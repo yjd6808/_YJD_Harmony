@@ -6,6 +6,28 @@
 # encoding : utf8
 # encdoing collation : utf8_unicode_520_ci
 
+
+/* 
+
+참고사항 1
+Mysql 디폴트 인코딩 변경 방법 :
+C:\ProgramData\MySQL\MySQL Server 5.7 경로 들어가서 my.ini에 아래 옵션들 추가 해준 후 서버 껏다 키면됨
+
+[client]
+default-character-set=utf8
+
+[mysql]
+default-character-set=utf8
+
+
+[mysqld]
+collation-server = utf8_unicode_520_ci
+init-connect='SET NAMES utf8'
+character-set-server = utf8
+
+*/
+
+
 drop schema if exists tankfighter ;											# 만약 스키마가 존재한다면 제거하도록 한다.
 create schema tankfighter character set utf8 collate utf8_unicode_520_ci;	# 스키마를 utf8 인코딩으로 생성한다.
 use tankfighter;
@@ -18,10 +40,10 @@ create table t_channel (
 	c_time				timestamp(6)	not null 						comment	'추가된 시간'
 ) character set utf8 collate utf8_unicode_520_ci;
 
-insert into t_channel (c_name, c_max_player_count, c_time) values ('초보 정도 채널', 2, now(6));
-insert into t_channel (c_name, c_max_player_count, c_time) values ('중수 정도 채널', 3, now(6));
-insert into t_channel (c_name, c_max_player_count, c_time) values ('고수 정도 채널', 4, now(6));
-insert into t_channel (c_name, c_max_player_count, c_time) values ('초고수 정도 채널', 5, now(6));
+insert into t_channel (c_name, c_max_player_count, c_time) values ('초보 정도 채널', 1000, now(6));
+insert into t_channel (c_name, c_max_player_count, c_time) values ('중수 정도 채널', 1000, now(6));
+insert into t_channel (c_name, c_max_player_count, c_time) values ('고수 정도 채널', 1000, now(6));
+insert into t_channel (c_name, c_max_player_count, c_time) values ('초고수 정도 채널', 1000, now(6));
 
 # 비밀번호 저장할 때 MD5() 함수로 저장할 것
 # 32
@@ -78,19 +100,93 @@ create table t_friendship (
 
 
 
-/* 참고사항 1
-Mysql 디폴트 인코딩 변경 방법 :
-C:\ProgramData\MySQL\MySQL Server 5.7 경로 들어가서 my.ini에 아래 옵션들 추가 해준 후 서버 껏다 키면됨
+# 테스트용 계정 미리 넣어놓기
+drop procedure if exists insert_many_account;
+delimiter $$
+create procedure insert_many_account(
+    in count int
+)
+begin    
+    declare _i int default 0;
+    prepare stmt from 'insert into t_account (c_id, c_pass) values (?, md5(?))';
+    
+    delete from t_friendship;
+    delete from t_character;
+    delete from t_account;
+    
+    while (_i <= count) do
+        set @id = concat('wjdeh', _i);
+        set @pass = concat('wjdeh', _i);
+        execute stmt using @id, @pass;
+        set _i = _i + 1;
+    end while;
+    
+    deallocate prepare stmt;
+end$$
+delimiter ;
 
-[client]
-default-character-set=utf8
-
-[mysql]
-default-character-set=utf8
 
 
-[mysqld]
-collation-server = utf8_unicode_520_ci
-init-connect='SET NAMES utf8'
-character-set-server = utf8
-*/
+
+
+
+# 각 계정별로 채널당 캐릭터를 count만큼 생성합니다.
+# 캐릭터명은 계정명이 wjdeh1이라면 wjdeh1-0, wjdeh1-1 이렇게 순서대로 캐릭터명 생성토록함
+drop procedure if exists insert_many_character;
+delimiter $$
+create procedure insert_many_character(
+	in count int
+)
+begin    
+	declare _i int default 0;
+    declare _account_uid int;
+    declare _account_id varchar(30);
+    declare _channel_uid int;
+    declare _is_cursor_end bool default false;
+    declare _cur_channel_uid cursor for select c_uid from t_channel;
+    declare _cur_account_id cursor for select c_uid, c_id from t_account;
+    declare continue handler for not found set _is_cursor_end = true;
+
+    prepare stmt from 'insert into t_character (c_account_uid, c_channel_uid, c_name) values (?, ?, ?)';
+    
+    delete from t_friendship;
+    delete from t_character;
+
+    open _cur_account_id;    
+    
+L1:	loop
+		fetch _cur_account_id into _account_uid, _account_id;
+		if (_is_cursor_end = true) then
+			close _cur_account_id;
+			leave L1;
+		end if;
+		
+		set @account_uid = _account_uid;
+		set @account_id = _account_id;
+    
+		open _cur_channel_uid;
+L2:		loop
+			
+			fetch _cur_channel_uid into _channel_uid;
+            if (_is_cursor_end = true) then
+				close _cur_channel_uid;
+				set _is_cursor_end = false;
+				leave L2;
+			end if;
+            set @channel_uid = _channel_uid;
+            set _i = 0;
+            while (_i < count) do
+				set @character_name = concat(@account_id, '-', _i);
+				execute stmt using 	@account_uid, @channel_uid, @character_name;
+                set _i = _i + 1;
+            end while;
+		end loop L2;
+    end loop L1;
+	select _debug_log;
+    
+    deallocate prepare stmt;
+end$$
+delimiter ;
+
+call insert_many_account(100);
+call insert_many_character(10);

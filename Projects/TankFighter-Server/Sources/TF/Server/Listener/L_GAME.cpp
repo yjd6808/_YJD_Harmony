@@ -40,12 +40,13 @@ void L_GAME::OnDisconnected(Session* session) {
 	}
 
 	pPlayer->OnDisconnected();
-	pSession->SetPlayer(nullptr);
 }
 
 void L_GAME::OnSent(Session* session, ISendPacket* sentPacket, Int32UL sentBytes) {
 	sentPacket->ForEach([](ICommand* cmd) {
-		_LogInfo_("%s(%d) 송신", Core::CommandNameMap.Get(cmd->GetCommand()), cmd->GetCommand());
+		Cmd_t uiCmd = cmd->GetCommand();
+		if (Core::FilteredCommandSet.Exist(uiCmd)) return;
+		_LogInfo_("%s(%d) 송신", Core::CommandNameMap.Get(uiCmd), uiCmd);
 	});
 }
 

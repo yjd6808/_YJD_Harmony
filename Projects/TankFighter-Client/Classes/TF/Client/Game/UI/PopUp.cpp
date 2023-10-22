@@ -86,36 +86,35 @@ bool PopUp::init(bool bgClickable)
 	if (!Layer::init())
 		return false;
 
-	auto  paren = this->getParent();
 	Size winSize = Director::getInstance()->getWinSize();
 
 	if (bgClickable == false) {
-		Button* bg = Button::create(Const::Resource::WhiteRectFileName);
-		bg->setColor(Color3B::BLACK);
-		bg->setOpacity(150);
-		bg->setAnchorPoint(ZERO);
-		bg->setPosition(ZERO);
-		bg->setScale(25.0f);
-		this->addChild(bg, 0);
+		Button* pBackground = Button::create(Const::Resource::WhiteRectFileName);
+		pBackground->setColor(Color3B::BLACK);
+		pBackground->setOpacity(150);
+		pBackground->setAnchorPoint(ZERO);
+		pBackground->setPosition(ZERO);
+		pBackground->setScale(25.0f);
+		this->addChild(pBackground, 0);
 	}
 
-	Scale9Sprite* popUpWindow = Scale9Sprite::create(Const::Resource::WhiteRectFileName);
-	popUpWindow->setColor(ColorList::Englishlavender_v);
-	popUpWindow->setAnchorPoint(CENTER);
-	popUpWindow->setPosition(Vec2(winSize.width / 2, winSize.height / 2));
-	popUpWindow->setContentSize(Size(300.0f, 300.0f));
-	this->addChild(popUpWindow, 6000, SPRITE_POPUPWINDOW);
+	Scale9Sprite* pWindoiw = Scale9Sprite::create(Const::Resource::WhiteRectFileName);
+	pWindoiw->setColor(ColorList::Englishlavender_v);
+	pWindoiw->setAnchorPoint(CENTER);
+	pWindoiw->setPosition(Vec2(winSize.width / 2, winSize.height / 2));
+	pWindoiw->setContentSize(Size(300.0f, 300.0f));
+	this->addChild(pWindoiw, 6000, SPRITE_POPUPWINDOW);
 
-	Text* popUpText = Text::create(getText(), Const::Resource::FontName, 20);
-	popUpText->setTextAreaSize(popUpWindow->getContentSize() - Size(40.0f, 40.0f));
-	popUpText->setTextHorizontalAlignment(TextHAlignment::CENTER);
-	popUpText->setColor(ColorList::Black_v);
-	popUpText->setPosition(Vec2(winSize.width / 2, winSize.height / 2));
-	this->addChild(popUpText, 6001, LABEL_POPUPTEXT);
+	Text* pText = Text::create(getText(), Const::Resource::FontName, 20);
+	pText->setTextAreaSize(pWindoiw->getContentSize() - Size(40.0f, 40.0f));
+	pText->setTextHorizontalAlignment(TextHAlignment::CENTER);
+	pText->setColor(ColorList::Black_v);
+	pText->setPosition(Vec2(winSize.width / 2, winSize.height / 2));
+	this->addChild(pText, 6001, LABEL_POPUPTEXT);
 
 	if (getType() == CONFIRM) {
 		TextButton* confBtn = TextButton::create(100, 50, "확인", 15);
-		confBtn->setPosition(Vec2(popUpWindow->getPosition().x, popUpWindow->getPosition().y - 90.0f));
+		confBtn->setPosition(Vec2(pWindoiw->getPosition().x, pWindoiw->getPosition().y - 90.0f));
 		confBtn->setClickEvent([&](TextButton* btn) {
 			auto func = this->getConfirm();
 			if (func != nullptr) 
@@ -127,7 +126,7 @@ bool PopUp::init(bool bgClickable)
 		this->addChild(confBtn, 6001, BUTTON_POPUP_CONFIRM);
 	} else if (getType() == YESNO) {
 		TextButton* yesBtn = TextButton::create(100, 50, "예", 15);
-		yesBtn->setPosition(Vec2(popUpWindow->getPosition().x - 60.0f, popUpWindow->getPosition().y - 90.0f));
+		yesBtn->setPosition(Vec2(pWindoiw->getPosition().x - 60.0f, pWindoiw->getPosition().y - 90.0f));
 		yesBtn->setClickEvent( [&](TextButton* btn) {
 			this->getYes()();
 			this->getParent()->removeChild(this);
@@ -136,7 +135,7 @@ bool PopUp::init(bool bgClickable)
 		this->addChild(yesBtn, 6001, BUTTON_POPUP_YES);
 
 		TextButton* noBtn = TextButton::create(100, 50, "아니오", 15);
-		noBtn->setPosition(Vec2(popUpWindow->getPosition().x + 60.0f, popUpWindow->getPosition().y - 90.0f));
+		noBtn->setPosition(Vec2(pWindoiw->getPosition().x + 60.0f, pWindoiw->getPosition().y - 90.0f));
 		noBtn->setClickEvent(
 			[&](TextButton* btn)
 		{

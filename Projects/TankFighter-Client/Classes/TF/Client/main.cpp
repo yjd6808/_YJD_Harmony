@@ -9,6 +9,7 @@
 #include "AppDelegate.h"
 
 USING_NS_CC;
+USING_NS_JC;
 
 int main() {
     int iExit = -1;

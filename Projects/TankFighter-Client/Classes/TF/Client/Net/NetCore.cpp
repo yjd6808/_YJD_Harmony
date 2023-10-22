@@ -57,8 +57,9 @@ void NetCore::initializeHost() {
 
 void NetCore::initializeParser() {
 	m_Parser.AddCommand<SC_Login>(R_GAME::RECV_SC_Login);
-	m_Parser.AddCommand<SC_Disconnect>(R_GAME::RECV_SC_Login);
 	m_Parser.AddCommand<SC_Register>(R_GAME::RECV_SC_Register);
+	m_Parser.AddCommand<SC_Logout>(R_GAME::RECV_SC_Logout);
+	m_Parser.AddCommand<SC_Disconnect>(R_GAME::RECV_SC_Login);
 	m_Parser.AddCommand<SC_LoadChannelInfo>(R_GAME::RECV_SC_LoadChannelInfo);
 	m_Parser.AddCommand<SC_JoinChannel>(R_GAME::RECV_SC_JoinChannel);
 	m_Parser.AddCommand<SC_LeaveChannel>(R_GAME::RECV_SC_LeaveChannel);
@@ -74,30 +75,38 @@ void NetCore::initializeParser() {
 	m_Parser.AddCommand<SC_UpdatePlayerList>(R_GAME::RECV_SC_UpdatePlayerList);
 	m_Parser.AddCommand<SC_AddFriendRequest>(R_GAME::RECV_SC_AddFriendRequest);
 	m_Parser.AddCommand<SC_UpdateRoomMemberList>(R_GAME::RECV_SC_UpdateRoomMemberList);
+	m_Parser.AddCommand<SC_UpdateRoomMember>(R_GAME::RECV_SC_UpdateRoomMember);
 	m_Parser.AddCommand<SC_RoomGameStart>(R_GAME::RECV_SC_RoomGameStart);
 	m_Parser.AddCommand<SC_RoomGameReady>(R_GAME::RECV_SC_RoomGameReady);
 	m_Parser.AddCommand<SC_RoomGameIntrude>(R_GAME::RECV_SC_RoomGameIntrude);
 	m_Parser.AddCommand<SC_RoomLeave>(R_GAME::RECV_SC_RoomLeave);
-	m_Parser.AddCommand<SC_BattleFieldLoad>(R_GAME::RECV_SC_BattleFieldLoad);
-	m_Parser.AddCommand<SC_BattleFieldLeave>(R_GAME::RECV_SC_BattleFieldLeave);
+	m_Parser.AddCommand<SC_RoomGameEnd>(R_GAME::RECV_SC_RoomGameEnd);
+	m_Parser.AddCommand<SC_RoomGameJudge>(R_GAME::RECV_SC_RoomGameJudge);
 	m_Parser.AddCommand<SC_ServerMessage>(R_GAME::RECV_SC_ServerMessage);
 	m_Parser.AddCommand<SC_ChatMessage>(R_GAME::RECV_SC_ChatMessage);
+	m_Parser.AddCommand<SC_BattleFieldTimeSync>(R_GAME::RECV_SC_BattleFieldTimeSync);
+	m_Parser.AddCommand<SC_BattleFieldTankSpawn>(R_GAME::RECV_SC_BattleFieldTankSpawn);
+	m_Parser.AddCommand<SC_BattleFieldMove>(R_GAME::RECV_SC_BattleFieldMove);
 	m_Parser.AddCommand<SC_BattleFieldFire>(R_GAME::RECV_SC_BattleFieldFire);
 	m_Parser.AddCommand<SC_BattleFieldDeath>(R_GAME::RECV_SC_BattleFieldDeath);
-	// m_Parser.AddCommand<SC_BattleFieldRevival>(R_GAME::RECV_SC_BattleFieldRevival);
-	// m_Parser.AddCommand<SC_BattleFieldStatisticsUpdate>(R_GAME::RECV_SC_BattleFieldStatisticsUpdate);
+	m_Parser.AddCommand<SC_BattleFieldStateChanged>(R_GAME::RECV_SC_BattleFieldStateChanged);
+	m_Parser.AddCommand<SC_BattleFieldStatisticsUpdate>(R_GAME::RECV_SC_BattleFieldStatisticsUpdate);
 	m_Parser.AddCommand<SC_TcpRTT>(R_GAME::RECV_SC_TcpRTT);
 	
 }
 
-void NetCore::update(const TimeSpan& elpased) {
+void NetCore::update(const TimeSpan& elapsed) {
 	processCommands();
 }
 
 void NetCore::runCommand(Session* session, ICommand* cmd) {
-	if (!m_Parser.RunCommand(session, cmd)) {
-		_LogInfo_("%s 커맨드(%d) 실행실패", Core::CommandNameMap.Get(cmd->GetCommand()), cmd->GetCommand());
+	if (m_Parser.RunCommand(session, cmd)) {
+		return;
 	}
+
+	Cmd_t uiCmd = cmd->GetCommand();
+	if (Core::FilteredCommandSet.Exist(uiCmd)) return;
+	_LogInfo_("%s 커맨드(%d) 실행실패", Core::CommandNameMap.Get(uiCmd), uiCmd);
 }
 
 void NetCore::clearCommandQueue() {

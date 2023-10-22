@@ -10,6 +10,7 @@
 
 #include <TF/Common/Base/IOpenCloseable.h>
 #include <TF/Server/Contents/Room.h>
+#include <TF/Server/Contents/BattleFieldRoutine.h>
 
 struct ChannelInfo;
 
@@ -36,6 +37,9 @@ public:
 
 	ChannelInfo GetInfo();
 
+	bool StartBattle(Room* room);
+	void EndBattle(Room* room);
+
 	int Join(Player* player);
 	bool Leave(Player* player);
 
@@ -47,6 +51,7 @@ private:
 	mutable JCore::NormalLock m_PlayerListLock;
 	JCore::HashSet<Player*> m_hsPlayerSet;
 
+	BattleFieldRoutine m_BattleFieldRoutine;
 	JCore::AtomicBool m_bClosed;
 
 	int m_iPrimaryKey;

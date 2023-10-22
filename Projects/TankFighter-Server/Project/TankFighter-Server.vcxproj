@@ -23,6 +23,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Contents\BattleFieldRoutine.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\TF\Server\Contents\Channel.cpp">
       <SubType>
       </SubType>
@@ -95,6 +99,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\TF\Server\Const.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Contents\BattleFieldRoutine.h">
       <SubType>
       </SubType>
     </ClInclude>

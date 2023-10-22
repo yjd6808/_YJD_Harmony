@@ -11,10 +11,18 @@
 
 
 void InitializeCommon() {
+	Core::FilteredCommandSet.Insert(SC_BattleFieldMove::_Command());
+	Core::FilteredCommandSet.Insert(CS_BattleFieldMove::_Command());
+	Core::FilteredCommandSet.Insert(SC_BattleFieldFire::_Command());
+	Core::FilteredCommandSet.Insert(CS_BattleFieldFire::_Command());
+
 	Core::CommandNameMap.Add<CS_Login>();
 	Core::CommandNameMap.Add<SC_Login>();
 	Core::CommandNameMap.Add<CS_Register>();
 	Core::CommandNameMap.Add<SC_Register>();
+	Core::CommandNameMap.Add<CS_Logout>();
+	Core::CommandNameMap.Add<SC_Logout>();
+	Core::CommandNameMap.Add<SC_LoadChannelInfo>();
 	Core::CommandNameMap.Add<CS_LoadChannelInfo>();
 	Core::CommandNameMap.Add<SC_LoadChannelInfo>();
 	Core::CommandNameMap.Add<CS_JoinChannel>();
@@ -39,6 +47,7 @@ void InitializeCommon() {
 	Core::CommandNameMap.Add<CS_JoinRoom>();
 	Core::CommandNameMap.Add<SC_JoinRoom>();
 	Core::CommandNameMap.Add<SC_UpdateRoomMemberList>();
+	Core::CommandNameMap.Add<SC_UpdateRoomMember>();
 	Core::CommandNameMap.Add<CS_AddFriend>();
 	Core::CommandNameMap.Add<CS_AddFriendRequest>();
 	Core::CommandNameMap.Add<SC_AddFriendRequest>();
@@ -48,26 +57,24 @@ void InitializeCommon() {
 	Core::CommandNameMap.Add<CS_RoomGameStart>();
 	Core::CommandNameMap.Add<SC_RoomGameStart>();
 	Core::CommandNameMap.Add<CS_RoomGameReady>();
+	Core::CommandNameMap.Add<SC_RoomGameEnd>();
 	Core::CommandNameMap.Add<CS_RoomLeave>();
 	Core::CommandNameMap.Add<SC_RoomLeave>();
-	Core::CommandNameMap.Add<CS_BattleFieldLoad>();
-	Core::CommandNameMap.Add<SC_BattleFieldLoad>();
-	Core::CommandNameMap.Add<CS_BattileFieldTankMove>();
-	Core::CommandNameMap.Add<CS_BattileFieldTankUpdate>();
-	Core::CommandNameMap.Add<CS_BattleFieldPlayWaitEnd>();
-	Core::CommandNameMap.Add<CS_BattleFieldPlayingEnd>();
-	Core::CommandNameMap.Add<CS_BattleFieldEndWaitEnd>();
-	Core::CommandNameMap.Add<CS_BattleFieldLeave>();
-	Core::CommandNameMap.Add<SC_BattleFieldLeave>();
-	Core::CommandNameMap.Add<SC_ServerMessage>();
-	Core::CommandNameMap.Add<CS_ChatMessage>();
-	Core::CommandNameMap.Add<SC_ChatMessage>();
+	Core::CommandNameMap.Add<CS_LoadBattleFieldInfo>();
+	Core::CommandNameMap.Add<SC_BattleFieldTankSpawn>();
+	Core::CommandNameMap.Add<SC_BattleFieldTimeSync>();
+	Core::CommandNameMap.Add<CS_BattleFieldMove>();
+	Core::CommandNameMap.Add<SC_BattleFieldMove>();
 	Core::CommandNameMap.Add<CS_BattleFieldFire>();
 	Core::CommandNameMap.Add<SC_BattleFieldFire>();
 	Core::CommandNameMap.Add<CS_BattleFieldDeath>();
 	Core::CommandNameMap.Add<SC_BattleFieldDeath>();
-	Core::CommandNameMap.Add<CS_BattleFieldRevival>();
-	Core::CommandNameMap.Add<CS_BattleFieldStatisticsUpdate>();
+	Core::CommandNameMap.Add<SC_BattleFieldStateChanged>();
+	Core::CommandNameMap.Add<SC_BattleFieldStatisticsUpdate>();
+	Core::CommandNameMap.Add<SC_RoomGameJudge>();
+	Core::CommandNameMap.Add<SC_ServerMessage>();
+	Core::CommandNameMap.Add<CS_ChatMessage>();
+	Core::CommandNameMap.Add<SC_ChatMessage>();
 	Core::CommandNameMap.Add<CS_TcpRTT>();
 	Core::CommandNameMap.Add<SC_TcpRTT>();
 	Core::CommandNameMap.Add<SC_Disconnect>();

@@ -15,6 +15,7 @@ class R_GAME
 public:
 	static void RECV_CS_Login(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_Register(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_CS_Logout(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_LoadChannelInfo(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_JoinChannel(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_LeaveChannel(JNetwork::Session* session, JNetwork::ICommand* cmd);
@@ -33,20 +34,12 @@ public:
 	static void RECV_CS_RoomGameReady(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_RoomGameStart(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_RoomLeave(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_CS_BattleFieldLoad(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_CS_BattileFieldTankMove(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_CS_BattileFieldTankUpdate(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_CS_BattleFieldPlayWaitEnd(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_CS_BattleFieldPlayingEnd(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_CS_BattleFieldEndWaitEnd(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_CS_BattleFieldLeave(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_CS_ChatMessage(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_CS_LoadBattleFieldInfo(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_BattleFieldFire(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_BattleFieldDeath(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_CS_BattleFieldRevival(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_CS_BattleFieldStatisticsUpdate(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_CS_BattleFieldMove(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_CS_ChatMessage(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_TcpRTT(JNetwork::Session* session, JNetwork::ICommand* cmd);
-
 };
 
 

@@ -52,12 +52,17 @@ void Player::OnConnected() {
 }
 
 void Player::OnDisconnected() {
+	m_pSession->SetPlayer(nullptr);
 	Core::World->RemovePlayer(this);
 	LeaveChannel();
 	Push(this);
 }
 
 void Player::OnUpdate(const TimeSpan& elapsed) {
+	Character* pCharacter = m_pCharacter;
+
+	if (pCharacter)
+		pCharacter->OnUpdate(elapsed);
 }
 
 void Player::OnLobbyJoin(ChannelLobby* lobby) {
@@ -91,10 +96,12 @@ void Player::OnChannelLeave() {
 
 void Player::OnRoomJoin(Room* room) {
 	m_pRoom = room;
+	m_pCharacter->SetRoom(room);
 }
 
 void Player::OnRoomLeave() {
 	m_pRoom = nullptr;
+	m_pCharacter->SetRoom(nullptr);
 }
 
 void Player::SendPacket(ISendPacket* packet) {

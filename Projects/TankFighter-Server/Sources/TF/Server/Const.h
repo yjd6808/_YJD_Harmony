@@ -25,6 +25,7 @@ namespace Broadcast
 	namespace Room
 	{
 		extern const int StateAny;
+		extern const int StateBattle;
 	}
 
 	namespace BattleField
@@ -32,7 +33,6 @@ namespace Broadcast
 		extern const int StateAny;
 	}
 }
-
 
 namespace Failed
 {

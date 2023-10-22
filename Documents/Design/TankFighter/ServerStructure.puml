@@ -32,7 +32,7 @@ class GameSession {
 
 }
 
-class ChannelManager {
+class World {
     + Initialize()
     + void Update() override;
     --

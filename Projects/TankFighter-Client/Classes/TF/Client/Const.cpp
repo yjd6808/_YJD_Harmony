@@ -16,6 +16,8 @@ namespace Resource
 	const char* FontName = "fonts/N2G.ttf";
 	const char* WhiteRectFileName = "white_rect.png";
 	const char* TransparentRectFileName = "transparent_rect.png";
+	const char* WhiteCircleFileName = "white_circle.png";
+	const char* BigWhiteCircleFileName = "white_circle_big.png";
 }
 
 namespace Ping
@@ -27,6 +29,14 @@ namespace Layer
 {
 	const int ID_UI = 100;
 	const int ID_Grid = 101;
+}
+
+namespace String
+{
+	const char* PlayWaitLeftTimeFormat = "다른 플레이어가 모두 입장할때까지 기다려주세요.\n남은시간 : %.1f초";
+	const char* PlayingLeftTimeFormat = "게임 종료까지 남은시간 : %.1f초";
+	const char* EndWaitLeftTimeFormat = "방으로 이동하기까지 남은시간 : % .1f초";
+	const char* RevivalLeftTimeFormat = "%.1f초뒤 부활합니다.";
 }
 
 namespace Window

@@ -31,6 +31,8 @@ namespace Room
 
 namespace Tank
 {
+	const float BodyWidth = 30.0f;
+	const float BodyHeight = 60.0f;
 	const float MoveSpeed = 70.0f;
 	const float RotationSpeed = 70.0f;
 	const float FireDelay = 0.3f;			// 총 발사는 0.1초에 한번만 가능
@@ -41,6 +43,15 @@ namespace Map
 {
 	const float Width = 1000.0f;
 	const float Height = 600.0f;
+}
+
+namespace BattleField
+{
+	// 모두 초단위
+	const float PlayWaitTime = 7.0f;
+	const float PayingTime = 5.0f;
+	const float EndWaitTime = 10.0f;
+	const float RevivalTime = 5.0f;
 }
 
 

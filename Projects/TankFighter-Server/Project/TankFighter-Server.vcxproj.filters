@@ -56,6 +56,9 @@
     <ClCompile Include="..\Sources\TF\Server\Contents\ChannelLobby.cpp">
       <Filter>Contents</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Contents\BattleFieldRoutine.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\TF\Server\Pch.h" />
@@ -98,9 +101,6 @@
       <Filter>Contents</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\TF\Server\Const.h" />
-    <ClInclude Include="..\Sources\TF\Server\Recv\R_GAME.h">
-      <Filter>Recv</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\TF\Server\Send\S_GAME.h">
       <Filter>Send</Filter>
     </ClInclude>
@@ -127,6 +127,12 @@
     </ClInclude>
     <ClInclude Include="..\Sources\TF\Server\Contents\ChannelLobby.h">
       <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Contents\BattleFieldRoutine.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Recv\R_GAME.h">
+      <Filter>Recv</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

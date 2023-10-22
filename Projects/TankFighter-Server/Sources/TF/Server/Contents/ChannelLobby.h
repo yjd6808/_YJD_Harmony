@@ -22,6 +22,7 @@ public:
 	void OnUpdate(const JCore::TimeSpan& elapsed) override;
 
 	void Finalize();
+	
 	bool Join(Player* player);
 	bool Leave(Player* player);
 
@@ -37,6 +38,7 @@ public:
 	JCore::Vector<RoomInfo> GetRoomInfoList();
 	JCore::Vector<CharacterInfo> GetPlayerInfoList(PlayerState state);
 
+	void BroadcastRoomListInfo();
 private:
 	JCore::NormalLock m_PlayerListLock;
 	JCore::HashSet<Player*> m_hsPlayerSet;

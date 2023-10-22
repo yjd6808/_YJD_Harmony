@@ -9,7 +9,6 @@
 #include "Pch.h"
 #include "R_GAME.h"
 
-#include <source_location>
 #include <TF/Common/Command.h>
 
 #include <TF/Server/Contents/Player.h>
@@ -84,6 +83,25 @@ void R_GAME::RECV_CS_Register(Session* session, ICommand* cmd) {
 	S_GAME::SEND_SC_Register(bRegisterSuccess);
 }
 
+void R_GAME::RECV_CS_Logout(Session* session, ICommand* cmd) {
+	GameSession* pSession = (GameSession*)session;
+	CS_Logout* pCmd = (CS_Logout*)cmd;
+
+	Player* pPlayer = pSession->GetPlayer();
+	if (pPlayer == nullptr)
+		return;
+
+	if (pPlayer->GetAccountPrimaryKey() != pCmd->AccountPrimaryKey) {
+		return;
+	}
+
+	pPlayer->LeaveChannel();
+	pPlayer->OnDisconnected();
+
+	S_GAME::SetInformation(session, SendStrategy::SendAsync);
+	S_GAME::SEND_SC_Logout();
+}
+
 void R_GAME::RECV_CS_LoadChannelInfo(Session* session, ICommand* cmd) {
 	GameSession* pSession = (GameSession*)session;
 	CS_LoadChannelInfo* pCmd = (CS_LoadChannelInfo*)cmd;
@@ -126,7 +144,7 @@ void R_GAME::RECV_CS_JoinChannel(Session* session, ICommand* cmd) {
 	S_GAME::SEND_SC_SelectChannel(pCmd->ChannelPrimaryKey);
 }
 
-void R_GAME::RECV_CS_LeaveChannel(Session* session, JNetwork::ICommand* cmd) {
+void R_GAME::RECV_CS_LeaveChannel(Session* session, ICommand* cmd) {
 	GameSession* pSession = (GameSession*)session;
 	CS_LeaveChannel* pCmd = (CS_LeaveChannel*)cmd;
 
@@ -260,10 +278,10 @@ void R_GAME::RECV_CS_SelectCharacterAndJoinLobby(Session* session, ICommand* cmd
 	CharacterInfo info;
 	info.PrimaryKey = selectQryResult.PrimaryKey;
 	info.Name = selectQryResult.Name;
-	info.Win = selectQryResult.Win;
-	info.Lose = selectQryResult.Lose;
-	info.Kill = selectQryResult.Kill;
-	info.Death = selectQryResult.Death;
+	info.WinCount = selectQryResult.Win;
+	info.LoseCount = selectQryResult.Lose;
+	info.KillCount = selectQryResult.Kill;
+	info.DeathCount = selectQryResult.Death;
 	info.Money = selectQryResult.Money;
 	Character* pCharacter = Character::Pop();
 	pCharacter->SetPlayer(pPlayer);
@@ -530,6 +548,10 @@ void R_GAME::RECV_CS_CreateRoom(Session* session, ICommand* cmd) {
 	if (pPlayer == nullptr) 
 		return;
 
+	Channel* pChannel = pPlayer->GetChannel();
+	if (pChannel == nullptr)
+		return;
+
 	ChannelLobby* pChannelLobby = pPlayer->GetChannelLobby();
 	if (pChannelLobby == nullptr) 
 		return;
@@ -543,6 +565,7 @@ void R_GAME::RECV_CS_CreateRoom(Session* session, ICommand* cmd) {
 	}
 
 	pNewRoom->SetLobby(pChannelLobby);
+	pNewRoom->SetChannel(pChannel);
 	pNewRoom->SetNameRaw(pCmd->RoomName.Source);
 	const int iJoinResult = pNewRoom->Join(pPlayer);
 
@@ -583,6 +606,25 @@ void R_GAME::RECV_CS_JoinRoom(Session* session, ICommand* cmd) {
 	else if (iJoinResult == Const::Failed::Room::AddFailedFull)		S_GAME::SEND_SC_ServerMessage("꽉찬 방입니다.");
 }
 
+
+void R_GAME::RECV_CS_RoomLeave(Session* session, ICommand* cmd) {
+	GameSession* pSession = (GameSession*)session;
+	CS_RoomLeave* pCmd = (CS_RoomLeave*)cmd;
+
+	Room* pRoom = Room::GetByAccessId(pCmd->RoomAccessId);
+	if (pRoom == nullptr) {
+		return;
+	}
+
+	Player* pPlayer = pSession->GetPlayer();
+	if (pPlayer == nullptr)
+		return;
+
+	pPlayer->LeaveRoom();
+
+	S_GAME::SetInformation(pSession, SendStrategy::SendAsync);
+	S_GAME::SEND_SC_RoomLeave();
+}
 
 // Create 또는 Join 이후 방씬으로 전환완료된 후 클라가 각종 정보들 로딩을 요청함.
 void R_GAME::RECV_CS_LoadRoomInfo(Session* session, ICommand* cmd) {
@@ -628,6 +670,9 @@ void R_GAME::RECV_CS_RoomGameReady(Session* session, ICommand* cmd) {
 	S_GAME::SEND_SC_RoomGameReadyBroadcast(pRoom, pCharacter->GetPrimaryKey(), pCmd->Ready);
 }
 
+
+
+
 void R_GAME::RECV_CS_RoomGameStart(Session* session, ICommand* cmd) {
 	GameSession* pSession = (GameSession*)session;
 	CS_RoomGameStart* pCmd = (CS_RoomGameStart*)cmd;
@@ -636,11 +681,37 @@ void R_GAME::RECV_CS_RoomGameStart(Session* session, ICommand* cmd) {
 	if (pRoom == nullptr) {
 		return;
 	}
+
+	Player* pPlayer = pSession->GetPlayer();
+	if (pPlayer != pRoom->GetHostPlayer()) {
+		return;
+	}
+
+	Character* pCharacter = pPlayer->GetCharacter();
+	if (pCharacter->GetPrimaryKey() != pCmd->CharacterPrimaryKey) {
+		return;
+	}
+
+	Channel* pChannel =  pPlayer->GetChannel();
+	if (pChannel == nullptr) {
+		return;
+	}
+
+	if (!pRoom->IsAllReady()) {
+		S_GAME::SetInformation(pSession, SendStrategy::SendAsync);
+		S_GAME::SEND_SC_ServerMessage("모든 플레이어가 준비되지 않았습니다.");
+		return;
+	}
+
+	if (!pChannel->StartBattle(pRoom)) {
+		S_GAME::SetInformation(pSession, SendStrategy::SendAsync);
+		S_GAME::SEND_SC_ServerMessage("게임을 시작할 수 없습니다.");
+	}
 }
 
-void R_GAME::RECV_CS_RoomLeave(Session* session, ICommand* cmd) {
+void R_GAME::RECV_CS_LoadBattleFieldInfo(Session* session, ICommand* cmd) {
 	GameSession* pSession = (GameSession*)session;
-	CS_RoomLeave* pCmd = (CS_RoomLeave*)cmd;
+	CS_LoadBattleFieldInfo* pCmd = (CS_LoadBattleFieldInfo*)cmd;
 
 	Room* pRoom = Room::GetByAccessId(pCmd->RoomAccessId);
 	if (pRoom == nullptr) {
@@ -651,33 +722,102 @@ void R_GAME::RECV_CS_RoomLeave(Session* session, ICommand* cmd) {
 	if (pPlayer == nullptr)
 		return;
 
-	pPlayer->LeaveRoom();
+	Character* pCharacter = pPlayer->GetCharacter();
+	if (pCharacter == nullptr)
+		return;
 
-	S_GAME::SetInformation(pSession, SendStrategy::SendAsync);
-	S_GAME::SEND_SC_RoomLeave();
+	if (pPlayer->GetRoom() != pRoom) {
+		S_GAME::SetInformation(pSession, SendStrategy::SendAsync);
+		S_GAME::SEND_SC_Disconnect(pSession);
+		return;
+	}
+
+	pCharacter->SetDeath(false);
+
+	pRoom->BroadcastRoomMemberInfo(pCharacter);
+	pRoom->BroadcastBattleSatistics();
+	pRoom->BroadcastBattleFieldTankSpawn(pCharacter);
+	
+
+	S_GAME::AutoFlush _;
+	S_GAME::SetInformation(pSession, SendStrategy::SendAlloc);
+	S_GAME::SEND_SC_BattleFieldTimeSync(pRoom->GetBattleFieldTime());
+	S_GAME::SEND_SC_LoadRoomInfo(pRoom);
 }
 
-void R_GAME::RECV_CS_BattleFieldLoad(Session* session, ICommand* cmd) {
-	CS_BattleFieldLoad* pCmd = (CS_BattleFieldLoad*)cmd;
+void R_GAME::RECV_CS_BattleFieldFire(Session* session, ICommand* cmd) {
+	GameSession* pSession = (GameSession*)session;
+	CS_BattleFieldFire* pCmd = (CS_BattleFieldFire*)cmd;
+
+	Player* pPlayer = pSession->GetPlayer();
+	if (pPlayer == nullptr)
+		return;
+
+	Room* pRoom = pPlayer->GetRoom();
+	if (pRoom == nullptr) {
+		return;
+	}
+
+	pRoom->BroadcastBattleFieldFire(pCmd->BulletInfo);
 }
-void R_GAME::RECV_CS_BattileFieldTankMove(Session* session, ICommand* cmd) {
-	CS_BattileFieldTankMove* pCmd = (CS_BattileFieldTankMove*)cmd;
+
+void R_GAME::RECV_CS_BattleFieldDeath(Session* session, ICommand* cmd) {
+	GameSession* pSession = (GameSession*)session;
+	CS_BattleFieldDeath* pCmd = (CS_BattleFieldDeath*)cmd;
+
+	Player* pPlayer = pSession->GetPlayer();
+	if (pPlayer == nullptr)
+		return;
+
+	Character* pDeadCharacter = pPlayer->GetCharacter();
+	if (pPlayer == nullptr)
+		return;
+
+	Room* pRoom = pPlayer->GetRoom();
+	if (pRoom == nullptr) {
+		return;
+	}
+
+	Character* pKillerCharacter = pRoom->GetCharacterByCharacterPrimaryKey(pCmd->KillerCharacterPrimaryKey);
+	if (pKillerCharacter == nullptr) {
+		return;
+	}
+
+	const int iKillerCharacterPrimaryKey = pCmd->KillerCharacterPrimaryKey;
+	const int iDeadCharacterPrimaryKey = pDeadCharacter->GetPrimaryKey();
+
+	Q_GAME::AddKillCount(iKillerCharacterPrimaryKey, 1);
+	Q_GAME::AddDeathCount(iDeadCharacterPrimaryKey, 1);
+
+	pKillerCharacter->AddBattleKillCount(1);
+	pDeadCharacter->AddBattleDeathCount(1);
+
+	pDeadCharacter->SetDeath(true);
+
+	pRoom->BroadcastBattleFieldDeath(iDeadCharacterPrimaryKey);
+	pRoom->BroadcastBattleSatistics();
 }
-void R_GAME::RECV_CS_BattileFieldTankUpdate(Session* session, ICommand* cmd) {
-	CS_BattileFieldTankUpdate* pCmd = (CS_BattileFieldTankUpdate*)cmd;
+
+void R_GAME::RECV_CS_BattleFieldMove(Session* session, ICommand* cmd) {
+	GameSession* pSession = (GameSession*)session;
+	CS_BattleFieldMove* pCmd = (CS_BattleFieldMove*)cmd;
+
+	Player* pPlayer = pSession->GetPlayer();
+	if (pPlayer == nullptr)
+		return;
+
+	Character* pCharacter = pPlayer->GetCharacter();
+	if (pCharacter == nullptr)
+		return;
+
+	if (pCharacter->GetPrimaryKey() != pCmd->Move.CharacterPrimaryKey) {
+		DebugAssert(false);
+		return;
+	}
+
+	pCharacter->SetMove(pCmd->Move);
 }
-void R_GAME::RECV_CS_BattleFieldPlayWaitEnd(Session* session, ICommand* cmd) {
-	CS_BattleFieldPlayWaitEnd* pCmd = (CS_BattleFieldPlayWaitEnd*)cmd;
-}
-void R_GAME::RECV_CS_BattleFieldPlayingEnd(Session* session, ICommand* cmd) {
-	CS_BattleFieldPlayingEnd* pCmd = (CS_BattleFieldPlayingEnd*)cmd;
-}
-void R_GAME::RECV_CS_BattleFieldEndWaitEnd(Session* session, ICommand* cmd) {
-	CS_BattleFieldEndWaitEnd* pCmd = (CS_BattleFieldEndWaitEnd*)cmd;
-}
-void R_GAME::RECV_CS_BattleFieldLeave(Session* session, ICommand* cmd) {
-	CS_BattleFieldLeave* pCmd = (CS_BattleFieldLeave*)cmd;
-}
+
 void R_GAME::RECV_CS_ChatMessage(Session* session, ICommand* cmd) {
 	GameSession* pSession = (GameSession*)session;
 	CS_ChatMessage* pCmd = (CS_ChatMessage*)cmd;
@@ -698,18 +838,7 @@ void R_GAME::RECV_CS_ChatMessage(Session* session, ICommand* cmd) {
 	}
 
 }
-void R_GAME::RECV_CS_BattleFieldFire(Session* session, ICommand* cmd) {
-	CS_BattleFieldFire* pCmd = (CS_BattleFieldFire*)cmd;
-}
-void R_GAME::RECV_CS_BattleFieldDeath(Session* session, ICommand* cmd) {
-	CS_BattleFieldDeath* pCmd = (CS_BattleFieldDeath*)cmd;
-}
-void R_GAME::RECV_CS_BattleFieldRevival(Session* session, ICommand* cmd) {
-	CS_BattleFieldRevival* pCmd = (CS_BattleFieldRevival*)cmd;
-}
-void R_GAME::RECV_CS_BattleFieldStatisticsUpdate(Session* session, ICommand* cmd) {
-	CS_BattleFieldStatisticsUpdate* pCmd = (CS_BattleFieldStatisticsUpdate*)cmd;
-}
+
 void R_GAME::RECV_CS_TcpRTT(Session* session, ICommand* cmd) {
 	GameSession* pSession = (GameSession*)session;
 	CS_TcpRTT* pCmd = (CS_TcpRTT*)cmd;

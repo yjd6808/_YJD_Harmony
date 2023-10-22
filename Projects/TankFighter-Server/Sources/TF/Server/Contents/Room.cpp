@@ -11,32 +11,91 @@
 
 #include <TF/Common/Command.h>
 #include <TF/Server/Const.h>
+#include <TF/Server/Contents/Character.h>
+#include <TF/Server/Send/S_GAME.h>
 
-#include "Character.h"
-#include "Send/S_GAME.h"
+#include "Query/Q_GAME.h"
 
 USING_NS_JC;
 USING_NS_JNET;
 
 Room::Room()
-	: m_eState(RoomState::ReadyWait)			
+	: m_pChannel(nullptr)
+	, m_pLobby(nullptr)
+	, m_eState(RoomState::ReadyWait)			
 	, m_szName(0)
 	, m_vPlayerList(0)						// Lazy-Intialization
 	, m_pLeader(nullptr)
+	, m_ElapsedBattleTime(TimeCounterAttribute::TimeOverReset)
 {}
 
 void Room::OnUpdate(const TimeSpan& elapsed) {
 }
 
-void Room::BroadcastPacket(ISendPacket* packet, int state) {
-	auto fnStateAny = [=](Player* player) {
-		player->SendPacket(packet);
-	};
+// 배틀필드를 진행중일 때 수행하는 업데이트
+void Room::OnUpdateBattle(const TimeSpan& elapsed) {
+	JCORE_LOCK_GUARD(m_Sync);
 
-	if (state == Const::Broadcast::Room::StateAny) {
-		m_vPlayerList.ForEach(fnStateAny);
+	const RoomState eCurState = m_eState;
+	switch (eCurState) {
+	case RoomState::PlayWait: OnUpdatePlayWait(elapsed);
+	case RoomState::Playing:  OnUpdatePlaying(elapsed);	
+	case RoomState::EndWait:  OnUpdateEndWait(elapsed);	
+	default: ;
 	}
+
+	const RoomState eNextState = m_eState;
+	if (eNextState != eCurState) {
+		OnRoomStateChanged(eNextState);
+	}
+
+	BroadcastBattleFieldMoveRaw();
+	m_ElapsedBattleTime.Elapsed += elapsed;
 }
+
+void Room::OnUpdatePlayWait(const TimeSpan& elapsed) {
+	if (m_eState != RoomState::PlayWait)
+		return;
+
+
+	if (!m_ElapsedBattleTime.ElapsedSeconds(Const::BattleField::PlayWaitTime)) {
+		return;
+	}
+
+
+	m_eState = RoomState::Playing;
+}
+
+void Room::OnUpdatePlaying(const TimeSpan& elapsed) {
+	if (m_eState != RoomState::Playing)
+		return;
+
+	if (!m_ElapsedBattleTime.ElapsedSeconds(Const::BattleField::PayingTime)) {
+		return;
+	}
+
+	// 승자/패자 판단 및 DB 반영
+	JudgeWinnerLoserRaw();
+	m_eState = RoomState::EndWait;
+}
+
+void Room::OnUpdateEndWait(const TimeSpan& elapsed) {
+	if (m_eState != RoomState::EndWait)
+		return;
+
+	if (!m_ElapsedBattleTime.ElapsedSeconds(Const::BattleField::EndWaitTime)) {
+		return;
+	}
+
+	m_eState = RoomState::ReadyWait;
+	m_pChannel->EndBattle(this);
+}
+
+void Room::OnRoomStateChanged(RoomState changedState) {
+	BroadcastTimeSync();
+	BroadcastBattleStateChanged(changedState);
+}
+
 
 void Room::OnPopped() {
 	m_bClosed = false;
@@ -45,15 +104,105 @@ void Room::OnPopped() {
 
 void Room::OnPushed() {
 	m_pLobby = nullptr;
+	m_pChannel = nullptr;
 	m_bClosed = true;
 	m_pLeader = nullptr;
 	m_vPlayerList.Clear();
+}
+
+void Room::OnBattleBegin() {
+	m_eState = RoomState::PlayWait;
+
+	JCORE_LOCK_GUARD(m_Sync);
+	for (int i = 0; i < m_vPlayerList.Size(); ++i) {
+		Player* pPlayer = m_vPlayerList[i];
+		pPlayer->SetPlayerState(PlayerState::BattleField);
+
+		Character* pCharacter = pPlayer->GetCharacter();
+		if (pCharacter == nullptr)
+			continue;
+
+		pCharacter->ClearBattleInfo();
+		pCharacter->SetRevivalTime(0);
+	}
+
+	BroadcastRoomGameStart();
+}
+
+void Room::OnBattleEnd() {
+	m_eState = RoomState::ReadyWait;
+
+	{
+		JCORE_LOCK_GUARD(m_Sync);
+		for (int i = 0; i < m_vPlayerList.Size(); ++i) {
+			Player* pPlayer = m_vPlayerList[i];
+			pPlayer->SetPlayerState(PlayerState::Room);
+
+			Character* pCharacter = pPlayer->GetCharacter();
+			if (pCharacter == nullptr)
+				continue;
+
+			pCharacter->ApplyBattleStatisticsToInfo();
+			pCharacter->ClearBattleInfo();
+		}
+
+	}
+	BroadcastRoomGameEnd();
+}
+
+
+void Room::JudgeWinnerLoserRaw() {
+	Character* pWinner = GetBattleTopKillerRaw();
+	if (pWinner != nullptr) {
+		pWinner->AddWinCount(1);
+		Q_GAME::AddWinCount(pWinner->GetPrimaryKey(), 1);
+	}
+
+	for (int i = 0; i < m_vPlayerList.Size(); ++i) {
+		Character* pLoser = m_vPlayerList[i]->GetCharacter();
+		if (pLoser == pWinner) continue;	// 승자 제외
+		pLoser->AddLoseCount(1);
+		Q_GAME::AddWinCount(pLoser->GetPrimaryKey(), 1);
+	}
+
+	BroadcastJudgeRaw(pWinner == nullptr ? Const::InvalidValue : pWinner->GetPrimaryKey());
+}
+
+
+void Room::BroadcastPacket(ISendPacket* packet, int state) {
+	auto fnStateAny = [=](Player* player) {
+		player->SendPacket(packet);
+	};
+
+	auto fnStateBattle = [=](Player* player) {
+		if (player->GetPlayerState() == PlayerState::BattleField)
+			player->SendPacket(packet);
+	};
+
+	if (state == Const::Broadcast::Room::StateAny) {
+		m_vPlayerList.ForEach(fnStateAny);
+	} else if (state == Const::Broadcast::Room::StateBattle) {
+		m_vPlayerList.ForEach(fnStateBattle);
+	}
 }
 
 void Room::Close() {
 }
 
 void Room::Open() {
+}
+
+bool Room::IsAllReady() const {
+	int iReadyCount = 0;
+	JCORE_LOCK_GUARD(m_Sync);
+	for (int i = 0; i < m_vPlayerList.Size(); ++i) {
+		const Character* pCharacter = m_vPlayerList[i]->GetCharacter();
+		if (pCharacter == nullptr) continue;
+		if (pCharacter->IsReady()) {
+			++iReadyCount;
+		}
+	}
+	return iReadyCount == m_vPlayerList.Size();
 }
 
 void Room::SetName(const String& name) {
@@ -65,8 +214,16 @@ void Room::SetLobby(ChannelLobby* lobby) {
 	m_pLobby = lobby;
 }
 
+void Room::SetChannel(Channel* channel) {
+	m_pChannel = channel;
+}
+
 void Room::SetNameRaw(const char* name) {
 	m_szName = name;
+}
+
+void Room::SetState(RoomState state) {
+	m_eState = state;
 }
 
 void Room::SetNameRaw(const String& name) {
@@ -105,13 +262,15 @@ int Room::Join(Player* player) {
 			return iResult;
 
 		if (m_vPlayerList.Size() == 1) {
-			m_pLeader = player;
+			ChooseNewLeaderRaw();
 		}
 	}
 
 
 	player->OnRoomJoin(this);
-	BroadcastRoomListInfo();
+	m_pLobby->BroadcastRoomListInfo();
+	BroadcastRoomMemberListInfo();
+	BroadcastRoomInfo();
 	return Const::Success;
 }
 
@@ -122,11 +281,10 @@ bool Room::Leave(Player* player) {
 	const bool bHost = m_pLeader == player;
 	const bool bEmpty = IsEmptyRaw();
 
-
-
 	if (bEmpty) {
-		Push(this);
 		m_pLobby->RemoveRoom(this);
+		m_pChannel->EndBattle(this);
+		Push(this);
 	} else {
 		if (bHost && bPlayerRemoved)
 			ChooseNewLeaderRaw();
@@ -136,8 +294,9 @@ bool Room::Leave(Player* player) {
 		m_Sync.Unlock();
 		player->OnRoomLeave();
 
-		BroadcastRoomListInfo();
+		m_pLobby->BroadcastRoomListInfo();
 		BroadcastRoomMemberListInfo();
+		BroadcastRoomInfo();
 
 		m_Sync.Lock();
 	}
@@ -210,30 +369,112 @@ void Room::BroadcastRoomMemberListInfo() {
 	BroadcastPacket(pPacket, Const::Broadcast::Room::StateAny);
 }
 
-void Room::BroadcastRoomListInfo() {
-	const auto vRoomInfoList = m_pLobby->GetRoomInfoList();
-	const auto pPacket = dbg_new SinglePacket<SC_UpdateRoomList>(vRoomInfoList.Size());
+void Room::BroadcastRoomMemberInfo(Character* character) {
+	auto pPacket = dbg_new SinglePacket<SC_UpdateRoomMember>();
 	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
-	for (int i = 0; i < vRoomInfoList.Size(); ++i) {
-		RoomInfo& dst = pPacket->Cmd.Info[i];
-		const RoomInfo& src = vRoomInfoList[i];
-
-		dst.AccessId = src.AccessId;
-		dst.PlayerCount = src.PlayerCount;
-		dst.MaxPlayerCount = src.MaxPlayerCount;
-		dst.Name = src.Name;
-		dst.RoomState = src.RoomState;
-	}
-
-	m_pLobby->BroadcastPacket(pPacket, Const::Broadcast::Lobby::StateLobby);
+	character->GetRoomInfo(pPacket->Cmd.Info);
+	BroadcastPacket(pPacket, Const::Broadcast::Room::StateAny);
 }
-	
+
+void Room::BroadcastRoomInfo() {
+	auto pPacket = dbg_new SinglePacket<SC_LoadRoomInfo>();
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	GetRoomInfo(pPacket->Cmd.Info);
+	BroadcastPacket(pPacket, Const::Broadcast::Room::StateAny);
+}
+
+void Room::BroadcastRoomGameStart() {
+	auto pPacket = dbg_new SinglePacket<SC_RoomGameStart>;
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	BroadcastPacket(pPacket, Const::Broadcast::Room::StateAny);
+}
+
+void Room::BroadcastBattleFieldTankSpawn(Character* character) {
+	auto pPacket = dbg_new SinglePacket<SC_BattleFieldTankSpawn>();
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	character->GetMoveNet(pPacket->Cmd.Move);
+	pPacket->Cmd.Move.X = Random::GenerateF(50.0f, Const::Map::Width - 50.0f);
+	pPacket->Cmd.Move.Y = Random::GenerateF(50.0f, Const::Map::Height - 50.0f);
+	BroadcastPacket(pPacket, Const::Broadcast::Room::StateAny);
+}
+
+void Room::BroadcastBattleSatistics() {
+	JCORE_LOCK_GUARD(m_Sync);
+	const auto pPacket = dbg_new SinglePacket<SC_BattleFieldStatisticsUpdate>(m_vPlayerList.Size());
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	for (int i = 0; i < m_vPlayerList.Size(); ++i) {
+		BattleStatisticsNet& dst = pPacket->Cmd.Statistics[i];
+		m_vPlayerList[i]->GetCharacter()->GetBattleStatisticsNet(dst);
+	}
+	BroadcastPacket(pPacket, Const::Broadcast::Room::StateBattle);
+}
+
+void Room::BroadcastBattleFieldFire(const BulletInfoNet& info) {
+	const auto pPacket = dbg_new SinglePacket<SC_BattleFieldFire>();
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	pPacket->Cmd.BulletInfo = info;
+	BroadcastPacket(pPacket, Const::Broadcast::Room::StateBattle);
+}
+
+void Room::BroadcastBattleStateChanged(RoomState changedState) {
+	const auto vRoomInfoList = m_pLobby->GetRoomInfoList();
+	const auto pPacket = dbg_new SinglePacket<SC_BattleFieldStateChanged>(vRoomInfoList.Size());
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	pPacket->Cmd.State = changedState;
+	BroadcastPacket(pPacket, Const::Broadcast::Room::StateBattle);
+}
+
+void Room::BroadcastJudgeRaw(int winnerCharacterPrimaryKey) {
+	auto pPacket = dbg_new SinglePacket<SC_RoomGameJudge>;
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	pPacket->Cmd.WinnerCharacterPrimaryKey = winnerCharacterPrimaryKey;
+	BroadcastPacket(pPacket, Const::Broadcast::Room::StateBattle);
+}
+
+void Room::BroadcastRoomGameEnd() {
+	auto pPacket = dbg_new SinglePacket<SC_RoomGameEnd>;
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	BroadcastPacket(pPacket, Const::Broadcast::Room::StateAny);
+}
+
+
+void Room::BroadcastTimeSync() {
+	const auto pPacket = dbg_new SinglePacket<SC_BattleFieldTimeSync>();
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	pPacket->Cmd.Elapsed.Tick = m_ElapsedBattleTime.Elapsed.Tick;
+	BroadcastPacket(pPacket, Const::Broadcast::Room::StateBattle);
+}
+
+
+void Room::BroadcastBattleFieldMoveRaw() {
+	const int iCount = m_vPlayerList.Size();
+	const auto pPacket = dbg_new SinglePacket<SC_BattleFieldMove>(iCount);
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	for (int i = 0; i < iCount; ++i) {
+		Character* pCharacter = m_vPlayerList[i]->GetCharacter();
+		TankMoveNet& move = pPacket->Cmd.Move[i];
+		pCharacter->GetMoveNet(move);
+	}
+	BroadcastPacket(pPacket, Const::Broadcast::Room::StateBattle);
+}
+
+void Room::BroadcastBattleFieldDeath(int deadCharacterPrimaryKey) {
+	const int iCount = m_vPlayerList.Size();
+	const auto pPacket = dbg_new SinglePacket<SC_BattleFieldDeath>(iCount);
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	pPacket->Cmd.DeadCharacterPrimaryKey = deadCharacterPrimaryKey;
+	BroadcastPacket(pPacket, Const::Broadcast::Room::StateBattle);
+}
+
 
 void Room::ChooseNewLeaderRaw() {
 	const int iLeftPlayerCount = m_vPlayerList.Size();
-	if (iLeftPlayerCount > 0) {
-		m_pLeader = m_vPlayerList[0];
+	if (iLeftPlayerCount <= 0) {
+		return;
 	}
+
+	m_pLeader = m_vPlayerList[0];
+	m_pLeader->GetCharacter()->SetReady(true);	// 방장은 기본적으로 레디 상태
 }
 
 int Room::AddPlayerRaw(Player* player) {
@@ -257,6 +498,48 @@ bool Room::RemovePlayerRaw(Player* player) {
 
 int Room::GetPlayerCountRaw() const {
 	return m_vPlayerList.Size();
+}
+
+Character* Room::GetBattleTopKillerRaw() const {
+	const int iCount = m_vPlayerList.Size();
+
+	Character* pTopKiller = nullptr;
+	int iTopKillCount = -1;				// 최고 킬 수
+	DateTime dtTopLastKillTime = 0;		// 이 킬을 가장빨리 달성한 시각
+
+	for (int i = 0; i < iCount; ++i) {
+		Character* pCharacter = m_vPlayerList[i]->GetCharacter();
+		if (pCharacter == nullptr)
+			continue;
+
+		const int iBattleKillCount = pCharacter->GetBattleKillCount();
+		DateTime dtLastKillTime = pCharacter->GetBattleLastKillTime();
+
+		if (iBattleKillCount == iTopKillCount && dtLastKillTime < dtTopLastKillTime) {
+			pTopKiller = pCharacter;
+			dtTopLastKillTime = dtLastKillTime;
+			continue;
+		}
+
+		if (iBattleKillCount > iTopKillCount) {
+			pTopKiller = pCharacter;
+			iTopKillCount = iBattleKillCount;
+			dtTopLastKillTime = dtLastKillTime;
+		}
+	}
+	return pTopKiller;
+}
+
+Character* Room::GetCharacterByCharacterPrimaryKey(int characterPrimaryKey) const {
+	JCORE_LOCK_GUARD(m_Sync);
+	const int iCount = m_vPlayerList.Size();
+	for (int i = 0; i < iCount; ++i) {
+		Character* pCharacter = m_vPlayerList[i]->GetCharacter();
+		if (pCharacter && pCharacter->GetPrimaryKey() == characterPrimaryKey) {
+			return pCharacter;
+		}
+	}
+	return nullptr;
 }
 
 bool Room::IsEmptyRaw() {

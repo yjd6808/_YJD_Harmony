@@ -12,6 +12,8 @@
 #include <TF/Server/Contents/Character.h>
 #include <TF/Server/Send/S_GAME.h>
 
+#include "TF/Common/Command.h"
+
 USING_NS_JC;
 USING_NS_JNET;
 
@@ -201,4 +203,22 @@ void ChannelLobby::Finalize() {
 	m_hsRoomSet.ForEach([](Room* room) {
 		Room::Push(room);
 	});	
+}
+
+void ChannelLobby::BroadcastRoomListInfo() {
+	const auto vRoomInfoList = GetRoomInfoList();
+	const auto pPacket = dbg_new SinglePacket<SC_UpdateRoomList>(vRoomInfoList.Size());
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	for (int i = 0; i < vRoomInfoList.Size(); ++i) {
+		RoomInfo& dst = pPacket->Cmd.Info[i];
+		const RoomInfo& src = vRoomInfoList[i];
+
+		dst.AccessId = src.AccessId;
+		dst.PlayerCount = src.PlayerCount;
+		dst.MaxPlayerCount = src.MaxPlayerCount;
+		dst.Name = src.Name;
+		dst.RoomState = src.RoomState;
+	}
+
+	BroadcastPacket(pPacket, Const::Broadcast::Lobby::StateLobby);
 }

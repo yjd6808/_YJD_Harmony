@@ -30,6 +30,10 @@ void S_GAME::SEND_SC_Register(bool success) {
 	sending.Cmd.Result = success;
 }
 
+void S_GAME::SEND_SC_Logout() {
+	auto sending = SendBegin<SC_Logout>();
+}
+
 void S_GAME::SEND_SC_LoadChannelInfo(const Vector<ChannelInfo>& channelInfoList) {
 	const int iSize = channelInfoList.Size();
 	auto sending = SendBegin<SC_LoadChannelInfo>(iSize);
@@ -56,10 +60,10 @@ void S_GAME::SEND_SC_LoadCharacterInfo(int accountPrimaryKey, int channelPrimary
 			CharacterInfo info;
 			info.PrimaryKey = selectQryResult.PrimaryKey;
 			info.Name = selectQryResult.Name;
-			info.Win = selectQryResult.Win;
-			info.Lose = selectQryResult.Lose;
-			info.Kill = selectQryResult.Kill;
-			info.Death = selectQryResult.Death;
+			info.WinCount = selectQryResult.Win;
+			info.LoseCount = selectQryResult.Lose;
+			info.KillCount = selectQryResult.Kill;
+			info.DeathCount = selectQryResult.Death;
 			info.Money = selectQryResult.Money;
 			vCharacterInfoList.PushBack(Move(info));
 		} while (selectQryResult.FetchNextRow());
@@ -140,6 +144,15 @@ void S_GAME::SEND_SC_RoomGameReadyBroadcast(Room* room, int characterPrimaryKey,
 
 void S_GAME::SEND_SC_RoomLeave() {
 	auto sending = SendBegin<SC_RoomLeave>();
+}
+
+void S_GAME::SEND_SC_BattleFieldTimeSync(const TimeSpan& elapsed) {
+}
+
+void S_GAME::SEND_SC_BattleFieldSpawnTankBroadcast(Room* room, Character* character) {
+}
+
+void S_GAME::SEND_SC_BattleFieldStateChanged(RoomState state) {
 }
 
 void S_GAME::SEND_SC_ServerMessage(const char* msg) {

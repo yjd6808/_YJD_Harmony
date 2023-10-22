@@ -45,6 +45,7 @@ public:
 	}
 
 	virtual void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+	virtual void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 protected:
 	cocos2d::Layer* m_pUILayer;
 	GridLayer* m_pGridLayer;

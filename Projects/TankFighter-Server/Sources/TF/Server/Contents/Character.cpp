@@ -8,20 +8,20 @@
 #include "Pch.h"
 #include "Character.h"
 
-#include <TF/Common/Structure.h>
+#include <TF/Common/Command.h>
 
 #include <TF/Server/Const.h>
 #include <TF/Server/Query/Q_GAME.h>
 #include <TF/Server/Contents/Character.h>
 #include <TF/Server/Send/S_GAME.h>
-
-#include "Host/GameSession.h"
+#include <TF/Server/Host/GameSession.h>
 
 USING_NS_JC;
 USING_NS_JNET;
 
 Character::Character()
 	: m_pPlayer(nullptr)
+	, m_pRoom(nullptr)
 	, m_iPrimaryKey(Const::InvalidValue)
 	, m_szName(String::Null)
 	, m_iWin(0)
@@ -29,6 +29,8 @@ Character::Character()
 	, m_iDeath(0)
 	, m_iKill(0)
 	, m_iMoney(0)
+	, m_BattleStatistics()
+	, m_Move()
 	, m_bReady(false)
 	, m_bDeath(false)
 	, m_bDirty(false)
@@ -38,6 +40,7 @@ Character::~Character() {}
 
 void Character::OnPopped() {
 	m_pPlayer = nullptr;
+	m_pRoom = nullptr;
 	m_iPrimaryKey = Const::InvalidValue;
 	m_szName = String::Null;
 	m_iWin = 0;
@@ -45,9 +48,41 @@ void Character::OnPopped() {
 	m_iDeath = 0;
 	m_iKill = 0;
 	m_iMoney = 0;
+	m_bDeath = false;
+	m_bReady = false;
+	m_RevivalTime.Tick = 0;
+	m_Move.MoveSpeed = Const::Tank::MoveSpeed;
+	m_Move.RotationSpeed = Const::Tank::RotationSpeed;
 }
 
 void Character::OnPushed() {}
+
+void Character::OnUpdate(const TimeSpan& elapsed) {
+	UpdateRevivalTime(elapsed);
+}
+
+void Character::UpdateRevivalTime(const TimeSpan& elapsed) {
+	if (m_pPlayer->GetPlayerState() != PlayerState::BattleField)
+		return;
+
+	if (!m_bDeath)
+		return;
+
+	m_RevivalTime += elapsed;
+
+	if (m_RevivalTime.GetTotalSeconds() >= Const::BattleField::RevivalTime) {
+		m_RevivalTime = 0.0f;
+		m_bDeath = false;
+		m_pRoom->BroadcastRoomMemberInfo(this);
+		m_pRoom->BroadcastBattleFieldTankSpawn(this);
+	}
+}
+
+void Character::ClearBattleInfo() {
+	m_BattleStatistics.Kill = 0;
+	m_BattleStatistics.Death = 0;
+	m_BattleStatistics.FireCount = 0;
+}
 
 void Character::SetDeath(bool death) {
 	m_bDeath = death;
@@ -57,24 +92,38 @@ void Character::SetReady(bool ready) {
 	m_bReady = ready;
 }
 
-void Character::AddWin(int win, bool dirty /* = true */) {
+void Character::SetRevivalTime(const Int64 tick) {
+	m_RevivalTime.Tick = tick;
+}
+
+void Character::AddWinCount(int win, bool dirty /* = true */) {
 	m_iWin += win;
 	m_bDirty = dirty;
 }
 
-void Character::AddLose(int lose, bool dirty /* = true */) {
-	m_iWin += lose;
+void Character::AddLoseCount(int lose, bool dirty /* = true */) {
+	m_iLose += lose;
 	m_bDirty = dirty;
 }
 
-void Character::AddDeath(int death, bool dirty /* = true */) {
-	m_iWin += death;
+void Character::AddDeathCount(int death, bool dirty /* = true */) {
+	m_iDeath += death;
 	m_bDirty = dirty;
 }
 
-void Character::AddKill(int kill, bool dirty /* = true */) {
-	m_iWin += kill;
+void Character::AddKillCount(int kill, bool dirty /* = true */) {
+	m_iKill += kill;
 	m_bDirty = dirty;
+}
+
+void Character::AddBattleKillCount(int count) {
+	m_BattleStatistics.Kill += count;
+	m_BattleStatistics.LastKillTime = DateTime::Now();
+}
+
+void Character::ApplyBattleStatisticsToInfo() {
+	m_iKill += m_BattleStatistics.Kill;
+	m_iDeath += m_BattleStatistics.Death;
 }
 
 void Character::ApplyToDatabase() {
@@ -208,36 +257,60 @@ void Character::LoadFriendList(ChannelLobby* channelLobby) {
 void Character::SetInfo(const CharacterInfo& info, bool dirty /*= true*/) {
 	m_iPrimaryKey = info.PrimaryKey;
 	m_szName = info.Name;
-	m_iWin = info.Win;
-	m_iLose = info.Lose;
-	m_iKill = info.Kill;
-	m_iDeath = info.Death;
+	m_iWin = info.WinCount;
+	m_iLose = info.LoseCount;
+	m_iKill = info.KillCount;
+	m_iDeath = info.DeathCount;
 	m_iMoney = info.Money;
 	m_bDirty = dirty;
+}
+
+void Character::SetMove(const TankMove& move) {
+	m_Move = move;
 }
 
 void Character::GetInfo(JCORE_REF_OUT CharacterInfo& info) {
 	info.AccessId = m_iAccessId;
 	info.PrimaryKey = m_iPrimaryKey;
 	info.Name = m_szName;
-	info.Win = m_iWin;
-	info.Lose = m_iLose;
-	info.Kill = m_iKill;
-	info.Death = m_iDeath;
+	info.WinCount = m_iWin;
+	info.LoseCount = m_iLose;
+	info.KillCount = m_iKill;
+	info.DeathCount = m_iDeath;
 	info.Money = m_iMoney;
 	info.LoggedIn = true;
 }
 
-void Character::GetRoomInfo(RoomCharacterInfo& info) {
+void Character::GetRoomInfo(JCORE_REF_OUT RoomCharacterInfo& info) {
 	GetInfo(info);
-	info.Ready = m_bReady;
-	info.Death = m_bDeath;
+	info.IsReady = m_bReady;
+	info.IsDeath = m_bDeath;
 }
 
 void Character::GetFriendInfo(JCORE_REF_OUT FriendCharacterInfo& info) {
 	info.PrimaryKey = m_iPrimaryKey;
 	info.Name = m_szName;
 	info.LoggedIn = true;
+}
+
+void Character::GetBattleStatisticsNet(JCORE_REF_OUT BattleStatisticsNet& info) {
+	info.CharacterPrimaryKey = m_iPrimaryKey;
+	info.Kill = m_BattleStatistics.Kill;
+	info.Death = m_BattleStatistics.Death;
+	info.FireCount = m_BattleStatistics.FireCount;
+	info.LastKillTime = m_BattleStatistics.LastKillTime;
+}
+
+void Character::GetMoveNet(JCORE_REF_OUT TankMoveNet& move) {
+	move.CharacterPrimaryKey = m_iPrimaryKey;
+	move.X = m_Move.X;
+	move.Y = m_Move.Y ;
+	move.MoveSpeed = m_Move.MoveSpeed ;
+	move.MoveDir = m_Move.MoveDir ;
+	move.RotationDir = m_Move.RotationDir ;
+	move.Rotation = m_Move.Rotation ;
+	move.RotationSpeed = m_Move.RotationSpeed ;
+
 }
 
 String Character::ToString() { return StringUtil::Format("%s(%d)", m_szName.Source(), m_iPrimaryKey); }

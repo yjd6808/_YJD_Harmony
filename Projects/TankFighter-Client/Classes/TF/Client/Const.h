@@ -18,6 +18,8 @@ namespace Resource
 	extern const char* FontName;
 	extern const char* WhiteRectFileName;			// 흰색 사각형 판때기
 	extern const char* TransparentRectFileName;		// 투명 사각형 판때기
+	extern const char* WhiteCircleFileName;
+	extern const char* BigWhiteCircleFileName;
 }
 
 namespace Ping
@@ -29,6 +31,14 @@ namespace Layer
 {
 	extern const int ID_Grid;
 	extern const int ID_UI;
+}
+
+namespace String
+{
+	extern const char* PlayWaitLeftTimeFormat;
+	extern const char* PlayingLeftTimeFormat;
+	extern const char* EndWaitLeftTimeFormat;
+	extern const char* RevivalLeftTimeFormat;
 }
 
 namespace Window

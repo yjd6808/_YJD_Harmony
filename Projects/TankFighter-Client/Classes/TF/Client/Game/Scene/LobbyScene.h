@@ -33,6 +33,7 @@ public:
 	void onClickedTerminateGameButton(TextButton* btn);				// 게임 종료 
 	void onClickedSelectChannelButton(TextButton* btn);				// 채널 선택
 	void onClickedSelectCharacterButton(TextButton* btn);			// 캐릭터 선택
+	void onClickedLogoutButton(TextButton* btn);					// 로그아웃
 	void onClickedJoinRoomButton(TextButton* btn);					// 방 참가
 	void onClickedFriendListButton(TextButton* btn);				// 친구 목록 클릭시
 	void onClickedAddFriendButton(TextButton* btn);					// 친구 추가
@@ -62,5 +63,6 @@ private:
 	TextButton* m_pTerminateGameButton;
 	TextButton* m_pSelectChannelButton;
 	TextButton* m_pSelectCharacterButton;
+	TextButton* m_pLogoutButton;
 	TextButton* m_pNyInfoButton;
 };

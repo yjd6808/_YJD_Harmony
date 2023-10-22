@@ -14,15 +14,18 @@
 
 struct TankMove
 {
-	int CharacterUID = Const::InvalidValue;
 	float X;
 	float Y;
 	float MoveSpeed;
 	MoveDirection MoveDir;
-	
 	RotateDirection RotationDir;
 	float Rotation;
 	float RotationSpeed;
+};
+
+struct TankMoveNet : TankMove
+{
+	int CharacterPrimaryKey = Const::InvalidValue;
 };
 
 struct CharacterInfo
@@ -30,10 +33,10 @@ struct CharacterInfo
 	int AccessId = Const::InvalidValue;
 	int PrimaryKey = Const::InvalidValue;
 	JCore::StaticString<Const::Length::Name> Name;
-	int Win{};
-	int Lose{};
-	int Kill{};
-	int Death{};
+	int WinCount{};
+	int LoseCount{};
+	int KillCount{};
+	int DeathCount{};
 	int Money{};
 	bool LoggedIn{};
 };
@@ -47,7 +50,7 @@ struct FriendCharacterInfo
 
 struct RoomCharacterInfo : CharacterInfo
 {
-	bool Ready;
+	bool IsReady;
 	bool IsDeath;
 };
 
@@ -80,23 +83,32 @@ struct RoomInfo
 	}
 };
 
-struct BattleInfo
+struct BattleStatistics
 {
-	int CharacterUID = Const::InvalidValue;
 	int Kill;
 	int Death;
 	int FireCount;
+	JCore::DateTime LastKillTime;
+};
+
+struct BattleStatisticsNet : BattleStatistics
+{
+	int CharacterPrimaryKey = Const::InvalidValue;
 };
 
 struct BulletInfo
 {
-	int CharacterUID = Const::InvalidValue;		// 발사한놈
 	float X;
 	float Y;
 	float Rotation;
 	float Diameter;
 	float MoveSpeed;
 	Int32U Color;
+};
+
+struct BulletInfoNet : BulletInfo
+{
+	int CharacterPrimaryKey = Const::InvalidValue;		// 발사한놈
 };
 
 #pragma warning(pop)

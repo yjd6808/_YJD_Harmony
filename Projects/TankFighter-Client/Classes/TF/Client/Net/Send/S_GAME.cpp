@@ -18,6 +18,11 @@ void S_GAME::SEND_CS_Login(const String& id, const String& pass) {
 	sending.Cmd.Password = pass;
 }
 
+void S_GAME::SEND_CS_Logout() {
+	auto sending = SendBegin<CS_Logout>();
+	sending.Cmd.AccountPrimaryKey = Core::GameClient->GetAccountPrimaryKey();
+}
+
 void S_GAME::SEND_CS_Register(const JCore::String& id, const JCore::String& pass) {
 	auto sending = SendBegin<CS_Register>();
 	sending.Cmd.Id = id;
@@ -116,7 +121,7 @@ bool S_GAME::SEND_CS_LoadRoomInfo(int roomAccessId) {
 
 void S_GAME::SEND_CS_RoomGameStart() {
 	auto sending = SendBegin<CS_RoomGameStart>();
-	sending.Cmd.CharacterPrimaryKey = Core::GameClient->GetChannelPrimaryKey();
+	sending.Cmd.CharacterPrimaryKey = Core::GameClient->GetCharacterPrimaryKey();
 	sending.Cmd.RoomAccessId = Core::GameClient->GetRoomAccessId();
 }
 
@@ -137,10 +142,31 @@ void S_GAME::SEND_CS_RoomLeave() {
 	sending.Cmd.RoomAccessId = Core::GameClient->GetRoomAccessId();
 }
 
+bool S_GAME::SEND_CS_LoadBattleFieldInfo(int roomAccessId) {
+	auto sending = SendBegin<CS_LoadBattleFieldInfo>();
+	sending.Cmd.RoomAccessId = roomAccessId;
+	return SendEndExplicit(sending);
+}
+
+void S_GAME::SEND_CS_BattleFieldFire(const BulletInfoNet& bulletInfo) {
+	auto sending = SendBegin<CS_BattleFieldFire>();
+	sending.Cmd.BulletInfo = bulletInfo;
+}
+
+void S_GAME::SEND_CS_BattleFieldMove(const TankMoveNet& tankMove) {
+	auto sending = SendBegin<CS_BattleFieldMove>();
+	sending.Cmd.Move = tankMove;
+}
+
 void S_GAME::SEND_CS_ChatMessage(const char* msg) {
 	int iMsgLen = StringUtil::LengthWithNull(msg);
 	auto sending = SendBegin<CS_ChatMessage>(iMsgLen);
 	sending.Cmd.Message.SetStringUnsafe(msg);
 	sending.Cmd.PlayerState = Core::GameClient->GetPlayerState();
+}
+
+void S_GAME::SEND_CS_BattleFieldDeath(int killerCharacterPrimaryKey) {
+	auto sending = SendBegin<CS_BattleFieldDeath>();
+	sending.Cmd.KillerCharacterPrimaryKey = killerCharacterPrimaryKey;
 }
 

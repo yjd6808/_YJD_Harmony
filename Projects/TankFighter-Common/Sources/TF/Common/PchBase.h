@@ -82,6 +82,7 @@
 namespace Core
 {
 	inline JNetwork::CommandNameDictionary CommandNameMap;
+	inline JCore::HashSet<int> FilteredCommandSet;
 }
 
 void InitializeCommon();

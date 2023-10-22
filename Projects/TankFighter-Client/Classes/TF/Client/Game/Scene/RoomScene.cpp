@@ -136,12 +136,12 @@ bool RoomScene::init() {
 
 void RoomScene::onClickedGameStartButton(TextButton* btn) {
 
-	if (m_pRoom->IsBattleEndingState()) {
+	if (m_pRoom->isBattleEndingState()) {
 		PopUp::createInParent("게임이 거의 끝나갑니다. 기다려주세요!!", this, false);
 		return;
 	}
 
-	if (m_pRoom->IsBattlePlayingState()) {
+	if (m_pRoom->isBattlePlayingState()) {
 		PopUp::createInParent("이미 게임이 진행중입니다. 난입하시겠습니까?", this, false,
 			[]() { S_GAME::SEND_CS_RoomGameIntrude(); },				// 수락
 			[]() {});													// 거절
@@ -164,9 +164,12 @@ void RoomScene::onClickedGameStartButton(TextButton* btn) {
 		return;
 	}
 
-	if (iReadyCount == roomInfo.PlayerCount - 1) {
-		S_GAME::SEND_CS_RoomGameStart();
+	if (iReadyCount < roomInfo.PlayerCount) {
+		PopUp::createInParent("모든 플레이어가 준비되지 않았습니다.", this, false);
+		return;
 	}
+
+	S_GAME::SEND_CS_RoomGameStart();
 }
 
 void RoomScene::onClickedGameReadyButton(TextButton* btn) {
@@ -234,9 +237,9 @@ void RoomScene::refreshRoomMemberReadyState(int memberIndex) {
 
 	if (pInfo->PrimaryKey != iHostCharacterPrimaryKey) {
 		if (iMyCharacterPrimaryKey == pInfo->PrimaryKey)
-			m_pMarkSlot[memberIndex]->setText(pInfo->Ready ? "(나) 준비 완료" : "(나)");
+			m_pMarkSlot[memberIndex]->setText(pInfo->IsReady ? "(나) 준비 완료" : "(나)");
 		else
-			m_pMarkSlot[memberIndex]->setText(pInfo->Ready ? "준비 완료" : "");
+			m_pMarkSlot[memberIndex]->setText(pInfo->IsReady ? "준비 완료" : "");
 	} else {
 		if (iMyCharacterPrimaryKey == pInfo->PrimaryKey)
 			m_pMarkSlot[memberIndex]->setText("(나) 방장");
@@ -249,10 +252,10 @@ void RoomScene::refreshRoomMemberInfo(int memberIndex) {
 	RoomCharacterInfo* pInfo = m_pRoom->getRoomMemberByIndex(memberIndex);
 	m_pSlot[memberIndex]->setText(StringUtils::format("%s\n%d킬 %d데스\n%d승리 %d패배\n%d 골드",
 		pInfo->Name.Source,
-		pInfo->Kill,
-		pInfo->Death,
-		pInfo->Win,
-		pInfo->Lose,
+		pInfo->KillCount,
+		pInfo->DeathCount,
+		pInfo->WinCount,
+		pInfo->LoseCount,
 		pInfo->Money
 	));
 }

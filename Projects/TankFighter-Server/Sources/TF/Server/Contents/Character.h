@@ -27,24 +27,38 @@ public:
 	void OnPopped() override;
 	void OnPushed() override;
 
+	void OnUpdate(const JCore::TimeSpan& elapsed);
+	void UpdateRevivalTime(const JCore::TimeSpan& elapsed);
+
 	Player* GetPlayer() const { return m_pPlayer; }
 	int GetPrimaryKey() const { return m_iPrimaryKey; }
 	const JCore::String& GetName() const { return m_szName; }
-	int GetWin() const { return m_iWin; }
-	int GetLose() const { return m_iLose; }
-	int GetKill() const { return m_iKill; }
+	int GetWinCount() const { return m_iWin; }
+	int GetLoseCount() const { return m_iLose; }
+	int GetKillCount() const { return m_iKill; }
+	int GetBattleKillCount() const { return m_BattleStatistics.Kill; }
+	int GetBattleDeathCount() const { return m_BattleStatistics.Death; }
+	JCore::DateTime GetBattleLastKillTime() const { return m_BattleStatistics.LastKillTime; }
 	bool IsDeath() const { return m_iDeath; }
 	bool IsReady() const { return m_bReady; }
 
+	void ClearBattleInfo();
+
 	void SetPlayer(Player* player) { m_pPlayer = player; }
+	void SetRoom(Room* room) { m_pRoom = room; }
 	void SetDeath(bool death);
 	void SetReady(bool ready);
+	void SetRevivalTime(Int64 tick);
 
-	void AddWin(int win, bool dirty = true);
-	void AddLose(int lose, bool dirty = true);
-	void AddDeath(int death, bool dirty = true);
-	void AddKill(int kill, bool dirty = true);
+	void AddWinCount(int win, bool dirty = true);
+	void AddLoseCount(int lose, bool dirty = true);
+	void AddDeathCount(int death, bool dirty = true);
+	void AddKillCount(int kill, bool dirty = true);
+	void AddBattleFireCount(int count) { m_BattleStatistics.FireCount += count; }
+	void AddBattleDeathCount(int count) { m_BattleStatistics.Death += count; }
+	void AddBattleKillCount(int count);
 
+	void ApplyBattleStatisticsToInfo();
 	void ApplyToDatabase();
 
 	void LoadFriendList(ChannelLobby* channelLobby);
@@ -57,14 +71,19 @@ public:
 	void NotifyLoginStateToFriends(bool login);
 	
 	void SetInfo(const CharacterInfo& info, bool dirty = true);
+	void SetMove(const TankMove& move);
+
 	void GetInfo(JCORE_REF_OUT CharacterInfo& info);
 	void GetRoomInfo(JCORE_REF_OUT RoomCharacterInfo& info);
 	void GetFriendInfo(JCORE_REF_OUT FriendCharacterInfo& info);
+	void GetBattleStatisticsNet(JCORE_REF_OUT BattleStatisticsNet& info);
+	void GetMoveNet(JCORE_REF_OUT TankMoveNet& move);
 
 	JCore::String ToString();
 	
 private:
 	Player* m_pPlayer;
+	Room* m_pRoom;
 
 	mutable JCore::NormalLock m_FriendLock;
 	JCore::Vector<FriendCharacterInfo> m_vFriendList;
@@ -80,6 +99,11 @@ private:
 	JCore::AtomicInt m_iKill;
 	JCore::AtomicInt m_iMoney;
 
+	// 배틀필드관련
+	BattleStatistics m_BattleStatistics;
+	TankMove m_Move;
+
+	JCore::TimeSpan m_RevivalTime;
 	bool m_bReady;				// 방 레디 여부
 	bool m_bDeath;				// 사망여부
 	bool m_bDirty;

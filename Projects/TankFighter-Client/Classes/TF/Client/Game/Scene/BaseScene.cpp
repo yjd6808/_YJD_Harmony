@@ -43,6 +43,7 @@ bool BaseScene::init() {
 
 	EventListenerKeyboard* keyboardListener = EventListenerKeyboard::create();
 	keyboardListener->onKeyPressed = CC_CALLBACK_2(BaseScene::onKeyPressed, this);
+	keyboardListener->onKeyReleased = CC_CALLBACK_2(BaseScene::onKeyReleased, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 
 	this->scheduleUpdate();
@@ -64,8 +65,29 @@ void BaseScene::update(float delta) {
 	}
 }
 
+struct TT
+{
+	int item1;
+	JCore::String item2;
+};
+
+static HashMap<EventKeyboard::KeyCode, bool> m_KeyPressedMap;
+static LinkedList<TT> code;
 
 void BaseScene::onKeyPressed(EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
+
+	if (keyCode == EventKeyboard::KeyCode::KEY_ENTER) {
+		code.ForEach([](const TT& tuple) { _LogDebug_("%d:%s", tuple.item1, tuple.item2.Source()); });
+		m_KeyPressedMap.Clear();
+		_LogDebug_("성공");
+		return;
+	}
+
+	if (m_KeyPressedMap.Insert(keyCode, true)) {
+		code.PushBack({ int(keyCode), "IN" });
+	}
+
+
 	switch (keyCode) {
 	case EventKeyboard::KeyCode::KEY_ESCAPE:
 		Director::getInstance()->setDisplayStats(!Director::getInstance()->isDisplayStats());
@@ -75,5 +97,11 @@ void BaseScene::onKeyPressed(EventKeyboard::KeyCode keyCode, cocos2d::Event* eve
 		if (m_pNetInfo)
 			m_pNetInfo->setVisible(!m_pNetInfo->isVisible());
 		break;
+	}
+}
+
+void BaseScene::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
+	if (m_KeyPressedMap.Remove(keyCode)) {
+		code.PushBack({ int(keyCode), "OUT" });
 	}
 }

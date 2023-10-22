@@ -15,7 +15,6 @@ NS_QRY_BEGIN
 // ==================================================================
 // SelectAccountInfoList
 // ==================================================================
-
 QRY_SELECT_STATEMENT_BEGIN(SelectAccountInfoList)
 static constexpr const char* Script = QRY_SCRIPT(
 	select c_account_id, c_id, c_pass, c_created, c_logined 
@@ -46,7 +45,6 @@ REGISTER_QRY_STRUCT
 // ==================================================================
 // SelectAccountInfo
 // ==================================================================
-
 QRY_SELECT_STATEMENT_BEGIN(SelectAccountInfo)
 static constexpr const char* Script = QRY_SCRIPT(
 	select c_uid, c_id, c_pass 
@@ -72,7 +70,6 @@ REGISTER_QRY_STRUCT
 // ==================================================================
 // InsertAccountInfo
 // ==================================================================
-
 QRY_INSERT_STATEMENT_BEGIN(InsertAccountInfo)
 static constexpr const char* Script = QRY_SCRIPT(
 	insert into t_account (c_id, c_pass) values (?, md5(?))
@@ -83,7 +80,6 @@ QRY_INSERT_STATEMENT_END
 // ==================================================================
 // UpdateLoginDate
 // ==================================================================
-
 QRY_UPDATE_STATEMENT_BEGIN(UpdateLoginDate)
 static constexpr const char* Script = QRY_SCRIPT(
 	update t_account set c_last_login_time = ? where c_uid = ?
@@ -94,7 +90,6 @@ QRY_UPDATE_STATEMENT_END
 // ==================================================================
 // CheckAccountIdExist
 // ==================================================================
-
 // mysql에서 행이 존재하는지 체크하는 가장 빠른 방법
 // https://stackoverflow.com/questions/1676551/best-way-to-test-if-a-row-exists-in-a-mysql-table
 QRY_SELECT_STATEMENT_BEGIN(CheckAccountIdExist)
@@ -118,7 +113,6 @@ REGISTER_QRY_STRUCT
 // ==================================================================
 // SelectChannelInfo
 // ==================================================================
-
 QRY_SELECT_STATEMENT_BEGIN(SelectChannelInfo)
 static constexpr const char* Script = QRY_SCRIPT(
 	select * 
@@ -145,7 +139,6 @@ REGISTER_QRY_STRUCT
 // ==================================================================
 // SelectCharacterInfoList
 // ==================================================================
-
 QRY_SELECT_STATEMENT_BEGIN(SelectCharacterInfoList)
 static constexpr const char* Script = QRY_SCRIPT(
 	select c_uid, c_name, c_win, c_lose, c_kill, c_death, c_money 
@@ -179,7 +172,6 @@ REGISTER_QRY_STRUCT
 // ==================================================================
 // CheckCharacterNameExist
 // ==================================================================
-
 QRY_SELECT_STATEMENT_BEGIN(CheckCharacterNameExist)
 static constexpr const char* Script = QRY_SCRIPT(
 	select c_uid 
@@ -201,7 +193,6 @@ REGISTER_QRY_STRUCT
 // ==================================================================
 // CreateCharacter
 // ==================================================================
-
 QRY_INSERT_STATEMENT_BEGIN(CreateCharacter)
 static constexpr const char* Script = QRY_SCRIPT(
 	insert into t_character (c_account_uid, c_channel_uid, c_name, c_win, c_lose, c_kill, c_death, c_money) 
@@ -212,7 +203,6 @@ QRY_INSERT_STATEMENT_END
 // ==================================================================
 // DeleteCharacter
 // ==================================================================
-
 QRY_DELETE_STATEMENT_BEGIN(DeleteCharacter)
 static constexpr const char* Script = QRY_SCRIPT(
 	delete from t_character 
@@ -224,7 +214,6 @@ QRY_DELETE_STATEMENT_END
 // ==================================================================
 // SelectCharacterInfo
 // ==================================================================
-
 QRY_SELECT_STATEMENT_BEGIN(SelectCharacterInfo)
 static constexpr const char* Script = QRY_SCRIPT(
 	select c_uid, c_name, c_win, c_lose, c_kill, c_death, c_money 
@@ -259,7 +248,6 @@ REGISTER_QRY_STRUCT
 // ==================================================================
 // CheckFriend
 // ==================================================================
-
 QRY_SELECT_STATEMENT_BEGIN(CheckFriend)
 static constexpr const char* Script = QRY_SCRIPT(
 	select count(*) as c_count 
@@ -284,7 +272,6 @@ REGISTER_QRY_STRUCT
 // ==================================================================
 // AddFriendship
 // ==================================================================
-
 QRY_INSERT_STATEMENT_BEGIN(AddFriendship)
 static constexpr const char* Script = QRY_SCRIPT(
 	insert into t_friendship (c_req_character_uid, c_ack_character_uid) 
@@ -296,7 +283,6 @@ QRY_INSERT_STATEMENT_END
 // ==================================================================
 // SelectFriendCharacterInfoList
 // ==================================================================
-
 QRY_SELECT_STATEMENT_BEGIN(SelectFriendCharacterInfoList)
 static constexpr const char* Script = QRY_SCRIPT(
 	select c_uid, c_name
@@ -324,7 +310,6 @@ REGISTER_QRY_STRUCT
 // ==================================================================
 // SelectFriendCharacterInfo
 // ==================================================================
-
 QRY_SELECT_STATEMENT_BEGIN(SelectFriendCharacterInfo)
 static constexpr const char* Script = QRY_SCRIPT(
 	select c_uid, c_name, c_win, c_lose, c_kill, c_death, c_money
@@ -363,13 +348,54 @@ REGISTER_QRY_STRUCT
 // ==================================================================
 // DeleteFriend
 // ==================================================================
-
 QRY_DELETE_STATEMENT_BEGIN(DeleteFriend)
 static constexpr const char* Script = QRY_SCRIPT(
 	delete from t_friendship 
 	 where (c_req_character_uid = ? and c_ack_character_uid = ?) or (c_req_character_uid = ? and c_ack_character_uid = ?)
 )
 QRY_DELETE_STATEMENT_END
+
+// ==================================================================
+// AddKillCount
+// ==================================================================
+QRY_UPDATE_STATEMENT_BEGIN(AddKillCount)
+static constexpr const char* Script = QRY_SCRIPT(
+	update t_character set c_kill = c_kill + ?
+where c_uid = ?
+)
+QRY_UPDATE_STATEMENT_END
+
+// ==================================================================
+// AddDeathCount
+// ==================================================================
+QRY_UPDATE_STATEMENT_BEGIN(AddDeathCount)
+static constexpr const char* Script = QRY_SCRIPT(
+	update t_character set c_death = c_death + ?
+	 where c_uid = ?
+)
+QRY_UPDATE_STATEMENT_END
+
+
+// ==================================================================
+// AddWinCount
+// ==================================================================
+QRY_UPDATE_STATEMENT_BEGIN(AddWinCount)
+static constexpr const char* Script = QRY_SCRIPT(
+	update t_character set c_win = c_win + ? 
+     where c_uid = ?
+)
+QRY_UPDATE_STATEMENT_END
+
+// ==================================================================
+// AddLoseCount
+// ==================================================================
+QRY_UPDATE_STATEMENT_BEGIN(AddLoseCount)
+static constexpr const char* Script = QRY_SCRIPT(
+	update t_character set c_lose = c_lose + ? 
+     where c_uid = ?
+)
+QRY_UPDATE_STATEMENT_END
+
 
 NS_QRY_END
 

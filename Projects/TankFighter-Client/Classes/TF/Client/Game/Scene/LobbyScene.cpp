@@ -31,6 +31,7 @@ LobbyScene::LobbyScene()
 	, m_pTerminateGameButton(nullptr)
 	, m_pSelectChannelButton(nullptr)
 	, m_pSelectCharacterButton(nullptr)
+	, m_pLogoutButton(nullptr)
 	, m_pNyInfoButton(nullptr)
 {}
 
@@ -164,6 +165,14 @@ bool LobbyScene::init() {
 	m_pSelectCharacterButton->setClickEvent(CC_CALLBACK_1(LobbyScene::onClickedSelectCharacterButton, this));
 	m_pUILayer->addChild(m_pSelectCharacterButton);
 
+	m_pLogoutButton = TextButton::create(200, 50, "로그아웃", 16);
+	m_pLogoutButton->setBackgroundColor(ColorList::Beaublue_v);
+	m_pLogoutButton->setFontColor(ColorList::Black_v);
+	m_pLogoutButton->setAnchorPoint(Vec2::ZERO);
+	m_pLogoutButton->setPosition({ 800, 100 });
+	m_pLogoutButton->setClickEvent(CC_CALLBACK_1(LobbyScene::onClickedLogoutButton, this));
+	m_pUILayer->addChild(m_pLogoutButton);
+
 	m_pNyInfoButton = TextButton::create(200, 100, "내 정보", 16);
 	m_pNyInfoButton->setBackgroundColor(ColorList::Blackcoral_v);
 	m_pNyInfoButton->setFontColor(ColorList::BlackShadows_v);
@@ -222,6 +231,10 @@ void LobbyScene::onClickedSelectChannelButton(TextButton* btn) {
 
 void LobbyScene::onClickedSelectCharacterButton(TextButton* btn) {
 	S_GAME::SEND_CS_LeaveLobby();
+}
+
+void LobbyScene::onClickedLogoutButton(TextButton* btn) {
+	S_GAME::SEND_CS_Logout();
 }
 
 // 방 참가
@@ -286,10 +299,10 @@ void LobbyScene::refreshPlayerList(CharacterInfo* characterList, int count) {
 void LobbyScene::refreshCharacterInfo(const CharacterInfo& info) {
 	m_pNyInfoButton->setText(StringUtils::format("%s\n%d킬 %d데스\n%d승리 %d패배\n%d 골드",
 		info.Name.Source,
-		info.Kill,
-		info.Death,
-		info.Win,
-		info.Lose,
+		info.KillCount,
+		info.DeathCount,
+		info.WinCount,
+		info.LoseCount,
 		info.Money
 	));
 }

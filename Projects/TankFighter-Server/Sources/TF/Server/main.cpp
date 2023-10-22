@@ -15,6 +15,7 @@ USING_NS_JNET;
 
 int main() {
 	//_CrtSetBreakAlloc(1556);
+	Random::EngineInitialize();
 	Winsock::Initialize(2, 2);
 	InitializeDefaultLogger();
 	InitializeNetLogger();

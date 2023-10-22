@@ -9,6 +9,7 @@
 #include "Pch.h"
 #include "L_GAME.h"
 
+#include <TF/Common/Command.h>
 #include <TF/Client/Net/Connection/C_GAME.h>
 
 USING_NS_CC;
@@ -36,7 +37,11 @@ void L_GAME::OnDisconnected(Session* session) {
 }
 
 void L_GAME::OnSent(Session* session, ISendPacket* sentPacket, Int32UL sentBytes) {
-	sentPacket->ForEach([](ICommand* cmd) { _LogInfo_("%s(%d) 송신", Core::CommandNameMap.Get(cmd->GetCommand()), cmd->GetCommand()); });
+	sentPacket->ForEach([](ICommand* cmd) {
+		Cmd_t uiCmd = cmd->GetCommand();
+		if (Core::FilteredCommandSet.Exist(uiCmd)) return;
+		_LogInfo_("%s(%d) 송신", Core::CommandNameMap.Get(uiCmd), uiCmd);
+	});
 }
 
 void L_GAME::OnReceived(Session* session, ICommand* recvCmd) {
@@ -47,6 +52,7 @@ void L_GAME::OnReceived(Session* session, ICommand* recvCmd) {
 	}
 
 	const Cmd_t uiCmdId = recvCmd->GetCommand();
+	if (Core::FilteredCommandSet.Exist(uiCmdId)) return;
 	_LogDebug_("%s(%d) 커맨드 수신", Core::CommandNameMap.Get(uiCmdId), uiCmdId);
 }
 

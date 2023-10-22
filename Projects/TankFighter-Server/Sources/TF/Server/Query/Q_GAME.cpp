@@ -111,3 +111,23 @@ bool Q_GAME::DeleteFriend(int lhsCharacterPrimaryKey, int rhsCharacterPrimaryKey
 
 	return IsSuccess;
 }
+
+void Q_GAME::AddKillCount(int characterPrimaryKey, int count) {
+	Qry::UpdateResult result;
+	Qry::AddKillCount::Execute<THelper>(Core::GameDB, result, count, characterPrimaryKey);
+}
+
+void Q_GAME::AddDeathCount(int characterPrimaryKey, int count) {
+	Qry::UpdateResult result;
+	Qry::AddDeathCount::Execute<THelper>(Core::GameDB, result, count, characterPrimaryKey);
+}
+
+void Q_GAME::AddWinCount(int characterPrimaryKey, int count) {
+	Qry::UpdateResult result;
+	Qry::AddWinCount::Execute<THelper>(Core::GameDB, result, count, characterPrimaryKey);
+}
+
+void Q_GAME::AddLoseCount(int characterPrimaryKey, int count) {
+	Qry::UpdateResult result;
+	Qry::AddLoseCount::Execute<THelper>(Core::GameDB, result, count, characterPrimaryKey);
+}

@@ -29,5 +29,11 @@ struct Q_GAME : Qry::QryHelper<Q_GAME>
 	static Qry::CheckFriendResult CheckFriend(int lhsCharacterPrimaryKey, int rhsCharacterPrimaryKey);
 	static bool AddFriendship(int requestCharacterPrimaryKey, int acceptCharacterPrimaryKey);
 	static bool DeleteFriend(int lhsCharacterPrimaryKey, int rhsCharacterPrimaryKey, JCORE_OUT int* deletedCount = nullptr);
+
+	static void AddKillCount(int characterPrimaryKey, int count);
+	static void AddDeathCount(int characterPrimaryKey, int count);
+	static void AddWinCount(int characterPrimaryKey, int count);
+	static void AddLoseCount(int characterPrimaryKey, int count);
+
 };
 

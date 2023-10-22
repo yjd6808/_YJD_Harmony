@@ -13,6 +13,7 @@
 struct S_GAME : JNetwork::SendHelper<S_GAME>
 {
 	static void SEND_CS_Login(const JCore::String& id, const JCore::String& pass);
+	static void SEND_CS_Logout();
 	static void SEND_CS_Register(const JCore::String& id, const JCore::String& pass);
 	static bool SEND_CS_LoadChannelInfo();
 	static void SEND_CS_JoinChannel(int channelPrimaryKey);
@@ -33,29 +34,12 @@ struct S_GAME : JNetwork::SendHelper<S_GAME>
 	static void SEND_CS_RoomGameIntrude();
 	static void SEND_CS_RoomGameReady(bool ready);
 	static void SEND_CS_RoomLeave();
-	// static void SEND_CS_BattleFieldLoad();
-	// static void SEND_CS_BattileFieldTankMove();
-	// static void SEND_CS_BattileFieldTankUpdate();
-	// static void SEND_CS_BattleFieldPlayWaitEnd();
-	// static void SEND_CS_BattleFieldPlayingEnd();
-	// static void SEND_CS_BattleFieldEndWaitEnd();
-	// static void SEND_CS_BattleFieldLeave();
+	static bool SEND_CS_LoadBattleFieldInfo(int roomAccessId);
+	static void SEND_CS_BattleFieldFire(const BulletInfoNet& bulletInfo);
+	static void SEND_CS_BattleFieldMove(const TankMoveNet& tankMove);
+	static void SEND_CS_BattleFieldDeath(int killerCharacterPrimaryKey);
 	static void SEND_CS_ChatMessage(const char* msg);
 	
-
-
-
-	// static void SEND_CS_BattleFieldFire();
-	// static void SEND_CS_BattleFieldDeath();
-	// static void SEND_CS_BattleFieldRevival();
-	// static void SEND_CS_BattleFieldStatisticsUpdate();
-	// static void SEND_CS_TcpRTT();
-
-
-
-
-
-
 
 
 };

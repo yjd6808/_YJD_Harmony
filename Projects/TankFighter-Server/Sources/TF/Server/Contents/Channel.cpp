@@ -16,20 +16,20 @@ USING_NS_JC;
 USING_NS_JNET;
 
 Channel::Channel()
-	: m_iPrimaryKey(-1)
+	: m_bClosed(false)
+	, m_iPrimaryKey(-1)
 	, m_szName("Empty")
 	, m_iMaxPlayerCount(0)
 	, m_dtGeneratedTime(0)
-	, m_bClosed(false)
 {}
 
 Channel::Channel(int uid, String name, int maxPlayerCount, DateTime generatedTime)
-	: m_iPrimaryKey(uid)
+	: m_hsPlayerSet(maxPlayerCount)
+	, m_bClosed(false)
+	, m_iPrimaryKey(uid)
 	, m_szName(name)
 	, m_iMaxPlayerCount(maxPlayerCount)
 	, m_dtGeneratedTime(generatedTime)
-	, m_hsPlayerSet(maxPlayerCount)
-	, m_bClosed(false)
 {}
 
 ChannelInfo Channel::GetInfo() {
@@ -45,6 +45,14 @@ ChannelInfo Channel::GetInfo() {
 	
 
 	return info;
+}
+
+bool Channel::StartBattle(Room* room) {
+	return m_BattleFieldRoutine.Start(room);
+}
+
+void Channel::EndBattle(Room* room) {
+	m_BattleFieldRoutine.End(room);
 }
 
 int Channel::Join(Player* player) {
@@ -112,7 +120,7 @@ void Channel::Open() {
 void Channel::OnUpdate(const TimeSpan& elapsed) {
 	static Vector<Player*> s_vUpdatesPlayers;
 	static auto fnUpdate = [&elapsed](Player* p) { p->OnUpdate(elapsed); };
-	
+
 
 	// 플레이어 업데이트와 플레이어 추가/삭제 동기화를 분리하기 위함.
 	// 업데이트 시간이 오래 걸릴경우 채널에 플레이어를 추가/삭제시 병목이 생길 우려가 있기 떄문
@@ -123,6 +131,8 @@ void Channel::OnUpdate(const TimeSpan& elapsed) {
 
 	s_vUpdatesPlayers.ForEach(fnUpdate);
 	s_vUpdatesPlayers.Clear();
+
+	m_BattleFieldRoutine.OnUpdate(elapsed);
 }
 
 void Channel::BroadcastPacket(ISendPacket* packet, int state) {

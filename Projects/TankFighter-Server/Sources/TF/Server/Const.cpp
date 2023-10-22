@@ -23,6 +23,7 @@ namespace Broadcast
 	namespace Room
 	{
 		const int StateAny = 0;
+		const int StateBattle = 1;
 	}
 
 	namespace BattleField

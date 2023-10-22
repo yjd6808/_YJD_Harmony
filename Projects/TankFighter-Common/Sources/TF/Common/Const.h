@@ -50,12 +50,22 @@ namespace Map
 
 namespace Tank
 {
+	extern const float BodyWidth;
+	extern const float BodyHeight;
 	extern const float MoveSpeed;
 	extern const float RotationSpeed;
 	extern const float FireDelay;
 	extern const float BulletSpeed;
 }
 
+namespace BattleField
+{
+	// 모두 초단위
+	extern const float PlayWaitTime;
+	extern const float PayingTime;
+	extern const float EndWaitTime;
+	extern const float RevivalTime;
+}
 
 
 namespace AccessibleObject

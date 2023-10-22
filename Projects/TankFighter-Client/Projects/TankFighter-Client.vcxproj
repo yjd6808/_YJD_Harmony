@@ -24,12 +24,16 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Game\Contents\BattleField.cpp" />
+    <ClCompile Include="..\Classes\TF\Client\Game\Contents\Bullet.cpp" />
     <ClCompile Include="..\Classes\TF\Client\Game\Contents\Room.cpp" />
+    <ClCompile Include="..\Classes\TF\Client\Game\Contents\Tank.cpp" />
     <ClCompile Include="..\Classes\TF\Client\Game\Layer\GridLayer.cpp" />
     <ClCompile Include="..\Classes\TF\Client\Game\Scene\BaseScene.cpp">
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Game\Scene\BattleFieldScene.cpp" />
     <ClCompile Include="..\Classes\TF\Client\Game\Scene\ChannelScene.cpp" />
     <ClCompile Include="..\Classes\TF\Client\Game\Scene\CharacterSelectScene.cpp" />
     <ClCompile Include="..\Classes\TF\Client\Game\Scene\LobbyScene.cpp" />
@@ -82,12 +86,16 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\Contents\BattleField.h" />
+    <ClInclude Include="..\Classes\TF\Client\Game\Contents\Bullet.h" />
     <ClInclude Include="..\Classes\TF\Client\Game\Contents\Room.h" />
+    <ClInclude Include="..\Classes\TF\Client\Game\Contents\Tank.h" />
     <ClInclude Include="..\Classes\TF\Client\Game\Layer\GridLayer.h" />
     <ClInclude Include="..\Classes\TF\Client\Game\Scene\BaseScene.h">
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\Scene\BattleFieldScene.h" />
     <ClInclude Include="..\Classes\TF\Client\Game\Scene\ChannelScene.h" />
     <ClInclude Include="..\Classes\TF\Client\Game\Scene\CharacterSelectScene.h" />
     <ClInclude Include="..\Classes\TF\Client\Game\Scene\LobbyScene.h" />

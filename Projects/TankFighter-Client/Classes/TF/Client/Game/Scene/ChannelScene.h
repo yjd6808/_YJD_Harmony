@@ -25,6 +25,12 @@ public:
 	void onEnterTransitionDidFinish() override;
 
 	void refreshChannelList(ChannelInfo* channelList, int count);
-	void onChannelBtnClick(TextButton* textButton);
+
+	void onClickedChannelButton(TextButton* textButton);
+	void onClickedLogoutButton(TextButton* textButton);
+
 	Type getType() const override { return Type::Login; }
+
+private:
+	TextButton* m_pLogoutButton;
 };

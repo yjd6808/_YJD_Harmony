@@ -19,7 +19,10 @@ public:
 	JCORE_GETTER_SETTER(L, const RoomInfo&, RoomInfo, m_RoomInfo)
 	JCORE_GETTER(L, int, HostCharacterPrimaryKey, m_iHostCharacterPrimaryKey)
 
+	void setState(RoomState state);
+
 	void updateRoomMemberList(RoomCharacterInfo* info, int count, int hostCharacterPrimaryKey);
+	void updateRoomMember(const RoomCharacterInfo& info);
 	void updateRoomInfo(const RoomInfo& info);
 	int updateRoomMemberReadyState(int characterPrimaryKey, bool ready);
 
@@ -28,11 +31,15 @@ public:
 	int getRoomMemberIndexByPrimaryKey(int characterPrimaryKey);
 	int getRoomMemberCount() const { return m_iRoomMemberCount; }
 	int getReadyCount() const;
+	JCore::String getRoomMemberName(int characterPrimaryKey);
+	RoomState getRoomState() const { return m_RoomInfo.RoomState; }
 
-	void leave();
+	bool isBattleEndingState() const;
+	bool isBattlePlayingState() const;
+	bool isDeath(int characterPrimaryKey);
+	
 
-	bool IsBattleEndingState() const;
-	bool IsBattlePlayingState() const;
+
 private:
 	int m_iRoomMemberCount;
 	int m_iHostCharacterPrimaryKey;

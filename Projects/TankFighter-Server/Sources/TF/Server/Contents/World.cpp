@@ -56,7 +56,7 @@ void World::Finalize() {
 
 }
 
-void World::OnUpdate(const JCore::TimeSpan& elapsed) {
+void World::OnUpdate(const TimeSpan& elapsed) {
 	for (int i = 0; i < m_vChannelList.Size(); ++i) {
 		m_vChannelList[i]->OnUpdate(elapsed);
 	}
@@ -97,7 +97,7 @@ void World::AddPlayer(Player* player) {
 
 	{
 		JCORE_LOCK_GUARD(m_PlayerMapSync);
-		const JCore::String& playerAccountId = player->GetAccountId();
+		const String& playerAccountId = player->GetAccountId();
 		const bool bSuccess = m_hmPlayerMapByAccountId.Insert(playerAccountId, player);
 		if (!bSuccess) {
 			m_hmPlayerMapByAccountId[playerAccountId] = player;
@@ -117,7 +117,7 @@ void World::RemovePlayer(Player* player) {
 	}
 }
 
-Player* World::GetPlayerByAccountId(const JCore::String& accountId) {
+Player* World::GetPlayerByAccountId(const String& accountId) {
 	JCORE_LOCK_GUARD(m_PlayerMapSync);
 	Player** ppPlayer = m_hmPlayerMapByAccountId.Find(accountId);
 	if (ppPlayer == nullptr) {
