@@ -16,20 +16,12 @@ class NetCore {
     + void Update()
 }
 
-note left
-BattleFiledRoutine {
-    if (State == PlayWait) StepPlayWait()
-    if (State == Playing) StepPlaying()
-    if (State == PlayEndWait) StepPlayEndWait()
-}
-end note
-
 class GameServer {
 
 }
 
 class GameSession {
-
+    - Player
 }
 
 class World {
@@ -37,23 +29,22 @@ class World {
     + void Update() override;
     --
     - List<Player>
-}
-
-class TimeManager {
-
+    - List<Channel>
+    - List<ChannelLobby>
 }
 
 class Channel {
     + void Update() override;
     --
-    - Id
+    - List<Player>
+    - BattleFieldRoutine
+}
+
+class ChannelLobby {
     - List<Player>
 }
 
 class Room {
-    --
-    - Id
-    - State
     - List<Player>
 }
 
@@ -61,50 +52,27 @@ class Player<<ObjectPool>> {
 
 }
 
-class RoutineManager { 
-    BattleFieldRoutine
-    --
-    + Initialize()
-    + void Update() override;
+class Character<<ObjectPool>> {
+
 }
 
-/' 
-배틀필드 루틴은 항상 백그라운드로 돌아가고 있어야함. -> 어디서 업데이트를 돌릴 것인가? (메인쓰레드)
-배틀필드 루틴에는 참가자가 존재함. 이 참가자들을 대상으로 업데이트를 진행한다.
-이 참가자는 Room이 될 수 있겠다. 배틀필드를 진행중인 방들!
-즉 Room은 IRoutineParticipant를 상속받는다.
-기본적으로 방, 플레이어, 채널등의 게임
-'/
-
-interface IRoutineParticipant {
-    void OnRoutineBegin(Routine*)
-    void OnRoutineUpdate(Routine*)
-    void OnRoutineEnd(Routine*)
+class BattleFieldRoutine {
+    + OnUpdate()
 }
 
-abstract Routine extends IUpdaable {
-    void OnBegin() virtual = 0
-    void OnStageChanged() virtual = 0
-    void OnEnd() virtual = 0
-    Type GetType() const virtual = 0
-    --
-    # List<IStage> StageList
-    # List<IRoutineParticipant> ParticipantList
-}
+NetCore --> World
+World *-r-> Channel
+World *--> ChannelLobby
+Channel -r-> BattleFieldRoutine
+ChannelLobby *--> Room
+World *.r.> Player
+Channel *.r.> Player
+ChannelLobby *.r.> Player
+Room *.r.> Player
+Player -d-> Character
 
-abstract Stage extends IUpdatable {
-    Stage(Routine*)
-
-    - void OnBegin() virtual = 0
-    - void OnEnd() virtual = 0
-    --
-    # Routine* Routine
-}
-
-NetCore --> ChannelManager
-
-GameServer *-d-> GameSession
-GameSession .d.> Player
+GameServer *-l-> GameSession
+GameSession -l-> Player
 
 
 

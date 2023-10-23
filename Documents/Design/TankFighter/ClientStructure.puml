@@ -11,10 +11,6 @@ skinparam ArrowThickness 2
 hide empty methods
 hide empty fields
 
-note top of DesignView
-목표. 대략적인 클래스 구조를 설계 한 후 코드 작성을 해보도록 하자.
-end note
-
 rectangle DesignView {
     rectangle Scene {
         abstract BaseScene {
@@ -46,7 +42,7 @@ rectangle DesignView {
 
         }
 
-        class LISTENER_GAME {
+        class L_GAME {
             연결시 로그인 정보 전송
             # void OnConnected();
             연결 끊길 시 강제로 로그인씬 이동
@@ -57,13 +53,13 @@ rectangle DesignView {
             - CommandQueuePtr
         }
 
-        class RECV_GAME {
+        class R_GAME {
             수신 커맨드 파싱
             --
             + SC_Login()
         }
 
-        class SEND_GAME {
+        class S_GAME {
             커맨드 송신 기능 정의
             --
             + SC_Login
@@ -72,40 +68,19 @@ rectangle DesignView {
         NetCore -d-> GameClient
 
         '위치 고정용도'
-        GameClient .[hidden]d.> LISTENER_GAME
-        GameClient .[hidden]d.> RECV_GAME
-        GameClient .[hidden]d.> SEND_GAME
+        GameClient .[hidden]d.> L_GAME
+        GameClient .[hidden]d.> R_GAME
+        GameClient .[hidden]d.> S_GAME
     }
 
+    class Room
+    class Tank
+    class Bullet
 
-    rectangle Entity {
-        class Tank 
-        class Player
-        class Bullet
+    BaseScene ..> NetCore
 
-        Player -d-> Tank
-        Tank ..> Bullet
-    }
-
-    class RoomManager<<Singleton>> {
-        + GetRoom(int id)
-        + GetRoomList()
-        --
-        - RoomList
-    }
-
-    class Room {
-        - Name
-        - Id
-        - PlayerList
-    }
-
-    RoomManager *-d-> Room
-    Room *-r-> Player
-
-    BaseScene --> NetCore
-
-    RoomScene ..> RoomManager
+    BattleFieldScene *--> Tank
+    BattleFieldScene *--> Bullet
 }
 
 

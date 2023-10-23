@@ -48,30 +48,10 @@ class t_friendship {
     c_ack_character_uid
 }
 
-class t_inventory  {
-    캐릭터는 인벤토리를 최소 1개 가지고 여러개 소지할 수 있음
-    --
-    c_uid
-    c_character_uid
-    c_size
-}
-
-class t_inventoryitem {
-    인벤토리에는 아이템이 여러개 들어있을 수 있음
-    --
-    c_character_uid
-    c_inventory_uid
-    c_item_uid
-    c_quantity
-}
-
 
 'entity relation ship 참고 : https://plantuml.com/ko/ie-diagram'
 t_character }o-u-|| t_channel
 t_character }o-u-|| t_account
-t_inventory |o-u-|| t_character
 t_friendship }o-u-|| t_character
-t_inventoryitem }o-l-|| t_inventory
-t_inventoryitem }o-u-|| t_character
 
 @enduml
