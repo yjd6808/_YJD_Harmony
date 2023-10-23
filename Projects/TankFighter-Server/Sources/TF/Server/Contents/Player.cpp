@@ -104,6 +104,26 @@ void Player::OnRoomLeave() {
 	m_pCharacter->SetRoom(nullptr);
 }
 
+void Player::OnBattleBegin() {
+	m_eState = PlayerState::BattleField;
+	Character* pCharacter = m_pCharacter;
+	if (pCharacter == nullptr)
+		return;
+	pCharacter->ClearBattleInfo();
+	pCharacter->SetRevivalTime(0);
+}
+
+void Player::OnBattleEnd() {
+	m_eState = PlayerState::Room;
+
+	Character* pCharacter = m_pCharacter;
+	if (pCharacter == nullptr)
+		return;
+
+	pCharacter->ApplyBattleStatisticsToInfo();
+	pCharacter->ClearBattleInfo();
+}
+
 void Player::SendPacket(ISendPacket* packet) {
 	Session* session = m_pSession;
 

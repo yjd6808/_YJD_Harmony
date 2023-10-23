@@ -62,7 +62,7 @@ namespace BattleField
 {
 	// 모두 초단위
 	extern const float PlayWaitTime;
-	extern const float PayingTime;
+	extern const float PlayingTime;
 	extern const float EndWaitTime;
 	extern const float RevivalTime;
 }

@@ -41,6 +41,9 @@ public:
 	void OnRoomJoin(Room* room);
 	void OnRoomLeave();
 
+	void OnBattleBegin();
+	void OnBattleEnd();
+
 	void SendPacket(JNetwork::ISendPacket* packet);
 
 	JCORE_GETTER_SETTER(U, int,						AccountPrimaryKey,	m_iAccountPrimaryKey)

@@ -36,7 +36,7 @@ public:
 	bool RemoveRoom(Room* room);
 
 	JCore::Vector<RoomInfo> GetRoomInfoList();
-	JCore::Vector<CharacterInfo> GetPlayerInfoList(PlayerState state);
+	JCore::Vector<CharacterInfo> GetPlayerInfoList();
 
 	void BroadcastRoomListInfo();
 private:

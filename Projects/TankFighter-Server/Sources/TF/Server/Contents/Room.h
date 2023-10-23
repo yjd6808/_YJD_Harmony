@@ -58,10 +58,16 @@ public:
 
 	int GetPlayerCount();
 	int GetPlayerCountRaw() const;
+	int GetBattleFieldPlayerCountRaw() const;
 	Character* GetBattleTopKillerRaw() const;
 	Character* GetCharacterByCharacterPrimaryKey(int characterPrimaryKey) const;
 	RoomState GetState() const { return m_eState; }
 	JCore::TimeSpan GetBattleFieldTime() { return m_ElapsedBattleTime.Elapsed; }
+	void GetRoomInfo(JCORE_REF_OUT RoomInfo& info);
+	void GetRoomMemberInfoList(JCORE_OUT RoomCharacterInfo* info);
+	JCore::Vector<TankMoveNet> GetRoomMemberLiveMoveList();			// 살아있는 탱크 위치정보
+	void GetRoomMemberInfoListRaw(JCORE_OUT RoomCharacterInfo* info);
+	Player* GetHostPlayer() const { return m_pLeader; }
 
 	bool IsEmpty();
 	bool IsEmptyRaw();
@@ -75,23 +81,19 @@ public:
 	bool RemovePlayer(Player* player);
 	bool RemovePlayerRaw(Player* player);
 
-	void GetRoomInfo(JCORE_REF_OUT RoomInfo& info);
-	void GetRoomMemberInfoList(JCORE_OUT RoomCharacterInfo* info);
-	void GetRoomMemberInfoListRaw(JCORE_OUT RoomCharacterInfo* info);
-	Player* GetHostPlayer() const { return m_pLeader; }
-
 	void ChooseNewLeaderRaw();
 
 	void BroadcastRoomMemberListInfo();
 	void BroadcastRoomMemberInfo(Character* character);
 	void BroadcastRoomInfo();
 	void BroadcastRoomGameStart();
-	void BroadcastBattleFieldTankSpawn(Character* character);
-	void BroadcastBattleFieldMoveRaw();
+	void BroadcastBattleFieldTankSpawn(Character* character, bool revival);
+	void BroadcastBattleFieldMove(const TankMoveNet& move);
 	void BroadcastBattleFieldDeath(int deadCharacterPrimaryKey);
 	void BroadcastBattleSatistics();
 	void BroadcastBattleFieldFire(const BulletInfoNet& info);
 	void BroadcastBattleStateChanged(RoomState changedState);
+	void BroadcastBattleFieldLeave(Player* outPlayer);
 	void BroadcastJudgeRaw(int winnerCharacterPrimaryKey);
 	void BroadcastRoomGameEnd();
 	void BroadcastTimeSync();

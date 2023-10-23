@@ -74,7 +74,7 @@ void Character::UpdateRevivalTime(const TimeSpan& elapsed) {
 		m_RevivalTime = 0.0f;
 		m_bDeath = false;
 		m_pRoom->BroadcastRoomMemberInfo(this);
-		m_pRoom->BroadcastBattleFieldTankSpawn(this);
+		m_pRoom->BroadcastBattleFieldTankSpawn(this, true);
 	}
 }
 
@@ -304,13 +304,22 @@ void Character::GetBattleStatisticsNet(JCORE_REF_OUT BattleStatisticsNet& info) 
 void Character::GetMoveNet(JCORE_REF_OUT TankMoveNet& move) {
 	move.CharacterPrimaryKey = m_iPrimaryKey;
 	move.X = m_Move.X;
-	move.Y = m_Move.Y ;
-	move.MoveSpeed = m_Move.MoveSpeed ;
-	move.MoveDir = m_Move.MoveDir ;
-	move.RotationDir = m_Move.RotationDir ;
-	move.Rotation = m_Move.Rotation ;
-	move.RotationSpeed = m_Move.RotationSpeed ;
+	move.Y = m_Move.Y;
+	move.MoveSpeed = m_Move.MoveSpeed;
+	move.MoveDir = m_Move.MoveDir;
+	move.RotationDir = m_Move.RotationDir;
+	move.Rotation = m_Move.Rotation;
+	move.RotationSpeed = m_Move.RotationSpeed;
 
 }
 
 String Character::ToString() { return StringUtil::Format("%s(%d)", m_szName.Source(), m_iPrimaryKey); }
+
+void Character::Spawn() {
+	m_RevivalTime.Tick = 0;
+	m_bDeath = false;
+	m_Move.RotationDir = RotateDirection::None;
+	m_Move.MoveDir = MoveDirection::None;
+	m_Move.X = Random::GenerateF(50.0f, Const::Map::Width - 50.0f);
+	m_Move.Y = Random::GenerateF(50.0f, Const::Map::Height - 50.0f);
+}

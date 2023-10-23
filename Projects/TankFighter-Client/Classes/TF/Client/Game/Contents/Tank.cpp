@@ -17,14 +17,14 @@ USING_NS_JNET;
 
 
 Tank::Tank()
-	: m_pBodyCollidors{}
+	: m_iCharacterPrimaryKey(Const::InvalidValue)
+	, m_pBodyCollidors{}
     , m_pTower(nullptr)
     , m_pGun(nullptr)
     , m_pFirePosition(nullptr)
     , m_bMoveable(false)
     , m_bFireable(false)
     , m_Move()
-	, m_pInfo(nullptr)
 	, m_fShotTimeCounter(TimeCounterAttribute::TimeOverReset)
 {}
 
@@ -88,6 +88,7 @@ void Tank::update(float delta) {
 	updateShotFire(delta);
 
 	static TimeCounterF s_MoveSendCounter(TimeCounterAttribute::TimeOverReset);
+	s_MoveSendCounter.Elapsed.Second += delta;
 	if (s_MoveSendCounter.ElapsedSeconds(0.1f)) {
 		sendMove();
 	}
@@ -98,9 +99,14 @@ void Tank::sendMove() {
 		return;
 	}
 
+	if (isDeath()) {
+		return;
+	}
+
 	TankMoveNet move;
 	getMove(move);
-	move.CharacterPrimaryKey = m_pInfo == nullptr ? Const::InvalidValue : m_pInfo->PrimaryKey;
+	move.CharacterPrimaryKey = m_iCharacterPrimaryKey;
+	S_GAME::SEND_CS_BattleFieldMove(move);
 }
 
 void Tank::getMove(JCORE_REF_OUT TankMove& move) {
@@ -169,9 +175,9 @@ void Tank::fire() {
 		m_FilreCallBack(this);
 }
 
-void Tank::spawn(RoomCharacterInfo* info, const TankMove& move) {
-	m_pInfo = info;
-	setTankMove(move);
+void Tank::spawn(int characterPrimaryKey, const TankMove& initialMove) {
+	m_iCharacterPrimaryKey = characterPrimaryKey;
+	setTankMove(initialMove);
 	setVisible(true);
 
 	// 이하 코드는 주인공 플레이어만 적용
@@ -184,7 +190,7 @@ void Tank::spawn(RoomCharacterInfo* info, const TankMove& move) {
 }
 
 void Tank::free() {
-	m_pInfo = nullptr;
+	m_iCharacterPrimaryKey = Const::InvalidValue;
 	m_bFireable = false;
 	m_bMoveable = false;
 	setVisible(false);
@@ -198,18 +204,16 @@ void Tank::setTankMove(const TankMove& move) {
 }
 
 void Tank::setDeath(bool death) {
-	if (m_pInfo == nullptr) {
+	RoomCharacterInfo* pInfo = Core::Room->getRoomMemberByPrimaryKey(m_iCharacterPrimaryKey);
+	if (pInfo == nullptr) {
 		DebugAssert(false);
 		return;
 	}
-	m_pInfo->IsDeath = death;
+	pInfo->IsDeath = death;
 }
 
 int Tank::getCharacterPrimaryKey() const {
-	if (m_pInfo == nullptr)
-		return Const::InvalidValue;
-
-	return m_pInfo->PrimaryKey;
+	return m_iCharacterPrimaryKey;
 }
 
 Vec2 Tank::getFirePosition() const {
@@ -290,9 +294,14 @@ bool Tank::isCollide(Bullet* bullet) {
 }
 
 bool Tank::isDeath() {
-	if (m_pInfo == nullptr) {
+	if (m_iCharacterPrimaryKey == Const::InvalidValue) {
 		return true;
 	}
 
-	return m_pInfo->IsDeath;
+	RoomCharacterInfo* pInfo = Core::Room->getRoomMemberByPrimaryKey(m_iCharacterPrimaryKey);
+	if (pInfo == nullptr) {
+		return true;
+	}
+
+	return pInfo->IsDeath;
 }

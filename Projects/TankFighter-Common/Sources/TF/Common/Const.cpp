@@ -49,7 +49,7 @@ namespace BattleField
 {
 	// 모두 초단위
 	const float PlayWaitTime = 7.0f;
-	const float PayingTime = 5.0f;
+	const float PlayingTime = 120.0f;
 	const float EndWaitTime = 10.0f;
 	const float RevivalTime = 5.0f;
 }

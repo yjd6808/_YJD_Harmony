@@ -25,8 +25,14 @@ void Room::setState(RoomState state) {
 void Room::updateRoomMemberList(RoomCharacterInfo* info, int count, int hostCharacterPrimaryKey) {
 	m_iRoomMemberCount = count;
 	m_iHostCharacterPrimaryKey = hostCharacterPrimaryKey;
-	for (int i = 0; i < count; i++) {
+	int i = 0;
+
+	for (; i < count; i++) {
 		m_RoomMember[i] = info[i];
+	}
+
+	for (; i < Const::Room::MaxPlayerCount; i++) {
+		m_RoomMember[i] = {};
 	}
 }
 

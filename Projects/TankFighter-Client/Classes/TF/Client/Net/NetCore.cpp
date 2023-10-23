@@ -86,11 +86,13 @@ void NetCore::initializeParser() {
 	m_Parser.AddCommand<SC_ChatMessage>(R_GAME::RECV_SC_ChatMessage);
 	m_Parser.AddCommand<SC_BattleFieldTimeSync>(R_GAME::RECV_SC_BattleFieldTimeSync);
 	m_Parser.AddCommand<SC_BattleFieldTankSpawn>(R_GAME::RECV_SC_BattleFieldTankSpawn);
+	m_Parser.AddCommand<SC_BattleFieldTankList>(R_GAME::RECV_SC_BattleFieldTankList);
 	m_Parser.AddCommand<SC_BattleFieldMove>(R_GAME::RECV_SC_BattleFieldMove);
 	m_Parser.AddCommand<SC_BattleFieldFire>(R_GAME::RECV_SC_BattleFieldFire);
 	m_Parser.AddCommand<SC_BattleFieldDeath>(R_GAME::RECV_SC_BattleFieldDeath);
 	m_Parser.AddCommand<SC_BattleFieldStateChanged>(R_GAME::RECV_SC_BattleFieldStateChanged);
 	m_Parser.AddCommand<SC_BattleFieldStatisticsUpdate>(R_GAME::RECV_SC_BattleFieldStatisticsUpdate);
+	m_Parser.AddCommand<SC_BattleFieldLeave>(R_GAME::RECV_SC_BattleFieldLeave);
 	m_Parser.AddCommand<SC_TcpRTT>(R_GAME::RECV_SC_TcpRTT);
 	
 }

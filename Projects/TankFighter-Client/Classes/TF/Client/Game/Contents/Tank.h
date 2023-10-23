@@ -28,7 +28,7 @@ public:
 
 	void fire();
 
-	void spawn(RoomCharacterInfo* info, const TankMove& move);
+	void spawn(int characterPrimaryKey, const TankMove& initialMove);
 	void free();
 
 	void setFireCallback(JCore::Action<Tank*> callback) { m_FilreCallBack = callback; }
@@ -51,6 +51,8 @@ public:
 	bool isCollide(Bullet* bullet);
 	bool isDeath();
 private:
+	int m_iCharacterPrimaryKey;
+
 	Sprite* m_pBodyCollidors[2];
 	Sprite* m_pTower;
 	Sprite* m_pGun;
@@ -60,7 +62,6 @@ private:
 	bool m_bFireable;							// 탱크를 키보드를 눌러서 총을 쏠 수 있는지
 
 	TankMove m_Move;
-	RoomCharacterInfo* m_pInfo;
 
 	JCore::TimeCounterF m_fShotTimeCounter;
 	JCore::Action<Tank*> m_FilreCallBack;		// 총 발사할때마다 호출할 콜백 함수

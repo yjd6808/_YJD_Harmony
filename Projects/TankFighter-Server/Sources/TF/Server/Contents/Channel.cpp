@@ -119,7 +119,7 @@ void Channel::Open() {
 
 void Channel::OnUpdate(const TimeSpan& elapsed) {
 	static Vector<Player*> s_vUpdatesPlayers;
-	static auto fnUpdate = [&elapsed](Player* p) { p->OnUpdate(elapsed); };
+	auto fnUpdate = [&elapsed](Player* p) { p->OnUpdate(elapsed); };
 
 
 	// 플레이어 업데이트와 플레이어 추가/삭제 동기화를 분리하기 위함.
@@ -136,7 +136,7 @@ void Channel::OnUpdate(const TimeSpan& elapsed) {
 }
 
 void Channel::BroadcastPacket(ISendPacket* packet, int state) {
-	static auto fnBroadcast = [&](Player* player) { player->SendPacket(packet); };
+	auto fnBroadcast = [&](Player* player) { player->SendPacket(packet); };
 	JCORE_REF_COUNT_GUARD(packet);
 	JCORE_LOCK_GUARD(m_PlayerListLock);
 	m_hsPlayerSet.ForEach(fnBroadcast);

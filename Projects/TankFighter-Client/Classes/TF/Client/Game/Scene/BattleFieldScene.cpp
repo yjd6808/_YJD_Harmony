@@ -78,7 +78,7 @@ bool BattleFieldScene::init() {
 		Tank* pTank = Tank::create();
 		pTank->setVisible(false);
 		m_pEntityLayer->addChild(pTank, 2);
-		m_vOtherPlayers.PushBack(pTank);
+		m_vOtherTanks.PushBack(pTank);
 	}
 
 	m_pTimeText = Text::create("", Const::Resource::FontName, 25);
@@ -175,12 +175,16 @@ void BattleFieldScene::updateEntities(float delta) {
 		m_vOtherBullets[i]->update(delta);
 	}
 
-	for (int i = 0; i < m_vOtherPlayers.Size(); ++i) {
-		m_vOtherPlayers[i]->update(delta);
+	for (int i = 0; i < m_vOtherTanks.Size(); ++i) {
+		m_vOtherTanks[i]->update(delta);
 	}
 }
 
 void BattleFieldScene::updateEntitiesCollision(float delta) {
+
+	// 게임중일때만 충돌처리
+	if (m_pRoom->getRoomState() != RoomState::Playing)
+		return;
 
 	for (int i = 0; i < m_vMyBullets.Size(); ) {
 		Bullet* pMyBullet = m_vMyBullets[i];
@@ -216,8 +220,8 @@ void BattleFieldScene::updateEntitiesCollision(float delta) {
 			continue;
 		}
 
-		for (int j = 0; j < m_vOtherPlayers.Size(); j++) {
-			Tank* pOtherTank = m_vOtherPlayers[j];
+		for (int j = 0; j < m_vOtherTanks.Size(); j++) {
+			Tank* pOtherTank = m_vOtherTanks[j];
 
 			// 다른 탱크와 부딫힌 경우에는 총알만 없앤다.
 			if (pOtherTank->isCollide(pBullet) && !pOtherTank->isDeath()) {
@@ -293,7 +297,7 @@ void BattleFieldScene::onTankFire(Tank* tank) {
 	info.Y = firePos.y;
 	info.Rotation = tank->getRotation();
 	info.Diameter = Random::GenerateF(5.0f, 20.0f);
-	info.MoveSpeed = Random::GenerateF(20.0f, 20.0f);
+	info.MoveSpeed = Random::GenerateF(70.0f, 300.0f);
 	info.CharacterPrimaryKey = tank->getCharacterPrimaryKey();
 	info.Color = ColorUtil::ToIn32U(colorList[Random::GenerateInt(0, RandomColorCount)]);
 	S_GAME::SEND_CS_BattleFieldFire(info);
@@ -332,18 +336,18 @@ Tank* BattleFieldScene::getTankByCharacterPrimaryKey(int characterPrimaryKey) {
 		return m_pMyTank;
 	}
 
-	for (int i = 0; i < m_vOtherPlayers.Size(); ++i) {
-		if (m_vOtherPlayers[i]->getCharacterPrimaryKey() == characterPrimaryKey) {
-			return m_vOtherPlayers[i];
+	for (int i = 0; i < m_vOtherTanks.Size(); ++i) {
+		if (m_vOtherTanks[i]->getCharacterPrimaryKey() == characterPrimaryKey) {
+			return m_vOtherTanks[i];
 		}
 	}
 	return nullptr;
 }
 
 Tank* BattleFieldScene::getAvilableOtherTank() {
-	for (int i = 0; i < m_vOtherPlayers.Size(); ++i) {
-		if (m_vOtherPlayers[i]->getCharacterPrimaryKey() == Const::InvalidValue) {
-			return m_vOtherPlayers[i];
+	for (int i = 0; i < m_vOtherTanks.Size(); ++i) {
+		if (m_vOtherTanks[i]->getCharacterPrimaryKey() == Const::InvalidValue) {
+			return m_vOtherTanks[i];
 		}
 	}
 
@@ -355,7 +359,7 @@ float BattleFieldScene::getRemainTimeOfNextState() {
 
 	switch (m_pRoom->getRoomState()) {
 	case RoomState::PlayWait: return Const::BattleField::PlayWaitTime - fGameTime;
-	case RoomState::Playing: return Const::BattleField::PayingTime - fGameTime;
+	case RoomState::Playing: return Const::BattleField::PlayingTime - fGameTime;
 	case RoomState::EndWait: return Const::BattleField::EndWaitTime- fGameTime;
 	default: ;
 	}
@@ -379,26 +383,44 @@ void BattleFieldScene::removeTank(int characterPrimaryKey) {
 	pTank->free();
 }
 
-void BattleFieldScene::spawnTank(const TankMoveNet& move) {
-	RoomCharacterInfo* pInfo = m_pRoom->getRoomMemberByPrimaryKey(move.CharacterPrimaryKey);
-	if (pInfo == nullptr) {
-		_LogWarn_("방에 없어서 소환불가능");
-		return;
-	}
+void BattleFieldScene::spawnTanks(TankMoveNet* moves, int count) {
 
-	if (pInfo->PrimaryKey == Core::GameClient->GetCharacterPrimaryKey()) {
-		m_RevivalTime.Second = 0;
-		m_pMyTank->spawn(pInfo, move);
-		return;
-	}
+	for (int i = 0; i < count; ++i) {
+		const TankMoveNet& move = moves[i];
+		RoomCharacterInfo* pInfo = m_pRoom->getRoomMemberByPrimaryKey(move.CharacterPrimaryKey);
 
-	Tank* pOtherTank = getAvilableOtherTank();
-	if (pOtherTank == nullptr) {
-		_LogWarn_("소환가능한 탱크가 없습니다.");
-		return;
-	}
+		if (pInfo == nullptr) {
+			_LogWarn_("방에 없어서 소환불가능");
+			continue;
+		}
 
-	pOtherTank->spawn(pInfo, move);
+		if (pInfo->IsDeath)
+			continue;
+
+		if (pInfo->PrimaryKey == Core::GameClient->GetCharacterPrimaryKey()) {
+
+			// 중복 spawn 방지
+			if (pInfo->PrimaryKey == m_pMyTank->getCharacterPrimaryKey()) {
+				continue;
+			}
+			m_RevivalTime.Second = 0;
+			m_pMyTank->spawn(move.CharacterPrimaryKey, move);
+			continue;
+		}
+
+		// 중복 spawn 방지
+		if (getTankByCharacterPrimaryKey(move.CharacterPrimaryKey) != nullptr) {
+			continue;
+		}
+
+		Tank* pOtherTank = getAvilableOtherTank();
+		if (pOtherTank == nullptr) {
+			_LogWarn_("소환가능한 탱크가 없습니다.");
+			continue;
+		}
+
+		pOtherTank->spawn(move.CharacterPrimaryKey, move);
+	}
 }
 
 void BattleFieldScene::spawnBullet(const BulletInfoNet& info) {
@@ -412,11 +434,10 @@ void BattleFieldScene::spawnBullet(const BulletInfoNet& info) {
 	Bullet* pBullet = Bullet::create();
 	pBullet->setNetInfo(info);
 	m_pEntityLayer->addChild(pBullet);
-	m_vOtherBullets.PushBack(pBullet);
-	/*if (pTank == m_pMyTank)
+	if (pTank == m_pMyTank)
 		m_vMyBullets.PushBack(pBullet);
 	else
-		m_vOtherBullets.PushBack(pBullet);*/
+		m_vOtherBullets.PushBack(pBullet);
 }
 
 void BattleFieldScene::syncTime(const TimeSpan& gameTime) {
@@ -424,13 +445,11 @@ void BattleFieldScene::syncTime(const TimeSpan& gameTime) {
 	updateTimerText();
 }
 
-void BattleFieldScene::syncMove(TankMoveNet* moves, int count) {
-	for (int i = 0; i < count; ++i) {
-		Tank* pTank = getTankByCharacterPrimaryKey(moves[i].CharacterPrimaryKey);
-		if (pTank == m_pMyTank) continue;	// 내껀 내가 조종하므로 무시
-		if (pTank == nullptr) continue;		// 찾을 수 없어도 무시
-		pTank->setTankMove(moves[i]);
-	}
+void BattleFieldScene::syncMove(const TankMoveNet& move) {
+	Tank* pTank = getTankByCharacterPrimaryKey(move.CharacterPrimaryKey);
+	if (pTank == m_pMyTank) return;	// 내껀 내가 조종하므로 무시
+	if (pTank == nullptr) return;	// 찾을 수 없어도 무시
+	pTank->setTankMove(move);
 }
 
 void BattleFieldScene::refreshUIByRoomState() {
@@ -470,7 +489,13 @@ void BattleFieldScene::refreshStatistics(BattleStatisticsNet* statistics, int co
 
 	int iIndexer = 0;
 	sortVector.Extension().
-				Sorted([](BattleStatisticsNet& lhs, BattleStatisticsNet& rhs) { return lhs.Kill > rhs.Kill; }).
+				Sorted([](BattleStatisticsNet& lhs, BattleStatisticsNet& rhs) {
+					if (lhs.Kill != rhs.Kill) {
+						return lhs.Kill > rhs.Kill;
+					}
+
+					return lhs.LastKillTime < rhs.LastKillTime;
+				}).
 				ForEach([&iIndexer, this](BattleStatisticsNet& info) {
 					m_pNameText[iIndexer]->setString(m_pRoom->getRoomMemberName(info.CharacterPrimaryKey).Source());
 					m_pNameText[iIndexer]->setVisible(true);
@@ -489,6 +514,23 @@ void BattleFieldScene::refreshStatistics(BattleStatisticsNet* statistics, int co
 	}
 }
 
+void BattleFieldScene::refreshTanks() {
+	// 방 정보에 없는 탱크들은 모두 제거처리함.
+	for (int i = 0; i < m_vOtherTanks.Size(); ++i) {
+		Tank* pOtherTank = m_vOtherTanks[i];
+		const int iCharacterPrimaryKey = pOtherTank->getCharacterPrimaryKey();
+
+		if (iCharacterPrimaryKey == Const::InvalidValue) {
+			pOtherTank->free();
+			continue;
+		}
+
+		if (m_pRoom->getRoomMemberByPrimaryKey(iCharacterPrimaryKey) == nullptr) {
+			pOtherTank->free();
+		} 
+	}
+}
+
 void BattleFieldScene::addChatMssage(const char* str) {
 	m_pChatBox->AddChatMessage(str);
 }
@@ -498,7 +540,7 @@ void BattleFieldScene::judge(int winnerCharacterPrimaryKey) {
 	if (m_pMyTank->getCharacterPrimaryKey() == winnerCharacterPrimaryKey) {
 		pAnimatedText = Text::create(StringUtils::format("당신은 치열한 전투에서 승리하였습니다."), Const::Resource::FontName, 48);
 	} else {
-		pAnimatedText = Text::create(StringUtils::format("응 넌 졌어!"), Const::Resource::FontName, 48);
+		pAnimatedText = Text::create(StringUtils::format("졌어용 ㅠㅠㅠ"), Const::Resource::FontName, 48);
 	}
 	pAnimatedText->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	pAnimatedText->setPositionX(Const::Window::Width / 2.0f);

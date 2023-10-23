@@ -180,6 +180,8 @@ public:
 		else {
 			ConnectBucket(bucket->Previous, bucket->Next);
 		}
+		bucket->Previous = nullptr;
+		bucket->Next = nullptr;
 	}
 
 	void Clear() noexcept {

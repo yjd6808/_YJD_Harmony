@@ -40,12 +40,14 @@ struct R_GAME
 	static void RECV_SC_ServerMessage(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_ChatMessage(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_BattleFieldTankSpawn(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SC_BattleFieldTankList(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_BattleFieldTimeSync(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_BattleFieldMove(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_BattleFieldFire(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_BattleFieldDeath(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_BattleFieldStateChanged(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_BattleFieldStatisticsUpdate(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SC_BattleFieldLeave(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_RoomGameJudge(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_TcpRTT(JNetwork::Session* session, JNetwork::ICommand* cmd);
 };

@@ -58,6 +58,7 @@ namespace Properties
 		extern const int ChannelPrimaryKey;
 		extern const int PlayerState;
 		extern const int RoomAccessId;
+		extern const int IsIntruder;
 	}
 }
 

@@ -177,13 +177,10 @@ Vector<RoomInfo> ChannelLobby::GetRoomInfoList() {
 	return vInfoList;
 }
 
-Vector<CharacterInfo> ChannelLobby::GetPlayerInfoList(PlayerState state) {
+Vector<CharacterInfo> ChannelLobby::GetPlayerInfoList() {
 	JCORE_LOCK_GUARD(m_RoomListLock);
 	Vector<CharacterInfo> vInfoList(m_hsPlayerSet.Size());
-	m_hsPlayerSet.ForEach([&vInfoList, state](Player* player) {
-		if (player->GetPlayerState() != state)
-			return;
-
+	m_hsPlayerSet.ForEach([&vInfoList](Player* player) {
 		Character* pCharacter = player->GetCharacter();
 		if (pCharacter == nullptr)
 			return;

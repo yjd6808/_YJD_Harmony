@@ -33,6 +33,7 @@ public:
 	static void RECV_CS_LoadRoomInfo(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_RoomGameReady(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_RoomGameStart(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_CS_RoomGameIntrude(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_RoomLeave(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_LoadBattleFieldInfo(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_BattleFieldFire(JNetwork::Session* session, JNetwork::ICommand* cmd);

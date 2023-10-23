@@ -12,6 +12,7 @@ USING_NS_CC;
 USING_NS_JC;
 
 int main() {
+    new char; // Force Leak
     int iExit = -1;
     {
         AppDelegate app;

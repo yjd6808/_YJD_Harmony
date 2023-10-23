@@ -40,6 +40,9 @@ public:
 
 	void SetRoomAccessId(int accessId);
 	int GetRoomAccessId() const;
+
+	bool IsIntruder() const;
+	void SetIntruder(bool intruder);
 private:
 	JCore::Properties<int> m_Properties;
 	CharacterInfo m_CharacterInfo;

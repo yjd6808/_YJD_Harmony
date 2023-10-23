@@ -142,17 +142,29 @@ void S_GAME::SEND_SC_RoomGameReadyBroadcast(Room* room, int characterPrimaryKey,
 	room->BroadcastPacket(pPacket, Const::Broadcast::Room::StateAny);
 }
 
+void S_GAME::SEND_SC_RoomGameStart() {
+	auto sending = SendBegin<SC_RoomGameStart>();
+}
+
+void S_GAME::SEND_SC_RoomGameIntrude() {
+	auto sending = SendBegin<SC_RoomGameIntrude>();
+}
+
 void S_GAME::SEND_SC_RoomLeave() {
 	auto sending = SendBegin<SC_RoomLeave>();
 }
 
 void S_GAME::SEND_SC_BattleFieldTimeSync(const TimeSpan& elapsed) {
+	auto sending = SendBegin<SC_BattleFieldTimeSync>();
+	sending.Cmd.Elapsed = elapsed;
 }
 
-void S_GAME::SEND_SC_BattleFieldSpawnTankBroadcast(Room* room, Character* character) {
-}
-
-void S_GAME::SEND_SC_BattleFieldStateChanged(RoomState state) {
+void S_GAME::SEND_SC_BattleFieldTankList(Room* room) {
+	Vector<TankMoveNet> vMoves = room->GetRoomMemberLiveMoveList();
+	auto sending = SendBegin<SC_BattleFieldTankList>(vMoves.Size());
+	for (int i = 0; i < vMoves.Size(); ++i) {
+		sending.Cmd.Move[i] = vMoves[i];
+	}
 }
 
 void S_GAME::SEND_SC_ServerMessage(const char* msg) {
@@ -194,7 +206,7 @@ void S_GAME::SEND_SC_ChatMessageBroadcastBattleField(IBroadcastable* broadcastab
 }
 
 void S_GAME::SEND_SC_UpdatePlayerListBroadcastInLobby(ChannelLobby* pLobby) {
-	Vector<CharacterInfo> vInfoList = pLobby->GetPlayerInfoList(PlayerState::Lobby);
+	Vector<CharacterInfo> vInfoList = pLobby->GetPlayerInfoList();
 	int iCount = vInfoList.Size();
 	const auto pPacket = dbg_new SinglePacket<SC_UpdatePlayerList>(iCount);
 	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
@@ -206,7 +218,7 @@ void S_GAME::SEND_SC_UpdatePlayerListBroadcastInLobby(ChannelLobby* pLobby) {
 }
 
 void S_GAME::SEND_SC_UpdatePlayerList(ChannelLobby* pLobby) {
-	Vector<CharacterInfo> vInfoList = pLobby->GetPlayerInfoList(PlayerState::Lobby);
+	Vector<CharacterInfo> vInfoList = pLobby->GetPlayerInfoList();
 	int iCount = vInfoList.Size();
 	auto sending = SendBegin<SC_UpdatePlayerList>(iCount);
 	sending.Cmd.State = PlayerState::Lobby;

@@ -234,18 +234,24 @@ void RoomScene::refreshRoomMemberReadyState(int memberIndex) {
 	}
 
 	const int iMyCharacterPrimaryKey = Core::GameClient->GetCharacterPrimaryKey();
+	JCore::String szTag = JCore::String::Empty;
 
-	if (pInfo->PrimaryKey != iHostCharacterPrimaryKey) {
-		if (iMyCharacterPrimaryKey == pInfo->PrimaryKey)
-			m_pMarkSlot[memberIndex]->setText(pInfo->IsReady ? "(나) 준비 완료" : "(나)");
-		else
-			m_pMarkSlot[memberIndex]->setText(pInfo->IsReady ? "준비 완료" : "");
+	if (iMyCharacterPrimaryKey == pInfo->PrimaryKey) {
+		m_pMarkSlot[memberIndex]->setBackgroundColor(ColorList::Acidgreen_v);
+		szTag += "(나)";
 	} else {
-		if (iMyCharacterPrimaryKey == pInfo->PrimaryKey)
-			m_pMarkSlot[memberIndex]->setText("(나) 방장");
-		else
-			m_pMarkSlot[memberIndex]->setText("방장");
+		m_pMarkSlot[memberIndex]->setBackgroundColor(ColorList::BlackShadows_v);
 	}
+
+	if (pInfo->PrimaryKey == iHostCharacterPrimaryKey) {
+		szTag += " 방장";
+	} else {
+		if (pInfo->IsReady) {
+			szTag += " 준비 완료";
+		}
+	}
+
+	m_pMarkSlot[memberIndex]->setText(szTag.Source());
 }
 
 void RoomScene::refreshRoomMemberInfo(int memberIndex) {

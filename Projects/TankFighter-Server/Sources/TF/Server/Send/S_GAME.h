@@ -40,10 +40,11 @@ struct S_GAME : JNetwork::SendHelper<S_GAME>
 	static void SEND_SC_LoadRoomInfo(Room* room);
 	static void SEND_SC_AddFriendRequest(Character* character);
 	static void SEND_SC_RoomGameReadyBroadcast(Room* room, int characterPrimaryKey, bool ready);
+	static void SEND_SC_RoomGameStart();
+	static void SEND_SC_RoomGameIntrude();
 	static void SEND_SC_RoomLeave();
 	static void SEND_SC_BattleFieldTimeSync(const JCore::TimeSpan& elapsed);
-	static void SEND_SC_BattleFieldSpawnTankBroadcast(Room* room, Character* character);
-	static void SEND_SC_BattleFieldStateChanged(RoomState state);
+	static void SEND_SC_BattleFieldTankList(Room* room);
 	static void SEND_SC_ChatMessageBroadcastLobby(IBroadcastable* broadcastable, const char* msg);
 	static void SEND_SC_ChatMessageBroadcastBattleField(IBroadcastable* broadcastable, const char* msg);
 

@@ -46,14 +46,15 @@ public:
 	float getRemainTimeOfRevival();
 
 	void removeTank(int characterPrimaryKey);
-	void spawnTank(const TankMoveNet& move);
+	void spawnTanks(TankMoveNet* move, int count);
 	void spawnBullet(const BulletInfoNet& info);
 
 	void syncTime(const JCore::TimeSpan& gameTime);
-	void syncMove(TankMoveNet* moves, int count);
+	void syncMove(const TankMoveNet& moves);
 
 	void refreshUIByRoomState();
 	void refreshStatistics(BattleStatisticsNet* statistics, int count);
+	void refreshTanks();
 
 	void addChatMssage(const char* str);
 
@@ -80,6 +81,6 @@ private:
 
 	JCore::Vector<Bullet*>	m_vMyBullets;	// 내가 쏜 총알들
 	JCore::Vector<Bullet*>	m_vOtherBullets;	// 다른 플레이어가 쏜 총알들
-	JCore::Vector<Tank*>	m_vOtherPlayers;	// 다른 플레이어 탱크
+	JCore::Vector<Tank*>	m_vOtherTanks;	// 다른 플레이어 탱크
 	
 };

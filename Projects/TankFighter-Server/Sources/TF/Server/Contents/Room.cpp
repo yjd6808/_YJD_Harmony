@@ -49,7 +49,6 @@ void Room::OnUpdateBattle(const TimeSpan& elapsed) {
 		OnRoomStateChanged(eNextState);
 	}
 
-	BroadcastBattleFieldMoveRaw();
 	m_ElapsedBattleTime.Elapsed += elapsed;
 }
 
@@ -70,7 +69,7 @@ void Room::OnUpdatePlaying(const TimeSpan& elapsed) {
 	if (m_eState != RoomState::Playing)
 		return;
 
-	if (!m_ElapsedBattleTime.ElapsedSeconds(Const::BattleField::PayingTime)) {
+	if (!m_ElapsedBattleTime.ElapsedSeconds(Const::BattleField::PlayingTime)) {
 		return;
 	}
 
@@ -115,15 +114,7 @@ void Room::OnBattleBegin() {
 
 	JCORE_LOCK_GUARD(m_Sync);
 	for (int i = 0; i < m_vPlayerList.Size(); ++i) {
-		Player* pPlayer = m_vPlayerList[i];
-		pPlayer->SetPlayerState(PlayerState::BattleField);
-
-		Character* pCharacter = pPlayer->GetCharacter();
-		if (pCharacter == nullptr)
-			continue;
-
-		pCharacter->ClearBattleInfo();
-		pCharacter->SetRevivalTime(0);
+		m_vPlayerList[i]->OnBattleBegin();
 	}
 
 	BroadcastRoomGameStart();
@@ -135,15 +126,7 @@ void Room::OnBattleEnd() {
 	{
 		JCORE_LOCK_GUARD(m_Sync);
 		for (int i = 0; i < m_vPlayerList.Size(); ++i) {
-			Player* pPlayer = m_vPlayerList[i];
-			pPlayer->SetPlayerState(PlayerState::Room);
-
-			Character* pCharacter = pPlayer->GetCharacter();
-			if (pCharacter == nullptr)
-				continue;
-
-			pCharacter->ApplyBattleStatisticsToInfo();
-			pCharacter->ClearBattleInfo();
+			m_vPlayerList[i]->OnBattleEnd();
 		}
 
 	}
@@ -297,6 +280,8 @@ bool Room::Leave(Player* player) {
 		m_pLobby->BroadcastRoomListInfo();
 		BroadcastRoomMemberListInfo();
 		BroadcastRoomInfo();
+		BroadcastBattleFieldLeave(player);
+		BroadcastBattleSatistics();
 
 		m_Sync.Lock();
 	}
@@ -330,6 +315,32 @@ void Room::GetRoomInfo(JCORE_REF_OUT RoomInfo& info) {
 void Room::GetRoomMemberInfoList(JCORE_OUT RoomCharacterInfo* info) {
 	JCORE_LOCK_GUARD(m_Sync);
 	GetRoomMemberInfoListRaw(info);
+}
+
+Vector<TankMoveNet> Room::GetRoomMemberLiveMoveList() {
+	Vector<TankMoveNet> vMoves{ Const::Room::MaxPlayerCount };
+	JCORE_LOCK_GUARD(m_Sync);
+	for (int i = 0; i < m_vPlayerList.Size(); ++i) {
+
+		if (m_vPlayerList[i]->GetPlayerState() != PlayerState::BattleField) {
+			continue;
+		}
+
+		Character* pCharacter = m_vPlayerList[i]->GetCharacter();
+
+		if (pCharacter == nullptr) {
+			continue;
+		}
+
+		if (pCharacter->IsDeath()) {
+			continue;
+		}
+
+		TankMoveNet moveNet;
+		pCharacter->GetMoveNet(moveNet);
+		vMoves.PushBack(moveNet);
+	}
+	return vMoves;
 }
 
 void Room::GetRoomMemberInfoListRaw(JCORE_OUT RoomCharacterInfo* info) {
@@ -389,22 +400,25 @@ void Room::BroadcastRoomGameStart() {
 	BroadcastPacket(pPacket, Const::Broadcast::Room::StateAny);
 }
 
-void Room::BroadcastBattleFieldTankSpawn(Character* character) {
+void Room::BroadcastBattleFieldTankSpawn(Character* character, bool revival) {
 	auto pPacket = dbg_new SinglePacket<SC_BattleFieldTankSpawn>();
 	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	character->Spawn();
 	character->GetMoveNet(pPacket->Cmd.Move);
-	pPacket->Cmd.Move.X = Random::GenerateF(50.0f, Const::Map::Width - 50.0f);
-	pPacket->Cmd.Move.Y = Random::GenerateF(50.0f, Const::Map::Height - 50.0f);
 	BroadcastPacket(pPacket, Const::Broadcast::Room::StateAny);
 }
 
 void Room::BroadcastBattleSatistics() {
 	JCORE_LOCK_GUARD(m_Sync);
-	const auto pPacket = dbg_new SinglePacket<SC_BattleFieldStatisticsUpdate>(m_vPlayerList.Size());
+	const auto pPacket = dbg_new SinglePacket<SC_BattleFieldStatisticsUpdate>(GetBattleFieldPlayerCountRaw());
 	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
 	for (int i = 0; i < m_vPlayerList.Size(); ++i) {
+		Player* pPlayer = m_vPlayerList[i];
+		if (pPlayer->GetPlayerState() != PlayerState::BattleField)
+			continue;
+
 		BattleStatisticsNet& dst = pPacket->Cmd.Statistics[i];
-		m_vPlayerList[i]->GetCharacter()->GetBattleStatisticsNet(dst);
+		pPlayer->GetCharacter()->GetBattleStatisticsNet(dst);
 	}
 	BroadcastPacket(pPacket, Const::Broadcast::Room::StateBattle);
 }
@@ -424,6 +438,18 @@ void Room::BroadcastBattleStateChanged(RoomState changedState) {
 	BroadcastPacket(pPacket, Const::Broadcast::Room::StateBattle);
 }
 
+void Room::BroadcastBattleFieldLeave(Player* outPlayer) {
+	if (outPlayer->GetPlayerState() != PlayerState::BattleField) {
+		return;
+	}
+
+	Character* pCharacter = outPlayer->GetCharacter();
+	const auto pPacket = dbg_new SinglePacket<SC_BattleFieldLeave>();
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	pPacket->Cmd.CharacterPrimaryKey = pCharacter->GetPrimaryKey();
+	BroadcastPacket(pPacket, Const::Broadcast::Room::StateBattle);
+}
+
 void Room::BroadcastJudgeRaw(int winnerCharacterPrimaryKey) {
 	auto pPacket = dbg_new SinglePacket<SC_RoomGameJudge>;
 	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
@@ -437,7 +463,6 @@ void Room::BroadcastRoomGameEnd() {
 	BroadcastPacket(pPacket, Const::Broadcast::Room::StateAny);
 }
 
-
 void Room::BroadcastTimeSync() {
 	const auto pPacket = dbg_new SinglePacket<SC_BattleFieldTimeSync>();
 	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
@@ -445,16 +470,10 @@ void Room::BroadcastTimeSync() {
 	BroadcastPacket(pPacket, Const::Broadcast::Room::StateBattle);
 }
 
-
-void Room::BroadcastBattleFieldMoveRaw() {
-	const int iCount = m_vPlayerList.Size();
-	const auto pPacket = dbg_new SinglePacket<SC_BattleFieldMove>(iCount);
+void Room::BroadcastBattleFieldMove(const TankMoveNet& move) {
+	const auto pPacket = dbg_new SinglePacket<SC_BattleFieldMove>();
 	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
-	for (int i = 0; i < iCount; ++i) {
-		Character* pCharacter = m_vPlayerList[i]->GetCharacter();
-		TankMoveNet& move = pPacket->Cmd.Move[i];
-		pCharacter->GetMoveNet(move);
-	}
+	pPacket->Cmd.Move = move;
 	BroadcastPacket(pPacket, Const::Broadcast::Room::StateBattle);
 }
 
@@ -465,7 +484,6 @@ void Room::BroadcastBattleFieldDeath(int deadCharacterPrimaryKey) {
 	pPacket->Cmd.DeadCharacterPrimaryKey = deadCharacterPrimaryKey;
 	BroadcastPacket(pPacket, Const::Broadcast::Room::StateBattle);
 }
-
 
 void Room::ChooseNewLeaderRaw() {
 	const int iLeftPlayerCount = m_vPlayerList.Size();
@@ -478,7 +496,6 @@ void Room::ChooseNewLeaderRaw() {
 }
 
 int Room::AddPlayerRaw(Player* player) {
-
 	if (m_vPlayerList.Size() >= Const::Room::MaxPlayerCount) {
 		return Const::Failed::Room::AddFailedFull;
 	}
@@ -498,6 +515,14 @@ bool Room::RemovePlayerRaw(Player* player) {
 
 int Room::GetPlayerCountRaw() const {
 	return m_vPlayerList.Size();
+}
+
+int Room::GetBattleFieldPlayerCountRaw() const {
+	int iCount = 0;
+	for (int i = 0; i < m_vPlayerList.Size(); ++i)
+		if (m_vPlayerList[i]->GetPlayerState() == PlayerState::BattleField)
+			iCount++;
+	return iCount;
 }
 
 Character* Room::GetBattleTopKillerRaw() const {
@@ -527,6 +552,12 @@ Character* Room::GetBattleTopKillerRaw() const {
 			dtTopLastKillTime = dtLastKillTime;
 		}
 	}
+
+	// 아무도 킬을 안한 경우는 톱브킬러 없다고 처리
+	if (iTopKillCount == 0) {
+		return nullptr;
+	}
+
 	return pTopKiller;
 }
 

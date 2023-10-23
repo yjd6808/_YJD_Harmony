@@ -66,6 +66,7 @@
 #define CMDID_SC_ROOM_LEAVE								139		// 방 나가기에 대한 응답
 #define CMDID_SC_ROOM_GAME_JUDGE						223		// 게임 승/패자 알려줌
 #define CMDID_CS_LOAD_BATTLE_FIELD_INFO					150		// 방에 진입하면 서버로 난 준비됐소! 라고 알려준다.
+#define CMDID_SC_BATTLE_FIELD_TANK_LIST					252		// 방진입 후 활동중인 탱크 목록 전파
 #define CMDID_CS_BATTLE_FIELD_MOVE						161		// 클라에서 움직일때마다 일정 주기마다 서버로 자신의 위치를 전송한다. - 서버는 이를 업데이트한다.
 #define CMDID_SC_BATTLE_FIELD_MOVE						162		// 서버는 일정주기마다 플레이어 위치를 플레이중인 방의 유저들에게 브로드캐스팅 해준다.
 #define CMDID_CS_BATTLE_FIELD_FIRE						166		// 플레이어 총알 발사 후 위치 정보 전달
@@ -76,6 +77,7 @@
 #define CMDID_SC_BATTLE_FIELD_TANK_SPAWN				165		// 탱크 생성시 알려준다.
 #define CMDID_CS_BATTLE_FIELD_DEATH						168
 #define CMDID_SC_BATTLE_FIELD_DEATH						169		// 다른 플레이어에게 브로드캐스팅 및 본인에 해당하는 경우 리바이벌 타이머 설정을 진행한다.
+#define CMDID_SC_BATTLE_FIELD_LEAVE						251		// 특정 유저가 배틀중 나간경우
 #define CMDID_CS_SERVER_MESSAGE							400		// 서버 메시지 전송
 #define CMDID_CS_CHAT_MESSAGE							401		// 채팅 메시지 전송
 #define CMDID_SC_CHAT_MESSAGE							402		// 브로드캐스트 전송
@@ -230,6 +232,7 @@ STATIC_CMD_END
 
 STATIC_CMD_BEGIN(SC_BattleFieldTankSpawn, CMDID_SC_BATTLE_FIELD_TANK_SPAWN)
 TankMoveNet Move;	// 생성위치
+bool Revival;		// 부활로 살아나는건지
 STATIC_CMD_END
 
 STATIC_CMD_BEGIN(CS_AddFriend, CMDID_CS_ADD_FRIEND)
@@ -300,23 +303,27 @@ int RoomAccessId = Const::InvalidValue;
 STATIC_CMD_END
 
 STATIC_CMD_BEGIN(SC_RoomGameIntrude, CMDID_SC_ROOM_GAME_INTRUDE)
+int CharacterPrimaryKey = Const::InvalidValue;
 STATIC_CMD_END
-
 
 STATIC_CMD_BEGIN(CS_LoadBattleFieldInfo, CMDID_CS_LOAD_BATTLE_FIELD_INFO)
 int RoomAccessId = Const::InvalidValue;
+bool Intrude;
 STATIC_CMD_END
+
+DYNAMIC_CMD_BEGIN(SC_BattleFieldTankList, CMDID_SC_BATTLE_FIELD_TANK_LIST, TankMoveNet)
+TankMoveNet Move[1];
+DYNAMIC_CMD_END
 
 // 클라는 일정주기마다 서버로 자신의 탱크 정보를 서버로 전송한다.
 // 서버는 이 정보를 받아서 업데이트 시켜준다.
 STATIC_CMD_BEGIN(CS_BattleFieldMove, CMDID_CS_BATTLE_FIELD_MOVE)
-TankMoveNet Move {};
+TankMoveNet Move;
 STATIC_CMD_END
 
-//서버는 일정주기마다 클라이언트들의 위치정보를 클라이언트들로 전송해주도록한다.
-DYNAMIC_CMD_BEGIN(SC_BattleFieldMove, CMDID_SC_BATTLE_FIELD_MOVE, TankMoveNet)
-TankMoveNet Move[1];
-DYNAMIC_CMD_END
+STATIC_CMD_BEGIN(SC_BattleFieldMove, CMDID_SC_BATTLE_FIELD_MOVE)
+TankMoveNet Move;
+STATIC_CMD_END
 
 STATIC_CMD_BEGIN(SC_BattleFieldStateChanged, CMDID_SC_BATTLE_FIELD_STATE_CHANGED)
 RoomState State;
@@ -348,6 +355,10 @@ STATIC_CMD_END
 
 STATIC_CMD_BEGIN(SC_RoomGameJudge, CMDID_SC_ROOM_GAME_JUDGE)
 int WinnerCharacterPrimaryKey = Const::InvalidValue;
+STATIC_CMD_END
+
+STATIC_CMD_BEGIN(SC_BattleFieldLeave, CMDID_SC_BATTLE_FIELD_LEAVE)
+int CharacterPrimaryKey = Const::InvalidValue;
 STATIC_CMD_END
 
 DYNAMIC_CMD_BEGIN(CS_ChatMessage, CMDID_CS_CHAT_MESSAGE, JCore::StaticString<1>)

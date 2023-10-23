@@ -115,6 +115,8 @@ bool PopUp::init(bool bgClickable)
 	if (getType() == CONFIRM) {
 		TextButton* confBtn = TextButton::create(100, 50, "확인", 15);
 		confBtn->setPosition(Vec2(pWindoiw->getPosition().x, pWindoiw->getPosition().y - 90.0f));
+		confBtn->setBackgroundColor(ColorList::Beige_v);
+		confBtn->setFontColor(ColorList::Black_v);
 		confBtn->setClickEvent([&](TextButton* btn) {
 			auto func = this->getConfirm();
 			if (func != nullptr) 
@@ -127,6 +129,8 @@ bool PopUp::init(bool bgClickable)
 	} else if (getType() == YESNO) {
 		TextButton* yesBtn = TextButton::create(100, 50, "예", 15);
 		yesBtn->setPosition(Vec2(pWindoiw->getPosition().x - 60.0f, pWindoiw->getPosition().y - 90.0f));
+		yesBtn->setBackgroundColor(ColorList::Beige_v);
+		yesBtn->setFontColor(ColorList::Black_v);
 		yesBtn->setClickEvent( [&](TextButton* btn) {
 			this->getYes()();
 			this->getParent()->removeChild(this);
@@ -136,9 +140,9 @@ bool PopUp::init(bool bgClickable)
 
 		TextButton* noBtn = TextButton::create(100, 50, "아니오", 15);
 		noBtn->setPosition(Vec2(pWindoiw->getPosition().x + 60.0f, pWindoiw->getPosition().y - 90.0f));
-		noBtn->setClickEvent(
-			[&](TextButton* btn)
-		{
+		noBtn->setBackgroundColor(ColorList::Beige_v);
+		noBtn->setFontColor(ColorList::Black_v);
+		noBtn->setClickEvent([&](TextButton* btn) {
 			this->getNo()();
 			this->getParent()->removeChild(this);
 		});

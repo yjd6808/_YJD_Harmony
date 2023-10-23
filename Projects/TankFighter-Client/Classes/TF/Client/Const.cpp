@@ -33,7 +33,7 @@ namespace Layer
 
 namespace String
 {
-	const char* PlayWaitLeftTimeFormat = "다른 플레이어가 모두 입장할때까지 기다려주세요.\n남은시간 : %.1f초";
+	const char* PlayWaitLeftTimeFormat = "게임 시작까지 남은시간 : %.1f초";
 	const char* PlayingLeftTimeFormat = "게임 종료까지 남은시간 : %.1f초";
 	const char* EndWaitLeftTimeFormat = "방으로 이동하기까지 남은시간 : % .1f초";
 	const char* RevivalLeftTimeFormat = "%.1f초뒤 부활합니다.";
@@ -56,6 +56,7 @@ namespace Properties
 		const int ChannelPrimaryKey = 4;
 		const int PlayerState = 5;
 		const int RoomAccessId = 6;
+		const int IsIntruder = 7;
 	}
 }
 

@@ -203,19 +203,36 @@ void R_GAME::RECV_SC_RoomGameReady(Session* session, ICommand* cmd) {
 }
 
 void R_GAME::RECV_SC_RoomGameIntrude(Session* session, ICommand* cmd) {
+	SC_RoomGameIntrude* pCmd = (SC_RoomGameIntrude*)cmd;
+	Core::GameClient->SetIntruder(true);
+	Core::GameClient->SetPlayerState(PlayerState::BattleField);
+	Director::getInstance()->replaceScene(BattleFieldScene::create(Core::Room));
 }
 
 void R_GAME::RECV_SC_RoomLeave(Session* session, ICommand* cmd) {
 	SC_RoomLeave* pCmd = (SC_RoomLeave*)cmd;
+	Core::GameClient->SetIntruder(false);
 	Core::GameClient->SetRoomAccessId(Const::InvalidValue);
 	Core::GameClient->SetPlayerState(PlayerState::Lobby);
 	Director::getInstance()->replaceScene(LobbyScene::create());
 }
 
-void R_GAME::RECV_SC_RoomGameEnd(JNetwork::Session* session, JNetwork::ICommand* cmd) {
+void R_GAME::RECV_SC_RoomGameEnd(Session* session, ICommand* cmd) {
 	SC_RoomGameEnd* pCmd = (SC_RoomGameEnd*)cmd;
-	Core::GameClient->SetPlayerState(PlayerState::Room);
-	Director::getInstance()->replaceScene(RoomScene::create(Core::Room));
+	
+	if (Core::GameClient->GetPlayerState() == PlayerState::BattleField) {
+		Core::GameClient->SetPlayerState(PlayerState::Room);
+		Director::getInstance()->replaceScene(RoomScene::create(Core::Room));
+	} else if (Core::GameClient->GetPlayerState() == PlayerState::Room) {
+		Core::Room->setState(RoomState::ReadyWait);
+
+		RoomScene* pRoomScene = dynamic_cast<RoomScene*>(Director::getInstance()->getRunningScene());
+		if (pRoomScene == nullptr) {
+			_LogWarn_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Room));
+			return;
+		}
+		pRoomScene->refreshRoomInfo();
+	}
 }
 
 void R_GAME::RECV_SC_LoadRoomInfo(Session* session, ICommand* cmd) {
@@ -236,12 +253,20 @@ void R_GAME::RECV_SC_UpdateRoomMemberList(Session* session, ICommand* cmd) {
 	SC_UpdateRoomMemberList* pCmd = (SC_UpdateRoomMemberList*)cmd;
 	Core::Room->updateRoomMemberList(pCmd->Info, pCmd->Count, pCmd->HostCharacterPrimaryKey);
 
-	RoomScene* pRoomScene = dynamic_cast<RoomScene*>(Director::getInstance()->getRunningScene());
-	if (pRoomScene == nullptr) {
-		return;
+	if (Core::GameClient->GetPlayerState() == PlayerState::Room) {
+		RoomScene* pRoomScene = dynamic_cast<RoomScene*>(Director::getInstance()->getRunningScene());
+		if (pRoomScene == nullptr) {
+			return;
+		}
+		pRoomScene->refreshRoomMemberInfoList();
+	} else if (Core::GameClient->GetPlayerState() == PlayerState::BattleField) {
+		BattleFieldScene* pBattleFieldScene = dynamic_cast<BattleFieldScene*>(Director::getInstance()->getRunningScene());
+		if (pBattleFieldScene == nullptr) {
+			return;
+		}
+		pBattleFieldScene->refreshTanks();
 	}
-
-	pRoomScene->refreshRoomMemberInfoList();
+	
 }
 
 void R_GAME::RECV_SC_UpdateRoomMember(Session* session, ICommand* cmd) {
@@ -297,7 +322,16 @@ void R_GAME::RECV_SC_BattleFieldTankSpawn(Session* session, ICommand* cmd) {
 	if (pBattleFieldScene == nullptr) {
 		return;
 	}
-	pBattleFieldScene->spawnTank(pCmd->Move);
+	pBattleFieldScene->spawnTanks(&pCmd->Move, 1);
+}
+
+void R_GAME::RECV_SC_BattleFieldTankList(Session* session, ICommand* cmd) {
+	SC_BattleFieldTankList* pCmd = (SC_BattleFieldTankList*)cmd;
+	BattleFieldScene* pBattleFieldScene = dynamic_cast<BattleFieldScene*>(Director::getInstance()->getRunningScene());
+	if (pBattleFieldScene == nullptr) {
+		return;
+	}
+	pBattleFieldScene->spawnTanks(pCmd->Move, pCmd->Count);
 }
 
 void R_GAME::RECV_SC_BattleFieldTimeSync(Session* session, ICommand* cmd) {
@@ -306,8 +340,9 @@ void R_GAME::RECV_SC_BattleFieldTimeSync(Session* session, ICommand* cmd) {
 	if (pBattleFieldScene == nullptr) {
 		return;
 	}
+	
 	pBattleFieldScene->syncTime(pCmd->Elapsed);
-
+	pBattleFieldScene->refreshUIByRoomState();
 }
 
 void R_GAME::RECV_SC_BattleFieldMove(Session* session, ICommand* cmd) {
@@ -316,7 +351,7 @@ void R_GAME::RECV_SC_BattleFieldMove(Session* session, ICommand* cmd) {
 	if (pBattleFieldScene == nullptr) {
 		return;
 	}
-	pBattleFieldScene->syncMove(pCmd->Move, pCmd->Count);
+	pBattleFieldScene->syncMove(pCmd->Move);
 }
 
 void R_GAME::RECV_SC_BattleFieldFire(Session* session, ICommand* cmd) {
@@ -359,7 +394,16 @@ void R_GAME::RECV_SC_BattleFieldStatisticsUpdate(Session* session, ICommand* cmd
 	
 }
 
-void R_GAME::RECV_SC_RoomGameJudge(JNetwork::Session* session, JNetwork::ICommand* cmd) {
+void R_GAME::RECV_SC_BattleFieldLeave(Session* session, ICommand* cmd) {
+	SC_BattleFieldLeave* pCmd = (SC_BattleFieldLeave*)cmd;
+	BattleFieldScene* pBattleFieldScene = dynamic_cast<BattleFieldScene*>(Director::getInstance()->getRunningScene());
+	if (pBattleFieldScene == nullptr) {
+		return;
+	}
+	pBattleFieldScene->removeTank(pCmd->CharacterPrimaryKey);
+}
+
+void R_GAME::RECV_SC_RoomGameJudge(Session* session, ICommand* cmd) {
 	SC_RoomGameJudge* pCmd = (SC_RoomGameJudge*)cmd;
 	BattleFieldScene* pBattleFieldScene = dynamic_cast<BattleFieldScene*>(Director::getInstance()->getRunningScene());
 	if (pBattleFieldScene == nullptr) {

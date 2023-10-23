@@ -14,6 +14,7 @@ USING_NS_JC;
 USING_NS_JNET;
 
 int main() {
+	new char; // Force Leak
 	//_CrtSetBreakAlloc(1556);
 	Random::EngineInitialize();
 	Winsock::Initialize(2, 2);

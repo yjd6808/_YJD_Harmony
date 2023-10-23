@@ -60,8 +60,10 @@ void InitializeCommon() {
 	Core::CommandNameMap.Add<SC_RoomGameEnd>();
 	Core::CommandNameMap.Add<CS_RoomLeave>();
 	Core::CommandNameMap.Add<SC_RoomLeave>();
+	Core::CommandNameMap.Add<SC_RoomGameIntrude>();
 	Core::CommandNameMap.Add<CS_LoadBattleFieldInfo>();
 	Core::CommandNameMap.Add<SC_BattleFieldTankSpawn>();
+	Core::CommandNameMap.Add<SC_BattleFieldTankList>();
 	Core::CommandNameMap.Add<SC_BattleFieldTimeSync>();
 	Core::CommandNameMap.Add<CS_BattleFieldMove>();
 	Core::CommandNameMap.Add<SC_BattleFieldMove>();
@@ -71,6 +73,7 @@ void InitializeCommon() {
 	Core::CommandNameMap.Add<SC_BattleFieldDeath>();
 	Core::CommandNameMap.Add<SC_BattleFieldStateChanged>();
 	Core::CommandNameMap.Add<SC_BattleFieldStatisticsUpdate>();
+	Core::CommandNameMap.Add<SC_BattleFieldLeave>();
 	Core::CommandNameMap.Add<SC_RoomGameJudge>();
 	Core::CommandNameMap.Add<SC_ServerMessage>();
 	Core::CommandNameMap.Add<CS_ChatMessage>();

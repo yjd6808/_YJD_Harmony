@@ -127,7 +127,7 @@ void S_GAME::SEND_CS_RoomGameStart() {
 
 void S_GAME::SEND_CS_RoomGameIntrude() {
 	auto sending = SendBegin<CS_RoomGameIntrude>();
-	sending.Cmd.CharacterPrimaryKey = Core::GameClient->GetChannelPrimaryKey();
+	sending.Cmd.CharacterPrimaryKey = Core::GameClient->GetCharacterPrimaryKey();
 	sending.Cmd.RoomAccessId = Core::GameClient->GetRoomAccessId();
 }
 

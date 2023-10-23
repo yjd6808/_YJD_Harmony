@@ -39,6 +39,9 @@ public:
 	int GetBattleKillCount() const { return m_BattleStatistics.Kill; }
 	int GetBattleDeathCount() const { return m_BattleStatistics.Death; }
 	JCore::DateTime GetBattleLastKillTime() const { return m_BattleStatistics.LastKillTime; }
+	int GetFriendCount() const;
+	void GetFriendList(JCORE_OUT FriendCharacterInfo* friendArray, int capacity);
+
 	bool IsDeath() const { return m_iDeath; }
 	bool IsReady() const { return m_bReady; }
 
@@ -62,8 +65,6 @@ public:
 	void ApplyToDatabase();
 
 	void LoadFriendList(ChannelLobby* channelLobby);
-	int GetFriendCount() const;
-	void GetFriendList(JCORE_OUT FriendCharacterInfo* friendArray, int capacity);
 	bool IsFriend(int characterPrimaryKey);
 	void AddFriend(Character* friendCharactor);
 	void DeleteFriend(int characterPrimaryKey);
@@ -79,8 +80,13 @@ public:
 	void GetBattleStatisticsNet(JCORE_REF_OUT BattleStatisticsNet& info);
 	void GetMoveNet(JCORE_REF_OUT TankMoveNet& move);
 
+	void Spawn();
+
 	JCore::String ToString();
 	
+
+
+
 private:
 	Player* m_pPlayer;
 	Room* m_pRoom;

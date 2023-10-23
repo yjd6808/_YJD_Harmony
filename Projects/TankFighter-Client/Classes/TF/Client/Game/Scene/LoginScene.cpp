@@ -29,14 +29,21 @@ bool LoginScene::init() {
 		return false;
 	}
 
-	Text* pLogoText = Text::create("탱크 파이터!", Const::Resource::FontName, 72);
+	Text* pLogoText = Text::create("탱크 파이터! 슈퍼 리뉴얼", Const::Resource::FontName, 72);
 	pLogoText->setSkewX(30.0f);
 	pLogoText->setPosition({ 500, 500 });
+	pLogoText->runAction(RepeatForever::create(Sequence::create(FadeOut::create(1.0f), FadeIn::create(1.0f), nullptr)));
 	m_pUILayer->addChild(pLogoText);
+
+	Text* pVersionText = Text::create("Ver 2.31", Const::Resource::FontName, 48);
+	pVersionText->setSkewX(30.0f);
+	pVersionText->setPosition({ 740, 445 });
+	pVersionText->runAction(RepeatForever::create(Sequence::create(FadeOut::create(1.0f), FadeIn::create(1.0f), nullptr)));
+	m_pUILayer->addChild(pVersionText);
 
 	Text* pInfoText = Text::create("개발자 : 윤정도", Const::Resource::FontName, 25);
 	pInfoText->enableGlow(Color4B::GRAY);
-	pInfoText->setColor(ColorList::AbsoluteZero_v);
+	pInfoText->setColor(ColorList::Aero_v);
 	pInfoText->setAnchorPoint(Vec2::ANCHOR_MIDDLE_BOTTOM);
 	pInfoText->setPosition({ 500, 400 });
 	m_pUILayer->addChild(pInfoText);

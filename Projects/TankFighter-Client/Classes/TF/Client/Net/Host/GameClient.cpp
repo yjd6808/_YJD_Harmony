@@ -20,6 +20,7 @@ GameClient::GameClient(const JNetwork::IOCPPtr& iocp, const MemoryPoolAbstractPt
 	m_Properties.Add(Const::Properties::GameClient::ChannelPrimaryKey, PropertyType::Int);
 	m_Properties.Add(Const::Properties::GameClient::PlayerState, PropertyType::Int);
 	m_Properties.Add(Const::Properties::GameClient::RoomAccessId, PropertyType::Int);
+	m_Properties.Add(Const::Properties::GameClient::IsIntruder, PropertyType::Bool);
 }
 
 void GameClient::SetReconnectMode(bool mode) {
@@ -80,4 +81,12 @@ void GameClient::SetRoomAccessId(int accessId) {
 
 int GameClient::GetRoomAccessId() const {
 	return m_Properties[Const::Properties::GameClient::RoomAccessId].As<int>();
+}
+
+bool GameClient::IsIntruder() const {
+	return m_Properties[Const::Properties::GameClient::IsIntruder].As<bool>();
+}
+
+void GameClient::SetIntruder(bool intruder) {
+	m_Properties[Const::Properties::GameClient::IsIntruder] = intruder;
 }

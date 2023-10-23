@@ -671,8 +671,6 @@ void R_GAME::RECV_CS_RoomGameReady(Session* session, ICommand* cmd) {
 }
 
 
-
-
 void R_GAME::RECV_CS_RoomGameStart(Session* session, ICommand* cmd) {
 	GameSession* pSession = (GameSession*)session;
 	CS_RoomGameStart* pCmd = (CS_RoomGameStart*)cmd;
@@ -709,6 +707,31 @@ void R_GAME::RECV_CS_RoomGameStart(Session* session, ICommand* cmd) {
 	}
 }
 
+void R_GAME::RECV_CS_RoomGameIntrude(Session* session, ICommand* cmd) {
+	GameSession* pSession = (GameSession*)session;
+	CS_RoomGameIntrude* pCmd = (CS_RoomGameIntrude*)cmd;
+
+	Room* pRoom = Room::GetByAccessId(pCmd->RoomAccessId);
+	if (pRoom == nullptr) {
+		return;
+	}
+
+	Player* pPlayer = pSession->GetPlayer();
+	if (pPlayer == nullptr) {
+		return;
+	}
+
+	Character* pCharacter = pPlayer->GetCharacter();
+	if (pCharacter->GetPrimaryKey() != pCmd->CharacterPrimaryKey) {
+		return;
+	}
+
+	pPlayer->OnBattleBegin();
+
+	S_GAME::SetInformation(pSession, SendStrategy::SendAsync);
+	S_GAME::SEND_SC_RoomGameIntrude();
+}
+
 void R_GAME::RECV_CS_LoadBattleFieldInfo(Session* session, ICommand* cmd) {
 	GameSession* pSession = (GameSession*)session;
 	CS_LoadBattleFieldInfo* pCmd = (CS_LoadBattleFieldInfo*)cmd;
@@ -732,16 +755,15 @@ void R_GAME::RECV_CS_LoadBattleFieldInfo(Session* session, ICommand* cmd) {
 		return;
 	}
 
-	pCharacter->SetDeath(false);
 
 	pRoom->BroadcastRoomMemberInfo(pCharacter);
+	pRoom->BroadcastBattleFieldTankSpawn(pCharacter, false);
 	pRoom->BroadcastBattleSatistics();
-	pRoom->BroadcastBattleFieldTankSpawn(pCharacter);
-	
 
 	S_GAME::AutoFlush _;
 	S_GAME::SetInformation(pSession, SendStrategy::SendAlloc);
 	S_GAME::SEND_SC_BattleFieldTimeSync(pRoom->GetBattleFieldTime());
+	S_GAME::SEND_SC_BattleFieldTankList(pRoom);
 	S_GAME::SEND_SC_LoadRoomInfo(pRoom);
 }
 
@@ -806,6 +828,10 @@ void R_GAME::RECV_CS_BattleFieldMove(Session* session, ICommand* cmd) {
 	if (pPlayer == nullptr)
 		return;
 
+	Room* pRoom = pPlayer->GetRoom();
+	if (pRoom == nullptr)
+		return;
+
 	Character* pCharacter = pPlayer->GetCharacter();
 	if (pCharacter == nullptr)
 		return;
@@ -816,6 +842,7 @@ void R_GAME::RECV_CS_BattleFieldMove(Session* session, ICommand* cmd) {
 	}
 
 	pCharacter->SetMove(pCmd->Move);
+	pRoom->BroadcastBattleFieldMove(pCmd->Move);
 }
 
 void R_GAME::RECV_CS_ChatMessage(Session* session, ICommand* cmd) {

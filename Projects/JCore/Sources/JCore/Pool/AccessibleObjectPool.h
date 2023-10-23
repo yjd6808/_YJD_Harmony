@@ -137,7 +137,7 @@ public:
 
 	static void FreeAllObjects() {
 		JCORE_LOCK_GUARD(ms_Sync);
-		DebugAssertMsg(ms_iCount == ms_lPool.Size(), "%s 아직 반환되지 않은 오브젝트가 존재합니다.", typeid(T).name());
+		DebugAssertMsg(ms_iCount == ms_lPool.Size(), "%s 아직 반환되지 않은 오브젝트가 %d개 존재합니다.", typeid(T).name(), ms_iCount - ms_lPool.Size());
 
 		for (int i = 0; i < ms_iCount; ++i) {
 			DeleteObject(ms_vAccessTable->At(i));

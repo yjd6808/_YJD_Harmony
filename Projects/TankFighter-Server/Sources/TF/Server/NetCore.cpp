@@ -112,10 +112,12 @@ void NetCore::InitializeParser() {
 	m_Parser.AddCommand<CS_LoadRoomInfo>(R_GAME::RECV_CS_LoadRoomInfo);
 	m_Parser.AddCommand<CS_RoomGameReady>(R_GAME::RECV_CS_RoomGameReady);
 	m_Parser.AddCommand<CS_RoomGameStart>(R_GAME::RECV_CS_RoomGameStart);
+	m_Parser.AddCommand<CS_RoomGameIntrude>(R_GAME::RECV_CS_RoomGameIntrude);
 	m_Parser.AddCommand<CS_RoomLeave>(R_GAME::RECV_CS_RoomLeave);
 	m_Parser.AddCommand<CS_LoadBattleFieldInfo>(R_GAME::RECV_CS_LoadBattleFieldInfo);
 	m_Parser.AddCommand<CS_BattleFieldFire>(R_GAME::RECV_CS_BattleFieldFire);
 	m_Parser.AddCommand<CS_BattleFieldDeath>(R_GAME::RECV_CS_BattleFieldDeath);
+	m_Parser.AddCommand<CS_BattleFieldMove>(R_GAME::RECV_CS_BattleFieldMove);
 	m_Parser.AddCommand<CS_ChatMessage>(R_GAME::RECV_CS_ChatMessage);
 	m_Parser.AddCommand<CS_TcpRTT>(R_GAME::RECV_CS_TcpRTT);
 }

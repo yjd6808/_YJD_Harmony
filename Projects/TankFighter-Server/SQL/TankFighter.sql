@@ -1,8 +1,8 @@
 # < TaskFighter 프로젝트 SQL 스크립트 >
 # 작성자 : 윤정도
 # 
-# mysql server version : 5.7.37
-# mysql workbench 8.0.27
+# mysql server version : 5.7.40, 8.0.31 실행확인
+# mysql workbench 8.0.31
 # encoding : utf8
 # encdoing collation : utf8_unicode_520_ci
 
@@ -185,8 +185,8 @@ L2:		loop
 	select _debug_log;
     
     deallocate prepare stmt;
-end$$
+end$$t_character
 delimiter ;
 
-call insert_many_account(100);
-call insert_many_character(10);
+# call insert_many_account(100);
+# call insert_many_character(10);
