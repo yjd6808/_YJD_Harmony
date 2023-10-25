@@ -39,13 +39,14 @@
    * Path
  - 메모리 풀 [설명 보기](./project_jcore-feature-memory-pool.md)
    * ObjectPool
+   * AccessibleObjectPool
    * IndexedMemoryPool
    * BinarySearchMemoryPool
  - 쓰레드 [설명 보기](./project_jcore-feature-thread.md)
    * Thread
    * ThreadPool
    * Scheduler
- - 동기화 객체 [설명 보기](./project_jcore-feature-sync.md)
+ - 동기화 객체 [설명 보기](./project_jcore-feature-synchronization-object.md)
    * WaitHandle
    * AutoResetEvent
    * ManualResetEvent
