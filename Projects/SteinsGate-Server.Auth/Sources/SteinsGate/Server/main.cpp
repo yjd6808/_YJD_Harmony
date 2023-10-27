@@ -19,6 +19,7 @@ int main() {
 	Random::EngineInitialize();
 	Winsock::Initialize(2, 2);
 	Console::SetSize(800, 400);
+	InitializeJCore();
 	InitializeNetLogger(LOG_SPECIFIER_AUTH);
 	InitializeDefaultLogger(LOG_SPECIFIER_AUTH);
 	InitializeCommonCore();
@@ -45,6 +46,7 @@ int main() {
 	FinalizeCommonCore();
 	FinalizeDefaultLogger();
 	FinalizeNetLogger();
+	FinalizeJCore();
 	Winsock::Finalize();
 	return Console::ReadKeyWhile("X키 입력시 종료", ConsoleKey::X);
 }

@@ -18,6 +18,7 @@ int main() {
 	//_CrtSetBreakAlloc(1556);
 	Random::EngineInitialize();
 	Winsock::Initialize(2, 2);
+	InitializeJCore();
 	InitializeDefaultLogger();
 	InitializeNetLogger();
 	InitializeCommon();
@@ -32,6 +33,7 @@ int main() {
 	FinalizeCommon();
 	FinalizeNetLogger();
 	FinalizeDefaultLogger();
+	FinalizeJCore();
 	Winsock::Finalize();
 	return 0;
 }

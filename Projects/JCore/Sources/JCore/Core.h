@@ -35,29 +35,5 @@
 
 #include <JCore/Pool/ObjectPool.h>
 
-NS_JC_BEGIN
-
-struct JCoreLibManager
-{
-	JCoreLibManager();
-	~JCoreLibManager();
-
-	static int Initialize();
-	static int Finalize();
-	static int InitResult() { return ms_iInitResult; }
-private:
-	inline static bool ms_bInitialized = false;
-	inline static int ms_iInitResult = -1;
-};
-
-
-extern Int64 AppStartUpTime_v;
-
-// #if JCORE_OPTION_AUTO_INIT 1
-inline JCoreLibManager JCoreLibManager_v;
-// #endif
-
-NS_JC_END
-
 
 #pragma warning(pop)

@@ -60,6 +60,7 @@ bool SteinsGateApp::applicationDidFinishLaunching() {
 	// 메인 리소스 초기화
 	// ======================================================
 
+    InitializeJCore();
     Winsock::Initialize(2, 2);
     AudioPlayer::Initilize();
     SgaElementInitializer::Initialize();

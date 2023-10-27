@@ -315,6 +315,7 @@ void WorldScene::onExit() {
 	FinalizeCommonCore();
 	FinalizeDefaultLogger();
 	FinalizeNetLogger();
+	FinalizeJCore();
 	Winsock::Finalize();
 }
 

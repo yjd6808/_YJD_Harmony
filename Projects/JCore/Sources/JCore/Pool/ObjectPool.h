@@ -28,9 +28,9 @@
 
 #pragma once
 
+#include <JCore/Config.h>
 #include <JCore/Memory.h>
 #include <JCore/Primitives/SmartPtr.h>
-
 #include <JCore/Sync/NormalLock.h>
 
 NS_JC_BEGIN
@@ -73,9 +73,8 @@ public:
 		TPool::operator delete(obj);
 	}
 
-
 	static void	FreeAllObjects() {
-		LockGuard guard(ms_Lock);
+		JCORE_LIB_LOCK_GUARD(ms_Lock);
 
 		if (ms_uiAllocatedCount != 0) {
 			_LogWarn_("아직 반환되지 않은 데이터가 존재합니다.");
@@ -106,7 +105,7 @@ public:
 
 
 	void* operator new(size_t size, int blockUse, char const* fileName, int lineNumber) {
-		LockGuard guard(ms_Lock);
+		JCORE_LIB_LOCK_GUARD(ms_Lock);
 
 		T* pInst;
 		if (ms_pHead != nullptr) {
@@ -125,14 +124,13 @@ public:
 	}
 
 	void* operator new(size_t size) {
-		LockGuard guard(ms_Lock);
+		JCORE_LIB_LOCK_GUARD(ms_Lock);
 
 		T* pInst;
 		if (ms_pHead != nullptr) {
 			pInst = ms_pHead;
 			ms_pHead = ms_pHead->m_pNext;
-		}
-		else {
+		} else {
 			pInst = Memory::Allocate<T*>(size);
 			++ms_uiTotalCount;
 		}
@@ -150,7 +148,7 @@ public:
 
 		T* pInst = (T*)obj;
 
-		LockGuard guard(ms_Lock);
+		JCORE_LIB_LOCK_GUARD(ms_Lock);
 		if (pInst->m_pNext) {
 			_LogWarn_("풀에서 관리중인 객체를 삭제할려고 시도했습니다.");
 			return;
@@ -164,37 +162,11 @@ public:
 private:
 	T* m_pNext;
 
-	inline static bool ms_bAtExitCalled = false;
+	
 	inline static T* ms_pHead = nullptr;
 	inline static Int32U ms_uiTotalCount = 0;
 	inline static Int32U ms_uiAllocatedCount = 0;
 	inline static TLock	ms_Lock;
-	inline static AtExitCallback ms_AtExit;
-
-	struct AtExitCallback
-	{
-		~AtExitCallback() { ms_bAtExitCalled = true; }
-	};
-
-	struct LockGuard
-	{
-		LockGuard(TLock& lock)
-			: m_bStaticDataDestroyed(ms_bAtExitCalled)
-			, m_Lock(lock)
-		{
-			if (!m_bStaticDataDestroyed)
-				lock.Lock();
-		}
-		~LockGuard() {
-			if (!m_bStaticDataDestroyed)
-				m_Lock.Unlock();
-		}
-
-	private:
-		bool m_bStaticDataDestroyed;
-		TLock& m_Lock;
-	};
-
 };
 
 NS_JC_END

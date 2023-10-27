@@ -233,6 +233,7 @@
     <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_BOOL.cpp">
       <Filter>Container\RelatedProperty</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Config.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -650,6 +651,7 @@
     <ClInclude Include="..\Sources\JCore\Pool\AccessibleObjectPool.h">
       <Filter>Pool</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Config.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\JCore\Natvis\ListQueue.natvis">

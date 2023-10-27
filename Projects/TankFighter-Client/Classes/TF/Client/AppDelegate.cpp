@@ -20,6 +20,7 @@ void AppDelegate::initGLContextAttrs() {
 bool AppDelegate::applicationDidFinishLaunching() {
     Random::EngineInitialize();
     Winsock::Initialize(2, 2);
+    InitializeJCore();
     InitializeDefaultLogger();
     InitializeNetLogger();
     InitializeCommon();
@@ -35,6 +36,7 @@ void AppDelegate::applicationDidExit() {
     FinalizeCommon();
     FinalizeNetLogger();
     FinalizeDefaultLogger();
+    FinalizeJCore();
     Winsock::Finalize();
 }
 

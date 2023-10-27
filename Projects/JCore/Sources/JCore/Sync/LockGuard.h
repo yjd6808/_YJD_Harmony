@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <JCore/Namespace.h>
+#include <JCore/Config.h>
 
 NS_JC_BEGIN
 
@@ -27,6 +27,42 @@ public:
 	void Unlock() { m_Mtx->Unlock(); }
 
 	LockGuard(const TLockGuard& mtx) = delete;
+	TLock& operator=(const TLockGuard& mtx) = delete;
+private:
+	TLock* m_Mtx;
+};
+
+
+// JCore 라이브러리내부에서 사용하는 용도의 락가드
+// 앱이 종료된 이후에는 락기능 무효화를 시킴
+// 이유는 Config.h 주석 참고
+template <typename TLock>
+class JCoreLibLockGuard final
+{
+	using TLockGuard = LockGuard<TLock>;
+public:
+	JCoreLibLockGuard(TLock& mtx) : m_Mtx(&mtx) {
+		if (!AppExited)
+			m_Mtx->Lock();
+	}
+
+	~JCoreLibLockGuard() {
+		if (!AppExited)
+			m_Mtx->Unlock();
+	}
+
+	TLock* Handle() const { return m_Mtx; }
+
+	void Lock() {
+		if (!AppExited)
+			m_Mtx->Lock();
+	}
+	void Unlock() {
+		if (!AppExited)
+			m_Mtx->Unlock();
+	}
+
+	JCoreLibLockGuard(const TLockGuard& mtx) = delete;
 	TLock& operator=(const TLockGuard& mtx) = delete;
 private:
 	TLock* m_Mtx;

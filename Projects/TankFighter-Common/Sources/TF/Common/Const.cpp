@@ -14,8 +14,8 @@ namespace Net
 {
 	namespace Server
 	{
-		const char GameBindEndPoint[] = "0.0.0.0:12345";
-		const char GameConnectEndPoint[] = "127.0.0.1:12345";
+		const char GameBindEndPoint[] = "0.0.0.0:9999";
+		const char GameConnectEndPoint[] = "112.163.241.175:9999";
 	}
 }
 

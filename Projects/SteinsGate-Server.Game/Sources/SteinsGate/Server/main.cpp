@@ -22,6 +22,7 @@ int main(int argc, char* argv[]) {
 	Random::EngineInitialize();
 	Winsock::Initialize(2, 2);
 	Console::SetSize(800, 400);
+	InitializeJCore();
 	InitializeNetLogger(szLogSpecifier.Source());
 	InitializeDefaultLogger(szLogSpecifier.Source());
 	InitializeCommonCore();
@@ -46,6 +47,7 @@ int main(int argc, char* argv[]) {
 	FinalizeCommonCore();
 	FinalizeDefaultLogger();
 	FinalizeNetLogger();
+	FinalizeJCore();
 	Winsock::Finalize();
 	return Console::ReadKeyWhile("X키 입력시 종료", ConsoleKey::X) ? 0 : -1;
 }

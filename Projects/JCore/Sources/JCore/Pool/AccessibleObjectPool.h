@@ -80,7 +80,7 @@ public:
 		if (iCurSize == capacity) 
 			return;
 
-		JCORE_LOCK_GUARD(ms_Sync);
+		JCORE_LIB_LOCK_GUARD(ms_Sync);
 		JCORE_DELETE_SAFE(ms_vAccessTableForSwap);
 
 		ms_vAccessTableForSwap = dbg_new TAccessTable(capacity, nullptr);
@@ -96,7 +96,7 @@ public:
 	static T* Pop() {
 		DebugAssertMsg(ms_vAccessTable != nullptr, "초기화를 우선 해주세요.");
 
-		JCORE_LOCK_GUARD(ms_Sync);
+		JCORE_LIB_LOCK_GUARD(ms_Sync);
 		if (ms_iCount == ms_iCapacity) {
 			Expand(ms_iCapacity * 4);
 		}
@@ -118,7 +118,7 @@ public:
 	}
 
 	static void Push(T* obj) {
-		JCORE_LOCK_GUARD(ms_Sync);
+		JCORE_LIB_LOCK_GUARD(ms_Sync);
 		DebugAssert(ms_lPool.Exist(obj) == false);
 		ms_lPool.PushFront(obj);
 	}
@@ -136,7 +136,7 @@ public:
 	}
 
 	static void FreeAllObjects() {
-		JCORE_LOCK_GUARD(ms_Sync);
+		JCORE_LIB_LOCK_GUARD(ms_Sync);
 		DebugAssertMsg(ms_iCount == ms_lPool.Size(), "%s 아직 반환되지 않은 오브젝트가 %d개 존재합니다.", typeid(T).name(), ms_iCount - ms_lPool.Size());
 
 		for (int i = 0; i < ms_iCount; ++i) {
@@ -149,19 +149,19 @@ public:
 
 	// 메모리 할당된 모든 객체수
 	static int GetTotalCount() {
-		JCORE_LOCK_GUARD(ms_Sync);
+		JCORE_LIB_LOCK_GUARD(ms_Sync);
 		return ms_iCount;
 	}
 
 	// 메모리 할당된 모든 객체들 중 실제 사용중인 객체 수
 	static int GetActiveCount() {
-		JCORE_LOCK_GUARD(ms_Sync);
+		JCORE_LIB_LOCK_GUARD(ms_Sync);
 		return ms_iCount - ms_lPool.Size();
 	}
 
 	// 메모리 할당된 모든 객체들 중 사용이 끝나고 반환된 객체 수
 	static int GetRelasedCount() {
-		JCORE_LOCK_GUARD(ms_Sync);
+		JCORE_LIB_LOCK_GUARD(ms_Sync);
 		return ms_lPool.Size();
 	}
 
