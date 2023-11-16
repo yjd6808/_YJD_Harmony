@@ -38,7 +38,6 @@ struct PropertyStatics
 	inline static IPropertyFactory*							Factorys					[PropertyType::Max]{};
 	inline static PropertyBase*								DefaultPrperty				[PropertyType::Max]{};
 
-
 	inline static bool										EnableOperatorLog = true;
 	inline static thread_local bool							ComparisonResult{};
 };

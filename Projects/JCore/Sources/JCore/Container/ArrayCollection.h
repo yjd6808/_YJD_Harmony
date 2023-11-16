@@ -124,6 +124,10 @@ public:
 		return this->m_iSize == m_iCapacity;
 	}
 
+	T* Source() {
+		return m_pArray;
+	}
+
 	bool IsEmpty() const override { return m_iSize == 0; }
 	int Size() const override { return m_iSize; }
 protected:
@@ -351,7 +355,7 @@ protected:
 
 	template <typename TPredicate>
 	void Sort(TPredicate&& predicate) {
-		Arrays::Sort(m_pArray, this->m_iSize, Move(predicate));
+		Arrays::Sort(m_pArray, this->m_iSize, Forward<TPredicate>(predicate));
 	}
 
 	void Sort() {
@@ -359,8 +363,8 @@ protected:
 	}
 
 	template <typename TPredicate>
-	void SortInsertion(TPredicate&& predicate) {
-		Arrays::SortInsertion(m_pArray, this->m_iSize, Move(predicate));
+	void InsertionSort(TPredicate&& predicate) {
+		Arrays::InsertionSort(m_pArray, this->m_iSize, Forward<TPredicate>(predicate));
 	}
 
 	/// <summary>
@@ -368,14 +372,14 @@ protected:
 	/// </summary>
 	template <typename TPredicate>
 	void SortRange(const int startIdx, const int endIdx, TPredicate&& predicate) {
-		Arrays::SortRange(m_pArray, startIdx, endIdx, Move(predicate));
+		Arrays::SortRange(m_pArray, startIdx, endIdx, Forward<TPredicate>(predicate));
 	}
 
 	void SortRange(const int startIdx, const int endIdx) {
 		Arrays::SortRange(m_pArray, startIdx, endIdx, NaturalOrder{});
 	}
 
-protected:
+
 	T& GetAt(const int idx) const {
 		DebugAssertMsg(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
 		return m_pArray[idx];
@@ -510,10 +514,6 @@ protected:
 			}
 		}
 		return iExpectedCapacity;
-	}
-
-	T* Source() {
-		return m_pArray;
 	}
 
 	CollectionType GetCollectionType() override { return CollectionType::Array; }

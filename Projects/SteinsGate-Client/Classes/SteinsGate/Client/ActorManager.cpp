@@ -538,7 +538,7 @@ void ActorManager::cleanUp(Actor* actor) {
 }
 
 void ActorManager::sortZOrderActor() {
-	m_vZOrderedActors.SortInsertion([](Actor* lhs, Actor* rhs) {
+	m_vZOrderedActors.InsertionSort([](Actor* lhs, Actor* rhs) {
 		return lhs->getThicknessBoxRect().getMidY() > rhs->getThicknessBoxRect().getMidY();
 	});
 

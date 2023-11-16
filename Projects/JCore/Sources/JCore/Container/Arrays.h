@@ -20,49 +20,49 @@ NS_DETAIL_END
 
 struct Arrays final
 {
-	template <typename T, Int32U ArraySize>
-	static constexpr int Size(T(&)[ArraySize]) {
-		return ArraySize;
+	template <typename T, Int32U Size>
+	static constexpr int Size(T(&)[Size]) {
+		return Size;
 	}
 
 	// 길이를 아는 경우
-	template <typename T, Int32U ArraySize>
-	static void Sort(T(&arr)[ArraySize]) {
-		QuickSort(arr, 0, ArraySize - 1, NaturalOrder{});
+	template <typename T, Int32U Size>
+	static void Sort(T(&arr)[Size]) {
+		QuickSort(arr, 0, Size - 1, NaturalOrder{});
 	}
 
 	// 길이를 아는 경우
-	template <typename T, Int32U ArraySize, typename TPredicate>
-	static void Sort(T(&arr)[ArraySize], TPredicate&& predicate) {
-		QuickSort(arr, 0, ArraySize - 1, Move(predicate));
+	template <typename T, Int32U Size, typename TPredicate>
+	static void Sort(T(&arr)[Size], TPredicate&& predicate) {
+		QuickSort(arr, 0, Size - 1, Forward<TPredicate>(predicate));
 	}
 
 	// 길이를 아는 경우
-	template <typename T, Int32U ArraySize>
-	static void SortInsertion(T(&arr)[ArraySize]) {
-		SortInsertion(arr, ArraySize, NaturalOrder{});
+	template <typename T, Int32U Size>
+	static void InsertionSort(T(&arr)[Size]) {
+		InsertionSortImpl(arr, Size, NaturalOrder{});
 	}
 
 	// 길이를 아는 경우
-	template <typename T, Int32U ArraySize, typename TPredicate>
-	static void SortInsertion(T(&arr)[ArraySize], TPredicate&& predicate) {
-		SortInsertion(arr, ArraySize, Move(predicate));
+	template <typename T, Int32U Size, typename TPredicate>
+	static void InsertionSort(T(&arr)[Size], TPredicate&& predicate) {
+		InsertionSortImpl(arr, Size, Forward<TPredicate>(predicate));
 	}
 
 	// 길이를 모르는 포인터타입인 경우
 	template <typename T>
-	static void SortInsertion(T* arr, const int arrSize) {
+	static void InsertionSort(T* arr, const int arrSize) {
 		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
 		DebugAssertMsg(arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
-		InsertionSort(arr, arrSize, NaturalOrder{});
+		InsertionSortImpl(arr, arrSize, NaturalOrder{});
 	}
 
 	// 길이를 모르는 포인터타입인 경우
 	template <typename T, typename TPredicate>
-	static void SortInsertion(T* arr, const int arrSize, TPredicate&& predicate) {
+	static void InsertionSort(T* arr, const int arrSize, TPredicate&& predicate) {
 		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
 		DebugAssertMsg(arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
-		InsertionSort(arr, arrSize, Move(predicate));
+		InsertionSortImpl(arr, arrSize, Forward<TPredicate>(predicate));
 	}
 
 	// 길이를 모르는 포인터타입인 경우
@@ -78,7 +78,7 @@ struct Arrays final
 	static void Sort(T* arr, const int arrSize, TPredicate&& predicate) {
 		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
 		DebugAssertMsg(arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
-		QuickSort(arr, 0, arrSize - 1, Move(predicate));
+		QuickSort(arr, 0, arrSize - 1, Forward<TPredicate>(predicate));
 	}
 
 	template <typename T>
@@ -92,16 +92,60 @@ struct Arrays final
 	static void SortRange(T* arr, const int startIdx, const int endIdx, TPredicate&& predicate) {
 		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
 		DebugAssertMsg(startIdx >= 0 && startIdx <= endIdx, "올바르지 않은 인덱스 범위입니다.");
-		QuickSort(arr, startIdx, endIdx, Move(predicate));
+		QuickSort(arr, startIdx, endIdx, Forward<TPredicate>(predicate));
 	}
 
-	
+	// 길이를 아는 경우
+	template <typename T, Int32U Size>
+	static void HeapSort(T(&arr)[Size]) {
+		HeapSortImpl(arr, Size, NaturalOrder{});
+	}
+
+	// 길이를 아는 경우
+	template <typename T, Int32U Size, typename TPredicate>
+	static void HeapSort(T(&arr)[Size], TPredicate&& predicate) {
+		HeapSortImpl(arr, Size, Forward<TPredicate>(predicate));
+	}
+
+	// 길이를 모르는 포인터타입인 경우
+	template <typename T>
+	static void HeapSort(T* arr, const int arrSize) {
+		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
+		DebugAssertMsg(arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
+		HeapSortImpl(arr, arrSize, NaturalOrder{});
+	}
+
+	// 길이를 모르는 포인터타입인 경우
+	template <typename T, typename TPredicate>
+	static void HeapSort(T* arr, const int arrSize, TPredicate&& predicate) {
+		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
+		DebugAssertMsg(arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
+		HeapSortImpl(arr, arrSize, 0, arrSize - 1, Forward<TPredicate>(predicate));
+	}
+
+	template <typename T>
+	static void SortHeapRange(T* arr, const int startIdx, const int endIdx) {
+		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
+		DebugAssertMsg(startIdx >= 0 && startIdx <= endIdx, "올바르지 않은 인덱스 범위입니다.");
+		HeapSortImpl(arr + startIdx, endIdx - startIdx + 1, NaturalOrder{});
+	}
+
+	template <typename T, typename TPredicate>
+	static void SortHeapRange(T* arr, const int startIdx, const int endIdx, TPredicate&& predicate) {
+		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
+		DebugAssertMsg(startIdx >= 0 && startIdx <= endIdx, "올바르지 않은 인덱스 범위입니다.");
+		HeapSortImpl(arr + startIdx, endIdx - startIdx + 1, Forward<TPredicate>(predicate));
+	}
+
+
+
+
 	/// <summary>
 	/// 첫 원소부터 선형 탐색
 	/// </summary>
-	template <typename T, Int32U ArraySize>
-	static int LinearSearch(T(&arr)[ArraySize], const T& data) {
-		return LinearSearch(arr, ArraySize, data);
+	template <typename T, Int32U Size>
+	static int LinearSearch(T(&arr)[Size], const T& data) {
+		return LinearSearch(arr, Size, data);
 	}
 
 
@@ -122,9 +166,9 @@ struct Arrays final
 	/// <summary>
 	/// 마지막 원소부터 선형 탐색
 	/// </summary>
-	template <typename T, Int32U ArraySize>
-	static int LinearSearchReverse(T(&arr)[ArraySize], const T& data) {
-		return LinearSearchReverse(arr, ArraySize, data);
+	template <typename T, Int32U Size>
+	static int LinearSearchReverse(T(&arr)[Size], const T& data) {
+		return LinearSearchReverse(arr, Size, data);
 	}
 
 
@@ -144,9 +188,9 @@ struct Arrays final
 	}
 
 
-	template <typename T, Int32U ArraySize>
-	static int BinarySearch(T(&arr)[ArraySize], const T& data) {
-		return BinarySearch(arr, ArraySize, data);
+	template <typename T, Int32U Size>
+	static int BinarySearch(T(&arr)[Size], const T& data) {
+		return BinarySearch(arr, Size, data);
 	}
 
 	template <typename T>
@@ -178,9 +222,9 @@ struct Arrays final
 	/// <summary>
 	/// data가 처음으로 시작되는 위치(인덱스)를 반환한다.
 	/// </summary>
-	template <typename T, Int32U ArraySize>
-	static int LowerBound(const T(&arr)[ArraySize], const T& data) {
-		return LowerBound(arr, ArraySize, data);
+	template <typename T, Int32U Size>
+	static int LowerBound(const T(&arr)[Size], const T& data) {
+		return LowerBound(arr, Size, data);
 	}
 
 	//	TPredicate은 T와 TVal을 비교해서 참이면 우측으로 탐색
@@ -203,21 +247,21 @@ struct Arrays final
 		// model.a가 200이고, val이 300이 들어왔다.
 		// 현재 탐색중인 곳인 model.a가 val보다 좌측에 있는 상황이다.
 		// 따라서 300 근처의 값이 있는 우측을 탐색하기 위해서는 이 결과가 참이 되야한다.
-		
+
 		int idx = Arrays::LowerBound(&models[0], 1001, 300, [](const A& model, const int& val) {
-			return model.b < val;	
+			return model.b < val;
 		});	// idx = 300이 들어감
-		
+
 
 		// a값중 300을 찾고 싶다.
 		// a는 내림차순 정렬되어있다.
 		// model.a가 500이고, val이 300이 들어왔다.
 		// 현재 탐색중인 곳인 model.a가 val보다 좌측에 있는 상황이다.
 		// 따라서 300 근처의 값이 있는 우측을 탐색하기 위해서는 이 결과가 참이 되야한다.
-		
+
 		int idx = Arrays::LowerBound(&models[0], 1001, 300, [](const A& model, const int& val) {
 			return model.a > val;	// val은 계속 300이 들어옴
-		});	
+		});
 	 */
 
 	template <typename T, typename TVal, typename TPredicate>
@@ -243,11 +287,11 @@ struct Arrays final
 	/// <summary>
 	/// data 보다 큰 값들 중에서 가장 작은 값의 위치(인덱스)를 반환한다.
 	/// </summary>
-	template <typename T, Int32U ArraySize>
-	static int UpperBound(T(&arr)[ArraySize], const T& data) {
-		return UpperBound(arr, ArraySize, data);
+	template <typename T, Int32U Size>
+	static int UpperBound(T(&arr)[Size], const T& data) {
+		return UpperBound(arr, Size, data);
 	}
-	
+
 
 	template <typename T>
 	static int UpperBound(T* arr, const int arrSize, const T& data) {
@@ -335,7 +379,7 @@ struct Arrays final
 
 	template <typename T, Int32U Size, typename TPredicate>
 	static int FindIf(const T(&arr)[Size], TPredicate&& predicate) {
-		return FindIf(arr, Size, Move(predicate));
+		return FindIf(arr, Size, Forward<TPredicate>(predicate));
 	}
 
 	template <typename T, Int32U Size, typename TVal>
@@ -381,12 +425,153 @@ struct Arrays final
 		Swap(arr, l, r);
 	}
 
-private:
+	template <typename T, Int32U Size>
+	static void MakeHeap(T(&arr)[Size]) {
+		MakeHeapRange(arr, 0, Size - 1, NaturalOrder{}); // call [2]
+	}
 
+	template <typename T>
+	static void MakeHeap(T* arr, int arrSize) {
+		MakeHeapRange(arr, 0, arrSize - 1, NaturalOrder{});	// call [2]
+	}
+
+	template <typename T, typename TPredicate>
+	static void MakeHeap(T* arr, int arrSize, TPredicate&& predicate) {
+		MakeHeapRange(arr, 0, arrSize - 1, Forward<TPredicate>(predicate));	// call [2]
+	}
+
+	// [2]
+	template <typename T, typename TPredicate>
+	static void MakeHeapRange(T* arr, int start, int end, TPredicate&& predicate) {
+		MakeHeapSiftDown(arr + start, end - start + 1, Forward<TPredicate>(predicate));
+	}
+
+	template <typename T, typename TPredicate>
+	static void MakeHeapSiftDown(T* arr, int arrSize, TPredicate&& predicate) {
+		for (int i = arrSize / 2 - 1; i >= 0; --i) {
+			HeapifySiftDown(arr, arrSize, i, Forward<TPredicate>(predicate));
+		}
+	}
+
+
+	// 안씀 SiftDown이랑 성능 비교할려고 구현 해놓은거
+	template <typename T, typename TPredicate>
+	static void MakeHeapSiftUp(T* arr, int arrSize, TPredicate&& predicate) {
+		for (int i = 0; i < arrSize; ++i) {
+			HeapifySiftUp(arr, i, Forward<TPredicate>(predicate));
+		}
+	}
+
+	template <typename T, typename TPredicate>
+	static void HeapifySiftDown(T* arr, int arrSize, int i, TPredicate&& predicate) {
+		int iCur = i;			// 우선순위가 더 낮아서 교체되어야하는 노드인덱스
+
+		for (;;) {
+			int iPrev = iCur;
+			int iLeft = 2 * iCur + 1;
+			int iRight = 2 * iCur + 2;
+
+
+			// 3개중 제일 우선순위가 낮은 노드가 부모가 되어야함.
+			if (iLeft < arrSize && !predicate(arr[iLeft], arr[iCur])) {
+				iCur = iLeft;
+			}
+
+			if (iRight < arrSize && !predicate(arr[iRight], arr[iCur])) {
+				iCur = iRight;
+			}
+
+			// 변경사항이 없다면
+			if (iCur == iPrev) {
+				return;
+			}
+
+			Swap(arr, iPrev, iCur);
+		}
+	}
+
+
+
+	template <typename T, typename TPredicate>
+	static void HeapifySiftUp(T* arr, int idx, TPredicate&& predicate) {
+		int iCur = idx;
+
+		for (;;) {
+			int iPrev = iCur;
+			int iParent = (iCur - 1) / 2;
+
+			// 부모 노드가 우선순위가 더 낮다면
+			if (iParent >= 0 && !predicate(arr[iCur], arr[iParent])) {
+				iCur = iParent;
+			}
+
+			if (iCur == iPrev) {
+				return;
+			}
+
+			Swap(arr, iPrev, iCur);
+		}
+	}
+
+	template <typename T, Int32U Size>
+	static void PushHeap(T(&arr)[Size]) {
+		HeapifySiftUp(arr, Size, NaturalOrder{});
+	}
+
+	template <typename T>
+	static void PushHeap(T* arr, int arrSize) {
+		HeapifySiftUp(arr, arrSize, NaturalOrder{});
+	}
+
+	template <typename T, typename TPredicate>
+	static void PushHeap(T* arr, int arrSize, TPredicate&& predicate) {
+		HeapifySiftUp(arr, arrSize, Forward<TPredicate>(predicate));
+	}
+
+	template <typename T>
+	static void PushHeapRange(T* arr, int start, int end) {
+		HeapifySiftUp(arr + start, end - start + 1, NaturalOrder{});
+	}
+
+	template <typename T, typename TPredicate>
+	static void PushHeapRange(T* arr, int start, int end, TPredicate&& predicate) {
+		HeapifySiftUp(arr + start, end - start + 1, Forward<TPredicate>(predicate));
+	}
+
+	template <typename T, Int32U Size>
+	static void PopHeap(T(&arr)[Size]) {
+		Swap(arr, 0, Size - 1);
+		HeapifySiftDown(arr, Size - 1, 0, NaturalOrder{});
+	}
+
+	template <typename T>
+	static void PopHeap(T* arr, int arrSize) {
+		Swap(arr, 0, arrSize - 1);
+		HeapifySiftDown(arr, arrSize - 1, 0, NaturalOrder{});
+	}
+
+	template <typename T, typename TPredicate>
+	static void PopHeap(T* arr, int arrSize, TPredicate&& predicate) {
+		Swap(arr, 0, arrSize - 1);
+		HeapifySiftDown(arr, arrSize - 1, 0, Forward<TPredicate>(predicate));
+	}
+
+	template <typename T>
+	static void PopHeapRange(T* arr, int start, int end) {
+		Swap(arr, start, end);
+		HeapifySiftDown(arr + start, end - start, 0, NaturalOrder{});
+	}
+
+	template <typename T, typename TPredicate>
+	static void PopHeapRange(T* arr, int start, int end, TPredicate&& predicate) {
+		Swap(arr, start, end);
+		HeapifySiftDown(arr + start, end - start, 0, Forward<TPredicate>(predicate));
+	}
+private:
 	// @참고 : https://www.youtube.com/watch?v=PgBzjlCcFvc&t=45s&ab_channel=GeeksforGeeks
 	// 영상에서 동작하는데로 만들기
-	template <typename T, typename Prdeicate>
-	static void QuickSort(T* arr, int start, int end, Prdeicate&& predicate) {
+	template <typename T, typename TPredicate>
+	static void QuickSort(T* arr, int start, int end, TPredicate&& predicate) {
 		if (start >= end) {
 			return;
 		}
@@ -410,8 +595,20 @@ private:
 		QuickSort(arr, pivot + 1, end, predicate);
 	}
 
-	template <typename T, typename Prdeicate>
-	static void InsertionSort(T* arr, int size, Prdeicate predicate) {
+	template <typename T, typename TPredicate>
+	static void HeapSortImpl(T* arr, const int arrSize, TPredicate&& predicate) {
+		MakeHeap(arr, arrSize, Forward<TPredicate>(predicate));
+
+		for (int i = 0, j = 0; arrSize- j > 1; ++j) {
+			Swap(arr, i, arrSize - j - 1);
+			HeapifySiftDown(arr, arrSize - j - 1, 0, Forward<TPredicate>(predicate));
+		}
+	}
+
+
+
+	template <typename T, typename TPredicate>
+	static void InsertionSortImpl(T* arr, int size, TPredicate&& predicate) {
 		for (int i = 1; i < size; ++i) {
 			int find = i;
 			for (int j = i - 1; j >= 0; --j) {

@@ -95,6 +95,22 @@ public:
 		this->SetAt(this->m_iSize++, Move(data));
 	}
 
+	T& Front() {
+		if (this->m_iSize == 0) {
+			throw InvalidOperationException{"데이터가 없습니다."};
+		}
+
+		return this->m_pArray[0];
+	}
+
+	T& Back() {
+		if (this->m_iSize == 0) {
+			throw InvalidOperationException{ "데이터가 없습니다." };
+		}
+
+		return this->m_pArray[this->m_iSize - 1];
+	}
+
 	/**
 	 * \brief 용량을 수정하도록 한다. 만약 기존에 담긴 데이터 수가 전달해준
 	 * 용량보다 많을 경우 소멸자를 호출하여 넘치는 만큼 삭제해줌
@@ -352,13 +368,17 @@ public:
 		return false;
 	}
 
+	void PopBack() {
+		RemoveAt(this->m_iSize - 1);
+	}
+
 	void Sort() {
 		TArrayCollection::Sort(NaturalOrder{});
 	}
 
 	template <typename TPredicate>
 	void Sort(TPredicate&& predicate) {
-		TArrayCollection::Sort(Move(predicate));
+		TArrayCollection::Sort(Forward<TPredicate>(predicate));
 	}
 
 	void SortRange(const int startIdx, const int endIdx) {
@@ -367,12 +387,12 @@ public:
 
 	template <typename TPredicate>
 	void SortRange(const int startIdx, const int endIdx, TPredicate&& predicate) {
-		TArrayCollection::SortRange(startIdx, endIdx, Move(predicate));
+		TArrayCollection::SortRange(startIdx, endIdx, Forward<TPredicate>(predicate));
 	}
 
 	template <typename TPredicate>
-	void SortInsertion(TPredicate&& predicate) {
-		TArrayCollection::SortInsertion(Move(predicate));
+	void InsertionSort(TPredicate&& predicate) {
+		TArrayCollection::InsertionSort(Forward<TPredicate>(predicate));
 	}
 
 	T& operator[](const int idx) const {
