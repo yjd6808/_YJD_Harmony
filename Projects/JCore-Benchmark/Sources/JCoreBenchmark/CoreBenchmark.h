@@ -42,4 +42,5 @@ using namespace std;
 
 #define HashMapTest				OFF
 #define HashMapMemoryPoolTest	OFF
-#define HashMapIterationTest	ON
+#define HashMapIterationTest	OFF
+#define HeapifyTest				ON

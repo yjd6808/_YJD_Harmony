@@ -28,6 +28,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\JCoreBenchmark\Container\HashMapTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreBenchmark\Container\HeapifyTest.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCoreBenchmark\CoreBenchmark.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">JCoreBenchmark/CoreBenchmark.h</PrecompiledHeaderFile>

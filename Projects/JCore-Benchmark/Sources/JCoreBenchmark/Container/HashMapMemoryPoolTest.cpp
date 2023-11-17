@@ -15,13 +15,13 @@
 
 #include <JCoreBenchmark/CoreBenchmark.h>
 #include <JCore/Container/HashMap.h>
-#include <JCore/Pool/MemoryPool.h>
+#include <JCore/Pool/BinarySearchMemoryPool.h>
 
 
 #if HashMapMemoryPoolTest == ON
 
 
-static MemoryPool<eSingle, eBinarySearch> Pool{ true };
+static BinarySearchMemoryPool Pool{};
 
 auto lmb = []() {
 	Pool.Initialize({
@@ -35,37 +35,37 @@ class MyAlloc
 public:
 	// 명시적으로 사이즈 요청해서 반환하는 2가지 기능을 구현할 것
 	template <typename T>
-	static auto Allocate() {	// Static
+	static auto AllocateStatic() {	// Static
 		return (RemovePointer_t<T>*)Pool.StaticPop<sizeof(T)>();
 	}
 
 	template <typename T = void*>	// 명시하지 않을 경우 void* 반환
-	static auto Allocate(int requestSize, int& realAllocatedSize) {	// Dynamic
+	static auto AllocateDynamic(int requestSize, int& realAllocatedSize) {	// Dynamic
 		return (RemovePointer_t<T>*)Pool.DynamicPop(requestSize, realAllocatedSize);
 	}
 
 	template <typename T, typename... Args>
-	static auto AllocateInit(Args&&... args) {	// Static
+	static auto AllocateInitStatic(Args&&... args) {	// Static
 		auto pRet = (RemovePointer_t<T>*)Pool.StaticPop<sizeof(T)>();
 		Memory::PlacementNew(pRet, Forward<Args>(args)...);
 		return pRet;
 	}
 
 	template <typename T = void*, typename... Args>	// 명시하지 않을 경우 void* 반환
-	static auto AllocateInit(int requestSize, int& realAllocatedSize, Args&&... args) {	// Dynamic
+	static auto AllocateInitDynamic(int requestSize, int& realAllocatedSize, Args&&... args) {	// Dynamic
 		auto pRet = (RemovePointer_t<T>*)Pool.DynamicPop(requestSize, realAllocatedSize);
 		Memory::PlacementNew(pRet, Forward<Args>(args)...);
 		return pRet;
 	}
 
 	template <typename T>
-	static void Deallocate(void* del) {
+	static void DeallocateStatic(void* del) {
 		Pool.StaticPush<sizeof(T)>(del);
 
 		
 	}
 
-	static void Deallocate(void* del, int size) {
+	static void DeallocateDynamic(void* del, int size) {
 		Pool.DynamicPush(del, size);
 	}
 };
@@ -123,9 +123,9 @@ static void BM_HashMapIteratorVisit(State& state) {
 #endif
 	}
 #ifdef StdHashMap
-	DebugAssertMessage(v.size() == hashMap.size(), "데이터가 이상합니다.");
+	DebugAssertMsg(v.size() == hashMap.size(), "데이터가 이상합니다.");
 #else
-	DebugAssertMessage(v.size() == hashMap.Size(), "데이터가 이상합니다.");
+	DebugAssertMsg(v.size() == hashMap.Size(), "데이터가 이상합니다.");
 #endif
 }
 
@@ -170,9 +170,9 @@ static void BM_HashMapIteratorCreation(State& state) {
 #endif
 	}
 #ifdef StdHashMap
-	DebugAssertMessage(v.size() == dataSize * iterationCount, "데이터가 이상합니다.");
+	DebugAssertMsg(v.size() == dataSize * iterationCount, "데이터가 이상합니다.");
 #else
-	DebugAssertMessage(v.size() == dataSize * iterationCount, "데이터가 이상합니다.");
+	DebugAssertMsg(v.size() == dataSize * iterationCount, "데이터가 이상합니다.");
 #endif
 }
 

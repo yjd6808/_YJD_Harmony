@@ -599,9 +599,11 @@ private:
 	static void HeapSortImpl(T* arr, const int arrSize, TPredicate&& predicate) {
 		MakeHeap(arr, arrSize, Forward<TPredicate>(predicate));
 
-		for (int i = 0, j = 0; arrSize- j > 1; ++j) {
-			Swap(arr, i, arrSize - j - 1);
-			HeapifySiftDown(arr, arrSize - j - 1, 0, Forward<TPredicate>(predicate));
+		// size = 마지막원소를 제외한 힘 크기
+		for (int size = arrSize - 1; size > 0; --size) {
+			// 마지막 원소를 제외
+			Swap(arr, 0, size);
+			HeapifySiftDown(arr, size, 0, Forward<TPredicate>(predicate));
 		}
 	}
 

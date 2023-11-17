@@ -21,7 +21,6 @@
 		JCore::HashMap<int, int> h;
 	#endif
 
-#endif
 
 
 #if UseStd == ON
@@ -132,6 +131,8 @@ BENCHMARK(BM_HashMapIteration)->Iterations(5)->Unit(TimeUnit::kMillisecond)->Arg
 BENCHMARK(BM_VectorIteration)->Iterations(5)->Unit(TimeUnit::kMillisecond)->Arg(1 << 24);
 BENCHMARK(BM_VectorAddDelete)->Unit(TimeUnit::kMillisecond)->Arg(200);
 BENCHMARK(BM_HashMapAddDelete)->Unit(TimeUnit::kMillisecond)->Arg(200);
+
+#endif
 
 
 /*
