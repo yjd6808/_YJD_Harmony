@@ -166,6 +166,17 @@ String Console::ReadLine(const char* msg) {
     return ReadLine();
 }
 
+int Console::ReadLineBuffered(const char* msg, char* buff, int capacity) {
+    int i = 0;
+    char ch;
+
+    while (std::cin.get(ch) && i < capacity && ch != '\n')
+        buff[i++] = ch;
+
+    buff[i] = NULL;
+    return i;
+}
+
 ConsoleKeyInfo Console::ReadKey(const char* msg) {
 
     // 멀티쓰레딩시 인풋 동기화를 위해 사용

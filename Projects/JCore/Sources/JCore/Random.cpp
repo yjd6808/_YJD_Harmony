@@ -27,6 +27,21 @@ void Random::EngineInitialize() {
 	ms_DefaultRandomEngine.seed(ms_RandomDevice());
 }
 
+void Random::WriteRandomAlphabatTextBuffered(int length, char* buff, int capacity) {
+	int i = 0;
+	while (i < capacity && i < length) {
+		int idx = GenerateInt(0, 51);
+		if (idx >= 26) {
+			idx -= 26;
+			buff[i] = 'a' + char(idx);
+		} else {
+			buff[i] = 'A' + char(idx);
+		}
+		++i;
+	}
+	buff[i] = NULL;
+}
+
 int Random::GenerateInt(int begin, int end) {
 	if (begin > end) {
 		throw InvalidArgumentException("begin > end 되면 안댐");

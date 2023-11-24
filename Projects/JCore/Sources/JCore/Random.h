@@ -76,6 +76,9 @@ struct Random final
 	static bool Chance(float percentProbability);
 	static bool Chance(double percentProbability);
 	static void EngineInitialize();
+
+	static void WriteRandomAlphabatTextBuffered(int length, char* buff, int capacity);
+
 private:
 	inline static bool ms_bInitialized;
     inline static std::mt19937 ms_DefaultRandomEngine;

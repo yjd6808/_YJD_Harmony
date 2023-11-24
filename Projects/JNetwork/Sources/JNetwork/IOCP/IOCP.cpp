@@ -103,7 +103,10 @@ JCore::Vector<Int32U> IOCP::GetWorkThreadIdList() {
 }
 
 bool IOCP::Connect(WinHandle handle, ULONG_PTR completionKey) const {
-	return CreateIoCompletionPort(handle, m_hIOCP, completionKey, m_uiThreadCount) != 0;
+	// @참고: https://learn.microsoft.com/en-us/windows/win32/fileio/createiocompletionport
+	// 연결시 NumberOfConcurrentThreads 파라미터 값은 무시된다.
+	// ExistingCompletionPort를 NULL이 아닌 유효한 IOCP 핸들을 전달한 후 성공적으로 연결되면 ExistingCompletionPort 파라미터의 핸들과 같은 핸들을 반환한다.
+	return CreateIoCompletionPort(handle, m_hIOCP, completionKey, m_uiThreadCount) == m_hIOCP;
 }
 
 BOOL IOCP::GetStatus(Int32UL* numberOfBytesTransffered, PULONG_PTR completionKey, LPOVERLAPPED* ppOverlapped) const {

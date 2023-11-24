@@ -148,6 +148,7 @@ public:
 
     static String ReadLine();
     static String ReadLine(const char* msg);
+    static int ReadLineBuffered(const char* msg, char* buff, int capacity);
 
     static ConsoleKeyInfo ReadKey() { return ReadKey(nullptr); }
     static ConsoleKeyInfo ReadKey(const char* msg);

@@ -48,16 +48,16 @@ public:
 
 
 	template <typename T>
-	T Read() {
-		static_assert(JCore::IsPointerType_v<T>, "... T must be pointer type");
+	bool Read(JCORE_OUT T& data) {
+		static_assert(JCore::IsNaturalType_v<T>, "... T must be natural type");
 
 		if (!IsReadable(sizeof(T))) {
-			return nullptr;
+			return false;
 		}
 
-		T pRet = reinterpret_cast<T>(m_pBuffer + m_iReadPos);
-		m_iReadPos += sizeof(JCore::RemovePointer_t<T>);
-		return pRet;
+		data = *reinterpret_cast<T*>(m_pBuffer + m_iReadPos);
+		m_iReadPos += sizeof(sizeof(T));
+		return true;
 	}
 
 	template <typename T>
@@ -68,6 +68,30 @@ public:
 
 		JCore::Memory::CopyUnsafe(m_pBuffer + m_iWritePos, &data, sizeof(T));
 		m_iWritePos += sizeof(T);
+		return true;
+	}
+
+	JCore::String ReadString(int len) {
+		if (!IsReadable(len)) {
+			return {};
+		}
+
+		JCore::String s;
+		for (int i = 0; i < len; ++i) {
+			s += m_pBuffer[m_iReadPos + i];
+		}
+		m_iReadPos += len;
+		return s;
+	}
+
+	bool WriteString(const JCore::String& s) {
+		const int iLen = s.Length();
+		if (!IsWriteable(iLen)) {
+			return false;
+		}
+
+		JCore::Memory::CopyUnsafe(m_pBuffer + m_iWritePos, s.Source(), iLen);
+		m_iWritePos += iLen;
 		return true;
 	}
 
@@ -133,7 +157,16 @@ public:
 		return m_iWritePos - m_iReadPos;
 	}
 
-	
+	char* GetReadableSource() {
+		return m_pBuffer + m_iReadPos;
+	}
+
+	char* GetWriteableSource() {
+		return m_pBuffer + m_iReadPos;
+	}
+
+	void SetReadPos(int pos) { m_iReadPos = pos; }
+	void SetWritePos(int pos) { m_iWritePos = pos; }
 	int GetReadPos() const { return m_iReadPos; }
 	int GetWritePos() const { return m_iWritePos; }
 	int GetBufferCapacity() const { return m_iBufferSize; }

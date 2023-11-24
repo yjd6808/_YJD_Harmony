@@ -20,6 +20,7 @@ UdpClientNetGroup* pClientGroup;
 
 int main() {
 	Winsock::Initialize(2, 2);
+	InitializeJCore();
 
 	pClientGroup = dbg_new UdpClientNetGroup{"UDP A"};
 	pClientGroup->Initialize();
@@ -40,6 +41,7 @@ int main() {
 
 	JCORE_DELETE_SAFE(pClientGroup);
 
+	FinalizeJCore();
 	Winsock::Finalize();
 	return 0;
 }

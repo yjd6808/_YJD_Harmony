@@ -265,7 +265,7 @@ private:
 	 */
 	template <int Index>
 	void InitializeCountRecursive(int count) {
-		int iSize = TypeAt<Index>::Size(count);
+		int iSize = TypeAt<Index>::_Size(count);
 
 		if constexpr (Index > 0) {
 			iSize += m_CmdEndPos[Index];
@@ -276,7 +276,7 @@ private:
 	template <int Index, typename... Ints>
 	void InitializeCountRecursive(int count, Ints... counts) {
 
-		int iSize = TypeAt<Index>::Size(count);
+		int iSize = TypeAt<Index>::_Size(count);
 
 		if constexpr (Index > 0) {
 			iSize += m_CmdEndPos[Index];

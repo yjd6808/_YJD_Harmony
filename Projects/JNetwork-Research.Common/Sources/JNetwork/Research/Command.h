@@ -15,8 +15,7 @@
 
 STATIC_CMD_BEGIN(StaticMessage, Cmd_SaticMessage)
 JCore::StaticString<512> Msg;
-STATIC_CMD_END(StaticMessage)
-
+STATIC_CMD_END
 
 struct Dummy
 {
@@ -29,6 +28,6 @@ DYNAMIC_CMD_BEGIN(DynamicMessage, Cmd_DynamicMessage, char)
 Dummy dmg;
 long long d = 4;
 char Msg[1];
-DYNAMIC_CMD_END(DynamicMessage)
+DYNAMIC_CMD_END
 
 #pragma pack(pop)	// #pragma pack(push, CMD_ALIGNMENT)
