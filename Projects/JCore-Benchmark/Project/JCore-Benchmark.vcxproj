@@ -56,6 +56,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreBenchmark\CoreBenchmark.h" />
+    <ClCompile Include="..\Sources\JCoreBenchmark\Pool\MemoryPoolTest.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

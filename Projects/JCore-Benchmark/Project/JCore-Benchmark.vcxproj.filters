@@ -7,6 +7,9 @@
     <Filter Include="Container">
       <UniqueIdentifier>{65a3e965-cbea-4849-b815-c8292693dfa3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pool">
+      <UniqueIdentifier>{624e25c1-080c-44d2-9e87-8a3645cf371c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\JCoreBenchmark\CoreBenchmark.cpp" />
@@ -27,6 +30,9 @@
     </ClCompile>
     <ClCompile Include="..\Sources\JCoreBenchmark\Container\HeapifyTest.cpp">
       <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreBenchmark\Pool\MemoryPoolTest.cpp">
+      <Filter>Pool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -137,7 +137,7 @@ public:
 			iChunkQueueIndex = size / BoundarySizeMax;
 			pTargeterList = m_PoolTargeterHigh;
 
-			if (iChunkQueueIndex <= 0 || iChunkQueueIndex >= HighTargeterListCapacity) {
+			if (iChunkQueueIndex < 0 || iChunkQueueIndex >= HighTargeterListCapacity) {
 				DebugAssertMsg(false, "올바르지 않은 청크큐 인덱스입니다. %d바이트 [%s]", size, "하이");
 				return nullptr;
 			}

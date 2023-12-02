@@ -76,7 +76,7 @@ public:
 #ifdef StdHashMap
 	std::unordered_map<int, int> hashMap;
 #else
-	#define UseAllocator ON
+	#define UseAllocator OFF
 
 	#if UseAllocator == OFF
 		HashMap<int, int> hashMap{ 2'000'000 };
