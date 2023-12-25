@@ -82,7 +82,7 @@ bool Session::Disconnect() {
 		return true;
 
 	m_eState = eDisconnected;
-	m_bIocpConneced = false;
+	m_bIocpConnected = false;
 
 	// 굳이 오류 처리를 할 필요가 있나
 	// WSAENOTSOCK: 소켓 할당이 안된 
@@ -260,44 +260,53 @@ void Session::SendAlloc(ICommand* cmd) {
 }
 
 void Session::Received(Int32UL receivedBytes) {
-	m_spRecvBuffer->MoveWritePos(receivedBytes);
+
+	// 0 byte를 수신하는 경우
+	// Page-Lock 방지를 위한 0 byte가 들어올 수 있음 (TODO: 아직 0 byte recv는 구현안함)
+	// 상대 클라이언트 Disconnect시 들어올 수 있음
+	if (receivedBytes == 0) {
+		return;
+	}
+
+	CommandBuffer* pRecvBuffer = m_spRecvBuffer.GetPtr();
+	pRecvBuffer->MoveWritePos(receivedBytes);
 
 	for (;;) {
-		const int iReadableBufferSize = m_spRecvBuffer->GetReadableBufferSize();
-		// 패킷의 헤더 크기만큼 데이터를 수신하지 않았으면 모일때까지 기달
+		const int iReadableBufferSize = pRecvBuffer->GetReadableBufferSize();
+		// 패킷의 헤더 크기만큼 데이터를 수신하지 않았으면 모일때까지 기다린다.
 		if (iReadableBufferSize < PacketHeaderSize_v)
 			return;
 
 		// 패킷 헤더 길이 + 패킷 길이 만큼 수신하지 않았으면 다시 모일때까지 기다린다.
-		IRecvPacket* packet = m_spRecvBuffer->Peek<IRecvPacket*>();
+		IRecvPacket* packet = pRecvBuffer->Peek<IRecvPacket*>();
 		const int iPacketLength = packet->GetPacketLength();
 		if (iReadableBufferSize < (PacketHeaderSize_v + iPacketLength)) {
 			return;
 		}
 
-		m_spRecvBuffer->MoveReadPos(PacketHeaderSize_v);
+		pRecvBuffer->MoveReadPos(PacketHeaderSize_v);
 		NotifyPacket(packet);
 
 		for (int i = 0; i < packet->GetCommandCount(); i++) {
-			ICommand* pCmd = m_spRecvBuffer->Peek<ICommand*>();
+			ICommand* pCmd = pRecvBuffer->Peek<ICommand*>();
 			CmdLen_t uiCmdLen = pCmd->GetCommandLen();
 
 			NotifyCommand(pCmd);
 
-			if (m_spRecvBuffer->MoveReadPos(uiCmdLen) == false) {
+			if (pRecvBuffer->MoveReadPos(uiCmdLen) == false) {
 				_NetLogWarn_("커맨드 크기가 이상합니다.");
-				m_spRecvBuffer->ResetPosition();
+				pRecvBuffer->ResetPosition();
 				return;
 			}
 		}
 
-		if (m_spRecvBuffer->GetReadPos() == m_spRecvBuffer->GetWritePos()) {
+		if (pRecvBuffer->GetReadPos() == pRecvBuffer->GetWritePos()) {
 			// 만약 수신한 데이터를 모두 읽었으면 포지션을 그냥 0으로 옮긴다.
-			m_spRecvBuffer->ResetPosition();
+			pRecvBuffer->ResetPosition();
 		} else {
 			// 읽은 위치만큼은 이제 다시 쓰일일이 없으므로 버퍼를 앞으로 당긴다. 
 			// WritePos 이후로 데이터를 쌓을 수 있도록하기 위해
-			m_spRecvBuffer->Pop(m_spRecvBuffer->GetReadPos(), true);
+			pRecvBuffer->Pop(pRecvBuffer->GetReadPos(), true);
 		}
 	}
 }

@@ -21,6 +21,7 @@
  *		    void OnPopped() override {}
  *	   }
  *
+ * // TODO: 버철 기능 제거, OnPushed, OnPopped 함수는 콜백 함수로 처리할 수 있도록 한다. 정적 멤버로 Action<T>를 두고 가져올 때, 넣을 때 설정한 액션을 실행해주도록 한다.
  */
 
 

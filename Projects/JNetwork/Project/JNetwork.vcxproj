@@ -23,6 +23,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\Config.cpp" />
     <ClCompile Include="..\Sources\JNetwork\Host\Host.cpp">
       <SubType>
       </SubType>
@@ -108,6 +109,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\Packet\Command.cpp" />
     <ClCompile Include="..\Sources\JNetwork\Packet\CommandNameDictionary.cpp">
       <SubType>
       </SubType>
@@ -147,6 +149,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\ByteOrder.h" />
+    <ClInclude Include="..\Sources\JNetwork\Config.h" />
     <ClInclude Include="..\Sources\JNetwork\EventListener\ClientEventListener.h" />
     <ClInclude Include="..\Sources\JNetwork\EventListener\SessionEventListener.h" />
     <ClInclude Include="..\Sources\JNetwork\EventListener\ServerEventListener.h" />

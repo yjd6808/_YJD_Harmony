@@ -74,12 +74,7 @@ struct ICommand
 	}
 
 	// 삭제시 필히 char*로 캐스팅 후 delete[] 해줄 것
-	ICommand* Clone() const {
-		ICommand* pCopy = (ICommand*)dbg_new char[CmdLen];
-		JCore::Memory::CopyUnsafe(pCopy, this, CmdLen);	// 데이터영역 복사
-		return pCopy;
-	}
-
+	ICommand* Clone() const;
 	
 	CmdType_t Type;
 	Cmd_t	 Cmd;		// 사용자 지정 커맨드 ID값

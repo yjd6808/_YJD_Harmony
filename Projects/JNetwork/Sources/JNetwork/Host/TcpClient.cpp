@@ -160,7 +160,7 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 
 	m_eState = eConnectWait;
 
-	if (m_bIocpConneced == false) {
+	if (m_bIocpConnected == false) {
 		DebugAssertMsg(false, "IOCP와 연결해주세요.");
 
 		if (m_pEventListener)

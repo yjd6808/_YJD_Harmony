@@ -22,7 +22,7 @@ public:
 		: m_spIocp(iocp)
 		, m_Socket(TransportProtocol::None, INVALID_SOCKET)
 		, m_eState(eNone)
-		, m_bIocpConneced(false)
+		, m_bIocpConnected(false)
 	{}
 	virtual ~Host() = default;
 
@@ -71,7 +71,7 @@ protected:
 	IOCPPtr m_spIocp;
 	Socketv4 m_Socket;
 	JCore::AtomicInt m_eState;
-	bool m_bIocpConneced;
+	bool m_bIocpConnected;
 };
 
 using HostPtr = JCore::SharedPtr<Host>;
