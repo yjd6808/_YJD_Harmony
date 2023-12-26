@@ -30,7 +30,7 @@ void ListenerAuthServer::OnDisconnected(Session* disconnetedSession) {
 	ListenerServerCommon::OnDisconnected(disconnetedSession);
 }
 
-void ListenerAuthServer::OnSent(Session* sender, ISendPacket* sentPacket, Int32UL sentBytes) {
+void ListenerAuthServer::OnSent(Session* sender, IPacket* sentPacket, Int32UL sentBytes) {
 	ListenerServerCommon::OnSent(sender, sentPacket, sentBytes);
 }
 

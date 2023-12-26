@@ -22,8 +22,9 @@ public:
 	UdpClient(
 		const IOCPPtr& iocp,
 		const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-		int recvBufferSize = 6000,
-		int sendBufferSize = 6000 
+		PacketParser* parser = nullptr,
+		int recvBufferSize = 0,
+		int sendBufferSize = 0 
 	);
 	~UdpClient() override;
 
@@ -35,8 +36,10 @@ public:
 	void Disconnected() override;
 
 	void NotifyCommand(ICommand* cmd) override;
-	void NotifyPacket(IRecvPacket* packet) override;
-	void Sent(ISendPacket* sentPacket, Int32UL sentBytes) override;
+	void NotifyPacket(RecvedCommandPacket* packet) override;
+	void NotifyRaw(char* data, int len) override;
+
+	void Sent(IPacket* sentPacket, Int32UL sentBytes) override;
 	Type GetType() const override { return eClient; }
 	DetailType GetDetailType() const override { return eUdpClient; }
 	const char* TypeName() override { return "UDP 클라"; }

@@ -13,8 +13,8 @@
 
 #include <JNetwork/EventListener/ServerEventListener.h>
 
-#include <JNetwork/Packet/SendPacket.h>
-#include <JNetwork/Packet/RecvPacket.h>
+#include <JNetwork/Packet/Packet.h>
+#include <JNetwork/Packet/PacketParser.h>
 
 NS_JNET_BEGIN
 
@@ -22,7 +22,7 @@ class IOCPOverlapped;
 class JCORE_NOVTABLE Session : public Host
 {
 public:
-	Session(const IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator, int recvBufferSize, int sendBufferSize);
+	Session(const IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator, PacketParser* packetParser, int recvBufferSize, int sendBufferSize);
 	~Session() override;
 
 	const IPv4EndPoint& GetLocalEndPoint() const { return m_LocalEndPoint; }
@@ -35,10 +35,10 @@ public:
 	bool Bind(const IPv4EndPoint& bindAddr);
 	bool Disconnect();
 
-	bool SendAsync(ISendPacket* packet);
+	bool SendAsync(IPacket* packet);
 	bool SendAsync(const CommandBufferPtr& buffer);
-	bool SendToAsync(ISendPacket* packet);
-	bool SendToAsync(ISendPacket* packet, const IPv4EndPoint& destination);
+	bool SendToAsync(IPacket* packet);
+	bool SendToAsync(IPacket* packet, const IPv4EndPoint& destination);
 	bool SendToAsync(const CommandBufferPtr& buffer, const IPv4EndPoint& destination);
 
 	bool RecvAsync();
@@ -62,11 +62,13 @@ public:
 	virtual void FlushSendBuffer();
 	virtual void Connected() = 0;
 	virtual void ConnectFailed(Int32U errorCode) = 0;
-	virtual void Disconnected() = 0;	
-	virtual void Received(Int32UL receivedBytes);						
-	virtual void Sent(ISendPacket* sentPacket, Int32UL receivedBytes) = 0;
+	virtual void Disconnected() = 0;
+	virtual void Received(Int32UL receivedBytes);
+	virtual void Sent(IPacket* sentPacket, Int32UL receivedBytes) = 0;
+
+	virtual void NotifyRaw(char* data, int len) = 0;
 	virtual void NotifyCommand(ICommand* cmd) = 0;
-	virtual void NotifyPacket(IRecvPacket* packet) = 0;
+	virtual void NotifyPacket(RecvedCommandPacket* packet) = 0;
 
 	int	 AddPendingCount()		{ return ++m_iOveralappedPendingCount;	}
 	int  DecreasePendingCount()	{ return --m_iOveralappedPendingCount;	}
@@ -82,8 +84,10 @@ protected:
 	JCore::MemoryPoolAbstractPtr m_spBufferAllocator;
 	JCore::RecursiveLock m_SendBufferLock;
 
-	CommandBufferPtr m_spSendBuffer;
+	PacketParser* m_pPacketParser;
+
 	CommandBufferPtr m_spRecvBuffer;
+	CommandBufferPtr m_spSendBuffer;
 
 	IPv4EndPoint m_LocalEndPoint;
 	IPv4EndPoint m_RemoteEndPoint;

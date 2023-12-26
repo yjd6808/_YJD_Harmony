@@ -14,6 +14,8 @@ USING_NS_JC;
 USING_NS_JNET;
 
 int main() {
+	DefaultParserType = PacketParser::Command;
+
 	new char; // Force Leak
 	//_CrtSetBreakAlloc(1556);
 	Random::EngineInitialize();

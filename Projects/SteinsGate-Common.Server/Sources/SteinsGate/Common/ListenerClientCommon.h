@@ -19,7 +19,7 @@ protected:
 	ListenerClientCommon(JNetwork::CommandParser* parser);
 
 	void OnReceived(JNetwork::Session* session, JNetwork::ICommand* recvCmd) override;
-	void OnReceived(JNetwork::Session* session, JNetwork::IRecvPacket* recvPacket) override;
+	void OnReceived(JNetwork::Session* session, JNetwork::RecvedCommandPacket* recvPacket) override;
 public:
 	JNetwork::CommandParser* Parser;
 };

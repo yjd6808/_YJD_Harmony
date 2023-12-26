@@ -6,9 +6,10 @@
 #include <JNetwork/Winsock.h>
 #include <JNetwork/Socket.h>
 
-NS_JNET_BEGIN
+#include "JCore/Primitives/StringUtil.h"
 
-bool Winsock::ms_bFinalized = false;
+NS_JNET_BEGIN
+	bool Winsock::ms_bFinalized = false;
 bool Winsock::ms_bInitailized = false;
 
 /*
@@ -60,17 +61,57 @@ Int32U Winsock::LastError() {
 	return WSAGetLastError();
 }
 
-JCore::String Winsock::LastErrorMessage() {
-	return ErrorMessage(::WSAGetLastError());
+JCore::String Winsock::LastErrorMessageUTF8() {
+	return ErrorMessageUTF8(::WSAGetLastError());
 }
 
-JCore::String Winsock::ErrorMessage(Int32U errorCode) {
-	char buf[1024];
-	FormatMessageA(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM,
+JCore::String Winsock::ErrorMessageMBCS(Int32U errorCode) {
+	constexpr int BUF_SIZE = 512;
+
+	JCore::String mbcsString{ BUF_SIZE };
+	char* pSource = mbcsString.Source();
+	DWORD dwLength = FormatMessageA(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM,
 		NULL, errorCode,
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		buf, 1024, NULL);
-	return buf;
+		pSource, BUF_SIZE, NULL);
+
+	mbcsString.SetLength(int(dwLength));
+	return mbcsString;
+}
+
+JCore::String Winsock::ErrorMessageUTF8(Int32U errorCode) {
+	// MBCS -> UTF16 -> UTF8보다는 바로 UTF16 -> UTF8로 변환이 당연히 낫겟지?
+	// 근데, FormatMessage에서 곧바로 UTF8 문자열을 반환 받는 방법은 없나..
+
+	constexpr int BUF_SIZE_UNICODCE = 512;
+
+	wchar_t buf[BUF_SIZE_UNICODCE];
+
+	FormatMessageW(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM,
+		NULL, errorCode,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		buf, BUF_SIZE_UNICODCE, NULL);
+
+	
+	int iRequiredLength = 0;
+	// 먼저 필요한 버퍼 크기를 얻는다.
+	if ((iRequiredLength = WideCharToMultiByte(CP_UTF8, 0, buf, BUF_SIZE_UNICODCE, nullptr, 0, NULL, NULL)) == 0) {
+		// @에러코드 표: https://learn.microsoft.com/ko-kr/windows/win32/debug/system-error-codes--0-499-
+		DebugAssertMsg(false, "%d", ::GetLastError());
+		return {};
+	}
+
+	JCore::String utf8String{ iRequiredLength + 1 };
+	char* pSource = utf8String.Source();
+
+	if (WideCharToMultiByte(CP_UTF8, 0, buf, BUF_SIZE_UNICODCE, pSource, iRequiredLength, NULL, NULL) == 0) {
+		DebugAssertMsg(false, "%d", ::GetLastError());
+		return {};
+	}
+
+	pSource[iRequiredLength] = '\0';
+	utf8String.SetLength(iRequiredLength);
+	return utf8String;
 }
 
 NS_JNET_END

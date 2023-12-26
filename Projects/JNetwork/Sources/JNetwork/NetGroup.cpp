@@ -27,7 +27,6 @@ NetGroup::NetGroup(const String& name)
 {}
 
 NetGroup::~NetGroup() {
-	NetGroup::Finalize();
 }
 
 void NetGroup::CreateIocp(int threadCount) {
@@ -51,7 +50,7 @@ bool NetGroup::AddHost(int id, const HostPtr& host) {
 	DebugAssertMsg(host != nullptr, "따끈따끈한 호스트만 넣어주세요");
 
 	if (m_hHostMap.Exist(id)) {
-		DebugAssert("%d 호스트가 이미 %s 넷그룹에 존재합니다.", id, m_Name.Source());
+		_NetLogWarn_("%d 호스트가 이미 %s 넷그룹에 존재합니다.", id, m_szName.Source());
 		return false;
 	}
 
@@ -65,8 +64,10 @@ void NetGroup::SetName(const String& name) {
 
 void NetGroup::Finalize() {
 
-	if (m_bFinalized)
+	if (m_bFinalized) {
+		DebugAssert(false);
 		return;
+	}
 
 	m_hHostMap.ForEachValue([](const HostPtr& host) {
 		DebugAssertMsg(host.RefCount() == 1, "넷 그룹 소멸전에 외부 레퍼런스를 모두 정리해주세요. (윅포를 사용해주세요)");

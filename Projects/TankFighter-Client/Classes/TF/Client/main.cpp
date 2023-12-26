@@ -10,8 +10,11 @@
 
 USING_NS_CC;
 USING_NS_JC;
+USING_NS_JNET;
 
 int main() {
+	DefaultParserType = PacketParser::Command;
+
     new char; // Force Leak
     int iExit = -1;
     {

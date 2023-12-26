@@ -19,11 +19,12 @@ NS_JNET_BEGIN
 TcpSession::TcpSession(
 	TcpServer* server, 
 	const IOCPPtr& iocp, 
-	const JCore::MemoryPoolAbstractPtr& bufferAllocator, 
+	const JCore::MemoryPoolAbstractPtr& bufferAllocator,
+	PacketParser* parser,
 	int recvBufferSize, 
 	int sendBufferSize
 )
-	: Session(iocp, bufferAllocator, recvBufferSize, sendBufferSize)
+	: Session(iocp, bufferAllocator, parser, recvBufferSize, sendBufferSize)
 	, m_pServer(server)
 {
 	TcpSession::Initialize();
@@ -60,7 +61,7 @@ bool TcpSession::AcceptAsync() {
 
 		Int32U uiError = Winsock::LastError();
 		if (uiError != WSA_IO_PENDING) {
-			_NetLogWarn_("세션 AcceptEx 실패 (%d:%s)", uiError, Winsock::LastErrorMessage().Source());
+			_NetLogWarn_("세션 AcceptEx 실패 (%d:%s)", uiError, Winsock::LastErrorMessageUTF8().Source());
 			pOverlapped->Release();
 			return false;
 		}
@@ -96,8 +97,12 @@ void TcpSession::NotifyCommand(ICommand* cmd) {
 	m_pServer->SessionReceived(this, cmd);
 }
 
-void TcpSession::NotifyPacket(IRecvPacket* recvPacket) {
+void TcpSession::NotifyPacket(RecvedCommandPacket* recvPacket) {
 	m_pServer->SessionReceived(this, recvPacket);
+}
+
+void TcpSession::NotifyRaw(char* data, int len) {
+	m_pServer->SessionReceivedRaw(this, data, len);
 }
 
 void TcpSession::Connected() {
@@ -115,7 +120,7 @@ void TcpSession::Disconnected() {
 	m_pServer->SessionDisconnected(this);
 }
 
-void TcpSession::Sent(ISendPacket* sentPacket, Int32UL sentBytes) {
+void TcpSession::Sent(IPacket* sentPacket, Int32UL sentBytes) {
 	m_pServer->SessionSent(this, sentPacket, sentBytes);
 }
 

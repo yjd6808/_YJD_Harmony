@@ -30,7 +30,7 @@ void ListenerAreaServer::OnDisconnected(Session* disconnetedSession) {
 	ListenerServerCommon::OnDisconnected(disconnetedSession);
 }
 
-void ListenerAreaServer::OnSent(Session* sender, ISendPacket* sentPacket, Int32UL sentBytes) {
+void ListenerAreaServer::OnSent(Session* sender, IPacket* sentPacket, Int32UL sentBytes) {
 	ListenerServerCommon::OnSent(sender, sentPacket, sentBytes);
 }
 
@@ -38,7 +38,7 @@ void ListenerAreaServer::OnReceived(Session* receiver, ICommand* cmd) {
 	ListenerServerCommon::OnReceived(receiver, cmd);
 }
 
-void ListenerAreaServer::OnReceived(Session* session, IRecvPacket* recvPacket) {
+void ListenerAreaServer::OnReceived(Session* session, RecvedCommandPacket* recvPacket) {
 	ListenerServerCommon::OnReceived(session, recvPacket);
 }
 

@@ -44,7 +44,7 @@ public:
 	void OnBattleBegin();
 	void OnBattleEnd();
 
-	void SendPacket(JNetwork::ISendPacket* packet);
+	void SendPacket(JNetwork::IPacket* packet);
 
 	JCORE_GETTER_SETTER(U, int,						AccountPrimaryKey,	m_iAccountPrimaryKey)
 	JCORE_GETTER_SETTER(U, const JCore::String&,	AccountId,			m_szAccountId)

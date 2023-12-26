@@ -42,12 +42,12 @@ void ListenerHelperBase::LogCommand(TransportProtocol protocol, Transmission tra
 
 }
 
-void ListenerHelperBase::LogPacketHex(IRecvPacket* recvPacket) {
+void ListenerHelperBase::LogPacketHex(RecvedCommandPacket* recvPacket) {
 	if (Core::RuntimeConfigBase->ShowRecvPacketHex)
 		PacketViewer::View(recvPacket);
 }
 
-void ListenerHelperBase::LogPacketHex(ISendPacket* sentPacket) {
+void ListenerHelperBase::LogPacketHex(IPacket* sentPacket) {
 	if (Core::RuntimeConfigBase->ShowSendPacketHex)
 		PacketViewer::View(sentPacket);
 }

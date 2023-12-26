@@ -28,19 +28,19 @@ struct SendHelper;
 
 struct SendingBase
 {
-	SendingBase(ISendPacket* packet)
+	SendingBase(IPacket* packet)
 		: Packet(packet)
 		, Sended(false)
 	{}
 
-	ISendPacket* Packet;
+	IPacket* Packet;
 	bool Sended;
 };
 
 template <typename T, typename TCommand>
 struct Sending : JCore::NonCopyable, SendingBase
 {
-	Sending(TCommand& cmd, ISendPacket* packet)
+	Sending(TCommand& cmd, IPacket* packet)
 		: SendingBase(packet)
 		, Cmd(cmd)
 	{}
@@ -123,7 +123,7 @@ struct SendHelper : SendHelperBase
 
 	
 
-	static bool SendEnd(ISendPacket* packet) {
+	static bool SendEnd(IPacket* packet) {
 		if (SendInformation.Sender == nullptr) {
 			_LogError_("센더가 설정되지 않았습니다.");
 			return false;
@@ -151,7 +151,7 @@ struct SendHelper : SendHelperBase
 
 
 	static bool SendEndExplicit(SendingBase& sending) {
-		ISendPacket* packet = sending.Packet;
+		IPacket* packet = sending.Packet;
 		sending.Sended = true;
 		return SendEnd(packet);
 	}

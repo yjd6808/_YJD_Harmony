@@ -32,7 +32,7 @@ TcpServer::~TcpServer() {
 }
 
 TcpSession* TcpServer::CreateSession() {
-	return dbg_new TcpSession(this, m_spIocp, m_spBufferAllocator, 6000, 6000);
+	return dbg_new TcpSession(this, m_spIocp, m_spBufferAllocator, nullptr, 0, 0);
 }
 
 // 디폴트 세션 컨테이너, 서버시작전 외부에서 주입해줄 경우 호출안됨
@@ -71,7 +71,7 @@ void TcpServer::SessionConnectFailed(TcpSession* session, Int32U errorCode) {
 		m_pEventListener->OnConnectFailed(session, errorCode);
 }
 
-void TcpServer::SessionSent(TcpSession* session, ISendPacket* sentPacket, Int32UL receivedBytes) {
+void TcpServer::SessionSent(TcpSession* session, IPacket* sentPacket, Int32UL receivedBytes) {
 	if (m_pEventListener)
 		m_pEventListener->OnSent(session, sentPacket, receivedBytes);
 }
@@ -81,9 +81,14 @@ void TcpServer::SessionReceived(TcpSession* session, ICommand* command) {
 		m_pEventListener->OnReceived(session, command);
 }
 
-void TcpServer::SessionReceived(TcpSession* session, IRecvPacket* recvPacket) {
+void TcpServer::SessionReceived(TcpSession* session, RecvedCommandPacket* recvPacket) {
 	if (m_pEventListener)
 		m_pEventListener->OnReceived(session, recvPacket);
+}
+
+void TcpServer::SessionReceivedRaw(TcpSession* session, char* data, int len) {
+	if (m_pEventListener)
+		m_pEventListener->OnReceivedRaw(session, data, len);
 }
 
 ISessionContainer* TcpServer::GetSessionContainer() {
@@ -184,9 +189,9 @@ bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
 		session->AcceptWait();
 
 		if (!session->AcceptAsync()) {
+			Notifier.ErrorCode = Winsock::LastError();
 			m_pContainer->DisconnectAll();
 			m_pContainer->Clear();
-			Notifier.ErrorCode = Winsock::LastError();
 			return false;
 		}
 		m_pContainer->Add(session);

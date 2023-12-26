@@ -15,4 +15,9 @@ NS_JNET_BEGIN
 extern bool DisableSendBuffering;
 extern bool DisableRecvBuffering;
 
+extern int DefaultSendBufferSize;
+extern int DefaultRecvBufferSize;
+
+extern int DefaultParserType;
+
 NS_JNET_END

@@ -4,12 +4,11 @@
 
 #include <JNetwork/Network.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedConnect.h>
-#include <JNetwork/Packet/SendPacket.h>
 #include <JNetwork/Host/TcpServer.h>
 
 NS_JNET_BEGIN
 
-IOCPOverlappedConnect::IOCPOverlappedConnect(TcpClient* client, IOCP* iocp, ISendPacket* sentPacket) :
+IOCPOverlappedConnect::IOCPOverlappedConnect(TcpClient* client, IOCP* iocp, IPacket* sentPacket) :
 	IOCPOverlapped(iocp, Type::Connect),
 	m_pClient(client),
 	m_pSentPacket(sentPacket) {

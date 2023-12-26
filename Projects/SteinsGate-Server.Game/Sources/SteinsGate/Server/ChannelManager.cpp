@@ -20,5 +20,5 @@ ChannelManager::~ChannelManager() {
 void ChannelManager::Initialize() {
 }
 
-void ChannelManager::BroadcastPacket(JNetwork::ISendPacket* packet) {
+void ChannelManager::BroadcastPacket(JNetwork::IPacket* packet) {
 }

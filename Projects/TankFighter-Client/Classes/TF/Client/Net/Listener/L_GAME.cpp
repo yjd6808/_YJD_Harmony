@@ -36,8 +36,15 @@ void L_GAME::OnDisconnected(Session* session) {
 	Director::getInstance()->getScheduler()->performFunctionInCocosThread(C_GAME::DisconnectedSynchronized);
 }
 
-void L_GAME::OnSent(Session* session, ISendPacket* sentPacket, Int32UL sentBytes) {
-	sentPacket->ForEach([](ICommand* cmd) {
+void L_GAME::OnSent(Session* session, IPacket* sentPacket, Int32UL sentBytes) {
+	CommandPacket* pPacket = dynamic_cast<CommandPacket*>(sentPacket);
+
+	if (pPacket == nullptr) {
+		DebugAssert(false);
+		return;
+	}
+
+	pPacket->ForEach([](ICommand* cmd) {
 		Cmd_t uiCmd = cmd->GetCommand();
 		if (Core::FilteredCommandSet.Exist(uiCmd)) return;
 		_LogInfo_("%s(%d) 송신", Core::CommandNameMap.Get(uiCmd), uiCmd);
@@ -56,7 +63,7 @@ void L_GAME::OnReceived(Session* session, ICommand* recvCmd) {
 	_LogDebug_("%s(%d) 커맨드 수신", Core::CommandNameMap.Get(uiCmdId), uiCmdId);
 }
 
-void L_GAME::OnReceived(Session* session, IRecvPacket* recvPacket) {
+void L_GAME::OnReceived(Session* session, RecvedCommandPacket* recvPacket) {
 }
 
 void L_GAME::ClearCommandQueue() {

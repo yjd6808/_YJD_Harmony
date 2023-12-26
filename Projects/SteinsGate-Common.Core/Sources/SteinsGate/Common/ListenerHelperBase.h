@@ -14,6 +14,6 @@
 struct ListenerHelperBase
 {
 	static void LogCommand(JNetwork::TransportProtocol protocol, JNetwork::Transmission transmission, JNetwork::ICommand* cmd);
-	static void LogPacketHex(JNetwork::IRecvPacket* recvPacket);
-	static void LogPacketHex(JNetwork::ISendPacket* sentPacket);
+	static void LogPacketHex(JNetwork::RecvedCommandPacket* recvPacket);
+	static void LogPacketHex(JNetwork::IPacket* sentPacket);
 };

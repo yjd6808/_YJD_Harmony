@@ -39,7 +39,7 @@ struct InterServerSendHelperBase : JNetwork::SendHelperBase
 	static void FlushSendBuffer();
 	static void SetInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy, int toServerId = InvalidValue_v);
 	static void SetInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy, SingleServerType_t toServerType);
-	static void SendEnd(JNetwork::ISendPacket* packet);
+	static void SendEnd(JNetwork::IPacket* packet);
 
 	static bool IsValidInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy, int toServerId);
 	
@@ -53,15 +53,20 @@ struct InterServerSendHelperBase : JNetwork::SendHelperBase
 template <typename T, typename TCommand>
 struct InterServerSending : JCore::NonCopyable
 {
-	InterServerSending(TCommand& cmd, JNetwork::ISendPacket* packet)
+	InterServerSending(TCommand& cmd, JNetwork::IPacket* packet)
 		: Cmd(cmd)
 		, Packet(packet)
 	{}
 
-	~InterServerSending() { InterServerSendHelper<T>::SendEnd(Packet); }
+	~InterServerSending() {
+		InterServerSendHelper<T>::SendEnd(Packet);
+
+		if (Packet)
+			Packet->Release();
+	}
 
 	TCommand& Cmd;
-	JNetwork::ISendPacket* Packet;
+	JNetwork::IPacket* Packet;
 };
 
 template <typename T>

@@ -17,7 +17,7 @@ CommonSession::CommonSession(
 	const IOCPPtr& iocp,
 	const JCore::MemoryPoolAbstractPtr& bufferAllocator,
 	int recvBufferSize,
-	int sendBufferSize) : TcpSession(server, iocp, bufferAllocator, recvBufferSize, sendBufferSize)
+	int sendBufferSize) : TcpSession(server, iocp, bufferAllocator, nullptr, recvBufferSize, sendBufferSize)
 {}
 
 bool CommonSession::AddComponent(IComponent* component) {

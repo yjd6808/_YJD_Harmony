@@ -54,7 +54,7 @@ void InterServerSendHelperBase::SetInformation(Session* sender, SendStrategy str
 	SendInformation.Destination = Core::ServerProcessInfoPackage->InfoMap[SendInformation.ToId]->RemoteInterServerEP;
 }
 
-void InterServerSendHelperBase::SendEnd(ISendPacket* packet) {
+void InterServerSendHelperBase::SendEnd(IPacket* packet) {
 	switch (SendInformation.Strategy) {
 	case SendStrategy::SendAsync:
 		SendInformation.Sender->SendAsync(packet);

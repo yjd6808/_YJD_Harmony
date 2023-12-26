@@ -144,6 +144,17 @@ public:
 			m_iWritePos - m_iReadPos);
 	}
 
+	void PopReads() {
+		if (m_iReadPos == m_iWritePos) {
+			// 만약 수신한 데이터를 모두 읽었으면 포지션을 그냥 0으로 옮긴다.
+			ResetPosition();
+		} else {
+			// 읽은 위치만큼은 이제 다시 쓰일일이 없으므로 버퍼를 앞으로 당긴다. 
+			// WritePos 이후로 데이터를 쌓을 수 있도록하기 위해
+			Pop(m_iReadPos, true);
+		}
+	}
+
 
 	WSABUF GetRemainBuffer() {
 		return { (Int32U)m_iBufferSize - m_iWritePos, m_pBuffer + m_iWritePos };

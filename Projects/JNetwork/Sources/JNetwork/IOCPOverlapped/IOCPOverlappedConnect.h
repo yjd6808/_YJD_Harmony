@@ -13,13 +13,13 @@ NS_JNET_BEGIN
 class IOCPOverlappedConnect : public IOCPOverlapped
 {
 public:
-	IOCPOverlappedConnect(TcpClient* client, IOCP* iocp, ISendPacket* sentPacket);
+	IOCPOverlappedConnect(TcpClient* client, IOCP* iocp, IPacket* sentPacket);
 	~IOCPOverlappedConnect() override;
 public:
 	void Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) override;
 private:
 	TcpClient* m_pClient;	
-	ISendPacket* m_pSentPacket;
+	IPacket* m_pSentPacket;
 };
 
 NS_JNET_END

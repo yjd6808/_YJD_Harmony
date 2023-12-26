@@ -22,7 +22,7 @@ public:
 	void Finalize();
 
 	void OnUpdate(const JCore::TimeSpan& elapsed) override;
-	void BroadcastPacket(JNetwork::ISendPacket* packet, int state) override;
+	void BroadcastPacket(JNetwork::IPacket* packet, int state) override;
 
 	int GetChannelCount() const { return m_vChannelList.Size(); }
 	Channel* GetChannelByPrimaryKey(int channelPrimaryKey);

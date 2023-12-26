@@ -37,7 +37,7 @@ void NetClientEventListener::OnConnectFailed(Session* session, Int32U errorCode)
 	SyncConnectionResult(m_eConnectedServerType, session, false, errorCode);
 }
 
-void NetClientEventListener::OnSent(Session* session, ISendPacket* sendPacket, Int32UL sentBytes) {
+void NetClientEventListener::OnSent(Session* session, IPacket* sendPacket, Int32UL sentBytes) {
 	ListenerClientBase::OnSent(session, sendPacket, sentBytes);
 }
 
@@ -46,7 +46,7 @@ void NetClientEventListener::OnReceived(Session* session, ICommand* recvCmd) {
 	SyncReceivedCommand(m_eConnectedServerType, session, recvCmd);
 }
 
-void NetClientEventListener::OnReceived(Session* session, IRecvPacket* recvPacket) {
+void NetClientEventListener::OnReceived(Session* session, RecvedCommandPacket* recvPacket) {
 	ListenerClientBase::OnReceived(session, recvPacket);
 }
 

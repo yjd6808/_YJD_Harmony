@@ -1,18 +1,17 @@
 ﻿/*
  * 작성자: 윤정도
- * 생성일: 10/13/2023 11:00:11 AM
+ * 생성일: 2/9/2023 10:48:34 PM
  * =====================
  *
  */
 
 
 #include <JNetwork/Network.h>
-#include <JNetwork/Packet/Command.h>
-#include <JNetwork/Packet/RecvPacket.h>
+#include <JNetwork/Packet/Packet.h>
 
 NS_JNET_BEGIN
 
-void IRecvPacket::ForEach(const JCore::Action<ICommand*>& consumer) {
+void RecvedCommandPacket::ForEach(const JCore::Action<ICommand*>& consumer) {
 	int iCmdIndex = 0;
 	char* pCmdData = reinterpret_cast<char*>(this) + PacketHeaderSize_v;
 
@@ -24,8 +23,8 @@ void IRecvPacket::ForEach(const JCore::Action<ICommand*>& consumer) {
 	}
 }
 
-IRecvPacket* IRecvPacket::Clone() const {
-	IRecvPacket* pCopy = (IRecvPacket*)dbg_new char[PacketHeaderSize_v + m_iPacketLen];
+RecvedCommandPacket* RecvedCommandPacket::Clone() const {
+	RecvedCommandPacket* pCopy = (RecvedCommandPacket*)dbg_new char[PacketHeaderSize_v + m_iPacketLen];
 	const char* pCmdData = (char*)this + PacketHeaderSize_v;
 
 	JCore::Memory::CopyUnsafe(pCopy, pCmdData, m_iPacketLen);	// 데이터영역 복사
@@ -33,5 +32,12 @@ IRecvPacket* IRecvPacket::Clone() const {
 	pCopy->m_iCommandCount = m_iCommandCount;
 	return pCopy;
 }
+
+
+CommandBufferPacket::CommandBufferPacket(const CommandBufferPtr& buffer)
+	: CommandPacket(buffer->GetCommandCount(), buffer->GetPacketLength())
+	, m_Buffer(buffer)
+{}
+
 
 NS_JNET_END

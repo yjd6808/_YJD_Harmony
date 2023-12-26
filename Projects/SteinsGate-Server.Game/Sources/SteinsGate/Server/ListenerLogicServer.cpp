@@ -30,7 +30,7 @@ void ListenerLogicServer::OnDisconnected(Session* disconnetedSession) {
 	ListenerServerCommon::OnDisconnected(disconnetedSession);
 }
 
-void ListenerLogicServer::OnSent(Session* sender, ISendPacket* sentPacket, Int32UL sentBytes) {
+void ListenerLogicServer::OnSent(Session* sender, IPacket* sentPacket, Int32UL sentBytes) {
 	ListenerServerCommon::OnSent(sender, sentPacket, sentBytes);
 }
 
@@ -38,7 +38,7 @@ void ListenerLogicServer::OnReceived(Session* receiver, ICommand* cmd) {
 	ListenerServerCommon::OnReceived(receiver, cmd);
 }
 
-void ListenerLogicServer::OnReceived(Session* session, IRecvPacket* recvPacket) {
+void ListenerLogicServer::OnReceived(Session* session, RecvedCommandPacket* recvPacket) {
 	ListenerServerCommon::OnReceived(session, recvPacket);
 }
 

@@ -4,10 +4,10 @@
 
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
+#include <JNetwork/Config.h>
 
 #include <JNetwork/Host/Session.h>
 #include <JNetwork/Buffer/CommandBuffer.h>
-#include <JNetwork/Packet/RecvPacket.h>
 
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedRecv.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedSend.h>
@@ -22,19 +22,30 @@ NS_JNET_BEGIN
 
 Session::Session(
 	const IOCPPtr& iocp, 
-	const MemoryPoolAbstractPtr& bufferAllocator, 
+	const MemoryPoolAbstractPtr& bufferAllocator,
+	PacketParser* packetParser,
 	int recvBufferSize, 
 	int sendBufferSize
 )
 	: Host(iocp)
 	, m_iHandle(-1)
 	, m_spBufferAllocator(bufferAllocator)
-	, m_spSendBuffer(MakeShared<CommandBuffer>(m_spBufferAllocator, sendBufferSize))
-	, m_spRecvBuffer(MakeShared<CommandBuffer>(m_spBufferAllocator, recvBufferSize)) {
+	, m_pPacketParser(packetParser)
+	, m_spRecvBuffer(nullptr)
+	, m_spSendBuffer(nullptr)
+{
 
+	m_spRecvBuffer = MakeShared<CommandBuffer>(m_spBufferAllocator, recvBufferSize <= 0 ? DefaultRecvBufferSize : recvBufferSize);
+	m_spSendBuffer = MakeShared<CommandBuffer>(m_spBufferAllocator, sendBufferSize <= 0 ? DefaultSendBufferSize : sendBufferSize);
+	
+	if (m_pPacketParser == nullptr) {
+		m_pPacketParser = PacketParser::Create(DefaultParserType, this);
+	}
 }
 
-Session::~Session() = default;
+Session::~Session() {
+	JCORE_DELETE_SAFE(m_pPacketParser);
+}
 
 void Session::Initialize() {
 	const int eState = m_eState.Load();
@@ -100,7 +111,7 @@ bool Session::Disconnect() {
 }
 
 
-bool Session::SendAsync(ISendPacket* packet) {
+bool Session::SendAsync(IPacket* packet) {
 	packet->AddRef();
 	WSABUF buf = packet->GetWSABuf();
 	Int32UL uiSendBytes = 0;
@@ -158,7 +169,7 @@ void Session::FlushSendBuffer() {
 	if (pWrappedPacket) SendAsync(pWrappedPacket);
 }
 
-bool Session::SendToAsync(ISendPacket* packet, const IPv4EndPoint& destination) {
+bool Session::SendToAsync(IPacket* packet, const IPv4EndPoint& destination) {
 
 	if (!destination.IsValidRemoteEndPoint()) {
 		_NetLogError_("유효한 목적지 주소가 아닙니다.");
@@ -193,7 +204,7 @@ bool Session::SendToAsync(const CommandBufferPtr& buffer, const IPv4EndPoint& de
 	return SendToAsync(pPacket, destination);
 }
 
-bool Session::SendToAsync(ISendPacket* packet) {
+bool Session::SendToAsync(IPacket* packet) {
 	return SendToAsync(packet, m_RemoteEndPoint);
 }
 
@@ -268,47 +279,7 @@ void Session::Received(Int32UL receivedBytes) {
 		return;
 	}
 
-	CommandBuffer* pRecvBuffer = m_spRecvBuffer.GetPtr();
-	pRecvBuffer->MoveWritePos(receivedBytes);
-
-	for (;;) {
-		const int iReadableBufferSize = pRecvBuffer->GetReadableBufferSize();
-		// 패킷의 헤더 크기만큼 데이터를 수신하지 않았으면 모일때까지 기다린다.
-		if (iReadableBufferSize < PacketHeaderSize_v)
-			return;
-
-		// 패킷 헤더 길이 + 패킷 길이 만큼 수신하지 않았으면 다시 모일때까지 기다린다.
-		IRecvPacket* packet = pRecvBuffer->Peek<IRecvPacket*>();
-		const int iPacketLength = packet->GetPacketLength();
-		if (iReadableBufferSize < (PacketHeaderSize_v + iPacketLength)) {
-			return;
-		}
-
-		pRecvBuffer->MoveReadPos(PacketHeaderSize_v);
-		NotifyPacket(packet);
-
-		for (int i = 0; i < packet->GetCommandCount(); i++) {
-			ICommand* pCmd = pRecvBuffer->Peek<ICommand*>();
-			CmdLen_t uiCmdLen = pCmd->GetCommandLen();
-
-			NotifyCommand(pCmd);
-
-			if (pRecvBuffer->MoveReadPos(uiCmdLen) == false) {
-				_NetLogWarn_("커맨드 크기가 이상합니다.");
-				pRecvBuffer->ResetPosition();
-				return;
-			}
-		}
-
-		if (pRecvBuffer->GetReadPos() == pRecvBuffer->GetWritePos()) {
-			// 만약 수신한 데이터를 모두 읽었으면 포지션을 그냥 0으로 옮긴다.
-			pRecvBuffer->ResetPosition();
-		} else {
-			// 읽은 위치만큼은 이제 다시 쓰일일이 없으므로 버퍼를 앞으로 당긴다. 
-			// WritePos 이후로 데이터를 쌓을 수 있도록하기 위해
-			pRecvBuffer->Pop(pRecvBuffer->GetReadPos(), true);
-		}
-	}
+	m_pPacketParser->Received(receivedBytes);
 }
 
 

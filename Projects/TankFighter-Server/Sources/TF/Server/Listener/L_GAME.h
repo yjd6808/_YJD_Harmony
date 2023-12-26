@@ -19,7 +19,7 @@ class L_GAME : public JNetwork::ServerEventListener
 	 void OnConnected(JNetwork::Session* session);
 	 void OnConnectFailed(JNetwork::Session* session, Int32U errorCode);
 	 void OnDisconnected(JNetwork::Session* session);
-	 void OnSent(JNetwork::Session* session, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes);
+	 void OnSent(JNetwork::Session* session, JNetwork::IPacket* sentPacket, Int32UL sentBytes);
 	 void OnReceived(JNetwork::Session* session, JNetwork::ICommand* recvCmd);
-	 void OnReceived(JNetwork::Session* session, JNetwork::IRecvPacket* recvPacket);
+	 void OnReceived(JNetwork::Session* session, JNetwork::RecvedCommandPacket* recvPacket);
 };

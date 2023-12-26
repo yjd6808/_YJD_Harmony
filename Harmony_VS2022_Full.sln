@@ -46,9 +46,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JCore", "JCore", "{3EF305E3-4E86-4021-B720-83FA381CAB91}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JNetwork", "JNetwork", "{96C8F976-4BBC-4218-920C-5C003304E2F2}"
-	ProjectSection(SolutionItems) = preProject
-		Projects\JNetwork-Research.Buffering\Project\JNetwork-Research.Buffering.vcxproj = Projects\JNetwork-Research.Buffering\Project\JNetwork-Research.Buffering.vcxproj
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JCore-Test", "Projects\JCore-Test\Project\JCore-Test.vcxproj", "{5CE6FAB1-0D87-4FB7-BDFE-B959B47F974E}"
 	ProjectSection(ProjectDependencies) = postProject

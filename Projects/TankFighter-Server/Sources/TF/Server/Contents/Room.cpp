@@ -152,7 +152,7 @@ void Room::JudgeWinnerLoserRaw() {
 }
 
 
-void Room::BroadcastPacket(ISendPacket* packet, int state) {
+void Room::BroadcastPacket(IPacket* packet, int state) {
 	auto fnStateAny = [=](Player* player) {
 		player->SendPacket(packet);
 	};

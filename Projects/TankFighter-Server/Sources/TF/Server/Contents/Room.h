@@ -36,7 +36,7 @@ public:
 	void OnBattleBegin();
 	void OnBattleEnd();
 
-	void BroadcastPacket(JNetwork::ISendPacket* packet, int state) override;
+	void BroadcastPacket(JNetwork::IPacket* packet, int state) override;
 	void OnPopped() override;
 	void OnPushed() override;
 

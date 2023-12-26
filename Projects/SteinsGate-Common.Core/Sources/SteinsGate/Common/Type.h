@@ -131,7 +131,7 @@ using SGNetMaster = JNetwork::NetMaster;
 using SGIOCP = JNetwork::IOCP;
 
 using SGOverlapped = JNetwork::IOCPOverlapped;
-using SGISendPacket = JNetwork::ISendPacket;
+using SGISendPacket = JNetwork::IPacket;
 using SGCommandBuffer = JNetwork::CommandBuffer;
 using SGCommandBufferPacket = JNetwork::CommandBufferPacket;
 

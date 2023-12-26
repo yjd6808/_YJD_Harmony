@@ -145,7 +145,7 @@ void UI_Login::login() {
 		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("LOGIN_REQUIRED_ID_PASS"));
 		return;
 	}
-
+	
 	AuthenticationComponent* pAuthenticationComponent = Core::Net->getAuthenticationComponent();
 	pAuthenticationComponent->setAccountIdPass(m_pEbId->getText().c_str(), m_pEbPass->getText().c_str());
 

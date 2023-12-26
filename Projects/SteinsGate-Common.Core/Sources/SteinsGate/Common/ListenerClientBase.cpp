@@ -32,9 +32,14 @@ void ListenerClientBase::OnDisconnected(SGSession* session) {
 	_LogInfo_("%s와 연결이 종료되었습니다.", remoteEndPointString.Source());
 }
 
-void ListenerClientBase::OnSent(SGSession* session, ISendPacket* sentPacket, Int32UL sentBytes) {
+void ListenerClientBase::OnSent(SGSession* session, IPacket* sentPacket, Int32UL sentBytes) {
 	const TransportProtocol protocol = session->Protocol();
-	sentPacket->ForEach([&](ICommand* cmd) { ListenerHelperBase::LogCommand(protocol, Transmission::Send, cmd); });
+
+	if (sentPacket->GetType() == PacketType::Command) {
+		CommandPacket* pPacket = static_cast<CommandPacket*>(sentPacket);
+		pPacket->ForEach([&](ICommand* cmd) { ListenerHelperBase::LogCommand(protocol, Transmission::Send, cmd); });
+	}
+	
 	ListenerHelperBase::LogPacketHex(sentPacket);
 }
 
@@ -42,7 +47,7 @@ void ListenerClientBase::OnReceived(SGSession* session, ICommand* recvCmd) {
 	ListenerHelperBase::LogCommand(session->Protocol(), Transmission::Recv, recvCmd);
 }
 
-void ListenerClientBase::OnReceived(Session* session, IRecvPacket* recvPacket) {
+void ListenerClientBase::OnReceived(Session* session, RecvedCommandPacket* recvPacket) {
 	ListenerHelperBase::LogPacketHex(recvPacket);
 }
 

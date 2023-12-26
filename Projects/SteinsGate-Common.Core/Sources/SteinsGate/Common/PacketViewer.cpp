@@ -26,12 +26,30 @@ void PacketViewer::View(JNetwork::Transmission transmission, char* data, int len
 	_LogPlain_("\t[%c 패킷 뷰]\n\t패킷 크기: %d\n\t커맨드 수: %d\n\t헥스\n%s", JNetwork::TransmissionName(transmission), len, cmdCount, szHex.Source());
 }
 
-void PacketViewer::View(JNetwork::ISendPacket* packet) {
-	WSABUF wsaBuf = packet->GetWSABuf();
-	View(JNetwork::Transmission::Send, wsaBuf.buf, wsaBuf.len, packet->GetCommandCount());
+void PacketViewer::View(JNetwork::Transmission transmission, char* data, int len) {
+	String szHex{ 1024 };
+
+	if (len > szHex.Capacity() - 1) {
+		_LogWarn_("패킷 뷰 실패(출력 불가능한 크기)");
+		return;
+	}
+	Hex(data, len, szHex);
+	_LogPlain_("\t[%c 패킷 뷰]\n\t패킷 크기: %d\n\t헥스\n%s", JNetwork::TransmissionName(transmission), len, szHex.Source());
 }
 
-void PacketViewer::View(JNetwork::IRecvPacket* packet) {
+void PacketViewer::View(JNetwork::IPacket* packet) {
+	const WSABUF wsaBuf = packet->GetWSABuf();
+
+	if (packet->GetType() == JNetwork::PacketType::Command) {
+		View(JNetwork::Transmission::Send, wsaBuf.buf, wsaBuf.len, static_cast<JNetwork::CommandPacket*>(packet)->GetCommandCount());
+	} else if (packet->GetType() == JNetwork::PacketType::Raw) {
+		View(JNetwork::Transmission::Send, wsaBuf.buf, wsaBuf.len);
+	} else {
+		DebugAssert(false);
+	}
+}
+
+void PacketViewer::View(JNetwork::RecvedCommandPacket* packet) {
 	View(JNetwork::Transmission::Recv, reinterpret_cast<char*>(packet), packet->GetPacketLength() + JNetwork::PacketHeaderSize_v, packet->GetCommandCount());
 }
 

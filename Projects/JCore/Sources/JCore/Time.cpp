@@ -920,7 +920,7 @@ bool DateTime::TryParse(DateTime& parsed, const char* fmt, int fmtLen, const cha
 		case DateFormat::d:
 		case DateFormat::dd: {
 			const int day = StringUtil::ToNumber<Int32>(szDateStringToken.Source());
-			if (day < 1 || day > 31) {
+			if (day < 0 || day > 31) {
 				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
 				break;
 			}

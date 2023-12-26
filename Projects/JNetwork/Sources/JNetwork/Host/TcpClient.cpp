@@ -7,21 +7,20 @@
 
 #include <JNetwork/Host/TcpClient.h>
 
-#include <JNetwork/Packet/SendPacket.h>
-#include <JNetwork/Packet/RecvPacket.h>
-
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedConnect.h>
 
-using namespace JCore;
+USING_NS_JC;
 
 NS_JNET_BEGIN
 
 TcpClient::TcpClient(
 	const IOCPPtr& iocp,
-	const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-	int sendBuffSize, 
-	int recvBufferSize)
-	: Session(iocp, bufferAllocator, sendBuffSize, recvBufferSize)
+	const MemoryPoolAbstractPtr& bufferAllocator,
+	PacketParser* parser,
+	int recvBufferSize,
+	int sendBufferSize
+)
+	: Session(iocp, bufferAllocator, parser, sendBufferSize, recvBufferSize)
 	, m_pEventListener(nullptr) {
 
 	TcpClient::Initialize();
@@ -228,12 +227,17 @@ void TcpClient::NotifyCommand(ICommand* cmd) {
 		m_pEventListener->OnReceived(this, cmd);
 }
 
-void TcpClient::NotifyPacket(IRecvPacket* packet) {
+void TcpClient::NotifyPacket(RecvedCommandPacket* packet) {
 	if (m_pEventListener)
 		m_pEventListener->OnReceived(this, packet);
 }
 
-void TcpClient::Sent(ISendPacket* sentPacket, Int32UL sentBytes) {
+void TcpClient::NotifyRaw(char* data, int len) {
+	if (m_pEventListener)
+		m_pEventListener->OnReceivedRaw(this, data, len);
+}
+
+void TcpClient::Sent(IPacket* sentPacket, Int32UL sentBytes) {
 	if (m_pEventListener)
 		m_pEventListener->OnSent(this, sentPacket, sentBytes);
 }

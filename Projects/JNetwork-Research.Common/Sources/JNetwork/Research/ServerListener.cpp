@@ -10,7 +10,6 @@
 #include <JNetwork/Research/ServerListener.h>
 #include <JNetwork/Research/Command.h>
 
-#include <JNetwork/Packet/SendPacket.h>
 #include <JNetwork/Host/Session.h>
 
 #include <JCore/Primitives/StringUtil.h>
@@ -36,7 +35,7 @@ void ServerListener::OnDisconnected(Session* disconnetedSession) {
 		m_Name.Source(), disconnetedSession->GetRemoteEndPoint().ToString().Source());
 }
 
-void ServerListener::OnSent(Session* sender, ISendPacket* packet, Int32UL sentBytes) {
+void ServerListener::OnSent(Session* sender, IPacket* packet, Int32UL sentBytes) {
 	//Console::WriteLine("[%s] 송신 : %d 바이트", m_Name.Source(), packet->GetPacketLength());
 }
 

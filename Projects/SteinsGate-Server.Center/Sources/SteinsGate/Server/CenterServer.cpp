@@ -40,7 +40,7 @@ void CenterServer::RemoveSession(CenterSession* session) {
 	m_pSession[id].Type = ServerProcessType::None;
 }
 
-void CenterServer::BroadcastPacket(ISendPacket* packet) {
+void CenterServer::BroadcastPacket(IPacket* packet) {
 	const Vector<int>& vActiveServerIdList = Core::ServerProcessInfoPackage->ActiveServerIdList;
 	const int iServerCount = vActiveServerIdList.Size();
 

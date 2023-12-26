@@ -33,7 +33,7 @@ void GameInterServerClientNetGroup::InitializeIOCP() {
 }
 
 void GameInterServerClientNetGroup::InitializeInterServerTcp() {
-	auto spInterServerClient = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, RecvBufferSize_v, SendBufferSize_v);
+	auto spInterServerClient = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, nullptr, RecvBufferSize_v, SendBufferSize_v);
 	spInterServerClient->Bind(Core::GameServerProcessInfo->BindInterServerTcp);
 	AddHost(Const::Host::GameInterServerTcpId, spInterServerClient);
 
@@ -42,7 +42,7 @@ void GameInterServerClientNetGroup::InitializeInterServerTcp() {
 }
 
 void GameInterServerClientNetGroup::InitializeInterServerUdp() {
-	auto spInterServerClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, RecvBufferSize_v, SendBufferSize_v);
+	auto spInterServerClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, nullptr, RecvBufferSize_v, SendBufferSize_v);
 	spInterServerClient->Bind(Core::GameServerProcessInfo->BindInterServerUdp);
 	AddHost(Const::Host::GameInterServerUdpId, spInterServerClient);
 	m_pInterServerClientUdp = spInterServerClient.Get<UdpClient*>();

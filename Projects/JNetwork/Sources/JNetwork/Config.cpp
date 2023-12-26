@@ -6,7 +6,7 @@
  */
 
 #include <JNetwork/Network.h>
-#include <JNetwork/Config.h>
+#include <JNetwork/Packet/PacketParser.h>
 
 NS_JNET_BEGIN
 
@@ -45,5 +45,17 @@ bool DisableSendBuffering = true;
  */ 
 bool DisableRecvBuffering = false;
 
+
+// 세션의 디폴트 버퍼 크기
+int DefaultSendBufferSize = 6000;
+int DefaultRecvBufferSize = 6000;
+
+
+/*
+ * 수신한 데이터를 어떻게 파싱할지, 파서 설정을 하지 않을 경우 디폴트로 생성할 패킷파서
+ * Raw: 단순 char 배열로 파싱함
+ * Command: ICommand단위로 파싱함
+ */
+int DefaultParserType = PacketParser::Type::Raw;
 
 NS_JNET_END

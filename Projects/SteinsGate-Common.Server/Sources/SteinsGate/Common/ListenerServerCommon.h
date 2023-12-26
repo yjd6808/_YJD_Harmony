@@ -19,7 +19,7 @@ public:
 	ListenerServerCommon(JNetwork::CommandParser* parser);
 protected:
 	void OnReceived(JNetwork::Session* session, JNetwork::ICommand* recvCmd) override;
-	void OnReceived(JNetwork::Session* session, JNetwork::IRecvPacket* recvPacket) override;
+	void OnReceived(JNetwork::Session* session, JNetwork::RecvedCommandPacket* recvPacket) override;
 
 	virtual ServerType_t GetServerType() = 0;
 	const char* GetServerName() override { return ServerType::Name[GetServerType()]; }

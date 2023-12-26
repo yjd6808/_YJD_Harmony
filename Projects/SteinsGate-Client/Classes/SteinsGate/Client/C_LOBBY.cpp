@@ -29,7 +29,7 @@ void C_LOBBY::OnConnected(Session* session) {
 
 void C_LOBBY::OnConnectFailed(Session* session, Int32U errorCode) {
 	Core::Contents.PopupManager->closeByTag(DEF_POPUP_CONNECT_LOBBY);
-	Core::Contents.PopupManager->showOk(SG_TEXT_RAW_FMT_STD("CONNECT_SERVER_FAILED_WITH_MESSAGE", ServerType::Name[ServerType::Lobby], Winsock::ErrorMessage(errorCode).Source(), errorCode));
+	Core::Contents.PopupManager->showOk(SG_TEXT_RAW_FMT_STD("CONNECT_SERVER_FAILED_WITH_MESSAGE", ServerType::Name[ServerType::Lobby], Winsock::ErrorMessageUTF8(errorCode).Source(), errorCode));
 }
 
 void C_LOBBY::OnDisconnected(Session* session) {

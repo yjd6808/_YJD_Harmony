@@ -22,7 +22,7 @@ protected:
 	void OnStarted() override;
 	void OnConnected(Session* connectedSession) override;
 	void OnDisconnected(Session* disconnetedSession) override;
-	void OnSent(Session* sender, ISendPacket* packet, Int32UL sentBytes) override;
+	void OnSent(Session* sender, IPacket* packet, Int32UL sentBytes) override;
 	void OnReceived(Session* receiver, ICommand* cmd) override;
 	void OnStopped() override;
 private:

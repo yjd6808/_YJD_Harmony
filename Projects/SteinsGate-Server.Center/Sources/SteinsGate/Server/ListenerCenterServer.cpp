@@ -43,12 +43,12 @@ void ListenerCenterServer::OnDisconnected(Session* disconnetedSession) {
 	}
 }
 
-void ListenerCenterServer::OnSent(Session* sender, ISendPacket* sentPacket, Int32UL sentBytes) {
+void ListenerCenterServer::OnSent(Session* sender, IPacket* sentPacket, Int32UL sentBytes) {
 	ListenerServerCommon::OnSent(sender, sentPacket, sentBytes);
 }
 
 
-void ListenerCenterServer::OnReceived(Session* session, IRecvPacket* recvPacket) {
+void ListenerCenterServer::OnReceived(Session* session, RecvedCommandPacket* recvPacket) {
 
 	ms_tlsSenderMap.Clear();
 

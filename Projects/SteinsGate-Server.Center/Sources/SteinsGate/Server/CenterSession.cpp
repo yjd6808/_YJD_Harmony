@@ -18,7 +18,7 @@ CenterSession::CenterSession(
 	const JCore::MemoryPoolAbstractPtr& bufferAllocator,
 	int recvBufferSize,
 	int sendBufferSize)
-	: TcpSession(server, iocp, bufferAllocator, recvBufferSize, sendBufferSize)
+	: TcpSession(server, iocp, bufferAllocator, nullptr, recvBufferSize, sendBufferSize)
 	, m_eClientType(ServerProcessType::None)
 	, m_iServerId(InvalidValue_v)
 {}

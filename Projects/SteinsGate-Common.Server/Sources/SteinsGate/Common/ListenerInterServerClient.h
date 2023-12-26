@@ -17,9 +17,9 @@ public:
 protected:
 	void OnConnected(JNetwork::Session* session) override;
 	void OnDisconnected(JNetwork::Session* session) override;
-	void OnSent(JNetwork::Session* sessionm, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) override;
+	void OnSent(JNetwork::Session* sessionm, JNetwork::IPacket* sentPacket, Int32UL sentBytes) override;
 	void OnReceived(JNetwork::Session* session, JNetwork::ICommand* recvCmd) override;
-	void OnReceived(JNetwork::Session* session, JNetwork::IRecvPacket* recvPacket) override;
+	void OnReceived(JNetwork::Session* session, JNetwork::RecvedCommandPacket* recvPacket) override;
 	void OnConnectFailed(JNetwork::Session* session, Int32U errorCode) override;
 private:
 	ServerProcessType_t m_eServerProcessType;

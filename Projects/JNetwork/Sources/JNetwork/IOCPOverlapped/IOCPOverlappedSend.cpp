@@ -4,14 +4,13 @@
 
 #include <JNetwork/Network.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedSend.h>
-#include <JNetwork/Packet/SendPacket.h>
 #include <JNetwork/Host/TcpServer.h>
 
 #include <JCore/Primitives/RefCountObjectPtr.h>
 
 NS_JNET_BEGIN
 
-IOCPOverlappedSend::IOCPOverlappedSend(Session* session, IOCP* iocp, ISendPacket* sentPacket)
+IOCPOverlappedSend::IOCPOverlappedSend(Session* session, IOCP* iocp, IPacket* sentPacket)
 	: IOCPOverlapped(iocp, Type::Send)
 	, m_pSender(session)
 	, m_pSentPacket(sentPacket)

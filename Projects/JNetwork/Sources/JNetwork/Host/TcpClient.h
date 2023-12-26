@@ -15,8 +15,9 @@ public:
 	TcpClient(
 		const IOCPPtr& iocp,
 		const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-		int sendBufferSize = 6000, 
-		int recvBufferSize = 6000
+		PacketParser* parser = nullptr,
+		int sendBufferSize = 0, 
+		int recvBufferSize = 0
 	);
 
 	~TcpClient() override;
@@ -28,8 +29,9 @@ public:
 	void ConnectFailed(Int32U errorCode) override;
 	void Disconnected() override;
 	void NotifyCommand(ICommand* cmd) override;
-	void NotifyPacket(IRecvPacket* packet) override;
-	void Sent(ISendPacket* sentPacket, Int32UL sentBytes) override;
+	void NotifyPacket(RecvedCommandPacket* packet) override;
+	void NotifyRaw(char* data, int len) override;
+	void Sent(IPacket* sentPacket, Int32UL sentBytes) override;
 	Type GetType() const override { return eClient; }
 	DetailType GetDetailType() const override { return eTcpClient; }
 	const char* TypeName() override { return "TCP 클라"; }

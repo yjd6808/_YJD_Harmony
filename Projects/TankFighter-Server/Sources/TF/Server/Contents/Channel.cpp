@@ -135,7 +135,7 @@ void Channel::OnUpdate(const TimeSpan& elapsed) {
 	m_BattleFieldRoutine.OnUpdate(elapsed);
 }
 
-void Channel::BroadcastPacket(ISendPacket* packet, int state) {
+void Channel::BroadcastPacket(IPacket* packet, int state) {
 	auto fnBroadcast = [&](Player* player) { player->SendPacket(packet); };
 	JCORE_REF_COUNT_GUARD(packet);
 	JCORE_LOCK_GUARD(m_PlayerListLock);

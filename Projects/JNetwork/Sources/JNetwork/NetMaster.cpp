@@ -19,8 +19,10 @@ NetMaster::NetMaster()
 NetMaster::~NetMaster() = default;
 
 void NetMaster::Finalize() {
-	if (m_bFinalized)
+	if (m_bFinalized) {
+		DebugAssert(false);
 		return;
+	}
 
 	m_hNetGroup.ForEachValue([](NetGroupPtr& group) { group->Finalize(); });
 	m_hNetGroup.Clear();

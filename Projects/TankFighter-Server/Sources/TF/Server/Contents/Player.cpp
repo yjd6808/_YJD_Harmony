@@ -124,7 +124,7 @@ void Player::OnBattleEnd() {
 	pCharacter->ClearBattleInfo();
 }
 
-void Player::SendPacket(ISendPacket* packet) {
+void Player::SendPacket(IPacket* packet) {
 	Session* session = m_pSession;
 
 	if (session == nullptr) 

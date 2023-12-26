@@ -8,7 +8,7 @@
 
 #include <JNetwork/Network.h>
 #include <JNetwork/Buffer/CommandBuffer.h>
-#include <JNetwork/Packet/SendPacket.h>
+#include <JNetwork/Packet/Packet.h>
 
 NS_JNET_BEGIN
 

@@ -62,7 +62,7 @@ void World::OnUpdate(const TimeSpan& elapsed) {
 	}
 }
 
-void World::BroadcastPacket(JNetwork::ISendPacket* packet, int state) {
+void World::BroadcastPacket(JNetwork::IPacket* packet, int state) {
 	JCORE_REF_COUNT_GUARD(packet);
 	JCORE_LOCK_GUARD(m_PlayerListSync);
 	m_hsPlayerList.ForEach([=](Player* player) { player->SendPacket(packet); });

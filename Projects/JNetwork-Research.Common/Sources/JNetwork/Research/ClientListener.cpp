@@ -10,7 +10,7 @@
 #include <JNetwork/Research/ClientListener.h>
 #include <JNetwork/Research/Command.h>
 
-#include <JNetwork/Packet/SendPacket.h>
+#include <JNetwork/Packet/Packet.h>
 #include <JCore/Utils/Console.h>
 
 USING_NS_JC;
@@ -27,8 +27,10 @@ void ClientListener::OnDisconnected(Session* session) {
 	Console::WriteLine("[%s] 연결이 종료되었습니다.", m_Name.Source());
 }
 
-void ClientListener::OnSent(Session* session, ISendPacket* sentPacket, Int32UL sentBytes) {
-	Console::WriteLine("[%s] 커맨드 %d개를 송신했습니다.", m_Name.Source(), sentPacket->GetCommandCount());
+void ClientListener::OnSent(Session* session, IPacket* sentPacket, Int32UL sentBytes) {
+	CommandPacket* pSentPacket = dynamic_cast<CommandPacket*>(sentPacket);
+	if (pSentPacket == nullptr) { DebugAssert(false); }
+	Console::WriteLine("[%s] 커맨드 %d개를 송신했습니다.", m_Name.Source(), pSentPacket->GetCommandCount());
 }
 
 void ClientListener::OnReceived(Session* session, ICommand* cmd) {

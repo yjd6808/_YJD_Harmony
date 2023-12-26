@@ -10,19 +10,18 @@
 #include <JNetwork/Winsock.h>
 #include <JNetwork/Host/UdpClient.h>
 
-#include <JNetwork/Packet/RecvPacket.h>
-#include <JNetwork/Packet/SendPacket.h>
-
 NS_JNET_BEGIN
+
 USING_NS_JC;
 
 UdpClient::UdpClient(
 	const IOCPPtr& iocp,
-	const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-	int recvBufferSize, 
+	const MemoryPoolAbstractPtr& bufferAllocator,
+	PacketParser* parser,
+	int recvBufferSize,
 	int sendBufferSize
 )
-	: Session(iocp, bufferAllocator, recvBufferSize, sendBufferSize)
+	: Session(iocp, bufferAllocator, parser, recvBufferSize, sendBufferSize)
 	, m_pEventListener(nullptr)
 {
 	UdpClient::Initialize();
@@ -87,12 +86,17 @@ void UdpClient::NotifyCommand(ICommand* cmd) {
 		m_pEventListener->OnReceived(this, cmd);
 }
 
-void UdpClient::NotifyPacket(IRecvPacket* packet) {
+void UdpClient::NotifyPacket(RecvedCommandPacket* packet) {
 	if (m_pEventListener)
 		m_pEventListener->OnReceived(this, packet);
 }
 
-void UdpClient::Sent(ISendPacket* sentPacket, Int32UL sentBytes) {
+void UdpClient::NotifyRaw(char* data, int len) {
+	if (m_pEventListener)
+		m_pEventListener->OnReceivedRaw(this, data, len);
+}
+
+void UdpClient::Sent(IPacket* sentPacket, Int32UL sentBytes) {
 	if (m_pEventListener)
 		m_pEventListener->OnSent(this, sentPacket, sentBytes);
 }

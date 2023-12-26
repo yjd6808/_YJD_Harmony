@@ -20,7 +20,7 @@ USING_NS_JNET;
 ChannelLobby::ChannelLobby() {}
 ChannelLobby::~ChannelLobby() {}
 
-void ChannelLobby::BroadcastPacket(ISendPacket* packet, int state) {
+void ChannelLobby::BroadcastPacket(IPacket* packet, int state) {
 	auto fnBroadcastAny = [=](Player* player) {
 		player->SendPacket(packet);
 	};

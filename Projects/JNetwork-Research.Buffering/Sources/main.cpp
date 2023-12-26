@@ -10,6 +10,7 @@
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
 #include <JNetwork/Config.h>
+#include <JNetwork/Packet/PacketParser.h>
 
 #include <JCore/Threading/Thread.h>
 
@@ -17,12 +18,14 @@
 #include "ServerSide.h"
 #include "Common.h"
 
+
 USING_NS_JC;
 USING_NS_JNET;
 
 int main() {
 	Winsock::Initialize(2, 2);
 	InitializeJCore();
+	DefaultParserType = PacketParser::Command;
 
 	for (int j = 0; j < 4; ++j) {
 		if (j == 0) {

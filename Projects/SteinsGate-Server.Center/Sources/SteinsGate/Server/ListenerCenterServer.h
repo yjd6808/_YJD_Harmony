@@ -22,9 +22,9 @@ protected:
 	void OnStarted() override;
 	void OnConnected(JNetwork::Session* connectedSession) override;
 	void OnDisconnected(JNetwork::Session* disconnetedSession) override;
-	void OnSent(JNetwork::Session* sender, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) override;
+	void OnSent(JNetwork::Session* sender, JNetwork::IPacket* sentPacket, Int32UL sentBytes) override;
 	void OnReceived(JNetwork::Session* session, JNetwork::ICommand* recvCmd) override {}
-	void OnReceived(JNetwork::Session* session, JNetwork::IRecvPacket* recvPacket) override;
+	void OnReceived(JNetwork::Session* session, JNetwork::RecvedCommandPacket* recvPacket) override;
 	void OnStopped() override;
 
 	ServerType_t GetServerType() override { return ServerType::Center; }

@@ -12,6 +12,7 @@
 #include <SteinsGate/Common/Cmd.h>
 
 USING_NS_JC;
+USING_NS_JNET;
 
 NS_CORE_BEGIN
 ::CLIThread*					CLIThread;
@@ -25,6 +26,8 @@ JNetwork::CommandNameDictionary CommandNameDictionary;
 NS_CORE_END
 
 void InitializeCommonCore() {
+	DefaultParserType = PacketParser::Command;
+
 	Core::CLIThread = dbg_new CLIThread();
 	Core::CLIThread->Start();
 

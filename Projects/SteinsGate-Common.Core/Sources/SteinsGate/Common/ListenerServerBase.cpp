@@ -34,8 +34,11 @@ void ListenerServerBase::OnDisconnected(Session* disconnetedSession) {
 	_LogInfo_("%s 클라이언트 연결종료", remoteEndPointString.Source());
 }
 
-void ListenerServerBase::OnSent(Session* sender, ISendPacket* sentPacket, Int32UL sentBytes) {
-	sentPacket->ForEach([&](ICommand* cmd) { ListenerHelperBase::LogCommand(sender->Protocol(), Transmission::Send, cmd); });
+void ListenerServerBase::OnSent(Session* sender, IPacket* sentPacket, Int32UL sentBytes) {
+	if (sentPacket->GetType() == PacketType::Command) {
+		CommandPacket* pPacket = static_cast<CommandPacket*>(sentPacket);
+		pPacket->ForEach([&](ICommand* cmd) { ListenerHelperBase::LogCommand(sender->Protocol(), Transmission::Send, cmd); });
+	}
 	ListenerHelperBase::LogPacketHex(sentPacket);
 }
 
@@ -43,7 +46,7 @@ void ListenerServerBase::OnReceived(Session* receiver, ICommand* cmd) {
 	ListenerHelperBase::LogCommand(receiver->Protocol(), Transmission::Recv, cmd);
 }
 
-void ListenerServerBase::OnReceived(Session* receiver, IRecvPacket* recvPacket) {
+void ListenerServerBase::OnReceived(Session* receiver, RecvedCommandPacket* recvPacket) {
 	ListenerHelperBase::LogPacketHex(recvPacket);
 }
 

@@ -118,15 +118,12 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JNetwork\Packet\RecvPacket.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\Packet\PacketParser.cpp" />
     <ClCompile Include="..\Sources\JNetwork\Packet\SendHelper.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JNetwork\Packet\SendPacket.cpp">
+    <ClCompile Include="..\Sources\JNetwork\Packet\Packet.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -268,15 +265,12 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Packet\PacketParser.h" />
     <ClInclude Include="..\Sources\JNetwork\Packet\SendHelper.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Packet\RecvPacket.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Packet\SendPacket.h">
+    <ClInclude Include="..\Sources\JNetwork\Packet\Packet.h">
       <SubType>
       </SubType>
     </ClInclude>

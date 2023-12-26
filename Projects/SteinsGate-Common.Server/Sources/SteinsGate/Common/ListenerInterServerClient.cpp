@@ -37,7 +37,7 @@ void ListenerInterServerClient::OnDisconnected(SGSession* session) {
 	ListenerClientCommon::OnDisconnected(session);
 }
 
-void ListenerInterServerClient::OnSent(SGSession* session, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) {
+void ListenerInterServerClient::OnSent(SGSession* session, JNetwork::IPacket* sentPacket, Int32UL sentBytes) {
 	ListenerClientCommon::OnSent(session, sentPacket, sentBytes);
 }
 
@@ -45,7 +45,7 @@ void ListenerInterServerClient::OnReceived(SGSession* session, JNetwork::IComman
 	ListenerClientCommon::OnReceived(session, cmd);
 }
 
-void ListenerInterServerClient::OnReceived(SGSession* session, JNetwork::IRecvPacket* recvPacket) {
+void ListenerInterServerClient::OnReceived(SGSession* session, JNetwork::RecvedCommandPacket* recvPacket) {
 	ListenerClientCommon::OnReceived(session, recvPacket);
 }
 

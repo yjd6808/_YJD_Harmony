@@ -12,8 +12,8 @@
 NS_JNET_BEGIN
 
 struct ICommand;
-struct ISendPacket;
-struct IRecvPacket;
+struct IPacket;
+struct RecvedCommandPacket;
 
 class Session;
 class JCORE_NOVTABLE SessionEventListener
@@ -24,10 +24,10 @@ public:
 
 	virtual void OnConnected(Session* session) {}
 	virtual void OnDisconnected(Session* session) {}
-	virtual void OnSent(Session* session, ISendPacket* sentPacket, Int32UL sentBytes) {}
-	virtual void OnReceivedRaw(Session* session, Byte* data, int len) {}
+	virtual void OnSent(Session* session, IPacket* sentPacket, Int32UL sentBytes) {}
+	virtual void OnReceivedRaw(Session* session, char* data, int len) {}
 	virtual void OnReceived(Session* session, ICommand* recvCmd) {}
-	virtual void OnReceived(Session* session, IRecvPacket* recvPacket) {}
+	virtual void OnReceived(Session* session, RecvedCommandPacket* recvPacket) {}
 };
 
 NS_JNET_END

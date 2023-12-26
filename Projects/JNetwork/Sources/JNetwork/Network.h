@@ -15,7 +15,9 @@
 #include <sstream>
 
 #include <JCore/Core.h>
+
 #include <JNetwork/NetLoggerDefine.h>
+#include <JNetwork/Config.h>
 #include <JNetwork/Namespace.h>
 
 #define MAX_MSS 1460

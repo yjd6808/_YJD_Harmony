@@ -34,6 +34,6 @@ void ListenerServerCommon::OnReceived(Session* session, ICommand* recvCmd) {
 	}
 }
 
-void ListenerServerCommon::OnReceived(Session* session, IRecvPacket* packet) {
+void ListenerServerCommon::OnReceived(Session* session, RecvedCommandPacket* packet) {
 	ListenerServerBase::OnReceived(session, packet);
 }

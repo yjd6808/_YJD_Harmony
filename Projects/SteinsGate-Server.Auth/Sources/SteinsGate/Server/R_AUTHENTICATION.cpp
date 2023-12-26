@@ -24,6 +24,7 @@ USING_NS_JNET;
 
 void R_AUTHENTICATION::RECV_CAU_Login(Session* session, ICommand* cmd) {
 	CAU_Login* pCmd = (CAU_Login*)cmd;
+
 	S_AUTHENTICATION::AutoFlush _;
 	S_AUTHENTICATION::SetInformation(session, SendStrategy::SendAlloc);
 	AccountData accountData;

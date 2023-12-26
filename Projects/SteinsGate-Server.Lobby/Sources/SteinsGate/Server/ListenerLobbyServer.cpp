@@ -35,7 +35,7 @@ void ListenerLobbyServer::OnDisconnected(Session* disconnetedSession) {
 	ListenerServerCommon::OnDisconnected(disconnetedSession);
 }
 
-void ListenerLobbyServer::OnSent(Session* sender, ISendPacket* sentPacket, Int32UL sentBytes) {
+void ListenerLobbyServer::OnSent(Session* sender, IPacket* sentPacket, Int32UL sentBytes) {
 	ListenerServerCommon::OnSent(sender, sentPacket, sentBytes);
 }
 
@@ -43,7 +43,7 @@ void ListenerLobbyServer::OnReceived(Session* receiver, ICommand* cmd) {
 	ListenerServerCommon::OnReceived(receiver, cmd);
 }
 
-void ListenerLobbyServer::OnReceived(Session* session, IRecvPacket* recvPacket) {
+void ListenerLobbyServer::OnReceived(Session* session, RecvedCommandPacket* recvPacket) {
 	ListenerServerCommon::OnReceived(session, recvPacket);
 }
 

@@ -64,7 +64,8 @@ public:
 
 		for (int i = 0; i < m_vWorkers.Size(); i++) {
 			m_vHandles[i].Reset();
-			m_vWorkers[i]->Join();
+			Worker* pWorker = m_vWorkers[i];
+			pWorker->Join();
 		}
 	}
 

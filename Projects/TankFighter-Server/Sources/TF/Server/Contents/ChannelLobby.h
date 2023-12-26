@@ -18,7 +18,7 @@ public:
 	ChannelLobby();
 	~ChannelLobby() override;
 
-	void BroadcastPacket(JNetwork::ISendPacket* packet, int state) override;
+	void BroadcastPacket(JNetwork::IPacket* packet, int state) override;
 	void OnUpdate(const JCore::TimeSpan& elapsed) override;
 
 	void Finalize();
