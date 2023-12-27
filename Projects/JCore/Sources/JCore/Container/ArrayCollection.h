@@ -282,7 +282,7 @@ protected:
 	/// </summary>
 	/// <param name="newCapacity">기존 용량보다 더 큰 값</param>
 	virtual void Expand(int newCapacity) {
-		if (m_iCapacity == newCapacity) {
+		if (m_iCapacity >= newCapacity) {
 			return;
 		}
 
@@ -291,8 +291,7 @@ protected:
 		T* pNewArray = TAllocator::template AllocateDynamic<T*>(newCapacity * sizeof(T), iAllocatedSize);
 
 		if (m_pArray) {
-			CopyElements(pNewArray, newCapacity, m_pArray, this->m_iSize);
-			if (this->m_iSize > 0) DestroyAtRange(0, this->m_iSize - 1);
+			MoveElements(pNewArray, newCapacity, m_pArray, this->m_iSize);
 			TAllocator::template DeallocateDynamic(m_pArray, sizeof(T) * m_iCapacity);
 		}
 		

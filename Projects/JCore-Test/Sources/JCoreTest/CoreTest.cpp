@@ -35,8 +35,10 @@ TEST(JCoreTest, DeleteArraySafe) {
 // 전 프로젝트 UTF8로 교체함에따라 main 함수 명시적으로 추가해줌
 int main(int argc, char** argv) {
 	::testing::InitGoogleTest(&argc, argv);
+	InitializeJCore();
 	Random::EngineInitialize();
 	const int ret = RUN_ALL_TESTS();
 	PropertyStatics::Finalize();
+	FinalizeJCore();
     return ret;
 }

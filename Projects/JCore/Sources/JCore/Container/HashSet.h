@@ -71,7 +71,7 @@ public:
 	}
 
 	template <typename = DefaultEnableIf_t<IsStringType_v<TKey>>>
-	bool Remove(const char* key) const {
+	bool Remove(const char* key) {
 		return Table.Remove(key);
 	}
 

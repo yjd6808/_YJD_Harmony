@@ -23,6 +23,7 @@ public:
 	~NetCore() override;
 
 	void Initialize() override;
+	void Finalize() override;
 
 	void initializeBuffer();
 	void initializeIOCP();

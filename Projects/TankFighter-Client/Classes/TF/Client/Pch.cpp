@@ -18,6 +18,9 @@ void InitializeGameCore() {
 }
 
 void FinalizeGameCore() {
+	if (Core::NetCore)
+		Core::NetCore->Finalize();
+
 	JCORE_DELETE_SAFE(Core::Room);
 	JCORE_DELETE_SAFE(Core::NetCore);
 

@@ -35,6 +35,13 @@ void NetCore::Initialize() {
 	initializeParser();
 }
 
+void NetCore::Finalize() {
+	m_spGameClient = nullptr;	// 레퍼런스 정리
+
+	NetGroup::Finalize();
+}
+
+
 void NetCore::initializeBuffer() {
 	CreateBufferPool({});
 }

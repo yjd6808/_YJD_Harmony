@@ -19,7 +19,7 @@ static Vector<int> gec;
 // String::Compare 함수 테스트
 TEST(StringTest, Compare) {
 	String szStr1 = "abcd";
-	String szStr2 = String::EmptyString;
+	String szStr2 = String::Empty;
 	String szStr3 = "a";
 
 	string szStr4 = "abcd";
@@ -29,10 +29,10 @@ TEST(StringTest, Compare) {
 	// String 결과
 	EXPECT_TRUE(szStr1 == "abcd");
 	EXPECT_TRUE(szStr1 != "abc");
-	EXPECT_TRUE(szStr2 == String::EmptyString);
+	EXPECT_TRUE(szStr2 == String::Empty);
 	EXPECT_TRUE(szStr2 != "a");
 	EXPECT_TRUE(szStr3 == "a");
-	EXPECT_TRUE(szStr3 != String::EmptyString);
+	EXPECT_TRUE(szStr3 != String::Empty);
 	EXPECT_TRUE(szStr1.Compare(szStr1) == 0);	// abcd와 abcd 자기 자신 비교
 	EXPECT_TRUE(szStr1.Compare(szStr2) == 1);	// abcd와 "" 빈 문자열 비교는 abcd가 더 크다.
 	EXPECT_TRUE(szStr1.Compare(szStr3) == 1);	// abcd와 a를 비교하면 abcd가 더 크다.
@@ -40,10 +40,10 @@ TEST(StringTest, Compare) {
 	// std::string의 결과
 	EXPECT_TRUE(szStr4 == "abcd");
 	EXPECT_TRUE(szStr4 != "abc");
-	EXPECT_TRUE(szStr5 == String::EmptyString);
+	EXPECT_TRUE(szStr5 == String::Empty);
 	EXPECT_TRUE(szStr5 != "a");
 	EXPECT_TRUE(szStr6 == "a");
-	EXPECT_TRUE(szStr6 != String::EmptyString);
+	EXPECT_TRUE(szStr6 != String::Empty);
 	EXPECT_TRUE(szStr4.compare(szStr4) == 0);	// abcd와 abcd 자기 자신 비교
 	EXPECT_TRUE(szStr4.compare(szStr5) == 1);	// abcd와 "" 빈 문자열 비교는 abcd가 더 크다.
 	EXPECT_TRUE(szStr4.compare(szStr6) == 1);	// abcd와 a를 비교하면 abcd가 더 크다.
