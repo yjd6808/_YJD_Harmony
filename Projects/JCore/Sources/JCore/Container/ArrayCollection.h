@@ -70,7 +70,7 @@ public:
 	// [6]
 	// Call [2]
 	ArrayCollection(int capacity, const T& initData) : TArrayCollection(capacity) {
-		this->m_iSize = capacity;
+		m_iSize = capacity;
 
 		for (int i = 0; i < capacity; ++i) {
 			SetAtUnsafe(i, initData);
@@ -80,7 +80,7 @@ public:
 	// [7]
 	// Call [2]
 	ArrayCollection(int capacity, T&& initData) : TArrayCollection(capacity) {
-		this->m_iSize = capacity;
+		m_iSize = capacity;
 
 		// Move에는 앞에 3개는 복사 해주고 마지막 1개만 이동해주면 된다.
 		// 만약 T가 많이 무거우면 이 작업은 효율이 좋을 것이고
@@ -105,8 +105,11 @@ public:
 	///  - ArrayQueue
 	/// </summary>
 	virtual void Clear(bool removeHeap = false) {
-		if (this->m_iSize > 0) DestroyAtRange(0, this->m_iSize - 1);
-		this->m_iSize = 0;
+		if (m_iSize > 0) {
+			DestroyAtRange(0, m_iSize - 1);
+			m_iSize = 0;
+		}
+		
 		if (removeHeap) {
 			JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(m_pArray, sizeof(T) * m_iCapacity);
 		}
@@ -121,7 +124,7 @@ public:
 	///  - ArrayQueue : 한칸이 덜 찬 상태를 꽉찬 상태로 처리해야하기 때문에 오버라이딩 해야함
 	/// </summary>
 	virtual bool IsFull() const {
-		return this->m_iSize == m_iCapacity;
+		return m_iSize == m_iCapacity;
 	}
 
 	T* Source() {
@@ -149,7 +152,7 @@ protected:
 			Expand(iCapacity);
 		}
 
-		this->m_iSize = other.m_iSize;
+		m_iSize = other.m_iSize;
 		m_iCapacity = iCapacity;
 
 		if (other.m_iSize == 0) {
@@ -166,7 +169,7 @@ protected:
 
 		this->m_Owner = Move(other.m_Owner);
 		this->m_pArray = other.m_pArray;
-		this->m_iSize = other.m_iSize;
+		m_iSize = other.m_iSize;
 		this->m_iCapacity = other.m_iCapacity;
 
 		other.m_pArray = nullptr;
@@ -211,7 +214,7 @@ protected:
 		// Memory::Copy(this->m_pArray, sizeof(T) * iCapacity, other.m_pArray, sizeof(T) * other.m_iSize);
 		// 해결책: Vector<String*> 같은건 메모리만 복사해줘도 된다.
 
-		DebugAssert(fromCount < toCapacity);
+		DebugAssert(fromCount <= toCapacity);
 
 		if constexpr (IsPointerType_v<T>) {
 			if constexpr (Reverse)
@@ -237,7 +240,7 @@ protected:
 	virtual void CopyFrom(std::initializer_list<T> other) {
 		Clear();
 		ExpandIfNeeded(int(other.size()));
-		this->m_iSize = int(other.size());
+		m_iSize = int(other.size());
 
 		int i = 0;
 		for (const T& otherElem : other) {
@@ -245,16 +248,33 @@ protected:
 		}
 	}
 
+
+	template <typename Ty>
+	void Fill(int start, int end, Ty&& t) {
+		if (end < start) 
+			return;
+
+		for (int i = start; i <= end; ++i) {
+			ConstructAt(i, Forward<Ty>(t));
+		}
+	}
+
 	// 용량 수정
 	// 만약 현재 용량보다 더 작은 용량을 넣어줄 경우
-	virtual void Resize(int capacity) {
-		if (capacity >= this->m_iSize) {
-			Expand(capacity);
+	template <typename Ty>
+	void Resize(int newSize, const Ty& t) {
+		if (m_iSize == newSize) {
 			return;
-		} 
+		}
 
-		DestroyAtRange(capacity, this->m_iSize - 1);
-		m_iCapacity = capacity;
+		if (newSize > m_iSize) {
+			Expand(newSize);
+			Fill(m_iSize, newSize - 1, t);
+		} else {
+			DestroyAtRange(newSize, m_iSize - 1);
+		}
+		
+		m_iSize = newSize;
 	}
 
 	// 현재 용량이 전달받은 사이즈를 충분히 커버 가능한지
@@ -291,12 +311,43 @@ protected:
 		T* pNewArray = TAllocator::template AllocateDynamic<T*>(newCapacity * sizeof(T), iAllocatedSize);
 
 		if (m_pArray) {
-			MoveElements(pNewArray, newCapacity, m_pArray, this->m_iSize);
+			MoveElements(pNewArray, newCapacity, m_pArray, m_iSize);
 			TAllocator::template DeallocateDynamic(m_pArray, sizeof(T) * m_iCapacity);
 		}
 		
 		m_pArray = pNewArray;
 		m_iCapacity = newCapacity;
+	}
+
+	virtual void Shrink(int newCapacity) {
+		// 현재 용량이 더 작은 경우 스킵
+		if (m_iCapacity <= newCapacity) {
+			return;
+		}
+
+		// 현재 데이터 수가 용량보다 더 많은 경우 넘친 만큼 삭제
+		if (m_iSize > newCapacity) {
+			DestroyAtRange(newCapacity, m_iSize - 1);
+			m_iSize = newCapacity;
+		}
+
+		int iAllocatedSize;
+		T* pNewArray = TAllocator::template AllocateDynamic<T*>(newCapacity * sizeof(T), iAllocatedSize);
+
+		// 기존 데이터 옮김
+		if (m_pArray) {
+			MoveElements(pNewArray, newCapacity, m_pArray, m_iSize);
+			TAllocator::template DeallocateDynamic(m_pArray, sizeof(T) * m_iCapacity);
+		}
+
+		m_pArray = pNewArray;
+		m_iCapacity = newCapacity;
+	}
+
+	// 기존 size보다 ratio 비율만큼 더 크게 용량 맞춤, 디폴트는 size와 완전동일하게
+	virtual void ShrinkToFit(float ratio = 1.0f) {
+		const int iNewCapacity = int(m_iSize * ratio);
+		Shrink(iNewCapacity);
 	}
 	
 	/// <summary>
@@ -308,7 +359,7 @@ protected:
 	/// <param name="idx">사이즈 내부의 인덱스</param>
 	/// <returns></returns>
 	virtual bool IsValidIndex(const int idx) const {
-		return idx >= 0 && idx < this->m_iSize;
+		return idx >= 0 && idx < m_iSize;
 	}
 
 	/// <summary>
@@ -341,7 +392,7 @@ protected:
 	/// </summary>
 	virtual void DestroyAtRange(const int startIdx, const int endIdx) {
 		DebugAssertMsg(this->IsValidRange(startIdx, endIdx),
-			"올바르지 않은 인덱스 범위(%d ~ %d) 입니다. (%d, 컨테이너 크기: %d)", startIdx, endIdx, this->m_iSize);
+			"올바르지 않은 인덱스 범위(%d ~ %d) 입니다. (%d, 컨테이너 크기: %d)", startIdx, endIdx, m_iSize);
 
 		// 포인터 타입은 소멸자 호출을 하지 않도록 한다.
 		if constexpr (IsPointerType_v<T>)
@@ -354,16 +405,16 @@ protected:
 
 	template <typename TPredicate>
 	void Sort(TPredicate&& predicate) {
-		Arrays::Sort(m_pArray, this->m_iSize, Forward<TPredicate>(predicate));
+		Arrays::Sort(m_pArray, m_iSize, Forward<TPredicate>(predicate));
 	}
 
 	void Sort() {
-		Arrays::Sort(m_pArray, this->m_iSize, NaturalOrder{});
+		Arrays::Sort(m_pArray, m_iSize, NaturalOrder{});
 	}
 
 	template <typename TPredicate>
 	void InsertionSort(TPredicate&& predicate) {
-		Arrays::InsertionSort(m_pArray, this->m_iSize, Forward<TPredicate>(predicate));
+		Arrays::InsertionSort(m_pArray, m_iSize, Forward<TPredicate>(predicate));
 	}
 
 	/// <summary>
@@ -380,18 +431,18 @@ protected:
 
 
 	T& GetAt(const int idx) const {
-		DebugAssertMsg(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
+		DebugAssertMsg(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, m_iSize);
 		return m_pArray[idx];
 	}
 
 
 	void SetAt(const int idx, const T& data) {
-		DebugAssertMsg(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
+		DebugAssertMsg(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, m_iSize);
 		ConstructAt(idx, data);
 	}
 
 	void SetAt(const int idx, T&& data) {
-		DebugAssertMsg(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
+		DebugAssertMsg(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, m_iSize);
 		ConstructAt(idx, Move(data));
 	}
 
@@ -420,7 +471,7 @@ protected:
 
 	template <typename... Args>
 	void EmplaceAt(const int idx, Args&&... args) {
-		DebugAssertMsg(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
+		DebugAssertMsg(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, m_iSize);
 
 		if constexpr (IsPointerType_v<T>)
 			DebugAssertMsg(false, "포인터 타입은 Emplace 기능 사용 금지...");
@@ -429,7 +480,7 @@ protected:
 	}
 
 	void DestroyAt(const int idx) {
-		DebugAssertMsg(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
+		DebugAssertMsg(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, m_iSize);
 
 		// 포인터 타입은 소멸자 호출을 하지 않도록 한다.
 		if constexpr (IsPointerType_v<T>)
@@ -461,15 +512,15 @@ protected:
 
 		// 데이터가 존재하는지
 		DebugAssertMsg(IsValidIndex(blockIdx), 
-			"(1) 올바르지 않은 데이터 인덱스 입니다. (%d, 컨테이너 크기: %d)", blockIdx, this->m_iSize);
+			"(1) 올바르지 않은 데이터 인덱스 입니다. (%d, 컨테이너 크기: %d)", blockIdx, m_iSize);
 		DebugAssertMsg(IsValidIndex(blockIdx + blockSize - 1), 
-			"(2) 올바르지 않은 데이터 인덱스 입니다. (%d, 컨테이너 크기: %d)", blockIdx + blockSize - 1, this->m_iSize);
+			"(2) 올바르지 않은 데이터 인덱스 입니다. (%d, 컨테이너 크기: %d)", blockIdx + blockSize - 1, m_iSize);
 
 		// 블록이 이동할 위치가 배열 내부에 둘 수 있는지 체크
 		DebugAssertMsg(IsValidIndexCapacity(moveIdx),
-			"(3) 올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", moveIdx, this->m_iSize);
+			"(3) 올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", moveIdx, m_iSize);
 		DebugAssertMsg(IsValidIndexCapacity(moveIdx + blockSize - 1),
-			"(4) 올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", moveIdx + blockSize - 1, this->m_iSize);
+			"(4) 올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", moveIdx + blockSize - 1, m_iSize);
 
 		
 

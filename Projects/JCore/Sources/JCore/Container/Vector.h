@@ -115,8 +115,24 @@ public:
 	 * \brief 용량을 수정하도록 한다. 만약 기존에 담긴 데이터 수가 전달해준
 	 * 용량보다 많을 경우 소멸자를 호출하여 넘치는 만큼 삭제해줌
 	 */
-	void Resize(int capacity) override {
-		return TArrayCollection::Resize(capacity);
+	void Resize(int capacity) {
+		TArrayCollection::Resize(capacity, T{});
+	}
+
+	void Resize(int capacity, const T& val) {
+		TArrayCollection::Resize(capacity, val);
+	}
+
+	void Reserve(int capacity) {
+		TArrayCollection::ExpandIfNeeded(capacity);
+	}
+
+	void Shrink(int capacity) override {
+		return TArrayCollection::Shrink(capacity);
+	}
+
+	void ShrinkToFit(float ratio = 1.0f) override {
+		return TArrayCollection::ShrinkToFit(ratio);
 	}
 
 	/// <summary>>a

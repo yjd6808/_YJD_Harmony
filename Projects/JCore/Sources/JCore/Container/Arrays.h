@@ -546,12 +546,22 @@ struct Arrays final
 
 	template <typename T>
 	static void PopHeap(T* arr, int arrSize) {
+		if (arrSize <= 0) {
+			DebugAssert(false);
+			return;
+		}
+
 		Swap(arr, 0, arrSize - 1);
 		HeapifySiftDown(arr, arrSize - 1, 0, NaturalOrder{});
 	}
 
 	template <typename T, typename TPredicate>
 	static void PopHeap(T* arr, int arrSize, TPredicate&& predicate) {
+		if (arrSize <= 0) {
+			DebugAssert(false);
+			return;
+		}
+
 		Swap(arr, 0, arrSize - 1);
 		HeapifySiftDown(arr, arrSize - 1, 0, Forward<TPredicate>(predicate));
 	}
