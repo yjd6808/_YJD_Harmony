@@ -320,6 +320,11 @@ protected:
 	}
 
 	virtual void Shrink(int newCapacity) {
+		if (newCapacity < 0) {
+			DebugAssert(false);
+			return;
+		}
+
 		// 현재 용량이 더 작은 경우 스킵
 		if (m_iCapacity <= newCapacity) {
 			return;
@@ -329,6 +334,13 @@ protected:
 		if (m_iSize > newCapacity) {
 			DestroyAtRange(newCapacity, m_iSize - 1);
 			m_iSize = newCapacity;
+		}
+
+		if (newCapacity == 0) {
+			TAllocator::template DeallocateDynamic(m_pArray, sizeof(T) * m_iCapacity);
+			m_pArray = nullptr;
+			m_iCapacity = 0;
+			return;
 		}
 
 		int iAllocatedSize;
@@ -531,19 +543,10 @@ protected:
 			// 검게칠해진 겹치는 영역이 있을 수 있으므로 뒤에서부터 복사해줘야함.
 
 			MoveElements<true>(m_pArray + moveIdx, m_iCapacity - moveIdx, m_pArray + blockIdx, blockSize);
-			/*Memory::CopyUnsafeReverse(
-				m_pArray + moveIdx,
-				m_pArray + blockIdx,
-				blockSize * sizeof(T));*/
 			return;
 		}
 
 		MoveElements<false>(m_pArray + moveIdx, m_iCapacity - moveIdx, m_pArray + blockIdx, blockSize);
-
-		/*Memory::CopyUnsafe(
-			m_pArray + moveIdx,
-			m_pArray + blockIdx,
-			blockSize * sizeof(T));*/
 	}
 
 

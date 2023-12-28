@@ -27,7 +27,7 @@ void ListenerServerBase::OnConnected(Session* connectedSession) {
 	_LogInfo_("%s 클라이언트 접속", remoteEndPointString.Source());
 }
 
-void ListenerServerBase::OnDisconnected(Session* disconnetedSession) {
+void ListenerServerBase::OnDisconnected(Session* disconnetedSession, Int32U errorCode) {
 	const IPv4EndPoint& remoteEndPoint = disconnetedSession->GetRemoteEndPoint();
 	const String remoteEndPointString = remoteEndPoint.ToString();
 

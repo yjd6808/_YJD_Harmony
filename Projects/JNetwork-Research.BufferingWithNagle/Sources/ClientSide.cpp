@@ -7,6 +7,7 @@
 
 
 #include <JNetwork/Network.h>
+#include <JNetwork/Winsock.h>
 #include <JNetwork/Host/TcpClient.h>
 #include <JNetwork/NetGroup.h>
 
@@ -18,7 +19,6 @@ USING_NS_JNET;
 
 int ConnectionCheck_v = 0;
 AtomicInt RecvCounter_v = 0;
-StopWatch<StopWatchMode::HighResolution> StopWatch_v;
 TcpClient* ClientList_v[TEST_CLIENT_COUNT];
 
 struct ClientListener : ClientEventListener
@@ -32,11 +32,23 @@ struct ClientListener : ClientEventListener
 
 			for (int i = 0; i < TEST_CLIENT_COUNT; ++i) {
 				sendingThreads[i].Start([i](void*) {
-					for (int j = 0; j < TEST_ECHO_COUNT; ++j) {
+					for (int j = 0; j < TEST_SEND_COUNT; ++j) {
 						auto pPacket = dbg_new SinglePacket<CS_TEST>();
 						JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
-						pPacket->Cmd.Seq = i * TEST_ECHO_COUNT + j;
+						pPacket->Cmd.Seq = i * TEST_SEND_COUNT + j;
+#if ASYNC_SENDING
 						ClientList_v[i]->SendAsync(pPacket);
+#else
+						ClientList_v[i]->Send(pPacket, false);
+#endif
+					}
+
+					for (;;) {
+						Int32U e;
+						ClientList_v[i]->SendPending(e);
+
+						if (!ClientList_v[i]->HasPendingData())
+							break;
 					}
 				});
 			}
@@ -44,9 +56,12 @@ struct ClientListener : ClientEventListener
 			for (int i = 0; i < TEST_CLIENT_COUNT; ++i) {
 				sendingThreads[i].Join();
 			}
-
-			Console::WriteLine("%d회 에코 송신 완료", TEST_ECHO_COUNT * TEST_CLIENT_COUNT);
+			Console::WriteLine("%d회 송신 완료", TEST_SEND_COUNT * TEST_CLIENT_COUNT);
 		}
+	}
+
+	void OnDisconnected(Session* session, Int32U errorCode) override {
+		// Console::Write("[클라] %s와 연결이 끊어짐(%s", session->GetRemoteEndPoint().ToString().Source(), Winsock::ErrorMessageUTF8(errorCode));
 	}
 
 	void OnReceived(Session* session, ICommand* cmd) override {
@@ -57,8 +72,9 @@ struct ClientListener : ClientEventListener
 
 		const int iCount = ++RecvCounter_v;
 
-		if (iCount == TEST_ECHO_COUNT * TEST_CLIENT_COUNT) {
-			Console::WriteLine("%d회 에코 수신 완료 (%.2lf초)", TEST_ECHO_COUNT * TEST_CLIENT_COUNT, StopWatch_v.Stop().GetTotalSeconds());
+		if (iCount == TEST_SEND_COUNT * TEST_CLIENT_COUNT) {
+			LastTime_v = StopWatch_v.Stop();
+			Console::WriteLine("%d회 에코 수신 완료 (%.2lf초)", TEST_SEND_COUNT * TEST_CLIENT_COUNT, LastTime_v.GetTotalSeconds());
 			TestFinished_v = true;
 		}
 	}
@@ -83,6 +99,14 @@ struct tagClientGroup : NetGroup
 		m_bFinalized = false;
 	}
 
+	void SetNagle(bool nagle) {
+		for (int i = 0; i < TEST_CLIENT_COUNT; ++i) {
+			if (ClientList_v[i]->Socket().Option().SetNagleEnabled(nagle) == SOCKET_ERROR) {
+				DebugAssert(false);
+			}
+		}
+	}
+		
 	void ConnectToServer() {
 		for (int i = 0; i < TEST_CLIENT_COUNT; ++i) {
 			ClientList_v[i]->Connect(IPv4EndPoint::Parse(JNET_RESEARCH_CONN_ADDR));
@@ -93,8 +117,9 @@ struct tagClientGroup : NetGroup
 } ClientGroup_v;
 
 
-void ClientSide::Initialize() {
+void ClientSide::Initialize(bool nagle) {
 	ClientGroup_v.Initialize();
+	ClientGroup_v.SetNagle(nagle);
 	ClientGroup_v.ConnectToServer();
 }
 

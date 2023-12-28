@@ -19,7 +19,7 @@ public:
 	ClientListener(const JCore::String& name);
 protected:
 	void OnConnected(Session* session) override;
-	void OnDisconnected(Session* session) override;
+	void OnDisconnected(Session* session, Int32U errorCode) override;
 	void OnSent(Session* session, IPacket* sentPacket, Int32UL sentBytes) override;
 	void OnReceived(Session* session, ICommand* cmd) override;
 	void OnConnectFailed(Session* session, Int32U errorMessage) override;

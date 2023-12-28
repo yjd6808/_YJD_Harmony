@@ -16,7 +16,7 @@ public:
 	ListenerInterServerClient(ServerProcessType_t serverProcessType, SGCommandParser* parser);
 protected:
 	void OnConnected(JNetwork::Session* session) override;
-	void OnDisconnected(JNetwork::Session* session) override;
+	void OnDisconnected(JNetwork::Session* session, Int32U errorCode) override;
 	void OnSent(JNetwork::Session* sessionm, JNetwork::IPacket* sentPacket, Int32UL sentBytes) override;
 	void OnReceived(JNetwork::Session* session, JNetwork::ICommand* recvCmd) override;
 	void OnReceived(JNetwork::Session* session, JNetwork::RecvedCommandPacket* recvPacket) override;

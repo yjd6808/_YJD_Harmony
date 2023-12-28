@@ -368,4 +368,67 @@ TEST(VectorTest, Pointer) {
 
 }
 
+TEST(VectorTest, Shrink) {
+	LeakCheck;
+
+	Vector v{ 1, 2, 3, 4, 5 };
+	v.Shrink(3);
+	EXPECT_TRUE(v[0] == 1);
+	EXPECT_TRUE(v[1] == 2);
+	EXPECT_TRUE(v[2] == 3);
+	EXPECT_TRUE(v.Capacity() == 3);
+	EXPECT_TRUE(v.Size() == 3);
+
+	v.Shrink(6);
+	EXPECT_TRUE(v.Capacity() == 3);
+	EXPECT_TRUE(v.Size() == 3);
+
+	v.Shrink(0);
+	EXPECT_TRUE(v.Capacity() == 0);
+	EXPECT_TRUE(v.Size() == 0);
+	EXPECT_TRUE(v.Source() == nullptr);
+
+
+	v.Reserve(20);
+	EXPECT_TRUE(v.Size() == 0);
+	EXPECT_TRUE(v.Capacity() == 20);
+	EXPECT_TRUE(v.Source() != nullptr);
+
+	for (int i = 0; i < 10; ++i) {
+		v.PushBack(i);
+	}
+	EXPECT_TRUE(v.Size() == 10);
+	EXPECT_TRUE(v.Capacity() == 20);
+	v.ShrinkToFit();
+	EXPECT_TRUE(v.Capacity() == 10);
+}
+
+TEST(VectorTest, Pop) {
+	Vector v{ 1, 2, 3 };
+	v.PopFront();
+	EXPECT_TRUE(v[0] == 2);
+	EXPECT_TRUE(v[1] == 3);
+	EXPECT_TRUE(v.Size() == 2);
+
+	v.PopFront();
+	EXPECT_TRUE(v[0] == 3);
+	EXPECT_TRUE(v.Size() == 1);
+
+	v.PopFront();
+	EXPECT_TRUE(v.Size() == 0);
+
+	v.PushBack(1);
+	EXPECT_TRUE(v[0] == 1);
+	EXPECT_TRUE(v.Size() == 1);
+
+	v = { 1, 2, 3 };
+	v.PopFront(3);
+	EXPECT_TRUE(v.Size() == 0);
+
+	v = { 1, 2, 3 };
+	v.PopFront(2);
+	EXPECT_TRUE(v[0] == 3);
+	EXPECT_TRUE(v.Size() == 1);
+}
+
 #endif // TEST_VectorTest == ON

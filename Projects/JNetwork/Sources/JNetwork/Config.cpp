@@ -58,4 +58,10 @@ int DefaultRecvBufferSize = 6000;
  */
 int DefaultParserType = PacketParser::Type::Raw;
 
+
+/*
+ * 호스트 생성시 논블로킹 소켓으로 생성할지 말지 여부
+ */
+bool NonblokingSocket = true;
+
 NS_JNET_END

@@ -36,7 +36,7 @@ public:
 	void Initialize() override;
 	void Connected() override;
 	void ConnectFailed(Int32U errorCode) override;
-	void Disconnected() override;
+	void Disconnected(Int32U errorCode) override;
 	bool AcceptAsync();
 	void AcceptWait();
 	bool Accepted(Int32UL receivedBytes);

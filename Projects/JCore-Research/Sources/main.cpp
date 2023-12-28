@@ -1,15 +1,22 @@
 ﻿#include "header.h"
 
+struct A
+{
+	A() = default;
+	A(const A&) { cout << "copy\n"; }
+	A(A&&) { cout << "move\n"; }
+	~A() { cout << "del\n"; }
+	int a;
+};
+
 int main() {
 	InitializeJCore();
 	InitializeDefaultLogger();
 
-	Vector v{ 5, 2, 7, 3, 8, 1 };
-
-	v.ForEach([](int val) { std::cout << val << " "; }); std::cout << "\n";
+	Vector v{ 5, 2, 7, 3, 8, 1 };	v.ForEach([](int val) { std::cout << val << " "; }); std::cout << "\n";
 	Arrays::MakeHeap(v.Source(), v.Size());	// Max Heap으로 만든다.
-
 	v.ForEach([](int val) { std::cout << val << " "; }); std::cout << "\n";
+
 	Arrays::PopHeap(v.Source(), v.Size());
 	v.ForEach([](int val) { std::cout << val << " "; }); std::cout << "\n";
 	

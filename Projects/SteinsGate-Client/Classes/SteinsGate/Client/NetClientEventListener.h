@@ -21,7 +21,7 @@ public:
 	NetClientEventListener(ClientConnectServerType_t m_eConnectedServerType);
 protected:
 	void OnConnected(JNetwork::Session* session) override;
-	void OnDisconnected(JNetwork::Session* session) override;
+	void OnDisconnected(JNetwork::Session* session, Int32U errorCode) override;
 	void OnConnectFailed(JNetwork::Session* session, Int32U errorCode) override;
 	void OnSent(JNetwork::Session* session, JNetwork::IPacket* sendPacket, Int32UL sentBytes) override;
 	void OnReceived(JNetwork::Session* session, JNetwork::ICommand* recvCmd) override;

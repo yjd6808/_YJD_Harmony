@@ -57,5 +57,5 @@ int main() {
 
 	FinalizeJCore();
 	Winsock::Finalize();
-	return 0;
+	return Console::ReadKeyWhile("X키 입력시 종료", ConsoleKey::X);
 }

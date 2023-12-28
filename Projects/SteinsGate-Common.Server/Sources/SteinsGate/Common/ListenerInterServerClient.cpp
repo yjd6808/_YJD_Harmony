@@ -33,8 +33,8 @@ void ListenerInterServerClient::OnConnected(SGSession* session) {
 	S_SETUP_IS_COMMON::SEND_SCE_ItsMe(m_eServerProcessType, Core::ServerProcessInfo->ServerId);
 }
 
-void ListenerInterServerClient::OnDisconnected(SGSession* session) {
-	ListenerClientCommon::OnDisconnected(session);
+void ListenerInterServerClient::OnDisconnected(SGSession* session, Int32U errorCode) {
+	ListenerClientCommon::OnDisconnected(session, errorCode);
 }
 
 void ListenerInterServerClient::OnSent(SGSession* session, JNetwork::IPacket* sentPacket, Int32UL sentBytes) {

@@ -30,6 +30,7 @@ Session::Session(
 	: Host(iocp)
 	, m_iHandle(-1)
 	, m_spBufferAllocator(bufferAllocator)
+	, m_PendingData(0)						// Lazy-Allocation
 	, m_pPacketParser(packetParser)
 	, m_spRecvBuffer(nullptr)
 	, m_spSendBuffer(nullptr)
@@ -108,6 +109,96 @@ bool Session::Disconnect() {
 	// Connect 오버랩이 실패하면서 한번더 Disconnect를 호출하게되어버림.
 
 	return true;
+}
+
+int Session::Send(char* data, int len) {
+	Int32U uiSendPendingErrorCode = 0;
+	int iSended = SendPending(uiSendPendingErrorCode);
+	const int iPendingSeneded = iSended;
+
+	if (uiSendPendingErrorCode != 0) {
+		PushPendingData(data, len);
+		return iSended;
+	}
+
+	if (HasPendingData()) {
+		PushPendingData(data, len);
+		return iSended;
+	}
+
+	for (;;) {
+		const int iSendRet = m_Socket.Send(data, len);
+
+		if (iSendRet == SOCKET_ERROR) {
+			const Int32U uiErrorCode = Winsock::LastError();
+			if (uiErrorCode == WSAEWOULDBLOCK) {
+				PushPendingData(data, len);
+			} else {
+				_NetLogError_("Send 실패 (%u)", uiErrorCode);
+			}
+			break;
+		}
+
+		data += iSendRet;
+		len -= iSendRet;
+		iSended += iSendRet;
+
+		// 다 보낸 경우 나가도록
+		if (iSended - iPendingSeneded >= len) {
+			break;
+		}
+	}
+
+	return iSended;
+}
+
+int Session::Send(IPacket* packet, bool releasePacket /* = true */) {
+	const WSABUF data = packet->GetWSABuf();
+	const int iSended = Send(data.buf, data.len);
+
+	if (releasePacket)
+		JCORE_RELEASE_SAFE(packet);
+
+	return iSended;
+}
+
+int Session::SendPending(JCORE_REF_OUT Int32U& errorCode) {
+	char* pPendingData = m_PendingData.Source();
+	int iPendingDataCount = m_PendingData.Size();		// 보내야하는 바이트 수
+
+	if (iPendingDataCount == 0) {
+		return 0;
+	}
+
+	for (;;) {
+		const int iSendRet = m_Socket.Send(pPendingData, iPendingDataCount);
+		if (iSendRet == SOCKET_ERROR) {
+			errorCode = Winsock::LastError();
+			if (errorCode != WSAEWOULDBLOCK) {
+				_NetLogError_("SendPending 실패 (%u)", errorCode);
+			} 
+			break;
+		}
+		pPendingData += iSendRet;
+		iPendingDataCount -= iSendRet;
+
+		// 다 보낸 경우 나가도록
+		if (iPendingDataCount <= 0) {
+			break;
+		}
+	}
+
+	const int iSended = m_PendingData.Size() - iPendingDataCount;
+	m_PendingData.PopFront(iSended);
+	return iSended;
+}
+
+void Session::PushPendingData(char* data, int len) {
+	if (m_PendingData.Source() == nullptr) {
+		m_PendingData.Reserve(len + 1);
+	}
+
+	m_PendingData.PushBack(data, len);
 }
 
 

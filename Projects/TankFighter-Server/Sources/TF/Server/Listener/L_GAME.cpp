@@ -26,7 +26,7 @@ void L_GAME::OnConnected(Session* session) {
 }
 
 void L_GAME::OnConnectFailed(Session* session, Int32U errorCode) {}
-void L_GAME::OnDisconnected(Session* session) {
+void L_GAME::OnDisconnected(Session* session, Int32U errorCode) {
 	_LogInfo_("%s가 연결 종료하였습니다.", session->GetRemoteEndPoint().ToString().Source());
 	GameSession* pSession = dynamic_cast<GameSession*>(session);
 	if (pSession == nullptr) {

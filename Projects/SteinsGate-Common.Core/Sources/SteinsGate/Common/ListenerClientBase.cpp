@@ -25,7 +25,7 @@ void ListenerClientBase::OnConnectFailed(SGSession* session, Int32U errorCode) {
 	_LogInfo_("연결 실패 (%d)", errorCode);
 }
 
-void ListenerClientBase::OnDisconnected(SGSession* session) {
+void ListenerClientBase::OnDisconnected(SGSession* session, Int32U errorCode) {
 	const IPv4EndPoint& remoteEndPoint = session->GetRemoteEndPoint();
 	const String remoteEndPointString = remoteEndPoint.ToString();
 

@@ -26,8 +26,8 @@ void ListenerAuthServer::OnConnected(Session* connectedSession) {
 	ListenerServerCommon::OnConnected(connectedSession);
 }
 
-void ListenerAuthServer::OnDisconnected(Session* disconnetedSession) {
-	ListenerServerCommon::OnDisconnected(disconnetedSession);
+void ListenerAuthServer::OnDisconnected(Session* disconnetedSession, Int32U errorCode) {
+	ListenerServerCommon::OnDisconnected(disconnetedSession, errorCode);
 }
 
 void ListenerAuthServer::OnSent(Session* sender, IPacket* sentPacket, Int32UL sentBytes) {

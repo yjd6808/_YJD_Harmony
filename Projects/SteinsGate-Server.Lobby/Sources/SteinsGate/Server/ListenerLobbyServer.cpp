@@ -31,8 +31,8 @@ void ListenerLobbyServer::OnConnected(Session* connectedSession) {
 	ListenerServerCommon::OnConnected(connectedSession);
 }
 
-void ListenerLobbyServer::OnDisconnected(Session* disconnetedSession) {
-	ListenerServerCommon::OnDisconnected(disconnetedSession);
+void ListenerLobbyServer::OnDisconnected(Session* disconnetedSession, Int32U errorCode) {
+	ListenerServerCommon::OnDisconnected(disconnetedSession, errorCode);
 }
 
 void ListenerLobbyServer::OnSent(Session* sender, IPacket* sentPacket, Int32UL sentBytes) {

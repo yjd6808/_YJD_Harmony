@@ -34,8 +34,8 @@ void ListenerCenterServer::OnConnected(Session* connectedSession) {
 	ListenerServerCommon::OnConnected(connectedSession);
 }
 
-void ListenerCenterServer::OnDisconnected(Session* disconnetedSession) {
-	ListenerServerCommon::OnDisconnected(disconnetedSession);
+void ListenerCenterServer::OnDisconnected(Session* disconnetedSession, Int32U errorCode) {
+	ListenerServerCommon::OnDisconnected(disconnetedSession, errorCode);
 	CenterSession* pSession = (CenterSession*)disconnetedSession;
 
 	if (pSession->IsValid()) {

@@ -24,7 +24,7 @@
     <ProjectGuid>{B993AD0F-64EE-4D28-93E3-423D3E1F15A1}</ProjectGuid>
     <RootNamespace>JNetworkMainClient</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>JNetwork-Research.Buffering</ProjectName>
+    <ProjectName>JNetwork-Research.BufferingPerformance</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

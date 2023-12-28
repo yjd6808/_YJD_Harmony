@@ -46,7 +46,7 @@ void TcpClient::Initialize() {
 
 	Session::Initialize();
 
-	if (CreateSocket(TransportProtocol::TCP) == false) {
+	if (CreateSocket(TransportProtocol::TCP, NonblokingSocket) == false) {
 		DebugAssertMsg(false, "TCP 소켓 생성에 실패했습니다. (%u)", Winsock::LastError());
 	}
 
@@ -216,9 +216,10 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 
 
 
-void TcpClient::Disconnected() {
+void TcpClient::Disconnected(Int32U errorCode) {
 	if (m_pEventListener)
-		m_pEventListener->OnDisconnected(this);
+		m_pEventListener->OnDisconnected(this, errorCode);
+
 	Initialize();
 }
 

@@ -38,7 +38,7 @@ UdpClient::~UdpClient() {
 void UdpClient::Initialize() {
 	Session::Initialize();
 
-	if (CreateSocket(TransportProtocol::UDP, true) == false) {
+	if (CreateSocket(TransportProtocol::UDP, NonblokingSocket) == false) {
 		DebugAssertMsg(false, "UDP 소켓 생성에 실패했습니다. (%u)", Winsock::LastError());
 	}
 
@@ -74,11 +74,11 @@ void UdpClient::ConnectFailed(Int32U errorCode) {
 		m_pEventListener->OnConnectFailed(this, errorCode);
 }
 
-void UdpClient::Disconnected() {
+void UdpClient::Disconnected(Int32U errorCode) {
 	// UDP는 연결이 끊긴다는 개념이 존재하지 않는다. 이 함수는 아무데서도 호출하지 않음
 	// 추후 ReliableUDP를 구현하게된다면 활용할 듯?
 	if (m_pEventListener)
-		m_pEventListener->OnDisconnected(this);
+		m_pEventListener->OnDisconnected(this, errorCode);
 }
 
 void UdpClient::NotifyCommand(ICommand* cmd) {

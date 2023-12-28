@@ -187,7 +187,7 @@ void Character::NotifyLoginStateToFriends(bool login) {
 
 	{
 		JCORE_LOCK_GUARD(m_FriendLock);
-		vFriendPrimaryKeyList.Resize(m_vFriendList.Size());
+		vFriendPrimaryKeyList.Reserve(m_vFriendList.Size());
 
 		for (int i = 0; i < m_vFriendList.Size(); ++i) {
 			vFriendPrimaryKeyList.PushBack(m_vFriendList[i].PrimaryKey);

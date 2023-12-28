@@ -124,7 +124,7 @@ public:
 	}
 
 	void Reserve(int capacity) {
-		TArrayCollection::ExpandIfNeeded(capacity);
+		TArrayCollection::Expand(capacity);
 	}
 
 	void Shrink(int capacity) override {
@@ -356,7 +356,7 @@ public:
 	void RemoveAt(const int idx) {
 		DebugAssertMsg(this->IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
 
-		int iMoveBlockSize = this->m_iSize - (idx + 1);
+		const int iMoveBlockSize = this->m_iSize - (idx + 1);
 
 		this->DestroyAt(idx);
 		this->MoveBlock(
@@ -387,6 +387,22 @@ public:
 	void PopBack() {
 		RemoveAt(this->m_iSize - 1);
 	}
+
+	void PopFront(int count = 1) {
+		if (count <= 0) {
+			return;
+		}
+
+		if (count > this->m_iSize) {
+			count = this->m_iSize;
+		}
+
+		const int iMoveBlockSize = this->m_iSize - count;
+		this->DestroyAtRange(0, count - 1);
+		this->MoveBlock(count, 0, iMoveBlockSize);
+		this->m_iSize -= count;
+	}
+
 
 	void Sort() {
 		TArrayCollection::Sort(NaturalOrder{});

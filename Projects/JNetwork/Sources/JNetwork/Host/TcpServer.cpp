@@ -40,9 +40,9 @@ ISessionContainer* TcpServer::CreateSessionContainer() {
 	return dbg_new SessionContainer(10);
 }
 
-void TcpServer::SessionDisconnected(TcpSession* session) {
+void TcpServer::SessionDisconnected(TcpSession* session, Int32U errorCode) {
 	if (m_pEventListener)
-		m_pEventListener->OnDisconnected(session);
+		m_pEventListener->OnDisconnected(session, errorCode);
 
 	// 세션 재사용... 이거땜에 State를 Atomic으로 변경함.
 	// 서버가 다른 쓰레드에서 Stop을 실행하는 순간

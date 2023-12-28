@@ -23,7 +23,7 @@ public:
 	virtual ~SessionEventListener() = default;
 
 	virtual void OnConnected(Session* session) {}
-	virtual void OnDisconnected(Session* session) {}
+	virtual void OnDisconnected(Session* session, Int32U errorCode) {}
 	virtual void OnSent(Session* session, IPacket* sentPacket, Int32UL sentBytes) {}
 	virtual void OnReceivedRaw(Session* session, char* data, int len) {}
 	virtual void OnReceived(Session* session, ICommand* recvCmd) {}

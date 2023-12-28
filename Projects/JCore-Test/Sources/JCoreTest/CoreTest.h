@@ -47,7 +47,7 @@ USING_NS_STD;
 //출력 여부
 #define Print	OFF
 
-#define TestEnabled                 ON     // 전체 테스트 수행 여부
+#define TestEnabled                 OFF     // 전체 테스트 수행 여부
 #define BaseTestEnabled             ON      // JCore 테스트 수행 여부
 #define ContainerTestEnabled        ON      // JCore::Container 테스트 수행 여부
 #define ContainerImplTestEnabled    OFF     // 컨테이너 개발 테스트 코드를 수행 여부
@@ -61,8 +61,7 @@ USING_NS_STD;
 
 // 개별 테스트 수행시 사용
 #if TestEnabled == OFF
-	#define TEST_AccessibleObjectPoolTest           ON
-	#define TEST_ArraysTest                         ON
+	#define	TEST_VectorTest					    ON
 #endif
 
 #if TestEnabled == ON

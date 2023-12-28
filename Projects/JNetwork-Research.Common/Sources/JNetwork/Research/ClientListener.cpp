@@ -23,7 +23,7 @@ void ClientListener::OnConnected(Session* session) {
 	Console::WriteLine("[%s] 연결되었습니다.", m_Name.Source());
 }
 
-void ClientListener::OnDisconnected(Session* session) {
+void ClientListener::OnDisconnected(Session* session, Int32U errorCode) {
 	Console::WriteLine("[%s] 연결이 종료되었습니다.", m_Name.Source());
 }
 

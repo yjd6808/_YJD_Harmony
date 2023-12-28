@@ -35,6 +35,13 @@ public:
 	bool Bind(const IPv4EndPoint& bindAddr);
 	bool Disconnect();
 
+	int Send(char* data, int len);
+	int Send(IPacket* packet, bool releasePacket = true);
+	int SendPending(JCORE_REF_OUT Int32U& errorCode);
+	void PushPendingData(char* data, int len);
+	bool HasPendingData() const { return m_PendingData.Size() > 0; }
+	bool PendingDataSize() const { return m_PendingData.Size(); }
+
 	bool SendAsync(IPacket* packet);
 	bool SendAsync(const CommandBufferPtr& buffer);
 	bool SendToAsync(IPacket* packet);
@@ -62,7 +69,7 @@ public:
 	virtual void FlushSendBuffer();
 	virtual void Connected() = 0;
 	virtual void ConnectFailed(Int32U errorCode) = 0;
-	virtual void Disconnected() = 0;
+	virtual void Disconnected(Int32U errorCode) = 0;
 	virtual void Received(Int32UL receivedBytes);
 	virtual void Sent(IPacket* sentPacket, Int32UL receivedBytes) = 0;
 
@@ -83,6 +90,7 @@ protected:
 	JCore::AtomicInt m_iOveralappedPendingCount;
 	JCore::MemoryPoolAbstractPtr m_spBufferAllocator;
 	JCore::RecursiveLock m_SendBufferLock;
+	JCore::Vector<char> m_PendingData;
 
 	PacketParser* m_pPacketParser;
 

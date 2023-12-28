@@ -26,8 +26,8 @@ void ListenerChatServer::OnConnected(Session* connectedSession) {
 	ListenerServerCommon::OnConnected(connectedSession);
 }
 
-void ListenerChatServer::OnDisconnected(Session* disconnetedSession) {
-	ListenerServerCommon::OnDisconnected(disconnetedSession);
+void ListenerChatServer::OnDisconnected(Session* disconnetedSession, Int32U errorCode) {
+	ListenerServerCommon::OnDisconnected(disconnetedSession, errorCode);
 }
 
 void ListenerChatServer::OnSent(Session* sender, IPacket* sentPacket, Int32UL sentBytes) {

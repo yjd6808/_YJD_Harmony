@@ -32,7 +32,7 @@ void L_GAME::OnConnectFailed(Session* session, Int32U errorCode) {
 	Director::getInstance()->getScheduler()->performFunctionInCocosThread([=] {C_GAME::ConnectFailedSynchronized(errorCode); });
 }
 
-void L_GAME::OnDisconnected(Session* session) {
+void L_GAME::OnDisconnected(Session* session, Int32U errorCode) {
 	Director::getInstance()->getScheduler()->performFunctionInCocosThread(C_GAME::DisconnectedSynchronized);
 }
 

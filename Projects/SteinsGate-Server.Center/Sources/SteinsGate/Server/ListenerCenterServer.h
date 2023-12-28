@@ -21,7 +21,7 @@ public:
 protected:
 	void OnStarted() override;
 	void OnConnected(JNetwork::Session* connectedSession) override;
-	void OnDisconnected(JNetwork::Session* disconnetedSession) override;
+	void OnDisconnected(JNetwork::Session* disconnetedSession, Int32U errorCode) override;
 	void OnSent(JNetwork::Session* sender, JNetwork::IPacket* sentPacket, Int32UL sentBytes) override;
 	void OnReceived(JNetwork::Session* session, JNetwork::ICommand* recvCmd) override {}
 	void OnReceived(JNetwork::Session* session, JNetwork::RecvedCommandPacket* recvPacket) override;

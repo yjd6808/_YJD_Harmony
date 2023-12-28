@@ -27,7 +27,7 @@ public:
 	bool ConnectAsync(const IPv4EndPoint& destination);
 	void Connected() override;
 	void ConnectFailed(Int32U errorCode) override;
-	void Disconnected() override;
+	void Disconnected(Int32U errorCode) override;
 	void NotifyCommand(ICommand* cmd) override;
 	void NotifyPacket(RecvedCommandPacket* packet) override;
 	void NotifyRaw(char* data, int len) override;

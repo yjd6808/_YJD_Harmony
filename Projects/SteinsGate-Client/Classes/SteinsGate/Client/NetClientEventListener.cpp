@@ -27,8 +27,8 @@ void NetClientEventListener::OnConnected(Session* session) {
 	ListenerClientBase::OnConnected(session);
 	SyncConnectionResult(m_eConnectedServerType, session, true, 0);
 }
-void NetClientEventListener::OnDisconnected(Session* session) {
-	ListenerClientBase::OnDisconnected(session);
+void NetClientEventListener::OnDisconnected(Session* session, Int32U errorCode) {
+	ListenerClientBase::OnDisconnected(session, errorCode);
 	SyncDisconnectionResult(m_eConnectedServerType, session);
 }
 

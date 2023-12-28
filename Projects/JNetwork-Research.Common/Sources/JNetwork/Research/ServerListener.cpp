@@ -30,7 +30,7 @@ void ServerListener::OnConnected(Session* connectedSession) {
 		m_Name.Source(), connectedSession->GetRemoteEndPoint().ToString().Source());
 }
 
-void ServerListener::OnDisconnected(Session* disconnetedSession) {
+void ServerListener::OnDisconnected(Session* disconnetedSession, Int32U errorCode) {
 	Console::WriteLine("[%s] %s 클라이언트가 접속해제하였습니다.",
 		m_Name.Source(), disconnetedSession->GetRemoteEndPoint().ToString().Source());
 }

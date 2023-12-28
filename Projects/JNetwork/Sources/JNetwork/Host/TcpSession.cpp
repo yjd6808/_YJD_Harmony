@@ -34,7 +34,7 @@ void TcpSession::Initialize() {
 	Session::Initialize();
 
 
-	if (CreateSocket(TransportProtocol::TCP) == false) {
+	if (CreateSocket(TransportProtocol::TCP, NonblokingSocket) == false) {
 		DebugAssertMsg(false, "TCP 소켓 생성에 실패했습니다. (%u)", Winsock::LastError());
 	}
 }
@@ -115,9 +115,9 @@ void TcpSession::ConnectFailed(Int32U errorCode) {
 	m_pServer->SessionConnectFailed(this, errorCode);
 }
 
-void TcpSession::Disconnected() {
+void TcpSession::Disconnected(Int32U errorCode) {
 	OnDisconnected();
-	m_pServer->SessionDisconnected(this);
+	m_pServer->SessionDisconnected(this, errorCode);
 }
 
 void TcpSession::Sent(IPacket* sentPacket, Int32UL sentBytes) {

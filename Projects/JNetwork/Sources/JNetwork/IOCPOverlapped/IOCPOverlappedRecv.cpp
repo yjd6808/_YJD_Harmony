@@ -3,6 +3,8 @@
  */
 
 #include <JNetwork/Network.h>
+#include <JNetwork/Winsock.h>
+
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedRecv.h>
 #include <JNetwork/Host/TcpServer.h>
 
@@ -25,7 +27,7 @@ void IOCPOverlappedRecv::Process(BOOL result, Int32UL bytesTransffered, IOCPPost
 	Int32U uiErrorCode = 0;
 	if (IsFailed(hReceiveSock, result, bytesTransffered, uiErrorCode) || bytesTransffered == 0) {
 		m_pReceivedSession->Disconnect();
-		m_pReceivedSession->Disconnected();
+		m_pReceivedSession->Disconnected(uiErrorCode);
 		return;
 	}
 
@@ -33,8 +35,10 @@ void IOCPOverlappedRecv::Process(BOOL result, Int32UL bytesTransffered, IOCPPost
 
 	// TODO: 리시브 오버랩 재사용 기능 구현
 	if (m_pReceivedSession->RecvAsync() == false) {
+		uiErrorCode = Winsock::LastError();
+
 		m_pReceivedSession->Disconnect();
-		m_pReceivedSession->Disconnected();
+		m_pReceivedSession->Disconnected(uiErrorCode);
 	}
 }
 

@@ -41,7 +41,7 @@ public:
 	bool Stop() override;
 
 	void Initialize() override;
-	void SessionDisconnected(TcpSession* session);
+	void SessionDisconnected(TcpSession* session, Int32U errorCode);
 	void SessionConnected(TcpSession* session);
 	void SessionConnectFailed(TcpSession* session, Int32U errorCode);
 	void SessionSent(TcpSession* session, IPacket* sentPacket, Int32UL receivedBytes);
