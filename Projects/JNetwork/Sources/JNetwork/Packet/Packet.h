@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include <JCore/Macro.h>
 #include <JCore/TypeTraits.h>
 #include <JCore/Primitives/RefCountObjectPtr.h>
 
@@ -39,28 +40,90 @@ enum class PacketDetailType
 	CommandBuffer
 };
 
+#define JNET_PACKET_POOLING_PARAMS_0()							const JCore::MemoryPoolAbstractPtr& allocator 
+#define JNET_PACKET_POOLING_PARAMS_1(argty1)					const JCore::MemoryPoolAbstractPtr& allocator, argty1 arg1
+#define JNET_PACKET_POOLING_PARAMS_2(argty1, argty2)			const JCore::MemoryPoolAbstractPtr& allocator, argty1 arg1, argty2 arg2
+#define JNET_PACKET_POOLING_PARAMS_3(argty1, argty2, argty3)	const JCore::MemoryPoolAbstractPtr& allocator, argty1 arg1, argty2 arg2, argty3 arg3
+
+#define JNET_PACKET_POOLING_ARGS_0()							
+#define JNET_PACKET_POOLING_ARGS_1(argty1)						arg1
+#define JNET_PACKET_POOLING_ARGS_2(argty1, argty2)				arg1, arg2
+#define JNET_PACKET_POOLING_ARGS_3(argty1, argty2, argty3)		arg1, arg2, arg3
+
+#define JNET_PACKET_POOLING_ARGS_WITH_PACKET_0()							pPacket
+#define JNET_PACKET_POOLING_ARGS_WITH_PACKET_1(argty1)						pPacket, arg1
+#define JNET_PACKET_POOLING_ARGS_WITH_PACKET_2(argty1, argty2)				pPacket, arg1, arg2
+#define JNET_PACKET_POOLING_ARGS_WITH_PACKET_3(argty1, argty2, argty3)		pPacket, arg1, arg2, arg3
+
+#define JNET_PACKET_POOLING_PARAMS(...)							JCORE_EXPAND_1(JCORE_CONCAT_2(JNET_PACKET_POOLING_PARAMS_, JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__))
+#define JNET_PACKET_POOLING_ARGS(...)							JCORE_EXPAND_1(JCORE_CONCAT_2(JNET_PACKET_POOLING_ARGS_,   JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__))
+#define JNET_PACKET_POOLING_ARGS_WITH_PACKET(...)				JCORE_EXPAND_1(JCORE_CONCAT_2(JNET_PACKET_POOLING_ARGS_WITH_PACKET_,   JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__))
+
+#define JNET_PACKET_POOLING_CREATE(...)														\
+static TPacket* Create(JNET_PACKET_POOLING_PARAMS(__VA_ARGS__)) {							\
+	if (allocator == nullptr) {																\
+		return dbg_new TPacket(JNET_PACKET_POOLING_ARGS(__VA_ARGS__));						\
+	}																						\
+	int _;																					\
+	TPacket* pPacket = (TPacket*)allocator->DynamicPop(sizeof(TPacket), _);					\
+	JCore::Memory::PlacementNew(JNET_PACKET_POOLING_ARGS_WITH_PACKET(__VA_ARGS__));			\
+	pPacket->m_Allocator = allocator;														\
+	return pPacket;																			\
+}
+
+
+// spGuard를 둔 이유: allocator의 레퍼런스 카운트가 1남은 경우 패킷 소멸자 호출시 allocator가 소멸되어버리는 문제가 발생해버릴 수 있다.
+// 따라서 레퍼런스 카운트를 1올려놓은 후 패킷 반환이 이뤄진 이후에 allocator의 ref count를 낮추도록 한다.
+// allocator가 없는 경우는 dbg_new TPacket과 같이 동적할당해서 생성해버린 경우이거나 스택할당해서 생성해버린 경우이다.
+// TODO: 어떻게하면 spGuard를 사용하지 않을 수 있을까?
+//  -> 이 풀이 네트워킹동안 절대 소멸되지 않음을 보장해줘야한다
+//  -> 즉, 개발자가 풀의 LifeCycle을 관리해줘야한다는 말이다. ㅠㅠ
+//  -> 그러면 개발자가 LifeCycle을 관리하지 않을 수는 없을까? ... 이건 최후의 최적화 방법으로 남겨놓도록 하자.
+#define JNET_PACKET_POOLING_RELEASE(class_name)											\
+void ReleaseAction() override {															\
+	if (!m_Allocator.Exist()) {															\
+		delete this;																	\
+		return;																			\
+	}																					\
+																						\
+	JCore::MemoryPoolAbstractPtr spGuard = m_Allocator;									\
+	JCore::MemoryPoolAbstract* pAllocator = m_Allocator.GetPtr();						\
+	this->~class_name();																\
+	pAllocator->DynamicPush(this, sizeof(TPacket));										\
+}
+
+
 
 struct IPacket : JCore::RefCountObject
 {
 	IPacket() = default;
 	~IPacket() override = default;
 
-	void ReleaseAction() override { delete this; }
 	virtual WSABUF GetWSABuf() const = 0;
 	virtual PacketType GetType() const = 0;
 	virtual PacketDetailType GetDetailType() const = 0;
+	virtual int SizeOf() const = 0;
+protected:
+	JCore::MemoryPoolAbstractPtr m_Allocator;	// 소멸시 반환될 메모리풀
 };
 
 
 struct RawPacket : IPacket
 {
+	using TPacket = RawPacket;
+
 	RawPacket(char* data, int len) {
 		buf.buf = data;
 		buf.len = len;
 	}
+
+	JNET_PACKET_POOLING_CREATE(char*, int)
+	JNET_PACKET_POOLING_RELEASE(RawPacket)
+
 	WSABUF GetWSABuf() const override { return buf; }
 	PacketType GetType() const override { return PacketType::Raw; }
 	PacketDetailType GetDetailType() const override { return PacketDetailType::Raw; }
+	int SizeOf() const override { return sizeof(TPacket); }
 private:
 	WSABUF buf;
 };
@@ -176,6 +239,7 @@ class StaticPacket : public CommandPacket
 
 	template <int Index>
 	using TypeAt = JCore::IndexOf_t<Index, CommandArgs...>;	 // 인자로 전달받은 커맨드 타입
+	using TPacket = StaticPacket<CommandArgs...>;
 public:
 	StaticPacket() : CommandPacket(CommandCount, PacketLen) {
 
@@ -189,7 +253,8 @@ public:
 
 	~StaticPacket() override = default;
 
-
+	JNET_PACKET_POOLING_CREATE()
+	JNET_PACKET_POOLING_RELEASE(StaticPacket)
 
 	WSABUF GetWSABuf() const override {
 		/*
@@ -206,7 +271,7 @@ public:
 
 		*/
 		// 패킷 상위 4바이트는 패킷 헤더로 사용한다.
-		* (CmdCnt_t*)(m_pBuf + 0) = m_iCommandCount;
+		*(CmdCnt_t*)(m_pBuf + 0) = m_iCommandCount;
 		*(PktLen_t*)(m_pBuf + sizeof(CmdCnt_t)) = m_iPacketLen;
 
 		WSABUF wsaBuf;
@@ -251,6 +316,8 @@ public:
 			return (TypeAt<Index>*)(CommandBuf() + SumOfSizeRecursive<Index - 1>());
 		}
 	}
+
+	int SizeOf() const override { return sizeof(TPacket); }
 private:
 	static constexpr int PacketLen = (... + sizeof(CommandArgs));
 	static constexpr int CommandCount = sizeof...(CommandArgs);
@@ -275,6 +342,7 @@ class DynamicPacket : public CommandPacket
 	static_assert(JCore::IsMultipleDerived_v<DynamicCommand, CommandArgs...>, "... CommandArgs must be derived type of \"DynamicCommand\""); // 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
 	template <int Index>
 	using TypeAt = JCore::IndexOf_t<Index, CommandArgs...>;	 // 인자로 전달받은 커맨드 타입
+	using TPacket = DynamicPacket<CommandArgs...>;
 public:
 	template <typename... Ints>
 	DynamicPacket(Ints... counts) : CommandPacket() {
@@ -292,6 +360,8 @@ public:
 		JCORE_DELETE_ARRAY_SAFE(m_pDynamicBuf);
 	}
 
+	JNET_PACKET_POOLING_CREATE()
+	JNET_PACKET_POOLING_RELEASE(DynamicPacket)
 
 	WSABUF GetWSABuf() const override {
 		// 패킷 상위 4바이트는 패킷 헤더로 사용한다.
@@ -312,6 +382,7 @@ public:
 		return reinterpret_cast<TypeAt<Index>*>(CommandBuf() + m_CmdEndPos[Index]);
 	}
 
+	int SizeOf() const override { return sizeof(TPacket); }
 	PacketDetailType GetDetailType() const override { return PacketDetailType::Dynamic; }
 private:
 
@@ -375,13 +446,17 @@ private:
 
 class CommandBufferPacket : public CommandPacket
 {
+	using TPacket = CommandBufferPacket;
 public:
 	CommandBufferPacket(const CommandBufferPtr& buffer);
-	WSABUF GetWSABuf() const override {
-		return { (ULONG)m_Buffer->GetWritePos(), m_Buffer->Source() };
-	}
+
+	JNET_PACKET_POOLING_CREATE(const CommandBufferPtr&)
+	JNET_PACKET_POOLING_RELEASE(CommandBufferPacket)
+
+	WSABUF GetWSABuf() const override { return { (ULONG)m_Buffer->GetWritePos(), m_Buffer->Source() }; }
 	char* GetCommandSource() const override { return m_Buffer->Source() + PacketHeaderSize_v; }
 	PacketDetailType GetDetailType() const override { return PacketDetailType::CommandBuffer; }
+	int SizeOf() const override { return sizeof(TPacket); }
 private:
 	CommandBufferPtr m_Buffer;
 };
@@ -400,6 +475,7 @@ template <typename TCommand>
 class SinglePacket : public CommandPacket
 {
 	static_assert(JCore::IsBaseOf_v<ICommand, TCommand>, "... TCommand must be derived type of \"ICommand\""); // 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
+	using TPacket = SinglePacket<TCommand>;
 public:
 	SinglePacket() : SinglePacket(1, true) {}
 	SinglePacket(int count, bool noCount = false)
@@ -419,6 +495,10 @@ public:
 		JCORE_DELETE_ARRAY_SAFE(m_pDynamicBuf);
 	}
 
+	JNET_PACKET_POOLING_CREATE()
+	JNET_PACKET_POOLING_CREATE(int)
+	JNET_PACKET_POOLING_RELEASE(SinglePacket)
+
 	WSABUF GetWSABuf() const override {
 		*(CmdCnt_t*)(m_pDynamicBuf + 0) = m_iCommandCount;
 		*(PktLen_t*)(m_pDynamicBuf + sizeof(CmdCnt_t)) = m_iPacketLen;
@@ -429,6 +509,7 @@ public:
 		return wsaBuf;
 	}
 
+	int SizeOf() const override { return sizeof(TPacket); }
 	char* GetCommandSource() const override { return const_cast<char*>(m_pDynamicBuf) + PacketHeaderSize_v; }
 	PacketDetailType GetDetailType() const override { return PacketDetailType::Single; }
 
