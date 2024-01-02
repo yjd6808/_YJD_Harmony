@@ -32,11 +32,14 @@
 // 인자 갯수를 반환한다. (적기 귀찮으므로 10개까지만 적음, 추후 확장시 추가할 것
 //   -> 확장사유: 2023/06/13 인자 40개로 확장함. SteinsGate/Common/QueryDefine.h의 SelectResult<TQry> 바인딩시 인자가 수십개 전달될 수도 있기 때문
 //               매크로함수에 인자 수십개를 전달할 일이 있을까 했지만 있었다. ㄷㄷ
-#define JCORE_ARGS_COUNT(...) JCORE_ARGS_COUNT_(__VA_ARGS__, JCORE_ARGS_COUNT_REST)
-#define JCORE_ARGS_COUNT_(...) JCORE_EXPAND_1(JCORE_ARGS_COUNT__(__VA_ARGS__))			// JCORE_ARGS_COUNT_REST를 확장시켜주기 위한 중간 매크로
-#define JCORE_ARGS_COUNT__(_1,_2,_3,_4,_5,_6,_7,_8,_9,_10,_11,_12,_13,_14,_15,_16,_17,_18,_19,_20,_21,_22,_23,_24,_25,_26,_27,_28,_29,_30,_31,_32,_33,_34,_35,_36,_37,_38,_49,_40,N,...) N
-#define JCORE_ARGS_COUNT_REST 40,39,38,37,36,35,34,33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0
-
+//   -> 더미인자 추가(DUMMY): 더미를 추가 안하면 JCORE_ARGS_COUNT(1)과 JCORE_ARGS_COUNT() 모두 1로 치환됨
+//				JCORE_ARGS_COUNT()	-> JCORE_ARGS_COUNT_( ,JCORE_ARGS_COUNT_REST) ㅡㅡ; 콤마 땜에 인자 1개 있는걸로 처리하고 있었음
+//				JCORE_ARGS_COUNT(1) -> JCORE_ARGS_COUNT_(1,JCORE_ARGS_COUNT_REST)
+#define JCORE_ARGS_DUMMY(...)	DUMMY, __VA_ARGS__, JCORE_ARGS_COUNT_REST				// MSVC는 중첩호출시의 콤마를 구분자로 인식을 안하기 때문에, 내부에서 확장시켜주기 위함
+#define JCORE_ARGS_COUNT(...)	JCORE_ARGS_COUNT_(JCORE_ARGS_DUMMY(__VA_ARGS__))
+#define JCORE_ARGS_COUNT_(...)	JCORE_EXPAND_1(JCORE_ARGS_COUNT__(__VA_ARGS__))			// JCORE_ARGS_COUNT_REST를 확장시켜주기 위한 중간 매크로
+#define JCORE_ARGS_COUNT__(_dummy,_1,_2,_3,_4,_5,_6,_7,_8,_9,_10,_11,_12,_13,_14,_15,_16,_17,_18,_19,_20,_21,_22,_23,_24,_25,_26,_27,_28,_29,_30,_31,_32,_33,_34,_35,_36,_37,_38,_39,_40,N,...) N
+#define JCORE_ARGS_COUNT_REST	40,39,38,37,36,35,34,33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0
 
 // 전달받은 인자들을 토큰 결합시킨다. (적기 귀찮으므로 5개까지만 적음, 추후 확장시 추가할 것)
 // 인자들중 홀수번째 인자들만 가져옴
