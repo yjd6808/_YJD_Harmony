@@ -5,7 +5,7 @@
  *
  */
 
-#include <JCoreBenchmark/CoreBenchmark.h>
+#include <Benchmark/Core.h>
 #include <JCore/Pool/IndexedMemoryPool.h>
 #include <JCore/Pool/BinarySearchMemoryPool.h>
 

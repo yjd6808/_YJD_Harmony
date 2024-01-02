@@ -19,47 +19,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Sources\JCoreBenchmark\Container\HashMapIterationTest.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCoreBenchmark\Container\HashMapMemoryPoolTest.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCoreBenchmark\Container\HashMapTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreBenchmark\Container\HeapifyTest.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCoreBenchmark\CoreBenchmark.cpp">
+    <ClCompile Include="..\Sources\Benchmark\Container\HashMapIterationTest.cpp" />
+    <ClCompile Include="..\Sources\Benchmark\Container\HashMapMemoryPoolTest.cpp" />
+    <ClCompile Include="..\Sources\Benchmark\Container\HashMapTest.cpp" />
+    <ClCompile Include="..\Sources\Benchmark\Container\HeapifyTest.cpp" />
+    <ClCompile Include="..\Sources\Benchmark\Core.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">JCoreBenchmark/CoreBenchmark.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">JCoreBenchmark/CoreBenchmark.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">JCoreBenchmark/CoreBenchmark.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">JCoreBenchmark/CoreBenchmark.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCoreBenchmark\Research\AllocationTest.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">JCoreBenchmark/CoreBenchmark.h</PrecompiledHeaderFile>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">JCoreBenchmark/CoreBenchmark.h</PrecompiledHeaderFile>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">JCoreBenchmark/CoreBenchmark.h</PrecompiledHeaderFile>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">JCoreBenchmark/CoreBenchmark.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCoreBenchmark\Research\VirtualAllocTest.cpp" />
+    <ClCompile Include="..\Sources\Benchmark\Pool\MemoryPoolTest.cpp" />
+    <ClCompile Include="..\Sources\Benchmark\Research\AllocationTest.cpp" />
+    <ClCompile Include="..\Sources\Benchmark\Research\VirtualAllocTest.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\JCoreBenchmark\CoreBenchmark.h" />
-    <ClCompile Include="..\Sources\JCoreBenchmark\Pool\MemoryPoolTest.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
+    <ClInclude Include="..\Sources\Benchmark\Core.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -151,8 +126,8 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/utf-8</AdditionalOptions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>JCoreBenchmark/CoreBenchmark.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>$(IntDir)CoreBenchmark.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderFile>Benchmark/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -172,8 +147,8 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/utf-8</AdditionalOptions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>JCoreBenchmark/CoreBenchmark.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>$(IntDir)CoreBenchmark.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderFile>Benchmark/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -199,8 +174,8 @@
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>JCoreBenchmark/CoreBenchmark.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>$(IntDir)CoreBenchmark.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderFile>Benchmark/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -228,8 +203,8 @@
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>JCoreBenchmark/CoreBenchmark.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>$(IntDir)CoreBenchmark.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderFile>Benchmark/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>

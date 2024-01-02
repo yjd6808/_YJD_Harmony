@@ -41,7 +41,7 @@
  * 
  */
 
-#include <JCoreBenchmark/CoreBenchmark.h>
+#include <Benchmark/Core.h>
 #include <JCore/Container/HashMap.h>
 
 #include <unordered_map>

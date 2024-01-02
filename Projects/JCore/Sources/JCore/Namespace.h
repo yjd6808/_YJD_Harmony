@@ -16,9 +16,16 @@
 #define NS_DETAIL_BEGIN	namespace Detail {
 #define NS_DETAIL_END	}
 
+#define NS_BENCHMARK_BEGIN		namespace benchmark {
+#define NS_BENCHMARK_END		}
+
 #define USING_NS_JC			using namespace JCore
 #define USING_NS_JC_DETAIL	using namespace JCore::Detail
 #define USING_NS_DETAIL		using namespace Detail
 
+
 #define USING_NS_STD		using namespace std
 #define USING_NS_STD_CHRONO using namespace std::chrono
+#define USING_NS_BENCHMARK  using namespace benchmark
+
+

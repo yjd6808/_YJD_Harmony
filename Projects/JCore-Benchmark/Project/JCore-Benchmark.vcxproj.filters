@@ -12,30 +12,30 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Sources\JCoreBenchmark\CoreBenchmark.cpp" />
-    <ClCompile Include="..\Sources\JCoreBenchmark\Research\AllocationTest.cpp">
-      <Filter>Research</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCoreBenchmark\Research\VirtualAllocTest.cpp">
-      <Filter>Research</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCoreBenchmark\Container\HashMapTest.cpp">
+    <ClCompile Include="..\Sources\Benchmark\Container\HashMapTest.cpp">
       <Filter>Container</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCoreBenchmark\Container\HashMapMemoryPoolTest.cpp">
+    <ClCompile Include="..\Sources\Benchmark\Container\HeapifyTest.cpp">
       <Filter>Container</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCoreBenchmark\Container\HashMapIterationTest.cpp">
+    <ClCompile Include="..\Sources\Benchmark\Container\HashMapIterationTest.cpp">
       <Filter>Container</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCoreBenchmark\Container\HeapifyTest.cpp">
+    <ClCompile Include="..\Sources\Benchmark\Container\HashMapMemoryPoolTest.cpp">
       <Filter>Container</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCoreBenchmark\Pool\MemoryPoolTest.cpp">
+    <ClCompile Include="..\Sources\Benchmark\Pool\MemoryPoolTest.cpp">
       <Filter>Pool</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\Benchmark\Research\VirtualAllocTest.cpp">
+      <Filter>Research</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Benchmark\Research\AllocationTest.cpp">
+      <Filter>Research</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Benchmark\Core.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\JCoreBenchmark\CoreBenchmark.h" />
+    <ClInclude Include="..\Sources\Benchmark\Core.h" />
   </ItemGroup>
 </Project>

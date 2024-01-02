@@ -22,13 +22,12 @@
 #include <cassert>
 #pragma warning(pop)
 
-using namespace JCore;
-using namespace benchmark;
-using namespace std;
+USING_NS_JC;
+USING_NS_STD;
+USING_NS_BENCHMARK;
 
 #define ON						1
 #define OFF						0
-
 
 // ========================================================================================
 // Research: 구조 고민에 앞서서 함수 사용 연습 및 성능 테스트를 위한 폴더

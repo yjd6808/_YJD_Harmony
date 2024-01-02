@@ -7,7 +7,7 @@
 
 
 
-#include <JCoreBenchmark/CoreBenchmark.h>
+#include <Benchmark/Core.h>
 #include <JCore/Container/Arrays.h>
 
 #if HeapifyTest == ON

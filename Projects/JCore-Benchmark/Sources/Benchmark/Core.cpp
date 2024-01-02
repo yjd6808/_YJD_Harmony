@@ -1,4 +1,4 @@
-﻿#include <JCoreBenchmark/CoreBenchmark.h>
+﻿#include <Benchmark/Core.h>
 
 int main(int argc, char** argv) {
     Console::Init();

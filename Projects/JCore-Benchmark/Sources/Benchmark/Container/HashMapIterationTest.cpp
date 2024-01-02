@@ -5,7 +5,7 @@
  *
  */
 
-#include <JCoreBenchmark/CoreBenchmark.h>
+#include <Benchmark/Core.h>
 #include <JCore/Container/Vector.h>
 #include <JCore/Container/HashMap.h>
 
