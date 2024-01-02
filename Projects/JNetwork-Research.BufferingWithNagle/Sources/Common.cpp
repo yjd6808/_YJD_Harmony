@@ -10,6 +10,6 @@
 #include "Common.h"
 
 volatile bool TestFinished_v = false;
-bool DontEcho_v = true;
+bool DontEcho_v;
 JCore::StopWatch<JCore::StopWatchMode::HighResolution> StopWatch_v;
 JCore::TimeSpan LastTime_v;

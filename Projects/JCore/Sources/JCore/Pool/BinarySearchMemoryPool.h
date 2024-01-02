@@ -51,8 +51,9 @@ public:
 
 		bool bNewAlloc;
 		void* pMemoryBlock = m_Pool[iIndex]->Pop(bNewAlloc);
+#if DebugMode
 		AddAllocated(iIndex, bNewAlloc);
-
+#endif
 		return pMemoryBlock;
 	}
 
@@ -63,7 +64,9 @@ public:
 		realAllocatedSize = iFitSize;
 		bool bNewAlloc;
 		void* pMemoryBlock = m_Pool[iIndex]->Pop(bNewAlloc);
+#if DebugMode
 		AddAllocated(iIndex, bNewAlloc);
+#endif
 		return pMemoryBlock;
 	}
 
@@ -71,14 +74,18 @@ public:
 	void StaticPush(void* memory) {
 		// static_assert(Detail::AllocationLengthMapConverter::ValidateSize<PushSize>());
 		int index = Detail::AllocationLengthMapConverter::ToIndex<PushSize>();
+#if DebugMode
 		AddDeallocated(index);
+#endif
 		m_Pool[index]->Push(memory);
 	}
 
 	void DynamicPush(void* memory, int returnSize) override {
 		// DebugAssertMessage(Detail::AllocationLengthMapConverter::ValidateSize(returnSize), "뭐야! 사이즈가 안맞자나!");
 		int index = Detail::AllocationLengthMapConverter::ToIndex(returnSize);
+#if DebugMode
 		AddDeallocated(index);
+#endif
 		m_Pool[index]->Push(memory);
 	}
 

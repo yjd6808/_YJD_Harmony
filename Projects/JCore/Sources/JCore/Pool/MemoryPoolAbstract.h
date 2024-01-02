@@ -123,15 +123,15 @@ protected:
 		if (m_bDetecting) ++m_pBlockReturnedCounter[blockIndex];
 	}
 
-	bool m_bDetecting{};
+	AtomicBool m_bDetecting{};
 	MemoryPoolStatistics m_Statistics;
 
 	// TODO: 멀티 쓰레딩 디텍션을 수행할려면 쓰레드로컬처럼 동작해야함.
 	// 근데 멤버변수로는 쓰레드로컬로 둘 수 없으므로 다른 방식으로 구현해야함.
 	// 이거 해결안하면 멀티쓰레드기반환경에서 메모리릭 제대로 못잡아냄;
 	// 일단 싱글쓰레드로 가정하고 릭 감지기능 자체만 구현먼저 해놓자.
-	int m_pBlockUsedCounter[Detail::MemoryBlockSizeMapSize_v]{};			// 블록 종류별로 몇번 사용되었는지
-	int m_pBlockReturnedCounter[Detail::MemoryBlockSizeMapSize_v]{};		// 블록 종류별로 몇번 반환되었는지
+	AtomicInt m_pBlockUsedCounter[Detail::MemoryBlockSizeMapSize_v]{};			// 블록 종류별로 몇번 사용되었는지
+	AtomicInt m_pBlockReturnedCounter[Detail::MemoryBlockSizeMapSize_v]{};		// 블록 종류별로 몇번 반환되었는지
 #else
 public:
 	Int64U GetTotalAllocated() { return 0; }

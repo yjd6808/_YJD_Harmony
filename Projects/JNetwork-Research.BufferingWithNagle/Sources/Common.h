@@ -14,16 +14,16 @@
 
 
 // Heavy-Traffic
-//#define TEST_CLIENT_COUNT		10			// 테스트 송신 클라이언트 수
-//#define TEST_SEND_COUNT		10'000		// 클라이언트당 테스트 에코
-//#define TEST_PADDING_SIZE		1'000
-//#define TEST_COUNT			30
+#define TEST_CLIENT_COUNT		10			// 테스트 송신 클라이언트 수
+#define TEST_SEND_COUNT			10'000		// 클라이언트당 테스트 에코
+#define TEST_PADDING_SIZE		1'000
+#define TEST_COUNT				1
 
 // Middle-Traffic
-#define TEST_CLIENT_COUNT		1		// 테스트 송신 클라이언트 수
-#define TEST_SEND_COUNT			100		// 클라이언트당 테스트 에코
-#define TEST_PADDING_SIZE		50
-#define TEST_COUNT				10
+//#define TEST_CLIENT_COUNT		1		// 테스트 송신 클라이언트 수
+//#define TEST_SEND_COUNT			100		// 클라이언트당 테스트 에코
+//#define TEST_PADDING_SIZE		50
+//#define TEST_COUNT				10
 
 // Light-Traffic 와이어샤크 캡쳐해서 분석하는 용도
 // #define TEST_CLIENT_COUNT		1			// 테스트 송신 클라이언트 수

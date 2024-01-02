@@ -77,16 +77,16 @@ protected:
 	// 현재 사용중인 블록이 있는지
 	bool HasUsingBlock() { return Arrays::FindIf(m_pBlockUsingCounter, [](const int& count) { return count > 0; }) != Detail::InvalidIndex_v; }
 protected:
-	Int64U m_uiInitAllocted{};		//	MemoryPool::Initialize()시 제일 처음 할당된 메모리양
-	Int64U m_uiNewAlloctaed{};		//	MemoryPool::Initialize()때 할당된 메모리외에! 추가로 새로 할당된 메모리양 (누적)
-	Int64U m_uiTotalUsed{};			//	메모리풀을 얼마나 사용했는지
-	Int64U m_uiTotalReturned{};		//  메모리풀로 얼마나 반환되었는지
-	Int64U m_uiTotalUsing{};		//  현재 얼마나 사용중인지
+	AtomicInt64U m_uiInitAllocted{};		//	MemoryPool::Initialize()시 제일 처음 할당된 메모리양
+	AtomicInt64U m_uiNewAlloctaed{};		//	MemoryPool::Initialize()때 할당된 메모리외에! 추가로 새로 할당된 메모리양 (누적)
+	AtomicInt64U m_uiTotalUsed{};			//	메모리풀을 얼마나 사용했는지
+	AtomicInt64U m_uiTotalReturned{};		//  메모리풀로 얼마나 반환되었는지
+	AtomicInt64U m_uiTotalUsing{};		//  현재 얼마나 사용중인지
 
-	int m_pBlockTotalCounter[Detail::MemoryBlockSizeMapSize_v]{};			// 블록 종류별로 현재 몇개가 있는지 기록
-	int m_pBlockUsedCounter[Detail::MemoryBlockSizeMapSize_v]{};			// 블록 종류별로 몇번 사용되었는지
-	int m_pBlockNewAllocCounter[Detail::MemoryBlockSizeMapSize_v]{};		// 블록 종류별로 몇번 생성 할당되었는지 기록
-	int m_pBlockUsingCounter[Detail::MemoryBlockSizeMapSize_v]{};			// 블록 종류별로 사용중인 블록 수 기록
+	AtomicInt m_pBlockTotalCounter[Detail::MemoryBlockSizeMapSize_v]{};			// 블록 종류별로 현재 몇개가 있는지 기록
+	AtomicInt m_pBlockUsedCounter[Detail::MemoryBlockSizeMapSize_v]{};			// 블록 종류별로 몇번 사용되었는지
+	AtomicInt m_pBlockNewAllocCounter[Detail::MemoryBlockSizeMapSize_v]{};		// 블록 종류별로 몇번 생성 할당되었는지 기록
+	AtomicInt m_pBlockUsingCounter[Detail::MemoryBlockSizeMapSize_v]{};			// 블록 종류별로 사용중인 블록 수 기록
 
 	friend class MemoryPoolAbstract;
 };
