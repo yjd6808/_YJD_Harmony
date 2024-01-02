@@ -17,7 +17,7 @@ NS_JC_BEGIN
 class AutoResetEvent : public WaitHandle
 {
 public:
-    AutoResetEvent(bool initialState, const char* name = nullptr) : WaitHandle(initialState, true, name) {}
+    AutoResetEvent(bool initialState, const char* name = nullptr) : WaitHandle(initialState, false, name) {}
     AutoResetEvent(const AutoResetEvent& other) = delete;
     AutoResetEvent(AutoResetEvent&& other) noexcept;
     ~AutoResetEvent() override = default;
