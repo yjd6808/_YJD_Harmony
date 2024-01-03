@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Sources\Benchmark\Core.cpp" />
+    <ClCompile Include="..\Sources\Benchmark\BufferingPerformance\BufferingPerformance_ClientSide.cpp">
+      <Filter>BufferingPerformance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Benchmark\BufferingPerformance\BufferingPerformance_Common.cpp">
+      <Filter>BufferingPerformance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Benchmark\BufferingPerformance\BufferingPerformance.cpp">
+      <Filter>BufferingPerformance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Benchmark\BufferingPerformance\BufferingPerformance_ServerSide.cpp">
+      <Filter>BufferingPerformance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Benchmark\BufferingWithNagle\BufferingWithNagle_Common.cpp">
+      <Filter>BufferingWithNagle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Benchmark\BufferingWithNagle\BufferingWithNagle.cpp">
+      <Filter>BufferingWithNagle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Benchmark\BufferingWithNagle\BufferingWithNagle_ServerSide.cpp">
+      <Filter>BufferingWithNagle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Benchmark\BufferingWithNagle\BufferingWithNagle_ClientSide.cpp">
+      <Filter>BufferingWithNagle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Benchmark\PacketPooling\PacketPooling_ClientSide.cpp">
+      <Filter>PacketPooling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Benchmark\PacketPooling\PacketPooling_Common.cpp">
+      <Filter>PacketPooling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Benchmark\PacketPooling\PacketPooling_ServerSide.cpp">
+      <Filter>PacketPooling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Benchmark\PacketPooling\PacketPooling.cpp">
+      <Filter>PacketPooling</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\Benchmark\Core.h" />
+    <ClInclude Include="..\Sources\Benchmark\BufferingPerformance\BufferingPerformance_ServerSide.h">
+      <Filter>BufferingPerformance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Benchmark\BufferingPerformance\BufferingPerformance_ClientSide.h">
+      <Filter>BufferingPerformance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Benchmark\BufferingPerformance\BufferingPerformance_Common.h">
+      <Filter>BufferingPerformance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Benchmark\Namespace.h" />
+    <ClInclude Include="..\Sources\Benchmark\Cmdlist.h" />
+    <ClInclude Include="..\Sources\Benchmark\BufferingWithNagle\BufferingWithNagle_ClientSide.h">
+      <Filter>BufferingWithNagle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Benchmark\BufferingWithNagle\BufferingWithNagle_Common.h">
+      <Filter>BufferingWithNagle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Benchmark\BufferingWithNagle\BufferingWithNagle_ServerSide.h">
+      <Filter>BufferingWithNagle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Benchmark\PacketPooling\PacketPooling_ClientSide.h">
+      <Filter>PacketPooling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Benchmark\PacketPooling\PacketPooling_Common.h">
+      <Filter>PacketPooling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Benchmark\PacketPooling\PacketPooling_ServerSide.h">
+      <Filter>PacketPooling</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="BufferingPerformance">
+      <UniqueIdentifier>{32a94c0f-3d30-49bf-bb18-42cd67b583b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BufferingWithNagle">
+      <UniqueIdentifier>{d72074b1-ccd6-49e0-b32f-b3612480f7b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PacketPooling">
+      <UniqueIdentifier>{486b1bab-f1a8-4d14-a710-91d6d39d3189}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

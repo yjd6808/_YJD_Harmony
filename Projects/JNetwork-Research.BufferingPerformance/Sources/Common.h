@@ -12,7 +12,7 @@
 #include <JNetwork/Packet/Command.h>
 
 #define TEST_CLIENT_COUNT		10			// 테스트 송신 클라이언트 수
-#define TEST_SEND_COUNT			10'000		// 클라이언트당 테스트 에코 횟수
+#define TEST_SEND_COUNT			100'000		// 클라이언트당 테스트 에코 횟수
 
  // 테스트 IP:포트
 #define JNET_RESEARCH_CONN_ADDR		"112.163.241.175:9999"
@@ -22,8 +22,6 @@
 #define CMDID_SC_TEST			100
 #define CMDID_CS_TEST			101
 
-// 테스트 완료여부
-extern volatile bool TestFinished_v;
 
 STATIC_CMD_BEGIN(CS_TEST, CMDID_CS_TEST)
 int Seq;
