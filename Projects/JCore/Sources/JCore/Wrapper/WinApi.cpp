@@ -77,7 +77,7 @@ WinApi::CreateEventA(bool initialState, bool manualReset, const char* name) {
 
 Int32UL
 JCORE_STDCALL
-WinApi::WaitForMultipleObjectsEx(JCORE_IN Int32U eventCount, JCORE_IN WinHandle* handles, JCORE_IN bool waitAll, JCORE_IN Int32U timeout, JCORE_IN bool alertable) {
+WinApi::WaitForMultipleObjectsEx(JCORE_IN Int32U eventCount, JCORE_IN WinHandle* handles, JCORE_IN bool waitAll, JCORE_IN Int32U timeout /*= JCORE_INFINITE */, JCORE_IN bool alertable /*= false */) {
     return ::WaitForMultipleObjectsEx(eventCount, handles, waitAll ? TRUE : FALSE, timeout, alertable ? TRUE: FALSE);
 }
 
