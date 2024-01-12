@@ -57,6 +57,18 @@ public:
 		return pMemoryBlock;
 	}
 
+	void* DynamicPop(int requestSize) override {
+		int iIndex = Detail::AllocationLengthMapConverter::ToIndex(requestSize);
+		int iFitSize = Detail::AllocationLengthMapConverter::ToSize(iIndex);
+
+		bool bNewAlloc;
+		void* pMemoryBlock = m_Pool[iIndex]->Pop(bNewAlloc);
+#if DebugMode
+		AddAllocated(iIndex, bNewAlloc);
+#endif
+		return pMemoryBlock;
+	}
+
 	void* DynamicPop(int requestSize, int& realAllocatedSize) override {
 		int iIndex = Detail::AllocationLengthMapConverter::ToIndex(requestSize);
 		int iFitSize = Detail::AllocationLengthMapConverter::ToSize(iIndex);

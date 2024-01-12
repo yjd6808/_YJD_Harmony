@@ -86,6 +86,18 @@ public:
 		return pMemoryBlock;
 	}
 
+	void* DynamicPop(int requestSize) override {
+		bool bNewAlloc;
+		MemoryChunckQueue* pChuckQueue = GetChunckQueue(requestSize);
+		if (pChuckQueue == nullptr) return nullptr;
+		void* pMemoryBlock = pChuckQueue->Pop(bNewAlloc);
+#ifdef DebugMode
+		const int iIndex = Detail::AllocationLengthMapConverter::ToIndex(pChuckQueue->ChunkSize());
+		AddAllocated(iIndex, bNewAlloc);
+#endif
+		return pMemoryBlock;
+	}
+
 	// TODO: 메모리할당 규칙이 Low와 High가 틀리기떄문에 벌어지는 현상이다.
 	//       BinarySearch와 Indexed를 똑같이 사용하기 위해서는 "요청한" 값을 기록해놓고 "요청한" 값을 반납해야한다.
 	//		 예를들어 617 Byte를 요청하면 1024바이트가 실제 할당되는데

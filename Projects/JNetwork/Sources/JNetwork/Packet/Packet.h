@@ -36,10 +36,12 @@ enum class PacketDetailType
 	Raw,
 	Static,
 	Dynamic,
-	Single,
+	SingleStatic,
+	SingleDynamic,
 	CommandBuffer
 };
 
+// 매크로 처리됬기 때문에 라인 디버깅을 할 수가 없기 때문에 상당히 난감해!
 #define JNET_PACKET_POOLING_PARAMS_0()							const JCore::MemoryPoolAbstractPtr& allocator 
 #define JNET_PACKET_POOLING_PARAMS_1(argty1)					const JCore::MemoryPoolAbstractPtr& allocator, argty1 arg1
 #define JNET_PACKET_POOLING_PARAMS_2(argty1, argty2)			const JCore::MemoryPoolAbstractPtr& allocator, argty1 arg1, argty2 arg2
@@ -50,10 +52,10 @@ enum class PacketDetailType
 #define JNET_PACKET_POOLING_ARGS_2(argty1, argty2)				arg1, arg2
 #define JNET_PACKET_POOLING_ARGS_3(argty1, argty2, argty3)		arg1, arg2, arg3
 
-#define JNET_PACKET_POOLING_ARGS_WITH_PACKET_0()							pPacket
-#define JNET_PACKET_POOLING_ARGS_WITH_PACKET_1(argty1)						pPacket, arg1
-#define JNET_PACKET_POOLING_ARGS_WITH_PACKET_2(argty1, argty2)				pPacket, arg1, arg2
-#define JNET_PACKET_POOLING_ARGS_WITH_PACKET_3(argty1, argty2, argty3)		pPacket, arg1, arg2, arg3
+#define JNET_PACKET_POOLING_ARGS_WITH_PACKET_0()							pPacket, allocator
+#define JNET_PACKET_POOLING_ARGS_WITH_PACKET_1(argty1)						pPacket, allocator, arg1
+#define JNET_PACKET_POOLING_ARGS_WITH_PACKET_2(argty1, argty2)				pPacket, allocator, arg1, arg2
+#define JNET_PACKET_POOLING_ARGS_WITH_PACKET_3(argty1, argty2, argty3)		pPacket, allocator, arg1, arg2, arg3
 
 #define JNET_PACKET_POOLING_PARAMS(...)							JCORE_EXPAND_1(JCORE_CONCAT_2(JNET_PACKET_POOLING_PARAMS_, JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__))
 #define JNET_PACKET_POOLING_ARGS(...)							JCORE_EXPAND_1(JCORE_CONCAT_2(JNET_PACKET_POOLING_ARGS_,   JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__))
@@ -67,7 +69,6 @@ static TPacket* Create(JNET_PACKET_POOLING_PARAMS(__VA_ARGS__)) {							\
 	int _;																					\
 	TPacket* pPacket = (TPacket*)allocator->DynamicPop(sizeof(TPacket), _);					\
 	JCore::Memory::PlacementNew(JNET_PACKET_POOLING_ARGS_WITH_PACKET(__VA_ARGS__));			\
-	pPacket->m_Allocator = allocator;														\
 	return pPacket;																			\
 }
 
@@ -97,6 +98,7 @@ void ReleaseAction() override {															\
 struct IPacket : JCore::RefCountObject
 {
 	IPacket() = default;
+	IPacket(const JCore::MemoryPoolAbstractPtr& allocator) : m_Allocator(allocator) {}
 	~IPacket() override = default;
 
 	virtual WSABUF GetWSABuf() const = 0;
@@ -113,6 +115,11 @@ struct RawPacket : IPacket
 	using TPacket = RawPacket;
 
 	RawPacket(char* data, int len) {
+		buf.buf = data;
+		buf.len = len;
+	}
+
+	RawPacket(const JCore::MemoryPoolAbstractPtr& allocator, char* data, int len) : IPacket(allocator) {
 		buf.buf = data;
 		buf.len = len;
 	}
@@ -151,9 +158,16 @@ private:
 
 struct CommandPacket : IPacket
 {
-	CommandPacket() {}
+	CommandPacket() = default;
+	CommandPacket(const JCore::MemoryPoolAbstractPtr& allocator) : IPacket(allocator) {}
+
 	CommandPacket(CmdCnt_t iCommandCount, PktLen_t iPacketLen)
 		: m_iCommandCount(iCommandCount)
+		, m_iPacketLen(iPacketLen) {
+	}
+	CommandPacket(const JCore::MemoryPoolAbstractPtr& allocator, CmdCnt_t iCommandCount, PktLen_t iPacketLen)
+		: IPacket(allocator)
+		, m_iCommandCount(iCommandCount)
 		, m_iPacketLen(iPacketLen) {
 	}
 
@@ -242,12 +256,15 @@ class StaticPacket : public CommandPacket
 	using TPacket = StaticPacket<CommandArgs...>;
 public:
 	StaticPacket() : CommandPacket(CommandCount, PacketLen) {
-
 		// m_pBuf에 각 커맨드의 시작주소 마다 디폴트 초기화를 수행해준다.
 		// 예를들어서 Packet<Commant<A>, GenericCommand<B>> 패킷을 생성했다면
 		// 
 		// m_pBuf + 0		  에다가 A를 디폴트 초기화하고
 		// m_pBuf + sizeof(A) 에다가 B를 디폴트 초기화하도록 한다.
+		PlacementDefaultAllocateRecursive<CommandCount - 1, CommandArgs...>();
+	}
+
+	StaticPacket(const JCore::MemoryPoolAbstractPtr& allocator) : CommandPacket(allocator, CommandCount, PacketLen) {
 		PlacementDefaultAllocateRecursive<CommandCount - 1, CommandArgs...>();
 	}
 
@@ -330,10 +347,11 @@ private:
 
 								 따이나믹 패킷 : 가변크기의 커맨드들을 담는 녀석
 
-  현재 사용금지, count가 0인 경우에 대해서 Placement New 수행시 메모리 커럽션 발생 문제가 생길 수 있음
+  TODO: 현재 사용금지, count가 0인 경우에 대해서 Placement New 수행시 메모리 커럽션 발생 문제가 생길 수 있음
   SinglePacket에 대해서는 해당 문제를 수정했으므로 그걸 사용하도록 할 것
   시간이 촉박하고 따이나믹 패킷을 복수로 보내는일은 아직까진 없었으므로.. 수정하진 않는다.
   추후 사용하게 된다면 필히 수정 후 사용할 것!!!
+  이걸 해결할려면 다이나믹 커맨드의 CountableObject 배열의 크기를 0으로 설정해놓도록 해야한다.
   ===================================================================================== */
 template <typename... CommandArgs>
 class DynamicPacket : public CommandPacket
@@ -343,8 +361,10 @@ class DynamicPacket : public CommandPacket
 	template <int Index>
 	using TypeAt = JCore::IndexOf_t<Index, CommandArgs...>;	 // 인자로 전달받은 커맨드 타입
 	using TPacket = DynamicPacket<CommandArgs...>;
+
 public:
-	template <typename... Ints>
+	// Ints가 모두 정수형일 때만 동작하도록 한다.
+	template <typename... Ints, typename = JCore::DefaultEnableIf_t<JCore::IsAllUnaryTrue_v<JCore::Detail::IsIntegerType, Ints...>>>
 	DynamicPacket(Ints... counts) : CommandPacket() {
 		static_assert(CommandCount == sizeof...(counts), "... Invalid command size count");
 		const int iPacketLen = (... + counts);
@@ -356,8 +376,26 @@ public:
 
 		ConstructRecursive<0>(counts...);
 	}
+
+	template <typename... Ints, typename = JCore::DefaultEnableIf_t<JCore::IsAllUnaryTrue_v<JCore::Detail::IsIntegerType, Ints...>>>
+	DynamicPacket(const JCore::MemoryPoolAbstractPtr& allocator, Ints... counts) : CommandPacket(allocator) {
+		static_assert(CommandCount == sizeof...(counts), "... Invalid command size count");
+		const int iPacketLen = (... + counts);
+		InitializeCountRecursive<0>(counts...);
+
+		this->m_iPacketLen = m_CmdEndPos[CommandCount];
+		this->m_iCommandCount = CommandCount;
+		this->m_pDynamicBuf = allocator->DynamicPop(PacketHeaderSize_v + this->m_iPacketLen);
+
+		ConstructRecursive<0>(counts...);
+	}
+
 	~DynamicPacket() override {
-		JCORE_DELETE_ARRAY_SAFE(m_pDynamicBuf);
+		if (m_Allocator.Exist()) {
+			m_Allocator->DynamicPush(m_pDynamicBuf, PacketHeaderSize_v + this->m_iPacketLen);
+		} else {
+			JCORE_DELETE_ARRAY_SAFE(m_pDynamicBuf);
+		}
 	}
 
 	JNET_PACKET_POOLING_CREATE()
@@ -403,24 +441,47 @@ private:
 
 	template <int Index, typename... Ints>
 	void InitializeCountRecursive(int count, Ints... counts) {
-
 		int iSize = TypeAt<Index>::_Size(count);
 
 		if constexpr (Index > 0) {
 			iSize += m_CmdEndPos[Index];
 		}
+
 		m_CmdEndPos[Index + 1] = iSize;
 		InitializeCountRecursive<Index + 1>(counts...);
 	}
 
 	template <int Index>
 	void ConstructRecursive(int count) {
-		:: new (Get<Index>()) TypeAt<Index>(count);
+		using TCommand = TypeAt<Index>;
+		using TCountableElement = typename TCommand::TCountableElement;
+
+		TCommand* pCmd = Get<Index>();
+		:: new (pCmd) TCommand(count);
+
+		if constexpr (TCommand::ConstructCountableElement) {
+			for (int i = 0; i < count - 1; ++i) {
+				char* pCountableElementPos = reinterpret_cast<char*>(pCmd) + sizeof(TCommand) + sizeof(TCountableElement) * i;
+				JCore::Memory::PlacementNew(*reinterpret_cast<TCountableElement*>(pCountableElementPos));
+			}
+		}
 	}
 
 	template <int Index, typename... Ints>
 	void ConstructRecursive(int count, Ints... counts) {
-		:: new (Get<Index>()) TypeAt<Index>(count);
+		using TCommand = TypeAt<Index>;
+		using TCountableElement = typename TCommand::TCountableElement;
+
+		TCommand* pCmd = Get<Index>();
+		:: new (pCmd) TCommand(count);
+
+		if constexpr (TCommand::ConstructCountableElement) {
+			for (int i = 0; i < count - 1; ++i) {
+				char* pCountableElementPos = reinterpret_cast<char*>(pCmd) + sizeof(TCommand) + sizeof(TCountableElement) * i;
+				JCore::Memory::PlacementNew(*reinterpret_cast<TCountableElement*>(pCountableElementPos));
+			}
+		}
+
 		ConstructRecursive<Index + 1>(counts...);
 	}
 
@@ -449,6 +510,7 @@ class CommandBufferPacket : public CommandPacket
 	using TPacket = CommandBufferPacket;
 public:
 	CommandBufferPacket(const CommandBufferPtr& buffer);
+	CommandBufferPacket(const JCore::MemoryPoolAbstractPtr& allocator, const CommandBufferPtr& buffer);
 
 	JNET_PACKET_POOLING_CREATE(const CommandBufferPtr&)
 	JNET_PACKET_POOLING_RELEASE(CommandBufferPacket)
@@ -469,30 +531,87 @@ private:
 							   싱글 패킷 (커맨드 한개만 전송하는 용도)
 							   다이나믹, 스태릭 커맨드 아무거나 가능
 
- TODO: 다이나믹 버퍼는 메모리풀에서 할당받도록 하는게 좋아보인다.
+ TODO[완료]: 다이나믹 버퍼는 메모리풀에서 할당받도록 하는게 좋아보인다.
  ===================================================================================== */
+template <typename TCommand, bool IsStatic = TCommand::IsStatic>
+class SinglePacket;
+
+// 스타릭 커맨드 전용
 template <typename TCommand>
-class SinglePacket : public CommandPacket
-{
+class SinglePacket<TCommand, true> : public CommandPacket {
 	static_assert(JCore::IsBaseOf_v<ICommand, TCommand>, "... TCommand must be derived type of \"ICommand\""); // 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
 	using TPacket = SinglePacket<TCommand>;
 public:
-	SinglePacket() : SinglePacket(1, true) {}
-	SinglePacket(int count, bool noCount = false)
-		: CommandPacket(1, TCommand::_Size(count)) // 실제 보낼 패킷데이터 크기(m_iPacketLen)만큼만 보내기 위해서 m_iPacketLen은 올바르게 설정해줘야한다.
-		, m_pDynamicBuf(dbg_new char[PacketHeaderSize_v + TCommand::_Size(count <= 0 ? 1 : count)])	// count가 0일 경우 구조체 일부가 잘리기 때문에 PlacementNew 수행시 메모리 커럽션이 발생하게 된다. 따라서 생성시에는 count가 0이더라도 1로 가정하고 처리하도록 한다.
+	// count와 noCount 매개변수는 다이나믹 커맨드 처리를 위해 특수화된 SinglePacket과의 호환성을 위해 둔 것이다.
+	SinglePacket(int count = 1)
+		: CommandPacket(1, sizeof(TCommand))
+		, Cmd(*reinterpret_cast<TCommand*>(m_pBuf + PacketHeaderSize_v))
+	{
+		JCore::Memory::PlacementNew(Cmd);
+	}
+
+	SinglePacket(const JCore::MemoryPoolAbstractPtr& allocator, int count)
+		: CommandPacket(allocator, 1, sizeof(TCommand))
+		, Cmd(*reinterpret_cast<TCommand*>(m_pBuf + PacketHeaderSize_v))
+	{
+		JCore::Memory::PlacementNew(Cmd);
+	}
+
+	JNET_PACKET_POOLING_CREATE()
+	JNET_PACKET_POOLING_CREATE(int)
+	JNET_PACKET_POOLING_RELEASE(SinglePacket)
+
+	WSABUF GetWSABuf() const override {
+		*(CmdCnt_t*)(m_pBuf + 0) = m_iCommandCount;
+		*(PktLen_t*)(m_pBuf + sizeof(CmdCnt_t)) = m_iPacketLen;
+
+		WSABUF wsaBuf;
+		wsaBuf.len = PacketHeaderSize_v + m_iPacketLen;
+		wsaBuf.buf = (char*)m_pBuf;
+		return wsaBuf;
+	}
+
+	int SizeOf() const override { return sizeof(TPacket); }
+	char* GetCommandSource() const override { return const_cast<char*>(m_pBuf) + PacketHeaderSize_v; }
+	PacketDetailType GetDetailType() const override { return PacketDetailType::SingleStatic; }
+	TCommand& Cmd;
+private:
+	char m_pBuf[PacketHeaderSize_v + sizeof(TCommand)];
+};
+
+// 다이나믹 커맨드 전용
+template <typename TCommand>
+class SinglePacket<TCommand, false> : public CommandPacket {
+	static_assert(JCore::IsBaseOf_v<ICommand, TCommand>, "... TCommand must be derived type of \"ICommand\""); // 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
+	using TPacket = SinglePacket<TCommand>;
+	using TCountableElement = typename TCommand::TCountableElement;
+public:
+	SinglePacket(int count) : SinglePacket(nullptr, count) {}
+	SinglePacket(const JCore::MemoryPoolAbstractPtr& allocator, int count)
+		// 실제 보낼 패킷데이터 크기(m_iPacketLen)만큼만 보내기 위해서 m_iPacketLen은 올바르게 설정해줘야한다.
+		: CommandPacket(allocator, 1, TCommand::_Size(count)) 
+		// count가 0일 경우 구조체 일부가 잘리기 때문에 PlacementNew 수행시 메모리 커럽션이 발생하게 된다. 따라서 생성시에는 count가 0이더라도 1로 가정하고 처리하도록 한다.
+		, m_pDynamicBuf(allocator.Exist() ? (char*)allocator->DynamicPop(PacketHeaderSize_v + TCommand::_Size(count <= 0 ? 1 : count)) : dbg_new char[PacketHeaderSize_v + TCommand::_Size(count <= 0 ? 1 : count)])
 		, Cmd(*reinterpret_cast<TCommand*>(m_pDynamicBuf + PacketHeaderSize_v))
 	{
-		// 다이나믹 커맨드인데 count 인자를 명시적으로 전달안한 경우
-		if (JCore::IsBaseOf_v<DynamicCommand, TCommand> && noCount) {
-			DebugAssertMsg(false, "다이나맥 커맨드는 명시적으로 count 인자를 전달해줘야합니다.");
-		}
-
 		// m_pDynamicBuf가 최소 sizeof(TCommand)보다는 커야지 메모리 커럽션이 발생하지 않는다.
 		JCore::Memory::PlacementNew(Cmd, count);
+
+		// CountableObject에 대해서 count만큼 생성자 호출을 수행해줘야한다.
+		if constexpr (TCommand::ConstructCountableElement) {
+			for (int i = 0; i < count - 1; ++i) {
+				char* pCountableElementPos = reinterpret_cast<char*>(&Cmd) + sizeof(Cmd) + sizeof(TCountableElement) * i;
+				JCore::Memory::PlacementNew(*reinterpret_cast<TCountableElement*>(pCountableElementPos));
+			}
+		}
 	}
+
 	~SinglePacket() override {
-		JCORE_DELETE_ARRAY_SAFE(m_pDynamicBuf);
+		if (m_Allocator.Exist()) {
+			m_Allocator->DynamicPush(m_pDynamicBuf, PacketHeaderSize_v + TCommand::_Size(Cmd.Count <= 0 ? 1 : Cmd.Count));
+		} else {
+			JCORE_DELETE_ARRAY_SAFE(m_pDynamicBuf);
+		}
 	}
 
 	JNET_PACKET_POOLING_CREATE()
@@ -511,7 +630,7 @@ public:
 
 	int SizeOf() const override { return sizeof(TPacket); }
 	char* GetCommandSource() const override { return const_cast<char*>(m_pDynamicBuf) + PacketHeaderSize_v; }
-	PacketDetailType GetDetailType() const override { return PacketDetailType::Single; }
+	PacketDetailType GetDetailType() const override { return PacketDetailType::SingleDynamic; }
 
 	// @참고: https://stackoverflow.com/questions/2669888/initialization-order-of-class-data-members
 	// 클래스 필드는 배열한 순서대로 초기화가 이뤄진다.
@@ -519,6 +638,7 @@ public:
 	char* m_pDynamicBuf;
 	TCommand& Cmd;
 };
+
 
 using ISendPacketPtr = JCore::SharedPtr<IPacket>;
 using ISendPacketGuard = JCore::RefCountObjectPtr<IPacket>;

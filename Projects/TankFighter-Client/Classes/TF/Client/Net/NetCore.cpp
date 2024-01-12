@@ -59,6 +59,7 @@ void NetCore::initializeHost() {
 
 	if (m_spGameClient->ConnectAsync(IPv4EndPoint::Parse(Const::Net::Server::GameConnectEndPoint))) {
 		S_GAME::SetInformation(m_spGameClient.GetPtr(), SendStrategy::SendAsync);
+		S_GAME::SetMemoryPool(m_spBufferPool);	// 세션 버퍼 크기가 커맨드크기보다 훨씬 크기때문에 경합이 없으므로 같이써도 ㄱㅊ
 	}
 }
 

@@ -160,6 +160,7 @@ NS_JNET_END
 
 #pragma pack(pop)	// #pragma pack(push, CMD_ALIGNMENT)
 
+
 /*=====================================================================================
 								 커맨드 생성 규칙
 					  아래 규칙에 맞게 커맨드를 생성토록 한다.
@@ -180,21 +181,26 @@ struct __struct__ : JNetwork::StaticCommand {						\
 	CMD_FUNCSIG_SIZE	{ return sizeof(__struct__); }				\
 	CMD_FUNCSIG_NAME	{ return #__struct__; }						\
 	CMD_FUNCSIG_COMMAND { return __cmd__; }							\
-	
+
 #define STATIC_CMD_END };
 
 
 // @https://stackoverflow.com/questions/35196871/what-is-the-optimal-order-of-members-in-a-class
-#define DYNAMIC_CMD_BEGIN(__struct__, __cmd__, __countable_elem_type__)									\
-struct __struct__ : JNetwork::DynamicCommand {															\
-	__struct__(int count) {																				\
-		Type = JNetwork::CmdType::Dynamic;																\
-		Cmd = __cmd__;																					\
-		CmdLen = sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);					\
-		Count = count;																					\
-	}																									\
-	CMD_FUNCSIG_SIZE { return sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);}		\
-	CMD_FUNCSIG_NAME { return #__struct__; }															\
-	CMD_FUNCSIG_COMMAND { return __cmd__; }																\
+#define DYNAMIC_CMD_BEGIN(...)		JCORE_CONCAT_ARGS(DYNAMIC_CMD_BEGIN_IMPL_, JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__)
+#define DYNAMIC_CMD_BEGIN_IMPL_3(__struct__, __cmd__, __countable_elem_type__) DYNAMIC_CMD_BEGIN_IMPL_4(__struct__, __cmd__, __countable_elem_type__, true)
+#define DYNAMIC_CMD_BEGIN_IMPL_4(__struct__, __cmd__, __countable_elem_type__, __construct_countable_elem__)	\
+struct __struct__ : JNetwork::DynamicCommand {																	\
+	using TCountableElement = __countable_elem_type__;															\
+	static constexpr bool ConstructCountableElement = __construct_countable_elem__;								\
+																												\
+	__struct__(int count) {																						\
+		Type = JNetwork::CmdType::Dynamic;																		\
+		Cmd = __cmd__;																							\
+		CmdLen = sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);							\
+		Count = count;																							\
+	}																											\
+	CMD_FUNCSIG_SIZE { return sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);}				\
+	CMD_FUNCSIG_NAME { return #__struct__; }																	\
+	CMD_FUNCSIG_COMMAND { return __cmd__; }																		\
 
 #define DYNAMIC_CMD_END	};

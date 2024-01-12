@@ -75,6 +75,7 @@ struct SendHelper : SendHelperBase
 		Session* Sender = nullptr;
 		SendStrategy Strategy = SendStrategy::SendAsync;
 		IPv4EndPoint Destination;
+		JCore::MemoryPoolAbstractPtr MemPool;
 	};
 
 	struct AutoFlush
@@ -85,18 +86,18 @@ struct SendHelper : SendHelperBase
 
 	template <typename TCommand>
 	static TSending<TCommand> SendBegin() {
-		return SendBegin<TCommand>(1, true);
+		return SendBegin<TCommand>(1);
 	}
 
 	template <typename TCommand>
-	static TSending<TCommand> SendBegin(int count, bool noCount = false) {
+	static TSending<TCommand> SendBegin(int count) {
 		DebugAssertMsg(SendInformation.Sender, "샌더가 설정되어있지 않습니다.");
 
 		if (SendInformation.Strategy == SendStrategy::SendAlloc) {
 			return TSending<TCommand>(SendInformation.Sender->template SendAlloc<TCommand>(count), nullptr);
 		}
 
-		auto pPacket = dbg_new SinglePacket<TCommand>(count, noCount);	// 해제는 소멸자에서함
+		auto pPacket = SinglePacket<TCommand>::Create(SendInformation.MemPool, count);	// 해제는 소멸자에서함
 		return TSending<TCommand>(pPacket->Cmd, pPacket);
 	}
 
@@ -121,7 +122,9 @@ struct SendHelper : SendHelperBase
 		SendInformation.Destination = destination;
 	}
 
-	
+	static void SetMemoryPool(const JCore::MemoryPoolAbstractPtr& memPool) {
+		SendInformation.MemPool = memPool;
+	}
 
 	static bool SendEnd(IPacket* packet) {
 		if (SendInformation.Sender == nullptr) {

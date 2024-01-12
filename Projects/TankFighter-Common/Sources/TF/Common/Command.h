@@ -361,7 +361,7 @@ STATIC_CMD_BEGIN(SC_BattleFieldLeave, CMDID_SC_BATTLE_FIELD_LEAVE)
 int CharacterPrimaryKey = Const::InvalidValue;
 STATIC_CMD_END
 
-DYNAMIC_CMD_BEGIN(CS_ChatMessage, CMDID_CS_CHAT_MESSAGE, JCore::StaticString<1>)
+DYNAMIC_CMD_BEGIN(CS_ChatMessage, CMDID_CS_CHAT_MESSAGE, JCore::StaticString<1>, false)
 PlayerState PlayerState;
 JCore::StaticString<1> Message;
 DYNAMIC_CMD_END

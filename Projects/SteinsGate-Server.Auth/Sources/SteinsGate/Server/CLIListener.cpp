@@ -12,7 +12,7 @@
 
 
 CLIListener::CLIListener() {
-	m_Table.Insert("example",		JCORE_CALLBACK_2(CLIListener::CLI_Example, this));
+	m_Table.Insert("example", JCORE_CALLBACK_2(CLIListener::CLI_Example, this));
 }
 
 bool CLIListener::OnInputProcessing(int argc, JCore::String* argv) {

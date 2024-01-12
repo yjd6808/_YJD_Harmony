@@ -52,8 +52,8 @@ template <>
 struct Command<InterServerCmdType::HostDynamic> : ICommand, DynamicCommandBase
 {
 	static constexpr bool IsValid = true;
-	static constexpr bool IsDynamic = false;
-	static constexpr bool IsStatic = true;
+	static constexpr bool IsDynamic = true;
+	static constexpr bool IsStatic = false;
 	static constexpr bool IsRelay = false;
 	static constexpr bool IsHost = true;
 };
@@ -72,8 +72,8 @@ template <>
 struct Command<InterServerCmdType::RelayDynamic> : ICommand, RelayCommandBase, DynamicCommandBase
 {
 	static constexpr bool IsValid = true;
-	static constexpr bool IsDynamic = false;
-	static constexpr bool IsStatic = true;
+	static constexpr bool IsDynamic = true;
+	static constexpr bool IsStatic = false;
 	static constexpr bool IsRelay = true;
 	static constexpr bool IsHost = false;
 };
@@ -134,16 +134,21 @@ struct __struct__ : HostStaticCommand {															\
 #define HOST_STATIC_CMD_END };
 
 
-#define HOST_DYNAMIC_CMD_BEGIN(__struct__, __cmd__, __countable_elem_type__)							\
-struct __struct__ : HostDynamicCommand {																\
-	__struct__(int count) {																				\
-		Type = InterServerCmdType::HostDynamic;															\
-		Cmd = __cmd__;																					\
-		CmdLen = sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);					\
-		Count = count;																					\
-	}																									\
-	CMD_FUNCSIG_SIZE	{ return sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);}	\
-	CMD_FUNCSIG_NAME	{ return #__struct__; }															\
+#define HOST_DYNAMIC_CMD_BEGIN(...)		JCORE_CONCAT_ARGS(HOST_DYNAMIC_CMD_BEGIN_IMPL_, JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__)
+#define HOST_DYNAMIC_CMD_BEGIN_IMPL_3(__struct__, __cmd__, __countable_elem_type__) HOST_DYNAMIC_CMD_BEGIN_IMPL_4(__struct__, __cmd__, __countable_elem_type__, true)
+#define HOST_DYNAMIC_CMD_BEGIN_IMPL_4(__struct__, __cmd__, __countable_elem_type__, __construct_countable_elem__)	\
+struct __struct__ : HostDynamicCommand {																			\
+	using TCountableElement = __countable_elem_type__;																\
+	static constexpr bool ConstructCountableElement = __construct_countable_elem__;									\
+																													\
+	__struct__(int count) {																							\
+		Type = InterServerCmdType::HostDynamic;																		\
+		Cmd = __cmd__;																								\
+		CmdLen = sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);								\
+		Count = count;																								\
+	}																												\
+	CMD_FUNCSIG_SIZE	{ return sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);}				\
+	CMD_FUNCSIG_NAME	{ return #__struct__; }																		\
 	CMD_FUNCSIG_COMMAND { return __cmd__; }																		
 
 #define HOST_DYNAMIC_CMD_END	};
@@ -163,8 +168,13 @@ struct __struct__ : RelayStaticCommand {								\
 #define RELAY_STATIC_CMD_END };
 
 
-#define RELAY_DYNAMIC_CMD_BEGIN(__struct__, __cmd__, __countable_elem_type__)								\
+#define RELAY_DYNAMIC_CMD_BEGIN(...)		JCORE_CONCAT_ARGS(RELAY_DYNAMIC_CMD_BEGIN_IMPL_, JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__)
+#define RELAY_DYNAMIC_CMD_BEGIN_IMPL_3(__struct__, __cmd__, __countable_elem_type__) RELAY_DYNAMIC_CMD_BEGIN_IMPL_4(__struct__, __cmd__, __countable_elem_type__, true)
+#define RELAY_DYNAMIC_CMD_BEGIN_IMPL_4(__struct__, __cmd__, __countable_elem_type__, __construct_countable_elem__)	\
 struct __struct__ : RelayDynamicCommand {																	\
+	using TCountableElement = __countable_elem_type__;														\
+	static constexpr bool ConstructCountableElement = __construct_countable_elem__;							\
+																											\
 	__struct__(int count) {																					\
 		Type = InterServerCmdType::RelayDynamic;															\
 		Cmd = __cmd__;																						\

@@ -32,6 +32,7 @@ public:
 
 	virtual void Initialize(const HashMap<int, int>& allocationMap) = 0;
 	virtual void Finalize() = 0;
+	virtual void* DynamicPop(int requestSize) = 0;	// 요청한 바이트 크기
 	virtual void* DynamicPop(int requestSize, int& realAllocatedSize) = 0;	// 요청한 바이트 크기와 반환된 바이트 크기
 	virtual void DynamicPush(void* memory, int returnSize) = 0;
 	virtual int Algorithm() = 0;

@@ -39,5 +39,10 @@ CommandBufferPacket::CommandBufferPacket(const CommandBufferPtr& buffer)
 	, m_Buffer(buffer)
 {}
 
+CommandBufferPacket::CommandBufferPacket(const JCore::MemoryPoolAbstractPtr& allocator, const CommandBufferPtr& buffer)
+	: CommandPacket(allocator, buffer->GetCommandCount(), buffer->GetPacketLength())
+	, m_Buffer(buffer)
+{}
+
 
 NS_JNET_END
