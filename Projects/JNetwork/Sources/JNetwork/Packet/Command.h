@@ -9,6 +9,8 @@
 #pragma once
 
 #include <JCore/Type.h>
+#include <JCore/Macro.h>
+#include <JCore/Memory.h>
 #include <JCore/TypeTraits.h>
 
 #include <JNetwork/Namespace.h>
@@ -147,6 +149,15 @@ using DynamicCommand = Command<CmdType::Dynamic>;
 	struct IsStaticCommand : JCore::IntegralConstant<bool, JCore::IsBaseOf_v<Staticity, T>> {};
 	template<typename T>
 	struct IsDynamicCommand : JCore::IntegralConstant<bool, JCore::IsBaseOf_v<Dynamicity, T>> {};
+
+	template<typename TCommand>
+	struct HasDynamicFiled
+	{
+		template <typename = JCore::DefaultEnableIf_t<std::is_union_v<TCommand::__ZeroSizeArray__>>>
+		static constexpr bool Check(int*) { return true; }
+		static constexpr bool Check(...) { return false; }
+		static constexpr bool Value = Check(nullptr);
+	};
 	NS_DETAIL_END
 
 template <typename T>
@@ -154,6 +165,9 @@ constexpr bool IsStaticCommand_v = Detail::IsStaticCommand<T>::Value;
 
 template <typename T>
 constexpr bool IsDynamicCommand_v = Detail::IsDynamicCommand<T>::Value;
+
+template <typename TCommand>
+constexpr bool HasDynamicField_v = Detail::HasDynamicFiled<TCommand>::Value;
 
 
 NS_JNET_END
@@ -166,21 +180,71 @@ NS_JNET_END
 					  아래 규칙에 맞게 커맨드를 생성토록 한다.
  =====================================================================================*/
 
-#define CMD_FUNCSIG_SIZE	static constexpr int _Size(int count = 1)
-#define CMD_FUNCSIG_NAME	static constexpr const char* _Name()
-#define CMD_FUNCSIG_COMMAND static constexpr int _Command()
+
+// 올바른 커맨드인지 체크하는 기능
+// 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
+#define CMD_CHECK_BASE_OF_COMMAND(command)					static_assert(JCore::IsBaseOf_v<JNetwork::ICommand, command>, "... " #command " must be derived type of ICommand"); 
+// 스타릭 커맨드는 무조건 통과, 다이나믹 커맨드일 경우 다이나믹 필드가 있는지 체크
+#define DYNAMIC_CMD_CHECK_ZERO_SIZE_ARRAY_FIELD(command)	static_assert(JCore::Or_v<JNetwork::IsStaticCommand_v<command>, JCore::And_v<JNetwork::IsDynamicCommand_v<command>, JNetwork::HasDynamicField_v<command>>>, "... " #command " has no zero size array field");
+
+
+// 스타릭 커맨드, 다이나믹 커맨드 공통 함수 정의
+// count = 0으로 둔 이유는 static cmmand와 dynamic command간 상호호환을 위해서이다.
+#define CMD_FUNC_DEF_NAME(struct)		static constexpr const char* _Name() { return #struct; }
+#define CMD_FUNC_DEF_COMMAND(cmd)		static constexpr int _Command() { return cmd; }
+#define CMD_FUNC_DEF_SIZE(...) 			JCORE_CONCAT_ARGS(CMD_FUNC_DEF_SIZE_, JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__)
+#define CMD_FUNC_DEF_SIZE_1(struct)		static constexpr int _Size(int count = 0) { return sizeof(struct); } // static command 전용
+#define CMD_FUNC_DEF_SIZE_2(struct, countable_elem_type) static constexpr int _Size(int count) { return sizeof(struct) + sizeof(countable_elem_type) * count; }		// dynamic command 전용
+#define CMD_FUNC_DEF_CONSTRUCT(...)		JCORE_CONCAT_ARGS(CMD_FUNC_DEF_CONSTRUCT_, JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__)
+#define CMD_FUNC_DEF_CONSTRUCT_1(struct)	static void _Construct(void* p, int count = 0) { return JCore::Memory::PlacementNew(*static_cast<struct*>(p)); }
+#define CMD_FUNC_DEF_CONSTRUCT_2(struct, countable_elem_type) static void _Construct(void* p, int count) {		\
+	JCore::Memory::PlacementNew(*static_cast<struct*>(p), count);															\
+	if constexpr (ConstructCountableElement) {																				\
+		for (int i = 0; i < count; ++i) {																					\
+			void* pCountableElementPos = static_cast<char*>(p) + sizeof(struct) + sizeof(countable_elem_type) * i;			\
+			JCore::Memory::PlacementNew(*static_cast<TCountableElement*>(pCountableElementPos));							\
+		}																													\
+	}																														\
+}
+
+
+// 다이나믹 커맨드 공통 기능 정의
+#define DYNAMIC_CMD_USING_COUNTABLE_ELEMENT(element_type)			using TCountableElement = element_type;
+#define DYNAMIC_CMD_DECL_COUNTABLE_ELEMENT(contruct_countable_elem)	static constexpr bool ConstructCountableElement = contruct_countable_elem;
+#define DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(elem_name)	\
+union __ZeroSizeArray__ {									\
+	__ZeroSizeArray__() {}									\
+	~__ZeroSizeArray__() {}									\
+	TCountableElement elem_name;							\
+} Object[0];												\
+															\
+TCountableElement* elem_name() {							\
+	if (Count <= 0) {										\
+		return nullptr;										\
+	}														\
+	return &Object[0].##elem_name;							\
+}															\
+															\
+TCountableElement& elem_name##At(int idx) {					\
+	if (idx < 0 || idx >= Count) {							\
+		DebugAssertMsg(false, "%s 커맨드의 다이나믹 필드 갯수가 %d인데 %d인덱스에 접근을 시도했습니다.", _Name(), Count, idx); \
+		throw JCore::OutOfRangeException("");				\
+	}														\
+	return Object[idx].##elem_name;							\
+}
 
 #define STATIC_CMD_BEGIN(__struct__, __cmd__)						\
 struct __struct__ : JNetwork::StaticCommand {						\
-	__struct__(int count = 1) {										\
+	__struct__(int count = 0) {										\
 		Type = JNetwork::CmdType::Static;							\
 		Cmd = __cmd__;												\
 		CmdLen = sizeof(__struct__);								\
 	}																\
 																	\
-	CMD_FUNCSIG_SIZE	{ return sizeof(__struct__); }				\
-	CMD_FUNCSIG_NAME	{ return #__struct__; }						\
-	CMD_FUNCSIG_COMMAND { return __cmd__; }							\
+	CMD_FUNC_DEF_NAME(__struct__)									\
+	CMD_FUNC_DEF_COMMAND(__cmd__)									\
+	CMD_FUNC_DEF_SIZE(__struct__)									\
+	CMD_FUNC_DEF_CONSTRUCT(__struct__)								
 
 #define STATIC_CMD_END };
 
@@ -190,17 +254,19 @@ struct __struct__ : JNetwork::StaticCommand {						\
 #define DYNAMIC_CMD_BEGIN_IMPL_3(__struct__, __cmd__, __countable_elem_type__) DYNAMIC_CMD_BEGIN_IMPL_4(__struct__, __cmd__, __countable_elem_type__, true)
 #define DYNAMIC_CMD_BEGIN_IMPL_4(__struct__, __cmd__, __countable_elem_type__, __construct_countable_elem__)	\
 struct __struct__ : JNetwork::DynamicCommand {																	\
-	using TCountableElement = __countable_elem_type__;															\
-	static constexpr bool ConstructCountableElement = __construct_countable_elem__;								\
+	DYNAMIC_CMD_USING_COUNTABLE_ELEMENT(__countable_elem_type__)												\
+	DYNAMIC_CMD_DECL_COUNTABLE_ELEMENT(__construct_countable_elem__)											\
 																												\
 	__struct__(int count) {																						\
 		Type = JNetwork::CmdType::Dynamic;																		\
 		Cmd = __cmd__;																							\
-		CmdLen = sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);							\
+		CmdLen = _Size(count);																					\
 		Count = count;																							\
 	}																											\
-	CMD_FUNCSIG_SIZE { return sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);}				\
-	CMD_FUNCSIG_NAME { return #__struct__; }																	\
-	CMD_FUNCSIG_COMMAND { return __cmd__; }																		\
+																												\
+	CMD_FUNC_DEF_NAME(__struct__)																				\
+	CMD_FUNC_DEF_COMMAND(__cmd__)																				\
+	CMD_FUNC_DEF_SIZE(__struct__, __countable_elem_type__)														\
+	CMD_FUNC_DEF_CONSTRUCT(__struct__, __countable_elem_type__)													
 
 #define DYNAMIC_CMD_END	};

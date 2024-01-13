@@ -27,7 +27,7 @@ struct Dummy
 DYNAMIC_CMD_BEGIN(DynamicMessage, Cmd_DynamicMessage, char)
 Dummy dmg;
 long long d = 4;
-char Msg[1];
+DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(Msg)
 DYNAMIC_CMD_END
 
 #pragma pack(pop)	// #pragma pack(push, CMD_ALIGNMENT)

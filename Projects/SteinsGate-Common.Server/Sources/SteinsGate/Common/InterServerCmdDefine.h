@@ -39,41 +39,33 @@ NS_JNET_BEGIN
 struct RelayCommandBase { Int8 From = -1; Int8 To = -1; };
 
 template <>
-struct Command<InterServerCmdType::HostStatic> : ICommand
+struct Command<InterServerCmdType::HostStatic> : ICommand, Staticity
 {
 	static constexpr bool IsValid = true;
-	static constexpr bool IsDynamic = false;
-	static constexpr bool IsStatic = true;
 	static constexpr bool IsRelay = false;
 	static constexpr bool IsHost = true;
 };
 
 template <>
-struct Command<InterServerCmdType::HostDynamic> : ICommand, DynamicCommandBase
+struct Command<InterServerCmdType::HostDynamic> : ICommand, Dynamicity, DynamicCommandBase
 {
 	static constexpr bool IsValid = true;
-	static constexpr bool IsDynamic = true;
-	static constexpr bool IsStatic = false;
 	static constexpr bool IsRelay = false;
 	static constexpr bool IsHost = true;
 };
 
 template <>
-struct Command<InterServerCmdType::RelayStatic> : ICommand, RelayCommandBase
+struct Command<InterServerCmdType::RelayStatic> : ICommand, Staticity, RelayCommandBase
 {
 	static constexpr bool IsValid = true;
-	static constexpr bool IsDynamic = false;
-	static constexpr bool IsStatic = true;
 	static constexpr bool IsRelay = true;
 	static constexpr bool IsHost = false;
 };
 
 template <>
-struct Command<InterServerCmdType::RelayDynamic> : ICommand, RelayCommandBase, DynamicCommandBase
+struct Command<InterServerCmdType::RelayDynamic> : ICommand, Dynamicity, RelayCommandBase, DynamicCommandBase
 {
 	static constexpr bool IsValid = true;
-	static constexpr bool IsDynamic = true;
-	static constexpr bool IsStatic = false;
 	static constexpr bool IsRelay = true;
 	static constexpr bool IsHost = false;
 };
@@ -119,6 +111,9 @@ template<typename T> constexpr bool IsInterServerCommand_v = IsInterServerComman
 template<typename T> constexpr bool IsInterServerHostCommand_v = IsInterServerHostCommand<T>::Value;
 template<typename T> constexpr bool IsInterServerRelayCommand_v = IsInterServerRelayCommand<T>::Value;
 
+#define HOST_DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(struct)		DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(struct)
+#define RELAY_DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(struct)		DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(struct)
+
 #define HOST_STATIC_CMD_BEGIN(__struct__, __cmd__)												\
 struct __struct__ : HostStaticCommand {															\
 	__struct__(int count = 1) {																	\
@@ -127,9 +122,10 @@ struct __struct__ : HostStaticCommand {															\
 		CmdLen = sizeof(__struct__);															\
 	}																							\
 																								\
-	CMD_FUNCSIG_SIZE	{ return sizeof(__struct__); }											\
-	CMD_FUNCSIG_NAME	{ return #__struct__; }													\
-	CMD_FUNCSIG_COMMAND { return __cmd__; }											
+	CMD_FUNC_DEF_NAME(__struct__)																\
+	CMD_FUNC_DEF_COMMAND(__cmd__)																\
+	CMD_FUNC_DEF_SIZE(__struct__)																\
+	CMD_FUNC_DEF_CONSTRUCT(__struct__)
 
 #define HOST_STATIC_CMD_END };
 
@@ -138,18 +134,19 @@ struct __struct__ : HostStaticCommand {															\
 #define HOST_DYNAMIC_CMD_BEGIN_IMPL_3(__struct__, __cmd__, __countable_elem_type__) HOST_DYNAMIC_CMD_BEGIN_IMPL_4(__struct__, __cmd__, __countable_elem_type__, true)
 #define HOST_DYNAMIC_CMD_BEGIN_IMPL_4(__struct__, __cmd__, __countable_elem_type__, __construct_countable_elem__)	\
 struct __struct__ : HostDynamicCommand {																			\
-	using TCountableElement = __countable_elem_type__;																\
-	static constexpr bool ConstructCountableElement = __construct_countable_elem__;									\
+	DYNAMIC_CMD_USING_COUNTABLE_ELEMENT(__countable_elem_type__)													\
+	DYNAMIC_CMD_DECL_COUNTABLE_ELEMENT(__construct_countable_elem__)												\
 																													\
 	__struct__(int count) {																							\
 		Type = InterServerCmdType::HostDynamic;																		\
 		Cmd = __cmd__;																								\
-		CmdLen = sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);								\
+		CmdLen = _Size(count);																						\
 		Count = count;																								\
 	}																												\
-	CMD_FUNCSIG_SIZE	{ return sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);}				\
-	CMD_FUNCSIG_NAME	{ return #__struct__; }																		\
-	CMD_FUNCSIG_COMMAND { return __cmd__; }																		
+	CMD_FUNC_DEF_NAME(__struct__)																					\
+	CMD_FUNC_DEF_COMMAND(__cmd__)																					\
+	CMD_FUNC_DEF_SIZE(__struct__, __countable_elem_type__)															\
+	CMD_FUNC_DEF_CONSTRUCT(__struct__, __countable_elem_type__)																			
 
 #define HOST_DYNAMIC_CMD_END	};
 
@@ -162,9 +159,11 @@ struct __struct__ : RelayStaticCommand {								\
 		CmdLen = sizeof(__struct__);									\
 	}																	\
 																		\
-	CMD_FUNCSIG_SIZE	{ return sizeof(__struct__); }					\
-	CMD_FUNCSIG_NAME	{ return #__struct__; }							\
-	CMD_FUNCSIG_COMMAND { return __cmd__; }											
+	CMD_FUNC_DEF_NAME(__struct__)										\
+	CMD_FUNC_DEF_COMMAND(__cmd__)										\
+	CMD_FUNC_DEF_SIZE(__struct__)										\
+	CMD_FUNC_DEF_CONSTRUCT(__struct__)									
+
 #define RELAY_STATIC_CMD_END };
 
 
@@ -172,17 +171,18 @@ struct __struct__ : RelayStaticCommand {								\
 #define RELAY_DYNAMIC_CMD_BEGIN_IMPL_3(__struct__, __cmd__, __countable_elem_type__) RELAY_DYNAMIC_CMD_BEGIN_IMPL_4(__struct__, __cmd__, __countable_elem_type__, true)
 #define RELAY_DYNAMIC_CMD_BEGIN_IMPL_4(__struct__, __cmd__, __countable_elem_type__, __construct_countable_elem__)	\
 struct __struct__ : RelayDynamicCommand {																	\
-	using TCountableElement = __countable_elem_type__;														\
-	static constexpr bool ConstructCountableElement = __construct_countable_elem__;							\
+	DYNAMIC_CMD_USING_COUNTABLE_ELEMENT(__countable_elem_type__)											\
+	DYNAMIC_CMD_DECL_COUNTABLE_ELEMENT(__construct_countable_elem__)										\
 																											\
 	__struct__(int count) {																					\
 		Type = InterServerCmdType::RelayDynamic;															\
 		Cmd = __cmd__;																						\
-		CmdLen = sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);						\
+		CmdLen = _Size(count);																				\
 		Count = count;																						\
 	}																										\
-	CMD_FUNCSIG_SIZE	{ return sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);}		\
-	CMD_FUNCSIG_NAME	{ return #__struct__; }																\
-	CMD_FUNCSIG_COMMAND { return __cmd__; }																		
+	CMD_FUNC_DEF_NAME(__struct__)																			\
+	CMD_FUNC_DEF_COMMAND(__cmd__)																			\
+	CMD_FUNC_DEF_SIZE(__struct__, __countable_elem_type__)													\
+	CMD_FUNC_DEF_CONSTRUCT(__struct__, __countable_elem_type__)
 
 #define RELAY_DYNAMIC_CMD_END	};

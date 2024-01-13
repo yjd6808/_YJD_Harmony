@@ -376,7 +376,7 @@ void Room::BroadcastRoomMemberListInfo() {
 	auto pPacket = dbg_new SinglePacket<SC_UpdateRoomMemberList>(iCount);
 	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
 	pPacket->Cmd.HostCharacterPrimaryKey = pLeaderCharacter->GetPrimaryKey();
-	GetRoomMemberInfoListRaw(pPacket->Cmd.Info);
+	GetRoomMemberInfoListRaw(pPacket->Cmd.Info());
 	BroadcastPacket(pPacket, Const::Broadcast::Room::StateAny);
 }
 
@@ -417,7 +417,7 @@ void Room::BroadcastBattleSatistics() {
 		if (pPlayer->GetPlayerState() != PlayerState::BattleField)
 			continue;
 
-		BattleStatisticsNet& dst = pPacket->Cmd.Statistics[i];
+		BattleStatisticsNet& dst = pPacket->Cmd.StatisticsAt(i);
 		pPlayer->GetCharacter()->GetBattleStatisticsNet(dst);
 	}
 	BroadcastPacket(pPacket, Const::Broadcast::Room::StateBattle);

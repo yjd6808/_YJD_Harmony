@@ -859,9 +859,9 @@ void R_GAME::RECV_CS_ChatMessage(Session* session, ICommand* cmd) {
 
 
 	if (pCmd->PlayerState == PlayerState::Lobby) {
-		S_GAME::SEND_SC_ChatMessageBroadcastLobby(pPlayer->GetChannelLobby(), pCmd->Message.Source);
+		S_GAME::SEND_SC_ChatMessageBroadcastLobby(pPlayer->GetChannelLobby(), pCmd->Msg()->Source);
 	} else if (pCmd->PlayerState == PlayerState::BattleField) {
-		S_GAME::SEND_SC_ChatMessageBroadcastBattleField(pPlayer->GetRoom(), pCmd->Message.Source);
+		S_GAME::SEND_SC_ChatMessageBroadcastBattleField(pPlayer->GetRoom(), pCmd->Msg()->Source);
 	}
 
 }

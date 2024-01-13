@@ -26,6 +26,6 @@ bool S_TEST_IS_COMMON::SEND_SS_P2PRelayStaticTest(const char* msg) {
 
 bool S_TEST_IS_COMMON::SEND_SS_P2PRelayDynamicTest(const char* msg) {
 	auto sending = SendBegin<SS_P2PRelayDynamicTest>(64);
-	sending.Cmd.Msg.SetStringUnsafe(msg);
+	sending.Cmd.Msg()->SetStringUnsafe(msg);
 	return true;
 }

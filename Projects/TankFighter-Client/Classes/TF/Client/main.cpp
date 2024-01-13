@@ -7,12 +7,18 @@
 
 #include "Pch.h"
 #include "AppDelegate.h"
+#include "TF/Common/Command.h"
 
 USING_NS_CC;
 USING_NS_JC;
 USING_NS_JNET;
 
+DYNAMIC_CMD_BEGIN(A, 100, StaticString<1>)
+DYNAMIC_CMD_END
+
 int main() {
+    
+
 	DefaultParserType = PacketParser::Command;
 
     new char; // Force Leak

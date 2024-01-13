@@ -65,7 +65,7 @@ void R_GAME::RECV_SC_LoadChannelInfo(Session* session, ICommand* cmd) {
 	}
 
 	Director::getInstance()->getOpenGLView()->setViewName(StringUtils::format("%s [계정: %s]", Const::Window::ViewName, Core::GameClient->GetAccountId().Source()));
-	pChannelScene->refreshChannelList(pCmd->Info, pCmd->Count);
+	pChannelScene->refreshChannelList(pCmd->Info(), pCmd->Count);
 }
 
 void R_GAME::RECV_SC_JoinChannel(Session* session, ICommand* cmd) {
@@ -95,7 +95,7 @@ void R_GAME::RECV_SC_LoadCharacterInfo(Session* session, ICommand* cmd) {
 	}
 
 	Director::getInstance()->getOpenGLView()->setViewName(StringUtils::format("%s [계정: %s]", Const::Window::ViewName, Core::GameClient->GetAccountId().Source()));
-	pCharacterSelectScene->refreshCharacterList(pCmd->Info, pCmd->Count);
+	pCharacterSelectScene->refreshCharacterList(pCmd->Info(), pCmd->Count);
 }
 
 void R_GAME::RECV_SC_LeaveLobby(Session* session, ICommand* cmd) {
@@ -133,7 +133,7 @@ void R_GAME::RECV_SC_UpdateRoomList(Session* session, ICommand* cmd) {
 		_LogWarn_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Lobby));
 		return;
 	}
-	pLobbyScene->refreshRoomList(pCmd->Info, pCmd->Count);
+	pLobbyScene->refreshRoomList(pCmd->Info(), pCmd->Count);
 }
 
 void R_GAME::RECV_SC_UpdatePlayerList(Session* session, ICommand* cmd) {
@@ -144,7 +144,7 @@ void R_GAME::RECV_SC_UpdatePlayerList(Session* session, ICommand* cmd) {
 		return;
 	}
 
-	pLobbyScene->refreshPlayerList(pCmd->Info, pCmd->Count);
+	pLobbyScene->refreshPlayerList(pCmd->Info(), pCmd->Count);
 }
 
 void R_GAME::RECV_SC_UpdateFriendList(Session* session, ICommand* cmd) {
@@ -154,7 +154,7 @@ void R_GAME::RECV_SC_UpdateFriendList(Session* session, ICommand* cmd) {
 		_LogWarn_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Lobby));
 		return;
 	}
-	pLobbyScene->refreshFriendList(pCmd->Info, pCmd->Count);
+	pLobbyScene->refreshFriendList(pCmd->Info(), pCmd->Count);
 }
 
 void R_GAME::RECV_SC_CreateRoom(Session* session, ICommand* cmd) {
@@ -251,7 +251,7 @@ void R_GAME::RECV_SC_LoadRoomInfo(Session* session, ICommand* cmd) {
 
 void R_GAME::RECV_SC_UpdateRoomMemberList(Session* session, ICommand* cmd) {
 	SC_UpdateRoomMemberList* pCmd = (SC_UpdateRoomMemberList*)cmd;
-	Core::Room->updateRoomMemberList(pCmd->Info, pCmd->Count, pCmd->HostCharacterPrimaryKey);
+	Core::Room->updateRoomMemberList(pCmd->Info(), pCmd->Count, pCmd->HostCharacterPrimaryKey);
 
 	if (Core::GameClient->GetPlayerState() == PlayerState::Room) {
 		RoomScene* pRoomScene = dynamic_cast<RoomScene*>(Director::getInstance()->getRunningScene());
@@ -291,7 +291,7 @@ void R_GAME::RECV_SC_AddFriendRequest(Session* session, ICommand* cmd) {
 
 void R_GAME::RECV_SC_ServerMessage(Session* session, ICommand* cmd) {
 	SC_ServerMessage* pCmd = (SC_ServerMessage*)cmd;
-	PopUp::createInRunningScene(pCmd->Message.Source, false);
+	PopUp::createInRunningScene(pCmd->Msg()->Source, false);
 }
 
 void R_GAME::RECV_SC_ChatMessage(Session* session, ICommand* cmd) {
@@ -304,7 +304,7 @@ void R_GAME::RECV_SC_ChatMessage(Session* session, ICommand* cmd) {
 			return;
 		}
 
-		pLobbyScene->addChatMssage(pCmd->Message.Source);
+		pLobbyScene->addChatMssage(pCmd->Msg()->Source);
 	} else if (pCmd->PlayerState == PlayerState::BattleField) {
 		BattleFieldScene* pBattleFieldScene = dynamic_cast<BattleFieldScene*>(Director::getInstance()->getRunningScene());
 		if (pBattleFieldScene == nullptr) {
@@ -312,7 +312,7 @@ void R_GAME::RECV_SC_ChatMessage(Session* session, ICommand* cmd) {
 			return;
 		}
 
-		pBattleFieldScene->addChatMssage(pCmd->Message.Source);
+		pBattleFieldScene->addChatMssage(pCmd->Msg()->Source);
 	}
 }
 
@@ -331,7 +331,7 @@ void R_GAME::RECV_SC_BattleFieldTankList(Session* session, ICommand* cmd) {
 	if (pBattleFieldScene == nullptr) {
 		return;
 	}
-	pBattleFieldScene->spawnTanks(pCmd->Move, pCmd->Count);
+	pBattleFieldScene->spawnTanks(pCmd->Move(), pCmd->Count);
 }
 
 void R_GAME::RECV_SC_BattleFieldTimeSync(Session* session, ICommand* cmd) {
@@ -390,7 +390,7 @@ void R_GAME::RECV_SC_BattleFieldStatisticsUpdate(Session* session, ICommand* cmd
 	if (pBattleFieldScene == nullptr) {
 		return;
 	}
-	pBattleFieldScene->refreshStatistics(pCmd->Statistics, pCmd->Count);
+	pBattleFieldScene->refreshStatistics(pCmd->Statistics(), pCmd->Count);
 	
 }
 

@@ -7,6 +7,8 @@ USING_NS_JC;
 USING_NS_JNET;
 
 int main() {
+	DefaultParserType = PacketParser::Command;
+
 	Winsock::Initialize(2, 2);
 	InitializeJCore();
 	InitializeNetLogger();

@@ -25,5 +25,5 @@ void R_TEST_COMMON::RECV_SS_P2PRelayStaticTest(Session* session, ICommand* cmd) 
 
 void R_TEST_COMMON::RECV_SS_P2PRelayDynamicTest(Session* session, ICommand* cmd) {
 	SS_P2PRelayDynamicTest* pCmd = (SS_P2PRelayDynamicTest*)cmd;
-	Console::WriteLine("%s", pCmd->Msg.Source);
+	Console::WriteLine("%s", pCmd->Msg()->Source);
 }

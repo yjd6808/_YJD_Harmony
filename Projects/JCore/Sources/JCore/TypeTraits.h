@@ -89,16 +89,26 @@ NS_JC_BEGIN
         }
     };
 
-    template <template <typename> typename Checker, typename T, typename... TArgs>
     struct IsAllUnaryTrue {
+        template <template <typename> typename Checker, typename... Args>
         static constexpr bool Value() {
-            if constexpr (sizeof...(TArgs) == 0) {
+            if constexpr (sizeof...(Args) == 0) {
+                return true;
+            } else {
+                return Value2<Checker, Args...>();
+            }
+        }
+
+        template <template <typename> typename Checker, typename T, typename... Args>
+        static constexpr bool Value2() {
+            if constexpr (sizeof...(Args) == 0) {
                 return Checker<T>::Value;
             } else {
-                return Checker<T>::Value && IsAllUnaryTrue<Checker, TArgs...>::Value();
+                return Checker<T>::Value && Value2<Checker, Args...>();
             }
         }
     };
+
 
     template <typename T, typename... Rest>
     struct IsPrimitiveTypes {
@@ -498,8 +508,8 @@ constexpr bool IsMultipleDerived_v
 template <typename Derived, typename... BaseArgs>
 constexpr bool IsMultipleBase_v = Detail::IsMultipleBase<Derived, BaseArgs...>::Value();
 
-template <template <typename> typename Checker, typename... TArgs>
-constexpr bool IsAllUnaryTrue_v = Detail::IsAllUnaryTrue<Checker, TArgs...>::Value();
+template <template <typename> typename Checker, typename... Args>
+constexpr bool IsAllUnaryTrue_v = Detail::IsAllUnaryTrue::Value<Checker, Args...>();
 
 template <typename T>
 constexpr bool IsFundamentalType_v = std::is_fundamental_v<T>;

@@ -38,7 +38,7 @@ void S_GAME::SEND_SC_LoadChannelInfo(const Vector<ChannelInfo>& channelInfoList)
 	const int iSize = channelInfoList.Size();
 	auto sending = SendBegin<SC_LoadChannelInfo>(iSize);
 	for (int i = 0; i < iSize; ++i) {
-		sending.Cmd.Info[i] = channelInfoList[i];
+		sending.Cmd.InfoAt(i) = channelInfoList[i];
 	}
 }
 
@@ -72,7 +72,7 @@ void S_GAME::SEND_SC_LoadCharacterInfo(int accountPrimaryKey, int channelPrimary
 	int iCount = vCharacterInfoList.Size();
 	auto sending = SendBegin<SC_LoadCharacterInfo>(iCount);
 	for (int i = 0; i < iCount; ++i) {
-		sending.Cmd.Info[i] = Move(vCharacterInfoList[i]);
+		sending.Cmd.InfoAt(i) = Move(vCharacterInfoList[i]);
 	}
 }
 
@@ -93,7 +93,7 @@ void S_GAME::SEND_SC_UpdateRoomList(ChannelLobby* lobby) {
 	auto sending = SendBegin<SC_UpdateRoomList>(iRoomCount);
 
 	for (int i = 0; i < iRoomCount; ++i) {
-		RoomInfo& dst = sending.Cmd.Info[i];
+		RoomInfo& dst = sending.Cmd.InfoAt(i);
 		const RoomInfo& src = vRoomInfoList[i];
 
 		dst.AccessId = src.AccessId;
@@ -107,7 +107,7 @@ void S_GAME::SEND_SC_UpdateRoomList(ChannelLobby* lobby) {
 void S_GAME::SEND_SC_UpdateFriendList(Character* character) {
 	const int iFriendCount = character->GetFriendCount();
 	auto sending = SendBegin<SC_UpdateFriendList>(iFriendCount);
-	character->GetFriendList(sending.Cmd.Info, iFriendCount);
+	character->GetFriendList(sending.Cmd.Info(), iFriendCount);
 }
 
 void S_GAME::SEND_SC_LeaveLobby() {
@@ -163,7 +163,7 @@ void S_GAME::SEND_SC_BattleFieldTankList(Room* room) {
 	Vector<TankMoveNet> vMoves = room->GetRoomMemberLiveMoveList();
 	auto sending = SendBegin<SC_BattleFieldTankList>(vMoves.Size());
 	for (int i = 0; i < vMoves.Size(); ++i) {
-		sending.Cmd.Move[i] = vMoves[i];
+		sending.Cmd.MoveAt(i) = vMoves[i];
 	}
 }
 
@@ -171,14 +171,14 @@ void S_GAME::SEND_SC_ServerMessage(const char* msg) {
 	const int iLen = StringUtil::LengthWithNull(msg);
 	auto sending = SendBegin<SC_ServerMessage>(iLen);
 	sending.Cmd.Count = iLen;
-	sending.Cmd.Message.SetStringUnsafe(msg);
+	sending.Cmd.Msg()->SetStringUnsafe(msg);
 }
 
 void S_GAME::SEND_SC_ServerMessage(const String& msg) {
 	const int len = msg.LengthWithNull();
 	auto sending = SendBegin<SC_ServerMessage>(len);
 	sending.Cmd.Count = len;
-	sending.Cmd.Message.SetStringUnsafe(msg);
+	sending.Cmd.Msg()->SetStringUnsafe(msg);
 }
 
 bool S_GAME::SEND_SC_Disconnect(Session* session) {
@@ -191,7 +191,7 @@ void S_GAME::SEND_SC_ChatMessageBroadcastLobby(IBroadcastable* broadcastable, co
 	const int iMsgLen = StringUtil::LengthWithNull(msg);
 	const auto pPacket = dbg_new SinglePacket<SC_ChatMessage>(iMsgLen);
 	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
-	pPacket->Cmd.Message.SetStringUnsafe(msg);
+	pPacket->Cmd.Msg()->SetStringUnsafe(msg);
 	pPacket->Cmd.PlayerState = PlayerState::Lobby;
 	broadcastable->BroadcastPacket(pPacket, Const::Broadcast::Lobby::StateLobby);
 }
@@ -200,7 +200,7 @@ void S_GAME::SEND_SC_ChatMessageBroadcastBattleField(IBroadcastable* broadcastab
 	const int iMsgLen = StringUtil::LengthWithNull(msg);
 	const auto pPacket = dbg_new SinglePacket<SC_ChatMessage>(iMsgLen);
 	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
-	pPacket->Cmd.Message.SetStringUnsafe(msg);
+	pPacket->Cmd.Msg()->SetStringUnsafe(msg);
 	pPacket->Cmd.PlayerState = PlayerState::BattleField;
 	broadcastable->BroadcastPacket(pPacket, Const::Broadcast::Room::StateAny);
 }
@@ -212,7 +212,7 @@ void S_GAME::SEND_SC_UpdatePlayerListBroadcastInLobby(ChannelLobby* pLobby) {
 	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
 	pPacket->Cmd.State = PlayerState::Lobby;
 	for (int i = 0; i < iCount; ++i) {
-		pPacket->Cmd.Info[i] = vInfoList[i];
+		pPacket->Cmd.InfoAt(i) = vInfoList[i];
 	}
 	pLobby->BroadcastPacket(pPacket, Const::Broadcast::Lobby::StateLobby);
 }
@@ -223,6 +223,6 @@ void S_GAME::SEND_SC_UpdatePlayerList(ChannelLobby* pLobby) {
 	auto sending = SendBegin<SC_UpdatePlayerList>(iCount);
 	sending.Cmd.State = PlayerState::Lobby;
 	for (int i = 0; i < iCount; ++i) {
-		sending.Cmd.Info[i] = vInfoList[i];
+		sending.Cmd.InfoAt(i) = vInfoList[i];
 	}
 }

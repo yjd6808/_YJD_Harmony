@@ -27,7 +27,7 @@ JCore::StaticString<64> Msg;
 RELAY_STATIC_CMD_END
 
 RELAY_DYNAMIC_CMD_BEGIN(SS_P2PRelayDynamicTest, CMDID_SS_P2PRelayDynamicTest, JCore::StaticString<1>)
-JCore::StaticString<1> Msg;
+RELAY_DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(Msg)
 RELAY_DYNAMIC_CMD_END
 
 #pragma pack(pop)	// #pragma pack(push, CMD_ALIGNMENT)

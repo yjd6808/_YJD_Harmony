@@ -207,7 +207,7 @@ void ChannelLobby::BroadcastRoomListInfo() {
 	const auto pPacket = dbg_new SinglePacket<SC_UpdateRoomList>(vRoomInfoList.Size());
 	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
 	for (int i = 0; i < vRoomInfoList.Size(); ++i) {
-		RoomInfo& dst = pPacket->Cmd.Info[i];
+		RoomInfo& dst = pPacket->Cmd.InfoAt(i);
 		const RoomInfo& src = vRoomInfoList[i];
 
 		dst.AccessId = src.AccessId;

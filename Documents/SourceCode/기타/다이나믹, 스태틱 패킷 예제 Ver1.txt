@@ -1,0 +1,41 @@
+
+DYNAMIC_CMD_BEGIN(A, 100, StaticString<1>)
+DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(Msg)
+DYNAMIC_CMD_END
+
+
+STATIC_CMD_BEGIN(B, 101)
+int data;
+STATIC_CMD_END
+
+DYNAMIC_CMD_BEGIN(C, 102, int)
+DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(IdList)
+DYNAMIC_CMD_END
+
+int main() {
+	
+	{
+		constexpr int _A = sizeof A;
+		constexpr int _B = sizeof B;
+		constexpr int _C = sizeof C;
+
+		MemoryPoolAbstractPtr memPool = MakeShared<IndexedMemoryPool>();
+		auto pBuffer = dbg_new CommandBuffer(memPool, 6000);
+		String s = "abc";
+		A& a = pBuffer->Alloc<A>(s.LengthWithNull());
+		B& b = pBuffer->Alloc<B>();
+		C& c = pBuffer->Alloc<C>(10);
+
+		a.Msg()->SetStringUnsafe(s.Source());
+		b.data = 200;
+
+		int* d = c.IdList();
+		for (int i = 0; i < c.Count; ++i) {
+			d[i] = i;
+		}
+
+		bool x = pBuffer->IsValid();
+		int g = c.CmdLen;
+		Console::WriteLine("%s", a.Msg()->Source);
+	}
+}

@@ -66,12 +66,20 @@ void ServerListener::OnReceived(Session* receiver, ICommand* cmd) {
 		}
 
 		int iLen = pDynamicMessage->Count - 1;
-		Console::WriteLine("[%s] 다이나믹 메시지를 수신했습니다. : %s(길이 : %d)", m_Name.Source(), pDynamicMessage->Msg, iLen);
+		Console::WriteLine("[%s] 다이나믹 메시지를 수신했습니다. : %s(길이 : %d)", m_Name.Source(), pDynamicMessage->Msg(), iLen);
+
+
+		MemoryPoolAbstractPtr ptr;
+		auto pPacket2 = dbg_new DynamicPacket<DynamicMessage>(ptr, iLen + 2);
+		auto pPacket3 = dbg_new DynamicPacket<DynamicMessage>(nullptr, iLen + 2);
+		pPacket2->Release();
+		pPacket3->Release();
+
 
 		// 다이나믹 패킷 에코 진행
 		auto pPacket = dbg_new DynamicPacket<DynamicMessage>(iLen + 1);
 		DynamicMessage* pMsg = pPacket->Get<0>();
-		StringUtil::CopyUnsafe(pMsg->Msg, pDynamicMessage->Msg);
+		StringUtil::CopyUnsafe(pMsg->Msg(), pDynamicMessage->Msg());
 
 		if (!receiver->SendAsync(pPacket)) {
 			Console::WriteLine("[%s] 다이나믹 에코 실패", m_Name.Source());

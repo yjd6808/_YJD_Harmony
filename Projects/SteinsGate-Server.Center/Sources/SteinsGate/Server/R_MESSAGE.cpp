@@ -18,5 +18,5 @@ USING_NS_JNET;
 
 void R_MESSAGE::RECV_SS_HostMessage(Session* session, ICommand* cmd) {
 	SS_HostMessage* pCmd = (SS_HostMessage*)cmd;
-	_LogInfo_(pCmd->Msg.Source);
+	_LogInfo_(pCmd->Msg()->Source);
 }

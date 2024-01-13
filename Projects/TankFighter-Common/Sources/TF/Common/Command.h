@@ -127,7 +127,7 @@ STATIC_CMD_END
 
 // 최대 10개의 채널 정보까지 받을 수 있도록.
 DYNAMIC_CMD_BEGIN(SC_LoadChannelInfo, CMDID_SC_LOAD_CHANNEL_INFO, ChannelInfo)
-ChannelInfo Info[1];
+DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(Info)
 DYNAMIC_CMD_END
 
 STATIC_CMD_BEGIN(CS_JoinChannel, CMDID_CS_JOIN_CHANNEL)
@@ -151,7 +151,7 @@ int ChannelPrimaryKey = Const::InvalidValue;
 STATIC_CMD_END
 
 DYNAMIC_CMD_BEGIN(SC_LoadCharacterInfo, CMDID_SC_LOAD_CHARACTER_INFO, CharacterInfo)
-CharacterInfo Info[1];
+DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(Info)
 DYNAMIC_CMD_END
 
 STATIC_CMD_BEGIN(CS_CreateCharacter, CMDID_CS_CREATE_CHARACTER)
@@ -197,11 +197,11 @@ CharacterInfo Info{};
 STATIC_CMD_END
 
 DYNAMIC_CMD_BEGIN(SC_UpdateRoomList, CMDID_SC_UPDATE_ROOMLIST, RoomInfo)
-RoomInfo Info[1];
+DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(Info)
 DYNAMIC_CMD_END
 
 DYNAMIC_CMD_BEGIN(SC_UpdateFriendList, CMDID_SC_UPDATE_FRIENDLIST, FriendCharacterInfo)
-FriendCharacterInfo Info[1];
+DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(Info)
 DYNAMIC_CMD_END
 
 STATIC_CMD_BEGIN(CS_CreateRoom, CMDID_CS_CREATE_ROOM)
@@ -223,7 +223,7 @@ STATIC_CMD_END
 
 DYNAMIC_CMD_BEGIN(SC_UpdateRoomMemberList, CMDID_SC_UPDATE_ROOM_MEMBER_LIST, RoomCharacterInfo)
 int HostCharacterPrimaryKey = Const::InvalidValue;		// 방장
-RoomCharacterInfo Info[1];
+DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(Info)
 DYNAMIC_CMD_END
 
 STATIC_CMD_BEGIN(SC_UpdateRoomMember, CMDID_SC_UPDATE_ROOM_MEMBER)
@@ -253,7 +253,7 @@ int DeleteCharacterPrimaryKey = Const::InvalidValue;
 STATIC_CMD_END
 
 DYNAMIC_CMD_BEGIN(SC_ServerMessage, CMDID_CS_SERVER_MESSAGE, JCore::StaticString<1>)
-JCore::StaticString<1> Message;
+DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(Msg)
 DYNAMIC_CMD_END
 
 
@@ -312,7 +312,7 @@ bool Intrude;
 STATIC_CMD_END
 
 DYNAMIC_CMD_BEGIN(SC_BattleFieldTankList, CMDID_SC_BATTLE_FIELD_TANK_LIST, TankMoveNet)
-TankMoveNet Move[1];
+DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(Move)
 DYNAMIC_CMD_END
 
 // 클라는 일정주기마다 서버로 자신의 탱크 정보를 서버로 전송한다.
@@ -334,7 +334,7 @@ JCore::TimeSpan Elapsed;
 STATIC_CMD_END
 
 DYNAMIC_CMD_BEGIN(SC_BattleFieldStatisticsUpdate, CMDID_SC_BATTLE_FILED_STATISTICS_UPDATE, BattleStatisticsNet)
-BattleStatisticsNet Statistics[1];
+DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(Statistics)
 DYNAMIC_CMD_END
 
 STATIC_CMD_BEGIN(CS_BattleFieldFire, CMDID_CS_BATTLE_FIELD_FIRE)
@@ -363,12 +363,12 @@ STATIC_CMD_END
 
 DYNAMIC_CMD_BEGIN(CS_ChatMessage, CMDID_CS_CHAT_MESSAGE, JCore::StaticString<1>, false)
 PlayerState PlayerState;
-JCore::StaticString<1> Message;
+DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(Msg)
 DYNAMIC_CMD_END
 
 DYNAMIC_CMD_BEGIN(SC_ChatMessage, CMDID_SC_CHAT_MESSAGE, JCore::StaticString<1>)
 PlayerState PlayerState;
-JCore::StaticString<1> Message;
+DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(Msg)
 DYNAMIC_CMD_END
 
 
@@ -394,7 +394,7 @@ STATIC_CMD_END
 
 DYNAMIC_CMD_BEGIN(SC_UpdatePlayerList, CMDID_SC_UPDATE_PLAYERLIST, CharacterInfo)
 PlayerState State;		// 이 State인 경우 업데이트
-CharacterInfo Info[1];
+DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(Info)
 DYNAMIC_CMD_END
 
 #pragma pack(pop)

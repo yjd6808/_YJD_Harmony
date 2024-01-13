@@ -81,7 +81,7 @@ static void SendMsg(TcpClient* client) {
 	DynamicMessage& msg2 = client->SendAlloc<DynamicMessage>(length);
 
 	StringUtil::CopyUnsafe(msg1.Msg.Source, s.Source);
-	StringUtil::CopyUnsafe(msg2.Msg, s.Source);
+	StringUtil::CopyUnsafe(msg2.Msg(), s.Source);
 
 	// 다이나믹 패킷을 활용한 전송
 	auto packet1 = dbg_new DynamicPacket<DynamicMessage, DynamicMessage, DynamicMessage>(length, length, length);
@@ -89,9 +89,9 @@ static void SendMsg(TcpClient* client) {
 	auto msg4 = packet1->Get<1>();
 	auto msg5 = packet1->Get<2>();
 
-	StringUtil::CopyUnsafe(msg3->Msg, s.Source);
-	StringUtil::CopyUnsafe(msg4->Msg, s.Source);
-	StringUtil::CopyUnsafe(msg5->Msg, s.Source);
+	StringUtil::CopyUnsafe(msg3->Msg(), s.Source);
+	StringUtil::CopyUnsafe(msg4->Msg(), s.Source);
+	StringUtil::CopyUnsafe(msg5->Msg(), s.Source);
 
 	// 커맨드 버퍼를 활용한 전송 테스트
 	CommandBufferPtr buffer = CommandBuffer::Create(client->GetBufferAllocator());
@@ -99,14 +99,14 @@ static void SendMsg(TcpClient* client) {
 	DynamicMessage& msg7 = buffer->Alloc<DynamicMessage>(length);
 	DynamicMessage& msg8 = buffer->Alloc<DynamicMessage>(length);
 
-	StringUtil::CopyUnsafe(msg6.Msg, s.Source);
-	StringUtil::CopyUnsafe(msg7.Msg, s.Source);
-	StringUtil::CopyUnsafe(msg8.Msg, s.Source);
+	StringUtil::CopyUnsafe(msg6.Msg(), s.Source);
+	StringUtil::CopyUnsafe(msg7.Msg(), s.Source);
+	StringUtil::CopyUnsafe(msg8.Msg(), s.Source);
 
 	// 싱글 패킷 전송 (스태틱, 다이나믹 커맨드 아무거나 가능)
 	// auto msg9 = dbg_new SinglePacket<DynamicMessage>(); assert 발사: 다이나믹 커맨드는 명시적으로 무조건 사이즈 전달
 	auto msg9 = dbg_new SinglePacket<DynamicMessage>(length);
-	StringUtil::CopyUnsafe(msg9->Cmd.Msg, s.Source);
+	StringUtil::CopyUnsafe(msg9->Cmd.Msg(), s.Source);
 
 	// 스태틱 패킷 전송
 	auto pPacket = dbg_new StaticPacket<StaticMessage>();

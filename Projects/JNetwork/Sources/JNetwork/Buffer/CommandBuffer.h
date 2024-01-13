@@ -24,18 +24,21 @@ public:
 
 	template <typename TCommand>
 	TCommand& Alloc() {
-		static_assert(JCore::IsBaseOf_v<DynamicCommand, TCommand>, "... this method is only for StaticCommand ");
-		return Alloc<TCommand>(1);
+		static_assert(JCore::IsBaseOf_v<StaticCommand, TCommand>, "... this method is only for StaticCommand ");
+		return Alloc<TCommand>(0);
 	}
 
 	template <typename TCommand>
 	TCommand& Alloc(int count) {
-		static_assert(JCore::IsBaseOf_v<ICommand, TCommand>, "... TCommand is not command [1]");
-		const int CmdSize = TCommand::_Size(count);
+		CMD_CHECK_BASE_OF_COMMAND(TCommand)
+		DYNAMIC_CMD_CHECK_ZERO_SIZE_ARRAY_FIELD(TCommand)
 
-		if (CmdSize <= 0) {
+		const int CmdSize = TCommand::_Size(count);
+#if DebugMode
+		if (CmdSize <= 0 || CmdSize >= 2500) {
 			DebugAssertMsg(false, "%s::_Size(%d) = %d 커맨드 사이즈가 이상합니다.", TCommand::_Name(), count, CmdSize);
-		}
+		} 
+#endif
 
 		if (MoveWritePos(CmdSize) == false) {
 			DebugAssertMsg(false, "버퍼에 커맨드를 쓸 공간이 부족합니다.");
@@ -43,9 +46,9 @@ public:
 
 		DebugAssertMsg(m_iReadPos + CmdSize == m_iWritePos, "리드포스 또는 라이트포스가 이상합니다.");
 		TCommand* cmd = Peek<TCommand*>();
-		MoveReadPos(CmdSize);
-		JCore::Memory::PlacementNew(cmd, count);
+		TCommand::_Construct(cmd, count);
 
+		MoveReadPos(CmdSize);
 		AddCommandCount();
 		AddPacketLength(CmdSize);
 		return *cmd;

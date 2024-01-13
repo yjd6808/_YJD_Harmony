@@ -38,7 +38,7 @@ void ClientListener::OnReceived(Session* session, ICommand* cmd) {
 		Console::WriteLine("[%s] 스태틱 메시지를 수신했습니다. : %s", m_Name.Source(), cmd->CastCommand<StaticMessage*>()->Msg.Source);
 	else if (cmd->GetCommand() == Cmd_DynamicMessage) {
 		DynamicMessage* pDynamicMessage = cmd->CastCommand<DynamicMessage*>();
-		Console::WriteLine("[%s] 다이나믹 메시지를 수신했습니다. : %s(길이 : %d)", m_Name.Source(), pDynamicMessage->Msg, pDynamicMessage->Count - 1);
+		Console::WriteLine("[%s] 다이나믹 메시지를 수신했습니다. : %s(길이 : %d)", m_Name.Source(), pDynamicMessage->Msg(), pDynamicMessage->Count - 1);
 	}
 }
 

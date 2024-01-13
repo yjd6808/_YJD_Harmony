@@ -7,6 +7,10 @@
  *	 - 멀티 다이나믹 패킷 (다이나믹 커맨드 여러개 담아서 전송)
  *	 - 커맨드 버퍼 패킷 (커맨드 버퍼 통째로 전송)
  *	 - 싱글 패킷 (스타릭 커맨드, 다이나믹 커맨드 암거나 1개만 담음)
+ *
+ *	 굳이 멀티 패킷을 정의하지 않고 멀티 스타릭, 멀티 다이나믹으로 구분한 이유는
+ *	 스타릭커맨드는 크기가 컴파일타임에 결정되므로 멀티 스타릭 패킷은 패킷을 한번 생성하는 것만으로 모든게 종견된다.
+ *	 다이나믹커맨드는 크기가 런타임에 결정되므로 멀티 다이나믹 패킷은 패킷을 한번 생성하고 내부에서 한번더 런타임에 결정된 크기대로 동적할당하여 커맨드 데이터를 생성해줘야한다.
  */
 
 
@@ -364,28 +368,27 @@ class DynamicPacket : public CommandPacket
 
 public:
 	// Ints가 모두 정수형일 때만 동작하도록 한다.
-	template <typename... Ints, typename = JCore::DefaultEnableIf_t<JCore::IsAllUnaryTrue_v<JCore::Detail::IsIntegerType, Ints...>>>
-	DynamicPacket(Ints... counts) : CommandPacket() {
+	template <typename... Ints,  typename = JCore::DefaultEnableIf_t<JCore::And_v<JCore::IsIntegerType_v<JCore::IndexOf_t<0, Ints...>>, JCore::IsAllUnaryTrue_v<JCore::Detail::IsIntegerType, Ints...>>>>
+	DynamicPacket(Ints... counts) : DynamicPacket(nullptr, counts...) {}
+
+	template <typename Allocator, typename... Ints, typename = JCore::DefaultEnableIf_t<JCore::And_v<std::is_constructible_v<JCore::MemoryPoolAbstractPtr, Allocator>, JCore::IsAllUnaryTrue_v<JCore::Detail::IsIntegerType, Ints...>>>>
+	DynamicPacket(const Allocator& nullable_allocator, Ints... counts) : CommandPacket(nullable_allocator) {
 		static_assert(CommandCount == sizeof...(counts), "... Invalid command size count");
 		const int iPacketLen = (... + counts);
 		InitializeCountRecursive<0>(counts...);
 
 		this->m_iPacketLen = m_CmdEndPos[CommandCount];
 		this->m_iCommandCount = CommandCount;
-		this->m_pDynamicBuf = dbg_new char[PacketHeaderSize_v + this->m_iPacketLen];
 
-		ConstructRecursive<0>(counts...);
-	}
-
-	template <typename... Ints, typename = JCore::DefaultEnableIf_t<JCore::IsAllUnaryTrue_v<JCore::Detail::IsIntegerType, Ints...>>>
-	DynamicPacket(const JCore::MemoryPoolAbstractPtr& allocator, Ints... counts) : CommandPacket(allocator) {
-		static_assert(CommandCount == sizeof...(counts), "... Invalid command size count");
-		const int iPacketLen = (... + counts);
-		InitializeCountRecursive<0>(counts...);
-
-		this->m_iPacketLen = m_CmdEndPos[CommandCount];
-		this->m_iCommandCount = CommandCount;
-		this->m_pDynamicBuf = allocator->DynamicPop(PacketHeaderSize_v + this->m_iPacketLen);
+		if (nullable_allocator != nullptr) {
+			if constexpr (!std::is_null_pointer_v<Allocator>)
+				this->m_pDynamicBuf = (char*)nullable_allocator->DynamicPop(PacketHeaderSize_v + this->m_iPacketLen);
+			else
+				this->m_pDynamicBuf = dbg_new char[PacketHeaderSize_v + this->m_iPacketLen];
+		} else {
+			this->m_pDynamicBuf = dbg_new char[PacketHeaderSize_v + this->m_iPacketLen];
+		}
+		
 
 		ConstructRecursive<0>(counts...);
 	}
@@ -457,14 +460,7 @@ private:
 		using TCountableElement = typename TCommand::TCountableElement;
 
 		TCommand* pCmd = Get<Index>();
-		:: new (pCmd) TCommand(count);
-
-		if constexpr (TCommand::ConstructCountableElement) {
-			for (int i = 0; i < count - 1; ++i) {
-				char* pCountableElementPos = reinterpret_cast<char*>(pCmd) + sizeof(TCommand) + sizeof(TCountableElement) * i;
-				JCore::Memory::PlacementNew(*reinterpret_cast<TCountableElement*>(pCountableElementPos));
-			}
-		}
+		TCommand::_Construct(pCmd, count);
 	}
 
 	template <int Index, typename... Ints>
@@ -473,14 +469,7 @@ private:
 		using TCountableElement = typename TCommand::TCountableElement;
 
 		TCommand* pCmd = Get<Index>();
-		:: new (pCmd) TCommand(count);
-
-		if constexpr (TCommand::ConstructCountableElement) {
-			for (int i = 0; i < count - 1; ++i) {
-				char* pCountableElementPos = reinterpret_cast<char*>(pCmd) + sizeof(TCommand) + sizeof(TCountableElement) * i;
-				JCore::Memory::PlacementNew(*reinterpret_cast<TCountableElement*>(pCountableElementPos));
-			}
-		}
+		TCommand::_Construct(pCmd, count);
 
 		ConstructRecursive<Index + 1>(counts...);
 	}
@@ -539,11 +528,12 @@ class SinglePacket;
 // 스타릭 커맨드 전용
 template <typename TCommand>
 class SinglePacket<TCommand, true> : public CommandPacket {
-	static_assert(JCore::IsBaseOf_v<ICommand, TCommand>, "... TCommand must be derived type of \"ICommand\""); // 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
+	CMD_CHECK_BASE_OF_COMMAND(TCommand)
+
 	using TPacket = SinglePacket<TCommand>;
 public:
-	// count와 noCount 매개변수는 다이나믹 커맨드 처리를 위해 특수화된 SinglePacket과의 호환성을 위해 둔 것이다.
-	SinglePacket(int count = 1)
+	// count 매개변수는 다이나믹 커맨드 처리를 위해 특수화된 SinglePacket과의 호환성을 위해 둔 것이다.
+	SinglePacket(int count = 0)
 		: CommandPacket(1, sizeof(TCommand))
 		, Cmd(*reinterpret_cast<TCommand*>(m_pBuf + PacketHeaderSize_v))
 	{
@@ -582,7 +572,8 @@ private:
 // 다이나믹 커맨드 전용
 template <typename TCommand>
 class SinglePacket<TCommand, false> : public CommandPacket {
-	static_assert(JCore::IsBaseOf_v<ICommand, TCommand>, "... TCommand must be derived type of \"ICommand\""); // 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
+	DYNAMIC_CMD_CHECK_ZERO_SIZE_ARRAY_FIELD(TCommand)
+	
 	using TPacket = SinglePacket<TCommand>;
 	using TCountableElement = typename TCommand::TCountableElement;
 public:
@@ -591,24 +582,17 @@ public:
 		// 실제 보낼 패킷데이터 크기(m_iPacketLen)만큼만 보내기 위해서 m_iPacketLen은 올바르게 설정해줘야한다.
 		: CommandPacket(allocator, 1, TCommand::_Size(count)) 
 		// count가 0일 경우 구조체 일부가 잘리기 때문에 PlacementNew 수행시 메모리 커럽션이 발생하게 된다. 따라서 생성시에는 count가 0이더라도 1로 가정하고 처리하도록 한다.
-		, m_pDynamicBuf(allocator.Exist() ? (char*)allocator->DynamicPop(PacketHeaderSize_v + TCommand::_Size(count <= 0 ? 1 : count)) : dbg_new char[PacketHeaderSize_v + TCommand::_Size(count <= 0 ? 1 : count)])
+		//   -> 이제 0으로 사용가능, Flexible Array를 사용하기 약속함
+		, m_pDynamicBuf(allocator.Exist() ? (char*)allocator->DynamicPop(PacketHeaderSize_v + TCommand::_Size(count)) : dbg_new char[PacketHeaderSize_v + TCommand::_Size(count)])
 		, Cmd(*reinterpret_cast<TCommand*>(m_pDynamicBuf + PacketHeaderSize_v))
 	{
 		// m_pDynamicBuf가 최소 sizeof(TCommand)보다는 커야지 메모리 커럽션이 발생하지 않는다.
-		JCore::Memory::PlacementNew(Cmd, count);
-
-		// CountableObject에 대해서 count만큼 생성자 호출을 수행해줘야한다.
-		if constexpr (TCommand::ConstructCountableElement) {
-			for (int i = 0; i < count - 1; ++i) {
-				char* pCountableElementPos = reinterpret_cast<char*>(&Cmd) + sizeof(Cmd) + sizeof(TCountableElement) * i;
-				JCore::Memory::PlacementNew(*reinterpret_cast<TCountableElement*>(pCountableElementPos));
-			}
-		}
+		TCommand::_Construct(&Cmd, count);
 	}
 
 	~SinglePacket() override {
 		if (m_Allocator.Exist()) {
-			m_Allocator->DynamicPush(m_pDynamicBuf, PacketHeaderSize_v + TCommand::_Size(Cmd.Count <= 0 ? 1 : Cmd.Count));
+			m_Allocator->DynamicPush(m_pDynamicBuf, PacketHeaderSize_v + TCommand::_Size(Cmd.Count));
 		} else {
 			JCORE_DELETE_ARRAY_SAFE(m_pDynamicBuf);
 		}

@@ -86,7 +86,7 @@ struct SendHelper : SendHelperBase
 
 	template <typename TCommand>
 	static TSending<TCommand> SendBegin() {
-		return SendBegin<TCommand>(1);
+		return SendBegin<TCommand>(0);
 	}
 
 	template <typename TCommand>
@@ -96,8 +96,14 @@ struct SendHelper : SendHelperBase
 		if (SendInformation.Strategy == SendStrategy::SendAlloc) {
 			return TSending<TCommand>(SendInformation.Sender->template SendAlloc<TCommand>(count), nullptr);
 		}
-
+		
 		auto pPacket = SinglePacket<TCommand>::Create(SendInformation.MemPool, count);	// 해제는 소멸자에서함
+
+		if (pPacket->Cmd.CmdLen >= 2500) {
+			const char* n = TCommand::_Name();
+			DebugAssert(false);
+		}
+
 		return TSending<TCommand>(pPacket->Cmd, pPacket);
 	}
 

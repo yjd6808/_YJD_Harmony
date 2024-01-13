@@ -19,6 +19,8 @@ bool SelectMenu(int menu);
 UdpClientNetGroup* pClientGroup;
 
 int main() {
+	DefaultParserType = PacketParser::Command;
+
 	Winsock::Initialize(2, 2);
 	InitializeJCore();
 
