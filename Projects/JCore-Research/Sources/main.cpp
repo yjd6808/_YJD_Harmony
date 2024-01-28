@@ -66,9 +66,54 @@ struct Example7
 // C/C++에서는 크기 0인 배열(Zero Size Array)을
 // 사용하는 이유는 가변길이
 
+#define CASE_1(a)			CASE_1_(1, 2, a)
+#define CASE_1_(a, b, c)	a + b + c
+
+
+#define CASE_2(a)			CASE_2_(1, a)
+#define CASE_2_(...)		CASE_2__(__VA_ARGS__, 3)
+#define CASE_2__(a, b, c)	a + b + c
+
+#define CASE_3_ELEMS(...)	__VA_ARGS__, 1, 2
+#define CASE_3(...)			CASE_2_(CASE_3_ELEMS(__VA_ARGS__))
+// #define CASE_3_(a, b, c)	a + b + c
+#define CASE_3_(a)	a
+
+
+struct S
+{
+	int a;
+	int b;
+};
+
+
+#define CASE_4_ELEMENTS(a, b)	{ a, b }
+#define CASE_4(a, b)			CASE_4_(CASE_4_ELEMENTS(a, b))
+#define CASE_4_(a)				a
+
+constexpr S case4 CASE_4(1, 2);		// constexpr S case4{1, 2};로 확장됨
+
+// CASE4에서 발생한 마이크로소프트 전처리기만의 고유 문제를 확장 매크로를 활용해서 해결
+#define CASE_5_ELEMENTS(a, b)	{ a, b }
+#define CASE_5(a, b)			CASE_5_(CASE_5_ELEMENTS(a, b))
+#define CASE_5_(...)			JCORE_EXPAND_1(CASE_5__(__VA_ARGS__))		// 확장 매크로 수행
+#define CASE_5__(a, b)			a, b
+
+constexpr S case5 CASE_5(1, 2);		// constexpr S case5{1, 2};로 확장됨
+
+#define CASE_6_ELEMENTS			1, 2
+#define CASE_6					JCORE_EXPAND_1(CASE_6_(CASE_6_ELEMENTS))
+#define CASE_6_					
+
+
+
 int main() {
 	InitializeJCore();
 	InitializeDefaultLogger();
+
+	
+
+	
 
 	Example5 ex_array[2];
 
