@@ -21,7 +21,10 @@ public:
     void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 
     void update(float dt) override;
+
     bool init() override;
+    void onEnterTransitionDidFinish() override;
+
     SceneType_t getType() override { return SceneType::ChannelSelect; }
 };
 

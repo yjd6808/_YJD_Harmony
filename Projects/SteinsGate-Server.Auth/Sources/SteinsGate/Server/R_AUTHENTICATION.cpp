@@ -64,7 +64,7 @@ void R_AUTHENTICATION::RECV_CAU_Login(Session* session, ICommand* cmd) {
 		return;
 	}
 
-	pAuthenticationData = Core::Contents.AuthenticationManager->Issue(accountData.Id.Source);
+	pAuthenticationData = Core::Contents.AuthenticationManager->Issue(accountData);
 	if (pAuthenticationData == nullptr) {
 		S_AUTHENTICATION::SEND_AUC_LoginAck(LoginResult::Logined);
 		return;
@@ -77,19 +77,22 @@ void R_AUTHENTICATION::RECV_CAU_Login(Session* session, ICommand* cmd) {
 void R_AUTHENTICATION::RECV_SAU_AuthenticationCheck(Session* session, ICommand* cmd) {
 	SAU_AuthenticationCheck* pCmd = (SAU_AuthenticationCheck*)cmd;
 	ServerProcessType_t eReplyServer = ServerProcessType::None;
-	bool bAuthenticated = false;
+	AuthenticationData* pAuthenticationData = nullptr;
 
 	if (pCmd->RequestedServer == ServerProcessType::Lobby) {
-		bAuthenticated = Core::Contents.AuthenticationManager->Update(pCmd->Serial, pCmd->AccountId.Source, AuthenticationState::Lobby);
+		pAuthenticationData = Core::Contents.AuthenticationManager->Update(pCmd->Serial, pCmd->AccountId.Source, AuthenticationState::Lobby);
 		eReplyServer = ServerProcessType::Lobby;
 	} else if (pCmd->RequestedServer == ServerProcessType::Game) {
-		bAuthenticated = Core::Contents.AuthenticationManager->Update(pCmd->Serial, pCmd->AccountId.Source, AuthenticationState::Game);
+		pAuthenticationData = Core::Contents.AuthenticationManager->Update(pCmd->Serial, pCmd->AccountId.Source, AuthenticationState::Game);
 		eReplyServer = ServerProcessType::Game;
 	} else {
 		_LogWarn_("알 수 없는 프로세스로부터 수신");
 		return;
 	}
 
+	const GameServerType_t eLastServer = GameServerType::Hilder;		// 힐더서버를 디폴트로...
+	const bool bAuthenticated = pAuthenticationData != nullptr;			// 업데이트가 성공적으로 끝나서 올바른 AuthenticationData를 반환한 경우
+
 	S_AUTHENTICATION_IS::SetInformation(Core::InterServerClientTcp, SendStrategy::SendAsync, eReplyServer);
-	S_AUTHENTICATION_IS::SEND_AUS_AuthenticationCheckAck(pCmd->SessionHandle, bAuthenticated);
+	S_AUTHENTICATION_IS::SEND_AUS_AuthenticationCheckAck(bAuthenticated, pCmd->SessionHandle, pAuthenticationData->AccountData.LastServer);
 }

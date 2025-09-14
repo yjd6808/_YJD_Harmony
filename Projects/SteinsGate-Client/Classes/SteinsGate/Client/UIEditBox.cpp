@@ -77,10 +77,10 @@ bool UIEditBox::init() {
 	m_pEditBox = EditBox::create(m_UISize, "");
 	m_pListener = dbg_new Listener(this);
 
-	m_pImpl = (SGEditBoxImplWin*)m_pEditBox->getImpl();
-	m_hNativeHandle = m_pImpl->getNativeHandle();
-	m_pLabel = m_pImpl->getLabel();
-	m_pLabelPlaceholder = m_pImpl->getLabelPlaceholder();
+	m_pEditBoxImpl = (SGEditBoxImplWin*)m_pEditBox->getImpl();
+	m_hNativeHandle = m_pEditBoxImpl->getNativeHandle();
+	m_pLabel = m_pEditBoxImpl->getLabel();
+	m_pLabelPlaceholder = m_pEditBoxImpl->getLabelPlaceholder();
 	m_pLabelPlaceholder->setAlignment(TextHAlignment(m_pInfo->TextHAlignment));
 	m_pLabelPlaceholder->setDimensions(m_UISize.width, m_UISize.height);
 

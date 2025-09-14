@@ -13,9 +13,15 @@
 
 NS_CONST_BEGIN
 
-namespace Authentication
+namespace Timeout
 {
-	constexpr JCore::Range SerialRange = { 10000000, 20000000 };
+    namespace Authentication
+    {
+        constexpr int LobbyWait = 15;
+        constexpr int Lobby = 900;
+        constexpr int GameWait = 15;
+        constexpr int Game = 1800;
+    };
 }
 
 

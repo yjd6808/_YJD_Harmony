@@ -17,9 +17,9 @@
 
 USING_NS_JC;
 
-AuthenticationData* AuthenticationManager::Issue(const char* accountId) {
+AuthenticationData* AuthenticationManager::Issue(const JCORE_REF_IN AccountData& accountData) {
 	JCORE_LOCK_GUARD(m_Lock);
-	return IssueRaw(accountId);
+	return IssueRaw(accountData);
 }
 
 bool AuthenticationManager::Exist(AuthenticationSerial_t serial, const char* accountId) {
@@ -27,7 +27,7 @@ bool AuthenticationManager::Exist(AuthenticationSerial_t serial, const char* acc
 	return FindRaw(serial, accountId);
 }
 
-bool AuthenticationManager::Update(AuthenticationSerial_t serial, const char* accountId, AuthenticationState_t state) {
+AuthenticationData* AuthenticationManager::Update(AuthenticationSerial_t serial, const char* accountId, AuthenticationState_t state) {
 	JCORE_LOCK_GUARD(m_Lock);
 	return UpdateRaw(serial, accountId, state);
 }
@@ -74,14 +74,14 @@ void AuthenticationManager::OnScheduled(SchedulerTask* task) {
 	// TODO: 만료된 경우 알려줌
 	for (int i = 0; i < s_vExpired.Size(); ++i) {
 		AuthenticationData* pExpiredData = s_vExpired[i];
-		_LogDebug_("%s 인증 데이터 만료 (상태:%s)", pExpiredData->AccountId.Source, AuthenticationState::Name[pExpiredData->State]);
+		_LogDebug_("%s 인증 데이터 만료 (상태:%s)", pExpiredData->AccountData.Id.Source, AuthenticationState::Name[pExpiredData->State]);
 		delete pExpiredData;
 	}
 	s_vExpired.Clear();
 }
 
-AuthenticationData* AuthenticationManager::IssueRaw(const char* accountId) {
-	if (m_hmAccountIdMap.Exist(accountId)) {
+AuthenticationData* AuthenticationManager::IssueRaw(const JCORE_REF_IN AccountData& accountData) {
+	if (m_hmAccountIdMap.Exist(accountData.Id.Source)) {
 		return nullptr;
 	}
 
@@ -99,14 +99,14 @@ AuthenticationData* AuthenticationManager::IssueRaw(const char* accountId) {
 	}
 
 	if (AuthenticationData* pExistData = FindRaw(iSerial)) {
-		_LogDebug_("이미 해당 시리얼의 유저가 존재함. (%d:%s)", pExistData->Serial, pExistData->AccountId.Source);
+		_LogDebug_("이미 해당 시리얼의 유저가 존재함. (%d:%s)", pExistData->Serial, pExistData->AccountData.Id.Source);
 		return nullptr;
 	}
 
 	AuthenticationData* pToken = dbg_new AuthenticationData{};
 	bool bAdded = true;
 
-	pToken->AccountId = accountId;
+	pToken->AccountData = accountData;
 	pToken->Serial = iSerial;
 	pToken->TimeId = timeId;
 
@@ -116,7 +116,7 @@ AuthenticationData* AuthenticationManager::IssueRaw(const char* accountId) {
 	bAdded = m_hmSerialMap.Insert(iSerial, pToken);
 	if (!bAdded) { DebugAssert(false); return nullptr; }
 
-	bAdded = m_hmAccountIdMap.Insert(pToken->AccountId.Source, pToken);
+	bAdded = m_hmAccountIdMap.Insert(pToken->AccountData.Id.Source, pToken);
 	if (!bAdded) { DebugAssert(false); return nullptr; }
 
 	return pToken;
@@ -147,33 +147,33 @@ AuthenticationData* AuthenticationManager::FindRaw(AuthenticationSerial_t serial
 		return nullptr;
 	}
 
-	if ((*ppFind)->AccountId == accountId) {
+	if ((*ppFind)->AccountData.Id == accountId) {
 		return *ppFind;
 	}
 	return nullptr;
 }
 
-bool AuthenticationManager::UpdateRaw(AuthenticationSerial_t serial, const char* accountId, AuthenticationState_t nextState) {
+AuthenticationData* AuthenticationManager::UpdateRaw(AuthenticationSerial_t serial, const char* accountId, AuthenticationState_t nextState) {
 
  	AuthenticationData* pData = FindRaw(serial);
 
 	if (pData == nullptr) {
-		return false;
+		return nullptr;
 	}
 
-	if (pData->AccountId != accountId) {
+	if (pData->AccountData.Id != accountId) {
 		_LogWarn_("시리얼은 동일하지만 ID가 다른 유저입니다.");
-		return false;
+		return nullptr;
 	}
 
 	if (pData->State == nextState) {
 		DebugAssertMsg(false, "동일한 인증상태로 업데이트를 시도했습니다.");
-		return false;
+		return nullptr;
 	}
 
 	if (!RemoveRaw(pData->TimeId)) {
 		_LogDebug_("기존 타임ID 제거 실패");
-		return false;
+		return nullptr;
 	}
 
 	DateTime timeId;
@@ -187,9 +187,9 @@ bool AuthenticationManager::UpdateRaw(AuthenticationSerial_t serial, const char*
 	pData->State = nextState;
 
 	bAdded = m_tmTimeMap.Insert(timeId, pData);
-	if (!bAdded) { DebugAssert(false); return false; }
+	if (!bAdded) { DebugAssert(false); return nullptr; }
 
-	return true;
+	return pData;
 }
 
 bool AuthenticationManager::RemoveRaw(const DateTime& timeId) {
@@ -210,7 +210,7 @@ bool AuthenticationManager::RemoveRaw(AuthenticationSerial_t serial) {
 	bRemoved = m_hmSerialMap.Remove(serial);
 	if (!bRemoved) { DebugAssert(false); return false; }
 
-	bRemoved = m_hmAccountIdMap.Remove(pData->AccountId.Source);
+	bRemoved = m_hmAccountIdMap.Remove(pData->AccountData.Id.Source);
 	if (!bRemoved) { DebugAssert(false); return false; }
 	return true;
 }
@@ -223,7 +223,7 @@ bool AuthenticationManager::RemoveRaw(AuthenticationSerial_t serial, const char*
 		return false;
 	}
 
-	if (pData->AccountId != accountId) {
+	if (pData->AccountData.Id.Source != accountId) {
 		return false;
 	}
 
@@ -265,10 +265,10 @@ bool AuthenticationManager::GenerateTimeId(JCORE_OUT DateTime& timeId, Authentic
 	int iRetry = 0;
 
 	switch (state) {
-	case AuthenticationState::LobbyWait: generatedTime.AddMiliSecond(1000 * Const::Timeout::LobbyWait);	break;
-	case AuthenticationState::Lobby:	 generatedTime.AddMiliSecond(1000 * Const::Timeout::Lobby);		break;
-	case AuthenticationState::GameWait:  generatedTime.AddMiliSecond(1000 * Const::Timeout::GameWait);	break;
-	case AuthenticationState::Game:		 generatedTime.AddMiliSecond(1000 * Const::Timeout::Game);		break;
+	case AuthenticationState::LobbyWait: generatedTime.AddMiliSecond(1000 * Const::Timeout::Authentication::LobbyWait);	break;
+	case AuthenticationState::Lobby:	 generatedTime.AddMiliSecond(1000 * Const::Timeout::Authentication::Lobby);		break;
+	case AuthenticationState::GameWait:  generatedTime.AddMiliSecond(1000 * Const::Timeout::Authentication::GameWait);	break;
+	case AuthenticationState::Game:		 generatedTime.AddMiliSecond(1000 * Const::Timeout::Authentication::Game);		break;
 	default: _LogWarn_("GenerateTimeId() 실패"); return false;
 	}
 

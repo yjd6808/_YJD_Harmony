@@ -14,6 +14,6 @@
 
 struct S_LOBBY : JNetwork::SendHelper<S_LOBBY>
 {
-	static void SEND_LOC_JoinLobbyAck(bool success);
+	static void SEND_LOC_JoinLobbyAck(GameServerType_t serverType);
 };
 

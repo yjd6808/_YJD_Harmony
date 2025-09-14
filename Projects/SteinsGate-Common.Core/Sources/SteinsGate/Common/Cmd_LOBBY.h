@@ -17,8 +17,9 @@
 // ======================= CMD LIST =======================
 // COUNT = 2
 
-#define CMDID_CLO_JoinLobby		2000
-#define CMDID_LOC_JoinLobbyAck	2001
+#define CMDID_CLO_JoinLobby				2000
+#define CMDID_LOC_JoinLobbyAck			2001
+#define CMDID_CLO_LoadChannelInfo		2002
 
 #pragma pack(push, CMD_ALIGNMENT)
 
@@ -29,8 +30,11 @@ STATIC_CMD_END
 
 
 STATIC_CMD_BEGIN(LOC_JoinLobbyAck, CMDID_LOC_JoinLobbyAck)
-bool Success;
+GameServerType_t DefaultSelectedServer;
 STATIC_CMD_END
 
+STATIC_CMD_BEGIN(CLO_LoadChannelInfo, CMDID_CLO_LoadChannelInfo)
+GameServerType_t Server;
+STATIC_CMD_END
 
 #pragma pack(pop)

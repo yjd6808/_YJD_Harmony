@@ -11,7 +11,7 @@
 #include "GameCoreHeader.h"
 #include "S_LOBBY.h"
 
-#include <SteinsGate/Common/Cmd.h>
+#include <SteinsGate/Common/Cmd_LOBBY.h>
 #include <SteinsGate/Client/AuthenticationComponent.h>
 
 USING_NS_JC;
@@ -23,4 +23,9 @@ void S_LOBBY::SEND_CLO_JoinLobby() {
 	const AuthenticationComponent* pAuthenticationComponent = Core::Net->getAuthenticationComponent();
 	sending.Cmd.AccountId = pAuthenticationComponent->getAccountData().Id;
 	sending.Cmd.Serial = pAuthenticationComponent->getSerial();
+}
+
+void S_LOBBY::SEND_CLO_LoadChannelInfo(GameServerType_t serverType) {
+	const auto sending = SendBegin<CLO_LoadChannelInfo>();
+	sending.Cmd.Server = serverType;
 }

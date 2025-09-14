@@ -23,7 +23,10 @@
 
         {"__comment__": "인증 관련"},
         ["AUTHENTICATION_BEGIN",                        "%s서버 접속성공\n인증 시퀀스를 진행중입니다."],
-        ["AUTHENTICATION_LOBBY_FAILED",                 "로비인증에 실패했습니다. 인증시간이 만료되었거나, 올바르지 않은 경로로 접속하셨습니다."]
+        ["AUTHENTICATION_LOBBY_FAILED",                 "로비인증에 실패했습니다. 인증시간이 만료되었거나, 올바르지 않은 경로로 접속하셨습니다."],
+
+        {"__comment__": "로비 관련"},
+        ["LOBBY_LOADING_CHANNEL_INFO",                  "채널 정보를 불러오는 중입니다."],
     ]
     
     

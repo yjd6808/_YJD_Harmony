@@ -52,6 +52,6 @@ void R_AUTHENTICATION::RECV_AUS_AuthenticationCheckAck(JCORE_UNUSED Session* ses
 
 	pAuthenticationComponent->SetState(AuthenticationState::Lobby);
 	S_LOBBY::SetInformation(pSession, SendStrategy::SendAsync);
-	S_LOBBY::SEND_LOC_JoinLobbyAck(pCmd->Success);
+	S_LOBBY::SEND_LOC_JoinLobbyAck(pCmd->LastServer);
 }
 

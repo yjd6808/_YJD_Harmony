@@ -16,8 +16,8 @@ create table t_account (
     c_account_id		varchar(20) 	unique								comment '계정 아이디',
     c_account_pass		varchar(20)		not null							comment '계정 비번',
     c_created			timestamp		default current_timestamp			comment '계정 생성날짜',
-    c_logined			timestamp		default 0							comment '계정 접속날짜',
-    c_last_login_server tinyint         default 0                           comment '마지막 접속한 게임서버 ID'
+    c_logined			timestamp		default null						comment '계정 접속날짜',
+    c_last_login_server tinyint         default 1                           comment '마지막 접속한 게임서버 ID'
 );
 
 

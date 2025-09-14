@@ -345,7 +345,6 @@ void UI_ChannelSelect::onInit() {
 }
 
 void UI_ChannelSelect::onLoaded() {
-	selectServer(GameServerType::Luke);
 	selectChannelTab(ChannelTab::Teen);
 
 	SGSprite* pGearSprite = m_pSpriteBackgroundGear->source();
@@ -484,6 +483,8 @@ void UI_ChannelSelect::selectServer(GameServerType_t serverType) {
 		else if (pButton->State_ == ServerButton::Selected)
 			pButton->setState(ServerButton::Normal);
 	}
+
+	S_LOBBY::SEND_CLO_LoadChannelInfo(serverType);
 }
 
 void UI_ChannelSelect::selectChannel(int channelIndex) {

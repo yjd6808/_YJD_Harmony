@@ -23,6 +23,7 @@ TEST(PathTest, BasicTest) {
 	auto d = Path::Combine("aaa/////", "\\\\ggfd/bbb");
 	auto e = Path::Combine("a", "b");
 	auto f = Path::Combine("a", "b", "c");
+	auto z = Path::Combine("", "b", "c");
 
 	EXPECT_TRUE(a == "aaa/bbb");
 	EXPECT_TRUE(b == "aaa/bbb");
@@ -30,6 +31,7 @@ TEST(PathTest, BasicTest) {
 	EXPECT_TRUE(d == "aaa/ggfd/bbb");
 	EXPECT_TRUE(e == "a/b");
 	EXPECT_TRUE(f == "a/b/c");
+	EXPECT_TRUE(z == "b/c");
 
 	auto g = Path::Extension("fse.abc");
 	auto h = Path::Extension(".abc");

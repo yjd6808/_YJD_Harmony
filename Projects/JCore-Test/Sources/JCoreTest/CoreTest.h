@@ -62,6 +62,7 @@ USING_NS_STD;
 // 개별 테스트 수행시 사용
 #if TestEnabled == OFF
 	#define	TEST_VectorTest					    ON
+	#define	TEST_PathTest					    ON
 #endif
 
 #if TestEnabled == ON

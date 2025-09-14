@@ -18,6 +18,8 @@
 #include <SteinsGate/Common/Const_RESOURCE.h>
 #include <SteinsGate/Common/Const_SERVER.h>
 #include <SteinsGate/Common/Const_STRINGLEN.h>
+#include <SteinsGate/Common/Const_TIMEOUT.h>
 #include <SteinsGate/Common/Const_VISUAL.h>
+
 
 constexpr int InvalidValue_v = -1;

@@ -143,7 +143,9 @@ String Path::Combine(const String& lhs, const String& rhs) {
 	if (iLast != -1)
 		szCombined.Clear(iLast + 1, iCount);
 
-	szCombined.Append('/');
+	if (szCombined.Length() != 0)
+		szCombined.Append('/');
+
 	iCount = 0;
 
 	for (iLast = 0; iLast < rhs.Length(); ++iLast, ++iCount) {

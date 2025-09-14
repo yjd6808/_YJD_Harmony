@@ -13,6 +13,7 @@
 
 #include <SteinsGate/Client/WorldScene.h>
 #include <SteinsGate/Client/Define_UI.h>
+#include <SteinsGate/Client/S_LOBBY.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -45,6 +46,10 @@ bool SGChannelSelectScene::init() {
 
 	m_pUILayer->addUIGroup(GROUP_UI_CHANNEL);
 	return true;
+}
+
+void SGChannelSelectScene::onEnterTransitionDidFinish() {
+	SceneBase::onEnterTransitionDidFinish();
 }
 
 

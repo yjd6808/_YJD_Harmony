@@ -422,6 +422,9 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\Struct_CHANNEL.h">
       <Filter>Struct</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_TIMEOUT.h">
+      <Filter>Const</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">

@@ -101,19 +101,10 @@ constexpr S case4 CASE_4(1, 2);		// constexpr S case4{1, 2};로 확장됨
 
 constexpr S case5 CASE_5(1, 2);		// constexpr S case5{1, 2};로 확장됨
 
-#define CASE_6_ELEMENTS			1, 2
-#define CASE_6					JCORE_EXPAND_1(CASE_6_(CASE_6_ELEMENTS))
-#define CASE_6_					
-
-
-
 int main() {
 	InitializeJCore();
 	InitializeDefaultLogger();
 
-	
-
-	
 
 	Example5 ex_array[2];
 
@@ -125,9 +116,6 @@ int main() {
 
 	Example2 _2;
 	Example3 _3;
-
-	constexpr int K22 = sizeof _2.b;
-	constexpr int K33 = sizeof _3.b;
 
 	Example6 ex;
 	void* a = &ex;

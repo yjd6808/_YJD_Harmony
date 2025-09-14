@@ -179,6 +179,10 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\Const_MONSTER.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Const_STRINGLEN.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Const_CHARACTER.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_TIMEOUT.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\Const_VISUAL.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Const_SERVER.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Const_ITEM.h" />

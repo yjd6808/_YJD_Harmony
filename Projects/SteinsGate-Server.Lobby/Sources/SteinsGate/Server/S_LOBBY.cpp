@@ -11,7 +11,7 @@
 
 #include <SteinsGate/Common/Cmd_LOBBY.h>
 
-void S_LOBBY::SEND_LOC_JoinLobbyAck(bool success) {
+void S_LOBBY::SEND_LOC_JoinLobbyAck(GameServerType_t serverType) {
 	auto sending = SendBegin<LOC_JoinLobbyAck>();
-	sending.Cmd.Success = success;
+	sending.Cmd.DefaultSelectedServer = serverType;
 }

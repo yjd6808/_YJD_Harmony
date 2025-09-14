@@ -31,8 +31,10 @@ RELAY_STATIC_CMD_END
 
 RELAY_STATIC_CMD_BEGIN(AUS_AuthenticationCheckAck, CMDID_AUS_AuthenticationCheckAck)
 int SessionHandle;
-bool Success;			// 실패시 만료 혹은 이상한유저
+GameServerType_t LastServer;
+bool Success;							// 실패시 만료 혹은 이상한유저
 RELAY_STATIC_CMD_END
+
 
 
 #pragma pack(pop)	// #pragma pack(push, CMD_ALIGNMENT)

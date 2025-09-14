@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
 
 
 int parse_args(int argc, char* argv[]) {
-	if (argc == 0) {
+	if (argc <= 1) {
 		Console::WriteLine("게임 서버 타입을 인자로 전달해주세요");
 		::exit(-1);
 	}

@@ -100,7 +100,7 @@ private:
 	UIEditBoxInfo* m_pInfo;
     SGLabel* m_pLabel{};
     SGLabel* m_pLabelPlaceholder{};
-    SGEditBoxImplWin* m_pImpl{};
+    SGEditBoxImplWin* m_pEditBoxImpl{};
 	SGEditBox* m_pEditBox;
     Listener* m_pListener;
 };

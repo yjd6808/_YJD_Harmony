@@ -14,6 +14,7 @@
 struct S_LOBBY : JNetwork::SendHelper<S_LOBBY>
 {
 	static void SEND_CLO_JoinLobby();
+	static void SEND_CLO_LoadChannelInfo(GameServerType_t serverType);
 };
 
 

@@ -16,19 +16,21 @@
         Title="MainWindow"
         WindowStyle="None"
         Width="400"
-        Height="800"
+        Height="400"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="400"></RowDefinition>
+            <RowDefinition Height="200"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+        <Grid>
 
-        <StackPanel>
-            <Image Source="SGToolsCommon;component/Resource/Icon/arrow_bottomleft.ico"
-                   Height="63"
-                   Stretch="Fill"></Image>
+        </Grid>
 
-            <TextBlock Text="{Binding Source={x:Static local:MainWindow.Str}}" LineHeight="15">
-               
-            </TextBlock>
-        </StackPanel>
+        <Grid Grid.Row="1" Margin="0, 0, 0, 200">
+            
+        </Grid>
     </Grid>
     
 </Window>
