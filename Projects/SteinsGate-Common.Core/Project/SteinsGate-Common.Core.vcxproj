@@ -127,6 +127,8 @@
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\Struct.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\TextParser.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\_Object\_Character\StackingBuffer.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\_Object\_Character\StackingBufferMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\AudioPlayer.h" />
@@ -410,6 +412,8 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\_Object\_Character\StackingBuffer.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\_Object\_Character\StackingBufferMgr.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -500,6 +504,7 @@
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
       <BrowseInformation>true</BrowseInformation>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Sources\SteinsGate\Common</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -524,6 +529,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Sources\SteinsGate\Common</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -544,6 +550,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Sources\SteinsGate\Common</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -564,6 +571,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Sources\SteinsGate\Common</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>

@@ -778,7 +778,5 @@ struct TimeCounterF : TimeCounterBase
 	TimeSpanF Elapsed;
 };
 
-
-
 NS_JC_END
 

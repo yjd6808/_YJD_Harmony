@@ -197,19 +197,10 @@
 
 
 	// 게터/세터
-	#define JCORE_GETTER_L(type, function_name, variable_name)  type get##function_name() const { return variable_name; }
-	#define JCORE_SETTER_L(type, function_name, variable_name)  void set##function_name(type _##function_name) { variable_name = _##function_name; }
-	#define JCORE_GETTER_SETTER_L(type, function_name, variable_name)	\
-	JCORE_GETTER_L(type, function_name, variable_name)					\
-	JCORE_SETTER_L(type, function_name, variable_name)
-	
-	#define JCORE_GETTER_U(type, function_name, variable_name)  type Get##function_name() const { return variable_name; }
-	#define JCORE_SETTER_U(type, function_name, variable_name)  void Set##function_name(type _##function_name) { variable_name = _##function_name; }
-	#define JCORE_GETTER_SETTER_U(type, function_name, variable_name)	\
-	JCORE_GETTER_U(type, function_name, variable_name)					\
-	JCORE_SETTER_U(type, function_name, variable_name)
+	#define JCORE_GETTER(type, function_name, variable_name)  type Get##function_name() const { return variable_name; }
+	#define JCORE_SETTER(type, function_name, variable_name)  void Set##function_name(type _##function_name) { variable_name = _##function_name; }
+	#define JCORE_GETTER_SETTER(type, function_name, variable_name)	\
+	JCORE_GETTER(type, function_name, variable_name)				\
+	JCORE_SETTER(type, function_name, variable_name)
 
-	#define JCORE_GETTER_SETTER(character_case, type, function_name, variable_name) JCORE_GETTER_SETTER_##character_case(type, function_name, variable_name)
-	#define JCORE_GETTER(character_case, type, function_name, variable_name)		JCORE_GETTER_##character_case(type, function_name, variable_name)
-	#define JCORE_SETTER(character_case, type, function_name, variable_name)		JCORE_SETTER_##character_case(type, function_name, variable_name)
 #endif

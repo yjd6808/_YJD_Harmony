@@ -127,6 +127,12 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\Enum_CHARACTER.cpp">
       <Filter>Enum</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\_Object\_Character\StackingBufferMgr.cpp">
+      <Filter>Object\Character\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\_Object\_Character\StackingBuffer.cpp">
+      <Filter>Object\Character\Buffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h" />
@@ -425,6 +431,12 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\Const_TIMEOUT.h">
       <Filter>Const</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\_Object\_Character\StackingBufferMgr.h">
+      <Filter>Object\Character\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\_Object\_Character\StackingBuffer.h">
+      <Filter>Object\Character\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">
@@ -504,6 +516,15 @@
     </Filter>
     <Filter Include="Struct">
       <UniqueIdentifier>{cee0fccc-495f-40e7-a9f1-67de833ca29e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{c863910e-9069-4ec0-b514-fe7fef29315e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Character">
+      <UniqueIdentifier>{25802493-0c7e-4558-9ea2-eb8d78e4022e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Character\Buffer">
+      <UniqueIdentifier>{83bd29c4-7086-4f8b-bbf7-60e764ef1422}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

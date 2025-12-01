@@ -10,9 +10,12 @@
 #include <JCore/Time.h>
 #include <JCore/Container/PropertyStatics.h>
 
+#include <timeapi.h>
+
 NS_JC_BEGIN
 
 bool AppExited = false;
+Int32U AppStartUpTimeTGT_v = ::timeGetTime();
 Int64 AppStartUpTime_v = DateTime::Now().Tick;
 
 void InitializeJCore() {
