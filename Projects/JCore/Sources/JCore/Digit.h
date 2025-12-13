@@ -14,7 +14,7 @@ NS_JC_BEGIN
 
 struct Digit
 {
-	static int Length(int num);	// 자릿수
+	static int Length(int _num);	// 자릿수
 	static const char* HexChar;
 };
 

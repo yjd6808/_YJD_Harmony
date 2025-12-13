@@ -4,102 +4,137 @@
 
 #pragma once
 
-
 #include <JCore/Container/ArrayStackIterator.h>
 #include <JCore/Container/ArrayCollection.h>
 
 NS_JC_BEGIN
 
 /*=====================================================================================
-								배열 스택
+						배열 스택
 =====================================================================================*/
 
-template <typename T, typename TAllocator = DefaultAllocator>
-class ArrayStack : public ArrayCollection<T, TAllocator>
+template <typename T, typename TAllocator = CDefaultAllocator>
+class ArrayStack final : public ArrayCollection<T, TAllocator>
 {
 	using TEnumerator			= Enumerator<T, TAllocator>;
 	using TArrayCollection		= ArrayCollection<T, TAllocator>;
 	using TArrayStack			= ArrayStack<T, TAllocator>;
 	using TArrayStackIterator	= ArrayStackIterator<T, TAllocator>;
+
 public:
-	ArrayStack(int capacity = TArrayCollection::ms_iDefaultCapacity) : TArrayCollection(capacity) {}
+	ArrayStack(int _capacity = TArrayCollection::DEFAULT_CAPACITY)
+		: TArrayCollection(_capacity)
+	{
+	}
 
-	ArrayStack(int size, const T& initData) : TArrayCollection(size, initData) {}
+	ArrayStack(int _size, const T& _initData)
+		: TArrayCollection(_size, _initData)
+	{
+	}
 
-	ArrayStack(int size, T&& initData) : TArrayCollection(size, Move(initData)) {}
+	ArrayStack(int _size, T&& _initData)
+		: TArrayCollection(_size, Move(_initData))
+	{
+	}
 
-	ArrayStack(const TArrayStack& other) : TArrayCollection(other) {}
+	ArrayStack(const TArrayStack& _other)
+		: TArrayCollection(_other)
+	{
+	}
 
-	ArrayStack(TArrayStack&& other) noexcept : TArrayCollection(Move(other)) {}
+	ArrayStack(TArrayStack&& _other) noexcept
+		: TArrayCollection(Move(_other))
+	{
+	}
 
-	ArrayStack(std::initializer_list<T> ilist) : TArrayCollection(ilist) {}
+	ArrayStack(std::initializer_list<T> _ilist)
+		: TArrayCollection(_ilist)
+	{
+	}
 
-	~ArrayStack() noexcept override {
+	~ArrayStack() noexcept override
+	{
 		this->Clear(true);
 	}
+
 public:
-	TArrayStack& operator=(const TArrayStack& other) {
-		this->CopyFrom(other);
+	TArrayStack& operator=(const TArrayStack& _other)
+	{
+		this->CopyFrom(_other);
 		return *this;
 	}
 
-	TArrayStack& operator=(TArrayStack&& other) noexcept {
-		this->CopyFrom(Move(other));
+	TArrayStack& operator=(TArrayStack&& _other) noexcept
+	{
+		this->CopyFrom(Move(_other));
 		return *this;
 	}
 
-	TArrayStack& operator=(std::initializer_list<T> ilist) {
-		this->CopyFrom(ilist);
+	TArrayStack& operator=(std::initializer_list<T> _ilist)
+	{
+		this->CopyFrom(_ilist);
 		return *this;
 	}
 
-	void Push(const T& data) {
-		if (this->IsFull()) {
+	void Push(const T& _data)
+	{
+		if (this->IsFull())
+		{
 			this->ExpandAuto();
 		}
 
-		this->SetAtUnsafe(this->m_iSize++, data);
+		this->SetAtUnsafe(this->size_++, _data);
 	}
 
-	void Push(const T&& data) {
-		if (this->IsFull()) {
+	void Push(T&& _data)
+	{
+		if (this->IsFull())
+		{
 			this->ExpandAuto();
 		}
 
-		this->SetAtUnsafe(this->m_iSize++, Move(data));
+		this->SetAtUnsafe(this->size_++, Move(_data));
 	}
 
-	T& Top() const {
-		return this->GetAt(this->m_iSize - 1);
+	T& Top() const
+	{
+		return this->GetAt(this->size_ - 1);
 	}
 
-	void Pop() {
-		this->DestroyAt(this->m_iSize - 1);
-		--this->m_iSize;
+	void Pop()
+	{
+		this->DestroyAt(this->size_ - 1);
+		--this->size_;
 	}
 
 	template <typename... Args>
-	void EmplacePush(Args&&... args) {
-		if (this->IsFull()) {
+	void EmplacePush(Args&&... _args)
+	{
+		if (this->IsFull())
+		{
 			this->ExpandAuto();
 		}
 
-		this->EmplaceAt(this->m_iSize++, Forward<Args>(args)...);
+		this->EmplaceAt(this->size_++, Forward<Args>(_args)...);
 	}
 
-	TEnumerator Begin() const override {
+	TEnumerator Begin() const override
+	{
 		return MakeShared<TArrayStackIterator, TAllocator>(this->GetOwner(), 0);
 	}
 
-	TEnumerator End() const override {
+	TEnumerator End() const override
+	{
 		return MakeShared<TArrayStackIterator, TAllocator>(this->GetOwner(), this->Size());
 	}
 
-	ContainerType GetContainerType() override { return ContainerType::ArrayStack; }
+	ContainerType GetContainerType() override
+	{
+		return ContainerType::ArrayStack;
+	}
 
 protected:
-	friend class TArrayStackIterator;
+	friend class ArrayStackIteratorAlias;
 };
-
 
 NS_JC_END

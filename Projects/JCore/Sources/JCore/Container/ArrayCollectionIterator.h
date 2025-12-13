@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 */
 
@@ -8,73 +8,91 @@
 
 NS_JC_BEGIN
 
-		
 // 전방 선언
-class VoidOwner;
+class CVoidOwner;
 template <typename, typename> class ArrayCollection;
+
 template <typename T, typename TAllocator>
 class JCORE_NOVTABLE ArrayCollectionIterator : public Iterator<T, TAllocator>
 {
 	using TIterator			= Iterator<T, TAllocator>;
-	using TArrayCollection  = ArrayCollection<T, TAllocator>;
+	using TArrayCollection	= ArrayCollection<T, TAllocator>;
+
 public:
-	ArrayCollectionIterator(VoidOwner& owner, int pos)
-		: TIterator(owner)
-		, m_iPos(pos) {}
+	ArrayCollectionIterator(CVoidOwner& _owner, int _pos)
+		: TIterator(_owner)
+		, pos_(_pos)
+	{
+	}
+
 	~ArrayCollectionIterator() noexcept override = 0;
+
 public:
-	bool HasNext() const override {
-		if (!this->IsValid()) {
+	bool HasNext() const override
+	{
+		if (!this->IsValid())
+		{
 			return false;
 		}
 
-		return IsValidIndex(m_iPos);
+		return IsValidIndex(pos_);
 	}
 
-	bool HasPrevious() const override {
-		if (!this->IsValid()) {
+	bool HasPrevious() const override
+	{
+		if (!this->IsValid())
+		{
 			return false;
 		}
 
-		return IsValidIndex(m_iPos - 1);
+		return IsValidIndex(pos_ - 1);
 	}
 
-	T& Next() override {
-		return CastArrayCollection()->m_pArray[m_iPos++];
+	T& Next() override
+	{
+		return CastArrayCollection()->pArray_[pos_++];
 	}
 
-	T& Previous() override {
-		return CastArrayCollection()->m_pArray[--m_iPos];
+	T& Previous() override
+	{
+		return CastArrayCollection()->pArray_[--pos_];
 	}
 
-	T& Current() override {
-		return CastArrayCollection()->m_pArray[m_iPos];
+	T& Current() override
+	{
+		return CastArrayCollection()->pArray_[pos_];
 	}
 
-	bool IsEnd() const override {
+	bool IsEnd() const override
+	{
 		return HasNext() == false;
 	}
 
-	bool IsBegin() const override {
+	bool IsBegin() const override
+	{
 		return HasPrevious() == false;
 	}
+
 protected:
-	virtual bool IsValidIndex(int idx) const {
-		return idx >= 0 && idx < CastArrayCollection()->Size();
+	virtual bool IsValidIndex(int _idx) const
+	{
+		return _idx >= 0 && _idx < CastArrayCollection()->Size();
 	}
 
-	TArrayCollection* CastArrayCollection() const {
+	TArrayCollection* CastArrayCollection() const
+	{
 		this->ThrowIfIteratorIsNotValid();
-		return this->Watcher.Get<TArrayCollection*>();
+		return this->watcher_.Get<TArrayCollection*>();
 	}
+
 protected:
-	int m_iPos;
+	int pos_;
 };
 
 template <typename T, typename TAllocator>
-ArrayCollectionIterator<T, TAllocator>::~ArrayCollectionIterator() noexcept {
+ArrayCollectionIterator<T, TAllocator>::~ArrayCollectionIterator() noexcept
+{
 	// UNUSED
 }
-
 
 NS_JC_END

@@ -5,62 +5,100 @@
  * HashTable에서 사용할 노드와 버킷
  */
 
-
 #pragma once
 
+#include <JCore/Comparator.h>
 #include <JCore/Hasher.h>
 #include <JCore/Memory.h>
 #include <JCore/TypeTraits.h>
 
 #include <JCore/Allocator/DefaultAllocator.h>
-#include <JCore/Pattern/NonCopyableh.h>
 #include <JCore/Container/Pair.h>
+#include <JCore/Pattern/NonCopyableh.h>
 
 NS_JC_BEGIN
 
 enum class HashTableType
 {
-	Set,
-	Map
+    Set,
+    Map
 };
 
 template <typename T>
 struct BucketNode
 {
-	using TThis = BucketNode<T>;
+    using TThis = BucketNode<T>;
 
-	BucketNode(const T& data, Int32U hash) : Data(data), Hash(hash) {}
-	BucketNode(T&& data, Int32U hash) : Data(Move(data)), Hash(hash) {}						// 호출됨: HashTable:Insert()
-	BucketNode(const TThis& other) : Data(other.Data), Hash(other.Hash) {}					// 호출됨: HashTable:operator=(const THashTable& other)
-	BucketNode(TThis&& other) noexcept { Data = Move(other.Data); Hash = other.Hash; }		// 호출됨: HashTable:Expand
-	~BucketNode() {}
+    BucketNode(const T& _data, Int32U _hash) : data_(_data), hash_(_hash)
+    {
+    }
+    BucketNode(T&& _data, Int32U _hash) : data_(Move(_data)), hash_(_hash)
+    {
+        // 호출됨: HashTable:Insert()
+    } 
+    BucketNode(const TThis& _other) : data_(_other.data_), hash_(_other.hash_)
+    {
+        // 호출됨: HashTable:operator=(const THashTable& other)
+    } 
+    BucketNode(TThis&& _other) noexcept
+    {
+        // 호출됨: HashTable:Expand
+        data_ = Move(_other.data_);
+        hash_ = _other.hash_;
+    } 
+    ~BucketNode()
+    {
+    }
 
-	TThis& operator=(const TThis& other) = delete;
-	TThis& operator=(TThis&& other) noexcept { Data = Move(other.Data); Hash = other.Hash; return *this; }
+    TThis& operator=(const TThis& _other) = delete;
+    TThis& operator=(TThis&& _other) noexcept
+    {
+        data_ = Move(_other.data_);
+        hash_ = _other.hash_;
+        return *this;
+    }
 
-	
-
-	T Data;
-	Int32U Hash;	// 처음에 한번 계산해놓으면 성능이 좀더 개선될 듯?
+    T data_;
+    Int32U hash_; // 처음에 한번 계산해놓으면 성능이 좀더 개선될 듯?
 };
 
 template <typename TKey, typename TValue>
 struct BucketNode<Pair<TKey, TValue>>
 {
-	using TPair = Pair<TKey, TValue>;
-	using TThis = BucketNode<Pair<TKey, TValue>>;
+    using TPair = Pair<TKey, TValue>;
+    using TThis = BucketNode<Pair<TKey, TValue>>;
 
-	BucketNode(const TPair& data, Int32U hash) : Data(data), Hash(hash) {}
-	BucketNode(TPair&& data, Int32U hash) : Data(Move(data)), Hash(hash) {}					// 호출됨: HashTable:Insert()
-	BucketNode(const TThis& other) : Data(other.Data), Hash(other.Hash) {}					// 호출됨: HashTable:operator=(const THashTable& other)
-	BucketNode(TThis&& other) noexcept { Data = Move(other.Data); Hash = other.Hash; }		// 호출됨: HashTable:Expand
-	~BucketNode() {}
+    BucketNode(const TPair& _data, Int32U _hash) : data_(_data), hash_(_hash)
+    {
+    }
+    BucketNode(TPair&& _data, Int32U _hash) : data_(Move(_data)), hash_(_hash)
+    {
+        // 호출됨: HashTable:Insert()
+    } 
+    BucketNode(const TThis& _other) : data_(_other.data_), hash_(_other.hash_)
+    {
+        // 호출됨: HashTable:operator=(const THashTable& other)
+    } 
+    BucketNode(TThis&& _other) noexcept
+    {
+        // 호출됨: HashTable:Expand
+        data_ = Move(_other.data_);
+        hash_ = _other.hash_;
+    } 
+    ~BucketNode()
+    {
+    }
 
-	TThis& operator=(const TThis& other) = delete;
-	TThis& operator=(TThis&& other) noexcept { Data = Move(other.Data); Hash = other.Hash; return *this; }
+    TThis& operator=(const TThis& _other) = delete;
+    TThis& operator=(TThis&& _other) noexcept
+    {
+        data_ = Move(_other.data_);
+        hash_ = _other.hash_;
+        return *this;
+    }
 
-	Pair<TKey, TValue> Data;
-	Int32U Hash;
+    Pair<TKey, TValue> data_;
+    Int32U hash_;
 };
 
 /* ==============================================================
@@ -80,151 +118,177 @@ struct Bucket;
 template <typename TKey, typename TAllocator>
 struct Bucket<TKey, TAllocator>
 {
-	using TBucketNode = BucketNode<TKey>;
+    using TBucketNode = BucketNode<TKey>;
 
-	Bucket()
-		: Next(nullptr)
-		, Previous(nullptr)
-		, DynamicArray(nullptr)
-		, Capacity(1)
-		, Size(0) {}
-	~Bucket() {
-		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(DynamicArray, Size);
-		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(DynamicArray, sizeof(TBucketNode) * Capacity);
-	}
+    Bucket()
+	: pNext_(nullptr)
+	, pPrevious_(nullptr)
+	, pDynamicArray_(nullptr)
+	, capacity_(1)
+	, size_(0)
+    {
+    }
+    ~Bucket()
+    {
+        JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pDynamicArray_, size_);
+        JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pDynamicArray_, sizeof(TBucketNode) * capacity_);
+    }
 
-	template <typename... Args>
-	void EmplaceBack(Args&&... args) {
-		if (!IsValid())
-			Initialize();
+    template <typename... Args>
+    void EmplaceBack(Args&&... _args)
+    {
+        if(!IsValid())
+            Initialize();
 
-		if (IsFull())
-			Expand(Capacity + 2);
+        if(IsFull())
+            Expand(capacity_ + 2);
 
-		Memory::PlacementNew(DynamicArray[Size++], Forward<Args>(args)...);
-	}
+        Memory::PlacementNew(pDynamicArray_[size_++], Forward<Args>(_args)...);
+    }
 
-	void PushBack(const TBucketNode& data) {
-		if (!IsValid())
-			Initialize();
+    void PushBack(const TBucketNode& _data)
+    {
+        if(!IsValid())
+            Initialize();
 
-		if (IsFull())
-			Expand(Capacity + 2);
+        if(IsFull())
+            Expand(capacity_ + 2);
 
-		Memory::PlacementNew(DynamicArray[Size++], data);
-	}
+        Memory::PlacementNew(pDynamicArray_[size_++], _data);
+    }
 
-	void PushBack(TBucketNode&& data) {
-		if (!IsValid())
-			Initialize();
+    void PushBack(TBucketNode&& _data)
+    {
+        if(!IsValid())
+            Initialize();
 
-		if (IsFull())
-			Expand(Capacity + 2);
+        if(IsFull())
+            Expand(capacity_ + 2);
 
-		Memory::PlacementNew(DynamicArray[Size++], Move(data));
-	}
+        Memory::PlacementNew(pDynamicArray_[size_++], Move(_data));
+    }
 
-	void Initialize() {
-		int iAllocated;
-		DynamicArray = TAllocator::template AllocateDynamic<TBucketNode*>(sizeof(TBucketNode) * Capacity, iAllocated);
-		// Memory::Set(DynamicArray, sizeof(TBucketNode) * Capacity, 0);
-	}
+    void Initialize()
+    {
+        int iAllocated;
+        pDynamicArray_ = TAllocator::template AllocateDynamic<TBucketNode*>(sizeof(TBucketNode) * capacity_, iAllocated);
+        // Memory::Set(DynamicArray, sizeof(TBucketNode) * Capacity, 0);
+    }
 
-	void Expand(int newCapacity) {
-		int iAllocated;
-		TBucketNode* pNewDynamicArray = TAllocator::template AllocateDynamic<TBucketNode*>(sizeof(TBucketNode) * newCapacity, iAllocated);
+    void Expand(int _newCapacity)
+    {
+        int iAllocated;
+        TBucketNode* pNewDynamicArray = TAllocator::template AllocateDynamic<TBucketNode*>(sizeof(TBucketNode) * _newCapacity, iAllocated);
 
-		if constexpr (!IsFundamentalType_v<TKey> && !IsPointerType_v<TKey>) {
-			if constexpr (IsStringType_v<TKey>)
-				Memory::PlacementNewArray(pNewDynamicArray, newCapacity, TBucketNode{ { 0 }, 0 });	// 문자열은 동적할당 안된 상태로 생성해주자. String(0)는 동적할당안함
-			else
-				DebugAssert(false); // String도 아니고 int같은 기본 타입도 아닌 새로운 키타입을 추가하고자 한다면 성능향상을 위해 여기서 직접 수정 ㄱ, 그냥 Memory::PlacementNewArray(pNewDynamicArray, newCapacity)를 수행해도 동작하는데 문제없긴함
-		}
+        if constexpr(!IsFundamentalType_v<TKey> && !IsPointerType_v<TKey>)
+        {
+            if constexpr(IsStringType_v<TKey>)
+                Memory::PlacementNewArray(pNewDynamicArray, _newCapacity, TBucketNode{{0}, 0}); // 문자열은 동적할당 안된 상태로 생성해주자. String(0)는 동적할당안함
+            else
+                DebugAssert(false); // String도 아니고 int같은 기본 타입도 아닌 새로운 키타입을 추가하고자 한다면 성능향상을 위해 여기서 직접 수정 ㄱ, 그냥 Memory::PlacementNewArray(pNewDynamicArray,
+                                    // newCapacity)를 수행해도 동작하는데 문제없긴함
+        }
 
-		for (int i = 0; i < Size; i++) {
-			pNewDynamicArray[i] = Move(DynamicArray[i]);	// 2023/02/23 Move 필수.. Value가 포인터라지만 Key가 String 같은 타입일 수가 있다. 만약 Move를 안하고 Copy를 한다면 DynamicArray의 메모리를 해제하기전에 수동으로 소멸자 호출을 해줘야함.
-		}
+        for(int i = 0; i < size_; i++)
+        {
+            pNewDynamicArray[i] = Move(pDynamicArray_[i]); // 2023/02/23 Move 필수.. Value가 포인터라지만 Key가 String 같은 타입일 수가 있다. 만약 Move를 안하고 Copy를 한다면 DynamicArray의 메모리를
+                                                           // 해제하기전에 수동으로 소멸자 호출을 해줘야함.
+        }
 
-		TAllocator::DeallocateDynamic(DynamicArray, sizeof(TBucketNode) * Capacity);
-		DynamicArray = pNewDynamicArray;
-		Capacity = newCapacity;
-	}
+        TAllocator::DeallocateDynamic(pDynamicArray_, sizeof(TBucketNode) * capacity_);
+        pDynamicArray_ = pNewDynamicArray;
+        capacity_ = _newCapacity;
+    }
 
-	void Clear() {
-		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(DynamicArray, Size);
-		Size = 0;
-	}
+    void Clear()
+    {
+        JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pDynamicArray_, size_);
+        size_ = 0;
+    }
 
-	template <typename Ky>
-	bool Exist(const Ky& key) {
-		for (int i = 0; i < Size; i++) {
-			if (Comparator<TKey>()(DynamicArray[i].Data, key) == 0) {
-				return true;
-			}
-		}
+    template <typename Ky>
+    bool Exist(const Ky& _key)
+    {
+        for(int i = 0; i < size_; i++)
+        {
+            if(Comparator<TKey>()(pDynamicArray_[i].data_, _key) == 0)
+            {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	template <typename Ky>
-	TKey* Find(const Ky& key) {
-		for (int i = 0; i < Size; i++) {
-			if (Comparator<TKey>()(DynamicArray[i].Data, key) == 0) {
-				return AddressOf(DynamicArray[i].Data);
-			}
-		}
+    template <typename Ky>
+    TKey* Find(const Ky& _key)
+    {
+        for(int i = 0; i < size_; i++)
+        {
+            if(Comparator<TKey>()(pDynamicArray_[i].data_, _key) == 0)
+            {
+                return AddressOf(pDynamicArray_[i].data_);
+            }
+        }
 
-		return nullptr;
-	}
+        return nullptr;
+    }
 
-	template <typename Ky>
-	bool Remove(const Ky& key) {
-		int iFind = -1;
-		for (int i = 0; i < Size; i++) {
-			if (Comparator<TKey>()(DynamicArray[i].Data, key) == 0) {
-				Memory::PlacementDelete(DynamicArray[i]);
-				iFind = i;
-				break;
-			}
-		}
+    template <typename Ky>
+    bool Remove(const Ky& _key)
+    {
+        int findPos = -1;
+        for(int i = 0; i < size_; i++)
+        {
+            if(Comparator<TKey>()(pDynamicArray_[i].data_, _key) == 0)
+            {
+                Memory::PlacementDelete(pDynamicArray_[i]);
+                findPos = i;
+                break;
+            }
+        }
 
-		if (iFind == -1) {
-			return false;
-		}
+        if(findPos == -1)
+        {
+            return false;
+        }
 
-		for (int i = iFind; i < Size - 1; i++) {
-			DynamicArray[i] = Move(DynamicArray[i + 1]);
-		}
+        for(int i = findPos; i < size_ - 1; i++)
+        {
+            pDynamicArray_[i] = Move(pDynamicArray_[i + 1]);
+        }
 
-		--Size;
-		return true;
-	}
+        --size_;
+        return true;
+    }
 
-	bool IsFull() {
-		return Size == Capacity;
-	}
+    bool IsFull()
+    {
+        return size_ == capacity_;
+    }
 
-	bool IsEmpty() {
-		return Size == 0;
-	}
+    bool IsEmpty()
+    {
+        return size_ == 0;
+    }
 
-	bool IsValid() {
-		return DynamicArray != nullptr;
-	}
+    bool IsValid()
+    {
+        return pDynamicArray_ != nullptr;
+    }
 
+    TBucketNode& GetAt(const int _idx)
+    {
+        DebugAssert(pDynamicArray_);
+        DebugAssert(_idx >= 0 && _idx < size_);
+        return pDynamicArray_[_idx];
+    }
 
-	TBucketNode& GetAt(const int idx) {
-		DebugAssert(DynamicArray);
-		DebugAssert(idx >= 0 && idx < Size);
-		return DynamicArray[idx];
-	}
-
-	Bucket* Next;
-	Bucket* Previous;
-	TBucketNode* DynamicArray;
-	int Capacity;
-	int Size;
-
+    Bucket* pNext_;
+    Bucket* pPrevious_;
+    TBucketNode* pDynamicArray_;
+    int capacity_;
+    int size_;
 };
 
 #pragma endregion
@@ -233,159 +297,186 @@ struct Bucket<TKey, TAllocator>
 template <typename TKey, typename TValue, typename TAllocator>
 struct Bucket<TKey, TValue, TAllocator>
 {
-	using TBucket = Bucket<TKey, TValue, TAllocator>;
-	using TBucketNode = BucketNode<Pair<TKey, TValue>>;
+    using TBucket = Bucket<TKey, TValue, TAllocator>;
+    using TBucketNode = BucketNode<Pair<TKey, TValue>>;
 
-	Bucket()
-		: Next(nullptr)
-		, Previous(nullptr)
-		, DynamicArray(nullptr)
-		, Capacity(1)
-		, Size(0) {}
+    Bucket()
+	: pNext_(nullptr)
+	, pPrevious_(nullptr)
+	, pDynamicArray_(nullptr)
+	, capacity_(1)
+	, size_(0)
+    {
+    }
 
-	~Bucket() {
-		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(DynamicArray, Size);
-		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(DynamicArray, sizeof(TBucketNode) * Capacity);
-	}
+    ~Bucket()
+    {
+        JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pDynamicArray_, size_);
+        JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pDynamicArray_, sizeof(TBucketNode) * capacity_);
+    }
 
-	template <typename... Args>
-	void EmplaceBack(Args&&... args) {
-		if (!IsValid())
-			Initialize();
+    template <typename... Args>
+    void EmplaceBack(Args&&... _args)
+    {
+        if(!IsValid())
+            Initialize();
 
-		if (IsFull())
-			Expand(Capacity + 2);
+        if(IsFull())
+            Expand(capacity_ + 2);
 
-		Memory::PlacementNew(DynamicArray[Size++], Forward<Args>(args)...);
-	}
+        Memory::PlacementNew(pDynamicArray_[size_++], Forward<Args>(_args)...);
+    }
 
-	void PushBack(const TBucketNode& data) {
-		if (!IsValid())
-			Initialize();
+    void PushBack(const TBucketNode& _data)
+    {
+        if(!IsValid())
+            Initialize();
 
-		if (IsFull())
-			Expand(Capacity + 2);
+        if(IsFull())
+            Expand(capacity_ + 2);
 
-		Memory::PlacementNew(DynamicArray[Size++], data);
-	}
+        Memory::PlacementNew(pDynamicArray_[size_++], _data);
+    }
 
-	void PushBack(TBucketNode&& data) {
-		if (!IsValid())
-			Initialize();
+    void PushBack(TBucketNode&& _data)
+    {
+        if(!IsValid())
+            Initialize();
 
-		if (IsFull())
-			Expand(Capacity + 2);
+        if(IsFull())
+            Expand(capacity_ + 2);
 
-		Memory::PlacementNew(DynamicArray[Size++], Move(data));
-	}
+        Memory::PlacementNew(pDynamicArray_[size_++], Move(_data));
+    }
 
-	void Initialize() {
-		int iAllocated;
-		DynamicArray = TAllocator::template AllocateDynamic<TBucketNode*>(sizeof(TBucketNode) * Capacity, iAllocated);
-		// Memory::Set(DynamicArray, sizeof(TBucketNode) * Capacity, 0);
-	}
+    void Initialize()
+    {
+        int iAllocated;
+        pDynamicArray_ = TAllocator::template AllocateDynamic<TBucketNode*>(sizeof(TBucketNode) * capacity_, iAllocated);
+        // Memory::Set(DynamicArray, sizeof(TBucketNode) * Capacity, 0);
+    }
 
-	void Expand(int newCapacity) {
-		int iAllocated;
-		TBucketNode* pNewDynamicArray = TAllocator::template AllocateDynamic<TBucketNode*>(sizeof(TBucketNode) * newCapacity, iAllocated);
+    void Expand(int _newCapacity)
+    {
+        int iAllocated;
+        TBucketNode* pNewDynamicArray = TAllocator::template AllocateDynamic<TBucketNode*>(sizeof(TBucketNode) * _newCapacity, iAllocated);
 
-		// 2023/02/23
-		// 키가 String 같은 타입인 경우 그냥 대입 해버리면 Key의 생성자로 초기화가 수행이 안되어있기때문에 오류가 발생한다.
-		// String의 경우 m_pBuffer가 nullptr로 초기화가 되지 않음
-		// 기본 생성자를 호출해서 초기화를 해놔야한다.
-		if constexpr (IsPointerType_v<TValue> && !IsFundamentalType_v<TKey> && !IsPointerType_v<TKey>) {
-			if constexpr (IsStringType_v<TKey>)
-				Memory::PlacementNewArray(pNewDynamicArray, newCapacity, TBucketNode{ { 0, nullptr }, 0 });	// 문자열은 동적할당 안된 상태로 생성해주자. String(0)는 동적할당안함
-			else
-				DebugAssert(false); // String도 아니고 int같은 기본 타입도 아닌 새로운 키타입을 추가하고자 한다면 성능향상을 위해 여기서 직접 수정 ㄱ, 그냥 Memory::PlacementNewArray(pNewDynamicArray, newCapacity)를 수행해도 동작하는데 문제없긴함
-		}
+        // 2023/02/23
+        // 키가 String 같은 타입인 경우 그냥 대입 해버리면 Key의 생성자로 초기화가 수행이 안되어있기때문에 오류가 발생한다.
+        // String의 경우 m_pBuffer가 nullptr로 초기화가 되지 않음
+        // 기본 생성자를 호출해서 초기화를 해놔야한다.
+        if constexpr(IsPointerType_v<TValue> && !IsFundamentalType_v<TKey> && !IsPointerType_v<TKey>)
+        {
+            if constexpr(IsStringType_v<TKey>)
+                Memory::PlacementNewArray(pNewDynamicArray, _newCapacity, TBucketNode{{0, nullptr}, 0}); // 문자열은 동적할당 안된 상태로 생성해주자. String(0)는 동적할당안함
+            else
+                DebugAssert(false); // String도 아니고 int같은 기본 타입도 아닌 새로운 키타입을 추가하고자 한다면 성능향상을 위해 여기서 직접 수정 ㄱ, 그냥 Memory::PlacementNewArray(pNewDynamicArray,
+                                    // newCapacity)를 수행해도 동작하는데 문제없긴함
+        }
 
-		for (int i = 0; i < Size; i++) {
-			if constexpr (IsPointerType_v<TValue>)
-				pNewDynamicArray[i] = Move(DynamicArray[i]);	// 2023/02/23 Move 필수.. Value가 포인터라지만 Key가 String 같은 타입일 수가 있다. 만약 Move를 안하고 Copy를 한다면 DynamicArray의 메모리를 해제하기전에 수동으로 소멸자 호출을 해줘야함.
-			else
-				Memory::PlacementNew(pNewDynamicArray[i], Move(DynamicArray[i]));
-		}
+        for(int i = 0; i < size_; i++)
+        {
+            if constexpr(IsPointerType_v<TValue>)
+                pNewDynamicArray[i] = Move(pDynamicArray_[i]); // 2023/02/23 Move 필수.. Value가 포인터라지만 Key가 String 같은 타입일 수가 있다. 만약 Move를 안하고 Copy를 한다면 DynamicArray의
+                                                               // 메모리를 해제하기전에 수동으로 소멸자 호출을 해줘야함.
+            else
+                Memory::PlacementNew(pNewDynamicArray[i], Move(pDynamicArray_[i]));
+        }
 
-		TAllocator::DeallocateDynamic(DynamicArray, sizeof(TBucketNode) * Capacity);
-		DynamicArray = pNewDynamicArray;
-		Capacity = newCapacity;
-	}
+        TAllocator::DeallocateDynamic(pDynamicArray_, sizeof(TBucketNode) * capacity_);
+        pDynamicArray_ = pNewDynamicArray;
+        capacity_ = _newCapacity;
+    }
 
-	void Clear() {
-		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(DynamicArray, Size);
-		Size = 0;
-	}
+    void Clear()
+    {
+        JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pDynamicArray_, size_);
+        size_ = 0;
+    }
 
-	template <typename Ky>
-	bool Exist(const Ky& key) {
-		for (int i = 0; i < Size; i++) {
-			if (Comparator<TKey>()(DynamicArray[i].Data.Key, key) == 0) {
-				return true;
-			}
-		}
+    template <typename Ky>
+    bool Exist(const Ky& _key)
+    {
+        for(int i = 0; i < size_; i++)
+        {
+            if(Comparator<TKey>()(pDynamicArray_[i].data_.key_, _key) == 0)
+            {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	template <typename Ky>
-	TValue* Find(const Ky& key) {
-		for (int i = 0; i < Size; i++) {
-			if (Comparator<TKey>()(DynamicArray[i].Data.Key, key) == 0) {
-				return AddressOf(DynamicArray[i].Data.Value);
-			}
-		}
+    template <typename Ky>
+    TValue* Find(const Ky& _key)
+    {
+        for(int i = 0; i < size_; i++)
+        {
+            if(Comparator<TKey>()(pDynamicArray_[i].data_.key_, _key) == 0)
+            {
+                return AddressOf(pDynamicArray_[i].data_.value_);
+            }
+        }
 
-		return nullptr;
-	}
+        return nullptr;
+    }
 
-	template <typename Ky>
-	bool Remove(const Ky& key) {
-		int iFind = -1;
-		for (int i = 0; i < Size; i++) {
-			if (Comparator<TKey>()(DynamicArray[i].Data.Key, key) == 0) {
-				Memory::PlacementDelete(DynamicArray[i]);
-				iFind = i;
-				break;
-			}
-		}
+    template <typename Ky>
+    bool Remove(const Ky& _key)
+    {
+        int findPos = -1;
+        for(int i = 0; i < size_; i++)
+        {
+            if(Comparator<TKey>()(pDynamicArray_[i].data_.key_, _key) == 0)
+            {
+                Memory::PlacementDelete(pDynamicArray_[i]);
+                findPos = i;
+                break;
+            }
+        }
 
-		if (iFind == -1) {
-			return false;
-		}
+        if(findPos == -1)
+        {
+            return false;
+        }
 
-		for (int i = iFind; i < Size - 1; i++) {
-			DynamicArray[i] = Move(DynamicArray[i + 1]);
-		}
+        for(int i = findPos; i < size_ - 1; i++)
+        {
+            pDynamicArray_[i] = Move(pDynamicArray_[i + 1]);
+        }
 
-		--Size;
-		return true;
-	}
+        --size_;
+        return true;
+    }
 
-	bool IsFull() {
-		return Size == Capacity;
-	}
+    bool IsFull()
+    {
+        return size_ == capacity_;
+    }
 
-	bool IsEmpty() {
-		return Size == 0;
-	}
+    bool IsEmpty()
+    {
+        return size_ == 0;
+    }
 
-	bool IsValid() {
-		return DynamicArray != nullptr;
-	}
+    bool IsValid()
+    {
+        return pDynamicArray_ != nullptr;
+    }
 
+    TBucketNode& GetAt(const int _idx)
+    {
+        DebugAssert(pDynamicArray_);
+        DebugAssert(_idx >= 0 && _idx < size_);
+        return pDynamicArray_[_idx];
+    }
 
-	TBucketNode& GetAt(const int idx) {
-		DebugAssert(DynamicArray);
-		DebugAssert(idx >= 0 && idx < Size);
-		return DynamicArray[idx];
-	}
-
-	Bucket* Next;
-	Bucket* Previous;
-	TBucketNode* DynamicArray;
-	int Capacity;
-	int Size;
+    Bucket* pNext_;
+    Bucket* pPrevious_;
+    TBucketNode* pDynamicArray_;
+    int capacity_;
+    int size_;
 };
 #pragma endregion
 

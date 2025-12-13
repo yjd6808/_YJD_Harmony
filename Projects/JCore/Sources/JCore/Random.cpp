@@ -7,71 +7,91 @@
 #include <JCore/Random.h>
 #include <JCore/Exception.h>
 
-
 NS_JC_BEGIN
 
-Random::Random() {
+//////////////////////////////////////////////////////////////////////////////////////////
+Random::Random()
+{
 	// 처음 한번만 초기화를 하자.
-	if (!ms_bInitialized) {
-		ms_bInitialized = true;
-		ms_DefaultRandomEngine.seed(ms_RandomDevice());
+	if (!Initialized)
+	{
+		Initialized = true;
+		DefaultRandomEngine.seed(RandomDevice());
 	}
 }
 
-
-/*  =======================================================
-					   Public
-    ======================================================= */
-
-void Random::EngineInitialize() {
-	ms_DefaultRandomEngine.seed(ms_RandomDevice());
+//////////////////////////////////////////////////////////////////////////////////////////
+void Random::EngineInitialize()
+{
+	DefaultRandomEngine.seed(RandomDevice());
 }
 
-void Random::WriteRandomAlphabatTextBuffered(int length, char* buff, int capacity) {
-	int i = 0;
-	while (i < capacity && i < length) {
-		int idx = GenerateInt(0, 51);
-		if (idx >= 26) {
-			idx -= 26;
-			buff[i] = 'a' + char(idx);
-		} else {
-			buff[i] = 'A' + char(idx);
+//////////////////////////////////////////////////////////////////////////////////////////
+void Random::WriteRandomAlphabatTextBuffered(int _length, char* _pBuff, int _capacity)
+{
+	int index = 0;
+
+	while (index < _capacity && index < _length)
+	{
+		int alphabetIndex = GenerateInt(0, 51);
+
+		if (alphabetIndex >= 26)
+		{
+			alphabetIndex -= 26;
+			_pBuff[index] = 'a' + static_cast<char>(alphabetIndex);
 		}
-		++i;
+		else
+		{
+			_pBuff[index] = 'A' + static_cast<char>(alphabetIndex);
+		}
+
+		++index;
 	}
-	buff[i] = NULL;
+
+	_pBuff[index] = '\0';
 }
 
-int Random::GenerateInt(int begin, int end) {
-	if (begin > end) {
+//////////////////////////////////////////////////////////////////////////////////////////
+int Random::GenerateInt(int _inclusiveBegin, int _exclusiveEnd)
+{
+	if (_inclusiveBegin > _exclusiveEnd)
+	{
 		throw InvalidArgumentException("begin > end 되면 안댐");
 	}
 
-	std::uniform_int_distribution<> dist(begin, end - 1);
-	return dist(ms_DefaultRandomEngine);
+	std::uniform_int_distribution<> dist(_inclusiveBegin, _exclusiveEnd - 1);
+	return dist(DefaultRandomEngine);
 }
 
-double Random::GenerateDouble(double begin, double end) {
-	if (begin > end) {
+//////////////////////////////////////////////////////////////////////////////////////////
+double Random::GenerateDouble(double _inclusiveBegin, double _inclusiveEnd)
+{
+	if (_inclusiveBegin > _inclusiveEnd)
+	{
 		throw InvalidArgumentException("begin > end 되면 안댐");
 	}
 
-	std::uniform_real_distribution<> dist(begin, end);
-	return dist(ms_DefaultRandomEngine);
+	std::uniform_real_distribution<> dist(_inclusiveBegin, _inclusiveEnd);
+	return dist(DefaultRandomEngine);
 }
 
-char Random::GenerateAlphabat() {
-	static char s_Alphabats[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	return s_Alphabats[GenerateInt(0, sizeof s_Alphabats)];
+//////////////////////////////////////////////////////////////////////////////////////////
+char Random::GenerateAlphabat()
+{
+	static char Alphabats[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	return Alphabats[GenerateInt(0, static_cast<int>(sizeof Alphabats))];
 }
 
-bool Random::Chance(float percentProbability) {
-	return GenerateF(0.0f, 100.0f) <= percentProbability;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Random::Chance(float _percentProbability)
+{
+	return GenerateF(0.0f, 100.0f) <= _percentProbability;
 }
 
-bool Random::Chance(double percentProbability) {
-	return GenerateF(0.0, 100.0) <= percentProbability;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Random::Chance(double _percentProbability)
+{
+	return GenerateF(0.0, 100.0) <= _percentProbability;
 }
-
 
 NS_JC_END

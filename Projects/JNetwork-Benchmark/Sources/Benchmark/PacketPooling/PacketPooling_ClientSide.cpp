@@ -103,7 +103,7 @@ void ClientSide::StartTest() {
 		pSendingThreads[i].Start([i](void*) {
 
 			if (UsePooling && TlsMemPool == nullptr)
-				TlsMemPool = MakeShared<BinarySearchMemoryPool>();
+				TlsMemPool = MakeShared<CBinarySearchMemoryPool>();
 
 			for (int j = 0; j < TestSendCount; ++j) {
 				auto pPacket = SinglePacket<CS_TEST>::Create(TlsMemPool);

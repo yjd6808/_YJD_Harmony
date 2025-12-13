@@ -182,7 +182,7 @@ TEST(LinkedListTest, InnerDestructorTest) {
 TEST(LinkedListTest, MemoryPool) {
 	MemoryPoolLeakCheck;
 
-	LinkedList<String, DefaultArrayAllocator> l;
+	LinkedList<String, CDefaultArrayAllocator> l;
 	for (int i = 0; i < 100'000; i++) l.PushBack(1);
 }
 

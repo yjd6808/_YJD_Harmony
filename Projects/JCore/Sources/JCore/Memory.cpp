@@ -7,17 +7,18 @@
 #include <JCore/Memory.h>
 
 NS_JC_BEGIN
-
 // memcpy_s와 기능이 동일합니다.
-void Memory::Copy(void* dst, const int dstCapacityByte, const void* src, const int srcCopyByte) {
-	DebugAssertMsg(dst && src && dstCapacityByte > 0, "인자를 똑띠 전달해주세요");
+void Memory::Copy(void* _dst, const int _dstCapacityByte, const void* _src, const int _srcCopyByte)
+{
+	DebugAssertMsg(_dst && _src && _dstCapacityByte > 0, "인자를 똑띠 전달해주세요");
 	int iCopiedBytes = 0;
 
-	Byte* pDst = static_cast<Byte*>(dst);
-	Byte* pSrc = (Byte*)src;
-	
+	Byte* pDst = static_cast<Byte*>(_dst);
+	Byte* pSrc = (Byte*)_src;
 
-	while (iCopiedBytes < dstCapacityByte && iCopiedBytes < srcCopyByte) {
+
+	while (iCopiedBytes < _dstCapacityByte && iCopiedBytes < _srcCopyByte)
+	{
 		*pDst = *pSrc;
 		pSrc++;
 		pDst++;
@@ -26,15 +27,17 @@ void Memory::Copy(void* dst, const int dstCapacityByte, const void* src, const i
 }
 
 // memcpy와 기능이 동일합니다.
-void Memory::CopyUnsafe(void* dst, const void* src, const int srcCopyByte) {
-	DebugAssertMsg(dst && src, "인자를 똑띠 전달해주세요");
+void Memory::CopyUnsafe(void* _dst, const void* _src, const int _srcCopyByte)
+{
+	DebugAssertMsg(_dst && _src, "인자를 똑띠 전달해주세요");
 	int iCopiedBytes = 0;
 
-	Byte* pDst = static_cast<Byte*>(dst);
-	Byte* pSrc = (Byte*)src;
-	
+	Byte* pDst = static_cast<Byte*>(_dst);
+	Byte* pSrc = (Byte*)_src;
 
-	while (iCopiedBytes < srcCopyByte) {
+
+	while (iCopiedBytes < _srcCopyByte)
+	{
 		*pDst = *pSrc;
 		pSrc++;
 		pDst++;
@@ -42,17 +45,19 @@ void Memory::CopyUnsafe(void* dst, const void* src, const int srcCopyByte) {
 	}
 }
 
-void Memory::CopyReverse(void* dst, const int dstCapacityByte, const void* src, const int srcCopyByte) {
-	DebugAssertMsg(dst && src && dstCapacityByte > 0, "인자를 똑띠 전달해주세요");
+void Memory::CopyReverse(void* _dst, const int _dstCapacityByte, const void* _src, const int _srcCopyByte)
+{
+	DebugAssertMsg(_dst && _src && _dstCapacityByte > 0, "인자를 똑띠 전달해주세요");
 	int iCopiedBytes = 0;
 
-	Byte* pDst = (Byte*)dst;
-	Byte* pSrc = (Byte*)src;
+	Byte* pDst = (Byte*)_dst;
+	Byte* pSrc = (Byte*)_src;
 
-	pDst += srcCopyByte - 1;	// 마지막 원소가 pDst[srcCopyByte - 1] 이므로
-	pSrc += srcCopyByte - 1;
+	pDst += _srcCopyByte - 1; // 마지막 원소가 pDst[srcCopyByte - 1] 이므로
+	pSrc += _srcCopyByte - 1;
 
-	while (iCopiedBytes < dstCapacityByte && iCopiedBytes < srcCopyByte) {
+	while (iCopiedBytes < _dstCapacityByte && iCopiedBytes < _srcCopyByte)
+	{
 		*pDst = *pSrc;
 		pSrc--;
 		pDst--;
@@ -60,17 +65,19 @@ void Memory::CopyReverse(void* dst, const int dstCapacityByte, const void* src, 
 	}
 }
 
-void Memory::CopyUnsafeReverse(void* dst, const void* src, const int srcCopyByte) {
-	DebugAssertMsg(dst && src, "인자를 똑띠 전달해주세요");
+void Memory::CopyUnsafeReverse(void* _dst, const void* _src, const int _srcCopyByte)
+{
+	DebugAssertMsg(_dst && _src, "인자를 똑띠 전달해주세요");
 	int iCopiedBytes = 0;
 
-	Byte* pDst = (Byte*)dst;
-	Byte* pSrc = (Byte*)src;
+	Byte* pDst = (Byte*)_dst;
+	Byte* pSrc = (Byte*)_src;
 
-	pDst += srcCopyByte - 1;
-	pSrc += srcCopyByte - 1;
+	pDst += _srcCopyByte - 1;
+	pSrc += _srcCopyByte - 1;
 
-	while (iCopiedBytes < srcCopyByte) {
+	while (iCopiedBytes < _srcCopyByte)
+	{
 		*pDst = *pSrc;
 		pSrc--;
 		pDst--;
@@ -79,21 +86,23 @@ void Memory::CopyUnsafeReverse(void* dst, const void* src, const int srcCopyByte
 }
 
 // memset과 기능이 동일합니다.
-void Memory::Set(void* src, const int srcCapacity, const Byte value) {
+void Memory::Set(void* _src, const int _srcCapacity, const Byte _value)
+{
 #ifdef _DEBUG
-	if (src == nullptr || srcCapacity <= 0) {
+	if (_src == nullptr || _srcCapacity <= 0)
+	{
 		DebugAssertMsg(false, "인자를 똑띠 전달해주세요");
 	}
 #endif
 
-	Byte* pSrc = (Byte*)src;
+	Byte* pSrc = (Byte*)_src;
 
-	for (int i = 0; i < srcCapacity; i++) {
-		*pSrc = value;
+	for (int i = 0; i < _srcCapacity; i++)
+	{
+		*pSrc = _value;
 		pSrc++;
 	}
 }
-
 
 
 NS_JC_END

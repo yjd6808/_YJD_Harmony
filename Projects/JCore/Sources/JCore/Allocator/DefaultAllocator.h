@@ -9,7 +9,7 @@
 
 NS_JC_BEGIN
 
-class DefaultAllocator
+class CDefaultAllocator
 {
 public:
 	// 할당 규칙
@@ -27,40 +27,45 @@ public:
 
 	// 명시적으로 사이즈 요청해서 반환하는 2가지 기능을 구현할 것
 	template <typename T>
-	static auto AllocateStatic() {	// Static
-		using Ty = NakedType_t<T>;
-		return Memory::Allocate<Ty*>(sizeof(Ty));
+	static auto AllocateStatic() // Static
+	{
+		using Type = NakedType_t<T>;
+		auto pRet = Memory::Allocate<Type*>(sizeof(Type));
+		return pRet;
 	}
 
 	template <typename T>
-    static auto AllocateDynamic(int size, int& allocatedSize) {	// Dynamic
-		return Memory::Allocate<NakedType_t<T>*>(size);
+	static auto AllocateDynamic(int _size, int& _allocatedSize) // Dynamic
+	{
+		return Memory::Allocate<NakedType_t<T>*>(_size);
 	}
 
 	template <typename T, typename... Args>
-	static auto AllocateInitStatic(Args&&... args) {	// Static
+	static auto AllocateInitStatic(Args&&... _args) // Static
+	{
 		auto pRet = Memory::Allocate<NakedType_t<T>*>(sizeof(NakedType_t<T>));
-		Memory::PlacementNew(pRet, Forward<Args>(args)...);
+		Memory::PlacementNew(pRet, Forward<Args>(_args)...);
 		return pRet;
 	}
 
-	template <typename T, typename... Args>	
-	static auto AllocateInitDynamic(int size, int& allocatedSize, Args&&... args) {	// Dynamic
-		auto pRet = Memory::Allocate<NakedType_t<T>*>(size);
-		Memory::PlacementNew(pRet, Forward<Args>(args)...);
+	template <typename T, typename... Args>
+	static auto AllocateInitDynamic(int _size, int& _allocatedSize, Args&&... _args) // Dynamic
+	{
+		auto pRet = Memory::Allocate<NakedType_t<T>*>(_size);
+		Memory::PlacementNew(pRet, Forward<Args>(_args)...);
 		return pRet;
 	}
 
 	template <typename T>
-    static void DeallocateStatic(void* del) {
-		Memory::Deallocate(del);
-    }
-
-	static void DeallocateDynamic(void* del, int size) {
-		Memory::Deallocate(del);
+	static void DeallocateStatic(void* _pDel)
+	{
+		Memory::Deallocate(_pDel);
 	}
 
-
+	static void DeallocateDynamic(void* _pDel, int _size)
+	{
+		Memory::Deallocate(_pDel);
+	}
 };
 
 NS_JC_END

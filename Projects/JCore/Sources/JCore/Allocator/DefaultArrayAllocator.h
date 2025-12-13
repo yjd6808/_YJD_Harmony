@@ -13,7 +13,7 @@
 
 NS_JC_BEGIN
 
-inline BinarySearchMemoryPool ArrayAllocatorPool_v
+inline CBinarySearchMemoryPool ArrayAllocatorPool_v
 {
 	/* 테스트 완료, 봉인
 	{
@@ -34,43 +34,48 @@ inline BinarySearchMemoryPool ArrayAllocatorPool_v
 	*/
 };
 
-class DefaultArrayAllocator
+class CDefaultArrayAllocator
 {
 public:
 	// 명시적으로 사이즈 요청해서 반환하는 2가지 기능을 구현할 것
 	template <typename T>
-	static auto AllocateStatic() {	// Static
+	static auto AllocateStatic()   // Static
+	{
 		return (RemovePointer_t<T>*)ArrayAllocatorPool_v.StaticPop<sizeof(T)>();
 	}
 
-	template <typename T>	// 명시하지 않을 경우 void* 반환
-	static auto AllocateDynamic(int requestSize, int& realAllocatedSize) {	// Dynamic
-		return (RemovePointer_t<T>*)ArrayAllocatorPool_v.DynamicPop(requestSize, realAllocatedSize);
+	template <typename T>  // 명시하지 않을 경우 void* 반환
+	static auto AllocateDynamic(int _requestSize, int& _realAllocatedSize)   // Dynamic
+	{
+		return (RemovePointer_t<T>*)ArrayAllocatorPool_v.DynamicPop(_requestSize, _realAllocatedSize);
 	}
 
 	template <typename T, typename... Args>
-	static auto AllocateInitStatic(Args&&... args) {	// Static
+	static auto AllocateInitStatic(Args&&... _args)   // Static
+	{
 		auto pRet = (RemovePointer_t<T>*)ArrayAllocatorPool_v.StaticPop<sizeof(T)>();
-		Memory::PlacementNew(pRet, Forward<Args>(args)...);
+		Memory::PlacementNew(pRet, Forward<Args>(_args)...);
 		return pRet;
 	}
 
-	template <typename T, typename... Args>	// 명시하지 않을 경우 void* 반환
-	static auto AllocateInitDynamic(int requestSize, int& realAllocatedSize, Args&&... args) {	// Dynamic
-		auto pRet = (RemovePointer_t<T>*)ArrayAllocatorPool_v.DynamicPop(requestSize, realAllocatedSize);
-		Memory::PlacementNew(pRet, Forward<Args>(args)...);
+	template <typename T, typename... Args>  // 명시하지 않을 경우 void* 반환
+	static auto AllocateInitDynamic(int _requestSize, int& _realAllocatedSize, Args&&... _args)   // Dynamic
+	{
+		auto pRet = (RemovePointer_t<T>*)ArrayAllocatorPool_v.DynamicPop(_requestSize, _realAllocatedSize);
+		Memory::PlacementNew(pRet, Forward<Args>(_args)...);
 		return pRet;
 	}
 
 	template <typename T>
-	static void DeallocateStatic(void* del) {
-		ArrayAllocatorPool_v.StaticPush<sizeof(T)>(del);
+	static void DeallocateStatic(void* _pDel)
+	{
+		ArrayAllocatorPool_v.StaticPush<sizeof(T)>(_pDel);
 	}
 
-	static void DeallocateDynamic(void* del, int size) {
-		ArrayAllocatorPool_v.DynamicPush(del, size);
+	static void DeallocateDynamic(void* _pDel, int _size)
+	{
+		ArrayAllocatorPool_v.DynamicPush(_pDel, _size);
 	}
 };
 
 NS_JC_END
-

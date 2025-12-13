@@ -9,7 +9,7 @@
 
 NS_JC_BEGIN
 
-template <typename T, typename TAllocator = DefaultAllocator>
+template <typename T, typename TAllocator = CDefaultAllocator>
 class ListQueue;
 
 template <typename T, typename TAllocator>
@@ -23,44 +23,44 @@ class ListQueue	: public ListCollection<T, TAllocator>
 public:
 	ListQueue() : TListCollection() {}
 
-	ListQueue(const TListQueue& other) : TListCollection(other) {}
+	ListQueue(const TListQueue& _other) : TListCollection(_other) {}
 
-	ListQueue(TListQueue&& other) noexcept : TListCollection(Move(other)) {}
+	ListQueue(TListQueue&& _other) noexcept : TListCollection(Move(_other)) {}
 
-	ListQueue(std::initializer_list<T> ilist) : TListCollection(ilist) {}
+	ListQueue(std::initializer_list<T> _ilist) : TListCollection(_ilist) {}
 
 	~ListQueue() noexcept override {}
 public:
-	TListQueue& operator=(const TListQueue& other) {
-		this->CopyFrom(other);
+	TListQueue& operator=(const TListQueue& _other) {
+		this->CopyFrom(_other);
 		return *this;
 	}
 
-	TListQueue& operator=(TListQueue&& other) noexcept {
-		this->CopyFrom(Move(other));
+	TListQueue& operator=(TListQueue&& _other) noexcept {
+		this->CopyFrom(Move(_other));
 		return *this;
 	}
 	
-	TListQueue& operator=(std::initializer_list<T> ilist) {
-		this->CopyFrom(ilist);
+	TListQueue& operator=(std::initializer_list<T> _ilist) {
+		this->CopyFrom(_ilist);
 		return *this;
 	}
 
-	virtual void Enqueue(const T& data) {
-		TListCollection::PushBack(data);
+	virtual void Enqueue(const T& _data) {
+		TListCollection::PushBack(_data);
 	}
 
-	virtual void Enqueue(T&& data) {
-		TListCollection::PushBack(Move(data));
+	virtual void Enqueue(T&& _data) {
+		TListCollection::PushBack(Move(_data));
 	}
 
-	virtual void EnqueueAll(const TCollection& collection) {
-		TListCollection::PushBackAll(collection);
+	virtual void EnqueueAll(const TCollection& _collection) {
+		TListCollection::PushBackAll(_collection);
 	}
 
 	template <typename... Args>
-	void Emplace(Args&&... args) {
-		TListCollection::EmplaceBack(Forward<Args>(args)...);
+	void Emplace(Args&&... _args) {
+		TListCollection::EmplaceBack(Forward<Args>(_args)...);
 	}
 
 	virtual void Dequeue() {
@@ -72,11 +72,11 @@ public:
 	}
 
 	TEnumerator Begin() const override {
-		return MakeShared<TListQueueIterator, TAllocator>(this->GetOwner(), this->m_pHead);
+		return MakeShared<TListQueueIterator, TAllocator>(this->GetOwner(), this->pHead_);
 	}
 
 	TEnumerator End() const override {
-		return MakeShared<TListQueueIterator, TAllocator>(this->GetOwner(), this->m_pTail);
+		return MakeShared<TListQueueIterator, TAllocator>(this->GetOwner(), this->pTail_);
 	}
 
 	ContainerType GetContainerType() override { return ContainerType::ListQueue; }

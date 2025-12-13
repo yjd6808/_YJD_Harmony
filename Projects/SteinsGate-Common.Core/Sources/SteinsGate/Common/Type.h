@@ -33,25 +33,25 @@ using SGStringUtil = JCore::StringUtil;
 using SGMemory = JCore::Memory;
 using SGArrays = JCore::Arrays;
 
-template <typename TKey, typename TValue, typename TAllocator = JCore::DefaultAllocator>
+template <typename TKey, typename TValue, typename TAllocator = JCore::CDefaultAllocator>
 using SGHashMap = JCore::HashMap<TKey, TValue, TAllocator>;
 
-template <typename TKey, typename TAllocator = JCore::DefaultAllocator>
+template <typename TKey, typename TAllocator = JCore::CDefaultAllocator>
 using SGHashSet = JCore::HashSet<TKey, TAllocator>;
 
-template <typename TKey, typename TValue, typename TComparator = JCore::Comparator<TKey>, typename TAllocator = JCore::DefaultAllocator>
+template <typename TKey, typename TValue, typename TComparator = JCore::Comparator<TKey>, typename TAllocator = JCore::CDefaultAllocator>
 using SGTreeMap = JCore::TreeMap<TKey, TValue, TComparator, TAllocator>;
 
-template <typename TKey, typename TComparator = JCore::Comparator<TKey>, typename TAllocator = JCore::DefaultAllocator>
+template <typename TKey, typename TComparator = JCore::Comparator<TKey>, typename TAllocator = JCore::CDefaultAllocator>
 using SGTreeSet = JCore::TreeSet<TKey, TComparator, TAllocator>;
 
-template <typename T, typename TAllocator = JCore::DefaultAllocator>
+template <typename T, typename TAllocator = JCore::CDefaultAllocator>
 using SGVector = JCore::Vector<T, TAllocator>;
 
-template <typename T, typename TAllocator = JCore::DefaultAllocator>
+template <typename T, typename TAllocator = JCore::CDefaultAllocator>
 using SGLinkedList = JCore::LinkedList<T, TAllocator>;
 
-template <typename T, typename TAllocator = JCore::DefaultAllocator>
+template <typename T, typename TAllocator = JCore::CDefaultAllocator>
 using SGArrayQueue = JCore::ArrayQueue<T, TAllocator>;
 
 using SGMath = JCore::Math;
@@ -89,7 +89,7 @@ template <typename... TArgs>
 using SGTuple = JCore::Tuple<TArgs...>;
 
 using SGIndexMemroyPool = JCore::IndexedMemoryPool;
-using SGBinarySearchMemroyPool = JCore::BinarySearchMemoryPool;
+using SGBinarySearchMemroyPool = JCore::CBinarySearchMemoryPool;
 
 template <typename T>
 using SGObjectPool = JCore::ObjectPool<T>;
@@ -145,13 +145,13 @@ using SGCommandParser = JNetwork::CommandParser;
 //       컨테이너
 // ============================================================
 
-template <typename T, typename TAllocator = JCore::DefaultAllocator>
+template <typename T, typename TAllocator = JCore::CDefaultAllocator>
 class alignas(SG_CACHELINE_SIZE) SGAlignedVector : public SGVector<T, TAllocator> {};
 
-template <typename T, typename TAllocator = JCore::DefaultAllocator>
+template <typename T, typename TAllocator = JCore::CDefaultAllocator>
 class alignas(SG_CACHELINE_SIZE) SGAlignedLinkedList : public SGLinkedList<T, TAllocator> {};
 
-template <typename TKey, typename TValue, typename TAllocator = JCore::DefaultAllocator>
+template <typename TKey, typename TValue, typename TAllocator = JCore::CDefaultAllocator>
 class alignas(SG_CACHELINE_SIZE) SGAlignedHashMap : public SGHashMap<TKey, TValue, TAllocator> {};
 
 

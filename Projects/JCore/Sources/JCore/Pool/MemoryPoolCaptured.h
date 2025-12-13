@@ -17,12 +17,11 @@ class SharedPtr;
 class MemoryPoolAbstract;
 struct MemoryPoolCaptured
 {
-	MemoryPoolAbstract* Pool{};
-	Int64U TotalLeaks{};
-	Int32 LeakBlocks[Detail::MemoryBlockSizeMapSize_v]{};
+	MemoryPoolAbstract* pPool_{};
+	Int64U totalLeaks_{};
+	Int32 leakBlocks_[Detail::MemoryBlockSizeMapSize_v]{};
 };
 
 using MemoryPoolCapturedPtr = SharedPtr<MemoryPoolCaptured>;
 
 NS_JC_END
-

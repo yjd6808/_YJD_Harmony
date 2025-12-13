@@ -103,13 +103,13 @@ template <typename>	class SharedPtr;
 template <typename>	class UniquePtr;
 template <typename>	class MakeSharedFromThis; struct MakeSharedFromThisBase;
 
-template <typename T, typename TAllocator = DefaultAllocator, typename... Args>
+template <typename T, typename TAllocator = CDefaultAllocator, typename... Args>
 constexpr decltype(auto) MakeShared(Args&&... args) {
 	Detail::PreventCreatingObjectPoolItem<NakedType_t<T>>();
 	return SharedMaker<T, TAllocator>::Create(Forward<Args>(args)...);
 }
 
-template <typename T, typename TAllocator = DefaultAllocator, typename... Args>
+template <typename T, typename TAllocator = CDefaultAllocator, typename... Args>
 constexpr decltype(auto) MakeUnique(Args&&... args) {
 	Detail::PreventCreatingObjectPoolItem<NakedType_t<T>>();
 	return UniqueMaker<T, TAllocator>::Create(Forward<Args>(args)...);
@@ -643,7 +643,7 @@ protected:
 	// SharedPtr에서만 호출
 	template <typename U, DefaultEnableIf_t<IsPointerType_v<U>> = nullptr>
     void MakeShared(U ptr) {
-	    m_pControlBlock = dbg_new SharedObject<U, DefaultAllocator>(ptr);
+	    m_pControlBlock = dbg_new SharedObject<U, CDefaultAllocator>(ptr);
         m_pPtr = ptr;
         m_Size = 1;
 

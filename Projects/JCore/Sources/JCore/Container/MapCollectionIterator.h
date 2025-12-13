@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 */
 
@@ -8,13 +8,13 @@
 
 NS_JC_BEGIN
 
-//전방 선언
-class VoidOwner;	
+// 전방 선언
+class CVoidOwner;
 
-template <typename, typename>	
+template <typename, typename>
 class ListCollection;
 
-template <typename, typename> 
+template <typename, typename>
 struct Pair;
 
 template <typename TKey, typename TValue, typename TAllocator>
@@ -22,14 +22,19 @@ class JCORE_NOVTABLE MapCollectionIterator : public Iterator<Pair<TKey, TValue>,
 {
 	using TKeyValuePair = Pair<TKey, TValue>;
 	using TIterator		= Iterator<TKeyValuePair, TAllocator>;
+
 public:
-	MapCollectionIterator(VoidOwner& owner) : TIterator(owner) {}
+	MapCollectionIterator(CVoidOwner& _owner)
+		: TIterator(_owner)
+	{
+	}
+
 	~MapCollectionIterator() noexcept override = 0;
 };
 
 template <typename TKey, typename TValue, typename TAllocator>
-MapCollectionIterator<TKey, TValue, TAllocator>::~MapCollectionIterator() noexcept {
-
+MapCollectionIterator<TKey, TValue, TAllocator>::~MapCollectionIterator() noexcept
+{
 }
 
 NS_JC_END

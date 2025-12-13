@@ -190,7 +190,7 @@ TEST(ListStackTest, InnerDestructorTest) {
 TEST(ListStackTest, MemoryPool) {
 	MemoryPoolLeakCheck;
 
-	ListStack<String, DefaultArrayAllocator> l;
+	ListStack<String, CDefaultArrayAllocator> l;
 	for (int i = 0; i < 100'000; i++) l.Push(1);
 }
 

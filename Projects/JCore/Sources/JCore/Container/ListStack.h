@@ -9,77 +9,108 @@
 
 NS_JC_BEGIN
 
-template <typename T, typename TAllocator = DefaultAllocator>
+template <typename T, typename TAllocator = CDefaultAllocator>
 class ListStack;
 
 template <typename T, typename TAllocator>
-class ListStack	: public ListCollection<T, TAllocator>
+class ListStack : public ListCollection<T, TAllocator>
 {
-	using TEnumerator			= Enumerator<T, TAllocator>;
-	using TCollection			= Collection<T, TAllocator>;
-	using TListCollection		= ListCollection<T, TAllocator>;
-	using TListStack			= ListStack<T, TAllocator>;
-	using TListStackIterator	= ListStackIterator<T, TAllocator>;
+	using TEnumerator             = Enumerator<T, TAllocator>;
+	using TCollection             = Collection<T, TAllocator>;
+	using TListCollection         = ListCollection<T, TAllocator>;
+	using TListStack              = ListStack<T, TAllocator>;
+	using TListStackIterator      = ListStackIterator<T, TAllocator>;
+
 public:
-	ListStack() : TListCollection() {}
+	ListStack()
+		: TListCollection()
+	{
+	}
 
-	ListStack(const TListStack& other) : TListCollection(other) {}
+	ListStack(const TListStack& _other)
+		: TListCollection(_other)
+	{
+	}
 
-	ListStack(TListStack&& other) noexcept : TListCollection(Move(other)) {}
+	ListStack(TListStack&& _other) noexcept
+		: TListCollection(Move(_other))
+	{
+	}
 
-	ListStack(std::initializer_list<T> ilist) : TListCollection(ilist) {}
+	ListStack(std::initializer_list<T> _ilist)
+		: TListCollection(_ilist)
+	{
+	}
 
-	~ListStack() noexcept override {}
+	~ListStack() noexcept override
+	{
+	}
+
 public:
-	TListStack& operator=(const TListStack& other) {
-		this->CopyFrom(other);
+	TListStack& operator=(const TListStack& _other)
+	{
+		this->CopyFrom(_other);
 		return *this;
 	}
 
-	TListStack& operator=(TListStack&& other) noexcept {
-		this->CopyFrom(Move(other));
+	TListStack& operator=(TListStack&& _other) noexcept
+	{
+		this->CopyFrom(Move(_other));
 		return *this;
 	}
 
-	TListStack& operator=(std::initializer_list<T> ilist) {
-		this->CopyFrom(ilist);
+	TListStack& operator=(std::initializer_list<T> _ilist)
+	{
+		this->CopyFrom(_ilist);
 		return *this;
 	}
 
-	virtual void Push(const T& data) {
-		TListCollection::PushBack(data);
+	virtual void Push(const T& _data)
+	{
+		TListCollection::PushBack(_data);
 	}
 
-	virtual void Push(T&& data) {
-		TListCollection::PushBack(Move(data));
+	virtual void Push(T&& _data)
+	{
+		TListCollection::PushBack(Move(_data));
 	}
 
-	virtual void PushAll(const TCollection& collection) {
-		TListCollection::PushBackAll(collection);
+	virtual void PushAll(const TCollection& _collection)
+	{
+		TListCollection::PushBackAll(_collection);
 	}
 
 	template <typename... Args>
-	void Emplace(Args&&... args) {
-		TListCollection::EmplaceBack(Forward<Args>(args)...);
+	void Emplace(Args&&... _args)
+	{
+		TListCollection::EmplaceBack(Forward<Args>(_args)...);
 	}
 
-	virtual void Pop() {
+	virtual void Pop()
+	{
 		TListCollection::PopBack();
 	}
 
-	virtual T& Top() const {
+	virtual T& Top() const
+	{
 		return TListCollection::Back();
 	}
 
-	TEnumerator Begin() const override {
-		return MakeShared<TListStackIterator, TAllocator>(this->GetOwner(), this->m_pHead);
+	TEnumerator Begin() const override
+	{
+		return MakeShared<TListStackIterator, TAllocator>(this->GetOwner(), this->pHead_);
 	}
 
-	TEnumerator End() const override {
-		return MakeShared<TListStackIterator, TAllocator>(this->GetOwner(), this->m_pTail);
+	TEnumerator End() const override
+	{
+		return MakeShared<TListStackIterator, TAllocator>(this->GetOwner(), this->pTail_);
 	}
 
-	ContainerType GetContainerType() override { return ContainerType::ListStack; }
+	ContainerType GetContainerType() override
+	{
+		return ContainerType::ListStack;
+	}
+
 protected:
 	friend class TListStackIterator;
 };

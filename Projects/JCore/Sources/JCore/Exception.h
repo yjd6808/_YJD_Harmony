@@ -15,55 +15,55 @@ NS_JC_BEGIN
 
 struct Exception : public std::exception
 {
-	Exception(const char* msg) : std::exception(msg) {}
+	Exception(const char* _msg) : std::exception(_msg) {}
 };
 
 struct NullPointerException : Exception
 {
-	NullPointerException(const char* msg) : Exception(msg) {}
-	NullPointerException(const String& msg) : Exception(msg.Source()) {}
+	NullPointerException(const char* _msg) : Exception(_msg) {}
+	NullPointerException(const String& _msg) : Exception(_msg.Source()) {}
 };
 
 struct RuntimeException : Exception
 {
-	RuntimeException(const char* msg) : Exception(msg) {}
-	RuntimeException(const String& msg) : Exception(msg.Source()) {}
+	RuntimeException(const char* _msg) : Exception(_msg) {}
+	RuntimeException(const String& _msg) : Exception(_msg.Source()) {}
 };
 
 struct InvalidArgumentException : Exception
 {
-	InvalidArgumentException(const char* msg) : Exception(msg) {}
-	InvalidArgumentException(const String& msg) : Exception(msg.Source()) {}
+	InvalidArgumentException(const char* _msg) : Exception(_msg) {}
+	InvalidArgumentException(const String& _msg) : Exception(_msg.Source()) {}
 };
 
 struct OutOfRangeException : public Exception
 {
-	OutOfRangeException(const char* msg) : Exception(msg) {}
-	OutOfRangeException(const String& msg) : Exception(msg.Source()) {}
+	OutOfRangeException(const char* _msg) : Exception(_msg) {}
+	OutOfRangeException(const String& _msg) : Exception(_msg.Source()) {}
 };
 
 struct OverFlowException : public Exception
 {
-	OverFlowException(const char* msg) : Exception(msg) {}
-	OverFlowException(const String& msg) : Exception(msg.Source()) {}
+	OverFlowException(const char* _msg) : Exception(_msg) {}
+	OverFlowException(const String& _msg) : Exception(_msg.Source()) {}
 };
 
 struct UnderFlowException : public Exception
 {
-	UnderFlowException(const char* msg) : Exception(msg) {}
-	UnderFlowException(const String& msg) : Exception(msg.Source()) {}
+	UnderFlowException(const char* _msg) : Exception(_msg) {}
+	UnderFlowException(const String& _msg) : Exception(_msg.Source()) {}
 };
 
 struct InvalidOperationException : public Exception
 {
-	InvalidOperationException(const char* msg) : Exception(msg) {}
-	InvalidOperationException(const String& msg) : Exception(msg.Source()) {}
+	InvalidOperationException(const char* _msg) : Exception(_msg) {}
+	InvalidOperationException(const String& _msg) : Exception(_msg.Source()) {}
 };
 
 struct NotImplementedException : public Exception
 {
-  NotImplementedException(const char* msg) : Exception(msg) {}
-  NotImplementedException(const String& msg) : Exception(msg.Source()) {}
+  NotImplementedException(const char* _msg) : Exception(_msg) {}
+  NotImplementedException(const String& _msg) : Exception(_msg.Source()) {}
 };
 
 

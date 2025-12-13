@@ -23,7 +23,7 @@ extern int TestClientCount;
 extern int TestSendCount;
 extern bool UsePooling;
 extern AutoResetEvent TestFinished;		// 테스트 완료여부
-extern thread_local SharedPtr<BinarySearchMemoryPool> TlsMemPool;
+extern thread_local SharedPtr<CBinarySearchMemoryPool> TlsMemPool;
 extern TestMode Mode;
 
 NS_PACKET_POOLING_END

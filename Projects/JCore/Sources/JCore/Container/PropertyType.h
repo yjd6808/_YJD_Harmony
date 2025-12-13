@@ -36,7 +36,8 @@ CharPtr,
 Unknown,
 Max
 JCORE_SENUM_MIDDLE(PropertyType)
-static constexpr const char* Name[Max]{
+static constexpr const char* NAME[Max]
+{
 	"Bool",
 	"Int8",
 	"Int8U",
@@ -56,7 +57,8 @@ static constexpr const char* Name[Max]{
 	"Unknown",
 };
 
-static constexpr bool IsIntegerType[Max]{
+static constexpr bool IS_INTEGER_TYPE[Max]
+{
 	true,
 	true,
 	true,
@@ -76,7 +78,8 @@ static constexpr bool IsIntegerType[Max]{
 	false
 };
 
-static constexpr bool IsFloatType[Max]{
+static constexpr bool IS_FLOAT_TYPE[Max]
+{
 	false,
 	false,
 	false,
@@ -96,7 +99,8 @@ static constexpr bool IsFloatType[Max]{
 	false
 };
 
-static constexpr bool IsNumericType[Max]{
+static constexpr bool IS_NUMERIC_TYPE[Max]
+{
 	true,
 	true,
 	true,
@@ -116,7 +120,8 @@ static constexpr bool IsNumericType[Max]{
 	false
 };
 
-static constexpr bool IsStringType[Max]{
+static constexpr bool IS_STRING_TYPE[Max]
+{
 	false,
 	false,
 	false,
@@ -137,7 +142,8 @@ static constexpr bool IsStringType[Max]{
 };
 
 // CharPtr, Unknwon 제외
-static constexpr bool CanBeLeftOperand[Max]{
+static constexpr bool CAN_BE_LEFT_OPERAND[Max]
+{
 	true,
 	true,
 	true,
@@ -158,7 +164,8 @@ static constexpr bool CanBeLeftOperand[Max]{
 };
 
 // Unknwon 제외
-static constexpr bool CanBeRightOperand[Max]{
+static constexpr bool CAN_BE_RIGHT_OPERAND[Max]
+{
 	true,
 	true,
 	true,
@@ -179,7 +186,8 @@ static constexpr bool CanBeRightOperand[Max]{
 };
 
 // CharPtr, Unknwon 제외
-static constexpr bool CanConstruct[Max]{
+static constexpr bool CAN_CONSTRUCT[Max]
+{
 	true,
 	true,
 	true,
@@ -200,7 +208,8 @@ static constexpr bool CanConstruct[Max]{
 };
 
 // CharPtr만
-static constexpr bool IsPtrType[Max]{
+static constexpr bool IS_PTR_TYPE[Max]
+{
 	false,
 	false,
 	false,
@@ -220,13 +229,18 @@ static constexpr bool IsPtrType[Max]{
 	false
 };
 
-static constexpr bool IsConvertiable(PropertyType_t lhs, PropertyType_t rhs) {
-	if (IsNumericType[lhs] && IsNumericType[rhs]) {
+static constexpr bool IsConvertiable(PropertyType_t _lhs, PropertyType_t _rhs)
+{
+	if (IS_NUMERIC_TYPE[_lhs] && IS_NUMERIC_TYPE[_rhs])
+	{
 		return true;
 	}
-	if (IsStringType[lhs] && IsStringType[rhs]) {
+
+	if (IS_STRING_TYPE[_lhs] && IS_STRING_TYPE[_rhs])
+	{
 		return true;
 	}
+
 	return false;
 }
 
@@ -240,7 +254,8 @@ PostfixIncrement,
 PostfixDecrement,
 Max
 JCORE_SENUM_MIDDLE(PropertyUnaryOperatorType)
-static constexpr const char* Name[Max] = {
+static constexpr const char* NAME[Max] =
+{
 	"++",
 	"--",
 	"++(int)",
@@ -268,7 +283,8 @@ Unknwon,
 Max
 JCORE_SENUM_MIDDLE(PropertyBinaryOperatorType)
 
-static constexpr const char* Name[Max] = {
+static constexpr const char* NAME[Max] =
+{
 	"=",
 	"=&&",
 	"+",

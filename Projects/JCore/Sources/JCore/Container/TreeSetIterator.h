@@ -1,88 +1,94 @@
-﻿/*
- * 작성자: 윤정도
- * 생성일: 8/15/2023 5:57:14 AM
- * =====================
- *
- */
-
+/*
+	작성자 : 윤정도
+*/
 
 #pragma once
 
 
+#include <JCore/Container/TreeTable.h>
 #include <JCore/Container/SetCollectionIterator.h>
 
 NS_JC_BEGIN
 
 // 전방 선언
-enum class TreeTableImplementation;
-class VoidOwner; 
-template <typename> struct TreeNode;
-template <typename, typename, typename, TreeTableImplementation> class TreeSet;
+enum class ETreeTableImplementation;
+class CVoidOwner;
+template <typename> class TreeNode;
+template <typename, typename, typename, ETreeTableImplementation> class TreeSet;
 
-template <typename TKey, typename TKeyComparator, typename TAllocator, TreeTableImplementation Implementation>
+template <typename TKey, typename TKeyComparator, typename TAllocator, ETreeTableImplementation Implementation>
 class TreeSetIterator : public SetCollectionIterator<TKey, TAllocator>
 {
-	using TTreeNode				 = TreeNode<TKey>;
-	using TTreeSet				 = TreeSet<TKey, TKeyComparator, TAllocator, Implementation>;
-	using TTreeTable			 = TreeTable<ParameterPack_t<TKey, TKeyComparator, TAllocator>, Implementation>;
-	using TTreeSetIterator		 = TreeSetIterator<TKey, TKeyComparator, TAllocator, Implementation>;
+	using TTreeNode			 = TreeNode<TKey>;
+	using TTreeSet			 = TreeSet<TKey, TKeyComparator, TAllocator, Implementation>;
+	using TTreeTable		 = TreeTable<ParameterPack_t<TKey, TKeyComparator, TAllocator>, Implementation>;
+	using TTreeSetIterator	 = TreeSetIterator<TKey, TKeyComparator, TAllocator, Implementation>;
 	using TSetCollectionIterator = SetCollectionIterator<TKey, TAllocator>;
 public:
-	TreeSetIterator(VoidOwner& owner, TTreeNode* node) : TSetCollectionIterator(owner) { m_pIteratorNode = node; }
-	~TreeSetIterator() noexcept override = default;
+	TreeSetIterator(CVoidOwner& _owner, TTreeNode* _pIteratorNode)
+	: TSetCollectionIterator(_owner)
+	{
+		pIteratorNode_ = _pIteratorNode;
+	}
 
-	bool HasNext() const override {
+	~TreeSetIterator() noexcept override = default;
+public:
+	bool HasNext() const override
+	{
 		if (!this->IsValid())
 			return false;
 
-		return m_pIteratorNode;
+		return pIteratorNode_ != nullptr;
 	}
 
-	bool HasPrevious() const override {
-		if (!this->IsValid()) 
+	bool HasPrevious() const override
+	{
+		if (!this->IsValid())
 			return false;
 
-		return m_pIteratorNode;
+		return pIteratorNode_ != nullptr;
 	}
 
-	TKey& Next() override {
-		if (m_pIteratorNode == nullptr) {
+	TKey& Next() override
+	{
+		if (pIteratorNode_ == nullptr)
 			throw InvalidOperationException("데이터가 없습니다.");
-		}
 
-		TKey& key = m_pIteratorNode->Data;
-		m_pIteratorNode = TTreeTable::FindBiggerNode(m_pIteratorNode);
+		TKey& key = pIteratorNode_->data_;
+		pIteratorNode_ = TTreeTable::FindBiggerNode(pIteratorNode_);
 		return key;
 	}
 
-	TKey& Previous() override {
-		if (m_pIteratorNode == nullptr) {
+	TKey& Previous() override
+	{
+		if (pIteratorNode_ == nullptr)
 			throw InvalidOperationException("데이터가 없습니다.");
-		}
 
-		TKey& key = m_pIteratorNode->Data;
-		m_pIteratorNode = TTreeTable::FindSmallerNode(m_pIteratorNode);
+		TKey& key = pIteratorNode_->data_;
+		pIteratorNode_ = TTreeTable::FindSmallerNode(pIteratorNode_);
 		return key;
 	}
 
-	TKey& Current() override {
-		if (m_pIteratorNode == nullptr) {
+	TKey& Current() override
+	{
+		if (pIteratorNode_ == nullptr)
 			throw InvalidOperationException("데이터가 없습니다.");
-		}
 
-		return m_pIteratorNode->Data;
+		return pIteratorNode_->data_;
 	}
 
 	// TODO: 올바르게 수정
-	bool IsEnd() const override {
+	bool IsEnd() const override
+	{
 		return HasNext() == false;
 	}
 
-	bool IsBegin() const override {
+	bool IsBegin() const override
+	{
 		return HasPrevious() == false;
 	}
 protected:
-	TTreeNode* m_pIteratorNode;
+	TTreeNode* pIteratorNode_;
 
 	friend class TTreeSet;
 };

@@ -15,5 +15,5 @@ int TestSendCount;
 bool UsePooling;
 AutoResetEvent TestFinished(false);
 TestMode Mode;
-thread_local SharedPtr<BinarySearchMemoryPool> TlsMemPool;
+thread_local SharedPtr<CBinarySearchMemoryPool> TlsMemPool;
 NS_PACKET_POOLING_END

@@ -17,7 +17,7 @@
 
 #define ModeBufferSize		32
 #define FileReadCount		64
-#define ReadBufferSize		1024
+#define READ_BUFFER_SIZE		1024
 
 NS_JC_BEGIN
 

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/15/2023 3:22:16 AM
  * =====================
@@ -15,11 +15,19 @@
 
 NS_JC_BEGIN
 
-struct TreeNodeColor { enum _ { eBlack, eRed }; };
+struct TreeNodeColor
+{
+	enum _
+	{
+		eBlack,
+		eRed
+	};
+};
 
 template <typename TKey>
-struct TreeNode
+class TreeNode
 {
+public:
 	using TTreeNode = TreeNode<TKey>;
 
 	enum Color
@@ -29,48 +37,72 @@ struct TreeNode
 	};
 
 	template <typename Ky>
-	TreeNode(Ky&& data)
-		: Parent(nullptr)
-		, Left(nullptr)
-		, Right(nullptr)
-		, Color(TreeNodeColor::eRed) {
-		Data = Forward<Ky>(data);
+	TreeNode(Ky&& _data)
+		: pParent_(nullptr)
+		, pLeft_(nullptr)
+		, pRight_(nullptr)
+		, color_(TreeNodeColor::eRed)
+	{
+		data_ = Forward<Ky>(_data);
 	}
 
 	// 둘중 할당된 자식 아무거나 반환
-	TreeNode* Any() const { return Left ? Left : Right; }
+	TreeNode* Any() const
+	{
+		return pLeft_ ? pLeft_ : pRight_;
+	}
 
 	// 둥중 하나의 자식 아무거나 반환 및 자식이 몇개있는지도 같이 반환
-	TreeNode* AnyWithChildrenCount(JCORE_OUT int& count) const {
-		if (Left && Right) {
-			count = 2;
-			return Left;
+	TreeNode* AnyWithChildrenCount(JCORE_OUT int& _count) const
+	{
+		if (pLeft_ && pRight_)
+		{
+			_count = 2;
+			return pLeft_;
 		}
-		if (Left) {
-			count = 1;
-			return Left;
+
+		if (pLeft_)
+		{
+			_count = 1;
+			return pLeft_;
 		}
-		if (Right) {
-			count = 1;
-			return Right;
+
+		if (pRight_)
+		{
+			_count = 1;
+			return pRight_;
 		}
-		count = 0;
+
+		_count = 0;
 		return nullptr;
 	}
-	bool IsLeft() const { return Parent->Left == this; }
-	bool IsRight() const { return Parent->Right == this; }
-	int Count() const {
-		if (Left && Right) return 2;
-		if (Left) return 1;
-		if (Right) return 1;
+
+	bool IsLeft() const
+	{
+		return pParent_->pLeft_ == this;
+	}
+
+	bool IsRight() const
+	{
+		return pParent_->pRight_ == this;
+	}
+
+	int Count() const
+	{
+		if (pLeft_ && pRight_)
+			return 2;
+		if (pLeft_)
+			return 1;
+		if (pRight_)
+			return 1;
 		return 0;
 	}
 
-	TKey Data;
-	TTreeNode* Parent;
-	TTreeNode* Left;
-	TTreeNode* Right;
-	char Color;
+	TKey data_;
+	TTreeNode* pParent_;
+	TTreeNode* pLeft_;
+	TTreeNode* pRight_;
+	char color_;
 };
 
 NS_JC_END

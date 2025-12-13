@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 */
 
@@ -8,105 +8,123 @@
 
 NS_JC_BEGIN
 
-
 // 전방 선언
-							
+
 template <typename, typename>
 class ArrayQueue;
-class VoidOwner;
+class CVoidOwner;
 
 template <typename T, typename TAllocator>
 class ArrayQueueIterator : public ArrayCollectionIterator<T, TAllocator>
 {
 	using TArrayCollectionIterator	= ArrayCollectionIterator<T, TAllocator>;
 	using TArrayQueue				= ArrayQueue<T, TAllocator>;
+
 public:
-	ArrayQueueIterator(VoidOwner& owner, int pos) : TArrayCollectionIterator(owner, pos) {}
-	~ArrayQueueIterator() noexcept override {}
+	ArrayQueueIterator(CVoidOwner& _owner, int _pos)
+		: TArrayCollectionIterator(_owner, _pos)
+	{
+	}
+
+	~ArrayQueueIterator() noexcept override = default;
+
 public:
-	bool HasNext() const override {
-		if (!this->IsValid()) {
+	bool HasNext() const override
+	{
+		if (!this->IsValid())
+		{
 			return false;
 		}
 
-		return IsValidIndex(this->m_iPos);
+		return IsValidIndex(this->pos_);
 	}
 
-	bool HasPrevious() const override {
-		if (!this->IsValid()) {
+	bool HasPrevious() const override
+	{
+		if (!this->IsValid())
+		{
 			return false;
 		}
 
-		int iPos = this->m_iPos - 1;
+		int pos = this->pos_ - 1;
 
-		if (iPos == -1) {
-			iPos = CastArrayQueue()->Capacity() - 1;
+		if (pos == -1)
+		{
+			pos = CastArrayQueue()->Capacity() - 1;
 		}
 
-		return IsValidIndex(iPos);
+		return IsValidIndex(pos);
 	}
 
-	T& Next() override {
+	T& Next() override
+	{
 		TArrayQueue* pQueue = CastArrayQueue();
-		T& val = pQueue->m_pArray[this->m_iPos++];
+		T& value = pQueue->pArray_[this->pos_++];
 
-		if (this->m_iPos == pQueue->Capacity()) {
-			this->m_iPos = 0;
+		if (this->pos_ == pQueue->Capacity())
+		{
+			this->pos_ = 0;
 		}
 
-		return val;
+		return value;
 	}
 
-	T& Previous() override {
+	T& Previous() override
+	{
 		TArrayQueue* pQueue = CastArrayQueue();
-		this->m_iPos -= 1;
-		if (this->m_iPos == -1) {
-			this->m_iPos = pQueue->Capacity() - 1;
+		this->pos_ -= 1;
+
+		if (this->pos_ == -1)
+		{
+			this->pos_ = pQueue->Capacity() - 1;
 		}
 
-		return pQueue->m_pArray[this->m_iPos];
+		return pQueue->pArray_[this->pos_];
 	}
 
-	T& Current() override {
-		return CastArrayQueue()->m_pArray[this->m_iPos];
+	T& Current() override
+	{
+		return CastArrayQueue()->pArray_[this->pos_];
 	}
 
-	bool IsEnd() const override {
+	bool IsEnd() const override
+	{
 		return HasNext() == false;
 	}
 
-	bool IsBegin() const override {
+	bool IsBegin() const override
+	{
 		return HasPrevious() == false;
 	}
-protected:
 
+protected:
 	/// <summary>
 	/// [오버라이딩]
-	/// - From ArrayCollectionIterator
+	/// - From CArrayCollectionIterator
 	/// </summary>
-
-	bool IsValidIndex(int idx) const override {
+	bool IsValidIndex(int _idx) const override
+	{
 		TArrayQueue* pQueue = CastArrayQueue();
 
-		if (pQueue->IsEmpty()) {
+		if (pQueue->IsEmpty())
+		{
 			return false;
 		}
 
-		if (pQueue->IsForwardedHead()) {
-			return (idx >= pQueue->m_iHead && idx < pQueue->Capacity()) ||
-				   (idx >= 0			   && idx < pQueue->m_iTail);
-		} 
+		if (pQueue->IsForwardedHead())
+		{
+			return (_idx >= pQueue->head_ && _idx < pQueue->Capacity()) ||
+				   (_idx >= 0 && _idx < pQueue->tail_);
+		}
 
-		return idx >= pQueue->m_iHead && idx < pQueue->m_iTail;
+		return _idx >= pQueue->head_ && _idx < pQueue->tail_;
 	}
-	
 
-
-	TArrayQueue* CastArrayQueue() const {
+	TArrayQueue* CastArrayQueue() const
+	{
 		this->ThrowIfIteratorIsNotValid();
-		return this->Watcher.Get<TArrayQueue*>();
+		return this->watcher_.Get<TArrayQueue*>();
 	}
 };
-
 
 NS_JC_END

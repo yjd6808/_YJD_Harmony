@@ -1,96 +1,100 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 5/8/2023 8:42:54 AM
  * =====================
  *
  */
 
-
 #pragma once
-
 
 #include <JCore/Container/Iterator.h>
 
 NS_JC_BEGIN
 
-
 // 전방 선언
-class VoidOwner;
-template <typename, typename> class CollectionStream;
+class CVoidOwner;
+template <typename, typename> class CCollectionStream;
 template <typename> struct StreamNode;
 
 template <typename T, typename TAllocator>
 class CollectionStreamIterator : public Iterator<T, TAllocator>
 {
+public:
 	using TIterator = Iterator<T, TAllocator>;
-	using TStreamNode = StreamNode<T>;
-	using TCollectionStream = CollectionStream<T, TAllocator>;
+    using TStreamNode = StreamNode<T>;
+	using TCollectionStream = CCollectionStream<T, TAllocator>;
+
 public:
-	CollectionStreamIterator(VoidOwner& owner, TStreamNode* current) : TIterator(owner) {
-		m_pCurrent = current;
+	CollectionStreamIterator(CVoidOwner& _owner, TStreamNode* _current)
+	: TIterator(_owner)
+	{
+		pCurrent_ = _current;
 
-		TCollectionStream* pList = owner.Get<TCollectionStream*>();
-		m_pHead = pList->m_pHead;
-		m_pTail = pList->m_pTail;
+		TCollectionStream* pList = _owner.Get<TCollectionStream*>();
+		pHead_ = pList->pHead_;
+		pTail_ = pList->pTail_;
 	}
 
-	~CollectionStreamIterator() noexcept override {}
+	~CollectionStreamIterator() noexcept override = default;
+
 public:
-	bool HasNext() const override {
-		if (!this->IsValid()) {
+	bool HasNext() const override
+	{
+		if (!this->IsValid())
 			return false;
-		}
 
-		return m_pCurrent != m_pTail;
+		return pCurrent_ != pTail_;
 	}
 
-	bool HasPrevious() const override {
-		if (!this->IsValid()) {
+	bool HasPrevious() const override
+	{
+		if (!this->IsValid())
 			return false;
-		}
 
-		return m_pCurrent != m_pHead;
-
+		return pCurrent_ != pHead_;
 	}
 
-	T& Next() override {
-		if (m_pCurrent == nullptr) {
+	T& Next() override
+	{
+		if (pCurrent_ == nullptr)
 			throw InvalidOperationException("데이터가 없습니다.");
-		}
 
-		T& val = *m_pCurrent->Pointer;
-		m_pCurrent = m_pCurrent->Next;
-		return val;
+		T& value = *pCurrent_->pValue_;
+		pCurrent_ = pCurrent_->pNext_;
+		return value;
 	}
 
-	T& Previous() override {
-		if (m_pCurrent == nullptr) {
+	T& Previous() override
+	{
+		if (pCurrent_ == nullptr)
 			throw InvalidOperationException("데이터가 없습니다.");
-		}
 
-		T& val = *m_pCurrent->Pointer;
-		m_pCurrent = m_pCurrent->Previous;
-		return val;
+		T& value = *pCurrent_->pValue_;
+		pCurrent_ = pCurrent_->pPrevious_;
+		return value;
 	}
 
-	T& Current() override {
-		return *m_pCurrent->Pointer;
+	T& Current() override
+	{
+		return *pCurrent_->pValue_;
 	}
 
-	bool IsEnd() const override {
-		return m_pCurrent == m_pTail;
+	bool IsEnd() const override
+	{
+		return pCurrent_ == pTail_;
 	}
 
-	bool IsBegin() const override {
-		return m_pCurrent == m_pHead;
+	bool IsBegin() const override
+	{
+		return pCurrent_ == pHead_;
 	}
+
 protected:
-	TStreamNode* m_pCurrent;
-	TStreamNode* m_pHead;
-	TStreamNode* m_pTail;
+	TStreamNode* pCurrent_;
+	TStreamNode* pHead_;
+	TStreamNode* pTail_;
 
 	friend class TCollectionStream;
 };
 
 NS_JC_END
-

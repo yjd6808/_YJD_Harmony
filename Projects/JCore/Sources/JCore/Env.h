@@ -18,9 +18,9 @@ public:
 	static String CurrentDirectory();
 	static Int32U   TimeGetTime();
 	static TimeSpan AppTime();			// 앱 실행후 시간이 얼마나 결과했는지
-	static Int32U	AppTimeTGT();		// 앱 실행후 시간이 얼마나 결과했는지
+	static Int32U	AppTimeTgt();		// 앱 실행후 시간이 얼마나 결과했는지
 	static TimeSpan SystemTime();		// OS 실행후 시간이 얼마나 경과했는지
-	static TimeSpan SystemTimeTGT();	// OS 실행후 시간이 얼마나 경과했는지 (TimeGetTime64)
+	static TimeSpan SystemTimeTgt();	// OS 실행후 시간이 얼마나 경과했는지 (TimeGetTime64)
 	
 
 private:

@@ -194,8 +194,8 @@ int Scheduler::PopTasks(JCORE_OUT Vector<SchedulerTask*>& executableTasks, const
 	while (cur->HasNext()) {
 		auto& curValue = cur->Current();
 
-		const Int64U& expiredTaskKey = curValue.Key;
-		const TaskList* expiredTaskList = curValue.Value;
+		const Int64U& expiredTaskKey = curValue.key_;
+		const TaskList* expiredTaskList = curValue.value_;
 
 		if (expiredTaskKey >= *executableTaskLimitTime) {
 			break;
@@ -245,7 +245,7 @@ void Scheduler::ClearWaitingTaskListRaw() {
 	auto it = m_tmWaitTasks.Begin();
 	while (it->HasNext()) {
 
-		TaskList* pList = it->Current().Value;
+		TaskList* pList = it->Current().value_;
 		pList->ForEachDelete();
 		delete pList;
 		m_tmWaitTasks.RemoveByIterator(it);

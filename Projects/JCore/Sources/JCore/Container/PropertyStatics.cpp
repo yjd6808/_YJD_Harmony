@@ -6,28 +6,12 @@
  */
 
 #include <JCore/Core.h>
+
+#include <JCore/Container/PropertyOperatorDefinitions.h>
 #include <JCore/Container/PropertyStatics.h>
 #include <JCore/Container/Property.h>
 
 NS_JC_BEGIN
-
-extern void InitializePropertyOperatorSelectors();
-extern void InitializePropertyOperatorBool();
-extern void InitializePropertyOperatorInt8();
-extern void InitializePropertyOperatorInt8U();
-extern void InitializePropertyOperatorInt16();
-extern void InitializePropertyOperatorInt16U();
-extern void InitializePropertyOperatorInt();
-extern void InitializePropertyOperatorInt32U();
-extern void InitializePropertyOperatorInt32L();
-extern void InitializePropertyOperatorInt32UL();
-extern void InitializePropertyOperatorInt64();
-extern void InitializePropertyOperatorInt64U();
-extern void InitializePropertyOperatorFloat();
-extern void InitializePropertyOperatorDouble();
-extern void InitializePropertyOperatorLDouble();
-extern void InitializePropertyOperatorString();
-extern void InitializePropertyOperatorUnary();
 
 template <PropertyType_t I>
 static void CreateFactory() {

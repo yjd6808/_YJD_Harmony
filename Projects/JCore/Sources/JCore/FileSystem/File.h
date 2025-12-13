@@ -36,9 +36,9 @@ public:
 	static bool Copy(const String& srcPath, const String& dstPath);
 
 	// "abcd", 4 (NULL 문자는 뺀 길이를 전달해줘야함)
-	static void WriteAllText(const char* content, const int contentLength, const char* path);
+	static void WriteAllText(const char* content, int contentLength, const char* path);
 	static void WriteAllText(const String& content, const char* path);
-	static void WriteAllBytes(const Byte* content, const int contentLength, const char* path);
+	static void WriteAllBytes(const Byte* content, int contentLength, const char* path);
 
 
 	static String ReadAllText(const char* path);
@@ -51,7 +51,7 @@ public:
 	}
 
 private:
-	static void FormatFileMode(char* modeBuffer, const int modeBufferCapacity, const char* dfaultMode, CodePage codePage);
+	static void FormatFileMode(char* modeBuffer, int modeBufferCapacity, const char* dfaultMode, CodePage codePage);
 };
 
 

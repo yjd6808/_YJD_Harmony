@@ -8,94 +8,111 @@
 
 NS_JC_BEGIN
 
-		
 // 전방 선언
-class VoidOwner;
+class CVoidOwner;
 template <typename, typename> class ListCollection;
-template <typename, typename> struct ListNode;
+template <typename, typename> class ListNode;
+
 template <typename T, typename TAllocator>
 class JCORE_NOVTABLE ListCollectionIterator : public Iterator<T, TAllocator>
 {
-	using TIterator		   = Iterator<T, TAllocator>;
-	using TListNode		   = ListNode<T, TAllocator>;
-	using TListCollection  = ListCollection<T, TAllocator>;
-public:
-	ListCollectionIterator(VoidOwner& owner, TListNode* current) : TIterator(owner) {
-		m_pCurrent = current;
+	using TIterator = Iterator<T, TAllocator>;
+	using TListNode = ListNode<T, TAllocator>;
+	using TListCollection = ListCollection<T, TAllocator>;
 
-		TListCollection* pList = owner.Get<TListCollection*>();
-		m_pHead = pList->m_pHead;
-		m_pTail = pList->m_pTail;
+public:
+	ListCollectionIterator(CVoidOwner& _owner, TListNode* _pCurrent)
+		: TIterator(_owner)
+		, pCurrent_(_pCurrent)
+	{
+		TListCollection* pList = _owner.Get<TListCollection*>();
+		pHead_ = pList->pHead_;
+		pTail_ = pList->pTail_;
 	}
 
 	~ListCollectionIterator() noexcept override = 0;
+
 public:
-	bool HasNext() const override {
-		if (!this->IsValid()) {
+	bool HasNext() const override
+	{
+		if (!this->IsValid())
+		{
 			return false;
 		}
 
-		return m_pCurrent != nullptr;		// 헤드까지 도달했는데 Previous를 해버리는 경우가 있을 수 있으므로;
+		// 헤드까지 도달했는데 Previous를 해버리는 경우가 있을 수 있으므로
+		return pCurrent_ != nullptr;
 	}
 
-	bool HasPrevious() const override {
-		if (!this->IsValid()) {
+	bool HasPrevious() const override
+	{
+		if (!this->IsValid())
+		{
 			return false;
 		}
 
-		return m_pCurrent != nullptr;
-
+		return pCurrent_ != nullptr;
 	}
 
-	T& Next() override {
+	T& Next() override
+	{
 		// 반복자가 꼬리까지 도달했는데 데이터를 가져올려고 시도하는 경우
-		if (m_pCurrent == nullptr) {
+		if (pCurrent_ == nullptr)
+		{
 			throw InvalidOperationException("데이터가 없습니다.");
 		}
 
-		T& val = m_pCurrent->Value;
-		m_pCurrent = m_pCurrent->Next;
-		return val;
+		T& value = pCurrent_->value_;
+		pCurrent_ = pCurrent_->pNext_;
+		return value;
 	}
 
-	T& Previous() override {
-		if (m_pCurrent == nullptr) {
+	T& Previous() override
+	{
+		if (pCurrent_ == nullptr)
+		{
 			throw InvalidOperationException("데이터가 없습니다.");
 		}
 
-		T& val = m_pCurrent->Value;
-		m_pCurrent = m_pCurrent->Previous;
-		return val;
+		T& value = pCurrent_->value_;
+		pCurrent_ = pCurrent_->pPrevious_;
+		return value;
 	}
 
-	T& Current() override {
-		return m_pCurrent->Value;
+	T& Current() override
+	{
+		return pCurrent_->value_;
 	}
 
-	bool IsEnd() const override {
-		return m_pCurrent == nullptr;
+	bool IsEnd() const override
+	{
+		return pCurrent_ == nullptr;
 	}
 
-	bool IsBegin() const override {
-		return m_pCurrent == m_pHead;
+	bool IsBegin() const override
+	{
+		return pCurrent_ == pHead_;
 	}
+
 protected:
-	TListCollection* CastListCollection() const {
+	TListCollection* CastListCollection() const
+	{
 		this->ThrowIfIteratorIsNotValid();
-		return this->Watcher.Get<TListCollection>();
+		return this->watcher_.Get<TListCollection>();
 	}
+
 protected:
-	TListNode* m_pCurrent;
-	TListNode* m_pHead;
-	TListNode* m_pTail;
+	TListNode* pCurrent_;
+	TListNode* pHead_;
+	TListNode* pTail_;
 
 	friend class TListCollection;
 };
 
 
 template <typename T, typename TAllocator>
-ListCollectionIterator<T, TAllocator>::~ListCollectionIterator() noexcept {
-	
+ListCollectionIterator<T, TAllocator>::~ListCollectionIterator() noexcept
+{
 }
 
 

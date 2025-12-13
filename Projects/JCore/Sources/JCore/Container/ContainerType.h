@@ -10,7 +10,8 @@
 
 
 
-enum class ContainerType {
+enum class ContainerType
+{
 	ArrayQueue,
 	ArrayStack,
 	Vector,

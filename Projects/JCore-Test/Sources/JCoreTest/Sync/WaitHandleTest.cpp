@@ -15,7 +15,6 @@
 
 namespace WaitHandleTest {
 
-
 TEST(WaitHandleTest, WaitHandle) {
     LeakCheck;
     Vector<WaitHandle> handles;
@@ -27,13 +26,13 @@ TEST(WaitHandleTest, WaitHandle) {
     handles.PushBack(WaitHandle{ false, true, "F" });
 
     std::thread th([&handles] {
-        this_thread::sleep_for(100ms);
+        this_thread::sleep_for(chrono::milliseconds(100));
         handles[0].Signal();
 
-        this_thread::sleep_for(100ms);
+        this_thread::sleep_for(chrono::milliseconds(100));
         handles.Extension().ForEach([](WaitHandle& handle) { handle.Signal(); });
 
-        this_thread::sleep_for(100ms);
+        this_thread::sleep_for(chrono::milliseconds(100));
         handles[0].Signal();
         handles[handles.Size() - 1].Signal();
     });

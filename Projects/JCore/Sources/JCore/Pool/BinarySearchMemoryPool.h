@@ -28,122 +28,143 @@ NS_JC_BEGIN
  *
  * =====================================================================
  */
-class BinarySearchMemoryPool :  public MemoryPoolAbstract
+class CBinarySearchMemoryPool : public MemoryPoolAbstract
 {
-	using Type = BinarySearchMemoryPool;
+	using Type = CBinarySearchMemoryPool;
+
 public:
-	BinarySearchMemoryPool(const String& name = nullptr) : MemoryPoolAbstract(name) {
-		BinarySearchMemoryPool::CreatePool();
+	CBinarySearchMemoryPool(const String& _name = nullptr)
+		: MemoryPoolAbstract(_name)
+	{
+		CBinarySearchMemoryPool::CreatePool();
 	}
 
-	BinarySearchMemoryPool(const HashMap<int, int>& allocationMap, const String& name = nullptr) : MemoryPoolAbstract(name) {
-		BinarySearchMemoryPool::Initialize(allocationMap);
+	CBinarySearchMemoryPool(const HashMap<int, int>& _allocationMap, const String& _name = nullptr)
+		: MemoryPoolAbstract(_name)
+	{
+		CBinarySearchMemoryPool::Initialize(_allocationMap);
 	}
 
-	~BinarySearchMemoryPool() override {
-		BinarySearchMemoryPool::Finalize();
+	~CBinarySearchMemoryPool() override
+	{
+		CBinarySearchMemoryPool::Finalize();
 	}
 
 	template <int RequestSize>
-	void* StaticPop()  {
-		constexpr int iIndex = Detail::AllocationLengthMapConverter::ToIndex<RequestSize>();
-		constexpr int iFitSize = Detail::AllocationLengthMapConverter::ToSize<iIndex>();
+	void* StaticPop()
+	{
+		constexpr int index = Detail::AllocationLengthMapConverter::ToIndex<RequestSize>();
+		constexpr int fitSize = Detail::AllocationLengthMapConverter::ToSize<index>();
 
-		bool bNewAlloc;
-		void* pMemoryBlock = m_Pool[iIndex]->Pop(bNewAlloc);
+		bool newAlloc;
+		void* pMemoryBlock = pPool_[index]->Pop(newAlloc);
 #if DebugMode
-		AddAllocated(iIndex, bNewAlloc);
+		AddAllocated(index, newAlloc);
 #endif
 		return pMemoryBlock;
 	}
 
-	void* DynamicPop(int requestSize) override {
-		int iIndex = Detail::AllocationLengthMapConverter::ToIndex(requestSize);
-		int iFitSize = Detail::AllocationLengthMapConverter::ToSize(iIndex);
+	void* DynamicPop(int _requestSize) override
+	{
+		int index = Detail::AllocationLengthMapConverter::ToIndex(_requestSize);
+		int fitSize = Detail::AllocationLengthMapConverter::ToSize(index);
 
-		bool bNewAlloc;
-		void* pMemoryBlock = m_Pool[iIndex]->Pop(bNewAlloc);
+		bool newAlloc;
+		void* pMemoryBlock = pPool_[index]->Pop(newAlloc);
 #if DebugMode
-		AddAllocated(iIndex, bNewAlloc);
+		AddAllocated(index, newAlloc);
 #endif
 		return pMemoryBlock;
 	}
 
-	void* DynamicPop(int requestSize, int& realAllocatedSize) override {
-		int iIndex = Detail::AllocationLengthMapConverter::ToIndex(requestSize);
-		int iFitSize = Detail::AllocationLengthMapConverter::ToSize(iIndex);
+	void* DynamicPop(int _requestSize, int& _realAllocatedSize) override
+	{
+		int index = Detail::AllocationLengthMapConverter::ToIndex(_requestSize);
+		int fitSize = Detail::AllocationLengthMapConverter::ToSize(index);
 
-		realAllocatedSize = iFitSize;
-		bool bNewAlloc;
-		void* pMemoryBlock = m_Pool[iIndex]->Pop(bNewAlloc);
+		_realAllocatedSize = fitSize;
+		bool newAlloc;
+		void* pMemoryBlock = pPool_[index]->Pop(newAlloc);
 #if DebugMode
-		AddAllocated(iIndex, bNewAlloc);
+		AddAllocated(index, newAlloc);
 #endif
 		return pMemoryBlock;
 	}
 
 	template <int PushSize>
-	void StaticPush(void* memory) {
+	void StaticPush(void* _pMemory)
+	{
 		// static_assert(Detail::AllocationLengthMapConverter::ValidateSize<PushSize>());
 		int index = Detail::AllocationLengthMapConverter::ToIndex<PushSize>();
 #if DebugMode
 		AddDeallocated(index);
 #endif
-		m_Pool[index]->Push(memory);
+		pPool_[index]->Push(_pMemory);
 	}
 
-	void DynamicPush(void* memory, int returnSize) override {
-		// DebugAssertMessage(Detail::AllocationLengthMapConverter::ValidateSize(returnSize), "뭐야! 사이즈가 안맞자나!");
-		int index = Detail::AllocationLengthMapConverter::ToIndex(returnSize);
+	void DynamicPush(void* _pMemory, int _returnSize) override
+	{
+		// DebugAssertMessage(Detail::AllocationLengthMapConverter::ValidateSize(_returnSize), "뭐야! 사이즈가 안맞자나!");
+		int index = Detail::AllocationLengthMapConverter::ToIndex(_returnSize);
 #if DebugMode
 		AddDeallocated(index);
 #endif
-		m_Pool[index]->Push(memory);
+		pPool_[index]->Push(_pMemory);
 	}
 
 
-	void CreatePool() {
-		for (int i = 0; i < Detail::MemoryBlockSizeMapSize_v; ++i) {
-			int iChunkSize = Detail::AllocationLengthMapConverter::ToSize(i);
-			m_Pool[i] = dbg_new MemoryChunckQueue(iChunkSize, 0);
+	void CreatePool()
+	{
+		for (int i = 0; i < Detail::MemoryBlockSizeMapSize_v; ++i)
+		{
+			int chunkSize = Detail::AllocationLengthMapConverter::ToSize(i);
+			pPool_[i] = dbg_new CMemoryChunckQueue(chunkSize, 0);
 		}
 	}
 
-	void Initialize(const HashMap<int, int>& allocationMap) override {
-		DebugAssertMsg(m_bInitialized == false, "이미 풀이 초기화 되어 있습니다.");
+	void Initialize(const HashMap<int, int>& _allocationMap) override
+	{
+		DebugAssertMsg(initialized_ == false, "이미 풀이 초기화 되어 있습니다.");
 
-		const_cast<HashMap<int, int>&>(allocationMap).Extension().ForEach([this](Pair<int, int>& count) {
-			int iSize = count.Key;
-			int iCount = count.Value;
-			int iIndex = Detail::AllocationLengthMapConverter::ToIndex(iSize);
-			DebugAssertMsg(Detail::AllocationLengthMapConverter::ValidateSize(iSize), "뭐야! 사이즈가 안맞자나!");
+		const_cast<HashMap<int, int>&>(_allocationMap).Extension().ForEach([this](Pair<int, int>& count)
+		{
+			int size = count.key_;
+			int countValue = count.value_;
+			int index = Detail::AllocationLengthMapConverter::ToIndex(size);
+			DebugAssertMsg(Detail::AllocationLengthMapConverter::ValidateSize(size), "뭐야! 사이즈가 안맞자나!");
 
-			if (m_Pool[iIndex]) {
-				JCORE_DELETE_SAFE(m_Pool[iIndex]);
+			if (pPool_[index])
+			{
+				JCORE_DELETE_SAFE(pPool_[index]);
 			}
-			
-			m_Pool[iIndex] = dbg_new MemoryChunckQueue(iSize, iCount);
-			AddInitBlock(iIndex, iCount);
+
+			pPool_[index] = dbg_new CMemoryChunckQueue(size, countValue);
+			AddInitBlock(index, countValue);
 		});
 
-		m_bInitialized = true;
+		initialized_ = true;
 	}
 
 	// 반드시 프로그램 종료전 메모리풀을 더이상 사용하지 않을 때 호출하여 정리할 것
-	void Finalize() override {
+	void Finalize() override
+	{
 		DebugAssertMsg(HasUsingBlock() == false, "현재 사용중인 블록이 있습니다. !!!");
 
-		for (int i = 0; i < Detail::MemoryBlockSizeMapSize_v; ++i) {
-			JCORE_DELETE_SAFE(m_Pool[i]);
+		for (int i = 0; i < Detail::MemoryBlockSizeMapSize_v; ++i)
+		{
+			JCORE_DELETE_SAFE(pPool_[i]);
 		}
 	}
 
-	int Algorithm() override { return eBinarySearch; }
-	
+	int Algorithm() override
+	{
+		return eBinarySearch;
+	}
+
 private:
-	MemoryChunckQueue* m_Pool[Detail::MemoryBlockSizeMapSize_v]{};
+	CMemoryChunckQueue* pPool_[Detail::MemoryBlockSizeMapSize_v]{};
 };
 
-using BinaryMemoryPoolPtr = SharedPtr<BinarySearchMemoryPool>;
+using BinaryMemoryPoolPtr = SharedPtr<CBinarySearchMemoryPool>;
 
 NS_JC_END

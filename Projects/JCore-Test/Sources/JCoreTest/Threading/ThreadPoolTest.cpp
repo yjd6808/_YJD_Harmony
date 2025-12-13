@@ -57,7 +57,6 @@ TEST(ThreadPoolTest, General) {
 			} else {
 				Console::WriteLine("태스크1 작업 완료 %d", r);
 			}
-			JCORE_PASS;
 		}};
 
 		Thread th2{ [=](void*) {

@@ -12,7 +12,7 @@
 
 NS_JC_BEGIN
 
-class DefaultAllocator;
+class CDefaultAllocator;
 
 template <typename...>
 struct Tuple;
@@ -23,11 +23,11 @@ class String;
 class StringUtil final
 {
 public:
-	static Vector<String, DefaultAllocator> Split(String& src, const char* delimiter);
+	static Vector<String, CDefaultAllocator> Split(String& src, const char* delimiter);
 	static String Format(const char* format, ...);
 	static String Format(const char* format, va_list args);
-	static void FormatBuffer(char* buff, const int buffCapacity, const char* format, ...);
-	static void FormatBuffer(char* buff, const int buffCapacity, const char* format, va_list va);
+	static void FormatBuffer(char* buff, int buffCapacity, const char* format, ...);
+	static void FormatBuffer(char* buff, int buffCapacity, const char* format, va_list va);
 
 
 	// FillLeft(20, '0', 3) -> 020
@@ -99,9 +99,9 @@ public:
 	}
 
 	static bool IsNullOrEmpty(const char* str);
-	static int Copy(char* buffer, const int bufferSize, const char* copy);
+	static int Copy(char* buffer, int bufferSize, const char* copy);
 	static int CopyUnsafe(char* buffer, const char* copy);
-	static bool IsEqual(const char* src, const int srcLen, const char* dst, const int dstLen);
+	static bool IsEqual(const char* src, int srcLen, const char* dst, int dstLen);
 	static void Swap(String& src, String& dst);
 	static int Find(const char* source, int sourceLen, int startIdx, int endIdx, const char* str);
 	static int Find(const char* source, int sourceLen, int startIdx, int endIdx, const char* str, int strLen);

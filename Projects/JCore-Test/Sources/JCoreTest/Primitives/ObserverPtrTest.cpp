@@ -19,7 +19,7 @@ using namespace std;
 TEST(ObserverPtrTest, VoidOwner_VoidWatcher) {
 	LeakCheck;
 	int* pNew = new int(1000);
-	VoidOwner owner(pNew);
+	CVoidOwner owner(pNew);
 
 	*owner.Get<int*>() = 300;			// 값 수정
 	void* pVoidNew = owner.GetRaw();
@@ -30,8 +30,8 @@ TEST(ObserverPtrTest, VoidOwner_VoidWatcher) {
 	// 오너는 감시자이기도 하다. 따라서 초기 1로 설정
 	EXPECT_TRUE(owner.WatcherCount() == 1);
 
-	const VoidWatcher watch1(owner);
-	VoidWatcher watch2;
+	const CVoidWatcher watch1(owner);
+	CVoidWatcher watch2;
 
 	// watch1은 owner를 감시한다.
 	EXPECT_TRUE(watch1.WatcherCount() == 2);
@@ -42,7 +42,7 @@ TEST(ObserverPtrTest, VoidOwner_VoidWatcher) {
 
 	{
 		// 오너의 소유권을 다른 오너에게 이전한다.
-		VoidOwner tempOwner(Move(owner));	
+		CVoidOwner tempOwner(Move(owner));	
 
 		// 기존 오너는 이제 유효하지 않다.
 		EXPECT_TRUE(owner.Exist() == false);

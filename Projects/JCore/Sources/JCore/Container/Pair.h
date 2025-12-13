@@ -11,13 +11,14 @@ NS_JC_BEGIN
 template <typename TKey, typename TValue>
 struct Pair
 {
-	TKey Key;
-	TValue Value;
+	TKey key_;
+	TValue value_;
 };
 
 template <typename TKey, typename TValue>
-constexpr Pair<NaturalType_t<TKey>, NaturalType_t<TValue>> MakePair(TKey&& key, TValue&& value) {
-	return { Forward<TKey>(key), Forward<TValue>(value) };
+constexpr Pair<NaturalType_t<TKey>, NaturalType_t<TValue>> MakePair(TKey&& _key, TValue&& _value)
+{
+	return { Forward<TKey>(_key), Forward<TValue>(_value) };
 }
 
 NS_JC_END

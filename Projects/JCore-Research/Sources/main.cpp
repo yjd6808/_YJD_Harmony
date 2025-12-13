@@ -35,6 +35,11 @@ struct Example2
 
 };
 
+struct TestF
+{
+	
+};
+
 struct Example3
 {
 	int a;
@@ -105,6 +110,7 @@ int main() {
 	InitializeJCore();
 	InitializeDefaultLogger();
 
+	int fsef[5];
 
 	Example5 ex_array[2];
 
@@ -132,6 +138,13 @@ int main() {
 	Console::WriteLine("%d", sizeof(Example6));
 	Console::WriteLine("%d", sizeof(Example7));
 
+	CProperties props;
+	props.Add(5, PropertyType::Bool);
+	props[5] = false;
+
+	Console::WriteLine("props[5]: %d", props[5].As<bool>());
+
+
 	Vector v{ 5, 2, 7, 3, 8, 1 };	v.ForEach([](int val) { std::cout << val << " "; }); std::cout << "\n";
 	Arrays::MakeHeap(v.Source(), v.Size());	// Max Heap으로 만든다.
 	v.ForEach([](int val) { std::cout << val << " "; }); std::cout << "\n";
@@ -156,5 +169,8 @@ int main() {
 
 	FinalizeDefaultLogger();
 	FinalizeJCore();
+
 	return Console::ReadKeyWhile("X키 입력시 종료", ConsoleKey::X) ? 0 : -1;
+
+
 }

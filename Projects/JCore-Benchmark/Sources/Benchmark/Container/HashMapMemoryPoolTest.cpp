@@ -21,7 +21,7 @@
 #if HashMapMemoryPoolTest == ON
 
 
-static BinarySearchMemoryPool Pool{};
+static CBinarySearchMemoryPool Pool{};
 
 auto lmb = []() {
 	Pool.Initialize({

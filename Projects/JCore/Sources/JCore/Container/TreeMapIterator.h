@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 */
 
@@ -9,13 +9,13 @@
 NS_JC_BEGIN
 
 // 전방 선언
-enum class TreeTableImplementation;
-class VoidOwner; 
-template <typename> struct TreeNode;
-template <typename, typename, typename, typename, TreeTableImplementation> class TreeMap;
+enum class ETreeTableImplementation;
+class CVoidOwner;
+template <typename> class TreeNode;
 template <typename, typename> struct Pair;
+template <typename, typename, typename, typename, ETreeTableImplementation> class TreeMap;
 
-template <typename TKey, typename TValue, typename TKeyComparator, typename TAllocator, TreeTableImplementation Implementation>
+template <typename TKey, typename TValue, typename TKeyComparator, typename TAllocator, ETreeTableImplementation Implementation>
 class TreeMapIterator : public MapCollectionIterator<TKey, TValue, TAllocator>
 {
 	using TKeyValuePair			 = Pair<TKey, TValue>;
@@ -25,61 +25,70 @@ class TreeMapIterator : public MapCollectionIterator<TKey, TValue, TAllocator>
 	using TTreeMapIterator		 = TreeMapIterator<TKey, TValue, TKeyComparator, TAllocator, Implementation>;
 	using TMapCollectionIterator = MapCollectionIterator<TKey, TValue, TAllocator>;
 public:
-	TreeMapIterator(VoidOwner& owner, TTreeNode* node) : TMapCollectionIterator(owner) { m_pIteratorNode = node; }
+	TreeMapIterator(CVoidOwner& _owner, TTreeNode* _pIteratorNode)
+		: TMapCollectionIterator(_owner)
+	{
+		pIteratorNode_ = _pIteratorNode;
+	}
+
 	~TreeMapIterator() noexcept override = default;
 public:
-	bool HasNext() const override {
+	bool HasNext() const override
+	{
 		if (!this->IsValid())
 			return false;
 
-		return m_pIteratorNode;
+		return pIteratorNode_ != nullptr;
 	}
 
-	bool HasPrevious() const override {
-		if (!this->IsValid()) 
+	bool HasPrevious() const override
+	{
+		if (!this->IsValid())
 			return false;
 
-		return m_pIteratorNode;
+		return pIteratorNode_ != nullptr;
 	}
 
-	TKeyValuePair& Next() override {
-		if (m_pIteratorNode == nullptr) {
+	TKeyValuePair& Next() override
+	{
+		if (pIteratorNode_ == nullptr)
 			throw InvalidOperationException("데이터가 없습니다.");
-		}
 
-		TKeyValuePair& pair = m_pIteratorNode->Data;
-		m_pIteratorNode = TTreeTable::FindBiggerNode(m_pIteratorNode);
+		TKeyValuePair& pair = pIteratorNode_->data_;
+		pIteratorNode_ = TTreeTable::FindBiggerNode(pIteratorNode_);
 		return pair;
 	}
 
-	TKeyValuePair& Previous() override {
-		if (m_pIteratorNode == nullptr) {
+	TKeyValuePair& Previous() override
+	{
+		if (pIteratorNode_ == nullptr)
 			throw InvalidOperationException("데이터가 없습니다.");
-		}
 
-		TKeyValuePair& pair = m_pIteratorNode->Data;
-		m_pIteratorNode = TTreeTable::FindSmallerNode(m_pIteratorNode);
+		TKeyValuePair& pair = pIteratorNode_->data_;
+		pIteratorNode_ = TTreeTable::FindSmallerNode(pIteratorNode_);
 		return pair;
 	}
 
-	TKeyValuePair& Current() override {
-		if (m_pIteratorNode == nullptr) {
+	TKeyValuePair& Current() override
+	{
+		if (pIteratorNode_ == nullptr)
 			throw InvalidOperationException("데이터가 없습니다.");
-		}
 
-		return m_pIteratorNode->Data;
+		return pIteratorNode_->data_;
 	}
 
 	// TODO: 올바르게 수정
-	bool IsEnd() const override {
+	bool IsEnd() const override
+	{
 		return HasNext() == false;
 	}
 
-	bool IsBegin() const override {
+	bool IsBegin() const override
+	{
 		return HasPrevious() == false;
 	}
 protected:
-	TTreeNode* m_pIteratorNode;
+	TTreeNode* pIteratorNode_;
 
 	friend class TTreeMap;
 };

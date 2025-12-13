@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 */
 
@@ -9,129 +9,169 @@
 
 NS_JC_BEGIN
 
-template <typename T, typename TAllocator = DefaultAllocator>
-class LinkedList	: public ListCollection<T, TAllocator>
+template <typename T, typename TAllocator = CDefaultAllocator>
+class LinkedList : public ListCollection<T, TAllocator>
 {
-	using TListNode				= ListNode<T, TAllocator>;
-	using TEnumerator			= Enumerator<T, TAllocator>;
-	using TCollection			= Collection<T, TAllocator>;
-	using TListCollection		= ListCollection<T, TAllocator>;
-	using TLinkedList			= LinkedList<T, TAllocator>;
-	using TLinkedListIterator	= LinkedListIterator<T, TAllocator>;
+    using TListNode = ListNode<T, TAllocator>;
+    using TEnumerator = Enumerator<T, TAllocator>;
+    using TCollection = Collection<T, TAllocator>;
+    using TListCollection = ListCollection<T, TAllocator>;
+    using TLinkedList = LinkedList<T, TAllocator>;
+    using TLinkedListIterator = LinkedListIterator<T, TAllocator>;
+
 public:
-	LinkedList() : TListCollection() {}
+    LinkedList()
+        : TListCollection()
+    {
+    }
 
-	LinkedList(const TLinkedList& other) : TListCollection(other) {}
+    LinkedList(const TLinkedList& _other)
+        : TListCollection(_other)
+    {
+    }
 
-	LinkedList(TLinkedList&& other) noexcept : TListCollection(Move(other)) {}
+    LinkedList(TLinkedList&& _other) noexcept
+        : TListCollection(Move(_other))
+    {
+    }
 
-	LinkedList(std::initializer_list<T> ilist) : TListCollection(ilist) {}
+    LinkedList(std::initializer_list<T> _ilist)
+        : TListCollection(_ilist)
+    {
+    }
 
-	~LinkedList() noexcept override {}
+    ~LinkedList() noexcept override
+    {
+    }
+
 public:
-	TLinkedList& operator=(const TLinkedList& other) {
-		this->CopyFrom(other);
-		return *this;
-	}
+    TLinkedList& operator=(const TLinkedList& _other)
+    {
+        this->CopyFrom(_other);
+        return *this;
+    }
 
-	TLinkedList& operator=(TLinkedList&& other) noexcept {
-		this->CopyFrom(Move(other));
-		return *this;
-	}
+    TLinkedList& operator=(TLinkedList&& _other) noexcept
+    {
+        this->CopyFrom(Move(_other));
+        return *this;
+    }
 
-	TLinkedList& operator=(std::initializer_list<T> ilist) {
-		this->CopyFrom(ilist);
-		return *this;
-	}
+    TLinkedList& operator=(std::initializer_list<T> _ilist)
+    {
+        this->CopyFrom(_ilist);
+        return *this;
+    }
 
-	void PushBack(const T& data) override {
-		TListCollection::PushBack(data);
-	}
+    void PushBack(const T& _data) override
+    {
+        TListCollection::PushBack(_data);
+    }
 
-	void PushBack(T&& data) override {
-		TListCollection::PushBack(Move(data));
-	}
+    void PushBack(T&& _data) override
+    {
+        TListCollection::PushBack(Move(_data));
+    }
 
-	void PushBackAll(const TCollection& collection) override {
-		TListCollection::PushBackAll(collection);
-	}
+    void PushBackAll(const TCollection& _collection) override
+    {
+        TListCollection::PushBackAll(_collection);
+    }
 
-	void PushFront(const T& data) override {
-		TListCollection::PushFront(data);
-	}
+    void PushFront(const T& _data) override
+    {
+        TListCollection::PushFront(_data);
+    }
 
-	void PushFront(T&& data) override {
-		TListCollection::PushFront(Move(data));
-	}
+    void PushFront(T&& _data) override
+    {
+        TListCollection::PushFront(Move(_data));
+    }
 
-	void PushFrontAll(const TCollection& collection) override {
-		TListCollection::PushFrontAll(collection);
-	}
+    void PushFrontAll(const TCollection& _collection) override
+    {
+        TListCollection::PushFrontAll(_collection);
+    }
 
-	template <typename... Args>
-	void EmplaceBack(Args&&... args) {
-		TListCollection::EmplaceBack(Forward<Args>(args)...);
-	}
+    template <typename... TArgs>
+    void EmplaceBack(TArgs&&... _args)
+    {
+        TListCollection::EmplaceBack(Forward<TArgs>(_args)...);
+    }
 
-	template <typename... Args>
-	void EmplaceFront(Args&&... args) {
-		TListCollection::EmplaceFront(Forward<Args>(args)...);
-	}
+    template <typename... TArgs>
+    void EmplaceFront(TArgs&&... _args)
+    {
+        TListCollection::EmplaceFront(Forward<TArgs>(_args)...);
+    }
 
-	T& Back() const override {
-		return TListCollection::Back();
-	}
+    T& Back() const override
+    {
+        return TListCollection::Back();
+    }
 
-	T& Front() const override {
-		return TListCollection::Front();
-	}
+    T& Front() const override
+    {
+        return TListCollection::Front();
+    }
 
-	void PopBack() override {
-		TListCollection::PopBack();
-	}
+    void PopBack() override
+    {
+        TListCollection::PopBack();
+    }
 
-	void PopFront() override {
-		TListCollection::PopFront();
-	}
+    void PopFront() override
+    {
+        TListCollection::PopFront();
+    }
 
-	bool Exist(const T& data) const {
-		return this->FindNode(data) != nullptr;
-	}
+    bool Exist(const T& _data) const
+    {
+        return this->FindNode(_data) != nullptr;
+    }
 
-	bool Remove(const T& data) {
-            return TListCollection::Remove(data);
-	}
+    bool Remove(const T& _data)
+    {
+        return TListCollection::Remove(_data);
+    }
 
-	bool Remove(const TLinkedListIterator& iter) {
-		return TListCollection::Remove(iter);
-	}
+    bool Remove(const TLinkedListIterator& _iter)
+    {
+        return TListCollection::Remove(_iter);
+    }
 
-	template <typename TPredicate>
-	bool RemoveIf(TPredicate&& predicate) {
-		TListNode* pDel = TListCollection::FindNodeIf(Move(predicate));
+    template <typename TPredicate>
+    bool RemoveIf(TPredicate&& _predicate)
+    {
+        TListNode* pDel = TListCollection::FindNodeIf(Move(_predicate));
 
-		if (pDel == nullptr) {
-			return false;
-		}
+        if (pDel == nullptr)
+            return false;
 
-		this->RemoveNode(pDel);
-		pDel->DeleteSelf();
-		--this->m_iSize;
-		return true;
-	}
+        this->RemoveNode(pDel);
+        pDel->DeleteSelf();
+        --this->size_;
+        return true;
+    }
 
-	TEnumerator Begin() const override {
-		return MakeShared<TLinkedListIterator, TAllocator>(this->GetOwner(), this->m_pHead);
-	}
+    TEnumerator Begin() const override
+    {
+        return MakeShared<TLinkedListIterator, TAllocator>(this->GetOwner(), this->pHead_);
+    }
 
-	TEnumerator End() const override {
-		return MakeShared<TLinkedListIterator, TAllocator>(this->GetOwner(), this->m_pTail);
-	}
+    TEnumerator End() const override
+    {
+        return MakeShared<TLinkedListIterator, TAllocator>(this->GetOwner(), this->pTail_);
+    }
 
-	ContainerType GetContainerType() override { return ContainerType::LinkedList; }
+    ContainerType GetContainerType() override
+    {
+        return ContainerType::LinkedList;
+    }
+
 protected:
-	friend class TLinkedListIterator;
-	template <typename, typename, typename> friend class HashMapIterator;
+    friend class TLinkedListIterator;
+    template <typename, typename, typename> friend class CHashMapIterator;
 };
 
 NS_JC_END

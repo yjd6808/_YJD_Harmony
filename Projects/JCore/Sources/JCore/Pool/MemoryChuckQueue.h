@@ -13,26 +13,25 @@
 
 NS_JC_BEGIN
 
-class MemoryChunckQueue
+class CMemoryChunckQueue
 {
 	using QueueGuard = NormalLockGuard;
 public:
-	MemoryChunckQueue(int chunkSize, int chunkCount);
-	~MemoryChunckQueue();
+	CMemoryChunckQueue(int _chunkSize, int _chunkCount);
+	~CMemoryChunckQueue();
 
-	void Push(void* chunk);
-	void* Pop(JCORE_OUT bool& newAlloc);
-	int FreeCount() { return m_ChunkQueue.Size();  }
-	int TotalCount() { return m_iTotalChunkCount; }
-	int ChunkSize() { return m_iChunkSize; }
+	void Push(void* _pChunk);
+	void* Pop(JCORE_OUT bool& _newAlloc);
+	int FreeCount() { return chunkQueue_.Size(); }
+	int TotalCount() { return totalChunkCount_; }
+	int ChunkSize() { return chunkSize_; }
 private:
-	int m_iChunkSize;
-	int m_iTotalChunkCount;
-	JCore::ArrayStack<void*> m_ChunkQueue;
-	JCore::NormalLock m_Lock;
+	int chunkSize_;
+	int totalChunkCount_;
+	JCore::ArrayStack<void*> chunkQueue_;
+	JCore::NormalLock lock_;
 };
 
 
 
 NS_JC_END
-

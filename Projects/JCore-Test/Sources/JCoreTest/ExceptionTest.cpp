@@ -21,7 +21,7 @@ void CheckTest(int* ptr) {
 TEST(ExceptionTest, ExceptionTest) {
 	int f = 5;
 	EXPECT_THROW(CheckTest(nullptr), NullPointerException);
-	EXPECT_NO_THROW(CheckTest(&f), NullPointerException);
+	EXPECT_NO_THROW(CheckTest(&f));
 }
 
 #endif

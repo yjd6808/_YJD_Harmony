@@ -21,7 +21,7 @@ using namespace std;
 #if TEST_AccessibleObjectPoolTest == ON
 
 
-class Data : public AccessibleObjectPool<Data>
+class Data : public CAccessibleObjectPool<Data>
 {
 public:
 	void OnPopped() override {}

@@ -14,25 +14,47 @@
 #include "Property.h"
 
 NS_JC_BEGIN
-	struct PropertyBase
+struct PropertyBase
 {
 	virtual ~PropertyBase() = default;
 	virtual PropertyType_t GetType() const = 0;
 	virtual const char* GetTypeName() const = 0;
 	virtual int* GetDecayedValue() const = 0;
 
-	virtual void Operate(PropertyType_t argumentType, int* decayedArgument, PropertyBinaryOperatorType_t operatorType) const = 0;
+	virtual void Operate(PropertyType_t _argumentType, int* _pDecayedArgument, PropertyBinaryOperatorType_t _operatorType) const = 0;
 
-	static void LogGettingMismatchedType(PropertyType_t lhs, PropertyType_t rhs);
-	static void LogConversionFailed(PropertyType_t to, PropertyType_t from);
+	static void LogGettingMismatchedType(PropertyType_t _lhs, PropertyType_t _rhs);
+	static void LogConversionFailed(PropertyType_t _to, PropertyType_t _from);
 
 
 	// 소스파일에 특정 프로퍼티 타입들에 대해서 명시적으로 정의함.
 	template <typename T>
-	T As() const;
+	T As() const
+	{
+		using TProperty = Property<T>;
+		constexpr PropertyType_t eParamType = PropertyTypeGetter<T>::Type;
+		const PropertyType_t eType = GetType();
+		if (eType != eParamType)
+		{
+			LogGettingMismatchedType(eType, eParamType);
+			return TProperty::Default.value_;
+		}
+		return ((TProperty*)this)->value_;
+	}
 
 	template <typename T>
-	const T& CRef() const;
+	const T& CRef() const
+	{
+		using TProperty = Property<T>;
+		constexpr PropertyType_t eParamType = PropertyTypeGetter<T>::Type;
+		const PropertyType_t eType = GetType();
+		if (eType != eParamType)
+		{
+			LogGettingMismatchedType(eType, eParamType);
+			return TProperty::Default.value_;
+		}
+		return ((TProperty*)this)->value_;
+	}
 
 	template <typename T>
 	T& Ref();
@@ -80,74 +102,74 @@ NS_JC_BEGIN
 
 
 	template <typename TVal>
-	void Set(const TVal& other) {
+	void Set(const TVal& _other) {
 		using TDesc = PropertyTypeDescription<TVal>;
 		static_assert(TDesc::Type != PropertyType::Unknown, "... right operand is unknwon argument type");
-		Operate(TDesc::Type, (int*)&other, PropertyBinaryOperatorType::Store);
+		Operate(TDesc::Type, (int*)&_other, PropertyBinaryOperatorType::Store);
 	}
 
 	template <typename TVal>
-	void Set(TVal&& other) {
+	void Set(TVal&& _other) {
 		using TDesc = PropertyTypeDescription<TVal>;
 		static_assert(TDesc::Type != PropertyType::Unknown, "... right operand is unknwon argument type");
-		Operate(TDesc::ArgumentTyp, (int*)&other, PropertyBinaryOperatorType::Move);
+		Operate(TDesc::ArgumentTyp, (int*)&_other, PropertyBinaryOperatorType::Move);
 	}
 
 	// 프로퍼티 생성 당시의 초기값으로 변경
 	virtual void SetInitialValue() = 0;
 
 	template <typename TVal>
-	PropertyBase& operator=(const TVal& other) {
+	PropertyBase& operator=(const TVal& _other) {
 		using TDesc = PropertyTypeDescription<TVal>;
 		static_assert(TDesc::Type != PropertyType::Unknown, "... right operand is unknwon argument type");
-		Operate(TDesc::Type, (int*)&other, PropertyBinaryOperatorType::Store);
+		Operate(TDesc::Type, (int*)&_other, PropertyBinaryOperatorType::Store);
 		return *this;
 	}
 
 	template <typename TVal>
-	PropertyBase& operator=(TVal&& other) {
+	PropertyBase& operator=(TVal&& _other) {
 		using TDesc = PropertyTypeDescription<TVal>;
 		static_assert(TDesc::Type != PropertyType::Unknown, "... right operand is unknwon argument type");
-		Operate(TDesc::Type, (int*)&other, PropertyBinaryOperatorType::Move);
+		Operate(TDesc::Type, (int*)&_other, PropertyBinaryOperatorType::Move);
 		return *this;
 	}
 
-	PropertyBase& operator=(const PropertyBase& other) {
-		Operate(other.GetType(), other.GetDecayedValue(), PropertyBinaryOperatorType::Store);
+	PropertyBase& operator=(const PropertyBase& _other) {
+		Operate(_other.GetType(), _other.GetDecayedValue(), PropertyBinaryOperatorType::Store);
 		return *this;
 	}
-	PropertyBase& operator=(PropertyBase&& other) noexcept {
-		Operate(other.GetType(), other.GetDecayedValue(), PropertyBinaryOperatorType::Move);
+	PropertyBase& operator=(PropertyBase&& _other) noexcept {
+		Operate(_other.GetType(), _other.GetDecayedValue(), PropertyBinaryOperatorType::Move);
 		return *this;
 	}
 
-	bool operator==(const PropertyBase& other) const {
-		Operate(other.GetType(), other.GetDecayedValue(), PropertyBinaryOperatorType::Equal);
+	bool operator==(const PropertyBase& _other) const {
+		Operate(_other.GetType(), _other.GetDecayedValue(), PropertyBinaryOperatorType::Equal);
 		return PropertyStatics::ComparisonResult;
 	}
 
-	bool operator!=(const PropertyBase& other) const {
-		Operate(other.GetType(), other.GetDecayedValue(), PropertyBinaryOperatorType::NotEqual);
+	bool operator!=(const PropertyBase& _other) const {
+		Operate(_other.GetType(), _other.GetDecayedValue(), PropertyBinaryOperatorType::NotEqual);
 		return PropertyStatics::ComparisonResult;
 	}
 
-	bool operator>(const PropertyBase& other) const {
-		Operate(other.GetType(), other.GetDecayedValue(), PropertyBinaryOperatorType::Greator);
+	bool operator>(const PropertyBase& _other) const {
+		Operate(_other.GetType(), _other.GetDecayedValue(), PropertyBinaryOperatorType::Greator);
 		return PropertyStatics::ComparisonResult;
 	}
 
-	bool operator<(const PropertyBase& other) const {
-		Operate(other.GetType(), other.GetDecayedValue(), PropertyBinaryOperatorType::Less);
+	bool operator<(const PropertyBase& _other) const {
+		Operate(_other.GetType(), _other.GetDecayedValue(), PropertyBinaryOperatorType::Less);
 		return PropertyStatics::ComparisonResult;
 	}
 
-	bool operator<=(const PropertyBase& other) const {
-		Operate(other.GetType(), other.GetDecayedValue(), PropertyBinaryOperatorType::LessEqual);
+	bool operator<=(const PropertyBase& _other) const {
+		Operate(_other.GetType(), _other.GetDecayedValue(), PropertyBinaryOperatorType::LessEqual);
 		return PropertyStatics::ComparisonResult;
 	}
 
-	bool operator>=(const PropertyBase& other) const {
-		Operate(other.GetType(), other.GetDecayedValue(), PropertyBinaryOperatorType::GreatorEqual);
+	bool operator>=(const PropertyBase& _other) const {
+		Operate(_other.GetType(), _other.GetDecayedValue(), PropertyBinaryOperatorType::GreatorEqual);
 		return PropertyStatics::ComparisonResult;
 	}
 
@@ -167,85 +189,85 @@ NS_JC_BEGIN
  */
 
 
-#define SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(op)															\
-template <typename TVal>																											\
-PropertyBase& operator##op(PropertyBase& lhs, const TVal& rhs) {																	\
-	using TDesc = PropertyTypeDescription<TVal>;																					\
-	static_assert(PropertyType::CanBeRightOperand[TDesc::Type], "... right operand cannot perfrom operation:" #op);			\
-	constexpr PropertyBinaryOperatorType_t eOperatorType = PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()(#op)>::Type;	\
-	if constexpr (PropertyType::IsPtrType[TDesc::Type])																				\
-		lhs.Operate(TDesc::Type, (int*)rhs, eOperatorType);																			\
-	else																															\
-		lhs.Operate(TDesc::Type, (int*)&rhs, eOperatorType);																		\
-																																	\
-	return lhs;																														\
+#define SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(op)\
+template <typename TVal>\
+PropertyBase& operator##op(PropertyBase& _lhs, const TVal& _rhs) {\
+	using TDesc = PropertyTypeDescription<TVal>;\
+	static_assert(PropertyType::CanBeRightOperand[TDesc::Type], "... right operand cannot perfrom operation:" #op);\
+	constexpr PropertyBinaryOperatorType_t eOperatorType = PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()(#op)>::Type;\
+	if constexpr (PropertyType::IsPtrType[TDesc::Type])\
+		_lhs.Operate(TDesc::Type, (int*)_rhs, eOperatorType);\
+	else\
+		_lhs.Operate(TDesc::Type, (int*)&_rhs, eOperatorType);\
+\
+	return _lhs;\
 }
 
 
-#define SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_LEFT_OPERAND(op)														\
-template <typename TVal, JCore::DefaultEnableIf_t<!IsSameType_v<NaturalType_t<TVal>, PropertyBase>> = nullptr>					\
-bool operator##op(PropertyBase& lhs, const TVal& rhs) {																				\
-	using TDesc = PropertyTypeDescription<TVal>;																					\
-	static_assert(PropertyType::CanBeRightOperand[TDesc::Type], "... right operand cannot perfrom operation:" #op);					\
-	constexpr PropertyBinaryOperatorType_t eOperatorType = PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()(#op)>::Type;	\
-	if constexpr (PropertyType::IsPtrType[TDesc::Type])																				\
-		lhs.Operate(TDesc::Type, (int*)rhs, eOperatorType);																			\
-	else																															\
-		lhs.Operate(TDesc::Type, (int*)&rhs, eOperatorType);																		\
-	const bool bRet = PropertyStatics::ComparisonResult;																			\
-	PropertyStatics::ComparisonResult = false;																						\
-	return bRet;																													\
+#define SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_LEFT_OPERAND(op)\
+template <typename TVal, JCore::DefaultEnableIf_t<!IsSameType_v<NaturalType_t<TVal>, PropertyBase>> = nullptr>\
+bool operator##op(PropertyBase& _lhs, const TVal& _rhs) {\
+	using TDesc = PropertyTypeDescription<TVal>;\
+	static_assert(PropertyType::CanBeRightOperand[TDesc::Type], "... right operand cannot perfrom operation:" #op);\
+	constexpr PropertyBinaryOperatorType_t eOperatorType = PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()(#op)>::Type;\
+	if constexpr (PropertyType::IsPtrType[TDesc::Type])\
+		_lhs.Operate(TDesc::Type, (int*)_rhs, eOperatorType);\
+	else\
+		_lhs.Operate(TDesc::Type, (int*)&_rhs, eOperatorType);\
+	const bool bRet = PropertyStatics::ComparisonResult;\
+	PropertyStatics::ComparisonResult = false;\
+	return bRet;\
 }
 
 
-#define SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(op)																			\
-template <typename TVal>																													\
-TVal operator##op(const TVal& lhs, const PropertyBase& rhs) {																				\
-	using TDesc = PropertyTypeDescription<TVal>;																							\
-	static_assert(PropertyType::CanBeLeftOperand[TDesc::Type], "... left operand cannot perfrom operation:" #op);							\
-	constexpr PropertyBinaryOperatorType_t eOperatorType = PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()(#op)>::Type;			\
-																																			\
-	TVal ret{ lhs };																														\
-	if constexpr (PropertyType::IsPtrType[TDesc::Type])																						\
-		PropertyStatics::BinaryOperatorSelectors[TDesc::Type][rhs.GetType()]->Select((int*)ret, rhs.GetDecayedValue(), eOperatorType);		\
-	else																																	\
-		PropertyStatics::BinaryOperatorSelectors[TDesc::Type][rhs.GetType()]->Select((int*)&ret, rhs.GetDecayedValue(), eOperatorType);		\
-	return ret;																																\
-}																																			
+#define SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(op)\
+template <typename TVal>\
+TVal operator##op(const TVal& _lhs, const PropertyBase& _rhs) {\
+	using TDesc = PropertyTypeDescription<TVal>;\
+	static_assert(PropertyType::CanBeLeftOperand[TDesc::Type], "... left operand cannot perfrom operation:" #op);\
+	constexpr PropertyBinaryOperatorType_t eOperatorType = PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()(#op)>::Type;\
+\
+	TVal ret{ _lhs };\
+	if constexpr (PropertyType::IsPtrType[TDesc::Type])\
+		PropertyStatics::BinaryOperatorSelectors[TDesc::Type][_rhs.GetType()]->Select((int*)ret, _rhs.GetDecayedValue(), eOperatorType);\
+	else\
+		PropertyStatics::BinaryOperatorSelectors[TDesc::Type][_rhs.GetType()]->Select((int*)&ret, _rhs.GetDecayedValue(), eOperatorType);\
+	return ret;\
+}
 
 
-#define SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(op)																\
-template <typename TVal>																													\
-bool operator##op(const TVal& lhs, const PropertyBase& rhs) {																				\
-	using TDesc = PropertyTypeDescription<TVal>;																							\
-	static_assert(PropertyType::CanBeLeftOperand[TDesc::Type], "... left operand cannot perfrom operation operation:" #op);					\
-	constexpr PropertyBinaryOperatorType_t eOperatorType = PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()(#op)>::Type;			\
-																																			\
-	if constexpr (PropertyType::IsPtrType[TDesc::Type])																						\
-		PropertyStatics::BinaryOperatorSelectors[TDesc::Type][rhs.GetType()]->Select((int*)lhs, rhs.GetDecayedValue(), eOperatorType);		\
-	else																																	\
-		PropertyStatics::BinaryOperatorSelectors[TDesc::Type][rhs.GetType()]->Select((int*)&lhs, rhs.GetDecayedValue(), eOperatorType);		\
-	const bool bRet = PropertyStatics::ComparisonResult;																					\
-	PropertyStatics::ComparisonResult = false;																								\
-	return bRet;																															\
+#define SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(op)\
+template <typename TVal>\
+bool operator##op(const TVal& _lhs, const PropertyBase& _rhs) {\
+	using TDesc = PropertyTypeDescription<TVal>;\
+	static_assert(PropertyType::CanBeLeftOperand[TDesc::Type], "... left operand cannot perfrom operation operation:" #op);\
+	constexpr PropertyBinaryOperatorType_t eOperatorType = PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()(#op)>::Type;\
+\
+	if constexpr (PropertyType::IsPtrType[TDesc::Type])\
+		PropertyStatics::BinaryOperatorSelectors[TDesc::Type][_rhs.GetType()]->Select((int*)_lhs, _rhs.GetDecayedValue(), eOperatorType);\
+	else\
+		PropertyStatics::BinaryOperatorSelectors[TDesc::Type][_rhs.GetType()]->Select((int*)&_lhs, _rhs.GetDecayedValue(), eOperatorType);\
+	const bool bRet = PropertyStatics::ComparisonResult;\
+	PropertyStatics::ComparisonResult = false;\
+	return bRet;\
 }
 
 
 
 
-#define SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(op)																	\
-template <typename TVal>																													\
-TVal& operator##op(TVal& lhs, const PropertyBase& rhs) {																					\
-	using TDesc = PropertyTypeDescription<TVal>;																							\
-	static_assert(PropertyType::CanBeLeftOperand[TDesc::Type], "... left operand cannot perfrom operation:" #op);							\
-	constexpr PropertyBinaryOperatorType_t eOperatorType = PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()(#op)>::Type;			\
-																																			\
-	if constexpr (PropertyType::IsPtrType[TDesc::Type])																						\
-		PropertyStatics::BinaryOperatorSelectors[TDesc::Type][rhs.GetType()]->Select((int*)lhs, rhs.GetDecayedValue(), eOperatorType);		\
-	else																																	\
-		PropertyStatics::BinaryOperatorSelectors[TDesc::Type][rhs.GetType()]->Select((int*)&lhs, rhs.GetDecayedValue(), eOperatorType);		\
-	return lhs;																																\
-}																																			
+#define SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(op)\
+template <typename TVal>\
+TVal& operator##op(TVal& _lhs, const PropertyBase& _rhs) {\
+	using TDesc = PropertyTypeDescription<TVal>;\
+	static_assert(PropertyType::CanBeLeftOperand[TDesc::Type], "... left operand cannot perfrom operation:" #op);\
+	constexpr PropertyBinaryOperatorType_t eOperatorType = PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()(#op)>::Type;\
+\
+	if constexpr (PropertyType::IsPtrType[TDesc::Type])\
+		PropertyStatics::BinaryOperatorSelectors[TDesc::Type][_rhs.GetType()]->Select((int*)_lhs, _rhs.GetDecayedValue(), eOperatorType);\
+	else\
+		PropertyStatics::BinaryOperatorSelectors[TDesc::Type][_rhs.GetType()]->Select((int*)&_lhs, _rhs.GetDecayedValue(), eOperatorType);\
+	return _lhs;\
+}
 
 
 

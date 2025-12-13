@@ -5,6 +5,8 @@
 
 #pragma once
 
+#pragma comment(lib, "winmm.lib")
+
 #pragma warning(push, 0)
 
 #pragma warning (disable : 4267)		// conversion from 'size_t' to 'type', possible loss of data
@@ -34,6 +36,5 @@
 #include <JCore/Assert.h>
 
 #include <JCore/Pool/ObjectPool.h>
-
 
 #pragma warning(pop)

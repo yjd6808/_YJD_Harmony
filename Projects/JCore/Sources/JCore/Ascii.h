@@ -7,8 +7,8 @@
 
 NS_JC_BEGIN
 
-constexpr bool IsAlphabat(const char ch) {
-	return ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z';
+constexpr bool IsAlphabat(const char _ch) {
+	return _ch >= 'a' && _ch <= 'z' || _ch >= 'A' && _ch <= 'Z';
 }
 
 // 소문자 알파벳인지

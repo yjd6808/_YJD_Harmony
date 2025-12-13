@@ -17,7 +17,7 @@ NS_JC_BEGIN
  Void 왓쳐와 Void 오너의 기능을 포함하고 있는 객체
  =====================================================================================*/
 
-void VoidBase::OwnerMoveToOwner(VoidOwner& owner) {
+void JCore::VoidBase::OwnerMoveToOwner(CVoidOwner& owner) {
 	DeletePointer();
 
 	m_pPointer = owner.m_pPointer;
@@ -27,7 +27,7 @@ void VoidBase::OwnerMoveToOwner(VoidOwner& owner) {
 	owner.m_pCounter = nullptr;
 }
 
-void VoidBase::WatcherCopyToOwner(const VoidOwner& owner) {
+void VoidBase::WatcherCopyToOwner(const CVoidOwner& owner) {
 	SubtractWatcherCount();
 
 	m_pPointer = owner.m_pPointer;
@@ -36,7 +36,7 @@ void VoidBase::WatcherCopyToOwner(const VoidOwner& owner) {
 	AddWatcherCount();
 }
 
-void VoidBase::WatcherCopyToWatcher(const VoidWatcher& watcher) {
+void VoidBase::WatcherCopyToWatcher(const CVoidWatcher& watcher) {
 	SubtractWatcherCount();
 
 	m_pPointer = watcher.m_pPointer;
@@ -45,7 +45,7 @@ void VoidBase::WatcherCopyToWatcher(const VoidWatcher& watcher) {
 	AddWatcherCount();
 }
 
-void VoidBase::WatcherMoveToWatcher(VoidWatcher& watcher) {
+void VoidBase::WatcherMoveToWatcher(CVoidWatcher& watcher) {
 	SubtractWatcherCount();
 
 	m_pPointer = watcher.m_pPointer;
@@ -56,23 +56,23 @@ void VoidBase::WatcherMoveToWatcher(VoidWatcher& watcher) {
 }
 
 // 글로벌 비교 오퍼레이터
-bool operator==(const VoidOwner& lhs, const VoidWatcher& rhs) {
+bool operator==(const CVoidOwner& lhs, const CVoidWatcher& rhs) {
 	return lhs.GetRaw() == rhs.GetRaw();
 }
 
-bool operator==(const VoidWatcher& lhs, const VoidOwner& rhs) {
+bool operator==(const CVoidWatcher& lhs, const CVoidOwner& rhs) {
 	return lhs.GetRaw() == rhs.GetRaw();
 }
 
-bool operator==(const VoidWatcher& lhs, const VoidWatcher& rhs) {
+bool operator==(const CVoidWatcher& lhs, const CVoidWatcher& rhs) {
 	return lhs.GetRaw() == rhs.GetRaw();
 }
 
-bool operator==(const VoidWatcher& lhs, std::nullptr_t) {
+bool operator==(const CVoidWatcher& lhs, std::nullptr_t) {
 	return lhs.GetRaw() == nullptr;
 }
 
-bool operator==(std::nullptr_t, const VoidWatcher& rhs) {
+bool operator==(std::nullptr_t, const CVoidWatcher& rhs) {
 	return nullptr == rhs.GetRaw();
 }
 

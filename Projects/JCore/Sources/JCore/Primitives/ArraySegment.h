@@ -15,23 +15,28 @@
 NS_JC_BEGIN
 
 template <typename T>
-class ArraySegment
+class CArraySegment
 {
 public:
-	ArraySegment(T* arr, int len)
-		: m_pRawArray(arr)
-		, m_iLen(len) {}
-	virtual ~ArraySegment() = default;
-
-	T& operator[](const int idx) {
-		DebugAssertMsg(idx >= 0 && idx < m_iLen, "세그먼트의 인덱스 범위가 이상합니다.");
-		return m_pRawArray[idx];
+	CArraySegment(T* _pRawArray, int _length)
+		: pRawArray_(_pRawArray)
+		, length_(_length)
+	{
 	}
+
+	virtual ~CArraySegment() = default;
+
+	T& operator[](const int _index)
+	{
+		DebugAssertMsg(_index >= 0 && _index < length_, "세그먼트의 인덱스 범위가 이상합니다.");
+		return pRawArray_[_index];
+	}
+
 private:
-	T* m_pRawArray;
-	int m_iLen;
+	T* pRawArray_;
+	int length_;
 };
 
-using ByteArraySegment = ArraySegment<Byte>;
+using ByteArraySegment = CArraySegment<Byte>;
 
 NS_JC_END

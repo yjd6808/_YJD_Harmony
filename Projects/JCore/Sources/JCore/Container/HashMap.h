@@ -10,315 +10,360 @@
 
 NS_JC_BEGIN
 
-template <typename TKey, typename TValue, typename TAllocator = DefaultAllocator>
+template <typename TKey, typename TValue, typename TAllocator = CDefaultAllocator>
 class HashMap : public MapCollection<TKey, TValue, TAllocator>
 {
-	/* =====================================================================
-	 *
-	 *
-	 *		[해결해야할 문제]
-	 *		1. 빈 버킷을 아예 검사하지 않고 어떻게 키셋과 벨류셋을 얻을까?
-	 *			-> 모르겠다.
-	 *			-> 잠시만 이거 와 방법 생각남
-	 *			-> 검색 도움 없이 해결완료
-	 *		2. 어떻게 이터레이션을 해야할까?
-	 *			-> 검색 도움 없이 해결완료
-	 *
-	 *
-	 * ==================================================================== */
-public:
-	using THashTable			    = HashTable<TKey, TValue, TAllocator>;
-	using TKeyValuePair				= Pair<TKey, TValue>;
-	using TMapCollection			= MapCollection<TKey, TValue, TAllocator>;
-	using TIterator					= Iterator<TKeyValuePair, TAllocator>;
-	using THashMap					= HashMap<TKey, TValue, TAllocator>;
-	using THashMapIterator			= HashMapIterator<TKey, TValue, TAllocator>;
-	using TKeyCollection			= typename TMapCollection::KeyCollection;
-	using TValueCollection			= typename TMapCollection::ValueCollection;
+	using TKeyValuePair			= Pair<TKey, TValue>;
+	using TMapCollection		= MapCollection<TKey, TValue, TAllocator>;
+	using TIterator				= Iterator<TKeyValuePair, TAllocator>;
+	using THashMap				= HashMap<TKey, TValue, TAllocator>;
+	using THashMapIterator		= HashMapIterator<TKey, TValue, TAllocator>;
+	using TKeyCollection		= typename TMapCollection::KeyCollection;
+	using TValueCollection		= typename TMapCollection::ValueCollection;
 	using TKeyCollectionIterator	= typename TMapCollection::KeyCollectionIterator;
 	using TValueCollectionIterator	= typename TMapCollection::ValueCollectionIterator;
+
 public:
 	// 내부 구조체 전방 선언 (inner struct forward declaration)
 	struct HashMapKeyCollection;
 	struct HashMapKeyCollectionIterator;
 	struct HashMapValueCollection;
 	struct HashMapValueCollectionIterator;
-public:
-	HashMap(int capacity = THashTable::ms_iTableDefaultCapacity)
-		: TMapCollection()
-		, Table(capacity)
-	{}
 
-	HashMap(const THashMap& other) : THashMap(other.Table.m_iCapacity) {
-		operator=(other);
+public:
+	HashMap(int _capacity = HashTable<TKey, TValue, TAllocator>::TABLE_DEFAULT_CAPACITY)
+		: TMapCollection()
+		, hashTable_(_capacity)
+	{
 	}
 
-	HashMap(THashMap&& other) noexcept {
-		operator=(Move(other));
+	HashMap(const THashMap& _other)
+		: THashMap(_other.hashTable_.capacity_)
+	{
+		operator=(_other);
+	}
+
+	HashMap(THashMap&& _other) noexcept
+	{
+		operator=(Move(_other));
 	}
 
 	// 이니셜라이저로 초기화 하는 경우 보통 더 확장안시킬 확률이 크므로.. 맞춤형으로 가자.
-	HashMap(std::initializer_list<TKeyValuePair> ilist) : THashMap(ilist.size() + 1) {
-		operator=(ilist);
+	HashMap(std::initializer_list<TKeyValuePair> _ilist)
+		: THashMap(static_cast<int>(_ilist.size()) + 1)
+	{
+		operator=(_ilist);
 	}
 
-	~HashMap() noexcept override {}
+	~HashMap() noexcept override = default;
+
 public:
-
-
-	THashMap& operator=(const THashMap& other) {
-		Table.operator=(other.Table);
+	THashMap& operator=(const THashMap& _other)
+	{
+		hashTable_.operator=(_other.hashTable_);
 		return *this;
 	}
 
-	THashMap& operator=(THashMap&& other) noexcept {
-		Table.operator=(Move(other.Table));
+	THashMap& operator=(THashMap&& _other) noexcept
+	{
+		hashTable_.operator=(Move(_other.hashTable_));
 		return *this;
 	}
 
-	THashMap& operator=(std::initializer_list<TKeyValuePair> ilist) {
-		Table.operator=(ilist);
+	THashMap& operator=(std::initializer_list<TKeyValuePair> _ilist)
+	{
+		hashTable_.operator=(_ilist);
 		return *this;
 	}
 
-	TValue& operator[](const TKey& key) {
-		return Table.Get(key);
+	TValue& operator[](const TKey& _key)
+	{
+		return hashTable_.Get(_key);
 	}
 
 	template <typename Ky, typename Vy>
-	bool Insert(Ky&& key, Vy&& value) {
-		return Table.Insert(Forward<Ky>(key), Forward<Vy>(value));
+	bool Insert(Ky&& _key, Vy&& _value)
+	{
+		return hashTable_.Insert(Forward<Ky>(_key), Forward<Vy>(_value));
 	}
 
-	bool Insert(const TKeyValuePair& pair) override {
-		return Table.Insert(pair.Key, pair.Value);
+	bool Insert(const TKeyValuePair& _pair) override
+	{
+		return hashTable_.Insert(_pair.key_, _pair.value_);
 	}
 
-	bool Insert(TKeyValuePair&& pair) override {
-		return Table.Insert(Move(pair.Key), Move(pair.Value));
-	}
-
-	template <typename = DefaultEnableIf_t<IsStringType_v<TKey>>>
-	bool Exist(const char* key) const {
-		return Table.Exist(key);
-	}
-
-	bool Exist(const TKey& key) const override {
-		return Table.Exist(key);
+	bool Insert(TKeyValuePair&& _pair) override
+	{
+		return hashTable_.Insert(Move(_pair.key_), Move(_pair.value_));
 	}
 
 	template <typename = DefaultEnableIf_t<IsStringType_v<TKey>>>
-	TValue* Find(const char* key) const {
-		return Table.Find(key);
+	bool Exist(const char* _pKey) const
+	{
+		return hashTable_.Exist(_pKey);
 	}
 
-	TValue* Find(const TKey& key) const {
-		return Table.Find(key);
-	}
-
-	TValue& Get(const TKey& key) const override {
-		return Table.Get(key);
+	bool Exist(const TKey& _key) const override
+	{
+		return hashTable_.Exist(_key);
 	}
 
 	template <typename = DefaultEnableIf_t<IsStringType_v<TKey>>>
-	bool Remove(const char* key) {
-		return Table.Remove(key);
+	TValue* Find(const char* _pKey) const
+	{
+		return hashTable_.Find(_pKey);
 	}
 
-	bool Remove(const TKey& key) override {
-		return Table.Remove(key);
+	TValue* Find(const TKey& _key) const
+	{
+		return hashTable_.Find(_key);
 	}
 
-	void Clear() noexcept override {
-		Table.Clear();
+	TValue& Get(const TKey& _key) const override
+	{
+		return hashTable_.Get(_key);
 	}
 
-	typename THashTable::TBucket* Bucket(int index) const {
-		return Table.Bucket();
+	template <typename = DefaultEnableIf_t<IsStringType_v<TKey>>>
+	bool Remove(const char* _pKey)
+	{
+		return hashTable_.Remove(_pKey);
 	}
 
-	int BucketCount() {
-		return Table.BucketCount();
+	bool Remove(const TKey& _key) override
+	{
+		return hashTable_.Remove(_key);
 	}
 
-	int Size() const override {
-		return Table.Size();
+	void Clear() noexcept override
+	{
+		hashTable_.Clear();
 	}
 
-	bool IsEmpty() const override {
-		return Table.Size() == 0;
+	typename HashTable<TKey, TValue, TAllocator>::TBucket* Bucket() const
+	{
+		return hashTable_.Bucket();
 	}
 
-	bool ExpandIfNeeded(int size) {
-		return Table.ExpandIfNeeded(size);
+	int BucketCount()
+	{
+		return hashTable_.BucketCount();
+	}
+
+	int Size() const override
+	{
+		return hashTable_.Size();
+	}
+
+	bool IsEmpty() const override
+	{
+		return hashTable_.Size() == 0;
+	}
+
+	bool ExpandIfNeeded(int _size)
+	{
+		return hashTable_.ExpandIfNeeded(_size);
 	}
 
 	// ==========================================
 	// 동적할당 안하고 해쉬맵 순회할 수 있도록 기능 구현
 	// ==========================================
 	template <typename Consumer>
-	void ForEach(Consumer&& consumer) {
-		Table.ForEach(Forward<Consumer>(consumer));
+	void ForEach(Consumer&& _consumer)
+	{
+		hashTable_.ForEach(Forward<Consumer>(_consumer));
 	}
 
 	template <typename Consumer>
-	void ForEachKey(Consumer&& consumer) {
-		Table.ForEachKey(Forward<Consumer>(consumer));
+	void ForEachKey(Consumer&& _consumer)
+	{
+		hashTable_.ForEachKey(Forward<Consumer>(_consumer));
 	}
 
 	template <typename Consumer>
-	void ForEachValue(Consumer&& consumer) {
-		Table.ForEachValue(Forward<Consumer>(consumer));
+	void ForEachValue(Consumer&& _consumer)
+	{
+		hashTable_.ForEachValue(Forward<Consumer>(_consumer));
 	}
 
 	// Value들만 순회해서 삭제하는 작업
 	// 자주 사용해서 그냥 라이브러리에 박음
-	void ForEachValueDelete() {
-		Table.ForEachValueDelete();
+	void ForEachValueDelete()
+	{
+		hashTable_.ForEachValueDelete();
 	}
 
-	void ForEachValueRelease() {
-		Table.ForEachValueRelease();
+	void ForEachValueRelease()
+	{
+		hashTable_.ForEachValueRelease();
 	}
 
-	SharedPtr<TIterator> Begin() const override {
+	SharedPtr<TIterator> Begin() const override
+	{
 		return MakeShared<THashMapIterator, TAllocator>(
-			this->GetOwner(), 
-			Table.m_pHeadBucket,
+			this->GetOwner(),
+			hashTable_.pHeadBucket_,
 			0
 		);
 	}
 
-	SharedPtr<TIterator> End() const override {
+	SharedPtr<TIterator> End() const override
+	{
 		return MakeShared<THashMapIterator, TAllocator>(
-			this->GetOwner(), 
-			Table.m_pTailBucket,
-			Table.m_pTailBucket ? Table.m_pTailBucket->Size - 1 : -1
+			this->GetOwner(),
+			hashTable_.pTailBucket_,
+			hashTable_.pTailBucket_ ? hashTable_.pTailBucket_->size_ - 1 : -1
 		);
 	}
 
-	HashMapKeyCollection Keys() {
+	HashMapKeyCollection Keys()
+	{
 		return HashMapKeyCollection(this);
 	}
 
-	HashMapValueCollection Values() {
+	HashMapValueCollection Values()
+	{
 		return HashMapValueCollection(this);
 	}
 
-	ContainerType GetContainerType() override { return ContainerType::HashMap; }
+	ContainerType GetContainerType() override
+	{
+		return ContainerType::HashMap;
+	}
+
 protected:
-	THashTable Table;
+	HashTable<TKey, TValue, TAllocator> hashTable_;
+
 public:
 	struct HashMapKeyCollection : public TKeyCollection
 	{
-		using TEnumerator		= SharedPtr<Iterator<TKey, TAllocator>>;
-		using TCollection		= Collection<TKey, TAllocator>;
+		using TEnumerator	= SharedPtr<Iterator<TKey, TAllocator>>;
+		using TCollection	= Collection<TKey, TAllocator>;
 
-		HashMapKeyCollection(THashMap* hashMap) : TKeyCollection(hashMap) {
-			m_pHashMap = hashMap;
+		HashMapKeyCollection(THashMap* _pHashMap)
+			: TKeyCollection(_pHashMap)
+			, pHashMap_(_pHashMap)
+		{
 		}
 
-		HashMapKeyCollection& operator=(const HashMapKeyCollection& other) {
-			this->m_pHashMap = other.m_pHashMap;
-			this->m_pMap = other.m_pHashMap;
+		HashMapKeyCollection& operator=(const HashMapKeyCollection& _other)
+		{
+			this->m_pMap = _other.pHashMap_;
+			pHashMap_ = _other.pHashMap_;
 			return *this;
 		}
 
 		~HashMapKeyCollection() noexcept override = default;
 
-		int Size() const override {
+		int Size() const override
+		{
 			return TKeyCollection::Size();
 		}
 
-		bool IsEmpty() const override {
+		bool IsEmpty() const override
+		{
 			return TKeyCollection::IsEmpty();
 		}
 
-		TEnumerator Begin() const override {
+		TEnumerator Begin() const override
+		{
 			return MakeShared<HashMapKeyCollectionIterator, TAllocator>(
-				m_pHashMap->GetOwner(), 
-				m_pHashMap->Table.m_pHeadBucket,
+				pHashMap_->GetOwner(),
+				pHashMap_->hashTable_.pHeadBucket_,
 				0
 			);
 		}
 
-		TEnumerator End() const override {
+		TEnumerator End() const override
+		{
 			return MakeShared<HashMapKeyCollectionIterator, TAllocator>(
-				m_pHashMap->GetOwner(), 
-				m_pHashMap->Table.m_pTailBucket,
-				m_pHashMap->Table.m_pTailBucket ? m_pHashMap->Table.m_pTailBucket->Size - 1 : -1
+				pHashMap_->GetOwner(),
+				pHashMap_->hashTable_.pTailBucket_,
+				pHashMap_->hashTable_.pTailBucket_ ? pHashMap_->hashTable_.pTailBucket_->size_ - 1 : -1
 			);
 		}
 
-		ContainerType GetContainerType() override { return ContainerType::HashMapKeyCollection; }
+		ContainerType GetContainerType() override
+		{
+			return ContainerType::HashMapKeyCollection;
+		}
 
-		THashMap* m_pHashMap;
+		THashMap* pHashMap_;
 	};
 
 	struct HashMapKeyCollectionIterator final : public TKeyCollectionIterator
 	{
-		HashMapKeyCollectionIterator(VoidOwner& owner, typename THashTable::TBucket* currentBucket, int currentBucketIndex)
-			: TKeyCollectionIterator(owner, &m_HashMapIterator), m_HashMapIterator(owner, currentBucket, currentBucketIndex)
+		HashMapKeyCollectionIterator(CVoidOwner& _owner, typename HashTable<TKey, TValue, TAllocator>::TBucket* _pCurrentBucket, int _currentBucketIndex)
+			: TKeyCollectionIterator(_owner, &hashMapIterator_)
+			, hashMapIterator_(_owner, _pCurrentBucket, _currentBucketIndex)
 		{
 		}
-		virtual ~HashMapKeyCollectionIterator() noexcept = default;
 
-		THashMapIterator m_HashMapIterator;
+		~HashMapKeyCollectionIterator() noexcept override = default;
+
+		THashMapIterator hashMapIterator_;
 	};
 
 	struct HashMapValueCollection final : public TValueCollection
 	{
-		using TEnumerator		= SharedPtr<Iterator<TValue, TAllocator>>;
-		using TCollection		= Collection<TValue, TAllocator>;
+		using TEnumerator	= SharedPtr<Iterator<TValue, TAllocator>>;
+		using TCollection	= Collection<TValue, TAllocator>;
 
-		HashMapValueCollection(THashMap* hashMap) : TMapCollection::ValueCollection(hashMap) {
-			m_pHashMap = hashMap;
+		HashMapValueCollection(THashMap* _pHashMap)
+			: TMapCollection::ValueCollection(_pHashMap)
+			, pHashMap_(_pHashMap)
+		{
 		}
 
-		virtual ~HashMapValueCollection() noexcept override = default;
+		~HashMapValueCollection() noexcept override = default;
 
-		HashMapValueCollection& operator=(const HashMapValueCollection& other) {
-			this->m_pHashMap = other.m_pHashMap;
-			this->m_pMap = other.m_pHashMap;
+		HashMapValueCollection& operator=(const HashMapValueCollection& _other)
+		{
+			this->m_pMap = _other.pHashMap_;
+			pHashMap_ = _other.pHashMap_;
 			return *this;
 		}
 
-		TEnumerator Begin() const override {
+		TEnumerator Begin() const override
+		{
 			return MakeShared<HashMapValueCollectionIterator, TAllocator>(
-				m_pHashMap->GetOwner(),
-				m_pHashMap->Table.m_pHeadBucket,
+				pHashMap_->GetOwner(),
+				pHashMap_->hashTable_.pHeadBucket_,
 				0
 			);
 		}
 
-		TEnumerator End() const override {
+		TEnumerator End() const override
+		{
 			return MakeShared<HashMapValueCollectionIterator, TAllocator>(
-				m_pHashMap->GetOwner(),
-				m_pHashMap->Table.m_pTailBucket,
-				m_pHashMap->Table.m_pTailBucket ? m_pHashMap->Table.m_pTailBucket->Size - 1 : -1
+				pHashMap_->GetOwner(),
+				pHashMap_->hashTable_.pTailBucket_,
+				pHashMap_->hashTable_.pTailBucket_ ? pHashMap_->hashTable_.pTailBucket_->size_ - 1 : -1
 			);
 		}
 
-		ContainerType GetContainerType() override { return ContainerType::HashMapValueCollection; }
+		ContainerType GetContainerType() override
+		{
+			return ContainerType::HashMapValueCollection;
+		}
 
-		THashMap* m_pHashMap;
+		THashMap* pHashMap_;
 	};
 
 	struct HashMapValueCollectionIterator final : public TValueCollectionIterator
 	{
-		HashMapValueCollectionIterator(VoidOwner& owner, typename THashTable::TBucket* currentBucket, int currentBucketIndex)
-			: TValueCollectionIterator(owner, &m_HashMapIterator), m_HashMapIterator(owner, currentBucket, currentBucketIndex)
-		{}
+		HashMapValueCollectionIterator(CVoidOwner& _owner, typename HashTable<TKey, TValue, TAllocator>::TBucket* _pCurrentBucket, int _currentBucketIndex)
+			: TValueCollectionIterator(_owner, &hashMapIterator_)
+			, hashMapIterator_(_owner, _pCurrentBucket, _currentBucketIndex)
+		{
+		}
 
 		~HashMapValueCollectionIterator() noexcept override = default;
 
-		THashMapIterator m_HashMapIterator;
+		THashMapIterator hashMapIterator_;
 	};
 
-
 	friend class THashMapIterator;
-
-}; // class HashMap<TKey, TValue>
+}; // class HashMap<TKey, TValue, TAllocator>
 
 NS_JC_END
-

@@ -614,7 +614,7 @@ public: // public non-static
 
 private: // private static
 	static Tuple<int, int, int, int, int> GetYearsFromDays(int days);		// 단위 년도별로 일수를 가져옴
-	static int GetDatePart(const Int64 tick, const DatePart part);
+	static int GetDatePart(Int64 tick, DatePart part);
 	
 private: // private non-static
 	int GetDatePart(const DatePart part) const { return GetDatePart(Tick, part); }

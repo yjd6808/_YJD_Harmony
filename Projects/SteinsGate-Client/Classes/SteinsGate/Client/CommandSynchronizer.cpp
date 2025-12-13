@@ -68,7 +68,7 @@ void CommandSynchronizer::enqueueCommand(ClientConnectServerType_t listenerType,
 
 void CommandSynchronizer::processCommands() {
 	for (int i = 0; i < m_iPacketQueueCount; ++i) {
-		CommandQueueHolder* pIOCPCommandQueueHolder = m_vIOCPThreadAccessCommandQueueList[i].Value;
+		CommandQueueHolder* pIOCPCommandQueueHolder = m_vIOCPThreadAccessCommandQueueList[i].value_;
 		CommandQueue* pQueue;
 		{
 			JCORE_LOCK_GUARD(*pIOCPCommandQueueHolder->Lock);
@@ -90,14 +90,14 @@ void CommandSynchronizer::processCommands() {
 void CommandSynchronizer::filterUnusedCommandQueue() {
 	// 필터완료 전까지는 IOCP쓰레드가 아닌 쓰레드도 생성될 수 있으므로. 완료전까지 생성된 쓸모없는 패킷큐는 걸러줘야함
 	SGVector<Int32U> vIocpThreadIdList = Core::Net->getGroup()->GetIocp()->GetWorkThreadIdList();
-	auto fnContained = [&vIocpThreadIdList](const IOCPThreadId$CommandQueuePair& pair) { return vIocpThreadIdList.Exist(pair.Key); };
+	auto fnContained = [&vIocpThreadIdList](const IOCPThreadId$CommandQueuePair& pair) { return vIocpThreadIdList.Exist(pair.key_); };
 	m_vIOCPThreadAccessCommandQueueList = m_vIOCPThreadAccessCommandQueueList.Extension().Filter(fnContained).ToVector();
 	m_iPacketQueueCount = m_vIOCPThreadAccessCommandQueueList.Size();
 }
 
 void CommandSynchronizer::allocateCommandQueue() {
 	auto fnAllocator = [this](const IOCPThreadId$CommandQueuePair& pair) {
-		CommandQueueHolder* pHolder = pair.Value;
+		CommandQueueHolder* pHolder = pair.value_;
 		CommandQueue* pReceiverQueue = dbg_new CommandQueue(pHolder->InitialCapacity);
 		CommandQueue* pSwapQueue = dbg_new CommandQueue(pHolder->InitialCapacity);
 
@@ -111,7 +111,7 @@ void CommandSynchronizer::allocateCommandQueue() {
 
 void CommandSynchronizer::finalize() {
 	for (int i = 0; i < m_iPacketQueueCount; ++i) {
-		CommandQueueHolder* pIOCPPacketQueueHolder = m_vIOCPThreadAccessCommandQueueList[i].Value;
+		CommandQueueHolder* pIOCPPacketQueueHolder = m_vIOCPThreadAccessCommandQueueList[i].value_;
 		CommandQueue* pQueue;
 
 		// 미처리 데이터 삭제

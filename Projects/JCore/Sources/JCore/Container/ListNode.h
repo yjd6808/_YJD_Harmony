@@ -11,37 +11,49 @@
 NS_JC_BEGIN
 
 template <typename T, typename TAllocator>
-struct ListNode final
+class ListNode final
 {
+public:
 	using TListNode = ListNode<T, TAllocator>;
 
-	ListNode() {}
-	~ListNode() noexcept {}
-
-	template <typename... Args>
-	void Construct(Args&&... args) {
-		new (__builtin_addressof(Value)) T{ Forward<Args>(args)... };
+	ListNode()
+	{
 	}
 
-	void DeleteSelf() {
-		Value.~T();
+	~ListNode() noexcept
+	{
+	}
+
+	template <typename... Args>
+	void Construct(Args&&... _args)
+	{
+		new (__builtin_addressof(value_)) T{ Forward<Args>(_args)... };
+	}
+
+	void DeleteSelf()
+	{
+		value_.~T();
 
 		TAllocator::template DeallocateStatic<decltype(*this)>(this);
 		// delete this;
 	}
 
-	union { T Value; };	// Lazy Instantiation
-	TListNode* Next = nullptr;
-	TListNode* Previous = nullptr;
+	union
+	{
+		T value_;    // Lazy Instantiation
+	};
+
+	TListNode* pNext_ = nullptr;
+	TListNode* pPrevious_ = nullptr;
 };
 
 
 /*
 template <typename T>
-struct ListNode<T*> {  };
+class CListNode<T*> {  };
 
 template <typename T>
-struct ListNode<T&> {  };
+class CListNode<T&> {  };
 */
 
 NS_JC_END

@@ -52,48 +52,55 @@ NS_JC_BEGIN
 
 class IndexedMemoryPool : public MemoryPoolAbstract
 {
-	using MemoryChunkQueueTargetrList = Vector<MemoryChunckQueue**>;
+	using MemoryChunkQueueTargetrList = Vector<CMemoryChunckQueue**>;
 public:
-	IndexedMemoryPool(const String& name = nullptr) : MemoryPoolAbstract(name) {
+	IndexedMemoryPool(const String& _name = nullptr)
+		: MemoryPoolAbstract(_name)
+	{
 		IndexedMemoryPool::CreatePool();
 		IndexedMemoryPool::CreateTargeters();
 	}
 
-	IndexedMemoryPool(const HashMap<int, int>& allocationMap, const String& name = nullptr) : MemoryPoolAbstract(name) {
-		IndexedMemoryPool::Initialize(allocationMap);
+	IndexedMemoryPool(const HashMap<int, int>& _allocationMap, const String& _name = nullptr)
+		: MemoryPoolAbstract(_name)
+	{
+		IndexedMemoryPool::Initialize(_allocationMap);
 		IndexedMemoryPool::CreatePool();
 		IndexedMemoryPool::CreateTargeters();
 	}
 
-	~IndexedMemoryPool() override {
+	~IndexedMemoryPool() override
+	{
 		IndexedMemoryPool::Finalize();
 	}
 
 	template <int RequestSize>
-	void* StaticPop() {
-		bool bNewAlloc;
-		MemoryChunckQueue* pChuckQueue = GetChunckQueue(RequestSize);
+	void* StaticPop()
+	{
+		bool isNewAlloc;
+		CMemoryChunckQueue* pChuckQueue = GetChunckQueue(RequestSize);
 
-		if (pChuckQueue == nullptr) {
+		if (pChuckQueue == nullptr)
 			return nullptr;
-		}
 
-		void* pMemoryBlock = pChuckQueue->Pop(bNewAlloc);
+		void* pMemoryBlock = pChuckQueue->Pop(isNewAlloc);
 #ifdef DebugMode
-		const int iIndex = Detail::AllocationLengthMapConverter::ToIndex(pChuckQueue->ChunkSize());
-		AddAllocated(iIndex, bNewAlloc);
+		const int allocationIndex = Detail::AllocationLengthMapConverter::ToIndex(pChuckQueue->ChunkSize());
+		AddAllocated(allocationIndex, isNewAlloc);
 #endif
 		return pMemoryBlock;
 	}
 
-	void* DynamicPop(int requestSize) override {
-		bool bNewAlloc;
-		MemoryChunckQueue* pChuckQueue = GetChunckQueue(requestSize);
-		if (pChuckQueue == nullptr) return nullptr;
-		void* pMemoryBlock = pChuckQueue->Pop(bNewAlloc);
+	void* DynamicPop(int _requestSize) override
+	{
+		bool isNewAlloc;
+		CMemoryChunckQueue* pChuckQueue = GetChunckQueue(_requestSize);
+		if (pChuckQueue == nullptr)
+			return nullptr;
+		void* pMemoryBlock = pChuckQueue->Pop(isNewAlloc);
 #ifdef DebugMode
-		const int iIndex = Detail::AllocationLengthMapConverter::ToIndex(pChuckQueue->ChunkSize());
-		AddAllocated(iIndex, bNewAlloc);
+		const int allocationIndex = Detail::AllocationLengthMapConverter::ToIndex(pChuckQueue->ChunkSize());
+		AddAllocated(allocationIndex, isNewAlloc);
 #endif
 		return pMemoryBlock;
 	}
@@ -101,158 +108,179 @@ public:
 	// TODO: 메모리할당 규칙이 Low와 High가 틀리기떄문에 벌어지는 현상이다.
 	//       BinarySearch와 Indexed를 똑같이 사용하기 위해서는 "요청한" 값을 기록해놓고 "요청한" 값을 반납해야한다.
 	//		 예를들어 617 Byte를 요청하면 1024바이트가 실제 할당되는데
-	//       BinarySearchMemoryPool의 경우 617바이트로 반환하든지, 1024바이트로 반환하든지 모두 올바른 반환이 이뤄지지만
+	//       CBinarySearchMemoryPool의 경우 617바이트로 반환하든지, 1024바이트로 반환하든지 모두 올바른 반환이 이뤄지지만
 	//       IndexedMemoryPool의 경우 617바이트로 반환해야지 올바른 반환이 이뤄진다.
-	void* DynamicPop(int requestSize, int& realAllocatedSize) override {
-
-		bool bNewAlloc;
-		MemoryChunckQueue* pChuckQueue = GetChunckQueue(requestSize);
-		if (pChuckQueue == nullptr) return nullptr;
-		void* pMemoryBlock = pChuckQueue->Pop(bNewAlloc);
-		realAllocatedSize = pChuckQueue->ChunkSize();
+	void* DynamicPop(int _requestSize, int& _realAllocatedSize) override
+	{
+		bool isNewAlloc;
+		CMemoryChunckQueue* pChuckQueue = GetChunckQueue(_requestSize);
+		if (pChuckQueue == nullptr)
+			return nullptr;
+		void* pMemoryBlock = pChuckQueue->Pop(isNewAlloc);
+		_realAllocatedSize = pChuckQueue->ChunkSize();
 #ifdef DebugMode
-		const int iIndex = Detail::AllocationLengthMapConverter::ToIndex(realAllocatedSize);
-		AddAllocated(iIndex, bNewAlloc);
+		const int allocationIndex = Detail::AllocationLengthMapConverter::ToIndex(_realAllocatedSize);
+		AddAllocated(allocationIndex, isNewAlloc);
 #endif
 		return pMemoryBlock;
 	}
 
 	template <int PushSize>
-	void StaticPush(void* memory) {
-		MemoryChunckQueue* pChuckQueue = GetChunckQueue(PushSize);
-		if (pChuckQueue == nullptr) return;
-		const int iChunkSize = pChuckQueue->ChunkSize();
-		const int iIndex = Detail::AllocationLengthMapConverter::ToIndex(iChunkSize);
-		AddDeallocated(iIndex);
-		pChuckQueue->Push(memory);
+	void StaticPush(void* _pMemory)
+	{
+		CMemoryChunckQueue* pChuckQueue = GetChunckQueue(PushSize);
+		if (pChuckQueue == nullptr)
+			return;
+		const int chunkSize = pChuckQueue->ChunkSize();
+		const int allocationIndex = Detail::AllocationLengthMapConverter::ToIndex(chunkSize);
+		AddDeallocated(allocationIndex);
+		pChuckQueue->Push(_pMemory);
 	}
 
-	void DynamicPush(void* memory, int returnSize) override {
-		MemoryChunckQueue* pChuckQueue = GetChunckQueue(returnSize);
-		if (pChuckQueue == nullptr) return;
-		const int iChunkSize = pChuckQueue->ChunkSize();
-		const int index = Detail::AllocationLengthMapConverter::ToIndex(iChunkSize);
+	void DynamicPush(void* _pMemory, int _returnSize) override
+	{
+		CMemoryChunckQueue* pChuckQueue = GetChunckQueue(_returnSize);
+		if (pChuckQueue == nullptr)
+			return;
+		const int chunkSize = pChuckQueue->ChunkSize();
+		const int index = Detail::AllocationLengthMapConverter::ToIndex(chunkSize);
 		AddDeallocated(index);
-		pChuckQueue->Push(memory);
+		pChuckQueue->Push(_pMemory);
 	}
 
-	MemoryChunckQueue* GetChunckQueue(int size) {
+	CMemoryChunckQueue* GetChunckQueue(int _size)
+	{
 		MemoryChunkQueueTargetrList* pTargeterList;
-		int iChunkQueueIndex = -1;
+		int chunkQueueIndex = -1;
 
-		if (size > MaxAllocatableSize) {
-			DebugAssertMsg(false, "풀인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트)", MaxAllocatableSize, size);
+		if (_size > MaxAllocatableSize)
+		{
+			DebugAssertMsg(false, "풀인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트)", MaxAllocatableSize, _size);
 			return nullptr;
 		}
 
-		if (size > LowBoundarySize) {
-			iChunkQueueIndex = size / BoundarySizeMax;
-			pTargeterList = m_PoolTargeterHigh;
+		if (_size > LowBoundarySize)
+		{
+			chunkQueueIndex = _size / BoundarySizeMax;
+			pTargeterList = poolTargeterHigh_Member;
 
-			if (iChunkQueueIndex < 0 || iChunkQueueIndex >= HighTargeterListCapacity) {
-				DebugAssertMsg(false, "올바르지 않은 청크큐 인덱스입니다. %d바이트 [%s]", size, "하이");
+			if (chunkQueueIndex < 0 || chunkQueueIndex >= HighTargeterListCapacity)
+			{
+				DebugAssertMsg(false, "올바르지 않은 청크큐 인덱스입니다. %d바이트 [%s]", _size, "하이");
 				return nullptr;
 			}
 		}
-		else {
-			iChunkQueueIndex = size;
-			pTargeterList = m_PoolTargeterLow;
+		else
+		{
+			chunkQueueIndex = _size;
+			pTargeterList = poolTargeterLow_Member;
 
-			if (iChunkQueueIndex < 0 || iChunkQueueIndex >= LowTargeterListCapacity) {
-				DebugAssertMsg(false, "올바르지 않은 청크큐 인덱스입니다. %d바이트 [%s]", size, "하이");
+			if (chunkQueueIndex < 0 || chunkQueueIndex >= LowTargeterListCapacity)
+			{
+				DebugAssertMsg(false, "올바르지 않은 청크큐 인덱스입니다. %d바이트 [%s]", _size, "하이");
 				return nullptr;
 			}
 		}
 
-		MemoryChunckQueue* pChuckQueue = *pTargeterList->At(iChunkQueueIndex);
+		CMemoryChunckQueue* pChuckQueue = *pTargeterList->At(chunkQueueIndex);
 		return pChuckQueue;
 	}
 
-	void CreatePool() {
-		for (int i = 0; i <= HighBoundaryIndex; ++i) {
-			int iChunkSize = Detail::AllocationLengthMapConverter::ToSize(i);
-			if (m_Pool[i] == nullptr) m_Pool[i] = dbg_new MemoryChunckQueue(iChunkSize, 0);
+	void CreatePool()
+	{
+		for (int boundaryIndex = 0; boundaryIndex <= HighBoundaryIndex; ++boundaryIndex)
+		{
+			int chunkSize = Detail::AllocationLengthMapConverter::ToSize(boundaryIndex);
+			if (poolChunkQueueArray_Member[boundaryIndex] == nullptr)
+				poolChunkQueueArray_Member[boundaryIndex] = dbg_new CMemoryChunckQueue(chunkSize, 0);
 		}
 	}
 
-	void Initialize(const HashMap<int, int>& allocationMap) override {
-		DebugAssertMsg(m_bInitialized == false, "이미 풀이 초기화 되어 있습니다.");
+	void Initialize(const HashMap<int, int>& _allocationMap) override
+	{
+		DebugAssertMsg(initialized_ == false, "이미 풀이 초기화 되어 있습니다.");
 
-		const_cast<HashMap<int, int>&>(allocationMap).Extension().ForEach([this](Pair<int, int>& count) {
-			const int iSize = count.Key;
-			const int iCount = count.Value;
-			const int iIndex = Detail::AllocationLengthMapConverter::ToIndex(iSize);
-			DebugAssertMsg(iSize <= MaxAllocatableSize, "이 풀 인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트 블록을 초기화하려함)", MaxAllocatableSize, iSize);
-			DebugAssertMsg(Detail::AllocationLengthMapConverter::ValidateSize(iSize), "뭐야! 사이즈가 안맞자나!");
-			if (m_Pool[iIndex])
-				JCORE_DELETE_SAFE(m_Pool[iIndex]);
+		const_cast<HashMap<int, int>&>(_allocationMap).Extension().ForEach([this](Pair<int, int>& count)
+		{
+			const int blockSize = count.key_;
+			const int blockCount = count.value_;
+			const int allocationIndex = Detail::AllocationLengthMapConverter::ToIndex(blockSize);
+			DebugAssertMsg(blockSize <= MaxAllocatableSize, "이 풀 인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트 블록을 초기화하려함)", MaxAllocatableSize, blockSize);
+			DebugAssertMsg(Detail::AllocationLengthMapConverter::ValidateSize(blockSize), "뭐야! 사이즈가 안맞자나!");
+			if (poolChunkQueueArray_Member[allocationIndex])
+				JCORE_DELETE_SAFE(poolChunkQueueArray_Member[allocationIndex]);
 
-			m_Pool[iIndex] = dbg_new MemoryChunckQueue(iSize, iCount);
-			AddInitBlock(iIndex, iCount);
+			poolChunkQueueArray_Member[allocationIndex] = dbg_new CMemoryChunckQueue(blockSize, blockCount);
+			AddInitBlock(allocationIndex, blockCount);
 		});
 
-		m_bInitialized = true;
+		initialized_ = true;
 	}
 
 	// 반드시 프로그램 종료전 메모리풀을 더이상 사용하지 않을 때 호출하여 정리할 것
-	void Finalize() override {
+	void Finalize() override
+	{
 		DebugAssertMsg(HasUsingBlock() == false, "현재 사용중인 블록이 있습니다. !!!");
 
-		for (int i = 0; i <= HighBoundaryIndex; ++i) {
-			JCORE_DELETE_SAFE(m_Pool[i]);
+		for (int boundaryIndex = 0; boundaryIndex <= HighBoundaryIndex; ++boundaryIndex)
+		{
+			JCORE_DELETE_SAFE(poolChunkQueueArray_Member[boundaryIndex]);
 		}
 
-		if (m_PoolTargeterLow != nullptr) {
-			for (int i = 0; i < m_PoolTargeterLow->Size(); ++i) {
-				m_PoolTargeterLow->At(i) = nullptr;
+		if (poolTargeterLow_Member != nullptr)
+		{
+			for (int targetIndex = 0; targetIndex < poolTargeterLow_Member->Size(); ++targetIndex)
+			{
+				poolTargeterLow_Member->At(targetIndex) = nullptr;
 			}
-			JCORE_DELETE_SAFE(m_PoolTargeterLow);
+			JCORE_DELETE_SAFE(poolTargeterLow_Member);
 		}
 
-		if (m_PoolTargeterHigh != nullptr) {
-			for (int i = 0; i < m_PoolTargeterHigh->Size(); ++i) {
-				m_PoolTargeterHigh->At(i) = nullptr;
+		if (poolTargeterHigh_Member != nullptr)
+		{
+			for (int targetIndex = 0; targetIndex < poolTargeterHigh_Member->Size(); ++targetIndex)
+			{
+				poolTargeterHigh_Member->At(targetIndex) = nullptr;
 			}
-			JCORE_DELETE_SAFE(m_PoolTargeterHigh);
+			JCORE_DELETE_SAFE(poolTargeterHigh_Member);
 		}
 	}
 
 	int Algorithm() override { return eFullIndexing; }
 
+	void CreateTargeters()
+	{
+		DebugAssertMsg(poolTargeterLow_Member == nullptr, "이미 Low 타게터 세팅이 되어있습니다.");
+		DebugAssertMsg(poolTargeterHigh_Member == nullptr, "이미 High 타게터 세팅이 되어있습니다.");
 
-	void CreateTargeters() {
-
-		DebugAssertMsg(m_PoolTargeterLow == nullptr, "이미 Low 타게터 세팅이 되어있습니다.");
-		DebugAssertMsg(m_PoolTargeterHigh == nullptr, "이미 High 타게터 세팅이 되어있습니다.");
-
-		m_PoolTargeterLow = dbg_new MemoryChunkQueueTargetrList(LowTargeterListCapacity, nullptr);	// 513
-		m_PoolTargeterHigh = dbg_new MemoryChunkQueueTargetrList(HighTargeterListCapacity, nullptr);	// 524
-		int iBeforeMax = 0;
+		poolTargeterLow_Member = dbg_new MemoryChunkQueueTargetrList(LowTargeterListCapacity, nullptr);    // 513
+		poolTargeterHigh_Member = dbg_new MemoryChunkQueueTargetrList(HighTargeterListCapacity, nullptr);  // 524
+		int previousMaxSize = 0;
 
 		// 1 ~ 512 바이트 (Low 타게터 할당)
-		for (int i = 0; i <= LowBoundaryIndex; ++i) {
-			
-			int iMaxSize = 1 << i;
+		for (int boundaryIndex = 0; boundaryIndex <= LowBoundaryIndex; ++boundaryIndex)
+		{
+			int maxSize = 1 << boundaryIndex;
 
 			// 1: 0 ~ 1 (0 제외)
 			// 2: 2
 			// 4: 3 ~ 4
 			// 8: 5 ~ 8
-			for (int iSize = iBeforeMax + 1; iSize <= iMaxSize; ++iSize) {
-				m_PoolTargeterLow->At(iSize) = &m_Pool[i];
+			for (int sizeIndex = previousMaxSize + 1; sizeIndex <= maxSize; ++sizeIndex)
+			{
+				poolTargeterLow_Member->At(sizeIndex) = &poolChunkQueueArray_Member[boundaryIndex];
 			}
 
-			iBeforeMax = iMaxSize;
+			previousMaxSize = maxSize;
 		}
 
-
 		// 513 ~ 524288 바이트 (High 타게터 할당)
-		iBeforeMax = 0;
-		for (int i = LowBoundaryIndex + 1; i <= HighBoundaryIndex; ++i) {
-			int iMaxSize = (1 << i) / BoundarySizeMax;
+		previousMaxSize = 0;
+		for (int boundaryIndex = LowBoundaryIndex + 1; boundaryIndex <= HighBoundaryIndex; ++boundaryIndex)
+		{
+			int maxSize = (1 << boundaryIndex) / BoundarySizeMax;
 
-
-			// iMaxSize    1000으로 나눴을때 몫
+			// maxSize    1000으로 나눴을때 몫
 			// 1024  : -> 0
 			// 2048  : -> 1
 			// 4096  : -> 2 ~ 3
@@ -262,16 +290,14 @@ public:
 			// 4001바이트를 주문하면 8192바이트를 주게되네
 			// 살짝 손해가 있긴하다.
 
-			for (int iSize = iBeforeMax; iSize <= iMaxSize - 1; ++iSize) {
-				m_PoolTargeterHigh->At(iSize) = &m_Pool[i];
+			for (int sizeIndex = previousMaxSize; sizeIndex <= maxSize - 1; ++sizeIndex)
+			{
+				poolTargeterHigh_Member->At(sizeIndex) = &poolChunkQueueArray_Member[boundaryIndex];
 			}
 
-			
-			iBeforeMax = iMaxSize;
+			previousMaxSize = maxSize;
 		}
 	}
-
-
 
 public:
 	static constexpr int LowBoundaryIndex = 9;
@@ -285,14 +311,14 @@ public:
 	static constexpr int HighTargeterListCapacity = HighBoundarySize / BoundarySizeMax;	// 524
 
 	static constexpr int MaxAllocatableSize = (HighBoundarySize / 1000 - 1) * 1000;	// 최대 할당 가능한 메모리 (523'000)
+
 private:
-	MemoryChunckQueue* m_Pool[Detail::MemoryBlockSizeMapSize_v]{};
-	MemoryChunkQueueTargetrList* m_PoolTargeterLow{};
-	MemoryChunkQueueTargetrList* m_PoolTargeterHigh{};
+	CMemoryChunckQueue* poolChunkQueueArray_Member[Detail::MemoryBlockSizeMapSize_v]{};
+	MemoryChunkQueueTargetrList* poolTargeterLow_Member{};
+	MemoryChunkQueueTargetrList* poolTargeterHigh_Member{};
 };
 
 
 using IndexedMemoryPoolPtr = SharedPtr<IndexedMemoryPool>;
 
 NS_JC_END
-

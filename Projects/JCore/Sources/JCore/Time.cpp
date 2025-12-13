@@ -903,7 +903,7 @@ bool DateTime::TryParse(DateTime& parsed, const char* fmt, int fmtLen, const cha
 
 	// vFormatList를 정렬해서 위치가 변경되기 전에 먼저 vDateStringList 정렬해줘야함.
 	vDateStringList.Sort([&vFormatList](auto& lhs, auto& rhs) {
-		return s_DateFormatParsePriority[int(vFormatList[lhs.Key])] < s_DateFormatParsePriority[int(vFormatList[rhs.Key])];
+		return s_DateFormatParsePriority[int(vFormatList[lhs.key_])] < s_DateFormatParsePriority[int(vFormatList[rhs.key_])];
 	});
 
 	vFormatList.Sort([](DateFormat_t& lhs, DateFormat_t& rhs) {
@@ -914,7 +914,7 @@ bool DateTime::TryParse(DateTime& parsed, const char* fmt, int fmtLen, const cha
 	
 	for (int i = 0; i < vFormatList.Size(); ++i) {
 		const DateFormat_t eFormatToken = vFormatList[i];
-		String& szDateStringToken = vDateStringList[i].Value;
+		String& szDateStringToken = vDateStringList[i].value_;
 
 		switch (eFormatToken) {
 		case DateFormat::d:

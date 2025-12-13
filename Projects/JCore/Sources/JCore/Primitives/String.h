@@ -16,23 +16,24 @@ NS_JC_BEGIN
 // variadic template forward declaration
 template <typename...>
 struct Tuple;
-class DefaultAllocator;
+class CDefaultAllocator;
 
 template <typename, typename>
 class Vector;
 
 class String final
 {
-	inline static const int DefaultBufferSize = 32;	// 초기 버퍼의 크기
-	inline static const int ExpandingFactor = 2;		// 더해준 문자열과 기존 문자열의 길이를 합쳤을 때 용량을 초과할 경우 배열 크기를 몇배 확장시켜줄지
+	inline static constexpr int DEFAULT_BUFFER_SIZE = 32;	// 초기 버퍼의 크기
+	inline static constexpr int EXPANDING_FACTOR = 2;		// 더해준 문자열과 기존 문자열의 길이를 합쳤을 때 용량을 초과할 경우 배열 크기를 몇배 확장시켜줄지
+
 	inline static const char* EmptySource = "";
 public:
 	static String Empty;
 	static String Null;
 
 	String();
-	String(const int capacity);
-	String(const char* str, const int capacity);
+	String(int capacity);
+	String(const char* str, int capacity);
 	String(const char* str);
 	String(char ch, int count);
 	String(const std::string& str);
@@ -59,24 +60,24 @@ public:
 		ss << str;
 		Append(ss.str());
 	}
-	void Append(const char ch);
+	void Append(char ch);
 	void Append(char* str);
 	void Append(const char* str);
 	void Append(const std::string& str);
 	void Append(const String& str);
 	void Append(String&& str);
 
-	void Insert(const int idx, const char* str);
-	void Insert(const int idx, const String& str);
+	void Insert(int idx, const char* str);
+	void Insert(int idx, const String& str);
 
-	void Resize(const int capacity);
+	void Resize(int capacity);
 	void ResizeIfNeeded(int len);		// len이 m_iCapcity 이상일 경우에 x2해서 확장
 
 	int Compare(const String& str) const;
-	int Compare(const char* str, const int strLen = -1) const;
-	Vector<int, DefaultAllocator> FindAll(int startIdx, int endIdx, const char* str) const;
-	Vector<int, DefaultAllocator> FindAll(const char* str) const;
-	Vector<int, DefaultAllocator> FindAll(const String& str) const;
+	int Compare(const char* str, int strLen = -1) const;
+	Vector<int, CDefaultAllocator> FindAll(int startIdx, int endIdx, const char* str) const;
+	Vector<int, CDefaultAllocator> FindAll(const char* str) const;
+	Vector<int, CDefaultAllocator> FindAll(const String& str) const;
 	int Find(int startIdx, int endIdx, const char* str) const;
 	int Find(int startIdx, const char* str) const;
 	int Find(int startIdx, const String& str) const;
@@ -97,8 +98,8 @@ public:
 
 	int Count(const char* str) const;
 	int Count(const String& val) const;
-	int Count(const int startIdx, const int endIdx, const char* str) const;
-	int Count(const int startIdx, const int endIdx, const String& val) const;
+	int Count(int startIdx, int endIdx, const char* str) const;
+	int Count(int startIdx, int endIdx, const String& val) const;
 
 	int Replace(const char* from, const String& to);
 	int Replace(const String& from, const String& to);
@@ -116,14 +117,14 @@ public:
 	bool Contain(const String& str) const;
 	void Format(const char* format, ...);
 	
-	void SetAt(const int idx, const char ch);
-	char GetAt(const int idx) const ;
-	String GetRange(const int startIdx, const int endIdx) const;
+	void SetAt(int idx, char ch);
+	char GetAt(int idx) const ;
+	String GetRange(int startIdx, int endIdx) const;
 
 	// 동적할당된 문자열, 길이, 할당된 크기를 반환한다.
-	Tuple<char*, int, int> GetRangeUnsafe(const int startIdx, const int endIdx) const;
-	Vector<String, DefaultAllocator> Split(const char* delimiter, const bool includeEmpty = false) const;
-	void Initialize(int capacity = DefaultBufferSize);
+	Tuple<char*, int, int> GetRangeUnsafe(int startIdx, int endIdx) const;
+	Vector<String, CDefaultAllocator> Split(const char* delimiter, bool includeEmpty = false) const;
+	void Initialize(int capacity = DEFAULT_BUFFER_SIZE);
 
 	String ToLowerCase() const;
 	String ToUpperCase() const;
@@ -132,7 +133,7 @@ public:
 
 	std::string ToStd();
 public:
-	char& operator[](const int idx) const;
+	char& operator[](int idx) const;
 
 	template <typename T>
 	String operator+(const T& other) { 
@@ -142,13 +143,13 @@ public:
 	}
 
 	String operator+(const String& other) const;
-	String operator+(const char ch) const;
+	String operator+(char ch) const;
 	String operator+(const char* str) const;
 
 	template <typename T>
 	String& operator+=(const T& other) { Append(other);  return *this; }
 	String& operator+=(const String& other);
-	String& operator+=(const char ch);
+	String& operator+=(char ch);
 	String& operator+=(char* str);
 	String& operator+=(const char* str);
 
@@ -168,8 +169,6 @@ public:
 	String& operator=(std::nullptr_t other);
 	bool operator==(const String& other) const;
 	bool operator==(const char* other) const;
-	bool operator!=(const String& other) const;
-	bool operator!=(const char* other) const;
 
 	bool operator<(const String& other) const;
 	bool operator<(const char* other) const;
@@ -182,9 +181,9 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& os, const String& src);
 private:
-	void ThrowIfInvalidRangeIndex(const int startIdx, const int endIdx) const;
+	void ThrowIfInvalidRangeIndex(int startIdx, int endIdx) const;
 	void ThrowIfNotInitialized() const;
-	void ThrowIfInvalidIndex(const int idx) const;
+	void ThrowIfInvalidIndex(int idx) const;
 private:
 	char* m_pBuffer{};
 	int m_iLen{};

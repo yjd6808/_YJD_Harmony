@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/30/2023 12:20:46 PM
  * =====================
@@ -28,8 +28,12 @@ struct IPropertyFactory
 template <typename T>
 struct PropertyFactory : IPropertyFactory
 {
-	static_assert(PropertyType::CanConstruct[PropertyTypeGetter<T>::Type], "... T is not constructable property type");
-	PropertyBase* CreateInstance() override { return dbg_new Property<T>; }
+	static_assert(PropertyType::CAN_CONSTRUCT[PropertyTypeGetter<T>::Type], "... T is not constructable property type");
+
+	PropertyBase* CreateInstance() override
+	{
+		return dbg_new Property<T>;
+	}
 };
 
 

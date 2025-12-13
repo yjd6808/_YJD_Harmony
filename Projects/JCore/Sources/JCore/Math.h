@@ -6,47 +6,54 @@
 #pragma once
 
 NS_JC_BEGIN
-
 struct Math final
 {
 	template <typename T>
-	static T Pow(T base, const int exponent) {
-		if (exponent == 0) {
+	static T Pow(T _base, const int _exponent)
+	{
+		if (_exponent == 0)
+		{
 			return 1;
 		}
 
-		T mul = base;
+		T mul = _base;
 
-		for (int i = 1; i < exponent; i++) {
-			base *= mul;
+		for (int i = 1; i < _exponent; i++)
+		{
+			_base *= mul;
 		}
 
-		return base;
+		return _base;
 	}
 
 	template <typename T>
-	static constexpr T Max(const T lhs, const T rhs) {
-		return lhs > rhs ? lhs : rhs;
+	static constexpr T Max(const T _lhs, const T _rhs)
+	{
+		return _lhs > _rhs ? _lhs : _rhs;
 	}
 
 	template <typename T, typename... Args>
-	static constexpr T Max(const T arg0, const Args... args) {
-		return Max(arg0, Max(args...));
+	static constexpr T Max(const T _arg0, const Args ... _args)
+	{
+		return Max(_arg0, Max(_args...));
 	}
 
 	template <typename T>
-	static constexpr T Min(const T lhs, const T rhs) {
-		return lhs < rhs ? lhs : rhs;
+	static constexpr T Min(const T _lhs, const T _rhs)
+	{
+		return _lhs < _rhs ? _lhs : _rhs;
 	}
 
 	template <typename T, typename... Args>
-	static constexpr T Min(const T arg0, const Args... args) {
-		return Min(arg0, Min(args...));
+	static constexpr T Min(const T _arg0, const Args ... _args)
+	{
+		return Min(_arg0, Min(_args...));
 	}
 
 	template <typename T>
-	static constexpr T Abs(const T arg) {
-		return arg < 0 ? arg * -1 : arg;
+	static constexpr T Abs(const T _arg)
+	{
+		return _arg < 0 ? _arg * -1 : _arg;
 	}
 };
 

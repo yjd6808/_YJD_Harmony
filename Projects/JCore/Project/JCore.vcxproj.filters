@@ -176,64 +176,64 @@
     <ClCompile Include="..\Sources\JCore\Container\PropertyOperator.cpp">
       <Filter>Container\RelatedProperty</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators.cpp">
-      <Filter>Container\RelatedProperty</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_DOUBLE.cpp">
-      <Filter>Container\RelatedProperty</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_FLOAT.cpp">
-      <Filter>Container\RelatedProperty</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT.cpp">
-      <Filter>Container\RelatedProperty</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT8.cpp">
-      <Filter>Container\RelatedProperty</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT8U.cpp">
-      <Filter>Container\RelatedProperty</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT16.cpp">
-      <Filter>Container\RelatedProperty</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT16U.cpp">
-      <Filter>Container\RelatedProperty</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT32L.cpp">
-      <Filter>Container\RelatedProperty</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT32U.cpp">
-      <Filter>Container\RelatedProperty</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT32UL.cpp">
-      <Filter>Container\RelatedProperty</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT64.cpp">
-      <Filter>Container\RelatedProperty</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT64U.cpp">
-      <Filter>Container\RelatedProperty</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_LDOUBLE.cpp">
-      <Filter>Container\RelatedProperty</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_SELECTORS.cpp">
-      <Filter>Container\RelatedProperty</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_STRING.cpp">
-      <Filter>Container\RelatedProperty</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_UNARY.cpp">
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperatorDefinitions.cpp">
       <Filter>Container\RelatedProperty</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JCore\Container\PropertyStatics.cpp">
       <Filter>Container\RelatedProperty</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_BOOL.cpp">
+    <ClCompile Include="..\Sources\JCore\Config.cpp" />
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_UNARY.inl">
       <Filter>Container\RelatedProperty</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Config.cpp" />
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_BOOL.inl">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_DOUBLE.inl">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_FLOAT.inl">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT.inl">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT8.inl">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT8U.inl">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT16.inl">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT16U.inl">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT32L.inl">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT32U.inl">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT32UL.inl">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT64.inl">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT64U.inl">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_LDOUBLE.inl">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_SELECTORS.inl">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_STRING.inl">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -652,6 +652,9 @@
       <Filter>Pool</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Config.h" />
+    <ClInclude Include="..\Sources\JCore\Container\PropertyOperatorDefinitions.h">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\JCore\Natvis\ListQueue.natvis">

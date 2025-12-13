@@ -12,12 +12,14 @@ NS_JC_BEGIN
 
 const char* Digit::HexChar = "0123456789ABCDEF";
 
-int Digit::Length(int num) {
-	int iLen = 1;
-	while ((num /= 10) > 0) {
-		iLen++;
+int Digit::Length(int _num)
+{
+	int len = 1;
+	while ((_num /= 10) > 0)
+	{
+		len++;
 	}
-	return iLen;
+	return len;
 }
 
 NS_JC_END

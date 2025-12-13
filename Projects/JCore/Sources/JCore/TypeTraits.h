@@ -166,17 +166,17 @@ NS_JC_BEGIN
     template <bool Test, bool... RestTests>
     struct Or { static constexpr bool Value = Test || Or<RestTests...>::Value; };
     template <>
-    struct Or<true> { static const bool Value = true; };
+    struct Or<true> { static constexpr bool Value = true; };
     template <>
-    struct Or<false> { static const bool Value = false; };
+    struct Or<false> { static constexpr bool Value = false; };
 
     // And<false, true, false> = false
     template <bool Test, bool... RestTests>
     struct And { static constexpr bool Value = Test && And<RestTests...>::Value; };
     template <>
-    struct And<true> { static const bool Value = true; };
+    struct And<true> { static constexpr bool Value = true; };
     template <>
-    struct And<false> { static const bool Value = false; };
+    struct And<false> { static constexpr bool Value = false; };
 
 
     template <typename... Args>

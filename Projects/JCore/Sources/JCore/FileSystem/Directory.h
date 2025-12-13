@@ -12,34 +12,34 @@ NS_JC_BEGIN
 
 template <typename, typename>
 class Vector;
-class DefaultAllocator;
+class CDefaultAllocator;
 class String;
 class Directory
 {
 public:
-	static bool Exist(const char* path);
-	static bool Exist(const String& path);
+	static bool Exist(const char* _path);
+	static bool Exist(const String& _path);
 
-	static bool Create(const char* path);
-	static bool Create(const String& path);
+	static bool Create(const char* _path);
+	static bool Create(const String& _path);
 
-	static bool Delete(const char* path);
-	static bool Delete(const String& path);
+	static bool Delete(const char* _path);
+	static bool Delete(const String& _path);
 
-	static int DirectoryCount(const String& path, bool recursive = true);
-	static int DirectoryCount(const char* path, bool recursive = true);
+	static int DirectoryCount(const String& _path, bool recursive = true);
+	static int DirectoryCount(const char* _path, bool recursive = true);
 
-	static int FileCount(const String& path, bool recursive = true);
-	static int FileCount(const char* path, bool recursive = true);
+	static int FileCount(const String& _path, bool recursive = true);
+	static int FileCount(const char* _path, bool recursive = true);
 
-	static Vector<String, DefaultAllocator> Files(const String& path, bool recursive = true);
-	static Vector<String, DefaultAllocator> Files(const char* path, bool recursive = true);
+	static Vector<String, CDefaultAllocator> Files(const String& _path, bool _recursive = true);
+	static Vector<String, CDefaultAllocator> Files(const char* _path, bool _recursive = true);
 
-	static Vector<String, DefaultAllocator> Directories(const String& path, bool recursive = true);
-	static Vector<String, DefaultAllocator> Directories(const char* path, bool recursive = true);
+	static Vector<String, CDefaultAllocator> Directories(const String& _path, bool _recursive = true);
+	static Vector<String, CDefaultAllocator> Directories(const char* _path, bool _recursive = true);
 
 private:
-	static void FilesRecursive(Vector<String, DefaultAllocator>& files, String path, bool recursive);
+	static void FilesRecursive(Vector<String, CDefaultAllocator>& _files, String _path, bool _recursive);
 };
 
 NS_JC_END

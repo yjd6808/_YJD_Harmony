@@ -167,7 +167,7 @@ TEST(HashSetTest, NonFundamental) {
 
 TEST(HashSetTest, MemoryPool) {
 	MemoryPoolLeakCheck
-	HashSet<String, DefaultArrayAllocator> q;
+	HashSet<String, CDefaultArrayAllocator> q;
 	for (int i = 0; i < 1'000; i++) {
 		q.Insert(StringUtil::Format("ss%d", i));
 	}
@@ -206,10 +206,10 @@ TEST(HashSetTest, Pointer) {
 	EXPECT_TRUE(testSet1.Insert(ptr));
 	EXPECT_FALSE(testSet1.Insert(ptr));
 
-	testSet1.Insert(new int);
-	testSet1.Insert(new int);
-	testSet1.Insert(new int);
-	testSet1.Insert(new int);
+	testSet1.Insert(new int(0));
+	testSet1.Insert(new int(0));
+	testSet1.Insert(new int(0));
+	testSet1.Insert(new int(0));
 	testSet1.ForEachDelete();
 }
 

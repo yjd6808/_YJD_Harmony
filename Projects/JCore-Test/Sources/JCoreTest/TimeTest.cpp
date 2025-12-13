@@ -84,7 +84,7 @@ TEST(DateTimeTest, Operation_Year_Month) {
 TEST(DateTimeTest, Operation_Day_Hour_Minute_Second_Mili_Micro) {
 	DateTime dt = g_TestTime;
 
-	EXPECT_TRUE(dt.SubtractDay(1).ToDate() == Date(2022, 1, 31)); ResetDate(dt);
+	EXPECT_TRUE(dt.SubtractDay(1).ToDate() == Date(2022, 1, 31)); ResetDadte(dt);
 	EXPECT_TRUE(dt.SubtractDay(-1).ToDate() == Date(2022, 2, 2)); ResetDate(dt);
 	EXPECT_TRUE(dt.AddDay(1).ToDate() == Date(2022, 2, 2)); ResetDate(dt);
 	EXPECT_TRUE(dt.AddDay(-1).ToDate() == Date(2022, 1, 31)); ResetDate(dt);

@@ -1,116 +1,130 @@
-﻿/*
- * 작성자: 윤정도
- * 생성일: 10/11/2023 6:17:36 AM
- * =====================
- * HashMapIterator과 코드 동일
- */
-
+/*
+	작성자 : 윤정도
+*/
 
 #pragma once
 
-
-#include <JCore/Container/Iterator.h>
+#include <JCore/Container/MapCollectionIterator.h>
 
 NS_JC_BEGIN
 
 // 전방 선언
-class VoidOwner;
-struct PropertyBase;
-
-template <typename...> class HashTable;
-
-template <typename, typename> class  Properties;
+class CVoidOwner;
+template <typename> struct BucketNode;
+template <typename...> struct Bucket;
+template <typename, typename> class CProperties;
 template <typename, typename> struct Pair;
 
 template <typename TKey, typename TAllocator>
-class PropertiesIterator : Iterator<Pair<TKey, PropertyBase*>, TAllocator>
+class CPropertiesIterator : public MapCollectionIterator<TKey, PropertyBase*, TAllocator>
 {
-	using TIterator = Iterator<Pair<TKey, PropertyBase*>, TAllocator>;
-
-	using TPair = Pair<TKey, PropertyBase*>;
-	using TProperties = Properties<TKey, TAllocator>;
-
 	using TBucket = Bucket<TKey, PropertyBase*, TAllocator>;
-	using TBucketNode = BucketNode<TPair>;
+	using TKeyPropertyPair = Pair<TKey, PropertyBase*>;
+	using TBucketNode = BucketNode<TKeyPropertyPair>;
+	using TProperties = CProperties<TKey, TAllocator>;
+	using TMapCollectionIterator = MapCollectionIterator<TKey, PropertyBase*, TAllocator>;
+
 public:
-	PropertiesIterator(VoidOwner& owner, TBucket* currentBucket, int currentBucketIndex) : TIterator(owner) {
-		m_pCurrentBucket = currentBucket;
-		m_iCurrentBucketIndex = currentBucketIndex;
+	CPropertiesIterator(CVoidOwner& _owner, TBucket* _pCurrentBucket, int _currentBucketIndex)
+		: TMapCollectionIterator(_owner)
+	{
+		pCurrentBucket_ = _pCurrentBucket;
+		currentBucketIndex_ = _currentBucketIndex;
 	}
 
-	~PropertiesIterator() noexcept override = default;
+	~CPropertiesIterator() noexcept override = default;
+
 public:
-	bool HasNext() const override {
+	bool HasNext() const override
+	{
 		if (!this->IsValid())
 			return false;
 
-		if (m_pCurrentBucket != nullptr && m_iCurrentBucketIndex < m_pCurrentBucket->Size)
+		if (pCurrentBucket_ != nullptr && currentBucketIndex_ < pCurrentBucket_->size_)
 			return true;
 
 		return false;
 	}
 
-	bool HasPrevious() const override {
+	bool HasPrevious() const override
+	{
 		if (!this->IsValid())
 			return false;
 
-		if (m_pCurrentBucket != nullptr && m_iCurrentBucketIndex >= 0)
+		if (pCurrentBucket_ != nullptr && currentBucketIndex_ >= 0)
 			return true;
 
 		return false;
 	}
 
-	TPair& Next() override {
+	TKeyPropertyPair& Next() override
+	{
 		// 반복자가 꼬리까지 도달했는데 데이터를 가져올려고 시도하는 경우
-		TBucketNode& val = m_pCurrentBucket->GetAt(m_iCurrentBucketIndex++);
+		TBucketNode& val = pCurrentBucket_->GetAt(currentBucketIndex_++);
 
-		if (m_iCurrentBucketIndex < m_pCurrentBucket->Size) {
-			return val.Data;
+		if (currentBucketIndex_ < pCurrentBucket_->size_)
+		{
+			return val.data_;
 		}
 
-		m_pCurrentBucket = m_pCurrentBucket->Next;
+		pCurrentBucket_ = pCurrentBucket_->pNext_;
 
-		if (m_pCurrentBucket) {
-			m_iCurrentBucketIndex = 0;
+		if (pCurrentBucket_)
+		{
+			currentBucketIndex_ = 0;
 		}
 
-		return val.Data;
+		return val.data_;
 	}
 
-	TPair& Previous() override {
+	TKeyPropertyPair& Previous() override
+	{
 		// 반복자가 꼬리까지 도달했는데 데이터를 가져올려고 시도하는 경우
-		TBucketNode& val = m_pCurrentBucket->GetAt(m_iCurrentBucketIndex--);
+		TBucketNode& val = pCurrentBucket_->GetAt(currentBucketIndex_--);
 
-		if (m_iCurrentBucketIndex >= 0) {
-			return val.Data;
+		if (currentBucketIndex_ >= 0)
+		{
+			return val.data_;
 		}
 
-		m_pCurrentBucket = m_pCurrentBucket->Previous;
+		pCurrentBucket_ = pCurrentBucket_->pPrevious_;
 
-		if (m_pCurrentBucket) {
-			m_iCurrentBucketIndex = m_pCurrentBucket->Size - 1;
+		if (pCurrentBucket_)
+		{
+			currentBucketIndex_ = pCurrentBucket_->size_ - 1;
 		}
 
-		return val.Data;
+		return val.data_;
 	}
 
-	TPair& Current() override {
-		TBucketNode& val = m_pCurrentBucket->GetAt(m_iCurrentBucketIndex);
-		return val.Data;
+	TKeyPropertyPair& Current() override
+	{
+		TBucketNode& val = pCurrentBucket_->GetAt(currentBucketIndex_);
+		return val.data_;
 	}
 
-	bool IsEnd() const override {
+	bool IsEnd() const override
+	{
 		return HasNext() == false;
 	}
 
-	bool IsBegin() const override {
+	bool IsBegin() const override
+	{
 		return HasPrevious() == false;
 	}
-private:
-	int m_iCurrentBucketIndex;
-	TBucket* m_pCurrentBucket;
 
-	TProperties m_Properties;
+protected:
+	TProperties* CastProperties() const
+	{
+		this->ThrowIfIteratorIsNotValid();
+		return this->watcher_.template Get<TProperties*>();
+	}
+
+protected:
+	int currentBucketIndex_;
+	TBucket* pCurrentBucket_;
+
+	friend class TProperties;
 };
 
 NS_JC_END

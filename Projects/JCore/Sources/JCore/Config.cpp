@@ -18,7 +18,8 @@ bool AppExited = false;
 Int32U AppStartUpTimeTGT_v = ::timeGetTime();
 Int64 AppStartUpTime_v = DateTime::Now().Tick;
 
-void InitializeJCore() {
+void InitializeJCore()
+{
 	// 콘솔출력 인코딩 설정
 	//  - 전 소스파일 UTF8 통일
 	//  - MSVC 컴파일러 옵션 설정도 변경함
@@ -41,11 +42,11 @@ void InitializeJCore() {
 	PropertyStatics::Initialize();
 }
 
-void FinalizeJCore() {
+void FinalizeJCore()
+{
 	PropertyStatics::Finalize();
 	AppExited = true;
 }
 
 
 NS_JC_END
-

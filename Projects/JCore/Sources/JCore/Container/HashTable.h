@@ -17,6 +17,7 @@ template <typename...>
 class HashTable;
 
 #pragma region HashTable<TKey>
+
 template <typename TKey, typename TAllocator>
 class HashTable<TKey, TAllocator>
 {
@@ -25,95 +26,111 @@ public:
 	using THasher = Hasher<TKey>;
 	using TBucket = Bucket<TKey, TAllocator>;
 	using TBucketNode = BucketNode<TKey>;
+
 public:
-	HashTable(int capacity = ms_iTableDefaultCapacity)
-		: m_pTable(nullptr)
-		, m_pHeadBucket(nullptr)
-		, m_pTailBucket(nullptr)
-		, m_iCapacity(capacity)
-		, m_iSize(0)
+	HashTable(int _capacity = TABLE_DEFAULT_CAPACITY)
+		: pTable_(nullptr)
+		, pHeadBucket_(nullptr)
+		, pTailBucket_(nullptr)
+		, capacity_(_capacity)
+		, size_(0)
 	{
-		if (m_iCapacity > 0) {
-			int iAllocatedSize;
-			m_pTable = TAllocator::template AllocateDynamic<TBucket*>(sizeof(TBucket) * capacity, iAllocatedSize);
-			Memory::PlacementNewArray(m_pTable, capacity);
+		if (capacity_ > 0)
+		{
+			int allocatedSize = 0;
+			pTable_ = TAllocator::template AllocateDynamic<TBucket*>(sizeof(TBucket) * _capacity, allocatedSize);
+			Memory::PlacementNewArray(pTable_, _capacity);
 		}
 	}
 
-	HashTable(const THashTable& other) : THashTable(other.m_iCapacity) {
-		operator=(other);
+	HashTable(const THashTable& _other)
+		: THashTable(_other.capacity_)
+	{
+		operator=(_other);
 	}
 
-	HashTable(THashTable&& other) noexcept
-		: m_pTable(nullptr)
-		, m_pHeadBucket(nullptr)
-		, m_pTailBucket(nullptr)
+	HashTable(THashTable&& _other) noexcept
+		: pTable_(nullptr)
+		, pHeadBucket_(nullptr)
+		, pTailBucket_(nullptr)
 	{
-		operator=(Move(other));
+		operator=(Move(_other));
 	}
 
 	// 이니셜라이저로 초기화 하는 경우 보통 더 확장안시킬 확률이 크므로.. 맞춤형으로 가자.
-	HashTable(std::initializer_list<TKey> ilist) : THashTable(ilist.size() + 1) {
-		operator=(ilist);
+	HashTable(std::initializer_list<TKey> _ilist)
+		: THashTable(static_cast<int>(_ilist.size()) + 1)
+	{
+		operator=(_ilist);
 	}
 
-	~HashTable() noexcept {
+	~HashTable() noexcept
+	{
 		Clear();
 
-		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(m_pTable, m_iCapacity);
-		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(m_pTable, m_iCapacity * sizeof(TBucket));
+		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pTable_, capacity_);
+		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pTable_, capacity_ * sizeof(TBucket));
 	}
+
 public:
-	THashTable& operator=(const THashTable& other) {
+	THashTable& operator=(const THashTable& _other)
+	{
 		Clear();
-		ExpandIfNeeded(other.m_iSize);
+		ExpandIfNeeded(_other.size_);
 
-		TBucket* pOtherBucketCur = other.m_pHeadBucket;
-		while (pOtherBucketCur != nullptr) {
-			for (int i = 0; i < pOtherBucketCur->Size; i++) {
-				TBucketNode& node = pOtherBucketCur->GetAt(i);
-				Int32U uiBucket = BucketIndex(node.Hash);
-				TBucket& bucket = m_pTable[uiBucket];
+		TBucket* pOtherBucketCurrent = _other.pHeadBucket_;
 
-				if (bucket.IsEmpty()) {
+		while (pOtherBucketCurrent != nullptr)
+		{
+			for (int i = 0; i < pOtherBucketCurrent->size_; ++i)
+			{
+				TBucketNode& node = pOtherBucketCurrent->GetAt(i);
+				Int32U bucketIndex = BucketIndex(node.hash_);
+				TBucket& bucket = pTable_[bucketIndex];
+
+				if (bucket.IsEmpty())
+				{
 					PushBackNewBucket(&bucket);
 				}
 
 				bucket.PushBack(node);
-				
 			}
-			pOtherBucketCur = pOtherBucketCur->Next;
+
+			pOtherBucketCurrent = pOtherBucketCurrent->pNext_;
 		}
 
-		this->m_iSize = other.m_iSize;
+		size_ = _other.size_;
 		return *this;
 	}
 
-	THashTable& operator=(THashTable&& other) noexcept {
+	THashTable& operator=(THashTable&& _other) noexcept
+	{
 		Clear();
 
-		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(m_pTable, m_iCapacity);
-		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(m_pTable, sizeof(TBucket) * m_iCapacity);
+		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pTable_, capacity_);
+		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pTable_, sizeof(TBucket) * capacity_);
 
-		this->m_iSize = other.m_iSize;
-		this->m_iCapacity = other.m_iCapacity;
-		this->m_pTable = other.m_pTable;
-		this->m_pHeadBucket = other.m_pHeadBucket;
-		this->m_pTailBucket = other.m_pTailBucket;;
+		size_ = _other.size_;
+		capacity_ = _other.capacity_;
+		pTable_ = _other.pTable_;
+		pHeadBucket_ = _other.pHeadBucket_;
+		pTailBucket_ = _other.pTailBucket_;
 
-		other.m_pTable = nullptr;
-		other.m_pHeadBucket = nullptr;
-		other.m_pTailBucket = nullptr;
-		other.m_iSize = 0;
+		_other.pTable_ = nullptr;
+		_other.pHeadBucket_ = nullptr;
+		_other.pTailBucket_ = nullptr;
+		_other.size_ = 0;
 
 		return *this;
 	}
 
-	THashTable& operator=(std::initializer_list<TKey> ilist) {
+	THashTable& operator=(std::initializer_list<TKey> _ilist)
+	{
 		Clear();
-		ExpandIfNeeded(ilist.size());
+		ExpandIfNeeded(static_cast<int>(_ilist.size()));
 
-		for (auto it = ilist.begin(); it != ilist.end(); ++it) {
+		for (auto it = _ilist.begin(); it != _ilist.end(); ++it)
+		{
 			Insert((*it));
 		}
 
@@ -121,291 +138,379 @@ public:
 	}
 
 	template <typename Ky>
-	bool Insert(Ky&& key) {
-		if (IsFull()) {
-			Expand(m_iCapacity * ms_iTableExpandingFactor);
+	bool Insert(Ky&& _key)
+	{
+		if (IsFull())
+		{
+			Expand(capacity_ * TABLE_EXPANDING_FACTOR);
 		}
 
-		if (Exist(key)) {
+		if (Exist(_key))
+		{
 			return false;
 		}
 
-		Int32U uiHash = Hash(key);
-		Int32U uiBucket = BucketIndex(uiHash);
-		TBucket& bucket = m_pTable[uiBucket];
+		Int32U hashValue = Hash(_key);
+		Int32U bucketIndex = BucketIndex(hashValue);
+		TBucket& bucket = pTable_[bucketIndex];
 
-		if (bucket.IsEmpty()) {
+		if (bucket.IsEmpty())
+		{
 			PushBackNewBucket(&bucket);
 		}
 
-		bucket.EmplaceBack(Forward<Ky>(key), uiHash);
-		++this->m_iSize;
+		bucket.EmplaceBack(Forward<Ky>(_key), hashValue);
+		++size_;
 		return true;
 	}
 
 	template <typename Ky>
-	bool Exist(const Ky& key) const {
-		if (m_pTable == nullptr) return false;
-		return m_pTable[HashBucket(key)].Exist(key);
+	bool Exist(const Ky& _key) const
+	{
+		if (pTable_ == nullptr)
+		{
+			return false;
+		}
+
+		return pTable_[HashBucket(_key)].Exist(_key);
 	}
 
 	template <typename Ky>
-	bool Remove(const Ky& key) {
-		TBucket& bucket = m_pTable[HashBucket(key)];
+	bool Remove(const Ky& _key)
+	{
+		TBucket& bucket = pTable_[HashBucket(_key)];
 
-		if (!bucket.Remove(key)) {
+		if (!bucket.Remove(_key))
+		{
 			return false;
 		}
 
 		// 버킷이 비었으면 연결을 끊어준다.
-		if (bucket.IsEmpty()) {
+		if (bucket.IsEmpty())
+		{
 			DisjointBucket(&bucket);
 		}
 
-		--this->m_iSize;
+		--size_;
 		return true;
 	}
 
-	void DisjointBucket(TBucket* bucket) {
-		if (bucket == m_pHeadBucket) {
-			m_pHeadBucket = m_pHeadBucket->Next;
-			if (m_pHeadBucket == nullptr) m_pTailBucket = nullptr;
-			else m_pHeadBucket->Previous = nullptr;
+	void DisjointBucket(TBucket* _pBucket)
+	{
+		if (_pBucket == pHeadBucket_)
+		{
+			pHeadBucket_ = pHeadBucket_->pNext_;
+
+			if (pHeadBucket_ == nullptr)
+			{
+				pTailBucket_ = nullptr;
+			}
+			else
+			{
+				pHeadBucket_->pPrevious_ = nullptr;
+			}
 		}
-		else if (bucket == m_pTailBucket) {
-			m_pTailBucket = m_pTailBucket->Previous;
-			if (m_pTailBucket == nullptr) m_pHeadBucket = nullptr;
-			else m_pTailBucket->Next = nullptr;
+		else if (_pBucket == pTailBucket_)
+		{
+			pTailBucket_ = pTailBucket_->pPrevious_;
+
+			if (pTailBucket_ == nullptr)
+			{
+				pHeadBucket_ = nullptr;
+			}
+			else
+			{
+				pTailBucket_->pNext_ = nullptr;
+			}
 		}
-		else {
-			ConnectBucket(bucket->Previous, bucket->Next);
+		else
+		{
+			ConnectBucket(_pBucket->pPrevious_, _pBucket->pNext_);
 		}
-		bucket->Previous = nullptr;
-		bucket->Next = nullptr;
+
+		_pBucket->pPrevious_ = nullptr;
+		_pBucket->pNext_ = nullptr;
 	}
 
-	void Clear() noexcept {
-		if (this->m_iSize == 0) {
+	void Clear() noexcept
+	{
+		if (size_ == 0)
+		{
 			return;
 		}
 
-		TBucket* pCur = m_pHeadBucket;
-		while (pCur != nullptr) {
-			TBucket* pTemp = pCur;
-			pCur->Clear();
-			pCur = pCur->Next;
+		TBucket* pCurrent = pHeadBucket_;
+
+		while (pCurrent != nullptr)
+		{
+			TBucket* pTemp = pCurrent;
+			pTemp->Clear();
+			pCurrent = pCurrent->pNext_;
 		}
 
-		this->m_iSize = 0;
-
-		m_pHeadBucket = nullptr;
-		m_pTailBucket = nullptr;
+		size_ = 0;
+		pHeadBucket_ = nullptr;
+		pTailBucket_ = nullptr;
 	}
 
-	bool Valid() const {
-		return m_pTable != nullptr;
+	bool Valid() const
+	{
+		return pTable_ != nullptr;
 	}
 
-
-	TBucket* Bucket(int index) const {
-		if (index < 0 || index >= m_iCapacity) {
+	TBucket* Bucket(int _index) const
+	{
+		if (_index < 0 || _index >= capacity_)
+		{
 			DebugAssert(false);
 			return nullptr;
 		}
 
-		return m_pTable[index];
+		return &pTable_[_index];
 	}
 
-	int BucketCount() {
-		int iCount = 0;
-		for (int i = 0; i < m_iCapacity; i++) {
-			if (m_pTable[i].IsEmpty()) {
+	int BucketCount()
+	{
+		int count = 0;
+
+		for (int i = 0; i < capacity_; ++i)
+		{
+			if (pTable_[i].IsEmpty())
+			{
 				continue;
 			}
-			++iCount;
-		}
-		return iCount;
-	}
 
+			++count;
+		}
+
+		return count;
+	}
 
 	// ==========================================
 	// 동적할당 안하고 해쉬맵 순회할 수 있도록 기능 구현
 	// ==========================================
 	template <typename Consumer>
-	void ForEach(Consumer&& consumer) {
-		TBucket* pCurBucket = m_pHeadBucket;
-		while (pCurBucket != nullptr) {
-			for (int i = 0; i < pCurBucket->Size; i++) {
-				TBucketNode& node = pCurBucket->GetAt(i);
-				consumer(node.Data);
+	void ForEach(Consumer&& consumer)
+	{
+		TBucket* pCurrentBucket = pHeadBucket_;
+
+		while (pCurrentBucket != nullptr)
+		{
+			for (int i = 0; i < pCurrentBucket->size_; ++i)
+			{
+				TBucketNode& node = pCurrentBucket->GetAt(i);
+				consumer(node.data_);
 			}
-			pCurBucket = pCurBucket->Next;
+
+			pCurrentBucket = pCurrentBucket->pNext_;
 		}
 	}
 
-	void ForEachDelete() {
-		if constexpr (!IsPointerType_v<TKey>) {
+	void ForEachDelete()
+	{
+		if constexpr (!IsPointerType_v<TKey>)
+		{
 			DebugAssert(false);
 			return;
 		}
 
-		TBucket* pCurBucket = m_pHeadBucket;
-		while (pCurBucket != nullptr) {
-			for (int i = 0; i < pCurBucket->Size; i++) {
-				TBucketNode& node = pCurBucket->GetAt(i);
-				delete node.Data;
+		TBucket* pCurrentBucket = pHeadBucket_;
+
+		while (pCurrentBucket != nullptr)
+		{
+			for (int i = 0; i < pCurrentBucket->size_; ++i)
+			{
+				TBucketNode& node = pCurrentBucket->GetAt(i);
+				delete node.data_;
 			}
-			pCurBucket = pCurBucket->Next;
+
+			pCurrentBucket = pCurrentBucket->pNext_;
 		}
 
 		Clear();
 	}
 
-	void Expand(int capacity) {
-
+	void Expand(int _capacity)
+	{
 		// 0 용량 해쉬맵 기능 추가때문에
-		if (capacity == 0)
-			capacity = 4;
+		if (_capacity == 0)
+		{
+			_capacity = 4;
+		}
 
-		DebugAssertMsg(capacity > m_iCapacity, "이전 해쉬맵 크기보다 커야합니다.");
+		DebugAssertMsg(_capacity > capacity_, "이전 해쉬맵 크기보다 커야합니다.");
 
-		int iAllocatedSize;
-		TBucket* pNewTable = TAllocator::template AllocateDynamic<TBucket*>(sizeof(TBucket) * capacity, iAllocatedSize);
-		Memory::PlacementNewArray(pNewTable, capacity);
-		const int iPrevCapacity = m_iCapacity;
+		int allocatedSize = 0;
+		TBucket* pNewTable = TAllocator::template AllocateDynamic<TBucket*>(sizeof(TBucket) * _capacity, allocatedSize);
+		Memory::PlacementNewArray(pNewTable, _capacity);
 
-		m_iCapacity = capacity;
-		m_pHeadBucket = nullptr;
-		m_pTailBucket = nullptr;
+		const int previousCapacity = capacity_;
 
-		for (int i = 0; i < iPrevCapacity; i++) {
-			if (m_pTable[i].Size == 0) {
+		capacity_ = _capacity;
+		pHeadBucket_ = nullptr;
+		pTailBucket_ = nullptr;
+
+		for (int i = 0; i < previousCapacity; ++i)
+		{
+			if (pTable_[i].size_ == 0)
+			{
 				continue;
 			}
 
-			TBucket& prevBucket = m_pTable[i];
+			TBucket& previousBucket = pTable_[i];
 
 			// 기존 버킷을 순회하며 새로운 버킷에 데이터를 담아준다.
-			for (int j = 0; j < prevBucket.Size; j++) {
-				TBucketNode& bucketNode = prevBucket.GetAt(j);
-				Int32U uiBucket = BucketIndex(bucketNode.Hash);
+			for (int j = 0; j < previousBucket.size_; ++j)
+			{
+				TBucketNode& bucketNode = previousBucket.GetAt(j);
+				Int32U bucketIndex = BucketIndex(bucketNode.hash_);
 
-				if (pNewTable[uiBucket].IsEmpty()) {
-					PushBackNewBucket(&pNewTable[uiBucket]);
+				if (pNewTable[bucketIndex].IsEmpty())
+				{
+					PushBackNewBucket(&pNewTable[bucketIndex]);
 				}
 
-				pNewTable[uiBucket].PushBack(Move(bucketNode));
+				pNewTable[bucketIndex].PushBack(Move(bucketNode));
 			}
 		}
 
-		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(m_pTable, iPrevCapacity);
-		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(m_pTable, sizeof(TBucket) * iPrevCapacity);
-		m_pTable = pNewTable;
+		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pTable_, previousCapacity);
+		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pTable_, sizeof(TBucket) * previousCapacity);
+		pTable_ = pNewTable;
 	}
 
-	bool ExpandIfNeeded(int size) {
-		if (size <= 0 || size < m_iCapacity) {
+	bool ExpandIfNeeded(int _size)
+	{
+		if (_size <= 0 || _size < capacity_)
+		{
 			return false;
 		}
 
-		const int iCapacity = CalculateExpandCapacity(size);
-		Expand(iCapacity);
+		const int expandedCapacity = CalculateExpandCapacity(_size);
+		Expand(expandedCapacity);
 		return true;
 	}
 
-	int Size() const {
-		return m_iSize;
+	int Size() const
+	{
+		return size_;
 	}
 
-	int Capacity() const {
-		return m_iCapacity;
+	int Capacity() const
+	{
+		return capacity_;
 	}
+
 protected:
 	/// <summary>
 	/// 전달받은 사이즈 크기에 맞는 배열 크기를 반환해준다.
 	/// </summary>
-	int CalculateExpandCapacity(int size) const {
-		if (size < m_iCapacity) {
-			return m_iCapacity;
+	int CalculateExpandCapacity(int _size) const
+	{
+		if (_size < capacity_)
+		{
+			return capacity_;
 		}
 
-		int iExpectedCapacity = m_iCapacity;
+		int expectedCapacity = capacity_;
 
-		while (true) {
-			iExpectedCapacity *= ms_iTableExpandingFactor;
-			if (iExpectedCapacity > size) {
+		while (true)
+		{
+			expectedCapacity *= TABLE_EXPANDING_FACTOR;
+
+			if (expectedCapacity > _size)
+			{
 				break;
 			}
 		}
-		return iExpectedCapacity;
+
+		return expectedCapacity;
 	}
 
-	static void ConnectBucket(TBucket* lhs, TBucket* rhs) noexcept {
-		if (lhs) lhs->Next = rhs;
-		if (rhs) rhs->Previous = lhs;
+	static void ConnectBucket(TBucket* _pLeft, TBucket* _pRight) noexcept
+	{
+		if (_pLeft)
+		{
+			_pLeft->pNext_ = _pRight;
+		}
+
+		if (_pRight)
+		{
+			_pRight->pPrevious_ = _pLeft;
+		}
 	}
 
 	/// <summary>
 	/// bucket 바로 전에 다른 bucket을 삽입한다.
 	/// </summary>
-	void PushBackNewBucket(TBucket* bucket) {
-		if (m_pHeadBucket == nullptr) {
-			m_pHeadBucket = bucket;
-			m_pTailBucket = bucket;
+	void PushBackNewBucket(TBucket* _pBucket)
+	{
+		if (pHeadBucket_ == nullptr)
+		{
+			pHeadBucket_ = _pBucket;
+			pTailBucket_ = _pBucket;
 			return;
 		}
 
 		/*
 			[삽입 전]
 			 ■ <=> ■ <=> ■ <=> ■ <=> ■ <=> ■
-										   ↑
-										  Tail
+									   ↑
+									  Tail
 
 			[삽입 후]
 			 ■ <=> ■ <=> ■ <=> ■ <=> ■ <=> ■ <=> ■
-												 ↑
-											 newNode (tail)
+											 ↑
+									    newNode (tail)
 		 */
 
-		ConnectBucket(m_pTailBucket, bucket);
-		m_pTailBucket = bucket;
+		ConnectBucket(pTailBucket_, _pBucket);
+		pTailBucket_ = _pBucket;
 	}
 
-
-	Int32U BucketIndex(const Int32U hash) const {
-		return hash % m_iCapacity;
-	}
-
-	template <typename Ky>
-	Int32U Hash(const Ky& key) const {
-		return THasher()(key);
+	Int32U BucketIndex(const Int32U _hash) const
+	{
+		return _hash % capacity_;
 	}
 
 	template <typename Ky>
-	Int32U HashBucket(const Ky& key) const {
-		return BucketIndex(Hash(key));
+	Int32U Hash(const Ky& _key) const
+	{
+		return THasher()(_key);
 	}
 
-	bool IsFull() const {
-		return this->m_iSize == m_iCapacity;
+	template <typename Ky>
+	Int32U HashBucket(const Ky& _key) const
+	{
+		return BucketIndex(Hash(_key));
 	}
 
-	static constexpr Int32U	ms_iTableExpandingFactor = 4;	// 테이블 크기만큼 데이터가 들어가면 확장하는데 몇배나 확장할 지
-	static constexpr Int32U	ms_iTableDefaultCapacity = 16;	// 테이블 초기 크기
+	bool IsFull() const
+	{
+		return size_ == capacity_;
+	}
+
+	static constexpr Int32U TABLE_EXPANDING_FACTOR = 4;    // 테이블 크기만큼 데이터가 들어가면 확장하는데 몇배나 확장할 지
+	static constexpr Int32U TABLE_DEFAULT_CAPACITY = 16;    // 테이블 초기 크기
+
 protected:
-	TBucket* m_pTable;
-	TBucket* m_pHeadBucket;
-	TBucket* m_pTailBucket;
-	Int32 m_iCapacity;
-	Int32 m_iSize;
+	TBucket* pTable_;
+	TBucket* pHeadBucket_;
+	TBucket* pTailBucket_;
+	Int32 capacity_;
+	Int32 size_;
 
-	template <typename, typename> friend class HashSet;
-	template <typename, typename> friend class HashSetIterator;
+	template <typename, typename>
+	friend class HashSet;
+
+	template <typename, typename>
+	friend class HashSetIterator;
 }; // class HashTable<TKey, TAllocator>
 
 #pragma endregion
 
 #pragma region HashTable<TKey, TValue>
+
 template <typename TKey, typename TValue, typename TAllocator>
 class HashTable<TKey, TValue, TAllocator>
 {
@@ -419,470 +524,601 @@ class HashTable<TKey, TValue, TAllocator>
 	 *			-> 검색 도움 없이 해결완료
 	 *		2. 어떻게 이터레이션을 해야할까?
 	 *			-> 검색 도움 없이 해결완료
-	 *
-	 *
+	 *	 *
+	 *	 *
 	 * ==================================================================== */
+
 public:
-	using THashTable		= HashTable<TKey, TValue, TAllocator>;
-	using THasher			= Hasher<TKey>;
-	using TBucket			= Bucket<TKey, TValue, TAllocator>;
-	using TBucketNode		= BucketNode<Pair<TKey, TValue>>;
-	using TKeyValuePair		= Pair<TKey, TValue>;
+	using THashTable = HashTable<TKey, TValue, TAllocator>;
+	using THasher = Hasher<TKey>;
+	using TBucket = Bucket<TKey, TValue, TAllocator>;
+	using TBucketNode = BucketNode<Pair<TKey, TValue>>;
+	using TKeyValuePair = Pair<TKey, TValue>;
 
-	HashTable(int capacity = ms_iTableDefaultCapacity)
-		: m_pTable(nullptr)
-		, m_pHeadBucket(nullptr)
-		, m_pTailBucket(nullptr)
-		, m_iCapacity(capacity)
-		, m_iSize(0)
+	HashTable(int _capacity = TABLE_DEFAULT_CAPACITY)
+		: pTable_(nullptr)
+		, pHeadBucket_(nullptr)
+		, pTailBucket_(nullptr)
+		, capacity_(_capacity)
+		, size_(0)
 	{
-		if (m_iCapacity > 0) {
-			int iAllocatedSize;
-			m_pTable = TAllocator::template AllocateDynamic<TBucket*>(sizeof(TBucket) * capacity, iAllocatedSize);
-			Memory::PlacementNewArray(m_pTable, capacity);
-		} 
+		if (capacity_ > 0)
+		{
+			int allocatedSize = 0;
+			pTable_ = TAllocator::template AllocateDynamic<TBucket*>(sizeof(TBucket) * _capacity, allocatedSize);
+			Memory::PlacementNewArray(pTable_, _capacity);
+		}
 	}
 
-	HashTable(const THashTable& other) : THashTable(other.m_iCapacity) {
-		operator=(other);
+	HashTable(const THashTable& _other)
+		: THashTable(_other.capacity_)
+	{
+		operator=(_other);
 	}
 
-	HashTable(THashTable&& other) noexcept
-		: m_pTable(nullptr)
-		, m_pHeadBucket(nullptr)
-		, m_pTailBucket(nullptr)
+	HashTable(THashTable&& _other) noexcept
+		: pTable_(nullptr)
+		, pHeadBucket_(nullptr)
+		, pTailBucket_(nullptr)
 	{
-		operator=(Move(other));
+		operator=(Move(_other));
 	}
 
 	// 이니셜라이저로 초기화 하는 경우 보통 더 확장안시킬 확률이 크므로.. 맞춤형으로 가자.
-	HashTable(std::initializer_list<TKeyValuePair> ilist) : THashTable(ilist.size() + 1) {
-		operator=(ilist);
+	HashTable(std::initializer_list<TKeyValuePair> _ilist)
+		: THashTable(static_cast<int>(_ilist.size()) + 1)
+	{
+		operator=(_ilist);
 	}
 
-	~HashTable() noexcept {
+	~HashTable() noexcept
+	{
 		Clear();
 
-		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(m_pTable, m_iCapacity);
-		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(m_pTable, m_iCapacity * sizeof(TBucket));
+		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pTable_, capacity_);
+		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pTable_, capacity_ * sizeof(TBucket));
 	}
+
 public:
-
-
-	THashTable& operator=(const THashTable& other) {
+	THashTable& operator=(const THashTable& _other)
+	{
 		Clear();
-		ExpandIfNeeded(other.m_iSize);
+		ExpandIfNeeded(_other.size_);
 
-		TBucket* pOtherBucketCur = other.m_pHeadBucket;
-		while (pOtherBucketCur != nullptr) {
-			for (int i = 0; i < pOtherBucketCur->Size; i++) {
-				TBucketNode& node = pOtherBucketCur->GetAt(i);
-				Int32U uiBucket = BucketIndex(node.Hash);
-				TBucket& bucket = m_pTable[uiBucket];
-				
-				if (bucket.IsEmpty()) {
+		TBucket* pOtherBucketCurrent = _other.pHeadBucket_;
+
+		while (pOtherBucketCurrent != nullptr)
+		{
+			for (int i = 0; i < pOtherBucketCurrent->size_; ++i)
+			{
+				TBucketNode& node = pOtherBucketCurrent->GetAt(i);
+				Int32U bucketIndex = BucketIndex(node.hash_);
+				TBucket& bucket = pTable_[bucketIndex];
+
+				if (bucket.IsEmpty())
+				{
 					PushBackNewBucket(&bucket);
 				}
 
 				bucket.PushBack(node);
-
 			}
-			pOtherBucketCur = pOtherBucketCur->Next;
+
+			pOtherBucketCurrent = pOtherBucketCurrent->pNext_;
 		}
 
-		this->m_iSize = other.m_iSize;
+		size_ = _other.size_;
 		return *this;
 	}
 
-	THashTable& operator=(THashTable&& other) noexcept {
+	THashTable& operator=(THashTable&& _other) noexcept
+	{
 		Clear();
 
-		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(m_pTable, m_iCapacity);
-		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(m_pTable, sizeof(TBucket) * m_iCapacity);
+		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pTable_, capacity_);
+		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pTable_, sizeof(TBucket) * capacity_);
 
-		this->m_iSize = other.m_iSize;
-		this->m_iCapacity = other.m_iCapacity;
-		this->m_pTable = other.m_pTable;
-		this->m_pHeadBucket = other.m_pHeadBucket;
-		this->m_pTailBucket = other.m_pTailBucket;;
+		size_ = _other.size_;
+		capacity_ = _other.capacity_;
+		pTable_ = _other.pTable_;
+		pHeadBucket_ = _other.pHeadBucket_;
+		pTailBucket_ = _other.pTailBucket_;
 
-		other.m_pTable = nullptr;
-		other.m_pHeadBucket = nullptr;
-		other.m_pTailBucket = nullptr;
-		other.m_iSize = 0;
+		_other.pTable_ = nullptr;
+		_other.pHeadBucket_ = nullptr;
+		_other.pTailBucket_ = nullptr;
+		_other.size_ = 0;
 
 		return *this;
 	}
 
-	THashTable& operator=(std::initializer_list<TKeyValuePair> ilist) {
+	THashTable& operator=(std::initializer_list<TKeyValuePair> _ilist)
+	{
 		Clear();
-		ExpandIfNeeded(ilist.size());
+		ExpandIfNeeded(static_cast<int>(_ilist.size()));
 
-		for (auto it = ilist.begin(); it != ilist.end(); ++it) {
-			Insert(Move(it->Key), Move(it->Value));
+		for (auto it = _ilist.begin(); it != _ilist.end(); ++it)
+		{
+			Insert(Move(it->key_), Move(it->value_));
 		}
 
 		return *this;
 	}
 
-	TValue& operator[](const TKey& key) {
-		return Get(key);
+	TValue& operator[](const TKey& _key)
+	{
+		return Get(_key);
 	}
-
 
 	template <typename Ky, typename Vy>
-	bool Insert(Ky&& key, Vy&& value) {
-		if (IsFull()) {
-			Expand(m_iCapacity * ms_iTableExpandingFactor);
+	bool Insert(Ky&& _key, Vy&& _value)
+	{
+		if (IsFull())
+		{
+			Expand(capacity_ * TABLE_EXPANDING_FACTOR);
 		}
 
-		if (Exist(key)) {
+		if (Exist(_key))
+		{
 			return false;
 		}
 
-		Int32U uiHash = Hash(key);
-		Int32U uiBucket = BucketIndex(uiHash);
-		TBucket& bucket = m_pTable[uiBucket];
+		Int32U hashValue = Hash(_key);
+		Int32U bucketIndex = BucketIndex(hashValue);
+		TBucket& bucket = pTable_[bucketIndex];
 
-		if (bucket.IsEmpty()) {
+		if (bucket.IsEmpty())
+		{
 			PushBackNewBucket(&bucket);
 		}
 
-		bucket.EmplaceBack(TKeyValuePair{ static_cast<TKey>(Forward<Ky>(key)), static_cast<TValue>(Forward<Vy>(value))}, uiHash);
-		++this->m_iSize;
+		bucket.EmplaceBack(TKeyValuePair{ static_cast<TKey>(Forward<Ky>(_key)), static_cast<TValue>(Forward<Vy>(_value)) }, hashValue);
+		++size_;
 		return true;
 	}
 
 	template <typename Ky>
-	bool Exist(const Ky& key) const {
-		if (m_pTable == nullptr) return false;
-		return m_pTable[HashBucket(key)].Exist(key);
+	bool Exist(const Ky& _key) const
+	{
+		if (pTable_ == nullptr)
+		{
+			return false;
+		}
+
+		return pTable_[HashBucket(_key)].Exist(_key);
 	}
 
 	template <typename Ky>
-	TValue* Find(const Ky& key) const {
-		if (m_pTable == nullptr) return nullptr;
-
-		TValue* pVal = m_pTable[HashBucket(key)].Find(key);
-
-		if (pVal == nullptr) {
+	TValue* Find(const Ky& _key) const
+	{
+		if (pTable_ == nullptr)
+		{
 			return nullptr;
 		}
 
-		return pVal;
+		TValue* pValue = pTable_[HashBucket(_key)].Find(_key);
+
+		if (pValue == nullptr)
+		{
+			return nullptr;
+		}
+
+		return pValue;
 	}
 
 	template <typename Ky>
-	TValue& Get(const Ky& key) const {
-		if (m_pTable == nullptr) 
-			throw InvalidOperationException("초기화 되지 않은 해쉬맵입니다.");;
+	TValue& Get(const Ky& _key) const
+	{
+		if (pTable_ == nullptr)
+		{
+			throw InvalidOperationException("초기화 되지 않은 해쉬맵입니다.");
+		}
 
-		TValue* pVal = m_pTable[HashBucket(key)].Find(key);
+		TValue* pValue = pTable_[HashBucket(_key)].Find(_key);
 
-		if (pVal == nullptr) {
+		if (pValue == nullptr)
+		{
 			throw InvalidArgumentException("해당 키값에 대응하는 값이 존재하지 않습니다.");
 		}
 
-		return *pVal;
+		return *pValue;
 	}
 
 	template <typename Ky>
-	bool Remove(const Ky& key) {
-		TBucket& bucket = m_pTable[HashBucket(key)];
+	bool Remove(const Ky& _key)
+	{
+		TBucket& bucket = pTable_[HashBucket(_key)];
 
-		if (!bucket.Remove(key)) {
+		if (!bucket.Remove(_key))
+		{
 			return false;
 		}
 
 		// 버킷이 비었으면 연결을 끊어준다.
-		if (bucket.IsEmpty()) {
+		if (bucket.IsEmpty())
+		{
 			DisjointBucket(&bucket);
 		}
-	
-		--this->m_iSize;
+
+		--size_;
 		return true;
 	}
 
-	void DisjointBucket(TBucket* bucket) {
-		if (bucket == m_pHeadBucket) {
-			m_pHeadBucket = m_pHeadBucket->Next;
-			if (m_pHeadBucket == nullptr) m_pTailBucket = nullptr;
-			else m_pHeadBucket->Previous = nullptr;
-		} else if (bucket == m_pTailBucket) {
-			m_pTailBucket = m_pTailBucket->Previous;
-			if (m_pTailBucket == nullptr) m_pHeadBucket = nullptr;
-			else m_pTailBucket->Next = nullptr;
-		} else {
-			ConnectBucket(bucket->Previous, bucket->Next);
+	void DisjointBucket(TBucket* _pBucket)
+	{
+		if (_pBucket == pHeadBucket_)
+		{
+			pHeadBucket_ = pHeadBucket_->pNext_;
+
+			if (pHeadBucket_ == nullptr)
+			{
+				pTailBucket_ = nullptr;
+			}
+			else
+			{
+				pHeadBucket_->pPrevious_ = nullptr;
+			}
+		}
+		else if (_pBucket == pTailBucket_)
+		{
+			pTailBucket_ = pTailBucket_->pPrevious_;
+
+			if (pTailBucket_ == nullptr)
+			{
+				pHeadBucket_ = nullptr;
+			}
+			else
+			{
+				pTailBucket_->pNext_ = nullptr;
+			}
+		}
+		else
+		{
+			ConnectBucket(_pBucket->pPrevious_, _pBucket->pNext_);
 		}
 
 		// 연결리스트는 발견된 노드를 삭제하기 때문에 Next, Previous를 null로 설정할 필요가 없었는데
 		// 해쉬테이블은 노드를 삭제한게 아니기 땜에 Next, Previous를 null로 설정해놔야한다. ㅠㅠ
 		// 작성된 코드에는 문제가 없었고.. 추가를 해줬어야했다 ㅠㅠ 논리적 오류가 있을 줄 알앗는데.. 아니었다.
 		// 1시간 30분동안이나 디버깅 해서 겨우 찾음 ㅠㅠ;
-		bucket->Next = nullptr;
-		bucket->Previous = nullptr;
+		_pBucket->pNext_ = nullptr;
+		_pBucket->pPrevious_ = nullptr;
 	}
 
-	void Clear() noexcept {
-		if (this->m_iSize == 0) {
+	void Clear() noexcept
+	{
+		if (size_ == 0)
+		{
 			return;
 		}
 
-		TBucket* pCur = m_pHeadBucket;
-		while (pCur != nullptr) {
-			TBucket* pTemp = pCur;
-			pCur->Clear();
-			pCur = pCur->Next;
+		TBucket* pCurrent = pHeadBucket_;
+
+		while (pCurrent != nullptr)
+		{
+			TBucket* pTemp = pCurrent;
+			pTemp->Clear();
+			pCurrent = pCurrent->pNext_;
 		}
 
-		this->m_iSize = 0;
-
-		m_pHeadBucket = nullptr;
-		m_pTailBucket = nullptr;
+		size_ = 0;
+		pHeadBucket_ = nullptr;
+		pTailBucket_ = nullptr;
 	}
 
-	bool Valid() const {
-		return m_pTable != nullptr;
+	bool Valid() const
+	{
+		return pTable_ != nullptr;
 	}
 
-	TBucket* Bucket(int index) const {
-		if (index < 0 || index >= m_iCapacity) {
+	TBucket* Bucket(int _index) const
+	{
+		if (_index < 0 || _index >= capacity_)
+		{
 			DebugAssert(false);
 			return nullptr;
 		}
 
-		return m_pTable[index];
+		return &pTable_[_index];
 	}
 
-	int BucketCount() {
-		int iCount = 0;
-		for (int i = 0; i < m_iCapacity; i++) {
-			if (m_pTable[i].IsEmpty()) {
+	int BucketCount()
+	{
+		int count = 0;
+
+		for (int i = 0; i < capacity_; ++i)
+		{
+			if (pTable_[i].IsEmpty())
+			{
 				continue;
 			}
-			++iCount;
-		}
-		return iCount;
-	}
 
+			++count;
+		}
+
+		return count;
+	}
 
 	// ==========================================
 	// 동적할당 안하고 해쉬맵 순회할 수 있도록 기능 구현
 	// ==========================================
 	template <typename Consumer>
-	void ForEach(Consumer&& consumer) {
-		TBucket* pCurBucket = m_pHeadBucket;
-		while (pCurBucket != nullptr) {
-			for (int i = 0; i < pCurBucket->Size; i++) {
-				TBucketNode& node = pCurBucket->GetAt(i);
-				consumer(node.Data);
+	void ForEach(Consumer&& _consumer)
+	{
+		TBucket* pCurrentBucket = pHeadBucket_;
+
+		while (pCurrentBucket != nullptr)
+		{
+			for (int i = 0; i < pCurrentBucket->size_; ++i)
+			{
+				TBucketNode& node = pCurrentBucket->GetAt(i);
+				_consumer(node.data_);
 			}
-			pCurBucket = pCurBucket->Next;
+
+			pCurrentBucket = pCurrentBucket->pNext_;
 		}
 	}
 
 	template <typename Consumer>
-	void ForEachKey(Consumer&& consumer) {
-		TBucket* pCurBucket = m_pHeadBucket;
-		while (pCurBucket != nullptr) {
-			for (int i = 0; i < pCurBucket->Size; i++) {
-				TBucketNode& node = pCurBucket->GetAt(i);
-				consumer(node.Data.Key);
+	void ForEachKey(Consumer&& _consumer)
+	{
+		TBucket* pCurrentBucket = pHeadBucket_;
+
+		while (pCurrentBucket != nullptr)
+		{
+			for (int i = 0; i < pCurrentBucket->size_; ++i)
+			{
+				TBucketNode& node = pCurrentBucket->GetAt(i);
+				_consumer(node.data_.key_);
 			}
-			pCurBucket = pCurBucket->Next;
+
+			pCurrentBucket = pCurrentBucket->pNext_;
 		}
 	}
 
 	template <typename Consumer>
-	void ForEachValue(Consumer&& consumer) {
-		TBucket* pCurBucket = m_pHeadBucket;
-		while (pCurBucket != nullptr) {
-			for (int i = 0; i < pCurBucket->Size; i++) {
-				TBucketNode& node = pCurBucket->GetAt(i);
-				consumer(node.Data.Value);
+	void ForEachValue(Consumer&& _consumer)
+	{
+		TBucket* pCurrentBucket = pHeadBucket_;
+
+		while (pCurrentBucket != nullptr)
+		{
+			for (int i = 0; i < pCurrentBucket->size_; ++i)
+			{
+				TBucketNode& node = pCurrentBucket->GetAt(i);
+				_consumer(node.data_.value_);
 			}
-			pCurBucket = pCurBucket->Next;
+
+			pCurrentBucket = pCurrentBucket->pNext_;
 		}
 	}
 
 	// Value들만 순회해서 삭제하는 작업
 	// 자주 사용해서 그냥 라이브러리에 박음
-	void ForEachValueDelete() {
-		if constexpr (!IsPointerType_v<TValue>) {
+	void ForEachValueDelete()
+	{
+		if constexpr (!IsPointerType_v<TValue>)
+		{
 			DebugAssert(false);
 			return;
 		}
 
-		TBucket* pCurBucket = m_pHeadBucket;
-		while (pCurBucket != nullptr) {
-			for (int i = 0; i < pCurBucket->Size; i++) {
-				TBucketNode& node = pCurBucket->GetAt(i);
-				delete node.Data.Value;
+		TBucket* pCurrentBucket = pHeadBucket_;
+
+		while (pCurrentBucket != nullptr)
+		{
+			for (int i = 0; i < pCurrentBucket->size_; ++i)
+			{
+				TBucketNode& node = pCurrentBucket->GetAt(i);
+				delete node.data_.value_;
 			}
-			pCurBucket = pCurBucket->Next;
+
+			pCurrentBucket = pCurrentBucket->pNext_;
 		}
 	}
 
-	void ForEachValueRelease() {
-		if constexpr (!IsPointerType_v<TValue>) {
+	void ForEachValueRelease()
+	{
+		if constexpr (!IsPointerType_v<TValue>)
+		{
 			DebugAssert(false);
 			return;
 		}
 
-		TBucket* pCurBucket = m_pHeadBucket;
-		while (pCurBucket != nullptr) {
-			for (int i = 0; i < pCurBucket->Size; i++) {
-				TBucketNode& node = pCurBucket->GetAt(i);
-				node.Data.Value->Release();
+		TBucket* pCurrentBucket = pHeadBucket_;
+
+		while (pCurrentBucket != nullptr)
+		{
+			for (int i = 0; i < pCurrentBucket->size_; ++i)
+			{
+				TBucketNode& node = pCurrentBucket->GetAt(i);
+				node.data_.Value->Release();
 			}
-			pCurBucket = pCurBucket->Next;
+
+			pCurrentBucket = pCurrentBucket->pNext_;
 		}
 	}
 
-	void Expand(int capacity) {
-
+	void Expand(int _capacity)
+	{
 		// 0 용량 해쉬맵 기능 추가때문에
-		if (capacity == 0)
-			capacity = 4;
+		if (_capacity == 0)
+		{
+			_capacity = 4;
+		}
 
-		DebugAssertMsg(capacity > m_iCapacity, "이전 해쉬맵 크기보다 커야합니다.");
+		DebugAssertMsg(_capacity > capacity_, "이전 해쉬맵 크기보다 커야합니다.");
 
-		int iAllocatedSize;
-		TBucket* pNewTable = TAllocator::template AllocateDynamic<TBucket*>(sizeof(TBucket) * capacity, iAllocatedSize);
-		Memory::PlacementNewArray(pNewTable, capacity);
-		const int iPrevCapacity = m_iCapacity;
+		int allocatedSize = 0;
+		TBucket* pNewTable = TAllocator::template AllocateDynamic<TBucket*>(sizeof(TBucket) * _capacity, allocatedSize);
+		Memory::PlacementNewArray(pNewTable, _capacity);
 
-		m_iCapacity = capacity;
-		m_pHeadBucket = nullptr;
-		m_pTailBucket = nullptr;
+		const int previousCapacity = capacity_;
 
-		for (int i = 0; i < iPrevCapacity; i++) {
-			if (m_pTable[i].Size == 0) {
+		capacity_ = _capacity;
+		pHeadBucket_ = nullptr;
+		pTailBucket_ = nullptr;
+
+		for (int i = 0; i < previousCapacity; ++i)
+		{
+			if (pTable_[i].size_ == 0)
+			{
 				continue;
 			}
 
-			TBucket& prevBucket = m_pTable[i];
+			TBucket& previousBucket = pTable_[i];
 
 			// 기존 버킷을 순회하며 새로운 버킷에 데이터를 담아준다.
-			for (int j = 0; j < prevBucket.Size; j++) {
-				TBucketNode& bucketNode = prevBucket.GetAt(j);
-				Int32U uiBucket = BucketIndex(bucketNode.Hash);
+			for (int j = 0; j < previousBucket.size_; ++j)
+			{
+				TBucketNode& bucketNode = previousBucket.GetAt(j);
+				Int32U bucketIndex = BucketIndex(bucketNode.hash_);
 
-				if (pNewTable[uiBucket].IsEmpty()) {
-					PushBackNewBucket(&pNewTable[uiBucket]);
+				if (pNewTable[bucketIndex].IsEmpty())
+				{
+					PushBackNewBucket(&pNewTable[bucketIndex]);
 				}
 
-				pNewTable[uiBucket].PushBack(Move(bucketNode));
+				pNewTable[bucketIndex].PushBack(Move(bucketNode));
 			}
 		}
 
-		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(m_pTable, iPrevCapacity);
-		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(m_pTable, sizeof(TBucket) * iPrevCapacity);
-		m_pTable = pNewTable;
+		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pTable_, previousCapacity);
+		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pTable_, sizeof(TBucket) * previousCapacity);
+		pTable_ = pNewTable;
 	}
 
-	bool ExpandIfNeeded(int size) {
-		if (size <= 0 || size < m_iCapacity) {
+	bool ExpandIfNeeded(int _size)
+	{
+		if (_size <= 0 || _size < capacity_)
+		{
 			return false;
 		}
 
-		const int iCapacity = CalculateExpandCapacity(size);
-		Expand(iCapacity);
+		const int expandedCapacity = CalculateExpandCapacity(_size);
+		Expand(expandedCapacity);
 		return true;
 	}
 
-	int Size() const {
-		return m_iSize;
+	int Size() const
+	{
+		return size_;
 	}
 
-	int Capacity() const {
-		return m_iCapacity;
+	int Capacity() const
+	{
+		return capacity_;
 	}
+
 protected:
 	/// <summary>
 	/// 전달받은 사이즈 크기에 맞는 배열 크기를 반환해준다.
 	/// </summary>
-	int CalculateExpandCapacity(int size) const {
-		if (size < m_iCapacity) {
-			return m_iCapacity;
+	int CalculateExpandCapacity(int _size) const
+	{
+		if (_size < capacity_)
+		{
+			return capacity_;
 		}
 
-		int iExpectedCapacity = m_iCapacity;
+		int expectedCapacity = capacity_;
 
-		while (true) {
-			iExpectedCapacity *= ms_iTableExpandingFactor;
-			if (iExpectedCapacity > size) {
+		while (true)
+		{
+			expectedCapacity *= TABLE_EXPANDING_FACTOR;
+
+			if (expectedCapacity > _size)
+			{
 				break;
 			}
 		}
-		return iExpectedCapacity;
+
+		return expectedCapacity;
 	}
 
-	static void ConnectBucket(TBucket* lhs, TBucket* rhs) noexcept {
-		if (lhs) lhs->Next = rhs;
-		if (rhs) rhs->Previous = lhs;
+	static void ConnectBucket(TBucket* _pLeft, TBucket* _pRight) noexcept
+	{
+		if (_pLeft)
+		{
+			_pLeft->pNext_ = _pRight;
+		}
+
+		if (_pRight)
+		{
+			_pRight->pPrevious_ = _pLeft;
+		}
 	}
 
 	/// <summary>
 	/// bucket 바로 전에 다른 bucket을 삽입한다.
 	/// </summary>
-	void PushBackNewBucket(TBucket* bucket) {
-		if (m_pHeadBucket == nullptr) {
-			m_pHeadBucket = bucket;
-			m_pTailBucket = bucket;
+	void PushBackNewBucket(TBucket* _pBucket)
+	{
+		if (pHeadBucket_ == nullptr)
+		{
+			pHeadBucket_ = _pBucket;
+			pTailBucket_ = _pBucket;
 			return;
 		}
 
 		/*
 			[삽입 전]
 			 ■ <=> ■ <=> ■ <=> ■ <=> ■ <=> ■
-									       ↑
-										  Tail
+								   ↑
+								  Tail
 
 			[삽입 후]
 			 ■ <=> ■ <=> ■ <=> ■ <=> ■ <=> ■ <=> ■
-			                                     ↑
-									    	 newNode (tail)
+										 ↑
+								    newNode (tail)
 		 */
 
-		ConnectBucket(m_pTailBucket, bucket);
-		m_pTailBucket = bucket;
+		ConnectBucket(pTailBucket_, _pBucket);
+		pTailBucket_ = _pBucket;
 	}
 
-
-	Int32U BucketIndex(const Int32U hash) const {
-		return hash % m_iCapacity;
-	}
-
-	template <typename Ky>
-	Int32U Hash(const Ky& key) const {
-		return THasher()(key);
+	Int32U BucketIndex(const Int32U _hash) const
+	{
+		return _hash % capacity_;
 	}
 
 	template <typename Ky>
-	Int32U HashBucket(const Ky& key) const {
-		return BucketIndex(Hash(key));
+	Int32U Hash(const Ky& _key) const
+	{
+		return THasher()(_key);
 	}
 
-	bool IsFull() const {
-		return this->m_iSize == m_iCapacity;
+	template <typename Ky>
+	Int32U HashBucket(const Ky& _key) const
+	{
+		return BucketIndex(Hash(_key));
 	}
-	
-	static constexpr Int32U	ms_iTableExpandingFactor = 4;	// 테이블 크기만큼 데이터가 들어가면 확장하는데 몇배나 확장할 지
-	static constexpr Int32U	ms_iTableDefaultCapacity = 16;	// 테이블 초기 크기
+
+	bool IsFull() const
+	{
+		return size_ == capacity_;
+	}
+
+	static constexpr Int32U TABLE_EXPANDING_FACTOR = 4;    // 테이블 크기만큼 데이터가 들어가면 확장하는데 몇배나 확장할 지
+	static constexpr Int32U TABLE_DEFAULT_CAPACITY = 16;    // 테이블 초기 크기
+
 protected:
-	TBucket* m_pTable;
-	TBucket* m_pHeadBucket;
-	TBucket* m_pTailBucket;
-	Int32 m_iCapacity;
-	Int32 m_iSize;
+	TBucket* pTable_;
+	TBucket* pHeadBucket_;
+	TBucket* pTailBucket_;
+	Int32 capacity_;
+	Int32 size_;
 
-	template <typename, typename, typename> friend class HashMap;
-	template <typename, typename, typename> friend class HashMapIterator;
+	template <typename, typename, typename>
+	friend class HashMap;
 
-	template <typename, typename> friend class Properties;
-	template <typename, typename> friend class PropertiesIterator;
+	template <typename, typename, typename>
+	friend class HashMapIterator;
+
+	template <typename, typename>
+	friend class CProperties;
+
+	template <typename, typename>
+	friend class CPropertiesIterator;
 }; // class HashTable<TKey, TValue, TAllocator>
 
 #pragma endregion

@@ -44,7 +44,7 @@ static void BM_IndexedPoolDynamic(State& state) {
 }
 
 static void BM_BinaryPoolDynamic(State& state) {
-	BinarySearchMemoryPool pool
+	CBinarySearchMemoryPool pool
 	(
 		HashMap<int, int>{ { 1024, DataCount } }	// 1GB
 	);
@@ -84,7 +84,7 @@ static void BM_IndexedPoolStatic(State& state) {
 }
 
 static void BM_BinaryPoolStatic(State& state) {
-	BinarySearchMemoryPool pool
+	CBinarySearchMemoryPool pool
 	(
 		HashMap<int, int>{ { 1024, DataCount } }	// 1GB
 	);

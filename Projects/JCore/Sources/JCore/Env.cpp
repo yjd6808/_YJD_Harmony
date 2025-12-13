@@ -40,7 +40,7 @@ TimeSpan Env::AppTime() {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Int32U Env::AppTimeTGT()
+Int32U Env::AppTimeTgt()
 {
 	return ::timeGetTime() - AppStartUpTimeTGT_v;
 }
@@ -51,7 +51,7 @@ TimeSpan Env::SystemTime() {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-TimeSpan Env::SystemTimeTGT()
+TimeSpan Env::SystemTimeTgt()
 {
 	SpinLockGuard lock(tgt64_lock_);
 

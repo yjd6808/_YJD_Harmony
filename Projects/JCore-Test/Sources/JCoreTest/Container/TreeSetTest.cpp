@@ -168,7 +168,7 @@ TEST(TreeSetTest, NonFundamental) {
 
 TEST(TreeSetTest, MemoryPool) {
 	MemoryPoolLeakCheck
-	TreeSet<String, Comparator<String>, DefaultArrayAllocator> q;
+	TreeSet<String, Comparator<String>, CDefaultArrayAllocator> q;
 	for (int i = 0; i < 1'000; i++) {
 		q.Insert(StringUtil::Format("ss%d", i));
 	}

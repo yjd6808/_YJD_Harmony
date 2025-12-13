@@ -300,7 +300,7 @@ TEST(VectorTest, OperatorTest) {
 TEST(VectorTest, MemoryPool) {
 	MemoryPoolLeakCheck;
 
-	Vector<String, DefaultArrayAllocator> l;
+	Vector<String, CDefaultArrayAllocator> l;
 	for (int i = 0; i < 100'000; i++) l.PushBack(1);
 }
 

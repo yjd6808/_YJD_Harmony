@@ -108,8 +108,8 @@ TEST(TypeTraitsTest, DynamicCastable) {
 }
 
 TEST(TypeTraitsTest, IsValidAllocator) {
-	constexpr bool a = IsValidAllocator_v<int, DefaultAllocator>;
-	constexpr bool b = IsValidAllocator_v<int, DefaultArrayAllocator>;
+	constexpr bool a = IsValidAllocator_v<int, CDefaultAllocator>;
+	constexpr bool b = IsValidAllocator_v<int, CDefaultArrayAllocator>;
 
 	EXPECT_TRUE(a);
 	EXPECT_TRUE(b);

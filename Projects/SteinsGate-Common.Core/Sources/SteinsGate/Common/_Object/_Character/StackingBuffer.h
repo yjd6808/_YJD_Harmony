@@ -19,8 +19,8 @@ public:
 		bool _isPercentStacking = false,
 		float _percentBase = 0.f);
 
-	CStackingBuffer(const CStackingBuffer&);
-	CStackingBuffer& operator=(const CStackingBuffer&);
+	CStackingBuffer(const CStackingBuffer& _other);
+	CStackingBuffer& operator=(const CStackingBuffer& _other);
 
 	float	CalcDelta();
 

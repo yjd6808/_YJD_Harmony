@@ -22,6 +22,29 @@ CStackingBuffer::CStackingBuffer(
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+CStackingBuffer::CStackingBuffer(const CStackingBuffer& _other)
+{
+	this->operator=(_other);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+CStackingBuffer& CStackingBuffer::operator=(const CStackingBuffer& _other)
+{
+	if (this == &_other)
+		return *this;
+
+	id_ = _other.id_;
+	type_ = _other.type_;
+	deltaPerSec_ = _other.deltaPerSec_;
+	duration_ = _other.duration_;
+	percentBase_ = _other.percentBase_;
+	isPercentStacking_ = _other.isPercentStacking_;
+	isDirty_ = _other.isDirty_;
+	lastCalcTime_ = _other.lastCalcTime_;
+	return *this;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 float CStackingBuffer::CalcDelta()
 {
 	Int32U currTime = JCore::Env::TimeGetTime();

@@ -19,7 +19,7 @@ static void TestPool(TPool& pool);
 
 TEST(MemoryPoolTest, SingleBinarySearch) {
 	LeakCheck;
-	BinarySearchMemoryPool pool{};
+	CBinarySearchMemoryPool pool{};
 	TestPool(pool);
 }
 

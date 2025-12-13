@@ -14,298 +14,361 @@ NS_JC_BEGIN
 template <typename, typename> class CollectionExtension;
 template <typename, typename> class Vector;
 template <typename, typename> class LinkedList;
+template <typename, typename> class Collection;
+template <typename, typename> class CollectionStreamIterator;
 
 template <typename T>
 struct StreamNode
 {
 private:
 	using TStreamNode = StreamNode<T>;
-public:
-	T* Pointer = nullptr;					// 다른 콜렉션의 데이터를 참조
-	TStreamNode* Next = nullptr;
-	TStreamNode* Previous = nullptr;
 
-	T& Ref() const {
-		return *Pointer;
+public:
+	T* pValue_ = nullptr;              // 다른 콜렉션의 데이터를 참조
+	TStreamNode* pNext_ = nullptr;
+	TStreamNode* pPrevious_ = nullptr;
+
+	T& Ref() const
+	{
+		return *pValue_;
 	}
 };
 
 
-
 /*=====================================================================================
-									콜렉션 스트림
+                                    콜렉션 스트림
            다른 콜렉션을 참조하는 물리적 배열, 논리적인 연결리스트 기반의 자료구조이다.
 =====================================================================================*/
 
 template <typename T, typename TAllocator>
 class CollectionStream : public Collection<T, TAllocator>
 {
-	using TStreamNode		= StreamNode<T>;
-	using TEnumerator		= Enumerator<T, TAllocator>;
-	using TCollection		= Collection<T, TAllocator>;
-	using TCollectionStream	= CollectionStream<T, TAllocator>;
-	using TCollectionStreamIterator = CollectionStreamIterator<T, TAllocator>;
-private: 
-	// [1] : CollectionStream은 CollectionExtension 에서만 직접생성 가능하도록 한다.
-	CollectionStream(TCollection* collection): TCollection() {
-		m_pCollection = collection;
-        int size = collection->Size();
-	    this->m_iSize = size;
+	using TStreamNode                 = StreamNode<T>;
+	using TEnumerator                 = Enumerator<T, TAllocator>;
+	using TCollection                 = Collection<T, TAllocator>;
+	using TCollectionStream           = CollectionStream<T, TAllocator>;
+	using TCollectionStreamIterator   = CollectionStreamIterator<T, TAllocator>;
 
-		if (size == 0) {
-			ConnectNode(m_pHead, m_pTail);
+private:
+	// [1] : CollectionStream은 CollectionExtension 에서만 직접생성 가능하도록 한다.
+	CollectionStream(TCollection* _pCollection)
+		: TCollection()
+	{
+		pCollection_ = _pCollection;
+		int size = _pCollection->Size();
+		this->size_ = size;
+
+		if (size == 0)
+		{
+			ConnectNode(pHead_, pTail_);
 			return;
 		}
 
 		// Memory::AllocateStatic<TStreamNode*>(sizeof(TStreamNode) * size);
 		// 물리적 배열 생성
-		m_pArray = TAllocator::template AllocateDynamic<TStreamNode*>(sizeof(TStreamNode) * size, m_iAllocatedSize);
+		pArray_ = TAllocator::template AllocateDynamic<TStreamNode*>(sizeof(TStreamNode) * size, allocatedSize_);
 
 		// 논리적 연결리스트 구성
-		ConnectNode(m_pHead, &m_pArray[0]);
-		ConnectNode(&m_pArray[size - 1], m_pTail);
+		ConnectNode(pHead_, &pArray_[0]);
+		ConnectNode(&pArray_[size - 1], pTail_);
 
-		TEnumerator it = collection->Begin();
-		for (int i = 0; i < size - 1; i++) {
+		TEnumerator enumerator = _pCollection->Begin();
+		for (int index = 0; index < size - 1; ++index)
+		{
 			// 실질적인 참조 데이터의 포인터를 담아준다.
-			m_pArray[i].Pointer = AddressOf(it->Next());	
+			pArray_[index].pValue_ = AddressOf(enumerator->Next());
 
 			// 초기에는 바로 다음 인덱스에 위치하는 노드가 다음 원소이므로 연결해준다.
-			ConnectNode(&m_pArray[i], &m_pArray[i + 1]);		
+			ConnectNode(&pArray_[index], &pArray_[index + 1]);
 		}
 
 		// 마지막 원소의 참조 정보를 저장한다.
-		m_pArray[size - 1].Pointer = AddressOf(it->Next());
+		pArray_[size - 1].pValue_ = AddressOf(enumerator->Next());
 	}
 
 public:
 	// 복사 생성 금지
-	CollectionStream(const TCollectionStream& CollectionStream) = delete;
-	CollectionStream(TCollectionStream&& CollectionStream) noexcept : TCollection(){
-		m_pArray = CollectionStream.m_pArray;
-		this->m_iSize = CollectionStream.m_iSize;
-		m_pCollection = CollectionStream.m_pCollection;
+	CollectionStream(const TCollectionStream& _collectionStream) = delete;
 
-		CollectionStream.m_pArray = nullptr;
-		CollectionStream.m_iSize = 0;
+	CollectionStream(TCollectionStream&& _collectionStream) noexcept
+		: TCollection()
+	{
+		pArray_ = _collectionStream.pArray_;
+		this->size_ = _collectionStream.size_;
+		pCollection_ = _collectionStream.pCollection_;
 
-		if (this->m_iSize == 0) {
-			ConnectNode(m_pHead, m_pTail);
+		_collectionStream.pArray_ = nullptr;
+		_collectionStream.size_ = 0;
+
+		if (this->size_ == 0)
+		{
+			ConnectNode(pHead_, pTail_);
 			return;
 		}
 
-		ConnectNode(m_pHead, CollectionStream.m_pHead->Next);
-		ConnectNode(CollectionStream.m_pTail->Previous, m_pTail);
+		ConnectNode(pHead_, _collectionStream.pHead_->pNext_);
+		ConnectNode(_collectionStream.pTail_->pPrevious_, pTail_);
 	}
 
-	virtual ~CollectionStream() noexcept {
-		if (m_pArray) TAllocator::template DeallocateDynamic(m_pArray, m_iAllocatedSize);
+	virtual ~CollectionStream() noexcept
+	{
+		if (pArray_)
+			TAllocator::template DeallocateDynamic(pArray_, allocatedSize_);
 	}
 
 	// TODO: 더미노드 없앨 시 수정
-    TEnumerator Begin() const override {
-		return MakeShared<TCollectionStreamIterator , TAllocator>(this->GetOwner(), this->m_pHead->Next);
+	TEnumerator Begin() const override
+	{
+		return MakeShared<TCollectionStreamIterator, TAllocator>(this->GetOwner(), pHead_->pNext_);
 	}
 
-	TEnumerator End() const override {
-		return MakeShared<TCollectionStreamIterator, TAllocator>(this->GetOwner(), this->m_pTail->Previous);
+	TEnumerator End() const override
+	{
+		return MakeShared<TCollectionStreamIterator, TAllocator>(this->GetOwner(), pTail_->pPrevious_);
 	}
 
-	
 public:
-	ContainerType GetContainerType() override { return ContainerType::ReferenceStream; }
-	CollectionType GetCollectionType() override { return CollectionType::Stream; }
-	
+	ContainerType GetContainerType() override
+	{
+		return ContainerType::ReferenceStream;
+	}
+
+	CollectionType GetCollectionType() override
+	{
+		return CollectionType::Stream;
+	}
 
 	template <typename Consumer>
-	TCollectionStream& ForEach(Consumer consumer) {
-		TStreamNode* pCur = m_pHead->Next;
-		while (pCur != m_pTail) {
-			consumer(pCur->Ref());
-			pCur = pCur->Next;
+	TCollectionStream& ForEach(Consumer _consumer)
+	{
+		TStreamNode* pCurrent = pHead_->pNext_;
+		while (pCurrent != pTail_)
+		{
+			_consumer(pCurrent->Ref());
+			pCurrent = pCurrent->pNext_;
 		}
 		return *this;
 	}
 
 	template <typename IndexConsumer>
-	TCollectionStream& ForEachWithIndex(IndexConsumer consumer) {
-		TStreamNode* pCur = m_pHead->Next;
-		int i = 0;
-		while (pCur != m_pTail) {
-			consumer(pCur->Ref(), i);
-			pCur = pCur->Next;
-			++i;
+	TCollectionStream& ForEachWithIndex(IndexConsumer _consumer)
+	{
+		TStreamNode* pCurrent = pHead_->pNext_;
+		int index = 0;
+		while (pCurrent != pTail_)
+		{
+			_consumer(pCurrent->Ref(), index);
+			pCurrent = pCurrent->pNext_;
+			++index;
 		}
 		return *this;
 	}
 
 	template <typename TPredicate>
-	TCollectionStream& Filter(TPredicate&& predicate) {
-		TStreamNode* pCur = m_pHead->Next;
-		int iSize = 0;
-		while (pCur != m_pTail) {
-			if (predicate(pCur->Ref())) {
-				iSize++;
-			} else {
-				ConnectNode(pCur->Previous, pCur->Next);
+	TCollectionStream& Filter(TPredicate&& _predicate)
+	{
+		TStreamNode* pCurrent = pHead_->pNext_;
+		int size = 0;
+		while (pCurrent != pTail_)
+		{
+			if (_predicate(pCurrent->Ref()))
+			{
+				++size;
 			}
-			pCur = pCur->Next;
+			else
+			{
+				ConnectNode(pCurrent->pPrevious_, pCurrent->pNext_);
+			}
+			pCurrent = pCurrent->pNext_;
 		}
 
-		this->m_iSize = iSize;
+		this->size_ = size;
 		return *this;
 	}
 
-	TCollectionStream& Sorted() {
+	TCollectionStream& Sorted()
+	{
 		return Sorted(NaturalOrder{});
 	}
 
 	template <typename TPredicate>
-	TCollectionStream& Sorted(TPredicate&& predicate) {
-		MergeSort(Move(predicate));
+	TCollectionStream& Sorted(TPredicate&& _predicate)
+	{
+		MergeSort(Move(_predicate));
 		return *this;
 	}
 
-	T& First() const {
-		DebugAssertMsg(this->m_iSize != 0, "데이터가 없습니다.");
-		return *m_pHead->Next->Pointer;
+	T& First() const
+	{
+		DebugAssertMsg(this->size_ != 0, "데이터가 없습니다.");
+		return *pHead_->pNext_->pValue_;
 	}
 
-	T& Last() const {
-		DebugAssertMsg(this->m_iSize != 0, "데이터가 없습니다.");
-		return *m_pTail->Previous->Pointer;
+	T& Last() const
+	{
+		DebugAssertMsg(this->size_ != 0, "데이터가 없습니다.");
+		return *pTail_->pPrevious_->pValue_;
 	}
 
-
-	Vector<T, TAllocator> ToVector() {
-		Vector<T, TAllocator> v;
-		v.PushBackAll(*this);
-		return v;
+	Vector<T, TAllocator> ToVector()
+	{
+		Vector<T, TAllocator> vector;
+		vector.PushBackAll(*this);
+		return vector;
 	}
 
-	LinkedList<T, TAllocator> ToLinkedList() {
-		LinkedList<T, TAllocator> l;
-		l.PushBackAll(*this);
-		return l;
+	LinkedList<T, TAllocator> ToLinkedList()
+	{
+		LinkedList<T, TAllocator> list;
+		list.PushBackAll(*this);
+		return list;
 	}
 
-	int Size() const override { return m_iSize; }
-	bool IsEmpty() const override { return m_iSize == 0; }
+	int Size() const override
+	{
+		return size_;
+	}
+
+	bool IsEmpty() const override
+	{
+		return size_ == 0;
+	}
 
 protected:
-	static void ConnectNode(TStreamNode* lhs, TStreamNode* rhs) {
-		lhs->Next = rhs;
-		rhs->Previous = lhs;
+	static void ConnectNode(TStreamNode* _pLeft, TStreamNode* _pRight)
+	{
+		_pLeft->pNext_ = _pRight;
+		_pRight->pPrevious_ = _pLeft;
 	}
 
-	static TStreamNode* EndNode(TStreamNode* begin) {
-		while (begin->Next != nullptr) {
-			begin = begin->Next;
+	static TStreamNode* EndNode(TStreamNode* _pBegin)
+	{
+		while (_pBegin->pNext_ != nullptr)
+		{
+			_pBegin = _pBegin->pNext_;
 		}
-		return begin;
+		return _pBegin;
 	}
 
 	template <typename TPredicate>
-	void MergeSort(TPredicate&& predicate) {
+	void MergeSort(TPredicate&& _predicate)
+	{
 		// 데이터가 1개 이하인 경우는 정렬 자체를 해줄 필요가 없다.
-		if (this->m_iSize <= 1) {
+		if (this->size_ <= 1)
+		{
 			return;
 		}
 
-		TStreamNode* pBegin = m_pHead->Next;
-		TStreamNode* pEnd = m_pTail->Previous;
+		TStreamNode* pBegin = pHead_->pNext_;
+		TStreamNode* pEnd = pTail_->pPrevious_;
 
 		// 임시로 더미노드와 연결을 끊어준다.
-		pBegin->Previous = nullptr;
-		pEnd->Next = nullptr;
+		pBegin->pPrevious_ = nullptr;
+		pEnd->pNext_ = nullptr;
 
-		TStreamNode* pSorted = MergeSort(pBegin, Move(predicate));
+		TStreamNode* pSorted = MergeSort(pBegin, Move(_predicate));
 
-		if (pSorted == nullptr) {
+		if (pSorted == nullptr)
+		{
 			return;
 		}
 
 		// 다시 더미노드와 연결해준다.
-		ConnectNode(m_pHead, pSorted);
-		ConnectNode(EndNode(pSorted), m_pTail);
+		ConnectNode(pHead_, pSorted);
+		ConnectNode(EndNode(pSorted), pTail_);
 	}
 
 	template <typename TPredicate>
-	TStreamNode* MergeSort(TStreamNode* begin, TPredicate&& predicate) {
-		if (begin == nullptr) {
+	TStreamNode* MergeSort(TStreamNode* _pBegin, TPredicate&& _predicate)
+	{
+		if (_pBegin == nullptr)
+		{
 			return nullptr;
 		}
 
-		TStreamNode* pSlow = begin;
-		TStreamNode* pFast = begin;
+		TStreamNode* pSlow = _pBegin;
+		TStreamNode* pFast = _pBegin;
 
-		while (pFast != nullptr && pFast->Next != nullptr) {
-			pSlow = pSlow->Next;
-			pFast = pFast->Next->Next;
+		while (pFast != nullptr && pFast->pNext_ != nullptr)
+		{
+			pSlow = pSlow->pNext_;
+			pFast = pFast->pNext_->pNext_;
 		}
 
-		TStreamNode* pLeftBegin = begin;
-		TStreamNode* pLeftEnd = pSlow->Previous;
+		TStreamNode* pLeftBegin = _pBegin;
+		TStreamNode* pLeftEnd = pSlow->pPrevious_;
 
 		TStreamNode* pRightBegin = pSlow;
 
-		if (pLeftBegin == pRightBegin) {
+		if (pLeftBegin == pRightBegin)
+		{
 			return pLeftBegin;
 		}
 
 		if (pLeftEnd != nullptr)
-			pLeftEnd->Next = nullptr;
+		{
+			pLeftEnd->pNext_ = nullptr;
+		}
 
 		if (pRightBegin != nullptr)
-			pRightBegin->Previous = nullptr;
+		{
+			pRightBegin->pPrevious_ = nullptr;
+		}
 
-		pLeftBegin = MergeSort(pLeftBegin, Move(predicate));
-		pRightBegin = MergeSort(pRightBegin, Move(predicate));
+		pLeftBegin = MergeSort(pLeftBegin, Move(_predicate));
+		pRightBegin = MergeSort(pRightBegin, Move(_predicate));
 
-		return Merge(pLeftBegin, pRightBegin, Move(predicate));
+		return Merge(pLeftBegin, pRightBegin, Move(_predicate));
 	}
 
 	template <typename TPredicate>
-	TStreamNode* Merge(TStreamNode* leftBegin, TStreamNode* rightBegin, TPredicate&& predicate) {
-		TStreamNode* pTemp = &m_ValtyTemp;
+	TStreamNode* Merge(TStreamNode* _pLeftBegin, TStreamNode* _pRightBegin, TPredicate&& _predicate)
+	{
+		TStreamNode* pTemp = &tempNode_;
 
-		while (leftBegin != nullptr && rightBegin != nullptr) {
-			if (predicate(leftBegin->Ref(), rightBegin->Ref())) {
-				ConnectNode(pTemp, leftBegin);
-				leftBegin = leftBegin->Next;
-			} else {
-				ConnectNode(pTemp, rightBegin);
-				rightBegin = rightBegin->Next;
+		while (_pLeftBegin != nullptr && _pRightBegin != nullptr)
+		{
+			if (_predicate(_pLeftBegin->Ref(), _pRightBegin->Ref()))
+			{
+				ConnectNode(pTemp, _pLeftBegin);
+				_pLeftBegin = _pLeftBegin->pNext_;
+			}
+			else
+			{
+				ConnectNode(pTemp, _pRightBegin);
+				_pRightBegin = _pRightBegin->pNext_;
 			}
 
-			pTemp = pTemp->Next;
+			pTemp = pTemp->pNext_;
 		}
 
-		if (leftBegin != nullptr) {
-			ConnectNode(pTemp, leftBegin);
-		} else if (rightBegin != nullptr) {
-			ConnectNode(pTemp, rightBegin);
+		if (_pLeftBegin != nullptr)
+		{
+			ConnectNode(pTemp, _pLeftBegin);
+		}
+		else if (_pRightBegin != nullptr)
+		{
+			ConnectNode(pTemp, _pRightBegin);
 		}
 
-		m_ValtyTemp.Next->Previous = nullptr;
-		return m_ValtyTemp.Next;
+		tempNode_.pNext_->pPrevious_ = nullptr;
+		return tempNode_.pNext_;
 	}
 
-    
-	
 protected:
-	TCollection* m_pCollection = nullptr;
-	TStreamNode* m_pArray = nullptr;
-	TStreamNode* m_pHead = &m_ValtyHead;
-	TStreamNode* m_pTail = &m_ValtyTail;
+	TCollection* pCollection_ = nullptr;
+	TStreamNode* pArray_ = nullptr;
+	TStreamNode* pHead_ = &headNode_;
+	TStreamNode* pTail_ = &tailNode_;
+
 private:
-	int m_iAllocatedSize{};
-	int m_iSize;
+	int allocatedSize_{};
+	int size_{};
 
 	// TODO: 추후 시간나면 더미노드 없앨 것
-	TStreamNode m_ValtyHead;
-	TStreamNode m_ValtyTail;
-	TStreamNode m_ValtyTemp;
+	TStreamNode headNode_{};
+	TStreamNode tailNode_{};
+	TStreamNode tempNode_{};
 
 	friend class CollectionExtension<T, TAllocator>;
 	friend class CollectionStreamIterator<T, TAllocator>;

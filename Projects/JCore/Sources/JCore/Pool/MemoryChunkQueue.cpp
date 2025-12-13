@@ -10,45 +10,57 @@
 
 NS_JC_BEGIN
 
-MemoryChunckQueue::MemoryChunckQueue(int chunkSize, int chunkCount)
-	: m_iChunkSize(chunkSize)
-	, m_iTotalChunkCount(chunkCount)
-	, m_ChunkQueue(chunkCount > 0 ? chunkCount : 32)
+//////////////////////////////////////////////////////////////////////////////////////////
+CMemoryChunckQueue::CMemoryChunckQueue(int _chunkSize, int _chunkCount)
+	: chunkSize_(_chunkSize)
+	, totalChunkCount_(_chunkCount)
+	, chunkQueue_(_chunkCount > 0 ? _chunkCount : 32)
 {
-	for (int i = 0; i < chunkCount; ++i) {
-		m_ChunkQueue.Push(dbg_new char[chunkSize]);
+	for (int i = 0; i < _chunkCount; ++i)
+	{
+		chunkQueue_.Push(dbg_new char[_chunkSize]);
 	}
 }
 
-MemoryChunckQueue::~MemoryChunckQueue() {
-	DebugAssertMsg(FreeCount() == m_iTotalChunkCount, "모도테코나이 메모리 청크가 있습니다.");
+//////////////////////////////////////////////////////////////////////////////////////////
+CMemoryChunckQueue::~CMemoryChunckQueue()
+{
+	DebugAssertMsg(FreeCount() == totalChunkCount_, "모도테코나이 메모리 청크가 있습니다.");
 
-	while (!m_ChunkQueue.IsEmpty()) {
-		JCORE_DELETE_ARRAY_SAFE(m_ChunkQueue.Top());
-		m_ChunkQueue.Pop();
+	while (!chunkQueue_.IsEmpty())
+	{
+		JCORE_DELETE_ARRAY_SAFE(chunkQueue_.Top());
+		chunkQueue_.Pop();
 	}
 }
 
-void MemoryChunckQueue::Push(void* chunk) {
-	QueueGuard guard(m_Lock);
-	m_ChunkQueue.Push(chunk);
-	int iFreeCount = FreeCount();
-	DebugAssertMsg(iFreeCount <= m_iTotalChunkCount, "알 수 없는 메모리가 스택에 포함되어있는 듯 합니다. Free가 Total보다 많네요...");
+//////////////////////////////////////////////////////////////////////////////////////////
+void CMemoryChunckQueue::Push(void* _pChunk)
+{
+	QueueGuard guard(lock_);
+	chunkQueue_.Push(_pChunk);
+	int freeCount = FreeCount();
+	DebugAssertMsg(freeCount <= totalChunkCount_, "알 수 없는 메모리가 스택에 포함되어있는 듯 합니다. Free가 Total보다 많네요...");
 }
 
-void* MemoryChunckQueue::Pop(JCORE_OUT bool& newAlloc) {
-	QueueGuard guard(m_Lock);
-	
+//////////////////////////////////////////////////////////////////////////////////////////
+void* CMemoryChunckQueue::Pop(JCORE_OUT bool& _newAlloc)
+{
+	QueueGuard guard(lock_);
+
 	void* pChunk;
 
-	if (m_ChunkQueue.IsEmpty()) {
-		pChunk = dbg_new char[m_iChunkSize];
-		m_iTotalChunkCount++;
-		newAlloc = true;
-	} else {
-		pChunk = m_ChunkQueue.Top();
-		m_ChunkQueue.Pop();
-		newAlloc = false;
+	if (chunkQueue_.IsEmpty())
+	{
+		pChunk = dbg_new char[chunkSize_];
+		totalChunkCount_++;
+		_newAlloc = true;
+	}
+	else
+	{
+		pChunk = chunkQueue_.Top();
+		chunkQueue_.Pop();
+		_newAlloc = false;
 	}
 
 	return pChunk;

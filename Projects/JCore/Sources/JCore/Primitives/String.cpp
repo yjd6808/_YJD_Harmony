@@ -42,7 +42,7 @@ String::String(const char* str, const int capacity) {
 	}
 
 	const int iLen = StringUtil::Length(str);
-	int iExpectedCapcity = int(iLen * ExpandingFactor);
+	int iExpectedCapcity = int(iLen * EXPANDING_FACTOR);
 
 	if (iExpectedCapcity < capacity) {
 		iExpectedCapcity = capacity;
@@ -60,12 +60,12 @@ String::String(const char* str, const int capacity) {
 	StringUtil::Copy(m_pBuffer, m_iCapacity, str);
 }
 
-String::String(const char* str) : String(str, DefaultBufferSize) {
+String::String(const char* str) : String(str, DEFAULT_BUFFER_SIZE) {
 }
 
 String::String(char ch, int count) {
-	m_pBuffer = dbg_new char[count + DefaultBufferSize];
-	m_iCapacity = count + DefaultBufferSize;
+	m_pBuffer = dbg_new char[count + DEFAULT_BUFFER_SIZE];
+	m_iCapacity = count + DEFAULT_BUFFER_SIZE;
 	m_iLen = count;
 
 	for (int i = 0; i < count; ++i) {
@@ -207,7 +207,7 @@ void String::Resize(const int capacity) {
 void String::ResizeIfNeeded(int len) {
 	bool bNeedResize = false;
 	if (len >= m_iCapacity) {
-		len *= ExpandingFactor;
+		len *= EXPANDING_FACTOR;
 		bNeedResize = true;
 	}
 
@@ -246,9 +246,9 @@ int String::Compare(const char* str, const int strLen) const {
 	return 0;
 }
 
-Vector<int, DefaultAllocator> String::FindAll(int startIdx, int endIdx, const char* str) const {
+Vector<int, CDefaultAllocator> String::FindAll(int startIdx, int endIdx, const char* str) const {
 
-	Vector<int, DefaultAllocator> offsets;
+	Vector<int, CDefaultAllocator> offsets;
 	const int iStrLen = StringUtil::Length(str);
 
 	if (iStrLen == 0) {
@@ -274,11 +274,11 @@ Vector<int, DefaultAllocator> String::FindAll(int startIdx, int endIdx, const ch
 
 // 문자열을 찾음 : 시작 인덱스 반환
 // 문자열을 못찾음 : -1을 반환
-Vector<int, DefaultAllocator> String::FindAll(const char* str) const {
+Vector<int, CDefaultAllocator> String::FindAll(const char* str) const {
 	return FindAll(0, m_iLen - 1, str);
 }
 
-Vector<int, DefaultAllocator> String::FindAll(const String& str) const {
+Vector<int, CDefaultAllocator> String::FindAll(const String& str) const {
 	return FindAll(str.m_pBuffer);
 }
 
@@ -479,7 +479,7 @@ void String::Format(const char* format, ...) {
 	}
 
 	if (m_iCapacity < iExpectedLen + 1) {
-		Resize(iExpectedLen + DefaultBufferSize);
+		Resize(iExpectedLen + DEFAULT_BUFFER_SIZE);
 	}
 
 	vsnprintf(m_pBuffer, m_iCapacity, format, args);
@@ -704,7 +704,7 @@ String& String::operator=(const char* other) {
 	const int iExpectedCapaity = iToLen + 10;
 
 	if (iExpectedCapaity > m_iCapacity) {
-		Initialize(iExpectedCapaity + DefaultBufferSize);
+		Initialize(iExpectedCapaity + DEFAULT_BUFFER_SIZE);
 	}
 
 	StringUtil::Copy(m_pBuffer, m_iCapacity, other);
@@ -728,14 +728,6 @@ bool String::operator==(const String& other) const {
 
 bool String::operator==(const char* other) const {
 	return Compare(other) == 0;
-}
-
-bool String::operator!=(const String& other) const {
-	return Compare(other) != 0;
-}
-
-bool String::operator!=(const char* other) const {
-	return Compare(other) != 0;
 }
 
 bool String::operator<(const String& other) const {

@@ -28,107 +28,125 @@
     <ClCompile Include="..\Sources\JCore\Container\PropertyBase.cpp" />
     <ClCompile Include="..\Sources\JCore\Container\PropertyFactory.cpp" />
     <ClCompile Include="..\Sources\JCore\Container\PropertyOperator.cpp" />
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators.cpp" />
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_BOOL.cpp">
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperatorDefinitions.cpp" />
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_BOOL.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_DOUBLE.cpp">
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_DOUBLE.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_FLOAT.cpp">
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_FLOAT.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT.cpp">
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT16.cpp">
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT16.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT16U.cpp">
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT16U.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT32L.cpp">
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT32L.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT32U.cpp">
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT32U.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT32UL.cpp">
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT32UL.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT64.cpp">
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT64.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT64U.cpp">
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT64U.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT8.cpp">
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT8.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT8U.cpp">
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT8U.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_LDOUBLE.cpp">
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_LDOUBLE.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_SELECTORS.cpp">
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_SELECTORS.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_STRING.cpp">
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_STRING.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_UNARY.cpp">
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_UNARY.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
     </ClCompile>
     <ClCompile Include="..\Sources\JCore\Container\PropertyStatics.cpp" />
     <ClCompile Include="..\Sources\JCore\Core.cpp">
@@ -291,6 +309,7 @@
     <ClInclude Include="..\Sources\JCore\Container\PropertyFactory.h" />
     <ClInclude Include="..\Sources\JCore\Container\PropertyOperator.h" />
     <ClInclude Include="..\Sources\JCore\Container\PropertyOperatorDefinitionMacro.h" />
+    <ClInclude Include="..\Sources\JCore\Container\PropertyOperatorDefinitions.h" />
     <ClInclude Include="..\Sources\JCore\Container\PropertyStatics.h" />
     <ClInclude Include="..\Sources\JCore\Container\PropertyType.h" />
     <ClInclude Include="..\Sources\JCore\Container\PropertyTypeTraits.h" />

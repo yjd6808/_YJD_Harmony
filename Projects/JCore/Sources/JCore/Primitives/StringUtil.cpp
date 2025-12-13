@@ -11,7 +11,7 @@
 
 NS_JC_BEGIN
 
-Vector<String, DefaultAllocator> StringUtil::Split(String& src, const char* delimiter) {
+Vector<String, CDefaultAllocator> StringUtil::Split(String& src, const char* delimiter) {
 	return src.Split(delimiter);
 }
 
@@ -30,7 +30,7 @@ String StringUtil::Format(const char* format, va_list args) {
 		throw RuntimeException("문자열 포맷 수행중 오류가 발생하였습니다.");
 	}
 
-	String szResult(iExpectedLen + 1 + String::DefaultBufferSize);
+	String szResult(iExpectedLen + 1 + String::DEFAULT_BUFFER_SIZE);
 	vsnprintf(szResult.Source(), szResult.Capacity(), format, args);
 	szResult.SetAt(iExpectedLen, NULL);
 	szResult.m_iLen = iExpectedLen;

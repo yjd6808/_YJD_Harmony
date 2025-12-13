@@ -24,7 +24,7 @@
 NS_JC_BEGIN
 
 
-template <typename T, typename TAllocator = DefaultAllocator>
+template <typename T, typename TAllocator = CDefaultAllocator>
 class ThreadLocal
 {
 	using TlsObjectId = Int64U;

@@ -64,7 +64,7 @@ TEST(TreeMapTest, EnumeratorTest) {
 	const auto mapIter = map.Begin();
 	for (int i = 0; mapIter->HasNext(); i++) {
 		Pair<int, int>& pair = mapIter->Next();
-		EXPECT_TRUE(map.Exist(pair.Key));
+		EXPECT_TRUE(map.Exist(pair.key_));
 		EXPECT_TRUE(map.Values().Extension().Exist(i + 1));	
 	}
 
@@ -84,8 +84,8 @@ TEST(TreeMapTest, EnumeratorTest) {
 	const auto mapRIter = map.End();
 	for (int i = 9; mapRIter->HasPrevious(); i--) {
 		Pair<int, int>& pair = mapRIter->Previous();
-		EXPECT_TRUE(map.Exist(pair.Key));
-		EXPECT_TRUE(map.Values().Extension().Exist(pair.Value));
+		EXPECT_TRUE(map.Exist(pair.key_));
+		EXPECT_TRUE(map.Values().Extension().Exist(pair.value_));
 	}
 }
 
@@ -196,7 +196,7 @@ TEST(TreeMapTest, InnerDestructorTest) {
 TEST(TreeMapTest, MemoryPool) {
 	MemoryPoolLeakCheck;
 
-	TreeMap<String, String, Comparator<String>, DefaultArrayAllocator> q;
+	TreeMap<String, String, Comparator<String>, CDefaultArrayAllocator> q;
 	for (int i = 0; i < 100'000; i++) 
 		q.Insert(StringUtil::Format("ss%d", i), StringUtil::Format("ss%d", i));
 }

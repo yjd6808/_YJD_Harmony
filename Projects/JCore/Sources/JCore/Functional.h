@@ -6,6 +6,7 @@
 #pragma once
 
 #include <functional>
+#include <JCore/Namespace.h>
 
 NS_JC_BEGIN
 

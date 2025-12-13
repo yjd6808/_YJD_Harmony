@@ -31,7 +31,7 @@ struct ServerListener : ServerEventListener
 
 		if (Mode == TestMode::OnNetworking) {
 			if (UsePooling && TlsMemPool == nullptr)
-				TlsMemPool = MakeShared<BinarySearchMemoryPool>();
+				TlsMemPool = MakeShared<CBinarySearchMemoryPool>();
 
 			auto pPacket = SinglePacket<SC_TEST>::Create(TlsMemPool);
 			JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);

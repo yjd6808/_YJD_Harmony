@@ -9,104 +9,123 @@
 NS_JC_BEGIN
 
 // 전방 선언
-class VoidOwner; 
-template <typename> struct Hasher;
-template <typename> struct BucketNode;
+class CVoidOwner;
 
-template <typename...> struct Bucket;
-template <typename, typename> class  HashSet;
-template <typename, typename> struct Pair;
+template <typename>
+struct Hasher;
+
+template <typename>
+struct BucketNode;
+
+template <typename...>
+struct Bucket;
+
+template <typename, typename>
+class HashSet;
+
+template <typename, typename>
+struct Pair;
 
 template <typename TKey, typename TAllocator>
 class HashSetIterator : public SetCollectionIterator<TKey, TAllocator>
 {
-	using TBucket				 = Bucket<TKey, TAllocator>;
-	using TBucketNode			 = BucketNode<TKey>;
-	using THashSet				 = HashSet<TKey, TAllocator>;
+	using TBucket = Bucket<TKey, TAllocator>;
+	using TBucketNode = BucketNode<TKey>;
+	using THashSet = HashSet<TKey, TAllocator>;
 	using TSetCollectionIterator = SetCollectionIterator<TKey, TAllocator>;
+
 public:
-	HashSetIterator(VoidOwner& owner, TBucket* currentBucket, int currentBucketIndex) : TSetCollectionIterator(owner) {
-		m_pCurrentBucket = currentBucket;
-		m_iCurrentBucketIndex = currentBucketIndex;
+	HashSetIterator(CVoidOwner& _owner, TBucket* _pCurrentBucket, int _currentBucketIndex)
+		: TSetCollectionIterator(_owner)
+	{
+		pCurrentBucket_ = _pCurrentBucket;
+		currentBucketIndex_ = _currentBucketIndex;
 	}
 
 	~HashSetIterator() noexcept override = default;
+
 public:
-	bool HasNext() const override {
+	bool HasNext() const override
+	{
 		if (!this->IsValid())
 			return false;
 
-		if (m_pCurrentBucket != nullptr && m_iCurrentBucketIndex < m_pCurrentBucket->Size)
+		if (pCurrentBucket_ != nullptr && currentBucketIndex_ < pCurrentBucket_->size_)
 			return true;
 
 		return false;
 	}
 
-	bool HasPrevious() const override {
-		if (!this->IsValid()) 
+	bool HasPrevious() const override
+	{
+		if (!this->IsValid())
 			return false;
 
-		if (m_pCurrentBucket != nullptr && m_iCurrentBucketIndex >= 0)
+		if (pCurrentBucket_ != nullptr && currentBucketIndex_ >= 0)
 			return true;
 
 		return false;
 	}
 
-	TKey& Next() override {
+	TKey& Next() override
+	{
 		// 반복자가 꼬리까지 도달했는데 데이터를 가져올려고 시도하는 경우
-		TBucketNode& val = m_pCurrentBucket->GetAt(m_iCurrentBucketIndex++);
+		TBucketNode& val = pCurrentBucket_->GetAt(currentBucketIndex_++);
 
-		if (m_iCurrentBucketIndex < m_pCurrentBucket->Size) {
-			return val.Data;
-		}
+		if (currentBucketIndex_ < pCurrentBucket_->size_)
+			return val.data_;
 
-		m_pCurrentBucket = m_pCurrentBucket->Next;
+		pCurrentBucket_ = pCurrentBucket_->pNext_;
 
-		if (m_pCurrentBucket) {
-			m_iCurrentBucketIndex = 0;
-		}
+		if (pCurrentBucket_)
+			currentBucketIndex_ = 0;
 
-		return val.Data;
+		return val.data_;
 	}
 
-	TKey& Previous() override {
+	TKey& Previous() override
+	{
 		// 반복자가 꼬리까지 도달했는데 데이터를 가져올려고 시도하는 경우
-		TBucketNode& val = m_pCurrentBucket->GetAt(m_iCurrentBucketIndex--);
+		TBucketNode& val = pCurrentBucket_->GetAt(currentBucketIndex_--);
 
-		if (m_iCurrentBucketIndex >= 0) {
-			return val.Data;
-		}
+		if (currentBucketIndex_ >= 0)
+			return val.data_;
 
-		m_pCurrentBucket = m_pCurrentBucket->Previous;
+		pCurrentBucket_ = pCurrentBucket_->pPrevious_;
 
-		if (m_pCurrentBucket) {
-			m_iCurrentBucketIndex = m_pCurrentBucket->Size - 1;
-		}
+		if (pCurrentBucket_)
+			currentBucketIndex_ = pCurrentBucket_->size_ - 1;
 
-		return val.Data;
+		return val.data_;
 	}
 
-	TKey& Current() override {
-		TBucketNode& val = m_pCurrentBucket->GetAt(m_iCurrentBucketIndex);
-		return val.Data;
+	TKey& Current() override
+	{
+		TBucketNode& val = pCurrentBucket_->GetAt(currentBucketIndex_);
+		return val.data_;
 	}
 
-	bool IsEnd() const override {
+	bool IsEnd() const override
+	{
 		return HasNext() == false;
 	}
 
-	bool IsBegin() const override {
+	bool IsBegin() const override
+	{
 		return HasPrevious() == false;
 	}
 
 protected:
-	THashSet* CastHashSet() const {
+	THashSet* CastHashSet() const
+	{
 		this->ThrowIfIteratorIsNotValid();
-		return this->Watcher.template Get<THashSet*>();
+		return this->watcher_.template Get<THashSet*>();
 	}
+
 protected:
-	int m_iCurrentBucketIndex;
-	TBucket* m_pCurrentBucket;
+	int currentBucketIndex_;
+	TBucket* pCurrentBucket_;
+
 	friend class THashSet;
 };
 

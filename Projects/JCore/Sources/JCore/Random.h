@@ -11,61 +11,81 @@
 #include <random>
 
 NS_JC_BEGIN
-
-
-
 struct Random final
 {
 	Random();
 
 	template <typename T>
-	static T Generate(T inclusiveBegin, T inclusiveEnd) {
-		if (inclusiveBegin > inclusiveEnd) {
+	static T Generate(T _inclusiveBegin, T _inclusiveEnd)
+	{
+		if (_inclusiveBegin > _inclusiveEnd)
+		{
 			throw InvalidArgumentException("begin > end 되면 안댐");
 		}
 
-		std::uniform_int_distribution<T> dist(inclusiveBegin, inclusiveEnd);
-		return dist(ms_DefaultRandomEngine);
+		std::uniform_int_distribution<T> dist(_inclusiveBegin, _inclusiveEnd);
+		return dist(DefaultRandomEngine);
 	}
 
 	template <typename T>
-	static T GenerateF(T inclusiveBegin, T inclusiveEnd) {
-		if (inclusiveBegin > inclusiveEnd) {
+	static T GenerateF(T _inclusiveBegin, T _inclusiveEnd)
+	{
+		if (_inclusiveBegin > _inclusiveEnd)
+		{
 			throw InvalidArgumentException("begin > end 되면 안댐");
 		}
 
-		std::uniform_real_distribution<T> dist(inclusiveBegin, inclusiveEnd);
-		return dist(ms_DefaultRandomEngine);
+		std::uniform_real_distribution<T> dist(_inclusiveBegin, _inclusiveEnd);
+		return dist(DefaultRandomEngine);
 	}
 
-	static int GenerateInt(int inclusiveBegin, int exclusiveEnd);
-	static double GenerateDouble(double inclusiveBegin, double inclusiveEnd);
+	static int GenerateInt(int _inclusiveBegin, int _exclusiveEnd);
+	static double GenerateDouble(double _inclusiveBegin, double _inclusiveEnd);
 
-	
 	template <typename T>
-	static const T& Pick(std::initializer_list<T> ilist) {
-		if (ilist.size() == 0) throw InvalidArgumentException("최소 1개이상의 엘리먼트가 있어야합니다.");
+	static const T& Pick(std::initializer_list<T> _ilist)
+	{
+		if (_ilist.size() == 0)
+		{
+			throw InvalidArgumentException("최소 1개이상의 엘리먼트가 있어야합니다.");
+		}
 
-		const int iSelectedIndex = Random::GenerateInt(0, ilist.size());
-		for (int i = 0; const T & value : ilist) {
-			if (i == iSelectedIndex) {
+		const int selectedIndex = Random::GenerateInt(0, static_cast<int>(_ilist.size()));
+		int index = 0;
+		for (const T& value : _ilist)
+		{
+			if (index == selectedIndex)
+			{
 				return value;
 			}
-			++i;
+
+			++index;
 		}
 
-		return *ilist.begin();
+		return *_ilist.begin();
 	}
 
 	template <typename T, typename TAllocator>
-	static T& Pick(const Collection<T, TAllocator>& collection) {
-		if (collection.Size() == 0) throw InvalidArgumentException("최소 1개이상의 엘리먼트가 있어야합니다.");
-		const int iSelectedIndex = Random::GenerateInt(0, collection.Size());
-		auto it = collection.Begin();
-		for (int i = 0; i < collection.Size(); ++i) {
-			if (i == iSelectedIndex) return it->Current();
+	static T& Pick(const Collection<T, TAllocator>& _collection)
+	{
+		if (_collection.Size() == 0)
+		{
+			throw InvalidArgumentException("최소 1개이상의 엘리먼트가 있어야합니다.");
+		}
+
+		const int selectedIndex = Random::GenerateInt(0, _collection.Size());
+		auto it = _collection.Begin();
+
+		for (int index = 0; index < _collection.Size(); ++index)
+		{
+			if (index == selectedIndex)
+			{
+				return it->Current();
+			}
+
 			it->Next();
 		}
+
 		return it->Current();
 	}
 
@@ -73,32 +93,28 @@ struct Random final
 
 	// 파라메터: 백분율로 표현된 확률
 	// ex) Chance(70.0f) -> 70% 확률로 true 반환
-	static bool Chance(float percentProbability);
-	static bool Chance(double percentProbability);
+	static bool Chance(float _percentProbability);
+	static bool Chance(double _percentProbability);
 	static void EngineInitialize();
 
-	static void WriteRandomAlphabatTextBuffered(int length, char* buff, int capacity);
+	static void WriteRandomAlphabatTextBuffered(int _length, char* _pBuff, int _capacity);
 
 private:
-	inline static bool ms_bInitialized;
-    inline static std::mt19937 ms_DefaultRandomEngine;
-    inline static std::random_device ms_RandomDevice;
+	inline static bool Initialized;
+	inline static std::mt19937 DefaultRandomEngine;
+	inline static std::random_device RandomDevice;
 };
-
 
 NS_DETAIL_BEGIN
 template <typename T>
 struct RandomPicker
 {
-	
 };
 
-template <template <typename> typename Collection, typename T>
-struct RandomPicker<Collection<T>>
+template <template <typename> typename TCollection, typename T>
+struct RandomPicker<TCollection<T>>
 {
-	
 };
-
 
 NS_DETAIL_END
 

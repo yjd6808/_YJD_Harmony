@@ -30,8 +30,8 @@ constexpr bool IsDynamicCastable() {
 }
 NS_DETAIL_END
 
-class VoidOwner;
-class VoidWatcher;
+class CVoidOwner;
+class CVoidWatcher;
 
 struct VoidPointerCounter {
 	bool Alive = true;
@@ -111,10 +111,10 @@ protected:
 		m_pCounter->Counter++;
 	}
 
-	void OwnerMoveToOwner(VoidOwner& owner);
-	void WatcherCopyToOwner(const VoidOwner& owner);
-	void WatcherCopyToWatcher(const VoidWatcher& watcher);
-	void WatcherMoveToWatcher(VoidWatcher& watcher);
+	void OwnerMoveToOwner(CVoidOwner& owner);
+	void WatcherCopyToOwner(const CVoidOwner& owner);
+	void WatcherCopyToWatcher(const CVoidWatcher& watcher);
+	void WatcherMoveToWatcher(CVoidWatcher& watcher);
 protected:
 	bool m_bNoDelete = false;
 	void* m_pPointer = nullptr;
@@ -129,22 +129,21 @@ protected:
  포인터 소유자로 이녀석이 해제되면 이 포인터의 감시자들이 모두 무효화된다.
  ControlBlock으로 이를 인지할 수 있다.
  =====================================================================================*/
-class VoidOwner : public VoidBase 
+class CVoidOwner : public VoidBase 
 {
-	friend class VoidWatcher;
 public:
-	VoidOwner(void* ptr, bool nodelete = false) {
+	CVoidOwner(void* ptr, bool nodelete = false) {
 		m_pPointer = ptr;
 		m_pCounter = dbg_new VoidPointerCounter();
 		m_bNoDelete = nodelete;
 	}
 
-	VoidOwner(const VoidOwner&) = delete;
-	VoidOwner(VoidOwner&& owner) noexcept {
+	CVoidOwner(const CVoidOwner&) = delete;
+	CVoidOwner(CVoidOwner&& owner) noexcept {
 		OwnerMoveToOwner(owner);
 	}
 
-	~VoidOwner() override {
+	~CVoidOwner() override {
 		DeletePointer();
 	}
 
@@ -157,8 +156,8 @@ public:
 		return true;
 	}
 
-	void operator=(const VoidOwner&) = delete;
-	void operator=(VoidOwner&& owner) noexcept {
+	void operator=(const CVoidOwner&) = delete;
+	void operator=(CVoidOwner&& owner) noexcept {
 		OwnerMoveToOwner(owner);
 	}
 };
@@ -169,43 +168,42 @@ public:
 									Void 포인터 감시자
  =====================================================================================*/
 
-class VoidWatcher : public VoidBase
+class CVoidWatcher : public VoidBase
 {
-	friend class VoidOwner;
 public:
-	VoidWatcher() = default;
+	CVoidWatcher() = default;
 
-	VoidWatcher(VoidOwner& owner) {
+	CVoidWatcher(CVoidOwner& owner) {
 		WatcherCopyToOwner(owner);
 	}
 
-	VoidWatcher(VoidWatcher& watcher) {
+	CVoidWatcher(CVoidWatcher& watcher) {
 		WatcherCopyToWatcher(watcher);
 	}
 
-	VoidWatcher(VoidWatcher&& watcher) noexcept {
+	CVoidWatcher(CVoidWatcher&& watcher) noexcept {
 		WatcherMoveToWatcher(watcher);
 	}
 
-	VoidWatcher(VoidOwner&& monitor) = delete;
+	CVoidWatcher(CVoidOwner&& monitor) = delete;
 
-	~VoidWatcher() override {
+	~CVoidWatcher() override {
 		SubtractWatcherCount();
 	}
 
-	VoidWatcher& operator=(VoidOwner& owner) {
+	CVoidWatcher& operator=(CVoidOwner& owner) {
 		WatcherCopyToOwner(owner);
 		return *this;
 	}
 
-	VoidWatcher& operator=(VoidOwner&& owner) = delete;
+	CVoidWatcher& operator=(CVoidOwner&& owner) = delete;
 
-	VoidWatcher& operator=(VoidWatcher& watcher) {
+	CVoidWatcher& operator=(CVoidWatcher& watcher) {
 		WatcherCopyToWatcher(watcher);
 		return *this;
 	}
 
-	VoidWatcher& operator=(VoidWatcher&& watcher) noexcept {
+	CVoidWatcher& operator=(CVoidWatcher&& watcher) noexcept {
 		WatcherMoveToWatcher(watcher);
 		return *this;
 	}
@@ -224,7 +222,7 @@ public:
 
 struct JCORE_NOVTABLE PtrCounter
 {
-	virtual void DestroyObject() = 0;
+	virtual void DestroyObject() {};
 
 	bool Alive = true;
 	int Counter = 1;
@@ -698,11 +696,11 @@ bool operator==(const Owner<T>& lhs, std::nullptr_t) {
 
 
 // 글로벌 비교 오퍼레이터
-bool operator==(const VoidOwner& lhs, const VoidWatcher& rhs);
-bool operator==(const VoidWatcher& lhs, const VoidOwner& rhs);
-bool operator==(const VoidWatcher& lhs, const VoidWatcher& rhs);
-bool operator==(const VoidWatcher& lhs, std::nullptr_t);
-bool operator==(std::nullptr_t, const VoidWatcher& rhs);
+bool operator==(const CVoidOwner& lhs, const CVoidWatcher& rhs);
+bool operator==(const CVoidWatcher& lhs, const CVoidOwner& rhs);
+bool operator==(const CVoidWatcher& lhs, const CVoidWatcher& rhs);
+bool operator==(const CVoidWatcher& lhs, std::nullptr_t);
+bool operator==(std::nullptr_t, const CVoidWatcher& rhs);
 
 
 NS_JC_END

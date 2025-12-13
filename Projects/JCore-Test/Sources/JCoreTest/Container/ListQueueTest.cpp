@@ -278,7 +278,7 @@ TEST(ListQueueTest, InnerDestructorTest) {
 TEST(ListQueueTest, MemoryPool) {
 	MemoryPoolLeakCheck;
 
-	ListQueue<String, DefaultArrayAllocator> l;
+	ListQueue<String, CDefaultArrayAllocator> l;
 	for (int i = 0; i < 100'000; i++) l.Enqueue(1);
 }
 
