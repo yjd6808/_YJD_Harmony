@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <JCore/Namespace.h>
 #include <JCore/Type.h>
@@ -13,11 +13,11 @@ NS_DETAIL_BEGIN
 union NatvisByteOrderInt16U {
 	struct
 	{
-		Int8U Seg1;	// 0xbb
-		Int8U Seg2;	// 0xaa
-	} Segs;
+		Int8U seg1; // 0xbb
+		Int8U seg2; // 0xaa
+	} segs;
 
-	Int16U Val; // 0xaabb
+	Int16U val; // 0xaabb
 };
 
 NS_DETAIL_END

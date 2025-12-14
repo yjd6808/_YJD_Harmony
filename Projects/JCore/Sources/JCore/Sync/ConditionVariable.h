@@ -22,35 +22,35 @@ class ConditionVariable final
 public:
 	ConditionVariable();
 
-	void Wait(LockGuard<NormalLock>& lockGuard);
+	void Wait(LockGuard<NormalLock>& _lockGuard);
 
 	template <typename TPredicate>
-	void Wait(LockGuard<NormalLock>& lockGuard, TPredicate&& predicate) {
-		while (!predicate()) {
-			Wait(lockGuard);
+	void Wait(LockGuard<NormalLock>& _lockGuard, TPredicate&& _predicate) {
+		while (!_predicate()) {
+			Wait(_lockGuard);
 		}
 	}
 
-	int WaitFor(LockGuard<NormalLock>& lockGuard, const TimeSpan& ts);
+	int WaitFor(LockGuard<NormalLock>& _lockGuard, const TimeSpan& _timeSpan);
 
 	template <typename TPredicate>
-	bool WaitFor(LockGuard<NormalLock>& lockGuard, const TimeSpan& ts, TPredicate&& predicate) {
-		while (!predicate()) {
-			const int status = WaitFor(lockGuard, ts);
+	bool WaitFor(LockGuard<NormalLock>& _lockGuard, const TimeSpan& _timeSpan, TPredicate&& _predicate) {
+		while (!_predicate()) {
+			const int status = WaitFor(_lockGuard, _timeSpan);
 			if (status == CvStatus::eTimeout) {
-				return predicate();
+				return _predicate();
 			}
 		}
 		return true;
 	}
 
 
-	int WaitUntil(LockGuard<NormalLock>& lockGuard, const DateTime& dt);
+	int WaitUntil(LockGuard<NormalLock>& _lockGuard, const DateTime& _dateTime);
 
 	template <typename TPredicate>
-	bool WaitUntil(LockGuard<NormalLock>& lockGuard, const DateTime& dt, TPredicate&& predicate) {
-		TimeSpan ts = dt.Diff(DateTime::Now());
-		return WaitFor(lockGuard, ts, predicate);
+	bool WaitUntil(LockGuard<NormalLock>& _lockGuard, const DateTime& _dateTime, TPredicate&& _predicate) {
+		TimeSpan timeSpan = _dateTime.Diff(DateTime::Now());
+		return WaitFor(_lockGuard, timeSpan, _predicate);
 	}
 
 	void NotifyOne();

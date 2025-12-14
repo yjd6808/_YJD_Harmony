@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/8/2023 6:03:54 PM
  * =====================
@@ -16,13 +16,15 @@ NS_JNET_BEGIN
 class IOCPOverlappedSendTo : public IOCPOverlapped
 {
 public:
-	IOCPOverlappedSendTo(Session* sender, IOCP* iocp, IPacket* sentPacket);
+	IOCPOverlappedSendTo(Session* _pSender, IOCP* _pIocp, IPacket* _pSentPacket);
 	~IOCPOverlappedSendTo() override;
+
 public:
-	void Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) override;
+	void Process(BOOL _result, Int32UL _bytesTransferred, IOCPPostOrder* _pCompletionKey) override;
+
 private:
-	Session* m_pSender;
-	IPacket* m_pSentPacket;
+	Session* sender_;
+	IPacket* sentPacket_;
 };
 
 NS_JNET_END

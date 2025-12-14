@@ -87,19 +87,23 @@ const char*     Console::VTBackToken[ConsoleColor::Max] {
     VT_BACK_COLOR_WHITE
 };
 
-
-bool Console::Init() {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Console::Init()
+{
     ms_hStdout = WinApi::GetStdoutHandle();
     ms_hStdin = WinApi::GetStdinHandle();
 
-    if (ms_hStdout == WinApi::InvalidHandleValue || ms_hStdin == WinApi::InvalidHandleValue) {
+    if (ms_hStdout == WinApi::InvalidHandleValue || ms_hStdin == WinApi::InvalidHandleValue)
+    {
         return false;
     }
 
     return true;
 }
 
-bool Console::SetSize(int width, int height) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Console::SetSize(int _width, int _height)
+{
     HWND hConsole = GetConsoleWindow();
 
     if (hConsole == NULL)
@@ -109,184 +113,221 @@ bool Console::SetSize(int width, int height) {
     if (::GetWindowRect(hConsole, &r) == 0)
         return false;
 
-    return ::MoveWindow(hConsole, r.left, r.top, width, height, TRUE) != 0;
+    return ::MoveWindow(hConsole, r.left, r.top, _width, _height, TRUE) != 0;
 }
 
-void Console::SetColor(ConsoleColor color) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void Console::SetColor(ConsoleColor _color)
+{
     TLockGuard guard(ms_ConsoleLock);
     DebugAssertMsg(ms_hStdout != WinApi::InvalidHandleValue, "출력 핸들이 이상합니다.");
-    ms_iDefaultColor = color;
-    ::SetConsoleTextAttribute(ms_hStdout, static_cast<Int16>(color));
+    ms_iDefaultColor = _color;
+    ::SetConsoleTextAttribute(ms_hStdout, static_cast<Int16>(_color));
 }
 
-void Console::GetColor(ConsoleColor color) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void Console::GetColor(ConsoleColor _color)
+{
     TLockGuard guard(ms_ConsoleLock);
     DebugAssertMsg(ms_hStdout != WinApi::InvalidHandleValue, "출력 핸들이 이상합니다.");
-    ms_iDefaultColor = color;
-    ::SetConsoleTextAttribute(ms_hStdout, static_cast<Int16>(color));
+    ms_iDefaultColor = _color;
+    ::SetConsoleTextAttribute(ms_hStdout, static_cast<Int16>(_color));
 }
 
-ConsoleColor Console::GetColor() {
+//////////////////////////////////////////////////////////////////////////////////////////
+ConsoleColor Console::GetColor()
+{
     TLockGuard guard(ms_ConsoleLock);
     return ms_iDefaultColor;
 }
 
-ConsoleColor Console::ConvertColorString(const String& colorString) {
-    if (colorString == "black") { return Black; }
-    if (colorString == "blue") { return Blue; }
-    if (colorString == "green") { return Green; }
-    if (colorString == "cyan") { return Cyan; }
-    if (colorString == "red") { return Red; }
-    if (colorString == "magenta") { return Magenta; }
-    if (colorString == "yellow") { return Yellow; }
-    if (colorString == "lightgray") { return LightGray; }
-    if (colorString == "gray") { return Gray; }
-    if (colorString == "lightblue") { return LightBlue; }
-    if (colorString == "lightgreen") { return LightGreen; }
-    if (colorString == "lightcyan") { return LightCyan; }
-    if (colorString == "lightred") { return LightRed; }
-    if (colorString == "lightmagenta") { return LightMagenta; }
-    if (colorString == "lightyellow") { return LightYellow; }
-    if (colorString == "white") { return White; }
+//////////////////////////////////////////////////////////////////////////////////////////
+ConsoleColor Console::ConvertColorString(const String& _colorString)
+{
+    if (_colorString == "black") { return Black; }
+    if (_colorString == "blue") { return Blue; }
+    if (_colorString == "green") { return Green; }
+    if (_colorString == "cyan") { return Cyan; }
+    if (_colorString == "red") { return Red; }
+    if (_colorString == "magenta") { return Magenta; }
+    if (_colorString == "yellow") { return Yellow; }
+    if (_colorString == "lightgray") { return LightGray; }
+    if (_colorString == "gray") { return Gray; }
+    if (_colorString == "lightblue") { return LightBlue; }
+    if (_colorString == "lightgreen") { return LightGreen; }
+    if (_colorString == "lightcyan") { return LightCyan; }
+    if (_colorString == "lightred") { return LightRed; }
+    if (_colorString == "lightmagenta") { return LightMagenta; }
+    if (_colorString == "lightyellow") { return LightYellow; }
+    if (_colorString == "white") { return White; }
     return Max;
 }
 
-String Console::ReadLine() {
-    String s;
-    char ch;
+//////////////////////////////////////////////////////////////////////////////////////////
+String Console::ReadLine()
+{
+    String line;
+    char keyChar;
 
-    while (std::cin.get(ch) && ch != '\n')
-        s += ch;
+    while (std::cin.get(keyChar) && keyChar != '\n')
+        line += keyChar;
 
-    return s;
+    return line;
 }
 
-String Console::ReadLine(const char* msg) {
-    Write("%s", msg);
+//////////////////////////////////////////////////////////////////////////////////////////
+String Console::ReadLine(const char* _pMsg)
+{
+    Write("%s", _pMsg);
     return ReadLine();
 }
 
-int Console::ReadLineBuffered(const char* msg, char* buff, int capacity) {
-    int i = 0;
-    char ch;
+//////////////////////////////////////////////////////////////////////////////////////////
+int Console::ReadLineBuffered(const char* _pMsg, char* _pBuff, int _capacity)
+{
+    int index = 0;
+    char keyChar;
 
-    while (std::cin.get(ch) && i < capacity && ch != '\n')
-        buff[i++] = ch;
+    Write("%s", _pMsg);
 
-    buff[i] = NULL;
-    return i;
+    while (std::cin.get(keyChar) && index < _capacity && keyChar != '\n')
+        _pBuff[index++] = keyChar;
+
+    _pBuff[index] = NULL;
+    return index;
 }
 
-ConsoleKeyInfo Console::ReadKey(const char* msg) {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+ConsoleKeyInfo Console::ReadKey(const char* _pMsg)
+{
     // 멀티쓰레딩시 인풋 동기화를 위해 사용
     static NormalLock s_Lock;
 
-    if (ms_hStdin == WinApi::InvalidHandleValue) {
+    if (ms_hStdin == WinApi::InvalidHandleValue)
+    {
         return {};
     }
 
-    if (msg != nullptr)
-		Write("%s", msg);
+    if (_pMsg != nullptr)
+		Write("%s", _pMsg);
 
     INPUT_RECORD inputRecord;
-    DWORD ulNumberOfeventRead;
-    BOOL iResult = FALSE;
-    char chKeyChar;
-    VirtualKey eVirtualKey;
+    DWORD eventsRead;
+    BOOL result = FALSE;
+    char keyChar;
+    VirtualKey virtualKey;
 
     JCORE_LOCK_GUARD(s_Lock);
 
-    for (;;) {
-        iResult = ReadConsoleInput(ms_hStdin, &inputRecord, 1, &ulNumberOfeventRead);
+    for (;;)
+    {
+        result = ReadConsoleInput(ms_hStdin, &inputRecord, 1, &eventsRead);
 
         // 샐패하는 경우는 파일 또는 파이프로 리다이렉트 되는 경우
-        if (iResult == FALSE || ulNumberOfeventRead == 0) {
+        if (result == FALSE || eventsRead == 0)
+        {
             return {};
         }
 
         // 키 입력없는 경우 쉬엄쉬엄
-        if (inputRecord.EventType != KEY_EVENT || inputRecord.Event.KeyEvent.bKeyDown == FALSE) {
+        if (inputRecord.EventType != KEY_EVENT || inputRecord.Event.KeyEvent.bKeyDown == FALSE)
+        {
             Thread::Sleep(10);
             continue;
         }
 
-        eVirtualKey = (VirtualKey)inputRecord.Event.KeyEvent.wVirtualKeyCode;
-        chKeyChar = inputRecord.Event.KeyEvent.uChar.AsciiChar;
+        virtualKey = (VirtualKey)inputRecord.Event.KeyEvent.wVirtualKeyCode;
+        keyChar = inputRecord.Event.KeyEvent.uChar.AsciiChar;
 
-        if (chKeyChar == 0) {
-            if (eVirtualKey == VirtualKey::Alt || eVirtualKey == VirtualKey::ShiftKey || eVirtualKey == VirtualKey::CapsLock || eVirtualKey == VirtualKey::NumLock || eVirtualKey == VirtualKey::Scroll)
+        if (keyChar == 0)
+        {
+            if (virtualKey == VirtualKey::Alt || virtualKey == VirtualKey::ShiftKey || virtualKey == VirtualKey::CapsLock || virtualKey == VirtualKey::NumLock || virtualKey == VirtualKey::Scroll)
                 continue;
         }
 
-        
         break;
     }
 
-    return ConsoleKeyInfo{ (ConsoleKey)eVirtualKey, chKeyChar };
+    return ConsoleKeyInfo{ (ConsoleKey)virtualKey, keyChar };
 }
 
-ConsoleKeyInfo Console::ReadKeyWhile(const char* msg, ConsoleKey key) {
+//////////////////////////////////////////////////////////////////////////////////////////
+ConsoleKeyInfo Console::ReadKeyWhile(const char* _pMsg, ConsoleKey _key)
+{
+    if (_pMsg)
+        Write("%s", _pMsg);
 
-    if (msg)
-        Write("%s", msg);
-
-    for (;;) {
+    for (;;)
+    {
         ConsoleKeyInfo info = ReadKey(nullptr);
-        if (info && info.Key == key) { 
+        if (info && info.Key == _key)
+        {
             return info;
         }
     }
 }
 
-void Console::Clear() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void Console::Clear()
+{
     TLockGuard guard(ms_ConsoleLock);
     CRuntime::System("cls");
 }
 
-void Console::SetCursorPosition(int x, int y) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void Console::SetCursorPosition(int _x, int _y)
+{
     TLockGuard guard(ms_ConsoleLock);
     DebugAssert(ms_hStdout != WinApi::InvalidHandleValue);
-    ms_iCursorPosX = x;
-    ms_iCursorPosY = y;
-    WinApi::SetConsoleCursorPosition(ms_hStdout, x, y);
+    ms_iCursorPosX = _x;
+    ms_iCursorPosY = _y;
+    WinApi::SetConsoleCursorPosition(ms_hStdout, _x, _y);
 }
 
-Tuple<int, int> Console::GetCursorPosition() {
+//////////////////////////////////////////////////////////////////////////////////////////
+Tuple<int, int> Console::GetCursorPosition()
+{
     DebugAssert(ms_hStdout != WinApi::InvalidHandleValue);
-    int x;
-    int y;
-    if (WinApi::GetConsoleCursorPosition(ms_hStdout, x, y)) {
-        return { x,  y };
+    int cursorX;
+    int cursorY;
+    if (WinApi::GetConsoleCursorPosition(ms_hStdout, cursorX, cursorY))
+    {
+        return { cursorX,  cursorY };
     }
     return { -1, -1 };
 }
 
-bool Console::SetOutputCodePage(int codePage) {
-    bool bRet = WinApi::SetConsoleOutputCodePage(codePage);
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Console::SetOutputCodePage(int _codePage)
+{
+    bool result = WinApi::SetConsoleOutputCodePage(_codePage);
     // DebugAssertMessage(bRet, "인코딩 변경 실패");
-    return bRet;
+    return result;
 }
 
-bool Console::SetEnableVTMode(bool enabled) {
-    Int32UL dwMode = 0;
-    if (!GetConsoleMode(ms_hStdout, &dwMode))
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Console::SetEnableVTMode(bool _enabled)
+{
+    Int32UL mode = 0;
+    if (!GetConsoleMode(ms_hStdout, &mode))
         return false;
 
-    if (enabled)
-        dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;    // 0x0004
+    if (_enabled)
+        mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;    // 0x0004
     else
-        dwMode &= ~ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+        mode &= ~ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 
-    if (!SetConsoleMode(ms_hStdout, dwMode))
+    if (!SetConsoleMode(ms_hStdout, mode))
         return false;
 
     return true;
 }
 
-int Console::GetOutputCodePage() {
+//////////////////////////////////////////////////////////////////////////////////////////
+int Console::GetOutputCodePage()
+{
     return WinApi::GetConsoleOutputCodePage();
 }
 
-
 NS_JC_END
+

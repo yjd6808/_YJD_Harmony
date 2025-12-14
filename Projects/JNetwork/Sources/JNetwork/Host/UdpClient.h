@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/8/2023 2:33:37 PM
  * =====================
@@ -20,32 +20,32 @@ class UdpClient : public Session
 {
 public:
 	UdpClient(
-		const IOCPPtr& iocp,
-		const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-		PacketParser* parser = nullptr,
-		int recvBufferSize = 0,
-		int sendBufferSize = 0 
-	);
+		const IOCPPtr& _pIocp,
+		const JCore::MemoryPoolAbstractPtr& _pBufferAllocator,
+		PacketParser* _pParser = nullptr,
+		int _recvBufferSize = 0,
+		int _sendBufferSize = 0);
 	~UdpClient() override;
 
 	void Initialize() override;
 	void FlushSendBuffer() override;
-	void SetRemoteEndpoint(const IPv4EndPoint& remoteEp);
+	void SetRemoteEndpoint(const IPv4EndPoint& _remoteEndPoint);
 	void Connected() override;
-	void ConnectFailed(Int32U errorCode) override;
-	void Disconnected(Int32U errorCode) override;
+	void ConnectFailed(Int32U _errorCode) override;
+	void Disconnected(Int32U _errorCode) override;
 
-	void NotifyCommand(ICommand* cmd) override;
-	void NotifyPacket(RecvedCommandPacket* packet) override;
-	void NotifyRaw(char* data, int len) override;
+	void NotifyCommand(ICommand* _pCmd) override;
+	void NotifyPacket(RecvedCommandPacket* _pPacket) override;
+	void NotifyRaw(char* _pData, int _len) override;
 
-	void Sent(IPacket* sentPacket, Int32UL sentBytes) override;
+	void Sent(IPacket* _pSentPacket, Int32UL _sentBytes) override;
 	Type GetType() const override { return eClient; }
 	DetailType GetDetailType() const override { return eUdpClient; }
 	const char* TypeName() override { return "UDP 클라"; }
-	void SetEventListener(ClientEventListener* listener) { m_pEventListener = listener; }
+	void SetEventListener(ClientEventListener* _pListener) { pEventListener_ = _pListener; }
+
 protected:
-	ClientEventListener* m_pEventListener;
+	ClientEventListener* pEventListener_;
 };
 
 using UdpClientPtr = JCore::SharedPtr<UdpClient>;

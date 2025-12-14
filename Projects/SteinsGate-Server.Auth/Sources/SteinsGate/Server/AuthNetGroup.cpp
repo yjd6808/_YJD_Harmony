@@ -68,7 +68,7 @@ void AuthNetGroup::InitializeParser() {
 }
 
 void AuthNetGroup::InitializeServer() {
-	auto spServer = MakeShared<AuthServer>(m_spIOCP, m_spBufferPool);
+	auto spServer = MakeShared<AuthServer>(pIocp_, pBufferPool_);
 
 	AddHost(Const::Host::AuthTcpId, spServer);
 

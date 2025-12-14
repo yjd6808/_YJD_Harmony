@@ -11,21 +11,35 @@ NS_JC_BEGIN
 
 template class LockGuard<EventLock>;
 
-EventLock::EventLock(): m_LockEvent(true, false) {}
-EventLock::~EventLock() {}
+//////////////////////////////////////////////////////////////////////////////////////////
+EventLock::EventLock()
+	: m_LockEvent(true, false)
+{
+}
 
-void EventLock::Lock() {
+//////////////////////////////////////////////////////////////////////////////////////////
+EventLock::~EventLock()
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void EventLock::Lock()
+{
 	m_LockEvent.Wait();
 	m_bLocked = true;
 }
 
-void EventLock::Unlock() {
-    DebugAssertMsg(m_bLocked.Load(), "이미 잠금이 해제된 상태입니다.");
-    m_bLocked = false;
-    m_LockEvent.Signal();
+//////////////////////////////////////////////////////////////////////////////////////////
+void EventLock::Unlock()
+{
+	DebugAssertMsg(m_bLocked.Load(), "이미 잠금이 해제된 상태입니다.");
+	m_bLocked = false;
+	m_LockEvent.Signal();
 }
 
-bool EventLock::TryLock() {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool EventLock::TryLock()
+{
 	if (m_bLocked)
 		return false;
 
@@ -33,7 +47,9 @@ bool EventLock::TryLock() {
 	return true;
 }
 
-bool EventLock::IsLocked() {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool EventLock::IsLocked()
+{
 	return m_bLocked;
 }
 

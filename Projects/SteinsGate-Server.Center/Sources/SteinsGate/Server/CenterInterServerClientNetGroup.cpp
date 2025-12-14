@@ -39,7 +39,7 @@ void CenterInterServerClientNetGroup::InitializeInterServerTcp() {
 }
 
 void CenterInterServerClientNetGroup::InitializeInterServerUdp() {
-	auto spInterServerClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, nullptr, RecvBufferSize_v, SendBufferSize_v);
+	auto spInterServerClient = MakeShared<UdpClient>(pIocp_, pBufferPool_, nullptr, RecvBufferSize_v, SendBufferSize_v);
 	spInterServerClient->Bind(Core::ServerProcessInfoPackage->Center.BindInterServerUdp);
 	AddHost(Const::Host::CenterInterServerUdpId, spInterServerClient);
 	m_pInterServerClientUdp = spInterServerClient.Get<UdpClient*>();
@@ -49,6 +49,6 @@ void CenterInterServerClientNetGroup::InitializeInterServerUdp() {
 	
 }
 
-void CenterInterServerClientNetGroup::OnUpdate(const JCore::TimeSpan& elapsed) {
+void CenterInterServerClientNetGroup::OnUpdate(const JCore::TimeSpan& _elapsed) {
 
 }

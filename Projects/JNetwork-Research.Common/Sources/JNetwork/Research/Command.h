@@ -8,25 +8,25 @@
 #include <JNetwork/Packet/Command.h>
 #include <JCore/Primitives/StaticString.h>
 
-#define Cmd_SaticMessage						100
-#define Cmd_DynamicMessage						101
+#define CMD_SATIC_MESSAGE						100
+#define CMD_DYNAMIC_MESSAGE						101
 
 #pragma pack(push, CMD_ALIGNMENT)
 
-STATIC_CMD_BEGIN(StaticMessage, Cmd_SaticMessage)
-JCore::StaticString<512> Msg;
+STATIC_CMD_BEGIN(StaticMessage, CMD_SATIC_MESSAGE)
+JCore::StaticString<512> msg_;
 STATIC_CMD_END
 
 struct Dummy
 {
-	short a = 1;
-	int b = 2;
-	short c = 3;
+	short a_ = 1;
+	int b_ = 2;
+	short c_ = 3;
 };
 
-DYNAMIC_CMD_BEGIN(DynamicMessage, Cmd_DynamicMessage, char)
-Dummy dmg;
-long long d = 4;
+DYNAMIC_CMD_BEGIN(DynamicMessage, CMD_DYNAMIC_MESSAGE, char)
+Dummy dmg_;
+long long d_ = 4;
 DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(Msg)
 DYNAMIC_CMD_END
 

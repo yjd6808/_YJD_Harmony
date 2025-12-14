@@ -1,4 +1,4 @@
-﻿/*
+/*
  *	작성자 : 윤정도
  *	소멸자 호출로 작업을 처리하기 위한 용도
  */
@@ -14,17 +14,30 @@ template <typename T, typename TAction = Action<T*>>
 class AutoPtr
 {
 public:
-	AutoPtr(T* ptr) : m_pPtr(ptr) {}
-	AutoPtr(T* ptr, TAction&& fn) : m_pPtr(ptr), m_Fn(Move(fn)) {}
-	~AutoPtr() { m_Fn(m_pPtr); }
+	AutoPtr(T* _pPtr)
+		: ptr_(_pPtr)
+	{
+	}
+
+	AutoPtr(T* _pPtr, TAction&& _fn)
+		: ptr_(_pPtr)
+		, fn_(Move(_fn))
+	{
+	}
+
+	~AutoPtr()
+	{
+		fn_(ptr_);
+	}
+
 private:
-	T* m_pPtr;
-	TAction m_Fn;
+	T* ptr_;
+	TAction fn_;
 };
 
 template <typename T, typename TAction>
-class AutoPtr<T&, TAction> {};
-
-
+class AutoPtr<T&, TAction>
+{
+};
 
 NS_JC_END

@@ -15,19 +15,23 @@ USING_NS_JC;
 
 LoggerAbstract* Logger_v;
 
-void InitializeDefaultLogger(const char* specifier) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void InitializeDefaultLogger(const char* _pSpecifier)
+{
 	DebugAssertMsg(Logger_v == nullptr, "이미 로거가 초기화되어 있습니다.");
 
 	ConsoleLogger* pConsoleLogger = dbg_new ConsoleLogger;
 	pConsoleLogger->SetEnableLock(true);
 	pConsoleLogger->SetAutoFlush(true);
-	pConsoleLogger->SetHeaderFormat(StringUtil::Format("%s[ level ✓  datetime ] ", specifier));
+	pConsoleLogger->SetHeaderFormat(StringUtil::Format("%s[ level ✓  datetime ] ", _pSpecifier));
 	pConsoleLogger->ShowDateTime(true);
 	pConsoleLogger->ShowLevel(true);
 	Logger_v = pConsoleLogger;
 }
 
-void FinalizeDefaultLogger() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void FinalizeDefaultLogger()
+{
 	JCORE_DELETE_SAFE(Logger_v);
 }
 

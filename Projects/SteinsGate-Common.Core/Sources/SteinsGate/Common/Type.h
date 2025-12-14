@@ -88,7 +88,7 @@ using SGEventList = JCore::Event<Args...>;
 template <typename... TArgs>
 using SGTuple = JCore::Tuple<TArgs...>;
 
-using SGIndexMemroyPool = JCore::IndexedMemoryPool;
+using SGIndexMemroyPool = JCore::CIndexedMemoryPool;
 using SGBinarySearchMemroyPool = JCore::CBinarySearchMemoryPool;
 
 template <typename T>

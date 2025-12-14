@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -10,132 +10,173 @@
 USING_NS_JC;
 
 NS_JNET_BEGIN
-
-SessionContainer::SessionContainer(int capacity)
-	: m_iInitialHandleSeq(0)
-	, m_iSize(0)
-	, m_vSessionList(capacity, nullptr) {
+//////////////////////////////////////////////////////////////////////////////////////////
+SessionContainer::SessionContainer(int _capacity)
+: handleSeq_(0)
+, initialHandleSeq_(0)
+, size_(0)
+, sessionList_(_capacity, nullptr)
+{
 }
 
-SessionContainer::~SessionContainer() {
+//////////////////////////////////////////////////////////////////////////////////////////
+SessionContainer::~SessionContainer()
+{
 	SessionContainer::Clear();
 }
 
-int SessionContainer::CreateHandle() {
-	return m_iInitialHandleSeq + Interlocked<int>::Increment(&m_iHandleSeq) - 1;
+//////////////////////////////////////////////////////////////////////////////////////////
+int SessionContainer::CreateHandle()
+{
+	return initialHandleSeq_ + Interlocked<int>::Increment(&handleSeq_) - 1;
 }
 
-bool SessionContainer::Add(Session* session) {
-	const int iHandle = session->GetHandle();
-	const int iHandleIndex = iHandle - m_iInitialHandleSeq;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool SessionContainer::Add(Session* _pSession)
+{
+	const int handle = _pSession->GetHandle();
+	const int handleIndex = handle - initialHandleSeq_;
 
-	if (!IsValidHandle(iHandleIndex)) {
+	if (!IsValidHandle(handleIndex))
+	{
 		_NetLogWarn_("세션 컨테이너 인덱스 범위를 벗어난 핸들입니다. %d", 1);
 		return false;
 	}
 
-	if (m_vSessionList[iHandleIndex] != nullptr) {
+	if (sessionList_[handleIndex] != nullptr)
+	{
 		_NetLogWarn_("동일한 핸들의 세션이 컨테이너에 존재합니다.");
 		return false;
 	}
 
-	m_vSessionList[iHandleIndex] = session;
-	m_iSize++;
+	sessionList_[handleIndex] = _pSession;
+	++size_;
 	return true;
 }
 
-Session* SessionContainer::Get(int handle) {
-	const int iHandleIndex = handle - m_iInitialHandleSeq;
+//////////////////////////////////////////////////////////////////////////////////////////
+Session* SessionContainer::Get(int _handle)
+{
+	const int handleIndex = _handle - initialHandleSeq_;
 
-	if (!IsValidHandle(iHandleIndex)) {
+	if (!IsValidHandle(handleIndex))
+	{
 		_NetLogWarn_("세션 컨테이너 인덱스 범위를 벗어난 핸들입니다. %d", 2);
 		return nullptr;
 	}
 
-	return m_vSessionList[iHandleIndex];
+	return sessionList_[handleIndex];
 }
 
-bool SessionContainer::Remove(int handle) {
-	const int iHandleIndex = handle - m_iInitialHandleSeq;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool SessionContainer::Remove(int _handle)
+{
+	const int handleIndex = _handle - initialHandleSeq_;
 
-	if (!IsValidHandle(iHandleIndex)) {
+	if (!IsValidHandle(handleIndex))
+	{
 		_NetLogWarn_("세션 컨테이너 인덱스 범위를 벗어난 핸들입니다. %d", 3);
 		return false;
 	}
 
-	const Session* pSession = m_vSessionList[iHandleIndex];
-	if (pSession) {
+	Session* pSession = sessionList_[handleIndex];
+	if (pSession)
+	{
 		delete pSession;
-		m_vSessionList[iHandleIndex] = nullptr;
+		sessionList_[handleIndex] = nullptr;
 		return true;
 	}
 
 	return false;
 }
 
-void SessionContainer::DisconnectAll() {
-	const int iSize = m_vSessionList.Size();
-	PercentProgressNotifier notifier(iSize, 10.0f);
+//////////////////////////////////////////////////////////////////////////////////////////
+void SessionContainer::DisconnectAll()
+{
+	const int size = sessionList_.Size();
+	PercentProgressNotifier notifier(size, 10.0f);
 	CallbackProgressListener* pListener = dbg_new CallbackProgressListener;
-	pListener->ProgressedCallback = [](int i, int size) { _NetLogDebug_("세션 연결 닫음: %d/%d(%.1f%%)", i, size, i / float(size) * 100.f); };
+	pListener->ProgressedCallback = [](int _index, int _size)
+	{
+		_NetLogDebug_("세션 연결 닫음: %d/%d(%.1f%%)", _index, _size, _index / float(_size) * 100.0f);
+	};
 	notifier.SetListener(pListener, true);
-	
-	for (int i = 0; i < iSize; ++i) {
-		Session* pSession = m_vSessionList[i];
 
-		if (!pSession) {
+	for (int index = 0; index < size; ++index)
+	{
+		Session* pSession = sessionList_[index];
+
+		if (!pSession)
+		{
 			continue;
 		}
-			
+
 		pSession->Disconnect();
 		pSession->WaitForZeroPending();
 
-		notifier.Progress(i + 1);
+		notifier.Progress(index + 1);
 	}
+
 	_NetLogDebug_("모든 세션 연결종료 완료");
 }
 
-void SessionContainer::Clear() {
-	const int iSize = m_vSessionList.Size();
-	for (int i = 0; i < iSize; ++i) {
-		const Session* pSession = m_vSessionList[i];
+//////////////////////////////////////////////////////////////////////////////////////////
+void SessionContainer::Clear()
+{
+	const int size = sessionList_.Size();
+	for (int index = 0; index < size; ++index)
+	{
+		Session* pSession = sessionList_[index];
 
-		if (pSession) {
+		if (pSession)
+		{
 			delete pSession;
 		}
 
-		m_vSessionList[i] = nullptr;
+		sessionList_[index] = nullptr;
 	}
 
-	m_iSize = 0;
+	size_ = 0;
 	_NetLogDebug_("모든 세션 삭제완료");
 }
 
-void SessionContainer::ForEach(Action<Session*> fn) {
-	const int iSize = m_vSessionList.Size();
-	for (int i = 0; i < iSize; ++i) {
-		Session* pSession = m_vSessionList[i];
-		if (pSession) {
-			fn(pSession);
+//////////////////////////////////////////////////////////////////////////////////////////
+void SessionContainer::ForEach(Action<Session*> _fn)
+{
+	const int size = sessionList_.Size();
+	for (int index = 0; index < size; ++index)
+	{
+		Session* pSession = sessionList_[index];
+		if (pSession)
+		{
+			_fn(pSession);
 		}
 	}
 }
 
-void SessionContainer::ForEachConnected(Action<Session*> fn) {
-	const int iSize = m_vSessionList.Size();
-	for (int i = 0; i < iSize; ++i) {
-		Session* pSession = m_vSessionList[i];
+//////////////////////////////////////////////////////////////////////////////////////////
+void SessionContainer::ForEachConnected(Action<Session*> _fn)
+{
+	const int size = sessionList_.Size();
+	for (int index = 0; index < size; ++index)
+	{
+		Session* pSession = sessionList_[index];
 
-		if (pSession && pSession->GetState() == Host::eConnected) {
-			fn(pSession);
+		if (pSession && pSession->GetState() == Host::eConnected)
+		{
+			_fn(pSession);
 		}
 	}
 }
 
-bool SessionContainer::IsValidHandle(int handleIndex) {
-	if (handleIndex < 0 || handleIndex >= 0 + m_vSessionList.Size()) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool SessionContainer::IsValidHandle(int _handleIndex)
+{
+	if (_handleIndex < 0 || _handleIndex >= sessionList_.Size())
+	{
 		return false;
 	}
+
 	return true;
 }
 

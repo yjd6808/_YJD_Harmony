@@ -18,83 +18,101 @@
 USING_NS_JC;
 
 NS_JNET_BEGIN
-
-ServerListener::ServerListener(const JCore::String& name) : m_Name(name) {}
-
-void ServerListener::OnStarted() {
-	Console::WriteLine("[%s] 서버가 시작되었습니다.", m_Name.Source());
+//////////////////////////////////////////////////////////////////////////////////////////
+ServerListener::ServerListener(const JCore::String& _name)
+: name_(_name)
+{
 }
 
-void ServerListener::OnConnected(Session* connectedSession) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ServerListener::OnStarted()
+{
+	Console::WriteLine("[%s] 서버가 시작되었습니다.", name_.Source());
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void ServerListener::OnConnected(Session* _pConnectedSession)
+{
 	Console::WriteLine("[%s] %s 클라이언트가 접속하였습니다.",
-		m_Name.Source(), connectedSession->GetRemoteEndPoint().ToString().Source());
+	                   name_.Source(), _pConnectedSession->GetRemoteEndPoint().ToString().Source());
 }
 
-void ServerListener::OnDisconnected(Session* disconnetedSession, Int32U errorCode) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ServerListener::OnDisconnected(Session* _pDisconnectedSession, Int32U _errorCode)
+{
 	Console::WriteLine("[%s] %s 클라이언트가 접속해제하였습니다.",
-		m_Name.Source(), disconnetedSession->GetRemoteEndPoint().ToString().Source());
+	                   name_.Source(), _pDisconnectedSession->GetRemoteEndPoint().ToString().Source());
 }
 
-void ServerListener::OnSent(Session* sender, IPacket* packet, Int32UL sentBytes) {
-	//Console::WriteLine("[%s] 송신 : %d 바이트", m_Name.Source(), packet->GetPacketLength());
+//////////////////////////////////////////////////////////////////////////////////////////
+void ServerListener::OnSent(Session* _pSender, IPacket* _pPacket, Int32UL _sentBytes)
+{
+	//Console::WriteLine("[%s] 송신 : %d 바이트", name_.Source(), _pPacket->GetPacketLength());
 }
 
-void ServerListener::OnReceived(Session* receiver, ICommand* cmd) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ServerListener::OnReceived(Session* _pReceiver, ICommand* _pCmd)
+{
 	// 수신한 메시지 출력
-	if (cmd->GetCommand() == Cmd_SaticMessage) {
-		StaticMessage* pMsg = cmd->CastCommand<StaticMessage*>();
-		Console::WriteLine("[%s] 스태틱 메시지를 수신했습니다. : %s", m_Name.Source(), pMsg->Msg.Source);
+	if (_pCmd->GetId() == CMD_SATIC_MESSAGE)
+	{
+		StaticMessage* pMsg = _pCmd->CastCommand<StaticMessage*>();
+		Console::WriteLine("[%s] 스태틱 메시지를 수신했습니다. : %s", name_.Source(), pMsg->msg_.Source);
 
 		// 스태틱 패킷 에코 진행
 		auto pPacket = dbg_new StaticPacket<StaticMessage>();
-		StaticMessage* arg1 = pPacket->Get<0>();
-		arg1->Msg.SetString(pMsg->Msg);
+		StaticMessage* pArg1 = pPacket->Get<0>();
+		pArg1->msg_.SetString(pMsg->msg_);
 
-		if (!receiver->SendAsync(pPacket)) {
-			Console::WriteLine("[%s] 스태틱 에코 실패", m_Name.Source());
+		if (!_pReceiver->SendAsync(pPacket))
+		{
+			Console::WriteLine("[%s] 스태틱 에코 실패", name_.Source());
 			return;
 		}
 
-		Console::WriteLine("[%s] 스태틱 에코", m_Name.Source());
-	} else if (cmd->GetCommand() == Cmd_DynamicMessage) {
-		DynamicMessage* pDynamicMessage = cmd->CastCommand<DynamicMessage*>();
-		Dummy* pDummy = &pDynamicMessage->dmg;
+		Console::WriteLine("[%s] 스태틱 에코", name_.Source());
+	}
+	else if (_pCmd->GetId() == CMD_DYNAMIC_MESSAGE)
+	{
+		DynamicMessage* pDynamicMessage = _pCmd->CastCommand<DynamicMessage*>();
+		Dummy* pDummy = &pDynamicMessage->dmg_;
 
-		if (pDummy->a != 1 || pDummy->b != 2 || pDummy->c != 3 || pDynamicMessage->d != 4) {
+		if (pDummy->a_ != 1 || pDummy->b_ != 2 || pDummy->c_ != 3 || pDynamicMessage->d_ != 4)
+		{
 			Console::WriteLine("데이터를 올바르게 수신하지 못했습니다.");
 			return;
 		}
 
-		int iLen = pDynamicMessage->Count - 1;
-		Console::WriteLine("[%s] 다이나믹 메시지를 수신했습니다. : %s(길이 : %d)", m_Name.Source(), pDynamicMessage->Msg(), iLen);
+		int len = pDynamicMessage->count_ - 1;
+		Console::WriteLine("[%s] 다이나믹 메시지를 수신했습니다. : %s(길이 : %d)", name_.Source(), pDynamicMessage->Msg(), len);
 
-
-		MemoryPoolAbstractPtr ptr;
-		auto pPacket2 = dbg_new DynamicPacket<DynamicMessage>(ptr, iLen + 2);
-		auto pPacket3 = dbg_new DynamicPacket<DynamicMessage>(nullptr, iLen + 2);
+		MemoryPoolAbstractPtr pMemoryPool;
+		auto pPacket2 = dbg_new DynamicPacket<DynamicMessage>(pMemoryPool, len + 2);
+		auto pPacket3 = dbg_new DynamicPacket<DynamicMessage>(nullptr, len + 2);
 		pPacket2->Release();
 		pPacket3->Release();
 
 
 		// 다이나믹 패킷 에코 진행
-		auto pPacket = dbg_new DynamicPacket<DynamicMessage>(iLen + 1);
+		auto pPacket = dbg_new DynamicPacket<DynamicMessage>(len + 1);
 		DynamicMessage* pMsg = pPacket->Get<0>();
 		StringUtil::CopyUnsafe(pMsg->Msg(), pDynamicMessage->Msg());
 
-		if (!receiver->SendAsync(pPacket)) {
-			Console::WriteLine("[%s] 다이나믹 에코 실패", m_Name.Source());
+		if (!_pReceiver->SendAsync(pPacket))
+		{
+			Console::WriteLine("[%s] 다이나믹 에코 실패", name_.Source());
 			return;
 		}
 
-		Console::WriteLine("[%s] 다이나믹 에코", m_Name.Source());
+		Console::WriteLine("[%s] 다이나믹 에코", name_.Source());
 	}
 }
 
 
-void ServerListener::OnStopped() {
-	Console::WriteLine("[%s] 종료되었습니다.", m_Name.Source());
+//////////////////////////////////////////////////////////////////////////////////////////
+void ServerListener::OnStopped()
+{
+	Console::WriteLine("[%s] 종료되었습니다.", name_.Source());
 }
 
 NS_JNET_END
-
-

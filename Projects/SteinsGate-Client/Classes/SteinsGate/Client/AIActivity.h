@@ -1,10 +1,9 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/29/2023 4:57:59 AM
  * =====================
  *
  */
-
 
 #pragma once
 
@@ -27,31 +26,32 @@ public:
 		eFinished,
 	};
 
-	AIActivity(Actor* actor, AIActivityType_t type);
+	AIActivity(Actor* _pActor, AIActivityType_t _type);
 	virtual ~AIActivity() = default;
 
 	virtual void run();
 	virtual void stop();
 
 	bool isRunning();
-	AIActivityType_t getType() { return m_eType; }
+	AIActivityType_t getType() { return type_; }
 
-	void updateLimitTime(float dt);
+	void updateLimitTime(float _dt);
 
-	virtual void onUpdate(float dt) = 0;
-	virtual void onActivitySelectFromAIRoutine(AIInfo* aiInfo, AIState_t aiState) {}		// AI 루틴 실행중 선택된 경우
+	virtual void onUpdate(float _dt) = 0;
+	virtual void onActivitySelectFromAIRoutine(AIInfo* _pAiInfo, AIState_t _aiState) {}      // AI 루틴 실행중 선택된 경우
 	virtual void onActivityBegin() = 0;
 	virtual void onActivityEnd() {}
-	virtual void onFrameBegin(ActorPartAnimation* animation, FrameTexture* frame) {}
-	virtual void onFrameEnd(ActorPartAnimation* animation, FrameTexture* frame) {}
-	virtual void onAnimationBegin(ActorPartAnimation* animation, FrameTexture* frame) {}
-	virtual void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* frame) {}
+	virtual void onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) {}
+	virtual void onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) {}
+	virtual void onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) {}
+	virtual void onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) {}
+
 protected:
-	JCORE_NOT_NULL Actor* m_pActor;
+	JCORE_NOT_NULL Actor* actor_;
 
-	AIActivityType_t m_eType;
-	State m_eState;
+	AIActivityType_t type_;
+	State state_;
 
-	float m_fElasedTime;
-	float m_fLimitTime;
+	float elapsedTime_;
+	float limitTime_;
 };

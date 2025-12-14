@@ -1,4 +1,4 @@
-﻿#include <JNetwork/Network.h>
+#include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
 #include <JNetwork/Host/TcpServer.h>
 #include <JNetwork/Research/ServerNetMaster.h>
@@ -6,7 +6,9 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-int main() {
+//////////////////////////////////////////////////////////////////////////////////////////
+int main()
+{
 	DefaultParserType = PacketParser::Command;
 
 	Winsock::Initialize(2, 2);
@@ -16,7 +18,9 @@ int main() {
 		ServerNetMaster master;
 		master.Initialize();
 
-		while (getchar() != 'c') {}
+		while (getchar() != 'c')
+		{
+		}
 
 	}
 	FinalizeNetLogger();

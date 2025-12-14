@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/6/2022 1:55:29 PM
  * =====================
@@ -15,7 +15,7 @@ NS_JC_BEGIN
 struct CRuntime {
     using ThreadFunc = Int32U (JCORE_STDCALL*)(void*);
 
-    static int      JCORE_CDECL System(JCORE_IN const char* cmd);
+    static int      JCORE_CDECL System(JCORE_IN const char* _pCmd);
 
     /** https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/beginthread-beginthreadex?view=msvc-170
      * \brief 쓰레드를 만듬
@@ -31,13 +31,13 @@ struct CRuntime {
      * _beginthreadex -> endthreadex를 하더라도 CloseHandle을 해줘야한다.
      *
      */
-    static IntPtr   JCORE_CDECL BeginThreadEx(JCORE_IN ThreadFunc fn, JCORE_IN_OPT void* arg = nullptr, JCORE_IN_OPT Int32U stackSize = 0, JCORE_IN_OPT Int32U initFlag = 0);
+    static IntPtr   JCORE_CDECL BeginThreadEx(JCORE_IN ThreadFunc _fn, JCORE_IN_OPT void* _pArg = nullptr, JCORE_IN_OPT Int32U _stackSize = 0, JCORE_IN_OPT Int32U _initFlag = 0);
 
     /** https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/endthread-endthreadex?view=msvc-170
      * \brief Terminates a thread; _endthread terminates a thread that's created by _beginthread and _endthreadex terminates a thread that's created by _beginthreadex.
      * \param exitCode Thread exit code.
      */
-    static void     JCORE_CDECL EndThreadEx(JCORE_IN Int32U exitCode);
+    static void     JCORE_CDECL EndThreadEx(JCORE_IN Int32U _exitCode);
 
     /** https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/get-errno?view=msvc-170
      * 참고: C 라이브러리에서 전역 에러값을 체크하는 함수들은 함수실행전 0로 초기화시킴 (https://cplusplus.com/reference/cerrno/errno/)
@@ -61,7 +61,7 @@ struct CRuntime {
 	 * ccs 플래그를 줘서 인코딩 형식을 지정할 수도 있다.
 	 * "w+, ccs=UTF-8" 뭐 이런식으로
 	 */
-	static IoHandle JCORE_CDECL FileOpen(const char* filename, const char* mode);
+	static IoHandle JCORE_CDECL FileOpen(const char* _pFilename, const char* _pMode);
 
 
 	/**
@@ -75,7 +75,7 @@ struct CRuntime {
 	 * \return 쓴 원소 갯수 (count보다 작은 경우 오류가 발생한 경우이다.)
 	 * 
 	 */
-	static int JCORE_CDECL FileWrite(const void* buffer, int size, int count, IoHandle stream);
+	static int JCORE_CDECL FileWrite(const void* _pBuffer, int _size, int _count, IoHandle _pStream);
 
 	/**
 	 * \brief https://en.cppreference.com/w/cpp/io/c/fread
@@ -84,7 +84,7 @@ struct CRuntime {
 	 * stream에서 size * count 만큼 읽어서 buffer에 저장한다.
 	 * \return 읽은 원소 갯수
 	 */
-	static int JCORE_CDECL FileRead(void* buffer, int size, int count, IoHandle stream);
+	static int JCORE_CDECL FileRead(void* _pBuffer, int _size, int _count, IoHandle _pStream);
 
 
 	/**
@@ -92,13 +92,13 @@ struct CRuntime {
 	 * stream에서 1개의 문자를 읽어서 int 형으로 변환해서 반환한다.
 	 * \return 성공시 문자 값을, 실패시 EOF를 반환한다.
 	 */
-	static int JCORE_CDECL FileReadChar(IoHandle stream);
+	static int JCORE_CDECL FileReadChar(IoHandle _pStream);
 
 	/**
 	 * \brief https://en.cppreference.com/w/cpp/io/c/ferror
 	 * 파일 스트림에 오류가 발생했는지 체크용
 	 */
-	static bool JCORE_CDECL FileHasError(IoHandle stream);
+	static bool JCORE_CDECL FileHasError(IoHandle _pStream);
 
 
 	/**
@@ -106,7 +106,7 @@ struct CRuntime {
 	 * 현재 파일이 바이너리 모드로 열린경우에만 사용 가능
 	 * \return ErrorCode 값 (성공시 현재 스트림의 커서 위치, 실패시 errno 값을 반환한다.)
 	 */
-	static long JCORE_CDECL FileTell(IoHandle stream);
+	static long JCORE_CDECL FileTell(IoHandle _pStream);
 
 
 	/**
@@ -121,10 +121,10 @@ struct CRuntime {
 	 *
 	 * \return 성공적으로 움직였는지 여부
 	 */
-	static bool JCORE_CDECL FileSeek(IoHandle stream, long offset, int origin);
-	static bool JCORE_CDECL FileSeekBegin(IoHandle stream, long offset);
-	static bool JCORE_CDECL FileSeekCur(IoHandle stream, long offset);
-	static bool JCORE_CDECL FileSeekEnd(IoHandle stream, long offset);
+	static bool JCORE_CDECL FileSeek(IoHandle _pStream, long _offset, int _origin);
+	static bool JCORE_CDECL FileSeekBegin(IoHandle _pStream, long _offset);
+	static bool JCORE_CDECL FileSeekCur(IoHandle _pStream, long _offset);
+	static bool JCORE_CDECL FileSeekEnd(IoHandle _pStream, long _offset);
 
 	/**
 	 * \brief https://en.cppreference.com/w/cpp/io/c/fflush
@@ -132,30 +132,30 @@ struct CRuntime {
 	 *  - nullptr로 전달시 모든 열린 스트림에 대해서 flush가 수행된다.
 	 * \return 오류 발생시 false 반환
 	 */
-	static bool JCORE_CDECL FileFlush(IoHandle stream);
+	static bool JCORE_CDECL FileFlush(IoHandle _pStream);
 
 	/**
 	 * \brief https://en.cppreference.com/w/c/io/feof
 	 * 파일 스트림이 끝까지 도달했는지 체크용
 	 */
-	static bool JCORE_CDECL FileEOF(IoHandle stream);
+	static bool JCORE_CDECL FileEOF(IoHandle _pStream);
 
 	/**
 	 * \brief https://en.cppreference.com/w/cpp/io/c/fclose
 	 * stream을 닫는다.
 	 */
-	static bool JCORE_CDECL FileClose(IoHandle stream);
+	static bool JCORE_CDECL FileClose(IoHandle _pStream);
 
 	/**
 	 * \brief https://en.cppreference.com/w/cpp/io/c/remove
 	 * 파일을 삭제한다.
 	 */
-	static bool JCORE_CDECL FileDelete(const char* path);
+	static bool JCORE_CDECL FileDelete(const char* _pPath);
 
 	/**
 	 * \brief https://en.cppreference.com/w/cpp/io/c/rename
 	 * 파일의 이름을 변경한다.
 	 */
-	static bool JCORE_CDECL FileRename(const char* oldPath, const char* newPath, bool overwrite = true);
+	static bool JCORE_CDECL FileRename(const char* _pOldPath, const char* _pNewPath, bool _overwrite = true);
 };
 NS_JC_END

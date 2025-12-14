@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -20,9 +20,10 @@ struct ByteOrder final
 {
 	// 엔디안 체크 방법
 	// @참고 : https://sites.google.com/site/insideoscore/endianness
-	constexpr static Endianness HostEndianness() {
-		constexpr int iEndianness = 0x00000001;
-		return (*(char*)&iEndianness == 0x01) ? Endianness::Little : Endianness::Big;
+	constexpr static Endianness HostEndianness()
+	{
+		constexpr int ENDIANNESS = 0x00000001;
+		return (*(char*)&ENDIANNESS == 0x01) ? Endianness::Little : Endianness::Big;
 	}
 
 	// 리틀엔디안 : 4바이트 정수 0xaabbccdd가 메모리에 아래와 같이 저장됨
@@ -38,47 +39,53 @@ struct ByteOrder final
 	// 0x103 : dd
 
 	template <typename T>
-	constexpr static T NetworkToHost(const T val) {
+	constexpr static T NetworkToHost(const T _val)
+	{
 		static_assert(JCore::IsFundamentalType_v<T>, "... T muse be primitive type");
 
 		// 호스트가 빅 엔디언이면 그냥 반환
-		if (HostEndianness() == Endianness::Big) {
-			return val;
+		if (HostEndianness() == Endianness::Big)
+		{
+			return _val;
 		}
 
-		T ret = 0;
-		const int iSize = sizeof(T);
+		T result = 0;
+		const int size = sizeof(T);
 
-		Byte* pDst = (Byte*)&ret;
-		const Byte* pSrc = (Byte*)&val;
+		Byte* pDst = (Byte*)&result;
+		const Byte* pSrc = (Byte*)&_val;
 
-		for (int i = iSize - 1, j = 0; i >= 0; --i, j++) {
-			pDst[j] = pSrc[i];
+		for (int index = size - 1, offset = 0; index >= 0; --index, offset++)
+		{
+			pDst[offset] = pSrc[index];
 		}
 
-		return ret;
+		return result;
 	}
 
 	template <typename T>
-	constexpr static T HostToNetwork(const T val) {
+	constexpr static T HostToNetwork(const T _val)
+	{
 		static_assert(JCore::IsFundamentalType_v<T>, "... T muse be primitive type");
 
 		// 호스트가 빅 엔디언이면 그냥 반환
-		if (HostEndianness() == Endianness::Big) {
-			return val;
+		if (HostEndianness() == Endianness::Big)
+		{
+			return _val;
 		}
 
-		T ret = 0;
-		const int iSize = sizeof(T);
+		T result = 0;
+		const int size = sizeof(T);
 
-		Byte* pDst = (Byte*)&ret;
-		const Byte* pSrc = (Byte*)&val;
+		Byte* pDst = (Byte*)&result;
+		const Byte* pSrc = (Byte*)&_val;
 
-		for (int i = iSize - 1, j = 0; i >= 0; --i, j++) {
-			pDst[j] = pSrc[i];
+		for (int index = size - 1, offset = 0; index >= 0; --index, offset++)
+		{
+			pDst[offset] = pSrc[index];
 		}
 
-		return ret;
+		return result;
 	}
 };
 

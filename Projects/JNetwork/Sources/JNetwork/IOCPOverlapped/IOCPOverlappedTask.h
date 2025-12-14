@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 */
 
@@ -16,50 +16,59 @@ class IOCPOverlappedTask : public IOCPOverlapped
 	using TIOCPTask = IOCPTask<T>;
 	using TIOCPTaskPtr = JCore::SharedPtr<IOCPTask<T>>;
 	using TFnTask = FnTask<T>;
+
 public:
-	IOCPOverlappedTask(IOCP* iocp, TIOCPTaskPtr iocpTask)
-		: IOCPOverlapped(iocp, Type::Custom)
-		, m_spTask(iocpTask)
-	{}
+	IOCPOverlappedTask(IOCP* _pIocp, TIOCPTaskPtr _pIocpTask)
+		: IOCPOverlapped(_pIocp, Type::Custom)
+		, task_(_pIocpTask)
+	{
+	}
 
-	
-	void Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) override {
+	void Process(BOOL _result, Int32UL _numberOfBytesTransferred, IOCPPostOrder* _pCompletionKey) override
+	{
+		(void)_numberOfBytesTransferred;
+		(void)_pCompletionKey;
 
-		TIOCPTask* pTask = m_spTask.GetPtr();
-		Int32U iErrorCode;
+		TIOCPTask* pTask = task_.GetPtr();
+		Int32U errorCode;
 
-		if (IsFailed(result, iErrorCode)) {
-			pTask->m_spResult->Success = false;
-			pTask->m_spResult->ErrorCode = iErrorCode;
-			pTask->m_eState = IOCPTaskState::eFinished;
+		if (IsFailed(_result, errorCode))
+		{
+			pTask->result_->success_ = false;
+			pTask->result_->errorCode_ = errorCode;
+			pTask->state_ = IOCPTaskState::eFinished;
 			ProcessFinally();
 			return;
 		}
 
-		pTask->m_fnTask(*pTask->m_spResult);
-		pTask->m_eState = IOCPTaskState::eReady;
-		pTask->m_WaitHandle.Signal();
+		pTask->fnTask_(*pTask->result_);
+		pTask->state_ = IOCPTaskState::eReady;
+		pTask->waitHandle_.Signal();
 
-		pTask->m_lkContinuousTaskLock.Lock();
-		if (pTask->m_spContinuousTask != nullptr)
-			pTask->m_spContinuousTask->Start();
+		pTask->continuousTaskLock_.Lock();
+		if (pTask->continuousTask_ != nullptr)
+		{
+			pTask->continuousTask_->Start();
+		}
 
-		pTask->m_eState = IOCPTaskState::eFinished;
-		pTask->m_lkContinuousTaskLock.Unlock();
+		pTask->state_ = IOCPTaskState::eFinished;
+		pTask->continuousTaskLock_.Unlock();
 
-		
 		ProcessFinally();
 	}
 
-	void ProcessFinally() {
-		TIOCPTask* pTask = m_spTask.GetPtr();
+	void ProcessFinally()
+	{
+		TIOCPTask* pTask = task_.GetPtr();
 
-		if (pTask->m_fnFinally)
-			pTask->m_fnFinally(*pTask->m_spResult);
+		if (pTask->fnFinally_)
+		{
+			pTask->fnFinally_(*pTask->result_);
+		}
 	}
 
 private:
-	TIOCPTaskPtr m_spTask;
+	TIOCPTaskPtr task_;
 };
 
 NS_JNET_END

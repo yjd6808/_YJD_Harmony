@@ -16,17 +16,24 @@ NS_JC_BEGIN
 Int32U Thread::ms_uiMainThreadId = WinApi::GetCurrentThreadId();
 thread_local Int32U Thread::tls_uiThreadId = 0;
 
-Thread::Thread(TRunnable&& fn, void* param, const char* name, bool autoJoin): Thread(name, autoJoin) {
-    Start(Move(fn), param);
+//////////////////////////////////////////////////////////////////////////////////////////
+Thread::Thread(TRunnable&& _fn, void* _pParam, const char* _pName, bool _autoJoin)
+	: Thread(_pName, _autoJoin)
+{
+    Start(Move(_fn), _pParam);
 }
 
-Thread::~Thread() noexcept {
-    if (m_bAutoJoin) {
+//////////////////////////////////////////////////////////////////////////////////////////
+Thread::~Thread() noexcept
+{
+    if (m_bAutoJoin)
+    {
         Join();
         return;
     }
 
-    if (m_hHandle == nullptr) {
+    if (m_hHandle == nullptr)
+    {
         return;
     }
 
@@ -34,57 +41,71 @@ Thread::~Thread() noexcept {
     WinApi::CloseHandle(m_hHandle);
 }
 
-Thread::Thread(Thread&& other) noexcept : Thread() {
-    operator=(Move(other));
+//////////////////////////////////////////////////////////////////////////////////////////
+Thread::Thread(Thread&& _other) noexcept
+	: Thread()
+{
+    operator=(Move(_other));
 }
 
-bool Thread::SetPriority(int priority) {
-
-    return WinApi::SetThreadPriority(m_hHandle, priority);
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Thread::SetPriority(int _priority)
+{
+    return WinApi::SetThreadPriority(m_hHandle, _priority);
 }
 
-int Thread::GetPriority() {
+//////////////////////////////////////////////////////////////////////////////////////////
+int Thread::GetPriority()
+{
     return WinApi::GetThreadPriority(m_hHandle);
 }
 
-Int32U Thread::GetId() {
-    
+//////////////////////////////////////////////////////////////////////////////////////////
+Int32U Thread::GetId()
+{
     if (m_eState >= eRunning)
         return m_uiThreadId;
 
     return 0;
 }
 
-Thread& Thread::operator=(Thread&& other) noexcept {
-    m_hHandle = other.m_hHandle;
-    m_uiThreadId = other.m_uiThreadId;
-    m_Name = Move(other.m_Name);
-    m_bAutoJoin = other.m_bAutoJoin;
-    m_eState = other.m_eState;
+//////////////////////////////////////////////////////////////////////////////////////////
+Thread& Thread::operator=(Thread&& _other) noexcept
+{
+    m_hHandle = _other.m_hHandle;
+    m_uiThreadId = _other.m_uiThreadId;
+    m_Name = Move(_other.m_Name);
+    m_bAutoJoin = _other.m_bAutoJoin;
+    m_eState = _other.m_eState;
 
-    other.m_hHandle = nullptr;
-    other.m_uiThreadId = 0;
-    other.m_eState = eUninitialized;
-    other.m_bAutoJoin = false;
+    _other.m_hHandle = nullptr;
+    _other.m_uiThreadId = 0;
+    _other.m_eState = eUninitialized;
+    _other.m_bAutoJoin = false;
 
     return *this;
 }
 
-Int32U Thread::GetThreadId() {
+//////////////////////////////////////////////////////////////////////////////////////////
+Int32U Thread::GetThreadId()
+{
     if (tls_uiThreadId != 0)
         return tls_uiThreadId;
 
     return tls_uiThreadId = WinApi::GetCurrentThreadId();
 }
 
-void Thread::Sleep(Int32U ms) {
-    return ::Sleep(ms);
+//////////////////////////////////////////////////////////////////////////////////////////
+void Thread::Sleep(Int32U _milliseconds)
+{
+    ::Sleep(_milliseconds);
 }
 
-Int32U JCORE_STDCALL Thread::ThreadRoutine(void* param) {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+Int32U JCORE_STDCALL Thread::ThreadRoutine(void* _pParam)
+{
     {
-        auto* pRecvParam = static_cast<ThreadParam*>(param);
+        auto* pRecvParam = static_cast<ThreadParam*>(_pParam);
         Thread* pThis = pRecvParam->Self;
         TRunnable runnable = Move(pRecvParam->ThreadFunc);
         void* pParam = pRecvParam->Param;
@@ -101,17 +122,20 @@ Int32U JCORE_STDCALL Thread::ThreadRoutine(void* param) {
     return 0;
 }
 
-int Thread::Start(TRunnable&& fn, void* param) {
+//////////////////////////////////////////////////////////////////////////////////////////
+int Thread::Start(TRunnable&& _fn, void* _pParam)
+{
     DebugAssertMsg(m_eState == eUninitialized, "이미 시작된적이 있는 쓰레드입니다.");      // 재시작 막음
     m_eState = eRunningWait;
     ThreadParam* pStartParam = dbg_new ThreadParam;
-    pStartParam->Param = param;
+    pStartParam->Param = _pParam;
     pStartParam->Self = this;
-    pStartParam->ThreadFunc = Move(fn);
+    pStartParam->ThreadFunc = Move(_fn);
 
     m_hHandle = reinterpret_cast<WinHandle>(CRuntime::BeginThreadEx(ThreadRoutine, pStartParam));
     
-    if (m_hHandle == NULL) {
+    if (m_hHandle == NULL)
+    {
         m_eState = eAborted;
         delete pStartParam;
         return CRuntime::ErrorNo();
@@ -123,7 +147,9 @@ int Thread::Start(TRunnable&& fn, void* param) {
     return 0;
 }
 
-Thread::JoinResult Thread::Join(int timeoutMiliSeconds) {
+//////////////////////////////////////////////////////////////////////////////////////////
+Thread::JoinResult Thread::Join(int _timeoutMiliSeconds)
+{
     const int state = m_eState;
 
     if (state == eUninitialized || state == eAborted)
@@ -132,14 +158,16 @@ Thread::JoinResult Thread::Join(int timeoutMiliSeconds) {
     if (state == eJoined)
         return eAlreadyJoined;
 
-    const Int32U iWaitResult = WinApi::WaitForSingleObject(m_hHandle, timeoutMiliSeconds);
+    const Int32U waitResult = WinApi::WaitForSingleObject(m_hHandle, _timeoutMiliSeconds);
 
-    if (iWaitResult == WAIT_TIMEOUT) {
+    if (waitResult == WAIT_TIMEOUT)
+    {
         return eTimeout;
     }
 
 	// https://learn.microsoft.com/ko-kr/windows/win32/sync/waiting-for-multiple-objects
-    if (iWaitResult != WAIT_OBJECT_0) {
+    if (waitResult != WAIT_OBJECT_0)
+    {
         // ::GetLastError();
         return eError;
     }
@@ -150,12 +178,16 @@ Thread::JoinResult Thread::Join(int timeoutMiliSeconds) {
     return eSuccess;
 }
 
-bool Thread::Joinable() {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Thread::Joinable()
+{
     const int state = m_eState;
     return state >= eRunningWait && state <= eJoinWait;
 }
 
-void Thread::Abort() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void Thread::Abort()
+{
     WinApi::CloseHandle(m_hHandle);
     m_hHandle = nullptr;
     m_eState = eAborted;

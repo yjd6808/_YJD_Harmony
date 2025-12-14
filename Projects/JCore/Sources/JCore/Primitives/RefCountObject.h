@@ -15,12 +15,12 @@ struct RefCountObject
 	virtual ~RefCountObject() = default;
 
 	void AddRef() { ++m_iRef; }
-	void AddRef(int cnt) { m_iRef += cnt; }
+	void AddRef(int _count) { m_iRef += _count; }
 	int GetRefCount() const { return m_iRef.Load(); }
 
 	// 계산을 똑바로해서 Release 호출하도록 할 것
 	// m_iRef가 0이하가 되는 순간이 2회 이상인 경우가 되면 안됨.
-	void Release(int cnt = 1);
+	void Release(int _count = 1);
 protected:
     virtual void ReleaseAction() {}
 private:

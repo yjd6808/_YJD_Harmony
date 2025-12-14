@@ -15,7 +15,10 @@ NS_JC_BEGIN
 class ManualResetEvent : public WaitHandle
 {
 public:
-    explicit ManualResetEvent(bool initialState, const char* name = nullptr): WaitHandle(initialState, true, name) {}
+    explicit ManualResetEvent(bool _initialState, const char* _pName = nullptr)
+        : WaitHandle(_initialState, true, _pName)
+    {
+    }
     ManualResetEvent(const ManualResetEvent& other) = delete;   // 복사 생성 금지
     ManualResetEvent(ManualResetEvent&& other) noexcept;
 

@@ -55,8 +55,8 @@ void NetClientGroup::Initialize() {
 	CreateBufferPool({});
 	RunIocp();
 
-	auto spAuthTcp = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, nullptr, AuthRecvBufferSize_v, AuthSendBufferSize_v);
-	auto spLobbyTcp = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, nullptr, LobbyRecvBufferSize_v, LobbySendBufferSize_v);
+	auto spAuthTcp = MakeShared<TcpClient>(pIocp_, pBufferPool_, nullptr, AuthRecvBufferSize_v, AuthSendBufferSize_v);
+	auto spLobbyTcp = MakeShared<TcpClient>(pIocp_, pBufferPool_, nullptr, LobbyRecvBufferSize_v, LobbySendBufferSize_v);
 
 	AddHost(Const::Host::AuthTcpId, spAuthTcp);
 	AddHost(Const::Host::LobbyTcpId, spLobbyTcp);

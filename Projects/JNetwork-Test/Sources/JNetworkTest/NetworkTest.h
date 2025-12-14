@@ -1,4 +1,4 @@
-﻿//
+//
 // pch.h
 //
 
@@ -17,11 +17,11 @@
 using namespace JCore;
 using namespace JNetwork;
 
-#define ON		1
-#define OFF		0
+#define ON        1
+#define OFF       0
 
 //출력 여부
-#define Print	OFF
+#define Print    OFF
 
 #define TEST_IPEndPointTest     ON
 #define TEST_IPAddressTest      ON
@@ -34,23 +34,29 @@ using namespace JNetwork;
 class AutoMemoryLeakDetector
 {
 public:
-    AutoMemoryLeakDetector() {
+    AutoMemoryLeakDetector()
+    {
         _CrtMemCheckpoint(&memState_);
     }
 
-    ~AutoMemoryLeakDetector() {
+    ~AutoMemoryLeakDetector()
+    {
         _CrtMemState stateNow, stateDiff;
         _CrtMemCheckpoint(&stateNow);
         const int diffResult = _CrtMemDifference(&stateDiff, &memState_, &stateNow);
 
-        if (diffResult) {
+        if (diffResult)
+        {
             reportFailure(stateDiff.lSizes[1]);
             _CrtMemDumpStatistics(&stateDiff);
         }
     }
+
 private:
-    void reportFailure(unsigned int unfreedBytes) {
-        FAIL() << "Memory leak of " << unfreedBytes << " byte(s) detected.";
+    void reportFailure(unsigned int _unfreedBytes)
+    {
+        FAIL() << "Memory leak of " << _unfreedBytes << " byte(s) detected.";
     }
+
     _CrtMemState memState_;
 };

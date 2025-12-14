@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 01/02/2024 10:13:00 AM
  * =====================
@@ -12,27 +12,31 @@
 
 USING_NS_JNET;
 
-int main(int argc, char** argv) {
-    char arg0_default[] = "benchmark";                                 
-    char* args_default = arg0_default;                                 
-    if (!argv) {
-        argc = 1;                                                         
-        argv = &args_default;                                             
+//////////////////////////////////////////////////////////////////////////////////////////
+
+int main(int _argc, char** _pArgv)
+{
+    char arg0Default[] = "benchmark";
+    char* pArgsDefault = arg0Default;
+    if (!_pArgv)
+    {
+        _argc = 1;
+        _pArgv = &pArgsDefault;
     }
 
-    ::benchmark::Initialize(&argc, argv);
+    ::benchmark::Initialize(&_argc, _pArgv);
 
-    if (::benchmark::ReportUnrecognizedArguments(argc, argv)) 
+    if (::benchmark::ReportUnrecognizedArguments(_argc, _pArgv))
         return 1;
 
     Winsock::Initialize(2, 2);
     InitializeJCore();
 
     DefaultParserType = PacketParser::Command;
-    ::benchmark::RunSpecifiedBenchmarks();                         
+    ::benchmark::RunSpecifiedBenchmarks();
     ::benchmark::Shutdown();
 
     FinalizeJCore();
     Winsock::Finalize();
-    return 0;                                                      
+    return 0;
 }

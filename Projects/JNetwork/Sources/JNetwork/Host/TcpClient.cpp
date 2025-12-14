@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -13,266 +13,324 @@ USING_NS_JC;
 
 NS_JNET_BEGIN
 
+//////////////////////////////////////////////////////////////////////////////////////////
 TcpClient::TcpClient(
-	const IOCPPtr& iocp,
-	const MemoryPoolAbstractPtr& bufferAllocator,
-	PacketParser* parser,
-	int recvBufferSize,
-	int sendBufferSize
-)
-	: Session(iocp, bufferAllocator, parser, sendBufferSize, recvBufferSize)
-	, m_pEventListener(nullptr) {
-
+	const IOCPPtr& _pIocp,
+	const MemoryPoolAbstractPtr& _pBufferAllocator,
+	PacketParser* _pParser,
+	int _sendBufferSize,
+	int _recvBufferSize)
+	: Session(_pIocp, _pBufferAllocator, _pParser, _recvBufferSize, _sendBufferSize)
+	, pEventListener_(nullptr)
+{
 	TcpClient::Initialize();
 }
 
-TcpClient::~TcpClient() {
+//////////////////////////////////////////////////////////////////////////////////////////
+TcpClient::~TcpClient()
+{
 	Disconnect();
 	WaitForZeroPending();
-	JCORE_DELETE_SAFE(m_pEventListener);
+	JCORE_DELETE_SAFE(pEventListener_);
 }
 
-static StaticPacket<GenericCommand<int>, GenericCommand<int>>* GenerateTestDummyPacket() {
-	auto* dummyPacket = dbg_new StaticPacket<GenericCommand<int>, GenericCommand<int>>;
-	dummyPacket->Get<0>()->SetCommand(1);
-	dummyPacket->Get<0>()->Value = 2;
-	dummyPacket->Get<1>()->SetCommand(3);
-	dummyPacket->Get<1>()->Value = 4;
-	dummyPacket->AddRef();
-	return dummyPacket;
+//////////////////////////////////////////////////////////////////////////////////////////
+static StaticPacket<GenericCommand<int>, GenericCommand<int>>* GenerateTestDummyPacket()
+{
+	auto* pDummyPacket = dbg_new StaticPacket<GenericCommand<int>, GenericCommand<int>>;
+	pDummyPacket->Get<0>()->SetCommand(1);
+	pDummyPacket->Get<0>()->value_ = 2;
+	pDummyPacket->Get<1>()->SetCommand(3);
+	pDummyPacket->Get<1>()->value_ = 4;
+	pDummyPacket->AddRef();
+	return pDummyPacket;
 }
 
-void TcpClient::Initialize() {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpClient::Initialize()
+{
 	Session::Initialize();
 
-	if (CreateSocket(TransportProtocol::TCP, NonblokingSocket) == false) {
+	if (!CreateSocket(TransportProtocol::TCP, NonblokingSocket))
+	{
 		DebugAssertMsg(false, "TCP 소켓 생성에 실패했습니다. (%u)", Winsock::LastError());
 	}
 
-	if (ConnectIocp() == false) {
+	if (!ConnectIocp())
+	{
 		DebugAssertMsg(false, "IOCP에 연결하는데 실패했습니다. (%u)", Winsock::LastError());
 	}
 }
 
-
 // https://stackoverflow.com/questions/46045434/winsock-c-connect-timeout
 // select로 타임아웃 연결 구현가능
-bool TcpClient::Connect(const IPv4EndPoint& remoteAddr, int timeoutMiliseconds) {
-
-	if (!m_Socket.IsValid()) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool TcpClient::Connect(const IPv4EndPoint& _remoteEndPoint, int _timeoutMilliseconds)
+{
+	if (!socket_.IsValid())
+	{
 		_NetLogError_("연결에 실패했습니다. INVALID_SOCKET 입니다.");
 
-		if (m_pEventListener)
-			m_pEventListener->OnConnectFailed(this, WSA_INVALID_HANDLE);
+		if (pEventListener_)
+		{
+			pEventListener_->OnConnectFailed(this, WSA_INVALID_HANDLE);
+		}
 
 		return false;
 	}
 
+	if (socket_.Option().SetNonBlockingEnabled(true) == SOCKET_ERROR)
+	{
+		const Int32U errorCode = Winsock::LastError();
 
-	if (m_Socket.Option().SetNonBlockingEnabled(true) == SOCKET_ERROR) {
-		const Int32U uiErrorCode = Winsock::LastError();
+		if (pEventListener_)
+		{
+			pEventListener_->OnConnectFailed(this, errorCode);
+		}
 
-		if (m_pEventListener)
-			m_pEventListener->OnConnectFailed(this, uiErrorCode);
-
-		_NetLogError_("연결에 실패했습니다. 논블로킹 소켓 전환실패 (%u)", uiErrorCode);
+		_NetLogError_("연결에 실패했습니다. 논블로킹 소켓 전환실패 (%u)", errorCode);
 		return false;
 	}
 
-	if (m_Socket.Connect(remoteAddr) == SOCKET_ERROR) {
+	if (socket_.Connect(_remoteEndPoint) == SOCKET_ERROR)
+	{
+		const Int32U errorCode = Winsock::LastError();
 
-		const Int32U uiErrorCode = Winsock::LastError();
+		if (errorCode != WSAEWOULDBLOCK)
+		{
+			_NetLogError_("연결에 실패했습니다. (%u)", errorCode);
 
-		if (uiErrorCode != WSAEWOULDBLOCK) {
-			_NetLogError_("연결에 실패했습니다. (%u)", uiErrorCode);
-
-			if (m_pEventListener)
-				m_pEventListener->OnConnectFailed(this, uiErrorCode);
+			if (pEventListener_)
+			{
+				pEventListener_->OnConnectFailed(this, errorCode);
+			}
 
 			return false;
 		}
 
-		fd_set setWrite, setException;
+		fd_set writeSet, exceptionSet;
 
-		FD_ZERO(&setWrite);
-		FD_ZERO(&setException);
+		FD_ZERO(&writeSet);
+		FD_ZERO(&exceptionSet);
 
-		FD_SET(m_Socket.Handle, &setWrite);
-		FD_SET(m_Socket.Handle, &setException);
+		FD_SET(socket_.Handle, &writeSet);
+		FD_SET(socket_.Handle, &exceptionSet);
 
 		timeval timeout;
-		timeout.tv_sec = timeoutMiliseconds / 1000;
-		timeout.tv_usec = (timeoutMiliseconds % 1000) * 1000;
+		timeout.tv_sec = _timeoutMilliseconds / 1000;
+		timeout.tv_usec = (_timeoutMilliseconds % 1000) * 1000;
 
-		const int iSelectRet = select(0, nullptr, &setWrite, &setException, timeoutMiliseconds == 0 ? nullptr : &timeout);
-		if (iSelectRet <= 0) {
+		const int selectResult = select(0, nullptr, &writeSet, &exceptionSet, _timeoutMilliseconds == 0 ? nullptr : &timeout);
+		if (selectResult <= 0)
+		{
 			// 이때 연결을 시도 중(10037)일 수도 있지만 시간이 지났으므로 타임아웃 처리
-			m_Socket.Close();
-			m_eState = eDisconnected;
+			socket_.Close();
+			state_ = eDisconnected;
 			Initialize();
 			WSASetLastError(WSAETIMEDOUT);
 
-			if (m_pEventListener)
-				m_pEventListener->OnConnectFailed(this, WSAETIMEDOUT);
+			if (pEventListener_)
+			{
+				pEventListener_->OnConnectFailed(this, WSAETIMEDOUT);
+			}
 
 			return false;
 		}
 
-		if (FD_ISSET(m_Socket.Handle, &setException)) {
-			const int err = m_Socket.Option().GetErrorCode();
-			m_Socket.Close();
-			m_eState = eDisconnected;
+		if (FD_ISSET(socket_.Handle, &exceptionSet))
+		{
+			const int errorCode = socket_.Option().GetErrorCode();
+			socket_.Close();
+			state_ = eDisconnected;
 			Initialize();
-			WSASetLastError(err);
+			WSASetLastError(errorCode);
 
-			if (m_pEventListener)
-				m_pEventListener->OnConnectFailed(this, err);
+			if (pEventListener_)
+			{
+				pEventListener_->OnConnectFailed(this, errorCode);
+			}
 
 			return false;
 		}
 	}
 
-	m_RemoteEndPoint = remoteAddr;
+	remoteEndPoint_ = _remoteEndPoint;
 	Connected();
 #if TEST_DUMMY_PACKET_TRANSFER
 	// 연결 후 곧장 데이터 전송 테스트
-	if (SendAsync(GenerateTestDummyPacket())) {
-		
+	if (SendAsync(GenerateTestDummyPacket()))
+	{
 	}
 #endif
 
 	return RecvAsync();
 }
 
-
-bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+bool TcpClient::ConnectAsync(const IPv4EndPoint& _destination)
+{
 	// 초기화된 상태에서만 연결을 진행할 수 있습니다.
-	if (m_eState != eInitailized) {
-
-		if (m_pEventListener)
-			m_pEventListener->OnConnectFailed(this, WSANOTINITIALISED);
+	if (state_ != eInitailized)
+	{
+		if (pEventListener_)
+		{
+			pEventListener_->OnConnectFailed(this, WSANOTINITIALISED);
+		}
 
 		return false;
 	}
 
-	m_eState = eConnectWait;
+	state_ = eConnectWait;
 
-	if (m_bIocpConnected == false) {
+	if (!iocpConnected_)
+	{
 		DebugAssertMsg(false, "IOCP와 연결해주세요.");
 
-		if (m_pEventListener)
-			m_pEventListener->OnConnectFailed(this, WSANOTINITIALISED);
+		if (pEventListener_)
+		{
+			pEventListener_->OnConnectFailed(this, WSANOTINITIALISED);
+		}
 
 		return false;
 	}
 
 	// ConnectEx를 사용하기 위해서 클라이언트더라도 바인딩을 해줘야한다.
-	if (!m_Socket.IsBinded() && Bind({}) == false) {
-
-		if (m_pEventListener)
-			m_pEventListener->OnConnectFailed(this, Winsock::LastError());
+	if (!socket_.IsBinded() && !Bind({}))
+	{
+		if (pEventListener_)
+		{
+			pEventListener_->OnConnectFailed(this, Winsock::LastError());
+		}
 
 		return false;
 	}
 
 	// 연결 후 곧장 데이터 전송 테스트
 	// 패킷은 모두 오버랩 Process에서 해제하도록 한다.
-	Int32UL dwSentBytes = 0;
-	auto dummyPacket =
+	Int32UL sentBytes = 0;
+	auto pDummyPacket =
 #if TEST_DUMMY_PACKET_TRANSFER
-	GenerateTestDummyPacket();
+		GenerateTestDummyPacket();
 #else
-	nullptr;
+		nullptr;
 #endif
 
-	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedConnect(this, m_spIocp.GetPtr(), dummyPacket);
-	if (m_Socket.ConnectEx(destination, pOverlapped,
+	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedConnect(this, iocp_.GetPtr(), pDummyPacket);
+	if (socket_.ConnectEx(_destination, pOverlapped,
 #if TEST_DUMMY_PACKET_TRANSFER
-		dummyPacket->GetWSABuf().buf, 
+		pDummyPacket->GetWSABuf().buf,
 		TEST_DUMMY_PACKET_SIZE,
 #else
 		nullptr,
 		0,
 #endif
-		&dwSentBytes) == FALSE) {
-		const Int32U uiError = Winsock::LastError();
-		if (uiError != WSA_IO_PENDING) {
-			DebugAssertMsg(false, "서버 접속에 실패하였습니다. (%u)", uiError);
+		&sentBytes) == FALSE)
+	{
+		const Int32U errorCode = Winsock::LastError();
+		if (errorCode != WSA_IO_PENDING)
+		{
+			DebugAssertMsg(false, "서버 접속에 실패하였습니다. (%u)", errorCode);
 			Disconnect();
 			pOverlapped->Release();
 
-			if (m_pEventListener)
-				m_pEventListener->OnConnectFailed(this, uiError);
+			if (pEventListener_)
+			{
+				pEventListener_->OnConnectFailed(this, errorCode);
+			}
 
 			return false;
 		}
 	}
 
-	
 	return true;
 }
 
-
-
-void TcpClient::Disconnected(Int32U errorCode) {
-	if (m_pEventListener)
-		m_pEventListener->OnDisconnected(this, errorCode);
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpClient::Disconnected(Int32U _errorCode)
+{
+	if (pEventListener_)
+	{
+		pEventListener_->OnDisconnected(this, _errorCode);
+	}
 
 	Initialize();
 }
 
-void TcpClient::NotifyCommand(ICommand* cmd) {
-	if (m_pEventListener)
-		m_pEventListener->OnReceived(this, cmd);
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpClient::NotifyCommand(ICommand* _pCmd)
+{
+	if (pEventListener_)
+	{
+		pEventListener_->OnReceived(this, _pCmd);
+	}
 }
 
-void TcpClient::NotifyPacket(RecvedCommandPacket* packet) {
-	if (m_pEventListener)
-		m_pEventListener->OnReceived(this, packet);
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpClient::NotifyPacket(RecvedCommandPacket* _pPacket)
+{
+	if (pEventListener_)
+	{
+		pEventListener_->OnReceived(this, _pPacket);
+	}
 }
 
-void TcpClient::NotifyRaw(char* data, int len) {
-	if (m_pEventListener)
-		m_pEventListener->OnReceivedRaw(this, data, len);
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpClient::NotifyRaw(char* _pData, int _len)
+{
+	if (pEventListener_)
+	{
+		pEventListener_->OnReceivedRaw(this, _pData, _len);
+	}
 }
 
-void TcpClient::Sent(IPacket* sentPacket, Int32UL sentBytes) {
-	if (m_pEventListener)
-		m_pEventListener->OnSent(this, sentPacket, sentBytes);
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpClient::Sent(IPacket* _pSentPacket, Int32UL _sentBytes)
+{
+	if (pEventListener_)
+	{
+		pEventListener_->OnSent(this, _pSentPacket, _sentBytes);
+	}
 }
 
-
-void TcpClient::Connected() {
-	m_eState = eConnected;
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpClient::Connected()
+{
+	state_ = eConnected;
 
 	// 일정주기마다 "나 살아있소" 전송
-	if (m_Socket.Option().SetKeepAliveEnabled(true) == SOCKET_ERROR) {
+	if (socket_.Option().SetKeepAliveEnabled(true) == SOCKET_ERROR)
+	{
 		DebugAssertMsg(false, "클라이언트 소켓 Keep Alive 활성화 실패");
 	}
 
 	// 빠른 반응을 위해 Nagle 알고리즘을 꺼준다.
-	if (m_Socket.Option().SetNagleEnabled(false) == SOCKET_ERROR) {
+	if (socket_.Option().SetNagleEnabled(false) == SOCKET_ERROR)
+	{
 		DebugAssertMsg(false, "클라이언트 소켓 Nagle 비활성화 실패");
 	}
 
 	// 클라이언트는 린저를 꺼주자.
 	// 송신 버퍼에 있는 데이터를 모두 보내고 안전하게 종료할 수 있도록
-	if (m_Socket.Option().SetLingerEnabled(false) == SOCKET_ERROR) {
+	if (socket_.Option().SetLingerEnabled(false) == SOCKET_ERROR)
+	{
 		DebugAssertMsg(false, "클라이언트 소켓 린저 타임아웃 설정 실패");
 	}
 
-	if (m_pEventListener)
-		m_pEventListener->OnConnected(this);
+	if (pEventListener_)
+	{
+		pEventListener_->OnConnected(this);
+	}
 }
 
-void TcpClient::ConnectFailed(Int32U errorCode) {
-	if (m_pEventListener)
-		m_pEventListener->OnConnectFailed(this, errorCode);
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpClient::ConnectFailed(Int32U _errorCode)
+{
+	if (pEventListener_)
+	{
+		pEventListener_->OnConnectFailed(this, _errorCode);
+	}
 
 	Initialize();
 }
 
 NS_JNET_END
-

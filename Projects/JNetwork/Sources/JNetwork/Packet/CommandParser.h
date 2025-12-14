@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/25/2023 12:14:16 AM
  * =====================
@@ -20,26 +20,31 @@ class CommandParser
 public:
 	virtual ~CommandParser() = default;
 
-	virtual void Initialize() {}
+	virtual void Initialize()
+	{
+	}
 
-	template <typename Cmd>
-	void AddCommand(JCore::Action<Session*, ICommand*> fn) {
-		static_assert(JCore::IsBaseOf_v<ICommand, Cmd>, "... template parameter is not derived from ICommand");
+	template <typename TCommand>
+	void AddCommand(JCore::Action<Session*, ICommand*> _fn)
+	{
+		static_assert(JCore::IsBaseOf_v<ICommand, TCommand>, "... template parameter is not derived from ICommand");
 
-		if (m_CommandActionMap.Exist(Cmd::_Command())) {
+		if (commandActionMap_.Exist(TCommand::_Command()))
+		{
 			DebugAssertMsg(false, "해당 커맨드가 이미 있습니다.");
 			return;
 		}
 
-		m_CommandActionMap.Insert(Cmd::_Command(), fn);
+		commandActionMap_.Insert(TCommand::_Command(), _fn);
 	}
-	virtual bool RunCommand(Session* session, JNetwork::ICommand* cmd) const;
+
+	virtual bool RunCommand(Session* _pSession, JNetwork::ICommand* _pCommand) const;
+
 private:
 	// JCore::Action<Session*, ICommand*> m_fnPreRun;
 	// JCore::Action<Session*, ICommand*> m_fnPostRun;
 
-	JCore::HashMap<Cmd_t, JCore::Action<Session*, ICommand*>> m_CommandActionMap;
+	JCore::HashMap<Cmd_t, JCore::Action<Session*, ICommand*>> commandActionMap_;
 };
-
 
 NS_JNET_END

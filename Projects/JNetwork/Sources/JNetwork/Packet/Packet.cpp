@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/9/2023 10:48:34 PM
  * =====================
@@ -10,39 +10,47 @@
 #include <JNetwork/Packet/Packet.h>
 
 NS_JNET_BEGIN
+//////////////////////////////////////////////////////////////////////////////////////////
+void RecvedCommandPacket::ForEach(const JCore::Action<ICommand*>& _consumer)
+{
+	int commandIndex = 0;
+	char* pCommandData = reinterpret_cast<char*>(this) + PACKET_HEADER_SIZE;
 
-void RecvedCommandPacket::ForEach(const JCore::Action<ICommand*>& consumer) {
-	int iCmdIndex = 0;
-	char* pCmdData = reinterpret_cast<char*>(this) + PacketHeaderSize_v;
+	while (commandIndex < commandCount_)
+	{
+		ICommand* pCurrentCommand = reinterpret_cast<ICommand*>(pCommandData);
+		_consumer(pCurrentCommand);
 
-	while (iCmdIndex < m_iCommandCount) {
-		ICommand* pCurCmd = reinterpret_cast<ICommand*>(pCmdData);
-		consumer(pCurCmd);
-		pCmdData += pCurCmd->CmdLen;
-		iCmdIndex += 1;
+		pCommandData += pCurrentCommand->GetCommandLength();
+		++commandIndex;
 	}
 }
 
-RecvedCommandPacket* RecvedCommandPacket::Clone() const {
-	RecvedCommandPacket* pCopy = (RecvedCommandPacket*)dbg_new char[PacketHeaderSize_v + m_iPacketLen];
-	const char* pCmdData = (char*)this + PacketHeaderSize_v;
+//////////////////////////////////////////////////////////////////////////////////////////
+RecvedCommandPacket* RecvedCommandPacket::Clone() const
+{
+	RecvedCommandPacket* pCopy = reinterpret_cast<RecvedCommandPacket*>(dbg_new char[PACKET_HEADER_SIZE + packetLength_]);
+	const char* pCommandData = reinterpret_cast<const char*>(this) + PACKET_HEADER_SIZE;
 
-	JCore::Memory::CopyUnsafe(pCopy, pCmdData, m_iPacketLen);	// 데이터영역 복사
-	pCopy->m_iPacketLen = m_iPacketLen;
-	pCopy->m_iCommandCount = m_iCommandCount;
+	JCore::Memory::CopyUnsafe(pCopy, pCommandData, packetLength_); // 데이터영역 복사
+	pCopy->packetLength_ = packetLength_;
+	pCopy->commandCount_ = commandCount_;
 	return pCopy;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+CommandBufferPacket::CommandBufferPacket(const CommandBufferPtr& _buffer)
+: CommandPacket(_buffer->GetCommandCount(), _buffer->GetPacketLength())
+, buffer_(_buffer)
+{
+}
 
-CommandBufferPacket::CommandBufferPacket(const CommandBufferPtr& buffer)
-	: CommandPacket(buffer->GetCommandCount(), buffer->GetPacketLength())
-	, m_Buffer(buffer)
-{}
-
-CommandBufferPacket::CommandBufferPacket(const JCore::MemoryPoolAbstractPtr& allocator, const CommandBufferPtr& buffer)
-	: CommandPacket(allocator, buffer->GetCommandCount(), buffer->GetPacketLength())
-	, m_Buffer(buffer)
-{}
-
+//////////////////////////////////////////////////////////////////////////////////////////
+CommandBufferPacket::CommandBufferPacket(const JCore::MemoryPoolAbstractPtr& _allocator,
+                                         const CommandBufferPtr& _buffer)
+: CommandPacket(_allocator, _buffer->GetCommandCount(), _buffer->GetPacketLength())
+, buffer_(_buffer)
+{
+}
 
 NS_JNET_END

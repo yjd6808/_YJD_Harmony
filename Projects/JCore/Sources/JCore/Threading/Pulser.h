@@ -12,38 +12,44 @@
 #include <JCore/Pattern/NonCopyableh.h>
 
 NS_JC_BEGIN
-
 struct PulserStatistics
 {
 	PulserStatistics()
-		: SleepIntervalLast(0)
-		, TotalSleepTime(0)
-		, PulseCount(0)
-	{}
+	: sleepIntervalLast_(0)
+	, totalSleepTime_(0)
+	, pulseCount_(0)
+	{
+	}
 
-	Int32U SleepIntervalLast;		// 마지막으로 실제로 Sleep한 시간
-	Int32U TotalSleepTime;			// 얼마나 잤는지 (누계)
-	Int32U PulseCount;				// 몇번 Sleep에서 깨어났는지 0으로 돌아가도록 unsigned로둠
+	Int32U sleepIntervalLast_; // 마지막으로 실제로 Sleep한 시간
+	Int32U totalSleepTime_; // 얼마나 잤는지 (누계)
+	Int32U pulseCount_; // 몇번 Sleep에서 깨어났는지 0으로 돌아가도록 unsigned로둠
 
-	void Reset() {
-		PulseCount = 0;
-		SleepIntervalLast = 0;
-		TotalSleepTime = 0;
+	void Reset()
+	{
+		pulseCount_ = 0;
+		sleepIntervalLast_ = 0;
+		totalSleepTime_ = 0;
 	}
 };
-
 
 
 class Pulser
 {
 	struct WaitorAbstract
 	{
-		WaitorAbstract(Pulser& pulser) : m_Pulser(pulser) {}
+		WaitorAbstract(Pulser& _pulser)
+		: pulser_(_pulser)
+		{
+		}
+
 		virtual ~WaitorAbstract() = default;
 		virtual TimeSpan Wait() = 0;
+
 	protected:
-		Pulser& m_Pulser;
+		Pulser& pulser_;
 	};
+
 public:
 	using TWatch = StopWatch<StopWatchMode::System>;
 
@@ -65,35 +71,42 @@ public:
 		// 워크타임: 600ms
 		// 슬립타임: 400ms (인터벌 * 2 - 워크타임)
 		// 장점: 슬립타임이 거의 항상 존재하므로 쾌적함.
-		eExactCycle		
+		eExactCycle
 	};
 
-	Pulser(Int32U intervalMiliseconds, Mode mode = eSliceCycle, JCORE_IN PulserStatistics* statistics = nullptr);
+	Pulser(Int32U _intervalMiliseconds, Mode _mode = eSliceCycle, JCORE_IN PulserStatistics* _pStatistics = nullptr);
 	~Pulser();
 
 	void Start();
 	TimeSpan Wait();
 
-	Int32U Interval;
-	TWatch Watch;
-	PulserStatistics* Statistics;
+	Int32U interval_;
+	TWatch watch_;
+	PulserStatistics* pStatistics_;
+
 private:
 	struct SliceWaitor final : WaitorAbstract
 	{
-		SliceWaitor(Pulser& pulser) : WaitorAbstract(pulser) {}
+		SliceWaitor(Pulser& _pulser)
+		: WaitorAbstract(_pulser)
+		{
+		}
+
 		TimeSpan Wait() override;
 	};
 
 	struct ExactWaitor final : WaitorAbstract
 	{
-		ExactWaitor(Pulser& pulser) : WaitorAbstract(pulser) {}
+		ExactWaitor(Pulser& _pulser)
+		: WaitorAbstract(_pulser)
+		{
+		}
+
 		TimeSpan Wait() override;
 	};
 
-	WaitorAbstract* m_pWaitor;
+	WaitorAbstract* pWaitor_;
 };
-
-
 
 
 NS_JC_END

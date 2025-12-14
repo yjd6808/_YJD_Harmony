@@ -2,10 +2,11 @@
 
 #include <JNetwork/IPAddress.h>
 
-
 #if TEST_IPAddressTest == ON
 
-TEST(IPAddressTest, IPv4) {
+//////////////////////////////////////////////////////////////////////////////////////////
+TEST(IPAddressTest, IPv4)
+{
 	EXPECT_DEATH(IPv4Address("255.255.255.256"), "");
 	EXPECT_DEATH(IPv4Address("255.255.256.255"), "");
 	EXPECT_DEATH(IPv4Address("255.256.255.255"), "");
@@ -35,6 +36,5 @@ TEST(IPAddressTest, IPv4) {
 	String s2 = inet_ntop(AF_INET, &addr, buff, 22);
 	EXPECT_TRUE(s == "121.122.123.124");
 }
-
 
 #endif

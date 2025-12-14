@@ -13,15 +13,21 @@ USING_NS_JC;
 
 NS_JNET_BEGIN
 
-UdpClientNetGroup::UdpClientNetGroup(const JCore::String& name)
-	: NetGroup(StringUtil::Format("%s 그룹", name))
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+UdpClientNetGroup::UdpClientNetGroup(const JCore::String& _name)
+	: NetGroup(StringUtil::Format("%s 그룹", _name))
+{
+}
 
-UdpClientNetGroup::~UdpClientNetGroup() {
+//////////////////////////////////////////////////////////////////////////////////////////
+UdpClientNetGroup::~UdpClientNetGroup()
+{
 	UdpClientNetGroup::Finalize();
 }
 
-void UdpClientNetGroup::Initialize() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void UdpClientNetGroup::Initialize()
+{
 	CreateIocp(8);
 	CreateBufferPool({
 		{ 8192, 1 }
@@ -29,12 +35,12 @@ void UdpClientNetGroup::Initialize() {
 
 	RunIocp();
 
-	UdpClientPtr spUdpClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool);
+	UdpClientPtr pUdpClient = MakeShared<UdpClient>(pIocp_, pBufferPool_);
 
-	AddHost(1, spUdpClient);
+	AddHost(1, pUdpClient);
 
-	m_spUdpClient = spUdpClient;
-	m_spUdpClient->SetEventListener(dbg_new ClientListener{ m_szName });
+	udpClient_ = pUdpClient;
+	udpClient_->SetEventListener(dbg_new ClientListener{ name_ });
 }
 
 NS_JNET_END

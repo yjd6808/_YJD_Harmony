@@ -1,4 +1,4 @@
-﻿/*
+/*
  *	작성자 : 윤정도
  */
 
@@ -10,27 +10,32 @@
 #include <JNetwork/Worker.h>
 
 NS_JNET_BEGIN
-
 class WorkerGroup final
 {
 public:
-	WorkerGroup(int threadCount)
-		: m_vWorkers(threadCount)
-		, m_vHandles(threadCount)
-	{}
-	~WorkerGroup() noexcept {
-		for (int i = 0; i < m_vWorkers.Size(); i++) {
-			delete m_vWorkers[i];
+	WorkerGroup(int _threadCount)
+	: workers_(_threadCount)
+	, handles_(_threadCount)
+	{
+	}
+
+	~WorkerGroup() noexcept
+	{
+		for (int i = 0; i < workers_.Size(); i++)
+		{
+			delete workers_[i];
 		}
 	}
 
 	template <typename TWorker, typename... Args>
-	static WorkerGroup* Create(int threadCount, Args&&... args) {
+	static WorkerGroup* Create(int _threadCount, Args&&... _args)
+	{
 		USING_NS_JC;
 
-		WorkerGroup* pManager = dbg_new WorkerGroup(threadCount);
+		WorkerGroup* pManager = dbg_new WorkerGroup(_threadCount);
 
-		for (int i = 0; i < threadCount; i++) {
+		for (int i = 0; i < _threadCount; i++)
+		{
 			// TODO: 이벤트에 동일한 이름부여하면 IOCP를 여러개 생성 후 join할 때 이상하게 동작되는 경우가 있다. 원인파악 할 것
 			// 발생했던 이상한 동작
 			// 1번 IOCP가 워커1, 워커2라는 이름으로 이벤트를 생성한 후
@@ -39,44 +44,57 @@ public:
 
 			String workerName = StringUtil::Format("%s 워커(%d)", typeid(TWorker).name(), i);
 
-			pManager->m_vWorkers.PushBack(dbg_new TWorker(Forward<Args>(args)...));
-			pManager->m_vHandles.EmplaceBack(false, workerName.Source());
+			pManager->workers_.PushBack(dbg_new TWorker(Forward<Args>(_args)...));
+			pManager->handles_.EmplaceBack(false, workerName.Source());
 		}
 
 		return pManager;
 	}
 
-	void Run(void* param = nullptr) {
-		m_vWorkers.Extension().ForEach([param](Worker* worker) { 
-			worker->Run(param);
+	void Run(void* _pParam = nullptr)
+	{
+		workers_.Extension().ForEach([_pParam](Worker* _pWorker)
+		{
+			_pWorker->Run(_pParam);
 		});
 	}
 
-	void Join() const {
-		for (int i = 0; i < m_vWorkers.Size(); i++) {
-			m_vWorkers[i]->JoinWait(&m_vHandles[i]);
+	void Join() const
+	{
+		for (int i = 0; i < workers_.Size(); i++)
+		{
+			workers_[i]->JoinWait(&handles_[i]);
 		}
 
-		Int32UL uiResult;
-		if (JCore::WaitHandle::WaitAll(m_vHandles, &uiResult) == false) {
-			_NetLogError_("워커그룹 Join시도중 오류 발생 (%ul)", uiResult);
+		Int32UL waitResult;
+		if (JCore::WaitHandle::WaitAll(handles_, &waitResult) == false)
+		{
+			_NetLogError_("워커그룹 Join시도중 오류 발생 (%ul)", waitResult);
 		}
 
-		for (int i = 0; i < m_vWorkers.Size(); i++) {
-			m_vHandles[i].Reset();
-			Worker* pWorker = m_vWorkers[i];
+		for (int i = 0; i < workers_.Size(); i++)
+		{
+			handles_[i].Reset();
+			Worker* pWorker = workers_[i];
 			pWorker->Join();
 		}
 	}
 
-	void SetName(const JCore::String& name) { m_szName = name; }
-	const JCore::String& GetName() const { return m_szName; }
+	void SetName(const JCore::String& _name)
+	{
+		name_ = _name;
+	}
+
+	const JCore::String& GetName() const
+	{
+		return name_;
+	}
 
 private:
-	JCore::Vector<Worker*> m_vWorkers;
-	JCore::Vector<JCore::AutoResetEvent> m_vHandles;
-	JCore::String m_szName;
-	
+	JCore::Vector<Worker*> workers_;
+	JCore::Vector<JCore::AutoResetEvent> handles_;
+	JCore::String name_;
+
 	friend class IOCP;
 };
 

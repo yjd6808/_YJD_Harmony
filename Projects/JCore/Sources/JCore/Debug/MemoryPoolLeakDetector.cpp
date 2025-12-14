@@ -6,7 +6,6 @@
  */
 
 
-
 #include <JCore/Core.h>
 #include <JCore/Debug/MemoryPoolLeakDetector.h>
 
@@ -14,18 +13,24 @@
 
 NS_JC_BEGIN
 
-	AutMemoryPoolLeakDetector::AutMemoryPoolLeakDetector(MemoryPoolAbstract* pool, const TAction& action)
-	: m_Pool(pool)
-	, m_Callback(action) {
-		m_Pool->StartDetectLeak();
-	}
+//////////////////////////////////////////////////////////////////////////////////////////
+AutMemoryPoolLeakDetector::AutMemoryPoolLeakDetector(MemoryPoolAbstract* _pPool, const TAction& _action)
+	: m_Pool(_pPool)
+	, m_Callback(_action)
+{
+	m_Pool->StartDetectLeak();
+}
 
-	AutMemoryPoolLeakDetector::~AutMemoryPoolLeakDetector() {
-		int detail[Detail::MemoryBlockSizeMapSize_v];
-		Int64U uiTotalLeak = m_Pool->StopDetectLeak(detail);
+//////////////////////////////////////////////////////////////////////////////////////////
+AutMemoryPoolLeakDetector::~AutMemoryPoolLeakDetector()
+{
+	int detail[Detail::MemoryBlockSizeMapSize_v];
+	Int64U totalLeak = m_Pool->StopDetectLeak(detail);
 
-		if (m_Callback) {
-			m_Callback(uiTotalLeak, detail);
-		}
+	if (m_Callback)
+	{
+		m_Callback(totalLeak, detail);
 	}
 }
+
+NS_JC_END

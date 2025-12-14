@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/23/2023 9:19:50 PM (크리스마스 2일전 토요일날 작성함)
  * =====================
@@ -40,43 +40,43 @@ USING_NS_PACKET_POOLING;
 
 #if PacketPoolingTest == ON
 
-void BM_PacketPooling(State& state) {
-	TestClientCount = state.range(0);
-	TestSendCount = state.range(1);
-	UsePooling = state.range(2);
-	Mode = (TestMode)state.range(3);
+//////////////////////////////////////////////////////////////////////////////////////////
+void BM_PacketPooling(State& _state)
+{
+    TestClientCount = _state.range(0);
+    TestSendCount = _state.range(1);
+    UsePooling = _state.range(2);
+    Mode = (TestMode)_state.range(3);
 
-	char szLabel[1024];
-	sprintf_s(szLabel, 1024, "\n테스트 클라이언트 수 : %d\n테스트 송신 횟수 : %d\n%s\n%s", TestClientCount, TestSendCount, UsePooling ? "풀링 : O" : " 풀링 : X", Mode == TestMode::OnSending ? "풀링 효율을 송신 오버랩 중에서만 측정" : "풀링 효율을 네트워킹동안 측정");
-	state.SetLabel(szLabel);
+    char label[1024];
+    sprintf_s(label, 1024, "\n테스트 클라이언트 수 : %d\n테스트 송신 횟수 : %d\n%s\n%s", TestClientCount, TestSendCount, UsePooling ? "풀링 : O" : " 풀링 : X", Mode == TestMode::OnSending ? "풀링 효율을 송신 오버랩 중에서만 측정" : "풀링 효율을 네트워킹동안 측정");
+    _state.SetLabel(label);
 
+    for (auto value : _state)
+    {
+        _state.PauseTiming();
+        ServerSide::Initialize();
+        ClientSide::Initialize();
+        _state.ResumeTiming();
 
-	for (auto _ : state) {
-		state.PauseTiming();
-		ServerSide::Initialize();
-		ClientSide::Initialize();
-		state.ResumeTiming();
+        ClientSide::StartTest();
+        TestFinished.Wait();
 
-		ClientSide::StartTest();
-		TestFinished.Wait();
+        _state.PauseTiming();
+        // 서버에서 송신 트래픽 모두 수신할때까지 기다린다.
+        if (Mode == TestMode::OnSending)
+            TestFinished.Wait();
 
-
-		state.PauseTiming();
-		// 서버에서 송신 트래픽 모두 수신할때까지 기다린다.
-		if (Mode == TestMode::OnSending)
-			TestFinished.Wait();
-
-		ServerSide::Finalize();
-		ClientSide::Finalize();
-		state.ResumeTiming();
-	}
-	
+        ServerSide::Finalize();
+        ClientSide::Finalize();
+        _state.ResumeTiming();
+    }
 }
 
 BENCHMARK(BM_PacketPooling)->Unit(benchmark::TimeUnit::kMillisecond)
-	->Iterations(5)											// 테스트 횟수
-	->Args({ 10, 100'000, 1, int(TestMode::OnNetworking) })	// 테스트 클라이언트 수, 테스트 송신 횟수, 패킷 풀링 여부
-	->Args({ 10, 100'000, 0, int(TestMode::OnNetworking) })
-	->Args({ 10, 100'000, 1, int(TestMode::OnSending)	})
-	->Args({ 10, 100'000, 0, int(TestMode::OnSending)	});
+    ->Iterations(5)                                            // 테스트 횟수
+    ->Args({ 10, 100'000, 1, int(TestMode::OnNetworking) })    // 테스트 클라이언트 수, 테스트 송신 횟수, 패킷 풀링 여부
+    ->Args({ 10, 100'000, 0, int(TestMode::OnNetworking) })
+    ->Args({ 10, 100'000, 1, int(TestMode::OnSending) })
+    ->Args({ 10, 100'000, 0, int(TestMode::OnSending) });
 #endif

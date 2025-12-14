@@ -22,68 +22,90 @@ String::String() {
 	Initialize();
 }
 
-String::String(const int capacity)  {
-	if (capacity == 0) {
+//////////////////////////////////////////////////////////////////////////////////////////
+String::String(const int _capacity)
+{
+	if (_capacity == 0)
+	{
 		m_pBuffer = nullptr;
 		m_iCapacity = 0;
 		m_iLen = 0;
-	} else {
-		*this = String(EmptySource, capacity);
+	}
+	else
+	{
+		*this = String(EmptySource, _capacity);
 	}
 }
 
-String::String(const char* str, const int capacity) {
-	
-	if (str == nullptr) {
-        m_pBuffer = nullptr;
-        m_iCapacity = 0;
-        m_iLen = 0;
-        return;
-	}
-
-	const int iLen = StringUtil::Length(str);
-	int iExpectedCapcity = int(iLen * EXPANDING_FACTOR);
-
-	if (iExpectedCapcity < capacity) {
-		iExpectedCapcity = capacity;
-	}
-
-	if (iLen == 0) {
-		Initialize(capacity);
+//////////////////////////////////////////////////////////////////////////////////////////
+String::String(const char* _pStr, const int _capacity)
+{
+	if (_pStr == nullptr)
+	{
+		m_pBuffer = nullptr;
+		m_iCapacity = 0;
+		m_iLen = 0;
 		return;
 	}
 
-	m_pBuffer = dbg_new char[iExpectedCapcity];
-	m_iCapacity = iExpectedCapcity;
-	m_iLen = iLen;
+	const int length = StringUtil::Length(_pStr);
+	int expectedCapacity = int(length * EXPANDING_FACTOR);
 
-	StringUtil::Copy(m_pBuffer, m_iCapacity, str);
+	if (expectedCapacity < _capacity)
+	{
+		expectedCapacity = _capacity;
+	}
+
+	if (length == 0)
+	{
+		Initialize(_capacity);
+		return;
+	}
+
+	m_pBuffer = dbg_new char[expectedCapacity];
+	m_iCapacity = expectedCapacity;
+	m_iLen = length;
+
+	StringUtil::Copy(m_pBuffer, m_iCapacity, _pStr);
 }
 
-String::String(const char* str) : String(str, DEFAULT_BUFFER_SIZE) {
+//////////////////////////////////////////////////////////////////////////////////////////
+String::String(const char* _pStr)
+	: String(_pStr, DEFAULT_BUFFER_SIZE)
+{
 }
 
-String::String(char ch, int count) {
-	m_pBuffer = dbg_new char[count + DEFAULT_BUFFER_SIZE];
-	m_iCapacity = count + DEFAULT_BUFFER_SIZE;
-	m_iLen = count;
+//////////////////////////////////////////////////////////////////////////////////////////
+String::String(char _ch, int _count)
+{
+	m_pBuffer = dbg_new char[_count + DEFAULT_BUFFER_SIZE];
+	m_iCapacity = _count + DEFAULT_BUFFER_SIZE;
+	m_iLen = _count;
 
-	for (int i = 0; i < count; ++i) {
-		m_pBuffer[i] = ch;
+	for (int i = 0; i < _count; ++i)
+	{
+		m_pBuffer[i] = _ch;
 	}
 }
 
-String::String(const std::string& str) : String(str.c_str()) {
+//////////////////////////////////////////////////////////////////////////////////////////
+String::String(const std::string& _str)
+	: String(_str.c_str())
+{
 }
 
-String::String(const String& str) : String(str.m_pBuffer) {
-	
+//////////////////////////////////////////////////////////////////////////////////////////
+String::String(const String& _str)
+	: String(_str.m_pBuffer)
+{
 }
 
 
-String::String(String&& str) noexcept {
+//////////////////////////////////////////////////////////////////////////////////////////
+String::String(String&& _str) noexcept
+{
 	// 이동 대입 연산자 호출
-	this->operator=(Move(str));
+	this->operator=(Move(_str));
 }
 
 String::~String() {
@@ -92,11 +114,13 @@ String::~String() {
 
 /* ========================================================== */
 
-void String::ExchangeSource(char* src, int len) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::ExchangeSource(char* _pSrc, int _len)
+{
 	JCORE_DELETE_ARRAY_SAFE(m_pBuffer);
-	m_pBuffer = src;
-	m_iLen = len;
-	m_iCapacity = len + 1;
+	m_pBuffer = _pSrc;
+	m_iLen = _len;
+	m_iCapacity = _len + 1;
 }
 
 /* ========================================================== */

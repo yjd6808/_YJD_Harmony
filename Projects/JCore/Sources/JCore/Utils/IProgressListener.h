@@ -3,6 +3,7 @@
  * 생성일: 8/18/2023 4:53:00 AM
  * =====================
  *
+ *
  */
 
 
@@ -16,14 +17,21 @@ NS_JC_BEGIN
 struct IProgressListener
 {
 	virtual ~IProgressListener() = default;
-	virtual void OnProgressed(int cur, int max) = 0;
-	virtual void OnFinished(int cur, int max) = 0;
+	virtual void OnProgressed(int _cur, int _max) = 0;
+	virtual void OnFinished(int _cur, int _max) = 0;
 };
 
 struct CallbackProgressListener : IProgressListener
 {
-	void OnFinished(int cur, int max) override { if (FinishedCallback) FinishedCallback(cur, max); }
-	void OnProgressed(int cur, int max) override { if (ProgressedCallback) ProgressedCallback(cur, max); }
+	void OnFinished(int _cur, int _max) override
+	{
+		if (FinishedCallback) FinishedCallback(_cur, _max);
+	}
+
+	void OnProgressed(int _cur, int _max) override
+	{
+		if (ProgressedCallback) ProgressedCallback(_cur, _max);
+	}
 
 	Action<int, int> ProgressedCallback;
 	Action<int, int> FinishedCallback;

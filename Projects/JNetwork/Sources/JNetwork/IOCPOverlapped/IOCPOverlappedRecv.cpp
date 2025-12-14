@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -6,39 +6,45 @@
 #include <JNetwork/Winsock.h>
 
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedRecv.h>
-#include <JNetwork/Host/TcpServer.h>
 
 NS_JNET_BEGIN
-
-IOCPOverlappedRecv::IOCPOverlappedRecv(Session* session, IOCP* iocp)
-	: IOCPOverlapped(iocp, Type::Receive)
-	, m_pReceivedSession(session)
+//////////////////////////////////////////////////////////////////////////////////////////
+IOCPOverlappedRecv::IOCPOverlappedRecv(Session* _pSession, IOCP* _pIocp)
+: IOCPOverlapped(_pIocp, Type::Receive)
+, receivedSession_(_pSession)
 {
-	m_pReceivedSession->AddPendingCount();
+	receivedSession_->AddPendingCount();
 }
 
-IOCPOverlappedRecv::~IOCPOverlappedRecv() {
-	m_pReceivedSession->DecreasePendingCount();
+//////////////////////////////////////////////////////////////////////////////////////////
+IOCPOverlappedRecv::~IOCPOverlappedRecv()
+{
+	receivedSession_->DecreasePendingCount();
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+void IOCPOverlappedRecv::Process(BOOL _result, Int32UL _bytesTransferred, IOCPPostOrder* _pCompletionKey)
+{
+	(void)_pCompletionKey;
 
-void IOCPOverlappedRecv::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {
-	const SOCKET hReceiveSock = m_pReceivedSession->SocketHandle();
-	Int32U uiErrorCode = 0;
-	if (IsFailed(hReceiveSock, result, bytesTransffered, uiErrorCode) || bytesTransffered == 0) {
-		m_pReceivedSession->Disconnect();
-		m_pReceivedSession->Disconnected(uiErrorCode);
+	const SOCKET receiveSocket = receivedSession_->SocketHandle();
+	Int32U errorCode = 0;
+	if (IsFailed(receiveSocket, _result, _bytesTransferred, errorCode) || _bytesTransferred == 0)
+	{
+		receivedSession_->Disconnect();
+		receivedSession_->Disconnected(errorCode);
 		return;
 	}
 
-	m_pReceivedSession->Received(bytesTransffered);
+	receivedSession_->Received(_bytesTransferred);
 
 	// TODO: 리시브 오버랩 재사용 기능 구현
-	if (m_pReceivedSession->RecvAsync() == false) {
-		uiErrorCode = Winsock::LastError();
+	if (!receivedSession_->RecvAsync())
+	{
+		errorCode = Winsock::LastError();
 
-		m_pReceivedSession->Disconnect();
-		m_pReceivedSession->Disconnected(uiErrorCode);
+		receivedSession_->Disconnect();
+		receivedSession_->Disconnected(errorCode);
 	}
 }
 

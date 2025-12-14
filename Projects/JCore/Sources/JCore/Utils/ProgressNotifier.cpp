@@ -10,56 +10,73 @@
 
 NS_JC_BEGIN
 
-ProgressNotifier::ProgressNotifier(int maxStep)
+//////////////////////////////////////////////////////////////////////////////////////////
+ProgressNotifier::ProgressNotifier(int _maxStep)
 	: m_pListener(nullptr)
-	, m_iMaxStep(maxStep)
+	, m_iMaxStep(_maxStep)
 	, m_iMaxProgressedStep(0)
 	, m_bListenerOwner(false)
-{}
+{
+}
 
-ProgressNotifier::~ProgressNotifier() {
+//////////////////////////////////////////////////////////////////////////////////////////
+ProgressNotifier::~ProgressNotifier()
+{
 	if (m_bListenerOwner && m_pListener)
 		JCORE_DELETE_SAFE(m_pListener);
 }
 
-void ProgressNotifier::SetListener(IProgressListener* listener, bool transferOwnership) {
-	m_bListenerOwner = transferOwnership;
-	m_pListener = listener;
+//////////////////////////////////////////////////////////////////////////////////////////
+void ProgressNotifier::SetListener(IProgressListener* _pListener, bool _transferOwnership)
+{
+	m_bListenerOwner = _transferOwnership;
+	m_pListener = _pListener;
 }
 
-void ProgressNotifier::NotifyPrgressed(int step) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ProgressNotifier::NotifyPrgressed(int _step)
+{
 	if (m_pListener)
-		m_pListener->OnProgressed(step, m_iMaxStep);
+		m_pListener->OnProgressed(_step, m_iMaxStep);
 }
 
-void ProgressNotifier::NotifyFinished(int step) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ProgressNotifier::NotifyFinished(int _step)
+{
 	if (m_pListener)
-		m_pListener->OnFinished(step, m_iMaxStep);
+		m_pListener->OnFinished(_step, m_iMaxStep);
 }
 
-EachProgressNotifier::EachProgressNotifier(int maxStep)
-	: ProgressNotifier(maxStep)
-{} 
+//////////////////////////////////////////////////////////////////////////////////////////
+EachProgressNotifier::EachProgressNotifier(int _maxStep)
+	: ProgressNotifier(_maxStep)
+{
+}
 
-void EachProgressNotifier::Progress(int step) {
-	NotifyPrgressed(step);
+//////////////////////////////////////////////////////////////////////////////////////////
+void EachProgressNotifier::Progress(int _step)
+{
+	NotifyPrgressed(_step);
 
-	if (step > m_iMaxProgressedStep) {
-		m_iMaxProgressedStep = step;
+	if (_step > m_iMaxProgressedStep)
+	{
+		m_iMaxProgressedStep = _step;
 	}
 
-	if (step >= m_iMaxStep) {
-		NotifyFinished(step);
+	if (_step >= m_iMaxStep)
+	{
+		NotifyFinished(_step);
 	}
 }
 
-PercentProgressNotifier::PercentProgressNotifier(int maxStep, float notificationStepPercent)
-	: ProgressNotifier(maxStep)
-	, m_fNotificationStepPercent(notificationStepPercent)
+//////////////////////////////////////////////////////////////////////////////////////////
+PercentProgressNotifier::PercentProgressNotifier(int _maxStep, float _notificationStepPercent)
+	: ProgressNotifier(_maxStep)
+	, m_fNotificationStepPercent(_notificationStepPercent)
 	, m_fNextNotificationStepQuantity(0.0f)
 {
-
-	if (notificationStepPercent < 0.1f) {
+	if (_notificationStepPercent < 0.1f)
+	{
 		m_fNotificationStepPercent = 0.1f;
 		DebugAssertMsg(false, "알림 퍼센트가 0.1%보다 작으면 안됩니다.");
 	}
@@ -68,47 +85,59 @@ PercentProgressNotifier::PercentProgressNotifier(int maxStep, float notification
 	m_fNotificationStepQuantity = float(m_iMaxStep) * m_fNotificationStepPercent * 0.01f;
 }
 
-void PercentProgressNotifier::Progress(int step) {
-	if (step > m_iMaxProgressedStep) {
-		m_iMaxProgressedStep = step;
+//////////////////////////////////////////////////////////////////////////////////////////
+void PercentProgressNotifier::Progress(int _step)
+{
+	if (_step > m_iMaxProgressedStep)
+	{
+		m_iMaxProgressedStep = _step;
 	}
 
-	if (step >= m_iMaxStep) {
-		NotifyPrgressed(step);
-		NotifyFinished(step);
+	if (_step >= m_iMaxStep)
+	{
+		NotifyPrgressed(_step);
+		NotifyFinished(_step);
 		return;
 	}
 
-	if (float(step) <= m_fNextNotificationStepQuantity) {
+	if (float(_step) <= m_fNextNotificationStepQuantity)
+	{
 		return;
 	}
 
-	NotifyPrgressed(step);
+	NotifyPrgressed(_step);
 	m_fNextNotificationStepQuantity += m_fNotificationStepQuantity;
 }
 
-QuantityProgressNotifier::QuantityProgressNotifier(int maxStep, int notificationStepQuantity)
-	: ProgressNotifier(maxStep)
-	, m_iNotificationStepQuantity(notificationStepQuantity)
+//////////////////////////////////////////////////////////////////////////////////////////
+QuantityProgressNotifier::QuantityProgressNotifier(int _maxStep, int _notificationStepQuantity)
+	: ProgressNotifier(_maxStep)
+	, m_iNotificationStepQuantity(_notificationStepQuantity)
 	, m_iNextNotificationStepQuantity(0)
-{}
+{
+}
 
-void QuantityProgressNotifier::Progress(int step) {
-	if (step > m_iMaxProgressedStep) {
-		m_iMaxProgressedStep = step;
+//////////////////////////////////////////////////////////////////////////////////////////
+void QuantityProgressNotifier::Progress(int _step)
+{
+	if (_step > m_iMaxProgressedStep)
+	{
+		m_iMaxProgressedStep = _step;
 	}
 
-	if (step >= m_iMaxStep) {
-		NotifyPrgressed(step);
-		NotifyFinished(step);
+	if (_step >= m_iMaxStep)
+	{
+		NotifyPrgressed(_step);
+		NotifyFinished(_step);
 		return;
 	}
 
-	if (float(step) <= m_iNotificationStepQuantity) {
+	if (float(_step) <= m_iNotificationStepQuantity)
+	{
 		return;
 	}
 
-	NotifyPrgressed(step);
+	NotifyPrgressed(_step);
 	m_iNextNotificationStepQuantity += m_iNextNotificationStepQuantity;
 }
 

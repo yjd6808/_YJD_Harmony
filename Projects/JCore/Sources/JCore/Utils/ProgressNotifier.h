@@ -4,8 +4,8 @@
  * =====================
  *
  */
-
-
+ 
+ 
 #pragma once
 
 #include <JCore/Utils/IProgressListener.h>
@@ -16,16 +16,16 @@ NS_JC_BEGIN
 class ProgressNotifier
 {
 public:
-	ProgressNotifier(int maxStep);
+	ProgressNotifier(int _maxStep);
 	virtual ~ProgressNotifier();
 
-	virtual void Progress(int step) = 0;
+	virtual void Progress(int _step) = 0;
 
 	// transferOwnership: 인자로 전달한 리스너의 소유권을 Notifier로 이전할지 여부 (이전시 소멸자에서 해당 리스너를 자동 삭제처리함)
-	void SetListener(IProgressListener* listener, bool transferOwnership = false);
+	void SetListener(IProgressListener* _pListener, bool _transferOwnership = false);
 protected:
-	void NotifyPrgressed(int step);
-	void NotifyFinished(int step);
+	void NotifyPrgressed(int _step);
+	void NotifyFinished(int _step);
 
 	IProgressListener* m_pListener;
 	int m_iMaxStep;
@@ -37,16 +37,16 @@ protected:
 class EachProgressNotifier : public ProgressNotifier
 {
 public:
-	EachProgressNotifier(int maxStep);
-	void Progress(int step) override;
+	EachProgressNotifier(int _maxStep);
+	void Progress(int _step) override;
 };
 
 // 몇퍼센트 진행률마다 알림줄지
 class PercentProgressNotifier : public ProgressNotifier
 {
 public:
-	PercentProgressNotifier(int maxStep, float notificationStepPercent);
-	void Progress(int step) override;
+	PercentProgressNotifier(int _maxStep, float _notificationStepPercent);
+	void Progress(int _step) override;
 private:
 	float m_fNotificationStepPercent;
 	float m_fNotificationStepQuantity;
@@ -57,8 +57,8 @@ private:
 class QuantityProgressNotifier : public ProgressNotifier
 {
 public:
-	QuantityProgressNotifier(int maxStep, int notificationStepQuantity);
-	void Progress(int step) override;
+	QuantityProgressNotifier(int _maxStep, int _notificationStepQuantity);
+	void Progress(int _step) override;
 private:
 	int m_iNotificationStepQuantity;
 	int m_iNextNotificationStepQuantity;	// 알람을 줄 다음 스탭 갯수

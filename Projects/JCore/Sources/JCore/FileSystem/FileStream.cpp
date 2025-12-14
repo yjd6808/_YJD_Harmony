@@ -16,154 +16,216 @@
 
 NS_JC_BEGIN
 
-FileStream::FileStream(const String& path, FileAccess access, FileMode mode)
-	: m_eAccess(access)
-	, m_eMode(mode)
+//////////////////////////////////////////////////////////////////////////////////////////
+FileStream::FileStream(const String& _path, FileAccess _access, FileMode _mode)
+	: m_eAccess(_access)
+	, m_eMode(_mode)
 	, m_hHandle(nullptr)
 {
-	const char* pPath = path.Source();
+	const char* pPath = _path.Source();
 
-	switch (access) {
-		case FileAccess::eRead: {
-			m_hHandle = CRuntime::FileOpen(pPath, "rb");
+	switch (_access)
+	{
+	case FileAccess::eRead:
+	{
+		m_hHandle = CRuntime::FileOpen(pPath, "rb");
 
-			if (m_hHandle == nullptr) throw RuntimeException("파일을 Read 모드로 여는데 실패하였습니다.");
-			if (CRuntime::FileSeekEnd(m_hHandle, 0)) {
-				m_eMode = FileMode::eOpen;
-				m_bCanRead = true;
-				m_iLength = CRuntime::FileTell(m_hHandle);
-				CRuntime::FileSeekBegin(m_hHandle, 0);
-			}
+		if (m_hHandle == nullptr)
+		{
+			throw RuntimeException("파일을 Read 모드로 여는데 실패하였습니다.");
 		}
-		break;
-		case FileAccess::eWrite: {
 
-			switch (mode) {
-			case FileMode::eAppend: 
-				m_hHandle = CRuntime::FileOpen(pPath, "ab");
-				if (m_hHandle == nullptr) throw RuntimeException("파일을 Write/Append 모드로 여는데 실패하였습니다.");
-				m_iLength = CRuntime::FileTell(m_hHandle);
-				m_iOffset = m_iLength;
-				break;
-			case FileMode::eOpen:
-				if (!File::Exist(pPath)) throw RuntimeException("파일을 Write/Open 모드로 여는데 실패하였습니다. (파일이 없음)");
-				m_hHandle = CRuntime::FileOpen(pPath, "wb");
-				if (m_hHandle == nullptr) throw RuntimeException("파일을 Write/Open 모드로 여는데 실패하였습니다.");
-				m_iLength = CRuntime::FileTell(m_hHandle);
-				break;
-			case FileMode::eCreate: 
-				m_hHandle = CRuntime::FileOpen(pPath, "wb");
-				if (m_hHandle == nullptr) throw RuntimeException("파일을 Write/Create 모드로 여는데 실패하였습니다.");
-				break;
-			}
-
-			m_bCanWrite = true;
-			
-		}
-		break;
-
-		case FileAccess::eReadWrite: {
-			switch (mode) {
-			case FileMode::eAppend:
-				m_iLength = File::Size(pPath);	// append/read 모드로 열면 한번이라도 write 하기전에는 옵셋이 0임, 따라서 위치를 수동으로 구해줘야한다.
-				if (m_iLength == -1) throw RuntimeException("파일을 ReadWrite/Append 모드로 여는데 실패하였습니다.");
-				m_hHandle = CRuntime::FileOpen(pPath, "ab+");
-				if (m_hHandle == nullptr) throw RuntimeException("파일을 ReadWrite/Append 모드로 여는데 실패하였습니다.");
-				m_iOffset = m_iLength;
-				break;
-			case FileMode::eOpen:
-				m_iLength = File::Size(pPath);	// read/write 모드로 열면 옵셋이 초기 0이므로 길이를 수동으로 구해줘야한다.
-				if (m_iLength == -1) throw RuntimeException("파일을 ReadWrite/Open 모드로 여는데 실패하였습니다.");
-				m_hHandle = CRuntime::FileOpen(pPath, "rb+");
-				if (m_hHandle == nullptr) throw RuntimeException("파일을 ReadWrite/Open 모드로 여는데 실패하였습니다.");
-				
-				break;
-			case FileMode::eCreate: 
-				m_hHandle = CRuntime::FileOpen(pPath, "wb+");
-				if (m_hHandle == nullptr) throw RuntimeException("파일을 ReadWrite/Create 모드로 여는데 실패하였습니다.");
-				break;
-			}
-
-			m_bCanWrite = true;
+		if (CRuntime::FileSeekEnd(m_hHandle, 0))
+		{
+			m_eMode = FileMode::eOpen;
 			m_bCanRead = true;
+			m_iLength = CRuntime::FileTell(m_hHandle);
+			CRuntime::FileSeekBegin(m_hHandle, 0);
 		}
+	}
+	break;
+
+	case FileAccess::eWrite:
+	{
+		switch (_mode)
+		{
+		case FileMode::eAppend:
+			m_hHandle = CRuntime::FileOpen(pPath, "ab");
+			if (m_hHandle == nullptr)
+			{
+				throw RuntimeException("파일을 Write/Append 모드로 여는데 실패하였습니다.");
+			}
+			m_iLength = CRuntime::FileTell(m_hHandle);
+			m_iOffset = m_iLength;
+			break;
+
+		case FileMode::eOpen:
+			if (!File::Exist(pPath))
+			{
+				throw RuntimeException("파일을 Write/Open 모드로 여는데 실패하였습니다. (파일이 없음)");
+			}
+			m_hHandle = CRuntime::FileOpen(pPath, "wb");
+			if (m_hHandle == nullptr)
+			{
+				throw RuntimeException("파일을 Write/Open 모드로 여는데 실패하였습니다.");
+			}
+			m_iLength = CRuntime::FileTell(m_hHandle);
+			break;
+
+		case FileMode::eCreate:
+			m_hHandle = CRuntime::FileOpen(pPath, "wb");
+			if (m_hHandle == nullptr)
+			{
+				throw RuntimeException("파일을 Write/Create 모드로 여는데 실패하였습니다.");
+			}
+			break;
+		}
+
+		m_bCanWrite = true;
+	}
+	break;
+
+	case FileAccess::eReadWrite:
+	{
+		switch (_mode)
+		{
+		case FileMode::eAppend:
+			m_iLength = File::Size(pPath); // append/read 모드로 열면 한번이라도 write 하기전에는 옵셋이 0임, 따라서 위치를 수동으로 구해줘야한다.
+			if (m_iLength == -1)
+			{
+				throw RuntimeException("파일을 ReadWrite/Append 모드로 여는데 실패하였습니다.");
+			}
+			m_hHandle = CRuntime::FileOpen(pPath, "ab+");
+			if (m_hHandle == nullptr)
+			{
+				throw RuntimeException("파일을 ReadWrite/Append 모드로 여는데 실패하였습니다.");
+			}
+			m_iOffset = m_iLength;
+			break;
+
+		case FileMode::eOpen:
+			m_iLength = File::Size(pPath); // read/write 모드로 열면 옵셋이 초기 0이므로 길이를 수동으로 구해줘야한다.
+			if (m_iLength == -1)
+			{
+				throw RuntimeException("파일을 ReadWrite/Open 모드로 여는데 실패하였습니다.");
+			}
+			m_hHandle = CRuntime::FileOpen(pPath, "rb+");
+			if (m_hHandle == nullptr)
+			{
+				throw RuntimeException("파일을 ReadWrite/Open 모드로 여는데 실패하였습니다.");
+			}
+			break;
+
+		case FileMode::eCreate:
+			m_hHandle = CRuntime::FileOpen(pPath, "wb+");
+			if (m_hHandle == nullptr)
+			{
+				throw RuntimeException("파일을 ReadWrite/Create 모드로 여는데 실패하였습니다.");
+			}
+			break;
+		}
+
+		m_bCanWrite = true;
+		m_bCanRead = true;
+	}
+	break;
 	}
 
 	m_bCanSeek = true;
-	
 }
 
-FileStream::~FileStream() {
+//////////////////////////////////////////////////////////////////////////////////////////
+FileStream::~FileStream()
+{
 	FileStream::Close();
 }
 
-int FileStream::Read(JCORE_OUT Byte* bytes, int offset, int len) {
+//////////////////////////////////////////////////////////////////////////////////////////
+int FileStream::Read(JCORE_OUT Byte* _pBytes, int _offset, int _len)
+{
 	DebugAssertMsg(CanRead(), "읽기가 불가능한 스트림입니다.");
 	DebugAssertMsg(m_hHandle, "스트림이 닫혀 있습니다.");
-	int iReadCount = CRuntime::FileRead(bytes + offset, 1, (int)len, m_hHandle);
 
-	m_iOffset += iReadCount;
+	int readCount = CRuntime::FileRead(_pBytes + _offset, 1, _len, m_hHandle);
+
+	m_iOffset += readCount;
 
 	if (m_iOffset > m_iLength)
+	{
 		m_iOffset = m_iLength;
+	}
 
 	DebugAssert(CRuntime::FileTell(m_hHandle) == m_iOffset);
-	return (int)iReadCount;
+	return readCount;
 }
 
-void FileStream::Write(const Byte* bytes, int offset, int len) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void FileStream::Write(const Byte* _pBytes, int _offset, int _len)
+{
 	DebugAssertMsg(CanWrite(), "쓰기가 불가능한 스트림입니다.");
 	DebugAssertMsg(m_hHandle, "스트림이 닫혀 있습니다.");
-	int iWriteCount = CRuntime::FileWrite(bytes + offset, 1, len, m_hHandle);
-	SetOffset(m_iOffset += iWriteCount);
+
+	int writeCount = CRuntime::FileWrite(_pBytes + _offset, 1, _len, m_hHandle);
+	SetOffset(m_iOffset += writeCount);
 
 	DebugAssert(CRuntime::FileTell(m_hHandle) == m_iOffset);
 }
 
-
-void FileStream::Seek(int offset, Origin origin) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void FileStream::Seek(int _offset, Origin _origin)
+{
 	DebugAssertMsg(CanSeek(), "읽기가 불가능한 스트림입니다.");
 	DebugAssertMsg(m_hHandle, "스트림이 닫혀 있습니다.");
 
-	switch (origin) {
+	switch (_origin)
+	{
 	case Origin::eBegin:
-		if (offset >= m_iLength) {
+		if (_offset >= m_iLength)
+		{
 			CRuntime::FileSeekEnd(m_hHandle, 0);
-			offset = m_iLength;
+			_offset = m_iLength;
 		}
-		else {
-			CRuntime::FileSeekBegin(m_hHandle, offset);
+		else
+		{
+			CRuntime::FileSeekBegin(m_hHandle, _offset);
 		}
-		m_iOffset = offset;
+		m_iOffset = _offset;
 		break;
+
 	case Origin::eCurrent:
-		CRuntime::FileSeekCur(m_hHandle, offset);
-		m_iOffset += offset;
+		CRuntime::FileSeekCur(m_hHandle, _offset);
+		m_iOffset += _offset;
 		break;
+
 	case Origin::eEnd:
-		CRuntime::FileSeekEnd(m_hHandle, offset);
-		m_iOffset -= offset;
+		CRuntime::FileSeekEnd(m_hHandle, _offset);
+		m_iOffset -= _offset;
 		break;
 	}
-	
-	
+
 	DebugAssert(CRuntime::FileTell(m_hHandle) == m_iOffset);
 }
 
-bool FileStream::Flush() {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool FileStream::Flush()
+{
 	return CRuntime::FileFlush(m_hHandle);
 }
 
-void FileStream::Close() {
-	if (m_hHandle) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void FileStream::Close()
+{
+	if (m_hHandle)
+	{
 		CRuntime::FileClose(m_hHandle);
 		m_hHandle = nullptr;
 	}
 }
 
-bool FileStream::IsClosed() {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool FileStream::IsClosed()
+{
 	return m_hHandle == nullptr;
 }
 
 NS_JC_END
-

@@ -17,20 +17,33 @@ public:
 	~AuthenticationComponent() override;
 
 	void initialize() override;
-	Type getType() const override { return  eAuthentication; }
+	Type getType() const override
+	{
+		return eAuthentication;
+	}
 
-	void setAccountIdPass(const char* id, const char* pass);
-	void setLastServer(GameServerType_t lastServer);
-	void setState(AuthenticationState_t state);
-	void setSerial(AuthenticationSerial_t serial);
+	void setAccountIdPass(const char* _pId, const char* _pPass);
+	void setLastServer(GameServerType_t _lastServer);
+	void setState(AuthenticationState_t _state);
+	void setSerial(AuthenticationSerial_t _serial);
 
-	AuthenticationSerial_t getSerial() const { return m_iSerial; }
-	AuthenticationState_t getState() const { return m_eState; }
-	const AccountData& getAccountData() const { return m_AccountData; }
+	AuthenticationSerial_t getSerial() const
+	{
+		return serial_;
+	}
+
+	AuthenticationState_t getState() const
+	{
+		return state_;
+	}
+
+	const AccountData& getAccountData() const
+	{
+		return accountData_;
+	}
 
 private:
-	AccountData m_AccountData;
-
-	AuthenticationSerial_t m_iSerial;
-	AuthenticationState_t m_eState;
+	AccountData accountData_;
+	AuthenticationSerial_t serial_;
+	AuthenticationState_t state_;
 };

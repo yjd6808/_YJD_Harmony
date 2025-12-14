@@ -14,12 +14,12 @@ template <typename T, typename TAction = Action<T>>
 class AutoRef
 {
 public:
-	AutoRef(T& ref) : m_Ref(ref) {}
-	AutoRef(T& ref, TAction&& fn) : m_Ref(ref), m_Fn(Move(fn)) {}
-	~AutoRef() { m_Fn(m_Ref); }
+	AutoRef(T& _ref) : ref_(_ref) {}
+	AutoRef(T& _ref, TAction&& _fn) : ref_(_ref), fn_(Move(_fn)) {}
+	~AutoRef() { fn_(ref_); }
 private:
-	T& m_Ref;
-	TAction m_Fn;
+	T& ref_;
+	TAction fn_;
 };
 
 template <typename T, typename TAction>

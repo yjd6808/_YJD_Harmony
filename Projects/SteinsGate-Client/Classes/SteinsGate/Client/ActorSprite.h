@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 1:09:35 PM
  * =====================
@@ -12,8 +12,6 @@
 #include <SteinsGate/Client/ActorPartSprite.h>
 
 
-
-
 class Actor;
 class ActorSprite : public SGSprite
 {
@@ -24,49 +22,49 @@ public:
 		ActorPartSprite* Part;
 		SGDrawNode* BoundingBox;
 
-		bool operator==(const PartData& other);
+		bool operator==(const PartData& _other);
 	};
 
-	ActorSprite(Actor* actor, ActorSpriteData* actorSpriteData);
-	static ActorSprite* create(Actor* actor, ActorSpriteData* actorSpriteData);
+	ActorSprite(Actor* _pActor, ActorSpriteData* _pActorSpriteData);
+	static ActorSprite* create(Actor* _pActor, ActorSpriteData* _pActorSpriteData);
 
 	bool init() override;
-	void update(float dt) override;
+	void update(float _dt) override;
 
-	void onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture);
-	void onFrameEnd(ActorPartAnimation* animation, FrameTexture* texture);
-	void onAnimationBegin(ActorPartAnimation* animation, FrameTexture* texture);
-	void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture);
+	void onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	void onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	void onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	void onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
 
-	void setSpriteDirection(SpriteDirection_t direction);
+	void setSpriteDirection(SpriteDirection_t _direction);
 	void setForwardDirection();
 	void setBackwardDirection();
 
-	void runAnimation(int code);
-	void runAnimation(int code, int startFrameIndexInAnimation);
+	void runAnimation(int _code);
+	void runAnimation(int _code, int _startFrameIndexInAnimation);
 	void pauseAnimation();
-	void pauseAnimation(float delay);
+	void pauseAnimation(float _delay);
 	void resumeAnimation();
 
 	ActorPartSprite* getBodyPart();
-	Actor* getActor() { return m_pActor; }
+	Actor* getActor() { return actor_; }
 	SGNode* getBodyCanvas();
-	SGSize	getBodyCanvasSize();
-	SGSize	getBodyPartSize();
-	SGVec2	getBodyPartPosition();
-	PartData createPart(const ActorPartSpriteData& partSpriteData, int frameCount);
+	SGSize getBodyCanvasSize();
+	SGSize getBodyPartSize();
+	SGVec2 getBodyPartPosition();
+	PartData createPart(const ActorPartSpriteData& _partSpriteData, int _frameCount);
 
-	SGVector<PartData>& getParts() { return m_vParts; }
+	SGVector<PartData>& getParts() { return parts_; }
 	SpriteDirection_t getSpriteDirection();
 	int getRunningAnimationCode();
 	ActorPartAnimation* getRunningAnimation() const;
-	void updateSpriteData(ActorSpriteData* spriteData);
+	void updateSpriteData(ActorSpriteData* _pSpriteData);
 private:
-	int m_iFrameCount;
-	Actor* m_pActor;
-	ActorSpriteData* m_pActorData;
-	SGVector<PartData> m_vParts;
-	SpriteDirection_t m_eDirection;
+	int frameCount_;
+	Actor* actor_;
+	ActorSpriteData* actorData_;
+	SGVector<PartData> parts_;
+	SpriteDirection_t direction_;
 };
 
 

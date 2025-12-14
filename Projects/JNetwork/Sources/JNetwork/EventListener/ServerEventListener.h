@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	서버의 이벤트리스너
 
@@ -19,9 +19,9 @@
 
 NS_JNET_BEGIN
 
-struct ICommand;
-struct IPacket;
-struct RecvedCommandPacket;
+class ICommand;
+class IPacket;
+class RecvedCommandPacket;
 class TcpServer;
 class Session;
 class Server;
@@ -31,17 +31,17 @@ class ServerEventListener
 public:
 	virtual ~ServerEventListener() = default;
 	virtual void OnStarted() {}
-	virtual void OnStartFailed(Int32U errorCode) {}
+	virtual void OnStartFailed(Int32U _errorCode) {}
 	virtual void OnStopped() {}
 
 	// TODO: 함수명 Accept로 변경할것, 관련해서 TcpServer, Session도 수정해야할듯?
-	virtual void OnConnected(Session* session) {}
-	virtual void OnConnectFailed(Session* session, Int32U errorCode) {}
-	virtual void OnDisconnected(Session* session, Int32U errorCode) {}
-	virtual void OnSent(Session* session, IPacket* sentPacket, Int32UL sentBytes) {}
-	virtual void OnReceivedRaw(Session* session, char* data, int len) {}
-	virtual void OnReceived(Session* session, ICommand* recvCmd) {}
-	virtual void OnReceived(Session* session, RecvedCommandPacket* recvPacket) {}
+	virtual void OnConnected(Session* _pSession) {}
+	virtual void OnConnectFailed(Session* _pSession, Int32U _errorCode) {}
+	virtual void OnDisconnected(Session* _pSession, Int32U _errorCode) {}
+	virtual void OnSent(Session* _pSession, IPacket* _pSentPacket, Int32UL _sentBytes) {}
+	virtual void OnReceivedRaw(Session* _pSession, char* _pData, int _len) {}
+	virtual void OnReceived(Session* _pSession, ICommand* _pRecvCmd) {}
+	virtual void OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket) {}
 };
 
 NS_JNET_END

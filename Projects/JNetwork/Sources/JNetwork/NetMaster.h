@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/9/2023 1:32:55 PM
  * =====================
@@ -21,16 +21,17 @@ public:
 	virtual void Initialize() = 0;
 	virtual void Finalize();
 
-	void SetName(const JCore::String& name);
+	void SetName(const JCore::String& _name);
 
-	void AddNetGroup(int id, const NetGroupPtr& group);
-	NetGroupPtr GetNetGroup(int id);
+	void AddNetGroup(int _groupId, const NetGroupPtr& _pGroupPtr);
+	NetGroupPtr GetNetGroup(int _id);
 
 	static constexpr const char* TypeName() { return "네트마스터"; }
+
 protected:
-	JCore::HashMap<int, NetGroupPtr> m_hNetGroup;
-	bool m_bFinalized;
-	JCore::String m_szName;
+	JCore::HashMap<int, NetGroupPtr> netGroupMap_;
+	bool finalized_;
+	JCore::String name_;
 };
 
 NS_JNET_END

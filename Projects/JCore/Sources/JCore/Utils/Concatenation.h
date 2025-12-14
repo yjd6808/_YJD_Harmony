@@ -24,15 +24,17 @@ NS_JC_BEGIN
 */
 
 template <typename R, typename T>
-static R MoveConcat(T&& str) {
-	R ret = Move(str);
+static R MoveConcat(T&& _str)
+{
+	R ret = Move(_str);
 	return ret;
 }
 
 template <typename R, typename T, typename... TOther>
-static R MoveConcat(T&& a1, TOther&&... strings) {
-	R ret = Move(a1);
-	ret += MoveConcat<R>(Forward<TOther>(strings)...);
+static R MoveConcat(T&& _a1, TOther&&... _strings)
+{
+	R ret = Move(_a1);
+	ret += MoveConcat<R>(Forward<TOther>(_strings)...);
 	return ret;
 }
 
@@ -44,15 +46,18 @@ static R MoveConcat(T&& a1, TOther&&... strings) {
 */
 
 template <typename R, typename T>
-static R CopyConcat(T&& str) {
-	R ret = str;
+static R CopyConcat(T&& _str)
+{
+	R ret = _str;
 	return ret;
 }
 
 template <typename R, typename T, typename... TOther>
-static R CopyConcat(T&& a1, TOther&&... strings) {
-	R ret = a1;
-	ret += CopyConcat<R>(Forward<TOther>(strings)...);
+static R CopyConcat(T&& _a1, TOther&&... _strings)
+{
+	R ret = _a1;
+	ret += CopyConcat<R>(Forward<TOther>(_strings)...);
 	return ret;
 }
+
 NS_JC_END

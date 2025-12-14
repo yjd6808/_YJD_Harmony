@@ -24,9 +24,9 @@ public:
 	void Unlock() override;
 	bool IsLocked() override;
 private:
-	NormalLock m_Lock;
-	Int32U m_uiLockedThreadId;
-	int m_iRecursion;
+	NormalLock m_lock;
+	Int32U m_lockedThreadId;
+	int m_recursion;
 };
 
 using RecursiveLockGuard = LockGuard<RecursiveLock>;

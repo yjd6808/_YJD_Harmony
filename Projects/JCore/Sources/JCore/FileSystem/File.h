@@ -19,39 +19,38 @@ class String;
 class File
 {
 public:
-	static bool Exist(const char* path);
-	static bool Exist(const String& path);
+	static bool Exist(const char* _pPath);
+	static bool Exist(const String& _path);
 
 	// 파일이 없으면 -1 반환
-	static long Size(const char* path);
-	static long Size(const String& path);
+	static long Size(const char* _pPath);
+	static long Size(const String& _path);
 
-	static bool Delete(const char* path);
-	static bool Delete(const String& path);
+	static bool Delete(const char* _pPath);
+	static bool Delete(const String& _path);
 
-	static bool Move(const char* srcPath, const char* dstPath);
-	static bool Move(const String& srcPath, const String& dstPath);
+	static bool Move(const char* _pSrcPath, const char* _pDstPath);
+	static bool Move(const String& _srcPath, const String& _dstPath);
 
-	static bool Copy(const char* srcPath, const char* dstPath);
-	static bool Copy(const String& srcPath, const String& dstPath);
+	static bool Copy(const char* _pSrcPath, const char* _pDstPath);
+	static bool Copy(const String& _srcPath, const String& _dstPath);
 
 	// "abcd", 4 (NULL 문자는 뺀 길이를 전달해줘야함)
-	static void WriteAllText(const char* content, int contentLength, const char* path);
-	static void WriteAllText(const String& content, const char* path);
-	static void WriteAllBytes(const Byte* content, int contentLength, const char* path);
+	static void WriteAllText(const char* _pContent, int _contentLength, const char* _pPath);
+	static void WriteAllText(const String& _content, const char* _pPath);
+	static void WriteAllBytes(const Byte* _pContent, int _contentLength, const char* _pPath);
 
-
-	static String ReadAllText(const char* path);
-
+	static String ReadAllText(const char* _pPath);
 
 	template <Int32U ContentLength>
-	static void WriteAllText(const char(&content)[ContentLength], const char* path) {
+	static void WriteAllText(const char (&_content)[ContentLength], const char* _pPath)
+	{
 		// NULL 문자 뺀 길이를 전달
-		WriteAllText(content, ContentLength - 1, path);
+		WriteAllText(_content, ContentLength - 1, _pPath);
 	}
 
 private:
-	static void FormatFileMode(char* modeBuffer, int modeBufferCapacity, const char* dfaultMode, CodePage codePage);
+	static void FormatFileMode(char* _pModeBuffer, int _modeBufferCapacity, const char* _pDefaultMode, CodePage _codePage);
 };
 
 

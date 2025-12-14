@@ -47,39 +47,39 @@ class RefCountObjectPtr
 
 	template <typename U>
 	static constexpr bool ValidateType() {
-		constexpr bool bValidType = IsRefCountObjectPtrType<NakedType_t<U>>::Value;
-		static_assert(bValidType, "... U is not RefCountObjectPtr type");
-		return bValidType;
+		constexpr bool VALID_TYPE = IsRefCountObjectPtrType<NakedType_t<U>>::Value;
+		static_assert(VALID_TYPE, "... U is not RefCountObjectPtr type");
+		return VALID_TYPE;
 	}
 
 	template <typename UField>
 	static constexpr bool ValidateField() {
-		constexpr bool bFieldConversion = JCore::IsConvertible_v<UField*, TField*>;
-		static_assert(bFieldConversion, "... cannot convert! TField = UField");
-		return bFieldConversion;
+		constexpr bool FIELD_CONVERSION = JCore::IsConvertible_v<UField*, TField*>;
+		static_assert(FIELD_CONVERSION, "... cannot convert! TField = UField");
+		return FIELD_CONVERSION;
 	}
 
 	#pragma endregion
 public:
 	RefCountObjectPtr() : m_pRefCountObj(nullptr) {}
-	RefCountObjectPtr(T* ref, bool addRef = true) : m_pRefCountObj(ref) {
-		if (addRef && m_pRefCountObj)
+	RefCountObjectPtr(T* _pRef, bool _addRef = true) : m_pRefCountObj(_pRef) {
+		if (_addRef && m_pRefCountObj)
 			m_pRefCountObj->AddRef();
 	}
 
-	RefCountObjectPtr(const TThis& other) : m_pRefCountObj(nullptr) { CopyFrom(other); }
-	RefCountObjectPtr(TThis&& other) noexcept : m_pRefCountObj(nullptr) { MoveFrom(other); }
+	RefCountObjectPtr(const TThis& _other) : m_pRefCountObj(nullptr) { CopyFrom(_other); }
+	RefCountObjectPtr(TThis&& _other) noexcept : m_pRefCountObj(nullptr) { MoveFrom(_other); }
 
 	template <typename U>
-	RefCountObjectPtr(const RefCountObjectPtr<U>& other) : m_pRefCountObj(nullptr) {
+	RefCountObjectPtr(const RefCountObjectPtr<U>& _other) : m_pRefCountObj(nullptr) {
 		if constexpr (ValidateField<U>())
-			CopyFrom(other);
+			CopyFrom(_other);
 	}
 
 	template <typename U>
-	RefCountObjectPtr(RefCountObjectPtr<U>&& other) : m_pRefCountObj(nullptr) {
+	RefCountObjectPtr(RefCountObjectPtr<U>&& _other) : m_pRefCountObj(nullptr) {
 		if constexpr (ValidateField<U>())
-			MoveFrom(other);
+			MoveFrom(_other);
 	}
 	
 	~RefCountObjectPtr() {
@@ -89,32 +89,32 @@ public:
 
 	T* GetPtr() const { return m_pRefCountObj; }
 
-	TThis& operator=(const TThis& other) {
-		CopyFrom(other);
+	TThis& operator=(const TThis& _other) {
+		CopyFrom(_other);
 		return *this;
 	}
-	TThis& operator=(TThis&& other) noexcept {
-		MoveFrom(other);
+	TThis& operator=(TThis&& _other) noexcept {
+		MoveFrom(_other);
 		return *this;
 	}
 
 	template <typename U>
-	TThis& operator=(const RefCountObjectPtr<U>& other) {
+	TThis& operator=(const RefCountObjectPtr<U>& _other) {
 		if constexpr (ValidateField<U>())
-			CopyFrom(other);
+			CopyFrom(_other);
 		return *this;
 	}
 	template <typename U>
-	TThis& operator=(RefCountObjectPtr<U>&& other) noexcept {
+	TThis& operator=(RefCountObjectPtr<U>&& _other) noexcept {
 		if constexpr (ValidateField<U>())
-			MoveFrom(other);
+			MoveFrom(_other);
 		return *this;
 	}
 
-	bool operator==(const TThis& other) const { return m_pRefCountObj == other.m_pRefCountObj; }
-	bool operator==(RefCountObject* other) const { return m_pRefCountObj == other; }
-	bool operator!=(const TThis& other) const { return m_pRefCountObj != other.m_pRefCountObj; }
-	bool operator!=(RefCountObject* other) const { return m_pRefCountObj != other; }
+	bool operator==(const TThis& _other) const { return m_pRefCountObj == _other.m_pRefCountObj; }
+	bool operator==(RefCountObject* _pOther) const { return m_pRefCountObj == _pOther; }
+	bool operator!=(const TThis& _other) const { return m_pRefCountObj != _other.m_pRefCountObj; }
+	bool operator!=(RefCountObject* _pOther) const { return m_pRefCountObj != _pOther; }
 	T* operator->() { return m_pRefCountObj; }
 	T& operator*() { return *m_pRefCountObj; }
 
@@ -123,29 +123,29 @@ public:
 
 private:
 	template <typename U>
-	void CopyFrom(U& other) {
+	void CopyFrom(U& _other) {
 		if (m_pRefCountObj)
 			m_pRefCountObj->Release();
 
-		m_pRefCountObj = other.m_pRefCountObj;
+		m_pRefCountObj = _other.m_pRefCountObj;
 
 		if (m_pRefCountObj)
 			m_pRefCountObj->AddRef();
 	}
 
 	template <typename U>
-	void MoveFrom(U& other) {
+	void MoveFrom(U& _other) {
 		if (m_pRefCountObj)
 			m_pRefCountObj->Release();
 
-		m_pRefCountObj = other.m_pRefCountObj;
+		m_pRefCountObj = _other.m_pRefCountObj;
 
 		if (m_pRefCountObj)
 			m_pRefCountObj->AddRef();
 
 		// 나중에 해줘야함. (0되면 ReleaseAction을 수행하기 때문)
-		if (other.m_pRefCountObj)
-			other.m_pRefCountObj->Release();
+		if (_other.m_pRefCountObj)
+			_other.m_pRefCountObj->Release();
 	}
 
 	

@@ -10,22 +10,26 @@
 
 NS_JC_BEGIN
 
-void RefCountObject::Release(int cnt) {
-    int desired = m_iRef - cnt;
-    int expected = desired + cnt;
+//////////////////////////////////////////////////////////////////////////////////////////
+void RefCountObject::Release(int _count)
+{
+    int desired = m_iRef - _count;
+    int expected = desired + _count;
 
-    for (;;) {
+    for (;;)
+    {
         DebugAssertMsg(desired >= 0, "레퍼런스 카운트 계산을 똑바로 해주세요.");
 
-        if (m_iRef.CompareExchange(expected, desired)) {
+        if (m_iRef.CompareExchange(expected, desired))
+        {
             if (desired <= 0)
                 ReleaseAction();
 
             break;
         }
 
-        desired = m_iRef - cnt;
-        expected = desired + cnt;
+        desired = m_iRef - _count;
+        expected = desired + _count;
     }
 }
 

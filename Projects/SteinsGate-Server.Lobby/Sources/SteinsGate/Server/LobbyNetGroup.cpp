@@ -67,7 +67,7 @@ void LobbyNetGroup::InitializeParser() {
 }
 
 void LobbyNetGroup::InitializeServer() {
-	auto spServer = MakeShared<LobbyServer>(m_spIOCP, m_spBufferPool);
+	auto spServer = MakeShared<LobbyServer>(pIocp_, pBufferPool_);
 
 	AddHost(Const::Host::LobbyTcpId, spServer);
 

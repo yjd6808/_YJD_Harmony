@@ -1,4 +1,4 @@
-﻿/*
+/*
  *	작성자 : 윤정도
  */
 
@@ -29,22 +29,23 @@ enum class TransportProtocol
 	UDP  = IPPROTO_UDP 
 };
 
-constexpr const char* TransportProtocolName(TransportProtocol protocol) {
-	if (protocol == TransportProtocol::TCP)
+constexpr const char* TransportProtocolName(TransportProtocol _protocol)
+{
+	if (_protocol == TransportProtocol::TCP)
 		return "TCP";
-	if (protocol == TransportProtocol::UDP)
+	if (_protocol == TransportProtocol::UDP)
 		return "UDP";
 
 	return "None";
 }
 
-constexpr char TransmissionName(Transmission transmission) {
-	if (transmission == Transmission::Recv)
+constexpr char TransmissionName(Transmission _transmission)
+{
+	if (_transmission == Transmission::Recv)
 		return 'R';
-	if (transmission == Transmission::Send)
+	if (_transmission == Transmission::Send)
 		return 'S';
 	return 'X';
 }
 
 NS_JNET_END
-

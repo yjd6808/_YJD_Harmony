@@ -36,10 +36,10 @@ struct NonCopyableButMovable
 protected:
 	NonCopyableButMovable() = default;
 public:
-	NonCopyableButMovable(const NonCopyableButMovable& other) = delete;
-	NonCopyableButMovable(NonCopyableButMovable&& other) = default;
-	NonCopyableButMovable& operator=(const NonCopyableButMovable& other) = delete;
-	NonCopyableButMovable& operator=(NonCopyableButMovable&& other) = default;
+	NonCopyableButMovable(const NonCopyableButMovable& _other) = delete;
+	NonCopyableButMovable(NonCopyableButMovable&& _other) = default;
+	NonCopyableButMovable& operator=(const NonCopyableButMovable& _other) = delete;
+	NonCopyableButMovable& operator=(NonCopyableButMovable&& _other) = default;
 };
 
 struct NonCopyable
@@ -47,8 +47,8 @@ struct NonCopyable
 protected:
 	NonCopyable() = default;
 public:
-	NonCopyable(const NonCopyable& other) = delete;
-	NonCopyable& operator=(const NonCopyable& other) = delete;
+	NonCopyable(const NonCopyable& _other) = delete;
+	NonCopyable& operator=(const NonCopyable& _other) = delete;
 };
 
 struct NonCopyableNonMovable
@@ -56,10 +56,10 @@ struct NonCopyableNonMovable
 protected:
 	NonCopyableNonMovable() = default;
 public:
-	NonCopyableNonMovable(const NonCopyableNonMovable& other) = delete;
-	NonCopyableNonMovable(NonCopyableNonMovable&& other) = default;
-	NonCopyableNonMovable& operator=(const NonCopyableNonMovable& other) = delete;
-	NonCopyableNonMovable& operator=(NonCopyableNonMovable&& other) = default;
+	NonCopyableNonMovable(const NonCopyableNonMovable& _other) = delete;
+	NonCopyableNonMovable(NonCopyableNonMovable&& _other) = default;
+	NonCopyableNonMovable& operator=(const NonCopyableNonMovable& _other) = delete;
+	NonCopyableNonMovable& operator=(NonCopyableNonMovable&& _other) = default;
 };
 
 

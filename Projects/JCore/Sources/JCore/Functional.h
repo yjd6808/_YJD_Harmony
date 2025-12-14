@@ -19,9 +19,9 @@ NS_JC_BEGIN
 
  (2) 펑터를 이용한 초기화
  struct Increaser {
-	operator() (int& ref) {
-		ref++;
-	}
+ 	operator() (int& ref) {
+ 		ref++;
+ 	}
  }
 
  Action<int&> increaser = Increase();

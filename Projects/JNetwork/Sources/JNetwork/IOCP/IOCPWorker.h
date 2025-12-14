@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	
 	IOCPWorker 쓰레드는 IOCPWorkerManager에서만 생성하고 다룰 수 있다.
@@ -14,16 +14,17 @@ NS_JNET_BEGIN
 class IOCPWorker : public Worker
 {
 public:
-	IOCPWorker(IOCP* iocp);
+	IOCPWorker(IOCP* _pIocp);
 	~IOCPWorker() override;
 
-	void Run(void* param = nullptr) override;
-	void JoinWait(JCore::WaitHandle* waitHandle) override;
+	void Run(void* _pParam = nullptr) override;
+	void JoinWait(JCore::WaitHandle* _pWaitHandle) override;
 	void Join() override;
 
-	void WorkerThread(void* param) override;
+	void WorkerThread(void* _pParam) override;
+
 private:
-	IOCP* m_pIocp;
+	IOCP* iocp_;
 
 	friend class WorkerManager;
 	friend struct IOCPPostOrder;

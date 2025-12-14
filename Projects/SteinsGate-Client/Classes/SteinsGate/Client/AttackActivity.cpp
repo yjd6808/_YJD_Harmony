@@ -8,7 +8,9 @@
 #include "Tutturu.h"
 #include "AttackActivity.h"
 
-AttackActivity::AttackActivity(Actor* actor)
-	: AIActivity(actor, AIActivityType::Attack)
+//////////////////////////////////////////////////////////////////////////////////////////
+AttackActivity::AttackActivity(Actor* _pActor)
+	: AIActivity(_pActor, AIActivityType::Attack)
 	, m_pHitRecorder(nullptr)
-{}
+{
+}

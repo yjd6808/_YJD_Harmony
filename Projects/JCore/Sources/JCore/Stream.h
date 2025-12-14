@@ -52,18 +52,18 @@ public:
 	int GetOffset() { return m_iOffset; }
 	int GetLength() { return m_iLength; }
 
-	void SetOffset(int offset)
+	void SetOffset(int _offset)
 	{
-		m_iOffset = offset;
+		m_iOffset = _offset;
 
-		if (offset >= m_iLength)
+		if (_offset >= m_iLength)
 		{
-			m_iLength = offset;
+			m_iLength = _offset;
 		}
 	}
 
 	// bytes의 offset 위치부터 len 만큼 스트림으로부터 읽어서 저장한다.
-	virtual int Read(JCORE_OUT Byte* bytes, int offset, int len) = 0;
+	virtual int Read(JCORE_OUT Byte* _pBytes, int _offset, int _length) = 0;
 
 	String ReadString();
 	Int8 ReadInt8();
@@ -76,13 +76,13 @@ public:
 	Int64U ReadInt64U();
 
 	// bytes의 offset 위치부터 len만큼 스트림에 작성한다.
-	virtual void Write(const Byte* bytes, int offset, int len) = 0;
+	virtual void Write(const Byte* _pBytes, int _offset, int _length) = 0;
 
 	// bytes의 0위치부터 len만큼 스트림에 작성한다.
-	virtual void Write(const Byte* bytes, int len)
+	virtual void Write(const Byte* _pBytes, int _length)
 	{
 		DebugAssertMsg(CanWrite(), "해당 스트림에 Write 할 수 없습니다.");
-		Write(bytes, 0, len);
+		Write(_pBytes, 0, _length);
 	}
 
 	void WriteString(const String& str, bool withNull = true);

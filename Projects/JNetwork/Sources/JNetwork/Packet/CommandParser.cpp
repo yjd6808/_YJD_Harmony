@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/25/2023 12:19:48 AM
  * =====================
@@ -12,15 +12,17 @@ USING_NS_JC;
 
 NS_JNET_BEGIN
 
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CommandParser::RunCommand(Session* _pSession, ICommand* _pCommand) const
+{
+	const Int16 commandId = _pCommand->GetId();
 
-bool CommandParser::RunCommand(Session* session, ICommand* cmd) const {
-	const Int16 uiCmd = cmd->GetCommand();
-
-	if (!m_CommandActionMap.Exist(uiCmd)) {
+	if (!commandActionMap_.Exist(commandId))
+	{
 		return false;
 	}
 
-	m_CommandActionMap.Get(uiCmd)(session, cmd);
+	commandActionMap_.Get(commandId)(_pSession, _pCommand);
 	return true;
 }
 

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/9/2023 9:56:28 PM
  * =====================
@@ -11,81 +11,96 @@
 #include <JNetwork/Packet/Packet.h>
 
 NS_JNET_BEGIN
-
-CommandBuffer::CommandBuffer(const JCore::MemoryPoolAbstractPtr& allocator, int bufferSize)
-	: BufferAbstract()
-	, m_iRequestBufferSize(0)
-	, m_Allocator(allocator)
+//////////////////////////////////////////////////////////////////////////////////////////
+CommandBuffer::CommandBuffer(const JCore::MemoryPoolAbstractPtr& _allocator, int _bufferSize)
+: BufferAbstract()
+, requestBufferSize_(0)
+, allocator_(_allocator)
 {
-	DebugAssertMsg(m_Allocator != nullptr, "할당자가 없습니다.");
-	int iRealAlloc;
-	m_pBuffer = (char*)m_Allocator->DynamicPop(bufferSize, iRealAlloc);
-	m_iBufferSize = iRealAlloc;
-	m_iRequestBufferSize = bufferSize;
+	DebugAssertMsg(allocator_ != nullptr, "할당자가 없습니다.");
+	int realAlloc;
+	buffer_ = (char*)allocator_->DynamicPop(_bufferSize, realAlloc);
+	bufferSize_ = realAlloc;
+	requestBufferSize_ = _bufferSize;
 
 	Initialize();
 }
 
-CommandBuffer::CommandBuffer(const CommandBuffer& other)
-	: BufferAbstract()
-	, m_iRequestBufferSize(0)
-	, m_Allocator(other.m_Allocator)
+//////////////////////////////////////////////////////////////////////////////////////////
+CommandBuffer::CommandBuffer(const CommandBuffer& _other)
+: BufferAbstract()
+, requestBufferSize_(0)
+, allocator_(_other.allocator_)
 {
-	int iRealAlloc;
-	m_pBuffer = (char*)m_Allocator->DynamicPop(other.m_iRequestBufferSize, iRealAlloc);
-	m_iBufferSize = iRealAlloc;
-	m_iRequestBufferSize = other.m_iRequestBufferSize;
-	DebugAssertMsg(iRealAlloc == other.GetBufferCapacity(), "머지..? 메모리풀 얼른 고쳐");
+	int realAlloc;
+	buffer_ = (char*)allocator_->DynamicPop(_other.requestBufferSize_, realAlloc);
+	bufferSize_ = realAlloc;
+	requestBufferSize_ = _other.requestBufferSize_;
+	DebugAssertMsg(realAlloc == _other.GetBufferCapacity(), "머지..? 메모리풀 얼른 고쳐");
 
-	JCore::Memory::Copy(m_pBuffer, m_iBufferSize, other.m_pBuffer, other.m_iBufferSize);
+	JCore::Memory::Copy(buffer_, bufferSize_, _other.buffer_, _other.bufferSize_);
 
-	m_iReadPos = other.m_iReadPos;
-	m_iWritePos = other.m_iWritePos;
+	readPos_ = _other.readPos_;
+	writePos_ = _other.writePos_;
 }
 
-CommandBuffer::~CommandBuffer() {
-	m_Allocator->DynamicPush(m_pBuffer, m_iRequestBufferSize);
+//////////////////////////////////////////////////////////////////////////////////////////
+CommandBuffer::~CommandBuffer()
+{
+	allocator_->DynamicPush(buffer_, requestBufferSize_);
 }
 
-CommandBufferPtr CommandBuffer::Create(const JCore::MemoryPoolAbstractPtr& allocator, int bufferSize) {
-	return JCore::MakeShared<CommandBuffer>(allocator, bufferSize);
+//////////////////////////////////////////////////////////////////////////////////////////
+CommandBufferPtr CommandBuffer::Create(const JCore::MemoryPoolAbstractPtr& _allocator, int _bufferSize)
+{
+	return JCore::MakeShared<CommandBuffer>(_allocator, _bufferSize);
 }
 
-void CommandBuffer::Initialize() {
-	JCore::Arrays::Fill(m_pBuffer, PacketHeaderSize_v, (char)0);
+//////////////////////////////////////////////////////////////////////////////////////////
+void CommandBuffer::Initialize()
+{
+	JCore::Arrays::Fill(buffer_, PACKET_HEADER_SIZE, (char)0);
 
-	m_iReadPos += PacketHeaderSize_v;
-	m_iWritePos += PacketHeaderSize_v;
+	readPos_ += PACKET_HEADER_SIZE;
+	writePos_ += PACKET_HEADER_SIZE;
 }
 
-void CommandBuffer::AddCommandCount() {
-	CmdCnt_t& uiCommandCount = *(CmdCnt_t*)m_pBuffer;
-	++uiCommandCount;
+//////////////////////////////////////////////////////////////////////////////////////////
+void CommandBuffer::AddCommandCount()
+{
+	CmdCnt_t& commandCount = *(CmdCnt_t*)buffer_;
+	++commandCount;
 }
 
-void CommandBuffer::AddPacketLength(int size) {
-	PktLen_t& uiPktLen = *(PktLen_t*)(m_pBuffer + sizeof(CmdCnt_t));
-	uiPktLen += size;
+//////////////////////////////////////////////////////////////////////////////////////////
+void CommandBuffer::AddPacketLength(int _size)
+{
+	PktLen_t& pktLen = *(PktLen_t*)(buffer_ + sizeof(CmdCnt_t));
+	pktLen += _size;
 }
 
-bool CommandBuffer::IsValid() const {
-	CommandBuffer dbgBuffer(*this);	// 기존꺼 무결성 보장
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CommandBuffer::IsValid() const
+{
+	CommandBuffer dbgBuffer(*this); // 기존꺼 무결성 보장
 
-	int iWritePos = this->GetWritePos();
+	int writePos = GetWritePos();
 
 	dbgBuffer.ResetPosition();
-	dbgBuffer.MoveWritePos(iWritePos);
+	dbgBuffer.MoveWritePos(writePos);
 
-	int iCommandCount = dbgBuffer.GetCommandCount();
-	int iPacketLen = dbgBuffer.GetPacketLength();
+	int commandCount = dbgBuffer.GetCommandCount();
+	int packetLen = dbgBuffer.GetPacketLength();
 
-	dbgBuffer.MoveReadPos(PacketHeaderSize_v);
+	dbgBuffer.MoveReadPos(PACKET_HEADER_SIZE);
 
-	for (int i = 0; i < iCommandCount; i++) {
+	for (int i = 0; i < commandCount; i++)
+	{
 		ICommand* pCmd = dbgBuffer.Peek<ICommand*>();
-		int iCommandLen = pCmd->GetCommandLen();
+		int commandLen = pCmd->GetCommandLength();
 
-		if (dbgBuffer.MoveReadPos(iCommandLen) == false) {
+		if (!dbgBuffer.MoveReadPos(commandLen))
+		{
 			return false;
 		}
 	}
@@ -93,15 +108,36 @@ bool CommandBuffer::IsValid() const {
 	return true;
 }
 
-CmdCnt_t CommandBuffer::GetCommandCount() {
-	CmdCnt_t& uiCommandCount = *(CmdCnt_t*)m_pBuffer;
-	return uiCommandCount;
+//////////////////////////////////////////////////////////////////////////////////////////
+CmdCnt_t CommandBuffer::GetCommandCount()
+{
+	CmdCnt_t& commandCount = *(CmdCnt_t*)buffer_;
+	return commandCount;
 }
 
-PktLen_t CommandBuffer::GetPacketLength() {
-	PktLen_t& uiPktLen = *(PktLen_t*)(m_pBuffer + sizeof(CmdCnt_t));
-	return uiPktLen;
+//////////////////////////////////////////////////////////////////////////////////////////
+PktLen_t CommandBuffer::GetPacketLength()
+{
+	PktLen_t& pktLen = *(PktLen_t*)(buffer_ + sizeof(CmdCnt_t));
+	return pktLen;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+void CommandBuffer::Alloc(ICommand* _pCmd)
+{
+	const int cmdSize = _pCmd->GetCommandLength();
+
+	if (!MoveWritePos(cmdSize))
+	{
+		DebugAssertMsg(false, "버퍼에 커맨드를 쓸 공간이 부족합니다.");
+	}
+
+	char* pMem = Peek<char*>();
+	JCore::Memory::CopyUnsafe(pMem, _pCmd, cmdSize);
+	MoveReadPos(cmdSize);
+
+	AddCommandCount();
+	AddPacketLength(cmdSize);
+}
 
 NS_JNET_END

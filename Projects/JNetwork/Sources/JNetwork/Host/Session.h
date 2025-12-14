@@ -1,10 +1,9 @@
-﻿/*
+/*
  *	작성자 : 윤정도
  *	TCP, UDP 세션/클라 들의 공통기능 정의
  */
 
 #pragma once
-
 
 #include <JCore/Sync/RecursiveLock.h>
 
@@ -22,85 +21,96 @@ class IOCPOverlapped;
 class JCORE_NOVTABLE Session : public Host
 {
 public:
-	Session(const IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator, PacketParser* packetParser, int recvBufferSize, int sendBufferSize);
+	Session(const IOCPPtr& _pIocp,
+	        const JCore::MemoryPoolAbstractPtr& _pBufferAllocator,
+	        PacketParser* _pPacketParser,
+	        int _recvBufferSize,
+	        int _sendBufferSize);
 	~Session() override;
 
-	const IPv4EndPoint& GetLocalEndPoint() const { return m_LocalEndPoint; }
-	const IPv4EndPoint& GetRemoteEndPoint() const { return m_RemoteEndPoint; }
-	CommandBufferPtr GetRecvBuffer() { return m_spRecvBuffer; }
-	CommandBufferPtr GetSendBuffer() { return m_spSendBuffer; }
-	JCore::MemoryPoolAbstractPtr GetBufferAllocator() { return m_spBufferAllocator; }
+	const IPv4EndPoint& GetLocalEndPoint() const { return localEndPoint_; }
+	const IPv4EndPoint& GetRemoteEndPoint() const { return remoteEndPoint_; }
+	CommandBufferPtr GetRecvBuffer() { return recvBuffer_; }
+	CommandBufferPtr GetSendBuffer() { return sendBuffer_; }
+	JCore::MemoryPoolAbstractPtr GetBufferAllocator() { return bufferAllocator_; }
 
 	void Initialize() override;
-	bool Bind(const IPv4EndPoint& bindAddr);
+	bool Bind(const IPv4EndPoint& _bindEndPoint);
 	bool Disconnect();
 
-	int Send(char* data, int len);
-	int Send(IPacket* packet, bool releasePacket = true);
-	int SendPending(JCORE_REF_OUT Int32U& errorCode);
-	void PushPendingData(char* data, int len);
-	bool HasPendingData() const { return m_PendingData.Size() > 0; }
-	bool PendingDataSize() const { return m_PendingData.Size(); }
+	int Send(char* _pData, int _len);
+	int Send(IPacket* _pPacket, bool _releasePacket = true);
+	int SendPending(JCORE_REF_OUT Int32U& _errorCode);
+	void PushPendingData(char* _pData, int _len);
+	bool HasPendingData() const { return pendingData_.Size() > 0; }
+	bool PendingDataSize() const { return pendingData_.Size(); }
 
-	bool SendAsync(IPacket* packet);
-	bool SendAsync(const CommandBufferPtr& buffer);
-	bool SendToAsync(IPacket* packet);
-	bool SendToAsync(IPacket* packet, const IPv4EndPoint& destination);
-	bool SendToAsync(const CommandBufferPtr& buffer, const IPv4EndPoint& destination);
+	bool SendAsync(IPacket* _pPacket);
+	bool SendAsync(const CommandBufferPtr& _pBuffer);
+	bool SendToAsync(IPacket* _pPacket);
+	bool SendToAsync(IPacket* _pPacket, const IPv4EndPoint& _destination);
+	bool SendToAsync(const CommandBufferPtr& _pBuffer, const IPv4EndPoint& _destination);
 
 	bool RecvAsync();
 	bool RecvFromAsync();
 
-	void SendAlloc(ICommand* cmd);
+	void SendAlloc(ICommand* _pCmd);
 	template <typename TCommand>
-	TCommand& SendAlloc(int count = 0) {
-		JCORE_LOCK_GUARD(m_SendBufferLock);
+	TCommand& SendAlloc(int _count = 0)
+	{
+		JCORE_LOCK_GUARD(sendBufferLock_);
 		CMD_CHECK_BASE_OF_COMMAND(TCommand)
 		DYNAMIC_CMD_CHECK_ZERO_SIZE_ARRAY_FIELD(TCommand)
 
-		const int CmdSize = TCommand::_Size(count);
-		if (m_spSendBuffer->GetWritePos() + CmdSize >= MAX_MSS) {
+		const int cmdSize = TCommand::_Size(_count);
+		if (sendBuffer_->GetWritePos() + cmdSize >= MAX_MSS)
+		{
 			FlushSendBuffer();
 		}
 
-		DebugAssertMsg(CmdSize <= m_spSendBuffer->GetRemainBufferSize(), "버퍼의 남은 공간에 넣을 커맨드가 너무 큽니다. (CmdSize: %d, RemainBufferCapacity: %d)", CmdSize, m_spSendBuffer->GetRemainBufferSize());
-		return m_spSendBuffer->Alloc<TCommand>(count);
+		DebugAssertMsg(
+			cmdSize <= sendBuffer_->GetRemainBufferSize(),
+			"버퍼의 남은 공간에 넣을 커맨드가 너무 큽니다. (CmdSize: %d, RemainBufferCapacity: %d)",
+			cmdSize,
+			sendBuffer_->GetRemainBufferSize());
+		return sendBuffer_->Alloc<TCommand>(_count);
 	}
 
 	CommandBufferPacket* GetCommandBufferForSending();
 	virtual void FlushSendBuffer();
 	virtual void Connected() = 0;
-	virtual void ConnectFailed(Int32U errorCode) = 0;
-	virtual void Disconnected(Int32U errorCode) = 0;
-	virtual void Received(Int32UL receivedBytes);
-	virtual void Sent(IPacket* sentPacket, Int32UL receivedBytes) = 0;
+	virtual void ConnectFailed(Int32U _errorCode) = 0;
+	virtual void Disconnected(Int32U _errorCode) = 0;
+	virtual void Received(Int32UL _receivedBytes);
+	virtual void Sent(IPacket* _pSentPacket, Int32UL _receivedBytes) = 0;
 
-	virtual void NotifyRaw(char* data, int len) = 0;
-	virtual void NotifyCommand(ICommand* cmd) = 0;
-	virtual void NotifyPacket(RecvedCommandPacket* packet) = 0;
+	virtual void NotifyRaw(char* _pData, int _len) = 0;
+	virtual void NotifyCommand(ICommand* _pCmd) = 0;
+	virtual void NotifyPacket(RecvedCommandPacket* _pPacket) = 0;
 
-	int	 AddPendingCount()		{ return ++m_iOveralappedPendingCount;	}
-	int  DecreasePendingCount()	{ return --m_iOveralappedPendingCount;	}
-	int  GetPendingCount()		{ return m_iOveralappedPendingCount;	}
+	int  AddPendingCount()      { return ++overlappedPendingCount_; }
+	int  DecreasePendingCount() { return --overlappedPendingCount_; }
+	int  GetPendingCount()      { return overlappedPendingCount_; }
 	void WaitForZeroPending();
 
-	void SetHandle(int handle) { m_iHandle = handle; }
-	int GetHandle() const { return m_iHandle; }
+	void SetHandle(int _handle) { handle_ = _handle; }
+	int GetHandle() const { return handle_; }
+
 protected:
-	int m_iHandle;
+	int handle_;
 
-	JCore::AtomicInt m_iOveralappedPendingCount;
-	JCore::MemoryPoolAbstractPtr m_spBufferAllocator;
-	JCore::RecursiveLock m_SendBufferLock;
-	JCore::Vector<char> m_PendingData;
+	JCore::AtomicInt overlappedPendingCount_;
+	JCore::MemoryPoolAbstractPtr bufferAllocator_;
+	JCore::RecursiveLock sendBufferLock_;
+	JCore::Vector<char> pendingData_;
 
-	PacketParser* m_pPacketParser;
+	PacketParser* packetParser_;
 
-	CommandBufferPtr m_spRecvBuffer;
-	CommandBufferPtr m_spSendBuffer;
+	CommandBufferPtr recvBuffer_;
+	CommandBufferPtr sendBuffer_;
 
-	IPv4EndPoint m_LocalEndPoint;
-	IPv4EndPoint m_RemoteEndPoint;
+	IPv4EndPoint localEndPoint_;
+	IPv4EndPoint remoteEndPoint_;
 };
 
 using SessionPtr = JCore::SharedPtr<Session>;

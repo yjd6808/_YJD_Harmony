@@ -24,7 +24,7 @@ vector<TestStruct*> Box(DataCount, nullptr);
 
 
 static void BM_IndexedPoolDynamic(State& state) {
-	IndexedMemoryPool pool
+	CIndexedMemoryPool pool
 	(
 		HashMap<int, int>{ { 1024, DataCount } }	// 1GB
 	);
@@ -65,7 +65,7 @@ static void BM_BinaryPoolDynamic(State& state) {
 
 
 static void BM_IndexedPoolStatic(State& state) {
-	IndexedMemoryPool pool
+	CIndexedMemoryPool pool
 	(
 		HashMap<int, int>{ { 1024, DataCount } }	// 1GB
 	);

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/23/2023 9:19:50 PM
  * =====================
@@ -21,23 +21,29 @@ static AtomicInt RecvCounter;
 
 struct ServerListener : ServerEventListener
 {
-	void OnReceived(Session* session, ICommand* cmd) override {
-		if (cmd->Cmd != CMDID_CS_TEST) {
+	//////////////////////////////////////////////////////////////////////////////////////
+	void OnReceived(Session* _pSession, ICommand* _pCmd) override
+	{
+		if (_pCmd->GetId() != CMDID_CS_TEST)
+		{
 			DebugAssert(false);
 			return;
 		}
 
-		const int iAck = ++RecvCounter;
+		const int ack = ++RecvCounter;
 
-		if (Mode == TestMode::OnNetworking) {
+		if (Mode == TestMode::OnNetworking)
+		{
 			if (UsePooling && TlsMemPool == nullptr)
 				TlsMemPool = MakeShared<CBinarySearchMemoryPool>();
 
 			auto pPacket = SinglePacket<SC_TEST>::Create(TlsMemPool);
 			JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
-			pPacket->Cmd.Ack = iAck;
-			session->SendAsync(pPacket);
-		} else if (Mode == TestMode::OnSending && iAck == TestSendCount * TestClientCount) {
+			pPacket->cmd_.Ack = ack;
+			_pSession->SendAsync(pPacket);
+		}
+		else if (Mode == TestMode::OnSending && ack == TestSendCount * TestClientCount)
+		{
 			TestFinished.Signal();
 		}
 	}
@@ -45,27 +51,36 @@ struct ServerListener : ServerEventListener
 
 struct tagServerGroup : NetGroup
 {
-	tagServerGroup() : NetGroup("서버") {}
+	//////////////////////////////////////////////////////////////////////////////////////
+	tagServerGroup()
+		: NetGroup("서버")
+	{
+	}
 
-	void Initialize() override {
+	//////////////////////////////////////////////////////////////////////////////////////
+	void Initialize() override
+	{
 		CreateIocp(8);
 		CreateBufferPool({});
 		RunIocp();
-		auto spServer = MakeShared<TcpServer>(m_spIOCP, m_spBufferPool);
-		spServer->SetEventListener(dbg_new ServerListener);
-		spServer->Start(IPv4EndPoint::Parse(JNET_RESEARCH_BIND_ADDR));
-		AddHost(0, spServer);
-		m_bFinalized = false;
 
+		auto pServer = MakeShared<TcpServer>(pIocp_, pBufferPool_);
+		pServer->SetEventListener(dbg_new ServerListener);
+		pServer->Start(IPv4EndPoint::Parse(JNET_RESEARCH_BIND_ADDR));
+		AddHost(0, pServer);
+		finalized_ = false;
 	}
 } ServerGroup;
 
-
-void ServerSide::Initialize() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ServerSide::Initialize()
+{
 	ServerGroup.Initialize();
 }
 
-void ServerSide::Finalize() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ServerSide::Finalize()
+{
 	ServerGroup.Finalize();
 	RecvCounter = 0;
 }

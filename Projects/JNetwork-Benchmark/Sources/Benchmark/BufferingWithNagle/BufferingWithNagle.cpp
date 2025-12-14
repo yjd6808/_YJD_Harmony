@@ -117,31 +117,34 @@ USING_NS_BUFFERING_WITH_NAGLE;
 // 트래픽 선택
 #define TRAFFIC		MIDDLE
 
-void BM_BufferingWithNagle(State& state) {
-	TestClientCount = state.range(0);
-	TestSendCount = state.range(1);
-	DisableSendBuffering = state.range(2);
-	const bool bNagle = state.range(3);
-	AsyncSending = state.range(4);
+//////////////////////////////////////////////////////////////////////////////////////////
+void BM_BufferingWithNagle(State& _state)
+{
+	TestClientCount = _state.range(0);
+	TestSendCount = _state.range(1);
+	DisableSendBuffering = _state.range(2);
+	const bool nagle = _state.range(3);
+	AsyncSending = _state.range(4);
 
-	char szLabel[1024];
-	sprintf_s(szLabel, 1024, "\n테스트 클라이언트 수 : %d\n테스트 송신 횟수 : %d\n%s\n%s\n%s", TestClientCount, TestSendCount, DisableSendBuffering ? "송신 버퍼링 : X" : "송신 버퍼링 : O", bNagle ? "Nagle : O" : "Nagle : X", AsyncSending ? "비동기 : O" : "비동기 : X");
-	state.SetLabel(szLabel);
+	char label[1024];
+	sprintf_s(label, 1024, "\n테스트 클라이언트 수 : %d\n테스트 송신 횟수 : %d\n%s\n%s\n%s", TestClientCount, TestSendCount, DisableSendBuffering ? "송신 버퍼링 : X" : "송신 버퍼링 : O", nagle ? "Nagle : O" : "Nagle : X", AsyncSending ? "비동기 : O" : "비동기 : X");
+	_state.SetLabel(label);
 
 
-	for (auto _ : state) {
-		state.PauseTiming();
+	for (auto _ : _state)
+	{
+		_state.PauseTiming();
 		ServerSide::Initialize();
-		ClientSide::Initialize(bNagle);
-		state.ResumeTiming();
+		ClientSide::Initialize(nagle);
+		_state.ResumeTiming();
 
 		ClientSide::StartTest();
 		TestFinished.Wait();
 
-		state.PauseTiming();
+		_state.PauseTiming();
 		ServerSide::Finalize();
 		ClientSide::Finalize();
-		state.ResumeTiming();
+		_state.ResumeTiming();
 	}
 	
 }

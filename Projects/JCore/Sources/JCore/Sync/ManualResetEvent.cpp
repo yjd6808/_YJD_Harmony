@@ -10,11 +10,20 @@
 #include <JCore/Sync/ManualResetEvent.h>
 
 NS_JC_BEGIN
-ManualResetEvent::ManualResetEvent(ManualResetEvent&& other) noexcept : WaitHandle(Move(other)) {}
-ManualResetEvent& ManualResetEvent::operator=(ManualResetEvent&& other) noexcept {
-    WaitHandle::operator=(Move(other));
-    return *this;
+
+//////////////////////////////////////////////////////////////////////////////////////////
+ManualResetEvent::ManualResetEvent(ManualResetEvent&& _other) noexcept
+	: WaitHandle(Move(_other))
+{
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
+ManualResetEvent& ManualResetEvent::operator=(ManualResetEvent&& _other) noexcept
+{
+	WaitHandle::operator=(Move(_other));
+	return *this;
+}
+
 NS_JC_END
 
 

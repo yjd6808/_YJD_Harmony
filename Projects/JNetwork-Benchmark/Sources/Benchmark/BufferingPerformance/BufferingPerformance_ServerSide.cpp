@@ -21,43 +21,53 @@ static AtomicInt RecvCounter;
 
 struct ServerListener : ServerEventListener
 {
-	void OnReceived(Session* session, ICommand* cmd) override {
-		if (cmd->Cmd != CMDID_CS_TEST) {
+	//////////////////////////////////////////////////////////////////////////
+	void OnReceived(Session* _pSession, ICommand* _pCmd) override
+	{
+		if (_pCmd->GetId() != CMDID_CS_TEST)
+		{
 			DebugAssert(false);
 			return;
 		}
 
-		const int iAck = ++RecvCounter;
+		const int ack = ++RecvCounter;
 		auto pPacket = dbg_new SinglePacket<SC_TEST>();
 		JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
-		pPacket->Cmd.Ack = iAck;
-		session->SendAsync(pPacket);
+		pPacket->cmd_.Ack = ack;
+		_pSession->SendAsync(pPacket);
 	}
 };
 
 struct tagServerGroup : NetGroup
 {
-	tagServerGroup() : NetGroup("서버") {}
+	tagServerGroup() : NetGroup("서버")
+	{
+	}
 
-	void Initialize() override {
+	void Initialize() override
+	{
 		CreateIocp(8);
 		CreateBufferPool({});
 		RunIocp();
-		auto spServer = MakeShared<TcpServer>(m_spIOCP, m_spBufferPool);
-		spServer->SetEventListener(dbg_new ServerListener);
-		spServer->Start(IPv4EndPoint::Parse(JNET_RESEARCH_BIND_ADDR));
-		AddHost(0, spServer);
-		m_bFinalized = false;
+		auto pServer = MakeShared<TcpServer>(pIocp_, pBufferPool_);
+		pServer->SetEventListener(dbg_new ServerListener);
+		pServer->Start(IPv4EndPoint::Parse(JNET_RESEARCH_BIND_ADDR));
+		AddHost(0, pServer);
+		finalized_ = false;
 
 	}
 } ServerGroup_v;
 
 
-void ServerSide::Initialize() {
+//////////////////////////////////////////////////////////////////////////////////////////////
+void ServerSide::Initialize()
+{
 	ServerGroup_v.Initialize();
 }
 
-void ServerSide::Finalize() {
+//////////////////////////////////////////////////////////////////////////////////////////////
+void ServerSide::Finalize()
+{
 	ServerGroup_v.Finalize();
 	RecvCounter = 0;
 }

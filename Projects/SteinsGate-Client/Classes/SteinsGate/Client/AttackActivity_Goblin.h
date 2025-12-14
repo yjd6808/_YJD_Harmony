@@ -14,17 +14,16 @@
 class AttackActivity_Goblin : public AttackActivity
 {
 public:
-	AttackActivity_Goblin(Actor* actor);
+	AttackActivity_Goblin(Actor* _pActor);
 
-	void onActivitySelectFromAIRoutine(AIInfo* aiInfo, AIState_t aiState) override;
+	void onActivitySelectFromAIRoutine(AIInfo* _pAiInfo, AIState_t _aiState) override;
 	void onActivityBegin() override;
 	
-	void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* frame) override;
-	void onUpdate(float dt) override;
-	void onEnemySingleHit(HitInfo& info);
-	void onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount);
+	void onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
+	void onUpdate(float _dt) override;
+	void onEnemySingleHit(HitInfo& _info);
+	void onEnemyMultiHit(SGHitInfoList& _hitList, int _newHitCount);
 };
-
 
 
 

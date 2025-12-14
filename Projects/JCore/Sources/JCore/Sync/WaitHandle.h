@@ -15,70 +15,78 @@
 
 
 NS_JC_BEGIN
-
 template <typename, typename>
 class Collection;
+
 class WaitHandle
 {
 public:
-    WaitHandle(): m_hHandle(nullptr), m_Name(0) {}
-    WaitHandle(bool initialState, bool manualReset, const char* name = nullptr);
-    WaitHandle(const WaitHandle& handle) = delete;      // 복사 생성을 금한다.
-    WaitHandle(WaitHandle&& handle) noexcept;           // 이동 생성만 허용
-    virtual ~WaitHandle();
+	WaitHandle()
+	: handle_(nullptr), name_(0)
+	{
+	}
 
-    bool Wait(Int32U timeout = JCORE_INFINITE, JCORE_OUT Int32U* result = nullptr);
-    bool Signal();
-    bool Reset();
-    const String& Name() { return m_Name; }
+	WaitHandle(bool _initialState, bool _manualReset, const char* _name = nullptr);
+	WaitHandle(const WaitHandle& _handle) = delete; // 복사 생성을 금한다.
+	WaitHandle(WaitHandle&& _handle) noexcept; // 이동 생성만 허용
+	virtual ~WaitHandle();
 
-    void operator=(const WaitHandle& other) = delete;
-    void operator=(WaitHandle&& other) noexcept;
+	bool Wait(Int32U _timeout = JCORE_INFINITE, JCORE_OUT Int32U* _result = nullptr);
+	bool Signal();
+	bool Reset();
+	const String& Name() { return name_; }
+
+	void operator=(const WaitHandle& _other);
+	void operator=(WaitHandle&& _other) noexcept;
+
 public:
-    static bool WaitAll(WaitHandle* handles, Int32U count, JCORE_OUT_OPT Int32U* result = nullptr);
-    static WaitHandle* WaitAny(WaitHandle* handles, Int32U count, JCORE_OUT_OPT Int32U* result = nullptr);
+	static bool WaitAll(WaitHandle* _handles, Int32U _count, JCORE_OUT_OPT Int32U* _result = nullptr);
+	static WaitHandle* WaitAny(WaitHandle* _handles, Int32U _count, JCORE_OUT_OPT Int32U* _result = nullptr);
 
-    template <typename TCollection>
-	static bool WaitAll(const TCollection& handles, JCORE_OUT_OPT Int32UL* result = nullptr) {
-	    DebugAssert(handles.Size() <= MAXIMUM_WAIT_OBJECTS && handles.Size() > 0);
-	    WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
+	template <typename TCollection>
+	static bool WaitAll(const TCollection& _handles, JCORE_OUT_OPT Int32UL* _result = nullptr)
+	{
+		DebugAssert(_handles.Size() <= MAXIMUM_WAIT_OBJECTS && _handles.Size() > 0);
+		WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
 
-	    auto it = handles.Begin();
-	    int idx = 0;
-	    while (it->HasNext()) {
-	        waitHandles[idx++] = it->Next().m_hHandle;
-	    }
-        const Int32UL uiResult = WinApi::WaitForMultipleObjectsEx(handles.Size(), waitHandles, true);
+		auto it = _handles.Begin();
+		int idx = 0;
+		while (it->HasNext())
+		{
+			waitHandles[idx++] = it->Next().handle_;
+		}
+		const Int32UL ret = WinApi::WaitForMultipleObjectsEx(_handles.Size(), waitHandles, true);
 
-        if (result)
-            *result = uiResult;
+		if (_result)
+			*_result = ret;
 
-	    return uiResult == WAIT_OBJECT_0;
+		return ret == WAIT_OBJECT_0;
 	}
 
 	template <typename TAllocator>
-	static WaitHandle* WaitAny(Collection<WaitHandle, TAllocator>& handles) {
-        DebugAssert(handles.Size() <= MAXIMUM_WAIT_OBJECTS && handles.Size() > 0);
-        WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
+	static WaitHandle* WaitAny(Collection<WaitHandle, TAllocator>& _handles)
+	{
+		DebugAssert(_handles.Size() <= MAXIMUM_WAIT_OBJECTS && _handles.Size() > 0);
+		WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
 
-        auto it = handles.Begin();
-        int idx = 0;
-        while (it->HasNext()) {
-            waitHandles[idx++] = it->Next().m_hHandle;
-        }
+		auto iterator = _handles.Begin();
+		int index = 0;
+		while (iterator->HasNext())
+		{
+			waitHandles[index++] = iterator->Next().handle_;
+		}
 
-        Int32U iResult = WinApi::WaitForMultipleObjectsEx(handles.Size(), waitHandles, false);
+		Int32U waitResult = WinApi::WaitForMultipleObjectsEx(_handles.Size(), waitHandles, false);
 
-        if (iResult >= WAIT_OBJECT_0 && iResult <= WAIT_OBJECT_0 + handles.Size() - 1)
-            return handles.Extension().IndexOf(static_cast<int>(iResult - WAIT_OBJECT_0));
+		if (waitResult >= WAIT_OBJECT_0 && waitResult <= WAIT_OBJECT_0 + _handles.Size() - 1)
+			return _handles.Extension().IndexOf(static_cast<int>(waitResult - WAIT_OBJECT_0));
 
-        return nullptr;
-    }
-    
+		return nullptr;
+	}
 
 protected:
-    WinHandle m_hHandle;
-    String m_Name;
+	WinHandle handle_;
+	String name_;
 };
 
 using WaitHandlePtr = JCore::SharedPtr<WaitHandle>;

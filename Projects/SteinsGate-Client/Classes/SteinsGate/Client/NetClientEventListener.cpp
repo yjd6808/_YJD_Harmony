@@ -77,7 +77,7 @@ void NetClientEventListener::SyncReceivedCommand(ClientConnectServerType_t liste
 	CommandSynchronizer* pSynchronizer = Core::Net->getCommandSynchronizer();
 
 	if (pSynchronizer == nullptr) {
-		_LogWarn_("커맨드를 수신했지만 동기화기가 소멸되어서 이를 메인쓰레드에서 받아서 처리할 수가 없습니다. (커맨드:%d)", cmd->GetCommand());
+		_LogWarn_("커맨드를 수신했지만 동기화기가 소멸되어서 이를 메인쓰레드에서 받아서 처리할 수가 없습니다. (커맨드:%d)", cmd->GetId());
 		return;
 	}
 

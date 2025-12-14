@@ -25,7 +25,7 @@ TEST(MemoryPoolTest, SingleBinarySearch) {
 
 TEST(MemoryPoolTest, SingleFullIndexing) {
 	LeakCheck;
-	IndexedMemoryPool pool{};
+	CIndexedMemoryPool pool{};
 	TestPool(pool);
 }
 

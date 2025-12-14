@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/25/2023 9:39:58 PM (크리스마스)
  * =====================
@@ -10,7 +10,6 @@
 
 NS_JNET_BEGIN
 
- 
 /* 옵션을 켤시 송신 버퍼링을 하지 않도록 한다.
  *
  * 소켓 송신 버퍼 크기를 0으로 설정함으로써 우리가 제공한 WSABUF의 버퍼에서 전송을 하도록 한다.
@@ -22,8 +21,7 @@ NS_JNET_BEGIN
  * 관련내용: https://chfhrqnfrhc.tistory.com/entry/SOSNDBUF-0?category=484325
  *
  */
-bool DisableSendBuffering = true; 
-
+bool DisableSendBuffering = true;
 
 /* 옵션을 켤시 수신 버퍼링을 하지 않도록 한다.
  *
@@ -42,14 +40,12 @@ bool DisableSendBuffering = true;
  *
  * 따라서 윈도우도 마찬가지로 네트워크 안정성과 퍼포먼스를 위해서 수신 버퍼 크기를 강제로 0으로 설정하는걸 막고 있지 않을까 추측해본다.
  *
- */ 
+ */
 bool DisableRecvBuffering = false;
-
 
 // 세션의 디폴트 버퍼 크기
 int DefaultSendBufferSize = 6000;
 int DefaultRecvBufferSize = 6000;
-
 
 /*
  * 수신한 데이터를 어떻게 파싱할지, 파서 설정을 하지 않을 경우 디폴트로 생성할 패킷파서
@@ -57,7 +53,6 @@ int DefaultRecvBufferSize = 6000;
  * Command: ICommand단위로 파싱함
  */
 int DefaultParserType = PacketParser::Type::Raw;
-
 
 /*
  * 호스트 생성시 논블로킹 소켓으로 생성할지 말지 여부

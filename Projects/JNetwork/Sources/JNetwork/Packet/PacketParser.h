@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/26/2023 2:20:50 PM
  * =====================
@@ -20,38 +20,45 @@ class Session;
 class JCORE_NOVTABLE PacketParser
 {
 public:
-	PacketParser(Session* session);
+	PacketParser(Session* _pSession);
 	virtual ~PacketParser() = default;
 
 	enum Type
 	{
-		Raw,				// OnReceivedRaw	-> char		단위로 파싱
-		Command,			// OnReceived		-> ICommand 단위로 파싱
+		Raw,                // OnReceivedRaw    -> char     단위로 파싱
+		Command,            // OnReceived       -> ICommand 단위로 파싱
 		Custom
 	};
 
-	virtual void Received(Int32UL receivedBytes) = 0;
+	virtual void Received(Int32UL _receivedBytes) = 0;
 	virtual Type GetType() const = 0;
 
-	static PacketParser* Create(int type, Session* session);
+	static PacketParser* Create(int _type, Session* _pSession);
+
 protected:
-	Session* m_pSession;
+	Session* session_;
 };
 
 class PacketRawParser : public PacketParser
 {
 public:
-	PacketRawParser(Session* session);
-	void Received(Int32UL receivedBytes) override;
-	Type GetType() const override { return Type::Raw; }
+	PacketRawParser(Session* _pSession);
+	void Received(Int32UL _receivedBytes) override;
+	Type GetType() const override
+	{
+		return Type::Raw;
+	}
 };
 
 class PacketCommandParser : public PacketParser
 {
 public:
-	PacketCommandParser(Session* session);
-	void Received(Int32UL receivedBytes) override;
-	Type GetType() const override { return Type::Command; }
+	PacketCommandParser(Session* _pSession);
+	void Received(Int32UL _receivedBytes) override;
+	Type GetType() const override
+	{
+		return Type::Command;
+	}
 };
 
 NS_JNET_END

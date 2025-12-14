@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 3:38:18 PM
  * =====================
@@ -10,9 +10,7 @@
  * 아직은 쓸일이 없는 듯 - 2023/01/22(설날)
  */
 
-
 #pragma once
-
 
 #include <SteinsGate/Client/Tutturu.h>
 #include <SteinsGate/Client/FrameTexture.h>
@@ -22,82 +20,80 @@ class ActorPartSprite;
 class ActorPartAnimation : public cocos2d::Ref
 {
 public:
-	enum State
-	{
-		eInitialized,
-		eRunning,
-		ePaused,
-		eZeroFramePaused,
-		eFinished
-	};
+    enum State
+    {
+        eInitialized,
+        eRunning,
+        ePaused,
+        eZeroFramePaused,
+        eFinished
+    };
 
-	static ActorPartAnimation* create(
-		ActorPartSprite* animationTarget, 
-		AnimationInfo* animationInfo,
-		SGVector<FrameTexture*>& frames
-	);
+    static ActorPartAnimation* create(
+        ActorPartSprite* _pAnimationTarget,
+        AnimationInfo* _pAnimationInfo,
+        SGVector<FrameTexture*>& _frames
+    );
 
-	ActorPartAnimation(
-		ActorPartSprite* animationTarget, 
-		AnimationInfo* animationInfo, 
-		SGVector<FrameTexture*>& frames
-	);
-	
-	void constructFrames(int sgaIndex, int imgIndex);
-	void update(float dt);
-	void updateLoopSequence(float dt);
-	void updateAnimation(float currentdelayFrame, FrameTexture* currentFrameTexture, float dt);
-	void updateZeroDelayFrame(float currentFrameDelay, FrameTexture* currentFrameTexture);
-	void init();
-	void run();
-	void run(int frameIndexInAnimation);
-	void pause();
-	void pauseTime(float delay);
-	void resume();
-	void setPlaySpeed(float speed);
-	void setLoopSequence();
-	void setAnimationInfo(AnimationInfo* animationInfo);
+    ActorPartAnimation(
+        ActorPartSprite* _pAnimationTarget,
+        AnimationInfo* _pAnimationInfo,
+        SGVector<FrameTexture*>& _frames
+    );
 
-	AnimationInfo* getAnimationInfo() { return m_pAnimationInfo; }
+    void constructFrames(int _sgaIndex, int _imgIndex);
+    void update(float _dt);
+    void updateLoopSequence(float _dt);
+    void updateAnimation(float _currentFrameDelay, FrameTexture* _pCurrentFrameTexture, float _dt);
+    void updateZeroDelayFrame(float _currentFrameDelay, FrameTexture* _pCurrentFrameTexture);
+    void init();
+    void run();
+    void run(int _frameIndexInAnimation);
+    void pause();
+    void pauseTime(float _delay);
+    void resume();
+    void setPlaySpeed(float _speed);
+    void setLoopSequence();
+    void setAnimationInfo(AnimationInfo* _pAnimationInfo);
 
-	int getFrameIndexInAnimation() { return m_iFrameIndexInAnimation; }
-	int getTargetFrameIndex() { return m_vAnimationFrames[m_iFrameIndexInAnimation]->getTargetFrameIndex(); }
-	int getFrameIndex() { return m_vAnimationFrames[m_iFrameIndexInAnimation]->getFrameIndex(); }
-	int getPartIndex();
-	int getAnimationCode() { return m_pAnimationInfo->Code; }
+    AnimationInfo* getAnimationInfo() { return animationInfo_; }
 
-	FrameInfo& getFrameInfo(int frameIndexInAnimation);
-	FrameInfo& getRunningFrameInfo();
-	int getRunningFrameEventCode();
+    int getFrameIndexInAnimation() { return frameIndexInAnimation_; }
+    int getTargetFrameIndex() { return animationFrames_[frameIndexInAnimation_]->getTargetFrameIndex(); }
+    int getFrameIndex() { return animationFrames_[frameIndexInAnimation_]->getFrameIndex(); }
+    int getPartIndex();
+    int getAnimationCode() { return animationInfo_->Code; }
 
-	bool isFinished() { return m_bFinished; }
-	bool isPaused() { return m_bPaused || m_bZeroFramePaused; }
-	bool isZeroFramePaused() { return m_bZeroFramePaused; }
-	void reflectAnimation(ActorPartAnimation* runningAnimation); // runningAnimation과 동일한 상태의 애니메이션 상태로 바꿈
-	
+    FrameInfo& getFrameInfo(int _frameIndexInAnimation);
+    FrameInfo& getRunningFrameInfo();
+    int getRunningFrameEventCode();
+
+    bool isFinished() { return finished_; }
+    bool isPaused() { return paused_ || zeroFramePaused_; }
+    bool isZeroFramePaused() { return zeroFramePaused_; }
+    void reflectAnimation(ActorPartAnimation* _pRunningAnimation);
 
 private:
-	FrameTexture* changeTexture(int frameIndexInAnimation);
-	FrameTexture* getTexture(int frameIndexInAnimation);
+    FrameTexture* changeTexture(int _frameIndexInAnimation);
+    FrameTexture* getTexture(int _frameIndexInAnimation);
+
 private:
-	// 주입 데이터
-	int m_iSgaIndex;
-	int m_iImgIndex;
+    // 주입 데이터
+    int sgaIndex_;
+    int imgIndex_;
 
-	AnimationInfo* m_pAnimationInfo;
-	ActorPartSprite* m_pTarget;
-	SGVector<FrameTexture*>	m_vAnimationFrames;	// 해당 애니메이션을 구성하는 프레임들만
-	SGVector<FrameTexture*>& m_vFrames;			// 이미지 팩의 전체 프레임 참조본 / 원본은 파츠가 들고있음
+    AnimationInfo* animationInfo_;
+    ActorPartSprite* target_;
+    SGVector<FrameTexture*> animationFrames_;
+    SGVector<FrameTexture*>& frames_;
 
-	// 자체 데이터
-	float m_fRunningFrameTime;
-	float m_fPauseDelay;
-	float m_fPlaySpeed;
-	int m_iFrameIndexInAnimation;
-	bool m_bFinished;
-	bool m_bPaused;
-	bool m_bZeroFramePaused;
-	bool m_bLoopSequence;		// 켜져있으면 한번 더 돔
+    // 자체 데이터
+    float runningFrameTime_;
+    float pauseDelay_;
+    float playSpeed_;
+    int frameIndexInAnimation_;
+    bool finished_;
+    bool paused_;
+    bool zeroFramePaused_;
+    bool loopSequence_;
 };
-
-

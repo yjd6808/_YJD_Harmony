@@ -1,4 +1,4 @@
-﻿/*
+/*
  *	작성자 : 윤정도
  * ================
  *
@@ -27,5 +27,5 @@
 #define TEST_DUMMY_PACKET_SIZE	20
 
 NS_JNET_BEGIN
-inline int DbgFlag_v = 0;	// 외부 프로젝트에서 JNetwork 프로젝트에 브레이크 포인트 걸기위해 추가함.
+inline int DbgFlag_v = 0; // 외부 프로젝트에서 JNetwork 프로젝트에 브레이크 포인트 걸기위해 추가함.
 NS_JNET_END

@@ -5,42 +5,39 @@
  *
  */
 
-
-#pragma once
-
 #include <JCore/Core.h>
 #include <JCore/Threading/ThreadPool.h>
 
 NS_JC_BEGIN
-
 // =============================================================================================
 // TaskContext
 // =============================================================================================
-
-const char* TaskContext::ToStateString(int state)
+const char* TaskContext::ToStateString(int _state)
 {
-	if (state == eRunningWait) return "RunningWait";
-	else if (state == eRunning) return "Running";
-	else if (state == eFinished) return "Finished";
-	else if (state == eCancelled) return "Cancelled";
+	if (_state == eRunningWait) return "RunningWait";
+	else if (_state == eRunning) return "Running";
+	else if (_state == eFinished) return "Finished";
+	else if (_state == eCancelled) return "Cancelled";
 	return "none";
 }
 
-void TaskContext::Run() {
-	
+//////////////////////////////////////////////////////////////////////////////////////////
+void TaskContext::Run()
+{
 	{
 		TASKPOOL_LOG("%s 실행 Begin", m_DebugName.Source());
 		NormalLockGuard guard(m_CtxLock);
-		if (m_eState == eCancelled) {
+		if (m_eState == eCancelled)
+		{
 			TASKPOOL_LOG("%s 실행 Cancel 리턴", m_DebugName.Source());
 			return;
 		}
 		m_eState = eRunning;
 		RunImpl();
-		m_eState = eFinished;	
+		m_eState = eFinished;
 		// (1)
 	}
-	
+
 	// 아토믹 변수라서 락안걸고 수행했었는데
 	// (1)라인 직후 락이 해제되면서 조건변수 Wait부분의 Predicate 함수 체크를 수행을 바로 하게되고
 	// 이때 m_eState = eFinished보다 eState = m_eState의 읽기가 먼저 수행되서 Running상태로 읽어버려서
@@ -52,7 +49,9 @@ void TaskContext::Run() {
 	TASKPOOL_LOG("%s 실행 End", m_DebugName.Source());
 }
 
-void TaskContext::Cancel() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void TaskContext::Cancel()
+{
 	{
 		NormalLockGuard guard(m_CtxLock);
 		m_eState = eCancelled;
@@ -64,40 +63,53 @@ void TaskContext::Cancel() {
 // =============================================================================================
 // TaskThread
 // =============================================================================================
-
-TaskThread::TaskThread(ConditionVariable& poolCv, ConditionVariable& joinCv, NormalLock& poolLock, int& poolState, TaskQueue& poolTaskQueue, int code)
-	: RunnableThread()
-	, m_PoolCondVar(poolCv)
-	, m_JoinCondVar(joinCv)
-	, m_PoolLock(poolLock)
-	, m_ePoolState(poolState)
-	, m_qPoolWaitingTasks(poolTaskQueue)
-	, m_iCode(code)
-	, m_bJoinWait(false)
-{}
+TaskThread::TaskThread(
+	ConditionVariable& _poolCv, 
+	ConditionVariable& _joinCv, 
+	NormalLock& _poolLock, 
+	int& _poolState,
+	TaskQueue& _poolTaskQueue, 
+	int _code)
+//////////////////////////////////////////////////////////////////////////////////////////
+: RunnableThread()
+, m_PoolCondVar(_poolCv)
+, m_JoinCondVar(_joinCv)
+, m_PoolLock(_poolLock)
+, m_ePoolState(_poolState)
+, m_qPoolWaitingTasks(_poolTaskQueue)
+, m_iCode(_code)
+, m_bJoinWait(false)
+{
+}
 
 TaskThread::~TaskThread()
 {
 }
 
-void TaskThread::CancelRunningTask() {
-	if (m_spRunningTask != nullptr) {
+void TaskThread::CancelRunningTask()
+{
+	if (m_spRunningTask != nullptr)
+	{
 		NormalLockGuard guard(m_Lock);
-		if (m_spRunningTask != nullptr) {
+		if (m_spRunningTask != nullptr)
+		{
 			m_spRunningTask->Cancel();
 			m_spRunningTask = nullptr;
 		}
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void TaskThread::WorkerThread()
 {
 	int iCount = 0;
 	bool bExit = false;
 	TaskContextPtr spRunningTask;
 
-	for (;;) {
-		if (spRunningTask != nullptr) {
+	for (;;)
+	{
+		if (spRunningTask != nullptr)
+		{
 			{
 				NormalLockGuard guard(m_Lock);
 				m_spRunningTask = spRunningTask;
@@ -110,13 +122,17 @@ void TaskThread::WorkerThread()
 			break;
 
 		NormalLockGuard guard(m_PoolLock);
-		m_PoolCondVar.Wait(guard, [this, &iCount, &bExit] {
+		m_PoolCondVar.Wait(guard, [this, &iCount, &bExit]
+		{
 			iCount = m_qPoolWaitingTasks.Size();
 			bExit = false;
 
-			if (m_ePoolState == ThreadPool::State::eJoinWaitAll) {
+			if (m_ePoolState == ThreadPool::State::eJoinWaitAll)
+			{
 				bExit = iCount <= 0;
-			} else if (m_ePoolState == ThreadPool::State::eJoinWaitOnlyRunningTask) {
+			}
+			else if (m_ePoolState == ThreadPool::State::eJoinWaitOnlyRunningTask)
+			{
 				bExit = true;
 			}
 
@@ -132,32 +148,35 @@ void TaskThread::WorkerThread()
 }
 
 
-
 // =============================================================================================
-// ThreadPool
-// =============================================================================================
+// ThreadPool// =============================================================================================
 
-ThreadPool::ThreadPool(int poolSize)
-	: m_vThreads(poolSize)
-	, m_eState(eRunning) {
-	for (int i = 0; i < poolSize; ++i) {
-		TaskThreadPtr spThread = MakeShared<TaskThread>(m_CondVar, m_JoinCondVar, m_Lock, m_eState, m_qWaitingTasks, i);
-		m_vThreads.PushBack(spThread);
+ThreadPool::ThreadPool(int _poolSize)
+: threads_(_poolSize)
+, state_(eRunning)
+{
+	for (int i = 0; i < _poolSize; ++i)
+	{
+		TaskThreadPtr spThread = MakeShared<TaskThread>(condVar_, joinCondVar_, lock_, state_, waitingTasks_, i);
+		threads_.PushBack(spThread);
 		spThread->Start();
 	}
 }
 
-void ThreadPool::Join(JoinStrategy strategy) {
-	
+//////////////////////////////////////////////////////////////////////////////////////////
+void ThreadPool::Join(JoinStrategy _strategy)
+{
 	{
-		NormalLockGuard guard(m_Lock);
-		m_eState = strategy == JoinStrategy::WaitOnlyRunningTask ? eJoinWaitOnlyRunningTask : eJoinWaitAll;
+		NormalLockGuard guard(lock_);
+		state_ = _strategy == JoinStrategy::WaitOnlyRunningTask ? eJoinWaitOnlyRunningTask : eJoinWaitAll;
 
-		if (strategy == JoinStrategy::WaitOnlyRunningTask) {
-			while (!m_qWaitingTasks.IsEmpty()) {
-				TaskContextPtr& spTask = m_qWaitingTasks.Front();
+		if (_strategy == JoinStrategy::WaitOnlyRunningTask)
+		{
+			while (!waitingTasks_.IsEmpty())
+			{
+				TaskContextPtr& spTask = waitingTasks_.Front();
 				spTask->Cancel();
-				m_qWaitingTasks.Dequeue();
+				waitingTasks_.Dequeue();
 			}
 		}
 
@@ -165,27 +184,28 @@ void ThreadPool::Join(JoinStrategy strategy) {
 		// 		m_vThreads[i]->CancelRunningTask();	// 이미 실행중인 작업은 완료될때까지 기다리도록 하는게 나을듯?
 		// }
 	}
-	m_CondVar.NotifyAll();
+	condVar_.NotifyAll();
 
 	{
-		NormalLockGuard guard(m_Lock);
-		for (int i = 0; i < m_vThreads.Size(); ++i) {
+		NormalLockGuard guard(lock_);
+		for (int i = 0; i < threads_.Size(); ++i)
+		{
 			TASKPOOL_LOG("조인1-%d 시작", i);
-			TaskThread* pThread = m_vThreads[i].GetPtr();
-			m_JoinCondVar.Wait(guard, [pThread] { return pThread->IsJoinWait(); });
+			TaskThread* pThread = threads_[i].GetPtr();
+			joinCondVar_.Wait(guard, [pThread] { return pThread->IsJoinWait(); });
 			pThread->Join();
 			TASKPOOL_LOG("조인1-%d 완료", i);
 		}
-		m_vThreads.Clear();
-		m_eState = eJoined;
+		threads_.Clear();
+		state_ = eJoined;
 	}
 }
 
-int ThreadPool::WaitingTaskCount() {
-	NormalLockGuard guard(m_Lock);
-	return m_qWaitingTasks.Size();
+//////////////////////////////////////////////////////////////////////////////////////////
+int ThreadPool::WaitingTaskCount()
+{
+	NormalLockGuard guard(lock_);
+	return waitingTasks_.Size();
 }
 
 NS_JC_END
-
-

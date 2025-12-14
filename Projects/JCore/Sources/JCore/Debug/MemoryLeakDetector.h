@@ -15,29 +15,25 @@
 #include <JCore/Functional.h>
 
 
-
-
 NS_JC_BEGIN
-
 
 // CrtMemBlockHeader
 struct MemHeader
 {
 	_CrtMemBlockHeader* block_header_next;
 	_CrtMemBlockHeader* block_header_prev;
-	char const*			file_name;
-	int                 line_number;
+	char const* file_name;
+	int line_number;
 
-	int                 block_use;
-	size_t              data_size;
+	int block_use;
+	size_t data_size;
 
-	long                request_number;
-	unsigned char       gap[4];
+	long request_number;
+	unsigned char gap[4];
 
 	// unsigned char    _data[_data_size];
 	// unsigned char    _another_gap[no_mans_land_size];
 };
-
 
 
 // 범위 메모리릭 체크
@@ -45,27 +41,30 @@ struct MemHeader
 class MemoryLeakDetector
 {
 public:
-    void StartDetect();
-    bool Detecting() { return m_bDetecting; }
-    int StopDetect();
+	void StartDetect();
+	bool Detecting()
+	{
+		return m_bDetecting;
+	}
+	int StopDetect();
+
 protected:
-    _CrtMemState m_State{};
-    bool m_bDetecting{};
+	_CrtMemState m_State{};
+	bool m_bDetecting{};
 };
 
 class AutoMemoryLeakDetector : public MemoryLeakDetector
 {
-    using TAction = Action<Int32U>;
+	using TAction = Action<Int32U>;
+
 public:
-    AutoMemoryLeakDetector();
-    AutoMemoryLeakDetector(const TAction& action);
-    AutoMemoryLeakDetector(TAction&& action);
-    ~AutoMemoryLeakDetector();
+	AutoMemoryLeakDetector();
+	AutoMemoryLeakDetector(const TAction& _action);
+	AutoMemoryLeakDetector(TAction&& _action);
+	~AutoMemoryLeakDetector();
+
 private:
-    TAction m_Callback;
+	TAction m_Callback;
 };
 
 NS_JC_END
-
-
-

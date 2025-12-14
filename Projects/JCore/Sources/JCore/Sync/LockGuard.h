@@ -13,23 +13,23 @@ class LockGuard final
 {
 	using TLockGuard = LockGuard<TLock>;
 public:
-	LockGuard(TLock& mtx) : m_Mtx(&mtx) {
-		m_Mtx->Lock();
+	LockGuard(TLock& _lock) : m_pLock(&_lock) {
+		m_pLock->Lock();
 	}
 
 	~LockGuard() {
-		m_Mtx->Unlock();
+		m_pLock->Unlock();
 	}
 
-	TLock* Handle() const { return m_Mtx; }
+	TLock* Handle() const { return m_pLock; }
 
-	void Lock() { m_Mtx->Lock(); }
-	void Unlock() { m_Mtx->Unlock(); }
+	void Lock() { m_pLock->Lock(); }
+	void Unlock() { m_pLock->Unlock(); }
 
-	LockGuard(const TLockGuard& mtx) = delete;
-	TLock& operator=(const TLockGuard& mtx) = delete;
+	LockGuard(const TLockGuard& _lockGuard) = delete;
+	TLock& operator=(const TLockGuard& _lockGuard) = delete;
 private:
-	TLock* m_Mtx;
+	TLock* m_pLock;
 };
 
 
@@ -41,31 +41,31 @@ class JCoreLibLockGuard final
 {
 	using TLockGuard = LockGuard<TLock>;
 public:
-	JCoreLibLockGuard(TLock& mtx) : m_Mtx(&mtx) {
+	JCoreLibLockGuard(TLock& _lock) : m_pLock(&_lock) {
 		if (!AppExited)
-			m_Mtx->Lock();
+			m_pLock->Lock();
 	}
 
 	~JCoreLibLockGuard() {
 		if (!AppExited)
-			m_Mtx->Unlock();
+			m_pLock->Unlock();
 	}
 
-	TLock* Handle() const { return m_Mtx; }
+	TLock* Handle() const { return m_pLock; }
 
 	void Lock() {
 		if (!AppExited)
-			m_Mtx->Lock();
+			m_pLock->Lock();
 	}
 	void Unlock() {
 		if (!AppExited)
-			m_Mtx->Unlock();
+			m_pLock->Unlock();
 	}
 
-	JCoreLibLockGuard(const TLockGuard& mtx) = delete;
-	TLock& operator=(const TLockGuard& mtx) = delete;
+	JCoreLibLockGuard(const TLockGuard& _lockGuard) = delete;
+	TLock& operator=(const TLockGuard& _lockGuard) = delete;
 private:
-	TLock* m_Mtx;
+	TLock* m_pLock;
 };
 
 
@@ -80,25 +80,25 @@ class RwLockGuard final
 {
 	using TLockGuard = RwLockGuard<TRwLock, Mode>;
 public:
-	RwLockGuard(TRwLock& mtx) : m_Mtx(&mtx) {
+	RwLockGuard(TRwLock& _lock) : m_pLock(&_lock) {
 		if constexpr (Mode == RwLockMode::Read)
-			m_Mtx->ReadLock();
+			m_pLock->ReadLock();
 		else
-			m_Mtx->WriteLock();
+			m_pLock->WriteLock();
 	}
 
 	~RwLockGuard() {
 		if constexpr (Mode == RwLockMode::Read)
-			m_Mtx->ReadUnlock();
+			m_pLock->ReadUnlock();
 		else
-			m_Mtx->WriteUnlock();
+			m_pLock->WriteUnlock();
 	}
 
 
-	RwLockGuard(TLockGuard&& mtx) = delete;
-	void operator=(const TLockGuard& mtx) = delete;
+	RwLockGuard(TLockGuard&& _lockGuard) = delete;
+	void operator=(const TLockGuard& _lockGuard) = delete;
 private:
-	TRwLock* m_Mtx;
+	TRwLock* m_pLock;
 };
 
 NS_JC_END

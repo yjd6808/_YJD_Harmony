@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/2/2023 4:38:29 PM
  * =====================
@@ -25,13 +25,13 @@ private:
 public:
 	void init();
 
-	CharacterListener* createCharacterListener(Character* character);
-	MonsterListener* createMonsterListener(Monster* monster);
-	ProjectileListener* createProjectileListener(Projectile* projectile, Actor* spawner = nullptr);
+	CharacterListener* createCharacterListener(Character* _pCharacter);
+	MonsterListener* createMonsterListener(Monster* _pMonster);
+	ProjectileListener* createProjectileListener(Projectile* _pProjectile, Actor* _pSpawner = nullptr);
 private:
-	ProjectileFactoryMap m_hProjectileListenerMap;
-	MonsterFactoryMap m_hMonsterListenerMap;
-	CharacterFactoryMap m_hCharacterListenerMap;
+	ProjectileFactoryMap projectileListenerMap_;
+	MonsterFactoryMap monsterListenerMap_;
+	CharacterFactoryMap characterListenerMap_;
 };
 
 

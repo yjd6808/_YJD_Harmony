@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/29/2023 4:58:10 AM
  * =====================
@@ -8,40 +8,51 @@
 #include "Tutturu.h"
 #include "AIActivity.h"
 
-AIActivity::AIActivity(Actor* actor, AIActivityType_t type)
-	: m_pActor(actor)
-	, m_eType(type)
-	, m_eState(eInitialized)
-	, m_fElasedTime(0.0f)
-	, m_fLimitTime(1.0f)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+AIActivity::AIActivity(Actor* _pActor, AIActivityType_t _type)
+	: actor_(_pActor)
+	, type_(_type)
+	, state_(eInitialized)
+	, elapsedTime_(0.0f)
+	, limitTime_(1.0f)
+{
+}
 
-void AIActivity::run() {
-	DebugAssertMsg(m_eState != eRunning, "해당 AI 액터의 액티비티가 실행중입니다.");
-	m_eState = eRunning;
-	m_fElasedTime = 0.0f;
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIActivity::run()
+{
+	DebugAssertMsg(state_ != eRunning, "해당 AI 액터의 액티비티가 실행중입니다.");
+	state_ = eRunning;
+	elapsedTime_ = 0.0f;
 	onActivityBegin();
 }
 
-void AIActivity::stop() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIActivity::stop()
+{
 	if (!isRunning())
 		return;
 
-	m_eState = eFinished;
+	state_ = eFinished;
 	onActivityEnd();
 }
 
-bool AIActivity::isRunning() {
-	return m_eState == eRunning;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool AIActivity::isRunning()
+{
+	return state_ == eRunning;
 }
 
-void AIActivity::updateLimitTime(float dt) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIActivity::updateLimitTime(float _dt)
+{
 	if (!isRunning())
 		return;
 
-	m_fElasedTime += dt;
+	elapsedTime_ += _dt;
 
-	if (m_fElasedTime >= m_fLimitTime) {
+	if (elapsedTime_ >= limitTime_)
+	{
 		stop();
 	}
 }

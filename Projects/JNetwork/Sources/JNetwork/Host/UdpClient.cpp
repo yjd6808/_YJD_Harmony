@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/8/2023 2:33:47 PM
  * =====================
@@ -11,94 +11,132 @@
 #include <JNetwork/Host/UdpClient.h>
 
 NS_JNET_BEGIN
-
 USING_NS_JC;
 
+//////////////////////////////////////////////////////////////////////////////////////////
 UdpClient::UdpClient(
-	const IOCPPtr& iocp,
-	const MemoryPoolAbstractPtr& bufferAllocator,
-	PacketParser* parser,
-	int recvBufferSize,
-	int sendBufferSize
-)
-	: Session(iocp, bufferAllocator, parser, recvBufferSize, sendBufferSize)
-	, m_pEventListener(nullptr)
+	const IOCPPtr& _pIocp,
+	const MemoryPoolAbstractPtr& _pBufferAllocator,
+	PacketParser* _pParser,
+	int _recvBufferSize,
+	int _sendBufferSize)
+: Session(_pIocp, _pBufferAllocator, _pParser, _recvBufferSize, _sendBufferSize)
+, pEventListener_(nullptr)
 {
 	UdpClient::Initialize();
 }
 
-UdpClient::~UdpClient() {
+//////////////////////////////////////////////////////////////////////////////////////////
+UdpClient::~UdpClient()
+{
 	Disconnect();
 	WaitForZeroPending();
 
-	JCORE_DELETE_SAFE(m_pEventListener);
+	JCORE_DELETE_SAFE(pEventListener_);
 }
 
-
-void UdpClient::Initialize() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void UdpClient::Initialize()
+{
 	Session::Initialize();
 
-	if (CreateSocket(TransportProtocol::UDP, NonblokingSocket) == false) {
+	if (!CreateSocket(TransportProtocol::UDP, NonblokingSocket))
+	{
 		DebugAssertMsg(false, "UDP 소켓 생성에 실패했습니다. (%u)", Winsock::LastError());
 	}
 
-	if (ConnectIocp() == false) {
+	if (!ConnectIocp())
+	{
 		DebugAssertMsg(false, "IOCP 연결 실패 (%d)", ::GetLastError());
 	}
-
 }
 
-void UdpClient::FlushSendBuffer() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void UdpClient::FlushSendBuffer()
+{
 	CommandBufferPacket* pWrappedPacket = GetCommandBufferForSending();
-	if (pWrappedPacket) SendToAsync(pWrappedPacket, m_RemoteEndPoint);
+	if (pWrappedPacket)
+	{
+		SendToAsync(pWrappedPacket, remoteEndPoint_);
+	}
 }
 
-void UdpClient::SetRemoteEndpoint(const IPv4EndPoint& remoteEp) {
-	m_RemoteEndPoint = remoteEp;
+//////////////////////////////////////////////////////////////////////////////////////////
+void UdpClient::SetRemoteEndpoint(const IPv4EndPoint& _remoteEndPoint)
+{
+	remoteEndPoint_ = _remoteEndPoint;
 }
 
-void UdpClient::Connected() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void UdpClient::Connected()
+{
 	// UDP는 연결이라는 개념이 존재하지 않는다. 이 함수는 아무데서도 호출하지 않음
 	// 추후 ReliableUDP를 구현하게된다면 활용할 듯?
-	m_Socket.State = Socket::eBinded;
+	socket_.State = Socket::eBinded;
 
-	if (m_pEventListener)
-		m_pEventListener->OnConnected(this);
+	if (pEventListener_)
+	{
+		pEventListener_->OnConnected(this);
+	}
 }
 
-void UdpClient::ConnectFailed(Int32U errorCode) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void UdpClient::ConnectFailed(Int32U _errorCode)
+{
 	// UDP는 연결이라는 개념이 존재하지 않는다. 이 함수는 아무데서도 호출하지 않음
 	// 추후 ReliableUDP를 구현하게된다면 활용할 듯?
 
-	if (m_pEventListener)
-		m_pEventListener->OnConnectFailed(this, errorCode);
+	if (pEventListener_)
+	{
+		pEventListener_->OnConnectFailed(this, _errorCode);
+	}
 }
 
-void UdpClient::Disconnected(Int32U errorCode) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void UdpClient::Disconnected(Int32U _errorCode)
+{
 	// UDP는 연결이 끊긴다는 개념이 존재하지 않는다. 이 함수는 아무데서도 호출하지 않음
 	// 추후 ReliableUDP를 구현하게된다면 활용할 듯?
-	if (m_pEventListener)
-		m_pEventListener->OnDisconnected(this, errorCode);
+	if (pEventListener_)
+	{
+		pEventListener_->OnDisconnected(this, _errorCode);
+	}
 }
 
-void UdpClient::NotifyCommand(ICommand* cmd) {
-	if (m_pEventListener)
-		m_pEventListener->OnReceived(this, cmd);
+//////////////////////////////////////////////////////////////////////////////////////////
+void UdpClient::NotifyCommand(ICommand* _pCmd)
+{
+	if (pEventListener_)
+	{
+		pEventListener_->OnReceived(this, _pCmd);
+	}
 }
 
-void UdpClient::NotifyPacket(RecvedCommandPacket* packet) {
-	if (m_pEventListener)
-		m_pEventListener->OnReceived(this, packet);
+//////////////////////////////////////////////////////////////////////////////////////////
+void UdpClient::NotifyPacket(RecvedCommandPacket* _pPacket)
+{
+	if (pEventListener_)
+	{
+		pEventListener_->OnReceived(this, _pPacket);
+	}
 }
 
-void UdpClient::NotifyRaw(char* data, int len) {
-	if (m_pEventListener)
-		m_pEventListener->OnReceivedRaw(this, data, len);
+//////////////////////////////////////////////////////////////////////////////////////////
+void UdpClient::NotifyRaw(char* _pData, int _len)
+{
+	if (pEventListener_)
+	{
+		pEventListener_->OnReceivedRaw(this, _pData, _len);
+	}
 }
 
-void UdpClient::Sent(IPacket* sentPacket, Int32UL sentBytes) {
-	if (m_pEventListener)
-		m_pEventListener->OnSent(this, sentPacket, sentBytes);
+//////////////////////////////////////////////////////////////////////////////////////////
+void UdpClient::Sent(IPacket* _pSentPacket, Int32UL _sentBytes)
+{
+	if (pEventListener_)
+	{
+		pEventListener_->OnSent(this, _pSentPacket, _sentBytes);
+	}
 }
 
 NS_JNET_END

@@ -71,7 +71,7 @@ void CenterNetGroup::InitializeParser() {
 }
 
 void CenterNetGroup::InitializeServer() {
-	auto spServer = MakeShared<CenterServer>(m_spIOCP, m_spBufferPool);
+	auto spServer = MakeShared<CenterServer>(pIocp_, pBufferPool_);
 
 	AddHost(Const::Host::CenterTcpId, spServer);
 

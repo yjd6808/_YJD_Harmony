@@ -21,8 +21,16 @@
 class ActorComponent : public IComponent
 {
 public:
-	ActorComponent(Actor* actor) : m_pActor(actor) {}
-	Actor* getActor() const { return m_pActor; }
+	ActorComponent(Actor* _pActor)
+		: actor_(_pActor)
+	{
+	}
+
+	Actor* getActor() const
+	{
+		return actor_;
+	}
+
 protected:
-	Actor* m_pActor;
+	Actor* actor_;
 };

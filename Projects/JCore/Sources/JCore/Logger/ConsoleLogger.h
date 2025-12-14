@@ -20,20 +20,25 @@ public:
 	ConsoleLogger();
 
 	void Flush() override;
-	void LogVaList(Level level, const char* fmt, va_list list) override;
-	void Log(Level level, const char* fmt, ...) override ;
-	void LogPlainVaList(const char* fmt, va_list list) override;
-	void LogPlain(const char* fmt, ...) override;
-	void LogPlain(const String& str) override;
-	String CreateHeader(Level level) override;
+	void LogVaList(Level _level, const char* _pFmt, va_list _list) override;
+	void Log(Level _level, const char* _pFmt, ...) override;
+	void LogPlainVaList(const char* _pFmt, va_list _list) override;
+	void LogPlain(const char* _pFmt, ...) override;
+	void LogPlain(const String& _str) override;
+	String CreateHeader(Level _level) override;
 
-	void SetHeaderLevelColor(Level level, ConsoleColor color);
-	void SetHeaderTimeColor(Level level, ConsoleColor color);
-	void SetHeaderDefaultColor(Level level, ConsoleColor color);
-	void SetLogColor(Level level, ConsoleColor color);
-	ConsoleColor GetLogColor(Level level);
-	void SetLoggerOption(ConsoleLoggerOption* option, bool transferOwnership);
-	LoggerType GetType() const override { return LoggerType::Console; }
+	void SetHeaderLevelColor(Level _level, ConsoleColor _color);
+	void SetHeaderTimeColor(Level _level, ConsoleColor _color);
+	void SetHeaderDefaultColor(Level _level, ConsoleColor _color);
+	void SetLogColor(Level _level, ConsoleColor _color);
+	ConsoleColor GetLogColor(Level _level);
+	void SetLoggerOption(ConsoleLoggerOption* _pOption, bool _transferOwnership);
+
+	LoggerType GetType() const override
+	{
+		return LoggerType::Console;
+	}
+
 private:
 	String m_szBuffer;
 };
@@ -42,10 +47,18 @@ class ConsoleLoggerOption final : public LoggerOption
 {
 public:
 	ConsoleLoggerOption();
-	ConsoleLoggerOption(const ConsoleLoggerOption& other) { this->operator=(other); }
-	ConsoleLoggerOption& operator=(const ConsoleLoggerOption& other);
 
-	LoggerType GetLoggerType() const override { return LoggerType::Console; }
+	ConsoleLoggerOption(const ConsoleLoggerOption& _other)
+	{
+		this->operator=(_other);
+	}
+
+	ConsoleLoggerOption& operator=(const ConsoleLoggerOption& _other);
+
+	LoggerType GetLoggerType() const override
+	{
+		return LoggerType::Console;
+	}
 
 	ConsoleColor LevelColors[LoggerAbstract::eMax];
 	ConsoleColor TimeColors[LoggerAbstract::eMax];

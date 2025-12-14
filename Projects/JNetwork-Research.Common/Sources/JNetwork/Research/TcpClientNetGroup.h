@@ -22,13 +22,22 @@ public:
 	~TcpClientNetGroup() override;
 
 	void Initialize() override;
-	TcpClient* GetLogin() { return m_spLoginClient.GetPtr(); }
-	TcpClient* GetChannel () { return m_spChannelClient.GetPtr(); }
-	TcpClient* GetGame() { return m_spGameClient.GetPtr(); }
+	TcpClient* GetLogin()
+	{
+		return loginClient_.GetPtr();
+	}
+	TcpClient* GetChannel()
+	{
+		return channelClient_.GetPtr();
+	}
+	TcpClient* GetGame()
+	{
+		return gameClient_.GetPtr();
+	}
 private:
-	TcpClientWPtr m_spLoginClient;
-	TcpClientWPtr m_spChannelClient;
-	TcpClientWPtr m_spGameClient;
+	TcpClientWPtr loginClient_;
+	TcpClientWPtr channelClient_;
+	TcpClientWPtr gameClient_;
 };
 
 NS_JNET_END

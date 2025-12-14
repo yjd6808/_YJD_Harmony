@@ -14,24 +14,24 @@ class Semaphore final : public ILock
 {
 public:
 	Semaphore();
-	Semaphore(int maxCount, int initialUsableCount);
+	Semaphore(int _maxCount, int _initialUsableCount);
 
 	void Lock() override;
 	void Unlock() override;
 	bool TryLock() override;
 	bool IsLocked() override;
-	int MaxCount() const { return m_iMaxCount; }
+	int MaxCount() const { return maxCount_; }
 	int UsableCount();
 
     void Acquire() { Lock(); }
-    void Release(int count = 1);
+    void Release(int _count = 1);
     bool TryAcquire() { return TryLock(); }
     bool IsAcquired() { return IsLocked(); }
 private:
-	ConditionVariable m_Condvar;
-	NormalLock m_Mtx;
-	int m_iMaxCount;
-	int m_iUsableCount;
+	ConditionVariable condVar_;
+	NormalLock lock_;
+	int maxCount_;
+	int usableCount_;
 };
 
 using SemaphoreGuard =  LockGuard<Semaphore>;

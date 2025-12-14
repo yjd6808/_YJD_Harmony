@@ -10,32 +10,51 @@
 
 NS_JC_BEGIN
 
-ConditionVariable::ConditionVariable() { InitializeConditionVariable((PCONDITION_VARIABLE)&m_Handle); }
+//////////////////////////////////////////////////////////////////////////////////////////
+ConditionVariable::ConditionVariable()
+{
+	InitializeConditionVariable((PCONDITION_VARIABLE)&m_Handle);
+}
 
-void ConditionVariable::Wait(LockGuard<NormalLock>& lockGuard) {
-	if (!SleepConditionVariableCS((PCONDITION_VARIABLE)&m_Handle, (PCRITICAL_SECTION)&lockGuard.Handle()->m_CriticalSection, INFINITE)) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ConditionVariable::Wait(LockGuard<NormalLock>& _lockGuard)
+{
+	if (!SleepConditionVariableCS((PCONDITION_VARIABLE)&m_Handle, (PCRITICAL_SECTION)&_lockGuard.Handle()->criticalSection_, INFINITE))
+	{
 		DebugAssert(false);
 	}
 }
 
-int ConditionVariable::WaitFor(LockGuard<NormalLock>& lockGuard, const TimeSpan& ts) {
-	int ms = int(ts.GetTotalMiliSecondsInt());
-	if (ms <= 0) { return CvStatus::eTimeout; }
-	if (!SleepConditionVariableCS((PCONDITION_VARIABLE)&m_Handle, (PCRITICAL_SECTION)&lockGuard.Handle()->m_CriticalSection, ms)) {
+//////////////////////////////////////////////////////////////////////////////////////////
+int ConditionVariable::WaitFor(LockGuard<NormalLock>& _lockGuard, const TimeSpan& _timeSpan)
+{
+	int milliSeconds = int(_timeSpan.GetTotalMiliSecondsInt());
+	if (milliSeconds <= 0)
+	{
+		return CvStatus::eTimeout;
+	}
+	if (!SleepConditionVariableCS((PCONDITION_VARIABLE)&m_Handle, (PCRITICAL_SECTION)&_lockGuard.Handle()->criticalSection_, milliSeconds))
+	{
 		return CvStatus::eTimeout;
 	}
 	return CvStatus::eNoTimeout;
 }
 
-int ConditionVariable::WaitUntil(LockGuard<NormalLock>& lockGuard, const DateTime& dt) {
-	return WaitFor(lockGuard, dt.Diff(DateTime::Now()));
+//////////////////////////////////////////////////////////////////////////////////////////
+int ConditionVariable::WaitUntil(LockGuard<NormalLock>& _lockGuard, const DateTime& _dateTime)
+{
+	return WaitFor(_lockGuard, _dateTime.Diff(DateTime::Now()));
 }
 
-void ConditionVariable::NotifyOne() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ConditionVariable::NotifyOne()
+{
 	WakeConditionVariable((PCONDITION_VARIABLE)&m_Handle);
 }
 
-void ConditionVariable::NotifyAll() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ConditionVariable::NotifyAll()
+{
 	WakeAllConditionVariable((PCONDITION_VARIABLE)&m_Handle);
 }
 

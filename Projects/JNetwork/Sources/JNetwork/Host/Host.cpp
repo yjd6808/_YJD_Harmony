@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/9/2023 1:41:58 PM
  * =====================
@@ -13,17 +13,23 @@
 
 NS_JNET_BEGIN
 
-bool Host::CreateSocket(TransportProtocol protocol, bool nonBlocking) {
-	if (m_Socket.IsValid()) {
-		m_Socket.Close();
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Host::CreateSocket(TransportProtocol _protocol, bool _nonBlocking)
+{
+	if (socket_.IsValid())
+	{
+		socket_.Close();
 	}
 
-	m_Socket = Socket::CreateV4(protocol, true);
+	socket_ = Socket::CreateV4(_protocol, true);
 
-	if (!m_Socket.IsValid())
+	if (!socket_.IsValid())
+	{
 		return false;
+	}
 
-	if (m_Socket.Option().SetNonBlockingEnabled(nonBlocking) == SOCKET_ERROR) {
+	if (socket_.Option().SetNonBlockingEnabled(_nonBlocking) == SOCKET_ERROR)
+	{
 		DebugAssertMsg(false, "논블로킹 소켓 설정 실패 (%u)", Winsock::LastError());
 	}
 
@@ -34,26 +40,28 @@ bool Host::CreateSocket(TransportProtocol protocol, bool nonBlocking) {
 	 * 버퍼링 여부는 JNetwork/Config.h 파일 참고
 	 */
 
-	if (DisableSendBuffering && m_Socket.Option().SetSendBufferSize(0) == SOCKET_ERROR) {
+	if (DisableSendBuffering && socket_.Option().SetSendBufferSize(0) == SOCKET_ERROR)
+	{
 		DebugAssertMsg(false, "소켓 %s 버퍼링 비활성화 실패 (%u)", TransmissionName(Transmission::Send), Winsock::LastError());
 	}
 
-	if (DisableRecvBuffering && m_Socket.Option().SetRecvBufferSize(0) == SOCKET_ERROR) {
+	if (DisableRecvBuffering && socket_.Option().SetRecvBufferSize(0) == SOCKET_ERROR)
+	{
 		DebugAssertMsg(false, "소켓 %s 버퍼링 비활성화 실패 (%u)", TransmissionName(Transmission::Recv), Winsock::LastError());
 	}
-
 
 	return true;
 }
 
-
-bool Host::ConnectIocp() {
-
-	if (m_spIocp->Connect(reinterpret_cast<WinHandle>(SocketHandle()), NULL) == false) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Host::ConnectIocp()
+{
+	if (!iocp_->Connect(reinterpret_cast<WinHandle>(SocketHandle()), NULL))
+	{
 		return false;
 	}
 
-	return m_bIocpConnected = true;
+	return iocpConnected_ = true;
 }
 
 

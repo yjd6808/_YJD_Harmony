@@ -39,21 +39,21 @@ public:
 		Joined
 	};
 
-	Scheduler(int threadCount);
+	Scheduler(int _threadCount);
 	~Scheduler() noexcept;
 
 	template <typename TCallback>
 	static constexpr void ValidateCallbackType() { static_assert(IsSchedulerTaskCallback_v<RemoveConstReference_t<TCallback>>, "... TCallback is not SchedulerTaskCallBack type (std::function<void(SchedulerTask*)>)"); }
 
 	template <typename TCallback>
-	void IntervalAt(TCallback&& callback, DateTime at, TimeSpan interval, Int32U repeat = INFINITE) {
+	void IntervalAt(TCallback&& _callback, DateTime _at, TimeSpan _interval, Int32U _repeat = INFINITE) {
 		ValidateCallbackType<TCallback>();
 
 		AddFirstTask(dbg_new SchedulerTaskRepeat{
-			at,
-			interval,
-			Forward<TCallback>(callback),
-			repeat
+			_at,
+			_interval,
+			Forward<TCallback>(_callback),
+			_repeat
 		});
 	}
 
@@ -89,19 +89,19 @@ public:
 		});
 	}
 
-	void AddFirstTask(SchedulerTask* task);
-	void AddTask(SchedulerTask* task);
+	void AddFirstTask(SchedulerTask* _pTask);
+	void AddTask(SchedulerTask* _pTask);
 	int WaitingTaskCount();
 	bool HasRunningTask() { return m_pRunningTask != nullptr; }
 	void Join(JoinStrategy strategy = JoinStrategy::WaitOnlyRunningTask);
 protected:
-	void AddTaskRaw(SchedulerTask* task);
-	bool HaveEarlierTask(const DateTime& waitUntil);
+	void AddTaskRaw(SchedulerTask* _pTask);
+	bool HaveEarlierTask(const DateTime& _waitUntil);
 	void SchedulingRoutine();
-	void ExecuteTasks(TaskList& scheduledTasks, const Int64U* executableTaskLimitTime);
-	int PopTasks(JCORE_OUT Vector<SchedulerTask*>& executableTasks, const Int64U* executableTaskLimitTime);
+	void ExecuteTasks(TaskList& _scheduledTasks, const Int64U* _pExecutableTaskLimitTime);
+	int PopTasks(JCORE_OUT Vector<SchedulerTask*>& _executableTasks, const Int64U* _pExecutableTaskLimitTime);
 	int WaitingTaskListCountRaw();
-	bool HaveExecutableTaskRaw(JCORE_IN_OUT Int64U* executableTaskLimitTime = nullptr);
+	bool HaveExecutableTaskRaw(JCORE_IN_OUT Int64U* _pExecutableTaskLimitTime = nullptr);
 	void ClearWaitingTaskListRaw();
 
 	static ThreadPool::JoinStrategy ConverToThreadPoolStrategy(JoinStrategy strategy);

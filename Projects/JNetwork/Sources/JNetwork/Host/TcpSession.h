@@ -1,10 +1,9 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/8/2023 11:23:59 AM
  * =====================
  *
  */
-
 
 #pragma once
 
@@ -17,36 +16,35 @@ class TcpSession : public Session
 {
 public:
 	TcpSession(
-		TcpServer* server,
-		const IOCPPtr& iocp,
-		const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-		PacketParser* parser,
-		int recvBufferSize, 
-		int sendBufferSize
-	);
+		TcpServer* _pServer,
+		const IOCPPtr& _pIocp,
+		const JCore::MemoryPoolAbstractPtr& _pBufferAllocator,
+		PacketParser* _pParser,
+		int _recvBufferSize,
+		int _sendBufferSize);
 
 	virtual void OnCreated() {}
 	virtual void OnConnected() {}
 	virtual void OnDisconnected() {}
 
-	void NotifyCommand(ICommand* cmd) override;
-	void NotifyPacket(RecvedCommandPacket* recvPacket) override;
-	void NotifyRaw(char* data, int len) override;
+	void NotifyCommand(ICommand* _pCmd) override;
+	void NotifyPacket(RecvedCommandPacket* _pRecvPacket) override;
+	void NotifyRaw(char* _pData, int _len) override;
 
 	void Initialize() override;
 	void Connected() override;
-	void ConnectFailed(Int32U errorCode) override;
-	void Disconnected(Int32U errorCode) override;
+	void ConnectFailed(Int32U _errorCode) override;
+	void Disconnected(Int32U _errorCode) override;
 	bool AcceptAsync();
 	void AcceptWait();
-	bool Accepted(Int32UL receivedBytes);
-	void Sent(IPacket* sentPacket, Int32UL receivedBytes) override;
+	bool Accepted(Int32UL _receivedBytes);
+	void Sent(IPacket* _pSentPacket, Int32UL _receivedBytes) override;
 	Type GetType() const override { return eSession; }
 	DetailType GetDetailType() const override { return eTcpSession; }
 	const char* TypeName() override { return "TCP 세션"; }
 
 protected:
-	TcpServer* m_pServer;
+	TcpServer* pServer_;
 };
 
 using TcpSessionPtr = JCore::SharedPtr<TcpSession>;

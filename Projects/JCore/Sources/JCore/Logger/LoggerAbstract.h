@@ -35,39 +35,39 @@ public:
 		eMax
 	};
 
-	LoggerAbstract(LoggerOption* option);
+	LoggerAbstract(LoggerOption* _pOption);
 	virtual ~LoggerAbstract();
 
-	
 	virtual void Flush() = 0;
-	virtual void LogVaList(Level level, const char* fmt, va_list list) = 0;
-	virtual void Log(Level level, const char* fmt, ...);
-	virtual void LogPlainVaList(const char* fmt, va_list list) = 0;
-	virtual void LogPlain(const char* fmt, ...);
-	virtual void LogPlain(const String& str);
-	virtual String CreateHeader(Level level);
-	
-	void Log(Level level, const String& str);
-	void LogInfo(const char* fmt, ...);
-	void LogWarn(const char* fmt, ...);
-	void LogError(const char* fmt, ...);
-	void LogDebug(const char* fmt, ...);
+	virtual void LogVaList(Level _level, const char* _pFmt, va_list _list) = 0;
+	virtual void Log(Level _level, const char* _pFmt, ...);
+	virtual void LogPlainVaList(const char* _pFmt, va_list _list) = 0;
+	virtual void LogPlain(const char* _pFmt, ...);
+	virtual void LogPlain(const String& _str);
+	virtual String CreateHeader(Level _level);
+
+	void Log(Level _level, const String& _str);
+	void LogInfo(const char* _pFmt, ...);
+	void LogWarn(const char* _pFmt, ...);
+	void LogError(const char* _pFmt, ...);
+	void LogDebug(const char* _pFmt, ...);
 	void Lock() { m_Lock.Lock(); }
 	void Unlock() { m_Lock.Unlock(); }
-	
-	void ShowDateTime(bool enabled);
-	void ShowLevel(bool enabled);
-	void ShowHeader(bool enabled);
-	void SetDateTimeFormat(const String& fmt);
-	void SetAutoFlush(bool enabled);
-	void SetHeaderFormat(const String& fmt);		// [level | datetime] => [Info | 20:08:02]
-	void SetLevelText(Level level, const String& levelText);
-	void SetEnableLock(bool lockEnabled);
-	void SetEnableLog(Level level, bool enabled);
-	void SetEnablePlainLog(bool enabled);
+
+	void ShowDateTime(bool _enabled);
+	void ShowLevel(bool _enabled);
+	void ShowHeader(bool _enabled);
+	void SetDateTimeFormat(const String& _fmt);
+	void SetAutoFlush(bool _enabled);
+	void SetHeaderFormat(const String& _fmt);        // [level | datetime] => [Info | 20:08:02]
+	void SetLevelText(Level _level, const String& _levelText);
+	void SetEnableLock(bool _lockEnabled);
+	void SetEnableLog(Level _level, bool _enabled);
+	void SetEnablePlainLog(bool _enabled);
 
 	virtual LoggerType GetType() const = 0;
 	LoggerOption* GetLoggerOption() { return m_pOption; }
+
 protected:
 	bool m_bAutoFlush;
 	bool m_bUseLock;
@@ -78,15 +78,14 @@ protected:
 	String m_szDateTimeFormat;
 	String m_szLevelText[eMax];
 	RecursiveLock m_Lock;
-	
 };
 
 class JCORE_NOVTABLE LoggerOption
 {
 public:
 	LoggerOption();
-	LoggerOption(const LoggerOption& other) { this->operator=(other); }
-	LoggerOption& operator=(const LoggerOption& other);
+	LoggerOption(const LoggerOption& _other) { this->operator=(_other); }
+	LoggerOption& operator=(const LoggerOption& _other);
 	virtual ~LoggerOption() = 0;
 	virtual LoggerType GetLoggerType() const = 0;
 

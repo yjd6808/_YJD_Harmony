@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -30,19 +30,22 @@ public:
 		ReceiveFrom,
 		SendTo
 	};
-public:
-	IOCPOverlapped(IOCP* iocp, Type type);
-	~IOCPOverlapped() override;
-public:
-	virtual void Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) = 0;
-	Type GetType() const { return m_eType; }
 
-	void ReleaseAction() override { delete this; }	// TODO: 풀링
-	bool IsFailed(BOOL result, JCORE_OUT Int32U& errorCode);
-	bool IsFailed(SOCKET hSocket, BOOL result, Int32UL bytesTransffered, JCORE_OUT Int32U& errorCode);
+public:
+	IOCPOverlapped(IOCP* _pIocp, Type _type);
+	~IOCPOverlapped() override;
+
+public:
+	virtual void Process(BOOL _result, Int32UL _bytesTransferred, IOCPPostOrder* _pCompletionKey) = 0;
+	Type GetType() const { return type_; }
+
+	void ReleaseAction() override { delete this; } // TODO: 풀링
+	bool IsFailed(BOOL _result, JCORE_OUT Int32U& _errorCode);
+	bool IsFailed(SOCKET _socket, BOOL _result, Int32UL _bytesTransferred, JCORE_OUT Int32U& _errorCode);
+
 protected:
-	Type m_eType;
-	IOCP* m_pIocp;
+	Type type_;
+	IOCP* pIocp_;
 };
 
 using IOCPOverlappedPtr = JCore::SharedPtr<IOCPOverlapped>;

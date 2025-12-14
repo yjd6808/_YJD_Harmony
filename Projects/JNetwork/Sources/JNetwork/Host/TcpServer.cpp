@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -9,230 +9,297 @@
 #include <JNetwork/Host/TcpSession.h>
 #include <JNetwork/Host/SessionContainer.h>
 
-#include <JNetwork/IOCPOverlapped/IOCPOverlappedAccept.h>
-
-#include <JCore/Primitives/RefCountObjectPtr.h>
-
 NS_JNET_BEGIN
-
-TcpServer::TcpServer(const IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator)
-	: Server(iocp)
-	, m_spBufferAllocator(bufferAllocator)
-	, m_pEventListener(nullptr)
-	, m_pContainer(nullptr)
+//////////////////////////////////////////////////////////////////////////////////////////
+TcpServer::TcpServer(const IOCPPtr& _pIocp, const JCore::MemoryPoolAbstractPtr& _pBufferAllocator)
+: Server(_pIocp)
+, bufferAllocator_(_pBufferAllocator)
+, serverEventListener_(nullptr)
+, sessionContainer_(nullptr)
 {
 	TcpServer::Initialize();
 }
 
-TcpServer::~TcpServer() {
+//////////////////////////////////////////////////////////////////////////////////////////
+TcpServer::~TcpServer()
+{
 	TcpServer::Stop();
 
-	JCORE_DELETE_SAFE(m_pContainer);
-	JCORE_DELETE_SAFE(m_pEventListener);
+	JCORE_DELETE_SAFE(sessionContainer_);
+	JCORE_DELETE_SAFE(serverEventListener_);
 }
 
-TcpSession* TcpServer::CreateSession() {
-	return dbg_new TcpSession(this, m_spIocp, m_spBufferAllocator, nullptr, 0, 0);
+//////////////////////////////////////////////////////////////////////////////////////////
+TcpSession* TcpServer::CreateSession()
+{
+	return dbg_new TcpSession(this, iocp_, bufferAllocator_, nullptr, 0, 0);
 }
 
-// 디폴트 세션 컨테이너, 서버시작전 외부에서 주입해줄 경우 호출안됨
-ISessionContainer* TcpServer::CreateSessionContainer() {
+//////////////////////////////////////////////////////////////////////////////////////////
+ISessionContainer* TcpServer::CreateSessionContainer()
+{
+	// 디폴트 세션 컨테이너, 서버시작전 외부에서 주입해줄 경우 호출안됨
 	return dbg_new SessionContainer(10);
 }
 
-void TcpServer::SessionDisconnected(TcpSession* session, Int32U errorCode) {
-	if (m_pEventListener)
-		m_pEventListener->OnDisconnected(session, errorCode);
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpServer::SessionDisconnected(TcpSession* _pSession, Int32U _errorCode)
+{
+	if (serverEventListener_)
+	{
+		serverEventListener_->OnDisconnected(_pSession, _errorCode);
+	}
 
 	// 세션 재사용... 이거땜에 State를 Atomic으로 변경함.
 	// 서버가 다른 쓰레드에서 Stop을 실행하는 순간
 	// IOCP 쓰레드들이 서버의 State를 정확하게 관측하도록 하기위함.
 	// 이렇게 체크한번만 해주면 쓰레드 세이프하게 재사용할 수 있다. (맞겠지?)
-	if (m_eState != eListening) {
+	if (state_ != eListening)
+	{
 		_NetLogDebug_("IOCP 서버가 리스닝 상태가 아닙니다. 세션 재사용을 하지 않습니다.");
 		return;
 	}
 
-	session->Initialize();
-	session->AcceptWait();
+	_pSession->Initialize();
+	_pSession->AcceptWait();
 
-	if (!session->AcceptAsync()) {
+	if (!_pSession->AcceptAsync())
+	{
 		_NetLogDebug_("세션을 재사용 실패");
 	}
 }
 
-void TcpServer::SessionConnected(TcpSession* session) {
-	if (m_pEventListener)
-		m_pEventListener->OnConnected(session);
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpServer::SessionConnected(TcpSession* _pSession)
+{
+	if (serverEventListener_)
+	{
+		serverEventListener_->OnConnected(_pSession);
+	}
 }
 
-void TcpServer::SessionConnectFailed(TcpSession* session, Int32U errorCode) {
-	if (m_pEventListener)
-		m_pEventListener->OnConnectFailed(session, errorCode);
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpServer::SessionConnectFailed(TcpSession* _pSession, Int32U _errorCode)
+{
+	if (serverEventListener_)
+	{
+		serverEventListener_->OnConnectFailed(_pSession, _errorCode);
+	}
 }
 
-void TcpServer::SessionSent(TcpSession* session, IPacket* sentPacket, Int32UL receivedBytes) {
-	if (m_pEventListener)
-		m_pEventListener->OnSent(session, sentPacket, receivedBytes);
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpServer::SessionSent(TcpSession* _pSession, IPacket* _pSentPacket, Int32UL _receivedBytes)
+{
+	if (serverEventListener_)
+	{
+		serverEventListener_->OnSent(_pSession, _pSentPacket, _receivedBytes);
+	}
 }
 
-void TcpServer::SessionReceived(TcpSession* session, ICommand* command) {
-	if (m_pEventListener)
-		m_pEventListener->OnReceived(session, command);
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpServer::SessionReceived(TcpSession* _pSession, ICommand* _pCommand)
+{
+	if (serverEventListener_)
+	{
+		serverEventListener_->OnReceived(_pSession, _pCommand);
+	}
 }
 
-void TcpServer::SessionReceived(TcpSession* session, RecvedCommandPacket* recvPacket) {
-	if (m_pEventListener)
-		m_pEventListener->OnReceived(session, recvPacket);
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpServer::SessionReceived(TcpSession* _pSession, RecvedCommandPacket* _pRecvPacket)
+{
+	if (serverEventListener_)
+	{
+		serverEventListener_->OnReceived(_pSession, _pRecvPacket);
+	}
 }
 
-void TcpServer::SessionReceivedRaw(TcpSession* session, char* data, int len) {
-	if (m_pEventListener)
-		m_pEventListener->OnReceivedRaw(session, data, len);
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpServer::SessionReceivedRaw(TcpSession* _pSession, char* _pData, int _len)
+{
+	if (serverEventListener_)
+	{
+		serverEventListener_->OnReceivedRaw(_pSession, _pData, _len);
+	}
 }
 
-ISessionContainer* TcpServer::GetSessionContainer() {
-	JCORE_LOCK_GUARD(m_Sync);
-	return m_pContainer;
+//////////////////////////////////////////////////////////////////////////////////////////
+ISessionContainer* TcpServer::GetSessionContainer()
+{
+	JCORE_LOCK_GUARD(sync_);
+	return sessionContainer_;
 }
 
-ServerEventListener* TcpServer::GetEventListener() {
-	JCORE_LOCK_GUARD(m_Sync);
-	return m_pEventListener;
+//////////////////////////////////////////////////////////////////////////////////////////
+ServerEventListener* TcpServer::GetEventListener()
+{
+	JCORE_LOCK_GUARD(sync_);
+	return serverEventListener_;
 }
 
-void TcpServer::SetSesssionContainer(ISessionContainer* container) {
-	JCORE_LOCK_GUARD(m_Sync);
-	m_pContainer = container;
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpServer::SetSesssionContainer(ISessionContainer* _pContainer)
+{
+	JCORE_LOCK_GUARD(sync_);
+	sessionContainer_ = _pContainer;
 }
 
-void TcpServer::SetEventListener(ServerEventListener* listener) {
-	JCORE_LOCK_GUARD(m_Sync);
-	m_pEventListener = listener;
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpServer::SetEventListener(ServerEventListener* _pListener)
+{
+	JCORE_LOCK_GUARD(sync_);
+	serverEventListener_ = _pListener;
 }
 
-void TcpServer::Initialize() {
-	JCORE_LOCK_GUARD(m_Sync);
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpServer::Initialize()
+{
+	JCORE_LOCK_GUARD(sync_);
 
-	if (CreateSocket(TransportProtocol::TCP) == false) {
+	if (!CreateSocket(TransportProtocol::TCP))
+	{
 		_NetLogError_("TCP 서버 소켓 생성 실패");
 		return;
 	}
 
-	if (ConnectIocp() == false) {
+	if (!ConnectIocp())
+	{
 		_NetLogError_("TCP 서버 IOCP 연결 실패");
 		return;
 	}
 
-	m_eState = eInitailized;
+	state_ = eInitailized;
 }
 
-
-bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+bool TcpServer::Start(const IPv4EndPoint& _localEndPoint)
+{
 	struct StartFailNotifyGuard
 	{
-		StartFailNotifyGuard(TcpServer* server) : Server(server) {}
-		~StartFailNotifyGuard() noexcept {
-			if (ErrorCode == 0)
-				return;
-
-			if (Server->m_pEventListener)
-				Server->m_pEventListener->OnStartFailed(ErrorCode);
-
-			Server->OnStartFailed(ErrorCode);
+		explicit StartFailNotifyGuard(TcpServer* _pServer)
+		: errorCode_(0)
+		, server_(_pServer)
+		{
 		}
 
-		Int32U ErrorCode = 0;
-		TcpServer* Server;
-	} Notifier{this};
+		~StartFailNotifyGuard() noexcept
+		{
+			if (errorCode_ == 0)
+			{
+				return;
+			}
 
-	JCORE_LOCK_GUARD(m_Sync);
+			if (server_->serverEventListener_)
+			{
+				server_->serverEventListener_->OnStartFailed(errorCode_);
+			}
 
-	if (m_eState != eInitailized) {
+			server_->OnStartFailed(errorCode_);
+		}
+
+		Int32U errorCode_;
+		TcpServer* server_;
+	} notifier{this};
+
+	JCORE_LOCK_GUARD(sync_);
+
+	if (state_ != eInitailized)
+	{
 		_NetLogError_("서버가 초기화 상태여야 시작할 수 있습니다.");
-		Notifier.ErrorCode = WSANOTINITIALISED;
+		notifier.errorCode_ = WSANOTINITIALISED;
 		return false;
 	}
-	
-	if (m_Socket.Option().SetReuseAddrEnabled(true) == SOCKET_ERROR) {
+
+	if (socket_.Option().SetReuseAddrEnabled(true) == SOCKET_ERROR)
+	{
 		_NetLogWarn_("서버 소켓 SetReuseAddrEnabled(true) 실패");
 	}
 
-	if (m_Socket.Bind(localEndPoint) == SOCKET_ERROR) {
-		_NetLogError_("%s %s %s 바인드 실패 (%u)", TypeName(), localEndPoint.ToString().Source(), m_Socket.ProtocolName(), Winsock::LastError());
-		Notifier.ErrorCode = Winsock::LastError();
+	if (socket_.Bind(_localEndPoint) == SOCKET_ERROR)
+	{
+		_NetLogError_("%s %s %s 바인드 실패 (%u)", TypeName(), _localEndPoint.ToString().Source(), socket_.ProtocolName(),
+		              Winsock::LastError());
+		notifier.errorCode_ = Winsock::LastError();
 		return false;
 	}
-	_NetLogDebug_("%s %s %s 바인드 완료", TypeName(), localEndPoint.ToString().Source(), m_Socket.ProtocolName());
+	_NetLogDebug_("%s %s %s 바인드 완료", TypeName(), _localEndPoint.ToString().Source(), socket_.ProtocolName());
 
-	if (m_Socket.Listen() == SOCKET_ERROR) {
+	if (socket_.Listen() == SOCKET_ERROR)
+	{
 		_NetLogError_("서버 소켓 리슨 실패 (%d)", Winsock::LastError());
-		Notifier.ErrorCode = Winsock::LastError();
+		notifier.errorCode_ = Winsock::LastError();
 		return false;
 	}
 
-	if (m_pContainer == nullptr) {
-		m_pContainer = CreateSessionContainer();
+	if (!sessionContainer_)
+	{
+		sessionContainer_ = CreateSessionContainer();
 	}
 
-	m_pContainer->ResetHandleSeq();
-	m_pContainer->Clear();
-	const int iMaxConn = m_pContainer->Capacity();
+	sessionContainer_->ResetHandleSeq();
+	sessionContainer_->Clear();
+	const int maxConnection = sessionContainer_->Capacity();
 
 	// 세션을 미리 생성해놓고 연결 대기 상태로 둠
-	for (int i = 0; i < iMaxConn; i++) {
-		TcpSession* session = CreateSession();
+	for (int index = 0; index < maxConnection; ++index)
+	{
+		TcpSession* pSession = CreateSession();
 
-		session->OnCreated();
-		session->SetHandle(m_pContainer->CreateHandle());
-		session->AcceptWait();
+		pSession->OnCreated();
+		pSession->SetHandle(sessionContainer_->CreateHandle());
+		pSession->AcceptWait();
 
-		if (!session->AcceptAsync()) {
-			Notifier.ErrorCode = Winsock::LastError();
-			m_pContainer->DisconnectAll();
-			m_pContainer->Clear();
+		if (!pSession->AcceptAsync())
+		{
+			notifier.errorCode_ = Winsock::LastError();
+			sessionContainer_->DisconnectAll();
+			sessionContainer_->Clear();
 			return false;
 		}
-		m_pContainer->Add(session);
+		sessionContainer_->Add(pSession);
 	}
 
-
-	if (m_pEventListener)
-		m_pEventListener->OnStarted();
+	if (serverEventListener_)
+	{
+		serverEventListener_->OnStarted();
+	}
 
 	OnStarted();
-	return bool(m_eState = eListening);
+	return state_ = eListening;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+bool TcpServer::Stop()
+{
+	JCORE_LOCK_GUARD(sync_);
 
-bool TcpServer::Stop() {
-	JCORE_LOCK_GUARD(m_Sync);
-
-	if (m_eState == eStopped)
+	if (state_ == eStopped)
+	{
 		return true;
+	}
 
-	m_eState = eStopped;
+	state_ = eStopped;
 
 	// 강종 진행: GetQueuedCompletionStatus에서 995번에러를 뱉음(I / O operation has been aborted)
-	m_pContainer->DisconnectAll();
+	sessionContainer_->DisconnectAll();
 
-	if (m_Socket.Close() == SOCKET_ERROR) {
+	if (socket_.Close() == SOCKET_ERROR)
+	{
 		_NetLogError_("서버 소켓을 닫는데 실패했습니다. (%d)", Winsock::LastError());
 	}
 
-	m_Socket.Invalidate();
+	socket_.Invalidate();
 
 	// 동적할당된 세션들을 모두 해제해주자.
-	m_pContainer->Clear();
+	sessionContainer_->Clear();
 
-	if (m_pEventListener)
-		m_pEventListener->OnStopped();
+	if (serverEventListener_)
+	{
+		serverEventListener_->OnStopped();
+	}
 
 	OnStopped();
 	return true;
 }
-
-
 
 NS_JNET_END

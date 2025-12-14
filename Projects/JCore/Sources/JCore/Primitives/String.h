@@ -32,26 +32,26 @@ public:
 	static String Null;
 
 	String();
-	String(int capacity);
-	String(const char* str, int capacity);
-	String(const char* str);
-	String(char ch, int count);
-	String(const std::string& str);
-	String(const String& str);
-	String(String&& str) noexcept;
+	String(int _capacity);
+	String(const char* _pStr, int _capacity);
+	String(const char* _pStr);
+	String(char _ch, int _count);
+	String(const std::string& _str);
+	String(const String& _str);
+	String(String&& _str) noexcept;
 	~String();
 public:
 	char* Source() const { return m_pBuffer; }
 	int Capacity() const { return m_iCapacity; }
 	int Length() const { return m_iLen; }
 	int LengthWithNull() const { return m_iLen + 1; }
-	void SetLength(int len) { m_iLen = len; }
-	void ExchangeSource(char* src, int len);
+	void SetLength(int _length) { m_iLen = _length; }
+	void ExchangeSource(char* _pSrc, int _len);
 	bool IsEmpty() const { return m_iLen == 0; }
     bool IsNull() const { return m_pBuffer == nullptr; }
-	bool IsValidIndex(const int idx) const { return idx >= 0 || idx < m_iLen; }
-	bool IsValidIndexRange(const int startIdx, const int endIdx) const {
-		return startIdx <= endIdx && startIdx >= 0 && endIdx < m_iLen;
+	bool IsValidIndex(const int _index) const { return _index >= 0 || _index < m_iLen; }
+	bool IsValidIndexRange(const int _startIndex, const int _endIndex) const {
+		return _startIndex <= _endIndex && _startIndex >= 0 && _endIndex < m_iLen;
 	}
 
 	template <typename T>
@@ -60,32 +60,32 @@ public:
 		ss << str;
 		Append(ss.str());
 	}
-	void Append(char ch);
-	void Append(char* str);
-	void Append(const char* str);
-	void Append(const std::string& str);
-	void Append(const String& str);
-	void Append(String&& str);
+	void Append(char _ch);
+	void Append(char* _pStr);
+	void Append(const char* _pStr);
+	void Append(const std::string& _str);
+	void Append(const String& _str);
+	void Append(String&& _str);
 
-	void Insert(int idx, const char* str);
-	void Insert(int idx, const String& str);
+	void Insert(int _index, const char* _pStr);
+	void Insert(int _index, const String& _str);
 
-	void Resize(int capacity);
-	void ResizeIfNeeded(int len);		// len이 m_iCapcity 이상일 경우에 x2해서 확장
+	void Resize(int _capacity);
+	void ResizeIfNeeded(int _length);		// len이 m_iCapcity 이상일 경우에 x2해서 확장
 
-	int Compare(const String& str) const;
-	int Compare(const char* str, int strLen = -1) const;
-	Vector<int, CDefaultAllocator> FindAll(int startIdx, int endIdx, const char* str) const;
-	Vector<int, CDefaultAllocator> FindAll(const char* str) const;
-	Vector<int, CDefaultAllocator> FindAll(const String& str) const;
-	int Find(int startIdx, int endIdx, const char* str) const;
-	int Find(int startIdx, const char* str) const;
-	int Find(int startIdx, const String& str) const;
-	int Find(const char* str) const;
-	int Find(const String& str) const;
-	int FindReverse(int startIdx, int endIdx, const char* str) const;
-	int FindReverse(const String& str) const;
-	int FindReverse(const char* str) const;
+	int Compare(const String& _str) const;
+	int Compare(const char* _pStr, int _strLen = -1) const;
+	Vector<int, CDefaultAllocator> FindAll(int _startIndex, int _endIndex, const char* _pStr) const;
+	Vector<int, CDefaultAllocator> FindAll(const char* _pStr) const;
+	Vector<int, CDefaultAllocator> FindAll(const String& _str) const;
+	int Find(int _startIndex, int _endIndex, const char* _pStr) const;
+	int Find(int _startIndex, const char* _pStr) const;
+	int Find(int _startIndex, const String& _str) const;
+	int Find(const char* _pStr) const;
+	int Find(const String& _str) const;
+	int FindReverse(int _startIndex, int _endIndex, const char* _pStr) const;
+	int FindReverse(const String& _str) const;
+	int FindReverse(const char* _pStr) const;
 
 	bool EndWith(const String& str) const { return FindReverse(str.Source()) == m_iLen - str.Length();  }
 	bool StartWith(const String& str) const { return Find(str) == 0; }
@@ -94,24 +94,24 @@ public:
 	char First() const { return GetAt(0); }
 
 	void Clear();
-	void Clear(int offset, int len);		// offset 인덱스에서 len만큼 없앰
+	void Clear(int _offset, int _length);		// offset 인덱스에서 len만큼 없앰
 
-	int Count(const char* str) const;
-	int Count(const String& val) const;
-	int Count(int startIdx, int endIdx, const char* str) const;
-	int Count(int startIdx, int endIdx, const String& val) const;
+	int Count(const char* _pStr) const;
+	int Count(const String& _value) const;
+	int Count(int _startIndex, int _endIndex, const char* _pStr) const;
+	int Count(int _startIndex, int _endIndex, const String& _value) const;
 
-	int Replace(const char* from, const String& to);
-	int Replace(const String& from, const String& to);
+	int Replace(const char* _pFrom, const String& _to);
+	int Replace(const String& _from, const String& _to);
 
 	// offset 인덱스에서 len길이만큼 to문자열로 변경 후 offset + len(이후 위치)을 반환
 	// from을 찾지 못했거나 마지막 위치에 도달한 경우 -1을 반환
-	int Replace(int offset, int len, const String& to);
+	int Replace(int _offset, int _length, const String& _to);
 
 	// offset 인덱스부터 from을 찾아서 to로 바꿈
-	int Replace(int offset, const char* from, const String& to);	
-	int Replace(int offset, const String& from, const String& to);
-	void ReplaceAll(const char* from, const char* to);
+	int Replace(int _offset, const char* _pFrom, const String& _to);	
+	int Replace(int _offset, const String& _from, const String& _to);
+	void ReplaceAll(const char* _pFrom, const char* _pTo);
 
 	bool Contain(const char* str) const;
 	bool Contain(const String& str) const;
@@ -133,7 +133,7 @@ public:
 
 	std::string ToStd();
 public:
-	char& operator[](int idx) const;
+	char& operator[](int _index) const;
 
 	template <typename T>
 	String operator+(const T& other) { 
@@ -142,16 +142,16 @@ public:
 		return temp;
 	}
 
-	String operator+(const String& other) const;
-	String operator+(char ch) const;
-	String operator+(const char* str) const;
+	String operator+(const String& _other) const;
+	String operator+(char _ch) const;
+	String operator+(const char* _pStr) const;
 
 	template <typename T>
 	String& operator+=(const T& other) { Append(other);  return *this; }
-	String& operator+=(const String& other);
-	String& operator+=(char ch);
-	String& operator+=(char* str);
-	String& operator+=(const char* str);
+	String& operator+=(const String& _other);
+	String& operator+=(char _ch);
+	String& operator+=(char* _pStr);
+	String& operator+=(const char* _pStr);
 
 	template <typename T>
 	String& operator=(const T& other) {
@@ -163,27 +163,27 @@ public:
 		return *this;
 	}
 
-	String& operator=(const String& other);
-	String& operator=(String&& other) noexcept;
-	String& operator=(const char* other);
-	String& operator=(std::nullptr_t other);
-	bool operator==(const String& other) const;
-	bool operator==(const char* other) const;
+	String& operator=(const String& _other);
+	String& operator=(String&& _other) noexcept;
+	String& operator=(const char* _pOther);
+	String& operator=(std::nullptr_t _other);
+	bool operator==(const String& _other) const;
+	bool operator==(const char* _pOther) const;
 
-	bool operator<(const String& other) const;
-	bool operator<(const char* other) const;
-	bool operator>(const String& other) const;
-	bool operator>(const char* other) const;
-	bool operator<=(const String& other) const;
-	bool operator<=(const char* other) const;
-	bool operator>=(const String& other) const;
-	bool operator>=(const char* other) const;
+	bool operator<(const String& _other) const;
+	bool operator<(const char* _pOther) const;
+	bool operator>(const String& _other) const;
+	bool operator>(const char* _pOther) const;
+	bool operator<=(const String& _other) const;
+	bool operator<=(const char* _pOther) const;
+	bool operator>=(const String& _other) const;
+	bool operator>=(const char* _pOther) const;
 
-	friend std::ostream& operator<<(std::ostream& os, const String& src);
+	friend std::ostream& operator<<(std::ostream& _os, const String& _src);
 private:
-	void ThrowIfInvalidRangeIndex(int startIdx, int endIdx) const;
+	void ThrowIfInvalidRangeIndex(int _startIndex, int _endIndex) const;
 	void ThrowIfNotInitialized() const;
-	void ThrowIfInvalidIndex(int idx) const;
+	void ThrowIfInvalidIndex(int _index) const;
 private:
 	char* m_pBuffer{};
 	int m_iLen{};

@@ -77,9 +77,9 @@ void GameNetGroup::InitializeParser() {
 }
 
 void GameNetGroup::InitializeServer() {
-	auto spLogicTcp = MakeShared<LogicServer>(m_spIOCP, m_spBufferPool);
-	auto spAreaTcp = MakeShared<AreaServer>(m_spIOCP, m_spBufferPool);
-	auto spChatTcp = MakeShared<ChatServer>(m_spIOCP, m_spBufferPool);
+	auto spLogicTcp = MakeShared<LogicServer>(pIocp_, pBufferPool_);
+	auto spAreaTcp = MakeShared<AreaServer>(pIocp_, pBufferPool_);
+	auto spChatTcp = MakeShared<ChatServer>(pIocp_, pBufferPool_);
 
 	AddHost(Const::Host::LogicTcpId, spLogicTcp);
 	AddHost(Const::Host::AreaTcpId, spAreaTcp);

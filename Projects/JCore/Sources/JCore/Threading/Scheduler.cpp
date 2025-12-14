@@ -12,53 +12,65 @@
 
 NS_JC_BEGIN
 
-Scheduler::Scheduler(int threadCount)
-	: m_pThreadPool(dbg_new ThreadPool(threadCount))
+//////////////////////////////////////////////////////////////////////////////////////////
+Scheduler::Scheduler(int _threadCount)
+	: m_pThreadPool(dbg_new ThreadPool(_threadCount))
 	, m_SchedulingThread(JCORE_CALLBACK_0(Scheduler::SchedulingRoutine, this))
 	, m_eState(State::Running)
-{}
+{
+}
 
-Scheduler::~Scheduler() {
+//////////////////////////////////////////////////////////////////////////////////////////
+Scheduler::~Scheduler()
+{
 	JCORE_DELETE_SAFE(m_pThreadPool);
 }
 
-void Scheduler::AddFirstTask(SchedulerTask* task) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void Scheduler::AddFirstTask(SchedulerTask* _pTask)
+{
 	{
 		NormalLockGuard guard(m_Lock);
-		if (m_eState != State::Running) {
+		if (m_eState != State::Running)
+		{
 			DebugAssertMsg(m_eState == State::Running, "스케쥴러가 Running상태가 아닌데 Task삽입을 시도했습니다.");
-			delete task;
+			delete _pTask;
 			return;
 		}
 
-		AddTaskRaw(task);
+		AddTaskRaw(_pTask);
 	}
 	m_CondVar.NotifyOne();
 }
 
-void Scheduler::AddTask(SchedulerTask* task) {
-	
+//////////////////////////////////////////////////////////////////////////////////////////
+void Scheduler::AddTask(SchedulerTask* _pTask)
+{
 	{
 		NormalLockGuard guard(m_Lock);
-		AddTaskRaw(task);
+		AddTaskRaw(_pTask);
 	}
 	m_CondVar.NotifyOne();
 }
 
-int Scheduler::WaitingTaskCount() {
+//////////////////////////////////////////////////////////////////////////////////////////
+int Scheduler::WaitingTaskCount()
+{
 	NormalLockGuard guard(m_Lock);
 	return WaitingTaskListCountRaw();
 }
 
-void Scheduler::Join(JoinStrategy strategy) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void Scheduler::Join(JoinStrategy _strategy)
+{
 	{
 		NormalLockGuard guard(m_Lock);
-		m_eState = strategy == JoinStrategy::WaitOnlyRunningTask ? State::JoinWaitOnlyRunningTask : State::JoinWaitAllTasks;
+		m_eState = _strategy == JoinStrategy::WaitOnlyRunningTask ? State::JoinWaitOnlyRunningTask : State::JoinWaitAllTasks;
 	}
 
 	m_CondVar.NotifyOne();
 	m_SchedulingThread.Join();
-	m_pThreadPool->Join(ConverToThreadPoolStrategy(strategy));
+	m_pThreadPool->Join(ConverToThreadPoolStrategy(_strategy));
 
 	{
 		// NextCall이 있는 Task들의 경우 때문에 Notify이전에 ClearWaitingTaskListRaw()를 호출해서
@@ -69,19 +81,27 @@ void Scheduler::Join(JoinStrategy strategy) {
 	}
 }
 
-void Scheduler::AddTaskRaw(SchedulerTask* task) {
-	Int64U uiAt = task->At().Tick;
-	if (!m_tmWaitTasks.Exist(uiAt)) {
-		m_tmWaitTasks.Insert(uiAt, dbg_new TaskList{ task });
-	} else {
-		m_tmWaitTasks[uiAt]->PushBack(task);
+//////////////////////////////////////////////////////////////////////////////////////////
+void Scheduler::AddTaskRaw(SchedulerTask* _pTask)
+{
+	Int64U atTick = _pTask->At().Tick;
+	if (!m_tmWaitTasks.Exist(atTick))
+	{
+		m_tmWaitTasks.Insert(atTick, dbg_new TaskList{ _pTask });
+	}
+	else
+	{
+		m_tmWaitTasks[atTick]->PushBack(_pTask);
 	}
 }
 
-bool Scheduler::HaveEarlierTask(const DateTime& waitUntil) {
-	TaskList* pvPendingTasks;
-	if (m_tmWaitTasks.TryGetFirstValue(pvPendingTasks)) {
-		return pvPendingTasks->At(0)->At() < waitUntil;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Scheduler::HaveEarlierTask(const DateTime& _waitUntil)
+{
+	TaskList* pPendingTasks;
+	if (m_tmWaitTasks.TryGetFirstValue(pPendingTasks))
+	{
+		return pPendingTasks->At(0)->At() < _waitUntil;
 	}
 	return false;
 }
@@ -145,30 +165,34 @@ void Scheduler::SchedulingRoutine() {
 	m_eState = State::Joined;
 }
 
-void Scheduler::ExecuteTasks(TaskList& scheduledTasks, const Int64U* executableTaskLimitTime) {
-	const int iTaskCount = PopTasks(scheduledTasks, executableTaskLimitTime);
+//////////////////////////////////////////////////////////////////////////////////////////
+void Scheduler::ExecuteTasks(TaskList& _scheduledTasks, const Int64U* _pExecutableTaskLimitTime)
+{
+	const int taskCount = PopTasks(_scheduledTasks, _pExecutableTaskLimitTime);
 	
-	for (int i = 0; i < iTaskCount; ++i) {
-		SchedulerTask* task = scheduledTasks[i];
-		m_ScheduledTaskMap.Insert(task, task);
+	for (int index = 0; index < taskCount; ++index)
+	{
+		SchedulerTask* pTask = _scheduledTasks[index];
+		m_ScheduledTaskMap.Insert(pTask, pTask);
 
-		m_pRunningTask = task;
-		m_pThreadPool->Run([task, this] {
-			task->CallCallback();
+		m_pRunningTask = pTask;
+		m_pThreadPool->Run([pTask, this]
+		{
+			pTask->CallCallback();
 
-			if (!task->CanNextCall()) {
-
+			if (!pTask->CanNextCall())
+			{
 				{
 					NormalLockGuard guard(m_Lock);
-					m_ScheduledTaskMap.Remove(task);
+					m_ScheduledTaskMap.Remove(pTask);
 				}
 
-				delete task;
+				delete pTask;
 				m_CondVar.NotifyOne();
 				return;
 			}
 
-			AddTask(task);
+			AddTask(pTask);
 		});
 	}
 
@@ -181,79 +205,99 @@ void Scheduler::ExecuteTasks(TaskList& scheduledTasks, const Int64U* executableT
  * \param executableTaskLimitTime 실행가능한 작업들이 있는지 여부 및 대기 작업 목록에서 만료 시간을 의미한다. (nullptr == 실행가능한 작업이 없음)
  * \return 실행가능한 작업 수
  */
-int Scheduler::PopTasks(JCORE_OUT Vector<SchedulerTask*>& executableTasks, const Int64U* executableTaskLimitTime) {
-	executableTasks.Clear();
+//////////////////////////////////////////////////////////////////////////////////////////
+int Scheduler::PopTasks(JCORE_OUT Vector<SchedulerTask*>& _executableTasks, const Int64U* _pExecutableTaskLimitTime)
+{
+	_executableTasks.Clear();
 
-	if (m_tmWaitTasks.Size() == 0 || executableTaskLimitTime == nullptr) {
+	if (m_tmWaitTasks.Size() == 0 || _pExecutableTaskLimitTime == nullptr)
+	{
 		return 0;
 	}
 
 	// 현재 시각을 기준으로 시간이 만료된 작업들을 가져온다.
-	auto cur = m_tmWaitTasks.Begin();
+	auto iterator = m_tmWaitTasks.Begin();
 
-	while (cur->HasNext()) {
-		auto& curValue = cur->Current();
+	while (iterator->HasNext())
+	{
+		auto& currentValue = iterator->Current();
 
-		const Int64U& expiredTaskKey = curValue.key_;
-		const TaskList* expiredTaskList = curValue.value_;
+		const Int64U& expiredTaskKey = currentValue.key_;
+		const TaskList* pExpiredTaskList = currentValue.value_;
 
-		if (expiredTaskKey >= *executableTaskLimitTime) {
+		if (expiredTaskKey >= *_pExecutableTaskLimitTime)
+		{
 			break;
 		}
 
-		const bool bRemoved = m_tmWaitTasks.RemoveByIterator(cur);
-		DebugAssert(bRemoved);
+		const bool removed = m_tmWaitTasks.RemoveByIterator(iterator);
+		DebugAssert(removed);
 
-		for (int i = 0; i < expiredTaskList->Size(); ++i) {
-			executableTasks.PushBack(expiredTaskList->At(i));
+		for (int index = 0; index < pExpiredTaskList->Size(); ++index)
+		{
+			_executableTasks.PushBack(pExpiredTaskList->At(index));
 		}
 
-		delete expiredTaskList;
+		delete pExpiredTaskList;
 	}
 
-	const int iPoppedSize = executableTasks.Size();
-	return iPoppedSize;
+	const int poppedSize = _executableTasks.Size();
+	return poppedSize;
 }
 
-int Scheduler::WaitingTaskListCountRaw() {
-	int iCount = 0;
-	m_tmWaitTasks.ForEachValue([&iCount](TaskList* taskList) { iCount += taskList->Size(); });
-	return iCount;
+//////////////////////////////////////////////////////////////////////////////////////////
+int Scheduler::WaitingTaskListCountRaw()
+{
+	int count = 0;
+	m_tmWaitTasks.ForEachValue([&count](TaskList* pTaskList)
+	{
+		count += pTaskList->Size();
+	});
+	return count;
 }
 
-bool Scheduler::HaveExecutableTaskRaw(JCORE_IN_OUT Int64U* executableTaskLimitTime) {
-	if (m_tmWaitTasks.Size() == 0) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Scheduler::HaveExecutableTaskRaw(JCORE_IN_OUT Int64U* _pExecutableTaskLimitTime)
+{
+	if (m_tmWaitTasks.Size() == 0)
+	{
 		return false;
 	}
 
-	Int64U uiFirstElementAt;
+	Int64U firstElementAt;
 	const DateTime now = DateTime::Now();
 	const Int64U* pNotExpiredKey = m_tmWaitTasks.UpperBoundKey(now.Tick); // 아직 시간이 만료되지 않은 첫 원소
 
 	if (pNotExpiredKey)
-		*executableTaskLimitTime = *pNotExpiredKey;
+		*_pExecutableTaskLimitTime = *pNotExpiredKey;
 	else 
-		*executableTaskLimitTime = MaxInt64U_v;
+		*_pExecutableTaskLimitTime = MaxInt64U_v;
 
-	if (m_tmWaitTasks.TryGetFirstKey(uiFirstElementAt) && uiFirstElementAt < *executableTaskLimitTime) {
+	if (m_tmWaitTasks.TryGetFirstKey(firstElementAt) && firstElementAt < *_pExecutableTaskLimitTime)
+	{
 		return true;
 	}
 	return false;
 }
 
-void Scheduler::ClearWaitingTaskListRaw() {
-	auto it = m_tmWaitTasks.Begin();
-	while (it->HasNext()) {
-
-		TaskList* pList = it->Current().value_;
+//////////////////////////////////////////////////////////////////////////////////////////
+void Scheduler::ClearWaitingTaskListRaw()
+{
+	auto iterator = m_tmWaitTasks.Begin();
+	while (iterator->HasNext())
+	{
+		TaskList* pList = iterator->Current().value_;
 		pList->ForEachDelete();
 		delete pList;
-		m_tmWaitTasks.RemoveByIterator(it);
+		m_tmWaitTasks.RemoveByIterator(iterator);
 	}
 }
 
-ThreadPool::JoinStrategy Scheduler::ConverToThreadPoolStrategy(JoinStrategy strategy) {
-	switch (strategy) {
+//////////////////////////////////////////////////////////////////////////////////////////
+ThreadPool::JoinStrategy Scheduler::ConverToThreadPoolStrategy(JoinStrategy _strategy)
+{
+	switch (_strategy)
+	{
 		case JoinStrategy::WaitAllTasks:		return ThreadPool::JoinStrategy::WaitAllTasks;
 		case JoinStrategy::WaitOnlyRunningTask: return ThreadPool::JoinStrategy::WaitOnlyRunningTask;
 	}

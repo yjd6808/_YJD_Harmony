@@ -1,7 +1,6 @@
-﻿/*
-	작성자 : 윤정도
-*/
-
+/*
+ * 작성자 : 윤정도
+ */
 
 #pragma once
 
@@ -11,35 +10,56 @@
 #include <JNetwork/Host/Session.h>
 
 NS_JNET_BEGIN
-
 class SessionContainer : public ISessionContainer
 {
 public:
-	using TContainer = JCore::Vector<Session*>;
+	using ContainerType = JCore::Vector<Session*>;
 
-	SessionContainer(int capacity);
+	SessionContainer(int _capacity);
 	~SessionContainer() override;
 
-	void SetInitialHandleSeq(int initialHandleSeq) override { m_iInitialHandleSeq = initialHandleSeq; }
-	int GetInitialHandleSeq() const override { return m_iInitialHandleSeq; }
-	int CreateHandle() override;
-	void ResetHandleSeq() override { m_iHandleSeq = 0; }
+	void SetInitialHandleSeq(int _initialHandleSeq) override
+	{
+		initialHandleSeq_ = _initialHandleSeq;
+	}
 
-	int Capacity() override { return m_vSessionList.Capacity(); }
-	bool Add(Session* session) override;
-	int Size() override { return m_iSize; }
-	Session* Get(int handle) override;
-	bool Remove(int handle) override;
+	int GetInitialHandleSeq() const override
+	{
+		return initialHandleSeq_;
+	}
+
+	int CreateHandle() override;
+
+	void ResetHandleSeq() override
+	{
+		handleSeq_ = 0;
+	}
+
+	int Capacity() override
+	{
+		return sessionList_.Capacity();
+	}
+
+	bool Add(Session* _pSession) override;
+
+	int Size() override
+	{
+		return size_;
+	}
+
+	Session* Get(int _handle) override;
+	bool Remove(int _handle) override;
 	void DisconnectAll() override;
 	void Clear() override;
-	void ForEach(JCore::Action<Session*> fn) override;
-	void ForEachConnected(JCore::Action<Session*> fn) override;
-	bool IsValidHandle(int handleIndex) override;
+	void ForEach(JCore::Action<Session*> _fn) override;
+	void ForEachConnected(JCore::Action<Session*> _fn) override;
+	bool IsValidHandle(int _handleIndex) override;
+
 protected:
-	int m_iHandleSeq;
-	int m_iInitialHandleSeq;
-	int m_iSize;
-	TContainer m_vSessionList; // TODO: StaticVector
+	int handleSeq_;
+	int initialHandleSeq_;
+	int size_;
+	ContainerType sessionList_; // TODO: StaticVector
 };
 
 NS_JNET_END

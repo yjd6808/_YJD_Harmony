@@ -29,11 +29,11 @@ public:
 	void ReadUnlock() override;
 	bool IsReadLocked() override;
 private:
-	ConditionVariable m_CondVar;
-	NormalLock m_Lock;
+	ConditionVariable m_condVar;
+	NormalLock m_lock;
 
-	int m_iReadCount;
-	bool m_bWriteFlag;
+	int m_readCount;
+	bool m_writeFlag;
 };
 
 using NormalWriteLockGuard = RwLockGuard<NormalRwLock, RwLockMode::Write>;

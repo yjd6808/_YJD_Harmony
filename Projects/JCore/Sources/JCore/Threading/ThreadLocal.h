@@ -33,7 +33,7 @@ class ThreadLocal
 	using TlsValueMaps = LinkedList<WeakPtr<TlsRefMap>, TAllocator>;
 public:
 	template <typename... Args>
-	explicit ThreadLocal(Args&&... args) {
+	explicit ThreadLocal(Args&&... _args) {
 		if (m_uiObjectId != 0ULL) {
 			DebugAssertMsg(false, "이미 생성자가 한번 호출이 되었습니다.");
 			return;
@@ -109,7 +109,7 @@ public:
 
 		NormalLockGuard guard(m_Lock);
 		m_pRefMap = &tls_RefMap;
-		m_pRefMap->Insert(m_uiObjectId, T(Forward<Args>(args)...));
+		m_pRefMap->Insert(m_uiObjectId, T(Forward<Args>(_args)...));
 		m_ValueMaps = TAllocator::template AllocateStatic<TlsValueMaps>();
 		Memory::PlacementNew(m_ValueMaps);
 	}
@@ -119,11 +119,11 @@ public:
 			m_pRefMap->Remove(m_uiObjectId);
 		}
 
-		auto it = m_ValueMaps->Begin();
-		while (it->HasNext()) {
-			auto wp = it->Next();
-			if (wp.Exist()) {
-				wp->Remove(m_uiObjectId);
+		auto iterator = m_ValueMaps->Begin();
+		while (iterator->HasNext()) {
+			auto valueMapWeakPtr = iterator->Next();
+			if (valueMapWeakPtr.Exist()) {
+				valueMapWeakPtr->Remove(m_uiObjectId);
 			} else {
 				// 글로벌 변수로 ThreadLocal<T>를 둔 경우 혹은 쓰레드가 소멸될 때
 				// tls_valueMap이 먼저 소멸될 수 있다.
@@ -167,13 +167,13 @@ public:
 		//                           | a 사용
 		//                           | 쓰레드2 소멸
 		
-		thread_local TlsRefMapPtr tls_valueMap = MakeShared<TlsRefMap, TAllocator>();
+		thread_local TlsRefMapPtr tlsValueMap = MakeShared<TlsRefMap, TAllocator>();
 
-		if (!tls_valueMap->Exist(m_uiObjectId)) {
-			tls_valueMap->Insert(m_uiObjectId, m_pRefMap->Get(m_uiObjectId));
-			m_ValueMaps->PushBack(WeakPtr<TlsRefMap>(tls_valueMap));
+		if (!tlsValueMap->Exist(m_uiObjectId)) {
+			tlsValueMap->Insert(m_uiObjectId, m_pRefMap->Get(m_uiObjectId));
+			m_ValueMaps->PushBack(WeakPtr<TlsRefMap>(tlsValueMap));
 		}
-		return tls_valueMap->Get(m_uiObjectId);
+		return tlsValueMap->Get(m_uiObjectId);
 	}
 private:
 	TlsRefMap* m_pRefMap;

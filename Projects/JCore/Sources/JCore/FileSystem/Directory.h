@@ -17,26 +17,26 @@ class String;
 class Directory
 {
 public:
-	static bool Exist(const char* _path);
+	static bool Exist(const char* _pPath);
 	static bool Exist(const String& _path);
 
-	static bool Create(const char* _path);
+	static bool Create(const char* _pPath);
 	static bool Create(const String& _path);
 
-	static bool Delete(const char* _path);
+	static bool Delete(const char* _pPath);
 	static bool Delete(const String& _path);
 
-	static int DirectoryCount(const String& _path, bool recursive = true);
-	static int DirectoryCount(const char* _path, bool recursive = true);
+	static int DirectoryCount(const String& _path, bool _recursive = true);
+	static int DirectoryCount(const char* _pPath, bool _recursive = true);
 
-	static int FileCount(const String& _path, bool recursive = true);
-	static int FileCount(const char* _path, bool recursive = true);
+	static int FileCount(const String& _path, bool _recursive = true);
+	static int FileCount(const char* _pPath, bool _recursive = true);
 
 	static Vector<String, CDefaultAllocator> Files(const String& _path, bool _recursive = true);
-	static Vector<String, CDefaultAllocator> Files(const char* _path, bool _recursive = true);
+	static Vector<String, CDefaultAllocator> Files(const char* _pPath, bool _recursive = true);
 
 	static Vector<String, CDefaultAllocator> Directories(const String& _path, bool _recursive = true);
-	static Vector<String, CDefaultAllocator> Directories(const char* _path, bool _recursive = true);
+	static Vector<String, CDefaultAllocator> Directories(const char* _pPath, bool _recursive = true);
 
 private:
 	static void FilesRecursive(Vector<String, CDefaultAllocator>& _files, String _path, bool _recursive);

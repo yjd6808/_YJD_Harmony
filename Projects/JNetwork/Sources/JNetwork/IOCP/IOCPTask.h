@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 4/15/2023 6:21:23 AM
  * =====================
@@ -21,27 +21,50 @@ NS_JNET_BEGIN
 template <typename T>
 struct IOCPTaskResult
 {
-	IOCPTaskResult() {}
-	IOCPTaskResult(const IOCPTaskResult<T>& other) { Value = other.Value; }
-	IOCPTaskResult(IOCPTaskResult<T>&& other) noexcept { Value = JCore::Move(other.Value); }
-	~IOCPTaskResult() { Destroy(); }
+	IOCPTaskResult() = default;
+	IOCPTaskResult(const IOCPTaskResult<T>& _other)
+	{
+		value_ = _other.value_;
+	}
+
+	IOCPTaskResult(IOCPTaskResult<T>&& _other) noexcept
+	{
+		value_ = JCore::Move(_other.value_);
+	}
+
+	~IOCPTaskResult()
+	{
+		Destroy();
+	}
 
 	template <typename... Args>
-	void Construct(Args&&... args) { JCore::Memory::PlacementNew(Value, JCore::Forward<Args>(args)...); }
-	void Destroy() { JCore::Memory::PlacementDelete(Value); }
+	void Construct(Args&&... _args)
+	{
+		JCore::Memory::PlacementNew(value_, JCore::Forward<Args>(_args)...);
+	}
 
-	union { T Value; };
-	JCore::AtomicBool Success;
-	JCore::AtomicInt32U ErrorCode;
+	void Destroy()
+	{
+		JCore::Memory::PlacementDelete(value_);
+	}
+
+	union
+	{
+		T value_;
+	};
+
+	JCore::AtomicBool success_;
+	JCore::AtomicInt32U errorCode_;
 };
 
 
 template <>
 struct IOCPTaskResult<void>
 {
-	JCore::AtomicBool Success;
-	JCore::AtomicInt32U ErrorCode;
+	JCore::AtomicBool success_;
+	JCore::AtomicInt32U errorCode_;
 };
+
 
 template <typename T>
 class IOCPOverlappedTask;
@@ -50,6 +73,7 @@ using IOCPTaskAbstractPtr = JCore::SharedPtr<IOCPTaskAbstract>;
 
 template <typename T>
 using FnTask = std::function<void(IOCPTaskResult<T>&)>;
+
 
 struct IOCPTaskState
 {
@@ -63,31 +87,38 @@ struct IOCPTaskState
 };
 
 
-
 class IOCPTaskAbstract : public JCore::MakeSharedFromThis<IOCPTaskAbstract>
 {
 public:
-	IOCPTaskAbstract(IOCP* iocp)
-		: m_WaitHandle(false)
-		, m_eState(IOCPTaskState::eInitialized)
-		, m_pIocp(iocp)
-	{}
+	IOCPTaskAbstract(IOCP* _pIocp)
+		: waitHandle_(false)
+		, state_(IOCPTaskState::eInitialized)
+		, iocp_(_pIocp)
+	{
+	}
 
 	virtual ~IOCPTaskAbstract() = default;
 	virtual void Start() = 0;
 
-	bool IsReady() { return m_eState >= IOCPTaskState::eReady; }
-	int GetState() { return m_eState; }
+	bool IsReady()
+	{
+		return state_ >= IOCPTaskState::eReady;
+	}
+
+	int GetState()
+	{
+		return state_;
+	}
+
 protected:
-	JCore::AutoResetEvent m_WaitHandle;
-	JCore::AtomicInt m_eState;
+	JCore::AutoResetEvent waitHandle_;
+	JCore::AtomicInt state_;
 
-	IOCP* m_pIocp;
+	IOCP* iocp_;
 
-	IOCPTaskAbstractPtr m_spContinuousTask;
-	JCore::SpinLock m_lkContinuousTaskLock;
+	IOCPTaskAbstractPtr continuousTask_;
+	JCore::SpinLock continuousTaskLock_;
 };
-
 
 
 template <typename T>
@@ -100,93 +131,104 @@ class IOCPTask : public IOCPTaskAbstract
 	using TResult = IOCPTaskResult<T>;
 	using TResultPtr = JCore::SharedPtr<TResult>;
 	using TFnTask = FnTask<T>;
-public:
-	IOCPTask(IOCP* iocp, const TFnTask& fnTask, const TFnTask& fnFinally)
-		: IOCPTaskAbstract(iocp)
-		, m_fnTask(fnTask)
-		, m_fnFinally(fnFinally)
-	{}
 
-	static IOCPTaskAbstractPtr Create(IOCP* iocp, const TFnTask& task, const TFnTask& fnFinally) {
-		return JCore::MakeShared<TIOCPTask>(iocp, task, fnFinally);
+public:
+	IOCPTask(IOCP* _pIocp, const TFnTask& _fnTask, const TFnTask& _fnFinally)
+		: IOCPTaskAbstract(_pIocp)
+		, fnTask_(_fnTask)
+		, fnFinally_(_fnFinally)
+	{
+	}
+
+	static IOCPTaskAbstractPtr Create(IOCP* _pIocp, const TFnTask& _task, const TFnTask& _fnFinally)
+	{
+		return JCore::MakeShared<TIOCPTask>(_pIocp, _task, _fnFinally);
 	}
 
 	template <typename... Args>
-	static IOCPTaskAbstractPtr Run(IOCP* iocp, const TFnTask& fnTask, const TFnTask& fnFinally = nullptr, Args&&... args) {
-		TIOCPTaskPtr spTask = Create(iocp, fnTask, fnFinally);
+	static IOCPTaskAbstractPtr Run(IOCP* _pIocp, const TFnTask& _fnTask, const TFnTask& _fnFinally = nullptr, Args&&... _args)
+	{
+		TIOCPTaskPtr pTask = Create(_pIocp, _fnTask, _fnFinally);
 
-		spTask->m_spResult = JCore::MakeShared<TResult>();
+		pTask->result_ = JCore::MakeShared<TResult>();
 
-		if constexpr (!IsVoidTask) {
+		if constexpr (!IsVoidTask)
+		{
 			static_assert(JCore::IsConstructible_v<T, Args...>, "... [Task<T>] cannot construct T");
-			spTask->m_spResult->Construct(JCore::Forward<Args>(args)...);
-		} else {
+			pTask->result_->Construct(JCore::Forward<Args>(_args)...);
+		}
+		else
+		{
 			static_assert(sizeof...(Args) == 0, "... [Task<void>] too many arguments");
 		}
 
-		spTask->Start();
-		return spTask;
+		pTask->Start();
+		return pTask;
 	}
 
-	
-	void Start() override {
+	void Start() override
+	{
+		DebugAssertMsg(result_ != nullptr, "TaskResult가 생성되어있지 않습니다.");
 
-		DebugAssertMsg(m_spResult != nullptr, "TaskResult가 생성되어있지 않습니다.");
+		TResult* pResult = result_.GetPtr();
 
-		TResult* pResult = m_spResult.GetPtr();
+		pResult->errorCode_ = 0;
+		pResult->success_ = false;
+		state_ = IOCPTaskState::eRunning;
+		TIOCPOverlappedTask* pOverlapped = dbg_new TIOCPOverlappedTask(iocp_, this->Shared());
 
-		pResult->ErrorCode = 0;
-		pResult->Success = false;
-		m_eState = IOCPTaskState::eRunning;
-		TIOCPOverlappedTask* pOverlapped = dbg_new TIOCPOverlappedTask(m_pIocp, this->Shared());
-
-		if (m_pIocp->Post(0, NULL, pOverlapped) == FALSE) {
+		if (!iocp_->Post(0, NULL, pOverlapped))
+		{
 			DebugAssertMsg(false, "Task::Start Failed");
 			pOverlapped->Release();
-			m_eState = IOCPTaskState::eFinished;
-			pResult->Success = false;
-			pResult->ErrorCode = IOCPTASK_FAILED;
+			state_ = IOCPTaskState::eFinished;
+			pResult->success_ = false;
+			pResult->errorCode_ = IOCPTASK_FAILED;
 		}
 	}
 
-	TResult& Wait(int timeout = JCORE_INFINITE) {
-
-		if (m_eState >= IOCPTaskState::eReady)
-			return *m_spResult;
-
-		Int32U iErrorCode;
-		const bool bWait = m_WaitHandle.Wait(timeout, &iErrorCode);
-
-		if (!bWait) {
-			m_spResult->Success = false;
-			m_spResult->ErrorCode = iErrorCode;
+	TResult& Wait(int _timeout = JCORE_INFINITE)
+	{
+		if (state_ >= IOCPTaskState::eReady)
+		{
+			return *result_;
 		}
 
-		return *m_spResult;
+		Int32U errorCode;
+		const bool wait = waitHandle_.Wait(_timeout, &errorCode);
+
+		if (!wait)
+		{
+			result_->success_ = false;
+			result_->errorCode_ = errorCode;
+		}
+
+		return *result_;
 	}
 
-	IOCPTaskAbstractPtr ContinuousWith(const TFnTask& fnTask, const TFnTask& fnFinally = nullptr) {
-		TIOCPTaskPtr spTask = Create(m_pIocp, fnTask, fnFinally);
-		spTask->m_spResult = m_spResult;
-		if (m_eState >= IOCPTaskState::eFinished) {
-			spTask->Start();
-			return spTask;
+	IOCPTaskAbstractPtr ContinuousWith(const TFnTask& _fnTask, const TFnTask& _fnFinally = nullptr)
+	{
+		TIOCPTaskPtr pTask = Create(iocp_, _fnTask, _fnFinally);
+		pTask->result_ = result_;
+		if (state_ >= IOCPTaskState::eFinished)
+		{
+			pTask->Start();
+			return pTask;
 		}
 
 		{
-			JCORE_LOCK_GUARD(m_lkContinuousTaskLock);
-			m_spContinuousTask = spTask;
+			JCORE_LOCK_GUARD(continuousTaskLock_);
+			continuousTask_ = pTask;
 		}
-		return spTask;
+		return pTask;
 	}
-
 
 private:
 	static constexpr bool IsVoidTask = JCore::IsVoidType_v<T>;
 
-	TFnTask m_fnTask;
-	TFnTask m_fnFinally;
-	TResultPtr m_spResult;
+	TFnTask fnTask_;
+	TFnTask fnFinally_;
+	TResultPtr result_;
 	template <typename> friend class IOCPOverlappedTask;
 };
 

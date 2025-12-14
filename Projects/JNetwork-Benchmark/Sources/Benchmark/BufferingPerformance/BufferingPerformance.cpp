@@ -34,29 +34,33 @@ USING_NS_BUFFERING_PERFORMANCE;
 
 #if BufferingPerformanceTest == ON
 
-void BM_BufferingPerformance(State& state) {
-	TestClientCount = state.range(0);
-	TestSendCount = state.range(1);
-	DisableSendBuffering = state.range(2);
-	DisableRecvBuffering = state.range(3);
-	char szLabel[256];
-	sprintf_s(szLabel, 256, "\n%s\n%s", DisableSendBuffering ? "송신 버퍼링 : X" : "송신 버퍼링 : O", DisableRecvBuffering ? "수신 버퍼링 : X" : "수신 버퍼링 : O");
-	state.SetLabel(szLabel);
+//////////////////////////////////////////////////////////////////////////////////////////
+
+void BM_BufferingPerformance(State& _state)
+{
+	TestClientCount = _state.range(0);
+	TestSendCount = _state.range(1);
+	DisableSendBuffering = _state.range(2);
+	DisableRecvBuffering = _state.range(3);
+	char label[256];
+	sprintf_s(label, 256, "\n%s\n%s", DisableSendBuffering ? "송신 버퍼링 : X" : "송신 버퍼링 : O", DisableRecvBuffering ? "수신 버퍼링 : X" : "수신 버퍼링 : O");
+	_state.SetLabel(label);
 
 	
-	for (auto _ : state) {
-		state.PauseTiming();
+	for (auto iteration : _state)
+	{
+		_state.PauseTiming();
 		ServerSide::Initialize();
 		ClientSide::Initialize();
-		state.ResumeTiming();
+		_state.ResumeTiming();
 
 		ClientSide::StartTest();
 		TestFinished.Wait();
 
-		state.PauseTiming();
+		_state.PauseTiming();
 		ServerSide::Finalize();
 		ClientSide::Finalize();
-		state.ResumeTiming();
+		_state.ResumeTiming();
 	}
 	
 }

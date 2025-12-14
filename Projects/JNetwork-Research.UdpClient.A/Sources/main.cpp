@@ -1,5 +1,3 @@
-
-
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
 #include <JNetwork/Research/UdpClientNetGroup.h>
@@ -14,11 +12,13 @@ USING_NS_STD;
 USING_NS_JC;
 
 void PrintMenu();
-bool SelectMenu(int menu);
+bool SelectMenu(int _menu);
 
 UdpClientNetGroup* pClientGroup;
 
-int main() {
+//////////////////////////////////////////////////////////////////////////////////////////
+int main()
+{
 	DefaultParserType = PacketParser::Command;
 
 	Winsock::Initialize(2, 2);
@@ -27,16 +27,19 @@ int main() {
 	pClientGroup = dbg_new UdpClientNetGroup{"UDP A"};
 	pClientGroup->Initialize();
 
-	for (;;) {
+	for (;;)
+	{
 		PrintMenu();
 		int menu;
 
-		if (!(cin >> menu).good()) {
+		if (!(cin >> menu).good())
+		{
 			cout << "메뉴를 똑바로 선택하지 않았군요, 종료합니다.\n";
 			break;
 		}
 
-		if (!SelectMenu(menu)) {
+		if (!SelectMenu(menu))
+		{
 			break;
 		}
 	}
@@ -48,7 +51,9 @@ int main() {
 	return 0;
 }
 
-void PrintMenu() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void PrintMenu()
+{
 	cout << "1. 로그인 UDP 연결\n";
 	cout << "2. 채널 UDP 연결\n";
 	cout << "3. 게임 UDP 연결\n";
@@ -62,18 +67,21 @@ void PrintMenu() {
 	cout << "메뉴 선택: ";
 }
 
-bool SelectMenu(int menu) {
-	switch (menu) {
-	case eConnectLogin:		ConnectLogin();		break;
-	case eConnectChannel:	ConnectChannel();	break;
-	case eConnectGame:		ConnectGame();		break;
-	case eConnectClientB:	ConnectClientB();	break;
-	case eSendLogin:		SendLogin();		break;
-	case eSendChannel:		SendChannel();		break;
-	case eSendGame:			SendGame();			break;
-	case eSendClientB:		SendClientB();		break;
-	case eBindRecvFrom:		BindRecvFrom();		break;
-	case eDisconnect:		Disconnect();		break;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool SelectMenu(int _menu)
+{
+	switch (_menu)
+	{
+	case eConnectLogin:     ConnectLogin();     break;
+	case eConnectChannel:   ConnectChannel();   break;
+	case eConnectGame:      ConnectGame();      break;
+	case eConnectClientB:   ConnectClientB();   break;
+	case eSendLogin:        SendLogin();        break;
+	case eSendChannel:      SendChannel();      break;
+	case eSendGame:         SendGame();         break;
+	case eSendClientB:      SendClientB();      break;
+	case eBindRecvFrom:     BindRecvFrom();     break;
+	case eDisconnect:       Disconnect();       break;
 	default: return false;
 	}
 

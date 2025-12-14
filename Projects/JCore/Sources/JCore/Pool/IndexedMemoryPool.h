@@ -50,28 +50,28 @@
 NS_JC_BEGIN
 
 
-class IndexedMemoryPool : public MemoryPoolAbstract
+class CIndexedMemoryPool : public MemoryPoolAbstract
 {
 	using MemoryChunkQueueTargetrList = Vector<CMemoryChunckQueue**>;
 public:
-	IndexedMemoryPool(const String& _name = nullptr)
+	CIndexedMemoryPool(const String& _name = nullptr)
 		: MemoryPoolAbstract(_name)
 	{
-		IndexedMemoryPool::CreatePool();
-		IndexedMemoryPool::CreateTargeters();
+		CIndexedMemoryPool::CreatePool();
+		CIndexedMemoryPool::CreateTargeters();
 	}
 
-	IndexedMemoryPool(const HashMap<int, int>& _allocationMap, const String& _name = nullptr)
+	CIndexedMemoryPool(const HashMap<int, int>& _allocationMap, const String& _name = nullptr)
 		: MemoryPoolAbstract(_name)
 	{
-		IndexedMemoryPool::Initialize(_allocationMap);
-		IndexedMemoryPool::CreatePool();
-		IndexedMemoryPool::CreateTargeters();
+		CIndexedMemoryPool::Initialize(_allocationMap);
+		CIndexedMemoryPool::CreatePool();
+		CIndexedMemoryPool::CreateTargeters();
 	}
 
-	~IndexedMemoryPool() override
+	~CIndexedMemoryPool() override
 	{
-		IndexedMemoryPool::Finalize();
+		CIndexedMemoryPool::Finalize();
 	}
 
 	template <int RequestSize>
@@ -153,18 +153,18 @@ public:
 		MemoryChunkQueueTargetrList* pTargeterList;
 		int chunkQueueIndex = -1;
 
-		if (_size > MaxAllocatableSize)
+		if (_size > MAX_ALLOCATABLE_SIZE)
 		{
-			DebugAssertMsg(false, "풀인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트)", MaxAllocatableSize, _size);
+			DebugAssertMsg(false, "풀인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트)", MAX_ALLOCATABLE_SIZE, _size);
 			return nullptr;
 		}
 
-		if (_size > LowBoundarySize)
+		if (_size > LOW_BOUNDARY_SIZE)
 		{
-			chunkQueueIndex = _size / BoundarySizeMax;
+			chunkQueueIndex = _size / BOUNDARY_SIZE_MAX;
 			pTargeterList = poolTargeterHigh_Member;
 
-			if (chunkQueueIndex < 0 || chunkQueueIndex >= HighTargeterListCapacity)
+			if (chunkQueueIndex < 0 || chunkQueueIndex >= HIGH_TARGETER_LIST_CAPACITY)
 			{
 				DebugAssertMsg(false, "올바르지 않은 청크큐 인덱스입니다. %d바이트 [%s]", _size, "하이");
 				return nullptr;
@@ -175,7 +175,7 @@ public:
 			chunkQueueIndex = _size;
 			pTargeterList = poolTargeterLow_Member;
 
-			if (chunkQueueIndex < 0 || chunkQueueIndex >= LowTargeterListCapacity)
+			if (chunkQueueIndex < 0 || chunkQueueIndex >= LOW_TARGETER_LIST_CAPACITY)
 			{
 				DebugAssertMsg(false, "올바르지 않은 청크큐 인덱스입니다. %d바이트 [%s]", _size, "하이");
 				return nullptr;
@@ -188,7 +188,7 @@ public:
 
 	void CreatePool()
 	{
-		for (int boundaryIndex = 0; boundaryIndex <= HighBoundaryIndex; ++boundaryIndex)
+		for (int boundaryIndex = 0; boundaryIndex <= HIGH_BOUNDARY_INDEX; ++boundaryIndex)
 		{
 			int chunkSize = Detail::AllocationLengthMapConverter::ToSize(boundaryIndex);
 			if (poolChunkQueueArray_Member[boundaryIndex] == nullptr)
@@ -200,12 +200,12 @@ public:
 	{
 		DebugAssertMsg(initialized_ == false, "이미 풀이 초기화 되어 있습니다.");
 
-		const_cast<HashMap<int, int>&>(_allocationMap).Extension().ForEach([this](Pair<int, int>& count)
+		const_cast<HashMap<int, int>&>(_allocationMap).Extension().ForEach([this](Pair<int, int>& _count)
 		{
-			const int blockSize = count.key_;
-			const int blockCount = count.value_;
+			const int blockSize = _count.key_;
+			const int blockCount = _count.value_;
 			const int allocationIndex = Detail::AllocationLengthMapConverter::ToIndex(blockSize);
-			DebugAssertMsg(blockSize <= MaxAllocatableSize, "이 풀 인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트 블록을 초기화하려함)", MaxAllocatableSize, blockSize);
+			DebugAssertMsg(blockSize <= MAX_ALLOCATABLE_SIZE, "이 풀 인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트 블록을 초기화하려함)", MAX_ALLOCATABLE_SIZE, blockSize);
 			DebugAssertMsg(Detail::AllocationLengthMapConverter::ValidateSize(blockSize), "뭐야! 사이즈가 안맞자나!");
 			if (poolChunkQueueArray_Member[allocationIndex])
 				JCORE_DELETE_SAFE(poolChunkQueueArray_Member[allocationIndex]);
@@ -222,7 +222,7 @@ public:
 	{
 		DebugAssertMsg(HasUsingBlock() == false, "현재 사용중인 블록이 있습니다. !!!");
 
-		for (int boundaryIndex = 0; boundaryIndex <= HighBoundaryIndex; ++boundaryIndex)
+		for (int boundaryIndex = 0; boundaryIndex <= HIGH_BOUNDARY_INDEX; ++boundaryIndex)
 		{
 			JCORE_DELETE_SAFE(poolChunkQueueArray_Member[boundaryIndex]);
 		}
@@ -253,12 +253,12 @@ public:
 		DebugAssertMsg(poolTargeterLow_Member == nullptr, "이미 Low 타게터 세팅이 되어있습니다.");
 		DebugAssertMsg(poolTargeterHigh_Member == nullptr, "이미 High 타게터 세팅이 되어있습니다.");
 
-		poolTargeterLow_Member = dbg_new MemoryChunkQueueTargetrList(LowTargeterListCapacity, nullptr);    // 513
-		poolTargeterHigh_Member = dbg_new MemoryChunkQueueTargetrList(HighTargeterListCapacity, nullptr);  // 524
+		poolTargeterLow_Member = dbg_new MemoryChunkQueueTargetrList(LOW_TARGETER_LIST_CAPACITY, nullptr);    // 513
+		poolTargeterHigh_Member = dbg_new MemoryChunkQueueTargetrList(HIGH_TARGETER_LIST_CAPACITY, nullptr);  // 524
 		int previousMaxSize = 0;
 
 		// 1 ~ 512 바이트 (Low 타게터 할당)
-		for (int boundaryIndex = 0; boundaryIndex <= LowBoundaryIndex; ++boundaryIndex)
+		for (int boundaryIndex = 0; boundaryIndex <= LOW_BOUNDARY_INDEX; ++boundaryIndex)
 		{
 			int maxSize = 1 << boundaryIndex;
 
@@ -276,9 +276,9 @@ public:
 
 		// 513 ~ 524288 바이트 (High 타게터 할당)
 		previousMaxSize = 0;
-		for (int boundaryIndex = LowBoundaryIndex + 1; boundaryIndex <= HighBoundaryIndex; ++boundaryIndex)
+		for (int boundaryIndex = LOW_BOUNDARY_INDEX + 1; boundaryIndex <= HIGH_BOUNDARY_INDEX; ++boundaryIndex)
 		{
-			int maxSize = (1 << boundaryIndex) / BoundarySizeMax;
+			int maxSize = (1 << boundaryIndex) / BOUNDARY_SIZE_MAX;
 
 			// maxSize    1000으로 나눴을때 몫
 			// 1024  : -> 0
@@ -300,17 +300,17 @@ public:
 	}
 
 public:
-	static constexpr int LowBoundaryIndex = 9;
-	static constexpr int HighBoundaryIndex = 19;
+	static constexpr int LOW_BOUNDARY_INDEX = 9;
+	static constexpr int HIGH_BOUNDARY_INDEX = 19;
 
-	static constexpr int LowBoundarySize = 1 << LowBoundaryIndex;		// 512		3자리 중 제일 큰 수
-	static constexpr int HighBoundarySize = 1 << HighBoundaryIndex;		// 524'288	6자리 중 제일 큰 수
-	static constexpr int BoundarySizeMax = 1000;							// 3자리수 최대 + 1
+	static constexpr int LOW_BOUNDARY_SIZE = 1 << LOW_BOUNDARY_INDEX;		// 512		3자리 중 제일 큰 수
+	static constexpr int HIGH_BOUNDARY_SIZE = 1 << HIGH_BOUNDARY_INDEX;		// 524'288	6자리 중 제일 큰 수
+	static constexpr int BOUNDARY_SIZE_MAX = 1000;							// 3자리수 최대 + 1
 
-	static constexpr int LowTargeterListCapacity = LowBoundarySize + 1;	// 513
-	static constexpr int HighTargeterListCapacity = HighBoundarySize / BoundarySizeMax;	// 524
+	static constexpr int LOW_TARGETER_LIST_CAPACITY = LOW_BOUNDARY_SIZE + 1;	// 513
+	static constexpr int HIGH_TARGETER_LIST_CAPACITY = HIGH_BOUNDARY_SIZE / BOUNDARY_SIZE_MAX;	// 524
 
-	static constexpr int MaxAllocatableSize = (HighBoundarySize / 1000 - 1) * 1000;	// 최대 할당 가능한 메모리 (523'000)
+	static constexpr int MAX_ALLOCATABLE_SIZE = (HIGH_BOUNDARY_SIZE / 1000 - 1) * 1000;	// 최대 할당 가능한 메모리 (523'000)
 
 private:
 	CMemoryChunckQueue* poolChunkQueueArray_Member[Detail::MemoryBlockSizeMapSize_v]{};
@@ -319,6 +319,6 @@ private:
 };
 
 
-using IndexedMemoryPoolPtr = SharedPtr<IndexedMemoryPool>;
+using IndexedMemoryPoolPtr = SharedPtr<CIndexedMemoryPool>;
 
 NS_JC_END

@@ -2,15 +2,16 @@
  *	작성자 : 윤정도
  */
 
+
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
 #include <JNetwork/Socket.h>
 
-#include "JCore/Primitives/StringUtil.h"
+#include <JCore/Primitives/StringUtil.h>
 
 NS_JNET_BEGIN
-	bool Winsock::ms_bFinalized = false;
-bool Winsock::ms_bInitailized = false;
+bool Winsock::Finalized = false;
+bool Winsock::Initialized = false;
 
 /*
 	참고 : https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsastartup
@@ -22,64 +23,74 @@ bool Winsock::ms_bInitailized = false;
 
 	함수 설명 : 윈도우 소켓 라이브러리 사용을 위한 초기 작업을 진행합니다.
 */
-bool Winsock::Initialize(Byte highVersion, Byte lowVersion) {
-	const WORD wRequestVersion = MAKEWORD(lowVersion, highVersion);
+bool Winsock::Initialize(Byte _highVersion, Byte _lowVersion)
+{
+	const WORD requestVersion = MAKEWORD(_lowVersion, _highVersion);
 
 	WSADATA wsaData;
-	const Int32UL ret = WSAStartup(wRequestVersion, &wsaData);
+	const Int32UL ret = WSAStartup(requestVersion, &wsaData);
 	WSASetLastError(ret);
 
 	const BYTE retLowVersion = LOBYTE(wsaData.wVersion);
 	const BYTE retHighVersion = HIBYTE(wsaData.wVersion);
 
-	if (retLowVersion != lowVersion || retHighVersion != highVersion) {
+	if (retLowVersion != _lowVersion || retHighVersion != _highVersion)
+	{
 		WSACleanup();
 		return false;
 	}
 
-	if (Detail::UseConnectEx() == false) {
+	if (Detail::UseConnectEx() == false)
+	{
 		DebugAssertMsg(false, "UseConnectEx 실패");
 	}
 
-	if (Detail::UseDisconnectEx() == false) {
+	if (Detail::UseDisconnectEx() == false)
+	{
 		DebugAssertMsg(false, "UseDisconnectEx 실패");
 	}
 
-	return ms_bInitailized = true;
+	return Initialized = true;
 }
 
 // 윈속 사용을 종료하면서 할당된 리소스 정보를 해제한다.
-bool Winsock::Finalize() {
-	if (WSACleanup() != 0) {
+bool Winsock::Finalize()
+{
+	if (WSACleanup() != 0)
+	{
 		return false;
 	}
 
-	return ms_bFinalized = true;
+	return Finalized = true;
 }
 
-Int32U Winsock::LastError() {
+Int32U Winsock::LastError()
+{
 	return WSAGetLastError();
 }
 
-JCore::String Winsock::LastErrorMessageUTF8() {
+JCore::String Winsock::LastErrorMessageUTF8()
+{
 	return ErrorMessageUTF8(::WSAGetLastError());
 }
 
-JCore::String Winsock::ErrorMessageMBCS(Int32U errorCode) {
+JCore::String Winsock::ErrorMessageMBCS(Int32U _errorCode)
+{
 	constexpr int BUF_SIZE = 512;
 
-	JCore::String mbcsString{ BUF_SIZE };
+	JCore::String mbcsString{BUF_SIZE};
 	char* pSource = mbcsString.Source();
-	DWORD dwLength = FormatMessageA(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM,
-		NULL, errorCode,
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		pSource, BUF_SIZE, NULL);
+	DWORD messageLength = FormatMessageA(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM,
+	                                     nullptr, _errorCode,
+	                                     MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+	                                     pSource, BUF_SIZE, nullptr);
 
-	mbcsString.SetLength(int(dwLength));
+	mbcsString.SetLength(int(messageLength));
 	return mbcsString;
 }
 
-JCore::String Winsock::ErrorMessageUTF8(Int32U errorCode) {
+JCore::String Winsock::ErrorMessageUTF8(Int32U _errorCode)
+{
 	// MBCS -> UTF16 -> UTF8보다는 바로 UTF16 -> UTF8로 변환이 당연히 낫겟지?
 	// 근데, FormatMessage에서 곧바로 UTF8 문자열을 반환 받는 방법은 없나..
 
@@ -88,31 +99,31 @@ JCore::String Winsock::ErrorMessageUTF8(Int32U errorCode) {
 	wchar_t buf[BUF_SIZE_UNICODCE];
 
 	FormatMessageW(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM,
-		NULL, errorCode,
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		buf, BUF_SIZE_UNICODCE, NULL);
+	               nullptr, _errorCode,
+	               MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+	               buf, BUF_SIZE_UNICODCE, nullptr);
 
-	
-	int iRequiredLength = 0;
+	int requiredLength = 0;
 	// 먼저 필요한 버퍼 크기를 얻는다.
-	if ((iRequiredLength = WideCharToMultiByte(CP_UTF8, 0, buf, BUF_SIZE_UNICODCE, nullptr, 0, NULL, NULL)) == 0) {
+	if ((requiredLength = WideCharToMultiByte(CP_UTF8, 0, buf, BUF_SIZE_UNICODCE, nullptr, 0, nullptr, nullptr)) == 0)
+	{
 		// @에러코드 표: https://learn.microsoft.com/ko-kr/windows/win32/debug/system-error-codes--0-499-
 		DebugAssertMsg(false, "%d", ::GetLastError());
 		return {};
 	}
 
-	JCore::String utf8String{ iRequiredLength + 1 };
+	JCore::String utf8String{requiredLength + 1};
 	char* pSource = utf8String.Source();
 
-	if (WideCharToMultiByte(CP_UTF8, 0, buf, BUF_SIZE_UNICODCE, pSource, iRequiredLength, NULL, NULL) == 0) {
+	if (WideCharToMultiByte(CP_UTF8, 0, buf, BUF_SIZE_UNICODCE, pSource, requiredLength, nullptr, nullptr) == 0)
+	{
 		DebugAssertMsg(false, "%d", ::GetLastError());
 		return {};
 	}
 
-	pSource[iRequiredLength] = '\0';
-	utf8String.SetLength(iRequiredLength);
+	pSource[requiredLength] = '\0';
+	utf8String.SetLength(requiredLength);
 	return utf8String;
 }
 
 NS_JNET_END
-

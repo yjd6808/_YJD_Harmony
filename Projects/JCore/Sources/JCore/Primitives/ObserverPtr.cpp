@@ -17,63 +17,81 @@ NS_JC_BEGIN
  Void 왓쳐와 Void 오너의 기능을 포함하고 있는 객체
  =====================================================================================*/
 
-void JCore::VoidBase::OwnerMoveToOwner(CVoidOwner& owner) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void JCore::VoidBase::OwnerMoveToOwner(CVoidOwner& _owner)
+{
 	DeletePointer();
 
-	m_pPointer = owner.m_pPointer;
-	m_pCounter = owner.m_pCounter;
+	m_pPointer = _owner.m_pPointer;
+	m_pCounter = _owner.m_pCounter;
 
-	owner.m_pPointer = nullptr;
-	owner.m_pCounter = nullptr;
+	_owner.m_pPointer = nullptr;
+	_owner.m_pCounter = nullptr;
 }
 
-void VoidBase::WatcherCopyToOwner(const CVoidOwner& owner) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void VoidBase::WatcherCopyToOwner(const CVoidOwner& _owner)
+{
 	SubtractWatcherCount();
 
-	m_pPointer = owner.m_pPointer;
-	m_pCounter = owner.m_pCounter;
+	m_pPointer = _owner.m_pPointer;
+	m_pCounter = _owner.m_pCounter;
 
 	AddWatcherCount();
 }
 
-void VoidBase::WatcherCopyToWatcher(const CVoidWatcher& watcher) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void VoidBase::WatcherCopyToWatcher(const CVoidWatcher& _watcher)
+{
 	SubtractWatcherCount();
 
-	m_pPointer = watcher.m_pPointer;
-	m_pCounter = watcher.m_pCounter;
+	m_pPointer = _watcher.m_pPointer;
+	m_pCounter = _watcher.m_pCounter;
 
 	AddWatcherCount();
 }
 
-void VoidBase::WatcherMoveToWatcher(CVoidWatcher& watcher) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void VoidBase::WatcherMoveToWatcher(CVoidWatcher& _watcher)
+{
 	SubtractWatcherCount();
 
-	m_pPointer = watcher.m_pPointer;
-	m_pCounter = watcher.m_pCounter;
+	m_pPointer = _watcher.m_pPointer;
+	m_pCounter = _watcher.m_pCounter;
 
-	watcher.m_pPointer = nullptr;
-	watcher.m_pCounter = nullptr;
+	_watcher.m_pPointer = nullptr;
+	_watcher.m_pCounter = nullptr;
 }
 
 // 글로벌 비교 오퍼레이터
-bool operator==(const CVoidOwner& lhs, const CVoidWatcher& rhs) {
-	return lhs.GetRaw() == rhs.GetRaw();
+//////////////////////////////////////////////////////////////////////////////////////////
+bool operator==(const CVoidOwner& _lhs, const CVoidWatcher& _rhs)
+{
+	return _lhs.GetRaw() == _rhs.GetRaw();
 }
 
-bool operator==(const CVoidWatcher& lhs, const CVoidOwner& rhs) {
-	return lhs.GetRaw() == rhs.GetRaw();
+//////////////////////////////////////////////////////////////////////////////////////////
+bool operator==(const CVoidWatcher& _lhs, const CVoidOwner& _rhs)
+{
+	return _lhs.GetRaw() == _rhs.GetRaw();
 }
 
-bool operator==(const CVoidWatcher& lhs, const CVoidWatcher& rhs) {
-	return lhs.GetRaw() == rhs.GetRaw();
+//////////////////////////////////////////////////////////////////////////////////////////
+bool operator==(const CVoidWatcher& _lhs, const CVoidWatcher& _rhs)
+{
+	return _lhs.GetRaw() == _rhs.GetRaw();
 }
 
-bool operator==(const CVoidWatcher& lhs, std::nullptr_t) {
-	return lhs.GetRaw() == nullptr;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool operator==(const CVoidWatcher& _lhs, std::nullptr_t)
+{
+	return _lhs.GetRaw() == nullptr;
 }
 
-bool operator==(std::nullptr_t, const CVoidWatcher& rhs) {
-	return nullptr == rhs.GetRaw();
+//////////////////////////////////////////////////////////////////////////////////////////
+bool operator==(std::nullptr_t, const CVoidWatcher& _rhs)
+{
+	return nullptr == _rhs.GetRaw();
 }
 
 

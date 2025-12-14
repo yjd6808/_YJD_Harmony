@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -9,63 +9,77 @@
 
 NS_JNET_BEGIN
 
-IOCP::IOCP(int threadCount)
-	: m_eState(State::eInitialized)
-	, m_hIOCP(INVALID_HANDLE_VALUE)
-	, m_uiThreadCount(threadCount)
-	, m_pWorkerManager(nullptr)
-	, m_szName(0)
+//////////////////////////////////////////////////////////////////////////////////////////
+IOCP::IOCP(int _threadCount)
+	: state_(State::Initialized)
+	, iocpHandle_(INVALID_HANDLE_VALUE)
+	, threadCount_(_threadCount)
+	, workerManager_(nullptr)
+	, name_(0)
 {
-	if ((m_hIOCP = CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, 0, (Int32UL)threadCount)) == INVALID_HANDLE_VALUE) {
+	if ((iocpHandle_ = CreateIoCompletionPort(INVALID_HANDLE_VALUE, nullptr, 0, static_cast<Int32UL>(_threadCount))) == INVALID_HANDLE_VALUE)
+	{
 		DebugAssertMsg(false, "IOCP를 생성하는데 실패했습니다.");
 	}
 
-	m_uiThreadCount = threadCount;
-	m_pWorkerManager = WorkerGroup::Create<IOCPWorker>(threadCount, this);
-	m_eState = State::eInitialized;
+	threadCount_ = _threadCount;
+	workerManager_ = WorkerGroup::Create<IOCPWorker>(_threadCount, this);
+	state_ = State::Initialized;
 }
 
-IOCP::~IOCP()  {
-	if (m_eState == State::eRunning) {
+//////////////////////////////////////////////////////////////////////////////////////////
+IOCP::~IOCP()
+{
+	if (state_ == State::Running)
+	{
 		DebugAssertMsg(false, "먼저 조인을 해주세요");
 	}
 
-	if (m_eState != State::eDestroyed) {
+	if (state_ != State::Destroyed)
+	{
 		Destroy();
 	}
 }
 
-
-
-void IOCP::Destroy() {
-	if (m_eState == State::eDestroyed) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void IOCP::Destroy()
+{
+	if (state_ == State::Destroyed)
+	{
 		return;
 	}
 
-	if (m_hIOCP != INVALID_HANDLE_VALUE) {
-		CloseHandle(m_hIOCP);
-		m_hIOCP = INVALID_HANDLE_VALUE;
+	if (iocpHandle_ != INVALID_HANDLE_VALUE)
+	{
+		CloseHandle(iocpHandle_);
+		iocpHandle_ = INVALID_HANDLE_VALUE;
 	}
 
-	JCORE_DELETE_SAFE(m_pWorkerManager);
-	m_eState = State::eDestroyed;
+	JCORE_DELETE_SAFE(workerManager_);
+	state_ = State::Destroyed;
 }
 
-void IOCP::Run() {
-	if (m_eState != State::eInitialized) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void IOCP::Run()
+{
+	if (state_ != State::Initialized)
+	{
 		DebugAssertMsg(false, "Initialized 상태의 IOCP만 Run할 수 있습니다.");
 		return;
 	}
 
 	{
-		JCORE_LOCK_GUARD(m_WorkerManagerLock);
-		m_pWorkerManager->Run();
+		JCORE_LOCK_GUARD(workerManagerLock_);
+		workerManager_->Run();
 	}
-	m_eState = State::eRunning;
+	state_ = State::Running;
 }
 
-void IOCP::Join() {
-	if (m_eState != State::eRunning) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void IOCP::Join()
+{
+	if (state_ != State::Running)
+	{
 		DebugAssertMsg(false, "Running 상태의 IOCP만 Join 할 수 있습니다.");
 		return;
 	}
@@ -74,52 +88,66 @@ void IOCP::Join() {
 	WaitForZeroPending();
 
 	{
-		JCORE_LOCK_GUARD(m_WorkerManagerLock);
-		m_pWorkerManager->Join();
+		JCORE_LOCK_GUARD(workerManagerLock_);
+		workerManager_->Join();
 	}
-	m_eState = State::eJoined;
+	state_ = State::Joined;
 }
 
-void IOCP::WaitForZeroPending() {
-	while (true) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void IOCP::WaitForZeroPending()
+{
+	while (true)
+	{
+		int pending = pendingOverlappedCount_;
 
-		int iPending = m_iPendingOverlappedCount;
-
-		if (iPending == 0)
+		if (pending == 0)
+		{
 			break;
+		}
 
-		DebugAssertMsg(iPending >= 0, "멍미 펜딩 카운트가 움수 인뎁쇼 (%d)", iPending);
+		DebugAssertMsg(pending >= 0, "멍미 펜딩 카운트가 움수 인뎁쇼 (%d)", pending);
 		JCore::Thread::Sleep(10);
 	}
 }
 
-JCore::Vector<Int32U> IOCP::GetWorkThreadIdList() {
-	JCORE_LOCK_GUARD(m_WorkerManagerLock);
-	JCore::Vector<Int32U> vThreadIdList(m_pWorkerManager->m_vWorkers.Size());
-	for (int i = 0; i < m_pWorkerManager->m_vWorkers.Size(); ++i) {
-		vThreadIdList.PushBack(m_pWorkerManager->m_vWorkers[i]->GetThreadId());
+//////////////////////////////////////////////////////////////////////////////////////////
+JCore::Vector<Int32U> IOCP::GetWorkThreadIdList()
+{
+	JCORE_LOCK_GUARD(workerManagerLock_);
+	JCore::Vector<Int32U> threadIdList(workerManager_->workers_.Size());
+	for (int index = 0; index < workerManager_->workers_.Size(); ++index)
+	{
+		threadIdList.PushBack(workerManager_->workers_[index]->GetThreadId());
 	}
-	return vThreadIdList;
+	return threadIdList;
 }
 
-bool IOCP::Connect(WinHandle handle, ULONG_PTR completionKey) const {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool IOCP::Connect(WinHandle _handle, ULONG_PTR _completionKey) const
+{
 	// @참고: https://learn.microsoft.com/en-us/windows/win32/fileio/createiocompletionport
 	// 연결시 NumberOfConcurrentThreads 파라미터 값은 무시된다.
 	// ExistingCompletionPort를 NULL이 아닌 유효한 IOCP 핸들을 전달한 후 성공적으로 연결되면 ExistingCompletionPort 파라미터의 핸들과 같은 핸들을 반환한다.
-	return CreateIoCompletionPort(handle, m_hIOCP, completionKey, m_uiThreadCount) == m_hIOCP;
+	return CreateIoCompletionPort(_handle, iocpHandle_, _completionKey, threadCount_) == iocpHandle_;
 }
 
-BOOL IOCP::GetStatus(Int32UL* numberOfBytesTransffered, PULONG_PTR completionKey, LPOVERLAPPED* ppOverlapped) const {
-	return GetQueuedCompletionStatus(m_hIOCP, numberOfBytesTransffered, completionKey, ppOverlapped, INFINITE);
+//////////////////////////////////////////////////////////////////////////////////////////
+BOOL IOCP::GetStatus(Int32UL* _pNumberOfBytesTransffered, PULONG_PTR _pCompletionKey, LPOVERLAPPED* _ppOverlapped) const
+{
+	return GetQueuedCompletionStatus(iocpHandle_, _pNumberOfBytesTransffered, _pCompletionKey, _ppOverlapped, INFINITE);
 }
 
-BOOL IOCP::Post(Int32UL dwNumberOfBytesTransferred, ULONG_PTR dwCompletionKey, LPOVERLAPPED pOverlapped) const {
-	return PostQueuedCompletionStatus(m_hIOCP, dwNumberOfBytesTransferred, dwCompletionKey, pOverlapped);
+//////////////////////////////////////////////////////////////////////////////////////////
+BOOL IOCP::Post(Int32UL _numberOfBytesTransferred, ULONG_PTR _completionKey, LPOVERLAPPED _pOverlapped) const
+{
+	return PostQueuedCompletionStatus(iocpHandle_, _numberOfBytesTransferred, _completionKey, _pOverlapped);
 }
 
-void IOCP::SetName(const JCore::String& name) {
-	m_szName = name;
+//////////////////////////////////////////////////////////////////////////////////////////
+void IOCP::SetName(const JCore::String& _name)
+{
+	name_ = _name;
 }
 
 NS_JNET_END
-

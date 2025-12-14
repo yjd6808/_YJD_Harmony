@@ -104,15 +104,15 @@ template <typename>	class UniquePtr;
 template <typename>	class MakeSharedFromThis; struct MakeSharedFromThisBase;
 
 template <typename T, typename TAllocator = CDefaultAllocator, typename... Args>
-constexpr decltype(auto) MakeShared(Args&&... args) {
+constexpr decltype(auto) MakeShared(Args&&... _args) {
 	Detail::PreventCreatingObjectPoolItem<NakedType_t<T>>();
-	return SharedMaker<T, TAllocator>::Create(Forward<Args>(args)...);
+	return SharedMaker<T, TAllocator>::Create(Forward<Args>(_args)...);
 }
 
 template <typename T, typename TAllocator = CDefaultAllocator, typename... Args>
-constexpr decltype(auto) MakeUnique(Args&&... args) {
+constexpr decltype(auto) MakeUnique(Args&&... _args) {
 	Detail::PreventCreatingObjectPoolItem<NakedType_t<T>>();
-	return UniqueMaker<T, TAllocator>::Create(Forward<Args>(args)...);
+	return UniqueMaker<T, TAllocator>::Create(Forward<Args>(_args)...);
 }
 
 
@@ -128,8 +128,8 @@ struct UniqueObject : UniqueBase
 	using TDeletor = PlacementDeletor<T, DeletorOption::OnlyDestoryObject>;
 
 	template <typename... Args>
-	explicit UniqueObject(Args&&... args) {
-		::new (AddressOf(Object)) T(Forward<Args>(args)...);
+	explicit UniqueObject(Args&&... _args) {
+		::new (AddressOf(Object)) T(Forward<Args>(_args)...);
 	}
 
 	~UniqueObject() override {}
@@ -153,9 +153,9 @@ struct UniqueObject<T[Size], TAllocator> : UniqueBase
 	using TDeletor = PlacementDeletor<T[Size], DeletorOption::OnlyDestoryObject>;
 
 	template <typename... Args>
-	explicit UniqueObject(Args&&... args) {
+	explicit UniqueObject(Args&&... _args) {
 		for (int i = 0; i < Size; i++) {
-			::new (AddressOf(Object[i])) T{ Forward<Args>(args)... };
+			::new (AddressOf(Object[i])) T{ Forward<Args>(_args)... };
 		}
 	}
 
@@ -179,14 +179,14 @@ struct UniqueObject<T[], TAllocator> : UniqueBase
 	using TDeletor = PlacementDeletor<T[], DeletorOption::OnlyDestoryObject>;
 
 	template <typename... Args>
-	explicit UniqueObject(int Size, Args&&... args) {
-		Pointer = TAllocator::template AllocateDynamic<T*>(sizeof(T) * Size, m_Allocated);
+	explicit UniqueObject(int _size, Args&&... _args) {
+		Pointer = TAllocator::template AllocateDynamic<T*>(sizeof(T) * _size, m_Allocated);
 
-		for (int i = 0; i < Size; i++) {
-			::new (Pointer + i) T{ Forward<Args>(args)... };
+		for (int i = 0; i < _size; i++) {
+			::new (Pointer + i) T{ Forward<Args>(_args)... };
 		}
 
-		m_Size = Size;
+		m_Size = _size;
 	}
 
 	~UniqueObject() override {}
@@ -216,29 +216,29 @@ class UniquePtr
 	using TUniquePtr	= UniquePtr<T>;
 
 	template <typename U>
-	void SetUniquePtr(U* ptr, UniqueBase* base, int size) {
-		m_pPtr = (T*)ptr;
-		m_Base = base;
-		m_Size = size;
+	void SetUniquePtr(U* _pPtr, UniqueBase* _pBase, int _size) {
+		m_pPtr = (T*)_pPtr;
+		m_Base = _pBase;
+		m_Size = _size;
 	}
 public:
 	UniquePtr() : m_pPtr(nullptr) {}
-	UniquePtr(std::nullptr_t nulptr) : m_pPtr(nullptr) {}
+	UniquePtr(std::nullptr_t _nulptr) : m_pPtr(nullptr) {}
 
 	template <typename U>
 	UniquePtr(const UniquePtr<U>& other) = delete;
 
 	template <typename U>
-	UniquePtr(UniquePtr<U>&& other) {
+	UniquePtr(UniquePtr<U>&& _other) {
 		Detail::CheckDynamicCastable<U, T>();
 
-		m_pPtr = (T*)other.m_pPtr;
-		m_Base = other.m_Base;
-		m_Size = other.m_Size;
+		m_pPtr = (T*)_other.m_pPtr;
+		m_Base = _other.m_Base;
+		m_Size = _other.m_Size;
 		
-		other.m_pPtr = nullptr;
-		other.m_Base = nullptr;
-		other.m_Size = 0;
+		_other.m_pPtr = nullptr;
+		_other.m_Base = nullptr;
+		_other.m_Size = 0;
 		
 	}
 

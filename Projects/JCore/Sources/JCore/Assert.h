@@ -13,7 +13,7 @@
 // 헤더파일 의존성 회피를 위함
 NS_JC_BEGIN
 	NS_DETAIL_BEGIN
-	void __DebugAssertMsgImpl(const char* expectStr, const char* filePath, int lineNum, const char* functionName, const char* fmt, ...);
+	void __DebugAssertMsgImpl(const char* _expectStr, const char* _filePath, int _lineNum, const char* _functionName, const char* _fmt, ...);
 	NS_DETAIL_END
 NS_JC_END
 

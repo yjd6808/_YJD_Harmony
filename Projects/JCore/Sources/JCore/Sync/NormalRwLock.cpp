@@ -12,66 +12,95 @@ NS_JC_BEGIN
 template class RwLockGuard<NormalRwLock, RwLockMode::Write>;
 template class RwLockGuard<NormalRwLock, RwLockMode::Read>;
 
-NormalRwLock::NormalRwLock() :
-	m_iReadCount(0),
-	m_bWriteFlag(false) {}
-
-void NormalRwLock::WriteLock() {
-	NormalLockGuard lg(m_Lock);
-	while (m_bWriteFlag || m_iReadCount)
-		m_CondVar.Wait(lg);
-
-	m_bWriteFlag = true;
+//////////////////////////////////////////////////////////////////////////////////////////
+NormalRwLock::NormalRwLock()
+	: m_readCount(0)
+	, m_writeFlag(false)
+{
 }
 
-bool NormalRwLock::TryWriteLock() {
-	NormalLockGuard lg(m_Lock);
-	if (m_bWriteFlag || m_iReadCount)
-		return false;
+//////////////////////////////////////////////////////////////////////////////////////////
+void NormalRwLock::WriteLock()
+{
+	NormalLockGuard lockGuard(m_lock);
+	while (m_writeFlag || m_readCount)
+	{
+		m_condVar.Wait(lockGuard);
+	}
 
-	m_bWriteFlag = true;
+	m_writeFlag = true;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool NormalRwLock::TryWriteLock()
+{
+	NormalLockGuard lockGuard(m_lock);
+	if (m_writeFlag || m_readCount)
+	{
+		return false;
+	}
+
+	m_writeFlag = true;
 	return true;
 }
 
-void NormalRwLock::WriteUnlock() {
-	NormalLockGuard lg(m_Lock);
-	m_bWriteFlag = false;
-	m_CondVar.NotifyAll();
+//////////////////////////////////////////////////////////////////////////////////////////
+void NormalRwLock::WriteUnlock()
+{
+	NormalLockGuard lockGuard(m_lock);
+	m_writeFlag = false;
+	m_condVar.NotifyAll();
 }
 
-bool NormalRwLock::IsWriteLocked() {
-	NormalLockGuard lg(m_Lock);
-	return m_bWriteFlag;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool NormalRwLock::IsWriteLocked()
+{
+	NormalLockGuard lockGuard(m_lock);
+	return m_writeFlag;
 }
 
-void NormalRwLock::ReadLock() {
-	NormalLockGuard lg(m_Lock);
-	while (m_bWriteFlag)
-		m_CondVar.Wait(lg);
+//////////////////////////////////////////////////////////////////////////////////////////
+void NormalRwLock::ReadLock()
+{
+	NormalLockGuard lockGuard(m_lock);
+	while (m_writeFlag)
+	{
+		m_condVar.Wait(lockGuard);
+	}
 
-	++m_iReadCount;
+	++m_readCount;
 }
 
-bool NormalRwLock::TryReadLock() {
-	NormalLockGuard lg(m_Lock);
-	if (m_bWriteFlag)
+//////////////////////////////////////////////////////////////////////////////////////////
+bool NormalRwLock::TryReadLock()
+{
+	NormalLockGuard lockGuard(m_lock);
+	if (m_writeFlag)
+	{
 		return false;
+	}
 
-	++m_iReadCount;
+	++m_readCount;
 	return true;
 }
 
-void NormalRwLock::ReadUnlock() {
-	NormalLockGuard lg(m_Lock);
-	if (m_iReadCount > 0)
-		--m_iReadCount;
+//////////////////////////////////////////////////////////////////////////////////////////
+void NormalRwLock::ReadUnlock()
+{
+	NormalLockGuard lockGuard(m_lock);
+	if (m_readCount > 0)
+	{
+		--m_readCount;
+	}
 
-	m_CondVar.NotifyAll();
+	m_condVar.NotifyAll();
 }
 
-bool NormalRwLock::IsReadLocked() {
-	NormalLockGuard lg(m_Lock);
-	return m_iReadCount > 0;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool NormalRwLock::IsReadLocked()
+{
+	NormalLockGuard lockGuard(m_lock);
+	return m_readCount > 0;
 }
 
 

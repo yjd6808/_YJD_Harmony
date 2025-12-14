@@ -59,97 +59,97 @@ struct WinApi {
 
     static WinHandle InvalidHandleValue;
 
-    static bool            JCORE_STDCALL SetConsoleCursorPosition(JCORE_IN WinHandle hStdoutHandle, JCORE_IN int x, JCORE_IN int y);
-    static bool            JCORE_STDCALL GetConsoleCursorPosition(JCORE_IN WinHandle hStdoutHandle, JCORE_OUT int& x, JCORE_OUT int& y);
-    static bool            JCORE_STDCALL SetConsoleTextAttribute(JCORE_IN WinHandle hStdoutHandle, JCORE_IN Int16 attribute);
-    static bool            JCORE_STDCALL SetConsoleOutputCodePage(JCORE_IN Int32 codePage);
-    static Int             JCORE_STDCALL GetConsoleOutputCodePage();
+    static bool            JCORE_CDECL SetConsoleCursorPosition(JCORE_IN WinHandle _stdoutHandle, JCORE_IN int _x, JCORE_IN int _y);
+	static bool            JCORE_CDECL GetConsoleCursorPosition(JCORE_IN WinHandle _stdoutHandle, JCORE_OUT int& _x, JCORE_OUT int& _y);
+	static bool            JCORE_CDECL SetConsoleTextAttribute(JCORE_IN WinHandle _stdoutHandle, JCORE_IN Int16 _attribute);
+	static bool            JCORE_CDECL SetConsoleOutputCodePage(JCORE_IN Int32 _codePage);
+	static Int             JCORE_CDECL GetConsoleOutputCodePage();
 
 
-    /** https://learn.microsoft.com/en-us/windows/console/getstdhandle
-     * \brief Retrieves a handle to the specified standard device
-     * \return The standard output device. Initially, this is the active console screen buffer,
-     */
-    static WinHandle       JCORE_STDCALL GetStdoutHandle();
-    static WinHandle       JCORE_STDCALL GetStdinHandle();
+	/** https://learn.microsoft.com/en-us/windows/console/getstdhandle
+	 * \brief Retrieves a handle to the specified standard device
+	 * \return The standard output device. Initially, this is the active console screen buffer,
+	 */
+	static WinHandle       JCORE_CDECL GetStdoutHandle();
+	static WinHandle       JCORE_CDECL GetStdinHandle();
 
 
 
-    /** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createeventa
-     * \brief Creates or opens a named or unnamed event object.
-     * \param initialState If this parameter is TRUE, the initial state of the event object is signaled; otherwise, it is nonsignaled.
-     * \param manualReset If this parameter is TRUE, the function creates a manual-reset event object, which requires the use of the ResetEvent function to set the event state to nonsignaled. If this parameter is FALSE, the function creates an auto-reset event object, and system automatically resets the event state to nonsignaled after a single waiting thread has been released.
-     * \param name The name of the event object. The name is limited to MAX_PATH characters. Name comparison is case sensitive.
-     * \return If the function succeeds, the return value is a handle to the event object. If the named event object existed before the function call, the function returns a handle to the existing object and GetLastError returns ERROR_ALREADY_EXISTS.
-     *         If the function fails, the return value is NULL. To get extended error information, call GetLastError.
-     */
-    static WinHandle       JCORE_STDCALL CreateEventA(JCORE_IN bool initialState, JCORE_IN bool manualReset, JCORE_IN_OPT const char* name = nullptr);
+	/** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createeventa
+	 * \brief Creates or opens a named or unnamed event object.
+	 * \param initialState If this parameter is TRUE, the initial state of the event object is signaled; otherwise, it is nonsignaled.
+	 * \param manualReset If this parameter is TRUE, the function creates a manual-reset event object, which requires the use of the ResetEvent function to set the event state to nonsignaled. If this parameter is FALSE, the function creates an auto-reset event object, and system automatically resets the event state to nonsignaled after a single waiting thread has been released.
+	 * \param name The name of the event object. The name is limited to MAX_PATH characters. Name comparison is case sensitive.
+	 * \return If the function succeeds, the return value is a handle to the event object. If the named event object existed before the function call, the function returns a handle to the existing object and GetLastError returns ERROR_ALREADY_EXISTS.
+	 *         If the function fails, the return value is NULL. To get extended error information, call GetLastError.
+	 */
+	static WinHandle       JCORE_CDECL CreateEventA(JCORE_IN bool _initialState, JCORE_IN bool _manualReset, JCORE_IN_OPT const char* _pName = nullptr);
 
-    /** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitformultipleobjectsex
-     * \brief Waits until one or all of the specified objects are in the signaled state, an I/O completion routine or asynchronous procedure call (APC) is queued to the thread, or the time-out interval elapses.
-     * \param eventCount The number of object handles to wait for in the array pointed to by lpHandles. The maximum number of object handles is MAXIMUM_WAIT_OBJECTS. This parameter cannot be zero.
-     * \param handles An array of object handles. For a list of the object types whose handles can be specified, see the following Remarks section. The array can contain handles of objects of different types. It may not contain multiple copies of the same handle.
-     * \param waitAll If this parameter is TRUE, the function returns when the state of all objects in the lpHandles array is set to signaled. If FALSE, the function returns when the state of any one of the objects is set to signaled. In the latter case, the return value indicates the object whose state caused the function to return.
-     * \param timeout The time-out interval, in milliseconds. If a nonzero value is specified, the function waits until the specified objects are signaled, an I/O completion routine or APC is queued, or the interval elapses. If dwMilliseconds is zero, the function does not enter a wait state if the criteria is not met; it always returns immediately. If dwMilliseconds is INFINITE, the function will return only when the specified objects are signaled or an I/O completion routine or APC is queued.
-     * \param alertable If this parameter is TRUE and the thread is in the waiting state, the function returns when the system queues an I/O completion routine or APC, and the thread runs the routine or function. Otherwise, the function does not return and the completion routine or APC function is not executed.
-     * \return If the function succeeds, the return value indicates the event that caused the function to return. It can be one of the following values. (Note that WAIT_OBJECT_0 is defined as 0 and WAIT_ABANDONED_0 is defined as 0x00000080L.)
-     */
-    static Int32UL          JCORE_STDCALL WaitForMultipleObjectsEx(JCORE_IN Int32U eventCount, JCORE_IN WinHandle* handles, JCORE_IN bool waitAll, JCORE_IN Int32U timeout = JCORE_INFINITE, JCORE_IN bool alertable = false);
-    static Int32UL          JCORE_STDCALL WaitForSingleObject(JCORE_IN WinHandle handle, JCORE_IN Int32U timeout = JCORE_INFINITE);
-    static Int32UL          JCORE_STDCALL GetLastError();
-
-
-    /** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-setevent#return-value
-     * \brief -
-     * \param handle  A handle to the event object. The CreateEvent or OpenEvent function returns this handle.
-     * \return If the function succeeds, the return value is nonzero.
-     */
-    static bool            JCORE_STDCALL SetEvent(JCORE_IN WinHandle handle);
-
-    /** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-resetevent
-     * \brief Sets the specified event object to the nonsignaled state.
-     * \param handle A handle to the event object. The CreateEvent or OpenEvent function returns this handle.
-     * \return If the function succeeds, the return value is nonzero.
-     */
-    static bool            JCORE_STDCALL ResetEvent(JCORE_IN WinHandle handle);
-
-    /** https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle
-     * \brief Closes an open object handle.
-     * \param handle A valid handle to an open object.
-     * \return If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call GetLastError.
-     */
-    static bool            JCORE_STDCALL CloseHandle(JCORE_IN WinHandle handle);
+	/** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitformultipleobjectsex
+	 * \brief Waits until one or all of the specified objects are in the signaled state, an I/O completion routine or asynchronous procedure call (APC) is queued to the thread, or the time-out interval elapses.
+	 * \param eventCount The number of object handles to wait for in the array pointed to by lpHandles. The maximum number of object handles is MAXIMUM_WAIT_OBJECTS. This parameter cannot be zero.
+	 * \param handles An array of object handles. For a list of the object types whose handles can be specified, see the following Remarks section. The array can contain handles of objects of different types. It may not contain multiple copies of the same handle.
+	 * \param waitAll If this parameter is TRUE, the function returns when the state of all objects in the lpHandles array is set to signaled. If FALSE, the function returns when the state of any one of the objects is set to signaled. In the latter case, the return value indicates the object whose state caused the function to return.
+	 * \param timeout The time-out interval, in milliseconds. If a nonzero value is specified, the function waits until the specified objects are signaled, an I/O completion routine or APC is queued, or the interval elapses. If dwMilliseconds is zero, the function does not enter a wait state if the criteria is not met; it always returns immediately. If dwMilliseconds is INFINITE, the function will return only when the specified objects are signaled or an I/O completion routine or APC is queued.
+	 * \param alertable If this parameter is TRUE and the thread is in the waiting state, the function returns when the system queues an I/O completion routine or APC, and the thread runs the routine or function. Otherwise, the function does not return and the completion routine or APC function is not executed.
+	 * \return If the function succeeds, the return value indicates the event that caused the function to return. It can be one of the following values. (Note that WAIT_OBJECT_0 is defined as 0 and WAIT_ABANDONED_0 is defined as 0x00000080L.)
+	 */
+	static Int32UL          JCORE_CDECL WaitForMultipleObjectsEx(JCORE_IN Int32U _eventCount, JCORE_IN WinHandle* _pHandles, JCORE_IN bool _waitAll, JCORE_IN Int32U _timeout = JCORE_INFINITE, JCORE_IN bool _alertable = false);
+	static Int32UL          JCORE_CDECL WaitForSingleObject(JCORE_IN WinHandle _handle, JCORE_IN Int32U _timeout = JCORE_INFINITE);
+	static Int32UL          JCORE_CDECL GetLastError();
 
 
-    /** https://learn.microsoft.com/ko-kr/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadpriority
-     * \brief Retrieves the priority value for the specified thread. This value, together with the priority class of the thread's process, determines the thread's base-priority level.
-     * \param threadHandle A handle to the thread.
-     * \return If the function succeeds, the return value is the thread's priority level.
-     *
-     * THREAD_PRIORITY_ABOVE_NORMAL      1
-     * THREAD_PRIORITY_BELOW_NORMAL     -1
-     * THREAD_PRIORITY_HIGHEST          2
-     * THREAD_PRIORITY_IDLE             -15
-     * THREAD_PRIORITY_LOWEST           -2
-     * THREAD_PRIORITY_NORMAL           0
-     * THREAD_PRIORITY_TIME_CRITICAL    15
-     */
-    static int             JCORE_STDCALL GetThreadPriority(JCORE_IN WinHandle threadHandle);
+	/** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-setevent#return-value
+	 * \brief -
+	 * \param handle  A handle to the event object. The CreateEvent or OpenEvent function returns this handle.
+	 * \return If the function succeeds, the return value is nonzero.
+	 */
+	static bool            JCORE_CDECL SetEvent(JCORE_IN WinHandle _handle);
 
-    /** https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadpriority
-     * \brief Sets the priority value for the specified thread. This value, together with the priority class of the thread's process, determines the thread's base priority level.
-     * \param threadHandle A handle to the thread whose priority value is to be set.
-     * \param priority The priority value for the thread.
-     * \return If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call GetLastError.
-     */
-    static bool            JCORE_STDCALL SetThreadPriority(JCORE_IN WinHandle threadHandle, JCORE_IN Int priority);
+	/** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-resetevent
+	 * \brief Sets the specified event object to the nonsignaled state.
+	 * \param handle A handle to the event object. The CreateEvent or OpenEvent function returns this handle.
+	 * \return If the function succeeds, the return value is nonzero.
+	 */
+	static bool            JCORE_CDECL ResetEvent(JCORE_IN WinHandle _handle);
 
-    /** https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadid
-     * \brief Retrieves the thread identifier of the calling thread. 
-     * \remarks Until the thread terminates, the thread identifier uniquely identifies the thread throughout the system.
-     * \return The return value is the thread identifier of the calling thread.
-     */
-    static Int32U          JCORE_STDCALL GetCurrentThreadId();
+	/** https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle
+	 * \brief Closes an open object handle.
+	 * \param handle A valid handle to an open object.
+	 * \return If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call GetLastError.
+	 */
+	static bool            JCORE_CDECL CloseHandle(JCORE_IN WinHandle _handle);
+
+
+	/** https://learn.microsoft.com/ko-kr/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadpriority
+	 * \brief Retrieves the priority value for the specified thread. This value, together with the priority class of the thread's process, determines the thread's base-priority level.
+	 * \param threadHandle A handle to the thread.
+	 * \return If the function succeeds, the return value is the thread's priority level.
+	 *
+	 * THREAD_PRIORITY_ABOVE_NORMAL      1
+	 * THREAD_PRIORITY_BELOW_NORMAL     -1
+	 * THREAD_PRIORITY_HIGHEST          2
+	 * THREAD_PRIORITY_IDLE             -15
+	 * THREAD_PRIORITY_LOWEST           -2
+	 * THREAD_PRIORITY_NORMAL           0
+	 * THREAD_PRIORITY_TIME_CRITICAL    15
+	 */
+	static int             JCORE_CDECL GetThreadPriority(JCORE_IN WinHandle _threadHandle);
+
+	/** https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadpriority
+	 * \brief Sets the priority value for the specified thread. This value, together with the priority class of the thread's process, determines the thread's base priority level.
+	 * \param threadHandle A handle to the thread whose priority value is to be set.
+	 * \param priority The priority value for the thread.
+	 * \return If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call GetLastError.
+	 */
+	static bool            JCORE_CDECL SetThreadPriority(JCORE_IN WinHandle _threadHandle, JCORE_IN Int _priority);
+
+	/** https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadid
+	 * \brief Retrieves the thread identifier of the calling thread.
+	 * \remarks Until the thread terminates, the thread identifier uniquely identifies the thread throughout the system.
+	 * \return The return value is the thread identifier of the calling thread.
+	 */
+	static Int32U          JCORE_CDECL GetCurrentThreadId();
 
 
 	/**
@@ -157,7 +157,7 @@ struct WinApi {
 	 * Retrieves the fully qualified path for the file that contains the specified module. The module must have been loaded by the current process.
 	 * \return the return value is the length of the string that is copied to the buffer
 	 */
-	static Int32U          JCORE_STDCALL GetModuleFilePath(JCORE_IN_OPT WinModule module, JCORE_OUT char* filenameBuffer, JCORE_IN int filenameBufferCapacity);
+	static Int32U          JCORE_CDECL GetModuleFilePath(JCORE_IN_OPT WinModule _module, JCORE_OUT char* _pFilenameBuffer, JCORE_IN int _filenameBufferCapacity);
     
 }; // struct WinApi
 
@@ -184,7 +184,7 @@ struct Interlocked final
      * \param value The second operand.
      * \return The function returns the result of the operation.
      */
-    static TOperand Add(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value);
+    static TOperand Add(JCORE_IN_OUT TOperand* _pDestination, JCORE_IN TOperand _value);
 
     // https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedcompareexchange
     /**
@@ -194,7 +194,7 @@ struct Interlocked final
      * \param desired The exchange value.
      * \return The function returns the initial value of the Destination parameter.
      */
-    static TOperand CompareExchange(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand expected, TOperand desired);
+    static TOperand CompareExchange(JCORE_IN_OUT TOperand* _pDestination, JCORE_IN TOperand _expected, TOperand _desired);
 
     // https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedexchange
     /**
@@ -203,7 +203,7 @@ struct Interlocked final
      * \param value The value to be exchanged with the value pointed to by Target.
      * \return The function returns the initial value of the Target parameter.
      */
-    static TOperand Exchange(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value);
+    static TOperand Exchange(JCORE_IN_OUT TOperand* _pDestination, JCORE_IN TOperand _value);
 
     // https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedexchangeadd
     /**
@@ -212,7 +212,7 @@ struct Interlocked final
      * \param value The value to be added to the variable pointed to by the Addend parameter.
      * \return The function returns the initial value of the Addend parameter.
      */
-    static TOperand ExchangeAdd(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value);
+    static TOperand ExchangeAdd(JCORE_IN_OUT TOperand* _pDestination, JCORE_IN TOperand _value);
 
     // https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedincrement
     /**
@@ -220,7 +220,7 @@ struct Interlocked final
      * \param destination A pointer to the variable to be incremented.
      * \return The function returns the resulting incremented value.
      */
-    static TOperand Increment(JCORE_IN_OUT TOperand* destination);
+    static TOperand Increment(JCORE_IN_OUT TOperand* _pDestination);
 
     // https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockeddecrement
     /**
@@ -228,7 +228,7 @@ struct Interlocked final
      * \param destination A pointer to the variable to be decremented.
      * \return The function returns the resulting decremented value.
      */
-    static TOperand Decrement(JCORE_IN_OUT TOperand* destination);
+    static TOperand Decrement(JCORE_IN_OUT TOperand* _pDestination);
 
     // https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedand
     /**
@@ -237,7 +237,7 @@ struct Interlocked final
      * \param value The second operand.
      * \return The function returns the original value of the Destination parameter.
      */
-    static TOperand And(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value);
+    static TOperand And(JCORE_IN_OUT TOperand* _pDestination, JCORE_IN TOperand _value);
 
     // https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedor
     /**
@@ -246,7 +246,7 @@ struct Interlocked final
      * \param value The second operand.
      * \return The function returns the original value of the Destination parameter.
      */
-    static TOperand Or(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value);
+    static TOperand Or(JCORE_IN_OUT TOperand* _pDestination, JCORE_IN TOperand _value);
 
 
     // https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedxor
@@ -256,8 +256,8 @@ struct Interlocked final
      * \param value The second operand.
      * \return The function returns the original value of the Destination parameter.
      */
-    static TOperand Xor(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value);
-    static TOperand Read(JCORE_IN_OUT TOperand* destination) { return Interlocked::Add(destination, 0); }
+    static TOperand Xor(JCORE_IN_OUT TOperand* _pDestination, JCORE_IN TOperand _value);
+    static TOperand Read(JCORE_IN_OUT TOperand* _pDestination) { return Interlocked::Add(_pDestination, 0); }
 }; // struct Interlocked final
 
 
@@ -273,32 +273,32 @@ struct Interlocked<TOperand*> final
     using TReinterpretedType = Conditional_t<PlatformPtrSize == 4, Boundary32, Boundary64>;
     using TInterlocked = Interlocked<TReinterpretedType>;
 
-    static TOperand* Add(JCORE_IN_OUT TOperand** destination, JCORE_IN int value) {
+    static TOperand* Add(JCORE_IN_OUT TOperand** _ppDestination, JCORE_IN int _value) {
         return reinterpret_cast<TOperand*>(TInterlocked::Add(
-            reinterpret_cast<TReinterpretedType*>(destination), 
-            sizeof(TOperand) * value));
+            reinterpret_cast<TReinterpretedType*>(_ppDestination), 
+            sizeof(TOperand) * _value));
     }
 
-    static TOperand* CompareExchange(JCORE_IN_OUT TOperand** destination, JCORE_IN TOperand* expected, JCORE_IN TOperand* desired) {
+    static TOperand* CompareExchange(JCORE_IN_OUT TOperand** _ppDestination, JCORE_IN TOperand* _pExpected, JCORE_IN TOperand* _pDesired) {
         return reinterpret_cast<TOperand*>(TInterlocked::CompareExchange(
-            reinterpret_cast<TReinterpretedType*>(destination),
-            reinterpret_cast<TReinterpretedType>(expected),
-            reinterpret_cast<TReinterpretedType>(desired)));
+            reinterpret_cast<TReinterpretedType*>(_ppDestination),
+            reinterpret_cast<TReinterpretedType>(_pExpected),
+            reinterpret_cast<TReinterpretedType>(_pDesired)));
     }
-    static TOperand* Exchange(JCORE_IN_OUT TOperand** destination, JCORE_IN TOperand* value) {
+    static TOperand* Exchange(JCORE_IN_OUT TOperand** _ppDestination, JCORE_IN TOperand* _pValue) {
         return reinterpret_cast<TOperand*>(TInterlocked::Exchange(
-            reinterpret_cast<TReinterpretedType*>(destination),
-            reinterpret_cast<TReinterpretedType>(value)));
+            reinterpret_cast<TReinterpretedType*>(_ppDestination),
+            reinterpret_cast<TReinterpretedType>(_pValue)));
     }
 
-    static TOperand* ExchangeAdd(JCORE_IN_OUT TOperand** destination, JCORE_IN int value) {
+    static TOperand* ExchangeAdd(JCORE_IN_OUT TOperand** _ppDestination, JCORE_IN int _value) {
         return reinterpret_cast<TOperand*>(TInterlocked::ExchangeAdd(
-            reinterpret_cast<TReinterpretedType*>(destination),
-            sizeof(TOperand) * value));
+            reinterpret_cast<TReinterpretedType*>(_ppDestination),
+            sizeof(TOperand) * _value));
     }
 
-    static TOperand* Read(JCORE_IN_OUT TOperand** destination) {
-        return reinterpret_cast<TOperand*>(TInterlocked::Add(reinterpret_cast<TReinterpretedType*>(destination), 0));
+    static TOperand* Read(JCORE_IN_OUT TOperand** _ppDestination) {
+        return reinterpret_cast<TOperand*>(TInterlocked::Add(reinterpret_cast<TReinterpretedType*>(_ppDestination), 0));
     }
 
 }; // struct Interlocked final
@@ -309,9 +309,9 @@ struct Interlocked<bool> final
 {
     using TInterlocked = Interlocked<Boundary8>;
 
-    static bool CompareExchange(JCORE_IN_OUT bool* destination, JCORE_IN bool expected, JCORE_IN bool desired);
-    static bool Exchange(JCORE_IN_OUT bool* destination, JCORE_IN bool value);
-    static bool Read(JCORE_IN_OUT bool* destination);
+    static bool CompareExchange(JCORE_IN_OUT bool* _pDestination, JCORE_IN bool _expected, JCORE_IN bool _desired);
+    static bool Exchange(JCORE_IN_OUT bool* _pDestination, JCORE_IN bool _value);
+    static bool Read(JCORE_IN_OUT bool* _pDestination);
 }; // struct Interlocked final
 
 

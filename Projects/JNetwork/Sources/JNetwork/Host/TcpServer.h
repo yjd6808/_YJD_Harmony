@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -19,45 +19,45 @@ class IPv4EndPoint;
 class TcpServer : public Server
 {
 public:
-	TcpServer(const IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator);
+	TcpServer(const IOCPPtr& _pIocp, const JCore::MemoryPoolAbstractPtr& _pBufferAllocator);
 	~TcpServer() override;
-
 
 	// 커스텀 생성을 위한 버철
 	virtual TcpSession* CreateSession();
 	virtual ISessionContainer* CreateSessionContainer();
 
 	virtual void OnStarted() {}
-	virtual void OnStartFailed(Int32U errorCode) {}
+	virtual void OnStartFailed(Int32U _errorCode) {}
 	virtual void OnStopped() {}
 
 	ISessionContainer* GetSessionContainer();
 	ServerEventListener* GetEventListener();
 
-	void SetSesssionContainer(ISessionContainer* container);
-	void SetEventListener(ServerEventListener* listener);
+	void SetSesssionContainer(ISessionContainer* _pContainer);
+	void SetEventListener(ServerEventListener* _pListener);
 
-	bool Start(const IPv4EndPoint& localEndPoint) override;
+	bool Start(const IPv4EndPoint& _localEndPoint) override;
 	bool Stop() override;
 
 	void Initialize() override;
-	void SessionDisconnected(TcpSession* session, Int32U errorCode);
-	void SessionConnected(TcpSession* session);
-	void SessionConnectFailed(TcpSession* session, Int32U errorCode);
-	void SessionSent(TcpSession* session, IPacket* sentPacket, Int32UL receivedBytes);
-	void SessionReceived(TcpSession* session, ICommand* command);
-	void SessionReceived(TcpSession* session, RecvedCommandPacket* recvPacket);
-	void SessionReceivedRaw(TcpSession* session, char* data, int len);
+	void SessionDisconnected(TcpSession* _pSession, Int32U _errorCode);
+	void SessionConnected(TcpSession* _pSession);
+	void SessionConnectFailed(TcpSession* _pSession, Int32U _errorCode);
+	void SessionSent(TcpSession* _pSession, IPacket* _pSentPacket, Int32UL _receivedBytes);
+	void SessionReceived(TcpSession* _pSession, ICommand* _pCommand);
+	void SessionReceived(TcpSession* _pSession, RecvedCommandPacket* _pRecvPacket);
+	void SessionReceivedRaw(TcpSession* _pSession, char* _pData, int _len);
 
-	IPv4EndPoint GetBindEndPoint() const { return m_Socket.GetLocalEndPoint(); }
+	IPv4EndPoint GetBindEndPoint() const { return socket_.GetLocalEndPoint(); }
 	const char* TypeName() override { return "TCP 서버"; }
 	DetailType GetDetailType() const override { return eTcpListener; }
-protected:
-	JCore::MemoryPoolAbstractPtr m_spBufferAllocator;
-	JCore::NormalLock m_Sync;
 
-	ServerEventListener* m_pEventListener;
-	ISessionContainer* m_pContainer;
+protected:
+	JCore::MemoryPoolAbstractPtr bufferAllocator_;
+	JCore::NormalLock sync_;
+
+	ServerEventListener* serverEventListener_;
+	ISessionContainer* sessionContainer_;
 };
 
 using TcpServerPtr = JCore::SharedPtr<TcpServer>;

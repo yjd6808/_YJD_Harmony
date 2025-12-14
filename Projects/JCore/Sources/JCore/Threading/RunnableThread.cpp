@@ -11,40 +11,50 @@
 
 NS_JC_BEGIN
 
-RunnableThread::RunnableThread(int joinTimeoutMiliSeconds)
-	: m_iTimeoutMiliSecond(joinTimeoutMiliSeconds)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+RunnableThread::RunnableThread(int _joinTimeoutMiliSeconds)
+	: m_timeoutMiliSecond(_joinTimeoutMiliSeconds)
+{
+}
 
-RunnableThread::~RunnableThread() {
+//////////////////////////////////////////////////////////////////////////////////////////
+RunnableThread::~RunnableThread()
+{
 	DebugAssertMsg(m_hHandle == nullptr, "스레드가 정상적으로 종료되지 않았습니다.");
 }
 
-void RunnableThread::SetJoinTimeout(int joinTimeoutMiliSeconds) {
-	m_iTimeoutMiliSecond = joinTimeoutMiliSeconds;
+//////////////////////////////////////////////////////////////////////////////////////////
+void RunnableThread::SetJoinTimeout(int _joinTimeoutMiliSeconds)
+{
+	m_timeoutMiliSecond = _joinTimeoutMiliSeconds;
 }
 
-void RunnableThread::Start() {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void RunnableThread::Start()
+{
 	if (!PreStart())
 		return;
 
-	const int err = Thread::Start([this](void*) {
+	const int startError = Thread::Start([this](void*)
+	{
 		WorkerThread();
 	});
 
-	if (err != 0) {
-		_LogError_("쓰레드 시작 실패 (%d)", err);
+	if (startError != 0)
+	{
+		_LogError_("쓰레드 시작 실패 (%d)", startError);
 	}
 }
 
-Thread::JoinResult RunnableThread::Stop() {
-
-	if (PreStop()) {
-		return Join(m_iTimeoutMiliSecond);
+//////////////////////////////////////////////////////////////////////////////////////////
+Thread::JoinResult RunnableThread::Stop()
+{
+	if (PreStop())
+	{
+		return Join(m_timeoutMiliSecond);
 	}
 
 	return eNotJoinable;
-
 }
 
 NS_JC_END

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -11,9 +11,9 @@
 
 NS_JNET_BEGIN
 
-struct ICommand;
-struct IPacket;
-struct RecvedCommandPacket;
+class ICommand;
+class IPacket;
+class RecvedCommandPacket;
 
 class Session;
 class JCORE_NOVTABLE SessionEventListener
@@ -22,12 +22,12 @@ public:
 	SessionEventListener() = default;
 	virtual ~SessionEventListener() = default;
 
-	virtual void OnConnected(Session* session) {}
-	virtual void OnDisconnected(Session* session, Int32U errorCode) {}
-	virtual void OnSent(Session* session, IPacket* sentPacket, Int32UL sentBytes) {}
-	virtual void OnReceivedRaw(Session* session, char* data, int len) {}
-	virtual void OnReceived(Session* session, ICommand* recvCmd) {}
-	virtual void OnReceived(Session* session, RecvedCommandPacket* recvPacket) {}
+	virtual void OnConnected(Session* _pSession) {}
+	virtual void OnDisconnected(Session* _pSession, Int32U _errorCode) {}
+	virtual void OnSent(Session* _pSession, IPacket* _pSentPacket, Int32UL _sentBytes) {}
+	virtual void OnReceivedRaw(Session* _pSession, char* _pData, int _len) {}
+	virtual void OnReceived(Session* _pSession, ICommand* _pRecvCmd) {}
+	virtual void OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket) {}
 };
 
 NS_JNET_END

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 4/22/2023 7:30:19 PM
  * =====================
@@ -10,6 +10,7 @@
 #pragma once
 
 #include <JNetwork/Host/Session.h>
+#include <JNetwork/Packet/Packet.h>
 
 #include <JCore/Pattern/NonCopyableh.h>
 
@@ -28,10 +29,11 @@ struct SendHelper;
 
 struct SendingBase
 {
-	SendingBase(IPacket* packet)
-		: Packet(packet)
+	SendingBase(IPacket* _pPacket)
+		: Packet(_pPacket)
 		, Sended(false)
-	{}
+	{
+	}
 
 	IPacket* Packet;
 	bool Sended;
@@ -40,13 +42,16 @@ struct SendingBase
 template <typename T, typename TCommand>
 struct Sending : JCore::NonCopyable, SendingBase
 {
-	Sending(TCommand& cmd, IPacket* packet)
-		: SendingBase(packet)
-		, Cmd(cmd)
-	{}
+	Sending(TCommand& _command, IPacket* _pPacket)
+		: SendingBase(_pPacket)
+		, Cmd(_command)
+	{
+	}
 
-	~Sending() {
-		if (!Sended) {
+	~Sending()
+	{
+		if (!Sended)
+		{
 			SendHelper<T>::SendEnd(Packet);
 			Sended = true;
 		}
@@ -60,10 +65,10 @@ struct Sending : JCore::NonCopyable, SendingBase
 
 struct SendHelperBase
 {
-	static bool IsValidInformation(Session* sender, SendStrategy strategy);
+	static bool IsValidInformation(Session* _pSender, SendStrategy _strategy);
 };
 
-template <typename T>	// 상속시 static 필드 공유를 선택적으로 설정가능하도록 만들기 위한 템플릿
+template <typename T>    // 상속시 static 필드 공유를 선택적으로 설정가능하도록 만들기 위한 템플릿
 struct SendHelper : SendHelperBase
 {
 	template <typename TCommand>
@@ -80,36 +85,44 @@ struct SendHelper : SendHelperBase
 
 	struct AutoFlush
 	{
-		~AutoFlush() { FlushSendBuffer(); }
+		~AutoFlush()
+		{
+			FlushSendBuffer();
+		}
 	};
 
-
 	template <typename TCommand>
-	static TSending<TCommand> SendBegin() {
+	static TSending<TCommand> SendBegin()
+	{
 		return SendBegin<TCommand>(0);
 	}
 
 	template <typename TCommand>
-	static TSending<TCommand> SendBegin(int count) {
+	static TSending<TCommand> SendBegin(int _count)
+	{
 		DebugAssertMsg(SendInformation.Sender, "샌더가 설정되어있지 않습니다.");
 
-		if (SendInformation.Strategy == SendStrategy::SendAlloc) {
-			return TSending<TCommand>(SendInformation.Sender->template SendAlloc<TCommand>(count), nullptr);
+		if (SendInformation.Strategy == SendStrategy::SendAlloc)
+		{
+			return TSending<TCommand>(SendInformation.Sender->template SendAlloc<TCommand>(_count), nullptr);
 		}
-		
-		auto pPacket = SinglePacket<TCommand>::Create(SendInformation.MemPool, count);	// 해제는 소멸자에서함
 
-		if (pPacket->Cmd.CmdLen >= 2500) {
-			const char* n = TCommand::_Name();
+		auto pPacket = SinglePacket<TCommand>::Create(SendInformation.MemPool, _count);    // 해제는 소멸자에서함
+
+		if (pPacket->command_.GetCommandLen() >= 2500)
+		{
+			const char* pName = TCommand::_Name();
+			(void)pName; // name only used for debugging
 			DebugAssert(false);
 		}
 
-		return TSending<TCommand>(pPacket->Cmd, pPacket);
+		return TSending<TCommand>(pPacket->command_, pPacket);
 	}
 
-
-	static void FlushSendBuffer() {
-		if (SendInformation.Sender == nullptr) {
+	static void FlushSendBuffer()
+	{
+		if (SendInformation.Sender == nullptr)
+		{
 			_LogError_("샌더 미할당");
 			return;
 		}
@@ -117,37 +130,44 @@ struct SendHelper : SendHelperBase
 		SendInformation.Sender->FlushSendBuffer();
 	}
 
-	static void SetInformation(Session* sender, SendStrategy strategy) {
-		SendInformation.Sender = sender;
-		SendInformation.Strategy = strategy;
+	static void SetInformation(Session* _pSender, SendStrategy _strategy)
+	{
+		SendInformation.Sender = _pSender;
+		SendInformation.Strategy = _strategy;
 	}
 
-	static void SetInformation(Session* sender, SendStrategy strategy, const IPv4EndPoint& destination) {
-		SendInformation.Sender = sender;
-		SendInformation.Strategy = strategy;
-		SendInformation.Destination = destination;
+	static void SetInformation(Session* _pSender, SendStrategy _strategy, const IPv4EndPoint& _destination)
+	{
+		SendInformation.Sender = _pSender;
+		SendInformation.Strategy = _strategy;
+		SendInformation.Destination = _destination;
 	}
 
-	static void SetMemoryPool(const JCore::MemoryPoolAbstractPtr& memPool) {
-		SendInformation.MemPool = memPool;
+	static void SetMemoryPool(const JCore::MemoryPoolAbstractPtr& _memPool)
+	{
+		SendInformation.MemPool = _memPool;
 	}
 
-	static bool SendEnd(IPacket* packet) {
-		if (SendInformation.Sender == nullptr) {
+	static bool SendEnd(IPacket* _pPacket)
+	{
+		if (SendInformation.Sender == nullptr)
+		{
 			_LogError_("센더가 설정되지 않았습니다.");
 			return false;
 		}
 
-		if (SendInformation.Strategy == SendStrategy::None) {
+		if (SendInformation.Strategy == SendStrategy::None)
+		{
 			_LogError_("송신 전략이 설정되지 않았습니다.");
 			return false;
 		}
 
-		switch (SendInformation.Strategy) {
+		switch (SendInformation.Strategy)
+		{
 		case SendStrategy::SendAsync:
-			return SendInformation.Sender->SendAsync(packet);
+			return SendInformation.Sender->SendAsync(_pPacket);
 		case SendStrategy::SendToAsync:
-			return SendInformation.Sender->SendToAsync(packet, SendInformation.Destination);
+			return SendInformation.Sender->SendToAsync(_pPacket, SendInformation.Destination);
 		case SendStrategy::SendAlloc:
 			// 할거 없음
 			break;
@@ -158,22 +178,18 @@ struct SendHelper : SendHelperBase
 		return true;
 	}
 
-
-	static bool SendEndExplicit(SendingBase& sending) {
-		IPacket* packet = sending.Packet;
-		sending.Sended = true;
-		return SendEnd(packet);
+	static bool SendEndExplicit(SendingBase& _sending)
+	{
+		IPacket* pPacket = _sending.Packet;
+		_sending.Sended = true;
+		return SendEnd(pPacket);
 	}
-
 
 #ifdef SEND_HELPER_NONE_THREAD_LOCAL_INFORMATION
 	inline static Information SendInformation;
 #else
 	inline static thread_local Information SendInformation;
 #endif
-
 };
-
-
 
 NS_JNET_END

@@ -4,8 +4,9 @@
 
 #if TEST_IPEndPointTest == ON
 
-TEST(IPEndPointTest, IPv4) {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+TEST(IPEndPointTest, IPv4)
+{
 	IPv4EndPoint ep("127.0.0.1:8000");
 
 	EXPECT_TRUE(ep.GetProtocol() == InternetProtocol::IPv4);
@@ -17,6 +18,5 @@ TEST(IPEndPointTest, IPv4) {
 	String k = ep.ToString();
 	EXPECT_TRUE(ep.ToString() == "127.0.0.1:8000");
 }
-
 
 #endif

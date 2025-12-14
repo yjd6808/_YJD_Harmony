@@ -24,244 +24,301 @@ USING_NS_CC;
 	#define AILog(...)
 #endif
 
-AIComponent::AIComponent(Actor* actor)
-	: ActorComponent(actor)
-	, m_pAIInfo(nullptr)
-	, m_pTarget(nullptr)
-	, m_ActivityMap{}
-	, m_pRunningActivity()
-	, m_eState(AIState::None)
-	, m_eActivityState(AIState::None)
-	, m_ePreviousState(AIState::None)
-{}
-
-AIComponent::~AIComponent() {
-	Arrays::ForEachDelete(m_ActivityMap);
+//////////////////////////////////////////////////////////////////////////////////////////
+AIComponent::AIComponent(Actor* _pActor)
+	: ActorComponent(_pActor)
+	, aiInfo_(nullptr)
+	, target_(nullptr)
+	, activityMap_{}
+	, runningActivity_()
+	, state_(AIState::None)
+	, activityState_(AIState::None)
+	, previousState_(AIState::None)
+{
 }
 
-void AIComponent::initialize() {
-	m_pRunningActivity = nullptr;
-	m_eState = AIState::Wander;
-	m_ePreviousState = AIState::None;
-	m_pTarget = nullptr;
+//////////////////////////////////////////////////////////////////////////////////////////
+AIComponent::~AIComponent()
+{
+	Arrays::ForEachDelete(activityMap_);
 }
 
-void AIComponent::onUpdate(float dt) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIComponent::initialize()
+{
+	runningActivity_ = nullptr;
+	state_ = AIState::Wander;
+	previousState_ = AIState::None;
+	target_ = nullptr;
+}
 
-	if (m_pAIInfo == nullptr)
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIComponent::onUpdate(float _dt)
+{
+	if (aiInfo_ == nullptr)
 		return;
 
-	updateState();				// 변경가능한 상태 확인
+	updateState();			// 변경가능한 상태 확인
 	selectActivity();			// 해당 상태에서 수행가능한 액티비티 설정
 	updateDirection();
-	updateActivity(dt);			// 액티비티 지속 업데이트
+	updateActivity(_dt);			// 액티비티 지속 업데이트
 }
 
-void AIComponent::setAIInfo(AIInfo* info) {
-	m_pAIInfo = info;
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIComponent::setAIInfo(AIInfo* _pInfo)
+{
+	aiInfo_ = _pInfo;
 }
 
-void AIComponent::setAttackActivity(AttackActivity* attackActivity) {
-	DebugAssert(m_ActivityMap[AIActivityType::Attack] == nullptr);
-	m_ActivityMap[AIActivityType::Attack] = attackActivity;
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIComponent::setAttackActivity(AttackActivity* _pAttackActivity)
+{
+	DebugAssert(activityMap_[AIActivityType::Attack] == nullptr);
+	activityMap_[AIActivityType::Attack] = _pAttackActivity;
 }
 
-void AIComponent::setFallDownActivity(FallDownActivity* fallDownActivity) {
-	DebugAssert(m_ActivityMap[AIActivityType::FallDown] == nullptr);
-	m_ActivityMap[AIActivityType::FallDown] = fallDownActivity;
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIComponent::setFallDownActivity(FallDownActivity* _pFallDownActivity)
+{
+	DebugAssert(activityMap_[AIActivityType::FallDown] == nullptr);
+	activityMap_[AIActivityType::FallDown] = _pFallDownActivity;
 }
 
-void AIComponent::setHitActivity(HitActivity* hitActivity) {
-	DebugAssert(m_ActivityMap[AIActivityType::Hit] == nullptr);
-	m_ActivityMap[AIActivityType::Hit] = hitActivity;
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIComponent::setHitActivity(HitActivity* _pHitActivity)
+{
+	DebugAssert(activityMap_[AIActivityType::Hit] == nullptr);
+	activityMap_[AIActivityType::Hit] = _pHitActivity;
 }
 
-void AIComponent::setIdleActivity(IdleActivity* idleActivity) {
-	DebugAssert(m_ActivityMap[AIActivityType::Idle] == nullptr);
-	m_ActivityMap[AIActivityType::Idle] = idleActivity;
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIComponent::setIdleActivity(IdleActivity* _pIdleActivity)
+{
+	DebugAssert(activityMap_[AIActivityType::Idle] == nullptr);
+	activityMap_[AIActivityType::Idle] = _pIdleActivity;
 }
 
-void AIComponent::setWalkActivity(WalkActivity* walkActivity) {
-	DebugAssert(m_ActivityMap[AIActivityType::Walk] == nullptr);
-	m_ActivityMap[AIActivityType::Walk] = walkActivity;
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIComponent::setWalkActivity(WalkActivity* _pWalkActivity)
+{
+	DebugAssert(activityMap_[AIActivityType::Walk] == nullptr);
+	activityMap_[AIActivityType::Walk] = _pWalkActivity;
 }
 
-void AIComponent::setSitActivity(SitActivity* sitActivity) {
-	DebugAssert(m_ActivityMap[AIActivityType::Sit] == nullptr);
-	m_ActivityMap[AIActivityType::Sit] = sitActivity;
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIComponent::setSitActivity(SitActivity* _pSitActivity)
+{
+	DebugAssert(activityMap_[AIActivityType::Sit] == nullptr);
+	activityMap_[AIActivityType::Sit] = _pSitActivity;
 }
 
-void AIComponent::updateState() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIComponent::updateState()
+{
 	MapLayer* pMapLayer = m_pActor->getMapLayer();
 
-	if (pMapLayer == nullptr) {
+	if (pMapLayer == nullptr)
+	{
 		return;
 	}
 
-	if (m_pRunningActivity && m_pRunningActivity->isRunning()) {
+	if (runningActivity_ && runningActivity_->isRunning())
+	{
 		return;
 	}
 
-	m_ePreviousState = m_eState;
+	previousState_ = state_;
 	float enemyDist;
-	Actor* pPreviousTarget = m_pTarget;
-	m_pTarget = pMapLayer->findNearestCharacterInRadious(m_pActor, m_pAIInfo->SightRadious, enemyDist);
+	Actor* pPreviousTarget = target_;
+	target_ = pMapLayer->findNearestCharacterInRadious(m_pActor, aiInfo_->SightRadious, enemyDist);
 
-	if (m_pTarget == nullptr) {
+	if (target_ == nullptr)
+	{
 		AILog("[상태] 적 미발견: 배회 상태\n");
-		m_eState = AIState::Wander;
+		state_ = AIState::Wander;
 		return;
 	}
 
 	// TODO: 타겟 변경 알려줘야할까?
-	if (pPreviousTarget == nullptr) {
+	if (pPreviousTarget == nullptr)
+	{
 	}
 
-	if (enemyDist > m_pAIInfo->AttackRadious) {
+	if (enemyDist > aiInfo_->AttackRadious)
+	{
 		AILog("[상태] 적 발견: 추격 상태\n");
-		m_eState = AIState::Track;
+		state_ = AIState::Track;
 		return;
 	}
 
 	AILog("[상태] 적 근접: 분노 상태\n");
-	m_eState = AIState::Angry;
+	state_ = AIState::Angry;
 }
 
-
-
-void AIComponent::selectActivity() {
-	if (m_pRunningActivity && m_pRunningActivity->isRunning())
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIComponent::selectActivity()
+{
+	if (runningActivity_ && runningActivity_->isRunning())
 		return;
 
-	switch (m_eState) {
+	switch (state_)
+	{
 	case AIState::Wander:	selectWanderActivity();		break;
 	case AIState::Track:	selectTrackActivity();		break;
 	case AIState::Angry:	selectAngryActivity();		break;
 	}
 
-	if (m_pRunningActivity == nullptr)
+	if (runningActivity_ == nullptr)
 		return;
 
-	m_pRunningActivity->onActivitySelectFromAIRoutine(m_pAIInfo, m_eActivityState);
-	m_pRunningActivity->run();
+	runningActivity_->onActivitySelectFromAIRoutine(aiInfo_, activityState_);
+	runningActivity_->run();
 }
 
-void AIComponent::updateActivity(float dt) {
-	if (m_pRunningActivity == nullptr)
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIComponent::updateActivity(float _dt)
+{
+	if (runningActivity_ == nullptr)
 		return;
 
-	m_pRunningActivity->onUpdate(dt);
+	runningActivity_->onUpdate(_dt);
 }
 
-void AIComponent::updateDirection() {
-	if (m_pRunningActivity == nullptr)
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIComponent::updateDirection()
+{
+	if (runningActivity_ == nullptr)
 		return;
 
-	AIActivityType_t eActivityType = m_pRunningActivity->getType();
+	AIActivityType_t activityType = runningActivity_->getType();
 
-	if (eActivityType != AIActivityType::Idle && 
-		eActivityType != AIActivityType::Walk) {
+	if (activityType != AIActivityType::Idle &&
+		activityType != AIActivityType::Walk)
+	{
 		return;
 	}
 
-	if (m_eState >= AIState::Track && m_pTarget) {
-		SpriteDirection_t eWhereIsTarget;
-		SGVec2Ex::getLookDirectionX(m_pActor->getPositionRealCenterX(), m_pTarget->getPositionRealCenterX(), eWhereIsTarget);
-		m_pActor->setSpriteDirection(eWhereIsTarget);
+	if (state_ >= AIState::Track && target_)
+	{
+		SpriteDirection_t whereIsTarget;
+		SGVec2Ex::getLookDirectionX(m_pActor->getPositionRealCenterX(), target_->getPositionRealCenterX(), whereIsTarget);
+		m_pActor->setSpriteDirection(whereIsTarget);
 	}
 }
 
-void AIComponent::selectWanderActivity() {
-	const float fRnd = SGRandom::random_real(0.0f, 100.0f);
-	m_eActivityState = AIState::Wander;
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIComponent::selectWanderActivity()
+{
+	const float rnd = SGRandom::random_real(0.0f, 100.0f);
+	activityState_ = AIState::Wander;
 
-	if (fRnd < m_pAIInfo->WanderProbs[AIWanderDecision::Walk]) {
-		m_pRunningActivity = m_ActivityMap[AIActivityType::Walk];
+	if (rnd < aiInfo_->WanderProbs[AIWanderDecision::Walk])
+	{
+		runningActivity_ = activityMap_[AIActivityType::Walk];
 		AILog("[배회] 걷기\n");
 		return;
 	}
 
-	m_pRunningActivity = m_ActivityMap[AIActivityType::Idle];
+	runningActivity_ = activityMap_[AIActivityType::Idle];
 	AILog("[배회] 휴식\n");
 }
-void AIComponent::selectTrackActivity() {
-	const float fRnd = SGRandom::random_real(0.0f, 100.0f);
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIComponent::selectTrackActivity()
+{
+	const float rnd = SGRandom::random_real(0.0f, 100.0f);
 	
-	if (fRnd < m_pAIInfo->TrackProbs[AITrackDecision::Wander]) {
+	if (rnd < aiInfo_->TrackProbs[AITrackDecision::Wander])
+	{
 		AILog("[추격] 배회 시도\n");
 		selectWanderActivity();
 		return;
 	}
 
-	m_eActivityState = AIState::Track;
+	activityState_ = AIState::Track;
 
-	if (fRnd < m_pAIInfo->TrackProbs[AITrackDecision::Attack]) {
+	if (rnd < aiInfo_->TrackProbs[AITrackDecision::Attack])
+	{
 		AILog("[추격] 공격 시도\n");
-		m_pRunningActivity = m_ActivityMap[AIActivityType::Attack];
+		runningActivity_ = activityMap_[AIActivityType::Attack];
 		return;
 	}
 
 	AILog("[추격] 걷기 시도\n");
-	m_pRunningActivity = m_ActivityMap[AIActivityType::Walk];
+	runningActivity_ = activityMap_[AIActivityType::Walk];
 }
 
-void AIComponent::selectAngryActivity() {
-	const float fRnd = SGRandom::random_real(0.0f, 100.0f);
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIComponent::selectAngryActivity()
+{
+	const float rnd = SGRandom::random_real(0.0f, 100.0f);
 
-	if (fRnd < m_pAIInfo->AngryProbs[AIAngryDecision::Wander]) {
+	if (rnd < aiInfo_->AngryProbs[AIAngryDecision::Wander])
+	{
 		AILog("[분노] 배회 시도\n");
 		selectWanderActivity();
 		return;
 	}
 
-	if (fRnd < m_pAIInfo->AngryProbs[AIAngryDecision::Track]) {
+	if (rnd < aiInfo_->AngryProbs[AIAngryDecision::Track])
+	{
 		AILog("[분노] 추격 시도\n");
 		selectTrackActivity();
 		return;
 	}
 
 	AILog("[분노] 공격 시도\n");
-	m_eActivityState = AIState::Angry;
-	m_pRunningActivity = m_ActivityMap[AIActivityType::Attack];
+	activityState_ = AIState::Angry;
+	runningActivity_ = activityMap_[AIActivityType::Attack];
 }
 
-void AIComponent::runActivity(AIActivity* activity) {
-	DebugAssert(activity);
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIComponent::runActivity(AIActivity* _pActivity)
+{
+	DebugAssert(_pActivity);
 
-	if (m_pRunningActivity && m_pRunningActivity->isRunning()) {
-		m_pRunningActivity->stop();
+	if (runningActivity_ && runningActivity_->isRunning())
+	{
+		runningActivity_->stop();
 	}
 
-	m_pRunningActivity = activity;
+	runningActivity_ = _pActivity;
 
-	if (m_pRunningActivity)
-		m_pRunningActivity->run();
+	if (runningActivity_)
+		runningActivity_->run();
 }
 
-void AIComponent::runActivity(AIActivityType_t activityType) {
-	DebugAssertMsg(activityType >= 0 && activityType < AIActivityType::Max, "액티비티 타입이 올바르지 않습니다.");
+//////////////////////////////////////////////////////////////////////////////////////////
+void AIComponent::runActivity(AIActivityType_t _activityType)
+{
+	DebugAssertMsg(_activityType >= 0 && _activityType < AIActivityType::Max, "액티비티 타입이 올바르지 않습니다.");
 
-	if (m_pRunningActivity && m_pRunningActivity->isRunning()) {
-		m_pRunningActivity->stop();
+	if (runningActivity_ && runningActivity_->isRunning())
+	{
+		runningActivity_->stop();
 	}
 
-	m_pRunningActivity = m_ActivityMap[activityType];
+	runningActivity_ = activityMap_[_activityType];
 
-	if (m_pRunningActivity)
-		m_pRunningActivity->run();
+	if (runningActivity_)
+		runningActivity_->run();
 }
 
-SGVec2 AIComponent::getRandomSightPos() {
+//////////////////////////////////////////////////////////////////////////////////////////
+SGVec2 AIComponent::getRandomSightPos()
+{
 	SGVec2 curPos = m_pActor->getPositionRealCenter();
 	float randRad = SGRandom::random_real(0.0f, 2 * SG_PI);
 	SGVec2 dstPos{
-		curPos.x + m_pAIInfo->SightRadious * cosf(randRad),
-		curPos.y + m_pAIInfo->SightRadious * sinf(randRad)
+		curPos.x + aiInfo_->SightRadious * cosf(randRad),
+		curPos.y + aiInfo_->SightRadious * sinf(randRad)
 	};
 
 	return curPos.lerp(dstPos, SGRandom::random_real(SightRandomPosMinAlpha, 1.0f));
 }
 
-AIActivity* AIComponent::getRunningActivity() const {
-	return m_pRunningActivity;
+//////////////////////////////////////////////////////////////////////////////////////////
+AIActivity* AIComponent::getRunningActivity() const
+{
+	return runningActivity_;
 }

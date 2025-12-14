@@ -18,13 +18,16 @@ NS_JNET_BEGIN
 class UdpClientNetGroup : public NetGroup
 {
 public:
-	UdpClientNetGroup(const JCore::String& name);
+	UdpClientNetGroup(const JCore::String& _name);
 	~UdpClientNetGroup() override;
 
 	void Initialize() override;
-	UdpClient* Get() { return m_spUdpClient.GetPtr(); }
+	UdpClient* Get()
+	{
+		return udpClient_.GetPtr();
+	}
 private:
-	UdpClientWPtr m_spUdpClient;
+	UdpClientWPtr udpClient_;
 };
 
 NS_JNET_END

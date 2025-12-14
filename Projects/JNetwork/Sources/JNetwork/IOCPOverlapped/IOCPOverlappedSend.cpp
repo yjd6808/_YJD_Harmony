@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -9,29 +9,36 @@
 #include <JCore/Primitives/RefCountObjectPtr.h>
 
 NS_JNET_BEGIN
-
-IOCPOverlappedSend::IOCPOverlappedSend(Session* session, IOCP* iocp, IPacket* sentPacket)
-	: IOCPOverlapped(iocp, Type::Send)
-	, m_pSender(session)
-	, m_pSentPacket(sentPacket)
+//////////////////////////////////////////////////////////////////////////////////////////
+IOCPOverlappedSend::IOCPOverlappedSend(Session* _pSession, IOCP* _pIocp, IPacket* _pSentPacket)
+: IOCPOverlapped(_pIocp, Type::Send)
+, sender_(_pSession)
+, sentPacket_(_pSentPacket)
 {
-	m_pSender->AddPendingCount();
+	sender_->AddPendingCount();
 }
 
-IOCPOverlappedSend::~IOCPOverlappedSend() {
-	m_pSender->DecreasePendingCount();
+//////////////////////////////////////////////////////////////////////////////////////////
+IOCPOverlappedSend::~IOCPOverlappedSend()
+{
+	sender_->DecreasePendingCount();
 }
 
-void IOCPOverlappedSend::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {
-	JCORE_REF_COUNT_GUARD(m_pSentPacket, false);
-	const SOCKET hSentSock = m_pSender->SocketHandle();
-	Int32U uiErrorCode = 0;
+//////////////////////////////////////////////////////////////////////////////////////////
+void IOCPOverlappedSend::Process(BOOL _result, Int32UL _bytesTransferred, IOCPPostOrder* _pCompletionKey)
+{
+	(void)_pCompletionKey;
 
-	if (IsFailed(hSentSock, result, bytesTransffered, uiErrorCode) || bytesTransffered == 0) {
+	JCORE_REF_COUNT_GUARD(sentPacket_, false);
+	const SOCKET sentSocket = sender_->SocketHandle();
+	Int32U errorCode = 0;
+
+	if (IsFailed(sentSocket, _result, _bytesTransferred, errorCode) || _bytesTransferred == 0)
+	{
 		return;
 	}
 
-	m_pSender->Sent(m_pSentPacket, bytesTransffered);
+	sender_->Sent(sentPacket_, _bytesTransferred);
 }
 
 NS_JNET_END

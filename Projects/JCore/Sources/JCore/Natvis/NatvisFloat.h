@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <JCore/Namespace.h>
 
@@ -8,12 +8,35 @@
 NS_JC_BEGIN
 NS_DETAIL_BEGIN
 
-struct NatvisFloat6 { float f{}; };
-struct NatvisFloat5 { float f{}; };
-struct NatvisFloat4 { float f{}; };
-struct NatvisFloat3 { float f{}; };
-struct NatvisFloat2 { float f{}; };
-struct NatvisFloat1 { float f{}; };
+struct NatvisFloat6
+{
+	float f{};
+};
+
+struct NatvisFloat5
+{
+	float f{};
+};
+
+struct NatvisFloat4
+{
+	float f{};
+};
+
+struct NatvisFloat3
+{
+	float f{};
+};
+
+struct NatvisFloat2
+{
+	float f{};
+};
+
+struct NatvisFloat1
+{
+	float f{};
+};
 
 NS_DETAIL_END
 NS_JC_END

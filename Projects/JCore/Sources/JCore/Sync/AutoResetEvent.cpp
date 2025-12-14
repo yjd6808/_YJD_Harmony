@@ -11,11 +11,17 @@
 
 NS_JC_BEGIN
 
-AutoResetEvent::AutoResetEvent(AutoResetEvent&& other) noexcept : WaitHandle(Move(other)) {}
+//////////////////////////////////////////////////////////////////////////////////////////
+AutoResetEvent::AutoResetEvent(AutoResetEvent&& _other) noexcept
+	: WaitHandle(Move(_other))
+{
+}
 
-AutoResetEvent& AutoResetEvent::operator=(AutoResetEvent&& other) noexcept {
-    WaitHandle::operator=(Move(other));
-    return *this;
+//////////////////////////////////////////////////////////////////////////////////////////
+AutoResetEvent& AutoResetEvent::operator=(AutoResetEvent&& _other) noexcept
+{
+	WaitHandle::operator=(Move(_other));
+	return *this;
 }
 
 NS_JC_END

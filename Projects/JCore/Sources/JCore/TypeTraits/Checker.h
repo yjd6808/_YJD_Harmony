@@ -197,69 +197,69 @@ template <Int32U> struct StaticString;
 
 
 template <typename T>
-constexpr bool IsPointerType_v = Detail::IsPointerType<RemoveReference_t<T>>::Value;
+constexpr bool IsPointerType_v = Detail::IsPointerType<RemoveReference_t<T>>::VALUE;
 
 template <typename T>
-constexpr bool IsReferenceType_v = Detail::IsReferenceType<T>::Value;
+constexpr bool IsReferenceType_v = Detail::IsReferenceType<T>::VALUE;
 
 template <typename T>
-constexpr bool IsNaturalType_v = !Detail::IsReferenceType<T>::Value && !Detail::IsPointerType<T>::Value && !Detail::IsQulifiedType<T>::Value;
+constexpr bool IsNaturalType_v = !Detail::IsReferenceType<T>::VALUE && !Detail::IsPointerType<T>::VALUE && !Detail::IsQulifiedType<T>::VALUE;
 
 template <typename T>
-constexpr bool IsIntegerType_v = Detail::IsIntegerType<NaturalType_t<T>>::Value;
+constexpr bool IsIntegerType_v = Detail::IsIntegerType<NaturalType_t<T>>::VALUE;
 
 template <typename T>
-constexpr bool IsFloatType_v = Detail::IsFloatType<NaturalType_t<T>>::Value;
+constexpr bool IsFloatType_v = Detail::IsFloatType<NaturalType_t<T>>::VALUE;
 
 template <typename T>
 constexpr bool IsNumericType_v = IsIntegerType_v<T> && IsFloatType_v<T>;
 
 template <typename T>
-constexpr bool IsCharaterType_v = Detail::IsCharaterType<NaturalType_t<T>>::Value;
+constexpr bool IsCharaterType_v = Detail::IsCharaterType<NaturalType_t<T>>::VALUE;
 
 template <typename T>
-constexpr bool IsStringType_v = Detail::IsStringType<NaturalType_t<T>>::Value;
+constexpr bool IsStringType_v = Detail::IsStringType<NaturalType_t<T>>::VALUE;
 
 template <typename T>
-constexpr bool IsArrayType_v = Detail::IsArrayType<NaturalType_t<T>>::Value;
+constexpr bool IsArrayType_v = Detail::IsArrayType<NaturalType_t<T>>::VALUE;
 
 template <typename T>
-constexpr bool IsStaticArrayType_v = Detail::IsStaticArrayType<NaturalType_t<T>>::Value;
+constexpr bool IsStaticArrayType_v = Detail::IsStaticArrayType<NaturalType_t<T>>::VALUE;
 
 template <typename T>
-constexpr bool IsDyanmicArrayType_v = Detail::IsDynamicArrayType<NaturalType_t<T>>::Value;
+constexpr bool IsDyanmicArrayType_v = Detail::IsDynamicArrayType<NaturalType_t<T>>::VALUE;
 
 template <typename T>
-constexpr bool IsVoidType_v = Detail::IsVoid<NaturalType_t<T>>::Value;
+constexpr bool IsVoidType_v = Detail::IsVoid<NaturalType_t<T>>::VALUE;
 
 template <typename T>
-constexpr bool IsInt8_v = Detail::IsInt8<T>::Value;
+constexpr bool IsInt8_v = Detail::IsInt8<T>::VALUE;
 template <typename T>
-constexpr bool IsInt8U_v = Detail::IsInt8U<T>::Value;
+constexpr bool IsInt8U_v = Detail::IsInt8U<T>::VALUE;
 template <typename T>
-constexpr bool IsInt16_v = Detail::IsInt16<T>::Value;
+constexpr bool IsInt16_v = Detail::IsInt16<T>::VALUE;
 template <typename T>
-constexpr bool IsInt16U_v = Detail::IsInt16U<T>::Value;
+constexpr bool IsInt16U_v = Detail::IsInt16U<T>::VALUE;
 template <typename T>
-constexpr bool IsInt32_v = Detail::IsInt32<T>::Value;
+constexpr bool IsInt32_v = Detail::IsInt32<T>::VALUE;
 template <typename T>
-constexpr bool IsInt32U_v = Detail::IsInt32U<T>::Value;
+constexpr bool IsInt32U_v = Detail::IsInt32U<T>::VALUE;
 template <typename T>
-constexpr bool IsInt32L_v = Detail::IsInt32L<T>::Value;
+constexpr bool IsInt32L_v = Detail::IsInt32L<T>::VALUE;
 template <typename T>
-constexpr bool IsInt32UL_v = Detail::IsInt32UL<T>::Value;
+constexpr bool IsInt32UL_v = Detail::IsInt32UL<T>::VALUE;
 template <typename T>
-constexpr bool IsInt64_v = Detail::IsInt64<T>::Value;
+constexpr bool IsInt64_v = Detail::IsInt64<T>::VALUE;
 template <typename T>
-constexpr bool IsInt64U_v = Detail::IsInt64U<T>::Value;
+constexpr bool IsInt64U_v = Detail::IsInt64U<T>::VALUE;
 template <typename T>
-constexpr bool IsDouble_v = Detail::IsDouble<T>::Value;
+constexpr bool IsDouble_v = Detail::IsDouble<T>::VALUE;
 template <typename T>
-constexpr bool IsLDouble_v = Detail::IsLDouble<T>::Value;
+constexpr bool IsLDouble_v = Detail::IsLDouble<T>::VALUE;
 template <typename T>
-constexpr bool IsString_v = Detail::IsString<T>::Value;
+constexpr bool IsString_v = Detail::IsString<T>::VALUE;
 template <typename T>
-constexpr bool IsDateTime_v = Detail::IsDateTime<T>::Value;
+constexpr bool IsDateTime_v = Detail::IsDateTime<T>::VALUE;
 
 
 NS_JC_END

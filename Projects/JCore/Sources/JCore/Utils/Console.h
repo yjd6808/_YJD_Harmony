@@ -72,16 +72,20 @@ struct ConsoleKeyInfo
 	    : Key(ConsoleKey::None)
 		, KeyChar(NULL)
 		, Success(false) {}
-    ConsoleKeyInfo(ConsoleKey key, char keyChar)
-	    : Key(key)
-		, KeyChar(keyChar)
+
+    ConsoleKeyInfo(ConsoleKey _key, char _keyChar)
+	    : Key(_key)
+		, KeyChar(_keyChar)
 		, Success(true) {}
 
     ConsoleKey Key;
     char KeyChar;
     bool Success;           // 성공적으로 키입력을 받았는지.
 
-    operator bool() { return Success; }
+    operator bool()
+    {
+        return Success;
+    }
 };
 
 class Console
@@ -91,7 +95,7 @@ class Console
 
     inline static WinHandle     ms_hStdout = (WinHandle)-1;
     inline static WinHandle     ms_hStdin = (WinHandle)-1;
-    inline static ConsoleColor	ms_iDefaultColor = LightGray;
+    inline static ConsoleColor  ms_iDefaultColor = LightGray;
     inline static TLock         ms_ConsoleLock{};
     inline static bool          ms_UseConsoleLock{};
     inline static int           ms_iCursorPosX{};
@@ -105,105 +109,124 @@ public:
     static const char*   VTBackToken[ConsoleColor::Max];
 public:
     static bool Init();
-    static bool SetSize(int width, int height);
+    static bool SetSize(int _width, int _height);
 
-    static void SetColor(ConsoleColor color);
-    static void GetColor(ConsoleColor color);
+    static void SetColor(ConsoleColor _color);
+    static void GetColor(ConsoleColor _color);
     static ConsoleColor GetColor();
-    static ConsoleColor ConvertColorString(const String& colorString);
+    static ConsoleColor ConvertColorString(const String& _colorString);
 
     template <typename... TArgs>
-    static int Write(ConsoleColor color, char* format, TArgs&&... args) {
+    static int Write(ConsoleColor _color, char* _pFormat, TArgs&&... _args)
+    {
         TLockGuard guard(ms_ConsoleLock);
         ConsoleColor prevColor = ms_iDefaultColor;
-        SetColor(color);
-        int iRet = Write(format, Forward<TArgs>(args)...);
+        SetColor(_color);
+        int ret = Write(_pFormat, Forward<TArgs>(_args)...);
         SetColor(prevColor);
-        return iRet;
+        return ret;
     }
 
     template <Int32U FormatBufferLen, typename... TArgs>
-    static int Write(ConsoleColor color, const char(&format)[FormatBufferLen], TArgs&&... args) {
+    static int Write(ConsoleColor _color, const char(&_format)[FormatBufferLen], TArgs&&... _args)
+    {
         TLockGuard guard(ms_ConsoleLock);
         ConsoleColor prevColor = ms_iDefaultColor;
-        SetColor(color);
-        int iRet = Write(format, Forward<TArgs>(args)...);
+        SetColor(_color);
+        int ret = Write(_format, Forward<TArgs>(_args)...);
         SetColor(prevColor);
-        return iRet;
+        return ret;
     }
 
     template <typename... TArgs>
-    static int Write(char* format, TArgs&&... args) {
+    static int Write(char* _pFormat, TArgs&&... _args)
+    {
         char buf[TempBufferLen];
-        sprintf_s(buf, TempBufferLen, format);
+        sprintf_s(buf, TempBufferLen, _pFormat);
         TLockGuard guard(ms_ConsoleLock);
-        return printf_s(buf, Forward<TArgs>(args)...);
+        return printf_s(buf, Forward<TArgs>(_args)...);
     }
 
     template <Int32U FormatBufferLen, typename... TArgs>
-    static int Write(const char(&format)[FormatBufferLen], TArgs&&... args) {
+    static int Write(const char(&_format)[FormatBufferLen], TArgs&&... _args)
+    {
         TLockGuard guard(ms_ConsoleLock);
-        return printf_s(format, Forward<TArgs>(args)...);
+        return printf_s(_format, Forward<TArgs>(_args)...);
     }
 
     static String ReadLine();
-    static String ReadLine(const char* msg);
-    static int ReadLineBuffered(const char* msg, char* buff, int capacity);
+    static String ReadLine(const char* _pMsg);
+    static int ReadLineBuffered(const char* _pMsg, char* _pBuff, int _capacity);
 
-    static ConsoleKeyInfo ReadKey() { return ReadKey(nullptr); }
-    static ConsoleKeyInfo ReadKey(const char* msg);
+    static ConsoleKeyInfo ReadKey()
+    {
+        return ReadKey(nullptr);
+    }
+
+    static ConsoleKeyInfo ReadKey(const char* _pMsg);
 
     // 특정키를 입력받을때까지 체크
-    static ConsoleKeyInfo ReadKeyWhile(ConsoleKey key) { return ReadKeyWhile(nullptr, key); }
-    static ConsoleKeyInfo ReadKeyWhile(const char* msg, ConsoleKey key);
+    static ConsoleKeyInfo ReadKeyWhile(ConsoleKey _key)
+    {
+        return ReadKeyWhile(nullptr, _key);
+    }
+
+    static ConsoleKeyInfo ReadKeyWhile(const char* _pMsg, ConsoleKey _key);
 
     template <typename... TArgs>
-    static int WriteLine(ConsoleColor color, char* format, TArgs&&... args) {
+    static int WriteLine(ConsoleColor _color, char* _pFormat, TArgs&&... _args)
+    {
         TLockGuard guard(ms_ConsoleLock);
         ConsoleColor prevColor = ms_iDefaultColor;
-        SetColor(color);
-        WriteLine(format, Forward<TArgs>(args)...);
+        SetColor(_color);
+        WriteLine(_pFormat, Forward<TArgs>(_args)...);
         SetColor(prevColor);
         return 0;
     }
 
     template <Int32U FormatBufferLen, typename... TArgs>
-    static int WriteLine(ConsoleColor color, const char(&format)[FormatBufferLen], TArgs&&... args) {
+    static int WriteLine(ConsoleColor _color, const char(&_format)[FormatBufferLen], TArgs&&... _args)
+    {
         TLockGuard guard(ms_ConsoleLock);
         ConsoleColor prevColor = ms_iDefaultColor;
-        SetColor(color);
-        int iRet = WriteLine(format, Forward<TArgs>(args)...);
+        SetColor(_color);
+        int ret = WriteLine(_format, Forward<TArgs>(_args)...);
         SetColor(prevColor);
-        return iRet;
+        return ret;
     }
 
     template <typename... TArgs>
-    static int WriteLine(char* format, TArgs&&... args) {
-        if constexpr (sizeof...(args) == 0) {
-            printf("%s\n", format);
+    static int WriteLine(char* _pFormat, TArgs&&... _args)
+    {
+        if constexpr (sizeof...(_args) == 0)
+        {
+            printf("%s\n", _pFormat);
             return 0;
-        } else {
+        }
+        else
+        {
             char buf[TempBufferLen + 1];
-            sprintf_s(buf, TempBufferLen + 1, format);
+            sprintf_s(buf, TempBufferLen + 1, _pFormat);
             TLockGuard guard(ms_ConsoleLock);
-            return Math::Min(printf_s("\n"), printf_s(buf, Forward<TArgs>(args)...));
+            return Math::Min(printf_s("\n"), printf_s(buf, Forward<TArgs>(_args)...));
         }
     }
 
     template <Int32U FormatBufferLen, typename... TArgs>
-    static int WriteLine(const char(&format)[FormatBufferLen], TArgs&&... args) {
+    static int WriteLine(const char(&_format)[FormatBufferLen], TArgs&&... _args)
+    {
         TLockGuard guard(ms_ConsoleLock);
-        return Math::Min(printf_s("\n"), printf_s(format, Forward<TArgs>(args)...));
+        return Math::Min(printf_s("\n"), printf_s(_format, Forward<TArgs>(_args)...));
     }
 
     static void Clear();
-    static void SetCursorPosition(int x, int y);
+    static void SetCursorPosition(int _x, int _y);
     static Tuple<int, int> GetCursorPosition();
 
-    static bool SetOutputCodePage(int codePage);
+    static bool SetOutputCodePage(int _codePage);
 
 	// 출력 스트림에 문자를 입력해서 콘솔을 제어할 수 있도록 버철 터미널 옵션을 켜주자.
-    static bool SetEnableVTMode(bool enabled);
+    static bool SetEnableVTMode(bool _enabled);
     static int GetOutputCodePage();
 };
 

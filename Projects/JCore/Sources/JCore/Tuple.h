@@ -1,7 +1,7 @@
 ﻿/*
 	작성자 : 윤정도
 	간단한 튜플
-*/
+ */
 
 #pragma once
 
@@ -59,8 +59,9 @@ struct Tuple<T1, T2, T3, T4, T5>
 
 
 template <typename... Args>
-constexpr auto MakeTuple(Args&&... args) {
-	return Tuple<RemoveReference_t<Args>...> { Forward<Args>(args)... };
+constexpr auto MakeTuple(Args&&... _args)
+{
+	return Tuple<RemoveReference_t<Args>...>{ Forward<Args>(_args)... };
 }
 
 

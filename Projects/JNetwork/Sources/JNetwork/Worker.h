@@ -1,4 +1,4 @@
-﻿/*
+/*
  *	작성자 : 윤정도
  */
 
@@ -23,18 +23,25 @@ public:
 		eJoined
 	};
 
-	Worker() : m_eState(State::ePrepared) {}
+	Worker()
+		: state_(State::ePrepared)
+	{
+	}
+
 	virtual ~Worker() = default;
 
-	virtual void Run(void* param = nullptr) = 0;
-	virtual void JoinWait(JCore::WaitHandle* waitHandle) = 0;
+	virtual void Run(void* _pParam = nullptr) = 0;
+	virtual void JoinWait(JCore::WaitHandle* _pWaitHandle) = 0;
 	virtual void Join() = 0;
-	virtual void WorkerThread(void* param) = 0;
-	Int32U GetThreadId() { return m_Thread.GetId(); }
+	virtual void WorkerThread(void* _pParam) = 0;
+	Int32U GetThreadId()
+	{
+		return thread_.GetId();
+	}
+
 protected:
-	JCore::Thread m_Thread;
-	JCore::AtomicInt m_eState;
-	
+	JCore::Thread thread_;
+	JCore::AtomicInt state_;
 };
 
 using WorkerPtr = JCore::SharedPtr<Worker>;

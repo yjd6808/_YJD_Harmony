@@ -23,21 +23,21 @@ class Atomic
     using TInterlocked = Interlocked<T>;
     using TAtomic = Atomic<T>;
 public:
-    Atomic() : m_Value(T()) {}
-    Atomic(T value) : m_Value(value) {}
+    Atomic() : value_(T()) {}
+    Atomic(T _value) : value_(_value) {}
     template <typename U>
-    Atomic(Atomic<U>& other) : m_Value(other.Load()) {}
+    Atomic(Atomic<U>& _other) : value_(_other.Load()) {}
 
 
-    void Store(T operand) { Exchange(operand); }
-    T Load() const { return TInterlocked::Read(const_cast<T*>(&m_Value)); }
+    void Store(T _operand) { Exchange(_operand); }
+    T Load() const { return TInterlocked::Read(const_cast<T*>(&value_)); }
 
-    T Add(T operand) { return TInterlocked::Add(&m_Value, operand); }
+    T Add(T _operand) { return TInterlocked::Add(&value_, _operand); }
 
-    bool TryCompareExchange(T expected, T desired) { return CompareExchange(expected, desired); }
-    bool CompareExchange(T& expected, T desired) {
-        T before = expected;
-        T initial = TInterlocked::CompareExchange(&m_Value, expected, desired);
+    bool TryCompareExchange(T _expected, T _desired) { return CompareExchange(_expected, _desired); }
+    bool CompareExchange(T& _expected, T _desired) {
+        T before = _expected;
+        T initial = TInterlocked::CompareExchange(&value_, _expected, _desired);
 
         // 바꾸고자 하는 값이 초기값이랑 일치했다는건
         // 교환이 되기전 값과 일치한다는 것은
@@ -45,17 +45,17 @@ public:
         if (before == initial)
             return true;
 
-        expected = initial;
+        _expected = initial;
         return false;
     }
 
-    T ExchangeAdd(T operand) { return TInterlocked::ExchangeAdd(&m_Value, operand); }
-    T Exchange(T operand) { return TInterlocked::Exchange(&m_Value, operand); }
-    T Increment() { return TInterlocked::Increment(&m_Value); }
-    T Decrement() { return TInterlocked::Decrement(&m_Value); }
-    T Xor(T operand) { return TInterlocked::Xor(&m_Value, operand); }
-    T Or(T operand) { return TInterlocked::Or(&m_Value, operand); }
-    T And(T operand) { return TInterlocked::And(&m_Value, operand); }
+    T ExchangeAdd(T _operand) { return TInterlocked::ExchangeAdd(&value_, _operand); }
+    T Exchange(T _operand) { return TInterlocked::Exchange(&value_, _operand); }
+    T Increment() { return TInterlocked::Increment(&value_); }
+    T Decrement() { return TInterlocked::Decrement(&value_); }
+    T Xor(T _operand) { return TInterlocked::Xor(&value_, _operand); }
+    T Or(T _operand) { return TInterlocked::Or(&value_, _operand); }
+    T And(T _operand) { return TInterlocked::And(&value_, _operand); }
 
 
     // =====================================================================================
@@ -65,37 +65,37 @@ public:
 
     T operator++() { return Increment(); }
     T operator++(int) {
-        T iResult = Increment();
-        return --iResult;
+        T result = Increment();
+        return --result;
     }
     T operator--() { return Decrement(); }
     T operator--(int) {
-        T iResult = Decrement();
-        return ++iResult;
+        T result = Decrement();
+        return ++result;
     }
 
-    TAtomic& operator=(T other) { Exchange(other); return *this; }
-    T operator+=(T other) { return ExchangeAdd(other) + other; }
-    T operator-=(T other) { return ExchangeAdd(other * -1) - other; }
-    T operator|(T other) { return Load() | other; }
-    T operator|=(T other) { return Or(other) | other; }
-    T operator&(T other) { return Load() & other; }
-    T operator&=(T other) { return And(other) & other; }
-    T operator^(T other) { return Load() ^ other; }
-    T operator^=(T other) { return Xor(other) ^ other; }
-    T operator/(T other) { return Load() / other; }
-    T operator*(T other) { return Load() * other; }
-    T operator%(T other) { return Load() % other; }
-    T operator+(T other) { return Load() + other; }
-    T operator-(T other) { return Load() - other; }
-    T operator==(T other) { return Load() == other; }
-    T operator!=(T other) { return Load() != other; }
-    T operator>(T other) { return Load() > other; }
-    T operator<(T other) { return Load() < other; }
-    T operator>=(T other) { return Load() >= other; }
-    T operator<=(T other) { return Load() <= other; }
+    TAtomic& operator=(T _other) { Exchange(_other); return *this; }
+    T operator+=(T _other) { return ExchangeAdd(_other) + _other; }
+    T operator-=(T _other) { return ExchangeAdd(_other * -1) - _other; }
+    T operator|(T _other) { return Load() | _other; }
+    T operator|=(T _other) { return Or(_other) | _other; }
+    T operator&(T _other) { return Load() & _other; }
+    T operator&=(T _other) { return And(_other) & _other; }
+    T operator^(T _other) { return Load() ^ _other; }
+    T operator^=(T _other) { return Xor(_other) ^ _other; }
+    T operator/(T _other) { return Load() / _other; }
+    T operator*(T _other) { return Load() * _other; }
+    T operator%(T _other) { return Load() % _other; }
+    T operator+(T _other) { return Load() + _other; }
+    T operator-(T _other) { return Load() - _other; }
+    T operator==(T _other) { return Load() == _other; }
+    T operator!=(T _other) { return Load() != _other; }
+    T operator>(T _other) { return Load() > _other; }
+    T operator<(T _other) { return Load() < _other; }
+    T operator>=(T _other) { return Load() >= _other; }
+    T operator<=(T _other) { return Load() <= _other; }
 private:
-    T m_Value;
+    T value_;
 
     template<typename> friend class Atomic;
 };
@@ -106,33 +106,33 @@ class Atomic<T*>
     using TAtomic = Atomic<T*>;
     using TInterlocked = Interlocked<T*>;
 public:
-    Atomic() : m_Value(nullptr) {}
+    Atomic() : value_(nullptr) {}
     template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
-    Atomic(U ptr) : m_Value(ptr) {}
+    Atomic(U _pPtr) : value_(_pPtr) {}
 
     template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
-    void Store(U operand) { Exchange(operand); }
+    void Store(U _pOperand) { Exchange(_pOperand); }
 
-    T* Load() const { return TInterlocked::Read(const_cast<T**>(&m_Value)); }
-    T* Add(int operand) {  return TInterlocked::Add(&m_Value, operand); }
+    T* Load() const { return TInterlocked::Read(const_cast<T**>(&value_)); }
+    T* Add(int _operand) {  return TInterlocked::Add(&value_, _operand); }
 
     template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
-    bool TryCompareExchange(U expected, U desired) { return CompareExchange(expected, desired); }
+    bool TryCompareExchange(U _pExpected, U _pDesired) { return CompareExchange(_pExpected, _pDesired); }
     template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
-    bool CompareExchange(U& expected, U desired) {
-        T* before = expected;
-        T* initial = TInterlocked::CompareExchange(&m_Value, expected, desired);
+    bool CompareExchange(U& _pExpected, U _pDesired) {
+        T* pBefore = _pExpected;
+        T* pInitial = TInterlocked::CompareExchange(&value_, _pExpected, _pDesired);
 
-        if (before == initial)
+        if (pBefore == pInitial)
             return true;
 
-        expected = initial;
+        _pExpected = pInitial;
         return false;
     }
 
-    T* ExchangeAdd(int operand) { return TInterlocked::ExchangeAdd(&m_Value, operand); }
+    T* ExchangeAdd(int _operand) { return TInterlocked::ExchangeAdd(&value_, _operand); }
     template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
-    T* Exchange(U operand) { return TInterlocked::Exchange(&m_Value, operand); }
+    T* Exchange(U _pOperand) { return TInterlocked::Exchange(&value_, _pOperand); }
 
 
     // =====================================================================================
@@ -142,28 +142,28 @@ public:
 
     T* operator++() { return Add(1); }
     T* operator++(int) {
-        T iResult = Add(1);
-        return --iResult;
+        T result = Add(1);
+        return --result;
     }
     T* operator--() { return Add(-1); }
     T* operator--(int) {
-        T* iResult = Add(-1);
-        return ++iResult;
+        T* pResult = Add(-1);
+        return ++pResult;
     }
 
     template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
-    TAtomic& operator=(U other) { Exchange(other); return *this; }
-    T* operator+=(int other) { return ExchangeAdd(other) + (sizeof(T) * other); }
-    T* operator-=(int other) { return ExchangeAdd(other * -1) - (sizeof(T) * other); }
+    TAtomic& operator=(U _pOther) { Exchange(_pOther); return *this; }
+    T* operator+=(int _other) { return ExchangeAdd(_other) + (sizeof(T) * _other); }
+    T* operator-=(int _other) { return ExchangeAdd(_other * -1) - (sizeof(T) * _other); }
 
     template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
-    bool operator==(U other) { return Load() == other; }
+    bool operator==(U _pOther) { return Load() == _pOther; }
     template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
-    bool operator!=(U other) { return Load() != other; }
+    bool operator!=(U _pOther) { return Load() != _pOther; }
 
-    T& operator[](const int idx) { return Load()[idx]; }
+    T& operator[](const int _idx) { return Load()[_idx]; }
 private:
-    T* m_Value;
+    T* value_;
 };
 
 template <>
@@ -172,24 +172,24 @@ class Atomic<bool>
     using TAtomic = Atomic<bool>;
     using TInterlocked = Interlocked<bool>;
 public:
-    Atomic() : m_Value(false) {}
-    Atomic(bool value) : m_Value(value) {}
-    Atomic(TAtomic& other) : m_Value(other.Load()) {}
+    Atomic() : value_(false) {}
+    Atomic(bool _value) : value_(_value) {}
+    Atomic(TAtomic& _other) : value_(_other.Load()) {}
 
-    void Store(bool operand) { Exchange(operand); }
-    bool Load() const { return TInterlocked::Read(const_cast<bool*>(&m_Value)); }
+    void Store(bool _operand) { Exchange(_operand); }
+    bool Load() const { return TInterlocked::Read(const_cast<bool*>(&value_)); }
 
-    bool Exchange(bool operand) { return TInterlocked::Exchange(&m_Value, operand); }
+    bool Exchange(bool _operand) { return TInterlocked::Exchange(&value_, _operand); }
 
-    bool TryCompareExchange(bool expected, bool desired) { return CompareExchange(expected, desired); }
-    bool CompareExchange(bool& expected, bool desired) {
-        bool before = expected;
-        bool initial = TInterlocked::CompareExchange(&m_Value, expected, desired);
+    bool TryCompareExchange(bool _expected, bool _desired) { return CompareExchange(_expected, _desired); }
+    bool CompareExchange(bool& _expected, bool _desired) {
+        bool before = _expected;
+        bool initial = TInterlocked::CompareExchange(&value_, _expected, _desired);
 
         if (before == initial)
             return true;
 
-        expected = initial;
+        _expected = initial;
         return false;
     }
 
@@ -198,11 +198,11 @@ public:
     // =====================================================================================
     operator bool() const { return Load(); }
 
-    TAtomic& operator=(bool other) { Exchange(other); return *this; }
-    bool operator==(bool other) { return Load() == other; }
-    bool operator!=(bool other) { return Load() != other; }
+    TAtomic& operator=(bool _other) { Exchange(_other); return *this; }
+    bool operator==(bool _other) { return Load() == _other; }
+    bool operator!=(bool _other) { return Load() != _other; }
 private:
-    bool m_Value;
+    bool value_;
 };
 
 template <>
@@ -211,24 +211,24 @@ class Atomic<void*>
     using TAtomic = Atomic<void*>;
     using TInterlocked = Interlocked<void*>;
 public:
-    Atomic() : m_Value(nullptr) {}
-    Atomic(void* value) : m_Value(value) {}
-    Atomic(TAtomic& other) : m_Value(other.Load()) {}
+    Atomic() : value_(nullptr) {}
+    Atomic(void* _pValue) : value_(_pValue) {}
+    Atomic(TAtomic& _other) : value_(_other.Load()) {}
 
-    void Store(void* operand) { Exchange(operand); }
-    void* Load() const { return TInterlocked::Read(const_cast<void**>(&m_Value)); }
+    void Store(void* _pOperand) { Exchange(_pOperand); }
+    void* Load() const { return TInterlocked::Read(const_cast<void**>(&value_)); }
 
-    void* Exchange(void* operand) { return TInterlocked::Exchange(&m_Value, operand); }
+    void* Exchange(void* _pOperand) { return TInterlocked::Exchange(&value_, _pOperand); }
 
-    bool TryCompareExchange(void* expected, void* desired) { return CompareExchange(expected, desired); }
-    bool CompareExchange(void*& expected, void* desired) {
-        void* before = expected;
-        void* initial = TInterlocked::CompareExchange(&m_Value, expected, desired);
+    bool TryCompareExchange(void* _pExpected, void* _pDesired) { return CompareExchange(_pExpected, _pDesired); }
+    bool CompareExchange(void*& _pExpected, void* _pDesired) {
+        void* pBefore = _pExpected;
+        void* pInitial = TInterlocked::CompareExchange(&value_, _pExpected, _pDesired);
 
-        if (before == initial)
+        if (pBefore == pInitial)
             return true;
 
-        expected = initial;
+        _pExpected = pInitial;
         return false;
     }
 
@@ -237,11 +237,11 @@ public:
     // =====================================================================================
     operator bool() const { return Load(); }
 
-    TAtomic& operator=(void* other) { Exchange(other); return *this; }
-    bool operator==(void* other) { return Load() == other; }
-    bool operator!=(void* other) { return Load() != other; }
+    TAtomic& operator=(void* _pOther) { Exchange(_pOther); return *this; }
+    bool operator==(void* _pOther) { return Load() == _pOther; }
+    bool operator!=(void* _pOther) { return Load() != _pOther; }
 private:
-    void* m_Value;
+    void* value_;
 };
 
 using AtomicInt64    = Atomic<Int64>;

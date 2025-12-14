@@ -16,55 +16,69 @@ NS_JC_BEGIN
 
 template class LockGuard<RecursiveLock>;
 
-RecursiveLock::RecursiveLock() :
-	m_uiLockedThreadId(0),
-	m_iRecursion(0) {}
+//////////////////////////////////////////////////////////////////////////////////////////
+RecursiveLock::RecursiveLock()
+	: m_lockedThreadId(0)
+	, m_recursion(0)
+{
+}
 
-void RecursiveLock::Lock() {
-	const Int32U m_uiId = WinApi::GetCurrentThreadId();
+//////////////////////////////////////////////////////////////////////////////////////////
+void RecursiveLock::Lock()
+{
+	const Int32U lockedThreadId = WinApi::GetCurrentThreadId();
 
-    // 일반 변수를 여러 쓰레드에서 접근해서 undefined behavior라고 생각할 수 있지만
-    // 동시에 여러 쓰레드가 Lock()을 통과하더라도 결국 m_Lock.Lock()에서 하나의 쓰레드만 통과 가능하므로 문제가 안된다.
-	if (m_uiLockedThreadId != m_uiId) {     
-		m_Lock.Lock();
-		m_uiLockedThreadId = m_uiId;
-		m_iRecursion = 1;
+	// 일반 변수를 여러 쓰레드에서 접근해서 undefined behavior라고 생각할 수 있지만
+	// 동시에 여러 쓰레드가 Lock()을 통과하더라도 결국 m_lock.Lock()에서 하나의 쓰레드만 통과 가능하므로 문제가 안된다.
+	if (m_lockedThreadId != lockedThreadId)
+	{
+		m_lock.Lock();
+		m_lockedThreadId = lockedThreadId;
+		m_recursion = 1;
 		return;
 	}
 
-	++m_iRecursion;
+	++m_recursion;
 }
 
-bool RecursiveLock::TryLock() {
-	const Int32U m_uiId = WinApi::GetCurrentThreadId();
+//////////////////////////////////////////////////////////////////////////////////////////
+bool RecursiveLock::TryLock()
+{
+	const Int32U lockedThreadId = WinApi::GetCurrentThreadId();
 
-	if (m_Lock.TryLock()) {
-		m_uiLockedThreadId = m_uiId;
-		m_iRecursion = 1;
+	if (m_lock.TryLock())
+	{
+		m_lockedThreadId = lockedThreadId;
+		m_recursion = 1;
 		return true;
 	}
 
-	if (m_uiLockedThreadId == m_uiId) {
-		++m_iRecursion;
+	if (m_lockedThreadId == lockedThreadId)
+	{
+		++m_recursion;
 		return true;
 	}
 
 	return false;
 }
 
-void RecursiveLock::Unlock() {
-	const Int32U m_uiId = WinApi::GetCurrentThreadId();
-	DebugAssert(m_uiLockedThreadId == m_uiId);
-    DebugAssert(m_iRecursion > 0);
+//////////////////////////////////////////////////////////////////////////////////////////
+void RecursiveLock::Unlock()
+{
+	const Int32U lockedThreadId = WinApi::GetCurrentThreadId();
+	DebugAssert(m_lockedThreadId == lockedThreadId);
+	DebugAssert(m_recursion > 0);
 
-	if ((--m_iRecursion) == 0)
+	if ((--m_recursion) == 0)
 	{
-		m_uiLockedThreadId = 0;
-		m_Lock.Unlock();
+		m_lockedThreadId = 0;
+		m_lock.Unlock();
 	}
 }
 
-bool RecursiveLock::IsLocked() {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool RecursiveLock::IsLocked()
+{
 	throw NotImplementedException("RecursiveLock::IsLocked()");
 }
 

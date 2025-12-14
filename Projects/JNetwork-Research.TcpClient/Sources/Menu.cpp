@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/11/2023 10:32:50 PM
  * =====================
@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include "Menu.h"
-
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
 #include <JNetwork/Research/TcpClientNetGroup.h>
 #include <JNetwork/Research/Command.h>
 #include <JNetwork/Research/Config.h>
+
+#include "Menu.h"
 
 USING_NS_JNET;
 USING_NS_STD;
@@ -22,102 +22,111 @@ USING_NS_JC;
 
 extern TcpClientNetGroup* pClientGroup;
 
-static void SendMsg(TcpClient* client);
+static void SendMsg(TcpClient* _pClient);
 
-void ConnectLogin() {
+void ConnectLogin()
+{
 	// pClientGroup->GetLogin()->ConnectAsync(ServerLoginTcpAddr);
-	pClientGroup->GetLogin()->Connect(ServerLoginTcpAddr, 1000);
+	pClientGroup->GetLogin()->Connect(IPv4EndPoint{ ServerLoginTcpAddr }, 1000);
 }
 
-void ConnectChannel() {
+void ConnectChannel()
+{
 	// pClientGroup->GetChannel()->ConnectAsync(ServerChannelTcpAddr);
-	pClientGroup->GetLogin()->Connect(ServerChannelTcpAddr, 1000);
+	pClientGroup->GetLogin()->Connect(IPv4EndPoint{ ServerChannelTcpAddr }, 1000);
 }
 
-void ConnectGame() {
+void ConnectGame()
+{
 	// pClientGroup->GetGame()->ConnectAsync(ServerGameTcpddr);
-	pClientGroup->GetLogin()->Connect(ServerGameTcpAddr, 1000);
+	pClientGroup->GetLogin()->Connect(IPv4EndPoint{ ServerGameTcpAddr }, 1000);
 }
 
-void SendLogin() {
+void SendLogin()
+{
 	SendMsg(pClientGroup->GetLogin());
 }
 
-void SendChannel() {
+void SendChannel()
+{
 	SendMsg(pClientGroup->GetChannel());
 }
 
-void SendGame() {
+void SendGame()
+{
 	SendMsg(pClientGroup->GetGame());
 }
 
-void DisconnectLogin() {
+void DisconnectLogin()
+{
 	pClientGroup->GetLogin()->Disconnect();
 }
 
-void DisconnectChannel() {
+void DisconnectChannel()
+{
 	pClientGroup->GetChannel()->Disconnect();
 }
 
-void DisconnectGame() {
+void DisconnectGame()
+{
 	pClientGroup->GetGame()->Disconnect();
 }
 
 
-static void SendMsg(TcpClient* client) {
-	StaticString<512> s;
+static void SendMsg(TcpClient* _pClient)
+{
+	StaticString<512> inputString;
 	cout << "보낼 메시지 입력: ";
 
-	if (!(cin >> s.Source).good()) {
+	if (!(cin >> inputString.Source).good())
+	{
 		cout << "제대로 입력해주세요.\n";
 		return;
 	}
 
-	int length = s.LengthWithNull();
-	
+	int length = inputString.LengthWithNull();
 
 	// 클라이언트 송신 버퍼를 활용한 전송
-	StaticMessage& msg1 =client->SendAlloc<StaticMessage>();
-	DynamicMessage& msg2 = client->SendAlloc<DynamicMessage>(length);
+	StaticMessage& msg1 = _pClient->SendAlloc<StaticMessage>();
+	DynamicMessage& msg2 = _pClient->SendAlloc<DynamicMessage>(length);
 
-	StringUtil::CopyUnsafe(msg1.Msg.Source, s.Source);
-	StringUtil::CopyUnsafe(msg2.Msg(), s.Source);
+	StringUtil::CopyUnsafe(msg1.msg_.Source, inputString.Source);
+	StringUtil::CopyUnsafe(msg2.Msg(), inputString.Source);
 
 	// 다이나믹 패킷을 활용한 전송
-	auto packet1 = dbg_new DynamicPacket<DynamicMessage, DynamicMessage, DynamicMessage>(length, length, length);
-	auto msg3 = packet1->Get<0>();
-	auto msg4 = packet1->Get<1>();
-	auto msg5 = packet1->Get<2>();
+	auto pPacket1 = dbg_new DynamicPacket<DynamicMessage, DynamicMessage, DynamicMessage>(length, length, length);
+	auto pMsg3 = pPacket1->Get<0>();
+	auto pMsg4 = pPacket1->Get<1>();
+	auto pMsg5 = pPacket1->Get<2>();
 
-	StringUtil::CopyUnsafe(msg3->Msg(), s.Source);
-	StringUtil::CopyUnsafe(msg4->Msg(), s.Source);
-	StringUtil::CopyUnsafe(msg5->Msg(), s.Source);
+	StringUtil::CopyUnsafe(pMsg3->Msg(), inputString.Source);
+	StringUtil::CopyUnsafe(pMsg4->Msg(), inputString.Source);
+	StringUtil::CopyUnsafe(pMsg5->Msg(), inputString.Source);
 
 	// 커맨드 버퍼를 활용한 전송 테스트
-	CommandBufferPtr buffer = CommandBuffer::Create(client->GetBufferAllocator());
-	DynamicMessage& msg6 = buffer->Alloc<DynamicMessage>(length);
-	DynamicMessage& msg7 = buffer->Alloc<DynamicMessage>(length);
-	DynamicMessage& msg8 = buffer->Alloc<DynamicMessage>(length);
+	CommandBufferPtr pBuffer = CommandBuffer::Create(_pClient->GetBufferAllocator());
+	DynamicMessage& msg6 = pBuffer->Alloc<DynamicMessage>(length);
+	DynamicMessage& msg7 = pBuffer->Alloc<DynamicMessage>(length);
+	DynamicMessage& msg8 = pBuffer->Alloc<DynamicMessage>(length);
 
-	StringUtil::CopyUnsafe(msg6.Msg(), s.Source);
-	StringUtil::CopyUnsafe(msg7.Msg(), s.Source);
-	StringUtil::CopyUnsafe(msg8.Msg(), s.Source);
+	StringUtil::CopyUnsafe(msg6.Msg(), inputString.Source);
+	StringUtil::CopyUnsafe(msg7.Msg(), inputString.Source);
+	StringUtil::CopyUnsafe(msg8.Msg(), inputString.Source);
 
 	// 싱글 패킷 전송 (스태틱, 다이나믹 커맨드 아무거나 가능)
 	// auto msg9 = dbg_new SinglePacket<DynamicMessage>(); assert 발사: 다이나믹 커맨드는 명시적으로 무조건 사이즈 전달
-	auto msg9 = dbg_new SinglePacket<DynamicMessage>(length);
-	StringUtil::CopyUnsafe(msg9->Cmd.Msg(), s.Source);
+	auto pMsg9 = dbg_new SinglePacket<DynamicMessage>(length);
+	StringUtil::CopyUnsafe(pMsg9->cmd_.Msg(), inputString.Source);
 
 	// 스태틱 패킷 전송
 	auto pPacket = dbg_new StaticPacket<StaticMessage>();
-	StaticMessage* arg1 = pPacket->Get<0>();
-	arg1->Msg.SetString(s);
-	auto g = pPacket->GetWSABuf();
-	
+	StaticMessage* pArg1 = pPacket->Get<0>();
+	pArg1->msg_.SetString(inputString);
+	auto wsaBuf = pPacket->GetWSABuf();
 
-	client->SendAsync(pPacket);
-	client->SendAsync(msg9);
-	client->SendAsync(buffer);
-	client->SendAsync(packet1);
-	client->FlushSendBuffer();
+	_pClient->SendAsync(pPacket);
+	_pClient->SendAsync(pMsg9);
+	_pClient->SendAsync(pBuffer);
+	_pClient->SendAsync(pPacket1);
+	_pClient->FlushSendBuffer();
 }

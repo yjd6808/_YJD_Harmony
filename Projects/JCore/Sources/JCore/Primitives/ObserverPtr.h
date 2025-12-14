@@ -111,10 +111,10 @@ protected:
 		m_pCounter->Counter++;
 	}
 
-	void OwnerMoveToOwner(CVoidOwner& owner);
-	void WatcherCopyToOwner(const CVoidOwner& owner);
-	void WatcherCopyToWatcher(const CVoidWatcher& watcher);
-	void WatcherMoveToWatcher(CVoidWatcher& watcher);
+	void OwnerMoveToOwner(CVoidOwner& _owner);
+	void WatcherCopyToOwner(const CVoidOwner& _owner);
+	void WatcherCopyToWatcher(const CVoidWatcher& _watcher);
+	void WatcherMoveToWatcher(CVoidWatcher& _watcher);
 protected:
 	bool m_bNoDelete = false;
 	void* m_pPointer = nullptr;
@@ -132,15 +132,15 @@ protected:
 class CVoidOwner : public VoidBase 
 {
 public:
-	CVoidOwner(void* ptr, bool nodelete = false) {
-		m_pPointer = ptr;
+	CVoidOwner(void* _pPtr, bool _noDelete = false) {
+		m_pPointer = _pPtr;
 		m_pCounter = dbg_new VoidPointerCounter();
-		m_bNoDelete = nodelete;
+		m_bNoDelete = _noDelete;
 	}
 
 	CVoidOwner(const CVoidOwner&) = delete;
-	CVoidOwner(CVoidOwner&& owner) noexcept {
-		OwnerMoveToOwner(owner);
+	CVoidOwner(CVoidOwner&& _owner) noexcept {
+		OwnerMoveToOwner(_owner);
 	}
 
 	~CVoidOwner() override {
@@ -157,8 +157,8 @@ public:
 	}
 
 	void operator=(const CVoidOwner&) = delete;
-	void operator=(CVoidOwner&& owner) noexcept {
-		OwnerMoveToOwner(owner);
+	void operator=(CVoidOwner&& _owner) noexcept {
+		OwnerMoveToOwner(_owner);
 	}
 };
 
@@ -173,38 +173,38 @@ class CVoidWatcher : public VoidBase
 public:
 	CVoidWatcher() = default;
 
-	CVoidWatcher(CVoidOwner& owner) {
-		WatcherCopyToOwner(owner);
+	CVoidWatcher(CVoidOwner& _owner) {
+		WatcherCopyToOwner(_owner);
 	}
 
-	CVoidWatcher(CVoidWatcher& watcher) {
-		WatcherCopyToWatcher(watcher);
+	CVoidWatcher(CVoidWatcher& _watcher) {
+		WatcherCopyToWatcher(_watcher);
 	}
 
-	CVoidWatcher(CVoidWatcher&& watcher) noexcept {
-		WatcherMoveToWatcher(watcher);
+	CVoidWatcher(CVoidWatcher&& _watcher) noexcept {
+		WatcherMoveToWatcher(_watcher);
 	}
 
-	CVoidWatcher(CVoidOwner&& monitor) = delete;
+	CVoidWatcher(CVoidOwner&& _monitor) = delete;
 
 	~CVoidWatcher() override {
 		SubtractWatcherCount();
 	}
 
-	CVoidWatcher& operator=(CVoidOwner& owner) {
-		WatcherCopyToOwner(owner);
+	CVoidWatcher& operator=(CVoidOwner& _owner) {
+		WatcherCopyToOwner(_owner);
 		return *this;
 	}
 
-	CVoidWatcher& operator=(CVoidOwner&& owner) = delete;
+	CVoidWatcher& operator=(CVoidOwner&& _owner) = delete;
 
-	CVoidWatcher& operator=(CVoidWatcher& watcher) {
-		WatcherCopyToWatcher(watcher);
+	CVoidWatcher& operator=(CVoidWatcher& _watcher) {
+		WatcherCopyToWatcher(_watcher);
 		return *this;
 	}
 
-	CVoidWatcher& operator=(CVoidWatcher&& watcher) noexcept {
-		WatcherMoveToWatcher(watcher);
+	CVoidWatcher& operator=(CVoidWatcher&& _watcher) noexcept {
+		WatcherMoveToWatcher(_watcher);
 		return *this;
 	}
 };
@@ -360,37 +360,37 @@ protected:
 	}
 
 	template <typename TI>	// 함수 정보 제공을 위해 일부러 달음
-	static void ThrowIfDynamicCastingFailed(void* ptr) {
-		if (ptr == nullptr) {
+	static void ThrowIfDynamicCastingFailed(void* _pPtr) {
+		if (_pPtr == nullptr) {
 			throw NullPointerException("다이나믹 캐스팅에 실패하였습니다.");
 		}
 	}
 
 	template <typename U>
-	static void ThrowIfOwnerNotExist(Owner<U>& owner) {
-		if (!owner.Exist()) {
+	static void ThrowIfOwnerNotExist(Owner<U>& _owner) {
+		if (!_owner.Exist()) {
 			throw InvalidArgumentException("전달받은 오너의 정보가 비어있습니다.");
 		}
 	}
 
 	template <typename U, Cast CastCheck>
-	void OwnerMoveToOwner(Owner<U>& owner) {
+	void OwnerMoveToOwner(Owner<U>& _owner) {
 		T* pTemp = nullptr;
 
 		if constexpr (CastCheck == Cast::DynamicCastable) {
-			pTemp = dynamic_cast<T*>(owner.m_pPointer);
+			pTemp = dynamic_cast<T*>(_owner.m_pPointer);
 			ThrowIfDynamicCastingFailed<T*>(pTemp);
 		} else {
-			pTemp = static_cast<T*>(owner.m_pPointer);
+			pTemp = static_cast<T*>(_owner.m_pPointer);
 		}
 		DeletePointer();
 
 		m_pPointer = pTemp;
-		m_pCounter = owner.m_pCounter;
-		m_bMaked = owner.m_bMaked;
+		m_pCounter = _owner.m_pCounter;
+		m_bMaked = _owner.m_bMaked;
 
-		owner.m_pPointer = nullptr;
-		owner.m_pCounter = nullptr;
+		_owner.m_pPointer = nullptr;
+		_owner.m_pCounter = nullptr;
 	}
 	
 	void WatcherMakeEmpty() {
@@ -401,56 +401,56 @@ protected:
 	}
 
 	template <typename U, Cast CastCheck>
-	void WatcherCopyToOwner(Owner<U>& owner) {
+	void WatcherCopyToOwner(Owner<U>& _owner) {
 		T* pTemp = nullptr;
 		if constexpr (CastCheck == Cast::DynamicCastable) {
-			pTemp = dynamic_cast<T*>(owner.m_pPointer);
+			pTemp = dynamic_cast<T*>(_owner.m_pPointer);
 			ThrowIfDynamicCastingFailed<T*>(pTemp);
 		} else {
-			pTemp = static_cast<T*>(owner.m_pPointer);
+			pTemp = static_cast<T*>(_owner.m_pPointer);
 		}
 		SubtractWatcherCount();
 
 		m_pPointer = pTemp;
-		m_pCounter = owner.m_pCounter;
+		m_pCounter = _owner.m_pCounter;
 
 		AddWatcherCount();
 	}
 
 
 	template <typename U, Cast CastCheck>
-	void WatcherCopyToWatcher(Watcher<U>& watcher) {
+	void WatcherCopyToWatcher(Watcher<U>& _watcher) {
 		T* pTemp = nullptr;
 		if constexpr (CastCheck == Cast::DynamicCastable) {
-			pTemp = dynamic_cast<T*>(watcher.m_pPointer);
+			pTemp = dynamic_cast<T*>(_watcher.m_pPointer);
 			ThrowIfDynamicCastingFailed<T*>(pTemp);
 		} else {
-			pTemp = static_cast<T*>(watcher.m_pPointer);
+			pTemp = static_cast<T*>(_watcher.m_pPointer);
 		}
 		SubtractWatcherCount();
 
 		m_pPointer = pTemp;
-		m_pCounter = watcher.m_pCounter;
+		m_pCounter = _watcher.m_pCounter;
 
 		AddWatcherCount();
 	}
 
 	template <typename U, Cast CastCheck>
-	void WatcherMoveToWatcher(Watcher<U>& watcher) {
+	void WatcherMoveToWatcher(Watcher<U>& _watcher) {
 		T* pTemp = nullptr;
 		if constexpr (CastCheck == Cast::DynamicCastable) {
-			pTemp = dynamic_cast<T*>(watcher.m_pPointer);
+			pTemp = dynamic_cast<T*>(_watcher.m_pPointer);
 			ThrowIfDynamicCastingFailed<T*>(pTemp);
 		} else {
-			pTemp = static_cast<T*>(watcher.m_pPointer);
+			pTemp = static_cast<T*>(_watcher.m_pPointer);
 		}
 		SubtractWatcherCount();
 
 		m_pPointer = pTemp;
-		m_pCounter = watcher.m_pCounter;
+		m_pCounter = _watcher.m_pCounter;
 
-		watcher.m_pPointer = nullptr;
-		watcher.m_pCounter = nullptr;
+		_watcher.m_pPointer = nullptr;
+		_watcher.m_pCounter = nullptr;
 	}
 protected:
 	T* m_pPointer = nullptr;
@@ -474,14 +474,14 @@ class Owner : public Base<T>
 
 
 public:
-	Owner(T* ptr, PtrCounter* counter) {
-		this->m_pPointer = ptr;
-		this->m_pCounter = counter;
+	Owner(T* _pPtr, PtrCounter* _pCounter) {
+		this->m_pPointer = _pPtr;
+		this->m_pCounter = _pCounter;
 		this->m_bMaked = true;
 	}
 
-	Owner(T* ptr) {
-		this->m_pPointer = ptr;
+	Owner(T* _pPtr) {
+		this->m_pPointer = _pPtr;
 		this->m_pCounter = dbg_new PtrCounter();
 		this->m_bMaked = false;
 	}
@@ -490,9 +490,9 @@ public:
 	Owner(const Owner<U>&) = delete;
 
 	template <typename U>
-	Owner(Owner<U>&& owner) {
-		this->ThrowIfOwnerNotExist(owner);
-		MoveToOwner(owner);
+	Owner(Owner<U>&& _owner) {
+		this->ThrowIfOwnerNotExist(_owner);
+		MoveToOwner(_owner);
 	}
 
 	~Owner() override {
@@ -511,19 +511,19 @@ public:
 	void operator=(const TOwner&) = delete;
 
 	template <typename U>
-	TOwner& operator=(Owner<U>&& owner) {
-		this->ThrowIfOwnerNotExist(owner);
-		MoveToOwner(owner);
+	TOwner& operator=(Owner<U>&& _owner) {
+		this->ThrowIfOwnerNotExist(_owner);
+		MoveToOwner(_owner);
 		return *this;
 	}
 
 
 	template <typename U>
-	void MoveToOwner(Owner<U>& owner) {
+	void MoveToOwner(Owner<U>& _owner) {
 		if constexpr (Detail::IsStaticCastable<T, U>()) {
-			this->OwnerMoveToOwner<U, TBase::Cast::StaticCastable>(owner);
+			this->OwnerMoveToOwner<U, TBase::Cast::StaticCastable>(_owner);
 		} else if constexpr (Detail::IsDynamicCastable<T, U>()) {
-			this->OwnerMoveToOwner<U, TBase::Cast::DynamicCastable>(owner);
+			this->OwnerMoveToOwner<U, TBase::Cast::DynamicCastable>(_owner);
 		} else {
 			DebugAssertMsg(false, "... cannot convert each other"); // static_assert(false, "cannot convert each other");
 		}
@@ -545,31 +545,31 @@ public:
 	Watcher(std::nullptr_t) {}
 
 	template <typename U>
-	Watcher(Owner<U>& owner) {
-		CopyToOwner(owner);
+	Watcher(Owner<U>& _owner) {
+		CopyToOwner(_owner);
 	}
 
 	template <typename U>
-	Watcher(Watcher<U>& watcher) {
-		CopyToWatcher(watcher);
+	Watcher(Watcher<U>& _watcher) {
+		CopyToWatcher(_watcher);
 	}
 
 	template <typename U>
-	Watcher(Watcher<U>&& watcher) {
-		MoveToWatcher(watcher);
+	Watcher(Watcher<U>&& _watcher) {
+		MoveToWatcher(_watcher);
 	}
 
 	template <typename U>
-	Watcher(Owner<U>&& monitor) = delete;
+	Watcher(Owner<U>&& _monitor) = delete;
 
 	~Watcher() override {
 		this->SubtractWatcherCount();
 	}
 
 	template <typename U>
-	TWatcher& operator=(Owner<U>& owner) {
-		this->ThrowIfOwnerNotExist(owner);
-		CopyToOwner(owner);
+	TWatcher& operator=(Owner<U>& _owner) {
+		this->ThrowIfOwnerNotExist(_owner);
+		CopyToOwner(_owner);
 		return *this;
 	}
 
@@ -581,57 +581,57 @@ public:
 	}
 
 	template <typename U>
-	TWatcher& operator=(Watcher<U>& watcher) {
-		CopyToWatcher(watcher);
+	TWatcher& operator=(Watcher<U>& _watcher) {
+		CopyToWatcher(_watcher);
 		return *this;
 	}
 
 
 	template <typename U>
-	TWatcher& operator=(Watcher<U>&& watcher) {
-		MoveToWatcher(watcher);
+	TWatcher& operator=(Watcher<U>&& _watcher) {
+		MoveToWatcher(_watcher);
 		return *this;
 	}
 
 
 	template <typename U>
-	void CopyToOwner(Owner<U>& owner) {
+	void CopyToOwner(Owner<U>& _owner) {
 		if constexpr (Detail::IsStaticCastable<T, U>()) {
-			this->WatcherCopyToOwner<U, TBase::Cast::StaticCastable>(owner);
+			this->WatcherCopyToOwner<U, TBase::Cast::StaticCastable>(_owner);
 		} else if constexpr (Detail::IsDynamicCastable<T, U>()) {
-			this->WatcherCopyToOwner<U, TBase::Cast::DynamicCastable>(owner);
+			this->WatcherCopyToOwner<U, TBase::Cast::DynamicCastable>(_owner);
 		} else {
 			DebugAssertMsg(false, "... cannot convert each other"); //static_assert(false, "cannot convert each other");
 		}
 	}
 	 
 	template <typename U>
-	void CopyToWatcher(Watcher<U>& watcher) {
-		if (!watcher.Exist()) {
+	void CopyToWatcher(Watcher<U>& _watcher) {
+		if (!_watcher.Exist()) {
 			this->WatcherMakeEmpty();
 			return;
 		}
 
 		if constexpr (Detail::IsStaticCastable<T, U>()) {
-			this->WatcherCopyToWatcher<U, TBase::Cast::StaticCastable>(watcher);
+			this->WatcherCopyToWatcher<U, TBase::Cast::StaticCastable>(_watcher);
 		} else if constexpr (Detail::IsDynamicCastable<T, U>()) {
-			this->WatcherCopyToWatcher<U, TBase::Cast::DynamicCastable>(watcher);
+			this->WatcherCopyToWatcher<U, TBase::Cast::DynamicCastable>(_watcher);
 		} else {
 			DebugAssertMsg(false, "... cannot convert each other");
 		}
 	}
 
 	template <typename U>
-	void MoveToWatcher(Watcher<U>& watcher) {
-		if (!watcher.Exist()) {
+	void MoveToWatcher(Watcher<U>& _watcher) {
+		if (!_watcher.Exist()) {
 			this->WatcherMakeEmpty();
 			return;
 		}
 
 		if constexpr (Detail::IsStaticCastable<T, U>()) {
-			this->WatcherMoveToWatcher<U, TBase::Cast::StaticCastable>(watcher);
+			this->WatcherMoveToWatcher<U, TBase::Cast::StaticCastable>(_watcher);
 		} else if constexpr (Detail::IsDynamicCastable<T, U>()) {
-			this->WatcherMoveToWatcher<U, TBase::Cast::DynamicCastable>(watcher);
+			this->WatcherMoveToWatcher<U, TBase::Cast::DynamicCastable>(_watcher);
 		} else {
 			DebugAssertMsg(false, "... cannot convert each other");
 		}
@@ -642,65 +642,65 @@ public:
 
 // 값 타입으로 반환
 template <typename T, typename... Args>
-constexpr decltype(auto) MakeOwner(Args&&... args) {
-	OwnerObject<T>* object = dbg_new OwnerObject<T>(Forward<Args>(args)...);
-	Owner<T> owner(object->Address(), object);
+constexpr decltype(auto) MakeOwner(Args&&... _args) {
+	OwnerObject<T>* pObject = dbg_new OwnerObject<T>(Forward<Args>(_args)...);
+	Owner<T> owner(pObject->Address(), pObject);
 	return owner;
 }
 
 
 // 포인터 타입으로 반환
 template <typename T, typename... Args>
-constexpr decltype(auto) MakeOwnerPointer(Args&&... args) {
-	OwnerObject<T>* object = dbg_new OwnerObject<T>(Forward<Args>(args)...);
-	Owner<T>* owner = dbg_new Owner<T>(object->Address(), object);
-	return owner;
+constexpr decltype(auto) MakeOwnerPointer(Args&&... _args) {
+	OwnerObject<T>* pObject = dbg_new OwnerObject<T>(Forward<Args>(_args)...);
+	Owner<T>* pOwner = dbg_new Owner<T>(pObject->Address(), pObject);
+	return pOwner;
 }
 
 
 // 글로벌 비교 오퍼레이터
 template <typename T, typename U>
-bool operator==(const Watcher<T>& lhs, const Owner<U>& rhs) {
-	return lhs.GetRaw() == rhs.GetRaw();
+bool operator==(const Watcher<T>& _lhs, const Owner<U>& _rhs) {
+	return _lhs.GetRaw() == _rhs.GetRaw();
 }
 
 template <typename T, typename U>
-bool operator==(const Owner<T>& lhs, const Watcher<U>& rhs) {
-	return lhs.GetRaw() == rhs.GetRaw();
+bool operator==(const Owner<T>& _lhs, const Watcher<U>& _rhs) {
+	return _lhs.GetRaw() == _rhs.GetRaw();
 }
 
 template <typename T, typename U>
-bool operator==(const Watcher<T>& lhs, const Watcher<U>& rhs) {
-	return lhs.GetRaw() == rhs.GetRaw();
+bool operator==(const Watcher<T>& _lhs, const Watcher<U>& _rhs) {
+	return _lhs.GetRaw() == _rhs.GetRaw();
 }
 
 template <typename T, typename U>
-bool operator==(std::nullptr_t, const Watcher<T>& rhs) {
-	return nullptr == rhs.GetRaw();
+bool operator==(std::nullptr_t, const Watcher<T>& _rhs) {
+	return nullptr == _rhs.GetRaw();
 }
 
 template <typename T, typename U>
-bool operator==(const Watcher<T>& lhs, std::nullptr_t) {
-	return lhs.GetRaw() == nullptr;
+bool operator==(const Watcher<T>& _lhs, std::nullptr_t) {
+	return _lhs.GetRaw() == nullptr;
 }
 
 template <typename T, typename U>
-bool operator==(std::nullptr_t, const Owner<T>& rhs) {
-	return nullptr == rhs.GetRaw();
+bool operator==(std::nullptr_t, const Owner<T>& _rhs) {
+	return nullptr == _rhs.GetRaw();
 }
 
 template <typename T, typename U>
-bool operator==(const Owner<T>& lhs, std::nullptr_t) {
-	return lhs.GetRaw() == nullptr;
+bool operator==(const Owner<T>& _lhs, std::nullptr_t) {
+	return _lhs.GetRaw() == nullptr;
 }
 
 
 // 글로벌 비교 오퍼레이터
-bool operator==(const CVoidOwner& lhs, const CVoidWatcher& rhs);
-bool operator==(const CVoidWatcher& lhs, const CVoidOwner& rhs);
-bool operator==(const CVoidWatcher& lhs, const CVoidWatcher& rhs);
-bool operator==(const CVoidWatcher& lhs, std::nullptr_t);
-bool operator==(std::nullptr_t, const CVoidWatcher& rhs);
+bool operator==(const CVoidOwner& _lhs, const CVoidWatcher& _rhs);
+bool operator==(const CVoidWatcher& _lhs, const CVoidOwner& _rhs);
+bool operator==(const CVoidWatcher& _lhs, const CVoidWatcher& _rhs);
+bool operator==(const CVoidWatcher& _lhs, std::nullptr_t);
+bool operator==(std::nullptr_t, const CVoidWatcher& _rhs);
 
 
 NS_JC_END

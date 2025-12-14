@@ -20,8 +20,8 @@ struct Range
 	TNumeric Min;	// Inclusive
 	TNumeric Max;	// Exclusive
 
-	constexpr bool Contain(TNumeric val) const {
-		return val >= Min && val < Max;
+	constexpr bool Contain(TNumeric _val) const {
+		return _val >= Min && _val < Max;
 	}
 
 	constexpr TNumeric Average() const {

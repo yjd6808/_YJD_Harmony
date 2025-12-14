@@ -23,43 +23,43 @@ struct StaticString
 	char Source[Size] = "";
 
 	template <Int32U ParamSize>
-	constexpr bool operator==(const char(&str)[ParamSize]) const {
-		return StringUtil::CTCompare(Source, str) == 0;
+	constexpr bool operator==(const char(&_str)[ParamSize]) const {
+		return StringUtil::CTCompare(Source, _str) == 0;
 	}
 
 	template <Int32U ParamSize>
-	constexpr bool operator!=(const char(&str)[ParamSize]) const {
-		return StringUtil::CTCompare(Source, str) != 0;
+	constexpr bool operator!=(const char(&_str)[ParamSize]) const {
+		return StringUtil::CTCompare(Source, _str) != 0;
 	}
 
-	constexpr bool operator==(const char* str) const {
-		return StringUtil::CTCompare(Source, str) == 0;
+	constexpr bool operator==(const char* _pStr) const {
+		return StringUtil::CTCompare(Source, _pStr) == 0;
 	}
 
-	constexpr bool operator!=(const char* str) const {
-		return StringUtil::CTCompare(Source, str) != 0;
+	constexpr bool operator!=(const char* _pStr) const {
+		return StringUtil::CTCompare(Source, _pStr) != 0;
 	}
 
-	constexpr bool operator==(const String& str) const {
-		return StringUtil::CTCompare(Source, str.Source()) == 0;
+	constexpr bool operator==(const String& _str) const {
+		return StringUtil::CTCompare(Source, _str.Source()) == 0;
 	}
 
-	constexpr bool operator!=(const String& str) const {
-		return StringUtil::CTCompare(Source, str.Source()) != 0;
-	}
-
-	template <Int32U ParamSize>
-	constexpr bool operator==(const StaticString<ParamSize>& str) const {
-		return Compare(str) == 0;
+	constexpr bool operator!=(const String& _str) const {
+		return StringUtil::CTCompare(Source, _str.Source()) != 0;
 	}
 
 	template <Int32U ParamSize>
-	constexpr bool operator!=(const StaticString<ParamSize>& str) const {
-		return Compare(str) != 0;
+	constexpr bool operator==(const StaticString<ParamSize>& _str) const {
+		return Compare(_str) == 0;
 	}
 
-	constexpr char& operator[](const int idx) const {
-		return *const_cast<char*>(Source + idx);
+	template <Int32U ParamSize>
+	constexpr bool operator!=(const StaticString<ParamSize>& _str) const {
+		return Compare(_str) != 0;
+	}
+
+	constexpr char& operator[](const int _index) const {
+		return *const_cast<char*>(Source + _index);
 	}
 
 	constexpr int Length() const {
@@ -74,35 +74,35 @@ struct StaticString
 		return Size;
 	}
 
-	constexpr int Compare(const char* str) const {
-		return StringUtil::CTCompare(Source, str);
+	constexpr int Compare(const char* _pStr) const {
+		return StringUtil::CTCompare(Source, _pStr);
 	}
 
 	template <Int32U ParamSize>
-	constexpr int Compare(const StaticString<ParamSize>& str) const {
-		return StringUtil::CTCompare(Source, str.Source);
+	constexpr int Compare(const StaticString<ParamSize>& _str) const {
+		return StringUtil::CTCompare(Source, _str.Source);
 	}
 
 	template <Int32U ParamSize>
-	constexpr void CopyFrom(const char(&str)[ParamSize]) const {
-		CopyFrom(0, StringUtil::CTLength2(str) - 1, str);
+	constexpr void CopyFrom(const char(&_str)[ParamSize]) const {
+		CopyFrom(0, StringUtil::CTLength2(_str) - 1, _str);
 	}
 
 	template <Int32U ParamSize>
-	constexpr void CopyFrom(int startIdx, int endIdx, const char(&str)[ParamSize]) const {
-		const int iThisLen = Size - 1;
-		int iCopyCount = 0;
+	constexpr void CopyFrom(int _startIndex, int _endIndex, const char(&_str)[ParamSize]) const {
+		const int thisLength = Size - 1;
+		int copyCount = 0;
 
 		char* pDst = (char*)Source;
-		char* pSrc = (char*)str;
-		pSrc += startIdx;
+		char* pSrc = (char*)_str;
+		pSrc += _startIndex;
 
-		for (int i = startIdx; i <= endIdx && iCopyCount < iThisLen; i++) {
+		for (int i = _startIndex; i <= _endIndex && copyCount < thisLength; i++) {
 			*pDst = *pSrc;
 
 			++pDst;
 			++pSrc;
-			iCopyCount++;
+			copyCount++;
 		}
 
 		*pDst = '\0';
@@ -128,18 +128,18 @@ struct StaticString
 	}
 
 	template <Int32U ParamSize>
-	constexpr bool EndWith(const char(&str)[ParamSize]) const {
-		const int iStrLen = ParamSize - 1;
-		const int iThisLen = Length();
+	constexpr bool EndWith(const char(&_str)[ParamSize]) const {
+		const int strLength = ParamSize - 1;
+		const int thisLength = Length();
 
-		if (iStrLen > iThisLen) {
+		if (strLength > thisLength) {
 			return false;
 		}
 
-		char* pStr = (char*)str + iStrLen  - 1;
-		char* pThis = (char*)Source + iThisLen - 1;
+		char* pStr = (char*)_str + strLength  - 1;
+		char* pThis = (char*)Source + thisLength - 1;
 
-		for (int i = 0; i < iStrLen; i++) {
+		for (int i = 0; i < strLength; i++) {
 			if (*pStr != *pThis) {
 				return false;
 			}

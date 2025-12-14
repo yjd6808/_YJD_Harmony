@@ -20,7 +20,7 @@ void ListenerClientCommon::OnReceived(Session* session, ICommand* recvCmd) {
 	ListenerClientBase::OnReceived(session, recvCmd);
 
 	if (Parser && !Parser->RunCommand(session, recvCmd)) {
-		const Cmd_t id = recvCmd->GetCommand();
+		const Cmd_t id = recvCmd->GetId();
 		const char* szName = Core::CommandNameDictionary.Get(id);
 
 		_LogWarn_("%c %s %sB %s(%d) Parse Faliled",

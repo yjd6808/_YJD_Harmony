@@ -16,15 +16,15 @@ NS_JNET_BEGIN
 class ClientListener : public ClientEventListener
 {
 public:
-	ClientListener(const JCore::String& name);
+	ClientListener(const JCore::String& _name);
 protected:
-	void OnConnected(Session* session) override;
-	void OnDisconnected(Session* session, Int32U errorCode) override;
-	void OnSent(Session* session, IPacket* sentPacket, Int32UL sentBytes) override;
-	void OnReceived(Session* session, ICommand* cmd) override;
-	void OnConnectFailed(Session* session, Int32U errorMessage) override;
+	void OnConnected(Session* _pSession) override;
+	void OnDisconnected(Session* _pSession, Int32U _errorCode) override;
+	void OnSent(Session* _pSession, IPacket* _pSentPacket, Int32UL _sentBytes) override;
+	void OnReceived(Session* _pSession, ICommand* _pCommand) override;
+	void OnConnectFailed(Session* _pSession, Int32U _errorMessage) override;
 private:
-	JCore::String m_Name;
+	JCore::String name_;
 };
 
 

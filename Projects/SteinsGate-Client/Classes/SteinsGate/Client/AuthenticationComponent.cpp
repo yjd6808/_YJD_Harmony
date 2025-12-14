@@ -10,33 +10,47 @@
 #include "GameCoreHeader.h"
 #include "AuthenticationComponent.h"
 
-AuthenticationComponent::AuthenticationComponent() {
+//////////////////////////////////////////////////////////////////////////////////////////
+AuthenticationComponent::AuthenticationComponent()
+{
 	AuthenticationComponent::initialize();
 }
 
-AuthenticationComponent::~AuthenticationComponent() {}
-
-
-void AuthenticationComponent::initialize() {
-	m_AccountData.Clear();
-
-	m_eState = AuthenticationState::Initialized;
-	m_iSerial = InvalidValue_v;
+//////////////////////////////////////////////////////////////////////////////////////////
+AuthenticationComponent::~AuthenticationComponent()
+{
 }
 
-void AuthenticationComponent::setAccountIdPass(const char* id, const char* pass) {
-	m_AccountData.Id.SetString(id);
-	m_AccountData.Pass.SetString(pass);
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationComponent::initialize()
+{
+	accountData_.Clear();
+
+	state_ = AuthenticationState::Initialized;
+	serial_ = InvalidValue_v;
 }
 
-void AuthenticationComponent::setLastServer(GameServerType_t lastServer) {
-	m_AccountData.LastServer = lastServer;
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationComponent::setAccountIdPass(const char* _pId, const char* _pPass)
+{
+	accountData_.Id.SetString(_pId);
+	accountData_.Pass.SetString(_pPass);
 }
 
-void AuthenticationComponent::setState(AuthenticationState_t state) {
-	m_eState = state;
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationComponent::setLastServer(GameServerType_t _lastServer)
+{
+	accountData_.LastServer = _lastServer;
 }
 
-void AuthenticationComponent::setSerial(AuthenticationSerial_t serial) {
-	m_iSerial = serial;
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationComponent::setState(AuthenticationState_t _state)
+{
+	state_ = _state;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationComponent::setSerial(AuthenticationSerial_t _serial)
+{
+	serial_ = _serial;
 }

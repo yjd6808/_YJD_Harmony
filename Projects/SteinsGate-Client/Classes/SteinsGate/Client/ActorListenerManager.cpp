@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/2/2023 4:44:55 PM
  * =====================
@@ -21,60 +21,81 @@
 // 프로젝틸 리스너
 #include <SteinsGate/Client/CharacterListener_Gunner.h>
 
-ActorListenerManager::ActorListenerManager() {}
+//////////////////////////////////////////////////////////////////////////////////////////
 
-ActorListenerManager::~ActorListenerManager() {
-	m_hCharacterListenerMap.ForEachValueDelete();
-	m_hMonsterListenerMap.ForEachValueDelete();
-	m_hProjectileListenerMap.ForEachValueDelete();
+ActorListenerManager::ActorListenerManager()
+{
 }
 
-void ActorListenerManager::init() {
+//////////////////////////////////////////////////////////////////////////////////////////
+
+ActorListenerManager::~ActorListenerManager()
+{
+	characterListenerMap_.ForEachValueDelete();
+	monsterListenerMap_.ForEachValueDelete();
+	projectileListenerMap_.ForEachValueDelete();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+void ActorListenerManager::init()
+{
 	// 캐릭터 리스너 등록
-	m_hCharacterListenerMap.Insert(DEF_CHARACTER_LISTENER_GUNNER, dbg_new CharacterListener_Gunner::Factory);
+	characterListenerMap_.Insert(DEF_CHARACTER_LISTENER_GUNNER, dbg_new CharacterListener_Gunner::Factory);
 
 	// 몬스터 리스너 등록
-	m_hMonsterListenerMap.Insert(DEF_MONSTER_LISTENER_NORMAL_GOBLIN, dbg_new MonsterListener_NormalGoblin::Factory);
-	m_hMonsterListenerMap.Insert(DEF_MONSTER_LISTENER_DARK_GOBLIN, dbg_new MonsterListener_DarkGoblin::Factory);
+	monsterListenerMap_.Insert(DEF_MONSTER_LISTENER_NORMAL_GOBLIN, dbg_new MonsterListener_NormalGoblin::Factory);
+	monsterListenerMap_.Insert(DEF_MONSTER_LISTENER_DARK_GOBLIN, dbg_new MonsterListener_DarkGoblin::Factory);
 
 	// 프로젝틸 리스너 등록
-	m_hProjectileListenerMap.Insert(DEF_PROJECTILE_LISTENER_GUNNER_BULLET, dbg_new ProjectileListener_GunnerBullet::Factory);
+	projectileListenerMap_.Insert(DEF_PROJECTILE_LISTENER_GUNNER_BULLET, dbg_new ProjectileListener_GunnerBullet::Factory);
 }
 
-CharacterListener* ActorListenerManager::createCharacterListener(Character* character) {
-	const int iCharacterCode = character->getCode();
-	CharacterListener::IFactory** ppFactory = m_hCharacterListenerMap.Find(iCharacterCode);
+//////////////////////////////////////////////////////////////////////////////////////////
 
-	if (ppFactory == nullptr) {
+CharacterListener* ActorListenerManager::createCharacterListener(Character* _pCharacter)
+{
+	const int characterCode = _pCharacter->getCode();
+	CharacterListener::IFactory** pFactory = characterListenerMap_.Find(characterCode);
+
+	if (pFactory == nullptr)
+	{
 		DebugAssertMsg(false, "해당 %sListener를 찾지 못했습니다.", ActorType::Name[ActorType::Character]);
 		return nullptr;
 	}
 
-	return (*ppFactory)->create(character);
+	return (*pFactory)->create(_pCharacter);
 }
 
-MonsterListener* ActorListenerManager::createMonsterListener(Monster* monster) {
-	const int iMonsterCode = monster->getCode();
-	MonsterListener::IFactory** ppFactory = m_hMonsterListenerMap.Find(iMonsterCode);
+//////////////////////////////////////////////////////////////////////////////////////////
 
-	if (ppFactory == nullptr) {
+MonsterListener* ActorListenerManager::createMonsterListener(Monster* _pMonster)
+{
+	const int monsterCode = _pMonster->getCode();
+	MonsterListener::IFactory** pFactory = monsterListenerMap_.Find(monsterCode);
+
+	if (pFactory == nullptr)
+	{
 		DebugAssertMsg(false, "해당 %sListener를 찾지 못했습니다.", ActorType::Name[ActorType::Monster]);
 		return nullptr;
 	}
 
-	return (*ppFactory)->create(monster);
+	return (*pFactory)->create(_pMonster);
 }
 
-ProjectileListener* ActorListenerManager::createProjectileListener(Projectile* projectile, Actor* spawner /* = nullptr */) {
-	const int iProjectileListenerCode = projectile->getListenerCode();
-	ProjectileListener::IFactory** ppFactory = m_hProjectileListenerMap.Find(iProjectileListenerCode);
+//////////////////////////////////////////////////////////////////////////////////////////
 
-	if (ppFactory == nullptr) {
+ProjectileListener* ActorListenerManager::createProjectileListener(Projectile* _pProjectile, Actor* _pSpawner /* = nullptr */)
+{
+	const int projectileListenerCode = _pProjectile->getListenerCode();
+	ProjectileListener::IFactory** pFactory = projectileListenerMap_.Find(projectileListenerCode);
+
+	if (pFactory == nullptr)
+	{
 		DebugAssertMsg(false, "해당 %sListener를 찾지 못했습니다.", ActorType::Name[ActorType::Projectile]);
 		return nullptr;
 	}
 
-	return (*ppFactory)->create(projectile, spawner);
+	return (*pFactory)->create(_pProjectile, _pSpawner);
 }
-
 

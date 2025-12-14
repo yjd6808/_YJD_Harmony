@@ -26,8 +26,8 @@ public:
 	bool TryLock() override;
 	bool IsLocked() override;
 private:
-	WinApi::CriticalSection m_CriticalSection;
-	Atomic<int> m_hOwnThreadId;
+	WinApi::CriticalSection criticalSection_;
+	Atomic<int> ownedThreadId_;
 
 	friend class ConditionVariable;
 };

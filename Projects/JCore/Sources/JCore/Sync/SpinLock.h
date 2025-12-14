@@ -25,7 +25,7 @@ public:
 	bool TryLock() override;
 	bool IsLocked() override;
 private:
-	Atomic<bool> m_bLocked;
+	Atomic<bool> isLocked_;
 };
 
 using SpinLockGuard = LockGuard<SpinLock>;

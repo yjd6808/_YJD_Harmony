@@ -18,21 +18,30 @@ NS_JC_BEGIN
 
 template <typename T>
 class SharedPtr;
+
 class FileStream : public Stream
 {
 public:
-	FileStream(const String& path, FileAccess access, FileMode mode);
+	FileStream(const String& _path, FileAccess _access, FileMode _mode);
 	~FileStream() override;
 
-	FileMode GetMode() { return m_eMode;  }
-	FileAccess GetAccess() { return m_eAccess; }
+	FileMode GetMode()
+	{
+		return m_eMode;
+	}
 
-	int Read(JCORE_OUT Byte* bytes, int offset, int len) override;
-	void Write(const Byte* bytes, int offset, int len) override;
-	void Seek(int offset, Origin origin = Origin::eBegin) override;
+	FileAccess GetAccess()
+	{
+		return m_eAccess;
+	}
+
+	int Read(JCORE_OUT Byte* _pBytes, int _offset, int _len) override;
+	void Write(const Byte* _pBytes, int _offset, int _len) override;
+	void Seek(int _offset, Origin _origin = Origin::eBegin) override;
 	bool Flush() override;
 	void Close() override;
 	bool IsClosed() override;
+
 protected:
 	FileAccess m_eAccess;
 	FileMode m_eMode;

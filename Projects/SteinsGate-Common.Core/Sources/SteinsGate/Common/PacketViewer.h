@@ -15,7 +15,7 @@ namespace JCore
 
 namespace JNetwork
 {
-	struct IPacket;
+	class IPacket;
 }
 
 struct PacketViewer

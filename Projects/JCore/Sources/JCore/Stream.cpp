@@ -115,9 +115,9 @@ Int64U Stream::ReadInt64U()
 }
 
 
-void Stream::WriteString(const String& str, bool withNull)
+void Stream::WriteString(const String& _str, bool _withNull)
 {
-	Write((Byte*)str.Source(), withNull ? str.Length() + 1 : str.Length());
+	Write((Byte*)_str.Source(), _withNull ? _str.Length() + 1 : _str.Length());
 }
 
 

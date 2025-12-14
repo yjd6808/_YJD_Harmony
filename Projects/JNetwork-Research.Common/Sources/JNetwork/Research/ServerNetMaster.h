@@ -16,12 +16,10 @@
 #include <JNetwork/Research/ClientListener.h>
 
 
-
 NS_JNET_BEGIN
-
-#define ServerLoginChannelGroup		1
-#define ServerGameGroup				2
-#define ServerUdpGroup				3
+#define SERVER_LOGIN_CHANNEL_GROUP		1
+#define SERVER_GAME_GROUP				2
+#define SERVER_UDP_GROUP				3
 
 class ServerNetMaster : public NetMaster
 {
@@ -37,11 +35,19 @@ public:
 
 	void Initialize() override;
 
-	TcpServer* GetLogin() { return m_spLoginServer.GetPtr(); }
-	TcpServer* GetChannel() { return m_spChannelServer.GetPtr(); }
+	TcpServer* GetLogin()
+	{
+		return loginServer_.GetPtr();
+	}
+
+	TcpServer* GetChannel()
+	{
+		return channelServer_.GetPtr();
+	}
+
 private:
-	TcpServerWPtr m_spLoginServer;
-	TcpServerWPtr m_spChannelServer;
+	TcpServerWPtr loginServer_;
+	TcpServerWPtr channelServer_;
 };
 
 class ServerGameNetGroup : public NetGroup
@@ -52,9 +58,13 @@ public:
 
 	void Initialize() override;
 
-	TcpServer* GetGame() { return m_spGameServer.GetPtr(); }
+	TcpServer* GetGame()
+	{
+		return gameServer_.GetPtr();
+	}
+
 private:
-	TcpServerWPtr m_spGameServer;
+	TcpServerWPtr gameServer_;
 };
 
 class ServerUdpNetGroup : public NetGroup
@@ -65,16 +75,26 @@ public:
 
 	void Initialize() override;
 
-	UdpClient* GetLogin() { return m_spLoginUdpClient.GetPtr(); }
-	UdpClient* GetChannel() { return m_spChannelUdpClient.GetPtr(); }
-	UdpClient* GetGame() { return m_spGameUdpClient.GetPtr(); }
+	UdpClient* GetLogin()
+	{
+		return loginUdpClient_.GetPtr();
+	}
+
+	UdpClient* GetChannel()
+	{
+		return channelUdpClient_.GetPtr();
+	}
+
+	UdpClient* GetGame()
+	{
+		return gameUdpClient_.GetPtr();
+	}
 
 private:
-	UdpClientWPtr m_spLoginUdpClient;
-	UdpClientWPtr m_spChannelUdpClient;
-	UdpClientWPtr m_spGameUdpClient;
+	UdpClientWPtr loginUdpClient_;
+	UdpClientWPtr channelUdpClient_;
+	UdpClientWPtr gameUdpClient_;
 };
-
 
 
 NS_JNET_END

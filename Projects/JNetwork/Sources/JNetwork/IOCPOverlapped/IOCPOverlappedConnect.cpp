@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -7,38 +7,49 @@
 #include <JNetwork/Host/TcpServer.h>
 
 NS_JNET_BEGIN
-
-IOCPOverlappedConnect::IOCPOverlappedConnect(TcpClient* client, IOCP* iocp, IPacket* sentPacket) :
-	IOCPOverlapped(iocp, Type::Connect),
-	m_pClient(client),
-	m_pSentPacket(sentPacket) {
-	m_pClient->AddPendingCount();
-}
-IOCPOverlappedConnect::~IOCPOverlappedConnect() {
-	m_pClient->DecreasePendingCount();
+//////////////////////////////////////////////////////////////////////////////////////////
+IOCPOverlappedConnect::IOCPOverlappedConnect(TcpClient* _pClient, IOCP* _pIocp, IPacket* _pSentPacket)
+: IOCPOverlapped(_pIocp, Type::Connect)
+, client_(_pClient)
+, sentPacket_(_pSentPacket)
+{
+	client_->AddPendingCount();
 }
 
-void IOCPOverlappedConnect::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {
-	const SOCKET hConnectedSock = m_pClient->SocketHandle();
-	Int32U uiErrorCode = 0;
-	if (IsFailed(hConnectedSock, result, bytesTransffered, uiErrorCode)) {
-		m_pClient->Disconnect();
-		m_pClient->ConnectFailed(uiErrorCode);
+//////////////////////////////////////////////////////////////////////////////////////////
+IOCPOverlappedConnect::~IOCPOverlappedConnect()
+{
+	client_->DecreasePendingCount();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void IOCPOverlappedConnect::Process(BOOL _result, Int32UL _bytesTransferred, IOCPPostOrder* _pCompletionKey)
+{
+	(void)_pCompletionKey;
+
+	const SOCKET connectedSocket = client_->SocketHandle();
+	Int32U errorCode = 0;
+	if (IsFailed(connectedSocket, _result, _bytesTransferred, errorCode))
+	{
+		client_->Disconnect();
+		client_->ConnectFailed(errorCode);
 #if TEST_DUMMY_PACKET_TRANSFER
-		m_pSentPacket->Release();
+		sentPacket_->Release();
 #endif
 		return;
 	}
 
-	m_pClient->Connected();
+	client_->Connected();
 
-	if (m_pSentPacket) {
-		m_pClient->Sent(m_pSentPacket, bytesTransffered);
-		m_pSentPacket->Release();
+	if (sentPacket_)
+	{
+		client_->Sent(sentPacket_, _bytesTransferred);
+		sentPacket_->Release();
 	}
 
-	if (m_pClient->RecvAsync() == false) {
-		m_pClient->Disconnect();
+	if (!client_->RecvAsync())
+	{
+		client_->Disconnect();
 	}
 }
 

@@ -3,6 +3,7 @@
  * 생성일: 8/22/2023 10:40:48 AM
  * =====================
  *
+ *
  */
 
 
@@ -12,6 +13,7 @@
 
 NS_JC_BEGIN
 
+// @https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
 enum class ConsoleKey
 {
     None = 0x00,

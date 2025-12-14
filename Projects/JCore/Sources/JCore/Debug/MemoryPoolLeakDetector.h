@@ -13,17 +13,18 @@
 
 NS_JC_BEGIN
 
-	class AutMemoryPoolLeakDetector
-	{
-		using TOut = int*;
-		using TAction = Action<Int64U, int*>;
-	public:
-		AutMemoryPoolLeakDetector(MemoryPoolAbstract* pool, const TAction& action);
-		~AutMemoryPoolLeakDetector();
-	protected:
-		MemoryPoolAbstract* m_Pool;
-		TAction m_Callback;
-	};
+class AutMemoryPoolLeakDetector
+{
+	using TOut = int*;
+	using TAction = Action<Int64U, int*>;
 
-	
+public:
+	AutMemoryPoolLeakDetector(MemoryPoolAbstract* _pPool, const TAction& _action);
+	~AutMemoryPoolLeakDetector();
+
+protected:
+	MemoryPoolAbstract* m_Pool;
+	TAction m_Callback;
+};
+
 NS_JC_END

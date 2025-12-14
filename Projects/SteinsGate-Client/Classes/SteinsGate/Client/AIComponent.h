@@ -21,20 +21,20 @@
 class AIComponent : public ActorComponent, public IUpdatable
 {
 public:
-	AIComponent(Actor* actor);
+	AIComponent(Actor* _pActor);
 	~AIComponent() override;
 
 	void initialize() override;
-	void onUpdate(float dt) override;
+	void onUpdate(float _dt) override;
 
-	void setAIInfo(AIInfo* info);
+	void setAIInfo(AIInfo* _pInfo);
 
-	void setAttackActivity(AttackActivity* attackActivity);
-	void setFallDownActivity(FallDownActivity* fallDownActivity);
-	void setHitActivity(HitActivity* hitActivity);
-	void setIdleActivity(IdleActivity* idleActivity);
-	void setWalkActivity(WalkActivity* walkActivity);
-	void setSitActivity(SitActivity* sitActivity);
+	void setAttackActivity(AttackActivity* _pAttackActivity);
+	void setFallDownActivity(FallDownActivity* _pFallDownActivity);
+	void setHitActivity(HitActivity* _pHitActivity);
+	void setIdleActivity(IdleActivity* _pIdleActivity);
+	void setWalkActivity(WalkActivity* _pWalkActivity);
+	void setSitActivity(SitActivity* _pSitActivity);
 
 	// TODO: 분할 정복 방식으로 미리 확률 계산해놓는것 고려.
 	// void initAIProbs(); 
@@ -44,7 +44,7 @@ public:
 	// void exhangeAI(SGAIInfo* exchangeInfo);
 
 	void updateState();
-	void updateActivity(float dt);
+	void updateActivity(float _dt);
 	void selectActivity();
 	void updateDirection();
 
@@ -52,24 +52,24 @@ public:
 	void selectTrackActivity();
 	void selectAngryActivity();
 
-	void runActivity(AIActivity* activity);
-	void runActivity(AIActivityType_t activityType);
+	void runActivity(AIActivity* _pActivity);
+	void runActivity(AIActivityType_t _activityType);
 
 	SGVec2 getRandomSightPos();
-	AIInfo* getAiInfo() { return m_pAIInfo; }
-	AIState_t getState() { return m_eState; }
-	Actor* getTarget() { return m_pTarget; }
+	AIInfo* getAiInfo() { return aiInfo_; }
+	AIState_t getState() { return state_; }
+	Actor* getTarget() { return target_; }
 	AIActivity* getRunningActivity() const;
 
 	SG_COMPONENT_TYPE_GETTER(Type::eAI)
 private:
-	JCORE_NULLABLE AIInfo* m_pAIInfo;
-	JCORE_NULLABLE Actor* m_pTarget;
+	JCORE_NULLABLE AIInfo* aiInfo_;
+	JCORE_NULLABLE Actor* target_;
 
-	JCORE_NULLABLE AIActivity* m_ActivityMap[AIActivityType::Max];
-	JCORE_NULLABLE AIActivity* m_pRunningActivity;
+	JCORE_NULLABLE AIActivity* activityMap_[AIActivityType::Max];
+	JCORE_NULLABLE AIActivity* runningActivity_;
 	
-	AIState_t m_eState;
-	AIState_t m_eActivityState;
-	AIState_t m_ePreviousState;
+	AIState_t state_;
+	AIState_t activityState_;
+	AIState_t previousState_;
 };

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/9/2023 7:24:50 PM
  * =====================
@@ -12,9 +12,11 @@
 
 NS_JNET_BEGIN
 
-ICommand* ICommand::Clone() const {
-	ICommand * pCopy = (ICommand*)dbg_new char[CmdLen];
-	JCore::Memory::CopyUnsafe(pCopy, this, CmdLen);	// 데이터영역 복사
+//////////////////////////////////////////////////////////////////////////////////////////
+ICommand* ICommand::Clone() const
+{
+	ICommand* pCopy = reinterpret_cast<ICommand*>(dbg_new char[commandLength_]);
+	JCore::Memory::CopyUnsafe(pCopy, this, commandLength_); // 데이터영역 복사
 	return pCopy;
 }
 

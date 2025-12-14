@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -13,18 +13,19 @@
 
 NS_JNET_BEGIN
 
-int IOCPPostOrder::Process(IOCPWorker* worker) {
-	switch (Order) {
+//////////////////////////////////////////////////////////////////////////////////////////
+int IOCPPostOrder::Process(IOCPWorker* _pWorker)
+{
+	(void)_pWorker;
+
+	switch (order_)
+	{
 	case IOCP_POST_ORDER_TERMINATE:
-		Handle->Signal();
+		waitHandle_->Signal();
 		return IOCP_POST_ORDER_TERMINATE;
-	default: 
-		return -1;
+	default:
+		return IOCP_POST_ORDER_ERROR;
 	}
 }
 
 NS_JNET_END
-
-
-
-

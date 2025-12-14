@@ -16,7 +16,7 @@ USING_NS_JC;
 USING_NS_JNET;
 
 void ListenerHelperBase::LogCommand(TransportProtocol protocol, Transmission transmission, ICommand* cmd) {
-	const Cmd_t id = cmd->GetCommand();
+	const Cmd_t id = cmd->GetId();
 
 	if (transmission == Transmission::Recv && !Core::RuntimeConfigBase->ShowRecvCommand) {
 		return;

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/8/2023 11:30:33 AM
  * =====================
@@ -18,69 +18,64 @@ NS_JNET_BEGIN
 class CommandBuffer : public BufferAbstract
 {
 public:
-	CommandBuffer(const JCore::MemoryPoolAbstractPtr& allocator, int bufferSize);
-	CommandBuffer(const CommandBuffer& other);
+	CommandBuffer(const JCore::MemoryPoolAbstractPtr& _allocator, int _bufferSize);
+	CommandBuffer(const CommandBuffer& _other);
 	~CommandBuffer() override;
 
 	template <typename TCommand>
-	TCommand& Alloc() {
+	TCommand& Alloc()
+	{
 		static_assert(JCore::IsBaseOf_v<StaticCommand, TCommand>, "... this method is only for StaticCommand ");
 		return Alloc<TCommand>(0);
 	}
 
 	template <typename TCommand>
-	TCommand& Alloc(int count) {
+	TCommand& Alloc(int _count)
+	{
 		CMD_CHECK_BASE_OF_COMMAND(TCommand)
 		DYNAMIC_CMD_CHECK_ZERO_SIZE_ARRAY_FIELD(TCommand)
 
-		const int CmdSize = TCommand::_Size(count);
+		const int cmdSize = TCommand::_Size(_count);
 #if DebugMode
-		if (CmdSize <= 0 || CmdSize >= 2500) {
-			DebugAssertMsg(false, "%s::_Size(%d) = %d 커맨드 사이즈가 이상합니다.", TCommand::_Name(), count, CmdSize);
-		} 
+		if (cmdSize <= 0 || cmdSize >= 2500)
+		{
+			DebugAssertMsg(false, "%s::_Size(%d) = %d 커맨드 사이즈가 이상합니다.", TCommand::_Name(), _count, cmdSize);
+		}
 #endif
 
-		if (MoveWritePos(CmdSize) == false) {
+		if (!MoveWritePos(cmdSize))
+		{
 			DebugAssertMsg(false, "버퍼에 커맨드를 쓸 공간이 부족합니다.");
 		}
 
-		DebugAssertMsg(m_iReadPos + CmdSize == m_iWritePos, "리드포스 또는 라이트포스가 이상합니다.");
-		TCommand* cmd = Peek<TCommand*>();
-		TCommand::_Construct(cmd, count);
+		DebugAssertMsg(readPos_ + cmdSize == writePos_, "리드포스 또는 라이트포스가 이상합니다.");
+		TCommand* pCmd = Peek<TCommand*>();
+		TCommand::_Construct(pCmd, _count);
 
-		MoveReadPos(CmdSize);
+		MoveReadPos(cmdSize);
 		AddCommandCount();
-		AddPacketLength(CmdSize);
-		return *cmd;
+		AddPacketLength(cmdSize);
+		return *pCmd;
 	}
 
-	void Alloc(ICommand* cmd) {
-		const int CmdSize = cmd->CmdLen;
+	void Alloc(ICommand* _pCmd);
 
-		if (MoveWritePos(cmd->CmdLen) == false) {
-			DebugAssertMsg(false, "버퍼에 커맨드를 쓸 공간이 부족합니다.");
-		}
-
-		char* pMem = Peek<char*>();
-		JCore::Memory::CopyUnsafe(pMem, cmd, cmd->CmdLen);
-		MoveReadPos(CmdSize);
-
-		AddCommandCount();
-		AddPacketLength(CmdSize);
-	}
-
-	static JCore::SharedPtr<CommandBuffer> Create(const JCore::MemoryPoolAbstractPtr& allocator, int bufferSize = 6000);
+	static JCore::SharedPtr<CommandBuffer> Create(const JCore::MemoryPoolAbstractPtr& _allocator, int _bufferSize = 6000);
 
 	void Initialize();
 	void AddCommandCount();
-	void AddPacketLength(int size);
+	void AddPacketLength(int _size);
 	bool IsValid() const;
-	int GetBufferRequestSize() { return m_iRequestBufferSize; }
+	int GetBufferRequestSize()
+	{
+		return requestBufferSize_;
+	}
 	CmdCnt_t GetCommandCount();
 	PktLen_t GetPacketLength();
+
 private:
-	int m_iRequestBufferSize;
-	JCore::MemoryPoolAbstractPtr m_Allocator;
+	int requestBufferSize_;
+	JCore::MemoryPoolAbstractPtr allocator_;
 };
 
 using CommandBufferPtr = JCore::SharedPtr<CommandBuffer>;

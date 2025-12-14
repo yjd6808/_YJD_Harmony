@@ -36,7 +36,7 @@ class JCORE_NOVTABLE SchedulerTaskRunnable : public SchedulerTask
 {
 public:
 	SchedulerTaskRunnable() : m_At(DateTime::Now()) {}
-	SchedulerTaskRunnable(DateTime at) : m_At(at) {}
+	SchedulerTaskRunnable(DateTime _at) : m_At(_at) {}
 
 	DateTime At() override { return m_At; }
 	bool CanNextCall() override { return true; }
@@ -67,9 +67,9 @@ class SchedulerTaskOnce : public SchedulerTask
 {
 public:
 	template <typename TCallback, DefaultEnableIf_t<IsSchedulerTaskCallback_v<TCallback>> = nullptr>
-	SchedulerTaskOnce(DateTime at, TCallback&& callback)
-		: m_At(at)
-		, m_Callback(Forward<TCallback>(callback))
+	SchedulerTaskOnce(DateTime _at, TCallback&& _callback)
+		: m_At(_at)
+		, m_Callback(Forward<TCallback>(_callback))
 	{}
 
 	DateTime At() override { return m_At; }
@@ -86,12 +86,12 @@ class SchedulerTaskRepeat : public SchedulerTask
 {
 public:
 	template <typename TCallback>
-	SchedulerTaskRepeat(DateTime at, TimeSpan interval, TCallback&& callback, Int32U repeat = INFINITE)
-		: m_At(at.Tick)
-		, m_Interval(interval)
-		, m_Callback(Forward<TCallback>(callback))
+	SchedulerTaskRepeat(DateTime _at, TimeSpan _interval, TCallback&& _callback, Int32U _repeat = INFINITE)
+		: m_At(_at.Tick)
+		, m_Interval(_interval)
+		, m_Callback(Forward<TCallback>(_callback))
 		, m_uiCurRepeat(0)
-		, m_uiMaxRepeat(repeat)
+		, m_uiMaxRepeat(_repeat)
 	{}
 
 	DateTime At() override { return { m_At.Load() }; }

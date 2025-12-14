@@ -5,91 +5,112 @@
  *
  */
 
-
-
 #include <JCore/Core.h>
 #include <JCore/Memory.h>
 
 #include <JCore/FileSystem/Path.h>
 
-
 NS_JC_BEGIN
 
-String Path::FileName(const String& path) {
-	return FileName(path.Source(), path.Length());
-}
-
-String Path::FileName(const char* path) {
-	return FileName(path, strlen(path));
-}
-
-String Path::FileNameWithoutExt(const String& path)
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+String Path::FileName(const String& _path)
 {
-	return FileNameWithoutExt(path.Source());
+	return FileName(_path.Source(), _path.Length());
 }
 
-String Path::FileNameWithoutExt(const char* path)
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+String Path::FileName(const char* _pPath)
 {
-	const String szFileName = FileName(path);
-	int lastPeriod = szFileName.FindReverse(".");
-	return lastPeriod == -1 ? lastPeriod : szFileName.GetRange(0, lastPeriod);
+	return FileName(_pPath, strlen(_pPath));
 }
 
-String Path::FileName(const char* path, int length) {
-	String szFileName;
-	bool bSlashFound = false;
-	char* pPath = (char*)path;
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+String Path::FileNameWithoutExt(const String& _path)
+{
+	return FileNameWithoutExt(_path.Source());
+}
 
-	for (int i = length - 1; i >= 0; i--) {
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+String Path::FileNameWithoutExt(const char* _pPath)
+{
+	const String fileName = FileName(_pPath);
+	int lastPeriodIndex = fileName.FindReverse(".");
+	return lastPeriodIndex == -1 ? lastPeriodIndex : fileName.GetRange(0, lastPeriodIndex);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+String Path::FileName(const char* _pPath, int _length)
+{
+	String fileName;
+	bool slashFound = false;
+	char* pPath = (char*)_pPath;
+
+	for (int i = _length - 1; i >= 0; --i)
+	{
 		char& ch = pPath[i];
-		if (ch == '\\' || ch == '/') {
-			szFileName += pPath + i + 1;
-			bSlashFound = true;
+
+		if (ch == '\\' || ch == '/')
+		{
+			fileName += pPath + i + 1;
+			slashFound = true;
 			break;
 		}
 	}
-	if (bSlashFound == false)
-		return path;
 
-	return szFileName;
+	if (slashFound == false)
+	{
+		return _pPath;
+	}
+
+	return fileName;
 }
 
-String Path::FileNameLevel(const String& path, int level) {
-	return FileNameLevel(path.Source(), path.Length(), level);
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+String Path::FileNameLevel(const String& _path, int _level)
+{
+	return FileNameLevel(_path.Source(), _path.Length(), _level);
 }
 
-String Path::FileNameLevel(const char* path, int level) {
-	return FileNameLevel(path, strlen(path), level);
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+String Path::FileNameLevel(const char* _pPath, int _level)
+{
+	return FileNameLevel(_pPath, strlen(_pPath), _level);
 }
 
-void Path::FileNameLevel(char* buf, int bufCapacity, const char* path, int pathLen, int level) {
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+void Path::FileNameLevel(char* _pBuf, int _bufCapacity, const char* _pPath, int _pathLen, int _level)
+{
+	int lastIndex = _bufCapacity - 1;
 
-	int iLast = bufCapacity - 1;
+	char* pPath = (char*)_pPath;
+	int currentLevel = 0;
 
-	char* pPath = (char*)path;
-	int iLevel = 0;
-
-	for (int i = pathLen - 1; i >= 0; i--, iLast--) {
+	for (int i = _pathLen - 1; i >= 0; --i, --lastIndex)
+	{
 		char& ch = pPath[i];
 
-		if (ch == '\\' || ch == '/') {
-			buf[iLast] = '/';
+		if (ch == '\\' || ch == '/')
+		{
+			_pBuf[lastIndex] = '/';
 
-			if (iLevel == level) {
+			if (currentLevel == _level)
+			{
 				break;
 			}
 
 			// 슬래쉬가 아닌 문자열을 만날때까지 체크
 			int j = i - 1;
-			while (j >= 0 && (pPath[j] == '\\' || pPath[j] == '/')) {
-				j--;
+			while (j >= 0 && (pPath[j] == '\\' || pPath[j] == '/'))
+			{
+				--j;
 			}
 
 			i = j + 1;
-			iLevel++;
+			++currentLevel;
 		}
-		else {
-			buf[iLast] = ch;
+		else
+		{
+			_pBuf[lastIndex] = ch;
 		}
 	}
 
@@ -101,76 +122,93 @@ void Path::FileNameLevel(char* buf, int bufCapacity, const char* path, int pathL
 	//            |
 	//          iLast 이렇게 옮겨 줘야함
 
-	iLast += 1;	// 문자열이 있는 위치로 다시 옮겨 놓는다.
+	lastIndex += 1; // 문자열이 있는 위치로 다시 옮겨 놓는다.
 
 	// 레벨을 높게 잡아버린 경우 마지막 슬래쉬가 포함될 수가 있다.
 	// //a///b//c/d에 레벨 10을 전달하면 /a/b/c/d 이렇게 됨 
-	if (buf[iLast] == '/') {
-		iLast += 1;
+	if (_pBuf[lastIndex] == '/')
+	{
+		++lastIndex;
 	}
 
-	int iFileNameLength = bufCapacity - iLast;
-	Memory::Copy(buf, bufCapacity, buf + iLast, iFileNameLength);
-	buf[iFileNameLength] = NULL;
-
+	int fileNameLength = _bufCapacity - lastIndex;
+	Memory::Copy(_pBuf, _bufCapacity, _pBuf + lastIndex, fileNameLength);
+	_pBuf[fileNameLength] = NULL;
 }
 
-String Path::FileNameLevel(const char* path, int length, int level) {
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+String Path::FileNameLevel(const char* _pPath, int _length, int _level)
+{
+	static constexpr int BUF_SIZE = 512;
+	DebugAssertMsg(_length < BUF_SIZE, "경로 길이는 버퍼 사이즈보다 작아야합니다.");
 
-	static constexpr int BufSize = 512;
-	DebugAssertMsg(length < BufSize, "경로 길이는 버퍼 사이즈보다 작아야합니다.");
+	char fileName[BUF_SIZE]{};
+	FileNameLevel(fileName, BUF_SIZE, _pPath, _length, _level);
 
-	char szFileName[BufSize]{};
-	FileNameLevel(szFileName, BufSize, path, length, level);
-
-	return szFileName;
+	return fileName;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+String Path::Combine(const String& _lhs, const String& _rhs)
+{
+	String combined{ _lhs.Source(), _lhs.Length() + _rhs.Length() + 1 };
 
-String Path::Combine(const String& lhs, const String& rhs) {
+	int lastIndex = -1;
+	int count = 0;
 
-	String szCombined{lhs.Source(), lhs.Length() + rhs.Length() + 1};
-
-	int iLast = -1;
-	int iCount = 0;
-	for (int i = szCombined.Length() - 1; i >= 0; --i, ++iCount) {
-		if (szCombined[i] != '/' && szCombined[i] != '\\') {
-			iLast = i;
+	for (int i = combined.Length() - 1; i >= 0; --i, ++count)
+	{
+		if (combined[i] != '/' && combined[i] != '\\')
+		{
+			lastIndex = i;
 			break;
 		}
 	}
 
-	if (iLast != -1)
-		szCombined.Clear(iLast + 1, iCount);
+	if (lastIndex != -1)
+	{
+		combined.Clear(lastIndex + 1, count);
+	}
 
-	if (szCombined.Length() != 0)
-		szCombined.Append('/');
+	if (combined.Length() != 0)
+	{
+		combined.Append('/');
+	}
 
-	iCount = 0;
+	count = 0;
 
-	for (iLast = 0; iLast < rhs.Length(); ++iLast, ++iCount) {
-		if (rhs.GetAt(iLast) != '/' && rhs.GetAt(iLast) != '\\') {
+	for (lastIndex = 0; lastIndex < _rhs.Length(); ++lastIndex, ++count)
+	{
+		if (_rhs.GetAt(lastIndex) != '/' && _rhs.GetAt(lastIndex) != '\\')
+		{
 			break;
 		}
 	}
-	szCombined.Append(rhs.Source() + iCount);
-	return szCombined;
+
+	combined.Append(_rhs.Source() + count);
+	return combined;
 }
 
-String Path::Combine(const String& lhs, const String& rhs, const String& khs) {
-	return Combine(lhs, Combine(rhs, khs));
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+String Path::Combine(const String& _lhs, const String& _rhs, const String& _khs)
+{
+	return Combine(_lhs, Combine(_rhs, _khs));
 }
 
-String Path::Extension(const String& path) {
-	int iCount = 0;
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+String Path::Extension(const String& _path)
+{
+	int count = 0;
 
-	for (int i = path.Length() - 1; i >= 0; --i, ++iCount) {
-
-		if (path.GetAt(i) == '.') {
-			return { path.Source() + i, iCount + 1};
+	for (int i = _path.Length() - 1; i >= 0; --i, ++count)
+	{
+		if (_path.GetAt(i) == '.')
+		{
+			return { _path.Source() + i, count + 1 };
 		}
 
-		if (path.GetAt(i) == '/' || path.GetAt(i) == '\\') {
+		if (_path.GetAt(i) == '/' || _path.GetAt(i) == '\\')
+		{
 			return "";
 		}
 	}
@@ -178,5 +216,4 @@ String Path::Extension(const String& path) {
 	return "";
 }
 
-
-}
+NS_JC_END

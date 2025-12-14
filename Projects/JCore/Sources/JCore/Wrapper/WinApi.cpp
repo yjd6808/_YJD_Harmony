@@ -11,129 +11,153 @@
 #include <JCore/Wrapper/WinApi.h>
 
 NS_JC_BEGIN
-
 WinHandle WinApi::InvalidHandleValue = INVALID_HANDLE_VALUE;
 
 bool
-JCORE_STDCALL
-WinApi::SetConsoleCursorPosition(JCORE_IN WinHandle hStdoutHandle, JCORE_IN int x, JCORE_IN int y) {
-    COORD p;
-    p.X = static_cast<Int16>(x);
-    p.Y = static_cast<Int16>(y);
-    return ::SetConsoleCursorPosition(hStdoutHandle, p) != 0;
+JCORE_CDECL
+WinApi::SetConsoleCursorPosition(JCORE_IN WinHandle _stdoutHandle, JCORE_IN int _x, JCORE_IN int _y)
+{
+	COORD p;
+	p.X = static_cast<Int16>(_x);
+	p.Y = static_cast<Int16>(_y);
+	return ::SetConsoleCursorPosition(_stdoutHandle, p) != 0;
 }
 
 bool
-JCORE_STDCALL
-WinApi::GetConsoleCursorPosition(JCORE_IN WinHandle hStdoutHandle, JCORE_OUT int& x, JCORE_OUT int& y) {
-    CONSOLE_SCREEN_BUFFER_INFO cbsi;
+JCORE_CDECL
+WinApi::GetConsoleCursorPosition(JCORE_IN WinHandle _stdoutHandle, JCORE_OUT int& _x, JCORE_OUT int& _y)
+{
+	CONSOLE_SCREEN_BUFFER_INFO cbsi;
 
-    if (::GetConsoleScreenBufferInfo(hStdoutHandle, &cbsi)) {
-        x = cbsi.dwCursorPosition.X;
-        y = cbsi.dwCursorPosition.Y;
-        return true;
-    }
+	if (::GetConsoleScreenBufferInfo(_stdoutHandle, &cbsi))
+	{
+		_x = cbsi.dwCursorPosition.X;
+		_y = cbsi.dwCursorPosition.Y;
+		return true;
+	}
 
-    return false;
+	return false;
 }
 
 bool
-JCORE_STDCALL
-WinApi::SetConsoleTextAttribute(JCORE_IN WinHandle hStdoutHandle, JCORE_IN Int16 attribute) {
-    return ::SetConsoleTextAttribute(hStdoutHandle, attribute) != 0;
+JCORE_CDECL
+WinApi::SetConsoleTextAttribute(JCORE_IN WinHandle _stdoutHandle, JCORE_IN Int16 _attribute)
+{
+	return ::SetConsoleTextAttribute(_stdoutHandle, _attribute) != 0;
 }
 
 
 bool
-JCORE_STDCALL
-WinApi::SetConsoleOutputCodePage(JCORE_IN Int codePage) {
-    return ::SetConsoleOutputCP(codePage) != 0;
+JCORE_CDECL
+WinApi::SetConsoleOutputCodePage(JCORE_IN Int _codePage)
+{
+	return ::SetConsoleOutputCP(_codePage) != 0;
 }
 
 
 Int
-JCORE_STDCALL
-WinApi::GetConsoleOutputCodePage() {
-    return static_cast<int>(::GetConsoleOutputCP());
+JCORE_CDECL
+WinApi::GetConsoleOutputCodePage()
+{
+	return static_cast<int>(::GetConsoleOutputCP());
 }
 
 WinHandle
-JCORE_STDCALL
-WinApi::GetStdoutHandle() {
-    return ::GetStdHandle(STD_OUTPUT_HANDLE);
+JCORE_CDECL
+WinApi::GetStdoutHandle()
+{
+	return ::GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
 WinHandle
-JCORE_STDCALL
-WinApi::GetStdinHandle() {
-    return ::GetStdHandle(STD_INPUT_HANDLE);
+JCORE_CDECL
+WinApi::GetStdinHandle()
+{
+	return ::GetStdHandle(STD_INPUT_HANDLE);
 }
 
 WinHandle
-JCORE_STDCALL
-WinApi::CreateEventA(bool initialState, bool manualReset, const char* name) {
-    return ::CreateEventA(NULL, manualReset ? TRUE : FALSE, initialState ? TRUE : FALSE, name);
+JCORE_CDECL
+WinApi::CreateEventA(bool _initialState, bool _manualReset, const char* _pName)
+{
+	return ::CreateEventA(nullptr, _manualReset ? TRUE : FALSE, _initialState ? TRUE : FALSE, _pName);
 }
 
 Int32UL
-JCORE_STDCALL
-WinApi::WaitForMultipleObjectsEx(JCORE_IN Int32U eventCount, JCORE_IN WinHandle* handles, JCORE_IN bool waitAll, JCORE_IN Int32U timeout /*= JCORE_INFINITE */, JCORE_IN bool alertable /*= false */) {
-    return ::WaitForMultipleObjectsEx(eventCount, handles, waitAll ? TRUE : FALSE, timeout, alertable ? TRUE: FALSE);
+JCORE_CDECL
+WinApi::WaitForMultipleObjectsEx(JCORE_IN Int32U _eventCount, JCORE_IN WinHandle* _handles, JCORE_IN bool _waitAll,
+                                 JCORE_IN Int32U _timeout /*= JCORE_INFINITE */, JCORE_IN bool _alertable /*= false */)
+{
+	BOOL bWaitAll = _waitAll ? TRUE : FALSE;
+	BOOL bAlertable = _alertable ? TRUE : FALSE;
+
+	// 직접 호출 테스트
+	DWORD result = ::WaitForMultipleObjectsEx(_eventCount, _handles, bWaitAll, _timeout, bAlertable);
+	return result;
 }
 
 Int32UL
-JCORE_STDCALL
-WinApi::WaitForSingleObject(WinHandle handle, Int32U timeout) {
-    return ::WaitForSingleObject(handle, timeout);
+JCORE_CDECL
+WinApi::WaitForSingleObject(WinHandle _handle, Int32U _timeout)
+{
+	return ::WaitForSingleObject(_handle, _timeout);
 }
 
 Int32UL
-JCORE_STDCALL
-WinApi::GetLastError() {
-    return ::GetLastError();
+JCORE_CDECL
+WinApi::GetLastError()
+{
+	return ::GetLastError();
 }
 
 bool
-JCORE_STDCALL
-WinApi::SetEvent(JCORE_IN WinHandle handle) {
-    return ::SetEvent(handle) != 0;
+JCORE_CDECL
+WinApi::SetEvent(JCORE_IN WinHandle _handle)
+{
+	return ::SetEvent(_handle) != 0;
 }
 
 bool
-JCORE_STDCALL
-WinApi::ResetEvent(JCORE_IN WinHandle handle) {
-    return ::ResetEvent(handle) != 0;   
+JCORE_CDECL
+WinApi::ResetEvent(JCORE_IN WinHandle _handle)
+{
+	return ::ResetEvent(_handle) != 0;
 }
 
 bool
-JCORE_STDCALL
-WinApi::CloseHandle(JCORE_IN WinHandle handle) {
-    return ::CloseHandle(handle) != 0;
+JCORE_CDECL
+WinApi::CloseHandle(JCORE_IN WinHandle _handle)
+{
+	return ::CloseHandle(_handle) != 0;
 }
 
 int
-JCORE_STDCALL
-WinApi::GetThreadPriority(JCORE_IN WinHandle threadHandle) {
-    return ::GetThreadPriority(threadHandle);
+JCORE_CDECL
+WinApi::GetThreadPriority(JCORE_IN WinHandle _threadHandle)
+{
+	return ::GetThreadPriority(_threadHandle);
 }
 
 bool
-JCORE_STDCALL
-WinApi::SetThreadPriority(JCORE_IN WinHandle threadHandle, JCORE_IN int priority) {
-    return ::SetThreadPriority(threadHandle, priority) != 0;
+JCORE_CDECL
+WinApi::SetThreadPriority(JCORE_IN WinHandle _threadHandle, JCORE_IN int _priority)
+{
+	return ::SetThreadPriority(_threadHandle, _priority) != 0;
 }
 
 
 Int32U
-JCORE_STDCALL
-WinApi::GetCurrentThreadId() {
-    return ::GetCurrentThreadId();
+JCORE_CDECL
+WinApi::GetCurrentThreadId()
+{
+	return ::GetCurrentThreadId();
 }
 
 Int32U
-JCORE_STDCALL
-WinApi::GetModuleFilePath(WinModule module, char* filenameBuffer, int filenameBufferCapacity) {
-    return GetModuleFileNameA((HMODULE)module, filenameBuffer, filenameBufferCapacity);
+JCORE_CDECL
+WinApi::GetModuleFilePath(WinModule _module, char* _filenameBuffer, int _filenameBufferCapacity)
+{
+	return GetModuleFileNameA((HMODULE)_module, _filenameBuffer, _filenameBufferCapacity);
 }
 
 
@@ -144,198 +168,246 @@ WinApi::GetModuleFilePath(WinModule module, char* filenameBuffer, int filenameBu
 
 template <typename TOperand>
 TOperand
-Interlocked<TOperand>::Add(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value) {
-    return ExchangeAdd(destination, value) + value;
+Interlocked<TOperand>::Add(JCORE_IN_OUT TOperand* _destination, JCORE_IN TOperand _value)
+{
+	return ExchangeAdd(_destination, _value) + _value;
 }
 
 template <typename TOperand>
 TOperand
-Interlocked<TOperand>::CompareExchange(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand expected, TOperand desired) {
-    if constexpr (sizeof(TOperand) == sizeof(Boundary8)) {
-        return static_cast<TOperand>(::_InterlockedCompareExchange8(reinterpret_cast<volatile Boundary8*>(destination), desired, expected));
-    }
+Interlocked<TOperand>::CompareExchange(JCORE_IN_OUT TOperand* _pDestination, JCORE_IN TOperand _expected, TOperand _desired)
+{
+	if constexpr (sizeof(TOperand) == sizeof(Boundary8))
+	{
+		return static_cast<TOperand>(::_InterlockedCompareExchange8(
+			reinterpret_cast<volatile Boundary8*>(_pDestination),_desired, _expected));
+	}
 
-    if constexpr (sizeof(TOperand) == sizeof(Boundary16)) {
-        return static_cast<TOperand>(::_InterlockedCompareExchange16(reinterpret_cast<volatile Boundary16*>(destination), desired, expected));
-    }
+	if constexpr (sizeof(TOperand) == sizeof(Boundary16))
+	{
+		return static_cast<TOperand>(::_InterlockedCompareExchange16(
+			reinterpret_cast<volatile Boundary16*>(_pDestination), _desired, _expected));
+	}
 
-    if constexpr (sizeof(TOperand) == sizeof(Boundary32)) {
-        return static_cast<TOperand>(::_InterlockedCompareExchange(reinterpret_cast<volatile Boundary32*>(destination), desired, expected));
-    }
+	if constexpr (sizeof(TOperand) == sizeof(Boundary32))
+	{
+		return static_cast<TOperand>(::_InterlockedCompareExchange(
+			reinterpret_cast<volatile Boundary32*>(_pDestination),_desired, _expected));
+	}
 
-    return static_cast<TOperand>(::_InterlockedCompareExchange64(reinterpret_cast<volatile Boundary64*>(destination), desired, expected));
+	return static_cast<TOperand>(::_InterlockedCompareExchange64(
+		reinterpret_cast<volatile Boundary64*>(_pDestination), _desired, _expected));
 }
 
 template <typename TOperand>
 TOperand
-Interlocked<TOperand>::Exchange(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value) {
-    if constexpr (sizeof(TOperand) == sizeof(Boundary8)) {
-        return static_cast<TOperand>(::_InterlockedExchange8(reinterpret_cast<volatile Boundary8*>(destination), value));
-    }
+Interlocked<TOperand>::Exchange(JCORE_IN_OUT TOperand* _pDestination, JCORE_IN TOperand _value)
+{
+	if constexpr (sizeof(TOperand) == sizeof(Boundary8))
+	{
+		return static_cast<TOperand>(
+			::_InterlockedExchange8(reinterpret_cast<volatile Boundary8*>(_pDestination), _value));
+	}
 
-    if constexpr (sizeof(TOperand) == sizeof(Boundary16)) {
-        return static_cast<TOperand>(::_InterlockedExchange16(reinterpret_cast<volatile Boundary16*>(destination), value));
-    }
+	if constexpr (sizeof(TOperand) == sizeof(Boundary16))
+	{
+		return static_cast<TOperand>(::_InterlockedExchange16(
+			reinterpret_cast<volatile Boundary16*>(_pDestination), _value));
+	}
 
-    if constexpr (sizeof(TOperand) == sizeof(Boundary32)) {
-        return static_cast<TOperand>(::_InterlockedExchange(reinterpret_cast<volatile Boundary32*>(destination), value));
-    }
+	if constexpr (sizeof(TOperand) == sizeof(Boundary32))
+	{
+		return static_cast<TOperand>(
+			::_InterlockedExchange(reinterpret_cast<volatile Boundary32*>(_pDestination), _value));
+	}
 
 #ifdef _WIN64
-    return static_cast<TOperand>(::_InterlockedExchange64(reinterpret_cast<volatile Boundary64*>(destination), value));
+	return static_cast<TOperand>(::_InterlockedExchange64(reinterpret_cast<volatile Boundary64*>(_pDestination), _value));
 #else
-    return static_cast<TOperand>(::_InlineInterlockedExchange64(reinterpret_cast<volatile Boundary64*>(destination), value));
+	return static_cast<TOperand>(::_InlineInterlockedExchange64(
+		reinterpret_cast<volatile Boundary64*>(_pDestination), _value));
 #endif
 }
 
 template <typename TOperand>
 TOperand
-Interlocked<TOperand>::ExchangeAdd(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value) {
-    if constexpr (sizeof(TOperand) == sizeof(Boundary8)) {
-        return static_cast<TOperand>(_InterlockedExchangeAdd8(reinterpret_cast<volatile Boundary8*>(destination), value));
-    }
+Interlocked<TOperand>::ExchangeAdd(JCORE_IN_OUT TOperand* _pDestination, JCORE_IN TOperand _value)
+{
+	if constexpr (sizeof(TOperand) == sizeof(Boundary8))
+	{
+		return static_cast<TOperand>(
+			_InterlockedExchangeAdd8(reinterpret_cast<volatile Boundary8*>(_pDestination), _value));
+	}
 
-    if constexpr (sizeof(TOperand) == sizeof(Boundary16)) {
-        return static_cast<TOperand>(_InterlockedExchangeAdd16(reinterpret_cast<volatile Boundary16*>(destination), value));
-    }
+	if constexpr (sizeof(TOperand) == sizeof(Boundary16))
+	{
+		return static_cast<TOperand>(_InterlockedExchangeAdd16(
+			reinterpret_cast<volatile Boundary16*>(_pDestination), _value));
+	}
 
-    if constexpr (sizeof(TOperand) == sizeof(Boundary32)) {
-        return static_cast<TOperand>(::_InterlockedExchangeAdd(reinterpret_cast<volatile Boundary32*>(destination), value));
-    }
+	if constexpr (sizeof(TOperand) == sizeof(Boundary32))
+	{
+		return static_cast<TOperand>(::_InterlockedExchangeAdd(
+			reinterpret_cast<volatile Boundary32*>(_pDestination), _value));
+	}
 
 #ifdef _WIN64
-    return static_cast<TOperand>(::_InterlockedExchangeAdd64(reinterpret_cast<volatile Boundary64*>(destination), value));
+	return static_cast<TOperand>(
+		::_InterlockedExchangeAdd64(reinterpret_cast<volatile Boundary64*>(_pDestination), _value));
 #else
-    return static_cast<TOperand>(::_InlineInterlockedExchangeAdd64(reinterpret_cast<volatile Boundary64*>(destination), value));
+	return static_cast<TOperand>(::_InlineInterlockedExchangeAdd64(
+		reinterpret_cast<volatile Boundary64*>(_pDestination), _value));
 #endif
 }
 
 template <typename TOperand>
 TOperand
-Interlocked<TOperand>::Increment(JCORE_IN_OUT TOperand* destination) {
-    if constexpr (sizeof(TOperand) == sizeof(Boundary8)) {
-        return Add(destination, 1);
-    }
+Interlocked<TOperand>::Increment(JCORE_IN_OUT TOperand* _destination)
+{
+	if constexpr (sizeof(TOperand) == sizeof(Boundary8))
+	{
+		return Add(_destination, 1);
+	}
 
-    if constexpr (sizeof(TOperand) == sizeof(Boundary16)) {
-        return static_cast<TOperand>(::_InterlockedIncrement16(reinterpret_cast<volatile Boundary16*>(destination)));
-    }
+	if constexpr (sizeof(TOperand) == sizeof(Boundary16))
+	{
+		return static_cast<TOperand>(::_InterlockedIncrement16(reinterpret_cast<volatile Boundary16*>(_destination)));
+	}
 
-    if constexpr (sizeof(TOperand) == sizeof(Boundary32)) {
-        return static_cast<TOperand>(::_InterlockedIncrement(reinterpret_cast<volatile Boundary32*>(destination)));
-    }
+	if constexpr (sizeof(TOperand) == sizeof(Boundary32))
+	{
+		return static_cast<TOperand>(::_InterlockedIncrement(reinterpret_cast<volatile Boundary32*>(_destination)));
+	}
 #ifdef _WIN64
-    return static_cast<TOperand>(::_InterlockedIncrement64(reinterpret_cast<volatile Boundary64*>(destination)));
+	return static_cast<TOperand>(::_InterlockedIncrement64(reinterpret_cast<volatile Boundary64*>(_destination)));
 #else
-    return static_cast<TOperand>(::_InlineInterlockedIncrement64(reinterpret_cast<volatile Boundary64*>(destination)));
+	return static_cast<TOperand>(::_InlineInterlockedIncrement64(reinterpret_cast<volatile Boundary64*>(_destination)));
 #endif
 }
 
 template <typename TOperand>
 TOperand
-Interlocked<TOperand>::Decrement(JCORE_IN_OUT TOperand* destination) {
-    if constexpr (sizeof(TOperand) == sizeof(Boundary8)) {
-        return Add(destination, -1);
-    }
+Interlocked<TOperand>::Decrement(JCORE_IN_OUT TOperand* _pDestination)
+{
+	if constexpr (sizeof(TOperand) == sizeof(Boundary8))
+	{
+		return Add(_pDestination, -1);
+	}
 
-    if constexpr (sizeof(TOperand) == sizeof(Boundary16)) {
-        return static_cast<TOperand>(::_InterlockedDecrement16(reinterpret_cast<volatile Boundary16*>(destination)));
-    }
+	if constexpr (sizeof(TOperand) == sizeof(Boundary16))
+	{
+		return static_cast<TOperand>(::_InterlockedDecrement16(reinterpret_cast<volatile Boundary16*>(_pDestination)));
+	}
 
-    if constexpr (sizeof(TOperand) == sizeof(Boundary32)) {
-        return static_cast<TOperand>(::_InterlockedDecrement(reinterpret_cast<volatile Boundary32*>(destination)));
-    }
+	if constexpr (sizeof(TOperand) == sizeof(Boundary32))
+	{
+		return static_cast<TOperand>(::_InterlockedDecrement(reinterpret_cast<volatile Boundary32*>(_pDestination)));
+	}
 
 #ifdef _WIN64
-    return static_cast<TOperand>(::_InterlockedDecrement64(reinterpret_cast<volatile Boundary64*>(destination)));
+	return static_cast<TOperand>(::_InterlockedDecrement64(reinterpret_cast<volatile Boundary64*>(_pDestination)));
 #else
-    return static_cast<TOperand>(::_InlineInterlockedDecrement64(reinterpret_cast<volatile Boundary64*>(destination)));
+	return static_cast<TOperand>(::_InlineInterlockedDecrement64(reinterpret_cast<volatile Boundary64*>(_pDestination)));
 #endif
 }
 
 template <typename TOperand>
 TOperand
-Interlocked<TOperand>::And(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value) {
-    if constexpr (sizeof(TOperand) == sizeof(Boundary8)) {
-        return static_cast<TOperand>(::_InterlockedAnd8(reinterpret_cast<volatile Boundary8*>(destination), value));
-    }
+Interlocked<TOperand>::And(JCORE_IN_OUT TOperand* _destination, JCORE_IN TOperand _value)
+{
+	if constexpr (sizeof(TOperand) == sizeof(Boundary8))
+	{
+		return static_cast<TOperand>(::_InterlockedAnd8(reinterpret_cast<volatile Boundary8*>(_destination), _value));
+	}
 
-    if constexpr (sizeof(TOperand) == sizeof(Boundary16)) {
-        return static_cast<TOperand>(::_InterlockedAnd16(reinterpret_cast<volatile Boundary16*>(destination), value));
-    }
+	if constexpr (sizeof(TOperand) == sizeof(Boundary16))
+	{
+		return static_cast<TOperand>(::_InterlockedAnd16(reinterpret_cast<volatile Boundary16*>(_destination), _value));
+	}
 
-    if constexpr (sizeof(TOperand) == sizeof(Boundary32)) {
-        return static_cast<TOperand>(::_InterlockedAnd(reinterpret_cast<volatile Boundary32*>(destination), value));
-    }
+	if constexpr (sizeof(TOperand) == sizeof(Boundary32))
+	{
+		return static_cast<TOperand>(::_InterlockedAnd(reinterpret_cast<volatile Boundary32*>(_destination), _value));
+	}
 
 #ifdef _WIN64
-    return static_cast<TOperand>(::_InterlockedAnd64(reinterpret_cast<volatile Boundary64*>(destination), value));
+	return static_cast<TOperand>(::_InterlockedAnd64(reinterpret_cast<volatile Boundary64*>(_destination), _value));
 #else
-    return static_cast<TOperand>(::_InlineInterlockedAnd64(reinterpret_cast<volatile Boundary64*>(destination), value));
+	return static_cast<TOperand>(::_InlineInterlockedAnd64(reinterpret_cast<volatile Boundary64*>(_destination), _value));
 #endif
 }
 
 template <typename TOperand>
 TOperand
-Interlocked<TOperand>::Or(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value) {
-    if constexpr (sizeof(TOperand) == sizeof(Boundary8)) {
-        return static_cast<TOperand>(::_InterlockedOr8(reinterpret_cast<volatile Boundary8*>(destination), value));
-    }
+Interlocked<TOperand>::Or(JCORE_IN_OUT TOperand* _pDestination, JCORE_IN TOperand _value)
+{
+	if constexpr (sizeof(TOperand) == sizeof(Boundary8))
+	{
+		return static_cast<TOperand>(::_InterlockedOr8(reinterpret_cast<volatile Boundary8*>(_pDestination), _value));
+	}
 
-    if constexpr (sizeof(TOperand) == sizeof(Boundary16)) {
-        return static_cast<TOperand>(::_InterlockedOr16(reinterpret_cast<volatile Boundary16*>(destination), value));
-    }
+	if constexpr (sizeof(TOperand) == sizeof(Boundary16))
+	{
+		return static_cast<TOperand>(::_InterlockedOr16(reinterpret_cast<volatile Boundary16*>(_pDestination), _value));
+	}
 
-    if constexpr (sizeof(TOperand) == sizeof(Boundary32)) {
-        return static_cast<TOperand>(::_InterlockedOr(reinterpret_cast<volatile Boundary32*>(destination), value));
-    }
+	if constexpr (sizeof(TOperand) == sizeof(Boundary32))
+	{
+		return static_cast<TOperand>(::_InterlockedOr(reinterpret_cast<volatile Boundary32*>(_pDestination), _value));
+	}
 
 #ifdef _WIN64
-    return static_cast<TOperand>(::_InterlockedOr64(reinterpret_cast<volatile Boundary64*>(destination), value));
+	return static_cast<TOperand>(::_InterlockedOr64(reinterpret_cast<volatile Boundary64*>(_pDestination), _value));
 #else
-    return static_cast<TOperand>(::_InlineInterlockedOr64(reinterpret_cast<volatile Boundary64*>(destination), value));
+	return static_cast<TOperand>(::_InlineInterlockedOr64(reinterpret_cast<volatile Boundary64*>(_pDestination), _value));
 #endif
 }
 
 template <typename TOperand>
-TOperand
-Interlocked<TOperand>::Xor(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value) {
-    if constexpr (sizeof(TOperand) == sizeof(Boundary8)) {
-        return static_cast<TOperand>(::_InterlockedXor8(reinterpret_cast<volatile Boundary8*>(destination), value));
-    }
+auto Interlocked<TOperand>::Xor(JCORE_IN_OUT TOperand* _pDestination, JCORE_IN TOperand _value) -> TOperand
+{
+	if constexpr (sizeof(TOperand) == sizeof(Boundary8))
+	{
+		return static_cast<TOperand>(::_InterlockedXor8(reinterpret_cast<volatile Boundary8*>(_pDestination), _value));
+	}
 
-    if constexpr (sizeof(TOperand) == sizeof(Boundary16)) {
-        return static_cast<TOperand>(::_InterlockedXor16(reinterpret_cast<volatile Boundary16*>(destination), value));
-    }
+	if constexpr (sizeof(TOperand) == sizeof(Boundary16))
+	{
+		return static_cast<TOperand>(::_InterlockedXor16(reinterpret_cast<volatile Boundary16*>(_pDestination), _value));
+	}
 
-    if constexpr (sizeof(TOperand) == sizeof(Boundary32)) {
-        return static_cast<TOperand>(::_InterlockedXor(reinterpret_cast<volatile Boundary32*>(destination), value));
-    }
+	if constexpr (sizeof(TOperand) == sizeof(Boundary32))
+	{
+		return static_cast<TOperand>(::_InterlockedXor(reinterpret_cast<volatile Boundary32*>(_pDestination), _value));
+	}
 
 #ifdef _WIN64
-    return static_cast<TOperand>(::_InterlockedXor64(reinterpret_cast<volatile Boundary64*>(destination), value));
+	return static_cast<TOperand>(::_InterlockedXor64(reinterpret_cast<volatile Boundary64*>(_pDestination), _value));
 #else
-    return static_cast<TOperand>(::_InlineInterlockedXor64(reinterpret_cast<volatile Boundary64*>(destination), value));
+	return static_cast<TOperand>(::_InlineInterlockedXor64(reinterpret_cast<volatile Boundary64*>(_pDestination), _value));
 #endif
 }
 
 
 bool
-Interlocked<bool>::CompareExchange(JCORE_IN_OUT bool* destination, JCORE_IN bool expected, JCORE_IN bool desired) {
-        Boundary8 iExpected = expected ? 1 : 0;
-        Boundary8 iDesired = desired ? 1 : 0;
+Interlocked<bool>::CompareExchange(JCORE_IN_OUT bool* _pDestination, JCORE_IN bool _expected, JCORE_IN bool _desired)
+{
+	Boundary8 iExpected = _expected ? 1 : 0;
+	Boundary8 iDesired = _desired ? 1 : 0;
 
-    return TInterlocked::CompareExchange(reinterpret_cast<Boundary8*>(destination), iExpected, iDesired) ? true : false;
+	return TInterlocked::CompareExchange(reinterpret_cast<Boundary8*>(_pDestination), iExpected, iDesired) ? true : false;
 }
 
 bool
-Interlocked<bool>::Exchange(bool* destination, bool value) {
-    Boundary8 iValue = value ? 1 : 0;
-    return TInterlocked::Exchange(reinterpret_cast<Boundary8*>(destination), iValue) ? true : false;
+Interlocked<bool>::Exchange(bool* _pDestination, bool _value)
+{
+	Boundary8 iValue = _value ? 1 : 0;
+	return TInterlocked::Exchange(reinterpret_cast<Boundary8*>(_pDestination), iValue) ? true : false;
 }
 
-bool Interlocked<bool>::Read(bool* destination) {
-    return TInterlocked::Read(reinterpret_cast<Boundary8*>(destination));
+bool Interlocked<bool>::Read(bool* _destination)
+{
+	return TInterlocked::Read(reinterpret_cast<Boundary8*>(_destination));
 }
 
 template struct Interlocked<Int8>;
@@ -352,4 +424,3 @@ template struct Interlocked<Int64U>;
 template struct Interlocked<bool>;
 
 NS_JC_END
-

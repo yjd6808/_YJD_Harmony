@@ -12,101 +12,124 @@
 #include <JCore/Container/Collection.h>
 
 NS_JC_BEGIN
-
-WaitHandle::WaitHandle(bool initialState, bool manualReset, const char* name)
-	: m_hHandle(WinApi::CreateEventA(initialState, manualReset, name))
-	, m_Name(name)
-{}
-
-WaitHandle::WaitHandle(WaitHandle&& handle) noexcept {
-   this->operator=(Move(handle));
+//////////////////////////////////////////////////////////////////////////////////////////
+WaitHandle::WaitHandle(bool _initialState, bool _manualReset, const char* _name)
+: handle_(WinApi::CreateEventA(_initialState, _manualReset, _name))
+, name_(_name)
+{
 }
 
-WaitHandle::~WaitHandle() {
-    if (m_hHandle) {
-        WinApi::CloseHandle(m_hHandle);
-    }
+//////////////////////////////////////////////////////////////////////////////////////////
+WaitHandle::WaitHandle(WaitHandle&& _handle) noexcept
+{
+	this->operator=(Move(_handle));
 }
 
-bool WaitHandle::Wait(Int32U timeout, JCORE_OUT Int32U* result) {
-    if (m_hHandle == nullptr)
-        return false;
-
-    const Int32U uiResult = WinApi::WaitForMultipleObjectsEx(1, &m_hHandle, true, timeout);
-
-    if (result)
-        *result = uiResult;
-    
-    return uiResult == WAIT_OBJECT_0;
+//////////////////////////////////////////////////////////////////////////////////////////
+WaitHandle::~WaitHandle()
+{
+	if (handle_)
+	{
+		WinApi::CloseHandle(handle_);
+	}
 }
 
-bool WaitHandle::Signal() {
-    if (m_hHandle == nullptr)
-        return false;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool WaitHandle::Wait(Int32U _timeout, JCORE_OUT Int32U* _pResult)
+{
+	if (handle_ == nullptr)
+		return false;
 
-    return WinApi::SetEvent(m_hHandle) != 0;
+	const Int32U waitResult = WinApi::WaitForMultipleObjectsEx(1, &handle_, true, _timeout);
+
+	if (_pResult)
+		*_pResult = waitResult;
+
+	return waitResult == WAIT_OBJECT_0;
 }
 
-bool WaitHandle::Reset() {
-    if (m_hHandle == nullptr)
-        return false;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool WaitHandle::Signal()
+{
+	if (handle_ == nullptr)
+		return false;
 
-    return WinApi::ResetEvent(m_hHandle);
+	return WinApi::SetEvent(handle_) != 0;
 }
 
-void WaitHandle::operator=(WaitHandle&& other) noexcept {
-    m_hHandle = other.m_hHandle;
-    other.m_hHandle = nullptr;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool WaitHandle::Reset()
+{
+	if (handle_ == nullptr)
+		return false;
 
-    if (other.m_Name.IsNull())
-        return;
+	return WinApi::ResetEvent(handle_);
+}
 
-    m_Name = Move(other.m_Name);
+void WaitHandle::operator=(const WaitHandle& _other)
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void WaitHandle::operator=(WaitHandle&& _other) noexcept
+{
+	handle_ = _other.handle_;
+	_other.handle_ = nullptr;
+
+	if (_other.name_.IsNull())
+		return;
+
+	name_ = Move(_other.name_);
 }
 
 // =====================================================================
 // static
 // =====================================================================
-bool WaitHandle::WaitAll(WaitHandle* handles, Int32U count, JCORE_OUT_OPT Int32U* result) {
-    DebugAssert(count <= MAXIMUM_WAIT_OBJECTS);
-    WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
-    for (Int32U i = 0; i < count; ++i) {
-        waitHandles[i] = handles[i].m_hHandle;
-    }
+//////////////////////////////////////////////////////////////////////////////////////////
+bool WaitHandle::WaitAll(WaitHandle* _pHandles, Int32U _count, JCORE_OUT_OPT Int32U* _pResult)
+{
+	DebugAssert(_count <= MAXIMUM_WAIT_OBJECTS);
+	WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
+	for (Int32U index = 0; index < _count; ++index)
+	{
+		waitHandles[index] = _pHandles[index].handle_;
+	}
 
-    const Int32UL uiResult = WinApi::WaitForMultipleObjectsEx(count, waitHandles, true);
+	const Int32UL waitResult = WinApi::WaitForMultipleObjectsEx(_count, waitHandles, true);
 
-    if (result)
-        *result = uiResult;
+	if (_pResult)
+		*_pResult = waitResult;
 
-    if (uiResult == WAIT_OBJECT_0) {
-        return true;
-    }
+	if (waitResult == WAIT_OBJECT_0)
+	{
+		return true;
+	}
 
-    return false;
+	return false;
 }
 
 
+//////////////////////////////////////////////////////////////////////////////////////////
+WaitHandle* WaitHandle::WaitAny(WaitHandle* _pHandles, Int32U _count, JCORE_OUT_OPT Int32U* _pResult)
+{
+	DebugAssert(_count <= MAXIMUM_WAIT_OBJECTS);
+	WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
 
-WaitHandle* WaitHandle::WaitAny(WaitHandle* handles, Int32U count, JCORE_OUT_OPT Int32U* result) {
-    DebugAssert(count <= MAXIMUM_WAIT_OBJECTS);
-    WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
+	for (Int32U index = 0; index < _count; ++index)
+	{
+		waitHandles[index] = _pHandles[index].handle_;
+	}
 
-    for (Int32U i = 0; i < count; ++i) {
-        waitHandles[i] = handles[i].m_hHandle;
-    }
+	const Int32U waitResult = WinApi::WaitForMultipleObjectsEx(_count, waitHandles, false);
 
-    const Int32U uiResult = WinApi::WaitForMultipleObjectsEx(count, waitHandles, false);
+	if (_pResult)
+		*_pResult = waitResult;
 
-    if (result)
-        *result = uiResult;
+	if (waitResult >= WAIT_OBJECT_0 && waitResult <= WAIT_OBJECT_0 + _count - 1)
+		return &_pHandles[waitResult - WAIT_OBJECT_0];
 
-    if (uiResult >= WAIT_OBJECT_0 && uiResult <= WAIT_OBJECT_0 + count - 1)
-        return &handles[uiResult - WAIT_OBJECT_0];
-
-    return nullptr;
+	return nullptr;
 }
 
 
-  
 NS_JC_END
