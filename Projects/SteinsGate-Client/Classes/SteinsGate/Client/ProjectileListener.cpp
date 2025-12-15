@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/2/2023 4:50:11 PM
  * =====================
@@ -10,62 +10,75 @@
 
 #include <SteinsGate/Client/Projectile.h>
 
-ProjectileListener::ProjectileListener(Projectile* projectile, Actor* spawner)
-	: m_pProjectile(projectile)
-	, m_pSpawner(spawner)
-	, m_fMoveDistance(0.0f)
-	, m_fElapsedLifeTime(0.0f)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+ProjectileListener::ProjectileListener(Projectile* _pProjectile, Actor* _pSpawner)
+: m_pProjectile(_pProjectile)
+, m_pSpawner(_pSpawner)
+, m_fMoveDistance(0.0f)
+, m_fElapsedLifeTime(0.0f)
+{
+}
 
-void ProjectileListener::onCreated() {
+void ProjectileListener::onCreated()
+{
 	IActorListener::onCreated();
 
 	m_fElapsedLifeTime = 0.0f;
 	m_fMoveDistance = 0.0f;
 }
 
-void ProjectileListener::onCleanUp() {
+void ProjectileListener::onCleanUp()
+{
 	CC_SAFE_RELEASE_NULL(m_pSpawner);
 }
 
-void ProjectileListener::onUpdate(float dt) {
+void ProjectileListener::onUpdate(float _dt)
+{
 	ActorSprite* pActorSprite = m_pProjectile->getActorSprite();
 
 	const float currentRotation = pActorSprite->getBodyPart()->getRotation();
-	const float fMoveSpeedFPS = m_pProjectile->getBaseInfo()->MoveSpeed / 60.0f;
-	const float fMoveDistanceFPSX = fMoveSpeedFPS * cosf(CC_DEGREES_TO_RADIANS(currentRotation));
-	const float fMoveDistanceFPSY = fMoveSpeedFPS * sinf(CC_DEGREES_TO_RADIANS(currentRotation));
+	const float moveSpeedFps = m_pProjectile->getBaseInfo()->MoveSpeed / 60.0f;
+	const float moveDistanceFpsX = moveSpeedFps * cosf(CC_DEGREES_TO_RADIANS(currentRotation));
+	const float moveDistanceFpsY = moveSpeedFps * sinf(CC_DEGREES_TO_RADIANS(currentRotation));
 
 	// x축 이동은 액터를 이동
-	m_pProjectile->setPositionX(m_pProjectile->getPositionX() + (m_pProjectile->getSpriteDirection() == SpriteDirection::Right ? fMoveDistanceFPSX : -fMoveDistanceFPSX));
+	m_pProjectile->setPositionX(
+		m_pProjectile->getPositionX() + (m_pProjectile->getSpriteDirection() == SpriteDirection::Right
+			                                 ? moveDistanceFpsX
+			                                 : -moveDistanceFpsX));
 
 	// y축 이동은 엑터 스프라이트를 이동
-	pActorSprite->setPositionY(pActorSprite->getPositionY() - fMoveDistanceFPSY);
-	m_fMoveDistance += fMoveSpeedFPS;
-	m_fElapsedLifeTime += dt;
+	pActorSprite->setPositionY(pActorSprite->getPositionY() - moveDistanceFpsY);
+	m_fMoveDistance += moveSpeedFps;
+	m_fElapsedLifeTime += _dt;
 
-	if (isLifeTimeOver()) {
+	if (isLifeTimeOver())
+	{
 		onLifeTimeOver();
 	}
 
-	if (isDistanceOver()) {
+	if (isDistanceOver())
+	{
 		onDistanceOver();
 	}
 
-	if (pActorSprite->getPositionY() <= m_pProjectile->getThicknessBoxNode()->getPositionY()) {
+	if (pActorSprite->getPositionY() <= m_pProjectile->getThicknessBoxNode()->getPositionY())
+	{
 		onCollisionWithGround();
 	}
-
 }
 
-void ProjectileListener::onCollisionWithGround() {
+void ProjectileListener::onCollisionWithGround()
+{
 	m_pProjectile->cleanUpAtNextFrame();
 }
 
-void ProjectileListener::onLifeTimeOver() {
+void ProjectileListener::onLifeTimeOver()
+{
 	m_pProjectile->cleanUpAtNextFrame();
 }
 
-void ProjectileListener::onDistanceOver() {
+void ProjectileListener::onDistanceOver()
+{
 	m_pProjectile->cleanUpAtNextFrame();
 }

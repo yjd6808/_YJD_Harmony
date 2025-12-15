@@ -6,14 +6,12 @@
  * 카메라를 다를줄몰라서 만든거..
  */
 
-
 #pragma once
-
 
 #include <SteinsGate/Client/Tutturu.h>
 
-
 class MapLayer;
+
 class MimicCamera : public SGNode
 {
 public:
@@ -21,14 +19,11 @@ public:
 
 	static MimicCamera* create();
 
-	void setFollowTarget(Actor* actor);
-	void updateView(float dt);
-	void update(float dt);
+	void setFollowTarget(Actor* _pTarget);
+	void updateView(float _dt);
+	void update(float _dt) override;
+
 private:
-	Actor* m_pTarget;
-	MapLayer* m_pMapLayer;
+	Actor* target_;
+	MapLayer* mapLayer_;
 };
-
-
-
-

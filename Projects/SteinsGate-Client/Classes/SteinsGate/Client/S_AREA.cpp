@@ -6,7 +6,6 @@
  */
 
 
-
 #include "Tutturu.h"
 #include "GameCoreHeader.h"
 #include "S_AREA.h"

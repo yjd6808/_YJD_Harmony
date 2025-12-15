@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 3:55:09 PM
  * =====================
@@ -13,31 +13,28 @@
 struct JsonUtil
 {
 public:
-	static bool load(const char* fileName, JCORE_OUT Json::Value& root);
-	static bool load(const SGString& fileName, JCORE_OUT Json::Value& root);
-	static void loadThrow(const char* fileName, JCORE_OUT Json::Value& root);
-	static void loadThrow(const SGString& fileName, JCORE_OUT Json::Value& root);
+	static bool Load(const char* _pFileName, JCORE_OUT Json::Value& _root);
+	static bool Load(const SGString& _fileName, JCORE_OUT Json::Value& _root);
+	static void LoadThrow(const char* _pFileName, JCORE_OUT Json::Value& _root);
+	static void LoadThrow(const SGString& _fileName, JCORE_OUT Json::Value& _root);
 
-	static SGString getString(Json::Value& value);
-	static const char* getStringRaw(Json::Value& value, JCORE_OUT_OPT int* len = nullptr);
-	static SGString getStringOrNull(Json::Value& value);
-	static SGString getStringOrDefault(Json::Value& value, const SGString& defaultValue = 0); // 내 문자열은 0으로 초기화하면 동적 할당 안함
-	static void parseThicknessInfo(Json::Value& thicknessRoot, JCORE_OUT ThicknessBox& box);
+	static SGString GetString(Json::Value& _value);
+	static const char* GetStringRaw(Json::Value& _value, JCORE_OUT_OPT int* _pLength = nullptr);
+	static SGString GetStringOrNull(Json::Value& _value);
+	static SGString GetStringOrDefault(Json::Value& _value, const SGString& _defaultValue = 0);
+	// 내 문자열은 0으로 초기화하면 동적 할당 안함
+	static void ParseThicknessInfo(Json::Value& _thicknessRoot, JCORE_OUT ThicknessBox& _box);
 
-	static void parseIntNumber2(Json::Value& root, JCORE_OUT int& num1, JCORE_OUT int& num2);
-	static void parseIntNumber3(Json::Value& root, JCORE_OUT int& num1, JCORE_OUT int& num2, JCORE_OUT int& num3);
-	static void parseIntNumber4(Json::Value& root, JCORE_OUT int& num1, JCORE_OUT int& num2, JCORE_OUT int& num3, JCORE_OUT int& num4);
-	static void parseIntNumberN(Json::Value& root, JCORE_OUT int* numArr, int count);
+	static void ParseIntNumber2(Json::Value& _root, JCORE_OUT int& _num1, JCORE_OUT int& _num2);
+	static void ParseIntNumber3(Json::Value& _root, JCORE_OUT int& _num1, JCORE_OUT int& _num2, JCORE_OUT int& _num3);
+	static void ParseIntNumber4(Json::Value& _root, JCORE_OUT int& _num1, JCORE_OUT int& _num2, JCORE_OUT int& _num3,
+	                            JCORE_OUT int& _num4);
+	static void ParseIntNumberN(Json::Value& _root, JCORE_OUT int* _pNumArr, int _count);
 
-	static void parseFloatNumber2(Json::Value& root, JCORE_OUT float& num1, JCORE_OUT float& num2);
-	static void parseFloatNumberN(Json::Value& root, JCORE_OUT float* numArr, int count);
+	static void ParseFloatNumber2(Json::Value& _root, JCORE_OUT float& _num1, JCORE_OUT float& _num2);
+	static void ParseFloatNumberN(Json::Value& _root, JCORE_OUT float* _pNumArr, int _count);
 
-	static int getIntDefault(Json::Value& value, int defaultValue = 0);
-	static bool getBooleanDefault(Json::Value& value, bool defaultValue = false);
-	static float getFloatDefault(Json::Value& value, float defaultValue = 0);
-	
+	static int GetIntDefault(Json::Value& _value, int _defaultValue = 0);
+	static bool GetBooleanDefault(Json::Value& _value, bool _defaultValue = false);
+	static float GetFloatDefault(Json::Value& _value, float _defaultValue = 0);
 };
-
-
-
-

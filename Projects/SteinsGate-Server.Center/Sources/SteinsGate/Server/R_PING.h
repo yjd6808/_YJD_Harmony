@@ -14,5 +14,5 @@
 struct R_PING : InterServerRecvHelper
 {
 public:
-	static void RECV_SCE_TimeSync(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SCE_TimeSync(JNetwork::Session* _pSession, JNetwork::ICommand* _pCommand);
 };

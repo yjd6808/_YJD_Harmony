@@ -18,4 +18,3 @@ struct LobbyChannelInfo
 	int Number;
 	ChannelDensity_t Desity;
 };
-

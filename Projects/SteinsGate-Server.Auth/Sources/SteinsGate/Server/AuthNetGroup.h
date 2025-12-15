@@ -18,9 +18,9 @@ public:
 	~AuthNetGroup() override;
 
 	AuthServer* GetAuthTcp() const { return m_pAuthTcp; }
-	SGISessionContainer* GetSessionContainer(ServerType_t type) override;
+	SGISessionContainer* GetSessionContainer(ServerType_t _type) override;
 	SGISessionContainer* GetAuthSessionContainer() const { return m_pAuthSessionContainer; }
-	CommonSession* GetSessionFromContainer(int handle) override;
+	CommonSession* GetSessionFromContainer(int _handle) override;
 
 	CommonServer* GetMainTcp() const override { return m_pAuthTcp; }
 protected:
@@ -29,7 +29,7 @@ protected:
 	void InitializeParser() override;
 	void InitializeServer() override;
 
-	void OnUpdate(const JCore::TimeSpan& elapsed) override;
+	void OnUpdate(const JCore::TimeSpan& _elapsed) override;
 
 	SGISessionContainer* m_pAuthSessionContainer;
 	AuthServer* m_pAuthTcp;

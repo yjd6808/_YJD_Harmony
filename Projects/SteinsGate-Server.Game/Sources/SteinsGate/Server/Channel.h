@@ -14,9 +14,9 @@
 class Channel
 {
 public:
-	Channel(GameChannelInfo* channelInfo);
+	Channel(GameChannelInfo* _pChannelInfo);
 
-	GameChannelInfo* GetInfo() const { return m_pInfo; }
+	GameChannelInfo* GetInfo() const { return info_; }
 private:
-	GameChannelInfo* m_pInfo;
+	GameChannelInfo* info_;
 };

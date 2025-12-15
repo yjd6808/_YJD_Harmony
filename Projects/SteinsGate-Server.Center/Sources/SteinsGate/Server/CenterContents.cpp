@@ -12,11 +12,15 @@
 
 USING_NS_JC;
 
-void CenterContents::Initialize() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterContents::Initialize()
+{
 	BootStateManager = BootStateManager::Get();
 }
 
-void CenterContents::Finalize() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterContents::Finalize()
+{
 	ClearSchedule();
 
 	JCORE_DELETE_SINGLETON_SAFE(BootStateManager);

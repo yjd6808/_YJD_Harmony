@@ -21,5 +21,5 @@ class ChannelManager
 	~ChannelManager() override;
 public:
 	void Initialize();
-	void BroadcastPacket(JNetwork::IPacket* packet) override;
+	void BroadcastPacket(JNetwork::IPacket* _pPacket) override;
 };

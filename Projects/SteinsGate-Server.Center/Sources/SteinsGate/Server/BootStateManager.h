@@ -19,12 +19,11 @@ class BootStateManager : public JCore::SingletonStaticPointer<BootStateManager>
 public:
 	void Initialize();
 
-	void SetState(int serverId, ServerBootState_t state);
-	ServerBootState_t GetState(int serverId);
+	void SetState(int _serverId, ServerBootState_t _state);
+	ServerBootState_t GetState(int _serverId);
 
 	ServerBootState_t m_eStates[Const::Server::MaxProcessId];
 };
-
 
 
 

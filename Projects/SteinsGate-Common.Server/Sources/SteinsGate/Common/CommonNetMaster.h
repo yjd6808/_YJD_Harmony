@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <JCore/Threading/Pulser.h>
@@ -15,26 +14,29 @@
 class CommonNetMaster : public JNetwork::NetMaster
 {
 public:
-	CommonNetMaster(int updatePerSecond);
+	CommonNetMaster(int _updatePerSecond);
 
 	void Initialize() override;
 
 	virtual ServerProcessType_t GetProcessType() = 0;
 
-	void SetProcessInfo(ServerProcessInfo* info);
-	ServerProcessInfo* GetProcessInfo() const { return m_pProcessInfo; }
+	void SetProcessInfo(ServerProcessInfo* _pProcessInfo);
+	ServerProcessInfo* GetProcessInfo() const { return processInfo_; }
 
 	void ProcessMainUpdate();
-	void ProcessSubUpdate(const JCore::TimeSpan& elapsed);
-	void Terminate() { m_bRunning = false; }
+	void ProcessSubUpdate(const JCore::TimeSpan& _elapsed);
+
+	void Terminate()
+	{
+		running_ = false;
+	}
+
 protected:
-	virtual void OnUpdate(const JCore::TimeSpan& elapsed) = 0;
+	virtual void OnUpdate(const JCore::TimeSpan& _elapsed) = 0;
 	virtual void OnStopped() = 0;
+
 private:
-	int m_iUpdatePerSecond;
-	bool m_bRunning;
-	ServerProcessInfo* m_pProcessInfo;
+	int updatePerSecond_;
+	bool running_;
+	ServerProcessInfo* processInfo_;
 };
-
-
-

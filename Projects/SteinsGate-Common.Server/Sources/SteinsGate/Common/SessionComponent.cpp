@@ -9,4 +9,8 @@
 #include "ServerCoreHeader.h"
 #include "SessionComponent.h"
 
-SessionComponent::SessionComponent(CommonSession* session) : m_pSession(session) {}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+SessionComponent::SessionComponent(CommonSession* _pSession)
+: pSession_(_pSession)
+{
+}

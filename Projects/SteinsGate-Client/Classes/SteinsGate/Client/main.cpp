@@ -6,12 +6,13 @@
 #include "Tutturu.h"
 #include "SteinsGateApp.h"
 
-int main() {
-    int iResult = -1;
-    {
-        SteinsGateApp app;
-        iResult = cocos2d::Application::getInstance()->run();
-    }
-    return iResult;
-    
+//////////////////////////////////////////////////////////////////////////////////////////
+int main()
+{
+	int result = -1;
+	{
+		SteinsGateApp app;
+		result = cocos2d::Application::getInstance()->run();
+	}
+	return result;
 }

@@ -16,47 +16,44 @@
 
 class HostPlayer
 	: public Player
-	, public JCore::SingletonPointer<HostPlayer>
+	  , public JCore::SingletonPointer<HostPlayer>
 {
 private:
 	friend class TSingleton;
 	HostPlayer();
 	~HostPlayer() override;
+
 public:
 	void initialize() override;
 	void initActionManager();
 	void initController();
-	void initListeners();
-	void hit(const HitInfo& hitInfo) override;
+	void initListeners() override;
+	void hit(const HitInfo& _hitInfo) override;
 
 	void removeActionManager();
 	void removeController();
 
-	void update(float dt) override;
-	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event);
-	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event);
-	void onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture) override;
-	void onFrameEnd(ActorPartAnimation* animation, FrameTexture* texture) override;
-	void onAnimationBegin(ActorPartAnimation* animation, FrameTexture* texture) override;
-	void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture) override;
+	void update(float _dt) override;
+	void onKeyPressed(SGEventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent);
+	void onKeyReleased(SGEventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent);
+	void onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
+	void onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
+	void onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
+	void onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
 
-	void playAction(int actionCode);
-	void playActionForce(int actionCode);
-	void playBaseActionForce(BaseAction_t baseActionType);
-	void playBaseAction(BaseAction_t baseAction);
+	void playAction(int _actionCode);
+	void playActionForce(int _actionCode);
+	void playBaseActionForce(BaseAction_t _baseActionType);
+	void playBaseAction(BaseAction_t _baseAction);
 
 	int getRunningActionCode();
 
-
 	ActionMgr* actionManager();
 	PlayerController* ctrl();
-	AccountData& accountData() { return m_AccountData; }
-	
+	AccountData& accountData() { return accountData_; }
 
 private:
-	AccountData m_AccountData;
-	ActionMgr* m_pActionManager;
-	PlayerController* m_pController;
+	AccountData accountData_;
+	ActionMgr* actionManager_;
+	PlayerController* controller_;
 };
-
-

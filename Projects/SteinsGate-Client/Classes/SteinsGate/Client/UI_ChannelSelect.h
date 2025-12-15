@@ -8,20 +8,20 @@
 
 #pragma once
 
-#include <SteinsGate/Client/UIMasterGroup.h>
+#include <SteinsGate/Client/UIRootGroup.h>
 
 #define SG_UI_CHANNELSELECT_MAX_CHANNEL_COUNT	10
 
-class UI_ChannelSelect : public UIMasterGroup
+class UI_ChannelSelect : public UIRootGroup
 {
 public:
-	UI_ChannelSelect(UIGroupInfo* groupInfo);
+	UI_ChannelSelect(UIGroupInfo* _pGroupInfo);
 	~UI_ChannelSelect() override;
 
 	enum class ChannelTab
 	{
-		Teen,		// 청소년
-		Adult		// 성인
+		Teen, // 청소년
+		Adult // 성인
 	};
 
 	struct ServerButton
@@ -91,20 +91,21 @@ public:
 	};
 
 protected:
-	void onInit() override;
-	void onLoaded() override;
-	void onUnloaded() override;
-	void onUpdate(float dt) override;
+	void OnInit() override;
+	void OnLoaded() override;
+	void OnUnloaded() override;
+	void onUpdate(float _dt) override;
 
-	void onMouseDown(SGEventMouse* mouseEvent) override;
-	void onMouseMove(SGEventMouse* mouseEvent) override;
-	void onToggleStateChanged(UIToggleButton* toggleBtn, ToggleState state) override;
+	void OnMouseDown(SGEventMouse* _pMouseEvent) override;
+	void OnMouseMove(SGEventMouse* _pMouseEvent) override;
+	void OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _state) override;
 
-	int getMonsterSpriteSgaIndex() const { return m_iMonsterSpriteSgaIndex; }
-	int getMonsterSpriteImgIndex() const { return m_iMonsterSpriteImgIndex; }
+	int getMonsterSpriteSgaIndex() const { return monsterSpriteSgaIndex_; }
+	int getMonsterSpriteImgIndex() const { return monsterSpriteImgIndex_; }
 
 	void updateServerSelectionSpriteOpacity(float dt);
 	void updateBackgroundGearRotation(float dt);
+
 public:
 	// void initServerList();
 	// void initChannelList();
@@ -112,32 +113,30 @@ public:
 	void selectServer(GameServerType_t serverType);
 	void selectChannel(int channelIndex);
 	void selectChannelTab(ChannelTab tab);
-	
+
 	void enterChannel(GameServerType_t serverType, int channelIndex);
+
 private:
+	UISprite* spriteBackgroundGear_;
+	UIButton* btnStart_;
+	UIButton* btnTerminate_;
+	UIButton* btnRefresh_;
+	UIToggleButton* toggleTeen_;
+	UIToggleButton* toggleAdult_;
+	UILabel* labelPage_;
 
-	UISprite* m_pSpriteBackgroundGear;
-	UIButton* m_pBtnStart;
-	UIButton* m_pBtnTerminate;
-	UIButton* m_pBtnRefresh;
-	UIToggleButton* m_pTBtnTeen;
-	UIToggleButton* m_pTBtnAdult;
-	UILabel* m_pLabelPage;
-
-	ServerButton* m_arrServerButtonList[GameServerType::Max];
-	ChannelButton* m_arrChannelButtonList[SG_UI_CHANNELSELECT_MAX_CHANNEL_COUNT];
+	ServerButton* serverButtons_[GameServerType::Max];
+	ChannelButton* channelButtons_[SG_UI_CHANNELSELECT_MAX_CHANNEL_COUNT];
 
 	// =========================================
 
-	int m_iMonsterSpriteSgaIndex;
-	int m_iMonsterSpriteImgIndex;
+	int monsterSpriteSgaIndex_;
+	int monsterSpriteImgIndex_;
 
-	float m_fServerButtonSelectionOpacity;
-	bool m_bServerButtonSelectionOpacityUp;
+	float serverButtonSelectionOpacity_;
+	bool serverButtonSelectionOpacityUp_;
 
-	GameServerType_t m_eSelectedServer;
-	int m_iSelectedChannelIndex;
-	ChannelTab m_eChannelTab;
+	GameServerType_t selectedServer_;
+	int selectedChannelIndex_;
+	ChannelTab channelTab_;
 };
-
-

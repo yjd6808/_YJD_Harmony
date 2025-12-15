@@ -12,30 +12,40 @@
 USING_NS_JC;
 USING_NS_JNET;
 
+//////////////////////////////////////////////////////////////////////////////////////////
 CenterSession::CenterSession(
-	TcpServer* server,
-	const IOCPPtr& iocp,
-	const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-	int recvBufferSize,
-	int sendBufferSize)
-	: TcpSession(server, iocp, bufferAllocator, nullptr, recvBufferSize, sendBufferSize)
-	, m_eClientType(ServerProcessType::None)
-	, m_iServerId(InvalidValue_v)
-{}
-
-void CenterSession::OnConnected() {
-	m_eClientType = ServerProcessType::None;
+    TcpServer* _pServer,
+    const IOCPPtr& _pIocp,
+    const JCore::MemoryPoolAbstractPtr& _pBufferAllocator,
+    int _recvBufferSize,
+    int _sendBufferSize
+)
+    : TcpSession(_pServer, _pIocp, _pBufferAllocator, nullptr, _recvBufferSize, _sendBufferSize)
+    , clientType_(ServerProcessType::None)
+    , serverId_(InvalidValue_v)
+{
 }
 
-void CenterSession::OnDisconnected() {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterSession::OnConnected()
+{
+    clientType_ = ServerProcessType::None;
 }
 
-void CenterSession::SetClientInformation(ServerProcessType_t type, Int8 serverId) {
-	m_eClientType = type;
-	m_iServerId = serverId;
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterSession::OnDisconnected()
+{
 }
 
-bool CenterSession::IsValid() const {
-	return m_eClientType != ServerProcessType::None && m_iServerId != InvalidValue_v;
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterSession::SetClientInformation(ServerProcessType_t _clientType, Int8 _serverId)
+{
+    clientType_ = _clientType;
+    serverId_ = _serverId;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CenterSession::IsValid() const
+{
+    return clientType_ != ServerProcessType::None && serverId_ != InvalidValue_v;
 }

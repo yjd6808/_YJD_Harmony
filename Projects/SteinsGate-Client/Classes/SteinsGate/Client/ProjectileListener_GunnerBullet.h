@@ -1,13 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/2/2023 10:18:42 AM
  * =====================
  *
  */
 
-
 #pragma once
-
 
 #include <SteinsGate/Client/ProjectileListener.h>
 #include <SteinsGate/Client/HitRecorder.h>
@@ -15,15 +13,13 @@
 class ProjectileListener_GunnerBullet : public ProjectileListener
 {
 public:
-	ProjectileListener_GunnerBullet(Projectile* projectile, Actor* spawner);
+	ProjectileListener_GunnerBullet(Projectile* _pProjectile, Actor* _pSpawner);
 
 	void onCreated() override;
-	void onUpdate(float dt) override;
+	void onUpdate(float _dt) override;
 	void onCollisionWithGround() override;
-	void onEnemySingleHit(HitInfo& info);
-	void onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount);
+	void onEnemySingleHit(HitInfo& _info);
+	void onEnemyMultiHit(SGHitInfoList& _hitList, int _newHitCount);
 
 	SG_PROJECTILE_LISTENER_FACTORY(ProjectileListener_GunnerBullet)
 };
-
-

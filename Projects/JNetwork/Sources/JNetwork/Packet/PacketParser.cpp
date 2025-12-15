@@ -83,7 +83,7 @@ void PacketCommandParser::Received(Int32UL _receivedBytes)
 		for (int commandIndex = 0; commandIndex < pPacket->GetCommandCount(); ++commandIndex)
 		{
 			ICommand* pCommand = pRecvBuffer->Peek<ICommand*>();
-			CmdLen_t commandLength = pCommand->GetCommandLength();
+			CmdLen_t commandLength = pCommand->GetLength();
 			session_->NotifyCommand(pCommand);
 
 			if (pRecvBuffer->MoveReadPos(commandLength) == false)

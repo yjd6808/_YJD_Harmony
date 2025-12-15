@@ -6,158 +6,183 @@
  */
 
 
-
 #include "Tutturu.h"
 #include "UILabel.h"
 #include "GameCoreHeader.h"
 
-#include <SteinsGate/Client/UIMasterGroup.h>
+#include <SteinsGate/Client/UIRootGroup.h>
 
 USING_NS_CC;
 USING_NS_JC;
 
-UILabel::UILabel(UIMasterGroup* master, UIGroup* parent)
-	: UIElement(master, parent)
-	, m_fInitialFontSize(12.0f)
-	, m_fFontSize(12.0f)
-	, m_bFontAutoScaling(true)
-	, m_pInfo( nullptr )
-	, m_pLabel{ nullptr }
-{}
-
-UILabel::UILabel(UIMasterGroup* master, UIGroup* parent, UILabelInfo* labelInfo, bool infoOwner)
-	: UIElement(master, parent, labelInfo, infoOwner)
-	, m_fInitialFontSize(12.0f)
-	, m_fFontSize(12.0f)
-	, m_bFontAutoScaling(true)
-	, m_pInfo(labelInfo)
-	, m_pLabel{nullptr}
-{}
-
-UILabel::~UILabel() {
+//////////////////////////////////////////////////////////////////////////////////////////
+UILabel::UILabel(UIRootGroup* _pMaster, UIGroup* _pParent)
+: UIElement(_pMaster, _pParent)
+, initialFontSize_(12.0f)
+, fontSize_(12.0f)
+, fontAutoScaling_(true)
+, pInfo_(nullptr)
+, pLabel_(nullptr)
+{
 }
 
-UILabel* UILabel::create(UIMasterGroup* master, UIGroup* parent) {
-	UILabel* pLabel = dbg_new UILabel(master, parent);
+UILabel::UILabel(UIRootGroup* _pMaster, UIGroup* _pParent, UILabelInfo* _pLabelInfo, bool _infoOwner)
+: UIElement(_pMaster, _pParent, _pLabelInfo, _infoOwner)
+, initialFontSize_(12.0f)
+, fontSize_(12.0f)
+, fontAutoScaling_(true)
+, pInfo_(_pLabelInfo)
+, pLabel_(nullptr)
+{
+}
+
+UILabel::~UILabel()
+{
+}
+
+UILabel* UILabel::create(UIRootGroup* _pMaster, UIGroup* _pParent)
+{
+	UILabel* pLabel = dbg_new UILabel(_pMaster, _pParent);
 	pLabel->init();
 	pLabel->autorelease();
 	return pLabel;
 }
 
-UILabel* UILabel::create(UIMasterGroup* master, UIGroup* parent, UILabelInfo* labelInfo, bool infoOwner) {
-	UILabel* pLabel = dbg_new UILabel(master, parent, labelInfo, infoOwner);
+UILabel* UILabel::create(UIRootGroup* _pMaster, UIGroup* _pParent, UILabelInfo* _pLabelInfo, bool _infoOwner)
+{
+	UILabel* pLabel = dbg_new UILabel(_pMaster, _pParent, _pLabelInfo, _infoOwner);
 	pLabel->init();
 	pLabel->autorelease();
 	return pLabel;
 }
 
-SGString UILabel::getFontPath() const {
-	const SGString fontName = Core::Contents.FontManager->getFontName(m_pInfo->FontCode);
-	const SGString fontPath = Path::Combine(Core::CommonInfo->DataPath, Const::Resource::FontDirName, fontName);
+SGString UILabel::getFontPath() const
+{
+	const SGString fontName = Core::Contents.FontManager->getFontName(pInfo_->FontCode);
+	const SGString fontPath = Path::Combine(Core::CommonInfo->dataPath_, Const::Resource::FontDirName, fontName);
 	return fontPath;
 }
 
-void UILabel::setText(const std::string& text) {
-	m_pLabel->setString(text);
+void UILabel::setText(const std::string& _text)
+{
+	pLabel_->setString(_text);
 }
 
-void UILabel::setText(const std::string& text, float fontSize) {
-	m_pLabel->initWithTTF(text, getFontPath().Source(), fontSize);
-	setContentSize({ m_pInfo->Size.width, m_pInfo->Size.height });
+void UILabel::setText(const std::string& _text, float _fontSize)
+{
+	pLabel_->initWithTTF(_text, getFontPath().Source(), _fontSize);
+	setContentSize({ pInfo_->Size.width, pInfo_->Size.height });
 }
 
-void UILabel::setText(const std::string& text, float fontSize, const SGSize& dimension) {
-	m_pLabel->initWithTTF(text, getFontPath().Source(), fontSize);
-	setContentSize(dimension);
+void UILabel::setText(const std::string& _text, float _fontSize, const SGSize& _dimension)
+{
+	pLabel_->initWithTTF(_text, getFontPath().Source(), _fontSize);
+	setContentSize(_dimension);
 }
 
-void UILabel::setUISize(const SGSize& contentSize) {
-	if (!m_bResizable)
+void UILabel::SetUISize(const SGSize& _contentSize)
+{
+	if (!isResizable_)
+	{
 		return;
+	}
 
-	m_UISize = contentSize;
+	uiSize_ = _contentSize;
 
-	if (m_pLabel == nullptr)
+	if (pLabel_ == nullptr)
+	{
 		return;
+	}
 
 	// TODO: (완료) 폰트 사이즈도 변경되야함.
-	if (m_bFontAutoScaling) {
-		m_fFontSize = m_fInitialFontSize * getUIScaleY();
-		m_pLabel->initWithTTF(m_pLabel->getString(), getFontPath().Source(), (int)m_fFontSize, { m_UISize.width, m_UISize.height });
-		m_pLabel->setLineHeight((int)m_fFontSize);
-	} else {
-		m_pLabel->setDimensions(m_UISize.width, m_UISize.height);
+	if (fontAutoScaling_)
+	{
+		fontSize_ = initialFontSize_ * GetUIScaleY();
+		pLabel_->initWithTTF(pLabel_->getString(), getFontPath().Source(), static_cast<int>(fontSize_),
+		                     { uiSize_.width, uiSize_.height });
+		pLabel_->setLineHeight(static_cast<int>(fontSize_));
+	}
+	else
+	{
+		pLabel_->setDimensions(uiSize_.width, uiSize_.height);
 	}
 }
 
-void UILabel::setInfo(UIElementInfo* info, bool infoOwner) {
-	if (info->Type != UIElementType::Label) {
-		logWarnInvalidInfo(info->Type);
+void UILabel::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
+{
+	if (_pInfo->Type != UIElementType::Label)
+	{
+		LogWarnInvalidInfo(_pInfo->Type);
 		return;
 	}
 
-	if (m_bInfoOwner) {
-		JCORE_DELETE_SAFE(m_pInfo);
+	if (isInfoOwner_)
+	{
+		JCORE_DELETE_SAFE(pInfo_);
 	}
 
-	m_pBaseInfo = info;
-	m_pInfo = static_cast<UILabelInfo*>(info);
-	m_bInfoOwner = infoOwner;
+	pBaseInfo_ = _pInfo;
+	pInfo_ = static_cast<UILabelInfo*>(_pInfo);
+	isInfoOwner_ = _infoOwner;
 }
 
-void UILabel::setInfoLabel(UILabelInfo* info, bool infoOwner) {
-	setInfo(info, infoOwner);
+void UILabel::setInfoLabel(UILabelInfo* _pInfo, bool _infoOwner)
+{
+	SetInfo(_pInfo, _infoOwner);
 }
 
-void UILabel::setVAlignment(VAlignment_t valign) {
-	m_pLabel->setVerticalAlignment((TextVAlignment)valign);
+void UILabel::setVAlignment(VAlignment_t _valign)
+{
+	pLabel_->setVerticalAlignment((TextVAlignment)_valign);
 }
 
-void UILabel::setHAlignment(HAlignment_t halign) {
-	m_pLabel->setHorizontalAlignment((TextHAlignment)halign);
+void UILabel::setHAlignment(HAlignment_t _halign)
+{
+	pLabel_->setHorizontalAlignment((TextHAlignment)_halign);
 }
 
-
-
-
-float UILabel::getAppliedFontSize() const {
-	return m_pLabel->getTTFConfig().fontSize;
+float UILabel::getAppliedFontSize() const
+{
+	return pLabel_->getTTFConfig().fontSize;
 }
 
-int UILabel::getLineCount() const {
-	return m_pLabel->getStringNumLines();
+int UILabel::getLineCount() const
+{
+	return pLabel_->getStringNumLines();
 }
 
-bool UILabel::init() {
-
-	if (!UIElement::init()) {
+bool UILabel::init()
+{
+	if (!UIElement::init())
+	{
 		return false;
 	}
 
-	if (m_pInfo == nullptr) {
-		logWarnMissingInfo();
+	if (pInfo_ == nullptr)
+	{
+		LogWarnMissingInfo();
 		return false;
 	}
 
-	setInitialUISize(m_pInfo->Size);
+	SetInitialUISize(pInfo_->Size);
 
-	m_pLabel = SGLabel::createWithTTF(m_pInfo->Text.ToStd(), getFontPath().Source(), (int)m_fFontSize, Size::ZERO);
-	m_pLabel->setHorizontalAlignment((TextHAlignment)m_pInfo->TextHAlignment);
-	m_pLabel->setVerticalAlignment((TextVAlignment)m_pInfo->TextVAlignment);
-	m_pLabel->setDimensions(m_UISize.width, m_UISize.height);
-	m_pLabel->setTextColor(m_pInfo->FontColor);
-	m_pLabel->enableWrap(m_pInfo->TextWrap);
-	m_pLabel->setLineHeight((int)m_fFontSize);
-	m_pLabel->setAnchorPoint(Vec2::ZERO);
-	this->addChild(m_pLabel);
+	pLabel_ = SGLabel::createWithTTF(pInfo_->Text.ToStd(), getFontPath().Source(), static_cast<int>(fontSize_),
+	                                 Size::ZERO);
+	pLabel_->setHorizontalAlignment((TextHAlignment)pInfo_->TextHAlignment);
+	pLabel_->setVerticalAlignment((TextVAlignment)pInfo_->TextVAlignment);
+	pLabel_->setDimensions(uiSize_.width, uiSize_.height);
+	pLabel_->setTextColor(pInfo_->FontColor);
+	pLabel_->enableWrap(pInfo_->TextWrap);
+	pLabel_->setLineHeight(static_cast<int>(fontSize_));
+	pLabel_->setAnchorPoint(Vec2::ZERO);
+	this->addChild(pLabel_);
 
-	
-	return m_bInitialized = true;
+	return isInitialized_ = true;
 }
 
-
-void UILabel::setInitialUISize(SGSize size) {
-	UIElement::setInitialUISize(size);
-	m_fFontSize = m_pInfo->FontSize * Core::ClientInfo->UIScaleYFactor;
-	m_fInitialFontSize = m_fFontSize;
+void UILabel::SetInitialUISize(SGSize _size)
+{
+	UIElement::SetInitialUISize(_size);
+	fontSize_ = pInfo_->FontSize * Core::ClientInfo->uiScaleYFactor_;
+	initialFontSize_ = fontSize_;
 }

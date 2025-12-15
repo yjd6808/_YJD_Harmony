@@ -29,10 +29,15 @@ LobbyNetGroup::LobbyNetGroup()
 {
 	SetName("로비 메인");
 }
-LobbyNetGroup::~LobbyNetGroup() {}
 
-SGISessionContainer* LobbyNetGroup::GetSessionContainer(ServerType_t type) {
-	if (type == ServerType::Lobby) {
+LobbyNetGroup::~LobbyNetGroup()
+{
+}
+
+SGISessionContainer* LobbyNetGroup::GetSessionContainer(ServerType_t _type)
+{
+	if (_type == ServerType::Lobby)
+	{
 		return m_pLobbySessionContainer;
 	}
 
@@ -40,47 +45,52 @@ SGISessionContainer* LobbyNetGroup::GetSessionContainer(ServerType_t type) {
 	return nullptr;
 }
 
-CommonSession* LobbyNetGroup::GetSessionFromContainer(int handle) {
-	if (!Const::Host::LobbyHandleRange.Contain(handle)) {
-		_LogWarn_("올바르지 않은 로비 세션핸들입니다. (%d)", handle);
+CommonSession* LobbyNetGroup::GetSessionFromContainer(int _handle)
+{
+	if (!Const::Host::LobbyHandleRange.Contain(_handle))
+	{
+		_LogWarn_("올바르지 않은 로비 세션핸들입니다. (%d)", _handle);
 		return nullptr;
 	}
-	
 
-	return dynamic_cast<CommonSession*>(m_pLobbySessionContainer->Get(handle));
+	return dynamic_cast<CommonSession*>(m_pLobbySessionContainer->Get(_handle));
 }
 
-void LobbyNetGroup::InitializeBufferPool() {
+void LobbyNetGroup::InitializeBufferPool()
+{
 	CreateBufferPool({});
 }
 
-void LobbyNetGroup::InitializeIOCP() {
+void LobbyNetGroup::InitializeIOCP()
+{
 	CreateIocp(2);
 	RunIocp();
 }
 
-void LobbyNetGroup::InitializeParser() {
+void LobbyNetGroup::InitializeParser()
+{
 	CommonNetGroup::InitializeParser();
 
 	// LOBBY
-	m_pParser->AddCommand<CLO_JoinLobby>(R_LOBBY::RECV_CLO_JoinLobby);
+	pParser_->AddCommand<CLO_JoinLobby>(R_LOBBY::RECV_CLO_JoinLobby);
 }
 
-void LobbyNetGroup::InitializeServer() {
-	auto spServer = MakeShared<LobbyServer>(pIocp_, pBufferPool_);
+void LobbyNetGroup::InitializeServer()
+{
+	auto pLobbyServer = MakeShared<LobbyServer>(m_spIOCP, m_spBufferPool);
 
-	AddHost(Const::Host::LobbyTcpId, spServer);
+	AddHost(Const::Host::LobbyTcpId, pLobbyServer);
 
-	m_pLobbySessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->MaxSessionCount);
+	m_pLobbySessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->maxSessionCount_);
 	m_pLobbySessionContainer->SetInitialHandleSeq(Const::Host::LobbyHandleRange.Min);
 
-	m_pLobbyTcp = spServer.Get<LobbyServer*>();
+	m_pLobbyTcp = pLobbyServer.Get<LobbyServer*>();
 	m_pLobbyTcp->SetSesssionContainer(m_pLobbySessionContainer);
-	m_pLobbyTcp->SetEventListener(dbg_new ListenerLobbyServer{ m_pLobbyTcp, m_pParser });
+	m_pLobbyTcp->SetEventListener(dbg_new ListenerLobbyServer{ m_pLobbyTcp, pParser_ });
 
 	AddUpdatable(Const::Host::LobbyTcpId, m_pLobbyTcp);
 }
 
-void LobbyNetGroup::OnUpdate(const TimeSpan& elapsed) {
-
+void LobbyNetGroup::OnUpdate(const TimeSpan& _elapsed)
+{
 }

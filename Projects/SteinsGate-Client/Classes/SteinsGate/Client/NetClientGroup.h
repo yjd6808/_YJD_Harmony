@@ -5,9 +5,7 @@
  *
  */
 
-
 #pragma once
-
 
 #include <SteinsGate/Client/NetClientEventListener.h>
 
@@ -31,11 +29,10 @@ public:
 	SGTcpClient* ChatTcp;
 	SGUdpClient* ChatUdp;
 
-	SGCommandParser* getParser() { return &m_Parser; }
+	SGCommandParser* getParser() { return &parser_; }
+
 private:
-	SGCommandParser m_Parser;
+	SGCommandParser parser_;
 
 	friend class NetCore;
 };
-
-

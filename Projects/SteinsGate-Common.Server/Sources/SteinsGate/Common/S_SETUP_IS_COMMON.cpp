@@ -14,26 +14,33 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-bool S_SETUP_IS_COMMON::SEND_SCE_ItsMe(ServerProcessType_t clientType, int serverId) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool S_SETUP_IS_COMMON::SEND_SCE_ItsMe(ServerProcessType_t _clientType, int _serverId)
+{
 	auto sending = SendBegin<SCE_ItsMe>();
-	sending.Cmd.ClientServerType = clientType;
-	sending.Cmd.ServerId = serverId;
+	sending.cmd_.ClientServerType = _clientType;
+	sending.cmd_.ServerId = _serverId;
 	return true;
 }
 
-bool S_SETUP_IS_COMMON::SEND_SCE_NotifyBootState(int serverId, ServerType_t serverType, ServerBootState_t state) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool S_SETUP_IS_COMMON::SEND_SCE_NotifyBootState(int _serverId, ServerType_t _serverType, ServerBootState_t _state)
+{
 	auto sending = SendBegin<SCE_NotifyBootState>();
-	sending.Cmd.State = state;
-	sending.Cmd.ServerType = serverType;
-	sending.Cmd.ServerId = serverId;
+	sending.cmd_.State = _state;
+	sending.cmd_.ServerType = _serverType;
+	sending.cmd_.ServerId = _serverId;
 	return true;
 }
 
-bool S_SETUP_IS_COMMON::SEND_SCE_NotifyOrderFailed(int serverId, ServerType_t serverType, CenterOrder_t failedOrder, Int32U errorCode) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool S_SETUP_IS_COMMON::SEND_SCE_NotifyOrderFailed(int _serverId, ServerType_t _serverType, CenterOrder_t _failedOrder,
+                                                   Int32U _errorCode)
+{
 	auto sending = SendBegin<SCE_NotifyOrderFailed>();
-	sending.Cmd.ErrorCode = errorCode;
-	sending.Cmd.ServerType = serverType;
-	sending.Cmd.ServerId = serverId;
-	sending.Cmd.Order = failedOrder;
+	sending.cmd_.ErrorCode = _errorCode;
+	sending.cmd_.ServerType = _serverType;
+	sending.cmd_.ServerId = _serverId;
+	sending.cmd_.Order = _failedOrder;
 	return true;
 }

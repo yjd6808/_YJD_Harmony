@@ -5,9 +5,6 @@
  *
  */
 
-
-
-
 #include "Tutturu.h"
 #include "ChannelSelectScene.h"
 
@@ -18,29 +15,31 @@
 USING_NS_CC;
 USING_NS_JC;
 
-// ==============================================================
-// 스태틱
-// ==============================================================
+//////////////////////////////////////////////////////////////////////////////////////////
+SGChannelSelectScene* SGChannelSelectScene::create()
+{
+	SGChannelSelectScene* pScene = dbg_new SGChannelSelectScene();
 
-SGChannelSelectScene* SGChannelSelectScene::create() {
-	SGChannelSelectScene* scene = dbg_new SGChannelSelectScene();
-
-	if (scene && scene->init()) {
-		scene->autorelease();
-		return scene;
+	if (pScene && pScene->init())
+	{
+		pScene->autorelease();
+		return pScene;
 	}
-	CC_SAFE_DELETE(scene);
+
+	CC_SAFE_DELETE(pScene);
 	return nullptr;
 }
 
-// ==============================================================
-// 멤버
-// ==============================================================
+//////////////////////////////////////////////////////////////////////////////////////////
+SGChannelSelectScene::SGChannelSelectScene()
+{
+}
 
-SGChannelSelectScene::SGChannelSelectScene() {}
-
-bool SGChannelSelectScene::init() {
-	if (!SceneBase::init()) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool SGChannelSelectScene::init()
+{
+	if (!SceneBase::init())
+	{
 		return false;
 	}
 
@@ -48,21 +47,31 @@ bool SGChannelSelectScene::init() {
 	return true;
 }
 
-void SGChannelSelectScene::onEnterTransitionDidFinish() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void SGChannelSelectScene::onEnterTransitionDidFinish()
+{
 	SceneBase::onEnterTransitionDidFinish();
 }
 
-
-void SGChannelSelectScene::update(float dt) {
-	
+//////////////////////////////////////////////////////////////////////////////////////////
+void SGChannelSelectScene::update(float _dt)
+{
 }
 
-void SGChannelSelectScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
-	if (keyCode == EventKeyboard::KeyCode::KEY_F8) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void SGChannelSelectScene::onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
+{
+	if (_keyCode == EventKeyboard::KeyCode::KEY_F8)
+	{
 		WorldScene::get()->reserveScene(SceneType::Game);
-	} else if (keyCode == EventKeyboard::KeyCode::KEY_F7) {
+	}
+	else if (_keyCode == EventKeyboard::KeyCode::KEY_F7)
+	{
 		WorldScene::get()->reserveScene(SceneType::Login);
 	}
 }
 
-void SGChannelSelectScene::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {}
+//////////////////////////////////////////////////////////////////////////////////////////
+void SGChannelSelectScene::onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
+{
+}

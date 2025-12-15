@@ -5,27 +5,28 @@
  *
  */
 
-
 #pragma once
 
 #include <SteinsGate/Client/GunnerAction.h>
 
-class GunnerHit : public GunnerAction {
+class GunnerHit : public GunnerAction
+{
 public:
-	GunnerHit(HostPlayer* player, ActionInfo* actionInfo);
+	GunnerHit(HostPlayer* _pPlayer, ActionInfo* _pActionInfo);
 
 	void onActionBegin() override;
 	void onActionEnd() override;
 	void selectHitAnimation();
-    void checkPosition();
-    void updateGroundHitState(float dt);
-    void updateDownState(float dt);
-    void updateAirHitState(float dt);
-    void onUpdate(float dt) override;
+	void checkPosition();
+	void updateGroundHitState(float _deltaTime);
+	void updateDownState(float _deltaTime);
+	void updateAirHitState(float _deltaTime);
+	void onUpdate(float _deltaTime) override;
+
 private:
-	bool m_bHitSmall;
-	bool m_bOnTheGround;		// 초기 Hit 판정시 공중이었는지 아니면 바닥이었는지
-	bool m_bDownTimeCheckBegin;
-	float m_fElapsedDownTime;
-	float m_fDownRecoverTime;
+	bool hitSmall_;
+	bool onTheGround_; // 초기 Hit 판정시 공중이었는지 아니면 바닥이었는지
+	bool downTimeCheckBegin_;
+	float elapsedDownTime_;
+	float downRecoverTime_;
 };

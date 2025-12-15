@@ -10,12 +10,15 @@
 #include "ServerCoreHeader.h"
 #include "UnauthenticatedSessionManager.h"
 
-bool UnauthenticatedSessionManager::Add(AuthenticationSerial_t serial, CommonSession* session) {
-	JCORE_LOCK_GUARD(m_Sync);
-	return m_hSessionMap.Insert(serial, session);
+bool UnauthenticatedSessionManager::Add(AuthenticationSerial_t _serial, CommonSession* _pSession)
+{
+	JCORE_LOCK_GUARD(sync_);
+	return sessionMap_.Insert(_serial, _pSession);
 }
 
-bool UnauthenticatedSessionManager::Remove(AuthenticationSerial_t serial) {
-	JCORE_LOCK_GUARD(m_Sync);
-	return m_hSessionMap.Remove(serial);
+//////////////////////////////////////////////////////////////////////////////////////////
+bool UnauthenticatedSessionManager::Remove(AuthenticationSerial_t _serial)
+{
+	JCORE_LOCK_GUARD(sync_);
+	return sessionMap_.Remove(_serial);
 }

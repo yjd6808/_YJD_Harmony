@@ -1,10 +1,11 @@
-﻿/*
+
+/*
+ * 
  * 작성자: 윤정도
  * 생성일: 8/3/2023 9:10:29 AM [SteinsGate-Server.Lobby 프로젝트 복사 생성]
  * =====================
  *
  */
-
 
 #pragma once
 
@@ -13,7 +14,6 @@
 #include <SteinsGate/Server/LogicServer.h>
 #include <SteinsGate/Server/AreaServer.h>
 #include <SteinsGate/Server/ChatServer.h>
-
 
 class GameNetGroup final : public CommonNetGroup
 {
@@ -34,14 +34,15 @@ public:
 	SGISessionContainer* GetAreaSessionContainer() const { return m_pChatSessionContainer; }
 	SGISessionContainer* GetChatSessionContainer() const { return m_pAreaSessionContainer; }
 
-	SGISessionContainer* GetSessionContainer(ServerType_t type) override;
-	CommonSession* GetSessionFromContainer(int handle) override;
+	SGISessionContainer* GetSessionContainer(ServerType_t _serverType) override;
+	CommonSession* GetSessionFromContainer(int _handle) override;
+
 protected:
 	void InitializeBufferPool() override;
 	void InitializeIOCP() override;
 	void InitializeParser() override;
 	void InitializeServer() override;
-	void OnUpdate(const JCore::TimeSpan& elapsed) override;
+	void OnUpdate(const JCore::TimeSpan& _elapsed) override;
 
 	LogicServer* m_pLogicTcp;
 	AreaServer* m_pAreaTcp;
@@ -51,5 +52,3 @@ protected:
 	SGISessionContainer* m_pChatSessionContainer;
 	SGISessionContainer* m_pAreaSessionContainer;
 };
-
-

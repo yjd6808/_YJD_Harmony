@@ -11,28 +11,38 @@
 
 USING_NS_JC;
 
-SgaSound::~SgaSound() {}
+//////////////////////////////////////////////////////////////////////////////////////////
+SgaSound::~SgaSound()
+{
+}
 
-bool SgaSound::Load(bool loadIndexOnly) {
-	if (loadIndexOnly) return true;
-	if (m_spParent.Exist() == false) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool SgaSound::Load(bool _indexOnly)
+{
+	if (_indexOnly)
+		return true;
+
+	if (!pParent_.Exist())
 		return false;
-	}
 
-	m_spData = MakeShared<Byte[]>(m_iIndexLength);
-	m_spParent->StreamRef().Seek(m_iIndexOffset);
-	m_spParent->StreamRef().Read(m_spData.GetPtr(), 0, m_spData.Length());
+	pData_ = MakeShared<Byte[]>(indexLength_);
+	pParent_->StreamRef().Seek(indexOffset_);
+	pParent_->StreamRef().Read(pData_.GetPtr(), 0, pData_.Length());
 	return true;
 }
 
-bool SgaSound::Unload() {
-	if (!m_spData.Exist())
+//////////////////////////////////////////////////////////////////////////////////////////
+bool SgaSound::Unload()
+{
+	if (!pData_.Exist())
 		return false;
 
-	m_spData = nullptr;
+	pData_ = nullptr;
 	return true;
 }
 
-SgaSoundPtr SgaSound::Create(const Header& header) {
-	return MakeShared<SgaSound>(header);
+//////////////////////////////////////////////////////////////////////////////////////////
+SgaSoundPtr SgaSound::Create(const Header& _header)
+{
+	return MakeShared<SgaSound>(_header);
 }

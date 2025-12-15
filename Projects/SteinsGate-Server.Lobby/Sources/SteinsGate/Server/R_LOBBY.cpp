@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/3/2023 8:34:29 AM [SteinsGate-Server.Auth 프로젝트 복사 생성]
  * =====================
@@ -23,19 +23,20 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-void R_LOBBY::RECV_CLO_JoinLobby(Session* session, ICommand* cmd) {
-	CLO_JoinLobby* pCmd = (CLO_JoinLobby*)cmd;
-	LobbySession* pSession = (LobbySession*)session;
+void R_LOBBY::RECV_CLO_JoinLobby(Session* _pSession, ICommand* _pCmd)
+{
+	CLO_JoinLobby* pCmd = (CLO_JoinLobby*)_pCmd;
+	LobbySession* pSession = (LobbySession*)_pSession;
 
 	if (!Const::Authentication::SerialRange.Contain(pCmd->Serial)) {
 		_LogWarn_("세션의 시리얼 정보가 올바르지 않습니다. (시리얼: %d)", pCmd->Serial);
-		session->Disconnect();
+		_pSession->Disconnect();
 		return;
 	}
 
 	if (!Core::Contents.UnauthenticatedSessionManager->Add(pCmd->Serial, pSession)) {
 		_LogWarn_("세션이 이미 포함되어있습니다.");
-		session->Disconnect();
+		_pSession->Disconnect();
 		return;
 	}
 

@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <SteinsGate/Common/Type.h>
@@ -17,20 +16,16 @@
 #include <SteinsGate/Client/Actor.h>
 #include <SteinsGate/Client/Const.h>
 
-
 class ActorComponent : public IComponent
 {
 public:
 	ActorComponent(Actor* _pActor)
-		: actor_(_pActor)
+	: pActor_(_pActor)
 	{
 	}
 
-	Actor* getActor() const
-	{
-		return actor_;
-	}
+	Actor* getActor() const { return pActor_; }
 
 protected:
-	Actor* actor_;
+	Actor* pActor_;
 };

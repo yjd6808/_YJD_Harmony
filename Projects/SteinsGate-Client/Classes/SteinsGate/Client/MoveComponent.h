@@ -11,27 +11,28 @@
 #include <SteinsGate/Client/ActorComponent.h>
 
 struct MapAreaInfo;
+
 class MoveComponent : public ActorComponent, public IUpdatable
 {
 public:
-	MoveComponent(Actor* actor);
+	MoveComponent(Actor* _pActor);
 
 	void initialize() override;
-	void onUpdate(float dt) override;
+	void onUpdate(float _dt) override;
 
-	void setSpeed(const SGVec2& speed);
-	void setSpeed(float x, float y);
+	void setSpeed(const SGVec2& _speed);
+	void setSpeed(float _x, float _y);
 
 	const SGVec2& getSpeed() const;
 
 	SG_COMPONENT_TYPE_GETTER(Type::eMove)
+
 private:
-	void updateLeftMove(MapLayer* mapLayer, MapAreaInfo* areaInfo, const SGRect& thicknessRect);
-	void updateRightMove(MapLayer* mapLayer, MapAreaInfo* areaInfo, const SGRect& nextThicknessRect);
-	void updateUpMove(MapLayer* mapLayer, MapAreaInfo* areaInfo, const SGRect& nextThicknessRect);
-	void updateDownMove(MapLayer* mapLayer, MapAreaInfo* areaInfo, const SGRect& nextThicknessRect);
+	void updateLeftMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect);
+	void updateRightMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect);
+	void updateUpMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect);
+	void updateDownMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect);
+
 private:
-	SGVec2 m_Speed;
+	SGVec2 speed_;
 };
-
-

@@ -13,7 +13,5 @@
 
 struct R_MESSAGE
 {
-	static void RECV_SC_ClientText(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SC_ClientText(JNetwork::Session* _pSession, JNetwork::ICommand* _pCmd);
 };
-
-

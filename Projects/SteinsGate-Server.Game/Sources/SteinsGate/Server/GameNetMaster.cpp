@@ -15,47 +15,55 @@
 #include <SteinsGate/Server/GameInterServerClientNetGroup.h>
 
 
-
 USING_NS_JC;
 USING_NS_JNET;
 
-GameNetMaster::GameNetMaster() : CommonNetMaster(Const::Process::LoopPerSecondGame) {
+//////////////////////////////////////////////////////////////////////////////////////////
+GameNetMaster::GameNetMaster()
+	: CommonNetMaster(Const::Process::LoopPerSecondGame)
+{
 	SetName("게임");
 }
 
-GameNetMaster::~GameNetMaster() {
+//////////////////////////////////////////////////////////////////////////////////////////
+GameNetMaster::~GameNetMaster()
+{
 }
 
-void GameNetMaster::Initialize() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void GameNetMaster::Initialize()
+{
 	CommonNetMaster::Initialize();
 
-	const auto spGameNetGroup = MakeShared<GameNetGroup>();
-	const auto spInterServerNetGroup = MakeShared<GameInterServerClientNetGroup>();
+	const auto gameNetGroup = MakeShared<GameNetGroup>();
+	const auto interServerNetGroup = MakeShared<GameInterServerClientNetGroup>();
 
-	AddNetGroup(Const::NetGroup::MainId, spGameNetGroup);
-	AddNetGroup(Const::NetGroup::InterServerId,	spInterServerNetGroup);
+	AddNetGroup(Const::NetGroup::MainId, gameNetGroup);
+	AddNetGroup(Const::NetGroup::InterServerId, interServerNetGroup);
 
-	spGameNetGroup->Initialize();
-	spInterServerNetGroup->Initialize();
+	gameNetGroup->Initialize();
+	interServerNetGroup->Initialize();
 }
 
-void GameNetMaster::OnUpdate(const TimeSpan& elapsed) {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void GameNetMaster::OnUpdate(const TimeSpan& _elapsed)
+{
 #if DebugMode
 	static TimeCounter s;
-	s.Elapsed += elapsed;
+	s.Elapsed += _elapsed;
 
 	Thread::Sleep(30);
 
-	if (s.ElapsedSeconds(5)) {
+	if (s.ElapsedSeconds(5))
+	{
 		//_LogDebug_("중앙 시각 %s", Core::Contents.TimeManager->Now().FormatMysqlTime().Source());
 		//_LogDebug_("현재 시각 %s", DateTime::Now().FormatMysqlTime().Source());
 	}
 #endif
-
 }
 
-void GameNetMaster::OnStopped() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void GameNetMaster::OnStopped()
+{
 }
-
 

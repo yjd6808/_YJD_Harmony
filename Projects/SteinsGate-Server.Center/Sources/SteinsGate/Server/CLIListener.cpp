@@ -10,25 +10,33 @@
 #include "CenterCoreHeader.h"
 #include "CLIListener.h"
 
-
-CLIListener::CLIListener() {
-	m_Table.Insert("example",		JCORE_CALLBACK_2(CLIListener::CLI_Example, this));
+//////////////////////////////////////////////////////////////////////////////////////////
+CLIListener::CLIListener()
+{
+	table_.Insert("example", JCORE_CALLBACK_2(CLIListener::CLI_Example, this));
 }
 
-bool CLIListener::OnInputProcessing(int argc, JCore::String* argv) {
-	if (!CLIListenerCommon::OnInputProcessing(argc, argv)) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CLIListener::OnInputProcessing(int _argc, JCore::String* _pArgv)
+{
+	if (!CLIListenerCommon::OnInputProcessing(_argc, _pArgv))
+	{
 		return false;
 	}
 
-	const TCLI_Callback* pCallback = m_Table.Find(argv[0].Source());
+	const TCLI_Callback* pCallback = table_.Find(_pArgv[0].Source());
 
-	if (pCallback) {
-		return (*pCallback)(argc, argv);
+	if (pCallback)
+	{
+		return (*pCallback)(_argc, _pArgv);
 	}
 
 	return true;
 }
 
-bool CLIListener::CLI_Example(int argc, JCore::String* argv) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CLIListener::CLI_Example(int _argc, JCore::String* _pArgv)
+{
 	return true;
 }
+

@@ -1,16 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/25/2023 4:37:02 PM
  * =====================
  *
  */
 
-
 #pragma once
-
-
-
-
 
 #include <SteinsGate/Client/Actor.h>
 #include <SteinsGate/Client/MapObjectInfo.h>
@@ -18,8 +13,8 @@
 class MapObject : public Actor
 {
 public:
-	MapObject(MapObjectInfo* baseInfo);
-	static MapObject* create(MapObjectInfo* baseInfo);
+	MapObject(MapObjectInfo* _pBaseInfo);
+	static MapObject* create(MapObjectInfo* _pBaseInfo);
 
 	void initialize() override;
 	void initActorSprite() override;
@@ -29,20 +24,19 @@ public:
 	void initListeners() override;
 	void initComponents() override;
 
-	void update(float dt) override;
-	void onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture) override;
-	void onFrameEnd(ActorPartAnimation* animation, FrameTexture* texture) override;
-	void onAnimationBegin(ActorPartAnimation* animation, FrameTexture* texture) override;
-	void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture) override;
+	void update(float _dt) override;
+	void onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
+	void onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
+	void onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
+	void onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
 
-	MapObjectType_t getObjectType() const { return m_pBaseInfo->Type; }
-	ActorType_t getType() const override { return ActorType::MapObject; }
+	MapObjectType_t getObjectType() const;
+	ActorType_t getType() const override;
 
-	int getCode() override { return m_pBaseInfo->Code; }
+	int getCode() override;
 
 	MapObjectInfo* getBaseInfo();
+
 private:
-	MapObjectInfo* m_pBaseInfo;
+	MapObjectInfo* baseInfo_;
 };
-
-

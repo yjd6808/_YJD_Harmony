@@ -21,23 +21,39 @@ private:
 	friend class TSingleton;
 	TimeManager();
 	~TimeManager();
+
 public:
 	void updateAppTime();
 	void updateServerTime();
 
-	Int64 getAppStartUpTick() const { return m_AppStartupTime.Tick; }
-	Int64 getAppTick() const { return m_AppTime.Tick; }
+	Int64 getAppStartUpTick() const
+	{
+		return appStartupTime_.Tick;
+	}
 
-	const SGDateTime& getAppTime() const { return m_AppTime; }
-	const SGTimeSpan& getElapsedAppTime() const { return m_AppRunningTime; }
+	Int64 getAppTick() const
+	{
+		return appTime_.Tick;
+	}
+
+	const SGDateTime& getAppTime() const
+	{
+		return appTime_;
+	}
+
+	const SGTimeSpan& getElapsedAppTime() const
+	{
+		return appRunningTime_;
+	}
+
 private:
-	SGTimeSpan m_AppStartupSystemTime;	// App 시작 당시 OS 부팅 후 경과 시간
-	SGDateTime m_AppStartupTime;		// App 시작 시각
-	SGDateTime m_AppTime;				// App 현재 시각
-	SGTimeSpan m_AppRunningTime;		// App 시작 후 경과 시간
+	SGTimeSpan appStartupSystemTime_; // App 시작 당시 OS 부팅 후 경과 시간
+	SGDateTime appStartupTime_; // App 시작 시각
+	SGDateTime appTime_; // App 현재 시각
+	SGTimeSpan appRunningTime_; // App 시작 후 경과 시간
 
-	SGDateTime m_ServerTime;
+	SGDateTime serverTime_;
 
-	bool m_bLobbyServerTimeUpdated;
-	bool m_bGameServerTimeUpdated;
+	bool lobbyServerTimeUpdated_;
+	bool gameServerTimeUpdated_;
 };

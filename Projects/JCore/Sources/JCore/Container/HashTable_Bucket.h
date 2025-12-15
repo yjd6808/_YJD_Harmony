@@ -29,36 +29,46 @@ struct BucketNode
 {
     using TThis = BucketNode<T>;
 
-    BucketNode(const T& _data, Int32U _hash) : data_(_data), hash_(_hash)
+    BucketNode(const T& _data, Int32U _hash) : hash_(_hash)
     {
+		new (&data_) T(_data);
     }
-    BucketNode(T&& _data, Int32U _hash) : data_(Move(_data)), hash_(_hash)
+    BucketNode(T&& _data, Int32U _hash) : hash_(_hash)
     {
         // 호출됨: HashTable:Insert()
+		new (&data_) T(Move(_data));
     } 
-    BucketNode(const TThis& _other) : data_(_other.data_), hash_(_other.hash_)
+    BucketNode(const TThis& _other) : hash_(_other.hash_)
     {
         // 호출됨: HashTable:operator=(const THashTable& other)
+		new (&data_) T(_other.data_);
     } 
-    BucketNode(TThis&& _other) noexcept
+    BucketNode(TThis&& _other) noexcept : hash_(_other.hash_)
     {
         // 호출됨: HashTable:Expand
-        data_ = Move(_other.data_);
-        hash_ = _other.hash_;
+		new (&data_) T(Move(_other.data_));
     } 
     ~BucketNode()
     {
+		data_.~T();
     }
 
     TThis& operator=(const TThis& _other) = delete;
     TThis& operator=(TThis&& _other) noexcept
     {
-        data_ = Move(_other.data_);
-        hash_ = _other.hash_;
+		if (this != &_other) 
+		{
+			data_.~T();
+			new (&data_) T(Move(_other.data_));
+			hash_ = _other.hash_;
+		}
         return *this;
     }
 
-    T data_;
+	union
+    {
+		T data_;
+    };
     Int32U hash_; // 처음에 한번 계산해놓으면 성능이 좀더 개선될 듯?
 };
 
@@ -68,36 +78,46 @@ struct BucketNode<Pair<TKey, TValue>>
     using TPair = Pair<TKey, TValue>;
     using TThis = BucketNode<Pair<TKey, TValue>>;
 
-    BucketNode(const TPair& _data, Int32U _hash) : data_(_data), hash_(_hash)
+    BucketNode(const TPair& _data, Int32U _hash) : hash_(_hash)
     {
+		new (&data_) TPair(_data);
     }
-    BucketNode(TPair&& _data, Int32U _hash) : data_(Move(_data)), hash_(_hash)
+    BucketNode(TPair&& _data, Int32U _hash) : hash_(_hash)
     {
         // 호출됨: HashTable:Insert()
+		new (&data_) TPair(Move(_data));
     } 
-    BucketNode(const TThis& _other) : data_(_other.data_), hash_(_other.hash_)
+    BucketNode(const TThis& _other) : hash_(_other.hash_)
     {
         // 호출됨: HashTable:operator=(const THashTable& other)
+		new (&data_) TPair(_other.data_);
     } 
-    BucketNode(TThis&& _other) noexcept
+    BucketNode(TThis&& _other) noexcept : hash_(_other.hash_)
     {
         // 호출됨: HashTable:Expand
-        data_ = Move(_other.data_);
-        hash_ = _other.hash_;
+		new (&data_) TPair(Move(_other.data_));
     } 
     ~BucketNode()
     {
+		data_.~TPair();
     }
 
     TThis& operator=(const TThis& _other) = delete;
     TThis& operator=(TThis&& _other) noexcept
     {
-        data_ = Move(_other.data_);
-        hash_ = _other.hash_;
+		if (this != &_other)
+		{
+			data_.~TPair();
+			new (&data_) TPair(Move(_other.data_));
+			hash_ = _other.hash_;
+		}
         return *this;
     }
 
-    Pair<TKey, TValue> data_;
+	union
+    {
+		Pair<TKey, TValue> data_;
+    };
     Int32U hash_;
 };
 

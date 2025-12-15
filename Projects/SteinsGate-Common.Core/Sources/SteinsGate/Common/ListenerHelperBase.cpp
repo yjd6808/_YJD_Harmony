@@ -15,39 +15,51 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-void ListenerHelperBase::LogCommand(TransportProtocol protocol, Transmission transmission, ICommand* cmd) {
-	const Cmd_t id = cmd->GetId();
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerHelperBase::LogCommand(TransportProtocol _protocol, Transmission _transmission, ICommand* _pCommand)
+{
+	const Cmd_t id = _pCommand->GetId();
 
-	if (transmission == Transmission::Recv && !Core::RuntimeConfigBase->ShowRecvCommand) {
+	if (_transmission == Transmission::Recv && !Core::RuntimeConfigBase->showRecvCommand_)
+	{
 		return;
 	}
 
-	if (transmission == Transmission::Send && !Core::RuntimeConfigBase->ShowSendCommand) {
+	if (_transmission == Transmission::Send && !Core::RuntimeConfigBase->showSendCommand_)
+	{
 		return;
 	}
 
-	if (Core::RuntimeConfigBase->IsFilteredCommand(transmission, id)) {
+	if (Core::RuntimeConfigBase->IsFilteredCommand(_transmission, id))
+	{
 		return;
 	}
 
-	const char* szName = Core::CommandNameDictionary.Get(id);
+	const char* pName = Core::CommandNameDictionary.Get(id);
 
-	_LogDebug_("%c %s %sB %s(%d)", 
-		TransmissionName(transmission),
-		TransportProtocolName(protocol), 
-		StringUtil::FillLeft(cmd->CmdLen, ' ', 4).Source(), 
-		szName, 
-		id
+	_LogDebug_("%c %s %sB %s(%d)",
+	           TransmissionName(_transmission),
+	           TransportProtocolName(_protocol),
+	           StringUtil::FillLeft(_pCommand->GetLength(), ' ', 4).Source(),
+	           pName,
+	           id
 	);
-
 }
 
-void ListenerHelperBase::LogPacketHex(RecvedCommandPacket* recvPacket) {
-	if (Core::RuntimeConfigBase->ShowRecvPacketHex)
-		PacketViewer::View(recvPacket);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerHelperBase::LogPacketHex(RecvedCommandPacket* _pRecvPacket)
+{
+	if (Core::RuntimeConfigBase->showRecvPacketHex_)
+	{
+		PacketViewer::View(_pRecvPacket);
+	}
 }
 
-void ListenerHelperBase::LogPacketHex(IPacket* sentPacket) {
-	if (Core::RuntimeConfigBase->ShowSendPacketHex)
-		PacketViewer::View(sentPacket);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerHelperBase::LogPacketHex(IPacket* _pSentPacket)
+{
+	if (Core::RuntimeConfigBase->showSendPacketHex_)
+	{
+		PacketViewer::View(_pSentPacket);
+	}
 }

@@ -18,63 +18,68 @@ class CommandSynchronizer final : public SGSingletonPointer<CommandSynchronizer>
 	struct CommandQueueHolder
 	{
 		CommandQueueHolder()
-			: InitialCapacity(0)
-			, Queue(nullptr)
-			, MemPool(nullptr)
-			, Lock(nullptr)
-		{}
-		CommandQueueHolder(int capacity)
-			: InitialCapacity(capacity)
-			, Queue(nullptr)
-			, MemPool(nullptr)
-			, Lock(nullptr)
-		{}
-			
+		: InitialCapacity(0)
+		, Queue(nullptr)
+		, MemPool(nullptr)
+		, Lock(nullptr)
+		{
+		}
+
+		CommandQueueHolder(int _capacity)
+		: InitialCapacity(_capacity)
+		, Queue(nullptr)
+		, MemPool(nullptr)
+		, Lock(nullptr)
+		{
+		}
+
 		int InitialCapacity;
 		CommandQueue* Queue;
-		SGIndexMemroyPool* MemPool;	// 데이터를 반환해줄 메모리풀
+		SGIndexMemroyPool* MemPool; // 데이터를 반환해줄 메모리풀
 		SGNormalLock* Lock;
 	};
 
 	struct CommandHolder : SGObjectPool<CommandHolder>
 	{
 		CommandHolder()
-			: Command(nullptr)
-			, MemPool(nullptr)
-			, ListenerType(ClientConnectServerType::Max)
-			, Sender(nullptr)
-		{}
-		CommandHolder(ClientConnectServerType_t listenerType, SGSession* sender, JNetwork::ICommand* copy);
+		: Command(nullptr)
+		, MemPool(nullptr)
+		, ListenerType(ClientConnectServerType::Max)
+		, Sender(nullptr)
+		{
+		}
+
+		CommandHolder(ClientConnectServerType_t _listenerType, SGSession* _pSender, JNetwork::ICommand* _pCopy);
 		~CommandHolder() override;
 
-		JNetwork::ICommand* Command;								// 무조건 위쪽에 위치해야 캐스팅이 정상적으로 동작함
-		SGIndexMemroyPool* MemPool;				// 데이터를 돌려놓을 메모리풀(홀더 해제를 메인쓰레드에서 수행하기 때문에 포인터정보가 필요함)
+		JNetwork::ICommand* Command; // 무조건 위쪽에 위치해야 캐스팅이 정상적으로 동작함
+		SGIndexMemroyPool* MemPool; // 데이터를 돌려놓을 메모리풀(홀더 해제를 메인쓰레드에서 수행하기 때문에 포인터정보가 필요함)
 		ClientConnectServerType_t ListenerType;
 		SGSession* Sender;
 	};
 
-	using IOCPThreadId$CommandQueuePair = JCore::Pair<Int32U, CommandQueueHolder*>;			// IOCP 쓰레드의 ID와 커맨드큐 페어
+	using IOCPThreadId$CommandQueuePair = JCore::Pair<Int32U, CommandQueueHolder*>; // IOCP 쓰레드의 ID와 커맨드큐 페어
 	using IOCPThreadId$CommandQueuePairList = SGVector<IOCPThreadId$CommandQueuePair>;
 
 	friend class TSingleton;
 	CommandSynchronizer();
 	~CommandSynchronizer();
 
-	void filterUnusedCommandQueue();	// 안쓰는 패킷큐는 해제 (메인 쓰레드에서 생성된 큐의 경우 쓸일이 없으므로)
+	void filterUnusedCommandQueue(); // 안쓰는 패킷큐는 해제 (메인 쓰레드에서 생성된 큐의 경우 쓸일이 없으므로)
 	void allocateCommandQueue();
 	void finalize();
-	static CommandQueueHolder registerPacketQueueAddress(int initCapacity);
+	static CommandQueueHolder registerPacketQueueAddress(int _initCapacity);
+
 public:
-	void enqueueCommand(ClientConnectServerType_t listenerType, SGSession* sender, JNetwork::ICommand* cmd);
+	void enqueueCommand(ClientConnectServerType_t _listenerType, SGSession* _pSender, JNetwork::ICommand* _pCmd);
 	void initialize();
 	void processCommands();
+
 private:
-	int m_iPacketQueueCount;
-	SGVector<CommandQueue*> m_vSwapCommandQueue;
-	IOCPThreadId$CommandQueuePairList m_vIOCPThreadAccessCommandQueueList;
+	int packetQueueCount_;
+	SGVector<CommandQueue*> swapCommandQueue_;
+	IOCPThreadId$CommandQueuePairList iocpThreadAccessCommandQueueList_;
 
 	static bool RegistrationEnd;
 	static thread_local CommandQueueHolder tlsCommandQueueHolder;
 };
-
-

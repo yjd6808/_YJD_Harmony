@@ -8,91 +8,103 @@
 #include "Core.h"
 #include "TextParser.h"
 
-char* TextParser::parseFrameInfo(const char* frameString, int len,
-	JCORE_OUT int& frameIndex, 
-	JCORE_OUT int& delay,
-	JCORE_OUT int& frameEventCode) {
+//////////////////////////////////////////////////////////////////////////////////////////
+char* TextParser::ParseFrameInfo(const char* _pFrameString, int _len,
+                                 JCORE_OUT int& _frameIndex,
+                                 JCORE_OUT int& _delay,
+                                 JCORE_OUT int& _frameEventCode)
+{
+	char* pSource = (char*)_pFrameString;
+	int* pFrameValues[3];
+	pFrameValues[0] = &_frameIndex;
+	pFrameValues[1] = &_delay;
+	pFrameValues[2] = &_frameEventCode;
 
-	char* pSource = (char*)frameString;
-	int* p[3];
-	p[0] = &frameIndex;
-	p[1] = &delay;
-	p[2] = &frameEventCode;
-
-	int iPtrIdx = 0;
-	int iBuffIdx = 0;
+	int ptrIndex = 0;
+	int buffIndex = 0;
 	char buff[16];
 
-	for (int i = 0; i < len + 1; ++i) {
-		buff[iBuffIdx] = pSource[i];
+	for (int i = 0; i < _len + 1; ++i)
+	{
+		buff[buffIndex] = pSource[i];
 
-		if (pSource[i] == ' ' || pSource[i] == NULL) {
-			buff[iBuffIdx] = NULL;
-			*p[iPtrIdx++] = std::atoi(buff);
-			iBuffIdx = 0;
+		if (pSource[i] == ' ' || pSource[i] == NULL)
+		{
+			buff[buffIndex] = NULL;
+			*pFrameValues[ptrIndex++] = std::atoi(buff);
+			buffIndex = 0;
 
 			// 프레임 이벤트, 프레임 이벤트 ID까지 읽은 경우
 			// 인스턴트 공격 박스 일수도 있으니 이어서 파싱을 진행해야함
-			if (iPtrIdx == 4) {
+			if (ptrIndex == 4)
 				return pSource + i + 1;
-			}
+
 			continue;
 		}
 
-		++iBuffIdx;
+		++buffIndex;
 	}
 
 	return nullptr;
 }
 
-void TextParser::parseIntNumbers(const SGString& numStr, JCORE_OUT int* numArr, int count) {
-	char* pSoruce = numStr.Source();
-	int iPtrIdx = 0;
-	int iBuffIdx = 0;
-	int iReadCount = 0;
+//////////////////////////////////////////////////////////////////////////////////////////
+void TextParser::ParseIntNumbers(const SGString& _numStr, JCORE_OUT int* _pNumArr, int _count)
+{
+	char* pSource = _numStr.Source();
+	int ptrIndex = 0;
+	int buffIndex = 0;
+	int readCount = 0;
 	char buff[16];
 
-	for (int i = 0; i < numStr.Length() + 1; ++i) {
-		buff[iBuffIdx] = pSoruce[i];
+	for (int i = 0; i < _numStr.Length() + 1; ++i)
+	{
+		buff[buffIndex] = pSource[i];
 
-		if (pSoruce[i] == ' ' || pSoruce[i] == NULL) {
-			buff[iBuffIdx] = NULL;
-			numArr[iPtrIdx++] = std::atoi(buff);
-			iBuffIdx = 0;
-			++iReadCount;
+		if (pSource[i] == ' ' || pSource[i] == NULL)
+		{
+			buff[buffIndex] = NULL;
+			_pNumArr[ptrIndex++] = std::atoi(buff);
+			buffIndex = 0;
+			++readCount;
 			continue;
 		}
 
-		++iBuffIdx;
+		++buffIndex;
 	}
 
-	DebugAssertMsg(iReadCount == count, "읽은 숫자와 작성된 숫자가 틀립니다.");
+	DebugAssertMsg(readCount == _count, "읽은 숫자와 작성된 숫자가 틀립니다.");
 }
 
-void TextParser::parseFloatNumbers(const SGString& numStr, float* numArr, int count) {
-	parseFloatNumbers(numStr.Source(), numStr.Length(), numArr, count);
-	
+//////////////////////////////////////////////////////////////////////////////////////////
+void TextParser::ParseFloatNumbers(const SGString& _numStr, JCORE_OUT float* _pNumArr, int _count)
+{
+	ParseFloatNumbers(_numStr.Source(), _numStr.Length(), _pNumArr, _count);
 }
 
-void TextParser::parseFloatNumbers(char* source, int len, float* numArr, int count) {
-	int iPtrIdx = 0;
-	int iBuffIdx = 0;
-	int iReadCount = 0;
+//////////////////////////////////////////////////////////////////////////////////////////
+void TextParser::ParseFloatNumbers(char* _pSource, int _len, JCORE_OUT float* _pNumArr, int _count)
+{
+	int ptrIndex = 0;
+	int buffIndex = 0;
+	int readCount = 0;
 	char buff[64];
 
-	for (int i = 0; i < len + 1; ++i) {
-		buff[iBuffIdx] = source[i];
+	for (int i = 0; i < _len + 1; ++i)
+	{
+		buff[buffIndex] = _pSource[i];
 
-		if (source[i] == ' ' || source[i] == NULL) {
-			buff[iBuffIdx] = NULL;
-			numArr[iPtrIdx++] = (float)std::atof(buff);
-			iBuffIdx = 0;
-			++iReadCount;
+		if (_pSource[i] == ' ' || _pSource[i] == NULL)
+		{
+			buff[buffIndex] = NULL;
+			_pNumArr[ptrIndex++] = (float)std::atof(buff);
+			buffIndex = 0;
+			++readCount;
 			continue;
 		}
 
-		++iBuffIdx;
+		++buffIndex;
 	}
 
-	DebugAssertMsg(iReadCount == count, "읽은 숫자와 작성된 숫자가 틀립니다.");
+	DebugAssertMsg(readCount == _count, "읽은 숫자와 작성된 숫자가 틀립니다.");
 }

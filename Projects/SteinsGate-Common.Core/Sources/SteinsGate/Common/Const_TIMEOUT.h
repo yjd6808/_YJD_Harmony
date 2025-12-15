@@ -12,18 +12,16 @@
 #include <SteinsGate/Common/Namepsace.h>
 
 NS_CONST_BEGIN
-
 namespace Timeout
 {
-    namespace Authentication
-    {
-        constexpr int LobbyWait = 15;
-        constexpr int Lobby = 900;
-        constexpr int GameWait = 15;
-        constexpr int Game = 1800;
-    };
+namespace Authentication
+{
+constexpr int LobbyWait = 15;
+constexpr int Lobby = 900;
+constexpr int GameWait = 15;
+constexpr int Game = 1800;
+};
 }
 
 
 NS_CONST_END
-

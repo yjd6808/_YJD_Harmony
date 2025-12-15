@@ -16,23 +16,21 @@ public:
 	AttackDataInfoLoader(DataManagerAbstract* _pManager, ActorType_t _actorType);
 	~AttackDataInfoLoader() override = default;
 
-	bool load() override;
-	ConfigFileType_t getConfigFileType() override
+	bool Load() override;
+
+	ConfigFileType_t GetConfigFileType() override
 	{
 		switch (actorType_)
 		{
-		case ActorType::Character:
-			return ConfigFileType::Char_Attack_Data;
-		case ActorType::Monster:
-			return ConfigFileType::Monster_Attack_Data;
-		default:
-			DebugAssert(false);
+		case ActorType::Character: return ConfigFileType::Char_Attack_Data;
+		case ActorType::Monster: return ConfigFileType::Monster_Attack_Data;
+		default: DebugAssert(false);
 		}
 		return ConfigFileType::Max;
 	}
 
-	static void readAttackDataInfo(Json::Value& _attackDataRoot, JCORE_OUT AttackDataInfo* _pAttackDataInfo);
+	static void ReadAttackDataInfo(Json::Value& _attackDataRoot, JCORE_OUT AttackDataInfo* _pAttackDataInfo);
 
 private:
-	ActorType_t actorType_;        // 어떤 액터의 데이터인지 구분하는 용도
+	ActorType_t actorType_; // 어떤 액터의 데이터인지 구분하는 용도
 };

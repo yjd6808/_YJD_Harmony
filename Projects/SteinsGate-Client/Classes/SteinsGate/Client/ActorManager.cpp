@@ -23,18 +23,21 @@ USING_NS_CC;
 USING_NS_JC;
 
 ActorManager::ActorManager()
-	: m_iIdSequence(0)
-	, m_pMapLayer(nullptr)
-	, m_fZReorderTime(0.0f)
-	, m_bCleared(true)
-{}
+: m_pMapLayer(nullptr)
+, m_bCleared(true)
+, m_fZReorderTime(0.0f)
+, m_iIdSequence(0)
+{
+}
 
-ActorManager::~ActorManager() {
+ActorManager::~ActorManager()
+{
 	clearAll();
 }
 
 
-void ActorManager::init(MapLayer* mapLayer) {
+void ActorManager::init(MapLayer* mapLayer)
+{
 	DebugAssertMsg(m_bCleared == true, "먼저 깔끔하게 비워주세요.");
 
 	m_iIdSequence = 0;
@@ -45,12 +48,15 @@ void ActorManager::init(MapLayer* mapLayer) {
 }
 
 template <typename TActor>
-static int releasePool(SGHashMap<int, SGLinkedList<TActor*>>& pool) {
+static int releasePool(SGHashMap<int, SGLinkedList<TActor*>>& pool)
+{
 	int iReleaseCount = 0;
-	pool.ForEachKey([&iReleaseCount , &pool](int& code) {
+	pool.ForEachKey([&iReleaseCount , &pool](int& code)
+	{
 		SGLinkedList<TActor*>& li = pool[code];
 		auto it = li.Begin();
-		while (it->HasNext()) {
+		while (it->HasNext())
+		{
 			TActor* pActor = it->Next();
 			++iReleaseCount;
 			CC_SAFE_RELEASE(pActor);
@@ -61,11 +67,13 @@ static int releasePool(SGHashMap<int, SGLinkedList<TActor*>>& pool) {
 }
 
 template <typename TActor>
-static int releaseList(SGVector<TActor*>& actorList) {
+static int releaseList(SGVector<TActor*>& actorList)
+{
 	int iReleaseCount = 0;
-	actorList.ForEach([&iReleaseCount](TActor* actor) {
+	actorList.ForEach([&iReleaseCount](TActor* actor)
+	{
 		CC_SAFE_RELEASE(actor);
-		++iReleaseCount;	
+		++iReleaseCount;
 	});
 	actorList.Clear();
 	_LogDebug_("[%10s] 릴리즈: %d개", typeid(TActor).name(), iReleaseCount);
@@ -73,9 +81,11 @@ static int releaseList(SGVector<TActor*>& actorList) {
 }
 
 template <typename TActor>
-static int cleanUpList(SGVector<TActor*>& actorList) {
+static int cleanUpList(SGVector<TActor*>& actorList)
+{
 	int iCleanUpCount = 0;
-	actorList.ForEach([&iCleanUpCount](TActor* actor) {
+	actorList.ForEach([&iCleanUpCount](TActor* actor)
+	{
 		actor->cleanUpAtNextFrame();
 		++iCleanUpCount;
 	});
@@ -84,8 +94,8 @@ static int cleanUpList(SGVector<TActor*>& actorList) {
 	return iCleanUpCount;
 }
 
-void ActorManager::clearAll() {
-
+void ActorManager::clearAll()
+{
 	if (m_bCleared)
 		return;
 
@@ -131,7 +141,8 @@ void ActorManager::clearAll() {
 }
 
 
-void ActorManager::clearRoom() {
+void ActorManager::clearRoom()
+{
 	// 여기선 해줘야함 삭제시키는게 목적이 아니라 풀로 복귀 시키는게 목적이기 때문
 	int iCleanUpCount = 0;
 
@@ -142,7 +153,8 @@ void ActorManager::clearRoom() {
 	iCleanUpCount += cleanUpList<Character>(m_vCharacters);
 
 	_LogDebug_("Step Before. 정리 대기중 엑터 수: %d개", m_hRemoveActorMap.Size());
-	if (updateCleanUp() != iCleanUpCount) {
+	if (updateCleanUp() != iCleanUpCount)
+	{
 		DebugAssertMsg(false, "정리가 제대로 수행되지 않았습니다.");
 	}
 	DebugAssertMsg(m_hRemoveActorMap.Size() == 0, "아직 반환안된 액터가 있습니다. 이러면 안됩니다.");
@@ -158,8 +170,8 @@ void ActorManager::clearRoom() {
 	m_bCleared = true;
 }
 
-void ActorManager::update(float dt) {
-
+void ActorManager::update(float dt)
+{
 	if (m_bCleared)
 		return;
 
@@ -170,9 +182,11 @@ void ActorManager::update(float dt) {
 	updateCleanUp();
 }
 
-int ActorManager::updateCleanUp() {
+int ActorManager::updateCleanUp()
+{
 	int iCleanUpCount = m_qRemovedActors.Size();
-	while (!m_qRemovedActors.IsEmpty()) {
+	while (!m_qRemovedActors.IsEmpty())
+	{
 		Actor* pRemovedActor = m_qRemovedActors.Front();
 		m_qRemovedActors.Dequeue();
 		m_hRemoveActorMap.Remove(pRemovedActor);
@@ -185,39 +199,48 @@ int ActorManager::updateCleanUp() {
 }
 
 
-void ActorManager::updateZOrder() {
+void ActorManager::updateZOrder()
+{
 	// 틱 이전, 이후 비교했을때 높은 확률로 대부분 정렬되어 있으므로 삽입 정렬 진행
 	sortZOrderActor();
 
-	for (int iOrder = 1; iOrder <= m_vZOrderedActors.Size(); ++iOrder) {
+	for (int iOrder = 1; iOrder <= m_vZOrderedActors.Size(); ++iOrder)
+	{
 		m_pMapLayer->reorderChild(m_vZOrderedActors[iOrder - 1], iOrder);
 	}
 }
 
-void ActorManager::updateActors(float dt) {
-	for (int i = 0; i < m_vProjectiles.Size(); ++i) {
+void ActorManager::updateActors(float dt)
+{
+	for (int i = 0; i < m_vProjectiles.Size(); ++i)
+	{
 		m_vProjectiles[i]->update(dt);
 	}
 
-	for (int i = 0; i < m_vMonsters.Size(); ++i) {
+	for (int i = 0; i < m_vMonsters.Size(); ++i)
+	{
 		m_vMonsters[i]->update(dt);
 	}
 
-	for (int i = 0; i < m_vMapObjects.Size(); ++i) {
+	for (int i = 0; i < m_vMapObjects.Size(); ++i)
+	{
 		m_vMapObjects[i]->update(dt);
 	}
 
-	for (int i = 0; i < m_vCharacters.Size(); ++i) {
+	for (int i = 0; i < m_vCharacters.Size(); ++i)
+	{
 		m_vCharacters[i]->update(dt);
 	}
 
-	for (int i = 0; i < m_vEffectList.Size(); ++i) {
+	for (int i = 0; i < m_vEffectList.Size(); ++i)
+	{
 		m_vEffectList[i]->update(dt);
 	}
 }
 
 
-Character* ActorManager::createCharacterOnMap(CharType_t charType, float x, float y, VisualInfo& visualInfo) {
+Character* ActorManager::createCharacterOnMap(CharType_t charType, float x, float y, VisualInfo& visualInfo)
+{
 	DebugAssertMsg(m_pMapLayer, "맵 레이어 생성 및 init 후 캐릭터를 생성해주세요");
 
 	CharBaseInfo* pCharInfo = Core::DataManager->getCharInfo(charType);
@@ -234,25 +257,30 @@ Character* ActorManager::createCharacterOnMap(CharType_t charType, float x, floa
 	return pCharacter;
 }
 
-Projectile* ActorManager::createProejctileOnMap(Actor* spawner, int projectileId) {
+Projectile* ActorManager::createProejctileOnMap(Actor* spawner, int projectileId)
+{
 	DebugAssertMsg(m_pMapLayer, "맵 레이어 생성 및 init 후 프로젝틸을 생성해주세요");
 
 	ProjectileInfo* pInfo = Core::DataManager->getProjectileInfo(spawner->getType(), projectileId);
-	
 
-	if (!m_hProjectilePool.Exist(projectileId)) {
+
+	if (!m_hProjectilePool.Exist(projectileId))
+	{
 		m_hProjectilePool.Insert(Move(projectileId), SGLinkedList<Projectile*>());
 	}
-	
+
 	Projectile* pProjectile = nullptr;
 	SGLinkedList<Projectile*>& projectileList = m_hProjectilePool[projectileId];
 
-	if (projectileList.IsEmpty()) {
+	if (projectileList.IsEmpty())
+	{
 		pProjectile = Projectile::create(pInfo, spawner);
 		pProjectile->retain();
-	} else {
+	}
+	else
+	{
 		pProjectile = projectileList.Front();
-		pProjectile->setSpawner(spawner);											// 위치 세팅전 스포너 세팅 먼저 해줘야함
+		pProjectile->setSpawner(spawner); // 위치 세팅전 스포너 세팅 먼저 해줘야함
 		pProjectile->initialize();
 		projectileList.PopFront();
 	}
@@ -262,40 +290,48 @@ Projectile* ActorManager::createProejctileOnMap(Actor* spawner, int projectileId
 	pProjectile->setAllyFlag(spawner->getAllyFlag());
 	pProjectile->setMapLayer(m_pMapLayer);
 
-	if (pInfo->SpawnEffect->Code != InvalidValue_v) {
-		Effect* pSpawnEffect = createEffectOnMapBySpawner(spawner, pInfo->SpawnEffect->Code, pInfo->SpawnEffectOffsetX, pInfo->SpawnEffectOffsetY);
+	if (pInfo->SpawnEffect->code_ != InvalidValue_v)
+	{
+		Effect* pSpawnEffect = createEffectOnMapBySpawner(spawner, pInfo->SpawnEffect->code_, pInfo->SpawnEffectOffsetX,
+		                                                  pInfo->SpawnEffectOffsetY);
 		pSpawnEffect->setLocalZOrder(spawner->getLocalZOrder() + 1);
 	}
-	
+
 	registerProjectile(pProjectile);
 	m_pMapLayer->addChild(pProjectile);
 	return pProjectile;
 }
 
 
-Monster* ActorManager::createMonsterOnMap(int monsterCode, int aiCode, float x, float y) {
+Monster* ActorManager::createMonsterOnMap(int monsterCode, int aiCode, float x, float y)
+{
 	DebugAssertMsg(m_pMapLayer, "맵 레이어 생성 및 init 후 몬스터를 생성해주세요");
 
 	MonsterInfo* pMonsterInfo = Core::DataManager->getMonsterInfo(monsterCode);
 	AIInfo* pAIInfo = Core::DataManager->getAIInfo(aiCode);
 
-	if (!m_hMonsterPool.Exist(monsterCode)) {
+	if (!m_hMonsterPool.Exist(monsterCode))
+	{
 		m_hMonsterPool.Insert(Move(monsterCode), SGLinkedList<Monster*>());
 	}
 
 	Monster* pMonster = nullptr;
 	SGLinkedList<Monster*>& monsterList = m_hMonsterPool[monsterCode];
 
-	if (monsterList.IsEmpty()) {
+	if (monsterList.IsEmpty())
+	{
 		pMonster = Monster::create(pMonsterInfo);
 		pMonster->retain();
-	} else {
+	}
+	else
+	{
 		pMonster = monsterList.Front();
 		pMonster->initialize();
 		monsterList.PopFront();
 	}
 
-	if (!pMonster->hasComponent(IComponent::eAI)) {
+	if (!pMonster->hasComponent(IComponent::eAI))
+	{
 		AIComponent* pAIComponent = dbg_new AIComponent(pMonster);
 		pAIComponent->setAIInfo(pAIInfo);
 		pMonster->addComponent(pAIComponent);
@@ -312,22 +348,27 @@ Monster* ActorManager::createMonsterOnMap(int monsterCode, int aiCode, float x, 
 	return pMonster;
 }
 
-MapObject* ActorManager::createMapObjectOnMap(int mapObjectCode, float x, float y) {
+MapObject* ActorManager::createMapObjectOnMap(int mapObjectCode, float x, float y)
+{
 	DebugAssertMsg(m_pMapLayer, "맵 레이어 생성 및 init 후 옵스터클을 생성해주세요");
 
 	MapObjectInfo* pMapObjectInfo = Core::DataManager->getMapObjectInfo(mapObjectCode);
 
-	if (!m_hMapObjectPool.Exist(mapObjectCode)) {
+	if (!m_hMapObjectPool.Exist(mapObjectCode))
+	{
 		m_hMapObjectPool.Insert(Move(mapObjectCode), SGLinkedList<MapObject*>());
 	}
 
 	MapObject* pMapObject = nullptr;
 	SGLinkedList<MapObject*>& mapObjectList = m_hMapObjectPool[mapObjectCode];
 
-	if (mapObjectList.IsEmpty()) {
+	if (mapObjectList.IsEmpty())
+	{
 		pMapObject = MapObject::create(pMapObjectInfo);
 		pMapObject->retain();
-	} else {
+	}
+	else
+	{
 		pMapObject = mapObjectList.Front();
 		pMapObject->initialize();
 		mapObjectList.PopFront();
@@ -343,10 +384,12 @@ MapObject* ActorManager::createMapObjectOnMap(int mapObjectCode, float x, float 
 	return pMapObject;
 }
 
-void ActorManager::registerPlayerOnMap(Player* player) {
-
-	for (int i = 0; i < m_vCharacters.Size(); ++i) {
-		if (m_vCharacters[i] == player) {
+void ActorManager::registerPlayerOnMap(Player* player)
+{
+	for (int i = 0; i < m_vCharacters.Size(); ++i)
+	{
+		if (m_vCharacters[i] == player)
+		{
 			DebugAssertMsg(false, "이미 캐릭터가 맵에 포함되어 있습니다.");
 			return;
 		}
@@ -358,7 +401,8 @@ void ActorManager::registerPlayerOnMap(Player* player) {
 }
 
 
-Effect* ActorManager::createEffectOnMapBySpawner(Actor* spawner, int effectCode, float offsetX, float offsetY) {
+Effect* ActorManager::createEffectOnMapBySpawner(Actor* spawner, int effectCode, float offsetX, float offsetY)
+{
 	Effect* pEffect = createEffectOnMap(effectCode);
 
 	SGSize spawnerCanvsSize = spawner->getCanvasSize();
@@ -366,12 +410,15 @@ Effect* ActorManager::createEffectOnMapBySpawner(Actor* spawner, int effectCode,
 
 	pEffect->setSpriteDirection(spawner->getSpriteDirection());
 
-	if (spawner->getSpriteDirection() == SpriteDirection::Right) {
+	if (spawner->getSpriteDirection() == SpriteDirection::Right)
+	{
 		pEffect->setPositionReal(
 			spawnerCanvasPos.x + offsetX,
 			spawnerCanvasPos.y + offsetY
 		);
-	} else {
+	}
+	else
+	{
 		pEffect->setPositionReal(
 			spawnerCanvasPos.x + spawnerCanvsSize.width - offsetX,
 			spawnerCanvasPos.y + offsetY
@@ -381,11 +428,14 @@ Effect* ActorManager::createEffectOnMapBySpawner(Actor* spawner, int effectCode,
 	return pEffect;
 }
 
-Effect* ActorManager::createEffectOnMapBySpawner(Actor* spawner, int effectCode, const SGVec2& offset) {
+Effect* ActorManager::createEffectOnMapBySpawner(Actor* spawner, int effectCode, const SGVec2& offset)
+{
 	return createEffectOnMapBySpawner(spawner, effectCode, offset.x, offset.y);
 }
 
-Effect* ActorManager::createEffectOnMapAbsolute(int effectCode, SpriteDirection_t direction, float x, float y, int zOrder) {
+Effect* ActorManager::createEffectOnMapAbsolute(int effectCode, SpriteDirection_t direction, float x, float y,
+                                                int zOrder)
+{
 	Effect* pEffect = createEffectOnMap(effectCode);
 	pEffect->setSpriteDirection(direction);
 	pEffect->setPositionRealCenter(x, y);
@@ -393,64 +443,81 @@ Effect* ActorManager::createEffectOnMapAbsolute(int effectCode, SpriteDirection_
 	return pEffect;
 }
 
-Effect* ActorManager::createEffectOnMapAbsolute(int effectCode, SpriteDirection_t direction, const SGVec2& pos, int zOrder) {
+Effect* ActorManager::createEffectOnMapAbsolute(int effectCode, SpriteDirection_t direction, const SGVec2& pos,
+                                                int zOrder)
+{
 	return createEffectOnMapAbsolute(effectCode, direction, pos.x, pos.y, zOrder);
 }
 
-Effect* ActorManager::createEffectOnMapAbsolute(int effectCode, float x, float y, int zOrder) {
+Effect* ActorManager::createEffectOnMapAbsolute(int effectCode, float x, float y, int zOrder)
+{
 	Effect* pEffect = createEffectOnMap(effectCode);
 	pEffect->setPositionRealCenter(x, y);
 	pEffect->setLocalZOrder(zOrder);
 	return pEffect;
 }
 
-Effect* ActorManager::createEffectOnMapAbsolute(int effectCode, const SGVec2& pos, int zOrder) {
+Effect* ActorManager::createEffectOnMapAbsolute(int effectCode, const SGVec2& pos, int zOrder)
+{
 	return createEffectOnMapAbsolute(effectCode, pos.x, pos.y, zOrder);
 }
 
 
-Effect* ActorManager::createEffectOnMapTargetCollision(int effectCode, SpriteDirection_t direction, const HitInfo& info, bool randomRotation) {
-	Effect* pEffect = createEffectOnMapAbsolute(effectCode, info.HitRect.getMid(), info.HitTarget->getLocalZOrder() + 1);
+Effect* ActorManager::createEffectOnMapTargetCollision(int effectCode, SpriteDirection_t direction, const HitInfo& info,
+                                                       bool randomRotation)
+{
+	Effect* pEffect = createEffectOnMapAbsolute(effectCode, info.HitRect.getMid(),
+	                                            info.HitTarget->getLocalZOrder() + 1);
 	pEffect->setSpriteDirection(direction);
 
-	if (randomRotation) {
+	if (randomRotation)
+	{
 		pEffect->setRotation(SGRandom::random_real(0.0f, 360.0f));
 	}
 
 	return pEffect;
 }
 
-Effect* ActorManager::createEffectOnMapTargetCollision(int effectCode, const HitInfo& info, bool randomRotation) {
+Effect* ActorManager::createEffectOnMapTargetCollision(int effectCode, const HitInfo& info, bool randomRotation)
+{
 	return createEffectOnMapTargetCollision(effectCode, SpriteDirection::Right, info, randomRotation);
 }
 
-Effect* ActorManager::createEffectOnMapTargetCollision(int effectCode, const HitInfo& info, float offsetX, float offsetY, bool randomRotation) {
+Effect* ActorManager::createEffectOnMapTargetCollision(int effectCode, const HitInfo& info, float offsetX,
+                                                       float offsetY, bool randomRotation)
+{
 	Effect* pEffect = createEffectOnMapTargetCollision(effectCode, info, randomRotation);
 	pEffect->setPosition(pEffect->getPositionX() + offsetX, pEffect->getPositionX() + offsetY);
 	return pEffect;
 }
 
-Effect* ActorManager::createEffectOnMapTargetCollision(int effectCode, const HitInfo& info, const SGVec2& offset, bool randomRotation) {
+Effect* ActorManager::createEffectOnMapTargetCollision(int effectCode, const HitInfo& info, const SGVec2& offset,
+                                                       bool randomRotation)
+{
 	return createEffectOnMapTargetCollision(effectCode, info, offset.x, offset.y, randomRotation);
 }
 
-Effect* ActorManager::createEffectOnMap(int effectCode) {
+Effect* ActorManager::createEffectOnMap(int effectCode)
+{
 	DebugAssertMsg(m_pMapLayer, "맵 레이어 생성 및 init 후 이펙트를 생성해주세요");
 
 	EffectInfo* pEffectInfo = Core::DataManager->getEffectInfo(effectCode);
 
-	if (!m_hEffectPool.Exist(effectCode)) {
+	if (!m_hEffectPool.Exist(effectCode))
+	{
 		m_hEffectPool.Insert(Move(effectCode), SGLinkedList<Effect*>());
 	}
 
 	Effect* pEffect = nullptr;
 	SGLinkedList<Effect*>& effectList = m_hEffectPool[effectCode];
 
-	if (effectList.IsEmpty()) {
+	if (effectList.IsEmpty())
+	{
 		pEffect = Effect::create(pEffectInfo);
 		pEffect->retain();
 	}
-	else {
+	else
+	{
 		pEffect = effectList.Front();
 		pEffect->initVariables();
 		effectList.PopFront();
@@ -465,153 +532,185 @@ Effect* ActorManager::createEffectOnMap(int effectCode) {
 }
 
 
-void ActorManager::registerCharacter(Character* character) {
+void ActorManager::registerCharacter(Character* character)
+{
 	m_vCharacters.PushBack(character);
 	m_vPhysicsActors.PushBack(character);
 	m_vZOrderedActors.PushBack(character);
 	registerActor(character);
 }
 
-void ActorManager::registerProjectile(Projectile* projectile) {
+void ActorManager::registerProjectile(Projectile* projectile)
+{
 	m_vProjectiles.PushBack(projectile);
 	m_vZOrderedActors.PushBack(projectile);
 	registerActor(projectile);
 }
 
-void ActorManager::registerMonster(Monster* monster) {
+void ActorManager::registerMonster(Monster* monster)
+{
 	m_vMonsters.PushBack(monster);
 	m_vZOrderedActors.PushBack(monster);
 	m_vPhysicsActors.PushBack(monster);
 	registerActor(monster);
 }
 
-void ActorManager::registerMapObject(MapObject* mapObject) {
+void ActorManager::registerMapObject(MapObject* mapObject)
+{
 	m_vMapObjects.PushBack(mapObject);
 
-	switch(mapObject->getObjectType()) {
-	case MapObjectType::Obstacle: {
-		MapObjectObstacleInfo* pInfo = dynamic_cast<MapObjectObstacleInfo*>(mapObject->getBaseInfo());
+	switch (mapObject->getObjectType())
+	{
+	case MapObjectType::Obstacle:
+		{
+			MapObjectObstacleInfo* pInfo = dynamic_cast<MapObjectObstacleInfo*>(mapObject->getBaseInfo());
 
-		if (pInfo->ZOrederable)
+			if (pInfo->isZOrederable_)
+				m_vZOrderedActors.PushBack(mapObject);
+			if (pInfo->isColliadalble_)
+				m_vCollidableMapObjects.PushBack(mapObject);
+
+			break;
+		}
+	case MapObjectType::Gate:
+		{
 			m_vZOrderedActors.PushBack(mapObject);
-		if (pInfo->Colliadalble)
-			m_vCollidableMapObjects.PushBack(mapObject);
+			break;
+		}
+	}
 
-		break;
-	}
-	case MapObjectType::Gate: {
-		m_vZOrderedActors.PushBack(mapObject);
-		break;
-	}
-	}
-	
 
 	registerActor(mapObject);
 }
 
-void ActorManager::registerEffect(Effect* effect) {
+void ActorManager::registerEffect(Effect* effect)
+{
 	m_vEffectList.PushBack(effect);
 	registerActor(effect);
 }
 
 
-void ActorManager::registerActor(Actor* actor) {
+void ActorManager::registerActor(Actor* actor)
+{
 	int iUniqueId = ++m_iIdSequence;
 	actor->setActorId(iUniqueId);
-	if (m_hActorMap.Insert(iUniqueId, actor) == false) {
+	if (m_hActorMap.Insert(iUniqueId, actor) == false)
+	{
 		DebugAssertMsg(false, "이미 %s 액터가 ActorMap에 등록되어 있습니다. (코드: %d)", actor->getTypeName(), iUniqueId);
 	}
 }
 
-void ActorManager::cleanUp(Actor* actor) {
-	switch (actor->getType()) {
-	case ActorType::Character: cleanUpCharacter(dynamic_cast<Character*>(actor)); break;
-	case ActorType::Monster: cleanUpMonster(dynamic_cast<Monster*>(actor)); break;
+void ActorManager::cleanUp(Actor* actor)
+{
+	switch (actor->getType())
+	{
+	case ActorType::Character: cleanUpCharacter(dynamic_cast<Character*>(actor));
+		break;
+	case ActorType::Monster: cleanUpMonster(dynamic_cast<Monster*>(actor));
+		break;
 	// case ActorType::Npc: cleanUpNpc(dynamic_cast<Character*>(actor)); break;
-	case ActorType::Projectile: cleanUpProjectile(dynamic_cast<Projectile*>(actor)); break;
-	case ActorType::MapObject: cleanUpMapObject(dynamic_cast<MapObject*>(actor)); break;
-	case ActorType::Effect: cleanUpEffect(dynamic_cast<Effect*>(actor)); break;
+	case ActorType::Projectile: cleanUpProjectile(dynamic_cast<Projectile*>(actor));
+		break;
+	case ActorType::MapObject: cleanUpMapObject(dynamic_cast<MapObject*>(actor));
+		break;
+	case ActorType::Effect: cleanUpEffect(dynamic_cast<Effect*>(actor));
+		break;
 	default: DebugAssert(false);
 	}
 
 	actor->getListenerCollection().onCleanUp();
 }
 
-void ActorManager::sortZOrderActor() {
-	m_vZOrderedActors.InsertionSort([](Actor* lhs, Actor* rhs) {
+void ActorManager::sortZOrderActor()
+{
+	m_vZOrderedActors.InsertionSort([](Actor* lhs, Actor* rhs)
+	{
 		return lhs->getThicknessBoxRect().getMidY() > rhs->getThicknessBoxRect().getMidY();
 	});
-
-	
 }
 
-void ActorManager::cleanUpAtNextFrame(Actor* actor) {
+void ActorManager::cleanUpAtNextFrame(Actor* actor)
+{
 	// 이미 존재하는 경우 무시
-	if (m_hRemoveActorMap.Exist(actor)) {
+	if (m_hRemoveActorMap.Exist(actor))
+	{
 		return;
 	}
 	m_hRemoveActorMap.Insert(actor, actor);
 	m_qRemovedActors.Enqueue(actor);
 }
 
-void ActorManager::unregisterZOrderActor(Actor* actor) {
-
-	int iOffset = m_vZOrderedActors.OffsetLowerBound(actor->getLocalZOrder(), [](const Actor* actor, int zorder) {
+void ActorManager::unregisterZOrderActor(Actor* actor)
+{
+	int iOffset = m_vZOrderedActors.OffsetLowerBound(actor->getLocalZOrder(), [](const Actor* actor, int zorder)
+	{
 		return actor->getLocalZOrder() < zorder;
 	});
 
 	DebugAssertMsg(iOffset != -1, "Z 오더 목록에서 대상을 찾지 못했습니다.");
 	DebugAssertMsg(m_vZOrderedActors[iOffset] == actor, "Z 오더 목록에서 찾은 대상이 동일하지 않습니다. 로직 오류! 로직 오류!");
 
-	if (m_vZOrderedActors[iOffset] == actor) {
+	if (m_vZOrderedActors[iOffset] == actor)
+	{
 		m_vZOrderedActors.RemoveAt(iOffset);
 	}
 }
 
-void ActorManager::unregisterProjectile(Projectile* projectile) {
-	if (!m_vProjectiles.Remove(projectile)) {
+void ActorManager::unregisterProjectile(Projectile* projectile)
+{
+	if (!m_vProjectiles.Remove(projectile))
+	{
 		DebugAssertMsg(false, "프로젝틸 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
 	}
 }
 
-void ActorManager::unregisterCharacter(Character* chracter) {
-	if (!m_vCharacters.Remove(chracter)) {
+void ActorManager::unregisterCharacter(Character* chracter)
+{
+	if (!m_vCharacters.Remove(chracter))
+	{
 		DebugAssertMsg(false, "캐릭터 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
 	}
 }
 
-void ActorManager::unregisterMonster(Monster* mosnter) {
-	if (!m_vMonsters.Remove(mosnter)) {
+void ActorManager::unregisterMonster(Monster* mosnter)
+{
+	if (!m_vMonsters.Remove(mosnter))
+	{
 		DebugAssertMsg(false, "몬스터 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
 	}
 }
 
-void ActorManager::unregisterMapObject(MapObject* mapObject) {
-
-	if (!m_vMapObjects.Remove(mapObject)) {
+void ActorManager::unregisterMapObject(MapObject* mapObject)
+{
+	if (!m_vMapObjects.Remove(mapObject))
+	{
 		DebugAssertMsg(false, "옵스터클 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
 	}
 }
 
-void ActorManager::unregisterColidableMapObject(MapObject* mapObject) {
-	if (!m_vCollidableMapObjects.Remove(mapObject)) {
+void ActorManager::unregisterColidableMapObject(MapObject* mapObject)
+{
+	if (!m_vCollidableMapObjects.Remove(mapObject))
+	{
 		DebugAssertMsg(false, "충돌 가능한 옵스터클 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
 	}
 }
 
 
-
-void ActorManager::unregisterEffect(Effect* effect) {
-	if (!m_vEffectList.Remove(effect)) 
+void ActorManager::unregisterEffect(Effect* effect)
+{
+	if (!m_vEffectList.Remove(effect))
 		DebugAssertMsg(false, "이펙트 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
 }
 
-void ActorManager::unregisterPhysicsActor(Actor* physicsActor) {
+void ActorManager::unregisterPhysicsActor(Actor* physicsActor)
+{
 	if (!m_vPhysicsActors.Remove(physicsActor))
 		DebugAssertMsg(false, "피직스 액터 목록에서 액터를 제거하는데 실패했습니다.");
 }
 
-void ActorManager::unregisterActor(Actor* actor) {
+void ActorManager::unregisterActor(Actor* actor)
+{
 	DebugAssertMsg(actor->getActorId() != InvalidValue_v, "올바르지 않은 액터 ID입니다.");
 	if (!m_hActorMap.Remove(actor->getActorId()))
 		DebugAssertMsg(false, "공통 액터 목록에서 액터를 제거하는데 실패했습니다.");
@@ -620,15 +719,18 @@ void ActorManager::unregisterActor(Actor* actor) {
 }
 
 
-void ActorManager::cleanUpProjectile(Projectile* projectile) {
+void ActorManager::cleanUpProjectile(Projectile* projectile)
+{
 	unregisterProjectile(projectile);
 	unregisterZOrderActor(projectile);
 	unregisterActor(projectile);
-	m_hProjectilePool[projectile->getBaseInfo()->Code].PushBack(projectile);
-	_LogDebug_("삭제> 플레이어 프로젝틸 (%s), 남은 플레이어 프로젝틸 수 : %d, Z오더 액터 수: %d", projectile->getBaseInfo()->Name.Source(), m_vProjectiles.Size(), m_vZOrderedActors.Size());
+	m_hProjectilePool[projectile->getBaseInfo()->code_].PushBack(projectile);
+	_LogDebug_("삭제> 플레이어 프로젝틸 (%s), 남은 플레이어 프로젝틸 수 : %d, Z오더 액터 수: %d", projectile->getBaseInfo()->Name.Source(),
+	           m_vProjectiles.Size(), m_vZOrderedActors.Size());
 }
 
-void ActorManager::cleanUpMonster(Monster* monster) {
+void ActorManager::cleanUpMonster(Monster* monster)
+{
 	unregisterMonster(monster);
 	unregisterZOrderActor(monster);
 
@@ -636,46 +738,52 @@ void ActorManager::cleanUpMonster(Monster* monster) {
 		unregisterPhysicsActor(monster);
 
 	unregisterActor(monster);
-	m_hMonsterPool[monster->getBaseInfo()->Code].PushBack(monster);
-	_LogDebug_("삭제> 몬스터 (%s), 남은 몬스터 수 : %d, Z오더 액터 수: %d", monster->getBaseInfo()->Name.Source(), m_vMonsters.Size(), m_vZOrderedActors.Size());
+	m_hMonsterPool[monster->getBaseInfo()->code_].PushBack(monster);
+	_LogDebug_("삭제> 몬스터 (%s), 남은 몬스터 수 : %d, Z오더 액터 수: %d", monster->getBaseInfo()->name_.Source(), m_vMonsters.Size(),
+	           m_vZOrderedActors.Size());
 }
 
-void ActorManager::cleanUpMapObject(MapObject* mapObject) {
+void ActorManager::cleanUpMapObject(MapObject* mapObject)
+{
 	unregisterMapObject(mapObject);
 	unregisterActor(mapObject);
 
 	MapObjectInfo* pBaseInfo = mapObject->getBaseInfo();
 
-	switch(mapObject->getObjectType()) {
-	case MapObjectType::Obstacle: {
-		MapObjectObstacleInfo* pInfo = dynamic_cast<MapObjectObstacleInfo*>(mapObject->getBaseInfo());
+	switch (mapObject->getObjectType())
+	{
+	case MapObjectType::Obstacle:
+		{
+			MapObjectObstacleInfo* pInfo = dynamic_cast<MapObjectObstacleInfo*>(mapObject->getBaseInfo());
 
-		if (pInfo->ZOrederable)
+			if (pInfo->isZOrederable_)
+				unregisterZOrderActor(mapObject);
+			if (pInfo->isColliadalble_)
+				unregisterColidableMapObject(mapObject);
+
+			break;
+		}
+	case MapObjectType::Gate:
+		{
 			unregisterZOrderActor(mapObject);
-		if (pInfo->Colliadalble)
-			unregisterColidableMapObject(mapObject);
-
-		break;
-	}
-	case MapObjectType::Gate: {
-		unregisterZOrderActor(mapObject);
-		break;
-	}
+			break;
+		}
 	}
 
-	m_hMapObjectPool[pBaseInfo->Code].PushBack(mapObject);
+	m_hMapObjectPool[pBaseInfo->code_].PushBack(mapObject);
 }
 
-void ActorManager::cleanUpCharacter(Character* character) {
+void ActorManager::cleanUpCharacter(Character* character)
+{
 	unregisterCharacter(character);
 	unregisterZOrderActor(character);
 	unregisterActor(character);
 }
 
-void ActorManager::cleanUpEffect(Effect* effect) {
+void ActorManager::cleanUpEffect(Effect* effect)
+{
 	unregisterEffect(effect);
 	unregisterActor(effect);
 
-	m_hEffectPool[effect->getBaseInfo()->Code].PushBack(effect);
+	m_hEffectPool[effect->getBaseInfo()->code_].PushBack(effect);
 }
-

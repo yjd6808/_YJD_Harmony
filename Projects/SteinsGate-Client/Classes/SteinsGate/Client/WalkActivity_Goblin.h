@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/29/2023 8:01:39 AM
  * =====================
@@ -14,10 +14,9 @@
 class WalkActivity_Goblin : public WalkActivity
 {
 public:
-	WalkActivity_Goblin(Actor* actor);
+	WalkActivity_Goblin(Actor* _pActor);
 
-	void onActivityBegin() override;
-	void updateMoveImpl(float dt, MoveComponent* moveComponent, bool arrivedX, bool arrivedY, Direction_t lr, Direction_t ud) override;
+	void OnActivityBegin() override;
+	void updateMoveImpl(float _dt, MoveComponent* _pMoveComponent, bool _arrivedX, bool _arrivedY, Direction_t _lr,
+	                    Direction_t _ud) override;
 };
-
-

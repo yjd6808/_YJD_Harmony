@@ -14,15 +14,14 @@ struct DatabaseInfo : ConfigDataAbstract
 {
 	~DatabaseInfo() override = default;
 
-	SGString Name;			 // DB 접속에 중요한 정보는 아님
-	SGString HostName;		 // "127.0.0.1, localhost
-	Int16U ConnectionPort;	 // 3306
-	int Use[ServerProcessType::Count]; // 서버 프로세스가 DB를 사용하는지 여부
-	int ConnectionPoolSize[ServerProcessType::Count];
-	SGString AccountId;		 // root
-	SGString AccountPass;	 // 1234
-	SGString SchemaName;	 // steinsgate
-	int MaxConnection[ServerProcessType::Count];
-	int IocpThreadCount[ServerProcessType::Count];
-	
+	SGString name_; // DB 접속에 중요한 정보는 아님
+	SGString hostName_; // "127.0.0.1, localhost
+	Int16U connPort_; // 3306
+	int use_[ServerProcessType::Count]; // 서버 프로세스가 DB를 사용하는지 여부
+	int connPoolSize_[ServerProcessType::Count];
+	SGString accountId_; // root
+	SGString accountPass_; // 1234
+	SGString schemaName_; // steinsgate
+	int maxConnection_[ServerProcessType::Count];
+	int iocpThreadCount_[ServerProcessType::Count];
 };

@@ -17,29 +17,35 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-CenterNetMaster::CenterNetMaster() : CommonNetMaster(Const::Process::LoopPerSecondCenter) {
+CenterNetMaster::CenterNetMaster()
+	: CommonNetMaster(Const::Process::LoopPerSecondCenter)
+{
 	SetName("센터");
 }
 
-CenterNetMaster::~CenterNetMaster() {
+CenterNetMaster::~CenterNetMaster()
+{
 }
 
-void CenterNetMaster::Initialize() {
+void CenterNetMaster::Initialize()
+{
 	CommonNetMaster::Initialize();
 
-	const auto spCenterNetGroup = MakeShared<CenterNetGroup>();
-	const auto spInterServerNetGroup = MakeShared<CenterInterServerClientNetGroup>();
+	const auto pCenterNetGroup = MakeShared<CenterNetGroup>();
+	const auto pInterServerNetGroup = MakeShared<CenterInterServerClientNetGroup>();
 
-	AddNetGroup(Const::NetGroup::MainId, spCenterNetGroup);
-	AddNetGroup(Const::NetGroup::InterServerId, spInterServerNetGroup);
+	AddNetGroup(Const::NetGroup::MainId, pCenterNetGroup);
+	AddNetGroup(Const::NetGroup::InterServerId, pInterServerNetGroup);
 
-	spCenterNetGroup->Initialize();
-	spInterServerNetGroup->Initialize();
+	pCenterNetGroup->Initialize();
+	pInterServerNetGroup->Initialize();
 }
 
-void CenterNetMaster::OnUpdate(const TimeSpan& elapsed) {
+void CenterNetMaster::OnUpdate(const TimeSpan& _elapsed)
+{
 }
 
-void CenterNetMaster::OnStopped() {
+void CenterNetMaster::OnStopped()
+{
 }
 

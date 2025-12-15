@@ -12,8 +12,6 @@
 #include <SteinsGate/Common/ServerNamespace.h>
 
 NS_QRY_BEGIN
-	
-	
 template <typename T>
 struct QryHelper
 {
@@ -22,20 +20,26 @@ struct QryHelper
 	inline static thread_local bool IsSuccess;
 	inline static thread_local int LastErrorCode;
 
-	static void SetLastErrorCode(int code) {
-		LastErrorCode = code;
-		IsSuccess = code == 0;
+	static void SetLastErrorCode(int _code)
+	{
+		LastErrorCode = _code;
+		IsSuccess = _code == 0;
 	}
-
 };
 
-	NS_DETAIL_BEGIN
-	template <typename T>
-	struct IsQryHelper : JCore::FalseType {};
+NS_DETAIL_BEGIN
+template <typename T>
+struct IsQryHelper : JCore::FalseType
+{
+};
 
-	template <template <typename> typename Base, typename U>
-	struct IsQryHelper<Base<U>> : JCore::Conditional_t<JCore::IsSameType_v<Base<U>, QryHelper<U>>, JCore::TrueType, JCore::FalseType> {};
-	NS_DETAIL_END
+template <template <typename> typename Base, typename U>
+struct IsQryHelper<Base<
+		U>> : JCore::Conditional_t<JCore::IsSameType_v<Base<U>, QryHelper<U>>, JCore::TrueType, JCore::FalseType>
+{
+};
+
+NS_DETAIL_END
 
 template <typename THelper>
 static constexpr bool IsQryHelper_v = Detail::IsQryHelper<THelper>::Value;

@@ -31,13 +31,16 @@ struct UIGroupElemInfo
 
 struct UIGroupInfo : UIElementInfo
 {
-	UIGroupInfo(int elemCount) : InfoList(elemCount == 0 ? 1 : elemCount) {}	// 용량이 0일수는 없으므로.
-	UIGroupInfo(const UIGroupInfo& other) { this->operator=(other); }
-	UIGroupInfo(UIGroupInfo&& other) noexcept { this->operator=(JCore::Move(other)); }
+	UIGroupInfo(int _elemCount)
+	: InfoList(_elemCount == 0 ? 1 : _elemCount)
+	{
+	} // 용량이 0일수는 없으므로.
+	UIGroupInfo(const UIGroupInfo& _other) { this->operator=(_other); }
+	UIGroupInfo(UIGroupInfo&& _other) noexcept { this->operator=(JCore::Move(_other)); }
 	~UIGroupInfo() override = default;
 
-	UIGroupInfo& operator=(const UIGroupInfo& other);
-	UIGroupInfo& operator=(UIGroupInfo&& other) noexcept;
+	UIGroupInfo& operator=(const UIGroupInfo& _other);
+	UIGroupInfo& operator=(UIGroupInfo&& _other) noexcept;
 
 	SGSize Size;
 	SGVector<UIGroupElemInfo> InfoList;
@@ -52,8 +55,9 @@ struct UIButtonInfo : UIElementInfo
 		SGArrays::Fill(Sprites, InvalidValue_v);
 		LinearDodge = false;
 	}
-	UIButtonInfo(const UIButtonInfo& other) { this->operator=(other); }
-	UIButtonInfo& operator=(const UIButtonInfo& other);
+
+	UIButtonInfo(const UIButtonInfo& _other) { this->operator=(_other); }
+	UIButtonInfo& operator=(const UIButtonInfo& _other);
 
 	int Sga;
 	int Img;
@@ -74,8 +78,8 @@ struct UILabelInfo : UIElementInfo
 		TextVAlignment = VAlignment::Top;
 	}
 
-	UILabelInfo(const UILabelInfo& other) { this->operator=(other); }
-	UILabelInfo& operator=(const UILabelInfo& other);
+	UILabelInfo(const UILabelInfo& _other) { this->operator=(_other); }
+	UILabelInfo& operator=(const UILabelInfo& _other);
 
 	SGSize Size;
 	int FontCode;
@@ -97,8 +101,9 @@ struct UISpriteInfo : UIElementInfo
 		LinearDodge = false;
 		Scale9 = false;
 	}
-	UISpriteInfo(const UISpriteInfo& other) { this->operator=(other); }
-	UISpriteInfo& operator=(const UISpriteInfo& other);
+
+	UISpriteInfo(const UISpriteInfo& _other) { this->operator=(_other); }
+	UISpriteInfo& operator=(const UISpriteInfo& _other);
 
 	int Img;
 	int Sga;
@@ -114,7 +119,7 @@ struct UIEditBoxInfo : UIElementInfo
 	UIEditBoxInfo()
 	{
 		FontSize = 16;
-		FontColor = {0, 0, 0, 255};
+		FontColor = { 0, 0, 0, 255 };
 		TextHAlignment = HAlignment::Left;
 		PlaceholderText = "텍스트 없음";
 		PlaceHolderFontColor = { 128, 128, 128, 255 };
@@ -122,9 +127,9 @@ struct UIEditBoxInfo : UIElementInfo
 		MaxLength = 50;
 		InputMode = SGInputMode::EMAIL_ADDRESS;
 	}
-	
-	UIEditBoxInfo(const UIEditBoxInfo& other) { this->operator=(other); }
-	UIEditBoxInfo& operator=(const UIEditBoxInfo& other);
+
+	UIEditBoxInfo(const UIEditBoxInfo& _other) { this->operator=(_other); }
+	UIEditBoxInfo& operator=(const UIEditBoxInfo& _other);
 
 	SGSize Size;
 	int FontSize;
@@ -149,8 +154,8 @@ struct UICheckBoxInfo : UIElementInfo
 		SGArrays::Fill(Sprites, InvalidValue_v);
 	}
 
-	UICheckBoxInfo(const UICheckBoxInfo& other) { this->operator=(other); }
-	UICheckBoxInfo& operator=(const UICheckBoxInfo& other);
+	UICheckBoxInfo(const UICheckBoxInfo& _other) { this->operator=(_other); }
+	UICheckBoxInfo& operator=(const UICheckBoxInfo& _other);
 
 	bool Check;
 	int BackgroundSga;
@@ -171,8 +176,8 @@ struct UIToggleButtonInfo : UIElementInfo
 		LinearDodge = false;
 	}
 
-	UIToggleButtonInfo(const UIToggleButtonInfo& other) { this->operator=(other); }
-	UIToggleButtonInfo& operator=(const UIToggleButtonInfo& other);
+	UIToggleButtonInfo(const UIToggleButtonInfo& _other) { this->operator=(_other); }
+	UIToggleButtonInfo& operator=(const UIToggleButtonInfo& _other);
 
 	int Sga;
 	int Img;
@@ -197,8 +202,8 @@ struct UIScrollBarInfo : UIElementInfo
 	static constexpr int IndexThumbOver = 5;
 	static constexpr int IndexTrack = 6;
 
-	UIScrollBarInfo(const UIScrollBarInfo& other) { this->operator=(other); }
-	UIScrollBarInfo& operator=(const UIScrollBarInfo& other);
+	UIScrollBarInfo(const UIScrollBarInfo& _other) { this->operator=(_other); }
+	UIScrollBarInfo& operator=(const UIScrollBarInfo& _other);
 
 	int Sga;
 	int Img;
@@ -216,8 +221,8 @@ struct UIProgressBarInfo : UIElementInfo
 		ProgressIncreaseDirection = ProgressIncreaseDirection::LeftRight;
 	}
 
-	UIProgressBarInfo(const UIProgressBarInfo& other) { this->operator=(other); }
-	UIProgressBarInfo& operator=(const UIProgressBarInfo& other);
+	UIProgressBarInfo(const UIProgressBarInfo& _other) { this->operator=(_other); }
+	UIProgressBarInfo& operator=(const UIProgressBarInfo& _other);
 
 	int Sga;
 	int Img;
@@ -229,9 +234,8 @@ struct UIProgressBarInfo : UIElementInfo
 struct UIStaticInfo : UIElementInfo
 {
 	UIStaticInfo() = default;
-	UIStaticInfo(const UIStaticInfo& other) { this->operator=(other); }
-	UIStaticInfo& operator=(const UIStaticInfo& other);
+	UIStaticInfo(const UIStaticInfo& _other) { this->operator=(_other); }
+	UIStaticInfo& operator=(const UIStaticInfo& _other);
 
 	SGSize Size;
 };
-

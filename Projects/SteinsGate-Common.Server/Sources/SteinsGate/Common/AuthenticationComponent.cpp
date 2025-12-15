@@ -13,47 +13,64 @@
 #include "ServerContents.h"
 #include "UnauthenticatedSessionManager.h"
 
-
-AuthenticationComponent::AuthenticationComponent(CommonSession* session)
-	: SessionComponent(session)
+//////////////////////////////////////////////////////////////////////////////////////////
+AuthenticationComponent::AuthenticationComponent(CommonSession* _pSession)
+: SessionComponent(_pSession)
 {
 	AuthenticationComponent::Initialize();
 }
 
-void AuthenticationComponent::Initialize() {
-	m_eState = AuthenticationState::Initialized;
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationComponent::Initialize()
+{
+	state_ = AuthenticationState::Initialized;
 }
 
-void AuthenticationComponent::OnConnected() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationComponent::OnConnected()
+{
 }
 
-void AuthenticationComponent::OnDisconnected() {
-	switch (m_eState) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationComponent::OnDisconnected()
+{
+	switch (state_)
+	{
 	case AuthenticationState::Initialized:
 		break;
 	case AuthenticationState::LobbyWait:
 		RemoveUnauthenticatedSession();
 		break;
-	case AuthenticationState::Lobby:		
+	case AuthenticationState::Lobby:
 		break;
-	default: DebugAssert(false);
+	default:
+		DebugAssert(false);
 	}
 }
 
-void AuthenticationComponent::SetState(AuthenticationState_t state) {
-	m_eState = state;
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationComponent::SetState(AuthenticationState_t _state)
+{
+	state_ = _state;
 }
 
-void AuthenticationComponent::SetSerial(AuthenticationSerial_t serial) {
-	m_iSerial = serial;
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationComponent::SetSerial(AuthenticationSerial_t _serial)
+{
+	serial_ = _serial;
 }
 
-void AuthenticationComponent::SetAccountId(const char* accountId) {
-	m_szAccountId.SetString(accountId);
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationComponent::SetAccountId(const char* _pAccountId)
+{
+	accountId_.SetString(_pAccountId);
 }
 
-void AuthenticationComponent::RemoveUnauthenticatedSession() {
-	if (!Core::CommonContents->UnauthenticatedSessionManager->Remove(m_iSerial)) {
-		_LogWarn_("미인증 세션목록에 %d 시리얼에 해당하는 세션이 없습니다.", m_iSerial);
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationComponent::RemoveUnauthenticatedSession()
+{
+	if (!Core::CommonContents->UnauthenticatedSessionManager->Remove(serial_))
+	{
+		_LogWarn_("미인증 세션목록에 %d 시리얼에 해당하는 세션이 없습니다.", serial_);
 	}
 }

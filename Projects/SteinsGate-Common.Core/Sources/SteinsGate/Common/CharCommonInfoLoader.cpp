@@ -6,7 +6,6 @@
  */
 
 
-
 #include "Core.h"
 #include "CharCommonInfoLoader.h"
 #include "CommonCoreHeader.h"
@@ -18,46 +17,56 @@
 USING_NS_JS;
 USING_NS_JC;
 
-CharCommonInfoLoader::CharCommonInfoLoader(DataManagerAbstract* manager)
-	: ConfigFileLoaderAbstract(manager)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+CharCommonInfoLoader::CharCommonInfoLoader(DataManagerAbstract* _pManager)
+: ConfigFileLoaderAbstract(_pManager)
+{
+}
 
-bool CharCommonInfoLoader::load() {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CharCommonInfoLoader::Load()
+{
 	Value root;
 
-	if (!loadJson(root)) {
+	if (!LoadJson(root))
+	{
 		return false;
 	}
 
-	try {
+	try
+	{
 		Value& charCommonInfoListRoot = root["common"];
 
-		for (int i = 0; i < charCommonInfoListRoot.size(); ++i) {
+		for (int i = 0; i < charCommonInfoListRoot.size(); ++i)
+		{
 			Value& charCommonInfoRoot = charCommonInfoListRoot[i];
 			CharCommonInfo* pCharCommonInfo = dbg_new CharCommonInfo(charCommonInfoRoot["exp"].size() + 1);
-			readCharCommonInfo(charCommonInfoRoot, pCharCommonInfo);
-			addData(pCharCommonInfo);
+			ReadCharCommonInfo(charCommonInfoRoot, pCharCommonInfo);
+			AddData(pCharCommonInfo);
 		}
 	}
-	catch (std::exception& ex) {
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
+	catch (std::exception& ex)
+	{
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), ex.what());
 		return false;
 	}
 
 	return true;
 }
 
-void CharCommonInfoLoader::readCharCommonInfo(Value& charCommonRoot, CharCommonInfo* charCommonInfo) {
-	charCommonInfo->Code = charCommonRoot["code"].asInt();
-	charCommonInfo->DefaultInvenSlotCount[InvenItemType::Equip] = charCommonRoot["default_equip_slot_count"].asInt();
-	charCommonInfo->DefaultInvenSlotCount[InvenItemType::Consume] = charCommonRoot["default_consume_slot_count"].asInt();
-	charCommonInfo->DefaultInvenSlotCount[InvenItemType::Etc] = charCommonRoot["default_etc_slot_count"].asInt();
-	charCommonInfo->DefaultInvenSlotCount[InvenItemType::Quest] = charCommonRoot["default_quest_slot_count"].asInt();
-	charCommonInfo->DefaultInvenSlotCount[InvenItemType::Avatar] = charCommonRoot["default_avatar_slot_count"].asInt();
+//////////////////////////////////////////////////////////////////////////////////////////
+void CharCommonInfoLoader::ReadCharCommonInfo(Value& _charCommonRoot, CharCommonInfo* _pCharCommonInfo)
+{
+	_pCharCommonInfo->code_ = _charCommonRoot["code"].asInt();
+	_pCharCommonInfo->defaultInvenSlotCount_[InvenItemType::Equip] = _charCommonRoot["default_equip_slot_count"].asInt();
+	_pCharCommonInfo->defaultInvenSlotCount_[InvenItemType::Consume] = _charCommonRoot["default_consume_slot_count"].asInt();
+	_pCharCommonInfo->defaultInvenSlotCount_[InvenItemType::Etc] = _charCommonRoot["default_etc_slot_count"].asInt();
+	_pCharCommonInfo->defaultInvenSlotCount_[InvenItemType::Quest] = _charCommonRoot["default_quest_slot_count"].asInt();
+	_pCharCommonInfo->defaultInvenSlotCount_[InvenItemType::Avatar] = _charCommonRoot["default_avatar_slot_count"].asInt();
 
-	Value& expRoot = charCommonRoot["exp"];
-	for (int i = 0; i < expRoot.size(); ++i) {
-		charCommonInfo->Exp.PushBack(expRoot[i].asInt());
+	Value& expRoot = _charCommonRoot["exp"];
+	for (int i = 0; i < expRoot.size(); ++i)
+	{
+		_pCharCommonInfo->expTables_.PushBack(expRoot[i].asInt());
 	}
 }
-

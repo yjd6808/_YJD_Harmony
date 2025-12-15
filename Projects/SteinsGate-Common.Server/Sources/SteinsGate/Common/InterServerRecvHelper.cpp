@@ -14,4 +14,3 @@
 
 
 thread_local Int8 InterServerRecvHelper::LastFromId = InvalidValue_v;
-

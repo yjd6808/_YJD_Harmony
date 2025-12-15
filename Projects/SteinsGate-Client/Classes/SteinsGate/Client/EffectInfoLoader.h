@@ -5,10 +5,7 @@
  *
  */
 
-
 #pragma once
-
-
 
 #include <SteinsGate/Client/EffectInfo.h>
 #include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
@@ -16,11 +13,14 @@
 struct EffectInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	EffectInfoLoader(DataManagerAbstract* manager);
-	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Effect; }
-	bool load() override;
+	EffectInfoLoader(DataManagerAbstract* _pManager);
 
-	static void readEffectInfo(Json::Value& effectRoot, JCORE_OUT EffectInfo* effectInfo);
+	ConfigFileType_t GetConfigFileType() override
+	{
+		return ConfigFileType::Effect;
+	}
+
+	bool Load() override;
+
+	static void ReadEffectInfo(Json::Value& _effectRoot, JCORE_OUT EffectInfo* _pEffectInfo);
 };
-
-

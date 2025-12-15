@@ -15,26 +15,26 @@
 class AuthenticationComponent : public SessionComponent
 {
 public:
-	AuthenticationComponent(CommonSession* session);
+	AuthenticationComponent(CommonSession* _pSession);
 
 	void Initialize() override;
 	void OnConnected() override;
 	void OnDisconnected() override;
 
-	void SetState(AuthenticationState_t state);
-	void SetSerial(AuthenticationSerial_t serial);
-	void SetAccountId(const char* accountId);
+	void SetState(AuthenticationState_t _state);
+	void SetSerial(AuthenticationSerial_t _serial);
+	void SetAccountId(const char* _pAccountId);
 
-	AuthenticationState_t GetState() const { return m_eState; }
-	AuthenticationSerial_t GetSerial() const { return m_iSerial; }
+	AuthenticationState_t GetState() const { return state_; }
+	AuthenticationSerial_t GetSerial() const { return serial_; }
 
 	SG_COMPONENT_TYPE_GETTER(Const::Component::Authentication)
 
 protected:
 	void RemoveUnauthenticatedSession();
-private:
-	SGStaticString<Const::StringLen::AccountId> m_szAccountId;
 
-	AuthenticationState_t m_eState;
-	AuthenticationSerial_t m_iSerial;
+private:
+	SGStaticString<Const::StringLen::AccountId> accountId_;
+	AuthenticationState_t state_;
+	AuthenticationSerial_t serial_;
 };

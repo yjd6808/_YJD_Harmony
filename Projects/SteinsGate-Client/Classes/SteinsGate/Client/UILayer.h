@@ -5,7 +5,6 @@
  * UI 마스타 그룹 외에 절대 addChild 금지
  */
 
-
 #pragma once
 
 #include <SteinsGate/Client/Tutturu.h>
@@ -19,25 +18,26 @@ public:
 	static UILayer* create();
 
 	bool init() override;
-	void onMouseMove(SGEventMouse* mouseEvent);
-	void onMouseDown(SGEventMouse* mouseEvent);
-	void onMouseUp(SGEventMouse* mouseEvent);
-	void onMouseScroll(SGEventMouse* mouseEvent) const;
+	void onMouseMove(SGEventMouse* _pMouseEvent);
+	void onMouseDown(SGEventMouse* _pMouseEvent);
+	void onMouseUp(SGEventMouse* _pMouseEvent);
+	void onMouseScroll(SGEventMouse* _pMouseEvent) const;
 
-	void update(float dt) override;
-	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
-	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
+	void update(float _delta) override;
+	void onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
+	void onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
 
-	UIMasterGroup* findGroup(int groupCode);
+	UIRootGroup* findGroup(int _groupCode);
 
-	void forEach(const SGActionFn<UIMasterGroup*>& actionFn);
-	void addUIGroup(int groupCode, int zorder = 0);
-	void addUIGroup(UIMasterGroup* group, int zorder = 0);
-	void removeUIGroup(int groupCode);
-	void removeUIGroup(UIMasterGroup* group);
+	void forEach(const SGActionFn<UIRootGroup*>& _actionFn);
+	void addUIGroup(int _groupCode, int _zOrder = 0);
+	void addUIGroup(UIRootGroup* _pGroup, int _zOrder = 0);
+	void removeUIGroup(int _groupCode);
+	void removeUIGroup(UIRootGroup* _pGroup);
 	void clear();
 	void clearUnload();
+
 private:
-	UIGroup* m_pPrevOverStateGroup;
-	UIGroup* m_pPrevPressedStateGroup;
+	UIGroup* pPrevOverStateGroup_;
+	UIGroup* pPrevPressedStateGroup_;
 };

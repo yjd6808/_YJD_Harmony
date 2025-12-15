@@ -15,45 +15,50 @@
 USING_NS_JS;
 USING_NS_JC;
 
-ChannelInfoLoader::ChannelInfoLoader(DataManagerAbstract* manager)
-	: ChannelBaseInfoLoader(manager)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+ChannelInfoLoader::ChannelInfoLoader(DataManagerAbstract* _pManager)
+: ChannelBaseInfoLoader(_pManager)
+{
+}
 
-
-bool ChannelInfoLoader::load() {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ChannelInfoLoader::Load()
+{
 	Value root;
 
-	if (!loadJson(root)) {
+	if (!LoadJson(root))
+	{
 		return false;
 	}
 
-	try {
+	try
+	{
 		Value& channelInfoRootList = root["channel"];
 
-		for (int i = 0; i < channelInfoRootList.size(); ++i) {
+		for (int i = 0; i < channelInfoRootList.size(); ++i)
+		{
 			Value& channelInfoRoot = channelInfoRootList[i];
 			ChannelInfo* pChannelInfo = dbg_new ChannelInfo;
-			readChannelBaseInfo(channelInfoRoot, pChannelInfo);
-			readChannelInfo(channelInfoRoot, pChannelInfo);
-			addData(pChannelInfo);
+			ReadChannelBaseInfo(channelInfoRoot, pChannelInfo);
+			ReadChannelInfo(channelInfoRoot, pChannelInfo);
+			AddData(pChannelInfo);
 		}
 	}
-	catch (std::exception& ex) {
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
+	catch (std::exception& ex)
+	{
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), ex.what());
 		return false;
 	}
 
 	return true;
 }
 
-void ChannelInfoLoader::readChannelInfo(Json::Value& channelRoot, JCORE_OUT ChannelInfo* channelInfo) {
-
-	JsonUtil::parseIntNumber2(
-		channelRoot["monster_sprite"], 
-		channelInfo->SelectedSpriteIndex,
-		channelInfo->NormalSpriteIndex
+//////////////////////////////////////////////////////////////////////////////////////////
+void ChannelInfoLoader::ReadChannelInfo(Json::Value& _channelRoot, JCORE_OUT ChannelInfo* _pChannelInfo)
+{
+	JsonUtil::ParseIntNumber2(
+		_channelRoot["monster_sprite"],
+		_pChannelInfo->SelectedSpriteIndex,
+		_pChannelInfo->NormalSpriteIndex
 	);
 }
-
-
-

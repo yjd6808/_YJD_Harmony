@@ -14,16 +14,15 @@
 
 
 NS_CALLBACK_BEGIN
-
 namespace Popup
 {
-	void LobbyAuthenticationTimeout::operator()() {
-		if (Core::Net->getAuthenticationComponent()->getState() == AuthenticationState::LobbyWait) {
-			
-		}
+//////////////////////////////////////////////////////////////////////////////////////
+void LobbyAuthenticationTimeout::operator()()
+{
+	if (Core::Net->getAuthenticationComponent()->getState() == AuthenticationState::LobbyWait)
+	{
 	}
-
-
+}
 }
 
 NS_CALLBACK_END

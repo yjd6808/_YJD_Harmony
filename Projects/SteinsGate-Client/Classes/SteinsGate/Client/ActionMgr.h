@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/22/2023 9:00:34 AM
  * =====================
@@ -14,6 +14,7 @@
 class FrameTexture;
 class HostPlayer;
 class PlayerController;
+
 class ActionMgr
 {
 public:
@@ -25,8 +26,8 @@ public:
 	void update(float _dt);
 	void onKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);
 	void onKeyReleased(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);
-	void onKeyPressedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);      // 키가 눌려진 상태가 수정되기전 호출
-	void onKeyReleasedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);    // 키가 안눌려진 상태가 수정되기전 호출
+	void onKeyPressedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode); // 키가 눌려진 상태가 수정되기전 호출
+	void onKeyReleasedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode); // 키가 안눌려진 상태가 수정되기전 호출
 	void onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
 	void onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
 	void onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
@@ -53,7 +54,7 @@ public:
 private:
 	HostPlayer* player_;
 	SGComboTree comboTree_;
-	SGAction* runningAction_;				// 캐릭터 자체가 움직여서 사용하는 액션
+	SGAction* runningAction_; // 캐릭터 자체가 움직여서 사용하는 액션
 	SGAction* previousAction_;
 	SGAction* baseAction_[BaseAction::Max];
 	SGHashMap<int, SGAction*> actionMap_;

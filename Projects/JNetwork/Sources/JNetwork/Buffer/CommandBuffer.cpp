@@ -97,7 +97,7 @@ bool CommandBuffer::IsValid() const
 	for (int i = 0; i < commandCount; i++)
 	{
 		ICommand* pCmd = dbgBuffer.Peek<ICommand*>();
-		int commandLen = pCmd->GetCommandLength();
+		int commandLen = pCmd->GetLength();
 
 		if (!dbgBuffer.MoveReadPos(commandLen))
 		{
@@ -125,7 +125,7 @@ PktLen_t CommandBuffer::GetPacketLength()
 //////////////////////////////////////////////////////////////////////////////////////////
 void CommandBuffer::Alloc(ICommand* _pCmd)
 {
-	const int cmdSize = _pCmd->GetCommandLength();
+	const int cmdSize = _pCmd->GetLength();
 
 	if (!MoveWritePos(cmdSize))
 	{

@@ -11,12 +11,9 @@
 #include <SteinsGate/Common/ServerNamespace.h>
 
 NS_CONST_BEGIN
-
 namespace Component
 {
-	constexpr int Authentication = 1;
+constexpr int Authentication = 1;
 }
 
 NS_CONST_END
-
-

@@ -8,19 +8,18 @@
 #include "Core.h"
 #include "Enum_CHARACTER.h"
 
-
-
-WeaponType_t WeaponType::getType(const JCore::String& name) {
-	static SGHashMap<SGString, WeaponType_t> NameToTypeMap
+//////////////////////////////////////////////////////////////////////////////////////////
+WeaponType_t WeaponType::getType(const JCore::String& _name)
+{
+	static SGHashMap<SGString, WeaponType_t> nameToTypeMap
 	{
-		{ "auto"	, Automatic		},
-		{ "rev" 	, Revolver		},
-		{ "bowgun"	, Bowgun		},
-		{ "musket"	, Musket		},
-		{ "hcan"	, HandCannon	}
+		{ "auto", Automatic },
+		{ "rev", Revolver },
+		{ "bowgun", Bowgun },
+		{ "musket", Musket },
+		{ "hcan", HandCannon }
 	};
 
-	DebugAssertMsg(NameToTypeMap.Exist(name), "%s 무기타입명에 해당하는 코드가 존재하지 않습니다.", name.Source());
-	return NameToTypeMap[name];
+	DebugAssertMsg(nameToTypeMap.Exist(_name), "%s 무기타입명에 해당하는 코드가 존재하지 않습니다.", _name.Source());
+	return nameToTypeMap[_name];
 }
-

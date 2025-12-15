@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <SteinsGate/Common/Struct_ACTOR.h>
@@ -15,16 +14,13 @@
 #include <SteinsGate/Common/Struct_ITEM.h>
 #include <SteinsGate/Common/Struct_RESOURCE.h>
 
-
-
-
 struct PlayerData
 {
 	PlayerData();
 
 	void clear();
 
-	int CharId;	// 캐릭터 고유 아이디
+	int CharId; // 캐릭터 고유 아이디
 	SGStaticString<Const::StringLen::CharacterName> Name;
 	CharType_t CharType;
 	Int32 Life;
@@ -40,5 +36,3 @@ struct PlayerData
 	Int32 Int;
 	Int32 Vit;
 };
-
-

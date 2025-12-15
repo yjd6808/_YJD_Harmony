@@ -12,113 +12,152 @@
 #include <SteinsGate/Client/MapLayer.h>
 #include <SteinsGate/Client/DataManager.h>
 
-HitRecorder::HitRecorder(Actor* owner, Actor* recorder)
-	: m_pOwner(owner)
-	, m_pRecorder(recorder)
-	, m_vHitPossibleList(16)
-	, m_hAlreadyHitEnemy(32)
-	, m_bRecordAlreadyHit(false)
-	, m_bRecord(true)
-{}
-
-HitRecorder::HitRecorder(Actor* owner, Actor* recorder, int hitPossibleListSize, int alreadyHitEnemySize)
-	: m_pOwner(owner)
-	, m_pRecorder(recorder)
-	, m_vHitPossibleList(hitPossibleListSize)
-	, m_hAlreadyHitEnemy(alreadyHitEnemySize)
-	, m_bRecordAlreadyHit(false)
-	, m_bRecord(true)
-{}
-
-bool HitRecorder::isAlreadyHit(Actor* hitEnemy) {
-	return m_hAlreadyHitEnemy.Exist(hitEnemy);
+//////////////////////////////////////////////////////////////////////////////////////////
+HitRecorder::HitRecorder(Actor* _pOwner, Actor* _pRecorder)
+: owner_(_pOwner)
+, recorder_(_pRecorder)
+, hitPossibleList_(16)
+, alreadyHitEnemy_(32)
+, recordAlreadyHit_(false)
+, record_(true)
+{
 }
 
-void HitRecorder::record(const FrameEventAttackBoxInstant* frameEvent) {
+//////////////////////////////////////////////////////////////////////////////////////////
+HitRecorder::HitRecorder(Actor* _pOwner, Actor* _pRecorder, int _hitPossibleListSize, int _alreadyHitEnemySize)
+: owner_(_pOwner)
+, recorder_(_pRecorder)
+, hitPossibleList_(_hitPossibleListSize)
+, alreadyHitEnemy_(_alreadyHitEnemySize)
+, recordAlreadyHit_(false)
+, record_(true)
+{
+}
 
-	if (!m_bRecord)
+//////////////////////////////////////////////////////////////////////////////////////////
+bool HitRecorder::isAlreadyHit(Actor* _pHitEnemy)
+{
+	return alreadyHitEnemy_.Exist(_pHitEnemy);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void HitRecorder::record(const FrameEventAttackBoxInstant* _pFrameEvent)
+{
+	if (!record_)
 		return;
 
 	// 절대 위치 박스로 변환
-	ActorRect absoluteActorRect = Actor::convertAbsoluteActorRect(m_pRecorder, frameEvent->Rect);
-	record(absoluteActorRect, frameEvent->AttackDataCode);
+	ActorRect absoluteActorRect = Actor::convertAbsoluteActorRect(recorder_, _pFrameEvent->rect_);
+	record(absoluteActorRect, _pFrameEvent->attackDataCode_);
 }
 
-void HitRecorder::record(const ActorRect& absoluteActorRect, int attackDataCode) {
-	MapLayer* pMapLayer = m_pRecorder->getMapLayer();
+//////////////////////////////////////////////////////////////////////////////////////////
+void HitRecorder::record(const ActorRect& _absoluteActorRect, int _attackDataCode)
+{
+	MapLayer* pMapLayer = recorder_->getMapLayer();
 
-	int iNewHitCount = 0;
-	m_vHitPossibleList.Clear();
+	int newHitCount = 0;
+	hitPossibleList_.Clear();
 
-	pMapLayer->collectEnemiesInActorRect(m_pRecorder, absoluteActorRect, m_vHitPossibleList);
+	pMapLayer->collectEnemiesInActorRect(recorder_, _absoluteActorRect, hitPossibleList_);
 
-	for (int i = 0; i < m_vHitPossibleList.Size(); ++i) {
-		HitInfo& hitInfo = m_vHitPossibleList[i];
-		hitInfo.AttackDataInfo = DataManager::Get()->getAttackDataInfo(m_pOwner->getType(), attackDataCode);
-		hitInfo.Attacker = m_pRecorder;
+	for (int i = 0; i < hitPossibleList_.Size(); ++i)
+	{
+		HitInfo& hitInfo = hitPossibleList_[i];
+		hitInfo.AttackDataInfo = DataManager::Get()->getAttackDataInfo(owner_->getType(), _attackDataCode);
+		hitInfo.Attacker = recorder_;
 
-		m_SingleHitEvent.Invoke(hitInfo);
+		singleHitEvent_.Invoke(hitInfo);
 
-		if (m_bRecordAlreadyHit && m_hAlreadyHitEnemy.Insert(hitInfo.HitTarget, hitInfo.HitTarget)) {
-			++iNewHitCount;
+		if (recordAlreadyHit_ && alreadyHitEnemy_.Insert(hitInfo.HitTarget, hitInfo.HitTarget))
+		{
+			++newHitCount;
 		}
 	}
 
-	m_MultiHitEvent.Invoke(m_vHitPossibleList, iNewHitCount);
+	multiHitEvent_.Invoke(hitPossibleList_, newHitCount);
 }
 
-void HitRecorder::clearAlreadyHitEnemies() {
-	m_hAlreadyHitEnemy.Clear();
+//////////////////////////////////////////////////////////////////////////////////////////
+void HitRecorder::clearAlreadyHitEnemies()
+{
+	alreadyHitEnemy_.Clear();
 }
 
-void HitRecorder::setOwner(Actor* owner) {
-	m_pOwner = owner;
+//////////////////////////////////////////////////////////////////////////////////////////
+void HitRecorder::setOwner(Actor* _pOwner)
+{
+	owner_ = _pOwner;
 }
 
-void HitRecorder::setRecord(bool enabled) {
-	m_bRecord = enabled;
+//////////////////////////////////////////////////////////////////////////////////////////
+void HitRecorder::setRecord(bool _enabled)
+{
+	record_ = _enabled;
 }
 
-void HitRecorder::setAlreadyHitRecord(bool enabled) {
-	m_bRecordAlreadyHit = enabled;
+//////////////////////////////////////////////////////////////////////////////////////////
+void HitRecorder::setAlreadyHitRecord(bool _enabled)
+{
+	recordAlreadyHit_ = _enabled;
 }
 
-bool HitRecorder::hasSingleHitCallback(int definedEventId) {
-	return m_SingleHitEvent.IsRegistered(definedEventId);
+//////////////////////////////////////////////////////////////////////////////////////////
+bool HitRecorder::hasSingleHitCallback(int _definedEventId)
+{
+	return singleHitEvent_.IsRegistered(_definedEventId);
 }
 
-bool HitRecorder::addSingleHitCallback(int definedEventId, const SGHitSingleCallbackFn& callback) {
-	return m_SingleHitEvent.Register(definedEventId, callback);
+//////////////////////////////////////////////////////////////////////////////////////////
+bool HitRecorder::addSingleHitCallback(int _definedEventId, const SGHitSingleCallbackFn& _callback)
+{
+	return singleHitEvent_.Register(_definedEventId, _callback);
 }
 
-bool HitRecorder::addSingleHitCallback(int definedEventId, SGHitSingleCallbackFn&& callback) {
-	return m_SingleHitEvent.Register(definedEventId, JCore::Move(callback));
+//////////////////////////////////////////////////////////////////////////////////////////
+bool HitRecorder::addSingleHitCallback(int _definedEventId, SGHitSingleCallbackFn&& _callback)
+{
+	return singleHitEvent_.Register(_definedEventId, JCore::Move(_callback));
 }
 
-bool HitRecorder::removeSingleHitCallback(int definedEventId) {
-	return m_SingleHitEvent.Unregister(definedEventId);
+//////////////////////////////////////////////////////////////////////////////////////////
+bool HitRecorder::removeSingleHitCallback(int _definedEventId)
+{
+	return singleHitEvent_.Unregister(_definedEventId);
 }
 
-void HitRecorder::clearSingleHitCallback() {
-	m_SingleHitEvent.Clear();
+//////////////////////////////////////////////////////////////////////////////////////////
+void HitRecorder::clearSingleHitCallback()
+{
+	singleHitEvent_.Clear();
 }
 
-bool HitRecorder::hasMultiHitCallback(int definedEventId) {
-	return m_MultiHitEvent.IsRegistered(definedEventId);
+//////////////////////////////////////////////////////////////////////////////////////////
+bool HitRecorder::hasMultiHitCallback(int _definedEventId)
+{
+	return multiHitEvent_.IsRegistered(_definedEventId);
 }
 
-bool HitRecorder::addMultiHitCallback(int definedEventId, const SGHitMultiCallbackFn& callback) {
-	return m_MultiHitEvent.Register(definedEventId, callback);
+//////////////////////////////////////////////////////////////////////////////////////////
+bool HitRecorder::addMultiHitCallback(int _definedEventId, const SGHitMultiCallbackFn& _callback)
+{
+	return multiHitEvent_.Register(_definedEventId, _callback);
 }
 
-bool HitRecorder::addMultiHitCallback(int definedEventId, SGHitMultiCallbackFn&& callback) {
-	return m_MultiHitEvent.Register(definedEventId, Move(callback));
+//////////////////////////////////////////////////////////////////////////////////////////
+bool HitRecorder::addMultiHitCallback(int _definedEventId, SGHitMultiCallbackFn&& _callback)
+{
+	return multiHitEvent_.Register(_definedEventId, Move(_callback));
 }
 
-bool HitRecorder::removeMultiHitCallback(int definedEventId) {
-	return m_MultiHitEvent.Unregister(definedEventId);
+//////////////////////////////////////////////////////////////////////////////////////////
+bool HitRecorder::removeMultiHitCallback(int _definedEventId)
+{
+	return multiHitEvent_.Unregister(_definedEventId);
 }
 
-void HitRecorder::clearMultiHitCallback() {
-	m_MultiHitEvent.Clear();
+//////////////////////////////////////////////////////////////////////////////////////////
+void HitRecorder::clearMultiHitCallback()
+{
+	multiHitEvent_.Clear();
 }

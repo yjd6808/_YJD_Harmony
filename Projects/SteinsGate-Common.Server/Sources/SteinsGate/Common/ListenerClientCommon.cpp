@@ -12,27 +12,34 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-ListenerClientCommon::ListenerClientCommon(CommandParser* parser)
-	: Parser(parser)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+ListenerClientCommon::ListenerClientCommon(CommandParser* _pParser)
+: pParser_(_pParser)
+{
+}
 
-void ListenerClientCommon::OnReceived(Session* session, ICommand* recvCmd) {
-	ListenerClientBase::OnReceived(session, recvCmd);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerClientCommon::OnReceived(Session* _pSession, ICommand* _pRecvCmd)
+{
+	ListenerClientBase::OnReceived(_pSession, _pRecvCmd);
 
-	if (Parser && !Parser->RunCommand(session, recvCmd)) {
-		const Cmd_t id = recvCmd->GetId();
-		const char* szName = Core::CommandNameDictionary.Get(id);
+	if (pParser_ && !pParser_->RunCommand(_pSession, _pRecvCmd))
+	{
+		const Cmd_t id = _pRecvCmd->GetId();
+		const char* pCommandName = Core::CommandNameDictionary.Get(id);
 
 		_LogWarn_("%c %s %sB %s(%d) Parse Faliled",
-			TransmissionName(Transmission::Recv),
-			TransportProtocolName(session->Protocol()),
-			StringUtil::FillLeft(recvCmd->CmdLen, ' ', 4).Source(),
-			szName,
-			id
+		          TransmissionName(Transmission::Recv),
+		          TransportProtocolName(_pSession->Protocol()),
+		          StringUtil::FillLeft(_pRecvCmd->GetLength(), ' ', 4).Source(),
+		          pCommandName,
+		          id
 		);
 	}
 }
 
-void ListenerClientCommon::OnReceived(Session* session, RecvedCommandPacket* recvPacket) {
-	ListenerClientBase::OnReceived(session, recvPacket);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerClientCommon::OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket)
+{
+	ListenerClientBase::OnReceived(_pSession, _pRecvPacket);
 }

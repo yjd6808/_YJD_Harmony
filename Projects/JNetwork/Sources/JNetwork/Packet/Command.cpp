@@ -15,8 +15,8 @@ NS_JNET_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 ICommand* ICommand::Clone() const
 {
-	ICommand* pCopy = reinterpret_cast<ICommand*>(dbg_new char[commandLength_]);
-	JCore::Memory::CopyUnsafe(pCopy, this, commandLength_); // 데이터영역 복사
+	ICommand* pCopy = reinterpret_cast<ICommand*>(dbg_new char[cmdLength_]);
+	JCore::Memory::CopyUnsafe(pCopy, this, cmdLength_); // 데이터영역 복사
 	return pCopy;
 }
 

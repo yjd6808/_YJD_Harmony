@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <SteinsGate/Client/Tutturu.h>
@@ -14,17 +13,19 @@
 class SGChannelSelectScene : public SceneBase
 {
 public:
-    SGChannelSelectScene();
-    static SGChannelSelectScene* create();
+	SGChannelSelectScene();
+	static SGChannelSelectScene* create();
 
-    void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
-    void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
+	void onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
+	void onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
 
-    void update(float dt) override;
+	void update(float _dt) override;
 
-    bool init() override;
-    void onEnterTransitionDidFinish() override;
+	bool init() override;
+	void onEnterTransitionDidFinish() override;
 
-    SceneType_t getType() override { return SceneType::ChannelSelect; }
+	SceneType_t getType() override
+	{
+		return SceneType::ChannelSelect;
+	}
 };
-

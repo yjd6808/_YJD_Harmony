@@ -14,9 +14,10 @@
 class UnauthenticatedSessionManager : public ICreatable<UnauthenticatedSessionManager>
 {
 public:
-	bool Add(AuthenticationSerial_t serial, CommonSession* session);
-	bool Remove(AuthenticationSerial_t serial);
+	bool Add(AuthenticationSerial_t _serial, CommonSession* _pSession);
+	bool Remove(AuthenticationSerial_t _serial);
+
 private:
-	SGNormalLock m_Sync;
-	SGHashMap<AuthenticationSerial_t, CommonSession*> m_hSessionMap;
+	SGNormalLock sync_;
+	SGHashMap<AuthenticationSerial_t, CommonSession*> sessionMap_;
 };

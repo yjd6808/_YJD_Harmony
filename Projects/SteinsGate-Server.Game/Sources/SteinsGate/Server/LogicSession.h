@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <JNetwork/Host/TcpSession.h>
@@ -15,12 +14,11 @@ class LogicSession : public JNetwork::TcpSession
 {
 public:
 	LogicSession(
-		JNetwork::TcpServer* server,
-		const JNetwork::IOCPPtr& iocp,
-		const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-		int recvBufferSize,
-		int sendBufferSize
+		JNetwork::TcpServer* _pServer,
+		const JNetwork::IOCPPtr& _pIocp,
+		const JCore::MemoryPoolAbstractPtr& _pBufferAllocator,
+		int _recvBufferSize,
+		int _sendBufferSize
 	);
 };
-
 

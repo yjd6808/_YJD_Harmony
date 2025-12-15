@@ -1,6 +1,6 @@
 /*
- * 작성자: 윤정도
- * 생성일: 1/20/2023 1:57:14 PM
+ * 
+ * !F$ 1/20/2023 1:57:14 PM
  * =====================
  *
  */
@@ -15,36 +15,46 @@
 USING_NS_JS;
 USING_NS_JC;
 
-MonsterInfoLoader::MonsterInfoLoader(DataManagerAbstract* manager)
-	: MonsterBaseInfoLoader(manager)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+MonsterInfoLoader::MonsterInfoLoader(DataManagerAbstract* _pManager)
+: MonsterBaseInfoLoader(_pManager)
+{
+}
 
-bool MonsterInfoLoader::load() {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool MonsterInfoLoader::Load()
+{
 	Json::Value root;
 
-	if (!loadJson(root))
+	if (!LoadJson(root))
+	{
 		return false;
+	}
 
-	try {
-
+	try
+	{
 		Json::Value monsterListRoot = root["monsters"];
 
-		for (int i = 0; i < monsterListRoot.size(); ++i) {
+		for (int i = 0; i < monsterListRoot.size(); ++i)
+		{
 			Value& monterRoot = monsterListRoot[i];
-			MonsterInfo* monsterInfo = dbg_new MonsterInfo();
-			readMonsterBaseInfo(monterRoot, monsterInfo);
-			readMonsterInfo(monterRoot, monsterInfo);
-			addData(monsterInfo);
+			MonsterInfo* pMonsterInfo = dbg_new MonsterInfo();
+			ReadMonsterBaseInfo(monterRoot, pMonsterInfo);
+			ReadMonsterInfo(monterRoot, pMonsterInfo);
+			AddData(pMonsterInfo);
 		}
 	}
-	catch (std::exception& ex) {
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
+	catch (std::exception& exception)
+	{
+		_LogError_("%s OeYj( uJm)uA$.)%s", GetConfigFileName(), exception.what());
 		return false;
 	}
 
 	return true;
 }
 
-void MonsterInfoLoader::readMonsterInfo(Json::Value& mobRoot, MonsterInfo* mobInfo) {
-	JsonUtilEx::parseActorSpriteData(mobRoot["actor_sprite_data"], &mobInfo->SpriteData);
+//////////////////////////////////////////////////////////////////////////////////////////
+void MonsterInfoLoader::ReadMonsterInfo(Json::Value& _mobRoot, MonsterInfo* _pMobInfo)
+{
+	JsonUtilEx::ParseActorSpriteData(_mobRoot["actor_sprite_data"], &_pMobInfo->pSpriteData_);
 }

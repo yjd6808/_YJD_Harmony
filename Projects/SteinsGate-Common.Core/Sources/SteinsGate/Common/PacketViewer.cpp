@@ -15,67 +15,97 @@
 
 USING_NS_JC;
 
-void PacketViewer::View(JNetwork::Transmission transmission, char* data, int len, int cmdCount) {
-	String szHex{ 1024 };
+////////////////////////////////////////////////////////////////////////////////////////////
+void PacketViewer::View(JNetwork::Transmission _transmission, char* _pData, int _len, int _cmdCount)
+{
+	String hex{ 1024 };
 
-	if (len > szHex.Capacity() - 1) {
+	if (_len > hex.Capacity() - 1)
+	{
 		_LogWarn_("패킷 뷰 실패(출력 불가능한 크기)");
 		return;
 	}
-	Hex(data, len, szHex);
-	_LogPlain_("\t[%c 패킷 뷰]\n\t패킷 크기: %d\n\t커맨드 수: %d\n\t헥스\n%s", JNetwork::TransmissionName(transmission), len, cmdCount, szHex.Source());
+
+	Hex(_pData, _len, hex);
+	_LogPlain_("\t[%c 패킷 뷰]\n\t패킷 크기: %d\n\t커맨드 수: %d\n\t헥스\n%s", JNetwork::TransmissionName(_transmission), _len,
+	           _cmdCount, hex.Source());
 }
 
-void PacketViewer::View(JNetwork::Transmission transmission, char* data, int len) {
-	String szHex{ 1024 };
+////////////////////////////////////////////////////////////////////////////////////////////
+void PacketViewer::View(JNetwork::Transmission _transmission, char* _pData, int _len)
+{
+	String hex{ 1024 };
 
-	if (len > szHex.Capacity() - 1) {
+	if (_len > hex.Capacity() - 1)
+	{
 		_LogWarn_("패킷 뷰 실패(출력 불가능한 크기)");
 		return;
 	}
-	Hex(data, len, szHex);
-	_LogPlain_("\t[%c 패킷 뷰]\n\t패킷 크기: %d\n\t헥스\n%s", JNetwork::TransmissionName(transmission), len, szHex.Source());
+
+	Hex(_pData, _len, hex);
+	_LogPlain_("\t[%c 패킷 뷰]\n\t패킷 크기: %d\n\t헥스\n%s", JNetwork::TransmissionName(_transmission), _len, hex.Source());
 }
 
-void PacketViewer::View(JNetwork::IPacket* packet) {
-	const WSABUF wsaBuf = packet->GetWSABuf();
+////////////////////////////////////////////////////////////////////////////////////////////
+void PacketViewer::View(JNetwork::IPacket* _pPacket)
+{
+	const WSABUF wsaBuf = _pPacket->GetWSABuf();
 
-	if (packet->GetType() == JNetwork::PacketType::Command) {
-		View(JNetwork::Transmission::Send, wsaBuf.buf, wsaBuf.len, static_cast<JNetwork::CommandPacket*>(packet)->GetCommandCount());
-	} else if (packet->GetType() == JNetwork::PacketType::Raw) {
+	if (_pPacket->GetType() == JNetwork::PacketType::Command)
+	{
+		View(JNetwork::Transmission::Send, wsaBuf.buf, wsaBuf.len,
+		     static_cast<JNetwork::CommandPacket*>(_pPacket)->GetCommandCount());
+	}
+	else if (_pPacket->GetType() == JNetwork::PacketType::Raw)
+	{
 		View(JNetwork::Transmission::Send, wsaBuf.buf, wsaBuf.len);
-	} else {
+	}
+	else
+	{
 		DebugAssert(false);
 	}
 }
 
-void PacketViewer::View(JNetwork::RecvedCommandPacket* packet) {
-	View(JNetwork::Transmission::Recv, reinterpret_cast<char*>(packet), packet->GetPacketLength() + JNetwork::PacketHeaderSize_v, packet->GetCommandCount());
+////////////////////////////////////////////////////////////////////////////////////////////
+void PacketViewer::View(JNetwork::RecvedCommandPacket* _pPacket)
+{
+	View(JNetwork::Transmission::Recv, reinterpret_cast<char*>(_pPacket),
+	     _pPacket->GetPacketLength() + JNetwork::PACKET_HEADER_SIZE, _pPacket->GetCommandCount());
 }
 
-void PacketViewer::View(JNetwork::ICommand* cmd) {
-	String szHex{ 1024 };
+////////////////////////////////////////////////////////////////////////////////////////////
+void PacketViewer::View(JNetwork::ICommand* _pCmd)
+{
+	String hex{ 1024 };
+	CmdLen_t cmdLen = _pCmd->GetLength();
 
-	if (cmd->CmdLen > szHex.Capacity() - 1) {
+	if (cmdLen > hex.Capacity() - 1)
+	{
 		_LogWarn_("커맨드 뷰 실패(출력 불가능한 크기)");
 		return;
 	}
 
-	Hex(reinterpret_cast<char*>(cmd), cmd->CmdLen, szHex);
-	_LogPlain_("[커맨드 뷰]\n커맨드 타입:%d\n커맨드: %d\n크기: %d\n헥스\n%s", cmd->Type, cmd->Cmd, cmd->CmdLen, szHex.Source());
+	Hex(reinterpret_cast<char*>(_pCmd), cmdLen, hex);
+	_LogPlain_("[커맨드 뷰]\n커맨드 타입:%d\n커맨드: %d\n크기: %d\n헥스\n%s", _pCmd->GetType(), _pCmd->GetId(), cmdLen, hex.Source());
 }
 
-void PacketViewer::Hex(char* data, int len, JCORE_OUT String& hex) {
-	hex.SetLength(0);
-	hex += '\t';
-	char szByte[4]{ '0', '0', ' ', NULL };
-	for (int i = 0; i < len; ++i) {
-		szByte[0] = Digit::HexChar[Byte(data[i]) / 0x10];
-		szByte[1] = Digit::HexChar[Byte(data[i]) % 0x10];
-		hex += szByte;
+////////////////////////////////////////////////////////////////////////////////////////////
+void PacketViewer::Hex(char* _pData, int _len, JCORE_OUT String& _hex)
+{
+	_hex.SetLength(0);
+	_hex += '\t';
 
-		if (i != 0 && i % 10 == 9) {
-			hex += "\n\t";
+	char byteBuf[4]{ '0', '0', ' ', NULL };
+
+	for (int index = 0; index < _len; ++index)
+	{
+		byteBuf[0] = Digit::HexChar[Byte(_pData[index]) / 0x10];
+		byteBuf[1] = Digit::HexChar[Byte(_pData[index]) % 0x10];
+		_hex += byteBuf;
+
+		if (index != 0 && index % 10 == 9)
+		{
+			_hex += "\n\t";
 		}
 	}
 }

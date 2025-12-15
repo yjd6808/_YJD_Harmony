@@ -13,7 +13,7 @@
 
 struct C_GAME
 {
-	static void OnConnected(JNetwork::Session* session);
-	static void OnConnectFailed(JNetwork::Session* session, Int32U errorCode);
-	static void OnDisconnected(JNetwork::Session* session);
+	static void OnConnected(JNetwork::Session* _pSession);
+	static void OnConnectFailed(JNetwork::Session* _pSession, Int32U _errorCode);
+	static void OnDisconnected(JNetwork::Session* _pSession);
 };

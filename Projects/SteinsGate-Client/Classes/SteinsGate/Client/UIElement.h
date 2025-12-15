@@ -31,14 +31,15 @@ using SGMouseEventList = JCore::Event<cocos2d::EventMouse*>;
 
 
 class UIGroup;
-class UIMasterGroup;
+class UIRootGroup;
+
 class UIElement : public SGNode
 {
 public:
-	inline static const SGSize DefaultSize45 = { 45, 45 };
-	inline static const SGSize DefaultSize30 = { 30, 30 };
-	inline static const SGSize DefaultSize15 = { 15, 15 };
-	inline static const int MinDragStartDistance = 5.0f;		// 드래그 시작 최단 거리
+	inline static const SGSize DEFAULT_SIZE45 = { 45, 45 };
+	inline static const SGSize DEFAULT_SIZE30 = { 30, 30 };
+	inline static const SGSize DEFAULT_SIZE15 = { 15, 15 };
+	static constexpr int MIN_DRAG_START_DISTANCE = 5.0f; // 드래그 시작 최단 거리
 
 	enum State
 	{
@@ -49,117 +50,129 @@ public:
 		eMax
 	};
 
-	UIElement(UIMasterGroup* masterGroup, UIGroup* parent);
-	UIElement(UIMasterGroup* masterGroup, UIGroup* parent, UIElementInfo* info, bool infoOwner);
+	UIElement(UIRootGroup* _masterGroup, UIGroup* _parent);
+	UIElement(UIRootGroup* _masterGroup, UIGroup* _parent, UIElementInfo* _info, bool _infoOwner);
 	~UIElement() override;
 
 	bool init() override;
-	bool loaded() const;
+	bool Loaded() const;
 
-	virtual void focus();
-	virtual void unfocus();
+	virtual void Focus();
+	virtual void Unfocus();
 
-	virtual void restoreState(State state);
-	virtual void load();
-	virtual void unload();
-	virtual void reload();
-	virtual bool onMouseMoveInternal(SGEventMouse* mouseEvent);
-	virtual bool onMouseDownInternal(SGEventMouse* mouseEvent);
-	virtual bool onMouseUpInternal(SGEventMouse* mouseEvent);
-	virtual bool onMouseScrollInternal(SGEventMouse* mouseEvent);
+	virtual void RestoreState(State _state);
+	virtual void Load();
+	virtual void Unload();
+	virtual void Reload();
+	virtual bool OnMouseMoveInternal(SGEventMouse* _mouseEvent);
+	virtual bool OnMouseDownInternal(SGEventMouse* _mouseEvent);
+	virtual bool OnMouseUpInternal(SGEventMouse* _mouseEvent);
+	virtual bool OnMouseScrollInternal(SGEventMouse* _mouseEvent);
 
-	virtual void onMouseEnterInternalDetail(SGEventMouse* mouseEvent);
-	virtual void onMouseLeaveInternalDetail(SGEventMouse* mouseEvent);
-	virtual bool onMouseMoveInternalDetail(SGEventMouse* mouseEvent);
-	virtual bool onMouseDownInternalDetail(SGEventMouse* mouseEvent);
-	virtual void onMouseUpInternalDetail(SGEventMouse* mouseEvent);
-	virtual bool onMouseUpContainedInternalDetail(SGEventMouse* mouseEvent);
-	virtual bool onMouseScrollInternalDetail(SGEventMouse* mouseEvent);
+	virtual void OnMouseEnterInternalDetail(SGEventMouse* _mouseEvent);
+	virtual void OnMouseLeaveInternalDetail(SGEventMouse* _mouseEvent);
+	virtual bool OnMouseMoveInternalDetail(SGEventMouse* _mouseEvent);
+	virtual bool OnMouseDownInternalDetail(SGEventMouse* _mouseEvent);
+	virtual void OnMouseUpInternalDetail(SGEventMouse* _mouseEvent);
+	virtual bool OnMouseUpContainedInternalDetail(SGEventMouse* _mouseEvent);
+	virtual bool OnMouseScrollInternalDetail(SGEventMouse* _mouseEvent);
 
-	virtual void setInfo(UIElementInfo* info, bool infoOwner) = 0;
-	virtual void setEnabled(bool enabled);
-	virtual UIElementType_t getElementType() = 0;
+	virtual void SetInfo(UIElementInfo* _info, bool _infoOwner) = 0;
+	virtual void SetEnabled(bool _enabled);
+	virtual UIElementType_t GetElementType() = 0;
 
-	virtual bool isGroup() const { return false; }
-	virtual bool isMasterGroup() { return false; }
+	virtual bool IsGroup() const { return false; }
+	virtual bool IsRootGroup() { return false; }
 
-	SGRect getWorldBoundingBox() const;
-	virtual void updateState();
+	SGRect GetWorldBoundingBox() const;
+	virtual void UpdateState();
 
 	template <typename TElement>
-	TElement cast() {
+	TElement Cast()
+	{
 		static_assert(JCore::IsPointerType_v<TElement>, "... TElement must be pointer type");
-		static_assert(JCore::IsBaseOf_v<UIElement, JCore::RemovePointer_t<TElement>>, "... TElement must be UIElement type");
+		static_assert(JCore::IsBaseOf_v<UIElement, JCore::RemovePointer_t<TElement>>,
+		              "... TElement must be UIElement type");
 		return static_cast<TElement>(this);
 	}
 
-	virtual SGString toString() = 0;
+	virtual SGString ToString() = 0;
 
-	int getCode() const { return m_pBaseInfo->Code; }
-	UIMasterGroup* getMasterGroup() const { return m_pMasterGroup; }
-	
-	SGVec2 calculateZeroPosition(const SGRect& rc) const;
-	SGVec2 calculateZeroPosition(const SGRect& rc, HAlignment_t halign, VAlignment_t valign) const;
-	SGVec2 calculateRelativePosition(const SGSize& parentSize) const;
+	int GetCode() const { return pBaseInfo_->code_; }
+	UIRootGroup* GetRootGroup() const { return pRootGroup_; }
 
-	SGRect getParentAbsoluteRect();
-	SGRect getParentRect();
-	SGSize getParentSize();
+	SGVec2 CalculateZeroPosition(const SGRect& _rc) const;
+	SGVec2 CalculateZeroPosition(const SGRect& _rc, HAlignment_t _halign, VAlignment_t _valign) const;
+	SGVec2 CalculateRelativePosition(const SGSize& _parentSize) const;
 
-	float getAbsoluteScaleX();
-	float getAbsoluteScaleY();
-	SGVec2 getAbsoluteScale();
-	SGVec2 getAbsolutePosition() const;
-	
+	SGRect GetParentAbsoluteRect();
+	SGRect GetParentRect();
+	SGSize GetParentSize();
+
+	float GetAbsoluteScaleX();
+	float GetAbsoluteScaleY();
+	SGVec2 GetAbsoluteScale();
+	SGVec2 GetAbsolutePosition() const;
+
 
 	// getPosition : 그룹내에서 엘리먼트의 좌하단 위치를 반환
-	SGVec2 getPositionCenter() const;	// 그룹내에서 엘리먼트의 중앙 위치를 반환
-	SGVec2 getPositionRightTop() const;	// 그룹내에서 엘리먼트의 우상단 위치를 반환
-	SGVec2 getRelativePosition();
-	SGVec2 getRelativePositionOnElement(SGVec2 absolutePos) const;
+	SGVec2 GetPositionCenter() const; // 그룹내에서 엘리먼트의 중앙 위치를 반환
+	SGVec2 GetPositionRightTop() const; // 그룹내에서 엘리먼트의 우상단 위치를 반환
+	SGVec2 GetRelativePosition();
+	SGVec2 GetRelativePositionOnElement(const SGVec2& _absolutePos) const;
 
-	void setRelativePosition(float x, float y);																	// 부모기준 상대적 위치 반영
-	void setRelativePosition(const SGVec2& pos);																// 부모기준 상대적 위치 반영
-	void setRelativePosition(float x, float y, HAlignment_t halign, VAlignment_t valign);						// 부모기준 상대적 위치 반영
-	void setRelativePosition(UIElement* target, float x, float y, HAlignment_t halign, VAlignment_t valign);	// 타겟기준 상대적 위치 반영
-	
+	void SetRelativePosition(float _x, float _y); // 부모기준 상대적 위치 반영
+	void SetRelativePosition(const SGVec2& _pos); // 부모기준 상대적 위치 반영
+	void SetRelativePosition(float _x, float _y, HAlignment_t _halign, VAlignment_t _valign); // 부모기준 상대적 위치 반영
+	void SetRelativePosition(UIElement* _target, float _x, float _y, HAlignment_t _halign, VAlignment_t _valign);
+	// 타겟기준 상대적 위치 반영
 
-	void invokeMouseEvent(MouseEventType mouseEventType, SGEventMouse* mouseEvent);
-	void addMouseEvent(MouseEventType mouseEventType, int id, const SGActionFn<SGEventMouse*>& fn);
-	void addMouseEvent(MouseEventType mouseEventType, int id, SGActionFn<SGEventMouse*>&& fn);
-	void removeMouseEvent(MouseEventType mouseEventType, int id);
 
-	void setUISize(const float width, const float height) { setUISize({ width, height }); }
-	virtual void setUISize(const SGSize& size) { m_UISize = size; }
-	SGRect getUIRect() const { return { SGVec2{}, m_UISize }; }
-	const SGSize& getUISize() const { return m_UISize; }
+	void InvokeMouseEvent(MouseEventType _mouseEventType, SGEventMouse* _mouseEvent);
+	void AddMouseEvent(MouseEventType _mouseEventType, int _id, const SGActionFn<SGEventMouse*>& _fn);
+	void AddMouseEvent(MouseEventType _mouseEventType, int _id, SGActionFn<SGEventMouse*>&& _fn);
+	void RemoveMouseEvent(MouseEventType _mouseEventType, int _id);
 
-	void setUIScale(float scale)				{ setUISize({ _contentSize.width * scale, _contentSize.height * scale }); }
-	void setUIScale(float scaleX, float scaleY)	{ setUISize({ _contentSize.width * scaleX, _contentSize.height * scaleY }); }
-	void setUIScaleX(float scaleX)				{ setUISize({ _contentSize.width * scaleX, m_UISize.height }); }
-	void setUIScaleY(float scaleY)				{ setUISize({ m_UISize.width, _contentSize.height * scaleY }); }
+	void SetUISize(const float _width, const float _height) { SetUISize({ _width, _height }); }
+	virtual void SetUISize(const SGSize& _size) { uiSize_ = _size; }
+	SGRect GetUIRect() const { return { SGVec2{}, uiSize_ }; }
+	const SGSize& GetUISize() const { return uiSize_; }
 
-	float getUIScaleX()							{ return m_UISize.width / _contentSize.width; }
-	float getUIScaleY()							{ return m_UISize.height / _contentSize.height; }
+	void SetUIScale(float _scale) { SetUISize({ _contentSize.width * _scale, _contentSize.height * _scale }); }
 
-	void setResizable(bool resizable) { m_bResizable = resizable; }
-	bool isResizable() const { return m_bResizable; }
+	void SetUIScale(float _scaleX, float _scaleY)
+	{
+		SetUISize({ _contentSize.width * _scaleX, _contentSize.height * _scaleY });
+	}
 
-	void setDraggable(bool draggable) { m_bDraggable = draggable; }
-	bool isDraggable() const { return m_bDraggable; }
+	void SetUIScaleX(float _scaleX) { SetUISize({ _contentSize.width * _scaleX, uiSize_.height }); }
+	void SetUIScaleY(float _scaleY) { SetUISize({ uiSize_.width, _contentSize.height * _scaleY }); }
 
-	void setDeveloperCreated(bool developerCreated) { m_bDevloperCreated = developerCreated; }
-	bool isDeveloperCreated() const { return m_bDevloperCreated; }
+	float GetUIScaleX() { return uiSize_.width / _contentSize.width; }
+	float GetUIScaleY() { return uiSize_.height / _contentSize.height; }
 
-	void setDragLinkElement(UIElement* dragLinkElement) { m_pDragLinkElement = dragLinkElement; }
+	void SetResizable(bool _resizable) { isResizable_ = _resizable; }
+	bool IsResizable() const { return isResizable_; }
 
-	void setInternalDetailEventEnabled(bool enabledInternalDetailEnabled) { m_bInternalDetailEventEnabled = enabledInternalDetailEnabled; }
+	void SetDraggable(bool _draggable) { isDraggable_ = _draggable; }
+	bool IsDraggable() const { return isDraggable_; }
+
+	void SetDeveloperCreated(bool _developerCreated) { isDeveloperCreated_ = _developerCreated; }
+	bool IsDeveloperCreated() const { return isDeveloperCreated_; }
+
+	void SetDragLinkElement(UIElement* _dragLinkElement) { pDragLinkElement_ = _dragLinkElement; }
+
+	void SetInternalDetailEventEnabled(bool _enabledInternalDetailEnabled)
+	{
+		isInternalDetailEventEnabled_ = _enabledInternalDetailEnabled;
+	}
+
 protected:
-	bool isContainPoint(SGEventMouse* mouseEvent);
-	virtual void setInitialUISize(SGSize size);
+	bool IsContainPoint(SGEventMouse* _mouseEvent);
+	virtual void SetInitialUISize(SGSize _size);
 
-	void logWarnMissingInfo();
-	void logWarnInvalidInfo(UIElementType_t targetType);
+	void LogWarnMissingInfo();
+	void LogWarnInvalidInfo(UIElementType_t _targetType);
 
 	// 현재 내가 정립한 UI 규격
 	// m_pInfo->Size = 실제 UI 크기(설정파일)
@@ -167,25 +180,21 @@ protected:
 	// m_UISize = 사용자 지정 변경된 UI 크기
 	// _position = 부모 노드 기준 좌하단 좌표
 
-	SGMouseEventList* m_pMouseEventMap[eMouseEventMax];
-	UIElementInfo* m_pBaseInfo;
-	UIElement* m_pDragLinkElement;	// 이 엘리먼트를 드래그할 때 실제로 움직일 엘리먼트 (이 엘리먼트와, 링크 엘리먼트 모두 Draggable 옵션이 활성화되어 있어야함.) 추가한 이유: 타이틀바를 잡고 드래그할 때 그룹 전체를 움직이기 위함.
-	UIMasterGroup* m_pMasterGroup;	// 대통령
-	UIGroup* m_pParent;				// 직속 상관
-	SGSize m_UISize;				// 화면상 보이는 UI 크기 
-	State m_eState;
+	SGMouseEventList* pMouseEventMap_[eMouseEventMax];
+	UIElementInfo* pBaseInfo_;
+	UIElement* pDragLinkElement_;
+	// 이 엘리먼트를 드래그할 때 실제로 움직일 엘리먼트 (이 엘리먼트와, 링크 엘리먼트 모두 Draggable 옵션이 활성화되어 있어야함.) 추가한 이유: 타이틀바를 잡고 드래그할 때 그룹 전체를 움직이기 위함.
+	UIRootGroup* pRootGroup_; // 대통령
+	UIGroup* pParent_; // 직속 상관
+	SGSize uiSize_; // 화면상 보이는 UI 크기 
+	State state_;
 
-	bool m_bDevloperCreated;		// 개발자가 수동으로 생성한 커스텀 객체인 경우 (해당 엘리먼트를 포함하는 그룹이 unload될 때 소멸됨)
-	bool m_bInfoOwner;				// m_pBaseInfo의 주인인지
-	bool m_bInitialized;
-	bool m_bDraggable;
-	bool m_bLoaded;
-	bool m_bFocused;
-	bool m_bResizable;					// 처음 크기가 결정된 후 UIGroup::setContentSize() 호출시 크기 업데이트가 이뤄질지 여부
-	bool m_bInternalDetailEventEnabled; // 구현된 엘리먼트(UIButton, UICheckBox 같은)에 디테일 이벤트(~~~InternalDetail 함수) 전달할지
-	
+	bool isDeveloperCreated_; // 개발자가 수동으로 생성한 커스텀 객체인 경우 (해당 엘리먼트를 포함하는 그룹이 unload될 때 소멸됨)
+	bool isInfoOwner_; // m_pBaseInfo의 주인인지
+	bool isInitialized_;
+	bool isDraggable_;
+	bool isLoaded_;
+	bool isFocused_;
+	bool isResizable_; // 처음 크기가 결정된 후 UIGroup::setContentSize() 호출시 크기 업데이트가 이뤄질지 여부
+	bool isInternalDetailEventEnabled_; // 구현된 엘리먼트(UIButton, UICheckBox 같은)에 디테일 이벤트(~~~InternalDetail 함수) 전달할지
 };
-
-
-
-

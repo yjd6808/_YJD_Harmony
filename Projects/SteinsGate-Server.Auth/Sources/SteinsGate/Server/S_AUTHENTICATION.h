@@ -14,9 +14,8 @@
 
 struct S_AUTHENTICATION : JNetwork::SendHelper<S_AUTHENTICATION>
 {
-	static void SEND_AUC_LoginAck(LoginResult_t result, GameServerType_t lastServer = GameServerType::Max, AuthenticationSerial_t serial = InvalidValue_v);
+	static void SEND_AUC_LoginAck(LoginResult_t _result, GameServerType_t _lastServer = GameServerType::Max, AuthenticationSerial_t _serial = InvalidValue_v);
 };
-
 
 
 

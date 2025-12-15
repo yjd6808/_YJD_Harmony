@@ -15,8 +15,10 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-bool ListenerHelperCommon::IsRelayCommand(ICommand* cmd) {
-	const CmdType_t type = cmd->Type;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ListenerHelperCommon::IsRelayCommand(ICommand* _pCommand)
+{
+	const CmdType_t type = _pCommand->GetType();
 	if (type == InterServerCmdType::RelayStatic)
 		return true;
 	if (type == InterServerCmdType::RelayDynamic)
@@ -24,9 +26,10 @@ bool ListenerHelperCommon::IsRelayCommand(ICommand* cmd) {
 	return false;
 }
 
-
-bool ListenerHelperCommon::IsHostCommand(ICommand* cmd) {
-	const CmdType_t type = cmd->Type;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ListenerHelperCommon::IsHostCommand(ICommand* _pCommand)
+{
+	const CmdType_t type = _pCommand->GetType();
 	if (type == InterServerCmdType::HostStatic)
 		return true;
 	if (type == InterServerCmdType::HostDynamic)
@@ -34,8 +37,10 @@ bool ListenerHelperCommon::IsHostCommand(ICommand* cmd) {
 	return false;
 }
 
-bool ListenerHelperCommon::IsStaticCommand(ICommand* cmd) {
-	const CmdType_t type = cmd->Type;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ListenerHelperCommon::IsStaticCommand(ICommand* _pCommand)
+{
+	const CmdType_t type = _pCommand->GetType();
 	if (type == InterServerCmdType::HostStatic)
 		return true;
 	if (type == InterServerCmdType::RelayStatic)
@@ -45,8 +50,10 @@ bool ListenerHelperCommon::IsStaticCommand(ICommand* cmd) {
 	return false;
 }
 
-bool ListenerHelperCommon::IsDynamicCommand(ICommand* cmd) {
-	const CmdType_t type = cmd->Type;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ListenerHelperCommon::IsDynamicCommand(ICommand* _pCommand)
+{
+	const CmdType_t type = _pCommand->GetType();
 	if (type == InterServerCmdType::HostDynamic)
 		return true;
 	if (type == InterServerCmdType::RelayDynamic)
@@ -56,7 +63,9 @@ bool ListenerHelperCommon::IsDynamicCommand(ICommand* cmd) {
 	return false;
 }
 
-bool ListenerHelperCommon::IsInterServerCommand(JNetwork::ICommand* cmd) {
-	const CmdType_t type = cmd->Type;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ListenerHelperCommon::IsInterServerCommand(JNetwork::ICommand* _pCommand)
+{
+	const CmdType_t type = _pCommand->GetType();
 	return type >= InterServerCmdType::InterServerBegin && type <= InterServerCmdType::InterServerEnd;
 }

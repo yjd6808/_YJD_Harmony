@@ -16,162 +16,213 @@
 USING_NS_JC;
 USING_NS_JS;
 
-ProjectileInfoLoader::ProjectileInfoLoader(DataManagerAbstract* manager, ActorType_t actorType)
-	: ConfigFileLoaderAbstract(manager)
-	, m_eActorType(actorType)
-{}
+ProjectileInfoLoader::ProjectileInfoLoader(DataManagerAbstract* _pManager, ActorType_t _actorType)
+: ConfigFileLoaderAbstract(_pManager)
+, actorType_(_actorType)
+{
+}
 
-bool ProjectileInfoLoader::load() {
-	Json::Value root;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ProjectileInfoLoader::Load()
+{
+	Json::Value jsonRoot;
 
-	if (!loadJson(root))
+	if (!LoadJson(jsonRoot))
+	{
 		return false;
+	}
 
-	try {
-		Json::Value projectiles = root["projectile"];
+	try
+	{
+		Json::Value projectileArray = jsonRoot["projectile"];
 
-		for (Json::Value::ArrayIndex i = 0; i < projectiles.size(); i++) {
-			Value& projectile = projectiles[i];
-			int iOverride = JsonUtilEx::getIntDefault(projectile["override_code"]);
+		for (Json::Value::ArrayIndex projectileIndex = 0; projectileIndex < projectileArray.size(); ++projectileIndex)
+		{
+			Json::Value& projectileValue = projectileArray[projectileIndex];
+			int overrideCode = JsonUtilEx::GetIntDefault(projectileValue["override_code"]);
 
 			// 오버라이드 읽기
-			if (iOverride != 0) {
-				DebugAssertMsg(m_hConfigDataAbstract.Exist(iOverride), "오버라이딩할 프로젝틸 데이터가 없습니다. 문서 똑바로 안만들어!!?");
-				const ProjectileInfo& ref = static_cast<ProjectileInfo&>( *m_hConfigDataAbstract[iOverride] );
-				ProjectileInfo* pInfo = dbg_new ProjectileInfo(ref);
-				pInfo->IsSpriteDataRef = true;
-				readOverridedProjectileInfo(projectile, pInfo);
-				addData(pInfo);
+			if (overrideCode != 0)
+			{
+				DebugAssertMsg(configDataMap_.Exist(overrideCode), "오버라이딩할 프로젝틸 데이터가 없습니다. 문서 똑바로 안만들어!!?");
+
+				ProjectileInfo& referenceProjectileInfo = static_cast<ProjectileInfo&>(*configDataMap_[overrideCode]);
+				ProjectileInfo* pProjectileInfo = dbg_new ProjectileInfo(referenceProjectileInfo);
+				pProjectileInfo->IsSpriteDataRef = true;
+				ReadOverridedProjectileInfo(projectileValue, pProjectileInfo);
+				AddData(pProjectileInfo);
 				continue;
 			}
 
 			// 원본 읽기
-			ProjectileInfo* pInfo = dbg_new ProjectileInfo;
-			pInfo->IsSpriteDataRef = false;
-			readProjectileInfo(projectile, pInfo);
-			addData(pInfo);
+			ProjectileInfo* pProjectileInfo = dbg_new ProjectileInfo;
+			pProjectileInfo->IsSpriteDataRef = false;
+			ReadProjectileInfo(projectileValue, pProjectileInfo);
+			AddData(pProjectileInfo);
 		}
 	}
-	catch (std::exception& ex) {
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
+	catch (std::exception& exception)
+	{
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), exception.what());
 		return false;
 	}
 
 	return true;
 }
 
-void ProjectileInfoLoader::readOverridedProjectileInfo(Json::Value& projectileRoot, JCORE_OUT ProjectileInfo* projectileInfo) {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void ProjectileInfoLoader::ReadOverridedProjectileInfo(Json::Value& _projectileRoot,
+                                                       JCORE_OUT ProjectileInfo* _pProjectileInfo)
+{
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 	DataManager* pDataManager = DataManager::Get();
 
-	projectileInfo->Code = projectileRoot["code"].asInt();
-	projectileInfo->Name = JsonUtilEx::getString(projectileRoot["name"]);
+	(void)pPackManager; // currently only used by commented-out code
 
-	int iAttackDataCode = JsonUtilEx::getIntDefault(projectileRoot["attack_data_code"], 0);
-	if (iAttackDataCode != 0)
-		projectileInfo->AttackData = pDataManager->getAttackDataInfo(m_eActorType, iAttackDataCode);
+	_pProjectileInfo->code_ = _projectileRoot["code"].asInt();
+	_pProjectileInfo->Name = JsonUtilEx::GetString(_projectileRoot["name"]);
 
-	int iProjectileListenerCode = JsonUtilEx::getIntDefault(projectileRoot["listener_code"], 0);
-	if (iProjectileListenerCode != 0)
-		projectileInfo->ListenerCode = iProjectileListenerCode;
-
-	/*const SGString& sgaName = JsonUtilEx::getStringOrNull(projectileRoot["sga"]);
-	if (!sgaName.IsNull()) {
-		projectileInfo->SgaIndex = pPackManager->getPackIndex(sgaName);
+	int attackDataCode = JsonUtilEx::GetIntDefault(_projectileRoot["attack_data_code"], 0);
+	if (attackDataCode != 0)
+	{
+		_pProjectileInfo->AttackData = pDataManager->getAttackDataInfo(actorType_, attackDataCode);
 	}
 
-	const SGString& imgName = JsonUtilEx::getStringOrNull(projectileRoot["img"]);
-	if (!imgName.IsNull()) {
-		projectileInfo->ImgIndex = pPackManager->getPack(projectileInfo->SgaIndex)->getImgIndex(imgName);
+	int projectileListenerCode = JsonUtilEx::GetIntDefault(_projectileRoot["listener_code"], 0);
+	if (projectileListenerCode != 0)
+	{
+		_pProjectileInfo->ListenerCode = projectileListenerCode;
+	}
+
+	/*const SGString& sgaName = JsonUtilEx::getStringOrNull(_projectileRoot["sga"]);
+	if (!sgaName.IsNull())
+	{
+	    _pProjectileInfo->SgaIndex = pPackManager->getPackIndex(sgaName);
+	}
+
+	const SGString& imgName = JsonUtilEx::getStringOrNull(_projectileRoot["img"]);
+	if (!imgName.IsNull())
+	{
+	    _pProjectileInfo->ImgIndex = pPackManager->getPack(_pProjectileInfo->SgaIndex)->getImgIndex(imgName);
 	}*/
 
-	float fSpawnOffsetX = JsonUtilEx::getFloatDefault(projectileRoot["spawn_offset_x"], 0);
-	if ((int)fSpawnOffsetX != 0)
-		projectileInfo->SpawnOffsetX = fSpawnOffsetX;
-
-	float fSpawnOffsetY = JsonUtilEx::getFloatDefault(projectileRoot["spawn_offset_y"], 0);
-	if ((int)fSpawnOffsetY != 0)
-		projectileInfo->SpawnOffsetY = fSpawnOffsetY;
-
-	int iSpawnEffectCode = JsonUtilEx::getIntDefault(projectileRoot["spawn_effect_code"], 0);
-	if (iSpawnEffectCode != 0)
-		projectileInfo->SpawnEffect = pDataManager->getEffectInfo(iSpawnEffectCode);
-
-
-	float fSpawnEffectOffsetX = JsonUtilEx::getFloatDefault(projectileRoot["spawn_effect_offset_x"], 0);
-	if ((int)fSpawnEffectOffsetX != 0)
-		projectileInfo->SpawnEffectOffsetX = fSpawnEffectOffsetX;
-
-	float fSpawnEffectOffsetY = JsonUtilEx::getFloatDefault(projectileRoot["spawn_effect_offset_y"], 0);
-	if ((int)fSpawnEffectOffsetY != 0)
-		projectileInfo->SpawnEffectOffsetY = fSpawnEffectOffsetY;
-
-	int iHitEffectCode = JsonUtilEx::getIntDefault(projectileRoot["hit_effect_code"], 0);
-	if (iHitEffectCode != 0)
-		projectileInfo->HitEffect = pDataManager->getEffectInfo(iHitEffectCode);
-
-	float fRotation = JsonUtilEx::getFloatDefault(projectileRoot["rotation"], 400);
-	if (fRotation < 360)
-		projectileInfo->Rotation = fRotation;
-
-	if (projectileRoot.isMember("random_rotation_range")) {
-		JsonUtilEx::parseFloatNumber2(projectileRoot["random_rotation_range"], projectileInfo->RamdomRotationRangeMin, projectileInfo->RamdomRotationRangeMax);
+	float spawnOffsetX = JsonUtilEx::GetFloatDefault(_projectileRoot["spawn_offset_x"], 0);
+	if (static_cast<int>(spawnOffsetX) != 0)
+	{
+		_pProjectileInfo->SpawnOffsetX = spawnOffsetX;
 	}
 
-	float fDistance = JsonUtilEx::getFloatDefault(projectileRoot["distance"], 0);
-	if ((int)fDistance != 0)
-		projectileInfo->Distance = fDistance;
+	float spawnOffsetY = JsonUtilEx::GetFloatDefault(_projectileRoot["spawn_offset_y"], 0);
+	if (static_cast<int>(spawnOffsetY) != 0)
+	{
+		_pProjectileInfo->SpawnOffsetY = spawnOffsetY;
+	}
 
-	float fMoveSpeed = JsonUtilEx::getFloatDefault(projectileRoot["move_speed"], 0);
-	if ((int)fMoveSpeed != 0)
-		projectileInfo->MoveSpeed = fMoveSpeed;
+	int spawnEffectCode = JsonUtilEx::GetIntDefault(_projectileRoot["spawn_effect_code"], 0);
+	if (spawnEffectCode != 0)
+	{
+		_pProjectileInfo->SpawnEffect = pDataManager->getEffectInfo(spawnEffectCode);
+	}
 
-	float fLifeTime = JsonUtilEx::getFloatDefault(projectileRoot["life_time"], 0);
-	if ((int)fLifeTime != 0)
-		projectileInfo->LifeTime = fLifeTime;
+	float spawnEffectOffsetX = JsonUtilEx::GetFloatDefault(_projectileRoot["spawn_effect_offset_x"], 0);
+	if (static_cast<int>(spawnEffectOffsetX) != 0)
+	{
+		_pProjectileInfo->SpawnEffectOffsetX = spawnEffectOffsetX;
+	}
 
-	float fRehitDelay = JsonUtilEx::getFloatDefault(projectileRoot["rehit_delay"], -1);
-	if (fRehitDelay >= 0)
-		projectileInfo->RehitDelay = fRehitDelay;
+	float spawnEffectOffsetY = JsonUtilEx::GetFloatDefault(_projectileRoot["spawn_effect_offset_y"], 0);
+	if (static_cast<int>(spawnEffectOffsetY) != 0)
+	{
+		_pProjectileInfo->SpawnEffectOffsetY = spawnEffectOffsetY;
+	}
 
-	if (projectileRoot.isMember("thickness_box")) {
-		JsonUtilEx::parseThicknessInfo(projectileRoot["thickness_box"], projectileInfo->ThicknessBox);
+	int hitEffectCode = JsonUtilEx::GetIntDefault(_projectileRoot["hit_effect_code"], 0);
+	if (hitEffectCode != 0)
+	{
+		_pProjectileInfo->HitEffect = pDataManager->getEffectInfo(hitEffectCode);
+	}
+
+	float rotation = JsonUtilEx::GetFloatDefault(_projectileRoot["rotation"], 400);
+	if (rotation < 360)
+	{
+		_pProjectileInfo->Rotation = rotation;
+	}
+
+	if (_projectileRoot.isMember("random_rotation_range"))
+	{
+		JsonUtilEx::ParseFloatNumber2(_projectileRoot["random_rotation_range"],
+		                              _pProjectileInfo->RamdomRotationRangeMin,
+		                              _pProjectileInfo->RamdomRotationRangeMax);
+	}
+
+	float distance = JsonUtilEx::GetFloatDefault(_projectileRoot["distance"], 0);
+	if (static_cast<int>(distance) != 0)
+	{
+		_pProjectileInfo->Distance = distance;
+	}
+
+	float moveSpeed = JsonUtilEx::GetFloatDefault(_projectileRoot["move_speed"], 0);
+	if (static_cast<int>(moveSpeed) != 0)
+	{
+		_pProjectileInfo->MoveSpeed = moveSpeed;
+	}
+
+	float lifeTime = JsonUtilEx::GetFloatDefault(_projectileRoot["life_time"], 0);
+	if (static_cast<int>(lifeTime) != 0)
+	{
+		_pProjectileInfo->LifeTime = lifeTime;
+	}
+
+	float rehitDelay = JsonUtilEx::GetFloatDefault(_projectileRoot["rehit_delay"], -1);
+	if (rehitDelay >= 0)
+	{
+		_pProjectileInfo->RehitDelay = rehitDelay;
+	}
+
+	if (_projectileRoot.isMember("thickness_box"))
+	{
+		JsonUtilEx::ParseThicknessInfo(_projectileRoot["thickness_box"], _pProjectileInfo->ThicknessBox);
 	}
 
 	// 애니메이션 없으면 종료
-	if (!projectileRoot.isMember("animation")) {
+	if (!_projectileRoot.isMember("animation"))
+	{
 		return;
 	}
 
-	projectileInfo->IsSpriteDataRef = false;
-	JsonUtilEx::parseActorSpriteData(projectileRoot["actor_sprite_data"], &projectileInfo->SpriteData);
+	_pProjectileInfo->IsSpriteDataRef = false;
+	JsonUtilEx::ParseActorSpriteData(_projectileRoot["actor_sprite_data"], &_pProjectileInfo->SpriteData);
 }
 
-void ProjectileInfoLoader::readProjectileInfo(Json::Value& projectileRoot, JCORE_OUT ProjectileInfo* projectileInfo) {
-	// 초기화 안된 변수가 없어야함 
+//////////////////////////////////////////////////////////////////////////////////////////
+void ProjectileInfoLoader::ReadProjectileInfo(Json::Value& _projectileRoot, JCORE_OUT ProjectileInfo* _pProjectileInfo)
+{
+	// 초기화 안된 변수가 없어야함
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 	DataManager* pDataManager = DataManager::Get();
 
+	(void)pPackManager; // currently only used by commented-out code
 
-	projectileInfo->Code = projectileRoot["code"].asInt();
-	projectileInfo->ListenerCode = projectileRoot["listener_code"].asInt();
-	projectileInfo->AttackData = pDataManager->getAttackDataInfo(m_eActorType, projectileRoot["attack_data_code"].asInt());
-	projectileInfo->Name = JsonUtilEx::getString(projectileRoot["name"]);
-	//projectileInfo->SgaIndex = pPackManager->getPackIndex(JsonUtilEx::getString(projectileRoot["sga"]));
-	//projectileInfo->ImgIndex = pPackManager->getPack(projectileInfo->SgaIndex)->getImgIndex(JsonUtilEx::getString(projectileRoot["img"]));
-	projectileInfo->SpawnOffsetX = projectileRoot["spawn_offset_x"].asFloat();
-	projectileInfo->SpawnOffsetY = projectileRoot["spawn_offset_y"].asFloat();
-	projectileInfo->SpawnEffect = pDataManager->getEffectInfo(projectileRoot["spawn_effect_code"].asInt());
-	projectileInfo->SpawnEffectOffsetX = projectileRoot["spawn_effect_offset_x"].asFloat();
-	projectileInfo->SpawnEffectOffsetY = projectileRoot["spawn_effect_offset_y"].asFloat();
-	projectileInfo->HitEffect = pDataManager->getEffectInfo(projectileRoot["hit_effect_code"].asInt());
-	projectileInfo->Rotation = projectileRoot["rotation"].asFloat();
-	JsonUtilEx::parseFloatNumber2(projectileRoot["random_rotation_range"], projectileInfo->RamdomRotationRangeMin, projectileInfo->RamdomRotationRangeMax);
-	projectileInfo->Distance = projectileRoot["distance"].asFloat();
-	projectileInfo->MoveSpeed = projectileRoot["move_speed"].asFloat();
-	projectileInfo->LifeTime = projectileRoot["life_time"].asFloat();
-	projectileInfo->RehitDelay = projectileRoot["rehit_delay"].asFloat();
-	JsonUtilEx::parseThicknessInfo(projectileRoot["thickness_box"], projectileInfo->ThicknessBox);
-	JsonUtilEx::parseActorSpriteData(projectileRoot["actor_sprite_data"], &projectileInfo->SpriteData);
+	_pProjectileInfo->code_ = _projectileRoot["code"].asInt();
+	_pProjectileInfo->ListenerCode = _projectileRoot["listener_code"].asInt();
+	_pProjectileInfo->AttackData = pDataManager->getAttackDataInfo(
+		actorType_, _projectileRoot["attack_data_code"].asInt());
+	_pProjectileInfo->Name = JsonUtilEx::GetString(_projectileRoot["name"]);
+	//_pProjectileInfo->SgaIndex = pPackManager->getPackIndex(JsonUtilEx::getString(_projectileRoot["sga"]));
+	//_pProjectileInfo->ImgIndex = pPackManager->getPack(_pProjectileInfo->SgaIndex)->getImgIndex(JsonUtilEx::getString(_projectileRoot["img"]));
+	_pProjectileInfo->SpawnOffsetX = _projectileRoot["spawn_offset_x"].asFloat();
+	_pProjectileInfo->SpawnOffsetY = _projectileRoot["spawn_offset_y"].asFloat();
+	_pProjectileInfo->SpawnEffect = pDataManager->getEffectInfo(_projectileRoot["spawn_effect_code"].asInt());
+	_pProjectileInfo->SpawnEffectOffsetX = _projectileRoot["spawn_effect_offset_x"].asFloat();
+	_pProjectileInfo->SpawnEffectOffsetY = _projectileRoot["spawn_effect_offset_y"].asFloat();
+	_pProjectileInfo->HitEffect = pDataManager->getEffectInfo(_projectileRoot["hit_effect_code"].asInt());
+	_pProjectileInfo->Rotation = _projectileRoot["rotation"].asFloat();
+	JsonUtilEx::ParseFloatNumber2(_projectileRoot["random_rotation_range"], _pProjectileInfo->RamdomRotationRangeMin,
+	                              _pProjectileInfo->RamdomRotationRangeMax);
+	_pProjectileInfo->Distance = _projectileRoot["distance"].asFloat();
+	_pProjectileInfo->MoveSpeed = _projectileRoot["move_speed"].asFloat();
+	_pProjectileInfo->LifeTime = _projectileRoot["life_time"].asFloat();
+	_pProjectileInfo->RehitDelay = _projectileRoot["rehit_delay"].asFloat();
+	JsonUtilEx::ParseThicknessInfo(_projectileRoot["thickness_box"], _pProjectileInfo->ThicknessBox);
+	JsonUtilEx::ParseActorSpriteData(_projectileRoot["actor_sprite_data"], &_pProjectileInfo->SpriteData);
 }

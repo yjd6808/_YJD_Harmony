@@ -11,9 +11,11 @@
 
 #include <SteinsGate/Common/CmdRelay_AUTHENTICATION.h>
 
-void S_AUTHENTICATION_IS::SEND_AUS_AuthenticationCheckAck(bool success, int sessionHandle, GameServerType_t lastServer) {
-	auto sending = SendBegin<AUS_AuthenticationCheckAck>();
-	sending.Cmd.Success = success;
-	sending.Cmd.SessionHandle = sessionHandle;
-	sending.Cmd.LastServer = lastServer;
+//////////////////////////////////////////////////////////////////////////////////////////
+void S_AUTHENTICATION_IS::SEND_AUS_AuthenticationCheckAck(bool _success, int _sessionHandle, GameServerType_t _lastServer)
+{
+	const auto sending = SendBegin<AUS_AuthenticationCheckAck>();
+	sending.cmd_.Success = _success;
+	sending.cmd_.SessionHandle = _sessionHandle;
+	sending.cmd_.LastServer = _lastServer;
 }

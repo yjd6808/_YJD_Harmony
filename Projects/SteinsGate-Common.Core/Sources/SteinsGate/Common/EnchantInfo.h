@@ -13,35 +13,42 @@
 
 struct EnchantBonusOptInfo
 {
-	EnchantBonusOptInfo() : Opt(nullptr), Value{} {}
-	EnchantBonusOptInfo(const EnchantBonusOptInfo& other) { this->operator=(other); }
-	
-	EnchantBonusOptInfo& operator=(const EnchantBonusOptInfo& other) {
-		DebugAssertMsg(this != &other, "셀프 어사인 하지마!");
-		Opt = other.Opt;
-		SGMemory::CopyUnsafe(Value, other.Value, sizeof(int) * Const::Item::MaxEnchantLevel);
+	EnchantBonusOptInfo()
+	: opt_(nullptr)
+	, value_{}
+	{
+	}
+
+	EnchantBonusOptInfo(const EnchantBonusOptInfo& _other)
+	{
+		this->operator=(_other);
+	}
+
+	EnchantBonusOptInfo& operator=(const EnchantBonusOptInfo& _other)
+	{
+		DebugAssertMsg(this != &_other, "셀프 어사인 하지마!");
+		opt_ = _other.opt_;
+		SGMemory::CopyUnsafe(value_, _other.value_, sizeof(int) * Const::Item::MaxEnchantLevel);
 		return *this;
 	}
 
-
-	ItemOptInfo* Opt;
-	int Value[Const::Item::MaxEnchantLevel];
+	ItemOptInfo* opt_;
+	int value_[Const::Item::MaxEnchantLevel];
 };
 
 struct EnchantInfo : ConfigDataAbstract
 {
 	~EnchantInfo() override = default;
 
-	int ArmorBonusOptCount;
-	int AccessoryBonusOptCount;
-	EnchantBonusOptInfo ArmorBonusOptList[Const::Item::ArmorEnchantBonusOptCount];
-	EnchantBonusOptInfo AccessoryBonusOptList[Const::Item::ArmorEnchantBonusOptCount];
+	int armorBonusOptCount_;
+	int accessoryBonusOptCount_;
+	EnchantBonusOptInfo armorBonusOptList_[Const::Item::ArmorEnchantBonusOptCount];
+	EnchantBonusOptInfo accessoryBonusOptList_[Const::Item::ArmorEnchantBonusOptCount];
 
-	float WeaponAttackPhysicalMultiplyValue[Const::Item::MaxEnchantLevel];
-	float ArmorRarityConstant[RarityType::Max];
-	float AccesorryRarityConstant[RarityType::Max];
-	float WeaponRarityConstant[RarityType::Max];
-	float EnchangeProbs[Const::Item::MaxEnchantLevel];
-	float SellBonus[Const::Item::MaxEnchantLevel];
+	float weaponAttackPhysicalMultiplyValue_[Const::Item::MaxEnchantLevel];
+	float armorRarityConstant_[RarityType::Max];
+	float accesorryRarityConstant_[RarityType::Max];
+	float weaponRarityConstant_[RarityType::Max];
+	float enchangeProbs_[Const::Item::MaxEnchantLevel];
+	float sellBonus_[Const::Item::MaxEnchantLevel];
 };
-

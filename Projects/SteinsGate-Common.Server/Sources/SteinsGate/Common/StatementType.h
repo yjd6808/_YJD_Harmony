@@ -12,10 +12,11 @@ enum class StatementType
 	Insert
 };
 
-constexpr const char* StatementName(StatementType stmt) {
-	if (stmt == StatementType::Select) return "Select";
-	if (stmt == StatementType::Update) return "Update";
-	if (stmt == StatementType::Delete) return "Delete";
-	if (stmt == StatementType::Insert) return "Insert";
+constexpr const char* StatementName(StatementType _statementType)
+{
+	if (_statementType == StatementType::Select) return "Select";
+	if (_statementType == StatementType::Update) return "Update";
+	if (_statementType == StatementType::Delete) return "Delete";
+	if (_statementType == StatementType::Insert) return "Insert";
 	return "None";
 }

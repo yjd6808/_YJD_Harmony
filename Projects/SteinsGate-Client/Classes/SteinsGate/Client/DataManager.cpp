@@ -34,207 +34,226 @@
 #include <SteinsGate/Client/ChannelInfoLoader.h>
 
 DataManager::DataManager()
-	: DataManagerAbstract()
-{}
+: DataManagerAbstract()
+{
+}
 
-void DataManager::initializeLoader() {
+void DataManager::initializeLoader()
+{
+	m_pConfigFileLoaders[ConfigFileType::Effect] = dbg_new EffectInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Map] = dbg_new MapInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::MapPhysics] = dbg_new MapPhysicsInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::MapObject] = dbg_new MapObjectInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Monster] = dbg_new MonsterInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Monster_Animation_Frame_Event] = dbg_new FrameEventLoader(
+		this, ActorType::Monster);
+	m_pConfigFileLoaders[ConfigFileType::Monster_Projectile] = dbg_new ProjectileInfoLoader(this, ActorType::Monster);
+	m_pConfigFileLoaders[ConfigFileType::Monster_Attack_Data] = dbg_new AttackDataInfoLoader(this, ActorType::Monster);
 
-	m_pConfigFileLoaders[ConfigFileType::Effect]						= dbg_new EffectInfoLoader(this);
-	m_pConfigFileLoaders[ConfigFileType::Map]							= dbg_new MapInfoLoader(this);
-	m_pConfigFileLoaders[ConfigFileType::MapPhysics]					= dbg_new MapPhysicsInfoLoader(this);
-	m_pConfigFileLoaders[ConfigFileType::MapObject]						= dbg_new MapObjectInfoLoader(this);
-	m_pConfigFileLoaders[ConfigFileType::Monster]						= dbg_new MonsterInfoLoader(this);
-	m_pConfigFileLoaders[ConfigFileType::Monster_Animation_Frame_Event]	= dbg_new FrameEventLoader(this, ActorType::Monster);
-	m_pConfigFileLoaders[ConfigFileType::Monster_Projectile]			= dbg_new ProjectileInfoLoader(this, ActorType::Monster);
-	m_pConfigFileLoaders[ConfigFileType::Monster_Attack_Data]			= dbg_new AttackDataInfoLoader(this, ActorType::Monster);
-	
-	m_pConfigFileLoaders[ConfigFileType::Server]						= dbg_new ServerInfoLoader(this);
-	m_pConfigFileLoaders[ConfigFileType::Tile]							= dbg_new TileInfoLoader(this);
-	m_pConfigFileLoaders[ConfigFileType::UI]							= dbg_new UIInfoLoader(this);
-	m_pConfigFileLoaders[ConfigFileType::Action]						= dbg_new ActionInfoLoader(this);
-	m_pConfigFileLoaders[ConfigFileType::AI]							= dbg_new AIInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Server] = dbg_new ServerInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Tile] = dbg_new TileInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::UI] = dbg_new UIInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Action] = dbg_new ActionInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::AI] = dbg_new AIInfoLoader(this);
 	// m_pConfigFileLoaders[ConfigFileType::AttackBox]
-	m_pConfigFileLoaders[ConfigFileType::Char_Attack_Data]				= dbg_new AttackDataInfoLoader(this, ActorType::Character);
-	m_pConfigFileLoaders[ConfigFileType::Char_Projectile]				= dbg_new ProjectileInfoLoader(this, ActorType::Character);
-	m_pConfigFileLoaders[ConfigFileType::Channel]						= dbg_new ChannelInfoLoader(this);
-	m_pConfigFileLoaders[ConfigFileType::Char_Animation]				= dbg_new CharAnimationInfoLoader(this);
-	m_pConfigFileLoaders[ConfigFileType::Char_Animation_Frame_Event]	= dbg_new FrameEventLoader(this, ActorType::Character);
-	m_pConfigFileLoaders[ConfigFileType::Char_Base]						= dbg_new CharInfoLoader(this);
-	m_pConfigFileLoaders[ConfigFileType::Client]						= dbg_new ClientInfoLoader(this);
-	m_pConfigFileLoaders[ConfigFileType::ClientText]					= dbg_new ClientTextInfoLoader(this);
-	m_pConfigFileLoaders[ConfigFileType::Item]							= dbg_new ItemInfoLoader(this);
-	m_pConfigFileLoaders[ConfigFileType::ItemOpt]						= dbg_new ItemOptInfoLoader(this);
-	m_pConfigFileLoaders[ConfigFileType::Char_Common]					= dbg_new CharCommonInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Char_Attack_Data] = dbg_new AttackDataInfoLoader(this, ActorType::Character);
+	m_pConfigFileLoaders[ConfigFileType::Char_Projectile] = dbg_new ProjectileInfoLoader(this, ActorType::Character);
+	m_pConfigFileLoaders[ConfigFileType::Channel] = dbg_new ChannelInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Char_Animation] = dbg_new CharAnimationInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Char_Animation_Frame_Event] = dbg_new FrameEventLoader(
+		this, ActorType::Character);
+	m_pConfigFileLoaders[ConfigFileType::Char_Base] = dbg_new CharInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Client] = dbg_new ClientInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::ClientText] = dbg_new ClientTextInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Item] = dbg_new ItemInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::ItemOpt] = dbg_new ItemOptInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Char_Common] = dbg_new CharCommonInfoLoader(this);
 	// m_pConfigFileLoaders[ConfigFileType::Enchant]					= dbg_new EnchantInfoLoader(this);
 	m_bInitialized = true;
 }
 
-MonsterInfo* DataManager::getMonsterInfo(int mobCode) {
-
+MonsterInfo* DataManager::getMonsterInfo(int _mobCode)
+{
 	auto eType = ConfigFileType::Monster;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	return (MonsterInfo*)getData(eType, mobCode);
+	return (MonsterInfo*)getData(eType, _mobCode);
 }
 
-ActionInfo* DataManager::getActionInfo(int actionCode) {
+ActionInfo* DataManager::getActionInfo(int _actionCode)
+{
 	auto eType = ConfigFileType::Action;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	return (ActionInfo*)getData(eType, actionCode);
+	return (ActionInfo*)getData(eType, _actionCode);
 }
 
 
-ProjectileInfo* DataManager::getProjectileInfo(ActorType_t actorType, int projectileCode) {
+ProjectileInfo* DataManager::getProjectileInfo(ActorType_t _actorType, int _projectileCode)
+{
 	ConfigFileType_t eType = ConfigFileType::Max;
 
-	switch (actorType) {
-		
-	case ActorType::Character: eType = ConfigFileType::Char_Projectile;	break;
-	case ActorType::Monster:   eType = ConfigFileType::Monster_Projectile; break;
+	switch (_actorType)
+	{
+	case ActorType::Character: eType = ConfigFileType::Char_Projectile;
+		break;
+	case ActorType::Monster: eType = ConfigFileType::Monster_Projectile;
+		break;
 	default: DebugAssert(false) ;
 	}
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	return (ProjectileInfo*)getData(eType, projectileCode);
+	return (ProjectileInfo*)getData(eType, _projectileCode);
 }
 
-CharInfo* DataManager::getCharInfo(int charCode) {
+CharInfo* DataManager::getCharInfo(int _charCode)
+{
 	auto eType = ConfigFileType::Char_Base;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	return (CharInfo*)getData(eType, charCode);
+	return (CharInfo*)getData(eType, _charCode);
 }
 
-AnimationInfo* DataManager::getCharAnimationInfo(int charAnimationCode) {
+AnimationInfo* DataManager::getCharAnimationInfo(int _charAnimationCode)
+{
 	auto eType = ConfigFileType::Char_Animation;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	return (AnimationInfo*)getData(eType, charAnimationCode);
+	return (AnimationInfo*)getData(eType, _charAnimationCode);
 }
 
-SGVector<AnimationInfo*>& DataManager::getCharAnimationInfoList(int charCode) {
+SGVector<AnimationInfo*>& DataManager::getCharAnimationInfoList(int _charCode)
+{
 	auto eType = ConfigFileType::Char_Animation;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
 	auto pLoader = (CharAnimationInfoLoader*)m_pConfigFileLoaders[eType];
-	return pLoader->getAnimationList((CharType_t)charCode);
+	return pLoader->GetAnimationList((CharType_t)_charCode);
 }
 
-ClientInfo* DataManager::getClientInfo(int code) {
+ClientInfo* DataManager::getClientInfo(int _code)
+{
 	auto eType = ConfigFileType::Client;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	return (ClientInfo*)getData(eType, code);
+	return (ClientInfo*)getData(eType, _code);
 }
 
 
-TileInfo* DataManager::getTileInfo(int tileCode) {
+TileInfo* DataManager::getTileInfo(int _tileCode)
+{
 	auto eType = ConfigFileType::Tile;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	return (TileInfo*)getData(eType, tileCode);
+	return (TileInfo*)getData(eType, _tileCode);
 }
 
-MapObjectInfo* DataManager::getMapObjectInfo(int mapObjectCode) {
+MapObjectInfo* DataManager::getMapObjectInfo(int _mapObjectCode)
+{
 	auto eType = ConfigFileType::MapObject;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	return (MapObjectInfo*)getData(eType, mapObjectCode);
+	return (MapObjectInfo*)getData(eType, _mapObjectCode);
 }
 
-AIInfo* DataManager::getAIInfo(int aiCode) {
+AIInfo* DataManager::getAIInfo(int _aiCode)
+{
 	auto eType = ConfigFileType::AI;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	return (AIInfo*)getData(eType, aiCode);
+	return (AIInfo*)getData(eType, _aiCode);
 }
 
-AttackDataInfo* DataManager::getAttackDataInfo(ActorType_t actorType, int attackDataCode) {
-
+AttackDataInfo* DataManager::getAttackDataInfo(ActorType_t _actorType, int _attackDataCode)
+{
 	ConfigFileType_t eType = ConfigFileType::Max;
 
-	switch (actorType) {
-		
-	case ActorType::Character: eType = ConfigFileType::Char_Attack_Data;	break;
-	case ActorType::Monster:   eType = ConfigFileType::Monster_Attack_Data; break;
+	switch (_actorType)
+	{
+	case ActorType::Character: eType = ConfigFileType::Char_Attack_Data;
+		break;
+	case ActorType::Monster: eType = ConfigFileType::Monster_Attack_Data;
+		break;
 	default: DebugAssert(false) ;
 	}
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	return (AttackDataInfo*)getData(eType, attackDataCode);
-
+	return (AttackDataInfo*)getData(eType, _attackDataCode);
 }
 
-EffectInfo* DataManager::getEffectInfo(int effectCode) {
-
+EffectInfo* DataManager::getEffectInfo(int _effectCode)
+{
 	auto eType = ConfigFileType::Effect;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	return (EffectInfo*)getData(eType, effectCode);
+	return (EffectInfo*)getData(eType, _effectCode);
 }
 
-UIElementInfo* DataManager::getUIElementInfo(int uiElementCode) {
-
+UIElementInfo* DataManager::getUIElementInfo(int _uiElementCode)
+{
 	auto eType = ConfigFileType::UI;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	return (UIElementInfo*)getData(eType, uiElementCode);
-
+	return (UIElementInfo*)getData(eType, _uiElementCode);
 }
 
-FrameEvent* DataManager::getFrameEvent(ActorType_t actorType, int frameEventCode) {
-
+FrameEvent* DataManager::getFrameEvent(ActorType_t _actorType, int _frameEventCode)
+{
 	ConfigFileType_t eType = ConfigFileType::Max;
 
-	switch (actorType) {
-	case ActorType::Character: eType = ConfigFileType::Char_Animation_Frame_Event;	break;
-	case ActorType::Monster:   eType = ConfigFileType::Monster_Animation_Frame_Event; break;
+	switch (_actorType)
+	{
+	case ActorType::Character: eType = ConfigFileType::Char_Animation_Frame_Event;
+		break;
+	case ActorType::Monster: eType = ConfigFileType::Monster_Animation_Frame_Event;
+		break;
 	default: DebugAssert(false);
 	}
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	return (FrameEvent*)getData(eType, frameEventCode);
+	return (FrameEvent*)getData(eType, _frameEventCode);
 }
 
-ChannelInfo* DataManager::getChannelInfo(int channelCode) {
+ChannelInfo* DataManager::getChannelInfo(int _channelCode)
+{
 	auto eType = ConfigFileType::Channel;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	return (ChannelInfo*)getData(eType, channelCode);
+	return (ChannelInfo*)getData(eType, _channelCode);
 }
 
-char* DataManager::getTextRaw(const char* szId) {
+char* DataManager::getTextRaw(const char* _textId)
+{
 	auto eType = ConfigFileType::ClientText;
 
 	if (!m_bLoaded[eType])
@@ -242,20 +261,23 @@ char* DataManager::getTextRaw(const char* szId) {
 
 	const auto pLoader = dynamic_cast<ClientTextInfoLoader*>(m_pConfigFileLoaders[eType]);
 
-	if (pLoader == nullptr) {
+	if (pLoader == nullptr)
+	{
 		_LogWarn_("텍스트 로더가 없습니다.");
 		return ClientTextInfoLoader::DummyText.Source();
 	}
 
-	char* ppText = nullptr;
-	if (!pLoader->tryGetTextRaw(szId, &ppText)) {
-		_LogWarn_("%s 텍스트를 찾지 못했습니다.", szId);
+	char* pText = nullptr;
+	if (!pLoader->tryGetTextRaw(_textId, &pText))
+	{
+		_LogWarn_("%s 텍스트를 찾지 못했습니다.", _textId);
 	}
 
-	return ppText;
+	return pText;
 }
 
-SGString& DataManager::getText(const char* szId) {
+SGString& DataManager::getText(const char* _textId)
+{
 	auto eType = ConfigFileType::ClientText;
 
 	if (!m_bLoaded[eType])
@@ -263,20 +285,22 @@ SGString& DataManager::getText(const char* szId) {
 
 	const auto pLoader = dynamic_cast<ClientTextInfoLoader*>(m_pConfigFileLoaders[eType]);
 
-	if (pLoader == nullptr) {
+	if (pLoader == nullptr)
+	{
 		_LogWarn_("텍스트 로더가 없습니다.");
 		return ClientTextInfoLoader::DummyText;
 	}
 
-	SGString* ppText = nullptr;
-	if (!pLoader->tryGetText(szId, &ppText)) {
-		_LogWarn_("%s 텍스트를 찾지 못했습니다.", szId);
+	SGString* pText = nullptr;
+	if (!pLoader->tryGetText(_textId, &pText))
+	{
+		_LogWarn_("%s 텍스트를 찾지 못했습니다.", _textId);
 	}
 
-	return *ppText;
+	return *pText;
 }
 
-SGString& DataManager::getText(const SGString& szId) {
-	return getText(szId.Source());
+SGString& DataManager::getText(const SGString& _textId)
+{
+	return getText(_textId.Source());
 }
-

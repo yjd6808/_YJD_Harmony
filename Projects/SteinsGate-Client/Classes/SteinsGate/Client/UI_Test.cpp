@@ -14,23 +14,29 @@
 USING_NS_CC;
 USING_NS_JC;
 
-UI_Test::UI_Test(UIGroupInfo* groupInfo)
-	: UIMasterGroup(groupInfo)
-	, m_pGroupO1(nullptr)
-	, m_pGroupO2(nullptr)
-	, m_iFontCode(1)
-	, m_fScale(0.0f)
-	, m_eScaleState(eDecrease)
-	, m_bTestFont(false)
-{}
-
-void UI_Test::onInit() {
-
-	
+//////////////////////////////////////////////////////////////////////////////////////////
+UI_Test::UI_Test(UIGroupInfo* _pGroupInfo)
+: UIRootGroup(_pGroupInfo)
+, groupO1_(nullptr)
+, groupO2_(nullptr)
+, groupO1DefaultSize_()
+, groupO2DefaultSize_()
+, fontCode_(1)
+, testLabelList_()
+, testFont_(false)
+, scale_(0.0f)
+, scaleState_(eDecrease)
+{
 }
 
-void UI_Test::onLoaded() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void UI_Test::OnInit()
+{
+}
 
+//////////////////////////////////////////////////////////////////////////////////////////
+void UI_Test::OnLoaded()
+{
 	// #define UI_TEST_TOGGLEBUTTON_T1	
 	// #define UI_TEST_SPRITE_T2	
 	// #define UI_TEST_CHECKBOX_T3	
@@ -66,67 +72,78 @@ void UI_Test::onLoaded() {
 	// #define UI_TEST_O2_O21_BUTTON_T7	
 	// #define UI_TEST_O2_O21_EDITBOX_T8	
 
-	m_pGroupO1 = Core::Contents.UIManager->getGroup(UI_TEST_GROUP_O1);
-	m_pGroupO2 = Core::Contents.UIManager->getGroup(UI_TEST_GROUP_O2);
+	groupO1_ = Core::Contents.UIManager->getGroup(UI_TEST_GROUP_O1);
+	groupO2_ = Core::Contents.UIManager->getGroup(UI_TEST_GROUP_O2);
 
-	m_GroupO1DefaultSize = m_pGroupO1->getContentSize();
-	m_GroupO2DefaultSize = m_pGroupO2->getContentSize();
+	groupO1DefaultSize_ = groupO1_->getContentSize();
+	groupO2DefaultSize_ = groupO2_->getContentSize();
 }
 
-void UI_Test::onUpdate(float dt) {
-	if (m_eScaleState == eIncrease) {
-		m_fScale += dt;
+//////////////////////////////////////////////////////////////////////////////////////////
+void UI_Test::onUpdate(float _dt)
+{
+	if (scaleState_ == eIncrease)
+	{
+		scale_ += _dt;
 
-		if (m_fScale > 1.25f)
+		if (scale_ > 1.25f)
 			return;
 
-		
-		m_pGroupO1->setContentSize(m_GroupO1DefaultSize * m_fScale);
-		m_pGroupO2->setContentSize(m_GroupO2DefaultSize * m_fScale);
-	} else {
-		m_fScale -= dt;
-
-		if (m_fScale < 1.0f)
-			return;
-
-		m_pGroupO1->setContentSize(m_GroupO1DefaultSize * m_fScale);
-		m_pGroupO2->setContentSize(m_GroupO2DefaultSize * m_fScale);
+		groupO1_->setContentSize(groupO1DefaultSize_ * scale_);
+		groupO2_->setContentSize(groupO2DefaultSize_ * scale_);
 	}
+	else
+	{
+		scale_ -= _dt;
 
-	
+		if (scale_ < 1.0f)
+			return;
+
+		groupO1_->setContentSize(groupO1DefaultSize_ * scale_);
+		groupO2_->setContentSize(groupO2DefaultSize_ * scale_);
+	}
 }
 
-void UI_Test::onToggleStateChanged(UIToggleButton* toggleBtn, ToggleState state) {
-	
+//////////////////////////////////////////////////////////////////////////////////////////
+void UI_Test::OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _state)
+{
 }
 
-void UI_Test::onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void UI_Test::OnMouseUpTarget(UIElement* _pElement, SGEventMouse* _pMouseEvent)
+{
+	CC_UNUSED_PARAM(_pMouseEvent);
 
-	if (element->getCode() == UI_TEST_LABEL_POPUP_TEST) {
+	if (_pElement->GetCode() == UI_TEST_LABEL_POPUP_TEST)
+	{
 		Core::Contents.PopupManager->showOk(
 			"안녕하세요\n안녕하세요2\n안녕하세요3\n안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요"
 		);
 	}
-
-	else if (element->getCode() == UI_TEST_LABEL_SCALE_TEST) {
-		if (m_eScaleState == eDecrease) {
-			m_fScale = 1.0f;
-			m_eScaleState = eIncrease;
-		} else {
-			m_fScale = 1.25f;
-			m_eScaleState = eDecrease;
+	else if (_pElement->GetCode() == UI_TEST_LABEL_SCALE_TEST)
+	{
+		if (scaleState_ == eDecrease)
+		{
+			scale_ = 1.0f;
+			scaleState_ = eIncrease;
+		}
+		else
+		{
+			scale_ = 1.25f;
+			scaleState_ = eDecrease;
 		}
 	}
+	else if (_pElement->GetCode() == UI_TEST_LABEL_FONT_TEST)
+	{
+		testFont_ = !testFont_;
 
-	else if (element->getCode() == UI_TEST_LABEL_FONT_TEST) {
-		m_bTestFont = !m_bTestFont;
-
-		for (int i = 0; i < m_vTestLabelList.Size(); ++i) {
-			Core::Contents.World->removeChild(m_vTestLabelList[i]);
+		for (int i = 0; i < testLabelList_.Size(); ++i)
+		{
+			Core::Contents.World->removeChild(testLabelList_[i]);
 		}
-		m_vTestLabelList.Clear();
+		testLabelList_.Clear();
 
-		if (!m_bTestFont) 
+		if (!testFont_)
 			return;
 
 		// 1: DF.ttf
@@ -137,53 +154,57 @@ void UI_Test::onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent) {
 		// 6: N2GB.ttf
 		// 7: N2GM.ttf
 
-		float fHeight = 0;
-		const SGString fontName = Core::Contents.FontManager->getFontName(m_iFontCode);
-		const SGString fontPath = Path::Combine(Core::CommonInfo->DataPath, Const::Resource::FontDirName, fontName);
-		std::string txt;
+		float height = 0.0f;
+		const SGString fontName = Core::Contents.FontManager->getFontName(fontCode_);
+		const SGString fontPath = Path::Combine(Core::CommonInfo->dataPath_, Const::Resource::FontDirName, fontName);
+		std::string text;
 
 		_LogDebug_("폰트이름: %s", fontName.Source());
-		for (int i = 10; i <= 32; ++i) {
-			txt = StringUtils::format("안녕하세요 %d", i);
-			auto lb = Label::createWithTTF(txt, fontPath.Source(), i, Size::ZERO);
-			auto atlas = lb->getFontAtlas();
-			lb->setPosition(150.0f, fHeight);
-			lb->setAnchorPoint(Vec2::ZERO);
-			_LogDebug_("txt: %s, lineHeight: %.f, width: %.f", txt.data(), lb->getLineHeight(), lb->getWidth());
-			fHeight += i;	// 폰트 크기가 곧 라벨 높이
-			Core::Contents.World->addChild(lb);
-			m_vTestLabelList.PushBack(lb);
+		for (int i = 10; i <= 32; ++i)
+		{
+			text = StringUtils::format("안녕하세요 %d", i);
+			auto pLabel = Label::createWithTTF(text, fontPath.Source(), i, Size::ZERO);
+			auto pFontAtlas = pLabel->getFontAtlas();
+			CC_UNUSED_PARAM(pFontAtlas);
+			pLabel->setPosition(150.0f, height);
+			pLabel->setAnchorPoint(Vec2::ZERO);
+			_LogDebug_("txt: %s, lineHeight: %.f, width: %.f", text.data(), pLabel->getLineHeight(),
+			           pLabel->getWidth());
+			height += static_cast<float>(i);
+			Core::Contents.World->addChild(pLabel);
+			testLabelList_.PushBack(pLabel);
 		}
 
-		float fSize = 14;
-		txt = StringUtils::format("안녕하세요 1234567890123456789\n안녕하세요 1\n안녕하세요 1\n안녕하세요 1");
-		auto lb = Label::createWithTTF(txt, fontPath.Source(), fSize, {100, 0});
-		lb->setPosition(350.0f, 200);
-		lb->setAnchorPoint(Vec2::ZERO);
-		lb->setLineHeight(fSize);
-		Core::Contents.World->addChild(lb);
-		m_vTestLabelList.PushBack(lb);
+		float fontSize = 14.0f;
+		text = StringUtils::format("안녕하세요 1234567890123456789\n안녕하세요 1\n안녕하세요 1\n안녕하세요 1");
+		auto pLabel = Label::createWithTTF(text, fontPath.Source(), fontSize, { 100, 0 });
+		pLabel->setPosition(350.0f, 200.0f);
+		pLabel->setAnchorPoint(Vec2::ZERO);
+		pLabel->setLineHeight(fontSize);
+		Core::Contents.World->addChild(pLabel);
+		testLabelList_.PushBack(pLabel);
 
-		m_iFontCode++;
+		fontCode_++;
 
-		_LogDebug_("라인 너비 벡터 크기: %d", lb->getLinesWidth().size());
-		_LogDebug_("라인 수: %d", lb->getStringNumLines());
-		
+		_LogDebug_("라인 너비 벡터 크기: %d", pLabel->getLinesWidth().size());
+		_LogDebug_("라인 수: %d", pLabel->getStringNumLines());
 
-		if (m_iFontCode >= Core::Contents.FontManager->getFontCount()) {
-			m_iFontCode = 1;
+		if (fontCode_ >= Core::Contents.FontManager->getFontCount())
+		{
+			fontCode_ = 1;
 		}
 	}
-
-	else if (element->getCode() == UI_TEST_LABEL_DRAG_TEST) {
-		forEachRecursiveContainedSelf([](UIElement* element) {
-			element->setDraggable(!element->isDraggable());
+	else if (_pElement->GetCode() == UI_TEST_LABEL_DRAG_TEST)
+	{
+		forEachRecursiveContainedSelf([](UIElement* _pInnerElement)
+		{
+			_pInnerElement->SetDraggable(!_pInnerElement->IsDraggable());
 		});
 
-		Core::Contents.UIManager->getToggleButton(UI_TEST_TOGGLEBUTTON_T1)->setDragLinkElement(this);
+		Core::Contents.UIManager->getToggleButton(UI_TEST_TOGGLEBUTTON_T1)->SetDragLinkElement(this);
 	}
-
-	else if (element->getCode() == UI_TEST_LABEL_RESET_POSITION) {
+	else if (_pElement->GetCode() == UI_TEST_LABEL_RESET_POSITION)
+	{
 		resetChildrenPosition();
 	}
 }

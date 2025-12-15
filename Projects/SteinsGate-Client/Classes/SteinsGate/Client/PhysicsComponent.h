@@ -5,21 +5,19 @@
  *
  */
 
-
 #pragma once
-
 
 #include <SteinsGate/Client/ActorComponent.h>
 
 class PhysicsComponent : public ActorComponent, public IUpdatable
 {
 public:
-	PhysicsComponent(Actor* actor);
+	PhysicsComponent(Actor* _pActor);
 
 	void initialize() override;
-	void onUpdate(float dt) override;
+	void onUpdate(float _dt) override;
 
-	void hit(const HitInfo& info);
+	void hit(const HitInfo& _hitInfo);
 
 	bool isPaused();
 	bool isBounced();
@@ -27,61 +25,58 @@ public:
 	void disableElasticity();
 	void enableElasticity();
 
-	void updatePauseTime(float dt);
-	void updatePhysics(float dt);
-	void updateGravity(float dt);
-	void updateFriction(float dt);
+	void updatePauseTime(float _dt);
+	void updatePhysics(float _dt);
+	void updateGravity(float _dt);
+	void updateFriction(float _dt);
 
 	// 디버깅용 코드 =====================
-	void updateDebug(float dt);
-	void updateDebugSub1(float dt);
-	void updateDebugSub2(float dt);
+	void updateDebug(float _dt);
+	void updateDebugSub1(float _dt);
+	void updateDebugSub2(float _dt);
 	// =================================
 
-	float addForceX(float force);
-	float addForceY(float force);
+	float addForceX(float _force);
+	float addForceY(float _force);
 
 	float removeForceX();
 	float removeForceY();
 
-	float getUpTime() { return m_fUpTime; }
-	float getDownTime() { return m_fDownTime; }
-	float getForceX() { return m_Velocity.x; }
-	float getForceY() { return m_Velocity.y; }
-	float getWeight() { return m_fWeight; }
+	float getUpTime() { return upTime_; }
+	float getDownTime() { return downTime_; }
+	float getForceX() { return velocity_.x; }
+	float getForceY() { return velocity_.y; }
+	float getWeight() { return weight_; }
 
 	bool hasForceX();
 	bool hasForceY();
 	bool hasForce();
 
 	void pausePhysics();
-	void pausePhysics(float time);
+	void pausePhysics(float _time);
 	void resume();
 
-	void stiffenBody(float time);		// 경직시키다 영단어
+	void stiffenBody(float _time); // 경직시키다 영단어
 
 	Direction_t getForceXDirection();
 	Direction_t getForceYDirection();
 
 	SG_COMPONENT_TYPE_GETTER(Type::ePhysics)
+
 private:
-	bool m_bUseElasticity;
-	bool m_bBounced;
+	bool useElasticity_;
+	bool bounced_;
 
-	SGVec2 m_Velocity;
+	SGVec2 velocity_;
 
-	float m_fWeight;
-	float m_fUpTime;
-	float m_fDownTime;
-	float m_fElapsedPausedTime;
-	float m_fPuaseTime;
+	float weight_;
+	float upTime_;
+	float downTime_;
+	float elapsedPausedTime_;
+	float pauseTime_;
 
 	// 디버깅 용
-	float m_fAtkBoxInstantElapsedTime;
-	SGDrawNode* m_pAtkThicknessBox;
-	SGDrawNode* m_pAtkHitBox;
+	float atkBoxInstantElapsedTime_;
+	SGDrawNode* atkThicknessBox_;
+	SGDrawNode* atkHitBox_;
 };
-
-
-
-

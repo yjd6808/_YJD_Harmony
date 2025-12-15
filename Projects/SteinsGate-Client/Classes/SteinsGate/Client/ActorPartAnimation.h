@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 3:38:18 PM
  * =====================
@@ -10,7 +10,9 @@
  * 아직은 쓸일이 없는 듯 - 2023/01/22(설날)
  */
 
+
 #pragma once
+
 
 #include <SteinsGate/Client/Tutturu.h>
 #include <SteinsGate/Client/FrameTexture.h>
@@ -62,7 +64,7 @@ public:
     int getTargetFrameIndex() { return animationFrames_[frameIndexInAnimation_]->getTargetFrameIndex(); }
     int getFrameIndex() { return animationFrames_[frameIndexInAnimation_]->getFrameIndex(); }
     int getPartIndex();
-    int getAnimationCode() { return animationInfo_->Code; }
+    int getAnimationCode() { return animationInfo_->code_; }
 
     FrameInfo& getFrameInfo(int _frameIndexInAnimation);
     FrameInfo& getRunningFrameInfo();

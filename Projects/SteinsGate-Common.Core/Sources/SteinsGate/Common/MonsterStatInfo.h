@@ -14,14 +14,14 @@ struct MonsterStatInfo : ConfigDataAbstract
 {
 	~MonsterStatInfo() override = default;
 
-	int HP;
-	int MP;
-	int PhysicalDamage;
-	int MagicDamage;
-	int Armor;
-	int MagicArmor;
-	float Weight;
-	float MoveSpeedX;
-	float MoveSpeedY;
-	float DownRecoverTime;
+	int hp_;
+	int mp_;
+	int physicalDamage_;
+	int magicDamage_;
+	int armor_;
+	int magicArmor_;
+	float weight_;
+	float moveSpeedX_;
+	float moveSpeedY_;
+	float downRecoverTime_;
 };

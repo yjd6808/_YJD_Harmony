@@ -1,10 +1,9 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/25/2023 4:37:14 PM
  * =====================
  *
  */
-
 
 #include "Tutturu.h"
 #include "MapObject.h"
@@ -17,72 +16,125 @@
 USING_NS_CC;
 USING_NS_JC;
 
-MapObject::MapObject(MapObjectInfo* baseInfo) : m_pBaseInfo(baseInfo) {}
+//////////////////////////////////////////////////////////////////////////////////////////
+MapObject::MapObject(MapObjectInfo* _pBaseInfo)
+: baseInfo_(_pBaseInfo)
+{
+}
 
-MapObject* MapObject::create(MapObjectInfo* baseInfo) {
-	MapObject* pMapObject = dbg_new MapObject(baseInfo);
+//////////////////////////////////////////////////////////////////////////////////////////
+MapObject* MapObject::create(MapObjectInfo* _pBaseInfo)
+{
+	MapObject* pMapObject = dbg_new MapObject(_pBaseInfo);
 	pMapObject->initialize();
 	pMapObject->autorelease();
 	return pMapObject;
 }
 
-void MapObject::initialize() {
-	initThicknessBox(m_pBaseInfo->ThicknessBox);
+//////////////////////////////////////////////////////////////////////////////////////////
+void MapObject::initialize()
+{
+	initThicknessBox(baseInfo_->thicknessBox_);
 	initActorSprite();
 	initVariables();
 	initListeners();
 	initComponents();
 }
 
-// 옵스터클은 파츠, 애니메이션 다 1개씩임 (팔 다리 달린 장애물은 없을 듯?)
-void MapObject::initActorSprite() {
-
-	if (!m_pActorSprite) {
-		m_pActorSprite = ActorSprite::create(this, m_pBaseInfo->SpriteData);
+//////////////////////////////////////////////////////////////////////////////////////////
+void MapObject::initActorSprite()
+{
+	if (!m_pActorSprite)
+	{
+		m_pActorSprite = ActorSprite::create(this, baseInfo_->pSpriteData_);
 		m_pActorSprite->setAnchorPoint(Vec2::ZERO);
 		m_pActorSprite->runAnimation(1);
-		this->addChild(m_pActorSprite);	
+		addChild(m_pActorSprite);
 	}
 
-	switch (m_pBaseInfo->Type) {
-	case MapObjectType::Obstacle:	initActorSpriteObstacle();	break;
-	case MapObjectType::Gate:		initActorSpriteGate();		break;
+	switch (baseInfo_->type_)
+	{
+	case MapObjectType::Obstacle:
+		initActorSpriteObstacle();
+		break;
+	case MapObjectType::Gate:
+		initActorSpriteGate();
+		break;
 	}
 }
 
-void MapObject::initActorSpriteObstacle() {}
-void MapObject::initActorSpriteGate() {}
+//////////////////////////////////////////////////////////////////////////////////////////
+void MapObject::initActorSpriteObstacle()
+{
+}
 
-bool MapObject::initVariables() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void MapObject::initActorSpriteGate()
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool MapObject::initVariables()
+{
 	return Actor::initVariables();
 }
 
-void MapObject::initListeners() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void MapObject::initListeners()
+{
 }
 
-void MapObject::initComponents() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void MapObject::initComponents()
+{
 }
 
-void MapObject::update(float dt) {
-	Actor::update(dt);
+//////////////////////////////////////////////////////////////////////////////////////////
+void MapObject::update(float _dt)
+{
+	Actor::update(_dt);
 }
 
-void MapObject::onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture) {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void MapObject::onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+{
 }
 
-void MapObject::onFrameEnd(ActorPartAnimation* animation, FrameTexture* texture) {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void MapObject::onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+{
 }
 
-void MapObject::onAnimationBegin(ActorPartAnimation* animation, FrameTexture* texture) {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void MapObject::onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+{
 }
 
-void MapObject::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture) {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void MapObject::onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+{
 }
 
-MapObjectInfo* MapObject::getBaseInfo() {
-	return m_pBaseInfo;
+//////////////////////////////////////////////////////////////////////////////////////////
+MapObjectType_t MapObject::getObjectType() const
+{
+	return baseInfo_->type_;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+ActorType_t MapObject::getType() const
+{
+	return ActorType::MapObject;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+int MapObject::getCode()
+{
+	return baseInfo_->code_;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+MapObjectInfo* MapObject::getBaseInfo()
+{
+	return baseInfo_;
 }

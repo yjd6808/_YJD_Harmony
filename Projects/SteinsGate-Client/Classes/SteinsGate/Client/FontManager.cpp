@@ -20,41 +20,47 @@
 #include <fstream>
 
 
-
-
 USING_NS_JC;
 USING_NS_JS;
 
+//////////////////////////////////////////////////////////////////////////////////////////
 FontManager::FontManager()
-	: m_hFontNameToCodeMap(8)
-	, m_hFontCodeToNameMap(8)
-{}
-
-FontManager::~FontManager() {
+: fontNameToCodeMap_(8)
+, fontCodeToNameMap_(8)
+{
 }
 
-void FontManager::init() {
-	SGString szFontDirPath = JCore::Path::Combine(Core::CommonInfo->DataPath, Const::Resource::FontDirName);
-	Vector<SGString> vFontFiles = Directory::Files(szFontDirPath.Source());
+//////////////////////////////////////////////////////////////////////////////////////////
+FontManager::~FontManager()
+{
+}
 
-	for (int i = 0; i < vFontFiles.Size(); ++i) {
-		SGString& fontPath = vFontFiles[i];
+//////////////////////////////////////////////////////////////////////////////////////////
+void FontManager::init()
+{
+	SGString fontDirPath = JCore::Path::Combine(Core::CommonInfo->dataPath_, Const::Resource::FontDirName);
+	Vector<SGString> fontFiles = Directory::Files(fontDirPath.Source());
+
+	for (int index = 0; index < fontFiles.Size(); ++index)
+	{
+		SGString& fontPath = fontFiles[index];
 		SGString fontFileName = JCore::Path::FileName(fontPath);
 
-		m_hFontNameToCodeMap.Insert(fontFileName, i);
-		m_hFontCodeToNameMap.Insert(i, Move(fontFileName));	// 버리기 아까우니 옴긴다.
+		fontNameToCodeMap_.Insert(fontFileName, index);
+		fontCodeToNameMap_.Insert(index, Move(fontFileName)); // 버리기 아까우니 옴긴다.
 	}
-
 }
 
-SGString& FontManager::getFontName(int fontCode) {
-	DebugAssertMsg(m_hFontCodeToNameMap.Exist(fontCode), "해당 폰트코드에 맞는 폰트 이름이 없습니다.");
-	return m_hFontCodeToNameMap[fontCode];
+//////////////////////////////////////////////////////////////////////////////////////////
+SGString& FontManager::getFontName(int _fontCode)
+{
+	DebugAssertMsg(fontCodeToNameMap_.Exist(_fontCode), "해당 폰트코드에 맞는 폰트 이름이 없습니다.");
+	return fontCodeToNameMap_[_fontCode];
 }
 
-int FontManager::getFontCode(const SGString& fontName) {
-	DebugAssertMsg(m_hFontNameToCodeMap.Exist(fontName), "해당 폰트이름에 맞는 폰트 코드가 없습니다.");
-	return m_hFontNameToCodeMap[fontName];
+//////////////////////////////////////////////////////////////////////////////////////////
+int FontManager::getFontCode(const SGString& _fontName)
+{
+	DebugAssertMsg(fontNameToCodeMap_.Exist(_fontName), "해당 폰트이름에 맞는 폰트 코드가 없습니다.");
+	return fontNameToCodeMap_[_fontName];
 }
-
-

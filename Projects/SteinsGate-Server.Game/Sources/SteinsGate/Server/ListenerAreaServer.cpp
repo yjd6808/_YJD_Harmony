@@ -13,37 +13,44 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-ListenerAreaServer::ListenerAreaServer(AreaServer* server, CommandParser* parser)
-	: ListenerServerCommon(parser)
-	, m_pAreaTcp(server)
-{}
+ListenerAreaServer::ListenerAreaServer(AreaServer* _pServer, CommandParser* _pParser)
+	: ListenerServerCommon(_pParser)
+	, areaTcp_(_pServer)
+{
+}
 
-void ListenerAreaServer::OnStarted() {
+void ListenerAreaServer::OnStarted()
+{
 	ListenerServerCommon::OnStarted();
 }
 
-void ListenerAreaServer::OnConnected(Session* connectedSession) {
-	ListenerServerCommon::OnConnected(connectedSession);
+void ListenerAreaServer::OnConnected(Session* _pConnectedSession)
+{
+	ListenerServerCommon::OnConnected(_pConnectedSession);
 }
 
-void ListenerAreaServer::OnDisconnected(Session* disconnetedSession, Int32U errorCode) {
-	ListenerServerCommon::OnDisconnected(disconnetedSession, errorCode);
+void ListenerAreaServer::OnDisconnected(Session* _pDisconnectedSession, Int32U _errorCode)
+{
+	ListenerServerCommon::OnDisconnected(_pDisconnectedSession, _errorCode);
 }
 
-void ListenerAreaServer::OnSent(Session* sender, IPacket* sentPacket, Int32UL sentBytes) {
-	ListenerServerCommon::OnSent(sender, sentPacket, sentBytes);
+void ListenerAreaServer::OnSent(Session* _pSender, IPacket* _pSentPacket, Int32UL _sentBytes)
+{
+	ListenerServerCommon::OnSent(_pSender, _pSentPacket, _sentBytes);
 }
 
-void ListenerAreaServer::OnReceived(Session* receiver, ICommand* cmd) {
-	ListenerServerCommon::OnReceived(receiver, cmd);
+void ListenerAreaServer::OnReceived(Session* _pReceiver, ICommand* _pCmd)
+{
+	ListenerServerCommon::OnReceived(_pReceiver, _pCmd);
 }
 
-void ListenerAreaServer::OnReceived(Session* session, RecvedCommandPacket* recvPacket) {
-	ListenerServerCommon::OnReceived(session, recvPacket);
+void ListenerAreaServer::OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket)
+{
+	ListenerServerCommon::OnReceived(_pSession, _pRecvPacket);
 }
 
-void ListenerAreaServer::OnStopped() {
+void ListenerAreaServer::OnStopped()
+{
 	ListenerServerCommon::OnStopped();
 }
-
 

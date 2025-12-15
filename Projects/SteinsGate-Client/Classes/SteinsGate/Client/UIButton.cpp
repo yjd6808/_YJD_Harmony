@@ -9,230 +9,273 @@
 #include "GameCoreHeader.h"
 #include "UIButton.h"
 
-#include <SteinsGate/Client/UIMasterGroup.h>
+#include <SteinsGate/Client/UIRootGroup.h>
 
 USING_NS_CC;
 USING_NS_JC;
 
-UIButton::UIButton(UIMasterGroup* master, UIGroup* parent)
-	: UIElement(master, parent)
-	, m_pInfo(nullptr)
-	, m_pTexture{}
-	, m_pSprite{}
-{}
-
-UIButton::UIButton(UIMasterGroup* master, UIGroup* parent, UIButtonInfo* btnInfo, bool infoOwner)
-	: UIElement(master, parent, btnInfo, infoOwner)
-	, m_pInfo(btnInfo)
-	, m_pTexture{}
-	, m_pSprite{}
-{}
-
-UIButton::~UIButton() {
-	CC_SAFE_RELEASE(m_pTexture[eNormal]);
-	CC_SAFE_RELEASE(m_pTexture[eOver]);
-	CC_SAFE_RELEASE(m_pTexture[ePressed]);
-	CC_SAFE_RELEASE(m_pTexture[eDisabled]);
+UIButton::UIButton(UIRootGroup* _pMaster, UIGroup* _pParent)
+: UIElement(_pMaster, _pParent)
+, buttonInfo_(nullptr)
+, texture_{}
+, sprite_{}
+{
 }
 
-UIButton* UIButton::create(UIMasterGroup* master, UIGroup* parent) {
-	UIButton* pBtn = dbg_new UIButton(master, parent);
-	pBtn->init();
-	pBtn->autorelease();
-	return pBtn;
+UIButton::UIButton(UIRootGroup* _pMaster, UIGroup* _pParent, UIButtonInfo* _pButtonInfo, bool _infoOwner)
+: UIElement(_pMaster, _pParent, _pButtonInfo, _infoOwner)
+, buttonInfo_(_pButtonInfo)
+, texture_{}
+, sprite_{}
+{
 }
 
-UIButton* UIButton::create(UIMasterGroup* master, UIGroup* parent, UIButtonInfo* btnInfo, bool infoOwner) {
-	UIButton* pBtn = dbg_new UIButton(master, parent, btnInfo, infoOwner);
-	pBtn->init();
-	pBtn->autorelease();
-	return pBtn;
+UIButton::~UIButton()
+{
+	CC_SAFE_RELEASE(texture_[eNormal]);
+	CC_SAFE_RELEASE(texture_[eOver]);
+	CC_SAFE_RELEASE(texture_[ePressed]);
+	CC_SAFE_RELEASE(texture_[eDisabled]);
 }
 
+UIButton* UIButton::create(UIRootGroup* _pMaster, UIGroup* _pParent)
+{
+	UIButton* pButton = dbg_new UIButton(_pMaster, _pParent);
+	pButton->init();
+	pButton->autorelease();
+	return pButton;
+}
 
-void UIButton::setVisibleState(State state) {
-	for (int i = 0; i < eMax; ++i) {
-		Sprite* pSprite = m_pSprite[i];
+UIButton* UIButton::create(UIRootGroup* _pMaster, UIGroup* _pParent, UIButtonInfo* _pButtonInfo, bool _infoOwner)
+{
+	UIButton* pButton = dbg_new UIButton(_pMaster, _pParent, _pButtonInfo, _infoOwner);
+	pButton->init();
+	pButton->autorelease();
+	return pButton;
+}
+
+void UIButton::setVisibleState(State _state)
+{
+	for (int i = 0; i < eMax; ++i)
+	{
+		Sprite* pSprite = sprite_[i];
 
 		if (pSprite == nullptr)
+		{
 			continue;
+		}
 
-		if (i == state) {
+		if (i == _state)
+		{
 			pSprite->setVisible(true);
 			continue;
 		}
+
 		pSprite->setVisible(false);
 	}
 
-	m_eState = state;
+	state_ = _state;
 }
 
-void UIButton::setUISize(const SGSize& size) {
-	if (!m_bResizable)
+void UIButton::SetUISize(const SGSize& _size)
+{
+	if (!isResizable_)
+	{
 		return;
+	}
 
-	m_UISize = size;
+	uiSize_ = _size;
 
-	if (!m_bLoaded) 
+	if (!isLoaded_)
+	{
 		return;
+	}
 
-	const float fScaleX = getScaleX();
-	const float fScaleY = getScaleY();
+	const float scaleX = getScaleX();
+	const float scaleY = getScaleY();
 
-	for (int i = 0; i < eMax; ++i) {
+	for (int i = 0; i < eMax; ++i)
+	{
+		Sprite* pSprite = sprite_[i];
 
-		Sprite* pSprite = m_pSprite[i];
-
-		if (pSprite == nullptr) {
+		if (pSprite == nullptr)
+		{
 			continue;
 		}
 
-		pSprite->setScaleX(fScaleX);
-		pSprite->setScaleY(fScaleY);
+		pSprite->setScaleX(scaleX);
+		pSprite->setScaleY(scaleY);
 	}
-	
 }
 
-void UIButton::setInfo(UIElementInfo* info, bool infoOwner) {
-
-	if (info->Type != UIElementType::Button) {
-		logWarnInvalidInfo(info->Type);
+void UIButton::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
+{
+	if (_pInfo->Type != UIElementType::Button)
+	{
+		LogWarnInvalidInfo(_pInfo->Type);
 		return;
 	}
 
-	if (m_bInfoOwner) {
-		JCORE_DELETE_SAFE(m_pInfo);
+	if (isInfoOwner_)
+	{
+		JCORE_DELETE_SAFE(buttonInfo_);
 	}
 
-	m_pBaseInfo = info;
-	m_pInfo = static_cast<UIButtonInfo*>(info);
-	m_bInfoOwner = infoOwner;
+	pBaseInfo_ = _pInfo;
+	buttonInfo_ = static_cast<UIButtonInfo*>(_pInfo);
+	isInfoOwner_ = _infoOwner;
 }
 
-void UIButton::setInfoButton(UIButtonInfo* info, bool infoOwner) {
-	setInfo(info, infoOwner);
+void UIButton::setInfoButton(UIButtonInfo* _pInfo, bool _infoOwner)
+{
+	SetInfo(_pInfo, _infoOwner);
 }
 
-
-void UIButton::setEnabled(bool enabled) {
-
-	if (enabled) {
+void UIButton::SetEnabled(bool _enabled)
+{
+	if (_enabled)
+	{
 		// 활성화 요청을 했지만 이미 활성화 상태인 경우는 무시
-		if (m_eState != eDisabled)
+		if (state_ != eDisabled)
+		{
 			return;
+		}
 
 		// 이전 상태가 비활성화 상태 인경우 현재 상태가 Pressed인지, Moved인지 체크해서 업데이트
-		updateState();
+		UpdateState();
 		setVisibleState(eNormal);
 		return;
 	}
 
-	m_eState = eDisabled;
+	state_ = eDisabled;
 	setVisibleState(eDisabled);
 }
 
-void UIButton::restoreState(State state) {
-	if (m_eState == eDisabled)
+void UIButton::RestoreState(State _state)
+{
+	if (state_ == eDisabled)
+	{
 		return;
+	}
 
-	if (m_eState == state)
+	if (state_ == _state)
+	{
 		setVisibleState(eNormal);
+	}
 }
 
-void UIButton::onMouseEnterInternalDetail(SGEventMouse* mouseEvent) {
+void UIButton::OnMouseEnterInternalDetail(SGEventMouse* _pMouseEvent)
+{
 	setVisibleState(eOver);
 }
 
-void UIButton::onMouseLeaveInternalDetail(SGEventMouse* mouseEvent) {
+void UIButton::OnMouseLeaveInternalDetail(SGEventMouse* _pMouseEvent)
+{
 	setVisibleState(eNormal);
 }
 
-bool UIButton::onMouseMoveInternalDetail(SGEventMouse* mouseEvent) {
+bool UIButton::OnMouseMoveInternalDetail(SGEventMouse* _pMouseEvent)
+{
 	return false;
 }
-bool UIButton::onMouseDownInternalDetail(SGEventMouse* mouseEvent) {
+
+bool UIButton::OnMouseDownInternalDetail(SGEventMouse* _pMouseEvent)
+{
 	setVisibleState(ePressed);
 	return false;
 }
-void UIButton::onMouseUpInternalDetail(SGEventMouse* mouseEvent) {
+
+void UIButton::OnMouseUpInternalDetail(SGEventMouse* _pMouseEvent)
+{
 	setVisibleState(eNormal);
 }
 
-
-bool UIButton::init() {
-
-	if (!UIElement::init()) {
+bool UIButton::init()
+{
+	if (!UIElement::init())
+	{
 		return false;
 	}
 
-	if (m_pInfo == nullptr) {
-		logWarnMissingInfo();
+	if (buttonInfo_ == nullptr)
+	{
+		LogWarnMissingInfo();
 		return false;
 	}
 
-	const ImagePack* pPack = Core::Contents.PackManager->getPackUnsafe(m_pInfo->Sga);
-	setInitialUISize(DefaultSize30);
+	const ImagePack* pPack = Core::Contents.PackManager->getPackUnsafe(buttonInfo_->Sga);
+	SetInitialUISize(DEFAULT_SIZE30);
 
-	if (pPack == nullptr) {
+	if (pPack == nullptr)
+	{
 		_LogWarn_("버튼 Sga패키지를 찾지 못했습니다.");
 		return false;
 	}
 
-	const SgaSpriteAbstractPtr spSprite = pPack->getSpriteUnsafe(m_pInfo->Img, m_pInfo->Sprites[eNormal]);
+	const SgaSpriteAbstractPtr pSprite = pPack->getSpriteUnsafe(buttonInfo_->Img, buttonInfo_->Sprites[eNormal]);
 
-	if (spSprite == nullptr) {
+	if (pSprite == nullptr)
+	{
 		_LogWarn_("버튼 노말 스프라이트를 찾지 못했습니다.");
 		return false;
 	}
 
-	const SgaSpriteRect spriteRect = spSprite->GetRect();
-	setInitialUISize({ spriteRect.GetWidthF(), spriteRect.GetHeightF() });
-	return m_bInitialized = true;
+	const SgaSpriteRect spriteRect = pSprite->GetRect();
+	SetInitialUISize({ spriteRect.GetWidthF(), spriteRect.GetHeightF() });
+	return isInitialized_ = true;
 }
 
-void UIButton::load() { 
-	if (m_bLoaded)
+void UIButton::Load()
+{
+	if (isLoaded_)
+	{
 		return;
+	}
 
-	for (int i = 0; i < eMax; ++i) {
-		const int iSprite = m_pInfo->Sprites[i];
+	for (int i = 0; i < eMax; ++i)
+	{
+		const int spriteIndex = buttonInfo_->Sprites[i];
 
-		if (iSprite == InvalidValue_v) {
+		if (spriteIndex == InvalidValue_v)
+		{
 			_LogWarn_("설정되지 않은 스프라이트입니다.");
 			continue;
 		}
 
-		FrameTexture* pTexture = Core::Contents.UIManager->createUITextureRetained(m_pInfo->Sga, m_pInfo->Img, iSprite, m_pInfo->LinearDodge);
+		FrameTexture* pTexture = Core::Contents.UIManager->createUITextureRetained(
+			buttonInfo_->Sga, buttonInfo_->Img, spriteIndex, buttonInfo_->LinearDodge);
 
 		Sprite* pSprite = Sprite::create();
 		pSprite->initWithTexture(pTexture->getTexture());
-		pSprite->setScaleX(m_UISize.width / pTexture->getWidthF());
-		pSprite->setScaleY(m_UISize.height / pTexture->getHeightF());
+		pSprite->setScaleX(uiSize_.width / pTexture->getWidthF());
+		pSprite->setScaleY(uiSize_.height / pTexture->getHeightF());
 		pSprite->setAnchorPoint(Vec2::ZERO);
 
-		m_pTexture[i] = pTexture;
-		m_pSprite[i] = pSprite;
+		texture_[i] = pTexture;
+		sprite_[i] = pSprite;
 
 		this->addChild(pSprite);
 	}
 
 	setVisibleState(eNormal);
 
-	m_bLoaded = true;
+	isLoaded_ = true;
 }
 
-void UIButton::unload() {
-	if (m_bLoaded == false)
+void UIButton::Unload()
+{
+	if (!isLoaded_)
+	{
 		return;
+	}
 
 	removeAllChildren(); // autorelease 되기땜
 
-	for (int i = 0; i < eMax; ++i) {
-		m_pSprite[i] = nullptr;
-		CC_SAFE_RELEASE_NULL(m_pTexture[i]);
+	for (int i = 0; i < eMax; ++i)
+	{
+		sprite_[i] = nullptr;
+		CC_SAFE_RELEASE_NULL(texture_[i]);
 	}
 
-	m_bLoaded = false;
+	isLoaded_ = false;
 }
-
-

@@ -11,61 +11,78 @@
 #include <SteinsGate/Client/HostPlayer.h>
 #include <SteinsGate/Client/Define_Animation.h>
 
-GunnerIdle::GunnerIdle(HostPlayer* player, ActionInfo* actionInfo)
-	: GunnerAction(player, actionInfo)
-	, m_iIdleCount(0) {}
-
-
-void GunnerIdle::init() {
-	m_iIdleCount = 0;
+//////////////////////////////////////////////////////////////////////////////////////////
+GunnerIdle::GunnerIdle(HostPlayer* _pPlayer, ActionInfo* _pActionInfo)
+: GunnerAction(_pPlayer, _pActionInfo)
+, idleCount_(0)
+{
 }
 
-void GunnerIdle::onActionBegin() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerIdle::init()
+{
+	idleCount_ = 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerIdle::onActionBegin()
+{
 	m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_IDLE_BREATH);
 }
 
-void GunnerIdle::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* frame) {
-	int iAnimationCode = animation->getAnimationInfo()->Code;
-	
-	if (iAnimationCode == DEF_ANIMATION_GUNNER_IDLE_BREATH) {
-		++m_iIdleCount;
-	} else if (iAnimationCode == DEF_ANIMATION_GUNNER_IDLE_GUN_ROLLING) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerIdle::onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
+{
+	int iAnimationCode = _pAnimation->getAnimationInfo()->code_;
+
+	if (iAnimationCode == DEF_ANIMATION_GUNNER_IDLE_BREATH)
+	{
+		++idleCount_;
+	}
+	else if (iAnimationCode == DEF_ANIMATION_GUNNER_IDLE_GUN_ROLLING)
+	{
 		m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_IDLE_BREATH);
-		m_iIdleCount = 0;
+		idleCount_ = 0;
 	}
 }
 
-void GunnerIdle::onKeyPressed(PlayerController* controller, SGEventKeyboard::KeyCode keyCode) {
-	controller->reflectPressedMoveKeys();
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerIdle::onKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
+{
+	_pController->reflectPressedMoveKeys();
 }
 
-void GunnerIdle::onKeyReleasedBefore(PlayerController* controller, SGEventKeyboard::KeyCode keyCode) {
-	ControlKey_t releasedKey = controller->convertControlKey(keyCode);
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerIdle::onKeyReleasedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
+{
+	ControlKey_t releasedKey = _pController->convertControlKey(_keyCode);
 
 	if (releasedKey != ControlKey::None)
-		fixFreezedState(controller, releasedKey);
+		FixFreezedState(_pController, releasedKey);
 }
 
-
-void GunnerIdle::onActionEnd() {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerIdle::onActionEnd()
+{
 }
 
-void GunnerIdle::fixFreezedState(PlayerController* controller, ControlKey_t releasedKey) {
-	ControlKey_t eReverseKey = ControlKey::ReverseDirection[releasedKey];
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerIdle::FixFreezedState(PlayerController* _pController, ControlKey_t _releasedKey)
+{
+	ControlKey_t eReverseKey = ControlKey::ReverseDirection[_releasedKey];
 	ActionMgr* pActionManager = m_pPlayer->actionManager();
 
-	if (controller->isKeyPressed(ControlKey::Left) && controller->isKeyPressed(ControlKey::Right) &&
-		(releasedKey == ControlKey::Left || releasedKey == ControlKey::Right)) {
-
-		controller->updateDirection(eReverseKey);
+	if (_pController->isKeyPressed(ControlKey::Left) && _pController->isKeyPressed(ControlKey::Right) &&
+		(_releasedKey == ControlKey::Left || _releasedKey == ControlKey::Right))
+	{
+		_pController->updateDirection(eReverseKey);
 		pActionManager->runBaseAction(BaseAction::Walk);
 	}
 
-	if (controller->isKeyPressed(ControlKey::Up) && controller->isKeyPressed(ControlKey::Down) &&
-		(releasedKey == ControlKey::Up || releasedKey == ControlKey::Down)) {
-
-		controller->updateDirection(eReverseKey);
+	if (_pController->isKeyPressed(ControlKey::Up) && _pController->isKeyPressed(ControlKey::Down) &&
+		(_releasedKey == ControlKey::Up || _releasedKey == ControlKey::Down))
+	{
+		_pController->updateDirection(eReverseKey);
 		pActionManager->runBaseAction(BaseAction::Walk);
 	}
 }

@@ -15,43 +15,60 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-void ListenerServerBase::OnStarted() {
-	const char* z = GetServerName();
-	_LogInfo_("%s 서버가 시작되었습니다.", GetServerName());
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerServerBase::OnStarted()
+{
+	const char* pServerName = GetServerName();
+	_LogInfo_("%s 서버가 시작되었습니다.", pServerName);
 }
 
-void ListenerServerBase::OnConnected(Session* connectedSession) {
-	const IPv4EndPoint& remoteEndPoint = connectedSession->GetRemoteEndPoint();
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerServerBase::OnConnected(Session* _pConnectedSession)
+{
+	const IPv4EndPoint& remoteEndPoint = _pConnectedSession->GetRemoteEndPoint();
 	const String remoteEndPointString = remoteEndPoint.ToString();
 
 	_LogInfo_("%s 클라이언트 접속", remoteEndPointString.Source());
 }
 
-void ListenerServerBase::OnDisconnected(Session* disconnetedSession, Int32U errorCode) {
-	const IPv4EndPoint& remoteEndPoint = disconnetedSession->GetRemoteEndPoint();
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerServerBase::OnDisconnected(Session* _pDisconnectedSession, Int32U _errorCode)
+{
+	const IPv4EndPoint& remoteEndPoint = _pDisconnectedSession->GetRemoteEndPoint();
 	const String remoteEndPointString = remoteEndPoint.ToString();
 
 	_LogInfo_("%s 클라이언트 연결종료", remoteEndPointString.Source());
 }
 
-void ListenerServerBase::OnSent(Session* sender, IPacket* sentPacket, Int32UL sentBytes) {
-	if (sentPacket->GetType() == PacketType::Command) {
-		CommandPacket* pPacket = static_cast<CommandPacket*>(sentPacket);
-		pPacket->ForEach([&](ICommand* cmd) { ListenerHelperBase::LogCommand(sender->Protocol(), Transmission::Send, cmd); });
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerServerBase::OnSent(Session* _pSender, IPacket* _pSentPacket, Int32UL _sentBytes)
+{
+	if (_pSentPacket->GetType() == PacketType::Command)
+	{
+		CommandPacket* pPacket = static_cast<CommandPacket*>(_pSentPacket);
+		pPacket->ForEach([&](ICommand* _pCmd)
+		{
+			ListenerHelperBase::LogCommand(_pSender->Protocol(), Transmission::Send, _pCmd);
+		});
 	}
-	ListenerHelperBase::LogPacketHex(sentPacket);
+
+	ListenerHelperBase::LogPacketHex(_pSentPacket);
 }
 
-void ListenerServerBase::OnReceived(Session* receiver, ICommand* cmd) {
-	ListenerHelperBase::LogCommand(receiver->Protocol(), Transmission::Recv, cmd);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerServerBase::OnReceived(Session* _pReceiver, ICommand* _pRecvCmd)
+{
+	ListenerHelperBase::LogCommand(_pReceiver->Protocol(), Transmission::Recv, _pRecvCmd);
 }
 
-void ListenerServerBase::OnReceived(Session* receiver, RecvedCommandPacket* recvPacket) {
-	ListenerHelperBase::LogPacketHex(recvPacket);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerServerBase::OnReceived(Session* _pReceiver, RecvedCommandPacket* _pRecvPacket)
+{
+	ListenerHelperBase::LogPacketHex(_pRecvPacket);
 }
 
-void ListenerServerBase::OnStopped() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerServerBase::OnStopped()
+{
 	_LogInfo_("%s 서버가 중지되었습니다.", GetServerName());
 }
-
-

@@ -13,7 +13,7 @@
 // ===========================================
 // 포워딩
 // ===========================================
-template<typename T>
+template <typename T>
 struct ICreatable;
 
 class UnauthenticatedSessionManager;

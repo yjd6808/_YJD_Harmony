@@ -22,7 +22,7 @@
 // ======================= CMD LIST =======================
 
 #define CMDID_CES_WhoAreYou					50000
-#define CMDID_SCE_ItsMe						50001
+#define CMDID_SCE_ItsMe					50001
 #define CMDID_CES_AlreadyConnected			50002
 #define CMDID_CES_YouNeedToDoThis			50003
 #define CMDID_SCE_NotifyBootState			50004
@@ -36,8 +36,8 @@ HOST_STATIC_CMD_END
 // ===============================================================================================================
 
 HOST_STATIC_CMD_BEGIN(SCE_ItsMe, CMDID_SCE_ItsMe)
-ServerProcessType_t ClientServerType;
-int ServerId;
+	ServerProcessType_t ClientServerType;
+	int ServerId;
 HOST_STATIC_CMD_END
 
 // ===============================================================================================================
@@ -48,27 +48,26 @@ HOST_STATIC_CMD_END
 // ===============================================================================================================
 
 HOST_STATIC_CMD_BEGIN(CES_YouNeedToDoThis, CMDID_CES_YouNeedToDoThis)
-CenterOrder_t Order;
+	CenterOrder_t Order;
 HOST_STATIC_CMD_END
 
 // ===============================================================================================================
 
 HOST_STATIC_CMD_BEGIN(SCE_NotifyBootState, CMDID_SCE_NotifyBootState)
-int ServerId;
-ServerType_t ServerType;
-ServerBootState_t State;
+	int ServerId;
+	ServerType_t ServerType;
+	ServerBootState_t State;
 HOST_STATIC_CMD_END
 
 // ===============================================================================================================
 
 HOST_STATIC_CMD_BEGIN(SCE_NotifyOrderFailed, CMDID_SCE_NotifyOrderFailed)
-int ServerId;
-ServerType_t ServerType;
-CenterOrder_t Order;
-Int32U ErrorCode;
+	int ServerId;
+	ServerType_t ServerType;
+	CenterOrder_t Order;
+	Int32U ErrorCode;
 HOST_STATIC_CMD_END
 
 // ===============================================================================================================
 
 #pragma pack(pop)	// #pragma pack(push, CMD_ALIGNMENT)
-

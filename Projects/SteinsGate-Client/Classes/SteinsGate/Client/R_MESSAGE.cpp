@@ -21,8 +21,9 @@ USING_NS_JC;
 USING_NS_CC;
 USING_NS_JNET;
 
-void R_MESSAGE::RECV_SC_ClientText(Session* session, ICommand* cmd) {
-	SC_ClientText* pCmd = (SC_ClientText*)cmd;
+//////////////////////////////////////////////////////////////////////////////////////////
+void R_MESSAGE::RECV_SC_ClientText(Session* _pSession, ICommand* _pCmd)
+{
+	SC_ClientText* pCmd = (SC_ClientText*)_pCmd;
 	Core::Contents.PopupManager->showOk(StringUtils::format("리모트 메시지\n%s", SG_TEXT_RAW(pCmd->Key.Source)));
-
 }

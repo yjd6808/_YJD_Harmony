@@ -16,16 +16,17 @@
 union SgaResourceIndex
 {
 	SgaResourceIndex();
-	SgaResourceIndex(int sgaIndex, int imgIndex, int frameIndex)
-		: Un{ sgaIndex, imgIndex, frameIndex }
-	{}
+
+	SgaResourceIndex(int _sgaIndex, int _imgIndex, int _frameIndex)
+	: Un{ _sgaIndex, _imgIndex, _frameIndex }
+	{
+	}
 
 	struct
 	{
-		int SgaIndex : 9;	// 512
-		int ImgIndex : 11;	// 2048
-		int FrameIndex : 12;	// 4096
-
+		int SgaIndex : 9; // 512
+		int ImgIndex : 11; // 2048
+		int FrameIndex : 12; // 4096
 	} Un;
 
 	SGString ToString() const;

@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <JCore/Pattern/Singleton.h>
@@ -21,5 +20,5 @@ class World
 	~World() override;
 public:
 	void Initialize();
-	void BroadcastPacket(JNetwork::ISendPacket* packet) override;
+	void BroadcastPacket(JNetwork::ISendPacket* _pPacket) override;
 };

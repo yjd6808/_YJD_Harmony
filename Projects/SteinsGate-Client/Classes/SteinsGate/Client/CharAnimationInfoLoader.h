@@ -1,11 +1,3 @@
-﻿/*
- * 작성자: 윤정도
- * 생성일: 1/20/2023 1:44:44 PM
- * =====================
- *
- */
-
-
 #pragma once
 
 #include <SteinsGate/Client/Tutturu.h>
@@ -14,13 +6,14 @@
 struct CharAnimationInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	CharAnimationInfoLoader(DataManagerAbstract* manager);
+	CharAnimationInfoLoader(DataManagerAbstract* _pManager);
 	~CharAnimationInfoLoader() override = default;
 
-	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Char_Animation; }
-	bool load() override;
+	ConfigFileType_t GetConfigFileType() override { return ConfigFileType::Char_Animation; }
+	bool Load() override;
 
-	SGVector<AnimationInfo*>& getAnimationList(CharType_t charCode);
+	SGVector<AnimationInfo*>& GetAnimationList(CharType_t _charCode);
+
 private:
-	SGVector<AnimationInfo*> m_CharAnimationList[CharType::Max];
+	SGVector<AnimationInfo*> charAnimationList_[CharType::Max];
 };

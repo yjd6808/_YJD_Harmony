@@ -5,14 +5,12 @@
  *
  */
 
-
 #pragma once
 
 #include <SteinsGate/Common/ConfigDataAbstract.h>
 
-
-
 class DataManagerAbstract;
+
 class ConfigFileLoaderAbstract
 {
 protected:
@@ -21,64 +19,62 @@ protected:
 
 	struct DirectoryTreeNode
 	{
-		DirectoryTreeNode(const SGString& directoryName, int childDirectoryCount)
-			: DirectoryName(directoryName)
-			, Children(childDirectoryCount)
-		{}
+		DirectoryTreeNode(const SGString& _directoryName, int _childDirectoryCount)
+		: directoryName_(_directoryName)
+		, children_(_childDirectoryCount)
+		{
+		}
 
-		SGString DirectoryName;
-		SGVector<DirectoryTreeNode*> Children;
-		DirectoryTreeNodeCallback_t OnJsonLoaded;
+		SGString directoryName_;
+		SGVector<DirectoryTreeNode*> children_;
+		DirectoryTreeNodeCallback_t onJsonLoaded_;
 	};
 
 	struct DirectoryTree
 	{
 		DirectoryTree()
-			: Root(nullptr)
-			, Loader(nullptr)
-		{}
+		: root_(nullptr)
+		, loader_(nullptr)
+		{
+		}
 
-		~DirectoryTree() { clear(); }
+		~DirectoryTree() { Clear(); }
 
-		bool init(const SGString& rootDirectoryName);
-		bool load();
-		void clear();
+		bool Init(const SGString& _rootDirectoryName);
+		bool Load();
+		void Clear();
 
-		void setCallback(const char* directoryName, DirectoryTreeNodeCallback_t&& callback);
-		void setCallback(const char* directoryName, const DirectoryTreeNodeCallback_t& callback);
-		void setCallbackCommon(DirectoryTreeNodeCallback_t&& callback);
-		void setCallbackCommon(const DirectoryTreeNodeCallback_t& callback);
+		void SetCallback(const char* _directoryName, DirectoryTreeNodeCallback_t&& _callback);
+		void SetCallback(const char* _directoryName, const DirectoryTreeNodeCallback_t& _callback);
+		void SetCallbackCommon(DirectoryTreeNodeCallback_t&& _callback);
+		auto SetCallbackCommon(const DirectoryTreeNodeCallback_t& _callback) -> void;
 
-		static DirectoryTreeNode* findNodeRecursive(DirectoryTreeNode* node, const char* directoryName);
-		static void constructTreeRecursive(JCORE_OUT DirectoryTreeNode** node, const char* path, int depth);
-		static void loadRecursive(DirectoryTree* tree, DirectoryTreeNode* node);
-		static void clearRecursive(DirectoryTreeNode* node);
+		static DirectoryTreeNode* FindNodeRecursive(DirectoryTreeNode* _pNode, const char* _pDirectoryName);
+		static void ConstructTreeRecursive(JCORE_OUT DirectoryTreeNode** _ppNode, const char* _path, int _depth);
+		static void LoadRecursive(DirectoryTree* _pTree, DirectoryTreeNode* _pNode);
+		static void ClearRecursive(DirectoryTreeNode* _pNode);
 
-		DirectoryTreeNode* Root;
-		ConfigFileLoaderAbstract* Loader;
-		DirectoryTreeNodeCallback_t OnJsonLoadedCommon;
+		DirectoryTreeNode* root_;
+		ConfigFileLoaderAbstract* loader_;
+		DirectoryTreeNodeCallback_t onJsonLoadedCommon_;
 	};
 
-
 public:
-	ConfigFileLoaderAbstract(DataManagerAbstract* manager);
+	ConfigFileLoaderAbstract(DataManagerAbstract* _pManager);
 	virtual ~ConfigFileLoaderAbstract();
 
-	virtual bool loadJson(JCORE_OUT Json::Value& root);
-	virtual bool loadDirectory(JCORE_OUT DirectoryTree& tree);
-	virtual bool load() = 0;
+	virtual bool LoadJson(JCORE_OUT Json::Value& _root);
+	virtual bool LoadDirectory(JCORE_OUT DirectoryTree& _directoryTree);
+	virtual bool Load() = 0;
 
-	virtual ConfigFileType_t getConfigFileType() = 0;
-	const char* getConfigFileName() { return ConfigFileType::FileName[getConfigFileType()]; }
+	virtual ConfigFileType_t GetConfigFileType() = 0;
+	const char* GetConfigFileName() { return ConfigFileType::FileName[GetConfigFileType()]; }
 
-	void addData(ConfigDataAbstract* data);
-	ConfigDataAbstract* getData(int code);
+	void AddData(ConfigDataAbstract* _pData);
+	ConfigDataAbstract* GetData(int _code);
 
-	
 protected:
-	SGString* m_pConfigPath{};
-	DataManagerAbstract* m_pManager;
-	SGHashMap<int, ConfigDataAbstract*> m_hConfigDataAbstract;
+	SGString* configPath_{};
+	DataManagerAbstract* pManager_;
+	SGHashMap<int, ConfigDataAbstract*> configDataMap_;
 };
-
-

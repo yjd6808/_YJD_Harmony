@@ -15,8 +15,8 @@ class ActorListenerCollection
 {
 public:
 	ActorListenerCollection()
-		: m_vListeners(1)
-		, m_hListeners(1)
+	: m_vListeners(1)
+	, m_hListeners(1)
 	{
 	}
 

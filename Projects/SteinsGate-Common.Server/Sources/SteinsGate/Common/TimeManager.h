@@ -27,11 +27,12 @@ private:
 	friend class TSingleton;
 	TimeManager();
 	~TimeManager();
-public:
-	void UpdateMasterServerTime(const JCore::DateTime& masterServerTime);
-	JCore::DateTime Now() const;
-private:
-	JCore::AtomicInt64 m_MasterServerTime;
-	JCore::AtomicInt64 m_TimeDiff;			// 피어 서버와 마스터 서버의 시간 차이
-};
 
+public:
+	void UpdateMasterServerTime(const JCore::DateTime& _masterServerTime);
+	JCore::DateTime Now() const;
+
+private:
+	JCore::AtomicInt64 masterServerTime_;
+	JCore::AtomicInt64 timeDiff_; // 피어 서버와 마스터 서버의 시간 차이
+};

@@ -17,13 +17,15 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-void R_PING::RECV_SCE_TimeSync(JNetwork::Session* session, JNetwork::ICommand* cmd) {
-	SCE_TimeSync* pCmd = (SCE_TimeSync*)cmd;
-	CenterSession* pSession = (CenterSession*)session;
+//////////////////////////////////////////////////////////////////////////////////////////
+void R_PING::RECV_SCE_TimeSync(JNetwork::Session* _pSession, JNetwork::ICommand* _pCommand)
+{
+	SCE_TimeSync* pTimeSyncCommand = (SCE_TimeSync*)_pCommand;
+	CenterSession* pSession = (CenterSession*)_pSession;
 
-	S_SETUP_IS::AutoFlush _;
-	S_SETUP_IS::SetInformation(session, SendStrategy::SendAsync);
-	S_SETUP_IS::SEND_CES_TimeSyncAck(*pCmd);
+	S_SETUP_IS::AutoFlush autoFlush;
+	S_SETUP_IS::SetInformation(_pSession, SendStrategy::SendAsync);
+	S_SETUP_IS::SEND_CES_TimeSyncAck(*pTimeSyncCommand);
 }
 
 

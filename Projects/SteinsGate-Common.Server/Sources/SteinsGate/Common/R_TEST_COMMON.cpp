@@ -6,8 +6,6 @@
  */
 
 
-
-
 #include "Server.h"
 #include "ServerCoreHeader.h"
 #include "R_TEST_COMMON.h"
@@ -18,12 +16,16 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-void R_TEST_COMMON::RECV_SS_P2PRelayStaticTest(Session* session, ICommand* cmd) {
-	SS_P2PRelayStaticTest* pCmd = (SS_P2PRelayStaticTest*)cmd;
+//////////////////////////////////////////////////////////////////////////////////////////
+void R_TEST_COMMON::RECV_SS_P2PRelayStaticTest(Session* _pSession, ICommand* _pCmd)
+{
+	SS_P2PRelayStaticTest* pCmd = (SS_P2PRelayStaticTest*)_pCmd;
 	Console::WriteLine("%s", pCmd->Msg.Source);
 }
 
-void R_TEST_COMMON::RECV_SS_P2PRelayDynamicTest(Session* session, ICommand* cmd) {
-	SS_P2PRelayDynamicTest* pCmd = (SS_P2PRelayDynamicTest*)cmd;
+//////////////////////////////////////////////////////////////////////////////////////////
+void R_TEST_COMMON::RECV_SS_P2PRelayDynamicTest(Session* _pSession, ICommand* _pCmd)
+{
+	SS_P2PRelayDynamicTest* pCmd = (SS_P2PRelayDynamicTest*)_pCmd;
 	Console::WriteLine("%s", pCmd->Msg()->Source);
 }

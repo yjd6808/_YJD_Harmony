@@ -12,12 +12,10 @@
 #include <SteinsGate/Common/Namepsace.h>
 
 NS_CONST_BEGIN
-
 namespace Authentication
 {
-	constexpr JCore::Range SerialRange = { 10000000, 20000000 };
+constexpr JCore::Range SerialRange = { 10000000, 20000000 };
 }
 
 
 NS_CONST_END
-

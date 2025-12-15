@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 1:44:44 PM
  * =====================
@@ -14,21 +14,21 @@
 struct ItemInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	ItemInfoLoader(DataManagerAbstract* manager);
+	ItemInfoLoader(DataManagerAbstract* _pManager);
 
-	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Item; }
-	void loadArmor(const JCore::String& equipItemArmorPath, int armorType, int equipItemType);
-	
-	void loadAvatar(const JCore::String& equipItemAvatarPath, int charType, int equipItemType);
-	void loadWeapon(const JCore::String& equipItemWeaponPath, int charType, int equipItemType);
-	void loadDetailedEquip(const SGString& equipItemPath, int equipItemType);
-	
-	void loadAccessory(const SGString& equipAccessoryPath, int equipItemType);
-	void loadEquip(const SGString& equipItemPath, int equipItemType);
-	bool load() override;
+	ConfigFileType_t GetConfigFileType() override { return ConfigFileType::Item; }
+	void LoadArmor(const JCore::String& _equipItemArmorPath, int _armorType, int _equipItemType);
 
-	static void readVisualInfo(Json::Value& visualRoot, ItemVisualInfo* pVisual);
-	static void readWeaponInfo(Json::Value& weaponRoot, ItemWeaponInfo* pWeapon);
-	static void readArmorInfo(Json::Value& armorRoot, ItemArmorInfo* itemArmorInfo);
-	static void readCommonInfo(Json::Value& itemRoot, ItemType_t itemType, int detail1, int detail2, ItemInfo* itemInfo);
+	void LoadAvatar(const JCore::String& _equipItemAvatarPath, int _charType, int _equipItemType);
+	void LoadWeapon(const JCore::String& _equipItemWeaponPath, int _charType, int _equipItemType);
+	void LoadDetailedEquip(const SGString& _equipItemPath, int _equipItemType);
+
+	void LoadAccessory(const SGString& _equipAccessoryPath, int _equipItemType);
+	void LoadEquip(const SGString& _equipItemPath, int _equipItemType);
+	bool Load() override;
+
+	static void ReadVisualInfo(Json::Value& _visualRoot, ItemVisualInfo* _pVisual);
+	static void ReadWeaponInfo(Json::Value& _weaponRoot, ItemWeaponInfo* _pWeapon);
+	static void ReadArmorInfo(Json::Value& _armorRoot, ItemArmorInfo* _pItemArmorInfo);
+	static void ReadCommonInfo(Json::Value& _itemRoot, ItemType_t _itemType, int _detail1, int _detail2, ItemInfo* _pItemInfo);
 };

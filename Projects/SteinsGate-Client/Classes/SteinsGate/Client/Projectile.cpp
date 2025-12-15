@@ -6,7 +6,6 @@
  */
 
 
-
 #include "Tutturu.h"
 #include "GameCoreHeader.h"
 #include "Projectile.h"
@@ -19,121 +18,143 @@
 USING_NS_JC;
 USING_NS_CC;
 
-Projectile::Projectile(ProjectileInfo* baseInfo)
-	: m_pBaseInfo(baseInfo)
-	, m_pSpawner(nullptr)
-{}
-
-Projectile::~Projectile() {
-	CC_SAFE_RELEASE_NULL(m_pSpawner);
+//////////////////////////////////////////////////////////////////////////////////////////
+Projectile::Projectile(ProjectileInfo* _pBaseInfo)
+: baseInfo_(_pBaseInfo)
+, spawner_(nullptr)
+{
 }
 
-Projectile* Projectile::create(ProjectileInfo* baseInfo, Actor* spawner) {
-	Projectile* pProjectile = dbg_new Projectile(baseInfo);
-	pProjectile->setSpawner(spawner);
+Projectile::~Projectile()
+{
+	CC_SAFE_RELEASE_NULL(spawner_);
+}
+
+Projectile* Projectile::create(ProjectileInfo* _pBaseInfo, Actor* _pSpawner)
+{
+	Projectile* pProjectile = dbg_new Projectile(_pBaseInfo);
+	pProjectile->setSpawner(_pSpawner);
 	pProjectile->initialize();
 	pProjectile->autorelease();
 	return pProjectile;
 }
 
-void Projectile::initialize() {
-	initThicknessBox(m_pBaseInfo->ThicknessBox);
+void Projectile::initialize()
+{
+	initThicknessBox(baseInfo_->ThicknessBox);
 	initActorSprite();
-	initHitRecorder(8, 16, m_pSpawner);
+	initHitRecorder(8, 16, spawner_);
 	initVariables();
 	initPosition();
 	initListeners();
 	initComponents();
 }
 
-void Projectile::initThicknessBox(const ThicknessBox& thicknessBox) {
-	Actor::initThicknessBox(thicknessBox);
+void Projectile::initThicknessBox(const ThicknessBox& _thicknessBox)
+{
+	Actor::initThicknessBox(_thicknessBox);
 
 	// 두께빡스 위치 자동지정
-	if (thicknessBox.RelativeY <= 0.0f) {
-		SGVec2 spawnerCanvasPos = m_pSpawner->getCanvasPositionReal();
-		SGVec2 spawnerGroundPos = m_pSpawner->getPositionRealCenter();
+	if (_thicknessBox.RelativeY <= 0.0f)
+	{
+		SGVec2 spawnerCanvasPos = spawner_->getCanvasPositionReal();
+		SGVec2 spawnerGroundPos = spawner_->getPositionRealCenter();
 
 		// 스포너의 캔버스 기준상에서 프로젝틸의 절대 y 위치를 구한다.
 		// 스포너의 절대 그라운드 위치 중앙 y 위치에서 빼주면 됨.
-		float fRelativeY = spawnerGroundPos.y - (spawnerCanvasPos.y + m_pBaseInfo->SpawnOffsetY);
-		m_pThicknessBox->setPositionY(fRelativeY);
+		float relativeY = spawnerGroundPos.y - (spawnerCanvasPos.y + baseInfo_->SpawnOffsetY);
+		m_pThicknessBox->setPositionY(relativeY);
 	}
 }
 
-void Projectile::initPosition() {
-	SGSize spawnerCanvsSize = m_pSpawner->getCanvasSize();
-	SGVec2 spawnerCanvasPos = m_pSpawner->getCanvasPositionReal();
+void Projectile::initPosition()
+{
+	SGSize spawnerCanvsSize = spawner_->getCanvasSize();
+	SGVec2 spawnerCanvasPos = spawner_->getCanvasPositionReal();
 
-	setSpriteDirection(m_pSpawner->getSpriteDirection());
+	setSpriteDirection(spawner_->getSpriteDirection());
 
-	if (m_pSpawner->getSpriteDirection() == SpriteDirection::Right) {
+	if (spawner_->getSpriteDirection() == SpriteDirection::Right)
+	{
 		setPosition(
-			spawnerCanvasPos.x + m_pBaseInfo->SpawnOffsetX,
-			spawnerCanvasPos.y + m_pBaseInfo->SpawnOffsetY
-		);
-	} else {
-		setPosition(
-			spawnerCanvasPos.x + spawnerCanvsSize.width - m_pBaseInfo->SpawnOffsetX,
-			spawnerCanvasPos.y + m_pBaseInfo->SpawnOffsetY
+			spawnerCanvasPos.x + baseInfo_->SpawnOffsetX,
+			spawnerCanvasPos.y + baseInfo_->SpawnOffsetY
 		);
 	}
-
-
+	else
+	{
+		setPosition(
+			spawnerCanvasPos.x + spawnerCanvsSize.width - baseInfo_->SpawnOffsetX,
+			spawnerCanvasPos.y + baseInfo_->SpawnOffsetY
+		);
+	}
 
 	m_pActorSprite->setPosition(0, 0);
 }
 
-void Projectile::initListeners() {
-
+void Projectile::initListeners()
+{
 	IActorListener* pListener = getListener(IActorListener::Type::eProjectile);
 
-	if (pListener == nullptr) {
-		pListener = Core::Contents.ActorListenerManager->createProjectileListener(this, m_pSpawner);
+	if (pListener == nullptr)
+	{
+		pListener = Core::Contents.ActorListenerManager->createProjectileListener(this, spawner_);
 		addListener(pListener);
 	}
 }
 
-void Projectile::initComponents() {
-
+void Projectile::initComponents()
+{
 }
 
 // 프로젝틸은 파츠, 애니메이션 다 1개씩임
-void Projectile::initActorSprite() {
+void Projectile::initActorSprite()
+{
+	const float rotation = baseInfo_->Rotation + SGRandom::random_real(baseInfo_->RamdomRotationRangeMin,
+	                                                                   baseInfo_->RamdomRotationRangeMax);
 
-	const float fRotation = m_pBaseInfo->Rotation + SGRandom::random_real(m_pBaseInfo->RamdomRotationRangeMin, m_pBaseInfo->RamdomRotationRangeMax);
-
-	if (!m_pActorSprite) {
-		m_pActorSprite = ActorSprite::create(this, m_pBaseInfo->SpriteData);
+	if (!m_pActorSprite)
+	{
+		m_pActorSprite = ActorSprite::create(this, baseInfo_->SpriteData);
 		m_pActorSprite->setAnchorPoint(Vec2::ZERO);
 		this->addChild(m_pActorSprite);
 	}
 
-	m_pActorSprite->getBodyPart()->setRotation(fRotation);
+	m_pActorSprite->getBodyPart()->setRotation(rotation);
 }
 
-EffectInfo* Projectile::getSpawnEffectInfo() {
-	DebugAssertMsg(m_pBaseInfo->SpawnEffect, "스폰 이펙트가 없습니다.");
-	return m_pBaseInfo->SpawnEffect; 
+EffectInfo* Projectile::getSpawnEffectInfo()
+{
+	DebugAssertMsg(baseInfo_->SpawnEffect, "스폰 이펙트가 없습니다.");
+	return baseInfo_->SpawnEffect;
 }
 
-EffectInfo* Projectile::getHitEffectInfo() {
-	DebugAssertMsg(m_pBaseInfo->HitEffect, "히트 이펙트가 없습니다.");
-	return m_pBaseInfo->HitEffect; 
+EffectInfo* Projectile::getHitEffectInfo()
+{
+	DebugAssertMsg(baseInfo_->HitEffect, "히트 이펙트가 없습니다.");
+	return baseInfo_->HitEffect;
 }
 
-void Projectile::setSpawner(Actor* spawner) {
-	CC_SAFE_RELEASE_NULL(m_pSpawner);
+void Projectile::setSpawner(Actor* _pSpawner)
+{
+	CC_SAFE_RELEASE_NULL(spawner_);
 
-	if (!spawner)
+	if (!_pSpawner)
 		return;
 
-	m_pSpawner = spawner;
-	m_pSpawner->retain();
+	spawner_ = _pSpawner;
+	spawner_->retain();
 
 	if (m_pHitRecorder)
-		m_pHitRecorder->setOwner(spawner);
+		m_pHitRecorder->setOwner(_pSpawner);
 }
 
-Actor* Projectile::getSpawner() { return m_pSpawner; }
-ProjectileInfo* Projectile::getBaseInfo() { return m_pBaseInfo; }
+Actor* Projectile::getSpawner()
+{
+	return spawner_;
+}
+
+ProjectileInfo* Projectile::getBaseInfo()
+{
+	return baseInfo_;
+}

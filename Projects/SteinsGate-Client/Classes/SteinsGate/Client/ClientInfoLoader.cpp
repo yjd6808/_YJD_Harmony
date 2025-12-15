@@ -13,45 +13,59 @@
 USING_NS_JS;
 USING_NS_JC;
 
-ClientInfoLoader::ClientInfoLoader(DataManagerAbstract* manager)
-	: ConfigFileLoaderAbstract(manager)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+ClientInfoLoader::ClientInfoLoader(DataManagerAbstract* _pManager)
+: ConfigFileLoaderAbstract(_pManager)
+{
+}
 
-bool ClientInfoLoader::load() {
+//////////////////////////////////////////////////////////////////////////////////////////
+ConfigFileType_t ClientInfoLoader::GetConfigFileType()
+{
+	return ConfigFileType::Client;
+}
 
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ClientInfoLoader::Load()
+{
 	Json::Value root;
-	if (!loadJson(root))
+
+	if (!LoadJson(root))
 		return false;
 
-	try {
+	try
+	{
 		Json::Value clientInfoListRoot = root["client"];
 
-		for (int i = 0; i < clientInfoListRoot.size(); ++i) {
+		for (int i = 0; i < clientInfoListRoot.size(); ++i)
+		{
 			Value& clientRoot = clientInfoListRoot[i];
-			ClientInfo* pInfo = dbg_new ClientInfo;
-			readClientInfo(clientRoot, pInfo);
-			addData(pInfo);
+			ClientInfo* pClientInfo = dbg_new ClientInfo;
+			ReadClientInfo(clientRoot, pClientInfo);
+			AddData(pClientInfo);
 		}
 	}
-	catch (std::exception& ex) {
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
+	catch (std::exception& ex)
+	{
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), ex.what());
 		return false;
 	}
 
 	return true;
 }
 
-void ClientInfoLoader::readClientInfo(Json::Value& clientRoot, JCORE_OUT ClientInfo* clientInfo) {
-	clientInfo->Code = clientRoot["code"].asInt();
-	clientInfo->FrameSize.width = clientRoot["frame_width"].asFloat();
-	clientInfo->FrameSize.height = clientRoot["frame_height"].asFloat();
-	clientInfo->GameResolutionSize.width = clientRoot["game_resolution_width"].asFloat();
-	clientInfo->GameResolutionSize.height = clientRoot["game_resolution_height"].asFloat();
-	clientInfo->GameResolutionPolicy = (ResolutionPolicy)clientRoot["game_resolution_policy"].asInt();
-	clientInfo->Resizable = clientRoot["resizable"].asBool();
-	clientInfo->FullScreen = clientRoot["fullscreen"].asBool();
+//////////////////////////////////////////////////////////////////////////////////////////
+void ClientInfoLoader::ReadClientInfo(Json::Value& _clientRoot, JCORE_OUT ClientInfo* _pClientInfo)
+{
+	_pClientInfo->code_ = _clientRoot["code"].asInt();
+	_pClientInfo->frameSize_.width = _clientRoot["frame_width"].asFloat();
+	_pClientInfo->frameSize_.height = _clientRoot["frame_height"].asFloat();
+	_pClientInfo->gameResolutionSize_.width = _clientRoot["game_resolution_width"].asFloat();
+	_pClientInfo->gameResolutionSize_.height = _clientRoot["game_resolution_height"].asFloat();
+	_pClientInfo->gameResolutionPolicy_ = static_cast<ResolutionPolicy>(_clientRoot["game_resolution_policy"].asInt());
+	_pClientInfo->resizable_ = _clientRoot["resizable"].asBool();
+	_pClientInfo->fullScreen_ = _clientRoot["fullscreen"].asBool();
 
-
-	clientInfo->UIScaleXFactor = clientInfo->GameResolutionSize.width / clientInfo->UIResolutionSize.width;
-	clientInfo->UIScaleYFactor = clientInfo->GameResolutionSize.height / clientInfo->UIResolutionSize.height;
+	_pClientInfo->uiScaleXFactor_ = _pClientInfo->gameResolutionSize_.width / _pClientInfo->uiResolutionSize_.width;
+	_pClientInfo->uiScaleYFactor_ = _pClientInfo->gameResolutionSize_.height / _pClientInfo->uiResolutionSize_.height;
 }

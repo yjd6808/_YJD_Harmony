@@ -13,7 +13,7 @@ struct ActorRect
 	SGRect ThicknessRect;
 	SGRect BodyRect;
 
-	bool isCollide(const ActorRect& rect, SpriteDirection_t& otherHitDirection, SGRect& hitRect);
+	bool isCollide(const ActorRect& _rect, SpriteDirection_t& _otherHitDirection, SGRect& _hitRect);
 };
 
 struct HitInfo
@@ -24,4 +24,3 @@ struct HitInfo
 	SGRect HitRect;
 	AttackDataInfo* AttackDataInfo;
 };
-

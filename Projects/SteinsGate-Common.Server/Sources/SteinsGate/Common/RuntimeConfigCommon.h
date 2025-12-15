@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <SteinsGate/Common/RuntimeConfigBase.h>
@@ -15,7 +14,6 @@ struct RuntimeConfigCommon : RuntimeConfigBase
 	RuntimeConfigCommon();
 	~RuntimeConfigCommon() override;
 
-	void ReadCommon(Json::Value& root);
-	void WriteCommon(Json::Value& root);
+	void ReadCommon(Json::Value& _jsonRoot);
+	void WriteCommon(Json::Value& _jsonRoot);
 };
-

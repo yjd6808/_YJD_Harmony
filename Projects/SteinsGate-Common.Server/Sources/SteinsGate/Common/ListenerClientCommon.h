@@ -16,10 +16,11 @@
 class JCORE_NOVTABLE ListenerClientCommon : public ListenerClientBase
 {
 protected:
-	ListenerClientCommon(JNetwork::CommandParser* parser);
+	ListenerClientCommon(JNetwork::CommandParser* _pParser);
 
-	void OnReceived(JNetwork::Session* session, JNetwork::ICommand* recvCmd) override;
-	void OnReceived(JNetwork::Session* session, JNetwork::RecvedCommandPacket* recvPacket) override;
+	void OnReceived(JNetwork::Session* _pSession, JNetwork::ICommand* _pRecvCmd) override;
+	void OnReceived(JNetwork::Session* _pSession, JNetwork::RecvedCommandPacket* _pRecvPacket) override;
+
 public:
-	JNetwork::CommandParser* Parser;
+	JNetwork::CommandParser* pParser_;
 };

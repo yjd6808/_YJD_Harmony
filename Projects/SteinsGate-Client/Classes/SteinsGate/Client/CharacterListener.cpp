@@ -5,15 +5,17 @@
  *
  */
 
-
 #include "Tutturu.h"
 #include "GameCoreHeader.h"
 #include "CharacterListener.h"
 
-void CharacterListener::onCleanUp() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CharacterListener::onCleanUp()
+{
 	IActorListener::onCleanUp();
 
-	if (m_pCharacter->hasCleanUpFlag(Actor::CF_ReleaseActorSprite)) {
+	if (m_pCharacter->hasCleanUpFlag(Actor::CF_ReleaseActorSprite))
+	{
 		m_pCharacter->releaseActorSprite();
 	}
 }

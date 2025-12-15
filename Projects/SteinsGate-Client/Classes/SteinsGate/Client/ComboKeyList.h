@@ -17,18 +17,18 @@ struct ComboKeyList
 {
 public:
 	ComboKeyList();
-	ComboKeyList(std::initializer_list<ControlKey_t> list);
-	ComboKeyList(const ComboKeyList& other);
-	ComboKeyList& operator=(const ComboKeyList& other);
+	ComboKeyList(std::initializer_list<ControlKey_t> _list);
+	ComboKeyList(const ComboKeyList& _other);
+	ComboKeyList& operator=(const ComboKeyList& _other);
 
-	bool operator==(const ComboKeyList& other) const;
-	bool operator!=(const ComboKeyList& other) const;
+	bool operator==(const ComboKeyList& _other) const;
+	bool operator!=(const ComboKeyList& _other) const;
 
-	ControlKey_t& operator[](int idx);
-	void set(int idx, ControlKey_t key);
+	ControlKey_t& operator[](int _idx);
+	void set(int _idx, ControlKey_t _key);
 
-	ControlKey_t at(int idx) const;
-	ComboKeyList reverse() const;		// 좌, 우 방향키 반전 후 반환
+	ControlKey_t at(int _idx) const;
+	ComboKeyList reverse() const; // 좌, 우 방향키 반전 후 반환
 	SGString string() const;
 	int count() const;
 

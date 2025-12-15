@@ -16,38 +16,45 @@
 USING_NS_JS;
 USING_NS_JC;
 
-EffectInfoLoader::EffectInfoLoader(DataManagerAbstract* manager)
-	: ConfigFileLoaderAbstract(manager)
-{}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+EffectInfoLoader::EffectInfoLoader(DataManagerAbstract* _pManager)
+: ConfigFileLoaderAbstract(_pManager)
+{
+}
 
-bool EffectInfoLoader::load() {
+////////////////////////////////////////////////////////////////////////////////////////////////////
+bool EffectInfoLoader::Load()
+{
 	Json::Value root;
 
-	if (!loadJson(root))
+	if (!LoadJson(root))
 		return false;
 
-	try {
+	try
+	{
 		Value& effectListRoot = root["effect"];
 
-		for (int i = 0; i < effectListRoot.size(); ++i) {
-			Value& effectRoot = effectListRoot[i];
-			EffectInfo* pInfo = dbg_new EffectInfo();
-			readEffectInfo(effectRoot, pInfo);
-			addData(pInfo);
+		for (int effectIndex = 0; effectIndex < effectListRoot.size(); ++effectIndex)
+		{
+			Value& effectRoot = effectListRoot[effectIndex];
+			EffectInfo* pEffectInfo = dbg_new EffectInfo();
+			ReadEffectInfo(effectRoot, pEffectInfo);
+			AddData(pEffectInfo);
 		}
 	}
-	catch (std::exception& ex) {
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
+	catch (std::exception& ex)
+	{
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), ex.what());
 		return false;
 	}
 
 	return true;
 }
 
-
-
-void EffectInfoLoader::readEffectInfo(Json::Value& effectRoot, EffectInfo* effectInfo) {
-	effectInfo->Code = effectRoot["code"].asInt();
-	effectInfo->Name = JsonUtilEx::getString(effectRoot["name"]);
-	JsonUtilEx::parseActorSpriteData(effectRoot["actor_sprite_data"], &effectInfo->SpriteData);
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void EffectInfoLoader::ReadEffectInfo(Json::Value& _effectRoot, EffectInfo* _pEffectInfo)
+{
+	_pEffectInfo->code_ = _effectRoot["code"].asInt();
+	_pEffectInfo->name_ = JsonUtilEx::GetString(_effectRoot["name"]);
+	JsonUtilEx::ParseActorSpriteData(_effectRoot["actor_sprite_data"], &_pEffectInfo->pSpriteData_);
 }

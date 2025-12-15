@@ -15,24 +15,23 @@ class Character : public Actor
 {
 public:
 	Character();
-	Character(CharBaseInfo* charInfo, const VisualInfo& visualInfo);
+	Character(CharBaseInfo* _pCharInfo, const VisualInfo& _visualInfo);
 	~Character() override;
 
-	static Character* create(CharBaseInfo* charInfo, const VisualInfo& visualInfo);
+	static Character* create(CharBaseInfo* _pCharInfo, const VisualInfo& _visualInfo);
 
 	void initialize() override;
-	void initActorSpriteData(const VisualInfo& visualInfo);
+	void initActorSpriteData(const VisualInfo& _visualInfo);
 	void initActorSprite() override;
 	void initListeners() override;
 	void initComponents() override;
 
 	CharBaseInfo* getBaseInfo();
-	int getCode() override { return m_pBaseInfo->Code; }
+	int getCode() override { return m_pBaseInfo->code_; }
 	ActorType_t getType() const override { return ActorType::Character; }
+
 protected:
 	CharBaseInfo* m_pBaseInfo;
 	VisualInfo m_VisualInfo;
 	ActorSpriteData* m_pSpriteData;
 };
-
-

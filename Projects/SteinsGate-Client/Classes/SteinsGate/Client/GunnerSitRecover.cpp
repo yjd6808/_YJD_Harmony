@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/1/2023 7:02:29 PM
  * =====================
@@ -11,22 +11,27 @@
 #include <SteinsGate/Client/HostPlayer.h>
 #include <SteinsGate/Client/Define_Animation.h>
 
-GunnerSitRecover::GunnerSitRecover(HostPlayer* player, ActionInfo* actionInfo)
-	: GunnerAction(player, actionInfo)
+//////////////////////////////////////////////////////////////////////////////////////////
+GunnerSitRecover::GunnerSitRecover(HostPlayer* _pPlayer, ActionInfo* _pActionInfo)
+: GunnerAction(_pPlayer, _pActionInfo)
 {
 }
 
-void GunnerSitRecover::onActionBegin() {
-	m_fElaspedSitTime = 0.0f;
-	m_fRecoverSitTime = m_pBaseInfo->DownRecoverTime / 2.0f;
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerSitRecover::onActionBegin()
+{
+	elapsedSitTime_ = 0.0f;
+	recoverSitTime_ = m_pBaseInfo->downRecoverTime_ / 2.0f;
 	m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_SIT);
 }
 
-void GunnerSitRecover::onUpdate(float dt) {
-	m_fElaspedSitTime += dt;
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerSitRecover::onUpdate(float _dt)
+{
+	elapsedSitTime_ += _dt;
 
-	if (m_fElaspedSitTime >= m_fRecoverSitTime) {
+	if (elapsedSitTime_ >= recoverSitTime_)
+	{
 		stop();
 	}
 }
-

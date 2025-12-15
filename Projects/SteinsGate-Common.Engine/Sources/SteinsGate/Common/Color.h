@@ -9,33 +9,37 @@
 class ColorUtil
 {
 public:
-	static cocos2d::Color3B Parse3B(Int32U hex) {
-		GLubyte r = (hex >> 16) & 0xff;
-		GLubyte g = (hex >>  8) & 0xff;
-		GLubyte b = (hex >>  0) & 0xff;
+	static cocos2d::Color3B Parse3B(Int32U _hex)
+	{
+		GLubyte r = (_hex >> 16) & 0xff;
+		GLubyte g = (_hex >> 8) & 0xff;
+		GLubyte b = (_hex >> 0) & 0xff;
 		return { r, g, b };
 	}
 
-	static cocos2d::Color4B To4B(const cocos2d::Color3B& _3bColor) {
-		return { _3bColor.r, _3bColor.g, _3bColor.b, 255 };
+	static cocos2d::Color4B To4B(const cocos2d::Color3B& _color3B)
+	{
+		return { _color3B.r, _color3B.g, _color3B.b, 255 };
 	}
 
-	static cocos2d::Color3B To3B(const cocos2d::Color4B& _4bColor) {
-		return { _4bColor.r, _4bColor.g, _4bColor.b  };
+	static cocos2d::Color3B To3B(const cocos2d::Color4B& _color4B)
+	{
+		return { _color4B.r, _color4B.g, _color4B.b };
 	}
 
-	static Int32U ToIn32U(const cocos2d::Color3B& _3bColor) {
-		Int32U color;
-		color |= _3bColor.r << 16;
-		color |= _3bColor.g << 8;
-		color |= _3bColor.b << 0;
+	static Int32U ToIn32U(const cocos2d::Color3B& _color3B)
+	{
+		Int32U color = 0;
+		color |= _color3B.r << 16;
+		color |= _color3B.g << 8;
+		color |= _color3B.b << 0;
 		return color;
 	}
 
-	static cocos2d::Color3B To3B(const Int32U _int32uColor) {
-		return cocos2d::Color3B((_int32uColor >> 16) & 0xff,
-						(_int32uColor >> 8) & 0xff,
-						(_int32uColor >> 0) & 0xff );
+	static cocos2d::Color3B To3B(const Int32U _int32UColor) {
+		return cocos2d::Color3B((_int32UColor >> 16) & 0xff,
+						(_int32UColor >> 8) & 0xff,
+						(_int32UColor >> 0) & 0xff );
 	}
 
 };

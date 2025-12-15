@@ -12,20 +12,23 @@
 
 #include <SteinsGate/Common/UnauthenticatedSessionManager.h>
 
-void ServerContents::Initialize() {
-	if (Core::ServerProcessInfo->ProcessType == ServerProcessType::Auth) {
-		
+//////////////////////////////////////////////////////////////////////////////////////////
+void ServerContents::Initialize()
+{
+	if (Core::ServerProcessInfo->processType_ == ServerProcessType::Auth)
+	{
 	}
-
-	else if (Core::ServerProcessInfo->ProcessType == ServerProcessType::Lobby) {
+	else if (Core::ServerProcessInfo->processType_ == ServerProcessType::Lobby)
+	{
 		UnauthenticatedSessionManager = UnauthenticatedSessionManager::CreateInstance();
 	}
-
-	else if (Core::ServerProcessInfo->ProcessType == ServerProcessType::Game) {
-
+	else if (Core::ServerProcessInfo->processType_ == ServerProcessType::Game)
+	{
 	}
 }
 
-void ServerContents::Finalize() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ServerContents::Finalize()
+{
 	JCORE_DELETE_SAFE(UnauthenticatedSessionManager);
 }

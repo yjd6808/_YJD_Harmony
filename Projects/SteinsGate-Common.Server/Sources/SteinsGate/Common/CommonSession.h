@@ -16,23 +16,25 @@ class CommonSession : public JNetwork::TcpSession
 {
 public:
 	CommonSession(
-		JNetwork::TcpServer* server,
-		const JNetwork::IOCPPtr& iocp,
-		const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-		int recvBufferSize,
-		int sendBufferSize
-	);
+		JNetwork::TcpServer* _pServer,
+		const JNetwork::IOCPPtr& _pIocp,
+		const JCore::MemoryPoolAbstractPtr& _pBufferAllocator,
+		int _recvBufferSize,
+		int _sendBufferSize);
 
-	bool AddComponent(IComponent* component);
-	bool HasComponent(int type);
+	bool AddComponent(IComponent* _pComponent);
+	bool HasComponent(int _type);
 
 	template <typename TComponent>
-	TComponent* GetComponent(bool addRef = false) const { return m_Components.Get<TComponent>(addRef); }
+	TComponent* GetComponent(bool _addRef = false) const
+	{
+		return components_.Get<TComponent>(_addRef);
+	}
 
 	void OnCreated() override;
 	void OnConnected() override;
 	void OnDisconnected() override;
-protected:
-	ComponentCollection m_Components;
-};
 
+protected:
+	ComponentCollection components_;
+};

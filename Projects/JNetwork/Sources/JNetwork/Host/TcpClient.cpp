@@ -38,9 +38,9 @@ TcpClient::~TcpClient()
 static StaticPacket<GenericCommand<int>, GenericCommand<int>>* GenerateTestDummyPacket()
 {
 	auto* pDummyPacket = dbg_new StaticPacket<GenericCommand<int>, GenericCommand<int>>;
-	pDummyPacket->Get<0>()->SetCommand(1);
+	pDummyPacket->Get<0>()->SetId(1);
 	pDummyPacket->Get<0>()->value_ = 2;
-	pDummyPacket->Get<1>()->SetCommand(3);
+	pDummyPacket->Get<1>()->SetId(3);
 	pDummyPacket->Get<1>()->value_ = 4;
 	pDummyPacket->AddRef();
 	return pDummyPacket;

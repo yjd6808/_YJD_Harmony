@@ -8,7 +8,8 @@
 #include "Tutturu.h"
 #include "HitActivity.h"
 
-HitActivity::HitActivity(Actor* actor)
-	: AIActivity(actor, AIActivityType::Hit)
-{}
-
+//////////////////////////////////////////////////////////////////////////////////////////
+HitActivity::HitActivity(Actor* _pActor)
+: AIActivity(_pActor, AIActivityType::Hit)
+{
+}

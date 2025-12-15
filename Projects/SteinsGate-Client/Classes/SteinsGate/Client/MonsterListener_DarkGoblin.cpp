@@ -1,10 +1,9 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/2/2023 10:30:26 AM
  * =====================
  *
  */
-
 
 #include "Tutturu.h"
 #include "GameCoreHeader.h"
@@ -19,16 +18,18 @@
 #include <SteinsGate/Client/FallDownActivity_Goblin.h>
 #include <SteinsGate/Client/SitActivity_Goblin.h>
 
-void MonsterListener_DarkGoblin::onCreated() {
-	AIComponent* pAIComponent = m_pMonster->getComponent<AIComponent>();
+//////////////////////////////////////////////////////////////////////////////////////////
+void MonsterListener_DarkGoblin::onCreated()
+{
+	AIComponent* pAiComponent = m_pMonster->getComponent<AIComponent>();
 
-	if (!pAIComponent)
+	if (!pAiComponent)
 		return;
 
-	pAIComponent->setWalkActivity(dbg_new WalkActivity_Goblin(m_pMonster));
-	pAIComponent->setIdleActivity(dbg_new IdleActivity_Goblin(m_pMonster));
-	pAIComponent->setAttackActivity(dbg_new AttackActivity_Goblin(m_pMonster));
-	pAIComponent->setHitActivity(dbg_new HitActivity_Goblin(m_pMonster));
-	pAIComponent->setFallDownActivity(dbg_new FallDownActivity_Goblin(m_pMonster));
-	pAIComponent->setSitActivity(dbg_new SitActivity_Goblin(m_pMonster));
+	pAiComponent->setWalkActivity(dbg_new WalkActivity_Goblin(m_pMonster));
+	pAiComponent->setIdleActivity(dbg_new IdleActivity_Goblin(m_pMonster));
+	pAiComponent->setAttackActivity(dbg_new AttackActivity_Goblin(m_pMonster));
+	pAiComponent->setHitActivity(dbg_new HitActivity_Goblin(m_pMonster));
+	pAiComponent->setFallDownActivity(dbg_new FallDownActivity_Goblin(m_pMonster));
+	pAiComponent->setSitActivity(dbg_new SitActivity_Goblin(m_pMonster));
 }

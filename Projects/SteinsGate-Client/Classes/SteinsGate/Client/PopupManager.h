@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <SteinsGate/Client/UI_Popup.h>
@@ -15,89 +14,91 @@ class PopupManager : public JCore::SingletonPointer<PopupManager>
 	friend class TSingleton;
 	PopupManager();
 	~PopupManager();
+
 public:
-	void setWidth(float width);
-	void setPadding(float padding);
+	void setWidth(float _width);
+	void setPadding(float _padding);
 
 	UI_Popup* showYesNo(
-		const std::string& text, 
-		const PopupCallback& yes = nullptr, 
-		const PopupCallback& no = nullptr,
-		bool closeWithEsc = false,
-		float timeout = SG_POPUP_NO_TIMEOUT,
-		const PopupCallback& timeoutFn = nullptr,
-		HAlignment_t halign = HAlignment::Left,
-		VAlignment_t valign = VAlignment::Top
+		const std::string& _text,
+		const PopupCallback& _yes = nullptr,
+		const PopupCallback& _no = nullptr,
+		bool _closeWithEsc = false,
+		float _timeout = SG_POPUP_NO_TIMEOUT,
+		const PopupCallback& _timeoutFn = nullptr,
+		HAlignment_t _halign = HAlignment::Left,
+		VAlignment_t _valign = VAlignment::Top
 	);
 
 	UI_Popup* showYesNo(
-		const std::string& text,
-		int tag,
-		const PopupCallback& yes = nullptr,
-		const PopupCallback& no = nullptr,
-		bool closeWithEsc = false,
-		float timeout = SG_POPUP_NO_TIMEOUT,
-		const PopupCallback& timeoutFn = nullptr,
-		HAlignment_t halign = HAlignment::Left,
-		VAlignment_t valign = VAlignment::Top
-	);
-
-
-	UI_Popup* showOk(
-		const std::string& text,
-		const PopupCallback& ok = nullptr,
-		bool closeWithEsc = true,
-		float timeout = SG_POPUP_NO_TIMEOUT,
-		const PopupCallback& timeoutFn = nullptr,
-		HAlignment_t halign = HAlignment::Left,
-		VAlignment_t valign = VAlignment::Top
+		const std::string& _text,
+		int _tag,
+		const PopupCallback& _yes = nullptr,
+		const PopupCallback& _no = nullptr,
+		bool _closeWithEsc = false,
+		float _timeout = SG_POPUP_NO_TIMEOUT,
+		const PopupCallback& _timeoutFn = nullptr,
+		HAlignment_t _halign = HAlignment::Left,
+		VAlignment_t _valign = VAlignment::Top
 	);
 
 	UI_Popup* showOk(
-		const std::string& text,
-		int tag,
-		const PopupCallback& ok = nullptr,
-		bool closeWithEsc = true,
-		float timeout = SG_POPUP_NO_TIMEOUT,
-		const PopupCallback& timeoutFn = nullptr,
-		HAlignment_t halign = HAlignment::Left,
-		VAlignment_t valign = VAlignment::Top
+		const std::string& _text,
+		const PopupCallback& _ok = nullptr,
+		bool _closeWithEsc = true,
+		float _timeout = SG_POPUP_NO_TIMEOUT,
+		const PopupCallback& _timeoutFn = nullptr,
+		HAlignment_t _halign = HAlignment::Left,
+		VAlignment_t _valign = VAlignment::Top
+	);
+
+	UI_Popup* showOk(
+		const std::string& _text,
+		int _tag,
+		const PopupCallback& _ok = nullptr,
+		bool _closeWithEsc = true,
+		float _timeout = SG_POPUP_NO_TIMEOUT,
+		const PopupCallback& _timeoutFn = nullptr,
+		HAlignment_t _halign = HAlignment::Left,
+		VAlignment_t _valign = VAlignment::Top
 	);
 
 	UI_Popup* showNone(
-		const std::string& text,
-		bool closeWithEsc = false,
-		float timeout = SG_POPUP_NO_TIMEOUT,
-		const PopupCallback& timeoutFn = nullptr,
-		HAlignment_t halign = HAlignment::Center,
-		VAlignment_t valign = VAlignment::Center
+		const std::string& _text,
+		bool _closeWithEsc = false,
+		float _timeout = SG_POPUP_NO_TIMEOUT,
+		const PopupCallback& _timeoutFn = nullptr,
+		HAlignment_t _halign = HAlignment::Center,
+		VAlignment_t _valign = VAlignment::Center
 	);
 
 	UI_Popup* showNone(
-		const std::string& text,
-		int tag,
-		bool closeWithEsc = false,
-		float timeout = SG_POPUP_NO_TIMEOUT,
-		const PopupCallback& timeoutFn = nullptr,
-		HAlignment_t halign = HAlignment::Center, 
-		VAlignment_t valign = VAlignment::Center
+		const std::string& _text,
+		int _tag,
+		bool _closeWithEsc = false,
+		float _timeout = SG_POPUP_NO_TIMEOUT,
+		const PopupCallback& _timeoutFn = nullptr,
+		HAlignment_t _halign = HAlignment::Center,
+		VAlignment_t _valign = VAlignment::Center
 	);
 
-	bool close(UI_Popup* popup);
-	bool closeByTag(int tag);
-	UI_Popup* findByTag(int tag);
+	bool close(UI_Popup* _pPopup);
+	bool closeByTag(int _tag);
+	UI_Popup* findByTag(int _tag);
 	int closeAll();
 	void releaseAll();
 
-	float getWidth() const { return m_fWidth; }
-	float getPadding() const { return m_fPadding; }
+	float getWidth() const { return width_; }
+	float getPadding() const { return padding_; }
+
 protected:
 	UI_Popup* pop();
 	UI_Popup* createPopup();
-private:
-	float m_fWidth;
-	float m_fPadding;
 
-	SGVector<UI_Popup*> m_vOpendList;
-	SGArrayQueue<UI_Popup*> m_qPopupPool;
+private:
+	float width_;
+	float padding_;
+
+	SGVector<UI_Popup*> opendList_;
+	SGArrayQueue<UI_Popup*> popupPool_;
 };

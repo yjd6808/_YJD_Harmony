@@ -4,5 +4,5 @@
 
 struct WndMessage
 {
-	static const char* GetName(int message);
+	static const char* GetName(int _message);
 };

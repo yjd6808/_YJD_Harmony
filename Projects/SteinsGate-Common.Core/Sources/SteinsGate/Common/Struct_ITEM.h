@@ -22,10 +22,10 @@
 
 union ItemCode
 {
-	inline static constexpr int BitCode = 16;	// 65535
-	inline static constexpr int BitDetail1 = 6;		// 64
-	inline static constexpr int BitDetail2 = 4;		// 16
-	inline static constexpr int BitType = 6;		// 64
+	inline static constexpr int BitCode = 16; // 65535
+	inline static constexpr int BitDetail1 = 6; // 64
+	inline static constexpr int BitDetail2 = 4; // 16
+	inline static constexpr int BitType = 6; // 64
 
 	inline static constexpr int BitCodeShift = 0;
 	inline static constexpr int BitDetail1Shift = 16;
@@ -38,15 +38,19 @@ union ItemCode
 	inline static constexpr int BitTypeMask = 0xffffffff & JCore::FillBitRight32<26>();
 
 
-	ItemCode() : Code(InvalidValue_v) {}
-	ItemCode(int Total);	// 얘는 전체 값
-	ItemCode(int Code, ItemType_t Type);
-	ItemCode(int Code, int Detail1, ItemType_t Type);
-	ItemCode(int Code, int Detail1, int Detail2, ItemType_t Type);
+	ItemCode()
+	: Code(InvalidValue_v)
+	{
+	}
 
-	void initAvatarCode(CharType_t charType, AvatarType_t avatarType, int code);
-	void initWeaponCode(CharType_t charType, WeaponType_t weaponType, int code);
-	void initArmorCode(ItemType_t itemType, EquipArmorType_t armorType, int code);
+	ItemCode(int _total); // 얘는 전체 값
+	ItemCode(int _code, ItemType_t _type);
+	ItemCode(int _code, int _detail1, ItemType_t _type);
+	ItemCode(int _code, int _detail1, int _detail2, ItemType_t _type);
+
+	void initAvatarCode(CharType_t _charType, AvatarType_t _avatarType, int _code);
+	void initWeaponCode(CharType_t _charType, WeaponType_t _weaponType, int _code);
+	void initArmorCode(ItemType_t _itemType, EquipArmorType_t _armorType, int _code);
 
 	// 이렇게 유니온 많이 달아도 일반 유니온 1개짜리랑 성능차이가 있을려나?
 	// TODO: 어셈코드 확인해볼 것
@@ -55,9 +59,9 @@ union ItemCode
 	struct
 	{
 		int Code : BitCode;
-		int Detail1 : BitDetail1;		// 아바타 부위 || 갑옷 종류 || 무기 종류
-		int Detail2 : BitDetail2;		// 캐릭터 타입
-		ItemType_t Type : BitType;			// 소모품, 아바타, 무기
+		int Detail1 : BitDetail1; // 아바타 부위 || 갑옷 종류 || 무기 종류
+		int Detail2 : BitDetail2; // 캐릭터 타입
+		ItemType_t Type : BitType; // 소모품, 아바타, 무기
 	} CommonUn;
 
 	struct
@@ -90,7 +94,10 @@ union ItemCode
 
 struct ItemOpt
 {
-	ItemOpt() : Code(InvalidValue_v) {}
+	ItemOpt()
+	: Code(InvalidValue_v)
+	{
+	}
 
 	int Code{};
 };
@@ -105,7 +112,6 @@ struct ItemOptRangeVal : ItemOpt
 	int MinValue{};
 	int MaxValue{};
 };
-
 
 
 struct InvenItem

@@ -27,16 +27,16 @@ class UdpClient;
 NS_JNET_END
 
 NS_CORE_BEGIN
-extern ::CommonNetMaster*			CommonNetMaster;
-extern ::CommonNetGroup*			CommonNetGroup;
-extern ::CommonServer*				CommonServer;
-extern ::RuntimeConfigCommon*		CommonRuntimeConfig;
-extern ::ServerContents*			CommonContents;
+extern ::CommonNetMaster* CommonNetMaster;
+extern ::CommonNetGroup* CommonNetGroup;
+extern ::CommonServer* CommonServer;
+extern ::RuntimeConfigCommon* CommonRuntimeConfig;
+extern ::ServerContents* CommonContents;
 extern ::InterServerClientNetGroup* InterServerClientNetGroup;
-extern ::JNetwork::TcpClient*		InterServerClientTcp;
-extern ::JNetwork::UdpClient*		InterServerClientUdp;
-extern ::ServerProcessInfo*			ServerProcessInfo;
-extern ::TimeManager*				TimeManager;
+extern ::JNetwork::TcpClient* InterServerClientTcp;
+extern ::JNetwork::UdpClient* InterServerClientUdp;
+extern ::ServerProcessInfo* ServerProcessInfo;
+extern ::TimeManager* TimeManager;
 NS_CORE_END
 
 void InitializeServerCore();

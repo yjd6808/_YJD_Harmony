@@ -23,7 +23,7 @@ GridLayer::~GridLayer() {
 GridLayer * GridLayer::create(const int interval, const Color4F & color, const GridEvent userGridEvent)
 {
 	GridLayer *layer = dbg_new GridLayer(interval, userGridEvent);
-	if (layer && layer->initWithParams(interval, color))
+	if (layer && layer->InitWithParams(interval, color))
 	{
 		layer->autorelease();
 		return layer;
@@ -60,7 +60,7 @@ void GridLayer::DrawGridWindow(const int interval, const Color4F& color) {
 	this->addChild(m_pDrawNode, 0);
 }
 
-bool GridLayer::initWithParams(const int interval, const Color4F & color)
+bool GridLayer::InitWithParams(const int interval, const Color4F & color)
 {
 	if (!Layer::init())
 		return false;
@@ -75,7 +75,7 @@ bool GridLayer::initWithParams(const int interval, const Color4F & color)
 	if (userGridEvent == GridEvent::ShowGridAndMousePoint || userGridEvent == GridEvent::ShowMousePoint)
 	{
 		EventListenerMouse* listner = EventListenerMouse::create();
-		listner->onMouseMove = CC_CALLBACK_1(GridLayer::onMouseMove, this);
+		listner->onMouseMove = CC_CALLBACK_1(GridLayer::OnMouseMove, this);
 		_eventDispatcher->addEventListenerWithSceneGraphPriority(listner, this);
 
 		EventListenerTouchOneByOne* listnerTouch = EventListenerTouchOneByOne::create();
@@ -107,7 +107,7 @@ bool GridLayer::initWithParams(const int interval, const Color4F & color)
 	return true;
 }
 
-bool GridLayer::onMouseMove(cocos2d::Event* event)
+bool GridLayer::OnMouseMove(cocos2d::Event* event)
 {
 	if (userGridEvent == GridEvent::ShowGridAndMousePoint || userGridEvent == GridEvent::ShowMousePoint)
 	{

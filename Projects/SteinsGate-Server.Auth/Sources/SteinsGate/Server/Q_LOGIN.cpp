@@ -14,37 +14,45 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-void Q_LOGIN::SelectAccountInfoList(const char* accountId) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void Q_LOGIN::SelectAccountInfoList(const char* _pAccountId)
+{
 	Qry::SelectAccountInfoListResult result;
 	Qry::SelectAccountInfoList::Execute<THelper>(Core::GameDB, result);
 
-	do {
+	do
+	{
 
 	} while (result.FetchNextRow());
 }
 
-bool Q_LOGIN::RegisterAccount(const char* accountId, const char* accountPass) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Q_LOGIN::RegisterAccount(const char* _pAccountId, const char* _pAccountPass)
+{
 	Qry::InsertResult result;
-	Qry::InsertAccountInfo::Execute<THelper>(Core::GameDB, result, accountId, accountPass);
+	Qry::InsertAccountInfo::Execute<THelper>(Core::GameDB, result, _pAccountId, _pAccountPass);
 	return IsSuccess;
 }
 
-bool Q_LOGIN::SelectAccountInfo(const char* accountId, JCORE_OUT AccountData& accountData) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Q_LOGIN::SelectAccountInfo(const char* _pAccountId, JCORE_OUT AccountData& _accountData)
+{
 	Qry::SelectAccountInfoResult result;
-	Qry::SelectAccountInfo::Execute<THelper>(Core::GameDB, result, accountId);
+	Qry::SelectAccountInfo::Execute<THelper>(Core::GameDB, result, _pAccountId);
 
 	// 쿼리는 성공했지만 바인딩된 결과물이 없으면 실패로 간주
 	if (!IsSuccess || !result.HasBindedResult)
 		return false;
 
-	if (result.LastServer < GameServerType::Begin || result.LastServer > GameServerType::End) {
+	if (result.LastServer < GameServerType::Begin || result.LastServer > GameServerType::End)
+	{
 		DebugAssert(false);
 		return false;
 	}
 
-	accountData.LastLogin = DateTime::Now();
-	accountData.LastServer = (GameServerType_t)result.LastServer;
-	accountData.Id = result.Id;
-	accountData.Pass = result.Pass;
+	_accountData.LastLogin = DateTime::Now();
+	_accountData.LastServer = (GameServerType_t)result.LastServer;
+	_accountData.Id = result.Id;
+	_accountData.Pass = result.Pass;
 	return true;
 }

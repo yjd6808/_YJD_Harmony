@@ -14,10 +14,10 @@
 class AuthServer final : public CommonServer
 {
 public:
-	AuthServer(const JNetwork::IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator);
+	AuthServer(const JNetwork::IOCPPtr& _pIocp, const JCore::MemoryPoolAbstractPtr& _pBufferAllocator);
 
 	SGTcpSession* CreateSession() override;
 	ServerType_t GetServerType() override { return ServerType::Auth; }
 protected:
-	void OnUpdate(const JCore::TimeSpan& elapsed) override;
+	void OnUpdate(const JCore::TimeSpan& _elapsed) override;
 };

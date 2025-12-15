@@ -11,7 +11,6 @@
 #pragma once
 
 
-
 #include <JCore/Assert.h>
 #include <JCore/Time.h>
 #include <JCore/Container/HashMap.h>
@@ -32,73 +31,80 @@ using MysqlQuerySelectPtr = JCore::SharedPtr<MysqlQuerySelect>;
 using MysqlQueryUpdatePtr = JCore::SharedPtr<MysqlQueryUpdate>;
 using MysqlQueryDeletePtr = JCore::SharedPtr<MysqlQueryDelete>;
 using MysqlQueryInsertPtr = JCore::SharedPtr<MysqlQueryInsert>;
+
 class MysqlQuery
 {
 public:
 	static constexpr int StatementPrefixLength = JCore::StringUtil::CTLength("select");
 
-	MysqlQuery(MysqlConnection* conn, const JCore::String& preparedStatement, StatementType type);
+	MysqlQuery(MysqlConnection* _pConn, const JCore::String& _preparedStatement, StatementType _type);
 	virtual ~MysqlQuery() = default;
 
 	// 앞 6글자를 확인해서 어떤 타입의 Statement인지 확인
 	// 문자열이 select로 시작하면 SELECT 타입 - 뭐 이런식
-	static StatementType ParseStatement(const JCore::String& statement);
+	static StatementType ParseStatement(const JCore::String& _statement);
 
 	// 만들면서 동시에 인자를 넣어주도록...
 	template <typename... Args>
-	static MysqlQueryPtr Create(MysqlConnection* conn, const JCore::String& statement, Args&&... args) {
-		const JCore::String preparedStatement = MysqlStatementBuilder::Build(statement, JCore::Forward<Args>(args)...);
+	static MysqlQueryPtr Create(MysqlConnection* _pConn, const JCore::String& _statement, Args&&... _args)
+	{
+		const JCore::String preparedStatement =
+			MysqlStatementBuilder::Build(_statement, JCore::Forward<Args>(_args)...);
 
 		if (preparedStatement == "")
 			return nullptr;
 
-		MysqlQueryPtr spQuery;
+		MysqlQueryPtr query;
 
-		switch (ParseStatement(preparedStatement)) {
-		case StatementType::Select: 
-			spQuery = JCore::MakeShared<MysqlQuerySelect>(conn, preparedStatement, StatementType::Select);
+		switch (ParseStatement(preparedStatement))
+		{
+		case StatementType::Select:
+			query = JCore::MakeShared<MysqlQuerySelect>(_pConn, preparedStatement, StatementType::Select);
 			break;
 		case StatementType::Update:
-			spQuery = JCore::MakeShared<MysqlQueryUpdate>(conn, preparedStatement, StatementType::Update);
+			query = JCore::MakeShared<MysqlQueryUpdate>(_pConn, preparedStatement, StatementType::Update);
 			break;
 		case StatementType::Delete:
-			spQuery = JCore::MakeShared<MysqlQueryDelete>(conn, preparedStatement, StatementType::Delete);
+			query = JCore::MakeShared<MysqlQueryDelete>(_pConn, preparedStatement, StatementType::Delete);
 			break;
-		case StatementType::Insert: 
-			spQuery = JCore::MakeShared<MysqlQueryInsert>(conn, preparedStatement, StatementType::Insert);
+		case StatementType::Insert:
+			query = JCore::MakeShared<MysqlQueryInsert>(_pConn, preparedStatement, StatementType::Insert);
 			break;
 		default:
 			DebugAssertMsg(false, "올바르지 않은 스테이트먼트입니다.");
 		}
 
 
-		return spQuery;
+		return query;
 	}
 
-	MysqlConnection* GetConnection() const { return m_pConn; }
+	MysqlConnection* GetConnection() const { return conn_; }
 	virtual bool Execute() = 0;
 
-	bool IsSuccess() const { return m_iErrorCode == 0; }
-	bool IsFailed() const { return m_iErrorCode != 0; }
-	int GetErrorCode() const { return m_iErrorCode; }
+	bool IsSuccess() const { return errorCode_ == 0; }
+	bool IsFailed() const { return errorCode_ != 0; }
+	int GetErrorCode() const { return errorCode_; }
 
 	// Insert Update Delete는 영향받은 행 수를 반환한다.
 	virtual Int32U GetRowCount() const;
 
-	StatementType GetStatementType() { return m_eType; }
+	StatementType GetStatementType() { return statementType_; }
+
 protected:
-	StatementType m_eType;
-	MysqlConnection* m_pConn;
-	JCore::String m_PreparedStatement;
-	int m_iErrorCode;
+	StatementType statementType_;
+	MysqlConnection* conn_;
+	JCore::String preparedStatement_;
+	int errorCode_;
 };
 
 class MysqlQueryUpdate : public MysqlQuery
 {
 public:
-	MysqlQueryUpdate(MysqlConnection* conn, const JCore::String& preparedStatement, StatementType type)
-		: MysqlQuery(conn, preparedStatement, type)
-	{}
+	MysqlQueryUpdate(MysqlConnection* _pConn, const JCore::String& _preparedStatement, StatementType _type)
+	: MysqlQuery(_pConn, _preparedStatement, _type)
+	{
+	}
+
 	~MysqlQueryUpdate() override = default;
 
 	bool Execute() override;
@@ -107,9 +113,11 @@ public:
 class MysqlQueryDelete : public MysqlQuery
 {
 public:
-	MysqlQueryDelete(MysqlConnection* conn, const JCore::String& preparedStatement, StatementType type)
-		: MysqlQuery(conn, preparedStatement, type)
-	{}
+	MysqlQueryDelete(MysqlConnection* _pConn, const JCore::String& _preparedStatement, StatementType _type)
+	: MysqlQuery(_pConn, _preparedStatement, _type)
+	{
+	}
+
 	~MysqlQueryDelete() override = default;
 
 	bool Execute() override;
@@ -118,16 +126,19 @@ public:
 class MysqlQueryInsert : public MysqlQuery
 {
 public:
-	MysqlQueryInsert(MysqlConnection* conn, const JCore::String& preparedStatement, StatementType type)
-		: MysqlQuery(conn, preparedStatement, type)
-		, m_uiInsertId(0)
-	{}
+	MysqlQueryInsert(MysqlConnection* _pConn, const JCore::String& _preparedStatement, StatementType _type)
+	: MysqlQuery(_pConn, _preparedStatement, _type)
+	, insertId_(0)
+	{
+	}
+
 	~MysqlQueryInsert() override = default;
 
 	bool Execute() override;
-	Int64U GetInsertId() const { return m_uiInsertId; }
+	Int64U GetInsertId() const { return insertId_; }
+
 private:
-	Int64U m_uiInsertId;
+	Int64U insertId_;
 };
 
 // 기존의 모든 행 로딩 방식에서 Lazy Loading 방식으로 변경
@@ -136,41 +147,45 @@ private:
 class MysqlQuerySelect : public MysqlQuery
 {
 public:
-	MysqlQuerySelect(MysqlConnection* conn, const JCore::String& preparedStatement, StatementType type)
-		: MysqlQuery(conn, preparedStatement, type)
-		, m_SqlResult(nullptr)
-		, m_SqlRow(nullptr)
-	{}
+	MysqlQuerySelect(MysqlConnection* _pConn, const JCore::String& _preparedStatement, StatementType _type)
+	: MysqlQuery(_pConn, _preparedStatement, _type)
+	, sqlResult_(nullptr)
+	, sqlRow_(nullptr)
+	{
+	}
+
 	~MysqlQuerySelect() override;
 
 	bool Execute() override;
 	bool HasNext() const;
 	bool Next();
 
-	int GetFieldIndex(const char* fieldName);
-	const char* GetRawString(const char* fieldName);
+	int GetFieldIndex(const char* _pFieldName);
+	const char* GetRawString(const char* _pFieldName);
 
 	// 잘못된 필드를 주입하거나, 해당 행의 필드가 비어있는 경우(NULL)인경우 JCore::String(0)반환
-	JCore::String GetString(const char* fieldName);
-	JCore::DateTime GetDateTime(const char* fieldName);
+	JCore::String GetString(const char* _pFieldName);
+	JCore::DateTime GetDateTime(const char* _pFieldName);
 
 	template <typename TInteger>
-	bool TryGetNumber(const char* fieldName, TInteger& val, TInteger defaultValue = 0) {
-		const char* pRawString = GetRawString(fieldName);
+	bool TryGetNumber(const char* _pFieldName, TInteger& _val, TInteger _defaultValue = 0)
+	{
+		const char* pRawString = GetRawString(_pFieldName);
 
-		if (pRawString == nullptr) {
-			val = defaultValue;
+		if (pRawString == nullptr)
+		{
+			_val = _defaultValue;
 			return false;
 		}
 
 		return JCore::StringUtil::ToNumber<TInteger>(pRawString);
 	}
 
-	
 
 	template <typename TInteger>
-	TInteger GetNumber(const char* fieldName) {
-		const char* pRawString = GetRawString(fieldName);
+	TInteger GetNumber(const char* _pFieldName)
+	{
+		const char* pRawString = GetRawString(_pFieldName);
 		if (pRawString == nullptr) return 0;
 		return JCore::StringUtil::ToNumber<TInteger>(pRawString);
 	}
@@ -179,9 +194,8 @@ public:
 	Int32U GetFieldCount() const;
 
 private:
-	MYSQL_RES*	m_SqlResult;
-	MYSQL_ROW	m_SqlRow;
+	MYSQL_RES* sqlResult_;
+	MYSQL_ROW sqlRow_;
 
-	JCore::HashMap<JCore::String, int> m_hFieldList;
+	JCore::HashMap<JCore::String, int> fieldList_;
 };
-

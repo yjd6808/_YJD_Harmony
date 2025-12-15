@@ -106,9 +106,22 @@ constexpr S case4 CASE_4(1, 2);		// constexpr S case4{1, 2};로 확장됨
 
 constexpr S case5 CASE_5(1, 2);		// constexpr S case5{1, 2};로 확장됨
 
-int main() {
+struct CtorV
+{
+	CtorV(int _v) { value_ = _v; }
+
+	int value_ = 0;
+};
+
+
+
+int main() 
+{
 	InitializeJCore();
 	InitializeDefaultLogger();
+
+
+	TreeMap<int, CtorV> sss;
 
 	int fsef[5];
 

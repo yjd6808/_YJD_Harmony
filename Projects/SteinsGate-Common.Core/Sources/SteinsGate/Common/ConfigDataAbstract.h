@@ -14,6 +14,5 @@ struct ConfigDataAbstract
 {
 	virtual ~ConfigDataAbstract() = default;
 
-	int Code;
+	int code_;
 };
-

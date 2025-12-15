@@ -1,5 +1,5 @@
 /*
- * 작성자: 윤정도
+ * 작성자: 윤정도
  * 생성일: 2/21/2023 7:01:42 AM
  * =====================
  *
@@ -14,14 +14,14 @@
 struct ServerInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	ServerInfoLoader(DataManagerAbstract* manager);
-	virtual ~ServerInfoLoader() override = default;
+	ServerInfoLoader(DataManagerAbstract* _pManager);
+	~ServerInfoLoader() override = default;
 
-	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Server; }
-	bool load() override;
+	ConfigFileType_t GetConfigFileType() override { return ConfigFileType::Server; }
+	bool Load() override;
 
-	static void readCenterInfo(Json::Value& serverRoot, JCORE_OUT ServerProcessInfoPackage* serverInfo);
-	static void readAuthInfo(Json::Value& serverRoot, JCORE_OUT ServerProcessInfoPackage* serverInfo);
-	static void readLobbyInfo(Json::Value& serverRoot, JCORE_OUT ServerProcessInfoPackage* serverInfo);
-	static void readGameInfo(Json::Value& serverRoot, JCORE_OUT ServerProcessInfoPackage* serverInfo);
+	static void ReadCenterInfo(Json::Value& _serverRoot, JCORE_OUT ServerProcessInfoPackage* _pServerInfo);
+	static void ReadAuthInfo(Json::Value& _serverRoot, JCORE_OUT ServerProcessInfoPackage* _pServerInfo);
+	static void ReadLobbyInfo(Json::Value& _serverRoot, JCORE_OUT ServerProcessInfoPackage* _pServerInfo);
+	static void ReadGameInfo(Json::Value& _serverRoot, JCORE_OUT ServerProcessInfoPackage* _pServerInfo);
 };

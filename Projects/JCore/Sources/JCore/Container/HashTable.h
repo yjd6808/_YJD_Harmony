@@ -11,8 +11,6 @@
 #include <JCore/Container/HashTable_Bucket.h>
 
 NS_JC_BEGIN
-
-
 template <typename...>
 class HashTable;
 
@@ -29,11 +27,11 @@ public:
 
 public:
 	HashTable(int _capacity = TABLE_DEFAULT_CAPACITY)
-		: pTable_(nullptr)
-		, pHeadBucket_(nullptr)
-		, pTailBucket_(nullptr)
-		, capacity_(_capacity)
-		, size_(0)
+	: pTable_(nullptr)
+	, pHeadBucket_(nullptr)
+	, pTailBucket_(nullptr)
+	, capacity_(_capacity)
+	, size_(0)
 	{
 		if (capacity_ > 0)
 		{
@@ -44,22 +42,22 @@ public:
 	}
 
 	HashTable(const THashTable& _other)
-		: THashTable(_other.capacity_)
+	: THashTable(_other.capacity_)
 	{
 		operator=(_other);
 	}
 
 	HashTable(THashTable&& _other) noexcept
-		: pTable_(nullptr)
-		, pHeadBucket_(nullptr)
-		, pTailBucket_(nullptr)
+	: pTable_(nullptr)
+	, pHeadBucket_(nullptr)
+	, pTailBucket_(nullptr)
 	{
 		operator=(Move(_other));
 	}
 
 	// 이니셜라이저로 초기화 하는 경우 보통 더 확장안시킬 확률이 크므로.. 맞춤형으로 가자.
 	HashTable(std::initializer_list<TKey> _ilist)
-		: THashTable(static_cast<int>(_ilist.size()) + 1)
+	: THashTable(static_cast<int>(_ilist.size()) + 1)
 	{
 		operator=(_ilist);
 	}
@@ -490,8 +488,8 @@ protected:
 		return size_ == capacity_;
 	}
 
-	static constexpr Int32U TABLE_EXPANDING_FACTOR = 4;    // 테이블 크기만큼 데이터가 들어가면 확장하는데 몇배나 확장할 지
-	static constexpr Int32U TABLE_DEFAULT_CAPACITY = 16;    // 테이블 초기 크기
+	static constexpr Int32U TABLE_EXPANDING_FACTOR = 4; // 테이블 크기만큼 데이터가 들어가면 확장하는데 몇배나 확장할 지
+	static constexpr Int32U TABLE_DEFAULT_CAPACITY = 16; // 테이블 초기 크기
 
 protected:
 	TBucket* pTable_;
@@ -536,11 +534,11 @@ public:
 	using TKeyValuePair = Pair<TKey, TValue>;
 
 	HashTable(int _capacity = TABLE_DEFAULT_CAPACITY)
-		: pTable_(nullptr)
-		, pHeadBucket_(nullptr)
-		, pTailBucket_(nullptr)
-		, capacity_(_capacity)
-		, size_(0)
+	: pTable_(nullptr)
+	, pHeadBucket_(nullptr)
+	, pTailBucket_(nullptr)
+	, capacity_(_capacity)
+	, size_(0)
 	{
 		if (capacity_ > 0)
 		{
@@ -551,22 +549,22 @@ public:
 	}
 
 	HashTable(const THashTable& _other)
-		: THashTable(_other.capacity_)
+	: THashTable(_other.capacity_)
 	{
 		operator=(_other);
 	}
 
 	HashTable(THashTable&& _other) noexcept
-		: pTable_(nullptr)
-		, pHeadBucket_(nullptr)
-		, pTailBucket_(nullptr)
+	: pTable_(nullptr)
+	, pHeadBucket_(nullptr)
+	, pTailBucket_(nullptr)
 	{
 		operator=(Move(_other));
 	}
 
 	// 이니셜라이저로 초기화 하는 경우 보통 더 확장안시킬 확률이 크므로.. 맞춤형으로 가자.
 	HashTable(std::initializer_list<TKeyValuePair> _ilist)
-		: THashTable(static_cast<int>(_ilist.size()) + 1)
+	: THashTable(static_cast<int>(_ilist.size()) + 1)
 	{
 		operator=(_ilist);
 	}
@@ -671,7 +669,9 @@ public:
 			PushBackNewBucket(&bucket);
 		}
 
-		bucket.EmplaceBack(TKeyValuePair{ static_cast<TKey>(Forward<Ky>(_key)), static_cast<TValue>(Forward<Vy>(_value)) }, hashValue);
+		bucket.EmplaceBack(TKeyValuePair{
+			                   static_cast<TKey>(Forward<Ky>(_key)), static_cast<TValue>(Forward<Vy>(_value))
+		                   }, hashValue);
 		++size_;
 		return true;
 	}
@@ -931,7 +931,7 @@ public:
 			for (int i = 0; i < pCurrentBucket->size_; ++i)
 			{
 				TBucketNode& node = pCurrentBucket->GetAt(i);
-				node.data_.Value->Release();
+				node.data_.value_->Release();
 			}
 
 			pCurrentBucket = pCurrentBucket->pNext_;
@@ -1098,8 +1098,8 @@ protected:
 		return size_ == capacity_;
 	}
 
-	static constexpr Int32U TABLE_EXPANDING_FACTOR = 4;    // 테이블 크기만큼 데이터가 들어가면 확장하는데 몇배나 확장할 지
-	static constexpr Int32U TABLE_DEFAULT_CAPACITY = 16;    // 테이블 초기 크기
+	static constexpr Int32U TABLE_EXPANDING_FACTOR = 4; // 테이블 크기만큼 데이터가 들어가면 확장하는데 몇배나 확장할 지
+	static constexpr Int32U TABLE_DEFAULT_CAPACITY = 16; // 테이블 초기 크기
 
 protected:
 	TBucket* pTable_;

@@ -6,7 +6,6 @@
  */
 
 
-
 #include "Tutturu.h"
 #include "GameCoreHeader.h"
 #include "S_LOBBY.h"
@@ -18,14 +17,18 @@ USING_NS_JC;
 USING_NS_CC;
 USING_NS_JNET;
 
-void S_LOBBY::SEND_CLO_JoinLobby() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void S_LOBBY::SEND_CLO_JoinLobby()
+{
 	const auto sending = SendBegin<CLO_JoinLobby>();
 	const AuthenticationComponent* pAuthenticationComponent = Core::Net->getAuthenticationComponent();
 	sending.Cmd.AccountId = pAuthenticationComponent->getAccountData().Id;
 	sending.Cmd.Serial = pAuthenticationComponent->getSerial();
 }
 
-void S_LOBBY::SEND_CLO_LoadChannelInfo(GameServerType_t serverType) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void S_LOBBY::SEND_CLO_LoadChannelInfo(GameServerType_t _serverType)
+{
 	const auto sending = SendBegin<CLO_LoadChannelInfo>();
-	sending.Cmd.Server = serverType;
+	sending.Cmd.Server = _serverType;
 }

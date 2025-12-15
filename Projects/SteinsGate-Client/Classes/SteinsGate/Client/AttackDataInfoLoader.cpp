@@ -19,19 +19,18 @@ USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 AttackDataInfoLoader::AttackDataInfoLoader(DataManagerAbstract* _pManager, ActorType_t _actorType)
-	: ConfigFileLoaderAbstract(_pManager)
-	, actorType_(_actorType)
+: ConfigFileLoaderAbstract(_pManager)
+, actorType_(_actorType)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool AttackDataInfoLoader::load()
+bool AttackDataInfoLoader::Load()
 {
 	Json::Value root;
 
-	if (!loadJson(root))
+	if (!LoadJson(root))
 		return false;
-
 	try
 	{
 		Json::Value attackDataListRoot = root["attackdata"];
@@ -40,13 +39,13 @@ bool AttackDataInfoLoader::load()
 		{
 			Value& attackDataRoot = attackDataListRoot[i];
 			AttackDataInfo* pInfo = dbg_new AttackDataInfo;
-			readAttackDataInfo(attackDataRoot, pInfo);
-			addData(pInfo);
+			ReadAttackDataInfo(attackDataRoot, pInfo);
+			AddData(pInfo);
 		}
 	}
 	catch (std::exception& ex)
 	{
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), ex.what());
 		return false;
 	}
 
@@ -54,14 +53,14 @@ bool AttackDataInfoLoader::load()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void AttackDataInfoLoader::readAttackDataInfo(Json::Value& _attackDataRoot, AttackDataInfo* _pAttackDataInfo)
+void AttackDataInfoLoader::ReadAttackDataInfo(Json::Value& _attackDataRoot, AttackDataInfo* _pAttackDataInfo)
 {
-	_pAttackDataInfo->Code = _attackDataRoot["code"].asInt();
-	_pAttackDataInfo->Name = JsonUtilEx::getString(_attackDataRoot["name"]);
-	_pAttackDataInfo->AttackDamageType = (AttackDamageType_t)_attackDataRoot["attack_damage_type"].asInt();
-	_pAttackDataInfo->AttackDamageRatio = _attackDataRoot["attack_damage_ratio"].asFloat();
-	_pAttackDataInfo->AttackXForceDir = (AttackXForceDirection_t)_attackDataRoot["attack_x_force_dir"].asInt();
-	_pAttackDataInfo->AttackXForce = _attackDataRoot["attack_x_force"].asFloat();
-	_pAttackDataInfo->AttackYForce = _attackDataRoot["attack_y_force"].asFloat();
-	_pAttackDataInfo->IsFallDownAttack = _attackDataRoot["is_fall_down_attack"].asBool();
+	_pAttackDataInfo->code_ = _attackDataRoot["code"].asInt();
+	_pAttackDataInfo->name_ = JsonUtilEx::GetString(_attackDataRoot["name"]);
+	_pAttackDataInfo->attackDamageType_ = (AttackDamageType_t)_attackDataRoot["attack_damage_type"].asInt();
+	_pAttackDataInfo->attackDamageRatio_ = _attackDataRoot["attack_damage_ratio"].asFloat();
+	_pAttackDataInfo->attackXForceDir_ = (AttackXForceDirection_t)_attackDataRoot["attack_x_force_dir"].asInt();
+	_pAttackDataInfo->attackXForce_ = _attackDataRoot["attack_x_force"].asFloat();
+	_pAttackDataInfo->attackYForce_ = _attackDataRoot["attack_y_force"].asFloat();
+	_pAttackDataInfo->isFallDownAttack_ = _attackDataRoot["is_fall_down_attack"].asBool();
 }

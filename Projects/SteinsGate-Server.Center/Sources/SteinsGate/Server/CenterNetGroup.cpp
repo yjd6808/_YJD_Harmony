@@ -21,15 +21,23 @@
 USING_NS_JC;
 USING_NS_JNET;
 
+//////////////////////////////////////////////////////////////////////////////////////////
 CenterNetGroup::CenterNetGroup()
 	: m_pCenterTcp(nullptr)
 {
 	SetName("센터 메인");
 }
-CenterNetGroup::~CenterNetGroup() {}
 
-SGISessionContainer* CenterNetGroup::GetSessionContainer(ServerType_t type) {
-	if (type == ServerType::Center) {
+//////////////////////////////////////////////////////////////////////////////////////////
+CenterNetGroup::~CenterNetGroup()
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+SGISessionContainer* CenterNetGroup::GetSessionContainer(ServerType_t _type)
+{
+	if (_type == ServerType::Center)
+	{
 		return m_pCenterSessionContainer;
 	}
 
@@ -37,53 +45,66 @@ SGISessionContainer* CenterNetGroup::GetSessionContainer(ServerType_t type) {
 	return nullptr;
 }
 
-CommonSession* CenterNetGroup::GetSessionFromContainer(int handle) {
-	if (!Const::Host::LobbyHandleRange.Contain(handle)) {
-		DebugAssertMsg(false, "올바르지 않은 로비 세션핸들입니다. (%d)", handle);
+//////////////////////////////////////////////////////////////////////////////////////////
+CommonSession* CenterNetGroup::GetSessionFromContainer(int _handle)
+{
+	if (!Const::Host::LobbyHandleRange.Contain(_handle))
+	{
+		DebugAssertMsg(false, "올바르지 않은 로비 세션핸들입니다. (%d)", _handle);
 		return nullptr;
 	}
 
-
-	return dynamic_cast<CommonSession*>(m_pCenterSessionContainer->Get(handle));
+	return dynamic_cast<CommonSession*>(m_pCenterSessionContainer->Get(_handle));
 }
 
-void CenterNetGroup::InitializeBufferPool() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterNetGroup::InitializeBufferPool()
+{
 	CreateBufferPool({});
 }
 
-void CenterNetGroup::InitializeIOCP() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterNetGroup::InitializeIOCP()
+{
 	CreateIocp(8);
 	RunIocp();
 }
 
-void CenterNetGroup::InitializeParser() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterNetGroup::InitializeParser()
+{
 	CommonNetGroup::InitializeParser();
 
 	// SETUP
-	m_pParser->AddCommand<SCE_ItsMe>			(R_SETUP::RECV_SCE_ItsMe);
-    m_pParser->AddCommand<SCE_NotifyBootState>	(R_SETUP::RECV_SCE_NotifyBootState);
+	pParser_->AddCommand<SCE_ItsMe>			(R_SETUP::RECV_SCE_ItsMe);
+	pParser_->AddCommand<SCE_NotifyBootState>	(R_SETUP::RECV_SCE_NotifyBootState);
 
 	// MESSAGE
-	m_pParser->AddCommand<SS_HostMessage>		(R_MESSAGE::RECV_SS_HostMessage);
+	pParser_->AddCommand<SS_HostMessage>		(R_MESSAGE::RECV_SS_HostMessage);
 
 	// PING
-    m_pParser->AddCommand<SCE_TimeSync>			(R_PING::RECV_SCE_TimeSync);
+	pParser_->AddCommand<SCE_TimeSync>			(R_PING::RECV_SCE_TimeSync);
 }
 
-void CenterNetGroup::InitializeServer() {
-	auto spServer = MakeShared<CenterServer>(pIocp_, pBufferPool_);
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterNetGroup::InitializeServer()
+{
+	auto pServer = MakeShared<CenterServer>(m_spIOCP, m_spBufferPool);
 
-	AddHost(Const::Host::CenterTcpId, spServer);
+	AddHost(Const::Host::CenterTcpId, pServer);
 
-	m_pCenterSessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->MaxSessionCount);
+	m_pCenterSessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->maxSessionCount_);
 	m_pCenterSessionContainer->SetInitialHandleSeq(Const::Host::CenterHandleRange.Min);
 
-	m_pCenterTcp = spServer.Get<CenterServer*>();
+	m_pCenterTcp = pServer.Get<CenterServer*>();
 	m_pCenterTcp->SetSesssionContainer(m_pCenterSessionContainer);
-	m_pCenterTcp->SetEventListener(dbg_new ListenerCenterServer{ m_pCenterTcp, m_pParser });
+	m_pCenterTcp->SetEventListener(dbg_new ListenerCenterServer{ m_pCenterTcp, pParser_ });
 
 	AddUpdatable(Const::Host::CenterTcpId, m_pCenterTcp);
 }
 
-void CenterNetGroup::OnUpdate(const TimeSpan& elapsed) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterNetGroup::OnUpdate(const JCore::TimeSpan& _elapsed)
+{
 }
+

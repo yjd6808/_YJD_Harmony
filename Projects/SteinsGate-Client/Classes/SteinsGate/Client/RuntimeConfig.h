@@ -5,24 +5,23 @@
  *
  */
 
-
 #pragma once
 
 #include <SteinsGate/Common/RuntimeConfigBase.h>
 
 struct RuntimeConfig
 	: RuntimeConfigBase
-	, SGSingletonPointer<RuntimeConfig>
+	  , SGSingletonPointer<RuntimeConfig>
 {
 private:
 	friend class TSingleton;
 	RuntimeConfig();
 	~RuntimeConfig() override;
+
 public:
-	void OnLoading(Json::Value& root) override;
-	void OnSaving(Json::Value& root) override;
+	void OnLoading(Json::Value& _root) override;
+	void OnSaving(Json::Value& _root) override;
 
-	void Read(Json::Value& root);
-	void Write(Json::Value& root);
+	void Read(Json::Value& _root);
+	void Write(Json::Value& _root);
 };
-

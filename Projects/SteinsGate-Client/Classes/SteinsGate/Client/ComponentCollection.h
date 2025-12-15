@@ -18,34 +18,35 @@ class ComponentCollection : public IUpdatable
 {
 public:
 	ComponentCollection();
-	ComponentCollection(int capacity);
+	ComponentCollection(int _capacity);
 	~ComponentCollection() override;
 
 	void clear();
-	bool add(IComponent* component);
-	bool has(IComponent::Type type) const;
-	bool remove(IComponent::Type type);
+	bool add(IComponent* _pComponent);
+	bool has(IComponent::Type _type) const;
+	bool remove(IComponent::Type _type);
 	void initialize();
 
 	template <typename TComponent>
-	TComponent* get() const {
+	TComponent* get() const
+	{
 		static_assert(JCore::IsNaturalType_v<TComponent>, "... TComponent must be natural type");
 		static_assert(JCore::IsBaseOf_v<IComponent, TComponent>, "... TComponent must be derived from IComponent");
 
-		IComponent::Type eType = TComponent::type();
-		IComponent** ppFoundComponent = m_hComponentMap.Find(int(eType));
+		IComponent::Type type = TComponent::type();
+		IComponent** pFoundComponent = componentMap_.Find(type);
 
-		if (ppFoundComponent == nullptr) {
+		if (pFoundComponent == nullptr)
+		{
 			return nullptr;
 		}
 
-		return dynamic_cast<TComponent*>(*ppFoundComponent);
+		return dynamic_cast<TComponent*>(*pFoundComponent);
 	}
 
-	void onUpdate(float dt) override;
+	void onUpdate(float _dt) override;
+
 private:
-	JCore::HashMap<int, IComponent*> m_hComponentMap;
-	JCore::Vector<IUpdatable*> m_vUpdatables;
+	JCore::HashMap<int, IComponent*> componentMap_;
+	JCore::Vector<IUpdatable*> updatables_;
 };
-
-

@@ -17,53 +17,63 @@
 
 
 class SgaLoader;
+
 class SgaSprite : public SgaSpriteAbstract
 {
 	using SgaSpritePtr = JCore::SharedPtr<SgaSprite>;
-public:
-	SgaSprite(SgaImagePtr parent, int frameIndex, int format)
-		: SgaSpriteAbstract(parent, Type::eSprite, frameIndex, format)
-		, m_iDataOffset(-1)
-		, m_iDataLength(-1)
-		, m_bLoaded(false) {}
-	~SgaSprite() override;
-public:
-	bool IsDummy() override			{ return m_Rect.Width * m_Rect.Height <= 10; }
-	int GetWidth() override			{ return m_Rect.Width;		  }
-	int GetHeight() override		{ return m_Rect.Height;		  }
-	int GetX() 	override			{ return m_Rect.X;			  }
-	int GetY() 	override			{ return m_Rect.Y;			  }
-	int GetFrameWidth() override	{ return m_Rect.FrameWidth;	  }
-	int GetFrameHeight() override	{ return m_Rect.FrameHeight;	  }
-	int GetCompressMode() override	{ return m_eCompressMode;		  }
 
-	SgaDataPtr GetData() override	{ return m_spData;		  }
+public:
+	SgaSprite(const SgaImagePtr& _pParent, int _frameIndex, int _format)
+	: SgaSpriteAbstract(_pParent, Type::eSprite, _frameIndex, _format)
+	, compressMode_(0)
+	, rect_()
+	, dataOffset_(-1)
+	, dataLength_(-1)
+	, loaded_(false)
+	{
+	}
+
+	~SgaSprite() override;
+
+public:
+	bool IsDummy() override { return rect_.width_ * rect_.height_ <= 10; }
+	int GetWidth() override { return rect_.width_; }
+	int GetHeight() override { return rect_.height_; }
+	int GetX() override { return rect_.x_; }
+	int GetY() override { return rect_.y_; }
+	int GetFrameWidth() override { return rect_.frameWidth_; }
+	int GetFrameHeight() override { return rect_.frameHeight_; }
+	int GetCompressMode() override { return compressMode_; }
+
+	SgaDataPtr GetData() override { return pData_; }
 	SgaDataPtr Decompress() override;
 
-	SgaSpriteRect GetRect()	override { return m_Rect; }
+	SgaSpriteRect GetRect() override { return rect_; }
 
 	// ==========================================
 	// Lazy Loading을 위함
 	// ==========================================
-	int GetDataLength() override  { return m_iDataLength; }
-	int GetDataOffset() override  { return m_iDataOffset; }
-	bool Loaded() override		  { return m_bLoaded;	  }
+	int GetDataLength() override { return dataLength_; }
+	int GetDataOffset() override { return dataOffset_; }
+	bool Loaded() override { return loaded_; }
 	bool Load() override;
 	bool Unload() override;
-public:
-	static SgaSpritePtr Create(const SgaImagePtr& parent, int frameIndex, int format);
-protected:
-	int m_eCompressMode;
 
-	SgaSpriteRect m_Rect;
-	SgaDataPtr m_spData;				// 이미지 바이너리 데이터
+public:
+	static SgaSpritePtr Create(const SgaImagePtr& _pParent, int _frameIndex, int _format);
+
+protected:
+	int compressMode_;
+
+	SgaSpriteRect rect_;
+	SgaDataPtr pData_;				// 이미지 바이너리 데이터
 
 	// ==========================================
 	// Lazy Loading을 위함
 	// ==========================================
-	int m_iDataOffset;
-	int m_iDataLength;
-	bool m_bLoaded;
+	int dataOffset_;
+	int dataLength_;
+	bool loaded_;
 
 	template <Int32>
 	friend class SgaElementInitializerImpl;

@@ -21,21 +21,23 @@
 // ===========================================================
 
 NS_CORE_BEGIN
-::SteinsGateApp*		App;
-::ClientInfo*			ClientInfo;
-::Contents				Contents;
-::DataManager*			DataManager;
-::NetCore*				Net;
-::RuntimeConfig*		RuntimeConfig;
+::SteinsGateApp* App;
+::ClientInfo* ClientInfo;
+::Contents Contents;
+::DataManager* DataManager;
+::NetCore* Net;
+::RuntimeConfig* RuntimeConfig;
 NS_CORE_END
 
-void InitializeClientCore() {
-	Core::App						= (SteinsGateApp*)cocos2d::Application::getInstance();
-	Core::DataManager				= DataManager::Get();
-	Core::Net						= NetCore::Get();
-	Core::RuntimeConfig				= RuntimeConfig::Get();
-	Core::RuntimeConfigBase			= Core::RuntimeConfig;
-	Core::ServerProcessInfoPackage  = Core::DataManager->getServerProcessInfoPackage(1);
+//////////////////////////////////////////////////////////////////////////////////////////
+void InitializeClientCore()
+{
+	Core::App = (SteinsGateApp*)cocos2d::Application::getInstance();
+	Core::DataManager = DataManager::Get();
+	Core::Net = NetCore::Get();
+	Core::RuntimeConfig = RuntimeConfig::Get();
+	Core::RuntimeConfigBase = Core::RuntimeConfig;
+	Core::ServerProcessInfoPackage = Core::DataManager->getServerProcessInfoPackage(1);
 
 	Core::Contents.Initialize();
 
@@ -52,11 +54,12 @@ void InitializeClientCore() {
 		Core::CLIThread->SetListener(dbg_new CLIListener);
 }
 
-void FinalizeClientCore() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void FinalizeClientCore()
+{
 	JCORE_DELETE_SINGLETON_SAFE(Core::Net);
 	JCORE_DELETE_SINGLETON_SAFE(Core::DataManager);
 	JCORE_DELETE_SINGLETON_SAFE(Core::RuntimeConfig);
 
 	Core::Contents.Finalize();
-	
 }

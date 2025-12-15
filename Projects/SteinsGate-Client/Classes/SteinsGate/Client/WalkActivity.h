@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/29/2023 8:01:39 AM
  * =====================
@@ -12,6 +12,7 @@
 #include <SteinsGate/Client/AIActivity.h>
 
 class MoveComponent;
+
 class WalkActivity : public AIActivity
 {
 public:
@@ -22,20 +23,20 @@ public:
 		eTrack
 	};
 
-	WalkActivity(Actor* actor);
+	WalkActivity(Actor* _pActor);
 
-	void onActivitySelectFromAIRoutine(AIInfo* aiInfo, AIState_t aiState) override;
-	void onUpdate(float dt) override;
+	void OnActivitySelectFromAiRoutine(AIInfo* _pAiInfo, AIState_t _aiState) override;
+	void OnUpdate(float _dt) override;
 
-	void updateWander(float dt);
-	void updateTrack(float dt);
-	void updateMove(float dt);
+	void updateWander(float _dt);
+	void updateTrack(float _dt);
+	void updateMove(float _dt);
 
-	virtual void updateMoveImpl(float dt, MoveComponent* moveComponent, bool arrivedX, bool arrivedY, Direction_t lr, Direction_t ud) = 0;
+	virtual void updateMoveImpl(float _dt, MoveComponent* _pMoveComponent, bool _arrivedX, bool _arrivedY,
+	                            Direction_t _lr, Direction_t _ud) = 0;
+
 protected:
 	SGVec2 m_Destination;
 	Actor* m_pTarget;
 	Mode m_eMode;
 };
-
-

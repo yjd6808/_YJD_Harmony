@@ -5,9 +5,7 @@
  *
  */
 
-
 #pragma once
-
 
 #include <SteinsGate/Common/Enum.h>
 #include <SteinsGate/Common/Const.h>
@@ -22,20 +20,27 @@ struct ThicknessBox
 	float Width;
 	float Height;
 
-	ThicknessBox() : RelativeX(0), RelativeY(0), Width(0), Height(0) {}
-	ThicknessBox(float relaitveX, float relativeY, float width, float height)
-		: RelativeX(relaitveX)
-		, RelativeY(relativeY)
-		, Width(width)
-		, Height(height) {}
+	ThicknessBox()
+	: RelativeX(0)
+	, RelativeY(0)
+	, Width(0)
+	, Height(0)
+	{
+	}
+
+	ThicknessBox(float _relativeX, float _relativeY, float _width, float _height)
+	: RelativeX(_relativeX)
+	, RelativeY(_relativeY)
+	, Width(_width)
+	, Height(_height)
+	{
+	}
 };
-
-
 
 struct ActorPartSpriteData
 {
 	ActorPartSpriteData();
-	ActorPartSpriteData(int zorder, int sga, int img);
+	ActorPartSpriteData(int _zOrder, int _sga, int _img);
 
 	// 스프라이트 정보(필수)
 	int SgaIndex;
@@ -48,10 +53,12 @@ struct ActorPartSpriteData
 
 struct ActorSpriteData
 {
-	ActorSpriteData(ActorPartSpritePositioningRule_t positioningRule, int partCount, int animationCount)
-		: PositioningRule(positioningRule)
-		, Parts(partCount)
-		, Animations(animationCount) {}
+	ActorSpriteData(ActorPartSpritePositioningRule_t _positioningRule, int _partCount, int _animationCount)
+	: PositioningRule(_positioningRule)
+	, Parts(_partCount)
+	, Animations(_animationCount)
+	{
+	}
 
 	ActorPartSpritePositioningRule_t PositioningRule;
 	SGVector<ActorPartSpriteData> Parts;

@@ -15,47 +15,55 @@
 #include <SteinsGate/Server/LobbyInterServerClientNetGroup.h>
 
 
-
 USING_NS_JC;
 USING_NS_JNET;
 
-LobbyNetMaster::LobbyNetMaster() : CommonNetMaster(Const::Process::LoopPerSecondLobby) {
+//////////////////////////////////////////////////////////////////////////////////////////
+LobbyNetMaster::LobbyNetMaster()
+	: CommonNetMaster(Const::Process::LoopPerSecondLobby)
+{
 	SetName("로비");
 }
 
-LobbyNetMaster::~LobbyNetMaster() {
+//////////////////////////////////////////////////////////////////////////////////////////
+LobbyNetMaster::~LobbyNetMaster()
+{
 }
 
-void LobbyNetMaster::Initialize() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void LobbyNetMaster::Initialize()
+{
 	CommonNetMaster::Initialize();
 
-	const auto spLobbyNetGroup = MakeShared<LobbyNetGroup>();
-	const auto spInterServerNetGroup = MakeShared<LobbyInterServerClientNetGroup>();
+	const auto lobbyNetGroup = MakeShared<LobbyNetGroup>();
+	const auto interServerNetGroup = MakeShared<LobbyInterServerClientNetGroup>();
 
-	AddNetGroup(Const::NetGroup::MainId, spLobbyNetGroup);
-	AddNetGroup(Const::NetGroup::InterServerId,	spInterServerNetGroup);
+	AddNetGroup(Const::NetGroup::MainId, lobbyNetGroup);
+	AddNetGroup(Const::NetGroup::InterServerId, interServerNetGroup);
 
-	spLobbyNetGroup->Initialize();
-	spInterServerNetGroup->Initialize();
+	lobbyNetGroup->Initialize();
+	interServerNetGroup->Initialize();
 }
 
-void LobbyNetMaster::OnUpdate(const TimeSpan& elapsed) {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void LobbyNetMaster::OnUpdate(const TimeSpan& _elapsed)
+{
 #if DebugMode
-	static TimeCounter s;
-	s.Elapsed += elapsed;
+	static TimeCounter timeCounter;
+	timeCounter.Elapsed += _elapsed;
 
 	Thread::Sleep(30);
 
-	if (s.ElapsedSeconds(5)) {
+	if (timeCounter.ElapsedSeconds(5))
+	{
 		//_LogDebug_("중앙 시각 %s", Core::Contents.TimeManager->Now().FormatMysqlTime().Source());
 		//_LogDebug_("현재 시각 %s", DateTime::Now().FormatMysqlTime().Source());
 	}
 #endif
-
 }
 
-void LobbyNetMaster::OnStopped() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void LobbyNetMaster::OnStopped()
+{
 }
-
 

@@ -12,10 +12,13 @@
 
 #include "RandomEx.h"
 
-bool RandomEx::check(float prob) {
-	if (SGRandom::random_real(0.0f, 100.0f) <= prob) {
-		return true;
-	}
+//////////////////////////////////////////////////////////////////////////////////////////
+bool RandomEx::Check(float _prob)
+{
+    if (SGRandom::random_real(0.0f, 100.0f) <= _prob)
+    {
+        return true;
+    }
 
-	return false;
+    return false;
 }

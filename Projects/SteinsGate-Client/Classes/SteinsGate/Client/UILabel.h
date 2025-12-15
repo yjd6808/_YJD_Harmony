@@ -9,53 +9,51 @@
 #pragma once
 
 
-
 #include <SteinsGate/Client/UIElement.h>
 
 class UILabel : public UIElement
 {
 public:
-	static UILabel* create(UIMasterGroup* master, UIGroup* parent);
-	static UILabel* create(UIMasterGroup* master, UIGroup* parent, UILabelInfo* labelInfo, bool infoOwner);
+	static UILabel* create(UIRootGroup* _pMaster, UIGroup* _pParent);
+	static UILabel* create(UIRootGroup* _pMaster, UIGroup* _pParent, UILabelInfo* _pLabelInfo, bool _infoOwner);
 
 	static constexpr UIElementType_t type() { return UIElementType::Label; }
 
-	UILabel(UIMasterGroup* master, UIGroup* parent);
-	UILabel(UIMasterGroup* master, UIGroup* parent, UILabelInfo* labelInfo, bool infoOwner);
+	UILabel(UIRootGroup* _pMaster, UIGroup* _pParent);
+	UILabel(UIRootGroup* _pMaster, UIGroup* _pParent, UILabelInfo* _pLabelInfo, bool _infoOwner);
 	~UILabel() override;
 
 	bool init() override;
 
 	SGString getFontPath() const;
-	const std::string& getString() const { return m_pLabel->getString(); }
-	void setText(const std::string& text);
-	void setText(const std::string& text, float fontSize);
-	void setText(const std::string& text, float fontSize, const SGSize& dimesion);
-	void setUISize(const SGSize& contentSize) override;
-	void setInfo(UIElementInfo* info, bool infoOwner) override;
-	void setInfoLabel(UILabelInfo* info, bool infoOwner);
-	void setVAlignment(VAlignment_t valign);
-	void setHAlignment(HAlignment_t halign);
+	const std::string& getString() const { return pLabel_->getString(); }
+	void setText(const std::string& _text);
+	void setText(const std::string& _text, float _fontSize);
+	void setText(const std::string& _text, float _fontSize, const SGSize& _dimension);
+	void SetUISize(const SGSize& _contentSize) override;
+	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
+	void setInfoLabel(UILabelInfo* _pInfo, bool _infoOwner);
+	void setVAlignment(VAlignment_t _valign);
+	void setHAlignment(HAlignment_t _halign);
 
-	void setInitialUISize(SGSize size) override;
-	void setEnableFontAutoScaling(bool enableScaling) { m_bFontAutoScaling = enableScaling; }
-	bool isFontAutoScalingEnabled() const { return m_bFontAutoScaling; }
+	void SetInitialUISize(SGSize _size) override;
+	void setEnableFontAutoScaling(bool _enableScaling) { fontAutoScaling_ = _enableScaling; }
+	bool isFontAutoScalingEnabled() const { return fontAutoScaling_; }
 
 	float getAppliedFontSize() const;
-	float getFontSize() const { return m_fFontSize; }
-	float getInitialFontSize() const { return m_fInitialFontSize; }
+	float getFontSize() const { return fontSize_; }
+	float getInitialFontSize() const { return initialFontSize_; }
 	int getLineCount() const;
 
-	SGLabel* source() const { return m_pLabel; }
-	UILabelInfo* getInfo() const { return m_pInfo; }
-	UIElementType_t getElementType() override { return UIElementType::Label; }
-	SGString toString() override { return SGStringUtil::Format("라벨(%d)", m_pInfo->Code); }
+	SGLabel* source() const { return pLabel_; }
+	UILabelInfo* getInfo() const { return pInfo_; }
+	UIElementType_t GetElementType() override { return UIElementType::Label; }
+	SGString ToString() override { return SGStringUtil::Format("라벨(%d)", pInfo_->code_); }
+
 private:
-	float m_fInitialFontSize;
-	float m_fFontSize;
-	bool m_bFontAutoScaling;	// UI 사이즈 변경시 변경된 사이즈 비율에 맞게 폰트 크기도 변경시킬지 여부
-	UILabelInfo* m_pInfo;
-	SGLabel* m_pLabel;
+	float initialFontSize_;
+	float fontSize_;
+	bool fontAutoScaling_; // UI 사이즈 변경시 변경된 사이즈 비율에 맞게 폰트 크기도 변경시킬지 여부
+	UILabelInfo* pInfo_;
+	SGLabel* pLabel_;
 };
-
-

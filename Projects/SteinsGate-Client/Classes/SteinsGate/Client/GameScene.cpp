@@ -13,85 +13,103 @@
 USING_NS_CC;
 
 
+//////////////////////////////////////////////////////////////////////////////////////////
 SGGameScene::SGGameScene()
-	: SceneBase()
-	, m_pMapLayer(nullptr)
-	, m_pGridLayer(nullptr)
-{}
-
-SGGameScene::~SGGameScene() {
-    CC_SAFE_RELEASE(m_pGridLayer);
+: SceneBase()
+, mapLayer_(nullptr)
+, gridLayer_(nullptr)
+{
 }
 
-void SGGameScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
+//////////////////////////////////////////////////////////////////////////////////////////
+SGGameScene::~SGGameScene()
+{
+	CC_SAFE_RELEASE(gridLayer_);
+}
 
-    if (m_pMapLayer)
-        m_pMapLayer->onKeyPressed(keyCode, event);
+//////////////////////////////////////////////////////////////////////////////////////////
+void SGGameScene::onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
+{
+	if (mapLayer_)
+		mapLayer_->onKeyPressed(_keyCode, _pEvent);
 
-   
-    if (keyCode == EventKeyboard::KeyCode::KEY_F8) {
-        WorldScene::get()->reserveScene(SceneType::Login);
-    } else if (keyCode == EventKeyboard::KeyCode::KEY_F7) {
+	if (_keyCode == EventKeyboard::KeyCode::KEY_F8)
+	{
+		WorldScene::get()->reserveScene(SceneType::Login);
+	}
+	else if (_keyCode == EventKeyboard::KeyCode::KEY_F7)
+	{
 		WorldScene::get()->reserveScene(SceneType::ChannelSelect);
-    } else if (keyCode == EventKeyboard::KeyCode::KEY_F9) {
-        if (m_pGridLayer == nullptr) {
-            return;
-        }
+	}
+	else if (_keyCode == EventKeyboard::KeyCode::KEY_F9)
+	{
+		if (gridLayer_ == nullptr)
+			return;
 
-        m_pGridLayer->setVisible(!m_pGridLayer->isVisible());
-    }
+		gridLayer_->setVisible(!gridLayer_->isVisible());
+	}
 }
 
-void SGGameScene::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
-    if (m_pMapLayer)
-        m_pMapLayer->onKeyReleased(keyCode, event);
+//////////////////////////////////////////////////////////////////////////////////////////
+void SGGameScene::onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
+{
+	if (mapLayer_)
+		mapLayer_->onKeyReleased(_keyCode, _pEvent);
 }
 
-void SGGameScene::update(float dt) {
-    if (m_pMapLayer)
-        m_pMapLayer->update(dt);
+//////////////////////////////////////////////////////////////////////////////////////////
+void SGGameScene::update(float _dt)
+{
+	if (mapLayer_)
+		mapLayer_->update(_dt);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 bool SGGameScene::init()
 {
-    if (!SceneBase::init())
-        return false;
+	if (!SceneBase::init())
+		return false;
 
-    m_pGridLayer = GridLayer::create(100, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
-    m_pGridLayer->setAnchorPoint(Vec2::ZERO);
-    m_pGridLayer->setVisible(false);
-    m_pGridLayer->retain();
-    
-    m_pMapLayer = MapLayer::create();
-    m_pMapLayer->setAnchorPoint(Vec2::ZERO);
-    m_pMapLayer->addChild(m_pGridLayer, 1);
-    this->addChild(m_pMapLayer);
+	gridLayer_ = GridLayer::create(100, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
+	gridLayer_->setAnchorPoint(Vec2::ZERO);
+	gridLayer_->setVisible(false);
+	gridLayer_->retain();
 
-    Core::Contents.ActorManager->init(m_pMapLayer);                   // 맵 레이어 초기화
+	mapLayer_ = MapLayer::create();
+	mapLayer_->setAnchorPoint(Vec2::ZERO);
+	mapLayer_->addChild(gridLayer_, 1);
+	addChild(mapLayer_);
 
-    cmdEnterMap();
-    cmdLoadChar();
+	Core::Contents.ActorManager->init(mapLayer_);
 
-    return true;
+	cmdEnterMap();
+	cmdLoadChar();
+
+	return true;
 }
 
-void SGGameScene::cmdLoadChar() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void SGGameScene::cmdLoadChar()
+{
+	Core::Contents.Player->initialize();
+	Core::Contents.Player->setPositionRealCenter(300, 200);
+	Core::Contents.Player->setMapLayer(mapLayer_);
+	Core::Contents.Player->setCleanUpFlag(Actor::CF_ReleaseActorSprite);
 
-    Core::Contents.Player->initialize();
-    Core::Contents.Player->setPositionRealCenter(300, 200);
-    Core::Contents.Player->setMapLayer(m_pMapLayer);
-    Core::Contents.Player->setCleanUpFlag(Actor::CF_ReleaseActorSprite);
-
-    Core::Contents.ActorManager->registerPlayerOnMap(Core::Contents.Player);
-    m_pMapLayer->getCamera()->setFollowTarget(Core::Contents.Player);
+	Core::Contents.ActorManager->registerPlayerOnMap(Core::Contents.Player);
+	mapLayer_->getCamera()->setFollowTarget(Core::Contents.Player);
 }
 
-void SGGameScene::cmdEnterMap() {
-    m_pMapLayer->loadMap(10000);
+//////////////////////////////////////////////////////////////////////////////////////////
+void SGGameScene::cmdEnterMap()
+{
+	mapLayer_->loadMap(10000);
 }
 
-void SGGameScene::onExit() {
-    Core::Contents.Player->cleanUp();
-    ActorManager::Get()->clearAll();
-    SceneBase::onExit();
+//////////////////////////////////////////////////////////////////////////////////////////
+void SGGameScene::onExit()
+{
+	Core::Contents.Player->cleanUp();
+	ActorManager::Get()->clearAll();
+	SceneBase::onExit();
 }

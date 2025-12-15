@@ -14,9 +14,9 @@
 #define SG_FLT_EPSILON			0.0001f
 #define SG_PI					3.141592f
 
- // ============================================================
- //     JCore
- // ============================================================
+// ============================================================
+//     JCore
+// ============================================================
 
 using SGString = JCore::String;
 
@@ -39,7 +39,8 @@ using SGHashMap = JCore::HashMap<TKey, TValue, TAllocator>;
 template <typename TKey, typename TAllocator = JCore::CDefaultAllocator>
 using SGHashSet = JCore::HashSet<TKey, TAllocator>;
 
-template <typename TKey, typename TValue, typename TComparator = JCore::Comparator<TKey>, typename TAllocator = JCore::CDefaultAllocator>
+template <typename TKey, typename TValue, typename TComparator = JCore::Comparator<TKey>, typename TAllocator =
+          JCore::CDefaultAllocator>
 using SGTreeMap = JCore::TreeMap<TKey, TValue, TComparator, TAllocator>;
 
 template <typename TKey, typename TComparator = JCore::Comparator<TKey>, typename TAllocator = JCore::CDefaultAllocator>
@@ -103,8 +104,8 @@ using SGSingletonStaticPointer = JCore::SingletonStaticPointer<T>;
 
 
 // ============================================================
- //     JNework
- // ============================================================
+//     JNework
+// ============================================================
 
 using SGSocket = JNetwork::Socketv4;
 using SGEndPoint = JNetwork::IPv4EndPoint;
@@ -146,13 +147,16 @@ using SGCommandParser = JNetwork::CommandParser;
 // ============================================================
 
 template <typename T, typename TAllocator = JCore::CDefaultAllocator>
-class alignas(SG_CACHELINE_SIZE) SGAlignedVector : public SGVector<T, TAllocator> {};
+class alignas(SG_CACHELINE_SIZE) SGAlignedVector : public SGVector<T, TAllocator>
+{
+};
 
 template <typename T, typename TAllocator = JCore::CDefaultAllocator>
-class alignas(SG_CACHELINE_SIZE) SGAlignedLinkedList : public SGLinkedList<T, TAllocator> {};
+class alignas(SG_CACHELINE_SIZE) SGAlignedLinkedList : public SGLinkedList<T, TAllocator>
+{
+};
 
 template <typename TKey, typename TValue, typename TAllocator = JCore::CDefaultAllocator>
-class alignas(SG_CACHELINE_SIZE) SGAlignedHashMap : public SGHashMap<TKey, TValue, TAllocator> {};
-
-
-
+class alignas(SG_CACHELINE_SIZE) SGAlignedHashMap : public SGHashMap<TKey, TValue, TAllocator>
+{
+};

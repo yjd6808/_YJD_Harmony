@@ -14,5 +14,5 @@
 
 struct S_MESSAGE_COMMON : JNetwork::SendHelper<S_MESSAGE_COMMON>
 {
-	static void SEND_SC_ClientText(const char* clientTextKey);
+	static void SEND_SC_ClientText(const char* _pClientTextKey);
 };

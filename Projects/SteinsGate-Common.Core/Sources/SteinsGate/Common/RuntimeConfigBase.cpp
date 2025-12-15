@@ -19,229 +19,267 @@ USING_NS_JC;
 USING_NS_JS;
 
 RuntimeConfigBase::RuntimeConfigBase()
-	: RecvCommandFilter(512)
-	, SendCommandFilter(512)
-	, ShowRecvCommand(true)
-	, ShowSendCommand(true)
-	, ShowRecvPacketHex(false)
-	, ShowSendPacketHex(false)
-	, ShowConsoleLog{ true, true, true, true, true }
-	, ShowConsoleNetLog{ true, true, true, true, true } {
-
-	Arrays::Copy(ConsoleLogColor, ConsoleLoggerOption::Default.LogColors);
-	Arrays::Copy(ConsoleNetLogColor, ConsoleLoggerOption::Default.LogColors);
-
+: showRecvCommand_(true)
+, showSendCommand_(true)
+, showRecvPacketHex_(false)
+, showSendPacketHex_(false)
+, showConsoleLog_{ true, true, true, true, true }
+, showConsoleNetLog_{ true, true, true, true, true }
+, recvCommandFilter_(512)
+, sendCommandFilter_(512)
+{
+	Arrays::Copy(consoleLogColor_, ConsoleLoggerOption::Default.LogColors);
+	Arrays::Copy(consoleNetLogColor_, ConsoleLoggerOption::Default.LogColors);
 }
 
-void RuntimeConfigBase::Load() {
+void RuntimeConfigBase::Load()
+{
+	const SGString exeDirectoryPath = Env::CurrentDirectory();
+	const SGString runtimeConfigPath = JCore::Path::Combine(exeDirectoryPath, SG_RUNTIME_CONFIG_FILENAME);
 
-	const SGString szExeDirectoryPath = Env::CurrentDirectory();
-	const SGString szRuntimeConfigPath = JCore::Path::Combine(szExeDirectoryPath, SG_RUNTIME_CONFIG_FILENAME);
-
-	if (!File::Exist(szRuntimeConfigPath)) {
+	if (!File::Exist(runtimeConfigPath))
+	{
 		return;
 	}
 
-	try {
+	try
+	{
 		Value root;
-		JsonUtil::loadThrow(szRuntimeConfigPath, root);
+		JsonUtil::LoadThrow(runtimeConfigPath, root);
 		OnLoading(root);
 		_LogInfo_("런타임 설정파일(%s) 로드완료", SG_RUNTIME_CONFIG_FILENAME);
-	} catch (std::exception& ex) {
+	}
+	catch (std::exception& ex)
+	{
 		_LogError_("런타임 설정파일(%s) 로드중 오류가 발생하였습니다.\n%s", SG_RUNTIME_CONFIG_FILENAME, ex.what());
 	}
 }
 
-void RuntimeConfigBase::Delete() {
-	const SGString szExeDirectoryPath = Env::CurrentDirectory();
-	const SGString szRuntimeConfigPath = JCore::Path::Combine(szExeDirectoryPath, SG_RUNTIME_CONFIG_FILENAME);
+void RuntimeConfigBase::Delete()
+{
+	const SGString exeDirectoryPath = Env::CurrentDirectory();
+	const SGString runtimeConfigPath = JCore::Path::Combine(exeDirectoryPath, SG_RUNTIME_CONFIG_FILENAME);
 
-	if (!File::Exist(szRuntimeConfigPath)) {
+	if (!File::Exist(runtimeConfigPath))
+	{
 		_LogInfo_("런타임 설정파일(%s)이 실행 디렉토리에 없습니다.", SG_RUNTIME_CONFIG_FILENAME);
 		return;
 	}
 
-	bool bDeleted = File::Delete(szRuntimeConfigPath);
-	if (bDeleted) _LogInfo_("런타임 설정파일(%s) 삭제완료", SG_RUNTIME_CONFIG_FILENAME);
-	else _LogWarn_("런타임 설정파일(%s) 삭제실패", SG_RUNTIME_CONFIG_FILENAME);
-	
+	bool isDeleted = File::Delete(runtimeConfigPath);
+	if (isDeleted)
+		_LogInfo_("런타임 설정파일(%s) 삭제완료", SG_RUNTIME_CONFIG_FILENAME);
+	else
+		_LogWarn_("런타임 설정파일(%s) 삭제실패", SG_RUNTIME_CONFIG_FILENAME);
 }
 
-void RuntimeConfigBase::Save() {
-	const SGString szExeDirectoryPath = Env::CurrentDirectory();
-	const SGString szRuntimeConfigPath = JCore::Path::Combine(szExeDirectoryPath, SG_RUNTIME_CONFIG_FILENAME);
+void RuntimeConfigBase::Save()
+{
+	const SGString exeDirectoryPath = Env::CurrentDirectory();
+	const SGString runtimeConfigPath = JCore::Path::Combine(exeDirectoryPath, SG_RUNTIME_CONFIG_FILENAME);
 
-	try {
+	try
+	{
 		Value value;
 		OnSaving(value);
 		const std::string content = value.toStyledString();
-		if (content.data() == nullptr) {
+		if (content.data() == nullptr)
+		{
 			throw std::exception("Value 문자열 변환중 오류 발생");
 		}
-		File::WriteAllText(content.c_str(), content.length(), szRuntimeConfigPath.Source());
+		File::WriteAllText(content.c_str(), content.length(), runtimeConfigPath.Source());
 		_LogInfo_("런타임 설정파일(%s) 저장완료", SG_RUNTIME_CONFIG_FILENAME);
-	} catch (std::exception& ex) {
+	}
+	catch (std::exception& ex)
+	{
 		_LogError_("런타임 설정파일(%s) 저장중 오류가 발생하였습니다.\n%s", SG_RUNTIME_CONFIG_FILENAME, ex.what());
 	}
 }
 
-void RuntimeConfigBase::ReadCore(Value& root) {
-	for (Value& v : root[RecvCommandFilterKey]) {
-		RecvCommandFilter.Insert(v.asInt());
+void RuntimeConfigBase::ReadCore(Value& _root)
+{
+	for (Value& v : _root[RECV_COMMAND_FILTER_KEY])
+	{
+		recvCommandFilter_.Insert(v.asInt());
 	}
 
-	for (Value& v : root[SendCommandFilterKey]) {
-		SendCommandFilter.Insert(v.asInt());
+	for (Value& v : _root[SEND_COMMAND_FILTER_KEY])
+	{
+		sendCommandFilter_.Insert(v.asInt());
 	}
 
-	ShowRecvCommand = root[ShowRecvCommandKey].asBool();
-	ShowSendCommand = root[ShowSendCommandKey].asBool();
+	showRecvCommand_ = _root[SHOW_RECV_COMMAND_KEY].asBool();
+	showSendCommand_ = _root[SHOW_SEND_COMMAND_KEY].asBool();
 
-	ShowRecvPacketHex = root[ShowRecvPacketHexKey].asBool();
-	ShowSendPacketHex = root[ShowSendPacketHexKey].asBool();
+	showRecvPacketHex_ = _root[SHOW_RECV_PACKET_HEX_KEY].asBool();
+	showSendPacketHex_ = _root[SHOW_SEND_PACKET_HEX_KEY].asBool();
 
-	for (int i = 0; Value & v : root[ConsoleLogColorKey]) {
-		ConsoleLogColor[i++] = (ConsoleColor)v.asInt();
+	for (int i = 0; Value& v : _root[CONSOLE_LOG_COLOR_KEY])
+	{
+		consoleLogColor_[i++] = (ConsoleColor)v.asInt();
 	}
 
-	for (int i = 0; Value & v : root[ConsoleNetLogColorKey]) {
-		ConsoleNetLogColor[i++] = (ConsoleColor)v.asInt();
+	for (int i = 0; Value& v : _root[CONSOLE_NET_LOG_COLOR_KEY])
+	{
+		consoleNetLogColor_[i++] = (ConsoleColor)v.asInt();
 	}
 
-	for (int i = 0; Value& v : root[ShowConsoleLogKey]) {
-		ShowConsoleLog[i++] = v.asInt();
+	for (int i = 0; Value& v : _root[SHOW_CONSOLE_LOG_KEY])
+	{
+		showConsoleLog_[i++] = v.asInt();
 	}
 
-	for (int i = 0; Value & v : root[ShowConsoleNetLogKey]) {
-		ShowConsoleNetLog[i++] = v.asInt();
+	for (int i = 0; Value& v : _root[SHOW_CONSOLE_NET_LOG_KEY])
+	{
+		showConsoleNetLog_[i++] = v.asInt();
 	}
 
 	ApplyLoggerOption();
 	ApplyNetLoggerOption();
 }
 
-void RuntimeConfigBase::WriteCore(Value& root) {
+void RuntimeConfigBase::WriteCore(Value& _root)
+{
 	{
 		// JCORE_LOCK_GUARD(FilterLock);
-		RecvCommandFilter.ForEach([&root](Cmd_t cmd) {
-			root[RecvCommandFilterKey].append(cmd);
+		recvCommandFilter_.ForEach([&_root](Cmd_t cmd)
+		{
+			_root[RECV_COMMAND_FILTER_KEY].append(cmd);
 		});
 
-		SendCommandFilter.ForEach([&root](Cmd_t cmd) {
-			root[SendCommandFilterKey].append(cmd);
+		sendCommandFilter_.ForEach([&_root](Cmd_t cmd)
+		{
+			_root[SEND_COMMAND_FILTER_KEY].append(cmd);
 		});
 	}
 
-	root[ShowRecvCommandKey] = ShowRecvCommand;
-	root[ShowSendCommandKey] = ShowSendCommand;
+	_root[SHOW_RECV_COMMAND_KEY] = showRecvCommand_;
+	_root[SHOW_SEND_COMMAND_KEY] = showSendCommand_;
 
-	root[ShowRecvPacketHexKey] = ShowRecvPacketHex;
-	root[ShowSendPacketHexKey] = ShowSendPacketHex;
+	_root[SHOW_RECV_PACKET_HEX_KEY] = showRecvPacketHex_;
+	_root[SHOW_SEND_PACKET_HEX_KEY] = showSendPacketHex_;
 
-	for (int i = 0; i < LoggerAbstract::Level::eMax; ++i) {
-		root[ConsoleLogColorKey].append(ConsoleLogColor[i]);
+	for (int i = 0; i < LoggerAbstract::Level::eMax; ++i)
+	{
+		_root[CONSOLE_LOG_COLOR_KEY].append(consoleLogColor_[i]);
 	}
 
-	for (int i = 0; i < LoggerAbstract::Level::eMax; ++i) {
-		root[ConsoleNetLogColorKey].append(ConsoleNetLogColor[i]);
+	for (int i = 0; i < LoggerAbstract::Level::eMax; ++i)
+	{
+		_root[CONSOLE_NET_LOG_COLOR_KEY].append(consoleNetLogColor_[i]);
 	}
 
-	for (int i = 0; i < LoggerAbstract::Level::eMax; ++i) {
-		root[ShowConsoleLogKey].append(ShowConsoleLog[i] ? 1 : 0);
+	for (int i = 0; i < LoggerAbstract::Level::eMax; ++i)
+	{
+		_root[SHOW_CONSOLE_LOG_KEY].append(showConsoleLog_[i] ? 1 : 0);
 	}
 
-	for (int i = 0; i < LoggerAbstract::Level::eMax; ++i) {
-		root[ShowConsoleNetLogKey].append(ShowConsoleLog[i] ? 1 : 0);
+	for (int i = 0; i < LoggerAbstract::Level::eMax; ++i)
+	{
+		_root[SHOW_CONSOLE_NET_LOG_KEY].append(showConsoleLog_[i] ? 1 : 0);
 	}
 }
 
-
-
-void RuntimeConfigBase::ShowCommandFilter(JNetwork::Transmission transmission) {
-	SGString szCommands{ 1024 };
-	SGHashSet<Cmd_t>& filter = transmission == JNetwork::Transmission::Send ? SendCommandFilter : RecvCommandFilter;
+void RuntimeConfigBase::ShowCommandFilter(JNetwork::Transmission _transmission)
+{
+	SGString commands{ 1024 };
+	SGHashSet<Cmd_t>& filter = _transmission == JNetwork::Transmission::Send ? sendCommandFilter_ : recvCommandFilter_;
 
 	{
 		// JCORE_LOCK_GUARD(FilterLock);
 		int i = 0;
-		filter.ForEach([&](Cmd_t cmd) {
-			if (i != 0 && i % 10 == 0) {
-				szCommands += '\n';
+		filter.ForEach([&](Cmd_t cmd)
+		{
+			if (i != 0 && i % 10 == 0)
+			{
+				commands += '\n';
 			}
 
-			szCommands += cmd;
+			commands += cmd;
 			++i;
 		});
 	}
 
-	Console::WriteLine(szCommands.Source());
-	
+	Console::WriteLine(commands.Source());
 }
 
-void RuntimeConfigBase::FilterCommand(JNetwork::Transmission transmission, Cmd_t cmd) {
+void RuntimeConfigBase::FilterCommand(JNetwork::Transmission _transmission, Cmd_t _cmd)
+{
 	// JCORE_LOCK_GUARD(FilterLock);
-	SGHashSet<Cmd_t>& filter = transmission == JNetwork::Transmission::Send ? SendCommandFilter : RecvCommandFilter;
-	filter.Insert(cmd);
+	SGHashSet<Cmd_t>& filter = _transmission == JNetwork::Transmission::Send ? sendCommandFilter_ : recvCommandFilter_;
+	filter.Insert(_cmd);
 }
 
-void RuntimeConfigBase::UnfilterCommand(JNetwork::Transmission transmission, Cmd_t cmd) {
+void RuntimeConfigBase::UnfilterCommand(JNetwork::Transmission _transmission, Cmd_t _cmd)
+{
 	// JCORE_LOCK_GUARD(FilterLock);
-	SGHashSet<Cmd_t>& filter = transmission == JNetwork::Transmission::Send ? SendCommandFilter : RecvCommandFilter;
-	filter.Remove(cmd);
+	SGHashSet<Cmd_t>& filter = _transmission == JNetwork::Transmission::Send ? sendCommandFilter_ : recvCommandFilter_;
+	filter.Remove(_cmd);
 }
 
-bool RuntimeConfigBase::IsFilteredCommand(JNetwork::Transmission transmission, Cmd_t cmd) {
+bool RuntimeConfigBase::IsFilteredCommand(JNetwork::Transmission _transmission, Cmd_t _cmd)
+{
 	// JCORE_LOCK_GUARD(FilterLock);
-	SGHashSet<Cmd_t>& filter = transmission == JNetwork::Transmission::Send ? SendCommandFilter : RecvCommandFilter;
-	return filter.Exist(cmd);
+	SGHashSet<Cmd_t>& filter = _transmission == JNetwork::Transmission::Send ? sendCommandFilter_ : recvCommandFilter_;
+	return filter.Exist(_cmd);
 }
 
-
-void RuntimeConfigBase::ApplyLoggerOption() {
-
-	if (Logger_v == nullptr) {
+void RuntimeConfigBase::ApplyLoggerOption()
+{
+	if (Logger_v == nullptr)
+	{
 		return;
 	}
 
 	LoggerOption* pOption = Logger_v->GetLoggerOption();
 
-	if (pOption->GetLoggerType() == LoggerType::Console) {
+	if (pOption->GetLoggerType() == LoggerType::Console)
+	{
 		ConsoleLoggerOption* pConsoleOption = dynamic_cast<ConsoleLoggerOption*>(pOption);
 
-		if (pConsoleOption == nullptr) {
+		if (pConsoleOption == nullptr)
+		{
 			return;
 		}
 
-		for (int i = 0; i < LoggerAbstract::eMax; ++i) {
-			pConsoleOption->EnableLog[i] = ShowConsoleLog[i];
+		for (int i = 0; i < LoggerAbstract::eMax; ++i)
+		{
+			pConsoleOption->EnableLog[i] = showConsoleLog_[i];
 		}
 
-		for (int i = 0; i < LoggerAbstract::eMax; ++i) {
-			pConsoleOption->LogColors[i] = (ConsoleColor)ConsoleLogColor[i];
+		for (int i = 0; i < LoggerAbstract::eMax; ++i)
+		{
+			pConsoleOption->LogColors[i] = consoleLogColor_[i];
 		}
 	}
 }
 
-void RuntimeConfigBase::ApplyNetLoggerOption() {
-	if (NetLogger_v == nullptr) {
+void RuntimeConfigBase::ApplyNetLoggerOption()
+{
+	if (NetLogger_v == nullptr)
+	{
 		return;
 	}
 
 	LoggerOption* pOption = NetLogger_v->GetLoggerOption();
 
-	if (pOption->GetLoggerType() == LoggerType::Console) {
+	if (pOption->GetLoggerType() == LoggerType::Console)
+	{
 		ConsoleLoggerOption* pConsoleOption = dynamic_cast<ConsoleLoggerOption*>(pOption);
 
-		if (pConsoleOption == nullptr) {
+		if (pConsoleOption == nullptr)
+		{
 			return;
 		}
 
-		for (int i = 0; i < LoggerAbstract::eMax; ++i) {
-			pConsoleOption->EnableLog[i] = ShowConsoleNetLog[i];
+		for (int i = 0; i < LoggerAbstract::eMax; ++i)
+		{
+			pConsoleOption->EnableLog[i] = showConsoleNetLog_[i];
 		}
 
-		for (int i = 0; i < LoggerAbstract::eMax; ++i) {
-			pConsoleOption->LogColors[i] = (ConsoleColor)ConsoleNetLogColor[i];
+		for (int i = 0; i < LoggerAbstract::eMax; ++i)
+		{
+			pConsoleOption->LogColors[i] = consoleNetLogColor_[i];
 		}
 	}
 }

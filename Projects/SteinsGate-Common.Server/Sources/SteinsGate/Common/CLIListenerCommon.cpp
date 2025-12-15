@@ -12,28 +12,36 @@
 
 USING_NS_JC;
 
-CLIListenerCommon::CLIListenerCommon() {
-	m_Table.Insert("help",		JCORE_CALLBACK_2(CLIListenerCommon::CLI_HelpCommon, this));
-	m_Table.Insert("exit",		JCORE_CALLBACK_2(CLIListenerCommon::CLI_ExitCommon, this));
+//////////////////////////////////////////////////////////////////////////////////////////
+CLIListenerCommon::CLIListenerCommon()
+{
+	table_.Insert("help", JCORE_CALLBACK_2(CLIListenerCommon::CLI_HelpCommon, this));
+	table_.Insert("exit", JCORE_CALLBACK_2(CLIListenerCommon::CLI_ExitCommon, this));
 }
 
-bool CLIListenerCommon::OnInputProcessing(int argc, JCore::String* argv) {
-	if (!CLIListenerBase::OnInputProcessing(argc, argv)) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CLIListenerCommon::OnInputProcessing(int _argc, JCore::String* _pArgv)
+{
+	if (!CLIListenerBase::OnInputProcessing(_argc, _pArgv))
+	{
 		return false;
 	}
 
-	return ExecuteCommand(argc, argv, m_Table);
+	return ExecuteCommand(_argc, _pArgv, table_);
 }
 
-bool CLIListenerCommon::CLI_HelpCommon(int argc, JCore::String* argv) {
-	String szHelpText{ 1024 };
-	szHelpText += " - exit: 애플리케이션을 종료합니다.\n";
-	Console::WriteLine(szHelpText.Source());
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CLIListenerCommon::CLI_HelpCommon(int _argc, JCore::String* _pArgv)
+{
+	String helpText{ 1024 };
+	helpText += " - exit: 애플리케이션을 종료합니다.\n";
+	Console::WriteLine(helpText.Source());
 	return true;
 }
 
-bool CLIListenerCommon::CLI_ExitCommon(int argc, JCore::String* argv) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CLIListenerCommon::CLI_ExitCommon(int _argc, JCore::String* _pArgv)
+{
 	Core::CommonNetMaster->Terminate();
 	return true;
 }
-

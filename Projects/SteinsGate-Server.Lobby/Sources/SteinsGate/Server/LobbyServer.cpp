@@ -15,16 +15,22 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-LobbyServer::LobbyServer(const IOCPPtr& iocp, const MemoryPoolAbstractPtr& bufferAllocator)
-	: CommonServer(iocp, bufferAllocator)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+LobbyServer::LobbyServer(const IOCPPtr& _pIocp, const MemoryPoolAbstractPtr& _pBufferAllocator)
+	: CommonServer(_pIocp, _pBufferAllocator)
+{
+}
 
-SGTcpSession* LobbyServer::CreateSession() {
+//////////////////////////////////////////////////////////////////////////////////////////
+SGTcpSession* LobbyServer::CreateSession()
+{
 	return dbg_new LobbySession(this, m_spIocp, m_spBufferAllocator, 6144, 6144);
 }
 
-void LobbyServer::OnUpdate(const TimeSpan& elapsed) {
-	CommonServer::OnUpdate(elapsed);
+//////////////////////////////////////////////////////////////////////////////////////////
+void LobbyServer::OnUpdate(const TimeSpan& _elapsed)
+{
+	CommonServer::OnUpdate(_elapsed);
 }
 
 

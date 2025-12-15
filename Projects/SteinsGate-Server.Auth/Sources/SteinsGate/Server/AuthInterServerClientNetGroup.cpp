@@ -23,46 +23,63 @@ USING_NS_JNET;
 static constexpr int RecvBufferSize_v = 2048;
 static constexpr int SendBufferSize_v = 2048;
 
-AuthInterServerClientNetGroup::AuthInterServerClientNetGroup() {
+//////////////////////////////////////////////////////////////////////////////////////////
+AuthInterServerClientNetGroup::AuthInterServerClientNetGroup()
+{
 	SetName("인증 인터서버");
 }
 
-AuthInterServerClientNetGroup::~AuthInterServerClientNetGroup() {
+//////////////////////////////////////////////////////////////////////////////////////////
+AuthInterServerClientNetGroup::~AuthInterServerClientNetGroup()
+{
 }
 
-void AuthInterServerClientNetGroup::InitializeParser() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthInterServerClientNetGroup::InitializeParser()
+{
 	InterServerClientNetGroup::InitializeParser();
 
 	// AUTHENTICATION
-	m_pParser->AddCommand<SAU_AuthenticationCheck>	(R_AUTHENTICATION::RECV_SAU_AuthenticationCheck);
+	parser_->AddCommand<SAU_AuthenticationCheck>(R_AUTHENTICATION::RECV_SAU_AuthenticationCheck);
 }
 
-void AuthInterServerClientNetGroup::InitializeBufferPool() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthInterServerClientNetGroup::InitializeBufferPool()
+{
 	CreateBufferPool({});
 }
 
-void AuthInterServerClientNetGroup::InitializeIOCP() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthInterServerClientNetGroup::InitializeIOCP()
+{
 	CreateIocp(2);
 	RunIocp();
 }
 
-void AuthInterServerClientNetGroup::InitializeInterServerTcp() {
-	auto spInterServerClient = MakeShared<TcpClient>(pIocp_, pBufferPool_, nullptr, RecvBufferSize_v, SendBufferSize_v);
-	spInterServerClient->Bind(Core::ServerProcessInfoPackage->Auth.BindInterServerTcp);
-	AddHost(Const::Host::AuthInterServerTcpId, spInterServerClient);
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthInterServerClientNetGroup::InitializeInterServerTcp()
+{
+	auto pInterServerClient = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, nullptr, RecvBufferSize_v, SendBufferSize_v);
+	pInterServerClient->Bind(Core::ServerProcessInfoPackage->auth_.bindInterServerTcp_);
+	AddHost(Const::Host::AuthInterServerTcpId, pInterServerClient);
 
-	m_pInterServerClientTcp = spInterServerClient.Get<TcpClient*>();
-	m_pInterServerClientTcp->SetEventListener(dbg_new ListenerInterServerClient{ ServerProcessType::Auth, m_pParser });
+	interServerClientTcp_ = pInterServerClient.Get<TcpClient*>();
+	interServerClientTcp_->SetEventListener(dbg_new ListenerInterServerClient{ ServerProcessType::Auth, parser_ });
 }
 
-void AuthInterServerClientNetGroup::InitializeInterServerUdp() {
-	auto spInterServerClient = MakeShared<UdpClient>(pIocp_, pBufferPool_, nullptr, RecvBufferSize_v, SendBufferSize_v);
-	spInterServerClient->Bind(Core::ServerProcessInfoPackage->Auth.BindInterServerUdp);
-	AddHost(Const::Host::AuthInterServerUdpId, spInterServerClient);
-	m_pInterServerClientUdp = spInterServerClient.Get<UdpClient*>();
-	m_pInterServerClientUdp->SetEventListener(dbg_new ListenerInterServerClient{ ServerProcessType::Auth, m_pParser });
-	m_pInterServerClientUdp->RecvFromAsync();
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthInterServerClientNetGroup::InitializeInterServerUdp()
+{
+	auto pInterServerClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, nullptr, RecvBufferSize_v, SendBufferSize_v);
+	pInterServerClient->Bind(Core::ServerProcessInfoPackage->auth_.bindInterServerUdp_);
+	AddHost(Const::Host::AuthInterServerUdpId, pInterServerClient);
+
+	interServerClientUdp_ = pInterServerClient.Get<UdpClient*>();
+	interServerClientUdp_->SetEventListener(dbg_new ListenerInterServerClient{ ServerProcessType::Auth, parser_ });
+	interServerClientUdp_->RecvFromAsync();
 }
 
-void AuthInterServerClientNetGroup::OnUpdate(const JCore::TimeSpan& elapsed) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthInterServerClientNetGroup::OnUpdate(const JCore::TimeSpan& _elapsed)
+{
 }

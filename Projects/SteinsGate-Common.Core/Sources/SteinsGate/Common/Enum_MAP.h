@@ -11,25 +11,25 @@
 #include <JCore/Define.h>
 
 JCORE_SENUM_BEGIN(MapObjectType)
-Obstacle,
-Begin = Obstacle,
-Gate,
-End = Gate,
+	Obstacle,
+	Begin = Obstacle,
+	Gate,
+	End = Gate,
 JCORE_SENUM_END(MapObjectType)
 
 // ==========================================================================================
 
 JCORE_SENUM_BEGIN(MapType)
-Dungeon,
-Private,
-Town
+	Dungeon,
+	Private,
+	Town
 JCORE_SENUM_END(MapType)
 
 // ==========================================================================================
 
 JCORE_SENUM_BEGIN(MapBundleType)
-Dungeon,
-Town
+	Dungeon,
+	Town
 JCORE_SENUM_END(MapBundleType)
 
 // ==========================================================================================

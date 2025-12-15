@@ -9,19 +9,18 @@
 #include <JCore/Container/HashMapIterator.h>
 
 NS_JC_BEGIN
-
 template <typename TKey, typename TValue, typename TAllocator = CDefaultAllocator>
 class HashMap : public MapCollection<TKey, TValue, TAllocator>
 {
-	using TKeyValuePair			= Pair<TKey, TValue>;
-	using TMapCollection		= MapCollection<TKey, TValue, TAllocator>;
-	using TIterator				= Iterator<TKeyValuePair, TAllocator>;
-	using THashMap				= HashMap<TKey, TValue, TAllocator>;
-	using THashMapIterator		= HashMapIterator<TKey, TValue, TAllocator>;
-	using TKeyCollection		= typename TMapCollection::KeyCollection;
-	using TValueCollection		= typename TMapCollection::ValueCollection;
-	using TKeyCollectionIterator	= typename TMapCollection::KeyCollectionIterator;
-	using TValueCollectionIterator	= typename TMapCollection::ValueCollectionIterator;
+	using TKeyValuePair = Pair<TKey, TValue>;
+	using TMapCollection = MapCollection<TKey, TValue, TAllocator>;
+	using TIterator = Iterator<TKeyValuePair, TAllocator>;
+	using THashMap = HashMap<TKey, TValue, TAllocator>;
+	using THashMapIterator = HashMapIterator<TKey, TValue, TAllocator>;
+	using TKeyCollection = typename TMapCollection::KeyCollection;
+	using TValueCollection = typename TMapCollection::ValueCollection;
+	using TKeyCollectionIterator = typename TMapCollection::KeyCollectionIterator;
+	using TValueCollectionIterator = typename TMapCollection::ValueCollectionIterator;
 
 public:
 	// 내부 구조체 전방 선언 (inner struct forward declaration)
@@ -32,13 +31,13 @@ public:
 
 public:
 	HashMap(int _capacity = HashTable<TKey, TValue, TAllocator>::TABLE_DEFAULT_CAPACITY)
-		: TMapCollection()
-		, hashTable_(_capacity)
+	: TMapCollection()
+	, hashTable_(_capacity)
 	{
 	}
 
 	HashMap(const THashMap& _other)
-		: THashMap(_other.hashTable_.capacity_)
+	: THashMap(_other.hashTable_.capacity_)
 	{
 		operator=(_other);
 	}
@@ -50,7 +49,7 @@ public:
 
 	// 이니셜라이저로 초기화 하는 경우 보통 더 확장안시킬 확률이 크므로.. 맞춤형으로 가자.
 	HashMap(std::initializer_list<TKeyValuePair> _ilist)
-		: THashMap(static_cast<int>(_ilist.size()) + 1)
+	: THashMap(static_cast<int>(_ilist.size()) + 1)
 	{
 		operator=(_ilist);
 	}
@@ -237,12 +236,12 @@ protected:
 public:
 	struct HashMapKeyCollection : public TKeyCollection
 	{
-		using TEnumerator	= SharedPtr<Iterator<TKey, TAllocator>>;
-		using TCollection	= Collection<TKey, TAllocator>;
+		using TEnumerator = SharedPtr<Iterator<TKey, TAllocator>>;
+		using TCollection = Collection<TKey, TAllocator>;
 
 		HashMapKeyCollection(THashMap* _pHashMap)
-			: TKeyCollection(_pHashMap)
-			, pHashMap_(_pHashMap)
+		: TKeyCollection(_pHashMap)
+		, pHashMap_(_pHashMap)
 		{
 		}
 
@@ -293,9 +292,11 @@ public:
 
 	struct HashMapKeyCollectionIterator final : public TKeyCollectionIterator
 	{
-		HashMapKeyCollectionIterator(CVoidOwner& _owner, typename HashTable<TKey, TValue, TAllocator>::TBucket* _pCurrentBucket, int _currentBucketIndex)
-			: TKeyCollectionIterator(_owner, &hashMapIterator_)
-			, hashMapIterator_(_owner, _pCurrentBucket, _currentBucketIndex)
+		HashMapKeyCollectionIterator(CVoidOwner& _owner,
+		                             typename HashTable<TKey, TValue, TAllocator>::TBucket* _pCurrentBucket,
+		                             int _currentBucketIndex)
+		: TKeyCollectionIterator(_owner, &hashMapIterator_)
+		, hashMapIterator_(_owner, _pCurrentBucket, _currentBucketIndex)
 		{
 		}
 
@@ -306,12 +307,12 @@ public:
 
 	struct HashMapValueCollection final : public TValueCollection
 	{
-		using TEnumerator	= SharedPtr<Iterator<TValue, TAllocator>>;
-		using TCollection	= Collection<TValue, TAllocator>;
+		using TEnumerator = SharedPtr<Iterator<TValue, TAllocator>>;
+		using TCollection = Collection<TValue, TAllocator>;
 
 		HashMapValueCollection(THashMap* _pHashMap)
-			: TMapCollection::ValueCollection(_pHashMap)
-			, pHashMap_(_pHashMap)
+		: TMapCollection::ValueCollection(_pHashMap)
+		, pHashMap_(_pHashMap)
 		{
 		}
 
@@ -352,9 +353,11 @@ public:
 
 	struct HashMapValueCollectionIterator final : public TValueCollectionIterator
 	{
-		HashMapValueCollectionIterator(CVoidOwner& _owner, typename HashTable<TKey, TValue, TAllocator>::TBucket* _pCurrentBucket, int _currentBucketIndex)
-			: TValueCollectionIterator(_owner, &hashMapIterator_)
-			, hashMapIterator_(_owner, _pCurrentBucket, _currentBucketIndex)
+		HashMapValueCollectionIterator(CVoidOwner& _owner,
+		                               typename HashTable<TKey, TValue, TAllocator>::TBucket* _pCurrentBucket,
+		                               int _currentBucketIndex)
+		: TValueCollectionIterator(_owner, &hashMapIterator_)
+		, hashMapIterator_(_owner, _pCurrentBucket, _currentBucketIndex)
 		{
 		}
 

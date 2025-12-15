@@ -24,17 +24,17 @@
 #pragma pack(push, CMD_ALIGNMENT)
 
 STATIC_CMD_BEGIN(CAU_Login, CMDID_CAU_Login)
-SGStaticString<Const::StringLen::AccountId> Id;
-SGStaticString<Const::StringLen::AccountPass> Pass;
+SGStaticString<Const::StringLen::AccountId> id_;
+SGStaticString<Const::StringLen::AccountPass> pass_;
 STATIC_CMD_END
 
 
 STATIC_CMD_BEGIN(AUC_LoginAck, CMDID_AUC_LoginAck)
-LoginResult_t Result;
-AuthenticationSerial_t Serial;
-GameServerType_t LastServer;
-JCore::DateTime BanBeginDate;
-JCore::DateTime BanEndDate;
+LoginResult_t result_;
+AuthenticationSerial_t serial_;
+GameServerType_t lastServer_;
+JCore::DateTime banBeginDate_;
+JCore::DateTime banEndDate_;
 STATIC_CMD_END
 
 

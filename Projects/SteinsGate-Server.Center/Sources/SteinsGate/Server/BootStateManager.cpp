@@ -11,16 +11,22 @@
 
 USING_NS_JC;
 
-void BootStateManager::Initialize() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void BootStateManager::Initialize()
+{
 	Arrays::Fill(m_eStates, ServerBootState::Stopped);
 }
 
-void BootStateManager::SetState(int serverId, ServerBootState_t state) {
-	DebugAssert(serverId >= 0 && serverId <= Const::Server::MaxProcessId);
-	m_eStates[serverId] = state;
+//////////////////////////////////////////////////////////////////////////////////////////
+void BootStateManager::SetState(int _serverId, ServerBootState_t _state)
+{
+	DebugAssert(_serverId >= 0 && _serverId <= Const::Server::MaxProcessId);
+	m_eStates[_serverId] = _state;
 }
 
-ServerBootState_t BootStateManager::GetState(int serverId) {
-	DebugAssert(serverId >= 0 && serverId <= Const::Server::MaxProcessId);
-	return m_eStates[serverId];
+//////////////////////////////////////////////////////////////////////////////////////////
+ServerBootState_t BootStateManager::GetState(int _serverId)
+{
+	DebugAssert(_serverId >= 0 && _serverId <= Const::Server::MaxProcessId);
+	return m_eStates[_serverId];
 }

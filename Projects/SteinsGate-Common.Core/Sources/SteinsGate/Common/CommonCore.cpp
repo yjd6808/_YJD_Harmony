@@ -15,17 +15,19 @@ USING_NS_JC;
 USING_NS_JNET;
 
 NS_CORE_BEGIN
-::CLIThread*					CLIThread;
-::ServerProcessInfoPackage*		ServerProcessInfoPackage;	// 메인 프로그램에서 주입해줄 것 (TODO: Common.Server로 옮기기)
-::CommonInfo*					CommonInfo;					// 메인 프로그램에서 주입해줄 것	
-::CharCommonInfo*				CharCommon;					// 메인 프로그램에서 주입해줄 것 (TODO: 전역으로 두기 좀 그럼)
-::ThreadPool*					ThreadPool;					// 메인 프로그램에서 주입해줄 것
-::Scheduler*					Scheduler;					// 메인 프로그램에서 주입해줄 것
-::RuntimeConfigBase*			RuntimeConfigBase;			// 메인 프로그램에서 주입해줄 것
+::CLIThread* CLIThread;
+::ServerProcessInfoPackage* ServerProcessInfoPackage; // 메인 프로그램에서 주입해줄 것 (TODO: Common.Server로 옮기기)
+::CommonInfo* CommonInfo; // 메인 프로그램에서 주입해줄 것	
+::CharCommonInfo* CharCommon; // 메인 프로그램에서 주입해줄 것 (TODO: 전역으로 두기 좀 그럼)
+::ThreadPool* ThreadPool; // 메인 프로그램에서 주입해줄 것
+::Scheduler* Scheduler; // 메인 프로그램에서 주입해줄 것
+::RuntimeConfigBase* RuntimeConfigBase; // 메인 프로그램에서 주입해줄 것
 JNetwork::CommandNameDictionary CommandNameDictionary;
 NS_CORE_END
 
-void InitializeCommonCore() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void InitializeCommonCore()
+{
 	DefaultParserType = PacketParser::Command;
 
 	Core::CLIThread = dbg_new CLIThread();
@@ -44,7 +46,9 @@ void InitializeCommonCore() {
 	Core::CommandNameDictionary.Add<SC_ClientText>();
 }
 
-void FinalizeCommonCore() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void FinalizeCommonCore()
+{
 	if (Core::ThreadPool)
 		Core::ThreadPool->Join(ThreadPool::JoinStrategy::WaitAllTasks);
 

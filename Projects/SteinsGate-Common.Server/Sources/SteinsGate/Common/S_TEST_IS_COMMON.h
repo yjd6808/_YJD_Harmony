@@ -14,6 +14,6 @@ struct S_TEST_IS_COMMON : InterServerSendHelper<S_TEST_IS_COMMON>
 {
 	// HOST
 	// RELAY
-	static bool SEND_SS_P2PRelayStaticTest(const char* msg);
-	static bool SEND_SS_P2PRelayDynamicTest(const char* msg);
+	static bool SEND_SS_P2PRelayStaticTest(const char* _pMsg);
+	static bool SEND_SS_P2PRelayDynamicTest(const char* _pMsg);
 };

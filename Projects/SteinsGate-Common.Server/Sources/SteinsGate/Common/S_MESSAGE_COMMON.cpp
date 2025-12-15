@@ -13,7 +13,9 @@
 #include <SteinsGate/Common/Cmd_MESSAGE.h>
 
 
-void S_MESSAGE_COMMON::SEND_SC_ClientText(const char* clientTextKey) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void S_MESSAGE_COMMON::SEND_SC_ClientText(const char* _pClientTextKey)
+{
 	auto sending = SendBegin<SC_ClientText>();
-	sending.Cmd.Key.SetString(clientTextKey);
+	sending.Cmd.Key.SetString(_pClientTextKey);
 }

@@ -18,8 +18,7 @@ struct S_SETUP_IS : InterServerSendHelper<S_SETUP_IS>
 {
 	static bool SEND_CES_WhoAreYou();
 	static bool SEND_CES_AlreadyConnected();
-	static bool SEND_CES_YouNeedToDoThis(CenterOrder_t order);
-	static bool SEND_CES_TimeSyncAck(SCE_TimeSync& time);
+	static bool SEND_CES_YouNeedToDoThis(CenterOrder_t _order);
+	static bool SEND_CES_TimeSyncAck(SCE_TimeSync& _time);
 };
-
 

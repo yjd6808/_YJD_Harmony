@@ -15,13 +15,11 @@ class CLIListenerCommon : public CLIListenerBase
 public:
 	CLIListenerCommon();
 
-	bool OnInputProcessing(int argc, JCore::String* argv) override;
+	bool OnInputProcessing(int _argc, JCore::String* _pArgv) override;
+
 private:
-	bool CLI_HelpCommon(int argc, JCore::String* argv);
-	bool CLI_ExitCommon(int argc, JCore::String* argv);
+	bool CLI_HelpCommon(int _argc, JCore::String* _pArgv);
+	bool CLI_ExitCommon(int _argc, JCore::String* _pArgv);
 
-	TCLI_Table m_Table;
+	TCLI_Table table_;
 };
-
-
-

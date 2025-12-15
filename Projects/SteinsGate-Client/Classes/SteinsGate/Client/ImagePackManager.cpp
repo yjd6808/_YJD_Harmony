@@ -16,223 +16,320 @@
 
 #include <SteinsGate/Client/Global.h>
 
-
-
 USING_NS_CC;
 USING_NS_JC;
 
-ImagePackManager::ImagePackManager() {}
-ImagePackManager::~ImagePackManager() {
-	for (int i = 0; i < Const::Resource::MaxSgaFileCount; ++i) {
-		JCORE_DELETE_SAFE(m_LoadedPackages[i]);
+//////////////////////////////////////////////////////////////////////////////////////////
+ImagePackManager::ImagePackManager()
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+ImagePackManager::~ImagePackManager()
+{
+	for (int i = 0; i < Const::Resource::MaxSgaFileCount; ++i)
+	{
+		JCORE_DELETE_SAFE(loadedPackages_[i]);
 	}
 }
 
-void ImagePackManager::loadAllPackages() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ImagePackManager::loadAllPackages()
+{
+	constexpr int THREAD_COUNT = Const::Resource::MaxSgaParallelLoadingThreadCount;
 
-	constexpr int ThreadCount = Const::Resource::MaxSgaParallelLoadingThreadCount;
-
-	SGThread loaderThread[ThreadCount];
-	SGString imageDirPath = Path::Combine(Core::CommonInfo->DataPath, Const::Resource::ImageDirName);
+	SGThread loaderThread[THREAD_COUNT];
+	SGString imageDirPath = Path::Combine(Core::CommonInfo->dataPath_, Const::Resource::ImageDirName);
 	SGVector<SGString> paths = Directory::Files(imageDirPath, false);
 	SGVector<SGString> sgaPaths;
 
-	for (int i = 0; i < paths.Size(); ++i) {
-		if (paths[i].EndWith(".sga")) {
+	for (int i = 0; i < paths.Size(); ++i)
+	{
+		if (paths[i].EndWith(".sga"))
+		{
 			sgaPaths.PushBack(paths[i]);
 		}
 	}
 
-	for (int i = 0; i < sgaPaths.Size(); i++) {
-		m_PathToIdMap.Insert(Path::FileName(sgaPaths[i]), i);
+	for (int i = 0; i < sgaPaths.Size(); ++i)
+	{
+		pathToIdMap_.Insert(Path::FileName(sgaPaths[i]), i);
 	}
 
-	m_iLoadedPackageCount = sgaPaths.Size();
+	loadedPackageCount_ = sgaPaths.Size();
 
 	// 8개씩 병렬 로딩 진행
-	for (int i = 0; i < ThreadCount; ++i) {
-		loaderThread[i].Start([i, this, &sgaPaths](void*) {
-			for (int j = i; j < m_iLoadedPackageCount; j += ThreadCount) {
-				SgaPackagePtr package = SgaLoader::LoadHeaderOnly(sgaPaths[j]);
-				m_LoadedPackages[j] = dbg_new ImagePack(package, j);
+	for (int i = 0; i < THREAD_COUNT; ++i)
+	{
+		loaderThread[i].Start([i, this, &sgaPaths](void*)
+		{
+			for (int j = i; j < loadedPackageCount_; j += THREAD_COUNT)
+			{
+				SgaPackagePtr pPackage = SgaLoader::LoadHeaderOnly(sgaPaths[j]);
+				loadedPackages_[j] = dbg_new ImagePack(pPackage, j);
 			}
-			});
+		});
 	}
 
-	for (int i = 0; i < ThreadCount; ++i) {
+	for (int i = 0; i < THREAD_COUNT; ++i)
+	{
 		loaderThread[i].Join();
 	}
-	_LogInfo_("sga 파일 %d개 헤더 인덱싱 완료", m_iLoadedPackageCount);
+
+	_LogInfo_("sga 파일 %d개 헤더 인덱싱 완료", loadedPackageCount_);
 }
 
-void ImagePackManager::unloadPackData(int packIndex) {
-	getPack(packIndex)->unload();
+//////////////////////////////////////////////////////////////////////////////////////////
+void ImagePackManager::unloadPackData(int _packIndex)
+{
+	getPack(_packIndex)->unload();
 }
 
-ImagePack* ImagePackManager::getPack(const SGString& packName) {
-	DebugAssertMsg(m_PathToIdMap.Exist(packName), "해당 패키지가 존재하지 않습니다.");
-	return m_LoadedPackages[m_PathToIdMap[packName]];
+//////////////////////////////////////////////////////////////////////////////////////////
+ImagePack* ImagePackManager::getPack(const SGString& _packName)
+{
+	DebugAssertMsg(pathToIdMap_.Exist(_packName), "해당 패키지가 존재하지 않습니다.");
+	return loadedPackages_[pathToIdMap_[_packName]];
 }
 
-ImagePack* ImagePackManager::getPack(const char* packName) {
-	DebugAssertMsg(m_PathToIdMap.Exist(packName), "해당 패키지가 존재하지 않습니다.");
-	return m_LoadedPackages[m_PathToIdMap[packName]];
+//////////////////////////////////////////////////////////////////////////////////////////
+ImagePack* ImagePackManager::getPack(const char* _pPackName)
+{
+	DebugAssertMsg(pathToIdMap_.Exist(_pPackName), "해당 패키지가 존재하지 않습니다.");
+	return loadedPackages_[pathToIdMap_[_pPackName]];
 }
 
-ImagePack* ImagePackManager::getPackUnsafe(const SGString& packName) {
-	if (!m_PathToIdMap.Exist(packName))
-		return nullptr;
-
-	return m_LoadedPackages[m_PathToIdMap[packName]];
-}
-
-ImagePack* ImagePackManager::getPackUnsafe(const char* packName) {
-	if (!m_PathToIdMap.Exist(packName))
-		return nullptr;
-
-	return m_LoadedPackages[m_PathToIdMap[packName]];
-}
-
-ImagePack* ImagePackManager::getPack(const int idx) {
-	DebugAssertMsg(IsValidPackIndex(idx), "올바르지 않은 패키지 인덱스 입니다.");
-	return m_LoadedPackages[idx];
-}
-
-ImagePack* ImagePackManager::getPackUnsafe(const int idx) {
-	if (!IsValidPackIndex(idx)) {
+//////////////////////////////////////////////////////////////////////////////////////////
+ImagePack* ImagePackManager::getPackUnsafe(const SGString& _packName)
+{
+	if (!pathToIdMap_.Exist(_packName))
+	{
 		return nullptr;
 	}
 
-	return m_LoadedPackages[idx];
+	return loadedPackages_[pathToIdMap_[_packName]];
 }
 
-ImagePack* ImagePackManager::getAvatarPack(CharType_t charType, AvatarType_t part) {
-	DebugAssertMsg(charType >= CharType::Begin && charType >= CharType::End, "올바르지 않은 캐릭터 타입입니다.");
-	DebugAssertMsg(part >= AvatarType::Begin && part < AvatarType::Max, "아바타 타입이 올바르지 않습니다.");
-
-	if (m_AvatarPacks[charType][part] == nullptr) {
-		const SGString& sgaName = Global::Get()->getAvatarSgaName(charType, part);
-		m_AvatarPacks[charType][part] = getPack(sgaName);
+//////////////////////////////////////////////////////////////////////////////////////////
+ImagePack* ImagePackManager::getPackUnsafe(const char* _pPackName)
+{
+	if (!pathToIdMap_.Exist(_pPackName))
+	{
+		return nullptr;
 	}
 
-	return m_AvatarPacks[charType][part];
+	return loadedPackages_[pathToIdMap_[_pPackName]];
 }
 
-ImagePack* ImagePackManager::getWeaponPack(WeaponType_t weaponType) {
-	DebugAssertMsg(weaponType >= WeaponType::Begin && weaponType < WeaponType::Max, "무기 타입이 올바르지 않습니다.");
+//////////////////////////////////////////////////////////////////////////////////////////
+ImagePack* ImagePackManager::getPack(const int _index)
+{
+	DebugAssertMsg(IsValidPackIndex(_index), "올바르지 않은 패키지 인덱스 입니다.");
+	return loadedPackages_[_index];
+}
 
-	if (m_WeaponPacks[weaponType] == nullptr) {
-		const SGString& sgaName = Global::Get()->getWeaponSgaName(weaponType);
-		m_WeaponPacks[weaponType] = getPack(sgaName);
+//////////////////////////////////////////////////////////////////////////////////////////
+ImagePack* ImagePackManager::getPackUnsafe(const int _index)
+{
+	if (!IsValidPackIndex(_index))
+	{
+		return nullptr;
 	}
 
-	return m_WeaponPacks[weaponType];
+	return loadedPackages_[_index];
 }
 
-int ImagePackManager::getAvatarPackIndex(CharType_t charType, AvatarType_t avatarType) {
-	return getAvatarPack(charType, avatarType)->getPackIndex();
+//////////////////////////////////////////////////////////////////////////////////////////
+ImagePack* ImagePackManager::getAvatarPack(CharType_t _charType, AvatarType_t _avatarType)
+{
+	DebugAssertMsg(_charType >= CharType::Begin && _charType >= CharType::End, "올바르지 않은 캐릭터 타입입니다.");
+	DebugAssertMsg(_avatarType >= AvatarType::Begin && _avatarType < AvatarType::Max, "아바타 타입이 올바르지 않습니다.");
+
+	if (avatarPacks_[_charType][_avatarType] == nullptr)
+	{
+		const SGString& sgaName = Global::Get()->getAvatarSgaName(_charType, _avatarType);
+		avatarPacks_[_charType][_avatarType] = getPack(sgaName);
+	}
+
+	return avatarPacks_[_charType][_avatarType];
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+ImagePack* ImagePackManager::getWeaponPack(WeaponType_t _weaponType)
+{
+	DebugAssertMsg(_weaponType >= WeaponType::Begin && _weaponType < WeaponType::Max, "무기 타입이 올바르지 않습니다.");
 
-int ImagePackManager::getWeaponPackIndex(WeaponType_t weaponType) {
-	return getWeaponPack(weaponType)->getPackIndex();
+	if (weaponPacks_[_weaponType] == nullptr)
+	{
+		const SGString& sgaName = Global::Get()->getWeaponSgaName(_weaponType);
+		weaponPacks_[_weaponType] = getPack(sgaName);
+	}
+
+	return weaponPacks_[_weaponType];
 }
 
-
-int ImagePackManager::getPackIndex(const SGString& packName) {
-	DebugAssertMsg(m_PathToIdMap.Exist(packName), "해당 패키지가 존재하지 않습니다. (2)");
-	return m_PathToIdMap[packName];
+//////////////////////////////////////////////////////////////////////////////////////////
+int ImagePackManager::getAvatarPackIndex(CharType_t _charType, AvatarType_t _avatarType)
+{
+	return getAvatarPack(_charType, _avatarType)->getPackIndex();
 }
 
-int ImagePackManager::getPackIndexDefault(const char* packName, int defaultIndex /* = InvalidValue_v */) {
-	if (!m_PathToIdMap.Exist(packName))
-		return defaultIndex;
-
-	return m_PathToIdMap[packName];
+//////////////////////////////////////////////////////////////////////////////////////////
+int ImagePackManager::getWeaponPackIndex(WeaponType_t _weaponType)
+{
+	return getWeaponPack(_weaponType)->getPackIndex();
 }
 
-int ImagePackManager::getPackIndexDefault(const SGString& packName, int defaultIndex /* = InvalidValue_v */) {
-	if (!m_PathToIdMap.Exist(packName))
-		return defaultIndex;
-
-	return m_PathToIdMap[packName];
+//////////////////////////////////////////////////////////////////////////////////////////
+int ImagePackManager::getPackIndex(const SGString& _packName)
+{
+	DebugAssertMsg(pathToIdMap_.Exist(_packName), "해당 패키지가 존재하지 않습니다. (2)");
+	return pathToIdMap_[_packName];
 }
 
-int ImagePackManager::getImgIndexUnsafe(int sgaIndex, const char* imgName) {
-	const ImagePack* pPack = getPackUnsafe(sgaIndex);
-	if (pPack == nullptr) { return InvalidValue_v; }
-	return pPack->getImgIndex(imgName);
+//////////////////////////////////////////////////////////////////////////////////////////
+int ImagePackManager::getPackIndexDefault(const char* _pPackName, int _defaultIndex /* = InvalidValue_v */)
+{
+	if (!pathToIdMap_.Exist(_pPackName))
+	{
+		return _defaultIndex;
+	}
+
+	return pathToIdMap_[_pPackName];
 }
 
-int ImagePackManager::getImgIndexUnsafe(int sgaIndex, const SGString& imgName) {
-	const ImagePack* pPack = getPackUnsafe(sgaIndex);
-	if (pPack == nullptr) { return InvalidValue_v; }
-	return pPack->getImgIndex(imgName);
+//////////////////////////////////////////////////////////////////////////////////////////
+int ImagePackManager::getPackIndexDefault(const SGString& _packName, int _defaultIndex /* = InvalidValue_v */)
+{
+	if (!pathToIdMap_.Exist(_packName))
+	{
+		return _defaultIndex;
+	}
+
+	return pathToIdMap_[_packName];
 }
 
-SGSize ImagePackManager::getTextureSize(int packIndex, int imgIndex, int frameIndex) {
-	const ImagePack* pPack = getPackUnsafe(packIndex);
-	if (pPack == nullptr) { logTexture("이미지팩을 찾지 못함.", { packIndex, imgIndex, frameIndex }, LoggerAbstract::eWarn); return {}; }
+//////////////////////////////////////////////////////////////////////////////////////////
+int ImagePackManager::getImgIndexUnsafe(int _sgaIndex, const char* _pImgName)
+{
+	const ImagePack* pPack = getPackUnsafe(_sgaIndex);
+	if (pPack == nullptr)
+	{
+		return InvalidValue_v;
+	}
 
-	SgaSpriteAbstractPtr sprite = pPack->getSpriteUnsafe(imgIndex, frameIndex);
-	if (sprite == nullptr) { logTexture("스프라이트를 찾지 못함.", { packIndex, imgIndex, frameIndex }, LoggerAbstract::eWarn); return {}; }
+	return pPack->getImgIndex(_pImgName);
+}
 
-	SgaSpriteRect rect = sprite->GetRect();
+//////////////////////////////////////////////////////////////////////////////////////////
+int ImagePackManager::getImgIndexUnsafe(int _sgaIndex, const SGString& _imgName)
+{
+	const ImagePack* pPack = getPackUnsafe(_sgaIndex);
+	if (pPack == nullptr)
+	{
+		return InvalidValue_v;
+	}
+
+	return pPack->getImgIndex(_imgName);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+SGSize ImagePackManager::getTextureSize(int _packIndex, int _imgIndex, int _frameIndex)
+{
+	const ImagePack* pPack = getPackUnsafe(_packIndex);
+	if (pPack == nullptr)
+	{
+		logTexture("이미지팩을 찾지 못함.", { _packIndex, _imgIndex, _frameIndex }, LoggerAbstract::eWarn);
+		return {};
+	}
+
+	SgaSpriteAbstractPtr pSprite = pPack->getSpriteUnsafe(_imgIndex, _frameIndex);
+	if (pSprite == nullptr)
+	{
+		logTexture("스프라이트를 찾지 못함.", { _packIndex, _imgIndex, _frameIndex }, LoggerAbstract::eWarn);
+		return {};
+	}
+
+	SgaSpriteRect rect = pSprite->GetRect();
 	return { rect.GetWidthF(), rect.GetHeightF() };
 }
 
-void ImagePackManager::releaseFrameTexture(int packIndex, int imgIndex, int frameIndex) {
-	getPack(packIndex)->releaseFrameTexture(imgIndex, frameIndex);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ImagePackManager::releaseFrameTexture(int _packIndex, int _imgIndex, int _frameIndex)
+{
+	getPack(_packIndex)->releaseFrameTexture(_imgIndex, _frameIndex);
 }
 
-void ImagePackManager::releaseFrameTexture(const SgaResourceIndex& sgaResourceIndex) {
-	getPack(sgaResourceIndex.Un.SgaIndex)->releaseFrameTexture(
-		sgaResourceIndex.Un.ImgIndex, 
-		sgaResourceIndex.Un.FrameIndex);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ImagePackManager::releaseFrameTexture(const SgaResourceIndex& _sgaResourceIndex)
+{
+	getPack(_sgaResourceIndex.Un.SgaIndex)->releaseFrameTexture(
+		_sgaResourceIndex.Un.ImgIndex,
+		_sgaResourceIndex.Un.FrameIndex);
 }
 
-void ImagePackManager::releaseAllFrameTexture() {
-	for (int i = 0; i < m_iLoadedPackageCount; ++i) {
-		ImagePack* pPack = m_LoadedPackages[i];
+//////////////////////////////////////////////////////////////////////////////////////////
+void ImagePackManager::releaseAllFrameTexture()
+{
+	for (int i = 0; i < loadedPackageCount_; ++i)
+	{
+		ImagePack* pPack = loadedPackages_[i];
 		pPack->clearCache();
 	}
 }
 
-void ImagePackManager::increaseCounter() {
-	m_TextureCounter.CachedCount++;
-	m_TextureCounter.MaxCachedCount = Math::Max(m_TextureCounter.CachedCount, m_TextureCounter.MaxCachedCount);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ImagePackManager::increaseCounter()
+{
+	textureCounter_.CachedCount++;
+	textureCounter_.MaxCachedCount = Math::Max(textureCounter_.CachedCount, textureCounter_.MaxCachedCount);
 }
 
-void ImagePackManager::decreaseCounter() {
-	m_TextureCounter.CachedCount--;
+//////////////////////////////////////////////////////////////////////////////////////////
+void ImagePackManager::decreaseCounter()
+{
+	textureCounter_.CachedCount--;
 }
 
-void ImagePackManager::resetCounter() {
-	m_TextureCounter.CachedCount = 0;
+//////////////////////////////////////////////////////////////////////////////////////////
+void ImagePackManager::resetCounter()
+{
+	textureCounter_.CachedCount = 0;
 }
 
-void ImagePackManager::logTexture(const SGString& text, const SgaResourceIndex& resource, LoggerAbstract::Level logLevel) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ImagePackManager::logTexture(const SGString& _text, const SgaResourceIndex& _resource,
+                                  LoggerAbstract::Level _logLevel)
+{
 #if DebugMode
-	const ImagePack* pPack = getPackUnsafe(resource.Un.SgaIndex);
-	const SGString szSgaName = pPack ? pPack->getFileName() : "없음";
-	const SGString szImgName = pPack ? pPack->getImgNameOrDefault(resource.Un.ImgIndex, "없음") : "없음";
+	const ImagePack* pPack = getPackUnsafe(_resource.Un.SgaIndex);
+	const SGString sgaName = pPack ? pPack->getFileName() : "없음";
+	const SGString imgName = pPack ? pPack->getImgNameOrDefault(_resource.Un.ImgIndex, "없음") : "없음";
 
 	if (!Logger_v)
-		return;
-
-	if (resource.Un.FrameIndex == InvalidValue_v) {
-		Logger_v->Log(logLevel, "%s / Sga: %s(%d) / Img: %s(%d)", text.Source(), szSgaName.Source(), resource.Un.SgaIndex, szImgName.Source(), resource.Un.ImgIndex);
+	{
 		return;
 	}
 
-	Logger_v->Log(logLevel, "%s / Sga: %s(%d) / Img: %s(%d) / Frame: %d", text.Source(), szSgaName.Source(), resource.Un.SgaIndex, szImgName.Source(), resource.Un.ImgIndex, resource.Un.FrameIndex);
+	if (_resource.Un.FrameIndex == InvalidValue_v)
+	{
+		Logger_v->Log(_logLevel, "%s / Sga: %s(%d) / Img: %s(%d)", _text.Source(), sgaName.Source(),
+		              _resource.Un.SgaIndex, imgName.Source(), _resource.Un.ImgIndex);
+		return;
+	}
+
+	Logger_v->Log(_logLevel, "%s / Sga: %s(%d) / Img: %s(%d) / Frame: %d", _text.Source(), sgaName.Source(),
+	              _resource.Un.SgaIndex, imgName.Source(), _resource.Un.ImgIndex, _resource.Un.FrameIndex);
 #endif
 }
 
-bool ImagePackManager::IsValidPackIndex(int idx) {
-	if (idx >= 0 && idx < m_iLoadedPackageCount)
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ImagePackManager::IsValidPackIndex(int _index)
+{
+	if (_index >= 0 && _index < loadedPackageCount_)
+	{
 		return true;
+	}
 
 	return false;
 }
-

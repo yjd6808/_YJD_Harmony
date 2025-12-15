@@ -12,12 +12,14 @@
 
 struct CharCommonInfo : ConfigDataAbstract
 {
-	CharCommonInfo(int maxLevel)
-		: DefaultInvenSlotCount{}
-		, MaxLevel(maxLevel)
-		, Exp(maxLevel)
-	{}
-	int DefaultInvenSlotCount[InvenItemType::Max];
-	int MaxLevel;
-	SGVector<int> Exp;
+	CharCommonInfo(int _maxLevel)
+	: defaultInvenSlotCount_{}
+	, maxLevel_(_maxLevel)
+	, expTables_(_maxLevel)
+	{
+	}
+
+	int defaultInvenSlotCount_[InvenItemType::Max];
+	int maxLevel_;
+	SGVector<int> expTables_;
 };

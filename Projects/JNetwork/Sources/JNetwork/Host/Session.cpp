@@ -418,7 +418,7 @@ void Session::SendAlloc(ICommand* _pCmd)
 {
 	JCORE_LOCK_GUARD(sendBufferLock_);
 
-	const int cmdSize = _pCmd->GetCommandLength();
+	const int cmdSize = _pCmd->GetLength();
 	if (sendBuffer_->GetWritePos() + cmdSize >= MAX_MSS)
 	{
 		FlushSendBuffer();

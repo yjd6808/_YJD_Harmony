@@ -12,29 +12,38 @@
 USING_NS_JC;
 USING_NS_JS;
 
+////////////////////////////////////////////////////////////////////////////////////////
 RuntimeConfig::RuntimeConfig()
-{}
-
-RuntimeConfig::~RuntimeConfig() {
-	
+{
 }
 
-void RuntimeConfig::OnLoading(Json::Value& root) {
-	ReadCore(root);
-	ReadCommon(root);
-	Read(root);
+////////////////////////////////////////////////////////////////////////////////////////
+RuntimeConfig::~RuntimeConfig()
+{
 }
 
-void RuntimeConfig::OnSaving(Json::Value& root) {
-	WriteCore(root);
-	WriteCommon(root);
-	Write(root);
+////////////////////////////////////////////////////////////////////////////////////////
+void RuntimeConfig::OnLoading(Json::Value& _root)
+{
+	ReadCore(_root);
+	ReadCommon(_root);
+	Read(_root);
 }
 
-void RuntimeConfig::Read(Json::Value& root) {
-
+////////////////////////////////////////////////////////////////////////////////////////
+void RuntimeConfig::OnSaving(Json::Value& _root)
+{
+	WriteCore(_root);
+	WriteCommon(_root);
+	Write(_root);
 }
 
-void RuntimeConfig::Write(Json::Value& root) {
+////////////////////////////////////////////////////////////////////////////////////////
+void RuntimeConfig::Read(Json::Value& _root)
+{
+}
 
+////////////////////////////////////////////////////////////////////////////////////////
+void RuntimeConfig::Write(Json::Value& _root)
+{
 }

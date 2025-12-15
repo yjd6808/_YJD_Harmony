@@ -20,14 +20,14 @@ public:
 	CommonServer* GetMainTcp() const override { return m_pCenterTcp; }
 	CenterServer* GetCenterTcp() const { return m_pCenterTcp; }
 	SGISessionContainer* GetSessionSessionContainer() const { return m_pCenterSessionContainer; }
-	SGISessionContainer* GetSessionContainer(ServerType_t type) override;
-	CommonSession* GetSessionFromContainer(int handle) override;
+	SGISessionContainer* GetSessionContainer(ServerType_t _type) override;
+	CommonSession* GetSessionFromContainer(int _handle) override;
 protected:
 	void InitializeBufferPool() override;
 	void InitializeIOCP() override;
 	void InitializeParser() override;
 	void InitializeServer() override;
-	void OnUpdate(const JCore::TimeSpan& elapsed) override;
+	void OnUpdate(const JCore::TimeSpan& _elapsed) override;
 
 	SGISessionContainer* m_pCenterSessionContainer;
 	CenterServer* m_pCenterTcp;

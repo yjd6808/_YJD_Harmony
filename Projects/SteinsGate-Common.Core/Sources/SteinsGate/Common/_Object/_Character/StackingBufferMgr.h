@@ -13,7 +13,8 @@
 class CStackingBufferMgr
 {
 public:
-	void Add(Int32U _id, Int32U _type, float _deltaPerSec, Int32U _duration, bool _isPercentStacking = false, float _percentBase = 0.f);
+	void Add(Int32U _id, Int32U _type, float _deltaPerSec, Int32U _duration, bool _isPercentStacking = false,
+	         float _percentBase = 0.f);
 	bool Remove(Int32U _id);
 
 	bool IsExist(Int32U _id) const;
@@ -23,6 +24,7 @@ public:
 	const CStackingBuffer& Get(Int32U _id) const;
 
 	void ResetDirtyAll();
+
 private:
-	JCore::HashMap<Int32U, CStackingBuffer>	map_;
+	JCore::HashMap<Int32U, CStackingBuffer> map_;
 };

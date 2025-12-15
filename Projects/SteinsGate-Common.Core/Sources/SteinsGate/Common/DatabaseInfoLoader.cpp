@@ -16,47 +16,55 @@
 USING_NS_JC;
 USING_NS_JS;
 
-DatabaseInfoLoader::DatabaseInfoLoader(DataManagerAbstract* manager)
-	: ConfigFileLoaderAbstract(manager)
-{}
+////////////////////////////////////////////////////////////////////////////////////////
+DatabaseInfoLoader::DatabaseInfoLoader(DataManagerAbstract* _pManager)
+: ConfigFileLoaderAbstract(_pManager)
+{
+}
 
-bool DatabaseInfoLoader::load() {
+////////////////////////////////////////////////////////////////////////////////////////
+bool DatabaseInfoLoader::Load()
+{
 	Value root;
 
-	if (!loadJson(root)) {
+	if (!LoadJson(root))
+	{
 		return false;
 	}
 
-	try {
+	try
+	{
 		Value& databaseListRoot = root["database"];
 
-		for (int i = 0; i < databaseListRoot.size(); ++i) {
-			Value& databasetRoot = databaseListRoot[i];
+		for (int i = 0; i < databaseListRoot.size(); ++i)
+		{
+			Value& databaseRoot = databaseListRoot[i];
 			DatabaseInfo* pDatabaseInfo = dbg_new DatabaseInfo;
-			readDatabaseInfo(databasetRoot, pDatabaseInfo);
-			addData(pDatabaseInfo);
+			ReadDatabaseInfo(databaseRoot, pDatabaseInfo);
+			AddData(pDatabaseInfo);
 		}
 	}
-	catch (std::exception& ex) {
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
+	catch (std::exception& _ex)
+	{
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), _ex.what());
 		return false;
 	}
 
 	return true;
 }
 
-void DatabaseInfoLoader::readDatabaseInfo(Value& databaseRoot, DatabaseInfo* databaseInfo) {
-	databaseInfo->Code = databaseRoot["code"].asInt();
-	databaseInfo->Name = JsonUtil::getString(databaseRoot["name"]);
-	databaseInfo->HostName = JsonUtil::getString(databaseRoot["hostname"]);
-	databaseInfo->ConnectionPort = (Int16U)databaseRoot["connection_port"].asInt();
-	JsonUtil::parseIntNumberN(databaseRoot["use"], databaseInfo->Use, ServerProcessType::Count);
-	JsonUtil::parseIntNumberN(databaseRoot["connection_pool_size"], databaseInfo->ConnectionPoolSize, ServerProcessType::Count);
-	JsonUtil::parseIntNumberN(databaseRoot["max_connection"], databaseInfo->MaxConnection, ServerProcessType::Count);
-	JsonUtil::parseIntNumberN(databaseRoot["iocp_thread_count"], databaseInfo->IocpThreadCount, ServerProcessType::Count);
-	databaseInfo->AccountId = JsonUtil::getString(databaseRoot["account_id"]);
-	databaseInfo->AccountPass = JsonUtil::getString(databaseRoot["account_pass"]);
-	databaseInfo->SchemaName = JsonUtil::getString(databaseRoot["schema_name"]);
+////////////////////////////////////////////////////////////////////////////////////////
+void DatabaseInfoLoader::ReadDatabaseInfo(Value& _databaseRoot, DatabaseInfo* _pDatabaseInfo)
+{
+	_pDatabaseInfo->code_ = _databaseRoot["code"].asInt();
+	_pDatabaseInfo->name_ = JsonUtil::GetString(_databaseRoot["name"]);
+	_pDatabaseInfo->hostName_ = JsonUtil::GetString(_databaseRoot["hostname"]);
+	_pDatabaseInfo->connPort_ = (Int16U)_databaseRoot["connection_port"].asInt();
+	JsonUtil::ParseIntNumberN(_databaseRoot["use"], _pDatabaseInfo->use_, ServerProcessType::Count);
+	JsonUtil::ParseIntNumberN(_databaseRoot["connection_pool_size"], _pDatabaseInfo->connPoolSize_,ServerProcessType::Count);
+	JsonUtil::ParseIntNumberN(_databaseRoot["max_connection"], _pDatabaseInfo->maxConnection_, ServerProcessType::Count);
+	JsonUtil::ParseIntNumberN(_databaseRoot["iocp_thread_count"], _pDatabaseInfo->iocpThreadCount_,ServerProcessType::Count);
+	_pDatabaseInfo->accountId_ = JsonUtil::GetString(_databaseRoot["account_id"]);
+	_pDatabaseInfo->accountPass_ = JsonUtil::GetString(_databaseRoot["account_pass"]);
+	_pDatabaseInfo->schemaName_ = JsonUtil::GetString(_databaseRoot["schema_name"]);
 }
-
-

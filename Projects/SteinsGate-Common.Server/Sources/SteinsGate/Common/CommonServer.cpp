@@ -15,47 +15,60 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-CommonServer::CommonServer(const IOCPPtr& iocp, const MemoryPoolAbstractPtr& bufferAllocator)
-	: TcpServer(iocp, bufferAllocator)
-	, m_eBootState(ServerBootState::Stopped)
-{}
-
-void CommonServer::OnStarted() {
-	const ServerType_t eType = GetServerType();
-
-	// 중앙서버는 자신이 부트상태를 관리하므로
-	if (eType == ServerType::Center)
-		return;
-
-	m_eBootState = ServerBootState::Launched;
-	S_SETUP_IS_COMMON::SetInformation(Core::InterServerClientTcp, SendStrategy::SendAsync);
-	S_SETUP_IS_COMMON::SEND_SCE_NotifyBootState(Core::ServerProcessInfo->ServerId, eType, ServerBootState::Launched);
+////////////////////////////////////////////////////////////////////////////////////////////////////
+CommonServer::CommonServer(const IOCPPtr& _pIocp, const MemoryPoolAbstractPtr& _pBufferAllocator)
+: TcpServer(_pIocp, _pBufferAllocator)
+, bootState_(ServerBootState::Stopped)
+{
 }
 
-void CommonServer::OnStartFailed(Int32U errorCode) {
-	const ServerType_t eType = GetServerType();
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void CommonServer::OnStarted()
+{
+	const ServerType_t serverType = GetServerType();
 
 	// 중앙서버는 자신이 부트상태를 관리하므로
-	if (eType == ServerType::Center)
+	if (serverType == ServerType::Center)
 		return;
 
-	m_eBootState = ServerBootState::Stopped;
+	bootState_ = ServerBootState::Launched;
 	S_SETUP_IS_COMMON::SetInformation(Core::InterServerClientTcp, SendStrategy::SendAsync);
-	S_SETUP_IS_COMMON::SEND_SCE_NotifyOrderFailed(Core::ServerProcessInfo->ServerId, eType, CenterOrder::LaunchServer, errorCode);
+	S_SETUP_IS_COMMON::SEND_SCE_NotifyBootState(Core::ServerProcessInfo->serverId_, serverType,
+	                                            ServerBootState::Launched);
 }
 
-void CommonServer::OnStopped() {
-	const ServerType_t eType = GetServerType();
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void CommonServer::OnStartFailed(Int32U _errorCode)
+{
+	const ServerType_t serverType = GetServerType();
 
 	// 중앙서버는 자신이 부트상태를 관리하므로
-	if (eType == ServerType::Center)
+	if (serverType == ServerType::Center)
 		return;
 
-	m_eBootState = ServerBootState::Stopped;
+	bootState_ = ServerBootState::Stopped;
 	S_SETUP_IS_COMMON::SetInformation(Core::InterServerClientTcp, SendStrategy::SendAsync);
-	S_SETUP_IS_COMMON::SEND_SCE_NotifyBootState(Core::ServerProcessInfo->ServerId, eType, ServerBootState::Stopped);
+	S_SETUP_IS_COMMON::SEND_SCE_NotifyOrderFailed(Core::ServerProcessInfo->serverId_, serverType,
+	                                              CenterOrder::LaunchServer, _errorCode);
 }
 
-void CommonServer::OnUpdate(const JCore::TimeSpan& elapsed) {
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void CommonServer::OnStopped()
+{
+	const ServerType_t serverType = GetServerType();
 
+	// 중앙서버는 자신이 부트상태를 관리하므로
+	if (serverType == ServerType::Center)
+		return;
+
+	bootState_ = ServerBootState::Stopped;
+	S_SETUP_IS_COMMON::SetInformation(Core::InterServerClientTcp, SendStrategy::SendAsync);
+	S_SETUP_IS_COMMON::SEND_SCE_NotifyBootState(Core::ServerProcessInfo->serverId_, serverType,
+	                                            ServerBootState::Stopped);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void CommonServer::OnUpdate(const JCore::TimeSpan& _elapsed)
+{
+	(void)_elapsed;
 }

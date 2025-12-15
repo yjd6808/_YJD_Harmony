@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 1:44:44 PM
  * =====================
@@ -14,12 +14,15 @@
 struct CharBaseInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	CharBaseInfoLoader(DataManagerAbstract* manager);
+	CharBaseInfoLoader(DataManagerAbstract* _pManager);
 
-	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Char_Base; }
-	
-	bool load() override;
+	ConfigFileType_t GetConfigFileType() override
+	{
+		return ConfigFileType::Char_Base;
+	}
 
-	static void readCharBaseInfo(Json::Value& charBaseRoot, CharBaseInfo* baseInfo);
-	static void readGunnerInfo(Json::Value& gunnerBaseRoot, GunnerInfo* baseInfo);
+	bool Load() override;
+
+	static void ReadCharBaseInfo(Json::Value& _charBaseRoot, CharBaseInfo* _pBaseInfo);
+	static void ReadGunnerInfo(Json::Value& _gunnerBaseRoot, GunnerInfo* _pBaseInfo);
 };

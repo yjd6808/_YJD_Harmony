@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <JCore/Container/Vector.h>
@@ -16,33 +15,40 @@
 
 template <typename T>
 struct InterServerSendHelper;
+
+//////////////////////////////////////////////////////////////////////////////////////////
 struct InterServerSendHelperBase : JNetwork::SendHelperBase
 {
 	struct Information
 	{
-		JNetwork::Session* Sender;				// 패킷을 전송할 호스트
-		JNetwork::SendStrategy Strategy;
-		JNetwork::IPv4EndPoint Destination;
-		int ToId;
+		JNetwork::Session* sender_; // 패킷을 전송할 호스트
+		JNetwork::SendStrategy strategy_;
+		JNetwork::IPv4EndPoint destination_;
+		int toId_;
 
 		Information();
 	};
 
 	struct AutoFlush
 	{
-		~AutoFlush() { FlushSendBuffer(); }
+		~AutoFlush()
+		{
+			FlushSendBuffer();
+		}
 	};
 
 	static void InitSingleServerIds();
 	static void InitSingleServerDestinations();
 
 	static void FlushSendBuffer();
-	static void SetInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy, int toServerId = InvalidValue_v);
-	static void SetInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy, SingleServerType_t toServerType);
-	static void SendEnd(JNetwork::IPacket* packet);
+	static void SetInformation(JNetwork::Session* _pSender, JNetwork::SendStrategy _strategy,
+	                           int _toServerId = InvalidValue_v);
+	static void SetInformation(JNetwork::Session* _pSender, JNetwork::SendStrategy _strategy,
+	                           SingleServerType_t _toServerType);
+	static void SendEnd(JNetwork::IPacket* _packet);
 
-	static bool IsValidInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy, int toServerId);
-	
+	static bool IsValidInformation(JNetwork::Session* _pSender, JNetwork::SendStrategy _strategy, int _toServerId);
+
 	static int GetSenderId();
 
 	inline static thread_local Information SendInformation;
@@ -50,24 +56,28 @@ struct InterServerSendHelperBase : JNetwork::SendHelperBase
 	inline static /* readonly */ JNetwork::IPv4EndPoint SingleServerInterServerEP[SingleServerType::Max];
 };
 
+//////////////////////////////////////////////////////////////////////////////////////////
 template <typename T, typename TCommand>
 struct InterServerSending : JCore::NonCopyable
 {
-	InterServerSending(TCommand& cmd, JNetwork::IPacket* packet)
-		: Cmd(cmd)
-		, Packet(packet)
-	{}
-
-	~InterServerSending() {
-		InterServerSendHelper<T>::SendEnd(Packet);
-
-		if (Packet)
-			Packet->Release();
+	InterServerSending(TCommand& _cmd, JNetwork::IPacket* _pPacket)
+	: cmd_(_cmd)
+	, pPacket_(_pPacket)
+	{
 	}
 
-	TCommand& Cmd;
-	JNetwork::IPacket* Packet;
+	~InterServerSending()
+	{
+		InterServerSendHelper<T>::SendEnd(pPacket_);
+
+		if (pPacket_)
+			pPacket_->Release();
+	}
+
+	TCommand& cmd_;
+	JNetwork::IPacket* pPacket_;
 };
+
 
 template <typename T>
 struct InterServerSendHelper : InterServerSendHelperBase
@@ -77,41 +87,47 @@ struct InterServerSendHelper : InterServerSendHelperBase
 	using THelper = InterServerSendHelper<T>;
 
 	template <typename TCommand>
-	static void InitCommand(TCommand& cmd) {
-		if constexpr (IsInterServerRelayCommand_v<TCommand>) {
-			cmd.From = GetSenderId();
+	static void InitCommand(TCommand& _cmd)
+	{
+		if constexpr (IsInterServerRelayCommand_v<TCommand>)
+		{
+			_cmd.From = GetSenderId();
 
-			if (SendInformation.ToId == InvalidValue_v) {
+			if (SendInformation.toId_ == InvalidValue_v)
+			{
 				DebugAssertMsg(false, "누구에게 보낼지 설정되지 않았습니다.");
 				return;
 			}
-			cmd.To = SendInformation.ToId;
-		} else if constexpr (IsInterServerHostCommand_v<TCommand>){
+
+			_cmd.To = SendInformation.toId_;
+		}
+		else if constexpr (IsInterServerHostCommand_v<TCommand>)
+		{
 			// 할거 없음
-		} else {
+		}
+		else
+		{
 			DebugAssert(false);
 		}
 	}
 
-
 	template <typename TCommand>
-	static TSending<TCommand> SendBegin(int count = 1) {
-		DebugAssertMsg(SendInformation.Sender, "%s 샌더가 설정되어있지 않습니다.", TCommand::_Name());
+	static TSending<TCommand> SendBegin(int _count = 1)
+	{
+		DebugAssertMsg(SendInformation.sender_, "%s 샌더가 설정되어있지 않습니다.", TCommand::_Name());
 
 		// InterServerCommand를 상속받지않은 커맨드를 전달하려는 경우를 막아야함.
 		static_assert(IsInterServerCommand_v<TCommand>, "... TCommand is not InterServerCommand");
 
-		if (SendInformation.Strategy == JNetwork::SendStrategy::SendAlloc) {
-			TCommand& cmd = SendInformation.Sender->template SendAlloc<TCommand>(count);
+		if (SendInformation.strategy_ == JNetwork::SendStrategy::SendAlloc)
+		{
+			TCommand& cmd = SendInformation.sender_->template SendAlloc<TCommand>(_count);
 			InitCommand(cmd);
 			return TSending<TCommand>(cmd, nullptr);
 		}
 
-		auto pPacket = dbg_new JNetwork::SinglePacket<TCommand>(count);
-		InitCommand(pPacket->Cmd);
-		return TSending<TCommand>(pPacket->Cmd, pPacket);
+		auto pPacket = dbg_new JNetwork::SinglePacket<TCommand>(_count);
+		InitCommand(pPacket->cmd_);
+		return TSending<TCommand>(pPacket->cmd_, pPacket);
 	}
-
 };
-
-

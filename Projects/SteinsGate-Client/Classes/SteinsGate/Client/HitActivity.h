@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <SteinsGate/Client/AIActivity.h>
@@ -13,6 +12,5 @@
 class JCORE_NOVTABLE HitActivity : public AIActivity
 {
 public:
-	HitActivity(Actor* actor);
+	HitActivity(Actor* _pActor);
 };
-

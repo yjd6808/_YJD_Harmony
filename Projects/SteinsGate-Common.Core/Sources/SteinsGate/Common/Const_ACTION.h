@@ -13,11 +13,10 @@
 #include <SteinsGate/Common/Const_FPS.h>
 
 NS_CONST_BEGIN
-
 namespace Action
 {
-	inline constexpr int ComboSequenceCount = 5;					// 콤보 가능키 최대 몇개?
-	inline constexpr float ComboSequenceDelay = FPS::_18;			// 콤보 입력 제한 시간
+inline constexpr int ComboSequenceCount = 5; // 콤보 가능키 최대 몇개?
+inline constexpr float ComboSequenceDelay = FPS::_18; // 콤보 입력 제한 시간
 }
 
 

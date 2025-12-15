@@ -13,6 +13,6 @@
 class CommonInfo : public ConfigDataAbstract
 {
 public:
-	SGString ConfigPath;
-	SGString DataPath;
+	SGString configPath_;
+	SGString dataPath_;
 };

@@ -1,11 +1,9 @@
-
-
- /*
-  * 작성자: 윤정도
-  * 생성일: 1/20/2023 1:57:14 PM
-  * =====================
-  *
-  */
+/*
+ * 작성자: 윤정도
+ * 생성일: 1/20/2023 1:57:14 PM
+ * =====================
+ *
+ */
 
 #include "Core.h"
 #include "MonsterBaseInfoLoader.h"
@@ -16,38 +14,47 @@
 USING_NS_JS;
 USING_NS_JC;
 
-MonsterBaseInfoLoader::MonsterBaseInfoLoader(DataManagerAbstract* manager)
-	: ConfigFileLoaderAbstract(manager)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+MonsterBaseInfoLoader::MonsterBaseInfoLoader(DataManagerAbstract* _pManager)
+: ConfigFileLoaderAbstract(_pManager)
+{
+}
 
-bool MonsterBaseInfoLoader::load() {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool MonsterBaseInfoLoader::Load()
+{
 	Json::Value root;
 
-	if (!loadJson(root)) {
+	if (!LoadJson(root))
+	{
 		return false;
 	}
 
-	try {
+	try
+	{
 		Json::Value& monsterListRoot = root["monsters"];
 
-		for (int i = 0; i < monsterListRoot.size(); ++i) {
+		for (int i = 0; i < monsterListRoot.size(); ++i)
+		{
 			Value& monsterRoot = monsterListRoot[i];
 			MonsterBaseInfo* pMobInfo = dbg_new MonsterBaseInfo;
-			readMonsterBaseInfo(monsterRoot, pMobInfo);
-			addData(pMobInfo);
+			ReadMonsterBaseInfo(monsterRoot, pMobInfo);
+			AddData(pMobInfo);
 		}
 	}
-	catch (std::exception& ex) {
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
+	catch (std::exception& _ex)
+	{
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), _ex.what());
 		return false;
 	}
 
 	return true;
 }
 
-void MonsterBaseInfoLoader::readMonsterBaseInfo(Json::Value& monsterRoot, JCORE_OUT MonsterBaseInfo* mobInfo) {
-
-	mobInfo->Code = monsterRoot["code"].asInt();
-	mobInfo->Name = JsonUtil::getString(monsterRoot["kor_name"]);
-	JsonUtil::parseThicknessInfo(monsterRoot["thickness_box"], mobInfo->ThicknessBox);
+//////////////////////////////////////////////////////////////////////////////////////////
+void MonsterBaseInfoLoader::ReadMonsterBaseInfo(Json::Value& _monsterRoot, JCORE_OUT MonsterBaseInfo* _pMobInfo)
+{
+	_pMobInfo->code_ = _monsterRoot["code"].asInt();
+	_pMobInfo->name_ = JsonUtil::GetString(_monsterRoot["kor_name"]);
+	JsonUtil::ParseThicknessInfo(_monsterRoot["thickness_box"], _pMobInfo->thicknessBox_);
 }

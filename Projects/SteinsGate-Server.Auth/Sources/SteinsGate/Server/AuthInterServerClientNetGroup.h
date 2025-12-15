@@ -8,7 +8,6 @@
 
 #pragma once
 
-
 #include <SteinsGate/Common/InterServerClientNetGroup.h>
 
 class AuthInterServerClientNetGroup : public InterServerClientNetGroup
@@ -22,6 +21,7 @@ public:
 	void InitializeBufferPool() override;
 	void InitializeInterServerTcp() override;
 	void InitializeInterServerUdp() override;
+
 protected:
-	void OnUpdate(const JCore::TimeSpan& elapsed) override;
+	void OnUpdate(const JCore::TimeSpan& _elapsed) override;
 };

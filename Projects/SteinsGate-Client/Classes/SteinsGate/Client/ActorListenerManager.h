@@ -22,16 +22,16 @@ private:
 	friend class TSingleton;
 	ActorListenerManager();
 	~ActorListenerManager();
+
 public:
 	void init();
 
 	CharacterListener* createCharacterListener(Character* _pCharacter);
 	MonsterListener* createMonsterListener(Monster* _pMonster);
 	ProjectileListener* createProjectileListener(Projectile* _pProjectile, Actor* _pSpawner = nullptr);
+
 private:
 	ProjectileFactoryMap projectileListenerMap_;
 	MonsterFactoryMap monsterListenerMap_;
 	CharacterFactoryMap characterListenerMap_;
 };
-
-

@@ -14,5 +14,5 @@
 struct R_MESSAGE : InterServerRecvHelper
 {
 public:
-	static void RECV_SS_HostMessage(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SS_HostMessage(JNetwork::Session* _pSession, JNetwork::ICommand* _pCmd);
 };

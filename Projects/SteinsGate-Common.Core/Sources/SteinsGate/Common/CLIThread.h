@@ -17,39 +17,35 @@ protected:
 	bool PreStart() override;
 	bool PreStop() override;
 	void WorkerThread() override;
-public:
 
+public:
 	struct Input
 	{
-		SGVector<SGString> Arguments;
+		SGVector<SGString> arguments_;
 
 		Input();
-		Input(SGVector<SGString>&& args);
-		Input(const Input& other) = delete;
-		Input(Input&& other) noexcept;
+		Input(SGVector<SGString>&& _arguments);
+		Input(const Input& _other) = delete;
+		Input(Input&& _other) noexcept;
 		~Input();
 
-		Input& operator=(const Input& other) = delete;
-		Input& operator=(Input&& other) noexcept;
+		Input& operator=(const Input& _other) = delete;
+		Input& operator=(Input&& _other) noexcept;
 	};
 
 	CLIThread();
 	~CLIThread() override;
 
 	// 입력을 수행하고 싶은 쓰레드에서 호출할 것
-	void SetListener(ICLIListener* listener);
+	void SetListener(ICLIListener* _pListener);
 	void ProcessInputs();
 	void SendInterrupt();
+
 protected:
-	JCore::NormalLock m_Lock;
-	volatile bool m_bRunning;
-	JCore::AtomicBool m_bHasInput;
-	ICLIListener* m_pListener;
-	JCore::ArrayQueue<Input> m_qInputs;
-	int m_iMaxInputEventCount;
+	JCore::NormalLock lock_;
+	volatile bool isRunning_;
+	JCore::AtomicBool hasInput_;
+	ICLIListener* pListener_;
+	JCore::ArrayQueue<Input> inputQueue_;
+	int maxInputEventCount_;
 };
-
-
-
-
-

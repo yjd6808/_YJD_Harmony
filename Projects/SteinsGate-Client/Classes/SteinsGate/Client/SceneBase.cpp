@@ -25,12 +25,19 @@
 USING_NS_CC;
 USING_NS_JC;
 
-SceneBase::SceneBase() {}
-
-SceneBase::~SceneBase() {
+//////////////////////////////////////////////////////////////////////////////////////////
+SceneBase::SceneBase()
+{
 }
 
-bool SceneBase::init() {
+//////////////////////////////////////////////////////////////////////////////////////////
+SceneBase::~SceneBase()
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool SceneBase::init()
+{
 	_LogDebug_("%s 씬 초기화", SceneType::Name[getType()]);
 
 	if (!Scene::init())
@@ -45,37 +52,42 @@ bool SceneBase::init() {
 	// Scene::onProjectionChanged 함수 참고.
 	// 디폴트 카메라는 removeChild하면 레퍼런스카운트가 1남아서 알아서 오토릴리즈 되기때문에 nullptr로
 	// 초기화만 해주면 문제 없음
-	_defaultCamera = nullptr;	 
+	_defaultCamera = nullptr;
 
 	return true;
 }
 
-void SceneBase::onEnter() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void SceneBase::onEnter()
+{
 	_LogDebug_("%s 씬을 시작", SceneType::Name[getType()]);
 	Scene::onEnter();
 }
 
-void SceneBase::onExit() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void SceneBase::onExit()
+{
 	_LogDebug_("%s 씬을 종료", SceneType::Name[getType()]);
 	Scene::onExit();
 	m_pUILayer->clearUnload();
 	Core::Contents.PackManager->releaseAllFrameTexture();
-	
 }
 
-void SceneBase::onEnterTransitionDidFinish() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void SceneBase::onEnterTransitionDidFinish()
+{
 }
 
-void SceneBase::onExitTransitionDidStart() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void SceneBase::onExitTransitionDidStart()
+{
 }
 
-
-
-void SceneBase::removeAllChildren() {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void SceneBase::removeAllChildren()
+{
 	// Scene::removeAllChildren() 함수는 디폴트 카메라를 삭제하지 않기 때문에
-	// 디폴트 카메라도 삭제해주도록 하기 위해서 오버라이딩 구현함
+	// 디폴트 카메라라도 삭제해주도록 하기 위해서 오버라이딩 구현함
 
 	Node::removeAllChildren();
 }
-

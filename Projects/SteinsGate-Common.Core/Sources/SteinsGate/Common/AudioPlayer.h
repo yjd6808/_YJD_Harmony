@@ -19,43 +19,48 @@ class AudioPlayer
 
 public:
 	AudioPlayer()
-		: m_iHandle(0)
-		, m_bPlaying(false)
-		, m_bPaused(false)
-		, m_bRepeat(false) {}
-	~AudioPlayer() {
-		Stop();
-		Close(m_iHandle);
+	: handle_(0)
+	, playing_(false)
+	, paused_(false)
+	, repeat_(false)
+	{
 	}
+
+	~AudioPlayer()
+	{
+		Stop();
+		Close(handle_);
+	}
+
 public:
-	bool IsPlaying() { return m_bPlaying; }
-	bool IsPaused() { return m_bPaused; }
-	bool IsRepeat() { return m_bRepeat; }
+	bool IsPlaying() const { return playing_; }
+	bool IsPaused() const { return paused_; }
+	bool IsRepeat() const { return repeat_; }
 
 	void PlayOnce();
-	void PlayNew(SoundDataPtr soundData, bool repeat = false);
-	void PlayNew(Byte* mem, int len, bool repeat);
+	void PlayNew(const SoundDataPtr& _pSoundData, bool _repeat = false);
+	void PlayNew(Byte* _pMem, int _len, bool _repeat);
 	void PlayRepeat();
 	void Pause();
 	void Stop();
+
 public:
-	static int Create(void* mem, int len);
-	static bool Play(int handle, bool restart = false);
-	static bool Stop(int handle);
-	static bool Pause(int handle);
-	static bool Close(int handle);
-	static Int64U GetPosition(int handle);
-	
+	static int Create(void* _pMem, int _len);
+	static bool Play(int _handle, bool _restart = false);
+	static bool Stop(int _handle);
+	static bool Pause(int _handle);
+	static bool Close(int _handle);
+	static Int64U GetPosition(int _handle);
+
 	static bool Initilize();
 	static bool Finalize();
+
 private:
-	SoundDataPtr m_spSoundData;
-	int m_iHandle;
-	bool m_bPlaying;
-	bool m_bPaused;
-	bool m_bRepeat;
+	SoundDataPtr soundData_;
+	int handle_;
+	bool playing_;
+	bool paused_;
+	bool repeat_;
 
-	inline static bool ms_bInitialized;
+	inline static bool IsInitialized;
 };
-
-

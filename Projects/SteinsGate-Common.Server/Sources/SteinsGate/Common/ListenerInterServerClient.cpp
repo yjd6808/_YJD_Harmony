@@ -21,34 +21,48 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-ListenerInterServerClient::ListenerInterServerClient(ServerProcessType_t serverProcessType, SGCommandParser* parser)
-	: ListenerClientCommon(parser)
-	, m_eServerProcessType(serverProcessType)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+ListenerInterServerClient::ListenerInterServerClient(ServerProcessType_t _serverProcessType, CommandParser* _pParser)
+: ListenerClientCommon(_pParser)
+, serverProcessType_(_serverProcessType)
+{
+}
 
-void ListenerInterServerClient::OnConnected(SGSession* session) {
-	ListenerClientCommon::OnConnected(session);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerInterServerClient::OnConnected(Session* _pSession)
+{
+	ListenerClientCommon::OnConnected(_pSession);
 
 	S_SETUP_IS_COMMON::SetInformation(Core::InterServerClientTcp, SendStrategy::SendAsync, SingleServerType::Center);
-	S_SETUP_IS_COMMON::SEND_SCE_ItsMe(m_eServerProcessType, Core::ServerProcessInfo->ServerId);
+	S_SETUP_IS_COMMON::SEND_SCE_ItsMe(serverProcessType_, Core::ServerProcessInfo->serverId_);
 }
 
-void ListenerInterServerClient::OnDisconnected(SGSession* session, Int32U errorCode) {
-	ListenerClientCommon::OnDisconnected(session, errorCode);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerInterServerClient::OnDisconnected(Session* _pSession, Int32U _errorCode)
+{
+	ListenerClientCommon::OnDisconnected(_pSession, _errorCode);
 }
 
-void ListenerInterServerClient::OnSent(SGSession* session, JNetwork::IPacket* sentPacket, Int32UL sentBytes) {
-	ListenerClientCommon::OnSent(session, sentPacket, sentBytes);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerInterServerClient::OnSent(Session* _pSession, IPacket* _pSentPacket, Int32UL _sentBytes)
+{
+	ListenerClientCommon::OnSent(_pSession, _pSentPacket, _sentBytes);
 }
 
-void ListenerInterServerClient::OnReceived(SGSession* session, JNetwork::ICommand* cmd) {
-	ListenerClientCommon::OnReceived(session, cmd);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerInterServerClient::OnReceived(Session* _pSession, ICommand* _pRecvCmd)
+{
+	ListenerClientCommon::OnReceived(_pSession, _pRecvCmd);
 }
 
-void ListenerInterServerClient::OnReceived(SGSession* session, JNetwork::RecvedCommandPacket* recvPacket) {
-	ListenerClientCommon::OnReceived(session, recvPacket);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerInterServerClient::OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket)
+{
+	ListenerClientCommon::OnReceived(_pSession, _pRecvPacket);
 }
 
-void ListenerInterServerClient::OnConnectFailed(SGSession* session, Int32U errorCode) {
-	ListenerClientCommon::OnConnectFailed(session, errorCode);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerInterServerClient::OnConnectFailed(Session* _pSession, Int32U _errorCode)
+{
+	ListenerClientCommon::OnConnectFailed(_pSession, _errorCode);
 }

@@ -1,10 +1,9 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/24/2023 1:44:44 PM
  * =====================
  *
  */
-
 
 #pragma once
 
@@ -14,10 +13,14 @@
 struct DatabaseInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	DatabaseInfoLoader(DataManagerAbstract* manager);
+	DatabaseInfoLoader(DataManagerAbstract* _pManager);
 
-	bool load() override;
-	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Database; }
-	static void readDatabaseInfo(Json::Value& databaseRoot, DatabaseInfo* databaseInfo);
+	bool Load() override;
+
+	ConfigFileType_t GetConfigFileType() override
+	{
+		return ConfigFileType::Database;
+	}
+
+	static void ReadDatabaseInfo(Json::Value& _databaseRoot, DatabaseInfo* _pDatabaseInfo);
 };
-

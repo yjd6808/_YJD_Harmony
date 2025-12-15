@@ -18,4 +18,3 @@
 #include <SteinsGate/Common/InterServerClientNetGroup.h>
 #include <SteinsGate/Common/TimeManager.h>
 #include <SteinsGate/Common/RuntimeConfigCommon.h>
-

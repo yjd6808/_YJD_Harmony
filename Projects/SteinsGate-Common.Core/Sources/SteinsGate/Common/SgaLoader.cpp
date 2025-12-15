@@ -18,171 +18,204 @@
 #include <JCore/FileSystem/Directory.h>
 #include <JCore/FileSystem/Path.h>
 
-
-
 USING_NS_JC;
 
-Vector<SgaElement::Header> SgaLoader::ReadPackageIndex(Stream& stream, int elementCount) {
-	
-	Vector<SgaElement::Header> vHeaders{ elementCount };
+//////////////////////////////////////////////////////////////////////////////////////////
+Vector<SgaElement::Header> SgaLoader::ReadPackageIndex(Stream& _stream, int _elementCount)
+{
+	Vector<SgaElement::Header> headers{ _elementCount };
 
-	for (int i = 0; i < elementCount; ++i) {
-		int Offset = stream.ReadInt32();
-		int Length = stream.ReadInt32();
-		String Path = ReadElementPath(stream);
-		String Name = Path::FileName(Path);
+	for (int i = 0; i < _elementCount; ++i)
+	{
+		int offset = _stream.ReadInt32();
+		int length = _stream.ReadInt32();
+		String elementPath = ReadElementPath(_stream);
+		String elementName = Path::FileName(elementPath);
 
-		vHeaders.PushBack({
-			Offset,
+		headers.PushBack({
+			offset,
 			0,
 			i,
-			Length,
-			Name
+			length,
+			elementName
 		});
-
-
 	}
 
 	// item1: SgaElement::Header
 	// item2: int
-	for (int i = 0; i < elementCount; ++i) {
-		vHeaders[i].NextOffset = i < elementCount - 1 ? vHeaders[i + 1].Offset : stream.GetLength();
+	for (int i = 0; i < _elementCount; ++i)
+	{
+		headers[i].nextOffset_ = i < _elementCount - 1 ? headers[i + 1].offset_ : _stream.GetLength();
 	}
 
-	return vHeaders;
+	return headers;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+String SgaLoader::ReadElementPath(Stream& _stream)
+{
+	String elementPath{ SGA_IMG_PATH_LEN };
+	char* pElementPathBuffer = elementPath.Source();
+	int length = 0;
 
-String SgaLoader::ReadElementPath(Stream& stream) {
+	for (int i = 0; i < SGA_IMG_PATH_LEN && !_stream.IsEnd(); ++i)
+	{
+		pElementPathBuffer[i] = _stream.ReadByte();
 
-	String szElementPath{ SgaImgPathLen };
-	char* szElementPathSource = szElementPath.Source();
-	int iLen = 0;
-
-	for (int i = 0; i < SgaImgPathLen && !stream.IsEnd(); ++i) {
-
-		szElementPathSource[i] = stream.ReadByte();
-
-		if (szElementPathSource[i] == NULL) {
-			iLen = i;
+		if (pElementPathBuffer[i] == NULL)
+		{
+			length = i;
 			break;
 		}
-
 	}
 
-	szElementPath.SetLength(iLen);
-	int iNextPosition = SgaImgPathLen - iLen - 1;
-	stream.Seek(iNextPosition, Stream::Origin::eCurrent);
-	return szElementPath;
+	elementPath.SetLength(length);
+	int nextPosition = SGA_IMG_PATH_LEN - length - 1;
+	_stream.Seek(nextPosition, Stream::Origin::eCurrent);
+	return elementPath;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+SgaElementPtr SgaLoader::ReadElement(Stream& _stream, SgaElement::Header& _header, int _nextOffset, bool _elementOnly)
+{
+	_stream.Seek(_header.offset_);
 
-SgaElementPtr SgaLoader::ReadElement(Stream& stream, SgaElement::Header& header, int nextOffset, bool elementOnly) {
-	stream.Seek(header.Offset);
+	SgaElementPtr pElement;
+	String elementFlag = _stream.ReadString();
 
-	SgaElementPtr spElement;
-	String szElementFlag = stream.ReadString();
+	if (elementFlag == SgaLoader::ImgFlag)
+	{
+		Int32 indexLength = static_cast<Int32>(_stream.ReadInt64());
+		Int32 version = _stream.ReadInt32();
+		Int32 spriteCount = _stream.ReadInt32();
 
-	if (szElementFlag == SgaLoader::ImgFlag) {
-		Int32 iIndexLength = (Int32)stream.ReadInt64();
-		Int32 iVersion = stream.ReadInt32();
-		Int32 iSpriteCount = stream.ReadInt32();
+		pElement = SgaImage::Create(_header, spriteCount);
+		pElement->indexLength_ = indexLength;
+		pElement->version_ = version;
+		pElement->indexOffset_ = _stream.GetOffset();
 
-		spElement = SgaImage::Create(header, iSpriteCount);
-		spElement->m_iIndexLength = iIndexLength;
-		spElement->m_iVersion = iVersion;
-		spElement->m_iIndexOffset = stream.GetOffset();
-		if (elementOnly) return spElement;
-		SgaElementInitializer::InitializeElement(spElement, stream, true);
-		return spElement;
+		if (_elementOnly)
+		{
+			return pElement;
+		}
+
+		SgaElementInitializer::InitializeElement(pElement, _stream, true);
+		return pElement;
 	}
 
-	if (szElementFlag == SgaLoader::SpriteFlag) {
+	if (elementFlag == SgaLoader::SpriteFlag)
+	{
+		Int32 indexLength = _stream.ReadInt32();
+		_stream.Seek(2, Stream::eCurrent);
+		Int32 version = _stream.ReadInt32();
+		Int32 spriteCount = _stream.ReadInt32();
 
-		Int32 iIndexLength = stream.ReadInt32(); stream.Seek(2, Stream::eCurrent);
-		Int32 iVersion = stream.ReadInt32();
-		Int32 iSpriteCount = stream.ReadInt32();
+		pElement = SgaImage::Create(_header, spriteCount);
+		pElement->indexLength_ = indexLength;
+		pElement->version_ = version;
+		pElement->indexOffset_ = _stream.GetOffset();
 
-		spElement = SgaImage::Create(header, iSpriteCount);
-		spElement->m_iIndexLength = iIndexLength;
-		spElement->m_iVersion = iVersion;
-		spElement->m_iIndexOffset = stream.GetOffset();
+		if (_elementOnly)
+		{
+			return pElement;
+		}
 
-		if (elementOnly) return spElement;
-		SgaElementInitializer::InitializeElement(spElement, stream, true);
-		return spElement;
+		SgaElementInitializer::InitializeElement(pElement, _stream, true);
+		return pElement;
 	}
 
-	if (header.Name.EndWith(".wav") ||
-		header.Name.EndWith(".ogg")) {
-		stream.Seek(header.Offset);
-		spElement = SgaSound::Create(header);
-		spElement->m_iVersion = 0;
-		spElement->m_iIndexLength = nextOffset - stream.GetOffset();	// 인덱스 길이가 곧 음악 데이터 길이이다.
-		spElement->m_iIndexOffset = stream.GetOffset();
-		if (elementOnly) return spElement;
-		SgaElementInitializer::InitializeElement(spElement, stream, true);
-		return spElement;
+	if (_header.name_.EndWith(".wav") ||
+		_header.name_.EndWith(".ogg"))
+	{
+		_stream.Seek(_header.offset_);
+		pElement = SgaSound::Create(_header);
+		pElement->version_ = 0;
+		pElement->indexLength_ = _nextOffset - _stream.GetOffset(); // 인덱스 길이가 곧 음악 데이터 길이이다.
+		pElement->indexOffset_ = _stream.GetOffset();
+
+		if (_elementOnly)
+		{
+			return pElement;
+		}
+
+		SgaElementInitializer::InitializeElement(pElement, _stream, true);
+		return pElement;
 	}
 
 	return nullptr;
 }
 
-SgaPackagePtr SgaLoader::Load(const String& sgaPath, int indexOnly, bool headerOnly) {
-	StreamPtr spStream = MakeShared<FileStream>(sgaPath, FileAccess::eRead, FileMode::eOpen);
-	String szFlag = spStream->ReadString();
+//////////////////////////////////////////////////////////////////////////////////////////
+SgaPackagePtr SgaLoader::Load(const String& _sgaPath, int _indexOnly, bool _headerOnly)
+{
+	StreamPtr pStream = MakeShared<FileStream>(_sgaPath, FileAccess::eRead, FileMode::eOpen);
+	String flag = pStream->ReadString();
 
-	if (szFlag != SgaFlag) {
+	if (flag != SgaFlag)
+	{
 		return nullptr;
 	}
 
-	int iElementCount = spStream->ReadInt32();
-	SgaPackagePtr spPackage = SgaPackage::Create(spStream, sgaPath, iElementCount);
+	int elementCount = pStream->ReadInt32();
+	SgaPackagePtr pPackage = SgaPackage::Create(pStream, _sgaPath, elementCount);
 
-	if (iElementCount == 0)
-		return spPackage;
-
-	auto vHeaders = ReadPackageIndex(spStream.GetRef(), iElementCount);
-
-	for (int i = 0; i < vHeaders.Size(); ++i) {
-		spPackage->m_ElementNameToIndex.Insert(vHeaders[i].Name, vHeaders[i].IndexInPackage);
+	if (elementCount == 0)
+	{
+		return pPackage;
 	}
 
-	if (headerOnly) {
-		spPackage->m_ElementHeaders = Move(vHeaders);
-		return spPackage;
+	auto headers = ReadPackageIndex(pStream.GetRef(), elementCount);
+
+	for (int i = 0; i < headers.Size(); ++i)
+	{
+		pPackage->elementNameToIndex_.Insert(headers[i].name_, headers[i].indexInPackage_);
 	}
 
-
-	for (int i = 0; i < vHeaders.Size(); ++i) {
-		SgaElement::Header& header = vHeaders[i];
-		SgaElementPtr spElement = ReadElement(spStream.GetRef(), header, header.NextOffset, indexOnly);
-		DebugAssertMsg(spElement.Exist(), "엘리먼트 파싱에 실패했습니다.");
-		spElement->m_spParent = spPackage;
-		spPackage->Add(header.IndexInPackage, spElement);
+	if (_headerOnly)
+	{
+		pPackage->elementHeaders_ = Move(headers);
+		return pPackage;
 	}
 
-	spPackage->m_ElementHeaders = Move(vHeaders);
-	return spPackage;
+	for (int i = 0; i < headers.Size(); ++i)
+	{
+		SgaElement::Header& header = headers[i];
+		SgaElementPtr pElement = ReadElement(pStream.GetRef(), header, header.nextOffset_, _indexOnly);
+		DebugAssertMsg(pElement.Exist(), "엘리먼트 파싱에 실패했습니다.");
+		pElement->pParent_ = pPackage;
+		pPackage->Add(header.indexInPackage_, pElement);
+	}
+
+	pPackage->elementHeaders_ = Move(headers);
+	return pPackage;
 }
 
-SgaPackagePtr SgaLoader::LoadPerfectly(const String& sgaPath) {
-	return Load(sgaPath, false, false);
+//////////////////////////////////////////////////////////////////////////////////////////
+SgaPackagePtr SgaLoader::LoadPerfectly(const String& _sgaPath)
+{
+	return Load(_sgaPath, false, false);
 }
 
-SgaPackagePtr SgaLoader::LoadIndexOnly(const String& sgaPath) {
-	return Load(sgaPath, true, false);
+//////////////////////////////////////////////////////////////////////////////////////////
+SgaPackagePtr SgaLoader::LoadIndexOnly(const String& _sgaPath)
+{
+	return Load(_sgaPath, true, false);
 }
 
-SgaPackagePtr SgaLoader::LoadHeaderOnly(const String& sgaPath) {
-	return Load(sgaPath, true, true);
+//////////////////////////////////////////////////////////////////////////////////////////
+SgaPackagePtr SgaLoader::LoadHeaderOnly(const String& _sgaPath)
+{
+	return Load(_sgaPath, true, true);
 }
 
-Vector<String> SgaLoader::LoadAllImagePackPaths(const String& path) {
-	return Directory::Files(path.Source(), true);
+//////////////////////////////////////////////////////////////////////////////////////////
+Vector<String> SgaLoader::LoadAllImagePackPaths(const String& _path)
+{
+	return Directory::Files(_path.Source(), true);
 }
 
-Vector<String> SgaLoader::LoadAllSoundPackPaths(const String& path) {
-	return Directory::Files(path.Source(), true);
+//////////////////////////////////////////////////////////////////////////////////////////
+Vector<String> SgaLoader::LoadAllSoundPackPaths(const String& _path)
+{
+	return Directory::Files(_path.Source(), true);
 }
-

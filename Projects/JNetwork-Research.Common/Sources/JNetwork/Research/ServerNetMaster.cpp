@@ -19,7 +19,6 @@ NS_JNET_BEGIN
  * ============================================================================= */
 
 //////////////////////////////////////////////////////////////////////////////////////////
-
 void ServerNetMaster::Initialize()
 {
 	NetGroupPtr pLoginChannelNetGroup = MakeShared<ServerLoginChannelNetGroup>();
@@ -43,14 +42,12 @@ void ServerNetMaster::Initialize()
  * ============================================================================= */
 
 //////////////////////////////////////////////////////////////////////////////////////////
-
 ServerLoginChannelNetGroup::ServerLoginChannelNetGroup()
 : NetGroup("서버 TCP 로그인,채널 서버 그룹")
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-
 ServerLoginChannelNetGroup::~ServerLoginChannelNetGroup()
 {
 	ServerLoginChannelNetGroup::Finalize();
@@ -89,21 +86,18 @@ void ServerLoginChannelNetGroup::Initialize()
  * ============================================================================= */
 
 //////////////////////////////////////////////////////////////////////////////////////////
-
 ServerGameNetGroup::ServerGameNetGroup()
 : NetGroup("서버 TCP 게임 서버 그룹")
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-
 ServerGameNetGroup::~ServerGameNetGroup()
 {
 	ServerGameNetGroup::Finalize();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-
 void ServerGameNetGroup::Initialize()
 {
 	CreateIocp(4);
@@ -129,21 +123,18 @@ void ServerGameNetGroup::Initialize()
  * ============================================================================= */
 
 //////////////////////////////////////////////////////////////////////////////////////////
-
 ServerUdpNetGroup::ServerUdpNetGroup()
 : NetGroup("서버 UDP 그룹")
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-
 ServerUdpNetGroup::~ServerUdpNetGroup()
 {
 	ServerUdpNetGroup::Finalize();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-
 void ServerUdpNetGroup::Initialize()
 {
 	CreateIocp(4);

@@ -14,40 +14,46 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-void ListenerClientBase::OnConnected(SGSession* session) {
-	const IPv4EndPoint& remoteEndPoint = session->GetRemoteEndPoint();
+void ListenerClientBase::OnConnected(SGSession* _pSession)
+{
+	const IPv4EndPoint& remoteEndPoint = _pSession->GetRemoteEndPoint();
 	const String remoteEndPointString = remoteEndPoint.ToString();
 
 	_LogInfo_("%s와 연결되었습니다.", remoteEndPointString.Source());
 }
 
-void ListenerClientBase::OnConnectFailed(SGSession* session, Int32U errorCode) {
-	_LogInfo_("연결 실패 (%d)", errorCode);
+void ListenerClientBase::OnConnectFailed(SGSession* _pSession, Int32U _errorCode)
+{
+	_LogInfo_("연결 실패 (%d)", _errorCode);
 }
 
-void ListenerClientBase::OnDisconnected(SGSession* session, Int32U errorCode) {
-	const IPv4EndPoint& remoteEndPoint = session->GetRemoteEndPoint();
+void ListenerClientBase::OnDisconnected(SGSession* _pSession, Int32U _errorCode)
+{
+	const IPv4EndPoint& remoteEndPoint = _pSession->GetRemoteEndPoint();
 	const String remoteEndPointString = remoteEndPoint.ToString();
 
 	_LogInfo_("%s와 연결이 종료되었습니다.", remoteEndPointString.Source());
 }
 
-void ListenerClientBase::OnSent(SGSession* session, IPacket* sentPacket, Int32UL sentBytes) {
-	const TransportProtocol protocol = session->Protocol();
+void ListenerClientBase::OnSent(SGSession* _pSession, IPacket* _pSentPacket, Int32UL _sentBytes)
+{
+	const TransportProtocol protocol = _pSession->Protocol();
 
-	if (sentPacket->GetType() == PacketType::Command) {
-		CommandPacket* pPacket = static_cast<CommandPacket*>(sentPacket);
+	if (_pSentPacket->GetType() == PacketType::Command)
+	{
+		CommandPacket* pPacket = static_cast<CommandPacket*>(_pSentPacket);
 		pPacket->ForEach([&](ICommand* cmd) { ListenerHelperBase::LogCommand(protocol, Transmission::Send, cmd); });
 	}
-	
-	ListenerHelperBase::LogPacketHex(sentPacket);
+
+	ListenerHelperBase::LogPacketHex(_pSentPacket);
 }
 
-void ListenerClientBase::OnReceived(SGSession* session, ICommand* recvCmd) {
-	ListenerHelperBase::LogCommand(session->Protocol(), Transmission::Recv, recvCmd);
+void ListenerClientBase::OnReceived(SGSession* _pSession, ICommand* _pRecvCmd)
+{
+	ListenerHelperBase::LogCommand(_pSession->Protocol(), Transmission::Recv, _pRecvCmd);
 }
 
-void ListenerClientBase::OnReceived(Session* session, RecvedCommandPacket* recvPacket) {
-	ListenerHelperBase::LogPacketHex(recvPacket);
+void ListenerClientBase::OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket)
+{
+	ListenerHelperBase::LogPacketHex(_pRecvPacket);
 }
-

@@ -8,11 +8,12 @@
 #include "Tutturu.h"
 #include "WndMessage.h"
 
-// https://stackoverflow.com/questions/7252398/convert-windows-message-ids-to-text
-const char* WndMessage::GetName(int message) {
+//////////////////////////////////////////////////////////////////////////////////////////
+const char* WndMessage::GetName(int _message)
+{
 	static SGHashMap<int, SGString> NameMap
 	{
-		{ 0, "WM_NULL"},
+		{ 0, "WM_NULL" },
 		{ 1, "WM_CREATE" },
 		{ 2, "WM_DESTROY" },
 		{ 3, "WM_MOVE" },
@@ -307,9 +308,8 @@ const char* WndMessage::GetName(int message) {
 		{ 1024, "WM_USER" }
 	};
 
-	if (!NameMap.Exist(message))
-		return SGStringUtil::Format("%d", message).Source();
+	if (!NameMap.Exist(_message))
+		return SGStringUtil::Format("%d", _message).Source();
 
-	return NameMap[message].Source();
+	return NameMap[_message].Source();
 }
-

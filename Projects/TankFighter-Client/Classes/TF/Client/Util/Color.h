@@ -32,10 +32,10 @@ public:
 		return color;
 	}
 
-	static cocos2d::Color3B To3B(const unsigned _int32uColor) {
-		return cocos2d::Color3B((_int32uColor >> 16) & 0xff,
-						(_int32uColor >> 8) & 0xff,
-						(_int32uColor >> 0) & 0xff );
+	static cocos2d::Color3B To3B(const unsigned _int32UColor) {
+		return cocos2d::Color3B((_int32UColor >> 16) & 0xff,
+						(_int32UColor >> 8) & 0xff,
+						(_int32UColor >> 0) & 0xff );
 	}
 
 };

@@ -20,64 +20,76 @@ USING_NS_CC;
 USING_NS_JS;
 USING_NS_JC;
 
-CharInfoLoader::CharInfoLoader(DataManagerAbstract* manager)
-	: CharBaseInfoLoader(manager)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+CharInfoLoader::CharInfoLoader(DataManagerAbstract* _pManager)
+: CharBaseInfoLoader(_pManager)
+{
+}
 
-bool CharInfoLoader::load() {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CharInfoLoader::Load()
+{
 	Json::Value root;
 
-	if (!loadJson(root))
+	if (!LoadJson(root))
 		return false;
 
-	try {
+	try
+	{
 		Json::Value gunnerRoot = root["gunner"];
 		// 다른 캐릭이 만약 추가되면 코드 변경 필요
 		GunnerInfo* pGunnerInfo = dbg_new GunnerInfo();
-		readCharBaseInfo(gunnerRoot, pGunnerInfo);
-		readGunnerInfo(gunnerRoot, pGunnerInfo);
-		readDefaultVisualInfo(gunnerRoot, pGunnerInfo);
-		addData(pGunnerInfo);
+		ReadCharBaseInfo(gunnerRoot, pGunnerInfo);
+		ReadGunnerInfo(gunnerRoot, pGunnerInfo);
+		ReadDefaultVisualInfo(gunnerRoot, pGunnerInfo);
+		AddData(pGunnerInfo);
 	}
-	catch (std::exception& ex) {
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
+	catch (std::exception& ex)
+	{
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), ex.what());
 		return false;
 	}
 
 	return true;
-
 }
 
-void CharInfoLoader::readDefaultVisualInfo(Json::Value& charRoot, JCORE_OUT CharInfo* charInfo) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CharInfoLoader::ReadDefaultVisualInfo(Json::Value& _charRoot, JCORE_OUT CharInfo* _pCharInfo)
+{
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 	Global* pGlobal = Global::Get();
-	Json::Value& defaultVisualInfoRoot = charRoot["default_visual_img"];
+	Json::Value& defaultVisualInfoRoot = _charRoot["default_visual_img"];
 
-	auto eCharType = (CharType_t)charInfo->Code;
+	CharType_t charType = static_cast<CharType_t>(_pCharInfo->code_);
 
-	for (int i = 0; i < VisualType::Max; ++i) {
-		const char* pVisualTypeName = VisualType::Name[i];
-		int iDefaultCode = defaultVisualInfoRoot.get(pVisualTypeName, InvalidValue_v).asInt();
+	for (int visualIndex = 0; visualIndex < VisualType::Max; ++visualIndex)
+	{
+		const char* pVisualTypeName = VisualType::Name[visualIndex];
+		int defaultCode = defaultVisualInfoRoot.get(pVisualTypeName, InvalidValue_v).asInt();
 
-		if (iDefaultCode == InvalidValue_v) {
-			charInfo->HasVisual[i] = false;
+		if (defaultCode == InvalidValue_v)
+		{
+			_pCharInfo->hasVisual_[visualIndex] = false;
 			continue;
 		}
 
-		ItemCode code;
-		if (VisualType::IsAvatar[i]) {
-			code.initAvatarCode(eCharType, (AvatarType_t)i, iDefaultCode);
-		} else if (VisualType::IsWeapon[i]) {
-			code.initWeaponCode(eCharType, charInfo->DefaultWeaponType, iDefaultCode);
-		} else {
+		ItemCode itemCode;
+		if (VisualType::IsAvatar[visualIndex])
+		{
+			itemCode.initAvatarCode(charType, static_cast<AvatarType_t>(visualIndex), defaultCode);
+		}
+		else if (VisualType::IsWeapon[visualIndex])
+		{
+			itemCode.initWeaponCode(charType, _pCharInfo->defaultWeaponType_, defaultCode);
+		}
+		else
+		{
 			DebugAssertMsg(false, "무슨 타입이죠?");
 			continue;
 		}
 
-		charInfo->VisualCount[i] = VisualHelper::getVisualData(charInfo->Visual[i], code.Code);
-		charInfo->HasVisual[i] = true;
+		_pCharInfo->visualCount_[visualIndex] = VisualHelper::getVisualData(
+			_pCharInfo->visual_[visualIndex], itemCode.Code);
+		_pCharInfo->hasVisual_[visualIndex] = true;
 	}
-	
 }
-
-

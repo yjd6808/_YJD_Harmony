@@ -14,6 +14,6 @@ struct MonsterBaseInfo : ConfigDataAbstract
 {
 	~MonsterBaseInfo() override = default;
 
-	SGString Name;
-	ThicknessBox ThicknessBox;
+	SGString name_;
+	ThicknessBox thicknessBox_;
 };

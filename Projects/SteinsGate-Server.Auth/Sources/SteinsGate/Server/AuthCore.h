@@ -22,13 +22,13 @@ struct RuntimeConfig;
 struct AuthContents;
 
 NS_CORE_BEGIN
-extern ::DataManager*		DataManager;
-extern ::MysqlDatabase*		GameDB;
-extern ::AuthNetMaster*		NetMaster;
-extern ::AuthNetGroup*		NetGroup;
-extern ::AuthServer*		Server;
-extern ::RuntimeConfig*		RuntimeConfig;
-extern ::AuthContents		Contents;
+extern ::DataManager*      DataManager;
+extern ::MysqlDatabase*    GameDB;
+extern ::AuthNetMaster*    NetMaster;
+extern ::AuthNetGroup*     NetGroup;
+extern ::AuthServer*       Server;
+extern ::RuntimeConfig*    RuntimeConfig;
+extern ::AuthContents      Contents;
 NS_CORE_END
 
 void InitializeAuthCore();

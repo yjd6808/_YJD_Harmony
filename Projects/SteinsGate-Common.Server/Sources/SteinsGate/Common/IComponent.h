@@ -26,5 +26,3 @@ struct JCORE_NOVTABLE IComponent : JCore::RefCountObject
 	virtual int GetType() const = 0;
 	void ReleaseAction() override { delete this; }
 };
-
-

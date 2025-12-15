@@ -1,4 +1,5 @@
-﻿/*
+ 
+/*
  * 작성자: 윤정도
  * 생성일: 2/4/2023 9:36:43 PM
  * =====================
@@ -11,6 +12,7 @@
 #include <SteinsGate/Client/Character.h>
 
 class MapLayer;
+
 class Player : public Character
 {
 public:
@@ -20,7 +22,8 @@ public:
 	void initialize() override;
 	void initPlayerData();
 
-	PlayerData& getPlayerData() { return m_PlayerData; }
+	PlayerData& getPlayerData() { return playerData_; }
+
 protected:
-	PlayerData m_PlayerData;
+	PlayerData playerData_;
 };

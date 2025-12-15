@@ -5,7 +5,6 @@
  *
  */
 
-
 #include "Tutturu.h"
 #include "TileInfoLoader.h"
 
@@ -15,40 +14,49 @@
 USING_NS_JC;
 USING_NS_JS;
 
-TileInfoLoader::TileInfoLoader(DataManagerAbstract* manager)
-	: ConfigFileLoaderAbstract(manager)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+TileInfoLoader::TileInfoLoader(DataManagerAbstract* _pManager)
+: ConfigFileLoaderAbstract(_pManager)
+{
+}
 
-bool TileInfoLoader::load() {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+bool TileInfoLoader::Load()
+{
 	Json::Value root;
 
-	if (!loadJson(root))
+	if (!LoadJson(root))
 		return false;
 
-	try {
+	try
+	{
 		Json::Value tileListRoot = root["tile"];
 
-		for (int i = 0; i < tileListRoot.size(); ++i) {
+		for (size_t i = 0; i < tileListRoot.size(); ++i)
+		{
 			Value& tileRoot = tileListRoot[i];
 			TileInfo* pInfo = dbg_new TileInfo;
 
 			readTileInfo(tileRoot, pInfo);
-			addData(pInfo);
+			AddData(pInfo);
 		}
 	}
-	catch (std::exception& ex) {
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
+	catch (std::exception& ex)
+	{
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), ex.what());
 		return false;
 	}
 
 	return true;
 }
 
-void TileInfoLoader::readTileInfo(Json::Value& tileRoot, TileInfo* tileInfo) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void TileInfoLoader::readTileInfo(Json::Value& _tileRoot, TileInfo* _pTileInfo)
+{
 	ImagePackManager* pPackManager = ImagePackManager::Get();
-	tileInfo->Code = tileRoot["code"].asInt();
-	tileInfo->SgaIndex = pPackManager->getPackIndex(JsonUtilEx::getString(tileRoot["sga"]));
-	tileInfo->ImgIndex = pPackManager->getPack(tileInfo->SgaIndex)->getImgIndex(JsonUtilEx::getString(tileRoot["img"]));
-	tileInfo->SpriteIndex = tileRoot["index"].asInt();
+	_pTileInfo->code_ = _tileRoot["code"].asInt();
+	_pTileInfo->SgaIndex = pPackManager->getPackIndex(JsonUtilEx::GetString(_tileRoot["sga"]));
+	_pTileInfo->ImgIndex = pPackManager->getPack(_pTileInfo->SgaIndex)->getImgIndex(
+		JsonUtilEx::GetString(_tileRoot["img"]));
+	_pTileInfo->SpriteIndex = _tileRoot["index"].asInt();
 }

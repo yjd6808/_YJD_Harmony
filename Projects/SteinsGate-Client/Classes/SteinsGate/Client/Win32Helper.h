@@ -22,4 +22,3 @@ struct Win32Helper
 	static SGRect getWindowRect();
 	static SGVec2 getCursorPos();
 };
-

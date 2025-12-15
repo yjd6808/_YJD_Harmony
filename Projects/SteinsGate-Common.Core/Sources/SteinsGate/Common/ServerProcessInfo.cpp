@@ -8,26 +8,37 @@
 #include "Core.h"
 #include "ServerProcessInfo.h"
 
-ServerProcessInfo* ServerProcessInfoPackage::getServerProcessInfo(int serverId) {
-	if (Auth.ServerId == serverId) { return &Auth; }
-	if (Lobby.ServerId == serverId) { return &Lobby; }
-	if (Center.ServerId == serverId) { return &Center; }
-	for (int i = 0; i < GameServerList.Size(); ++i) {
-		if (GameServerList[i].ServerId == serverId) {
-			return &GameServerList[i];
-		}
+//////////////////////////////////////////////////////////////////////////////////////////
+ServerProcessInfo* ServerProcessInfoPackage::GetServerProcessInfo(int _serverId)
+{
+	if (auth_.serverId_ == _serverId)
+		return &auth_;
+
+	if (lobby_.serverId_ == _serverId)
+		return &lobby_;
+
+	if (center_.serverId_ == _serverId)
+		return &center_;
+
+	for (int serverIndex = 0; serverIndex < gameServerList_.Size(); ++serverIndex)
+	{
+		if (gameServerList_[serverIndex].serverId_ == _serverId)
+			return &gameServerList_[serverIndex];
 	}
+
 	return nullptr;
 }
 
-GameServerProcessInfo* ServerProcessInfoPackage::getGameServerProcessInfo(GameServerType_t gameServerType) {
+//////////////////////////////////////////////////////////////////////////////////////////
+GameServerProcessInfo* ServerProcessInfoPackage::GetGameServerProcessInfo(GameServerType_t _gameServerType)
+{
+	for (int serverIndex = 0; serverIndex < gameServerList_.Size(); ++serverIndex)
+	{
+		GameServerProcessInfo& gameServerInfo = gameServerList_[serverIndex];
 
-	for (int i = 0; i < GameServerList.Size(); ++i) {
-		GameServerProcessInfo& info = GameServerList[i];
-
-		if (info.GameServerType == gameServerType) {
-			return &info;
-		}
+		if (gameServerInfo.gameServerType_ == _gameServerType)
+			return &gameServerInfo;
 	}
+
 	return nullptr;
 }

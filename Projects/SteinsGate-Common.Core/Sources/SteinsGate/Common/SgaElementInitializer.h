@@ -19,23 +19,21 @@ class SgaElementInitializer
 public:
 	virtual ~SgaElementInitializer() = default;
 
-	virtual void Initialize(const SgaElementPtr& element, JCore::Stream& strean, bool indexOnly) = 0;
-
+	virtual void Initialize(const SgaElementPtr& _pElement, JCore::Stream& _stream, bool _indexOnly) = 0;
 
 	static void Initialize();
 	static void Finalize();
-	static void InitializeElement(const SgaElementPtr& element, JCore::Stream& strean, bool indexOnly);
+	static void InitializeElement(const SgaElementPtr& _pElement, JCore::Stream& _stream, bool _indexOnly);
 };
-
 
 
 template <Int32 Version>
 class SgaElementInitializerImpl : public SgaElementInitializer
 {
 public:
-	~SgaElementInitializerImpl() override {}
+	~SgaElementInitializerImpl() override
+	{
+	}
 
-	void Initialize(const SgaElementPtr& element, JCore::Stream& strean, bool indexOnly) override;
+	void Initialize(const SgaElementPtr& _pElement, JCore::Stream& _stream, bool _indexOnly) override;
 };
-
-

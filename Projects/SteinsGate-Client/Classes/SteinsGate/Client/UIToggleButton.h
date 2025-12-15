@@ -21,41 +21,45 @@ class UIToggleButton : public UIElement
 {
 	static constexpr int StateOne = 0;
 	static constexpr int StateTwo = 1;
+
 public:
-	static UIToggleButton* create(UIMasterGroup* master, UIGroup* parent);
-	static UIToggleButton* create(UIMasterGroup* master, UIGroup* parent, UIToggleButtonInfo* btnInfo, bool infoOwner);
+	static UIToggleButton* create(UIRootGroup* _pMaster, UIGroup* _pParent);
+	static UIToggleButton* create(UIRootGroup* _pMaster, UIGroup* _pParent, UIToggleButtonInfo* _pBtnInfo,
+	                              bool _infoOwner);
 	static constexpr UIElementType_t type() { return UIElementType::ToggleButton; }
 
-	UIToggleButton(UIMasterGroup* master, UIGroup* parent);
-	UIToggleButton(UIMasterGroup* master, UIGroup* parent, UIToggleButtonInfo* btnInfo, bool infoOwner);
+	UIToggleButton(UIRootGroup* _pMaster, UIGroup* _pParent);
+	UIToggleButton(UIRootGroup* _pMaster, UIGroup* _pParent, UIToggleButtonInfo* _pBtnInfo, bool _infoOwner);
 	~UIToggleButton() override;
 
 	bool init() override;
-	void load() override;
-	void unload() override;
+	void Load() override;
+	void Unload() override;
 
-	void setVisibleState(State state);
-	void setEnabled(bool enabled) override;
-	void setUISize(const SGSize& contentSize) override;
-	void setInfo(UIElementInfo* info, bool infoOwner) override;
-	void setInfoToggleButton(UIToggleButtonInfo* info, bool infoOwner);
+	void setVisibleState(State _state);
+	void SetEnabled(bool _enabled) override;
+	void SetUISize(const SGSize& _contentSize) override;
+	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
+	void setInfoToggleButton(UIToggleButtonInfo* _pInfo, bool _infoOwner);
 
-	ToggleState getToggleState() const { return m_eToggleState; }
-	void setToggleState(ToggleState state);
-	void restoreState(State state) override;
+	ToggleState getToggleState() const { return toggleState_; }
+	void setToggleState(ToggleState _state);
+	void RestoreState(State _state) override;
 
-	UIElementType_t getElementType() override { return UIElementType::ToggleButton; }
-	SGString toString() override { return SGStringUtil::Format("토글버튼(%d)", m_pInfo->Code); }
+	UIElementType_t GetElementType() override { return UIElementType::ToggleButton; }
+	SGString ToString() override { return SGStringUtil::Format("토글버튼(%d)", info_->code_); }
+
 protected:
-	void onMouseEnterInternalDetail(SGEventMouse* mouseEvent) override;
-	void onMouseLeaveInternalDetail(SGEventMouse* mouseEvent) override;
-	bool onMouseMoveInternalDetail(SGEventMouse* mouseEvent) override;
-	bool onMouseDownInternalDetail(SGEventMouse* mouseEvent) override;
-	void onMouseUpInternalDetail(SGEventMouse* mouseEvent) override;
-	bool onMouseUpContainedInternalDetail(SGEventMouse* mouseEvent) override;
+	void OnMouseEnterInternalDetail(SGEventMouse* _pMouseEvent) override;
+	void OnMouseLeaveInternalDetail(SGEventMouse* _pMouseEvent) override;
+	bool OnMouseMoveInternalDetail(SGEventMouse* _pMouseEvent) override;
+	bool OnMouseDownInternalDetail(SGEventMouse* _pMouseEvent) override;
+	void OnMouseUpInternalDetail(SGEventMouse* _pMouseEvent) override;
+	bool OnMouseUpContainedInternalDetail(SGEventMouse* _pMouseEvent) override;
+
 private:
-	ToggleState m_eToggleState;
-	UIToggleButtonInfo* m_pInfo;
-	FrameTexture* m_pTexture[2][eMax];
-	SGSprite* m_pSprite[2][eMax];
+	ToggleState toggleState_;
+	UIToggleButtonInfo* info_;
+	FrameTexture* texture_[2][eMax];
+	SGSprite* sprite_[2][eMax];
 };

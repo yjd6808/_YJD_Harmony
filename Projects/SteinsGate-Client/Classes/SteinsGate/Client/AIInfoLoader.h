@@ -16,9 +16,8 @@ public:
 	AIInfoLoader(DataManagerAbstract* _pManager);
 	~AIInfoLoader() override = default;
 
-	bool load() override;
-	ConfigFileType_t getConfigFileType() override { return ConfigFileType::AI; }
+	bool Load() override;
+	ConfigFileType_t GetConfigFileType() override { return ConfigFileType::AI; }
 
-	static void readAIInfo(Json::Value& _aiRoot, JCORE_OUT AIInfo* _pAiInfo);
+	static void ReadAiInfo(Json::Value& _aiRoot, JCORE_OUT AIInfo* _pAiInfo);
 };
-

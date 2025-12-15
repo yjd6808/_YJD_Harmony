@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <SteinsGate/Client/UIElement.h>
@@ -19,33 +18,36 @@ public:
 	static constexpr int IndexCross = 2;
 	static constexpr int IndexCrossDisabled = 3;
 
-	static UICheckBox* create(UIMasterGroup* master, UIGroup* parent);
-	static UICheckBox* create(UIMasterGroup* master, UIGroup* parent, UICheckBoxInfo* checkBoxInfo, bool infoOwner);
+	static UICheckBox* create(UIRootGroup* _pMaster, UIGroup* _pParent);
+	static UICheckBox* create(UIRootGroup* _pMaster, UIGroup* _pParent, UICheckBoxInfo* _pCheckBoxInfo,
+	                          bool _infoOwner);
 
 	static constexpr UIElementType_t type() { return UIElementType::CheckBox; }
 
-	UICheckBox(UIMasterGroup* master, UIGroup* parent);
-	UICheckBox(UIMasterGroup* master, UIGroup* parent, UICheckBoxInfo* checkBoxInfo, bool infoOwner);
+	UICheckBox(UIRootGroup* _pMaster, UIGroup* _pParent);
+	UICheckBox(UIRootGroup* _pMaster, UIGroup* _pParent, UICheckBoxInfo* _pCheckBoxInfo, bool _infoOwner);
 	~UICheckBox() override;
 
 	bool init() override;
-	void load() override;
-	void unload() override;
+	void Load() override;
+	void Unload() override;
 
-	void setCheck(bool checked);
-	void setEnabled(bool enabled) override;
-	void setUISize(const SGSize& size) override;
-	void setInfo(UIElementInfo* info, bool infoOwner) override;
-	void setInfoCheckBox(UICheckBoxInfo* info, bool infoOwner);
+	void setCheck(bool _checked);
+	void SetEnabled(bool _enabled) override;
+	void SetUISize(const SGSize& _size) override;
+	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
+	void setInfoCheckBox(UICheckBoxInfo* _pInfo, bool _infoOwner);
 	bool isChecked() const;
 
-	UIElementType_t getElementType() override { return UIElementType::CheckBox; }
-	SGString toString() override { return SGStringUtil::Format("체크박스(%d)", m_pInfo->Code); }
+	UIElementType_t GetElementType() override { return UIElementType::CheckBox; }
+	SGString ToString() override { return SGStringUtil::Format("체크박스(%d)", pInfo_->code_); }
+
 protected:
-	bool onMouseUpContainedInternalDetail(SGEventMouse* mouseEvent) override;
+	bool OnMouseUpContainedInternalDetail(SGEventMouse* _pMouseEvent) override;
+
 private:
-	UICheckBoxInfo* m_pInfo;
-	FrameTexture* m_pTexture[TextureCount];
-	SGSprite* m_pSprite[TextureCount];
-	bool m_bChecked;
+	UICheckBoxInfo* pInfo_;
+	FrameTexture* pTexture_[TextureCount];
+	SGSprite* pSprite_[TextureCount];
+	bool checked_;
 };

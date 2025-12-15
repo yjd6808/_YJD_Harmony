@@ -16,21 +16,21 @@ struct AIInfo : ConfigDataAbstract
 	~AIInfo() override = default;
 
 	// 합친 확률 분해해서 얻기
-	float getWanderProb(AIWanderDecision_t _decision);
-	float getTrackProb(AITrackDecision_t _decision);
-	float getAngryProb(AIAngryDecision_t _decision);
+	float GetWanderProb(AIWanderDecision_t _decision);
+	float GetTrackProb(AITrackDecision_t _decision);
+	float GetAngryProb(AIAngryDecision_t _decision);
 
-	float WanderProbs[AIWanderDecision::Max - 1];
-	float TrackProbs[AITrackDecision::Max - 1];
-	float AngryProbs[AIAngryDecision::Max - 1];
+	float wanderProbs_[AIWanderDecision::Max - 1];
+	float trackProbs_[AITrackDecision::Max - 1];
+	float angryProbs_[AIAngryDecision::Max - 1];
 
-	float IdleTime[2];			// min, max
-	float WanderWalkTime[2];
-	float TrackWalkTime[2];
+	float idleTime_[2]; // min, max
+	float wanderWalkTime_[2];
+	float trackWalkTime_[2];
 
-	bool ForceTrack;
-	bool ForceAngry;
+	bool forceTrack_;
+	bool forceAngry_;
 
-	float SightRadious;
-	float AttackRadious;		// TODO: 인스턴트 히트박스로 변경필요
+	float sightRadious_;
+	float attackRadious_; // TODO: 인스턴트 히트박스로 변경필요
 };

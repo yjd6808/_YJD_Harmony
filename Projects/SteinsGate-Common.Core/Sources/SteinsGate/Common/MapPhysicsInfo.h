@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/7/2023 11:32:58 AM
  * =====================
@@ -12,10 +12,7 @@
 
 struct MapPhysicsInfo : ConfigDataAbstract
 {
-    float Gravity;
-    float Friction;
-    float ElasticityDividedForce;
+	float gravity_;
+	float friction_;
+	float elasticityDividedForce_;
 };
-
-
-

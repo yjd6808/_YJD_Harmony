@@ -14,15 +14,12 @@
 class TextParser
 {
 public:
-	static char* parseFrameInfo(const char* frameString, int len,
-		JCORE_OUT int& frameIndex,
-		JCORE_OUT int& delay,
-		JCORE_OUT int& frameEventCode);
+	static char* ParseFrameInfo(const char* _pFrameString, int _len,
+	                            JCORE_OUT int& _frameIndex,
+	                            JCORE_OUT int& _delay,
+	                            JCORE_OUT int& _frameEventCode);
 
-	static void parseIntNumbers(const SGString& numStr, JCORE_OUT int* numArr, int count);
-	static void parseFloatNumbers(const SGString& string, JCORE_OUT float* numArr, int count);
-	static void parseFloatNumbers(char* source, int len, JCORE_OUT float* numArr, int count);
+	static void ParseIntNumbers(const SGString& _numStr, JCORE_OUT int* _pNumArr, int _count);
+	static void ParseFloatNumbers(const SGString& _numStr, JCORE_OUT float* _pNumArr, int _count);
+	static void ParseFloatNumbers(char* _pSource, int _len, JCORE_OUT float* _pNumArr, int _count);
 };
-
-
-

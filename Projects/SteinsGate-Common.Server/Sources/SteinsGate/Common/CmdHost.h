@@ -12,4 +12,3 @@
 #include <SteinsGate/Common/CmdHost_MESSAGE.h>
 #include <SteinsGate/Common/CmdHost_PING.h>
 #include <SteinsGate/Common/CmdHost_SETUP.h>
-

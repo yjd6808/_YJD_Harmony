@@ -19,21 +19,21 @@ USING_NS_CC;
 #define EnableLog false
 
 #if EnableLog
-	#define AILog(fmt, ...) Log(fmt, ##__VA_ARGS__)
+#define AILog(fmt, ...) Log(fmt, ##__VA_ARGS__)
 #else
-	#define AILog(...)
+#define AILog(...)
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////////////
 AIComponent::AIComponent(Actor* _pActor)
-	: ActorComponent(_pActor)
-	, aiInfo_(nullptr)
-	, target_(nullptr)
-	, activityMap_{}
-	, runningActivity_()
-	, state_(AIState::None)
-	, activityState_(AIState::None)
-	, previousState_(AIState::None)
+: ActorComponent(_pActor)
+, aiInfo_(nullptr)
+, target_(nullptr)
+, activityMap_{}
+, runningActivity_(nullptr)
+, state_(AIState::None)
+, activityState_(AIState::None)
+, previousState_(AIState::None)
 {
 }
 
@@ -58,16 +58,16 @@ void AIComponent::onUpdate(float _dt)
 	if (aiInfo_ == nullptr)
 		return;
 
-	updateState();			// 변경가능한 상태 확인
-	selectActivity();			// 해당 상태에서 수행가능한 액티비티 설정
+	updateState(); // 변경가능한 상태 확인
+	selectActivity(); // 해당 상태에서 수행가능한 액티비티 설정
 	updateDirection();
-	updateActivity(_dt);			// 액티비티 지속 업데이트
+	updateActivity(_dt); // 액티비티 지속 업데이트
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void AIComponent::setAIInfo(AIInfo* _pInfo)
+void AIComponent::setAIInfo(AIInfo* _pAIInfo)
 {
-	aiInfo_ = _pInfo;
+	aiInfo_ = _pAIInfo;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -115,14 +115,14 @@ void AIComponent::setSitActivity(SitActivity* _pSitActivity)
 //////////////////////////////////////////////////////////////////////////////////////////
 void AIComponent::updateState()
 {
-	MapLayer* pMapLayer = m_pActor->getMapLayer();
+	MapLayer* pMapLayer = pActor_->getMapLayer();
 
 	if (pMapLayer == nullptr)
 	{
 		return;
 	}
 
-	if (runningActivity_ && runningActivity_->isRunning())
+	if (runningActivity_ && runningActivity_->IsRunning())
 	{
 		return;
 	}
@@ -130,7 +130,7 @@ void AIComponent::updateState()
 	previousState_ = state_;
 	float enemyDist;
 	Actor* pPreviousTarget = target_;
-	target_ = pMapLayer->findNearestCharacterInRadious(m_pActor, aiInfo_->SightRadious, enemyDist);
+	target_ = pMapLayer->findNearestCharacterInRadious(pActor_, aiInfo_->sightRadious_, enemyDist);
 
 	if (target_ == nullptr)
 	{
@@ -144,7 +144,7 @@ void AIComponent::updateState()
 	{
 	}
 
-	if (enemyDist > aiInfo_->AttackRadious)
+	if (enemyDist > aiInfo_->attackRadious_)
 	{
 		AILog("[상태] 적 발견: 추격 상태\n");
 		state_ = AIState::Track;
@@ -158,21 +158,24 @@ void AIComponent::updateState()
 //////////////////////////////////////////////////////////////////////////////////////////
 void AIComponent::selectActivity()
 {
-	if (runningActivity_ && runningActivity_->isRunning())
+	if (runningActivity_ && runningActivity_->IsRunning())
 		return;
 
 	switch (state_)
 	{
-	case AIState::Wander:	selectWanderActivity();		break;
-	case AIState::Track:	selectTrackActivity();		break;
-	case AIState::Angry:	selectAngryActivity();		break;
+	case AIState::Wander: selectWanderActivity();
+		break;
+	case AIState::Track: selectTrackActivity();
+		break;
+	case AIState::Angry: selectAngryActivity();
+		break;
 	}
 
 	if (runningActivity_ == nullptr)
 		return;
 
-	runningActivity_->onActivitySelectFromAIRoutine(aiInfo_, activityState_);
-	runningActivity_->run();
+	runningActivity_->OnActivitySelectFromAiRoutine(aiInfo_, activityState_);
+	runningActivity_->Run();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -181,7 +184,7 @@ void AIComponent::updateActivity(float _dt)
 	if (runningActivity_ == nullptr)
 		return;
 
-	runningActivity_->onUpdate(_dt);
+	runningActivity_->OnUpdate(_dt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -190,7 +193,7 @@ void AIComponent::updateDirection()
 	if (runningActivity_ == nullptr)
 		return;
 
-	AIActivityType_t activityType = runningActivity_->getType();
+	AIActivityType_t activityType = runningActivity_->GetType();
 
 	if (activityType != AIActivityType::Idle &&
 		activityType != AIActivityType::Walk)
@@ -201,8 +204,9 @@ void AIComponent::updateDirection()
 	if (state_ >= AIState::Track && target_)
 	{
 		SpriteDirection_t whereIsTarget;
-		SGVec2Ex::getLookDirectionX(m_pActor->getPositionRealCenterX(), target_->getPositionRealCenterX(), whereIsTarget);
-		m_pActor->setSpriteDirection(whereIsTarget);
+		SGVec2Ex::getLookDirectionX(pActor_->getPositionRealCenterX(), target_->getPositionRealCenterX(),
+		                            whereIsTarget);
+		pActor_->setSpriteDirection(whereIsTarget);
 	}
 }
 
@@ -212,7 +216,7 @@ void AIComponent::selectWanderActivity()
 	const float rnd = SGRandom::random_real(0.0f, 100.0f);
 	activityState_ = AIState::Wander;
 
-	if (rnd < aiInfo_->WanderProbs[AIWanderDecision::Walk])
+	if (rnd < aiInfo_->wanderProbs_[AIWanderDecision::Walk])
 	{
 		runningActivity_ = activityMap_[AIActivityType::Walk];
 		AILog("[배회] 걷기\n");
@@ -227,8 +231,8 @@ void AIComponent::selectWanderActivity()
 void AIComponent::selectTrackActivity()
 {
 	const float rnd = SGRandom::random_real(0.0f, 100.0f);
-	
-	if (rnd < aiInfo_->TrackProbs[AITrackDecision::Wander])
+
+	if (rnd < aiInfo_->trackProbs_[AITrackDecision::Wander])
 	{
 		AILog("[추격] 배회 시도\n");
 		selectWanderActivity();
@@ -237,7 +241,7 @@ void AIComponent::selectTrackActivity()
 
 	activityState_ = AIState::Track;
 
-	if (rnd < aiInfo_->TrackProbs[AITrackDecision::Attack])
+	if (rnd < aiInfo_->trackProbs_[AITrackDecision::Attack])
 	{
 		AILog("[추격] 공격 시도\n");
 		runningActivity_ = activityMap_[AIActivityType::Attack];
@@ -253,14 +257,14 @@ void AIComponent::selectAngryActivity()
 {
 	const float rnd = SGRandom::random_real(0.0f, 100.0f);
 
-	if (rnd < aiInfo_->AngryProbs[AIAngryDecision::Wander])
+	if (rnd < aiInfo_->angryProbs_[AIAngryDecision::Wander])
 	{
 		AILog("[분노] 배회 시도\n");
 		selectWanderActivity();
 		return;
 	}
 
-	if (rnd < aiInfo_->AngryProbs[AIAngryDecision::Track])
+	if (rnd < aiInfo_->angryProbs_[AIAngryDecision::Track])
 	{
 		AILog("[분노] 추격 시도\n");
 		selectTrackActivity();
@@ -277,15 +281,15 @@ void AIComponent::runActivity(AIActivity* _pActivity)
 {
 	DebugAssert(_pActivity);
 
-	if (runningActivity_ && runningActivity_->isRunning())
+	if (runningActivity_ && runningActivity_->IsRunning())
 	{
-		runningActivity_->stop();
+		runningActivity_->Stop();
 	}
 
 	runningActivity_ = _pActivity;
 
 	if (runningActivity_)
-		runningActivity_->run();
+		runningActivity_->Run();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -293,25 +297,25 @@ void AIComponent::runActivity(AIActivityType_t _activityType)
 {
 	DebugAssertMsg(_activityType >= 0 && _activityType < AIActivityType::Max, "액티비티 타입이 올바르지 않습니다.");
 
-	if (runningActivity_ && runningActivity_->isRunning())
+	if (runningActivity_ && runningActivity_->IsRunning())
 	{
-		runningActivity_->stop();
+		runningActivity_->Stop();
 	}
 
 	runningActivity_ = activityMap_[_activityType];
 
 	if (runningActivity_)
-		runningActivity_->run();
+		runningActivity_->Run();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 SGVec2 AIComponent::getRandomSightPos()
 {
-	SGVec2 curPos = m_pActor->getPositionRealCenter();
+	SGVec2 curPos = pActor_->getPositionRealCenter();
 	float randRad = SGRandom::random_real(0.0f, 2 * SG_PI);
 	SGVec2 dstPos{
-		curPos.x + aiInfo_->SightRadious * cosf(randRad),
-		curPos.y + aiInfo_->SightRadious * sinf(randRad)
+		curPos.x + aiInfo_->sightRadious_ * cosf(randRad),
+		curPos.y + aiInfo_->sightRadious_ * sinf(randRad)
 	};
 
 	return curPos.lerp(dstPos, SGRandom::random_real(SightRandomPosMinAlpha, 1.0f));

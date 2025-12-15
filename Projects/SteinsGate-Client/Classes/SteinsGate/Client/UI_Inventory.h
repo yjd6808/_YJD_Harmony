@@ -8,35 +8,33 @@
 
 #pragma once
 
-#include <SteinsGate/Client/UIMasterGroup.h>
+#include <SteinsGate/Client/UIRootGroup.h>
 
 #define MAX_INVEN_SLOT_COUNT		32
 #define INVEN_ITEM_COUNT_PER_ROW	8
 #define INVEN_ROW_COUNT				4
 
-class UI_Inventory : public UIMasterGroup
+class UI_Inventory : public UIRootGroup
 {
 public:
-	UI_Inventory(UIGroupInfo* groupInfo);
+	UI_Inventory(UIGroupInfo* _pGroupInfo);
 
-	void onInit() override;
-	void onLoaded() override;
-	void onAdded() override;
-	void onUpdate(float dt) override;
-	bool onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
-	bool onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
+	void OnInit() override;
+	void OnLoaded() override;
+	void OnAdded() override;
+	void onUpdate(float _dt) override;
+	bool onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
+	bool onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
 
 private:
-	UISprite* m_pBackground;
-	UIScrollBar* m_pScrollBar;
+	UISprite* background_;
+	UIScrollBar* scrollBar_;
 
-	UIGroup* m_pInvenSlotGroup;
-	UISprite* m_pInvenSlotSprites[MAX_INVEN_SLOT_COUNT];
+	UIGroup* invenSlotGroup_;
+	UISprite* invenSlotSprites_[MAX_INVEN_SLOT_COUNT];
 
-	UIGroup* m_pEquipSlotGroup;
-	UIStatic* m_pEquipSlotStatics[ItemType::MaxInvenEquip];
+	UIGroup* equipSlotGroup_;
+	UIStatic* equipSlotStatics_[ItemType::MaxInvenEquip];
 
-	InvenItemType_t m_iCurTab;
+	InvenItemType_t curTab_;
 };
-
-

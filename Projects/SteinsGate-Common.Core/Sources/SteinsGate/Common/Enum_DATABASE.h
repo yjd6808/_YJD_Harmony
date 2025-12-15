@@ -11,7 +11,7 @@
 #include <JCore/Define.h>
 
 JCORE_SENUM_BEGIN(DatabaseType)
-Game = 1
+	Game = 1
 JCORE_SENUM_END(DatabaseType)
 
 // ==========================================================================================

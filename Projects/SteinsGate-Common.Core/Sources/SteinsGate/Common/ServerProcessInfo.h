@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <SteinsGate/Common/ConfigDataAbstract.h>
@@ -13,68 +12,76 @@
 
 struct ServerProcessInfo
 {
-	ServerProcessType_t ProcessType;
-	SGString Name;
+	ServerProcessType_t processType_;
+	SGString name_;
 
 	// JSON에서 읽은 데이터
-	SGEndPoint BindInterServerUdp;
-	SGEndPoint BindInterServerTcp;	// 중앙서버X
-	SGEndPoint BindTcp;				// 게임서버는 로직서버
-	SGEndPoint BindUdp;				// 게임서버는 로직서버
-	SGEndPoint RemoteInterServerEP;
-	SGEndPoint RemoteEP;
-	int ServerId = - 1;
-	int MaxSessionCount = 0;
-
+	SGEndPoint bindInterServerUdp_;
+	SGEndPoint bindInterServerTcp_; // 중앙서버X
+	SGEndPoint bindTcp_; // 게임서버는 로직서버
+	SGEndPoint bindUdp_; // 게임서버는 로직서버
+	SGEndPoint remoteInterServerEp_;
+	SGEndPoint remoteEp_;
+	int serverId_ = -1;
+	int maxSessionCount_ = 0;
 };
 
 struct GameChannelInfo
 {
-	int ChannelNumber;
-	int ChannelType;
-	int MaxPlayerCount;
+	int channelNumber_;
+	int channelType_;
+	int maxPlayerCount_;
 };
 
 struct GameServerProcessInfo : ServerProcessInfo
 {
-	GameServerProcessInfo() : GameChannelInfoList(1) {}
-	GameServerProcessInfo(int channelCount)
-		: GameChannelInfoList(channelCount)
-	{}
+	GameServerProcessInfo()
+	: gameServerType_()
+	, active_(false)
+	, gameChannelInfoList_(1)
+	{
+	}
 
-	GameServerType_t GameServerType;
-	SGEndPoint BindChatTcp;
-	SGEndPoint BindChatUdp;
-	SGEndPoint RemoteChat;
+	GameServerProcessInfo(int _channelCount)
+	: gameServerType_()
+	, active_(false)
+	, gameChannelInfoList_(_channelCount)
+	{
+	}
 
-	SGEndPoint BindAreaTcp;
-	SGEndPoint BindAreaUdp;
-	SGEndPoint RemoteArea;
+	GameServerType_t gameServerType_;
+	SGEndPoint bindChatTcp_;
+	SGEndPoint bindChatUdp_;
+	SGEndPoint remoteChat_;
 
-	bool Active;
-	SGVector<GameChannelInfo> GameChannelInfoList;
+	SGEndPoint bindAreaTcp_;
+	SGEndPoint bindAreaUdp_;
+	SGEndPoint remoteArea_;
+
+	bool active_;
+	SGVector<GameChannelInfo> gameChannelInfoList_;
 };
-
 
 struct ServerProcessInfoPackage : ConfigDataAbstract
 {
-	ServerProcessInfoPackage(int activeGameServerCount)
-		: GameServerList(activeGameServerCount)
-		, ActiveServerIdList(3 + activeGameServerCount)	// 인증 + 로비 + 중앙 + 게임 서버들
-	{}
+	ServerProcessInfoPackage(int _activeGameServerCount)
+	: auth_(), center_(), lobby_(), gameServerList_(_activeGameServerCount)
+	, activeServerIdList_(3 + _activeGameServerCount), infoMap_{}
+	// 인증 + 로비 + 중앙 + 게임 서버들
+	{
+	}
+
 	~ServerProcessInfoPackage() override = default;
 
-	SGString getServerProcessName(int serverId);
-	ServerProcessInfo* getServerProcessInfo(int serverId);
-	GameServerProcessInfo* getGameServerProcessInfo(GameServerType_t gameServerType);
+	SGString GetServerProcessName(int _serverId);
+	ServerProcessInfo* GetServerProcessInfo(int _serverId);
+	GameServerProcessInfo* GetGameServerProcessInfo(GameServerType_t _gameServerType);
 
-	SGString Name;
-	ServerProcessInfo Auth;
-	ServerProcessInfo Center;
-	ServerProcessInfo Lobby;
-	SGVector<GameServerProcessInfo> GameServerList;
-	SGVector<int> ActiveServerIdList;
-	ServerProcessInfo* InfoMap[Const::Server::MaxProcessId];
+	SGString name_;
+	ServerProcessInfo auth_;
+	ServerProcessInfo center_;
+	ServerProcessInfo lobby_;
+	SGVector<GameServerProcessInfo> gameServerList_;
+	SGVector<int> activeServerIdList_;
+	ServerProcessInfo* infoMap_[Const::Server::MaxProcessId];
 };
-
-

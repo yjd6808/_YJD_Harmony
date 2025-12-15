@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <SteinsGate/Common/CommonNetMaster.h>
@@ -15,15 +14,19 @@ class AuthNetMaster final
 	, public JCore::SingletonPointer<AuthNetMaster>
 {
 	friend class TSingleton;
+
 	AuthNetMaster();
 	~AuthNetMaster() override;
+
 public:
 	void Initialize() override;
-	ServerProcessType_t GetProcessType() override { return ServerProcessType::Auth; }
+
+	ServerProcessType_t GetProcessType() override
+	{
+		return ServerProcessType::Auth;
+	}
+
 protected:
-	void OnUpdate(const JCore::TimeSpan& elapsed) override;
+	void OnUpdate(const JCore::TimeSpan& _elapsed) override;
 	void OnStopped() override;
 };
-
-
-

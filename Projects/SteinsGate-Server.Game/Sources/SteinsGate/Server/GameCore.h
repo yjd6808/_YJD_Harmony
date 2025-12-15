@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/3/2023 9:10:29 AM [SteinsGate-Server.Lobby 프로젝트 복사 생성]
  * =====================
@@ -34,5 +34,5 @@ extern ::RuntimeConfig*			RuntimeConfig;
 extern ::GameContents			Contents;
 NS_CORE_END
 
-void InitializeGameCore(GameServerType_t gameServerType);
+void InitializeGameCore(GameServerType_t _gameServerType);
 void FinalizeGameCore();

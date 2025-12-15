@@ -13,47 +13,49 @@
 struct SgaSpriteHelper
 {
 public:
-
-    // 전달받은 SgaSpriteAbstractPtr 타입들 중 null인경우 0으로간주해서 가장 큰 너비를 가져온다.
+	// 전달받은 SgaSpriteAbstractPtr 타입들 중 null인경우 0으로간주해서 가장 큰 너비를 가져온다.
 	template <typename... TSprites>
-	static float GetMaxWidthF(TSprites&&... spriteArgs) {
+	static float GetMaxWidthF(TSprites&&... _spriteArgs)
+	{
+		static_assert(sizeof...(_spriteArgs) >= 1, "... need sprite parameter");
+		SgaSpriteAbstractPtr pSprites[]{ _spriteArgs... };
+		int maxWidth = pSprites[0] != nullptr ? pSprites[0]->GetWidth() : 0;
 
-        static_assert(sizeof...(spriteArgs) >= 1, "... need sprite parameter");
-        SgaSpriteAbstractPtr sprites[] { spriteArgs... };
-        int iMaxWidth = sprites[0] != nullptr ? sprites[0]->GetWidth() : 0;
+		for (int spriteIndex = 1; spriteIndex < sizeof...(_spriteArgs); ++spriteIndex)
+		{
+			if (pSprites[spriteIndex] == nullptr)
+				continue;
 
-        for (int i = 1; i < sizeof...(spriteArgs); ++i) {
-            if (sprites[i] == nullptr)
-                continue;
+			const int targetWidth = pSprites[spriteIndex]->GetWidth();
+			if (targetWidth > maxWidth)
+			{
+				maxWidth = targetWidth;
+			}
+		}
 
-            const int iTargetWidth = sprites[i]->GetWidth();
-            if (iTargetWidth > iMaxWidth) {
-                iMaxWidth = iTargetWidth;
-            }
-        }
-
-        return iMaxWidth;
+		return maxWidth;
 	}
 
-    // 전달받은 SgaSpriteAbstractPtr 타입들 중 null인경우 0으로간주해서 가장 큰 높이를 가져온다.
-    template <typename... TSprites>
-	static float GetMaxHeightF(TSprites&&... spriteArgs) {
-        static_assert(sizeof...(spriteArgs) >= 1, "... need sprite parameter");
-        SgaSpriteAbstractPtr sprites[] { spriteArgs... };
-        int iMaxHeight = sprites[0] != nullptr ? sprites[0]->GetHeight() : 0;
+	// 전달받은 SgaSpriteAbstractPtr 타입들 중 null인경우 0으로간주해서 가장 큰 높이를 가져온다.
+	template <typename... TSprites>
+	static float GetMaxHeightF(TSprites&&... _spriteArgs)
+	{
+		static_assert(sizeof...(_spriteArgs) >= 1, "... need sprite parameter");
+		SgaSpriteAbstractPtr pSprites[]{ _spriteArgs... };
+		int maxHeight = pSprites[0] != nullptr ? pSprites[0]->GetHeight() : 0;
 
-        for (int i = 1; i < sizeof...(spriteArgs); ++i) {
-            if (sprites[i] == nullptr)
-                continue;
+		for (int spriteIndex = 1; spriteIndex < sizeof...(_spriteArgs); ++spriteIndex)
+		{
+			if (pSprites[spriteIndex] == nullptr)
+				continue;
 
-            const int iTargetHeight = sprites[i]->GetHeight();
-            if (iTargetHeight > iMaxHeight) {
-                iMaxHeight = iTargetHeight;
-            }
-        }
+			const int targetHeight = pSprites[spriteIndex]->GetHeight();
+			if (targetHeight > maxHeight)
+			{
+				maxHeight = targetHeight;
+			}
+		}
 
-        return iMaxHeight;
+		return maxHeight;
 	}
-
-
 };

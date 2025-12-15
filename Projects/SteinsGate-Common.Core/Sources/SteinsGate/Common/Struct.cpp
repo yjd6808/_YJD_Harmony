@@ -12,18 +12,21 @@
 
 USING_NS_JC;
 
-
+//////////////////////////////////////////////////////////////////////////////////////////
 ActorPartSpriteData::ActorPartSpriteData()
-	: SgaIndex(InvalidValue_v)
-	, ImgIndex(InvalidValue_v)
-	, ZOrder(0)
-{}
+: SgaIndex(InvalidValue_v)
+, ImgIndex(InvalidValue_v)
+, ZOrder(0)
+{
+}
 
-ActorPartSpriteData::ActorPartSpriteData(int zorder, int sga, int img)
-	: SgaIndex(sga)
-	, ImgIndex(img)
-	, ZOrder(zorder)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+ActorPartSpriteData::ActorPartSpriteData(int _zOrder, int _sga, int _img)
+: SgaIndex(_sga)
+, ImgIndex(_img)
+, ZOrder(_zOrder)
+{
+}
 
 //ActorPartSpriteDataCustom::ActorPartSpriteDataCustom()
 //	: ActorPartSpriteData()
@@ -33,44 +36,57 @@ ActorPartSpriteData::ActorPartSpriteData(int zorder, int sga, int img)
 //	: ActorPartSpriteData(zorder, sga, img)
 //{}
 
-SgaResourceIndex::SgaResourceIndex() : Value(0) {}
+//////////////////////////////////////////////////////////////////////////////////////////
+SgaResourceIndex::SgaResourceIndex()
+: Value(0)
+{
+}
 
-
-String SgaResourceIndex::ToString() const {
+//////////////////////////////////////////////////////////////////////////////////////////
+String SgaResourceIndex::ToString() const
+{
 	return StringUtil::Format("Sga(%d) Img(%d) Sprite(%d)", Un.SgaIndex, Un.ImgIndex, Un.FrameIndex);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 AccountData::AccountData()
-	: Id{""}
-	, Pass{""}
-	, LastLogin(0)
-	, LastServer(GameServerType::Max)
-{}
+: Id{ "" }
+, Pass{ "" }
+, LastLogin(0)
+, LastServer(GameServerType::Max)
+{
+}
 
-void AccountData::Clear() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void AccountData::Clear()
+{
 	Id = "";
 	Pass = "";
 	LastLogin.Tick = 0;
 	LastServer = GameServerType::Max;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 PlayerData::PlayerData()
-	: CharId(InvalidValue_v)
-	, Name{""}
-	, CharType(CharType::Gunner)
-	, Life(0)
-	, MaxLife(0)
-	, Mana(0)
-	, MaxMana(0)
-	, Level(0)
-	, Gold(0)
-	, Str(0)
-	, Dex(0)
-	, Int(0)
-	, Vit(0)
-{}
+: CharId(InvalidValue_v)
+, Name{ "" }
+, CharType(CharType::Gunner)
+, Life(0)
+, MaxLife(0)
+, Mana(0)
+, MaxMana(0)
+, Level(0)
+, Gold(0)
+, Str(0)
+, Dex(0)
+, Int(0)
+, Vit(0)
+{
+}
 
-void PlayerData::clear() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void PlayerData::clear()
+{
 	CharId = InvalidValue_v;
 	Name = "";
 	CharType = CharType::Gunner;
@@ -87,52 +103,62 @@ void PlayerData::clear() {
 	Vit = 0;
 }
 
-ItemCode::ItemCode(int Total)
-	: Code(Total)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+ItemCode::ItemCode(int _total)
+: Code(_total)
+{
+}
 
-
-
-ItemCode::ItemCode(int Code, ItemType_t Type) {
-	CommonUn.Code = Code;
+//////////////////////////////////////////////////////////////////////////////////////////
+ItemCode::ItemCode(int _code, ItemType_t _type)
+{
+	CommonUn.Code = _code;
 	CommonUn.Detail1 = InvalidValue_v;
 	CommonUn.Detail2 = InvalidValue_v;
-	CommonUn.Type = Type;
+	CommonUn.Type = _type;
 }
 
-ItemCode::ItemCode(int Code, int Detail, ItemType_t Type) {
-	CommonUn.Code = Code;
-	CommonUn.Detail1 = Detail;
+//////////////////////////////////////////////////////////////////////////////////////////
+ItemCode::ItemCode(int _code, int _detail, ItemType_t _type)
+{
+	CommonUn.Code = _code;
+	CommonUn.Detail1 = _detail;
 	CommonUn.Detail2 = InvalidValue_v;
-	CommonUn.Type = Type;
+	CommonUn.Type = _type;
 }
 
-ItemCode::ItemCode(int Code, int Detail1, int Detail2, ItemType_t Type) {
-	CommonUn.Code = Code;
-	CommonUn.Detail1 = Detail1;
-	CommonUn.Detail2 = Detail2;
-	CommonUn.Type = Type;
+//////////////////////////////////////////////////////////////////////////////////////////
+ItemCode::ItemCode(int _code, int _detail1, int _detail2, ItemType_t _type)
+{
+	CommonUn.Code = _code;
+	CommonUn.Detail1 = _detail1;
+	CommonUn.Detail2 = _detail2;
+	CommonUn.Type = _type;
 }
 
-
-void ItemCode::initAvatarCode(CharType_t charType, AvatarType_t avatarType, int code) {
-	AvatarUn.CharType = charType;
+//////////////////////////////////////////////////////////////////////////////////////////
+void ItemCode::initAvatarCode(CharType_t _charType, AvatarType_t _avatarType, int _code)
+{
+	AvatarUn.CharType = _charType;
 	AvatarUn.ItemType = ItemType::Avatar;
-	AvatarUn.PartType = avatarType;
-	AvatarUn.Code = code;
+	AvatarUn.PartType = _avatarType;
+	AvatarUn.Code = _code;
 }
 
-void ItemCode::initWeaponCode(CharType_t charType, WeaponType_t weaponType, int code) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ItemCode::initWeaponCode(CharType_t _charType, WeaponType_t _weaponType, int _code)
+{
 	WeaponUn.ItemType = ItemType::Weapon;
-	WeaponUn.WeaponType = weaponType;
-	WeaponUn.CharType = charType;
-	WeaponUn.Code = code;
+	WeaponUn.WeaponType = _weaponType;
+	WeaponUn.CharType = _charType;
+	WeaponUn.Code = _code;
 }
 
-void ItemCode::initArmorCode(ItemType_t itemType, EquipArmorType_t armorType, int code) {
-	ArmorUn.Code = code;
-	ArmorUn.ItemType = itemType;
-	ArmorUn.ArmorType = armorType;
+//////////////////////////////////////////////////////////////////////////////////////////
+void ItemCode::initArmorCode(ItemType_t _itemType, EquipArmorType_t _armorType, int _code)
+{
+	ArmorUn.Code = _code;
+	ArmorUn.ItemType = _itemType;
+	ArmorUn.ArmorType = _armorType;
 	ArmorUn._ = InvalidValue_v;
 }
-

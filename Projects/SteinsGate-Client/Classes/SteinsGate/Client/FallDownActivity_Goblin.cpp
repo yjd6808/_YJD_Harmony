@@ -14,58 +14,64 @@
 #include <SteinsGate/Client/PhysicsComponent.h>
 #include <SteinsGate/Client/AIComponent.h>
 
-FallDownActivity_Goblin::FallDownActivity_Goblin(Actor* actor)
-	: FallDownActivity(actor)
-	, m_bBounced(false)
-	, m_bDown(false)
-	, m_fElapsedDownTime(0.0f)
-	, m_fDownRecoverTime(0.0f)
-{}
+FallDownActivity_Goblin::FallDownActivity_Goblin(Actor* _pActor)
+: FallDownActivity(_pActor)
+, bounced_(false)
+, down_(false)
+, elapsedDownTime_(0.0f)
+, downRecoverTime_(0.0f)
+{
+}
 
-void FallDownActivity_Goblin::onActivityBegin() {
-	Monster* pMonster = dynamic_cast<Monster*>(m_pActor);
+void FallDownActivity_Goblin::OnActivityBegin()
+{
+	Monster* pMonster = dynamic_cast<Monster*>(pActor_);
 	DebugAssert(pMonster);
 
 	const MonsterStatInfo* pStatInfo = pMonster->getStatInfo();
 	PhysicsComponent* pPhysicsComponent = pMonster->getComponent<PhysicsComponent>();
 
 	pMonster->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_BEGIN);
-	m_fElapsedDownTime = 0.0f;
-	m_fDownRecoverTime = pStatInfo ? pStatInfo->DownRecoverTime / 2 : 1.0f;
-	m_bBounced = false;
-	m_bDown = false;
+	elapsedDownTime_ = 0.0f;
+	downRecoverTime_ = pStatInfo ? pStatInfo->downRecoverTime_ / 2 : 1.0f;
+	bounced_ = false;
+	down_ = false;
 
 	if (pPhysicsComponent)
 		pPhysicsComponent->enableElasticity();
 }
 
-void FallDownActivity_Goblin::onActivityEnd() {
-	PhysicsComponent* pPhysicsComponent = m_pActor->getComponent<PhysicsComponent>();
+void FallDownActivity_Goblin::OnActivityEnd()
+{
+	PhysicsComponent* pPhysicsComponent = pActor_->getComponent<PhysicsComponent>();
 
 	if (pPhysicsComponent)
 		pPhysicsComponent->disableElasticity();
 }
 
-void FallDownActivity_Goblin::onUpdate(float dt) {
-
-	PhysicsComponent* pPhysicsComponent = m_pActor->getComponent<PhysicsComponent>();
+void FallDownActivity_Goblin::OnUpdate(float _dt)
+{
+	PhysicsComponent* pPhysicsComponent = pActor_->getComponent<PhysicsComponent>();
 
 	// Step 1. 바닥에 충돌해서 공중으로 튀어올랐는지 확인
-	if (pPhysicsComponent && pPhysicsComponent->isBounced() && !m_bBounced) {
-		m_bBounced = true;
-		m_pActor->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_BOUNCE);
+	if (pPhysicsComponent && pPhysicsComponent->isBounced() && !bounced_)
+	{
+		bounced_ = true;
+		pActor_->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_BOUNCE);
 		return;
 	}
 
 	// Step 2. 공중으로 튀어올랐다가 다시 바닥에 닿았는지 확인
-	if (!m_bDown && m_bBounced && m_pActor->isOnTheGround()) {
-		m_pActor->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_END);
-		m_bDown = true;
+	if (!down_ && bounced_ && pActor_->isOnTheGround())
+	{
+		pActor_->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_END);
+		down_ = true;
 		return;
 	}
 
 	// Step 3. 바닥에 누워있는 시간 경과 체크
-	if (!m_bDown) {
+	if (!down_)
+	{
 		return;
 	}
 
@@ -73,15 +79,13 @@ void FallDownActivity_Goblin::onUpdate(float dt) {
 	// if (죽어있는 경우)
 	//   사망처리
 
-	m_fElapsedDownTime += dt;
+	elapsedDownTime_ += _dt;
 
-	if (m_fElapsedDownTime >= m_fDownRecoverTime) {
-
-		AIComponent* pAIComponent = m_pActor->getComponent<AIComponent>();
+	if (elapsedDownTime_ >= downRecoverTime_)
+	{
+		AIComponent* pAIComponent = pActor_->getComponent<AIComponent>();
 
 		if (pAIComponent)
 			pAIComponent->runActivity(AIActivityType::Sit);
 	}
 }
-
-

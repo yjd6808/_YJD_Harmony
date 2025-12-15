@@ -5,16 +5,16 @@
 
 class MysqlConnection
 {
-
 public:
 	MysqlConnection();
 	~MysqlConnection();
 
 	// MySQL 접속
-	bool Connect(const JCore::String &hostname, const uint16_t &port, const JCore::String &username, const JCore::String &password, const JCore::String &dbname);
+	bool Connect(const JCore::String& _hostname, const uint16_t& _port, const JCore::String& _username,
+	             const JCore::String& _password, const JCore::String& _dbName = NULL);
 
 	// DB 선택
-	bool SelectDB(const JCore::String &schemaName);
+	bool SelectDB(const JCore::String& _schemaName);
 
 	// 연결 끊기
 	void Disconnect();
@@ -27,15 +27,14 @@ public:
 	bool IsConnected() const;
 
 	// 이스케이프 스트링 반환
-	JCore::String EscapeString(const JCore::String& value) const;
+	JCore::String EscapeString(const JCore::String& _value) const;
 
 private:
-	MYSQL* m_MySQLConn;
-	bool m_bIsConnected;
-	JCore::String m_szHostname = "";
-	JCore::String m_sUsername = "";
-	JCore::String m_sPassword = "";
-	JCore::String m_sSchemaName = "";
-	uint16_t m_wPort;
+	MYSQL* mySqlConn_;
+	bool isConnected_;
+	JCore::String hostname_ = "";
+	JCore::String username_ = "";
+	JCore::String password_ = "";
+	JCore::String schemaName_ = "";
+	uint16_t port_;
 };
-

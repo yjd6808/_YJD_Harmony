@@ -20,56 +20,63 @@
 
 class ComponentCollection
 	: public IUpdatable
-	, public ISessionEventHandler
+	  , public ISessionEventHandler
 {
 public:
 	ComponentCollection();
-	ComponentCollection(int capacity);
+	ComponentCollection(int _capacity);
 	~ComponentCollection() override;
 
 	void Clear();
-	bool Add(IComponent* component);
-	bool Has(int type) const;
-	bool Remove(int type);
+	bool Add(IComponent* _pComponent);
+	bool Has(int _type) const;
+	bool Remove(int _type);
 	void Initialize();
 
 	template <typename TComponent>
-	TComponent* Get(bool addRef = false) const {
+	TComponent* Get(bool _addRef = false) const
+	{
 		static_assert(JCore::IsNaturalType_v<TComponent>, "... TComponent must be natural type");
 		static_assert(JCore::IsBaseOf_v<IComponent, TComponent>, "... TComponent must be derived from IComponent");
 
-		IComponent** ppFoundComponent = m_hComponentMap.Find(TComponent::GetType());
+		IComponent** pFoundComponent = componentMap_.Find(TComponent::GetType());
 
-		if (ppFoundComponent == nullptr) {
+		if (pFoundComponent == nullptr)
+		{
 			return nullptr;
 		}
-		TComponent* pComponent = dynamic_cast<TComponent*>(*ppFoundComponent);
-		if (addRef) pComponent->AddRef();
+
+		TComponent* pComponent = dynamic_cast<TComponent*>(*pFoundComponent);
+		if (_addRef)
+		{
+			pComponent->AddRef();
+		}
+
 		return pComponent;
 	}
 
 	template <typename TComponent>
-	JCore::RefCountObjectPtr<TComponent> GetRPtr() const {
+	JCore::RefCountObjectPtr<TComponent> GetRPtr() const
+	{
 		static_assert(JCore::IsNaturalType_v<TComponent>, "... TComponent must be natural type");
 		static_assert(JCore::IsBaseOf_v<IComponent, TComponent>, "... TComponent must be derived from IComponent");
 
-		IComponent** ppFoundComponent = m_hComponentMap.Find(TComponent::GetType());
+		IComponent** pFoundComponent = componentMap_.Find(TComponent::GetType());
 
-		if (ppFoundComponent == nullptr) {
+		if (pFoundComponent == nullptr)
+		{
 			return nullptr;
 		}
 
-		return JCore::RefCountObjectPtr<TComponent>{ dynamic_cast<TComponent*>(*ppFoundComponent) };
+		return JCore::RefCountObjectPtr<TComponent>{ dynamic_cast<TComponent*>(*pFoundComponent) };
 	}
 
-	void OnUpdate(const JCore::TimeSpan& elapsed) override;
+	void OnUpdate(const JCore::TimeSpan& _elapsed) override;
 	void OnConnected() override;
 	void OnDisconnected() override;
+
 private:
-	JCore::HashMap<int, IComponent*> m_hComponentMap;
-	JCore::Vector<IUpdatable*> m_vUpdatables;
-	JCore::Vector<ISessionEventHandler*> m_vSessionEventHandlers;
+	JCore::HashMap<int, IComponent*> componentMap_;
+	JCore::Vector<IUpdatable*> updatables_;
+	JCore::Vector<ISessionEventHandler*> sessionEventHandlers_;
 };
-
-
-

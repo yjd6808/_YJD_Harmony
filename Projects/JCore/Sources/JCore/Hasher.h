@@ -121,7 +121,7 @@ struct Hasher<T*>
 	constexpr Int32U operator()(T* _val) const
 	{
 #if defined(_WIN64)
-	return Hasher<Int64U>()((Int64U)val);
+	return Hasher<Int64U>()((Int64U)_val);
 #else
 		return Hasher<Int32U>()((Int32U)_val);
 #endif
@@ -253,7 +253,7 @@ struct Hasher64<T*>
 	constexpr Int64U operator()(T* _val) const
 	{
 #if defined(_WIN64)
-	return Hasher64<Int64U>()((Int64U)val);
+	return Hasher64<Int64U>()((Int64U)_val);
 #else
 		return Hasher64<Int32U>()((Int32U)_val);
 #endif

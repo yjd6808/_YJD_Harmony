@@ -23,7 +23,7 @@ public:
 	void Initialize() override;
 	ServerProcessType_t GetProcessType() override { return ServerProcessType::Center; }
 protected:
-	void OnUpdate(const JCore::TimeSpan& elapsed) override;
+	void OnUpdate(const JCore::TimeSpan& _elapsed) override;
 	void OnStopped() override;
 };
 

@@ -13,62 +13,68 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 AIInfo::AIInfo(const AIInfo& _other)
 {
-	Code = _other.Code;
+	code_ = _other.code_;
 
 	for (int i = 0; i < AIWanderDecision::Max - 1; ++i)
 	{
-		WanderProbs[i] = _other.WanderProbs[i];
+		wanderProbs_[i] = _other.wanderProbs_[i];
 	}
 
 	for (int i = 0; i < AITrackDecision::Max - 1; ++i)
 	{
-		TrackProbs[i] = _other.TrackProbs[i];
+		trackProbs_[i] = _other.trackProbs_[i];
 	}
 
 	for (int i = 0; i < AIAngryDecision::Max - 1; ++i)
 	{
-		AngryProbs[i] = _other.AngryProbs[i];
+		angryProbs_[i] = _other.angryProbs_[i];
 	}
 
 	for (int i = 0; i < 2; ++i)
 	{
-		IdleTime[i] = _other.IdleTime[i];
-		WanderWalkTime[i] = _other.WanderWalkTime[i];
-		TrackWalkTime[i] = _other.TrackWalkTime[i];
+		idleTime_[i] = _other.idleTime_[i];
+		wanderWalkTime_[i] = _other.wanderWalkTime_[i];
+		trackWalkTime_[i] = _other.trackWalkTime_[i];
 	}
 
-	ForceTrack = _other.ForceTrack;
-	ForceAngry = _other.ForceAngry;
-	SightRadious = _other.SightRadious;
-	AttackRadious = _other.AttackRadious;
+	forceTrack_ = _other.forceTrack_;
+	forceAngry_ = _other.forceAngry_;
+	sightRadious_ = _other.sightRadious_;
+	attackRadious_ = _other.attackRadious_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-float AIInfo::getWanderProb(AIWanderDecision_t _decision)
+float AIInfo::GetWanderProb(AIWanderDecision_t _decision)
 {
 	DebugAssertMsg(_decision >= 0 && _decision < AIWanderDecision::Max, "원더 디시전 범위가 이상합니다.");
 	if (_decision == 0)
-		return WanderProbs[0];
+	{
+		return wanderProbs_[0];
+	}
 
-	return WanderProbs[_decision] - WanderProbs[_decision - 1];
+	return wanderProbs_[_decision] - wanderProbs_[_decision - 1];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-float AIInfo::getTrackProb(AITrackDecision_t _decision)
+float AIInfo::GetTrackProb(AITrackDecision_t _decision)
 {
 	DebugAssertMsg(_decision >= 0 && _decision < AITrackDecision::Max, "트랙 디시전 범위가 이상합니다.");
 	if (_decision == 0)
-		return TrackProbs[0];
+	{
+		return trackProbs_[0];
+	}
 
-	return TrackProbs[_decision] - TrackProbs[_decision - 1];
+	return trackProbs_[_decision] - trackProbs_[_decision - 1];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-float AIInfo::getAngryProb(AIAngryDecision_t _decision)
+float AIInfo::GetAngryProb(AIAngryDecision_t _decision)
 {
 	DebugAssertMsg(_decision >= 0 && _decision < AIAngryDecision::Max, "앵구리 디시전 범위가 이상합니다.");
 	if (_decision == 0)
-		return AngryProbs[0];
+	{
+		return angryProbs_[0];
+	}
 
-	return AngryProbs[_decision] - AngryProbs[_decision - 1];
+	return angryProbs_[_decision] - angryProbs_[_decision - 1];
 }

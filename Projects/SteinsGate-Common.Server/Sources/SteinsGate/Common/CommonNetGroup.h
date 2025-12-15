@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <JNetwork/NetGroup.h>
@@ -25,28 +24,29 @@ public:
 	void Initialize() override;
 	void Finalize() override;
 
-	void ProcessUpdate(const JCore::TimeSpan& elapsed);
-	void ProcessOrder(CenterOrder_t order);
+	void ProcessUpdate(const JCore::TimeSpan& _elapsed);
+	void ProcessOrder(CenterOrder_t _order);
 
 	virtual void LaunchServer();
 	virtual void StopServer();
 
 	virtual CommonServer* GetMainTcp() const = 0;
-	virtual CommonSession* GetSessionFromContainer(int handle) = 0;
-	virtual SGISessionContainer* GetSessionContainer(ServerType_t type) = 0;
+	virtual CommonSession* GetSessionFromContainer(int _handle) = 0;
+	virtual SGISessionContainer* GetSessionContainer(ServerType_t _type) = 0;
 
-	bool AddUpdatable(int id, IUpdatable* updatable);
+	bool AddUpdatable(int _id, IUpdatable* _pUpdatable);
+
 protected:
 	virtual void InitializeIOCP() = 0;
 	virtual void InitializeBufferPool() = 0;
 	virtual void InitializeServer() = 0;
 	virtual void InitializeParser();
 
-	virtual void OnUpdate(const JCore::TimeSpan& elapsed) = 0;
+	virtual void OnUpdate(const JCore::TimeSpan& _elapsed) = 0;
 
-	SGNormalLock m_ServerBootLock;
-	SGCommandParser* m_pParser;
-	UpdatableCollection m_UpdatableCollection;
+	SGNormalLock serverBootLock_;
+	SGCommandParser* pParser_;
+	UpdatableCollection updatableCollection_;
 
-	inline static JCore::AtomicInt ms_iUpdatableSeq;
+	inline static JCore::AtomicInt UpdatableSeq;
 };

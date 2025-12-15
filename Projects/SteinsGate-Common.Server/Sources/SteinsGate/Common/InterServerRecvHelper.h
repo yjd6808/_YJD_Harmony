@@ -12,7 +12,5 @@
 
 struct InterServerRecvHelper
 {
-	static thread_local Int8 LastFromId;						// 누구에게서 받았는지	
+	static thread_local Int8 LastFromId; // 누구에게서 받았는지 	
 };
-
-

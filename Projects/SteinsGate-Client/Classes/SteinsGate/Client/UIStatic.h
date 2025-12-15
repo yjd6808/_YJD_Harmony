@@ -14,30 +14,31 @@
 class UIStatic : public UIElement
 {
 public:
-	static UIStatic* create(UIMasterGroup* master, UIGroup* parent);
-	static UIStatic* create(UIMasterGroup* master, UIGroup* parent, UIStaticInfo* staticInfo, bool infoOwner);
+	static UIStatic* create(UIRootGroup* _pMaster, UIGroup* _pParent);
+	static UIStatic* create(UIRootGroup* _pMaster, UIGroup* _pParent, UIStaticInfo* _pStaticInfo, bool _infoOwner);
 
 	static constexpr UIElementType_t type() { return UIElementType::Static; }
 
-	UIStatic(UIMasterGroup* master, UIGroup* parent);
-	UIStatic(UIMasterGroup* master, UIGroup* parent, UIStaticInfo* staticInfo, bool infoOwner);
+	UIStatic(UIRootGroup* _pMaster, UIGroup* _pParent);
+	UIStatic(UIRootGroup* _pMaster, UIGroup* _pParent, UIStaticInfo* _pStaticInfo, bool _infoOwner);
 	~UIStatic() override;
 
 	bool init() override;
-	void load() override;
-	void unload() override;
+	void Load() override;
+	void Unload() override;
 
-	void setDebugVisible(bool visible);
-	void setUISize(const SGSize& contentSize) override;
-	void setInfo(UIElementInfo* info, bool infoOwner) override;
-	void setInfoStatic(UIStaticInfo* info, bool infoOwner);
+	void setDebugVisible(bool _visible);
+	void SetUISize(const SGSize& _contentSize) override;
+	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
+	void setInfoStatic(UIStaticInfo* _pInfo, bool _infoOwner);
 
-	UIStaticInfo* getInfo() const { return m_pInfo; }
-	UIElementType_t getElementType() override { return UIElementType::Static; }
-	SGString toString() override { return SGStringUtil::Format("스태틱(%d)", m_pInfo->Code); }
+	UIStaticInfo* getInfo() const { return info_; }
+	UIElementType_t GetElementType() override { return UIElementType::Static; }
+	SGString ToString() override { return SGStringUtil::Format("스태틱(%d)", info_->code_); }
+
 private:
-	bool m_bVisible;
-	UIStaticInfo* m_pInfo;
-	FrameTexture* m_pDebugTexture;
-	SGSprite* m_pDebugSprite;
+	bool visible_;
+	UIStaticInfo* info_;
+	FrameTexture* debugTexture_;
+	SGSprite* debugSprite_;
 };

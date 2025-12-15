@@ -14,14 +14,19 @@
 struct ItemOptInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	ItemOptInfoLoader(DataManagerAbstract* manager);
-	virtual ~ItemOptInfoLoader() override = default;
+	ItemOptInfoLoader(DataManagerAbstract* _pManager);
+	~ItemOptInfoLoader() override = default;
 
-	ConfigFileType_t getConfigFileType() override { return ConfigFileType::ItemOpt; }
-	bool load() override;
+	ConfigFileType_t GetConfigFileType() override
+	{
+		return ConfigFileType::ItemOpt;
+	}
 
-	static void readItemOptInfo(Json::Value& optRoot, JCORE_OUT ItemOptInfo* optInfo);
-	ItemOptInfo* getData(const SGString& name);
+	bool Load() override;
+
+	static void ReadItemOptInfo(Json::Value& _optRoot, JCORE_OUT ItemOptInfo* _pOptInfo);
+	ItemOptInfo* GetData(const SGString& _name);
+
 private:
-	SGHashMap<SGString, ItemOptInfo*> m_DataMapByName;
+	SGHashMap<SGString, ItemOptInfo*> dataMapByName_;
 };

@@ -71,7 +71,6 @@
 #include <JCore/Primitives/Atomic.h>
 
 NS_JC_BEGIN
-
 template <typename T>
 class ObjectPool;
 
@@ -81,36 +80,40 @@ template <typename Lhs, typename Rhs>
 static constexpr bool IsSmartPtrCastable_v = IsDynamicCastable_v<NakedType_t<Lhs>*, NakedType_t<Rhs>*>;
 
 template <typename Lhs, typename Rhs>
-static void CheckDynamicCastable() {
-	static_assert(IsSmartPtrCastable_v<Lhs, Rhs>, 
-		"... cannot convert! Type T* and U* must be dynamic castable each other");
+static void CheckDynamicCastable()
+{
+	static_assert(IsSmartPtrCastable_v<Lhs, Rhs>,
+	              "... cannot convert! Type T* and U* must be dynamic castable each other");
 }
 
 template <typename T>
-static void PreventCreatingObjectPoolItem() {
+static void PreventCreatingObjectPoolItem()
+{
 	static_assert(!IsBaseOf_v<ObjectPool<T>, T>, "... cannot create object pool item using this method");
 }
 
 NS_DETAIL_END
 
 
-
 // 전방 선언
-template <typename, typename>	class SharedMaker;
-template <typename, typename>	class UniqueMaker;
-template <typename>	class WeakPtr;
-template <typename>	class SharedPtr;
-template <typename>	class UniquePtr;
-template <typename>	class MakeSharedFromThis; struct MakeSharedFromThisBase;
+template <typename, typename> class SharedMaker;
+template <typename, typename> class UniqueMaker;
+template <typename> class WeakPtr;
+template <typename> class SharedPtr;
+template <typename> class UniquePtr;
+template <typename> class MakeSharedFromThis;
+struct MakeSharedFromThisBase;
 
 template <typename T, typename TAllocator = CDefaultAllocator, typename... Args>
-constexpr decltype(auto) MakeShared(Args&&... _args) {
+constexpr decltype(auto) MakeShared(Args&&... _args)
+{
 	Detail::PreventCreatingObjectPoolItem<NakedType_t<T>>();
 	return SharedMaker<T, TAllocator>::Create(Forward<Args>(_args)...);
 }
 
 template <typename T, typename TAllocator = CDefaultAllocator, typename... Args>
-constexpr decltype(auto) MakeUnique(Args&&... _args) {
+constexpr decltype(auto) MakeUnique(Args&&... _args)
+{
 	Detail::PreventCreatingObjectPoolItem<NakedType_t<T>>();
 	return UniqueMaker<T, TAllocator>::Create(Forward<Args>(_args)...);
 }
@@ -128,23 +131,31 @@ struct UniqueObject : UniqueBase
 	using TDeletor = PlacementDeletor<T, DeletorOption::OnlyDestoryObject>;
 
 	template <typename... Args>
-	explicit UniqueObject(Args&&... _args) {
-		::new (AddressOf(Object)) T(Forward<Args>(_args)...);
+	explicit UniqueObject(Args&&... _args)
+	{
+		::new(AddressOf(object_)) T(Forward<Args>(_args)...);
 	}
 
-	~UniqueObject() override {}
-
-	void DeleteSelf() override {
-		TDeletor()(AddressOf(Object));
-
-		TAllocator::template DeallocateStatic<decltype(*this)>(this);		// static push
+	~UniqueObject() override
+	{
 	}
 
-	T* Address() const {
-		return (T*)AddressOf(Object);
+	void DeleteSelf() override
+	{
+		TDeletor()(AddressOf(object_));
+
+		TAllocator::template DeallocateStatic<decltype(*this)>(this); // static push
 	}
 
-	union { T Object; };
+	T* Address() const
+	{
+		return (T*)AddressOf(object_);
+	}
+
+	union
+	{
+		T object_;
+	};
 };
 
 template <typename T, int Size, typename TAllocator>
@@ -153,24 +164,33 @@ struct UniqueObject<T[Size], TAllocator> : UniqueBase
 	using TDeletor = PlacementDeletor<T[Size], DeletorOption::OnlyDestoryObject>;
 
 	template <typename... Args>
-	explicit UniqueObject(Args&&... _args) {
-		for (int i = 0; i < Size; i++) {
-			::new (AddressOf(Object[i])) T{ Forward<Args>(_args)... };
+	explicit UniqueObject(Args&&... _args)
+	{
+		for (int i = 0; i < Size; i++)
+		{
+			::new(AddressOf(object_[i])) T{ Forward<Args>(_args)... };
 		}
 	}
 
-	~UniqueObject() override {}
+	~UniqueObject() override
+	{
+	}
 
-	void DeleteSelf() override {
-		TDeletor()(Object);
+	void DeleteSelf() override
+	{
+		TDeletor()(object_);
 		TAllocator::template DeallocateStatic<decltype(*this)>(this);
 	}
 
-	T* Address() const {
-		return (T*)Object;
+	T* Address() const
+	{
+		return (T*)object_;
 	}
 
-	union { T Object[Size]; };
+	union
+	{
+		T object_[Size];
+	};
 };
 
 template <typename T, typename TAllocator>
@@ -179,133 +199,163 @@ struct UniqueObject<T[], TAllocator> : UniqueBase
 	using TDeletor = PlacementDeletor<T[], DeletorOption::OnlyDestoryObject>;
 
 	template <typename... Args>
-	explicit UniqueObject(int _size, Args&&... _args) {
-		Pointer = TAllocator::template AllocateDynamic<T*>(sizeof(T) * _size, m_Allocated);
+	explicit UniqueObject(int _size, Args&&... _args)
+	{
+		pointer_ = TAllocator::template AllocateDynamic<T*>(sizeof(T) * _size, allocated_);
 
-		for (int i = 0; i < _size; i++) {
-			::new (Pointer + i) T{ Forward<Args>(_args)... };
+		for (int i = 0; i < _size; i++)
+		{
+			::new(pointer_ + i) T{ Forward<Args>(_args)... };
 		}
 
-		m_Size = _size;
+		size_ = _size;
 	}
 
-	~UniqueObject() override {}
+	~UniqueObject() override
+	{
+	}
 
-	void DeleteSelf() override {
+	void DeleteSelf() override
+	{
 		// Pointer가 가리키는 배열 원소들 명시적으로 소멸자 호출
-		TDeletor()(Pointer, m_Size);
+		TDeletor()(pointer_, size_);
 		// Pointer메모리 해제
-		TAllocator::DeallocateDynamic(Pointer, m_Allocated);		// dynamic push
+		TAllocator::DeallocateDynamic(pointer_, allocated_); // dynamic push
 
 		// 이 객체의 메모리를 해제
-		TAllocator::template DeallocateStatic<decltype(*this)>(this);		// static push
+		TAllocator::template DeallocateStatic<decltype(*this)>(this); // static push
 	}
 
-	T* Address() const {
-		return reinterpret_cast<T*>(Pointer);
+	T* Address() const
+	{
+		return reinterpret_cast<T*>(pointer_);
 	}
 
-	union { T* Pointer; };
-	int m_Size;
-	int m_Allocated;
+	union
+	{
+		T* pointer_;
+	};
+
+	int size_;
+	int allocated_;
 };
 
 template <typename T>
 class UniquePtr
 {
-	using TUniquePtr	= UniquePtr<T>;
+	using TUniquePtr = UniquePtr<T>;
 
 	template <typename U>
-	void SetUniquePtr(U* _pPtr, UniqueBase* _pBase, int _size) {
-		m_pPtr = (T*)_pPtr;
-		m_Base = _pBase;
-		m_Size = _size;
+	void SetUniquePtr(U* _pPtr, UniqueBase* _pBase, int _size)
+	{
+		pPtr_ = (T*)_pPtr;
+		pBase_ = _pBase;
+		size_ = _size;
 	}
+
 public:
-	UniquePtr() : m_pPtr(nullptr) {}
-	UniquePtr(std::nullptr_t _nulptr) : m_pPtr(nullptr) {}
+	UniquePtr()
+	: pPtr_(nullptr)
+	{
+	}
+
+	UniquePtr(std::nullptr_t _nulptr)
+	: pPtr_(nullptr)
+	{
+	}
 
 	template <typename U>
-	UniquePtr(const UniquePtr<U>& other) = delete;
+	UniquePtr(const UniquePtr<U>& _other) = delete;
 
 	template <typename U>
-	UniquePtr(UniquePtr<U>&& _other) {
+	UniquePtr(UniquePtr<U>&& _other)
+	{
 		Detail::CheckDynamicCastable<U, T>();
 
-		m_pPtr = (T*)_other.m_pPtr;
-		m_Base = _other.m_Base;
-		m_Size = _other.m_Size;
-		
-		_other.m_pPtr = nullptr;
-		_other.m_Base = nullptr;
-		_other.m_Size = 0;
-		
+		pPtr_ = (T*)_other.pPtr_;
+		pBase_ = _other.pBase_;
+		size_ = _other.size_;
+
+		_other.pPtr_ = nullptr;
+		_other.pBase_ = nullptr;
+		_other.size_ = 0;
 	}
 
-	virtual ~UniquePtr() { 
-		if (m_Base != nullptr) {
+	virtual ~UniquePtr()
+	{
+		if (pBase_ != nullptr)
+		{
 			// 가상 클래스는 vfptr때문에 스칼라 타입은 4바이트만큼 뒤에 있어서 이렇게 캐스팅해주면 되던데
 			// 배열로 만들면 달라지네;
-			//UniqueBase* p = (UniqueBase*)((char*)m_pPtr - 4);
+			//UniqueBase* p = (UniqueBase*)((char*)pPtr_ - 4);
 
-			m_Base->DeleteSelf();
-			m_Base = nullptr;
+			pBase_->DeleteSelf();
+			pBase_ = nullptr;
 		}
-			
 	}
 
-	T& operator*() const {
-		if (m_pPtr == nullptr) {
+	T& operator*() const
+	{
+		if (pPtr_ == nullptr)
+		{
 			throw NullPointerException("포인터가 존재하지 않습니다.");
 		}
-		return *m_pPtr;
+		return *pPtr_;
 	}
 
-	T* operator->() const {
-		return m_pPtr;
+	T* operator->() const
+	{
+		return pPtr_;
 	}
 
 
-	T& operator[](const int idx) const {
-		if (m_pPtr == nullptr) {
+	T& operator[](const int _idx) const
+	{
+		if (pPtr_ == nullptr)
+		{
 			throw NullPointerException("포인터가 존재하지 않습니다.");
 		}
 
-		if (idx < 0 || idx >= m_Size) {
+		if (_idx < 0 || _idx >= size_)
+		{
 			throw OutOfRangeException("올바른 인덱스 값을 입력해주세요.");
 		}
 
-		return m_pPtr[idx];
+		return pPtr_[_idx];
 	}
 
-	int Length() const {
-		return m_Size;
+	int Length() const
+	{
+		return size_;
 	}
 
 	// Get<Model*> -> Model*로 반환
 	// 모두 같은 반환을 수행한다.
 	template <typename U = T*>
-	U Get() const {
-		if (m_pPtr == nullptr) {
+	U Get() const
+	{
+		if (pPtr_ == nullptr)
+		{
 			return nullptr;
 		}
 
-		
-		static_assert(!IsReferenceType_v<U>, "... cannot cast to reference type");	// Get<int&>와 같은 캐스팅을 방지
-		static_assert(IsPointerType_v<U>, "... only cast to pointer type.");		// Get<int>	와 같은 방식을 방지
+
+		static_assert(!IsReferenceType_v<U>, "... cannot cast to reference type"); // Get<int&>와 같은 캐스팅을 방지
+		static_assert(IsPointerType_v<U>, "... only cast to pointer type."); // Get<int>	와 같은 방식을 방지
 
 		// U -> int* -> 포인터를 없애주고 비교해야함
 		// T -> int
 		Detail::CheckDynamicCastable<RemovePointer_t<U>, T>();
-		return (U)m_pPtr;
+		return (U)pPtr_;
 	}
 
 	template <typename AnyType>
-	void operator=(AnyType&& other) = delete;
+	void operator=(AnyType&& _other) = delete;
+
 private:
-	T* m_pPtr = nullptr;
-	UniqueBase* m_Base = nullptr;
-	int m_Size = 0;
+	T* pPtr_ = nullptr;
+	UniqueBase* pBase_ = nullptr;
+	int size_ = 0;
 
 	template <typename, typename> friend class UniqueMaker;
 	template <typename> friend class UniquePtr;
@@ -317,24 +367,22 @@ private:
 };
 
 
-
-
-
-
 template <typename T, typename TAllocator>
 class UniqueMaker
 {
-	static const int ms_uiArraySize = 1;		// 기본적으로 길이는 무조건 1
+	static constexpr int ARRAY_SIZE = 1; // 기본적으로 길이는 무조건 1
 
 	using TUniquePtr = UniquePtr<T>;
 	using TUniqueObject = UniqueObject<T, TAllocator>;
+
 public:
 	template <typename... Args>
-	static constexpr TUniquePtr Create(Args&&... args) {
+	static constexpr TUniquePtr Create(Args&&... _args)
+	{
 		auto obj = TAllocator::template AllocateStatic<TUniqueObject>();
-		Memory::PlacementNew(obj, Forward<Args>(args)...);
+		Memory::PlacementNew(obj, Forward<Args>(_args)...);
 		TUniquePtr sp;
-		sp.SetUniquePtr(obj->Address(), obj, ms_uiArraySize);
+		sp.SetUniquePtr(obj->Address(), obj, ARRAY_SIZE);
 		return sp;
 	}
 };
@@ -344,11 +392,13 @@ class UniqueMaker<T[ArraySize], TAllocator>
 {
 	using TUniquePtr = UniquePtr<T[ArraySize]>;
 	using TUniqueObject = UniqueObject<T[ArraySize], TAllocator>;
+
 public:
 	template <typename... Args>
-	static constexpr TUniquePtr Create(Args&&... args) {
+	static constexpr TUniquePtr Create(Args&&... _args)
+	{
 		auto obj = TAllocator::template AllocateStatic<TUniqueObject>();
-		Memory::PlacementNew(obj, Forward<Args>(args)...);
+		Memory::PlacementNew(obj, Forward<Args>(_args)...);
 		TUniquePtr sp;
 		sp.SetUniquePtr(obj->Address(), obj, ArraySize);
 		return sp;
@@ -361,21 +411,22 @@ class UniqueMaker<T[], TAllocator>
 {
 	using TUniquePtr = UniquePtr<T[]>;
 	using TUniqueObject = UniqueObject<T[], TAllocator>;
+
 public:
 	template <typename... Args>
-	static constexpr TUniquePtr Create(int Size, Args&&... args) {
+	static constexpr TUniquePtr Create(int _size, Args&&... _args)
+	{
 		auto obj = TAllocator::template AllocateStatic<TUniqueObject>();
-		Memory::PlacementNew(obj, Size, Forward<Args>(args)...);
+		Memory::PlacementNew(obj, _size, Forward<Args>(_args)...);
 		TUniquePtr sp;
-		sp.SetUniquePtr(obj->Address(), obj, Size);
+		sp.SetUniquePtr(obj->Address(), obj, _size);
 		return sp;
 	}
 };
 
 
-
 struct JCORE_NOVTABLE ControlBlock
-{	
+{
 	ControlBlock() = default;
 	virtual ~ControlBlock() = default;
 
@@ -383,31 +434,36 @@ struct JCORE_NOVTABLE ControlBlock
 	virtual void DestroyObject() = 0;
 
 	// 레퍼런스 카운트 올릴 때 위크 카운트도 같이 올려준다.
-	void IncreaseRefCount() {
-		++ReferenceCount;
-		++WeakCount;
+	void IncreaseRefCount()
+	{
+		++referenceCount_;
+		++weakCount_;
 	}
 
-	void IncreaseWeakCount() {
-		++WeakCount;
+	void IncreaseWeakCount()
+	{
+		++weakCount_;
 	}
 
-	void DecreaseRefCount() {
-		if ((--ReferenceCount) == 0)
+	void DecreaseRefCount()
+	{
+		if ((--referenceCount_) == 0)
 			DestroyObject();
-		if ((--WeakCount) == 0)
+		if ((--weakCount_) == 0)
 			DeleteSelf();
 	}
 
-	void DecreaseWeakCount() {
-		if ((--WeakCount) == 0) {
+	void DecreaseWeakCount()
+	{
+		if ((--weakCount_) == 0)
+		{
 			DeleteSelf();
 		}
 	}
 
 
-	Atomic<int> ReferenceCount = 1;
-	Atomic<int> WeakCount = 1;
+	Atomic<int> referenceCount_ = 1;
+	Atomic<int> weakCount_ = 1;
 };
 
 
@@ -417,25 +473,34 @@ struct SharedObject : ControlBlock
 	using TDeletor = PlacementDeletor<T, DeletorOption::OnlyDestoryObject>;
 
 	template <typename... Args>
-	explicit SharedObject(Args&&... args) {
-		::new (AddressOf(Object)) T(Forward<Args>(args)...);
+	explicit SharedObject(Args&&... args)
+	{
+		::new(AddressOf(object_)) T(Forward<Args>(args)...);
 	}
 
-	~SharedObject() override {}
-
-	void DestroyObject() override {
-		TDeletor()(AddressOf(Object));
+	~SharedObject() override
+	{
 	}
 
-	void DeleteSelf() override {
+	void DestroyObject() override
+	{
+		TDeletor()(AddressOf(object_));
+	}
+
+	void DeleteSelf() override
+	{
 		TAllocator::template DeallocateStatic<decltype(*this)>(this);
 	}
 
-	T* Address() const {
-		return (T*)AddressOf(Object);
+	T* Address() const
+	{
+		return (T*)AddressOf(object_);
 	}
 
-	union { T Object; };
+	union
+	{
+		T object_;
+	};
 };
 
 
@@ -445,29 +510,38 @@ struct SharedObject<T*, TAllocator> : ControlBlock
 {
 	using TDeletor = PlacementDeletor<T, DeletorOption::Both>;
 
-	explicit SharedObject(T* ptr) {
-        Object = ptr;
+	explicit SharedObject(T* _ptr)
+	{
+		object_ = _ptr;
 	}
 
-	~SharedObject() override {}
+	~SharedObject() override
+	{
+	}
 
-	void DestroyObject() override {
-		if constexpr (IsBaseOf_v<ObjectPool<T>, T>) {
-			ObjectPool<T>::PushObjectWithDestroy(Object);
-		} else {
-			TDeletor()(Object);
+	void DestroyObject() override
+	{
+		if constexpr (IsBaseOf_v<ObjectPool<T>, T>)
+		{
+			ObjectPool<T>::PushObjectWithDestroy(object_);
+		}
+		else
+		{
+			TDeletor()(object_);
 		}
 	}
 
-	void DeleteSelf() override {
+	void DeleteSelf() override
+	{
 		TAllocator::template DeallocateStatic<decltype(*this)>(this);
 	}
 
-	T* Address() const {
-		return Object;
+	T* Address() const
+	{
+		return object_;
 	}
 
-    T* Object;
+	T* object_;
 };
 
 template <typename T, int Size, typename TAllocator>
@@ -476,27 +550,37 @@ struct SharedObject<T[Size], TAllocator> : ControlBlock
 	using TDeletor = PlacementDeletor<T[Size], DeletorOption::OnlyDestoryObject>;
 
 	template <typename... Args>
-	explicit SharedObject(Args&&... args) {
-		for (int i = 0; i < Size; i++) {
-			::new (AddressOf(Object[i])) T(Forward<Args>(args)...);
+	explicit SharedObject(Args&&... args)
+	{
+		for (int i = 0; i < Size; i++)
+		{
+			::new(AddressOf(object_[i])) T(Forward<Args>(args)...);
 		}
 	}
 
-	~SharedObject() override {}
-
-	void DestroyObject() override {
-		TDeletor()(Object);
+	~SharedObject() override
+	{
 	}
 
-	void DeleteSelf() override {
+	void DestroyObject() override
+	{
+		TDeletor()(object_);
+	}
+
+	void DeleteSelf() override
+	{
 		TAllocator::template DeallocateStatic<decltype(*this)>(this);
 	}
 
-	T* Address() const {
-		return (T*)Object;
+	T* Address() const
+	{
+		return (T*)object_;
 	}
 
-	union { T Object[Size]; };
+	union
+	{
+		T object_[Size];
+	};
 };
 
 template <typename T, typename TAllocator>
@@ -505,39 +589,50 @@ struct SharedObject<T[], TAllocator> : ControlBlock
 	using TDeletor = PlacementDeletor<T[], DeletorOption::OnlyDestoryObject>;
 
 	template <typename... Args>
-	explicit SharedObject(int Size, Args&&... args) {
-		Pointer = TAllocator::template AllocateDynamic<T*>(sizeof(T) * Size, m_Allocated);
+	explicit SharedObject(int _size, Args&&... _args)
+	{
+		pointer_ = TAllocator::template AllocateDynamic<T*>(sizeof(T) * _size, allocated_);
 
-		for (int i = 0; i < Size; i++) {
-			::new (Pointer + i) T{ Forward<Args>(args)... };
+		for (int i = 0; i < _size; i++)
+		{
+			::new(pointer_ + i) T{ Forward<Args>(_args)... };
 		}
 
-		m_Size = Size;
+		size_ = _size;
 	}
 
-	~SharedObject() override {}
-
-	void DestroyObject() override {
-		TDeletor()(Pointer, m_Size);
+	~SharedObject() override
+	{
 	}
 
-	void DeleteSelf() override {
+	void DestroyObject() override
+	{
+		TDeletor()(pointer_, size_);
+	}
+
+	void DeleteSelf() override
+	{
 		// Pointer가 가리키는 배열 원소들 명시적으로 소멸자 호출
-		TDeletor()(Pointer, m_Size);
+		TDeletor()(pointer_, size_);
 		// Pointer메모리 해제
-		TAllocator::DeallocateDynamic(Pointer, m_Allocated);		// dynamic push
+		TAllocator::DeallocateDynamic(pointer_, allocated_); // dynamic push
 
 		// 이 객체의 메모리를 해제
-		TAllocator::template DeallocateStatic<decltype(*this)>(this);		// static push
+		TAllocator::template DeallocateStatic<decltype(*this)>(this); // static push
 	}
 
-	T* Address() const {
-		return reinterpret_cast<T*>(Pointer);
+	T* Address() const
+	{
+		return reinterpret_cast<T*>(pointer_);
 	}
 
-	union { T* Pointer; };
-	int m_Size;
-	int m_Allocated;
+	union
+	{
+		T* pointer_;
+	};
+
+	int size_;
+	int allocated_;
 };
 
 
@@ -548,213 +643,239 @@ public:
 	using TType = T;
 	using TSharedPtr = SharedPtr<T>;
 	using TWeakPtr = WeakPtr<T>;
-	using TPortable = RemoveArray_t<T>;		// T[], T[20] -> T
+	using TPortable = RemoveArray_t<T>; // T[], T[20] -> T
 
-	int RefCount() const {
-		if (m_pControlBlock == nullptr) {
+	int RefCount() const
+	{
+		if (pControlBlock_ == nullptr)
+		{
 			return 0;
 		}
 
-		return m_pControlBlock->ReferenceCount;
+		return pControlBlock_->referenceCount_;
 	}
 
-	int WeakCount() const {
-		if (m_pControlBlock == nullptr) {
+	int WeakCount() const
+	{
+		if (pControlBlock_ == nullptr)
+		{
 			return 0;
 		}
 
-		return m_pControlBlock->WeakCount;
+		return pControlBlock_->weakCount_;
 	}
 
 
-	bool Exist() const {
-		if (m_pControlBlock == nullptr)
+	bool Exist() const
+	{
+		if (pControlBlock_ == nullptr)
 			return false;
 
-		return m_pControlBlock->ReferenceCount > 0;
+		return pControlBlock_->referenceCount_ > 0;
 	}
 
-	T& GetRef() const {
-		return *m_pPtr;
+	T& GetRef() const
+	{
+		return *pPtr_;
 	}
 
-	TPortable* GetPtr() const {
-		return m_pPtr;
+	TPortable* GetPtr() const
+	{
+		return pPtr_;
 	}
 
-	int Length() const {
-		return m_Size;
+	int Length() const
+	{
+		return size_;
 	}
 
 	// Get<Model*> -> Model*로 반환
 	// 모두 같은 반환을 수행한다.
 	template <typename U = T*>
-	U Get() const {
-		if (!Exist()) {
+	U Get() const
+	{
+		if (!Exist())
+		{
 			return nullptr;
 		}
 
-		static_assert(!IsReferenceType_v<U>, "... cannot cast to reference type");	// Get<int&>와 같은 캐스팅을 방지
-		static_assert(IsPointerType_v<U>, "... only cast to pointer type.");		// Get<int>	와 같은 방식을 방지
+		static_assert(!IsReferenceType_v<U>, "... cannot cast to reference type"); // Get<int&>와 같은 캐스팅을 방지
+		static_assert(IsPointerType_v<U>, "... only cast to pointer type."); // Get<int>	와 같은 방식을 방지
 
 		// U -> int* -> 포인터를 없애주고 비교해야함
 		// T -> int
 		Detail::CheckDynamicCastable<RemovePointer_t<U>, T>();
-		return (U)m_pPtr;
+		return (U)pPtr_;
 	}
 
-	T& operator*() const {
-		if (!Exist()) {
+	T& operator*() const
+	{
+		if (!Exist())
+		{
 			throw NullPointerException("포인터가 존재하지 않습니다.");
 		}
 
 		return GetRef();
 	}
 
-	T* operator->() const {
-		if (!Exist()) {
+	T* operator->() const
+	{
+		if (!Exist())
+		{
 			throw NullPointerException("포인터가 존재하지 않습니다.");
 		}
 
 		return GetPtr();
 	}
 
-	T& operator[](const int idx) const {
-		if (!Exist()) {
+	T& operator[](const int _idx) const
+	{
+		if (!Exist())
+		{
 			throw NullPointerException("포인터가 존재하지 않습니다.");
 		}
 
-		if (idx < 0 || idx >= m_Size) {
+		if (_idx < 0 || _idx >= size_)
+		{
 			throw OutOfRangeException("올바른 인덱스 값을 입력해주세요.");
 		}
 
-		return m_pPtr[idx];
+		return pPtr_[_idx];
 	}
-protected:
-	void MakeSharedEmpty() {
-		if (m_pControlBlock != nullptr)
-			m_pControlBlock->DecreaseRefCount();
 
-		m_pPtr = nullptr;
-		m_pControlBlock = nullptr;
-		m_Size = 0;
+protected:
+	void MakeSharedEmpty()
+	{
+		if (pControlBlock_ != nullptr)
+			pControlBlock_->DecreaseRefCount();
+
+		pPtr_ = nullptr;
+		pControlBlock_ = nullptr;
+		size_ = 0;
 	}
 
 	// SharedPtr에서만 호출
 	template <typename U, DefaultEnableIf_t<IsPointerType_v<U>> = nullptr>
-    void MakeShared(U ptr) {
-	    m_pControlBlock = dbg_new SharedObject<U, CDefaultAllocator>(ptr);
-        m_pPtr = ptr;
-        m_Size = 1;
-
-		if constexpr (IsBaseOf_v<MakeSharedFromThis<NakedType_t<U>>, NakedType_t<U>>)
-			ptr->m_spWeak = *static_cast<SharedPtr<T>*>(this);
-	}
+	void MakeShared(U _ptr);
 
 	// Shared로 Shared 복사
 	template <typename U>
-	void SharedChangeToShared(SharedPtr<U>& shared) {
+	void SharedChangeToShared(SharedPtr<U>& _shared)
+	{
 		SubtractReferenceCount();
-		m_pPtr = (TPortable*)shared.m_pPtr;
-		m_pControlBlock = shared.m_pControlBlock;
-		m_Size = shared.m_Size;
+		pPtr_ = (TPortable*)_shared.pPtr_;
+		pControlBlock_ = _shared.pControlBlock_;
+		size_ = _shared.size_;
 		AddReferenceCount();
 	}
 
 	// Shared로 Weak 복사
 	template <typename U>
-	void SharedChangeToWeak(WeakPtr<U>& weak) {
+	void SharedChangeToWeak(WeakPtr<U>& _weak)
+	{
 		SubtractReferenceCount();
-		m_pPtr = (TPortable*)weak.m_pPtr;
-		m_pControlBlock = weak.m_pControlBlock;
-		m_Size = weak.m_Size;
+		pPtr_ = (TPortable*)_weak.pPtr_;
+		pControlBlock_ = _weak.pControlBlock_;
+		size_ = _weak.size_;
 		AddReferenceCount();
 	}
 
 	// Weak로 Shared 복사
 	template <typename U>
-	void WeakChangeToShared(SharedPtr<U>& shared) {
+	void WeakChangeToShared(SharedPtr<U>& _shared)
+	{
 		SubtractWeakCount();
-		m_pPtr = (TPortable*)shared.m_pPtr;
-		m_pControlBlock = shared.m_pControlBlock;
-		m_Size = shared.m_Size;
+		pPtr_ = (TPortable*)_shared.pPtr_;
+		pControlBlock_ = _shared.pControlBlock_;
+		size_ = _shared.size_;
 		AddWeakCount();
 	}
 
 	// Weak로 Weak 복사
 	template <typename U>
-	void WeakChangeToWeak(WeakPtr<U>& weak) {
+	void WeakChangeToWeak(WeakPtr<U>& _weak)
+	{
 		SubtractWeakCount();
-		m_pPtr = (TPortable*)weak.m_pPtr;
-		m_pControlBlock = weak.m_pControlBlock;
-		m_Size = weak.m_Size;
+		pPtr_ = (TPortable*)_weak.pPtr_;
+		pControlBlock_ = _weak.pControlBlock_;
+		size_ = _weak.size_;
 		AddWeakCount();
 	}
 
 	// Shared로 Shared 이동
 	template <typename U>
-	void SharedMoveToShared(SharedPtr<U>& shared) {
+	void SharedMoveToShared(SharedPtr<U>& _shared)
+	{
 		SubtractReferenceCount();
 
-		m_pPtr = (TPortable*)shared.m_pPtr;
-		m_pControlBlock = shared.m_pControlBlock;
-		m_Size = shared.m_Size;
+		pPtr_ = (TPortable*)_shared.pPtr_;
+		pControlBlock_ = _shared.pControlBlock_;
+		size_ = _shared.size_;
 
-		shared.m_pPtr = nullptr;
-		shared.m_pControlBlock = nullptr;
-		shared.m_Size = 0;
+		_shared.pPtr_ = nullptr;
+		_shared.pControlBlock_ = nullptr;
+		_shared.size_ = 0;
 	}
 
 	// Shared로 Weak 이동
 	template <typename U>
-	void SharedMoveToWeak(WeakPtr<U>& weak) {
+	void SharedMoveToWeak(WeakPtr<U>& _weak)
+	{
 		SubtractReferenceCount();
-		m_pPtr = weak.m_pPtr;
-		m_pControlBlock = weak.m_pControlBlock;
+		pPtr_ = _weak.pPtr_;
+		pControlBlock_ = _weak.pControlBlock_;
 
-		weak.m_pPtr = nullptr;
-		weak.m_pControlBlock = nullptr;
-		weak.m_Size = 0;
+		_weak.pPtr_ = nullptr;
+		_weak.pControlBlock_ = nullptr;
+		_weak.size_ = 0;
 	}
 
 	template <typename U>
-	static void WeakMoveToShared(SharedPtr<U>& shared) {
+	static void WeakMoveToShared(SharedPtr<U>& _shared)
+	{
 		// 필요 없음
 		DebugAssertMsg(true, "멍미");
 	}
 
 	template <typename U>
-	void WeakMoveToWeak(WeakPtr<U>& weak) {
+	void WeakMoveToWeak(WeakPtr<U>& _weak)
+	{
 		SubtractWeakCount();
 
-		m_pPtr = weak.m_pPtr;
-		m_pControlBlock = weak.m_pControlBlock;
-		m_Size = weak.m_Size;
+		pPtr_ = _weak.pPtr_;
+		pControlBlock_ = _weak.pControlBlock_;
+		size_ = _weak.size_;
 
-		weak.m_pPtr = nullptr;
-		weak.m_pControlBlock = nullptr;
-		weak.m_Size = 0;
+		_weak.pPtr_ = nullptr;
+		_weak.pControlBlock_ = nullptr;
+		_weak.size_ = 0;
 	}
 
 
-	void AddReferenceCount() const {
-		if (m_pControlBlock == nullptr) {
+	void AddReferenceCount() const
+	{
+		if (pControlBlock_ == nullptr)
+		{
 			return;
 		}
 
-		m_pControlBlock->IncreaseRefCount();
+		pControlBlock_->IncreaseRefCount();
 	}
 
-	void AddWeakCount() const {
-		if (m_pControlBlock == nullptr) {
+	void AddWeakCount() const
+	{
+		if (pControlBlock_ == nullptr)
+		{
 			return;
 		}
 
-		m_pControlBlock->IncreaseWeakCount();
+		pControlBlock_->IncreaseWeakCount();
 	}
 
-	void SubtractReferenceCount() const {
-		if (m_pControlBlock == nullptr) {
+	void SubtractReferenceCount() const
+	{
+		if (pControlBlock_ == nullptr)
+		{
 			return;
 		}
 
@@ -762,74 +883,95 @@ protected:
 		// 이거땜에 계속 서버 팅겼나보다.. ㅠㅠ
 		// 잘못된 메모리참조로 튕길때도 있고 안튕길때도 있어서 찾기가 넘 어려웠다. ㄷㄷ
 		// m_ControlBlock->DecreaseWeakCount();
-		m_pControlBlock->DecreaseRefCount();
-		
+		pControlBlock_->DecreaseRefCount();
 	}
 
-	void SubtractWeakCount() const {
-		if (m_pControlBlock == nullptr) {
+	void SubtractWeakCount() const
+	{
+		if (pControlBlock_ == nullptr)
+		{
 			return;
 		}
 
-		m_pControlBlock->DecreaseWeakCount();
+		pControlBlock_->DecreaseWeakCount();
 	}
 
-	void SetSharedPtr(TPortable* ptr, ControlBlock* controlBlock, int size) {
+	void SetSharedPtr(TPortable* _ptr, ControlBlock* _controlBlock, int _size)
+	{
 		// SharedPtr<IRunnable> sp = MakeShared<Runnable[20]>();		// 컴파일타임 크기 결정
 		// SetSharedPtr<MyThread[20]>(MyThread*, ControlBlock*, int);
 		// SharedPtr<IRunnable> sp = MakeShared<Runnable[]>(20);		// 런타임 크기 결정
 		// SetSharedPtr<MyThread[0]>(MyThread*, ControlBlock*, int);
-		
-		m_pPtr = ptr;
-		m_pControlBlock = controlBlock;
-		m_Size = size;
+
+		pPtr_ = _ptr;
+		pControlBlock_ = _controlBlock;
+		size_ = _size;
 
 		// MakeSharedFromThis를 상속받지 않은 경우 그만
 		// if constexpr 특성상 if else 분리가 불가능함 ㅠ
-		if constexpr (IsBaseOf_v<MakeSharedFromThisBase, TPortable>) {
+		if constexpr (IsBaseOf_v<MakeSharedFromThisBase, TPortable>)
+		{
 			// 여기 들어오는 타입은 무조건 SharedPtr타입이므로 강제 케스팅 해줌
 			TSharedPtr& thisRef = static_cast<TSharedPtr&>(*this);
 
 			// 배열 타입이 아닌 경우 그냥 대입만하고 끝
-			if constexpr (IsArrayType_v<T>) {
-				for (int i = 0; i < size; ++i) {
-					ptr[i].m_spWeak = thisRef;
+			if constexpr (IsArrayType_v<T>)
+			{
+				for (int i = 0; i < _size; ++i)
+				{
+					_ptr[i].m_spWeak = thisRef;
 				}
-			} else {
-				ptr->m_spWeak = thisRef;
 			}
-		} 
+			else
+			{
+				_ptr->m_spWeak = thisRef;
+			}
+		}
 	}
+
 protected:
-	TPortable* m_pPtr = nullptr;
-	ControlBlock* m_pControlBlock = nullptr;
-	int m_Size = 0;
+	TPortable* pPtr_ = nullptr;
+	ControlBlock* pControlBlock_ = nullptr;
+	int size_ = 0;
 
 	template <typename, typename> friend class SharedMaker;
 	template <typename> friend class BasePtr;
 };
 
+template <typename T> template <typename U, DefaultEnableIf_t<IsPointerType_v<U>>> void BasePtr<T>::MakeShared(U _ptr)
+{
+	pControlBlock_ = dbg_new SharedObject<U, CDefaultAllocator>(_ptr);
+	pPtr_ = _ptr;
+	size_ = 1;
 
+	if constexpr (IsBaseOf_v<MakeSharedFromThis<NakedType_t<U>>, NakedType_t<U>>)
+		_ptr->m_spWeak = *static_cast<SharedPtr<T>*>(this);
+}
 
 
 template <typename T>
 class SharedPtr : public BasePtr<T>
 {
-
 	using TSharedPtr = SharedPtr<T>;
-public:
-	SharedPtr() {}
-	SharedPtr(std::nullptr_t nulptr) {}
 
-    // 외부에서 포인터를 직접 넣어주는 경우
-    // 밖에서 포인터 생성하고 안에서 또 제어블록을 생성해서 비효율적이지만
-    // 생성자가 private으로 선언된 경우 이 방식으로 초기화해야함
-    // 
-    // ┌ SharedPtr<int[20]>(new int);  ==> 지원안함
-    // │ SharedPtr<int[]>(new int[20]);==> 지원안함
-    // └ SharedPtr<int>(new int);      ==> 이거만 가능
-    //
-    // 진짜 라이브러리 만드는게 쉬운게 아니구나;; 혼자서는 이런거 하나하나 다 캐치해낼 수가 없다.
+public:
+	SharedPtr()
+	{
+	}
+
+	SharedPtr(std::nullptr_t)
+	{
+	}
+
+	// 외부에서 포인터를 직접 넣어주는 경우
+	// 밖에서 포인터 생성하고 안에서 또 제어블록을 생성해서 비효율적이지만
+	// 생성자가 private으로 선언된 경우 이 방식으로 초기화해야함
+	// 
+	// ┌ SharedPtr<int[20]>(new int);  ==> 지원안함
+	// │ SharedPtr<int[]>(new int[20]);==> 지원안함
+	// └ SharedPtr<int>(new int);      ==> 이거만 가능
+	//
+	// 진짜 라이브러리 만드는게 쉬운게 아니구나;; 혼자서는 이런거 하나하나 다 캐치해낼 수가 없다.
 
 	// SharedPtr(T* ptr)를 쓰지 않고 굳이 U로 받은 이유는
 	// 밖에서 전달해준 실체 타입이 필요하기 때문이다.
@@ -838,88 +980,103 @@ public:
 	// SharedPtr<IRunnable>(new Thread) -> 이렇게 해버릴 수 있음
 	// 따라서 IRunnable로는 MakeSharedFromThis를 상속받고 있는지 알 수가 없다.
 	template <typename U, DefaultEnableIf_t<IsPointerType_v<U>> = nullptr>
-    SharedPtr(U ptr) {
+	SharedPtr(U _ptr)
+	{
 		Detail::CheckDynamicCastable<U, T>();
-        this->MakeShared(ptr);
+		this->MakeShared(_ptr);
 	}
 
 	template <typename U>
-	SharedPtr(WeakPtr<U>& weak) {
+	SharedPtr(WeakPtr<U>& _weak)
+	{
 		Detail::CheckDynamicCastable<U, T>();
-		this->SharedChangeToWeak(weak);
-	}
-	
-	template <typename U>
-	SharedPtr(WeakPtr<U>&& weak) {
-		Detail::CheckDynamicCastable<U, T>();
-		this->SharedMoveToWeak(weak);
-	}
-
-	SharedPtr(const TSharedPtr& other) {
-		this->SharedChangeToShared(const_cast<TSharedPtr&>(other));
-	}
-
-	SharedPtr(TSharedPtr&& other) {
-		this->SharedMoveToShared(other);
+		this->SharedChangeToWeak(_weak);
 	}
 
 	template <typename U>
-	SharedPtr(const SharedPtr<U>& shared) {
+	SharedPtr(WeakPtr<U>&& _weak)
+	{
 		Detail::CheckDynamicCastable<U, T>();
-		this->SharedChangeToShared(const_cast<SharedPtr<U>&>(shared));
+		this->SharedMoveToWeak(_weak);
+	}
+
+	SharedPtr(const TSharedPtr& _other)
+	{
+		this->SharedChangeToShared(const_cast<TSharedPtr&>(_other));
+	}
+
+	SharedPtr(TSharedPtr&& _other)
+	{
+		this->SharedMoveToShared(_other);
 	}
 
 	template <typename U>
-	SharedPtr(SharedPtr<U>&& shared) {
+	SharedPtr(const SharedPtr<U>& _shared)
+	{
 		Detail::CheckDynamicCastable<U, T>();
-		this->SharedMoveToShared(shared);
+		this->SharedChangeToShared(const_cast<SharedPtr<U>&>(_shared));
 	}
 
-	~SharedPtr() {
+	template <typename U>
+	SharedPtr(SharedPtr<U>&& _shared)
+	{
+		Detail::CheckDynamicCastable<U, T>();
+		this->SharedMoveToShared(_shared);
+	}
+
+	~SharedPtr()
+	{
 		this->SubtractReferenceCount();
 	}
-	
-	TSharedPtr& operator=(std::nullptr_t ptr) {
+
+	TSharedPtr& operator=(std::nullptr_t _ptr)
+	{
 		this->MakeSharedEmpty();
 		return *this;
 	}
 
-	TSharedPtr& operator=(const TSharedPtr& other) {
-		this->SharedChangeToShared(const_cast<TSharedPtr&>(other));
+	TSharedPtr& operator=(const TSharedPtr& _other)
+	{
+		this->SharedChangeToShared(const_cast<TSharedPtr&>(_other));
 		return *this;
 	}
 
-	TSharedPtr& operator=(TSharedPtr&& other) {
-		this->SharedChangeToShared(other);
-		return *this;
-	}
-
-	template <typename U>
-	TSharedPtr& operator=(const SharedPtr<U>& other) {
-		Detail::CheckDynamicCastable<U, T>();
-		this->SharedChangeToShared(const_cast<SharedPtr<U>&>(other));
+	TSharedPtr& operator=(TSharedPtr&& _other) noexcept
+	{
+		this->SharedChangeToShared(_other);
 		return *this;
 	}
 
 	template <typename U>
-	TSharedPtr& operator=(SharedPtr<U>&& other) {
+	TSharedPtr& operator=(const SharedPtr<U>& _other)
+	{
 		Detail::CheckDynamicCastable<U, T>();
-		this->SharedMoveToShared(other);
+		this->SharedChangeToShared(const_cast<SharedPtr<U>&>(_other));
 		return *this;
 	}
 
 	template <typename U>
-	TSharedPtr& operator=(WeakPtr<U>& other) {
+	TSharedPtr& operator=(SharedPtr<U>&& _other)
+	{
 		Detail::CheckDynamicCastable<U, T>();
-		this->SharedChangeToWeak(other);
+		this->SharedMoveToShared(_other);
 		return *this;
 	}
-	
 
 	template <typename U>
-	TSharedPtr& operator=(WeakPtr<U>&& other) {
+	TSharedPtr& operator=(WeakPtr<U>& _other)
+	{
 		Detail::CheckDynamicCastable<U, T>();
-		this->SharedMoveToWeak(other);
+		this->SharedChangeToWeak(_other);
+		return *this;
+	}
+
+
+	template <typename U>
+	TSharedPtr& operator=(WeakPtr<U>&& _other)
+	{
+		Detail::CheckDynamicCastable<U, T>();
+		this->SharedMoveToWeak(_other);
 		return *this;
 	}
 
@@ -935,77 +1092,93 @@ class WeakPtr : public BasePtr<T>
 {
 	using TSharedPtr = SharedPtr<T>;
 	using TWeakPtr = WeakPtr<T>;
+
 public:
-	WeakPtr() {}
-	WeakPtr(std::nullptr_t nulptr) {}
-
-
-	WeakPtr(const TWeakPtr& other) {
-		this->WeakChangeToWeak(const_cast<TWeakPtr&>(other));
+	WeakPtr()
+	{
 	}
 
-	WeakPtr(TWeakPtr&& other) noexcept {
-		this->WeakMoveToWeak(other);
+	WeakPtr(std::nullptr_t)
+	{
 	}
 
-	template <typename U>
-	WeakPtr(const WeakPtr<U>& weak) {
-		Detail::CheckDynamicCastable<U, T>();
-		this->WeakChangeToWeak(const_cast<TWeakPtr&>(weak));
+
+	WeakPtr(const TWeakPtr& _other)
+	{
+		this->WeakChangeToWeak(const_cast<TWeakPtr&>(_other));
 	}
 
-	template <typename U>
-	WeakPtr(WeakPtr<U>&& weak) {
-		Detail::CheckDynamicCastable<U, T>();
-		this->WeakMoveToWeak(weak);
+	WeakPtr(TWeakPtr&& _other) noexcept
+	{
+		this->WeakMoveToWeak(_other);
 	}
 
 	template <typename U>
-	WeakPtr(const SharedPtr<U>& shared) {
+	WeakPtr(const WeakPtr<U>& _weak)
+	{
 		Detail::CheckDynamicCastable<U, T>();
-		this->WeakChangeToShared(const_cast<SharedPtr<U>&>(shared));
+		this->WeakChangeToWeak(const_cast<TWeakPtr&>(_weak));
+	}
+
+	template <typename U>
+	WeakPtr(WeakPtr<U>&& _weak)
+	{
+		Detail::CheckDynamicCastable<U, T>();
+		this->WeakMoveToWeak(_weak);
+	}
+
+	template <typename U>
+	WeakPtr(const SharedPtr<U>& _shared)
+	{
+		Detail::CheckDynamicCastable<U, T>();
+		this->WeakChangeToShared(const_cast<SharedPtr<U>&>(_shared));
 	}
 
 	// 쉐어드 포인터의 이동은 막도록 하자.
 	// 본체가 사라진 녀석을 참조해버릴 수 있으니까
 	template <typename U>
-	WeakPtr(SharedPtr<U>&& shared) = delete;
-	WeakPtr(TSharedPtr&& other) = delete;
+	WeakPtr(SharedPtr<U>&& _shared) = delete;
+	WeakPtr(TSharedPtr&& _other) = delete;
 
 
-	~WeakPtr() {
+	~WeakPtr()
+	{
 		this->SubtractWeakCount();
 	}
 
-	TWeakPtr& operator=(std::nullptr_t ptr) {
+	TWeakPtr& operator=(std::nullptr_t)
+	{
 		this->MakeWeakEmpty();
 		return *this;
 	}
 
 
 	template <typename U>
-	TWeakPtr& operator=(SharedPtr<U>& other) {
+	TWeakPtr& operator=(SharedPtr<U>& _other)
+	{
 		Detail::CheckDynamicCastable<U, T>();
-		this->WeakChangeToShared(other);
+		this->WeakChangeToShared(_other);
 		return *this;
 	}
 
 	template <typename U>
-	TWeakPtr& operator=(WeakPtr<U>& other) {
+	TWeakPtr& operator=(WeakPtr<U>& _other)
+	{
 		Detail::CheckDynamicCastable<U, T>();
-		this->WeakChangeToWeak(other);
+		this->WeakChangeToWeak(_other);
 		return *this;
 	}
 
 	template <typename U>
-	TWeakPtr& operator=(WeakPtr<U>&& other) {
+	TWeakPtr& operator=(WeakPtr<U>&& _other)
+	{
 		Detail::CheckDynamicCastable<U, T>();
-		this->WeakMoveToWeak(other);
+		this->WeakMoveToWeak(_other);
 		return *this;
 	}
 
 	template <typename U>
-	TWeakPtr& operator=(SharedPtr<U>&& other) = delete;
+	TWeakPtr& operator=(SharedPtr<U>&& _other) = delete;
 
 	// template <typename U> friend bool operator==(const TWeakPtr&,		const WeakPtr<U>&);
 	// template <typename U> friend bool operator==(const WeakPtr<U>&,		const TWeakPtr&);
@@ -1017,17 +1190,19 @@ public:
 template <typename T, typename TAllocator>
 class SharedMaker
 {
-	static const int ms_uiArraySize = 1;		// 기본적으로 길이는 무조건 1
+	static constexpr int ARRAY_SIZE = 1; // 기본적으로 길이는 무조건 1
 
 	using TSharedPtr = SharedPtr<T>;
 	using TSharedObject = SharedObject<T, TAllocator>;
+
 public:
 	template <typename... Args>
-	static constexpr TSharedPtr Create(Args&&... args) {
+	static constexpr TSharedPtr Create(Args&&... _args)
+	{
 		auto obj = TAllocator::template AllocateStatic<TSharedObject>();
-		Memory::PlacementNew(obj, Forward<Args>(args)...);
+		Memory::PlacementNew(obj, Forward<Args>(_args)...);
 		TSharedPtr sp;
-		sp.SetSharedPtr(obj->Address(), obj, ms_uiArraySize);
+		sp.SetSharedPtr(obj->Address(), obj, ARRAY_SIZE);
 		return sp;
 	}
 };
@@ -1037,11 +1212,13 @@ class SharedMaker<T[ArraySize], TAllocator>
 {
 	using TSharedPtr = SharedPtr<T[ArraySize]>;
 	using TSharedObject = SharedObject<T[ArraySize], TAllocator>;
+
 public:
 	template <typename... Args>
-	static constexpr TSharedPtr Create(Args&&... args) {
+	static constexpr TSharedPtr Create(Args&&... _args)
+	{
 		auto obj = TAllocator::template AllocateStatic<TSharedObject>();
-		Memory::PlacementNew(obj, Forward<Args>(args)...);
+		Memory::PlacementNew(obj, Forward<Args>(_args)...);
 		TSharedPtr sp;
 		sp.SetSharedPtr(obj->Address(), obj, ArraySize);
 		return sp;
@@ -1054,13 +1231,15 @@ class SharedMaker<T[], TAllocator>
 {
 	using TSharedPtr = SharedPtr<T[]>;
 	using TSharedObject = SharedObject<T[], TAllocator>;
+
 public:
 	template <typename... Args>
-	static constexpr TSharedPtr Create(int size, Args&&... args) {
+	static constexpr TSharedPtr Create(int _size, Args&&... _args)
+	{
 		auto obj = TAllocator::template AllocateStatic<TSharedObject>();
-		Memory::PlacementNew(obj, size, Forward<Args>(args)...);
+		Memory::PlacementNew(obj, _size, Forward<Args>(_args)...);
 		TSharedPtr sp;
-		sp.SetSharedPtr(obj->Address(), obj, size);
+		sp.SetSharedPtr(obj->Address(), obj, _size);
 		return sp;
 	}
 };
@@ -1068,24 +1247,30 @@ public:
 // 기존 C++ 표준 라이브러리 분석 후 내 라이브러리에도 적용
 // 엄청 편리한 기능인것같다.
 // 템플릿 제거용
-struct MakeSharedFromThisBase {};
+struct MakeSharedFromThisBase
+{
+};
 
 template <typename T>
 class MakeSharedFromThis : MakeSharedFromThisBase
 {
 	using TSharedPtr = SharedPtr<T>;
 	using TWeakPtr = WeakPtr<T>;
+
 public:
 	TSharedPtr Shared() { return m_spWeak; }
 	TWeakPtr Weak() { return m_spWeak; }
 	int RefCount() const { return m_spWeak.RefCount(); }
 	int WeakCount() const { return m_spWeak.WeakCount(); }
+
 protected:
-	MakeSharedFromThis() : m_spWeak() {}
+	MakeSharedFromThis()
+	: m_spWeak()
+	{
+	}
 
 	TWeakPtr m_spWeak;
 	template <typename> friend class BasePtr;
-
 };
 
 // 글로벌 비교 오퍼레이터
@@ -1101,157 +1286,185 @@ protected:
 // W == W
 
 template <typename T, typename U>
-bool operator==(const UniquePtr<T>& lhs, const UniquePtr<U>& rhs) {
-	return lhs.Get() == rhs.Get();
+bool operator==(const UniquePtr<T>& _lhs, const UniquePtr<U>& _rhs)
+{
+	return _lhs.Get() == _rhs.Get();
 }
 
 template <typename T, typename U>
-bool operator==(const UniquePtr<T>& lhs, const SharedPtr<U>& rhs) {
-	return lhs.Get() == rhs.Get();
+bool operator==(const UniquePtr<T>& _lhs, const SharedPtr<U>& _rhs)
+{
+	return _lhs.Get() == _rhs.Get();
 }
 
 template <typename T, typename U>
-bool operator==(const SharedPtr<T>& lhs, const UniquePtr<U>& rhs) {
-	return lhs.Get() == rhs.Get();
+bool operator==(const SharedPtr<T>& _lhs, const UniquePtr<U>& _rhs)
+{
+	return _lhs.Get() == _rhs.Get();
 }
 
 template <typename T, typename U>
-bool operator==(const UniquePtr<T>& lhs, const WeakPtr<U>& rhs) {
-	return lhs.Get() == rhs.Get();
+bool operator==(const UniquePtr<T>& _lhs, const WeakPtr<U>& _rhs)
+{
+	return _lhs.Get() == _rhs.Get();
 }
 
 template <typename T, typename U>
-bool operator==(const WeakPtr<T>& lhs, const UniquePtr<U>& rhs) {
-	return lhs.Get() == rhs.Get();
+bool operator==(const WeakPtr<T>& _lhs, const UniquePtr<U>& _rhs)
+{
+	return _lhs.Get() == _rhs.Get();
 }
 
 template <typename T, typename U>
-bool operator==(const SharedPtr<T>& lhs, const SharedPtr<U>& rhs) {
-	return lhs.Get() == rhs.Get();
+bool operator==(const SharedPtr<T>& _lhs, const SharedPtr<U>& _rhs)
+{
+	return _lhs.Get() == _rhs.Get();
 }
 
 template <typename T, typename U>
-bool operator==(const SharedPtr<T>& lhs, const WeakPtr<U>& rhs) {
-	return lhs.Get() == rhs.Get();
+bool operator==(const SharedPtr<T>& _lhs, const WeakPtr<U>& _rhs)
+{
+	return _lhs.Get() == _rhs.Get();
 }
 
 template <typename T, typename U>
-bool operator==(const WeakPtr<T>& lhs, const SharedPtr<U>& rhs) {
-	return lhs.Get() == rhs.Get();
+bool operator==(const WeakPtr<T>& _lhs, const SharedPtr<U>& _rhs)
+{
+	return _lhs.Get() == _rhs.Get();
 }
 
 template <typename T, typename U>
-bool operator==(const WeakPtr<T>& lhs, const WeakPtr<U>& rhs) {
-	return lhs.Get() == rhs.Get();
+bool operator==(const WeakPtr<T>& _lhs, const WeakPtr<U>& _rhs)
+{
+	return _lhs.Get() == _rhs.Get();
 }
 
 template <typename T>
-bool operator==(const UniquePtr<T>& lhs, std::nullptr_t) {
-	return lhs.Get() == nullptr;
+bool operator==(const UniquePtr<T>& _lhs, std::nullptr_t)
+{
+	return _lhs.Get() == nullptr;
 }
 
 template <typename T>
-bool operator==(std::nullptr_t, const UniquePtr<T>& rhs) {
-	return nullptr == rhs.Get();
+bool operator==(std::nullptr_t, const UniquePtr<T>& _rhs)
+{
+	return nullptr == _rhs.Get();
 }
 
 template <typename T>
-bool operator==(const SharedPtr<T>& lhs, std::nullptr_t) {
-	return lhs.Get() == nullptr;
+bool operator==(const SharedPtr<T>& _lhs, std::nullptr_t)
+{
+	return _lhs.Get() == nullptr;
 }
 
 template <typename T>
-bool operator==(std::nullptr_t, const SharedPtr<T>& rhs) {
-	return nullptr == rhs.Get();
+bool operator==(std::nullptr_t, const SharedPtr<T>& _rhs)
+{
+	return nullptr == _rhs.Get();
 }
 
 template <typename T>
-bool operator==(const WeakPtr<T>& lhs, std::nullptr_t) {
-	return lhs.Get() == nullptr;
+bool operator==(const WeakPtr<T>& _lhs, std::nullptr_t)
+{
+	return _lhs.Get() == nullptr;
 }
 
 template <typename T>
-bool operator==(std::nullptr_t, const WeakPtr<T>& rhs) {
-	return nullptr == rhs.Get();
+bool operator==(std::nullptr_t, const WeakPtr<T>& _rhs)
+{
+	return nullptr == _rhs.Get();
 }
 
 
 template <typename T, typename U>
-bool operator!=(const UniquePtr<T>& lhs, const UniquePtr<U>& rhs) {
-	return lhs.Get() != rhs.Get();
+bool operator!=(const UniquePtr<T>& _lhs, const UniquePtr<U>& _rhs)
+{
+	return _lhs.Get() != _rhs.Get();
 }
 
 template <typename T, typename U>
-bool operator!=(const UniquePtr<T>& lhs, const SharedPtr<U>& rhs) {
-	return lhs.Get() != rhs.Get();
+bool operator!=(const UniquePtr<T>& _lhs, const SharedPtr<U>& _rhs)
+{
+	return _lhs.Get() != _rhs.Get();
 }
 
 template <typename T, typename U>
-bool operator!=(const SharedPtr<T>& lhs, const UniquePtr<U>& rhs) {
-	return lhs.Get() != rhs.Get();
+bool operator!=(const SharedPtr<T>& _lhs, const UniquePtr<U>& _rhs)
+{
+	return _lhs.Get() != _rhs.Get();
 }
 
 template <typename T, typename U>
-bool operator!=(const UniquePtr<T>& lhs, const WeakPtr<U>& rhs) {
-	return lhs.Get() != rhs.Get();
+bool operator!=(const UniquePtr<T>& _lhs, const WeakPtr<U>& _rhs)
+{
+	return _lhs.Get() != _rhs.Get();
 }
 
 template <typename T, typename U>
-bool operator!=(const WeakPtr<T>& lhs, const UniquePtr<U>& rhs) {
-	return lhs.Get() != rhs.Get();
+bool operator!=(const WeakPtr<T>& _lhs, const UniquePtr<U>& _rhs)
+{
+	return _lhs.Get() != _rhs.Get();
 }
 
 template <typename T, typename U>
-bool operator!=(const SharedPtr<T>& lhs, const SharedPtr<U>& rhs) {
-	return lhs.Get() != rhs.Get();
+bool operator!=(const SharedPtr<T>& _lhs, const SharedPtr<U>& _rhs)
+{
+	return _lhs.Get() != _rhs.Get();
 }
 
 template <typename T, typename U>
-bool operator!=(const SharedPtr<T>& lhs, const WeakPtr<U>& rhs) {
-	return lhs.Get() != rhs.Get();
+bool operator!=(const SharedPtr<T>& _lhs, const WeakPtr<U>& _rhs)
+{
+	return _lhs.Get() != _rhs.Get();
 }
 
 template <typename T, typename U>
-bool operator!=(const WeakPtr<T>& lhs, const SharedPtr<U>& rhs) {
-	return lhs.Get() != rhs.Get();
+bool operator!=(const WeakPtr<T>& _lhs, const SharedPtr<U>& _rhs)
+{
+	return _lhs.Get() != _rhs.Get();
 }
 
 template <typename T, typename U>
-bool operator!=(const WeakPtr<T>& lhs, const WeakPtr<U>& rhs) {
-	return lhs.Get() != rhs.Get();
+bool operator!=(const WeakPtr<T>& _lhs, const WeakPtr<U>& _rhs)
+{
+	return _lhs.Get() != _rhs.Get();
 }
 
 template <typename T>
-bool operator!=(const UniquePtr<T>& lhs, std::nullptr_t) {
-	return lhs.Get() != nullptr;
+bool operator!=(const UniquePtr<T>& _lhs, std::nullptr_t)
+{
+	return _lhs.Get() != nullptr;
 }
 
 template <typename T>
-bool operator!=(std::nullptr_t, const UniquePtr<T>& rhs) {
-	return nullptr != rhs.Get();
+bool operator!=(std::nullptr_t, const UniquePtr<T>& _rhs)
+{
+	return nullptr != _rhs.Get();
 }
 
 template <typename T>
-bool operator!=(const SharedPtr<T>& lhs, std::nullptr_t) {
-	return lhs.Get() != nullptr;
+bool operator!=(const SharedPtr<T>& _lhs, std::nullptr_t)
+{
+	return _lhs.Get() != nullptr;
 }
 
 template <typename T>
-bool operator!=(std::nullptr_t, const SharedPtr<T>& rhs) {
-	return nullptr != rhs.Get();
+bool operator!=(std::nullptr_t, const SharedPtr<T>& _rhs)
+{
+	return nullptr != _rhs.Get();
 }
 
 template <typename T>
-bool operator!=(const WeakPtr<T>& lhs, std::nullptr_t) {
-	return lhs.Get() != nullptr;
+bool operator!=(const WeakPtr<T>& _lhs, std::nullptr_t)
+{
+	return _lhs.Get() != nullptr;
 }
 
 template <typename T>
-bool operator!=(std::nullptr_t, const WeakPtr<T>& rhs) {
-	return nullptr != rhs.Get();
+bool operator!=(std::nullptr_t, const WeakPtr<T>& _rhs)
+{
+	return nullptr != _rhs.Get();
 }
-
-
 
 
 NS_JC_END

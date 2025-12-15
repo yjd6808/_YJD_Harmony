@@ -16,13 +16,15 @@
 class JCORE_NOVTABLE ListenerServerCommon : public ListenerServerBase
 {
 public:
-	ListenerServerCommon(JNetwork::CommandParser* parser);
+	ListenerServerCommon(JNetwork::CommandParser* _pParser);
+
 protected:
-	void OnReceived(JNetwork::Session* session, JNetwork::ICommand* recvCmd) override;
-	void OnReceived(JNetwork::Session* session, JNetwork::RecvedCommandPacket* recvPacket) override;
+	void OnReceived(JNetwork::Session* _pSession, JNetwork::ICommand* _pRecvCmd) override;
+	void OnReceived(JNetwork::Session* _pSession, JNetwork::RecvedCommandPacket* _pRecvPacket) override;
 
 	virtual ServerType_t GetServerType() = 0;
 	const char* GetServerName() override { return ServerType::Name[GetServerType()]; }
+
 public:
-	JNetwork::CommandParser* Parser;
+	JNetwork::CommandParser* pParser_;
 };

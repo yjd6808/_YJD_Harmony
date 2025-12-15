@@ -1,24 +1,22 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/22/2023 11:40:57 AM
  * =====================
  *
  */
 
-
 #pragma once
-
 
 #include <SteinsGate/Client/GunnerAction.h>
 
-class GunnerWalk : public GunnerAction {
+class GunnerWalk : public GunnerAction
+{
 public:
-	GunnerWalk(HostPlayer* player, ActionInfo* actionInfo);
+	GunnerWalk(HostPlayer* _pHostPlayer, ActionInfo* _pActionInfo);
 
 	void onActionBegin() override;
-	void onKeyPressed(PlayerController* controller, SGEventKeyboard::KeyCode keyCode) override;
-	void onKeyReleased(PlayerController* controller, SGEventKeyboard::KeyCode keyCode) override;
-	bool isHorizontalKeyPressed(PlayerController* controller);
-	bool isVerticalKeyPressed(PlayerController* controller);
+	void onKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode) override;
+	void onKeyReleased(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode) override;
+	bool isHorizontalKeyPressed(PlayerController* _pController);
+	bool isVerticalKeyPressed(PlayerController* _pController);
 };
-

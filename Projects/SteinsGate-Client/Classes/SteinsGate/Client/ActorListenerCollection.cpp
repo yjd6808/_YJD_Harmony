@@ -12,14 +12,14 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 bool ActorListenerCollection::add(IActorListener* _pListener)
 {
-	const IActorListener::Type listenerType = _pListener->getListenerType();
+	const IActorListener::Type type = _pListener->getListenerType();
 
-	if (m_hListeners.Exist(listenerType))
+	if (m_hListeners.Exist(type))
 	{
 		return false;
 	}
 
-	m_hListeners.Insert(_pListener->getListenerType(), _pListener);
+	m_hListeners.Insert(type, _pListener);
 	m_vListeners.PushBack(_pListener);
 	return true;
 }
@@ -34,7 +34,6 @@ bool ActorListenerCollection::has(IActorListener::Type _type)
 IActorListener* ActorListenerCollection::get(IActorListener::Type _type)
 {
 	IActorListener** pFoundListener = m_hListeners.Find(_type);
-
 	if (pFoundListener == nullptr)
 	{
 		return nullptr;

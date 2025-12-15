@@ -12,15 +12,14 @@
 #include <SteinsGate/Common/Namepsace.h>
 
 NS_CONST_BEGIN
-
 namespace Resource
 {
-	constexpr const char* ImageDirName = "image";
-	constexpr const char* SoundDirName = "sound";
-	constexpr const char* FontDirName = "font";
+constexpr const char* ImageDirName = "image";
+constexpr const char* SoundDirName = "sound";
+constexpr const char* FontDirName = "font";
 
-	constexpr int MaxSgaFileCount = 200;
-	constexpr int MaxSgaParallelLoadingThreadCount = 8;
+constexpr int MaxSgaFileCount = 200;
+constexpr int MaxSgaParallelLoadingThreadCount = 8;
 }
 
 NS_CONST_END

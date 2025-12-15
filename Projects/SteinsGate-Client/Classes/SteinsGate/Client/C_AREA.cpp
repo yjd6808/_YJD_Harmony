@@ -1,19 +1,38 @@
 /*
  * 작성자: 윤정도
- * 생성일: 5/10/2023 3:19:21 AM
+ * 생성일: 5/10/2023 3:20:39 AM
  * =====================
  *
  */
 
+#include "Tutturu.h"
+#include "GameCoreHeader.h"
+#include "C_AREA.h"
 
-#pragma once
+// #include <SteinsGate/Common/Cmd_AREA.h>
+#include <SteinsGate/Client/S_AREA.h>
 
+USING_NS_JC;
+USING_NS_CC;
+USING_NS_JNET;
 
-#include <JNetwork/Host/Session.h>
-
-struct C_AREA
+//////////////////////////////////////////////////////////////////////////////////////////
+// OnConnected
+//////////////////////////////////////////////////////////////////////////////////////////
+void C_AREA::OnConnected(Session* _pSession)
 {
-    static void OnConnected(JNetwork::Session* _pSession);
-    static void OnConnectFailed(JNetwork::Session* _pSession, Int32U _errorCode);
-    static void OnDisconnected(JNetwork::Session* _pSession);
-};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// OnConnectFailed
+//////////////////////////////////////////////////////////////////////////////////////////
+void C_AREA::OnConnectFailed(Session* _pSession, Int32U _errorCode)
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// OnDisconnected
+//////////////////////////////////////////////////////////////////////////////////////////
+void C_AREA::OnDisconnected(Session* _pSession)
+{
+}

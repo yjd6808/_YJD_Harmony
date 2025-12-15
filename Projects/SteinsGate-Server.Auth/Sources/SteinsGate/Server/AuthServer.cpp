@@ -15,16 +15,20 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-AuthServer::AuthServer(const IOCPPtr& iocp, const MemoryPoolAbstractPtr& bufferAllocator)
-	: CommonServer(iocp, bufferAllocator)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+AuthServer::AuthServer(const IOCPPtr& _pIocp, const MemoryPoolAbstractPtr& _pBufferAllocator)
+	: CommonServer(_pIocp, _pBufferAllocator)
+{
+}
 
-SGTcpSession* AuthServer::CreateSession() {
+//////////////////////////////////////////////////////////////////////////////////////////
+SGTcpSession* AuthServer::CreateSession()
+{
 	return dbg_new AuthSession(this, m_spIocp, m_spBufferAllocator, 2048, 2048);
 }
 
-void AuthServer::OnUpdate(const TimeSpan& elapsed) {
-	CommonServer::OnUpdate(elapsed);
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthServer::OnUpdate(const TimeSpan& _elapsed)
+{
+	CommonServer::OnUpdate(_elapsed);
 }
-
-

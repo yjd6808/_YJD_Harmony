@@ -6,7 +6,6 @@
  */
 
 
-
 #include "Tutturu.h"
 #include "GameCoreHeader.h"
 #include "LoginScene.h"
@@ -18,30 +17,31 @@
 USING_NS_CC;
 USING_NS_JC;
 
-// ==============================================================
-// 스태틱
-// ==============================================================
-
-SGLoginScene* SGLoginScene::create() {
-	SGLoginScene*  scene = dbg_new SGLoginScene();
-	if (scene && scene->init()) {
-		scene->autorelease();
-		return scene;
+//////////////////////////////////////////////////////////////////////////////////////////
+SGLoginScene* SGLoginScene::create()
+{
+	SGLoginScene* pScene = dbg_new SGLoginScene();
+	if (pScene && pScene->init())
+	{
+		pScene->autorelease();
+		return pScene;
 	}
-	CC_SAFE_DELETE(scene);
+
+	CC_SAFE_DELETE(pScene);
 	return nullptr;
 }
 
-// ==============================================================
-// 멤버
-// ==============================================================
-
+//////////////////////////////////////////////////////////////////////////////////////////
 SGLoginScene::SGLoginScene()
-	: SceneBase()
-{}
+: SceneBase()
+{
+}
 
-bool SGLoginScene::init() {
-	if (!SceneBase::init()) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool SGLoginScene::init()
+{
+	if (!SceneBase::init())
+	{
 		return false;
 	}
 
@@ -49,17 +49,25 @@ bool SGLoginScene::init() {
 	return true;
 }
 
-
-void SGLoginScene::update(float dt) {
-	
+//////////////////////////////////////////////////////////////////////////////////////////
+void SGLoginScene::update(float _dt)
+{
 }
 
-void SGLoginScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
-	if (keyCode == EventKeyboard::KeyCode::KEY_F8) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void SGLoginScene::onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
+{
+	if (_keyCode == EventKeyboard::KeyCode::KEY_F8)
+	{
 		WorldScene::get()->reserveScene(SceneType::ChannelSelect);
-	} else if (keyCode == EventKeyboard::KeyCode::KEY_F7) {
+	}
+	else if (_keyCode == EventKeyboard::KeyCode::KEY_F7)
+	{
 		WorldScene::get()->reserveScene(SceneType::Game);
 	}
 }
 
-void SGLoginScene::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {}
+//////////////////////////////////////////////////////////////////////////////////////////
+void SGLoginScene::onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
+{
+}

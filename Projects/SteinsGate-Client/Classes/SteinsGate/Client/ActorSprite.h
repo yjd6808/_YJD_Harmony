@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 1:09:35 PM
  * =====================
@@ -13,6 +13,7 @@
 
 
 class Actor;
+
 class ActorSprite : public SGSprite
 {
 public:
@@ -29,7 +30,7 @@ public:
 	static ActorSprite* create(Actor* _pActor, ActorSpriteData* _pActorSpriteData);
 
 	bool init() override;
-	void update(float _dt) override;
+	void update(float _deltaTime) override;
 
 	void onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
 	void onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
@@ -47,7 +48,7 @@ public:
 	void resumeAnimation();
 
 	ActorPartSprite* getBodyPart();
-	Actor* getActor() { return actor_; }
+	Actor* getActor() { return pActor_; }
 	SGNode* getBodyCanvas();
 	SGSize getBodyCanvasSize();
 	SGSize getBodyPartSize();
@@ -59,12 +60,11 @@ public:
 	int getRunningAnimationCode();
 	ActorPartAnimation* getRunningAnimation() const;
 	void updateSpriteData(ActorSpriteData* _pSpriteData);
+
 private:
 	int frameCount_;
-	Actor* actor_;
-	ActorSpriteData* actorData_;
+	Actor* pActor_;
+	ActorSpriteData* pActorSpriteData_;
 	SGVector<PartData> parts_;
 	SpriteDirection_t direction_;
 };
-
-

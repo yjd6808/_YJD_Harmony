@@ -15,84 +15,101 @@ USING_NS_JC;
 USING_NS_CC;
 USING_NS_JNET;
 
+//////////////////////////////////////////////////////////////////////////////////////////
 NetCore::NetCore()
-	: m_pNetGroup(nullptr),
-	  m_pAuthTcp(nullptr),
-	  m_pLobbyTcp(nullptr),
-	  m_pLogicTcp(nullptr),
-	  m_pLogicUdp(nullptr),
-	  m_pChatTcp(nullptr),
-	  m_pAreaTcp(nullptr),
-	  m_pCommandSynchronizer(CommandSynchronizer::Get()),
-	  m_pConnectionSynchronizer(ConnectionSynchronizer::Get()),
-	  m_pAuthenticationComponent(nullptr)
+: netClientGroup_(nullptr)
+, authTcp_(nullptr)
+, lobbyTcp_(nullptr)
+, logicTcp_(nullptr)
+, logicUdp_(nullptr)
+, chatTcp_(nullptr)
+, areaTcp_(nullptr)
+, commandSynchronizer_(CommandSynchronizer::Get())
+, connectionSynchronizer_(ConnectionSynchronizer::Get())
+, componentCollection_()
+, authenticationComponent_(nullptr)
 {
 	SetName("클라");
 }
 
-NetCore::~NetCore() {
+//////////////////////////////////////////////////////////////////////////////////////////
+NetCore::~NetCore()
+{
 	NetCore::Finalize();
 }
 
-void NetCore::Initialize() {
-	const auto spCenterNetGroup = MakeShared<NetClientGroup>();
-	AddNetGroup(1, spCenterNetGroup);
-	m_pNetGroup = spCenterNetGroup.Get<NetClientGroup*>();
-	m_pNetGroup->Initialize();
+//////////////////////////////////////////////////////////////////////////////////////////
+void NetCore::Initialize()
+{
+	const auto centerNetGroup = MakeShared<NetClientGroup>();
+	AddNetGroup(1, centerNetGroup);
+	netClientGroup_ = centerNetGroup.Get<NetClientGroup*>();
+	netClientGroup_->Initialize();
 
-	m_pCommandSynchronizer->initialize();	// 이녀석은 무조건 IOCP 초기화이후 수행
-	m_pConnectionSynchronizer->initialize();
+	commandSynchronizer_->initialize(); // 이녀석은 무조건 IOCP 초기화이후 수행
+	connectionSynchronizer_->initialize();
 
-	m_pAuthTcp = m_pNetGroup->AuthTcp;
-	m_pLobbyTcp = m_pNetGroup->LobbyTcp;
-	m_pLogicTcp = m_pNetGroup->LogicTcp;
-	m_pLogicUdp = m_pNetGroup->LogicUdp;
-	m_pChatTcp = m_pNetGroup->ChatTcp;
-	m_pAreaTcp = m_pNetGroup->AreaTcp;
+	authTcp_ = netClientGroup_->AuthTcp;
+	lobbyTcp_ = netClientGroup_->LobbyTcp;
+	logicTcp_ = netClientGroup_->LogicTcp;
+	logicUdp_ = netClientGroup_->LogicUdp;
+	chatTcp_ = netClientGroup_->ChatTcp;
+	areaTcp_ = netClientGroup_->AreaTcp;
 
+	authenticationComponent_ = dbg_new AuthenticationComponent;
 
-	m_pAuthenticationComponent = dbg_new AuthenticationComponent;
-
-	m_ComponentCollection.add(m_pAuthenticationComponent);
+	componentCollection_.add(authenticationComponent_);
 }
 
-void NetCore::Finalize() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void NetCore::Finalize()
+{
 	NetMaster::Finalize();
 
-	JCORE_DELETE_SINGLETON_SAFE(m_pCommandSynchronizer);
-	JCORE_DELETE_SINGLETON_SAFE(m_pConnectionSynchronizer);
-
+	JCORE_DELETE_SINGLETON_SAFE(commandSynchronizer_);
+	JCORE_DELETE_SINGLETON_SAFE(connectionSynchronizer_);
 }
 
-
-void NetCore::pollNetEvents() {
-	m_pConnectionSynchronizer->processConnections();
-	m_pCommandSynchronizer->processCommands();
+//////////////////////////////////////////////////////////////////////////////////////////
+void NetCore::pollNetEvents()
+{
+	connectionSynchronizer_->processConnections();
+	commandSynchronizer_->processCommands();
 }
 
-void NetCore::runCommand(Session* session, ICommand* cmd) {
-	if (m_pNetGroup->getParser()->RunCommand(session, cmd) == false) {
-		_NetLogWarn_("처리 불가능한 커맨드(%d) 수신", cmd->GetId());
+//////////////////////////////////////////////////////////////////////////////////////////
+void NetCore::runCommand(SGSession* _pSession, ICommand* _pCmd)
+{
+	if (netClientGroup_->getParser()->RunCommand(_pSession, _pCmd) == false)
+	{
+		_NetLogWarn_("처리 불가능한 커맨드(%d) 수신", _pCmd->GetId());
 	}
 }
 
-void NetCore::initializeComponents() {
-	m_ComponentCollection.initialize();
+//////////////////////////////////////////////////////////////////////////////////////////
+void NetCore::initializeComponents()
+{
+	componentCollection_.initialize();
 }
 
-bool NetCore::connectAuthTcp() {
-	if (m_pAuthTcp == nullptr) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool NetCore::connectAuthTcp()
+{
+	if (authTcp_ == nullptr)
+	{
 		return false;
 	}
 
-	return m_pAuthTcp->ConnectAsync(Core::ServerProcessInfoPackage->Auth.RemoteEP);
+	return authTcp_->ConnectAsync(Core::ServerProcessInfoPackage->auth_.remoteEp_);
 }
 
-bool NetCore::connectLobbyTcp() {
-	if (m_pLobbyTcp == nullptr) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool NetCore::connectLobbyTcp()
+{
+	if (lobbyTcp_ == nullptr)
+	{
 		return false;
 	}
 
-	return m_pLobbyTcp->ConnectAsync(Core::ServerProcessInfoPackage->Lobby.RemoteEP);
+	return lobbyTcp_->ConnectAsync(Core::ServerProcessInfoPackage->lobby_.remoteEp_);
 }
-

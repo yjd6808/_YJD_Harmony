@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/3/2023 9:10:29 AM [SteinsGate-Server.Lobby 프로젝트 복사 생성]
  * =====================
@@ -15,19 +15,23 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-AreaServer::AreaServer(const IOCPPtr& iocp, const MemoryPoolAbstractPtr& bufferAllocator)
-	: CommonServer(iocp, bufferAllocator)
-{}
-
-AreaServer::~AreaServer() noexcept {
+AreaServer::AreaServer(const IOCPPtr& _pIocp, const MemoryPoolAbstractPtr& _pBufferAllocator)
+	: CommonServer(_pIocp, _pBufferAllocator)
+{
 }
-
-SGTcpSession* AreaServer::CreateSession() {
+//////////////////////////////////////////////////////////////////////////////////////////
+AreaServer::~AreaServer() noexcept
+{
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+SGTcpSession* AreaServer::CreateSession()
+{
 	return dbg_new AreaSession(this, m_spIocp, m_spBufferAllocator, 3072, 3072);
 }
-
-void AreaServer::OnUpdate(const TimeSpan& elapsed) {
-	CommonServer::OnUpdate(elapsed);
+//////////////////////////////////////////////////////////////////////////////////////////
+void AreaServer::OnUpdate(const TimeSpan& _elapsed)
+{
+	CommonServer::OnUpdate(_elapsed);
 }
 
 

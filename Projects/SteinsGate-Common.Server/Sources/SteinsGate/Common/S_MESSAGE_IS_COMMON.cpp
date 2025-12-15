@@ -14,8 +14,10 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-bool S_MESSAGE_IS_COMMON::SEND_SS_HostMessage(const String& msg) {
-	auto sending = SendBegin<SS_HostMessage>(msg.LengthWithNull());
-	sending.Cmd.Msg()->SetStringUnsafe(msg);
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+bool S_MESSAGE_IS_COMMON::SEND_SS_HostMessage(const String& _msg)
+{
+	auto sending = SendBegin<SS_HostMessage>(_msg.LengthWithNull());
+	sending.cmd_.Msg()->SetStringUnsafe(_msg);
 	return true;
 }

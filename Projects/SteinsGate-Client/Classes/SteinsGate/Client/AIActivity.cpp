@@ -10,49 +10,49 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////
 AIActivity::AIActivity(Actor* _pActor, AIActivityType_t _type)
-	: actor_(_pActor)
-	, type_(_type)
-	, state_(eInitialized)
-	, elapsedTime_(0.0f)
-	, limitTime_(1.0f)
+: pActor_(_pActor)
+, type_(_type)
+, state_(eInitialized)
+, elapsedTime_(0.0f)
+, limitTime_(1.0f)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void AIActivity::run()
+void AIActivity::Run()
 {
 	DebugAssertMsg(state_ != eRunning, "해당 AI 액터의 액티비티가 실행중입니다.");
 	state_ = eRunning;
 	elapsedTime_ = 0.0f;
-	onActivityBegin();
+	OnActivityBegin();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void AIActivity::stop()
+void AIActivity::Stop()
 {
-	if (!isRunning())
+	if (!IsRunning())
 		return;
 
 	state_ = eFinished;
-	onActivityEnd();
+	OnActivityEnd();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool AIActivity::isRunning()
+bool AIActivity::IsRunning()
 {
 	return state_ == eRunning;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void AIActivity::updateLimitTime(float _dt)
+void AIActivity::UpdateLimitTime(float _dt)
 {
-	if (!isRunning())
+	if (!IsRunning())
 		return;
 
 	elapsedTime_ += _dt;
 
 	if (elapsedTime_ >= limitTime_)
 	{
-		stop();
+		Stop();
 	}
 }

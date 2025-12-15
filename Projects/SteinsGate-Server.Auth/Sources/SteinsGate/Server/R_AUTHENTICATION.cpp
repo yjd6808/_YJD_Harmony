@@ -31,7 +31,7 @@ void R_AUTHENTICATION::RECV_CAU_Login(Session* session, ICommand* cmd) {
 
 	LoginResult_t eResult = LoginResult::LoginSuccess;
 
-	bool bHasAccount = Q_LOGIN::SelectAccountInfo(pCmd->Id.Source, accountData);
+	bool bHasAccount = Q_LOGIN::SelectAccountInfo(pCmd->id_.Source, accountData);
 	bool bRegistered = false;
 
 	if (!Q_LOGIN::IsSuccess) {
@@ -43,7 +43,7 @@ void R_AUTHENTICATION::RECV_CAU_Login(Session* session, ICommand* cmd) {
 
 	// 계정이 없는 경우, 회원가입시도
 	if (!bHasAccount)  {
-		bRegistered = Q_LOGIN::RegisterAccount(pCmd->Id.Source, pCmd->Pass.Source);
+		bRegistered = Q_LOGIN::RegisterAccount(pCmd->id_.Source, pCmd->pass_.Source);
 
 		if (!Q_LOGIN::IsSuccess) {
 			S_AUTHENTICATION::SEND_AUC_LoginAck(LoginResult::QueryFailed);
@@ -59,7 +59,7 @@ void R_AUTHENTICATION::RECV_CAU_Login(Session* session, ICommand* cmd) {
 	}
 
 	// 계정이 있는 경우
-	if (accountData.Pass != pCmd->Pass) {
+	if (accountData.Pass != pCmd->pass_) {
 		S_AUTHENTICATION::SEND_AUC_LoginAck(LoginResult::IdPasswordMismatch);
 		return;
 	}

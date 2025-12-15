@@ -16,33 +16,41 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-CommonNetMaster::CommonNetMaster(int updatePerSecond)
-	: m_iUpdatePerSecond(updatePerSecond)
-	, m_bRunning(true)
-	, m_pProcessInfo(nullptr)
-{}
-
-void CommonNetMaster::Initialize() {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+CommonNetMaster::CommonNetMaster(int _updatePerSecond)
+: updatePerSecond_(_updatePerSecond)
+, running_(true)
+, processInfo_(nullptr)
+{
 }
 
-void CommonNetMaster::SetProcessInfo(ServerProcessInfo* info) {
-	if (m_pProcessInfo) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CommonNetMaster::Initialize()
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void CommonNetMaster::SetProcessInfo(ServerProcessInfo* _pProcessInfo)
+{
+	if (processInfo_)
+	{
 		_LogWarn_("이미 주입된 정보가 있습니다.");
 		return;
 	}
-	m_pProcessInfo = info;
+
+	processInfo_ = _pProcessInfo;
 }
 
-
-void CommonNetMaster::ProcessMainUpdate() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CommonNetMaster::ProcessMainUpdate()
+{
 	PulserStatistics pulseStat;
-	Pulser pulser(1000 / m_iUpdatePerSecond, Pulser::eSliceCycle, &pulseStat);
+	Pulser pulser(1000 / updatePerSecond_, Pulser::eSliceCycle, &pulseStat);
 	TimeSpan elapsed;
 
 	pulser.Start();
-	while (m_bRunning) {
-
+	while (running_)
+	{
 		if (Core::CLIThread)
 			Core::CLIThread->ProcessInputs();
 
@@ -57,11 +65,12 @@ void CommonNetMaster::ProcessMainUpdate() {
 	OnStopped();
 }
 
-void CommonNetMaster::ProcessSubUpdate(const TimeSpan& elapsed) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CommonNetMaster::ProcessSubUpdate(const TimeSpan& _elapsed)
+{
 	if (Core::CommonNetGroup)
-		Core::CommonNetGroup->ProcessUpdate(elapsed);
+		Core::CommonNetGroup->ProcessUpdate(_elapsed);
 
 	if (Core::InterServerClientNetGroup)
-		Core::InterServerClientNetGroup->ProcessUpdate(elapsed);
+		Core::InterServerClientNetGroup->ProcessUpdate(_elapsed);
 }
-

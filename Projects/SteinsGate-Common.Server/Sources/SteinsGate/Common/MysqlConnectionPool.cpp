@@ -7,107 +7,134 @@ USING_NS_JC;
 USING_NS_JC;
 USING_NS_STD;
 
+//////////////////////////////////////////////////////////////////////////////////////////
 MysqlConnectionPool::MysqlConnectionPool(
-	const String& hostname, 
-	Int16U port,
-	const String& id, 
-	const String& pass, 
-	const String& schemaName, 
-	const int maxConn
-) :
-	m_HostName(hostname),
-	m_AccountId(id),
-	m_AccountPass(pass),
-	m_SchemeName(schemaName),
-	m_iPort(port),
-	m_MaxConnection(maxConn),
-	m_iCurConnSize(0)
-{}
+	const String& _hostName,
+	Int16U _port,
+	const String& _id,
+	const String& _pass,
+	const String& _schemaName,
+	const int _maxConn
+)
+: hostName_(_hostName)
+, accountId_(_id)
+, accountPass_(_pass)
+, schemeName_(_schemaName)
+, port_(_port)
+, maxConnection_(_maxConn)
+, currentConnectionSize_(0)
+{
+}
 
-MysqlConnectionPool::~MysqlConnectionPool() {
+//////////////////////////////////////////////////////////////////////////////////////////
+MysqlConnectionPool::~MysqlConnectionPool()
+{
 	TerminateAllConnections();
 }
 
-
-
-bool MysqlConnectionPool::Init(const uint32_t initConn) {
-	NormalLockGuard guard(m_Mtx);
-	for (int i = 0; i < initConn; ++i) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool MysqlConnectionPool::Init(const uint32_t _initConn)
+{
+	NormalLockGuard guard(mutex_);
+	for (int index = 0; index < static_cast<int>(_initConn); ++index)
+	{
 		MysqlConnection* pConn = CreateConnection();
-		if (pConn) {
-			m_ConnectionList.PushBack(pConn);
-			++m_iCurConnSize;
-		} else {
+		if (pConn)
+		{
+			connectionList_.PushBack(pConn);
+			++currentConnectionSize_;
+		}
+		else
+		{
 			return false;
 		}
 	}
 	return true;
 }
 
-void MysqlConnectionPool::TerminateAllConnections() {
-	NormalLockGuard guard(m_Mtx);
-	m_ConnectionList.Extension().ForEach([this](MysqlConnection* conn) {
-		this->TerminateConnection(conn);
+//////////////////////////////////////////////////////////////////////////////////////////
+void MysqlConnectionPool::TerminateAllConnections()
+{
+	NormalLockGuard guard(mutex_);
+	connectionList_.Extension().ForEach([this](MysqlConnection* _pConnection)
+	{
+		TerminateConnection(_pConnection);
 	});
-	
-	m_iCurConnSize = 0;
-	m_ConnectionList.Clear();
+
+	currentConnectionSize_ = 0;
+	connectionList_.Clear();
 }
 
-void MysqlConnectionPool::TerminateConnection(MysqlConnection* conn) {
-	if (conn)  {
-		conn->Disconnect();
-		delete conn;
+//////////////////////////////////////////////////////////////////////////////////////////
+void MysqlConnectionPool::TerminateConnection(MysqlConnection* _pConnection)
+{
+	if (_pConnection)
+	{
+		_pConnection->Disconnect();
+		delete _pConnection;
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+MysqlConnection* MysqlConnectionPool::GetConnection()
+{
+	MysqlConnection* pConn = nullptr;
+	NormalLockGuard guard(mutex_);
 
-MysqlConnection* MysqlConnectionPool::GetConnection() {
-	MysqlConnection* pConn;
-	NormalLockGuard guard(m_Mtx);
+	if (connectionList_.Size() > 0)
+	{
+		pConn = connectionList_.Front();
+		connectionList_.PopFront();
 
-	if (m_ConnectionList.Size() > 0) {
-		pConn = m_ConnectionList.Front();
-		m_ConnectionList.PopFront();
-
-		if (pConn->IsConnected() == false) {
+		if (!pConn->IsConnected())
+		{
 			JCORE_DELETE_SAFE(pConn);
-			pConn = this->CreateConnection();
+			pConn = CreateConnection();
 		}
 
-		if (pConn == nullptr) 
-			--m_iCurConnSize;
+		if (pConn == nullptr)
+		{
+			--currentConnectionSize_;
+		}
 
 		return pConn;
 	}
 
 	pConn = CreateConnection();
-	if (pConn) {
-		++m_iCurConnSize;
+	if (pConn)
+	{
+		++currentConnectionSize_;
 		return pConn;
 	}
 
 	return nullptr;
 }
 
-void MysqlConnectionPool::ReleaseConnection(MysqlConnection* conn) {
-	if (conn)  {
-		NormalLockGuard guard(m_Mtx);
-		m_ConnectionList.PushBack(conn);
+//////////////////////////////////////////////////////////////////////////////////////////
+void MysqlConnectionPool::ReleaseConnection(MysqlConnection* _pConnection)
+{
+	if (_pConnection)
+	{
+		NormalLockGuard guard(mutex_);
+		connectionList_.PushBack(_pConnection);
 	}
 }
 
-MysqlConnection* MysqlConnectionPool::CreateConnection() const {
-	MysqlConnection* connection = dbg_new MysqlConnection();
+//////////////////////////////////////////////////////////////////////////////////////////
+MysqlConnection* MysqlConnectionPool::CreateConnection() const
+{
+	MysqlConnection* pConnection = dbg_new MysqlConnection();
 
-	if (connection == nullptr) {
+	if (pConnection == nullptr)
+	{
 		return nullptr;
 	}
 
-	if (!connection->Connect(m_HostName, m_iPort, m_AccountId, m_AccountPass, m_SchemeName)) {
-		delete connection;
+	if (!pConnection->Connect(hostName_, port_, accountId_, accountPass_, schemeName_))
+	{
+		delete pConnection;
 		return nullptr;
 	}
 
-	return connection;
+	return pConnection;
 }

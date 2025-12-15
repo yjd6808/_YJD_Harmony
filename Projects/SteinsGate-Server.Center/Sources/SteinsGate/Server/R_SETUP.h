@@ -14,7 +14,7 @@
 struct R_SETUP : InterServerRecvHelper
 {
 public:
-	static void RECV_SCE_ItsMe(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_SCE_NotifyBootState(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_SCE_NotifyOrderFailed(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SCE_ItsMe(JNetwork::Session* _pSession, JNetwork::ICommand* _pCmd);
+	static void RECV_SCE_NotifyBootState(JNetwork::Session* _pSession, JNetwork::ICommand* _pCmd);
+	static void RECV_SCE_NotifyOrderFailed(JNetwork::Session* _pSession, JNetwork::ICommand* _pCmd);
 };

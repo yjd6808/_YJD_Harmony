@@ -22,21 +22,18 @@
 
 struct Contents
 {
-	::Global*				Global;
-	::ImagePackManager*		PackManager;
-	::FontManager*			FontManager;
-	::UIManager*			UIManager;
-	::HostPlayer*			Player;
-	::Inven*				Inven;
-	::WorldScene*			World;
-	::ActorListenerManager*	ActorListenerManager;
-	::ActorManager*			ActorManager;
-	::PopupManager*			PopupManager;
-	::TimeManager*			TimeManager;
+	::Global* Global;
+	::ImagePackManager* PackManager;
+	::FontManager* FontManager;
+	::UIManager* UIManager;
+	::HostPlayer* Player;
+	::Inven* Inven;
+	::WorldScene* World;
+	::ActorListenerManager* ActorListenerManager;
+	::ActorManager* ActorManager;
+	::PopupManager* PopupManager;
+	::TimeManager* TimeManager;
 
 	void Initialize();
 	void Finalize();
 };
-
-
-

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 3:56:56 PM
  * =====================
@@ -11,146 +11,179 @@
 #include <SteinsGate/Common/TextParser.h>
 
 
-bool JsonUtil::load(const char* fileName, JCORE_OUT Json::Value& root) {
-
-	if (JCore::Path::Extension(fileName) != ".json") {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool JsonUtil::Load(const char* _pFileName, JCORE_OUT Json::Value& _root)
+{
+	if (JCore::Path::Extension(_pFileName) != ".json")
 		return false;
-	}
 
-	std::ifstream reader(fileName, std::ifstream::in | std::ifstream::binary);
-	DebugAssertMsg(reader.is_open(), "%s 파일을 여는데 실패했습니다.", fileName);
-	try {
-		reader >> root;
+	std::ifstream reader(_pFileName, std::ifstream::in | std::ifstream::binary);
+	DebugAssertMsg(reader.is_open(), "%s 파일을 여는데 실패했습니다.", _pFileName);
+	try
+	{
+		reader >> _root;
 	}
-	catch (std::exception& ex) {
-		_LogError_("설정파일 %s을 로드하는중 오류가 발생하였습니다. (%s)", fileName, ex.what());
+	catch (std::exception& ex)
+	{
+		_LogError_("설정파일 %s을 로드하는중 오류가 발생하였습니다. (%s)", _pFileName, ex.what());
 		return false;
 	}
 	return true;
 }
 
-bool JsonUtil::load(const SGString& fileName, JCORE_OUT Json::Value& root) {
-	return load(fileName.Source(), root);
+//////////////////////////////////////////////////////////////////////////////////////////
+bool JsonUtil::Load(const SGString& _fileName, JCORE_OUT Json::Value& _root)
+{
+	return Load(_fileName.Source(), _root);
 }
 
-void JsonUtil::loadThrow(const char* fileName, Json::Value& root) {
-	std::ifstream reader(fileName, std::ifstream::in | std::ifstream::binary);
-	DebugAssertMsg(reader.is_open(), "%s 파일을 여는데 실패했습니다.", fileName);
-	reader >> root;
+//////////////////////////////////////////////////////////////////////////////////////////
+void JsonUtil::LoadThrow(const char* _pFileName, Json::Value& _root)
+{
+	std::ifstream reader(_pFileName, std::ifstream::in | std::ifstream::binary);
+	DebugAssertMsg(reader.is_open(), "%s 파일을 여는데 실패했습니다.", _pFileName);
+	reader >> _root;
 }
 
-void JsonUtil::loadThrow(const SGString& fileName, Json::Value& root) {
-	loadThrow(fileName.Source(), root);
+//////////////////////////////////////////////////////////////////////////////////////////
+void JsonUtil::LoadThrow(const SGString& _fileName, Json::Value& _root)
+{
+	LoadThrow(_fileName.Source(), _root);
 }
 
 
-SGString JsonUtil::getString(Json::Value& value) {
-	DebugAssertMsg(!value.isNull(), "인자로 전달한 Json 오브젝트에 문자열 데이터가 없습니다.");
+//////////////////////////////////////////////////////////////////////////////////////////
+SGString JsonUtil::GetString(Json::Value& _value)
+{
+	DebugAssertMsg(!_value.isNull(), "인자로 전달한 Json 오브젝트에 문자열 데이터가 없습니다.");
 	const char* pBegin;
 	const char* pEnd;
-	value.getString(&pBegin, &pEnd);
-	const int iLen = pEnd - pBegin;
-	return { pBegin, iLen + 1 };
+	_value.getString(&pBegin, &pEnd);
+	const int length = pEnd - pBegin;
+	return { pBegin, length + 1 };
 }
 
-const char* JsonUtil::getStringRaw(Json::Value& value, JCORE_OUT_OPT int* len /* = nullptr */) {
-	DebugAssertMsg(!value.isNull(), "인자로 전달한 Json 오브젝트에 문자열 데이터가 없습니다.");
+//////////////////////////////////////////////////////////////////////////////////////////
+const char* JsonUtil::GetStringRaw(Json::Value& _value, JCORE_OUT_OPT int* _pLength /* = nullptr */)
+{
+	DebugAssertMsg(!_value.isNull(), "인자로 전달한 Json 오브젝트에 문자열 데이터가 없습니다.");
 	const char* pBegin;
 	const char* pEnd;
-	value.getString(&pBegin, &pEnd);
-	if (len != nullptr)
-		*len = pEnd - pBegin;
+	_value.getString(&pBegin, &pEnd);
+	if (_pLength != nullptr)
+		*_pLength = pEnd - pBegin;
 	return pBegin;
 }
 
-SGString JsonUtil::getStringOrDefault(Json::Value& value, const SGString& defaultValue) {
-	if (value.empty())
-		return defaultValue;
+//////////////////////////////////////////////////////////////////////////////////////////
+SGString JsonUtil::GetStringOrDefault(Json::Value& _value, const SGString& _defaultValue)
+{
+	if (_value.empty())
+		return _defaultValue;
 
-	return getString(value);
+	return GetString(_value);
 }
 
-SGString JsonUtil::getStringOrNull(Json::Value& value)
+//////////////////////////////////////////////////////////////////////////////////////////
+SGString JsonUtil::GetStringOrNull(Json::Value& _value)
 {
-	if (value.empty())
+	if (_value.empty())
 		return { 0 };
 
-	return getString(value);
+	return GetString(_value);
 }
 
-void JsonUtil::parseThicknessInfo(Json::Value& thicknessRoot, JCORE_OUT ThicknessBox& info) {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void JsonUtil::ParseThicknessInfo(Json::Value& _thicknessRoot, JCORE_OUT ThicknessBox& _box)
+{
 	int num[4];
-	TextParser::parseIntNumbers(getString(thicknessRoot), num, 4);
+	TextParser::ParseIntNumbers(GetString(_thicknessRoot), num, 4);
 
-	info.RelativeX = (float)num[0];
-	info.RelativeY = (float)num[1];
-	info.Width = (float)num[2];
-	info.Height = (float)num[3];
+	_box.RelativeX = (float)num[0];
+	_box.RelativeY = (float)num[1];
+	_box.Width = (float)num[2];
+	_box.Height = (float)num[3];
 }
 
-void JsonUtil::parseIntNumber2(Json::Value& root, int& num1, int& num2) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void JsonUtil::ParseIntNumber2(Json::Value& _root, int& _num1, int& _num2)
+{
 	int num[2];
-	TextParser::parseIntNumbers(getString(root), num, 2);
+	TextParser::ParseIntNumbers(GetString(_root), num, 2);
 
-	num1 = num[0];
-	num2 = num[1];
+	_num1 = num[0];
+	_num2 = num[1];
 }
 
-void JsonUtil::parseIntNumber3(Json::Value& root, JCORE_OUT int& num1, JCORE_OUT int& num2, JCORE_OUT int& num3) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void JsonUtil::ParseIntNumber3(Json::Value& _root, JCORE_OUT int& _num1, JCORE_OUT int& _num2, JCORE_OUT int& _num3)
+{
 	int num[3];
-	TextParser::parseIntNumbers(getString(root), num, 3);
+	TextParser::ParseIntNumbers(GetString(_root), num, 3);
 
-	num1 = num[0];
-	num2 = num[1];
-	num3 = num[2];
+	_num1 = num[0];
+	_num2 = num[1];
+	_num3 = num[2];
 }
 
-void JsonUtil::parseIntNumber4(Json::Value& root, JCORE_OUT int& num1, JCORE_OUT int& num2, JCORE_OUT int& num3, JCORE_OUT int& num4) {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void JsonUtil::ParseIntNumber4(Json::Value& _root, JCORE_OUT int& _num1, JCORE_OUT int& _num2, JCORE_OUT int& _num3,
+                               JCORE_OUT int& _num4)
+{
 	int num[4];
-	TextParser::parseIntNumbers(getString(root), num, 4);
+	TextParser::ParseIntNumbers(GetString(_root), num, 4);
 
-	num1 = num[0];
-	num2 = num[1];
-	num3 = num[2];
-	num4 = num[3];
+	_num1 = num[0];
+	_num2 = num[1];
+	_num3 = num[2];
+	_num4 = num[3];
 }
 
-void JsonUtil::parseIntNumberN(Json::Value& root, JCORE_OUT int* numArr, int count) {
-	TextParser::parseIntNumbers(getString(root), numArr, count);
+//////////////////////////////////////////////////////////////////////////////////////////
+void JsonUtil::ParseIntNumberN(Json::Value& _root, JCORE_OUT int* _pNumArr, int _count)
+{
+	TextParser::ParseIntNumbers(GetString(_root), _pNumArr, _count);
 }
 
-void JsonUtil::parseFloatNumber2(Json::Value& root, JCORE_OUT float& num1, JCORE_OUT float& num2) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void JsonUtil::ParseFloatNumber2(Json::Value& _root, JCORE_OUT float& _num1, JCORE_OUT float& _num2)
+{
 	float num[2];
-	TextParser::parseFloatNumbers(getString(root), num, 2);
-	num1 = num[0];
-	num2 = num[1];
+	TextParser::ParseFloatNumbers(GetString(_root), num, 2);
+	_num1 = num[0];
+	_num2 = num[1];
 }
 
-void JsonUtil::parseFloatNumberN(Json::Value& root, JCORE_OUT float* numArr, int count) {
-	TextParser::parseFloatNumbers(getString(root), numArr, count);
+//////////////////////////////////////////////////////////////////////////////////////////
+void JsonUtil::ParseFloatNumberN(Json::Value& _root, JCORE_OUT float* _pNumArr, int _count)
+{
+	TextParser::ParseFloatNumbers(GetString(_root), _pNumArr, _count);
 }
 
 
+//////////////////////////////////////////////////////////////////////////////////////////
+float JsonUtil::GetFloatDefault(Json::Value& _value, float _defaultValue /* = 0 */)
+{
+	if (_value.empty())
+		return _defaultValue;
 
-float JsonUtil::getFloatDefault(Json::Value& value, float defaultValue /* = 0 */) {
-	if (value.empty())
-		return defaultValue;
-
-	return value.asFloat();
+	return _value.asFloat();
 }
 
-int JsonUtil::getIntDefault(Json::Value& value, int defaultValue /* = 0 */) {
-	if (value.empty())
-		return defaultValue;
+//////////////////////////////////////////////////////////////////////////////////////////
+int JsonUtil::GetIntDefault(Json::Value& _value, int _defaultValue /* = 0 */)
+{
+	if (_value.empty())
+		return _defaultValue;
 
-	return value.asInt();
+	return _value.asInt();
 }
 
-bool JsonUtil::getBooleanDefault(Json::Value& value, bool defaultValue /* = false */) {
-	if (value.empty())
-		return defaultValue;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool JsonUtil::GetBooleanDefault(Json::Value& _value, bool _defaultValue /* = false */)
+{
+	if (_value.empty())
+		return _defaultValue;
 
-	return value.asBool();
+	return _value.asBool();
 }

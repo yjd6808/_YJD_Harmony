@@ -20,25 +20,26 @@ public:
 	void Initialize() override;
 	void Finalize() override;
 
-	bool ConnectCenterServer(int tryCount);
-	void ProcessUpdate(const JCore::TimeSpan& elpased);
+	bool ConnectCenterServer(int _tryCount);
+	void ProcessUpdate(const JCore::TimeSpan& _elapsed);
 
-	JNetwork::TcpClient* GetInterServerClientTcp() const { return m_pInterServerClientTcp; }
-	JNetwork::UdpClient* GetInterServerClientUdp() const { return m_pInterServerClientUdp; }
+	JNetwork::TcpClient* GetInterServerClientTcp() const { return interServerClientTcp_; }
+	JNetwork::UdpClient* GetInterServerClientUdp() const { return interServerClientUdp_; }
+
 protected:
 	virtual void InitializeIOCP() = 0;
 	virtual void InitializeBufferPool() = 0;
 	virtual void InitializeParser();
 	virtual void InitializeInterServerTcp() = 0;
 	virtual void InitializeInterServerUdp() = 0;
-	
 
-	virtual void OnUpdate(const JCore::TimeSpan& elapsed) = 0;
-	virtual bool IsPeerServer() { return true; }	// 중앙 서버만 false
 
-	void SyncPeerServerTime(const JCore::TimeSpan& elapsed);
+	virtual void OnUpdate(const JCore::TimeSpan& _elapsed) = 0; // 중앙 서버만 false
+	virtual bool IsPeerServer() { return true; }
 
-	JNetwork::TcpClient* m_pInterServerClientTcp;
-	JNetwork::UdpClient* m_pInterServerClientUdp;
-	JNetwork::CommandParser* m_pParser;
+	void SyncPeerServerTime(const JCore::TimeSpan& _elapsed);
+
+	JNetwork::TcpClient* interServerClientTcp_;
+	JNetwork::UdpClient* interServerClientUdp_;
+	JNetwork::CommandParser* parser_;
 };

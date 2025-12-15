@@ -8,4 +8,3 @@
 #pragma once
 
 #include <SteinsGate/Common/CharBaseInfo.h>
-

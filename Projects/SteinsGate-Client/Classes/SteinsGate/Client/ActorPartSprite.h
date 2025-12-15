@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 1:09:11 PM
  * =====================
@@ -22,8 +22,7 @@ public:
 		SGNode* _pCanvas,
 		SGDrawNode* _pBoundingBox,
 		const ActorPartSpriteData& _partData,
-		SGVector<AnimationInfo>* _pAnimations
-	);
+		SGVector<AnimationInfo>* _pAnimations);
 
 	ActorPartSprite(
 		int _frameCount,
@@ -31,8 +30,8 @@ public:
 		SGNode* _pCanvas,
 		SGDrawNode* _pBoundingBox,
 		const ActorPartSpriteData& _partData,
-		SGVector<AnimationInfo>* _pAnimations
-	);
+		SGVector<AnimationInfo>* _pAnimations);
+
 	~ActorPartSprite() override;
 
 	bool init() override;
@@ -46,42 +45,14 @@ public:
 	void runAnimation(int _code);
 	void runAnimation(int _code, int _startFrameIndexInAnimation);
 
-	void setPartIndex(int _index)
-	{
-		partIndex_ = _index;
-	}
-
-	int getPartIndex()
-	{
-		return partIndex_;
-	}
-
+	void setPartIndex(int _index) { partIndex_ = _index; }
+	int getPartIndex() { return partIndex_; }
 	ActorType_t getActorType();
-
-	SGNode* getCanvas()
-	{
-		return canvas_;
-	}
-
-	SGDrawNode* getPartBoundingBox()
-	{
-		return boundingBox_;
-	}
-
-	ActorSprite* getActorSprite()
-	{
-		return actorSprite_;
-	}
-
-	const ActorPartSpriteData& getPartData()
-	{
-		return partData_;
-	}
-
-	ActorPartAnimation* getRunningAnimation()
-	{
-		return runningAnimation_;
-	}
+	SGNode* getCanvas() { return canvas_; }
+	SGDrawNode* getPartBoundingBox() { return boundingBox_; }
+	ActorSprite* getActorSprite() { return actorSprite_; }
+	const ActorPartSpriteData& getPartData() { return partData_; }
+	ActorPartAnimation* getRunningAnimation() { return runningAnimation_; }
 
 	void onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
 	void onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);

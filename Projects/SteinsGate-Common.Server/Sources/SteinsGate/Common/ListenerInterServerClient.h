@@ -13,15 +13,16 @@
 class ListenerInterServerClient : public ListenerClientCommon
 {
 public:
-	ListenerInterServerClient(ServerProcessType_t serverProcessType, SGCommandParser* parser);
-protected:
-	void OnConnected(JNetwork::Session* session) override;
-	void OnDisconnected(JNetwork::Session* session, Int32U errorCode) override;
-	void OnSent(JNetwork::Session* sessionm, JNetwork::IPacket* sentPacket, Int32UL sentBytes) override;
-	void OnReceived(JNetwork::Session* session, JNetwork::ICommand* recvCmd) override;
-	void OnReceived(JNetwork::Session* session, JNetwork::RecvedCommandPacket* recvPacket) override;
-	void OnConnectFailed(JNetwork::Session* session, Int32U errorCode) override;
-private:
-	ServerProcessType_t m_eServerProcessType;
-};
+	ListenerInterServerClient(ServerProcessType_t _serverProcessType, JNetwork::CommandParser* _pParser);
 
+protected:
+	void OnConnected(JNetwork::Session* _pSession) override;
+	void OnDisconnected(JNetwork::Session* _pSession, Int32U _errorCode) override;
+	void OnSent(JNetwork::Session* _pSession, JNetwork::IPacket* _pSentPacket, Int32UL _sentBytes) override;
+	void OnReceived(JNetwork::Session* _pSession, JNetwork::ICommand* _pRecvCmd) override;
+	void OnReceived(JNetwork::Session* _pSession, JNetwork::RecvedCommandPacket* _pRecvPacket) override;
+	void OnConnectFailed(JNetwork::Session* _pSession, Int32U _errorCode) override;
+
+private:
+	ServerProcessType_t serverProcessType_;
+};

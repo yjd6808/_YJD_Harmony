@@ -13,98 +13,120 @@
 #include <SteinsGate/Client/PhysicsComponent.h>
 #include <SteinsGate/Client/AIComponent.h>
 
+//////////////////////////////////////////////////////////////////////////////////////////
+HitActivity_Goblin::HitActivity_Goblin(Actor* _pActor)
+: HitActivity(_pActor)
+, hitSmall_(true)
+, onTheGround_(false)
+, downTimeCheckBegin_(false)
+, elapsedDownTime_(0.0f)
+, downRecoverTime_(0.0f)
+{
+}
 
-HitActivity_Goblin::HitActivity_Goblin(Actor* actor)
-	: HitActivity(actor)
-	, m_bHitSmall(true)
-	, m_bOnTheGround(false)
-	, m_bDownTimeCheckBegin(false)
-	, m_fElapsedDownTime(0)
-	, m_fDownRecoverTime(0)
-{}
-
-
-void HitActivity_Goblin::onActivityBegin() {
-	Monster* pMonster = dynamic_cast<Monster*>(m_pActor);
+//////////////////////////////////////////////////////////////////////////////////////////
+void HitActivity_Goblin::OnActivityBegin()
+{
+	Monster* pMonster = dynamic_cast<Monster*>(pActor_);
 	DebugAssert(pMonster);
 
 	const MonsterStatInfo* pStatInfo = pMonster->getStatInfo();
 
-	m_fElapsedDownTime = 0.0f;
-	m_bDownTimeCheckBegin = false;
-	m_fDownRecoverTime = pStatInfo ? pStatInfo->DownRecoverTime / 2 : 1.0f;
+	elapsedDownTime_ = 0.0f;
+	downTimeCheckBegin_ = false;
+	downRecoverTime_ = pStatInfo ? pStatInfo->downRecoverTime_ / 2 : 1.0f;
 
 	selectHitAnimation();
 	checkPosition();
 }
 
-
-void HitActivity_Goblin::onUpdate(float dt) {
-
-	if (m_bOnTheGround) {
-		updateGroundHitState(dt);
+//////////////////////////////////////////////////////////////////////////////////////////
+void HitActivity_Goblin::OnUpdate(float _dt)
+{
+	if (onTheGround_)
+	{
+		updateGroundHitState(_dt);
 		return;
 	}
 
-	updateAirHitState(dt);
+	updateAirHitState(_dt);
 }
 
-void HitActivity_Goblin::selectHitAnimation() {
-	if (m_bHitSmall) {
-		m_pActor->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_HIT_SMALL);
-	} else {
-		m_pActor->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_HIT_BIG);
+//////////////////////////////////////////////////////////////////////////////////////////
+void HitActivity_Goblin::selectHitAnimation()
+{
+	if (hitSmall_)
+	{
+		pActor_->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_HIT_SMALL);
 	}
-	m_bHitSmall = !m_bHitSmall;
+	else
+	{
+		pActor_->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_HIT_BIG);
+	}
+
+	hitSmall_ = !hitSmall_;
 }
 
-void HitActivity_Goblin::checkPosition() {
-	PhysicsComponent* pPhysicsComponent = m_pActor->getComponent<PhysicsComponent>();
+//////////////////////////////////////////////////////////////////////////////////////////
+void HitActivity_Goblin::checkPosition()
+{
+	PhysicsComponent* pPhysicsComponent = pActor_->getComponent<PhysicsComponent>();
 
-	if (!pPhysicsComponent->hasForceY() && m_pActor->getPositionActorY() <= SG_FLT_EPSILON) {
-		m_bOnTheGround = true;
+	if (!pPhysicsComponent->hasForceY() && pActor_->getPositionActorY() <= SG_FLT_EPSILON)
+	{
+		onTheGround_ = true;
 		return;
 	}
 
-	m_bOnTheGround = false;
+	onTheGround_ = false;
 }
 
-void HitActivity_Goblin::updateGroundHitState(float dt) {
-	PhysicsComponent* pPhysicsComponent = m_pActor->getComponent<PhysicsComponent>();
+//////////////////////////////////////////////////////////////////////////////////////////
+void HitActivity_Goblin::updateGroundHitState(float _dt)
+{
+	PhysicsComponent* pPhysicsComponent = pActor_->getComponent<PhysicsComponent>();
 
-	if (pPhysicsComponent->hasForceX()) {
+	if (pPhysicsComponent->hasForceX())
+	{
 		return;
 	}
 
 	// TODO: 죽음 확인 후 사망처리
-	stop();
+	Stop();
 }
 
-void HitActivity_Goblin::updateAirHitState(float dt) {
-
-
-	if (!m_pActor->isOnTheGround())
-		return;
-
-
-	// TODO: 죽음 확인 후 사망처리
-
-	if (!m_bDownTimeCheckBegin) {
-		m_pActor->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_END);
-		m_bDownTimeCheckBegin = true;
+//////////////////////////////////////////////////////////////////////////////////////////
+void HitActivity_Goblin::updateAirHitState(float _dt)
+{
+	if (!pActor_->isOnTheGround())
+	{
 		return;
 	}
 
-	updateDownState(dt);
+	// TODO: 죽음 확인 후 사망처리
+
+	if (!downTimeCheckBegin_)
+	{
+		pActor_->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_END);
+		downTimeCheckBegin_ = true;
+		return;
+	}
+
+	updateDownState(_dt);
 }
 
-void HitActivity_Goblin::updateDownState(float dt) {
-	m_fElapsedDownTime += dt;
+//////////////////////////////////////////////////////////////////////////////////////////
+void HitActivity_Goblin::updateDownState(float _dt)
+{
+	elapsedDownTime_ += _dt;
 
-	if (m_fElapsedDownTime >= m_fDownRecoverTime) {
-		AIComponent* pAIComponent = m_pActor->getComponent<AIComponent>();
+	if (elapsedDownTime_ >= downRecoverTime_)
+	{
+		AIComponent* pAIComponent = pActor_->getComponent<AIComponent>();
 
 		if (pAIComponent)
-			pAIComponent->runActivity(AIActivityType::Sit);	
+		{
+			pAIComponent->runActivity(AIActivityType::Sit);
+		}
 	}
 }

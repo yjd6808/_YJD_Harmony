@@ -19,76 +19,98 @@ USING_NS_JC;
 USING_NS_JS;
 USING_NS_CC;
 
+//////////////////////////////////////////////////////////////////////////////////////////
 Inven::Inven()
-	: m_EquipedItemList{}
-	, m_EquipedAvatarList{}
-	, m_hashInven{}
-	, m_iAvailableSlotCount{} {
+: equippedItemList_{}
+, equippedAvatarList_{}
+, invenMap_{}
+, availableSlotCount_{}
+{
 }
 
-Inven::~Inven() {
+//////////////////////////////////////////////////////////////////////////////////////////
+Inven::~Inven()
+{
 }
 
-void Inven::init() {
-	for (int i = 0; i < InvenItemType::Max; ++i) {
-		m_iAvailableSlotCount[i] = Core::CharCommon->DefaultInvenSlotCount[i];
+//////////////////////////////////////////////////////////////////////////////////////////
+void Inven::init()
+{
+	for (int i = 0; i < InvenItemType::Max; ++i)
+	{
+		availableSlotCount_[i] = Core::CharCommon->defaultInvenSlotCount_[i];
 	}
 }
 
-WeaponType_t Inven::getWeaponType() {
-	InvenItemEquip* pItemWeapon = m_EquipedItemList[ItemType::Weapon];
+//////////////////////////////////////////////////////////////////////////////////////////
+WeaponType_t Inven::getWeaponType()
+{
+	InvenItemEquip* pItemWeapon = equippedItemList_[ItemType::Weapon];
 
-	if (pItemWeapon == nullptr) {
-		return Core::Contents.Player->getBaseInfo()->DefaultWeaponType;
+	if (pItemWeapon == nullptr)
+	{
+		return Core::Contents.Player->getBaseInfo()->defaultWeaponType_;
 	}
+
 	std::bitset<128> g;
 	return pItemWeapon->Code.WeaponUn.WeaponType;
 }
 
-VisualInfo Inven::getVisualInfo(int defaultCharType) {
+//////////////////////////////////////////////////////////////////////////////////////////
+VisualInfo Inven::getVisualInfo(int _defaultCharType)
+{
 	VisualInfo info;
 
-	CharInfo* pCharInfo = Core::DataManager->getCharInfo(defaultCharType);
-	bool bEquiped[VisualType::Max]{};	// 착용중인지
+	CharInfo* pCharInfo = Core::DataManager->getCharInfo(_defaultCharType);
+	bool equipped[VisualType::Max]{}; // 착용중인지
 	VisualData data;
 
 	// 아바타 정보 확인
-	for (int i = VisualType::AvatarBegin; i <= VisualType::AvatarEnd; ++i) {
-		if (m_EquipedAvatarList[i] == nullptr) {
+	for (int i = VisualType::AvatarBegin; i <= VisualType::AvatarEnd; ++i)
+	{
+		if (equippedAvatarList_[i] == nullptr)
+		{
 			continue;
 		}
 
-		int iVisualCount = VisualHelper::getVisualData(data, m_EquipedAvatarList[i]->Code.Code);
-		info.PushBack(&data[0], iVisualCount);
-		bEquiped[i] = true;
+		int visualCount = VisualHelper::getVisualData(data, equippedAvatarList_[i]->Code.Code);
+		info.PushBack(&data[0], visualCount);
+		equipped[i] = true;
 	}
 
 	// 무기 정보 확인
-	InvenItemEquip* pItemWeapon = m_EquipedItemList[ItemType::Weapon];
+	InvenItemEquip* pItemWeapon = equippedItemList_[ItemType::Weapon];
 
-	if (pItemWeapon != nullptr) {
-		int iVisualCount = VisualHelper::getVisualData(data, pItemWeapon->Code.Code);
-		info.PushBack(&data[0], iVisualCount);
-		bEquiped[VisualType::Weapon] = true;
+	if (pItemWeapon != nullptr)
+	{
+		int visualCount = VisualHelper::getVisualData(data, pItemWeapon->Code.Code);
+		info.PushBack(&data[0], visualCount);
+		equipped[VisualType::Weapon] = true;
 	}
 
 	// 무기 강화 정보 확인
-	
-	for (int i = 0; i < VisualType::Max; ++i) {
 
-		if (!pCharInfo->HasVisual[i])
+	for (int i = 0; i < VisualType::Max; ++i)
+	{
+		if (!pCharInfo->hasVisual_[i])
+		{
 			continue;
+		}
 
-		if (bEquiped[i])
+		if (equipped[i])
+		{
 			continue;
+		}
 
 		// 디폴트는 존재하고 낀 비주얼 장비가 없으면 교체한다.
-		info.PushBack(&pCharInfo->Visual[i][0], pCharInfo->VisualCount[i]);
+		info.PushBack(&pCharInfo->visual_[i][0], pCharInfo->visualCount_[i]);
 	}
 
 	return info;
 }
 
-int Inven::getAvailableSlotCount(InvenItemType_t invenType) {
-	return m_iAvailableSlotCount[invenType];
+//////////////////////////////////////////////////////////////////////////////////////////
+int Inven::getAvailableSlotCount(InvenItemType_t _invenType)
+{
+	return availableSlotCount_[_invenType];
 }

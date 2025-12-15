@@ -16,140 +16,163 @@ USING_NS_JC;
 // =============================================================
 //					플레이어 기능
 // =============================================================
+void AudioPlayer::PlayOnce()
+{
+	DebugAssertMsg(handle_, "핸들이 설정되지 않았습니다.");
 
+	if (playing_)
+		Stop(handle_);
 
-void AudioPlayer::PlayOnce() {
-	DebugAssertMsg(m_iHandle, "핸들이 설정되지 않았습니다.");
-
-
-	if (m_bPlaying)
-		Stop(m_iHandle);
-
-	if (Play(m_iHandle, false)) {
-		m_bPaused = false;
-		m_bPlaying = true;
-		m_bRepeat = false; 
+	if (Play(handle_, false))
+	{
+		paused_ = false;
+		playing_ = true;
+		repeat_ = false;
 	}
 }
 
-void AudioPlayer::PlayNew(SoundDataPtr soundData, bool repeat) {
-	if (m_iHandle != 0) {
-		Stop(m_iHandle);
-		Close(m_iHandle);
+//////////////////////////////////////////////////////////////////////////////////////////
+void AudioPlayer::PlayNew(const SoundDataPtr& _pSoundData, bool _repeat)
+{
+	if (handle_ != 0)
+	{
+		Stop(handle_);
+		Close(handle_);
 	}
 
-	m_iHandle = Create(soundData.GetPtr(), soundData.Length());
+	handle_ = Create(_pSoundData.GetPtr(), _pSoundData.Length());
 
-	if (m_iHandle != 0) {
-		m_spSoundData = soundData;
-		if (repeat) PlayRepeat();
-		else PlayOnce();
-	}
-}
+	if (handle_ != 0)
+	{
+		soundData_ = _pSoundData;
 
-void AudioPlayer::PlayRepeat() {
-	DebugAssertMsg(m_iHandle, "핸들이 설정되지 않았습니다.");
-
-	if (m_bPlaying)
-		Stop(m_iHandle);
-
-	if (Play(m_iHandle, true)) {
-		m_bPaused = false;
-		m_bPlaying = true;
-		m_bRepeat = true;
+		if (_repeat)
+			PlayRepeat();
+		else
+			PlayOnce();
 	}
 }
 
-void AudioPlayer::PlayNew(Byte* mem, int len, bool repeat) {
-	if (m_iHandle != 0) {
-		Stop(m_iHandle);
-		Close(m_iHandle);
-	}
+//////////////////////////////////////////////////////////////////////////////////////////
+void AudioPlayer::PlayRepeat()
+{
+	DebugAssertMsg(handle_, "핸들이 설정되지 않았습니다.");
 
-	m_iHandle = Create(mem, len);
-	
-	if (m_iHandle != 0) {
-		m_spSoundData = nullptr;
-		if (repeat) PlayRepeat();
-		else PlayOnce();
+	if (playing_)
+		Stop(handle_);
+
+	if (Play(handle_, true))
+	{
+		paused_ = false;
+		playing_ = true;
+		repeat_ = true;
 	}
 }
 
-void AudioPlayer::Pause() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void AudioPlayer::PlayNew(Byte* _pMem, int _len, bool _repeat)
+{
+	if (handle_ != 0)
+	{
+		Stop(handle_);
+		Close(handle_);
+	}
 
-	if (!m_bPlaying)
+	handle_ = Create(_pMem, _len);
+
+	if (handle_ != 0)
+	{
+		soundData_ = nullptr;
+
+		if (_repeat)
+			PlayRepeat();
+		else
+			PlayOnce();
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void AudioPlayer::Pause()
+{
+	if (!playing_)
 		return;
 
-	if (Pause(m_iHandle)) {
-		m_bPaused = true;
-		m_bPlaying = false;
+	if (Pause(handle_))
+	{
+		paused_ = true;
+		playing_ = false;
 	}
 }
 
-void AudioPlayer::Stop() {
-
-	if (!m_bPlaying)
+//////////////////////////////////////////////////////////////////////////////////////////
+void AudioPlayer::Stop()
+{
+	if (!playing_)
 		return;
 
-	if (Stop(m_iHandle)) {
-		m_bPaused = false;
-		m_bPlaying = false;
+	if (Stop(handle_))
+	{
+		paused_ = false;
+		playing_ = false;
 	}
 }
 
 // =============================================================
 //					라이브러리 래핑
 // =============================================================
-
-int AudioPlayer::Create(void* mem, int len) {
-	return (int)BASS_StreamCreateFile(TRUE, mem, 0, len, 0);
+int AudioPlayer::Create(void* _pMem, int _len)
+{
+	return static_cast<int>(BASS_StreamCreateFile(TRUE, _pMem, 0, _len, 0));
 }
 
-bool AudioPlayer::Play(int handle, bool restart) {
-	return BASS_ChannelPlay(handle, !restart) != 0;
+bool AudioPlayer::Play(int _handle, bool _restart)
+{
+	return BASS_ChannelPlay(_handle, !_restart) != 0;
 }
 
-bool AudioPlayer::Stop(int handle) {
-	return BASS_ChannelStop(handle) != 0;
+bool AudioPlayer::Stop(int _handle)
+{
+	return BASS_ChannelStop(_handle) != 0;
 }
 
-bool AudioPlayer::Pause(int handle) {
-	return BASS_ChannelPause(handle);
+bool AudioPlayer::Pause(int _handle)
+{
+	return BASS_ChannelPause(_handle) != 0;
 }
 
-bool AudioPlayer::Close(int handle) {
-	return BASS_StreamFree(handle);
+bool AudioPlayer::Close(int _handle)
+{
+	return BASS_StreamFree(_handle) != 0;
 }
-
 
 // https://www.un4seen.com/doc/#bass/BASS_ChannelGetPosition.html
-Int64U AudioPlayer::GetPosition(int handle) {
-	return BASS_ChannelGetPosition(handle, BASS_POS_BYTE);
+Int64U AudioPlayer::GetPosition(int _handle)
+{
+	return BASS_ChannelGetPosition(_handle, BASS_POS_BYTE);
 }
 
-bool AudioPlayer::Initilize() {
+bool AudioPlayer::Initilize()
+{
 	if (BASS_Init(-1, 44100, 0, 0, 0))
-		ms_bInitialized = true;
+		IsInitialized = true;
 
-	return ms_bInitialized;
+	return IsInitialized;
 }
 
-
-bool AudioPlayer::Finalize() {
-	
-	if (!BASS_Stop()) {
+bool AudioPlayer::Finalize()
+{
+	if (!BASS_Stop())
+	{
 		DebugAssert(false);
 		return false;
 	}
 
-	if (!BASS_Free()) {
+	if (!BASS_Free())
+	{
 		DebugAssert(false);
 		return false;
 	}
 
-	ms_bInitialized = false;
+	IsInitialized = false;
 	return true;
 }
-
-
-

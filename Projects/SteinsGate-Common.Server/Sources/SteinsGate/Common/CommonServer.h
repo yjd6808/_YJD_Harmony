@@ -14,24 +14,24 @@
 
 class CommonServer
 	: public JNetwork::TcpServer
-	, public IUpdatable
+	  , public IUpdatable
 {
 protected:
-	CommonServer(const JNetwork::IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator);
+	CommonServer(const JNetwork::IOCPPtr& _pIocp, const JCore::MemoryPoolAbstractPtr& _pBufferAllocator);
+
 public:
-	void SetBootState(ServerBootState_t state) { m_eBootState = state; }
-	ServerBootState_t GetBootState() { return (ServerBootState_t)m_eBootState.Load(); }
+	void SetBootState(ServerBootState_t _state) { bootState_ = _state; }
+	ServerBootState_t GetBootState() { return (ServerBootState_t)bootState_.Load(); }
 
 	virtual ServerType_t GetServerType() = 0;
 	const char* GetServerName() { return ServerType::Name[GetServerType()]; }
 
 	void OnStarted() override;
-	void OnStartFailed(Int32U errorCode) override;
+	void OnStartFailed(Int32U _errorCode) override;
 	void OnStopped() override;
 
-	void OnUpdate(const JCore::TimeSpan& elapsed) override;
+	void OnUpdate(const JCore::TimeSpan& _elapsed) override;
+
 private:
-	JCore::AtomicInt m_eBootState;
+	JCore::AtomicInt bootState_;
 };
-
-

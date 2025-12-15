@@ -13,10 +13,5 @@
 class RandomEx
 {
 public:
-	static bool check(float prob);
+	static bool Check(float _prob);
 };
-
-
-
-
-

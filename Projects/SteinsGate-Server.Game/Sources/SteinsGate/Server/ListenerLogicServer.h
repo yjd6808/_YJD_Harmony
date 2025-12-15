@@ -1,10 +1,9 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/3/2023 9:10:29 AM [SteinsGate-Server.Lobby 프로젝트 복사 생성]
  * =====================
  *
  */
-
 
 #pragma once
 
@@ -14,17 +13,17 @@
 class ListenerLogicServer : public ListenerServerCommon
 {
 public:
-	ListenerLogicServer(LogicServer* server, JNetwork::CommandParser* parser);
+	ListenerLogicServer(LogicServer* _pLogicServer, JNetwork::CommandParser* _pParser);
 protected:
 	void OnStarted() override;
-	void OnConnected(JNetwork::Session* connectedSession) override;
-	void OnDisconnected(JNetwork::Session* disconnetedSession, Int32U errorCode) override;
-	void OnSent(JNetwork::Session* sender, JNetwork::IPacket* sentPacket, Int32UL sentBytes) override;
-	void OnReceived(JNetwork::Session* receiver, JNetwork::ICommand* recvCmd) override;
-	void OnReceived(JNetwork::Session* session, JNetwork::RecvedCommandPacket* recvPacket) override;
+	void OnConnected(JNetwork::Session* _pConnectedSession) override;
+	void OnDisconnected(JNetwork::Session* _pDisconnectedSession, Int32U _errorCode) override;
+	void OnSent(JNetwork::Session* _pSender, JNetwork::IPacket* _pSentPacket, Int32UL _sentBytes) override;
+	void OnReceived(JNetwork::Session* _pReceiver, JNetwork::ICommand* _pRecvCmd) override;
+	void OnReceived(JNetwork::Session* _pSession, JNetwork::RecvedCommandPacket* _pRecvPacket) override;
 	void OnStopped() override;
 
 	ServerType_t GetServerType() override { return ServerType::Logic; }
 private:
-	LogicServer* m_pLogicTcp;
+	LogicServer* logicTcp_;
 };

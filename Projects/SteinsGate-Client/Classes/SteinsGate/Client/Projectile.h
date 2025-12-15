@@ -14,14 +14,14 @@
 class Projectile : public Actor
 {
 public:
-	Projectile(ProjectileInfo* baseInfo);
+	Projectile(ProjectileInfo* _pBaseInfo);
 	~Projectile() override;
 
-	static Projectile* create(ProjectileInfo* baseInfo, Actor* spawner);
+	static Projectile* create(ProjectileInfo* _pBaseInfo, Actor* _pSpawner);
 
 	void initialize() override;
 	void initActorSprite() override;
-	void initThicknessBox(const ThicknessBox& thicknessBox) override;
+	void initThicknessBox(const ThicknessBox& _thicknessBox) override;
 	void initPosition();
 	void initListeners() override;
 	void initComponents() override;
@@ -29,13 +29,14 @@ public:
 	EffectInfo* getSpawnEffectInfo();
 	EffectInfo* getHitEffectInfo();
 
-	void setSpawner(Actor* spawner);
+	void setSpawner(Actor* _pSpawner);
 	Actor* getSpawner();
 	ProjectileInfo* getBaseInfo();
 	ActorType_t getType() const override { return ActorType::Projectile; }
-	int getCode() override { return m_pBaseInfo->Code; }
-	int getListenerCode() const { return m_pBaseInfo->ListenerCode; }
+	int getCode() override { return baseInfo_->code_; }
+	int getListenerCode() const { return baseInfo_->ListenerCode; }
+
 private:
-	JCORE_NOT_NULL ProjectileInfo* m_pBaseInfo;
-	JCORE_NULLABLE Actor* m_pSpawner;
+	JCORE_NOT_NULL ProjectileInfo* baseInfo_;
+	JCORE_NULLABLE Actor* spawner_;
 };

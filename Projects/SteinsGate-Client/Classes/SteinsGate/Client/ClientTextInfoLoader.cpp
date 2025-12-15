@@ -10,105 +10,130 @@
 
 #include <SteinsGate/Client/JsonUtilEx.h>
 
-#define MAX_ID_LEN		63
-#define MAX_TEXT_LEN	511
+#define MAX_ID_LEN      63
+#define MAX_TEXT_LEN    511
 
 USING_NS_JS;
 USING_NS_JC;
 
-ClientTextInfoLoader::ClientTextInfoLoader(DataManagerAbstract* manager)
-	: ConfigFileLoaderAbstract(manager)
-	, m_TextMap(1024)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+ClientTextInfoLoader::ClientTextInfoLoader(DataManagerAbstract* _pManager)
+: ConfigFileLoaderAbstract(_pManager)
+, textMap_(1024)
+{
+}
 
-bool ClientTextInfoLoader::load() {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ClientTextInfoLoader::Load()
+{
 	Value root;
-	if (!loadJson(root))
+	if (!LoadJson(root))
 		return false;
 
-	try {
+	try
+	{
 		Value clientInfoListRoot = root["text"];
 
-		SGString szId{ MAX_ID_LEN + 1 };
-		SGString szText{ MAX_TEXT_LEN + 1 };
+		SGString idString{ MAX_ID_LEN + 1 };
+		SGString textString{ MAX_TEXT_LEN + 1 };
 
-		for (int i = 0; i < clientInfoListRoot.size(); ++i) {
+		for (int i = 0; i < clientInfoListRoot.size(); ++i)
+		{
 			Value& clientRoot = clientInfoListRoot[i];
 
-			szId.SetLength(0);
-			szText.SetLength(0);
+			idString.SetLength(0);
+			textString.SetLength(0);
 
-			if (clientRoot.type() == arrayValue && readClientTextInfo(clientRoot, szId, szText)) {
-				m_TextMap.Insert(szId, szText);
+			if (clientRoot.type() == arrayValue && readClientTextInfo(clientRoot, idString, textString))
+			{
+				textMap_.Insert(idString, textString);
 			}
 		}
 	}
-	catch (std::exception& ex) {
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
+	catch (std::exception& ex)
+	{
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), ex.what());
 		return false;
 	}
 
 	return true;
 }
 
-bool ClientTextInfoLoader::tryGetTextRaw(const char* id, JCORE_OUT char** text) {
-	const SGString* pFind = m_TextMap.Find(id);
-	if (pFind == nullptr) {
-		*text = DummyText.Source();
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ClientTextInfoLoader::tryGetTextRaw(const char* _id, JCORE_OUT char** _pText)
+{
+	const SGString* pFind = textMap_.Find(_id);
+	if (pFind == nullptr)
+	{
+		*_pText = DummyText.Source();
 		return false;
 	}
-	*text = pFind->Source();
+
+	*_pText = pFind->Source();
 	return true;
 }
 
-bool ClientTextInfoLoader::tryGetText(const char* id, JCORE_OUT SGString** text) {
-	SGString* pFind = m_TextMap.Find(id);
-	if (pFind == nullptr) {
-		*text = &DummyText;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ClientTextInfoLoader::tryGetText(const char* _id, JCORE_OUT SGString** _pText)
+{
+	SGString* pFind = textMap_.Find(_id);
+	if (pFind == nullptr)
+	{
+		*_pText = &DummyText;
 		return false;
 	}
-	*text = pFind;
+
+	*_pText = pFind;
 	return true;
 }
 
-bool ClientTextInfoLoader::tryGetText(const SGString& id, JCORE_OUT SGString** text) {
-	SGString* pFind = m_TextMap.Find(id);
-	if (pFind == nullptr) {
-		*text = &DummyText;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ClientTextInfoLoader::tryGetText(const SGString& _id, JCORE_OUT SGString** _pText)
+{
+	SGString* pFind = textMap_.Find(_id);
+	if (pFind == nullptr)
+	{
+		*_pText = &DummyText;
 		return false;
 	}
-	*text = pFind;
+
+	*_pText = pFind;
 	return true;
 }
 
-bool ClientTextInfoLoader::readClientTextInfo(Json::Value& clientTextRoot, JCORE_OUT SGString& szId, JCORE_OUT SGString& szText) {
-	const int iTextArraySize = (int)clientTextRoot.size();
-	if (iTextArraySize < 2) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ClientTextInfoLoader::readClientTextInfo(Json::Value& _clientTextRoot, JCORE_OUT SGString& _id,
+                                              JCORE_OUT SGString& _text)
+{
+	const int textArraySize = static_cast<int>(_clientTextRoot.size());
+	if (textArraySize < 2)
+	{
 		DebugAssert(false);
 		return false;
 	}
 
-	Value& idRoot = clientTextRoot[0];
-	Value& textRoot = clientTextRoot[1];
+	Value& idRoot = _clientTextRoot[0];
+	Value& textRoot = _clientTextRoot[1];
 
-	if (idRoot.type() != stringValue || textRoot.type() != stringValue) {
+	if (idRoot.type() != stringValue || textRoot.type() != stringValue)
+	{
 		return false;
 	}
 
-	int iIdLen;
-	int iTextLen;
+	int idLen;
+	int textLen;
 
-	const char* szIdRaw = JsonUtil::getStringRaw(idRoot, &iIdLen);
-	const char* szTextRaw = JsonUtil::getStringRaw(textRoot, &iTextLen);
+	const char* pIdRaw = JsonUtil::GetStringRaw(idRoot, &idLen);
+	const char* pTextRaw = JsonUtil::GetStringRaw(textRoot, &textLen);
 
-	if (iIdLen <= 0 || iIdLen > MAX_ID_LEN ||
-		iTextLen <= 0 || iTextLen > MAX_TEXT_LEN) {
+	if (idLen <= 0 || idLen > MAX_ID_LEN ||
+		textLen <= 0 || textLen > MAX_TEXT_LEN)
+	{
 		return false;
 	}
 
-	szId += szIdRaw;
-	szText += szTextRaw;
+	_id += pIdRaw;
+	_text += pTextRaw;
 
 	return true;
 }

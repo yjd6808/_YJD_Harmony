@@ -11,7 +11,7 @@
 
 USING_NS_JC;
 
-String Logo_v{2048};
+String Logo_v{ 2048 };
 const int LogoWidth_v = 600;
 const int LogoHeight_v = 800;
 /* ================================================================================================================
@@ -19,110 +19,144 @@ const int LogoHeight_v = 800;
  * ================================================================================================================ */
 
 #define MAX_PADDING_SIZE 64
-#define COLOR_BLACK			CSI, VT_RESET, VT_BACK_COLOR_BLACK, CSI_AND, VT_FORE_COLOR_BLACK		, CSI_GRAPHIC_RENDITION_END
-#define COLOR_LIGHT_RED		CSI, VT_RESET, VT_BACK_COLOR_BLACK, CSI_AND, VT_FORE_COLOR_RED			, CSI_GRAPHIC_RENDITION_END
-#define COLOR_WHITE			CSI, VT_RESET, VT_BACK_COLOR_BLACK, CSI_AND, VT_FORE_COLOR_WHITE		, CSI_GRAPHIC_RENDITION_END
-#define COLOR_GRAY			CSI, VT_RESET, VT_BACK_COLOR_BLACK, CSI_AND, VT_FORE_COLOR_GRAY			, CSI_GRAPHIC_RENDITION_END
-#define COLOR_LIGHT_GREEN	CSI, VT_RESET, VT_BACK_COLOR_BLACK, CSI_AND, VT_FORE_COLOR_LIGHT_GREEN	, CSI_GRAPHIC_RENDITION_END
-#define COLOR_LIGHT_YELLOW	CSI, VT_RESET, VT_BACK_COLOR_BLACK, CSI_AND, VT_FORE_COLOR_LIGHT_YELLOW	, CSI_GRAPHIC_RENDITION_END
-#define COLOR_CYAN			CSI, VT_RESET, VT_BACK_COLOR_BLACK, CSI_AND, VT_FORE_COLOR_CYAN			, CSI_GRAPHIC_RENDITION_END
+#define COLOR_BLACK         CSI, VT_RESET, VT_BACK_COLOR_BLACK, CSI_AND, VT_FORE_COLOR_BLACK       , CSI_GRAPHIC_RENDITION_END
+#define COLOR_LIGHT_RED     CSI, VT_RESET, VT_BACK_COLOR_BLACK, CSI_AND, VT_FORE_COLOR_RED         , CSI_GRAPHIC_RENDITION_END
+#define COLOR_WHITE         CSI, VT_RESET, VT_BACK_COLOR_BLACK, CSI_AND, VT_FORE_COLOR_WHITE       , CSI_GRAPHIC_RENDITION_END
+#define COLOR_GRAY          CSI, VT_RESET, VT_BACK_COLOR_BLACK, CSI_AND, VT_FORE_COLOR_GRAY        , CSI_GRAPHIC_RENDITION_END
+#define COLOR_LIGHT_GREEN   CSI, VT_RESET, VT_BACK_COLOR_BLACK, CSI_AND, VT_FORE_COLOR_LIGHT_GREEN , CSI_GRAPHIC_RENDITION_END
+#define COLOR_LIGHT_YELLOW  CSI, VT_RESET, VT_BACK_COLOR_BLACK, CSI_AND, VT_FORE_COLOR_LIGHT_YELLOW, CSI_GRAPHIC_RENDITION_END
+#define COLOR_CYAN          CSI, VT_RESET, VT_BACK_COLOR_BLACK, CSI_AND, VT_FORE_COLOR_CYAN        , CSI_GRAPHIC_RENDITION_END
 
-void InitializeClientLogo(bool print, int leftPadding) {
+void InitializeClientLogo(bool _print, int _leftPadding)
+{
 	Logo_v.SetLength(0);
-	if (print) printf(Logo_v.Source());
+	if (_print)
+		printf(Logo_v.Source());
 }
 
-void InitializeServerAuthLogo(bool print, int leftPadding) {
-	if (leftPadding > MAX_PADDING_SIZE) {
+void InitializeServerAuthLogo(bool _print, int _leftPadding)
+{
+	if (_leftPadding > MAX_PADDING_SIZE)
+	{
 		_LogWarn_("패딩 사이즈는 %d를 초과해선 안됩니다.", MAX_PADDING_SIZE);
 		return;
 	}
+
 	char leftPad[MAX_PADDING_SIZE + 1]{};
-	Arrays::Fill(leftPad, leftPadding, ' ');
+	Arrays::Fill(leftPad, _leftPadding, ' ');
 
 	Logo_v.SetLength(0);
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED   , leftPad, "        ",  COLOR_WHITE,		 "                          \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED   , leftPad, "        ",  COLOR_WHITE,		 "                          \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED   , leftPad, "█████╗  ",  COLOR_WHITE,		 "██╗   ██╗████████╗██╗  ██╗\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED   , leftPad, "██╔══██╗",  COLOR_WHITE,		 "██║   ██║╚══██╔══╝██║  ██║\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED   , leftPad, "███████║",  COLOR_WHITE,		 "██║   ██║   ██║   ███████║\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED   , leftPad, "██╔══██║",  COLOR_WHITE,		 "██║   ██║   ██║   ██╔══██║\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED   , leftPad, "██║  ██║",  COLOR_WHITE,		 "╚██████╔╝   ██║   ██║  ██║\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED   , leftPad, "╚═╝  ╚═╝",  COLOR_WHITE,		 " ╚═════╝    ╚═╝   ╚═╝  ╚═╝\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN , leftPad, "--───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,"\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, "        ", COLOR_WHITE, "                          \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, "        ", COLOR_WHITE, "                          \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, "█████╗  ", COLOR_WHITE, "██╗   ██╗████████╗██╗  ██╗\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, "██╔══██╗", COLOR_WHITE, "██║   ██║╚══██╔══╝██║  ██║\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, "███████║", COLOR_WHITE, "██║   ██║   ██║   ███████║\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, "██╔══██║", COLOR_WHITE, "██║   ██║   ██║   ██╔══██║\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, "██║  ██║", COLOR_WHITE, "╚██████╔╝   ██║   ██║  ██║\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, "╚═╝  ╚═╝", COLOR_WHITE, " ╚═════╝    ╚═╝   ╚═╝  ╚═╝\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, leftPad, "--───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, "\n");
 	Logo_v += MoveConcat<String>(CSI_GRAPHIC_RENDITION(0));
-	if (print) printf(Logo_v.Source());
+	if (_print)
+		printf(Logo_v.Source());
 }
 
-void InitializeServerLobbyLogo(bool print, int leftPadding) {
-	if (leftPadding > MAX_PADDING_SIZE) {
+void InitializeServerLobbyLogo(bool _print, int _leftPadding)
+{
+	if (_leftPadding > MAX_PADDING_SIZE)
+	{
 		_LogWarn_("패딩 사이즈는 %d를 초과해선 안됩니다.", MAX_PADDING_SIZE);
 		return;
 	}
+
 	char leftPad[MAX_PADDING_SIZE + 1]{};
-	Arrays::Fill(leftPad, leftPadding, ' ');
+	Arrays::Fill(leftPad, _leftPadding, ' ');
+
 	Logo_v.SetLength(0);
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,leftPad, "        " COLOR_WHITE "                                   \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,leftPad, "        " COLOR_WHITE "                                   \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,leftPad, "██╗     " COLOR_WHITE "  ██████╗ ██████╗ ██████╗ ██╗   ██╗\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,leftPad, "██║     " COLOR_WHITE " ██╔═══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,leftPad, "██║     " COLOR_WHITE " ██║   ██║██████╔╝██████╔╝ ╚████╔╝ \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,leftPad, "██║     " COLOR_WHITE " ██║   ██║██╔══██╗██╔══██╗  ╚██╔╝  \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,leftPad, "███████╗" COLOR_WHITE " ╚██████╔╝██████╔╝██████╔╝   ██║   \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,leftPad, "╚══════╝" COLOR_WHITE "  ╚═════╝ ╚═════╝ ╚═════╝    ╚═╝   \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,leftPad, "    --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN "\n");
+	Logo_v += MoveConcat<String>(
+		COLOR_LIGHT_GREEN, leftPad, "        " COLOR_WHITE "                                   \n");
+	Logo_v += MoveConcat<String>(
+		COLOR_LIGHT_GREEN, leftPad, "        " COLOR_WHITE "                                   \n");
+	Logo_v += MoveConcat<String>(
+		COLOR_LIGHT_GREEN, leftPad, "██╗     " COLOR_WHITE "  ██████╗ ██████╗ ██████╗ ██╗   ██╗\n");
+	Logo_v += MoveConcat<String>(
+		COLOR_LIGHT_GREEN, leftPad, "██║     " COLOR_WHITE " ██╔═══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝\n");
+	Logo_v += MoveConcat<String>(
+		COLOR_LIGHT_GREEN, leftPad, "██║     " COLOR_WHITE " ██║   ██║██████╔╝██████╔╝ ╚████╔╝ \n");
+	Logo_v += MoveConcat<String>(
+		COLOR_LIGHT_GREEN, leftPad, "██║     " COLOR_WHITE " ██║   ██║██╔══██╗██╔══██╗  ╚██╔╝  \n");
+	Logo_v += MoveConcat<String>(
+		COLOR_LIGHT_GREEN, leftPad, "███████╗" COLOR_WHITE " ╚██████╔╝██████╔╝██████╔╝   ██║   \n");
+	Logo_v += MoveConcat<String>(
+		COLOR_LIGHT_GREEN, leftPad, "╚══════╝" COLOR_WHITE "  ╚═════╝ ╚═════╝ ╚═════╝    ╚═╝   \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, leftPad, "    --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, "\n");
 	Logo_v += MoveConcat<String>(CSI_GRAPHIC_RENDITION(0));
-	if (print) printf(Logo_v.Source());
+	if (_print)
+		printf(Logo_v.Source());
 }
 
-
-void InitializeServerGameLogo(bool print, int leftPadding) {
-	if (leftPadding > MAX_PADDING_SIZE) {
+void InitializeServerGameLogo(bool _print, int _leftPadding)
+{
+	if (_leftPadding > MAX_PADDING_SIZE)
+	{
 		_LogWarn_("패딩 사이즈는 %d를 초과해선 안됩니다.", MAX_PADDING_SIZE);
 		return;
 	}
+
 	char leftPad[MAX_PADDING_SIZE + 1]{};
-	Arrays::Fill(leftPad, leftPadding, ' ');
+	Arrays::Fill(leftPad, _leftPadding, ' ');
+
 	Logo_v.SetLength(0);
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW , leftPad, "        " COLOR_WHITE "                            \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW , leftPad, "        " COLOR_WHITE "                            \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW , leftPad, " ██████╗" COLOR_WHITE "  █████╗ ███╗   ███╗███████╗\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW , leftPad, "██╔════╝" COLOR_WHITE " ██╔══██╗████╗ ████║██╔════╝\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW , leftPad, "██║  ███" COLOR_WHITE "╗███████║██╔████╔██║█████╗  \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW , leftPad, "██║   ██" COLOR_WHITE "║██╔══██║██║╚██╔╝██║██╔══╝  \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW , leftPad, "╚██████╔" COLOR_WHITE "╝██║  ██║██║ ╚═╝ ██║███████╗\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW , leftPad, " ╚═════╝" COLOR_WHITE " ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN  , leftPad, "   --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN "\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, "        " COLOR_WHITE "                            \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, "        " COLOR_WHITE "                            \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, " ██████╗" COLOR_WHITE "  █████╗ ███╗   ███╗███████╗\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, "██╔════╝" COLOR_WHITE " ██╔══██╗████╗ ████║██╔════╝\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, "██║  ███" COLOR_WHITE "╗███████║██╔████╔██║█████╗  \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, "██║   ██" COLOR_WHITE "║██╔══██║██║╚██╔╝██║██╔══╝  \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, "╚██████╔" COLOR_WHITE "╝██║  ██║██║ ╚═╝ ██║███████╗\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, " ╚═════╝" COLOR_WHITE " ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, leftPad, "   --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, "\n");
 	Logo_v += MoveConcat<String>(CSI_GRAPHIC_RENDITION(0));
-	if (print) printf(Logo_v.Source());
+	if (_print)
+		printf(Logo_v.Source());
 }
 
-void InitializeServerCenterLogo(bool print, int leftPadding) {
-	if (leftPadding > MAX_PADDING_SIZE) {
+void InitializeServerCenterLogo(bool _print, int _leftPadding)
+{
+	if (_leftPadding > MAX_PADDING_SIZE)
+	{
 		_LogWarn_("패딩 사이즈는 %d를 초과해선 안됩니다.", MAX_PADDING_SIZE);
 		return;
 	}
+
 	char leftPad[MAX_PADDING_SIZE + 1]{};
-	Arrays::Fill(leftPad, leftPadding, ' ');
+	Arrays::Fill(leftPad, _leftPadding, ' ');
 
 	Logo_v.SetLength(0);
-	Logo_v += MoveConcat<String>(COLOR_CYAN		 , leftPad, "        " COLOR_WHITE "                                           \n");
-	Logo_v += MoveConcat<String>(COLOR_CYAN		 , leftPad, "        " COLOR_WHITE "                                           \n");
-	Logo_v += MoveConcat<String>(COLOR_CYAN		 , leftPad, "  ██████" COLOR_WHITE "╗███████╗███╗  ██╗████████╗███████╗██████╗ \n");
-	Logo_v += MoveConcat<String>(COLOR_CYAN		 , leftPad, "██╔════╝" COLOR_WHITE "██╔════╝████╗  ██║╚══██╔══╝██╔════╝██╔══██╗\n");
-	Logo_v += MoveConcat<String>(COLOR_CYAN		 , leftPad, "██║     " COLOR_WHITE "█████╗  ██╔██╗ ██║   ██║   █████╗  ██████╔╝\n");
-	Logo_v += MoveConcat<String>(COLOR_CYAN		 , leftPad, "██║     " COLOR_WHITE "██╔══╝  ██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗\n");
-	Logo_v += MoveConcat<String>(COLOR_CYAN		 , leftPad, "╚██████╗" COLOR_WHITE "███████╗██║ ╚████║   ██║   ███████╗██║  ██║\n");
-	Logo_v += MoveConcat<String>(COLOR_CYAN		 , leftPad, " ╚═════╝" COLOR_WHITE "╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN , leftPad, "           --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN "\n");
+	Logo_v += MoveConcat<String>(
+		COLOR_CYAN, leftPad, "        " COLOR_WHITE "                                           \n");
+	Logo_v += MoveConcat<String>(
+		COLOR_CYAN, leftPad, "        " COLOR_WHITE "                                           \n");
+	Logo_v += MoveConcat<String>(
+		COLOR_CYAN, leftPad, "  ██████" COLOR_WHITE "╗███████╗███╗  ██╗████████╗███████╗██████╗ \n");
+	Logo_v += MoveConcat<String>(
+		COLOR_CYAN, leftPad, "██╔════╝" COLOR_WHITE "██╔════╝████╗  ██║╚══██╔══╝██╔════╝██╔══██╗\n");
+	Logo_v += MoveConcat<String>(
+		COLOR_CYAN, leftPad, "██║     " COLOR_WHITE "█████╗  ██╔██╗ ██║   ██║   █████╗  ██████╔╝\n");
+	Logo_v += MoveConcat<String>(
+		COLOR_CYAN, leftPad, "██║     " COLOR_WHITE "██╔══╝  ██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗\n");
+	Logo_v += MoveConcat<String>(
+		COLOR_CYAN, leftPad, "╚██████╗" COLOR_WHITE "███████╗██║ ╚████║   ██║   ███████╗██║  ██║\n");
+	Logo_v += MoveConcat<String>(
+		COLOR_CYAN, leftPad, " ╚═════╝" COLOR_WHITE "╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, leftPad, "           --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, "\n");
 	Logo_v += MoveConcat<String>(CSI_GRAPHIC_RENDITION(0));
-	if (print) printf(Logo_v.Source());
+	if (_print)
+		printf(Logo_v.Source());
 }
-
 
 
 /* ================================================================================================================
@@ -151,6 +185,7 @@ printf("     ╚██████╗███████╗██║ ╚██
 printf("      ╚═════╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝       \n");
 printf("                                                               \n");
 
+
 printf("                                                               \n");
 printf("                                                               \n");
 printf("         ██╗      ██████╗ ██████╗ ██████╗ ██╗   ██╗            \n");
@@ -169,22 +204,22 @@ printf("                                                               \n");
 
  
 
-#define COLOR_BLACK			CSI VT_RESET VT_BACK_COLOR_BLACK CSI_AND VT_FORE_COLOR_BLACK		CSI_GRAPHIC_RENDITION_END
-#define COLOR_LIGHT_RED		CSI VT_RESET VT_BACK_COLOR_BLACK CSI_AND VT_FORE_COLOR_RED			CSI_GRAPHIC_RENDITION_END
-#define COLOR_WHITE			CSI VT_RESET VT_BACK_COLOR_BLACK CSI_AND VT_FORE_COLOR_WHITE		CSI_GRAPHIC_RENDITION_END
-#define COLOR_GRAY			CSI VT_RESET VT_BACK_COLOR_BLACK CSI_AND VT_FORE_COLOR_GRAY			CSI_GRAPHIC_RENDITION_END
-#define COLOR_LIGHT_GREEN	CSI VT_RESET VT_BACK_COLOR_BLACK CSI_AND VT_FORE_COLOR_LIGHT_GREEN	CSI_GRAPHIC_RENDITION_END
-#define COLOR_LIGHT_YELLOW	CSI VT_RESET VT_BACK_COLOR_BLACK CSI_AND VT_FORE_COLOR_LIGHT_YELLOW	CSI_GRAPHIC_RENDITION_END
-#define COLOR_CYAN			CSI VT_RESET VT_BACK_COLOR_BLACK CSI_AND VT_FORE_COLOR_CYAN			CSI_GRAPHIC_RENDITION_END
+#define COLOR_BLACK         CSI VT_RESET VT_BACK_COLOR_BLACK CSI_AND VT_FORE_COLOR_BLACK        CSI_GRAPHIC_RENDITION_END
+#define COLOR_LIGHT_RED     CSI VT_RESET VT_BACK_COLOR_BLACK CSI_AND VT_FORE_COLOR_RED          CSI_GRAPHIC_RENDITION_END
+#define COLOR_WHITE         CSI VT_RESET VT_BACK_COLOR_BLACK CSI_AND VT_FORE_COLOR_WHITE        CSI_GRAPHIC_RENDITION_END
+#define COLOR_GRAY          CSI VT_RESET VT_BACK_COLOR_BLACK CSI_AND VT_FORE_COLOR_GRAY         CSI_GRAPHIC_RENDITION_END
+#define COLOR_LIGHT_GREEN   CSI VT_RESET VT_BACK_COLOR_BLACK CSI_AND VT_FORE_COLOR_LIGHT_GREEN  CSI_GRAPHIC_RENDITION_END
+#define COLOR_LIGHT_YELLOW  CSI VT_RESET VT_BACK_COLOR_BLACK CSI_AND VT_FORE_COLOR_LIGHT_YELLOW CSI_GRAPHIC_RENDITION_END
+#define COLOR_CYAN          CSI VT_RESET VT_BACK_COLOR_BLACK CSI_AND VT_FORE_COLOR_CYAN         CSI_GRAPHIC_RENDITION_END
 
-printf(COLOR_LIGHT_RED   "                     "  COLOR_WHITE		 "                                          \n");
-printf(COLOR_LIGHT_RED   "                     "  COLOR_WHITE		 "                                          \n");
-printf(COLOR_LIGHT_RED   "             █████╗  "  COLOR_WHITE		 "██╗   ██╗████████╗██╗  ██╗                \n");
-printf(COLOR_LIGHT_RED   "             ██╔══██╗"  COLOR_WHITE		 "██║   ██║╚══██╔══╝██║  ██║                \n");
-printf(COLOR_LIGHT_RED   "             ███████║"  COLOR_WHITE		 "██║   ██║   ██║   ███████║                \n");
-printf(COLOR_LIGHT_RED   "             ██╔══██║"  COLOR_WHITE		 "██║   ██║   ██║   ██╔══██║                \n");
-printf(COLOR_LIGHT_RED   "             ██║  ██║"  COLOR_WHITE		 "╚██████╔╝   ██║   ██║  ██║                \n");
-printf(COLOR_LIGHT_RED   "             ╚═╝  ╚═╝"  COLOR_WHITE		 " ╚═════╝    ╚═╝   ╚═╝  ╚═╝                \n");
+printf(COLOR_LIGHT_RED   "                     "  COLOR_WHITE       "                                          \n");
+printf(COLOR_LIGHT_RED   "                     "  COLOR_WHITE       "                                          \n");
+printf(COLOR_LIGHT_RED   "             █████╗  "  COLOR_WHITE       "██╗   ██╗████████╗██╗  ██╗                \n");
+printf(COLOR_LIGHT_RED   "             ██╔══██╗"  COLOR_WHITE       "██║   ██║╚══██╔══╝██║  ██║                \n");
+printf(COLOR_LIGHT_RED   "             ███████║"  COLOR_WHITE       "██║   ██║   ██║   ███████║                \n");
+printf(COLOR_LIGHT_RED   "             ██╔══██║"  COLOR_WHITE       "██║   ██║   ██║   ██╔══██║                \n");
+printf(COLOR_LIGHT_RED   "             ██║  ██║"  COLOR_WHITE       "╚██████╔╝   ██║   ██║  ██║                \n");
+printf(COLOR_LIGHT_RED   "             ╚═╝  ╚═╝"  COLOR_WHITE       " ╚═════╝    ╚═╝   ╚═╝  ╚═╝                \n");
 printf(COLOR_LIGHT_GREEN "             --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--              \n");
 printf(COLOR_LIGHT_GREEN "                                                               \n");
 printf(CSI_GRAPHIC_RENDITION(0));

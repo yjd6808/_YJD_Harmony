@@ -25,12 +25,17 @@ struct FrameInfo
 
 struct AnimationInfo : ConfigDataAbstract
 {
-	AnimationInfo() { DebugAssertMsg(false, "호출 금지"); }
-	AnimationInfo(int frameSize)
-		: Loop(false)
-		, Name{ 0 }
-		, Frames(frameSize)
-	{}
+	AnimationInfo()
+	{
+		DebugAssertMsg(false, "호출 금지");
+	}
+
+	AnimationInfo(int _frameSize)
+	: Loop(false)
+	, Name{ 0 }
+	, Frames(_frameSize)
+	{
+	}
 
 	bool Loop;
 	SGString Name;

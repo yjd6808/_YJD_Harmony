@@ -14,57 +14,64 @@
 #include <JCore/Primitives/String.h>
 
 class SgaLoader;
+
 class SgaPackage : public JCore::MakeSharedFromThis<SgaPackage>
 {
 	using SgaPackagePtr = JCore::SharedPtr<SgaPackage>;
+
 public:
-	SgaPackage(const JCore::StreamPtr& readOnlyStream,  const JCore::String& path, int capacity)
-		: m_szPath(path)
-		, m_spStream(readOnlyStream)
-		, m_ElementNameToIndex(capacity + 1)
-		, m_ElementMap(capacity + 1) {}
+	SgaPackage(const JCore::StreamPtr& _pReadOnlyStream, const JCore::String& _path, int _capacity)
+	: path_(_path)
+	, stream_(_pReadOnlyStream)
+	, elementMap_(_capacity + 1)
+	, elementNameToIndex_(_capacity + 1)
+	{
+	}
+
 	~SgaPackage();
 
-	static SgaPackagePtr Create(const JCore::StreamPtr& readOnlyStream, const JCore::String& path, int capacity);
+	static SgaPackagePtr Create(const JCore::StreamPtr& _pReadOnlyStream, const JCore::String& _path, int _capacity);
+
 public:
-	const JCore::String& GetPath()			{ return m_szPath; }
-	void Add(int idx, const SgaElementPtr& element);
-	
+	const JCore::String& GetPath() { return path_; }
 
-	JCore::StreamPtr Stream()				{ return m_spStream; }
-	JCore::Stream& StreamRef() const		{ return m_spStream.GetRef(); }
-	int Count() const						{ return m_ElementMap.Size(); }
+	void Add(int _index, const SgaElementPtr& _pElement);
 
-	SgaElementPtr Get(int idx);
-	SgaElementPtr GetUnsafe(int idx);
-	SgaElement& GetAtRef(const int index) { return m_ElementMap[index].GetRef(); }
-	void LoadElement(const int index, bool elementOnly);
-	void LoadElementIndex(const int index) { LoadElement(index, false); }	// 스프라이트 프레임 인덱스 구성
-	void LoadElementOnly(const int index) { LoadElement(index, true); }		// 엘리먼트만 딸랑 만듬, 스프라이트 인덱스 미구성
+	JCore::StreamPtr Stream() { return stream_; }
+	JCore::Stream& StreamRef() const { return stream_.GetRef(); }
+	int Count() const { return elementMap_.Size(); }
+
+	SgaElementPtr Get(int _index);
+	SgaElementPtr GetUnsafe(int _index);
+	SgaElement& GetAtRef(const int _index) { return elementMap_[_index].GetRef(); }
+
+	void LoadElement(const int _index, bool _elementOnly);
+	void LoadElementIndex(const int _index) { LoadElement(_index, false); } // 스프라이트 프레임 인덱스 구성
+	void LoadElementOnly(const int _index) { LoadElement(_index, true); } // 엘리먼트만 딸랑 만듬, 스프라이트 인덱스 미구성
 	int UnloadAllElementData();
 
-	bool IsElementLoaded(const int index) const;
-	int GetElementIndex(const JCore::String& elementName);
-	int GetElementIndex(const char* elementName);
-	bool HasElementIndex(const JCore::String& elementName) const;
-	bool HasElementIndex(const char* elementName) const;
+	bool IsElementLoaded(const int _index) const;
+
+	int GetElementIndex(const JCore::String& _elementName);
+	int GetElementIndex(const char* _elementName);
+
+	bool HasElementIndex(const JCore::String& _elementName) const;
+	bool HasElementIndex(const char* _elementName) const;
 
 	// 연산자를 사용할 때는 레퍼런스로 가져오도록 하자.
-	SgaElement& operator[](const int idx);
+	SgaElement& operator[](const int _index);
 	JCore::String ToString() const;
 protected:
-	JCore::String m_szPath;
-	JCore::StreamPtr m_spStream;
+	JCore::String path_;
+	JCore::StreamPtr stream_;
 
-	JCore::HashMap<int, SgaElementPtr> m_ElementMap;
+	JCore::HashMap<int, SgaElementPtr> elementMap_;
 
 	// Lazy Loading을 위함
-	JCore::Vector<SgaElement::Header> m_ElementHeaders;
-	JCore::HashMap<JCore::String, int>  m_ElementNameToIndex;
+	JCore::Vector<SgaElement::Header> elementHeaders_;
+	JCore::HashMap<JCore::String, int> elementNameToIndex_;
 
 	friend class SgaLoader;
 };
 
 using SgaPackagePtr = JCore::SharedPtr<SgaPackage>;
-
-

@@ -109,14 +109,14 @@ struct SendHelper : SendHelperBase
 
 		auto pPacket = SinglePacket<TCommand>::Create(SendInformation.MemPool, _count);    // 해제는 소멸자에서함
 
-		if (pPacket->command_.GetCommandLen() >= 2500)
+		if (pPacket->cmd_.GetLength() >= 2500)
 		{
 			const char* pName = TCommand::_Name();
 			(void)pName; // name only used for debugging
 			DebugAssert(false);
 		}
 
-		return TSending<TCommand>(pPacket->command_, pPacket);
+		return TSending<TCommand>(pPacket->cmd_, pPacket);
 	}
 
 	static void FlushSendBuffer()

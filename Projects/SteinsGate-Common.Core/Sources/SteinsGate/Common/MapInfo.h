@@ -10,42 +10,56 @@
 
 #include <SteinsGate/Common/ConfigDataAbstract.h>
 
+//////////////////////////////////////////////////////////////////////////////////////////
 struct MapObjectPositionInfo
 {
-	int Code;
-	int X;
-	int Y;
+	int code_;
+	int x_;
+	int y_;
 };
 
+//////////////////////////////////////////////////////////////////////////////////////////
 struct MapAreaInfo
 {
-	MapAreaInfo(int areaHeight) : Area(areaHeight) {}
-	SGVector<SGString> Area;
+	MapAreaInfo(int _areaHeight)
+	: area_(_areaHeight)
+	{
+	}
 
-	bool checkWall(float x, float y) const;
+	SGVector<SGString> area_;
 
-	int getAreaHorizontolBlockCount() { return Area[0].Length(); }
-	int getAreaVerticalBlockCount() { return Area.Size(); }
-	float getAreaWidth();
-	float getAreaHeight();
+	bool CheckWall(float _x, float _y) const;
+
+	int GetAreaHorizontolBlockCount()
+	{
+		return area_[0].Length();
+	}
+
+	int GetAreaVerticalBlockCount()
+	{
+		return area_.Size();
+	}
+
+	float GetAreaWidth();
+	float GetAreaHeight();
 };
 
 struct MapInfo : ConfigDataAbstract
 {
-	MapInfo(int npcCount, int mapObjectCount)
-		: NpcList(npcCount)
-		, MapObjectList(mapObjectCount) {}
+	MapInfo(int _npcCount, int _mapObjectCount)
+	: npcList_(_npcCount)
+	, mapObjectList_(_mapObjectCount)
+	{
+	}
+
 	~MapInfo() override = default;
 
-	SGString Name;
-	MapType_t Type;
-	int TileWidth;
-	int TileHeight;
-	int TileArray[10][10];
-	int PhysicsCode;
-	SGVector<MapObjectPositionInfo> NpcList;
-	SGVector<MapObjectPositionInfo> MapObjectList;
+	SGString name_;
+	MapType_t type_ = MapType::Private;
+	int tileWidth_ = 0;
+	int tileHeight_ = 0;
+	int tileArray_[10][10]{};
+	int physicsCode_ = 0;
+	SGVector<MapObjectPositionInfo> npcList_;
+	SGVector<MapObjectPositionInfo> mapObjectList_;
 };
-
-
-

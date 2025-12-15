@@ -13,22 +13,25 @@
 
 struct ItemOptLevel
 {
-	int Level;
-	int Min;		// 포함
-	int Max;		// 포함
+	int level_;
+	int min_; // 포함
+	int max_; // 포함
 };
 
 struct ItemOptInfo : ConfigDataAbstract
 {
-	ItemOptInfo(int optLevelCount)
-		: EName(0)
-		, Format(0)
-		, OptLevelList(optLevelCount) {}
+	ItemOptInfo(int _optLevelCount)
+	: eName_(0)
+	, format_(0)
+	, isInteger_(false)
+	, optLevelList_(_optLevelCount)
+	{
+	}
+
 	~ItemOptInfo() override = default;
 
-	SGString EName;
-	SGString Format;
-	bool IsInteger;
-	SGVector<ItemOptLevel> OptLevelList;
+	SGString eName_;
+	SGString format_;
+	bool isInteger_;
+	SGVector<ItemOptLevel> optLevelList_;
 };
-

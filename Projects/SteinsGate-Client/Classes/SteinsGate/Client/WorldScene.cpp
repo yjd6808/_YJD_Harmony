@@ -28,23 +28,22 @@
 #include <SteinsGate/Client/Win32Helper.h>
 
 
-
 USING_NS_CC;
 USING_NS_CCUI;
 USING_NS_JC;
 USING_NS_JNET;
 
-// ==============================================================
-// 퍼블릭 스태틱
-// ==============================================================
-
-WorldScene* WorldScene::get() {
+//////////////////////////////////////////////////////////////////////////////////////////
+WorldScene* WorldScene::get()
+{
 	static WorldScene* scene;
 
-	if (scene == nullptr) {
+	if (scene == nullptr)
+	{
 		scene = dbg_new WorldScene();
 
-		if (scene && scene->init()) {
+		if (scene && scene->init())
+		{
 			scene->autorelease();
 			return scene;
 		}
@@ -56,46 +55,48 @@ WorldScene* WorldScene::get() {
 	return scene;
 }
 
-MapLayer* WorldScene::getMap() {
-	DebugAssertMsg(m_pRunningScene && m_pRunningScene->getType() == SceneType::Game, "게임 씬이 실행중이지 않을때 맵을 가져올려고 시도했습니다.");
-	return ((SGGameScene*)m_pRunningScene)->getMap();
+MapLayer* WorldScene::getMap()
+{
+	DebugAssertMsg(runningScene_ && runningScene_->getType() == SceneType::Game, "게임 씬이 실행중이지 않을때 맵을 가져올려고 시도했습니다.");
+	return static_cast<SGGameScene*>(runningScene_)->getMap();
 }
 
-MimicCamera* WorldScene::getCamera() {
+MimicCamera* WorldScene::getCamera()
+{
 	return getMap()->getCamera();
 }
 
 
-// ==============================================================
-// 멤버
-// ==============================================================
-
 WorldScene::WorldScene()
-	: m_pRunningScene(nullptr)
-	, m_eReservedScene(SceneType::Login)
-	, m_pUILayer(nullptr)
-{}
-
-WorldScene::~WorldScene() {
-	
+: runningScene_(nullptr)
+, reservedScene_(SceneType::Login)
+, uiLayer_(nullptr)
+, gridLayer_(nullptr)
+{
 }
 
-bool WorldScene::init() {
+WorldScene::~WorldScene()
+{
+}
 
+bool WorldScene::init()
+{
 	if (!Scene::init())
+	{
 		return false;
+	}
 
 	initEventListeners();
 	InitLayers();
 	reserveScene(SceneType::Login);
-	scheduleUpdate();	// 즉시 update 1회 호출함
+	scheduleUpdate(); // 즉시 update 1회 호출함
 
 	return true;
 }
 
 
-void WorldScene::initEventListeners() {
-
+void WorldScene::initEventListeners()
+{
 	const auto pKeyboardListener = EventListenerKeyboard::create();
 	pKeyboardListener->onKeyPressed = CC_CALLBACK_2(WorldScene::onKeyPressed, this);
 	pKeyboardListener->onKeyReleased = CC_CALLBACK_2(WorldScene::onKeyReleased, this);
@@ -107,12 +108,17 @@ void WorldScene::initEventListeners() {
 	pMouseListener->onMouseUp = CC_CALLBACK_1(WorldScene::onMouseUp, this);
 	pMouseListener->onMouseMove = CC_CALLBACK_1(WorldScene::onMouseMove, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(pMouseListener, this);
-	
-	const auto pFocusedListener = EventListenerCustom::create(GLViewImpl::EVENT_WINDOW_FOCUSED, CC_CALLBACK_1(WorldScene::onWndFocused, this));
-	const auto pLostFocusedListener = EventListenerCustom::create(GLViewImpl::EVENT_WINDOW_UNFOCUSED, CC_CALLBACK_1(WorldScene::onWndLostFocused, this));
-	const auto pResizedListener = EventListenerCustom::create(GLViewImpl::EVENT_WINDOW_RESIZED, CC_CALLBACK_1(WorldScene::onWndResized, this));
-	const auto pCursorEnterListener = EventListenerCustom::create(GLViewImpl::EVENT_CURSOR_ENTER, CC_CALLBACK_1(WorldScene::onWndCursorEnter, this));
-	const auto pCursorLeaveListener = EventListenerCustom::create(GLViewImpl::EVENT_CURSOR_LEAVE, CC_CALLBACK_1(WorldScene::onWndCursorLeave, this));
+
+	const auto pFocusedListener = EventListenerCustom::create(GLViewImpl::EVENT_WINDOW_FOCUSED,
+	                                                          CC_CALLBACK_1(WorldScene::onWndFocused, this));
+	const auto pLostFocusedListener = EventListenerCustom::create(GLViewImpl::EVENT_WINDOW_UNFOCUSED,
+	                                                              CC_CALLBACK_1(WorldScene::onWndLostFocused, this));
+	const auto pResizedListener = EventListenerCustom::create(GLViewImpl::EVENT_WINDOW_RESIZED,
+	                                                          CC_CALLBACK_1(WorldScene::onWndResized, this));
+	const auto pCursorEnterListener = EventListenerCustom::create(GLViewImpl::EVENT_CURSOR_ENTER,
+	                                                              CC_CALLBACK_1(WorldScene::onWndCursorEnter, this));
+	const auto pCursorLeaveListener = EventListenerCustom::create(GLViewImpl::EVENT_CURSOR_LEAVE,
+	                                                              CC_CALLBACK_1(WorldScene::onWndCursorLeave, this));
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(pFocusedListener, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(pLostFocusedListener, this);
@@ -122,102 +128,126 @@ void WorldScene::initEventListeners() {
 }
 
 
+void WorldScene::InitLayers()
+{
+	uiLayer_ = UILayer::create();
+	addChild(uiLayer_, 1000);
 
-void WorldScene::InitLayers() {
-	m_pUILayer = UILayer::create();
-	this->addChild(m_pUILayer, 1000);
-
-	m_pGridLayer = GridLayer::create(100, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
-	m_pGridLayer->setAnchorPoint(Vec2::ZERO);
-	m_pGridLayer->setVisible(false);
-	this->addChild(m_pGridLayer, 1001);
+	gridLayer_ = GridLayer::create(100, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
+	gridLayer_->setAnchorPoint(Vec2::ZERO);
+	gridLayer_->setVisible(false);
+	addChild(gridLayer_, 1001);
 }
 
 
-void WorldScene::update(float dt) {
+void WorldScene::update(float _dt)
+{
 	// 델타타임(float dt)은 long long 타입의 마이크로초단위 델타값을 float 타입으로, 단위 및 타입 변환을 수행한 것이므로
 	// 다시 복구 변환가능함. 코코스엔진의 아래 코드 참고할 것
 	// Director::drawScene() -> Director::calculateDeltaTime()
-	TimeSpan tsdt = Int64(dt * 1'000'000);
+	TimeSpan tsdt = Int64(_dt * 1'000'000);
 
-	updateCLI(dt);
-	updateTime(dt);
-	updateNet(dt);
-	updateScene(dt);
+	updateCLI(_dt);
+	updateTime(_dt);
+	updateNet(_dt);
+	updateScene(_dt);
 }
 
-void WorldScene::updateScene(float dt) {
-	
-	if (m_pRunningScene)
-		m_pRunningScene->update(dt);
-
-	if (m_pUILayer)
-		m_pUILayer->update(dt);
-
-	// 초기 세팅 안된 상태거나, 다른 상태로 전환이 예약된 경우
-	if (m_pRunningScene == nullptr || m_pRunningScene->getType() != m_eReservedScene) {
-		changeScene(m_eReservedScene);
+void WorldScene::updateScene(float _dt)
+{
+	if (runningScene_)
+	{
+		runningScene_->update(_dt);
 	}
 
+	if (uiLayer_)
+	{
+		uiLayer_->update(_dt);
+	}
+
+	// 초기 세팅 안된 상태거나, 다른 상태로 전환이 예약된 경우
+	if (runningScene_ == nullptr || runningScene_->getType() != reservedScene_)
+	{
+		changeScene(reservedScene_);
+	}
 }
 
-void WorldScene::updateNet(float dt) {
+void WorldScene::updateNet(float _dt)
+{
 	Core::Net->pollNetEvents();
 }
 
-void WorldScene::updateTime(float dt) {
+void WorldScene::updateTime(float _dt)
+{
 	Core::Contents.TimeManager->updateAppTime();
 	Core::Contents.TimeManager->updateServerTime();
 }
 
-void WorldScene::updateCLI(float dt) {
+void WorldScene::updateCLI(float _dt)
+{
 	Core::CLIThread->ProcessInputs();
 }
 
-void WorldScene::onWndMessageReceived(int code, WPARAM wParam, LPARAM lParam) {
-	const char* codeName = WndMessage::GetName(code);
-	
+void WorldScene::onWndMessageReceived(int _code, WPARAM _wParam, LPARAM _lParam)
+{
+	const char* codeName = WndMessage::GetName(_code);
 }
 
-void WorldScene::onWndFocused(SGEventCustom* custom) {
+void WorldScene::onWndFocused(SGEventCustom* _pCustom)
+{
 }
 
-void WorldScene::onWndLostFocused(SGEventCustom* custom) {
+void WorldScene::onWndLostFocused(SGEventCustom* _pCustom)
+{
 }
 
-
-void WorldScene::onWndResized(SGEventCustom* custom) {
+void WorldScene::onWndResized(SGEventCustom* _pCustom)
+{
 	SGSize size = _director->getOpenGLView()->getFrameSize();
 }
 
-void WorldScene::onWndCursorEnter(SGEventCustom* custom) {
+void WorldScene::onWndCursorEnter(SGEventCustom* _pCustom)
+{
 }
 
-void WorldScene::onWndCursorLeave(SGEventCustom* custom) {
+void WorldScene::onWndCursorLeave(SGEventCustom* _pCustom)
+{
 	const SGVec2 leavePos = Win32Helper::getCursorPos();
 	EventMouse* pEventMouse = dbg_new EventMouse(EventMouse::MouseEventType::MOUSE_MOVE);
 	pEventMouse->setCursorPosition(leavePos.x, leavePos.y);
 
-	if (m_pUILayer)
-		m_pUILayer->onMouseMove(pEventMouse);
+	if (uiLayer_)
+	{
+		uiLayer_->onMouseMove(pEventMouse);
+	}
 
 	CC_SAFE_DELETE(pEventMouse);
 }
 
-void WorldScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) const {
-
-	if (keyCode == EventKeyboard::KeyCode::KEY_F1)
+void WorldScene::onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) const
+{
+	if (_keyCode == EventKeyboard::KeyCode::KEY_F1)
+	{
 		Global::Get()->toggleDrawBodyBoundingBox();
-	else if (keyCode == EventKeyboard::KeyCode::KEY_F2)
+	}
+	else if (_keyCode == EventKeyboard::KeyCode::KEY_F2)
+	{
 		Global::Get()->toggleDrawThicknessBox();
-	else if (keyCode == EventKeyboard::KeyCode::KEY_F3)
+	}
+	else if (_keyCode == EventKeyboard::KeyCode::KEY_F3)
+	{
 		Global::Get()->toggleDrawAttackBox();
-	else if (keyCode == EventKeyboard::KeyCode::KEY_F4)
+	}
+	else if (_keyCode == EventKeyboard::KeyCode::KEY_F4)
+	{
 		Global::Get()->toggleDrawEffect();
-	else if (keyCode == EventKeyboard::KeyCode::KEY_F5)
+	}
+	else if (_keyCode == EventKeyboard::KeyCode::KEY_F5)
+	{
 		Global::Get()->toggleDrawUIStatic();
-	else if (keyCode == EventKeyboard::KeyCode::KEY_F6) {
-
+	}
+	else if (_keyCode == EventKeyboard::KeyCode::KEY_F6)
+	{
 		// TODO: 게임 해상도 변경 기능 구현
 		// UI의 경우 대대적인 코드 수정인 필요하다.
 		// 내가 m_UISize라는 변수를 추가해서 게임 해상도에 맞게 UI 해상도를 변경시켜주도록 구현했는데
@@ -235,81 +265,112 @@ void WorldScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) 
 
 		Core::App->SetDesignResolutionSize(640.0f, 480.0f);
 		Core::App->SetFrameSize(960.0f, 720.0f);
-	} else if (keyCode == EventKeyboard::KeyCode::KEY_ESCAPE) {
-		if (m_pGridLayer == nullptr) {
+	}
+	else if (_keyCode == EventKeyboard::KeyCode::KEY_ESCAPE)
+	{
+		if (gridLayer_ == nullptr)
+		{
 			return;
 		}
 
-		const bool bDisplaying = Director::getInstance()->isDisplayStats();
-		Director::getInstance()->setDisplayStats(!bDisplaying);
-		m_pGridLayer->setVisible(!m_pGridLayer->isVisible());
+		const bool displaying = Director::getInstance()->isDisplayStats();
+		Director::getInstance()->setDisplayStats(!displaying);
+		gridLayer_->setVisible(!gridLayer_->isVisible());
 	}
 
-	if (m_pRunningScene)
-		m_pRunningScene->onKeyPressed(keyCode, event);
+	if (runningScene_)
+	{
+		runningScene_->onKeyPressed(_keyCode, _pEvent);
+	}
 
-	if (m_pUILayer)
-		m_pUILayer->onKeyPressed(keyCode, event);
-
+	if (uiLayer_)
+	{
+		uiLayer_->onKeyPressed(_keyCode, _pEvent);
+	}
 }
 
-void WorldScene::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) const {
-	if (m_pRunningScene)
-		m_pRunningScene->onKeyReleased(keyCode, event);
+void WorldScene::onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) const
+{
+	if (runningScene_)
+	{
+		runningScene_->onKeyReleased(_keyCode, _pEvent);
+	}
 
-	if (m_pUILayer)
-		m_pUILayer->onKeyReleased(keyCode, event);
+	if (uiLayer_)
+	{
+		uiLayer_->onKeyReleased(_keyCode, _pEvent);
+	}
 }
 
-void WorldScene::onMouseMove(SGEventMouse* mouseEvent) const {
-	if (m_pRunningScene)
-		m_pRunningScene->onMouseMove(mouseEvent);
+void WorldScene::onMouseMove(SGEventMouse* _pMouseEvent) const
+{
+	if (runningScene_)
+	{
+		runningScene_->onMouseMove(_pMouseEvent);
+	}
 
-	if (m_pUILayer)
-		m_pUILayer->onMouseMove(mouseEvent);
+	if (uiLayer_)
+	{
+		uiLayer_->onMouseMove(_pMouseEvent);
+	}
 }
 
-void WorldScene::onMouseDown(SGEventMouse* mouseEvent) const {
-	if (m_pRunningScene)
-		m_pRunningScene->onMouseDown(mouseEvent);
+void WorldScene::onMouseDown(SGEventMouse* _pMouseEvent) const
+{
+	if (runningScene_)
+	{
+		runningScene_->onMouseDown(_pMouseEvent);
+	}
 
-	if (m_pUILayer)
-		m_pUILayer->onMouseDown(mouseEvent);
+	if (uiLayer_)
+	{
+		uiLayer_->onMouseDown(_pMouseEvent);
+	}
 }
 
-void WorldScene::onMouseUp(SGEventMouse* mouseEvent) const {
-	if (m_pRunningScene)
-		m_pRunningScene->onMouseUp(mouseEvent);
+void WorldScene::onMouseUp(SGEventMouse* _pMouseEvent) const
+{
+	if (runningScene_)
+	{
+		runningScene_->onMouseUp(_pMouseEvent);
+	}
 
-	if (m_pUILayer)
-		m_pUILayer->onMouseUp(mouseEvent);
+	if (uiLayer_)
+	{
+		uiLayer_->onMouseUp(_pMouseEvent);
+	}
 
 	Core::Contents.UIManager->dragEnd();
 }
 
-void WorldScene::onMouseScroll(SGEventMouse* mouseEvent) const {
-	if (m_pRunningScene)
-		m_pRunningScene->onMouseScroll(mouseEvent);
+void WorldScene::onMouseScroll(SGEventMouse* _pMouseEvent) const
+{
+	if (runningScene_)
+	{
+		runningScene_->onMouseScroll(_pMouseEvent);
+	}
 
-	if (m_pUILayer)
-		m_pUILayer->onMouseScroll(mouseEvent);
+	if (uiLayer_)
+	{
+		uiLayer_->onMouseScroll(_pMouseEvent);
+	}
 }
 
-void WorldScene::onExit() {
+void WorldScene::onExit()
+{
 	// ======================================================
 	// 리소스 정리
 	// ======================================================
 
 	// 삭제전 마지막 발악, 모든 UI 리소스 정리
-	m_pUILayer->clearUnload();
+	uiLayer_->clearUnload();
 
 	// 강종시 하위 씬들의 onExit을 수동호출해주자.
-	Scene::onExit();		
+	Scene::onExit();
 
 	// 자식노드 모두 정리 (onExit에서 제거하는줄 알았는데 아니네; 그냥 재귀 onExit 호출함.. 하..)
 	// 씬 정리되기전에 모든 레퍼런스 카운트가 0가 되어야함.
 	removeAllChildren();
-
 
 	FinalizeClientCore();
 	FinalizeCommonCore();
@@ -319,30 +380,29 @@ void WorldScene::onExit() {
 	Winsock::Finalize();
 }
 
-
-void WorldScene::reserveScene(SceneType_t sceneType) {
-	m_eReservedScene = sceneType;
+void WorldScene::reserveScene(SceneType_t _sceneType)
+{
+	reservedScene_ = _sceneType;
 }
 
-
-
-void WorldScene::changeScene(SceneType_t sceneType) {
+void WorldScene::changeScene(SceneType_t _sceneType)
+{
 	_LogDebug_("-- 씬변경 시작");
 
-	if (m_pRunningScene) {
-		this->removeChild(m_pRunningScene);
+	if (runningScene_)
+	{
+		removeChild(runningScene_);
 	}
 
-	
 	// 씬전환 시 UI 리소스 모두 해제
-	m_pUILayer->clearUnload();
-	m_pRunningScene = createScene(sceneType);
-	this->addChild(m_pRunningScene);
+	uiLayer_->clearUnload();
+	runningScene_ = createScene(_sceneType);
+	addChild(runningScene_);
 	_LogDebug_("-- 씬전환 완료");
-
 }
 
-void WorldScene::terminate() {
+void WorldScene::terminate()
+{
 	// 이렇게 종료하면 게임엔진의 메모리릭이 간혹 다다다닥 뜨는데.. 윈도우 타이틀바로 종료하면 깔끔하게 정리잘됨.
 	// Director::getInstance()->end();
 
@@ -353,14 +413,20 @@ void WorldScene::terminate() {
 	Director::getInstance()->getOpenGLView()->close();
 }
 
-SceneBase* WorldScene::createScene(SceneType_t sceneType) {
+SceneBase* WorldScene::createScene(SceneType_t _sceneType)
+{
 	SceneBase* pCreatedScene = nullptr;
 
-	switch (sceneType) {
-	case SceneType::Login:				pCreatedScene = SGLoginScene::create(); break;
-	case SceneType::ChannelSelect:		pCreatedScene = SGChannelSelectScene::create(); break;
-	case SceneType::Game:				pCreatedScene = SGGameScene::create(); break;
-	default: DebugAssertMsg(false, "[SGWorldScene] 이상한 씬 타입입니다."); return nullptr;
+	switch (_sceneType)
+	{
+	case SceneType::Login: pCreatedScene = SGLoginScene::create();
+		break;
+	case SceneType::ChannelSelect: pCreatedScene = SGChannelSelectScene::create();
+		break;
+	case SceneType::Game: pCreatedScene = SGGameScene::create();
+		break;
+	default: DebugAssertMsg(false, "[SGWorldScene] 이상한 씬 타입입니다.");
+		return nullptr;
 	}
 
 	// 씬을 생성하면 생성자에서 디폴트 카메라를 생성하고 자식으로 추가해버리는데
@@ -376,7 +442,8 @@ SceneBase* WorldScene::createScene(SceneType_t sceneType) {
 	return pCreatedScene;
 }
 
-UILayer* WorldScene::getUILayer() const {
-	DebugAssertMsg(m_pUILayer, "UI 레이어는 무조건 게임내내 생성되어있어야 합니다.");
-	return m_pUILayer;
+UILayer* WorldScene::getUILayer() const
+{
+	DebugAssertMsg(uiLayer_, "UI 레이어는 무조건 게임내내 생성되어있어야 합니다.");
+	return uiLayer_;
 }

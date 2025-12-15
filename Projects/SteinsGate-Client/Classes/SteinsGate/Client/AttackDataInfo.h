@@ -14,11 +14,11 @@ struct AttackDataInfo : ConfigDataAbstract
 {
 	~AttackDataInfo() override = default;
 
-	SGString Name;
-	AttackDamageType_t AttackDamageType;
-	float AttackDamageRatio;
-	AttackXForceDirection_t AttackXForceDir;
-	float AttackXForce;
-	float AttackYForce;
-	bool IsFallDownAttack;
+	SGString name_;
+	AttackDamageType_t attackDamageType_;
+	float attackDamageRatio_;
+	AttackXForceDirection_t attackXForceDir_;
+	float attackXForce_;
+	float attackYForce_;
+	bool isFallDownAttack_;
 };

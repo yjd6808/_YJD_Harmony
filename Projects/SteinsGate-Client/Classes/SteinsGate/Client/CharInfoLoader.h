@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 1:44:44 PM
  * =====================
@@ -14,8 +14,8 @@
 struct CharInfoLoader : CharBaseInfoLoader
 {
 public:
-	CharInfoLoader(DataManagerAbstract* manager);
+	CharInfoLoader(DataManagerAbstract* _pManager);
 
-	bool load() override;
-	static void readDefaultVisualInfo(Json::Value& charRoot, JCORE_OUT CharInfo* charInfo);
+	bool Load() override;
+	static void ReadDefaultVisualInfo(Json::Value& _charRoot, JCORE_OUT CharInfo* _pCharInfo);
 };

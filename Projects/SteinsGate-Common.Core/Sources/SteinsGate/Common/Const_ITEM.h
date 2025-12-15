@@ -12,12 +12,11 @@
 #include <SteinsGate/Common/Namepsace.h>
 
 NS_CONST_BEGIN
-
 namespace Item
 {
-	constexpr int MaxOptCount = 7;
-	constexpr int MaxEnchantLevel = 25;
-	constexpr int ArmorEnchantBonusOptCount = 2;
+constexpr int MaxOptCount = 7;
+constexpr int MaxEnchantLevel = 25;
+constexpr int ArmorEnchantBonusOptCount = 2;
 }
 
 NS_CONST_END

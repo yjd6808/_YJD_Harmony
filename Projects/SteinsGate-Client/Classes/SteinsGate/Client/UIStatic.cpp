@@ -10,136 +10,160 @@
 #include "GameCoreHeader.h"
 #include "UIStatic.h"
 
-#include <SteinsGate/Client/UIMasterGroup.h>
+#include <SteinsGate/Client/UIRootGroup.h>
 
 USING_NS_CC;
 USING_NS_JC;
 
-UIStatic::UIStatic(UIMasterGroup* master, UIGroup* parent)
-	: UIElement(master, parent)
-	, m_bVisible(false)
-	, m_pInfo(nullptr)
-	, m_pDebugTexture{}
-	, m_pDebugSprite{}
-{}
-
-UIStatic::UIStatic(UIMasterGroup* master, UIGroup* parent, UIStaticInfo* staticInfo, bool infoOwner)
-	: UIElement(master, parent, staticInfo, infoOwner)
-	, m_bVisible(false)
-	, m_pInfo(staticInfo)
-	, m_pDebugTexture{}
-	, m_pDebugSprite{}
-{}
-
-UIStatic::~UIStatic() {
-	CC_SAFE_RELEASE(m_pDebugTexture);
+//////////////////////////////////////////////////////////////////////////////////////////
+UIStatic::UIStatic(UIRootGroup* _pMaster, UIGroup* _pParent)
+: UIElement(_pMaster, _pParent)
+, visible_(false)
+, info_(nullptr)
+, debugTexture_{}
+, debugSprite_{}
+{
 }
 
-UIStatic* UIStatic::create(UIMasterGroup* master, UIGroup* parent) {
-	UIStatic* pStatic = dbg_new UIStatic(master, parent);
+//////////////////////////////////////////////////////////////////////////////////////////
+UIStatic::UIStatic(UIRootGroup* _pMaster, UIGroup* _pParent, UIStaticInfo* _pStaticInfo, bool _infoOwner)
+: UIElement(_pMaster, _pParent, _pStaticInfo, _infoOwner)
+, visible_(false)
+, info_(_pStaticInfo)
+, debugTexture_{}
+, debugSprite_{}
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+UIStatic::~UIStatic()
+{
+	CC_SAFE_RELEASE(debugTexture_);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+UIStatic* UIStatic::create(UIRootGroup* _pMaster, UIGroup* _pParent)
+{
+	UIStatic* pStatic = dbg_new UIStatic(_pMaster, _pParent);
 	pStatic->init();
 	pStatic->autorelease();
 	return pStatic;
 }
 
-UIStatic* UIStatic::create(UIMasterGroup* master, UIGroup* parent, UIStaticInfo* staticInfo, bool infoOwner) {
-	UIStatic* pStatic = dbg_new UIStatic(master, parent, staticInfo, infoOwner);
+//////////////////////////////////////////////////////////////////////////////////////////
+UIStatic* UIStatic::create(UIRootGroup* _pMaster, UIGroup* _pParent, UIStaticInfo* _pStaticInfo, bool _infoOwner)
+{
+	UIStatic* pStatic = dbg_new UIStatic(_pMaster, _pParent, _pStaticInfo, _infoOwner);
 	pStatic->init();
 	pStatic->autorelease();
 	return pStatic;
 }
 
-bool UIStatic::init() {
-	if (!UIElement::init()) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool UIStatic::init()
+{
+	if (!UIElement::init())
+	{
 		return false;
 	}
 
-	if (m_pInfo == nullptr) {
-		logWarnMissingInfo();
+	if (info_ == nullptr)
+	{
+		LogWarnMissingInfo();
 		return false;
 	}
 
-	setInitialUISize(m_pInfo->Size);
-	return m_bInitialized = true;
+	SetInitialUISize(info_->Size);
+	return isInitialized_ = true;
 }
 
-void UIStatic::load() {
-	if (m_bLoaded)
+//////////////////////////////////////////////////////////////////////////////////////////
+void UIStatic::Load()
+{
+	if (isLoaded_)
 		return;
 
-	m_pDebugTexture = Core::Contents.Global->getDefaultFrameTexture();
-	m_pDebugTexture->retain();
+	debugTexture_ = Core::Contents.Global->getDefaultFrameTexture();
+	debugTexture_->retain();
 
-	const Size spriteSize = m_pDebugTexture->getSize();
-	const float fScaleX = m_UISize.width / spriteSize.width;
-	const float fScaleY = m_UISize.height / spriteSize.height;
+	const Size spriteSize = debugTexture_->getSize();
+	const float scaleX = uiSize_.width / spriteSize.width;
+	const float scaleY = uiSize_.height / spriteSize.height;
 
-	m_pDebugSprite = Sprite::create();
-	m_pDebugSprite->initWithTexture(m_pDebugTexture->getTexture());
-	m_pDebugSprite->setAnchorPoint(Vec2::ZERO);
-	m_pDebugSprite->setScale(fScaleX, fScaleY);
-	m_pDebugSprite->setOpacity(125);
-	m_pDebugSprite->setColor(SGColorList::Africanviolet_v);
-	m_pDebugSprite->setVisible(m_bVisible);
+	debugSprite_ = Sprite::create();
+	debugSprite_->initWithTexture(debugTexture_->getTexture());
+	debugSprite_->setAnchorPoint(Vec2::ZERO);
+	debugSprite_->setScale(scaleX, scaleY);
+	debugSprite_->setOpacity(125);
+	debugSprite_->setColor(SGColorList::Africanviolet_v);
+	debugSprite_->setVisible(visible_);
 
-	this->addChild(m_pDebugSprite);
-	m_bLoaded = true;
+	this->addChild(debugSprite_);
+	isLoaded_ = true;
 }
 
-void UIStatic::unload() {
-	if (m_bLoaded == false)
+//////////////////////////////////////////////////////////////////////////////////////////
+void UIStatic::Unload()
+{
+	if (isLoaded_ == false)
 		return;
 
 	removeAllChildren(); // autorelease 되기땜
-	m_pDebugSprite = nullptr;
-	CC_SAFE_RELEASE_NULL(m_pDebugTexture);
-	m_bLoaded = false;
+	debugSprite_ = nullptr;
+	CC_SAFE_RELEASE_NULL(debugTexture_);
+	isLoaded_ = false;
 }
 
-void UIStatic::setDebugVisible(bool visible) {
-	m_bVisible = visible;
+//////////////////////////////////////////////////////////////////////////////////////////
+void UIStatic::setDebugVisible(bool _visible)
+{
+	visible_ = _visible;
 
-	if (m_pDebugSprite)
-		m_pDebugSprite->setVisible(m_bVisible);
+	if (debugSprite_)
+		debugSprite_->setVisible(visible_);
 }
 
-void UIStatic::setUISize(const SGSize& contentSize) {
-	if (!m_bResizable)
+//////////////////////////////////////////////////////////////////////////////////////////
+void UIStatic::SetUISize(const SGSize& _contentSize)
+{
+	if (!isResizable_)
 		return;
 
-	UIElement::setContentSize(contentSize);
+	UIElement::setContentSize(_contentSize);
 
-	if (!m_bLoaded)
+	if (!isLoaded_)
 		return;
 
-	m_pDebugTexture = Core::Contents.Global->getDefaultFrameTexture();
+	debugTexture_ = Core::Contents.Global->getDefaultFrameTexture();
 
-	const Size spriteSize = m_pDebugTexture->getSize();
-	const float fScaleX = m_UISize.width / spriteSize.width;
-	const float fScaleY = m_UISize.height / spriteSize.height;
+	const Size spriteSize = debugTexture_->getSize();
+	const float scaleX = uiSize_.width / spriteSize.width;
+	const float scaleY = uiSize_.height / spriteSize.height;
 
-	m_pDebugSprite->setScale(fScaleX, fScaleY);
-
+	debugSprite_->setScale(scaleX, scaleY);
 }
 
-void UIStatic::setInfo(UIElementInfo* info, bool infoOwner) {
-	if (info->Type != UIElementType::Static) {
-		logWarnInvalidInfo(info->Type);
+//////////////////////////////////////////////////////////////////////////////////////////
+void UIStatic::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
+{
+	if (_pInfo->Type != UIElementType::Static)
+	{
+		LogWarnInvalidInfo(_pInfo->Type);
 		return;
 	}
 
-	if (m_bInfoOwner) {
-		JCORE_DELETE_SAFE(m_pInfo);
+	if (isInfoOwner_)
+	{
+		JCORE_DELETE_SAFE(info_);
 	}
 
-	m_pBaseInfo = info;
-	m_pInfo = static_cast<UIStaticInfo*>(info);
-	m_bInfoOwner = infoOwner;
+	pBaseInfo_ = _pInfo;
+	info_ = static_cast<UIStaticInfo*>(_pInfo);
+	isInfoOwner_ = _infoOwner;
 }
 
-void UIStatic::setInfoStatic(UIStaticInfo* info, bool infoOwner) {
-	setInfo(info, infoOwner);
+//////////////////////////////////////////////////////////////////////////////////////////
+void UIStatic::setInfoStatic(UIStaticInfo* _pInfo, bool _infoOwner)
+{
+	SetInfo(_pInfo, _infoOwner);
 }
-
-
-

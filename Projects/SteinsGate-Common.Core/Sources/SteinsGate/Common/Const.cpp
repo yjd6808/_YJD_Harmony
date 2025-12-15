@@ -9,7 +9,6 @@
 #include <SteinsGate/Common/Namepsace.h>
 
 NS_CONST_BEGIN
-
 // 소스파일
 
 namespace FPS
@@ -19,7 +18,6 @@ namespace FPS
 
 namespace Character
 {
-
 }
 
 namespace Resource
@@ -38,17 +36,6 @@ namespace Item
 namespace Map
 {
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 NS_CONST_END

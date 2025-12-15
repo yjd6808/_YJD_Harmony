@@ -18,60 +18,71 @@ class PlayerController;
 class FrameTexture;
 class Actor;
 class ActorPartAnimation;
-class SGAction {
+
+class SGAction
+{
 public:
-	SGAction(HostPlayer* player, ActionInfo* actionInfo);
+	SGAction(HostPlayer* _pPlayer, ActionInfo* _pActionInfo);
 	virtual ~SGAction();
 
 	virtual void play();
 	virtual void stop();
 
-	virtual void init() {}	// 실행 직전 호출 (초기화 용도)
+	virtual void init()
+	{
+	} // 실행 직전 호출 (초기화 용도)
 	virtual bool onConditionCheck() = 0;
-	virtual void onKeyPressed(PlayerController* controller, SGEventKeyboard::KeyCode keyCode);
-	virtual void onKeyReleased(PlayerController* controller, SGEventKeyboard::KeyCode keyCode);
-	virtual void onKeyPressedBefore(PlayerController* controller, SGEventKeyboard::KeyCode keyCode);
-	virtual void onKeyReleasedBefore(PlayerController* controller, SGEventKeyboard::KeyCode keyCode);
-	virtual void onFrameBegin(ActorPartAnimation* animation, FrameTexture* frame);
-	virtual void onFrameEnd(ActorPartAnimation* animation, FrameTexture* frame);
-	virtual void onAnimationBegin(ActorPartAnimation* animation, FrameTexture* frame);
-	virtual void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* frame);
+	virtual void onKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);
+	virtual void onKeyReleased(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);
+	virtual void onKeyPressedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);
+	virtual void onKeyReleasedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);
+	virtual void onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame);
+	virtual void onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame);
+	virtual void onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame);
+	virtual void onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame);
 	virtual void onActionBegin();
-	virtual void onActionEnd(); 	// 정의안하면 해당 애니메이션 시퀀스가 끝나면 중단토록 한다.
-	virtual void onUpdate(float dt) {}
+	virtual void onActionEnd(); // 정의안하면 해당 애니메이션 시퀀스가 끝나면 중단토록 한다.
+	virtual void onUpdate(float _dt)
+	{
+	}
 
 	// virtual void onHit();
 	// virtual void onAttack();
 
 	virtual bool isComboAction() { return false; }
 	virtual bool isAttackAction() { return false; }
-	
-	int getActionCode()  { return m_pActionInfo->Code; }
+
+	int getActionCode() { return m_pActionInfo->code_; }
 	const SGString& getActionName() { return m_pActionInfo->ActionName; }
 	const ComboKeyList& getCommand() { return m_pActionInfo->Command; }
 	float getMoveSpeedX() { return m_fMoveSpeedFPSX; }
 	float getMoveSpeedY() { return m_fMoveSpeedFPSY; }
 
 	bool isForceCancelable() { return m_bCancelable; }
-	bool isMovealbe() { return
-		m_bMoveablePositiveX && 
-		m_bMoveablePositiveY && 
-		m_bMoveableNegativeX &&
-		m_bMoveableNegativeY; }
+
+	bool isMovealbe()
+	{
+		return
+			m_bMoveablePositiveX &&
+			m_bMoveablePositiveY &&
+			m_bMoveableNegativeX &&
+			m_bMoveableNegativeY;
+	}
 
 	bool isMoveablePositiveX() { return m_bMoveablePositiveX; }
 	bool isMoveablePositiveY() { return m_bMoveablePositiveY; }
 	bool isMoveableNegativeX() { return m_bMoveableNegativeX; }
 	bool isMoveableNegativeY() { return m_bMoveableNegativeY; }
 
-	void setMoveable(bool moveable);
+	void setMoveable(bool _moveable);
 
 	void initHitRecorder(
-		const SGHitSingleCallbackFn& sigleHitFn,
-		const SGHitMultiCallbackFn& multiHitFn, 
-		int hitListSize = 16, 
-		int alreadyHitListSize = 32
+		const SGHitSingleCallbackFn& _singleHitFn,
+		const SGHitMultiCallbackFn& _multiHitFn,
+		int _hitListSize = 16,
+		int _alreadyHitListSize = 32
 	);
+
 protected:
 	// 주입 하는 필드
 	HostPlayer* m_pPlayer;
@@ -87,7 +98,7 @@ protected:
 	bool m_bMoveableNegativeX;
 	bool m_bMoveableNegativeY;
 
-	bool m_bCancelable;			
-	float m_fMoveSpeedFPSX;		
-	float m_fMoveSpeedFPSY;		
+	bool m_bCancelable;
+	float m_fMoveSpeedFPSX;
+	float m_fMoveSpeedFPSY;
 };

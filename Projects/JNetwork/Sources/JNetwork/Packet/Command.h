@@ -53,24 +53,29 @@ struct CmdType
 class ICommand
 {
 public:
-	void SetCommand(const Cmd_t _command)
+	CmdType_t GetType() const
 	{
-		commandId_ = _command;
+		return type_;
 	}
 
-	void SetCommandLen(const CmdLen_t _commandLength)
+	void SetId(const Cmd_t _cmdId)
 	{
-		commandLength_ = _commandLength;
+		cmdId_ = _cmdId;
 	}
 
-	void AddCommandLen(const CmdLen_t _commandLength)
+	void SetLength(const CmdLen_t _cmdLength)
 	{
-		commandLength_ += _commandLength;
+		cmdLength_ = _cmdLength;
+	}
+
+	void AddLength(const CmdLen_t _cmdLength)
+	{
+		cmdLength_ += _cmdLength;
 	}
 
 	Cmd_t GetId() const
 	{
-		return commandId_;
+		return cmdId_;
 	}
 
 	char* GetData() const
@@ -78,14 +83,14 @@ public:
 		return reinterpret_cast<char*>(const_cast<ICommand*>(this)) + sizeof(ICommand);
 	}
 
-	int GetDataLen() const
+	int GetDataLength() const
 	{
-		return commandLength_ - static_cast<CmdLen_t>(sizeof(ICommand));
+		return cmdLength_ - static_cast<CmdLen_t>(sizeof(ICommand));
 	}
 
-	CmdLen_t GetCommandLength() const
+	CmdLen_t GetLength() const
 	{
-		return commandLength_;
+		return cmdLength_;
 	}
 
 	bool IsExtraCmdType() const
@@ -114,8 +119,8 @@ public:
 
 protected:
 	CmdType_t type_ = 0;
-	Cmd_t commandId_ = 0;      // 사용자 지정 커맨드 ID값
-	CmdLen_t commandLength_ = 0; // 커맨드 길이 이때 commandLength_는 커맨드 헤더의 크기를 더한 값으로 설정하도록한다.
+	Cmd_t cmdId_ = 0;      // 사용자 지정 커맨드 ID값
+	CmdLen_t cmdLength_ = 0; // 커맨드 길이 이때 cmdLength_는 커맨드 헤더의 크기를 더한 값으로 설정하도록한다.
 	// ex) Commnad<char>의 CmdLen은 1이 아니고 5임
 };
 
@@ -126,16 +131,16 @@ struct GenericCommand : ICommand
 	GenericCommand()
 	{
 		type_ = CmdType::Generic;
-		commandId_ = 0;
-		commandLength_ = static_cast<CmdLen_t>(sizeof(GenericCommand<T>)); // sizeof(T)로 할 경우 alignment 문제 때문에 커맨드길이는 T의 길이까지 포함해서 전송하도록 하자.
+		cmdId_ = 0;
+		cmdLength_ = static_cast<CmdLen_t>(sizeof(GenericCommand<T>)); // sizeof(T)로 할 경우 alignment 문제 때문에 커맨드길이는 T의 길이까지 포함해서 전송하도록 하자.
 		value_ = T();
 	}
 
 	explicit GenericCommand(const Int16U _command)
 	{
 		type_ = CmdType::Generic;
-		commandId_ = _command;
-		commandLength_ = static_cast<CmdLen_t>(sizeof(GenericCommand<T>));
+		cmdId_ = _command;
+		cmdLength_ = static_cast<CmdLen_t>(sizeof(GenericCommand<T>));
 		value_ = T();
 	}
 
@@ -299,8 +304,8 @@ NS_JNET_END
 		{                                                                                                                                                  \
 			(void)count;                                                                                                                                    \
 			type_ = JNetwork::CmdType::Static;                                                                                                             \
-			commandId_ = __cmd_id__;                                                                                                                             \
-			commandLength_ = static_cast<CmdLen_t>(sizeof(__struct__));                                                                           \
+			cmdId_ = __cmd_id__;                                                                                                                             \
+			cmdLength_ = static_cast<CmdLen_t>(sizeof(__struct__));                                                                           \
 		}                                                                                                                                                  \
                                                                                                                                                         \
 		CMD_FUNC_DEF_NAME(__struct__)                                                                                                                     \
@@ -323,8 +328,8 @@ NS_JNET_END
 		__struct__(int _count)                                                                                                                              \
 		{                                                                                                                                                  \
 			type_ = JNetwork::CmdType::Dynamic;                                                                                                            \
-			commandId_ = __cmd_id__;                                                                                                                             \
-			commandLength_ = static_cast<CmdLen_t>(_Size(_count));                                                                                \
+			cmdId_ = __cmd_id__;                                                                                                                             \
+			cmdLength_ = static_cast<CmdLen_t>(_Size(_count));                                                                                \
 			count_ = _count;                                                                                                                                \
 		}                                                                                                                                                  \
                                                                                                                                                         \

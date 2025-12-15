@@ -5,40 +5,36 @@
  *
  */
 
-
 #pragma once
 
 
 struct Position
 {
-	float X;	// 액터 가로축
-	float Y;	// 액터 높이
-	float Z;	// 액터 세로축
+	float x_; // 액터 가로축
+	float y_; // 액터 높이
+	float z_; // 액터 세로축
 
 	Position();
-	Position(const Position& other);
+	Position(const Position& _position);
 
-	Position& operator=(const Position& other);
-	Position& operator+=(const Position& other);
-	Position& operator-=(const Position& other);
-	Position& operator*=(const Position& other);
-	Position& operator/=(const Position& other);
+	Position& operator=(const Position& _position);
+	Position& operator+=(const Position& _position);
+	Position& operator-=(const Position& _position);
+	Position& operator*=(const Position& _position);
+	Position& operator/=(const Position& _position);
 
-	Position& operator+=(float other);
-	Position& operator-=(float other);
-	Position& operator*=(float other);
-	Position& operator/=(float other);
+	Position& operator+=(float _value);
+	Position& operator-=(float _value);
+	Position& operator*=(float _value);
+	Position& operator/=(float _value);
 
-	Position operator+(const Position& other);
-	Position operator-(const Position& other);
-	Position operator*(const Position& other);
-	Position operator/(const Position& other);
+	Position operator+(const Position& _position);
+	Position operator-(const Position& _position);
+	Position operator*(const Position& _position);
+	Position operator/(const Position& _position);
 
-	Position operator+(float other);
-	Position operator-(float other);
-	Position operator*(float other);
-	Position operator/(float other);
-	
+	Position operator+(float _value);
+	Position operator-(float _value);
+	Position operator*(float _value);
+	Position operator/(float _value);
 };
-
-

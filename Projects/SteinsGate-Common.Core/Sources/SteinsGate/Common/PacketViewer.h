@@ -10,25 +10,27 @@
 
 namespace JCore
 {
-	class String;
+class String;
 }
 
 namespace JNetwork
 {
-	class IPacket;
+class IPacket;
+class RecvedCommandPacket;
+class ICommand;
+enum class Transmission;
 }
 
 struct PacketViewer
 {
-	static void View(JNetwork::IPacket* packet);
-	static void View(char* data, int len);
-	static void View(JNetwork::RecvedCommandPacket* packet);
-	static void View(JNetwork::ICommand* cmd);
+	static void View(JNetwork::IPacket* _pPacket);
+	static void View(char* _pData, int _len);
+	static void View(JNetwork::RecvedCommandPacket* _pPacket);
+	static void View(JNetwork::ICommand* _pCmd);
+
 private:
-	static void View(JNetwork::Transmission transmission, char* data, int len, int cmdCount);
-	static void View(JNetwork::Transmission transmission, char* data, int len);
+	static void View(JNetwork::Transmission _transmission, char* _pData, int _len, int _cmdCount);
+	static void View(JNetwork::Transmission _transmission, char* _pData, int _len);
 
-	static void Hex(char* data, int len, JCORE_OUT JCore::String& hex);
+	static void Hex(char* _pData, int _len, JCORE_OUT JCore::String& _hex);
 };
-
-

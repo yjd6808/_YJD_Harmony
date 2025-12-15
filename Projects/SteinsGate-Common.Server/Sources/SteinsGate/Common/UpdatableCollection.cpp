@@ -10,29 +10,41 @@
 #include "ServerCoreHeader.h"
 #include "UpdatableCollection.h"
 
-void UpdatableCollection::Update(const JCore::TimeSpan& elapsed) {
-	const int iSize = m_vUpdatable.Size();
-	for (int i = 0; i < iSize; ++i) {
-		m_vUpdatable[i]->OnUpdate(elapsed);
+//////////////////////////////////////////////////////////////////////////////////////////
+void UpdatableCollection::Update(const JCore::TimeSpan& _elapsed)
+{
+	const int size = updatable_.Size();
+	for (int i = 0; i < size; ++i)
+	{
+		updatable_[i]->OnUpdate(_elapsed);
 	}
 }
 
-bool UpdatableCollection::Add(int id, IUpdatable* updatable) {
-
-	if (!m_hUpdatableMap.Insert(id, updatable)) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool UpdatableCollection::Add(int _id, IUpdatable* _pUpdatable)
+{
+	if (!updatableMap_.Insert(_id, _pUpdatable))
+	{
 		return false;
 	}
-	m_vUpdatable.PushBack(updatable);
+
+	updatable_.PushBack(_pUpdatable);
 	return true;
 }
 
-bool UpdatableCollection::Has(int id) {
-	return m_hUpdatableMap.Exist(id);
+//////////////////////////////////////////////////////////////////////////////////////////
+bool UpdatableCollection::Has(int _id)
+{
+	return updatableMap_.Exist(_id);
 }
 
-bool UpdatableCollection::Has(IUpdatable* updatable) {
-	for (int i = 0; i < m_vUpdatable.Size(); ++i) {
-		if (m_vUpdatable[i] == updatable) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool UpdatableCollection::Has(IUpdatable* _pUpdatable)
+{
+	for (int i = 0; i < updatable_.Size(); ++i)
+	{
+		if (updatable_[i] == _pUpdatable)
+		{
 			return true;
 		}
 	}
@@ -40,14 +52,17 @@ bool UpdatableCollection::Has(IUpdatable* updatable) {
 	return false;
 }
 
-bool UpdatableCollection::Remove(int id) {
-
-	IUpdatable** pUpdatable = m_hUpdatableMap.Find(id);
-	if (pUpdatable == nullptr) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool UpdatableCollection::Remove(int _id)
+{
+	IUpdatable** pFoundUpdatablePtr = updatableMap_.Find(_id);
+	if (pFoundUpdatablePtr == nullptr)
+	{
 		return false;
 	}
 
-	if (m_vUpdatable.Remove(*pUpdatable) && m_hUpdatableMap.Remove(id)) {
+	if (updatable_.Remove(*pFoundUpdatablePtr) && updatableMap_.Remove(_id))
+	{
 		return true;
 	}
 
@@ -55,26 +70,37 @@ bool UpdatableCollection::Remove(int id) {
 	return false;
 }
 
-bool UpdatableCollection::Remove(IUpdatable* updatable) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool UpdatableCollection::Remove(IUpdatable* _pUpdatable)
+{
+	bool found = false;
+	int foundId = InvalidValue_v;
 
-	bool bFound = false;
-	int iFoundId = InvalidValue_v;
+	updatableMap_.ForEach([&](JCore::Pair<int, IUpdatable*> _pair)
+	{
+		if (found)
+		{
+			return;
+		}
 
-	m_hUpdatableMap.ForEach([&](JCore::Pair<int, IUpdatable*> pair) {
-		if (bFound) return;
-		if (updatable == pair.Value) {
-			bFound = true;
-			iFoundId = pair.Key;
+		if (_pUpdatable == _pair.value_)
+		{
+			found = true;
+			foundId = _pair.key_;
 		}
 	});
 
-	if (bFound)
-		return m_hUpdatableMap.Remove(iFoundId) && m_vUpdatable.Remove(updatable);
-	
+	if (found)
+	{
+		return updatableMap_.Remove(foundId) && updatable_.Remove(_pUpdatable);
+	}
+
 	return false;
 }
 
-void UpdatableCollection::Clear() {
-	m_hUpdatableMap.Clear();
-	m_vUpdatable.Clear();
+//////////////////////////////////////////////////////////////////////////////////////////
+void UpdatableCollection::Clear()
+{
+	updatableMap_.Clear();
+	updatable_.Clear();
 }

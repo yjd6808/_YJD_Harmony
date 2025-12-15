@@ -241,7 +241,7 @@ struct CommandPacket : IPacket
 				break;
 			}
 
-			pCommandData += pCommand->GetCommandLength();
+			pCommandData += pCommand->GetLength();
 			++index;
 		}
 
@@ -258,13 +258,13 @@ struct CommandPacket : IPacket
 			ICommand* pCurrentCommand = reinterpret_cast<ICommand*>(pCommandData);
 			_consumer(pCurrentCommand);
 
-			if (pCurrentCommand->GetCommandLength() >= 2500)
+			if (pCurrentCommand->GetLength() >= 2500)
 			{
 				DebugAssert(false);
 				break;
 			}
 
-			pCommandData += pCurrentCommand->GetCommandLength();
+			pCommandData += pCurrentCommand->GetLength();
 			++commandIndex;
 		}
 	}

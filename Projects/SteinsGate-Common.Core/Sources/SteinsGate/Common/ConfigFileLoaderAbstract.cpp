@@ -5,7 +5,6 @@
  *
  */
 
-
 #include "Core.h"
 #include "DataManagerAbstract.h"
 #include "CommonCoreHeader.h"
@@ -13,194 +12,258 @@
 #include <SteinsGate/Common/JsonUtil.h>
 
 #include <filesystem>
+#include <fstream>
 
-bool ConfigFileLoaderAbstract::DirectoryTree::init(const SGString& rootDirectoryName) {
-	try {
-		constructTreeRecursive(&Root, rootDirectoryName.Source(), 0);
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ConfigFileLoaderAbstract::DirectoryTree::Init(const SGString& _rootDirectoryName)
+{
+	try
+	{
+		ConstructTreeRecursive(&root_, _rootDirectoryName.Source(), 0);
 		return true;
-	} catch (std::exception& ex) {
-		_LogError_("설정파일 %s을 초기화 하는중 오류가 발생하였습니다. (%s)", Loader->getConfigFileName(), ex.what());
+	}
+	catch (std::exception& exception)
+	{
+		_LogError_("설정파일 %s을 초기화 하는중 오류가 발생하였습니다. (%s)", loader_->GetConfigFileName(), exception.what());
 		return false;
 	}
 }
 
-bool ConfigFileLoaderAbstract::DirectoryTree::load() {
-	if (Root == nullptr) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ConfigFileLoaderAbstract::DirectoryTree::Load()
+{
+	if (root_ == nullptr)
 		return false;
-	}
 
-	try {
-		loadRecursive(this, Root);
+	try
+	{
+		LoadRecursive(this, root_);
 		return true;
-	} catch (std::exception& ex) {
-		_LogError_("설정파일 %s을 로드하는중 오류가 발생하였습니다. (%s)", Loader->getConfigFileName(), ex.what());
+	}
+	catch (std::exception& exception)
+	{
+		_LogError_("설정파일 %s을 로드하는중 오류가 발생하였습니다. (%s)", loader_->GetConfigFileName(), exception.what());
 		return false;
 	}
-	
 }
 
-void ConfigFileLoaderAbstract::DirectoryTree::clear() {
-	if (Root)
-	clearRecursive(Root);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ConfigFileLoaderAbstract::DirectoryTree::Clear()
+{
+	if (root_)
+		ClearRecursive(root_);
 }
 
-void ConfigFileLoaderAbstract::DirectoryTree::setCallback(const char* directoryName, DirectoryTreeNodeCallback_t&& callback) {
-	if (Root == nullptr) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ConfigFileLoaderAbstract::DirectoryTree::SetCallback(const char* _directoryName,
+                                                          DirectoryTreeNodeCallback_t&& _callback)
+{
+	if (root_ == nullptr)
+	{
 		_LogWarn_("디렉토리 트리의 Root 노드가 MULL입니다.");
 		return;
 	}
 
-	DirectoryTreeNode* pNode = findNodeRecursive(Root, directoryName);
-	if (pNode == nullptr) {
-		_LogWarn_("디렉토리 트리에서 %s 경로의 디렉토리를 찾지 못했습니다.", directoryName);
+	DirectoryTreeNode* pNode = FindNodeRecursive(root_, _directoryName);
+	if (pNode == nullptr)
+	{
+		_LogWarn_("디렉토리 트리에서 %s 경로의 디렉토리를 찾지 못했습니다.", _directoryName);
 		return;
 	}
-	pNode->OnJsonLoaded = JCore::Move(callback);
+
+	pNode->onJsonLoaded_ = JCore::Move(_callback);
 }
 
-void ConfigFileLoaderAbstract::DirectoryTree::setCallback(const char* directoryName, const DirectoryTreeNodeCallback_t& callback) {
-	if (Root == nullptr) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ConfigFileLoaderAbstract::DirectoryTree::SetCallback(const char* _directoryName,
+                                                          const DirectoryTreeNodeCallback_t& _callback)
+{
+	if (root_ == nullptr)
+	{
 		_LogWarn_("디렉토리 트리의 Root 노드가 MULL입니다.");
 		return;
 	}
 
-	DirectoryTreeNode* pNode = findNodeRecursive(Root, directoryName);
-	if (pNode == nullptr) {
-		_LogWarn_("디렉토리 트리에서 %s 경로의 디렉토리를 찾지 못했습니다.");
+	DirectoryTreeNode* pNode = FindNodeRecursive(root_, _directoryName);
+	if (pNode == nullptr)
+	{
+		_LogWarn_("디렉토리 트리에서 %s 경로의 디렉토리를 찾지 못했습니다.", _directoryName);
 		return;
 	}
 
-	pNode->OnJsonLoaded = callback;
+	pNode->onJsonLoaded_ = _callback;
 }
 
-void ConfigFileLoaderAbstract::DirectoryTree::setCallbackCommon(DirectoryTreeNodeCallback_t&& callback) {
-	OnJsonLoadedCommon = JCore::Move(callback);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ConfigFileLoaderAbstract::DirectoryTree::SetCallbackCommon(DirectoryTreeNodeCallback_t&& _callback)
+{
+	onJsonLoadedCommon_ = JCore::Move(_callback);
 }
 
-void ConfigFileLoaderAbstract::DirectoryTree::setCallbackCommon(const DirectoryTreeNodeCallback_t& callback) {
-	OnJsonLoadedCommon = callback;
+//////////////////////////////////////////////////////////////////////////////////////////
+void ConfigFileLoaderAbstract::DirectoryTree::SetCallbackCommon(const DirectoryTreeNodeCallback_t& _callback)
+{
+	onJsonLoadedCommon_ = _callback;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+ConfigFileLoaderAbstract::DirectoryTreeNode* ConfigFileLoaderAbstract::DirectoryTree::FindNodeRecursive(
+	DirectoryTreeNode* _pNode, const char* _pDirectoryName)
+{
+	DebugAssert(_pNode);
 
-ConfigFileLoaderAbstract::DirectoryTreeNode* ConfigFileLoaderAbstract::DirectoryTree::findNodeRecursive(DirectoryTreeNode* node, const char* directoryName) {
-	DebugAssert(node);
+	if (_pNode->directoryName_ == _pDirectoryName)
+		return _pNode;
 
-	if (node->DirectoryName == directoryName) 
-		return node;
-
-	for (int i = 0; i < node->Children.Size(); ++i) {
-
-		DirectoryTreeNode* pFindNode = findNodeRecursive(node->Children[i], directoryName);
-		if (pFindNode != nullptr) {
-			return pFindNode;
-		}
+	for (int i = 0; i < _pNode->children_.Size(); ++i)
+	{
+		DirectoryTreeNode* pFoundNode = FindNodeRecursive(_pNode->children_[i], _pDirectoryName);
+		if (pFoundNode != nullptr)
+			return pFoundNode;
 	}
 
 	return nullptr;
 }
 
-void ConfigFileLoaderAbstract::DirectoryTree::constructTreeRecursive(JCORE_OUT DirectoryTreeNode** node, const char* path, int depth) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ConfigFileLoaderAbstract::DirectoryTree::ConstructTreeRecursive(
+	JCORE_OUT DirectoryTreeNode** _ppNode, const char* _path, int _depth)
+{
+	const int directoryCount = JCore::Directory::DirectoryCount(_path);
+	const SGString directoryName = JCore::Path::FileNameLevel(_path, _depth);
+	DirectoryTreeNode* pNewNode = dbg_new DirectoryTreeNode{ directoryName, directoryCount };
 
-	const int iDirCount = JCore::Directory::DirectoryCount(path);
-	const SGString szDirName = JCore::Path::FileNameLevel(path, depth);
-	DirectoryTreeNode* pNewNode = dbg_new DirectoryTreeNode{ szDirName , iDirCount };
-
-	for (const std::filesystem::directory_entry& dirEntry : std::filesystem::directory_iterator(path)) {
-		if (is_directory(dirEntry)) {
+	for (const std::filesystem::directory_entry& directoryEntry : std::filesystem::directory_iterator(_path))
+	{
+		if (is_directory(directoryEntry))
+		{
 			DirectoryTreeNode* pChild = nullptr;
-			constructTreeRecursive(&pChild, dirEntry.path().string().c_str(), depth + 1);
-			pNewNode->Children.PushBack(pChild);
+			ConstructTreeRecursive(&pChild, directoryEntry.path().string().c_str(), _depth + 1);
+			pNewNode->children_.PushBack(pChild);
 		}
 	}
 
-	*node = pNewNode;
+	*_ppNode = pNewNode;
 }
 
-void ConfigFileLoaderAbstract::DirectoryTree::loadRecursive(DirectoryTree* tree, DirectoryTreeNode* node) {
-	const SGString szDirectoryFullPath = JCore::Path::Combine(Core::CommonInfo->ConfigPath, node->DirectoryName);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ConfigFileLoaderAbstract::DirectoryTree::LoadRecursive(DirectoryTree* _pTree, DirectoryTreeNode* _pNode)
+{
+	const SGString directoryFullPath = JCore::Path::Combine(Core::CommonInfo->configPath_, _pNode->directoryName_);
 
-	for (const std::filesystem::directory_entry& dirEntry : std::filesystem::directory_iterator(szDirectoryFullPath.Source())) {
-		if (dirEntry.is_regular_file()) {
-
+	for (const std::filesystem::directory_entry& directoryEntry : std::filesystem::directory_iterator(
+		     directoryFullPath.Source()))
+	{
+		if (directoryEntry.is_regular_file())
+		{
 			Json::Value root;
-			SGString szFileName = dirEntry.path().string().c_str();
+			SGString fileName = directoryEntry.path().string().c_str();
 
-			if (!JsonUtil::load(szFileName.Source(), root)) {
-				_LogDebug_("%s 파일 로딩 실패 (무시함)", JCore::Path::FileName(szFileName.Source()));
+			if (!JsonUtil::Load(fileName.Source(), root))
+			{
+				_LogDebug_("%s 파일 로딩 실패 (무시함)", JCore::Path::FileName(fileName.Source()));
 				continue;
 			}
 
-			if (node->OnJsonLoaded)
-				node->OnJsonLoaded(root, szFileName, node);
+			if (_pNode->onJsonLoaded_)
+				_pNode->onJsonLoaded_(root, fileName, _pNode);
 
-			if (tree->OnJsonLoadedCommon)
-				tree->OnJsonLoadedCommon(root, szFileName, node);
+			if (_pTree->onJsonLoadedCommon_)
+				_pTree->onJsonLoadedCommon_(root, fileName, _pNode);
 		}
 	}
 
-	for (int i = 0; i < node->Children.Size(); ++i) {
-		loadRecursive(tree, node->Children[i]);
-	}
+	for (int i = 0; i < _pNode->children_.Size(); ++i)
+		LoadRecursive(_pTree, _pNode->children_[i]);
 }
 
-void ConfigFileLoaderAbstract::DirectoryTree::clearRecursive(DirectoryTreeNode* node) {
-	for (int i = 0; i < node->Children.Size(); ++i) {
-		clearRecursive(node->Children.At(i));
-	}
+//////////////////////////////////////////////////////////////////////////////////////////
+void ConfigFileLoaderAbstract::DirectoryTree::ClearRecursive(DirectoryTreeNode* _pNode)
+{
+	for (int i = 0; i < _pNode->children_.Size(); ++i)
+		ClearRecursive(_pNode->children_.At(i));
 
-	delete node;
+	delete _pNode;
 }
 
-ConfigFileLoaderAbstract::ConfigFileLoaderAbstract(DataManagerAbstract* manager)
-	: m_pManager(manager)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+ConfigFileLoaderAbstract::ConfigFileLoaderAbstract(DataManagerAbstract* _pManager)
+: configPath_(nullptr)
+, pManager_(_pManager)
+, configDataMap_()
+{
+}
 
-ConfigFileLoaderAbstract::~ConfigFileLoaderAbstract() {
-	m_hConfigDataAbstract.ForEachValue([](ConfigDataAbstract* data) {
-		delete data;
+//////////////////////////////////////////////////////////////////////////////////////////
+ConfigFileLoaderAbstract::~ConfigFileLoaderAbstract()
+{
+	configDataMap_.ForEachValue([](ConfigDataAbstract* pData)
+	{
+		delete pData;
 	});
 }
 
-bool ConfigFileLoaderAbstract::loadJson(JCORE_OUT Json::Value& root) {
-	DebugAssertMsg(Core::CommonInfo != nullptr, "프로그램 실행 후 즉시 CoreCommon_v를 초기화해서 설정/데이터 파일 경로를 확보해주세요. 데이터 매니저 생성시 곧바로 실행파일 경로의 common.json이 로딩되므로 원하는 설정 코드로 세팅하면 됩니다.");
-	SGString path = JCore::Path::Combine(Core::CommonInfo->ConfigPath, getConfigFileName());
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ConfigFileLoaderAbstract::LoadJson(JCORE_OUT Json::Value& _root)
+{
+	DebugAssertMsg(Core::CommonInfo != nullptr,
+	               "프로그램 실행 후 즉시 CoreCommon_v를 초기화해서 설정/데이터 파일 경로를 확보해주세요. 데이터 매니저 생성시 곧바로 실행파일 경로의 common.json이 로딩되므로 원하는 설정 코드로 세팅하면 됩니다.")
+	;
 
-	if (JCore::Path::Extension(path) != ".json") {
-		_LogWarn_("%s 설정파일은 json 형식의 파일이 아닙니다.", getConfigFileName());
+	SGString configPath = JCore::Path::Combine(Core::CommonInfo->configPath_, GetConfigFileName());
+
+	if (JCore::Path::Extension(configPath) != ".json")
+	{
+		_LogWarn_("%s 설정파일은 json 형식의 파일이 아닙니다.", GetConfigFileName());
 		return false;
 	}
 
-	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
-	DebugAssertMsg(reader.is_open(), "%s 파일을 여는데 실패했습니다.", getConfigFileName());
-	try {
-		reader >> root;
-	} catch (std::exception& ex) {
-		_LogError_("설정파일 %s을 로드하는중 오류가 발생하였습니다. (%s)", getConfigFileName(), ex.what());
+	std::ifstream reader(configPath.Source(), std::ifstream::in | std::ifstream::binary);
+	DebugAssertMsg(reader.is_open(), "%s 파일을 여는데 실패했습니다.", GetConfigFileName());
+
+	try
+	{
+		reader >> _root;
+	}
+	catch (std::exception& exception)
+	{
+		_LogError_("설정파일 %s을 로드하는중 오류가 발생하였습니다. (%s)", GetConfigFileName(), exception.what());
 		return false;
 	}
+
 	return true;
 }
 
-bool ConfigFileLoaderAbstract::loadDirectory(JCORE_OUT DirectoryTree& tree) {
-	DebugAssertMsg(Core::CommonInfo != nullptr, "프로그램 실행 후 즉시 CoreCommon_v를 초기화해서 설정/데이터 파일 경로를 확보해주세요. 데이터 매니저 생성시 곧바로 실행파일 경로의 common.json이 로딩되므로 원하는 설정 코드로 세팅하면 됩니다.");
-	const SGString path = JCore::Path::Combine(Core::CommonInfo->ConfigPath, getConfigFileName());
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ConfigFileLoaderAbstract::LoadDirectory(JCORE_OUT DirectoryTree& _directoryTree)
+{
+	DebugAssertMsg(Core::CommonInfo != nullptr,
+	               "프로그램 실행 후 즉시 CoreCommon_v를 초기화해서 설정/데이터 파일 경로를 확보해주세요. 데이터 매니저 생성시 곧바로 실행파일 경로의 common.json이 로딩되므로 원하는 설정 코드로 세팅하면 됩니다.")
+	;
+	const SGString directoryPath = JCore::Path::Combine(Core::CommonInfo->configPath_, GetConfigFileName());
 
-	if (!JCore::Directory::Exist(path)) {
-		_LogWarn_("%s 디렉토리를 찾지 못했습니다.", path.Source());
+	if (!JCore::Directory::Exist(directoryPath))
+	{
+		_LogWarn_("%s 디렉토리를 찾지 못했습니다.", directoryPath.Source());
 		return false;
 	}
 
-	return tree.init(path);
+	return _directoryTree.Init(directoryPath);
 }
 
-void ConfigFileLoaderAbstract::addData(ConfigDataAbstract* data) {
-	if (m_hConfigDataAbstract.Insert(data->Code, data) == false) {
-		DebugAssertMsg(false, "%s 파일에서 이미 %d번 데이터를 읽은 후 입력하였습니다.", getConfigFileName(), data->Code);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ConfigFileLoaderAbstract::AddData(ConfigDataAbstract* _pData)
+{
+	if (!configDataMap_.Insert(_pData->code_, _pData))
+	{
+		DebugAssertMsg(false, "%s 파일에서 이미 %d번 데이터를 읽은 후 입력하였습니다.", GetConfigFileName(), _pData->code_);
 	}
 }
 
-ConfigDataAbstract* ConfigFileLoaderAbstract::getData(int code) {
-	DebugAssertMsg(m_hConfigDataAbstract.Exist(code), "%s 파일에서 읽은 데이터중 %d의 코드에 해당하는 데이터는 존재하지 않습니다.", getConfigFileName(), code);
-	return m_hConfigDataAbstract[code];
+//////////////////////////////////////////////////////////////////////////////////////////
+ConfigDataAbstract* ConfigFileLoaderAbstract::GetData(int _code)
+{
+	DebugAssertMsg(configDataMap_.Exist(_code), "%s 파일에서 읽은 데이터중 %d의 코드에 해당하는 데이터는 존재하지 않습니다.", GetConfigFileName(),
+	               _code);
+	return configDataMap_[_code];
 }
-

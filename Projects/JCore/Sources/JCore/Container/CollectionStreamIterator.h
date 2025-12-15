@@ -13,7 +13,7 @@ NS_JC_BEGIN
 
 // 전방 선언
 class CVoidOwner;
-template <typename, typename> class CCollectionStream;
+template <typename, typename> class CollectionStream;
 template <typename> struct StreamNode;
 
 template <typename T, typename TAllocator>
@@ -22,7 +22,7 @@ class CollectionStreamIterator : public Iterator<T, TAllocator>
 public:
 	using TIterator = Iterator<T, TAllocator>;
     using TStreamNode = StreamNode<T>;
-	using TCollectionStream = CCollectionStream<T, TAllocator>;
+	using TCollectionStream = CollectionStream<T, TAllocator>;
 
 public:
 	CollectionStreamIterator(CVoidOwner& _owner, TStreamNode* _current)

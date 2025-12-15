@@ -12,10 +12,9 @@
 #include <SteinsGate/Common/Namepsace.h>
 
 NS_CONST_BEGIN
-
 namespace Visual
 {
-	constexpr int MaxShapeCount = 3;
+constexpr int MaxShapeCount = 3;
 }
 
 NS_CONST_END

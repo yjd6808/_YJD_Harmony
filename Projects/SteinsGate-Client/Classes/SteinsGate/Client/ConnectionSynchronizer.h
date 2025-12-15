@@ -41,24 +41,25 @@ class ConnectionSynchronizer final : public SGSingletonPointer<ConnectionSynchro
 	{
 	};
 
-	void processConnection(ConnectionResult* result);
-	void processDisconnection(DisconnectionResult* result);
+	void processConnection(ConnectionResult* _pResult);
+	void processDisconnection(DisconnectionResult* _pResult);
 	void finalize();
+
 public:
-	void enqueueConnection(ClientConnectServerType_t listenerType, SGSession* session, bool success, Int32U errorCode);
-	void enqueueDisconnection(ClientConnectServerType_t listenerType, SGSession* session);
+	void enqueueConnection(ClientConnectServerType_t _listenerType, SGSession* _pSession, bool _success,
+	                       Int32U _errorCode);
+	void enqueueDisconnection(ClientConnectServerType_t _listenerType, SGSession* _pSession);
 	void initialize();
 	void processConnections();
+
 private:
 	using ResultQueue = SGArrayQueue<ResultBase*>;
-	SGActionFn<SGSession*> m_fnOnConnected[ClientConnectServerType::Max];
-	SGActionFn<SGSession*, Int32U> m_fnOnConnectFailed[ClientConnectServerType::Max];
-	SGActionFn<SGSession*> m_fnOnDisconnected[ClientConnectServerType::Max];
 
-	SGNormalLock m_Lock;
-	ResultQueue* m_qConnectionResults;
-	ResultQueue* m_qSwap;
+	SGActionFn<SGSession*> onConnected_[ClientConnectServerType::Max];
+	SGActionFn<SGSession*, Int32U> onConnectFailed_[ClientConnectServerType::Max];
+	SGActionFn<SGSession*> onDisconnected_[ClientConnectServerType::Max];
+
+	SGNormalLock lock_;
+	ResultQueue* connectionResultQueue_;
+	ResultQueue* swapQueue_;
 };
-
-
-

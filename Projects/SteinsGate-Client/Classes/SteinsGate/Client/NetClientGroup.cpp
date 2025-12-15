@@ -26,51 +26,56 @@ USING_NS_JC;
 USING_NS_CC;
 USING_NS_JNET;
 
-static constexpr int AuthRecvBufferSize_v = 2048;
-static constexpr int AuthSendBufferSize_v = 2048;
-static constexpr int LobbyRecvBufferSize_v = 6144;
-static constexpr int LobbySendBufferSize_v = 6144;
+static constexpr int AUTH_RECV_BUFFER_SIZE = 2048;
+static constexpr int AUTH_SEND_BUFFER_SIZE = 2048;
+static constexpr int LOBBY_RECV_BUFFER_SIZE = 6144;
+static constexpr int LOBBY_SEND_BUFFER_SIZE = 6144;
 
+//////////////////////////////////////////////////////////////////////////////////////////
 NetClientGroup::NetClientGroup()
-	: AuthTcp(nullptr)
-	, AuthUdp(nullptr)
-	, LobbyTcp(nullptr)
-	, LobbyUdp(nullptr)
-	, LogicTcp(nullptr)
-	, LogicUdp(nullptr)
-	, AreaTcp(nullptr)
-	, AreaUdp(nullptr)
-	, ChatTcp(nullptr)
-	, ChatUdp(nullptr)
+: AuthTcp(nullptr)
+, AuthUdp(nullptr)
+, LobbyTcp(nullptr)
+, LobbyUdp(nullptr)
+, LogicTcp(nullptr)
+, LogicUdp(nullptr)
+, AreaTcp(nullptr)
+, AreaUdp(nullptr)
+, ChatTcp(nullptr)
+, ChatUdp(nullptr)
 {
 	SetName("클라");
 }
 
-NetClientGroup::~NetClientGroup() {
+//////////////////////////////////////////////////////////////////////////////////////////
+NetClientGroup::~NetClientGroup()
+{
 }
 
-void NetClientGroup::Initialize() {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void NetClientGroup::Initialize()
+{
 	CreateIocp(4);
 	CreateBufferPool({});
 	RunIocp();
 
-	auto spAuthTcp = MakeShared<TcpClient>(pIocp_, pBufferPool_, nullptr, AuthRecvBufferSize_v, AuthSendBufferSize_v);
-	auto spLobbyTcp = MakeShared<TcpClient>(pIocp_, pBufferPool_, nullptr, LobbyRecvBufferSize_v, LobbySendBufferSize_v);
+	auto pAuthTcp = MakeShared<TcpClient>(pIocp_, pBufferPool_, nullptr, AUTH_RECV_BUFFER_SIZE,
+	                                      AUTH_SEND_BUFFER_SIZE);
+	auto pLobbyTcp = MakeShared<TcpClient>(pIocp_, pBufferPool_, nullptr, LOBBY_RECV_BUFFER_SIZE,
+	                                       LOBBY_SEND_BUFFER_SIZE);
 
-	AddHost(Const::Host::AuthTcpId, spAuthTcp);
-	AddHost(Const::Host::LobbyTcpId, spLobbyTcp);
+	AddHost(Const::Host::AuthTcpId, pAuthTcp);
+	AddHost(Const::Host::LobbyTcpId, pLobbyTcp);
 
-	AuthTcp = spAuthTcp.Get<TcpClient*>();
-	AuthTcp->SetEventListener(dbg_new NetClientEventListener{ClientConnectServerType::Auth});
+	AuthTcp = pAuthTcp.Get<TcpClient*>();
+	AuthTcp->SetEventListener(dbg_new NetClientEventListener{ ClientConnectServerType::Auth });
 
-	LobbyTcp = spLobbyTcp.Get<TcpClient*>();
-	LobbyTcp->SetEventListener(dbg_new NetClientEventListener{ClientConnectServerType::Lobby});
+	LobbyTcp = pLobbyTcp.Get<TcpClient*>();
+	LobbyTcp->SetEventListener(dbg_new NetClientEventListener{ ClientConnectServerType::Lobby });
 
-
-	// ==========================================================
+	// ======================================================================================
 	// 샌더 초기화
-	// ==========================================================
+	// ======================================================================================
 
 	S_AUTH::SetInformation(AuthTcp, SendStrategy::SendAsync);
 	S_LOBBY::SetInformation(LobbyTcp, SendStrategy::SendAsync);
@@ -79,24 +84,22 @@ void NetClientGroup::Initialize() {
 	S_CHAT::SetInformation(ChatTcp, SendStrategy::SendAsync);
 	S_AREA::SetInformation(AreaTcp, SendStrategy::SendAsync);
 
-
-
-	// ==========================================================
+	// ======================================================================================
 	// 커맨드 초기화
-	// ==========================================================
+	// ======================================================================================
 
 	// AUTHENTICATION
-	m_Parser.AddCommand<AUC_LoginAck>			(R_AUTHENTICATION::RECV_AUC_LoginAck);
+	parser_.AddCommand<AUC_LoginAck>(R_AUTHENTICATION::RECV_AUC_LoginAck);
 
 	// LOBBY
-	m_Parser.AddCommand<LOC_JoinLobbyAck>		(R_LOBBY::RECV_LOC_JoinLobbyAck);
+	parser_.AddCommand<LOC_JoinLobbyAck>(R_LOBBY::RECV_LOC_JoinLobbyAck);
 
 	// MESSAGE
-	m_Parser.AddCommand<SC_ClientText>			(R_MESSAGE::RECV_SC_ClientText);
+	parser_.AddCommand<SC_ClientText>(R_MESSAGE::RECV_SC_ClientText);
 }
 
-void NetClientGroup::Finalize() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void NetClientGroup::Finalize()
+{
 	NetGroup::Finalize();
 }
-
-

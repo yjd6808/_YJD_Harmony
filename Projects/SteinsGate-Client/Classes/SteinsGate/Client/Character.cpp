@@ -25,32 +25,42 @@
 USING_NS_JC;
 USING_NS_CC;
 
-Character::Character() 
-	: m_pBaseInfo(nullptr)
-	, m_pSpriteData(nullptr)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+Character::Character()
+: m_pBaseInfo(nullptr)
+, m_pSpriteData(nullptr)
+{
+}
 
-Character::Character(CharBaseInfo* charInfo, const VisualInfo& visualInfo)
-	: m_pBaseInfo(charInfo)
-	, m_VisualInfo(visualInfo)
-	, m_pSpriteData(nullptr)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+Character::Character(CharBaseInfo* _pCharInfo, const VisualInfo& _visualInfo)
+: m_pBaseInfo(_pCharInfo)
+, m_VisualInfo(_visualInfo)
+, m_pSpriteData(nullptr)
+{
+}
 
-Character::~Character() {
+//////////////////////////////////////////////////////////////////////////////////////////
+Character::~Character()
+{
 	JCORE_DELETE_SAFE(m_pSpriteData);
 	_LogDebug_("캐릭터 소멸");
 }
 
-Character* Character::create(CharBaseInfo* charInfo, const VisualInfo& info) {
-	Character* pCharacter = dbg_new Character(charInfo, info);
+//////////////////////////////////////////////////////////////////////////////////////////
+Character* Character::create(CharBaseInfo* _pCharInfo, const VisualInfo& _visualInfo)
+{
+	Character* pCharacter = dbg_new Character(_pCharInfo, _visualInfo);
 	pCharacter->initialize();
 	pCharacter->autorelease();
 	return pCharacter;
 }
 
-void Character::initialize() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void Character::initialize()
+{
 	initVariables();
-	initThicknessBox(m_pBaseInfo->ThicknessBox);
+	initThicknessBox(m_pBaseInfo->thicknessBox_);
 	initActorSpriteData(m_VisualInfo);
 	initActorSprite();
 	initHitRecorder(32, 64);
@@ -58,20 +68,29 @@ void Character::initialize() {
 	initComponents();
 }
 
-void Character::initActorSpriteData(const VisualInfo& visualInfo) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void Character::initActorSpriteData(const VisualInfo& _visualInfo)
+{
 	DebugAssert(m_pBaseInfo != nullptr);
 	JCORE_DELETE_SAFE(m_pSpriteData);
-	SGVector<AnimationInfo*>& animationList = Core::DataManager->getCharAnimationInfoList(m_pBaseInfo->Code);
+	SGVector<AnimationInfo*>& animationList = Core::DataManager->getCharAnimationInfoList(m_pBaseInfo->code_);
 	m_pSpriteData = dbg_new ActorSpriteData(ActorPartSpritePositioningRule::InFrameSize, 15, animationList.Size());
-	m_pSpriteData->Parts = visualInfo;
-	m_pSpriteData->Parts.Sort([](ActorPartSpriteData& lhs, ActorPartSpriteData& rhs) { return lhs.ZOrder < rhs.ZOrder; });
-	animationList.ForEach([this](AnimationInfo* animationInfo) { m_pSpriteData->Animations.PushBack(*animationInfo); });
+	m_pSpriteData->Parts = _visualInfo;
+	m_pSpriteData->Parts.Sort(
+		[](ActorPartSpriteData& lhs, ActorPartSpriteData& rhs) { return lhs.ZOrder < rhs.ZOrder; });
+	animationList.ForEach([this](AnimationInfo* _pAnimationInfo)
+	{
+		m_pSpriteData->Animations.PushBack(*_pAnimationInfo);
+	});
 }
 
-void Character::initActorSprite() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void Character::initActorSprite()
+{
 	DebugAssert(m_pSpriteData != nullptr);
 
-	if (m_pActorSprite != nullptr) {
+	if (m_pActorSprite != nullptr)
+	{
 		m_pActorSprite->updateSpriteData(m_pSpriteData);
 		return;
 	}
@@ -81,10 +100,13 @@ void Character::initActorSprite() {
 	this->addChild(m_pActorSprite);
 }
 
-void Character::initListeners() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void Character::initListeners()
+{
 	IActorListener* pListener = getListener(IActorListener::Type::eCharacter);
 
-	if (pListener == nullptr) {
+	if (pListener == nullptr)
+	{
 		pListener = Core::Contents.ActorListenerManager->createCharacterListener(this);
 		addListener(pListener);
 	}
@@ -92,7 +114,9 @@ void Character::initListeners() {
 	pListener->onCreated();
 }
 
-void Character::initComponents() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void Character::initComponents()
+{
 	if (!m_Components.has(IComponent::eMove))
 		m_Components.add(dbg_new MoveComponent(this));
 
@@ -100,7 +124,8 @@ void Character::initComponents() {
 		m_Components.add(dbg_new PhysicsComponent(this));
 }
 
-CharBaseInfo* Character::getBaseInfo() {
+//////////////////////////////////////////////////////////////////////////////////////////
+CharBaseInfo* Character::getBaseInfo()
+{
 	return m_pBaseInfo;
 }
-

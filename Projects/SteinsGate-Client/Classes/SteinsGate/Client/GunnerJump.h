@@ -11,7 +11,9 @@
 #include <SteinsGate/Client/GunnerAction.h>
 
 class Character;
-class GunnerJump : public GunnerAction {
+
+class GunnerJump : public GunnerAction
+{
 public:
 	GunnerJump(HostPlayer* player, ActionInfo* actionInfo);
 
@@ -33,6 +35,7 @@ public:
 	void reboundX(Character* character);
 	void reboundY(Character* character);
 	void createBullet();
+
 private:
 	bool m_bJumpUpbegin{};
 	bool m_bJumpDownBegin{};
@@ -45,6 +48,3 @@ private:
 	int m_iShotCount{};
 	int m_iMaxShotCount{};
 };
-
-
-

@@ -19,7 +19,9 @@
 #include <SteinsGate/Client/FallDownActivity_Goblin.h>
 #include <SteinsGate/Client/SitActivity_Goblin.h>
 
-void MonsterListener_NormalGoblin::onCreated() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void MonsterListener_NormalGoblin::onCreated()
+{
 	AIComponent* pAIComponent = m_pMonster->getComponent<AIComponent>();
 
 	if (!pAIComponent)

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/29/2023 8:01:39 AM
  * =====================
@@ -14,8 +14,5 @@
 class IdleActivity : public AIActivity
 {
 public:
-	IdleActivity(Actor* actor);
+	IdleActivity(Actor* _pActor);
 };
-
-
-

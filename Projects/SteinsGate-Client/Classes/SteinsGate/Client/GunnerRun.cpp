@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/22/2023 11:41:05 AM
  * =====================
@@ -12,52 +12,60 @@
 #include <SteinsGate/Client/Define_Animation.h>
 #include <SteinsGate/Client/PlayerController.h>
 
-GunnerRun::GunnerRun(HostPlayer* player, ActionInfo* actionInfo)
-	: GunnerAction(player, actionInfo)
+//////////////////////////////////////////////////////////////////////////////////////////
+GunnerRun::GunnerRun(HostPlayer* _pPlayer, ActionInfo* _pActionInfo)
+: GunnerAction(_pPlayer, _pActionInfo)
 {
 }
 
-void GunnerRun::onActionBegin() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerRun::onActionBegin()
+{
 	m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_RUN);
 }
 
-void GunnerRun::onKeyPressed(PlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerRun::onKeyPressed(PlayerController* _pController, cocos2d::EventKeyboard::KeyCode _keyCode)
+{
 	ActionMgr* pActionManager = m_pPlayer->actionManager();
 
-	if (controller->getSpriteDirection() == SpriteDirection::Right &&
-		controller->isKeyPressed(ControlKey::Left)) {
-		controller->updateDirection(ControlKey::Left);
+	if (_pController->getSpriteDirection() == SpriteDirection::Right &&
+		_pController->isKeyPressed(ControlKey::Left))
+	{
+		_pController->updateDirection(ControlKey::Left);
 		pActionManager->runBaseAction(BaseAction::Walk);
 	}
-	else if (controller->getSpriteDirection() == SpriteDirection::Left &&
-		controller->isKeyPressed(ControlKey::Right)) {
-		controller->updateDirection(ControlKey::Right);
+	else if (_pController->getSpriteDirection() == SpriteDirection::Left &&
+		_pController->isKeyPressed(ControlKey::Right))
+	{
+		_pController->updateDirection(ControlKey::Right);
 		pActionManager->runBaseAction(BaseAction::Walk);
 	}
-
 }
 
-void GunnerRun::onKeyReleased(PlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {
-
-	ControlKey_t releasedKey = controller->getLastestReleasedKey();
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerRun::onKeyReleased(PlayerController* _pController, cocos2d::EventKeyboard::KeyCode _keyCode)
+{
+	ControlKey_t releasedKey = _pController->getLastestReleasedKey();
 	ActionMgr* pActionManager = m_pPlayer->actionManager();
 
-	if (controller->isMoveKeyPressed() == false) {
+	if (_pController->isMoveKeyPressed() == false)
+	{
 		pActionManager->runBaseAction(BaseAction::Idle);
-		controller->updateDirection(releasedKey);
+		_pController->updateDirection(releasedKey);
 	}
-
-	
 }
 
-void GunnerRun::onKeyReleasedBefore(PlayerController* controller, SGEventKeyboard::KeyCode keyCode) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerRun::onKeyReleasedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
+{
+	ControlKey_t releasedKey = _pController->convertControlKey(_keyCode);
 
-	ControlKey_t releasedKey = controller->convertControlKey(keyCode);
+	if (releasedKey == ControlKey::None)
+		return;
 
-	if (releasedKey == ControlKey::None) return;
-	if (controller->isKeyPressed(ControlKey::Left) && controller->isKeyPressed(ControlKey::Right) &&
-		(releasedKey == ControlKey::Left || releasedKey == ControlKey::Right)) {
+	if (_pController->isKeyPressed(ControlKey::Left) && _pController->isKeyPressed(ControlKey::Right) &&
+		(releasedKey == ControlKey::Left || releasedKey == ControlKey::Right))
+	{
 	}
-
 }
-

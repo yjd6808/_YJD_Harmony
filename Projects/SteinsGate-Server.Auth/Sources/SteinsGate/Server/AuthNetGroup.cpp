@@ -19,21 +19,26 @@
 #include <SteinsGate/Server/ListenerAuthServer.h>
 #include <SteinsGate/Server/R_AUTHENTICATION.h>
 
-
-
-
 USING_NS_JC;
 USING_NS_JNET;
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
 AuthNetGroup::AuthNetGroup()
 	: m_pAuthTcp(nullptr)
 {
 	SetName("인증 메인");
 }
-AuthNetGroup::~AuthNetGroup() {}
 
-SGISessionContainer* AuthNetGroup::GetSessionContainer(ServerType_t type) {
-	if (type == ServerType::Auth) {
+////////////////////////////////////////////////////////////////////////////////////////////////////
+AuthNetGroup::~AuthNetGroup()
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+SGISessionContainer* AuthNetGroup::GetSessionContainer(ServerType_t _type)
+{
+	if (_type == ServerType::Auth)
+	{
 		return m_pAuthSessionContainer;
 	}
 
@@ -41,47 +46,59 @@ SGISessionContainer* AuthNetGroup::GetSessionContainer(ServerType_t type) {
 	return nullptr;
 }
 
-CommonSession* AuthNetGroup::GetSessionFromContainer(int handle) {
-	if (!Const::Host::AuthHandleRange.Contain(handle)) {
-		DebugAssertMsg(false, "올바르지 않은 로비 세션핸들입니다. (%d)", handle);
+////////////////////////////////////////////////////////////////////////////////////////////////////
+CommonSession* AuthNetGroup::GetSessionFromContainer(int _handle)
+{
+	if (!Const::Host::AuthHandleRange.Contain(_handle))
+	{
+		DebugAssertMsg(false, "올바르지 않은 로비 세션핸들입니다. (%d)", _handle);
 		return nullptr;
 	}
 
-
-	return dynamic_cast<CommonSession*>(m_pAuthSessionContainer->Get(handle));
+	return dynamic_cast<CommonSession*>(m_pAuthSessionContainer->Get(_handle));
 }
 
-void AuthNetGroup::InitializeBufferPool() {
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void AuthNetGroup::InitializeBufferPool()
+{
 	CreateBufferPool({});
 }
 
-void AuthNetGroup::InitializeIOCP() {
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void AuthNetGroup::InitializeIOCP()
+{
 	CreateIocp(2);
 	RunIocp();
 }
 
-void AuthNetGroup::InitializeParser() {
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void AuthNetGroup::InitializeParser()
+{
 	CommonNetGroup::InitializeParser();
 
 	// AUTHENTICATION
-	m_pParser->AddCommand<CAU_Login>				(R_AUTHENTICATION::RECV_CAU_Login);
+	pParser_->AddCommand<CAU_Login>(R_AUTHENTICATION::RECV_CAU_Login);
 }
 
-void AuthNetGroup::InitializeServer() {
-	auto spServer = MakeShared<AuthServer>(pIocp_, pBufferPool_);
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void AuthNetGroup::InitializeServer()
+{
+	auto pAuthServer = MakeShared<AuthServer>(m_spIOCP, m_spBufferPool);
 
-	AddHost(Const::Host::AuthTcpId, spServer);
+	AddHost(Const::Host::AuthTcpId, pAuthServer);
 
-	m_pAuthSessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->MaxSessionCount);
+	m_pAuthSessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->maxSessionCount_);
 	m_pAuthSessionContainer->SetInitialHandleSeq(Const::Host::AuthHandleRange.Min);
 
-	m_pAuthTcp = spServer.Get<AuthServer*>();
+	m_pAuthTcp = pAuthServer.Get<AuthServer*>();
 	m_pAuthTcp->SetSesssionContainer(m_pAuthSessionContainer);
-	m_pAuthTcp->SetEventListener(dbg_new ListenerAuthServer{ m_pAuthTcp, m_pParser });
+	m_pAuthTcp->SetEventListener(dbg_new ListenerAuthServer{ m_pAuthTcp, pParser_ });
 
 	AddUpdatable(Const::Host::AuthTcpId, m_pAuthTcp);
 }
 
-void AuthNetGroup::OnUpdate(const TimeSpan& elapsed) {
-
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void AuthNetGroup::OnUpdate(const TimeSpan& _elapsed)
+{
 }
+

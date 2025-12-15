@@ -21,7 +21,7 @@ void RecvedCommandPacket::ForEach(const JCore::Action<ICommand*>& _consumer)
 		ICommand* pCurrentCommand = reinterpret_cast<ICommand*>(pCommandData);
 		_consumer(pCurrentCommand);
 
-		pCommandData += pCurrentCommand->GetCommandLength();
+		pCommandData += pCurrentCommand->GetLength();
 		++commandIndex;
 	}
 }

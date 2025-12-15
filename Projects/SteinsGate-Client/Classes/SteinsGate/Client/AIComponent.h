@@ -5,9 +5,7 @@
  *
  */
 
-
 #pragma once
-
 
 #include <SteinsGate/Client/AIInfo.h>
 #include <SteinsGate/Client/AttackActivity.h>
@@ -27,7 +25,7 @@ public:
 	void initialize() override;
 	void onUpdate(float _dt) override;
 
-	void setAIInfo(AIInfo* _pInfo);
+	void setAIInfo(AIInfo* _pAIInfo);
 
 	void setAttackActivity(AttackActivity* _pAttackActivity);
 	void setFallDownActivity(FallDownActivity* _pFallDownActivity);
@@ -62,13 +60,14 @@ public:
 	AIActivity* getRunningActivity() const;
 
 	SG_COMPONENT_TYPE_GETTER(Type::eAI)
+
 private:
 	JCORE_NULLABLE AIInfo* aiInfo_;
 	JCORE_NULLABLE Actor* target_;
 
 	JCORE_NULLABLE AIActivity* activityMap_[AIActivityType::Max];
 	JCORE_NULLABLE AIActivity* runningActivity_;
-	
+
 	AIState_t state_;
 	AIState_t activityState_;
 	AIState_t previousState_;

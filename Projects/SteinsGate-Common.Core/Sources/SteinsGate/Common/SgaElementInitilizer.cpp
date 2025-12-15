@@ -13,153 +13,173 @@
 
 USING_NS_JC;
 
-void SgaElementInitializerImpl<-1>::Initialize(const SgaElementPtr& element, Stream& stream, bool indexOnly)
+////////////////////////////////////////////////////////////////////////////////////////
+void SgaElementInitializerImpl<-1>::Initialize(const SgaElementPtr& _pElement, Stream& _stream, bool _indexOnly)
 {
 	DebugAssertMsg(false, "이상한 버전이군요");
 }
 
-void SgaElementInitializerImpl<0>::Initialize(const SgaElementPtr& element, Stream& stream, bool indexOnly)
+////////////////////////////////////////////////////////////////////////////////////////
+void SgaElementInitializerImpl<0>::Initialize(const SgaElementPtr& _pElement, Stream& _stream, bool _indexOnly)
 {
-	
-	SgaSound& sound = *element.Get<SgaSound*>();
-	stream.Seek(sound.m_iIndexOffset);
-	sound.m_bIndexLoaded = true;
-	if (indexOnly) return;
-	auto pData = MakeShared<Byte[]>(sound.m_iIndexLength);
-	stream.Read(pData.GetPtr(), 0, pData.Length());
-	sound.m_spData = pData;
+	SgaSound& sound = *_pElement.Get<SgaSound*>();
+	_stream.Seek(sound.indexOffset_);
+	sound.isIndexLoaded_ = true;
+
+	if (_indexOnly)
+		return;
+
+	auto pData = MakeShared<Byte[]>(sound.indexLength_);
+	_stream.Read(pData.GetPtr(), 0, pData.Length());
+	sound.pData_ = pData;
 }
 
-void SgaElementInitializerImpl<1>::Initialize(const SgaElementPtr& element, Stream& stream, bool indexOnly)
+////////////////////////////////////////////////////////////////////////////////////////
+void SgaElementInitializerImpl<1>::Initialize(const SgaElementPtr& _pElement, Stream& _stream, bool _indexOnly)
 {
-	SgaImage& image = *element.Get<SgaImage*>();
-	stream.Seek(image.m_iIndexOffset);
-	int iSpriteDataOffset = stream.GetOffset() + element->m_iIndexLength;
-	int iWaitForLoadingCount = image.WaitForLoadingDataCount();
+	SgaImage& image = *_pElement.Get<SgaImage*>();
+	_stream.Seek(image.indexOffset_);
+	int spriteDataOffset = _stream.GetOffset() + _pElement->indexLength_;
+	int waitForLoadingCount = image.WaitForLoadingDataCount();
 
-	DebugAssertMsg(iWaitForLoadingCount == image.Count(), "로딩해야할 데이터 수와 미리 생성된 NULL 벡터의 용량이랑 다릅니다. (%d:%d)", iWaitForLoadingCount, image.Count());
+	DebugAssertMsg(waitForLoadingCount == image.Count(), "로딩해야할 데이터 수와 미리 생성된 NULL 벡터의 용량이랑 다릅니다. (%d:%d)",
+	               waitForLoadingCount, image.Count());
 
-	for (int i = 0; i < iWaitForLoadingCount; ++i) {
-		auto eFormat = (SgaColorFormat)stream.ReadInt32();
-		if (eFormat == SgaColorFormat::eLink) {
-			auto spLinkSprite = SgaLinkSprite::Create(element, i, eFormat);
-			spLinkSprite->m_iTargetFrameIndex = stream.ReadInt32();
-			image.Set(i, spLinkSprite);
+	for (int i = 0; i < waitForLoadingCount; ++i)
+	{
+		auto colorFormat = (SgaColorFormat)_stream.ReadInt32();
+
+		if (colorFormat == SgaColorFormat::eLink)
+		{
+			auto pLinkSpritePtr = SgaLinkSprite::Create(_pElement, i, colorFormat);
+			pLinkSpritePtr->targetFrameIndex_ = _stream.ReadInt32();
+			image.Set(i, pLinkSpritePtr);
 			continue;
 		}
 
-		auto spSprite = SgaSprite::Create(element, i, eFormat);
-		auto pSprite = spSprite.GetPtr();
+		auto pSpritePtr = SgaSprite::Create(_pElement, i, colorFormat);
+		auto pSprite = pSpritePtr.GetPtr();
 
-		pSprite->m_eCompressMode = stream.ReadInt32();
-		pSprite->m_Rect.Width = stream.ReadInt32();
-		pSprite->m_Rect.Height = stream.ReadInt32();
-		pSprite->m_iDataLength = stream.ReadInt32();
-		pSprite->m_Rect.X = stream.ReadInt32();
-		pSprite->m_Rect.Y = stream.ReadInt32();
-		pSprite->m_Rect.FrameWidth = stream.ReadInt32();
-		pSprite->m_Rect.FrameHeight = stream.ReadInt32();
+		pSprite->compressMode_ = _stream.ReadInt32();
+		pSprite->rect_.width_ = _stream.ReadInt32();
+		pSprite->rect_.height_ = _stream.ReadInt32();
+		pSprite->dataLength_ = _stream.ReadInt32();
+		pSprite->rect_.x_ = _stream.ReadInt32();
+		pSprite->rect_.y_ = _stream.ReadInt32();
+		pSprite->rect_.frameWidth_ = _stream.ReadInt32();
+		pSprite->rect_.frameHeight_ = _stream.ReadInt32();
 
-		if (pSprite->m_eCompressMode == SgaCompressMode::None) {
-			pSprite->m_iDataLength = pSprite->m_Rect.Width * pSprite->m_Rect.Height *
+		if (pSprite->compressMode_ == SgaCompressMode::None)
+		{
+			pSprite->dataLength_ = pSprite->rect_.width_ * pSprite->rect_.height_ *
 				(pSprite->m_eColorFormat == SgaColorFormat::eArgb8888 ? 4 : 2);
 		}
 
-		image.Set(i, spSprite);	// 선 삽입
-		pSprite->m_iDataOffset = stream.GetOffset();
+		image.Set(i, pSpritePtr); // 선 삽입
+		pSprite->dataOffset_ = _stream.GetOffset();
 
-		if (indexOnly) {
-			stream.Seek(pSprite->m_iDataOffset + pSprite->m_iDataLength);
+		if (_indexOnly)
+		{
+			_stream.Seek(pSprite->dataOffset_ + pSprite->dataLength_);
 			continue;
 		}
 
 		// 헤더 바로 뒤에 데이터가 위치함
-		auto pData = MakeShared<Byte[]>(pSprite->m_iDataLength);
-		stream.Read(pData.GetPtr(), 0, pData.Length());
-		pSprite->m_spData = pData;
-		pSprite->m_bLoaded = true;
-		
+		auto pData = MakeShared<Byte[]>(pSprite->dataLength_);
+		_stream.Read(pData.GetPtr(), 0, pData.Length());
+		pSprite->pData_ = pData;
+		pSprite->loaded_ = true;
 	}
 
-	image.m_bIndexLoaded = true;
+	image.isIndexLoaded_ = true;
 }
 
-void SgaElementInitializerImpl<2>::Initialize(const SgaElementPtr& element, Stream& stream, bool indexOnly)
+////////////////////////////////////////////////////////////////////////////////////////
+void SgaElementInitializerImpl<2>::Initialize(const SgaElementPtr& _pElement, Stream& _stream, bool _indexOnly)
 {
-	SgaImage& image = *element.Get<SgaImage*>();
-	stream.Seek(image.m_iIndexOffset);
-	int iSpriteDataOffset = stream.GetOffset() + element->m_iIndexLength;
-	int iWaitForLoadingCount = image.WaitForLoadingDataCount();
+	SgaImage& image = *_pElement.Get<SgaImage*>();
+	_stream.Seek(image.indexOffset_);
+	int spriteDataOffset = _stream.GetOffset() + _pElement->indexLength_;
+	int waitForLoadingCount = image.WaitForLoadingDataCount();
 
-	DebugAssertMsg(iWaitForLoadingCount == image.Count(), "로딩해야할 데이터 수와 미리 생성된 NULL 벡터의 용량이랑 다릅니다. (%d:%d)", iWaitForLoadingCount, image.Count());
+	DebugAssertMsg(waitForLoadingCount == image.Count(), "로딩해야할 데이터 수와 미리 생성된 NULL 벡터의 용량이랑 다릅니다. (%d:%d)",
+	               waitForLoadingCount, image.Count());
 
-	for (int i = 0; i < iWaitForLoadingCount; ++i) {
-		auto eFormat = (SgaColorFormat)stream.ReadInt32();
-		if (eFormat == SgaColorFormat::eLink) {
-			auto spLinkSprite = SgaLinkSprite::Create(element, i, eFormat);
-			spLinkSprite->m_iTargetFrameIndex = stream.ReadInt32();
-			image.Set(i, spLinkSprite);
+	for (int i = 0; i < waitForLoadingCount; ++i)
+	{
+		auto colorFormat = (SgaColorFormat)_stream.ReadInt32();
+
+		if (colorFormat == SgaColorFormat::eLink)
+		{
+			auto pLinkSpritePtr = SgaLinkSprite::Create(_pElement, i, colorFormat);
+			pLinkSpritePtr->targetFrameIndex_ = _stream.ReadInt32();
+			image.Set(i, pLinkSpritePtr);
 			continue;
 		}
 
-		auto spSprite = SgaSprite::Create(element, i, eFormat);
-		auto pSprite = spSprite.GetPtr();
-		pSprite->m_eCompressMode = stream.ReadInt32();
-		pSprite->m_Rect.Width = stream.ReadInt32();
-		pSprite->m_Rect.Height = stream.ReadInt32();
-		pSprite->m_iDataLength = stream.ReadInt32();
-		pSprite->m_Rect.X = stream.ReadInt32();
-		pSprite->m_Rect.Y = stream.ReadInt32();
-		pSprite->m_Rect.FrameWidth = stream.ReadInt32();
-		pSprite->m_Rect.FrameHeight = stream.ReadInt32();
+		auto pSpritePtr = SgaSprite::Create(_pElement, i, colorFormat);
+		auto pSprite = pSpritePtr.GetPtr();
 
-		if (pSprite->m_eCompressMode == SgaCompressMode::None) {
-			pSprite->m_iDataLength = pSprite->GetWidth() * pSprite->GetHeight() *
-			pSprite->m_eColorFormat == SgaColorFormat::eArgb8888 ? 4 : 2;
+		pSprite->compressMode_ = _stream.ReadInt32();
+		pSprite->rect_.width_ = _stream.ReadInt32();
+		pSprite->rect_.height_ = _stream.ReadInt32();
+		pSprite->dataLength_ = _stream.ReadInt32();
+		pSprite->rect_.x_ = _stream.ReadInt32();
+		pSprite->rect_.y_ = _stream.ReadInt32();
+		pSprite->rect_.frameWidth_ = _stream.ReadInt32();
+		pSprite->rect_.frameHeight_ = _stream.ReadInt32();
+
+		if (pSprite->compressMode_ == SgaCompressMode::None)
+		{
+			pSprite->dataLength_ = pSprite->GetWidth() * pSprite->GetHeight() *
+				(pSprite->m_eColorFormat == SgaColorFormat::eArgb8888 ? 4 : 2);
 		}
 
-		image.Set(i, spSprite);
+		image.Set(i, pSpritePtr);
 	}
 
-	if (stream.GetOffset() < iSpriteDataOffset) {
+	if (_stream.GetOffset() < spriteDataOffset)
+	{
 		image.Clear();
 		return;
 	}
 
-
-	for (int i = 0; i < image.Count(); ++i) {
-		if (image[i].m_eColorFormat == SgaColorFormat::eLink) 
+	for (int i = 0; i < image.Count(); ++i)
+	{
+		if (image[i].m_eColorFormat == SgaColorFormat::eLink)
 			continue;
 
 		auto& sprite = (SgaSprite&)image[i];
-		sprite.m_iDataOffset = stream.GetOffset();
+		sprite.dataOffset_ = _stream.GetOffset();
 
-		if (indexOnly) {
-			stream.Seek(sprite.m_iDataOffset + sprite.m_iDataLength);
+		if (_indexOnly)
+		{
+			_stream.Seek(sprite.dataOffset_ + sprite.dataLength_);
 			continue;
 		}
 
-		auto pData = MakeShared<Byte[]>(sprite.m_iDataLength);
-		stream.Read(pData.GetPtr(), 0, pData.Length());
-		sprite.m_spData = pData;
-		sprite.m_bLoaded = true;
+		auto pData = MakeShared<Byte[]>(sprite.dataLength_);
+		_stream.Read(pData.GetPtr(), 0, pData.Length());
+		sprite.pData_ = pData;
+		sprite.loaded_ = true;
 	}
 
-	image.m_bIndexLoaded = true;
+	image.isIndexLoaded_ = true;
 }
-
 
 // ============================================================================
 //                       버전별 SgaElement 초기화 수행자맵 구성하기
 // ============================================================================
 
 using SgaElementInitializerMap = Vector<SgaElementInitializer*>;
-static SgaElementInitializerMap InitializerMap_v {2};
+static SgaElementInitializerMap InitializerMap_v{ 2 };
 
 static int MinVersion_v = 0;
 static int MaxVersion_v = 2;
 
-void SgaElementInitializer::Initialize() {
+////////////////////////////////////////////////////////////////////////////////////////
+void SgaElementInitializer::Initialize()
+{
 	if (InitializerMap_v.Size() != 0)
 		return;
 
@@ -169,20 +189,24 @@ void SgaElementInitializer::Initialize() {
 	InitializerMap_v.PushBack(dbg_new SgaElementInitializerImpl<2>{});
 }
 
-void SgaElementInitializer::Finalize() {
-	for (int i = 0; i < InitializerMap_v.Size(); ++i) {
+////////////////////////////////////////////////////////////////////////////////////////
+void SgaElementInitializer::Finalize()
+{
+	for (int i = 0; i < InitializerMap_v.Size(); ++i)
+	{
 		JCORE_DELETE_SAFE(InitializerMap_v[i]);
 	}
 
 	InitializerMap_v.~Vector();
 }
 
-void SgaElementInitializer::InitializeElement(const SgaElementPtr& element, Stream& stream, bool indexOnly) {
-
-	int iVersion = element->GetVersion();
+////////////////////////////////////////////////////////////////////////////////////////
+void SgaElementInitializer::InitializeElement(const SgaElementPtr& _pElement, Stream& _stream, bool _indexOnly)
+{
+	int version = _pElement->GetVersion();
 
 	DebugAssertMsg(InitializerMap_v.Size() != 0, "초기화를 먼저 진행해주세요.");
-	DebugAssertMsg(iVersion >= MinVersion_v && iVersion <= MaxVersion_v, "올바른 버전이 아닙니다.");
-	
-	InitializerMap_v[iVersion]->Initialize(element, stream, indexOnly);
+	DebugAssertMsg(version >= MinVersion_v && version <= MaxVersion_v, "올바른 버전이 아닙니다.");
+
+	InitializerMap_v[version]->Initialize(_pElement, _stream, _indexOnly);
 }

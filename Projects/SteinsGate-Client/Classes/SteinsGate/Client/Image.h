@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 7:38:49 AM
  * =====================
@@ -15,8 +15,11 @@
 class SGImage
 {
 public:
-	SGImage(NpkImage* img) : m_pImage(img) {}
+	SGImage(NpkImage* _pImage)
+		: image_(_pImage)
+	{
+	}
+
 private:
-	NpkImage* m_pImage;
-	
+	NpkImage* image_;
 };

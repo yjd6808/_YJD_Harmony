@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <SteinsGate/Client/UIElement.h>
@@ -29,25 +28,33 @@ class UIGroup : public UIElement
 
 	struct CursorPositionGuard
 	{
-		CursorPositionGuard(SGEventMouse* mouseEvent, const SGVec2& position)
-			: Event(mouseEvent)
-			, ResetCursorPosition(position)
-		{}
-		~CursorPositionGuard() {
-			Event->setCursorPosition(ResetCursorPosition);
+		CursorPositionGuard(SGEventMouse* _pMouseEvent, const SGVec2& _cursorPosition)
+		: event_(_pMouseEvent)
+		, resetCursorPosition_(_cursorPosition)
+		{
 		}
 
-		SGEventMouse* Event;
-		const SGVec2& ResetCursorPosition; // 복귀할 위치
+		~CursorPositionGuard()
+		{
+			if (event_ == nullptr)
+			{
+				return;
+			}
+
+			event_->setCursorPosition(resetCursorPosition_);
+		}
+
+		SGEventMouse* event_;
+		SGVec2 resetCursorPosition_;
 	};
 
 public:
-	UIGroup(UIMasterGroup* master, UIGroup* parent);
-	UIGroup(UIMasterGroup* master, UIGroup* parent, UIGroupInfo* groupInfo, bool infoOwner);
+	UIGroup(UIRootGroup* _pMaster, UIGroup* _pParent);
+	UIGroup(UIRootGroup* _pMaster, UIGroup* _pParent, UIGroupInfo* _pGroupInfo, bool _infoOwner);
 	~UIGroup() override;
 
-	static UIGroup* create(UIMasterGroup* master, UIGroup* parent);
-	static UIGroup* create(UIMasterGroup* master, UIGroup* parent, UIGroupInfo* groupInfo, bool infoOwner);
+	static UIGroup* create(UIRootGroup* _pMaster, UIGroup* _pParent);
+	static UIGroup* create(UIRootGroup* _pMaster, UIGroup* _pParent, UIGroupInfo* _pGroupInfo, bool _infoOwner);
 
 	static constexpr UIElementType_t type() { return UIElementType::Group; }
 
@@ -55,116 +62,127 @@ public:
 	void initChildren();
 	void initChildrenPosition();
 
-	void load() override;
-	void unload() override;
+	void Load() override;
+	void Unload() override;
 
-	void addChild(UIElement* child);
+	void addChild(UIElement* _pChild);
 
 	// 이하 자식들 오버라이딩을 금하기 위해 파이널로 처리
-	bool onMouseDownInternal(SGEventMouse* mouseEvent) final;
-	bool onMouseMoveInternal(SGEventMouse* mouseEvent) final;
-	bool onMouseUpInternal(SGEventMouse* mouseEvent) final;
-	bool onMouseScrollInternal(SGEventMouse* mouseEvent) final;
+	bool OnMouseDownInternal(SGEventMouse* _pMouseEvent) final;
+	bool OnMouseMoveInternal(SGEventMouse* _pMouseEvent) final;
+	bool OnMouseUpInternal(SGEventMouse* _pMouseEvent) final;
+	bool OnMouseScrollInternal(SGEventMouse* _pMouseEvent) final;
 
-	virtual void onUpdate(float dt) { }
-	virtual bool onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) { return true; }
-	virtual bool onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) { return true; }
+	virtual void onUpdate(float _dt)
+	{
+	}
 
-	UIElementType_t getElementType() override { return UIElementType::Group; }
-	SGString toString() override { return SGStringUtil::Format("그룹(%d)", m_pInfo->Code); }
-	bool isGroup() const override { return true; }
+	virtual bool onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) { return true; }
+	virtual bool onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) { return true; }
+
+	UIElementType_t GetElementType() override { return UIElementType::Group; }
+	SGString ToString() override { return SGStringUtil::Format("그룹(%d)", groupInfo_->code_); }
+	bool IsGroup() const override { return true; }
 
 	// UI 매니저에 등록되지 않은 그룹내 엘리먼트들을 검색할 떄 사용하는 용도의 함수들
-	UIElement* getAt(int index);
+	UIElement* getAt(int _index);
 
 	template <typename TElem>
-	TElem* getAtTemplated(int index) {
-		if (index >= _children.size()) {
-			_LogWarn_("%d 그룹에서 %d번째 인덱스 원소를 찾지 못했습니다.", m_pBaseInfo->Code, index);
+	TElem* getAtTemplated(int _index)
+	{
+		if (_index >= _children.size())
+		{
+			_LogWarn_("%d 그룹에서 %d번째 인덱스 원소를 찾지 못했습니다.", pBaseInfo_->code_, _index);
 			return nullptr;
 		}
 
-		UIElement* pElement = static_cast<UIElement*>(_children.at(index));
-		if (pElement->getElementType() != TElem::type()) {
-			_LogWarn_("%d 그룹에서 %d번째 인덱스 원소가 캐스팅할려는 타입과 다릅니다.", m_pBaseInfo->Code, index);
+		UIElement* pElement = static_cast<UIElement*>(_children.at(_index));
+		if (pElement->GetElementType() != TElem::type())
+		{
+			_LogWarn_("%d 그룹에서 %d번째 인덱스 원소가 캐스팅할려는 타입과 다릅니다.", pBaseInfo_->code_, _index);
 			return nullptr;
 		}
 
 		return static_cast<TElem*>(pElement);
 	}
 
+	UIElement* findElement(int _code);
+	UIGroup* findGroup(int _groupCode);
+	UIButton* findButton(int _buttonCode);
+	UISprite* findSprite(int _spriteCode);
+	UILabel* findLabel(int _labelCode);
+	UICheckBox* findCheckBox(int _checkBoxCode);
+	UIEditBox* findEditBox(int _editBoxCode);
+	UIToggleButton* findToggleButton(int _toggleButtonCode);
+	UIProgressBar* findProgressBar(int _progressBarCode);
+	UIScrollBar* findScrollBar(int _scrollBarCode);
+	UIStatic* findStatic(int _staticCode);
 
-	UIElement* findElement(int code);
-	UIGroup* findGroup(int groupCode);						
-	UIButton* findButton(int buttonCode);					
-	UISprite* findSprite(int spriteCode);					
-	UILabel* findLabel(int labelCode);						
-	UICheckBox* findCheckBox(int checkBoxCode);				
-	UIEditBox* findEditBox(int editBoxCode);					
-	UIToggleButton* findToggleButton(int toggleButtonCode);	
-	UIProgressBar* findProgressBar(int progressBarCode);		
-	UIScrollBar* findScrollBar(int scrollBarCode);			
-	UIStatic* findStatic(int staticCode);
-
-	void addUIElement(UIGroupElemInfo* groupElemInfo);
+	void addUIElement(UIGroupElemInfo* _pGroupElemInfo);
 
 	template <typename TElem>
-	void forEachRecursiveSpecificType(const SGActionFn<TElem*>& action) const {
+	void forEachRecursiveSpecificType(const SGActionFn<TElem*>& _action) const
+	{
 		static_assert(!JCore::IsPointerType_v<TElem>, "... TElem must not be pointer type");
 		static_assert(JCore::IsBaseOf_v<UIElement, TElem>, "... TElem must be derived from UIElemenet type");
 
-		for (int i = 0; i < _children.size(); ++i) {
-			UIElement* pElem = (UIElement*)_children.at(i);
-			TElem* pCastElem = dynamic_cast<TElem*>(pElem);
+		for (int i = 0; i < _children.size(); ++i)
+		{
+			UIElement* pElement = static_cast<UIElement*>(_children.at(i));
+			TElem* pCastElement = dynamic_cast<TElem*>(pElement);
 
-			if (pCastElem) {
-				action(pCastElem);
+			if (pCastElement)
+			{
+				_action(pCastElement);
 			}
 
-			if (pElem->getElementType() == UIElementType::Group) {
-				UIGroup* pGroupElem = static_cast<UIGroup*>(pElem);
-				pGroupElem->forEachRecursiveSpecificType<TElem>(action);
+			if (pElement->GetElementType() == UIElementType::Group)
+			{
+				UIGroup* pGroupElement = static_cast<UIGroup*>(pElement);
+				pGroupElement->forEachRecursiveSpecificType<TElem>(_action);
 			}
 		}
-
 	}
-	void forEachRecursive(const SGActionFn<UIElement*>& action) const;
-	void forEachRecursiveContainedSelf(const SGActionFn<UIElement*>& action) const;
-	void forEach(const SGActionFn<UIElement*>& action) const;
-	void forEachContainedSelf(const SGActionFn<UIElement*>& action) const;
 
-	void restoreState(State state) override;
+	void forEachRecursive(const SGActionFn<UIElement*>& _action) const;
+	void forEachRecursiveContainedSelf(const SGActionFn<UIElement*>& _action) const;
+	void forEach(const SGActionFn<UIElement*>& _action) const;
+	void forEachContainedSelf(const SGActionFn<UIElement*>& _action) const;
+
+	void RestoreState(State _state) override;
 	void resetChildrenPosition() { initChildrenPosition(); }
 
-	void setUISize(const SGSize& contentSize) override;
-	void setInfo(UIElementInfo* info, bool infoOwner) override;
-	void setInfoGroup(UIGroupInfo* info, bool infoOwner);
+	void SetUISize(const SGSize& _contentSize) override;
+	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
+	void setInfoGroup(UIGroupInfo* _pInfo, bool _infoOwner);
+
 protected:
-	static UIElement* findElementRecursiveInternal(UIGroup* parent, int code);
+	static UIElement* findElementRecursiveInternal(UIGroup* _pParent, int _code);
 
 	template <typename TElement>
-	static TElement* findElementTemplated(UIGroup* parent, int code) {
-		UIElement* find = findElementRecursiveInternal(parent, code);
+	static TElement* findElementTemplated(UIGroup* _pParent, int _code)
+	{
+		UIElement* pElement = findElementRecursiveInternal(_pParent, _code);
 
-		if (find == nullptr) {
-			_LogWarn_("%d를 찾지 못했습니다.", code);
+		if (pElement == nullptr)
+		{
+			_LogWarn_("%d를 찾지 못했습니다.", _code);
 			return nullptr;
 		}
 
-		const UIElementType_t eTarget = TElement::type();
-		const UIElementType_t eCur = find->getElementType();
+		const UIElementType_t targetType = TElement::type();
+		const UIElementType_t currentType = pElement->GetElementType();
 
-		if (find->getElementType() != eTarget) {
-			_LogWarn_("%d가 %s타입이 아니고, %s입니다.", code, UIElementType::Name[eCur], UIElementType::Name[eTarget]);
+		if (currentType != targetType)
+		{
+			_LogWarn_("%d가 %s타입이 아니고, %s입니다.", _code, UIElementType::Name[currentType],
+			          UIElementType::Name[targetType]);
 			return nullptr;
 		}
 
-		return (TElement*)find;
+		return static_cast<TElement*>(pElement);
 	}
 
 protected:
-	UIGroupInfo* m_pInfo;
+	UIGroupInfo* groupInfo_;
 };
-
-
-

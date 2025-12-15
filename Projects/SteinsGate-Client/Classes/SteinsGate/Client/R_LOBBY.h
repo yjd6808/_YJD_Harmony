@@ -13,7 +13,5 @@
 struct R_LOBBY
 {
 public:
-	static void RECV_LOC_JoinLobbyAck(JCORE_UNUSED JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_LOC_JoinLobbyAck(JCORE_UNUSED JNetwork::Session* _pSession, JNetwork::ICommand* _pCommand);
 };
-
-

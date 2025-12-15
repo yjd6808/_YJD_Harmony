@@ -18,28 +18,29 @@
 class CenterServer final : public CommonServer
 {
 public:
-	CenterServer(const JNetwork::IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator);
+	CenterServer(const JNetwork::IOCPPtr& _pIocp, const JCore::MemoryPoolAbstractPtr& _pBufferAllocator);
 	~CenterServer() override;
 
 	SGTcpSession* CreateSession() override;
 	ServerType_t GetServerType() override { return ServerType::Center; }
 
-	CenterSession* GetCenterSession(int serverId) { return m_pSession[serverId].Session; }
-	void AddSession(CenterSession* session);
-	void RemoveSession(CenterSession* session);
-	void BroadcastPacket(JNetwork::IPacket* packet);
+	CenterSession* GetCenterSession(int _serverId) { return centerSessions_[_serverId].Session; }
+	void AddSession(CenterSession* _pSession);
+	void RemoveSession(CenterSession* _pSession);
+	void BroadcastPacket(JNetwork::IPacket* _pPacket);
 
 	bool IsAllCenterSessionConnected();
-	bool IsConnected(CenterSession* session);
-	bool IsConnected(int serverId);
+	bool IsConnected(CenterSession* _pSession);
+	bool IsConnected(int _serverId);
 
-	void SetStartupLaunching(bool startupLaunching) { m_bStartupLaunching = startupLaunching; }
-	bool IsStartupLaunching() { return m_bStartupLaunching; }
-	void OnUpdate(const JCore::TimeSpan& elapsed) override;
+	void SetStartupLaunching(bool _startupLaunching) { startupLaunching_ = _startupLaunching; }
+	bool IsStartupLaunching() { return startupLaunching_; }
+	void OnUpdate(const JCore::TimeSpan& _elapsed) override;
+
 private:
 	ANONYMOUS_CACHE_ALIGNED_VAR(
 		CenterSession* Session = nullptr;
 		ServerProcessType_t Type = ServerProcessType::None;
-	) m_pSession[Const::Server::MaxProcessId];
-	bool m_bStartupLaunching;	// 모든 서버세션들이 접속완료되어서 서버 시작명령을 내렸는지 여부
+	) centerSessions_[Const::Server::MaxProcessId];
+	bool startupLaunching_;    // 모든 서버세션들이 접속완료되어서 서버 시작명령을 내렸는지 여부
 };

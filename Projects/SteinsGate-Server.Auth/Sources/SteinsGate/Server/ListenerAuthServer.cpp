@@ -13,33 +13,45 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-ListenerAuthServer::ListenerAuthServer(AuthServer* server, CommandParser* parser)
-	: ListenerServerCommon(parser)
-	, m_pAuthTcp(server)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+ListenerAuthServer::ListenerAuthServer(AuthServer* _pServer, CommandParser* _pParser)
+	: ListenerServerCommon(_pParser)
+	, authTcp_(_pServer)
+{
+}
 
-void ListenerAuthServer::OnStarted() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerAuthServer::OnStarted()
+{
 	ListenerServerCommon::OnStarted();
 }
 
-void ListenerAuthServer::OnConnected(Session* connectedSession) {
-	ListenerServerCommon::OnConnected(connectedSession);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerAuthServer::OnConnected(Session* _pConnectedSession)
+{
+	ListenerServerCommon::OnConnected(_pConnectedSession);
 }
 
-void ListenerAuthServer::OnDisconnected(Session* disconnetedSession, Int32U errorCode) {
-	ListenerServerCommon::OnDisconnected(disconnetedSession, errorCode);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerAuthServer::OnDisconnected(Session* _pDisconnectedSession, Int32U _errorCode)
+{
+	ListenerServerCommon::OnDisconnected(_pDisconnectedSession, _errorCode);
 }
 
-void ListenerAuthServer::OnSent(Session* sender, IPacket* sentPacket, Int32UL sentBytes) {
-	ListenerServerCommon::OnSent(sender, sentPacket, sentBytes);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerAuthServer::OnSent(Session* _pSender, IPacket* _pSentPacket, Int32UL _sentBytes)
+{
+	ListenerServerCommon::OnSent(_pSender, _pSentPacket, _sentBytes);
 }
 
-void ListenerAuthServer::OnReceived(Session* receiver, ICommand* cmd) {
-	ListenerServerCommon::OnReceived(receiver, cmd);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerAuthServer::OnReceived(Session* _pReceiver, ICommand* _pRecvCmd)
+{
+	ListenerServerCommon::OnReceived(_pReceiver, _pRecvCmd);
 }
 
-void ListenerAuthServer::OnStopped() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerAuthServer::OnStopped()
+{
 	ListenerServerCommon::OnStopped();
 }
-
-

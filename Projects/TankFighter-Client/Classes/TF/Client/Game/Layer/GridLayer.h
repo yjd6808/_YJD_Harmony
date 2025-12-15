@@ -35,8 +35,8 @@ public:
 	void DrawGridWindow(const int interval, const cocos2d::Color4F & color);
 	static GridLayer* create(const int interval, const cocos2d::Color4F & color, const GridEvent userGridEvent);
 
-	virtual bool initWithParams(const int interval, const cocos2d::Color4F & color);
-	virtual bool onMouseMove(cocos2d::Event*);
+	virtual bool InitWithParams(const int interval, const cocos2d::Color4F & color);
+	virtual bool OnMouseMove(cocos2d::Event*);
 	virtual bool onTouchBegan(cocos2d::Touch*, cocos2d::Event*);
 	virtual void onTouchEnded(cocos2d::Touch*, cocos2d::Event*);
 

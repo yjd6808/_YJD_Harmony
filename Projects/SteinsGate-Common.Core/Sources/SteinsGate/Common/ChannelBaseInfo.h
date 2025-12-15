@@ -12,6 +12,6 @@
 
 struct ChannelBaseInfo : ConfigDataAbstract
 {
-	SGString Name;
-	EnteranceType_t EnteranceType;
+	SGString name_;
+	EnteranceType_t enteranceType_;
 };

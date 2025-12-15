@@ -14,16 +14,27 @@ class ClientInfo : public ConfigDataAbstract
 {
 public:
 	~ClientInfo() override = default;
-	SGSize FrameSize;
-	SGSize GameResolutionSize;
-	SGSize UIResolutionSize = { 640, 480 };
-	ResolutionPolicy GameResolutionPolicy;
-	float UIScaleXFactor;
-	float UIScaleYFactor;
-	bool Resizable;
-	bool FullScreen;
+	SGSize frameSize_;
+	SGSize gameResolutionSize_;
+	SGSize uiResolutionSize_ = { 640, 480 };
+	ResolutionPolicy gameResolutionPolicy_;
+	float uiScaleXFactor_;
+	float uiScaleYFactor_;
+	bool resizable_;
+	bool fullScreen_;
 
-	SGRect getFrameRect() { return { 0, 0, FrameSize.width, FrameSize.height }; }
-	SGRect getGameResolutionRect() { return { 0, 0, GameResolutionSize.width, GameResolutionSize.height }; }
-	SGRect getUIResolutionRect() { return { 0, 0, UIResolutionSize.width, UIResolutionSize.height }; }
+	SGRect GetFrameRect()
+	{
+		return { 0, 0, frameSize_.width, frameSize_.height };
+	}
+
+	SGRect GetGameResolutionRect()
+	{
+		return { 0, 0, gameResolutionSize_.width, gameResolutionSize_.height };
+	}
+
+	SGRect GetUiResolutionRect()
+	{
+		return { 0, 0, uiResolutionSize_.width, uiResolutionSize_.height };
+	}
 };

@@ -16,8 +16,6 @@ struct R_TEST_COMMON : InterServerRecvHelper
 {
 public:
 	// RELAY
-	static void RECV_SS_P2PRelayStaticTest(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_SS_P2PRelayDynamicTest(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SS_P2PRelayStaticTest(JNetwork::Session* _pSession, JNetwork::ICommand* _pCmd);
+	static void RECV_SS_P2PRelayDynamicTest(JNetwork::Session* _pSession, JNetwork::ICommand* _pCmd);
 };
-
-

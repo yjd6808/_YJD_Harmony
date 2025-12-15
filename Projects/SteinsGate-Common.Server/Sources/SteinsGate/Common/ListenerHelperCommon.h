@@ -12,9 +12,9 @@
 
 struct ListenerHelperCommon : ListenerHelperBase
 {
-	static bool IsRelayCommand(JNetwork::ICommand* cmd);
-	static bool IsHostCommand(JNetwork::ICommand* cmd);
-	static bool IsStaticCommand(JNetwork::ICommand* cmd);
-	static bool IsDynamicCommand(JNetwork::ICommand* cmd);
-	static bool IsInterServerCommand(JNetwork::ICommand* cmd);
+	static bool IsRelayCommand(JNetwork::ICommand* _pCommand);
+	static bool IsHostCommand(JNetwork::ICommand* _pCommand);
+	static bool IsStaticCommand(JNetwork::ICommand* _pCommand);
+	static bool IsDynamicCommand(JNetwork::ICommand* _pCommand);
+	static bool IsInterServerCommand(JNetwork::ICommand* _pCommand);
 };

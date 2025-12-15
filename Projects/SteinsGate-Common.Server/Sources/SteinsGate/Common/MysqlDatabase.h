@@ -1,15 +1,15 @@
-/*	
+/*
  *	작성자 : 윤정도
  *	사용 에시코드
  *
  *	--계정 테이블
  *	create table t_account(
  *		c_account_id				int				primary key auto_increment			comment '계정 PK',
- *		c_id						varchar(20) 	unique								comment '계정 아이디',
- *		c_pass						varchar(20)		not null							comment '계정 비번',
+ *		c_id						varchar(20)		unique							comment '계정 아이디',
+ *		c_pass						varchar(20)		not null						comment '계정 비번',
  *		c_created					timestamp		default current_timestamp			comment '계정 생성날짜',
- *		c_created2					timestamp(3)	default current_timestamp(3)		comment '계정 생성날짜',
- *		c_logined					timestamp		default null						comment '계정 접속날짜'
+ *		c_created2					timestamp(3)	default current_timestamp(3)			comment '계정 생성날짜',
+ *		c_logined					timestamp		default null					comment '계정 접속날짜'
  *	);
  *	
  *	char id[] = "wjdeh818";
@@ -22,10 +22,10 @@
  *	
  *	int iFieldCount = q->GetFieldCount();
  *	int iRowCount = q->GetRowCount();
- *
+ *	
  *	if (!q->HasNext())
  *		return;
- *
+ *	
  *	do {
  *		auto c1 = q->GetNumber<Int32>("c_account_id");
  *		auto c2 = q->GetString("c_id");
@@ -53,35 +53,40 @@ using MysqlQueryTaskPtr = JCore::SharedPtr<MysqlQueryTask>;
 class MysqlDatabase
 {
 public:
-	MysqlDatabase(DatabaseInfo* info);
+	MysqlDatabase(DatabaseInfo* _pInfo);
 	virtual ~MysqlDatabase();
-	
-	bool Initialize(ServerProcessType_t serverProcessType);
+
+	bool Initialize(ServerProcessType_t _serverProcessType);
 	void Finalize();
 
-	MysqlConnectionPool* GetConnectionPool() const { return m_pConnectionPool; }
+	MysqlConnectionPool* GetConnectionPool() const { return connectionPool_; }
 
 	/*
 	 * 비동기 Query 실행
 	*/
 	template <typename... Args>
-	MysqlQueryTaskPtr QueryAsync(const JCore::String& statement, Args&&... args) {
-		if (m_pConnectionPool == nullptr) {
+	MysqlQueryTaskPtr QueryAsync(const JCore::String& _statement, Args&&... _args)
+	{
+		if (connectionPool_ == nullptr)
+		{
 			DebugAssertMsg(false, "커넥션 풀이 초기화되지 않았습니다. 데이터베이스가 연결되어있는지 확인해주세요.");
 			return nullptr;
 		}
-		
-		const auto& fnTask = [this](MysqlQueryTask::TResult& result) {
-			result.Success = result.Value->Execute();
-			result.ErrorCode = !result.Success ? IOCPTASK_FAILED_DB : 0;
+
+		const auto& taskFunc = [this](MysqlQueryTask::TResult& _result)
+		{
+			_result.success_ = _result.value_->Execute();
+			_result.errorCode_ = !_result.success_ ? IOCPTASK_FAILED_DB : 0;
 		};
 
-		const auto& fnFinally = [this](MysqlQueryTask::TResult& result) {
-			m_pConnectionPool->ReleaseConnection(result.Value->GetConnection());
+		const auto& finallyFunc = [this](MysqlQueryTask::TResult& _result)
+		{
+			connectionPool_->ReleaseConnection(_result.value_->GetConnection());
 		};
 
-		MysqlQueryPtr spQuery = MysqlQuery::Create(m_pConnectionPool->GetConnection(), statement, JCore::Forward<Args>(args)...);
-		return MysqlQueryTask::Run(m_pIocp, fnTask, fnFinally, spQuery);
+		MysqlQueryPtr pQuery = MysqlQuery::Create(connectionPool_->GetConnection(), _statement,
+		                                          JCore::Forward<Args>(_args)...);
+		return MysqlQueryTask::Run(iocp_, taskFunc, finallyFunc, pQuery);
 	}
 
 	/*
@@ -90,37 +95,41 @@ public:
 	 */
 
 	template <typename... Args>
-	MysqlQueryPtr Query(const JCore::String& statement, Args&&... args) {
-		if (m_pConnectionPool == nullptr) {
+	MysqlQueryPtr Query(const JCore::String& _statement, Args&&... _args)
+	{
+		if (connectionPool_ == nullptr)
+		{
 			DebugAssertMsg(false, "커넥션 풀이 초기화되지 않았습니다. 데이터베이스가 연결되어있는지 확인해주세요.");
 			return nullptr;
 		}
 
-		auto pConn = m_pConnectionPool->GetConnection();
-		AutoReleaseConnection autoRelease(pConn, m_pConnectionPool);
+		auto pConn = connectionPool_->GetConnection();
+		AutoReleaseConnection autoRelease(pConn, connectionPool_);
 
-		if (pConn == nullptr) {
+		if (pConn == nullptr)
+		{
 			// 실패
 			DebugAssertMsg(false, "MysqlDatabase::Query() 커넥션 풀에서 가져오기 실패");
 			return nullptr;
 		}
 
-		MysqlQueryPtr spQuery = MysqlQuery::Create(pConn, statement, JCore::Forward<Args>(args)...);
+		MysqlQueryPtr pQuery = MysqlQuery::Create(pConn, _statement, JCore::Forward<Args>(_args)...);
 
-		if (spQuery == nullptr) {
+		if (pQuery == nullptr)
+		{
 			DebugAssertMsg(false, "MysqlDatabase::Query() 쿼리문 파싱 실패");
 			return nullptr;
 		}
 
-		spQuery->Execute();
-		return spQuery;
+		pQuery->Execute();
+		return pQuery;
 	}
+
 private:
-	
-	JNetwork::IOCP* m_pIocp;
-	MysqlConnectionPool* m_pConnectionPool;
-	DatabaseInfo* m_pInfo{};
-	bool m_bInitialized;
+	JNetwork::IOCP* iocp_;
+	MysqlConnectionPool* connectionPool_;
+	DatabaseInfo* info_{};
+	bool initialized_;
 
 	// 쿼리 수행 통계
 	// 실패 등 처리할 것들은 여기다가 추가 하면 된다

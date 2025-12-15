@@ -12,23 +12,25 @@
 #include <SteinsGate/Client/Tutturu.h>
 
 class SpriteFrameTexture;
+
 class Global : public JCore::SingletonPointer<Global>
 {
 private:
 	friend class TSingleton;
 	Global();
 	~Global();
+
 public:
 	void init();
-	int convertAvatarPartNameToType(const SGString& str);
+	int convertAvatarPartNameToType(const SGString& _avatarPartName);
 	void toggleDrawThicknessBox();
 	void toggleDrawBodyBoundingBox();
 	void toggleDrawAttackBox();
 	void toggleDrawEffect();
 	void toggleDrawUIStatic();
 
-	const SGString& getAvatarSgaName(int charType, int avatarType);
-	const SGString& getWeaponSgaName(int weaponType);
+	const SGString& getAvatarSgaName(int _charType, int _avatarType);
+	const SGString& getWeaponSgaName(int _weaponType);
 
 	SpriteFrameTexture* getDefaultFrameTexture();
 
@@ -38,15 +40,12 @@ public:
 	bool DrawAttackBox;
 	bool DrawEffect;
 	bool DrawUIStatic;
-private:
-	
 
+private:
 	// 런타임 중 변경가능
-	
 
 	// 변경되지 않는 데이터
-	SGString m_AvatarPackName[CharType::Max][AvatarType::Max];	
-	SGString m_WeaponPackName[WeaponType::Max];
-	SpriteFrameTexture* m_pDefaultFrameTexture;
-	
+	SGString avatarPackName_[CharType::Max][AvatarType::Max];
+	SGString weaponPackName_[WeaponType::Max];
+	SpriteFrameTexture* pDefaultFrameTexture_;
 };

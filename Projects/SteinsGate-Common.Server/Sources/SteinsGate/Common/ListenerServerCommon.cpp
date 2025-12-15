@@ -5,7 +5,6 @@
  *
  */
 
-
 #include "Server.h"
 #include "ServerCoreHeader.h"
 #include "ListenerServerCommon.h"
@@ -13,27 +12,34 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-ListenerServerCommon::ListenerServerCommon(CommandParser* parser)
-	: Parser(parser)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+ListenerServerCommon::ListenerServerCommon(CommandParser* _pParser)
+: pParser_(_pParser)
+{
+}
 
-void ListenerServerCommon::OnReceived(Session* session, ICommand* recvCmd) {
-	ListenerServerBase::OnReceived(session, recvCmd);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerServerCommon::OnReceived(Session* _pSession, ICommand* _pRecvCmd)
+{
+	ListenerServerBase::OnReceived(_pSession, _pRecvCmd);
 
-	if (Parser && !Parser->RunCommand(session, recvCmd)) {
-		const Cmd_t id = recvCmd->GetId();
-		const char* szName = Core::CommandNameDictionary.Get(id);
+	if (pParser_ && !pParser_->RunCommand(_pSession, _pRecvCmd))
+	{
+		const Cmd_t id = _pRecvCmd->GetId();
+		const char* pName = Core::CommandNameDictionary.Get(id);
 
 		_LogWarn_("%c %s %sB %s(%d) Parse Faliled",
-			TransmissionName(Transmission::Recv),
-			TransportProtocolName(session->Protocol()),
-			StringUtil::FillLeft(recvCmd->CmdLen, ' ', 4).Source(),
-			szName,
-			id
+		          TransmissionName(Transmission::Recv),
+		          TransportProtocolName(_pSession->Protocol()),
+		          StringUtil::FillLeft(_pRecvCmd->GetLength(), ' ', 4).Source(),
+		          pName,
+		          id
 		);
 	}
 }
 
-void ListenerServerCommon::OnReceived(Session* session, RecvedCommandPacket* packet) {
-	ListenerServerBase::OnReceived(session, packet);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerServerCommon::OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket)
+{
+	ListenerServerBase::OnReceived(_pSession, _pRecvPacket);
 }

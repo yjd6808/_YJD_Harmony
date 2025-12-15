@@ -14,10 +14,10 @@
 class ChatServer final : public CommonServer
 {
 public:
-	ChatServer(const JNetwork::IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator);
+	ChatServer(const JNetwork::IOCPPtr& _pIocp, const JCore::MemoryPoolAbstractPtr& _pBufferAllocator);
 
 	SGTcpSession* CreateSession() override;
 	ServerType_t GetServerType() override { return ServerType::Chat; }
 protected:
-	void OnUpdate(const JCore::TimeSpan& elapsed) override;
+	void OnUpdate(const JCore::TimeSpan& _elapsed) override;
 };

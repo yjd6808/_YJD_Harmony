@@ -15,11 +15,11 @@ class CLIListener : public CLIListenerCommon
 public:
 	CLIListener();
 
-	bool OnInputProcessing(int argc, JCore::String* argv) override;
+	bool OnInputProcessing(int _argc, JCore::String* _pArgv) override;
 private:
-	bool CLI_Example(int argc, JCore::String* argv);
+	bool CLI_Example(int _argc, JCore::String* _pArgv);
 
-	TCLI_Table m_Table;
+	TCLI_Table table_;
 };
 
 

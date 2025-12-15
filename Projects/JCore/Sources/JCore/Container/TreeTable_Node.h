@@ -14,7 +14,6 @@
 #include <JCore/Container/Pair.h>
 
 NS_JC_BEGIN
-
 struct TreeNodeColor
 {
 	enum _
@@ -38,12 +37,16 @@ public:
 
 	template <typename Ky>
 	TreeNode(Ky&& _data)
-		: pParent_(nullptr)
-		, pLeft_(nullptr)
-		, pRight_(nullptr)
-		, color_(TreeNodeColor::eRed)
+	: pParent_(nullptr)
+	, pLeft_(nullptr)
+	, pRight_(nullptr)
+	, color_(TreeNodeColor::eRed)
 	{
-		data_ = Forward<Ky>(_data);
+		new (&data_) TKey(Forward<Ky>(_data));
+	}
+	~TreeNode()
+	{
+		data_.~TKey();
 	}
 
 	// 둘중 할당된 자식 아무거나 반환
@@ -98,7 +101,10 @@ public:
 		return 0;
 	}
 
-	TKey data_;
+	union
+	{
+		TKey data_;
+	};
 	TTreeNode* pParent_;
 	TTreeNode* pLeft_;
 	TTreeNode* pRight_;
@@ -106,4 +112,3 @@ public:
 };
 
 NS_JC_END
-

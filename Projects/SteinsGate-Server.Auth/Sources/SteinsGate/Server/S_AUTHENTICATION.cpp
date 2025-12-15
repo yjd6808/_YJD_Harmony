@@ -14,9 +14,11 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-void S_AUTHENTICATION::SEND_AUC_LoginAck(LoginResult_t result, GameServerType_t lastServer /* = GameServerType::Max */, AuthenticationSerial_t serial /* = InvalidValue_v */) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void S_AUTHENTICATION::SEND_AUC_LoginAck(LoginResult_t _result, GameServerType_t _lastServer /* = GameServerType::Max */, AuthenticationSerial_t _serial /* = InvalidValue_v */)
+{
 	const auto sending = SendBegin<AUC_LoginAck>();
-	sending.Cmd.Result = result;
-	sending.Cmd.LastServer = lastServer;
-	sending.Cmd.Serial = serial;
+	sending.Cmd.result_ = _result;
+	sending.Cmd.lastServer_ = _lastServer;
+	sending.Cmd.serial_ = _serial;
 }

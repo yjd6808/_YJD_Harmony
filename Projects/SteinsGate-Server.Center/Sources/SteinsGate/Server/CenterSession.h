@@ -14,32 +14,30 @@
 class CenterSession : public JNetwork::TcpSession
 {
 public:
-	struct BootState
-	{
-		ServerType_t ServerType;
-		ServerBootState_t State;
-	};
+    struct BootState
+    {
+        ServerType_t ServerType;
+        ServerBootState_t State;
+    };
 
-	CenterSession(
-		JNetwork::TcpServer* server,
-		const JNetwork::IOCPPtr& iocp,
-		const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-		int recvBufferSize,
-		int sendBufferSize
-	);
+    CenterSession(
+        JNetwork::TcpServer* _pServer,
+        const JNetwork::IOCPPtr& _pIocp,
+        const JCore::MemoryPoolAbstractPtr& _pBufferAllocator,
+        int _recvBufferSize,
+        int _sendBufferSize
+    );
 
-	void OnConnected() override;
-	void OnDisconnected() override;
+    void OnConnected() override;
+    void OnDisconnected() override;
 
-	ServerProcessType_t GetClientType() const { return m_eClientType; }
-	Int8 GetServerId() const { return m_iServerId; }
+    ServerProcessType_t GetClientType() const { return clientType_; }
+    Int8 GetServerId() const { return serverId_; }
 
-	void SetClientType(ServerProcessType_t type) { m_eClientType = type; }
-	void SetClientInformation(ServerProcessType_t type, Int8 serverId);
-	bool IsValid() const;
+    void SetClientType(ServerProcessType_t _clientType) { clientType_ = _clientType; }
+    void SetClientInformation(ServerProcessType_t _clientType, Int8 _serverId);
+    bool IsValid() const;
 private:
-	ServerProcessType_t m_eClientType;
-	Int8 m_iServerId;
+    ServerProcessType_t clientType_;
+    Int8 serverId_;
 };
-
-

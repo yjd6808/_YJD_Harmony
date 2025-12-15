@@ -12,29 +12,41 @@
 USING_NS_JC;
 USING_NS_JNET;
 
+//////////////////////////////////////////////////////////////////////////////////////////
 CommonSession::CommonSession(
-	TcpServer* server,
-	const IOCPPtr& iocp,
-	const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-	int recvBufferSize,
-	int sendBufferSize) : TcpSession(server, iocp, bufferAllocator, nullptr, recvBufferSize, sendBufferSize)
-{}
-
-bool CommonSession::AddComponent(IComponent* component) {
-	return m_Components.Add(component);
+	TcpServer* _pServer,
+	const IOCPPtr& _pIocp,
+	const JCore::MemoryPoolAbstractPtr& _pBufferAllocator,
+	int _recvBufferSize,
+	int _sendBufferSize)
+//////////////////////////////////////////////////////////////////////////////////////////
+: TcpSession(_pServer, _pIocp, _pBufferAllocator, nullptr, _recvBufferSize, _sendBufferSize)
+{
 }
 
-bool CommonSession::HasComponent(int type) {
-	return m_Components.Has(type);
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CommonSession::AddComponent(IComponent* _pComponent)
+{
+	return components_.Add(_pComponent);
 }
 
-void CommonSession::OnCreated() {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CommonSession::HasComponent(int _type)
+{
+	return components_.Has(_type);
 }
 
-void CommonSession::OnConnected() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CommonSession::OnCreated()
+{
 }
 
-void CommonSession::OnDisconnected() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CommonSession::OnConnected()
+{
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+void CommonSession::OnDisconnected()
+{
+}

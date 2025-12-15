@@ -14,11 +14,11 @@
 struct CommonInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	CommonInfoLoader(DataManagerAbstract* manager);
-	virtual ~CommonInfoLoader() override = default;
+	CommonInfoLoader(DataManagerAbstract* _pManager);
+	~CommonInfoLoader() override = default;
 
-	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Common; }
-	bool load() override;
+	ConfigFileType_t GetConfigFileType() override { return ConfigFileType::Common; }
+	bool Load() override;
 
-	static void readCommonInfo(Json::Value& commonRoot, JCORE_OUT CommonInfo* commonInfo);
+	static void ReadCommonInfo(Json::Value& _commonRoot, JCORE_OUT CommonInfo* _pCommonInfo);
 };

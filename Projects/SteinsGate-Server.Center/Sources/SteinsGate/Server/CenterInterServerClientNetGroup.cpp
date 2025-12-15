@@ -18,37 +18,48 @@ USING_NS_JNET;
 static constexpr int RecvBufferSize_v = 2048;
 static constexpr int SendBufferSize_v = 2048;
 
-CenterInterServerClientNetGroup::CenterInterServerClientNetGroup() {
+//////////////////////////////////////////////////////////////////////////////////////////
+CenterInterServerClientNetGroup::CenterInterServerClientNetGroup()
+{
 	SetName("센터 인터서버");
 }
 
-void CenterInterServerClientNetGroup::InitializeBufferPool() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterInterServerClientNetGroup::InitializeBufferPool()
+{
 	CreateBufferPool({});
 }
 
-void CenterInterServerClientNetGroup::InitializeIOCP() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterInterServerClientNetGroup::InitializeIOCP()
+{
 	CreateIocp(2);
 	RunIocp();
 }
 
-void CenterInterServerClientNetGroup::InitializeParser() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterInterServerClientNetGroup::InitializeParser()
+{
 }
 
-void CenterInterServerClientNetGroup::InitializeInterServerTcp() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterInterServerClientNetGroup::InitializeInterServerTcp()
+{
 	// 중앙 서버 자체가 인터서버 호스트이므로.. TCP 클라이언트는 사용하지 않는다.
 }
 
-void CenterInterServerClientNetGroup::InitializeInterServerUdp() {
-	auto spInterServerClient = MakeShared<UdpClient>(pIocp_, pBufferPool_, nullptr, RecvBufferSize_v, SendBufferSize_v);
-	spInterServerClient->Bind(Core::ServerProcessInfoPackage->Center.BindInterServerUdp);
-	AddHost(Const::Host::CenterInterServerUdpId, spInterServerClient);
-	m_pInterServerClientUdp = spInterServerClient.Get<UdpClient*>();
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterInterServerClientNetGroup::InitializeInterServerUdp()
+{
+	auto pInterServerClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, nullptr, RecvBufferSize_v, SendBufferSize_v);
+	pInterServerClient->Bind(Core::ServerProcessInfoPackage->center_.bindInterServerUdp_);
+	AddHost(Const::Host::CenterInterServerUdpId, pInterServerClient);
+	m_pInterServerClientUdp = pInterServerClient.Get<UdpClient*>();
 	m_pInterServerClientUdp->SetEventListener(dbg_new ListenerInterServerClient{ ServerProcessType::Center, m_pParser });
 	m_pInterServerClientUdp->RecvFromAsync();
-
-	
 }
 
-void CenterInterServerClientNetGroup::OnUpdate(const JCore::TimeSpan& _elapsed) {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterInterServerClientNetGroup::OnUpdate(const JCore::TimeSpan& _elapsed)
+{
 }

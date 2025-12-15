@@ -13,76 +13,98 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-CenterServer::CenterServer(const IOCPPtr& iocp, const MemoryPoolAbstractPtr& bufferAllocator)
-	: CommonServer(iocp, bufferAllocator)
-	, m_bStartupLaunching(true)
-{}
-
-CenterServer::~CenterServer() {
+//////////////////////////////////////////////////////////////////////////////////////////
+CenterServer::CenterServer(const IOCPPtr& _pIocp, const MemoryPoolAbstractPtr& _pBufferAllocator)
+	: CommonServer(_pIocp, _pBufferAllocator)
+	, startupLaunching_(true)
+{
 }
 
-SGTcpSession* CenterServer::CreateSession() {
+//////////////////////////////////////////////////////////////////////////////////////////
+CenterServer::~CenterServer()
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+SGTcpSession* CenterServer::CreateSession()
+{
 	return dbg_new CenterSession(this, m_spIocp, m_spBufferAllocator, 4096, 4096);
 }
 
-void CenterServer::AddSession(CenterSession* session) {
-	DebugAssert(session->IsValid());
-	const Int8 id = session->GetServerId();
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterServer::AddSession(CenterSession* _pSession)
+{
+	DebugAssert(_pSession->IsValid());
+	const Int8 serverId = _pSession->GetServerId();
 
-	m_pSession[id].Session = session;
-	m_pSession[id].Type = session->GetClientType();
+	centerSessions_[serverId].Session = _pSession;
+	centerSessions_[serverId].Type = _pSession->GetClientType();
 }
 
-void CenterServer::RemoveSession(CenterSession* session) {
-	const Int8 id = session->GetServerId();
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterServer::RemoveSession(CenterSession* _pSession)
+{
+	const Int8 serverId = _pSession->GetServerId();
 
-	m_pSession[id].Session = nullptr;
-	m_pSession[id].Type = ServerProcessType::None;
+	centerSessions_[serverId].Session = nullptr;
+	centerSessions_[serverId].Type = ServerProcessType::None;
 }
 
-void CenterServer::BroadcastPacket(IPacket* packet) {
-	const Vector<int>& vActiveServerIdList = Core::ServerProcessInfoPackage->ActiveServerIdList;
-	const int iServerCount = vActiveServerIdList.Size();
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterServer::BroadcastPacket(IPacket* _pPacket)
+{
+	const Vector<int>& activeServerIdList = Core::ServerProcessInfoPackage->activeServerIdList_;
+	const int serverCount = activeServerIdList.Size();
 
-	for (int i = 0; i < iServerCount; ++i) {
-		Session* pSession = m_pSession[vActiveServerIdList[i]].Session;
-		if (pSession == nullptr) {
+	for (int serverIndex = 0; serverIndex < serverCount; ++serverIndex)
+	{
+		Session* pSession = centerSessions_[activeServerIdList[serverIndex]].Session;
+		if (pSession == nullptr)
 			continue;
-		}
-		pSession->SendAsync(packet);
+
+		pSession->SendAsync(_pPacket);
 	}
 }
 
-bool CenterServer::IsAllCenterSessionConnected() {
-	const Vector<int>& vActiveServerIdList = Core::ServerProcessInfoPackage->ActiveServerIdList;
-	const int iServerCount = vActiveServerIdList.Size();
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CenterServer::IsAllCenterSessionConnected()
+{
+	const Vector<int>& activeServerIdList = Core::ServerProcessInfoPackage->activeServerIdList_;
+	const int serverCount = activeServerIdList.Size();
 
-	for (int i = 0; i < iServerCount; ++i) {
-		if (m_pSession[vActiveServerIdList[i]].Session == nullptr) {
+	for (int serverIndex = 0; serverIndex < serverCount; ++serverIndex)
+	{
+		if (centerSessions_[activeServerIdList[serverIndex]].Session == nullptr)
 			return false;
-		}
 	}
+
 	return true;
 }
 
-bool CenterServer::IsConnected(CenterSession* session) {
-	for (int i = 0; i < Const::Server::MaxProcessId; ++i) {
-		if (m_pSession[i].Session == session) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CenterServer::IsConnected(CenterSession* _pSession)
+{
+	for (int serverId = 0; serverId < Const::Server::MaxProcessId; ++serverId)
+	{
+		if (centerSessions_[serverId].Session == _pSession)
 			return true;
-		}
 	}
+
 	return false;
 }
 
-bool CenterServer::IsConnected(int serverId) {
-	if (m_pSession[serverId].Session != nullptr) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CenterServer::IsConnected(int _serverId)
+{
+	if (centerSessions_[_serverId].Session != nullptr)
 		return true;
-	}
+
 	return false;
 }
 
-void CenterServer::OnUpdate(const TimeSpan& elapsed) {
-	CommonServer::OnUpdate(elapsed);
+//////////////////////////////////////////////////////////////////////////////////////////
+void CenterServer::OnUpdate(const TimeSpan& _elapsed)
+{
+	CommonServer::OnUpdate(_elapsed);
 }
-
 

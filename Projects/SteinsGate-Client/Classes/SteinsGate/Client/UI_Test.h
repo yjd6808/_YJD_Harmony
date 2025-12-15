@@ -5,13 +5,11 @@
  *
  */
 
-
 #pragma once
 
+#include <SteinsGate/Client/UIRootGroup.h>
 
-#include <SteinsGate/Client/UIMasterGroup.h>
-
-class UI_Test : public UIMasterGroup
+class UI_Test : public UIRootGroup
 {
 public:
 	enum ScaleState
@@ -20,28 +18,26 @@ public:
 		eDecrease
 	};
 
-	UI_Test(UIGroupInfo* groupInfo);
+	UI_Test(UIGroupInfo* _pGroupInfo);
 
 protected:
-	void onInit() override;
-	void onLoaded() override;
-	void onUpdate(float dt) override;
-	void onToggleStateChanged(UIToggleButton* toggleBtn, ToggleState state) override;
-	void onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent) override;
+	void OnInit() override;
+	void OnLoaded() override;
+	void onUpdate(float _dt) override;
+	void OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _state) override;
+	void OnMouseUpTarget(UIElement* _pElement, SGEventMouse* _pMouseEvent) override;
+
 private:
-	UIGroup* m_pGroupO1;
-	UIGroup* m_pGroupO2;
+	UIGroup* groupO1_;
+	UIGroup* groupO2_;
 
-	// ========================================================
-	SGSize m_GroupO1DefaultSize;
-	SGSize m_GroupO2DefaultSize;
+	SGSize groupO1DefaultSize_;
+	SGSize groupO2DefaultSize_;
 
-	int m_iFontCode;
-	SGVector<SGLabel*> m_vTestLabelList;
-	bool m_bTestFont;
+	int fontCode_;
+	SGVector<SGLabel*> testLabelList_;
+	bool testFont_;
 
-	float m_fScale;
-	ScaleState m_eScaleState;
-
-	
+	float scale_;
+	ScaleState scaleState_;
 };

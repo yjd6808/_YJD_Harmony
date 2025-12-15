@@ -14,11 +14,11 @@
 struct CharCommonInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	CharCommonInfoLoader(DataManagerAbstract* manager);
-	virtual ~CharCommonInfoLoader() override = default;
+	CharCommonInfoLoader(DataManagerAbstract* _pManager);
+	~CharCommonInfoLoader() override = default;
 
-	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Char_Common; }
-	bool load() override;
+	ConfigFileType_t GetConfigFileType() override { return ConfigFileType::Char_Common; }
+	bool Load() override;
 
-	static void readCharCommonInfo(Json::Value & charCommonRoot, JCORE_OUT CharCommonInfo * charCommonInfo);
+	static void ReadCharCommonInfo(Json::Value& _charCommonRoot, JCORE_OUT CharCommonInfo* _pCharCommonInfo);
 };

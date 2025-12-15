@@ -32,4 +32,3 @@ public:
 	virtual void initialize() = 0;
 	virtual Type getType() const = 0;
 };
-

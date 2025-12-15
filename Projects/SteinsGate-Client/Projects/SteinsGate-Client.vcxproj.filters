@@ -354,7 +354,7 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\UICheckBox.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\UIGroupMaster.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIRootGroupManager.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UIToggleButton.cpp">
@@ -372,7 +372,7 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\UIScrollBar.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\UIMasterGroup.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIRootGroup.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\WndMessage.cpp">
@@ -833,7 +833,7 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_UI.h">
       <Filter>Define</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\UIGroupMaster.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIRootGroupManager.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UIToggleButton.h">
@@ -851,7 +851,7 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\UIScrollBar.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\UIMasterGroup.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIRootGroup.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\WndMessage.h">

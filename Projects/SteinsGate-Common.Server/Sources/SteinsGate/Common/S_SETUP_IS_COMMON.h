@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <SteinsGate/Common/InterServerSendHelper.h>
@@ -16,9 +15,10 @@
 struct S_SETUP_IS_COMMON : InterServerSendHelper<S_SETUP_IS_COMMON>
 {
 	// HOST
-	static bool SEND_SCE_ItsMe(ServerProcessType_t clientType, int serverId);
-	static bool SEND_SCE_NotifyBootState(int serverId, ServerType_t serverType, ServerBootState_t state);
-	static bool SEND_SCE_NotifyOrderFailed(int serverId, ServerType_t serverType, CenterOrder_t failedOrder, Int32U errorCode);
+	static bool SEND_SCE_ItsMe(ServerProcessType_t _clientType, int _serverId);
+	static bool SEND_SCE_NotifyBootState(int _serverId, ServerType_t _serverType, ServerBootState_t _state);
+	static bool SEND_SCE_NotifyOrderFailed(int _serverId, ServerType_t _serverType, CenterOrder_t _failedOrder,
+	                                       Int32U _errorCode);
 
 	// RELAY
 };

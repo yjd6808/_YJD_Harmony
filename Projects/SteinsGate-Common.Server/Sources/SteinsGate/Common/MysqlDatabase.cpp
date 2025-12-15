@@ -9,97 +9,104 @@ USING_NS_JC;
 USING_NS_JNET;
 USING_NS_STD;
 
-MysqlDatabase::MysqlDatabase(DatabaseInfo* info)
-	: m_pIocp(nullptr)
-	, m_pConnectionPool(nullptr)
-	, m_pInfo(info)
-	, m_bInitialized(false)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+MysqlDatabase::MysqlDatabase(DatabaseInfo* _pInfo)
+: iocp_(nullptr)
+, connectionPool_(nullptr)
+, info_(_pInfo)
+, initialized_(false)
+{
+}
 
-MysqlDatabase::~MysqlDatabase() {
-	if (m_bInitialized) {
+//////////////////////////////////////////////////////////////////////////////////////////
+MysqlDatabase::~MysqlDatabase()
+{
+	if (initialized_)
+	{
 		Finalize();
-		JCORE_DELETE_SAFE(m_pIocp);
+		JCORE_DELETE_SAFE(iocp_);
 	}
 }
 
-
-bool MysqlDatabase::Initialize(ServerProcessType_t serverProcessType) {
-
-	if (m_bInitialized) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool MysqlDatabase::Initialize(ServerProcessType_t _serverProcessType)
+{
+	if (initialized_)
+	{
 		_LogError_("이미 생성된 객체입니다.");
 		return false;
 	}
 
-	const int iUse = m_pInfo->Use[serverProcessType];
-	const int iConnectionPoolSize = m_pInfo->ConnectionPoolSize[serverProcessType];
-	const int iMaxConnection = m_pInfo->MaxConnection[serverProcessType];
-	const int iThreadCount = m_pInfo->IocpThreadCount[serverProcessType];
+	const int use = info_->use_[_serverProcessType];
+	const int connectionPoolSize = info_->connPoolSize_[_serverProcessType];
+	const int maxConnection = info_->maxConnection_[_serverProcessType];
+	const int threadCount = info_->iocpThreadCount_[_serverProcessType];
 
-	if (iUse != 1) {
+	if (use != 1)
+	{
 		_LogError_("해당 데이터베이스는 사용하지 않습니다.");
 		return false;
 	}
 
-
-
-	if (m_pConnectionPool == nullptr)
-		m_pConnectionPool = dbg_new MysqlConnectionPool(
-			m_pInfo->HostName, 
-			m_pInfo->ConnectionPort, 
-			m_pInfo->AccountId, 
-			m_pInfo->AccountPass, 
-			m_pInfo->SchemaName,
-			iMaxConnection
+	if (connectionPool_ == nullptr)
+	{
+		connectionPool_ = dbg_new MysqlConnectionPool(
+			info_->hostName_,
+			info_->connPort_,
+			info_->accountId_,
+			info_->accountPass_,
+			info_->schemaName_,
+			maxConnection
 		);
+	}
 
 	// 커넥션 풀 초기화
-	if (!m_pConnectionPool->Init(iConnectionPoolSize)) {
-		JCORE_DELETE_SAFE(m_pConnectionPool);
+	if (!connectionPool_->Init(connectionPoolSize))
+	{
+		JCORE_DELETE_SAFE(connectionPool_);
 		_LogError_("DB 커넥션 풀 초기화 실패");
 		return false;
 	}
 
 	// 빌더 커넥션 초기화
 	// String Escape 하나를 위해서 어쩔수없이 초기화함;
-	if (!MysqlStatementBuilder::Initialize(m_pInfo)) {
+	if (!MysqlStatementBuilder::Initialize(info_))
+	{
 		_LogError_("DB 스테이트먼트 빌더 초기화 실패");
 		return false;
 	}
 
-	_LogInfo_("데이터베이스 커넥션 풀(크기: %d) 초기화 [%s:%d]", 
-		iConnectionPoolSize,
-		m_pInfo->HostName.Source(), 
-		m_pInfo->ConnectionPort
+	_LogInfo_("데이터베이스 커넥션 풀(크기: %d) 초기화 [%s:%d]",
+	          connectionPoolSize,
+	          info_->hostName_.Source(),
+	          info_->connPort_
 	);
 
-	m_pIocp = dbg_new IOCP(iThreadCount);
-	m_pIocp->Run();
-	m_bInitialized = true;
-	_LogInfo_("%s %s 실행완료 (쓰레드 수: %d)", m_pInfo->Name.Source(), IOCP::TypeName(), iThreadCount);
+	iocp_ = dbg_new IOCP(threadCount);
+	iocp_->Run();
+	initialized_ = true;
+	_LogInfo_("%s %s 실행완료 (쓰레드 수: %d)", info_->name_.Source(), IOCP::TypeName(), threadCount);
 	return true;
 }
 
-void MysqlDatabase::Finalize() {
-
-	if (m_bInitialized == false)
+//////////////////////////////////////////////////////////////////////////////////////////
+void MysqlDatabase::Finalize()
+{
+	if (initialized_ == false)
 		return;
 
-	_LogInfo_("%s 파괴시작", m_pInfo->Name.Source());
-	m_bInitialized = false;
+	_LogInfo_("%s 파괴시작", info_->name_.Source());
+	initialized_ = false;
 
-	m_pIocp->Join();
-	_LogInfo_("%s %s 쪼인완료", m_pInfo->Name.Source(), IOCP::TypeName());
+	iocp_->Join();
+	_LogInfo_("%s %s 쪼인완료", info_->name_.Source(), IOCP::TypeName());
 
-	m_pIocp->Destroy();
-	_LogInfo_("%s %s 파괴완료", m_pInfo->Name.Source(), IOCP::TypeName());
+	iocp_->Destroy();
+	_LogInfo_("%s %s 파괴완료", info_->name_.Source(), IOCP::TypeName());
 
-	if (m_pConnectionPool)
-		JCORE_DELETE_SAFE(m_pConnectionPool);
-	_LogInfo_("%s %s 파괴완료", m_pInfo->Name.Source(), IOCP::TypeName(),  MysqlConnectionPool::TypeName());
-
+	if (connectionPool_)
+		JCORE_DELETE_SAFE(connectionPool_);
+	_LogInfo_("%s %s 파괴완료", info_->name_.Source(), IOCP::TypeName(), MysqlConnectionPool::TypeName());
 
 	MysqlStatementBuilder::Finalize();
 }
-
-

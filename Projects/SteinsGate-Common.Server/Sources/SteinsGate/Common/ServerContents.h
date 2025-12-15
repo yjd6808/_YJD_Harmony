@@ -18,4 +18,3 @@ struct ServerContents : BaseContents
 	void Initialize() override;
 	void Finalize() override;
 };
-

@@ -14,16 +14,23 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-
-CommonNetGroup::CommonNetGroup() : m_pParser(dbg_new CommandParser) {}
-
-CommonNetGroup::~CommonNetGroup() {
-	JCORE_DELETE_SAFE(m_pParser);
+//////////////////////////////////////////////////////////////////////////////////////////
+CommonNetGroup::CommonNetGroup()
+: pParser_(dbg_new CommandParser)
+{
 }
 
-void CommonNetGroup::Initialize() {
+//////////////////////////////////////////////////////////////////////////////////////////
+CommonNetGroup::~CommonNetGroup()
+{
+	JCORE_DELETE_SAFE(pParser_);
+}
 
-	if (Core::ServerProcessInfo == nullptr) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CommonNetGroup::Initialize()
+{
+	if (Core::ServerProcessInfo == nullptr)
+	{
 		_LogWarn_("서버 정보가 없어서 네트그룹 초기화 실패 [메인 네트그룹]");
 		return;
 	}
@@ -34,60 +41,74 @@ void CommonNetGroup::Initialize() {
 	InitializeServer();
 }
 
-void CommonNetGroup::Finalize() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CommonNetGroup::Finalize()
+{
 	NetGroup::Finalize();
-	JCORE_DELETE_SAFE(m_pParser);
+	JCORE_DELETE_SAFE(pParser_);
 }
 
-bool CommonNetGroup::AddUpdatable(int id, IUpdatable* updatable) {
-	if (!m_UpdatableCollection.Add(id, updatable)) {
-		_LogWarn_("넷그룹 업데이터블 추가실패(%d)", id);
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CommonNetGroup::AddUpdatable(int _id, IUpdatable* _pUpdatable)
+{
+	if (!updatableCollection_.Add(_id, _pUpdatable))
+	{
+		_LogWarn_("넷그룹 업데이터블 추가실패(%d)", _id);
 		return false;
 	}
 
 	return true;
 }
 
-void CommonNetGroup::InitializeParser() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void CommonNetGroup::InitializeParser()
+{
 	// 서버 공통 커맨드 정의
 }
 
-void CommonNetGroup::ProcessUpdate(const TimeSpan& elapsed) {
-	m_UpdatableCollection.Update(elapsed);
+//////////////////////////////////////////////////////////////////////////////////////////
+void CommonNetGroup::ProcessUpdate(const TimeSpan& _elapsed)
+{
+	updatableCollection_.Update(_elapsed);
 }
 
-
-void CommonNetGroup::ProcessOrder(CenterOrder_t order) {
-	switch (order) {
-	case CenterOrder::LaunchServer:	
+//////////////////////////////////////////////////////////////////////////////////////////
+void CommonNetGroup::ProcessOrder(CenterOrder_t _order)
+{
+	switch (_order)
+	{
+	case CenterOrder::LaunchServer:
 		LaunchServer();
 		break;
-	case CenterOrder::StopServer:	
+	case CenterOrder::StopServer:
 		StopServer();
 		break;
-	default: DebugAssert(false);
+	default:
+		DebugAssert(false);
 	}
 }
 
-void CommonNetGroup::LaunchServer() {
-	JCORE_LOCK_GUARD(m_ServerBootLock);
-	const ServerBootState_t eState = Core::CommonServer->GetBootState();
+//////////////////////////////////////////////////////////////////////////////////////////
+void CommonNetGroup::LaunchServer()
+{
+	JCORE_LOCK_GUARD(serverBootLock_);
+	const ServerBootState_t state = Core::CommonServer->GetBootState();
 
-	if (eState == ServerBootState::Launched || eState == ServerBootState::Launching) {
+	if (state == ServerBootState::Launched || state == ServerBootState::Launching)
 		return;
-	}
 
 	Core::CommonServer->SetBootState(ServerBootState::Launching);
-	Core::CommonServer->Start(Core::ServerProcessInfo->BindTcp);
+	Core::CommonServer->Start(Core::ServerProcessInfo->bindTcp_);
 }
 
-void CommonNetGroup::StopServer() {
-	JCORE_LOCK_GUARD(m_ServerBootLock);
-	const ServerBootState_t eState = Core::CommonServer->GetBootState();
+//////////////////////////////////////////////////////////////////////////////////////////
+void CommonNetGroup::StopServer()
+{
+	JCORE_LOCK_GUARD(serverBootLock_);
+	const ServerBootState_t state = Core::CommonServer->GetBootState();
 
-	if (eState == ServerBootState::Stopped || eState == ServerBootState::Stopping) {
+	if (state == ServerBootState::Stopped || state == ServerBootState::Stopping)
 		return;
-	}
 
 	Core::CommonServer->SetBootState(ServerBootState::Stopping);
 	Core::CommonServer->Stop();

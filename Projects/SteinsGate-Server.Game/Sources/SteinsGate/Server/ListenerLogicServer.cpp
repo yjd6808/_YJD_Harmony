@@ -1,10 +1,9 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/3/2023 9:10:29 AM [SteinsGate-Server.Lobby 프로젝트 복사 생성]
  * =====================
  *
  */
-
 
 #include "Game.h"
 #include "GameCoreHeader.h"
@@ -13,37 +12,51 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-ListenerLogicServer::ListenerLogicServer(LogicServer* server, CommandParser* parser)
-	: ListenerServerCommon(parser)
-	, m_pLogicTcp(server)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+ListenerLogicServer::ListenerLogicServer(LogicServer* _pLogicServer, CommandParser* _pParser)
+	: ListenerServerCommon(_pParser)
+	, logicTcp_(_pLogicServer)
+{
+}
 
-void ListenerLogicServer::OnStarted() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerLogicServer::OnStarted()
+{
 	ListenerServerCommon::OnStarted();
 }
 
-void ListenerLogicServer::OnConnected(Session* connectedSession) {
-	ListenerServerCommon::OnConnected(connectedSession);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerLogicServer::OnConnected(Session* _pConnectedSession)
+{
+	ListenerServerCommon::OnConnected(_pConnectedSession);
 }
 
-void ListenerLogicServer::OnDisconnected(Session* disconnetedSession, Int32U errorCode) {
-	ListenerServerCommon::OnDisconnected(disconnetedSession, errorCode);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerLogicServer::OnDisconnected(Session* _pDisconnectedSession, Int32U _errorCode)
+{
+	ListenerServerCommon::OnDisconnected(_pDisconnectedSession, _errorCode);
 }
 
-void ListenerLogicServer::OnSent(Session* sender, IPacket* sentPacket, Int32UL sentBytes) {
-	ListenerServerCommon::OnSent(sender, sentPacket, sentBytes);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerLogicServer::OnSent(Session* _pSender, IPacket* _pSentPacket, Int32UL _sentBytes)
+{
+	ListenerServerCommon::OnSent(_pSender, _pSentPacket, _sentBytes);
 }
 
-void ListenerLogicServer::OnReceived(Session* receiver, ICommand* cmd) {
-	ListenerServerCommon::OnReceived(receiver, cmd);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerLogicServer::OnReceived(Session* _pReceiver, ICommand* _pCmd)
+{
+	ListenerServerCommon::OnReceived(_pReceiver, _pCmd);
 }
 
-void ListenerLogicServer::OnReceived(Session* session, RecvedCommandPacket* recvPacket) {
-	ListenerServerCommon::OnReceived(session, recvPacket);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerLogicServer::OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket)
+{
+	ListenerServerCommon::OnReceived(_pSession, _pRecvPacket);
 }
 
-void ListenerLogicServer::OnStopped() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ListenerLogicServer::OnStopped()
+{
 	ListenerServerCommon::OnStopped();
 }
-
-

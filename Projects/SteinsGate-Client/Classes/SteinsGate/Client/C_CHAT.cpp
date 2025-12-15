@@ -6,7 +6,6 @@
  */
 
 
-
 #include "Tutturu.h"
 #include "GameCoreHeader.h"
 #include "C_CHAT.h"
@@ -17,15 +16,17 @@ USING_NS_JC;
 USING_NS_CC;
 USING_NS_JNET;
 
-
-void C_CHAT::OnConnected(Session* session) {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void C_CHAT::OnConnected(Session* _pSession)
+{
 }
 
-void C_CHAT::OnConnectFailed(Session* session, Int32U errorCode) {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void C_CHAT::OnConnectFailed(Session* _pSession, Int32U _errorCode)
+{
 }
 
-void C_CHAT::OnDisconnected(Session* session) {
-	
+//////////////////////////////////////////////////////////////////////////////////////////
+void C_CHAT::OnDisconnected(Session* _pSession)
+{
 }

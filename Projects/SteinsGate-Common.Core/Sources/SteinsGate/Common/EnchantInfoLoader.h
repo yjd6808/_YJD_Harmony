@@ -14,11 +14,16 @@
 struct EnchantInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	EnchantInfoLoader(DataManagerAbstract* manager);
-	virtual ~EnchantInfoLoader() override = default;
+	EnchantInfoLoader(DataManagerAbstract* _pManager);
+	~EnchantInfoLoader() override = default;
 
-	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Enchant; }
-	bool load() override;
+	ConfigFileType_t GetConfigFileType() override
+	{
+		return ConfigFileType::Enchant;
+	}
 
-	/* static */ void readEnchantInfo(Json::Value & enchantRoot, JCORE_OUT EnchantInfo * enchantInfo);
+	bool Load() override;
+
+	/* static */
+	void ReadEnchantInfo(Json::Value& _enchantRoot, JCORE_OUT EnchantInfo* _pEnchantInfo);
 };

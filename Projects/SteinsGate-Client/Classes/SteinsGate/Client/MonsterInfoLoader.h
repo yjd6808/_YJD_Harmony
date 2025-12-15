@@ -1,6 +1,6 @@
-ï»¿/*
- * ì‘ì„±ì: ìœ¤ì •ë„
- * ìƒì„±ì¼: 1/20/2023 1:44:11 PM
+/*
+ * À±Á¤µµ
+ * ÀÛ¼ºÀÏ: 1/20/2023 1:44:11 PM
  * =====================
  *
  */
@@ -16,10 +16,10 @@
 struct MonsterInfoLoader : MonsterBaseInfoLoader
 {
 public:
-	MonsterInfoLoader(DataManagerAbstract* manager);
+	MonsterInfoLoader(DataManagerAbstract* _pManager);
 	~MonsterInfoLoader() override = default;
 
-	bool load() override;
+	bool Load() override;
 
-	static void readMonsterInfo(Json::Value& mobRoot, JCORE_OUT MonsterInfo* mobInfo);
+	static void ReadMonsterInfo(Json::Value& _mobRoot, JCORE_OUT MonsterInfo* _pMobInfo);
 };

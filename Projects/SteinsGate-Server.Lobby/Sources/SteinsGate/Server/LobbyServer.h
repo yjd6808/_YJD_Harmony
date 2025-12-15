@@ -14,10 +14,10 @@
 class LobbyServer final : public CommonServer
 {
 public:
-	LobbyServer(const JNetwork::IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator);
+	LobbyServer(const JNetwork::IOCPPtr& _pIocp, const JCore::MemoryPoolAbstractPtr& _pBufferAllocator);
 
 	SGTcpSession* CreateSession() override;
 	ServerType_t GetServerType() override { return ServerType::Lobby; }
 protected:
-	void OnUpdate(const JCore::TimeSpan& elapsed) override;
+	void OnUpdate(const JCore::TimeSpan& _elapsed) override;
 };

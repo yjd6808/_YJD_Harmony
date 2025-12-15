@@ -14,25 +14,26 @@
 #include <SteinsGate/Common/ListenerHelperBase.h>
 
 
-
 class NetClientEventListener : public ListenerClientBase
 {
 public:
-	NetClientEventListener(ClientConnectServerType_t m_eConnectedServerType);
+	NetClientEventListener(ClientConnectServerType_t _connectedServerType);
+
 protected:
-	void OnConnected(JNetwork::Session* session) override;
-	void OnDisconnected(JNetwork::Session* session, Int32U errorCode) override;
-	void OnConnectFailed(JNetwork::Session* session, Int32U errorCode) override;
-	void OnSent(JNetwork::Session* session, JNetwork::IPacket* sendPacket, Int32UL sentBytes) override;
-	void OnReceived(JNetwork::Session* session, JNetwork::ICommand* recvCmd) override;
-	void OnReceived(JNetwork::Session* session, JNetwork::RecvedCommandPacket* recvPacket) override;
+	void OnConnected(JNetwork::Session* _pSession) override;
+	void OnDisconnected(JNetwork::Session* _pSession, Int32U _errorCode) override;
+	void OnConnectFailed(JNetwork::Session* _pSession, Int32U _errorCode) override;
+	void OnSent(JNetwork::Session* _pSession, JNetwork::IPacket* _pSendPacket, Int32UL _sentBytes) override;
+	void OnReceived(JNetwork::Session* _pSession, JNetwork::ICommand* _pRecvCmd) override;
+	void OnReceived(JNetwork::Session* _pSession, JNetwork::RecvedCommandPacket* _pRecvPacket) override;
 
 	// 동기화 수행
-	static void SyncConnectionResult(ClientConnectServerType_t listenerType, JNetwork::Session* session, bool success, Int32U errorCode);
-	static void SyncDisconnectionResult(ClientConnectServerType_t listenerType, JNetwork::Session* session);
-	static void SyncReceivedCommand(ClientConnectServerType_t listenerType, SGSession* session, JNetwork::ICommand* cmd);
+	static void SyncConnectionResult(ClientConnectServerType_t _listenerType, JNetwork::Session* _pSession,
+	                                 bool _success, Int32U _errorCode);
+	static void SyncDisconnectionResult(ClientConnectServerType_t _listenerType, JNetwork::Session* _pSession);
+	static void SyncReceivedCommand(ClientConnectServerType_t _listenerType, SGSession* _pSession,
+	                                JNetwork::ICommand* _pCmd);
+
 private:
-	ClientConnectServerType_t m_eConnectedServerType;
+	ClientConnectServerType_t connectedServerType_;
 };
-
-

@@ -5,7 +5,6 @@
  *
  */
 
-
 #include "Core.h"
 #include "CommonCoreHeader.h"
 #include "MapInfoLoader.h"
@@ -15,134 +14,164 @@
 USING_NS_JC;
 USING_NS_JS;
 
-MapInfoLoader::MapInfoLoader(DataManagerAbstract* manager)
-	: ConfigFileLoaderAbstract(manager)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+MapInfoLoader::MapInfoLoader(DataManagerAbstract* _pManager)
+: ConfigFileLoaderAbstract(_pManager)
+{
+}
 
-MapInfoLoader::~MapInfoLoader() {
-	m_hMapAreaInfo.ForEachValue([](MapAreaInfo* area) {
-		delete area;
+//////////////////////////////////////////////////////////////////////////////////////////
+MapInfoLoader::~MapInfoLoader()
+{
+	mapAreaInfoHash_.ForEachValue([](MapAreaInfo* pMapArea)
+	{
+		delete pMapArea;
 	});
 }
 
-bool MapInfoLoader::load() {
-	DirectoryTree tree;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool MapInfoLoader::Load()
+{
+	DirectoryTree directoryTree;
 
-	if (!loadDirectory(tree)) {
+	if (!LoadDirectory(directoryTree))
+	{
 		return false;
 	}
 
-	tree.setCallback("map/map_of_dungeon",		JCORE_CALLBACK_3(MapInfoLoader::onDungeonMapRootLoaded, this));
-	tree.setCallback("map/map_of_dungeon_area", JCORE_CALLBACK_3(MapInfoLoader::onAreaRootLoaded, this));
-	tree.setCallback("map/map_of_private",		JCORE_CALLBACK_3(MapInfoLoader::onPrivateMapRootLoaded, this));
-	tree.setCallback("map/map_of_private_area", JCORE_CALLBACK_3(MapInfoLoader::onAreaRootLoaded, this));
-	tree.setCallback("map/map_of_town",			JCORE_CALLBACK_3(MapInfoLoader::onTownMapRootLoaded, this));
-	tree.setCallback("map/map_of_town_area",	JCORE_CALLBACK_3(MapInfoLoader::onAreaRootLoaded, this));
+	directoryTree.SetCallback("map/map_of_dungeon", JCORE_CALLBACK_3(MapInfoLoader::OnDungeonMapRootLoaded, this));
+	directoryTree.SetCallback("map/map_of_dungeon_area", JCORE_CALLBACK_3(MapInfoLoader::OnAreaRootLoaded, this));
+	directoryTree.SetCallback("map/map_of_private", JCORE_CALLBACK_3(MapInfoLoader::OnPrivateMapRootLoaded, this));
+	directoryTree.SetCallback("map/map_of_private_area", JCORE_CALLBACK_3(MapInfoLoader::OnAreaRootLoaded, this));
+	directoryTree.SetCallback("map/map_of_town", JCORE_CALLBACK_3(MapInfoLoader::OnTownMapRootLoaded, this));
+	directoryTree.SetCallback("map/map_of_town_area", JCORE_CALLBACK_3(MapInfoLoader::OnAreaRootLoaded, this));
 
-	tree.setCallbackCommon(JCORE_CALLBACK_3(MapInfoLoader::test_onCommon, this));
-	tree.load();
+	directoryTree.SetCallbackCommon(JCORE_CALLBACK_3(MapInfoLoader::TestOnCommon, this));
+	directoryTree.Load();
 
 	return true;
 }
 
-MapInfo* MapInfoLoader::createMapInfo(Value& mapRoot, MapType_t type) {
-	Value& npcListRoot = mapRoot["npc"];
-	Value& mapObjectListRoot = mapRoot["map_object"];
-
-
+//////////////////////////////////////////////////////////////////////////////////////////
+MapInfo* MapInfoLoader::CreateMapInfo(Value& _mapRoot, MapType_t _mapType)
+{
+	Value& npcListRoot = _mapRoot["npc"];
+	Value& mapObjectListRoot = _mapRoot["map_object"];
 
 	// TODO: NPC 추가시 수정 필요
-	return dbg_new MapInfo(/* (int)npcRoot.size() */ 1, (int)mapObjectListRoot.size());
+	return dbg_new MapInfo(/* (int)npcRoot.size() */ 1, static_cast<int>(mapObjectListRoot.size()));
 }
 
-void MapInfoLoader::onDungeonMapRootLoaded(Value& mapRoot, const SGString& fileName, DirectoryTreeNode* curNode) {
-	MapInfo* pInfo = createMapInfo(mapRoot, MapType::Dungeon);
-	readMapCommonInfo(mapRoot, pInfo);
-	addData(pInfo);
+//////////////////////////////////////////////////////////////////////////////////////////
+void MapInfoLoader::OnDungeonMapRootLoaded(Value& _mapRoot, const SGString& _fileName, DirectoryTreeNode* _pCurNode)
+{
+	MapInfo* pMapInfo = CreateMapInfo(_mapRoot, MapType::Dungeon);
+	ReadMapCommonInfo(_mapRoot, pMapInfo);
+	AddData(pMapInfo);
 }
 
-void MapInfoLoader::onPrivateMapRootLoaded(Value& mapRoot, const SGString& fileName, DirectoryTreeNode* curNode) {
-	MapInfo* pInfo = createMapInfo(mapRoot, MapType::Private);
-	readMapCommonInfo(mapRoot, pInfo);
-	addData(pInfo);
+//////////////////////////////////////////////////////////////////////////////////////////
+void MapInfoLoader::OnPrivateMapRootLoaded(Value& _mapRoot, const SGString& _fileName, DirectoryTreeNode* _pCurNode)
+{
+	MapInfo* pMapInfo = CreateMapInfo(_mapRoot, MapType::Private);
+	ReadMapCommonInfo(_mapRoot, pMapInfo);
+	AddData(pMapInfo);
 }
 
-void MapInfoLoader::onTownMapRootLoaded(Value& mapRoot, const SGString& fileName, DirectoryTreeNode* curNode) {
-	MapInfo* pInfo = createMapInfo(mapRoot, MapType::Town);
-	readMapCommonInfo(mapRoot, pInfo);
-	addData(pInfo);
+//////////////////////////////////////////////////////////////////////////////////////////
+void MapInfoLoader::OnTownMapRootLoaded(Value& _mapRoot, const SGString& _fileName, DirectoryTreeNode* _pCurNode)
+{
+	MapInfo* pMapInfo = CreateMapInfo(_mapRoot, MapType::Town);
+	ReadMapCommonInfo(_mapRoot, pMapInfo);
+	AddData(pMapInfo);
 }
 
-void MapInfoLoader::onAreaRootLoaded(Value& areaRoot, const SGString& fileName, DirectoryTreeNode* curNode) {
-	int iMapCode = areaRoot["code"].asInt();
-	int iHeight = areaRoot["area"].size();
+//////////////////////////////////////////////////////////////////////////////////////////
+void MapInfoLoader::OnAreaRootLoaded(Value& _areaRoot, const SGString& _fileName, DirectoryTreeNode* _pCurNode)
+{
+	int mapCode = _areaRoot["code"].asInt();
+	int height = _areaRoot["area"].size();
 
-	if (iMapCode < 1) {
-		_LogWarn_("%s 올바르지 않은 area 데이터", fileName.Source());
+	if (mapCode < 1)
+	{
+		_LogWarn_("%s 올바르지 않은 area 데이터", _fileName.Source());
 		return;
 	}
 
-	if (iHeight == 0) {
-		_LogWarn_("%s area 데이터가 없음", fileName.Source());
+	if (height == 0)
+	{
+		_LogWarn_("%s area 데이터가 없음", _fileName.Source());
 		return;
 	}
 
-	MapAreaInfo* pInfo = dbg_new MapAreaInfo(iHeight);
-	readMapAreaInfo(areaRoot, pInfo);
-	const bool bAdded = m_hMapAreaInfo.Insert(iMapCode, pInfo);
-	_LogWarnIf_(!bAdded, "이미 %d 맵의 area 데이터가 존재함", iMapCode);
+	MapAreaInfo* pMapAreaInfo = dbg_new MapAreaInfo(height);
+	ReadMapAreaInfo(_areaRoot, pMapAreaInfo);
+	const bool added = mapAreaInfoHash_.Insert(mapCode, pMapAreaInfo);
+	_LogWarnIf_(!added, "이미 %d 맵의 area 데이터가 존재함", mapCode);
 }
 
-void MapInfoLoader::test_onCommon(Value& mapRoot, const SGString& fileName, DirectoryTreeNode* curNode) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void MapInfoLoader::TestOnCommon(Value& _mapRoot, const SGString& _fileName, DirectoryTreeNode* _pCurNode)
+{
 	JCORE_PASS;
 }
 
-void MapInfoLoader::readMapCommonInfo(Value& mapRoot, JCORE_OUT MapInfo* mapInfo) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void MapInfoLoader::ReadMapCommonInfo(Value& _mapRoot, JCORE_OUT MapInfo* _pMapInfo)
+{
+	Value& areaRoot = _mapRoot["area"];
+	Value& npcListRoot = _mapRoot["npc"];
+	Value& mapObjectListRoot = _mapRoot["map_object"];
 
-	Value& areaRoot = mapRoot["area"];
-	Value& npcListRoot = mapRoot["npc"];
-	Value& mapObjectListRoot = mapRoot["map_object"];
+	_pMapInfo->code_ = _mapRoot["code"].asInt();
+	_pMapInfo->name_ = JsonUtil::GetString(_mapRoot["name"]);
+	_pMapInfo->physicsCode_ = _mapRoot["physics"].asInt();
 
-	mapInfo->Code = mapRoot["code"].asInt();
-	mapInfo->Name = JsonUtil::getString(mapRoot["name"]);
-	mapInfo->PhysicsCode = mapRoot["physics"].asInt();
-
-	for (int j = 0; j < npcListRoot.size(); ++j) {
+	for (int j = 0; j < npcListRoot.size(); ++j)
+	{
 		// TODO: NPC 추가시 구현 필요
 	}
 
-	for (int j = 0; j < mapObjectListRoot.size(); ++j) {
+	for (int j = 0; j < mapObjectListRoot.size(); ++j)
+	{
 		Value& mapObjectRoot = mapObjectListRoot[j];
-		MapObjectPositionInfo objectInfo;
-		JsonUtil::parseIntNumber3(mapObjectRoot, objectInfo.Code, objectInfo.X, objectInfo.Y);
-		mapInfo->MapObjectList.PushBack(objectInfo);
+		MapObjectPositionInfo mapObjectInfo;
+		JsonUtil::ParseIntNumber3(mapObjectRoot, mapObjectInfo.code_, mapObjectInfo.x_, mapObjectInfo.y_);
+		_pMapInfo->mapObjectList_.PushBack(mapObjectInfo);
 	}
 
-	mapInfo->TileWidth = mapRoot["tile_width"].asInt();
-	mapInfo->TileHeight = mapRoot["tile_height"].asInt();
+	_pMapInfo->tileWidth_ = _mapRoot["tile_width"].asInt();
+	_pMapInfo->tileHeight_ = _mapRoot["tile_height"].asInt();
 
-	Value& tileListRoot = mapRoot["tile"];
+	Value& tileListRoot = _mapRoot["tile"];
 
-	for (int j = 0; j < mapInfo->TileHeight; ++j) {
+	for (int j = 0; j < _pMapInfo->tileHeight_; ++j)
+	{
 		Value& tileRoot = tileListRoot[j];
-		JsonUtil::parseIntNumberN(tileRoot, mapInfo->TileArray[j], mapInfo->TileWidth);
-	}
-
-}
-
-void MapInfoLoader::readMapAreaInfo(Value& areaRoot, JCORE_OUT MapAreaInfo* mapAreaInfo) {
-	Value& areaDataRoot = areaRoot["area"];
-	for (int j = areaDataRoot.size() - 1; j >= 0; --j) {
-		mapAreaInfo->Area.PushBack(JsonUtil::getString(areaDataRoot[j]));
+		JsonUtil::ParseIntNumberN(tileRoot, _pMapInfo->tileArray_[j], _pMapInfo->tileWidth_);
 	}
 }
 
-MapAreaInfo* MapInfoLoader::getMapAreaInfo(int mapCode) {
-	MapAreaInfo** ppFind = m_hMapAreaInfo.Find(mapCode);
+//////////////////////////////////////////////////////////////////////////////////////////
+void MapInfoLoader::ReadMapAreaInfo(Value& _areaRoot, JCORE_OUT MapAreaInfo* _pMapAreaInfo)
+{
+	Value& areaDataRoot = _areaRoot["area"];
 
-	if (ppFind == nullptr) {
+	for (int j = areaDataRoot.size() - 1; j >= 0; --j)
+	{
+		_pMapAreaInfo->area_.PushBack(JsonUtil::GetString(areaDataRoot[j]));
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+MapAreaInfo* MapInfoLoader::GetMapAreaInfo(int _mapCode)
+{
+	MapAreaInfo** ppMapAreaInfo = mapAreaInfoHash_.Find(_mapCode);
+
+	if (ppMapAreaInfo == nullptr)
+	{
 		return nullptr;
 	}
 
-	return *ppFind;
+	return *ppMapAreaInfo;
 }

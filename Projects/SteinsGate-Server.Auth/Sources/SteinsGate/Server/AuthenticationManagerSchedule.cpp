@@ -11,19 +11,24 @@
 
 USING_NS_JC;
 
-void AuthenticationManagerSchedule::Initialize() {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationManagerSchedule::Initialize()
+{
 }
 
-void AuthenticationManagerSchedule::Finalize() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationManagerSchedule::Finalize()
+{
 }
 
-void AuthenticationManagerSchedule::OnFirstScheduled() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationManagerSchedule::OnFirstScheduled()
+{
 	JCORE_PASS;
 }
 
-void AuthenticationManagerSchedule::OnScheduled() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationManagerSchedule::OnScheduled()
+{
 	AuthenticationManager::Get()->OnScheduled(this);
 }
-
-

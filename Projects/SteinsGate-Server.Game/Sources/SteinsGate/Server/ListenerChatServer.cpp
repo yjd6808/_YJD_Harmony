@@ -1,10 +1,9 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/3/2023 9:10:29 AM [SteinsGate-Server.Lobby 프로젝트 복사 생성]
  * =====================
  *
  */
-
 
 #include "Game.h"
 #include "GameCoreHeader.h"
@@ -13,37 +12,43 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-ListenerChatServer::ListenerChatServer(ChatServer* server, CommandParser* parser)
-	: ListenerServerCommon(parser)
-	, m_pChatTcp(server)
-{}
+ListenerChatServer::ListenerChatServer(ChatServer* _pServer, CommandParser* _pParser)
+	: ListenerServerCommon(_pParser)
+	, chatTcp_(_pServer)
+{
+}
 
-void ListenerChatServer::OnStarted() {
+void ListenerChatServer::OnStarted()
+{
 	ListenerServerCommon::OnStarted();
 }
 
-void ListenerChatServer::OnConnected(Session* connectedSession) {
-	ListenerServerCommon::OnConnected(connectedSession);
+void ListenerChatServer::OnConnected(Session* _pConnectedSession)
+{
+	ListenerServerCommon::OnConnected(_pConnectedSession);
 }
 
-void ListenerChatServer::OnDisconnected(Session* disconnetedSession, Int32U errorCode) {
-	ListenerServerCommon::OnDisconnected(disconnetedSession, errorCode);
+void ListenerChatServer::OnDisconnected(Session* _pDisconnetedSession, Int32U _errorCode)
+{
+	ListenerServerCommon::OnDisconnected(_pDisconnetedSession, _errorCode);
 }
 
-void ListenerChatServer::OnSent(Session* sender, IPacket* sentPacket, Int32UL sentBytes) {
-	ListenerServerCommon::OnSent(sender, sentPacket, sentBytes);
+void ListenerChatServer::OnSent(Session* _pSender, IPacket* _pSentPacket, Int32UL _sentBytes)
+{
+	ListenerServerCommon::OnSent(_pSender, _pSentPacket, _sentBytes);
 }
 
-void ListenerChatServer::OnReceived(Session* receiver, ICommand* cmd) {
-	ListenerServerCommon::OnReceived(receiver, cmd);
+void ListenerChatServer::OnReceived(Session* _pReceiver, ICommand* _pRecvCmd)
+{
+	ListenerServerCommon::OnReceived(_pReceiver, _pRecvCmd);
 }
 
-void ListenerChatServer::OnReceived(Session* session, RecvedCommandPacket* recvPacket) {
-	ListenerServerCommon::OnReceived(session, recvPacket);
+void ListenerChatServer::OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket)
+{
+	ListenerServerCommon::OnReceived(_pSession, _pRecvPacket);
 }
 
-void ListenerChatServer::OnStopped() {
+void ListenerChatServer::OnStopped()
+{
 	ListenerServerCommon::OnStopped();
 }
-
-

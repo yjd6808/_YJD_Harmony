@@ -14,18 +14,15 @@
 class FallDownActivity_Goblin : public FallDownActivity
 {
 public:
-	FallDownActivity_Goblin(Actor* actor);
+	FallDownActivity_Goblin(Actor* _pActor);
 
-	void onActivityBegin() override;
-	void onActivityEnd() override;
-	void onUpdate(float dt) override;
+	void OnActivityBegin() override;
+	void OnActivityEnd() override;
+	void OnUpdate(float _dt) override;
+
 private:
-	bool m_bBounced;
-	bool m_bDown;
-	float m_fElapsedDownTime;
-	float m_fDownRecoverTime;
+	bool bounced_;
+	bool down_;
+	float elapsedDownTime_;
+	float downRecoverTime_;
 };
-
-
-
-

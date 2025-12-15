@@ -8,64 +8,89 @@
 #include "Tutturu.h"
 #include "ComponentCollection.h"
 
+//////////////////////////////////////////////////////////////////////////////////////////
 ComponentCollection::ComponentCollection()
-	: m_hComponentMap(0)
-	, m_vUpdatables(0)
-{}
-
-ComponentCollection::ComponentCollection(int capacity)
-	: m_hComponentMap(capacity)
-	, m_vUpdatables(capacity)
-{}
-
-ComponentCollection::~ComponentCollection() {
-	m_hComponentMap.ForEachValueDelete();
+: componentMap_(0)
+, updatables_(0)
+{
 }
 
-void ComponentCollection::clear() {
-	m_hComponentMap.ForEachValueDelete();
-	m_hComponentMap.Clear();
-	m_vUpdatables.Clear();
+//////////////////////////////////////////////////////////////////////////////////////////
+ComponentCollection::ComponentCollection(int _capacity)
+: componentMap_(_capacity)
+, updatables_(_capacity)
+{
 }
 
-bool ComponentCollection::add(IComponent* component) {
-	const bool bAdded = m_hComponentMap.Insert(int(component->getType()), component);
-	IUpdatable* pUpdatbleCompoenent = dynamic_cast<IUpdatable*>(component);
+//////////////////////////////////////////////////////////////////////////////////////////
+ComponentCollection::~ComponentCollection()
+{
+	componentMap_.ForEachValueDelete();
+}
 
-	if (bAdded && pUpdatbleCompoenent != nullptr) {
-		m_vUpdatables.PushBack(pUpdatbleCompoenent);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ComponentCollection::clear()
+{
+	componentMap_.ForEachValueDelete();
+	componentMap_.Clear();
+	updatables_.Clear();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ComponentCollection::add(IComponent* _pComponent)
+{
+	const bool added = componentMap_.Insert(static_cast<int>(_pComponent->getType()), _pComponent);
+	IUpdatable* pUpdatableComponent = dynamic_cast<IUpdatable*>(_pComponent);
+
+	if (added && pUpdatableComponent != nullptr)
+	{
+		updatables_.PushBack(pUpdatableComponent);
 	}
 
-	return bAdded;
+	return added;
 }
 
-bool ComponentCollection::has(IComponent::Type type) const {
-	return m_hComponentMap.Exist(int(type));
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ComponentCollection::has(IComponent::Type _type) const
+{
+	return componentMap_.Exist(_type);
 }
 
-bool ComponentCollection::remove(IComponent::Type type) {
-	IComponent** ppFoundComponent = m_hComponentMap.Find(int(type));
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ComponentCollection::remove(IComponent::Type _type)
+{
+	IComponent** pFoundComponent = componentMap_.Find(_type);
 
-	if (ppFoundComponent == nullptr) {
+	if (pFoundComponent == nullptr)
+	{
 		return false;
 	}
 
-	IUpdatable* pUpdatbleCompoenent = dynamic_cast<IUpdatable*>(*ppFoundComponent);
+	IUpdatable* pUpdatableComponent = dynamic_cast<IUpdatable*>(*pFoundComponent);
 
-	if (pUpdatbleCompoenent) {
-		const bool bRemoved = m_vUpdatables.Remove(pUpdatbleCompoenent);
-		DebugAssert(bRemoved);
+	if (pUpdatableComponent != nullptr)
+	{
+		const bool removed = updatables_.Remove(pUpdatableComponent);
+		DebugAssert(removed);
 	}
 
 	return true;
 }
 
-void ComponentCollection::initialize() {
-	m_hComponentMap.ForEachValue([](IComponent* component) { component->initialize(); });
+//////////////////////////////////////////////////////////////////////////////////////////
+void ComponentCollection::initialize()
+{
+	componentMap_.ForEachValue([](IComponent* _pComponent)
+	{
+		_pComponent->initialize();
+	});
 }
 
-void ComponentCollection::onUpdate(float dt) {
-	for (int i = 0; i < m_vUpdatables.Size(); ++i) {
-		m_vUpdatables[i]->onUpdate(dt);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ComponentCollection::onUpdate(float _dt)
+{
+	for (int i = 0; i < updatables_.Size(); ++i)
+	{
+		updatables_[i]->onUpdate(_dt);
 	}
 }

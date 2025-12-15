@@ -15,16 +15,22 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-ChatServer::ChatServer(const IOCPPtr& iocp, const MemoryPoolAbstractPtr& bufferAllocator)
-	: CommonServer(iocp, bufferAllocator)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+ChatServer::ChatServer(const IOCPPtr& _pIocp, const MemoryPoolAbstractPtr& _pBufferAllocator)
+	: CommonServer(_pIocp, _pBufferAllocator)
+{
+}
 
-SGTcpSession* ChatServer::CreateSession() {
+//////////////////////////////////////////////////////////////////////////////////////////
+SGTcpSession* ChatServer::CreateSession()
+{
 	return dbg_new ChatSession(this, m_spIocp, m_spBufferAllocator, 3072, 3072);
 }
 
-void ChatServer::OnUpdate(const TimeSpan& elapsed) {
-	CommonServer::OnUpdate(elapsed);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ChatServer::OnUpdate(const TimeSpan& _elapsed)
+{
+	CommonServer::OnUpdate(_elapsed);
 }
 
 

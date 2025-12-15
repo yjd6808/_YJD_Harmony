@@ -6,92 +6,124 @@
  */
 
 
-
 #include "Server.h"
 #include "ServerCoreHeader.h"
 #include "ComponentCollection.h"
 
+//////////////////////////////////////////////////////////////////////////////////////////
 ComponentCollection::ComponentCollection()
-	: m_hComponentMap(0)
-	, m_vUpdatables(0)
-{}
-
-ComponentCollection::ComponentCollection(int capacity)
-	: m_hComponentMap(capacity)
-	, m_vUpdatables(capacity)
-{}
-
-ComponentCollection::~ComponentCollection() {
-	m_hComponentMap.ForEachValueRelease();
+: componentMap_(0)
+, updatables_(0)
+{
 }
 
-void ComponentCollection::Clear() {
-	m_hComponentMap.ForEachValueRelease();
-	m_hComponentMap.Clear();
-	m_vUpdatables.Clear();
+//////////////////////////////////////////////////////////////////////////////////////////
+ComponentCollection::ComponentCollection(int _capacity)
+: componentMap_(_capacity)
+, updatables_(_capacity)
+{
 }
 
-bool ComponentCollection::Add(IComponent* component) {
-	const bool bAdded = m_hComponentMap.Insert(component->GetType(), component);
-	IUpdatable* pUpdatbleCompoenent = dynamic_cast<IUpdatable*>(component);
-	ISessionEventHandler* pSessionEventHandlerComponent = dynamic_cast<ISessionEventHandler*>(component);
+//////////////////////////////////////////////////////////////////////////////////////////
+ComponentCollection::~ComponentCollection()
+{
+	componentMap_.ForEachValueRelease();
+}
 
-	if (bAdded && pUpdatbleCompoenent != nullptr) {
-		m_vUpdatables.PushBack(pUpdatbleCompoenent);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ComponentCollection::Clear()
+{
+	componentMap_.ForEachValueRelease();
+	componentMap_.Clear();
+	updatables_.Clear();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ComponentCollection::Add(IComponent* _pComponent)
+{
+	const bool isAdded = componentMap_.Insert(_pComponent->GetType(), _pComponent);
+	IUpdatable* pUpdatableComponent = dynamic_cast<IUpdatable*>(_pComponent);
+	ISessionEventHandler* pSessionEventHandlerComponent = dynamic_cast<ISessionEventHandler*>(_pComponent);
+
+	if (isAdded && pUpdatableComponent != nullptr)
+	{
+		updatables_.PushBack(pUpdatableComponent);
 	}
 
-	if (bAdded && pSessionEventHandlerComponent != nullptr) {
-		m_vSessionEventHandlers.PushBack(pSessionEventHandlerComponent);
+	if (isAdded && pSessionEventHandlerComponent != nullptr)
+	{
+		sessionEventHandlers_.PushBack(pSessionEventHandlerComponent);
 	}
 
-	return bAdded;
+	return isAdded;
 }
 
-bool ComponentCollection::Has(int type) const {
-	return m_hComponentMap.Exist(type);
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ComponentCollection::Has(int _type) const
+{
+	return componentMap_.Exist(_type);
 }
 
-bool ComponentCollection::Remove(int type) {
-	IComponent** ppFoundComponent = m_hComponentMap.Find(type);
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ComponentCollection::Remove(int _type)
+{
+	IComponent** pFoundComponent = componentMap_.Find(_type);
 
-	if (ppFoundComponent == nullptr) {
+	if (pFoundComponent == nullptr)
+	{
 		return false;
 	}
 
-	IUpdatable* pUpdatbleCompoenent = dynamic_cast<IUpdatable*>(*ppFoundComponent);
-	ISessionEventHandler* pSessionEventHandlerComponent = dynamic_cast<ISessionEventHandler*>(*ppFoundComponent);
+	IUpdatable* pUpdatableComponent = dynamic_cast<IUpdatable*>(*pFoundComponent);
+	ISessionEventHandler* pSessionEventHandlerComponent = dynamic_cast<ISessionEventHandler*>(*pFoundComponent);
 
-	if (pUpdatbleCompoenent) {
-		const bool bRemoved = m_vUpdatables.Remove(pUpdatbleCompoenent);
-		DebugAssert(bRemoved);
+	if (pUpdatableComponent)
+	{
+		const bool isRemoved = updatables_.Remove(pUpdatableComponent);
+		DebugAssert(isRemoved);
 	}
 
-	if (pSessionEventHandlerComponent) {
-		const bool bRemoved = m_vSessionEventHandlers.Remove(pSessionEventHandlerComponent);
-		DebugAssert(bRemoved);
+	if (pSessionEventHandlerComponent)
+	{
+		const bool isRemoved = sessionEventHandlers_.Remove(pSessionEventHandlerComponent);
+		DebugAssert(isRemoved);
 	}
 
 	return true;
 }
 
-void ComponentCollection::Initialize() {
-	m_hComponentMap.ForEachValue([](IComponent* component) { component->Initialize(); });
+//////////////////////////////////////////////////////////////////////////////////////////
+void ComponentCollection::Initialize()
+{
+	componentMap_.ForEachValue([](IComponent* _pComponent)
+	{
+		_pComponent->Initialize();
+	});
 }
 
-void ComponentCollection::OnUpdate(const JCore::TimeSpan& elapsed) {
-	for (int i = 0; i < m_vUpdatables.Size(); ++i) {
-		m_vUpdatables[i]->OnUpdate(elapsed);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ComponentCollection::OnUpdate(const JCore::TimeSpan& _elapsed)
+{
+	for (int index = 0; index < updatables_.Size(); ++index)
+	{
+		updatables_[index]->OnUpdate(_elapsed);
 	}
 }
 
-void ComponentCollection::OnConnected() {
-	for (int i = 0; i < m_vSessionEventHandlers.Size(); ++i) {
-		m_vSessionEventHandlers[i]->OnConnected();
+//////////////////////////////////////////////////////////////////////////////////////////
+void ComponentCollection::OnConnected()
+{
+	for (int index = 0; index < sessionEventHandlers_.Size(); ++index)
+	{
+		sessionEventHandlers_[index]->OnConnected();
 	}
 }
 
-void ComponentCollection::OnDisconnected() {
-	for (int i = 0; i < m_vSessionEventHandlers.Size(); ++i) {
-		m_vSessionEventHandlers[i]->OnDisconnected();
+//////////////////////////////////////////////////////////////////////////////////////////
+void ComponentCollection::OnDisconnected()
+{
+	for (int index = 0; index < sessionEventHandlers_.Size(); ++index)
+	{
+		sessionEventHandlers_[index]->OnDisconnected();
 	}
 }

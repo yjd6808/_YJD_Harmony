@@ -23,5 +23,8 @@ public:
 	void InitializeInterServerUdp() override;
 protected:
 	void OnUpdate(const JCore::TimeSpan& _elapsed) override;
-	bool IsPeerServer() override { return false; }
+	bool IsPeerServer() override
+	{
+		return false;
+	}
 };

@@ -14,8 +14,10 @@ template <typename T>
 struct ICreatable
 {
 	using TCreatable = ICreatable<T>;
+
 	template <typename... Args>
-	static T* CreateInstance(Args&&... args) {
-		return dbg_new T( JCore::Forward<Args>(args)... );
+	static T* CreateInstance(Args&&... _args)
+	{
+		return dbg_new T(JCore::Forward<Args>(_args)...);
 	}
 };

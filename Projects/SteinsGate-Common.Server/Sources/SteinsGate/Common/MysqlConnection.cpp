@@ -4,120 +4,144 @@
 #include <JCore/Utils/Console.h>
 
 USING_NS_JC;
-USING_NS_JC;
 USING_NS_STD;
 
+//////////////////////////////////////////////////////////////////////////////////////////
 MysqlConnection::MysqlConnection()
-	: m_MySQLConn(NULL)
-	, m_bIsConnected(false)
-	, m_wPort(0) {
+: mySqlConn_(nullptr)
+, isConnected_(false)
+, port_(0)
+{
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 MysqlConnection::~MysqlConnection()
 {
-	if (m_MySQLConn != NULL)
-		mysql_close(m_MySQLConn);
+	if (mySqlConn_ != nullptr)
+	{
+		mysql_close(mySqlConn_);
+	}
 }
 
-bool MysqlConnection::Connect(const JCore::String &hostname, const uint16_t &port, const JCore::String &username, const JCore::String &password, const JCore::String &dbname = NULL)
+//////////////////////////////////////////////////////////////////////////////////////////
+bool MysqlConnection::Connect(const JCore::String& _hostname, const uint16_t& _port, const JCore::String& _username,
+                              const JCore::String& _password, const JCore::String& _dbName)
 {
-	// 이미 연결된 경우 우선 연결을 끊어준다.
 	Disconnect();
 
-	m_szHostname = hostname;
-	m_sUsername = username;
-	m_sPassword = password;
-	m_wPort = port;
-	m_sSchemaName = dbname;
-	m_bIsConnected = false;
+	hostname_ = _hostname;
+	username_ = _username;
+	password_ = _password;
+	port_ = _port;
+	schemaName_ = _dbName;
+	isConnected_ = false;
 
-	MYSQL *MySQLConnRet = NULL;
-	m_MySQLConn = mysql_init(m_MySQLConn);
+	MYSQL* pMySqlConnRet = nullptr;
+	mySqlConn_ = mysql_init(mySqlConn_);
 
-	mysql_options(m_MySQLConn, MYSQL_SET_CHARSET_NAME, "utf8");
-	mysql_options(m_MySQLConn, MYSQL_INIT_COMMAND, "SET NAMES utf8");
+	mysql_options(mySqlConn_, MYSQL_SET_CHARSET_NAME, "utf8");
+	mysql_options(mySqlConn_, MYSQL_INIT_COMMAND, "SET NAMES utf8");
 
+	pMySqlConnRet = mysql_real_connect(mySqlConn_, hostname_.Source(), username_.Source(), password_.Source(),
+	                                   schemaName_.Source(), port_, NULL, 0);
 
-	MySQLConnRet = mysql_real_connect(m_MySQLConn, m_szHostname.Source(), m_sUsername.Source(), m_sPassword.Source(), m_sSchemaName.Source(), m_wPort, NULL, 0);
-
-	if (MySQLConnRet == NULL) {
-		m_bIsConnected = false;
-		_LogError_("MySQL 데이터베이스 연결 실패 : %s", mysql_error(m_MySQLConn));
-	} else {
-		m_bIsConnected = true;
+	if (pMySqlConnRet == nullptr)
+	{
+		isConnected_ = false;
+		_LogError_("MySQL 데이터베이스 연결 실패 : %s", mysql_error(mySqlConn_));
+	}
+	else
+	{
+		isConnected_ = true;
 	}
 
-	return m_bIsConnected;
+	return isConnected_;
 }
 
-void MysqlConnection::Disconnect() {
-	if (m_bIsConnected) {
-		mysql_close(m_MySQLConn);
-		m_MySQLConn = nullptr;
-	}
-
-	m_bIsConnected = false;
-
-}
-
-bool MysqlConnection::SelectDB(const JCore::String &schemaName)
+//////////////////////////////////////////////////////////////////////////////////////////
+void MysqlConnection::Disconnect()
 {
-	if (!m_bIsConnected) {
+	if (isConnected_)
+	{
+		mysql_close(mySqlConn_);
+		mySqlConn_ = nullptr;
+	}
+
+	isConnected_ = false;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool MysqlConnection::SelectDB(const JCore::String& _schemaName)
+{
+	if (!isConnected_)
+	{
 		_LogError_("SelectDB() 실패 : MySQL 데이터베이스에 연결되어 있지 않습니다.");
 		return false;
 	}
 
-	if (mysql_select_db(m_MySQLConn, schemaName.Source()) != 0) {
-		_LogError_("SelectDB() 실패 : mysql_select_db() 호출 실패 : %s", mysql_error(m_MySQLConn));
+	if (mysql_select_db(mySqlConn_, _schemaName.Source()) != 0)
+	{
+		_LogError_("SelectDB() 실패 : mysql_select_db() 호출 실패 : %s", mysql_error(mySqlConn_));
 		return false;
 	}
 
-	m_sSchemaName = schemaName.Source();
-	_LogDebug_("SelectDB() 성공 : \"%s\"", schemaName.Source());
+	schemaName_ = _schemaName.Source();
+	_LogDebug_("SelectDB() 성공 : \"%s\"", _schemaName.Source());
 	return true;
 }
 
-JCore::String MysqlConnection::GetLastErrorString() const {
-	if (!m_bIsConnected) {
+//////////////////////////////////////////////////////////////////////////////////////////
+JCore::String MysqlConnection::GetLastErrorString() const
+{
+	if (!isConnected_)
+	{
 		_LogWarn_("GetLastErrorString() 실패 : MySQL 데이터베이스에 연결되어 있지 않습니다.");
 		return "연결 안되있음";
 	}
 
-	return (char*)mysql_error(m_MySQLConn);
+	return (char*)mysql_error(mySqlConn_);
 }
 
-int MysqlConnection::GetLastErrorCode() const {
-	if (!m_bIsConnected) {
+//////////////////////////////////////////////////////////////////////////////////////////
+int MysqlConnection::GetLastErrorCode() const
+{
+	if (!isConnected_)
+	{
 		_LogWarn_("GetLastErrorCode() 실패 : MySQL 데이터베이스에 연결되어 있지 않습니다.");
 		return -1;
 	}
 
-	return (int)mysql_errno(m_MySQLConn);
+	return static_cast<int>(mysql_errno(mySqlConn_));
 }
 
-MYSQL *MysqlConnection::GetConnection() const {
-	return m_MySQLConn;
+//////////////////////////////////////////////////////////////////////////////////////////
+MYSQL* MysqlConnection::GetConnection() const
+{
+	return mySqlConn_;
 }
 
-bool MysqlConnection::IsConnected() const {
-	return m_bIsConnected;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool MysqlConnection::IsConnected() const
+{
+	return isConnected_;
 }
 
-JCore::String MysqlConnection::EscapeString(const JCore::String& value) const {
-	if (!m_bIsConnected) {
+//////////////////////////////////////////////////////////////////////////////////////////
+JCore::String MysqlConnection::EscapeString(const JCore::String& _value) const
+{
+	if (!isConnected_)
+	{
 		_LogWarn_("DB에 연결되어있지 않습니다.");
 		return "";
 	}
 
 	char temp[1024];
-	JCore::String escapedString(value.Length() * 2 + 1);
+	JCore::String escapedString(_value.Length() * 2 + 1);
 
-	mysql_real_escape_string(m_MySQLConn, temp, value.Source(), value.Length());
+	mysql_real_escape_string(mySqlConn_, temp, _value.Source(), _value.Length());
 
-	// 여기서 걍 따옴표 달아주면 대네
 	escapedString += "\"";
 	escapedString += temp;
 	escapedString += "\"";
 	return escapedString;
 }
-

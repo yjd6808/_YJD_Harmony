@@ -16,26 +16,27 @@ USING_NS_JC;
 USING_NS_JNET;
 
 NS_CORE_BEGIN
-::CommonNetMaster*				CommonNetMaster;			// 메인 서버 프로그램에서 주입해줄 것
-::CommonNetGroup*				CommonNetGroup;				// 메인 서버 프로그램에서 주입해줄 것
-::CommonServer*					CommonServer;				// 메인 서버 프로그램에서 주입해줄 것
-::RuntimeConfigCommon*			CommonRuntimeConfig;		// 메인 서버 프로그램에서 주입해줄 것
-::ServerContents*				CommonContents;				// 메인 서버 프로그램에서 주입해줄 것
-::InterServerClientNetGroup*	InterServerClientNetGroup;	// 메인 서버 프로그램에서 주입해줄 것
-::TcpClient*					InterServerClientTcp;		// 메인 서버 프로그램에서 주입해줄 것
-::UdpClient*					InterServerClientUdp;		// 메인 서버 프로그램에서 주입해줄 것
-::ServerProcessInfo*			ServerProcessInfo;			// 메인 서버 프로그램에서 주입해줄 것
-::TimeManager*					TimeManager;				// 메인 서버 프로그램에서 주입해줄 것
+::CommonNetMaster* CommonNetMaster; // 메인 서버 프로그램에서 주입해줄 것
+::CommonNetGroup* CommonNetGroup; // 메인 서버 프로그램에서 주입해줄 것
+::CommonServer* CommonServer; // 메인 서버 프로그램에서 주입해줄 것
+::RuntimeConfigCommon* CommonRuntimeConfig; // 메인 서버 프로그램에서 주입해줄 것
+::ServerContents* CommonContents; // 메인 서버 프로그램에서 주입해줄 것
+::InterServerClientNetGroup* InterServerClientNetGroup; // 메인 서버 프로그램에서 주입해줄 것
+::TcpClient* InterServerClientTcp; // 메인 서버 프로그램에서 주입해줄 것
+::UdpClient* InterServerClientUdp; // 메인 서버 프로그램에서 주입해줄 것
+::ServerProcessInfo* ServerProcessInfo; // 메인 서버 프로그램에서 주입해줄 것
+::TimeManager* TimeManager; // 메인 서버 프로그램에서 주입해줄 것
 NS_CORE_END
 
-void InitializeServerCore() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void InitializeServerCore()
+{
 	// 공통 커맨드 이름 등록
 	// [ INTER_SERVER - HOST ]
 	// ============================================================
 	// MESSAGE
 	// ============================================================
 	Core::CommandNameDictionary.Add<SS_HostMessage>();
-
 
 	// ============================================================
 	// SETUP
@@ -53,7 +54,6 @@ void InitializeServerCore() {
 	Core::CommandNameDictionary.Add<SCE_TimeSync>();
 	Core::CommandNameDictionary.Add<CES_TimeSyncAck>();
 
-
 	// [ INTER_SERVER - RELAY ]
 	Core::CommandNameDictionary.Add<SS_P2PRelayStaticTest>();
 	Core::CommandNameDictionary.Add<SS_P2PRelayDynamicTest>();
@@ -64,5 +64,7 @@ void InitializeServerCore() {
 	Core::CommandNameDictionary.Add<AUS_AuthenticationCheckAck>();
 }
 
-void FinalizeServerCore() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void FinalizeServerCore()
+{
 }

@@ -11,36 +11,40 @@
 
 #include <SteinsGate/Common/Const.h>
 
-bool MapAreaInfo::checkWall(float x, float y) const {
-
-	if (x < 0.0f || y < 0.0f)
+//////////////////////////////////////////////////////////////////////////////////////////
+bool MapAreaInfo::CheckWall(float _x, float _y) const
+{
+	if (_x < 0.0f || _y < 0.0f)
 		return true;
 
-	int iX = x / Const::Map::MapAreaBlockSize;
-	int iY = y / Const::Map::MapAreaBlockSize;
-	int iWidth = Area[0].Length();
-	int iHeight = Area.Size();
+	int blockX = _x / Const::Map::MapAreaBlockSize;
+	int blockY = _y / Const::Map::MapAreaBlockSize;
+	int width = area_[0].Length();
+	int height = area_.Size();
 
-	if (iY >= iHeight)
+	if (blockY >= height)
 		return true;
 
-	if (iY < 0)
+	if (blockY < 0)
 		return true;
 
-	if (iX >= iWidth)
+	if (blockX >= width)
 		return true;
 
-	if (iX < 0)
+	if (blockX < 0)
 		return true;
 
-	return Area[iY][iX] == '1';
+	return area_[blockY][blockX] == '1';
 }
 
-float MapAreaInfo::getAreaWidth() {
-	return getAreaHorizontolBlockCount() * Const::Map::MapAreaBlockSize;
+//////////////////////////////////////////////////////////////////////////////////////////
+float MapAreaInfo::GetAreaWidth()
+{
+	return GetAreaHorizontolBlockCount() * Const::Map::MapAreaBlockSize;
 }
 
-float MapAreaInfo::getAreaHeight() {
-	return getAreaVerticalBlockCount() * Const::Map::MapAreaBlockSize;
+//////////////////////////////////////////////////////////////////////////////////////////
+float MapAreaInfo::GetAreaHeight()
+{
+	return GetAreaVerticalBlockCount() * Const::Map::MapAreaBlockSize;
 }
-

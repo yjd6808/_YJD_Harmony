@@ -11,13 +11,15 @@
 #include <SteinsGate/Client/IActorListener.h>
 #include <SteinsGate/Client/Monster.h>
 
-#define SG_MONSTER_LISTENER_FACTORY(Type)								\
-public:																	\
-	struct Factory : IFactory {											\
-		MonsterListener* create(Monster* monster) override {			\
-			return dbg_new Type(monster);								\
-		}																\
-	};
+#define SG_MONSTER_LISTENER_FACTORY(Type)                              \
+public:                                                                \
+    struct Factory : IFactory                                          \
+    {                                                                  \
+        MonsterListener* create(Monster* _pMonster) override           \
+        {                                                              \
+            return dbg_new Type(_pMonster);                            \
+        }                                                              \
+    };
 
 class MonsterListener : public IActorListener
 {
@@ -25,15 +27,21 @@ public:
 	struct IFactory
 	{
 		virtual ~IFactory() = default;
-		virtual MonsterListener* create(Monster* monster) = 0;
+		virtual MonsterListener* create(Monster* _pMonster) = 0;
 	};
 
-	MonsterListener(Monster* monster) : m_pMonster(monster) {}
+	MonsterListener(Monster* _pMonster)
+	: m_pMonster(_pMonster)
+	{
+	}
+
 	~MonsterListener() override = default;
 
-	Type getListenerType() const override { return eMonster; }
+	Type getListenerType() const override
+	{
+		return eMonster;
+	}
+
 protected:
 	JCORE_NOT_NULL Monster* m_pMonster;
 };
-
-

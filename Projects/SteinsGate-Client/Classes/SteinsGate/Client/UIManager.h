@@ -9,7 +9,7 @@
  *		 ┌────────────┼───────────────┐
  *	   Group        Button          Group
  *	  ....                      ┌────┴─────┐
- *							  Button     Label
+ *						  Button     Label
  *
  *
  *	             
@@ -19,20 +19,21 @@
 #pragma once
 
 #include <SteinsGate/Client/ImagePack.h>
-#include <SteinsGate/Client/UIGroupMaster.h>
+#include <SteinsGate/Client/UIRootGroupManager.h>
 
 struct DragState
 {
 	DragState()
-		: HostElement(nullptr)
-		, TargetElement(nullptr)
-		, Dragging(false)
-	{}
+	: HostElement(nullptr)
+	, TargetElement(nullptr)
+	, Dragging(false)
+	{
+	}
 
-	UIElement* HostElement;			// 드래그 주체
-	UIElement* TargetElement;		// 실제로 드래깅될 대상
+	UIElement* HostElement; // 드래그 주체
+	UIElement* TargetElement; // 실제로 드래깅될 대상
 	SGVec2 StartElementPosition;
-	SGVec2 StartCursorPosition;	
+	SGVec2 StartCursorPosition;
 	SGVec2 DragDelta;
 	bool Dragging;
 };
@@ -49,69 +50,79 @@ private:
 	friend class TSingleton;
 	UIManager();
 	~UIManager();
+
 public:
 	void init();
 	void initPublic();
-	void registerMasterGroup(UIMasterGroup* group);
-	void registerUITexture(SgaResourceIndex index);
+	void registerMasterGroup(UIRootGroup* _pGroup);
+	void registerUITexture(SgaResourceIndex _index);
 	void unloadAll();
-	void onUpdate(float dt);
-	void callUIElementsUpdateCallback(float dt);
+	void onUpdate(float _dt);
+	void callUIElementsUpdateCallback(float _dt);
 
-	void draginit(const DragState& state);
-	void dragEnter(const SGEventMouse* mouseEvent);
-	void dragMove(const SGEventMouse* mouseEvent);
+	void draginit(const DragState& _state);
+	void dragEnter(const SGEventMouse* _pMouseEvent);
+	void dragMove(const SGEventMouse* _pMouseEvent);
 	void dragEnd();
 
-	bool isDragging() { return m_DragState.Dragging; }
-	const DragState& getDragState() const { return m_DragState; }
+	bool isDragging() { return dragState_.Dragging; }
+	const DragState& getDragState() const { return dragState_; }
 
-	UIMasterGroup* getMasterGroup(int groupCode);
-	UIElement* getElement(int elementCode);
-	UIGroup* getGroup(int groupCode) { return getElementTemplated<UIGroup>(groupCode); }
-	UIButton* getButton(int buttonCode) { return getElementTemplated<UIButton>(buttonCode); }
-	UISprite* getSprite(int spriteCode) { return getElementTemplated<UISprite>(spriteCode); }
-	UILabel* getLabel(int labelCode) { return getElementTemplated<UILabel>(labelCode); }
-	UICheckBox* getCheckBox(int checkBoxCode) { return getElementTemplated<UICheckBox>(checkBoxCode); }
-	UIEditBox* getEditBox(int editBoxCode) { return getElementTemplated<UIEditBox>(editBoxCode); }
-	UIToggleButton* getToggleButton(int toggleButtonCode) { return getElementTemplated<UIToggleButton>(toggleButtonCode); }
-	UIProgressBar* getProgressBar(int progressBarCode) { return getElementTemplated<UIProgressBar>(progressBarCode); }
-	UIScrollBar* getScrollBar(int scrollBarCode) { return getElementTemplated<UIScrollBar>(scrollBarCode); }
-	UIStatic* getStatic(int staticCode) { return getElementTemplated<UIStatic>(staticCode); }
+	UIRootGroup* getMasterGroup(int _groupCode);
+	UIElement* getElement(int _elementCode);
+	UIGroup* getGroup(int _groupCode) { return getElementTemplated<UIGroup>(_groupCode); }
+	UIButton* getButton(int _buttonCode) { return getElementTemplated<UIButton>(_buttonCode); }
+	UISprite* getSprite(int _spriteCode) { return getElementTemplated<UISprite>(_spriteCode); }
+	UILabel* getLabel(int _labelCode) { return getElementTemplated<UILabel>(_labelCode); }
+	UICheckBox* getCheckBox(int _checkBoxCode) { return getElementTemplated<UICheckBox>(_checkBoxCode); }
+	UIEditBox* getEditBox(int _editBoxCode) { return getElementTemplated<UIEditBox>(_editBoxCode); }
 
-	FrameTexture* createUITexture(int sga, int img, int frame, bool linearDodge = false);
-	FrameTexture* createUITextureRetained(int sga, int img, int frame, bool linearDodge = false);
+	UIToggleButton* getToggleButton(int _toggleButtonCode)
+	{
+		return getElementTemplated<UIToggleButton>(_toggleButtonCode);
+	}
+
+	UIProgressBar* getProgressBar(int _progressBarCode) { return getElementTemplated<UIProgressBar>(_progressBarCode); }
+	UIScrollBar* getScrollBar(int _scrollBarCode) { return getElementTemplated<UIScrollBar>(_scrollBarCode); }
+	UIStatic* getStatic(int _staticCode) { return getElementTemplated<UIStatic>(_staticCode); }
+
+	FrameTexture* createUITexture(int _sga, int _img, int _frame, bool _linearDodge = false);
+	FrameTexture* createUITextureRetained(int _sga, int _img, int _frame, bool _linearDodge = false);
 
 	UI_Inventory* Inventory;
 	UI_Login* Login;
 	UI_Popup* Popup;
 	UI_Test* Test;
 	UI_ChannelSelect* ChannelSelect;
+
 private:
 	template <typename TElement>
-	TElement* getElementTemplated(int code) {
-		constexpr UIElementType_t eTargetType = TElement::type();
+	TElement* getElementTemplated(int _code)
+	{
+		constexpr UIElementType_t targetType = TElement::type();
 
-		if (!m_hUIElements.Exist(code)) {
-			_LogWarn_("%s(%d)를 찾지 못했습니다.", UIElementType::Name[eTargetType], code);
+		if (!uiElements_.Exist(_code))
+		{
+			_LogWarn_("%s(%d)를 찾지 못했습니다.", UIElementType::Name[targetType], _code);
 			return nullptr;
 		}
 
-		UIElement* pElem = m_hUIElements[code];
-		const UIElementType_t eType = pElem->getElementType();
+		UIElement* pElement = uiElements_[_code];
+		const UIElementType_t type = pElement->GetElementType();
 
-		if (eType != eTargetType) {
-			_LogWarn_("%d가 %s타입이 아니고, %s입니다.", code, UIElementType::Name[eTargetType], UIElementType::Name[eType]);
+		if (type != targetType)
+		{
+			_LogWarn_("%d가 %s타입이 아니고, %s입니다.", _code, UIElementType::Name[targetType], UIElementType::Name[type]);
 			return nullptr;
 		}
-		return (TElement*)pElem;
+
+		return (TElement*)pElement;
 	}
 
-	DragState m_DragState;
-	UIGroupMaster* m_pMaster;
-	SGHashMap<Int32U, SgaResourceIndex> m_hLoadedUITexture;		// 어떤 이미지 팩 로딩했는지 기록용
-	SGHashMap<int, UIElement*> m_hUIElements;
-	SGHashMap<int, UIMasterGroup*> m_hMasterUIGroups;
-	SGHashMap<UIElement*, SGEventList<UIElement*, float>> m_hUIElementsUpdateEvent;
+	DragState dragState_;
+	UIRootGroupManager* master_;
+	SGHashMap<Int32U, SgaResourceIndex> loadedUiTexture_; // 어떤 이미지 팩 로딩했는지 기록용
+	SGHashMap<int, UIElement*> uiElements_;
+	SGHashMap<int, UIRootGroup*> masterUiGroups_;
+	SGHashMap<UIElement*, SGEventList<UIElement*, float>> uiElementsUpdateEvent_;
 };
-

@@ -16,16 +16,15 @@
 #include <SteinsGate/Client/GameCore.h>
 
 
-
 #ifdef DebugMode
-	#define SG_LOG_TICK(time, fmt, ...)						\
-							static float __timer__;			\
-							__timer__ += dt;				\
-							if (__timer__ >= time) {		\
-								printf(fmt, ##__VA_ARGS__); \
-								__timer__ = 0.0f;			\
-							}
-
+#define SG_LOG_TICK(_time, _fmt, ...)            \
+        static float Timer;                          \
+        Timer += dt;                                 \
+        if (Timer >= _time)                          \
+        {                                            \
+            printf(_fmt, ##__VA_ARGS__);             \
+            Timer = 0.0f;                            \
+        }
 #else
-	#define SG_LOG_TICK(...)
+#define SG_LOG_TICK(...)
 #endif

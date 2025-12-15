@@ -5,18 +5,16 @@
  *
  */
 
-
 #pragma once
 
 #include <SteinsGate/Common/InterServerSendHelper.h>
 #include <SteinsGate/Common/ServerEnum.h>
 #include <JNetwork/Packet/SendHelper.h>
 
-
 struct S_MESSAGE_IS_COMMON : InterServerSendHelper<S_MESSAGE_IS_COMMON>
 {
 	// HOST
-	static bool SEND_SS_HostMessage(const JCore::String& msg);
-	
+	static bool SEND_SS_HostMessage(const JCore::String& _msg);
+
 	// RELAY
 };

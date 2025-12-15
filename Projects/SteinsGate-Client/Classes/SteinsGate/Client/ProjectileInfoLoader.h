@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 1:44:55 PM
  * =====================
@@ -14,21 +14,26 @@
 struct ProjectileInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	ProjectileInfoLoader(DataManagerAbstract* manager, ActorType_t actorType);
+	ProjectileInfoLoader(DataManagerAbstract* _pManager, ActorType_t _actorType);
 	~ProjectileInfoLoader() override = default;
 
-	ConfigFileType_t getConfigFileType() override {
-		switch (m_eActorType) {
-		case ActorType::Character:	return ConfigFileType::Char_Projectile;
-		case ActorType::Monster:	return ConfigFileType::Monster_Projectile;
+	ConfigFileType_t GetConfigFileType() override
+	{
+		switch (actorType_)
+		{
+		case ActorType::Character: return ConfigFileType::Char_Projectile;
+		case ActorType::Monster: return ConfigFileType::Monster_Projectile;
 		default: DebugAssert(false);
 		}
+
 		return ConfigFileType::Max;
 	}
-	bool load() override;
-private:
-	void readOverridedProjectileInfo(Json::Value& projectileRoot, JCORE_OUT ProjectileInfo* projectileInfo);
-	void readProjectileInfo(Json::Value& projectileRoot, JCORE_OUT ProjectileInfo* projectileInfo);
 
-	ActorType_t m_eActorType;
+	bool Load() override;
+
+private:
+	void ReadOverridedProjectileInfo(Json::Value& _projectileRoot, JCORE_OUT ProjectileInfo* _pProjectileInfo);
+	void ReadProjectileInfo(Json::Value& _projectileRoot, JCORE_OUT ProjectileInfo* _pProjectileInfo);
+
+	ActorType_t actorType_;
 };

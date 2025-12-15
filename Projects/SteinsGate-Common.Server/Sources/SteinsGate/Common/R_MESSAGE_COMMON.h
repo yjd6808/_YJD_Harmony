@@ -17,6 +17,3 @@ public:
 	// HOST
 	// RELAY
 };
-
-
-

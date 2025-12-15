@@ -34,35 +34,32 @@ public:
 	void loadCommon();
 	void loadAll();
 
-	ConfigDataAbstract* getData(ConfigFileType_t configFileType, int code);
+	ConfigDataAbstract* getData(ConfigFileType_t _configFileType, int _code);
 
-	
-	void load(ConfigFileType_t configFileType);
-	void unload(ConfigFileType_t configFileType); 
+	void load(ConfigFileType_t _configFileType);
+	void unload(ConfigFileType_t _configFileType);
 	void finalizeLoader();
 
-	MonsterBaseInfo* getMobBaseInfo(int monsterCode);
-	ItemAvatarInfo* getAvatarInfo(int avatarCode);		// 아바타
-	ItemWeaponInfo* getWeaponInfo(int weaponCode);		// 무기
-	ItemArmorInfo* getArmorInfo(int armorCode);			// 장신구 혹은 방어구
-	ItemVisualInfo* getVisualInfo(int visualCode);		// 아바타 혹은 무기;
-	CommonInfo* getCommonInfo(int commonConfigCode);	// 커몬 컨피크
+	MonsterBaseInfo* getMobBaseInfo(int _monsterCode);
+	ItemAvatarInfo* getAvatarInfo(int _avatarCode);
+	ItemWeaponInfo* getWeaponInfo(int _weaponCode);
+	ItemArmorInfo* getArmorInfo(int _armorCode);
+	ItemVisualInfo* getVisualInfo(int _visualCode);
+	CommonInfo* getCommonInfo(int _commonConfigCode);
 
-	ItemOptInfo* getItemOptInfo(int itemOptCode);
-	ItemOptInfo* getItemOptInfo(const SGString& itemOptEngName);
-	ChannelBaseInfo* getChannelBaseInfo(int channelCode);
-	EnchantInfo* getEnchantInfo(int enchantCode);
-	ServerProcessInfoPackage* getServerProcessInfoPackage(int serverCode);
-	DatabaseInfo* getDatabaseInfo(int databaseCode);
-	CharCommonInfo* getCharCommonInfo(int charCommonCode);
-	MapInfo* getMapInfo(int mapCode);
-	MapAreaInfo* getMapAreaInfo(int mapCode);
-	MapPhysicsInfo* getMapPhysicsInfo(int physicsCode);
+	ItemOptInfo* getItemOptInfo(int _itemOptCode);
+	ItemOptInfo* getItemOptInfo(const SGString& _itemOptEngName);
+	ChannelBaseInfo* getChannelBaseInfo(int _channelCode);
+	EnchantInfo* getEnchantInfo(int _enchantCode);
+	ServerProcessInfoPackage* getServerProcessInfoPackage(int _serverCode);
+	DatabaseInfo* getDatabaseInfo(int _databaseCode);
+	CharCommonInfo* getCharCommonInfo(int _charCommonCode);
+	MapInfo* getMapInfo(int _mapCode);
+	MapAreaInfo* getMapAreaInfo(int _mapCode);
+	MapPhysicsInfo* getMapPhysicsInfo(int _physicsCode);
+
 protected:
 	ConfigFileLoaderAbstract* m_pConfigFileLoaders[ConfigFileType::Max];
-	bool m_bLoaded[ConfigFileType::Max]; // Lazy Loading을 기본으로 하자.
+	bool m_bLoaded[ConfigFileType::Max];
 	bool m_bInitialized;
 };
-
-
-

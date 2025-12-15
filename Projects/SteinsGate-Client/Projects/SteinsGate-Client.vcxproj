@@ -363,7 +363,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\UIGroupMaster.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIRootGroupManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -383,7 +383,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\UIMasterGroup.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIRootGroup.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -635,7 +635,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\UIMasterGroup.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIRootGroup.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -882,7 +882,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\UIGroupMaster.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIRootGroupManager.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -1150,8 +1150,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClCompile>
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdcpplatest</LanguageStandard>
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpp20</LanguageStandard>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/utf-8</AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/utf-8</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/utf-8 /Zm500</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/utf-8 /Zm500</AdditionalOptions>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Tutturu.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Tutturu.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)Tutturu.pch</PrecompiledHeaderOutputFile>
@@ -1175,7 +1175,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
       <DisableSpecificWarnings>4267;4251;4244;4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalOptions>/utf-8</AdditionalOptions>
+      <AdditionalOptions>/utf-8 /Zm500</AdditionalOptions>
       <PrecompiledHeaderFile>Tutturu.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)Tutturu.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
@@ -1215,7 +1215,7 @@ xcopy /Y /Q "$(SolutionDir)Projects\SteinsGate-Data.Config\common.json" "$(OutDi
       <DisableSpecificWarnings>4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalOptions>/utf-8</AdditionalOptions>
+      <AdditionalOptions>/utf-8 /Zm500</AdditionalOptions>
       <PrecompiledHeaderFile>Tutturu.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)Tutturu.pch</PrecompiledHeaderOutputFile>
     </ClCompile>

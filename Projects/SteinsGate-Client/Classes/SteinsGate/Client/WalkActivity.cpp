@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/29/2023 8:01:53 AM
  * =====================
@@ -15,93 +15,115 @@
 #define DestinationMinDistX 7.0f	// 목표지점까지 거리가 이정도 이내이면 도착했다고 판정
 #define DestinationMinDistY 5.0f
 
-WalkActivity::WalkActivity(Actor* actor)
-	: AIActivity(actor, AIActivityType::Walk)
-	, m_pTarget(nullptr)
-	, m_eMode(eNone)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+WalkActivity::WalkActivity(Actor* _pActor)
+: AIActivity(_pActor, AIActivityType::Walk)
+, m_pTarget(nullptr)
+, m_eMode(eNone)
+{
+}
 
-void WalkActivity::onActivitySelectFromAIRoutine(AIInfo* aiInfo, AIState_t aiState) {
-	AIComponent* pAIComponent = m_pActor->getComponent<AIComponent>();
-	DebugAssert(pAIComponent);// AIComponent의해 실행된 함수인데, nullptr일 수가 없음
+//////////////////////////////////////////////////////////////////////////////////////////
+void WalkActivity::OnActivitySelectFromAiRoutine(AIInfo* _pAiInfo, AIState_t _aiState)
+{
+	AIComponent* pAIComponent = pActor_->getComponent<AIComponent>();
+	DebugAssert(pAIComponent); // AIComponent의해 실행된 함수인데, nullptr일 수가 없음
 
-	switch (aiState) {
-	case AIState::Wander: {
-		m_fLimitTime = SGRandom::random_real(aiInfo->WanderWalkTime[0], aiInfo->WanderWalkTime[1]);
-		m_Destination = pAIComponent->getRandomSightPos();
-		m_eMode = eWander;
+	switch (_aiState)
+	{
+	case AIState::Wander:
+		{
+			limitTime_ = SGRandom::random_real(_pAiInfo->wanderWalkTime_[0], _pAiInfo->wanderWalkTime_[1]);
+			m_Destination = pAIComponent->getRandomSightPos();
+			m_eMode = eWander;
+			break;
+		}
+	case AIState::Track:
+		{
+			limitTime_ = SGRandom::random_real(_pAiInfo->trackWalkTime_[0], _pAiInfo->trackWalkTime_[1]);
+			m_eMode = eTrack;
+			break;
+		}
+	default:
 		break;
-	}
-	case AIState::Track: {
-		m_fLimitTime = SGRandom::random_real(aiInfo->TrackWalkTime[0], aiInfo->TrackWalkTime[1]);
-		m_eMode = eTrack;
-		break;
-	}
 	}
 }
 
-void WalkActivity::onUpdate(float dt) {
-	updateLimitTime(dt);
+//////////////////////////////////////////////////////////////////////////////////////////
+void WalkActivity::OnUpdate(float _dt)
+{
+	UpdateLimitTime(_dt);
 
-	if (!isRunning())
+	if (!IsRunning())
 		return;
 
-	switch (m_eMode) {
-		case eNone: return;
-		case eWander: updateWander(dt); break;
-		case eTrack: updateTrack(dt); break;
-		default: DebugAssertMsg(false, "몬스터 Walking 액티비티 모드가 이상합니다.");
+	switch (m_eMode)
+	{
+	case eNone:
+		return;
+	case eWander:
+		updateWander(_dt);
+		break;
+	case eTrack:
+		updateTrack(_dt);
+		break;
+	default:
+		DebugAssertMsg(false, "몬스터 Walking 액티비티 모드가 이상합니다.");
+		break;
 	}
 
-	updateMove(dt);
+	updateMove(_dt);
 }
 
-void WalkActivity::updateWander(float dt) {
-	
+//////////////////////////////////////////////////////////////////////////////////////////
+void WalkActivity::updateWander(float _dt)
+{
 }
 
-void WalkActivity::updateTrack(float dt) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void WalkActivity::updateTrack(float _dt)
+{
 	if (m_pTarget == nullptr)
 		return;
 
-	m_Destination =  m_pTarget->getPositionRealCenter();
+	m_Destination = m_pTarget->getPositionRealCenter();
 }
 
-void WalkActivity::updateMove(float dt) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void WalkActivity::updateMove(float _dt)
+{
 	Direction_t lr;
 	Direction_t ud;
-	SGRect thicknessPosLR = m_pActor->getThicknessBoxRect();
+	SGRect thicknessPosLR = pActor_->getThicknessBoxRect();
 	SGRect thicknessPosUD = thicknessPosLR;
 	SGVec2 center = thicknessPosLR.getMid();
 
 	SGVec2Ex::getLookDirection(center, m_Destination, lr, ud);
 
-	bool bArrivedX = false;
-	bool bArrivedY = false;
+	bool arrivedX = false;
+	bool arrivedY = false;
 
 	if (SGMath::Abs(center.x - m_Destination.x) < DestinationMinDistX)
-		bArrivedX = true;
+		arrivedX = true;
 
 	if (SGMath::Abs(center.y - m_Destination.y) < DestinationMinDistY)
-		bArrivedY = true;
+		arrivedY = true;
 
-	MoveComponent* pMoveComponent = m_pActor->getComponent<MoveComponent>();
-	
-	if (bArrivedX && bArrivedY) {
+	MoveComponent* pMoveComponent = pActor_->getComponent<MoveComponent>();
 
-		if (pMoveComponent) 
+	if (arrivedX && arrivedY)
+	{
+		if (pMoveComponent)
+		{
 			pMoveComponent->setSpeed(0, 0);
+		}
 
-		stop();
+		Stop();
 		return;
 	}
 
 	if (!pMoveComponent)
 		return;
 
-	updateMoveImpl(dt, pMoveComponent, bArrivedX, bArrivedX, lr, ud);
+	updateMoveImpl(_dt, pMoveComponent, arrivedX, arrivedX, lr, ud);
 }
-
-
-
-

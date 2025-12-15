@@ -35,7 +35,6 @@ USING_NS_BUFFERING_PERFORMANCE;
 #if BufferingPerformanceTest == ON
 
 //////////////////////////////////////////////////////////////////////////////////////////
-
 void BM_BufferingPerformance(State& _state)
 {
 	TestClientCount = _state.range(0);

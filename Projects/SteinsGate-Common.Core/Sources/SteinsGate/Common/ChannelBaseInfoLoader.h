@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <SteinsGate/Common/ChannelBaseInfo.h>
@@ -14,12 +13,15 @@
 struct ChannelBaseInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	ChannelBaseInfoLoader(DataManagerAbstract* manager);
+	ChannelBaseInfoLoader(DataManagerAbstract* _pManager);
 	~ChannelBaseInfoLoader() override = default;
 
-	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Channel; }
-	bool load() override;
+	ConfigFileType_t GetConfigFileType() override
+	{
+		return ConfigFileType::Channel;
+	}
 
-	static void readChannelBaseInfo(Json::Value& channelRoot, JCORE_OUT ChannelBaseInfo* channelInfo);
+	bool Load() override;
+
+	static void ReadChannelBaseInfo(Json::Value& _channelRoot, JCORE_OUT ChannelBaseInfo* _pChannelInfo);
 };
-

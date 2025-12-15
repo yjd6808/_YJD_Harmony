@@ -12,12 +12,15 @@
 USING_NS_JC;
 USING_NS_JNET;
 
+//////////////////////////////////////////////////////////////////////////////////////////
 AuthSession::AuthSession(
-	TcpServer* server,
-	const IOCPPtr& iocp,
-	const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-	int recvBufferSize,
-	int sendBufferSize) : TcpSession(server, iocp, bufferAllocator, nullptr, recvBufferSize, sendBufferSize)
-{}
+	TcpServer* _pServer,
+	const IOCPPtr& _pIocp,
+	const JCore::MemoryPoolAbstractPtr& _pBufferAllocator,
+	int _recvBufferSize,
+	int _sendBufferSize
+) : TcpSession(_pServer, _pIocp, _pBufferAllocator, nullptr, _recvBufferSize, _sendBufferSize)
+{
+}
 
 

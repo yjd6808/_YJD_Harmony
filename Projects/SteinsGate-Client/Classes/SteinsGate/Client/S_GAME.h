@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <JNetwork/Packet/SendHelper.h>

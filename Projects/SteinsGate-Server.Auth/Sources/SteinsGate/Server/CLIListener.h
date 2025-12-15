@@ -1,5 +1,5 @@
 /*
- * 작성자: 윤정도
+ * 작성자: 윤정도
  * 생성일: 8/16/2023 6:25:23 AM
  * =====================
  *
@@ -13,14 +13,12 @@
 class CLIListener : public CLIListenerCommon
 {
 public:
-	CLIListener();
+    CLIListener();
 
-	bool OnInputProcessing(int argc, JCore::String* argv) override;
+    bool OnInputProcessing(int _argc, JCore::String* _pArgv) override;
+
 private:
-	bool CLI_Example(int argc, JCore::String* argv);
+    bool CLI_Example(int _argc, JCore::String* _pArgv);
 
-	TCLI_Table m_Table;
+    TCLI_Table table_;
 };
-
-
-

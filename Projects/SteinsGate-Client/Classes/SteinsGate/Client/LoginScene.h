@@ -14,14 +14,13 @@
 class SGLoginScene : public SceneBase
 {
 public:
-    SGLoginScene();
-    static SGLoginScene* create();
+	SGLoginScene();
+	static SGLoginScene* create();
 
-    void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
-    void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
+	void onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
+	void onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
 
-    void update(float dt) override;
-    bool init() override;
-    SceneType_t getType() override { return SceneType::Login; }
+	void update(float _dt) override;
+	bool init() override;
+	SceneType_t getType() override { return SceneType::Login; }
 };
-

@@ -16,189 +16,214 @@
 USING_NS_JC;
 USING_NS_JS;
 
-ItemInfoLoader::ItemInfoLoader(DataManagerAbstract* manager)
-	: ConfigFileLoaderAbstract(manager)
-{}
+ItemInfoLoader::ItemInfoLoader(DataManagerAbstract* _pManager)
+: ConfigFileLoaderAbstract(_pManager)
+{
+}
 
-bool ItemInfoLoader::load() {
-
-	SGString itemRootPath = SGPath::Combine(Core::CommonInfo->ConfigPath, getConfigFileName());
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ItemInfoLoader::Load()
+{
+	SGString itemRootPath = SGPath::Combine(Core::CommonInfo->configPath_, GetConfigFileName());
 
 	if (!JCore::Directory::Exist(itemRootPath))
 		return false;
 
-	try {
-
-		for (int i = 0; i < ItemType::Max; ++i) {
-			if (ItemType::IsEquip[i]) {
-
+	try
+	{
+		for (int i = 0; i < ItemType::Max; ++i)
+		{
+			if (ItemType::IsEquip[i])
+			{
 				SGString equipItemPath = SGPath::Combine(itemRootPath, "equip");
-				loadEquip(equipItemPath, i);
-			} 
+				LoadEquip(equipItemPath, i);
+			}
 		}
 
 		// TODO: loadConsume
 	}
-	catch (std::exception& ex) {
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
+	catch (std::exception& ex)
+	{
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), ex.what());
 		return false;
 	}
 
 	return true;
 }
 
-
-
-void ItemInfoLoader::readCommonInfo(
-	Json::Value& itemRoot, 
-	ItemType_t itemType,
-	int detail1,
-	int detail2,
-	ItemInfo* itemInfo)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ItemInfoLoader::ReadCommonInfo(
+	Json::Value& _itemRoot,
+	ItemType_t _itemType,
+	int _detail1,
+	int _detail2,
+	ItemInfo* _pItemInfo)
 {
-	int iCode = InvalidValue_v;
+	int codeValue = InvalidValue_v;
 
-	iCode = itemRoot["code"].asInt();
-	itemInfo->Code = ItemCode(iCode, detail1, detail2, itemType).Code;
-	itemInfo->Name = JsonUtil::getString(itemRoot["name_kor"]);
-	itemInfo->NameEng = JsonUtil::getStringOrNull(itemRoot["name_eng"]);
-	itemInfo->Rarity = (RarityType_t)itemRoot["rarity"].asInt();
-	itemInfo->Icon = itemRoot["icon"].asInt();
-	itemInfo->SellPrice = itemRoot["sell_price"].asInt();
+	codeValue = _itemRoot["code"].asInt();
+	_pItemInfo->code_ = ItemCode(codeValue, _detail1, _detail2, _itemType).Code;
+	_pItemInfo->name_ = JsonUtil::GetString(_itemRoot["name_kor"]);
+	_pItemInfo->nameEng_ = JsonUtil::GetStringOrNull(_itemRoot["name_eng"]);
+	_pItemInfo->rarity_ = (RarityType_t)_itemRoot["rarity"].asInt();
+	_pItemInfo->icon_ = _itemRoot["icon"].asInt();
+	_pItemInfo->sellPrice_ = _itemRoot["sell_price"].asInt();
 
-	ItemCode code(itemInfo->Code);
-	int a = 40;
+	ItemCode itemCode(_pItemInfo->code_);
 }
 
-void ItemInfoLoader::readArmorInfo(Json::Value& armorRoot, ItemArmorInfo* itemArmorInfo) {
-	itemArmorInfo->ArmorPhysical = armorRoot["armor_physical"].asInt();
-	itemArmorInfo->ArmorMagical = armorRoot["armor_magic"].asInt();
+//////////////////////////////////////////////////////////////////////////////////////////
+void ItemInfoLoader::ReadArmorInfo(Json::Value& _armorRoot, ItemArmorInfo* _pItemArmorInfo)
+{
+	_pItemArmorInfo->armorPhysical_ = _armorRoot["armor_physical"].asInt();
+	_pItemArmorInfo->armorMagical_ = _armorRoot["armor_magic"].asInt();
 }
 
-
-void ItemInfoLoader::readVisualInfo(Json::Value& visualRoot, ItemVisualInfo* pVisual) {
-	pVisual->Shape = JsonUtil::getString(visualRoot["shape"]);
-	pVisual->ShapeAlpha = JsonUtil::getString(visualRoot["shape_alpha"]);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ItemInfoLoader::ReadVisualInfo(Json::Value& _visualRoot, ItemVisualInfo* _pVisual)
+{
+	_pVisual->shape_ = JsonUtil::GetString(_visualRoot["shape"]);
+	_pVisual->shapeAlpha_ = JsonUtil::GetString(_visualRoot["shape_alpha"]);
 }
 
-void ItemInfoLoader::readWeaponInfo(Json::Value& weaponRoot, ItemWeaponInfo* pWeapon) {
-	pWeapon->AttackPhysical = weaponRoot["attack_physical"].asInt();
-	pWeapon->AttackMagic = weaponRoot["attack_magic"].asInt();;
+//////////////////////////////////////////////////////////////////////////////////////////
+void ItemInfoLoader::ReadWeaponInfo(Json::Value& _weaponRoot, ItemWeaponInfo* _pWeapon)
+{
+	_pWeapon->attackPhysical_ = _weaponRoot["attack_physical"].asInt();
+	_pWeapon->attackMagic_ = _weaponRoot["attack_magic"].asInt();
 }
 
-void ItemInfoLoader::loadEquip(const SGString& equipItemPath, int itemType) {
-	if (ItemType::HasDetailType[itemType]) {
-		loadDetailedEquip(equipItemPath, itemType);
+//////////////////////////////////////////////////////////////////////////////////////////
+void ItemInfoLoader::LoadEquip(const SGString& _equipItemPath, int _equipItemType)
+{
+	if (ItemType::HasDetailType[_equipItemType])
+	{
+		LoadDetailedEquip(_equipItemPath, _equipItemType);
 		return;
 	}
 
-	loadAccessory(SGPath::Combine(equipItemPath, ItemType::Name[itemType]) + ".json", itemType);
+	LoadAccessory(SGPath::Combine(_equipItemPath, ItemType::Name[_equipItemType]) + ".json", _equipItemType);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+void ItemInfoLoader::LoadDetailedEquip(const SGString& _equipItemPath, int _equipItemType)
+{
+	const char* equipName = ItemType::Name[_equipItemType];
 
-
-
-void ItemInfoLoader::loadDetailedEquip(const SGString& equipItemPath, int itemType) {
-
-	const char* equipName = ItemType::Name[itemType];
-
-	switch (itemType) {
-	case (int)ItemType::Avatar: 
-		for (int eCharType = 0; eCharType < CharType::Max; ++eCharType) {
-			loadAvatar(SGPath::Combine(equipItemPath, CharType::Name[eCharType], equipName), eCharType, itemType);
+	switch (_equipItemType)
+	{
+	case (int)ItemType::Avatar:
+		for (int charTypeIndex = 0; charTypeIndex < CharType::Max; ++charTypeIndex)
+		{
+			LoadAvatar(SGPath::Combine(_equipItemPath, CharType::Name[charTypeIndex], equipName), charTypeIndex,
+			           _equipItemType);
 		}
 		break;
 	case (int)ItemType::Weapon:
-		for (int eCharType = 0; eCharType < CharType::Max; ++eCharType) {
-			loadWeapon(SGPath::Combine(equipItemPath, CharType::Name[eCharType], equipName), eCharType, itemType);
+		for (int charTypeIndex = 0; charTypeIndex < CharType::Max; ++charTypeIndex)
+		{
+			LoadWeapon(SGPath::Combine(_equipItemPath, CharType::Name[charTypeIndex], equipName), charTypeIndex,
+			           _equipItemType);
 		}
 		break;
 	default:
-		for (int eEquipArmorType = 0; eEquipArmorType <EquipArmorType::Max; ++eEquipArmorType) {
-			SGString armorPath = SGPath::Combine(equipItemPath, equipName, EquipArmorType::Name[eEquipArmorType]);
-			loadArmor(armorPath + ".json", eEquipArmorType, itemType);
+		for (int equipArmorTypeIndex = 0; equipArmorTypeIndex < EquipArmorType::Max; ++equipArmorTypeIndex)
+		{
+			SGString armorPath = SGPath::Combine(_equipItemPath, equipName, EquipArmorType::Name[equipArmorTypeIndex]);
+			LoadArmor(armorPath + ".json", equipArmorTypeIndex, _equipItemType);
 		}
 		break;
 	}
 }
 
-
-void ItemInfoLoader::loadAccessory(const SGString& equipAccessoryPath, int itemType) {
-	if (!File::Exist(equipAccessoryPath))
-		throw std::exception(StringUtil::Format("%s 파일을 찾지 못했습니다.\n", equipAccessoryPath.Source()).Source());
+//////////////////////////////////////////////////////////////////////////////////////////
+void ItemInfoLoader::LoadAccessory(const SGString& _equipAccessoryPath, int _equipItemType)
+{
+	if (!File::Exist(_equipAccessoryPath))
+		throw std::exception(StringUtil::Format("%s 파일을 찾지 못했습니다.\n", _equipAccessoryPath.Source()).Source());
 
 	Json::Value root;
-	JsonUtil::loadThrow(equipAccessoryPath, root);
+	JsonUtil::LoadThrow(_equipAccessoryPath, root);
 
-	Json::Value& accessoryListRoot = root[ItemType::Name[itemType]];
+	Json::Value& accessoryListRoot = root[ItemType::Name[_equipItemType]];
 
-	for (int i = 0; i < accessoryListRoot.size(); ++i) {
+	for (int i = 0; i < accessoryListRoot.size(); ++i)
+	{
 		Json::Value& accessoryRoot = accessoryListRoot[i];
 		ItemArmorInfo* pAccessoryInfo = dbg_new ItemArmorInfo;
-		readCommonInfo(accessoryRoot, (ItemType_t)itemType, InvalidValue_v, InvalidValue_v, pAccessoryInfo);
-		readArmorInfo(accessoryRoot, pAccessoryInfo);
-		addData(pAccessoryInfo);
+		ReadCommonInfo(accessoryRoot, (ItemType_t)_equipItemType, InvalidValue_v, InvalidValue_v, pAccessoryInfo);
+		ReadArmorInfo(accessoryRoot, pAccessoryInfo);
+		AddData(pAccessoryInfo);
 	}
 }
 
-void ItemInfoLoader::loadArmor(const JCore::String& equipItemArmorPath, int armorType, int itemType) {
-	if (!File::Exist(equipItemArmorPath))
-		throw std::exception(StringUtil::Format("%s 파일을 찾지 못했습니다.\n", equipItemArmorPath.Source()).Source());
+//////////////////////////////////////////////////////////////////////////////////////////
+void ItemInfoLoader::LoadArmor(const JCore::String& _equipItemArmorPath, int _armorType, int _equipItemType)
+{
+	if (!File::Exist(_equipItemArmorPath))
+		throw std::exception(StringUtil::Format("%s 파일을 찾지 못했습니다.\n", _equipItemArmorPath.Source()).Source());
 
 	Json::Value root;
-	JsonUtil::loadThrow(equipItemArmorPath, root);
+	JsonUtil::LoadThrow(_equipItemArmorPath, root);
 
-	const char* ArmorTypeName = EquipArmorType::Name[armorType];
-	Json::Value& armorListRoot = root[ArmorTypeName];
+	const char* armorTypeName = EquipArmorType::Name[_armorType];
+	Json::Value& armorListRoot = root[armorTypeName];
 
-	for (int i = 0; i < armorListRoot.size(); ++i) {
+	for (int i = 0; i < armorListRoot.size(); ++i)
+	{
 		Json::Value& armorRoot = armorListRoot[i];
 		ItemArmorInfo* pArmorInfo = dbg_new ItemArmorInfo;
-		readCommonInfo(armorRoot, (ItemType_t)itemType, armorType, InvalidValue_v, pArmorInfo);
-		readArmorInfo(armorRoot, pArmorInfo);
-		addData(pArmorInfo);
+		ReadCommonInfo(armorRoot, (ItemType_t)_equipItemType, _armorType, InvalidValue_v, pArmorInfo);
+		ReadArmorInfo(armorRoot, pArmorInfo);
+		AddData(pArmorInfo);
 	}
 }
 
-void ItemInfoLoader::loadAvatar(const JCore::String& equipItemAvatarPath, int charType, int itemType) {
-	for (int eAvatarType = 0; eAvatarType < AvatarType::Max; ++eAvatarType) {
-
-		SGString avatarPath = SGPath::Combine(equipItemAvatarPath, AvatarType::Name[eAvatarType]) + ".json";
+//////////////////////////////////////////////////////////////////////////////////////////
+void ItemInfoLoader::LoadAvatar(const JCore::String& _equipItemAvatarPath, int _charType, int _equipItemType)
+{
+	for (int avatarTypeIndex = 0; avatarTypeIndex < AvatarType::Max; ++avatarTypeIndex)
+	{
+		SGString avatarPath = SGPath::Combine(_equipItemAvatarPath, AvatarType::Name[avatarTypeIndex]) + ".json";
 
 		Json::Value root;
-		JsonUtil::loadThrow(avatarPath, root);
+		JsonUtil::LoadThrow(avatarPath, root);
 
-		const char* avatarPartName = AvatarType::Name[eAvatarType];
+		const char* avatarPartName = AvatarType::Name[avatarTypeIndex];
 		Json::Value& avatarPartListRoot = root[avatarPartName];
 
-		for (int i = 0; i < avatarPartListRoot.size(); ++i) {
+		for (int i = 0; i < avatarPartListRoot.size(); ++i)
+		{
 			Json::Value& armorRoot = avatarPartListRoot[i];
 			ItemAvatarInfo* pAvatarInfo = dbg_new ItemAvatarInfo;
-			readCommonInfo(armorRoot, (ItemType_t)itemType, eAvatarType, charType, pAvatarInfo);
-			readVisualInfo(armorRoot, pAvatarInfo);
-			addData(pAvatarInfo);
+			ReadCommonInfo(armorRoot, (ItemType_t)_equipItemType, avatarTypeIndex, _charType, pAvatarInfo);
+			ReadVisualInfo(armorRoot, pAvatarInfo);
+			AddData(pAvatarInfo);
 		}
 	}
 }
 
-void ItemInfoLoader::loadWeapon(const JCore::String& equipItemWeaponPath, int charType, int itemType) {
-	for (int eWeaponType = 0; eWeaponType < WeaponType::Max; ++eWeaponType) {
-
-		SGString weaponPath = SGPath::Combine(equipItemWeaponPath, WeaponType::Name[eWeaponType]) + ".json";
+//////////////////////////////////////////////////////////////////////////////////////////
+void ItemInfoLoader::LoadWeapon(const JCore::String& _equipItemWeaponPath, int _charType, int _equipItemType)
+{
+	for (int weaponTypeIndex = 0; weaponTypeIndex < WeaponType::Max; ++weaponTypeIndex)
+	{
+		SGString weaponPath = SGPath::Combine(_equipItemWeaponPath, WeaponType::Name[weaponTypeIndex]) + ".json";
 
 		Json::Value root;
-		JsonUtil::loadThrow(weaponPath, root);
+		JsonUtil::LoadThrow(weaponPath, root);
 
-		const char* weaponName = WeaponType::Name[eWeaponType];
+		const char* weaponName = WeaponType::Name[weaponTypeIndex];
 		Json::Value& weaponListRoot = root[weaponName];
 
-		for (int i = 0; i < weaponListRoot.size(); ++i) {
+		for (int i = 0; i < weaponListRoot.size(); ++i)
+		{
 			Json::Value& weaponRoot = weaponListRoot[i];
 			ItemWeaponInfo* pWeaponInfo = dbg_new ItemWeaponInfo;
-			readCommonInfo(weaponRoot, (ItemType_t)itemType, eWeaponType, charType, pWeaponInfo);
-			readVisualInfo(weaponRoot, pWeaponInfo);
-			readWeaponInfo(weaponRoot, pWeaponInfo);
-			addData(pWeaponInfo);
+			ReadCommonInfo(weaponRoot, (ItemType_t)_equipItemType, weaponTypeIndex, _charType, pWeaponInfo);
+			ReadVisualInfo(weaponRoot, pWeaponInfo);
+			ReadWeaponInfo(weaponRoot, pWeaponInfo);
+			AddData(pWeaponInfo);
 		}
 	}
 }

@@ -15,5 +15,5 @@ struct ICLIListener
 	virtual ~ICLIListener() = default;
 
 	// 터널링 여부를 반환한다.
-	virtual bool OnInputProcessing(int argc, JCore::String* argv) = 0;
+	virtual bool OnInputProcessing(int _argc, JCore::String* _pArgv) = 0;
 };

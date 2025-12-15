@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <SteinsGate/Client/Tutturu.h>
@@ -18,59 +17,61 @@ class HostPlayer;
 class Character;
 class MapLayer;
 class ActionMgr;
+
 class PlayerController
 {
 public:
 	// 키와 그 키를 입력한 시간
-	struct InputTime {
+	struct InputTime
+	{
 		JCore::DateTime Time{};
 		ControlKey_t ControlKey{};
 	};
 
-	PlayerController(HostPlayer* player, ActionMgr* actionManager);
+	PlayerController(HostPlayer* _pPlayer, ActionMgr* _pActionManager);
 	~PlayerController();
 
-	static PlayerController* create(HostPlayer* player, ActionMgr* actionManager);
+	static PlayerController* create(HostPlayer* _pPlayer, ActionMgr* _pActionManager);
 
 	void init();
-	void update(float delta);
-	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event);
-	void onKeyPressed(ControlKey_t pressedKey);
-	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event);
-	void onKeyReleased(ControlKey_t pressedKey);
+	void update(float _delta);
+	void onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent);
+	void onKeyPressed(ControlKey_t _pressedKey);
+	void onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent);
+	void onKeyReleased(ControlKey_t _releasedKey);
 
 	SpriteDirection_t getSpriteDirection();
-	ControlKey_t getLastestReleasedKey() { return m_LastestReleasedKey.ControlKey; }
-	ControlKey_t getLastestPressedKey() { return m_LastestPressedKey.ControlKey; }
-	ControlKey_t convertControlKey(SGEventKeyboard::KeyCode keyCode);
+	ControlKey_t getLastestReleasedKey() { return lastestReleasedKey_.ControlKey; }
+	ControlKey_t getLastestPressedKey() { return lastestPressedKey_.ControlKey; }
+	ControlKey_t convertControlKey(SGEventKeyboard::KeyCode _keyCode);
 
-	bool isKeyPressed(ControlKey_t controlKey);
+	bool isKeyPressed(ControlKey_t _controlKey);
 	bool isMoveKeyPressed();
 
-	bool canUseCommand() { return m_bCabUseCommand; }
-	bool cannotUseCommand() { return m_bCabUseCommand == false; }
+	bool canUseCommand() { return cabUseCommand_; }
+	bool cannotUseCommand() { return cabUseCommand_ == false; }
 	void checkComboSequence();
 
 	void idle();
 	void walk();
 
-	void updateMove(float dt);
-	void updateDirection(ControlKey_t pressedKey);
-	void reflectPressedMoveKeys();	// 액션 수행동안 키 입력을 무시하는데 그사이 눌린 키들에 대한 처리
-	void setCommandable(bool commandable) { m_bCabUseCommand = commandable; }
+	void updateMove(float _delta);
+	void updateDirection(ControlKey_t _pressedKey);
+	void reflectPressedMoveKeys(); // 액션 수행동안 키 입력을 무시하는데 그사이 눌린 키들에 대한 처리
+	void setCommandable(bool _commandable) { cabUseCommand_ = _commandable; }
+
 private:
-	HostPlayer* m_pPlayer;
-	ActionMgr* m_pActionManager;
+	HostPlayer* player_;
+	ActionMgr* actionManager_;
 
 	// ==================================================
 	// 기본 필드
 	// ==================================================
-	SGVector<ControlKey_t> m_vPressedArrowKeyState;
-	ControlKey_t m_CocosKeyCodeToControlKeyMap[200];		// 코코스 키를 ControlKey로 변환 (None(0)으로 초기화)
-	bool m_ControlKeyPressedMap[ControlKey::Max]{};
-	InputTime m_LastestPressedKey;							// 제일 최근에 누른 키
-	InputTime m_LastestReleasedKey;							// 제일 최근에 땐 키
-	InputTime m_ControlKeySequence[Const::Action::ComboSequenceCount]{}; // 맨 앞이 제일 최근에 입력한 키
-	bool m_bCabUseCommand{};
+	SGVector<ControlKey_t> pressedArrowKeyState_;
+	ControlKey_t cocosKeyCodeToControlKeyMap_[200]; // 코코스 키를 ControlKey로 변환 (None(0)으로 초기화)
+	bool controlKeyPressedMap_[ControlKey::Max]{};
+	InputTime lastestPressedKey_; // 제일 최근에 누른 키
+	InputTime lastestReleasedKey_; // 제일 최근에 땐 키
+	InputTime controlKeySequence_[Const::Action::ComboSequenceCount]{}; // 맨 앞이 제일 최근에 입력한 키
+	bool cabUseCommand_{};
 };
-

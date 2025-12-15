@@ -5,7 +5,6 @@
  *
  */
 
-
 #pragma once
 
 #include <JCore/Container/HashMap.h>
@@ -17,20 +16,21 @@
 class ListenerCenterServer : public ListenerServerCommon
 {
 public:
-	ListenerCenterServer(CenterServer* server, SGCommandParser* parser);
+	ListenerCenterServer(CenterServer* _pServer, SGCommandParser* _pParser);
+
 protected:
 	void OnStarted() override;
-	void OnConnected(JNetwork::Session* connectedSession) override;
-	void OnDisconnected(JNetwork::Session* disconnetedSession, Int32U errorCode) override;
-	void OnSent(JNetwork::Session* sender, JNetwork::IPacket* sentPacket, Int32UL sentBytes) override;
-	void OnReceived(JNetwork::Session* session, JNetwork::ICommand* recvCmd) override {}
-	void OnReceived(JNetwork::Session* session, JNetwork::RecvedCommandPacket* recvPacket) override;
+	void OnConnected(JNetwork::Session* _pConnectedSession) override;
+	void OnDisconnected(JNetwork::Session* _pDisconnectedSession, Int32U _errorCode) override;
+	void OnSent(JNetwork::Session* _pSender, JNetwork::IPacket* _pSentPacket, Int32UL _sentBytes) override;
+	void OnReceived(JNetwork::Session* _pSession, JNetwork::ICommand* _pRecvCmd) override {}
+	void OnReceived(JNetwork::Session* _pSession, JNetwork::RecvedCommandPacket* _pRecvPacket) override;
 	void OnStopped() override;
 
 	ServerType_t GetServerType() override { return ServerType::Center; }
-	void RelayCommand(JNetwork::ICommand* cmd, JNetwork::RelayCommandBase* relayCmd);
+	void RelayCommand(JNetwork::ICommand* _pCmd, JNetwork::RelayCommandBase* _pRelayCmd);
+
 private:
 	inline thread_local static JCore::HashSet<JNetwork::Session*> ms_tlsSenderMap;
-	CenterServer* m_pCenterTcp;
+	CenterServer* centerTcp_;
 };
-

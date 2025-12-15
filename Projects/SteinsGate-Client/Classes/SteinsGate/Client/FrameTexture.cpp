@@ -14,7 +14,7 @@ FrameTexture::~FrameTexture() {
 }
 
 SpriteFrameTexture::~SpriteFrameTexture() {
-	_LogDebug_("%d 삭제", m_iFrameIndex);
-	JCORE_DELETE_SAFE(m_pTexture);
+	_LogDebug_("%d 삭제", frameIndex_);
+	JCORE_DELETE_SAFE(pTexture_);
 }
 

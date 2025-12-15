@@ -5,67 +5,80 @@
  * 사각형 폴리곤 쉽게 만들기위함.
  */
 
-
 #pragma once
-
-
 
 #include "Engine.h"
 
 class RectPoly
 {
 public:
-	RectPoly() {}	// 전부 0
-	RectPoly(const RectPoly& other) {
-		poly[0] = other.poly[0];
-		poly[1] = other.poly[1];
-		poly[2] = other.poly[2];
-		poly[3] = other.poly[3];
+	RectPoly()
+	{
 	}
 
-	RectPoly(float x, float y, float width, float height) {
-		poly[0].x = x;
-		poly[0].y = y;
-
-		poly[1].x = x + width;
-		poly[1].y = y;
-
-		poly[2].x = x + width;
-		poly[2].y = y + height;
-
-		poly[3].x = x;
-		poly[3].y = y + height;
+	RectPoly(const RectPoly& _other)
+	{
+		poly_[0] = _other.poly_[0];
+		poly_[1] = _other.poly_[1];
+		poly_[2] = _other.poly_[2];
+		poly_[3] = _other.poly_[3];
 	}
 
-	RectPoly(const SGVec2& origin, const SGSize& size)
-		: RectPoly(origin.x, origin.y, size.width, size.height)
-	{}
+	RectPoly(float _x, float _y, float _width, float _height)
+	{
+		poly_[0].x = _x;
+		poly_[0].y = _y;
 
-	SGVec2* source() { return poly; }
+		poly_[1].x = _x + _width;
+		poly_[1].y = _y;
 
-	static RectPoly createFromLeftBottom(float leftBottom_x, float leftBottom_y, float width, float height) {
-		return { leftBottom_x, leftBottom_y, width, height };
+		poly_[2].x = _x + _width;
+		poly_[2].y = _y + _height;
+
+		poly_[3].x = _x;
+		poly_[3].y = _y + _height;
 	}
 
-	static RectPoly createFromLeftBottom(const SGVec2& leftBottom, const SGSize& size) {
-		return { leftBottom.x, leftBottom.y, size.width, size.height };
+	RectPoly(const SGVec2& _origin, const SGSize& _size)
+		: RectPoly(_origin.x, _origin.y, _size.width, _size.height)
+	{
 	}
 
-	static RectPoly createFromRightTop(float rightTop_x, float rightTop_y, float width, float height) {
-		return { rightTop_x - width, rightTop_y - height, width, height };
+	SGVec2* source()
+	{
+		return poly_;
 	}
 
-	static RectPoly createFromRightTop(const SGVec2& rightTop, const SGSize& size) {
-		return { SGVec2{rightTop.x - size.width, rightTop.y - size.height }, size };
+	static RectPoly createFromLeftBottom(float _leftBottomX, float _leftBottomY, float _width, float _height)
+	{
+		return { _leftBottomX, _leftBottomY, _width, _height };
 	}
 
-	static RectPoly createFromCenter(float center_x, float center_y, float width, float height) {
-		return { center_x - width / 2, center_y / height / 2, width, height };
+	static RectPoly createFromLeftBottom(const SGVec2& _leftBottom, const SGSize& _size)
+	{
+		return { _leftBottom.x, _leftBottom.y, _size.width, _size.height };
 	}
 
-	static RectPoly createFromCenter(const SGVec2& center, const SGSize& size) {
-		return { SGVec2{ center.x - size.width / 2, center.y - size.height / 2 }, size };
+	static RectPoly createFromRightTop(float _rightTopX, float _rightTopY, float _width, float _height)
+	{
+		return { _rightTopX - _width, _rightTopY - _height, _width, _height };
 	}
+
+	static RectPoly createFromRightTop(const SGVec2& _rightTop, const SGSize& _size)
+	{
+		return { SGVec2{ _rightTop.x - _size.width, _rightTop.y - _size.height }, _size };
+	}
+
+	static RectPoly createFromCenter(float _centerX, float _centerY, float _width, float _height)
+	{
+		return { _centerX - _width / 2, _centerY / _height / 2, _width, _height };
+	}
+
+	static RectPoly createFromCenter(const SGVec2& _center, const SGSize& _size)
+	{
+		return { SGVec2{ _center.x - _size.width / 2, _center.y - _size.height / 2 }, _size };
+	}
+
 private:
-	SGVec2 poly[4];
+	SGVec2 poly_[4];
 };

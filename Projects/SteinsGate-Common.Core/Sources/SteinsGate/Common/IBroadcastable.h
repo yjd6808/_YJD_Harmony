@@ -15,5 +15,5 @@
 struct JCORE_NOVTABLE IBroadcastable
 {
 	virtual ~IBroadcastable() = default;
-	virtual void BroadcastPacket(JNetwork::IPacket* packet) = 0;
+	virtual void BroadcastPacket(JNetwork::IPacket* _pPacket) = 0;
 };

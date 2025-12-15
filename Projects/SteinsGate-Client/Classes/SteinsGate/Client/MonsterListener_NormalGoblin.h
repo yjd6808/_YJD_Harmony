@@ -13,9 +13,11 @@
 class MonsterListener_NormalGoblin : public MonsterListener
 {
 public:
-	MonsterListener_NormalGoblin(Monster* monster) : MonsterListener(monster) {}
+	MonsterListener_NormalGoblin(Monster* _pMonster)
+	: MonsterListener(_pMonster)
+	{
+	}
+
 	void onCreated() override;
 	SG_MONSTER_LISTENER_FACTORY(MonsterListener_NormalGoblin)
 };
-
-

@@ -18,44 +18,44 @@
 
 struct CachedTextureCounter
 {
-	int CachedCount{};			// 현재 캐싱된 텍스쳐 갯수
-	int MaxCachedCount{};		// 최대로 캐싱되었던 텍스쳐 갯수
+	int CachedCount{}; // 현재 캐싱된 텍스쳐 갯수
+	int MaxCachedCount{}; // 최대로 캐싱되었던 텍스쳐 갯수
 };
 
 class ImagePack
 {
 public:
-	ImagePack(const SgaPackagePtr& sgaPackage, int packIndex);
+	ImagePack(const SgaPackagePtr& _pSgaPackage, int _packIndex);
 	~ImagePack();
 
-	int getImgCount() { return m_Package->Count(); }
-	int getSpriteCount(int imgIndex) const;
+	int getImgCount() { return package_->Count(); }
+	int getSpriteCount(int _imgIndex) const;
 
-	SgaSpriteAbstractPtr getSprite(int imgIndex, int frameIndex) const;
-	SgaSpriteAbstractPtr getSpriteUnsafe(int imgIndex, int frameIndex) const;
-	FrameTexture* createFrameTexture(int imgIndex, int frameIndex, bool linearDodge = false);
+	SgaSpriteAbstractPtr getSprite(int _imgIndex, int _frameIndex) const;
+	SgaSpriteAbstractPtr getSpriteUnsafe(int _imgIndex, int _frameIndex) const;
+	FrameTexture* createFrameTexture(int _imgIndex, int _frameIndex, bool _linearDodge = false);
 
-	void releaseFrameTexture(int imgIndex, int frameIndex);
-	void releaseFrameTexture(const SgaResourceIndex& sgaResourceIndex);
+	void releaseFrameTexture(int _imgIndex, int _frameIndex);
+	void releaseFrameTexture(const SgaResourceIndex& _sgaResourceIndex);
 
-	const SGString& getPath() const { return m_Package->GetPath(); }
+	const SGString& getPath() const { return package_->GetPath(); }
 	SGString getFileName() const;
-	bool hasImgIndex(const SGString& imgName) const;
-	int getImgIndex(const SGString& imgName) const { return m_Package->GetElementIndex(imgName); }
-	int getImgIndex(const char* imgName) const { return m_Package->GetElementIndex(imgName); }
-	int getImgIndexUnsafe(const char* imgName) const;
-	SGString getImgName(const int imgIndex) const;
-	SGString getImgNameOrDefault(const int imgIndex, const SGString& defaultValue) const;
-	void applyLinearDodge(Byte* pixelData, int len) const;
+	bool hasImgIndex(const SGString& _imgName) const;
+	int getImgIndex(const SGString& _imgName) const { return package_->GetElementIndex(_imgName); }
+	int getImgIndex(const char* _imgName) const { return package_->GetElementIndex(_imgName); }
+	int getImgIndexUnsafe(const char* _imgName) const;
+	SGString getImgName(const int _imgIndex) const;
+	SGString getImgNameOrDefault(const int _imgIndex, const SGString& _defaultValue) const;
+	void applyLinearDodge(Byte* _pPixelData, int _len) const;
 
-	int getPackIndex() { return m_iIndex; }
+	int getPackIndex() { return index_; }
 
 	void unload();
 	void clearCache();
-	
+
 private:
-	int m_iIndex;
-	bool m_bHasLoadedData;	// 하나라도 로딩한 데이터가 있는지
-	SgaPackagePtr m_Package;
-	SGHashMap<Int64, FrameTexture*> m_TextureCacheMap;
+	int index_;
+	bool hasLoadedData_; // 하나라도 로딩한 데이터가 있는지
+	SgaPackagePtr package_;
+	SGHashMap<Int64, FrameTexture*> textureCacheMap_;
 };

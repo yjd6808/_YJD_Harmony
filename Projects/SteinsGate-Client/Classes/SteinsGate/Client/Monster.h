@@ -9,8 +9,6 @@
 #pragma once
 
 
-
-
 #include <SteinsGate/Common/MonsterStatInfo.h>
 
 #include <SteinsGate/Client/Actor.h>
@@ -20,28 +18,27 @@
 class Monster : public Actor
 {
 public:
-	Monster(MonsterInfo* baseInfo);
+	Monster(MonsterInfo* _pBaseInfo);
 	~Monster() override;
 
-	static Monster* create(MonsterInfo* baseInfo);
+	static Monster* create(MonsterInfo* _pBaseInfo);
 
 	void initialize() override;
 	void initActorSprite() override;
 	void initListeners() override;
 	void initComponents() override;
 
-	void hit(const HitInfo& hitInfo) override;
+	void hit(const HitInfo& _hitInfo) override;
 
-	void setStatInfo(MonsterStatInfo* statInfo);
+	void setStatInfo(MonsterStatInfo* _pStatInfo);
 
 	ActorType_t getType() const override { return ActorType::Monster; }
 	MonsterInfo* getBaseInfo();
 	MonsterStatInfo* getStatInfo();
 
-	int getCode() override { return m_pBaseInfo->Code; }
+	int getCode() override { return baseInfo_->code_; }
+
 private:
-	MonsterInfo* m_pBaseInfo;
-	MonsterStatInfo* m_pStatInfo;
+	MonsterInfo* baseInfo_;
+	MonsterStatInfo* statInfo_;
 };
-
-

@@ -5,10 +5,9 @@
  *
  */
 
-
 #pragma once
 
- #include <JCore/Threading/SchedulerTask.h>
+#include <JCore/Threading/SchedulerTask.h>
 
 class AuthenticationManagerSchedule : public JCore::SchedulerTaskRunnable
 {
@@ -19,6 +18,8 @@ public:
 	void Initialize() override;
 	void Finalize() override;
 
-	JCore::TimeSpan Interval() override { return JCore::TimeSpan::FromMiliSeocnd(994); }
+	JCore::TimeSpan Interval() override
+	{
+		return JCore::TimeSpan::FromMiliSeocnd(994);
+	}
 };
-

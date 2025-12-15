@@ -11,12 +11,12 @@
 #include <SteinsGate/Common/Namepsace.h>
 
 NS_JC_BEGIN
-	class Scheduler;
-	class ThreadPool;
+class Scheduler;
+class ThreadPool;
 NS_JC_END
 
 NS_JNET_BEGIN
-	class CommandNameDictionary;
+class CommandNameDictionary;
 NS_JNET_END
 
 class CLIThread;

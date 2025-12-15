@@ -14,15 +14,16 @@ struct ItemInfo : ConfigDataAbstract
 {
 	~ItemInfo() override = default;
 
-	SGString Name;
-	SGString NameEng;
-	RarityType_t Rarity;
+	SGString name_;
+	SGString nameEng_;
+	RarityType_t rarity_;
 
-	int Icon;
-	int SellPrice;
+	int icon_;
+	int sellPrice_;
 
-	ItemType_t getItemType() {
-		return ItemCode(Code).CommonUn.Type;
+	ItemType_t GetItemType()
+	{
+		return ItemCode(code_).CommonUn.Type;
 	}
 };
 
@@ -30,15 +31,15 @@ struct ItemStackableInfo : ItemInfo
 {
 	~ItemStackableInfo() override = default;
 
-	int MaxStack;
+	int maxStack_;
 };
 
 struct ItemConsumeInfo : ItemStackableInfo
 {
 	~ItemConsumeInfo() override = default;
 
-	int ReqLv;
-	int Buff;
+	int reqLv_;
+	int buff_;
 };
 
 struct ItemEtcInfo : ItemStackableInfo
@@ -53,56 +54,64 @@ struct ItemQuestInfo : ItemStackableInfo
 
 struct ItemEquipInfo : ItemInfo
 {
-	ItemEquipInfo() : ReqLv(1), SetCode(InvalidValue_v) {}
+	ItemEquipInfo()
+	: reqLv_(1)
+	, setCode_(InvalidValue_v)
+	{
+	}
+
 	~ItemEquipInfo() override = default;
 
-	int ReqLv;
-	int SetCode;
-
-	
+	int reqLv_;
+	int setCode_;
 };
 
 struct ItemArmorInfo : ItemEquipInfo
 {
 	~ItemArmorInfo() override = default;
 
-	int ArmorPhysical;
-	int ArmorMagical;
+	int armorPhysical_;
+	int armorMagical_;
 
-	EquipArmorType_t getArmorType() {
-		return ItemCode(Code).ArmorUn.ArmorType;
+	EquipArmorType_t GetArmorType()
+	{
+		return ItemCode(code_).ArmorUn.ArmorType;
 	}
-
 };
 
 struct ItemVisualInfo : ItemEquipInfo
 {
 	~ItemVisualInfo() override = default;
 
-	SGString Shape;
-	SGString ShapeAlpha;
+	SGString shape_;
+	SGString shapeAlpha_;
 
-	CharType_t getCharType() {
-		return ItemCode(Code).AvatarUn.CharType;
+	CharType_t GetCharType()
+	{
+		return ItemCode(code_).AvatarUn.CharType;
 	}
 
-	AvatarType_t getAvatarType() {
-		return ItemCode(Code).AvatarUn.PartType;
+	AvatarType_t GetAvatarType()
+	{
+		return ItemCode(code_).AvatarUn.PartType;
 	}
 
-	WeaponType_t getWeaponType() {
-		return ItemCode(Code).WeaponUn.WeaponType;
+	WeaponType_t GetWeaponType()
+	{
+		return ItemCode(code_).WeaponUn.WeaponType;
 	}
 
-	VisualType_t getVisualType() {
+	VisualType_t GetVisualType()
+	{
+		ItemCode itemCode(code_);
 
-		ItemCode c(Code);
-
-		if (c.CommonUn.Type == ItemType::Avatar) {
-			return (VisualType_t)c.AvatarUn.PartType;
+		if (itemCode.CommonUn.Type == ItemType::Avatar)
+		{
+			return (VisualType_t)itemCode.AvatarUn.PartType;
 		}
 
-		if (c.CommonUn.Type == ItemType::Weapon) {
+		if (itemCode.CommonUn.Type == ItemType::Weapon)
+		{
 			return VisualType::Weapon;
 		}
 
@@ -111,22 +120,15 @@ struct ItemVisualInfo : ItemEquipInfo
 	}
 };
 
-
 struct ItemAvatarInfo : ItemVisualInfo
 {
 	~ItemAvatarInfo() override = default;
-
-	
 };
 
 struct ItemWeaponInfo : ItemVisualInfo
 {
 	~ItemWeaponInfo() override = default;
 
-	int AttackPhysical;
-	int AttackMagic;
+	int attackPhysical_;
+	int attackMagic_;
 };
-
-
-
-

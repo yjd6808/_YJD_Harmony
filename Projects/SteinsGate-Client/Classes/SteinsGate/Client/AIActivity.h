@@ -29,29 +29,45 @@ public:
 	AIActivity(Actor* _pActor, AIActivityType_t _type);
 	virtual ~AIActivity() = default;
 
-	virtual void run();
-	virtual void stop();
+	virtual void Run();
+	virtual void Stop();
 
-	bool isRunning();
-	AIActivityType_t getType() { return type_; }
+	bool IsRunning();
+	AIActivityType_t GetType() { return type_; }
 
-	void updateLimitTime(float _dt);
+	void UpdateLimitTime(float _dt);
 
-	virtual void onUpdate(float _dt) = 0;
-	virtual void onActivitySelectFromAIRoutine(AIInfo* _pAiInfo, AIState_t _aiState) {}      // AI 루틴 실행중 선택된 경우
-	virtual void onActivityBegin() = 0;
-	virtual void onActivityEnd() {}
-	virtual void onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) {}
-	virtual void onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) {}
-	virtual void onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) {}
-	virtual void onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) {}
+	virtual void OnUpdate(float _dt) = 0;
+
+	virtual void OnActivitySelectFromAiRoutine(AIInfo* _pAiInfo, AIState_t _aiState)
+	{
+	} // AI 루틴 실행중 선택된 경우
+	virtual void OnActivityBegin() = 0;
+
+	virtual void OnActivityEnd()
+	{
+	}
+
+	virtual void OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
+	{
+	}
+
+	virtual void OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
+	{
+	}
+
+	virtual void OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
+	{
+	}
+
+	virtual void OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
+	{
+	}
 
 protected:
-	JCORE_NOT_NULL Actor* actor_;
-
+	JCORE_NOT_NULL Actor* pActor_;
 	AIActivityType_t type_;
 	State state_;
-
 	float elapsedTime_;
 	float limitTime_;
 };

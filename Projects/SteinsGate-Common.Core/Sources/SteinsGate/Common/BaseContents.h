@@ -18,11 +18,9 @@ protected:
 	virtual void Initialize() = 0;
 	virtual void Finalize() = 0;
 
-	void AddSchedule(JCore::SchedulerTaskRunnable* schedule);
+	void AddSchedule(JCore::SchedulerTaskRunnable* _pSchedule);
 	void ClearSchedule();
+
 private:
-	SGVector<JCore::SchedulerTaskRunnable*> m_vSchedules;
+	SGVector<JCore::SchedulerTaskRunnable*> schedules_;
 };
-
-
-

@@ -15,10 +15,10 @@ class ListenerInterServerClientTcp : public ListenerInterServerCommonClient
 public:
 	ListenerInterServerClientTcp();
 protected:
-	void OnConnected(SGSession* session) override;
-	void OnDisconnected(SGSession* session) override;
-	void OnSent(SGSession* sessionm, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) override;
-	void OnReceived(SGSession* session, JNetwork::ICommand* cmd) override;
-	void OnConnectFailed(SGSession* session, Int32U errorCode) override;
+	void OnConnected(SGSession* _pSession) override;
+	void OnDisconnected(SGSession* _pSession) override;
+	void OnSent(SGSession* _pSession, JNetwork::ISendPacket* _pSentPacket, Int32UL _sentBytes) override;
+	void OnReceived(SGSession* _pSession, JNetwork::ICommand* _pCmd) override;
+	void OnConnectFailed(SGSession* _pSession, Int32U _errorCode) override;
 };
 

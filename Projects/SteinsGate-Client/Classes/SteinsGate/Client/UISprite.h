@@ -13,32 +13,34 @@
 class UISprite : public UIElement
 {
 public:
-	static UISprite* create(UIMasterGroup* master, UIGroup* parent);
-	static UISprite* create(UIMasterGroup* master, UIGroup* parent, UISpriteInfo* spriteInfo, bool infoOwner);
+	static UISprite* create(UIRootGroup* _pMasterGroup, UIGroup* _pParent);
+	static UISprite* create(UIRootGroup* _pMasterGroup, UIGroup* _pParent, UISpriteInfo* _pSpriteInfo,
+	                        bool _infoOwner);
 
 	static constexpr UIElementType_t type() { return UIElementType::Sprite; }
 
-	UISprite(UIMasterGroup* master, UIGroup* parent);
-	UISprite(UIMasterGroup* master, UIGroup* parent, UISpriteInfo* staticInfo, bool infoOwner);
+	UISprite(UIRootGroup* _pMasterGroup, UIGroup* _pParent);
+	UISprite(UIRootGroup* _pMasterGroup, UIGroup* _pParent, UISpriteInfo* _pSpriteInfo, bool _infoOwner);
 	~UISprite() override;
 
 	bool init() override;
-	void load() override;
-	void unload() override;
+	void Load() override;
+	void Unload() override;
 
-	void setCapInsets(const SGRect& insets);
-	void setUISize(const SGSize& contentSize) override;
-	void setInfo(UIElementInfo* info, bool infoOwner) override;
-	void setInfoSprite(UISpriteInfo* info, bool infoOwner);
-	void setOpacity(GLubyte opacity) override;
-	bool isScale9() const { return m_pInfo->Scale9; }
+	void setCapInsets(const SGRect& _insets);
+	void SetUISize(const SGSize& _size) override;
+	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
+	void setInfoSprite(UISpriteInfo* _pInfo, bool _infoOwner);
+	void setOpacity(GLubyte _opacity) override;
+	bool isScale9() const { return spriteInfo_->Scale9; }
 
-	UISpriteInfo* getInfo() const { return m_pInfo; }
-	SGSprite* source() const { return m_pSprite; }
-	UIElementType_t getElementType() override { return UIElementType::Sprite; }
-	SGString toString() override { return SGStringUtil::Format("스프라이트(%d)", m_pInfo->Code); }
+	UISpriteInfo* getInfo() const { return spriteInfo_; }
+	SGSprite* source() const { return sprite_; }
+	UIElementType_t GetElementType() override { return UIElementType::Sprite; }
+	SGString ToString() override { return SGStringUtil::Format("스프라이트(%d)", spriteInfo_->code_); }
+
 private:
-	UISpriteInfo* m_pInfo;
-	FrameTexture* m_pTexture;
-	SGSprite* m_pSprite;
+	UISpriteInfo* spriteInfo_;
+	FrameTexture* texture_;
+	SGSprite* sprite_;
 };

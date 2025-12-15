@@ -9,173 +9,203 @@
 #include "GameCoreHeader.h"
 #include "UIProgressBar.h"
 
-#include <SteinsGate/Client/UIMasterGroup.h>
+#include <SteinsGate/Client/UIRootGroup.h>
 
 USING_NS_CC;
 USING_NS_JC;
 
-UIProgressBar::UIProgressBar(UIMasterGroup* master, UIGroup* parent)
-	: UIElement(master, parent)
-	, m_pInfo(nullptr)
-	, m_pTexture{}
-	, m_pProgressBar{}
-	, m_pProgressSprite(nullptr)
-{}
-
-UIProgressBar::UIProgressBar(UIMasterGroup* master, UIGroup* parent, UIProgressBarInfo* progressBarInfo, bool infoOwner)
-	: UIElement(master, parent, progressBarInfo, infoOwner)
-	, m_pInfo(progressBarInfo)
-	, m_pTexture{}
-	, m_pProgressBar{}
-	, m_pProgressSprite(nullptr)
-{}
-
-UIProgressBar::~UIProgressBar() {
-	CC_SAFE_RELEASE(m_pTexture);
+//////////////////////////////////////////////////////////////////////////////////////////
+UIProgressBar::UIProgressBar(UIRootGroup* _pMasterGroup, UIGroup* _pParent)
+: UIElement(_pMasterGroup, _pParent)
+, progressBarInfo_(nullptr)
+, texture_(nullptr)
+, progressBar_(nullptr)
+, progressSprite_(nullptr)
+{
 }
 
-UIProgressBar* UIProgressBar::create(UIMasterGroup* master, UIGroup* parent) {
-	UIProgressBar* pProgressBar = dbg_new UIProgressBar(master, parent);
+UIProgressBar::UIProgressBar(UIRootGroup* _pMasterGroup, UIGroup* _pParent, UIProgressBarInfo* _pProgressBarInfo,
+                             bool _infoOwner)
+: UIElement(_pMasterGroup, _pParent, _pProgressBarInfo, _infoOwner)
+, progressBarInfo_(_pProgressBarInfo)
+, texture_(nullptr)
+, progressBar_(nullptr)
+, progressSprite_(nullptr)
+{
+}
+
+UIProgressBar::~UIProgressBar()
+{
+	CC_SAFE_RELEASE(texture_);
+}
+
+UIProgressBar* UIProgressBar::create(UIRootGroup* _pMasterGroup, UIGroup* _pParent)
+{
+	UIProgressBar* pProgressBar = dbg_new UIProgressBar(_pMasterGroup, _pParent);
 	pProgressBar->init();
 	pProgressBar->autorelease();
 	return pProgressBar;
 }
 
-UIProgressBar* UIProgressBar::create(UIMasterGroup* master, UIGroup* parent, UIProgressBarInfo* progressBarInfo, bool infoOwner) {
-	UIProgressBar* pProgressBar = dbg_new UIProgressBar(master, parent, progressBarInfo, infoOwner);
+UIProgressBar* UIProgressBar::create(UIRootGroup* _pMasterGroup, UIGroup* _pParent,
+                                     UIProgressBarInfo* _pProgressBarInfo, bool _infoOwner)
+{
+	UIProgressBar* pProgressBar = dbg_new UIProgressBar(_pMasterGroup, _pParent, _pProgressBarInfo, _infoOwner);
 	pProgressBar->init();
 	pProgressBar->autorelease();
 	return pProgressBar;
 }
 
-bool UIProgressBar::init() {
-	if (!UIElement::init()) {
+bool UIProgressBar::init()
+{
+	if (!UIElement::init())
+	{
 		return false;
 	}
 
-	if (m_pInfo == nullptr) {
-		logWarnMissingInfo();
+	if (progressBarInfo_ == nullptr)
+	{
+		LogWarnMissingInfo();
 		return false;
 	}
 
-	setInitialUISize(m_pInfo->Size);
-	return m_bInitialized = true;
+	SetInitialUISize(progressBarInfo_->Size);
+	return isInitialized_ = true;
 }
 
-void UIProgressBar::load() {
-	if (m_pInfo == nullptr) {
-		logWarnMissingInfo();
+void UIProgressBar::Load()
+{
+	if (progressBarInfo_ == nullptr)
+	{
+		LogWarnMissingInfo();
 		return;
 	}
 
-	if (m_bLoaded)
-		return;
-
-	m_pTexture = Core::Contents.UIManager->createUITextureRetained(m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprite);
-
-	if (m_pTexture->isLink()) {
-		CC_SAFE_RELEASE_NULL(m_pTexture);
+	if (isLoaded_)
+	{
 		return;
 	}
 
-	const Size progressSpriteSize = m_pTexture->getSize();
-	const float fScaleX = m_UISize.width / progressSpriteSize.width;
-	const float fScaleY = m_UISize.height / progressSpriteSize.height;
+	texture_ = Core::Contents.UIManager->createUITextureRetained(progressBarInfo_->Sga, progressBarInfo_->Img,
+	                                                             progressBarInfo_->Sprite);
 
-	m_pProgressSprite = Sprite::create();
-	m_pProgressSprite->initWithTexture(m_pTexture->getTexture());
+	if (texture_->isLink())
+	{
+		CC_SAFE_RELEASE_NULL(texture_);
+		return;
+	}
 
-	m_pProgressBar = SGProgressTimer::create(m_pProgressSprite);
-	m_pProgressBar->setPercentage(0);
-	m_pProgressBar->setType(ProgressTimer::Type::BAR);
-	m_pProgressBar->setScale(fScaleX, fScaleY);
-	m_pProgressBar->setAnchorPoint(Vec2::ZERO);
+	const Size progressSpriteSize = texture_->getSize();
+	const float scaleX = uiSize_.width / progressSpriteSize.width;
+	const float scaleY = uiSize_.height / progressSpriteSize.height;
 
-	switch (m_pInfo->ProgressIncreaseDirection) {
+	progressSprite_ = Sprite::create();
+	progressSprite_->initWithTexture(texture_->getTexture());
+
+	progressBar_ = SGProgressTimer::create(progressSprite_);
+	progressBar_->setPercentage(0);
+	progressBar_->setType(ProgressTimer::Type::BAR);
+	progressBar_->setScale(scaleX, scaleY);
+	progressBar_->setAnchorPoint(Vec2::ZERO);
+
+	switch (progressBarInfo_->ProgressIncreaseDirection)
+	{
 	case ProgressIncreaseDirection::LeftRight:
-		m_pProgressBar->setMidpoint({ 0, 0 });
-		m_pProgressBar->setBarChangeRate({ 1, 0 });
+		progressBar_->setMidpoint({ 0, 0 });
+		progressBar_->setBarChangeRate({ 1, 0 });
 		break;
 	case ProgressIncreaseDirection::RightLeft:
-		m_pProgressBar->setMidpoint({ 1, 0 });
-		m_pProgressBar->setBarChangeRate({ 1, 0 });
+		progressBar_->setMidpoint({ 1, 0 });
+		progressBar_->setBarChangeRate({ 1, 0 });
 		break;
 	case ProgressIncreaseDirection::TopBottom:
-		m_pProgressBar->setMidpoint({ 0, 1 });
-		m_pProgressBar->setBarChangeRate({ 0, 1 });
+		progressBar_->setMidpoint({ 0, 1 });
+		progressBar_->setBarChangeRate({ 0, 1 });
 		break;
 	case ProgressIncreaseDirection::BottomTop:
-		m_pProgressBar->setMidpoint({ 0, 0 });
-		m_pProgressBar->setBarChangeRate({ 0, 1 });
+		progressBar_->setMidpoint({ 0, 0 });
+		progressBar_->setBarChangeRate({ 0, 1 });
 		break;
 	}
 
-	this->addChild(m_pProgressBar);
-	auto progressTo = ProgressTo::create(10.0f, 100);
-	m_pProgressBar->runAction(progressTo);
-	m_bLoaded = true;
+	this->addChild(progressBar_);
+	auto pProgressTo = ProgressTo::create(10.0f, 100);
+	progressBar_->runAction(pProgressTo);
+	isLoaded_ = true;
 }
 
-void UIProgressBar::unload() {
-	if (m_bLoaded == false)
+void UIProgressBar::Unload()
+{
+	if (!isLoaded_)
+	{
 		return;
+	}
 
 	removeAllChildren(); // autorelease 되기땜
 
-	m_pProgressBar = nullptr;
-	CC_SAFE_RELEASE_NULL(m_pTexture);
-	m_bLoaded = false;
-	m_bInitialized = false;
+	progressBar_ = nullptr;
+	CC_SAFE_RELEASE_NULL(texture_);
+	isLoaded_ = false;
+	isInitialized_ = false;
 
 	init();
 }
 
-void UIProgressBar::setUISize(const SGSize& size) {
-	if (!m_bResizable)
-		return;
-
-	m_UISize = size;
-
-	if (!m_bLoaded)
-		return;
-
-	const float fScaleX = getScaleX();
-	const float fScaleY = getScaleY();
-
-	if (m_pProgressBar == nullptr)
-		return;
-
-	m_pProgressBar->setScaleX(fScaleX);
-	m_pProgressBar->setScaleY(fScaleY);
-}
-
-void UIProgressBar::setInfo(UIElementInfo* info, bool infoOwner) {
-	if (info->Type != UIElementType::ProgressBar) {
-		logWarnInvalidInfo(info->Type);
+void UIProgressBar::SetUISize(const SGSize& _size)
+{
+	if (!isResizable_)
+	{
 		return;
 	}
 
-	if (m_bInfoOwner) {
-		JCORE_DELETE_SAFE(m_pInfo);
+	uiSize_ = _size;
+
+	if (!isLoaded_)
+	{
+		return;
 	}
 
-	m_pBaseInfo = info;
-	m_pInfo = static_cast<UIProgressBarInfo*>(info);
-	m_bInfoOwner = infoOwner;
+	const float scaleX = getScaleX();
+	const float scaleY = getScaleY();
+
+	if (progressBar_ == nullptr)
+	{
+		return;
+	}
+
+	progressBar_->setScaleX(scaleX);
+	progressBar_->setScaleY(scaleY);
 }
 
-void UIProgressBar::setInfoProgressBar(UIProgressBarInfo* info, bool infoOwner) {
-	setInfo(info, infoOwner);
+void UIProgressBar::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
+{
+	if (_pInfo->Type != UIElementType::ProgressBar)
+	{
+		LogWarnInvalidInfo(_pInfo->Type);
+		return;
+	}
+
+	if (isInfoOwner_)
+	{
+		JCORE_DELETE_SAFE(pBaseInfo_);
+	}
+
+	pBaseInfo_ = _pInfo;
+	progressBarInfo_ = static_cast<UIProgressBarInfo*>(_pInfo);
+	isInfoOwner_ = _infoOwner;
 }
 
-void UIProgressBar::setPercent(float percent) const {
-	m_pProgressBar->setPercentage(percent);
+void UIProgressBar::setInfoProgressBar(UIProgressBarInfo* _pInfo, bool _infoOwner)
+{
+	SetInfo(_pInfo, _infoOwner);
 }
 
-float UIProgressBar::getPercent() const {
-	return m_pProgressBar->getPercentage();
+void UIProgressBar::setPercent(float _percent) const
+{
+	progressBar_->setPercentage(_percent);
 }
 
-
-
-
+float UIProgressBar::getPercent() const
+{
+	return progressBar_->getPercentage();
+}

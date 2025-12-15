@@ -5,17 +5,18 @@
  *
  */
 
-
 #pragma once
 
 #include <SteinsGate/Common/CommonSession.h>
+#include <SteinsGate/Common/IComponent.h>
 #include <SteinsGate/Common/ISessionEventHandler.h>
 
 class SessionComponent : public IComponent, public ISessionEventHandler
 {
 public:
-	SessionComponent(CommonSession* session);
-	CommonSession* GetSession() const { return m_pSession; }
+	SessionComponent(CommonSession* _pSession);
+	CommonSession* GetSession() const { return pSession_; }
+
 protected:
-	CommonSession* m_pSession;
+	CommonSession* pSession_;
 };

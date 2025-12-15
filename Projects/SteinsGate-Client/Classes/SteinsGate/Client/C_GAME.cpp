@@ -6,7 +6,6 @@
  */
 
 
-
 #include "Tutturu.h"
 #include "GameCoreHeader.h"
 #include "C_GAME.h"
@@ -19,14 +18,17 @@ USING_NS_CC;
 USING_NS_JNET;
 
 
-void C_GAME::OnConnected(Session* session) {
-	
+//////////////////////////////////////////////////////////////////////////////////////////
+void C_GAME::OnConnected(Session* _pSession)
+{
 }
 
-void C_GAME::OnConnectFailed(Session* session, Int32U errorCode) {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void C_GAME::OnConnectFailed(Session* _pSession, Int32U _errorCode)
+{
 }
 
-void C_GAME::OnDisconnected(Session* session) {
-	
+//////////////////////////////////////////////////////////////////////////////////////////
+void C_GAME::OnDisconnected(Session* _pSession)
+{
 }

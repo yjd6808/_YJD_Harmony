@@ -14,19 +14,27 @@
 class SgaSound : public SgaElement
 {
 	using SgaSoundPtr = JCore::SharedPtr<SgaSound>;
-public:
-	SgaSound(const Header& header) : SgaElement(SgaElement::eSound, header) {}
-	~SgaSound() override;
-public:
-	SgaDataPtr GetData() { return m_spData; }
-	bool Load(bool indexOnly) override;
-	bool Unload();
 
-	bool DataLoaded() override { return m_spData.Exist() ; }
 public:
-	static SgaSoundPtr Create(const Header& header);
+	SgaSound(const Header& _header)
+	: SgaElement(SgaElement::eSound, _header)
+	{
+	}
+
+	~SgaSound() override;
+
+public:
+	SgaDataPtr GetData() { return pData_; }
+	bool Load(bool _indexOnly) override;
+	bool Unload() override;
+
+	bool DataLoaded() override { return pData_.Exist(); }
+
+public:
+	static SgaSoundPtr Create(const Header& _header);
+
 protected:
-	SgaDataPtr m_spData;
+	SgaDataPtr pData_;
 
 	template <Int32>
 	friend class SgaElementInitializerImpl;

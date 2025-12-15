@@ -5,15 +5,12 @@
  *
  */
 
-
 #pragma once
-
 
 #include <JNetwork/Packet/SendHelper.h>
 #include <SteinsGate/Common/Struct.h>
 
 struct S_LOBBY : JNetwork::SendHelper<S_LOBBY>
 {
-	static void SEND_LOC_JoinLobbyAck(GameServerType_t serverType);
+	static void SEND_LOC_JoinLobbyAck(GameServerType_t _serverType);
 };
-

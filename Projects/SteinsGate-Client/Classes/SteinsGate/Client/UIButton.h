@@ -13,35 +13,37 @@
 class UIButton : public UIElement
 {
 public:
-	static UIButton* create(UIMasterGroup* master, UIGroup* parent);
-	static UIButton* create(UIMasterGroup* master, UIGroup* parent, UIButtonInfo* btnInfo, bool infoOwner);
+	static UIButton* create(UIRootGroup* _pMaster, UIGroup* _pParent);
+	static UIButton* create(UIRootGroup* _pMaster, UIGroup* _pParent, UIButtonInfo* _pButtonInfo, bool _infoOwner);
 
 	static constexpr UIElementType_t type() { return UIElementType::Button; }
 
-	UIButton(UIMasterGroup* master, UIGroup* parent);
-	UIButton(UIMasterGroup* master, UIGroup* parent, UIButtonInfo* btnInfo, bool infoOwner);
+	UIButton(UIRootGroup* _pMaster, UIGroup* _pParent);
+	UIButton(UIRootGroup* _pMaster, UIGroup* _pParent, UIButtonInfo* _pButtonInfo, bool _infoOwner);
 	~UIButton() override;
-	 
+
 	bool init() override;
-	void load() override;
-	void unload() override;
-	
-	void setVisibleState(State state);
-	void setUISize(const SGSize& size) override;
-	void setInfo(UIElementInfo* info, bool infoOwner) override;
-	void setInfoButton(UIButtonInfo* info, bool infoOwner);
-	void setEnabled(bool enabled) override;
-	void restoreState(State state) override;
-	UIElementType_t getElementType() override { return UIElementType::Button; }
-	SGString toString() override { return SGStringUtil::Format("버튼(%d)", m_pInfo->Code); }
+	void Load() override;
+	void Unload() override;
+
+	void setVisibleState(State _state);
+	void SetUISize(const SGSize& _size) override;
+	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
+	void setInfoButton(UIButtonInfo* _pInfo, bool _infoOwner);
+	void SetEnabled(bool _enabled) override;
+	void RestoreState(State _state) override;
+	UIElementType_t GetElementType() override { return UIElementType::Button; }
+	SGString ToString() override { return SGStringUtil::Format("버튼(%d)", buttonInfo_->code_); }
+
 protected:
-	void onMouseEnterInternalDetail(SGEventMouse* mouseEvent) override;
-	void onMouseLeaveInternalDetail(SGEventMouse* mouseEvent) override;
-	bool onMouseMoveInternalDetail(SGEventMouse* mouseEvent) override;
-	bool onMouseDownInternalDetail(SGEventMouse* mouseEvent) override;
-	void onMouseUpInternalDetail(SGEventMouse* mouseEvent) override;
+	void OnMouseEnterInternalDetail(SGEventMouse* _pMouseEvent) override;
+	void OnMouseLeaveInternalDetail(SGEventMouse* _pMouseEvent) override;
+	bool OnMouseMoveInternalDetail(SGEventMouse* _pMouseEvent) override;
+	bool OnMouseDownInternalDetail(SGEventMouse* _pMouseEvent) override;
+	void OnMouseUpInternalDetail(SGEventMouse* _pMouseEvent) override;
+
 private:
-	UIButtonInfo* m_pInfo;
-	FrameTexture* m_pTexture[eMax];
-	SGSprite* m_pSprite[eMax];
+	UIButtonInfo* buttonInfo_;
+	FrameTexture* texture_[eMax];
+	SGSprite* sprite_[eMax];
 };

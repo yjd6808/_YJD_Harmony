@@ -15,4 +15,3 @@
 struct Q_CHAR : Qry::QryHelper<Q_CHAR>
 {
 };
-

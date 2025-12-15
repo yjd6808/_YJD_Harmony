@@ -5,20 +5,26 @@
  *
  */
 
+
 #include "Game.h"
 #include "GameCoreHeader.h"
 #include "ChannelManager.h"
 
-ChannelManager::ChannelManager() {
-
+ChannelManager::ChannelManager()
+{
 }
 
-ChannelManager::~ChannelManager() {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+ChannelManager::~ChannelManager()
+{
 }
 
-void ChannelManager::Initialize() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ChannelManager::Initialize()
+{
 }
 
-void ChannelManager::BroadcastPacket(JNetwork::IPacket* packet) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ChannelManager::BroadcastPacket(JNetwork::IPacket* _pPacket)
+{
 }

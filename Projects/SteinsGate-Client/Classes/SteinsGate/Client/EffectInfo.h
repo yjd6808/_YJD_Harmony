@@ -14,8 +14,12 @@
 struct EffectInfo : ConfigDataAbstract
 {
 	EffectInfo() = default;
-	~EffectInfo() override { JCORE_DELETE_SAFE(SpriteData); }
 
-	SGString Name;
-	ActorSpriteData* SpriteData;
+	~EffectInfo() override
+	{
+		JCORE_DELETE_SAFE(pSpriteData_);
+	}
+
+	SGString name_;
+	ActorSpriteData* pSpriteData_;
 };

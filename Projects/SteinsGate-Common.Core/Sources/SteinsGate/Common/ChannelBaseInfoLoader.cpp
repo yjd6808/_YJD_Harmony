@@ -15,41 +15,47 @@
 USING_NS_JS;
 USING_NS_JC;
 
-ChannelBaseInfoLoader::ChannelBaseInfoLoader(DataManagerAbstract* manager)
-	: ConfigFileLoaderAbstract(manager)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+ChannelBaseInfoLoader::ChannelBaseInfoLoader(DataManagerAbstract* _pManager)
+: ConfigFileLoaderAbstract(_pManager)
+{
+}
 
-
-bool ChannelBaseInfoLoader::load() {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ChannelBaseInfoLoader::Load()
+{
 	Json::Value root;
 
-	if (!loadJson(root)) {
+	if (!LoadJson(root))
+	{
 		return false;
 	}
 
-	try {
+	try
+	{
 		Json::Value& channelInfoRootList = root["channel"];
 
-		for (int i = 0; i < channelInfoRootList.size(); ++i) {
+		for (int i = 0; i < channelInfoRootList.size(); ++i)
+		{
 			Value& channelInfoRoot = channelInfoRootList[i];
 			ChannelBaseInfo* pChannelInfo = dbg_new ChannelBaseInfo;
-			readChannelBaseInfo(channelInfoRoot, pChannelInfo);
-			addData(pChannelInfo);
+			ReadChannelBaseInfo(channelInfoRoot, pChannelInfo);
+			AddData(pChannelInfo);
 		}
 	}
-	catch (std::exception& ex) {
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
+	catch (std::exception& ex)
+	{
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), ex.what());
 		return false;
 	}
 
 	return true;
 }
 
-void ChannelBaseInfoLoader::readChannelBaseInfo(Json::Value& channelRoot, JCORE_OUT ChannelBaseInfo* channelInfo) {
- 	channelInfo->Code = channelRoot["code"].asInt();
-	channelInfo->Name = JsonUtil::getString(channelRoot["name"]);
-	channelInfo->EnteranceType = (EnteranceType_t)channelRoot["enterance_type"].asInt();
+//////////////////////////////////////////////////////////////////////////////////////////
+void ChannelBaseInfoLoader::ReadChannelBaseInfo(Json::Value& _channelRoot, JCORE_OUT ChannelBaseInfo* _pChannelInfo)
+{
+	_pChannelInfo->code_ = _channelRoot["code"].asInt();
+	_pChannelInfo->name_ = JsonUtil::GetString(_channelRoot["name"]);
+	_pChannelInfo->enteranceType_ = (EnteranceType_t)_channelRoot["enterance_type"].asInt();
 }
-
-
-

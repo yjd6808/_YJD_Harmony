@@ -4,7 +4,6 @@
  * =====================
  */
 
-
 #pragma once
 
 #include <JCore/Container/Vector.h>
@@ -12,6 +11,7 @@
 using SgaDataPtr = JCore::SharedPtr<Byte[]>;
 class SgaLoader;
 class SgaPackage;
+
 class SgaElement : public JCore::MakeSharedFromThis<SgaElement>
 {
 public:
@@ -24,59 +24,111 @@ public:
 
 	struct Header
 	{
-		int Offset;			// Sga 파일내에서의 위치
-		int NextOffset;
-		int IndexInPackage;
-		int Length;
-		JCore::String Name{ 0 };
+		int offset_; // Sga 파일내에서의 위치
+		int nextOffset_;
+		int indexInPackage_;
+		int length_;
+		JCore::String name_{ 0 };
 	};
 
 public:
-	SgaElement(Type type, const Header& header)
-		: m_eType(type)
-		, m_Header(header)
-		, m_bIndexLoaded(false) {}
+	SgaElement(Type _type, const Header& _header)
+	: type_(_type)
+	, header_(_header)
+	, isIndexLoaded_(false)
+	{
+	}
 
 	virtual ~SgaElement() = default;
+
 public:
-	Type GetType() { return m_eType; }
-	int GetOffset() { return m_Header.Offset;  }
-	int GetLength() { return m_Header.Length;  }
-	JCore::String& GetName() { return m_Header.Name; }
+	Type GetType()
+	{
+		return type_;
+	}
+
+	int GetOffset()
+	{
+		return header_.offset_;
+	}
+
+	int GetLength()
+	{
+		return header_.length_;
+	}
+
+	JCore::String& GetName()
+	{
+		return header_.name_;
+	}
+
 	SgaPackage* GetParent();
 
-	Int32 GetVersion() { return m_iVersion; }
-	Int32 GetIndexOffset() { return m_iIndexOffset; }
-	Int32 GetIndexLength() { return m_iIndexLength; }
-	const Header& GetHeader() { return m_Header; }
+	Int32 GetVersion()
+	{
+		return version_;
+	}
 
+	Int32 GetIndexOffset()
+	{
+		return indexOffset_;
+	}
 
-	bool FullyLoaded() { return IndexLoaded() && DataLoaded(); }
-	virtual bool IndexLoaded() { return m_bIndexLoaded; }
-	virtual bool DataLoaded() { return true;  }
-	
+	Int32 GetIndexLength()
+	{
+		return indexLength_;
+	}
 
-	virtual bool Load(bool indexOnly) = 0;
-	virtual bool LoadPerfectly() { return Load(false); }
-	virtual bool LoadIndexOnly() { return Load(true); }
+	const Header& GetHeader()
+	{
+		return header_;
+	}
+
+	bool FullyLoaded()
+	{
+		return IndexLoaded() && DataLoaded();
+	}
+
+	virtual bool IndexLoaded()
+	{
+		return isIndexLoaded_;
+	}
+
+	virtual bool DataLoaded()
+	{
+		return true;
+	}
+
+	virtual bool Load(bool _indexOnly) = 0;
+
+	virtual bool LoadPerfectly()
+	{
+		return Load(false);
+	}
+
+	virtual bool LoadIndexOnly()
+	{
+		return Load(true);
+	}
+
 	virtual bool Unload() = 0;
-protected:
 
+protected:
 	// ========================================
 	// 파일에서 읽은 데이터
 	// ========================================
-	Type m_eType;
-	Header m_Header;
+	Type type_;
+	Header header_;
 
-	Int32 m_iVersion = 0;
-	Int32 m_iIndexOffset = 0;		// 인덱스 옵셋 (사운드 데이터는 데이터 시작 위치를 의미)
-	Int32 m_iIndexLength = 0;		// 인덱스 길이 (사운드 데이터는 데이터 길이를 의미)
+	Int32 version_ = 0;
+	Int32 indexOffset_ = 0; // 인덱스 옵셋 (사운드 데이터는 데이터 시작 위치를 의미)
+	Int32 indexLength_ = 0; // 인덱스 길이 (사운드 데이터는 데이터 길이를 의미)
 
 	// ========================================
 	// 기본
 	// ========================================
-	JCore::WeakPtr<SgaPackage> m_spParent;
-	bool m_bIndexLoaded;
+	JCore::WeakPtr<SgaPackage> pParent_;
+	bool isIndexLoaded_;
 
 	template <Int32>
 	friend class SgaElementInitializerImpl;

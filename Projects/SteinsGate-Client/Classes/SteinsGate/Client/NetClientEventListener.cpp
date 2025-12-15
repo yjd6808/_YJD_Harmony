@@ -17,70 +17,84 @@ USING_NS_JC;
 USING_NS_CC;
 USING_NS_JNET;
 
-NetClientEventListener::NetClientEventListener(ClientConnectServerType_t m_eConnectedServerType)
-	: m_eConnectedServerType(m_eConnectedServerType)
-{}
-
-
-
-void NetClientEventListener::OnConnected(Session* session) {
-	ListenerClientBase::OnConnected(session);
-	SyncConnectionResult(m_eConnectedServerType, session, true, 0);
-}
-void NetClientEventListener::OnDisconnected(Session* session, Int32U errorCode) {
-	ListenerClientBase::OnDisconnected(session, errorCode);
-	SyncDisconnectionResult(m_eConnectedServerType, session);
+//////////////////////////////////////////////////////////////////////////////////////////
+NetClientEventListener::NetClientEventListener(ClientConnectServerType_t _connectedServerType)
+: connectedServerType_(_connectedServerType)
+{
 }
 
-void NetClientEventListener::OnConnectFailed(Session* session, Int32U errorCode) {
-	ListenerClientBase::OnConnectFailed(session, errorCode);
-	SyncConnectionResult(m_eConnectedServerType, session, false, errorCode);
+void NetClientEventListener::OnConnected(Session* _pSession)
+{
+	ListenerClientBase::OnConnected(_pSession);
+	SyncConnectionResult(connectedServerType_, _pSession, true, 0);
 }
 
-void NetClientEventListener::OnSent(Session* session, IPacket* sendPacket, Int32UL sentBytes) {
-	ListenerClientBase::OnSent(session, sendPacket, sentBytes);
+void NetClientEventListener::OnDisconnected(Session* _pSession, Int32U _errorCode)
+{
+	ListenerClientBase::OnDisconnected(_pSession, _errorCode);
+	SyncDisconnectionResult(connectedServerType_, _pSession);
 }
 
-void NetClientEventListener::OnReceived(Session* session, ICommand* recvCmd) {
-	ListenerClientBase::OnReceived(session, recvCmd);
-	SyncReceivedCommand(m_eConnectedServerType, session, recvCmd);
+void NetClientEventListener::OnConnectFailed(Session* _pSession, Int32U _errorCode)
+{
+	ListenerClientBase::OnConnectFailed(_pSession, _errorCode);
+	SyncConnectionResult(connectedServerType_, _pSession, false, _errorCode);
 }
 
-void NetClientEventListener::OnReceived(Session* session, RecvedCommandPacket* recvPacket) {
-	ListenerClientBase::OnReceived(session, recvPacket);
+void NetClientEventListener::OnSent(Session* _pSession, IPacket* _pSendPacket, Int32UL _sentBytes)
+{
+	ListenerClientBase::OnSent(_pSession, _pSendPacket, _sentBytes);
 }
 
-void NetClientEventListener::SyncConnectionResult(ClientConnectServerType_t listenerType, Session* session, bool success, Int32U errorCode) {
+void NetClientEventListener::OnReceived(Session* _pSession, ICommand* _pRecvCmd)
+{
+	ListenerClientBase::OnReceived(_pSession, _pRecvCmd);
+	SyncReceivedCommand(connectedServerType_, _pSession, _pRecvCmd);
+}
+
+void NetClientEventListener::OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket)
+{
+	ListenerClientBase::OnReceived(_pSession, _pRecvPacket);
+}
+
+void NetClientEventListener::SyncConnectionResult(ClientConnectServerType_t _listenerType, Session* _pSession,
+                                                  bool _success, Int32U _errorCode)
+{
 	ConnectionSynchronizer* pSynchronizer = Core::Net->getConnectionSynchronizer();
 
-	if (pSynchronizer == nullptr) {
-		SGString szResult = StringUtil::ToString(success);
-		_LogWarn_("동기화기가 소멸되어서 Connection의 후속처리를 수행할 수 없습니다. [타입:%d][결과:%s]", listenerType, szResult.Source());
+	if (pSynchronizer == nullptr)
+	{
+		SGString szResult = StringUtil::ToString(_success);
+		_LogWarn_("동기화기가 소멸되어서 Connection의 후속처리를 수행할 수 없습니다. [타입:%d][결과:%s]", _listenerType, szResult.Source());
 		return;
 	}
 
-	pSynchronizer->enqueueConnection(listenerType, session, success, errorCode);
+	pSynchronizer->enqueueConnection(_listenerType, _pSession, _success, _errorCode);
 }
 
-void NetClientEventListener::SyncDisconnectionResult(ClientConnectServerType_t listenerType, Session* session) {
+void NetClientEventListener::SyncDisconnectionResult(ClientConnectServerType_t _listenerType, Session* _pSession)
+{
 	ConnectionSynchronizer* pSynchronizer = Core::Net->getConnectionSynchronizer();
 
-	if (pSynchronizer == nullptr) {
-		_LogWarn_("동기화기가 소멸되어서 Disconnection의 후속처리를 수행할 수 없습니다. [타입:%d]", listenerType);
+	if (pSynchronizer == nullptr)
+	{
+		_LogWarn_("동기화기가 소멸되어서 Disconnection의 후속처리를 수행할 수 없습니다. [타입:%d]", _listenerType);
 		return;
 	}
 
-	pSynchronizer->enqueueDisconnection(listenerType, session);
+	pSynchronizer->enqueueDisconnection(_listenerType, _pSession);
 }
 
-void NetClientEventListener::SyncReceivedCommand(ClientConnectServerType_t listenerType, SGSession* session, ICommand* cmd) {
+void NetClientEventListener::SyncReceivedCommand(ClientConnectServerType_t _listenerType, SGSession* _pSession,
+                                                 ICommand* _pCmd)
+{
 	CommandSynchronizer* pSynchronizer = Core::Net->getCommandSynchronizer();
 
-	if (pSynchronizer == nullptr) {
-		_LogWarn_("커맨드를 수신했지만 동기화기가 소멸되어서 이를 메인쓰레드에서 받아서 처리할 수가 없습니다. (커맨드:%d)", cmd->GetId());
+	if (pSynchronizer == nullptr)
+	{
+		_LogWarn_("커맨드를 수신했지만 동기화기가 소멸되어서 이를 메인쓰레드에서 받아서 처리할 수가 없습니다. (커맨드:%d)", _pCmd->GetId());
 		return;
 	}
 
-	pSynchronizer->enqueueCommand(listenerType, session, cmd);
+	pSynchronizer->enqueueCommand(_listenerType, _pSession, _pCmd);
 }
-

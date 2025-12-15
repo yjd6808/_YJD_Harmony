@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/3/2023 9:10:29 AM [SteinsGate-Server.Lobby 프로젝트 복사 생성]
  * =====================
@@ -14,10 +14,13 @@
 class LogicServer final : public CommonServer
 {
 public:
-	LogicServer(const JNetwork::IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator);
+	LogicServer(const JNetwork::IOCPPtr& _pIocp, const JCore::MemoryPoolAbstractPtr& _pBufferAllocator);
 
 	SGTcpSession* CreateSession() override;
-	ServerType_t GetServerType() override { return ServerType::Logic; }
+	ServerType_t GetServerType() override
+	{
+		return ServerType::Logic;
+	}
 protected:
-	void OnUpdate(const JCore::TimeSpan& elapsed) override;
+	void OnUpdate(const JCore::TimeSpan& _elapsed) override;
 };

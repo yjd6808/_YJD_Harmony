@@ -1,10 +1,9 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/1/2023 10:17:26 AM
  * =====================
  *
  */
-
 
 
 #include "Tutturu.h"
@@ -13,17 +12,20 @@
 #include <SteinsGate/Client/Monster.h>
 #include <SteinsGate/Client/Define_Animation.h>
 
-SitActivity_Goblin::SitActivity_Goblin(Actor* actor)
-	: SitActivity(actor)
-{}
+//////////////////////////////////////////////////////////////////////////////////////////
+SitActivity_Goblin::SitActivity_Goblin(Actor* _pActor)
+: SitActivity(_pActor)
+{
+}
 
-void SitActivity_Goblin::onActivityBegin() {
-	Monster* pMonster = dynamic_cast<Monster*>(m_pActor);
+void SitActivity_Goblin::OnActivityBegin()
+{
+	Monster* pMonster = dynamic_cast<Monster*>(pActor_);
 	DebugAssert(pMonster);
 
 	const MonsterStatInfo* pStatInfo = pMonster->getStatInfo();
-	const float fLimitTime = pStatInfo ? pStatInfo->DownRecoverTime / 2 : 1.0f;
+	const float limitTime = pStatInfo ? pStatInfo->downRecoverTime_ / 2 : 1.0f;
 
-	m_fLimitTime = fLimitTime;
-	m_pActor->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_SIT);
+	limitTime_ = limitTime;
+	pActor_->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_SIT);
 }

@@ -11,56 +11,72 @@
 
 USING_NS_JNET;
 
+//////////////////////////////////////////////////////////////////////////////////////////
 InterServerSendHelperBase::Information::Information()
-	: Sender(nullptr)
-	, Strategy(SendStrategy::SendAlloc)
-	, ToId(InvalidValue_v)
-{}
+: sender_(nullptr)
+, strategy_(SendStrategy::SendAlloc)
+, toId_(InvalidValue_v)
+{
+}
 
-void InterServerSendHelperBase::FlushSendBuffer() {
-	if (SendInformation.Sender == nullptr) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void InterServerSendHelperBase::FlushSendBuffer()
+{
+	if (SendInformation.sender_ == nullptr)
+	{
 		_LogError_("샌더 미할당");
 		return;
 	}
 
-	SendInformation.Sender->FlushSendBuffer();
+	SendInformation.sender_->FlushSendBuffer();
 }
 
-void InterServerSendHelperBase::SetInformation(Session* sender, SendStrategy strategy, int toServerId) {
-	if (!IsValidInformation(sender, strategy, toServerId)) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void InterServerSendHelperBase::SetInformation(Session* _pSender, SendStrategy _strategy, int _toServerId)
+{
+	if (!IsValidInformation(_pSender, _strategy, _toServerId))
+	{
 		return;
 	}
 
-	SendInformation.Sender = sender;
-	SendInformation.Strategy = strategy;
+	SendInformation.sender_ = _pSender;
+	SendInformation.strategy_ = _strategy;
 
-	if (toServerId == InvalidValue_v) 
+	if (_toServerId == InvalidValue_v)
 		return;
 
-	SendInformation.ToId = toServerId;
-	SendInformation.Destination = Core::ServerProcessInfoPackage->InfoMap[SendInformation.ToId]->RemoteInterServerEP;
+	SendInformation.toId_ = _toServerId;
+	SendInformation.destination_ = Core::ServerProcessInfoPackage->infoMap_[SendInformation.toId_]->
+		remoteInterServerEp_;
 }
 
-void InterServerSendHelperBase::SetInformation(Session* sender, SendStrategy strategy, SingleServerType_t toServerType) {
-	DebugAssert(toServerType >= SingleServerType::Begin && toServerType <= SingleServerType::End);
+//////////////////////////////////////////////////////////////////////////////////////////
+void InterServerSendHelperBase::SetInformation(Session* _pSender, SendStrategy _strategy,
+                                               SingleServerType_t _toServerType)
+{
+	DebugAssert(_toServerType >= SingleServerType::Begin && _toServerType <= SingleServerType::End);
 
-	if (!SendHelperBase::IsValidInformation(sender, strategy)) {
+	if (!SendHelperBase::IsValidInformation(_pSender, _strategy))
+	{
 		return;
 	}
 
-	SendInformation.Sender = sender;
-	SendInformation.Strategy = strategy;
-	SendInformation.ToId = SingleServerId[toServerType];
-	SendInformation.Destination = Core::ServerProcessInfoPackage->InfoMap[SendInformation.ToId]->RemoteInterServerEP;
+	SendInformation.sender_ = _pSender;
+	SendInformation.strategy_ = _strategy;
+	SendInformation.toId_ = SingleServerId[_toServerType];
+	SendInformation.destination_ = Core::ServerProcessInfoPackage->infoMap_[SendInformation.toId_]->remoteInterServerEp_;
 }
 
-void InterServerSendHelperBase::SendEnd(IPacket* packet) {
-	switch (SendInformation.Strategy) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void InterServerSendHelperBase::SendEnd(IPacket* _packet)
+{
+	switch (SendInformation.strategy_)
+	{
 	case SendStrategy::SendAsync:
-		SendInformation.Sender->SendAsync(packet);
+		SendInformation.sender_->SendAsync(_packet);
 		break;
 	case SendStrategy::SendToAsync:
-		SendInformation.Sender->SendToAsync(packet, SendInformation.Destination);
+		SendInformation.sender_->SendToAsync(_packet, SendInformation.destination_);
 		break;
 	case SendStrategy::SendAlloc:
 		// 할거 없음
@@ -70,14 +86,18 @@ void InterServerSendHelperBase::SendEnd(IPacket* packet) {
 	}
 }
 
-bool InterServerSendHelperBase::IsValidInformation(Session* sender, SendStrategy strategy, int toServerId) {
-
-	if (!SendHelperBase::IsValidInformation(sender, strategy)) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool InterServerSendHelperBase::IsValidInformation(Session* _pSender, SendStrategy _strategy, int _toServerId)
+{
+	if (!SendHelperBase::IsValidInformation(_pSender, _strategy))
+	{
 		return false;
 	}
 
-	if (sender->Protocol() == TransportProtocol::UDP) {
-		if (toServerId == InvalidValue_v) {
+	if (_pSender->Protocol() == TransportProtocol::UDP)
+	{
+		if (_toServerId == InvalidValue_v)
+		{
 			_LogWarn_("UDP인데 송신지 ID를 기입하지 않습니다.");
 			return false;
 		}
@@ -86,22 +106,26 @@ bool InterServerSendHelperBase::IsValidInformation(Session* sender, SendStrategy
 	return true;
 }
 
-void InterServerSendHelperBase::InitSingleServerIds() {
-	SingleServerId[SingleServerType::Center] = Core::ServerProcessInfoPackage->Center.ServerId;
-	SingleServerId[SingleServerType::Auth] = Core::ServerProcessInfoPackage->Auth.ServerId;
-	SingleServerId[SingleServerType::Lobby] = Core::ServerProcessInfoPackage->Lobby.ServerId;
+//////////////////////////////////////////////////////////////////////////////////////////
+void InterServerSendHelperBase::InitSingleServerIds()
+{
+	SingleServerId[SingleServerType::Center] = Core::ServerProcessInfoPackage->center_.serverId_;
+	SingleServerId[SingleServerType::Auth] = Core::ServerProcessInfoPackage->auth_.serverId_;
+	SingleServerId[SingleServerType::Lobby] = Core::ServerProcessInfoPackage->lobby_.serverId_;
 }
 
-void InterServerSendHelperBase::InitSingleServerDestinations() {
-	SingleServerInterServerEP[SingleServerType::Center] = Core::ServerProcessInfoPackage->Center.RemoteInterServerEP;
-	SingleServerInterServerEP[SingleServerType::Auth] = Core::ServerProcessInfoPackage->Auth.RemoteInterServerEP;
-	SingleServerInterServerEP[SingleServerType::Lobby] = Core::ServerProcessInfoPackage->Lobby.RemoteInterServerEP;
+//////////////////////////////////////////////////////////////////////////////////////////
+void InterServerSendHelperBase::InitSingleServerDestinations()
+{
+	SingleServerInterServerEP[SingleServerType::Center] = Core::ServerProcessInfoPackage->center_.remoteInterServerEp_;
+	SingleServerInterServerEP[SingleServerType::Auth] = Core::ServerProcessInfoPackage->auth_.remoteInterServerEp_;
+	SingleServerInterServerEP[SingleServerType::Lobby] = Core::ServerProcessInfoPackage->lobby_.remoteInterServerEp_;
 }
 
-int InterServerSendHelperBase::GetSenderId() {
-	const int iSenderId = Core::ServerProcessInfo->ServerId;
-	DebugAssert(iSenderId >= 0 && iSenderId <= Const::Server::MaxProcessId);
-	return int(iSenderId);
+//////////////////////////////////////////////////////////////////////////////////////////
+int InterServerSendHelperBase::GetSenderId()
+{
+	const int senderId = Core::ServerProcessInfo->serverId_;
+	DebugAssert(senderId >= 0 && senderId <= Const::Server::MaxProcessId);
+	return int(senderId);
 }
-
-

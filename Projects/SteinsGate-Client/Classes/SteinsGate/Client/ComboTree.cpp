@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/12/2023 8:09:21 AM
  * =====================
@@ -8,25 +8,32 @@
 #include "Tutturu.h"
 #include "ComboTree.h"
 
-void ComboTreeNodeActionList::add(SGAction* action) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ComboTreeNodeActionList::add(SGAction* _pAction)
+{
 	ComboTreeNodeActionList* pCur = this;
 	ComboTreeNodeActionList* pEnd = nullptr;
 
-	while (pCur != nullptr) {
+	while (pCur != nullptr)
+	{
 		pEnd = pCur;
 		pCur = pCur->Next;
 	}
 
-	if (pEnd->Action_ == nullptr) {
-		pEnd->Action_ = action;
+	if (pEnd->Action_ == nullptr)
+	{
+		pEnd->Action_ = _pAction;
 		pEnd->Next = dbg_new ComboTreeNodeActionList;
 	}
 }
 
-void ComboTreeNodeActionList::clear() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void ComboTreeNodeActionList::clear()
+{
 	ComboTreeNodeActionList* pCur = Next;
 
-	while (pCur != nullptr) {
+	while (pCur != nullptr)
+	{
 		auto pTemp = pCur;
 		pCur = pCur->Next;
 		delete pTemp;
@@ -36,192 +43,241 @@ void ComboTreeNodeActionList::clear() {
 	Next = nullptr;
 }
 
-int ComboTreeNodeActionList::count() {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+int ComboTreeNodeActionList::count()
+{
 	if (Action_ == nullptr)
+	{
 		return 0;
+	}
 
-	int iCount = 1;
+	int count = 1;
 	ComboTreeNodeActionList* pCur = Next;
-	while (pCur != nullptr) {
 
+	while (pCur != nullptr)
+	{
 		if (pCur->Action_)
-			++iCount;
+		{
+			++count;
+		}
 
 		pCur = pCur->Next;
 	}
 
-	return iCount;
+	return count;
 }
 
-bool ComboTreeNodeActionList::exist(SGAction* action) {
-	return find_if([action](SGAction* a) { return action == a; }) != nullptr;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ComboTreeNodeActionList::exist(SGAction* _pAction)
+{
+	return find_if([_pAction](SGAction* pAction)
+	{
+		return _pAction == pAction;
+	}) != nullptr;
 }
 
-SGAction* ComboTreeNodeActionList::find_if(const SGPredicateFn<SGAction*>& fn) {
+//////////////////////////////////////////////////////////////////////////////////////////
+SGAction* ComboTreeNodeActionList::find_if(const SGPredicateFn<SGAction*>& _fn)
+{
 	ComboTreeNodeActionList* pCur = this;
 
-	while (pCur) {
-		if (pCur->Action_ && fn(pCur->Action_)) {
+	while (pCur)
+	{
+		if (pCur->Action_ && _fn(pCur->Action_))
+		{
 			return pCur->Action_;
 		}
+
 		pCur = pCur->Next;
 	}
 
 	return nullptr;
 }
 
-int SGComboTreeNode::count() {
-	int iCount = 0;
+//////////////////////////////////////////////////////////////////////////////////////////
+int SGComboTreeNode::count()
+{
+	int childCount = 0;
 
 	for (int i = 0; i < ControlKey::Max; ++i)
+	{
 		if (Next[i] != nullptr && Next[i]->isValid())
-			iCount++;
-
-	return iCount;
-}
-
-SGComboTree::SGComboTree() {
-	m_pRoot = dbg_new SGComboTreeNode{};
-}
-
-SGComboTree::~SGComboTree() {
-	removeAll();
-	JCORE_DELETE_SAFE(m_pRoot);
-}
-
-void SGComboTree::addComboAction(SGAction* action) {
-	const ComboKeyList& keys = action->getCommand();
-	const ComboKeyList& keysReverse = keys.reverse();
-
-	int iCount = keys.count();
-	DebugAssertMsg(iCount != 0, "정방향 키가 없습니다.");
-
-	SGComboTreeNode* pFindNode = findComboNodeRecursive(m_pRoot, keys, iCount - 1, iCount);
-
-	if (pFindNode == nullptr) {
-		SGComboTreeNode* pNewNode = dbg_new SGComboTreeNode{};
-		pNewNode->ActionList.add(action);
-		addComboNodeRecursive(m_pRoot, pNewNode, keys, 0, iCount);
-		++m_iNodeCount;
-	} else {
-		pFindNode->ActionList.add(action);
+		{
+			++childCount;
+		}
 	}
 
-	if (keys == keysReverse) {
+	return childCount;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+SGComboTree::SGComboTree()
+{
+	rootNode_ = dbg_new SGComboTreeNode{};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+SGComboTree::~SGComboTree()
+{
+	removeAll();
+	JCORE_DELETE_SAFE(rootNode_);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void SGComboTree::addComboAction(SGAction* _pAction)
+{
+	const ComboKeyList& keys = _pAction->getCommand();
+	const ComboKeyList& reversedKeys = keys.reverse();
+
+	int comboKeyCount = keys.count();
+	DebugAssertMsg(comboKeyCount != 0, "정방향 키가 없습니다.");
+
+	SGComboTreeNode* pFoundNode = findComboNodeRecursive(rootNode_, keys, comboKeyCount - 1, comboKeyCount);
+
+	if (pFoundNode == nullptr)
+	{
+		SGComboTreeNode* pNewNode = dbg_new SGComboTreeNode{};
+		pNewNode->ActionList.add(_pAction);
+		addComboNodeRecursive(rootNode_, pNewNode, keys, 0, comboKeyCount);
+		++nodeCount_;
+	}
+	else
+	{
+		pFoundNode->ActionList.add(_pAction);
+	}
+
+	if (keys == reversedKeys)
+	{
 		return;
 	}
 
-	int iCountReverse = keysReverse.count();
-	DebugAssertMsg(iCountReverse != 0, "반대 방향 키가 없습니다.");
+	int reversedComboKeyCount = reversedKeys.count();
+	DebugAssertMsg(reversedComboKeyCount != 0, "반대 방향 키가 없습니다.");
 
-	pFindNode = findComboNodeRecursive(m_pRoot, keysReverse, iCountReverse - 1, iCountReverse);
+	pFoundNode = findComboNodeRecursive(rootNode_, reversedKeys, reversedComboKeyCount - 1, reversedComboKeyCount);
 
-	if (pFindNode == nullptr) {
+	if (pFoundNode == nullptr)
+	{
 		SGComboTreeNode* pNewNode = dbg_new SGComboTreeNode{};
-		pNewNode->ActionList.add(action);
-		addComboNodeRecursive(m_pRoot, pNewNode, keysReverse, 0, iCountReverse);
-		++m_iNodeCount;
-	} else {
-		pFindNode->ActionList.add(action);
+		pNewNode->ActionList.add(_pAction);
+		addComboNodeRecursive(rootNode_, pNewNode, reversedKeys, 0, reversedComboKeyCount);
+		++nodeCount_;
+	}
+	else
+	{
+		pFoundNode->ActionList.add(_pAction);
 	}
 }
 
-// 안씀
-
-void SGComboTree::removeAll() {
+//////////////////////////////////////////////////////////////////////////////////////////
+void SGComboTree::removeAll()
+{
 	// 루트빼고 다 삭제
-	for (int i = 0; i < ControlKey::Max; ++i) {
-		removeComboNodeRecursive(m_pRoot->Next[i]);
-		m_pRoot->Next[i] = nullptr;
+	for (int i = 0; i < ControlKey::Max; ++i)
+	{
+		removeComboNodeRecursive(rootNode_->Next[i]);
+		rootNode_->Next[i] = nullptr;
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+SGAction* SGComboTree::getComboAction(const ComboKeyList& _keys)
+{
+	int comboKeyCount = _keys.count();
 
-// -> -> X 를 입력했으면
-// X -> -> 로 들어옴
-SGAction* SGComboTree::getComboAction(const ComboKeyList& keys) {
-	int iCount = keys.count();
-
-	if (iCount == 0)
-		return nullptr;
-
-	SGComboTreeNode* pFindNode = findComboNodeRecursive(m_pRoot, keys, iCount - 1, iCount);
-
-	if (pFindNode == nullptr || pFindNode->empty()) {
+	if (comboKeyCount == 0)
+	{
 		return nullptr;
 	}
 
+	SGComboTreeNode* pFoundNode = findComboNodeRecursive(rootNode_, _keys, comboKeyCount - 1, comboKeyCount);
 
-	SGAction* pAction = pFindNode->ActionList.find_if([](SGAction* action) {
-		return action->onConditionCheck();
+	if (pFoundNode == nullptr || pFoundNode->empty())
+	{
+		return nullptr;
+	}
+
+	SGAction* pAction = pFoundNode->ActionList.find_if([](SGAction* pAction)
+	{
+		return pAction->onConditionCheck();
 	});
 
 	return pAction;
 }
 
-void SGComboTree::removeComboNodeRecursive(SGComboTreeNode* parent) {
-	if (parent == nullptr)
+//////////////////////////////////////////////////////////////////////////////////////////
+void SGComboTree::removeComboNodeRecursive(SGComboTreeNode* _pParent)
+{
+	if (_pParent == nullptr)
+	{
 		return;
-
-	for (int i = 0; i < ControlKey::Max; ++i) {
-		removeComboNodeRecursive(parent->Next[i]);
 	}
 
-	parent->ActionList.clear();
-	delete parent;
+	for (int i = 0; i < ControlKey::Max; ++i)
+	{
+		removeComboNodeRecursive(_pParent->Next[i]);
+	}
+
+	_pParent->ActionList.clear();
+	delete _pParent;
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////
 void SGComboTree::addComboNodeRecursive(
-	SGComboTreeNode* parent, 
-	SGComboTreeNode* newNode, 
-	const ComboKeyList& keys, 
-	int keyIndex, 
-	int keyCount)
+	SGComboTreeNode* _pParent,
+	SGComboTreeNode* _pNewNode,
+	const ComboKeyList& _keys,
+	int _keyIndex,
+	int _keyCount)
 {
-	ControlKey_t eKey = keys.at(keyIndex);
-	SGComboTreeNode* pCur = parent->Next[eKey];
+	ControlKey_t controlKey = _keys.at(_keyIndex);
+	SGComboTreeNode* pCur = _pParent->Next[controlKey];
 
-	if (keyIndex == keyCount - 1) {
+	if (_keyIndex == _keyCount - 1)
+	{
 		// 한줄이면 끝나는데
 		// 잘못된 코드 캐치하기 위함.
-		if (pCur == nullptr) 
-			parent->Next[eKey] = newNode;
-		else {
-			DebugAssertMsg(pCur->empty(), "이미 해당 콤보키가 바인딩 되어 있습니다.");
-			parent->Next[eKey] = newNode;
+		if (pCur == nullptr)
+		{
+			_pParent->Next[controlKey] = _pNewNode;
 		}
+		else
+		{
+			DebugAssertMsg(pCur->empty(), "이미 해당 콤보키가 바인딩 되어 있습니다.");
+			_pParent->Next[controlKey] = _pNewNode;
+		}
+
 		return;
 	}
 
 	// 가는 경로에 노드가 없으면 생성
-	if (pCur == nullptr) {
-		parent->Next[eKey] = dbg_new SGComboTreeNode;
+	if (pCur == nullptr)
+	{
+		_pParent->Next[controlKey] = dbg_new SGComboTreeNode;
 	}
 
-	addComboNodeRecursive(parent->Next[eKey], newNode, keys, keyIndex + 1, keyCount);
+	addComboNodeRecursive(_pParent->Next[controlKey], _pNewNode, _keys, _keyIndex + 1, _keyCount);
 }
 
-
-
+//////////////////////////////////////////////////////////////////////////////////////////
 SGComboTreeNode* SGComboTree::findComboNodeRecursive(
-	SGComboTreeNode* parent, 
-	const ComboKeyList& keys, 
-	int keyIndex,
-	int keyCount)
+	SGComboTreeNode* _pParent,
+	const ComboKeyList& _keys,
+	int _keyIndex,
+	int _keyCount)
 {
-	if (parent == nullptr) {
+	if (_pParent == nullptr)
+	{
 		return nullptr;
 	}
 
-	ControlKey_t eKey = keys.at(keyIndex);
-	SGComboTreeNode* pCur = parent->Next[eKey];
+	ControlKey_t controlKey = _keys.at(_keyIndex);
+	SGComboTreeNode* pCur = _pParent->Next[controlKey];
 
-	if (keyIndex == 0) {
+	if (_keyIndex == 0)
+	{
 		return pCur;
 	}
 
-	return findComboNodeRecursive(pCur, keys, keyIndex - 1, keyCount);
+	return findComboNodeRecursive(pCur, _keys, _keyIndex - 1, _keyCount);
 }
-

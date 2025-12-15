@@ -11,13 +11,12 @@
 #include <SteinsGate/Client/Namespace.h>
 
 NS_CALLBACK_BEGIN
-
 namespace Popup
 {
-	struct LobbyAuthenticationTimeout
-	{
-		void operator()();
-	};
+struct LobbyAuthenticationTimeout
+{
+	void operator()();
+};
 }
 
 NS_CALLBACK_END

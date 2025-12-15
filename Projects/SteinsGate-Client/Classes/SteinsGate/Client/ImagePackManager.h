@@ -5,9 +5,7 @@
  *
  */
 
-
 #pragma once
-
 
 #include <SteinsGate/Client/ImagePack.h>
 
@@ -17,53 +15,49 @@ private:
 	friend class TSingleton;
 	ImagePackManager();
 	~ImagePackManager();
+
 public:
 	void loadAllPackages();
-	void unloadPackData(int packIndex);
+	void unloadPackData(int _packIndex);
 
-	ImagePack* getPack(const SGString& packName);
-	ImagePack* getPack(const char* packName);
-	ImagePack* getPackUnsafe(const SGString& packName);
-	ImagePack* getPackUnsafe(const char* packName);
-	ImagePack* getPack(const int idx);
-	ImagePack* getPackUnsafe(const int idx);
-	ImagePack* getAvatarPack(CharType_t charType, AvatarType_t avatarType);
-	ImagePack* getWeaponPack(WeaponType_t weaponType);
+	ImagePack* getPack(const SGString& _packName);
+	ImagePack* getPack(const char* _pPackName);
+	ImagePack* getPackUnsafe(const SGString& _packName);
+	ImagePack* getPackUnsafe(const char* _pPackName);
+	ImagePack* getPack(const int _index);
+	ImagePack* getPackUnsafe(const int _index);
+	ImagePack* getAvatarPack(CharType_t _charType, AvatarType_t _avatarType);
+	ImagePack* getWeaponPack(WeaponType_t _weaponType);
 
-	int getAvatarPackIndex(CharType_t charType, AvatarType_t avatarType);
-	int getWeaponPackIndex(WeaponType_t weaponType);
-	int getPackIndex(const SGString& packName);
-	int getPackIndexDefault(const char* packName, int defaultIndex = InvalidValue_v);
-	int getPackIndexDefault(const SGString& packName, int defaultIndex = InvalidValue_v);
+	int getAvatarPackIndex(CharType_t _charType, AvatarType_t _avatarType);
+	int getWeaponPackIndex(WeaponType_t _weaponType);
+	int getPackIndex(const SGString& _packName);
+	int getPackIndexDefault(const char* _pPackName, int _defaultIndex = InvalidValue_v);
+	int getPackIndexDefault(const SGString& _packName, int _defaultIndex = InvalidValue_v);
 
-	int getImgIndexUnsafe(int sgaIndex, const char* imgName);
-	int getImgIndexUnsafe(int sgaIndex, const SGString& imgName);
+	int getImgIndexUnsafe(int _sgaIndex, const char* _pImgName);
+	int getImgIndexUnsafe(int _sgaIndex, const SGString& _imgName);
 
-	SGSize getTextureSize(int packIndex, int imgIndex, int frameIndex);
+	SGSize getTextureSize(int _packIndex, int _imgIndex, int _frameIndex);
 
-	void releaseFrameTexture(int packIndex, int imgIndex, int frameIndex);
-	void releaseFrameTexture(const SgaResourceIndex& sgaResourceIndex);
+	void releaseFrameTexture(int _packIndex, int _imgIndex, int _frameIndex);
+	void releaseFrameTexture(const SgaResourceIndex& _sgaResourceIndex);
 	void releaseAllFrameTexture();
 
 	void increaseCounter();
 	void decreaseCounter();
 	void resetCounter();
-	CachedTextureCounter& getCounter() { return m_TextureCounter; }
+	CachedTextureCounter& getCounter() { return textureCounter_; }
 
-	void logTexture(const SGString& text, const SgaResourceIndex& resource, JCore::LoggerAbstract::Level logLevel);
+	void logTexture(const SGString& _text, const SgaResourceIndex& _resource, JCore::LoggerAbstract::Level _logLevel);
 
-	// TODO: 로딩된 패키지들 모두 Unload 하는 기능
-	// void unloadAll();
 private:
-	bool IsValidPackIndex(int index);
+	bool IsValidPackIndex(int _index);
 
-	SGHashMap<SGString, int> m_PathToIdMap;
-	
-	ImagePack* m_LoadedPackages[Const::Resource::MaxSgaFileCount]{};
-	ImagePack* m_AvatarPacks[CharType::Max][AvatarType::Max]{};
-	ImagePack* m_WeaponPacks[WeaponType::Max]{};
-	CachedTextureCounter m_TextureCounter;
-	int m_iLoadedPackageCount{};
+	SGHashMap<SGString, int> pathToIdMap_;
+	ImagePack* loadedPackages_[Const::Resource::MaxSgaFileCount]{};
+	ImagePack* avatarPacks_[CharType::Max][AvatarType::Max]{};
+	ImagePack* weaponPacks_[WeaponType::Max]{};
+	CachedTextureCounter textureCounter_;
+	int loadedPackageCount_{};
 };
-
-

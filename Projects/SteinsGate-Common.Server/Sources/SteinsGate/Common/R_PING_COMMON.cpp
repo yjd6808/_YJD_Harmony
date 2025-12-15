@@ -6,7 +6,6 @@
  */
 
 
-
 #include "Server.h"
 #include "ServerCoreHeader.h"
 #include "R_PING_COMMON.h"
@@ -16,7 +15,9 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-void R_PING_COMMON::RECV_CES_TimeSyncAck(JNetwork::Session* session, JNetwork::ICommand* cmd) {
-	const CES_TimeSyncAck* pCmd = (CES_TimeSyncAck*)cmd;
-	Core::TimeManager->UpdateMasterServerTime(pCmd->MasterServerTime);
+//////////////////////////////////////////////////////////////////////////////////////////
+void R_PING_COMMON::RECV_CES_TimeSyncAck(JNetwork::Session* _pSession, JNetwork::ICommand* _pCommand)
+{
+	const CES_TimeSyncAck* pTimeSyncAck = (CES_TimeSyncAck*)_pCommand;
+	Core::TimeManager->UpdateMasterServerTime(pTimeSyncAck->MasterServerTime);
 }

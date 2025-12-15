@@ -15,19 +15,19 @@ class Inven final : public JCore::SingletonPointer<Inven>
 	friend class TSingleton;
 	Inven();
 	~Inven();
+
 public:
 	void init();
 	WeaponType_t getWeaponType();
-	VisualInfo getVisualInfo(int defaultCharType);
+	VisualInfo getVisualInfo(int _defaultCharType);
 
-	int getAvailableSlotCount(InvenItemType_t invenType);
+	int getAvailableSlotCount(InvenItemType_t _invenType);
+
 private:
-	InvenItemEquip* m_EquipedItemList[ItemType::MaxEquip];
-	InvenItemEquip* m_EquipedAvatarList[AvatarType::Max];
+	InvenItemEquip* equippedItemList_[ItemType::MaxEquip];
+	InvenItemEquip* equippedAvatarList_[AvatarType::Max];
 
-	SGHashMap<int, InvenItem*> m_hashInven[InvenItemType::Max];		// 슬롯(키), 아이템
+	SGHashMap<int, InvenItem*> invenMap_[InvenItemType::Max]; // 슬롯(키), 아이템
 
-	int m_iAvailableSlotCount[InvenItemType::Max];
+	int availableSlotCount_[InvenItemType::Max];
 };
-
-

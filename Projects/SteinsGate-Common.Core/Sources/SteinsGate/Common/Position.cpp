@@ -8,144 +8,179 @@
 #include "Core.h"
 #include "Position.h"
 
+//////////////////////////////////////////////////////////////////////////////////////////
 Position::Position()
-	: X(0)
-	, Y(0)
-	, Z(0)
-{}
-
-Position::Position(const Position& other) {
-	X = other.X;
-	Y = other.Y;
-	Z = other.Z;
+: x_(0)
+, y_(0)
+, z_(0)
+{
 }
 
-Position& Position::operator=(const Position& other) {
-	X = other.X;
-	Y = other.Y;
-	Z = other.Z;
+//////////////////////////////////////////////////////////////////////////////////////////
+Position::Position(const Position& _position)
+{
+	x_ = _position.x_;
+	y_ = _position.y_;
+	z_ = _position.z_;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+Position& Position::operator=(const Position& _position)
+{
+	x_ = _position.x_;
+	y_ = _position.y_;
+	z_ = _position.z_;
 	return *this;
 }
 
-Position& Position::operator+=(const Position& other) {
-	X += other.X;
-	Y += other.Y;
-	Z += other.Z;
+//////////////////////////////////////////////////////////////////////////////////////////
+Position& Position::operator+=(const Position& _position)
+{
+	x_ += _position.x_;
+	y_ += _position.y_;
+	z_ += _position.z_;
 	return *this;
 }
 
-Position& Position::operator-=(const Position& other) {
-	X -= other.X;
-	Y -= other.Y;
-	Z -= other.Z;
+//////////////////////////////////////////////////////////////////////////////////////////
+Position& Position::operator-=(const Position& _position)
+{
+	x_ -= _position.x_;
+	y_ -= _position.y_;
+	z_ -= _position.z_;
 	return *this;
 }
 
-Position& Position::operator*=(const Position& other) {
-	X *= other.X;
-	Y *= other.Y;
-	Z *= other.Z;
+//////////////////////////////////////////////////////////////////////////////////////////
+Position& Position::operator*=(const Position& _position)
+{
+	x_ *= _position.x_;
+	y_ *= _position.y_;
+	z_ *= _position.z_;
 	return *this;
 }
 
-Position& Position::operator/=(const Position& other) {
-	X /= other.X;
-	Y /= other.Y;
-	Z /= other.Z;
+//////////////////////////////////////////////////////////////////////////////////////////
+Position& Position::operator/=(const Position& _position)
+{
+	x_ /= _position.x_;
+	y_ /= _position.y_;
+	z_ /= _position.z_;
 	return *this;
 }
 
-Position& Position::operator+=(float other) {
-	X += other;
-	Y += other;
-	Z += other;
+//////////////////////////////////////////////////////////////////////////////////////////
+Position& Position::operator+=(float _value)
+{
+	x_ += _value;
+	y_ += _value;
+	z_ += _value;
 	return *this;
 }
 
-Position& Position::operator-=(float other) {
-	X -= other;
-	Y -= other;
-	Z -= other;
+//////////////////////////////////////////////////////////////////////////////////////////
+Position& Position::operator-=(float _value)
+{
+	x_ -= _value;
+	y_ -= _value;
+	z_ -= _value;
 	return *this;
 }
 
-Position& Position::operator*=(float other) {
-	X *= other;
-	Y *= other;
-	Z *= other;
+//////////////////////////////////////////////////////////////////////////////////////////
+Position& Position::operator*=(float _value)
+{
+	x_ *= _value;
+	y_ *= _value;
+	z_ *= _value;
 	return *this;
 }
 
-Position& Position::operator/=(float other) {
-	X /= other;
-	Y /= other;
-	Z /= other;
+//////////////////////////////////////////////////////////////////////////////////////////
+Position& Position::operator/=(float _value)
+{
+	x_ /= _value;
+	y_ /= _value;
+	z_ /= _value;
 	return *this;
 }
 
-
-
-Position Position::operator+(const Position& other) {
-	Position Value(*this);
-	Value.X += other.X;
-	Value.Y += other.Y;
-	Value.Z += other.Z;
-	return Value;
+//////////////////////////////////////////////////////////////////////////////////////////
+Position Position::operator+(const Position& _position)
+{
+	Position value(*this);
+	value.x_ += _position.x_;
+	value.y_ += _position.y_;
+	value.z_ += _position.z_;
+	return value;
 }
 
-Position Position::operator-(const Position& other) {
-	Position Value(*this);
-	Value.X -= other.X;
-	Value.Y -= other.Y;
-	Value.Z -= other.Z;
-	return Value;
+//////////////////////////////////////////////////////////////////////////////////////////
+Position Position::operator-(const Position& _position)
+{
+	Position value(*this);
+	value.x_ -= _position.x_;
+	value.y_ -= _position.y_;
+	value.z_ -= _position.z_;
+	return value;
 }
 
-Position Position::operator*(const Position& other) {
-	Position Value(*this);
-	Value.X *= other.X;
-	Value.Y *= other.Y;
-	Value.Z *= other.Z;
-	return Value;
+//////////////////////////////////////////////////////////////////////////////////////////
+Position Position::operator*(const Position& _position)
+{
+	Position value(*this);
+	value.x_ *= _position.x_;
+	value.y_ *= _position.y_;
+	value.z_ *= _position.z_;
+	return value;
 }
 
-Position Position::operator/(const Position& other) {
-	Position Value(*this);
-	Value.X /= other.X;
-	Value.Y /= other.Y;
-	Value.Z /= other.Z;
-	return Value;
+//////////////////////////////////////////////////////////////////////////////////////////
+Position Position::operator/(const Position& _position)
+{
+	Position value(*this);
+	value.x_ /= _position.x_;
+	value.y_ /= _position.y_;
+	value.z_ /= _position.z_;
+	return value;
 }
 
-
-Position Position::operator+(float other) {
-	Position Value(*this);
-	Value.X += other;
-	Value.Y += other;
-	Value.Z += other;
-	return Value;
+//////////////////////////////////////////////////////////////////////////////////////////
+Position Position::operator+(float _value)
+{
+	Position value(*this);
+	value.x_ += _value;
+	value.y_ += _value;
+	value.z_ += _value;
+	return value;
 }
 
-Position Position::operator-(float other) {
-	Position Value(*this);
-	Value.X -= other;
-	Value.Y -= other;
-	Value.Z -= other;
-	return Value;
+//////////////////////////////////////////////////////////////////////////////////////////
+Position Position::operator-(float _value)
+{
+	Position value(*this);
+	value.x_ -= _value;
+	value.y_ -= _value;
+	value.z_ -= _value;
+	return value;
 }
 
-Position Position::operator*(float other) {
-	Position Value(*this);
-	Value.X *= other;
-	Value.Y *= other;
-	Value.Z *= other;
-	return Value;
+//////////////////////////////////////////////////////////////////////////////////////////
+Position Position::operator*(float _value)
+{
+	Position value(*this);
+	value.x_ *= _value;
+	value.y_ *= _value;
+	value.z_ *= _value;
+	return value;
 }
 
-Position Position::operator/(float other) {
-	Position Value(*this);
-	Value.X /= other;
-	Value.Y /= other;
-	Value.Z /= other;
-	return Value;
+//////////////////////////////////////////////////////////////////////////////////////////
+Position Position::operator/(float _value)
+{
+	Position value(*this);
+	value.x_ /= _value;
+	value.y_ /= _value;
+	value.z_ /= _value;
+	return value;
 }

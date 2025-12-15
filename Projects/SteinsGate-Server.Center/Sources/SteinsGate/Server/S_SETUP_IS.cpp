@@ -15,26 +15,34 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-bool S_SETUP_IS::SEND_CES_WhoAreYou() {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool S_SETUP_IS::SEND_CES_WhoAreYou()
+{
 	auto sending = SendBegin<CES_WhoAreYou>();
 	return true;
 }
 
-bool S_SETUP_IS::SEND_CES_AlreadyConnected() {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool S_SETUP_IS::SEND_CES_AlreadyConnected()
+{
 	auto sending = SendBegin<CES_AlreadyConnected>();
 	return true;
 }
 
-bool S_SETUP_IS::SEND_CES_YouNeedToDoThis(CenterOrder_t order) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool S_SETUP_IS::SEND_CES_YouNeedToDoThis(CenterOrder_t _order)
+{
 	auto sending = SendBegin<CES_YouNeedToDoThis>();
-	sending.Cmd.Order = order;
+	sending.cmd_.Order = _order;
 	return true;
 }
 
-bool S_SETUP_IS::SEND_CES_TimeSyncAck(SCE_TimeSync& time) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool S_SETUP_IS::SEND_CES_TimeSyncAck(SCE_TimeSync& _time)
+{
 	auto sending = SendBegin<CES_TimeSyncAck>();
-	sending.Cmd.PeerServerTime = time.PeerServerTime;
-	sending.Cmd.MasterServerTime = DateTime::Now().Tick - TimeSpan::FromHour(3).Tick;
+	sending.cmd_.PeerServerTime = _time.PeerServerTime;
+	sending.cmd_.MasterServerTime = DateTime::Now().Tick - TimeSpan::FromHour(3).Tick;
 	return true;
 }
 

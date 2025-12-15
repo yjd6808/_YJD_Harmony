@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/12/2023 8:08:09 AM
  * =====================
@@ -18,11 +18,11 @@ struct ComboTreeNodeActionList
 	SGAction* Action_{};
 	ComboTreeNodeActionList* Next{};
 
-	void add(SGAction* action);
+	void add(SGAction* _pAction);
 	void clear();
 	int count();
-	bool exist(SGAction* action);
-	SGAction* find_if(const SGPredicateFn<SGAction*>& fn);
+	bool exist(SGAction* _pAction);
+	SGAction* find_if(const SGPredicateFn<SGAction*>& _fn);
 };
 
 class SGComboTreeNode
@@ -31,9 +31,17 @@ public:
 	ComboTreeNodeActionList ActionList{};
 	SGComboTreeNode* Next[ControlKey::Max]{};
 
-	bool isValid()	{ return ActionList.count() != 0; }
-	bool empty()	{ return ActionList.count() == 0;	}
-	int  count();
+	bool isValid()
+	{
+		return ActionList.count() != 0;
+	}
+
+	bool empty()
+	{
+		return ActionList.count() == 0;
+	}
+
+	int count();
 };
 
 class SGComboTree
@@ -41,37 +49,29 @@ class SGComboTree
 public:
 	SGComboTree();
 	~SGComboTree();
+
 public:
 	void removeAll();
-	void addComboAction(SGAction* action);
-	SGAction* getComboAction(const ComboKeyList& keys);
-	// int nodeCount();
-	// int actionCount();
+	void addComboAction(SGAction* _pAction);
+	SGAction* getComboAction(const ComboKeyList& _keys);
+
 private:
-	static void removeComboNodeRecursive(SGComboTreeNode* parent);
+	static void removeComboNodeRecursive(SGComboTreeNode* _pParent);
 	static void addComboNodeRecursive(
-		SGComboTreeNode* parent, 
-		SGComboTreeNode* newNode, 
-		const ComboKeyList& keys, 
-		int keyIndex, 
-		int keyCount
+		SGComboTreeNode* _pParent,
+		SGComboTreeNode* _pNewNode,
+		const ComboKeyList& _keys,
+		int _keyIndex,
+		int _keyCount
 	);
 	static SGComboTreeNode* findComboNodeRecursive(
-		SGComboTreeNode* parent, 
-		const ComboKeyList& keys, 
-		int keyIndex, 
-		int keyCount
+		SGComboTreeNode* _pParent,
+		const ComboKeyList& _keys,
+		int _keyIndex,
+		int _keyCount
 	);
+
 private:
-	SGComboTreeNode* m_pRoot;
-	int m_iNodeCount = 0;
+	SGComboTreeNode* rootNode_{};
+	int nodeCount_ = 0;
 };
-
-
-
-
-
-
-
-
-

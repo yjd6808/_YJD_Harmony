@@ -15,11 +15,11 @@
 struct MonsterStatInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	MonsterStatInfoLoader(DataManagerAbstract* manager);
-	virtual ~MonsterStatInfoLoader() override = default;
+	MonsterStatInfoLoader(DataManagerAbstract* _pManager);
+	~MonsterStatInfoLoader() override = default;
 
-	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Monster_Stat; }
-	bool load() override;
+	ConfigFileType_t GetConfigFileType() override { return ConfigFileType::Monster_Stat; }
+	bool Load() override;
 
-	static void readMobStatInfo(Json::Value& monsterRoot, JCORE_OUT MonsterStatInfo* mobStatInfo);
+	static void ReadMobStatInfo(Json::Value& _monsterRoot, JCORE_OUT MonsterStatInfo* _pMonsterStatInfo);
 };
