@@ -34,7 +34,7 @@ bool TileInfoLoader::Load()
 
 		for (size_t i = 0; i < tileListRoot.size(); ++i)
 		{
-			Value& tileRoot = tileListRoot[i];
+			Value& tileRoot = tileListRoot[(Json::ArrayIndex)i];
 			TileInfo* pInfo = dbg_new TileInfo;
 
 			readTileInfo(tileRoot, pInfo);

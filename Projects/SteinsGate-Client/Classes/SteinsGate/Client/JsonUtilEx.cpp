@@ -29,7 +29,7 @@ void JsonUtilEx::ParseAnimationInfo(Json::Value& _animationRoot, AnimationInfo& 
 	Json::Value& frameListRoot = _animationRoot["frames"];
 	for (size_t i = 0; i < frameListRoot.size(); ++i)
 	{
-		Json::Value& frameRoot = frameListRoot[i];
+		Json::Value& frameRoot = frameListRoot[(Json::ArrayIndex)i];
 
 		int frameIndex; // 필수
 		int delay; // 필수
