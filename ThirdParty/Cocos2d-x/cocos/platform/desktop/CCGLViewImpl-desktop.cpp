@@ -1,4 +1,4 @@
-/****************************************************************************
+ï»¿/****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2013-2016 Chukong Technologies Inc.
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
@@ -971,7 +971,7 @@ void GLViewImpl::onGLFWWindowFocusCallback(GLFWwindow* /*window*/, int focused)
     }
 }
 
-// À±Á¤µµ: À©µµ¿ì ¿µ¿ªÀ¸·Î Ä¿¼­ µé¾î¿À°í ³ª°¡´Â°Å ¾Ë·ÁÁÖ´Â ±â´É Ãß°¡
+// ìœ¤ì •ë„: ìœˆë„ìš° ì˜ì—­ìœ¼ë¡œ ì»¤ì„œ ë“¤ì–´ì˜¤ê³  ë‚˜ê°€ëŠ”ê±° ì•Œë ¤ì£¼ëŠ” ê¸°ëŠ¥ ì¶”ê°€
 void GLViewImpl::onGLFWCursorEnterCallback(GLFWwindow* window, int enter) {
     if (enter == GLFW_TRUE)
     {

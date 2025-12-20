@@ -9,6 +9,7 @@
     <BaseOutputPath>..\Output\</BaseOutputPath>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
     <AssemblyName>SGToolsCommon</AssemblyName>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,4 +1,4 @@
-/****************************************************************************
+Ôªø/****************************************************************************
  Copyright (c) 2013      Zynga Inc.
  Copyright (c) 2013-2016 Chukong Technologies Inc.
  Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
@@ -586,7 +586,7 @@ public:
 
     FontAtlas* getFontAtlas() { return _fontAtlas; }
 
-    // ¿±¡§µµ: ∞¢ ∂Û¿Œ∫∞ ≥ ∫Ò π›»Ø
+    // Ïú§Ï†ïÎèÑ: Í∞Å ÎùºÏù∏Î≥Ñ ÎÑàÎπÑ Î∞òÌôò
     std::vector<float>& getLinesWidth() { return _linesWidth; }
 
     virtual const BlendFunc& getBlendFunc() const override { return _blendFunc; }

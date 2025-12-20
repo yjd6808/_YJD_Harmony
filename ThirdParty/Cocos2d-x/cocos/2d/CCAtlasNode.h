@@ -1,4 +1,4 @@
-/****************************************************************************
+ï»¿/****************************************************************************
 Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2011      Zynga Inc.
@@ -111,7 +111,7 @@ CC_CONSTRUCTOR_ACCESS:
     /** Initializes an AtlasNode  with a texture the width and height of each item measured in points and the quantity of items to render*/
     bool initWithTexture(Texture2D* texture, int tileWidth, int tileHeight, int itemsToRender);
 
-    // 5120¹ÙÀÌÆ® ¸¯ ¹ß»ıÇØ¼­, Å×½ºÆ®¸¦ À§ÇØ publicÀ¸·Î º¯°æ
+    // 5120ë°”ì´íŠ¸ ë¦­ ë°œìƒí•´ì„œ, í…ŒìŠ¤íŠ¸ë¥¼ ìœ„í•´ publicìœ¼ë¡œ ë³€ê²½
     void setIgnoreContentScaleFactor(bool bIgnoreContentScaleFactor);
 protected:
     void calculateMaxItems();

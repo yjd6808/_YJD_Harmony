@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  Copyright (c) 2013-2016 Chukong Technologies Inc.
  Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
@@ -305,7 +305,7 @@ public:
     /** 
      * A mask that defines which categories of bodies cause intersection notifications with this physics body.
      *
-     * When two bodies share the same space, each body's category mask is tested against the other body's contact mask by performing a logical AND operation. If either comparison results in a non-zero value, an PhysicsContact object is created and passed to the physics world’s delegate. For best performance, only set bits in the contacts mask for interactions you are interested in.
+     * When two bodies share the same space, each body's category mask is tested against the other body's contact mask by performing a logical AND operation. If either comparison results in a non-zero value, an PhysicsContact object is created and passed to the physics worldâ€™s delegate. For best performance, only set bits in the contacts mask for interactions you are interested in.
      * @param bitmask An integer number, the default value is 0x00000000 (all bits cleared).
      */
     void setContactTestBitmask(int bitmask);

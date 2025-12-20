@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
 Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2011      Zynga Inc.
@@ -36,6 +36,8 @@ THE SOFTWARE.
 //
 // all cocos2d include files
 //
+#include <iostream>
+
 #include "base/ccConfig.h"
 
 // base

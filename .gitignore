@@ -12,8 +12,7 @@ out/
 *.Settings
 *.sga
 
-x64/
-Win32/
+
 
 
 packages/

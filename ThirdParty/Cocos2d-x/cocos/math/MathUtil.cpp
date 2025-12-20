@@ -1,4 +1,4 @@
-/**
+﻿/**
 Copyright 2013 BlackBerry Inc.
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 

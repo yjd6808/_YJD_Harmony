@@ -1,4 +1,4 @@
-/****************************************************************************
+ï»¿/****************************************************************************
  Copyright (c) 2010-2012 cocos2d-x.org
  Copyright (c) 2012 James Chen
  Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
@@ -74,7 +74,7 @@ namespace ui {
         virtual void editBoxEditingDidBegin(EditBox* /*editBox*/) {}
 
         /**
-         * // À±Á¤µµ editBoxEditingDidBeginÀ¸·Î º¸³½ PostMessage¸¦ ³×ÀÌÆ¼ºê ¿¡µ÷¹Ú½º¿¡¼­ ¼ö½ÅÇÑ ÈÄ È£ÃâÇÏµµ·Ï ÇÏ´Â µ¨¸®°ÔÀÌÆ®
+         * // ìœ¤ì •ë„ editBoxEditingDidBeginìœ¼ë¡œ ë³´ë‚¸ PostMessageë¥¼ ë„¤ì´í‹°ë¸Œ ì—ë”§ë°•ìŠ¤ì—ì„œ ìˆ˜ì‹ í•œ í›„ í˜¸ì¶œí•˜ë„ë¡ í•˜ëŠ” ë¸ë¦¬ê²Œì´íŠ¸
          */
         virtual void nativeEditBoxFocused(EditBox* /*editBox*/) {}
 
@@ -673,10 +673,10 @@ namespace ui {
 
         void openKeyboard() const;
 
-        // À±Á¤µµ: ¿¡µ÷¹Ú½º ÀÓÇÃ °ÙÅÍ Ãß°¡
+        // ìœ¤ì •ë„: ì—ë”§ë°•ìŠ¤ ì„í”Œ ê²Ÿí„° ì¶”ê°€
         EditBoxImplCommon* getImpl() const;
 
-        // À±Á¤µµ: ¸¶¿ì½º ¶­À» ¶§ ¿¡µ÷¹Ú½º°¡ ±âº»ÀûÀ¸·Î Æ÷Ä¿½ÌµÇ´Âµ¥ ³»°¡ ÀÌ°É Á¦¾îÇÒ ¼ö ÀÖµµ·Ï ÇÏ±âÀ§ÇÔ.
+        // ìœ¤ì •ë„: ë§ˆìš°ìŠ¤ ë•Ÿì„ ë•Œ ì—ë”§ë°•ìŠ¤ê°€ ê¸°ë³¸ì ìœ¼ë¡œ í¬ì»¤ì‹±ë˜ëŠ”ë° ë‚´ê°€ ì´ê±¸ ì œì–´í•  ìˆ˜ ìˆë„ë¡ í•˜ê¸°ìœ„í•¨.
         void setPassiveFocusable(bool passiveFocuable) { _passiveFocusable = passiveFocuable; }
     protected:
         virtual void releaseUpEvent() override;

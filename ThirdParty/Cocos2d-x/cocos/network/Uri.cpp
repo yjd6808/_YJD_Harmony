@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2017 Facebook, Inc.
  * Copyright (c) 2017 Chukong Technologies
  * Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.

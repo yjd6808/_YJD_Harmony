@@ -1,4 +1,4 @@
-/****************************************************************************
+Ôªø/****************************************************************************
  Copyright (c) 2010-2012 cocos2d-x.org
  Copyright (c) 2012 James Chen
  Copyright (c) 2013-2015 zilongshanren
@@ -287,7 +287,7 @@ void EditBoxImplCommon::setVisible(bool visible)
 void EditBoxImplCommon::setContentSize(const Size& size)
 {
     _contentSize = applyPadding(size);
-    // ¿±¡§µµ
+    // Ïú§Ï†ïÎèÑ
     // CCLOG("[Edit text] content size = (%f, %f)", _contentSize.width, _contentSize.height);
     placeInactiveLabels(_contentSize);
 }

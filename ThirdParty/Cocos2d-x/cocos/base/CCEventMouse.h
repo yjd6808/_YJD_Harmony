@@ -1,4 +1,4 @@
-/****************************************************************************
+ï»¿/****************************************************************************
  Copyright (c) 2013-2016 Chukong Technologies Inc.
  Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
@@ -113,10 +113,10 @@ public:
         }
     }
 
-    // À±Á¤µµ Vec2 Å¸ÀÔ Ãß°¡
+    // ìœ¤ì •ë„ Vec2 íƒ€ì… ì¶”ê°€
     void setCursorPosition(const Vec2& pos) { setCursorPosition(pos.x, pos.y); }
 
-    // À±Á¤µµ: ½ºÅ¸Æ®Æ÷Áö¼Ç °ÔÅÍ Ãß°¡, getStartLocationInView ÇÔ¼ö¿Í µ¿ÀÏÇÑ ±â´É, ÀÌ¸§ÀÌ ¸¶À½¿¡ ¾Èµé¾î¼­ Ãß°¡ÇÔ
+    // ìœ¤ì •ë„: ìŠ¤íƒ€íŠ¸í¬ì§€ì…˜ ê²Œí„° ì¶”ê°€, getStartLocationInView í•¨ìˆ˜ì™€ ë™ì¼í•œ ê¸°ëŠ¥, ì´ë¦„ì´ ë§ˆìŒì— ì•ˆë“¤ì–´ì„œ ì¶”ê°€í•¨
     Vec2 getStartCursorPos() const { return _startPoint; }
 
     /** Set mouse button.

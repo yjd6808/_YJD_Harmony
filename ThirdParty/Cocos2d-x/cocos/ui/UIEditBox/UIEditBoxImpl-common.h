@@ -1,4 +1,4 @@
-/****************************************************************************
+Ôªø/****************************************************************************
  Copyright (c) 2010-2012 cocos2d-x.org
  Copyright (c) 2012 James Chen
  Copyright (c) 2013-2015 zilongshanren
@@ -69,7 +69,7 @@ public:
     virtual void setMaxLength(int maxLength) override;
     virtual void setTextHorizontalAlignment(TextHAlignment alignment) override;
 
-    // ¿±¡§µµ: ∂Û∫ß ∞Ÿ≈Õ √ﬂ∞°
+    // Ïú§Ï†ïÎèÑ: ÎùºÎ≤® Í≤üÌÑ∞ Ï∂îÍ∞Ä
     Label* getLabel() const { return _label; }
     Label* getLabelPlaceholder() const { return _labelPlaceHolder; }
 

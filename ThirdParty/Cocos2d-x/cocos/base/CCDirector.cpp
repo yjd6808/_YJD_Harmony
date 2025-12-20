@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
 Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2010-2013 cocos2d-x.org
 Copyright (c) 2011      Zynga Inc.
@@ -117,6 +117,9 @@ Director* Director::getInstance()
 Director::Director()
 {
 }
+
+#include "AL\al.h"
+#include "AL/alc.h"
 
 bool Director::init(void)
 {
@@ -851,6 +854,16 @@ Rect Director::getSafeAreaRect() const
 
 void Director::runWithScene(Scene *scene)
 {
+	ALCdevice* device = alcOpenDevice(NULL);  // 디바이스 열기
+	if (device == NULL) { /* 오류 처리 */ }
+
+	ALCcontext* context = alcCreateContext(device, NULL);  // 컨텍스트 생성
+	if (context == NULL) { /* 오류 처리 */ }
+
+	alcMakeContextCurrent(context);  // 컨텍스트 현재로 설정 (필수!
+
+	const ALchar* version = alGetString(AL_VERSION);
+
     CCASSERT(scene != nullptr, "This command can only be used to start the Director. There is already a scene present.");
     CCASSERT(_runningScene == nullptr, "_runningScene should be null");
 

@@ -1,4 +1,4 @@
-/****************************************************************************
+ï»¿/****************************************************************************
 Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2011      Zynga Inc.
@@ -53,7 +53,7 @@ struct Color4F;
 struct CC_DLL Color3B
 {
     Color3B();
-    Color3B(const Color3B& other);    // ÄÃ·¯º¹»ç Ãß°¡
+    Color3B(const Color3B& other);    // ì»¬ëŸ¬ë³µì‚¬ ì¶”ê°€
     Color3B(GLubyte _r, GLubyte _g, GLubyte _b);
     explicit Color3B(const Color4B& color);
     explicit Color3B(const Color4F& color);

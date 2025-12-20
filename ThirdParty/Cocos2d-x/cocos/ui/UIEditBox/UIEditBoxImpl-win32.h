@@ -1,4 +1,4 @@
-/****************************************************************************
+ï»¿/****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2013 Jozef Pridavok
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
@@ -64,7 +64,7 @@ namespace ui {
         virtual void nativeCloseKeyboard() override;
         virtual void setNativeMaxLength(int maxLength) override;
 
-        // À±Á¤µµ ¿¡µ÷¹Ú½º ÇÚµé °ÙÅÍ Ãß°¡
+        // ìœ¤ì •ë„ ì—ë”§ë°•ìŠ¤ í•¸ë“¤ ê²Ÿí„° ì¶”ê°€
         virtual HWND getNativeHandle() const { return _hwndEdit; }
 
     private:

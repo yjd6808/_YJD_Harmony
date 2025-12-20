@@ -1,4 +1,4 @@
-/****************************************************************************
+ï»¿/****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2013-2016 Chukong Technologies Inc.
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
@@ -89,7 +89,7 @@ public:
     int getMonitorCount() const;
     Size getMonitorSize() const;
 
-    // À©µµ¿ì Å¸ÀÌÆ²µµ °°ÀÌ º¯°æµÇµµ·Ï ¼öÁ¤
+    // ìœˆë„ìš° íƒ€ì´í‹€ë„ ê°™ì´ ë³€ê²½ë˜ë„ë¡ ìˆ˜ì •
     void setViewName(const std::string& viewname) override;
 
     /* override functions */
@@ -145,7 +145,7 @@ public:
 #endif // #if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
 
 
-    // À±Á¤µµ: À©µµ¿ì Ã¢¸¸ ´İÀº »óÅÂ·Î º¯°æ
+    // ìœ¤ì •ë„: ìœˆë„ìš° ì°½ë§Œ ë‹«ì€ ìƒíƒœë¡œ ë³€ê²½
     void close() override;
 
 protected:
@@ -173,7 +173,7 @@ protected:
     void onGLFWWindowIconifyCallback(GLFWwindow* window, int iconified);
     void onGLFWWindowFocusCallback(GLFWwindow* window, int focused);
 
-    // À±Á¤µµ
+    // ìœ¤ì •ë„
     void onGLFWCursorEnterCallback(GLFWwindow* window, int enter);
 
     bool _captured;

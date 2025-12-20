@@ -1,8 +1,8 @@
-/*
+﻿/*
  * cocos2d for iPhone: http://www.cocos2d-iphone.org
  * cocos2d-x: http://www.cocos2d-x.org
  *
- * Copyright (c) 2012 Pierre-David Bélanger
+ * Copyright (c) 2012 Pierre-David BĂ©langer
  * Copyright (c) 2012 cocos2d-x.org
  * Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  *

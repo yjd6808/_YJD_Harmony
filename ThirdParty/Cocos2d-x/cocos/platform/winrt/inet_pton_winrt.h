@@ -1,4 +1,4 @@
-#ifndef HEADER_CURL_INET_PTON_WINIRT_H
+﻿#ifndef HEADER_CURL_INET_PTON_WINIRT_H
 #define HEADER_CURL_INET_PTON_WINIRT_H
 /***************************************************************************
  *                                  _   _ ____  _

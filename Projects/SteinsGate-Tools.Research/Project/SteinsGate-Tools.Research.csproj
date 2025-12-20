@@ -11,6 +11,7 @@
 		<AssemblyName>SGToolsResearch</AssemblyName>
 		<RunPostBuildEvent>Always</RunPostBuildEvent>
 		<ApplicationIcon>Resource\Icon\logo.ico</ApplicationIcon>
+		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
 
 	<ItemGroup>
