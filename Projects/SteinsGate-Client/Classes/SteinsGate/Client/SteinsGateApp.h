@@ -56,7 +56,7 @@ public:
 	void applicationDidExit() override;
 
 public:
-	cocos2d::GLViewImpl* View;
+	cocos2d::GLViewImpl* pView_;
 
 private:
 	HHOOK pWndProcHook_;

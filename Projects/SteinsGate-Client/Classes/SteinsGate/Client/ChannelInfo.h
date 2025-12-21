@@ -12,6 +12,6 @@
 
 struct ChannelInfo : ChannelBaseInfo
 {
-	int SelectedSpriteIndex;
-	int NormalSpriteIndex;
+	int selectedSpriteIndex_;
+	int normalSpriteIndex_;
 };

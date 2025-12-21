@@ -19,17 +19,17 @@
 #include <SteinsGate/Client/SitActivity_Goblin.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MonsterListener_DarkGoblin::onCreated()
+void MonsterListener_DarkGoblin::OnCreated()
 {
-	AIComponent* pAiComponent = m_pMonster->getComponent<AIComponent>();
+	AIComponent* pAiComponent = m_pMonster->GetComponent<AIComponent>();
 
 	if (!pAiComponent)
 		return;
 
-	pAiComponent->setWalkActivity(dbg_new WalkActivity_Goblin(m_pMonster));
-	pAiComponent->setIdleActivity(dbg_new IdleActivity_Goblin(m_pMonster));
-	pAiComponent->setAttackActivity(dbg_new AttackActivity_Goblin(m_pMonster));
-	pAiComponent->setHitActivity(dbg_new HitActivity_Goblin(m_pMonster));
-	pAiComponent->setFallDownActivity(dbg_new FallDownActivity_Goblin(m_pMonster));
-	pAiComponent->setSitActivity(dbg_new SitActivity_Goblin(m_pMonster));
+	pAiComponent->SetWalkActivity(dbg_new WalkActivity_Goblin(m_pMonster));
+	pAiComponent->SetIdleActivity(dbg_new IdleActivity_Goblin(m_pMonster));
+	pAiComponent->SetAttackActivity(dbg_new AttackActivity_Goblin(m_pMonster));
+	pAiComponent->SetHitActivity(dbg_new HitActivity_Goblin(m_pMonster));
+	pAiComponent->SetFallDownActivity(dbg_new FallDownActivity_Goblin(m_pMonster));
+	pAiComponent->SetSitActivity(dbg_new SitActivity_Goblin(m_pMonster));
 }

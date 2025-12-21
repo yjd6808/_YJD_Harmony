@@ -20,36 +20,36 @@ ProjectileInfo::ProjectileInfo(ProjectileInfo&& _other) noexcept
 ProjectileInfo& ProjectileInfo::operator=(ProjectileInfo&& _other) noexcept
 {
 	code_ = _other.code_;
-	ListenerCode = _other.ListenerCode;
-	AttackData = _other.AttackData;
-	Name = Move(_other.Name);
+	listenerCode_ = _other.listenerCode_;
+	attackData_ = _other.attackData_;
+	name_ = Move(_other.name_);
 	//SgaIndex = _other.SgaIndex;
 	//ImgIndex = _other.ImgIndex;
-	SpawnOffsetX = _other.SpawnOffsetX;
-	SpawnOffsetY = _other.SpawnOffsetY;
-	SpawnEffect = _other.SpawnEffect;
-	SpawnEffectOffsetX = _other.SpawnEffectOffsetX;
-	SpawnEffectOffsetY = _other.SpawnEffectOffsetY;
-	HitEffect = _other.HitEffect;
-	Rotation = _other.Rotation;
-	RamdomRotationRangeMin = _other.RamdomRotationRangeMin;
-	RamdomRotationRangeMax = _other.RamdomRotationRangeMax;
-	Distance = _other.Distance;
-	MoveSpeed = _other.MoveSpeed;
-	LifeTime = _other.LifeTime;
-	RehitDelay = _other.RehitDelay;
-	IsSpriteDataRef = _other.IsSpriteDataRef;
-	ThicknessBox = _other.ThicknessBox;
-	SpriteData = _other.SpriteData;
-	_other.SpriteData = nullptr;
+	spawnOffsetX_ = _other.spawnOffsetX_;
+	spawnOffsetY_ = _other.spawnOffsetY_;
+	spawnEffect_ = _other.spawnEffect_;
+	spawnEffectOffsetX_ = _other.spawnEffectOffsetX_;
+	spawnEffectOffsetY_ = _other.spawnEffectOffsetY_;
+	hitEffect_ = _other.hitEffect_;
+	rotation_ = _other.rotation_;
+	ramdomRotationRangeMin_ = _other.ramdomRotationRangeMin_;
+	ramdomRotationRangeMax_ = _other.ramdomRotationRangeMax_;
+	distance_ = _other.distance_;
+	moveSpeed_ = _other.moveSpeed_;
+	lifeTime_ = _other.lifeTime_;
+	rehitDelay_ = _other.rehitDelay_;
+	isSpriteDataRef_ = _other.isSpriteDataRef_;
+	thicknessBox_ = _other.thicknessBox_;
+	spriteData_ = _other.spriteData_;
+	_other.spriteData_ = nullptr;
 	return *this;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ProjectileInfo::~ProjectileInfo()
 {
-	if (IsSpriteDataRef)
+	if (isSpriteDataRef_)
 		return;
 
-	JCORE_DELETE_SAFE(SpriteData);
+	JCORE_DELETE_SAFE(spriteData_);
 }

@@ -23,26 +23,26 @@ struct ProjectileInfo : ConfigDataAbstract
 
 	~ProjectileInfo() override;
 
-	int ListenerCode;
-	AttackDataInfo* AttackData;
-	SGString Name;
+	int listenerCode_;
+	AttackDataInfo* attackData_;
+	SGString name_;
 	//int SgaIndex;
 	//int ImgIndex;
-	float SpawnOffsetX;
-	float SpawnOffsetY;
-	EffectInfo* SpawnEffect;
-	float SpawnEffectOffsetX;
-	float SpawnEffectOffsetY;
-	EffectInfo* HitEffect;
-	float Rotation;
-	float RamdomRotationRangeMin;
-	float RamdomRotationRangeMax;
-	float Distance;
-	float MoveSpeed;
-	float LifeTime;
-	float RehitDelay;
-	bool IsSpriteDataRef; // 오버라이딩 추가에따라 스프라이트 데이터가 원본인지 참조본인지 구분용도
+	float spawnOffsetX_;
+	float spawnOffsetY_;
+	EffectInfo* spawnEffect_;
+	float spawnEffectOffsetX_;
+	float spawnEffectOffsetY_;
+	EffectInfo* hitEffect_;
+	float rotation_;
+	float ramdomRotationRangeMin_;
+	float ramdomRotationRangeMax_;
+	float distance_;
+	float moveSpeed_;
+	float lifeTime_;
+	float rehitDelay_;
+	bool isSpriteDataRef_; // 오버라이딩 추가에따라 스프라이트 데이터가 원본인지 참조본인지 구분용도
 
-	ThicknessBox ThicknessBox;
-	ActorSpriteData* SpriteData;
+	ThicknessBox thicknessBox_;
+	ActorSpriteData* spriteData_;
 };

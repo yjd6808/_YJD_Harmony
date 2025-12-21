@@ -24,9 +24,11 @@ ActorPartAnimation::ActorPartAnimation(
 	AnimationInfo* _pAnimationInfo,
 	SGVector<FrameTexture*>& _frames)
 //////////////////////////////////////////////////////////////////////////////////////////
-: animationInfo_(_pAnimationInfo)
-, target_(_pAnimationTarget)
-, animationFrames_(_pAnimationInfo->Frames.Size(), nullptr)
+: sgaIndex_(0)
+, imgIndex_(0)
+, pAnimationInfo_(_pAnimationInfo)
+, pTarget_(_pAnimationTarget)
+, animationFrames_(_pAnimationInfo->frames_.Size(), nullptr)
 , frames_(_frames)
 , runningFrameTime_(0.0f)
 , pauseDelay_(0.0f) // 기본 재생속도
@@ -40,7 +42,7 @@ ActorPartAnimation::ActorPartAnimation(
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ActorPartAnimation* ActorPartAnimation::create(
+ActorPartAnimation* ActorPartAnimation::Create(
 	ActorPartSprite* _pAnimationTarget,
 	AnimationInfo* _pAnimationInfo,
 	SGVector<FrameTexture*>& _frames)
@@ -58,7 +60,7 @@ ActorPartAnimation* ActorPartAnimation::create(
 	return nullptr;
 }
 
-void ActorPartAnimation::init()
+void ActorPartAnimation::Init()
 {
 	runningFrameTime_ = 0.0f;
 	frameIndexInAnimation_ = 0;
@@ -68,27 +70,27 @@ void ActorPartAnimation::init()
 	loopSequence_ = false;
 }
 
-void ActorPartAnimation::run()
+void ActorPartAnimation::Run()
 {
-	run(0);
+	Run(0);
 }
 
-void ActorPartAnimation::run(int _frameIndexInAnimation)
+void ActorPartAnimation::Run(int _frameIndexInAnimation)
 {
-	init();
+	Init();
 
 	frameIndexInAnimation_ = _frameIndexInAnimation;
 
-	FrameTexture* pStartFrameTexture = changeTexture(frameIndexInAnimation_);
-	const float currentFrameDelay = animationInfo_->Frames[frameIndexInAnimation_].Delay;
+	FrameTexture* pStartFrameTexture = ChangeTexture(frameIndexInAnimation_);
+	const float currentFrameDelay = pAnimationInfo_->frames_[frameIndexInAnimation_].delay_;
 
-	target_->onAnimationBegin(this, pStartFrameTexture);
-	target_->onFrameBegin(this, pStartFrameTexture);
+	pTarget_->OnAnimationBegin(this, pStartFrameTexture);
+	pTarget_->OnFrameBegin(this, pStartFrameTexture);
 
-	updateZeroDelayFrame(currentFrameDelay, pStartFrameTexture);
+	UpdateZeroDelayFrame(currentFrameDelay, pStartFrameTexture);
 }
 
-void ActorPartAnimation::constructFrames(int _sgaIndex, int _imgIndex)
+void ActorPartAnimation::ConstructFrames(int _sgaIndex, int _imgIndex)
 {
 	sgaIndex_ = _sgaIndex;
 	imgIndex_ = _imgIndex;
@@ -99,16 +101,16 @@ void ActorPartAnimation::constructFrames(int _sgaIndex, int _imgIndex)
 	}
 
 	// 애니메이션 프레임 구성
-	for (int i = 0; i < animationInfo_->Frames.Size(); ++i)
+	for (int i = 0; i < pAnimationInfo_->frames_.Size(); ++i)
 	{
-		const FrameInfo& frameInfo = animationInfo_->Frames[i];
-		const int frameIndex = frameInfo.FrameIndex;
+		const FrameInfo& frameInfo = pAnimationInfo_->frames_[i];
+		const int frameIndex = frameInfo.frameIndex_;
 
 		if (frameIndex < 0 || frameIndex >= frames_.Size())
 		{
 			// 예를들어서 애니메이션이 5프레임으로 구성하여 설정파일에 작성했는데
 			// 이미지를 구성하는 텍스쳐가 4개 밖에 없는 경우 5번째 프레임텍스쳐를 가져오는 것 자체가 불가능하므로.. 체크함.
-			Core::Contents.PackManager->logTexture("ActorPartAnimation::ConstructFrames()",
+			Core::Contents.PackManager->LogTexture("ActorPartAnimation::ConstructFrames()",
 			                                       { sgaIndex_, imgIndex_, InvalidValue_v },
 			                                       JCore::LoggerAbstract::eError);
 			DebugAssertMsg(false, "전체 프레임 수(%d)에 포함되지 않는 애니메이션 프레임 인덱스(%d)입니다.", frames_.Size(), frameIndex);
@@ -118,27 +120,27 @@ void ActorPartAnimation::constructFrames(int _sgaIndex, int _imgIndex)
 	}
 }
 
-void ActorPartAnimation::setPlaySpeed(float _speed)
+void ActorPartAnimation::SetPlaySpeed(float _speed)
 {
 	playSpeed_ = _speed;
 }
 
-void ActorPartAnimation::setLoopSequence()
+void ActorPartAnimation::SetLoopSequence()
 {
 	finished_ = false;
 	loopSequence_ = true;
 }
 
-void ActorPartAnimation::update(float _dt)
+void ActorPartAnimation::Update(float _dt)
 {
-	const float currentFrameDelay = animationInfo_->Frames[frameIndexInAnimation_].Delay;
-	FrameTexture* pCurrentFrameTexture = getTexture(frameIndexInAnimation_);
+	const float currentFrameDelay = pAnimationInfo_->frames_[frameIndexInAnimation_].delay_;
+	FrameTexture* pCurrentFrameTexture = GetTexture(frameIndexInAnimation_);
 
-	updateLoopSequence(_dt);
-	updateAnimation(currentFrameDelay, pCurrentFrameTexture, _dt);
+	UpdateLoopSequence(_dt);
+	UpdateAnimation(currentFrameDelay, pCurrentFrameTexture, _dt);
 }
 
-void ActorPartAnimation::updateLoopSequence(float _dt)
+void ActorPartAnimation::UpdateLoopSequence(float _dt)
 {
 	(void)_dt;
 
@@ -154,13 +156,13 @@ void ActorPartAnimation::updateLoopSequence(float _dt)
 	// 아니면 이코드 땜에 심각한 문제가 발생하거나..
 	frameIndexInAnimation_ = 0;
 	runningFrameTime_ = 0.0f;
-	FrameTexture* pStartFrameTexture = changeTexture(frameIndexInAnimation_);
-	target_->onAnimationBegin(this, pStartFrameTexture);
-	target_->onFrameBegin(this, pStartFrameTexture);
+	FrameTexture* pStartFrameTexture = ChangeTexture(frameIndexInAnimation_);
+	pTarget_->OnAnimationBegin(this, pStartFrameTexture);
+	pTarget_->OnFrameBegin(this, pStartFrameTexture);
 	loopSequence_ = false; // 토글
 }
 
-void ActorPartAnimation::updateAnimation(float _currentFrameDelay, FrameTexture* _pCurrentFrameTexture, float _dt)
+void ActorPartAnimation::UpdateAnimation(float _currentFrameDelay, FrameTexture* _pCurrentFrameTexture, float _dt)
 {
 	// Step Check. 애니메이션 실행가능 여부 체크
 	if (paused_ || finished_ || zeroFramePaused_)
@@ -181,7 +183,7 @@ void ActorPartAnimation::updateAnimation(float _currentFrameDelay, FrameTexture*
 	}
 
 	// Step 2. 마지막 프레임이 아닌 경우
-	target_->onFrameEnd(this, _pCurrentFrameTexture);
+	pTarget_->OnFrameEnd(this, _pCurrentFrameTexture);
 	runningFrameTime_ = 0.0f;
 	pauseDelay_ = 0.0f;
 
@@ -194,12 +196,12 @@ void ActorPartAnimation::updateAnimation(float _currentFrameDelay, FrameTexture*
 
 		++frameIndexInAnimation_;
 
-		FrameTexture* pNextFrameTexture = changeTexture(frameIndexInAnimation_);
-		float nextFrameDelay = animationInfo_->Frames[frameIndexInAnimation_].Delay;
+		FrameTexture* pNextFrameTexture = ChangeTexture(frameIndexInAnimation_);
+		float nextFrameDelay = pAnimationInfo_->frames_[frameIndexInAnimation_].delay_;
 
-		target_->onFrameBegin(this, pNextFrameTexture);
+		pTarget_->OnFrameBegin(this, pNextFrameTexture);
 
-		updateZeroDelayFrame(nextFrameDelay, pNextFrameTexture);
+		UpdateZeroDelayFrame(nextFrameDelay, pNextFrameTexture);
 		return;
 	}
 
@@ -209,30 +211,30 @@ void ActorPartAnimation::updateAnimation(float _currentFrameDelay, FrameTexture*
 	//	  다시 동일한 애니메이션을 실행해버리는 것 같은 경우가 있을 수 있는데
 	//    onAnimateEnd 함수 진입 -> runAction -> init(finished_ = false) -> onAnimateEnd 함수 종료 -> finished_ = true로
 	//    만들어버버리기 떄문에 이런 상황이 나오지 않도록 하기위해 위에서 처리함
-	target_->onAnimationEnd(this, _pCurrentFrameTexture);
+	pTarget_->OnAnimationEnd(this, _pCurrentFrameTexture);
 
 	if (loopSequence_)
 	{
 		return;
 	}
 
-	if (animationInfo_->Loop)
+	if (pAnimationInfo_->loop_)
 	{
 		frameIndexInAnimation_ = 0;
-		FrameTexture* pStartFrameTexture = changeTexture(frameIndexInAnimation_);
-		float startFrameDelay = animationInfo_->Frames[frameIndexInAnimation_].Delay;
+		FrameTexture* pStartFrameTexture = ChangeTexture(frameIndexInAnimation_);
+		float startFrameDelay = pAnimationInfo_->frames_[frameIndexInAnimation_].delay_;
 
-		target_->onAnimationBegin(this, pStartFrameTexture);
-		target_->onFrameBegin(this, pStartFrameTexture);
+		pTarget_->OnAnimationBegin(this, pStartFrameTexture);
+		pTarget_->OnFrameBegin(this, pStartFrameTexture);
 
-		updateZeroDelayFrame(startFrameDelay, pStartFrameTexture);
+		UpdateZeroDelayFrame(startFrameDelay, pStartFrameTexture);
 		return;
 	}
 
 	finished_ = true;
 }
 
-void ActorPartAnimation::updateZeroDelayFrame(float _currentFrameDelay, FrameTexture* _pCurrentFrameTexture)
+void ActorPartAnimation::UpdateZeroDelayFrame(float _currentFrameDelay, FrameTexture* _pCurrentFrameTexture)
 {
 	// ==========================================================
 	// 일시정지 프레임 처리(기획 파일에 프레임 딜레이 0이하로 입력하면 애니메이션을 정지시키도록 한다.)
@@ -250,7 +252,7 @@ void ActorPartAnimation::updateZeroDelayFrame(float _currentFrameDelay, FrameTex
 	zeroFramePaused_ = true;
 
 	// Step 1. 딜레이가 음수인 프레임이 마지막 프레임이 아닌 경우
-	target_->onFrameEnd(this, _pCurrentFrameTexture);
+	pTarget_->OnFrameEnd(this, _pCurrentFrameTexture);
 
 	if (frameIndexInAnimation_ < animationFrames_.Size() - 1)
 	{
@@ -259,9 +261,9 @@ void ActorPartAnimation::updateZeroDelayFrame(float _currentFrameDelay, FrameTex
 	}
 
 	// Step 2. 딜레이가 음수인 프레임이 마지막 프레임인 경우
-	target_->onAnimationEnd(this, _pCurrentFrameTexture);
+	pTarget_->OnAnimationEnd(this, _pCurrentFrameTexture);
 
-	if (animationInfo_->Loop)
+	if (pAnimationInfo_->loop_)
 	{
 		frameIndexInAnimation_ = 0;
 		return;
@@ -270,29 +272,29 @@ void ActorPartAnimation::updateZeroDelayFrame(float _currentFrameDelay, FrameTex
 	finished_ = true;
 }
 
-int ActorPartAnimation::getPartIndex()
+int ActorPartAnimation::GetPartIndex()
 {
-	return target_->getPartIndex();
+	return pTarget_->GetPartIndex();
 }
 
-FrameInfo& ActorPartAnimation::getFrameInfo(int _frameIndexInAnimation)
+FrameInfo& ActorPartAnimation::GetFrameInfo(int _frameIndexInAnimation)
 {
-	DebugAssertMsg(_frameIndexInAnimation >= 0 && _frameIndexInAnimation < animationInfo_->Frames.Size(),
+	DebugAssertMsg(_frameIndexInAnimation >= 0 && _frameIndexInAnimation < pAnimationInfo_->frames_.Size(),
 	               "애니메이션 내 프레임 인덱스가 이상합니다.");
-	return animationInfo_->Frames[_frameIndexInAnimation];
+	return pAnimationInfo_->frames_[_frameIndexInAnimation];
 }
 
-FrameInfo& ActorPartAnimation::getRunningFrameInfo()
+FrameInfo& ActorPartAnimation::GetRunningFrameInfo()
 {
-	return animationInfo_->Frames[frameIndexInAnimation_];
+	return pAnimationInfo_->frames_[frameIndexInAnimation_];
 }
 
-int ActorPartAnimation::getRunningFrameEventCode()
+int ActorPartAnimation::GetRunningFrameEventCode()
 {
-	return animationInfo_->Frames[frameIndexInAnimation_].FrameEventCode;
+	return pAnimationInfo_->frames_[frameIndexInAnimation_].frameEventCode_;
 }
 
-void ActorPartAnimation::reflectAnimation(ActorPartAnimation* _pRunningAnimation)
+void ActorPartAnimation::ReflectAnimation(ActorPartAnimation* _pRunningAnimation)
 {
 	runningFrameTime_ = _pRunningAnimation->runningFrameTime_;
 	pauseDelay_ = _pRunningAnimation->pauseDelay_;
@@ -304,23 +306,23 @@ void ActorPartAnimation::reflectAnimation(ActorPartAnimation* _pRunningAnimation
 	loopSequence_ = _pRunningAnimation->loopSequence_;
 }
 
-void ActorPartAnimation::setAnimationInfo(AnimationInfo* _pAnimationInfo)
+void ActorPartAnimation::SetAnimationInfo(AnimationInfo* _pAnimationInfo)
 {
-	animationInfo_ = _pAnimationInfo;
+	pAnimationInfo_ = _pAnimationInfo;
 }
 
-FrameTexture* ActorPartAnimation::changeTexture(int _frameIndexInAnimation)
+FrameTexture* ActorPartAnimation::ChangeTexture(int _frameIndexInAnimation)
 {
 	FrameTexture* pFrameTexture = animationFrames_[_frameIndexInAnimation];
 
-	if (pFrameTexture->isLink())
+	if (pFrameTexture->IsLink())
 	{
-		int targetFrameIndex = pFrameTexture->getTargetFrameIndex();
+		int targetFrameIndex = pFrameTexture->GetTargetFrameIndex();
 		pFrameTexture = frames_[targetFrameIndex];
 	}
 
 	// 링크 검사 이후 체크해야함
-	if (pFrameTexture->isDummy())
+	if (pFrameTexture->IsDummy())
 	{
 		// null로 넣어주면 2x2 흰색 텍스쳐를 넣어줌
 		// 이렇게 넣어줘야 opacity하고 컬러 조절이 가능해지기 때문이라고 엔진 코드에 적혀있다.
@@ -328,12 +330,12 @@ FrameTexture* ActorPartAnimation::changeTexture(int _frameIndexInAnimation)
 		// createFrameTextureRetain에서 그냥 2x2 디폴트 생성해서 넣음
 		// --> 그냥 처음에 내가 2x2 텍스쳐 넣어놓음 안보이게만 해주자.
 
-		target_->setOpacity(0);
+		pTarget_->setOpacity(0);
 		return pFrameTexture;
 	}
 
 	// 동일한 텍스쳐 스킵
-	if (target_->getTexture() == pFrameTexture->getTexture())
+	if (pTarget_->getTexture() == pFrameTexture->GetTexture())
 	{
 		return pFrameTexture;
 	}
@@ -342,44 +344,44 @@ FrameTexture* ActorPartAnimation::changeTexture(int _frameIndexInAnimation)
 	// 최적화 없는 상태에서 한 틱당 initWithTexture 2만번 호출까지는 프레임 드랍 없다.
 	// 일단 문제 생기면 Sprite 풀을 구성해놓고 교체해주는 방식으로 바꾸는 걸로
 	// 이것도 완성하면 나중에... ㅋㅋ 뭔 전부 나중이야
-	target_->initWithTexture(pFrameTexture->getTexture());
-	target_->setAnchorPoint(target_->getActorType() == ActorType::Projectile ? SGVec2::ANCHOR_MIDDLE : SGVec2::ZERO);
-	target_->setOpacity(255);
+	pTarget_->initWithTexture(pFrameTexture->GetTexture());
+	pTarget_->setAnchorPoint(pTarget_->GetActorType() == ActorType::Projectile ? SGVec2::ANCHOR_MIDDLE : SGVec2::ZERO);
+	pTarget_->setOpacity(255);
 	return pFrameTexture;
 }
 
-FrameTexture* ActorPartAnimation::getTexture(int _frameIndexInAnimation)
+FrameTexture* ActorPartAnimation::GetTexture(int _frameIndexInAnimation)
 {
 	FrameTexture* pFrameTexture = animationFrames_[_frameIndexInAnimation];
 
-	if (pFrameTexture->isDummy())
+	if (pFrameTexture->IsDummy())
 	{
-		target_->setTexture(nullptr);
-		target_->setOpacity(0.0f);
+		pTarget_->setTexture(nullptr);
+		pTarget_->setOpacity(0.0f);
 		return pFrameTexture;
 	}
 
-	if (pFrameTexture->isLink())
+	if (pFrameTexture->IsLink())
 	{
-		int targetFrameIndex = pFrameTexture->getTargetFrameIndex();
+		int targetFrameIndex = pFrameTexture->GetTargetFrameIndex();
 		pFrameTexture = frames_[targetFrameIndex];
 	}
 
 	return pFrameTexture;
 }
 
-void ActorPartAnimation::pause()
+void ActorPartAnimation::Pause()
 {
 	paused_ = true;
 }
 
 // delay 만큼만 멈춤
-void ActorPartAnimation::pauseTime(float _delay)
+void ActorPartAnimation::PauseTime(float _delay)
 {
 	pauseDelay_ = _delay;
 }
 
-void ActorPartAnimation::resume()
+void ActorPartAnimation::Resume()
 {
 	paused_ = false;
 
@@ -388,9 +390,9 @@ void ActorPartAnimation::resume()
 	// 프레임, 애니메이션 시작 콜백함수는 호출안해놓은 상태이기 때문이다.
 	if (zeroFramePaused_)
 	{
-		FrameTexture* pStartFrameTexture = changeTexture(frameIndexInAnimation_);
-		target_->onAnimationBegin(this, pStartFrameTexture);
-		target_->onFrameBegin(this, pStartFrameTexture);
+		FrameTexture* pStartFrameTexture = ChangeTexture(frameIndexInAnimation_);
+		pTarget_->OnAnimationBegin(this, pStartFrameTexture);
+		pTarget_->OnFrameBegin(this, pStartFrameTexture);
 		zeroFramePaused_ = false;
 	}
 }

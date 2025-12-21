@@ -21,15 +21,15 @@ Player::~Player()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Player::initialize()
+void Player::Initialize()
 {
-	Character::initialize();
+	Character::Initialize();
 
-	initPlayerData();
+	InitPlayerData();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Player::initPlayerData()
+void Player::InitPlayerData()
 {
 	playerData_.clear();
 }

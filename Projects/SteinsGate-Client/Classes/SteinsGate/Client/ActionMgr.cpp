@@ -14,7 +14,7 @@
 #include <SteinsGate/Client/Define_Action.h>
 #include <SteinsGate/Client/FrameTexture.h>
 
-
+//////////////////////////////////////////////////////////////////////////////////////////
 ActionMgr::ActionMgr(HostPlayer* _pPlayer)
 : player_(_pPlayer)
 , runningAction_(nullptr)
@@ -23,18 +23,20 @@ ActionMgr::ActionMgr(HostPlayer* _pPlayer)
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 ActionMgr::~ActionMgr()
 {
 	actionMap_.ForEachValueDelete();
 	_LogDebug_("액션 매니저 소멸");
 }
 
-void ActionMgr::init(int _charType)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActionMgr::Init(int _charType)
 {
 	switch (_charType)
 	{
 	case CharType::Gunner:
-		initGunnerActions();
+		InitGunnerActions();
 		break;
 	default:
 		DebugAssertMsg(false, "해당 타입의 캐릭터는 존재하지 않습니다.");
@@ -44,31 +46,27 @@ void ActionMgr::init(int _charType)
 	          .Extension()
 	          .ForEach([this](SGAction* _pAction)
 	          {
-		          if (_pAction->getCommand().count() > 0)
+		          if (_pAction->GetCommand().Count() > 0)
 		          {
-			          comboTree_.addComboAction(_pAction);
+			          comboTree_.AddComboAction(_pAction);
 		          }
 	          });
 }
 
-void ActionMgr::initGunnerActions()
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActionMgr::InitGunnerActions()
 {
 	DataManager* pConfig = DataManager::Get();
 
-	baseAction_[BaseAction::Idle] = dbg_new GunnerIdle(player_, pConfig->getActionInfo(DEF_ACTION_GUNNER_IDLE));
-	baseAction_[BaseAction::Walk] = dbg_new GunnerWalk(player_, pConfig->getActionInfo(DEF_ACTION_GUNNER_WALK));
-	baseAction_[BaseAction::Run] = dbg_new GunnerRun(player_, pConfig->getActionInfo(DEF_ACTION_GUNNER_RUN));
-	baseAction_[BaseAction::Attack] = dbg_new
-		GunnerGunShot(player_, pConfig->getActionInfo(DEF_ACTION_GUNNER_GUN_SHOT));
-	baseAction_[BaseAction::Sliding] = dbg_new
-		GunnerSliding(player_, pConfig->getActionInfo(DEF_ACTION_GUNNER_SLIDING));
-	baseAction_[BaseAction::Jump] = dbg_new GunnerJump(player_, pConfig->getActionInfo(DEF_ACTION_GUNNER_JUMP));
-	baseAction_[BaseAction::Hit] = dbg_new GunnerHit(player_, pConfig->getActionInfo(DEF_ACTION_GUNNER_HIT));
-	baseAction_[BaseAction::FallDown] = dbg_new GunnerFallDown(
-		player_, pConfig->getActionInfo(DEF_ACTION_GUNNER_FALL_DOWN));
-	baseAction_[BaseAction::SitRecover] = dbg_new GunnerSitRecover(
-		player_, pConfig->getActionInfo(DEF_ACTION_GUNNER_SIT_RECOVER));
-
+	baseAction_[BaseAction::Idle] = dbg_new GunnerIdle(player_, pConfig->GetActionInfo(DEF_ACTION_GUNNER_IDLE));
+	baseAction_[BaseAction::Walk] = dbg_new GunnerWalk(player_, pConfig->GetActionInfo(DEF_ACTION_GUNNER_WALK));
+	baseAction_[BaseAction::Run] = dbg_new GunnerRun(player_, pConfig->GetActionInfo(DEF_ACTION_GUNNER_RUN));
+	baseAction_[BaseAction::Attack] = dbg_new  GunnerGunShot(player_, pConfig->GetActionInfo(DEF_ACTION_GUNNER_GUN_SHOT));
+	baseAction_[BaseAction::Sliding] = dbg_new GunnerSliding(player_, pConfig->GetActionInfo(DEF_ACTION_GUNNER_SLIDING));
+	baseAction_[BaseAction::Jump] = dbg_new GunnerJump(player_, pConfig->GetActionInfo(DEF_ACTION_GUNNER_JUMP));
+	baseAction_[BaseAction::Hit] = dbg_new GunnerHit(player_, pConfig->GetActionInfo(DEF_ACTION_GUNNER_HIT));
+	baseAction_[BaseAction::FallDown] = dbg_new GunnerFallDown(player_, pConfig->GetActionInfo(DEF_ACTION_GUNNER_FALL_DOWN));
+	baseAction_[BaseAction::SitRecover] = dbg_new GunnerSitRecover(player_, pConfig->GetActionInfo(DEF_ACTION_GUNNER_SIT_RECOVER));
 
 	actionMap_.Insert(DEF_ACTION_GUNNER_IDLE, baseAction_[BaseAction::Idle]);
 	actionMap_.Insert(DEF_ACTION_GUNNER_WALK, baseAction_[BaseAction::Walk]);
@@ -81,66 +79,75 @@ void ActionMgr::initGunnerActions()
 	actionMap_.Insert(DEF_ACTION_GUNNER_SIT_RECOVER, baseAction_[BaseAction::SitRecover]);
 }
 
-void ActionMgr::update(float _dt)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActionMgr::Update(float _dt)
 {
 	if (runningAction_)
-		runningAction_->onUpdate(_dt);
+		runningAction_->OnUpdate(_dt);
 }
 
-void ActionMgr::onKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActionMgr::OnKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
 {
 	if (runningAction_)
-		runningAction_->onKeyPressed(_pController, _keyCode);
+		runningAction_->OnKeyPressed(_pController, _keyCode);
 }
 
-void ActionMgr::onKeyReleased(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActionMgr::OnKeyReleased(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
 {
 	if (runningAction_)
-		runningAction_->onKeyReleased(_pController, _keyCode);
+		runningAction_->OnKeyReleased(_pController, _keyCode);
 }
 
-void ActionMgr::onKeyPressedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActionMgr::OnKeyPressedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
 {
 	if (runningAction_)
-		runningAction_->onKeyPressedBefore(_pController, _keyCode);
+		runningAction_->OnKeyPressedBefore(_pController, _keyCode);
 }
 
-void ActionMgr::onKeyReleasedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActionMgr::OnKeyReleasedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
 {
 	if (runningAction_)
-		runningAction_->onKeyReleasedBefore(_pController, _keyCode);
+		runningAction_->OnKeyReleasedBefore(_pController, _keyCode);
 }
 
-void ActionMgr::onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActionMgr::OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
 	if (runningAction_)
-		runningAction_->onFrameBegin(_pAnimation, _pTexture);
+		runningAction_->OnFrameBegin(_pAnimation, _pTexture);
 }
 
-void ActionMgr::onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActionMgr::OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
 	if (runningAction_)
-		runningAction_->onFrameEnd(_pAnimation, _pTexture);
+		runningAction_->OnFrameEnd(_pAnimation, _pTexture);
 }
 
-void ActionMgr::onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActionMgr::OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
 	if (runningAction_)
-		runningAction_->onAnimationBegin(_pAnimation, _pTexture);
+		runningAction_->OnAnimationBegin(_pAnimation, _pTexture);
 }
 
-void ActionMgr::onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActionMgr::OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
 	if (runningAction_)
-		runningAction_->onAnimationEnd(_pAnimation, _pTexture);
+		runningAction_->OnAnimationEnd(_pAnimation, _pTexture);
 }
 
-
-bool ActionMgr::canRunAction()
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ActionMgr::CanRunAction()
 {
 	if (runningAction_)
 	{
-		if (runningAction_->isForceCancelable())
+		if (runningAction_->IsForceCancelable())
 			return true;
 
 		return false; // 액션을 수행중인데 캔슬 가능한 경우가 아닌 경우
@@ -149,7 +156,8 @@ bool ActionMgr::canRunAction()
 	return true;
 }
 
-bool ActionMgr::isBaseActionRunning(BaseAction_t _baseActionType)
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ActionMgr::IsBaseActionRunning(BaseAction_t _baseActionType)
 {
 	if (baseAction_[_baseActionType] == nullptr)
 		return false;
@@ -157,7 +165,8 @@ bool ActionMgr::isBaseActionRunning(BaseAction_t _baseActionType)
 	return baseAction_[_baseActionType] == runningAction_;
 }
 
-bool ActionMgr::isActionRunning(int _actionCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ActionMgr::IsActionRunning(int _actionCode)
 {
 	DebugAssertMsg(actionMap_.Exist(_actionCode), "해당 코드값의 액션이 존재하지 않습니다.");
 
@@ -167,7 +176,8 @@ bool ActionMgr::isActionRunning(int _actionCode)
 	return true;
 }
 
-bool ActionMgr::isRunnningActionIdleOrWalkAction()
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ActionMgr::IsRunnningActionIdleOrWalkAction()
 {
 	if (runningAction_ == nullptr)
 		return true;
@@ -179,64 +189,68 @@ bool ActionMgr::isRunnningActionIdleOrWalkAction()
 	return false;
 }
 
-
-SGAction* ActionMgr::getAction(int _actionCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+SGAction* ActionMgr::GetAction(int _actionCode)
 {
 	DebugAssertMsg(actionMap_.Exist(_actionCode), "해당 코드값의 액션이 존재하지 않습니다.");
 	return actionMap_.Get(_actionCode);
 }
 
-SGAction* ActionMgr::getBaseAction(BaseAction_t _baseActionType)
+//////////////////////////////////////////////////////////////////////////////////////////
+SGAction* ActionMgr::GetBaseAction(BaseAction_t _baseActionType)
 {
 	DebugAssertMsg(baseAction_[_baseActionType], "해당 기초액션이 아직 구현되지 않았습니다.");
 	return baseAction_[_baseActionType];
 }
 
-int Count = 0;
-
-void ActionMgr::runAction(int _actionCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+// int Count = 0;
+void ActionMgr::RunAction(int _actionCode)
 {
-	if (!canRunAction())
+	if (!CanRunAction())
 		return;
 
 	if (runningAction_)
 	{
-		runningAction_->stop();
+		runningAction_->Stop();
 	}
 
-	runningAction_ = getAction(_actionCode);
-	runningAction_->init();
-	runningAction_->play();
+	runningAction_ = GetAction(_actionCode);
+	runningAction_->Init();
+	runningAction_->Play();
 	// Log("[액션 실행 %05d] %s\n", ++Count, runningAction_->getActionName().Source());
 }
 
-void ActionMgr::runAction(SGAction* _pAction)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActionMgr::RunAction(SGAction* _pAction)
 {
-	if (!canRunAction())
+	if (!CanRunAction())
 		return;
 
 	if (runningAction_)
 	{
-		runningAction_->stop();
+		runningAction_->Stop();
 	}
 
 	runningAction_ = _pAction;
-	runningAction_->init();
-	runningAction_->play();
+	runningAction_->Init();
+	runningAction_->Play();
 	// Log("[액션 실행 %05d] %s\n", ++Count, runningAction_->getActionName().Source());
 }
 
-void ActionMgr::runBaseAction(BaseAction_t _baseActionType)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActionMgr::RunBaseAction(BaseAction_t _baseActionType)
 {
 	DebugAssertMsg(baseAction_[_baseActionType], "해당 기초액션이 아직 구현되지 않았습니다.");
-	runAction(baseAction_[_baseActionType]);
+	RunAction(baseAction_[_baseActionType]);
 }
 
-void ActionMgr::stopActionForce()
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActionMgr::StopActionForce()
 {
 	if (runningAction_ != nullptr)
 	{
-		runningAction_->onActionEnd();
+		runningAction_->OnActionEnd();
 	}
 	previousAction_ = runningAction_;
 	runningAction_ = nullptr;

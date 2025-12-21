@@ -17,51 +17,53 @@ GunnerFallDown::GunnerFallDown(HostPlayer* _pPlayer, ActionInfo* _pActionInfo)
 : GunnerAction(_pPlayer, _pActionInfo)
 , bounced_(false)
 , down_(false)
+, elapsedDownTime_(0)
+, downRecoverTime_(0)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerFallDown::onActionBegin()
+void GunnerFallDown::OnActionBegin()
 {
-	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+	PhysicsComponent* pPhysicsComponent = pPlayer_->GetComponent<PhysicsComponent>();
 
 	if (pPhysicsComponent)
-		pPhysicsComponent->enableElasticity();
+		pPhysicsComponent->EnableElasticity();
 
-	m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_FALL_DOWN_BEGIN);
+	pPlayer_->RunAnimation(DEF_ANIMATION_GUNNER_FALL_DOWN_BEGIN);
 	elapsedDownTime_ = 0.0f;
-	downRecoverTime_ = m_pBaseInfo->downRecoverTime_ / 2.0f;
+	downRecoverTime_ = pBaseInfo_->downRecoverTime_ / 2.0f;
 	bounced_ = false;
 	down_ = false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerFallDown::onActionEnd()
+void GunnerFallDown::OnActionEnd()
 {
-	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+	PhysicsComponent* pPhysicsComponent = pPlayer_->GetComponent<PhysicsComponent>();
 
 	if (pPhysicsComponent)
-		pPhysicsComponent->disableElasticity();
+		pPhysicsComponent->DisableElasticity();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerFallDown::onUpdate(float _deltaTime)
+void GunnerFallDown::OnUpdate(float _deltaTime)
 {
-	Character* pCharacter = m_pPlayer;
-	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+	Character* pCharacter = pPlayer_;
+	PhysicsComponent* pPhysicsComponent = pPlayer_->GetComponent<PhysicsComponent>();
 
 	// Step 1. 바닥에 충돌해서 공중으로 튀어올랐는지 확인
-	if (pPhysicsComponent && pPhysicsComponent->isBounced() && !bounced_)
+	if (pPhysicsComponent && pPhysicsComponent->IsBounced() && !bounced_)
 	{
 		bounced_ = true;
-		pCharacter->runAnimation(DEF_ANIMATION_GUNNER_FALL_DOWN_BOUNCE);
+		pCharacter->RunAnimation(DEF_ANIMATION_GUNNER_FALL_DOWN_BOUNCE);
 		return;
 	}
 
 	// Step 2. 공중으로 튀어올랐다가 다시 바닥에 닿았는지 확인
-	if (!down_ && bounced_ && pCharacter->isOnTheGround())
+	if (!down_ && bounced_ && pCharacter->IsOnTheGround())
 	{
-		pCharacter->runAnimation(DEF_ANIMATION_GUNNER_FALL_DOWN_END);
+		pCharacter->RunAnimation(DEF_ANIMATION_GUNNER_FALL_DOWN_END);
 		down_ = true;
 		return;
 	}
@@ -79,9 +81,9 @@ void GunnerFallDown::onUpdate(float _deltaTime)
 
 	if (elapsedDownTime_ >= downRecoverTime_)
 	{
-		ActionMgr* pActionManager = m_pPlayer->actionManager();
+		ActionMgr* pActionManager = pPlayer_->GetActionManager();
 
-		pActionManager->stopActionForce();
-		pActionManager->runBaseAction(BaseAction::SitRecover);
+		pActionManager->StopActionForce();
+		pActionManager->RunBaseAction(BaseAction::SitRecover);
 	}
 }

@@ -15,12 +15,11 @@
 class SGVec2Ex
 {
 public:
-	static void getLookDirection(const SGVec2& _from, const SGVec2& _to, JCORE_OUT Direction_t& _lr,
-	                             JCORE_OUT Direction_t& _ud);
-	static void getLookDirectionX(float _fromX, float _toX, JCORE_OUT SpriteDirection_t& _lr);
-	static void getLookDirectionX(const SGVec2& _from, const SGVec2& _to, JCORE_OUT SpriteDirection_t& _lr);
+	static void GetLookDirection(const SGVec2& _from, const SGVec2& _to, JCORE_OUT Direction_t& _lr, JCORE_OUT Direction_t& _ud);
+	static void GetLookDirectionX(float _fromX, float _toX, JCORE_OUT SpriteDirection_t& _lr);
+	static void GetLookDirectionX(const SGVec2& _from, const SGVec2& _to, JCORE_OUT SpriteDirection_t& _lr);
 
-	static void log(const SGVec2& _value)
+	static void Log(const SGVec2& _value)
 	{
 		_LogDebug_("%.f, %.f", _value.x, _value.y);
 	}

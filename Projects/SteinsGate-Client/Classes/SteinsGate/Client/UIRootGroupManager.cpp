@@ -20,73 +20,73 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename TMasterGroup>
-TMasterGroup* createMasterGroup(UIRootGroupManager* _pParent, const UIGroupElemInfo* _pMasterGroupInfo)
+TMasterGroup* CreateRootGroup(UIRootGroupManager* _pParent, const UIGroupElemInfo* _pMasterGroupInfo)
 {
 	DataManager* pDataManager = DataManager::Get();
-	UIElementInfo* pInfo = pDataManager->getUIElementInfo(_pMasterGroupInfo->Code);
-	DebugAssertMsg(pInfo->Type == UIElementType::Group, "그룹 엘리먼트 타입이 아닙니다.");
+	UIElementInfo* pInfo = pDataManager->GetUiElementInfo(_pMasterGroupInfo->code_);
+	DebugAssertMsg(pInfo->type_ == UIElementType::Group, "그룹 엘리먼트 타입이 아닙니다.");
 	TMasterGroup* pGroup = dbg_new TMasterGroup(static_cast<UIGroupInfo*>(pInfo));
 	pGroup->init();
 	pGroup->retain();
 	pGroup->autorelease();
-	pGroup->SetRelativePosition(_pMasterGroupInfo->Pos.x, _pMasterGroupInfo->Pos.y);
-	pGroup->initChildren();
+	pGroup->SetRelativePosition(_pMasterGroupInfo->pos_.x, _pMasterGroupInfo->pos_.y);
+	pGroup->InitChildren();
 
 	// 그룹의 자식 생성은 무조건 그룹의 포지션이 결졍되고나서 수행해줘야함. 그룹의 자식들을 초기화하면서
 	// 자식들은 부모의 위치에 대한 상대적 위치로 결정되기 때문이다.
-	_pParent->addMasterGroup(pGroup);
+	_pParent->AddRootGroup(pGroup);
 	return pGroup;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 UIRootGroupManager::UIRootGroupManager(UIGroupInfo* _pInfo)
-: info_(_pInfo)
+: pInfo_(_pInfo)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 UIRootGroupManager::~UIRootGroupManager()
 {
-	for (int i = 0; i < masterGroupList_.Size(); ++i)
-		CC_SAFE_RELEASE(masterGroupList_[i]);
+	for (int i = 0; i < rootGroupList_.Size(); ++i)
+		CC_SAFE_RELEASE(rootGroupList_[i]);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIRootGroupManager::init()
+void UIRootGroupManager::Init()
 {
-	SGHashMap<int, UIGroupElemInfo*> masterGroupInfoMap(info_->InfoList.Size());
+	SGHashMap<int, UIGroupElemInfo*> masterGroupInfoMap(pInfo_->infoList_.Size());
 
-	for (int i = 0; i < info_->InfoList.Size(); ++i)
+	for (int i = 0; i < pInfo_->infoList_.Size(); ++i)
 	{
-		UIGroupElemInfo& elemInfo = info_->InfoList[i];
-		masterGroupInfoMap.Insert(elemInfo.Code, &elemInfo);
+		UIGroupElemInfo& elemInfo = pInfo_->infoList_[i];
+		masterGroupInfoMap.Insert(elemInfo.code_, &elemInfo);
 	}
 
-	createMasterGroup<UI_Login>(this, masterGroupInfoMap[GROUP_UI_LOGIN]);
-	createMasterGroup<UI_Inventory>(this, masterGroupInfoMap[GROUP_UI_INVENTORY]);
-	createMasterGroup<UI_Test>(this, masterGroupInfoMap[GROUP_UI_TEST]);
-	createMasterGroup<UI_ChannelSelect>(this, masterGroupInfoMap[GROUP_UI_CHANNEL]);
+	CreateRootGroup<UI_Login>(this, masterGroupInfoMap[GROUP_UI_LOGIN]);
+	CreateRootGroup<UI_Inventory>(this, masterGroupInfoMap[GROUP_UI_INVENTORY]);
+	CreateRootGroup<UI_Test>(this, masterGroupInfoMap[GROUP_UI_TEST]);
+	CreateRootGroup<UI_ChannelSelect>(this, masterGroupInfoMap[GROUP_UI_CHANNEL]);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIRootGroupManager::addMasterGroup(UIRootGroup* _pGroup)
+void UIRootGroupManager::AddRootGroup(UIRootGroup* _pGroup)
 {
-	masterGroupList_.PushBack(_pGroup);
+	rootGroupList_.PushBack(_pGroup);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIRootGroupManager::forEach(const SGActionFn<UIRootGroup*>& _action)
+void UIRootGroupManager::ForEach(const SGActionFn<UIRootGroup*>& _action)
 {
-	masterGroupList_.ForEach(_action);
+	rootGroupList_.ForEach(_action);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UIRootGroupManager* UIRootGroupManager::createRetain()
+UIRootGroupManager* UIRootGroupManager::CreateRetain()
 {
-	UIGroupInfo* pGroupInfo = static_cast<UIGroupInfo*>(Core::DataManager->getUIElementInfo(GROUP_MASTER));
-	UIRootGroupManager* pMaster = dbg_new UIRootGroupManager(pGroupInfo);
-	pMaster->init();
-	pMaster->autorelease();
-	pMaster->retain();
-	return pMaster;
+	UIGroupInfo* pGroupInfo = static_cast<UIGroupInfo*>(Core::DataManager->GetUiElementInfo(GROUP_MASTER));
+	UIRootGroupManager* pRoot = dbg_new UIRootGroupManager(pGroupInfo);
+	pRoot->Init();
+	pRoot->autorelease();
+	pRoot->retain();
+	return pRoot;
 }

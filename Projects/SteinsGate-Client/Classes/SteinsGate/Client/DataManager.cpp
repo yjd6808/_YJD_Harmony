@@ -33,11 +33,13 @@
 #include <SteinsGate/Client/ClientTextInfoLoader.h>
 #include <SteinsGate/Client/ChannelInfoLoader.h>
 
+//////////////////////////////////////////////////////////////////////////////////////////
 DataManager::DataManager()
 : DataManagerAbstract()
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void DataManager::initializeLoader()
 {
 	m_pConfigFileLoaders[ConfigFileType::Effect] = dbg_new EffectInfoLoader(this);
@@ -72,7 +74,8 @@ void DataManager::initializeLoader()
 	m_bInitialized = true;
 }
 
-MonsterInfo* DataManager::getMonsterInfo(int _mobCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+MonsterInfo* DataManager::GetMonsterInfo(int _mobCode)
 {
 	auto eType = ConfigFileType::Monster;
 
@@ -82,7 +85,8 @@ MonsterInfo* DataManager::getMonsterInfo(int _mobCode)
 	return (MonsterInfo*)getData(eType, _mobCode);
 }
 
-ActionInfo* DataManager::getActionInfo(int _actionCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+ActionInfo* DataManager::GetActionInfo(int _actionCode)
 {
 	auto eType = ConfigFileType::Action;
 
@@ -92,8 +96,8 @@ ActionInfo* DataManager::getActionInfo(int _actionCode)
 	return (ActionInfo*)getData(eType, _actionCode);
 }
 
-
-ProjectileInfo* DataManager::getProjectileInfo(ActorType_t _actorType, int _projectileCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+ProjectileInfo* DataManager::GetProjectileInfo(ActorType_t _actorType, int _projectileCode)
 {
 	ConfigFileType_t eType = ConfigFileType::Max;
 
@@ -112,7 +116,8 @@ ProjectileInfo* DataManager::getProjectileInfo(ActorType_t _actorType, int _proj
 	return (ProjectileInfo*)getData(eType, _projectileCode);
 }
 
-CharInfo* DataManager::getCharInfo(int _charCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+CharInfo* DataManager::GetCharInfo(int _charCode)
 {
 	auto eType = ConfigFileType::Char_Base;
 
@@ -122,7 +127,8 @@ CharInfo* DataManager::getCharInfo(int _charCode)
 	return (CharInfo*)getData(eType, _charCode);
 }
 
-AnimationInfo* DataManager::getCharAnimationInfo(int _charAnimationCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+AnimationInfo* DataManager::GetCharAnimationInfo(int _charAnimationCode)
 {
 	auto eType = ConfigFileType::Char_Animation;
 
@@ -132,7 +138,8 @@ AnimationInfo* DataManager::getCharAnimationInfo(int _charAnimationCode)
 	return (AnimationInfo*)getData(eType, _charAnimationCode);
 }
 
-SGVector<AnimationInfo*>& DataManager::getCharAnimationInfoList(int _charCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+SGVector<AnimationInfo*>& DataManager::GetCharAnimationInfoList(int _charCode)
 {
 	auto eType = ConfigFileType::Char_Animation;
 
@@ -143,7 +150,8 @@ SGVector<AnimationInfo*>& DataManager::getCharAnimationInfoList(int _charCode)
 	return pLoader->GetAnimationList((CharType_t)_charCode);
 }
 
-ClientInfo* DataManager::getClientInfo(int _code)
+//////////////////////////////////////////////////////////////////////////////////////////
+ClientInfo* DataManager::GetClientInfo(int _code)
 {
 	auto eType = ConfigFileType::Client;
 
@@ -153,8 +161,8 @@ ClientInfo* DataManager::getClientInfo(int _code)
 	return (ClientInfo*)getData(eType, _code);
 }
 
-
-TileInfo* DataManager::getTileInfo(int _tileCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+TileInfo* DataManager::GetTileInfo(int _tileCode)
 {
 	auto eType = ConfigFileType::Tile;
 
@@ -164,7 +172,8 @@ TileInfo* DataManager::getTileInfo(int _tileCode)
 	return (TileInfo*)getData(eType, _tileCode);
 }
 
-MapObjectInfo* DataManager::getMapObjectInfo(int _mapObjectCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+MapObjectInfo* DataManager::GetMapObjectInfo(int _mapObjectCode)
 {
 	auto eType = ConfigFileType::MapObject;
 
@@ -174,7 +183,8 @@ MapObjectInfo* DataManager::getMapObjectInfo(int _mapObjectCode)
 	return (MapObjectInfo*)getData(eType, _mapObjectCode);
 }
 
-AIInfo* DataManager::getAIInfo(int _aiCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+AIInfo* DataManager::GetAiInfo(int _aiCode)
 {
 	auto eType = ConfigFileType::AI;
 
@@ -184,7 +194,8 @@ AIInfo* DataManager::getAIInfo(int _aiCode)
 	return (AIInfo*)getData(eType, _aiCode);
 }
 
-AttackDataInfo* DataManager::getAttackDataInfo(ActorType_t _actorType, int _attackDataCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+AttackDataInfo* DataManager::GetAttackDataInfo(ActorType_t _actorType, int _attackDataCode)
 {
 	ConfigFileType_t eType = ConfigFileType::Max;
 
@@ -203,7 +214,8 @@ AttackDataInfo* DataManager::getAttackDataInfo(ActorType_t _actorType, int _atta
 	return (AttackDataInfo*)getData(eType, _attackDataCode);
 }
 
-EffectInfo* DataManager::getEffectInfo(int _effectCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+EffectInfo* DataManager::GetEffectInfo(int _effectCode)
 {
 	auto eType = ConfigFileType::Effect;
 
@@ -213,7 +225,8 @@ EffectInfo* DataManager::getEffectInfo(int _effectCode)
 	return (EffectInfo*)getData(eType, _effectCode);
 }
 
-UIElementInfo* DataManager::getUIElementInfo(int _uiElementCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+UIElementInfo* DataManager::GetUiElementInfo(int _uiElementCode)
 {
 	auto eType = ConfigFileType::UI;
 
@@ -223,7 +236,8 @@ UIElementInfo* DataManager::getUIElementInfo(int _uiElementCode)
 	return (UIElementInfo*)getData(eType, _uiElementCode);
 }
 
-FrameEvent* DataManager::getFrameEvent(ActorType_t _actorType, int _frameEventCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+FrameEvent* DataManager::GetFrameEvent(ActorType_t _actorType, int _frameEventCode)
 {
 	ConfigFileType_t eType = ConfigFileType::Max;
 
@@ -242,7 +256,8 @@ FrameEvent* DataManager::getFrameEvent(ActorType_t _actorType, int _frameEventCo
 	return (FrameEvent*)getData(eType, _frameEventCode);
 }
 
-ChannelInfo* DataManager::getChannelInfo(int _channelCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+ChannelInfo* DataManager::GetChannelInfo(int _channelCode)
 {
 	auto eType = ConfigFileType::Channel;
 
@@ -252,7 +267,8 @@ ChannelInfo* DataManager::getChannelInfo(int _channelCode)
 	return (ChannelInfo*)getData(eType, _channelCode);
 }
 
-char* DataManager::getTextRaw(const char* _textId)
+//////////////////////////////////////////////////////////////////////////////////////////
+char* DataManager::GetTextRaw(const char* _textId)
 {
 	auto eType = ConfigFileType::ClientText;
 
@@ -268,7 +284,7 @@ char* DataManager::getTextRaw(const char* _textId)
 	}
 
 	char* pText = nullptr;
-	if (!pLoader->tryGetTextRaw(_textId, &pText))
+	if (!pLoader->TryGetTextRaw(_textId, &pText))
 	{
 		_LogWarn_("%s 텍스트를 찾지 못했습니다.", _textId);
 	}
@@ -276,7 +292,8 @@ char* DataManager::getTextRaw(const char* _textId)
 	return pText;
 }
 
-SGString& DataManager::getText(const char* _textId)
+//////////////////////////////////////////////////////////////////////////////////////////
+SGString& DataManager::GetText(const char* _textId)
 {
 	auto eType = ConfigFileType::ClientText;
 
@@ -292,7 +309,7 @@ SGString& DataManager::getText(const char* _textId)
 	}
 
 	SGString* pText = nullptr;
-	if (!pLoader->tryGetText(_textId, &pText))
+	if (!pLoader->TryGetText(_textId, &pText))
 	{
 		_LogWarn_("%s 텍스트를 찾지 못했습니다.", _textId);
 	}
@@ -300,7 +317,8 @@ SGString& DataManager::getText(const char* _textId)
 	return *pText;
 }
 
-SGString& DataManager::getText(const SGString& _textId)
+//////////////////////////////////////////////////////////////////////////////////////////
+SGString& DataManager::GetText(const SGString& _textId)
 {
-	return getText(_textId.Source());
+	return GetText(_textId.Source());
 }

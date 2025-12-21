@@ -14,16 +14,16 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////
 SGAction::SGAction(HostPlayer* _pPlayer, ActionInfo* _pActionInfo)
-: m_pPlayer(_pPlayer)
-, m_pActionInfo(_pActionInfo)
-, m_pHitRecorder(nullptr)
-, m_bMoveablePositiveX(m_pActionInfo->Moveable)
-, m_bMoveablePositiveY(m_pActionInfo->Moveable)
-, m_bMoveableNegativeX(m_pActionInfo->Moveable)
-, m_bMoveableNegativeY(m_pActionInfo->Moveable)
-, m_bCancelable(m_pActionInfo->ForceCancelable)
-, m_fMoveSpeedFPSX(m_pActionInfo->SpeedX)
-, m_fMoveSpeedFPSY(m_pActionInfo->SpeedY)
+: pPlayer_(_pPlayer)
+, pActionInfo_(_pActionInfo)
+, pHitRecorder_(nullptr)
+, isMoveablePositiveX_(pActionInfo_->Moveable)
+, isMoveablePositiveY_(pActionInfo_->Moveable)
+, isMoveableNegativeX_(pActionInfo_->Moveable)
+, isMoveableNegativeY_(pActionInfo_->Moveable)
+, isCancelable_(pActionInfo_->ForceCancelable)
+, moveSpeedFPSX(pActionInfo_->SpeedX)
+, moveSpeedFPSY_(pActionInfo_->SpeedY)
 {
 }
 
@@ -33,90 +33,90 @@ SGAction::~SGAction()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGAction::play()
+void SGAction::Play()
 {
 	// 플레이어가 사용가능한지 체크
-	m_pHitRecorder = m_pPlayer->getHitRecorder();
-	m_pHitRecorder->clearAlreadyHitEnemies();
-	m_eWeaponType = Core::Contents.Inven->getWeaponType();
+	pHitRecorder_ = pPlayer_->GetHitRecorder();
+	pHitRecorder_->ClearAlreadyHitEnemies();
+	weaponType_ = Core::Contents.Inven->GetWeaponType();
 
-	onActionBegin();
+	OnActionBegin();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGAction::stop()
+void SGAction::Stop()
 {
-	m_pPlayer->actionManager()->stopActionForce();
-	m_pPlayer->ctrl()->setCommandable(true); // 다시 콤보 입력이 가능하도록 변경해준다.
+	pPlayer_->GetActionManager()->StopActionForce();
+	pPlayer_->GetController()->SetCommandable(true); // 다시 콤보 입력이 가능하도록 변경해준다.
 
-	m_pHitRecorder->setAlreadyHitRecord(false);
-	m_pHitRecorder->clearAlreadyHitEnemies();
-	m_pHitRecorder->clearSingleHitCallback();
-	m_pHitRecorder->clearMultiHitCallback();
+	pHitRecorder_->SetAlreadyHitRecord(false);
+	pHitRecorder_->ClearAlreadyHitEnemies();
+	pHitRecorder_->ClearSingleHitCallback();
+	pHitRecorder_->ClearMultiHitCallback();
 
-	if (!isForceCancelable())
+	if (!IsForceCancelable())
 	{
-		m_pPlayer->ctrl()->reflectPressedMoveKeys();
+		pPlayer_->GetController()->ReflectPressedMoveKeys();
 	}
 
-	onActionEnd();
+	OnActionEnd();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGAction::onActionBegin()
+void SGAction::OnActionBegin()
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGAction::onActionEnd()
+void SGAction::OnActionEnd()
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGAction::onKeyPressed(PlayerController* _pController, cocos2d::EventKeyboard::KeyCode _keyCode)
+void SGAction::OnKeyPressed(PlayerController* _pController, cocos2d::EventKeyboard::KeyCode _keyCode)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGAction::onKeyReleased(PlayerController* _pController, cocos2d::EventKeyboard::KeyCode _keyCode)
+void SGAction::OnKeyReleased(PlayerController* _pController, cocos2d::EventKeyboard::KeyCode _keyCode)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGAction::onKeyPressedBefore(PlayerController* _pController, cocos2d::EventKeyboard::KeyCode _keyCode)
+void SGAction::OnKeyPressedBefore(PlayerController* _pController, cocos2d::EventKeyboard::KeyCode _keyCode)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGAction::onKeyReleasedBefore(PlayerController* _pController, cocos2d::EventKeyboard::KeyCode _keyCode)
+void SGAction::OnKeyReleasedBefore(PlayerController* _pController, cocos2d::EventKeyboard::KeyCode _keyCode)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGAction::onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
+void SGAction::OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGAction::onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
+void SGAction::OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGAction::onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
+void SGAction::OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGAction::onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
+void SGAction::OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGAction::setMoveable(bool _moveable)
+void SGAction::SetMoveable(bool _moveable)
 {
-	m_bMoveablePositiveX = _moveable;
-	m_bMoveablePositiveY = _moveable;
-	m_bMoveableNegativeX = _moveable;
-	m_bMoveableNegativeY = _moveable;
+	isMoveablePositiveX_ = _moveable;
+	isMoveablePositiveY_ = _moveable;
+	isMoveableNegativeX_ = _moveable;
+	isMoveableNegativeY_ = _moveable;
 }

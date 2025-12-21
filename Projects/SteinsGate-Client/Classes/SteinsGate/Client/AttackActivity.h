@@ -16,5 +16,5 @@ public:
 	AttackActivity(Actor* _pActor);
 
 protected:
-	JCORE_NULLABLE HitRecorder* m_pHitRecorder; // 히트 레코더가 없는 객체도 있음
+	JCORE_NULLABLE HitRecorder* pHitRecorder_; // 히트 레코더가 없는 객체도 있음
 };

@@ -16,68 +16,72 @@
 GunnerHit::GunnerHit(HostPlayer* _pPlayer, ActionInfo* _pActionInfo)
 : GunnerAction(_pPlayer, _pActionInfo)
 , hitSmall_(false)
-, onTheGround_(false) // 초기 Hit 판정시 공중이었는지 아니면 바닥이었는지
+, onTheGround_(false)
+, downTimeCheckBegin_(false)
+, elapsedDownTime_(0)
+, downRecoverTime_(0)
+// 초기 Hit 판정시 공중이었는지 아니면 바닥이었는지
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerHit::onActionBegin()
+void GunnerHit::OnActionBegin()
 {
-	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+	PhysicsComponent* pPhysicsComponent = pPlayer_->GetComponent<PhysicsComponent>();
 
 	if (pPhysicsComponent)
-		pPhysicsComponent->enableElasticity();
+		pPhysicsComponent->EnableElasticity();
 
 	elapsedDownTime_ = 0.0f;
 	downTimeCheckBegin_ = false;
-	downRecoverTime_ = m_pBaseInfo->downRecoverTime_ / 2.0f;
+	downRecoverTime_ = pBaseInfo_->downRecoverTime_ / 2.0f;
 
-	selectHitAnimation();
-	checkPosition();
+	SelectHitAnimation();
+	CheckPosition();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerHit::onActionEnd()
+void GunnerHit::OnActionEnd()
 {
-	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+	PhysicsComponent* pPhysicsComponent = pPlayer_->GetComponent<PhysicsComponent>();
 
 	if (pPhysicsComponent)
-		pPhysicsComponent->disableElasticity();
+		pPhysicsComponent->DisableElasticity();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerHit::onUpdate(float _deltaTime)
+void GunnerHit::OnUpdate(float _deltaTime)
 {
 	if (onTheGround_)
 	{
-		updateGroundHitState(_deltaTime);
+		UpdateGroundHitState(_deltaTime);
 		return;
 	}
 
-	updateAirHitState(_deltaTime);
+	UpdateAirHitState(_deltaTime);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerHit::selectHitAnimation()
+void GunnerHit::SelectHitAnimation()
 {
 	if (hitSmall_)
 	{
-		m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_HIT_SMALL);
+		pPlayer_->RunAnimation(DEF_ANIMATION_GUNNER_HIT_SMALL);
 	}
 	else
 	{
-		m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_HIT_BIG);
+		pPlayer_->RunAnimation(DEF_ANIMATION_GUNNER_HIT_BIG);
 	}
 
 	hitSmall_ = !hitSmall_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerHit::checkPosition()
+void GunnerHit::CheckPosition()
 {
-	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+	PhysicsComponent* pPhysicsComponent = pPlayer_->GetComponent<PhysicsComponent>();
 
-	if (!pPhysicsComponent->hasForceY() && m_pPlayer->getPositionActorY() <= SG_FLT_EPSILON)
+	if (!pPhysicsComponent->HasForceY() && pPlayer_->GetPositionActorY() <= SG_FLT_EPSILON)
 	{
 		onTheGround_ = true;
 		return;
@@ -87,45 +91,45 @@ void GunnerHit::checkPosition()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerHit::updateGroundHitState(float _deltaTime)
+void GunnerHit::UpdateGroundHitState(float _deltaTime)
 {
-	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+	PhysicsComponent* pPhysicsComponent = pPlayer_->GetComponent<PhysicsComponent>();
 
-	if (pPhysicsComponent && pPhysicsComponent->hasForceX())
+	if (pPhysicsComponent && pPhysicsComponent->HasForceX())
 		return;
 
 	// TODO: 죽음 확인 후 사망처리
-	stop();
+	Stop();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerHit::updateAirHitState(float _deltaTime)
+void GunnerHit::UpdateAirHitState(float _deltaTime)
 {
-	if (!m_pPlayer->isOnTheGround())
+	if (!pPlayer_->IsOnTheGround())
 		return;
 
 	// TODO: 죽음 확인 후 사망처리
 
 	if (!downTimeCheckBegin_)
 	{
-		m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_FALL_DOWN_END);
+		pPlayer_->RunAnimation(DEF_ANIMATION_GUNNER_FALL_DOWN_END);
 		downTimeCheckBegin_ = true;
 		return;
 	}
 
-	updateDownState(_deltaTime);
+	UpdateDownState(_deltaTime);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerHit::updateDownState(float _deltaTime)
+void GunnerHit::UpdateDownState(float _deltaTime)
 {
 	elapsedDownTime_ += _deltaTime;
 
 	if (elapsedDownTime_ >= downRecoverTime_)
 	{
-		ActionMgr* pActionManager = m_pPlayer->actionManager();
+		ActionMgr* pActionManager = pPlayer_->GetActionManager();
 
-		pActionManager->stopActionForce();
-		pActionManager->runBaseAction(BaseAction::SitRecover);
+		pActionManager->StopActionForce();
+		pActionManager->RunBaseAction(BaseAction::SitRecover);
 	}
 }

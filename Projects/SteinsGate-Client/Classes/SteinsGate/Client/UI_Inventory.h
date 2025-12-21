@@ -22,19 +22,19 @@ public:
 	void OnInit() override;
 	void OnLoaded() override;
 	void OnAdded() override;
-	void onUpdate(float _dt) override;
-	bool onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
-	bool onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
+	void OnUpdate(float _dt) override;
+	bool OnKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
+	bool OnKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
 
 private:
-	UISprite* background_;
-	UIScrollBar* scrollBar_;
+	UISprite* pBackground_;
+	UIScrollBar* pScrollBar_;
 
-	UIGroup* invenSlotGroup_;
-	UISprite* invenSlotSprites_[MAX_INVEN_SLOT_COUNT];
+	UIGroup* pInvenSlotGroup_;
+	UISprite* pInvenSlotSprites_[MAX_INVEN_SLOT_COUNT];
 
-	UIGroup* equipSlotGroup_;
-	UIStatic* equipSlotStatics_[ItemType::MaxInvenEquip];
+	UIGroup* pEquipSlotGroup_;
+	UIStatic* pEquipSlotStatics_[ItemType::MaxInvenEquip];
 
 	InvenItemType_t curTab_;
 };

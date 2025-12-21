@@ -18,15 +18,15 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 WalkActivity::WalkActivity(Actor* _pActor)
 : AIActivity(_pActor, AIActivityType::Walk)
-, m_pTarget(nullptr)
-, m_eMode(eNone)
+, pTarget_(nullptr)
+, mode_(eNone)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void WalkActivity::OnActivitySelectFromAiRoutine(AIInfo* _pAiInfo, AIState_t _aiState)
 {
-	AIComponent* pAIComponent = pActor_->getComponent<AIComponent>();
+	AIComponent* pAIComponent = pActor_->GetComponent<AIComponent>();
 	DebugAssert(pAIComponent); // AIComponent의해 실행된 함수인데, nullptr일 수가 없음
 
 	switch (_aiState)
@@ -34,14 +34,14 @@ void WalkActivity::OnActivitySelectFromAiRoutine(AIInfo* _pAiInfo, AIState_t _ai
 	case AIState::Wander:
 		{
 			limitTime_ = SGRandom::random_real(_pAiInfo->wanderWalkTime_[0], _pAiInfo->wanderWalkTime_[1]);
-			m_Destination = pAIComponent->getRandomSightPos();
-			m_eMode = eWander;
+			destination_ = pAIComponent->GetRandomSightPos();
+			mode_ = eWander;
 			break;
 		}
 	case AIState::Track:
 		{
 			limitTime_ = SGRandom::random_real(_pAiInfo->trackWalkTime_[0], _pAiInfo->trackWalkTime_[1]);
-			m_eMode = eTrack;
+			mode_ = eTrack;
 			break;
 		}
 	default:
@@ -57,65 +57,65 @@ void WalkActivity::OnUpdate(float _dt)
 	if (!IsRunning())
 		return;
 
-	switch (m_eMode)
+	switch (mode_)
 	{
 	case eNone:
 		return;
 	case eWander:
-		updateWander(_dt);
+		UpdateWander(_dt);
 		break;
 	case eTrack:
-		updateTrack(_dt);
+		UpdateTrack(_dt);
 		break;
 	default:
 		DebugAssertMsg(false, "몬스터 Walking 액티비티 모드가 이상합니다.");
 		break;
 	}
 
-	updateMove(_dt);
+	UpdateMove(_dt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void WalkActivity::updateWander(float _dt)
+void WalkActivity::UpdateWander(float _dt)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void WalkActivity::updateTrack(float _dt)
+void WalkActivity::UpdateTrack(float _dt)
 {
-	if (m_pTarget == nullptr)
+	if (pTarget_ == nullptr)
 		return;
 
-	m_Destination = m_pTarget->getPositionRealCenter();
+	destination_ = pTarget_->GetPositionRealCenter();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void WalkActivity::updateMove(float _dt)
+void WalkActivity::UpdateMove(float _dt)
 {
 	Direction_t lr;
 	Direction_t ud;
-	SGRect thicknessPosLR = pActor_->getThicknessBoxRect();
+	SGRect thicknessPosLR = pActor_->GetThicknessBoxRect();
 	SGRect thicknessPosUD = thicknessPosLR;
 	SGVec2 center = thicknessPosLR.getMid();
 
-	SGVec2Ex::getLookDirection(center, m_Destination, lr, ud);
+	SGVec2Ex::GetLookDirection(center, destination_, lr, ud);
 
 	bool arrivedX = false;
 	bool arrivedY = false;
 
-	if (SGMath::Abs(center.x - m_Destination.x) < DestinationMinDistX)
+	if (SGMath::Abs(center.x - destination_.x) < DestinationMinDistX)
 		arrivedX = true;
 
-	if (SGMath::Abs(center.y - m_Destination.y) < DestinationMinDistY)
+	if (SGMath::Abs(center.y - destination_.y) < DestinationMinDistY)
 		arrivedY = true;
 
-	MoveComponent* pMoveComponent = pActor_->getComponent<MoveComponent>();
+	MoveComponent* pMoveComponent = pActor_->GetComponent<MoveComponent>();
 
 	if (arrivedX && arrivedY)
 	{
 		if (pMoveComponent)
 		{
-			pMoveComponent->setSpeed(0, 0);
+			pMoveComponent->SetSpeed(0, 0);
 		}
 
 		Stop();
@@ -125,5 +125,5 @@ void WalkActivity::updateMove(float _dt)
 	if (!pMoveComponent)
 		return;
 
-	updateMoveImpl(_dt, pMoveComponent, arrivedX, arrivedX, lr, ud);
+	UpdateMoveImpl(_dt, pMoveComponent, arrivedX, arrivedX, lr, ud);
 }

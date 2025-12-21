@@ -17,39 +17,39 @@ private:
 	~ImagePackManager();
 
 public:
-	void loadAllPackages();
-	void unloadPackData(int _packIndex);
+	void LoadAllPackages();
+	void UnloadPackData(int _packIndex);
 
-	ImagePack* getPack(const SGString& _packName);
-	ImagePack* getPack(const char* _pPackName);
-	ImagePack* getPackUnsafe(const SGString& _packName);
-	ImagePack* getPackUnsafe(const char* _pPackName);
-	ImagePack* getPack(const int _index);
-	ImagePack* getPackUnsafe(const int _index);
-	ImagePack* getAvatarPack(CharType_t _charType, AvatarType_t _avatarType);
-	ImagePack* getWeaponPack(WeaponType_t _weaponType);
+	ImagePack* GetPack(const SGString& _packName);
+	ImagePack* GetPack(const char* _pPackName);
+	ImagePack* GetPackUnsafe(const SGString& _packName);
+	ImagePack* GetPackUnsafe(const char* _pPackName);
+	ImagePack* GetPack(const int _index);
+	ImagePack* GetPackUnsafe(const int _index);
+	ImagePack* GetAvatarPack(CharType_t _charType, AvatarType_t _avatarType);
+	ImagePack* GetWeaponPack(WeaponType_t _weaponType);
 
-	int getAvatarPackIndex(CharType_t _charType, AvatarType_t _avatarType);
-	int getWeaponPackIndex(WeaponType_t _weaponType);
-	int getPackIndex(const SGString& _packName);
-	int getPackIndexDefault(const char* _pPackName, int _defaultIndex = InvalidValue_v);
-	int getPackIndexDefault(const SGString& _packName, int _defaultIndex = InvalidValue_v);
+	int GetAvatarPackIndex(CharType_t _charType, AvatarType_t _avatarType);
+	int GetWeaponPackIndex(WeaponType_t _weaponType);
+	int GetPackIndex(const SGString& _packName);
+	int GetPackIndexDefault(const char* _pPackName, int _defaultIndex = InvalidValue_v);
+	int GetPackIndexDefault(const SGString& _packName, int _defaultIndex = InvalidValue_v);
 
-	int getImgIndexUnsafe(int _sgaIndex, const char* _pImgName);
-	int getImgIndexUnsafe(int _sgaIndex, const SGString& _imgName);
+	int GetImgIndexUnsafe(int _sgaIndex, const char* _pImgName);
+	int GetImgIndexUnsafe(int _sgaIndex, const SGString& _imgName);
 
-	SGSize getTextureSize(int _packIndex, int _imgIndex, int _frameIndex);
+	SGSize GetTextureSize(int _packIndex, int _imgIndex, int _frameIndex);
 
-	void releaseFrameTexture(int _packIndex, int _imgIndex, int _frameIndex);
-	void releaseFrameTexture(const SgaResourceIndex& _sgaResourceIndex);
-	void releaseAllFrameTexture();
+	void ReleaseFrameTexture(int _packIndex, int _imgIndex, int _frameIndex);
+	void ReleaseFrameTexture(const SgaResourceIndex& _sgaResourceIndex);
+	void ReleaseAllFrameTexture();
 
-	void increaseCounter();
-	void decreaseCounter();
-	void resetCounter();
-	CachedTextureCounter& getCounter() { return textureCounter_; }
+	void IncreaseCounter();
+	void DecreaseCounter();
+	void ResetCounter();
+	CachedTextureCounter& GetCounter() { return textureCounter_; }
 
-	void logTexture(const SGString& _text, const SgaResourceIndex& _resource, JCore::LoggerAbstract::Level _logLevel);
+	void LogTexture(const SGString& _text, const SgaResourceIndex& _resource, JCore::LoggerAbstract::Level _logLevel);
 
 private:
 	bool IsValidPackIndex(int _index);

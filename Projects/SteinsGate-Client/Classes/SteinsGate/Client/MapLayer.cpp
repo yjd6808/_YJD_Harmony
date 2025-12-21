@@ -16,13 +16,8 @@ USING_NS_CC;
 USING_NS_CCUI;
 USING_NS_JC;
 
-
-// ==============================================================================================================================
-// 
-// ==============================================================================================================================
-
 //////////////////////////////////////////////////////////////////////////////////////////
-MapLayer* MapLayer::create()
+MapLayer* MapLayer::Create()
 {
 	MapLayer* pMap = dbg_new MapLayer;
 
@@ -38,8 +33,8 @@ MapLayer* MapLayer::create()
 
 //////////////////////////////////////////////////////////////////////////////////////////
 MapLayer::MapLayer()
-: m_pMapInfo(nullptr)
-, m_pActorBox(nullptr)
+: pMapInfo_(nullptr)
+, pActorBox_(nullptr)
 {
 }
 
@@ -57,9 +52,9 @@ bool MapLayer::init()
 		return false;
 	}
 
-	m_pActorBox = ActorManager::Get();
-	m_pCamera = MimicCamera::create();
-	this->addChild(m_pCamera);
+	pActorBox_ = ActorManager::Get();
+	pCamera_ = MimicCamera::Create();
+	this->addChild(pCamera_);
 	return true;
 }
 
@@ -67,69 +62,69 @@ bool MapLayer::init()
 //////////////////////////////////////////////////////////////////////////////////////////
 void MapLayer::onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
 {
-	HostPlayer::Get()->onKeyPressed(_keyCode, _pEvent);
+	HostPlayer::Get()->OnKeyPressed(_keyCode, _pEvent);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void MapLayer::onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
 {
-	HostPlayer::Get()->onKeyReleased(_keyCode, _pEvent);
+	HostPlayer::Get()->OnKeyReleased(_keyCode, _pEvent);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MapPhysicsInfo* MapLayer::getMapPhysicsInfo() const
+MapPhysicsInfo* MapLayer::GetMapPhysicsInfo() const
 {
-	return m_pMapPhysicsInfo;
+	return pMapPhysicsInfo_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MapAreaInfo* MapLayer::getMapAreaInfo() const
+MapAreaInfo* MapLayer::GetMapAreaInfo() const
 {
-	return m_pMapAreaInfo;
+	return pMapAreaInfo_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MapInfo* MapLayer::getMapInfo() const
+MapInfo* MapLayer::GetMapInfo() const
 {
-	return m_pMapInfo;
+	return pMapInfo_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MimicCamera* MapLayer::getCamera() const
+MimicCamera* MapLayer::GetCamera() const
 {
-	return m_pCamera;
+	return pCamera_;
 }
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void MapLayer::update(float _dt)
 {
-	m_pActorBox->update(_dt);
-	m_pCamera->update(_dt);
+	pActorBox_->Update(_dt);
+	pCamera_->update(_dt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MapLayer::loadMap(int _mapCode)
+void MapLayer::LoadMap(int _mapCode)
 {
-	m_pMapInfo = Core::DataManager->getMapInfo(_mapCode);
-	m_pMapAreaInfo = Core::DataManager->getMapAreaInfo(_mapCode);
-	m_pMapPhysicsInfo = Core::DataManager->getMapPhysicsInfo(m_pMapInfo->physicsCode_);
+	pMapInfo_ = Core::DataManager->getMapInfo(_mapCode);
+	pMapAreaInfo_ = Core::DataManager->getMapAreaInfo(_mapCode);
+	pMapPhysicsInfo_ = Core::DataManager->getMapPhysicsInfo(pMapInfo_->physicsCode_);
 
 	// 배경 로딩
 
 	// 타일 로딩, 맨 밑에 타일들부터 차곡차곡 쌓아서 올린다.
-	for (int i = m_pMapInfo->tileHeight_ - 1, k = 0; i >= 0; --i, ++k)
+	for (int i = pMapInfo_->tileHeight_ - 1, k = 0; i >= 0; --i, ++k)
 	{
-		for (int j = 0; j < m_pMapInfo->tileWidth_; j++)
+		for (int j = 0; j < pMapInfo_->tileWidth_; j++)
 		{
 			const float tileXPos = Const::Map::TileWidth * j;
 			const float tileYPos = Const::Map::TileHeight * k;
 
-			const TileInfo* pTileInfo = Core::DataManager->getTileInfo(m_pMapInfo->tileArray_[i][j]);
-			FrameTexture* pFrameTexture = Core::Contents.PackManager->getPack(pTileInfo->SgaIndex)->createFrameTexture(
-				pTileInfo->ImgIndex, pTileInfo->SpriteIndex);
+			const TileInfo* pTileInfo = Core::DataManager->GetTileInfo(pMapInfo_->tileArray_[i][j]);
+			FrameTexture* pFrameTexture = Core::Contents.PackManager->GetPack(pTileInfo->sgaIndex_)->CreateFrameTexture(
+				pTileInfo->imgIndex_, pTileInfo->spriteIndex_);
 
-			SGSprite* pTileSprite = SGSprite::createWithTexture(pFrameTexture->getTexture());
+			SGSprite* pTileSprite = SGSprite::createWithTexture(pFrameTexture->GetTexture());
 			pTileSprite->setAnchorPoint(Vec2::ZERO);
 			pTileSprite->setPosition(tileXPos, tileYPos);
 			this->addChild(pTileSprite);
@@ -137,27 +132,27 @@ void MapLayer::loadMap(int _mapCode)
 	}
 
 	// 오브젝트 로딩
-	for (int i = 0; i < m_pMapInfo->mapObjectList_.Size(); ++i)
+	for (int i = 0; i < pMapInfo_->mapObjectList_.Size(); ++i)
 	{
-		MapObjectPositionInfo& objectInfo = m_pMapInfo->mapObjectList_[i];
-		m_pActorBox->createMapObjectOnMap(objectInfo.code_, objectInfo.x_, objectInfo.y_);
+		MapObjectPositionInfo& objectInfo = pMapInfo_->mapObjectList_[i];
+		pActorBox_->CreateMapObjectOnMap(objectInfo.code_, objectInfo.x_, objectInfo.y_);
 	}
 
 	// NPC 로딩
 
 	// 몬스터 로딩
-	m_pActorBox->createMonsterOnMap(2, 1, 600, 350); // 테스트 몬스터 생성
-	m_bMapLoaded = true;
+	pActorBox_->CreateMonsterOnMap(2, 1, 600, 350); // 테스트 몬스터 생성
+	isMapLoaded_ = true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Character* MapLayer::findNearestCharacterInRadious(Actor* _pStdActor, float _radious, float& _enemyDist)
+Character* MapLayer::FindNearestCharacterInRadious(Actor* _pStdActor, float _radious, float& _enemyDist)
 {
-	int allyFlag = _pStdActor->getAllyFlag();
-	SGVec2 stdPos = _pStdActor->getPositionRealCenter();
+	int allyFlag = _pStdActor->GetAllyFlag();
+	SGVec2 stdPos = _pStdActor->GetPositionRealCenter();
 	Character* pNearestCharacter = nullptr;
 	float minDist = FLT_MAX;
-	CharacterList& characterList = m_pActorBox->getCharacterList();
+	CharacterList& characterList = pActorBox_->GetCharacterList();
 
 	for (int i = 0; i < characterList.Size(); ++i)
 	{
@@ -166,9 +161,9 @@ Character* MapLayer::findNearestCharacterInRadious(Actor* _pStdActor, float _rad
 		if (pCharacter == _pStdActor)
 			continue;
 
-		float dist = stdPos.distance(pCharacter->getPositionRealCenter());
+		float dist = stdPos.distance(pCharacter->GetPositionRealCenter());
 
-		if (dist < _radious && pCharacter->getAllyFlag() != allyFlag && dist < minDist)
+		if (dist < _radious && pCharacter->GetAllyFlag() != allyFlag && dist < minDist)
 		{
 			minDist = dist;
 			pNearestCharacter = pCharacter;
@@ -180,12 +175,12 @@ Character* MapLayer::findNearestCharacterInRadious(Actor* _pStdActor, float _rad
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool MapLayer::collectEnemiesInActorRect(
+bool MapLayer::CollectEnemiesInActorRect(
 	Actor* _pAttacker,
 	const ActorRect& _absoluteActorRect,
 	JCORE_OUT SGVector<HitInfo>& _hitTargets)
 {
-	ActorList& physcisActorList = m_pActorBox->getPhysicsActorList();
+	ActorList& physcisActorList = pActorBox_->GetPhysicsActorList();
 	bool find = false;
 
 	for (int i = 0; i < physcisActorList.Size(); ++i)
@@ -194,12 +189,12 @@ bool MapLayer::collectEnemiesInActorRect(
 		SGRect hitRect;
 		SpriteDirection_t hitDirection;
 
-		if (pHitTarget->getAllyFlag() == _pAttacker->getAllyFlag())
+		if (pHitTarget->GetAllyFlag() == _pAttacker->GetAllyFlag())
 			continue;
 
 		// 몬스터 기준으로 플레이어 충돌이라
 		// eHitDirection은 플레이어의 충돌방향이 되므로, 반대로 돌려줘야함.
-		if (pHitTarget->isCollide(_absoluteActorRect, hitDirection, hitRect))
+		if (pHitTarget->IsCollide(_absoluteActorRect, hitDirection, hitRect))
 		{
 			_hitTargets.PushBack({ _pAttacker, pHitTarget, SpriteDirection::Reverse[hitDirection], hitRect, nullptr });
 			find = true;
@@ -211,19 +206,19 @@ bool MapLayer::collectEnemiesInActorRect(
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool MapLayer::collectEnemiesInActor(Actor* _pCollector, JCORE_OUT SGVector<HitInfo>& _hitTargets)
+bool MapLayer::CollectEnemiesInActor(Actor* _pCollector, JCORE_OUT SGVector<HitInfo>& _hitTargets)
 {
-	return collectEnemiesInActorRect(_pCollector, _pCollector->getActorRect(), _hitTargets);
+	return CollectEnemiesInActorRect(_pCollector, _pCollector->GetActorRect(), _hitTargets);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool MapLayer::isCollideWithMapObjects(const SGRect& _rect) const
+bool MapLayer::IsCollideWithMapObjects(const SGRect& _rect) const
 {
-	MapObjectList& collidableMapObjects = m_pActorBox->getCollidableMapObjectList();
+	MapObjectList& collidableMapObjects = pActorBox_->GetCollidableMapObjectList();
 
 	for (int i = 0; i < collidableMapObjects.Size(); ++i)
 	{
-		SGRect thicknessBox = collidableMapObjects[i]->getThicknessBoxRect();
+		SGRect thicknessBox = collidableMapObjects[i]->GetThicknessBoxRect();
 
 		if (thicknessBox.intersectsRect(_rect))
 			return true;

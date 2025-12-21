@@ -18,17 +18,17 @@ public:
 	Character(CharBaseInfo* _pCharInfo, const VisualInfo& _visualInfo);
 	~Character() override;
 
-	static Character* create(CharBaseInfo* _pCharInfo, const VisualInfo& _visualInfo);
+	static Character* Create(CharBaseInfo* _pCharInfo, const VisualInfo& _visualInfo);
 
-	void initialize() override;
-	void initActorSpriteData(const VisualInfo& _visualInfo);
-	void initActorSprite() override;
-	void initListeners() override;
-	void initComponents() override;
+	void Initialize() override;
+	void InitActorSpriteData(const VisualInfo& _visualInfo);
+	void InitActorSprite() override;
+	void InitListeners() override;
+	void InitComponents() override;
 
-	CharBaseInfo* getBaseInfo();
-	int getCode() override { return m_pBaseInfo->code_; }
-	ActorType_t getType() const override { return ActorType::Character; }
+	CharBaseInfo* GetBaseInfo();
+	int GetCode() override { return m_pBaseInfo->code_; }
+	ActorType_t GetType() const override { return ActorType::Character; }
 
 protected:
 	CharBaseInfo* m_pBaseInfo;

@@ -19,21 +19,21 @@ GunnerIdle::GunnerIdle(HostPlayer* _pPlayer, ActionInfo* _pActionInfo)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerIdle::init()
+void GunnerIdle::Init()
 {
 	idleCount_ = 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerIdle::onActionBegin()
+void GunnerIdle::OnActionBegin()
 {
-	m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_IDLE_BREATH);
+	pPlayer_->RunAnimation(DEF_ANIMATION_GUNNER_IDLE_BREATH);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerIdle::onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
+void GunnerIdle::OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
 {
-	int iAnimationCode = _pAnimation->getAnimationInfo()->code_;
+	int iAnimationCode = _pAnimation->GetAnimationInfo()->code_;
 
 	if (iAnimationCode == DEF_ANIMATION_GUNNER_IDLE_BREATH)
 	{
@@ -41,28 +41,28 @@ void GunnerIdle::onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _
 	}
 	else if (iAnimationCode == DEF_ANIMATION_GUNNER_IDLE_GUN_ROLLING)
 	{
-		m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_IDLE_BREATH);
+		pPlayer_->RunAnimation(DEF_ANIMATION_GUNNER_IDLE_BREATH);
 		idleCount_ = 0;
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerIdle::onKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
+void GunnerIdle::OnKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
 {
-	_pController->reflectPressedMoveKeys();
+	_pController->ReflectPressedMoveKeys();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerIdle::onKeyReleasedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
+void GunnerIdle::OnKeyReleasedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
 {
-	ControlKey_t releasedKey = _pController->convertControlKey(_keyCode);
+	ControlKey_t releasedKey = _pController->ConvertControlKey(_keyCode);
 
 	if (releasedKey != ControlKey::None)
 		FixFreezedState(_pController, releasedKey);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerIdle::onActionEnd()
+void GunnerIdle::OnActionEnd()
 {
 }
 
@@ -70,19 +70,19 @@ void GunnerIdle::onActionEnd()
 void GunnerIdle::FixFreezedState(PlayerController* _pController, ControlKey_t _releasedKey)
 {
 	ControlKey_t eReverseKey = ControlKey::ReverseDirection[_releasedKey];
-	ActionMgr* pActionManager = m_pPlayer->actionManager();
+	ActionMgr* pActionManager = pPlayer_->GetActionManager();
 
-	if (_pController->isKeyPressed(ControlKey::Left) && _pController->isKeyPressed(ControlKey::Right) &&
+	if (_pController->IsKeyPressed(ControlKey::Left) && _pController->IsKeyPressed(ControlKey::Right) &&
 		(_releasedKey == ControlKey::Left || _releasedKey == ControlKey::Right))
 	{
-		_pController->updateDirection(eReverseKey);
-		pActionManager->runBaseAction(BaseAction::Walk);
+		_pController->UpdateDirection(eReverseKey);
+		pActionManager->RunBaseAction(BaseAction::Walk);
 	}
 
-	if (_pController->isKeyPressed(ControlKey::Up) && _pController->isKeyPressed(ControlKey::Down) &&
+	if (_pController->IsKeyPressed(ControlKey::Up) && _pController->IsKeyPressed(ControlKey::Down) &&
 		(_releasedKey == ControlKey::Up || _releasedKey == ControlKey::Down))
 	{
-		_pController->updateDirection(eReverseKey);
-		pActionManager->runBaseAction(BaseAction::Walk);
+		_pController->UpdateDirection(eReverseKey);
+		pActionManager->RunBaseAction(BaseAction::Walk);
 	}
 }

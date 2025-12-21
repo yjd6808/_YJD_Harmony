@@ -76,11 +76,11 @@ void CharInfoLoader::ReadDefaultVisualInfo(Json::Value& _charRoot, JCORE_OUT Cha
 		ItemCode itemCode;
 		if (VisualType::IsAvatar[visualIndex])
 		{
-			itemCode.initAvatarCode(charType, static_cast<AvatarType_t>(visualIndex), defaultCode);
+			itemCode.InitAvatarCode(charType, static_cast<AvatarType_t>(visualIndex), defaultCode);
 		}
 		else if (VisualType::IsWeapon[visualIndex])
 		{
-			itemCode.initWeaponCode(charType, _pCharInfo->defaultWeaponType_, defaultCode);
+			itemCode.InitWeaponCode(charType, _pCharInfo->defaultWeaponType_, defaultCode);
 		}
 		else
 		{
@@ -88,7 +88,7 @@ void CharInfoLoader::ReadDefaultVisualInfo(Json::Value& _charRoot, JCORE_OUT Cha
 			continue;
 		}
 
-		_pCharInfo->visualCount_[visualIndex] = VisualHelper::getVisualData(
+		_pCharInfo->visualCount_[visualIndex] = VisualHelper::GetVisualData(
 			_pCharInfo->visual_[visualIndex], itemCode.Code);
 		_pCharInfo->hasVisual_[visualIndex] = true;
 	}

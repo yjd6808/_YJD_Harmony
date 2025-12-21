@@ -15,12 +15,13 @@ public:
 	UIRootGroupManager(UIGroupInfo* _pInfo);
 	~UIRootGroupManager() override;
 
-	static UIRootGroupManager* createRetain();
-	void init();
-	void addMasterGroup(UIRootGroup* _pGroup);
-	void forEach(const SGActionFn<UIRootGroup*>& _action);
+	static UIRootGroupManager* CreateRetain();
+
+	void Init();
+	void AddRootGroup(UIRootGroup* _pGroup);
+	void ForEach(const SGActionFn<UIRootGroup*>& _action);
 
 private:
-	UIGroupInfo* info_;
-	SGVector<UIRootGroup*> masterGroupList_;
+	UIGroupInfo* pInfo_;
+	SGVector<UIRootGroup*> rootGroupList_;
 };

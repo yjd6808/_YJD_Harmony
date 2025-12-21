@@ -22,25 +22,25 @@ GunnerSliding::GunnerSliding(HostPlayer* _pPlayer, ActionInfo* _pActionInfo)
 {
 }
 
-bool GunnerSliding::onConditionCheck()
+bool GunnerSliding::OnConditionCheck()
 {
-	return m_pPlayer->getRunningActionCode() == DEF_ACTION_GUNNER_RUN;
+	return pPlayer_->GetRunningActionCode() == DEF_ACTION_GUNNER_RUN;
 }
 
-void GunnerSliding::onActionBegin()
+void GunnerSliding::OnActionBegin()
 {
 	slidingStarted_ = false;
-	m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_SLIDING);
-	m_pHitRecorder->setAlreadyHitRecord(true);
-	m_pHitRecorder->addSingleHitCallback(
-		DEF_EVENT_HIT_GUNNER_SLIDING, CC_CALLBACK_1(GunnerSliding::onEnemySingleHit, this));
-	m_pHitRecorder->addMultiHitCallback(
-		DEF_EVENT_HIT_GUNNER_SLIDING, CC_CALLBACK_2(GunnerSliding::onEnemyMultiHit, this));
+	pPlayer_->RunAnimation(DEF_ANIMATION_GUNNER_SLIDING);
+	pHitRecorder_->SetAlreadyHitRecord(true);
+	pHitRecorder_->AddSingleHitCallback(
+		DEF_EVENT_HIT_GUNNER_SLIDING, CC_CALLBACK_1(GunnerSliding::OnEnemySingleHit, this));
+	pHitRecorder_->AddMultiHitCallback(
+		DEF_EVENT_HIT_GUNNER_SLIDING, CC_CALLBACK_2(GunnerSliding::OnEnemyMultiHit, this));
 }
 
-void GunnerSliding::onUpdate(float _deltaTime)
+void GunnerSliding::OnUpdate(float _deltaTime)
 {
-	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+	PhysicsComponent* pPhysicsComponent = pPlayer_->GetComponent<PhysicsComponent>();
 
 	if (!slidingStarted_)
 	{
@@ -49,30 +49,30 @@ void GunnerSliding::onUpdate(float _deltaTime)
 
 	if (pPhysicsComponent == nullptr)
 	{
-		stop();
+		Stop();
 		return;
 	}
 
-	if (pPhysicsComponent->hasForceX())
+	if (pPhysicsComponent->HasForceX())
 	{
 		return;
 	}
 
 	// 더이상 X축 힘이 존재하지 않는 경우 중지
-	stop();
+	Stop();
 }
 
-void GunnerSliding::onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
+void GunnerSliding::OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
 {
-	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
-	const SpriteDirection_t spriteDirection = m_pPlayer->getSpriteDirection();
+	PhysicsComponent* pPhysicsComponent = pPlayer_->GetComponent<PhysicsComponent>();
+	const SpriteDirection_t spriteDirection = pPlayer_->GetSpriteDirection();
 
 	// 거너 특유의 슬라이딩 시작전 경직 효과를 주기위해 111번 프레임 끝난 후
-	if (_pAnimation->getFrameIndex() == 111)
+	if (_pAnimation->GetFrameIndex() == 111)
 	{
 		slidingStarted_ = true;
 
-		ActorManager::Get()->createEffectOnMapBySpawner(m_pPlayer, DEF_EFFECT_GUNNER_SLIDING_BEGIN, 250, 140);
+		ActorManager::Get()->CreateEffectOnMapBySpawner(pPlayer_, DEF_EFFECT_GUNNER_SLIDING_BEGIN, 250, 140);
 
 		if (pPhysicsComponent == nullptr)
 		{
@@ -81,35 +81,35 @@ void GunnerSliding::onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _p
 
 		if (spriteDirection == SpriteDirection::Right)
 		{
-			pPhysicsComponent->addForceX(m_pPlayer->getBaseInfo()->slidingForce_);
+			pPhysicsComponent->AddForceX(pPlayer_->GetBaseInfo()->slidingForce_);
 		}
 		else
 		{
-			pPhysicsComponent->addForceX(-m_pPlayer->getBaseInfo()->slidingForce_);
+			pPhysicsComponent->AddForceX(-pPlayer_->GetBaseInfo()->slidingForce_);
 		}
 	}
 
 	// 일시정지 프레임 만나면 1번부터 다시 재시작
-	if (_pAnimation->getFrameIndex() == 114 && _pAnimation->isZeroFramePaused())
+	if (_pAnimation->GetFrameIndex() == 114 && _pAnimation->IsZeroFramePaused())
 	{
-		m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_SLIDING, 1);
+		pPlayer_->RunAnimation(DEF_ANIMATION_GUNNER_SLIDING, 1);
 	}
 }
 
-void GunnerSliding::onEnemySingleHit(HitInfo& _info)
+void GunnerSliding::OnEnemySingleHit(HitInfo& _info)
 {
-	if (m_pHitRecorder->isAlreadyHit(_info.HitTarget))
+	if (pHitRecorder_->IsAlreadyHit(_info.pHitTarget_))
 	{
 		return;
 	}
 
-	ActorManager::Get()->createEffectOnMapTargetCollision(DEF_EFFECT_KNOCK_BIG, _info, true);
-	_info.HitTarget->hit(_info);
+	ActorManager::Get()->CreateEffectOnMapTargetCollision(DEF_EFFECT_KNOCK_BIG, _info, true);
+	_info.pHitTarget_->Hit(_info);
 }
 
-void GunnerSliding::onEnemyMultiHit(SGHitInfoList& _hitList, int _newHitCount)
+void GunnerSliding::OnEnemyMultiHit(SGHitInfoList& _hitList, int _newHitCount)
 {
-	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+	PhysicsComponent* pPhysicsComponent = pPlayer_->GetComponent<PhysicsComponent>();
 
 	if (pPhysicsComponent == nullptr)
 	{
@@ -118,6 +118,6 @@ void GunnerSliding::onEnemyMultiHit(SGHitInfoList& _hitList, int _newHitCount)
 
 	if (_newHitCount > 0)
 	{
-		pPhysicsComponent->stiffenBody(Const::FPS::_6);
+		pPhysicsComponent->StiffenBody(Const::FPS::_6);
 	}
 }

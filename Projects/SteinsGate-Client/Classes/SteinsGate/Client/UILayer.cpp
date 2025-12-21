@@ -26,7 +26,7 @@ UILayer::UILayer()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UILayer* UILayer::create()
+UILayer* UILayer::Create()
 {
 	UILayer* pLayer = dbg_new UILayer;
 
@@ -53,7 +53,7 @@ bool UILayer::init()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILayer::onMouseMove(SGEventMouse* _pMouseEvent)
+void UILayer::OnMouseMove(SGEventMouse* _pMouseEvent)
 {
 	const Vec2 absolutePosition = _pMouseEvent->getCursorPos();
 	UIGroup* pTopGroup = nullptr;
@@ -92,7 +92,7 @@ void UILayer::onMouseMove(SGEventMouse* _pMouseEvent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILayer::onMouseDown(SGEventMouse* _pMouseEvent)
+void UILayer::OnMouseDown(SGEventMouse* _pMouseEvent)
 {
 	const Vec2 absolutePosition = _pMouseEvent->getCursorPos();
 	UIGroup* pTopGroup = nullptr;
@@ -124,7 +124,7 @@ void UILayer::onMouseDown(SGEventMouse* _pMouseEvent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILayer::onMouseUp(SGEventMouse* _pMouseEvent)
+void UILayer::OnMouseUp(SGEventMouse* _pMouseEvent)
 {
 	const Vec2 absolutePosition = _pMouseEvent->getCursorPos();
 	UIGroup* pTopGroup = nullptr;
@@ -163,7 +163,7 @@ void UILayer::onMouseUp(SGEventMouse* _pMouseEvent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILayer::onMouseScroll(SGEventMouse* _pMouseEvent) const
+void UILayer::OnMouseScroll(SGEventMouse* _pMouseEvent) const
 {
 	for (int i = static_cast<int>(_children.size()) - 1; i >= 0; --i)
 	{
@@ -188,14 +188,14 @@ void UILayer::update(float _delta)
 	for (int i = static_cast<int>(_children.size()) - 1; i >= 0; --i)
 	{
 		UIRootGroup* pUiGroup = static_cast<UIRootGroup*>(_children.at(i));
-		pUiGroup->forEachRecursiveSpecificType<UIStatic>([](auto child)
+		pUiGroup->ForEachRecursiveSpecificType<UIStatic>([](UIStatic* _pChild)
 		{
-			child->setDebugVisible(Core::Contents.Global->DrawUIStatic);
+			_pChild->SetDebugVisible(Core::Contents.Global->DrawUIStatic);
 		});
-		pUiGroup->onUpdate(_delta);
+		pUiGroup->OnUpdate(_delta);
 	}
 
-	Core::Contents.UIManager->onUpdate(_delta);
+	Core::Contents.UIManager->OnUpdate(_delta);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -205,7 +205,7 @@ void UILayer::onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
 	{
 		UIRootGroup* pUiGroup = static_cast<UIRootGroup*>(_children.at(i));
 
-		if (!pUiGroup->onKeyPressed(_keyCode, _pEvent))
+		if (!pUiGroup->OnKeyPressed(_keyCode, _pEvent))
 		{
 			return;
 		}
@@ -219,7 +219,7 @@ void UILayer::onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
 	{
 		UIRootGroup* pUiGroup = static_cast<UIRootGroup*>(_children.at(i));
 
-		if (!pUiGroup->onKeyReleased(_keyCode, _pEvent))
+		if (!pUiGroup->OnKeyReleased(_keyCode, _pEvent))
 		{
 			return;
 		}
@@ -227,7 +227,7 @@ void UILayer::onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UIRootGroup* UILayer::findGroup(int _groupCode)
+UIRootGroup* UILayer::FindGroup(int _groupCode)
 {
 	for (int i = static_cast<int>(_children.size()) - 1; i >= 0; --i)
 	{
@@ -243,7 +243,7 @@ UIRootGroup* UILayer::findGroup(int _groupCode)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILayer::forEach(const SGActionFn<UIRootGroup*>& _actionFn)
+void UILayer::ForEach(const SGActionFn<UIRootGroup*>& _actionFn)
 {
 	for (int i = static_cast<int>(_children.size()) - 1; i >= 0; --i)
 	{
@@ -253,9 +253,9 @@ void UILayer::forEach(const SGActionFn<UIRootGroup*>& _actionFn)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILayer::addUIGroup(int _groupCode, int _zOrder)
+void UILayer::AddUIGroup(int _groupCode, int _zOrder)
 {
-	UIRootGroup* pGroup = Core::Contents.UIManager->getMasterGroup(_groupCode);
+	UIRootGroup* pGroup = Core::Contents.UIManager->GetMasterGroup(_groupCode);
 
 	if (pGroup == nullptr)
 	{
@@ -273,7 +273,7 @@ void UILayer::addUIGroup(int _groupCode, int _zOrder)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILayer::addUIGroup(UIRootGroup* _pGroup, int _zOrder)
+void UILayer::AddUIGroup(UIRootGroup* _pGroup, int _zOrder)
 {
 	if (!_pGroup->Loaded())
 	{
@@ -289,7 +289,7 @@ void UILayer::addUIGroup(UIRootGroup* _pGroup, int _zOrder)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILayer::removeUIGroup(int _groupCode)
+void UILayer::RemoveUIGroup(int _groupCode)
 {
 	Node* pChild = getChildByTag(_groupCode);
 
@@ -305,7 +305,7 @@ void UILayer::removeUIGroup(int _groupCode)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILayer::removeUIGroup(UIRootGroup* _pGroup)
+void UILayer::RemoveUIGroup(UIRootGroup* _pGroup)
 {
 	Node* pChild = nullptr;
 
@@ -329,11 +329,11 @@ void UILayer::removeUIGroup(UIRootGroup* _pGroup)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILayer::clear()
+void UILayer::Clear()
 {
 	SGVector<UIRootGroup*> tempList; // 레퍼런스 카운트가 1일 경우 레이어에서 해제될때 카운트가 0이되서 소멸해버림.
 
-	forEach([&tempList](UIRootGroup* child)
+	ForEach([&tempList](UIRootGroup* child)
 	{
 		child->retain();
 		tempList.PushBack(child);
@@ -349,8 +349,8 @@ void UILayer::clear()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILayer::clearUnload()
+void UILayer::ClearUnload()
 {
-	clear();
-	Core::Contents.UIManager->unloadAll();
+	Clear();
+	Core::Contents.UIManager->UnloadAll();
 }

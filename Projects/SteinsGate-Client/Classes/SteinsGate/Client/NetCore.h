@@ -16,7 +16,7 @@ class AuthenticationComponent;
 
 class NetCore
 	: public SGNetMaster
-	  , public SGSingletonPointer<NetCore>
+	, public SGSingletonPointer<NetCore>
 {
 	friend class TSingleton;
 	NetCore();
@@ -25,39 +25,39 @@ class NetCore
 public:
 	void Initialize() override;
 	void Finalize() override;
-	void pollNetEvents();
-	void runCommand(SGSession* _pSession, JNetwork::ICommand* _pCmd);
+	void PollNetEvents();
+	void RunCommand(SGSession* _pSession, JNetwork::ICommand* _pCmd);
 
-	NetClientGroup* getGroup() const { return netClientGroup_; }
-	SGTcpClient* getAuthTcp() const { return authTcp_; }
-	SGTcpClient* getLobbyTcp() const { return lobbyTcp_; }
-	SGTcpClient* getLogicTcp() const { return logicTcp_; }
-	SGUdpClient* getLogicUdp() const { return logicUdp_; }
-	SGTcpClient* getChatTcp() const { return chatTcp_; }
-	SGTcpClient* getAreaTcp() const { return areaTcp_; }
+	NetClientGroup* GetGroup() const { return pNetClientGroup_; }
+	SGTcpClient* GetAuthTcp() const { return pAuthTcp_; }
+	SGTcpClient* GetLobbyTcp() const { return pLobbyTcp_; }
+	SGTcpClient* GetLogicTcp() const { return pLogicTcp_; }
+	SGUdpClient* GetLogicUdp() const { return pLogicUdp_; }
+	SGTcpClient* GetChatTcp() const { return pChatTcp_; }
+	SGTcpClient* GetAreaTcp() const { return pAreaTcp_; }
 
-	CommandSynchronizer* getCommandSynchronizer() const { return commandSynchronizer_; }
-	ConnectionSynchronizer* getConnectionSynchronizer() const { return connectionSynchronizer_; }
+	CommandSynchronizer* GetCommandSynchronizer() const { return pCommandSynchronizer_; }
+	ConnectionSynchronizer* GetConnectionSynchronizer() const { return pConnectionSynchronizer_; }
 
-	void initializeComponents();
+	void InitializeComponents();
 
-	AuthenticationComponent* getAuthenticationComponent() const { return authenticationComponent_; }
+	AuthenticationComponent* GetAuthenticationComponent() const { return pAuthentication_; }
 
-	bool connectAuthTcp();
-	bool connectLobbyTcp();
+	bool ConnectAuthTcp();
+	bool ConnectLobbyTcp();
 
 private:
-	NetClientGroup* netClientGroup_;
-	SGTcpClient* authTcp_;
-	SGTcpClient* lobbyTcp_;
-	SGTcpClient* logicTcp_;
-	SGUdpClient* logicUdp_;
-	SGTcpClient* chatTcp_;
-	SGTcpClient* areaTcp_;
+	NetClientGroup* pNetClientGroup_;
+	SGTcpClient* pAuthTcp_;
+	SGTcpClient* pLobbyTcp_;
+	SGTcpClient* pLogicTcp_;
+	SGUdpClient* pLogicUdp_;
+	SGTcpClient* pChatTcp_;
+	SGTcpClient* pAreaTcp_;
 
-	CommandSynchronizer* commandSynchronizer_;
-	ConnectionSynchronizer* connectionSynchronizer_;
+	CommandSynchronizer* pCommandSynchronizer_;
+	ConnectionSynchronizer* pConnectionSynchronizer_;
 	ComponentCollection componentCollection_;
 
-	AuthenticationComponent* authenticationComponent_;
+	AuthenticationComponent* pAuthentication_;
 };

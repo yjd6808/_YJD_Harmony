@@ -14,14 +14,14 @@ class GunnerHit : public GunnerAction
 public:
 	GunnerHit(HostPlayer* _pPlayer, ActionInfo* _pActionInfo);
 
-	void onActionBegin() override;
-	void onActionEnd() override;
-	void selectHitAnimation();
-	void checkPosition();
-	void updateGroundHitState(float _deltaTime);
-	void updateDownState(float _deltaTime);
-	void updateAirHitState(float _deltaTime);
-	void onUpdate(float _deltaTime) override;
+	void OnActionBegin() override;
+	void OnActionEnd() override;
+	void SelectHitAnimation();
+	void CheckPosition();
+	void UpdateGroundHitState(float _deltaTime);
+	void UpdateDownState(float _deltaTime);
+	void UpdateAirHitState(float _deltaTime);
+	void OnUpdate(float _deltaTime) override;
 
 private:
 	bool hitSmall_;

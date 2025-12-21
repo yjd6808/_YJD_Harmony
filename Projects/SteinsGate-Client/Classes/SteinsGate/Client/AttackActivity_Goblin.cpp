@@ -27,21 +27,21 @@ void AttackActivity_Goblin::OnActivitySelectFromAiRoutine(AIInfo* _pAiInfo, AISt
 
 void AttackActivity_Goblin::OnActivityBegin()
 {
-	m_pHitRecorder = pActor_->getHitRecorder();
-	pActor_->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_ATTACK);
+	pHitRecorder_ = pActor_->GetHitRecorder();
+	pActor_->RunAnimation(DEF_ANIMATION_MONSTER_GOBLIN_ATTACK);
 
-	if (m_pHitRecorder == nullptr)
+	if (pHitRecorder_ == nullptr)
 	{
 		return;
 	}
 
-	m_pHitRecorder->setRecord(true);
-	m_pHitRecorder->setAlreadyHitRecord(true);
-	m_pHitRecorder->clearAlreadyHitEnemies();
-	m_pHitRecorder->addSingleHitCallback(
-		DEF_EVENT_HIT_GOBLIN_ATTACK, CC_CALLBACK_1(AttackActivity_Goblin::onEnemySingleHit, this));
-	m_pHitRecorder->addMultiHitCallback(
-		DEF_EVENT_HIT_GOBLIN_ATTACK, CC_CALLBACK_2(AttackActivity_Goblin::onEnemyMultiHit, this));
+	pHitRecorder_->SetRecord(true);
+	pHitRecorder_->SetAlreadyHitRecord(true);
+	pHitRecorder_->ClearAlreadyHitEnemies();
+	pHitRecorder_->AddSingleHitCallback(
+		DEF_EVENT_HIT_GOBLIN_ATTACK, CC_CALLBACK_1(AttackActivity_Goblin::OnEnemySingleHit, this));
+	pHitRecorder_->AddMultiHitCallback(
+		DEF_EVENT_HIT_GOBLIN_ATTACK, CC_CALLBACK_2(AttackActivity_Goblin::OnEnemyMultiHit, this));
 }
 
 void AttackActivity_Goblin::OnUpdate(float _dt)
@@ -50,29 +50,29 @@ void AttackActivity_Goblin::OnUpdate(float _dt)
 
 void AttackActivity_Goblin::OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
 {
-	if (_pAnimation->getAnimationCode() == DEF_ANIMATION_MONSTER_GOBLIN_ATTACK)
+	if (_pAnimation->GetAnimationCode() == DEF_ANIMATION_MONSTER_GOBLIN_ATTACK)
 	{
 		Stop();
 	}
 }
 
-void AttackActivity_Goblin::onEnemySingleHit(HitInfo& _info)
+void AttackActivity_Goblin::OnEnemySingleHit(HitInfo& _info)
 {
-	if (m_pHitRecorder->isAlreadyHit(_info.HitTarget))
+	if (pHitRecorder_->IsAlreadyHit(_info.pHitTarget_))
 	{
 		return;
 	}
 
-	ActorManager::Get()->createEffectOnMapTargetCollision(DEF_EFFECT_KNOCK_BIG, _info, true);
-	_info.HitTarget->hit(_info);
+	ActorManager::Get()->CreateEffectOnMapTargetCollision(DEF_EFFECT_KNOCK_BIG, _info, true);
+	_info.pHitTarget_->Hit(_info);
 }
 
-void AttackActivity_Goblin::onEnemyMultiHit(SGHitInfoList& _hitList, int _newHitCount)
+void AttackActivity_Goblin::OnEnemyMultiHit(SGHitInfoList& _hitList, int _newHitCount)
 {
-	PhysicsComponent* pPhysicsComponent = pActor_->getComponent<PhysicsComponent>();
+	PhysicsComponent* pPhysicsComponent = pActor_->GetComponent<PhysicsComponent>();
 
 	if (pPhysicsComponent && _newHitCount > 0)
 	{
-		pPhysicsComponent->stiffenBody(Const::FPS::_6);
+		pPhysicsComponent->StiffenBody(Const::FPS::_6);
 	}
 }

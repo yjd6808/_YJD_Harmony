@@ -24,14 +24,14 @@ private:
 	~ActorListenerManager();
 
 public:
-	void init();
+	void Init();
 
-	CharacterListener* createCharacterListener(Character* _pCharacter);
-	MonsterListener* createMonsterListener(Monster* _pMonster);
-	ProjectileListener* createProjectileListener(Projectile* _pProjectile, Actor* _pSpawner = nullptr);
+	CharacterListener*		CreateCharacterListener(Character* _pCharacter);
+	MonsterListener*		CreateMonsterListener(Monster* _pMonster);
+	ProjectileListener*		CreateProjectileListener(Projectile* _pProjectile, Actor* _pSpawner = nullptr);
 
 private:
-	ProjectileFactoryMap projectileListenerMap_;
-	MonsterFactoryMap monsterListenerMap_;
-	CharacterFactoryMap characterListenerMap_;
+	ProjectileFactoryMap	projectileListenerMap_;
+	MonsterFactoryMap		monsterListenerMap_;
+	CharacterFactoryMap		characterListenerMap_;
 };

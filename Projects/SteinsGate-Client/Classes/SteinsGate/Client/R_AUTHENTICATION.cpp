@@ -28,52 +28,52 @@ void R_AUTHENTICATION::RECV_AUC_LoginAck(Session* _pSession, ICommand* _pCommand
 	_pSession->Disconnect();
 
 	AUC_LoginAck* pLoginAck = (AUC_LoginAck*)_pCommand;
-	Core::Contents.PopupManager->closeByTag(DEF_POPUP_LOGIN_BEGIN);
+	Core::Contents.PopupManager->CloseByTag(DEF_POPUP_LOGIN_BEGIN);
 
 	switch (pLoginAck->result_)
 	{
 	case LoginResult::LoginSuccess:
 		{
-			Core::Contents.PopupManager->showNone(
+			Core::Contents.PopupManager->ShowNone(
 				SG_TEXT_RAW_FMT_STD("CONNECT_SERVER", ServerType::Name[ServerType::Lobby]), DEF_POPUP_CONNECT_LOBBY,
 				false, Const::Timeout::LobbyConnection);
 
-			if (!Core::Net->connectLobbyTcp())
+			if (!Core::Net->ConnectLobbyTcp())
 			{
-				Core::Contents.PopupManager->closeByTag(DEF_POPUP_CONNECT_LOBBY);
-				Core::Contents.PopupManager->showOk(
+				Core::Contents.PopupManager->CloseByTag(DEF_POPUP_CONNECT_LOBBY);
+				Core::Contents.PopupManager->ShowOk(
 					SG_TEXT_RAW_FMT_STD("CONNECT_LOBBY_FAILED_WITH_CODE", Winsock::LastError()));
 				break;
 			}
 
-			AuthenticationComponent* pAuthenticationComponent = Core::Net->getAuthenticationComponent();
-			pAuthenticationComponent->setState(AuthenticationState::LobbyWait);
-			pAuthenticationComponent->setSerial(pLoginAck->serial_);
-			pAuthenticationComponent->setLastServer(pLoginAck->lastServer_);
+			AuthenticationComponent* pAuthenticationComponent = Core::Net->GetAuthenticationComponent();
+			pAuthenticationComponent->SetState(AuthenticationState::LobbyWait);
+			pAuthenticationComponent->SetSerial(pLoginAck->serial_);
+			pAuthenticationComponent->SetLastServer(pLoginAck->lastServer_);
 			break;
 		}
 	case LoginResult::RegisterSuccess:
-		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("LOGIN_RESULT_REGISTER_SUCCESS"));
+		Core::Contents.PopupManager->ShowOk(SG_TEXT_RAW("LOGIN_RESULT_REGISTER_SUCCESS"));
 		break;
 	case LoginResult::IdAlreadyExist:
-		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("LOGIN_RESULT_ID_ALREADY_EXIST"));
+		Core::Contents.PopupManager->ShowOk(SG_TEXT_RAW("LOGIN_RESULT_ID_ALREADY_EXIST"));
 		break;
 	case LoginResult::IdPasswordMismatch:
-		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("LOGIN_RESULT_ID_PASSWORD_MISMATCH"));
+		Core::Contents.PopupManager->ShowOk(SG_TEXT_RAW("LOGIN_RESULT_ID_PASSWORD_MISMATCH"));
 		break;
 	case LoginResult::Banned:
-		Core::Contents.PopupManager->showOk(SG_TEXT_RAW_FMT_STD("LOGIN_RESULT_BANNED",
+		Core::Contents.PopupManager->ShowOk(SG_TEXT_RAW_FMT_STD("LOGIN_RESULT_BANNED",
 		                                                        pLoginAck->banBeginDate_.FormatMysqlTime().Source(),
 		                                                        pLoginAck->banEndDate_.FormatMysqlTime().Source()));
 		break;
 	case LoginResult::Logined:
-		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("LOGIN_RESULT_LOGINED"));
+		Core::Contents.PopupManager->ShowOk(SG_TEXT_RAW("LOGIN_RESULT_LOGINED"));
 		break;
 	case LoginResult::QueryFailed:
-		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("LOGIN_RESULT_QUERY_FAILED"));
+		Core::Contents.PopupManager->ShowOk(SG_TEXT_RAW("LOGIN_RESULT_QUERY_FAILED"));
 		break;
 	default:
-		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("LOGIN_RESULT_UNKNONW"));
+		Core::Contents.PopupManager->ShowOk(SG_TEXT_RAW("LOGIN_RESULT_UNKNONW"));
 		break;
 	}
 }

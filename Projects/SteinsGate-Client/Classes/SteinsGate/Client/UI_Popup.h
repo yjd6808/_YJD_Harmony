@@ -40,33 +40,33 @@ protected:
 	void OnAdded() override;
 	void OnRemoved() override;
 
-	void onUpdate(float _dt) override;
+	void OnUpdate(float _dt) override;
 	void OnMouseUpTarget(UIElement* _pElement, SGEventMouse* _pMouseEvent) override;
 	bool OnMouseMoveInternalDetail(SGEventMouse* _pMouseEvent) override;
 	bool OnMouseDownInternalDetail(SGEventMouse* _pMouseEvent) override;
 	bool OnMouseScrollInternalDetail(SGEventMouse* _pMouseEvent) override;
-	bool onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
-	bool onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
+	bool OnKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
+	bool OnKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
 
 public:
-	void setType(Type _type);
-	Type getType() const { return type_; }
+	void SetType(Type _type);
+	Type GetType() const { return type_; }
 
-	void setTextHAlign(HAlignment_t _hAlign) { labelText_->setHAlignment(_hAlign); }
-	void setTextVAlign(VAlignment_t _vAlign) { labelText_->setVAlignment(_vAlign); }
-	int getAttribute() const { return attributeFlag_.Value; }
+	void SetTextHAlign(HAlignment_t _hAlign) { pLabelText_->setHAlignment(_hAlign); }
+	void SetTextVAlign(VAlignment_t _vAlign) { pLabelText_->setVAlignment(_vAlign); }
+	int GetAttribute() const { return attributeFlag_.Value; }
 
-	void setText(const std::string& _text);
-	void setYesCallback(const PopupCallback& _fnYes);
-	void setNoCallback(const PopupCallback& _fnNo);
-	void setOkCallback(const PopupCallback& _fnOk);
-	void setCloseWithEsc(bool _closeWithEsc);
-	void setTimeoutCallback(const PopupCallback& _fnTimeout);
-	void setTimeout(float _timeout); // 음수 시간넣으면 타임아웃 미적용
-	void setClosed(bool _closed) { closed_ = _closed; }
-	bool isClosed() const { return closed_; }
-	void close();
-	void adjust();
+	void SetText(const std::string& _text);
+	void SetYesCallback(const PopupCallback& _fnYes);
+	void SetNoCallback(const PopupCallback& _fnNo);
+	void SetOkCallback(const PopupCallback& _fnOk);
+	void SetCloseWithEsc(bool _closeWithEsc);
+	void SetTimeoutCallback(const PopupCallback& _fnTimeout);
+	void SetTimeout(float _timeout); // 음수 시간넣으면 타임아웃 미적용
+	void SetClosed(bool _closed) { closed_ = _closed; }
+	bool IsClosed() const { return closed_; }
+	void Close();
+	void Adjust();
 
 private:
 	// #define UI_POPUP_GROUP_HOLDER
@@ -77,13 +77,13 @@ private:
 	// #define UI_POPUP_HOLDER_BTN_HOLDER_BUTTON_NO
 	// #define UI_POPUP_HOLDER_BTN_HOLDER_BUTTON_OK
 
-	UIGroup* groupHolder_;
-	UISprite* spriteBackground_;
-	UIGroup* groupButtonHolder_;
-	UIButton* yesButton_;
-	UIButton* noButton_;
-	UIButton* okButton_;
-	UILabel* labelText_;
+	UIGroup* pGroupHolder_;
+	UISprite* pSpriteBackground_;
+	UIGroup* pGroupButtonHolder_;
+	UIButton* pBtnYes_;
+	UIButton* pBtnNo_;
+	UIButton* pBtnOk_;
+	UILabel* pLabelText_;
 
 	// =========================================
 

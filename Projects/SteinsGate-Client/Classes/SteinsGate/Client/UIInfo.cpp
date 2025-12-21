@@ -13,48 +13,48 @@ USING_NS_JC;
 
 UIGroupInfo& UIGroupInfo::operator=(const UIGroupInfo& _other)
 {
-	Size = _other.Size;
-	InfoList = _other.InfoList;
+	size_ = _other.size_;
+	infoList_ = _other.infoList_;
 	return *this;
 }
 
 UIGroupInfo& UIGroupInfo::operator=(UIGroupInfo&& _other) noexcept
 {
-	Size = _other.Size;
-	InfoList = Move(_other.InfoList);
+	size_ = _other.size_;
+	infoList_ = Move(_other.infoList_);
 	return *this;
 }
 
 UIButtonInfo& UIButtonInfo::operator=(const UIButtonInfo& _other)
 {
-	Sga = _other.Sga;
-	Img = _other.Img;
-	LinearDodge = _other.LinearDodge;
-	Arrays::Copy(Sprites, _other.Sprites);
+	sga_ = _other.sga_;
+	img_ = _other.img_;
+	linearDodge_ = _other.linearDodge_;
+	Arrays::Copy(sprites_, _other.sprites_);
 	return *this;
 }
 
 UILabelInfo& UILabelInfo::operator=(const UILabelInfo& _other)
 {
-	Size = _other.Size;
-	FontCode = _other.FontCode;
-	FontSize = _other.FontSize;
-	FontColor = _other.FontColor;
-	Text = _other.Text;
-	TextWrap = _other.TextWrap;
-	TextHAlignment = _other.TextHAlignment;
-	TextVAlignment = _other.TextVAlignment;
+	size_ = _other.size_;
+	fontCode_ = _other.fontCode_;
+	fontSize_ = _other.fontSize_;
+	fontColor_ = _other.fontColor_;
+	text_ = _other.text_;
+	textWrap_ = _other.textWrap_;
+	textHAlignment_ = _other.textHAlignment_;
+	textVAlignment_ = _other.textVAlignment_;
 	return *this;
 }
 
 UISpriteInfo& UISpriteInfo::operator=(const UISpriteInfo& _other)
 {
-	Img = _other.Img;
-	Sga = _other.Sga;
-	Sprite = _other.Sprite;
-	LinearDodge = _other.LinearDodge;
-	Scale9 = _other.Scale9;
-	Size = _other.Size;
+	img_ = _other.img_;
+	sga_ = _other.sga_;
+	sprite_ = _other.sprite_;
+	linearDodge_ = _other.linearDodge_;
+	scale9_ = _other.scale9_;
+	size_ = _other.size_;
 	return *this;
 }
 

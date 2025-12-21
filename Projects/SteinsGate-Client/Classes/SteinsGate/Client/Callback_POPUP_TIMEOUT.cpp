@@ -19,7 +19,7 @@ namespace Popup
 //////////////////////////////////////////////////////////////////////////////////////
 void LobbyAuthenticationTimeout::operator()()
 {
-	if (Core::Net->getAuthenticationComponent()->getState() == AuthenticationState::LobbyWait)
+	if (Core::Net->GetAuthenticationComponent()->GetState() == AuthenticationState::LobbyWait)
 	{
 	}
 }

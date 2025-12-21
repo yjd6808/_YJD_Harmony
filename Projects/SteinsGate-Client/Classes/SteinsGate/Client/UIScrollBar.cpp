@@ -32,10 +32,10 @@ UIScrollBar::UIScrollBar(UIRootGroup* _pMasterGroup, UIGroup* _pParentGroup)
 , dragBegin_(false)
 , dragStartYPos_(0)
 , dragStartPos_(0)
-, linkElement_(nullptr)
-, info_(nullptr)
-, textures_{}
-, sprites_{}
+, pLinkElement_(nullptr)
+, pInfo_(nullptr)
+, pTextures_{}
+, pSprites_{}
 {
 }
 
@@ -43,10 +43,10 @@ UIScrollBar::UIScrollBar(UIRootGroup* _pMasterGroup, UIGroup* _pParentGroup, UIS
                          bool _infoOwner)
 : UIScrollBar(_pMasterGroup, _pParentGroup)
 {
-	setInfoScrollBar(_pScrollBarInfo, _infoOwner);
+	SetInfoScrollBar(_pScrollBarInfo, _infoOwner);
 }
 
-UIScrollBar* UIScrollBar::create(UIRootGroup* _pMasterGroup, UIGroup* _pParentGroup)
+UIScrollBar* UIScrollBar::Create(UIRootGroup* _pMasterGroup, UIGroup* _pParentGroup)
 {
 	UIScrollBar* pScrollBar = dbg_new UIScrollBar(_pMasterGroup, _pParentGroup);
 	pScrollBar->init();
@@ -54,7 +54,7 @@ UIScrollBar* UIScrollBar::create(UIRootGroup* _pMasterGroup, UIGroup* _pParentGr
 	return pScrollBar;
 }
 
-UIScrollBar* UIScrollBar::create(UIRootGroup* _pMasterGroup, UIGroup* _pParentGroup, UIScrollBarInfo* _pScrollBarInfo,
+UIScrollBar* UIScrollBar::Create(UIRootGroup* _pMasterGroup, UIGroup* _pParentGroup, UIScrollBarInfo* _pScrollBarInfo,
                                  bool _infoOwner)
 {
 	UIScrollBar* pScrollBar = dbg_new UIScrollBar(_pMasterGroup, _pParentGroup, _pScrollBarInfo, _infoOwner);
@@ -65,38 +65,38 @@ UIScrollBar* UIScrollBar::create(UIRootGroup* _pMasterGroup, UIGroup* _pParentGr
 
 UIScrollBar::~UIScrollBar()
 {
-	for (int i = 0; i < TextureCount; ++i)
+	for (int i = 0; i < TEXTURE_COUNT; ++i)
 	{
-		CC_SAFE_RELEASE(textures_[i]);
+		CC_SAFE_RELEASE(pTextures_[i]);
 	}
 }
 
 // 스크롤바 버튼들은 비활성화, 마우스 오버가 없으므로.. 비활성상태를 노말로 처리한다.
-void UIScrollBar::setVisibleStateNormal()
+void UIScrollBar::SetVisibleStateNormal()
 {
-	if (sprites_[IndexUpNormal])
+	if (pSprites_[INDEX_UP_NORMAL])
 	{
-		sprites_[IndexUpNormal]->setVisible(true);
+		pSprites_[INDEX_UP_NORMAL]->setVisible(true);
 	}
-	if (sprites_[IndexDownNormal])
+	if (pSprites_[INDEX_DOWN_NORMAL])
 	{
-		sprites_[IndexDownNormal]->setVisible(true);
+		pSprites_[INDEX_DOWN_NORMAL]->setVisible(true);
 	}
-	if (sprites_[IndexThumbNormal])
+	if (pSprites_[INDEX_THUMB_NORMAL])
 	{
-		sprites_[IndexThumbNormal]->setVisible(true);
+		pSprites_[INDEX_THUMB_NORMAL]->setVisible(true);
 	}
-	if (sprites_[IndexUpPressed])
+	if (pSprites_[INDEX_UP_PRESSED])
 	{
-		sprites_[IndexUpPressed]->setVisible(false);
+		pSprites_[INDEX_UP_PRESSED]->setVisible(false);
 	}
-	if (sprites_[IndexDownPressed])
+	if (pSprites_[INDEX_DOWN_PRESSED])
 	{
-		sprites_[IndexDownPressed]->setVisible(false);
+		pSprites_[INDEX_DOWN_PRESSED]->setVisible(false);
 	}
-	if (sprites_[IndexThumbPressed])
+	if (pSprites_[INDEX_THUMB_PRESSED])
 	{
-		sprites_[IndexThumbPressed]->setVisible(false);
+		pSprites_[INDEX_THUMB_PRESSED]->setVisible(false);
 	}
 }
 
@@ -116,24 +116,24 @@ void UIScrollBar::SetEnabled(bool _enabled)
 	}
 
 	state_ = eDisabled;
-	setVisibleStateNormal();
+	SetVisibleStateNormal();
 }
 
-void UIScrollBar::setLinkElement(UIElement* _pElement)
+void UIScrollBar::SetLinkElement(UIElement* _pElement)
 {
-	if (linkElement_ != nullptr)
+	if (pLinkElement_ != nullptr)
 	{
-		linkElement_->RemoveMouseEvent(eMouseEventScroll, DEF_EVENT_UI_ON_MOUSE_SCROLL);
+		pLinkElement_->RemoveMouseEvent(eMouseEventScroll, DEF_EVENT_UI_ON_MOUSE_SCROLL);
 	}
 
-	linkElement_ = _pElement;
-	linkElement_->AddMouseEvent(eMouseEventScroll, DEF_EVENT_UI_ON_MOUSE_SCROLL,
-	                            CC_CALLBACK_1(UIScrollBar::onLinkElementMouseScroll, this));
+	pLinkElement_ = _pElement;
+	pLinkElement_->AddMouseEvent(eMouseEventScroll, DEF_EVENT_UI_ON_MOUSE_SCROLL,
+	                            CC_CALLBACK_1(UIScrollBar::OnLinkElementMouseScroll, this));
 }
 
-void UIScrollBar::onLinkElementMouseScroll(SGEventMouse* _pMouseEvent)
+void UIScrollBar::OnLinkElementMouseScroll(SGEventMouse* _pMouseEvent)
 {
-	if (linkElement_ == nullptr)
+	if (pLinkElement_ == nullptr)
 	{
 		_LogWarn_("링크 엘리먼트가 없는데 여기 들어온다고?");
 		return;
@@ -141,11 +141,11 @@ void UIScrollBar::onLinkElementMouseScroll(SGEventMouse* _pMouseEvent)
 
 	if (_pMouseEvent->getScrollY() < 0)
 	{
-		setRowPos(pos_ - 1);
+		SetRowPos(pos_ - 1);
 	}
 	else
 	{
-		setRowPos(pos_ + 1);
+		SetRowPos(pos_ + 1);
 	}
 }
 
@@ -167,7 +167,7 @@ void UIScrollBar::RestoreState(State _state)
 
 	if (state_ == _state)
 	{
-		setVisibleStateNormal();
+		SetVisibleStateNormal();
 	}
 }
 
@@ -178,16 +178,16 @@ bool UIScrollBar::init()
 		return false;
 	}
 
-	if (info_ == nullptr)
+	if (pInfo_ == nullptr)
 	{
 		LogWarnMissingInfo();
 		return false;
 	}
 
-	const ImagePack* pPack = Core::Contents.PackManager->getPackUnsafe(info_->Sga);
+	const ImagePack* pPack = Core::Contents.PackManager->GetPackUnsafe(pInfo_->Sga);
 
 	// 위 아래 버튼높이 임시 추가 (이미지가 전혀 없더라도 스크롤바 기능이 가능토록. 하기위함)
-	SetInitialUISize(info_->TrackSize + Size{ 0, upButtonHeight_ + downButtonHeight_ });
+	SetInitialUISize(pInfo_->TrackSize + Size{ 0, upButtonHeight_ + downButtonHeight_ });
 
 	if (pPack == nullptr)
 	{
@@ -195,16 +195,16 @@ bool UIScrollBar::init()
 		return false;
 	}
 
-	if (info_->TrackSize.height < MinThumbHeight)
+	if (pInfo_->TrackSize.height < MIN_THUMB_HEIGHT)
 	{
-		_LogWarn_("스크롤바 손잡이 사이즈가 (%.f)보다 작습니다. (손잡이가 업/다운 버튼을 침범할 수 있습니다.)", MinThumbHeight);
+		_LogWarn_("스크롤바 손잡이 사이즈가 (%.f)보다 작습니다. (손잡이가 업/다운 버튼을 침범할 수 있습니다.)", MIN_THUMB_HEIGHT);
 	}
 
-	const SgaSpriteAbstractPtr pSpriteUpNormal = pPack->getSpriteUnsafe(info_->Img, info_->Sprites[IndexUpNormal]);
-	const SgaSpriteAbstractPtr pSpriteUpPressed = pPack->getSpriteUnsafe(info_->Img, info_->Sprites[IndexUpPressed]);
-	const SgaSpriteAbstractPtr pSpriteDownNormal = pPack->getSpriteUnsafe(info_->Img, info_->Sprites[IndexDownNormal]);
+	const SgaSpriteAbstractPtr pSpriteUpNormal = pPack->GetSpriteUnsafe(pInfo_->Img, pInfo_->Sprites[INDEX_UP_NORMAL]);
+	const SgaSpriteAbstractPtr pSpriteUpPressed = pPack->GetSpriteUnsafe(pInfo_->Img, pInfo_->Sprites[INDEX_UP_PRESSED]);
+	const SgaSpriteAbstractPtr pSpriteDownNormal = pPack->GetSpriteUnsafe(pInfo_->Img, pInfo_->Sprites[INDEX_DOWN_NORMAL]);
 	const SgaSpriteAbstractPtr pSpriteDownPressed = pPack->
-		getSpriteUnsafe(info_->Img, info_->Sprites[IndexDownPressed]);
+		GetSpriteUnsafe(pInfo_->Img, pInfo_->Sprites[INDEX_DOWN_PRESSED]);
 
 	upButtonHeight_ = SgaSpriteHelper::GetMaxHeightF(pSpriteUpNormal, pSpriteUpPressed);
 	downButtonHeight_ = SgaSpriteHelper::GetMaxHeightF(pSpriteDownNormal, pSpriteDownPressed);
@@ -219,14 +219,14 @@ bool UIScrollBar::init()
 		downButtonHeight_ = DEFAULT_SIZE15.height;
 	}
 
-	SetInitialUISize(info_->TrackSize + SGSize{ 0, upButtonHeight_ + downButtonHeight_ });
+	SetInitialUISize(pInfo_->TrackSize + SGSize{ 0, upButtonHeight_ + downButtonHeight_ });
 	isInitialized_ = true;
 	return true;
 }
 
 void UIScrollBar::Load()
 {
-	if (info_ == nullptr)
+	if (pInfo_ == nullptr)
 	{
 		LogWarnMissingInfo();
 		return;
@@ -237,8 +237,8 @@ void UIScrollBar::Load()
 		return;
 	}
 
-	createSprites();
-	updateThumbSize();
+	CreateSprites();
+	UpdateThumbSize();
 
 	// =============================================================
 	//                        포지셔닝
@@ -247,8 +247,8 @@ void UIScrollBar::Load()
 	// 이때 모든 컨트롤의 X좌표는 0으로 고정되므로 Y좌표만 신경써주면 된다.
 	// =============================================================
 
-	updateTrackAndButtonPosition();
-	updateThumbPosition();
+	UpdateTrackAndButtonPosition();
+	UpdateThumbPosition();
 
 	// =============================================================
 	//                       디폴트 컬러링
@@ -257,54 +257,54 @@ void UIScrollBar::Load()
 	const FrameTexture* pDefaultTexture = Core::Contents.Global->getDefaultFrameTexture();
 
 	// 업 버튼
-	if (textures_[IndexUpNormal] == pDefaultTexture)
+	if (pTextures_[INDEX_UP_NORMAL] == pDefaultTexture)
 	{
-		sprites_[IndexUpNormal]->setColor(SGColorList::Acidgreen_v);
+		pSprites_[INDEX_UP_NORMAL]->setColor(SGColorList::Acidgreen_v);
 	}
 
-	if (textures_[IndexUpPressed] == pDefaultTexture)
+	if (pTextures_[INDEX_UP_PRESSED] == pDefaultTexture)
 	{
-		sprites_[IndexUpPressed]->setColor(SGColorList::CGred_v);
+		pSprites_[INDEX_UP_PRESSED]->setColor(SGColorList::CGred_v);
 	}
 
 	// 다운 버튼
-	if (textures_[IndexDownNormal] == pDefaultTexture)
+	if (pTextures_[INDEX_DOWN_NORMAL] == pDefaultTexture)
 	{
-		sprites_[IndexDownNormal]->setColor(SGColorList::Acidgreen_v);
+		pSprites_[INDEX_DOWN_NORMAL]->setColor(SGColorList::Acidgreen_v);
 	}
 
-	if (textures_[IndexDownPressed] == pDefaultTexture)
+	if (pTextures_[INDEX_DOWN_PRESSED] == pDefaultTexture)
 	{
-		sprites_[IndexDownPressed]->setColor(SGColorList::CGred_v);
+		pSprites_[INDEX_DOWN_PRESSED]->setColor(SGColorList::CGred_v);
 	}
 
 	// 손잡이
-	if (textures_[IndexThumbNormal] == pDefaultTexture)
+	if (pTextures_[INDEX_THUMB_NORMAL] == pDefaultTexture)
 	{
-		sprites_[IndexThumbNormal]->setColor(SGColorList::Aeroblue_v);
+		pSprites_[INDEX_THUMB_NORMAL]->setColor(SGColorList::Aeroblue_v);
 	}
 
-	if (textures_[IndexThumbPressed] == pDefaultTexture)
+	if (pTextures_[INDEX_THUMB_PRESSED] == pDefaultTexture)
 	{
-		sprites_[IndexThumbPressed]->setColor(SGColorList::Alabaster_v);
+		pSprites_[INDEX_THUMB_PRESSED]->setColor(SGColorList::Alabaster_v);
 	}
 
-	setVisibleStateNormal();
+	SetVisibleStateNormal();
 	isLoaded_ = true;
 }
 
-void UIScrollBar::createSprites()
+void UIScrollBar::CreateSprites()
 {
-	for (int i = 0; i < TextureCount; ++i)
+	for (int i = 0; i < TEXTURE_COUNT; ++i)
 	{
-		FrameTexture* pTexture = Core::Contents.UIManager->createUITextureRetained(
-			info_->Sga, info_->Img, info_->Sprites[i]);
+		FrameTexture* pTexture = Core::Contents.UIManager->CreateUITextureRetained(
+			pInfo_->Sga, pInfo_->Img, pInfo_->Sprites[i]);
 		Sprite* pSprite;
 
 		// 나인 렉트의 중앙 렉트 크기는 setCapInsets로 설정할 수 있다.
-		if (i == IndexThumbNormal || i == IndexThumbPressed)
+		if (i == INDEX_THUMB_NORMAL || i == INDEX_THUMB_PRESSED)
 		{
-			SpriteFrame* pFrame = SpriteFrame::createWithTexture(pTexture->getTexture(), pTexture->getRect());
+			SpriteFrame* pFrame = SpriteFrame::createWithTexture(pTexture->GetTexture(), pTexture->GetRect());
 			SGScale9Sprite* pScale9 = SGScale9Sprite::createWithSpriteFrame(pFrame);
 			pSprite = pScale9;
 
@@ -313,76 +313,76 @@ void UIScrollBar::createSprites()
 		}
 		else
 		{
-			const SGSize spriteSize = pTexture->getSize();
+			const SGSize spriteSize = pTexture->GetSize();
 			const float widthScaleX = uiSize_.width / spriteSize.width;
 
-			pSprite = Sprite::createWithTexture(pTexture->getTexture());
+			pSprite = Sprite::createWithTexture(pTexture->GetTexture());
 			pSprite->setScaleX(widthScaleX);
 		}
 
 		pSprite->setAnchorPoint(Vec2::ZERO);
 
-		textures_[i] = pTexture;
-		sprites_[i] = pSprite;
+		pTextures_[i] = pTexture;
+		pSprites_[i] = pSprite;
 	}
 
 	// 높이의 경우 트랙과 손잡이만 contentSize.height에 영향을 받으므로 스케일을 변경해줘야한다.
 	// 손잡이의 경우 Scale9 스프이고 updateThumbSize()에서 수행하므로 트랙만 스케일 적용
-	sprites_[IndexTrack]->setScaleY(trackHeight_ / textures_[IndexTrack]->getHeightF());
+	pSprites_[INDEX_TRACK]->setScaleY(trackHeight_ / pTextures_[INDEX_TRACK]->GetHeightF());
 
-	sprites_[IndexUpNormal]->setScaleY(upButtonHeight_ / textures_[IndexUpNormal]->getHeightF());
-	sprites_[IndexUpPressed]->setScaleY(upButtonHeight_ / textures_[IndexUpPressed]->getHeightF());
-	sprites_[IndexDownNormal]->setScaleY(downButtonHeight_ / textures_[IndexDownNormal]->getHeightF());
-	sprites_[IndexDownPressed]->setScaleY(downButtonHeight_ / textures_[IndexDownPressed]->getHeightF());
+	pSprites_[INDEX_UP_NORMAL]->setScaleY(upButtonHeight_ / pTextures_[INDEX_UP_NORMAL]->GetHeightF());
+	pSprites_[INDEX_UP_PRESSED]->setScaleY(upButtonHeight_ / pTextures_[INDEX_UP_PRESSED]->GetHeightF());
+	pSprites_[INDEX_DOWN_NORMAL]->setScaleY(downButtonHeight_ / pTextures_[INDEX_DOWN_NORMAL]->GetHeightF());
+	pSprites_[INDEX_DOWN_PRESSED]->setScaleY(downButtonHeight_ / pTextures_[INDEX_DOWN_PRESSED]->GetHeightF());
 
-	this->addChild(sprites_[IndexUpNormal]);
-	this->addChild(sprites_[IndexUpPressed]);
-	this->addChild(sprites_[IndexDownNormal]);
-	this->addChild(sprites_[IndexDownPressed]);
-	this->addChild(sprites_[IndexTrack]);
-	this->addChild(sprites_[IndexThumbNormal]);
-	this->addChild(sprites_[IndexThumbPressed]);
+	this->addChild(pSprites_[INDEX_UP_NORMAL]);
+	this->addChild(pSprites_[INDEX_UP_PRESSED]);
+	this->addChild(pSprites_[INDEX_DOWN_NORMAL]);
+	this->addChild(pSprites_[INDEX_DOWN_PRESSED]);
+	this->addChild(pSprites_[INDEX_TRACK]);
+	this->addChild(pSprites_[INDEX_THUMB_NORMAL]);
+	this->addChild(pSprites_[INDEX_THUMB_PRESSED]);
 }
 
-void UIScrollBar::updateTrackAndButtonPosition()
+void UIScrollBar::UpdateTrackAndButtonPosition()
 {
 	// 업 버튼
-	sprites_[IndexUpNormal]->setPosition(0, downButtonHeight_ + trackHeight_);
-	sprites_[IndexUpPressed]->setPosition(0, downButtonHeight_ + trackHeight_);
+	pSprites_[INDEX_UP_NORMAL]->setPosition(0, downButtonHeight_ + trackHeight_);
+	pSprites_[INDEX_UP_PRESSED]->setPosition(0, downButtonHeight_ + trackHeight_);
 
 	// sprites_[IndexDownNormal]->setPosition(0, 0);
 	// sprites_[IndexDownPressed]->setPosition(0, 0);
 
 	// 트랙
-	sprites_[IndexTrack]->setPosition(0, downButtonHeight_);
+	pSprites_[INDEX_TRACK]->setPosition(0, downButtonHeight_);
 }
 
-void UIScrollBar::updateThumbSize()
+void UIScrollBar::UpdateThumbSize()
 {
 	const float splitedHeight = trackHeight_ / rowCount_;
-	const float thumbHeight = Math::Max(splitedHeight * rowCountPerPage_, MinThumbHeight);
+	const float thumbHeight = Math::Max(splitedHeight * rowCountPerPage_, MIN_THUMB_HEIGHT);
 
 	// 스케일스프는 콘텐츠 사이즈로 변경해야함
 	thumbHeight_ = thumbHeight;
-	sprites_[IndexThumbNormal]->setContentSize({ uiSize_.width, thumbHeight });
-	sprites_[IndexThumbPressed]->setContentSize({ uiSize_.width, thumbHeight });
+	pSprites_[INDEX_THUMB_NORMAL]->setContentSize({ uiSize_.width, thumbHeight });
+	pSprites_[INDEX_THUMB_PRESSED]->setContentSize({ uiSize_.width, thumbHeight });
 }
 
-void UIScrollBar::updateThumbPosition()
+void UIScrollBar::UpdateThumbPosition()
 {
 	// 손잡이 X 위치
 	// sprites_[IndexThumbNormal]->setPositionX(0);
 	// sprites_[IndexThumbPressed]->setPositionX(0);
 
 	const float splitedHeight = trackHeight_ / rowCount_;
-	const float thumbHeight = Math::Max(splitedHeight * rowCountPerPage_, MinThumbHeight);
+	const float thumbHeight = Math::Max(splitedHeight * rowCountPerPage_, MIN_THUMB_HEIGHT);
 	const float leftTrackHeight = trackHeight_ - thumbHeight;
 
 	splitedTrackHeight_ = endPos_ != 0 ? leftTrackHeight / endPos_ : 0;
 	thumbHeight_ = thumbHeight;
-	sprites_[IndexThumbNormal]->setPositionY(
+	pSprites_[INDEX_THUMB_NORMAL]->setPositionY(
 		downButtonHeight_ + splitedTrackHeight_ * static_cast<float>(endPos_ - pos_));
-	sprites_[IndexThumbPressed]->setPositionY(
+	pSprites_[INDEX_THUMB_PRESSED]->setPositionY(
 		downButtonHeight_ + splitedTrackHeight_ * static_cast<float>(endPos_ - pos_));
 }
 
@@ -395,16 +395,16 @@ void UIScrollBar::Unload()
 
 	removeAllChildren(); // autorelease 되기땜
 
-	for (int i = 0; i < TextureCount; ++i)
+	for (int i = 0; i < TEXTURE_COUNT; ++i)
 	{
-		sprites_[i] = nullptr;
-		CC_SAFE_RELEASE_NULL(textures_[i]);
+		pSprites_[i] = nullptr;
+		CC_SAFE_RELEASE_NULL(pTextures_[i]);
 	}
 
 	isLoaded_ = false;
 }
 
-void UIScrollBar::setRowPos(int _pos)
+void UIScrollBar::SetRowPos(int _pos)
 {
 	if (_pos == pos_)
 	{
@@ -427,10 +427,10 @@ void UIScrollBar::setRowPos(int _pos)
 	}
 
 	pRootGroup_->OnScrollBarPositionChanged(this, prevPos, pos_);
-	updateThumbPosition();
+	UpdateThumbPosition();
 }
 
-void UIScrollBar::setRowCount(int _count)
+void UIScrollBar::SetRowCount(int _count)
 {
 	if (_count < rowCountPerPage_)
 	{
@@ -440,11 +440,11 @@ void UIScrollBar::setRowCount(int _count)
 
 	rowCount_ = _count;
 	endPos_ = rowCount_ - rowCountPerPage_;
-	updateThumbSize();
-	updateThumbPosition();
+	UpdateThumbSize();
+	UpdateThumbPosition();
 }
 
-void UIScrollBar::setRowCountPerPage(int _count)
+void UIScrollBar::SetRowCountPerPage(int _count)
 {
 	if (_count <= 0)
 	{
@@ -460,8 +460,8 @@ void UIScrollBar::setRowCountPerPage(int _count)
 		pos_ = endPos_;
 	}
 
-	updateThumbSize();
-	updateThumbPosition();
+	UpdateThumbSize();
+	UpdateThumbPosition();
 }
 
 void UIScrollBar::SetUISize(const SGSize& _contentSize)
@@ -479,10 +479,10 @@ void UIScrollBar::SetUISize(const SGSize& _contentSize)
 		return;
 	}
 
-	for (int i = 0; i < TextureCount; ++i)
+	for (int i = 0; i < TEXTURE_COUNT; ++i)
 	{
-		FrameTexture* pTexture = textures_[i];
-		Sprite* pSprite = sprites_[i];
+		FrameTexture* pTexture = pTextures_[i];
+		Sprite* pSprite = pSprites_[i];
 
 		if (pTexture == nullptr || pSprite == nullptr)
 		{
@@ -490,77 +490,77 @@ void UIScrollBar::SetUISize(const SGSize& _contentSize)
 		}
 
 		// Scale9 스프이므로 updateThumbSize()에서 업데이트함
-		if (i == IndexThumbNormal || i == IndexThumbPressed)
+		if (i == INDEX_THUMB_NORMAL || i == INDEX_THUMB_PRESSED)
 		{
 			continue;
 		}
 
-		pSprite->setScaleX(uiSize_.width / textures_[i]->getWidthF());
+		pSprite->setScaleX(uiSize_.width / pTextures_[i]->GetWidthF());
 	}
 
-	sprites_[IndexTrack]->setScaleY(trackHeight_ / textures_[IndexTrack]->getHeightF());
+	pSprites_[INDEX_TRACK]->setScaleY(trackHeight_ / pTextures_[INDEX_TRACK]->GetHeightF());
 
-	updateTrackAndButtonPosition();
-	updateThumbSize();
-	updateThumbPosition();
+	UpdateTrackAndButtonPosition();
+	UpdateThumbSize();
+	UpdateThumbPosition();
 }
 
 void UIScrollBar::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 {
-	if (_pInfo->Type != UIElementType::ScrollBar)
+	if (_pInfo->type_ != UIElementType::ScrollBar)
 	{
-		LogWarnInvalidInfo(_pInfo->Type);
+		LogWarnInvalidInfo(_pInfo->type_);
 		return;
 	}
 
 	if (isInfoOwner_)
 	{
-		JCORE_DELETE_SAFE(info_);
+		JCORE_DELETE_SAFE(pInfo_);
 	}
 
 	pBaseInfo_ = _pInfo;
-	info_ = static_cast<UIScrollBarInfo*>(_pInfo);
+	pInfo_ = static_cast<UIScrollBarInfo*>(_pInfo);
 	isInfoOwner_ = _infoOwner;
 }
 
-void UIScrollBar::setInfoScrollBar(UIScrollBarInfo* _pInfo, bool _infoOwner)
+void UIScrollBar::SetInfoScrollBar(UIScrollBarInfo* _pInfo, bool _infoOwner)
 {
 	SetInfo(_pInfo, _infoOwner);
 }
 
-bool UIScrollBar::isUpButtonContainPoint(SGVec2 _pos)
+bool UIScrollBar::IsUpButtonContainPoint(SGVec2 _pos)
 {
-	if (sprites_[IndexUpNormal] == nullptr)
+	if (pSprites_[INDEX_UP_NORMAL] == nullptr)
 	{
 		return false;
 	}
 
-	const SGVec2 upButtonPos = sprites_[IndexUpNormal]->getPosition();
+	const SGVec2 upButtonPos = pSprites_[INDEX_UP_NORMAL]->getPosition();
 	const Rect upButtonBoundingBox = { _position + upButtonPos, SGSize{ uiSize_.width, upButtonHeight_ } };
 	return upButtonBoundingBox.containsPoint(_pos);
 }
 
-bool UIScrollBar::isDownButtonContainPoint(SGVec2 _pos)
+bool UIScrollBar::IsDownButtonContainPoint(SGVec2 _pos)
 {
-	if (sprites_[IndexDownNormal] == nullptr)
+	if (pSprites_[INDEX_DOWN_NORMAL] == nullptr)
 	{
 		return false;
 	}
 
-	const SGVec2 downButtonPos = sprites_[IndexDownNormal]->getPosition();
+	const SGVec2 downButtonPos = pSprites_[INDEX_DOWN_NORMAL]->getPosition();
 	const Rect downButtonBoundingBox = { _position + downButtonPos, SGSize{ uiSize_.width, downButtonHeight_ } };
 	return downButtonBoundingBox.containsPoint(_pos);
 }
 
-bool UIScrollBar::isThumbButtonContainPoint(SGVec2 _pos)
+bool UIScrollBar::IsThumbButtonContainPoint(SGVec2 _pos)
 {
-	if (sprites_[IndexThumbNormal] == nullptr)
+	if (pSprites_[INDEX_THUMB_NORMAL] == nullptr)
 	{
 		return false;
 	}
 
-	const SGVec2 thumbButtonPos = sprites_[IndexThumbNormal]->getPosition();
-	const Rect thumbButtonBoundingBox = { _position + thumbButtonPos, sprites_[IndexThumbNormal]->getContentSize() };
+	const SGVec2 thumbButtonPos = pSprites_[INDEX_THUMB_NORMAL]->getPosition();
+	const Rect thumbButtonBoundingBox = { _position + thumbButtonPos, pSprites_[INDEX_THUMB_NORMAL]->getContentSize() };
 	return thumbButtonBoundingBox.containsPoint(_pos);
 }
 
@@ -582,7 +582,7 @@ bool UIScrollBar::OnMouseMoveInternalDetail(SGEventMouse* _pMouseEvent)
 	const float thumbDragYPos = cursorPos.y - _position.y - downButtonHeight_;
 	const float dragDelta = dragStartYPos_ - thumbDragYPos;
 	const int posDelta = static_cast<int>(dragDelta / splitedTrackHeight_);
-	setRowPos(dragStartPos_ + posDelta);
+	SetRowPos(dragStartPos_ + posDelta);
 	return false;
 }
 
@@ -590,35 +590,35 @@ bool UIScrollBar::OnMouseDownInternalDetail(SGEventMouse* _pMouseEvent)
 {
 	const SGVec2 cursorPos = _pMouseEvent->getCursorPos();
 
-	const bool upButtonContained = isUpButtonContainPoint(cursorPos);
-	const bool downButtonContained = isDownButtonContainPoint(cursorPos);
-	const bool thumbButtonContained = isThumbButtonContainPoint(cursorPos);
+	const bool upButtonContained = IsUpButtonContainPoint(cursorPos);
+	const bool downButtonContained = IsDownButtonContainPoint(cursorPos);
+	const bool thumbButtonContained = IsThumbButtonContainPoint(cursorPos);
 
-	if (sprites_[IndexUpPressed])
+	if (pSprites_[INDEX_UP_PRESSED])
 	{
-		sprites_[IndexUpPressed]->setVisible(upButtonContained);
+		pSprites_[INDEX_UP_PRESSED]->setVisible(upButtonContained);
 	}
-	if (sprites_[IndexUpNormal])
+	if (pSprites_[INDEX_UP_NORMAL])
 	{
-		sprites_[IndexUpNormal]->setVisible(!upButtonContained);
-	}
-
-	if (sprites_[IndexDownPressed])
-	{
-		sprites_[IndexDownPressed]->setVisible(downButtonContained);
-	}
-	if (sprites_[IndexDownNormal])
-	{
-		sprites_[IndexDownNormal]->setVisible(!downButtonContained);
+		pSprites_[INDEX_UP_NORMAL]->setVisible(!upButtonContained);
 	}
 
-	if (sprites_[IndexThumbPressed])
+	if (pSprites_[INDEX_DOWN_PRESSED])
 	{
-		sprites_[IndexThumbPressed]->setVisible(thumbButtonContained);
+		pSprites_[INDEX_DOWN_PRESSED]->setVisible(downButtonContained);
 	}
-	if (sprites_[IndexThumbNormal])
+	if (pSprites_[INDEX_DOWN_NORMAL])
 	{
-		sprites_[IndexThumbNormal]->setVisible(!thumbButtonContained);
+		pSprites_[INDEX_DOWN_NORMAL]->setVisible(!downButtonContained);
+	}
+
+	if (pSprites_[INDEX_THUMB_PRESSED])
+	{
+		pSprites_[INDEX_THUMB_PRESSED]->setVisible(thumbButtonContained);
+	}
+	if (pSprites_[INDEX_THUMB_NORMAL])
+	{
+		pSprites_[INDEX_THUMB_NORMAL]->setVisible(!thumbButtonContained);
 	}
 
 	dragBegin_ = thumbButtonContained;
@@ -629,7 +629,7 @@ bool UIScrollBar::OnMouseDownInternalDetail(SGEventMouse* _pMouseEvent)
 
 void UIScrollBar::OnMouseUpInternalDetail(SGEventMouse* /*_pMouseEvent*/)
 {
-	setVisibleStateNormal();
+	SetVisibleStateNormal();
 	dragBegin_ = false;
 }
 
@@ -637,21 +637,21 @@ bool UIScrollBar::OnMouseUpContainedInternalDetail(SGEventMouse* _pMouseEvent)
 {
 	const SGVec2 cursorPos = _pMouseEvent->getCursorPos();
 
-	if (isUpButtonContainPoint(cursorPos))
+	if (IsUpButtonContainPoint(cursorPos))
 	{
-		setRowPos(pos_ - 1);
+		SetRowPos(pos_ - 1);
 		pRootGroup_->OnScrollBarUpButtonPressed(this, pos_);
 		return false;
 	}
 
-	if (isDownButtonContainPoint(cursorPos))
+	if (IsDownButtonContainPoint(cursorPos))
 	{
-		setRowPos(pos_ + 1);
+		SetRowPos(pos_ + 1);
 		pRootGroup_->OnScrollBarDownButtonPressed(this, pos_);
 		return false;
 	}
 
-	if (isThumbButtonContainPoint(cursorPos))
+	if (IsThumbButtonContainPoint(cursorPos))
 	{
 		pRootGroup_->OnScrollBarThumbButtonPressed(this, pos_);
 		return false;
@@ -664,11 +664,11 @@ bool UIScrollBar::OnMouseScrollInternalDetail(SGEventMouse* _pMouseEvent)
 {
 	if (_pMouseEvent->getScrollY() < 0)
 	{
-		setRowPos(pos_ - 1);
+		SetRowPos(pos_ - 1);
 	}
 	else
 	{
-		setRowPos(pos_ + 1);
+		SetRowPos(pos_ + 1);
 	}
 
 	return true;

@@ -28,43 +28,43 @@ void FallDownActivity_Goblin::OnActivityBegin()
 	Monster* pMonster = dynamic_cast<Monster*>(pActor_);
 	DebugAssert(pMonster);
 
-	const MonsterStatInfo* pStatInfo = pMonster->getStatInfo();
-	PhysicsComponent* pPhysicsComponent = pMonster->getComponent<PhysicsComponent>();
+	const MonsterStatInfo* pStatInfo = pMonster->GetStatInfo();
+	PhysicsComponent* pPhysicsComponent = pMonster->GetComponent<PhysicsComponent>();
 
-	pMonster->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_BEGIN);
+	pMonster->RunAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_BEGIN);
 	elapsedDownTime_ = 0.0f;
 	downRecoverTime_ = pStatInfo ? pStatInfo->downRecoverTime_ / 2 : 1.0f;
 	bounced_ = false;
 	down_ = false;
 
 	if (pPhysicsComponent)
-		pPhysicsComponent->enableElasticity();
+		pPhysicsComponent->EnableElasticity();
 }
 
 void FallDownActivity_Goblin::OnActivityEnd()
 {
-	PhysicsComponent* pPhysicsComponent = pActor_->getComponent<PhysicsComponent>();
+	PhysicsComponent* pPhysicsComponent = pActor_->GetComponent<PhysicsComponent>();
 
 	if (pPhysicsComponent)
-		pPhysicsComponent->disableElasticity();
+		pPhysicsComponent->DisableElasticity();
 }
 
 void FallDownActivity_Goblin::OnUpdate(float _dt)
 {
-	PhysicsComponent* pPhysicsComponent = pActor_->getComponent<PhysicsComponent>();
+	PhysicsComponent* pPhysicsComponent = pActor_->GetComponent<PhysicsComponent>();
 
 	// Step 1. 바닥에 충돌해서 공중으로 튀어올랐는지 확인
-	if (pPhysicsComponent && pPhysicsComponent->isBounced() && !bounced_)
+	if (pPhysicsComponent && pPhysicsComponent->IsBounced() && !bounced_)
 	{
 		bounced_ = true;
-		pActor_->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_BOUNCE);
+		pActor_->RunAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_BOUNCE);
 		return;
 	}
 
 	// Step 2. 공중으로 튀어올랐다가 다시 바닥에 닿았는지 확인
-	if (!down_ && bounced_ && pActor_->isOnTheGround())
+	if (!down_ && bounced_ && pActor_->IsOnTheGround())
 	{
-		pActor_->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_END);
+		pActor_->RunAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_END);
 		down_ = true;
 		return;
 	}
@@ -83,9 +83,9 @@ void FallDownActivity_Goblin::OnUpdate(float _dt)
 
 	if (elapsedDownTime_ >= downRecoverTime_)
 	{
-		AIComponent* pAIComponent = pActor_->getComponent<AIComponent>();
+		AIComponent* pAIComponent = pActor_->GetComponent<AIComponent>();
 
 		if (pAIComponent)
-			pAIComponent->runActivity(AIActivityType::Sit);
+			pAIComponent->RunActivity(AIActivityType::Sit);
 	}
 }

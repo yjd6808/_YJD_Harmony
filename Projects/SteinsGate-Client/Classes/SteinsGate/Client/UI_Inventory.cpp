@@ -18,12 +18,12 @@ USING_NS_JC;
 //////////////////////////////////////////////////////////////////////////////////////////
 UI_Inventory::UI_Inventory(UIGroupInfo* _pGroupInfo)
 : UIRootGroup(_pGroupInfo)
-, background_(nullptr)
-, scrollBar_(nullptr)
-, invenSlotGroup_(nullptr)
-, invenSlotSprites_{}
-, equipSlotGroup_(nullptr)
-, equipSlotStatics_{}
+, pBackground_(nullptr)
+, pScrollBar_(nullptr)
+, pInvenSlotGroup_(nullptr)
+, pInvenSlotSprites_{}
+, pEquipSlotGroup_(nullptr)
+, pEquipSlotStatics_{}
 , curTab_(InvenItemType::Equip)
 {
 }
@@ -31,54 +31,54 @@ UI_Inventory::UI_Inventory(UIGroupInfo* _pGroupInfo)
 //////////////////////////////////////////////////////////////////////////////////////////
 void UI_Inventory::OnInit()
 {
-	invenSlotGroup_ = Core::Contents.UIManager->getGroup(UI_INVENTORY_GROUP_INVEN_SLOTS);
+	pInvenSlotGroup_ = Core::Contents.UIManager->GetGroup(UI_INVENTORY_GROUP_INVEN_SLOTS);
 
 	for (int i = 0; i < MAX_INVEN_SLOT_COUNT; ++i)
 	{
-		invenSlotSprites_[i] = Core::Contents.UIManager->getSprite(UI_INVENTORY_INVEN_SLOTS_SPRITE_SLOT10 + i);
-		invenSlotSprites_[i]->setVisible(false);
+		pInvenSlotSprites_[i] = Core::Contents.UIManager->GetSprite(UI_INVENTORY_INVEN_SLOTS_SPRITE_SLOT10 + i);
+		pInvenSlotSprites_[i]->setVisible(false);
 	}
 
-	equipSlotGroup_ = Core::Contents.UIManager->getGroup(UI_INVENTORY_GROUP_EQUIP_SLOTS);
+	pEquipSlotGroup_ = Core::Contents.UIManager->GetGroup(UI_INVENTORY_GROUP_EQUIP_SLOTS);
 
 	for (int i = 0; i < ItemType::MaxInvenEquip; ++i)
 	{
-		equipSlotStatics_[i] = Core::Contents.UIManager->getStatic(UI_INVENTORY_EQUIP_SLOTS_STATIC_SHOULDER + i);
-		equipSlotStatics_[i]->setVisible(false);
+		pEquipSlotStatics_[i] = Core::Contents.UIManager->GetStatic(UI_INVENTORY_EQUIP_SLOTS_STATIC_SHOULDER + i);
+		pEquipSlotStatics_[i]->setVisible(false);
 	}
 
-	background_ = Core::Contents.UIManager->getSprite(UI_INVENTORY_SPRITE_BACKGROUND);
-	scrollBar_ = Core::Contents.UIManager->getScrollBar(UI_INVENTORY_SCROLLBAR);
+	pBackground_ = Core::Contents.UIManager->GetSprite(UI_INVENTORY_SPRITE_BACKGROUND);
+	pScrollBar_ = Core::Contents.UIManager->GetScrollBar(UI_INVENTORY_SCROLLBAR);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void UI_Inventory::OnLoaded()
 {
-	scrollBar_->setRowCount(INVEN_ROW_COUNT);
-	scrollBar_->setRowCountPerPage(INVEN_ROW_COUNT);
-	scrollBar_->setLinkElement(invenSlotGroup_);
+	pScrollBar_->SetRowCount(INVEN_ROW_COUNT);
+	pScrollBar_->SetRowCountPerPage(INVEN_ROW_COUNT);
+	pScrollBar_->SetLinkElement(pInvenSlotGroup_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void UI_Inventory::OnAdded()
 {
-	const int rowCount = Core::Contents.Inven->getAvailableSlotCount(curTab_) / INVEN_ITEM_COUNT_PER_ROW;
-	scrollBar_->setRowCount(rowCount);
+	const int rowCount = Core::Contents.Inven->GetAvailableSlotCount(curTab_) / INVEN_ITEM_COUNT_PER_ROW;
+	pScrollBar_->SetRowCount(rowCount);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UI_Inventory::onUpdate(float _dt)
+void UI_Inventory::OnUpdate(float _dt)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UI_Inventory::onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
+bool UI_Inventory::OnKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
 {
 	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UI_Inventory::onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
+bool UI_Inventory::OnKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
 {
 	return true;
 }

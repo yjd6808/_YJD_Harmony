@@ -15,36 +15,36 @@ class Character;
 class GunnerJump : public GunnerAction
 {
 public:
-	GunnerJump(HostPlayer* player, ActionInfo* actionInfo);
+	GunnerJump(HostPlayer* _pPlayer, ActionInfo* _pActionInfo);
 
-	void onUpdate(float dt) override;
-	void onActionBegin() override;
-	void onAnimationBegin(ActorPartAnimation* animation, FrameTexture* frame) override;
-	void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* frame) override;
-	void onFrameBegin(ActorPartAnimation* animation, FrameTexture* frame) override;
-	void onFrameEnd(ActorPartAnimation* animation, FrameTexture* frame) override;
-	void onKeyPressed(PlayerController* controller, SGEventKeyboard::KeyCode keyCode) override;
+	void OnUpdate(float _dt) override;
+	void OnActionBegin() override;
+	void OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
+	void OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
+	void OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
+	void OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
+	void OnKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode) override;
 
-	void updateJumpUp(Character* character, float dt);
-	void updateJumpDown(Character* character, float dt);
+	void UpdateJumpUp(Character* _pChar, float _dt);
+	void UpdateJumpDown(Character* _pChar, float _dt);
 
-	bool shot(Character* character);
+	bool Shot(Character* _pChar);
 
-	void reboundXLeft(Character* character);
-	void reboundXRight(Character* character);
-	void reboundX(Character* character);
-	void reboundY(Character* character);
-	void createBullet();
+	void ReboundXLeft(Character* _pChar);
+	void ReboundXRight(Character* _pChar);
+	void ReboundX(Character* _pChar);
+	void ReboundY(Character* _pChar);
+	void CreateBullet();
 
 private:
-	bool m_bJumpUpbegin{};
-	bool m_bJumpDownBegin{};
-	bool m_bCanFire{};
-	bool m_bFireMode{};
-	bool m_bWaitForFire{};
-	bool m_bRightFire{};
+	bool isJumpUpBegin_{};
+	bool isJumpDownBegin_{};
+	bool isFireable_{};
+	bool isFireMoveable_{};
+	bool isWaitingForFire_{};
+	bool isRightFire_{};
 
-	int m_iChargedShotCount{};
-	int m_iShotCount{};
-	int m_iMaxShotCount{};
+	int chargedShotCount_{};
+	int shotCount_{};
+	int maxShotCount_{};
 };

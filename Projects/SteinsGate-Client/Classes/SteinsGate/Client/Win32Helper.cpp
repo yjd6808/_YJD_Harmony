@@ -22,19 +22,19 @@ void Win32Helper::LazyInit()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-SGVec2 Win32Helper::getWindowPos()
+SGVec2 Win32Helper::GetWindowPos()
 {
 	RECT rect;
-	GetWindowRect(ViewHandle, &rect);
+	::GetWindowRect(ViewHandle, &rect);
 	const SGSize monitorSize = GetMonitorSizeFromPoint({ rect.left, rect.bottom });
 	return { (float)rect.left, monitorSize.height - rect.bottom };
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-SGRect Win32Helper::getWindowRect()
+SGRect Win32Helper::GetWindowRect()
 {
 	RECT rect;
-	GetWindowRect(ViewHandle, &rect);
+	::GetWindowRect(ViewHandle, &rect);
 	const SGSize monitorSize = GetMonitorSizeFromPoint({ rect.left, rect.bottom });
 	return {
 		(float)rect.left, monitorSize.height - rect.bottom, (float)rect.right - rect.left, (float)rect.bottom - rect.top
@@ -42,10 +42,10 @@ SGRect Win32Helper::getWindowRect()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-SGVec2 Win32Helper::getCursorPos()
+SGVec2 Win32Helper::GetCursorPos()
 {
 	POINT cursorPos;
-	GetCursorPos(&cursorPos);
+	::GetCursorPos(&cursorPos);
 	const SGSize monitorSize = GetMonitorSizeFromPoint(cursorPos);
 	return { (float)cursorPos.x, monitorSize.height - cursorPos.y };
 }

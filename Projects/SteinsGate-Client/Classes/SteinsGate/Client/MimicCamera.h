@@ -17,13 +17,13 @@ class MimicCamera : public SGNode
 public:
 	MimicCamera();
 
-	static MimicCamera* create();
+	static MimicCamera* Create();
 
-	void setFollowTarget(Actor* _pTarget);
-	void updateView(float _dt);
+	void SetFollowTarget(Actor* _pTarget);
+	void UpdateView(float _dt);
 	void update(float _dt) override;
 
 private:
-	Actor* target_;
-	MapLayer* mapLayer_;
+	Actor* pTarget_;
+	MapLayer* pMapLayer_;
 };

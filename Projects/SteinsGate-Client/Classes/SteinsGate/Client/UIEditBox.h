@@ -12,35 +12,35 @@
 class UIEditBox : public UIElement
 {
 public:
-	UIEditBox(UIRootGroup* _pMaster, UIGroup* _pParent);
-	UIEditBox(UIRootGroup* _pMaster, UIGroup* _pParent, UIEditBoxInfo* _pEditBoxInfo, bool _infoOwner);
+	UIEditBox(UIRootGroup* _pRoot, UIGroup* _pParent);
+	UIEditBox(UIRootGroup* _pRoot, UIGroup* _pParent, UIEditBoxInfo* _pEditBoxInfo, bool _infoOwner);
 	~UIEditBox() override;
 
-	static UIEditBox* create(UIRootGroup* _pMaster, UIGroup* _pParent);
-	static UIEditBox* create(UIRootGroup* _pMaster, UIGroup* _pParent, UIEditBoxInfo* _pEditBoxInfo, bool _infoOwner);
+	static UIEditBox* Create(UIRootGroup* _pRoot, UIGroup* _pParent);
+	static UIEditBox* Create(UIRootGroup* _pRoot, UIGroup* _pParent, UIEditBoxInfo* _pEditBoxInfo, bool _infoOwner);
 
-	static constexpr UIElementType_t type() { return UIElementType::EditBox; }
+	static constexpr UIElementType_t Type() { return UIElementType::EditBox; }
 
 	bool init() override;
 	UIElementType_t GetElementType() override { return UIElementType::EditBox; }
-	std::string getText();
-	const char* getTextRaw();
-	SGEditBox* source() const { return m_pEditBox; }
-	SGString ToString() override { return SGStringUtil::Format("에딧박스(%d)", m_pInfo->code_); }
+	std::string GetText();
+	const char* GetTextRaw();
+	SGEditBox* Source() const { return pEditBox_; }
+	SGString ToString() override { return SGStringUtil::Format("에딧박스(%d)", pInfo_->code_); }
 
 	void SetInitialUISize(SGSize _size) override;
-	void setMaxLength(int _maxLength);
-	void setTextEditBeginCallback(const SGActionFn<UIEditBox*>& _fnTextEditBegin) const;
-	void setTextChangedCallback(const SGActionFn<UIEditBox*, const SGString&>& _fnTextChanged) const;
-	void setReturnCallback(const SGActionFn<UIEditBox*>& _fnEditBoxReturn) const;
-	void setLoseFocusCallback(const SGActionFn<UIEditBox*, SGEditBoxEndAction>& _fnLoseFocus) const;
+	void SetMaxLength(int _maxLength);
+	void SetTextEditBeginCallback(const SGActionFn<UIEditBox*>& _fnTextEditBegin) const;
+	void SetTextChangedCallback(const SGActionFn<UIEditBox*, const SGString&>& _fnTextChanged) const;
+	void SetReturnCallback(const SGActionFn<UIEditBox*>& _fnEditBoxReturn) const;
+	void SetLoseFocusCallback(const SGActionFn<UIEditBox*, SGEditBoxEndAction>& _fnLoseFocus) const;
 	void SetUISize(const SGSize& _size) override;
 	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
-	void setInfoEditBox(UIEditBoxInfo* _pInfo, bool _infoOwner);
+	void SetInfoEditBox(UIEditBoxInfo* _pInfo, bool _infoOwner);
 
 	void Focus() override;
-	void setInputFlag(SGEditBox::InputFlag _inputFlag);
-	void setInputMode(SGEditBox::InputMode _inputMode);
+	void SetInputFlag(SGEditBox::InputFlag _inputFlag);
+	void SetInputMode(SGEditBox::InputMode _inputMode);
 	// ANY 모드에서는 VK_RETURN이 안먹히므로 오류라고 생각하지 말것
 protected:
 	bool OnMouseUpContainedInternalDetail(SGEventMouse* /*_pMouseEvent*/) override;
@@ -49,7 +49,7 @@ private:
 	struct Listener : cocos2d::ui::EditBoxDelegate
 	{
 		Listener(UIEditBox* _pEditBox)
-		: EditBox(_pEditBox)
+		: pEditBox_(_pEditBox)
 		{
 		}
 
@@ -84,25 +84,25 @@ private:
 		 */
 		void editBoxEditingDidEndWithAction(SGEditBox* /*editBox*/, EditBoxEndAction /*action*/) override;
 
-		SGActionFn<UIEditBox*> FnEditBoxEditingDidBegin;
-		SGActionFn<UIEditBox*, const SGString&> FnEditBoxTextChanged;
-		SGActionFn<UIEditBox*> FnEditBoxReturn;
-		SGActionFn<UIEditBox*, SGEditBoxEndAction> FnEditBoxEditingDidEndWithAction;
-		UIEditBox* EditBox;
+		SGActionFn<UIEditBox*> fnEditBoxEditingDidBegin_;
+		SGActionFn<UIEditBox*, const SGString&> fnEditBoxTextChanged_;
+		SGActionFn<UIEditBox*> fnEditBoxReturn_;
+		SGActionFn<UIEditBox*, SGEditBoxEndAction> fnEditBoxEditingDidEndWithAction_;
+		UIEditBox* pEditBox_;
 	};
 
 private:
-	bool m_bFontAutoScaling;
-	float m_fFontSizeInitial;
-	float m_fFontSize;
-	float m_fPlaceholderFontSizeInitial;
-	float m_fPlaceholderFontSize;
+	bool isFontAutoScaling_;
+	float fontSizeInitial_;
+	float fontSize_;
+	float placeholderFontSizeInitial_;
+	float placeholderFontSize_;
 
-	HWND m_hNativeHandle{};
-	UIEditBoxInfo* m_pInfo;
-	SGLabel* m_pLabel{};
-	SGLabel* m_pLabelPlaceholder{};
-	SGEditBoxImplWin* m_pEditBoxImpl{};
-	SGEditBox* m_pEditBox;
-	Listener* m_pListener;
+	HWND nativeHandle_{};
+	UIEditBoxInfo* pInfo_;
+	SGLabel* pLabel_{};
+	SGLabel* pLabelPlaceHolder_{};
+	SGEditBoxImplWin* pEditBoxImpl_{};
+	SGEditBox* pEditBox_;
+	Listener* pListener_;
 };

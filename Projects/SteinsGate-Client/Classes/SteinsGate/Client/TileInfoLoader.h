@@ -23,5 +23,5 @@ public:
 		return ConfigFileType::Tile;
 	}
 
-	static void readTileInfo(Json::Value& _tileRoot, JCORE_OUT TileInfo* _pTileInfo);
+	static void ReadTileInfo(Json::Value& _tileRoot, JCORE_OUT TileInfo* _pTileInfo);
 };

@@ -18,8 +18,8 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////
 HostPlayer::HostPlayer()
-: actionManager_(nullptr)
-, controller_(nullptr)
+: pActionManager_(nullptr)
+, pController_(nullptr)
 {
 }
 
@@ -27,70 +27,70 @@ HostPlayer::HostPlayer()
 HostPlayer::~HostPlayer()
 {
 	// 삭제
-	CC_SAFE_DELETE(controller_);
-	CC_SAFE_DELETE(actionManager_);
+	CC_SAFE_DELETE(pController_);
+	CC_SAFE_DELETE(pActionManager_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::initialize()
+void HostPlayer::Initialize()
 {
 	playerData_.CharType = CharType::Gunner;
-	m_VisualInfo = Core::Contents.Inven->getVisualInfo(playerData_.CharType);
-	m_pBaseInfo = Core::DataManager->getCharInfo(playerData_.CharType);
+	m_VisualInfo = Core::Contents.Inven->GetVisualInfo(playerData_.CharType);
+	m_pBaseInfo = Core::DataManager->GetCharInfo(playerData_.CharType);
 
-	Player::initialize();
-	initActionManager();
-	initController();
+	Player::Initialize();
+	InitActionManager();
+	InitController();
 
-	actionManager_->runBaseAction(BaseAction::Idle);
+	pActionManager_->RunBaseAction(BaseAction::Idle);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::initActionManager()
+void HostPlayer::InitActionManager()
 {
-	CC_SAFE_DELETE(actionManager_);
+	CC_SAFE_DELETE(pActionManager_);
 
-	actionManager_ = dbg_new ActionMgr(this);
-	actionManager_->init(m_pBaseInfo->code_);
+	pActionManager_ = dbg_new ActionMgr(this);
+	pActionManager_->Init(m_pBaseInfo->code_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::initController()
+void HostPlayer::InitController()
 {
-	CC_SAFE_DELETE(controller_);
-	DebugAssertMsg(actionManager_, "이 함수를 호출전에 액션 매니저 세팅을 먼저 해주세요.");
-	controller_ = dbg_new PlayerController(this, actionManager_);
+	CC_SAFE_DELETE(pController_);
+	DebugAssertMsg(pActionManager_, "이 함수를 호출전에 액션 매니저 세팅을 먼저 해주세요.");
+	pController_ = dbg_new PlayerController(this, pActionManager_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::initListeners()
+void HostPlayer::InitListeners()
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::hit(const HitInfo& _hitInfo)
+void HostPlayer::Hit(const HitInfo& _hitInfo)
 {
-	Player::hit(_hitInfo);
+	Player::Hit(_hitInfo);
 
-	if (_hitInfo.AttackDataInfo->isFallDownAttack_)
+	if (_hitInfo.pAttackDataInfo_->isFallDownAttack_)
 	{
-		playBaseActionForce(BaseAction::FallDown);
+		PlayBaseActionForce(BaseAction::FallDown);
 		return;
 	}
 
-	playBaseActionForce(BaseAction::Hit);
+	PlayBaseActionForce(BaseAction::Hit);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::removeActionManager()
+void HostPlayer::RemoveActionManager()
 {
-	JCORE_DELETE_SAFE(actionManager_);
+	JCORE_DELETE_SAFE(pActionManager_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::removeController()
+void HostPlayer::RemoveController()
 {
-	JCORE_DELETE_SAFE(controller_);
+	JCORE_DELETE_SAFE(pController_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -98,110 +98,110 @@ void HostPlayer::update(float _dt)
 {
 	Player::update(_dt);
 
-	if (controller_)
-		controller_->update(_dt);
+	if (pController_)
+		pController_->Update(_dt);
 
-	if (actionManager_)
-		actionManager_->update(_dt);
+	if (pActionManager_)
+		pActionManager_->Update(_dt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::onKeyPressed(SGEventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent)
+void HostPlayer::OnKeyPressed(SGEventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent)
 {
-	if (controller_)
-		controller_->onKeyPressed(_keyCode, _pEvent);
+	if (pController_)
+		pController_->OnKeyPressed(_keyCode, _pEvent);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::onKeyReleased(SGEventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent)
+void HostPlayer::OnKeyReleased(SGEventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent)
 {
-	if (controller_)
-		controller_->onKeyReleased(_keyCode, _pEvent);
+	if (pController_)
+		pController_->OnKeyReleased(_keyCode, _pEvent);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+void HostPlayer::OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
-	Player::onFrameBegin(_pAnimation, _pTexture);
+	Player::OnFrameBegin(_pAnimation, _pTexture);
 
-	if (actionManager_)
-		actionManager_->onFrameBegin(_pAnimation, _pTexture);
+	if (pActionManager_)
+		pActionManager_->OnFrameBegin(_pAnimation, _pTexture);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+void HostPlayer::OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
-	Player::onFrameEnd(_pAnimation, _pTexture);
+	Player::OnFrameEnd(_pAnimation, _pTexture);
 
-	if (actionManager_)
-		actionManager_->onFrameEnd(_pAnimation, _pTexture);
+	if (pActionManager_)
+		pActionManager_->OnFrameEnd(_pAnimation, _pTexture);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+void HostPlayer::OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
-	Player::onAnimationBegin(_pAnimation, _pTexture);
+	Player::OnAnimationBegin(_pAnimation, _pTexture);
 
-	if (actionManager_)
-		actionManager_->onAnimationBegin(_pAnimation, _pTexture);
+	if (pActionManager_)
+		pActionManager_->OnAnimationBegin(_pAnimation, _pTexture);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+void HostPlayer::OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
-	Player::onAnimationEnd(_pAnimation, _pTexture);
+	Player::OnAnimationEnd(_pAnimation, _pTexture);
 
-	if (actionManager_)
-		actionManager_->onAnimationEnd(_pAnimation, _pTexture);
+	if (pActionManager_)
+		pActionManager_->OnAnimationEnd(_pAnimation, _pTexture);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::playAction(int _actionCode)
+void HostPlayer::PlayAction(int _actionCode)
 {
-	actionManager_->runAction(_actionCode);
+	pActionManager_->RunAction(_actionCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::playActionForce(int _actionCode)
+void HostPlayer::PlayActionForce(int _actionCode)
 {
-	actionManager_->stopActionForce();
-	actionManager_->runAction(_actionCode);
+	pActionManager_->StopActionForce();
+	pActionManager_->RunAction(_actionCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::playBaseActionForce(BaseAction_t _baseActionType)
+void HostPlayer::PlayBaseActionForce(BaseAction_t _baseActionType)
 {
-	actionManager_->stopActionForce();
-	actionManager_->runBaseAction(_baseActionType);
+	pActionManager_->StopActionForce();
+	pActionManager_->RunBaseAction(_baseActionType);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::playBaseAction(BaseAction_t _baseAction)
+void HostPlayer::PlayBaseAction(BaseAction_t _baseAction)
 {
-	actionManager_->runBaseAction(_baseAction);
+	pActionManager_->RunBaseAction(_baseAction);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int HostPlayer::getRunningActionCode()
+int HostPlayer::GetRunningActionCode()
 {
-	SGAction* pAction = actionManager_->getRunningAction();
+	SGAction* pAction = pActionManager_->GetRunningAction();
 	if (pAction == nullptr)
 		return InvalidValue_v;
-	return pAction->getActionCode();
+	return pAction->GetActionCode();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ActionMgr* HostPlayer::actionManager()
+ActionMgr* HostPlayer::GetActionManager()
 {
-	DebugAssertMsg(actionManager_, "액션 매니저가 세팅되지 않았습니다.");
-	return actionManager_;
+	DebugAssertMsg(pActionManager_, "액션 매니저가 세팅되지 않았습니다.");
+	return pActionManager_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-PlayerController* HostPlayer::ctrl()
+PlayerController* HostPlayer::GetController()
 {
-	DebugAssertMsg(controller_, "플레이어 컨트롤러가 세팅되지 않았습니다.");
-	return controller_;
+	DebugAssertMsg(pController_, "플레이어 컨트롤러가 세팅되지 않았습니다.");
+	return pController_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

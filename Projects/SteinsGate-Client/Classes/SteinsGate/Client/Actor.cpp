@@ -22,36 +22,38 @@
 USING_NS_CC;
 USING_NS_JC;
 
+//////////////////////////////////////////////////////////////////////////////////////////
 Actor::Actor()
-: m_pMapLayer(nullptr)
-, m_pActorSprite(nullptr)
-, m_pHitRecorder(nullptr)
-, m_iActorId(InvalidValue_v)
-, m_iAllyFlag(0)
-, m_iCleanUpFlag(CF_None)
-, m_bCleanUp(false)
-, m_pThicknessBox(nullptr)
-, m_pAttacher(nullptr)
-, m_vAttches(4)
+: pMapLayer_(nullptr)
+, pActorSprite_(nullptr)
+, pHitRecorder_(nullptr)
+, actorId_(InvalidValue_v)
+, allyFlag_(0)
+, cleanUpFlag_(cfNone)
+, isCleanUp_(false)
+, pThicknessBox_(nullptr)
+, pAttacher_(nullptr)
+, attches_(4)
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 Actor::~Actor()
 {
-	JCORE_DELETE_SAFE(m_pHitRecorder);
-	m_Listeners.deleteAll();
+	JCORE_DELETE_SAFE(pHitRecorder_);
+	listeners_.DeleteAll();
 }
 
-
-bool Actor::initVariables()
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Actor::InitVariables()
 {
 	// 이거 2개만 초기화 시키면 댈듯?
-	m_iActorId = InvalidValue_v;
-	m_pMapLayer = nullptr;
-	m_vAttches.Clear();
-	m_pAttacher = nullptr;
-	m_bCleanUp = false;
-	m_iCleanUpFlag = CF_None;
+	actorId_ = InvalidValue_v;
+	pMapLayer_ = nullptr;
+	attches_.Clear();
+	pAttacher_ = nullptr;
+	isCleanUp_ = false;
+	cleanUpFlag_ = cfNone;
 
 	// m_eActorType = ;
 	// m_iCode = ;
@@ -64,315 +66,337 @@ bool Actor::initVariables()
 	return true;
 }
 
-bool Actor::addListener(IActorListener* _pListener)
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Actor::AddListener(IActorListener* _pListener)
 {
-	return m_Listeners.add(_pListener);
+	return listeners_.Add(_pListener);
 }
 
-bool Actor::hasListener(IActorListener::Type _type)
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Actor::HasListener(IActorListener::Type _type)
 {
-	return m_Listeners.has(_type);
+	return listeners_.Has(_type);
 }
 
-IActorListener* Actor::getListener(IActorListener::Type _type)
+//////////////////////////////////////////////////////////////////////////////////////////
+IActorListener* Actor::GetListener(IActorListener::Type _type)
 {
-	return m_Listeners.get(_type);
+	return listeners_.Get(_type);
 }
 
-void Actor::initThicknessBox(const ThicknessBox& _thicknessBox)
+//////////////////////////////////////////////////////////////////////////////////////////
+void Actor::InitThicknessBox(const ThicknessBox& _thicknessBox)
 {
 	// DrawNode는 앵커포인트 신경안쓰고 컨텐츠박스 기준 좌하단부터 그림
-	RectPoly poly = RectPoly::createFromLeftBottom(0, 0, _thicknessBox.Width, _thicknessBox.Height);
+	RectPoly poly = RectPoly::createFromLeftBottom(0, 0, _thicknessBox.width_, _thicknessBox.height_);
 
-	if (m_pThicknessBox == nullptr)
+	if (pThicknessBox_ == nullptr)
 	{
-		m_pThicknessBox = SGDrawNode::create();
-		m_pThicknessBox->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-		m_pThicknessBox->setOpacity(125);
-		m_pThicknessBox->drawPolygon(poly.source(), 4, {}, 1, SGColor4F{ ColorList::Brightgreen_v });
-		this->addChild(m_pThicknessBox);
+		pThicknessBox_ = SGDrawNode::create();
+		pThicknessBox_->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+		pThicknessBox_->setOpacity(125);
+		pThicknessBox_->drawPolygon(poly.source(), 4, {}, 1, SGColor4F{ ColorList::Brightgreen_v });
+		this->addChild(pThicknessBox_);
 	}
-	m_pThicknessBox->setPositionX(_thicknessBox.RelativeX);
-	m_pThicknessBox->setPositionY(_thicknessBox.RelativeY);
-	m_pThicknessBox->setContentSize(_thicknessBox.Width, _thicknessBox.Height);
+	pThicknessBox_->setPositionX(_thicknessBox.relativeX_);
+	pThicknessBox_->setPositionY(_thicknessBox.relativeY_);
+	pThicknessBox_->setContentSize(_thicknessBox.width_, _thicknessBox.height_);
 }
 
-void Actor::initHitRecorder(int _hitPossibleListSize /* = 16 */, int _alreadyHitMapSize /* = 32 */,
-                            Actor* _pOwner /*= nullptr */)
+//////////////////////////////////////////////////////////////////////////////////////////
+void Actor::InitHitRecorder(int _hitPossibleListSize /* = 16 */, int _alreadyHitMapSize /* = 32 */, Actor* _pOwner /*= nullptr */)
 {
 	Actor* pOwner = _pOwner;
 
 	if (pOwner == nullptr)
 		pOwner = this;
 
-	if (m_pHitRecorder == nullptr)
-		m_pHitRecorder = dbg_new HitRecorder(pOwner, this, _hitPossibleListSize, _alreadyHitMapSize);
+	if (pHitRecorder_ == nullptr)
+		pHitRecorder_ = dbg_new HitRecorder(pOwner, this, _hitPossibleListSize, _alreadyHitMapSize);
 }
 
-void Actor::hit(const HitInfo& _hitInfo)
+//////////////////////////////////////////////////////////////////////////////////////////
+void Actor::Hit(const HitInfo& _hitInfo)
 {
-	PhysicsComponent* pPhysicsComponent = getComponent<PhysicsComponent>();
+	PhysicsComponent* pPhysicsComponent = GetComponent<PhysicsComponent>();
 
 	if (pPhysicsComponent)
 	{
-		pPhysicsComponent->hit(_hitInfo);
+		pPhysicsComponent->Hit(_hitInfo);
 	}
 
-	getListenerCollection().onHit(_hitInfo);
+	GetListenerCollection().OnHit(_hitInfo);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void Actor::update(float _dt)
 {
-	DebugAssertMsg(m_bCleanUp == false, "다음 프레임에 풀로 복귀 예정중인 객체입니다.");
-	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
-	DebugAssertMsg(m_pMapLayer, "맵 레이어가 세팅되지 않았습니다.");
+	DebugAssertMsg(isCleanUp_ == false, "다음 프레임에 풀로 복귀 예정중인 객체입니다.");
+	DebugAssertMsg(pActorSprite_, "액터 스프라이트가 없습니다.");
+	DebugAssertMsg(pMapLayer_, "맵 레이어가 세팅되지 않았습니다.");
 
-	m_pActorSprite->update(_dt);
-	m_Listeners.onUpdate(_dt);
-	m_Components.onUpdate(_dt);
+	pActorSprite_->update(_dt);
+	listeners_.OnUpdate(_dt);
+	components_.OnUpdate(_dt);
 
 	if (Core::Contents.Global->DrawThicknessBox)
-		m_pThicknessBox->setOpacity(0);
+		pThicknessBox_->setOpacity(0);
 	else
-		m_pThicknessBox->setOpacity(125);
+		pThicknessBox_->setOpacity(125);
 }
 
-void Actor::addComponent(IComponent* _pComponenet)
+//////////////////////////////////////////////////////////////////////////////////////////
+void Actor::AddComponent(IComponent* _pComponenet)
 {
-	m_Components.add(_pComponenet);
+	components_.Add(_pComponenet);
 }
 
-bool Actor::hasComponent(IComponent::Type _type) const
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Actor::HasComponent(IComponent::Type _type) const
 {
-	return m_Components.has(_type);
+	return components_.Has(_type);
 }
 
-const char* Actor::getTypeName() const
+//////////////////////////////////////////////////////////////////////////////////////////
+const char* Actor::GetTypeName() const
 {
-	return ActorType::Name[getType()];
+	return ActorType::Name[GetType()];
 }
 
-ActorRect Actor::getActorRect() const
+//////////////////////////////////////////////////////////////////////////////////////////
+ActorRect Actor::GetActorRect() const
 {
-	return { getThicknessBoxRect(), getHitBox() };
+	return { GetThicknessBoxRect(), GetHitBox() };
 }
 
-ThicknessBox Actor::getThicknessBox() const
+//////////////////////////////////////////////////////////////////////////////////////////
+ThicknessBox Actor::GetThicknessBox() const
 {
-	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	DebugAssertMsg(pThicknessBox_, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 
-	SGVec2 pos = m_pThicknessBox->getPosition();
-	SGSize size = m_pThicknessBox->getContentSize();
+	SGVec2 pos = pThicknessBox_->getPosition();
+	SGSize size = pThicknessBox_->getContentSize();
 
 	return { pos.x, pos.y, size.width, size.height };
 }
 
-SGDrawNode* Actor::getThicknessBoxNode() const
+//////////////////////////////////////////////////////////////////////////////////////////
+SGDrawNode* Actor::GetThicknessBoxNode() const
 {
-	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	return m_pThicknessBox;
+	DebugAssertMsg(pThicknessBox_, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	return pThicknessBox_;
 }
 
-Rect Actor::getThicknessBoxRect() const
+//////////////////////////////////////////////////////////////////////////////////////////
+Rect Actor::GetThicknessBoxRect() const
 {
-	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	return { getPositionReal(), m_pThicknessBox->getContentSize() };
+	DebugAssertMsg(pThicknessBox_, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	return { GetPositionReal(), pThicknessBox_->getContentSize() };
 }
 
-SGVec2 Actor::getPositionReal() const
+//////////////////////////////////////////////////////////////////////////////////////////
+SGVec2 Actor::GetPositionReal() const
 {
-	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	ThicknessBox thicknessBox = getThicknessBox();
+	DebugAssertMsg(pThicknessBox_, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	ThicknessBox thicknessBox = GetThicknessBox();
 	Vec2 thicknessOrigin = getPosition();
-	thicknessOrigin.x += (thicknessBox.RelativeX - (thicknessBox.Width / 2.0f));
-	thicknessOrigin.y += (thicknessBox.RelativeY - (thicknessBox.Height / 2.0f));
+	thicknessOrigin.x += (thicknessBox.relativeX_ - (thicknessBox.width_ / 2.0f));
+	thicknessOrigin.y += (thicknessBox.relativeY_ - (thicknessBox.height_ / 2.0f));
 	return thicknessOrigin;
 }
 
-float Actor::getPositionRealX() const
+//////////////////////////////////////////////////////////////////////////////////////////
+float Actor::GetPositionRealX() const
 {
-	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	ThicknessBox thicknessBox = getThicknessBox();
+	DebugAssertMsg(pThicknessBox_, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	ThicknessBox thicknessBox = GetThicknessBox();
 	float thicknessOriginX = getPositionX();
-	thicknessOriginX += (thicknessBox.RelativeX - (thicknessBox.Width / 2.0f));
+	thicknessOriginX += (thicknessBox.relativeX_ - (thicknessBox.width_ / 2.0f));
 	return thicknessOriginX;
 }
 
-float Actor::getPositionRealY() const
+//////////////////////////////////////////////////////////////////////////////////////////
+float Actor::GetPositionRealY() const
 {
-	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	ThicknessBox thicknessBox = getThicknessBox();
+	DebugAssertMsg(pThicknessBox_, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	ThicknessBox thicknessBox = GetThicknessBox();
 	float thicknessOriginY = getPositionY();
-	thicknessOriginY += (thicknessBox.RelativeY - (thicknessBox.Height / 2.0f));
+	thicknessOriginY += (thicknessBox.relativeY_ - (thicknessBox.height_ / 2.0f));
 	return thicknessOriginY;
 }
 
-float Actor::getPositionActorY() const
+float Actor::GetPositionActorY() const
 {
-	return m_pActorSprite->getPositionY();
+	return pActorSprite_->getPositionY();
 }
 
-SGVec2 Actor::getPositionRealCenter() const
+//////////////////////////////////////////////////////////////////////////////////////////
+SGVec2 Actor::GetPositionRealCenter() const
 {
-	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	DebugAssertMsg(pThicknessBox_, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	Vec2 thisPos = getPosition();
-	thisPos.x += m_pThicknessBox->getPositionX();
-	thisPos.y += m_pThicknessBox->getPositionY();
+	thisPos.x += pThicknessBox_->getPositionX();
+	thisPos.y += pThicknessBox_->getPositionY();
 	return thisPos;
 }
 
-float Actor::getPositionRealCenterX() const
+//////////////////////////////////////////////////////////////////////////////////////////
+float Actor::GetPositionRealCenterX() const
 {
-	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	return getPositionX() + m_pThicknessBox->getPositionX();
+	DebugAssertMsg(pThicknessBox_, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	return getPositionX() + pThicknessBox_->getPositionX();
 }
 
-float Actor::getPositionRealCenterY() const
+//////////////////////////////////////////////////////////////////////////////////////////
+float Actor::GetPositionRealCenterY() const
 {
-	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	return getPositionY() + m_pThicknessBox->getPositionY();
+	DebugAssertMsg(pThicknessBox_, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	return getPositionY() + pThicknessBox_->getPositionY();
 }
 
-SGVec2 Actor::getCanvasPositionReal() const
+//////////////////////////////////////////////////////////////////////////////////////////
+SGVec2 Actor::GetCanvasPositionReal() const
 {
-	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
-	SGSize contentSize = m_pActorSprite->getBodyCanvas()->getContentSize();
-	SGVec2 canvasRealPos = this->getPosition() - (contentSize / 2) + m_pActorSprite->getPosition();
+	DebugAssertMsg(pActorSprite_, "액터 스프라이트가 없습니다.");
+	SGSize contentSize = pActorSprite_->GetBodyCanvas()->getContentSize();
+	SGVec2 canvasRealPos = this->getPosition() - (contentSize / 2) + pActorSprite_->getPosition();
 	return canvasRealPos;
 }
 
-SGSize Actor::getCanvasSize() const
+//////////////////////////////////////////////////////////////////////////////////////////
+SGSize Actor::GetCanvasSize() const
 {
-	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
-	return m_pActorSprite->getBodyCanvasSize();
+	DebugAssertMsg(pActorSprite_, "액터 스프라이트가 없습니다.");
+	return pActorSprite_->GetBodyCanvasSize();
 }
 
-SGRect Actor::getHitBox() const
+//////////////////////////////////////////////////////////////////////////////////////////
+SGRect Actor::GetHitBox() const
 {
-	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	DebugAssertMsg(pActorSprite_, "액터 스프라이트가 없습니다.");
 	// 위치: 캔버스 좌하단 절대 좌표 + 캔버스 좌하단 기준 스킨 파츠 좌표
 	//      캔버스 좌하단 절대 좌표 = 플레이어 Cocos 위치  + 캐릭터 위치 - (캔버스 사이즈 / 2)
-	Vec2 canvasPosition = getCanvasPositionReal();
-	Vec2 skinPartPos = m_pActorSprite->getBodyPartPosition(); // 캔버스 좌하단 기준 스킨 파츠 좌표
-	Rect hitBox{ getCanvasPositionReal() + skinPartPos, m_pActorSprite->getBodyPartSize() };
+	Vec2 canvasPosition = GetCanvasPositionReal();
+	Vec2 skinPartPos = pActorSprite_->GetBodyPartPosition(); // 캔버스 좌하단 기준 스킨 파츠 좌표
+	Rect hitBox{ GetCanvasPositionReal() + skinPartPos, pActorSprite_->GetBodyPartSize() };
 	return hitBox;
 }
 
-ActorSprite* Actor::getActorSprite() const
+ActorSprite* Actor::GetActorSprite() const
 {
-	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 초기화되지 않았습니다.");
-	return m_pActorSprite;
+	DebugAssertMsg(pActorSprite_, "액터 스프라이트가 초기화되지 않았습니다.");
+	return pActorSprite_;
 }
 
-SpriteDirection_t Actor::getSpriteDirection() const
+SpriteDirection_t Actor::GetSpriteDirection() const
 {
-	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 초기화되지 않았습니다.");
-	return m_pActorSprite->getSpriteDirection();
+	DebugAssertMsg(pActorSprite_, "액터 스프라이트가 초기화되지 않았습니다.");
+	return pActorSprite_->GetSpriteDirection();
 }
 
-int Actor::getRunningAnimationCode()
+int Actor::GetRunningAnimationCode()
 {
-	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 초기화되지 않았습니다.");
-	return m_pActorSprite->getRunningAnimationCode();
+	DebugAssertMsg(pActorSprite_, "액터 스프라이트가 초기화되지 않았습니다.");
+	return pActorSprite_->GetRunningAnimationCode();
 }
 
-ActorPartAnimation* Actor::getRunningAnimation()
+ActorPartAnimation* Actor::GetRunningAnimation()
 {
-	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 초기화되지 않았습니다.");
-	return m_pActorSprite->getRunningAnimation();
+	DebugAssertMsg(pActorSprite_, "액터 스프라이트가 초기화되지 않았습니다.");
+	return pActorSprite_->GetRunningAnimation();
 }
 
-void Actor::setPositionReal(float _x, float _y)
+void Actor::SetPositionReal(float _x, float _y)
 {
-	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	ThicknessBox thicknessBox = getThicknessBox();
+	DebugAssertMsg(pThicknessBox_, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	ThicknessBox thicknessBox = GetThicknessBox();
 
-	_x -= thicknessBox.RelativeX;
-	_y -= thicknessBox.RelativeY;
+	_x -= thicknessBox.relativeX_;
+	_y -= thicknessBox.relativeY_;
 
-	_x += thicknessBox.Width / 2.0f;
-	_y += thicknessBox.Height / 2.0f;
+	_x += thicknessBox.width_ / 2.0f;
+	_y += thicknessBox.height_ / 2.0f;
 
 	setPosition(_x, _y);
 }
 
-void Actor::setPositionReal(const SGVec2& _v)
+void Actor::SetPositionReal(const SGVec2& _v)
 {
-	setPositionReal(_v.x, _v.y);
+	SetPositionReal(_v.x, _v.y);
 }
 
-void Actor::setPositionRealX(float _x)
+void Actor::SetPositionRealX(float _x)
 {
-	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	ThicknessBox thicknessBox = getThicknessBox();
-	_x -= thicknessBox.RelativeX;
-	_x += thicknessBox.Width / 2.0f;
+	DebugAssertMsg(pThicknessBox_, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	ThicknessBox thicknessBox = GetThicknessBox();
+	_x -= thicknessBox.relativeX_;
+	_x += thicknessBox.width_ / 2.0f;
 	setPositionX(_x);
 }
 
-void Actor::setPositionRealY(float _y)
+void Actor::SetPositionRealY(float _y)
 {
-	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	ThicknessBox thicknessBox = getThicknessBox();
-	_y -= thicknessBox.RelativeY;
-	_y += thicknessBox.Height / 2.0f;
+	DebugAssertMsg(pThicknessBox_, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	ThicknessBox thicknessBox = GetThicknessBox();
+	_y -= thicknessBox.relativeY_;
+	_y += thicknessBox.height_ / 2.0f;
 	setPositionY(_y);
 }
 
-void Actor::setPositionRealCenter(float _x, float _y)
+void Actor::SetPositionRealCenter(float _x, float _y)
 {
-	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	DebugAssertMsg(pThicknessBox_, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	setPosition(
-		_x -= m_pThicknessBox->getPositionX(),
-		_y -= m_pThicknessBox->getPositionY()
+		_x -= pThicknessBox_->getPositionX(),
+		_y -= pThicknessBox_->getPositionY()
 	);
 }
 
-void Actor::setPositionRealCenter(const SGVec2& _v)
+void Actor::SetPositionRealCenter(const SGVec2& _v)
 {
-	setPositionRealCenter(_v.x, _v.y);
+	SetPositionRealCenter(_v.x, _v.y);
 }
 
-void Actor::setMapLayer(MapLayer* _pMapLayer)
+void Actor::SetMapLayer(MapLayer* _pMapLayer)
 {
-	m_pMapLayer = _pMapLayer;
+	pMapLayer_ = _pMapLayer;
 }
 
-void Actor::setActorId(int _id)
+void Actor::SetActorId(int _id)
 {
 	// 청소되지 않은 액터에 할당을 시도할려는 경우를 막아야한다.
-	if (!m_bCleanUp)
+	if (!isCleanUp_)
 	{
-		DebugAssertMsg(m_iActorId == InvalidValue_v, "이미 ID값이 할당되어 있습니다.");
+		DebugAssertMsg(actorId_ == InvalidValue_v, "이미 ID값이 할당되어 있습니다.");
 	}
 
-	m_iActorId = _id;
+	actorId_ = _id;
 }
 
-void Actor::runAnimation(int _animationCode)
+void Actor::RunAnimation(int _animationCode)
 {
-	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
-	m_pActorSprite->runAnimation(_animationCode);
+	DebugAssertMsg(pActorSprite_, "액터 스프라이트가 없습니다.");
+	pActorSprite_->RunAnimation(_animationCode);
 }
 
-void Actor::runAnimation(int _animationCode, int _startFrameIndexInAnimation)
+void Actor::RunAnimation(int _animationCode, int _startFrameIndexInAnimation)
 {
-	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
-	m_pActorSprite->runAnimation(_animationCode, _startFrameIndexInAnimation);
+	DebugAssertMsg(pActorSprite_, "액터 스프라이트가 없습니다.");
+	pActorSprite_->RunAnimation(_animationCode, _startFrameIndexInAnimation);
 }
 
-void Actor::pauseAnimation(float _delay)
+void Actor::PauseAnimation(float _delay)
 {
-	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
-	m_pActorSprite->pauseAnimation(_delay);
+	DebugAssertMsg(pActorSprite_, "액터 스프라이트가 없습니다.");
+	pActorSprite_->PauseAnimation(_delay);
 }
 
-void Actor::runFrameEventSpawn(FrameEventSpawnType_t _spawnType, int _spawnCode)
+void Actor::RunFrameEventSpawn(FrameEventSpawnType_t _spawnType, int _spawnCode)
 {
 	switch (_spawnType)
 	{
 	case FrameEventSpawnType::Projectile:
-		Core::Contents.ActorManager->createProejctileOnMap(this, _spawnCode);
+		Core::Contents.ActorManager->CreateProejctileOnMap(this, _spawnCode);
 		break;
 	case FrameEventSpawnType::AttackBox:
 		DebugAssertMsg(false, "미구현");
@@ -381,20 +405,20 @@ void Actor::runFrameEventSpawn(FrameEventSpawnType_t _spawnType, int _spawnCode)
 	}
 }
 
-void Actor::runFrameEvent(int _frameEventCode)
+void Actor::RunFrameEvent(int _frameEventCode)
 {
 	if (_frameEventCode == InvalidValue_v)
 		return;
 
-	FrameEvent* pFrameEvent = Core::DataManager->getFrameEvent(getType(), _frameEventCode);
+	FrameEvent* pFrameEvent = Core::DataManager->GetFrameEvent(GetType(), _frameEventCode);
 
 	if (pFrameEvent == nullptr)
 		return;
 
-	runFrameEvent(pFrameEvent);
+	RunFrameEvent(pFrameEvent);
 }
 
-void Actor::runFrameEvent(FrameEvent* _pFrameEvent)
+void Actor::RunFrameEvent(FrameEvent* _pFrameEvent)
 {
 	switch (_pFrameEvent->type_)
 	{
@@ -407,7 +431,7 @@ void Actor::runFrameEvent(FrameEvent* _pFrameEvent)
 				DebugAssert(false);
 				break;
 			}
-			runFrameEventSpawn(pSpawn->spawnType_, pSpawn->spawnCode_);
+			RunFrameEventSpawn(pSpawn->spawnType_, pSpawn->spawnCode_);
 			break;
 		}
 	case FrameEventType::AttackBoxInstant:
@@ -421,10 +445,10 @@ void Actor::runFrameEvent(FrameEvent* _pFrameEvent)
 				break;
 			}
 
-			if (m_pHitRecorder == nullptr)
+			if (pHitRecorder_ == nullptr)
 				break;
 
-			m_pHitRecorder->record(pAttackBoxInstant);
+			pHitRecorder_->Record(pAttackBoxInstant);
 			break;
 		}
 	default:
@@ -432,12 +456,12 @@ void Actor::runFrameEvent(FrameEvent* _pFrameEvent)
 	}
 }
 
-void Actor::onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+void Actor::OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
-	m_Listeners.onFrameBegin(_pAnimation, _pTexture);
-	runFrameEvent(_pAnimation->getRunningFrameEventCode());
+	listeners_.OnFrameBegin(_pAnimation, _pTexture);
+	RunFrameEvent(_pAnimation->GetRunningFrameEventCode());
 
-	AIActivity* pRunningActivity = getRunningAIActivity();
+	AIActivity* pRunningActivity = GetRunningAiActivity();
 
 	if (pRunningActivity)
 	{
@@ -445,11 +469,11 @@ void Actor::onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTextur
 	}
 }
 
-void Actor::onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+void Actor::OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
-	m_Listeners.onFrameEnd(_pAnimation, _pTexture);
+	listeners_.OnFrameEnd(_pAnimation, _pTexture);
 
-	AIActivity* pRunningActivity = getRunningAIActivity();
+	AIActivity* pRunningActivity = GetRunningAiActivity();
 
 	if (pRunningActivity)
 	{
@@ -457,11 +481,11 @@ void Actor::onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 	}
 }
 
-void Actor::onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+void Actor::OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
-	m_Listeners.onAnimationBegin(_pAnimation, _pTexture);
+	listeners_.OnAnimationBegin(_pAnimation, _pTexture);
 
-	AIActivity* pRunningActivity = getRunningAIActivity();
+	AIActivity* pRunningActivity = GetRunningAiActivity();
 
 	if (pRunningActivity)
 	{
@@ -469,11 +493,11 @@ void Actor::onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTe
 	}
 }
 
-void Actor::onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+void Actor::OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
-	m_Listeners.onAnimationEnd(_pAnimation, _pTexture);
+	listeners_.OnAnimationEnd(_pAnimation, _pTexture);
 
-	AIActivity* pRunningActivity = getRunningAIActivity();
+	AIActivity* pRunningActivity = GetRunningAiActivity();
 
 	if (pRunningActivity)
 	{
@@ -481,36 +505,36 @@ void Actor::onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pText
 	}
 }
 
-void Actor::setSpriteDirection(SpriteDirection_t _direction)
+void Actor::SetSpriteDirection(SpriteDirection_t _direction)
 {
-	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
-	m_pActorSprite->setSpriteDirection(_direction);
+	DebugAssertMsg(pActorSprite_, "액터 스프라이트가 없습니다.");
+	pActorSprite_->SetSpriteDirection(_direction);
 }
 
-void Actor::setForwardDirection()
+void Actor::SetForwardDirection()
 {
-	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
-	m_pActorSprite->setForwardDirection();
+	DebugAssertMsg(pActorSprite_, "액터 스프라이트가 없습니다.");
+	pActorSprite_->SetForwardDirection();
 }
 
-void Actor::setBackwardDirection()
+void Actor::SetBackwardDirection()
 {
-	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
-	m_pActorSprite->setBackwardDirection();
+	DebugAssertMsg(pActorSprite_, "액터 스프라이트가 없습니다.");
+	pActorSprite_->SetBackwardDirection();
 }
 
-bool Actor::isCollide(Actor* _pOther, SpriteDirection_t& _otherHitDirection, SGRect& _hitRect)
+bool Actor::IsCollide(Actor* _pOther, SpriteDirection_t& _otherHitDirection, SGRect& _hitRect)
 {
-	SGRect myThick = getThicknessBoxRect();
-	SGRect otherBox = _pOther->getThicknessBoxRect();
+	SGRect myThick = GetThicknessBoxRect();
+	SGRect otherBox = _pOther->GetThicknessBoxRect();
 
 	if (!RectEx::IntersectY(myThick, otherBox))
 	{
 		return false;
 	}
 
-	SGRect myHit = getHitBox();
-	SGRect targetHit = _pOther->getHitBox();
+	SGRect myHit = GetHitBox();
+	SGRect targetHit = _pOther->GetHitBox();
 
 	if (RectEx::Intersect(myHit, targetHit, _hitRect))
 	{
@@ -521,20 +545,20 @@ bool Actor::isCollide(Actor* _pOther, SpriteDirection_t& _otherHitDirection, SGR
 	return false;
 }
 
-bool Actor::isCollide(const ActorRect& _otherRect, SpriteDirection_t& _otherHitDirection, SGRect& _hitRect)
+bool Actor::IsCollide(const ActorRect& _otherRect, SpriteDirection_t& _otherHitDirection, SGRect& _hitRect)
 {
-	SGRect myThick = getThicknessBoxRect();
+	SGRect myThick = GetThicknessBoxRect();
 
-	if (!RectEx::IntersectY(myThick, _otherRect.ThicknessRect))
+	if (!RectEx::IntersectY(myThick, _otherRect.thicknessRect_))
 	{
 		return false;
 	}
 
-	SGRect myHit = getHitBox();
+	SGRect myHit = GetHitBox();
 
-	if (RectEx::Intersect(myHit, _otherRect.BodyRect, _hitRect))
+	if (RectEx::Intersect(myHit, _otherRect.bodyRect_, _hitRect))
 	{
-		_otherHitDirection = _otherRect.BodyRect.getMidX() > myHit.getMidX()
+		_otherHitDirection = _otherRect.bodyRect_.getMidX() > myHit.getMidX()
 			                     ? SpriteDirection::Left
 			                     : SpriteDirection::Right;
 		return true;
@@ -543,132 +567,132 @@ bool Actor::isCollide(const ActorRect& _otherRect, SpriteDirection_t& _otherHitD
 	return false;
 }
 
-bool Actor::isCollide(const ActorRect& _otherRect)
+bool Actor::IsCollide(const ActorRect& _otherRect)
 {
-	SGRect myThick = getThicknessBoxRect();
+	SGRect myThick = GetThicknessBoxRect();
 
-	if (!RectEx::IntersectY(myThick, _otherRect.ThicknessRect))
+	if (!RectEx::IntersectY(myThick, _otherRect.thicknessRect_))
 	{
 		return false;
 	}
 
-	SGRect myHit = getHitBox();
-	return myHit.intersectsRect(_otherRect.BodyRect);
+	SGRect myHit = GetHitBox();
+	return myHit.intersectsRect(_otherRect.bodyRect_);
 }
 
-bool Actor::isOnTheGround()
+bool Actor::IsOnTheGround()
 {
-	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
-	return m_pActorSprite->getPositionY() <= 0;
+	DebugAssertMsg(pActorSprite_, "액터 스프라이트가 없습니다.");
+	return pActorSprite_->getPositionY() <= 0;
 }
 
-void Actor::releaseActorSprite()
+void Actor::ReleaseActorSprite()
 {
-	if (!m_pActorSprite)
+	if (!pActorSprite_)
 		return;
 
-	removeChild(m_pActorSprite);
-	m_pActorSprite = nullptr;
+	removeChild(pActorSprite_);
+	pActorSprite_ = nullptr;
 }
 
-void Actor::cleanUpAtNextFrame()
+void Actor::CleanUpAtNextFrame()
 {
-	DebugAssertMsg(m_pMapLayer, "소속된 맵이 존재하지 않습니다.");
-	Core::Contents.ActorManager->cleanUpAtNextFrame(this);
-	m_bCleanUp = true;
+	DebugAssertMsg(pMapLayer_, "소속된 맵이 존재하지 않습니다.");
+	Core::Contents.ActorManager->CleanUpAtNextFrame(this);
+	isCleanUp_ = true;
 }
 
-void Actor::cleanUp()
+void Actor::CleanUp()
 {
-	m_bCleanUp = true;
-	m_pMapLayer = nullptr;
-	Core::Contents.ActorManager->cleanUp(this);
+	isCleanUp_ = true;
+	pMapLayer_ = nullptr;
+	Core::Contents.ActorManager->CleanUp(this);
 }
 
-void Actor::attach(Actor* _pActor)
+void Actor::Attach(Actor* _pActor)
 {
-	DebugAssertMsg(_pActor->hasAttacher() == false, "어태치 할려는 액터가 이미 다른 누군가에게 어태치 되어 있습니다.");
-	DebugAssertMsg(m_vAttches.Exist(_pActor) == false, "동일한 액터에 대해서 연속 어태치 할 수 없습니다.");
+	DebugAssertMsg(_pActor->HasAttacher() == false, "어태치 할려는 액터가 이미 다른 누군가에게 어태치 되어 있습니다.");
+	DebugAssertMsg(attches_.Exist(_pActor) == false, "동일한 액터에 대해서 연속 어태치 할 수 없습니다.");
 
-	m_vAttches.PushBack(_pActor);
+	attches_.PushBack(_pActor);
 
-	_pActor->m_pAttacher = this;
+	_pActor->pAttacher_ = this;
 	_pActor->retain();
 }
 
-void Actor::detach(Actor* _pActor)
+void Actor::Detach(Actor* _pActor)
 {
-	DebugAssertMsg(m_vAttches.Exist(_pActor), "디태치 할려는 액터가 어태치되어 있지 않습니다.");
-	if (m_vAttches.Remove(_pActor) == false)
+	DebugAssertMsg(attches_.Exist(_pActor), "디태치 할려는 액터가 어태치되어 있지 않습니다.");
+	if (attches_.Remove(_pActor) == false)
 	{
 		DebugAssertMsg(false, "디태치 실패");
 	}
 }
 
-Actor* Actor::getAttacher()
+Actor* Actor::GetAttacher()
 {
-	return m_pAttacher;
+	return pAttacher_;
 }
 
-bool Actor::hasAttacher()
+bool Actor::HasAttacher()
 {
-	return m_pAttacher != nullptr;
+	return pAttacher_ != nullptr;
 }
 
-bool Actor::hasCleanUpFlag(int _cleanUpFlag)
+bool Actor::HasCleanUpFlag(int _cleanUpFlag)
 {
-	return (m_iCleanUpFlag & _cleanUpFlag) == _cleanUpFlag;
+	return (cleanUpFlag_ & _cleanUpFlag) == _cleanUpFlag;
 }
 
-void Actor::addCleanUpFlag(int _cleanUpFlag)
+void Actor::AddCleanUpFlag(int _cleanUpFlag)
 {
-	m_iCleanUpFlag |= _cleanUpFlag;
+	cleanUpFlag_ |= _cleanUpFlag;
 }
 
-void Actor::clearCleanUpFlag()
+void Actor::ClearCleanUpFlag()
 {
-	m_iCleanUpFlag = CF_None;
+	cleanUpFlag_ = cfNone;
 }
 
-ActorRect Actor::convertAbsoluteActorRect(Actor* _pStdActor, const ActorRect& _relativeRect)
+ActorRect Actor::ConvertAbsoluteActorRect(Actor* _pStdActor, const ActorRect& _relativeRect)
 {
 	ActorRect absoluteActorRect;
-	const SGSize spawnerCanvasSize = _pStdActor->getCanvasSize();
-	const SGVec2 spawnerCanvasPos = _pStdActor->getCanvasPositionReal();
+	const SGSize spawnerCanvasSize = _pStdActor->GetCanvasSize();
+	const SGVec2 spawnerCanvasPos = _pStdActor->GetCanvasPositionReal();
 
-	if (_pStdActor->getSpriteDirection() == SpriteDirection::Right)
+	if (_pStdActor->GetSpriteDirection() == SpriteDirection::Right)
 	{
-		absoluteActorRect.ThicknessRect.origin.x = spawnerCanvasPos.x + _relativeRect.ThicknessRect.origin.x;
-		absoluteActorRect.ThicknessRect.origin.y = spawnerCanvasPos.y + _relativeRect.ThicknessRect.origin.y;
+		absoluteActorRect.thicknessRect_.origin.x = spawnerCanvasPos.x + _relativeRect.thicknessRect_.origin.x;
+		absoluteActorRect.thicknessRect_.origin.y = spawnerCanvasPos.y + _relativeRect.thicknessRect_.origin.y;
 
-		absoluteActorRect.BodyRect.origin.x = spawnerCanvasPos.x + _relativeRect.BodyRect.origin.x;
-		absoluteActorRect.BodyRect.origin.y = spawnerCanvasPos.y + _relativeRect.BodyRect.origin.y;
+		absoluteActorRect.bodyRect_.origin.x = spawnerCanvasPos.x + _relativeRect.bodyRect_.origin.x;
+		absoluteActorRect.bodyRect_.origin.y = spawnerCanvasPos.y + _relativeRect.bodyRect_.origin.y;
 	}
 	else
 	{
-		absoluteActorRect.ThicknessRect.origin.x = spawnerCanvasPos.x + (spawnerCanvasSize.width - _relativeRect.
-			ThicknessRect.origin.x - _relativeRect.ThicknessRect.size.width);
-		absoluteActorRect.ThicknessRect.origin.y = spawnerCanvasPos.y + _relativeRect.ThicknessRect.origin.y;
+		absoluteActorRect.thicknessRect_.origin.x = spawnerCanvasPos.x + (spawnerCanvasSize.width - _relativeRect.
+			thicknessRect_.origin.x - _relativeRect.thicknessRect_.size.width);
+		absoluteActorRect.thicknessRect_.origin.y = spawnerCanvasPos.y + _relativeRect.thicknessRect_.origin.y;
 
-		absoluteActorRect.BodyRect.origin.x = spawnerCanvasPos.x + (spawnerCanvasSize.width - _relativeRect.BodyRect.
-			origin.x - _relativeRect.BodyRect.size.width);
-		absoluteActorRect.BodyRect.origin.y = spawnerCanvasPos.y + _relativeRect.BodyRect.origin.y;
+		absoluteActorRect.bodyRect_.origin.x = spawnerCanvasPos.x + (spawnerCanvasSize.width - _relativeRect.bodyRect_.
+			origin.x - _relativeRect.bodyRect_.size.width);
+		absoluteActorRect.bodyRect_.origin.y = spawnerCanvasPos.y + _relativeRect.bodyRect_.origin.y;
 	}
 
-	absoluteActorRect.ThicknessRect.size = _relativeRect.ThicknessRect.size;
-	absoluteActorRect.BodyRect.size = _relativeRect.BodyRect.size;
+	absoluteActorRect.thicknessRect_.size = _relativeRect.thicknessRect_.size;
+	absoluteActorRect.bodyRect_.size = _relativeRect.bodyRect_.size;
 
 	return absoluteActorRect;
 }
 
-AIActivity* Actor::getRunningAIActivity()
+AIActivity* Actor::GetRunningAiActivity()
 {
-	const AIComponent* pAIComponent = m_Components.get<AIComponent>();
+	const AIComponent* pAIComponent = components_.Get<AIComponent>();
 
 	if (pAIComponent == nullptr)
 	{
 		return nullptr;
 	}
 
-	return pAIComponent->getRunningActivity();
+	return pAIComponent->GetRunningActivity();
 }

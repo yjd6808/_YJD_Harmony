@@ -9,7 +9,7 @@
 #include "Struct.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool ActorRect::isCollide(const ActorRect& _rect, SpriteDirection_t& _otherHitDirection, SGRect& _hitRect)
+bool ActorRect::IsCollide(const ActorRect& _rect, SpriteDirection_t& _otherHitDirection, SGRect& _hitRect)
 {
 	return true;
 }

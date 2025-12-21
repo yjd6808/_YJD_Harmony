@@ -14,8 +14,8 @@ class GunnerSitRecover : public GunnerAction
 public:
 	GunnerSitRecover(HostPlayer* _pPlayer, ActionInfo* _pActionInfo);
 
-	void onActionBegin() override;
-	void onUpdate(float _dt) override;
+	void OnActionBegin() override;
+	void OnUpdate(float _dt) override;
 
 private:
 	float elapsedSitTime_;

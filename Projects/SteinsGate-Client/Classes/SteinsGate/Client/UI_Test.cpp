@@ -17,8 +17,8 @@ USING_NS_JC;
 //////////////////////////////////////////////////////////////////////////////////////////
 UI_Test::UI_Test(UIGroupInfo* _pGroupInfo)
 : UIRootGroup(_pGroupInfo)
-, groupO1_(nullptr)
-, groupO2_(nullptr)
+, pGroup01_(nullptr)
+, pGroup02_(nullptr)
 , groupO1DefaultSize_()
 , groupO2DefaultSize_()
 , fontCode_(1)
@@ -72,15 +72,15 @@ void UI_Test::OnLoaded()
 	// #define UI_TEST_O2_O21_BUTTON_T7	
 	// #define UI_TEST_O2_O21_EDITBOX_T8	
 
-	groupO1_ = Core::Contents.UIManager->getGroup(UI_TEST_GROUP_O1);
-	groupO2_ = Core::Contents.UIManager->getGroup(UI_TEST_GROUP_O2);
+	pGroup01_ = Core::Contents.UIManager->GetGroup(UI_TEST_GROUP_O1);
+	pGroup02_ = Core::Contents.UIManager->GetGroup(UI_TEST_GROUP_O2);
 
-	groupO1DefaultSize_ = groupO1_->getContentSize();
-	groupO2DefaultSize_ = groupO2_->getContentSize();
+	groupO1DefaultSize_ = pGroup01_->getContentSize();
+	groupO2DefaultSize_ = pGroup02_->getContentSize();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UI_Test::onUpdate(float _dt)
+void UI_Test::OnUpdate(float _dt)
 {
 	if (scaleState_ == eIncrease)
 	{
@@ -89,8 +89,8 @@ void UI_Test::onUpdate(float _dt)
 		if (scale_ > 1.25f)
 			return;
 
-		groupO1_->setContentSize(groupO1DefaultSize_ * scale_);
-		groupO2_->setContentSize(groupO2DefaultSize_ * scale_);
+		pGroup01_->setContentSize(groupO1DefaultSize_ * scale_);
+		pGroup02_->setContentSize(groupO2DefaultSize_ * scale_);
 	}
 	else
 	{
@@ -99,8 +99,8 @@ void UI_Test::onUpdate(float _dt)
 		if (scale_ < 1.0f)
 			return;
 
-		groupO1_->setContentSize(groupO1DefaultSize_ * scale_);
-		groupO2_->setContentSize(groupO2DefaultSize_ * scale_);
+		pGroup01_->setContentSize(groupO1DefaultSize_ * scale_);
+		pGroup02_->setContentSize(groupO2DefaultSize_ * scale_);
 	}
 }
 
@@ -116,7 +116,7 @@ void UI_Test::OnMouseUpTarget(UIElement* _pElement, SGEventMouse* _pMouseEvent)
 
 	if (_pElement->GetCode() == UI_TEST_LABEL_POPUP_TEST)
 	{
-		Core::Contents.PopupManager->showOk(
+		Core::Contents.PopupManager->ShowOk(
 			"안녕하세요\n안녕하세요2\n안녕하세요3\n안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요"
 		);
 	}
@@ -155,7 +155,7 @@ void UI_Test::OnMouseUpTarget(UIElement* _pElement, SGEventMouse* _pMouseEvent)
 		// 7: N2GM.ttf
 
 		float height = 0.0f;
-		const SGString fontName = Core::Contents.FontManager->getFontName(fontCode_);
+		const SGString fontName = Core::Contents.FontManager->GetFontName(fontCode_);
 		const SGString fontPath = Path::Combine(Core::CommonInfo->dataPath_, Const::Resource::FontDirName, fontName);
 		std::string text;
 
@@ -189,22 +189,22 @@ void UI_Test::OnMouseUpTarget(UIElement* _pElement, SGEventMouse* _pMouseEvent)
 		_LogDebug_("라인 너비 벡터 크기: %d", pLabel->getLinesWidth().size());
 		_LogDebug_("라인 수: %d", pLabel->getStringNumLines());
 
-		if (fontCode_ >= Core::Contents.FontManager->getFontCount())
+		if (fontCode_ >= Core::Contents.FontManager->GetFontCount())
 		{
 			fontCode_ = 1;
 		}
 	}
 	else if (_pElement->GetCode() == UI_TEST_LABEL_DRAG_TEST)
 	{
-		forEachRecursiveContainedSelf([](UIElement* _pInnerElement)
+		ForEachRecursiveContainedSelf([](UIElement* _pInnerElement)
 		{
 			_pInnerElement->SetDraggable(!_pInnerElement->IsDraggable());
 		});
 
-		Core::Contents.UIManager->getToggleButton(UI_TEST_TOGGLEBUTTON_T1)->SetDragLinkElement(this);
+		Core::Contents.UIManager->GetToggleButton(UI_TEST_TOGGLEBUTTON_T1)->SetDragLinkElement(this);
 	}
 	else if (_pElement->GetCode() == UI_TEST_LABEL_RESET_POSITION)
 	{
-		resetChildrenPosition();
+		ResetChildrenPosition();
 	}
 }

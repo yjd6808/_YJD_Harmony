@@ -17,6 +17,5 @@ public:
 	WalkActivity_Goblin(Actor* _pActor);
 
 	void OnActivityBegin() override;
-	void updateMoveImpl(float _dt, MoveComponent* _pMoveComponent, bool _arrivedX, bool _arrivedY, Direction_t _lr,
-	                    Direction_t _ud) override;
+	void UpdateMoveImpl(float _dt, MoveComponent* _pMoveComponent, bool _arrivedX, bool _arrivedY, Direction_t _lr, Direction_t _ud) override;
 };

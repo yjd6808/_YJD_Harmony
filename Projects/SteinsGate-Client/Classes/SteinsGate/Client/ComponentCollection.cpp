@@ -29,7 +29,7 @@ ComponentCollection::~ComponentCollection()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ComponentCollection::clear()
+void ComponentCollection::Clear()
 {
 	componentMap_.ForEachValueDelete();
 	componentMap_.Clear();
@@ -37,9 +37,9 @@ void ComponentCollection::clear()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool ComponentCollection::add(IComponent* _pComponent)
+bool ComponentCollection::Add(IComponent* _pComponent)
 {
-	const bool added = componentMap_.Insert(static_cast<int>(_pComponent->getType()), _pComponent);
+	const bool added = componentMap_.Insert(static_cast<int>(_pComponent->GetType()), _pComponent);
 	IUpdatable* pUpdatableComponent = dynamic_cast<IUpdatable*>(_pComponent);
 
 	if (added && pUpdatableComponent != nullptr)
@@ -51,13 +51,13 @@ bool ComponentCollection::add(IComponent* _pComponent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool ComponentCollection::has(IComponent::Type _type) const
+bool ComponentCollection::Has(IComponent::Type _type) const
 {
 	return componentMap_.Exist(_type);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool ComponentCollection::remove(IComponent::Type _type)
+bool ComponentCollection::Remove(IComponent::Type _type)
 {
 	IComponent** pFoundComponent = componentMap_.Find(_type);
 
@@ -78,19 +78,19 @@ bool ComponentCollection::remove(IComponent::Type _type)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ComponentCollection::initialize()
+void ComponentCollection::Initialize()
 {
 	componentMap_.ForEachValue([](IComponent* _pComponent)
 	{
-		_pComponent->initialize();
+		_pComponent->Initialize();
 	});
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ComponentCollection::onUpdate(float _dt)
+void ComponentCollection::OnUpdate(float _dt)
 {
 	for (int i = 0; i < updatables_.Size(); ++i)
 	{
-		updatables_[i]->onUpdate(_dt);
+		updatables_[i]->OnUpdate(_dt);
 	}
 }

@@ -14,9 +14,9 @@ class GunnerFallDown : public GunnerAction
 public:
 	GunnerFallDown(HostPlayer* _pPlayer, ActionInfo* _pActionInfo);
 
-	void onActionBegin() override;
-	void onActionEnd() override;
-	void onUpdate(float _deltaTime) override;
+	void OnActionBegin() override;
+	void OnActionEnd() override;
+	void OnUpdate(float _deltaTime) override;
 
 private:
 	bool bounced_;

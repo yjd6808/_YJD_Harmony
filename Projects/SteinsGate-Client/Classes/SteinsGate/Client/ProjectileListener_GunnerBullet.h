@@ -15,9 +15,9 @@ class ProjectileListener_GunnerBullet : public ProjectileListener
 public:
 	ProjectileListener_GunnerBullet(Projectile* _pProjectile, Actor* _pSpawner);
 
-	void onCreated() override;
-	void onUpdate(float _dt) override;
-	void onCollisionWithGround() override;
+	void OnCreated() override;
+	void OnUpdate(float _dt) override;
+	void OnCollisionWithGround() override;
 	void onEnemySingleHit(HitInfo& _info);
 	void onEnemyMultiHit(SGHitInfoList& _hitList, int _newHitCount);
 

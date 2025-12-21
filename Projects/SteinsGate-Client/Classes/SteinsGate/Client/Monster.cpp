@@ -19,8 +19,8 @@ USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 Monster::Monster(MonsterInfo* _pBaseInfo)
-: baseInfo_(_pBaseInfo)
-, statInfo_(nullptr)
+: pBaseInfo_(_pBaseInfo)
+, pStatInfo_(nullptr)
 {
 }
 
@@ -30,98 +30,98 @@ Monster::~Monster()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Monster* Monster::create(MonsterInfo* _pBaseInfo)
+Monster* Monster::Create(MonsterInfo* _pBaseInfo)
 {
 	Monster* pMonster = dbg_new Monster(_pBaseInfo);
-	pMonster->initialize();
+	pMonster->Initialize();
 	pMonster->autorelease();
 	return pMonster;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Monster::initialize()
+void Monster::Initialize()
 {
-	initVariables();
-	initThicknessBox(baseInfo_->thicknessBox_);
-	initActorSprite();
-	initHitRecorder(); // 먼저 초기화 필요 (AIActivity에서 초기화해서 씀)
-	initListeners();
-	initComponents();
+	InitVariables();
+	InitThicknessBox(pBaseInfo_->thicknessBox_);
+	InitActorSprite();
+	InitHitRecorder(); // 먼저 초기화 필요 (AIActivity에서 초기화해서 씀)
+	InitListeners();
+	InitComponents();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Monster::initActorSprite()
+void Monster::InitActorSprite()
 {
-	if (!m_pActorSprite)
+	if (!pActorSprite_)
 	{
-		DebugAssert(baseInfo_->pSpriteData_ != nullptr);
-		m_pActorSprite = ActorSprite::create(this, baseInfo_->pSpriteData_);
-		m_pActorSprite->setAnchorPoint(Vec2::ZERO);
-		m_pActorSprite->runAnimation(1);
-		this->addChild(m_pActorSprite);
+		DebugAssert(pBaseInfo_->pSpriteData_ != nullptr);
+		pActorSprite_ = ActorSprite::Create(this, pBaseInfo_->pSpriteData_);
+		pActorSprite_->setAnchorPoint(Vec2::ZERO);
+		pActorSprite_->RunAnimation(1);
+		this->addChild(pActorSprite_);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Monster::initListeners()
+void Monster::InitListeners()
 {
-	IActorListener* pListener = getListener(IActorListener::Type::eMonster);
+	IActorListener* pListener = GetListener(IActorListener::Type::eMonster);
 
 	if (pListener == nullptr)
 	{
-		pListener = Core::Contents.ActorListenerManager->createMonsterListener(this);
-		addListener(pListener);
+		pListener = Core::Contents.ActorListenerManager->CreateMonsterListener(this);
+		AddListener(pListener);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Monster::initComponents()
+void Monster::InitComponents()
 {
-	if (!m_Components.has(IComponent::eMove))
+	if (!components_.Has(IComponent::eMove))
 	{
-		m_Components.add(dbg_new MoveComponent(this));
+		components_.Add(dbg_new MoveComponent(this));
 	}
 
-	if (!m_Components.has(IComponent::ePhysics))
+	if (!components_.Has(IComponent::ePhysics))
 	{
-		m_Components.add(dbg_new PhysicsComponent(this));
+		components_.Add(dbg_new PhysicsComponent(this));
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Monster::hit(const HitInfo& _hitInfo)
+void Monster::Hit(const HitInfo& _hitInfo)
 {
-	Actor::hit(_hitInfo);
-	AIComponent* pAIComponent = m_Components.get<AIComponent>();
+	Actor::Hit(_hitInfo);
+	AIComponent* pAIComponent = components_.Get<AIComponent>();
 
 	if (pAIComponent == nullptr)
 	{
 		return;
 	}
 
-	if (_hitInfo.AttackDataInfo->isFallDownAttack_)
+	if (_hitInfo.pAttackDataInfo_->isFallDownAttack_)
 	{
-		pAIComponent->runActivity(AIActivityType::FallDown);
+		pAIComponent->RunActivity(AIActivityType::FallDown);
 		return;
 	}
 
-	pAIComponent->runActivity(AIActivityType::Hit);
+	pAIComponent->RunActivity(AIActivityType::Hit);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Monster::setStatInfo(MonsterStatInfo* _pStatInfo)
+void Monster::SetStatInfo(MonsterStatInfo* _pStatInfo)
 {
-	statInfo_ = _pStatInfo;
+	pStatInfo_ = _pStatInfo;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MonsterInfo* Monster::getBaseInfo()
+MonsterInfo* Monster::GetBaseInfo()
 {
-	return baseInfo_;
+	return pBaseInfo_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MonsterStatInfo* Monster::getStatInfo()
+MonsterStatInfo* Monster::GetStatInfo()
 {
-	return statInfo_;
+	return pStatInfo_;
 }

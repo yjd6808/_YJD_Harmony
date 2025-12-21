@@ -29,11 +29,11 @@ ConnectionSynchronizer::ConnectionSynchronizer()
 //////////////////////////////////////////////////////////////////////////////////////////
 ConnectionSynchronizer::~ConnectionSynchronizer()
 {
-	finalize();
+	Finalize();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConnectionSynchronizer::initialize()
+void ConnectionSynchronizer::Initialize()
 {
 	connectionResultQueue_ = dbg_new SGArrayQueue<ResultBase*>();
 	swapQueue_ = dbg_new SGArrayQueue<ResultBase*>();
@@ -58,7 +58,7 @@ void ConnectionSynchronizer::initialize()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConnectionSynchronizer::processConnections()
+void ConnectionSynchronizer::ProcessConnections()
 {
 	ResultQueue* pQueue;
 	{
@@ -78,18 +78,18 @@ void ConnectionSynchronizer::processConnections()
 	{
 		const ResultBase* pResult = pQueue->Front();
 
-		switch (pResult->ConnType)
+		switch (pResult->connType_)
 		{
 		case eConnection:
 			{
 				ConnectionResult* pConnResult = (ConnectionResult*)pResult;
-				processConnection(pConnResult);
+				ProcessConnection(pConnResult);
 				break;
 			}
 		case eDisconnection:
 			{
 				DisconnectionResult* pDisconnectionResult = (DisconnectionResult*)pResult;
-				processDisconnection(pDisconnectionResult);
+				ProcessDisconnection(pDisconnectionResult);
 				break;
 			}
 		}
@@ -100,26 +100,26 @@ void ConnectionSynchronizer::processConnections()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConnectionSynchronizer::processConnection(ConnectionResult* _pResult)
+void ConnectionSynchronizer::ProcessConnection(ConnectionResult* _pResult)
 {
-	if (_pResult->Success)
+	if (_pResult->success_)
 	{
-		onConnected_[_pResult->ListenerType](_pResult->Session);
+		onConnected_[_pResult->listenerType_](_pResult->pSession_);
 	}
 	else
 	{
-		onConnectFailed_[_pResult->ListenerType](_pResult->Session, _pResult->ErrorCode);
+		onConnectFailed_[_pResult->listenerType_](_pResult->pSession_, _pResult->errorCode_);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConnectionSynchronizer::processDisconnection(DisconnectionResult* _pResult)
+void ConnectionSynchronizer::ProcessDisconnection(DisconnectionResult* _pResult)
 {
-	onDisconnected_[_pResult->ListenerType](_pResult->Session);
+	onDisconnected_[_pResult->listenerType_](_pResult->pSession_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConnectionSynchronizer::finalize()
+void ConnectionSynchronizer::Finalize()
 {
 	ResultQueue* pQueue;
 
@@ -149,26 +149,26 @@ void ConnectionSynchronizer::finalize()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConnectionSynchronizer::enqueueConnection(ClientConnectServerType_t _listenerType, SGSession* _pSession,
+void ConnectionSynchronizer::EnqueueConnection(ClientConnectServerType_t _listenerType, SGSession* _pSession,
                                                bool _success, Int32U _errorCode)
 {
 	JCORE_LOCK_GUARD(lock_);
 	ConnectionResult* pResult = dbg_new ConnectionResult;
-	pResult->ConnType = eConnection;
-	pResult->Success = _success;
-	pResult->ListenerType = _listenerType;
-	pResult->ErrorCode = _success ? 0 : _errorCode;
-	pResult->Session = _pSession;
+	pResult->connType_ = eConnection;
+	pResult->success_ = _success;
+	pResult->listenerType_ = _listenerType;
+	pResult->errorCode_ = _success ? 0 : _errorCode;
+	pResult->pSession_ = _pSession;
 	connectionResultQueue_->Enqueue(pResult);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConnectionSynchronizer::enqueueDisconnection(ClientConnectServerType_t _listenerType, SGSession* _pSession)
+void ConnectionSynchronizer::EnqueueDisconnection(ClientConnectServerType_t _listenerType, SGSession* _pSession)
 {
 	JCORE_LOCK_GUARD(lock_);
 	DisconnectionResult* pResult = dbg_new DisconnectionResult;
-	pResult->ConnType = eDisconnection;
-	pResult->ListenerType = _listenerType;
-	pResult->Session = _pSession;
+	pResult->connType_ = eDisconnection;
+	pResult->listenerType_ = _listenerType;
+	pResult->pSession_ = _pSession;
 	connectionResultQueue_->Enqueue(pResult);
 }

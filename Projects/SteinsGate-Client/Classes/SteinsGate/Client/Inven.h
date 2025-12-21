@@ -17,11 +17,11 @@ class Inven final : public JCore::SingletonPointer<Inven>
 	~Inven();
 
 public:
-	void init();
-	WeaponType_t getWeaponType();
-	VisualInfo getVisualInfo(int _defaultCharType);
+	void Init();
+	WeaponType_t	GetWeaponType();
+	VisualInfo		GetVisualInfo(int _defaultCharType);
 
-	int getAvailableSlotCount(InvenItemType_t _invenType);
+	int				GetAvailableSlotCount(InvenItemType_t _invenType);
 
 private:
 	InvenItemEquip* equippedItemList_[ItemType::MaxEquip];

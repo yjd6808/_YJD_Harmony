@@ -28,11 +28,9 @@ protected:
 	void OnReceived(JNetwork::Session* _pSession, JNetwork::RecvedCommandPacket* _pRecvPacket) override;
 
 	// 동기화 수행
-	static void SyncConnectionResult(ClientConnectServerType_t _listenerType, JNetwork::Session* _pSession,
-	                                 bool _success, Int32U _errorCode);
+	static void SyncConnectionResult(ClientConnectServerType_t _listenerType, JNetwork::Session* _pSession, bool _success, Int32U _errorCode);
 	static void SyncDisconnectionResult(ClientConnectServerType_t _listenerType, JNetwork::Session* _pSession);
-	static void SyncReceivedCommand(ClientConnectServerType_t _listenerType, SGSession* _pSession,
-	                                JNetwork::ICommand* _pCmd);
+	static void SyncReceivedCommand(ClientConnectServerType_t _listenerType, SGSession* _pSession, JNetwork::ICommand* _pCmd);
 
 private:
 	ClientConnectServerType_t connectedServerType_;

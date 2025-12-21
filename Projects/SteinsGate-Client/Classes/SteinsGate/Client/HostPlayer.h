@@ -24,36 +24,37 @@ private:
 	~HostPlayer() override;
 
 public:
-	void initialize() override;
-	void initActionManager();
-	void initController();
-	void initListeners() override;
-	void hit(const HitInfo& _hitInfo) override;
+	void Initialize() override;
+	void InitActionManager();
+	void InitController();
+	void InitListeners() override;
+	void Hit(const HitInfo& _hitInfo) override;
 
-	void removeActionManager();
-	void removeController();
+	void RemoveActionManager();
+	void RemoveController();
 
 	void update(float _dt) override;
-	void onKeyPressed(SGEventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent);
-	void onKeyReleased(SGEventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent);
-	void onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
-	void onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
-	void onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
-	void onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
 
-	void playAction(int _actionCode);
-	void playActionForce(int _actionCode);
-	void playBaseActionForce(BaseAction_t _baseActionType);
-	void playBaseAction(BaseAction_t _baseAction);
+	void OnKeyPressed(SGEventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent);
+	void OnKeyReleased(SGEventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent);
+	void OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
+	void OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
+	void OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
+	void OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
 
-	int getRunningActionCode();
+	void PlayAction(int _actionCode);
+	void PlayActionForce(int _actionCode);
+	void PlayBaseActionForce(BaseAction_t _baseActionType);
+	void PlayBaseAction(BaseAction_t _baseAction);
 
-	ActionMgr* actionManager();
-	PlayerController* ctrl();
-	AccountData& accountData() { return accountData_; }
+	int GetRunningActionCode();
+
+	ActionMgr*			GetActionManager();
+	PlayerController*	GetController();
+	AccountData&		GetAccountData() { return accountData_; }
 
 private:
-	AccountData accountData_;
-	ActionMgr* actionManager_;
-	PlayerController* controller_;
+	AccountData			accountData_;
+	ActionMgr*			pActionManager_;
+	PlayerController*	pController_;
 };

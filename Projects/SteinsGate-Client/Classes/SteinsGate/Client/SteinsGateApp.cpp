@@ -9,7 +9,7 @@
 #include <SteinsGate/Common/SgaElementInitializer.h>
 #include <SteinsGate/Client/Win32Helper.h>
 
-#define AppName "SteinsGate-Client"
+#define APP_NAME "SteinsGate-Client"
 
 USING_NS_CC;
 USING_NS_JC;
@@ -42,15 +42,15 @@ SteinsGateApp::~SteinsGateApp()
 //////////////////////////////////////////////////////////////////////////////////////////
 void SteinsGateApp::SetDesignResolutionSize(float _width, float _height)
 {
-	DebugAssertMsg(View, "아직 View가 설정되지 않았습니다.");
-	View->setDesignResolutionSize(_width, _height, Core::ClientInfo->gameResolutionPolicy_);
+	DebugAssertMsg(pView_, "아직 View가 설정되지 않았습니다.");
+	pView_->setDesignResolutionSize(_width, _height, Core::ClientInfo->gameResolutionPolicy_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void SteinsGateApp::SetFrameSize(float _width, float _height)
 {
-	DebugAssertMsg(View, "아직 View가 설정되지 않았습니다.");
-	View->setFrameSize(_width, _height);
+	DebugAssertMsg(pView_, "아직 View가 설정되지 않았습니다.");
+	pView_->setFrameSize(_width, _height);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -77,7 +77,7 @@ bool SteinsGateApp::applicationDidFinishLaunching()
 	DataManager* pDataManager = DataManager::Get();
 	pDataManager->initializeLoader();
 	Core::CommonInfo = pDataManager->getCommonInfo(1);
-	Core::ClientInfo = pDataManager->getClientInfo(1);
+	Core::ClientInfo = pDataManager->GetClientInfo(1);
 	Core::CharCommon = pDataManager->getCharCommonInfo(1);
 
 	CreateOpenGLWindow();
@@ -103,8 +103,8 @@ void SteinsGateApp::CreateOpenGLWindow()
 	if (pGlView == nullptr)
 	{
 		pGlView = Core::ClientInfo->fullScreen_
-			          ? GLViewImpl::createWithFullScreen(AppName)
-			          : GLViewImpl::createWithRect(AppName, frameRect, 1.0f, Core::ClientInfo->resizable_);
+			          ? GLViewImpl::createWithFullScreen(APP_NAME)
+			          : GLViewImpl::createWithRect(APP_NAME, frameRect, 1.0f, Core::ClientInfo->resizable_);
 		pGlView->setDesignResolutionSize(resolutionRect.size.width, resolutionRect.size.height,
 		                                 Core::ClientInfo->gameResolutionPolicy_);
 	}
@@ -116,13 +116,13 @@ void SteinsGateApp::CreateOpenGLWindow()
 
 	Win32Helper::LazyInit();
 
-	View = static_cast<GLViewImpl*>(pGlView);
+	pView_ = static_cast<GLViewImpl*>(pGlView);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void SteinsGateApp::CreateWorldScene()
 {
-	auto pScene = WorldScene::get();
+	auto pScene = WorldScene::Get();
 	pScene->setAnchorPoint(Vec2::ZERO);
 	DebugAssertMsg(pScene, "월드씬 생성에 실패했습니다.");
 	Director::getInstance()->runWithScene(pScene);

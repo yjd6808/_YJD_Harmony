@@ -59,7 +59,7 @@ void R_AUTHENTICATION::RECV_CAU_Login(Session* session, ICommand* cmd) {
 	}
 
 	// 계정이 있는 경우
-	if (accountData.Pass != pCmd->pass_) {
+	if (accountData.pass_ != pCmd->pass_) {
 		S_AUTHENTICATION::SEND_AUC_LoginAck(LoginResult::IdPasswordMismatch);
 		return;
 	}
@@ -70,7 +70,7 @@ void R_AUTHENTICATION::RECV_CAU_Login(Session* session, ICommand* cmd) {
 		return;
 	}
 
-	S_AUTHENTICATION::SEND_AUC_LoginAck(eResult, accountData.LastServer, pAuthenticationData->Serial);
+	S_AUTHENTICATION::SEND_AUC_LoginAck(eResult, accountData.lastServer_, pAuthenticationData->serial_);
 }
 
 
@@ -94,5 +94,5 @@ void R_AUTHENTICATION::RECV_SAU_AuthenticationCheck(Session* session, ICommand* 
 	const bool bAuthenticated = pAuthenticationData != nullptr;			// 업데이트가 성공적으로 끝나서 올바른 AuthenticationData를 반환한 경우
 
 	S_AUTHENTICATION_IS::SetInformation(Core::InterServerClientTcp, SendStrategy::SendAsync, eReplyServer);
-	S_AUTHENTICATION_IS::SEND_AUS_AuthenticationCheckAck(bAuthenticated, pCmd->SessionHandle, pAuthenticationData->AccountData.LastServer);
+	S_AUTHENTICATION_IS::SEND_AUS_AuthenticationCheckAck(bAuthenticated, pCmd->SessionHandle, pAuthenticationData->accountData_.lastServer_);
 }

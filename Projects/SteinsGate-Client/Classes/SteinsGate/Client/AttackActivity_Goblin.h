@@ -20,6 +20,7 @@ public:
 
 	void OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
 	void OnUpdate(float _dt) override;
-	void onEnemySingleHit(HitInfo& _info);
-	void onEnemyMultiHit(SGHitInfoList& _hitList, int _newHitCount);
+
+	void OnEnemySingleHit(HitInfo& _info);
+	void OnEnemyMultiHit(SGHitInfoList& _hitList, int _newHitCount);
 };

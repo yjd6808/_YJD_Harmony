@@ -19,10 +19,10 @@ public:
 	Player();
 	~Player() override;
 
-	void initialize() override;
-	void initPlayerData();
+	void Initialize() override;
+	void InitPlayerData();
 
-	PlayerData& getPlayerData() { return playerData_; }
+	PlayerData& GetPlayerData() { return playerData_; }
 
 protected:
 	PlayerData playerData_;

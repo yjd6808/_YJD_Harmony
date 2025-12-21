@@ -32,11 +32,11 @@ UIManager::UIManager()
 , masterUiGroups_(64)
 //////////////////////////////////////////////////////////////////////////////////////////
 {
-	Inventory = nullptr;
-	Login = nullptr;
-	Popup = nullptr;
-	Test = nullptr;
-	ChannelSelect = nullptr;
+	pInventory_ = nullptr;
+	pLogin_ = nullptr;
+	pPopup_ = nullptr;
+	pTest_ = nullptr;
+	pChannelSelect_ = nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -58,23 +58,23 @@ UIManager::~UIManager()
 //           루트 유아이 그룹 등록
 // =====================================================
 
-void UIManager::init()
+void UIManager::Init()
 {
-	master_ = UIRootGroupManager::createRetain();
-	master_->forEach([this](UIRootGroup* _pRootGroup) { registerMasterGroup(_pRootGroup); });
-	master_->forEach([this](UIRootGroup* _pRootGroup) { _pRootGroup->OnInit(); });
+	master_ = UIRootGroupManager::CreateRetain();
+	master_->ForEach([this](UIRootGroup* _pRootGroup) { RegisterMasterGroup(_pRootGroup); });
+	master_->ForEach([this](UIRootGroup* _pRootGroup) { _pRootGroup->OnInit(); });
 
-	initPublic();
+	InitPublic();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIManager::registerMasterGroup(UIRootGroup* _pGroup)
+void UIManager::RegisterMasterGroup(UIRootGroup* _pGroup)
 {
 	_pGroup->retain(); // 그룹마스터에서 생성/관리하기때문에 리테인했고 UIManager에서도 마스터를 참조하므로, 리테인해줘야함. 빼먹고있었넹
 	uiElements_.Insert(_pGroup->GetCode(), _pGroup);
 	masterUiGroups_.Insert(_pGroup->GetCode(), _pGroup);
 
-	_pGroup->forEachRecursive([this](UIElement* _pUIElement)
+	_pGroup->ForEachRecursive([this](UIElement* _pUIElement)
 	{
 		const int elementCode = _pUIElement->GetCode();
 		const bool inserted = uiElements_.Insert(elementCode, _pUIElement);
@@ -84,23 +84,23 @@ void UIManager::registerMasterGroup(UIRootGroup* _pGroup)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIManager::registerUITexture(SgaResourceIndex _index)
+void UIManager::RegisterUiTexture(SgaResourceIndex _index)
 {
-	if (_index.Un.FrameIndex == InvalidValue_v)
+	if (_index.un_.frameIndex_ == InvalidValue_v)
 	{
 		return;
 	}
 
-	const bool inserted = loadedUiTexture_.Insert(_index.Value, _index);
+	const bool inserted = loadedUiTexture_.Insert(_index.value_, _index);
 
 	if (inserted)
 	{
-		Core::Contents.PackManager->logTexture("로드", _index, LoggerAbstract::eDebug);
+		Core::Contents.PackManager->LogTexture("로드", _index, LoggerAbstract::eDebug);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIManager::unloadAll()
+void UIManager::UnloadAll()
 {
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 
@@ -113,20 +113,20 @@ void UIManager::unloadAll()
 	// 관련 캐쉬, 팩 모두 언로드
 	loadedUiTexture_.ForEachValue([pPackManager](SgaResourceIndex& _resourceIndex)
 	{
-		pPackManager->releaseFrameTexture(_resourceIndex);
-		pPackManager->unloadPackData(_resourceIndex.Un.SgaIndex);
+		pPackManager->ReleaseFrameTexture(_resourceIndex);
+		pPackManager->UnloadPackData(_resourceIndex.un_.sgaIndex_);
 	});
 	loadedUiTexture_.Clear();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIManager::onUpdate(float _dt)
+void UIManager::OnUpdate(float _dt)
 {
-	callUIElementsUpdateCallback(_dt);
+	CallUiElementsUpdateCallback(_dt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIManager::callUIElementsUpdateCallback(float _dt)
+void UIManager::CallUiElementsUpdateCallback(float _dt)
 {
 	uiElementsUpdateEvent_.ForEach([&_dt](Pair<UIElement*, SGEventList<UIElement*, float>>& _elementEventPair)
 	{
@@ -135,47 +135,47 @@ void UIManager::callUIElementsUpdateCallback(float _dt)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIManager::draginit(const DragState& _state)
+void UIManager::Draginit(const DragState& _state)
 {
 	dragState_ = _state;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIManager::dragEnter(const SGEventMouse* _pMouseEvent)
+void UIManager::DragEnter(const SGEventMouse* _pMouseEvent)
 {
-	UIElement* pDragElement = dragState_.TargetElement;
-	const Vec2 dragDelta = _pMouseEvent->getStartCursorPos() - dragState_.StartCursorPosition;
+	UIElement* pDragElement = dragState_.pTargetElement_;
+	const Vec2 dragDelta = _pMouseEvent->getStartCursorPos() - dragState_.startCursorPosition_;
 
-	pDragElement->setPosition(dragState_.StartElementPosition + dragDelta);
+	pDragElement->setPosition(dragState_.startElementPosition_ + dragDelta);
 	pDragElement->GetRootGroup()->OnDragEnter(pDragElement, dragState_);
 
-	dragState_.DragDelta = dragDelta;
-	dragState_.Dragging = true;
+	dragState_.dragDelta_ = dragDelta;
+	dragState_.isDragging_ = true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIManager::dragMove(const SGEventMouse* _pMouseEvent)
+void UIManager::DragMove(const SGEventMouse* _pMouseEvent)
 {
-	UIElement* pDragElement = dragState_.TargetElement;
-	const Vec2 dragDelta = _pMouseEvent->getStartCursorPos() - dragState_.StartCursorPosition;
+	UIElement* pDragElement = dragState_.pTargetElement_;
+	const Vec2 dragDelta = _pMouseEvent->getStartCursorPos() - dragState_.startCursorPosition_;
 
-	pDragElement->setPosition(dragState_.StartElementPosition + dragDelta);
+	pDragElement->setPosition(dragState_.startElementPosition_ + dragDelta);
 	pDragElement->GetRootGroup()->OnDragMove(pDragElement, dragState_);
 
-	dragState_.DragDelta = dragDelta;
+	dragState_.dragDelta_ = dragDelta;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIManager::dragEnd()
+void UIManager::DragEnd()
 {
-	dragState_.HostElement = nullptr;
-	dragState_.TargetElement = nullptr;
-	dragState_.Dragging = false;
-	dragState_.DragDelta = {};
+	dragState_.pHostElement_ = nullptr;
+	dragState_.pTargetElement_ = nullptr;
+	dragState_.isDragging_ = false;
+	dragState_.dragDelta_ = {};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UIRootGroup* UIManager::getMasterGroup(int _groupCode)
+UIRootGroup* UIManager::GetMasterGroup(int _groupCode)
 {
 	if (!masterUiGroups_.Exist(_groupCode))
 	{
@@ -187,7 +187,7 @@ UIRootGroup* UIManager::getMasterGroup(int _groupCode)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UIElement* UIManager::getElement(int _elementCode)
+UIElement* UIManager::GetElement(int _elementCode)
 {
 	if (!uiElements_.Exist(_elementCode))
 	{
@@ -198,36 +198,36 @@ UIElement* UIManager::getElement(int _elementCode)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-FrameTexture* UIManager::createUITexture(int _sga, int _img, int _frame, bool _linearDodge /* = false  */)
+FrameTexture* UIManager::CreateUITexture(int _sga, int _img, int _frame, bool _linearDodge /* = false  */)
 {
-	ImagePack* pPack = Core::Contents.PackManager->getPackUnsafe(_sga);
+	ImagePack* pPack = Core::Contents.PackManager->GetPackUnsafe(_sga);
 
 	if (pPack == nullptr)
 	{
-		Core::Contents.PackManager->logTexture("UIManager::createUITexture()", SgaResourceIndex{ _sga, _img, _frame },
+		Core::Contents.PackManager->LogTexture("UIManager::createUITexture()", SgaResourceIndex{ _sga, _img, _frame },
 		                                       LoggerAbstract::eWarn);
 		return Core::Contents.Global->getDefaultFrameTexture();
 	}
 
-	FrameTexture* pTexture = pPack->createFrameTexture(_img, _frame, _linearDodge);
-	registerUITexture({ _sga, _img, _frame });
+	FrameTexture* pTexture = pPack->CreateFrameTexture(_img, _frame, _linearDodge);
+	RegisterUiTexture({ _sga, _img, _frame });
 	return pTexture;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-FrameTexture* UIManager::createUITextureRetained(int _sga, int _img, int _frame, bool _linearDodge)
+FrameTexture* UIManager::CreateUITextureRetained(int _sga, int _img, int _frame, bool _linearDodge)
 {
-	FrameTexture* pTexture = createUITexture(_sga, _img, _frame, _linearDodge);
+	FrameTexture* pTexture = CreateUITexture(_sga, _img, _frame, _linearDodge);
 	pTexture->retain();
 	return pTexture;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIManager::initPublic()
+void UIManager::InitPublic()
 {
-	Login = (UI_Login*)getMasterGroup(GROUP_UI_LOGIN);
-	Inventory = (UI_Inventory*)getMasterGroup(GROUP_UI_INVENTORY);
-	Popup = nullptr; // 팝업 매니저에서 관리
-	Test = (UI_Test*)getMasterGroup(GROUP_UI_TEST);
-	ChannelSelect = (UI_ChannelSelect*)getMasterGroup(GROUP_UI_CHANNEL);
+	pLogin_ = (UI_Login*)GetMasterGroup(GROUP_UI_LOGIN);
+	pInventory_ = (UI_Inventory*)GetMasterGroup(GROUP_UI_INVENTORY);
+	pPopup_ = nullptr; // 팝업 매니저에서 관리
+	pTest_ = (UI_Test*)GetMasterGroup(GROUP_UI_TEST);
+	pChannelSelect_ = (UI_ChannelSelect*)GetMasterGroup(GROUP_UI_CHANNEL);
 }

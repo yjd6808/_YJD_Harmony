@@ -18,7 +18,7 @@ struct Win32Helper
 
 	static void LazyInit();
 
-	static SGVec2 getWindowPos();
-	static SGRect getWindowRect();
-	static SGVec2 getCursorPos();
+	static SGVec2 GetWindowPos();
+	static SGRect GetWindowRect();
+	static SGVec2 GetCursorPos();
 };

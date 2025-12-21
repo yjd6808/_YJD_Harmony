@@ -21,9 +21,9 @@ USING_NS_JNET;
 void S_LOBBY::SEND_CLO_JoinLobby()
 {
 	const auto sending = SendBegin<CLO_JoinLobby>();
-	const AuthenticationComponent* pAuthenticationComponent = Core::Net->getAuthenticationComponent();
-	sending.Cmd.AccountId = pAuthenticationComponent->getAccountData().Id;
-	sending.Cmd.Serial = pAuthenticationComponent->getSerial();
+	const AuthenticationComponent* pAuthenticationComponent = Core::Net->GetAuthenticationComponent();
+	sending.Cmd.AccountId = pAuthenticationComponent->GetAccountData().id_;
+	sending.Cmd.Serial = pAuthenticationComponent->GetSerial();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

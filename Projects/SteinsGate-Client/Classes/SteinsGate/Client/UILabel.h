@@ -14,13 +14,13 @@
 class UILabel : public UIElement
 {
 public:
-	static UILabel* create(UIRootGroup* _pMaster, UIGroup* _pParent);
-	static UILabel* create(UIRootGroup* _pMaster, UIGroup* _pParent, UILabelInfo* _pLabelInfo, bool _infoOwner);
+	static UILabel* create(UIRootGroup* _pRoot, UIGroup* _pParent);
+	static UILabel* create(UIRootGroup* _pRoot, UIGroup* _pParent, UILabelInfo* _pLabelInfo, bool _infoOwner);
 
-	static constexpr UIElementType_t type() { return UIElementType::Label; }
+	static constexpr UIElementType_t Type() { return UIElementType::Label; }
 
-	UILabel(UIRootGroup* _pMaster, UIGroup* _pParent);
-	UILabel(UIRootGroup* _pMaster, UIGroup* _pParent, UILabelInfo* _pLabelInfo, bool _infoOwner);
+	UILabel(UIRootGroup* _pRoot, UIGroup* _pParent);
+	UILabel(UIRootGroup* _pRoot, UIGroup* _pParent, UILabelInfo* _pLabelInfo, bool _infoOwner);
 	~UILabel() override;
 
 	bool init() override;

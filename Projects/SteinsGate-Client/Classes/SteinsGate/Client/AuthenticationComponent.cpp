@@ -13,7 +13,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 AuthenticationComponent::AuthenticationComponent()
 {
-	initialize();
+	Initialize();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -22,7 +22,7 @@ AuthenticationComponent::~AuthenticationComponent()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void AuthenticationComponent::initialize()
+void AuthenticationComponent::Initialize()
 {
 	accountData_.Clear();
 
@@ -31,26 +31,26 @@ void AuthenticationComponent::initialize()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void AuthenticationComponent::setAccountIdPass(const char* _pId, const char* _pPass)
+void AuthenticationComponent::SetAccountIdPass(const char* _pId, const char* _pPass)
 {
-	accountData_.Id.SetString(_pId);
-	accountData_.Pass.SetString(_pPass);
+	accountData_.id_.SetString(_pId);
+	accountData_.pass_.SetString(_pPass);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void AuthenticationComponent::setLastServer(GameServerType_t _lastServer)
+void AuthenticationComponent::SetLastServer(GameServerType_t _lastServer)
 {
-	accountData_.LastServer = _lastServer;
+	accountData_.lastServer_ = _lastServer;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void AuthenticationComponent::setState(AuthenticationState_t _state)
+void AuthenticationComponent::SetState(AuthenticationState_t _state)
 {
 	state_ = _state;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void AuthenticationComponent::setSerial(AuthenticationSerial_t _serial)
+void AuthenticationComponent::SetSerial(AuthenticationSerial_t _serial)
 {
 	serial_ = _serial;
 }

@@ -15,24 +15,24 @@
 
 struct ThicknessBox
 {
-	float RelativeX;
-	float RelativeY;
-	float Width;
-	float Height;
+	float relativeX_;
+	float relativeY_;
+	float width_;
+	float height_;
 
 	ThicknessBox()
-	: RelativeX(0)
-	, RelativeY(0)
-	, Width(0)
-	, Height(0)
+	: relativeX_(0)
+	, relativeY_(0)
+	, width_(0)
+	, height_(0)
 	{
 	}
 
 	ThicknessBox(float _relativeX, float _relativeY, float _width, float _height)
-	: RelativeX(_relativeX)
-	, RelativeY(_relativeY)
-	, Width(_width)
-	, Height(_height)
+	: relativeX_(_relativeX)
+	, relativeY_(_relativeY)
+	, width_(_width)
+	, height_(_height)
 	{
 	}
 };
@@ -43,26 +43,26 @@ struct ActorPartSpriteData
 	ActorPartSpriteData(int _zOrder, int _sga, int _img);
 
 	// 스프라이트 정보(필수)
-	int SgaIndex;
-	int ImgIndex;
+	int sgaIndex_;
+	int imgIndex_;
 
 	// 미입력시 순서대로 1씩증가
-	int ZOrder;
-	SgaSpriteRect CustomSizeInfo;
+	int zOrder_;
+	SgaSpriteRect customSizeInfo_;
 };
 
 struct ActorSpriteData
 {
 	ActorSpriteData(ActorPartSpritePositioningRule_t _positioningRule, int _partCount, int _animationCount)
-	: PositioningRule(_positioningRule)
-	, Parts(_partCount)
-	, Animations(_animationCount)
+	: positioningRule_(_positioningRule)
+	, parts_(_partCount)
+	, animations_(_animationCount)
 	{
 	}
 
-	ActorPartSpritePositioningRule_t PositioningRule;
-	SGVector<ActorPartSpriteData> Parts;
-	SGVector<AnimationInfo> Animations;
+	ActorPartSpritePositioningRule_t positioningRule_;
+	SGVector<ActorPartSpriteData> parts_;
+	SGVector<AnimationInfo> animations_;
 };
 
 using ActorSpriteDataPtr = JCore::SharedPtr<ActorSpriteData>;

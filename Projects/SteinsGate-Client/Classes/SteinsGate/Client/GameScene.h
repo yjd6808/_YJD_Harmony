@@ -17,26 +17,27 @@ public:
 	SGGameScene();
 	~SGGameScene() override;
 
-	void onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
-	void onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
+	void OnKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
+	void OnKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
 
 	void update(float _dt) override;
 	bool init() override;
 
-	MapLayer* getMap()
+	MapLayer* GetMap()
 	{
 		return mapLayer_;
 	}
 
-	void cmdLoadChar();
-	void cmdEnterMap();
+	void CmdLoadChar();
+	void CmdEnterMap();
+
 	void onExit() override;
 
 private:
 	MapLayer* mapLayer_;
 	GridLayer* gridLayer_;
 
-	SceneType_t getType() override
+	SceneType_t GetType() override
 	{
 		return SceneType::Game;
 	}

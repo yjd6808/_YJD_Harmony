@@ -21,7 +21,7 @@ USING_NS_JNET;
 void S_AUTH::SEND_CAU_Login()
 {
 	const auto sending = SendBegin<CAU_Login>();
-	const AccountData& accountData = Core::Net->getAuthenticationComponent()->getAccountData();
-	sending.Cmd.id_.SetString(accountData.Id);
-	sending.Cmd.pass_.SetString(accountData.Pass);
+	const AccountData& accountData = Core::Net->GetAuthenticationComponent()->GetAccountData();
+	sending.Cmd.id_.SetString(accountData.id_);
+	sending.Cmd.pass_.SetString(accountData.pass_);
 }

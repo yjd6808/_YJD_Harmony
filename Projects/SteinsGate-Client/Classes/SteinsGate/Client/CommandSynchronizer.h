@@ -18,44 +18,44 @@ class CommandSynchronizer final : public SGSingletonPointer<CommandSynchronizer>
 	struct CommandQueueHolder
 	{
 		CommandQueueHolder()
-		: InitialCapacity(0)
-		, Queue(nullptr)
-		, MemPool(nullptr)
-		, Lock(nullptr)
+		: initialCapacity_(0)
+		, pQueue_(nullptr)
+		, pMemPool_(nullptr)
+		, pLock_(nullptr)
 		{
 		}
 
 		CommandQueueHolder(int _capacity)
-		: InitialCapacity(_capacity)
-		, Queue(nullptr)
-		, MemPool(nullptr)
-		, Lock(nullptr)
+		: initialCapacity_(_capacity)
+		, pQueue_(nullptr)
+		, pMemPool_(nullptr)
+		, pLock_(nullptr)
 		{
 		}
 
-		int InitialCapacity;
-		CommandQueue* Queue;
-		SGIndexMemroyPool* MemPool; // 데이터를 반환해줄 메모리풀
-		SGNormalLock* Lock;
+		int initialCapacity_;
+		CommandQueue* pQueue_;
+		SGIndexMemroyPool* pMemPool_; // 데이터를 반환해줄 메모리풀
+		SGNormalLock* pLock_;
 	};
 
 	struct CommandHolder : SGObjectPool<CommandHolder>
 	{
 		CommandHolder()
-		: Command(nullptr)
-		, MemPool(nullptr)
-		, ListenerType(ClientConnectServerType::Max)
-		, Sender(nullptr)
+		: pCommand_(nullptr)
+		, pMemPool_(nullptr)
+		, listenerType_(ClientConnectServerType::Max)
+		, pSender_(nullptr)
 		{
 		}
 
 		CommandHolder(ClientConnectServerType_t _listenerType, SGSession* _pSender, JNetwork::ICommand* _pCopy);
 		~CommandHolder() override;
 
-		JNetwork::ICommand* Command; // 무조건 위쪽에 위치해야 캐스팅이 정상적으로 동작함
-		SGIndexMemroyPool* MemPool; // 데이터를 돌려놓을 메모리풀(홀더 해제를 메인쓰레드에서 수행하기 때문에 포인터정보가 필요함)
-		ClientConnectServerType_t ListenerType;
-		SGSession* Sender;
+		JNetwork::ICommand* pCommand_; // 무조건 위쪽에 위치해야 캐스팅이 정상적으로 동작함
+		SGIndexMemroyPool* pMemPool_; // 데이터를 돌려놓을 메모리풀(홀더 해제를 메인쓰레드에서 수행하기 때문에 포인터정보가 필요함)
+		ClientConnectServerType_t listenerType_;
+		SGSession* pSender_;
 	};
 
 	using IOCPThreadId$CommandQueuePair = JCore::Pair<Int32U, CommandQueueHolder*>; // IOCP 쓰레드의 ID와 커맨드큐 페어
@@ -65,15 +65,15 @@ class CommandSynchronizer final : public SGSingletonPointer<CommandSynchronizer>
 	CommandSynchronizer();
 	~CommandSynchronizer();
 
-	void filterUnusedCommandQueue(); // 안쓰는 패킷큐는 해제 (메인 쓰레드에서 생성된 큐의 경우 쓸일이 없으므로)
-	void allocateCommandQueue();
-	void finalize();
-	static CommandQueueHolder registerPacketQueueAddress(int _initCapacity);
+	void FilterUnusedCommandQueue(); // 안쓰는 패킷큐는 해제 (메인 쓰레드에서 생성된 큐의 경우 쓸일이 없으므로)
+	void AllocateCommandQueue();
+	void Finalize();
+	static CommandQueueHolder RegisterPacketQueueAddress(int _initCapacity);
 
 public:
-	void enqueueCommand(ClientConnectServerType_t _listenerType, SGSession* _pSender, JNetwork::ICommand* _pCmd);
-	void initialize();
-	void processCommands();
+	void EnqueueCommand(ClientConnectServerType_t _listenerType, SGSession* _pSender, JNetwork::ICommand* _pCmd);
+	void Initialize();
+	void ProcessCommands();
 
 private:
 	int packetQueueCount_;

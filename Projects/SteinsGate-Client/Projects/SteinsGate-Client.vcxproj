@@ -526,10 +526,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\PackHelper.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ActorManager.h">
       <SubType>
       </SubType>
@@ -1035,11 +1031,11 @@
   <PropertyGroup>
     <_ProjectFileVersion>12.0.21005.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)..\Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)..\Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)..\Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)..\Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
@@ -1063,7 +1059,7 @@
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Engine\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)..\Classes;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\SteinsGate-Common.Core\Sources;$(SolutionDir)Projects\SteinsGate-Common.Engine\Sources;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)..\Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
+    <IntDir>$(ProjectDir)..\Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Engine\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
@@ -1073,7 +1069,7 @@
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Engine\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)..\Classes;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\SteinsGate-Common.Core\Sources;$(SolutionDir)Projects\SteinsGate-Common.Engine\Sources;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)..\Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
+    <IntDir>$(ProjectDir)..\Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -1154,7 +1150,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdcpplatest</LanguageStandard>
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpp20</LanguageStandard>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/utf-8 /Zm500</AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/utf-8 /Zm500</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/utf-8</AdditionalOptions>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Tutturu.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Tutturu.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)Tutturu.pch</PrecompiledHeaderOutputFile>
@@ -1219,7 +1215,7 @@ xcopy /Y /Q "$(SolutionDir)Projects\SteinsGate-Data.Config\common.json" "$(OutDi
       <DisableSpecificWarnings>4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalOptions>/utf-8 /Zm500</AdditionalOptions>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
       <PrecompiledHeaderFile>Tutturu.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)Tutturu.pch</PrecompiledHeaderOutputFile>
     </ClCompile>

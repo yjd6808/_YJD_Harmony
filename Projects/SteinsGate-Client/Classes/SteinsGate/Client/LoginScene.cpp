@@ -18,7 +18,7 @@ USING_NS_CC;
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-SGLoginScene* SGLoginScene::create()
+SGLoginScene* SGLoginScene::Create()
 {
 	SGLoginScene* pScene = dbg_new SGLoginScene();
 	if (pScene && pScene->init())
@@ -45,7 +45,7 @@ bool SGLoginScene::init()
 		return false;
 	}
 
-	m_pUILayer->addUIGroup(GROUP_UI_LOGIN);
+	pUILayer_->AddUIGroup(GROUP_UI_LOGIN);
 	return true;
 }
 
@@ -55,19 +55,19 @@ void SGLoginScene::update(float _dt)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGLoginScene::onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
+void SGLoginScene::OnKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
 {
 	if (_keyCode == EventKeyboard::KeyCode::KEY_F8)
 	{
-		WorldScene::get()->reserveScene(SceneType::ChannelSelect);
+		WorldScene::Get()->ReserveScene(SceneType::ChannelSelect);
 	}
 	else if (_keyCode == EventKeyboard::KeyCode::KEY_F7)
 	{
-		WorldScene::get()->reserveScene(SceneType::Game);
+		WorldScene::Get()->ReserveScene(SceneType::Game);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGLoginScene::onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
+void SGLoginScene::OnKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
 {
 }

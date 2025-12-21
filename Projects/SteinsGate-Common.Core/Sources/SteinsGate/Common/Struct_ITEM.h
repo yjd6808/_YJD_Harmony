@@ -22,20 +22,20 @@
 
 union ItemCode
 {
-	inline static constexpr int BitCode = 16; // 65535
-	inline static constexpr int BitDetail1 = 6; // 64
-	inline static constexpr int BitDetail2 = 4; // 16
-	inline static constexpr int BitType = 6; // 64
+	inline static constexpr int BIT_CODE = 16; // 65535
+	inline static constexpr int BIT_DETAIL1 = 6; // 64
+	inline static constexpr int BIT_DETAIL2 = 4; // 16
+	inline static constexpr int BIT_TYPE = 6; // 64
 
-	inline static constexpr int BitCodeShift = 0;
-	inline static constexpr int BitDetail1Shift = 16;
-	inline static constexpr int BitDetail2Shift = 22;
-	inline static constexpr int BitTypeShift = 26;
+	inline static constexpr int BIT_CODE_SHIFT = 0;
+	inline static constexpr int BIT_DETAIL1_SHIFT = 16;
+	inline static constexpr int BIT_DETAIL2_SHIFT = 22;
+	inline static constexpr int BIT_TYPE_SHIFT = 26;
 
-	inline static constexpr int BitCodeMask = 0x0000ffff;
-	inline static constexpr int BitDetail1Mask = JCore::FillBitRight32<22>() & ~0x0000ffff;
-	inline static constexpr int BitDetail2Mask = JCore::FillBitRight32<26>() & ~JCore::FillBitRight32<22>();
-	inline static constexpr int BitTypeMask = 0xffffffff & JCore::FillBitRight32<26>();
+	inline static constexpr int BIT_CODE_MASK = 0x0000ffff;
+	inline static constexpr int BIT_DETAIL1_MASK = JCore::FillBitRight32<22>() & ~0x0000ffff;
+	inline static constexpr int BIT_DETAIL2_MASK = JCore::FillBitRight32<26>() & ~JCore::FillBitRight32<22>();
+	inline static constexpr int BIT_TYPE_MASK = 0xffffffff & JCore::FillBitRight32<26>();
 
 
 	ItemCode()
@@ -48,9 +48,9 @@ union ItemCode
 	ItemCode(int _code, int _detail1, ItemType_t _type);
 	ItemCode(int _code, int _detail1, int _detail2, ItemType_t _type);
 
-	void initAvatarCode(CharType_t _charType, AvatarType_t _avatarType, int _code);
-	void initWeaponCode(CharType_t _charType, WeaponType_t _weaponType, int _code);
-	void initArmorCode(ItemType_t _itemType, EquipArmorType_t _armorType, int _code);
+	void InitAvatarCode(CharType_t _charType, AvatarType_t _avatarType, int _code);
+	void InitWeaponCode(CharType_t _charType, WeaponType_t _weaponType, int _code);
+	void InitArmorCode(ItemType_t _itemType, EquipArmorType_t _armorType, int _code);
 
 	// 이렇게 유니온 많이 달아도 일반 유니온 1개짜리랑 성능차이가 있을려나?
 	// TODO: 어셈코드 확인해볼 것
@@ -58,35 +58,35 @@ union ItemCode
 
 	struct
 	{
-		int Code : BitCode;
-		int Detail1 : BitDetail1; // 아바타 부위 || 갑옷 종류 || 무기 종류
-		int Detail2 : BitDetail2; // 캐릭터 타입
-		ItemType_t Type : BitType; // 소모품, 아바타, 무기
-	} CommonUn;
+		int code_ : BIT_CODE;
+		int detail1_ : BIT_DETAIL1; // 아바타 부위 || 갑옷 종류 || 무기 종류
+		int detail2_ : BIT_DETAIL2; // 캐릭터 타입
+		ItemType_t type_ : BIT_TYPE; // 소모품, 아바타, 무기
+	} commonUn_;
 
 	struct
 	{
-		int Code : BitCode;
-		AvatarType_t PartType : BitDetail1;
-		CharType_t CharType : BitDetail2;
-		ItemType_t ItemType : BitType;
-	} AvatarUn;
+		int code_ : BIT_CODE;
+		AvatarType_t partType_ : BIT_DETAIL1;
+		CharType_t charType_ : BIT_DETAIL2;
+		ItemType_t itemType_ : BIT_TYPE;
+	} avatarUn_;
 
 	struct
 	{
-		int Code : BitCode;
-		WeaponType_t WeaponType : BitDetail1;
-		CharType_t CharType : BitDetail2;
-		ItemType_t ItemType : BitType;
-	} WeaponUn;
+		int code_ : BIT_CODE;
+		WeaponType_t weaponType_ : BIT_DETAIL1;
+		CharType_t charType_ : BIT_DETAIL2;
+		ItemType_t itemType_ : BIT_TYPE;
+	} weaponUn_;
 
 	struct
 	{
-		int Code : BitCode;
-		EquipArmorType_t ArmorType : BitDetail1;
-		int _ : BitDetail2;
-		ItemType_t ItemType : BitType;
-	} ArmorUn;
+		int code_ : BIT_CODE;
+		EquipArmorType_t armorType_ : BIT_DETAIL1;
+		int _ : BIT_DETAIL2;
+		ItemType_t itemType_ : BIT_TYPE;
+	} armorUn_;
 
 
 	int Code;
@@ -95,38 +95,38 @@ union ItemCode
 struct ItemOpt
 {
 	ItemOpt()
-	: Code(InvalidValue_v)
+	: code_(InvalidValue_v)
 	{
 	}
 
-	int Code{};
+	int code_{};
 };
 
 struct ItemOptVal : ItemOpt
 {
-	int Value{};
+	int value_{};
 };
 
 struct ItemOptRangeVal : ItemOpt
 {
-	int MinValue{};
-	int MaxValue{};
+	int minValue_{};
+	int maxValue_{};
 };
 
 
 struct InvenItem
 {
-	ItemCode Code;
-	int Quantity;
+	ItemCode code_;
+	int quantity_;
 };
 
 struct InvenItemEquip : InvenItem
 {
-	int ArmorPhisical;
-	int ArmorMagic;
-	int AttackPhysical;
-	int AttackMagic;
+	int armorPhisical_;
+	int armorMagic_;
+	int attackPhysical_;
+	int attackMagic_;
 
-	int OptCount;
-	ItemOptVal Opt[Const::Item::MaxOptCount];
+	int optCount_;
+	ItemOptVal opt_[Const::Item::MaxOptCount];
 };

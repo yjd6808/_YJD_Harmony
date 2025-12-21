@@ -24,12 +24,12 @@ WalkActivity_Goblin::WalkActivity_Goblin(Actor* _pActor)
 
 void WalkActivity_Goblin::OnActivityBegin()
 {
-	pActor_->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_WALK);
+	pActor_->RunAnimation(DEF_ANIMATION_MONSTER_GOBLIN_WALK);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-void WalkActivity_Goblin::updateMoveImpl(float _dt, MoveComponent* _pMoveComponent, bool _arrivedX, bool _arrivedY,
+void WalkActivity_Goblin::UpdateMoveImpl(float _dt, MoveComponent* _pMoveComponent, bool _arrivedX, bool _arrivedY,
                                          Direction_t _lr, Direction_t _ud)
 {
 	Monster* pMonster = dynamic_cast<Monster*>(pActor_);
@@ -40,7 +40,7 @@ void WalkActivity_Goblin::updateMoveImpl(float _dt, MoveComponent* _pMoveCompone
 		return;
 	}
 
-	MonsterStatInfo* pStatInfo = pMonster->getStatInfo();
+	MonsterStatInfo* pStatInfo = pMonster->GetStatInfo();
 
 	if (pStatInfo == nullptr)
 	{
@@ -68,5 +68,5 @@ void WalkActivity_Goblin::updateMoveImpl(float _dt, MoveComponent* _pMoveCompone
 		speedY = pStatInfo->moveSpeedY_ * _dt * -1;
 	}
 
-	_pMoveComponent->setSpeed(speedX, speedY);
+	_pMoveComponent->SetSpeed(speedX, speedY);
 }

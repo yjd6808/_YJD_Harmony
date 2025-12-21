@@ -14,9 +14,9 @@ class GunnerWalk : public GunnerAction
 public:
 	GunnerWalk(HostPlayer* _pHostPlayer, ActionInfo* _pActionInfo);
 
-	void onActionBegin() override;
-	void onKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode) override;
-	void onKeyReleased(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode) override;
-	bool isHorizontalKeyPressed(PlayerController* _pController);
-	bool isVerticalKeyPressed(PlayerController* _pController);
+	void OnActionBegin() override;
+	void OnKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode) override;
+	void OnKeyReleased(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode) override;
+	bool IsHorizontalKeyPressed(PlayerController* _pController);
+	bool IsVerticalKeyPressed(PlayerController* _pController);
 };

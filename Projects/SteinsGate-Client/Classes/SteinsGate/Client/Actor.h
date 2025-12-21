@@ -39,128 +39,128 @@ class Actor : public SGNode
 public:
 	enum CleanUpFlag
 	{
-		CF_None = 0,
-		CF_ReleaseActorSprite = 1
+		cfNone = 0,
+		cfReleaseActorSprite = 1
 	};
 
 	Actor();
 	~Actor() override;
 
-	virtual void initialize() = 0;
-	virtual void initActorSprite() = 0;
-	virtual void onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
-	virtual void onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
-	virtual void onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
-	virtual void onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
-	virtual void initThicknessBox(const ThicknessBox& _thicknessBox);
-	virtual void initHitRecorder(int _hitPossibleListSize = 16, int _alreadyHitMapSize = 32, Actor* _pOwner = nullptr);
-	virtual void hit(const HitInfo& _hitInfo);
+	virtual void			Initialize() = 0;
+	virtual void			InitActorSprite() = 0;
+	virtual void			OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	virtual void			OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	virtual void			OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	virtual void			OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	virtual void			InitThicknessBox(const ThicknessBox& _thicknessBox);
+	virtual void			InitHitRecorder(int _hitPossibleListSize = 16, int _alreadyHitMapSize = 32, Actor* _pOwner = nullptr);
+	virtual void			Hit(const HitInfo& _hitInfo);
 
-	virtual bool initVariables();
-	virtual void initComponents() = 0;
-	virtual void initListeners() = 0;
+	virtual bool			InitVariables();
+	virtual void			InitComponents() = 0;
+	virtual void			InitListeners() = 0;
 
-	bool addListener(IActorListener* _pListener);
-	bool hasListener(IActorListener::Type _type);
-	IActorListener* getListener(IActorListener::Type _type);
-	void update(float _dt) override; // 자식에서도 오버라이딩시 이거 호출하도록
+	bool					AddListener(IActorListener* _pListener);
+	bool					HasListener(IActorListener::Type _type);
+	IActorListener*			GetListener(IActorListener::Type _type);
+	void					update(float _dt) override; // 자식에서도 오버라이딩시 이거 호출하도록
 
-	void addComponent(IComponent* _pComponenet);
-	bool hasComponent(IComponent::Type _type) const;
+	void					AddComponent(IComponent* _pComponenet);
+	bool					HasComponent(IComponent::Type _type) const;
 
 	template <typename TComponent>
-	TComponent* getComponent() const { return m_Components.get<TComponent>(); }
+	TComponent*				GetComponent() const { return components_.Get<TComponent>(); }
 
-	virtual ActorType_t getType() const = 0;
-	const char* getTypeName() const;
-	ActorRect getActorRect() const;
-	SGRect getThicknessBoxRect() const;
-	SGVec2 getPositionReal() const;
-	float getPositionRealX() const;
-	float getPositionRealY() const;
-	float getPositionActorY() const;
-	SGVec2 getPositionRealCenter() const;
-	float getPositionRealCenterX() const;
-	float getPositionRealCenterY() const;
-	SGVec2 getCanvasPositionReal() const;
-	SGSize getCanvasSize() const;
-	SGRect getHitBox() const;
-	ThicknessBox getThicknessBox() const;
-	SGDrawNode* getThicknessBoxNode() const;
-	ActorSprite* getActorSprite() const;
-	SpriteDirection_t getSpriteDirection() const;
-	int getRunningAnimationCode();
-	ActorPartAnimation* getRunningAnimation();
-	int getAllyFlag() { return m_iAllyFlag; }
-	MapLayer* getMapLayer() { return m_pMapLayer; }
-	HitRecorder* getHitRecorder() { return m_pHitRecorder; }
-	int getActorId() { return m_iActorId; }
-	virtual int getCode() = 0;
-	ActorListenerCollection& getListenerCollection() { return m_Listeners; }
+	virtual ActorType_t		GetType() const = 0;
+	const char*				GetTypeName() const;
+	ActorRect				GetActorRect() const;
+	SGRect					GetThicknessBoxRect() const;
+	SGVec2					GetPositionReal() const;
+	float					GetPositionRealX() const;
+	float					GetPositionRealY() const;
+	float					GetPositionActorY() const;
+	SGVec2					GetPositionRealCenter() const;
+	float					GetPositionRealCenterX() const;
+	float					GetPositionRealCenterY() const;
+	SGVec2					GetCanvasPositionReal() const;
+	SGSize					GetCanvasSize() const;
+	SGRect					GetHitBox() const;
+	ThicknessBox			GetThicknessBox() const;
+	SGDrawNode*				GetThicknessBoxNode() const;
+	ActorSprite*			GetActorSprite() const;
+	SpriteDirection_t		GetSpriteDirection() const;
 
-	void setPositionReal(float _x, float _y);
-	void setPositionReal(const SGVec2& _v);
-	void setPositionRealX(float _x);
-	void setPositionRealY(float _y);
-	void setPositionRealCenter(float _x, float _y);
-	void setPositionRealCenter(const SGVec2& _v);
-	void setAllyFlag(int _flag) { m_iAllyFlag = _flag; }
-	void setMapLayer(MapLayer* _pMapLayer);
-	void setActorId(int _id);
-	void setCleanUpFlag(int _flag) { m_iCleanUpFlag = _flag; }
-	bool hasCleanUpFlag(int _cleanUpFlag);
-	void addCleanUpFlag(int _cleanUpFlag);
-	void clearCleanUpFlag();
+	int						GetRunningAnimationCode();
+	ActorPartAnimation*		GetRunningAnimation();
+	int						GetAllyFlag() { return allyFlag_; }
+	MapLayer*				GetMapLayer() { return pMapLayer_; }
+	HitRecorder*			GetHitRecorder() { return pHitRecorder_; }
+	int						GetActorId() { return actorId_; }
+	virtual int				GetCode() = 0;
+	ActorListenerCollection& GetListenerCollection() { return listeners_; }
 
-	void runAnimation(int _animationCode);
-	void runAnimation(int _animationCode, int _startFrameIndexInAnimation);
-	void pauseAnimation(float _delay);
+	void					SetPositionReal(float _x, float _y);
+	void					SetPositionReal(const SGVec2& _v);
+	void					SetPositionRealX(float _x);
+	void					SetPositionRealY(float _y);
+	void					SetPositionRealCenter(float _x, float _y);
+	void					SetPositionRealCenter(const SGVec2& _v);
+	void					SetAllyFlag(int _flag) { allyFlag_ = _flag; }
+	void					SetMapLayer(MapLayer* _pMapLayer);
+	void					SetActorId(int _id);
+	void					SetCleanUpFlag(int _flag) { cleanUpFlag_ = _flag; }
+	bool					HasCleanUpFlag(int _cleanUpFlag);
+	void					AddCleanUpFlag(int _cleanUpFlag);
+	void					ClearCleanUpFlag();
 
-	void runFrameEventSpawn(FrameEventSpawnType_t _frameEventSpawnType, int _code);
-	void runFrameEvent(FrameEvent* _pFrameEvent);
-	void runFrameEvent(int _frameEventCode);
+	void					RunAnimation(int _animationCode);
+	void					RunAnimation(int _animationCode, int _startFrameIndexInAnimation);
+	void					PauseAnimation(float _delay);
 
-	void setSpriteDirection(SpriteDirection_t _direction);
-	void setForwardDirection();
-	void setBackwardDirection();
+	void					RunFrameEventSpawn(FrameEventSpawnType_t _frameEventSpawnType, int _code);
+	void					RunFrameEvent(FrameEvent* _pFrameEvent);
+	void					RunFrameEvent(int _frameEventCode);
 
-	bool isCollide(Actor* _pOther, JCORE_OUT SpriteDirection_t& _otherHitDirection, JCORE_OUT SGRect& _hitRect);
-	bool isCollide(const ActorRect& _otherRect, JCORE_OUT SpriteDirection_t& _otherHitDirection,
-	               JCORE_OUT SGRect& _hitRect);
-	bool isCollide(const ActorRect& _otherRect);
-	bool isOnTheGround();
+	void					SetSpriteDirection(SpriteDirection_t _direction);
+	void					SetForwardDirection();
+	void					SetBackwardDirection();
 
-	void releaseActorSprite(); // 액터의 텍스쳐를 수동으로 제거하기 위해
+	bool					IsCollide(Actor* _pOther, JCORE_OUT SpriteDirection_t& _otherHitDirection, JCORE_OUT SGRect& _hitRect);
+	bool					IsCollide(const ActorRect& _otherRect, JCORE_OUT SpriteDirection_t& _otherHitDirection, JCORE_OUT SGRect& _hitRect);
+	bool					IsCollide(const ActorRect& _otherRect);
+	bool					IsOnTheGround();
 
-	void cleanUpAtNextFrame();
-	void cleanUp();
+	void					ReleaseActorSprite(); // 액터의 텍스쳐를 수동으로 제거하기 위해
 
-	void attach(Actor* _pActor); // 이 액터에 전달받은 액터를 붙임
-	void detach(Actor* _pActor); // 이 액터에게서 전달받은 액터를 떼어냄
-	Actor* getAttacher();
-	bool hasAttacher();
+	void		CleanUpAtNextFrame();
+	void		CleanUp();
+
+	void		Attach(Actor* _pActor); // 이 액터에 전달받은 액터를 붙임
+	void		Detach(Actor* _pActor); // 이 액터에게서 전달받은 액터를 떼어냄
+	Actor*		GetAttacher();
+	bool		HasAttacher();
 
 public:
 	// stdActor기준으로 절대 액터 렉트를 얻도록 해줌
-	static ActorRect convertAbsoluteActorRect(Actor* _pStdActor, const ActorRect& _relativeRect);
+	static ActorRect ConvertAbsoluteActorRect(Actor* _pStdActor, const ActorRect& _relativeRect);
 
 private:
-	AIActivity* getRunningAIActivity();
+	AIActivity* GetRunningAiActivity();
 
 protected:
-	JCORE_NOT_NULL MapLayer* m_pMapLayer;
-	JCORE_NOT_NULL ActorSprite* m_pActorSprite;
-	JCORE_NULLABLE HitRecorder* m_pHitRecorder;
+	JCORE_NOT_NULL MapLayer* pMapLayer_;
+	JCORE_NOT_NULL ActorSprite* pActorSprite_;
+	JCORE_NULLABLE HitRecorder* pHitRecorder_;
 
-	ActorListenerCollection m_Listeners;
-	ComponentCollection m_Components;
+	ActorListenerCollection listeners_;
+	ComponentCollection components_;
 
-	int m_iActorId; // 액터 박스에게서 부여된 고유 ID
-	int m_iAllyFlag; // 값이 같으면 동맹, 다르면 적
-	int m_iCleanUpFlag; // 클린업 될 때 수행할 작업 플래그
-	bool m_bCleanUp; // 액터가 될 예정 혹은 제거되었는지 여부
+	int actorId_; // 액터 박스에게서 부여된 고유 ID
+	int allyFlag_; // 값이 같으면 동맹, 다르면 적
+	int cleanUpFlag_; // 클린업 될 때 수행할 작업 플래그
+	bool isCleanUp_; // 액터가 될 예정 혹은 제거되었는지 여부
 
-	JCORE_NOT_NULL SGDrawNode* m_pThicknessBox; // TODO: Debug 시각화를 위해 노드로 표현하였다. 추후에는 단순 렉트로 표현해도 됨
-	JCORE_NULLABLE Actor* m_pAttacher; // 내가 누구에게 붙어있는가?
-	SGVector<Actor*> m_vAttches; // 내게 붙어 있는 녀석들
+	JCORE_NOT_NULL SGDrawNode* pThicknessBox_; // TODO: Debug 시각화를 위해 노드로 표현하였다. 추후에는 단순 렉트로 표현해도 됨
+	JCORE_NULLABLE Actor* pAttacher_; // 내가 누구에게 붙어있는가?
+	SGVector<Actor*> attches_; // 내게 붙어 있는 녀석들
 };

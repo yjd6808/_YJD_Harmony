@@ -16,7 +16,7 @@ class ActorSprite;
 class ActorPartSprite : public SGSprite
 {
 public:
-	static ActorPartSprite* create(
+	static ActorPartSprite* Create(
 		int _frameCount,
 		ActorSprite* _pActor,
 		SGNode* _pCanvas,
@@ -35,39 +35,39 @@ public:
 	~ActorPartSprite() override;
 
 	bool init() override;
-	void initFrames();
-	void initAnimations();
+	void InitFrames();
+	void InitAnimations();
 
 	void update(float _dt) override;
-	void updateBoundingBoxVisibleState();
-	void updateAnimationReference(SGVector<AnimationInfo>* _pAnimations);
+	void UpdateBoundingBoxVisibleState();
+	void UpdateAnimationReference(SGVector<AnimationInfo>* _pAnimations);
 
-	void runAnimation(int _code);
-	void runAnimation(int _code, int _startFrameIndexInAnimation);
+	void RunAnimation(int _code);
+	void RunAnimation(int _code, int _startFrameIndexInAnimation);
 
-	void setPartIndex(int _index) { partIndex_ = _index; }
-	int getPartIndex() { return partIndex_; }
-	ActorType_t getActorType();
-	SGNode* getCanvas() { return canvas_; }
-	SGDrawNode* getPartBoundingBox() { return boundingBox_; }
-	ActorSprite* getActorSprite() { return actorSprite_; }
-	const ActorPartSpriteData& getPartData() { return partData_; }
-	ActorPartAnimation* getRunningAnimation() { return runningAnimation_; }
+	void SetPartIndex(int _index) { partIndex_ = _index; }
+	int GetPartIndex() { return partIndex_; }
+	ActorType_t GetActorType();
+	SGNode* GetCanvas() { return canvas_; }
+	SGDrawNode* GetPartBoundingBox() { return boundingBox_; }
+	ActorSprite* GetActorSprite() { return pActorSprite_; }
+	const ActorPartSpriteData& GetPartData() { return partData_; }
+	ActorPartAnimation* GetRunningAnimation() { return runningAnimation_; }
 
-	void onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
-	void onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
-	void onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
-	void onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
-	void onCustomFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
-	void onCustomFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
-	void reflectAnimation(ActorPartAnimation* _pRunningAnimation);
+	void OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	void OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	void OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	void OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	void OnCustomFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	void OnCustomFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	void ReflectAnimation(ActorPartAnimation* _pRunningAnimation);
 
 private:
 	// 주입 데이터
 	int partIndex_;	// 몇번째 파츠인지
-	ActorSprite* actorSprite_;
+	ActorSprite* pActorSprite_;
 	ActorPartSpriteData partData_;
-	SGVector<AnimationInfo>* animationInfoList_;
+	SGVector<AnimationInfo>* pAnimationInfoList_;
 
 	// 자체 데이터
 	SGNode* canvas_;

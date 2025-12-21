@@ -11,7 +11,8 @@
 USING_NS_CC;
 USING_NS_JC;
 
-ActorPartSprite* ActorPartSprite::create(
+//////////////////////////////////////////////////////////////////////////////////////////
+ActorPartSprite* ActorPartSprite::Create(
 	int _frameCount,
 	ActorSprite* _pActor,
 	SGNode* _pCanvas,
@@ -33,6 +34,7 @@ ActorPartSprite* ActorPartSprite::create(
 	return nullptr;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 ActorPartSprite::ActorPartSprite(
 	int _frameCount,
 	ActorSprite* _pActor,
@@ -40,9 +42,10 @@ ActorPartSprite::ActorPartSprite(
 	SGDrawNode* _pBoundingBox,
 	const ActorPartSpriteData& _partData,
 	SGVector<AnimationInfo>* _pAnimations)
-: actorSprite_(_pActor)
+: partIndex_(0)
+, pActorSprite_(_pActor)
 , partData_(_partData)
-, animationInfoList_(_pAnimations)
+, pAnimationInfoList_(_pAnimations)
 , canvas_(_pCanvas)
 , boundingBox_(_pBoundingBox)
 , runningAnimation_(nullptr)
@@ -52,6 +55,7 @@ ActorPartSprite::ActorPartSprite(
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 ActorPartSprite::~ActorPartSprite()
 {
 	animationMap_.ForEachValue([](ActorPartAnimation* _pAnimation) { CC_SAFE_RELEASE(_pAnimation); });
@@ -62,6 +66,7 @@ ActorPartSprite::~ActorPartSprite()
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 bool ActorPartSprite::init()
 {
 	if (!Sprite::init())
@@ -69,19 +74,20 @@ bool ActorPartSprite::init()
 		return false;
 	}
 
-	initFrames();
-	initAnimations();
+	InitFrames();
+	InitAnimations();
 
 	return true;
 }
 
-void ActorPartSprite::initFrames()
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActorPartSprite::InitFrames()
 {
-	ImagePack* pImgPack = ImagePackManager::Get()->getPack(partData_.SgaIndex);
+	ImagePack* pImgPack = ImagePackManager::Get()->GetPack(partData_.sgaIndex_);
 
 	for (int i = 0; i < frames_.Size(); ++i)
 	{
-		frames_[i] = pImgPack->createFrameTexture(partData_.ImgIndex, i);
+		frames_[i] = pImgPack->CreateFrameTexture(partData_.imgIndex_, i);
 
 		if (frames_[i] == nullptr)
 		{
@@ -92,30 +98,33 @@ void ActorPartSprite::initFrames()
 	}
 }
 
-void ActorPartSprite::initAnimations()
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActorPartSprite::InitAnimations()
 {
-	for (int i = 0; i < animationInfoList_->Size(); ++i)
+	for (int i = 0; i < pAnimationInfoList_->Size(); ++i)
 	{
-		AnimationInfo& animationInfo = animationInfoList_->At(i);
-		ActorPartAnimation* pPartAnimation = ActorPartAnimation::create(this, &animationInfo, frames_);
-		pPartAnimation->constructFrames(partData_.SgaIndex, partData_.ImgIndex);
+		AnimationInfo& animationInfo = pAnimationInfoList_->At(i);
+		ActorPartAnimation* pPartAnimation = ActorPartAnimation::Create(this, &animationInfo, frames_);
+		pPartAnimation->ConstructFrames(partData_.sgaIndex_, partData_.imgIndex_);
 		pPartAnimation->retain();
 		animationMap_.Insert(animationInfo.code_, pPartAnimation);
 		animationList_.PushBack(pPartAnimation);
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void ActorPartSprite::update(float _dt)
 {
 	if (runningAnimation_)
 	{
-		runningAnimation_->update(_dt);
+		runningAnimation_->Update(_dt);
 	}
 
-	updateBoundingBoxVisibleState();
+	UpdateBoundingBoxVisibleState();
 }
 
-void ActorPartSprite::updateBoundingBoxVisibleState()
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActorPartSprite::UpdateBoundingBoxVisibleState()
 {
 	if (Global::Get()->DrawBodyBoundingBox)
 	{
@@ -127,23 +136,24 @@ void ActorPartSprite::updateBoundingBoxVisibleState()
 	}
 }
 
-void ActorPartSprite::updateAnimationReference(SGVector<AnimationInfo>* _pAnimations)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActorPartSprite::UpdateAnimationReference(SGVector<AnimationInfo>* _pAnimations)
 {
-	animationInfoList_ = _pAnimations;
+	pAnimationInfoList_ = _pAnimations;
 	SGVector<ActorPartAnimation*> animationList(animationList_.Size());
 
-	for (int i = 0; i < animationInfoList_->Size(); ++i)
+	for (int i = 0; i < pAnimationInfoList_->Size(); ++i)
 	{
-		AnimationInfo& animationInfo = animationInfoList_->At(i);
+		AnimationInfo& animationInfo = pAnimationInfoList_->At(i);
 
 		if (!animationMap_.Exist(animationInfo.code_))
 		{
-			DebugAssertMsg(false, "%s", animationInfo.Name.Source());
+			DebugAssertMsg(false, "%s", animationInfo.name_.Source());
 			return;
 		}
 
 		ActorPartAnimation* pAnimation = animationMap_[animationInfo.code_];
-		pAnimation->setAnimationInfo(&animationInfo);
+		pAnimation->SetAnimationInfo(&animationInfo);
 		animationList.PushBack(pAnimation);
 	}
 
@@ -151,58 +161,64 @@ void ActorPartSprite::updateAnimationReference(SGVector<AnimationInfo>* _pAnimat
 	animationList_ = animationList;
 }
 
-void ActorPartSprite::runAnimation(int _code)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActorPartSprite::RunAnimation(int _code)
 {
-	runAnimation(_code, 0);
+	RunAnimation(_code, 0);
 }
 
-void ActorPartSprite::runAnimation(int _code, int _startFrameIndexInAnimation)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActorPartSprite::RunAnimation(int _code, int _startFrameIndexInAnimation)
 {
 	DebugAssertMsg(animationMap_.Exist(_code), "");
 	ActorPartAnimation* pNextAnimation = animationMap_[_code];
 
 	if (runningAnimation_ == pNextAnimation && _startFrameIndexInAnimation == 0)
 	{
-		runningAnimation_->setLoopSequence();
+		runningAnimation_->SetLoopSequence();
 		return;
 	}
 
 	runningAnimation_ = pNextAnimation;
-	runningAnimation_->run(_startFrameIndexInAnimation);
+	runningAnimation_->Run(_startFrameIndexInAnimation);
 
-	updateBoundingBoxVisibleState();
+	UpdateBoundingBoxVisibleState();
 }
 
-ActorType_t ActorPartSprite::getActorType()
+//////////////////////////////////////////////////////////////////////////////////////////
+ActorType_t ActorPartSprite::GetActorType()
 {
-	return getActorSprite()->getActor()->getType();
+	return GetActorSprite()->GetActor()->GetType();
 }
 
-void ActorPartSprite::onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActorPartSprite::OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
-	actorSprite_->onAnimationBegin(_pAnimation, _pTexture);
+	pActorSprite_->OnAnimationBegin(_pAnimation, _pTexture);
 }
 
-void ActorPartSprite::onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActorPartSprite::OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
-	actorSprite_->onAnimationEnd(_pAnimation, _pTexture);
+	pActorSprite_->OnAnimationEnd(_pAnimation, _pTexture);
 }
 
-void ActorPartSprite::onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActorPartSprite::OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
-	const SgaSpriteRect& rect = _pTexture->getFullRect();
-	const int frameIndex = _pTexture->getFrameIndex();
-	const int frameIndexInAnimation = _pAnimation->getFrameIndexInAnimation();
+	const SgaSpriteRect& rect = _pTexture->GetFullRect();
+	const int frameIndex = _pTexture->GetFrameIndex();
+	const int frameIndexInAnimation = _pAnimation->GetFrameIndexInAnimation();
 
-	float frameWidth = _pTexture->getFrameWidthF();
-	float frameHeight = _pTexture->getFrameHeightF();
+	float frameWidth = _pTexture->GetFrameWidthF();
+	float frameHeight = _pTexture->GetFrameHeightF();
 
 	float width = static_cast<float>(rect.width_);
 	float height = static_cast<float>(rect.height_);
 	float adjustX = static_cast<float>(rect.x_);
 	float adjustY = frameHeight - static_cast<float>(rect.y_) - height;
 
-	bool projectile = getActorType() == ActorType::Projectile;
+	bool projectile = GetActorType() == ActorType::Projectile;
 
 	if (!projectile)
 	{
@@ -226,28 +242,32 @@ void ActorPartSprite::onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture
 		boundingBox_->drawPolygon(poly.source(), 4, {}, 1, Color4F::WHITE);
 	}
 
-	actorSprite_->onFrameBegin(_pAnimation, _pTexture);
+	pActorSprite_->OnFrameBegin(_pAnimation, _pTexture);
 }
 
-void ActorPartSprite::onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActorPartSprite::OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
-	actorSprite_->onFrameEnd(_pAnimation, _pTexture);
+	pActorSprite_->OnFrameEnd(_pAnimation, _pTexture);
 }
 
-void ActorPartSprite::onCustomFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
-{
-}
-
-void ActorPartSprite::onCustomFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActorPartSprite::OnCustomFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
 }
 
-void ActorPartSprite::reflectAnimation(ActorPartAnimation* _pRunningAnimation)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActorPartSprite::OnCustomFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
-	int animationCode = _pRunningAnimation->getAnimationCode();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActorPartSprite::ReflectAnimation(ActorPartAnimation* _pRunningAnimation)
+{
+	int animationCode = _pRunningAnimation->GetAnimationCode();
 	DebugAssertMsg(animationMap_.Exist(animationCode), "");
 	ActorPartAnimation* pAnimation = animationMap_[animationCode];
 
 	runningAnimation_ = pAnimation;
-	runningAnimation_->reflectAnimation(_pRunningAnimation);
+	runningAnimation_->ReflectAnimation(_pRunningAnimation);
 }

@@ -14,5 +14,5 @@ class JCORE_NOVTABLE IUpdatable
 {
 public:
 	virtual ~IUpdatable() = default;
-	virtual void onUpdate(float _dt) = 0;
+	virtual void OnUpdate(float _dt) = 0;
 };

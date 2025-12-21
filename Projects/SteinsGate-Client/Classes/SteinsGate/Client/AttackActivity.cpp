@@ -11,6 +11,6 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 AttackActivity::AttackActivity(Actor* _pActor)
 : AIActivity(_pActor, AIActivityType::Attack)
-, m_pHitRecorder(nullptr)
+, pHitRecorder_(nullptr)
 {
 }

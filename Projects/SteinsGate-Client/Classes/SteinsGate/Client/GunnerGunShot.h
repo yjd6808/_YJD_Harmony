@@ -16,27 +16,27 @@ class GunnerGunShot : public GunnerAction
 public:
 	GunnerGunShot(HostPlayer* _pPlayer, ActionInfo* _pActionInfo);
 
-	bool onConditionCheck() override;
-	void onActionBegin() override;
-	void onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
-	void onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
-	void onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
-	void onKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode) override;
+	bool OnConditionCheck() override;
+	void OnActionBegin() override;
+	void OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
+	void OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
+	void OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
+	void OnKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode) override;
 
-	void onUpdate(float _deltaTime) override;
-	void updateDownKeyCheck(PlayerController* _pController);
-	void updateRightShotTime(PlayerController* _pController, float _deltaTime);
+	void OnUpdate(float _deltaTime) override;
+	void UpdateDownKeyCheck(PlayerController* _pController);
+	void UpdateRightShotTime(PlayerController* _pController, float _deltaTime);
 
-	void onEnemySingleHit(HitInfo& _info);
-	void onEnemyMultiHit(SGHitInfoList& _hitList, int _newHitCount);
+	void OnEnemySingleHit(HitInfo& _info);
+	void OnEnemyMultiHit(SGHitInfoList& _hitList, int _newHitCount);
 
-	bool runRightShotAnimation(ActorSprite* _pCharacter);
-	void runLeftShotAnimation(ActorSprite* _pCharacter, int _animationCode);
+	bool RunRightShotAnimation(ActorSprite* _pCharacter);
+	void RunLeftShotAnimation(ActorSprite* _pCharacter, int _animationCode);
 
-	void shotRight(ActorSprite* _pActorSprite);
-	void shotRightDown(ActorSprite* _pActorSprite);
-	void shotLeft(ActorSprite* _pActorSprite);
-	void shotLeftDown(ActorSprite* _pActorSprite);
+	void ShotRight(ActorSprite* _pActorSprite);
+	void ShotRightDown(ActorSprite* _pActorSprite);
+	void ShotLeft(ActorSprite* _pActorSprite);
+	void ShotLeftDown(ActorSprite* _pActorSprite);
 
 private:
 	bool downShotKeyPressedFirst_;

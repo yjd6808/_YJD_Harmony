@@ -17,9 +17,9 @@ USING_NS_JNET;
 
 bool CommandSynchronizer::RegistrationEnd = false;
 CommandSynchronizer::CommandQueueHolder thread_local CommandSynchronizer::tlsCommandQueueHolder =
-	registerPacketQueueAddress(64);
+	RegisterPacketQueueAddress(64);
 
-CommandSynchronizer::CommandQueueHolder CommandSynchronizer::registerPacketQueueAddress(int _initCapacity)
+CommandSynchronizer::CommandQueueHolder CommandSynchronizer::RegisterPacketQueueAddress(int _initCapacity)
 {
 	if (RegistrationEnd)
 	{
@@ -35,17 +35,17 @@ CommandSynchronizer::CommandHolder::CommandHolder(ClientConnectServerType_t _lis
                                                   JNetwork::ICommand* _pCopy)
 {
 	int unused;
-	Sender = _pSender;
-	ListenerType = _listenerType;
-	MemPool = tlsCommandQueueHolder.MemPool;
+	pSender_ = _pSender;
+	listenerType_ = _listenerType;
+	pMemPool_ = tlsCommandQueueHolder.pMemPool_;
 	Int32U cmdLength = _pCopy->GetLength();
-	Command = (JNetwork::ICommand*)tlsCommandQueueHolder.MemPool->DynamicPop(cmdLength, unused);
-	Memory::CopyUnsafe(Command, _pCopy, cmdLength);
+	pCommand_ = (JNetwork::ICommand*)tlsCommandQueueHolder.pMemPool_->DynamicPop(cmdLength, unused);
+	Memory::CopyUnsafe(pCommand_, _pCopy, cmdLength);
 }
 
 CommandSynchronizer::CommandHolder::~CommandHolder()
 {
-	MemPool->DynamicPush(Command, Command->GetLength());
+	pMemPool_->DynamicPush(pCommand_, pCommand_->GetLength());
 }
 
 
@@ -57,42 +57,42 @@ CommandSynchronizer::CommandSynchronizer()
 CommandSynchronizer::~CommandSynchronizer()
 {
 	// IOCP 쓰레드가 삭제되기전 동적할당해준 패킷데이터들과 커맨드 홀더들을 해제해줘야한다.
-	finalize();
+	Finalize();
 }
 
 
-void CommandSynchronizer::initialize()
+void CommandSynchronizer::Initialize()
 {
-	filterUnusedCommandQueue();
-	allocateCommandQueue();
+	FilterUnusedCommandQueue();
+	AllocateCommandQueue();
 	RegistrationEnd = true;
 }
 
-void CommandSynchronizer::enqueueCommand(ClientConnectServerType_t _listenerType, SGSession* _pSession,
+void CommandSynchronizer::EnqueueCommand(ClientConnectServerType_t _listenerType, SGSession* _pSession,
                                          JNetwork::ICommand* _pCmd)
 {
-	JCORE_LOCK_GUARD(*tlsCommandQueueHolder.Lock);
+	JCORE_LOCK_GUARD(*tlsCommandQueueHolder.pLock_);
 	auto pHolder = dbg_new CommandHolder(_listenerType, _pSession, _pCmd);
-	tlsCommandQueueHolder.Queue->Enqueue(pHolder);
+	tlsCommandQueueHolder.pQueue_->Enqueue(pHolder);
 }
 
-void CommandSynchronizer::processCommands()
+void CommandSynchronizer::ProcessCommands()
 {
 	for (int i = 0; i < packetQueueCount_; ++i)
 	{
 		CommandQueueHolder* pIOCPCommandQueueHolder = iocpThreadAccessCommandQueueList_[i].value_;
 		CommandQueue* pQueue;
 		{
-			JCORE_LOCK_GUARD(*pIOCPCommandQueueHolder->Lock);
-			pQueue = pIOCPCommandQueueHolder->Queue;
-			pIOCPCommandQueueHolder->Queue = swapCommandQueue_[i];
+			JCORE_LOCK_GUARD(*pIOCPCommandQueueHolder->pLock_);
+			pQueue = pIOCPCommandQueueHolder->pQueue_;
+			pIOCPCommandQueueHolder->pQueue_ = swapCommandQueue_[i];
 			swapCommandQueue_[i] = pQueue;
 		}
 
 		while (!pQueue->IsEmpty())
 		{
 			CommandHolder* pHolder = pQueue->Front();
-			Core::Net->runCommand(pHolder->Sender, pHolder->Command);
+			Core::Net->RunCommand(pHolder->pSender_, pHolder->pCommand_);
 			pQueue->Dequeue();
 			delete pHolder;
 		}
@@ -100,10 +100,10 @@ void CommandSynchronizer::processCommands()
 }
 
 
-void CommandSynchronizer::filterUnusedCommandQueue()
+void CommandSynchronizer::FilterUnusedCommandQueue()
 {
 	// 필터완료 전까지는 IOCP쓰레드가 아닌 쓰레드도 생성될 수 있으므로. 완료전까지 생성된 쓸모없는 패킷큐는 걸러줘야함
-	SGVector<Int32U> iocpThreadIdList = Core::Net->getGroup()->GetIocp()->GetWorkThreadIdList();
+	SGVector<Int32U> iocpThreadIdList = Core::Net->GetGroup()->GetIocp()->GetWorkThreadIdList();
 	auto fnContained = [&iocpThreadIdList](const IOCPThreadId$CommandQueuePair& pair)
 	{
 		return iocpThreadIdList.Exist(pair.key_);
@@ -112,23 +112,23 @@ void CommandSynchronizer::filterUnusedCommandQueue()
 	packetQueueCount_ = iocpThreadAccessCommandQueueList_.Size();
 }
 
-void CommandSynchronizer::allocateCommandQueue()
+void CommandSynchronizer::AllocateCommandQueue()
 {
 	auto fnAllocator = [this](const IOCPThreadId$CommandQueuePair& pair)
 	{
 		CommandQueueHolder* pHolder = pair.value_;
-		CommandQueue* pReceiverQueue = dbg_new CommandQueue(pHolder->InitialCapacity);
-		CommandQueue* pSwapQueue = dbg_new CommandQueue(pHolder->InitialCapacity);
+		CommandQueue* pReceiverQueue = dbg_new CommandQueue(pHolder->initialCapacity_);
+		CommandQueue* pSwapQueue = dbg_new CommandQueue(pHolder->initialCapacity_);
 
-		pHolder->Lock = dbg_new SGNormalLock;
-		pHolder->MemPool = dbg_new SGIndexMemroyPool();
-		pHolder->Queue = pReceiverQueue;
+		pHolder->pLock_ = dbg_new SGNormalLock;
+		pHolder->pMemPool_ = dbg_new SGIndexMemroyPool();
+		pHolder->pQueue_ = pReceiverQueue;
 		swapCommandQueue_.PushBack(pSwapQueue);
 	};
 	iocpThreadAccessCommandQueueList_.ForEach(fnAllocator);
 }
 
-void CommandSynchronizer::finalize()
+void CommandSynchronizer::Finalize()
 {
 	for (int i = 0; i < packetQueueCount_; ++i)
 	{
@@ -137,7 +137,7 @@ void CommandSynchronizer::finalize()
 
 		// 미처리 데이터 삭제
 		{
-			pQueue = pIOCPPacketQueueHolder->Queue;
+			pQueue = pIOCPPacketQueueHolder->pQueue_;
 			while (!pQueue->IsEmpty())
 			{
 				delete pQueue->Front();
@@ -153,9 +153,9 @@ void CommandSynchronizer::finalize()
 			}
 		}
 
-		JCORE_DELETE_SAFE(pIOCPPacketQueueHolder->Queue);
-		JCORE_DELETE_SAFE(pIOCPPacketQueueHolder->Lock);
-		JCORE_DELETE_SAFE(pIOCPPacketQueueHolder->MemPool);
+		JCORE_DELETE_SAFE(pIOCPPacketQueueHolder->pQueue_);
+		JCORE_DELETE_SAFE(pIOCPPacketQueueHolder->pLock_);
+		JCORE_DELETE_SAFE(pIOCPPacketQueueHolder->pMemPool_);
 		JCORE_DELETE_SAFE(swapCommandQueue_[i]);
 	}
 	iocpThreadAccessCommandQueueList_.Clear();

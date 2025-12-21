@@ -17,11 +17,11 @@ USING_NS_JC;
 //////////////////////////////////////////////////////////////////////////////////////////
 void JsonUtilEx::ParseAnimationInfo(Json::Value& _animationRoot, AnimationInfo& _info)
 {
-	_info.Name = GetStringOrNull(_animationRoot["name"]);
+	_info.name_ = GetStringOrNull(_animationRoot["name"]);
 	_info.code_ = GetIntDefault(_animationRoot["code"], 1);
-	_info.Loop = GetBooleanDefault(_animationRoot["loop"]);
+	_info.loop_ = GetBooleanDefault(_animationRoot["loop"]);
 
-	if (!_info.Name.IsNull() && _info.Name == "sliding")
+	if (!_info.name_.IsNull() && _info.name_ == "sliding")
 	{
 		int a = 40;
 	}
@@ -38,7 +38,7 @@ void JsonUtilEx::ParseAnimationInfo(Json::Value& _animationRoot, AnimationInfo& 
 		int frameLength;
 		const char* pFrame = GetStringRaw(frameRoot, &frameLength);
 		TextParser::ParseFrameInfo(pFrame, frameLength, frameIndex, delay, frameEventId);
-		_info.Frames.EmplaceBack(frameIndex, (float)delay / 1000.0f, frameEventId);
+		_info.frames_.EmplaceBack(frameIndex, (float)delay / 1000.0f, frameEventId);
 	}
 }
 
@@ -48,15 +48,15 @@ void JsonUtilEx::ParseActorRect(Json::Value& _root, ActorRect& _actorRect)
 	int actorRectData[8];
 	ParseIntNumberN(_root, actorRectData, sizeof(actorRectData) / sizeof(int));
 
-	_actorRect.ThicknessRect.origin.x = actorRectData[0];
-	_actorRect.ThicknessRect.origin.y = actorRectData[1];
-	_actorRect.ThicknessRect.size.width = actorRectData[2];
-	_actorRect.ThicknessRect.size.height = actorRectData[3];
+	_actorRect.thicknessRect_.origin.x = actorRectData[0];
+	_actorRect.thicknessRect_.origin.y = actorRectData[1];
+	_actorRect.thicknessRect_.size.width = actorRectData[2];
+	_actorRect.thicknessRect_.size.height = actorRectData[3];
 
-	_actorRect.BodyRect.origin.x = actorRectData[4];
-	_actorRect.BodyRect.origin.y = actorRectData[5];
-	_actorRect.BodyRect.size.width = actorRectData[6];
-	_actorRect.BodyRect.size.height = actorRectData[7];
+	_actorRect.bodyRect_.origin.x = actorRectData[4];
+	_actorRect.bodyRect_.origin.y = actorRectData[5];
+	_actorRect.bodyRect_.size.width = actorRectData[6];
+	_actorRect.bodyRect_.size.height = actorRectData[7];
 }
 
 /**
@@ -81,7 +81,7 @@ void JsonUtilEx::ParseActorSpriteData(Json::Value& _actorSpriteDataRoot, JCORE_O
 	const int animationCount = animationListRoot.size();
 
 	ActorSpriteData* pInfo = dbg_new ActorSpriteData{ positioningRule, partCount, animationCount };
-	pInfo->PositioningRule = positioningRule;
+	pInfo->positioningRule_ = positioningRule;
 
 	for (int i = 0; i < partCount; i++)
 	{
@@ -89,12 +89,12 @@ void JsonUtilEx::ParseActorSpriteData(Json::Value& _actorSpriteDataRoot, JCORE_O
 
 		SGString sgaName = GetString(partRoot["sga"]);
 		SGString imgName = GetString(partRoot["img"]);
-		ImagePack* pImgPack = Core::Contents.PackManager->getPack(sgaName);
+		ImagePack* pImgPack = Core::Contents.PackManager->GetPack(sgaName);
 
 		const int zOrder = GetIntDefault(partRoot["z_order"], prevPartZOrder + 1);
 		// z_order가 없는 경우 이전 파츠 인덱스보다 점점 더 커지도록
-		const int sgaIndex = pImgPack->getPackIndex();
-		const int imgIndex = pImgPack->getImgIndex(imgName);
+		const int sgaIndex = pImgPack->GetPackIndex();
+		const int imgIndex = pImgPack->GetImgIndex(imgName);
 
 		//ActorPartSpriteData* pPartSpriteData = nullptr;
 
@@ -113,11 +113,11 @@ void JsonUtilEx::ParseActorSpriteData(Json::Value& _actorSpriteDataRoot, JCORE_O
 		//}
 		// DebugAssert(pPartSpriteData != nullptr);
 
-		pInfo->Parts.EmplaceBack(zOrder, sgaIndex, imgIndex);
+		pInfo->parts_.EmplaceBack(zOrder, sgaIndex, imgIndex);
 		prevPartZOrder = zOrder;
 	}
 
-	DebugAssert(pInfo->Parts.Capacity() == partCount); // parts 값 로딩 후 벡터 용량이 변경된 경우 (이런 경우는 없겠지?)
+	DebugAssert(pInfo->parts_.Capacity() == partCount); // parts 값 로딩 후 벡터 용량이 변경된 경우 (이런 경우는 없겠지?)
 	DebugAssert(animationCount > 0); // 액터에 애니메이션이 하나도 없는 경우
 
 	for (int i = 0; i < animationCount; ++i)
@@ -126,10 +126,10 @@ void JsonUtilEx::ParseActorSpriteData(Json::Value& _actorSpriteDataRoot, JCORE_O
 		const int frameCount = animationRoot["frames"].size();
 		AnimationInfo animation{ frameCount };
 		ParseAnimationInfo(animationListRoot[i], animation);
-		pInfo->Animations.PushBack(Move(animation));
+		pInfo->animations_.PushBack(Move(animation));
 	}
 
-	DebugAssert(pInfo->Animations.Capacity() == animationCount); // animation 값 로딩 후 벡터 용량이 변경된 경우 (이런 경우는 없겠지?)
+	DebugAssert(pInfo->animations_.Capacity() == animationCount); // animation 값 로딩 후 벡터 용량이 변경된 경우 (이런 경우는 없겠지?)
 
 	*_ppInfo = pInfo;
 }

@@ -13,7 +13,7 @@
 #define SG_PROJECTILE_LISTENER_FACTORY(Type)                                                \
 public:                                                                                     \
     struct Factory : IFactory {                                                             \
-        ProjectileListener* create(Projectile* _pProjectile, Actor* _pSpawner) override {   \
+        ProjectileListener* Create(Projectile* _pProjectile, Actor* _pSpawner) override {   \
             return dbg_new Type(_pProjectile, _pSpawner);                                   \
         }                                                                                   \
     };
@@ -24,28 +24,28 @@ public:
 	struct IFactory
 	{
 		virtual ~IFactory() = default;
-		virtual ProjectileListener* create(Projectile* _pProjectile, Actor* _pSpawner) = 0;
+		virtual ProjectileListener* Create(Projectile* _pProjectile, Actor* _pSpawner) = 0;
 	};
 
 	ProjectileListener(Projectile* _pProjectile, Actor* _pSpawner);
 
-	void onCreated() override;
-	void onCleanUp() override;
-	void onUpdate(float _dt) override;
+	void OnCreated() override;
+	void OnCleanUp() override;
+	void OnUpdate(float _dt) override;
 
-	virtual void onCollisionWithGround();
-	virtual void onLifeTimeOver();
-	virtual void onDistanceOver();
+	virtual void OnCollisionWithGround();
+	virtual void OnLifeTimeOver();
+	virtual void OnDistanceOver();
 
-	bool isLifeTimeOver() const { return m_fElapsedLifeTime >= m_pProjectile->getBaseInfo()->LifeTime; }
-	bool isDistanceOver() const { return m_fMoveDistance >= m_pProjectile->getBaseInfo()->Distance; }
+	bool IsLifeTimeOver() const { return elapsedLifeTime_ >= pProjectile_->GetBaseInfo()->lifeTime_; }
+	bool IsDistanceOver() const { return moveDistance_ >= pProjectile_->GetBaseInfo()->distance_; }
 
-	Type getListenerType() const override { return eProjectile; }
+	Type GetListenerType() const override { return eProjectile; }
 
 protected:
-	JCORE_NOT_NULL Projectile* m_pProjectile;
-	JCORE_NULLABLE Actor* m_pSpawner;
+	JCORE_NOT_NULL Projectile* pProjectile_;
+	JCORE_NULLABLE Actor* pSpawner_;
 
-	float m_fMoveDistance;
-	float m_fElapsedLifeTime;
+	float moveDistance_;
+	float elapsedLifeTime_;
 };

@@ -15,27 +15,28 @@ class UILayer : public SGLayer
 public:
 	UILayer();
 
-	static UILayer* create();
+	static UILayer* Create();
 
 	bool init() override;
-	void onMouseMove(SGEventMouse* _pMouseEvent);
-	void onMouseDown(SGEventMouse* _pMouseEvent);
-	void onMouseUp(SGEventMouse* _pMouseEvent);
-	void onMouseScroll(SGEventMouse* _pMouseEvent) const;
+
+	void OnMouseMove(SGEventMouse* _pMouseEvent);
+	void OnMouseDown(SGEventMouse* _pMouseEvent);
+	void OnMouseUp(SGEventMouse* _pMouseEvent);
+	void OnMouseScroll(SGEventMouse* _pMouseEvent) const;
 
 	void update(float _delta) override;
 	void onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
 	void onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
 
-	UIRootGroup* findGroup(int _groupCode);
+	UIRootGroup* FindGroup(int _groupCode);
 
-	void forEach(const SGActionFn<UIRootGroup*>& _actionFn);
-	void addUIGroup(int _groupCode, int _zOrder = 0);
-	void addUIGroup(UIRootGroup* _pGroup, int _zOrder = 0);
-	void removeUIGroup(int _groupCode);
-	void removeUIGroup(UIRootGroup* _pGroup);
-	void clear();
-	void clearUnload();
+	void ForEach(const SGActionFn<UIRootGroup*>& _actionFn);
+	void AddUIGroup(int _groupCode, int _zOrder = 0);
+	void AddUIGroup(UIRootGroup* _pGroup, int _zOrder = 0);
+	void RemoveUIGroup(int _groupCode);
+	void RemoveUIGroup(UIRootGroup* _pGroup);
+	void Clear();
+	void ClearUnload();
 
 private:
 	UIGroup* pPrevOverStateGroup_;

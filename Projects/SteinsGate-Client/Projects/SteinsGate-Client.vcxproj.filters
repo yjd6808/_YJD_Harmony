@@ -821,9 +821,6 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\PlayerController.h">
       <Filter>Game\Action</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\PackHelper.h">
-      <Filter>Game\Texture</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UIEditBox.h">
       <Filter>Game\UI</Filter>
     </ClInclude>

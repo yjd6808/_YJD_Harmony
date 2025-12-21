@@ -22,22 +22,22 @@ MoveComponent::MoveComponent(Actor* _pActor)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MoveComponent::initialize()
+void MoveComponent::Initialize()
 {
 	speed_.x = 0;
 	speed_.y = 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MoveComponent::onUpdate(float _dt)
+void MoveComponent::OnUpdate(float _dt)
 {
-	MapLayer* pMapLayer = pActor_->getMapLayer();
+	MapLayer* pMapLayer = pActor_->GetMapLayer();
 	if (pMapLayer == nullptr)
 	{
 		return;
 	}
 
-	MapAreaInfo* pAreaInfo = pMapLayer->getMapAreaInfo();
+	MapAreaInfo* pAreaInfo = pMapLayer->GetMapAreaInfo();
 	if (pAreaInfo == nullptr)
 	{
 		return;
@@ -49,7 +49,7 @@ void MoveComponent::onUpdate(float _dt)
 	// 이 적용된 값 때문에 Down에서 lb, rb 충돌 체크가 항상 참이 되어버림
 	// --------------------------------------------------------------
 	//  23/01/28 -> 좌,우,위,아래 모두 독립적으로 가능하도록 추가
-	SGRect thicknessPosLR = pActor_->getThicknessBoxRect();
+	SGRect thicknessPosLR = pActor_->GetThicknessBoxRect();
 	SGRect thicknessPosUD = thicknessPosLR;
 
 	thicknessPosLR.origin.x += speed_.x;
@@ -57,41 +57,41 @@ void MoveComponent::onUpdate(float _dt)
 
 	if (speed_.x < 0)
 	{
-		updateLeftMove(pMapLayer, pAreaInfo, thicknessPosLR);
+		UpdateLeftMove(pMapLayer, pAreaInfo, thicknessPosLR);
 	}
 	else
 	{
-		updateRightMove(pMapLayer, pAreaInfo, thicknessPosLR);
+		UpdateRightMove(pMapLayer, pAreaInfo, thicknessPosLR);
 	}
 
 	if (speed_.y < 0)
 	{
-		updateDownMove(pMapLayer, pAreaInfo, thicknessPosUD);
+		UpdateDownMove(pMapLayer, pAreaInfo, thicknessPosUD);
 	}
 	else
 	{
-		updateUpMove(pMapLayer, pAreaInfo, thicknessPosUD);
+		UpdateUpMove(pMapLayer, pAreaInfo, thicknessPosUD);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MoveComponent::updateLeftMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect)
+void MoveComponent::UpdateLeftMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect)
 {
 	SGVec2 lb{ _thicknessRect.origin.x, _thicknessRect.origin.y };
 	SGVec2 lt{ _thicknessRect.origin.x, _thicknessRect.origin.y + _thicknessRect.size.height };
 
 	// lb, lt 체크
 	if (_pAreaInfo->CheckWall(lb.x, lb.y) || _pAreaInfo->CheckWall(lt.x, lt.y) || _pMapLayer->
-		isCollideWithMapObjects(_thicknessRect))
+		IsCollideWithMapObjects(_thicknessRect))
 	{
 		return;
 	}
 
-	pActor_->setPositionRealX(_thicknessRect.origin.x);
+	pActor_->SetPositionRealX(_thicknessRect.origin.x);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MoveComponent::updateRightMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect)
+void MoveComponent::UpdateRightMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect)
 {
 	SGVec2 rb{ _thicknessRect.origin.x + _thicknessRect.size.width, _thicknessRect.origin.y };
 	SGVec2 rt{
@@ -100,16 +100,16 @@ void MoveComponent::updateRightMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInf
 
 	// rb, rt 체크
 	if (_pAreaInfo->CheckWall(rb.x, rb.y) || _pAreaInfo->CheckWall(rt.x, rt.y) || _pMapLayer->
-		isCollideWithMapObjects(_thicknessRect))
+		IsCollideWithMapObjects(_thicknessRect))
 	{
 		return;
 	}
 
-	pActor_->setPositionRealX(_thicknessRect.origin.x);
+	pActor_->SetPositionRealX(_thicknessRect.origin.x);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MoveComponent::updateUpMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect)
+void MoveComponent::UpdateUpMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect)
 {
 	SGVec2 lt{ _thicknessRect.origin.x, _thicknessRect.origin.y + _thicknessRect.size.height };
 	SGVec2 rt{
@@ -118,45 +118,45 @@ void MoveComponent::updateUpMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, 
 
 	// lt, rt 체크
 	if (_pAreaInfo->CheckWall(lt.x, lt.y) || _pAreaInfo->CheckWall(rt.x, rt.y) || _pMapLayer->
-		isCollideWithMapObjects(_thicknessRect))
+		IsCollideWithMapObjects(_thicknessRect))
 	{
 		return;
 	}
 
-	pActor_->setPositionRealY(_thicknessRect.origin.y);
+	pActor_->SetPositionRealY(_thicknessRect.origin.y);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MoveComponent::updateDownMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect)
+void MoveComponent::UpdateDownMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect)
 {
 	SGVec2 lb{ _thicknessRect.origin.x, _thicknessRect.origin.y };
 	SGVec2 rb{ _thicknessRect.origin.x + _thicknessRect.size.width, _thicknessRect.origin.y };
 
 	// lb, rb 체크
 	if (_pAreaInfo->CheckWall(lb.x, lb.y) || _pAreaInfo->CheckWall(rb.x, rb.y) || _pMapLayer->
-		isCollideWithMapObjects(_thicknessRect))
+		IsCollideWithMapObjects(_thicknessRect))
 	{
 		return;
 	}
 
-	pActor_->setPositionRealY(_thicknessRect.origin.y);
+	pActor_->SetPositionRealY(_thicknessRect.origin.y);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MoveComponent::setSpeed(const SGVec2& _speed)
+void MoveComponent::SetSpeed(const SGVec2& _speed)
 {
 	speed_ = _speed;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MoveComponent::setSpeed(float _x, float _y)
+void MoveComponent::SetSpeed(float _x, float _y)
 {
 	speed_.x = _x;
 	speed_.y = _y;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-const SGVec2& MoveComponent::getSpeed() const
+const SGVec2& MoveComponent::GetSpeed() const
 {
 	return speed_;
 }

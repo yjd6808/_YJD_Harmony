@@ -18,6 +18,6 @@ public:
 	{
 	}
 
-	void onCreated() override;
+	void OnCreated() override;
 	SG_MONSTER_LISTENER_FACTORY(MonsterListener_NormalGoblin)
 };

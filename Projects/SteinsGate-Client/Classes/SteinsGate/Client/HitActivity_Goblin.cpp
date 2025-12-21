@@ -30,14 +30,14 @@ void HitActivity_Goblin::OnActivityBegin()
 	Monster* pMonster = dynamic_cast<Monster*>(pActor_);
 	DebugAssert(pMonster);
 
-	const MonsterStatInfo* pStatInfo = pMonster->getStatInfo();
+	const MonsterStatInfo* pStatInfo = pMonster->GetStatInfo();
 
 	elapsedDownTime_ = 0.0f;
 	downTimeCheckBegin_ = false;
 	downRecoverTime_ = pStatInfo ? pStatInfo->downRecoverTime_ / 2 : 1.0f;
 
-	selectHitAnimation();
-	checkPosition();
+	SelectHitAnimation();
+	CheckPosition();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -45,34 +45,34 @@ void HitActivity_Goblin::OnUpdate(float _dt)
 {
 	if (onTheGround_)
 	{
-		updateGroundHitState(_dt);
+		UpdateGroundHitState(_dt);
 		return;
 	}
 
-	updateAirHitState(_dt);
+	UpdateAirHitState(_dt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HitActivity_Goblin::selectHitAnimation()
+void HitActivity_Goblin::SelectHitAnimation()
 {
 	if (hitSmall_)
 	{
-		pActor_->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_HIT_SMALL);
+		pActor_->RunAnimation(DEF_ANIMATION_MONSTER_GOBLIN_HIT_SMALL);
 	}
 	else
 	{
-		pActor_->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_HIT_BIG);
+		pActor_->RunAnimation(DEF_ANIMATION_MONSTER_GOBLIN_HIT_BIG);
 	}
 
 	hitSmall_ = !hitSmall_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HitActivity_Goblin::checkPosition()
+void HitActivity_Goblin::CheckPosition()
 {
-	PhysicsComponent* pPhysicsComponent = pActor_->getComponent<PhysicsComponent>();
+	PhysicsComponent* pPhysicsComponent = pActor_->GetComponent<PhysicsComponent>();
 
-	if (!pPhysicsComponent->hasForceY() && pActor_->getPositionActorY() <= SG_FLT_EPSILON)
+	if (!pPhysicsComponent->HasForceY() && pActor_->GetPositionActorY() <= SG_FLT_EPSILON)
 	{
 		onTheGround_ = true;
 		return;
@@ -82,11 +82,11 @@ void HitActivity_Goblin::checkPosition()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HitActivity_Goblin::updateGroundHitState(float _dt)
+void HitActivity_Goblin::UpdateGroundHitState(float _dt)
 {
-	PhysicsComponent* pPhysicsComponent = pActor_->getComponent<PhysicsComponent>();
+	PhysicsComponent* pPhysicsComponent = pActor_->GetComponent<PhysicsComponent>();
 
-	if (pPhysicsComponent->hasForceX())
+	if (pPhysicsComponent->HasForceX())
 	{
 		return;
 	}
@@ -96,9 +96,9 @@ void HitActivity_Goblin::updateGroundHitState(float _dt)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HitActivity_Goblin::updateAirHitState(float _dt)
+void HitActivity_Goblin::UpdateAirHitState(float _dt)
 {
-	if (!pActor_->isOnTheGround())
+	if (!pActor_->IsOnTheGround())
 	{
 		return;
 	}
@@ -107,26 +107,26 @@ void HitActivity_Goblin::updateAirHitState(float _dt)
 
 	if (!downTimeCheckBegin_)
 	{
-		pActor_->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_END);
+		pActor_->RunAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_END);
 		downTimeCheckBegin_ = true;
 		return;
 	}
 
-	updateDownState(_dt);
+	UpdateDownState(_dt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HitActivity_Goblin::updateDownState(float _dt)
+void HitActivity_Goblin::UpdateDownState(float _dt)
 {
 	elapsedDownTime_ += _dt;
 
 	if (elapsedDownTime_ >= downRecoverTime_)
 	{
-		AIComponent* pAIComponent = pActor_->getComponent<AIComponent>();
+		AIComponent* pAIComponent = pActor_->GetComponent<AIComponent>();
 
 		if (pAIComponent)
 		{
-			pAIComponent->runActivity(AIActivityType::Sit);
+			pAIComponent->RunActivity(AIActivityType::Sit);
 		}
 	}
 }

@@ -23,7 +23,7 @@ struct ItemInfo : ConfigDataAbstract
 
 	ItemType_t GetItemType()
 	{
-		return ItemCode(code_).CommonUn.Type;
+		return ItemCode(code_).commonUn_.type_;
 	}
 };
 
@@ -75,7 +75,7 @@ struct ItemArmorInfo : ItemEquipInfo
 
 	EquipArmorType_t GetArmorType()
 	{
-		return ItemCode(code_).ArmorUn.ArmorType;
+		return ItemCode(code_).armorUn_.armorType_;
 	}
 };
 
@@ -88,29 +88,29 @@ struct ItemVisualInfo : ItemEquipInfo
 
 	CharType_t GetCharType()
 	{
-		return ItemCode(code_).AvatarUn.CharType;
+		return ItemCode(code_).avatarUn_.charType_;
 	}
 
 	AvatarType_t GetAvatarType()
 	{
-		return ItemCode(code_).AvatarUn.PartType;
+		return ItemCode(code_).avatarUn_.partType_;
 	}
 
 	WeaponType_t GetWeaponType()
 	{
-		return ItemCode(code_).WeaponUn.WeaponType;
+		return ItemCode(code_).weaponUn_.weaponType_;
 	}
 
 	VisualType_t GetVisualType()
 	{
 		ItemCode itemCode(code_);
 
-		if (itemCode.CommonUn.Type == ItemType::Avatar)
+		if (itemCode.commonUn_.type_ == ItemType::Avatar)
 		{
-			return (VisualType_t)itemCode.AvatarUn.PartType;
+			return (VisualType_t)itemCode.avatarUn_.partType_;
 		}
 
-		if (itemCode.CommonUn.Type == ItemType::Weapon)
+		if (itemCode.commonUn_.type_ == ItemType::Weapon)
 		{
 			return VisualType::Weapon;
 		}

@@ -23,25 +23,25 @@ private:
 	~TimeManager();
 
 public:
-	void updateAppTime();
-	void updateServerTime();
+	void UpdateAppTime();
+	void UpdateServerTime();
 
-	Int64 getAppStartUpTick() const
+	Int64 GetAppStartUpTick() const
 	{
 		return appStartupTime_.Tick;
 	}
 
-	Int64 getAppTick() const
+	Int64 GetAppTick() const
 	{
 		return appTime_.Tick;
 	}
 
-	const SGDateTime& getAppTime() const
+	const SGDateTime& GetAppTime() const
 	{
 		return appTime_;
 	}
 
-	const SGTimeSpan& getElapsedAppTime() const
+	const SGTimeSpan& GetElapsedAppTime() const
 	{
 		return appRunningTime_;
 	}

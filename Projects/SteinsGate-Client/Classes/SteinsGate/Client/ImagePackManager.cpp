@@ -34,7 +34,7 @@ ImagePackManager::~ImagePackManager()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ImagePackManager::loadAllPackages()
+void ImagePackManager::LoadAllPackages()
 {
 	constexpr int THREAD_COUNT = Const::Resource::MaxSgaParallelLoadingThreadCount;
 
@@ -80,27 +80,27 @@ void ImagePackManager::loadAllPackages()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ImagePackManager::unloadPackData(int _packIndex)
+void ImagePackManager::UnloadPackData(int _packIndex)
 {
-	getPack(_packIndex)->unload();
+	GetPack(_packIndex)->Unload();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ImagePack* ImagePackManager::getPack(const SGString& _packName)
+ImagePack* ImagePackManager::GetPack(const SGString& _packName)
 {
 	DebugAssertMsg(pathToIdMap_.Exist(_packName), "해당 패키지가 존재하지 않습니다.");
 	return loadedPackages_[pathToIdMap_[_packName]];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ImagePack* ImagePackManager::getPack(const char* _pPackName)
+ImagePack* ImagePackManager::GetPack(const char* _pPackName)
 {
 	DebugAssertMsg(pathToIdMap_.Exist(_pPackName), "해당 패키지가 존재하지 않습니다.");
 	return loadedPackages_[pathToIdMap_[_pPackName]];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ImagePack* ImagePackManager::getPackUnsafe(const SGString& _packName)
+ImagePack* ImagePackManager::GetPackUnsafe(const SGString& _packName)
 {
 	if (!pathToIdMap_.Exist(_packName))
 	{
@@ -111,7 +111,7 @@ ImagePack* ImagePackManager::getPackUnsafe(const SGString& _packName)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ImagePack* ImagePackManager::getPackUnsafe(const char* _pPackName)
+ImagePack* ImagePackManager::GetPackUnsafe(const char* _pPackName)
 {
 	if (!pathToIdMap_.Exist(_pPackName))
 	{
@@ -122,14 +122,14 @@ ImagePack* ImagePackManager::getPackUnsafe(const char* _pPackName)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ImagePack* ImagePackManager::getPack(const int _index)
+ImagePack* ImagePackManager::GetPack(const int _index)
 {
 	DebugAssertMsg(IsValidPackIndex(_index), "올바르지 않은 패키지 인덱스 입니다.");
 	return loadedPackages_[_index];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ImagePack* ImagePackManager::getPackUnsafe(const int _index)
+ImagePack* ImagePackManager::GetPackUnsafe(const int _index)
 {
 	if (!IsValidPackIndex(_index))
 	{
@@ -140,7 +140,7 @@ ImagePack* ImagePackManager::getPackUnsafe(const int _index)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ImagePack* ImagePackManager::getAvatarPack(CharType_t _charType, AvatarType_t _avatarType)
+ImagePack* ImagePackManager::GetAvatarPack(CharType_t _charType, AvatarType_t _avatarType)
 {
 	DebugAssertMsg(_charType >= CharType::Begin && _charType >= CharType::End, "올바르지 않은 캐릭터 타입입니다.");
 	DebugAssertMsg(_avatarType >= AvatarType::Begin && _avatarType < AvatarType::Max, "아바타 타입이 올바르지 않습니다.");
@@ -148,47 +148,47 @@ ImagePack* ImagePackManager::getAvatarPack(CharType_t _charType, AvatarType_t _a
 	if (avatarPacks_[_charType][_avatarType] == nullptr)
 	{
 		const SGString& sgaName = Global::Get()->getAvatarSgaName(_charType, _avatarType);
-		avatarPacks_[_charType][_avatarType] = getPack(sgaName);
+		avatarPacks_[_charType][_avatarType] = GetPack(sgaName);
 	}
 
 	return avatarPacks_[_charType][_avatarType];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ImagePack* ImagePackManager::getWeaponPack(WeaponType_t _weaponType)
+ImagePack* ImagePackManager::GetWeaponPack(WeaponType_t _weaponType)
 {
 	DebugAssertMsg(_weaponType >= WeaponType::Begin && _weaponType < WeaponType::Max, "무기 타입이 올바르지 않습니다.");
 
 	if (weaponPacks_[_weaponType] == nullptr)
 	{
 		const SGString& sgaName = Global::Get()->getWeaponSgaName(_weaponType);
-		weaponPacks_[_weaponType] = getPack(sgaName);
+		weaponPacks_[_weaponType] = GetPack(sgaName);
 	}
 
 	return weaponPacks_[_weaponType];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ImagePackManager::getAvatarPackIndex(CharType_t _charType, AvatarType_t _avatarType)
+int ImagePackManager::GetAvatarPackIndex(CharType_t _charType, AvatarType_t _avatarType)
 {
-	return getAvatarPack(_charType, _avatarType)->getPackIndex();
+	return GetAvatarPack(_charType, _avatarType)->GetPackIndex();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ImagePackManager::getWeaponPackIndex(WeaponType_t _weaponType)
+int ImagePackManager::GetWeaponPackIndex(WeaponType_t _weaponType)
 {
-	return getWeaponPack(_weaponType)->getPackIndex();
+	return GetWeaponPack(_weaponType)->GetPackIndex();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ImagePackManager::getPackIndex(const SGString& _packName)
+int ImagePackManager::GetPackIndex(const SGString& _packName)
 {
 	DebugAssertMsg(pathToIdMap_.Exist(_packName), "해당 패키지가 존재하지 않습니다. (2)");
 	return pathToIdMap_[_packName];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ImagePackManager::getPackIndexDefault(const char* _pPackName, int _defaultIndex /* = InvalidValue_v */)
+int ImagePackManager::GetPackIndexDefault(const char* _pPackName, int _defaultIndex /* = InvalidValue_v */)
 {
 	if (!pathToIdMap_.Exist(_pPackName))
 	{
@@ -199,7 +199,7 @@ int ImagePackManager::getPackIndexDefault(const char* _pPackName, int _defaultIn
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ImagePackManager::getPackIndexDefault(const SGString& _packName, int _defaultIndex /* = InvalidValue_v */)
+int ImagePackManager::GetPackIndexDefault(const SGString& _packName, int _defaultIndex /* = InvalidValue_v */)
 {
 	if (!pathToIdMap_.Exist(_packName))
 	{
@@ -210,43 +210,43 @@ int ImagePackManager::getPackIndexDefault(const SGString& _packName, int _defaul
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ImagePackManager::getImgIndexUnsafe(int _sgaIndex, const char* _pImgName)
+int ImagePackManager::GetImgIndexUnsafe(int _sgaIndex, const char* _pImgName)
 {
-	const ImagePack* pPack = getPackUnsafe(_sgaIndex);
+	const ImagePack* pPack = GetPackUnsafe(_sgaIndex);
 	if (pPack == nullptr)
 	{
 		return InvalidValue_v;
 	}
 
-	return pPack->getImgIndex(_pImgName);
+	return pPack->GetImgIndex(_pImgName);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ImagePackManager::getImgIndexUnsafe(int _sgaIndex, const SGString& _imgName)
+int ImagePackManager::GetImgIndexUnsafe(int _sgaIndex, const SGString& _imgName)
 {
-	const ImagePack* pPack = getPackUnsafe(_sgaIndex);
+	const ImagePack* pPack = GetPackUnsafe(_sgaIndex);
 	if (pPack == nullptr)
 	{
 		return InvalidValue_v;
 	}
 
-	return pPack->getImgIndex(_imgName);
+	return pPack->GetImgIndex(_imgName);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-SGSize ImagePackManager::getTextureSize(int _packIndex, int _imgIndex, int _frameIndex)
+SGSize ImagePackManager::GetTextureSize(int _packIndex, int _imgIndex, int _frameIndex)
 {
-	const ImagePack* pPack = getPackUnsafe(_packIndex);
+	const ImagePack* pPack = GetPackUnsafe(_packIndex);
 	if (pPack == nullptr)
 	{
-		logTexture("이미지팩을 찾지 못함.", { _packIndex, _imgIndex, _frameIndex }, LoggerAbstract::eWarn);
+		LogTexture("이미지팩을 찾지 못함.", { _packIndex, _imgIndex, _frameIndex }, LoggerAbstract::eWarn);
 		return {};
 	}
 
-	SgaSpriteAbstractPtr pSprite = pPack->getSpriteUnsafe(_imgIndex, _frameIndex);
+	SgaSpriteAbstractPtr pSprite = pPack->GetSpriteUnsafe(_imgIndex, _frameIndex);
 	if (pSprite == nullptr)
 	{
-		logTexture("스프라이트를 찾지 못함.", { _packIndex, _imgIndex, _frameIndex }, LoggerAbstract::eWarn);
+		LogTexture("스프라이트를 찾지 못함.", { _packIndex, _imgIndex, _frameIndex }, LoggerAbstract::eWarn);
 		return {};
 	}
 
@@ -255,71 +255,71 @@ SGSize ImagePackManager::getTextureSize(int _packIndex, int _imgIndex, int _fram
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ImagePackManager::releaseFrameTexture(int _packIndex, int _imgIndex, int _frameIndex)
+void ImagePackManager::ReleaseFrameTexture(int _packIndex, int _imgIndex, int _frameIndex)
 {
-	getPack(_packIndex)->releaseFrameTexture(_imgIndex, _frameIndex);
+	GetPack(_packIndex)->ReleaseFrameTexture(_imgIndex, _frameIndex);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ImagePackManager::releaseFrameTexture(const SgaResourceIndex& _sgaResourceIndex)
+void ImagePackManager::ReleaseFrameTexture(const SgaResourceIndex& _sgaResourceIndex)
 {
-	getPack(_sgaResourceIndex.Un.SgaIndex)->releaseFrameTexture(
-		_sgaResourceIndex.Un.ImgIndex,
-		_sgaResourceIndex.Un.FrameIndex);
+	GetPack(_sgaResourceIndex.un_.sgaIndex_)->ReleaseFrameTexture(
+		_sgaResourceIndex.un_.imgIndex_,
+		_sgaResourceIndex.un_.frameIndex_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ImagePackManager::releaseAllFrameTexture()
+void ImagePackManager::ReleaseAllFrameTexture()
 {
 	for (int i = 0; i < loadedPackageCount_; ++i)
 	{
 		ImagePack* pPack = loadedPackages_[i];
-		pPack->clearCache();
+		pPack->ClearCache();
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ImagePackManager::increaseCounter()
+void ImagePackManager::IncreaseCounter()
 {
-	textureCounter_.CachedCount++;
-	textureCounter_.MaxCachedCount = Math::Max(textureCounter_.CachedCount, textureCounter_.MaxCachedCount);
+	textureCounter_.cachedCount_++;
+	textureCounter_.maxCachedCount_ = Math::Max(textureCounter_.cachedCount_, textureCounter_.maxCachedCount_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ImagePackManager::decreaseCounter()
+void ImagePackManager::DecreaseCounter()
 {
-	textureCounter_.CachedCount--;
+	textureCounter_.cachedCount_--;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ImagePackManager::resetCounter()
+void ImagePackManager::ResetCounter()
 {
-	textureCounter_.CachedCount = 0;
+	textureCounter_.cachedCount_ = 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ImagePackManager::logTexture(const SGString& _text, const SgaResourceIndex& _resource,
+void ImagePackManager::LogTexture(const SGString& _text, const SgaResourceIndex& _resource,
                                   LoggerAbstract::Level _logLevel)
 {
 #if DebugMode
-	const ImagePack* pPack = getPackUnsafe(_resource.Un.SgaIndex);
-	const SGString sgaName = pPack ? pPack->getFileName() : "없음";
-	const SGString imgName = pPack ? pPack->getImgNameOrDefault(_resource.Un.ImgIndex, "없음") : "없음";
+	const ImagePack* pPack = GetPackUnsafe(_resource.un_.sgaIndex_);
+	const SGString sgaName = pPack ? pPack->GetFileName() : "없음";
+	const SGString imgName = pPack ? pPack->GetImgNameOrDefault(_resource.un_.imgIndex_, "없음") : "없음";
 
 	if (!Logger_v)
 	{
 		return;
 	}
 
-	if (_resource.Un.FrameIndex == InvalidValue_v)
+	if (_resource.un_.frameIndex_ == InvalidValue_v)
 	{
 		Logger_v->Log(_logLevel, "%s / Sga: %s(%d) / Img: %s(%d)", _text.Source(), sgaName.Source(),
-		              _resource.Un.SgaIndex, imgName.Source(), _resource.Un.ImgIndex);
+		              _resource.un_.sgaIndex_, imgName.Source(), _resource.un_.imgIndex_);
 		return;
 	}
 
 	Logger_v->Log(_logLevel, "%s / Sga: %s(%d) / Img: %s(%d) / Frame: %d", _text.Source(), sgaName.Source(),
-	              _resource.Un.SgaIndex, imgName.Source(), _resource.Un.ImgIndex, _resource.Un.FrameIndex);
+	              _resource.un_.sgaIndex_, imgName.Source(), _resource.un_.imgIndex_, _resource.un_.frameIndex_);
 #endif
 }
 

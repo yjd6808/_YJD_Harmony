@@ -12,61 +12,59 @@
 
 class UIScrollBar : public UIElement
 {
-	static constexpr int TextureCount = 7;
-	static constexpr int IndexUpNormal = 0;
-	static constexpr int IndexUpPressed = 1;
-	static constexpr int IndexDownNormal = 2;
-	static constexpr int IndexDownPressed = 3;
-	static constexpr int IndexThumbNormal = 4;
-	static constexpr int IndexThumbPressed = 5;
-	static constexpr int IndexTrack = 6;
+	static constexpr int TEXTURE_COUNT = 7;
+	static constexpr int INDEX_UP_NORMAL = 0;
+	static constexpr int INDEX_UP_PRESSED = 1;
+	static constexpr int INDEX_DOWN_NORMAL = 2;
+	static constexpr int INDEX_DOWN_PRESSED = 3;
+	static constexpr int INDEX_THUMB_NORMAL = 4;
+	static constexpr int INDEX_THUMB_PRESSED = 5;
+	static constexpr int INDEX_TRACK = 6;
 
-	static constexpr float MinThumbHeight = 8;
+	static constexpr float MIN_THUMB_HEIGHT = 8;
 
 public:
-	static UIScrollBar* create(UIRootGroup* _pMasterGroup, UIGroup* _pParentGroup);
-	static UIScrollBar* create(UIRootGroup* _pMasterGroup, UIGroup* _pParentGroup, UIScrollBarInfo* _pScrollBarInfo,
-	                           bool _infoOwner);
+	static UIScrollBar* Create(UIRootGroup* _pMasterGroup, UIGroup* _pParentGroup);
+	static UIScrollBar* Create(UIRootGroup* _pMasterGroup, UIGroup* _pParentGroup, UIScrollBarInfo* _pScrollBarInfo, bool _infoOwner);
 
-	static constexpr UIElementType_t type() { return UIElementType::ScrollBar; }
+	static constexpr UIElementType_t Type() { return UIElementType::ScrollBar; }
 
 	UIScrollBar(UIRootGroup* _pMasterGroup, UIGroup* _pParentGroup);
-	UIScrollBar(UIRootGroup* _pMasterGroup, UIGroup* _pParentGroup, UIScrollBarInfo* _pScrollBarInfo,
-	            bool _infoOwner);
+	UIScrollBar(UIRootGroup* _pMasterGroup, UIGroup* _pParentGroup, UIScrollBarInfo* _pScrollBarInfo, bool _infoOwner);
 	~UIScrollBar() override;
 
 	bool init() override;
-	void createSprites();
+	void CreateSprites();
 
-	void updateTrackAndButtonPosition();
+	void UpdateTrackAndButtonPosition();
 	void Load() override;
 	void Unload() override;
 
-	void updateThumbSize();
-	void updateThumbPosition();
+	void UpdateThumbSize();
+	void UpdateThumbPosition();
 
-	void setRowPos(int _pos);
-	void setRowCount(int _count);
-	void setRowCountPerPage(int _count);
+	void SetRowPos(int _pos);
+	void SetRowCount(int _count);
+	void SetRowCountPerPage(int _count);
 	void SetUISize(const SGSize& _contentSize) override;
 	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
-	void setInfoScrollBar(UIScrollBarInfo* _pInfo, bool _infoOwner);
-	int getRowPos() const { return pos_; }
-	int getEndRowPos() const { return endPos_; }
+	void SetInfoScrollBar(UIScrollBarInfo* _pInfo, bool _infoOwner);
+	int GetRowPos() const { return pos_; }
+	int GetEndRowPos() const { return endPos_; }
 
-	void setVisibleStateNormal();
+	void SetVisibleStateNormal();
 	void SetEnabled(bool _enabled) override;
-	void setLinkElement(UIElement* _pElement);
+	void SetLinkElement(UIElement* _pElement);
 
-	bool isUpButtonContainPoint(SGVec2 _pos);
-	bool isDownButtonContainPoint(SGVec2 _pos);
-	bool isThumbButtonContainPoint(SGVec2 _pos);
+	bool IsUpButtonContainPoint(SGVec2 _pos);
+	bool IsDownButtonContainPoint(SGVec2 _pos);
+	bool IsThumbButtonContainPoint(SGVec2 _pos);
 
 	void RestoreState(State _state) override;
 
-	UIScrollBarInfo* getInfo() const { return info_; }
+	UIScrollBarInfo* GetInfo() const { return pInfo_; }
 	UIElementType_t GetElementType() override { return UIElementType::ScrollBar; }
-	SGString ToString() override { return SGStringUtil::Format("스크롤바(%d)", info_->code_); }
+	SGString ToString() override { return SGStringUtil::Format("스크롤바(%d)", pInfo_->code_); }
 
 protected:
 	void OnMouseLeaveInternalDetail(SGEventMouse* _pMouseEvent) override;
@@ -76,7 +74,7 @@ protected:
 	bool OnMouseUpContainedInternalDetail(SGEventMouse* _pMouseEvent) override;
 	bool OnMouseScrollInternalDetail(SGEventMouse* _pMouseEvent) override;
 
-	void onLinkElementMouseScroll(SGEventMouse* _pMouseEvent);
+	void OnLinkElementMouseScroll(SGEventMouse* _pMouseEvent);
 
 	void SetInitialUISize(SGSize _size) override;
 
@@ -96,8 +94,8 @@ private:
 	float dragStartYPos_;
 	int dragStartPos_;
 
-	UIElement* linkElement_;
-	UIScrollBarInfo* info_;
-	FrameTexture* textures_[TextureCount];
-	SGSprite* sprites_[TextureCount];
+	UIElement* pLinkElement_;
+	UIScrollBarInfo* pInfo_;
+	FrameTexture* pTextures_[TEXTURE_COUNT];
+	SGSprite* pSprites_[TEXTURE_COUNT];
 };

@@ -18,20 +18,20 @@ GunnerSitRecover::GunnerSitRecover(HostPlayer* _pPlayer, ActionInfo* _pActionInf
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerSitRecover::onActionBegin()
+void GunnerSitRecover::OnActionBegin()
 {
 	elapsedSitTime_ = 0.0f;
-	recoverSitTime_ = m_pBaseInfo->downRecoverTime_ / 2.0f;
-	m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_SIT);
+	recoverSitTime_ = pBaseInfo_->downRecoverTime_ / 2.0f;
+	pPlayer_->RunAnimation(DEF_ANIMATION_GUNNER_SIT);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerSitRecover::onUpdate(float _dt)
+void GunnerSitRecover::OnUpdate(float _dt)
 {
 	elapsedSitTime_ += _dt;
 
 	if (elapsedSitTime_ >= recoverSitTime_)
 	{
-		stop();
+		Stop();
 	}
 }

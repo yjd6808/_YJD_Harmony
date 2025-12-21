@@ -17,13 +17,13 @@ public:
 	GunnerAction(HostPlayer* _pHostPlayer, ActionInfo* _pActionInfo);
 	~GunnerAction() override;
 
-	void play() override;
+	void Play() override;
 
-	bool onConditionCheck() override
+	bool OnConditionCheck() override
 	{
 		return true;
 	}
 
 protected:
-	GunnerInfo* m_pBaseInfo;
+	GunnerInfo* pBaseInfo_;
 };

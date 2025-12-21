@@ -17,24 +17,24 @@ public:
 	Projectile(ProjectileInfo* _pBaseInfo);
 	~Projectile() override;
 
-	static Projectile* create(ProjectileInfo* _pBaseInfo, Actor* _pSpawner);
+	static Projectile* Create(ProjectileInfo* _pBaseInfo, Actor* _pSpawner);
 
-	void initialize() override;
-	void initActorSprite() override;
-	void initThicknessBox(const ThicknessBox& _thicknessBox) override;
-	void initPosition();
-	void initListeners() override;
-	void initComponents() override;
+	void Initialize() override;
+	void InitActorSprite() override;
+	void InitThicknessBox(const ThicknessBox& _thicknessBox) override;
+	void InitPosition();
+	void InitListeners() override;
+	void InitComponents() override;
 
-	EffectInfo* getSpawnEffectInfo();
-	EffectInfo* getHitEffectInfo();
+	EffectInfo*			GetSpawnEffectInfo();
+	EffectInfo*			GetHitEffectInfo();
 
-	void setSpawner(Actor* _pSpawner);
-	Actor* getSpawner();
-	ProjectileInfo* getBaseInfo();
-	ActorType_t getType() const override { return ActorType::Projectile; }
-	int getCode() override { return baseInfo_->code_; }
-	int getListenerCode() const { return baseInfo_->ListenerCode; }
+	void				SetSpawner(Actor* _pSpawner);
+	Actor*				GetSpawner();
+	ProjectileInfo*		GetBaseInfo();
+	ActorType_t			GetType() const override { return ActorType::Projectile; }
+	int					GetCode() override { return baseInfo_->code_; }
+	int					GetListenerCode() const { return baseInfo_->listenerCode_; }
 
 private:
 	JCORE_NOT_NULL ProjectileInfo* baseInfo_;

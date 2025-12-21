@@ -10,12 +10,12 @@
 #include "CharacterListener.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void CharacterListener::onCleanUp()
+void CharacterListener::OnCleanUp()
 {
-	IActorListener::onCleanUp();
+	IActorListener::OnCleanUp();
 
-	if (m_pCharacter->hasCleanUpFlag(Actor::CF_ReleaseActorSprite))
+	if (pChar_->HasCleanUpFlag(Actor::cfReleaseActorSprite))
 	{
-		m_pCharacter->releaseActorSprite();
+		pChar_->ReleaseActorSprite();
 	}
 }

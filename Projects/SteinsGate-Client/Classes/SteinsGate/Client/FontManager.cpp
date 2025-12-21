@@ -36,7 +36,7 @@ FontManager::~FontManager()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void FontManager::init()
+void FontManager::Init()
 {
 	SGString fontDirPath = JCore::Path::Combine(Core::CommonInfo->dataPath_, Const::Resource::FontDirName);
 	Vector<SGString> fontFiles = Directory::Files(fontDirPath.Source());
@@ -52,14 +52,14 @@ void FontManager::init()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-SGString& FontManager::getFontName(int _fontCode)
+SGString& FontManager::GetFontName(int _fontCode)
 {
 	DebugAssertMsg(fontCodeToNameMap_.Exist(_fontCode), "해당 폰트코드에 맞는 폰트 이름이 없습니다.");
 	return fontCodeToNameMap_[_fontCode];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int FontManager::getFontCode(const SGString& _fontName)
+int FontManager::GetFontCode(const SGString& _fontName)
 {
 	DebugAssertMsg(fontNameToCodeMap_.Exist(_fontName), "해당 폰트이름에 맞는 폰트 코드가 없습니다.");
 	return fontNameToCodeMap_[_fontName];

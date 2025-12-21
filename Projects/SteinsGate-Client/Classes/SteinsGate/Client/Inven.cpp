@@ -34,7 +34,7 @@ Inven::~Inven()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Inven::init()
+void Inven::Init()
 {
 	for (int i = 0; i < InvenItemType::Max; ++i)
 	{
@@ -43,25 +43,25 @@ void Inven::init()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-WeaponType_t Inven::getWeaponType()
+WeaponType_t Inven::GetWeaponType()
 {
 	InvenItemEquip* pItemWeapon = equippedItemList_[ItemType::Weapon];
 
 	if (pItemWeapon == nullptr)
 	{
-		return Core::Contents.Player->getBaseInfo()->defaultWeaponType_;
+		return Core::Contents.Player->GetBaseInfo()->defaultWeaponType_;
 	}
 
 	std::bitset<128> g;
-	return pItemWeapon->Code.WeaponUn.WeaponType;
+	return pItemWeapon->code_.weaponUn_.weaponType_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-VisualInfo Inven::getVisualInfo(int _defaultCharType)
+VisualInfo Inven::GetVisualInfo(int _defaultCharType)
 {
 	VisualInfo info;
 
-	CharInfo* pCharInfo = Core::DataManager->getCharInfo(_defaultCharType);
+	CharInfo* pCharInfo = Core::DataManager->GetCharInfo(_defaultCharType);
 	bool equipped[VisualType::Max]{}; // 착용중인지
 	VisualData data;
 
@@ -73,7 +73,7 @@ VisualInfo Inven::getVisualInfo(int _defaultCharType)
 			continue;
 		}
 
-		int visualCount = VisualHelper::getVisualData(data, equippedAvatarList_[i]->Code.Code);
+		int visualCount = VisualHelper::GetVisualData(data, equippedAvatarList_[i]->code_.Code);
 		info.PushBack(&data[0], visualCount);
 		equipped[i] = true;
 	}
@@ -83,7 +83,7 @@ VisualInfo Inven::getVisualInfo(int _defaultCharType)
 
 	if (pItemWeapon != nullptr)
 	{
-		int visualCount = VisualHelper::getVisualData(data, pItemWeapon->Code.Code);
+		int visualCount = VisualHelper::GetVisualData(data, pItemWeapon->code_.Code);
 		info.PushBack(&data[0], visualCount);
 		equipped[VisualType::Weapon] = true;
 	}
@@ -110,7 +110,7 @@ VisualInfo Inven::getVisualInfo(int _defaultCharType)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int Inven::getAvailableSlotCount(InvenItemType_t _invenType)
+int Inven::GetAvailableSlotCount(InvenItemType_t _invenType)
 {
 	return availableSlotCount_[_invenType];
 }

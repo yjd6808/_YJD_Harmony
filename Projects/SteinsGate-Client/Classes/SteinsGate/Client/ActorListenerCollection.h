@@ -15,27 +15,27 @@ class ActorListenerCollection
 {
 public:
 	ActorListenerCollection()
-	: m_vListeners(1)
-	, m_hListeners(1)
+	: listeners_(1)
+	, listenerMap_(1)
 	{
 	}
 
-	bool add(IActorListener* _pListener);
-	bool has(IActorListener::Type _type);
-	IActorListener* get(IActorListener::Type _type);
+	bool Add(IActorListener* _pListener);
+	bool Has(IActorListener::Type _type);
+	IActorListener* Get(IActorListener::Type _type);
 
-	void deleteAll();
+	void DeleteAll();
 
-	void onCreated();
-	void onCleanUp();
-	void onUpdate(float _dt);
-	void onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
-	void onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
-	void onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
-	void onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
-	void onHit(const HitInfo& _hitInfo);
+	void OnCreated();
+	void OnCleanUp();
+	void OnUpdate(float _dt);
+	void OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	void OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	void OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	void OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	void OnHit(const HitInfo& _hitInfo);
 
 protected:
-	SGVector<IActorListener*> m_vListeners;
-	SGHashMap<IActorListener::Type, IActorListener*> m_hListeners;
+	SGVector<IActorListener*> listeners_;
+	SGHashMap<IActorListener::Type, IActorListener*> listenerMap_;
 };

@@ -24,7 +24,7 @@ public:
 	{
 	}
 
-	Actor* getActor() const { return pActor_; }
+	Actor* GetActor() const { return pActor_; }
 
 protected:
 	Actor* pActor_;

@@ -20,7 +20,7 @@ USING_NS_JC;
 USING_NS_CC;
 
 Effect::Effect(EffectInfo* _pBaseInfo)
-: baseInfo_(_pBaseInfo)
+: pBaseInfo_(_pBaseInfo)
 {
 }
 
@@ -28,42 +28,42 @@ Effect::~Effect()
 {
 }
 
-Effect* Effect::create(EffectInfo* _pBaseInfo)
+Effect* Effect::Create(EffectInfo* _pBaseInfo)
 {
 	Effect* pEffect = dbg_new Effect(_pBaseInfo);
-	pEffect->initialize();
+	pEffect->Initialize();
 	pEffect->autorelease();
 	return pEffect;
 }
 
-void Effect::initialize()
+void Effect::Initialize()
 {
-	initActorSprite();
-	initVariables();
-	initListeners();
-	initComponents();
+	InitActorSprite();
+	InitVariables();
+	InitListeners();
+	InitComponents();
 }
 
-bool Effect::initVariables()
+bool Effect::InitVariables()
 {
-	Actor::initVariables();
+	Actor::InitVariables();
 
 	return true;
 }
 
 // 프로젝틸은 파츠, 애니메이션 다 1개씩임
-void Effect::initActorSprite()
+void Effect::InitActorSprite()
 {
-	m_pActorSprite = ActorSprite::create(this, baseInfo_->pSpriteData_);
-	m_pActorSprite->setAnchorPoint(Vec2::ZERO);
-	this->addChild(m_pActorSprite);
+	pActorSprite_ = ActorSprite::Create(this, pBaseInfo_->pSpriteData_);
+	pActorSprite_->setAnchorPoint(Vec2::ZERO);
+	this->addChild(pActorSprite_);
 }
 
-void Effect::initListeners()
+void Effect::InitListeners()
 {
 }
 
-void Effect::initComponents()
+void Effect::InitComponents()
 {
 }
 
@@ -73,29 +73,29 @@ void Effect::update(float _delta)
 
 	if (Global::Get()->DrawEffect)
 	{
-		m_pActorSprite->getParts().ForEach([](ActorSprite::PartData& part) { part.Part->setOpacity(255); });
+		pActorSprite_->GetParts().ForEach([](ActorSprite::PartData& part) { part.pPart_->setOpacity(255); });
 	}
 	else
 	{
-		m_pActorSprite->getParts().ForEach([](ActorSprite::PartData& part) { part.Part->setOpacity(0); });
+		pActorSprite_->GetParts().ForEach([](ActorSprite::PartData& part) { part.pPart_->setOpacity(0); });
 	}
 }
 
-void Effect::onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+void Effect::OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
 }
 
-void Effect::onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+void Effect::OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
 }
 
-void Effect::onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+void Effect::OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
 }
 
-void Effect::onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+void Effect::OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
 	// 일단 애니메이션 모두 실행 후 소멸된다고 가정
 	// 추후 이펙트 추가된다면 프로젝틸 리스너처럼 이펙트 리스너로 기능 개별 구현 필요
-	cleanUpAtNextFrame();
+	CleanUpAtNextFrame();
 }

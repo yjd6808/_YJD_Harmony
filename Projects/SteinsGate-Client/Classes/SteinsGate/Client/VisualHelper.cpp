@@ -14,7 +14,7 @@ USING_NS_JC;
 USING_NS_CC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int VisualHelper::getVisualData(JCORE_OUT VisualData& _visualData, int _code)
+int VisualHelper::GetVisualData(JCORE_OUT VisualData& _visualData, int _code)
 {
 	ItemVisualInfo* pVisualInfo = Core::DataManager->getVisualInfo(_code);
 	CharType_t charType = pVisualInfo->GetCharType();
@@ -29,14 +29,14 @@ int VisualHelper::getVisualData(JCORE_OUT VisualData& _visualData, int _code)
 	case ItemType::Avatar:
 		{
 			AvatarType_t avatarType = pVisualInfo->GetAvatarType();
-			pPack = Core::Contents.PackManager->getAvatarPack(charType, avatarType);
+			pPack = Core::Contents.PackManager->GetAvatarPack(charType, avatarType);
 			pImgPrefix = (char*)AvatarType::ImgPrefix[avatarType];
 			break;
 		}
 	case ItemType::Weapon:
 		{
 			WeaponType_t weaponType = pVisualInfo->GetWeaponType();
-			pPack = Core::Contents.PackManager->getWeaponPack(weaponType);
+			pPack = Core::Contents.PackManager->GetWeaponPack(weaponType);
 			pImgPrefix = (char*)WeaponType::ImgPrefix[weaponType];
 			break;
 		}
@@ -48,22 +48,22 @@ int VisualHelper::getVisualData(JCORE_OUT VisualData& _visualData, int _code)
 	DebugAssertMsg(pVisualInfo->shape_.Length() > 1, "해당 비주얼 아이템에 쉐이프가 없습니다.");
 
 	int zOrder = VisualType::ZOrder[visualType];
-	int sgaIndex = pPack->getPackIndex();
+	int sgaIndex = pPack->GetPackIndex();
 	int shapeCount = pVisualInfo->shapeAlpha_.Length(); // 쉐이프 수
 
 	// 알파가 없는 경우 그대로 씀
 	if (shapeCount == 0)
 	{
-		int imgIndex = pPack->getImgIndex(
+		int imgIndex = pPack->GetImgIndex(
 			StringUtil::Format("%s%s.img",
 			                   pImgPrefix,
 			                   pVisualInfo->shape_.Source()
 			)
 		);
 
-		_visualData[0].ZOrder = zOrder;
-		_visualData[0].SgaIndex = sgaIndex;
-		_visualData[0].ImgIndex = imgIndex;
+		_visualData[0].zOrder_ = zOrder;
+		_visualData[0].sgaIndex_ = sgaIndex;
+		_visualData[0].imgIndex_ = imgIndex;
 		return 1;
 	}
 
@@ -71,7 +71,7 @@ int VisualHelper::getVisualData(JCORE_OUT VisualData& _visualData, int _code)
 	{
 		char alpha = pVisualInfo->shapeAlpha_[shapeIndex];
 
-		int imgIndex = pPack->getImgIndex(
+		int imgIndex = pPack->GetImgIndex(
 			StringUtil::Format("%s%s%c.img",
 			                   pImgPrefix,
 			                   pVisualInfo->shape_.Source(),
@@ -79,9 +79,9 @@ int VisualHelper::getVisualData(JCORE_OUT VisualData& _visualData, int _code)
 			)
 		);
 
-		_visualData[shapeIndex].ZOrder = zOrder--;
-		_visualData[shapeIndex].SgaIndex = sgaIndex;
-		_visualData[shapeIndex].ImgIndex = imgIndex;
+		_visualData[shapeIndex].zOrder_ = zOrder--;
+		_visualData[shapeIndex].sgaIndex_ = sgaIndex;
+		_visualData[shapeIndex].imgIndex_ = imgIndex;
 	}
 
 	return shapeCount;

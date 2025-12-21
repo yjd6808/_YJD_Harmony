@@ -27,7 +27,7 @@
 
 class DataManager
 	: public DataManagerAbstract
-	  , public JCore::SingletonPointer<DataManager>
+	, public JCore::SingletonPointer<DataManager>
 {
 	friend class TSingleton;
 	DataManager();
@@ -36,29 +36,29 @@ class DataManager
 public:
 	void initializeLoader() override;
 
-	MonsterInfo* getMonsterInfo(int _mobCode);
-	ActionInfo* getActionInfo(int _actionCode);
-	ProjectileInfo* getProjectileInfo(ActorType_t _actorType, int _projectileCode);
-	CharInfo* getCharInfo(int _charCode);
-	AnimationInfo* getCharAnimationInfo(int _charAnimationCode);
-	SGVector<AnimationInfo*>& getCharAnimationInfoList(int _charCode);
-	ClientInfo* getClientInfo(int _code);
-	TileInfo* getTileInfo(int _tileCode);
-	MapObjectInfo* getMapObjectInfo(int _mapObjectCode);
-	AIInfo* getAIInfo(int _aiCode);
-	AttackDataInfo* getAttackDataInfo(ActorType_t _actorType, int _attackDataCode);
-	EffectInfo* getEffectInfo(int _effectCode);
-	UIElementInfo* getUIElementInfo(int _uiElementCode);
-	FrameEvent* getFrameEvent(ActorType_t _actorType, int _frameEventCode);
-	ChannelInfo* getChannelInfo(int _channelCode);
+	MonsterInfo* GetMonsterInfo(int _mobCode);
+	ActionInfo* GetActionInfo(int _actionCode);
+	ProjectileInfo* GetProjectileInfo(ActorType_t _actorType, int _projectileCode);
+	CharInfo* GetCharInfo(int _charCode);
+	AnimationInfo* GetCharAnimationInfo(int _charAnimationCode);
+	SGVector<AnimationInfo*>& GetCharAnimationInfoList(int _charCode);
+	ClientInfo* GetClientInfo(int _code);
+	TileInfo* GetTileInfo(int _tileCode);
+	MapObjectInfo* GetMapObjectInfo(int _mapObjectCode);
+	AIInfo* GetAiInfo(int _aiCode);
+	AttackDataInfo* GetAttackDataInfo(ActorType_t _actorType, int _attackDataCode);
+	EffectInfo* GetEffectInfo(int _effectCode);
+	UIElementInfo* GetUiElementInfo(int _uiElementCode);
+	FrameEvent* GetFrameEvent(ActorType_t _actorType, int _frameEventCode);
+	ChannelInfo* GetChannelInfo(int _channelCode);
 
-	char* getTextRaw(const char* _textId);
-	SGString& getText(const char* _textId);
-	SGString& getText(const SGString& _textId);
+	char* GetTextRaw(const char* _textId);
+	SGString& GetText(const char* _textId);
+	SGString& GetText(const SGString& _textId);
 };
 
-#define SG_TEXT_RAW(id)					Core::DataManager->getTextRaw(id)
-#define SG_TEXT(id)						Core::DataManager->getText(id)
+#define SG_TEXT_RAW(id)					Core::DataManager->GetTextRaw(id)
+#define SG_TEXT(id)						Core::DataManager->GetText(id)
 
-#define SG_TEXT_RAW_FMT(id, ...)		JCore::StringUtil::Format(Core::DataManager->getTextRaw(id), __VA_ARGS__)
-#define SG_TEXT_RAW_FMT_STD(id, ...)	StringUtils::format(Core::DataManager->getTextRaw(id), __VA_ARGS__)
+#define SG_TEXT_RAW_FMT(id, ...)		JCore::StringUtil::Format(Core::DataManager->GetTextRaw(id), __VA_ARGS__)
+#define SG_TEXT_RAW_FMT_STD(id, ...)	StringUtils::format(Core::DataManager->GetTextRaw(id), __VA_ARGS__)

@@ -25,14 +25,14 @@ USING_NS_JC;
 
 #define SG_CURSOR_POSITION_GUARD(mouse_event, cursor_pos) UIGroup::CursorPositionGuard JCORE_CONCAT_COUNTER(__guard__)(mouse_event, cursor_pos)
 
-UIGroup::UIGroup(UIRootGroup* _pMaster, UIGroup* _pParent)
-: UIElement(_pMaster, _pParent)
+UIGroup::UIGroup(UIRootGroup* _pRoot, UIGroup* _pParent)
+: UIElement(_pRoot, _pParent)
 , groupInfo_(nullptr)
 {
 }
 
-UIGroup::UIGroup(UIRootGroup* _pMaster, UIGroup* _pParent, UIGroupInfo* _pGroupInfo, bool _infoOwner)
-: UIElement(_pMaster, _pParent, _pGroupInfo, _infoOwner)
+UIGroup::UIGroup(UIRootGroup* _pRoot, UIGroup* _pParent, UIGroupInfo* _pGroupInfo, bool _infoOwner)
+: UIElement(_pRoot, _pParent, _pGroupInfo, _infoOwner)
 , groupInfo_(_pGroupInfo)
 {
 }
@@ -41,17 +41,17 @@ UIGroup::~UIGroup()
 {
 }
 
-UIGroup* UIGroup::create(UIRootGroup* _pMaster, UIGroup* _pParent)
+UIGroup* UIGroup::Create(UIRootGroup* _pRoot, UIGroup* _pParent)
 {
-	UIGroup* pGroup = dbg_new UIGroup(_pMaster, _pParent);
+	UIGroup* pGroup = dbg_new UIGroup(_pRoot, _pParent);
 	pGroup->init();
 	pGroup->autorelease();
 	return pGroup;
 }
 
-UIGroup* UIGroup::create(UIRootGroup* _pMaster, UIGroup* _pParent, UIGroupInfo* _pGroupInfo, bool _infoOwner)
+UIGroup* UIGroup::Create(UIRootGroup* _pRoot, UIGroup* _pParent, UIGroupInfo* _pGroupInfo, bool _infoOwner)
 {
-	UIGroup* pGroup = dbg_new UIGroup(_pMaster, _pParent, _pGroupInfo, _infoOwner);
+	UIGroup* pGroup = dbg_new UIGroup(_pRoot, _pParent, _pGroupInfo, _infoOwner);
 	pGroup->init();
 	pGroup->autorelease();
 	return pGroup;
@@ -66,13 +66,13 @@ bool UIGroup::init()
 
 	if (groupInfo_ != nullptr)
 	{
-		SetInitialUISize(groupInfo_->Size);
+		SetInitialUISize(groupInfo_->size_);
 	}
 
 	return isInitialized_ = true;
 }
 
-void UIGroup::initChildren()
+void UIGroup::InitChildren()
 {
 	if (groupInfo_ == nullptr)
 	{
@@ -80,34 +80,34 @@ void UIGroup::initChildren()
 		return;
 	}
 
-	for (int i = 0; i < groupInfo_->InfoList.Size(); ++i)
+	for (int i = 0; i < groupInfo_->infoList_.Size(); ++i)
 	{
-		UIGroupElemInfo* pElemInfo = &groupInfo_->InfoList[i];
-		addUIElement(pElemInfo);
+		UIGroupElemInfo* pElemInfo = &groupInfo_->infoList_[i];
+		AddUIElement(pElemInfo);
 	}
 
-	initChildrenPosition();
+	InitChildrenPosition();
 }
 
-void UIGroup::initChildrenPosition()
+void UIGroup::InitChildrenPosition()
 {
 	if (groupInfo_ == nullptr)
 	{
 		return;
 	}
 
-	for (int i = 0; i < groupInfo_->InfoList.Size(); ++i)
+	for (int i = 0; i < groupInfo_->infoList_.Size(); ++i)
 	{
 		UIElement* pElement = static_cast<UIElement*>(_children.at(i));
-		const UIGroupElemInfo& elemInfo = groupInfo_->InfoList[i];
+		const UIGroupElemInfo& elemInfo = groupInfo_->infoList_[i];
 
 		pElement->SetRelativePosition(
-			elemInfo.Pos.x * Core::ClientInfo->uiScaleXFactor_,
-			elemInfo.Pos.y * Core::ClientInfo->uiScaleYFactor_);
+			elemInfo.pos_.x * Core::ClientInfo->uiScaleXFactor_,
+			elemInfo.pos_.y * Core::ClientInfo->uiScaleYFactor_);
 
 		if (pElement->IsGroup())
 		{
-			static_cast<UIGroup*>(pElement)->initChildrenPosition();
+			static_cast<UIGroup*>(pElement)->InitChildrenPosition();
 		}
 	}
 }
@@ -119,7 +119,7 @@ void UIGroup::Load()
 		return;
 	}
 
-	forEachRecursive([](UIElement* _pElement)
+	ForEachRecursive([](UIElement* _pElement)
 	{
 		_pElement->Load();
 	});
@@ -143,7 +143,7 @@ void UIGroup::Unload()
 
 	DeveloperCreatedList.Clear();
 
-	forEachRecursive([](UIElement* _pElement)
+	ForEachRecursive([](UIElement* _pElement)
 	{
 		if (_pElement->IsDeveloperCreated())
 		{
@@ -166,7 +166,7 @@ void UIGroup::Unload()
 	}
 }
 
-void UIGroup::addChild(UIElement* _pChild)
+void UIGroup::AddChild(UIElement* _pChild)
 {
 	Node::addChild(_pChild);
 }
@@ -248,7 +248,7 @@ bool UIGroup::OnMouseScrollInternal(SGEventMouse* _pMouseEvent)
 	return UIElement::OnMouseScrollInternal(_pMouseEvent);
 }
 
-UIElement* UIGroup::getAt(int _index)
+UIElement* UIGroup::GetAt(int _index)
 {
 	if (_index >= _children.size())
 	{
@@ -259,9 +259,9 @@ UIElement* UIGroup::getAt(int _index)
 	return static_cast<UIElement*>(_children.at(_index));
 }
 
-UIElement* UIGroup::findElement(int _code)
+UIElement* UIGroup::FindElement(int _code)
 {
-	UIElement* pElement = findElementRecursiveInternal(this, _code);
+	UIElement* pElement = FindElementRecursiveInternal(this, _code);
 
 	if (pElement == nullptr)
 	{
@@ -271,97 +271,97 @@ UIElement* UIGroup::findElement(int _code)
 	return pElement;
 }
 
-UIGroup* UIGroup::findGroup(int _groupCode)
+UIGroup* UIGroup::FindGroup(int _groupCode)
 {
-	return findElementTemplated<UIGroup>(this, _groupCode);
+	return FindElementTemplated<UIGroup>(this, _groupCode);
 }
 
-UIButton* UIGroup::findButton(int _buttonCode)
+UIButton* UIGroup::FindButton(int _buttonCode)
 {
-	return findElementTemplated<UIButton>(this, _buttonCode);
+	return FindElementTemplated<UIButton>(this, _buttonCode);
 }
 
-UISprite* UIGroup::findSprite(int _spriteCode)
+UISprite* UIGroup::FindSprite(int _spriteCode)
 {
-	return findElementTemplated<UISprite>(this, _spriteCode);
+	return FindElementTemplated<UISprite>(this, _spriteCode);
 }
 
-UILabel* UIGroup::findLabel(int _labelCode)
+UILabel* UIGroup::FindLabel(int _labelCode)
 {
-	return findElementTemplated<UILabel>(this, _labelCode);
+	return FindElementTemplated<UILabel>(this, _labelCode);
 }
 
-UICheckBox* UIGroup::findCheckBox(int _checkBoxCode)
+UICheckBox* UIGroup::FindCheckBox(int _checkBoxCode)
 {
-	return findElementTemplated<UICheckBox>(this, _checkBoxCode);
+	return FindElementTemplated<UICheckBox>(this, _checkBoxCode);
 }
 
-UIEditBox* UIGroup::findEditBox(int _editBoxCode)
+UIEditBox* UIGroup::FindEditBox(int _editBoxCode)
 {
-	return findElementTemplated<UIEditBox>(this, _editBoxCode);
+	return FindElementTemplated<UIEditBox>(this, _editBoxCode);
 }
 
-UIToggleButton* UIGroup::findToggleButton(int _toggleButtonCode)
+UIToggleButton* UIGroup::FindToggleButton(int _toggleButtonCode)
 {
-	return findElementTemplated<UIToggleButton>(this, _toggleButtonCode);
+	return FindElementTemplated<UIToggleButton>(this, _toggleButtonCode);
 }
 
-UIProgressBar* UIGroup::findProgressBar(int _progressBarCode)
+UIProgressBar* UIGroup::FindProgressBar(int _progressBarCode)
 {
-	return findElementTemplated<UIProgressBar>(this, _progressBarCode);
+	return FindElementTemplated<UIProgressBar>(this, _progressBarCode);
 }
 
-UIScrollBar* UIGroup::findScrollBar(int _scrollBarCode)
+UIScrollBar* UIGroup::FindScrollBar(int _scrollBarCode)
 {
-	return findElementTemplated<UIScrollBar>(this, _scrollBarCode);
+	return FindElementTemplated<UIScrollBar>(this, _scrollBarCode);
 }
 
-UIStatic* UIGroup::findStatic(int _staticCode)
+UIStatic* UIGroup::FindStatic(int _staticCode)
 {
-	return findElementTemplated<UIStatic>(this, _staticCode);
+	return FindElementTemplated<UIStatic>(this, _staticCode);
 }
 
-void UIGroup::addUIElement(UIGroupElemInfo* _pGroupElemInfo)
+void UIGroup::AddUIElement(UIGroupElemInfo* _pGroupElemInfo)
 {
-	UIElementInfo* pElementInfo = Core::DataManager->getUIElementInfo(_pGroupElemInfo->Code);
+	UIElementInfo* pElementInfo = Core::DataManager->GetUiElementInfo(_pGroupElemInfo->code_);
 	UIElement* pChildElement = nullptr;
 
-	switch (pElementInfo->Type)
+	switch (pElementInfo->type_)
 	{
 	case UIElementType::Group:
-		pChildElement = UIGroup::create(pRootGroup_, this, static_cast<UIGroupInfo*>(pElementInfo), false);
+		pChildElement = UIGroup::Create(pRootGroup_, this, static_cast<UIGroupInfo*>(pElementInfo), false);
 		break;
 	case UIElementType::Button:
-		pChildElement = UIButton::create(pRootGroup_, this, static_cast<UIButtonInfo*>(pElementInfo), false);
+		pChildElement = UIButton::Create(pRootGroup_, this, static_cast<UIButtonInfo*>(pElementInfo), false);
 		break;
 	case UIElementType::Label:
 		pChildElement = UILabel::create(pRootGroup_, this, static_cast<UILabelInfo*>(pElementInfo), false);
 		break;
 	case UIElementType::Sprite:
-		pChildElement = UISprite::create(pRootGroup_, this, static_cast<UISpriteInfo*>(pElementInfo), false);
+		pChildElement = UISprite::Create(pRootGroup_, this, static_cast<UISpriteInfo*>(pElementInfo), false);
 		break;
 	case UIElementType::EditBox:
-		pChildElement = UIEditBox::create(pRootGroup_, this, static_cast<UIEditBoxInfo*>(pElementInfo), false);
+		pChildElement = UIEditBox::Create(pRootGroup_, this, static_cast<UIEditBoxInfo*>(pElementInfo), false);
 		break;
 	case UIElementType::CheckBox:
-		pChildElement = UICheckBox::create(pRootGroup_, this, static_cast<UICheckBoxInfo*>(pElementInfo), false);
+		pChildElement = UICheckBox::Create(pRootGroup_, this, static_cast<UICheckBoxInfo*>(pElementInfo), false);
 		break;
 	case UIElementType::ToggleButton:
-		pChildElement = UIToggleButton::create(pRootGroup_, this, static_cast<UIToggleButtonInfo*>(pElementInfo),
+		pChildElement = UIToggleButton::Create(pRootGroup_, this, static_cast<UIToggleButtonInfo*>(pElementInfo),
 		                                       false);
 		break;
 	case UIElementType::ProgressBar:
-		pChildElement = UIProgressBar::create(pRootGroup_, this, static_cast<UIProgressBarInfo*>(pElementInfo),
+		pChildElement = UIProgressBar::Create(pRootGroup_, this, static_cast<UIProgressBarInfo*>(pElementInfo),
 		                                      false);
 		break;
 	case UIElementType::ScrollBar:
-		pChildElement = UIScrollBar::create(pRootGroup_, this, static_cast<UIScrollBarInfo*>(pElementInfo), false);
+		pChildElement = UIScrollBar::Create(pRootGroup_, this, static_cast<UIScrollBarInfo*>(pElementInfo), false);
 		break;
 	case UIElementType::Static:
-		pChildElement = UIStatic::create(pRootGroup_, this, static_cast<UIStaticInfo*>(pElementInfo), false);
+		pChildElement = UIStatic::Create(pRootGroup_, this, static_cast<UIStaticInfo*>(pElementInfo), false);
 		break;
 	default:
-		_LogWarn_("알 수 없는 타입의 엘리먼트를 추가할려고했습니다. (%d)", pElementInfo->Type);
+		_LogWarn_("알 수 없는 타입의 엘리먼트를 추가할려고했습니다. (%d)", pElementInfo->type_);
 		return;
 	}
 
@@ -373,13 +373,13 @@ void UIGroup::addUIElement(UIGroupElemInfo* _pGroupElemInfo)
 
 	if (pChildElement->IsGroup())
 	{
-		static_cast<UIGroup*>(pChildElement)->initChildren();
+		static_cast<UIGroup*>(pChildElement)->InitChildren();
 	}
 
-	addChild(pChildElement);
+	AddChild(pChildElement);
 }
 
-void UIGroup::forEachRecursive(const SGActionFn<UIElement*>& _action) const
+void UIGroup::ForEachRecursive(const SGActionFn<UIElement*>& _action) const
 {
 	for (int i = 0; i < _children.size(); ++i)
 	{
@@ -389,7 +389,7 @@ void UIGroup::forEachRecursive(const SGActionFn<UIElement*>& _action) const
 		{
 			UIGroup* pGroupElement = static_cast<UIGroup*>(pElement);
 			_action(pGroupElement);
-			pGroupElement->forEachRecursive(_action);
+			pGroupElement->ForEachRecursive(_action);
 			continue;
 		}
 
@@ -397,13 +397,13 @@ void UIGroup::forEachRecursive(const SGActionFn<UIElement*>& _action) const
 	}
 }
 
-void UIGroup::forEachRecursiveContainedSelf(const SGActionFn<UIElement*>& _action) const
+void UIGroup::ForEachRecursiveContainedSelf(const SGActionFn<UIElement*>& _action) const
 {
 	_action(const_cast<UIGroup*>(this));
-	forEachRecursive(_action);
+	ForEachRecursive(_action);
 }
 
-void UIGroup::forEach(const SGActionFn<UIElement*>& _action) const
+void UIGroup::ForEach(const SGActionFn<UIElement*>& _action) const
 {
 	for (int i = 0; i < _children.size(); ++i)
 	{
@@ -411,10 +411,10 @@ void UIGroup::forEach(const SGActionFn<UIElement*>& _action) const
 	}
 }
 
-void UIGroup::forEachContainedSelf(const SGActionFn<UIElement*>& _action) const
+void UIGroup::ForEachContainedSelf(const SGActionFn<UIElement*>& _action) const
 {
 	_action(const_cast<UIGroup*>(this));
-	forEach(_action);
+	ForEach(_action);
 }
 
 void UIGroup::RestoreState(State _state)
@@ -424,7 +424,7 @@ void UIGroup::RestoreState(State _state)
 		return;
 	}
 
-	forEachRecursive([_state](UIElement* _pChild)
+	ForEachRecursive([_state](UIElement* _pChild)
 	{
 		_pChild->RestoreState(_state);
 	});
@@ -443,7 +443,7 @@ void UIGroup::SetUISize(const SGSize& _size)
 	const float scaleX = getScaleX();
 	const float scaleY = getScaleY();
 
-	forEach([&](UIElement* _pChild)
+	ForEach([&](UIElement* _pChild)
 	{
 		if (!_pChild->IsResizable())
 		{
@@ -458,9 +458,9 @@ void UIGroup::SetUISize(const SGSize& _size)
 
 void UIGroup::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 {
-	if (_pInfo->Type != UIElementType::Group)
+	if (_pInfo->type_ != UIElementType::Group)
 	{
-		LogWarnInvalidInfo(_pInfo->Type);
+		LogWarnInvalidInfo(_pInfo->type_);
 		return;
 	}
 
@@ -474,12 +474,12 @@ void UIGroup::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 	isInfoOwner_ = _infoOwner;
 }
 
-void UIGroup::setInfoGroup(UIGroupInfo* _pInfo, bool _infoOwner)
+void UIGroup::SetInfoGroup(UIGroupInfo* _pInfo, bool _infoOwner)
 {
 	SetInfo(_pInfo, _infoOwner);
 }
 
-UIElement* UIGroup::findElementRecursiveInternal(UIGroup* _pParent, int _code)
+UIElement* UIGroup::FindElementRecursiveInternal(UIGroup* _pParent, int _code)
 {
 	for (int i = 0; i < _pParent->_children.size(); ++i)
 	{
@@ -492,7 +492,7 @@ UIElement* UIGroup::findElementRecursiveInternal(UIGroup* _pParent, int _code)
 
 		if (pElement->GetElementType() == UIElementType::Group)
 		{
-			UIElement* pFound = findElementRecursiveInternal(static_cast<UIGroup*>(pElement), _code);
+			UIElement* pFound = FindElementRecursiveInternal(static_cast<UIGroup*>(pElement), _code);
 			if (pFound != nullptr)
 			{
 				return pFound;

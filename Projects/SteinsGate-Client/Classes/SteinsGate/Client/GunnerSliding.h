@@ -14,12 +14,12 @@ class GunnerSliding : public GunnerAction
 public:
 	GunnerSliding(HostPlayer* _pPlayer, ActionInfo* _pActionInfo);
 
-	bool onConditionCheck() override;
-	void onUpdate(float _deltaTime) override;
-	void onActionBegin() override;
-	void onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
-	void onEnemySingleHit(HitInfo& _info);
-	void onEnemyMultiHit(SGHitInfoList& _hitList, int _newHitCount);
+	bool OnConditionCheck() override;
+	void OnUpdate(float _deltaTime) override;
+	void OnActionBegin() override;
+	void OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
+	void OnEnemySingleHit(HitInfo& _info);
+	void OnEnemyMultiHit(SGHitInfoList& _hitList, int _newHitCount);
 
 private:
 	bool slidingStarted_{};

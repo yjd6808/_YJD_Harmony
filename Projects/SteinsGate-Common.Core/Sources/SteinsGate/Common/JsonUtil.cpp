@@ -99,10 +99,10 @@ void JsonUtil::ParseThicknessInfo(Json::Value& _thicknessRoot, JCORE_OUT Thickne
 	int num[4];
 	TextParser::ParseIntNumbers(GetString(_thicknessRoot), num, 4);
 
-	_box.RelativeX = (float)num[0];
-	_box.RelativeY = (float)num[1];
-	_box.Width = (float)num[2];
-	_box.Height = (float)num[3];
+	_box.relativeX_ = (float)num[0];
+	_box.relativeY_ = (float)num[1];
+	_box.width_ = (float)num[2];
+	_box.height_ = (float)num[3];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

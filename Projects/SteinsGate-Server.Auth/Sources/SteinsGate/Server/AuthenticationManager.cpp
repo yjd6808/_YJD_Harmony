@@ -83,7 +83,7 @@ void AuthenticationManager::OnScheduled(SchedulerTask* _pTask)
 		for (int i = 0; i < expiredList.Size(); ++i)
 		{
 			AuthenticationData* pExpiredData = expiredList[i];
-			RemoveRaw(pExpiredData->Serial);
+			RemoveRaw(pExpiredData->serial_);
 		}
 	}
 
@@ -91,7 +91,7 @@ void AuthenticationManager::OnScheduled(SchedulerTask* _pTask)
 	for (int i = 0; i < expiredList.Size(); ++i)
 	{
 		AuthenticationData* pExpiredData = expiredList[i];
-		_LogDebug_("%s 인증 데이터 만료 (상태:%s)", pExpiredData->AccountData.Id.Source, AuthenticationState::Name[pExpiredData->State]);
+		_LogDebug_("%s 인증 데이터 만료 (상태:%s)", pExpiredData->accountData_.id_.Source, AuthenticationState::Name[pExpiredData->state_]);
 		delete pExpiredData;
 	}
 
@@ -101,7 +101,7 @@ void AuthenticationManager::OnScheduled(SchedulerTask* _pTask)
 //////////////////////////////////////////////////////////////////////////////////////////
 AuthenticationData* AuthenticationManager::IssueRaw(const JCORE_REF_IN AccountData& _accountData)
 {
-	if (accountIdDataMap_.Exist(_accountData.Id.Source))
+	if (accountIdDataMap_.Exist(_accountData.id_.Source))
 	{
 		return nullptr;
 	}
@@ -123,16 +123,16 @@ AuthenticationData* AuthenticationManager::IssueRaw(const JCORE_REF_IN AccountDa
 
 	if (AuthenticationData* pExistData = FindRaw(serial))
 	{
-		_LogDebug_("이미 해당 시리얼의 유저가 존재함. (%d:%s)", pExistData->Serial, pExistData->AccountData.Id.Source);
+		_LogDebug_("이미 해당 시리얼의 유저가 존재함. (%d:%s)", pExistData->serial_, pExistData->accountData_.id_.Source);
 		return nullptr;
 	}
 
 	AuthenticationData* pToken = dbg_new AuthenticationData{};
 	bool added = true;
 
-	pToken->AccountData = _accountData;
-	pToken->Serial = serial;
-	pToken->TimeId = timeId;
+	pToken->accountData_ = _accountData;
+	pToken->serial_ = serial;
+	pToken->timeId_ = timeId;
 
 	added = timeDataMap_.Insert(timeId, pToken);
 	if (!added)
@@ -148,7 +148,7 @@ AuthenticationData* AuthenticationManager::IssueRaw(const JCORE_REF_IN AccountDa
 		return nullptr;
 	}
 
-	added = accountIdDataMap_.Insert(pToken->AccountData.Id.Source, pToken);
+	added = accountIdDataMap_.Insert(pToken->accountData_.id_.Source, pToken);
 	if (!added)
 	{
 		DebugAssert(false);
@@ -194,7 +194,7 @@ AuthenticationData* AuthenticationManager::FindRaw(AuthenticationSerial_t _seria
 		return nullptr;
 	}
 
-	if ((*pFindPtr)->AccountData.Id == _pAccountId)
+	if ((*pFindPtr)->accountData_.id_ == _pAccountId)
 	{
 		return *pFindPtr;
 	}
@@ -212,19 +212,19 @@ AuthenticationData* AuthenticationManager::UpdateRaw(AuthenticationSerial_t _ser
 		return nullptr;
 	}
 
-	if (pData->AccountData.Id != _pAccountId)
+	if (pData->accountData_.id_ != _pAccountId)
 	{
 		_LogWarn_("시리얼은 동일하지만 ID가 다른 유저입니다.");
 		return nullptr;
 	}
 
-	if (pData->State == _nextState)
+	if (pData->state_ == _nextState)
 	{
 		DebugAssertMsg(false, "동일한 인증상태로 업데이트를 시도했습니다.");
 		return nullptr;
 	}
 
-	if (!RemoveRaw(pData->TimeId))
+	if (!RemoveRaw(pData->timeId_))
 	{
 		_LogDebug_("기존 타임ID 제거 실패");
 		return nullptr;
@@ -238,8 +238,8 @@ AuthenticationData* AuthenticationManager::UpdateRaw(AuthenticationSerial_t _ser
 		_LogDebug_("타임ID 생성 실패 %d", 2);
 	}
 
-	pData->TimeId = timeId;
-	pData->State = _nextState;
+	pData->timeId_ = timeId;
+	pData->state_ = _nextState;
 
 	added = timeDataMap_.Insert(timeId, pData);
 	if (!added)
@@ -269,7 +269,7 @@ bool AuthenticationManager::RemoveRaw(AuthenticationSerial_t _serial)
 
 	bool removed = true;
 
-	removed = timeDataMap_.Remove(pData->TimeId);
+	removed = timeDataMap_.Remove(pData->timeId_);
 	if (!removed)
 	{
 		DebugAssert(false);
@@ -283,7 +283,7 @@ bool AuthenticationManager::RemoveRaw(AuthenticationSerial_t _serial)
 		return false;
 	}
 
-	removed = accountIdDataMap_.Remove(pData->AccountData.Id.Source);
+	removed = accountIdDataMap_.Remove(pData->accountData_.id_.Source);
 	if (!removed)
 	{
 		DebugAssert(false);
@@ -303,14 +303,14 @@ bool AuthenticationManager::RemoveRaw(AuthenticationSerial_t _serial, const char
 		return false;
 	}
 
-	if (pData->AccountData.Id.Source != _pAccountId)
+	if (pData->accountData_.id_.Source != _pAccountId)
 	{
 		return false;
 	}
 
 	bool removed = true;
 
-	removed = timeDataMap_.Remove(pData->TimeId);
+	removed = timeDataMap_.Remove(pData->timeId_);
 	if (!removed)
 	{
 		DebugAssert(false);

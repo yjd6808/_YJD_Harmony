@@ -23,9 +23,9 @@ void SitActivity_Goblin::OnActivityBegin()
 	Monster* pMonster = dynamic_cast<Monster*>(pActor_);
 	DebugAssert(pMonster);
 
-	const MonsterStatInfo* pStatInfo = pMonster->getStatInfo();
+	const MonsterStatInfo* pStatInfo = pMonster->GetStatInfo();
 	const float limitTime = pStatInfo ? pStatInfo->downRecoverTime_ / 2 : 1.0f;
 
 	limitTime_ = limitTime;
-	pActor_->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_SIT);
+	pActor_->RunAnimation(DEF_ANIMATION_MONSTER_GOBLIN_SIT);
 }

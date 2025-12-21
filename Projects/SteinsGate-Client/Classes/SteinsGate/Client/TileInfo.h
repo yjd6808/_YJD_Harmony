@@ -14,7 +14,7 @@ struct TileInfo : ConfigDataAbstract
 {
 	~TileInfo() override = default;
 
-	int SgaIndex;
-	int ImgIndex;
-	int SpriteIndex;
+	int sgaIndex_;
+	int imgIndex_;
+	int spriteIndex_;
 };

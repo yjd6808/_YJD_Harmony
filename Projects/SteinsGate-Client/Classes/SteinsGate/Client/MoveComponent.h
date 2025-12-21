@@ -17,21 +17,21 @@ class MoveComponent : public ActorComponent, public IUpdatable
 public:
 	MoveComponent(Actor* _pActor);
 
-	void initialize() override;
-	void onUpdate(float _dt) override;
+	void Initialize() override;
+	void OnUpdate(float _dt) override;
 
-	void setSpeed(const SGVec2& _speed);
-	void setSpeed(float _x, float _y);
+	void SetSpeed(const SGVec2& _speed);
+	void SetSpeed(float _x, float _y);
 
-	const SGVec2& getSpeed() const;
+	const SGVec2& GetSpeed() const;
 
 	SG_COMPONENT_TYPE_GETTER(Type::eMove)
 
 private:
-	void updateLeftMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect);
-	void updateRightMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect);
-	void updateUpMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect);
-	void updateDownMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect);
+	void UpdateLeftMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect);
+	void UpdateRightMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect);
+	void UpdateUpMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect);
+	void UpdateDownMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const SGRect& _thicknessRect);
 
 private:
 	SGVec2 speed_;

@@ -18,71 +18,71 @@ public:
 
 	bool Load() override;
 
-	static void readElementCommon(Json::Value& _elementRoot, JCORE_OUT UIElementInfo* _pElementInfo);
-	static void readElementGroup(Json::Value& _groupRoot, JCORE_OUT UIGroupInfo* _pGroupInfo);
-	static UIElementInfo* readElementButton(Json::Value& _buttonRoot);
-	static UIElementInfo* readElementLabel(Json::Value& _labelRoot);
-	static UIElementInfo* readElementSprite(Json::Value& _spriteRoot);
-	static UIElementInfo* readElementEditBox(Json::Value& _editBoxRoot);
-	static UIElementInfo* readElementCheckBox(Json::Value& _checkBoxRoot);
-	static UIElementInfo* readElementToggleButton(Json::Value& _toggleButtonRoot);
-	static UIElementInfo* readElementScrollBar(Json::Value& _scrollBarRoot);
-	static UIElementInfo* readElementProgressBar(Json::Value& _progressBarRoot);
-	static UIElementInfo* readElementStatic(Json::Value& _staticRoot);
+	static void ReadElementCommon(Json::Value& _elementRoot, JCORE_OUT UIElementInfo* _pElementInfo);
+	static void ReadElementGroup(Json::Value& _groupRoot, JCORE_OUT UIGroupInfo* _pGroupInfo);
+	static UIElementInfo* ReadElementButton(Json::Value& _buttonRoot);
+	static UIElementInfo* ReadElementLabel(Json::Value& _labelRoot);
+	static UIElementInfo* ReadElementSprite(Json::Value& _spriteRoot);
+	static UIElementInfo* ReadElementEditBox(Json::Value& _editBoxRoot);
+	static UIElementInfo* ReadElementCheckBox(Json::Value& _checkBoxRoot);
+	static UIElementInfo* ReadElementToggleButton(Json::Value& _toggleButtonRoot);
+	static UIElementInfo* ReadElementScrollBar(Json::Value& _scrollBarRoot);
+	static UIElementInfo* ReadElementProgressBar(Json::Value& _progressBarRoot);
+	static UIElementInfo* ReadElementStatic(Json::Value& _staticRoot);
 
-	static constexpr const char* JsonElementsKey = "elements";
-	static constexpr const char* JsonGroupMasterKey = "group_master";
-	static constexpr const char* JsonGroupsKey = "groups";
+	static constexpr const char* JSON_ELEMENTS_KEY = "elements";
+	static constexpr const char* JSON_GROUP_MASTER_KEY = "group_master";
+	static constexpr const char* JSON_GROUPS_KEY = "groups";
 
 	// 엘리먼트
-	static constexpr const char* JsonCodeKey = "code";
-	static constexpr const char* JsonElementTypeKey = "type";
-	static constexpr const char* JsonVisualNameKey = "name";
-	static constexpr const char* JsonVisualSizeKey = "size";
-	static constexpr const char* JsonVAlignKey = "valign";
-	static constexpr const char* JsonHAlignKey = "halign";
-	static constexpr const char* JsonLinearDodgeKey = "linear_dodge";
+	static constexpr const char* JSON_CODE_KEY = "code";
+	static constexpr const char* JSON_ELEMENT_TYPE_KEY = "type";
+	static constexpr const char* JSON_VISUAL_NAME_KEY = "name";
+	static constexpr const char* JSON_VISUAL_SIZE_KEY = "size";
+	static constexpr const char* JSON_V_ALIGN_KEY = "valign";
+	static constexpr const char* JSON_H_ALIGN_KEY = "halign";
+	static constexpr const char* JSON_LINEAR_DODGE_KEY = "linear_dodge";
 
 	// 그룹
-	static constexpr const char* JsonChildrenKey = "children";
+	static constexpr const char* JSON_CHILDREN_KEY = "children";
 
 	// 버튼
-	static constexpr const char* JsonSgaKey = "sga";
-	static constexpr const char* JsonImgKey = "img";
-	static constexpr const char* JsonSpriteKey = "sprite";
+	static constexpr const char* JSON_SGA_KEY = "sga";
+	static constexpr const char* JSON_IMG_KEY = "img";
+	static constexpr const char* JSON_SPRITE_KEY = "sprite";
 
 	// 스프라이트
-	static constexpr const char* JsonScale9 = "scale9";
+	static constexpr const char* JSON_SCALE9 = "scale9";
 
 	// 라벨
-	static constexpr const char* JsonFontKey = "font";
-	static constexpr const char* JsonFontSizeKey = "font_size";
-	static constexpr const char* JsonFontColorKey = "font_color";
-	static constexpr const char* JsonTextKey = "text";
-	static constexpr const char* JsonTextWrapKey = "text_wrap";
-	static constexpr const char* JsonTextVAlignKey = "text_valign";
-	static constexpr const char* JsonTextHAlignKey = "text_halign";
+	static constexpr const char* JSON_FONT_KEY = "font";
+	static constexpr const char* JSON_FONT_SIZE_KEY = "font_size";
+	static constexpr const char* JSON_FONT_COLOR_KEY = "font_color";
+	static constexpr const char* JSON_TEXT_KEY = "text";
+	static constexpr const char* JSON_TEXT_WRAP_KEY = "text_wrap";
+	static constexpr const char* JSON_TEXT_V_ALIGN_KEY = "text_valign";
+	static constexpr const char* JSON_TEXT_H_ALIGN_KEY = "text_halign";
 
 	// 에딧 박스
-	static constexpr const char* JsonPlaceholderTextKey = "p_text";
-	static constexpr const char* JsonPlaceholderFontColorKey = "p_font_color";
-	static constexpr const char* JsonPlaceholderFontSizeKey = "p_font_size";
-	static constexpr const char* JsonMaxLengthKey = "max_length";
-	static constexpr const char* JsonInputModeKey = "input_mode";
+	static constexpr const char* JSON_PLACEHOLDER_TEXT_KEY = "p_text";
+	static constexpr const char* JSON_PLACEHOLDER_FONT_COLOR_KEY = "p_font_color";
+	static constexpr const char* JSON_PLACEHOLDER_FONT_SIZE_KEY = "p_font_size";
+	static constexpr const char* JSON_MAX_LENGTH_KEY = "max_length";
+	static constexpr const char* JSON_INPUT_MODE_KEY = "input_mode";
 
 	// 체크 박스
-	static constexpr const char* JsonCheck = "check";
-	static constexpr const char* JsonBackgroundSga = "bg_sga";
-	static constexpr const char* JsonBackgroundImg = "bg_img";
-	static constexpr const char* JsonCrossSga = "cross_sga";
-	static constexpr const char* JsonCrossImg = "cross_img";
+	static constexpr const char* JSON_CHECK = "check";
+	static constexpr const char* JSON_BACKGROUND_SGA = "bg_sga";
+	static constexpr const char* JSON_BACKGROUND_IMG = "bg_img";
+	static constexpr const char* JSON_CROSS_SGA = "cross_sga";
+	static constexpr const char* JSON_CROSS_IMG = "cross_img";
 
 	// 토글 버튼
-	static constexpr const char* JsonToggleSpriteKey = "sprite2";
+	static constexpr const char* JSON_TOGGLE_SPRITE_KEY = "sprite2";
 
 	// 프로그래스바
-	static constexpr const char* JsonDirectionKey = "direction";
+	static constexpr const char* JSON_DIRECTION_KEY = "direction";
 
 	// 스크롤바
-	static constexpr const char* JsonTrackSizeKey = "track_size";
+	static constexpr const char* JSON_TRACK_SIZE_KEY = "track_size";
 };

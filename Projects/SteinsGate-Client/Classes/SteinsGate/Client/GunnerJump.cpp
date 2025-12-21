@@ -17,10 +17,10 @@
 
 #include "PhysicsComponent.h"
 
-#define MinimumShotHeight 30.0f
+#define MINIMUM_SHOT_HEIGHT 30.0f
 
-GunnerJump::GunnerJump(HostPlayer* player, ActionInfo* actionInfo)
-: GunnerAction(player, actionInfo)
+GunnerJump::GunnerJump(HostPlayer* _pPlayer, ActionInfo* _pActionInfo)
+: GunnerAction(_pPlayer, _pActionInfo)
 {
 }
 
@@ -33,229 +33,239 @@ GunnerJump::GunnerJump(HostPlayer* player, ActionInfo* actionInfo)
 // #define DEF_ANIMATION_GUNNER_JUMP_SHOT_SHOT				19
 // #define DEF_ANIMATION_GUNNER_JUMP_SHOT_END				20
 
-void GunnerJump::onActionBegin()
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerJump::OnActionBegin()
 {
-	ActionMgr* pActionManager = m_pPlayer->actionManager();
-	SGAction* pPrevious = pActionManager->getPreviousAction();
+	ActionMgr* pActionManager = pPlayer_->GetActionManager();
+	SGAction* pPrevious = pActionManager->GetPreviousAction();
 
-	setMoveable(false);
+	SetMoveable(false);
 
-	m_bJumpUpbegin = false;
-	m_bJumpDownBegin = false;
-	m_bCanFire = false;
-	m_bFireMode = false;
-	m_bWaitForFire = false;
-	m_bRightFire = false;
-	m_iChargedShotCount = 0;
-	m_iShotCount = 0;
-	m_iMaxShotCount = m_pBaseInfo->jumpShotCount_[m_eWeaponType];
+	isJumpUpBegin_ = false;
+	isJumpDownBegin_ = false;
+	isFireable_ = false;
+	isFireMoveable_ = false;
+	isWaitingForFire_ = false;
+	isRightFire_ = false;
+	chargedShotCount_ = 0;
+	shotCount_ = 0;
+	maxShotCount_ = pBaseInfo_->jumpShotCount_[weaponType_];
 
-	if (pPrevious->getActionCode() == DEF_ACTION_GUNNER_RUN)
+	if (pPrevious->GetActionCode() == DEF_ACTION_GUNNER_RUN)
 	{
-		m_fMoveSpeedFPSX = pPrevious->getMoveSpeedX();
-		m_fMoveSpeedFPSY = pPrevious->getMoveSpeedY();
+		moveSpeedFPSX = pPrevious->GetMoveSpeedX();
+		moveSpeedFPSY_ = pPrevious->GetMoveSpeedY();
 	}
 	else
 	{
-		SGAction* pWalkAction = pActionManager->getBaseAction(BaseAction::Walk);
-		m_fMoveSpeedFPSX = pWalkAction->getMoveSpeedX();
-		m_fMoveSpeedFPSY = pWalkAction->getMoveSpeedY();
+		SGAction* pWalkAction = pActionManager->GetBaseAction(BaseAction::Walk);
+		moveSpeedFPSX = pWalkAction->GetMoveSpeedX();
+		moveSpeedFPSY_ = pWalkAction->GetMoveSpeedY();
 	}
 
-	m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_JUMP_START);
+	pPlayer_->RunAnimation(DEF_ANIMATION_GUNNER_JUMP_START);
 }
 
-void GunnerJump::onUpdate(float dt)
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerJump::OnUpdate(float _dt)
 {
-	Character* pCharacter = m_pPlayer;
+	Character* pCharacter = pPlayer_;
 
-	updateJumpUp(pCharacter, dt);
-	updateJumpDown(pCharacter, dt);
+	UpdateJumpUp(pCharacter, _dt);
+	UpdateJumpDown(pCharacter, _dt);
 }
 
-void GunnerJump::onAnimationBegin(ActorPartAnimation* animation, FrameTexture* frame)
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerJump::OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
 {
-	int iAnimationCode = animation->getAnimationCode();
-	Character* pCharacter = m_pPlayer;
-	PlayerController* pController = m_pPlayer->ctrl();
+	int iAnimationCode = _pAnimation->GetAnimationCode();
+	Character* pCharacter = pPlayer_;
+	PlayerController* pController = pPlayer_->GetController();
 
 	// 착지 경지 효과를 위해 움직임 봉인
 	if (iAnimationCode == DEF_ANIMATION_GUNNER_JUMP_END)
 	{
-		setMoveable(false);
+		SetMoveable(false);
 	}
 }
 
-void GunnerJump::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* frame)
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerJump::OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
 {
-	int iAnimationCode = animation->getAnimationCode();
-	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+	int iAnimationCode = _pAnimation->GetAnimationCode();
+	PhysicsComponent* pPhysicsComponent = pPlayer_->GetComponent<PhysicsComponent>();
 
 	if (iAnimationCode == DEF_ANIMATION_GUNNER_JUMP_START)
 	{
-		setMoveable(true);
+		SetMoveable(true);
 
-		m_bJumpUpbegin = true;
-		m_bCanFire = true;
+		isJumpUpBegin_ = true;
+		isFireable_ = true;
 
-		m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_JUMP_UP);
+		pPlayer_->RunAnimation(DEF_ANIMATION_GUNNER_JUMP_UP);
 
 		if (pPhysicsComponent)
-			pPhysicsComponent->addForceY(m_pPlayer->getBaseInfo()->jumpForce_);
+			pPhysicsComponent->AddForceY(pPlayer_->GetBaseInfo()->jumpForce_);
 	}
 	else if (iAnimationCode == DEF_ANIMATION_GUNNER_JUMP_SHOT_BEGIN)
 	{
-		shot(m_pPlayer);
+		Shot(pPlayer_);
 	}
 	else if (iAnimationCode == DEF_ANIMATION_GUNNER_JUMP_END)
 	{
-		stop();
+		Stop();
 	}
 }
 
-void GunnerJump::onFrameBegin(ActorPartAnimation* animation, FrameTexture* frame)
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerJump::OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
 {
 }
 
-void GunnerJump::onFrameEnd(ActorPartAnimation* animation, FrameTexture* frame)
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerJump::OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame)
 {
-	int iAnimationCode = animation->getAnimationCode();
+	int iAnimationCode = _pAnimation->GetAnimationCode();
 	if (iAnimationCode != DEF_ANIMATION_GUNNER_JUMP_SHOT_SHOT)
 	{
 		return;
 	}
 
-	Character* pCharacter = m_pPlayer;
-	int iFrameIndexInAnimation = animation->getFrameIndexInAnimation();
+	Character* pCharacter = pPlayer_;
+	int iFrameIndexInAnimation = _pAnimation->GetFrameIndexInAnimation();
 
 	// jump_shot_shot 73번 인덱스 호출완료시
 	if (iFrameIndexInAnimation == 1)
 	{
 		// 쏘고 나서 높이가 0인경우 바로 정지시켜주도록 하자.
-		if (pCharacter->getPositionActorY() == 0)
+		if (pCharacter->GetPositionActorY() == 0)
 		{
-			pCharacter->runAnimation(DEF_ANIMATION_GUNNER_JUMP_END);
-			m_bJumpDownBegin = false;
+			pCharacter->RunAnimation(DEF_ANIMATION_GUNNER_JUMP_END);
+			isJumpDownBegin_ = false;
 			return;
 		}
 
 		// 높이가 그래도 어느정도 있어야 쏠 수 잇도록 하자.
-		if (pCharacter->getPositionActorY() >= MinimumShotHeight && !shot(pCharacter))
+		if (pCharacter->GetPositionActorY() >= MINIMUM_SHOT_HEIGHT && !Shot(pCharacter))
 		{
 			// 시간내로 총을 못쏜 경우에대한 처리, 공중에선 쏠 수 있는 횟수만 여유롭다면 언제든지 마음대로 계속 총을 쏠 수 있다.
-			m_bWaitForFire = true;
+			isWaitingForFire_ = true;
 		}
 	}
 }
 
-void GunnerJump::onKeyPressed(PlayerController* controller, SGEventKeyboard::KeyCode keyCode)
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerJump::OnKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
 {
-	ControlKey_t controlKey = controller->convertControlKey(keyCode);
-	Character* pCharacter = m_pPlayer;
+	ControlKey_t controlKey = _pController->ConvertControlKey(_keyCode);
+	Character* pCharacter = pPlayer_;
 
-	if (!m_bFireMode)
-		controller->updateDirection(controlKey);
+	if (!isFireMoveable_)
+		_pController->UpdateDirection(controlKey);
 
 	if (controlKey != ControlKey::Attack)
 		return;
 
-	if (!m_bCanFire)
+	if (!isFireable_)
 		return;
 
-	++m_iChargedShotCount;
+	++chargedShotCount_;
 
-	if (!m_bFireMode)
+	if (!isFireMoveable_)
 	{
-		pCharacter->runAnimation(DEF_ANIMATION_GUNNER_JUMP_SHOT_BEGIN);
-		m_bFireMode = true;
+		pCharacter->RunAnimation(DEF_ANIMATION_GUNNER_JUMP_SHOT_BEGIN);
+		isFireMoveable_ = true;
 	}
 
-	if (m_bWaitForFire && pCharacter->getPositionActorY() >= MinimumShotHeight)
+	if (isWaitingForFire_ && pCharacter->GetPositionActorY() >= MINIMUM_SHOT_HEIGHT)
 	{
-		shot(pCharacter);
-		m_bWaitForFire = false;
+		Shot(pCharacter);
+		isWaitingForFire_ = false;
 	}
 }
 
-void GunnerJump::updateJumpUp(Character* character, float dt)
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerJump::UpdateJumpUp(Character* _pChar, float _dt)
 {
-	if (!m_bJumpUpbegin)
+	if (!isJumpUpBegin_)
 		return;
 
-	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+	PhysicsComponent* pPhysicsComponent = pPlayer_->GetComponent<PhysicsComponent>();
 
 	// Step 1. 상승 중
-	if (m_bJumpUpbegin && pPhysicsComponent && pPhysicsComponent->getDownTime() > 0.0f)
+	if (isJumpUpBegin_ && pPhysicsComponent && pPhysicsComponent->GetDownTime() > 0.0f)
 	{
-		m_bJumpUpbegin = false;
-		m_bJumpDownBegin = true;
+		isJumpUpBegin_ = false;
+		isJumpDownBegin_ = true;
 
-		if (!m_bFireMode)
+		if (!isFireMoveable_)
 		{
-			character->runAnimation(DEF_ANIMATION_GUNNER_JUMP_DOWN);
+			_pChar->RunAnimation(DEF_ANIMATION_GUNNER_JUMP_DOWN);
 		}
 	}
 }
 
-void GunnerJump::updateJumpDown(Character* character, float dt)
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerJump::UpdateJumpDown(Character* _pChar, float _dt)
 {
-	if (!m_bJumpDownBegin)
+	if (!isJumpDownBegin_)
 		return;
 
 	// Step 2. 하강 중
-	if (m_bJumpDownBegin && character->isOnTheGround())
+	if (isJumpDownBegin_ && _pChar->IsOnTheGround())
 	{
-		character->runAnimation(DEF_ANIMATION_GUNNER_JUMP_END);
-		m_bJumpDownBegin = false;
+		_pChar->RunAnimation(DEF_ANIMATION_GUNNER_JUMP_END);
+		isJumpDownBegin_ = false;
 	}
 }
 
-
-bool GunnerJump::shot(Character* character)
+//////////////////////////////////////////////////////////////////////////////////////////
+bool GunnerJump::Shot(Character* _pChar)
 {
-	if (m_iChargedShotCount <= 0)
+	if (chargedShotCount_ <= 0)
 		return false;
 
-	if (m_iShotCount >= m_iMaxShotCount)
+	if (shotCount_ >= maxShotCount_)
 		return false;
 
-	m_iShotCount++;
-	--m_iChargedShotCount;
-	m_bRightFire = !m_bRightFire; // 좌/우 토글
-	character->runAnimation(DEF_ANIMATION_GUNNER_JUMP_SHOT_SHOT);
+	shotCount_++;
+	--chargedShotCount_;
+	isRightFire_ = !isRightFire_; // 좌/우 토글
+	_pChar->RunAnimation(DEF_ANIMATION_GUNNER_JUMP_SHOT_SHOT);
 
-	reboundX(character); // X축 반동
-	reboundY(character); // Y축 반동
-	createBullet();
+	ReboundX(_pChar); // X축 반동
+	ReboundY(_pChar); // Y축 반동
+	CreateBullet();
 
 	return true;
 }
 
-
-void GunnerJump::reboundX(Character* character)
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerJump::ReboundX(Character* _pChar)
 {
-	SpriteDirection_t eDirection = character->getSpriteDirection();
-	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+	SpriteDirection_t eDirection = _pChar->GetSpriteDirection();
+	PhysicsComponent* pPhysicsComponent = pPlayer_->GetComponent<PhysicsComponent>();
 
 	// 반동 초기화
 	if (pPhysicsComponent)
-		pPhysicsComponent->removeForceX();
+		pPhysicsComponent->RemoveForceX();
 
 	// 1. 우측키를 누른 상태
 	switch (eDirection)
 	{
-	case SpriteDirection::Right: reboundXLeft(character);
+	case SpriteDirection::Right: ReboundXLeft(_pChar);
 		break; // 우측으로 바라보고 있으면 좌측 반동
-	case SpriteDirection::Left: reboundXRight(character);
+	case SpriteDirection::Left: ReboundXRight(_pChar);
 		break; // 좌측으로 바라보고 있으면 우측 반동
 	default: DebugAssertMsg(false, "방향이 도대체 어디에요?");
 	}
 }
 
-void GunnerJump::reboundXLeft(Character* character)
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerJump::ReboundXLeft(Character* _pChar)
 {
-	PlayerController* pController = m_pPlayer->ctrl();
-	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+	PlayerController* pController = pPlayer_->GetController();
+	PhysicsComponent* pPhysicsComponent = pPlayer_->GetComponent<PhysicsComponent>();
 
 	/*
 	 * 생각 정리.
@@ -266,83 +276,85 @@ void GunnerJump::reboundXLeft(Character* character)
 	 */
 
 	// 우측으로 한번이라도 쏜 이후부터는 우측 방향 이동 불가능
-	m_bMoveablePositiveX = false;
-	m_fMoveSpeedFPSX = 0.0f;
+	isMoveablePositiveX_ = false;
+	moveSpeedFPSX = 0.0f;
 
-	if (pController->isKeyPressed(ControlKey::Right))
+	if (pController->IsKeyPressed(ControlKey::Right))
 	{
 		return;
 	}
 
-	if (!pController->isMoveKeyPressed())
+	if (!pController->IsMoveKeyPressed())
 	{
 		if (pPhysicsComponent)
-			pPhysicsComponent->addForceX(m_pBaseInfo->jumpShotForceX_[m_eWeaponType] * -1);
+			pPhysicsComponent->AddForceX(pBaseInfo_->jumpShotForceX_[weaponType_] * -1);
 		return;
 	}
 
-	if (pController->isKeyPressed(ControlKey::Left))
+	if (pController->IsKeyPressed(ControlKey::Left))
 	{
 		if (pPhysicsComponent)
-			pPhysicsComponent->addForceX(m_pBaseInfo->jumpShotForceX_[m_eWeaponType] * -1);
-		m_fMoveSpeedFPSX = m_pBaseInfo->jumpShotMoveSpeedX_[m_eWeaponType];
+			pPhysicsComponent->AddForceX(pBaseInfo_->jumpShotForceX_[weaponType_] * -1);
+		moveSpeedFPSX = pBaseInfo_->jumpShotMoveSpeedX_[weaponType_];
 	}
 }
 
-void GunnerJump::reboundXRight(Character* character)
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerJump::ReboundXRight(Character* _pChar)
 {
-	PlayerController* pController = m_pPlayer->ctrl();
-	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+	PlayerController* pController = pPlayer_->GetController();
+	PhysicsComponent* pPhysicsComponent = pPlayer_->GetComponent<PhysicsComponent>();
 
-	m_bMoveableNegativeX = false;
-	m_fMoveSpeedFPSX = 0.0f;
+	isMoveableNegativeX_ = false;
+	moveSpeedFPSX = 0.0f;
 
-	if (pController->isKeyPressed(ControlKey::Left))
+	if (pController->IsKeyPressed(ControlKey::Left))
 	{
 		return;
 	}
 
-	if (!pController->isMoveKeyPressed())
+	if (!pController->IsMoveKeyPressed())
 	{
 		if (pPhysicsComponent)
-			pPhysicsComponent->addForceX(m_pBaseInfo->jumpShotForceX_[m_eWeaponType]);
+			pPhysicsComponent->AddForceX(pBaseInfo_->jumpShotForceX_[weaponType_]);
 		return;
 	}
 
-	if (pController->isKeyPressed(ControlKey::Right))
+	if (pController->IsKeyPressed(ControlKey::Right))
 	{
 		if (pPhysicsComponent)
-			pPhysicsComponent->addForceX(m_pBaseInfo->jumpShotForceX_[m_eWeaponType]);
+			pPhysicsComponent->AddForceX(pBaseInfo_->jumpShotForceX_[weaponType_]);
 
-		m_fMoveSpeedFPSX = m_pBaseInfo->jumpShotMoveSpeedX_[m_eWeaponType];
+		moveSpeedFPSX = pBaseInfo_->jumpShotMoveSpeedX_[weaponType_];
 	}
 }
 
-
-void GunnerJump::reboundY(Character* character)
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerJump::ReboundY(Character* _pChar)
 {
-	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+	PhysicsComponent* pPhysicsComponent = pPlayer_->GetComponent<PhysicsComponent>();
 
 	if (!pPhysicsComponent)
 		return;
 
 	// 중력 역행
-	float fRemovedYForce = pPhysicsComponent->removeForceY();
+	float fRemovedYForce = pPhysicsComponent->RemoveForceY();
 	if (fRemovedYForce > 0.0f)
 	{
-		pPhysicsComponent->addForceY(m_pBaseInfo->jumpShotForceY_[m_eWeaponType]);
+		pPhysicsComponent->AddForceY(pBaseInfo_->jumpShotForceY_[weaponType_]);
 	}
 }
 
-void GunnerJump::createBullet()
+//////////////////////////////////////////////////////////////////////////////////////////
+void GunnerJump::CreateBullet()
 {
 	// 거너 총 종류에따라 프로젝틸 혹은 히트박스 생성
-	FrameEventSpawnType_t eFrameEventType = WeaponType::ShotFrameEventSpawnType[m_eWeaponType];
+	FrameEventSpawnType_t eFrameEventType = WeaponType::ShotFrameEventSpawnType[weaponType_];
 	int iSpawnCode = InvalidValue_v;
 
-	if (m_bRightFire)
+	if (isRightFire_)
 	{
-		switch (m_eWeaponType)
+		switch (weaponType_)
 		{
 		case WeaponType::Automatic: iSpawnCode = DEF_PROJECTILE_GUNNER_AUTO_JUMP_RIGHT;
 			break;
@@ -353,7 +365,7 @@ void GunnerJump::createBullet()
 	}
 	else
 	{
-		switch (m_eWeaponType)
+		switch (weaponType_)
 		{
 		case WeaponType::Automatic: iSpawnCode = DEF_PROJECTILE_GUNNER_AUTO_JUMP_LEFT;
 			break;
@@ -364,5 +376,5 @@ void GunnerJump::createBullet()
 	}
 
 	DebugAssertMsg(iSpawnCode != InvalidValue_v, "프레임 이벤트 ID가 설정되지 않았습니다.");
-	m_pPlayer->runFrameEventSpawn(eFrameEventType, iSpawnCode);
+	pPlayer_->RunFrameEventSpawn(eFrameEventType, iSpawnCode);
 }

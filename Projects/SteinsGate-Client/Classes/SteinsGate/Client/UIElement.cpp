@@ -177,27 +177,27 @@ bool UIElement::OnMouseDownInternal(SGEventMouse* _mouseEvent)
 
 	// 마우스를 눌렀을 때는 실질적인 드래그를 수행하지는 않기 때문에
 	// 드래그 시작 위치만 계속 업데이트시키도록 한다.
-	if (isDraggable_ && !Core::Contents.UIManager->isDragging())
+	if (isDraggable_ && !Core::Contents.UIManager->IsDragging())
 	{
 		DragState dragState;
-		dragState.Dragging = false; // 아직 실제 드래그가 시작된 상태가 아니므로
-		dragState.StartCursorPosition = _mouseEvent->getStartCursorPos();
-		dragState.HostElement = this;
+		dragState.isDragging_ = false; // 아직 실제 드래그가 시작된 상태가 아니므로
+		dragState.startCursorPosition_ = _mouseEvent->getStartCursorPos();
+		dragState.pHostElement_ = this;
 		bPropagate = false;
 
 		// 링크 엘리먼트가 있을 경우 링크 엘리먼트의 위치를 넣는다.
 		if (pDragLinkElement_)
 		{
-			dragState.StartElementPosition = pDragLinkElement_->_position;
-			dragState.TargetElement = pDragLinkElement_;
+			dragState.startElementPosition_ = pDragLinkElement_->_position;
+			dragState.pTargetElement_ = pDragLinkElement_;
 		}
 		else
 		{
-			dragState.StartElementPosition = _position;
-			dragState.TargetElement = this;
+			dragState.startElementPosition_ = _position;
+			dragState.pTargetElement_ = this;
 		}
 
-		Core::Contents.UIManager->draginit(dragState);
+		Core::Contents.UIManager->Draginit(dragState);
 	}
 	return bPropagate;
 }
@@ -205,27 +205,27 @@ bool UIElement::OnMouseDownInternal(SGEventMouse* _mouseEvent)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool UIElement::OnMouseMoveInternal(SGEventMouse* _mouseEvent)
 {
-	const DragState& dragState = Core::Contents.UIManager->getDragState();
+	const DragState& dragState = Core::Contents.UIManager->GetDragState();
 
 	// 주의사항: 스크롤바에 드래깅 활성화시 손잡이 드래그보다 먼저 Element에서 드래그 체크를 수행하기 때문에 손잡이 드래그가 안먹힌다.
 	// 만약 onMouseDown에서 드래그 초기화된 엘리먼트가 있는 경우
 	// 엘리먼트에 포함되어있지 않더라도 드래그 중일 경우 따라서 움직여야하므로 제일 먼저 처리하도록 하자.
-	if (dragState.Dragging)
+	if (dragState.isDragging_)
 	{
 		// 자기자신이 아닌 경우 대상을 찾아야하므로 이벤트는 상위 엘리먼트로 전파되도록 해줘야한다.
-		if (dragState.TargetElement != this)
+		if (dragState.pTargetElement_ != this)
 		{
 			return true;
 		}
 
-		Core::Contents.UIManager->dragMove(_mouseEvent);
+		Core::Contents.UIManager->DragMove(_mouseEvent);
 		return false;
 	}
 
 	// 드래그 중이 아닌데 드래그 타겟인 경우
-	if (dragState.TargetElement == this)
+	if (dragState.pTargetElement_ == this)
 	{
-		Core::Contents.UIManager->dragEnter(_mouseEvent);
+		Core::Contents.UIManager->DragEnter(_mouseEvent);
 		return false;
 	}
 
@@ -292,7 +292,7 @@ bool UIElement::OnMouseUpInternal(SGEventMouse* _mouseEvent)
 	InvokeMouseEvent(eMouseEventUpContained, _mouseEvent);
 
 	// 마우스를 땠을때 드래그 중인 상태인 경우 자식 엘리먼트 구현체들(버튼, 스크롤바, 에딧박스..등등)에게 이벤트가 전달되지 않도록 한다.
-	if (!Core::Contents.UIManager->isDragging())
+	if (!Core::Contents.UIManager->IsDragging())
 	{
 		if (isInternalDetailEventEnabled_)
 		{
@@ -499,7 +499,7 @@ void UIElement::SetEnabled(bool _enabled)
 // (100 - 25, 100 - 20)이 엘리먼트의 좌하단 좌표이다.
 SGVec2 UIElement::CalculateZeroPosition(const SGRect& _rc) const
 {
-	return CalculateZeroPosition(_rc, pBaseInfo_->HAlignment, pBaseInfo_->VAlignment);
+	return CalculateZeroPosition(_rc, pBaseInfo_->hAlignment_, pBaseInfo_->vAlignment_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -537,7 +537,7 @@ SGVec2 UIElement::CalculateZeroPosition(const SGRect& _rc, HAlignment_t _halign,
 SGVec2 UIElement::CalculateRelativePosition(const SGSize& _parentSize) const
 {
 	Vec2 pos;
-	switch (pBaseInfo_->HAlignment)
+	switch (pBaseInfo_->hAlignment_)
 	{
 	case HAlignment::Left:
 		pos.x = _position.x;
@@ -550,7 +550,7 @@ SGVec2 UIElement::CalculateRelativePosition(const SGSize& _parentSize) const
 		break;
 	}
 
-	switch (pBaseInfo_->VAlignment)
+	switch (pBaseInfo_->vAlignment_)
 	{
 	case VAlignment::Bottom:
 		pos.y = _position.y;
@@ -582,16 +582,16 @@ void UIElement::SetRelativePosition(float _x, float _y, HAlignment_t _halign, VA
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIElement::SetRelativePosition(UIElement* _target, float _x, float _y, HAlignment_t _halign, VAlignment_t _valign)
+void UIElement::SetRelativePosition(UIElement* _pTarget, float _x, float _y, HAlignment_t _halign, VAlignment_t _valign)
 {
 	// 1. 먼저 대상의 0,0좌표로 이 대상을 이동시킨다.
 	const Vec2 thisAbsPos = GetAbsolutePosition();
-	const Vec2 targetAbsPos = _target->GetAbsolutePosition();
+	const Vec2 targetAbsPos = _pTarget->GetAbsolutePosition();
 	const Vec2 zeroPos = _position + targetAbsPos - thisAbsPos;
 	setPosition(zeroPos);
 
 	// 2. 대상 사각형 기준 상대좌표를 구한다.
-	const Rect rect = { Vec2{}, _target->GetUISize() };
+	const Rect rect = { Vec2{}, _pTarget->GetUISize() };
 	const Vec2 realPos = CalculateZeroPosition(rect, _halign, _valign);
 	setPosition(_position + realPos + Vec2{ _x, _y });
 }

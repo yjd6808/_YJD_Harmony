@@ -32,117 +32,114 @@ private:
 	~ActorManager();
 
 public:
-	void init(MapLayer* mapLayer);
+	void Init(MapLayer* _pMapLayer);
 
-	void update(float dt);
+	void Update(float _dt);
 
-	void updateActors(float dt);
-	void updateZOrder();
-	int updateCleanUp();
+	void UpdateActors(float _dt);
+	void UpdateZOrder();
+	int UpdateCleanUp();
 
-	void clearRoom();
-	void clearAll();
+	void ClearRoom();
+	void ClearAll();
 
 	// 캐릭터는 액터 박스가 생성/소멸을 관리하는 객체가 아니다.
 	// 단지 생성만 도와줌
-	Character* createCharacterOnMap(CharType_t charType, float x, float y, VisualInfo& visualInfo);
-	Projectile* createProejctileOnMap(Actor* spawner, int projectileId);
-	Monster* createMonsterOnMap(int monsterCode, int aiCode, float x, float y);
-	MapObject* createMapObjectOnMap(int mapObjectCode, float x, float y);
-	void registerPlayerOnMap(Player* player);
+	Character*		CreateCharacterOnMap(CharType_t _charType, float _x, float _y, VisualInfo& _visualInfo);
+	Projectile*		CreateProejctileOnMap(Actor* _pSpawner, int _projectileId);
+	Monster*		CreateMonsterOnMap(int _monsterCode, int _aiCode, float _x, float _y);
+	MapObject*		CreateMapObjectOnMap(int _mapObjectCode, float _x, float _y);
+	void			RegisterPlayerOnMap(Player* _pPlayer);
 
 	// spawner 캔버스 기준 상대좌표로 이펙트를 만든다.
-	Effect* createEffectOnMapBySpawner(Actor* spawner, int effectCode, float offsetX, float offsetY);
-	Effect* createEffectOnMapBySpawner(Actor* spawner, int effectCode, const SGVec2& offset);
+	Effect* CreateEffectOnMapBySpawner(Actor* _pSpawner, int _effectCode, float _offsetX, float _offsetY);
+	Effect* CreateEffectOnMapBySpawner(Actor* _pSpawner, int _effectCode, const SGVec2& _offset);
 
 	// 이펙트를 Attcher에게 붙인다.
-	Effect* createEffectOnMapByAttacher(Actor* attacher, int effectCode, float offsetX, float offsetY);
-	Effect* createEffectOnMapByAttacher(Actor* attacher, int effectCode, const SGVec2& offset);
+	Effect* CreateEffectOnMapByAttacher(Actor* _pAttacher, int _effectCode, float _offsetX, float _offsetY);
+	Effect* CreateEffectOnMapByAttacher(Actor* _pAttacher, int _effectCode, const SGVec2& _offset);
 
 	// 절대적인 위치에 이펙트 생성
-	Effect* createEffectOnMapAbsolute(int effectCode, SpriteDirection_t direction, float x, float y, int zOrder);
-	Effect* createEffectOnMapAbsolute(int effectCode, SpriteDirection_t direction, const SGVec2& pos, int zOrder);
-	Effect* createEffectOnMapAbsolute(int effectCode, float x, float y, int zOrder);
-	Effect* createEffectOnMapAbsolute(int effectCode, const SGVec2& pos, int zOrder);
+	Effect* CreateEffectOnMapAbsolute(int _effectCode, SpriteDirection_t _direction, float _x, float _y, int _zOrder);
+	Effect* CreateEffectOnMapAbsolute(int _effectCode, SpriteDirection_t _direction, const SGVec2& _pos, int _zOrder);
+	Effect* CreateEffectOnMapAbsolute(int _effectCode, float _x, float _y, int _zOrder);
+	Effect* CreateEffectOnMapAbsolute(int _effectCode, const SGVec2& _pos, int _zOrder);
 
 
 	// 대상과 충돌한 지점에 이펙트 생성
-	Effect* createEffectOnMapTargetCollision(int effectCode, SpriteDirection_t direction, const HitInfo& info,
-	                                         bool randomRotation = false);
-	Effect* createEffectOnMapTargetCollision(int effectCode, const HitInfo& info, bool randomRotation = false);
-	Effect* createEffectOnMapTargetCollision(int effectCode, const HitInfo& info, float offsetX, float offsetY,
-	                                         bool randomRotation = false);
-	Effect* createEffectOnMapTargetCollision(int effectCode, const HitInfo& info, const SGVec2& offset,
-	                                         bool randomRotation = false);
+	Effect* CreateEffectOnMapTargetCollision(int _effectCode, SpriteDirection_t _direction, const HitInfo& _info, bool _randomRotation = false);
+	Effect* CreateEffectOnMapTargetCollision(int _effectCode, const HitInfo& _info, bool _randomRotation = false);
+	Effect* CreateEffectOnMapTargetCollision(int _effectCode, const HitInfo& _info, float _offsetX, float _offsetY, bool _randomRotation = false);
+	Effect* CreateEffectOnMapTargetCollision(int _effectCode, const HitInfo& _info, const SGVec2& _offset, bool _randomRotation = false);
 
 	// 일단 생성
-	Effect* createEffectOnMap(int effectCode);
+	Effect* CreateEffectOnMap(int _effectCode);
 
-	void cleanUpAtNextFrame(Actor* actor);
-	void cleanUp(Actor* actor);
+	void CleanUpAtNextFrame(Actor* _pActor);
+	void CleanUp(Actor* _pActor);
 
-	ActorList& getZOrderActorList() { return m_vZOrderedActors; }
-	ProjectileList& getProjectileList() { return m_vProjectiles; }
-	MonsterList& getMonsterList() { return m_vMonsters; }
-	MapObjectList& getCollidableMapObjectList() { return m_vCollidableMapObjects; }
-	CharacterList& getCharacterList() { return m_vCharacters; }
-	ActorList& getPhysicsActorList() { return m_vPhysicsActors; }
-	Actor* getActor(int actorId) { return m_hActorMap[actorId]; }
+	ActorList&		GetZOrderActorList() { return zOrderedActorList_; }
+	ProjectileList& GetProjectileList() { return projectiles_; }
+	MonsterList&	GetMonsterList() { return monsterList_; }
+	MapObjectList&	GetCollidableMapObjectList() { return collidableMapObjectList_; }
+	CharacterList&	GetCharacterList() { return characterList_; }
+	ActorList&		GetPhysicsActorList() { return physicsActors_; }
+	Actor*			GetActor(int _actorId) { return actorMap_[_actorId]; }
 
 private:
-	void sortZOrderActor();
-	void unregisterZOrderActor(Actor* actor);
+	void SortZOrderActor();
+	void UnregisterZOrderActor(Actor* _pActor);
 
-	void cleanUpProjectile(Projectile* projectile);
-	void cleanUpMonster(Monster* monster);
-	void cleanUpMapObject(MapObject* mapObject);
-	void cleanUpCharacter(Character* character);
-	void cleanUpEffect(Effect* effect);
+	void CleanUpProjectile(Projectile* _pProjectile);
+	void CleanUpMonster(Monster* _pMonster);
+	void CleanUpMapObject(MapObject* _pMapObject);
+	void CleanUpCharacter(Character* _pChar);
+	void CleanUpEffect(Effect* _pEffect);
 
-	void registerProjectile(Projectile* projectile);
-	void registerCharacter(Character* character);
-	void registerMonster(Monster* mosnter);
-	void registerMapObject(MapObject* mapObject);
-	void registerEffect(Effect* effect);
-	void registerActor(Actor* actor);
+	void RegisterProjectile(Projectile* _pProjectile);
+	void RegisterCharacter(Character* _pChar);
+	void RegisterMonster(Monster* _pMonster);
+	void RegisterMapObject(MapObject* _pMapObject);
+	void RegisterEffect(Effect* _pEffect);
+	void RegisterActor(Actor* _pActor);
 
-	void unregisterProjectile(Projectile* projectile);
-	void unregisterCharacter(Character* chracter);
-	void unregisterMonster(Monster* mosnter);
-	void unregisterMapObject(MapObject* mapObject);
-	void unregisterEffect(Effect* effect);
-	void unregisterColidableMapObject(MapObject* mapObject);
-	void unregisterPhysicsActor(Actor* physicsActor);
-	void unregisterActor(Actor* actor);
+	void UnregisterProjectile(Projectile* _pProjectile);
+	void UnregisterCharacter(Character* _pChar);
+	void UnregisterMonster(Monster* _pMonster);
+	void UnregisterMapObject(MapObject* _pMapObject);
+	void UnregisterEffect(Effect* _pEffect);
+	void UnregisterColidableMapObject(MapObject* _pMapObject);
+	void UnregisterPhysicsActor(Actor* _pPhysicsActor);
+	void UnregisterActor(Actor* _pActor);
 
 private:
 	// 풀링용 리스트
-	SGHashMap<int, SGLinkedList<Monster*>> m_hMonsterPool;
-	SGHashMap<int, SGLinkedList<MapObject*>> m_hMapObjectPool;
-	SGHashMap<int, SGLinkedList<Projectile*>> m_hProjectilePool;
-	SGHashMap<int, SGLinkedList<Effect*>> m_hEffectPool;
+	SGHashMap<int, SGLinkedList<Monster*>> monsterPool_;
+	SGHashMap<int, SGLinkedList<MapObject*>> mapObjectPool_;
+	SGHashMap<int, SGLinkedList<Projectile*>> projectilePool_;
+	SGHashMap<int, SGLinkedList<Effect*>> effectPool_;
 
 	// TODO: 캐릭터 풀링 - 이건 구현할려면 좀 고민해야함.
 	// 애니메이션 프레임 텍스쳐중에 교체 가능한것들은 다 해줘야하기때문
 	// 캐릭터 말고는 애니메이션이나 파츠 텍스쳐들이 변할일이 없기때문에 쉽게 풀링가능
 
 	// 관리용 리스트
-	SGHashMap<int, Actor*> m_hActorMap;
-	ActorList m_vZOrderedActors;
-	ProjectileList m_vProjectiles;
-	MonsterList m_vMonsters;
-	MapObjectList m_vCollidableMapObjects;
-	MapObjectList m_vMapObjects;
-	CharacterList m_vCharacters;
-	ActorList m_vPhysicsActors;
-	EffectList m_vEffectList;
+	SGHashMap<int, Actor*> actorMap_;
+	ActorList zOrderedActorList_;
+	ProjectileList projectiles_;
+	MonsterList monsterList_;
+	MapObjectList collidableMapObjectList_;
+	MapObjectList mapObjectList_;
+	CharacterList characterList_;
+	ActorList physicsActors_;
+	EffectList effectList_;
 
-	SGHashMap<Actor*, Actor*> m_hRemoveActorMap; // 중복 큐잉 방지용
-	SGArrayQueue<Actor*> m_qRemovedActors;
+	SGHashMap<Actor*, Actor*> removeActorMap_; // 중복 큐잉 방지용
+	SGArrayQueue<Actor*> removedActorQueue_;
 
-	MapLayer* m_pMapLayer;
+	MapLayer* pMapLayer_;
 
-	bool m_bCleared;
-	float m_fZReorderTime;
-	int m_iIdSequence;
+	bool isCleared_;
+	float zReorderTime_;
+	int idSequence_;
 };

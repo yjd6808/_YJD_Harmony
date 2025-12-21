@@ -33,7 +33,7 @@ void IdleActivity_Goblin::OnActivitySelectFromAiRoutine(AIInfo* _pAiInfo, AIStat
 //////////////////////////////////////////////////////////////////////////////////////////
 void IdleActivity_Goblin::OnActivityBegin()
 {
-	pActor_->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_IDLE);
+	pActor_->RunAnimation(DEF_ANIMATION_MONSTER_GOBLIN_IDLE);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

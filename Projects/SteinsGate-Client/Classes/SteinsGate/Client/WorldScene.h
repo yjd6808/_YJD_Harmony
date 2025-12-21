@@ -26,47 +26,47 @@ private:
 	~WorldScene() override;
 
 public:
-	static WorldScene* get();
+	static WorldScene* Get();
 
 	bool init() override;
-	void initEventListeners();
+	void InitEventListeners();
 	void InitLayers();
 
 	void update(float _dt) override;
-	void updateScene(float _dt);
-	void updateNet(float _dt);
-	void updateTime(float _dt);
-	void updateCLI(float _dt);
+	void UpdateScene(float _dt);
+	void UpdateNet(float _dt);
+	void UpdateTime(float _dt);
+	void UpdateCLI(float _dt);
 
-	void onWndMessageReceived(int _code, WPARAM _wParam, LPARAM _lParam);
-	void onWndFocused(SGEventCustom* _pCustom);
-	void onWndLostFocused(SGEventCustom* _pCustom);
-	void onWndResized(SGEventCustom* _pCustom);
-	void onWndCursorEnter(SGEventCustom* _pCustom);
-	void onWndCursorLeave(SGEventCustom* _pCustom);
+	void OnWndMessageReceived(int _code, WPARAM _wParam, LPARAM _lParam);
+	void OnWndFocused(SGEventCustom* _pCustom);
+	void OnWndLostFocused(SGEventCustom* _pCustom);
+	void OnWndResized(SGEventCustom* _pCustom);
+	void OnWndCursorEnter(SGEventCustom* _pCustom);
+	void OnWndCursorLeave(SGEventCustom* _pCustom);
 
-	void onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) const;
-	void onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) const;
-	void onMouseMove(SGEventMouse* _pMouseEvent) const;
-	void onMouseDown(SGEventMouse* _pMouseEvent) const;
-	void onMouseUp(SGEventMouse* _pMouseEvent) const;
-	void onMouseScroll(SGEventMouse* _pMouseEvent) const;
+	void OnKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) const;
+	void OnKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) const;
+	void OnMouseMove(SGEventMouse* _pMouseEvent) const;
+	void OnMouseDown(SGEventMouse* _pMouseEvent) const;
+	void OnMouseUp(SGEventMouse* _pMouseEvent) const;
+	void OnMouseScroll(SGEventMouse* _pMouseEvent) const;
 
 	void onExit() override;
 
-	void reserveScene(SceneType_t _sceneType);
-	void changeScene(SceneType_t _sceneType);
-	void terminate();
+	void ReserveScene(SceneType_t _sceneType);
+	void ChangeScene(SceneType_t _sceneType);
+	void Terminate();
 
-	static SceneBase* createScene(SceneType_t _sceneType);
+	static SceneBase* CreateScene(SceneType_t _sceneType);
 
-	UILayer* getUILayer() const;
-	MapLayer* getMap();
-	MimicCamera* getCamera();
+	UILayer* GetUILayer() const;
+	MapLayer* GetMap();
+	MimicCamera* GetCamera();
 
 private:
-	SceneBase* runningScene_;
+	SceneBase* pRunningScene_;
 	SceneType_t reservedScene_;
-	UILayer* uiLayer_;
-	GridLayer* gridLayer_;
+	UILayer*	pUILayer_ = nullptr;
+	GridLayer*	pGridLayer_ = nullptr;
 };

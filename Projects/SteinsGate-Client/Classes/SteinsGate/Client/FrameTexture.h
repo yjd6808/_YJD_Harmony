@@ -22,33 +22,33 @@ public:
 
 	~FrameTexture() override;
 
-	virtual int getWidth() = 0;
-	virtual int getHeight() = 0;
-	virtual int getX() = 0;
-	virtual int getY() = 0;
-	virtual int getFrameWidth() = 0;
-	virtual int getFrameHeight() = 0;
+	virtual int GetWidth() = 0;
+	virtual int GetHeight() = 0;
+	virtual int GetX() = 0;
+	virtual int GetY() = 0;
+	virtual int GetFrameWidth() = 0;
+	virtual int GetFrameHeight() = 0;
 
-	virtual int getTargetFrameIndex() = 0;
-	virtual const SgaSpriteRect& getFullRect() = 0;
+	virtual int GetTargetFrameIndex() = 0;
+	virtual const SgaSpriteRect& GetFullRect() = 0;
 
-	virtual float getWidthF() = 0;
-	virtual float getHeightF() = 0;
-	virtual float getXF() = 0;
-	virtual float getYF() = 0;
-	virtual float getFrameWidthF() = 0;
-	virtual float getFrameHeightF() = 0;
-	virtual SGTexture* getTexture() = 0;
-	virtual bool isLinearDodged() = 0;
-	virtual SGSize getSize() = 0;
-	virtual SGRect getRect() = 0;
-	virtual SGString toString() = 0;
-	virtual bool isDefaultTexture() const { return false; }
+	virtual float GetWidthF() = 0;
+	virtual float GetHeightF() = 0;
+	virtual float GetXF() = 0;
+	virtual float GetYF() = 0;
+	virtual float GetFrameWidthF() = 0;
+	virtual float GetFrameHeightF() = 0;
+	virtual SGTexture* GetTexture() = 0;
+	virtual bool IsLinearDodged() = 0;
+	virtual SGSize GetSize() = 0;
+	virtual SGRect GetRect() = 0;
+	virtual SGString ToString() = 0;
+	virtual bool IsDefaultTexture() const { return false; }
 
-	virtual bool isLink() = 0;
-	virtual bool isDummy() = 0;
+	virtual bool IsLink() = 0;
+	virtual bool IsDummy() = 0;
 
-	int getFrameIndex() { return frameIndex_; }
+	int GetFrameIndex() { return frameIndex_; }
 
 protected:
 	int frameIndex_;
@@ -68,36 +68,36 @@ public:
 
 	~SpriteFrameTexture() override;
 
-	int getWidth() override { return rect_.width_; }
-	int getHeight() override { return rect_.height_; }
-	int getX() override { return rect_.x_; }
-	int getY() override { return rect_.y_; }
-	int getFrameWidth() override { return rect_.frameWidth_; }
-	int getFrameHeight() override { return rect_.frameHeight_; }
+	int GetWidth() override { return rect_.width_; }
+	int GetHeight() override { return rect_.height_; }
+	int GetX() override { return rect_.x_; }
+	int GetY() override { return rect_.y_; }
+	int GetFrameWidth() override { return rect_.frameWidth_; }
+	int GetFrameHeight() override { return rect_.frameHeight_; }
 
-	float getWidthF() override { return (float)rect_.width_; }
-	float getHeightF() override { return (float)rect_.height_; }
-	float getXF() override { return (float)rect_.x_; }
-	float getYF() override { return (float)rect_.y_; }
-	float getFrameWidthF() override { return (float)rect_.frameWidth_; }
-	float getFrameHeightF() override { return (float)rect_.frameHeight_; }
-	SGSize getSize() override { return { (float)rect_.width_, (float)rect_.height_ }; }
-	SGString toString() override { return SGStringUtil::Format("프레임(%d)", frameIndex_); }
+	float GetWidthF() override { return (float)rect_.width_; }
+	float GetHeightF() override { return (float)rect_.height_; }
+	float GetXF() override { return (float)rect_.x_; }
+	float GetYF() override { return (float)rect_.y_; }
+	float GetFrameWidthF() override { return (float)rect_.frameWidth_; }
+	float GetFrameHeightF() override { return (float)rect_.frameHeight_; }
+	SGSize GetSize() override { return { (float)rect_.width_, (float)rect_.height_ }; }
+	SGString ToString() override { return SGStringUtil::Format("프레임(%d)", frameIndex_); }
 
 
-	int getTargetFrameIndex() override { return frameIndex_; }
-	const SgaSpriteRect& getFullRect() override { return rect_; }
+	int GetTargetFrameIndex() override { return frameIndex_; }
+	const SgaSpriteRect& GetFullRect() override { return rect_; }
 
-	SGRect getRect() override
+	SGRect GetRect() override
 	{
 		return { (float)rect_.x_, (float)rect_.y_, (float)rect_.width_, (float)rect_.height_ };
 	}
 
-	SGTexture* getTexture() override { return pTexture_; }
+	SGTexture* GetTexture() override { return pTexture_; }
 
-	bool isLink() override { return false; }
-	bool isDummy() override { return isDummy_; }
-	bool isLinearDodged() override { return isLinearDodged_; }
+	bool IsLink() override { return false; }
+	bool IsDummy() override { return isDummy_; }
+	bool IsLinearDodged() override { return isLinearDodged_; }
 
 protected:
 	SgaSpriteRect rect_;
@@ -117,34 +117,34 @@ public:
 	{
 	}
 
-	int getWidth() override { return 1; }
-	int getHeight() override { return 1; }
-	int getX() override { return 0; }
-	int getY() override { return 0; }
-	int getFrameWidth() override { return 0; }
-	int getFrameHeight() override { return 1; }
+	int GetWidth() override { return 1; }
+	int GetHeight() override { return 1; }
+	int GetX() override { return 0; }
+	int GetY() override { return 0; }
+	int GetFrameWidth() override { return 0; }
+	int GetFrameHeight() override { return 1; }
 
-	float getWidthF() override { return 1; }
-	float getHeightF() override { return 1; }
-	float getXF() override { return 0; }
-	float getYF() override { return 0; }
-	float getFrameWidthF() override { return 0; }
-	float getFrameHeightF() override { return 1; }
-	SGSize getSize() override { return { 1, 1 }; }
-	SGRect getRect() override { return { 0, 0, 1, 1 }; }
+	float GetWidthF() override { return 1; }
+	float GetHeightF() override { return 1; }
+	float GetXF() override { return 0; }
+	float GetYF() override { return 0; }
+	float GetFrameWidthF() override { return 0; }
+	float GetFrameHeightF() override { return 1; }
+	SGSize GetSize() override { return { 1, 1 }; }
+	SGRect GetRect() override { return { 0, 0, 1, 1 }; }
 
-	int getTargetFrameIndex() override { return targetFrameIndex_; }
-	SGString toString() override { return SGStringUtil::Format("프레임(%d) 링크(%d)", frameIndex_, targetFrameIndex_); }
+	int GetTargetFrameIndex() override { return targetFrameIndex_; }
+	SGString ToString() override { return SGStringUtil::Format("프레임(%d) 링크(%d)", frameIndex_, targetFrameIndex_); }
 
 #pragma warning(push, 1)
 #pragma warning(disable: 4172) // return local variable address
-	const SgaSpriteRect& getFullRect() override { return {}; }
+	const SgaSpriteRect& GetFullRect() override { return {}; }
 #pragma warning(pop)
-	SGTexture* getTexture() override { return nullptr; }
+	SGTexture* GetTexture() override { return nullptr; }
 
-	bool isLink() override { return true; }
-	bool isDummy() override { return false; }
-	bool isLinearDodged() override { return false; }
+	bool IsLink() override { return true; }
+	bool IsDummy() override { return false; }
+	bool IsLinearDodged() override { return false; }
 
 protected:
 	int targetFrameIndex_;
@@ -158,7 +158,7 @@ public:
 	{
 	}
 
-	bool isDefaultTexture() const override { return true; }
+	bool IsDefaultTexture() const override { return true; }
 };
 
 

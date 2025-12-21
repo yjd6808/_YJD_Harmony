@@ -26,31 +26,30 @@ class ConnectionSynchronizer final : public SGSingletonPointer<ConnectionSynchro
 	{
 		virtual ~ResultBase() = default;
 
-		Type ConnType;
-		ClientConnectServerType_t ListenerType;
-		SGSession* Session;
+		Type connType_;
+		ClientConnectServerType_t listenerType_;
+		SGSession* pSession_;
 	};
 
 	struct ConnectionResult : ResultBase, SGObjectPool<ConnectionResult>
 	{
-		bool Success;
-		Int32U ErrorCode;
+		bool success_;
+		Int32U errorCode_;
 	};
 
 	struct DisconnectionResult : ResultBase, SGObjectPool<DisconnectionResult>
 	{
 	};
 
-	void processConnection(ConnectionResult* _pResult);
-	void processDisconnection(DisconnectionResult* _pResult);
-	void finalize();
+	void ProcessConnection(ConnectionResult* _pResult);
+	void ProcessDisconnection(DisconnectionResult* _pResult);
+	void Finalize();
 
 public:
-	void enqueueConnection(ClientConnectServerType_t _listenerType, SGSession* _pSession, bool _success,
-	                       Int32U _errorCode);
-	void enqueueDisconnection(ClientConnectServerType_t _listenerType, SGSession* _pSession);
-	void initialize();
-	void processConnections();
+	void EnqueueConnection(ClientConnectServerType_t _listenerType, SGSession* _pSession, bool _success, Int32U _errorCode);
+	void EnqueueDisconnection(ClientConnectServerType_t _listenerType, SGSession* _pSession);
+	void Initialize();
+	void ProcessConnections();
 
 private:
 	using ResultQueue = SGArrayQueue<ResultBase*>;

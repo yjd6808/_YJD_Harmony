@@ -23,16 +23,16 @@ USING_NS_JC;
 //////////////////////////////////////////////////////////////////////////////////////////
 UI_Login::UI_Login(UIGroupInfo* _pGroupInfo)
 : UIRootGroup(_pGroupInfo)
-, labelSource_(nullptr)
-, labelDeveloper_(nullptr)
-, groupLoginBox_(nullptr)
-, spriteBackground_(nullptr)
-, hangameLoginToggleButton_(nullptr)
-, dnfLoginToggleButton_(nullptr)
-, startButton_(nullptr)
-, terminateButton_(nullptr)
-, idEditBox_(nullptr)
-, passEditBox_(nullptr)
+, pLabelSource_(nullptr)
+, pLabelDeveloper_(nullptr)
+, pGroupLoginBox_(nullptr)
+, pSpriteBackground_(nullptr)
+, pToggleButtonHangameLogin_(nullptr)
+, pToggleBtnDnfLogin_(nullptr)
+, pBtnStart_(nullptr)
+, pBtnTerminate_(nullptr)
+, pEditBoxId_(nullptr)
+, pEditBoxPassword_(nullptr)
 , tab_(Tab::eDnf)
 {
 }
@@ -54,34 +54,34 @@ void UI_Login::OnInit()
 	//#define UI_LOGIN_LOGIN_BOX_EDITBOX_ID	2006
 	//#define UI_LOGIN_LOGIN_BOX_EDITBOX_PW	2007
 
-	labelSource_ = Core::Contents.UIManager->getLabel(UI_LOGIN_LABEL_SOURCE);
-	labelDeveloper_ = Core::Contents.UIManager->getLabel(UI_LOGIN_LABEL_DEVELOPER);
+	pLabelSource_ = Core::Contents.UIManager->GetLabel(UI_LOGIN_LABEL_SOURCE);
+	pLabelDeveloper_ = Core::Contents.UIManager->GetLabel(UI_LOGIN_LABEL_DEVELOPER);
 
-	groupLoginBox_ = Core::Contents.UIManager->getGroup(UI_LOGIN_GROUP_LOGIN_BOX);
-	spriteBackground_ = Core::Contents.UIManager->getSprite(UI_LOGIN_LOGIN_BOX_SPRITE_BACKGROUND);
-	hangameLoginToggleButton_ = Core::Contents.UIManager->
-	                                           getToggleButton(UI_LOGIN_LOGIN_BOX_TOGGLEBUTTON_HANGAME_LOGIN);
-	dnfLoginToggleButton_ = Core::Contents.UIManager->getToggleButton(UI_LOGIN_LOGIN_BOX_TOGGLEBUTTON_DNF_LOGIN);
-	startButton_ = Core::Contents.UIManager->getButton(UI_LOGIN_LOGIN_BOX_BUTTON_START);
-	terminateButton_ = Core::Contents.UIManager->getButton(UI_LOGIN_LOGIN_BOX_BUTTON_TERMINATE);
-	idEditBox_ = Core::Contents.UIManager->getEditBox(UI_LOGIN_LOGIN_BOX_EDITBOX_ID);
-	idEditBox_->setMaxLength(Const::StringLen::AccountId);
-	passEditBox_ = Core::Contents.UIManager->getEditBox(UI_LOGIN_LOGIN_BOX_EDITBOX_PW);
-	passEditBox_->setInputFlag(SGEditBox::InputFlag::PASSWORD);
-	passEditBox_->setMaxLength(Const::StringLen::AccountPass);
+	pGroupLoginBox_ = Core::Contents.UIManager->GetGroup(UI_LOGIN_GROUP_LOGIN_BOX);
+	pSpriteBackground_ = Core::Contents.UIManager->GetSprite(UI_LOGIN_LOGIN_BOX_SPRITE_BACKGROUND);
+	pToggleButtonHangameLogin_ = Core::Contents.UIManager->
+	                                           GetToggleButton(UI_LOGIN_LOGIN_BOX_TOGGLEBUTTON_HANGAME_LOGIN);
+	pToggleBtnDnfLogin_ = Core::Contents.UIManager->GetToggleButton(UI_LOGIN_LOGIN_BOX_TOGGLEBUTTON_DNF_LOGIN);
+	pBtnStart_ = Core::Contents.UIManager->GetButton(UI_LOGIN_LOGIN_BOX_BUTTON_START);
+	pBtnTerminate_ = Core::Contents.UIManager->GetButton(UI_LOGIN_LOGIN_BOX_BUTTON_TERMINATE);
+	pEditBoxId_ = Core::Contents.UIManager->GetEditBox(UI_LOGIN_LOGIN_BOX_EDITBOX_ID);
+	pEditBoxId_->SetMaxLength(Const::StringLen::AccountId);
+	pEditBoxPassword_ = Core::Contents.UIManager->GetEditBox(UI_LOGIN_LOGIN_BOX_EDITBOX_PW);
+	pEditBoxPassword_->SetInputFlag(SGEditBox::InputFlag::PASSWORD);
+	pEditBoxPassword_->SetMaxLength(Const::StringLen::AccountPass);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void UI_Login::OnLoaded()
 {
-	setTab(tab_);
+	SetTab(tab_);
 
-	const Size scaledContentSize = groupLoginBox_->getContentSize() * 1.2f;
-	groupLoginBox_->setContentSize(scaledContentSize);
+	const Size scaledContentSize = pGroupLoginBox_->getContentSize() * 1.2f;
+	pGroupLoginBox_->setContentSize(scaledContentSize);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UI_Login::onUpdate(float _dt)
+void UI_Login::OnUpdate(float _dt)
 {
 }
 
@@ -96,10 +96,10 @@ void UI_Login::OnMouseUpTarget(UIElement* _pElement, SGEventMouse* _pMouseEvent)
 	switch (_pElement->GetCode())
 	{
 	case UI_LOGIN_LOGIN_BOX_BUTTON_START:
-		login();
+		Login();
 		break;
 	case UI_LOGIN_LOGIN_BOX_BUTTON_TERMINATE:
-		Core::Contents.World->terminate();
+		Core::Contents.World->Terminate();
 		break;
 	default:
 		break;
@@ -112,10 +112,10 @@ void UI_Login::OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _st
 	switch (_pToggleBtn->GetCode())
 	{
 	case UI_LOGIN_LOGIN_BOX_TOGGLEBUTTON_HANGAME_LOGIN:
-		setTab(Tab::eHangame);
+		SetTab(Tab::eHangame);
 		break;
 	case UI_LOGIN_LOGIN_BOX_TOGGLEBUTTON_DNF_LOGIN:
-		setTab(Tab::eDnf);
+		SetTab(Tab::eDnf);
 		break;
 	default:
 		break;
@@ -123,18 +123,18 @@ void UI_Login::OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _st
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UI_Login::onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
+bool UI_Login::OnKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
 {
 	if (_keyCode == EventKeyboard::KeyCode::KEY_ENTER)
 	{
-		login();
+		Login();
 	}
 
 	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UI_Login::onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
+bool UI_Login::OnKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
 {
 	return true;
 }
@@ -144,45 +144,45 @@ void UI_Login::OnEditBoxEditingDidEndWithAction(UIEditBox* _pEditBox, SGEditBoxE
 {
 	if (_endAction == EditBoxDelegate::EditBoxEndAction::RETURN)
 	{
-		login();
+		Login();
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UI_Login::setTab(Tab _tab)
+void UI_Login::SetTab(Tab _tab)
 {
 	tab_ = _tab;
 
 	if (tab_ == Tab::eHangame)
 	{
-		hangameLoginToggleButton_->setToggleState(ToggleState::eToggled);
-		dnfLoginToggleButton_->setToggleState(ToggleState::eNormal);
+		pToggleButtonHangameLogin_->SetToggleState(ToggleState::eToggled);
+		pToggleBtnDnfLogin_->SetToggleState(ToggleState::eNormal);
 	}
 	else if (tab_ == Tab::eDnf)
 	{
-		hangameLoginToggleButton_->setToggleState(ToggleState::eNormal);
-		dnfLoginToggleButton_->setToggleState(ToggleState::eToggled);
+		pToggleButtonHangameLogin_->SetToggleState(ToggleState::eNormal);
+		pToggleBtnDnfLogin_->SetToggleState(ToggleState::eToggled);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UI_Login::login()
+void UI_Login::Login()
 {
-	if (idEditBox_->getText().length() == 0 || passEditBox_->getText().length() == 0)
+	if (pEditBoxId_->GetText().length() == 0 || pEditBoxPassword_->GetText().length() == 0)
 	{
-		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("LOGIN_REQUIRED_ID_PASS"));
+		Core::Contents.PopupManager->ShowOk(SG_TEXT_RAW("LOGIN_REQUIRED_ID_PASS"));
 		return;
 	}
 
-	AuthenticationComponent* pAuthenticationComponent = Core::Net->getAuthenticationComponent();
-	pAuthenticationComponent->setAccountIdPass(idEditBox_->getText().c_str(), passEditBox_->getText().c_str());
+	AuthenticationComponent* pAuthenticationComponent = Core::Net->GetAuthenticationComponent();
+	pAuthenticationComponent->SetAccountIdPass(pEditBoxId_->GetText().c_str(), pEditBoxPassword_->GetText().c_str());
 
-	if (!Core::Net->connectAuthTcp())
+	if (!Core::Net->ConnectAuthTcp())
 	{
-		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("CONNECT_AUTH_FAILED_UNCONNECTABLE_STATE"));
+		Core::Contents.PopupManager->ShowOk(SG_TEXT_RAW("CONNECT_AUTH_FAILED_UNCONNECTABLE_STATE"));
 		return;
 	}
 
-	Core::Contents.PopupManager->showNone(
+	Core::Contents.PopupManager->ShowNone(
 		SG_TEXT_RAW_FMT_STD("CONNECT_SERVER", ServerType::Name[ServerType::Auth]), DEF_POPUP_CONNECT_AUTH);
 }

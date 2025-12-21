@@ -38,13 +38,13 @@ SceneBase::~SceneBase()
 //////////////////////////////////////////////////////////////////////////////////////////
 bool SceneBase::init()
 {
-	_LogDebug_("%s 씬 초기화", SceneType::Name[getType()]);
+	_LogDebug_("%s 씬 초기화", SceneType::Name[GetType()]);
 
 	if (!Scene::init())
 		return false;
 
-	m_pWorldScene = WorldScene::get();
-	m_pUILayer = m_pWorldScene->getUILayer();
+	pWorldScene_ = WorldScene::Get();
+	pUILayer_ = pWorldScene_->GetUILayer();
 
 	removeChild(_defaultCamera);
 
@@ -60,17 +60,17 @@ bool SceneBase::init()
 //////////////////////////////////////////////////////////////////////////////////////////
 void SceneBase::onEnter()
 {
-	_LogDebug_("%s 씬을 시작", SceneType::Name[getType()]);
+	_LogDebug_("%s 씬을 시작", SceneType::Name[GetType()]);
 	Scene::onEnter();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void SceneBase::onExit()
 {
-	_LogDebug_("%s 씬을 종료", SceneType::Name[getType()]);
+	_LogDebug_("%s 씬을 종료", SceneType::Name[GetType()]);
 	Scene::onExit();
-	m_pUILayer->clearUnload();
-	Core::Contents.PackManager->releaseAllFrameTexture();
+	pUILayer_->ClearUnload();
+	Core::Contents.PackManager->ReleaseAllFrameTexture();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

@@ -109,7 +109,7 @@ void NetCore::update(const TimeSpan& elapsed) {
 	processCommands();
 }
 
-void NetCore::runCommand(Session* session, ICommand* cmd) {
+void NetCore::RunCommand(Session* session, ICommand* cmd) {
 	if (m_Parser.RunCommand(session, cmd)) {
 		return;
 	}
@@ -138,7 +138,7 @@ void NetCore::processCommands() {
 
 	while (!m_pCommandQueue->IsEmpty()) {
 		ICommand* pCmd = m_pCommandQueue->Front();
-		runCommand(m_spGameClient.GetPtr(), pCmd);
+		RunCommand(m_spGameClient.GetPtr(), pCmd);
 		m_pCommandQueue->Dequeue();
 		delete[](char*)pCmd;
 	}

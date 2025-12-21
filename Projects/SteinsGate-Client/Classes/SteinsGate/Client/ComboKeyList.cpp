@@ -13,7 +13,7 @@ ComboKeyList::ComboKeyList()
 {
 	for (int i = 0; i < Const::Action::ComboSequenceCount; ++i)
 	{
-		Keys[i] = ControlKey::None;
+		keys_[i] = ControlKey::None;
 	}
 }
 
@@ -29,11 +29,11 @@ ComboKeyList::ComboKeyList(std::initializer_list<ControlKey_t> _list)
 	{
 		if (i < keyCount)
 		{
-			Keys[i] = *(it + i);
+			keys_[i] = *(it + i);
 		}
 		else
 		{
-			Keys[i] = ControlKey::None;
+			keys_[i] = ControlKey::None;
 		}
 	}
 }
@@ -49,7 +49,7 @@ ComboKeyList& ComboKeyList::operator=(const ComboKeyList& _other)
 {
 	for (int i = 0; i < Const::Action::ComboSequenceCount; ++i)
 	{
-		Keys[i] = _other.Keys[i];
+		keys_[i] = _other.keys_[i];
 	}
 	return *this;
 }
@@ -57,11 +57,11 @@ ComboKeyList& ComboKeyList::operator=(const ComboKeyList& _other)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool ComboKeyList::operator==(const ComboKeyList& _other) const
 {
-	int comboCount = count();
+	int comboCount = Count();
 
 	for (int i = 0; i < comboCount; ++i)
 	{
-		if (Keys[i] != _other.Keys[i])
+		if (keys_[i] != _other.keys_[i])
 		{
 			return false;
 		}
@@ -79,50 +79,50 @@ bool ComboKeyList::operator!=(const ComboKeyList& _other) const
 //////////////////////////////////////////////////////////////////////////////////////////
 ControlKey_t& ComboKeyList::operator[](const int _idx)
 {
-	return Keys[_idx];
+	return keys_[_idx];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ComboKeyList::set(int _idx, ControlKey_t _key)
+void ComboKeyList::Set(int _idx, ControlKey_t _key)
 {
-	Keys[_idx] = _key;
+	keys_[_idx] = _key;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ControlKey_t ComboKeyList::at(int _idx) const
+ControlKey_t ComboKeyList::At(int _idx) const
 {
-	return Keys[_idx];
+	return keys_[_idx];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ComboKeyList ComboKeyList::reverse() const
+ComboKeyList ComboKeyList::Reverse() const
 {
 	ComboKeyList reversedComboKeyList;
-	int comboCount = count();
+	int comboCount = Count();
 
 	for (int i = 0; i < comboCount; ++i)
 	{
-		if (Keys[i] == ControlKey_t::Left || Keys[i] == ControlKey_t::Right)
+		if (keys_[i] == ControlKey_t::Left || keys_[i] == ControlKey_t::Right)
 		{
-			reversedComboKeyList.Keys[i] = ControlKey::ReverseDirection[Keys[i]];
+			reversedComboKeyList.keys_[i] = ControlKey::ReverseDirection[keys_[i]];
 			continue;
 		}
 
-		reversedComboKeyList.Keys[i] = Keys[i];
+		reversedComboKeyList.keys_[i] = keys_[i];
 	}
 
 	return reversedComboKeyList;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-SGString ComboKeyList::string() const
+SGString ComboKeyList::ToString() const
 {
 	SGString keyString;
-	const int comboCount = count();
+	const int comboCount = Count();
 
 	for (int i = 0; i < comboCount; i++)
 	{
-		keyString += ControlKey::Name[Keys[i]];
+		keyString += ControlKey::Name[keys_[i]];
 		keyString += " ";
 	}
 
@@ -130,12 +130,12 @@ SGString ComboKeyList::string() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ComboKeyList::count() const
+int ComboKeyList::Count() const
 {
 	int comboCount = 0;
 	for (int i = 0; i < Const::Action::ComboSequenceCount; ++i)
 	{
-		if (Keys[i] == ControlKey::None)
+		if (keys_[i] == ControlKey::None)
 		{
 			break;
 		}

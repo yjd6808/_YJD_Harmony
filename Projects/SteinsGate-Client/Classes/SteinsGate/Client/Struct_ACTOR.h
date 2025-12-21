@@ -10,17 +10,17 @@
 
 struct ActorRect
 {
-	SGRect ThicknessRect;
-	SGRect BodyRect;
+	SGRect thicknessRect_;
+	SGRect bodyRect_;
 
-	bool isCollide(const ActorRect& _rect, SpriteDirection_t& _otherHitDirection, SGRect& _hitRect);
+	bool IsCollide(const ActorRect& _rect, SpriteDirection_t& _otherHitDirection, SGRect& _hitRect);
 };
 
 struct HitInfo
 {
-	Actor* Attacker;
-	Actor* HitTarget;
-	SpriteDirection_t HitDirection;
-	SGRect HitRect;
-	AttackDataInfo* AttackDataInfo;
+	Actor* pAttacker_;
+	Actor* pHitTarget_;
+	SpriteDirection_t hitDirection_;
+	SGRect hitRect_;
+	AttackDataInfo* pAttackDataInfo_;
 };

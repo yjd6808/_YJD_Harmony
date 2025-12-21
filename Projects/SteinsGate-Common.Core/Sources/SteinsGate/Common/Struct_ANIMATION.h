@@ -17,9 +17,9 @@
 
 struct FrameInfo
 {
-	int FrameIndex;
-	float Delay;
-	int FrameEventCode;
+	int frameIndex_;
+	float delay_;
+	int frameEventCode_;
 };
 
 
@@ -31,13 +31,13 @@ struct AnimationInfo : ConfigDataAbstract
 	}
 
 	AnimationInfo(int _frameSize)
-	: Loop(false)
-	, Name{ 0 }
-	, Frames(_frameSize)
+	: loop_(false)
+	, name_{ 0 }
+	, frames_(_frameSize)
 	{
 	}
 
-	bool Loop;
-	SGString Name;
-	SGVector<FrameInfo> Frames;
+	bool loop_;
+	SGString name_;
+	SGVector<FrameInfo> frames_;
 };

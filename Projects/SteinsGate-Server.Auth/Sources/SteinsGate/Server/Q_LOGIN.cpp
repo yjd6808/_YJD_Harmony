@@ -50,9 +50,9 @@ bool Q_LOGIN::SelectAccountInfo(const char* _pAccountId, JCORE_OUT AccountData& 
 		return false;
 	}
 
-	_accountData.LastLogin = DateTime::Now();
-	_accountData.LastServer = (GameServerType_t)result.LastServer;
-	_accountData.Id = result.Id;
-	_accountData.Pass = result.Pass;
+	_accountData.lastLoginTime_ = DateTime::Now();
+	_accountData.lastServer_ = (GameServerType_t)result.LastServer;
+	_accountData.id_ = result.Id;
+	_accountData.pass_ = result.Pass;
 	return true;
 }

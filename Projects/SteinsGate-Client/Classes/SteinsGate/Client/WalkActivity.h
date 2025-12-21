@@ -28,15 +28,14 @@ public:
 	void OnActivitySelectFromAiRoutine(AIInfo* _pAiInfo, AIState_t _aiState) override;
 	void OnUpdate(float _dt) override;
 
-	void updateWander(float _dt);
-	void updateTrack(float _dt);
-	void updateMove(float _dt);
+	void UpdateWander(float _dt);
+	void UpdateTrack(float _dt);
+	void UpdateMove(float _dt);
 
-	virtual void updateMoveImpl(float _dt, MoveComponent* _pMoveComponent, bool _arrivedX, bool _arrivedY,
-	                            Direction_t _lr, Direction_t _ud) = 0;
+	virtual void UpdateMoveImpl(float _dt, MoveComponent* _pMoveComponent, bool _arrivedX, bool _arrivedY, Direction_t _lr, Direction_t _ud) = 0;
 
 protected:
-	SGVec2 m_Destination;
-	Actor* m_pTarget;
-	Mode m_eMode;
+	SGVec2 destination_;
+	Actor* pTarget_;
+	Mode mode_;
 };

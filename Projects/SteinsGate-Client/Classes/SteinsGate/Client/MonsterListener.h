@@ -15,7 +15,7 @@
 public:                                                                \
     struct Factory : IFactory                                          \
     {                                                                  \
-        MonsterListener* create(Monster* _pMonster) override           \
+        MonsterListener* Create(Monster* _pMonster) override           \
         {                                                              \
             return dbg_new Type(_pMonster);                            \
         }                                                              \
@@ -27,7 +27,7 @@ public:
 	struct IFactory
 	{
 		virtual ~IFactory() = default;
-		virtual MonsterListener* create(Monster* _pMonster) = 0;
+		virtual MonsterListener* Create(Monster* _pMonster) = 0;
 	};
 
 	MonsterListener(Monster* _pMonster)
@@ -37,7 +37,7 @@ public:
 
 	~MonsterListener() override = default;
 
-	Type getListenerType() const override
+	Type GetListenerType() const override
 	{
 		return eMonster;
 	}

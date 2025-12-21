@@ -14,8 +14,8 @@ class GunnerRun : public GunnerAction
 public:
 	GunnerRun(HostPlayer* _pPlayer, ActionInfo* _pActionInfo);
 
-	void onActionBegin() override;
-	void onKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode) override;
-	void onKeyReleased(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode) override;
-	void onKeyReleasedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode) override;
+	void OnActionBegin() override;
+	void OnKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode) override;
+	void OnKeyReleased(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode) override;
+	void OnKeyReleasedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode) override;
 };

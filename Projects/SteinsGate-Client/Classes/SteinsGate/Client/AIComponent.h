@@ -22,17 +22,17 @@ public:
 	AIComponent(Actor* _pActor);
 	~AIComponent() override;
 
-	void initialize() override;
-	void onUpdate(float _dt) override;
+	void Initialize() override;
+	void OnUpdate(float _dt) override;
 
-	void setAIInfo(AIInfo* _pAIInfo);
+	void SetAiInfo(AIInfo* _pAIInfo);
 
-	void setAttackActivity(AttackActivity* _pAttackActivity);
-	void setFallDownActivity(FallDownActivity* _pFallDownActivity);
-	void setHitActivity(HitActivity* _pHitActivity);
-	void setIdleActivity(IdleActivity* _pIdleActivity);
-	void setWalkActivity(WalkActivity* _pWalkActivity);
-	void setSitActivity(SitActivity* _pSitActivity);
+	void SetAttackActivity(AttackActivity* _pAttackActivity);
+	void SetFallDownActivity(FallDownActivity* _pFallDownActivity);
+	void SetHitActivity(HitActivity* _pHitActivity);
+	void SetIdleActivity(IdleActivity* _pIdleActivity);
+	void SetWalkActivity(WalkActivity* _pWalkActivity);
+	void SetSitActivity(SitActivity* _pSitActivity);
 
 	// TODO: 분할 정복 방식으로 미리 확률 계산해놓는것 고려.
 	// void initAIProbs(); 
@@ -41,29 +41,29 @@ public:
 	// (쓸일 있을까?, 갑자기 몬스터 태세 전환 한다든가 할 때 괜찮을 듯)
 	// void exhangeAI(SGAIInfo* exchangeInfo);
 
-	void updateState();
-	void updateActivity(float _dt);
-	void selectActivity();
-	void updateDirection();
+	void UpdateState();
+	void UpdateActivity(float _dt);
+	void SelectActivity();
+	void UpdateDirection();
 
-	void selectWanderActivity();
-	void selectTrackActivity();
-	void selectAngryActivity();
+	void SelectWanderActivity();
+	void SelectTrackActivity();
+	void SelectAngryActivity();
 
-	void runActivity(AIActivity* _pActivity);
-	void runActivity(AIActivityType_t _activityType);
+	void RunActivity(AIActivity* _pActivity);
+	void RunActivity(AIActivityType_t _activityType);
 
-	SGVec2 getRandomSightPos();
-	AIInfo* getAiInfo() { return aiInfo_; }
-	AIState_t getState() { return state_; }
-	Actor* getTarget() { return target_; }
-	AIActivity* getRunningActivity() const;
+	SGVec2				GetRandomSightPos();
+	AIInfo*				GetAiInfo() { return pAIInfo_; }
+	AIState_t			GetState() { return state_; }
+	Actor*				GetTarget() { return pTarget_; }
+	AIActivity*			GetRunningActivity() const;
 
 	SG_COMPONENT_TYPE_GETTER(Type::eAI)
 
 private:
-	JCORE_NULLABLE AIInfo* aiInfo_;
-	JCORE_NULLABLE Actor* target_;
+	JCORE_NULLABLE AIInfo* pAIInfo_;
+	JCORE_NULLABLE Actor* pTarget_;
 
 	JCORE_NULLABLE AIActivity* activityMap_[AIActivityType::Max];
 	JCORE_NULLABLE AIActivity* runningActivity_;

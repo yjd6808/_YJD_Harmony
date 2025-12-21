@@ -48,84 +48,84 @@ Character::~Character()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Character* Character::create(CharBaseInfo* _pCharInfo, const VisualInfo& _visualInfo)
+Character* Character::Create(CharBaseInfo* _pCharInfo, const VisualInfo& _visualInfo)
 {
 	Character* pCharacter = dbg_new Character(_pCharInfo, _visualInfo);
-	pCharacter->initialize();
+	pCharacter->Initialize();
 	pCharacter->autorelease();
 	return pCharacter;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Character::initialize()
+void Character::Initialize()
 {
-	initVariables();
-	initThicknessBox(m_pBaseInfo->thicknessBox_);
-	initActorSpriteData(m_VisualInfo);
-	initActorSprite();
-	initHitRecorder(32, 64);
-	initListeners();
-	initComponents();
+	InitVariables();
+	InitThicknessBox(m_pBaseInfo->thicknessBox_);
+	InitActorSpriteData(m_VisualInfo);
+	InitActorSprite();
+	InitHitRecorder(32, 64);
+	InitListeners();
+	InitComponents();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Character::initActorSpriteData(const VisualInfo& _visualInfo)
+void Character::InitActorSpriteData(const VisualInfo& _visualInfo)
 {
 	DebugAssert(m_pBaseInfo != nullptr);
 	JCORE_DELETE_SAFE(m_pSpriteData);
-	SGVector<AnimationInfo*>& animationList = Core::DataManager->getCharAnimationInfoList(m_pBaseInfo->code_);
+	SGVector<AnimationInfo*>& animationList = Core::DataManager->GetCharAnimationInfoList(m_pBaseInfo->code_);
 	m_pSpriteData = dbg_new ActorSpriteData(ActorPartSpritePositioningRule::InFrameSize, 15, animationList.Size());
-	m_pSpriteData->Parts = _visualInfo;
-	m_pSpriteData->Parts.Sort(
-		[](ActorPartSpriteData& lhs, ActorPartSpriteData& rhs) { return lhs.ZOrder < rhs.ZOrder; });
+	m_pSpriteData->parts_ = _visualInfo;
+	m_pSpriteData->parts_.Sort(
+		[](ActorPartSpriteData& lhs, ActorPartSpriteData& rhs) { return lhs.zOrder_ < rhs.zOrder_; });
 	animationList.ForEach([this](AnimationInfo* _pAnimationInfo)
 	{
-		m_pSpriteData->Animations.PushBack(*_pAnimationInfo);
+		m_pSpriteData->animations_.PushBack(*_pAnimationInfo);
 	});
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Character::initActorSprite()
+void Character::InitActorSprite()
 {
 	DebugAssert(m_pSpriteData != nullptr);
 
-	if (m_pActorSprite != nullptr)
+	if (pActorSprite_ != nullptr)
 	{
-		m_pActorSprite->updateSpriteData(m_pSpriteData);
+		pActorSprite_->UpdateSpriteData(m_pSpriteData);
 		return;
 	}
 
-	m_pActorSprite = ActorSprite::create(this, m_pSpriteData);
-	m_pActorSprite->setAnchorPoint(Vec2::ZERO);
-	this->addChild(m_pActorSprite);
+	pActorSprite_ = ActorSprite::Create(this, m_pSpriteData);
+	pActorSprite_->setAnchorPoint(Vec2::ZERO);
+	this->addChild(pActorSprite_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Character::initListeners()
+void Character::InitListeners()
 {
-	IActorListener* pListener = getListener(IActorListener::Type::eCharacter);
+	IActorListener* pListener = GetListener(IActorListener::Type::eCharacter);
 
 	if (pListener == nullptr)
 	{
-		pListener = Core::Contents.ActorListenerManager->createCharacterListener(this);
-		addListener(pListener);
+		pListener = Core::Contents.ActorListenerManager->CreateCharacterListener(this);
+		AddListener(pListener);
 	}
 
-	pListener->onCreated();
+	pListener->OnCreated();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Character::initComponents()
+void Character::InitComponents()
 {
-	if (!m_Components.has(IComponent::eMove))
-		m_Components.add(dbg_new MoveComponent(this));
+	if (!components_.Has(IComponent::eMove))
+		components_.Add(dbg_new MoveComponent(this));
 
-	if (!m_Components.has(IComponent::ePhysics))
-		m_Components.add(dbg_new PhysicsComponent(this));
+	if (!components_.Has(IComponent::ePhysics))
+		components_.Add(dbg_new PhysicsComponent(this));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-CharBaseInfo* Character::getBaseInfo()
+CharBaseInfo* Character::GetBaseInfo()
 {
 	return m_pBaseInfo;
 }

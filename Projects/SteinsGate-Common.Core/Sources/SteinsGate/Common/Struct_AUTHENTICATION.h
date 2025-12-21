@@ -19,10 +19,10 @@ struct AccountData
 
 	void Clear();
 
-	SGStaticString<Const::StringLen::AccountId> Id;
-	SGStaticString<Const::StringLen::AccountPass> Pass;
-	SGDateTime LastLogin;
-	GameServerType_t LastServer;
+	SGStaticString<Const::StringLen::AccountId> id_;
+	SGStaticString<Const::StringLen::AccountPass> pass_;
+	SGDateTime lastLoginTime_;
+	GameServerType_t lastServer_;
 };
 
 
@@ -30,8 +30,8 @@ using AuthenticationSerial_t = Int32;
 
 struct AuthenticationData
 {
-	AuthenticationState_t State;
-	AuthenticationSerial_t Serial; // 토큰 데이터
-	SGDateTime TimeId; // 최신화된 시각 및 고유 시각ID
-	AccountData AccountData; // 처음 계정 접속시 DB로부터 불러왔던 계정 정보
+	AuthenticationState_t state_;
+	AuthenticationSerial_t serial_; // 토큰 데이터
+	SGDateTime timeId_; // 최신화된 시각 및 고유 시각ID
+	AccountData accountData_; // 처음 계정 접속시 DB로부터 불러왔던 계정 정보
 };

@@ -13,26 +13,26 @@
 
 struct UIElementInfo : ConfigDataAbstract
 {
-	UIElementType_t Type;
-	HAlignment_t HAlignment;
-	VAlignment_t VAlignment;
+	UIElementType_t type_;
+	HAlignment_t hAlignment_;
+	VAlignment_t vAlignment_;
 };
 
 struct UIGroupElemInfo
 {
 	UIGroupElemInfo()
 	{
-		Code = InvalidValue_v;
+		code_ = InvalidValue_v;
 	}
 
-	int Code;
-	SGVec2 Pos;
+	int code_;
+	SGVec2 pos_;
 };
 
 struct UIGroupInfo : UIElementInfo
 {
 	UIGroupInfo(int _elemCount)
-	: InfoList(_elemCount == 0 ? 1 : _elemCount)
+	: infoList_(_elemCount == 0 ? 1 : _elemCount)
 	{
 	} // 용량이 0일수는 없으므로.
 	UIGroupInfo(const UIGroupInfo& _other) { this->operator=(_other); }
@@ -42,75 +42,75 @@ struct UIGroupInfo : UIElementInfo
 	UIGroupInfo& operator=(const UIGroupInfo& _other);
 	UIGroupInfo& operator=(UIGroupInfo&& _other) noexcept;
 
-	SGSize Size;
-	SGVector<UIGroupElemInfo> InfoList;
+	SGSize size_;
+	SGVector<UIGroupElemInfo> infoList_;
 };
 
 struct UIButtonInfo : UIElementInfo
 {
 	UIButtonInfo()
 	{
-		Sga = InvalidValue_v;
-		Img = InvalidValue_v;
-		SGArrays::Fill(Sprites, InvalidValue_v);
-		LinearDodge = false;
+		sga_ = InvalidValue_v;
+		img_ = InvalidValue_v;
+		SGArrays::Fill(sprites_, InvalidValue_v);
+		linearDodge_ = false;
 	}
 
 	UIButtonInfo(const UIButtonInfo& _other) { this->operator=(_other); }
 	UIButtonInfo& operator=(const UIButtonInfo& _other);
 
-	int Sga;
-	int Img;
-	int Sprites[4];
-	bool LinearDodge;
+	int sga_;
+	int img_;
+	int sprites_[4];
+	bool linearDodge_;
 };
 
 struct UILabelInfo : UIElementInfo
 {
 	UILabelInfo()
 	{
-		FontCode = 0;
-		FontSize = 16;
-		FontColor = { 0, 0, 0, 255 };
-		Text = "라벨 텍스트 없음";
-		TextWrap = true;
-		TextHAlignment = HAlignment::Left;
-		TextVAlignment = VAlignment::Top;
+		fontCode_ = 0;
+		fontSize_ = 16;
+		fontColor_ = { 0, 0, 0, 255 };
+		text_ = "라벨 텍스트 없음";
+		textWrap_ = true;
+		textHAlignment_ = HAlignment::Left;
+		textVAlignment_ = VAlignment::Top;
 	}
 
 	UILabelInfo(const UILabelInfo& _other) { this->operator=(_other); }
 	UILabelInfo& operator=(const UILabelInfo& _other);
 
-	SGSize Size;
-	int FontCode;
-	int FontSize;
-	SGColor4B FontColor;
-	SGString Text;
-	bool TextWrap;
-	HAlignment_t TextHAlignment;
-	VAlignment_t TextVAlignment;
+	SGSize size_;
+	int fontCode_;
+	int fontSize_;
+	SGColor4B fontColor_;
+	SGString text_;
+	bool textWrap_;
+	HAlignment_t textHAlignment_;
+	VAlignment_t textVAlignment_;
 };
 
 struct UISpriteInfo : UIElementInfo
 {
 	UISpriteInfo()
 	{
-		Img = InvalidValue_v;
-		Sga = InvalidValue_v;
-		Sprite = InvalidValue_v;
-		LinearDodge = false;
-		Scale9 = false;
+		img_ = InvalidValue_v;
+		sga_ = InvalidValue_v;
+		sprite_ = InvalidValue_v;
+		linearDodge_ = false;
+		scale9_ = false;
 	}
 
 	UISpriteInfo(const UISpriteInfo& _other) { this->operator=(_other); }
 	UISpriteInfo& operator=(const UISpriteInfo& _other);
 
-	int Img;
-	int Sga;
-	int Sprite;
-	bool LinearDodge;
-	bool Scale9;
-	SGSize Size;
+	int img_;
+	int sga_;
+	int sprite_;
+	bool linearDodge_;
+	bool scale9_;
+	SGSize size_;
 };
 
 

@@ -15,12 +15,12 @@ class SGLoginScene : public SceneBase
 {
 public:
 	SGLoginScene();
-	static SGLoginScene* create();
+	static SGLoginScene* Create();
 
-	void onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
-	void onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
+	void OnKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
+	void OnKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
 
 	void update(float _dt) override;
 	bool init() override;
-	SceneType_t getType() override { return SceneType::Login; }
+	SceneType_t GetType() override { return SceneType::Login; }
 };

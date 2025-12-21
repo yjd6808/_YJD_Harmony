@@ -58,7 +58,7 @@ void ChannelInfoLoader::ReadChannelInfo(Json::Value& _channelRoot, JCORE_OUT Cha
 {
 	JsonUtil::ParseIntNumber2(
 		_channelRoot["monster_sprite"],
-		_pChannelInfo->SelectedSpriteIndex,
-		_pChannelInfo->NormalSpriteIndex
+		_pChannelInfo->selectedSpriteIndex_,
+		_pChannelInfo->normalSpriteIndex_
 	);
 }

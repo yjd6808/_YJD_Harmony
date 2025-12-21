@@ -21,35 +21,36 @@ public:
 	ActionMgr(HostPlayer* _pPlayer);
 	~ActionMgr();
 
-	void init(int _charType);
-	void initGunnerActions();
-	void update(float _dt);
-	void onKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);
-	void onKeyReleased(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);
-	void onKeyPressedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode); // 키가 눌려진 상태가 수정되기전 호출
-	void onKeyReleasedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode); // 키가 안눌려진 상태가 수정되기전 호출
-	void onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
-	void onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
-	void onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
-	void onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	void Init(int _charType);
+	void InitGunnerActions();
 
-	bool canRunAction();
-	bool hasPreviousAction() { return previousAction_ != nullptr; }
-	bool hasRunningAction() { return runningAction_ != nullptr; }
-	bool isBaseActionRunning(BaseAction_t _baseActionType);
-	bool isActionRunning(int _actionCode);
-	bool isRunnningActionIdleOrWalkAction();
+	void Update(float _dt);
+	void OnKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);
+	void OnKeyReleased(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);
+	void OnKeyPressedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode); // 키가 눌려진 상태가 수정되기전 호출
+	void OnKeyReleasedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode); // 키가 안눌려진 상태가 수정되기전 호출
+	void OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	void OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	void OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
+	void OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
 
-	SGAction* getRunningAction() { return runningAction_; }
-	SGAction* getPreviousAction() { return previousAction_; }
-	SGAction* getAction(int _actionCode);
-	SGAction* getBaseAction(BaseAction_t _baseActionType);
-	SGAction* getComboAction(const ComboKeyList& _keys) { return comboTree_.getComboAction(_keys); }
-	void runAction(int _actionCode);
-	void runAction(SGAction* _pAction);
-	void runBaseAction(BaseAction_t _baseActionType);
+	bool CanRunAction();
+	bool HasPreviousAction() { return previousAction_ != nullptr; }
+	bool HasRunningAction() { return runningAction_ != nullptr; }
+	bool IsBaseActionRunning(BaseAction_t _baseActionType);
+	bool IsActionRunning(int _actionCode);
+	bool IsRunnningActionIdleOrWalkAction();
 
-	void stopActionForce();
+	SGAction* GetRunningAction() { return runningAction_; }
+	SGAction* GetPreviousAction() { return previousAction_; }
+	SGAction* GetAction(int _actionCode);
+	SGAction* GetBaseAction(BaseAction_t _baseActionType);
+	SGAction* GetComboAction(const ComboKeyList& _keys) { return comboTree_.GetComboAction(_keys); }
+	void RunAction(int _actionCode);
+	void RunAction(SGAction* _pAction);
+	void RunBaseAction(BaseAction_t _baseActionType);
+
+	void StopActionForce();
 
 private:
 	HostPlayer* player_;

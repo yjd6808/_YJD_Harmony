@@ -28,105 +28,106 @@ public:
 	{
 		enum State
 		{
-			Selected,
-			Normal,
-			Disabled
+			sSelected,
+			sNormal,
+			sDisabled
 		};
 
-		ServerButton(GameServerType_t Type);
+		ServerButton(GameServerType_t _type);
 
-		void initSprites(GameServerType_t Type);
-		void setState(State state);
-		void select();
-		void normal();
-		void disabled();
+		void InitSprites(GameServerType_t _type);
+		void SetState(State _state);
+		void Select();
+		void Normal();
+		void Disabled();
 
-		bool containsPoint(const SGVec2& pos);
+		bool ContainsPoint(const SGVec2& _pos);
 
-		GameServerType_t Type;
-		UIGroup* Group;
-		UISprite* SpriteSelectedBackground;
-		UISprite* SpriteSelectedText;
-		UISprite* SpriteSelectedBorder;
-		UISprite* SpriteNormalText;
-		UISprite* SpriteNormalBorder;
-		UISprite* SpriteDisabledText;
-		UISprite* SpriteServerCharacter;
-		State State_;
+		GameServerType_t type_;
+		UIGroup* pGroup_;
+		UISprite* pSpriteSelectedBackground_;
+		UISprite* pSpriteSelectedText_;
+		UISprite* pSpriteSelectedBorder_;
+		UISprite* pSpriteNormalText_;
+		UISprite* pSpriteNormalBorder_;
+		UISprite* pSpriteDisabledText_;
+		UISprite* pSpriteServerCharacter_;
+		State state_;
 	};
 
 	struct ChannelButton
 	{
 		enum State
 		{
-			Normal,
-			Selected,
-			Invisible,
+			sNormal,
+			sSelected,
+			sInvisible,
 		};
 
-		ChannelButton(int index);
+		ChannelButton(int _index);
 
-		void initSprites();
+		void InitSprites();
 
-		void setState(State state);
-		void normal();
-		void selected();
-		void invisible();
-		void mouseOver();
-		void mouseLeave();
+		void SetState(State _state);
+		void SetNormal();
+		void SetSelected();
+		void SetInvisible();
 
-		void initMonsterSprites(UI_ChannelSelect* masterGroup);
-		void setChannelInfo(const LobbyChannelInfo& channelInfo, char sequence);
+		void OnMouseOver();
+		void OnMouseLeave();
 
-		bool containsPoint(const SGVec2& pos);
+		void InitMonsterSprites(UI_ChannelSelect* _pRootGroup);
+		void SetChannelInfo(const LobbyChannelInfo& _channelInfo, char _sequence);
 
-		int Index;
-		UIToggleButton* TBtnEnteranceBackground[EnteranceType::Max];
-		UISprite* SpriteMouseOverBorder;
-		UISprite* SpriteMonster[2]; /* 직접생성, index 0: selected, index 1: normal */
-		UILabel* LabelName;
-		UILabel* LabelDensity;
-		State State_;
-		ChannelInfo* Info;
+		bool ContainsPoint(const SGVec2& _pos);
+
+		int index_;
+		UIToggleButton* pToggleBtnEnteranceBackground_[EnteranceType::Max];
+		UISprite* pSpriteMouseOverBorder_;
+		UISprite* pSpriteMonsters_[2]; /* 직접생성, index 0: selected, index 1: normal */
+		UILabel* pLabelName_;
+		UILabel* pLabelDensity_;
+		State state_;
+		ChannelInfo* pInfo_;
 	};
 
 protected:
 	void OnInit() override;
 	void OnLoaded() override;
 	void OnUnloaded() override;
-	void onUpdate(float _dt) override;
+	void OnUpdate(float _dt) override;
 
 	void OnMouseDown(SGEventMouse* _pMouseEvent) override;
 	void OnMouseMove(SGEventMouse* _pMouseEvent) override;
 	void OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _state) override;
 
-	int getMonsterSpriteSgaIndex() const { return monsterSpriteSgaIndex_; }
-	int getMonsterSpriteImgIndex() const { return monsterSpriteImgIndex_; }
+	int GetMonsterSpriteSgaIndex() const { return monsterSpriteSgaIndex_; }
+	int GetMonsterSpriteImgIndex() const { return monsterSpriteImgIndex_; }
 
-	void updateServerSelectionSpriteOpacity(float dt);
-	void updateBackgroundGearRotation(float dt);
+	void UpdateServerSelectionSpriteOpacity(float _dt);
+	void UpdateBackgroundGearRotation(float _dt);
 
 public:
 	// void initServerList();
 	// void initChannelList();
 
-	void selectServer(GameServerType_t serverType);
-	void selectChannel(int channelIndex);
-	void selectChannelTab(ChannelTab tab);
+	void SelectServer(GameServerType_t _serverType);
+	void SelectChannel(int _channelIndex);
+	void SelectChannelTab(ChannelTab _tab);
 
-	void enterChannel(GameServerType_t serverType, int channelIndex);
+	void EnterChannel(GameServerType_t _serverType, int _channelIndex);
 
 private:
-	UISprite* spriteBackgroundGear_;
-	UIButton* btnStart_;
-	UIButton* btnTerminate_;
-	UIButton* btnRefresh_;
-	UIToggleButton* toggleTeen_;
-	UIToggleButton* toggleAdult_;
-	UILabel* labelPage_;
+	UISprite* pSpriteBackgroundGear_;
+	UIButton* pBtnStart_;
+	UIButton* pBtnTerminate_;
+	UIButton* pBtnRefresh_;
+	UIToggleButton* pToggleTeen_;
+	UIToggleButton* pToggleBtnAdult_;
+	UILabel* pLabelPage_;
 
-	ServerButton* serverButtons_[GameServerType::Max];
-	ChannelButton* channelButtons_[SG_UI_CHANNELSELECT_MAX_CHANNEL_COUNT];
+	ServerButton* pServerButtons_[GameServerType::Max];
+	ChannelButton* pChannelButtons_[SG_UI_CHANNELSELECT_MAX_CHANNEL_COUNT];
 
 	// =========================================
 

@@ -18,74 +18,74 @@ USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 MapObject::MapObject(MapObjectInfo* _pBaseInfo)
-: baseInfo_(_pBaseInfo)
+: pBaseInfo_(_pBaseInfo)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MapObject* MapObject::create(MapObjectInfo* _pBaseInfo)
+MapObject* MapObject::Create(MapObjectInfo* _pBaseInfo)
 {
 	MapObject* pMapObject = dbg_new MapObject(_pBaseInfo);
-	pMapObject->initialize();
+	pMapObject->Initialize();
 	pMapObject->autorelease();
 	return pMapObject;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MapObject::initialize()
+void MapObject::Initialize()
 {
-	initThicknessBox(baseInfo_->thicknessBox_);
-	initActorSprite();
-	initVariables();
-	initListeners();
-	initComponents();
+	InitThicknessBox(pBaseInfo_->thicknessBox_);
+	InitActorSprite();
+	InitVariables();
+	InitListeners();
+	InitComponents();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MapObject::initActorSprite()
+void MapObject::InitActorSprite()
 {
-	if (!m_pActorSprite)
+	if (!pActorSprite_)
 	{
-		m_pActorSprite = ActorSprite::create(this, baseInfo_->pSpriteData_);
-		m_pActorSprite->setAnchorPoint(Vec2::ZERO);
-		m_pActorSprite->runAnimation(1);
-		addChild(m_pActorSprite);
+		pActorSprite_ = ActorSprite::Create(this, pBaseInfo_->pSpriteData_);
+		pActorSprite_->setAnchorPoint(Vec2::ZERO);
+		pActorSprite_->RunAnimation(1);
+		addChild(pActorSprite_);
 	}
 
-	switch (baseInfo_->type_)
+	switch (pBaseInfo_->type_)
 	{
 	case MapObjectType::Obstacle:
-		initActorSpriteObstacle();
+		InitActorSpriteObstacle();
 		break;
 	case MapObjectType::Gate:
-		initActorSpriteGate();
+		InitActorSpriteGate();
 		break;
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MapObject::initActorSpriteObstacle()
+void MapObject::InitActorSpriteObstacle()
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MapObject::initActorSpriteGate()
+void MapObject::InitActorSpriteGate()
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool MapObject::initVariables()
+bool MapObject::InitVariables()
 {
-	return Actor::initVariables();
+	return Actor::InitVariables();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MapObject::initListeners()
+void MapObject::InitListeners()
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MapObject::initComponents()
+void MapObject::InitComponents()
 {
 }
 
@@ -96,45 +96,45 @@ void MapObject::update(float _dt)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MapObject::onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+void MapObject::OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MapObject::onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+void MapObject::OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MapObject::onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+void MapObject::OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MapObject::onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+void MapObject::OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MapObjectType_t MapObject::getObjectType() const
+MapObjectType_t MapObject::GetObjectType() const
 {
-	return baseInfo_->type_;
+	return pBaseInfo_->type_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ActorType_t MapObject::getType() const
+ActorType_t MapObject::GetType() const
 {
 	return ActorType::MapObject;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int MapObject::getCode()
+int MapObject::GetCode()
 {
-	return baseInfo_->code_;
+	return pBaseInfo_->code_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MapObjectInfo* MapObject::getBaseInfo()
+MapObjectInfo* MapObject::GetBaseInfo()
 {
-	return baseInfo_;
+	return pBaseInfo_;
 }

@@ -14,7 +14,7 @@
 
 struct LobbyChannelInfo
 {
-	int Type;
-	int Number;
-	ChannelDensity_t Desity;
+	int type_;
+	int number_;
+	ChannelDensity_t desity_;
 };

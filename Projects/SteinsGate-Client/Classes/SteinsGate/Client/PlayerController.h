@@ -24,41 +24,41 @@ public:
 	// 키와 그 키를 입력한 시간
 	struct InputTime
 	{
-		JCore::DateTime Time{};
-		ControlKey_t ControlKey{};
+		JCore::DateTime time_{};
+		ControlKey_t controlKey_{};
 	};
 
 	PlayerController(HostPlayer* _pPlayer, ActionMgr* _pActionManager);
 	~PlayerController();
 
-	static PlayerController* create(HostPlayer* _pPlayer, ActionMgr* _pActionManager);
+	static PlayerController* Create(HostPlayer* _pPlayer, ActionMgr* _pActionManager);
 
-	void init();
-	void update(float _delta);
-	void onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent);
-	void onKeyPressed(ControlKey_t _pressedKey);
-	void onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent);
-	void onKeyReleased(ControlKey_t _releasedKey);
+	void Init();
+	void Update(float _delta);
+	void OnKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent);
+	void OnKeyPressed(ControlKey_t _pressedKey);
+	void OnKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent);
+	void OnKeyReleased(ControlKey_t _releasedKey);
 
-	SpriteDirection_t getSpriteDirection();
-	ControlKey_t getLastestReleasedKey() { return lastestReleasedKey_.ControlKey; }
-	ControlKey_t getLastestPressedKey() { return lastestPressedKey_.ControlKey; }
-	ControlKey_t convertControlKey(SGEventKeyboard::KeyCode _keyCode);
+	SpriteDirection_t GetSpriteDirection();
+	ControlKey_t GetLastestReleasedKey() { return lastestReleasedKey_.controlKey_; }
+	ControlKey_t GetLastestPressedKey() { return lastestPressedKey_.controlKey_; }
+	ControlKey_t ConvertControlKey(SGEventKeyboard::KeyCode _keyCode);
 
-	bool isKeyPressed(ControlKey_t _controlKey);
-	bool isMoveKeyPressed();
+	bool IsKeyPressed(ControlKey_t _controlKey);
+	bool IsMoveKeyPressed();
 
-	bool canUseCommand() { return cabUseCommand_; }
-	bool cannotUseCommand() { return cabUseCommand_ == false; }
-	void checkComboSequence();
+	bool CanUseCommand() { return cabUseCommand_; }
+	bool CannotUseCommand() { return cabUseCommand_ == false; }
+	void CheckComboSequence();
 
-	void idle();
-	void walk();
+	void Idle();
+	void Walk();
 
-	void updateMove(float _delta);
-	void updateDirection(ControlKey_t _pressedKey);
-	void reflectPressedMoveKeys(); // 액션 수행동안 키 입력을 무시하는데 그사이 눌린 키들에 대한 처리
-	void setCommandable(bool _commandable) { cabUseCommand_ = _commandable; }
+	void UpdateMove(float _delta);
+	void UpdateDirection(ControlKey_t _pressedKey);
+	void ReflectPressedMoveKeys(); // 액션 수행동안 키 입력을 무시하는데 그사이 눌린 키들에 대한 처리
+	void SetCommandable(bool _commandable) { cabUseCommand_ = _commandable; }
 
 private:
 	HostPlayer* player_;

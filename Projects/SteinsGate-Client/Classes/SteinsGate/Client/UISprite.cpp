@@ -19,26 +19,26 @@ USING_NS_JC;
 //////////////////////////////////////////////////////////////////////////////////////////
 UISprite::UISprite(UIRootGroup* _pMasterGroup, UIGroup* _pParent)
 : UIElement(_pMasterGroup, _pParent)
-, spriteInfo_(nullptr)
-, texture_(nullptr)
-, sprite_(nullptr)
+, pInfo_(nullptr)
+, pTexture_(nullptr)
+, pSprite_(nullptr)
 {
 }
 
 UISprite::UISprite(UIRootGroup* _pMasterGroup, UIGroup* _pParent, UISpriteInfo* _pSpriteInfo, bool _infoOwner)
 : UIElement(_pMasterGroup, _pParent, _pSpriteInfo, _infoOwner)
-, spriteInfo_(_pSpriteInfo)
-, texture_(nullptr)
-, sprite_(nullptr)
+, pInfo_(_pSpriteInfo)
+, pTexture_(nullptr)
+, pSprite_(nullptr)
 {
 }
 
 UISprite::~UISprite()
 {
-	CC_SAFE_RELEASE(texture_);
+	CC_SAFE_RELEASE(pTexture_);
 }
 
-UISprite* UISprite::create(UIRootGroup* _pMasterGroup, UIGroup* _pParent)
+UISprite* UISprite::Create(UIRootGroup* _pMasterGroup, UIGroup* _pParent)
 {
 	UISprite* pSprite = dbg_new UISprite(_pMasterGroup, _pParent);
 	pSprite->init();
@@ -46,7 +46,7 @@ UISprite* UISprite::create(UIRootGroup* _pMasterGroup, UIGroup* _pParent)
 	return pSprite;
 }
 
-UISprite* UISprite::create(UIRootGroup* _pMasterGroup, UIGroup* _pParent, UISpriteInfo* _pSpriteInfo, bool _infoOwner)
+UISprite* UISprite::Create(UIRootGroup* _pMasterGroup, UIGroup* _pParent, UISpriteInfo* _pSpriteInfo, bool _infoOwner)
 {
 	UISprite* pSprite = dbg_new UISprite(_pMasterGroup, _pParent, _pSpriteInfo, _infoOwner);
 	pSprite->init();
@@ -61,12 +61,12 @@ bool UISprite::init()
 		return false;
 	}
 
-	SGSize initialSize = spriteInfo_->Size;
+	SGSize initialSize = pInfo_->size_;
 
 	if (int(initialSize.width) == 0 || int(initialSize.width) == 0)
 	{
-		initialSize = Core::Contents.PackManager->getTextureSize(spriteInfo_->Sga, spriteInfo_->Img,
-		                                                         spriteInfo_->Sprite);
+		initialSize = Core::Contents.PackManager->GetTextureSize(pInfo_->sga_, pInfo_->img_,
+		                                                         pInfo_->sprite_);
 	}
 
 	SetInitialUISize(initialSize);
@@ -80,16 +80,16 @@ void UISprite::Load()
 		return;
 	}
 
-	texture_ = Core::Contents.UIManager->createUITextureRetained(spriteInfo_->Sga, spriteInfo_->Img,
-	                                                             spriteInfo_->Sprite, spriteInfo_->LinearDodge);
+	pTexture_ = Core::Contents.UIManager->CreateUITextureRetained(pInfo_->sga_, pInfo_->img_,
+	                                                             pInfo_->sprite_, pInfo_->linearDodge_);
 
-	if (texture_->isLink())
+	if (pTexture_->IsLink())
 	{
-		CC_SAFE_RELEASE_NULL(texture_);
+		CC_SAFE_RELEASE_NULL(pTexture_);
 		return;
 	}
 
-	const Size spriteSize = texture_->getSize();
+	const Size spriteSize = pTexture_->GetSize();
 	float scaleX = 1.0f;
 	float scaleY = 1.0f;
 
@@ -103,20 +103,20 @@ void UISprite::Load()
 		scaleY = uiSize_.height / spriteSize.height;
 	}
 
-	sprite_ = spriteInfo_->Scale9 ? Scale9Sprite::create() : Sprite::create();
-	sprite_->initWithTexture(texture_->getTexture());
-	sprite_->setAnchorPoint(Vec2::ZERO);
+	pSprite_ = pInfo_->scale9_ ? Scale9Sprite::create() : Sprite::create();
+	pSprite_->initWithTexture(pTexture_->GetTexture());
+	pSprite_->setAnchorPoint(Vec2::ZERO);
 
-	if (spriteInfo_->Scale9)
+	if (pInfo_->scale9_)
 	{
-		sprite_->setContentSize({ spriteSize.width * scaleX, spriteSize.height * scaleY });
+		pSprite_->setContentSize({ spriteSize.width * scaleX, spriteSize.height * scaleY });
 	}
 	else
 	{
-		sprite_->setScale(scaleX, scaleY);
+		pSprite_->setScale(scaleX, scaleY);
 	}
 
-	this->addChild(sprite_);
+	this->addChild(pSprite_);
 	isLoaded_ = true;
 }
 
@@ -128,14 +128,14 @@ void UISprite::Unload()
 	}
 
 	removeAllChildren(); // autorelease 되기땜
-	sprite_ = nullptr;
-	CC_SAFE_RELEASE_NULL(texture_);
+	pSprite_ = nullptr;
+	CC_SAFE_RELEASE_NULL(pTexture_);
 	isLoaded_ = false;
 }
 
-void UISprite::setCapInsets(const SGRect& _insets)
+void UISprite::SetCapInsets(const SGRect& _insets)
 {
-	if (!spriteInfo_->Scale9)
+	if (!pInfo_->scale9_)
 	{
 		_LogWarn_("스케일9 스프가 아닌데 setCapInsets 시도");
 		return;
@@ -147,7 +147,7 @@ void UISprite::setCapInsets(const SGRect& _insets)
 		return;
 	}
 
-	dynamic_cast<Scale9Sprite*>(sprite_)->setCapInsets(_insets);
+	dynamic_cast<Scale9Sprite*>(pSprite_)->setCapInsets(_insets);
 }
 
 void UISprite::SetUISize(const SGSize& _size)
@@ -164,30 +164,30 @@ void UISprite::SetUISize(const SGSize& _size)
 		return;
 	}
 
-	if (texture_ == nullptr || sprite_ == nullptr)
+	if (pTexture_ == nullptr || pSprite_ == nullptr)
 	{
 		return;
 	}
 
-	const Size spriteSize = texture_->getSize();
+	const Size spriteSize = pTexture_->GetSize();
 	const float scaleX = uiSize_.width / spriteSize.width;
 	const float scaleY = uiSize_.height / spriteSize.height;
 
-	if (spriteInfo_->Scale9)
+	if (pInfo_->scale9_)
 	{
-		sprite_->setContentSize({ spriteSize.width * scaleX, spriteSize.height * scaleY });
+		pSprite_->setContentSize({ spriteSize.width * scaleX, spriteSize.height * scaleY });
 	}
 	else
 	{
-		sprite_->setScale(scaleX, scaleY);
+		pSprite_->setScale(scaleX, scaleY);
 	}
 }
 
 void UISprite::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 {
-	if (_pInfo->Type != UIElementType::Sprite)
+	if (_pInfo->type_ != UIElementType::Sprite)
 	{
-		LogWarnInvalidInfo(_pInfo->Type);
+		LogWarnInvalidInfo(_pInfo->type_);
 		return;
 	}
 
@@ -197,11 +197,11 @@ void UISprite::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 	}
 
 	pBaseInfo_ = _pInfo;
-	spriteInfo_ = static_cast<UISpriteInfo*>(_pInfo);
+	pInfo_ = static_cast<UISpriteInfo*>(_pInfo);
 	isInfoOwner_ = _infoOwner;
 }
 
-void UISprite::setInfoSprite(UISpriteInfo* _pInfo, bool _infoOwner)
+void UISprite::SetInfoSprite(UISpriteInfo* _pInfo, bool _infoOwner)
 {
 	SetInfo(_pInfo, _infoOwner);
 }
@@ -210,8 +210,8 @@ void UISprite::setOpacity(GLubyte _opacity)
 {
 	UIElement::setOpacity(_opacity);
 
-	if (sprite_)
+	if (pSprite_)
 	{
-		sprite_->setOpacity(_opacity);
+		pSprite_->setOpacity(_opacity);
 	}
 }

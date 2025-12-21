@@ -14,12 +14,14 @@ class HitActivity_Goblin : public HitActivity
 public:
 	HitActivity_Goblin(Actor* _pActor);
 
-	void selectHitAnimation();
-	void checkPosition();
+	void SelectHitAnimation();
+	void CheckPosition();
+
 	void OnActivityBegin() override;
-	void updateGroundHitState(float _dt);
-	void updateDownState(float _dt);
-	void updateAirHitState(float _dt);
+
+	void UpdateGroundHitState(float _dt);
+	void UpdateDownState(float _dt);
+	void UpdateAirHitState(float _dt);
 	void OnUpdate(float _dt) override;
 
 private:

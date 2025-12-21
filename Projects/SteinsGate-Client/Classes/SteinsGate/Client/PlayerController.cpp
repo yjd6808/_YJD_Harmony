@@ -19,10 +19,10 @@ USING_NS_CC;
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-PlayerController* PlayerController::create(HostPlayer* _pPlayer, ActionMgr* _pActionManager)
+PlayerController* PlayerController::Create(HostPlayer* _pPlayer, ActionMgr* _pActionManager)
 {
 	PlayerController* pController = dbg_new PlayerController(_pPlayer, _pActionManager);
-	pController->init();
+	pController->Init();
 	return pController;
 }
 
@@ -32,7 +32,7 @@ PlayerController::PlayerController(HostPlayer* _pPlayer, ActionMgr* _pActionMana
 , actionManager_(_pActionManager)
 , pressedArrowKeyState_(4)
 {
-	init();
+	Init();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,7 +42,7 @@ PlayerController::~PlayerController()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PlayerController::init()
+void PlayerController::Init()
 {
 	for (int index = 0; index < int(SGEventKeyboard::KeyCode::MAX); ++index)
 	{
@@ -59,43 +59,43 @@ void PlayerController::init()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PlayerController::update(float _delta)
+void PlayerController::Update(float _delta)
 {
-	updateMove(_delta);
+	UpdateMove(_delta);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PlayerController::onKeyPressed(SGEventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent)
+void PlayerController::OnKeyPressed(SGEventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent)
 {
 	ControlKey_t pressedControlKey = cocosKeyCodeToControlKeyMap_[int(_keyCode)];
 	if (pressedControlKey == ControlKey::None)
 		return;
-	actionManager_->onKeyPressedBefore(this, _keyCode);
-	onKeyPressed(pressedControlKey);
-	actionManager_->onKeyPressed(this, _keyCode);
+	actionManager_->OnKeyPressedBefore(this, _keyCode);
+	OnKeyPressed(pressedControlKey);
+	actionManager_->OnKeyPressed(this, _keyCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PlayerController::onKeyReleased(SGEventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent)
+void PlayerController::OnKeyReleased(SGEventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent)
 {
 	ControlKey_t releasedControlKey = cocosKeyCodeToControlKeyMap_[int(_keyCode)];
 	if (releasedControlKey == ControlKey::None)
 		return;
-	actionManager_->onKeyReleasedBefore(this, _keyCode);
-	onKeyReleased(releasedControlKey);
-	actionManager_->onKeyReleased(this, _keyCode);
+	actionManager_->OnKeyReleasedBefore(this, _keyCode);
+	OnKeyReleased(releasedControlKey);
+	actionManager_->OnKeyReleased(this, _keyCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PlayerController::onKeyPressed(ControlKey_t _pressedKey)
+void PlayerController::OnKeyPressed(ControlKey_t _pressedKey)
 {
 	controlKeyPressedMap_[_pressedKey] = true;
 	DateTime now = DateTime::Now();
 
-	lastestPressedKey_.ControlKey = _pressedKey;
-	lastestPressedKey_.Time = now;
+	lastestPressedKey_.controlKey_ = _pressedKey;
+	lastestPressedKey_.time_ = now;
 
-	if (cannotUseCommand())
+	if (CannotUseCommand())
 		return;
 
 	// 덮어쓰기 방지를 위해 뒤에서부터 복사
@@ -104,39 +104,39 @@ void PlayerController::onKeyPressed(ControlKey_t _pressedKey)
 		controlKeySequence_[index + 1] = controlKeySequence_[index];
 	}
 
-	controlKeySequence_[0].Time = now;
-	controlKeySequence_[0].ControlKey = _pressedKey;
+	controlKeySequence_[0].time_ = now;
+	controlKeySequence_[0].controlKey_ = _pressedKey;
 
-	checkComboSequence();
+	CheckComboSequence();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PlayerController::onKeyReleased(ControlKey_t _releasedKey)
+void PlayerController::OnKeyReleased(ControlKey_t _releasedKey)
 {
 	controlKeyPressedMap_[_releasedKey] = false;
-	lastestReleasedKey_.ControlKey = _releasedKey;
-	lastestReleasedKey_.Time = DateTime::Now();
+	lastestReleasedKey_.controlKey_ = _releasedKey;
+	lastestReleasedKey_.time_ = DateTime::Now();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-SpriteDirection_t PlayerController::getSpriteDirection()
+SpriteDirection_t PlayerController::GetSpriteDirection()
 {
-	return player_->getActorSprite()->getSpriteDirection();
+	return player_->GetActorSprite()->GetSpriteDirection();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool PlayerController::isKeyPressed(ControlKey_t _controlKey)
+bool PlayerController::IsKeyPressed(ControlKey_t _controlKey)
 {
 	return controlKeyPressedMap_[int(_controlKey)];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool PlayerController::isMoveKeyPressed()
+bool PlayerController::IsMoveKeyPressed()
 {
-	if (isKeyPressed(ControlKey::Left) ||
-		isKeyPressed(ControlKey::Right) ||
-		isKeyPressed(ControlKey::Up) ||
-		isKeyPressed(ControlKey::Down))
+	if (IsKeyPressed(ControlKey::Left) ||
+		IsKeyPressed(ControlKey::Right) ||
+		IsKeyPressed(ControlKey::Up) ||
+		IsKeyPressed(ControlKey::Down))
 	{
 		return true;
 	}
@@ -144,18 +144,18 @@ bool PlayerController::isMoveKeyPressed()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PlayerController::checkComboSequence()
+void PlayerController::CheckComboSequence()
 {
 	ComboKeyList sequence;
 
 	// 우선 현재 입력한 키는 무조건 콤보에 포함되어야하므로
 	int sequenceCount = 1;
-	DateTime currentTime = controlKeySequence_[0].Time;
-	sequence[0] = controlKeySequence_[0].ControlKey;
+	DateTime currentTime = controlKeySequence_[0].time_;
+	sequence[0] = controlKeySequence_[0].controlKey_;
 
 	for (int index = 1; index <= Const::Action::ComboSequenceCount; ++index, ++sequenceCount)
 	{
-		DateTime& beforeTime = controlKeySequence_[index].Time;
+		DateTime& beforeTime = controlKeySequence_[index].time_;
 		float diffSeconds = static_cast<float>(currentTime.Diff(beforeTime).GetTotalSeconds());
 
 		if (diffSeconds > Const::Action::ComboSequenceDelay)
@@ -163,13 +163,13 @@ void PlayerController::checkComboSequence()
 			break;
 		}
 
-		sequence[index] = controlKeySequence_[index].ControlKey;
+		sequence[index] = controlKeySequence_[index].controlKey_;
 		currentTime = beforeTime;
 	}
 
 	for (int index = 0; index < sequenceCount; ++index)
 	{
-		sequence[index] = controlKeySequence_[index].ControlKey;
+		sequence[index] = controlKeySequence_[index].controlKey_;
 	}
 
 	if (sequenceCount == 0)
@@ -184,88 +184,88 @@ void PlayerController::checkComboSequence()
 	// 
 	// ↑ -> -> 키를 순서대로 입력했을 때
 	//   -> -> 키가 바인딩 되어있음에도 불구하고 실행 안되는 경우를 방지하기 위함
-	while ((pAction = actionManager_->getComboAction(sequence)) == nullptr && sequenceCount > 0)
+	while ((pAction = actionManager_->GetComboAction(sequence)) == nullptr && sequenceCount > 0)
 	{
 		sequence[--sequenceCount] = ControlKey::None;
 	}
 
 	if (pAction != nullptr)
 	{
-		actionManager_->runAction(pAction);
+		actionManager_->RunAction(pAction);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PlayerController::idle()
+void PlayerController::Idle()
 {
-	actionManager_->runBaseAction(BaseAction::Idle);
+	actionManager_->RunBaseAction(BaseAction::Idle);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PlayerController::walk()
+void PlayerController::Walk()
 {
-	actionManager_->runBaseAction(BaseAction::Walk);
+	actionManager_->RunBaseAction(BaseAction::Walk);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PlayerController::updateMove(float _delta)
+void PlayerController::UpdateMove(float _delta)
 {
-	MoveComponent* pMoveComponent = player_->getComponent<MoveComponent>();
+	MoveComponent* pMoveComponent = player_->GetComponent<MoveComponent>();
 
 	if (pMoveComponent == nullptr)
 		return;
 
-	SGAction* pRunningAction = actionManager_->getRunningAction();
+	SGAction* pRunningAction = actionManager_->GetRunningAction();
 
 	// 액션중 이동가능한 액션인 경우 해당 액션의 이동속도로 움직일 수 있도록 한다.
 	if (pRunningAction == nullptr)
 	{
-		pMoveComponent->setSpeed(0, 0);
+		pMoveComponent->SetSpeed(0, 0);
 		return;
 	}
 
 	float speedX = 0.0f;
 	float speedY = 0.0f;
 
-	if (isKeyPressed(ControlKey::Left) && pRunningAction->isMoveableNegativeX())
+	if (IsKeyPressed(ControlKey::Left) && pRunningAction->IsMoveableNegativeX())
 	{
-		speedX = pRunningAction->getMoveSpeedX() / 60.0f * -1;
+		speedX = pRunningAction->GetMoveSpeedX() / 60.0f * -1;
 	}
-	else if (isKeyPressed(ControlKey::Right) && pRunningAction->isMoveablePositiveX())
+	else if (IsKeyPressed(ControlKey::Right) && pRunningAction->IsMoveablePositiveX())
 	{
-		speedX = pRunningAction->getMoveSpeedX() / 60.0f;
-	}
-
-	if (isKeyPressed(ControlKey::Up) && pRunningAction->isMoveablePositiveY())
-	{
-		speedY = pRunningAction->getMoveSpeedY() / 60.0f;
-	}
-	else if (isKeyPressed(ControlKey::Down) && pRunningAction->isMoveableNegativeY())
-	{
-		speedY = pRunningAction->getMoveSpeedY() / 60.0f * -1;
+		speedX = pRunningAction->GetMoveSpeedX() / 60.0f;
 	}
 
-	pMoveComponent->setSpeed(speedX, speedY);
+	if (IsKeyPressed(ControlKey::Up) && pRunningAction->IsMoveablePositiveY())
+	{
+		speedY = pRunningAction->GetMoveSpeedY() / 60.0f;
+	}
+	else if (IsKeyPressed(ControlKey::Down) && pRunningAction->IsMoveableNegativeY())
+	{
+		speedY = pRunningAction->GetMoveSpeedY() / 60.0f * -1;
+	}
+
+	pMoveComponent->SetSpeed(speedX, speedY);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PlayerController::updateDirection(ControlKey_t _pressedKey)
+void PlayerController::UpdateDirection(ControlKey_t _pressedKey)
 {
 	// 방향전환 가능 여부
 	if (_pressedKey == ControlKey::Right)
 	{
-		player_->setForwardDirection();
+		player_->SetForwardDirection();
 	}
 	else if (_pressedKey == ControlKey::Left)
 	{
-		player_->setBackwardDirection();
+		player_->SetBackwardDirection();
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 1. 스킬시전 중 꾹 누른키에 대한 처리를 액션이 끝난 후 키 입력 상태를 확인해서 상태를 변경해줘야한다. 처리해줘야한다.
 // 2. 액션이 없는 경우 키 입력시마다 반영해줘야한다.
-void PlayerController::reflectPressedMoveKeys()
+void PlayerController::ReflectPressedMoveKeys()
 {
 	// 액션 수행중 방향키로 움직일 수 있는 액션인 경우라도 걷기 나 평상시 애니메이션이 실행되어선 안된다.
 	// 방향키만 읽음
@@ -273,7 +273,7 @@ void PlayerController::reflectPressedMoveKeys()
 
 	for (int directionIndex = 0; directionIndex < Direction::Max; ++directionIndex)
 	{
-		if (isKeyPressed(ControlKey_t(directionIndex)))
+		if (IsKeyPressed(ControlKey_t(directionIndex)))
 		{
 			pressedArrowKeyState_.PushBack(ControlKey_t(directionIndex));
 		}
@@ -281,7 +281,7 @@ void PlayerController::reflectPressedMoveKeys()
 
 	if (pressedArrowKeyState_.Size() == 0)
 	{
-		idle();
+		Idle();
 		return;
 	}
 
@@ -301,18 +301,18 @@ void PlayerController::reflectPressedMoveKeys()
 
 	if (pressedArrowKeyState_.Exist(ControlKey::Right))
 	{
-		updateDirection(ControlKey::Right);
+		UpdateDirection(ControlKey::Right);
 	}
 	else if (pressedArrowKeyState_.Exist(ControlKey::Left))
 	{
-		updateDirection(ControlKey::Left);
+		UpdateDirection(ControlKey::Left);
 	}
 
-	walk();
+	Walk();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-ControlKey_t PlayerController::convertControlKey(SGEventKeyboard::KeyCode _keyCode)
+ControlKey_t PlayerController::ConvertControlKey(SGEventKeyboard::KeyCode _keyCode)
 {
 	return cocosKeyCodeToControlKeyMap_[int(_keyCode)];
 }

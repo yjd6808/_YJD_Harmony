@@ -30,57 +30,57 @@ public:
 
 	virtual ~IActorListener() = default;
 
-	virtual void onCreated()
+	virtual void OnCreated()
 	{
 	} // 액터 박스에서 생성되어 맵 레이어에 등록될 때마다 호출
-	virtual void onCleanUp()
+	virtual void OnCleanUp()
 	{
 	} // 엑터 박스에서 제거되어 맵 레이어에서 제거되어 더이상 사용되지 않는 경우 (풀에 돌아간 경우도 포함)
-	virtual void onUpdate(float _dt)
+	virtual void OnUpdate(float _dt)
 	{
 	}
 
-	virtual void onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+	virtual void OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 	{
 	}
 
-	virtual void onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+	virtual void OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 	{
 	}
 
-	virtual void onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+	virtual void OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 	{
 	}
 
-	virtual void onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
+	virtual void OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture)
 	{
 	}
 
 	// TODO: 아래 마우스 관련 기능도 구현
-	virtual void onMouseEnter()
+	virtual void OnMouseEnter()
 	{
 	}
 
-	virtual void onMouseMove()
+	virtual void OnMouseMove()
 	{
 	}
 
-	virtual void onMouseEnd()
+	virtual void OnMouseEnd()
 	{
 	}
 
 	// AI 컴포넌트가 부착된 경우
-	virtual void onActivitiyBegin(AIActivity* _pActivity)
+	virtual void OnActivitiyBegin(AIActivity* _pActivity)
 	{
 	}
 
-	virtual void onActivitiyEnd(AIActivity* _pActivity)
+	virtual void OnActivitiyEnd(AIActivity* _pActivity)
 	{
 	}
 
-	virtual void onHit(const HitInfo& _info)
+	virtual void OnHit(const HitInfo& _info)
 	{
 	}
 
-	virtual Type getListenerType() const = 0;
+	virtual Type GetListenerType() const = 0;
 };

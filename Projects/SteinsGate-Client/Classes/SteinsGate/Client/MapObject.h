@@ -14,29 +14,29 @@ class MapObject : public Actor
 {
 public:
 	MapObject(MapObjectInfo* _pBaseInfo);
-	static MapObject* create(MapObjectInfo* _pBaseInfo);
+	static MapObject* Create(MapObjectInfo* _pBaseInfo);
 
-	void initialize() override;
-	void initActorSprite() override;
-	void initActorSpriteObstacle();
-	void initActorSpriteGate();
-	bool initVariables() override;
-	void initListeners() override;
-	void initComponents() override;
+	void Initialize() override;
+	void InitActorSprite() override;
+	void InitActorSpriteObstacle();
+	void InitActorSpriteGate();
+	bool InitVariables() override;
+	void InitListeners() override;
+	void InitComponents() override;
 
 	void update(float _dt) override;
-	void onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
-	void onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
-	void onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
-	void onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
+	void OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
+	void OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
+	void OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
+	void OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
 
-	MapObjectType_t getObjectType() const;
-	ActorType_t getType() const override;
+	MapObjectType_t GetObjectType() const;
+	ActorType_t GetType() const override;
 
-	int getCode() override;
+	int GetCode() override;
 
-	MapObjectInfo* getBaseInfo();
+	MapObjectInfo* GetBaseInfo();
 
 private:
-	MapObjectInfo* baseInfo_;
+	MapObjectInfo* pBaseInfo_;
 };

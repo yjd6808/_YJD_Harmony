@@ -13,11 +13,10 @@
 class UISprite : public UIElement
 {
 public:
-	static UISprite* create(UIRootGroup* _pMasterGroup, UIGroup* _pParent);
-	static UISprite* create(UIRootGroup* _pMasterGroup, UIGroup* _pParent, UISpriteInfo* _pSpriteInfo,
-	                        bool _infoOwner);
+	static UISprite* Create(UIRootGroup* _pMasterGroup, UIGroup* _pParent);
+	static UISprite* Create(UIRootGroup* _pMasterGroup, UIGroup* _pParent, UISpriteInfo* _pSpriteInfo, bool _infoOwner);
 
-	static constexpr UIElementType_t type() { return UIElementType::Sprite; }
+	static constexpr UIElementType_t Type() { return UIElementType::Sprite; }
 
 	UISprite(UIRootGroup* _pMasterGroup, UIGroup* _pParent);
 	UISprite(UIRootGroup* _pMasterGroup, UIGroup* _pParent, UISpriteInfo* _pSpriteInfo, bool _infoOwner);
@@ -27,20 +26,20 @@ public:
 	void Load() override;
 	void Unload() override;
 
-	void setCapInsets(const SGRect& _insets);
+	void SetCapInsets(const SGRect& _insets);
 	void SetUISize(const SGSize& _size) override;
 	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
-	void setInfoSprite(UISpriteInfo* _pInfo, bool _infoOwner);
+	void SetInfoSprite(UISpriteInfo* _pInfo, bool _infoOwner);
 	void setOpacity(GLubyte _opacity) override;
-	bool isScale9() const { return spriteInfo_->Scale9; }
+	bool IsScale9() const { return pInfo_->scale9_; }
 
-	UISpriteInfo* getInfo() const { return spriteInfo_; }
-	SGSprite* source() const { return sprite_; }
+	UISpriteInfo* GetInfo() const { return pInfo_; }
+	SGSprite* Source() const { return pSprite_; }
 	UIElementType_t GetElementType() override { return UIElementType::Sprite; }
-	SGString ToString() override { return SGStringUtil::Format("스프라이트(%d)", spriteInfo_->code_); }
+	SGString ToString() override { return SGStringUtil::Format("스프라이트(%d)", pInfo_->code_); }
 
 private:
-	UISpriteInfo* spriteInfo_;
-	FrameTexture* texture_;
-	SGSprite* sprite_;
+	UISpriteInfo* pInfo_;
+	FrameTexture* pTexture_;
+	SGSprite* pSprite_;
 };

@@ -25,14 +25,14 @@ public:
 	bool operator!=(const ComboKeyList& _other) const;
 
 	ControlKey_t& operator[](int _idx);
-	void set(int _idx, ControlKey_t _key);
+	void Set(int _idx, ControlKey_t _key);
 
-	ControlKey_t at(int _idx) const;
-	ComboKeyList reverse() const; // 좌, 우 방향키 반전 후 반환
-	SGString string() const;
-	int count() const;
+	ControlKey_t At(int _idx) const;
+	ComboKeyList Reverse() const; // 좌, 우 방향키 반전 후 반환
+	SGString ToString() const;
+	int Count() const;
 
-	ControlKey_t Keys[Const::Action::ComboSequenceCount];
+	ControlKey_t keys_[Const::Action::ComboSequenceCount];
 };
 
 using ComboKeyListPtr = JCore::SharedPtr<ComboKeyList>;

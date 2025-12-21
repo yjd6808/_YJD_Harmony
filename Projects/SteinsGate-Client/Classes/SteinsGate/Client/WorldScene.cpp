@@ -34,7 +34,7 @@ USING_NS_JC;
 USING_NS_JNET;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-WorldScene* WorldScene::get()
+WorldScene* WorldScene::Get()
 {
 	static WorldScene* scene;
 
@@ -55,30 +55,32 @@ WorldScene* WorldScene::get()
 	return scene;
 }
 
-MapLayer* WorldScene::getMap()
+//////////////////////////////////////////////////////////////////////////////////////////
+MapLayer* WorldScene::GetMap()
 {
-	DebugAssertMsg(runningScene_ && runningScene_->getType() == SceneType::Game, "게임 씬이 실행중이지 않을때 맵을 가져올려고 시도했습니다.");
-	return static_cast<SGGameScene*>(runningScene_)->getMap();
+	DebugAssertMsg(pRunningScene_ && pRunningScene_->GetType() == SceneType::Game, "게임 씬이 실행중이지 않을때 맵을 가져올려고 시도했습니다.");
+	return static_cast<SGGameScene*>(pRunningScene_)->GetMap();
 }
 
-MimicCamera* WorldScene::getCamera()
+//////////////////////////////////////////////////////////////////////////////////////////
+MimicCamera* WorldScene::GetCamera()
 {
-	return getMap()->getCamera();
+	return GetMap()->GetCamera();
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////
 WorldScene::WorldScene()
-: runningScene_(nullptr)
+: pRunningScene_(nullptr)
 , reservedScene_(SceneType::Login)
-, uiLayer_(nullptr)
-, gridLayer_(nullptr)
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 WorldScene::~WorldScene()
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 bool WorldScene::init()
 {
 	if (!Scene::init())
@@ -86,39 +88,34 @@ bool WorldScene::init()
 		return false;
 	}
 
-	initEventListeners();
+	InitEventListeners();
 	InitLayers();
-	reserveScene(SceneType::Login);
+	ReserveScene(SceneType::Login);
 	scheduleUpdate(); // 즉시 update 1회 호출함
 
 	return true;
 }
 
-
-void WorldScene::initEventListeners()
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::InitEventListeners()
 {
 	const auto pKeyboardListener = EventListenerKeyboard::create();
-	pKeyboardListener->onKeyPressed = CC_CALLBACK_2(WorldScene::onKeyPressed, this);
-	pKeyboardListener->onKeyReleased = CC_CALLBACK_2(WorldScene::onKeyReleased, this);
+	pKeyboardListener->onKeyPressed = CC_CALLBACK_2(WorldScene::OnKeyPressed, this);
+	pKeyboardListener->onKeyReleased = CC_CALLBACK_2(WorldScene::OnKeyReleased, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(pKeyboardListener, this);
 
 	const auto pMouseListener = EventListenerMouse::create();
-	pMouseListener->onMouseDown = CC_CALLBACK_1(WorldScene::onMouseDown, this);
-	pMouseListener->onMouseScroll = CC_CALLBACK_1(WorldScene::onMouseScroll, this);
-	pMouseListener->onMouseUp = CC_CALLBACK_1(WorldScene::onMouseUp, this);
-	pMouseListener->onMouseMove = CC_CALLBACK_1(WorldScene::onMouseMove, this);
+	pMouseListener->onMouseDown = CC_CALLBACK_1(WorldScene::OnMouseDown, this);
+	pMouseListener->onMouseScroll = CC_CALLBACK_1(WorldScene::OnMouseScroll, this);
+	pMouseListener->onMouseUp = CC_CALLBACK_1(WorldScene::OnMouseUp, this);
+	pMouseListener->onMouseMove = CC_CALLBACK_1(WorldScene::OnMouseMove, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(pMouseListener, this);
 
-	const auto pFocusedListener = EventListenerCustom::create(GLViewImpl::EVENT_WINDOW_FOCUSED,
-	                                                          CC_CALLBACK_1(WorldScene::onWndFocused, this));
-	const auto pLostFocusedListener = EventListenerCustom::create(GLViewImpl::EVENT_WINDOW_UNFOCUSED,
-	                                                              CC_CALLBACK_1(WorldScene::onWndLostFocused, this));
-	const auto pResizedListener = EventListenerCustom::create(GLViewImpl::EVENT_WINDOW_RESIZED,
-	                                                          CC_CALLBACK_1(WorldScene::onWndResized, this));
-	const auto pCursorEnterListener = EventListenerCustom::create(GLViewImpl::EVENT_CURSOR_ENTER,
-	                                                              CC_CALLBACK_1(WorldScene::onWndCursorEnter, this));
-	const auto pCursorLeaveListener = EventListenerCustom::create(GLViewImpl::EVENT_CURSOR_LEAVE,
-	                                                              CC_CALLBACK_1(WorldScene::onWndCursorLeave, this));
+	const auto pFocusedListener = EventListenerCustom::create(GLViewImpl::EVENT_WINDOW_FOCUSED, CC_CALLBACK_1(WorldScene::OnWndFocused, this));
+	const auto pLostFocusedListener = EventListenerCustom::create(GLViewImpl::EVENT_WINDOW_UNFOCUSED, CC_CALLBACK_1(WorldScene::OnWndLostFocused, this));
+	const auto pResizedListener = EventListenerCustom::create(GLViewImpl::EVENT_WINDOW_RESIZED, CC_CALLBACK_1(WorldScene::OnWndResized, this));
+	const auto pCursorEnterListener = EventListenerCustom::create(GLViewImpl::EVENT_CURSOR_ENTER, CC_CALLBACK_1(WorldScene::OnWndCursorEnter, this));
+	const auto pCursorLeaveListener = EventListenerCustom::create(GLViewImpl::EVENT_CURSOR_LEAVE, CC_CALLBACK_1(WorldScene::OnWndCursorLeave, this));
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(pFocusedListener, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(pLostFocusedListener, this);
@@ -127,19 +124,19 @@ void WorldScene::initEventListeners()
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(pCursorLeaveListener, this);
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////
 void WorldScene::InitLayers()
 {
-	uiLayer_ = UILayer::create();
-	addChild(uiLayer_, 1000);
+	pUILayer_ = UILayer::Create();
+	addChild(pUILayer_, 1000);
 
-	gridLayer_ = GridLayer::create(100, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
-	gridLayer_->setAnchorPoint(Vec2::ZERO);
-	gridLayer_->setVisible(false);
-	addChild(gridLayer_, 1001);
+	pGridLayer_ = GridLayer::create(100, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
+	pGridLayer_->setAnchorPoint(Vec2::ZERO);
+	pGridLayer_->setVisible(false);
+	addChild(pGridLayer_, 1001);
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////
 void WorldScene::update(float _dt)
 {
 	// 델타타임(float dt)은 long long 타입의 마이크로초단위 델타값을 float 타입으로, 단위 및 타입 변환을 수행한 것이므로
@@ -147,84 +144,95 @@ void WorldScene::update(float _dt)
 	// Director::drawScene() -> Director::calculateDeltaTime()
 	TimeSpan tsdt = Int64(_dt * 1'000'000);
 
-	updateCLI(_dt);
-	updateTime(_dt);
-	updateNet(_dt);
-	updateScene(_dt);
+	UpdateCLI(_dt);
+	UpdateTime(_dt);
+	UpdateNet(_dt);
+	UpdateScene(_dt);
 }
 
-void WorldScene::updateScene(float _dt)
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::UpdateScene(float _dt)
 {
-	if (runningScene_)
+	if (pRunningScene_)
 	{
-		runningScene_->update(_dt);
+		pRunningScene_->update(_dt);
 	}
 
-	if (uiLayer_)
+	if (pUILayer_)
 	{
-		uiLayer_->update(_dt);
+		pUILayer_->update(_dt);
 	}
 
 	// 초기 세팅 안된 상태거나, 다른 상태로 전환이 예약된 경우
-	if (runningScene_ == nullptr || runningScene_->getType() != reservedScene_)
+	if (pRunningScene_ == nullptr || pRunningScene_->GetType() != reservedScene_)
 	{
-		changeScene(reservedScene_);
+		ChangeScene(reservedScene_);
 	}
 }
 
-void WorldScene::updateNet(float _dt)
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::UpdateNet(float _dt)
 {
-	Core::Net->pollNetEvents();
+	Core::Net->PollNetEvents();
 }
 
-void WorldScene::updateTime(float _dt)
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::UpdateTime(float _dt)
 {
-	Core::Contents.TimeManager->updateAppTime();
-	Core::Contents.TimeManager->updateServerTime();
+	Core::Contents.TimeManager->UpdateAppTime();
+	Core::Contents.TimeManager->UpdateServerTime();
 }
 
-void WorldScene::updateCLI(float _dt)
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::UpdateCLI(float _dt)
 {
 	Core::CLIThread->ProcessInputs();
 }
 
-void WorldScene::onWndMessageReceived(int _code, WPARAM _wParam, LPARAM _lParam)
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::OnWndMessageReceived(int _code, WPARAM _wParam, LPARAM _lParam)
 {
 	const char* codeName = WndMessage::GetName(_code);
 }
 
-void WorldScene::onWndFocused(SGEventCustom* _pCustom)
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::OnWndFocused(SGEventCustom* _pCustom)
 {
 }
 
-void WorldScene::onWndLostFocused(SGEventCustom* _pCustom)
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::OnWndLostFocused(SGEventCustom* _pCustom)
 {
 }
 
-void WorldScene::onWndResized(SGEventCustom* _pCustom)
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::OnWndResized(SGEventCustom* _pCustom)
 {
 	SGSize size = _director->getOpenGLView()->getFrameSize();
 }
 
-void WorldScene::onWndCursorEnter(SGEventCustom* _pCustom)
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::OnWndCursorEnter(SGEventCustom* _pCustom)
 {
 }
 
-void WorldScene::onWndCursorLeave(SGEventCustom* _pCustom)
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::OnWndCursorLeave(SGEventCustom* _pCustom)
 {
-	const SGVec2 leavePos = Win32Helper::getCursorPos();
+	const SGVec2 leavePos = Win32Helper::GetCursorPos();
 	EventMouse* pEventMouse = dbg_new EventMouse(EventMouse::MouseEventType::MOUSE_MOVE);
 	pEventMouse->setCursorPosition(leavePos.x, leavePos.y);
 
-	if (uiLayer_)
+	if (pUILayer_)
 	{
-		uiLayer_->onMouseMove(pEventMouse);
+		pUILayer_->OnMouseMove(pEventMouse);
 	}
 
 	CC_SAFE_DELETE(pEventMouse);
 }
 
-void WorldScene::onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) const
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::OnKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) const
 {
 	if (_keyCode == EventKeyboard::KeyCode::KEY_F1)
 	{
@@ -268,94 +276,100 @@ void WorldScene::onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEven
 	}
 	else if (_keyCode == EventKeyboard::KeyCode::KEY_ESCAPE)
 	{
-		if (gridLayer_ == nullptr)
+		if (pGridLayer_ == nullptr)
 		{
 			return;
 		}
 
 		const bool displaying = Director::getInstance()->isDisplayStats();
 		Director::getInstance()->setDisplayStats(!displaying);
-		gridLayer_->setVisible(!gridLayer_->isVisible());
+		pGridLayer_->setVisible(!pGridLayer_->isVisible());
 	}
 
-	if (runningScene_)
+	if (pRunningScene_)
 	{
-		runningScene_->onKeyPressed(_keyCode, _pEvent);
+		pRunningScene_->OnKeyPressed(_keyCode, _pEvent);
 	}
 
-	if (uiLayer_)
+	if (pUILayer_)
 	{
-		uiLayer_->onKeyPressed(_keyCode, _pEvent);
+		pUILayer_->onKeyPressed(_keyCode, _pEvent);
 	}
 }
 
-void WorldScene::onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) const
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::OnKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) const
 {
-	if (runningScene_)
+	if (pRunningScene_)
 	{
-		runningScene_->onKeyReleased(_keyCode, _pEvent);
+		pRunningScene_->OnKeyReleased(_keyCode, _pEvent);
 	}
 
-	if (uiLayer_)
+	if (pUILayer_)
 	{
-		uiLayer_->onKeyReleased(_keyCode, _pEvent);
+		pUILayer_->onKeyReleased(_keyCode, _pEvent);
 	}
 }
 
-void WorldScene::onMouseMove(SGEventMouse* _pMouseEvent) const
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::OnMouseMove(SGEventMouse* _pMouseEvent) const
 {
-	if (runningScene_)
+	if (pRunningScene_)
 	{
-		runningScene_->onMouseMove(_pMouseEvent);
+		pRunningScene_->OnMouseMove(_pMouseEvent);
 	}
 
-	if (uiLayer_)
+	if (pUILayer_)
 	{
-		uiLayer_->onMouseMove(_pMouseEvent);
+		pUILayer_->OnMouseMove(_pMouseEvent);
 	}
 }
 
-void WorldScene::onMouseDown(SGEventMouse* _pMouseEvent) const
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::OnMouseDown(SGEventMouse* _pMouseEvent) const
 {
-	if (runningScene_)
+	if (pRunningScene_)
 	{
-		runningScene_->onMouseDown(_pMouseEvent);
+		pRunningScene_->OnMouseDown(_pMouseEvent);
 	}
 
-	if (uiLayer_)
+	if (pUILayer_)
 	{
-		uiLayer_->onMouseDown(_pMouseEvent);
+		pUILayer_->OnMouseDown(_pMouseEvent);
 	}
 }
 
-void WorldScene::onMouseUp(SGEventMouse* _pMouseEvent) const
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::OnMouseUp(SGEventMouse* _pMouseEvent) const
 {
-	if (runningScene_)
+	if (pRunningScene_)
 	{
-		runningScene_->onMouseUp(_pMouseEvent);
+		pRunningScene_->OnMouseUp(_pMouseEvent);
 	}
 
-	if (uiLayer_)
+	if (pUILayer_)
 	{
-		uiLayer_->onMouseUp(_pMouseEvent);
+		pUILayer_->OnMouseUp(_pMouseEvent);
 	}
 
-	Core::Contents.UIManager->dragEnd();
+	Core::Contents.UIManager->DragEnd();
 }
 
-void WorldScene::onMouseScroll(SGEventMouse* _pMouseEvent) const
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::OnMouseScroll(SGEventMouse* _pMouseEvent) const
 {
-	if (runningScene_)
+	if (pRunningScene_)
 	{
-		runningScene_->onMouseScroll(_pMouseEvent);
+		pRunningScene_->OnMouseScroll(_pMouseEvent);
 	}
 
-	if (uiLayer_)
+	if (pUILayer_)
 	{
-		uiLayer_->onMouseScroll(_pMouseEvent);
+		pUILayer_->OnMouseScroll(_pMouseEvent);
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void WorldScene::onExit()
 {
 	// ======================================================
@@ -363,7 +377,7 @@ void WorldScene::onExit()
 	// ======================================================
 
 	// 삭제전 마지막 발악, 모든 UI 리소스 정리
-	uiLayer_->clearUnload();
+	pUILayer_->ClearUnload();
 
 	// 강종시 하위 씬들의 onExit을 수동호출해주자.
 	Scene::onExit();
@@ -380,28 +394,31 @@ void WorldScene::onExit()
 	Winsock::Finalize();
 }
 
-void WorldScene::reserveScene(SceneType_t _sceneType)
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::ReserveScene(SceneType_t _sceneType)
 {
 	reservedScene_ = _sceneType;
 }
 
-void WorldScene::changeScene(SceneType_t _sceneType)
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::ChangeScene(SceneType_t _sceneType)
 {
 	_LogDebug_("-- 씬변경 시작");
 
-	if (runningScene_)
+	if (pRunningScene_)
 	{
-		removeChild(runningScene_);
+		removeChild(pRunningScene_);
 	}
 
 	// 씬전환 시 UI 리소스 모두 해제
-	uiLayer_->clearUnload();
-	runningScene_ = createScene(_sceneType);
-	addChild(runningScene_);
+	pUILayer_->ClearUnload();
+	pRunningScene_ = CreateScene(_sceneType);
+	addChild(pRunningScene_);
 	_LogDebug_("-- 씬전환 완료");
 }
 
-void WorldScene::terminate()
+//////////////////////////////////////////////////////////////////////////////////////////
+void WorldScene::Terminate()
 {
 	// 이렇게 종료하면 게임엔진의 메모리릭이 간혹 다다다닥 뜨는데.. 윈도우 타이틀바로 종료하면 깔끔하게 정리잘됨.
 	// Director::getInstance()->end();
@@ -413,13 +430,14 @@ void WorldScene::terminate()
 	Director::getInstance()->getOpenGLView()->close();
 }
 
-SceneBase* WorldScene::createScene(SceneType_t _sceneType)
+//////////////////////////////////////////////////////////////////////////////////////////
+SceneBase* WorldScene::CreateScene(SceneType_t _sceneType)
 {
 	SceneBase* pCreatedScene = nullptr;
 
 	switch (_sceneType)
 	{
-	case SceneType::Login: pCreatedScene = SGLoginScene::create();
+	case SceneType::Login: pCreatedScene = SGLoginScene::Create();
 		break;
 	case SceneType::ChannelSelect: pCreatedScene = SGChannelSelectScene::create();
 		break;
@@ -442,8 +460,9 @@ SceneBase* WorldScene::createScene(SceneType_t _sceneType)
 	return pCreatedScene;
 }
 
-UILayer* WorldScene::getUILayer() const
+//////////////////////////////////////////////////////////////////////////////////////////
+UILayer* WorldScene::GetUILayer() const
 {
-	DebugAssertMsg(uiLayer_, "UI 레이어는 무조건 게임내내 생성되어있어야 합니다.");
-	return uiLayer_;
+	DebugAssertMsg(pUILayer_, "UI 레이어는 무조건 게임내내 생성되어있어야 합니다.");
+	return pUILayer_;
 }

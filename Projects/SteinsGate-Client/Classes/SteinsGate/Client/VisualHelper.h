@@ -13,5 +13,5 @@
 class VisualHelper
 {
 public:
-	static int getVisualData(JCORE_OUT VisualData& _visualData, int _code);
+	static int GetVisualData(JCORE_OUT VisualData& _visualData, int _code);
 };

@@ -9,7 +9,7 @@
 #include "CharacterListener_Gunner.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
-CharacterListener_Gunner::CharacterListener_Gunner(Character* _pCharacter)
-: CharacterListener(_pCharacter)
+CharacterListener_Gunner::CharacterListener_Gunner(Character* _pChar)
+: CharacterListener(_pChar)
 {
 }

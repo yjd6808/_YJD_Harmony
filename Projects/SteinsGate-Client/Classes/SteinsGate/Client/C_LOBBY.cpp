@@ -22,8 +22,8 @@ USING_NS_JNET;
 //////////////////////////////////////////////////////////////////////////////////////////
 void C_LOBBY::OnConnected(Session* _pSession)
 {
-	Core::Contents.PopupManager->closeByTag(DEF_POPUP_CONNECT_LOBBY);
-	Core::Contents.PopupManager->showNone(
+	Core::Contents.PopupManager->CloseByTag(DEF_POPUP_CONNECT_LOBBY);
+	Core::Contents.PopupManager->ShowNone(
 		SG_TEXT_RAW_FMT_STD("AUTHENTICATION_BEGIN", ServerType::Name[ServerType::Lobby]),
 		DEF_POPUP_AUTHENTICATION_LOBBY_BEGIN, false, Const::Timeout::LobbyAuthentication);
 	S_LOBBY::SEND_CLO_JoinLobby();
@@ -32,8 +32,8 @@ void C_LOBBY::OnConnected(Session* _pSession)
 //////////////////////////////////////////////////////////////////////////////////////////
 void C_LOBBY::OnConnectFailed(Session* _pSession, Int32U _errorCode)
 {
-	Core::Contents.PopupManager->closeByTag(DEF_POPUP_CONNECT_LOBBY);
-	Core::Contents.PopupManager->showOk(SG_TEXT_RAW_FMT_STD("CONNECT_SERVER_FAILED_WITH_MESSAGE",
+	Core::Contents.PopupManager->CloseByTag(DEF_POPUP_CONNECT_LOBBY);
+	Core::Contents.PopupManager->ShowOk(SG_TEXT_RAW_FMT_STD("CONNECT_SERVER_FAILED_WITH_MESSAGE",
 	                                                        ServerType::Name[ServerType::Lobby],
 	                                                        Winsock::ErrorMessageUTF8(_errorCode).Source(),
 	                                                        _errorCode));
@@ -42,5 +42,5 @@ void C_LOBBY::OnConnectFailed(Session* _pSession, Int32U _errorCode)
 //////////////////////////////////////////////////////////////////////////////////////////
 void C_LOBBY::OnDisconnected(Session* _pSession)
 {
-	Core::Contents.PopupManager->closeByTag(DEF_POPUP_CONNECT_LOBBY);
+	Core::Contents.PopupManager->CloseByTag(DEF_POPUP_CONNECT_LOBBY);
 }

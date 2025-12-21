@@ -16,54 +16,54 @@ USING_NS_CCUI;
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UIEditBox::UIEditBox(UIRootGroup* _pMaster, UIGroup* _pParent)
-: UIElement(_pMaster, _pParent)
-, m_bFontAutoScaling(true)
-, m_fFontSizeInitial(12.0f)
-, m_fFontSize(12.0f)
-, m_fPlaceholderFontSizeInitial(12.0f)
-, m_fPlaceholderFontSize(12.0f)
-, m_pInfo(nullptr)
-, m_pEditBox{ nullptr }
-, m_pListener(nullptr)
+UIEditBox::UIEditBox(UIRootGroup* _pRoot, UIGroup* _pParent)
+: UIElement(_pRoot, _pParent)
+, isFontAutoScaling_(true)
+, fontSizeInitial_(12.0f)
+, fontSize_(12.0f)
+, placeholderFontSizeInitial_(12.0f)
+, placeholderFontSize_(12.0f)
+, pInfo_(nullptr)
+, pEditBox_{ nullptr }
+, pListener_(nullptr)
 {
 }
 
-UIEditBox::UIEditBox(UIRootGroup* _pMaster, UIGroup* _pParent, UIEditBoxInfo* _pEditBoxInfo, bool _infoOwner)
-: UIEditBox(_pMaster, _pParent)
+UIEditBox::UIEditBox(UIRootGroup* _pRoot, UIGroup* _pParent, UIEditBoxInfo* _pEditBoxInfo, bool _infoOwner)
+: UIEditBox(_pRoot, _pParent)
 {
-	setInfoEditBox(_pEditBoxInfo, _infoOwner);
+	SetInfoEditBox(_pEditBoxInfo, _infoOwner);
 }
 
 UIEditBox::~UIEditBox()
 {
-	JCORE_DELETE_SAFE(m_pListener);
+	JCORE_DELETE_SAFE(pListener_);
 }
 
-UIEditBox* UIEditBox::create(UIRootGroup* _pMaster, UIGroup* _pParent)
+UIEditBox* UIEditBox::Create(UIRootGroup* _pRoot, UIGroup* _pParent)
 {
-	UIEditBox* pEditBox = dbg_new UIEditBox(_pMaster, _pParent);
+	UIEditBox* pEditBox = dbg_new UIEditBox(_pRoot, _pParent);
 	pEditBox->init();
 	pEditBox->autorelease();
 	return pEditBox;
 }
 
-UIEditBox* UIEditBox::create(UIRootGroup* _pMaster, UIGroup* _pParent, UIEditBoxInfo* _pEditBoxInfo, bool _infoOwner)
+UIEditBox* UIEditBox::Create(UIRootGroup* _pRoot, UIGroup* _pParent, UIEditBoxInfo* _pEditBoxInfo, bool _infoOwner)
 {
-	UIEditBox* pEditBox = dbg_new UIEditBox(_pMaster, _pParent, _pEditBoxInfo, _infoOwner);
+	UIEditBox* pEditBox = dbg_new UIEditBox(_pRoot, _pParent, _pEditBoxInfo, _infoOwner);
 	pEditBox->init();
 	pEditBox->autorelease();
 	return pEditBox;
 }
 
-std::string UIEditBox::getText()
+std::string UIEditBox::GetText()
 {
-	return m_pEditBox->getText();
+	return pEditBox_->getText();
 }
 
-const char* UIEditBox::getTextRaw()
+const char* UIEditBox::GetTextRaw()
 {
-	return m_pEditBox->getText();
+	return pEditBox_->getText();
 }
 
 bool UIEditBox::init()
@@ -73,40 +73,40 @@ bool UIEditBox::init()
 		return false;
 	}
 
-	if (m_pInfo == nullptr)
+	if (pInfo_ == nullptr)
 	{
 		LogWarnMissingInfo();
 		return false;
 	}
 
-	SetInitialUISize(m_pInfo->Size);
+	SetInitialUISize(pInfo_->Size);
 
 	// 에딧박스는 좌우 패딩 5씩 줘서 실제 컨텐츠 사이즈는 너비가 10 작아진다.
 	// EditBoxImplCommon::setContentSize(const Size& size) 함수에서 확인가능
 	//  => 패딩 0으로 없앰
 
-	m_pEditBox = EditBox::create(uiSize_, "");
-	m_pListener = dbg_new Listener(this);
+	pEditBox_ = EditBox::create(uiSize_, "");
+	pListener_ = dbg_new Listener(this);
 
-	m_pEditBoxImpl = (SGEditBoxImplWin*)m_pEditBox->getImpl();
-	m_hNativeHandle = m_pEditBoxImpl->getNativeHandle();
-	m_pLabel = m_pEditBoxImpl->getLabel();
-	m_pLabelPlaceholder = m_pEditBoxImpl->getLabelPlaceholder();
-	m_pLabelPlaceholder->setAlignment(TextHAlignment(m_pInfo->TextHAlignment));
-	m_pLabelPlaceholder->setDimensions(uiSize_.width, uiSize_.height);
+	pEditBoxImpl_ = (SGEditBoxImplWin*)pEditBox_->getImpl();
+	nativeHandle_ = pEditBoxImpl_->getNativeHandle();
+	pLabel_ = pEditBoxImpl_->getLabel();
+	pLabelPlaceHolder_ = pEditBoxImpl_->getLabelPlaceholder();
+	pLabelPlaceHolder_->setAlignment(TextHAlignment(pInfo_->TextHAlignment));
+	pLabelPlaceHolder_->setDimensions(uiSize_.width, uiSize_.height);
 
-	m_pEditBox->setFontColor(m_pInfo->FontColor);
-	m_pEditBox->setFontSize(int(m_fFontSizeInitial));
-	m_pEditBox->setTextHorizontalAlignment(TextHAlignment(m_pInfo->TextHAlignment));
-	m_pEditBox->setPlaceHolder(m_pInfo->PlaceholderText.Source());
-	m_pEditBox->setPlaceholderFontColor(m_pInfo->PlaceHolderFontColor);
-	m_pEditBox->setPlaceholderFontSize(m_fPlaceholderFontSizeInitial);
-	m_pEditBox->setAnchorPoint(Vec2::ZERO);
-	m_pEditBox->setMaxLength(m_pInfo->MaxLength);
-	m_pEditBox->setInputMode(m_pInfo->InputMode);
-	m_pEditBox->setDelegate(m_pListener);
-	m_pEditBox->setPassiveFocusable(true);
-	this->addChild(m_pEditBox);
+	pEditBox_->setFontColor(pInfo_->FontColor);
+	pEditBox_->setFontSize(int(fontSizeInitial_));
+	pEditBox_->setTextHorizontalAlignment(TextHAlignment(pInfo_->TextHAlignment));
+	pEditBox_->setPlaceHolder(pInfo_->PlaceholderText.Source());
+	pEditBox_->setPlaceholderFontColor(pInfo_->PlaceHolderFontColor);
+	pEditBox_->setPlaceholderFontSize(placeholderFontSizeInitial_);
+	pEditBox_->setAnchorPoint(Vec2::ZERO);
+	pEditBox_->setMaxLength(pInfo_->MaxLength);
+	pEditBox_->setInputMode(pInfo_->InputMode);
+	pEditBox_->setDelegate(pListener_);
+	pEditBox_->setPassiveFocusable(true);
+	this->addChild(pEditBox_);
 
 	return isInitialized_ = true;
 }
@@ -115,36 +115,36 @@ void UIEditBox::SetInitialUISize(SGSize _size)
 {
 	UIElement::SetInitialUISize(_size);
 
-	m_fFontSize = m_pInfo->FontSize * Core::ClientInfo->uiScaleYFactor_;
-	m_fFontSizeInitial = m_fFontSize;
+	fontSize_ = pInfo_->FontSize * Core::ClientInfo->uiScaleYFactor_;
+	fontSizeInitial_ = fontSize_;
 
-	m_fPlaceholderFontSize = m_pInfo->PlaceholderFontSize * Core::ClientInfo->uiScaleYFactor_;
-	m_fPlaceholderFontSizeInitial = m_fPlaceholderFontSize;
+	placeholderFontSize_ = pInfo_->PlaceholderFontSize * Core::ClientInfo->uiScaleYFactor_;
+	placeholderFontSizeInitial_ = placeholderFontSize_;
 }
 
-void UIEditBox::setMaxLength(int _maxLength)
+void UIEditBox::SetMaxLength(int _maxLength)
 {
-	m_pEditBox->setMaxLength(_maxLength);
+	pEditBox_->setMaxLength(_maxLength);
 }
 
-void UIEditBox::setTextEditBeginCallback(const SGActionFn<UIEditBox*>& _fnTextEditBegin) const
+void UIEditBox::SetTextEditBeginCallback(const SGActionFn<UIEditBox*>& _fnTextEditBegin) const
 {
-	m_pListener->FnEditBoxEditingDidBegin = _fnTextEditBegin;
+	pListener_->fnEditBoxEditingDidBegin_ = _fnTextEditBegin;
 }
 
-void UIEditBox::setTextChangedCallback(const SGActionFn<UIEditBox*, const SGString&>& _fnTextChanged) const
+void UIEditBox::SetTextChangedCallback(const SGActionFn<UIEditBox*, const SGString&>& _fnTextChanged) const
 {
-	m_pListener->FnEditBoxTextChanged = _fnTextChanged;
+	pListener_->fnEditBoxTextChanged_ = _fnTextChanged;
 }
 
-void UIEditBox::setReturnCallback(const SGActionFn<UIEditBox*>& _fnEditBoxReturn) const
+void UIEditBox::SetReturnCallback(const SGActionFn<UIEditBox*>& _fnEditBoxReturn) const
 {
-	m_pListener->FnEditBoxReturn = _fnEditBoxReturn;
+	pListener_->fnEditBoxReturn_ = _fnEditBoxReturn;
 }
 
-void UIEditBox::setLoseFocusCallback(const SGActionFn<UIEditBox*, SGEditBoxEndAction>& _fnLoseFocus) const
+void UIEditBox::SetLoseFocusCallback(const SGActionFn<UIEditBox*, SGEditBoxEndAction>& _fnLoseFocus) const
 {
-	m_pListener->FnEditBoxEditingDidEndWithAction = _fnLoseFocus;
+	pListener_->fnEditBoxEditingDidEndWithAction_ = _fnLoseFocus;
 }
 
 void UIEditBox::SetUISize(const SGSize& _size)
@@ -159,73 +159,73 @@ void UIEditBox::SetUISize(const SGSize& _size)
 	// 에딧박스의 컨텐트 사이즈를 변경하면 라벨은 변경되는데, 플레이스홀더 라벨은 사이즈 변경이 안되서 수동으로 해줘야함.
 	// 에딧박스의 컨텐트 사이즈를 변경하더라도 라벨의 폰트 크기가 변경되지도 않는다.
 	// EditBoxImplCommon::setContentSize 참조
-	m_pEditBox->setContentSize(_size);
-	m_pLabelPlaceholder->setDimensions(_size.width, _size.height);
+	pEditBox_->setContentSize(_size);
+	pLabelPlaceHolder_->setDimensions(_size.width, _size.height);
 
-	if (m_bFontAutoScaling)
+	if (isFontAutoScaling_)
 	{
 		const float scaleY = GetUIScaleY();
 
-		m_fFontSize = m_fFontSizeInitial * scaleY;
-		m_fPlaceholderFontSize = m_fPlaceholderFontSizeInitial * scaleY;
+		fontSize_ = fontSizeInitial_ * scaleY;
+		placeholderFontSize_ = placeholderFontSizeInitial_ * scaleY;
 
-		m_pLabel->setSystemFontSize(m_fFontSize);
-		m_pLabelPlaceholder->setSystemFontSize(m_fPlaceholderFontSize);
+		pLabel_->setSystemFontSize(fontSize_);
+		pLabelPlaceHolder_->setSystemFontSize(placeholderFontSize_);
 	}
 }
 
 void UIEditBox::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 {
-	if (_pInfo->Type != UIElementType::EditBox)
+	if (_pInfo->type_ != UIElementType::EditBox)
 	{
-		LogWarnInvalidInfo(_pInfo->Type);
+		LogWarnInvalidInfo(_pInfo->type_);
 		return;
 	}
 
 	if (isInfoOwner_)
 	{
-		JCORE_DELETE_SAFE(m_pInfo);
+		JCORE_DELETE_SAFE(pInfo_);
 	}
 
 	pBaseInfo_ = _pInfo;
-	m_pInfo = static_cast<UIEditBoxInfo*>(_pInfo);
+	pInfo_ = static_cast<UIEditBoxInfo*>(_pInfo);
 	isInfoOwner_ = _infoOwner;
 }
 
-void UIEditBox::setInfoEditBox(UIEditBoxInfo* _pInfo, bool _infoOwner)
+void UIEditBox::SetInfoEditBox(UIEditBoxInfo* _pInfo, bool _infoOwner)
 {
 	SetInfo(_pInfo, _infoOwner);
 }
 
 void UIEditBox::Focus()
 {
-	m_pEditBox->openKeyboard();
+	pEditBox_->openKeyboard();
 }
 
-void UIEditBox::setInputFlag(SGEditBox::InputFlag _inputFlag)
+void UIEditBox::SetInputFlag(SGEditBox::InputFlag _inputFlag)
 {
-	m_pEditBox->setInputFlag(_inputFlag);
+	pEditBox_->setInputFlag(_inputFlag);
 }
 
-void UIEditBox::setInputMode(SGEditBox::InputMode _inputMode)
+void UIEditBox::SetInputMode(SGEditBox::InputMode _inputMode)
 {
-	m_pEditBox->setInputMode(_inputMode);
+	pEditBox_->setInputMode(_inputMode);
 }
 
 bool UIEditBox::OnMouseUpContainedInternalDetail(SGEventMouse* /*_pMouseEvent*/)
 {
-	m_pEditBox->openKeyboard();
+	pEditBox_->openKeyboard();
 	return false;
 }
 
 void UIEditBox::Listener::editBoxEditingDidBegin(SGEditBox* /* editBox */)
 {
-	if (FnEditBoxEditingDidBegin)
+	if (fnEditBoxEditingDidBegin_)
 	{
-		FnEditBoxEditingDidBegin(EditBox);
+		fnEditBoxEditingDidBegin_(pEditBox_);
 	}
 
-	EditBox->pRootGroup_->OnEditBoxEditingDidBegin(EditBox);
+	pEditBox_->pRootGroup_->OnEditBoxEditingDidBegin(pEditBox_);
 }
 
 void UIEditBox::Listener::nativeEditBoxFocused(SGEditBox* /* editBox */)
@@ -234,30 +234,30 @@ void UIEditBox::Listener::nativeEditBoxFocused(SGEditBox* /* editBox */)
 
 void UIEditBox::Listener::editBoxTextChanged(SGEditBox* /* editBox */, const std::string& _text)
 {
-	if (FnEditBoxTextChanged)
+	if (fnEditBoxTextChanged_)
 	{
-		FnEditBoxTextChanged(EditBox, _text.c_str());
+		fnEditBoxTextChanged_(pEditBox_, _text.c_str());
 	}
 
-	EditBox->pRootGroup_->OnEditBoxTextChanged(EditBox, _text);
+	pEditBox_->pRootGroup_->OnEditBoxTextChanged(pEditBox_, _text);
 }
 
 void UIEditBox::Listener::editBoxReturn(SGEditBox* /* editBox */)
 {
-	if (FnEditBoxReturn)
+	if (fnEditBoxReturn_)
 	{
-		FnEditBoxReturn(EditBox);
+		fnEditBoxReturn_(pEditBox_);
 	}
 
-	EditBox->pRootGroup_->OnEditBoxReturn(EditBox);
+	pEditBox_->pRootGroup_->OnEditBoxReturn(pEditBox_);
 }
 
 void UIEditBox::Listener::editBoxEditingDidEndWithAction(SGEditBox* /* editBox */, EditBoxEndAction _editBoxEndAction)
 {
-	if (FnEditBoxEditingDidEndWithAction)
+	if (fnEditBoxEditingDidEndWithAction_)
 	{
-		FnEditBoxEditingDidEndWithAction(EditBox, _editBoxEndAction);
+		fnEditBoxEditingDidEndWithAction_(pEditBox_, _editBoxEndAction);
 	}
 
-	EditBox->pRootGroup_->OnEditBoxEditingDidEndWithAction(EditBox, _editBoxEndAction);
+	pEditBox_->pRootGroup_->OnEditBoxEditingDidEndWithAction(pEditBox_, _editBoxEndAction);
 }

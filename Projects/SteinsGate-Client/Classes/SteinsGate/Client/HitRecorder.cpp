@@ -14,8 +14,8 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////
 HitRecorder::HitRecorder(Actor* _pOwner, Actor* _pRecorder)
-: owner_(_pOwner)
-, recorder_(_pRecorder)
+: pOwner_(_pOwner)
+, pRecorder_(_pRecorder)
 , hitPossibleList_(16)
 , alreadyHitEnemy_(32)
 , recordAlreadyHit_(false)
@@ -25,8 +25,8 @@ HitRecorder::HitRecorder(Actor* _pOwner, Actor* _pRecorder)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 HitRecorder::HitRecorder(Actor* _pOwner, Actor* _pRecorder, int _hitPossibleListSize, int _alreadyHitEnemySize)
-: owner_(_pOwner)
-, recorder_(_pRecorder)
+: pOwner_(_pOwner)
+, pRecorder_(_pRecorder)
 , hitPossibleList_(_hitPossibleListSize)
 , alreadyHitEnemy_(_alreadyHitEnemySize)
 , recordAlreadyHit_(false)
@@ -35,41 +35,41 @@ HitRecorder::HitRecorder(Actor* _pOwner, Actor* _pRecorder, int _hitPossibleList
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool HitRecorder::isAlreadyHit(Actor* _pHitEnemy)
+bool HitRecorder::IsAlreadyHit(Actor* _pHitEnemy)
 {
 	return alreadyHitEnemy_.Exist(_pHitEnemy);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HitRecorder::record(const FrameEventAttackBoxInstant* _pFrameEvent)
+void HitRecorder::Record(const FrameEventAttackBoxInstant* _pFrameEvent)
 {
 	if (!record_)
 		return;
 
 	// 절대 위치 박스로 변환
-	ActorRect absoluteActorRect = Actor::convertAbsoluteActorRect(recorder_, _pFrameEvent->rect_);
-	record(absoluteActorRect, _pFrameEvent->attackDataCode_);
+	ActorRect absoluteActorRect = Actor::ConvertAbsoluteActorRect(pRecorder_, _pFrameEvent->rect_);
+	Record(absoluteActorRect, _pFrameEvent->attackDataCode_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HitRecorder::record(const ActorRect& _absoluteActorRect, int _attackDataCode)
+void HitRecorder::Record(const ActorRect& _absoluteActorRect, int _attackDataCode)
 {
-	MapLayer* pMapLayer = recorder_->getMapLayer();
+	MapLayer* pMapLayer = pRecorder_->GetMapLayer();
 
 	int newHitCount = 0;
 	hitPossibleList_.Clear();
 
-	pMapLayer->collectEnemiesInActorRect(recorder_, _absoluteActorRect, hitPossibleList_);
+	pMapLayer->CollectEnemiesInActorRect(pRecorder_, _absoluteActorRect, hitPossibleList_);
 
 	for (int i = 0; i < hitPossibleList_.Size(); ++i)
 	{
 		HitInfo& hitInfo = hitPossibleList_[i];
-		hitInfo.AttackDataInfo = DataManager::Get()->getAttackDataInfo(owner_->getType(), _attackDataCode);
-		hitInfo.Attacker = recorder_;
+		hitInfo.pAttackDataInfo_ = DataManager::Get()->GetAttackDataInfo(pOwner_->GetType(), _attackDataCode);
+		hitInfo.pAttacker_ = pRecorder_;
 
 		singleHitEvent_.Invoke(hitInfo);
 
-		if (recordAlreadyHit_ && alreadyHitEnemy_.Insert(hitInfo.HitTarget, hitInfo.HitTarget))
+		if (recordAlreadyHit_ && alreadyHitEnemy_.Insert(hitInfo.pHitTarget_, hitInfo.pHitTarget_))
 		{
 			++newHitCount;
 		}
@@ -79,85 +79,85 @@ void HitRecorder::record(const ActorRect& _absoluteActorRect, int _attackDataCod
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HitRecorder::clearAlreadyHitEnemies()
+void HitRecorder::ClearAlreadyHitEnemies()
 {
 	alreadyHitEnemy_.Clear();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HitRecorder::setOwner(Actor* _pOwner)
+void HitRecorder::SetOwner(Actor* _pOwner)
 {
-	owner_ = _pOwner;
+	pOwner_ = _pOwner;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HitRecorder::setRecord(bool _enabled)
+void HitRecorder::SetRecord(bool _enabled)
 {
 	record_ = _enabled;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HitRecorder::setAlreadyHitRecord(bool _enabled)
+void HitRecorder::SetAlreadyHitRecord(bool _enabled)
 {
 	recordAlreadyHit_ = _enabled;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool HitRecorder::hasSingleHitCallback(int _definedEventId)
+bool HitRecorder::HasSingleHitCallback(int _definedEventId)
 {
 	return singleHitEvent_.IsRegistered(_definedEventId);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool HitRecorder::addSingleHitCallback(int _definedEventId, const SGHitSingleCallbackFn& _callback)
+bool HitRecorder::AddSingleHitCallback(int _definedEventId, const SGHitSingleCallbackFn& _callback)
 {
 	return singleHitEvent_.Register(_definedEventId, _callback);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool HitRecorder::addSingleHitCallback(int _definedEventId, SGHitSingleCallbackFn&& _callback)
+bool HitRecorder::AddSingleHitCallback(int _definedEventId, SGHitSingleCallbackFn&& _callback)
 {
 	return singleHitEvent_.Register(_definedEventId, JCore::Move(_callback));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool HitRecorder::removeSingleHitCallback(int _definedEventId)
+bool HitRecorder::RemoveSingleHitCallback(int _definedEventId)
 {
 	return singleHitEvent_.Unregister(_definedEventId);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HitRecorder::clearSingleHitCallback()
+void HitRecorder::ClearSingleHitCallback()
 {
 	singleHitEvent_.Clear();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool HitRecorder::hasMultiHitCallback(int _definedEventId)
+bool HitRecorder::HasMultiHitCallback(int _definedEventId)
 {
 	return multiHitEvent_.IsRegistered(_definedEventId);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool HitRecorder::addMultiHitCallback(int _definedEventId, const SGHitMultiCallbackFn& _callback)
+bool HitRecorder::AddMultiHitCallback(int _definedEventId, const SGHitMultiCallbackFn& _callback)
 {
 	return multiHitEvent_.Register(_definedEventId, _callback);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool HitRecorder::addMultiHitCallback(int _definedEventId, SGHitMultiCallbackFn&& _callback)
+bool HitRecorder::AddMultiHitCallback(int _definedEventId, SGHitMultiCallbackFn&& _callback)
 {
 	return multiHitEvent_.Register(_definedEventId, Move(_callback));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool HitRecorder::removeMultiHitCallback(int _definedEventId)
+bool HitRecorder::RemoveMultiHitCallback(int _definedEventId)
 {
 	return multiHitEvent_.Unregister(_definedEventId);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HitRecorder::clearMultiHitCallback()
+void HitRecorder::ClearMultiHitCallback()
 {
 	multiHitEvent_.Clear();
 }

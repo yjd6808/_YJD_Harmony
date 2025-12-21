@@ -14,22 +14,22 @@ void Contents::Initialize()
 {
 	Global = Global::Get();
 	PackManager = ImagePackManager::Get();
-	PackManager->loadAllPackages();
+	PackManager->LoadAllPackages();
 	FontManager = FontManager::Get();
 	UIManager = UIManager::Get();
 	Player = HostPlayer::Get();
 	Inven = Inven::Get();
-	World = WorldScene::get();
+	World = WorldScene::Get();
 	ActorListenerManager = ActorListenerManager::Get();
 	ActorManager = ActorManager::Get();
 	PopupManager = PopupManager::Get();
 	TimeManager = TimeManager::Get();
 
 	Global->init();
-	FontManager->init();
-	UIManager->init();
-	Inven->init();
-	ActorListenerManager->init();
+	FontManager->Init();
+	UIManager->Init();
+	Inven->Init();
+	ActorListenerManager->Init();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

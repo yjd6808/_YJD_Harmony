@@ -14,8 +14,8 @@
 
 #define SG_COMPONENT_TYPE_GETTER(component_type)				\
 public:															\
-	Type getType() const override { return component_type; }	\
-	static Type type() { return component_type; }
+	Type GetType() const override { return component_type; }	\
+	static Type Type() { return component_type; }
 
 class JCORE_NOVTABLE IComponent
 {
@@ -29,6 +29,6 @@ public:
 	};
 
 	virtual ~IComponent() = default;
-	virtual void initialize() = 0;
-	virtual Type getType() const = 0;
+	virtual void Initialize() = 0;
+	virtual Type GetType() const = 0;
 };

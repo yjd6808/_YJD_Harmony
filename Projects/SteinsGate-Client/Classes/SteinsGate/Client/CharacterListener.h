@@ -10,14 +10,14 @@
 #include <SteinsGate/Client/IActorListener.h>
 #include <SteinsGate/Client/Character.h>
 
-#define SG_CHARACTER_LISTENER_FACTORY(Type)                                \
-public:                                                                     \
-    struct Factory : IFactory                                               \
-    {                                                                       \
-        CharacterListener* create(Character* _pCharacter) override          \
-        {                                                                   \
-            return dbg_new Type(_pCharacter);                               \
-        }                                                                   \
+#define SG_CHARACTER_LISTENER_FACTORY(Type)                            \
+public:                                                                \
+    struct Factory : IFactory                                          \
+    {                                                                  \
+        CharacterListener* Create(Character* _pChar) override          \
+        {                                                              \
+            return dbg_new Type(_pChar);                               \
+        }                                                              \
     };
 
 class CharacterListener : public IActorListener
@@ -26,21 +26,21 @@ public:
 	struct IFactory
 	{
 		virtual ~IFactory() = default;
-		virtual CharacterListener* create(Character* _pCharacter) = 0;
+		virtual CharacterListener* Create(Character* _pChar) = 0;
 	};
 
-	CharacterListener(Character* _pCharacter)
-	: m_pCharacter(_pCharacter)
+	CharacterListener(Character* _pChar)
+	: pChar_(_pChar)
 	{
 	}
 
-	void onCleanUp() override;
+	void OnCleanUp() override;
 
-	Type getListenerType() const override
+	Type GetListenerType() const override
 	{
 		return eCharacter;
 	}
 
 protected:
-	JCORE_NOT_NULL Character* m_pCharacter;
+	JCORE_NOT_NULL Character* pChar_;
 };

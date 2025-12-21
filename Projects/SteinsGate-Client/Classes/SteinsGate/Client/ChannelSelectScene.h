@@ -16,15 +16,15 @@ public:
 	SGChannelSelectScene();
 	static SGChannelSelectScene* create();
 
-	void onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
-	void onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
+	void OnKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
+	void OnKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;
 
 	void update(float _dt) override;
 
 	bool init() override;
 	void onEnterTransitionDidFinish() override;
 
-	SceneType_t getType() override
+	SceneType_t GetType() override
 	{
 		return SceneType::ChannelSelect;
 	}

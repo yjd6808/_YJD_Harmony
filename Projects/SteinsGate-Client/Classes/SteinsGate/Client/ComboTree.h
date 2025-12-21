@@ -11,39 +11,41 @@
 
 #include <SteinsGate/Client/SGAction.h>
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 동일한 액션이 있을 수 있어서 연결리스트로 구성
-
 struct ComboTreeNodeActionList
 {
-	SGAction* Action_{};
-	ComboTreeNodeActionList* Next{};
+	SGAction* action_{};
+	ComboTreeNodeActionList* pNext_{};
 
-	void add(SGAction* _pAction);
-	void clear();
-	int count();
-	bool exist(SGAction* _pAction);
-	SGAction* find_if(const SGPredicateFn<SGAction*>& _fn);
+	void Add(SGAction* _pAction);
+	void Clear();
+	int Count();
+	bool Exist(SGAction* _pAction);
+	SGAction* FindIf(const SGPredicateFn<SGAction*>& _fn);
 };
 
+//////////////////////////////////////////////////////////////////////////////////////////
 class SGComboTreeNode
 {
 public:
-	ComboTreeNodeActionList ActionList{};
-	SGComboTreeNode* Next[ControlKey::Max]{};
+	ComboTreeNodeActionList actionList_{};
+	SGComboTreeNode* pNextArr_[ControlKey::Max]{};
 
-	bool isValid()
+	bool IsValid()
 	{
-		return ActionList.count() != 0;
+		return actionList_.Count() != 0;
 	}
 
-	bool empty()
+	bool Empty()
 	{
-		return ActionList.count() == 0;
+		return actionList_.Count() == 0;
 	}
 
-	int count();
+	int Count();
 };
 
+//////////////////////////////////////////////////////////////////////////////////////////
 class SGComboTree
 {
 public:
@@ -51,25 +53,24 @@ public:
 	~SGComboTree();
 
 public:
-	void removeAll();
-	void addComboAction(SGAction* _pAction);
-	SGAction* getComboAction(const ComboKeyList& _keys);
+	void RemoveAll();
+	void AddComboAction(SGAction* _pAction);
+	SGAction* GetComboAction(const ComboKeyList& _keys);
 
 private:
-	static void removeComboNodeRecursive(SGComboTreeNode* _pParent);
-	static void addComboNodeRecursive(
+	static void RemoveComboNodeRecursive(SGComboTreeNode* _pParent);
+	static void AddComboNodeRecursive(
 		SGComboTreeNode* _pParent,
 		SGComboTreeNode* _pNewNode,
 		const ComboKeyList& _keys,
 		int _keyIndex,
-		int _keyCount
-	);
-	static SGComboTreeNode* findComboNodeRecursive(
+		int _keyCount);
+
+	static SGComboTreeNode* FindComboNodeRecursive(
 		SGComboTreeNode* _pParent,
 		const ComboKeyList& _keys,
 		int _keyIndex,
-		int _keyCount
-	);
+		int _keyCount);
 
 private:
 	SGComboTreeNode* rootNode_{};

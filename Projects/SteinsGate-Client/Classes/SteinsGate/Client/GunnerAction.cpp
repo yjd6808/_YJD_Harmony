@@ -22,10 +22,10 @@ GunnerAction::~GunnerAction()
 {
 }
 
-void GunnerAction::play()
+void GunnerAction::Play()
 {
-	m_pBaseInfo = dynamic_cast<GunnerInfo*>(Core::DataManager->getCharInfo(CharType::Gunner));
-	DebugAssertMsg(m_pBaseInfo, "오잉! 거너 인포가 아닌데요?");
+	pBaseInfo_ = dynamic_cast<GunnerInfo*>(Core::DataManager->GetCharInfo(CharType::Gunner));
+	DebugAssertMsg(pBaseInfo_, "오잉! 거너 인포가 아닌데요?");
 
-	SGAction::play();
+	SGAction::Play();
 }

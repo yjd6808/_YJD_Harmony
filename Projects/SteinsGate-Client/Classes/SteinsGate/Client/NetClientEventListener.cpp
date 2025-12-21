@@ -23,44 +23,51 @@ NetClientEventListener::NetClientEventListener(ClientConnectServerType_t _connec
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void NetClientEventListener::OnConnected(Session* _pSession)
 {
 	ListenerClientBase::OnConnected(_pSession);
 	SyncConnectionResult(connectedServerType_, _pSession, true, 0);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void NetClientEventListener::OnDisconnected(Session* _pSession, Int32U _errorCode)
 {
 	ListenerClientBase::OnDisconnected(_pSession, _errorCode);
 	SyncDisconnectionResult(connectedServerType_, _pSession);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void NetClientEventListener::OnConnectFailed(Session* _pSession, Int32U _errorCode)
 {
 	ListenerClientBase::OnConnectFailed(_pSession, _errorCode);
 	SyncConnectionResult(connectedServerType_, _pSession, false, _errorCode);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void NetClientEventListener::OnSent(Session* _pSession, IPacket* _pSendPacket, Int32UL _sentBytes)
 {
 	ListenerClientBase::OnSent(_pSession, _pSendPacket, _sentBytes);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void NetClientEventListener::OnReceived(Session* _pSession, ICommand* _pRecvCmd)
 {
 	ListenerClientBase::OnReceived(_pSession, _pRecvCmd);
 	SyncReceivedCommand(connectedServerType_, _pSession, _pRecvCmd);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void NetClientEventListener::OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket)
 {
 	ListenerClientBase::OnReceived(_pSession, _pRecvPacket);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void NetClientEventListener::SyncConnectionResult(ClientConnectServerType_t _listenerType, Session* _pSession,
                                                   bool _success, Int32U _errorCode)
 {
-	ConnectionSynchronizer* pSynchronizer = Core::Net->getConnectionSynchronizer();
+	ConnectionSynchronizer* pSynchronizer = Core::Net->GetConnectionSynchronizer();
 
 	if (pSynchronizer == nullptr)
 	{
@@ -69,12 +76,13 @@ void NetClientEventListener::SyncConnectionResult(ClientConnectServerType_t _lis
 		return;
 	}
 
-	pSynchronizer->enqueueConnection(_listenerType, _pSession, _success, _errorCode);
+	pSynchronizer->EnqueueConnection(_listenerType, _pSession, _success, _errorCode);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void NetClientEventListener::SyncDisconnectionResult(ClientConnectServerType_t _listenerType, Session* _pSession)
 {
-	ConnectionSynchronizer* pSynchronizer = Core::Net->getConnectionSynchronizer();
+	ConnectionSynchronizer* pSynchronizer = Core::Net->GetConnectionSynchronizer();
 
 	if (pSynchronizer == nullptr)
 	{
@@ -82,13 +90,14 @@ void NetClientEventListener::SyncDisconnectionResult(ClientConnectServerType_t _
 		return;
 	}
 
-	pSynchronizer->enqueueDisconnection(_listenerType, _pSession);
+	pSynchronizer->EnqueueDisconnection(_listenerType, _pSession);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void NetClientEventListener::SyncReceivedCommand(ClientConnectServerType_t _listenerType, SGSession* _pSession,
                                                  ICommand* _pCmd)
 {
-	CommandSynchronizer* pSynchronizer = Core::Net->getCommandSynchronizer();
+	CommandSynchronizer* pSynchronizer = Core::Net->GetCommandSynchronizer();
 
 	if (pSynchronizer == nullptr)
 	{
@@ -96,5 +105,5 @@ void NetClientEventListener::SyncReceivedCommand(ClientConnectServerType_t _list
 		return;
 	}
 
-	pSynchronizer->enqueueCommand(_listenerType, _pSession, _pCmd);
+	pSynchronizer->EnqueueCommand(_listenerType, _pSession, _pCmd);
 }

@@ -12,73 +12,79 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ProjectileListener::ProjectileListener(Projectile* _pProjectile, Actor* _pSpawner)
-: m_pProjectile(_pProjectile)
-, m_pSpawner(_pSpawner)
-, m_fMoveDistance(0.0f)
-, m_fElapsedLifeTime(0.0f)
+: pProjectile_(_pProjectile)
+, pSpawner_(_pSpawner)
+, moveDistance_(0.0f)
+, elapsedLifeTime_(0.0f)
 {
 }
 
-void ProjectileListener::onCreated()
+//////////////////////////////////////////////////////////////////////////////////////////
+void ProjectileListener::OnCreated()
 {
-	IActorListener::onCreated();
+	IActorListener::OnCreated();
 
-	m_fElapsedLifeTime = 0.0f;
-	m_fMoveDistance = 0.0f;
+	elapsedLifeTime_ = 0.0f;
+	moveDistance_ = 0.0f;
 }
 
-void ProjectileListener::onCleanUp()
+//////////////////////////////////////////////////////////////////////////////////////////
+void ProjectileListener::OnCleanUp()
 {
-	CC_SAFE_RELEASE_NULL(m_pSpawner);
+	CC_SAFE_RELEASE_NULL(pSpawner_);
 }
 
-void ProjectileListener::onUpdate(float _dt)
+//////////////////////////////////////////////////////////////////////////////////////////
+void ProjectileListener::OnUpdate(float _dt)
 {
-	ActorSprite* pActorSprite = m_pProjectile->getActorSprite();
+	ActorSprite* pActorSprite = pProjectile_->GetActorSprite();
 
-	const float currentRotation = pActorSprite->getBodyPart()->getRotation();
-	const float moveSpeedFps = m_pProjectile->getBaseInfo()->MoveSpeed / 60.0f;
+	const float currentRotation = pActorSprite->GetBodyPart()->getRotation();
+	const float moveSpeedFps = pProjectile_->GetBaseInfo()->moveSpeed_ / 60.0f;
 	const float moveDistanceFpsX = moveSpeedFps * cosf(CC_DEGREES_TO_RADIANS(currentRotation));
 	const float moveDistanceFpsY = moveSpeedFps * sinf(CC_DEGREES_TO_RADIANS(currentRotation));
 
 	// x축 이동은 액터를 이동
-	m_pProjectile->setPositionX(
-		m_pProjectile->getPositionX() + (m_pProjectile->getSpriteDirection() == SpriteDirection::Right
+	pProjectile_->setPositionX(
+		pProjectile_->getPositionX() + (pProjectile_->GetSpriteDirection() == SpriteDirection::Right
 			                                 ? moveDistanceFpsX
 			                                 : -moveDistanceFpsX));
 
 	// y축 이동은 엑터 스프라이트를 이동
 	pActorSprite->setPositionY(pActorSprite->getPositionY() - moveDistanceFpsY);
-	m_fMoveDistance += moveSpeedFps;
-	m_fElapsedLifeTime += _dt;
+	moveDistance_ += moveSpeedFps;
+	elapsedLifeTime_ += _dt;
 
-	if (isLifeTimeOver())
+	if (IsLifeTimeOver())
 	{
-		onLifeTimeOver();
+		OnLifeTimeOver();
 	}
 
-	if (isDistanceOver())
+	if (IsDistanceOver())
 	{
-		onDistanceOver();
+		OnDistanceOver();
 	}
 
-	if (pActorSprite->getPositionY() <= m_pProjectile->getThicknessBoxNode()->getPositionY())
+	if (pActorSprite->getPositionY() <= pProjectile_->GetThicknessBoxNode()->getPositionY())
 	{
-		onCollisionWithGround();
+		OnCollisionWithGround();
 	}
 }
 
-void ProjectileListener::onCollisionWithGround()
+//////////////////////////////////////////////////////////////////////////////////////////
+void ProjectileListener::OnCollisionWithGround()
 {
-	m_pProjectile->cleanUpAtNextFrame();
+	pProjectile_->CleanUpAtNextFrame();
 }
 
-void ProjectileListener::onLifeTimeOver()
+//////////////////////////////////////////////////////////////////////////////////////////
+void ProjectileListener::OnLifeTimeOver()
 {
-	m_pProjectile->cleanUpAtNextFrame();
+	pProjectile_->CleanUpAtNextFrame();
 }
 
-void ProjectileListener::onDistanceOver()
+//////////////////////////////////////////////////////////////////////////////////////////
+void ProjectileListener::OnDistanceOver()
 {
-	m_pProjectile->cleanUpAtNextFrame();
+	pProjectile_->CleanUpAtNextFrame();
 }

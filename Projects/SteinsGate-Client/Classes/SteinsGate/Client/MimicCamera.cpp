@@ -16,13 +16,13 @@ USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 MimicCamera::MimicCamera()
-: target_(nullptr)
-, mapLayer_(nullptr)
+: pTarget_(nullptr)
+, pMapLayer_(nullptr)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MimicCamera* MimicCamera::create()
+MimicCamera* MimicCamera::Create()
 {
 	MimicCamera* pInst = dbg_new MimicCamera;
 	pInst->autorelease();
@@ -30,22 +30,22 @@ MimicCamera* MimicCamera::create()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MimicCamera::setFollowTarget(Actor* _pTarget)
+void MimicCamera::SetFollowTarget(Actor* _pTarget)
 {
-	target_ = _pTarget;
+	pTarget_ = _pTarget;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void MimicCamera::update(float _dt)
 {
-	updateView(_dt);
+	UpdateView(_dt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // TODO: 무빙 자연스럽게
-void MimicCamera::updateView(float _dt)
+void MimicCamera::UpdateView(float _dt)
 {
-	if (target_ == nullptr)
+	if (pTarget_ == nullptr)
 		return;
 
 	MapLayer* pMapLayer = dynamic_cast<MapLayer*>(_parent);
@@ -56,7 +56,7 @@ void MimicCamera::updateView(float _dt)
 		return;
 	}
 
-	MapAreaInfo* pAreaInfo = pMapLayer->getMapAreaInfo();
+	MapAreaInfo* pAreaInfo = pMapLayer->GetMapAreaInfo();
 
 	if (pAreaInfo == nullptr)
 		return;
@@ -65,7 +65,7 @@ void MimicCamera::updateView(float _dt)
 	SGSize winSize = _director->getWinSize();
 
 	Vec2 mapLayerPos = pMapLayer->getPosition();
-	Vec2 playerNodePos = target_->getPositionRealCenter();
+	Vec2 playerNodePos = pTarget_->GetPositionRealCenter();
 	Vec2 playerNodePosOnScene = playerNodePos + mapLayerPos;
 
 	Size nineRectSize = winSize / 3.0f;

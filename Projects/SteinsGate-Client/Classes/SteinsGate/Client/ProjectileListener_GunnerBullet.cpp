@@ -21,52 +21,52 @@ ProjectileListener_GunnerBullet::ProjectileListener_GunnerBullet(Projectile* _pP
 {
 }
 
-void ProjectileListener_GunnerBullet::onCreated()
+void ProjectileListener_GunnerBullet::OnCreated()
 {
-	ProjectileListener::onCreated();
-	HitRecorder* pHitRecorder = m_pProjectile->getHitRecorder();
+	ProjectileListener::OnCreated();
+	HitRecorder* pHitRecorder = pProjectile_->GetHitRecorder();
 
-	pHitRecorder->clearAlreadyHitEnemies();
-	pHitRecorder->setAlreadyHitRecord(true);
-	pHitRecorder->addSingleHitCallback(
+	pHitRecorder->ClearAlreadyHitEnemies();
+	pHitRecorder->SetAlreadyHitRecord(true);
+	pHitRecorder->AddSingleHitCallback(
 		DEF_EVENT_HIT_GUNNER_BULLET, CC_CALLBACK_1(ProjectileListener_GunnerBullet::onEnemySingleHit, this));
-	pHitRecorder->addMultiHitCallback(
+	pHitRecorder->AddMultiHitCallback(
 		DEF_EVENT_HIT_GUNNER_BULLET, CC_CALLBACK_2(ProjectileListener_GunnerBullet::onEnemyMultiHit, this));
 }
 
-void ProjectileListener_GunnerBullet::onUpdate(float _dt)
+void ProjectileListener_GunnerBullet::OnUpdate(float _dt)
 {
-	ProjectileListener::onUpdate(_dt);
+	ProjectileListener::OnUpdate(_dt);
 
-	const ActorRect& projectileActorRect = m_pProjectile->getActorRect();
-	const int attackDataCode = m_pProjectile->getBaseInfo()->AttackData->code_;
+	const ActorRect& projectileActorRect = pProjectile_->GetActorRect();
+	const int attackDataCode = pProjectile_->GetBaseInfo()->attackData_->code_;
 
-	m_pProjectile->getHitRecorder()->record(projectileActorRect, attackDataCode);
+	pProjectile_->GetHitRecorder()->Record(projectileActorRect, attackDataCode);
 }
 
-void ProjectileListener_GunnerBullet::onCollisionWithGround()
+void ProjectileListener_GunnerBullet::OnCollisionWithGround()
 {
-	ProjectileListener::onCollisionWithGround();
-	ActorManager::Get()->createEffectOnMapAbsolute(
+	ProjectileListener::OnCollisionWithGround();
+	ActorManager::Get()->CreateEffectOnMapAbsolute(
 		DEF_EFFECT_COLLISION_FLOOR,
-		m_pProjectile->getPositionRealCenterX(),
-		m_pProjectile->getPositionRealCenterY(),
-		m_pProjectile->getLocalZOrder() + 1
+		pProjectile_->GetPositionRealCenterX(),
+		pProjectile_->GetPositionRealCenterY(),
+		pProjectile_->getLocalZOrder() + 1
 	);
 }
 
 void ProjectileListener_GunnerBullet::onEnemySingleHit(HitInfo& _info)
 {
-	if (m_pProjectile->getHitRecorder()->isAlreadyHit(_info.HitTarget))
+	if (pProjectile_->GetHitRecorder()->IsAlreadyHit(_info.pHitTarget_))
 		return;
 
-	EffectInfo* pHitEffectInfo = m_pProjectile->getHitEffectInfo();
-	ActorManager::Get()->createEffectOnMapTargetCollision(
+	EffectInfo* pHitEffectInfo = pProjectile_->GetHitEffectInfo();
+	ActorManager::Get()->CreateEffectOnMapTargetCollision(
 		pHitEffectInfo->code_,
-		SpriteDirection::Reverse[_info.HitDirection],
+		SpriteDirection::Reverse[_info.hitDirection_],
 		_info);
-	_info.HitTarget->hit(_info);
-	m_pProjectile->cleanUpAtNextFrame();
+	_info.pHitTarget_->Hit(_info);
+	pProjectile_->CleanUpAtNextFrame();
 }
 
 void ProjectileListener_GunnerBullet::onEnemyMultiHit(SGHitInfoList& _hitList, int _newHitCount)

@@ -16,24 +16,24 @@ public:
 	Effect(EffectInfo* _pBaseInfo);
 	~Effect() override;
 
-	static Effect* create(EffectInfo* _pBaseInfo);
+	static Effect* Create(EffectInfo* _pBaseInfo);
 
-	void initialize() override;
-	bool initVariables() override;
-	void initActorSprite() override;
-	void initListeners() override;
-	void initComponents() override;
+	void Initialize() override;
+	bool InitVariables() override;
+	void InitActorSprite() override;
+	void InitListeners() override;
+	void InitComponents() override;
 
-	EffectInfo* getBaseInfo() { return baseInfo_; }
-	ActorType_t getType() const override { return ActorType::Effect; }
-	int getCode() override { return baseInfo_->code_; }
+	EffectInfo* GetBaseInfo() { return pBaseInfo_; }
+	ActorType_t GetType() const override { return ActorType::Effect; }
+	int GetCode() override { return pBaseInfo_->code_; }
 
 	void update(float _delta) override;
-	void onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
-	void onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
-	void onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
-	void onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
+	void OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
+	void OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
+	void OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
+	void OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
 
 private:
-	EffectInfo* baseInfo_;
+	EffectInfo* pBaseInfo_;
 };

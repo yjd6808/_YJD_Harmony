@@ -16,8 +16,8 @@ USING_NS_CC;
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UILabel::UILabel(UIRootGroup* _pMaster, UIGroup* _pParent)
-: UIElement(_pMaster, _pParent)
+UILabel::UILabel(UIRootGroup* _pRoot, UIGroup* _pParent)
+: UIElement(_pRoot, _pParent)
 , initialFontSize_(12.0f)
 , fontSize_(12.0f)
 , fontAutoScaling_(true)
@@ -26,8 +26,8 @@ UILabel::UILabel(UIRootGroup* _pMaster, UIGroup* _pParent)
 {
 }
 
-UILabel::UILabel(UIRootGroup* _pMaster, UIGroup* _pParent, UILabelInfo* _pLabelInfo, bool _infoOwner)
-: UIElement(_pMaster, _pParent, _pLabelInfo, _infoOwner)
+UILabel::UILabel(UIRootGroup* _pRoot, UIGroup* _pParent, UILabelInfo* _pLabelInfo, bool _infoOwner)
+: UIElement(_pRoot, _pParent, _pLabelInfo, _infoOwner)
 , initialFontSize_(12.0f)
 , fontSize_(12.0f)
 , fontAutoScaling_(true)
@@ -40,17 +40,17 @@ UILabel::~UILabel()
 {
 }
 
-UILabel* UILabel::create(UIRootGroup* _pMaster, UIGroup* _pParent)
+UILabel* UILabel::create(UIRootGroup* _pRoot, UIGroup* _pParent)
 {
-	UILabel* pLabel = dbg_new UILabel(_pMaster, _pParent);
+	UILabel* pLabel = dbg_new UILabel(_pRoot, _pParent);
 	pLabel->init();
 	pLabel->autorelease();
 	return pLabel;
 }
 
-UILabel* UILabel::create(UIRootGroup* _pMaster, UIGroup* _pParent, UILabelInfo* _pLabelInfo, bool _infoOwner)
+UILabel* UILabel::create(UIRootGroup* _pRoot, UIGroup* _pParent, UILabelInfo* _pLabelInfo, bool _infoOwner)
 {
-	UILabel* pLabel = dbg_new UILabel(_pMaster, _pParent, _pLabelInfo, _infoOwner);
+	UILabel* pLabel = dbg_new UILabel(_pRoot, _pParent, _pLabelInfo, _infoOwner);
 	pLabel->init();
 	pLabel->autorelease();
 	return pLabel;
@@ -58,7 +58,7 @@ UILabel* UILabel::create(UIRootGroup* _pMaster, UIGroup* _pParent, UILabelInfo* 
 
 SGString UILabel::getFontPath() const
 {
-	const SGString fontName = Core::Contents.FontManager->getFontName(pInfo_->FontCode);
+	const SGString fontName = Core::Contents.FontManager->GetFontName(pInfo_->fontCode_);
 	const SGString fontPath = Path::Combine(Core::CommonInfo->dataPath_, Const::Resource::FontDirName, fontName);
 	return fontPath;
 }
@@ -71,7 +71,7 @@ void UILabel::setText(const std::string& _text)
 void UILabel::setText(const std::string& _text, float _fontSize)
 {
 	pLabel_->initWithTTF(_text, getFontPath().Source(), _fontSize);
-	setContentSize({ pInfo_->Size.width, pInfo_->Size.height });
+	setContentSize({ pInfo_->size_.width, pInfo_->size_.height });
 }
 
 void UILabel::setText(const std::string& _text, float _fontSize, const SGSize& _dimension)
@@ -110,9 +110,9 @@ void UILabel::SetUISize(const SGSize& _contentSize)
 
 void UILabel::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 {
-	if (_pInfo->Type != UIElementType::Label)
+	if (_pInfo->type_ != UIElementType::Label)
 	{
-		LogWarnInvalidInfo(_pInfo->Type);
+		LogWarnInvalidInfo(_pInfo->type_);
 		return;
 	}
 
@@ -164,15 +164,15 @@ bool UILabel::init()
 		return false;
 	}
 
-	SetInitialUISize(pInfo_->Size);
+	SetInitialUISize(pInfo_->size_);
 
-	pLabel_ = SGLabel::createWithTTF(pInfo_->Text.ToStd(), getFontPath().Source(), static_cast<int>(fontSize_),
+	pLabel_ = SGLabel::createWithTTF(pInfo_->text_.ToStd(), getFontPath().Source(), static_cast<int>(fontSize_),
 	                                 Size::ZERO);
-	pLabel_->setHorizontalAlignment((TextHAlignment)pInfo_->TextHAlignment);
-	pLabel_->setVerticalAlignment((TextVAlignment)pInfo_->TextVAlignment);
+	pLabel_->setHorizontalAlignment((TextHAlignment)pInfo_->textHAlignment_);
+	pLabel_->setVerticalAlignment((TextVAlignment)pInfo_->textVAlignment_);
 	pLabel_->setDimensions(uiSize_.width, uiSize_.height);
-	pLabel_->setTextColor(pInfo_->FontColor);
-	pLabel_->enableWrap(pInfo_->TextWrap);
+	pLabel_->setTextColor(pInfo_->fontColor_);
+	pLabel_->enableWrap(pInfo_->textWrap_);
 	pLabel_->setLineHeight(static_cast<int>(fontSize_));
 	pLabel_->setAnchorPoint(Vec2::ZERO);
 	this->addChild(pLabel_);
@@ -183,6 +183,6 @@ bool UILabel::init()
 void UILabel::SetInitialUISize(SGSize _size)
 {
 	UIElement::SetInitialUISize(_size);
-	fontSize_ = pInfo_->FontSize * Core::ClientInfo->uiScaleYFactor_;
+	fontSize_ = pInfo_->fontSize_ * Core::ClientInfo->uiScaleYFactor_;
 	initialFontSize_ = fontSize_;
 }

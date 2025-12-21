@@ -33,7 +33,7 @@ PhysicsComponent::PhysicsComponent(Actor* _pActor)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PhysicsComponent::initialize()
+void PhysicsComponent::Initialize()
 {
 	useElasticity_ = false;
 	bounced_ = false;
@@ -47,39 +47,39 @@ void PhysicsComponent::initialize()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool PhysicsComponent::isPaused()
+bool PhysicsComponent::IsPaused()
 {
 	return elapsedPausedTime_ < pauseTime_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool PhysicsComponent::isBounced()
+bool PhysicsComponent::IsBounced()
 {
 	return bounced_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PhysicsComponent::disableElasticity()
+void PhysicsComponent::DisableElasticity()
 {
 	useElasticity_ = false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PhysicsComponent::enableElasticity()
+void PhysicsComponent::EnableElasticity()
 {
 	useElasticity_ = true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PhysicsComponent::onUpdate(float _dt)
+void PhysicsComponent::OnUpdate(float _dt)
 {
-	updatePauseTime(_dt);
-	updatePhysics(_dt);
-	updateDebug(_dt); // TODO: 디버깅용 임시 코드
+	UpdatePauseTime(_dt);
+	UpdatePhysics(_dt);
+	UpdateDebug(_dt); // TODO: 디버깅용 임시 코드
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PhysicsComponent::updatePauseTime(float _dt)
+void PhysicsComponent::UpdatePauseTime(float _dt)
 {
 	elapsedPausedTime_ += _dt;
 
@@ -91,35 +91,35 @@ void PhysicsComponent::updatePauseTime(float _dt)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PhysicsComponent::updatePhysics(float _dt)
+void PhysicsComponent::UpdatePhysics(float _dt)
 {
-	if (isPaused())
+	if (IsPaused())
 	{
 		return;
 	}
 
-	updateGravity(_dt);
-	updateFriction(_dt);
+	UpdateGravity(_dt);
+	UpdateFriction(_dt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PhysicsComponent::updateGravity(float _dt)
+void PhysicsComponent::UpdateGravity(float _dt)
 {
-	const MapLayer* pMapLayer = pActor_->getMapLayer();
+	const MapLayer* pMapLayer = pActor_->GetMapLayer();
 
 	if (pMapLayer == nullptr)
 	{
 		return;
 	}
 
-	const MapPhysicsInfo* pPhysicsInfo = pMapLayer->getMapPhysicsInfo();
+	const MapPhysicsInfo* pPhysicsInfo = pMapLayer->GetMapPhysicsInfo();
 
 	if (pPhysicsInfo == nullptr)
 	{
 		return;
 	}
 
-	ActorSprite* pActorSprite = pActor_->getActorSprite();
+	ActorSprite* pActorSprite = pActor_->GetActorSprite();
 
 	if (pActorSprite == nullptr)
 	{
@@ -162,27 +162,27 @@ void PhysicsComponent::updateGravity(float _dt)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PhysicsComponent::updateFriction(float _dt)
+void PhysicsComponent::UpdateFriction(float _dt)
 {
-	const MapLayer* pMapLayer = pActor_->getMapLayer();
+	const MapLayer* pMapLayer = pActor_->GetMapLayer();
 
 	if (pMapLayer == nullptr)
 	{
 		return;
 	}
 
-	const MapPhysicsInfo* pPhysicsInfo = pMapLayer->getMapPhysicsInfo();
-	const MapAreaInfo* pAreaInfo = pMapLayer->getMapAreaInfo();
+	const MapPhysicsInfo* pPhysicsInfo = pMapLayer->GetMapPhysicsInfo();
+	const MapAreaInfo* pAreaInfo = pMapLayer->GetMapAreaInfo();
 
 	if (pPhysicsInfo == nullptr || pAreaInfo == nullptr)
 	{
 		return;
 	}
 
-	SGRect groundRect = pActor_->getThicknessBoxRect();
+	SGRect groundRect = pActor_->GetThicknessBoxRect();
 	groundRect.origin.x += velocity_.x * _dt;
 
-	if (pActor_->isOnTheGround())
+	if (pActor_->IsOnTheGround())
 	{
 		if (velocity_.x > 0.0f)
 		{
@@ -209,16 +209,16 @@ void PhysicsComponent::updateFriction(float _dt)
 		return;
 	}
 
-	if (pMapLayer->isCollideWithMapObjects(groundRect))
+	if (pMapLayer->IsCollideWithMapObjects(groundRect))
 	{
 		return;
 	}
 
-	pActor_->setPositionRealX(groundRect.origin.x);
+	pActor_->SetPositionRealX(groundRect.origin.x);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-float PhysicsComponent::addForceX(float _force)
+float PhysicsComponent::AddForceX(float _force)
 {
 	float before = velocity_.x;
 	velocity_.x += _force;
@@ -226,7 +226,7 @@ float PhysicsComponent::addForceX(float _force)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-float PhysicsComponent::addForceY(float _force)
+float PhysicsComponent::AddForceY(float _force)
 {
 	float before = velocity_.y;
 	velocity_.y += _force;
@@ -234,7 +234,7 @@ float PhysicsComponent::addForceY(float _force)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-float PhysicsComponent::removeForceX()
+float PhysicsComponent::RemoveForceX()
 {
 	float before = velocity_.x;
 	velocity_.x = 0.0f;
@@ -242,7 +242,7 @@ float PhysicsComponent::removeForceX()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-float PhysicsComponent::removeForceY()
+float PhysicsComponent::RemoveForceY()
 {
 	float before = velocity_.y;
 	velocity_.y = 0.0f;
@@ -250,37 +250,37 @@ float PhysicsComponent::removeForceY()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool PhysicsComponent::hasForceX()
+bool PhysicsComponent::HasForceX()
 {
 	return Math::Abs(velocity_.x) >= SG_FLT_EPSILON;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool PhysicsComponent::hasForceY()
+bool PhysicsComponent::HasForceY()
 {
 	return Math::Abs(velocity_.y) >= SG_FLT_EPSILON;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PhysicsComponent::hit(const HitInfo& _hitInfo)
+void PhysicsComponent::Hit(const HitInfo& _hitInfo)
 {
-	const Actor* pAttacker = _hitInfo.Attacker;
-	const SpriteDirection_t hitDirection = _hitInfo.HitDirection;
-	const SGRect& hitRect = _hitInfo.HitRect;
-	const AttackDataInfo* pAttackDataInfo = _hitInfo.AttackDataInfo;
+	const Actor* pAttacker = _hitInfo.pAttacker_;
+	const SpriteDirection_t hitDirection = _hitInfo.hitDirection_;
+	const SGRect& hitRect = _hitInfo.hitRect_;
+	const AttackDataInfo* pAttackDataInfo = _hitInfo.pAttackDataInfo_;
 
 	float forceX = 500.0f;
 
 	switch (pAttackDataInfo->attackXForceDir_)
 	{
 	case AttackXForceDirection::Forward:
-		forceX = pAttacker->getSpriteDirection() == SpriteDirection::Right
+		forceX = pAttacker->GetSpriteDirection() == SpriteDirection::Right
 			         ? pAttackDataInfo->attackXForce_
 			         : -pAttackDataInfo->attackXForce_;
 		break;
 
 	case AttackXForceDirection::Backward:
-		forceX = pAttacker->getSpriteDirection() == SpriteDirection::Right
+		forceX = pAttacker->GetSpriteDirection() == SpriteDirection::Right
 			         ? -pAttackDataInfo->attackXForce_
 			         : pAttackDataInfo->attackXForce_;
 		break;
@@ -298,60 +298,60 @@ void PhysicsComponent::hit(const HitInfo& _hitInfo)
 	}
 
 	bounced_ = false;
-	pActor_->setSpriteDirection(hitDirection);
+	pActor_->SetSpriteDirection(hitDirection);
 
-	float removedForceX = removeForceX();
-	float removedForceY = removeForceY();
+	float removedForceX = RemoveForceX();
+	float removedForceY = RemoveForceY();
 
 	if (pAttackDataInfo->isFallDownAttack_)
 	{
-		addForceX(forceX);
-		addForceY(pAttackDataInfo->attackYForce_);
+		AddForceX(forceX);
+		AddForceY(pAttackDataInfo->attackYForce_);
 		return;
 	}
 
 	if (removedForceX != 0.0f)
 	{
-		addForceY(pAttackDataInfo->attackYForce_);
+		AddForceY(pAttackDataInfo->attackYForce_);
 		return;
 	}
 
-	if (pActor_->isOnTheGround())
+	if (pActor_->IsOnTheGround())
 	{
-		addForceX(forceX);
+		AddForceX(forceX);
 		return;
 	}
 
-	addForceY(pAttackDataInfo->attackYForce_);
+	AddForceY(pAttackDataInfo->attackYForce_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PhysicsComponent::pausePhysics()
+void PhysicsComponent::PausePhysics()
 {
-	pausePhysics(FLT_MAX);
+	PausePhysics(FLT_MAX);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PhysicsComponent::pausePhysics(float _time)
+void PhysicsComponent::PausePhysics(float _time)
 {
 	pauseTime_ = _time;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PhysicsComponent::stiffenBody(float _time)
+void PhysicsComponent::StiffenBody(float _time)
 {
-	pausePhysics(_time);
-	pActor_->pauseAnimation(_time);
+	PausePhysics(_time);
+	pActor_->PauseAnimation(_time);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PhysicsComponent::resume()
+void PhysicsComponent::Resume()
 {
 	pauseTime_ = 0.0f;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Direction_t PhysicsComponent::getForceXDirection()
+Direction_t PhysicsComponent::GetForceXDirection()
 {
 	if (velocity_.x > SG_FLT_EPSILON)
 	{
@@ -367,7 +367,7 @@ Direction_t PhysicsComponent::getForceXDirection()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Direction_t PhysicsComponent::getForceYDirection()
+Direction_t PhysicsComponent::GetForceYDirection()
 {
 	if (velocity_.y > SG_FLT_EPSILON)
 	{
@@ -383,7 +383,7 @@ Direction_t PhysicsComponent::getForceYDirection()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool PhysicsComponent::hasForce()
+bool PhysicsComponent::HasForce()
 {
 	if (Math::Abs(velocity_.x) >= SG_FLT_EPSILON)
 	{
@@ -399,7 +399,7 @@ bool PhysicsComponent::hasForce()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PhysicsComponent::updateDebug(float _dt)
+void PhysicsComponent::UpdateDebug(float _dt)
 {
 	if (!Global::Get()->DrawAttackBox)
 	{
@@ -416,36 +416,36 @@ void PhysicsComponent::updateDebug(float _dt)
 		return;
 	}
 
-	updateDebugSub1(_dt);
-	updateDebugSub2(_dt);
+	UpdateDebugSub1(_dt);
+	UpdateDebugSub2(_dt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PhysicsComponent::updateDebugSub1(float _dt)
+void PhysicsComponent::UpdateDebugSub1(float _dt)
 {
-	MapLayer* pMapLayer = pActor_->getMapLayer();
-	const ActorSprite* pActorSprite = pActor_->getActorSprite();
+	MapLayer* pMapLayer = pActor_->GetMapLayer();
+	const ActorSprite* pActorSprite = pActor_->GetActorSprite();
 
 	if (pMapLayer == nullptr)
 	{
 		return;
 	}
 
-	ActorPartAnimation* pAnimation = pActorSprite->getRunningAnimation();
+	ActorPartAnimation* pAnimation = pActorSprite->GetRunningAnimation();
 
 	if (pAnimation == nullptr)
 	{
 		return;
 	}
 
-	const FrameInfo& frameInfo = pAnimation->getRunningFrameInfo();
+	const FrameInfo& frameInfo = pAnimation->GetRunningFrameInfo();
 
-	if (frameInfo.FrameEventCode == InvalidValue_v)
+	if (frameInfo.frameEventCode_ == InvalidValue_v)
 	{
 		return;
 	}
 
-	const FrameEvent* pFrameEvent = Core::DataManager->getFrameEvent(pActor_->getType(), frameInfo.FrameEventCode);
+	const FrameEvent* pFrameEvent = Core::DataManager->GetFrameEvent(pActor_->GetType(), frameInfo.frameEventCode_);
 
 	if (pFrameEvent && pFrameEvent->type_ != FrameEventType::AttackBoxInstant)
 	{
@@ -456,15 +456,15 @@ void PhysicsComponent::updateDebugSub1(float _dt)
 	atkBoxInstantElapsedTime_ = 0.0f;
 
 	FrameEventAttackBoxInstant* pAttackBoxInstantInfo = (FrameEventAttackBoxInstant*)pFrameEvent;
-	ActorRect absoluteActorRect = Actor::convertAbsoluteActorRect(pActor_, pAttackBoxInstantInfo->rect_);
+	ActorRect absoluteActorRect = Actor::ConvertAbsoluteActorRect(pActor_, pAttackBoxInstantInfo->rect_);
 
 	RectPoly hitPoly = RectPoly::createFromLeftBottom(
-		absoluteActorRect.BodyRect.origin,
-		absoluteActorRect.BodyRect.size);
+		absoluteActorRect.bodyRect_.origin,
+		absoluteActorRect.bodyRect_.size);
 
 	RectPoly thickPoly = RectPoly::createFromLeftBottom(
-		absoluteActorRect.ThicknessRect.origin,
-		absoluteActorRect.ThicknessRect.size);
+		absoluteActorRect.thicknessRect_.origin,
+		absoluteActorRect.thicknessRect_.size);
 
 	if (atkHitBox_ == nullptr)
 	{
@@ -494,7 +494,7 @@ void PhysicsComponent::updateDebugSub1(float _dt)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PhysicsComponent::updateDebugSub2(float _dt)
+void PhysicsComponent::UpdateDebugSub2(float _dt)
 {
 	atkBoxInstantElapsedTime_ += _dt;
 

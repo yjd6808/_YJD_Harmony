@@ -37,7 +37,7 @@ bool TileInfoLoader::Load()
 			Value& tileRoot = tileListRoot[(Json::ArrayIndex)i];
 			TileInfo* pInfo = dbg_new TileInfo;
 
-			readTileInfo(tileRoot, pInfo);
+			ReadTileInfo(tileRoot, pInfo);
 			AddData(pInfo);
 		}
 	}
@@ -51,12 +51,12 @@ bool TileInfoLoader::Load()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TileInfoLoader::readTileInfo(Json::Value& _tileRoot, TileInfo* _pTileInfo)
+void TileInfoLoader::ReadTileInfo(Json::Value& _tileRoot, TileInfo* _pTileInfo)
 {
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 	_pTileInfo->code_ = _tileRoot["code"].asInt();
-	_pTileInfo->SgaIndex = pPackManager->getPackIndex(JsonUtilEx::GetString(_tileRoot["sga"]));
-	_pTileInfo->ImgIndex = pPackManager->getPack(_pTileInfo->SgaIndex)->getImgIndex(
+	_pTileInfo->sgaIndex_ = pPackManager->GetPackIndex(JsonUtilEx::GetString(_tileRoot["sga"]));
+	_pTileInfo->imgIndex_ = pPackManager->GetPack(_pTileInfo->sgaIndex_)->GetImgIndex(
 		JsonUtilEx::GetString(_tileRoot["img"]));
-	_pTileInfo->SpriteIndex = _tileRoot["index"].asInt();
+	_pTileInfo->spriteIndex_ = _tileRoot["index"].asInt();
 }

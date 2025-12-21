@@ -18,18 +18,18 @@ public:
 	void Initialize() override;
 	void Finalize() override;
 
-	SGTcpClient* AuthTcp;
-	SGUdpClient* AuthUdp;
-	SGTcpClient* LobbyTcp;
-	SGUdpClient* LobbyUdp;
-	SGTcpClient* LogicTcp;
-	SGUdpClient* LogicUdp;
-	SGTcpClient* AreaTcp;
-	SGUdpClient* AreaUdp;
-	SGTcpClient* ChatTcp;
-	SGUdpClient* ChatUdp;
+	SGTcpClient* pAuthTcp_;
+	SGUdpClient* pAuthUdp_;
+	SGTcpClient* pLobbyTcp_;
+	SGUdpClient* pLobbyUdp_;
+	SGTcpClient* pLogicTcp_;
+	SGUdpClient* pLogicUdp_;
+	SGTcpClient* pAreaTcp_;
+	SGUdpClient* pAreaUdp_;
+	SGTcpClient* pChatTcp_;
+	SGUdpClient* pChatUdp_;
 
-	SGCommandParser* getParser() { return &parser_; }
+	SGCommandParser* GetParser() { return &parser_; }
 
 private:
 	SGCommandParser parser_;

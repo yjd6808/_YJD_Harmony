@@ -43,7 +43,7 @@ bool SGChannelSelectScene::init()
 		return false;
 	}
 
-	m_pUILayer->addUIGroup(GROUP_UI_CHANNEL);
+	pUILayer_->AddUIGroup(GROUP_UI_CHANNEL);
 	return true;
 }
 
@@ -59,19 +59,19 @@ void SGChannelSelectScene::update(float _dt)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGChannelSelectScene::onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
+void SGChannelSelectScene::OnKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
 {
 	if (_keyCode == EventKeyboard::KeyCode::KEY_F8)
 	{
-		WorldScene::get()->reserveScene(SceneType::Game);
+		WorldScene::Get()->ReserveScene(SceneType::Game);
 	}
 	else if (_keyCode == EventKeyboard::KeyCode::KEY_F7)
 	{
-		WorldScene::get()->reserveScene(SceneType::Login);
+		WorldScene::Get()->ReserveScene(SceneType::Login);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGChannelSelectScene::onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
+void SGChannelSelectScene::OnKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent)
 {
 }

@@ -33,16 +33,16 @@ static constexpr int LOBBY_SEND_BUFFER_SIZE = 6144;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 NetClientGroup::NetClientGroup()
-: AuthTcp(nullptr)
-, AuthUdp(nullptr)
-, LobbyTcp(nullptr)
-, LobbyUdp(nullptr)
-, LogicTcp(nullptr)
-, LogicUdp(nullptr)
-, AreaTcp(nullptr)
-, AreaUdp(nullptr)
-, ChatTcp(nullptr)
-, ChatUdp(nullptr)
+: pAuthTcp_(nullptr)
+, pAuthUdp_(nullptr)
+, pLobbyTcp_(nullptr)
+, pLobbyUdp_(nullptr)
+, pLogicTcp_(nullptr)
+, pLogicUdp_(nullptr)
+, pAreaTcp_(nullptr)
+, pAreaUdp_(nullptr)
+, pChatTcp_(nullptr)
+, pChatUdp_(nullptr)
 {
 	SetName("클라");
 }
@@ -67,22 +67,22 @@ void NetClientGroup::Initialize()
 	AddHost(Const::Host::AuthTcpId, pAuthTcp);
 	AddHost(Const::Host::LobbyTcpId, pLobbyTcp);
 
-	AuthTcp = pAuthTcp.Get<TcpClient*>();
-	AuthTcp->SetEventListener(dbg_new NetClientEventListener{ ClientConnectServerType::Auth });
+	pAuthTcp_ = pAuthTcp.Get<TcpClient*>();
+	pAuthTcp_->SetEventListener(dbg_new NetClientEventListener{ ClientConnectServerType::Auth });
 
-	LobbyTcp = pLobbyTcp.Get<TcpClient*>();
-	LobbyTcp->SetEventListener(dbg_new NetClientEventListener{ ClientConnectServerType::Lobby });
+	pLobbyTcp_ = pLobbyTcp.Get<TcpClient*>();
+	pLobbyTcp_->SetEventListener(dbg_new NetClientEventListener{ ClientConnectServerType::Lobby });
 
 	// ======================================================================================
 	// 샌더 초기화
 	// ======================================================================================
 
-	S_AUTH::SetInformation(AuthTcp, SendStrategy::SendAsync);
-	S_LOBBY::SetInformation(LobbyTcp, SendStrategy::SendAsync);
-	S_GAME::SetInformation(LogicTcp, SendStrategy::SendAsync);
-	S_GAME_UDP::SetInformation(LogicUdp, SendStrategy::SendToAsync);
-	S_CHAT::SetInformation(ChatTcp, SendStrategy::SendAsync);
-	S_AREA::SetInformation(AreaTcp, SendStrategy::SendAsync);
+	S_AUTH::SetInformation(pAuthTcp_, SendStrategy::SendAsync);
+	S_LOBBY::SetInformation(pLobbyTcp_, SendStrategy::SendAsync);
+	S_GAME::SetInformation(pLogicTcp_, SendStrategy::SendAsync);
+	S_GAME_UDP::SetInformation(pLogicUdp_, SendStrategy::SendToAsync);
+	S_CHAT::SetInformation(pChatTcp_, SendStrategy::SendAsync);
+	S_AREA::SetInformation(pAreaTcp_, SendStrategy::SendAsync);
 
 	// ======================================================================================
 	// 커맨드 초기화

@@ -124,7 +124,7 @@ public:
 	void SetRelativePosition(float _x, float _y); // 부모기준 상대적 위치 반영
 	void SetRelativePosition(const SGVec2& _pos); // 부모기준 상대적 위치 반영
 	void SetRelativePosition(float _x, float _y, HAlignment_t _halign, VAlignment_t _valign); // 부모기준 상대적 위치 반영
-	void SetRelativePosition(UIElement* _target, float _x, float _y, HAlignment_t _halign, VAlignment_t _valign);
+	void SetRelativePosition(UIElement* _pTarget, float _x, float _y, HAlignment_t _halign, VAlignment_t _valign);
 	// 타겟기준 상대적 위치 반영
 
 

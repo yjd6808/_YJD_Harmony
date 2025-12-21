@@ -31,61 +31,60 @@ public:
         eFinished
     };
 
-    static ActorPartAnimation* create(
+    static ActorPartAnimation* Create(
         ActorPartSprite* _pAnimationTarget,
         AnimationInfo* _pAnimationInfo,
-        SGVector<FrameTexture*>& _frames
-    );
+        SGVector<FrameTexture*>& _frames);
 
     ActorPartAnimation(
         ActorPartSprite* _pAnimationTarget,
         AnimationInfo* _pAnimationInfo,
-        SGVector<FrameTexture*>& _frames
-    );
+        SGVector<FrameTexture*>& _frame);
 
-    void constructFrames(int _sgaIndex, int _imgIndex);
-    void update(float _dt);
-    void updateLoopSequence(float _dt);
-    void updateAnimation(float _currentFrameDelay, FrameTexture* _pCurrentFrameTexture, float _dt);
-    void updateZeroDelayFrame(float _currentFrameDelay, FrameTexture* _pCurrentFrameTexture);
-    void init();
-    void run();
-    void run(int _frameIndexInAnimation);
-    void pause();
-    void pauseTime(float _delay);
-    void resume();
-    void setPlaySpeed(float _speed);
-    void setLoopSequence();
-    void setAnimationInfo(AnimationInfo* _pAnimationInfo);
+    void ConstructFrames(int _sgaIndex, int _imgIndex);
+    void Update(float _dt);
+    void UpdateLoopSequence(float _dt);
+    void UpdateAnimation(float _currentFrameDelay, FrameTexture* _pCurrentFrameTexture, float _dt);
+    void UpdateZeroDelayFrame(float _currentFrameDelay, FrameTexture* _pCurrentFrameTexture);
 
-    AnimationInfo* getAnimationInfo() { return animationInfo_; }
+    void Init();
+    void Run();
+    void Run(int _frameIndexInAnimation);
+    void Pause();
+    void PauseTime(float _delay);
+    void Resume();
+    void SetPlaySpeed(float _speed);
+    void SetLoopSequence();
+    void SetAnimationInfo(AnimationInfo* _pAnimationInfo);
 
-    int getFrameIndexInAnimation() { return frameIndexInAnimation_; }
-    int getTargetFrameIndex() { return animationFrames_[frameIndexInAnimation_]->getTargetFrameIndex(); }
-    int getFrameIndex() { return animationFrames_[frameIndexInAnimation_]->getFrameIndex(); }
-    int getPartIndex();
-    int getAnimationCode() { return animationInfo_->code_; }
+    AnimationInfo* GetAnimationInfo() { return pAnimationInfo_; }
 
-    FrameInfo& getFrameInfo(int _frameIndexInAnimation);
-    FrameInfo& getRunningFrameInfo();
-    int getRunningFrameEventCode();
+    int GetFrameIndexInAnimation() { return frameIndexInAnimation_; }
+    int GetTargetFrameIndex() { return animationFrames_[frameIndexInAnimation_]->GetTargetFrameIndex(); }
+    int GetFrameIndex() { return animationFrames_[frameIndexInAnimation_]->GetFrameIndex(); }
+    int GetPartIndex();
+    int GetAnimationCode() { return pAnimationInfo_->code_; }
 
-    bool isFinished() { return finished_; }
-    bool isPaused() { return paused_ || zeroFramePaused_; }
-    bool isZeroFramePaused() { return zeroFramePaused_; }
-    void reflectAnimation(ActorPartAnimation* _pRunningAnimation);
+    FrameInfo& GetFrameInfo(int _frameIndexInAnimation);
+    FrameInfo& GetRunningFrameInfo();
+    int GetRunningFrameEventCode();
+
+    bool IsFinished() { return finished_; }
+    bool IsPaused() { return paused_ || zeroFramePaused_; }
+    bool IsZeroFramePaused() { return zeroFramePaused_; }
+    void ReflectAnimation(ActorPartAnimation* _pRunningAnimation);
 
 private:
-    FrameTexture* changeTexture(int _frameIndexInAnimation);
-    FrameTexture* getTexture(int _frameIndexInAnimation);
+    FrameTexture* ChangeTexture(int _frameIndexInAnimation);
+    FrameTexture* GetTexture(int _frameIndexInAnimation);
 
 private:
     // 주입 데이터
     int sgaIndex_;
     int imgIndex_;
 
-    AnimationInfo* animationInfo_;
-    ActorPartSprite* target_;
+    AnimationInfo* pAnimationInfo_;
+    ActorPartSprite* pTarget_;
     SGVector<FrameTexture*> animationFrames_;
     SGVector<FrameTexture*>& frames_;
 

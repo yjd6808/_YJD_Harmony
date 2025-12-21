@@ -13,23 +13,23 @@
 class UIButton : public UIElement
 {
 public:
-	static UIButton* create(UIRootGroup* _pMaster, UIGroup* _pParent);
-	static UIButton* create(UIRootGroup* _pMaster, UIGroup* _pParent, UIButtonInfo* _pButtonInfo, bool _infoOwner);
+	static UIButton* Create(UIRootGroup* _pRoot, UIGroup* _pParent);
+	static UIButton* Create(UIRootGroup* _pRoot, UIGroup* _pParent, UIButtonInfo* _pButtonInfo, bool _infoOwner);
 
-	static constexpr UIElementType_t type() { return UIElementType::Button; }
+	static constexpr UIElementType_t Type() { return UIElementType::Button; }
 
-	UIButton(UIRootGroup* _pMaster, UIGroup* _pParent);
-	UIButton(UIRootGroup* _pMaster, UIGroup* _pParent, UIButtonInfo* _pButtonInfo, bool _infoOwner);
+	UIButton(UIRootGroup* _pRoot, UIGroup* _pParent);
+	UIButton(UIRootGroup* _pRoot, UIGroup* _pParent, UIButtonInfo* _pButtonInfo, bool _infoOwner);
 	~UIButton() override;
 
 	bool init() override;
 	void Load() override;
 	void Unload() override;
 
-	void setVisibleState(State _state);
+	void SetVisibleState(State _state);
 	void SetUISize(const SGSize& _size) override;
 	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
-	void setInfoButton(UIButtonInfo* _pInfo, bool _infoOwner);
+	void SetInfoButton(UIButtonInfo* _pInfo, bool _infoOwner);
 	void SetEnabled(bool _enabled) override;
 	void RestoreState(State _state) override;
 	UIElementType_t GetElementType() override { return UIElementType::Button; }

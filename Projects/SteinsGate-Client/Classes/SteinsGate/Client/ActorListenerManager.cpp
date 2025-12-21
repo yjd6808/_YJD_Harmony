@@ -21,10 +21,12 @@
 // 프로젝틸 리스너
 #include <SteinsGate/Client/CharacterListener_Gunner.h>
 
+//////////////////////////////////////////////////////////////////////////////////////////
 ActorListenerManager::ActorListenerManager()
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 ActorListenerManager::~ActorListenerManager()
 {
 	characterListenerMap_.ForEachValueDelete();
@@ -32,7 +34,8 @@ ActorListenerManager::~ActorListenerManager()
 	projectileListenerMap_.ForEachValueDelete();
 }
 
-void ActorListenerManager::init()
+//////////////////////////////////////////////////////////////////////////////////////////
+void ActorListenerManager::Init()
 {
 	// 캐릭터 리스너 등록
 	characterListenerMap_.Insert(DEF_CHARACTER_LISTENER_GUNNER, dbg_new CharacterListener_Gunner::Factory);
@@ -42,13 +45,13 @@ void ActorListenerManager::init()
 	monsterListenerMap_.Insert(DEF_MONSTER_LISTENER_DARK_GOBLIN, dbg_new MonsterListener_DarkGoblin::Factory);
 
 	// 프로젝틸 리스너 등록
-	projectileListenerMap_.Insert(
-		DEF_PROJECTILE_LISTENER_GUNNER_BULLET, dbg_new ProjectileListener_GunnerBullet::Factory);
+	projectileListenerMap_.Insert(DEF_PROJECTILE_LISTENER_GUNNER_BULLET, dbg_new ProjectileListener_GunnerBullet::Factory);
 }
 
-CharacterListener* ActorListenerManager::createCharacterListener(Character* _pCharacter)
+//////////////////////////////////////////////////////////////////////////////////////////
+CharacterListener* ActorListenerManager::CreateCharacterListener(Character* _pCharacter)
 {
-	const int characterCode = _pCharacter->getCode();
+	const int characterCode = _pCharacter->GetCode();
 	CharacterListener::IFactory** pFactory = characterListenerMap_.Find(characterCode);
 
 	if (pFactory == nullptr)
@@ -57,12 +60,13 @@ CharacterListener* ActorListenerManager::createCharacterListener(Character* _pCh
 		return nullptr;
 	}
 
-	return (*pFactory)->create(_pCharacter);
+	return (*pFactory)->Create(_pCharacter);
 }
 
-MonsterListener* ActorListenerManager::createMonsterListener(Monster* _pMonster)
+//////////////////////////////////////////////////////////////////////////////////////////
+MonsterListener* ActorListenerManager::CreateMonsterListener(Monster* _pMonster)
 {
-	const int monsterCode = _pMonster->getCode();
+	const int monsterCode = _pMonster->GetCode();
 	MonsterListener::IFactory** pFactory = monsterListenerMap_.Find(monsterCode);
 
 	if (pFactory == nullptr)
@@ -71,13 +75,13 @@ MonsterListener* ActorListenerManager::createMonsterListener(Monster* _pMonster)
 		return nullptr;
 	}
 
-	return (*pFactory)->create(_pMonster);
+	return (*pFactory)->Create(_pMonster);
 }
 
-ProjectileListener* ActorListenerManager::createProjectileListener(Projectile* _pProjectile,
-                                                                   Actor* _pSpawner /* = nullptr */)
+//////////////////////////////////////////////////////////////////////////////////////////
+ProjectileListener* ActorListenerManager::CreateProjectileListener(Projectile* _pProjectile, Actor* _pSpawner /* = nullptr */)
 {
-	const int projectileListenerCode = _pProjectile->getListenerCode();
+	const int projectileListenerCode = _pProjectile->GetListenerCode();
 	ProjectileListener::IFactory** pFactory = projectileListenerMap_.Find(projectileListenerCode);
 
 	if (pFactory == nullptr)
@@ -86,5 +90,5 @@ ProjectileListener* ActorListenerManager::createProjectileListener(Projectile* _
 		return nullptr;
 	}
 
-	return (*pFactory)->create(_pProjectile, _pSpawner);
+	return (*pFactory)->Create(_pProjectile, _pSpawner);
 }

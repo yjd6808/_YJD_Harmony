@@ -24,18 +24,18 @@
 struct DragState
 {
 	DragState()
-	: HostElement(nullptr)
-	, TargetElement(nullptr)
-	, Dragging(false)
+	: pHostElement_(nullptr)
+	, pTargetElement_(nullptr)
+	, isDragging_(false)
 	{
 	}
 
-	UIElement* HostElement; // 드래그 주체
-	UIElement* TargetElement; // 실제로 드래깅될 대상
-	SGVec2 StartElementPosition;
-	SGVec2 StartCursorPosition;
-	SGVec2 DragDelta;
-	bool Dragging;
+	UIElement* pHostElement_; // 드래그 주체
+	UIElement* pTargetElement_; // 실제로 드래깅될 대상
+	SGVec2 startElementPosition_;
+	SGVec2 startCursorPosition_;
+	SGVec2 dragDelta_;
+	bool isDragging_;
 };
 
 class UI_Inventory;
@@ -52,54 +52,54 @@ private:
 	~UIManager();
 
 public:
-	void init();
-	void initPublic();
-	void registerMasterGroup(UIRootGroup* _pGroup);
-	void registerUITexture(SgaResourceIndex _index);
-	void unloadAll();
-	void onUpdate(float _dt);
-	void callUIElementsUpdateCallback(float _dt);
+	void Init();
+	void InitPublic();
+	void RegisterMasterGroup(UIRootGroup* _pGroup);
+	void RegisterUiTexture(SgaResourceIndex _index);
+	void UnloadAll();
+	void OnUpdate(float _dt);
+	void CallUiElementsUpdateCallback(float _dt);
 
-	void draginit(const DragState& _state);
-	void dragEnter(const SGEventMouse* _pMouseEvent);
-	void dragMove(const SGEventMouse* _pMouseEvent);
-	void dragEnd();
+	void Draginit(const DragState& _state);
+	void DragEnter(const SGEventMouse* _pMouseEvent);
+	void DragMove(const SGEventMouse* _pMouseEvent);
+	void DragEnd();
 
-	bool isDragging() { return dragState_.Dragging; }
-	const DragState& getDragState() const { return dragState_; }
+	bool IsDragging() { return dragState_.isDragging_; }
+	const DragState& GetDragState() const { return dragState_; }
 
-	UIRootGroup* getMasterGroup(int _groupCode);
-	UIElement* getElement(int _elementCode);
-	UIGroup* getGroup(int _groupCode) { return getElementTemplated<UIGroup>(_groupCode); }
-	UIButton* getButton(int _buttonCode) { return getElementTemplated<UIButton>(_buttonCode); }
-	UISprite* getSprite(int _spriteCode) { return getElementTemplated<UISprite>(_spriteCode); }
-	UILabel* getLabel(int _labelCode) { return getElementTemplated<UILabel>(_labelCode); }
-	UICheckBox* getCheckBox(int _checkBoxCode) { return getElementTemplated<UICheckBox>(_checkBoxCode); }
-	UIEditBox* getEditBox(int _editBoxCode) { return getElementTemplated<UIEditBox>(_editBoxCode); }
+	UIRootGroup* GetMasterGroup(int _groupCode);
+	UIElement* GetElement(int _elementCode);
+	UIGroup* GetGroup(int _groupCode) { return GetElementTemplated<UIGroup>(_groupCode); }
+	UIButton* GetButton(int _buttonCode) { return GetElementTemplated<UIButton>(_buttonCode); }
+	UISprite* GetSprite(int _spriteCode) { return GetElementTemplated<UISprite>(_spriteCode); }
+	UILabel* GetLabel(int _labelCode) { return GetElementTemplated<UILabel>(_labelCode); }
+	UICheckBox* GetCheckBox(int _checkBoxCode) { return GetElementTemplated<UICheckBox>(_checkBoxCode); }
+	UIEditBox* GetEditBox(int _editBoxCode) { return GetElementTemplated<UIEditBox>(_editBoxCode); }
 
-	UIToggleButton* getToggleButton(int _toggleButtonCode)
+	UIToggleButton* GetToggleButton(int _toggleButtonCode)
 	{
-		return getElementTemplated<UIToggleButton>(_toggleButtonCode);
+		return GetElementTemplated<UIToggleButton>(_toggleButtonCode);
 	}
 
-	UIProgressBar* getProgressBar(int _progressBarCode) { return getElementTemplated<UIProgressBar>(_progressBarCode); }
-	UIScrollBar* getScrollBar(int _scrollBarCode) { return getElementTemplated<UIScrollBar>(_scrollBarCode); }
-	UIStatic* getStatic(int _staticCode) { return getElementTemplated<UIStatic>(_staticCode); }
+	UIProgressBar* GetProgressBar(int _progressBarCode) { return GetElementTemplated<UIProgressBar>(_progressBarCode); }
+	UIScrollBar* GetScrollBar(int _scrollBarCode) { return GetElementTemplated<UIScrollBar>(_scrollBarCode); }
+	UIStatic* GetStatic(int _staticCode) { return GetElementTemplated<UIStatic>(_staticCode); }
 
-	FrameTexture* createUITexture(int _sga, int _img, int _frame, bool _linearDodge = false);
-	FrameTexture* createUITextureRetained(int _sga, int _img, int _frame, bool _linearDodge = false);
+	FrameTexture* CreateUITexture(int _sga, int _img, int _frame, bool _linearDodge = false);
+	FrameTexture* CreateUITextureRetained(int _sga, int _img, int _frame, bool _linearDodge = false);
 
-	UI_Inventory* Inventory;
-	UI_Login* Login;
-	UI_Popup* Popup;
-	UI_Test* Test;
-	UI_ChannelSelect* ChannelSelect;
+	UI_Inventory* pInventory_;
+	UI_Login* pLogin_;
+	UI_Popup* pPopup_;
+	UI_Test* pTest_;
+	UI_ChannelSelect* pChannelSelect_;
 
 private:
 	template <typename TElement>
-	TElement* getElementTemplated(int _code)
+	TElement* GetElementTemplated(int _code)
 	{
-		constexpr UIElementType_t targetType = TElement::type();
+		constexpr UIElementType_t targetType = TElement::Type();
 
 		if (!uiElements_.Exist(_code))
 		{

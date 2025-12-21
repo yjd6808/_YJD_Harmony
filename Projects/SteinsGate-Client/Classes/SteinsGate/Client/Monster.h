@@ -21,24 +21,24 @@ public:
 	Monster(MonsterInfo* _pBaseInfo);
 	~Monster() override;
 
-	static Monster* create(MonsterInfo* _pBaseInfo);
+	static Monster* Create(MonsterInfo* _pBaseInfo);
 
-	void initialize() override;
-	void initActorSprite() override;
-	void initListeners() override;
-	void initComponents() override;
+	void Initialize() override;
+	void InitActorSprite() override;
+	void InitListeners() override;
+	void InitComponents() override;
 
-	void hit(const HitInfo& _hitInfo) override;
+	void Hit(const HitInfo& _hitInfo) override;
 
-	void setStatInfo(MonsterStatInfo* _pStatInfo);
+	void SetStatInfo(MonsterStatInfo* _pStatInfo);
 
-	ActorType_t getType() const override { return ActorType::Monster; }
-	MonsterInfo* getBaseInfo();
-	MonsterStatInfo* getStatInfo();
+	ActorType_t GetType() const override { return ActorType::Monster; }
+	MonsterInfo* GetBaseInfo();
+	MonsterStatInfo* GetStatInfo();
 
-	int getCode() override { return baseInfo_->code_; }
+	int GetCode() override { return pBaseInfo_->code_; }
 
 private:
-	MonsterInfo* baseInfo_;
-	MonsterStatInfo* statInfo_;
+	MonsterInfo* pBaseInfo_;
+	MonsterStatInfo* pStatInfo_;
 };

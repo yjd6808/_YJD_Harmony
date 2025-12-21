@@ -17,17 +17,17 @@ USING_NS_JNET;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 NetCore::NetCore()
-: netClientGroup_(nullptr)
-, authTcp_(nullptr)
-, lobbyTcp_(nullptr)
-, logicTcp_(nullptr)
-, logicUdp_(nullptr)
-, chatTcp_(nullptr)
-, areaTcp_(nullptr)
-, commandSynchronizer_(CommandSynchronizer::Get())
-, connectionSynchronizer_(ConnectionSynchronizer::Get())
+: pNetClientGroup_(nullptr)
+, pAuthTcp_(nullptr)
+, pLobbyTcp_(nullptr)
+, pLogicTcp_(nullptr)
+, pLogicUdp_(nullptr)
+, pChatTcp_(nullptr)
+, pAreaTcp_(nullptr)
+, pCommandSynchronizer_(CommandSynchronizer::Get())
+, pConnectionSynchronizer_(ConnectionSynchronizer::Get())
 , componentCollection_()
-, authenticationComponent_(nullptr)
+, pAuthentication_(nullptr)
 {
 	SetName("클라");
 }
@@ -43,22 +43,22 @@ void NetCore::Initialize()
 {
 	const auto centerNetGroup = MakeShared<NetClientGroup>();
 	AddNetGroup(1, centerNetGroup);
-	netClientGroup_ = centerNetGroup.Get<NetClientGroup*>();
-	netClientGroup_->Initialize();
+	pNetClientGroup_ = centerNetGroup.Get<NetClientGroup*>();
+	pNetClientGroup_->Initialize();
 
-	commandSynchronizer_->initialize(); // 이녀석은 무조건 IOCP 초기화이후 수행
-	connectionSynchronizer_->initialize();
+	pCommandSynchronizer_->Initialize(); // 이녀석은 무조건 IOCP 초기화이후 수행
+	pConnectionSynchronizer_->Initialize();
 
-	authTcp_ = netClientGroup_->AuthTcp;
-	lobbyTcp_ = netClientGroup_->LobbyTcp;
-	logicTcp_ = netClientGroup_->LogicTcp;
-	logicUdp_ = netClientGroup_->LogicUdp;
-	chatTcp_ = netClientGroup_->ChatTcp;
-	areaTcp_ = netClientGroup_->AreaTcp;
+	pAuthTcp_ = pNetClientGroup_->pAuthTcp_;
+	pLobbyTcp_ = pNetClientGroup_->pLobbyTcp_;
+	pLogicTcp_ = pNetClientGroup_->pLogicTcp_;
+	pLogicUdp_ = pNetClientGroup_->pLogicUdp_;
+	pChatTcp_ = pNetClientGroup_->pChatTcp_;
+	pAreaTcp_ = pNetClientGroup_->pAreaTcp_;
 
-	authenticationComponent_ = dbg_new AuthenticationComponent;
+	pAuthentication_ = dbg_new AuthenticationComponent;
 
-	componentCollection_.add(authenticationComponent_);
+	componentCollection_.Add(pAuthentication_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -66,50 +66,50 @@ void NetCore::Finalize()
 {
 	NetMaster::Finalize();
 
-	JCORE_DELETE_SINGLETON_SAFE(commandSynchronizer_);
-	JCORE_DELETE_SINGLETON_SAFE(connectionSynchronizer_);
+	JCORE_DELETE_SINGLETON_SAFE(pCommandSynchronizer_);
+	JCORE_DELETE_SINGLETON_SAFE(pConnectionSynchronizer_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetCore::pollNetEvents()
+void NetCore::PollNetEvents()
 {
-	connectionSynchronizer_->processConnections();
-	commandSynchronizer_->processCommands();
+	pConnectionSynchronizer_->ProcessConnections();
+	pCommandSynchronizer_->ProcessCommands();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetCore::runCommand(SGSession* _pSession, ICommand* _pCmd)
+void NetCore::RunCommand(SGSession* _pSession, ICommand* _pCmd)
 {
-	if (netClientGroup_->getParser()->RunCommand(_pSession, _pCmd) == false)
+	if (pNetClientGroup_->GetParser()->RunCommand(_pSession, _pCmd) == false)
 	{
 		_NetLogWarn_("처리 불가능한 커맨드(%d) 수신", _pCmd->GetId());
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetCore::initializeComponents()
+void NetCore::InitializeComponents()
 {
-	componentCollection_.initialize();
+	componentCollection_.Initialize();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool NetCore::connectAuthTcp()
+bool NetCore::ConnectAuthTcp()
 {
-	if (authTcp_ == nullptr)
+	if (pAuthTcp_ == nullptr)
 	{
 		return false;
 	}
 
-	return authTcp_->ConnectAsync(Core::ServerProcessInfoPackage->auth_.remoteEp_);
+	return pAuthTcp_->ConnectAsync(Core::ServerProcessInfoPackage->auth_.remoteEp_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool NetCore::connectLobbyTcp()
+bool NetCore::ConnectLobbyTcp()
 {
-	if (lobbyTcp_ == nullptr)
+	if (pLobbyTcp_ == nullptr)
 	{
 		return false;
 	}
 
-	return lobbyTcp_->ConnectAsync(Core::ServerProcessInfoPackage->lobby_.remoteEp_);
+	return pLobbyTcp_->ConnectAsync(Core::ServerProcessInfoPackage->lobby_.remoteEp_);
 }

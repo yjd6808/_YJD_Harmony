@@ -44,7 +44,7 @@ bool ClientTextInfoLoader::Load()
 			idString.SetLength(0);
 			textString.SetLength(0);
 
-			if (clientRoot.type() == arrayValue && readClientTextInfo(clientRoot, idString, textString))
+			if (clientRoot.type() == arrayValue && ReadClientTextInfo(clientRoot, idString, textString))
 			{
 				textMap_.Insert(idString, textString);
 			}
@@ -60,7 +60,7 @@ bool ClientTextInfoLoader::Load()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool ClientTextInfoLoader::tryGetTextRaw(const char* _id, JCORE_OUT char** _pText)
+bool ClientTextInfoLoader::TryGetTextRaw(const char* _id, JCORE_OUT char** _pText)
 {
 	const SGString* pFind = textMap_.Find(_id);
 	if (pFind == nullptr)
@@ -74,7 +74,7 @@ bool ClientTextInfoLoader::tryGetTextRaw(const char* _id, JCORE_OUT char** _pTex
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool ClientTextInfoLoader::tryGetText(const char* _id, JCORE_OUT SGString** _pText)
+bool ClientTextInfoLoader::TryGetText(const char* _id, JCORE_OUT SGString** _pText)
 {
 	SGString* pFind = textMap_.Find(_id);
 	if (pFind == nullptr)
@@ -88,7 +88,7 @@ bool ClientTextInfoLoader::tryGetText(const char* _id, JCORE_OUT SGString** _pTe
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool ClientTextInfoLoader::tryGetText(const SGString& _id, JCORE_OUT SGString** _pText)
+bool ClientTextInfoLoader::TryGetText(const SGString& _id, JCORE_OUT SGString** _pText)
 {
 	SGString* pFind = textMap_.Find(_id);
 	if (pFind == nullptr)
@@ -102,7 +102,7 @@ bool ClientTextInfoLoader::tryGetText(const SGString& _id, JCORE_OUT SGString** 
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool ClientTextInfoLoader::readClientTextInfo(Json::Value& _clientTextRoot, JCORE_OUT SGString& _id,
+bool ClientTextInfoLoader::ReadClientTextInfo(Json::Value& _clientTextRoot, JCORE_OUT SGString& _id,
                                               JCORE_OUT SGString& _text)
 {
 	const int textArraySize = static_cast<int>(_clientTextRoot.size());

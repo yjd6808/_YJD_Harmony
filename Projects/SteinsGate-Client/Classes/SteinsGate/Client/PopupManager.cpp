@@ -26,20 +26,20 @@ PopupManager::PopupManager()
 //////////////////////////////////////////////////////////////////////////////////////////
 PopupManager::~PopupManager()
 {
-	releaseAll();
+	ReleaseAll();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UI_Popup* PopupManager::createPopup()
+UI_Popup* PopupManager::CreatePopup()
 {
-	UIElementInfo* pInfo = Core::DataManager->getUIElementInfo(GROUP_UI_POPUP);
-	DebugAssertMsg(pInfo->Type == UIElementType::Group, "그룹 엘리먼트 타입이 아닙니다.");
+	UIElementInfo* pInfo = Core::DataManager->GetUiElementInfo(GROUP_UI_POPUP);
+	DebugAssertMsg(pInfo->type_ == UIElementType::Group, "그룹 엘리먼트 타입이 아닙니다.");
 
 	UIRootGroup* pPopupGroup = dbg_new UI_Popup(static_cast<UIGroupInfo*>(pInfo));
 	pPopupGroup->autorelease();
 	pPopupGroup->setTag(InvalidValue_v);
 	pPopupGroup->init();
-	pPopupGroup->initChildren();
+	pPopupGroup->InitChildren();
 	pPopupGroup->OnInit();
 	pPopupGroup->SetRelativePosition(0, 0, HAlignment::Center, VAlignment::Center);
 	pPopupGroup->Load();
@@ -48,25 +48,25 @@ UI_Popup* PopupManager::createPopup()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PopupManager::setWidth(float _width)
+void PopupManager::SetWidth(float _width)
 {
 	width_ = _width;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PopupManager::setPadding(float _padding)
+void PopupManager::SetPadding(float _padding)
 {
 	padding_ = _padding;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UI_Popup* PopupManager::pop()
+UI_Popup* PopupManager::Pop()
 {
 	UI_Popup* pPopup = nullptr;
 
 	if (popupPool_.IsEmpty())
 	{
-		pPopup = createPopup();
+		pPopup = CreatePopup();
 		pPopup->retain();
 	}
 	else
@@ -76,12 +76,12 @@ UI_Popup* PopupManager::pop()
 		popupPool_.Dequeue();
 	}
 
-	pPopup->setClosed(false);
+	pPopup->SetClosed(false);
 	return pPopup;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UI_Popup* PopupManager::showYesNo(
+UI_Popup* PopupManager::ShowYesNo(
 	const std::string& _text,
 	const PopupCallback& _yes /* = nullptr */,
 	const PopupCallback& _no /* = nullptr */,
@@ -92,24 +92,24 @@ UI_Popup* PopupManager::showYesNo(
 	VAlignment_t _valign /* = VAlignment::Top */
 )
 {
-	UI_Popup* pPopup = pop();
-	pPopup->setText(_text);
-	pPopup->setType(UI_Popup::Type::eYesNo);
-	pPopup->setYesCallback(_yes);
-	pPopup->setNoCallback(_no);
-	pPopup->setCloseWithEsc(_closeWithEsc);
-	pPopup->setTimeout(_timeout);
-	pPopup->setTimeoutCallback(_timeoutFn);
-	pPopup->setTextHAlign(_halign);
-	pPopup->setTextVAlign(_valign);
-	pPopup->adjust();
-	Core::Contents.World->getUILayer()->addUIGroup(pPopup);
+	UI_Popup* pPopup = Pop();
+	pPopup->SetText(_text);
+	pPopup->SetType(UI_Popup::Type::eYesNo);
+	pPopup->SetYesCallback(_yes);
+	pPopup->SetNoCallback(_no);
+	pPopup->SetCloseWithEsc(_closeWithEsc);
+	pPopup->SetTimeout(_timeout);
+	pPopup->SetTimeoutCallback(_timeoutFn);
+	pPopup->SetTextHAlign(_halign);
+	pPopup->SetTextVAlign(_valign);
+	pPopup->Adjust();
+	Core::Contents.World->GetUILayer()->AddUIGroup(pPopup);
 	opendList_.PushBack(pPopup);
 	return pPopup;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UI_Popup* PopupManager::showYesNo(
+UI_Popup* PopupManager::ShowYesNo(
 	const std::string& _text,
 	int _tag,
 	const PopupCallback& _yes /* = nullptr */,
@@ -121,31 +121,31 @@ UI_Popup* PopupManager::showYesNo(
 	VAlignment_t _valign /* = VAlignment::Top */
 )
 {
-	UI_Popup* pOpenedPopup = findByTag(_tag);
+	UI_Popup* pOpenedPopup = FindByTag(_tag);
 	if (pOpenedPopup != nullptr)
 	{
 		return pOpenedPopup;
 	}
 
-	UI_Popup* pPopup = pop();
+	UI_Popup* pPopup = Pop();
 	pPopup->setTag(_tag);
-	pPopup->setText(_text);
-	pPopup->setType(UI_Popup::Type::eYesNo);
-	pPopup->setYesCallback(_yes);
-	pPopup->setNoCallback(_no);
-	pPopup->setCloseWithEsc(_closeWithEsc);
-	pPopup->setTimeout(_timeout);
-	pPopup->setTimeoutCallback(_timeoutFn);
-	pPopup->setTextHAlign(_halign);
-	pPopup->setTextVAlign(_valign);
-	pPopup->adjust();
-	Core::Contents.World->getUILayer()->addUIGroup(pPopup);
+	pPopup->SetText(_text);
+	pPopup->SetType(UI_Popup::Type::eYesNo);
+	pPopup->SetYesCallback(_yes);
+	pPopup->SetNoCallback(_no);
+	pPopup->SetCloseWithEsc(_closeWithEsc);
+	pPopup->SetTimeout(_timeout);
+	pPopup->SetTimeoutCallback(_timeoutFn);
+	pPopup->SetTextHAlign(_halign);
+	pPopup->SetTextVAlign(_valign);
+	pPopup->Adjust();
+	Core::Contents.World->GetUILayer()->AddUIGroup(pPopup);
 	opendList_.PushBack(pPopup);
 	return pPopup;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UI_Popup* PopupManager::showOk(
+UI_Popup* PopupManager::ShowOk(
 	const std::string& _text,
 	const PopupCallback& _ok /* = nullptr */,
 	bool _closeWithEsc /* = true */,
@@ -155,23 +155,23 @@ UI_Popup* PopupManager::showOk(
 	VAlignment_t _valign /* = VAlignment::Top */
 )
 {
-	UI_Popup* pPopup = pop();
-	pPopup->setText(_text);
-	pPopup->setType(UI_Popup::Type::eOk);
-	pPopup->setOkCallback(_ok);
-	pPopup->setCloseWithEsc(_closeWithEsc);
-	pPopup->setTimeout(_timeout);
-	pPopup->setTimeoutCallback(_timeoutFn);
-	pPopup->setTextHAlign(_halign);
-	pPopup->setTextVAlign(_valign);
-	pPopup->adjust();
-	Core::Contents.World->getUILayer()->addUIGroup(pPopup);
+	UI_Popup* pPopup = Pop();
+	pPopup->SetText(_text);
+	pPopup->SetType(UI_Popup::Type::eOk);
+	pPopup->SetOkCallback(_ok);
+	pPopup->SetCloseWithEsc(_closeWithEsc);
+	pPopup->SetTimeout(_timeout);
+	pPopup->SetTimeoutCallback(_timeoutFn);
+	pPopup->SetTextHAlign(_halign);
+	pPopup->SetTextVAlign(_valign);
+	pPopup->Adjust();
+	Core::Contents.World->GetUILayer()->AddUIGroup(pPopup);
 	opendList_.PushBack(pPopup);
 	return pPopup;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UI_Popup* PopupManager::showOk(
+UI_Popup* PopupManager::ShowOk(
 	const std::string& _text,
 	int _tag,
 	const PopupCallback& _ok /* = nullptr */,
@@ -182,30 +182,30 @@ UI_Popup* PopupManager::showOk(
 	VAlignment_t _valign /* = VAlignment::Top */
 )
 {
-	UI_Popup* pOpenedPopup = findByTag(_tag);
+	UI_Popup* pOpenedPopup = FindByTag(_tag);
 	if (pOpenedPopup != nullptr)
 	{
 		return pOpenedPopup;
 	}
 
-	UI_Popup* pPopup = pop();
+	UI_Popup* pPopup = Pop();
 	pPopup->setTag(_tag);
-	pPopup->setText(_text);
-	pPopup->setType(UI_Popup::Type::eOk);
-	pPopup->setOkCallback(_ok);
-	pPopup->setCloseWithEsc(_closeWithEsc);
-	pPopup->setTimeout(_timeout);
-	pPopup->setTimeoutCallback(_timeoutFn);
-	pPopup->setTextHAlign(_halign);
-	pPopup->setTextVAlign(_valign);
-	pPopup->adjust();
-	Core::Contents.World->getUILayer()->addUIGroup(pPopup);
+	pPopup->SetText(_text);
+	pPopup->SetType(UI_Popup::Type::eOk);
+	pPopup->SetOkCallback(_ok);
+	pPopup->SetCloseWithEsc(_closeWithEsc);
+	pPopup->SetTimeout(_timeout);
+	pPopup->SetTimeoutCallback(_timeoutFn);
+	pPopup->SetTextHAlign(_halign);
+	pPopup->SetTextVAlign(_valign);
+	pPopup->Adjust();
+	Core::Contents.World->GetUILayer()->AddUIGroup(pPopup);
 	opendList_.PushBack(pPopup);
 	return pPopup;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UI_Popup* PopupManager::showNone(
+UI_Popup* PopupManager::ShowNone(
 	const std::string& _text,
 	bool _closeWithEsc /* = false */,
 	float _timeout /* = SG_POPUP_NO_TIMEOUT */,
@@ -214,22 +214,22 @@ UI_Popup* PopupManager::showNone(
 	VAlignment_t _valign /* = VAlignment::Center */
 )
 {
-	UI_Popup* pPopup = pop();
-	pPopup->setText(_text);
-	pPopup->setType(UI_Popup::Type::eNone);
-	pPopup->setCloseWithEsc(_closeWithEsc);
-	pPopup->setTimeout(_timeout);
-	pPopup->setTimeoutCallback(_timeoutFn);
-	pPopup->setTextHAlign(_halign);
-	pPopup->setTextVAlign(_valign);
-	pPopup->adjust();
-	Core::Contents.World->getUILayer()->addUIGroup(pPopup);
+	UI_Popup* pPopup = Pop();
+	pPopup->SetText(_text);
+	pPopup->SetType(UI_Popup::Type::eNone);
+	pPopup->SetCloseWithEsc(_closeWithEsc);
+	pPopup->SetTimeout(_timeout);
+	pPopup->SetTimeoutCallback(_timeoutFn);
+	pPopup->SetTextHAlign(_halign);
+	pPopup->SetTextVAlign(_valign);
+	pPopup->Adjust();
+	Core::Contents.World->GetUILayer()->AddUIGroup(pPopup);
 	opendList_.PushBack(pPopup);
 	return pPopup;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UI_Popup* PopupManager::showNone(
+UI_Popup* PopupManager::ShowNone(
 	const std::string& _text,
 	int _tag,
 	bool _closeWithEsc /* = false */,
@@ -239,57 +239,57 @@ UI_Popup* PopupManager::showNone(
 	VAlignment_t _valign /* = VAlignment::Center */
 )
 {
-	UI_Popup* pOpenedPopup = findByTag(_tag);
+	UI_Popup* pOpenedPopup = FindByTag(_tag);
 	if (pOpenedPopup != nullptr)
 	{
 		return pOpenedPopup;
 	}
 
-	UI_Popup* pPopup = pop();
+	UI_Popup* pPopup = Pop();
 	pPopup->setTag(_tag);
-	pPopup->setText(_text);
-	pPopup->setType(UI_Popup::Type::eNone);
-	pPopup->setCloseWithEsc(_closeWithEsc);
-	pPopup->setTimeout(_timeout);
-	pPopup->setTimeoutCallback(_timeoutFn);
-	pPopup->setTextHAlign(_halign);
-	pPopup->setTextVAlign(_valign);
-	pPopup->adjust();
-	Core::Contents.World->getUILayer()->addUIGroup(pPopup);
+	pPopup->SetText(_text);
+	pPopup->SetType(UI_Popup::Type::eNone);
+	pPopup->SetCloseWithEsc(_closeWithEsc);
+	pPopup->SetTimeout(_timeout);
+	pPopup->SetTimeoutCallback(_timeoutFn);
+	pPopup->SetTextHAlign(_halign);
+	pPopup->SetTextVAlign(_valign);
+	pPopup->Adjust();
+	Core::Contents.World->GetUILayer()->AddUIGroup(pPopup);
 	opendList_.PushBack(pPopup);
 	return pPopup;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool PopupManager::close(UI_Popup* _pPopup)
+bool PopupManager::Close(UI_Popup* _pPopup)
 {
-	if (_pPopup->isClosed())
+	if (_pPopup->IsClosed())
 	{
 		return false;
 	}
 
-	_pPopup->setClosed(true);
-	Core::Contents.World->getUILayer()->removeUIGroup(_pPopup);
+	_pPopup->SetClosed(true);
+	Core::Contents.World->GetUILayer()->RemoveUIGroup(_pPopup);
 	popupPool_.Enqueue(_pPopup);
 	return opendList_.Remove(_pPopup);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool PopupManager::closeByTag(int _tag)
+bool PopupManager::CloseByTag(int _tag)
 {
 	UI_Popup** pFind = opendList_.Extension().FindIf(
-		[_tag](UI_Popup* pPopup) { return pPopup->getTag() == _tag; });
+		[_tag](UI_Popup* _pPopup) { return _pPopup->getTag() == _tag; });
 
 	if (pFind == nullptr)
 	{
 		return false;
 	}
 
-	return close(*pFind);
+	return Close(*pFind);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UI_Popup* PopupManager::findByTag(int _tag)
+UI_Popup* PopupManager::FindByTag(int _tag)
 {
 	for (int i = 0; i < opendList_.Size(); ++i)
 	{
@@ -303,13 +303,13 @@ UI_Popup* PopupManager::findByTag(int _tag)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int PopupManager::closeAll()
+int PopupManager::CloseAll()
 {
 	int closedCount = 0;
 
 	for (int i = 0; i < opendList_.Size(); ++i)
 	{
-		if (close(opendList_[i]))
+		if (Close(opendList_[i]))
 		{
 			--i;
 			++closedCount;
@@ -320,12 +320,12 @@ int PopupManager::closeAll()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PopupManager::releaseAll()
+void PopupManager::ReleaseAll()
 {
 	// 열린 팝업창 모두 제거
 	for (int i = 0; i < opendList_.Size(); ++i)
 	{
-		Core::Contents.World->getUILayer()->removeUIGroup(opendList_[i]);
+		Core::Contents.World->GetUILayer()->RemoveUIGroup(opendList_[i]);
 		opendList_[i]->release();
 	}
 

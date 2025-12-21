@@ -28,17 +28,17 @@ public:
 	void onExitTransitionDidStart() override;
 	void removeAllChildren() override;
 
-	virtual SceneType_t getType() = 0;
+	virtual SceneType_t GetType() = 0;
 
-	virtual bool onMouseMove(SGEventMouse* _pMouseEvent) { return true; }
-	virtual bool onMouseDown(SGEventMouse* _pMouseEvent) { return true; }
-	virtual bool onMouseUp(SGEventMouse* _pMouseEvent) { return true; }
-	virtual bool onMouseScroll(SGEventMouse* _pMouseEvent) { return true; }
+	virtual bool OnMouseMove(SGEventMouse* _pMouseEvent) { return true; }
+	virtual bool OnMouseDown(SGEventMouse* _pMouseEvent) { return true; }
+	virtual bool OnMouseUp(SGEventMouse* _pMouseEvent) { return true; }
+	virtual bool OnMouseScroll(SGEventMouse* _pMouseEvent) { return true; }
 
-	virtual void onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) = 0;
-	virtual void onKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) = 0;
+	virtual void OnKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) = 0;
+	virtual void OnKeyReleased(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) = 0;
 
 protected:
-	WorldScene* m_pWorldScene;
-	UILayer* m_pUILayer;
+	WorldScene* pWorldScene_ = nullptr;
+	UILayer* pUILayer_ = nullptr;
 };

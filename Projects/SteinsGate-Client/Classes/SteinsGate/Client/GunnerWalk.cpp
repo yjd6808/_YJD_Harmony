@@ -18,55 +18,55 @@ GunnerWalk::GunnerWalk(HostPlayer* _pHostPlayer, ActionInfo* _pActionInfo)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerWalk::onActionBegin()
+void GunnerWalk::OnActionBegin()
 {
-	m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_WALK);
+	pPlayer_->RunAnimation(DEF_ANIMATION_GUNNER_WALK);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerWalk::onKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
+void GunnerWalk::OnKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
 {
-	ActionMgr* pActionManager = m_pPlayer->actionManager();
+	ActionMgr* pActionManager = pPlayer_->GetActionManager();
 
-	_pController->reflectPressedMoveKeys();
+	_pController->ReflectPressedMoveKeys();
 
-	if (_pController->getSpriteDirection() == SpriteDirection::Right &&
-		_pController->isKeyPressed(ControlKey::Left))
-		pActionManager->runBaseAction(BaseAction::Idle);
-	else if (_pController->getSpriteDirection() == SpriteDirection::Left &&
-		_pController->isKeyPressed(ControlKey::Right))
-		pActionManager->runBaseAction(BaseAction::Idle);
-	else if (isVerticalKeyPressed(_pController))
-		pActionManager->runBaseAction(BaseAction::Idle);
+	if (_pController->GetSpriteDirection() == SpriteDirection::Right &&
+		_pController->IsKeyPressed(ControlKey::Left))
+		pActionManager->RunBaseAction(BaseAction::Idle);
+	else if (_pController->GetSpriteDirection() == SpriteDirection::Left &&
+		_pController->IsKeyPressed(ControlKey::Right))
+		pActionManager->RunBaseAction(BaseAction::Idle);
+	else if (IsVerticalKeyPressed(_pController))
+		pActionManager->RunBaseAction(BaseAction::Idle);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerWalk::onKeyReleased(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
+void GunnerWalk::OnKeyReleased(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode)
 {
-	ControlKey_t releasedKey = _pController->getLastestReleasedKey();
-	ActionMgr* pActionManager = m_pPlayer->actionManager();
+	ControlKey_t releasedKey = _pController->GetLastestReleasedKey();
+	ActionMgr* pActionManager = pPlayer_->GetActionManager();
 
-	if (_pController->isMoveKeyPressed() == false)
+	if (_pController->IsMoveKeyPressed() == false)
 	{
-		pActionManager->runBaseAction(BaseAction::Idle);
-		_pController->updateDirection(releasedKey);
+		pActionManager->RunBaseAction(BaseAction::Idle);
+		_pController->UpdateDirection(releasedKey);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool GunnerWalk::isHorizontalKeyPressed(PlayerController* _pController)
+bool GunnerWalk::IsHorizontalKeyPressed(PlayerController* _pController)
 {
-	if (_pController->isKeyPressed(ControlKey::Left) &&
-		_pController->isKeyPressed(ControlKey::Right))
+	if (_pController->IsKeyPressed(ControlKey::Left) &&
+		_pController->IsKeyPressed(ControlKey::Right))
 		return true;
 	return false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool GunnerWalk::isVerticalKeyPressed(PlayerController* _pController)
+bool GunnerWalk::IsVerticalKeyPressed(PlayerController* _pController)
 {
-	if (_pController->isKeyPressed(ControlKey::Up) &&
-		_pController->isKeyPressed(ControlKey::Down))
+	if (_pController->IsKeyPressed(ControlKey::Up) &&
+		_pController->IsKeyPressed(ControlKey::Down))
 		return true;
 
 	return false;

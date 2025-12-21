@@ -23,13 +23,13 @@ public:
 protected:
 	void OnInit() override;
 	void OnLoaded() override;
-	void onUpdate(float _dt) override;
+	void OnUpdate(float _dt) override;
 	void OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _state) override;
 	void OnMouseUpTarget(UIElement* _pElement, SGEventMouse* _pMouseEvent) override;
 
 private:
-	UIGroup* groupO1_;
-	UIGroup* groupO2_;
+	UIGroup* pGroup01_;
+	UIGroup* pGroup02_;
 
 	SGSize groupO1DefaultSize_;
 	SGSize groupO2DefaultSize_;

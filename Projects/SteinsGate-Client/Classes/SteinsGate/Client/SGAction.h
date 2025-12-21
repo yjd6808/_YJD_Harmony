@@ -25,80 +25,79 @@ public:
 	SGAction(HostPlayer* _pPlayer, ActionInfo* _pActionInfo);
 	virtual ~SGAction();
 
-	virtual void play();
-	virtual void stop();
+	virtual void Play();
+	virtual void Stop();
 
-	virtual void init()
+	virtual void Init()
 	{
 	} // 실행 직전 호출 (초기화 용도)
-	virtual bool onConditionCheck() = 0;
-	virtual void onKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);
-	virtual void onKeyReleased(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);
-	virtual void onKeyPressedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);
-	virtual void onKeyReleasedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);
-	virtual void onFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame);
-	virtual void onFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame);
-	virtual void onAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame);
-	virtual void onAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame);
-	virtual void onActionBegin();
-	virtual void onActionEnd(); // 정의안하면 해당 애니메이션 시퀀스가 끝나면 중단토록 한다.
-	virtual void onUpdate(float _dt)
+	virtual bool OnConditionCheck() = 0;
+	virtual void OnKeyPressed(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);
+	virtual void OnKeyReleased(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);
+	virtual void OnKeyPressedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);
+	virtual void OnKeyReleasedBefore(PlayerController* _pController, SGEventKeyboard::KeyCode _keyCode);
+	virtual void OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame);
+	virtual void OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame);
+	virtual void OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame);
+	virtual void OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame);
+	virtual void OnActionBegin();
+	virtual void OnActionEnd(); // 정의안하면 해당 애니메이션 시퀀스가 끝나면 중단토록 한다.
+	virtual void OnUpdate(float _dt)
 	{
 	}
 
 	// virtual void onHit();
 	// virtual void onAttack();
 
-	virtual bool isComboAction() { return false; }
-	virtual bool isAttackAction() { return false; }
+	virtual bool IsComboAction() { return false; }
+	virtual bool IsAttackAction() { return false; }
 
-	int getActionCode() { return m_pActionInfo->code_; }
-	const SGString& getActionName() { return m_pActionInfo->ActionName; }
-	const ComboKeyList& getCommand() { return m_pActionInfo->Command; }
-	float getMoveSpeedX() { return m_fMoveSpeedFPSX; }
-	float getMoveSpeedY() { return m_fMoveSpeedFPSY; }
+	int GetActionCode() { return pActionInfo_->code_; }
+	const SGString& GetActionName() { return pActionInfo_->ActionName; }
+	const ComboKeyList& GetCommand() { return pActionInfo_->Command; }
+	float GetMoveSpeedX() { return moveSpeedFPSX; }
+	float GetMoveSpeedY() { return moveSpeedFPSY_; }
 
-	bool isForceCancelable() { return m_bCancelable; }
+	bool IsForceCancelable() { return isCancelable_; }
 
-	bool isMovealbe()
+	bool IsMovealbe()
 	{
 		return
-			m_bMoveablePositiveX &&
-			m_bMoveablePositiveY &&
-			m_bMoveableNegativeX &&
-			m_bMoveableNegativeY;
+			isMoveablePositiveX_ &&
+			isMoveablePositiveY_ &&
+			isMoveableNegativeX_ &&
+			isMoveableNegativeY_;
 	}
 
-	bool isMoveablePositiveX() { return m_bMoveablePositiveX; }
-	bool isMoveablePositiveY() { return m_bMoveablePositiveY; }
-	bool isMoveableNegativeX() { return m_bMoveableNegativeX; }
-	bool isMoveableNegativeY() { return m_bMoveableNegativeY; }
+	bool IsMoveablePositiveX() { return isMoveablePositiveX_; }
+	bool IsMoveablePositiveY() { return isMoveablePositiveY_; }
+	bool IsMoveableNegativeX() { return isMoveableNegativeX_; }
+	bool IsMoveableNegativeY() { return isMoveableNegativeY_; }
 
-	void setMoveable(bool _moveable);
+	void SetMoveable(bool _moveable);
 
-	void initHitRecorder(
+	void InitHitRecorder(
 		const SGHitSingleCallbackFn& _singleHitFn,
 		const SGHitMultiCallbackFn& _multiHitFn,
 		int _hitListSize = 16,
-		int _alreadyHitListSize = 32
-	);
+		int _alreadyHitListSize = 32);
 
 protected:
 	// 주입 하는 필드
-	HostPlayer* m_pPlayer;
-	ActionInfo* m_pActionInfo;
+	HostPlayer* pPlayer_;
+	ActionInfo* pActionInfo_;
 
 	// 자체 필드
-	HitRecorder* m_pHitRecorder;
-	WeaponType_t m_eWeaponType;
+	HitRecorder* pHitRecorder_;
+	WeaponType_t weaponType_;
 
-	bool m_bMoveablePositiveX;
-	bool m_bMoveablePositiveY;
+	bool isMoveablePositiveX_;
+	bool isMoveablePositiveY_;
 
-	bool m_bMoveableNegativeX;
-	bool m_bMoveableNegativeY;
+	bool isMoveableNegativeX_;
+	bool isMoveableNegativeY_;
 
-	bool m_bCancelable;
-	float m_fMoveSpeedFPSX;
-	float m_fMoveSpeedFPSY;
+	bool isCancelable_;
+	float moveSpeedFPSX;
+	float moveSpeedFPSY_;
 };

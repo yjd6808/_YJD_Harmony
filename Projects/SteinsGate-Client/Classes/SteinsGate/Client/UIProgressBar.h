@@ -13,15 +13,13 @@
 class UIProgressBar : public UIElement
 {
 public:
-	static UIProgressBar* create(UIRootGroup* _pMasterGroup, UIGroup* _pParent);
-	static UIProgressBar* create(UIRootGroup* _pMasterGroup, UIGroup* _pParent, UIProgressBarInfo* _pProgressBarInfo,
-	                             bool _infoOwner);
+	static UIProgressBar* Create(UIRootGroup* _pMasterGroup, UIGroup* _pParent);
+	static UIProgressBar* Create(UIRootGroup* _pMasterGroup, UIGroup* _pParent, UIProgressBarInfo* _pProgressBarInfo, bool _infoOwner);
 
-	static constexpr UIElementType_t type() { return UIElementType::ProgressBar; }
+	static constexpr UIElementType_t Type() { return UIElementType::ProgressBar; }
 
 	UIProgressBar(UIRootGroup* _pMasterGroup, UIGroup* _pParent);
-	UIProgressBar(UIRootGroup* _pMasterGroup, UIGroup* _pParent, UIProgressBarInfo* _pProgressBarInfo,
-	              bool _infoOwner);
+	UIProgressBar(UIRootGroup* _pMasterGroup, UIGroup* _pParent, UIProgressBarInfo* _pProgressBarInfo, bool _infoOwner);
 	~UIProgressBar() override;
 
 	bool init() override;
@@ -30,17 +28,17 @@ public:
 
 	void SetUISize(const SGSize& _size) override;
 	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
-	void setInfoProgressBar(UIProgressBarInfo* _pInfo, bool _infoOwner);
-	void setPercent(float _percent) const;
-	float getPercent() const;
+	void SetInfoProgressBar(UIProgressBarInfo* _pInfo, bool _infoOwner);
+	void SetPercent(float _percent) const;
+	float GetPercent() const;
 
-	SGProgressTimer* source() const { return progressBar_; }
+	SGProgressTimer* Source() const { return pProgressBar_; }
 	UIElementType_t GetElementType() override { return UIElementType::ProgressBar; }
-	SGString ToString() override { return SGStringUtil::Format("프로그래스바(%d)", progressBarInfo_->code_); }
+	SGString ToString() override { return SGStringUtil::Format("프로그래스바(%d)", pProgressBarInfo_->code_); }
 
 private:
-	UIProgressBarInfo* progressBarInfo_;
-	FrameTexture* texture_;
-	SGProgressTimer* progressBar_;
-	SGSprite* progressSprite_;
+	UIProgressBarInfo* pProgressBarInfo_;
+	FrameTexture* pTexture_;
+	SGProgressTimer* pProgressBar_;
+	SGSprite* pProgressSprite_;
 };

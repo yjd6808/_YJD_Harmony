@@ -14,16 +14,16 @@
 USING_NS_CC;
 USING_NS_JC;
 
-UIButton::UIButton(UIRootGroup* _pMaster, UIGroup* _pParent)
-: UIElement(_pMaster, _pParent)
+UIButton::UIButton(UIRootGroup* _pRoot, UIGroup* _pParent)
+: UIElement(_pRoot, _pParent)
 , buttonInfo_(nullptr)
 , texture_{}
 , sprite_{}
 {
 }
 
-UIButton::UIButton(UIRootGroup* _pMaster, UIGroup* _pParent, UIButtonInfo* _pButtonInfo, bool _infoOwner)
-: UIElement(_pMaster, _pParent, _pButtonInfo, _infoOwner)
+UIButton::UIButton(UIRootGroup* _pRoot, UIGroup* _pParent, UIButtonInfo* _pButtonInfo, bool _infoOwner)
+: UIElement(_pRoot, _pParent, _pButtonInfo, _infoOwner)
 , buttonInfo_(_pButtonInfo)
 , texture_{}
 , sprite_{}
@@ -38,23 +38,23 @@ UIButton::~UIButton()
 	CC_SAFE_RELEASE(texture_[eDisabled]);
 }
 
-UIButton* UIButton::create(UIRootGroup* _pMaster, UIGroup* _pParent)
+UIButton* UIButton::Create(UIRootGroup* _pRoot, UIGroup* _pParent)
 {
-	UIButton* pButton = dbg_new UIButton(_pMaster, _pParent);
+	UIButton* pButton = dbg_new UIButton(_pRoot, _pParent);
 	pButton->init();
 	pButton->autorelease();
 	return pButton;
 }
 
-UIButton* UIButton::create(UIRootGroup* _pMaster, UIGroup* _pParent, UIButtonInfo* _pButtonInfo, bool _infoOwner)
+UIButton* UIButton::Create(UIRootGroup* _pRoot, UIGroup* _pParent, UIButtonInfo* _pButtonInfo, bool _infoOwner)
 {
-	UIButton* pButton = dbg_new UIButton(_pMaster, _pParent, _pButtonInfo, _infoOwner);
+	UIButton* pButton = dbg_new UIButton(_pRoot, _pParent, _pButtonInfo, _infoOwner);
 	pButton->init();
 	pButton->autorelease();
 	return pButton;
 }
 
-void UIButton::setVisibleState(State _state)
+void UIButton::SetVisibleState(State _state)
 {
 	for (int i = 0; i < eMax; ++i)
 	{
@@ -110,9 +110,9 @@ void UIButton::SetUISize(const SGSize& _size)
 
 void UIButton::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 {
-	if (_pInfo->Type != UIElementType::Button)
+	if (_pInfo->type_ != UIElementType::Button)
 	{
-		LogWarnInvalidInfo(_pInfo->Type);
+		LogWarnInvalidInfo(_pInfo->type_);
 		return;
 	}
 
@@ -126,7 +126,7 @@ void UIButton::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 	isInfoOwner_ = _infoOwner;
 }
 
-void UIButton::setInfoButton(UIButtonInfo* _pInfo, bool _infoOwner)
+void UIButton::SetInfoButton(UIButtonInfo* _pInfo, bool _infoOwner)
 {
 	SetInfo(_pInfo, _infoOwner);
 }
@@ -143,12 +143,12 @@ void UIButton::SetEnabled(bool _enabled)
 
 		// 이전 상태가 비활성화 상태 인경우 현재 상태가 Pressed인지, Moved인지 체크해서 업데이트
 		UpdateState();
-		setVisibleState(eNormal);
+		SetVisibleState(eNormal);
 		return;
 	}
 
 	state_ = eDisabled;
-	setVisibleState(eDisabled);
+	SetVisibleState(eDisabled);
 }
 
 void UIButton::RestoreState(State _state)
@@ -160,18 +160,18 @@ void UIButton::RestoreState(State _state)
 
 	if (state_ == _state)
 	{
-		setVisibleState(eNormal);
+		SetVisibleState(eNormal);
 	}
 }
 
 void UIButton::OnMouseEnterInternalDetail(SGEventMouse* _pMouseEvent)
 {
-	setVisibleState(eOver);
+	SetVisibleState(eOver);
 }
 
 void UIButton::OnMouseLeaveInternalDetail(SGEventMouse* _pMouseEvent)
 {
-	setVisibleState(eNormal);
+	SetVisibleState(eNormal);
 }
 
 bool UIButton::OnMouseMoveInternalDetail(SGEventMouse* _pMouseEvent)
@@ -181,13 +181,13 @@ bool UIButton::OnMouseMoveInternalDetail(SGEventMouse* _pMouseEvent)
 
 bool UIButton::OnMouseDownInternalDetail(SGEventMouse* _pMouseEvent)
 {
-	setVisibleState(ePressed);
+	SetVisibleState(ePressed);
 	return false;
 }
 
 void UIButton::OnMouseUpInternalDetail(SGEventMouse* _pMouseEvent)
 {
-	setVisibleState(eNormal);
+	SetVisibleState(eNormal);
 }
 
 bool UIButton::init()
@@ -203,7 +203,7 @@ bool UIButton::init()
 		return false;
 	}
 
-	const ImagePack* pPack = Core::Contents.PackManager->getPackUnsafe(buttonInfo_->Sga);
+	const ImagePack* pPack = Core::Contents.PackManager->GetPackUnsafe(buttonInfo_->sga_);
 	SetInitialUISize(DEFAULT_SIZE30);
 
 	if (pPack == nullptr)
@@ -212,7 +212,7 @@ bool UIButton::init()
 		return false;
 	}
 
-	const SgaSpriteAbstractPtr pSprite = pPack->getSpriteUnsafe(buttonInfo_->Img, buttonInfo_->Sprites[eNormal]);
+	const SgaSpriteAbstractPtr pSprite = pPack->GetSpriteUnsafe(buttonInfo_->img_, buttonInfo_->sprites_[eNormal]);
 
 	if (pSprite == nullptr)
 	{
@@ -234,7 +234,7 @@ void UIButton::Load()
 
 	for (int i = 0; i < eMax; ++i)
 	{
-		const int spriteIndex = buttonInfo_->Sprites[i];
+		const int spriteIndex = buttonInfo_->sprites_[i];
 
 		if (spriteIndex == InvalidValue_v)
 		{
@@ -242,13 +242,13 @@ void UIButton::Load()
 			continue;
 		}
 
-		FrameTexture* pTexture = Core::Contents.UIManager->createUITextureRetained(
-			buttonInfo_->Sga, buttonInfo_->Img, spriteIndex, buttonInfo_->LinearDodge);
+		FrameTexture* pTexture = Core::Contents.UIManager->CreateUITextureRetained(
+			buttonInfo_->sga_, buttonInfo_->img_, spriteIndex, buttonInfo_->linearDodge_);
 
 		Sprite* pSprite = Sprite::create();
-		pSprite->initWithTexture(pTexture->getTexture());
-		pSprite->setScaleX(uiSize_.width / pTexture->getWidthF());
-		pSprite->setScaleY(uiSize_.height / pTexture->getHeightF());
+		pSprite->initWithTexture(pTexture->GetTexture());
+		pSprite->setScaleX(uiSize_.width / pTexture->GetWidthF());
+		pSprite->setScaleY(uiSize_.height / pTexture->GetHeightF());
 		pSprite->setAnchorPoint(Vec2::ZERO);
 
 		texture_[i] = pTexture;
@@ -257,7 +257,7 @@ void UIButton::Load()
 		this->addChild(pSprite);
 	}
 
-	setVisibleState(eNormal);
+	SetVisibleState(eNormal);
 
 	isLoaded_ = true;
 }

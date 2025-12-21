@@ -37,34 +37,34 @@ bool UIInfoLoader::Load()
 		// ========================================================================
 		//  UI 엘리먼트 로딩
 		// ========================================================================
-		Json::Value& elementListRoot = root[JsonElementsKey];
+		Json::Value& elementListRoot = root[JSON_ELEMENTS_KEY];
 
 		for (int i = 0; i < elementListRoot.size(); ++i)
 		{
 			Json::Value& elementRoot = elementListRoot[i];
 
 			UIElementInfo* pElementInfo = nullptr;
-			int elementType = elementRoot[JsonElementTypeKey].asInt();
+			int elementType = elementRoot[JSON_ELEMENT_TYPE_KEY].asInt();
 
 			switch (elementType)
 			{
-			case UIElementType::Button: pElementInfo = readElementButton(elementRoot);
+			case UIElementType::Button: pElementInfo = ReadElementButton(elementRoot);
 				break;
-			case UIElementType::Label: pElementInfo = readElementLabel(elementRoot);
+			case UIElementType::Label: pElementInfo = ReadElementLabel(elementRoot);
 				break;
-			case UIElementType::Sprite: pElementInfo = readElementSprite(elementRoot);
+			case UIElementType::Sprite: pElementInfo = ReadElementSprite(elementRoot);
 				break;
-			case UIElementType::EditBox: pElementInfo = readElementEditBox(elementRoot);
+			case UIElementType::EditBox: pElementInfo = ReadElementEditBox(elementRoot);
 				break;
-			case UIElementType::CheckBox: pElementInfo = readElementCheckBox(elementRoot);
+			case UIElementType::CheckBox: pElementInfo = ReadElementCheckBox(elementRoot);
 				break;
-			case UIElementType::ToggleButton: pElementInfo = readElementToggleButton(elementRoot);
+			case UIElementType::ToggleButton: pElementInfo = ReadElementToggleButton(elementRoot);
 				break;
-			case UIElementType::ScrollBar: pElementInfo = readElementScrollBar(elementRoot);
+			case UIElementType::ScrollBar: pElementInfo = ReadElementScrollBar(elementRoot);
 				break;
-			case UIElementType::ProgressBar: pElementInfo = readElementProgressBar(elementRoot);
+			case UIElementType::ProgressBar: pElementInfo = ReadElementProgressBar(elementRoot);
 				break;
-			case UIElementType::Static: pElementInfo = readElementStatic(elementRoot);
+			case UIElementType::Static: pElementInfo = ReadElementStatic(elementRoot);
 				break;
 			default:
 				break;
@@ -77,33 +77,33 @@ bool UIInfoLoader::Load()
 		// ========================================================================
 		//  UI 그룹 로딩
 		// ========================================================================
-		Json::Value& groupListRoot = root[JsonGroupsKey];
+		Json::Value& groupListRoot = root[JSON_GROUPS_KEY];
 
 		for (int i = 0; i < groupListRoot.size(); ++i)
 		{
 			Json::Value& groupRoot = groupListRoot[i];
-			Json::Value& groupElementInfoListRoot = groupRoot[JsonChildrenKey];
+			Json::Value& groupElementInfoListRoot = groupRoot[JSON_CHILDREN_KEY];
 
 			// 키값이 "groups" = []으로 들어가버린경우
 			_LogWarnIf_(groupElementInfoListRoot.empty(), "그룹에 자식이 없습니다.");
 
 			UIGroupInfo* pGroupInfo = dbg_new UIGroupInfo(groupElementInfoListRoot.size());
 
-			readElementCommon(groupRoot, pGroupInfo);
-			readElementGroup(groupRoot, pGroupInfo);
+			ReadElementCommon(groupRoot, pGroupInfo);
+			ReadElementGroup(groupRoot, pGroupInfo);
 			AddData(pGroupInfo);
 		}
 
 		// ========================================================================
 		//  UI 그룹마스터 로딩
 		// ========================================================================
-		Json::Value& groupMasterRoot = root[JsonGroupMasterKey];
-		Json::Value& groupMasterElementInfoListRoot = groupMasterRoot[JsonChildrenKey];
+		Json::Value& groupMasterRoot = root[JSON_GROUP_MASTER_KEY];
+		Json::Value& groupMasterElementInfoListRoot = groupMasterRoot[JSON_CHILDREN_KEY];
 
 		UIGroupInfo* pGroupMasterInfo = dbg_new UIGroupInfo(groupMasterElementInfoListRoot.size());
 
-		readElementCommon(groupMasterRoot, pGroupMasterInfo);
-		readElementGroup(groupMasterRoot, pGroupMasterInfo);
+		ReadElementCommon(groupMasterRoot, pGroupMasterInfo);
+		ReadElementGroup(groupMasterRoot, pGroupMasterInfo);
 		AddData(pGroupMasterInfo);
 	}
 	catch (std::exception& ex)
@@ -116,20 +116,20 @@ bool UIInfoLoader::Load()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIInfoLoader::readElementCommon(Json::Value& _elementRoot, UIElementInfo* _pElementInfo)
+void UIInfoLoader::ReadElementCommon(Json::Value& _elementRoot, UIElementInfo* _pElementInfo)
 {
-	_pElementInfo->code_ = _elementRoot[JsonCodeKey].asInt();
-	_pElementInfo->HAlignment = (HAlignment_t)_elementRoot[JsonHAlignKey].asInt();
-	_pElementInfo->VAlignment = (VAlignment_t)_elementRoot[JsonVAlignKey].asInt();
+	_pElementInfo->code_ = _elementRoot[JSON_CODE_KEY].asInt();
+	_pElementInfo->hAlignment_ = (HAlignment_t)_elementRoot[JSON_H_ALIGN_KEY].asInt();
+	_pElementInfo->vAlignment_ = (VAlignment_t)_elementRoot[JSON_V_ALIGN_KEY].asInt();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIInfoLoader::readElementGroup(Json::Value& _groupRoot, UIGroupInfo* _pGroupInfo)
+void UIInfoLoader::ReadElementGroup(Json::Value& _groupRoot, UIGroupInfo* _pGroupInfo)
 {
-	JsonUtilEx::ParseFloatNumber2(_groupRoot[JsonVisualSizeKey], _pGroupInfo->Size.width, _pGroupInfo->Size.height);
-	_pGroupInfo->Type = UIElementType::Group;
+	JsonUtilEx::ParseFloatNumber2(_groupRoot[JSON_VISUAL_SIZE_KEY], _pGroupInfo->size_.width, _pGroupInfo->size_.height);
+	_pGroupInfo->type_ = UIElementType::Group;
 
-	Json::Value& groupElementInfoListRoot = _groupRoot[JsonChildrenKey];
+	Json::Value& groupElementInfoListRoot = _groupRoot[JSON_CHILDREN_KEY];
 
 	for (int i = 0; i < groupElementInfoListRoot.size(); ++i)
 	{
@@ -139,228 +139,228 @@ void UIInfoLoader::readElementGroup(Json::Value& _groupRoot, UIGroupInfo* _pGrou
 
 		JsonUtilEx::ParseIntNumberN(groupElementInfoRoot, groupElementInfoData, 3);
 
-		groupElementInfo.Code = groupElementInfoData[0];
-		groupElementInfo.Pos.x = (float)groupElementInfoData[1];
-		groupElementInfo.Pos.y = (float)groupElementInfoData[2];
+		groupElementInfo.code_ = groupElementInfoData[0];
+		groupElementInfo.pos_.x = (float)groupElementInfoData[1];
+		groupElementInfo.pos_.y = (float)groupElementInfoData[2];
 
-		_pGroupInfo->InfoList.PushBack(groupElementInfo);
+		_pGroupInfo->infoList_.PushBack(groupElementInfo);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UIElementInfo* UIInfoLoader::readElementButton(Json::Value& _buttonRoot)
+UIElementInfo* UIInfoLoader::ReadElementButton(Json::Value& _buttonRoot)
 {
 	UIButtonInfo* pInfo = dbg_new UIButtonInfo();
 
-	readElementCommon(_buttonRoot, pInfo);
+	ReadElementCommon(_buttonRoot, pInfo);
 
 	ImagePackManager* pPackManager = ImagePackManager::Get();
-	const SGString& sgaName = JsonUtilEx::GetString(_buttonRoot[JsonSgaKey]);
-	const SGString& imageName = JsonUtilEx::GetString(_buttonRoot[JsonImgKey]);
+	const SGString& sgaName = JsonUtilEx::GetString(_buttonRoot[JSON_SGA_KEY]);
+	const SGString& imageName = JsonUtilEx::GetString(_buttonRoot[JSON_IMG_KEY]);
 
-	ImagePack* pPack = pPackManager->getPack(sgaName);
+	ImagePack* pPack = pPackManager->GetPack(sgaName);
 
-	pInfo->Sga = pPack->getPackIndex();
-	pInfo->Img = pPack->getImgIndex(imageName);
+	pInfo->sga_ = pPack->GetPackIndex();
+	pInfo->img_ = pPack->GetImgIndex(imageName);
 
-	pInfo->Type = UIElementType::Button;
-	pInfo->LinearDodge = _buttonRoot[JsonLinearDodgeKey].asBool();
-	JsonUtilEx::ParseIntNumberN(_buttonRoot[JsonSpriteKey], pInfo->Sprites, 4);
+	pInfo->type_ = UIElementType::Button;
+	pInfo->linearDodge_ = _buttonRoot[JSON_LINEAR_DODGE_KEY].asBool();
+	JsonUtilEx::ParseIntNumberN(_buttonRoot[JSON_SPRITE_KEY], pInfo->sprites_, 4);
 
 	return pInfo;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UIElementInfo* UIInfoLoader::readElementLabel(Json::Value& _labelRoot)
+UIElementInfo* UIInfoLoader::ReadElementLabel(Json::Value& _labelRoot)
 {
 	UILabelInfo* pInfo = dbg_new UILabelInfo();
 	DataManager* pDataManager = DataManager::Get();
 	(void)pDataManager;
 
-	readElementCommon(_labelRoot, pInfo);
+	ReadElementCommon(_labelRoot, pInfo);
 
-	const SGString fontName = JsonUtilEx::GetString(_labelRoot[JsonFontKey]);
+	const SGString fontName = JsonUtilEx::GetString(_labelRoot[JSON_FONT_KEY]);
 
-	pInfo->Type = UIElementType::Label;
-	pInfo->FontCode = FontManager::Get()->getFontCode(fontName);
-	pInfo->FontSize = _labelRoot[JsonFontSizeKey].asInt();
-	pInfo->TextWrap = _labelRoot[JsonTextWrapKey].asBool();
-	JsonUtilEx::ParseColor4B(_labelRoot[JsonFontColorKey], pInfo->FontColor);
-	JsonUtilEx::ParseSize(_labelRoot[JsonVisualSizeKey], pInfo->Size);
-	pInfo->TextHAlignment = (HAlignment_t)_labelRoot[JsonTextHAlignKey].asInt();
-	pInfo->TextVAlignment = (VAlignment_t)_labelRoot[JsonTextVAlignKey].asInt();
-	pInfo->Text = JsonUtilEx::GetString(_labelRoot[JsonTextKey]);
+	pInfo->type_ = UIElementType::Label;
+	pInfo->fontCode_ = FontManager::Get()->GetFontCode(fontName);
+	pInfo->fontSize_ = _labelRoot[JSON_FONT_SIZE_KEY].asInt();
+	pInfo->textWrap_ = _labelRoot[JSON_TEXT_WRAP_KEY].asBool();
+	JsonUtilEx::ParseColor4B(_labelRoot[JSON_FONT_COLOR_KEY], pInfo->fontColor_);
+	JsonUtilEx::ParseSize(_labelRoot[JSON_VISUAL_SIZE_KEY], pInfo->size_);
+	pInfo->textHAlignment_ = (HAlignment_t)_labelRoot[JSON_TEXT_H_ALIGN_KEY].asInt();
+	pInfo->textVAlignment_ = (VAlignment_t)_labelRoot[JSON_TEXT_V_ALIGN_KEY].asInt();
+	pInfo->text_ = JsonUtilEx::GetString(_labelRoot[JSON_TEXT_KEY]);
 
 	return pInfo;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UIElementInfo* UIInfoLoader::readElementSprite(Json::Value& _spriteRoot)
+UIElementInfo* UIInfoLoader::ReadElementSprite(Json::Value& _spriteRoot)
 {
 	UISpriteInfo* pInfo = dbg_new UISpriteInfo();
 
-	readElementCommon(_spriteRoot, pInfo);
+	ReadElementCommon(_spriteRoot, pInfo);
 
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 
-	const SGString& sgaName = JsonUtilEx::GetString(_spriteRoot[JsonSgaKey]);
-	const SGString& imageName = JsonUtilEx::GetString(_spriteRoot[JsonImgKey]);
+	const SGString& sgaName = JsonUtilEx::GetString(_spriteRoot[JSON_SGA_KEY]);
+	const SGString& imageName = JsonUtilEx::GetString(_spriteRoot[JSON_IMG_KEY]);
 
-	ImagePack* pPack = pPackManager->getPack(sgaName);
+	ImagePack* pPack = pPackManager->GetPack(sgaName);
 
-	pInfo->Type = UIElementType::Sprite;
-	pInfo->Sga = pPack->getPackIndex();
-	pInfo->Img = pPack->getImgIndex(imageName);
-	pInfo->Sprite = _spriteRoot[JsonSpriteKey].asInt();
-	pInfo->LinearDodge = _spriteRoot.get(JsonLinearDodgeKey, false).asBool();
-	pInfo->Scale9 = _spriteRoot.get(JsonScale9, false).asBool();
-	JsonUtilEx::ParseSize(_spriteRoot[JsonVisualSizeKey], pInfo->Size);
+	pInfo->type_ = UIElementType::Sprite;
+	pInfo->sga_ = pPack->GetPackIndex();
+	pInfo->img_ = pPack->GetImgIndex(imageName);
+	pInfo->sprite_ = _spriteRoot[JSON_SPRITE_KEY].asInt();
+	pInfo->linearDodge_ = _spriteRoot.get(JSON_LINEAR_DODGE_KEY, false).asBool();
+	pInfo->scale9_ = _spriteRoot.get(JSON_SCALE9, false).asBool();
+	JsonUtilEx::ParseSize(_spriteRoot[JSON_VISUAL_SIZE_KEY], pInfo->size_);
 
 	return pInfo;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UIElementInfo* UIInfoLoader::readElementEditBox(Json::Value& _editBoxRoot)
+UIElementInfo* UIInfoLoader::ReadElementEditBox(Json::Value& _editBoxRoot)
 {
 	UIEditBoxInfo* pInfo = dbg_new UIEditBoxInfo();
 
-	readElementCommon(_editBoxRoot, pInfo);
+	ReadElementCommon(_editBoxRoot, pInfo);
 
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 	(void)pPackManager;
 
-	pInfo->Type = UIElementType::EditBox;
-	JsonUtilEx::ParseSize(_editBoxRoot[JsonVisualSizeKey], pInfo->Size);
-	pInfo->FontSize = _editBoxRoot[JsonFontSizeKey].asInt();
-	pInfo->TextHAlignment = (HAlignment_t)_editBoxRoot[JsonTextHAlignKey].asInt();
-	JsonUtilEx::ParseColor4B(_editBoxRoot[JsonFontColorKey], pInfo->FontColor);
+	pInfo->type_ = UIElementType::EditBox;
+	JsonUtilEx::ParseSize(_editBoxRoot[JSON_VISUAL_SIZE_KEY], pInfo->Size);
+	pInfo->FontSize = _editBoxRoot[JSON_FONT_SIZE_KEY].asInt();
+	pInfo->TextHAlignment = (HAlignment_t)_editBoxRoot[JSON_TEXT_H_ALIGN_KEY].asInt();
+	JsonUtilEx::ParseColor4B(_editBoxRoot[JSON_FONT_COLOR_KEY], pInfo->FontColor);
 
-	pInfo->PlaceholderText = JsonUtilEx::GetString(_editBoxRoot[JsonPlaceholderTextKey]);
-	JsonUtilEx::ParseColor4B(_editBoxRoot[JsonPlaceholderFontColorKey], pInfo->PlaceHolderFontColor);
-	pInfo->PlaceholderFontSize = _editBoxRoot[JsonPlaceholderFontSizeKey].asInt();
-	pInfo->MaxLength = _editBoxRoot[JsonMaxLengthKey].asInt();
-	pInfo->InputMode = SGInputMode(_editBoxRoot[JsonInputModeKey].asInt());
+	pInfo->PlaceholderText = JsonUtilEx::GetString(_editBoxRoot[JSON_PLACEHOLDER_TEXT_KEY]);
+	JsonUtilEx::ParseColor4B(_editBoxRoot[JSON_PLACEHOLDER_FONT_COLOR_KEY], pInfo->PlaceHolderFontColor);
+	pInfo->PlaceholderFontSize = _editBoxRoot[JSON_PLACEHOLDER_FONT_SIZE_KEY].asInt();
+	pInfo->MaxLength = _editBoxRoot[JSON_MAX_LENGTH_KEY].asInt();
+	pInfo->InputMode = SGInputMode(_editBoxRoot[JSON_INPUT_MODE_KEY].asInt());
 
 	return pInfo;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UIElementInfo* UIInfoLoader::readElementCheckBox(Json::Value& _checkBoxRoot)
+UIElementInfo* UIInfoLoader::ReadElementCheckBox(Json::Value& _checkBoxRoot)
 {
 	UICheckBoxInfo* pInfo = dbg_new UICheckBoxInfo();
 
-	readElementCommon(_checkBoxRoot, pInfo);
+	ReadElementCommon(_checkBoxRoot, pInfo);
 
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 
-	const SGString backgroundSgaName = JsonUtilEx::GetString(_checkBoxRoot[JsonBackgroundSga]);
-	const SGString backgroundImageName = JsonUtilEx::GetString(_checkBoxRoot[JsonBackgroundImg]);
+	const SGString backgroundSgaName = JsonUtilEx::GetString(_checkBoxRoot[JSON_BACKGROUND_SGA]);
+	const SGString backgroundImageName = JsonUtilEx::GetString(_checkBoxRoot[JSON_BACKGROUND_IMG]);
 
-	const SGString crossSgaName = JsonUtilEx::GetString(_checkBoxRoot[JsonCrossSga]);
-	const SGString crossImageName = JsonUtilEx::GetString(_checkBoxRoot[JsonCrossImg]);
+	const SGString crossSgaName = JsonUtilEx::GetString(_checkBoxRoot[JSON_CROSS_SGA]);
+	const SGString crossImageName = JsonUtilEx::GetString(_checkBoxRoot[JSON_CROSS_IMG]);
 
-	ImagePack* pBackgroundPack = pPackManager->getPackUnsafe(backgroundSgaName); // 백그라운드는 sga이름이 빈 문자열 일 수 있음
-	ImagePack* pCrossPack = pPackManager->getPack(crossSgaName);
+	ImagePack* pBackgroundPack = pPackManager->GetPackUnsafe(backgroundSgaName); // 백그라운드는 sga이름이 빈 문자열 일 수 있음
+	ImagePack* pCrossPack = pPackManager->GetPack(crossSgaName);
 
-	pInfo->Type = UIElementType::CheckBox;
-	pInfo->Check = _checkBoxRoot.get(JsonCheck, false).asBool();
+	pInfo->type_ = UIElementType::CheckBox;
+	pInfo->Check = _checkBoxRoot.get(JSON_CHECK, false).asBool();
 
 	if (pBackgroundPack != nullptr)
 	{
-		pInfo->BackgroundSga = pBackgroundPack->getPackIndex();
-		pInfo->BackgroundImg = pBackgroundPack->getImgIndex(backgroundImageName);
+		pInfo->BackgroundSga = pBackgroundPack->GetPackIndex();
+		pInfo->BackgroundImg = pBackgroundPack->GetImgIndex(backgroundImageName);
 	}
 
-	pInfo->CrossSga = pCrossPack->getPackIndex();
-	pInfo->CrossImg = pCrossPack->getImgIndex(crossImageName);
-	JsonUtilEx::ParseIntNumberN(_checkBoxRoot[JsonSpriteKey], pInfo->Sprites, 4);
+	pInfo->CrossSga = pCrossPack->GetPackIndex();
+	pInfo->CrossImg = pCrossPack->GetImgIndex(crossImageName);
+	JsonUtilEx::ParseIntNumberN(_checkBoxRoot[JSON_SPRITE_KEY], pInfo->Sprites, 4);
 
-	DebugAssertMsg(pInfo->Sprites[UICheckBox::IndexCross] != InvalidValue_v, "체크박스인데 크로스 이미지가 설정되어있지 않습니다.");
+	DebugAssertMsg(pInfo->Sprites[UICheckBox::INDEX_CROSS] != InvalidValue_v, "체크박스인데 크로스 이미지가 설정되어있지 않습니다.");
 
 	return pInfo;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UIElementInfo* UIInfoLoader::readElementToggleButton(Json::Value& _toggleButtonRoot)
+UIElementInfo* UIInfoLoader::ReadElementToggleButton(Json::Value& _toggleButtonRoot)
 {
 	UIToggleButtonInfo* pInfo = dbg_new UIToggleButtonInfo();
 
-	readElementCommon(_toggleButtonRoot, pInfo);
+	ReadElementCommon(_toggleButtonRoot, pInfo);
 
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 
-	const SGString sgaName = JsonUtilEx::GetString(_toggleButtonRoot[JsonSgaKey]);
-	const SGString imageName = JsonUtilEx::GetString(_toggleButtonRoot[JsonImgKey]);
+	const SGString sgaName = JsonUtilEx::GetString(_toggleButtonRoot[JSON_SGA_KEY]);
+	const SGString imageName = JsonUtilEx::GetString(_toggleButtonRoot[JSON_IMG_KEY]);
 
-	ImagePack* pPack = pPackManager->getPack(sgaName);
+	ImagePack* pPack = pPackManager->GetPack(sgaName);
 
-	pInfo->Type = UIElementType::ToggleButton;
-	pInfo->LinearDodge = _toggleButtonRoot[JsonLinearDodgeKey].asBool();
-	pInfo->Sga = pPack->getPackIndex();
-	pInfo->Img = pPack->getImgIndex(imageName);
+	pInfo->type_ = UIElementType::ToggleButton;
+	pInfo->LinearDodge = _toggleButtonRoot[JSON_LINEAR_DODGE_KEY].asBool();
+	pInfo->Sga = pPack->GetPackIndex();
+	pInfo->Img = pPack->GetImgIndex(imageName);
 
-	JsonUtilEx::ParseIntNumberN(_toggleButtonRoot[JsonSpriteKey], pInfo->Sprites[0], 4);
-	JsonUtilEx::ParseIntNumberN(_toggleButtonRoot[JsonToggleSpriteKey], pInfo->Sprites[1], 4);
+	JsonUtilEx::ParseIntNumberN(_toggleButtonRoot[JSON_SPRITE_KEY], pInfo->Sprites[0], 4);
+	JsonUtilEx::ParseIntNumberN(_toggleButtonRoot[JSON_TOGGLE_SPRITE_KEY], pInfo->Sprites[1], 4);
 
 	return pInfo;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UIElementInfo* UIInfoLoader::readElementScrollBar(Json::Value& _scrollBarRoot)
+UIElementInfo* UIInfoLoader::ReadElementScrollBar(Json::Value& _scrollBarRoot)
 {
 	UIScrollBarInfo* pInfo = dbg_new UIScrollBarInfo();
 
-	readElementCommon(_scrollBarRoot, pInfo);
+	ReadElementCommon(_scrollBarRoot, pInfo);
 
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 
-	const SGString sgaName = JsonUtilEx::GetString(_scrollBarRoot[JsonSgaKey]);
-	const SGString imageName = JsonUtilEx::GetString(_scrollBarRoot[JsonImgKey]);
+	const SGString sgaName = JsonUtilEx::GetString(_scrollBarRoot[JSON_SGA_KEY]);
+	const SGString imageName = JsonUtilEx::GetString(_scrollBarRoot[JSON_IMG_KEY]);
 
-	ImagePack* pPack = pPackManager->getPack(sgaName);
+	ImagePack* pPack = pPackManager->GetPack(sgaName);
 
-	pInfo->Type = UIElementType::ScrollBar;
-	pInfo->Sga = pPack->getPackIndex();
-	pInfo->Img = pPack->getImgIndex(imageName);
-	JsonUtilEx::ParseSize(_scrollBarRoot[JsonTrackSizeKey], pInfo->TrackSize);
-	JsonUtilEx::ParseIntNumberN(_scrollBarRoot[JsonSpriteKey], pInfo->Sprites, 7);
+	pInfo->type_ = UIElementType::ScrollBar;
+	pInfo->Sga = pPack->GetPackIndex();
+	pInfo->Img = pPack->GetImgIndex(imageName);
+	JsonUtilEx::ParseSize(_scrollBarRoot[JSON_TRACK_SIZE_KEY], pInfo->TrackSize);
+	JsonUtilEx::ParseIntNumberN(_scrollBarRoot[JSON_SPRITE_KEY], pInfo->Sprites, 7);
 
 	return pInfo;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UIElementInfo* UIInfoLoader::readElementProgressBar(Json::Value& _progressBarRoot)
+UIElementInfo* UIInfoLoader::ReadElementProgressBar(Json::Value& _progressBarRoot)
 {
 	UIProgressBarInfo* pInfo = dbg_new UIProgressBarInfo();
 
-	readElementCommon(_progressBarRoot, pInfo);
+	ReadElementCommon(_progressBarRoot, pInfo);
 
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 
-	const SGString sgaName = JsonUtilEx::GetString(_progressBarRoot[JsonSgaKey]);
-	const SGString imageName = JsonUtilEx::GetString(_progressBarRoot[JsonImgKey]);
+	const SGString sgaName = JsonUtilEx::GetString(_progressBarRoot[JSON_SGA_KEY]);
+	const SGString imageName = JsonUtilEx::GetString(_progressBarRoot[JSON_IMG_KEY]);
 
-	ImagePack* pPack = pPackManager->getPack(sgaName);
+	ImagePack* pPack = pPackManager->GetPack(sgaName);
 
-	pInfo->Type = UIElementType::ProgressBar;
-	pInfo->Sga = pPack->getPackIndex();
-	pInfo->Img = pPack->getImgIndex(imageName);
-	pInfo->Sprite = _progressBarRoot[JsonSpriteKey].asInt();
-	JsonUtilEx::ParseSize(_progressBarRoot[JsonVisualSizeKey], pInfo->Size);
-	pInfo->ProgressIncreaseDirection = (ProgressIncreaseDirection_t)_progressBarRoot[JsonDirectionKey].asInt();
+	pInfo->type_ = UIElementType::ProgressBar;
+	pInfo->Sga = pPack->GetPackIndex();
+	pInfo->Img = pPack->GetImgIndex(imageName);
+	pInfo->Sprite = _progressBarRoot[JSON_SPRITE_KEY].asInt();
+	JsonUtilEx::ParseSize(_progressBarRoot[JSON_VISUAL_SIZE_KEY], pInfo->Size);
+	pInfo->ProgressIncreaseDirection = (ProgressIncreaseDirection_t)_progressBarRoot[JSON_DIRECTION_KEY].asInt();
 
 	return pInfo;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UIElementInfo* UIInfoLoader::readElementStatic(Json::Value& _staticRoot)
+UIElementInfo* UIInfoLoader::ReadElementStatic(Json::Value& _staticRoot)
 {
 	UIStaticInfo* pInfo = dbg_new UIStaticInfo();
 
-	readElementCommon(_staticRoot, pInfo);
+	ReadElementCommon(_staticRoot, pInfo);
 
-	pInfo->Type = UIElementType::Static;
-	JsonUtilEx::ParseSize(_staticRoot[JsonVisualSizeKey], pInfo->Size);
+	pInfo->type_ = UIElementType::Static;
+	JsonUtilEx::ParseSize(_staticRoot[JSON_VISUAL_SIZE_KEY], pInfo->Size);
 
 	return pInfo;
 }
