@@ -42,6 +42,7 @@ public:
 	~String();
 public:
 	char* Source() const { return m_pBuffer; }
+	const char* SafeSource() const { return m_pBuffer != nullptr ? m_pBuffer : EmptySource; }
 	int Capacity() const { return m_iCapacity; }
 	int Length() const { return m_iLen; }
 	int LengthWithNull() const { return m_iLen + 1; }
@@ -50,14 +51,16 @@ public:
 	bool IsEmpty() const { return m_iLen == 0; }
     bool IsNull() const { return m_pBuffer == nullptr; }
 	bool IsValidIndex(const int _index) const { return _index >= 0 || _index < m_iLen; }
-	bool IsValidIndexRange(const int _startIndex, const int _endIndex) const {
+	bool IsValidIndexRange(const int _startIndex, const int _endIndex) const 
+	{
 		return _startIndex <= _endIndex && _startIndex >= 0 && _endIndex < m_iLen;
 	}
 
 	template <typename T>
-	void Append(const T& str) {
+	void Append(const T& _str) 
+	{
 		std::stringstream ss;
-		ss << str;
+		ss << _str;
 		Append(ss.str());
 	}
 	void Append(char _ch);
@@ -87,8 +90,8 @@ public:
 	int FindReverse(const String& _str) const;
 	int FindReverse(const char* _pStr) const;
 
-	bool EndWith(const String& str) const { return FindReverse(str.Source()) == m_iLen - str.Length();  }
-	bool StartWith(const String& str) const { return Find(str) == 0; }
+	bool EndWith(const String& _str) const { return FindReverse(_str.Source()) == m_iLen - _str.Length();  }
+	bool StartWith(const String& _str) const { return Find(_str) == 0; }
 
 	char Last() const { return GetAt(m_iLen - 1); }
 	char First() const { return GetAt(0); }

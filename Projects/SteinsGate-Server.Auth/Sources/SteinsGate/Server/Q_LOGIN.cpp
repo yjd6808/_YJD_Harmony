@@ -35,7 +35,7 @@ bool Q_LOGIN::RegisterAccount(const char* _pAccountId, const char* _pAccountPass
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool Q_LOGIN::SelectAccountInfo(const char* _pAccountId, JCORE_OUT AccountData& _accountData)
+bool Q_LOGIN::SelectAccountInfo(const char* _pAccountId, OUT AccountData& _accountData)
 {
 	Qry::SelectAccountInfoResult result;
 	Qry::SelectAccountInfo::Execute<THelper>(Core::GameDB, result, _pAccountId);
@@ -44,7 +44,8 @@ bool Q_LOGIN::SelectAccountInfo(const char* _pAccountId, JCORE_OUT AccountData& 
 	if (!IsSuccess || !result.HasBindedResult)
 		return false;
 
-	if (result.LastServer < GameServerType::Begin || result.LastServer > GameServerType::End)
+	if (result.LastServer < GameServerType::Begin || 
+		result.LastServer > GameServerType::End) 
 	{
 		DebugAssert(false);
 		return false;

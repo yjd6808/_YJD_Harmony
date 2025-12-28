@@ -29,7 +29,7 @@ public:
 	bool AddPlayer(Player* player);
 	bool RemovePlayer(Player* player);
 	Player* GetPlayerByName(const char* name);
-	void GetPlayerListByCharacterPrimaryKeyList(const JCore::Vector<int>& characterPrimaryKeyList, JCORE_REF_OUT JCore::Vector<Player*>& playerList);
+	void GetPlayerListByCharacterPrimaryKeyList(const JCore::Vector<int>& characterPrimaryKeyList, OUT JCore::Vector<Player*>& playerList);
 	Player* GetPlayerByCharacterPrimaryKey(int characterPrimaryKey);
 	
 	bool AddRoom(Room* room);

@@ -10,9 +10,9 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////
 char* TextParser::ParseFrameInfo(const char* _pFrameString, int _len,
-                                 JCORE_OUT int& _frameIndex,
-                                 JCORE_OUT int& _delay,
-                                 JCORE_OUT int& _frameEventCode)
+                                 OUT int& _frameIndex,
+                                 OUT int& _delay,
+                                 OUT int& _frameEventCode)
 {
 	char* pSource = (char*)_pFrameString;
 	int* pFrameValues[3];
@@ -49,7 +49,7 @@ char* TextParser::ParseFrameInfo(const char* _pFrameString, int _len,
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TextParser::ParseIntNumbers(const SGString& _numStr, JCORE_OUT int* _pNumArr, int _count)
+void TextParser::ParseIntNumbers(const SGString& _numStr, OUT int* _pNumArr, int _count)
 {
 	char* pSource = _numStr.Source();
 	int ptrIndex = 0;
@@ -77,13 +77,13 @@ void TextParser::ParseIntNumbers(const SGString& _numStr, JCORE_OUT int* _pNumAr
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TextParser::ParseFloatNumbers(const SGString& _numStr, JCORE_OUT float* _pNumArr, int _count)
+void TextParser::ParseFloatNumbers(const SGString& _numStr, OUT float* _pNumArr, int _count)
 {
 	ParseFloatNumbers(_numStr.Source(), _numStr.Length(), _pNumArr, _count);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TextParser::ParseFloatNumbers(char* _pSource, int _len, JCORE_OUT float* _pNumArr, int _count)
+void TextParser::ParseFloatNumbers(char* _pSource, int _len, OUT float* _pNumArr, int _count)
 {
 	int ptrIndex = 0;
 	int buffIndex = 0;

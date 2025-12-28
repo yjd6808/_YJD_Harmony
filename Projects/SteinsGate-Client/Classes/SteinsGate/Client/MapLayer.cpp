@@ -106,9 +106,9 @@ void MapLayer::update(float _dt)
 //////////////////////////////////////////////////////////////////////////////////////////
 void MapLayer::LoadMap(int _mapCode)
 {
-	pMapInfo_ = Core::DataManager->getMapInfo(_mapCode);
-	pMapAreaInfo_ = Core::DataManager->getMapAreaInfo(_mapCode);
-	pMapPhysicsInfo_ = Core::DataManager->getMapPhysicsInfo(pMapInfo_->physicsCode_);
+	pMapInfo_ = Core::DataManager->GetMapInfo(_mapCode);
+	pMapAreaInfo_ = Core::DataManager->GetMapAreaInfo(_mapCode);
+	pMapPhysicsInfo_ = Core::DataManager->GetMapPhysicsInfo(pMapInfo_->physicsCode_);
 
 	// 배경 로딩
 
@@ -178,7 +178,7 @@ Character* MapLayer::FindNearestCharacterInRadious(Actor* _pStdActor, float _rad
 bool MapLayer::CollectEnemiesInActorRect(
 	Actor* _pAttacker,
 	const ActorRect& _absoluteActorRect,
-	JCORE_OUT SGVector<HitInfo>& _hitTargets)
+	OUT SGVector<HitInfo>& _hitTargets)
 {
 	ActorList& physcisActorList = pActorBox_->GetPhysicsActorList();
 	bool find = false;
@@ -206,7 +206,7 @@ bool MapLayer::CollectEnemiesInActorRect(
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool MapLayer::CollectEnemiesInActor(Actor* _pCollector, JCORE_OUT SGVector<HitInfo>& _hitTargets)
+bool MapLayer::CollectEnemiesInActor(Actor* _pCollector, OUT SGVector<HitInfo>& _hitTargets)
 {
 	return CollectEnemiesInActorRect(_pCollector, _pCollector->GetActorRect(), _hitTargets);
 }

@@ -65,7 +65,7 @@ public:
 	}
 
 protected:
-	JCORE_NOT_NULL Actor* pActor_;
+	NOT_NULL Actor* pActor_;
 	AIActivityType_t type_;
 	State state_;
 	float elapsedTime_;

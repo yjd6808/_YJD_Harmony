@@ -40,7 +40,7 @@ DataManager::DataManager()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void DataManager::initializeLoader()
+void DataManager::InitializeLoader()
 {
 	m_pConfigFileLoaders[ConfigFileType::Effect] = dbg_new EffectInfoLoader(this);
 	m_pConfigFileLoaders[ConfigFileType::Map] = dbg_new MapInfoLoader(this);
@@ -80,9 +80,9 @@ MonsterInfo* DataManager::GetMonsterInfo(int _mobCode)
 	auto eType = ConfigFileType::Monster;
 
 	if (!m_bLoaded[eType])
-		load(eType);
+		Load(eType);
 
-	return (MonsterInfo*)getData(eType, _mobCode);
+	return (MonsterInfo*)GetData(eType, _mobCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -91,9 +91,9 @@ ActionInfo* DataManager::GetActionInfo(int _actionCode)
 	auto eType = ConfigFileType::Action;
 
 	if (!m_bLoaded[eType])
-		load(eType);
+		Load(eType);
 
-	return (ActionInfo*)getData(eType, _actionCode);
+	return (ActionInfo*)GetData(eType, _actionCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -111,9 +111,9 @@ ProjectileInfo* DataManager::GetProjectileInfo(ActorType_t _actorType, int _proj
 	}
 
 	if (!m_bLoaded[eType])
-		load(eType);
+		Load(eType);
 
-	return (ProjectileInfo*)getData(eType, _projectileCode);
+	return (ProjectileInfo*)GetData(eType, _projectileCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -122,9 +122,9 @@ CharInfo* DataManager::GetCharInfo(int _charCode)
 	auto eType = ConfigFileType::Char_Base;
 
 	if (!m_bLoaded[eType])
-		load(eType);
+		Load(eType);
 
-	return (CharInfo*)getData(eType, _charCode);
+	return (CharInfo*)GetData(eType, _charCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -133,9 +133,9 @@ AnimationInfo* DataManager::GetCharAnimationInfo(int _charAnimationCode)
 	auto eType = ConfigFileType::Char_Animation;
 
 	if (!m_bLoaded[eType])
-		load(eType);
+		Load(eType);
 
-	return (AnimationInfo*)getData(eType, _charAnimationCode);
+	return (AnimationInfo*)GetData(eType, _charAnimationCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -144,7 +144,7 @@ SGVector<AnimationInfo*>& DataManager::GetCharAnimationInfoList(int _charCode)
 	auto eType = ConfigFileType::Char_Animation;
 
 	if (!m_bLoaded[eType])
-		load(eType);
+		Load(eType);
 
 	auto pLoader = (CharAnimationInfoLoader*)m_pConfigFileLoaders[eType];
 	return pLoader->GetAnimationList((CharType_t)_charCode);
@@ -156,9 +156,9 @@ ClientInfo* DataManager::GetClientInfo(int _code)
 	auto eType = ConfigFileType::Client;
 
 	if (!m_bLoaded[eType])
-		load(eType);
+		Load(eType);
 
-	return (ClientInfo*)getData(eType, _code);
+	return (ClientInfo*)GetData(eType, _code);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -167,9 +167,9 @@ TileInfo* DataManager::GetTileInfo(int _tileCode)
 	auto eType = ConfigFileType::Tile;
 
 	if (!m_bLoaded[eType])
-		load(eType);
+		Load(eType);
 
-	return (TileInfo*)getData(eType, _tileCode);
+	return (TileInfo*)GetData(eType, _tileCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -178,9 +178,9 @@ MapObjectInfo* DataManager::GetMapObjectInfo(int _mapObjectCode)
 	auto eType = ConfigFileType::MapObject;
 
 	if (!m_bLoaded[eType])
-		load(eType);
+		Load(eType);
 
-	return (MapObjectInfo*)getData(eType, _mapObjectCode);
+	return (MapObjectInfo*)GetData(eType, _mapObjectCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -189,9 +189,9 @@ AIInfo* DataManager::GetAiInfo(int _aiCode)
 	auto eType = ConfigFileType::AI;
 
 	if (!m_bLoaded[eType])
-		load(eType);
+		Load(eType);
 
-	return (AIInfo*)getData(eType, _aiCode);
+	return (AIInfo*)GetData(eType, _aiCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -209,9 +209,9 @@ AttackDataInfo* DataManager::GetAttackDataInfo(ActorType_t _actorType, int _atta
 	}
 
 	if (!m_bLoaded[eType])
-		load(eType);
+		Load(eType);
 
-	return (AttackDataInfo*)getData(eType, _attackDataCode);
+	return (AttackDataInfo*)GetData(eType, _attackDataCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -220,9 +220,9 @@ EffectInfo* DataManager::GetEffectInfo(int _effectCode)
 	auto eType = ConfigFileType::Effect;
 
 	if (!m_bLoaded[eType])
-		load(eType);
+		Load(eType);
 
-	return (EffectInfo*)getData(eType, _effectCode);
+	return (EffectInfo*)GetData(eType, _effectCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -231,9 +231,9 @@ UIElementInfo* DataManager::GetUiElementInfo(int _uiElementCode)
 	auto eType = ConfigFileType::UI;
 
 	if (!m_bLoaded[eType])
-		load(eType);
+		Load(eType);
 
-	return (UIElementInfo*)getData(eType, _uiElementCode);
+	return (UIElementInfo*)GetData(eType, _uiElementCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -251,9 +251,9 @@ FrameEvent* DataManager::GetFrameEvent(ActorType_t _actorType, int _frameEventCo
 	}
 
 	if (!m_bLoaded[eType])
-		load(eType);
+		Load(eType);
 
-	return (FrameEvent*)getData(eType, _frameEventCode);
+	return (FrameEvent*)GetData(eType, _frameEventCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -262,9 +262,9 @@ ChannelInfo* DataManager::GetChannelInfo(int _channelCode)
 	auto eType = ConfigFileType::Channel;
 
 	if (!m_bLoaded[eType])
-		load(eType);
+		Load(eType);
 
-	return (ChannelInfo*)getData(eType, _channelCode);
+	return (ChannelInfo*)GetData(eType, _channelCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -273,7 +273,7 @@ char* DataManager::GetTextRaw(const char* _textId)
 	auto eType = ConfigFileType::ClientText;
 
 	if (!m_bLoaded[eType])
-		load(eType);
+		Load(eType);
 
 	const auto pLoader = dynamic_cast<ClientTextInfoLoader*>(m_pConfigFileLoaders[eType]);
 
@@ -298,7 +298,7 @@ SGString& DataManager::GetText(const char* _textId)
 	auto eType = ConfigFileType::ClientText;
 
 	if (!m_bLoaded[eType])
-		load(eType);
+		Load(eType);
 
 	const auto pLoader = dynamic_cast<ClientTextInfoLoader*>(m_pConfigFileLoaders[eType]);
 

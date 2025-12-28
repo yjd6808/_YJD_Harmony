@@ -53,7 +53,7 @@ bool ChannelBaseInfoLoader::Load()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ChannelBaseInfoLoader::ReadChannelBaseInfo(Json::Value& _channelRoot, JCORE_OUT ChannelBaseInfo* _pChannelInfo)
+void ChannelBaseInfoLoader::ReadChannelBaseInfo(Json::Value& _channelRoot, OUT ChannelBaseInfo* _pChannelInfo)
 {
 	_pChannelInfo->code_ = _channelRoot["code"].asInt();
 	_pChannelInfo->name_ = JsonUtil::GetString(_channelRoot["name"]);

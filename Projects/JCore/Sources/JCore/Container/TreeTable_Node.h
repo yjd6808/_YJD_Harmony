@@ -56,7 +56,7 @@ public:
 	}
 
 	// 둥중 하나의 자식 아무거나 반환 및 자식이 몇개있는지도 같이 반환
-	TreeNode* AnyWithChildrenCount(JCORE_OUT int& _count) const
+	TreeNode* AnyWithChildrenCount(OUT int& _count) const
 	{
 		if (pLeft_ && pRight_)
 		{

@@ -56,7 +56,7 @@ bool Host::CreateSocket(TransportProtocol _protocol, bool _nonBlocking)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool Host::ConnectIocp()
 {
-	if (!iocp_->Connect(reinterpret_cast<WinHandle>(SocketHandle()), NULL))
+	if (!pIocp_->Connect(reinterpret_cast<WinHandle>(SocketHandle()), NULL))
 	{
 		return false;
 	}

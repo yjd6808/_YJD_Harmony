@@ -24,7 +24,7 @@ LogicServer::LogicServer(const IOCPPtr& _pIocp, const MemoryPoolAbstractPtr& _pB
 //////////////////////////////////////////////////////////////////////////////////////////
 SGTcpSession* LogicServer::CreateSession()
 {
-	return dbg_new LogicSession(this, m_spIocp, m_spBufferAllocator, 6144, 6144);
+	return dbg_new LogicSession(this, pIocp_, pBufferAllocator_, 6144, 6144);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

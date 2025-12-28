@@ -8,7 +8,7 @@ class JCORE_NOVTABLE Server : public Host
 {
 public:
 	Server(const IOCPPtr& _pIocp)
-		: Host(_pIocp)
+	: Host(_pIocp)
 	{
 	}
 

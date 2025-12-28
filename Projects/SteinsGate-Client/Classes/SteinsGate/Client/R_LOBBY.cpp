@@ -19,7 +19,7 @@ USING_NS_CC;
 USING_NS_JNET;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void R_LOBBY::RECV_LOC_JoinLobbyAck(JCORE_UNUSED Session* _pSession, ICommand* _pCommand)
+void R_LOBBY::RECV_LOC_JoinLobbyAck(UNUSED Session* _pSession, ICommand* _pCommand)
 {
 	LOC_JoinLobbyAck* pCmd = (LOC_JoinLobbyAck*)_pCommand;
 	Core::Contents.PopupManager->CloseByTag(DEF_POPUP_AUTHENTICATION_LOBBY_BEGIN);

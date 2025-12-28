@@ -116,21 +116,34 @@
 	#define JCORE_LEAK_CHECK_ASSERT		JCore::AutoMemoryLeakDetector JCORE_CONCAT_COUNTER(_) {[](Int32U leakedBytes ) { DebugAssertMsg(leakedBytes == 0, "%u 바이트 메모리 릭이 있습니다.", leakedBytes); }}
 	#define JCORE_DEFAULT_CODE_PAGE		JCore::CodePage::UTF8
 
-	// 파라미터 어노테이션
-	#define JCORE_REF_IN
-	#define JCORE_REF_INOUT
-	#define JCORE_REF_OUT
-
-    #define JCORE_IN
-    #define JCORE_OUT
-	#define JCORE_OUT_OPT
-    #define JCORE_IN_OUT
-    #define JCORE_IN_OPT
-
 	// 필드 어노테이션
-	#define JCORE_NOT_NULL
-	#define JCORE_NULLABLE
-	#define JCORE_UNUSED
+	#ifndef OUT
+	#define OUT
+	#endif
+
+	#ifndef IN_OUT
+	#define IN_OUT
+	#endif
+
+	#ifndef IN_OPT
+	#define IN_OPT
+	#endif
+
+	#ifndef OUT_OPT
+	#define OUT_OPT
+	#endif
+
+	#ifndef NOT_NULL
+	#define NOT_NULL
+	#endif
+
+	#ifndef NULLABLE
+	#define NULLABLE
+	#endif
+
+	#ifndef UNUSED
+	#define UNUSED
+	#endif
 	
 	#define JCORE_SWAP(val1, val2, type) do { type temp = val1; val1 = val2; val2 = temp; } while (0)
 

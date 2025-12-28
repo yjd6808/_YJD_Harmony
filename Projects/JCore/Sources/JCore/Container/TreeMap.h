@@ -212,27 +212,27 @@ public:
 		treeTable_.ForEachValueDelete();
 	}
 
-	bool TryGetFirst(JCORE_OUT TKeyValuePair& _pair) const
+	bool TryGetFirst(OUT TKeyValuePair& _pair) const
 	{
 		return treeTable_.TryGetFirst(_pair);
 	}
 
-	bool TryGetLast(JCORE_OUT TKeyValuePair& _pair) const
+	bool TryGetLast(OUT TKeyValuePair& _pair) const
 	{
 		return treeTable_.TryGetLast(_pair);
 	}
 
-	bool TryGetFirstValue(JCORE_OUT TValue& _value) const
+	bool TryGetFirstValue(OUT TValue& _value) const
 	{
 		return treeTable_.TryGetFirstValue(_value);
 	}
 
-	bool TryGetLastValue(JCORE_OUT TValue& _value) const
+	bool TryGetLastValue(OUT TValue& _value) const
 	{
 		return treeTable_.TryGetLastValue(_value);
 	}
 
-	bool TryGetFirstKey(JCORE_OUT TKey& _key) const
+	bool TryGetFirstKey(OUT TKey& _key) const
 	{
 		return treeTable_.TryGetFirstKey(_key);
 	}

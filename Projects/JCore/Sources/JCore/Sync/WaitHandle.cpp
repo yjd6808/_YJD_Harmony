@@ -35,7 +35,7 @@ WaitHandle::~WaitHandle()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool WaitHandle::Wait(Int32U _timeout, JCORE_OUT Int32U* _pResult)
+bool WaitHandle::Wait(Int32U _timeout, OUT Int32U* _pResult)
 {
 	if (handle_ == nullptr)
 		return false;
@@ -86,7 +86,7 @@ void WaitHandle::operator=(WaitHandle&& _other) noexcept
 // static
 // =====================================================================
 //////////////////////////////////////////////////////////////////////////////////////////
-bool WaitHandle::WaitAll(WaitHandle* _pHandles, Int32U _count, JCORE_OUT_OPT Int32U* _pResult)
+bool WaitHandle::WaitAll(WaitHandle* _pHandles, Int32U _count, OUT_OPT Int32U* _pResult)
 {
 	DebugAssert(_count <= MAXIMUM_WAIT_OBJECTS);
 	WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
@@ -110,7 +110,7 @@ bool WaitHandle::WaitAll(WaitHandle* _pHandles, Int32U _count, JCORE_OUT_OPT Int
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-WaitHandle* WaitHandle::WaitAny(WaitHandle* _pHandles, Int32U _count, JCORE_OUT_OPT Int32U* _pResult)
+WaitHandle* WaitHandle::WaitAny(WaitHandle* _pHandles, Int32U _count, OUT_OPT Int32U* _pResult)
 {
 	DebugAssert(_count <= MAXIMUM_WAIT_OBJECTS);
 	WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];

@@ -117,7 +117,7 @@ void MapInfoLoader::TestOnCommon(Value& _mapRoot, const SGString& _fileName, Dir
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MapInfoLoader::ReadMapCommonInfo(Value& _mapRoot, JCORE_OUT MapInfo* _pMapInfo)
+void MapInfoLoader::ReadMapCommonInfo(Value& _mapRoot, OUT MapInfo* _pMapInfo)
 {
 	Value& areaRoot = _mapRoot["area"];
 	Value& npcListRoot = _mapRoot["npc"];
@@ -153,7 +153,7 @@ void MapInfoLoader::ReadMapCommonInfo(Value& _mapRoot, JCORE_OUT MapInfo* _pMapI
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MapInfoLoader::ReadMapAreaInfo(Value& _areaRoot, JCORE_OUT MapAreaInfo* _pMapAreaInfo)
+void MapInfoLoader::ReadMapAreaInfo(Value& _areaRoot, OUT MapAreaInfo* _pMapAreaInfo)
 {
 	Value& areaDataRoot = _areaRoot["area"];
 

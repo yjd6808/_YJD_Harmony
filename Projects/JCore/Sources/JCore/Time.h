@@ -632,8 +632,8 @@ public: // public static
 	static DateTime FromUnixTime(double unixTimestamp, TimeStandard timeStandard = TimeStandard::Local);	// 초단위 스탬프를 DateTime으로 변환
 	static int LastError() { return ms_tlsiLastError; }
 	static const char* LastErrorMessage();
-	static Vector<DateFormat_t> ParseFormat(const String& fmt, JCORE_IN_OPT Vector<String>* delimiters = nullptr) { return ParseFormat(fmt.Source(), fmt.Length(), delimiters); }
-	static Vector<DateFormat_t> ParseFormat(const char* fmt, int fmtLen, JCORE_IN_OPT Vector<String>* delimiters = nullptr);
+	static Vector<DateFormat_t> ParseFormat(const String& fmt, IN_OPT Vector<String>* delimiters = nullptr) { return ParseFormat(fmt.Source(), fmt.Length(), delimiters); }
+	static Vector<DateFormat_t> ParseFormat(const char* fmt, int fmtLen, IN_OPT Vector<String>* delimiters = nullptr);
 
 	static const char* GetAbbreviationWeekendName(DayOfWeek week) {
 		return ms_szWeekAbbrevName[int(week)];

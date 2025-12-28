@@ -75,7 +75,7 @@ void L_GAME::ClearCommandQueue() {
 	}
 }
 
-bool L_GAME::SwapCommandQueue(JCORE_REF_OUT CommandQueue** target) {
+bool L_GAME::SwapCommandQueue(OUT CommandQueue** target) {
 	JCORE_LOCK_GUARD(m_Lock);
 	JCORE_SWAP(*target, m_pCommandQueue, CommandQueue*);
 	return true;

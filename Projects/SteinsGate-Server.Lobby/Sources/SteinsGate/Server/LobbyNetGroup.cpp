@@ -77,7 +77,7 @@ void LobbyNetGroup::InitializeParser()
 
 void LobbyNetGroup::InitializeServer()
 {
-	auto pLobbyServer = MakeShared<LobbyServer>(m_spIOCP, m_spBufferPool);
+	auto pLobbyServer = MakeShared<LobbyServer>(pIocp_, pBufferPool_);
 
 	AddHost(Const::Host::LobbyTcpId, pLobbyServer);
 

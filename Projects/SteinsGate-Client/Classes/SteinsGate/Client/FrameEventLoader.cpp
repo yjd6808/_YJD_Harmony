@@ -36,9 +36,9 @@ bool FrameEventLoader::Load()
 	{
 		Value frameEventListRoot = root["frame_event"];
 
-		for (int i = 0; i < frameEventListRoot.size(); ++i)
+		for (size_t i = 0; i < frameEventListRoot.size(); ++i)
 		{
-			Value& frameEventRoot = frameEventListRoot[i];
+			Value& frameEventRoot = frameEventListRoot[(ArrayIndex)i];
 			FrameEvent* pFrameEvent = nullptr;
 			const FrameEventType_t frameEventType = (FrameEventType_t)frameEventRoot["type"].asInt();
 			const int frameEventCode = frameEventRoot["code"].asInt();
@@ -94,7 +94,7 @@ void FrameEventLoader::ReadFrameEventSpawn(Value& _frameEventRoot, FrameEventSpa
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void FrameEventLoader::ReadFrameEventAttackBoxInstant(Value& _frameEventRoot,
-                                                      JCORE_OUT FrameEventAttackBoxInstant* _pFrameEvent)
+                                                      OUT FrameEventAttackBoxInstant* _pFrameEvent)
 {
 	_pFrameEvent->attackDataCode_ = _frameEventRoot["attack_data_code"].asInt();
 	JsonUtilEx::ParseActorRect(_frameEventRoot["actor_rect"], _pFrameEvent->rect_);

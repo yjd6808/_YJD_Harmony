@@ -37,7 +37,7 @@ void InitializeClientCore()
 	Core::Net = NetCore::Get();
 	Core::RuntimeConfig = RuntimeConfig::Get();
 	Core::RuntimeConfigBase = Core::RuntimeConfig;
-	Core::ServerProcessInfoPackage = Core::DataManager->getServerProcessInfoPackage(1);
+	Core::ServerProcessInfoPackage = Core::DataManager->GetServerProcessInfoPackage(1);
 
 	Core::Contents.Initialize();
 
@@ -45,7 +45,7 @@ void InitializeClientCore()
 		Core::RuntimeConfig->Load();
 
 	if (Core::DataManager)
-		Core::DataManager->loadAll();
+		Core::DataManager->LoadAll();
 
 	if (Core::Net)
 		Core::Net->Initialize();

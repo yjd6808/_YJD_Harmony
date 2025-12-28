@@ -148,7 +148,7 @@ public:
 		return this->pArray_[head_];
 	}
 
-	bool TryDequeue(JCORE_OUT T& _value)
+	bool TryDequeue(OUT T& _value)
 	{
 		if (this->size_ > 0)
 		{

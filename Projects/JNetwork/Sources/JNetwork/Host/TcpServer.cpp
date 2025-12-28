@@ -13,9 +13,9 @@ NS_JNET_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 TcpServer::TcpServer(const IOCPPtr& _pIocp, const JCore::MemoryPoolAbstractPtr& _pBufferAllocator)
 : Server(_pIocp)
-, bufferAllocator_(_pBufferAllocator)
-, serverEventListener_(nullptr)
-, sessionContainer_(nullptr)
+, pBufferAllocator_(_pBufferAllocator)
+, pServerEventListener_(nullptr)
+, pSessionContainer_(nullptr)
 {
 	TcpServer::Initialize();
 }
@@ -25,14 +25,14 @@ TcpServer::~TcpServer()
 {
 	TcpServer::Stop();
 
-	JCORE_DELETE_SAFE(sessionContainer_);
-	JCORE_DELETE_SAFE(serverEventListener_);
+	JCORE_DELETE_SAFE(pSessionContainer_);
+	JCORE_DELETE_SAFE(pServerEventListener_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 TcpSession* TcpServer::CreateSession()
 {
-	return dbg_new TcpSession(this, iocp_, bufferAllocator_, nullptr, 0, 0);
+	return dbg_new TcpSession(this, pIocp_, pBufferAllocator_, nullptr, 0, 0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -45,9 +45,9 @@ ISessionContainer* TcpServer::CreateSessionContainer()
 //////////////////////////////////////////////////////////////////////////////////////////
 void TcpServer::SessionDisconnected(TcpSession* _pSession, Int32U _errorCode)
 {
-	if (serverEventListener_)
+	if (pServerEventListener_)
 	{
-		serverEventListener_->OnDisconnected(_pSession, _errorCode);
+		pServerEventListener_->OnDisconnected(_pSession, _errorCode);
 	}
 
 	// 세션 재사용... 이거땜에 State를 Atomic으로 변경함.
@@ -72,89 +72,89 @@ void TcpServer::SessionDisconnected(TcpSession* _pSession, Int32U _errorCode)
 //////////////////////////////////////////////////////////////////////////////////////////
 void TcpServer::SessionConnected(TcpSession* _pSession)
 {
-	if (serverEventListener_)
+	if (pServerEventListener_)
 	{
-		serverEventListener_->OnConnected(_pSession);
+		pServerEventListener_->OnConnected(_pSession);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void TcpServer::SessionConnectFailed(TcpSession* _pSession, Int32U _errorCode)
 {
-	if (serverEventListener_)
+	if (pServerEventListener_)
 	{
-		serverEventListener_->OnConnectFailed(_pSession, _errorCode);
+		pServerEventListener_->OnConnectFailed(_pSession, _errorCode);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void TcpServer::SessionSent(TcpSession* _pSession, IPacket* _pSentPacket, Int32UL _receivedBytes)
 {
-	if (serverEventListener_)
+	if (pServerEventListener_)
 	{
-		serverEventListener_->OnSent(_pSession, _pSentPacket, _receivedBytes);
+		pServerEventListener_->OnSent(_pSession, _pSentPacket, _receivedBytes);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void TcpServer::SessionReceived(TcpSession* _pSession, ICommand* _pCommand)
 {
-	if (serverEventListener_)
+	if (pServerEventListener_)
 	{
-		serverEventListener_->OnReceived(_pSession, _pCommand);
+		pServerEventListener_->OnReceived(_pSession, _pCommand);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void TcpServer::SessionReceived(TcpSession* _pSession, RecvedCommandPacket* _pRecvPacket)
 {
-	if (serverEventListener_)
+	if (pServerEventListener_)
 	{
-		serverEventListener_->OnReceived(_pSession, _pRecvPacket);
+		pServerEventListener_->OnReceived(_pSession, _pRecvPacket);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void TcpServer::SessionReceivedRaw(TcpSession* _pSession, char* _pData, int _len)
 {
-	if (serverEventListener_)
+	if (pServerEventListener_)
 	{
-		serverEventListener_->OnReceivedRaw(_pSession, _pData, _len);
+		pServerEventListener_->OnReceivedRaw(_pSession, _pData, _len);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ISessionContainer* TcpServer::GetSessionContainer()
 {
-	JCORE_LOCK_GUARD(sync_);
-	return sessionContainer_;
+	JCORE_LOCK_GUARD(lock_);
+	return pSessionContainer_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ServerEventListener* TcpServer::GetEventListener()
 {
-	JCORE_LOCK_GUARD(sync_);
-	return serverEventListener_;
+	JCORE_LOCK_GUARD(lock_);
+	return pServerEventListener_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void TcpServer::SetSesssionContainer(ISessionContainer* _pContainer)
 {
-	JCORE_LOCK_GUARD(sync_);
-	sessionContainer_ = _pContainer;
+	JCORE_LOCK_GUARD(lock_);
+	pSessionContainer_ = _pContainer;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void TcpServer::SetEventListener(ServerEventListener* _pListener)
 {
-	JCORE_LOCK_GUARD(sync_);
-	serverEventListener_ = _pListener;
+	JCORE_LOCK_GUARD(lock_);
+	pServerEventListener_ = _pListener;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void TcpServer::Initialize()
 {
-	JCORE_LOCK_GUARD(sync_);
+	JCORE_LOCK_GUARD(lock_);
 
 	if (!CreateSocket(TransportProtocol::TCP))
 	{
@@ -189,9 +189,9 @@ bool TcpServer::Start(const IPv4EndPoint& _localEndPoint)
 				return;
 			}
 
-			if (server_->serverEventListener_)
+			if (server_->pServerEventListener_)
 			{
-				server_->serverEventListener_->OnStartFailed(errorCode_);
+				server_->pServerEventListener_->OnStartFailed(errorCode_);
 			}
 
 			server_->OnStartFailed(errorCode_);
@@ -201,7 +201,7 @@ bool TcpServer::Start(const IPv4EndPoint& _localEndPoint)
 		TcpServer* server_;
 	} notifier{this};
 
-	JCORE_LOCK_GUARD(sync_);
+	JCORE_LOCK_GUARD(lock_);
 
 	if (state_ != eInitailized)
 	{
@@ -231,14 +231,14 @@ bool TcpServer::Start(const IPv4EndPoint& _localEndPoint)
 		return false;
 	}
 
-	if (!sessionContainer_)
+	if (!pSessionContainer_)
 	{
-		sessionContainer_ = CreateSessionContainer();
+		pSessionContainer_ = CreateSessionContainer();
 	}
 
-	sessionContainer_->ResetHandleSeq();
-	sessionContainer_->Clear();
-	const int maxConnection = sessionContainer_->Capacity();
+	pSessionContainer_->ResetHandleSeq();
+	pSessionContainer_->Clear();
+	const int maxConnection = pSessionContainer_->Capacity();
 
 	// 세션을 미리 생성해놓고 연결 대기 상태로 둠
 	for (int index = 0; index < maxConnection; ++index)
@@ -246,22 +246,22 @@ bool TcpServer::Start(const IPv4EndPoint& _localEndPoint)
 		TcpSession* pSession = CreateSession();
 
 		pSession->OnCreated();
-		pSession->SetHandle(sessionContainer_->CreateHandle());
+		pSession->SetHandle(pSessionContainer_->CreateHandle());
 		pSession->AcceptWait();
 
 		if (!pSession->AcceptAsync())
 		{
 			notifier.errorCode_ = Winsock::LastError();
-			sessionContainer_->DisconnectAll();
-			sessionContainer_->Clear();
+			pSessionContainer_->DisconnectAll();
+			pSessionContainer_->Clear();
 			return false;
 		}
-		sessionContainer_->Add(pSession);
+		pSessionContainer_->Add(pSession);
 	}
 
-	if (serverEventListener_)
+	if (pServerEventListener_)
 	{
-		serverEventListener_->OnStarted();
+		pServerEventListener_->OnStarted();
 	}
 
 	OnStarted();
@@ -271,7 +271,7 @@ bool TcpServer::Start(const IPv4EndPoint& _localEndPoint)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool TcpServer::Stop()
 {
-	JCORE_LOCK_GUARD(sync_);
+	JCORE_LOCK_GUARD(lock_);
 
 	if (state_ == eStopped)
 	{
@@ -281,7 +281,7 @@ bool TcpServer::Stop()
 	state_ = eStopped;
 
 	// 강종 진행: GetQueuedCompletionStatus에서 995번에러를 뱉음(I / O operation has been aborted)
-	sessionContainer_->DisconnectAll();
+	pSessionContainer_->DisconnectAll();
 
 	if (socket_.Close() == SOCKET_ERROR)
 	{
@@ -291,11 +291,11 @@ bool TcpServer::Stop()
 	socket_.Invalidate();
 
 	// 동적할당된 세션들을 모두 해제해주자.
-	sessionContainer_->Clear();
+	pSessionContainer_->Clear();
 
-	if (serverEventListener_)
+	if (pServerEventListener_)
 	{
-		serverEventListener_->OnStopped();
+		pServerEventListener_->OnStopped();
 	}
 
 	OnStopped();

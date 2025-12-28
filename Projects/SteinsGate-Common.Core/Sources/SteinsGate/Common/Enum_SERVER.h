@@ -78,14 +78,14 @@ JCORE_SENUM_MIDDLE_END(GameServerType)
 
 JCORE_SENUM_BEGIN(ServerProcessType)
 		None,
-		Auth,
+		Auth,				// 1
 		Begin = Auth,
-		Center,
-		Lobby,
-		Game,
+		Center,				// 2
+		Lobby,				// 3
+		Game,				// 4
 		End = Game
 	JCORE_SENUM_MIDDLE(ServerProcessType)
-	static constexpr int Count = End;
+	static constexpr int Count = End;	// 4
 	static constexpr const char* Name[Count + 1]{
 		"없음",
 		"인증",

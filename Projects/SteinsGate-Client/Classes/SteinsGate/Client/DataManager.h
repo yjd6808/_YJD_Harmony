@@ -34,7 +34,7 @@ class DataManager
 	~DataManager() override = default;
 
 public:
-	void initializeLoader() override;
+	void InitializeLoader() override;
 
 	MonsterInfo* GetMonsterInfo(int _mobCode);
 	ActionInfo* GetActionInfo(int _actionCode);

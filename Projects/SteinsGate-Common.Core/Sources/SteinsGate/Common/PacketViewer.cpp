@@ -90,7 +90,7 @@ void PacketViewer::View(JNetwork::ICommand* _pCmd)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-void PacketViewer::Hex(char* _pData, int _len, JCORE_OUT String& _hex)
+void PacketViewer::Hex(char* _pData, int _len, OUT String& _hex)
 {
 	_hex.SetLength(0);
 	_hex += '\t';

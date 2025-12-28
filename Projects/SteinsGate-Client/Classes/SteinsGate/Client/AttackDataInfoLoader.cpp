@@ -35,9 +35,9 @@ bool AttackDataInfoLoader::Load()
 	{
 		Json::Value attackDataListRoot = root["attackdata"];
 
-		for (int i = 0; i < attackDataListRoot.size(); ++i)
+		for (size_t i = 0; i < attackDataListRoot.size(); ++i)
 		{
-			Value& attackDataRoot = attackDataListRoot[i];
+			Value& attackDataRoot = attackDataListRoot[(ArrayIndex)i];
 			AttackDataInfo* pInfo = dbg_new AttackDataInfo;
 			ReadAttackDataInfo(attackDataRoot, pInfo);
 			AddData(pInfo);

@@ -35,14 +35,15 @@ protected:
 class JCORE_NOVTABLE SchedulerTaskRunnable : public SchedulerTask
 {
 public:
-	SchedulerTaskRunnable() : m_At(DateTime::Now()) {}
-	SchedulerTaskRunnable(DateTime _at) : m_At(_at) {}
+	SchedulerTaskRunnable() : at_(DateTime::Now()) {}
+	SchedulerTaskRunnable(DateTime _at) : at_(_at) {}
 
-	DateTime At() override { return m_At; }
+	DateTime At() override { return at_; }
 	bool CanNextCall() override { return true; }
 	void CallCallback() override {
-		m_At = DateTime::Now() + Interval();
-		if (!m_bExecuted) {
+		at_ = DateTime::Now() + Interval();
+		if (!m_bExecuted) 
+		{
 			OnFirstScheduled();
 			m_bExecuted = true;
 		}
@@ -55,7 +56,7 @@ public:
 	virtual void OnScheduled() = 0;			// 처음을 포함해서 스케쥴링 될떄마다 호출
 	virtual void OnFirstScheduled() = 0;	// 제일 처음에만 호출
 protected:
-	DateTime m_At;
+	DateTime at_;
 };
 
 template <typename TCallback>
@@ -68,18 +69,18 @@ class SchedulerTaskOnce : public SchedulerTask
 public:
 	template <typename TCallback, DefaultEnableIf_t<IsSchedulerTaskCallback_v<TCallback>> = nullptr>
 	SchedulerTaskOnce(DateTime _at, TCallback&& _callback)
-		: m_At(_at)
-		, m_Callback(Forward<TCallback>(_callback))
+	: at_(_at)
+	, fnCallback_(Forward<TCallback>(_callback))
 	{}
 
-	DateTime At() override { return m_At; }
+	DateTime At() override { return at_; }
 	TimeSpan Interval() override { return { 0 }; }
 	bool CanNextCall() override { return false; }
-	void CallCallback() override { m_bExecuted = true; m_Callback(this); }
+	void CallCallback() override { m_bExecuted = true; fnCallback_(this); }
 	bool HasCallbackFunc() const override { return true; }
 private:
-	DateTime m_At;
-	SchedulerTaskCallback m_Callback;
+	DateTime at_;
+	SchedulerTaskCallback fnCallback_;
 };
 
 class SchedulerTaskRepeat : public SchedulerTask
@@ -87,30 +88,31 @@ class SchedulerTaskRepeat : public SchedulerTask
 public:
 	template <typename TCallback>
 	SchedulerTaskRepeat(DateTime _at, TimeSpan _interval, TCallback&& _callback, Int32U _repeat = INFINITE)
-		: m_At(_at.Tick)
-		, m_Interval(_interval)
-		, m_Callback(Forward<TCallback>(_callback))
-		, m_uiCurRepeat(0)
-		, m_uiMaxRepeat(_repeat)
+	: at_(_at.Tick)
+	, interval_(_interval)
+	, callback_(Forward<TCallback>(_callback))
+	, curRepeat_(0)
+	, maxRepeat_(_repeat)
 	{}
 
-	DateTime At() override { return { m_At.Load() }; }
-	TimeSpan Interval() override { return m_Interval; }
-	bool CanNextCall() override { return m_uiCurRepeat < m_uiMaxRepeat; }
-	Int32U MaxRepeatCount() override { return m_uiMaxRepeat; }
-	void CallCallback() override {
+	DateTime At() override { return { at_.Load() }; }
+	TimeSpan Interval() override { return interval_; }
+	bool CanNextCall() override { return curRepeat_ < maxRepeat_; }
+	Int32U MaxRepeatCount() override { return maxRepeat_; }
+	void CallCallback() override 
+	{
 		m_bExecuted = true;
-		m_At = (DateTime::Now() + m_Interval).Tick;
-		m_Callback(this);
-		m_uiCurRepeat += 1;
+		at_ = (DateTime::Now() + interval_).Tick;
+		callback_(this);
+		curRepeat_ += 1;
 	}
 	bool HasCallbackFunc() const override { return true; }
 private:
-	AtomicInt64 m_At;
-	TimeSpan m_Interval;
-	SchedulerTaskCallback m_Callback;
-	AtomicInt32U m_uiCurRepeat;
-	Int32U m_uiMaxRepeat;
+	AtomicInt64 at_;
+	TimeSpan interval_;
+	SchedulerTaskCallback callback_;
+	AtomicInt32U curRepeat_;
+	Int32U maxRepeat_;
 };
 
 NS_JC_END

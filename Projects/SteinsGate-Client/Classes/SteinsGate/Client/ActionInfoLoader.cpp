@@ -60,7 +60,7 @@ bool ActionInfoLoader::Load()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ActionInfoLoader::ReadActionInfo(Json::Value& _actionRoot, JCORE_OUT ActionInfo* _pActionInfo)
+void ActionInfoLoader::ReadActionInfo(Json::Value& _actionRoot, OUT ActionInfo* _pActionInfo)
 {
 	_pActionInfo->ActionName = JsonUtilEx::GetString(_actionRoot["name"]);
 	_pActionInfo->code_ = _actionRoot["code"].asInt();

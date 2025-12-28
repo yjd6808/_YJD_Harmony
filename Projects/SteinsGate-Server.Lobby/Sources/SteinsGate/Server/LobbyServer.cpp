@@ -24,7 +24,7 @@ LobbyServer::LobbyServer(const IOCPPtr& _pIocp, const MemoryPoolAbstractPtr& _pB
 //////////////////////////////////////////////////////////////////////////////////////////
 SGTcpSession* LobbyServer::CreateSession()
 {
-	return dbg_new LobbySession(this, m_spIocp, m_spBufferAllocator, 6144, 6144);
+	return dbg_new LobbySession(this, pIocp_, pBufferAllocator_, 6144, 6144);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

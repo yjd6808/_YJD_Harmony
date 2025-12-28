@@ -32,5 +32,5 @@ private:
 	static void View(JNetwork::Transmission _transmission, char* _pData, int _len, int _cmdCount);
 	static void View(JNetwork::Transmission _transmission, char* _pData, int _len);
 
-	static void Hex(char* _pData, int _len, JCORE_OUT JCore::String& _hex);
+	static void Hex(char* _pData, int _len, OUT JCore::String& _hex);
 };

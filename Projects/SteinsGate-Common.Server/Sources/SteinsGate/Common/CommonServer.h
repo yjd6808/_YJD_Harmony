@@ -14,7 +14,7 @@
 
 class CommonServer
 	: public JNetwork::TcpServer
-	  , public IUpdatable
+	, public IUpdatable
 {
 protected:
 	CommonServer(const JNetwork::IOCPPtr& _pIocp, const JCore::MemoryPoolAbstractPtr& _pBufferAllocator);

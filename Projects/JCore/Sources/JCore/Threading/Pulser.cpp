@@ -12,7 +12,7 @@
 
 NS_JC_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
-Pulser::Pulser(Int32U _intervalMiliseconds, Mode _mode /* = eSliceCycle */, JCORE_IN PulserStatistics* _pStatistics /* = nullptr */)
+Pulser::Pulser(Int32U _intervalMiliseconds, Mode _mode /* = eSliceCycle */,  PulserStatistics* _pStatistics /* = nullptr */)
 : interval_(_intervalMiliseconds)
 , pStatistics_(_pStatistics)
 {

@@ -34,7 +34,7 @@ void IOCPOverlapped::Process(BOOL _result, Int32UL _bytesTransferred, IOCPPostOr
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool IOCPOverlapped::IsFailed(SOCKET _socket, BOOL _result, Int32UL _bytesTransferred, JCORE_OUT Int32U& _errorCode)
+bool IOCPOverlapped::IsFailed(SOCKET _socket, BOOL _result, Int32UL _bytesTransferred, OUT Int32U& _errorCode)
 {
 	(void)_bytesTransferred;
 

@@ -52,7 +52,7 @@ bool MonsterStatInfoLoader::Load()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MonsterStatInfoLoader::ReadMobStatInfo(Json::Value& _monsterRoot, JCORE_OUT MonsterStatInfo* _pMonsterStatInfo)
+void MonsterStatInfoLoader::ReadMobStatInfo(Json::Value& _monsterRoot, OUT MonsterStatInfo* _pMonsterStatInfo)
 {
 	_pMonsterStatInfo->code_ = _monsterRoot["code"].asInt();
 	_pMonsterStatInfo->hp_ = _monsterRoot["hp"].asInt();

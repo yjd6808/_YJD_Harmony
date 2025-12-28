@@ -47,30 +47,30 @@ void LobbyInterServerClientNetGroup::InitializeParser()
 	InterServerClientNetGroup::InitializeParser();
 
 	// AUTHENTICATION
-	m_pParser->AddCommand<AUS_AuthenticationCheckAck>(R_AUTHENTICATION::RECV_AUS_AuthenticationCheckAck);
+	pParser_->AddCommand<AUS_AuthenticationCheckAck>(R_AUTHENTICATION::RECV_AUS_AuthenticationCheckAck);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void LobbyInterServerClientNetGroup::InitializeInterServerTcp()
 {
-	auto pInterServerClient = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, nullptr, RecvBufferSize_v, SendBufferSize_v);
+	auto pInterServerClient = MakeShared<TcpClient>(pIocp_, pBufferPool_, nullptr, RecvBufferSize_v, SendBufferSize_v);
 	pInterServerClient->Bind(Core::ServerProcessInfoPackage->lobby_.bindInterServerTcp_);
 	AddHost(Const::Host::LobbyInterServerTcpId, pInterServerClient);
 
-	m_pInterServerClientTcp = pInterServerClient.Get<TcpClient*>();
-	m_pInterServerClientTcp->SetEventListener(dbg_new ListenerInterServerClient{ ServerProcessType::Lobby, m_pParser });
+	pInterServerClientTcp_ = pInterServerClient.Get<TcpClient*>();
+	pInterServerClientTcp_->SetEventListener(dbg_new ListenerInterServerClient{ ServerProcessType::Lobby, pParser_ });
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void LobbyInterServerClientNetGroup::InitializeInterServerUdp()
 {
-	auto pInterServerClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, nullptr, RecvBufferSize_v, SendBufferSize_v);
+	auto pInterServerClient = MakeShared<UdpClient>(pIocp_, pBufferPool_, nullptr, RecvBufferSize_v, SendBufferSize_v);
 	pInterServerClient->Bind(Core::ServerProcessInfoPackage->lobby_.bindInterServerUdp_);
 	AddHost(Const::Host::LobbyInterServerUdpId, pInterServerClient);
 
-	m_pInterServerClientUdp = pInterServerClient.Get<UdpClient*>();
-	m_pInterServerClientUdp->SetEventListener(dbg_new ListenerInterServerClient{ ServerProcessType::Lobby, m_pParser });
-	m_pInterServerClientUdp->RecvFromAsync();
+	pInterServerClientUdp_ = pInterServerClient.Get<UdpClient*>();
+	pInterServerClientUdp_->SetEventListener(dbg_new ListenerInterServerClient{ ServerProcessType::Lobby, pParser_ });
+	pInterServerClientUdp_->RecvFromAsync();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

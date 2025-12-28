@@ -54,12 +54,12 @@ public:
 	}
 
 	template <typename TInteger>
-	static TInteger ToNumber(const char* str, JCORE_OUT char** endptr = nullptr, bool ignoreLeadingZero = true);
+	static TInteger ToNumber(const char* str, OUT char** endptr = nullptr, bool ignoreLeadingZero = true);
 
 
 	// https://stackoverflow.com/questions/26080829/detecting-strtol-failure
 	template <typename TInteger>
-	static bool TryToNumber(JCORE_OUT TInteger& val, const char* str, bool ignoreLeadingZero = true) {
+	static bool TryToNumber(OUT TInteger& val, const char* str, bool ignoreLeadingZero = true) {
 		errno = 0;
 		char* pEnd = nullptr;
 		TInteger v = ToNumber<TInteger>(str, &pEnd, ignoreLeadingZero);
@@ -106,9 +106,9 @@ public:
 	static int Find(const char* source, int sourceLen, int startIdx, int endIdx, const char* str);
 	static int Find(const char* source, int sourceLen, int startIdx, int endIdx, const char* str, int strLen);
 	static int Find(const char* source, int sourceLen, int startIdx, const char* str);
-	static int FindAll(JCORE_OUT int* positionArray, const char* source, const char* str);
-	static int FindAll(JCORE_OUT int* positionArray, const char* source, int sourceLen, const char* str);
-	static int FindAll(JCORE_OUT int* positionArray, const char* source, int sourceLen, int startIdx, int endIdx, const char* str);
+	static int FindAll(OUT int* positionArray, const char* source, const char* str);
+	static int FindAll(OUT int* positionArray, const char* source, int sourceLen, const char* str);
+	static int FindAll(OUT int* positionArray, const char* source, int sourceLen, int startIdx, int endIdx, const char* str);
 	static int FindChar(const char* source, char ch);
 	static int FindCharReverse(const char* source, char ch);
 	static int FindCharReverse(const char* source, int len, char ch);

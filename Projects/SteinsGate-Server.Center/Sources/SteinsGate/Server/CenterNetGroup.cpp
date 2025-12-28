@@ -89,7 +89,7 @@ void CenterNetGroup::InitializeParser()
 //////////////////////////////////////////////////////////////////////////////////////////
 void CenterNetGroup::InitializeServer()
 {
-	auto pServer = MakeShared<CenterServer>(m_spIOCP, m_spBufferPool);
+	auto pServer = MakeShared<CenterServer>(pIocp_, pBufferPool_);
 
 	AddHost(Const::Host::CenterTcpId, pServer);
 

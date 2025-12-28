@@ -16,11 +16,11 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 DataManager::DataManager()
 {
-	DataManager::initializeLoader();
+	DataManager::InitializeLoader();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void DataManager::initializeLoader()
+void DataManager::InitializeLoader()
 {
 	m_pConfigFileLoaders[ConfigFileType::Database] = dbg_new DatabaseInfoLoader(this);
 	m_pConfigFileLoaders[ConfigFileType::Server] = dbg_new ServerInfoLoader(this);

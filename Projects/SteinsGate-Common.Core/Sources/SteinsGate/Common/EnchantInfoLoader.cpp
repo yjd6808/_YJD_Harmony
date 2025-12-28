@@ -53,7 +53,7 @@ bool EnchantInfoLoader::Load()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void EnchantInfoLoader::ReadEnchantInfo(Json::Value& _enchantRoot, JCORE_OUT EnchantInfo* _pEnchantInfo)
+void EnchantInfoLoader::ReadEnchantInfo(Json::Value& _enchantRoot, OUT EnchantInfo* _pEnchantInfo)
 {
 	_pEnchantInfo->code_ = _enchantRoot["code"].asInt();
 
@@ -78,7 +78,7 @@ void EnchantInfoLoader::ReadEnchantInfo(Json::Value& _enchantRoot, JCORE_OUT Enc
 		DebugAssertMsg(optValListRoot.size() == Const::Item::MaxEnchantLevel, "방어구 보너스 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)",
 		               optValListRoot.size(), Const::Item::MaxEnchantLevel);
 
-		_pEnchantInfo->armorBonusOptList_[i].opt_ = pManager_->getItemOptInfo(optName);
+		_pEnchantInfo->armorBonusOptList_[i].opt_ = pManager_->GetItemOptInfo(optName);
 
 		for (int j = 0; j < Const::Item::MaxEnchantLevel; j++)
 		{
@@ -95,7 +95,7 @@ void EnchantInfoLoader::ReadEnchantInfo(Json::Value& _enchantRoot, JCORE_OUT Enc
 		DebugAssertMsg(optValListRoot.size() == Const::Item::MaxEnchantLevel, "악세서리 보너스 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)",
 		               optValListRoot.size(), Const::Item::MaxEnchantLevel);
 
-		_pEnchantInfo->accessoryBonusOptList_[i].opt_ = pManager_->getItemOptInfo(optName);
+		_pEnchantInfo->accessoryBonusOptList_[i].opt_ = pManager_->GetItemOptInfo(optName);
 
 		for (int j = 0; j < Const::Item::MaxEnchantLevel; j++)
 		{

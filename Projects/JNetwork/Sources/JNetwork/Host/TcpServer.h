@@ -53,11 +53,11 @@ public:
 	DetailType GetDetailType() const override { return eTcpListener; }
 
 protected:
-	JCore::MemoryPoolAbstractPtr bufferAllocator_;
-	JCore::NormalLock sync_;
+	JCore::MemoryPoolAbstractPtr pBufferAllocator_;
+	JCore::NormalLock lock_;
 
-	ServerEventListener* serverEventListener_;
-	ISessionContainer* sessionContainer_;
+	ServerEventListener* pServerEventListener_;
+	ISessionContainer* pSessionContainer_;
 };
 
 using TcpServerPtr = JCore::SharedPtr<TcpServer>;

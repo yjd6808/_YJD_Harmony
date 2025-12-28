@@ -14,10 +14,10 @@
 
 struct Q_GAME : Qry::QryHelper<Q_GAME>
 {
-	static bool CheckAccountExist(JCORE_REF_OUT int& accountPrimaryKey, const char* id, const char* pass);
+	static bool CheckAccountExist(OUT int& accountPrimaryKey, const char* id, const char* pass);
 	static bool InsertAccountInfo(const char* id, const char* pass);
 	static void UpdateLoginDate(int accountPrimaryKey);
-	static bool CheckAccountIdExist(const char* id, JCORE_OUT_OPT int* accountPrimaryKey = nullptr);
+	static bool CheckAccountIdExist(const char* id, OUT_OPT int* accountPrimaryKey = nullptr);
 	static Qry::SelectChannelInfoResult SelectChannelInfo();
 	static Qry::SelectCharacterInfoListResult SelectCharacterInfoList(int accountPrimaryKey, int channelPrimaryKey);
 	static Qry::SelectCharacterInfoResult SelectCharacterInfo(int accountPrimaryKey, int channelPrimaryKey, int characterPrimaryKey);
@@ -28,7 +28,7 @@ struct Q_GAME : Qry::QryHelper<Q_GAME>
 	static Qry::SelectFriendCharacterInfoListResult SelectFriendCharacterInfoList(int characterPrimaryKey);
 	static Qry::CheckFriendResult CheckFriend(int lhsCharacterPrimaryKey, int rhsCharacterPrimaryKey);
 	static bool AddFriendship(int requestCharacterPrimaryKey, int acceptCharacterPrimaryKey);
-	static bool DeleteFriend(int lhsCharacterPrimaryKey, int rhsCharacterPrimaryKey, JCORE_OUT int* deletedCount = nullptr);
+	static bool DeleteFriend(int lhsCharacterPrimaryKey, int rhsCharacterPrimaryKey, OUT int* deletedCount = nullptr);
 
 	static void AddKillCount(int characterPrimaryKey, int count);
 	static void AddDeathCount(int characterPrimaryKey, int count);

@@ -75,10 +75,10 @@ bool SteinsGateApp::applicationDidFinishLaunching()
 	JCore::Console::SetSize(1200, 800);
 
 	DataManager* pDataManager = DataManager::Get();
-	pDataManager->initializeLoader();
-	Core::CommonInfo = pDataManager->getCommonInfo(1);
+	pDataManager->InitializeLoader();
+	Core::CommonInfo = pDataManager->GetCommonInfo(1);
 	Core::ClientInfo = pDataManager->GetClientInfo(1);
-	Core::CharCommon = pDataManager->getCharCommonInfo(1);
+	Core::CharCommon = pDataManager->GetCharCommonInfo(1);
 
 	CreateOpenGLWindow();
 	InitializeNetLogger(LOG_SPECIFIER_CLIENT);

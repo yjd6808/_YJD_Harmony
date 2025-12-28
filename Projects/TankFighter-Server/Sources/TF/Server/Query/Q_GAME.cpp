@@ -11,7 +11,7 @@
 
 #include <TF/Server/Contents/Character.h>
 
-bool Q_GAME::CheckAccountExist(JCORE_REF_OUT int& accountPrimaryKey, const char* id, const char* pass) {
+bool Q_GAME::CheckAccountExist(OUT int& accountPrimaryKey, const char* id, const char* pass) {
 	Qry::SelectAccountInfoResult result;
 	Qry::SelectAccountInfo::Execute<THelper>(Core::GameDB, result, id, pass);
 
@@ -35,7 +35,7 @@ void Q_GAME::UpdateLoginDate(int accountPrimaryKey) {
 	Qry::UpdateLoginDate::Execute<THelper>(Core::GameDB, result, JCore::DateTime::Now(), accountPrimaryKey);
 }
 
-bool Q_GAME::CheckAccountIdExist(const char* id, JCORE_OUT_OPT int* accountPrimaryKey /* = nullptr */) {
+bool Q_GAME::CheckAccountIdExist(const char* id, OUT_OPT int* accountPrimaryKey /* = nullptr */) {
 	Qry::CheckAccountIdExistResult result;
 	Qry::CheckAccountIdExist::Execute<THelper>(Core::GameDB, result, id);
 
@@ -102,7 +102,7 @@ bool Q_GAME::AddFriendship(int requestCharacterPrimaryKey, int acceptCharacterPr
 	return IsSuccess;
 }
 
-bool Q_GAME::DeleteFriend(int lhsCharacterPrimaryKey, int rhsCharacterPrimaryKey, JCORE_OUT int* deletedCount /*= nullptr*/) {
+bool Q_GAME::DeleteFriend(int lhsCharacterPrimaryKey, int rhsCharacterPrimaryKey, OUT int* deletedCount /*= nullptr*/) {
 	Qry::DeleteResult result;
 	Qry::DeleteFriend::Execute<THelper>(Core::GameDB, result, lhsCharacterPrimaryKey, rhsCharacterPrimaryKey, rhsCharacterPrimaryKey, lhsCharacterPrimaryKey);
 

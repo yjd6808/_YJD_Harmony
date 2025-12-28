@@ -5,21 +5,19 @@
  *
  */
 
-#include "Game.h"
-#include "GameCoreHeader.h"
-#include "AreaSession.h"
 
-USING_NS_JC;
-USING_NS_JNET;
+#pragma once
 
-AreaSession::AreaSession(
-	TcpServer* _pServer,
-	const IOCPPtr& _pIocp,
-	const JCore::MemoryPoolAbstractPtr& _pBufferAllocator,
-	int _recvBufferSize,
-	int _sendBufferSize) :
-	TcpSession(_pServer, _pIocp, _pBufferAllocator, nullptr, _recvBufferSize, _sendBufferSize)
+#include <JNetwork/Host/TcpSession.h>
+#include <SteinsGate/Server/Game.h>
+
+class AreaSession : public JNetwork::TcpSession
 {
-}
-
-
+public:
+	AreaSession(
+		JNetwork::TcpServer* _pServer,
+		const JNetwork::IOCPPtr& _pIocp,
+		const JCore::MemoryPoolAbstractPtr& _pBufferAllocator,
+		int _recvBufferSize,
+		int _sendBufferSize);
+};

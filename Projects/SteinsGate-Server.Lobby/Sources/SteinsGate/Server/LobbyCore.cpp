@@ -28,10 +28,10 @@ NS_CORE_END
 void InitializeLobbyCore()
 {
 	Core::DataManager              = DataManager::Get();
-	Core::CommonInfo               = Core::DataManager->getCommonInfo(1);
-	Core::ServerProcessInfoPackage = Core::DataManager->getServerProcessInfoPackage(1);               // 공통 라이브러리 주입
+	Core::CommonInfo               = Core::DataManager->GetCommonInfo(1);
+	Core::ServerProcessInfoPackage = Core::DataManager->GetServerProcessInfoPackage(1);               // 공통 라이브러리 주입
 	Core::ServerProcessInfo        = &Core::ServerProcessInfoPackage->lobby_;                           // 공통 라이브러리 주입
-	Core::GameDB                   = dbg_new MysqlDatabase(Core::DataManager->getDatabaseInfo(DatabaseType::Game));
+	Core::GameDB                   = dbg_new MysqlDatabase(Core::DataManager->GetDatabaseInfo(DatabaseType::Game));
 	Core::GameDB->Initialize(ServerProcessType::Lobby);
 	Core::NetMaster                = LobbyNetMaster::Get();
 	Core::NetMaster->SetProcessInfo(Core::ServerProcessInfo);
@@ -45,8 +45,8 @@ void InitializeLobbyCore()
 	if (Core::CLIThread)
 		Core::CLIThread->SetListener(dbg_new CLIListener);
 
-	Core::ServerProcessInfoPackage     = Core::DataManager->getServerProcessInfoPackage(1);       // 위에서 주입됨
-	Core::CommonInfo                   = Core::DataManager->getCommonInfo(1);                     // 위에서 주입됨
+	Core::ServerProcessInfoPackage     = Core::DataManager->GetServerProcessInfoPackage(1);       // 위에서 주입됨
+	Core::CommonInfo                   = Core::DataManager->GetCommonInfo(1);                     // 위에서 주입됨
 	Core::CharCommon                   = nullptr;                                                 // 사용안함
 	Core::ThreadPool                   = dbg_new ThreadPool{ 2 };
 	Core::Scheduler                    = dbg_new Scheduler{ 2 };

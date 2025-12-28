@@ -22,9 +22,9 @@ public:
 
 	void update(float _dt) override;
 
-	Character* FindNearestCharacterInRadious(Actor* _pStdActor, float _radious, JCORE_OUT float& _enemyDist);
-	bool CollectEnemiesInActorRect(Actor* _pAttacker, const ActorRect& _rect, JCORE_OUT SGVector<HitInfo>& _hitTargets);
-	bool CollectEnemiesInActor(Actor* _pCollector, JCORE_OUT SGVector<HitInfo>& _hitTargets);
+	Character* FindNearestCharacterInRadious(Actor* _pStdActor, float _radious, OUT float& _enemyDist);
+	bool CollectEnemiesInActorRect(Actor* _pAttacker, const ActorRect& _rect, OUT SGVector<HitInfo>& _hitTargets);
+	bool CollectEnemiesInActor(Actor* _pCollector, OUT SGVector<HitInfo>& _hitTargets);
 	bool IsCollideWithMapObjects(const SGRect& _rect) const;
 
 	void onKeyPressed(SGEventKeyboard::KeyCode _keyCode, SGEvent* _pEvent) override;

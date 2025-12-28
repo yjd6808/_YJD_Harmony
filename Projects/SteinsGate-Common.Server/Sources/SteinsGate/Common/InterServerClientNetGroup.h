@@ -23,8 +23,8 @@ public:
 	bool ConnectCenterServer(int _tryCount);
 	void ProcessUpdate(const JCore::TimeSpan& _elapsed);
 
-	JNetwork::TcpClient* GetInterServerClientTcp() const { return interServerClientTcp_; }
-	JNetwork::UdpClient* GetInterServerClientUdp() const { return interServerClientUdp_; }
+	JNetwork::TcpClient* GetInterServerClientTcp() const { return pInterServerClientTcp_; }
+	JNetwork::UdpClient* GetInterServerClientUdp() const { return pInterServerClientUdp_; }
 
 protected:
 	virtual void InitializeIOCP() = 0;
@@ -39,7 +39,7 @@ protected:
 
 	void SyncPeerServerTime(const JCore::TimeSpan& _elapsed);
 
-	JNetwork::TcpClient* interServerClientTcp_;
-	JNetwork::UdpClient* interServerClientUdp_;
-	JNetwork::CommandParser* parser_;
+	JNetwork::TcpClient* pInterServerClientTcp_;
+	JNetwork::UdpClient* pInterServerClientUdp_;
+	JNetwork::CommandParser* pParser_;
 };

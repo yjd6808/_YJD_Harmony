@@ -24,7 +24,7 @@ ChatServer::ChatServer(const IOCPPtr& _pIocp, const MemoryPoolAbstractPtr& _pBuf
 //////////////////////////////////////////////////////////////////////////////////////////
 SGTcpSession* ChatServer::CreateSession()
 {
-	return dbg_new ChatSession(this, m_spIocp, m_spBufferAllocator, 3072, 3072);
+	return dbg_new ChatSession(this, pIocp_, pBufferAllocator_, 3072, 3072);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

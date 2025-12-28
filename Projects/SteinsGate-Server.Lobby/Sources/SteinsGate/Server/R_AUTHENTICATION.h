@@ -12,5 +12,5 @@
 
 struct R_AUTHENTICATION
 {
-	static void RECV_AUS_AuthenticationCheckAck(JCORE_UNUSED JNetwork::Session*, JNetwork::ICommand* _pCommand);
+	static void RECV_AUS_AuthenticationCheckAck(UNUSED JNetwork::Session*, JNetwork::ICommand* _pCommand);
 };

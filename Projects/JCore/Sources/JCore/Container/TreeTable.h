@@ -241,7 +241,7 @@ class TreeTable<Pack<TKey, TKeyComparator, TAllocator>, ETreeTableImplementation
         }
     }
 
-    bool TryGetFirst(JCORE_OUT TKey& _data) const
+    bool TryGetFirst(OUT TKey& _data) const
     {
         if(pRoot_ == nullptr)
         {
@@ -258,7 +258,7 @@ class TreeTable<Pack<TKey, TKeyComparator, TAllocator>, ETreeTableImplementation
         return true;
     }
 
-    bool TryGetLast(JCORE_OUT TKey& _data) const
+    bool TryGetLast(OUT TKey& _data) const
     {
         if(pRoot_ == nullptr)
         {
@@ -1261,7 +1261,7 @@ class TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, ETreeTableImplem
         InorderTraverseForEach<TraverseValueType::Value>(pRoot_, [](TValue v) { delete v; });
     }
 
-    bool TryGetFirst(JCORE_OUT TKeyValuePair& pair) const
+    bool TryGetFirst(OUT TKeyValuePair& pair) const
     {
         if(pRoot_ == nullptr)
         {
@@ -1278,7 +1278,7 @@ class TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, ETreeTableImplem
         return true;
     }
 
-    bool TryGetLast(JCORE_OUT TKeyValuePair& pair) const
+    bool TryGetLast(OUT TKeyValuePair& pair) const
     {
         if(pRoot_ == nullptr)
         {
@@ -1295,7 +1295,7 @@ class TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, ETreeTableImplem
         return true;
     }
 
-    bool TryGetFirstValue(JCORE_OUT TValue& pair) const
+    bool TryGetFirstValue(OUT TValue& pair) const
     {
         if(pRoot_ == nullptr)
         {
@@ -1312,7 +1312,7 @@ class TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, ETreeTableImplem
         return true;
     }
 
-    bool TryGetLastValue(JCORE_OUT TValue& pair) const
+    bool TryGetLastValue(OUT TValue& pair) const
     {
         if(pRoot_ == nullptr)
         {
@@ -1329,7 +1329,7 @@ class TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, ETreeTableImplem
         return true;
     }
 
-    bool TryGetFirstKey(JCORE_OUT TKey& key) const
+    bool TryGetFirstKey(OUT TKey& key) const
     {
         if(pRoot_ == nullptr)
         {

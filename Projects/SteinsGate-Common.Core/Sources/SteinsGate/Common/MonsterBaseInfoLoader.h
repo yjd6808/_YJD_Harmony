@@ -25,5 +25,5 @@ public:
 
 	bool Load() override;
 
-	static void ReadMonsterBaseInfo(Json::Value& _monsterRoot, JCORE_OUT MonsterBaseInfo* _pMobInfo);
+	static void ReadMonsterBaseInfo(Json::Value& _monsterRoot, OUT MonsterBaseInfo* _pMobInfo);
 };

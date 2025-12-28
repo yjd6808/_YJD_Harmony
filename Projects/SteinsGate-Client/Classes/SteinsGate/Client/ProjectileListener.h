@@ -43,8 +43,8 @@ public:
 	Type GetListenerType() const override { return eProjectile; }
 
 protected:
-	JCORE_NOT_NULL Projectile* pProjectile_;
-	JCORE_NULLABLE Actor* pSpawner_;
+	NOT_NULL Projectile* pProjectile_;
+	NULLABLE Actor* pSpawner_;
 
 	float moveDistance_;
 	float elapsedLifeTime_;

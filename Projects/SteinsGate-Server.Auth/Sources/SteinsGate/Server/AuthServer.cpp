@@ -24,7 +24,7 @@ AuthServer::AuthServer(const IOCPPtr& _pIocp, const MemoryPoolAbstractPtr& _pBuf
 //////////////////////////////////////////////////////////////////////////////////////////
 SGTcpSession* AuthServer::CreateSession()
 {
-	return dbg_new AuthSession(this, m_spIocp, m_spBufferAllocator, 2048, 2048);
+	return dbg_new AuthSession(this, pIocp_, pBufferAllocator_, 2048, 2048);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

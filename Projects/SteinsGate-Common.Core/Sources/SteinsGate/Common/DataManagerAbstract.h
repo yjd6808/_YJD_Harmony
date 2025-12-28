@@ -29,34 +29,34 @@ public:
 	DataManagerAbstract();
 	virtual ~DataManagerAbstract();
 
-	virtual void initializeLoader() = 0;
+	virtual void InitializeLoader() = 0;
 
-	void loadCommon();
-	void loadAll();
+	void LoadCommon();
+	void LoadAll();
 
-	ConfigDataAbstract* getData(ConfigFileType_t _configFileType, int _code);
+	ConfigDataAbstract* GetData(ConfigFileType_t _configFileType, int _code);
 
-	void load(ConfigFileType_t _configFileType);
-	void unload(ConfigFileType_t _configFileType);
-	void finalizeLoader();
+	void Load(ConfigFileType_t _configFileType);
+	void Unload(ConfigFileType_t _configFileType);
+	void FinalizeLoader();
 
-	MonsterBaseInfo* getMobBaseInfo(int _monsterCode);
-	ItemAvatarInfo* getAvatarInfo(int _avatarCode);
-	ItemWeaponInfo* getWeaponInfo(int _weaponCode);
-	ItemArmorInfo* getArmorInfo(int _armorCode);
-	ItemVisualInfo* getVisualInfo(int _visualCode);
-	CommonInfo* getCommonInfo(int _commonConfigCode);
+	MonsterBaseInfo* GetMobBaseInfo(int _monsterCode);
+	ItemAvatarInfo* GetAvatarInfo(int _avatarCode);
+	ItemWeaponInfo* GetWeaponInfo(int _weaponCode);
+	ItemArmorInfo* GetArmorInfo(int _armorCode);
+	ItemVisualInfo* GetVisualInfo(int _visualCode);
+	CommonInfo* GetCommonInfo(int _commonConfigCode);
 
-	ItemOptInfo* getItemOptInfo(int _itemOptCode);
-	ItemOptInfo* getItemOptInfo(const SGString& _itemOptEngName);
-	ChannelBaseInfo* getChannelBaseInfo(int _channelCode);
-	EnchantInfo* getEnchantInfo(int _enchantCode);
-	ServerProcessInfoPackage* getServerProcessInfoPackage(int _serverCode);
-	DatabaseInfo* getDatabaseInfo(int _databaseCode);
-	CharCommonInfo* getCharCommonInfo(int _charCommonCode);
-	MapInfo* getMapInfo(int _mapCode);
-	MapAreaInfo* getMapAreaInfo(int _mapCode);
-	MapPhysicsInfo* getMapPhysicsInfo(int _physicsCode);
+	ItemOptInfo* GetItemOptInfo(int _itemOptCode);
+	ItemOptInfo* GetItemOptInfo(const SGString& _itemOptEngName);
+	ChannelBaseInfo* GetChannelBaseInfo(int _channelCode);
+	EnchantInfo* GetEnchantInfo(int _enchantCode);
+	ServerProcessInfoPackage* GetServerProcessInfoPackage(int _serverCode);
+	DatabaseInfo* GetDatabaseInfo(int _databaseCode);
+	CharCommonInfo* GetCharCommonInfo(int _charCommonCode);
+	MapInfo* GetMapInfo(int _mapCode);
+	MapAreaInfo* GetMapAreaInfo(int _mapCode);
+	MapPhysicsInfo* GetMapPhysicsInfo(int _physicsCode);
 
 protected:
 	ConfigFileLoaderAbstract* m_pConfigFileLoaders[ConfigFileType::Max];

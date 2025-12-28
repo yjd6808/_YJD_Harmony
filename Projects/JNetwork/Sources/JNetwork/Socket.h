@@ -129,8 +129,8 @@ public:
 
 	// 반환값 실패시 FALSE, WSAGetLastError로 확인
 	//       성공시 TRUE
-	int AcceptEx(SOCKET _listeningSocket, void* _pOutputBuffer, Int32UL _receiveDataLength, JCORE_OUT Int32UL* _pReceivedBytes, LPOVERLAPPED _pOverlapped) const;
-	static void AcceptExResult(char* _pBuffer, Int32UL _receiveDataLength, JCORE_OUT IPv4EndPoint* _pLocalEndPoint, JCORE_OUT IPv4EndPoint* _pRemoteEndPoint);
+	int AcceptEx(SOCKET _listeningSocket, void* _pOutputBuffer, Int32UL _receiveDataLength, OUT Int32UL* _pReceivedBytes, LPOVERLAPPED _pOverlapped) const;
+	static void AcceptExResult(char* _pBuffer, Int32UL _receiveDataLength, OUT IPv4EndPoint* _pLocalEndPoint, OUT IPv4EndPoint* _pRemoteEndPoint);
 
 	// 반환값 실패시 SOCKET_ERROR
 	//       성공시 0
@@ -138,7 +138,7 @@ public:
 
 	// 반환값 실패시 FALSE, WSAGetLastError로 확인
 	//       성공시 TRUE
-	int ConnectEx(const IPv4EndPoint& _ipv4EndPoint, LPOVERLAPPED _pOverlapped, char* _pSendBuffer, Int32UL _sendBufferSize, JCORE_OUT Int32UL* _pSentBytes) const;
+	int ConnectEx(const IPv4EndPoint& _ipv4EndPoint, LPOVERLAPPED _pOverlapped, char* _pSendBuffer, Int32UL _sendBufferSize, OUT Int32UL* _pSentBytes) const;
 	int DisconnectEx(LPOVERLAPPED _pOverlapped, Int32UL _flag);
 	 
 	int Send(char* _pBuff, Int32U _length, Int32U _flag = 0) const;
@@ -147,11 +147,11 @@ public:
 	// 반환: 연결이 정상적으로 닫힌경우 0반환
 	//      오류가 발생하지 않은 경우 수신된 바이트 크기를 반환
 	int Receive(char* _pBuff, Int32U _bufferSize, Int32U _flag = 0) const;
-	int ReceiveFrom(char* _pBuff, Int32U _bufferSize, JCORE_OUT IPv4EndPoint* _pIpv4EndPoint, Int32U _flag = 0) const;
+	int ReceiveFrom(char* _pBuff, Int32U _bufferSize, OUT IPv4EndPoint* _pIpv4EndPoint, Int32U _flag = 0) const;
 
 	int SendEx(
 		LPWSABUF _pBuf,
-		JCORE_OUT Int32UL* _pBytesSent,
+		OUT Int32UL* _pBytesSent,
 		LPOVERLAPPED _pOverlapped,
 		LPWSAOVERLAPPED_COMPLETION_ROUTINE _pCompRoutine = nullptr,
 		Int32U _flag = 0
@@ -159,7 +159,7 @@ public:
 
 	int SendToEx(
 		LPWSABUF _pBuffers,
-		JCORE_OUT Int32UL* _pBytesSent,
+		OUT Int32UL* _pBytesSent,
 		LPOVERLAPPED _pOverlapped,
 		const IPv4EndPoint& _to,
 		LPWSAOVERLAPPED_COMPLETION_ROUTINE _pCompRoutine = nullptr
@@ -167,7 +167,7 @@ public:
 
 	int ReceiveEx(
 		LPWSABUF _pBuf,
-		JCORE_OUT Int32UL* _pBytesReceived,
+		OUT Int32UL* _pBytesReceived,
 		LPOVERLAPPED _pOverlapped,
 		LPWSAOVERLAPPED_COMPLETION_ROUTINE _pCompRoutine = nullptr,
 		Int32U _flag = 0
@@ -175,9 +175,9 @@ public:
 
 	int ReceiveFromEx(
 		LPWSABUF _pBuf,
-		JCORE_OUT Int32UL* _pBytesReceived,
+		OUT Int32UL* _pBytesReceived,
 		LPOVERLAPPED _pOverlapped,
-		JCORE_OUT SOCKADDR_IN* _pSenderAddr,
+		OUT SOCKADDR_IN* _pSenderAddr,
 		LPWSAOVERLAPPED_COMPLETION_ROUTINE _pCompRoutine = nullptr,
 		Int32U _flag = 0
 	) const;

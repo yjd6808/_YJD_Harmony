@@ -26,7 +26,7 @@ USING_NS_JC;
 USING_NS_JNET;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void R_AUTHENTICATION::RECV_AUS_AuthenticationCheckAck(JCORE_UNUSED Session*, ICommand* _pCommand)
+void R_AUTHENTICATION::RECV_AUS_AuthenticationCheckAck(UNUSED Session*, ICommand* _pCommand)
 {
 	AUS_AuthenticationCheckAck* pAuthenticationCheckAck = (AUS_AuthenticationCheckAck*)_pCommand;
 	LobbySession* pLobbySession = (LobbySession*)Core::NetGroup->GetSessionFromContainer(pAuthenticationCheckAck->SessionHandle);

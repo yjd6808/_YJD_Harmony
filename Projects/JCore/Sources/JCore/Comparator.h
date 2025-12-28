@@ -16,12 +16,15 @@ NS_JC_BEGIN
 template <typename T>
 struct Comparator
 {
-	int operator()(const T& lhs, const T& rhs) {
-		if (lhs < rhs) {
+	int operator()(const T& _lhs, const T& _rhs)
+	{
+		if (_lhs < _rhs)
+		{
 			return -1;
 		}
 
-	    if (lhs > rhs) {
+		if (_lhs > _rhs)
+		{
 			return 1;
 		}
 
@@ -32,17 +35,20 @@ struct Comparator
 template <>
 struct Comparator<const char*>
 {
-	int operator()(const char* lhs, const char* rhs) const {
-		return StringUtil::CTCompare(lhs, rhs);
+	int operator()(const char* _lhs, const char* _rhs) const
+	{
+		return StringUtil::CTCompare(_lhs, _rhs);
 	}
 
-	int operator()(const char* lhs, const String& rhs) const {
-		return StringUtil::CTCompare(lhs, rhs.Source());
+	int operator()(const char* _lhs, const String& _rhs) const
+	{
+		return StringUtil::CTCompare(_lhs, _rhs.Source());
 	}
 
 	template <Int32U Size>
-	int operator()(const char* lhs, const StaticString<Size>& rhs) const {
-		return StringUtil::CTCompare(lhs, rhs.Source());
+	int operator()(const char* _lhs, const StaticString<Size>& _rhs) const
+	{
+		return StringUtil::CTCompare(_lhs, _rhs.Source());
 	}
 };
 
@@ -52,33 +58,38 @@ struct Comparator<const char*>
 template <>
 struct Comparator<String>
 {
-	int operator()(const String& lhs, const String& rhs) {
-		return lhs.Compare(rhs);
+	int operator()(const String& _lhs, const String& _rhs)
+	{
+		return _lhs.Compare(_rhs);
 	}
 
-	int operator()(const String& lhs, const char* rhs) {
-		return lhs.Compare(rhs);
+	int operator()(const String& _lhs, const char* _rhs)
+	{
+		return _lhs.Compare(_rhs);
 	}
 
 	template <Int32U Size>
-	int operator()(const String& lhs, const StaticString<Size>& rhs) {
-		return lhs.Compare(rhs.Source);
+	int operator()(const String& _lhs, const StaticString<Size>& _rhs)
+	{
+		return _lhs.Compare(_rhs.Source);
 	}
 };
 
 struct NaturalOrder
 {
 	template <typename U>
-	bool operator()(U&& lhs, U&& rhs) {
-		return Comparator<NaturalType_t<U>>()(Forward<U>(lhs), Forward<U>(rhs)) < 0;
+	bool operator()(U&& _lhs, U&& _rhs)
+	{
+		return Comparator<NaturalType_t<U>>()(Forward<U>(_lhs), Forward<U>(_rhs)) < 0;
 	}
 };
 
 struct ReverseOrder
 {
 	template <typename U>
-	bool operator()(U&& lhs, U&& rhs) {
-		return Comparator<NaturalType_t<U>>()(Forward<U>(lhs), Forward<U>(rhs)) > 0;
+	bool operator()(U&& _lhs, U&& _rhs)
+	{
+		return Comparator<NaturalType_t<U>>()(Forward<U>(_lhs), Forward<U>(_rhs)) > 0;
 	}
 };
 
@@ -89,9 +100,6 @@ constexpr bool IsComparator_v = true;
 
 //template <typename TComparator>
 //constexpr bool IsComparator_v = IsCallable_v<TComparator>;
-
-
-
 
 
 NS_JC_END

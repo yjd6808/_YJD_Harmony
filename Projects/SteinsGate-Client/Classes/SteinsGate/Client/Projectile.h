@@ -37,6 +37,6 @@ public:
 	int					GetListenerCode() const { return baseInfo_->listenerCode_; }
 
 private:
-	JCORE_NOT_NULL ProjectileInfo* baseInfo_;
-	JCORE_NULLABLE Actor* spawner_;
+	NOT_NULL ProjectileInfo* baseInfo_;
+	NULLABLE Actor* spawner_;
 };

@@ -41,24 +41,24 @@ void GameInterServerClientNetGroup::InitializeIOCP()
 //////////////////////////////////////////////////////////////////////////////////////////
 void GameInterServerClientNetGroup::InitializeInterServerTcp()
 {
-	auto pInterServerClient = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, nullptr, RecvBufferSize_v, SendBufferSize_v);
+	auto pInterServerClient = MakeShared<TcpClient>(pIocp_, pBufferPool_, nullptr, RecvBufferSize_v, SendBufferSize_v);
 	pInterServerClient->Bind(Core::GameServerProcessInfo->bindInterServerTcp_);
 	AddHost(Const::Host::GameInterServerTcpId, pInterServerClient);
 
-	m_pInterServerClientTcp = pInterServerClient.Get<TcpClient*>();
-	m_pInterServerClientTcp->SetEventListener(dbg_new ListenerInterServerClient{ ServerProcessType::Game, m_pParser });
+	pInterServerClientTcp_ = pInterServerClient.Get<TcpClient*>();
+	pInterServerClientTcp_->SetEventListener(dbg_new ListenerInterServerClient{ ServerProcessType::Game, pParser_ });
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void GameInterServerClientNetGroup::InitializeInterServerUdp()
 {
-	auto pInterServerClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, nullptr, RecvBufferSize_v, SendBufferSize_v);
+	auto pInterServerClient = MakeShared<UdpClient>(pIocp_, pBufferPool_, nullptr, RecvBufferSize_v, SendBufferSize_v);
 	pInterServerClient->Bind(Core::GameServerProcessInfo->bindInterServerUdp_);
 	AddHost(Const::Host::GameInterServerUdpId, pInterServerClient);
 
-	m_pInterServerClientUdp = pInterServerClient.Get<UdpClient*>();
-	m_pInterServerClientUdp->SetEventListener(dbg_new ListenerInterServerClient{ ServerProcessType::Game, m_pParser });
-	m_pInterServerClientUdp->RecvFromAsync();
+	pInterServerClientUdp_ = pInterServerClient.Get<UdpClient*>();
+	pInterServerClientUdp_->SetEventListener(dbg_new ListenerInterServerClient{ ServerProcessType::Game, pParser_ });
+	pInterServerClientUdp_->RecvFromAsync();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

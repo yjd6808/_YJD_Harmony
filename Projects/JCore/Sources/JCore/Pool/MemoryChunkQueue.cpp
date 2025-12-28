@@ -44,7 +44,7 @@ void CMemoryChunckQueue::Push(void* _pChunk)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void* CMemoryChunckQueue::Pop(JCORE_OUT bool& _newAlloc)
+void* CMemoryChunckQueue::Pop(OUT bool& _newAlloc)
 {
 	QueueGuard guard(lock_);
 

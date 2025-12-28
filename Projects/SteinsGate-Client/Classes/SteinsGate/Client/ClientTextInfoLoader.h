@@ -17,11 +17,11 @@ struct ClientTextInfoLoader : ConfigFileLoaderAbstract
 	bool Load() override;
 	ConfigFileType_t GetConfigFileType() override { return ConfigFileType::ClientText; }
 
-	bool TryGetTextRaw(const char* _id, JCORE_OUT char** _pText);
-	bool TryGetText(const char* _id, JCORE_OUT SGString** _pText);
-	bool TryGetText(const SGString& _id, JCORE_OUT SGString** _pText);
+	bool TryGetTextRaw(const char* _id, OUT char** _pText);
+	bool TryGetText(const char* _id, OUT SGString** _pText);
+	bool TryGetText(const SGString& _id, OUT SGString** _pText);
 
-	static bool ReadClientTextInfo(Json::Value& _clientTextRoot, JCORE_OUT SGString& _id, JCORE_OUT SGString& _text);
+	static bool ReadClientTextInfo(Json::Value& _clientTextRoot, OUT SGString& _id, OUT SGString& _text);
 
 private:
 	SGHashMap<SGString, SGString> textMap_;

@@ -34,14 +34,13 @@ struct IsQryHelper : JCore::FalseType
 };
 
 template <template <typename> typename Base, typename U>
-struct IsQryHelper<Base<
-		U>> : JCore::Conditional_t<JCore::IsSameType_v<Base<U>, QryHelper<U>>, JCore::TrueType, JCore::FalseType>
+struct IsQryHelper<Base<U>> : JCore::Conditional_t<JCore::IsSameType_v<Base<U>, QryHelper<U>>, JCore::TrueType, JCore::FalseType>
 {
 };
 
 NS_DETAIL_END
 
 template <typename THelper>
-static constexpr bool IsQryHelper_v = Detail::IsQryHelper<THelper>::Value;
+static constexpr bool IsQryHelper_v = Detail::IsQryHelper<THelper>::VALUE;
 
 NS_QRY_END

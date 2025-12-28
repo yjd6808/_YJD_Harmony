@@ -46,7 +46,7 @@ bool TcpSession::AcceptAsync()
 	Int32UL receivedBytes = 0;
 
 	SOCKET listeningSocket = pServer_->SocketHandle();
-	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedAccept(this, iocp_.GetPtr());
+	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedAccept(this, pIocp_.GetPtr());
 
 	if (socket_.AcceptEx(
 		listeningSocket,

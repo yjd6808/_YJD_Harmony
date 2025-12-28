@@ -69,7 +69,7 @@ void JsonUtilEx::ParseActorRect(Json::Value& _root, ActorRect& _actorRect)
  * 우선 다 만들고 고민하는걸로..
  */
 
-void JsonUtilEx::ParseActorSpriteData(Json::Value& _actorSpriteDataRoot, JCORE_OUT ActorSpriteData** _ppInfo)
+void JsonUtilEx::ParseActorSpriteData(Json::Value& _actorSpriteDataRoot, OUT ActorSpriteData** _ppInfo)
 {
 	Json::Value& partListRoot = _actorSpriteDataRoot["parts"];
 	Json::Value& animationListRoot = _actorSpriteDataRoot["animation"];
@@ -135,7 +135,7 @@ void JsonUtilEx::ParseActorSpriteData(Json::Value& _actorSpriteDataRoot, JCORE_O
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void JsonUtilEx::ParseColor4B(Json::Value& _root, JCORE_OUT SGColor4B& _color)
+void JsonUtilEx::ParseColor4B(Json::Value& _root, OUT SGColor4B& _color)
 {
 	int r;
 	int g;

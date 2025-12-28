@@ -42,5 +42,5 @@ public:
 	}
 
 protected:
-	JCORE_NOT_NULL Character* pChar_;
+	NOT_NULL Character* pChar_;
 };

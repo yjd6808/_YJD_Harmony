@@ -9,5 +9,5 @@ struct Q_LOGIN : Qry::QryHelper<Q_LOGIN>
 {
 	static void SelectAccountInfoList(const char* _pAccountId);
 	static bool RegisterAccount(const char* _pAccountId, const char* _pAccountPass);
-	static bool SelectAccountInfo(const char* _pAccountId, JCORE_OUT AccountData& _accountData);
+	static bool SelectAccountInfo(const char* _pAccountId, OUT AccountData& _accountData);
 };

@@ -127,7 +127,7 @@ ConfigFileLoaderAbstract::DirectoryTreeNode* ConfigFileLoaderAbstract::Directory
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void ConfigFileLoaderAbstract::DirectoryTree::ConstructTreeRecursive(
-	JCORE_OUT DirectoryTreeNode** _ppNode, const char* _path, int _depth)
+	OUT DirectoryTreeNode** _ppNode, const char* _path, int _depth)
 {
 	const int directoryCount = JCore::Directory::DirectoryCount(_path);
 	const SGString directoryName = JCore::Path::FileNameLevel(_path, _depth);
@@ -204,11 +204,9 @@ ConfigFileLoaderAbstract::~ConfigFileLoaderAbstract()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool ConfigFileLoaderAbstract::LoadJson(JCORE_OUT Json::Value& _root)
+bool ConfigFileLoaderAbstract::LoadJson(OUT Json::Value& _root)
 {
-	DebugAssertMsg(Core::CommonInfo != nullptr,
-	               "프로그램 실행 후 즉시 CoreCommon_v를 초기화해서 설정/데이터 파일 경로를 확보해주세요. 데이터 매니저 생성시 곧바로 실행파일 경로의 common.json이 로딩되므로 원하는 설정 코드로 세팅하면 됩니다.")
-	;
+	DebugAssertMsg(Core::CommonInfo != nullptr, "프로그램 실행 후 즉시 CoreCommon_v를 초기화해서 설정/데이터 파일 경로를 확보해주세요. 데이터 매니저 생성시 곧바로 실행파일 경로의 common.json이 로딩되므로 원하는 설정 코드로 세팅하면 됩니다.");
 
 	SGString configPath = JCore::Path::Combine(Core::CommonInfo->configPath_, GetConfigFileName());
 
@@ -235,7 +233,7 @@ bool ConfigFileLoaderAbstract::LoadJson(JCORE_OUT Json::Value& _root)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool ConfigFileLoaderAbstract::LoadDirectory(JCORE_OUT DirectoryTree& _directoryTree)
+bool ConfigFileLoaderAbstract::LoadDirectory(OUT DirectoryTree& _directoryTree)
 {
 	DebugAssertMsg(Core::CommonInfo != nullptr,
 	               "프로그램 실행 후 즉시 CoreCommon_v를 초기화해서 설정/데이터 파일 경로를 확보해주세요. 데이터 매니저 생성시 곧바로 실행파일 경로의 common.json이 로딩되므로 원하는 설정 코드로 세팅하면 됩니다.")

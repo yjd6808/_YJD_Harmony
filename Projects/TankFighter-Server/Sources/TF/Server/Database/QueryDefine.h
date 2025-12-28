@@ -26,7 +26,7 @@ template <typename TQryResult>
 struct Visitable
 {
 	static_assert(IsVisitable<TQryResult>::value, "... T is not visitable Qry Struct");
-	constexpr static void BindSelectResult(JCORE_IN TQryResult& v, MysqlQuerySelect* query) {}
+	constexpr static void BindSelectResult( TQryResult& v, MysqlQuerySelect* query) {}
 	constexpr static int FieldCount = 0;
 };
 
@@ -68,7 +68,7 @@ struct Visitable<struct_name>																							\
 	enum Fields { QRY_STRUCT_VARIABLE_NAMES(__VA_ARGS__), _Count };														\
 																														\
 																														\
-	constexpr static void BindSelectResult(JCORE_IN struct_name& v,  MysqlQuerySelect* query) {							\
+	constexpr static void BindSelectResult( struct_name& v,  MysqlQuerySelect* query) {							\
 		QRY_STRUCT_APPLY(__VA_ARGS__)																					\
 	}																													\
 																														\

@@ -40,7 +40,7 @@ public:
 	int GetBattleDeathCount() const { return m_BattleStatistics.Death; }
 	JCore::DateTime GetBattleLastKillTime() const { return m_BattleStatistics.LastKillTime; }
 	int GetFriendCount() const;
-	void GetFriendList(JCORE_OUT FriendCharacterInfo* friendArray, int capacity);
+	void GetFriendList(OUT FriendCharacterInfo* friendArray, int capacity);
 
 	bool IsDeath() const { return m_iDeath; }
 	bool IsReady() const { return m_bReady; }
@@ -74,11 +74,11 @@ public:
 	void SetInfo(const CharacterInfo& info, bool dirty = true);
 	void SetMove(const TankMove& move);
 
-	void GetInfo(JCORE_REF_OUT CharacterInfo& info);
-	void GetRoomInfo(JCORE_REF_OUT RoomCharacterInfo& info);
-	void GetFriendInfo(JCORE_REF_OUT FriendCharacterInfo& info);
-	void GetBattleStatisticsNet(JCORE_REF_OUT BattleStatisticsNet& info);
-	void GetMoveNet(JCORE_REF_OUT TankMoveNet& move);
+	void GetInfo(OUT CharacterInfo& info);
+	void GetRoomInfo(OUT RoomCharacterInfo& info);
+	void GetFriendInfo(OUT FriendCharacterInfo& info);
+	void GetBattleStatisticsNet(OUT BattleStatisticsNet& info);
+	void GetMoveNet(OUT TankMoveNet& move);
 
 	void Spawn();
 

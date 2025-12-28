@@ -93,7 +93,7 @@ struct TaskResult
 		return *this;
 	}
 
-	bool TryGet(JCORE_OUT T& _v, TaskGetValueStrategy _getValueStrategy)
+	bool TryGet(OUT T& _v, TaskGetValueStrategy _getValueStrategy)
 	{
 		if (!holder_.held_)
 			return false;
@@ -145,7 +145,7 @@ public:
 	void SetDebugName(const String& _s) { m_DebugName = _s; }
 
 	template <typename T>
-	TaskWaitResult Wait(JCORE_OUT T* _pValue, TaskGetValueStrategy _getValueStrategy)
+	TaskWaitResult Wait(OUT T* _pValue, TaskGetValueStrategy _getValueStrategy)
 	{
 		int eState;
 		TaskWaitResult eResult = TaskWaitResult::Success;
@@ -177,7 +177,7 @@ public:
 	}
 
 	template <typename T>
-	TaskWaitResult TryWait(JCORE_OUT T* _pValue, TaskGetValueStrategy _getValueStrategy)
+	TaskWaitResult TryWait(OUT T* _pValue, TaskGetValueStrategy _getValueStrategy)
 	{
 		TaskWaitResult eResult = TaskWaitResult::Success;
 		NormalLockGuard guard(m_CtxLock);
@@ -307,9 +307,9 @@ struct Task : TaskBase
 	}
 
 	bool Wait(
-		JCORE_OUT T* _pValue = nullptr, 
+		OUT T* _pValue = nullptr, 
 		TaskGetValueStrategy _getValueStrategy = TaskGetValueStrategy::Move,
-		JCORE_OUT TaskWaitResult* _pWaitResult = nullptr) const
+		OUT TaskWaitResult* _pWaitResult = nullptr) const
 	{
 		if (!ValidateGetValueStrategy(_getValueStrategy))
 		{
@@ -334,9 +334,9 @@ struct Task : TaskBase
 	}
 
 	bool TryWait(
-		JCORE_OUT T* _pValue = nullptr, 
+		OUT T* _pValue = nullptr, 
 		TaskGetValueStrategy _getValueStrategy = TaskGetValueStrategy::Move,
-		JCORE_OUT TaskWaitResult* _pWaitResult = nullptr) const
+		OUT TaskWaitResult* _pWaitResult = nullptr) const
 	{
 		if (pContext == nullptr)
 		{
@@ -404,7 +404,7 @@ struct Task<void> : TaskBase
 		return *this;
 	}
 
-	bool Wait(JCORE_OUT TaskWaitResult* _pWaitResult = nullptr) const
+	bool Wait(OUT TaskWaitResult* _pWaitResult = nullptr) const
 	{
 		if (pContext == nullptr)
 		{

@@ -109,7 +109,7 @@ void Tank::sendMove() {
 	S_GAME::SEND_CS_BattleFieldMove(move);
 }
 
-void Tank::getMove(JCORE_REF_OUT TankMove& move) {
+void Tank::getMove(OUT TankMove& move) {
 	move = m_Move;
 }
 

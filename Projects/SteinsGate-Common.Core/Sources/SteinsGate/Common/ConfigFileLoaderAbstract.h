@@ -50,7 +50,7 @@ protected:
 		auto SetCallbackCommon(const DirectoryTreeNodeCallback_t& _callback) -> void;
 
 		static DirectoryTreeNode* FindNodeRecursive(DirectoryTreeNode* _pNode, const char* _pDirectoryName);
-		static void ConstructTreeRecursive(JCORE_OUT DirectoryTreeNode** _ppNode, const char* _path, int _depth);
+		static void ConstructTreeRecursive(OUT DirectoryTreeNode** _ppNode, const char* _path, int _depth);
 		static void LoadRecursive(DirectoryTree* _pTree, DirectoryTreeNode* _pNode);
 		static void ClearRecursive(DirectoryTreeNode* _pNode);
 
@@ -63,8 +63,8 @@ public:
 	ConfigFileLoaderAbstract(DataManagerAbstract* _pManager);
 	virtual ~ConfigFileLoaderAbstract();
 
-	virtual bool LoadJson(JCORE_OUT Json::Value& _root);
-	virtual bool LoadDirectory(JCORE_OUT DirectoryTree& _directoryTree);
+	virtual bool LoadJson(OUT Json::Value& _root);
+	virtual bool LoadDirectory(OUT DirectoryTree& _directoryTree);
 	virtual bool Load() = 0;
 
 	virtual ConfigFileType_t GetConfigFileType() = 0;

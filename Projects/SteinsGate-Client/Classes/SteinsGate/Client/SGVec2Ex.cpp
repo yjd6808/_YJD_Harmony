@@ -9,8 +9,8 @@
 #include "SGVec2Ex.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGVec2Ex::GetLookDirection(const SGVec2& _from, const SGVec2& _to, JCORE_OUT Direction_t& _lr,
-                                JCORE_OUT Direction_t& _ud)
+void SGVec2Ex::GetLookDirection(const SGVec2& _from, const SGVec2& _to, OUT Direction_t& _lr,
+                                OUT Direction_t& _ud)
 {
 	_lr = Direction::Left;
 	_ud = Direction::Down;

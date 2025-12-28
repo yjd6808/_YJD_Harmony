@@ -34,7 +34,7 @@ CLIListenerBase::CLIListenerBase()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool CLIListenerBase::ExecuteCommand(int _argc, String* _pArgv, JCORE_REF_IN TCLI_Table& _table)
+bool CLIListenerBase::ExecuteCommand(int _argc, String* _pArgv, TCLI_Table& _table)
 {
 	const TCLI_Callback* pCallback = _table.Find(_pArgv[0].Source());
 	if (pCallback)

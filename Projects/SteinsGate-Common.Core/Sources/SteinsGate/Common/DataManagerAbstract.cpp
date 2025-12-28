@@ -23,17 +23,17 @@ DataManagerAbstract::DataManagerAbstract()
 , m_bLoaded{}
 , m_bInitialized(false)
 {
-	loadCommon();
+	LoadCommon();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 DataManagerAbstract::~DataManagerAbstract()
 {
-	finalizeLoader();
+	FinalizeLoader();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void DataManagerAbstract::loadCommon()
+void DataManagerAbstract::LoadCommon()
 {
 	DebugAssertMsg(m_bLoaded[ConfigFileType::Common] == false, "이미 초기화가 진행되어있습니다.");
 
@@ -50,7 +50,7 @@ void DataManagerAbstract::loadCommon()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void DataManagerAbstract::loadAll()
+void DataManagerAbstract::LoadAll()
 {
 	DebugAssertMsg(m_bInitialized, "아직 데이터 매니저 초기화가 이뤄지지 않았습니다.");
 
@@ -67,7 +67,7 @@ void DataManagerAbstract::loadAll()
 		if (m_bLoaded[configFileTypeIndex])
 			continue;
 
-		load((ConfigFileType_t)configFileTypeIndex);
+		Load((ConfigFileType_t)configFileTypeIndex);
 
 		if (m_bLoaded[configFileTypeIndex])
 		{
@@ -79,7 +79,7 @@ void DataManagerAbstract::loadAll()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ConfigDataAbstract* DataManagerAbstract::getData(ConfigFileType_t _configFileType, int _code)
+ConfigDataAbstract* DataManagerAbstract::GetData(ConfigFileType_t _configFileType, int _code)
 {
 	DebugAssertMsg(_configFileType >= ConfigFileType::Begin && _configFileType <= ConfigFileType::End
 	               , "올바르지 않은 ConfigFileType 입니다.");
@@ -87,7 +87,7 @@ ConfigDataAbstract* DataManagerAbstract::getData(ConfigFileType_t _configFileTyp
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void DataManagerAbstract::load(ConfigFileType_t _configFileType)
+void DataManagerAbstract::Load(ConfigFileType_t _configFileType)
 {
 	ConfigFileLoaderAbstract* pLoader = m_pConfigFileLoaders[_configFileType];
 	DebugAssertMsg(pLoader != nullptr, "%s 파일 로더가 아직 생성되어있지 않습니다.", ConfigFileType::FileName[_configFileType]);
@@ -95,14 +95,14 @@ void DataManagerAbstract::load(ConfigFileType_t _configFileType)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void DataManagerAbstract::unload(ConfigFileType_t _configFileType)
+void DataManagerAbstract::Unload(ConfigFileType_t _configFileType)
 {
 	DebugAssertMsg(false, "아직 구현 안됨");
 	// TODO: 필요시 구현
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void DataManagerAbstract::finalizeLoader()
+void DataManagerAbstract::FinalizeLoader()
 {
 	for (int configFileTypeIndex = 0; configFileTypeIndex < ConfigFileType::Max; ++configFileTypeIndex)
 	{
@@ -121,188 +121,188 @@ void DataManagerAbstract::finalizeLoader()
 // ========================================================================================
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MonsterBaseInfo* DataManagerAbstract::getMobBaseInfo(int _monsterCode)
+MonsterBaseInfo* DataManagerAbstract::GetMobBaseInfo(int _monsterCode)
 {
-	const auto configType = ConfigFileType::Monster;
+	constexpr auto CONFIG_TYPE = ConfigFileType::Monster;
 
-	if (!m_bLoaded[configType])
-		load(configType);
+	if (!m_bLoaded[CONFIG_TYPE])
+		Load(CONFIG_TYPE);
 
-	const auto pRet = dynamic_cast<MonsterBaseInfo*>(getData(configType, _monsterCode));
+	const auto pRet = dynamic_cast<MonsterBaseInfo*>(GetData(CONFIG_TYPE, _monsterCode));
 	DebugAssertMsg(pRet, "아바타 타입이 아닙니다.");
 	return pRet;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ItemAvatarInfo* DataManagerAbstract::getAvatarInfo(int _avatarCode)
+ItemAvatarInfo* DataManagerAbstract::GetAvatarInfo(int _avatarCode)
 {
-	const auto configType = ConfigFileType::Item;
+	constexpr auto CONFIG_TYPE = ConfigFileType::Item;
 
-	if (!m_bLoaded[configType])
-		load(configType);
+	if (!m_bLoaded[CONFIG_TYPE])
+		Load(CONFIG_TYPE);
 
-	const auto pRet = dynamic_cast<ItemAvatarInfo*>(getData(configType, _avatarCode));
+	const auto pRet = dynamic_cast<ItemAvatarInfo*>(GetData(CONFIG_TYPE, _avatarCode));
 	DebugAssertMsg(pRet, "아바타 타입이 아닙니다.");
 	return pRet;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ItemWeaponInfo* DataManagerAbstract::getWeaponInfo(int _weaponCode)
+ItemWeaponInfo* DataManagerAbstract::GetWeaponInfo(int _weaponCode)
 {
-	const auto configType = ConfigFileType::Item;
+	constexpr auto CONFIG_TYPE = ConfigFileType::Item;
 
-	if (!m_bLoaded[configType])
-		load(configType);
+	if (!m_bLoaded[CONFIG_TYPE])
+		Load(CONFIG_TYPE);
 
-	const auto pRet = dynamic_cast<ItemWeaponInfo*>(getData(configType, _weaponCode));
+	const auto pRet = dynamic_cast<ItemWeaponInfo*>(GetData(CONFIG_TYPE, _weaponCode));
 	DebugAssertMsg(pRet, "무기 타입이 아닙니다.");
 	return pRet;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ItemArmorInfo* DataManagerAbstract::getArmorInfo(int _armorCode)
+ItemArmorInfo* DataManagerAbstract::GetArmorInfo(int _armorCode)
 {
-	const auto configType = ConfigFileType::Item;
+	constexpr auto CONFIG_TYPE = ConfigFileType::Item;
 
-	if (!m_bLoaded[configType])
-		load(configType);
+	if (!m_bLoaded[CONFIG_TYPE])
+		Load(CONFIG_TYPE);
 
-	const auto pRet = dynamic_cast<ItemArmorInfo*>(getData(configType, _armorCode));
+	const auto pRet = dynamic_cast<ItemArmorInfo*>(GetData(CONFIG_TYPE, _armorCode));
 	DebugAssertMsg(pRet, "방어구 | 장신구 | 칭호 타입이 아닙니다.");
 	return pRet;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ItemVisualInfo* DataManagerAbstract::getVisualInfo(int _visualCode)
+ItemVisualInfo* DataManagerAbstract::GetVisualInfo(int _visualCode)
 {
-	const auto configType = ConfigFileType::Item;
+	constexpr auto CONFIG_TYPE = ConfigFileType::Item;
 
-	if (!m_bLoaded[configType])
-		load(configType);
+	if (!m_bLoaded[CONFIG_TYPE])
+		Load(CONFIG_TYPE);
 
-	const auto pRet = dynamic_cast<ItemVisualInfo*>(getData(configType, _visualCode));
+	const auto pRet = dynamic_cast<ItemVisualInfo*>(GetData(CONFIG_TYPE, _visualCode));
 	DebugAssertMsg(pRet, "아바타 | 무기가 아닙니다.");
 	return pRet;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-CommonInfo* DataManagerAbstract::getCommonInfo(int _commonConfigCode)
+CommonInfo* DataManagerAbstract::GetCommonInfo(int _commonConfigCode)
 {
 	DebugAssertMsg(m_bLoaded[ConfigFileType::Common], "먼저 loadCommon()을 호출해주세요");
 	return (CommonInfo*)m_pConfigFileLoaders[ConfigFileType::Common]->GetData(_commonConfigCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ItemOptInfo* DataManagerAbstract::getItemOptInfo(int _itemOptCode)
+ItemOptInfo* DataManagerAbstract::GetItemOptInfo(int _itemOptCode)
 {
-	const auto configType = ConfigFileType::ItemOpt;
+	constexpr auto CONFIG_TYPE = ConfigFileType::ItemOpt;
 
-	if (!m_bLoaded[configType])
-		load(configType);
+	if (!m_bLoaded[CONFIG_TYPE])
+		Load(CONFIG_TYPE);
 
-	const auto pRet = dynamic_cast<ItemOptInfo*>(getData(configType, _itemOptCode));
+	const auto pRet = dynamic_cast<ItemOptInfo*>(GetData(CONFIG_TYPE, _itemOptCode));
 	DebugAssertMsg(pRet, "아이템 옵트 타입이 아닙니다.");
 	return pRet;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ItemOptInfo* DataManagerAbstract::getItemOptInfo(const SGString& _itemOptEngName)
+ItemOptInfo* DataManagerAbstract::GetItemOptInfo(const SGString& _itemOptEngName)
 {
-	const auto configType = ConfigFileType::ItemOpt;
+	constexpr auto CONFIG_TYPE = ConfigFileType::ItemOpt;
 
-	if (!m_bLoaded[configType])
-		load(configType);
+	if (!m_bLoaded[CONFIG_TYPE])
+		Load(CONFIG_TYPE);
 
-	return ((ItemOptInfoLoader*)m_pConfigFileLoaders[configType])->GetData(_itemOptEngName);
+	return ((ItemOptInfoLoader*)m_pConfigFileLoaders[CONFIG_TYPE])->GetData(_itemOptEngName);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ChannelBaseInfo* DataManagerAbstract::getChannelBaseInfo(int _channelCode)
+ChannelBaseInfo* DataManagerAbstract::GetChannelBaseInfo(int _channelCode)
 {
-	const auto configType = ConfigFileType::Channel;
+	constexpr auto CONFIG_TYPE = ConfigFileType::Channel;
 
-	if (!m_bLoaded[configType])
-		load(configType);
+	if (!m_bLoaded[CONFIG_TYPE])
+		Load(CONFIG_TYPE);
 
-	const auto pRet = dynamic_cast<ChannelBaseInfo*>(getData(configType, _channelCode));
+	const auto pRet = dynamic_cast<ChannelBaseInfo*>(GetData(CONFIG_TYPE, _channelCode));
 	DebugAssertMsg(pRet, "채널 인포 타입이 아닙니다.");
 	return pRet;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-EnchantInfo* DataManagerAbstract::getEnchantInfo(int _enchantCode)
+EnchantInfo* DataManagerAbstract::GetEnchantInfo(int _enchantCode)
 {
-	const auto configType = ConfigFileType::Enchant;
+	constexpr auto CONFIG_TYPE = ConfigFileType::Enchant;
 
-	if (!m_bLoaded[configType])
-		load(configType);
+	if (!m_bLoaded[CONFIG_TYPE])
+		Load(CONFIG_TYPE);
 
-	const auto pRet = dynamic_cast<EnchantInfo*>(getData(configType, _enchantCode));
+	const auto pRet = dynamic_cast<EnchantInfo*>(GetData(CONFIG_TYPE, _enchantCode));
 	DebugAssertMsg(pRet, "인챈트 인포 타입이 아닙니다.");
 	return pRet;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ServerProcessInfoPackage* DataManagerAbstract::getServerProcessInfoPackage(int _serverCode)
+ServerProcessInfoPackage* DataManagerAbstract::GetServerProcessInfoPackage(int _serverCode)
 {
-	const auto configType = ConfigFileType::Server;
+	constexpr auto CONFIG_TYPE = ConfigFileType::Server;
 
-	if (!m_bLoaded[configType])
-		load(configType);
+	if (!m_bLoaded[CONFIG_TYPE])
+		Load(CONFIG_TYPE);
 
-	const auto pRet = dynamic_cast<ServerProcessInfoPackage*>(getData(configType, _serverCode));
+	const auto pRet = dynamic_cast<ServerProcessInfoPackage*>(GetData(CONFIG_TYPE, _serverCode));
 	DebugAssertMsg(pRet, "서버 인포 타입이 아닙니다.");
 	return pRet;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-DatabaseInfo* DataManagerAbstract::getDatabaseInfo(int _databaseCode)
+DatabaseInfo* DataManagerAbstract::GetDatabaseInfo(int _databaseCode)
 {
-	const auto configType = ConfigFileType::Database;
+	constexpr auto CONFIG_TYPE = ConfigFileType::Database;
 
-	if (!m_bLoaded[configType])
-		load(configType);
+	if (!m_bLoaded[CONFIG_TYPE])
+		Load(CONFIG_TYPE);
 
-	const auto pRet = dynamic_cast<DatabaseInfo*>(getData(configType, _databaseCode));
+	const auto pRet = dynamic_cast<DatabaseInfo*>(GetData(CONFIG_TYPE, _databaseCode));
 	DebugAssertMsg(pRet, "데이터베이스 인포 타입이 아닙니다.");
 	return pRet;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-CharCommonInfo* DataManagerAbstract::getCharCommonInfo(int _charCommonCode)
+CharCommonInfo* DataManagerAbstract::GetCharCommonInfo(int _charCommonCode)
 {
-	const auto configType = ConfigFileType::Char_Common;
+	constexpr auto CONFIG_TYPE = ConfigFileType::Char_Common;
 
-	if (!m_bLoaded[configType])
-		load(configType);
+	if (!m_bLoaded[CONFIG_TYPE])
+		Load(CONFIG_TYPE);
 
-	const auto pRet = dynamic_cast<CharCommonInfo*>(getData(configType, _charCommonCode));
+	const auto pRet = dynamic_cast<CharCommonInfo*>(GetData(CONFIG_TYPE, _charCommonCode));
 	DebugAssertMsg(pRet, "데이터베이스 인포 타입이 아닙니다.");
 	return pRet;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MapInfo* DataManagerAbstract::getMapInfo(int _mapCode)
+MapInfo* DataManagerAbstract::GetMapInfo(int _mapCode)
 {
-	const auto configType = ConfigFileType::Map;
+	constexpr auto CONFIG_TYPE = ConfigFileType::Map;
 
-	if (!m_bLoaded[configType])
-		load(configType);
+	if (!m_bLoaded[CONFIG_TYPE])
+		Load(CONFIG_TYPE);
 
-	const auto pRet = dynamic_cast<MapInfo*>(getData(configType, _mapCode));
+	const auto pRet = dynamic_cast<MapInfo*>(GetData(CONFIG_TYPE, _mapCode));
 	DebugAssertMsg(pRet, "맵 인포 타입이 아닙니다.");
 	return pRet;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MapAreaInfo* DataManagerAbstract::getMapAreaInfo(int _mapCode)
+MapAreaInfo* DataManagerAbstract::GetMapAreaInfo(int _mapCode)
 {
-	const auto configType = ConfigFileType::Map;
+	constexpr auto CONFIG_TYPE = ConfigFileType::Map;
 
-	if (!m_bLoaded[configType])
-		load(configType);
+	if (!m_bLoaded[CONFIG_TYPE])
+		Load(CONFIG_TYPE);
 
-	const auto pLoader = dynamic_cast<MapInfoLoader*>(m_pConfigFileLoaders[configType]);
+	const auto pLoader = dynamic_cast<MapInfoLoader*>(m_pConfigFileLoaders[CONFIG_TYPE]);
 
 	if (pLoader == nullptr)
 	{
@@ -321,14 +321,14 @@ MapAreaInfo* DataManagerAbstract::getMapAreaInfo(int _mapCode)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MapPhysicsInfo* DataManagerAbstract::getMapPhysicsInfo(int _physicsCode)
+MapPhysicsInfo* DataManagerAbstract::GetMapPhysicsInfo(int _physicsCode)
 {
-	const auto configType = ConfigFileType::MapPhysics;
+	constexpr auto CONFIG_TYPE = ConfigFileType::MapPhysics;
 
-	if (!m_bLoaded[configType])
-		load(configType);
+	if (!m_bLoaded[CONFIG_TYPE])
+		Load(CONFIG_TYPE);
 
-	const auto pRet = dynamic_cast<MapPhysicsInfo*>(getData(configType, _physicsCode));
+	const auto pRet = dynamic_cast<MapPhysicsInfo*>(GetData(CONFIG_TYPE, _physicsCode));
 	DebugAssertMsg(pRet, "맵 피직스 타입이 아닙니다.");
 	return pRet;
 }

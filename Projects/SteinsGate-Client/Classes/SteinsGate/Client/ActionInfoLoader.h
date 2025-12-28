@@ -19,5 +19,5 @@ public:
 	ConfigFileType_t GetConfigFileType() override;
 	bool Load() override;
 
-	static void ReadActionInfo(Json::Value& _actionRoot, JCORE_OUT ActionInfo* _pActionInfo);
+	static void ReadActionInfo(Json::Value& _actionRoot, OUT ActionInfo* _pActionInfo);
 };

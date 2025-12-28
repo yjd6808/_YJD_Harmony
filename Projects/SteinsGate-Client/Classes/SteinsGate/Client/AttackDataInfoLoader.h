@@ -29,7 +29,7 @@ public:
 		return ConfigFileType::Max;
 	}
 
-	static void ReadAttackDataInfo(Json::Value& _attackDataRoot, JCORE_OUT AttackDataInfo* _pAttackDataInfo);
+	static void ReadAttackDataInfo(Json::Value& _attackDataRoot, OUT AttackDataInfo* _pAttackDataInfo);
 
 private:
 	ActorType_t actorType_; // 어떤 액터의 데이터인지 구분하는 용도

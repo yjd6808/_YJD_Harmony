@@ -21,7 +21,7 @@ public:
 	~CMemoryChunckQueue();
 
 	void Push(void* _pChunk);
-	void* Pop(JCORE_OUT bool& _newAlloc);
+	void* Pop(OUT bool& _newAlloc);
 	int FreeCount() { return chunkQueue_.Size(); }
 	int TotalCount() { return totalChunkCount_; }
 	int ChunkSize() { return chunkSize_; }

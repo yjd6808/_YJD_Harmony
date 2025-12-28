@@ -54,7 +54,7 @@ bool CharInfoLoader::Load()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void CharInfoLoader::ReadDefaultVisualInfo(Json::Value& _charRoot, JCORE_OUT CharInfo* _pCharInfo)
+void CharInfoLoader::ReadDefaultVisualInfo(Json::Value& _charRoot, OUT CharInfo* _pCharInfo)
 {
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 	Global* pGlobal = Global::Get();

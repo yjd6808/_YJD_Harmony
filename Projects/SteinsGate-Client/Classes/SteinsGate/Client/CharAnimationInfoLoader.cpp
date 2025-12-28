@@ -27,9 +27,9 @@ bool CharAnimationInfoLoader::Load()
 		for (int charCode = 0; charCode < CharType::Max; ++charCode)
 		{
 			Value& animationListRoot = root[CharType::Name[charCode]];
-			for (int i = 0; i < animationListRoot.size(); ++i)
+			for (size_t i = 0; i < animationListRoot.size(); ++i)
 			{
-				Value& animationRoot = animationListRoot[i];
+				Value& animationRoot = animationListRoot[(ArrayIndex)i];
 				AnimationInfo* pInfo = dbg_new AnimationInfo(animationRoot["frames"].size());
 				JsonUtilEx::ParseAnimationInfo(animationRoot, *pInfo);
 				charAnimationList_[charCode].PushBack(pInfo);

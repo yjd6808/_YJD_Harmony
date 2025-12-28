@@ -40,7 +40,7 @@ public:
 
 	int Send(char* _pData, int _len);
 	int Send(IPacket* _pPacket, bool _releasePacket = true);
-	int SendPending(JCORE_REF_OUT Int32U& _errorCode);
+	int SendPending(OUT Int32U& _errorCode);
 	void PushPendingData(char* _pData, int _len);
 	bool HasPendingData() const { return pendingData_.Size() > 0; }
 	bool PendingDataSize() const { return pendingData_.Size(); }

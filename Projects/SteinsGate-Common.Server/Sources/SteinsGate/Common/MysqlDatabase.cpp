@@ -56,8 +56,7 @@ bool MysqlDatabase::Initialize(ServerProcessType_t _serverProcessType)
 			info_->accountId_,
 			info_->accountPass_,
 			info_->schemaName_,
-			maxConnection
-		);
+			maxConnection);
 	}
 
 	// 커넥션 풀 초기화

@@ -51,7 +51,7 @@ bool AIInfoLoader::Load()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void AIInfoLoader::ReadAiInfo(Json::Value& _aiRoot, JCORE_OUT AIInfo* _pAiInfo)
+void AIInfoLoader::ReadAiInfo(Json::Value& _aiRoot, OUT AIInfo* _pAiInfo)
 {
 	_pAiInfo->code_ = _aiRoot["code"].asInt();
 	JsonUtilEx::ParseFloatNumberN(_aiRoot["wander_prob"], _pAiInfo->wanderProbs_, AIWanderDecision::Max - 1);

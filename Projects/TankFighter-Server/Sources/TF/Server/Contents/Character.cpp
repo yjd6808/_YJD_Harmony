@@ -143,7 +143,7 @@ int Character::GetFriendCount() const {
 	return m_vFriendList.Size();
 }
 
-void Character::GetFriendList(JCORE_OUT FriendCharacterInfo* friendArray, int capacity) {
+void Character::GetFriendList(OUT FriendCharacterInfo* friendArray, int capacity) {
 	JCORE_LOCK_GUARD(m_FriendLock);
 	for (int i = 0; i < m_vFriendList.Size() && i < capacity; ++i) {
 		friendArray[i] = m_vFriendList[i];
@@ -269,7 +269,7 @@ void Character::SetMove(const TankMove& move) {
 	m_Move = move;
 }
 
-void Character::GetInfo(JCORE_REF_OUT CharacterInfo& info) {
+void Character::GetInfo(OUT CharacterInfo& info) {
 	info.AccessId = m_iAccessId;
 	info.PrimaryKey = m_iPrimaryKey;
 	info.Name = m_szName;
@@ -281,19 +281,19 @@ void Character::GetInfo(JCORE_REF_OUT CharacterInfo& info) {
 	info.LoggedIn = true;
 }
 
-void Character::GetRoomInfo(JCORE_REF_OUT RoomCharacterInfo& info) {
+void Character::GetRoomInfo(OUT RoomCharacterInfo& info) {
 	GetInfo(info);
 	info.IsReady = m_bReady;
 	info.IsDeath = m_bDeath;
 }
 
-void Character::GetFriendInfo(JCORE_REF_OUT FriendCharacterInfo& info) {
+void Character::GetFriendInfo(OUT FriendCharacterInfo& info) {
 	info.PrimaryKey = m_iPrimaryKey;
 	info.Name = m_szName;
 	info.LoggedIn = true;
 }
 
-void Character::GetBattleStatisticsNet(JCORE_REF_OUT BattleStatisticsNet& info) {
+void Character::GetBattleStatisticsNet(OUT BattleStatisticsNet& info) {
 	info.CharacterPrimaryKey = m_iPrimaryKey;
 	info.Kill = m_BattleStatistics.Kill;
 	info.Death = m_BattleStatistics.Death;
@@ -301,7 +301,7 @@ void Character::GetBattleStatisticsNet(JCORE_REF_OUT BattleStatisticsNet& info) 
 	info.LastKillTime = m_BattleStatistics.LastKillTime;
 }
 
-void Character::GetMoveNet(JCORE_REF_OUT TankMoveNet& move) {
+void Character::GetMoveNet(OUT TankMoveNet& move) {
 	move.CharacterPrimaryKey = m_iPrimaryKey;
 	move.X = m_Move.X;
 	move.Y = m_Move.Y;

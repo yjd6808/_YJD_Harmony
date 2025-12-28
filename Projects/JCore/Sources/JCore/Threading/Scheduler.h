@@ -99,9 +99,9 @@ protected:
 	bool HaveEarlierTask(const DateTime& _waitUntil);
 	void SchedulingRoutine();
 	void ExecuteTasks(TaskList& _scheduledTasks, const Int64U* _pExecutableTaskLimitTime);
-	int PopTasks(JCORE_OUT Vector<SchedulerTask*>& _executableTasks, const Int64U* _pExecutableTaskLimitTime);
+	int PopTasks(OUT Vector<SchedulerTask*>& _executableTasks, const Int64U* _pExecutableTaskLimitTime);
 	int WaitingTaskListCountRaw();
-	bool HaveExecutableTaskRaw(JCORE_IN_OUT Int64U* _pExecutableTaskLimitTime = nullptr);
+	bool HaveExecutableTaskRaw(IN_OUT Int64U* _pExecutableTaskLimitTime = nullptr);
 	void ClearWaitingTaskListRaw();
 
 	static ThreadPool::JoinStrategy ConverToThreadPoolStrategy(JoinStrategy strategy);

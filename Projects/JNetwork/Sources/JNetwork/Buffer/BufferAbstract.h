@@ -49,7 +49,7 @@ public:
 	virtual ~BufferAbstract() = default;
 
 	template <typename T>
-	bool Read(JCORE_OUT T& _data)
+	bool Read(OUT T& _data)
 	{
 		static_assert(JCore::IsNaturalType_v<T>, "... T must be natural type");
 

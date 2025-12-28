@@ -48,7 +48,7 @@ void AuthNetMaster::OnUpdate(const TimeSpan& _elapsed)
 {
 #if DebugMode
 	static TimeCounter s;
-	_s.Elapsed += _elapsed;
+	s.Elapsed += _elapsed;
 
 	if (s.ElapsedSeconds(5))
 	{

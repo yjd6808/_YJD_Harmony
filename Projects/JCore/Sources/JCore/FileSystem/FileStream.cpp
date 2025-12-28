@@ -141,7 +141,7 @@ FileStream::~FileStream()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int FileStream::Read(JCORE_OUT Byte* _pBytes, int _offset, int _len)
+int FileStream::Read(OUT Byte* _pBytes, int _offset, int _len)
 {
 	DebugAssertMsg(CanRead(), "읽기가 불가능한 스트림입니다.");
 	DebugAssertMsg(m_hHandle, "스트림이 닫혀 있습니다.");

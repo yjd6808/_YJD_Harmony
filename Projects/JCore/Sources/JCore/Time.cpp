@@ -1178,7 +1178,7 @@ const char* DateTime::LastErrorMessage() {
 // fmtList = { YYYY, MM, dd }
 // delimiters = { -, -, === }
 // 이런식으로 파싱해주는 함수
-Vector<DateFormat_t> DateTime::ParseFormat(const char* fmt, int fmtLen, JCORE_IN_OPT Vector<String>* delimiters) {
+Vector<DateFormat_t> DateTime::ParseFormat(const char* fmt, int fmtLen, IN_OPT Vector<String>* delimiters) {
 
 	static auto FnAddDelimiter = [](String& delimiter, Vector<String>* delimiterList)->void {
 		if (delimiterList == nullptr) return;

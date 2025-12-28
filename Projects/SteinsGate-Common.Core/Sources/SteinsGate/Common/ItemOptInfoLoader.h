@@ -24,7 +24,7 @@ public:
 
 	bool Load() override;
 
-	static void ReadItemOptInfo(Json::Value& _optRoot, JCORE_OUT ItemOptInfo* _pOptInfo);
+	static void ReadItemOptInfo(Json::Value& _optRoot, OUT ItemOptInfo* _pOptInfo);
 	ItemOptInfo* GetData(const SGString& _name);
 
 private:

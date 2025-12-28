@@ -63,10 +63,10 @@ public:
 	Character* GetCharacterByCharacterPrimaryKey(int characterPrimaryKey) const;
 	RoomState GetState() const { return m_eState; }
 	JCore::TimeSpan GetBattleFieldTime() { return m_ElapsedBattleTime.Elapsed; }
-	void GetRoomInfo(JCORE_REF_OUT RoomInfo& info);
-	void GetRoomMemberInfoList(JCORE_OUT RoomCharacterInfo* info);
+	void GetRoomInfo(OUT RoomInfo& info);
+	void GetRoomMemberInfoList(OUT RoomCharacterInfo* info);
 	JCore::Vector<TankMoveNet> GetRoomMemberLiveMoveList();			// 살아있는 탱크 위치정보
-	void GetRoomMemberInfoListRaw(JCORE_OUT RoomCharacterInfo* info);
+	void GetRoomMemberInfoListRaw(OUT RoomCharacterInfo* info);
 	Player* GetHostPlayer() const { return m_pLeader; }
 
 	bool IsEmpty();

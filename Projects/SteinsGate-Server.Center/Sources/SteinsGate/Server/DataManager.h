@@ -18,5 +18,5 @@ class DataManager
 	friend class TSingleton;
 	DataManager();
 	~DataManager() override = default;
-	void initializeLoader() override;
+	void InitializeLoader() override;
 };

@@ -65,7 +65,7 @@ void ListenerCenterServer::OnReceived(Session* _pSession, RecvedCommandPacket* _
 		{
 			if (!ListenerHelperCommon::IsInterServerCommand(_pCmd))
 			{
-				_LogWarn_("인터서버 커맨드가 아닌 커맨드를 수신했습니다. (%d)", _pCmd->Cmd);
+				_LogWarn_("인터서버 커맨드가 아닌 커맨드를 수신했습니다. (%d)", _pCmd->GetId());
 				return;
 			}
 
@@ -74,7 +74,7 @@ void ListenerCenterServer::OnReceived(Session* _pSession, RecvedCommandPacket* _
 				// 릴레이 커맨드인 경우
 				RelayCommandBase* pInterServerCmd;
 
-				if (_pCmd->Type == InterServerCmdType::RelayStatic)
+				if (_pCmd->GetType() == InterServerCmdType::RelayStatic)
 				{
 					pInterServerCmd = static_cast<RelayStaticCommand*>(_pCmd);
 				}
@@ -102,7 +102,7 @@ void ListenerCenterServer::OnReceived(Session* _pSession, RecvedCommandPacket* _
 			}
 			else
 			{
-				DebugAssertMsg(false, "유효하지 않은 타입의 커맨드를 수신했습니다. (%d)", _pCmd->Cmd);
+				DebugAssertMsg(false, "유효하지 않은 타입의 커맨드를 수신했습니다. (%d)", _pCmd->GetId());
 			}
 		});
 

@@ -215,7 +215,7 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& _destination)
 		nullptr;
 #endif
 
-	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedConnect(this, iocp_.GetPtr(), pDummyPacket);
+	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedConnect(this, pIocp_.GetPtr(), pDummyPacket);
 	if (socket_.ConnectEx(_destination, pOverlapped,
 #if TEST_DUMMY_PACKET_TRANSFER
 		pDummyPacket->GetWSABuf().buf,

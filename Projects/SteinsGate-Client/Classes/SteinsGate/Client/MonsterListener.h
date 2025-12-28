@@ -43,5 +43,5 @@ public:
 	}
 
 protected:
-	JCORE_NOT_NULL Monster* m_pMonster;
+	NOT_NULL Monster* m_pMonster;
 };

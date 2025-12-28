@@ -151,12 +151,12 @@ class TreeSet : public SetCollection<TKey, TAllocator>
         table_.ForEachDelete();
     }
 
-    bool TryGetFirst(JCORE_OUT TKey& _key) const
+    bool TryGetFirst(OUT TKey& _key) const
     {
         return table_.TryGetFirst(_key);
     }
 
-    bool TryGetLast(JCORE_OUT TKey& _key) const
+    bool TryGetLast(OUT TKey& _key) const
     {
         return table_.TryGetLast(_key);
     }

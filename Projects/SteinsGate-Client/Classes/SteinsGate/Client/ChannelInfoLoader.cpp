@@ -35,9 +35,9 @@ bool ChannelInfoLoader::Load()
 	{
 		Value& channelInfoRootList = root["channel"];
 
-		for (int i = 0; i < channelInfoRootList.size(); ++i)
+		for (size_t i = 0; i < channelInfoRootList.size(); ++i)
 		{
-			Value& channelInfoRoot = channelInfoRootList[i];
+			Value& channelInfoRoot = channelInfoRootList[(ArrayIndex)i];
 			ChannelInfo* pChannelInfo = dbg_new ChannelInfo;
 			ReadChannelBaseInfo(channelInfoRoot, pChannelInfo);
 			ReadChannelInfo(channelInfoRoot, pChannelInfo);
@@ -54,7 +54,7 @@ bool ChannelInfoLoader::Load()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ChannelInfoLoader::ReadChannelInfo(Json::Value& _channelRoot, JCORE_OUT ChannelInfo* _pChannelInfo)
+void ChannelInfoLoader::ReadChannelInfo(Json::Value& _channelRoot, OUT ChannelInfo* _pChannelInfo)
 {
 	JsonUtil::ParseIntNumber2(
 		_channelRoot["monster_sprite"],

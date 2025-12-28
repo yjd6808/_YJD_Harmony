@@ -300,7 +300,7 @@ bool Room::RemovePlayer(Player* player) {
 	return RemovePlayerRaw(player);
 }
 
-void Room::GetRoomInfo(JCORE_REF_OUT RoomInfo& info) {
+void Room::GetRoomInfo(OUT RoomInfo& info) {
 	info.AccessId = m_iAccessId;
 	info.MaxPlayerCount = Const::Room::MaxPlayerCount;
 	info.RoomState = m_eState;
@@ -312,7 +312,7 @@ void Room::GetRoomInfo(JCORE_REF_OUT RoomInfo& info) {
 	}
 }
 
-void Room::GetRoomMemberInfoList(JCORE_OUT RoomCharacterInfo* info) {
+void Room::GetRoomMemberInfoList(OUT RoomCharacterInfo* info) {
 	JCORE_LOCK_GUARD(m_Sync);
 	GetRoomMemberInfoListRaw(info);
 }
@@ -343,7 +343,7 @@ Vector<TankMoveNet> Room::GetRoomMemberLiveMoveList() {
 	return vMoves;
 }
 
-void Room::GetRoomMemberInfoListRaw(JCORE_OUT RoomCharacterInfo* info) {
+void Room::GetRoomMemberInfoListRaw(OUT RoomCharacterInfo* info) {
 	for (int i = 0; i < m_vPlayerList.Size(); ++i) {
 		Character* pCharacter = m_vPlayerList[i]->GetCharacter();
 

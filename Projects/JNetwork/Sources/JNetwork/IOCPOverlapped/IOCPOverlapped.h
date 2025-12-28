@@ -40,8 +40,8 @@ public:
 	Type GetType() const { return type_; }
 
 	void ReleaseAction() override { delete this; } // TODO: 풀링
-	bool IsFailed(BOOL _result, JCORE_OUT Int32U& _errorCode);
-	bool IsFailed(SOCKET _socket, BOOL _result, Int32UL _bytesTransferred, JCORE_OUT Int32U& _errorCode);
+	bool IsFailed(BOOL _result, OUT Int32U& _errorCode);
+	bool IsFailed(SOCKET _socket, BOOL _result, Int32UL _bytesTransferred, OUT Int32U& _errorCode);
 
 protected:
 	Type type_;

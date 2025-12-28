@@ -19,5 +19,5 @@ public:
 	bool Load() override;
 	ConfigFileType_t GetConfigFileType() override { return ConfigFileType::AI; }
 
-	static void ReadAiInfo(Json::Value& _aiRoot, JCORE_OUT AIInfo* _pAiInfo);
+	static void ReadAiInfo(Json::Value& _aiRoot, OUT AIInfo* _pAiInfo);
 };

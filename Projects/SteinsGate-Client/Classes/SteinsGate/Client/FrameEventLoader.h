@@ -33,8 +33,8 @@ public:
 		return ConfigFileType::Max;
 	}
 
-	static void ReadFrameEventSpawn(Json::Value& _frameEventRoot, JCORE_OUT FrameEventSpawn* _pFrameEvent);
-	static void ReadFrameEventAttackBoxInstant(Json::Value& _frameEventRoot, JCORE_OUT FrameEventAttackBoxInstant* _pFrameEvent);
+	static void ReadFrameEventSpawn(Json::Value& _frameEventRoot, OUT FrameEventSpawn* _pFrameEvent);
+	static void ReadFrameEventAttackBoxInstant(Json::Value& _frameEventRoot, OUT FrameEventAttackBoxInstant* _pFrameEvent);
 
 private:
 	ActorType_t actorType_; // 어떤 액터의 데이터인지 구분하는 용도

@@ -60,10 +60,12 @@ void DatabaseInfoLoader::ReadDatabaseInfo(Value& _databaseRoot, DatabaseInfo* _p
 	_pDatabaseInfo->name_ = JsonUtil::GetString(_databaseRoot["name"]);
 	_pDatabaseInfo->hostName_ = JsonUtil::GetString(_databaseRoot["hostname"]);
 	_pDatabaseInfo->connPort_ = (Int16U)_databaseRoot["connection_port"].asInt();
-	JsonUtil::ParseIntNumberN(_databaseRoot["use"], _pDatabaseInfo->use_, ServerProcessType::Count);
-	JsonUtil::ParseIntNumberN(_databaseRoot["connection_pool_size"], _pDatabaseInfo->connPoolSize_,ServerProcessType::Count);
-	JsonUtil::ParseIntNumberN(_databaseRoot["max_connection"], _pDatabaseInfo->maxConnection_, ServerProcessType::Count);
-	JsonUtil::ParseIntNumberN(_databaseRoot["iocp_thread_count"], _pDatabaseInfo->iocpThreadCount_,ServerProcessType::Count);
+
+	// 처음껀 안쓰므로 인덱스 1부터 채운다.
+	JsonUtil::ParseIntNumberN(_databaseRoot["use"], _pDatabaseInfo->use_ + 1, ServerProcessType::Count);
+	JsonUtil::ParseIntNumberN(_databaseRoot["connection_pool_size"], _pDatabaseInfo->connPoolSize_ + 1,ServerProcessType::Count);
+	JsonUtil::ParseIntNumberN(_databaseRoot["max_connection"], _pDatabaseInfo->maxConnection_ + 1, ServerProcessType::Count);
+	JsonUtil::ParseIntNumberN(_databaseRoot["iocp_thread_count"], _pDatabaseInfo->iocpThreadCount_ + 1, ServerProcessType::Count);
 	_pDatabaseInfo->accountId_ = JsonUtil::GetString(_databaseRoot["account_id"]);
 	_pDatabaseInfo->accountPass_ = JsonUtil::GetString(_databaseRoot["account_pass"]);
 	_pDatabaseInfo->schemaName_ = JsonUtil::GetString(_databaseRoot["schema_name"]);

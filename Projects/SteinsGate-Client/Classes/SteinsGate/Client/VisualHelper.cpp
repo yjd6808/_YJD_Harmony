@@ -14,9 +14,9 @@ USING_NS_JC;
 USING_NS_CC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int VisualHelper::GetVisualData(JCORE_OUT VisualData& _visualData, int _code)
+int VisualHelper::GetVisualData(OUT VisualData& _visualData, int _code)
 {
-	ItemVisualInfo* pVisualInfo = Core::DataManager->getVisualInfo(_code);
+	ItemVisualInfo* pVisualInfo = Core::DataManager->GetVisualInfo(_code);
 	CharType_t charType = pVisualInfo->GetCharType();
 	ItemType_t itemType = pVisualInfo->GetItemType();
 	VisualType_t visualType = pVisualInfo->GetVisualType();

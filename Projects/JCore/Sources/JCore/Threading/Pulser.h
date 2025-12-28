@@ -74,7 +74,7 @@ public:
 		eExactCycle
 	};
 
-	Pulser(Int32U _intervalMiliseconds, Mode _mode = eSliceCycle, JCORE_IN PulserStatistics* _pStatistics = nullptr);
+	Pulser(Int32U _intervalMiliseconds, Mode _mode = eSliceCycle,  PulserStatistics* _pStatistics = nullptr);
 	~Pulser();
 
 	void Start();

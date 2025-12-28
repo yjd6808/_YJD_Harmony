@@ -137,6 +137,14 @@
       <HeapReserveSize>102</HeapReserveSize>
       <HeapCommitSize>102</HeapCommitSize>
     </Link>
+    <PreBuildEvent>
+      <Command>rem 여기서 오류나면 benchmark.lib이 없는 것임
+
+if not exist "$(SolutionDir)ThirdParty\Build\$(Platform)\lib\$(Configuration)\benchmark.lib" (
+    echo "벤치마크 라이브러리 파일(benchmark.lib)을 찾을 수 없습니다. Scripts/BuildBenchmark를 우선 실행해주세요"
+    exit /b 1
+)</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -158,6 +166,14 @@
       <HeapReserveSize>102</HeapReserveSize>
       <HeapCommitSize>102</HeapCommitSize>
     </Link>
+    <PreBuildEvent>
+      <Command>rem 여기서 오류나면 benchmark.lib이 없는 것임
+
+if not exist "$(SolutionDir)ThirdParty\Build\$(Platform)\lib\$(Configuration)\benchmark.lib" (
+    echo "벤치마크 라이브러리 파일(benchmark.lib)을 찾을 수 없습니다. Scripts/BuildBenchmark를 우선 실행해주세요"
+    exit /b 1
+)</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -187,6 +203,14 @@
       <HeapReserveSize>102</HeapReserveSize>
       <HeapCommitSize>102</HeapCommitSize>
     </Link>
+    <PreBuildEvent>
+      <Command>rem 여기서 오류나면 benchmark.lib이 없는 것임
+
+if not exist "$(SolutionDir)ThirdParty\Build\$(Platform)\lib\$(Configuration)\benchmark.lib" (
+    echo "벤치마크 라이브러리 파일(benchmark.lib)을 찾을 수 없습니다. Scripts/BuildBenchmark를 우선 실행해주세요"
+    exit /b 1
+)</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -216,6 +240,14 @@
       <HeapReserveSize>102</HeapReserveSize>
       <HeapCommitSize>102</HeapCommitSize>
     </Link>
+    <PreBuildEvent>
+      <Command>rem 여기서 오류나면 benchmark.lib이 없는 것임
+
+if not exist "$(SolutionDir)ThirdParty\Build\$(Platform)\lib\$(Configuration)\benchmark.lib" (
+    echo "벤치마크 라이브러리 파일(benchmark.lib)을 찾을 수 없습니다. Scripts/BuildBenchmark를 우선 실행해주세요"
+    exit /b 1
+)</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

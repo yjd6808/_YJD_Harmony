@@ -30,9 +30,9 @@ bool MapObjectInfoLoader::Load()
 	try
 	{
 		Json::Value mapObjectListRoot = root["map_object"];
-		for (int i = 0; i < mapObjectListRoot.size(); ++i)
+		for (size_t i = 0; i < mapObjectListRoot.size(); ++i)
 		{
-			Value& mapObjectRoot = mapObjectListRoot[i];
+			Value& mapObjectRoot = mapObjectListRoot[(ArrayIndex)i];
 
 			const int eType = mapObjectRoot["type"].asInt();
 			MapObjectInfo* pInfo;

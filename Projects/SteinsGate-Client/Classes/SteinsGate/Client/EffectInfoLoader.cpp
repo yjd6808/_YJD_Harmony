@@ -34,9 +34,9 @@ bool EffectInfoLoader::Load()
 	{
 		Value& effectListRoot = root["effect"];
 
-		for (int effectIndex = 0; effectIndex < effectListRoot.size(); ++effectIndex)
+		for (size_t effectIndex = 0; effectIndex < effectListRoot.size(); ++effectIndex)
 		{
-			Value& effectRoot = effectListRoot[effectIndex];
+			Value& effectRoot = effectListRoot[(ArrayIndex)effectIndex];
 			EffectInfo* pEffectInfo = dbg_new EffectInfo();
 			ReadEffectInfo(effectRoot, pEffectInfo);
 			AddData(pEffectInfo);

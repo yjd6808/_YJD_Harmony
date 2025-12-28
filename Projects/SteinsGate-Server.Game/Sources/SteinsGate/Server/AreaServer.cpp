@@ -26,7 +26,7 @@ AreaServer::~AreaServer() noexcept
 //////////////////////////////////////////////////////////////////////////////////////////
 SGTcpSession* AreaServer::CreateSession()
 {
-	return dbg_new AreaSession(this, m_spIocp, m_spBufferAllocator, 3072, 3072);
+	return dbg_new AreaSession(this, pIocp_, pBufferAllocator_, 3072, 3072);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 void AreaServer::OnUpdate(const TimeSpan& _elapsed)

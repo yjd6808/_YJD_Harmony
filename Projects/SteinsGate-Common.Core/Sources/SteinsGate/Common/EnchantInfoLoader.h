@@ -25,5 +25,5 @@ public:
 	bool Load() override;
 
 	/* static */
-	void ReadEnchantInfo(Json::Value& _enchantRoot, JCORE_OUT EnchantInfo* _pEnchantInfo);
+	void ReadEnchantInfo(Json::Value& _enchantRoot, OUT EnchantInfo* _pEnchantInfo);
 };

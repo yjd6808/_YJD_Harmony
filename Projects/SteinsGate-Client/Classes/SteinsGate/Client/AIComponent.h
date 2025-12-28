@@ -62,11 +62,11 @@ public:
 	SG_COMPONENT_TYPE_GETTER(Type::eAI)
 
 private:
-	JCORE_NULLABLE AIInfo* pAIInfo_;
-	JCORE_NULLABLE Actor* pTarget_;
+	NULLABLE AIInfo* pAIInfo_;
+	NULLABLE Actor* pTarget_;
 
-	JCORE_NULLABLE AIActivity* activityMap_[AIActivityType::Max];
-	JCORE_NULLABLE AIActivity* runningActivity_;
+	NULLABLE AIActivity* activityMap_[AIActivityType::Max];
+	NULLABLE AIActivity* runningActivity_;
 
 	AIState_t state_;
 	AIState_t activityState_;

@@ -189,7 +189,7 @@ int Session::Send(IPacket* _pPacket, bool _releasePacket)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int Session::SendPending(JCORE_REF_OUT Int32U& _errorCode)
+int Session::SendPending(OUT Int32U& _errorCode)
 {
 	char* pPendingData = pendingData_.Source();
 	int pendingDataCount = pendingData_.Size(); // 보내야하는 바이트 수
@@ -243,7 +243,7 @@ bool Session::SendAsync(IPacket* _pPacket)
 	_pPacket->AddRef();
 	WSABUF buf = _pPacket->GetWSABuf();
 	Int32UL sendBytes = 0;
-	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedSend(this, iocp_.GetPtr(), _pPacket);
+	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedSend(this, pIocp_.GetPtr(), _pPacket);
 
 	// 0으로 즉시 성공하더라도 IOCP 워커에서 오버랩이 처리되므로 여기서 삭제를 해줄필요가 없다.
 	const int sendResult = socket_.SendEx(&buf, &sendBytes, pOverlapped);
@@ -323,7 +323,7 @@ bool Session::SendToAsync(IPacket* _pPacket, const IPv4EndPoint& _destination)
 	_pPacket->AddRef();
 	WSABUF buf = _pPacket->GetWSABuf();
 	Int32UL sendBytes = 0;
-	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedSendTo(this, iocp_.GetPtr(), _pPacket);
+	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedSendTo(this, pIocp_.GetPtr(), _pPacket);
 
 	const int result = socket_.SendToEx(&buf, &sendBytes, pOverlapped, _destination);
 	if (result == SOCKET_ERROR)
@@ -363,7 +363,7 @@ bool Session::RecvAsync()
 {
 	WSABUF buf = recvBuffer_->GetRemainBuffer();
 	Int32UL receivedBytes = 0;
-	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedRecv(this, iocp_.GetPtr());
+	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedRecv(this, pIocp_.GetPtr());
 
 	const int result = socket_.ReceiveEx(&buf, &receivedBytes, pOverlapped);
 
@@ -391,7 +391,7 @@ bool Session::RecvFromAsync()
 
 	WSABUF buf = recvBuffer_->GetRemainBuffer();
 	Int32UL receivedBytes = 0;
-	IOCPOverlappedRecvFrom* pRecvFromOverlapped = dbg_new IOCPOverlappedRecvFrom(this, iocp_.GetPtr());
+	IOCPOverlappedRecvFrom* pRecvFromOverlapped = dbg_new IOCPOverlappedRecvFrom(this, pIocp_.GetPtr());
 
 	const int result = socket_.ReceiveFromEx(
 		&buf,

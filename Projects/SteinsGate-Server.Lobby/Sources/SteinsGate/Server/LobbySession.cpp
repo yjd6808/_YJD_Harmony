@@ -22,8 +22,9 @@ LobbySession::LobbySession(TcpServer* _pServer,
 	const JCore::MemoryPoolAbstractPtr& _pBufferAllocator,
 	int _recvBufferSize,
 	int _sendBufferSize)
-	: CommonSession(_pServer, _pIocp, _pBufferAllocator, _recvBufferSize, _sendBufferSize)
-	, authenticationComponent_(nullptr)
+	//////////////////////////////////////////////////////////////////////////////////////////
+: CommonSession(_pServer, _pIocp, _pBufferAllocator, _recvBufferSize, _sendBufferSize)
+, authenticationComponent_(nullptr)
 {
 }
 

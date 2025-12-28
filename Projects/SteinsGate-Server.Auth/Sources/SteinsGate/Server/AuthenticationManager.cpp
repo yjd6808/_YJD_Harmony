@@ -17,7 +17,7 @@
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-AuthenticationData* AuthenticationManager::Issue(const JCORE_REF_IN AccountData& _accountData)
+AuthenticationData* AuthenticationManager::Issue(const  AccountData& _accountData)
 {
 	JCORE_LOCK_GUARD(lock_);
 	return IssueRaw(_accountData);
@@ -68,9 +68,9 @@ void AuthenticationManager::OnScheduled(SchedulerTask* _pTask)
 		{
 			DateTimeDataMap::TKeyValuePair& current = it->Current();
 
-			if (current.Key <= now)
+			if (current.key_ <= now)
 			{
-				expiredList.PushBack(current.Value);
+				expiredList.PushBack(current.value_);
 			}
 			else
 			{
@@ -99,7 +99,7 @@ void AuthenticationManager::OnScheduled(SchedulerTask* _pTask)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-AuthenticationData* AuthenticationManager::IssueRaw(const JCORE_REF_IN AccountData& _accountData)
+AuthenticationData* AuthenticationManager::IssueRaw(const  AccountData& _accountData)
 {
 	if (accountIdDataMap_.Exist(_accountData.id_.Source))
 	{
@@ -335,7 +335,7 @@ bool AuthenticationManager::RemoveRaw(AuthenticationSerial_t _serial, const char
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool AuthenticationManager::GenerateSerial(JCORE_OUT AuthenticationSerial_t& _serial)
+bool AuthenticationManager::GenerateSerial(OUT AuthenticationSerial_t& _serial)
 {
 	AuthenticationSerial_t generatedSerial;
 	int retryCount = 0;
@@ -363,7 +363,7 @@ bool AuthenticationManager::GenerateSerial(JCORE_OUT AuthenticationSerial_t& _se
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool AuthenticationManager::GenerateTimeId(JCORE_OUT DateTime& _timeId, AuthenticationState_t _state)
+bool AuthenticationManager::GenerateTimeId(OUT DateTime& _timeId, AuthenticationState_t _state)
 {
 	DateTime generatedTime = DateTime::Now();
 	int retryCount = 0;

@@ -37,9 +37,9 @@ bool ClientInfoLoader::Load()
 	{
 		Json::Value clientInfoListRoot = root["client"];
 
-		for (int i = 0; i < clientInfoListRoot.size(); ++i)
+		for (size_t i = 0; i < clientInfoListRoot.size(); ++i)
 		{
-			Value& clientRoot = clientInfoListRoot[i];
+			Value& clientRoot = clientInfoListRoot[(ArrayIndex)i];
 			ClientInfo* pClientInfo = dbg_new ClientInfo;
 			ReadClientInfo(clientRoot, pClientInfo);
 			AddData(pClientInfo);
@@ -55,7 +55,7 @@ bool ClientInfoLoader::Load()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ClientInfoLoader::ReadClientInfo(Json::Value& _clientRoot, JCORE_OUT ClientInfo* _pClientInfo)
+void ClientInfoLoader::ReadClientInfo(Json::Value& _clientRoot, OUT ClientInfo* _pClientInfo)
 {
 	_pClientInfo->code_ = _clientRoot["code"].asInt();
 	_pClientInfo->frameSize_.width = _clientRoot["frame_width"].asFloat();

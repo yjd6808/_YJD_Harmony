@@ -31,7 +31,7 @@ protected:
 	 * \param _table
 	 * \return 이벤트 터널링 여부
 	 */
-	bool ExecuteCommand(int _argc, SGString* _pArgv, JCORE_REF_IN TCLI_Table& _table);
+	bool ExecuteCommand(int _argc, SGString* _pArgv,  TCLI_Table& _table);
 
 	JCore::LoggerAbstract::Level ConvertLogLevel(const SGString& _logLevelString);
 	int ToNumber(const SGString& _numString, int _argIndex);

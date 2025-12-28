@@ -493,7 +493,7 @@ void UI_ChannelSelect::OnMouseMove(SGEventMouse* _pMouseEvent)
 
 void UI_ChannelSelect::OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _state)
 {
-	JCORE_UNUSED(_state);
+	UNUSED(_state);
 
 	switch (_pToggleBtn->GetCode())
 	{
@@ -596,6 +596,6 @@ void UI_ChannelSelect::SelectChannelTab(ChannelTab _tab)
 
 void UI_ChannelSelect::EnterChannel(GameServerType_t _serverType, int _channelIndex)
 {
-	JCORE_UNUSED(_serverType);
-	JCORE_UNUSED(_channelIndex);
+	UNUSED(_serverType);
+	UNUSED(_channelIndex);
 }

@@ -60,7 +60,7 @@ bool ClientTextInfoLoader::Load()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool ClientTextInfoLoader::TryGetTextRaw(const char* _id, JCORE_OUT char** _pText)
+bool ClientTextInfoLoader::TryGetTextRaw(const char* _id, OUT char** _pText)
 {
 	const SGString* pFind = textMap_.Find(_id);
 	if (pFind == nullptr)
@@ -74,7 +74,7 @@ bool ClientTextInfoLoader::TryGetTextRaw(const char* _id, JCORE_OUT char** _pTex
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool ClientTextInfoLoader::TryGetText(const char* _id, JCORE_OUT SGString** _pText)
+bool ClientTextInfoLoader::TryGetText(const char* _id, OUT SGString** _pText)
 {
 	SGString* pFind = textMap_.Find(_id);
 	if (pFind == nullptr)
@@ -88,7 +88,7 @@ bool ClientTextInfoLoader::TryGetText(const char* _id, JCORE_OUT SGString** _pTe
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool ClientTextInfoLoader::TryGetText(const SGString& _id, JCORE_OUT SGString** _pText)
+bool ClientTextInfoLoader::TryGetText(const SGString& _id, OUT SGString** _pText)
 {
 	SGString* pFind = textMap_.Find(_id);
 	if (pFind == nullptr)
@@ -102,8 +102,8 @@ bool ClientTextInfoLoader::TryGetText(const SGString& _id, JCORE_OUT SGString** 
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool ClientTextInfoLoader::ReadClientTextInfo(Json::Value& _clientTextRoot, JCORE_OUT SGString& _id,
-                                              JCORE_OUT SGString& _text)
+bool ClientTextInfoLoader::ReadClientTextInfo(Json::Value& _clientTextRoot, OUT SGString& _id,
+                                              OUT SGString& _text)
 {
 	const int textArraySize = static_cast<int>(_clientTextRoot.size());
 	if (textArraySize < 2)

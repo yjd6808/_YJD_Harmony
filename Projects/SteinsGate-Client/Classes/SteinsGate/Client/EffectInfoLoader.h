@@ -22,5 +22,5 @@ public:
 
 	bool Load() override;
 
-	static void ReadEffectInfo(Json::Value& _effectRoot, JCORE_OUT EffectInfo* _pEffectInfo);
+	static void ReadEffectInfo(Json::Value& _effectRoot, OUT EffectInfo* _pEffectInfo);
 };

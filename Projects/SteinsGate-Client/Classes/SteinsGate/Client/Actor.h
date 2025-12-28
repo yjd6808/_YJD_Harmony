@@ -125,8 +125,8 @@ public:
 	void					SetForwardDirection();
 	void					SetBackwardDirection();
 
-	bool					IsCollide(Actor* _pOther, JCORE_OUT SpriteDirection_t& _otherHitDirection, JCORE_OUT SGRect& _hitRect);
-	bool					IsCollide(const ActorRect& _otherRect, JCORE_OUT SpriteDirection_t& _otherHitDirection, JCORE_OUT SGRect& _hitRect);
+	bool					IsCollide(Actor* _pOther, OUT SpriteDirection_t& _otherHitDirection, OUT SGRect& _hitRect);
+	bool					IsCollide(const ActorRect& _otherRect, OUT SpriteDirection_t& _otherHitDirection, OUT SGRect& _hitRect);
 	bool					IsCollide(const ActorRect& _otherRect);
 	bool					IsOnTheGround();
 
@@ -148,9 +148,9 @@ private:
 	AIActivity* GetRunningAiActivity();
 
 protected:
-	JCORE_NOT_NULL MapLayer* pMapLayer_;
-	JCORE_NOT_NULL ActorSprite* pActorSprite_;
-	JCORE_NULLABLE HitRecorder* pHitRecorder_;
+	NOT_NULL MapLayer* pMapLayer_;
+	NOT_NULL ActorSprite* pActorSprite_;
+	NULLABLE HitRecorder* pHitRecorder_;
 
 	ActorListenerCollection listeners_;
 	ComponentCollection components_;
@@ -160,7 +160,7 @@ protected:
 	int cleanUpFlag_; // 클린업 될 때 수행할 작업 플래그
 	bool isCleanUp_; // 액터가 될 예정 혹은 제거되었는지 여부
 
-	JCORE_NOT_NULL SGDrawNode* pThicknessBox_; // TODO: Debug 시각화를 위해 노드로 표현하였다. 추후에는 단순 렉트로 표현해도 됨
-	JCORE_NULLABLE Actor* pAttacher_; // 내가 누구에게 붙어있는가?
+	NOT_NULL SGDrawNode* pThicknessBox_; // TODO: Debug 시각화를 위해 노드로 표현하였다. 추후에는 단순 렉트로 표현해도 됨
+	NULLABLE Actor* pAttacher_; // 내가 누구에게 붙어있는가?
 	SGVector<Actor*> attches_; // 내게 붙어 있는 녀석들
 };

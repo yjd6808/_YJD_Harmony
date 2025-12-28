@@ -62,7 +62,7 @@ bool ServerInfoLoader::Load()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ServerInfoLoader::ReadCenterInfo(Json::Value& _serverRoot, JCORE_OUT ServerProcessInfoPackage* _pServerInfo)
+void ServerInfoLoader::ReadCenterInfo(Json::Value& _serverRoot, OUT ServerProcessInfoPackage* _pServerInfo)
 {
 	SGString bindInterServerUdp = JsonUtil::GetString(_serverRoot["bind_interserver_udp"]);
 	SGString bindCenterTcp = JsonUtil::GetString(_serverRoot["bind_center_tcp"]);
@@ -90,7 +90,7 @@ void ServerInfoLoader::ReadCenterInfo(Json::Value& _serverRoot, JCORE_OUT Server
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ServerInfoLoader::ReadAuthInfo(Json::Value& _serverRoot, JCORE_OUT ServerProcessInfoPackage* _pServerInfo)
+void ServerInfoLoader::ReadAuthInfo(Json::Value& _serverRoot, OUT ServerProcessInfoPackage* _pServerInfo)
 {
 	SGString bindAuthTcp = JsonUtil::GetString(_serverRoot["bind_auth_tcp"]);
 	SGString bindAuthUdp = JsonUtil::GetString(_serverRoot["bind_auth_udp"]);
@@ -119,7 +119,7 @@ void ServerInfoLoader::ReadAuthInfo(Json::Value& _serverRoot, JCORE_OUT ServerPr
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ServerInfoLoader::ReadLobbyInfo(Json::Value& _serverRoot, JCORE_OUT ServerProcessInfoPackage* _pServerInfo)
+void ServerInfoLoader::ReadLobbyInfo(Json::Value& _serverRoot, OUT ServerProcessInfoPackage* _pServerInfo)
 {
 	SGString bindLobbyTcp = JsonUtil::GetString(_serverRoot["bind_lobby_tcp"]);
 	SGString bindLobbyUdp = JsonUtil::GetString(_serverRoot["bind_lobby_udp"]);
@@ -147,7 +147,7 @@ void ServerInfoLoader::ReadLobbyInfo(Json::Value& _serverRoot, JCORE_OUT ServerP
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ServerInfoLoader::ReadGameInfo(Value& _serverRoot, JCORE_OUT ServerProcessInfoPackage* _pServerInfo)
+void ServerInfoLoader::ReadGameInfo(Value& _serverRoot, OUT ServerProcessInfoPackage* _pServerInfo)
 {
 	const int gameServerCount = (int)_serverRoot.size();
 

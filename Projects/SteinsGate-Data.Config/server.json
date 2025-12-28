@@ -36,9 +36,9 @@
                 "bind_lobby_udp": "127.0.0.1:10120",
                 "remote_lobby": "127.0.0.1:10120",
 
-                "bind_interserver_udp": "127.0.0.1:10121",
-                "bind_interserver_tcp": "127.0.0.1:10121",
-                "remote_interserver": "127.0.0.1:10121",
+                "bind_interserver_udp": "127.0.0.1:10123",
+                "bind_interserver_tcp": "127.0.0.1:10123",
+                "remote_interserver": "127.0.0.1:10123",
                 "max_session_count": 50
             },
         

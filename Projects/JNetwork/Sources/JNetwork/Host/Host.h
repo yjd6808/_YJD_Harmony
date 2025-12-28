@@ -17,7 +17,7 @@ class JCORE_NOVTABLE Host
 {
 public:
 	Host(const IOCPPtr& _pIocp)
-	: iocp_(_pIocp)
+	: pIocp_(_pIocp)
 	, socket_(TransportProtocol::None, INVALID_SOCKET)
 	, state_(eNone)
 	, iocpConnected_(false)
@@ -98,7 +98,7 @@ public:
 	}
 
 protected:
-	IOCPPtr iocp_;
+	IOCPPtr pIocp_;
 	Socketv4 socket_;
 	JCore::AtomicInt state_;
 	bool iocpConnected_;

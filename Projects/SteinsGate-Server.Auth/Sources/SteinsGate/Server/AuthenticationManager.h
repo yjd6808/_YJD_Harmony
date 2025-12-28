@@ -31,7 +31,7 @@ class AuthenticationManager : public JCore::SingletonPointer<AuthenticationManag
 	~AuthenticationManager() = default;
 
 public:
-	AuthenticationData* Issue(const JCORE_REF_IN AccountData& _accountData);								// 발급
+	AuthenticationData* Issue(const  AccountData& _accountData);								// 발급
 	bool Exist(AuthenticationSerial_t _serial, const char* _pAccountId);							// 발급되었는지 확인
 	AuthenticationData* Update(AuthenticationSerial_t _serial, const char* _pAccountId, AuthenticationState_t _state);	// 최신화시각 갱신 및 상태 업데이트
 	bool Remove(AuthenticationSerial_t _serial, const char* _pAccountId);
@@ -41,7 +41,7 @@ public:
 	void OnScheduled(JCore::SchedulerTask* _pTask); // 스케줄링 될때마다 수행할 작업
 
 private:
-	AuthenticationData* IssueRaw(const JCORE_REF_IN AccountData& _accountData);
+	AuthenticationData* IssueRaw(const  AccountData& _accountData);
 	AuthenticationData* FindRaw(const JCore::DateTime& _timeId);
 	AuthenticationData* FindRaw(AuthenticationSerial_t _serial);
 	AuthenticationData* FindRaw(AuthenticationSerial_t _serial, const char* _pAccountId);
@@ -50,8 +50,8 @@ private:
 	bool RemoveRaw(AuthenticationSerial_t _serial);
 	bool RemoveRaw(AuthenticationSerial_t _serial, const char* _pAccountId);
 
-	bool GenerateSerial(JCORE_OUT AuthenticationSerial_t& _serial);
-	bool GenerateTimeId(JCORE_OUT JCore::DateTime& _timeId, AuthenticationState_t _state);
+	bool GenerateSerial(OUT AuthenticationSerial_t& _serial);
+	bool GenerateTimeId(OUT JCore::DateTime& _timeId, AuthenticationState_t _state);
 
 private:
 	mutable JCore::NormalLock lock_;

@@ -21,5 +21,5 @@ public:
 	ConfigFileType_t GetConfigFileType() override { return ConfigFileType::Monster_Stat; }
 	bool Load() override;
 
-	static void ReadMobStatInfo(Json::Value& _monsterRoot, JCORE_OUT MonsterStatInfo* _pMonsterStatInfo);
+	static void ReadMobStatInfo(Json::Value& _monsterRoot, OUT MonsterStatInfo* _pMonsterStatInfo);
 };

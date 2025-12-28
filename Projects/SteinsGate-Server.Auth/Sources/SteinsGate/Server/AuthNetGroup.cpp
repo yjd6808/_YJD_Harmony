@@ -83,7 +83,7 @@ void AuthNetGroup::InitializeParser()
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void AuthNetGroup::InitializeServer()
 {
-	auto pAuthServer = MakeShared<AuthServer>(m_spIOCP, m_spBufferPool);
+	auto pAuthServer = MakeShared<AuthServer>(pIocp_, pBufferPool_);
 
 	AddHost(Const::Host::AuthTcpId, pAuthServer);
 

@@ -18,5 +18,5 @@ public:
 
 	bool Load() override;
 
-	static void ReadChannelInfo(Json::Value& _channelRoot, JCORE_OUT ChannelInfo* _pChannelInfo);
+	static void ReadChannelInfo(Json::Value& _channelRoot, OUT ChannelInfo* _pChannelInfo);
 };

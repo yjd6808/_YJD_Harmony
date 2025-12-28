@@ -134,7 +134,7 @@ Player* ChannelLobby::GetPlayerByName(const char* name) {
 	return *ppPlayer;
 }
 
-void ChannelLobby::GetPlayerListByCharacterPrimaryKeyList(const Vector<int>& characterPrimaryKeyList, JCORE_REF_OUT Vector<Player*>& playerList) {
+void ChannelLobby::GetPlayerListByCharacterPrimaryKeyList(const Vector<int>& characterPrimaryKeyList, OUT Vector<Player*>& playerList) {
 	JCORE_LOCK_GUARD(m_PlayerListLock);
 	for (int i = 0; i < characterPrimaryKeyList.Size(); ++i) {
 		Player** ppPlayer = m_hmPlayerMapByCharacterPrimaryKey.Find(characterPrimaryKeyList[i]);

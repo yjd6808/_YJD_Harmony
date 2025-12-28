@@ -35,7 +35,7 @@ public:
 		return m_eAccess;
 	}
 
-	int Read(JCORE_OUT Byte* _pBytes, int _offset, int _len) override;
+	int Read(OUT Byte* _pBytes, int _offset, int _len) override;
 	void Write(const Byte* _pBytes, int _offset, int _len) override;
 	void Seek(int _offset, Origin _origin = Origin::eBegin) override;
 	bool Flush() override;

@@ -12,7 +12,7 @@
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool JsonUtil::Load(const char* _pFileName, JCORE_OUT Json::Value& _root)
+bool JsonUtil::Load(const char* _pFileName, OUT Json::Value& _root)
 {
 	if (JCore::Path::Extension(_pFileName) != ".json")
 		return false;
@@ -32,7 +32,7 @@ bool JsonUtil::Load(const char* _pFileName, JCORE_OUT Json::Value& _root)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool JsonUtil::Load(const SGString& _fileName, JCORE_OUT Json::Value& _root)
+bool JsonUtil::Load(const SGString& _fileName, OUT Json::Value& _root)
 {
 	return Load(_fileName.Source(), _root);
 }
@@ -64,7 +64,7 @@ SGString JsonUtil::GetString(Json::Value& _value)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-const char* JsonUtil::GetStringRaw(Json::Value& _value, JCORE_OUT_OPT int* _pLength /* = nullptr */)
+const char* JsonUtil::GetStringRaw(Json::Value& _value, OUT_OPT int* _pLength /* = nullptr */)
 {
 	DebugAssertMsg(!_value.isNull(), "인자로 전달한 Json 오브젝트에 문자열 데이터가 없습니다.");
 	const char* pBegin;
@@ -94,7 +94,7 @@ SGString JsonUtil::GetStringOrNull(Json::Value& _value)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void JsonUtil::ParseThicknessInfo(Json::Value& _thicknessRoot, JCORE_OUT ThicknessBox& _box)
+void JsonUtil::ParseThicknessInfo(Json::Value& _thicknessRoot, OUT ThicknessBox& _box)
 {
 	int num[4];
 	TextParser::ParseIntNumbers(GetString(_thicknessRoot), num, 4);
@@ -116,7 +116,7 @@ void JsonUtil::ParseIntNumber2(Json::Value& _root, int& _num1, int& _num2)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void JsonUtil::ParseIntNumber3(Json::Value& _root, JCORE_OUT int& _num1, JCORE_OUT int& _num2, JCORE_OUT int& _num3)
+void JsonUtil::ParseIntNumber3(Json::Value& _root, OUT int& _num1, OUT int& _num2, OUT int& _num3)
 {
 	int num[3];
 	TextParser::ParseIntNumbers(GetString(_root), num, 3);
@@ -127,8 +127,8 @@ void JsonUtil::ParseIntNumber3(Json::Value& _root, JCORE_OUT int& _num1, JCORE_O
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void JsonUtil::ParseIntNumber4(Json::Value& _root, JCORE_OUT int& _num1, JCORE_OUT int& _num2, JCORE_OUT int& _num3,
-                               JCORE_OUT int& _num4)
+void JsonUtil::ParseIntNumber4(Json::Value& _root, OUT int& _num1, OUT int& _num2, OUT int& _num3,
+                               OUT int& _num4)
 {
 	int num[4];
 	TextParser::ParseIntNumbers(GetString(_root), num, 4);
@@ -140,13 +140,13 @@ void JsonUtil::ParseIntNumber4(Json::Value& _root, JCORE_OUT int& _num1, JCORE_O
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void JsonUtil::ParseIntNumberN(Json::Value& _root, JCORE_OUT int* _pNumArr, int _count)
+void JsonUtil::ParseIntNumberN(Json::Value& _root, OUT int* _pNumArr, int _count)
 {
 	TextParser::ParseIntNumbers(GetString(_root), _pNumArr, _count);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void JsonUtil::ParseFloatNumber2(Json::Value& _root, JCORE_OUT float& _num1, JCORE_OUT float& _num2)
+void JsonUtil::ParseFloatNumber2(Json::Value& _root, OUT float& _num1, OUT float& _num2)
 {
 	float num[2];
 	TextParser::ParseFloatNumbers(GetString(_root), num, 2);
@@ -155,7 +155,7 @@ void JsonUtil::ParseFloatNumber2(Json::Value& _root, JCORE_OUT float& _num1, JCO
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void JsonUtil::ParseFloatNumberN(Json::Value& _root, JCORE_OUT float* _pNumArr, int _count)
+void JsonUtil::ParseFloatNumberN(Json::Value& _root, OUT float* _pNumArr, int _count)
 {
 	TextParser::ParseFloatNumbers(GetString(_root), _pNumArr, _count);
 }

@@ -52,7 +52,7 @@ bool MonsterBaseInfoLoader::Load()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MonsterBaseInfoLoader::ReadMonsterBaseInfo(Json::Value& _monsterRoot, JCORE_OUT MonsterBaseInfo* _pMobInfo)
+void MonsterBaseInfoLoader::ReadMonsterBaseInfo(Json::Value& _monsterRoot, OUT MonsterBaseInfo* _pMobInfo)
 {
 	_pMobInfo->code_ = _monsterRoot["code"].asInt();
 	_pMobInfo->name_ = JsonUtil::GetString(_monsterRoot["kor_name"]);

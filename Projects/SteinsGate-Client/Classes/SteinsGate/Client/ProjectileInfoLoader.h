@@ -32,8 +32,8 @@ public:
 	bool Load() override;
 
 private:
-	void ReadOverridedProjectileInfo(Json::Value& _projectileRoot, JCORE_OUT ProjectileInfo* _pProjectileInfo);
-	void ReadProjectileInfo(Json::Value& _projectileRoot, JCORE_OUT ProjectileInfo* _pProjectileInfo);
+	void ReadOverridedProjectileInfo(Json::Value& _projectileRoot, OUT ProjectileInfo* _pProjectileInfo);
+	void ReadProjectileInfo(Json::Value& _projectileRoot, OUT ProjectileInfo* _pProjectileInfo);
 
 	ActorType_t actorType_;
 };

@@ -15,13 +15,14 @@ NS_JC_BEGIN
 struct CRuntime {
     using ThreadFunc = Int32U (JCORE_STDCALL*)(void*);
 
-    static int      JCORE_CDECL System(JCORE_IN const char* _pCmd);
+    static int      JCORE_CDECL System( const char* _pCmd);
 
     /** https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/beginthread-beginthreadex?view=msvc-170
      * \brief 쓰레드를 만듬
-     * \param fn 실행할 함수
-     * \param arg 전달할 인자
-     * \param stackSize 쓰레드 스택 크기(0 = 디폴트)
+     * \param _fn 실행할 함수
+     * \param _pArg 전달할 인자
+     * \param _stackSize 쓰레드 스택 크기(0 = 디폴트)
+     * \param _initFlag
      * \return If successful, each of these functions returns a handle to the newly created thread; however, if the newly created thread exits too quickly, _beginthread might not return a valid handle. (See the discussion in the Remarks section.) On an error, _beginthread returns -1L, and errno is set to EAGAIN if there are too many threads, to EINVAL if the argument is invalid or the stack size is incorrect, or to EACCES if there are insufficient resources (such as memory). On an error, _beginthreadex returns 0, and errno and _doserrno are set.
      *
      * _beginthread -> _endthread를 하면 이후에 CloseHandle을 해줄 필요가 없다.
@@ -31,13 +32,13 @@ struct CRuntime {
      * _beginthreadex -> endthreadex를 하더라도 CloseHandle을 해줘야한다.
      *
      */
-    static IntPtr   JCORE_CDECL BeginThreadEx(JCORE_IN ThreadFunc _fn, JCORE_IN_OPT void* _pArg = nullptr, JCORE_IN_OPT Int32U _stackSize = 0, JCORE_IN_OPT Int32U _initFlag = 0);
+    static IntPtr   JCORE_CDECL BeginThreadEx( ThreadFunc _fn, IN_OPT void* _pArg = nullptr, IN_OPT Int32U _stackSize = 0, IN_OPT Int32U _initFlag = 0);
 
     /** https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/endthread-endthreadex?view=msvc-170
      * \brief Terminates a thread; _endthread terminates a thread that's created by _beginthread and _endthreadex terminates a thread that's created by _beginthreadex.
-     * \param exitCode Thread exit code.
+     * \param _exitCode Thread exit code.
      */
-    static void     JCORE_CDECL EndThreadEx(JCORE_IN Int32U _exitCode);
+    static void     JCORE_CDECL EndThreadEx( Int32U _exitCode);
 
     /** https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/get-errno?view=msvc-170
      * 참고: C 라이브러리에서 전역 에러값을 체크하는 함수들은 함수실행전 0로 초기화시킴 (https://cplusplus.com/reference/cerrno/errno/)
@@ -68,10 +69,10 @@ struct CRuntime {
 	 * \brief https://en.cppreference.com/w/cpp/io/c/fwrite
 	 * count를 0으로 전달한 경우 아무 행동도 하지 않는다.
 	 *
-	 * \param buffer 버퍼의 크기
-	 * \param size 원소 크기
-	 * \param count 원소 갯수
-	 * \param stream 입출력 핸들
+	 * \param _pBuffer 버퍼의 크기
+	 * \param _size 원소 크기
+	 * \param _count 원소 갯수
+	 * \param _pStream 입출력 핸들
 	 * \return 쓴 원소 갯수 (count보다 작은 경우 오류가 발생한 경우이다.)
 	 * 
 	 */

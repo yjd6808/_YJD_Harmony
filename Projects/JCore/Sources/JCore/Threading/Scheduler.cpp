@@ -206,7 +206,7 @@ void Scheduler::ExecuteTasks(TaskList& _scheduledTasks, const Int64U* _pExecutab
  * \return 실행가능한 작업 수
  */
 //////////////////////////////////////////////////////////////////////////////////////////
-int Scheduler::PopTasks(JCORE_OUT Vector<SchedulerTask*>& _executableTasks, const Int64U* _pExecutableTaskLimitTime)
+int Scheduler::PopTasks(OUT Vector<SchedulerTask*>& _executableTasks, const Int64U* _pExecutableTaskLimitTime)
 {
 	_executableTasks.Clear();
 
@@ -257,7 +257,7 @@ int Scheduler::WaitingTaskListCountRaw()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool Scheduler::HaveExecutableTaskRaw(JCORE_IN_OUT Int64U* _pExecutableTaskLimitTime)
+bool Scheduler::HaveExecutableTaskRaw(IN_OUT Int64U* _pExecutableTaskLimitTime)
 {
 	if (m_tmWaitTasks.Size() == 0)
 	{

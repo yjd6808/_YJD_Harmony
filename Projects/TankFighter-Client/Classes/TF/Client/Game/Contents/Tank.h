@@ -38,7 +38,7 @@ public:
 	void setDeath(bool death);
 	void sendMove();
 
-	void getMove(JCORE_REF_OUT TankMove& move);
+	void getMove(OUT TankMove& move);
 	int getCharacterPrimaryKey() const;
 	cocos2d::Vec2 getFirePosition() const;
 

@@ -31,11 +31,11 @@ void InitializeGameCore(GameServerType_t _gameServerType)
 {
 	Core::GameServerType			= _gameServerType;
 	Core::DataManager				= DataManager::Get();
-	Core::CommonInfo				= Core::DataManager->getCommonInfo(1);
-	Core::ServerProcessInfoPackage	= Core::DataManager->getServerProcessInfoPackage(1);					// 공통 라이브러리 주입
+	Core::CommonInfo				= Core::DataManager->GetCommonInfo(1);
+	Core::ServerProcessInfoPackage	= Core::DataManager->GetServerProcessInfoPackage(1);					// 공통 라이브러리 주입
 	Core::GameServerProcessInfo		= Core::ServerProcessInfoPackage->GetGameServerProcessInfo(_gameServerType);
 	Core::ServerProcessInfo			= Core::GameServerProcessInfo;		// 공통 라이브러리 주입
-	Core::GameDB					= dbg_new MysqlDatabase(Core::DataManager->getDatabaseInfo(DatabaseType::Game));
+	Core::GameDB					= dbg_new MysqlDatabase(Core::DataManager->GetDatabaseInfo(DatabaseType::Game));
 	Core::GameDB->Initialize(ServerProcessType::Game);
 	Core::NetMaster					= GameNetMaster::Get();
 	Core::NetMaster->SetProcessInfo(Core::ServerProcessInfo);
@@ -52,12 +52,12 @@ void InitializeGameCore(GameServerType_t _gameServerType)
 		Core::CLIThread->SetListener(dbg_new CLIListener);
 	}
 
-	Core::ServerProcessInfoPackage		= Core::DataManager->getServerProcessInfoPackage(1);		// 위에서 주입됨
-	Core::CommonInfo					= Core::DataManager->getCommonInfo(1);						// 위에서 주입됨
+	Core::ServerProcessInfoPackage		= Core::DataManager->GetServerProcessInfoPackage(1);		// 위에서 주입됨
+	Core::CommonInfo					= Core::DataManager->GetCommonInfo(1);						// 위에서 주입됨
 	Core::CharCommon					= nullptr;											// 사용안함
 	Core::ThreadPool					= dbg_new ThreadPool{ 2 };
-	Core::Scheduler					= dbg_new Scheduler{ 2 };
-	Core::RuntimeConfigBase			= Core::RuntimeConfig;
+	Core::Scheduler						= dbg_new Scheduler{ 2 };
+	Core::RuntimeConfigBase				= Core::RuntimeConfig;
 
 	// COMMON INJECTION
 	Core::CommonNetMaster				= Core::NetMaster;

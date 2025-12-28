@@ -25,8 +25,8 @@ public:
 	void OnAreaRootLoaded(Json::Value& _areaRoot, const SGString& _fileName, DirectoryTreeNode* _pCurNode);
 	void TestOnCommon(Json::Value& _mapRoot, const SGString& _fileName, DirectoryTreeNode* _pCurNode);
 
-	static void ReadMapCommonInfo(Json::Value& _mapRoot, JCORE_OUT MapInfo* _pMapInfo);
-	static void ReadMapAreaInfo(Json::Value& _areaRoot, JCORE_OUT MapAreaInfo* _pMapAreaInfo);
+	static void ReadMapCommonInfo(Json::Value& _mapRoot, OUT MapInfo* _pMapInfo);
+	static void ReadMapAreaInfo(Json::Value& _areaRoot, OUT MapAreaInfo* _pMapAreaInfo);
 
 	MapAreaInfo* GetMapAreaInfo(int _mapCode);
 
