@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Sources\jc_gtest\Core.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\TypeTraitsTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\RandomTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\MathTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\Container\ArraysTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\HasherTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\ComparatorTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\TimeTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\ExceptionTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\MemoryTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\Container\ArrayStackTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\ArrayQueueTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\VectorTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\LinkedListTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\ListQueueTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\ListStackTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\HashMapTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\EventTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\Container\Impl\AVLTreeImplTest.cpp">
+      <Filter>Container\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\Impl\AVLTreeMemoImplTest.cpp">
+      <Filter>Container\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\Impl\BinarySearchTreeImplTest.cpp">
+      <Filter>Container\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\Impl\DynamicHashMapImplTest.cpp">
+      <Filter>Container\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\Impl\TwoTreeFourTreeImplTest.cpp">
+      <Filter>Container\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Primitives\ObserverPtrTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Primitives\SmartPtrTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Primitives\StaticStringTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Primitives\StringTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Primitives\StringUtilTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Sync\SemaphoreTest.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Sync\NormalLockTest.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Sync\NormalRwLockTest.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Sync\RecursiveLockTest.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Sync\SpinLockTest.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Sync\EventLockTest.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Sync\LockGuardTest.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Primitives\AtomicTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Sync\WaitHandleTest.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\RAII\AutoPtrTest.cpp">
+      <Filter>RAII</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\RAII\AutoRefTest.cpp">
+      <Filter>RAII</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Threading\ThreadTest.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Pool\MemoryPoolTest.cpp">
+      <Filter>Pool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Threading\ThreadLocalTest.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Wrapper\CRuntimeTest.cpp">
+      <Filter>Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\FileSystem\FileStreamTest.cpp">
+      <Filter>FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\FileSystem\FileUtilTest.cpp">
+      <Filter>FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\FileSystem\DirectoryUtilTest.cpp">
+      <Filter>FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\FileSystem\PathUtilTest.cpp">
+      <Filter>FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\TreeMapTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Threading\ThreadPoolTest.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Threading\SchedulerTest.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\HashSetTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\TreeSetTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Primitives\BitFlagTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Pool\AccessibleObjectPoolTest.cpp">
+      <Filter>Pool</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\jc_gtest\Core.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Container">
+      <UniqueIdentifier>{bf264a65-8776-4297-ba02-ad0ca1dd182b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sync">
+      <UniqueIdentifier>{6e14e343-e06a-4c87-b20a-33516f0f9cfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Container\Impl">
+      <UniqueIdentifier>{c88e3723-2243-4465-8fec-87869d63ee1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Primitives">
+      <UniqueIdentifier>{78719c96-fd9b-4bdf-b710-9854706255fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Wrapper">
+      <UniqueIdentifier>{9e783c3e-69d3-4eeb-99dc-75b71bd1e6a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Threading">
+      <UniqueIdentifier>{cd77f4b5-5afd-4c58-9ca6-d06729e946e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RAII">
+      <UniqueIdentifier>{bc47146e-bb48-4abc-bdb8-f2e59d2f8296}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pool">
+      <UniqueIdentifier>{eda00c72-9c10-42f4-be6b-7eb4293c1bad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FileSystem">
+      <UniqueIdentifier>{750802d8-37fc-4cbb-89bb-cf423f2efea4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,40 @@
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)Props/harmony.props" 
+          Condition="
+'$(MSBuildProjectName)' == 'jnet_gbench' 			OR 
+'$(MSBuildProjectName)' == 'jnet_gtest' 			OR
+'$(MSBuildProjectName)' == 'jnetr_common'			OR
+'$(MSBuildProjectName)' == 'jnetr_tcpclient'		OR
+'$(MSBuildProjectName)' == 'jnetr_tcpserver'		OR
+'$(MSBuildProjectName)' == 'jnetr_udpclient_a'		OR
+'$(MSBuildProjectName)' == 'jnetr_udpclient_b'		OR
+'$(MSBuildProjectName)' == 'sg'						OR
+'$(MSBuildProjectName)' == 'sge'					OR
+'$(MSBuildProjectName)' == 'sgcl'					OR
+'$(MSBuildProjectName)' == 'sgs'					OR
+'$(MSBuildProjectName)' == 'sgs_auth'				OR
+'$(MSBuildProjectName)' == 'sgs_center'				OR
+'$(MSBuildProjectName)' == 'sgs_game'				OR
+'$(MSBuildProjectName)' == 'sgs_lobby'
+          " />
+
+	<Import Project="$(MSBuildThisFileDirectory)Props/sg.props" 
+          Condition="
+'$(MSBuildProjectName)' == 'sge'					OR
+'$(MSBuildProjectName)' == 'sgcl'					OR
+'$(MSBuildProjectName)' == 'sgs'					OR
+'$(MSBuildProjectName)' == 'sgs_auth'				OR
+'$(MSBuildProjectName)' == 'sgs_center'				OR
+'$(MSBuildProjectName)' == 'sgs_game'				OR
+'$(MSBuildProjectName)' == 'sgs_lobby'
+          " />
+
+
+	<Import Project="$(MSBuildThisFileDirectory)Props/sgs.props" 
+          Condition="
+'$(MSBuildProjectName)' == 'sgs_auth'				OR
+'$(MSBuildProjectName)' == 'sgs_center'				OR
+'$(MSBuildProjectName)' == 'sgs_game'				OR
+'$(MSBuildProjectName)' == 'sgs_lobby'
+          " />
+</Project>

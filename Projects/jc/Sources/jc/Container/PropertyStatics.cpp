@@ -1,0 +1,110 @@
+﻿/*
+ * 작성자: 윤정도
+ * 생성일: 8/30/2023 11:55:55 AM
+ * =====================
+ *
+ */
+
+#include <jc/Core.h>
+
+#include <jc/Container/PropertyOperatorDefinitions.h>
+#include <jc/Container/PropertyStatics.h>
+#include <jc/Container/Property.h>
+
+NS_JC_BEGIN
+
+template <PropertyType_t I>
+static void CreateFactory() {
+	if constexpr (I == PropertyType::CharPtr) return;
+	else {
+		PropertyStatics::Factorys[I] = dbg_new PropertyFactory<typename PropertyDataTypeGetter<I>::Ty>();
+		CreateFactory<PropertyType_t(I + 1)>();
+	}
+}
+
+template <PropertyType_t I>
+static void InitDefaultProperty() {
+	if constexpr (I == PropertyType::CharPtr) return;
+	else {
+		PropertyStatics::DefaultPrperty[I] = &Property<typename PropertyDataTypeGetter<I>::Ty>::Default;
+		InitDefaultProperty<PropertyType_t(I + 1)>();
+	}
+}
+
+
+void PropertyStatics::Initialize() {
+	InitializePropertyOperatorSelectors();
+	InitializePropertyOperatorUnary();
+
+	InitializePropertyOperatorBool();
+	InitializePropertyOperatorInt8();
+	InitializePropertyOperatorInt8U();
+	InitializePropertyOperatorInt16();
+	InitializePropertyOperatorInt16U();
+	InitializePropertyOperatorInt();
+	InitializePropertyOperatorInt32U();
+	InitializePropertyOperatorInt32L();
+	InitializePropertyOperatorInt32UL();
+	InitializePropertyOperatorInt64();
+	InitializePropertyOperatorInt64U();
+	InitializePropertyOperatorFloat();
+	InitializePropertyOperatorDouble();
+	InitializePropertyOperatorLDouble();
+	InitializePropertyOperatorString();
+
+	CreateFactory<PropertyType_t(0)>();
+	InitDefaultProperty<PropertyType_t(0)>();
+}
+
+
+void PropertyStatics::Finalize() {
+	for (int i = 0; i < PropertyType::Max; ++i) {
+		for (int j = 0; j < PropertyType::Max; ++j) {
+			JCORE_DELETE_SAFE(BinaryOperatorSelectors[i][j]);
+		}
+	}
+
+	for (int i = 0; i < PropertyBinaryOperatorType::Max; ++i) {
+		JCORE_DELETE_SAFE(BinaryOperators_bool[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Int8[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Int8U[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Int16[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Int16U[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Int[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Int32U[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Int32L[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Int32UL[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Int64[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Int64U[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Float[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Double[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_LDouble[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_String[i]);
+	}
+
+	for (int i = 0; i < PropertyType::Max; ++i) {
+		JCORE_DELETE_SAFE(UnaryOperators[i]);
+	}
+
+	for (int i = 0; i < PropertyType::Max; ++i) {
+		JCORE_DELETE_SAFE(Factorys[i]);
+	}
+
+	Property<bool>::FreeAllObjects();
+	Property<Int8>::FreeAllObjects();
+	Property<Int8U>::FreeAllObjects();
+	Property<Int16>::FreeAllObjects();
+	Property<Int16U>::FreeAllObjects();
+	Property<Int>::FreeAllObjects();
+	Property<Int32U>::FreeAllObjects();
+	Property<Int32L>::FreeAllObjects();
+	Property<Int32UL>::FreeAllObjects();
+	Property<Int64>::FreeAllObjects();
+	Property<Int64U>::FreeAllObjects();
+	Property<Float>::FreeAllObjects();
+	Property<Double>::FreeAllObjects();
+	Property<LDouble>::FreeAllObjects();
+	Property<String>::FreeAllObjects();
+}
+
+NS_JC_END

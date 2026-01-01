@@ -1,0 +1,23 @@
+﻿/*
+ * 작성자: 윤정도
+ * 생성일: 8/11/2023 5:50:26 AM
+ * =====================
+ *
+ */
+
+
+#pragma once
+
+#include <sgcl/MonsterListener.h>
+
+class MonsterListener_NormalGoblin : public MonsterListener
+{
+public:
+	MonsterListener_NormalGoblin(Monster* _pMonster)
+	: MonsterListener(_pMonster)
+	{
+	}
+
+	void OnCreated() override;
+	SG_MONSTER_LISTENER_FACTORY(MonsterListener_NormalGoblin)
+};

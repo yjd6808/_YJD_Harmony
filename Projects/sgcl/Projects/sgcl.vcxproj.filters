@@ -1,0 +1,1098 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Data">
+      <UniqueIdentifier>{c229c058-5c89-42fa-96aa-4107a44b8854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Projectile">
+      <UniqueIdentifier>{c8ab47bd-66a6-43b5-a4a9-eb39aec47249}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Tile">
+      <UniqueIdentifier>{2f9a977b-b328-4a02-baab-7ae19e2c593a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\AI">
+      <UniqueIdentifier>{aa9500ff-549d-4d4e-a96c-163a6cd1ef3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{8999073e-667a-4980-89a7-1353515ef72b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\AttackData">
+      <UniqueIdentifier>{e39a0561-addf-41aa-89b8-849512666201}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Action">
+      <UniqueIdentifier>{0520369f-7e38-45ca-a074-74c59d0d3cb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\CharAnimation">
+      <UniqueIdentifier>{ec65ec03-91ef-490c-8f38-45cecb6661cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Effect">
+      <UniqueIdentifier>{926d1f0b-a511-4c7f-91aa-587ab0ce672f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\UI">
+      <UniqueIdentifier>{e1a5f450-8532-48da-ae6e-44f1e0253f12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Char">
+      <UniqueIdentifier>{775407e0-933b-4f9f-a0db-5fb53a3fe12b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net">
+      <UniqueIdentifier>{afca49d9-5dad-4dcb-8803-7f73c14f3200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Listener">
+      <UniqueIdentifier>{374a8a12-c841-4241-8c2e-917902a40305}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Send">
+      <UniqueIdentifier>{189d1ff7-f473-4a4d-8bc7-2f009d21e5ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Recv">
+      <UniqueIdentifier>{95abad0d-5fc9-48a1-a3f1-0039e977b60b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Connection">
+      <UniqueIdentifier>{bf59ba58-2f02-44e4-a7cd-452836a2dd40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Sync">
+      <UniqueIdentifier>{0754ca7c-0ffe-457e-8016-747afd443af4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\MapObject">
+      <UniqueIdentifier>{2b54d70f-de2d-4218-b6da-f13abcaa0677}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\FrameEvent">
+      <UniqueIdentifier>{d5a45180-26a8-4266-a6b7-f2cb9e3600b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Text">
+      <UniqueIdentifier>{f98a811f-e686-4426-ba7c-4fe2cc0b617e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Monster">
+      <UniqueIdentifier>{2ba3e7ea-9add-427b-84b3-8539777e05e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{f3c8eaa2-3cff-4932-a33b-be045449ca55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Channel">
+      <UniqueIdentifier>{7ce628d4-c979-4b15-b8d3-f03c3611a513}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{6ffa8ec9-2e87-47f2-90e3-73d68df33274}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Actor">
+      <UniqueIdentifier>{29c9d34e-31c9-4a0e-a136-15bb7bcd3b91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Texture">
+      <UniqueIdentifier>{2c7479b6-6920-4f4d-8a18-d686a3dc17b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Action">
+      <UniqueIdentifier>{4811212e-a215-4545-90b1-d42941b6c07d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Action\Gunner">
+      <UniqueIdentifier>{12442359-bbbd-4451-bee3-d187451dc375}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Contents">
+      <UniqueIdentifier>{aa3b8aac-e53b-4ec7-ad62-2aaa73674992}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Layer">
+      <UniqueIdentifier>{3d065bfc-aa30-4c21-ac0a-778e58e49571}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Scene">
+      <UniqueIdentifier>{ad27e0ec-46ef-42d3-8cd8-4c190b5b8213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\UI">
+      <UniqueIdentifier>{0d7eb5f0-5cd7-445d-825e-1d7b3e291f6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Helper">
+      <UniqueIdentifier>{62c231f5-2c23-4a23-8337-9397dce6d44c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Camera">
+      <UniqueIdentifier>{b83f0096-b0c2-41d8-b405-44b866993cb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\AI">
+      <UniqueIdentifier>{58c37cdd-8c5f-4ed2-8017-71e576c8870c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\AI\Activity">
+      <UniqueIdentifier>{76bc5b7f-5d57-4b1f-a16a-0b3d8b11bd05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\AI\Activity\Attack">
+      <UniqueIdentifier>{35f8f32a-7485-4f98-97ec-02a53d7b1d91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Component">
+      <UniqueIdentifier>{e2bffae1-e6b6-4d2c-a948-411e9267f569}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Listener">
+      <UniqueIdentifier>{0fa2fea9-9552-4752-90b5-a9bf05025453}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Listener\Character">
+      <UniqueIdentifier>{db2db770-f105-45f0-a847-4dd3d248e338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Listener\Projectile">
+      <UniqueIdentifier>{39dcc5c9-1f06-4e8c-aa0a-99fb80ec8b27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Listener\Monster">
+      <UniqueIdentifier>{ed8ea471-f4d4-402e-9eda-dd9784676ae3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Util">
+      <UniqueIdentifier>{82f6b34f-ddb7-4d22-be73-14dee37a6233}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\AI\Activity\FallDown">
+      <UniqueIdentifier>{bdbe7cd1-bcf3-4204-b508-fe20973a96c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\AI\Activity\Hit">
+      <UniqueIdentifier>{cfefd1c6-ad6c-4b70-b3bd-05b4df6ba51d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\AI\Activity\Idle">
+      <UniqueIdentifier>{18e4d335-fbe1-43a4-9551-2342e0e804a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\AI\Activity\Sit">
+      <UniqueIdentifier>{1ca7ac92-3b31-4467-b93f-9ef354b26efc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\AI\Activity\Walk">
+      <UniqueIdentifier>{25d92293-7b32-4b9d-ba75-5ef59fe63987}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\AI\Routine">
+      <UniqueIdentifier>{adb72265-b421-4f78-832c-a1afd2ee293b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Component">
+      <UniqueIdentifier>{223c4637-eb44-4a0e-9cec-3b21c0835806}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Callback">
+      <UniqueIdentifier>{7a35713c-d4d7-4039-97f1-3be5de1e23bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Const">
+      <UniqueIdentifier>{e9085bd4-65c5-4e18-92a8-d143f75158e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Struct">
+      <UniqueIdentifier>{ee93dcde-8922-4bb3-b234-f260a8e990d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Define">
+      <UniqueIdentifier>{438654f5-eaff-4964-afe5-bea9e182e705}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\UI_Implementation">
+      <UniqueIdentifier>{1fffd7f0-6d76-4c4d-9c61-517e54eb58cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="API">
+      <UniqueIdentifier>{479489ea-0bba-482a-9a03-dd3222c23497}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Classes\sgcl\ImagePackManager.cpp">
+      <Filter>Game\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ImagePack.cpp">
+      <Filter>Game\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\DataManager.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\JsonUtilEx.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ComboKeyList.cpp">
+      <Filter>Game\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Actor.cpp">
+      <Filter>Game\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Character.cpp">
+      <Filter>Game\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Projectile.cpp">
+      <Filter>Game\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Monster.cpp">
+      <Filter>Game\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ActorSprite.cpp">
+      <Filter>Game\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ActorPartSprite.cpp">
+      <Filter>Game\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ActorPartAnimation.cpp">
+      <Filter>Game\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\FrameTexture.cpp">
+      <Filter>Game\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\SGAction.cpp">
+      <Filter>Game\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ComboTree.cpp">
+      <Filter>Game\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\GunnerIdle.cpp">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\GunnerJump.cpp">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\GunnerRun.cpp">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\GunnerSliding.cpp">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\GunnerWalk.cpp">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\GunnerGunShot.cpp">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\CharInfoLoader.cpp">
+      <Filter>Data\Char</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\MonsterInfoLoader.cpp">
+      <Filter>Data\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ProjectileInfoLoader.cpp">
+      <Filter>Data\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\TileInfoLoader.cpp">
+      <Filter>Data\Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\MapObjectInfoLoader.cpp">
+      <Filter>Data\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\MapObject.cpp">
+      <Filter>Game\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\GunnerHit.cpp">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\GunnerAction.cpp">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\AIInfoLoader.cpp">
+      <Filter>Data\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\AIInfo.cpp">
+      <Filter>Data\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\SGVec2Ex.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\SteinsGateApp.cpp" />
+    <ClCompile Include="..\Classes\sgcl\AttackDataInfoLoader.cpp">
+      <Filter>Data\AttackData</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\GunnerFallDown.cpp">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\HitRecorder.cpp">
+      <Filter>Game\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\GunnerSitRecover.cpp">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ActionInfoLoader.cpp">
+      <Filter>Data\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\main.cpp" />
+    <ClCompile Include="..\Classes\sgcl\CharAnimationInfoLoader.cpp">
+      <Filter>Data\CharAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Effect.cpp">
+      <Filter>Game\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\EffectInfoLoader.cpp">
+      <Filter>Data\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ProjectileInfo.cpp">
+      <Filter>Data\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ChannelSelectScene.cpp">
+      <Filter>Game\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\LoginScene.cpp">
+      <Filter>Game\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\GameScene.cpp">
+      <Filter>Game\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\MapLayer.cpp">
+      <Filter>Game\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UILayer.cpp">
+      <Filter>Game\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UIInfoLoader.cpp">
+      <Filter>Data\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UIGroup.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UIButton.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UIElement.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UI_Login.cpp">
+      <Filter>Game\UI_Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UILabel.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UISprite.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Player.cpp">
+      <Filter>Game\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\PlayerController.cpp">
+      <Filter>Game\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\PlayerPool.cpp">
+      <Filter>Game\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UIEditBox.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UICheckBox.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UIRootGroupManager.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UIToggleButton.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UIProgressBar.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UIStatic.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UI_Inventory.cpp">
+      <Filter>Game\UI_Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UIScrollBar.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UIRootGroup.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\WndMessage.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Win32Helper.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\NetClientGroup.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UI_Popup.cpp">
+      <Filter>Game\UI_Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UI_Test.cpp">
+      <Filter>Game\UI_Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\NetCore.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\R_AUTHENTICATION.cpp">
+      <Filter>Net\Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\S_AUTH.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\S_GAME_UDP.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\S_GAME.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\S_LOBBY.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\S_AREA.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\S_CHAT.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\CommandSynchronizer.cpp">
+      <Filter>Net\Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ConnectionSynchronizer.cpp">
+      <Filter>Net\Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\C_AUTH.cpp">
+      <Filter>Net\Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\C_CHAT.cpp">
+      <Filter>Net\Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\C_GAME.cpp">
+      <Filter>Net\Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\C_LOBBY.cpp">
+      <Filter>Net\Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\C_AREA.cpp">
+      <Filter>Net\Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\FrameEventLoader.cpp">
+      <Filter>Data\FrameEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\IActorListener.cpp">
+      <Filter>Game\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ActorListenerCollection.cpp">
+      <Filter>Game\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ClientTextInfoLoader.cpp">
+      <Filter>Data\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ComponentCollection.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\MoveComponent.cpp">
+      <Filter>Game\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\PhysicsComponent.cpp">
+      <Filter>Game\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\AIComponent.cpp">
+      <Filter>Game\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\CharacterListener_Gunner.cpp">
+      <Filter>Game\Listener\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ProjectileListener_GunnerBullet.cpp">
+      <Filter>Game\Listener\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\CharacterListener.cpp">
+      <Filter>Game\Listener\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ProjectileListener.cpp">
+      <Filter>Game\Listener\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\MonsterListener.cpp">
+      <Filter>Game\Listener\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\MonsterListener_NormalGoblin.cpp">
+      <Filter>Game\Listener\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\MonsterListener_DarkGoblin.cpp">
+      <Filter>Game\Listener\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\FallDownActivity_Goblin.cpp">
+      <Filter>Game\AI\Activity\FallDown</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\FallDownActivity.cpp">
+      <Filter>Game\AI\Activity\FallDown</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\HitActivity.cpp">
+      <Filter>Game\AI\Activity\Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\HitActivity_Goblin.cpp">
+      <Filter>Game\AI\Activity\Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\IdleActivity.cpp">
+      <Filter>Game\AI\Activity\Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\SitActivity.cpp">
+      <Filter>Game\AI\Activity\Sit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\WalkActivity.cpp">
+      <Filter>Game\AI\Activity\Walk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\IdleActivity_Goblin.cpp">
+      <Filter>Game\AI\Activity\Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\WalkActivity_Goblin.cpp">
+      <Filter>Game\AI\Activity\Walk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\SitActivity_Goblin.cpp">
+      <Filter>Game\AI\Activity\Sit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\NetClientEventListener.cpp">
+      <Filter>Net\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UI_ChannelSelect.cpp">
+      <Filter>Game\UI_Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ChannelInfoLoader.cpp">
+      <Filter>Data\Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UIInfo.cpp">
+      <Filter>Data\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\FontManager.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Global.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Inven.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\PopupManager.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\TimeManager.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\GameCore.cpp" />
+    <ClCompile Include="..\Classes\sgcl\WorldScene.cpp">
+      <Filter>Game\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\SceneBase.cpp">
+      <Filter>Game\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\VisualHelper.cpp">
+      <Filter>Game\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ActorListenerManager.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\UIManager.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\MimicCamera.cpp">
+      <Filter>Game\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\AIActivity.cpp">
+      <Filter>Game\AI\Activity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\AttackActivity.cpp">
+      <Filter>Game\AI\Activity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\AttackActivity_Goblin.cpp">
+      <Filter>Game\AI\Activity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ActorManager.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\ActionMgr.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\HostPlayer.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Contents.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\AuthenticationComponent.cpp">
+      <Filter>Net\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Callback_POPUP_TIMEOUT.cpp">
+      <Filter>Game\Callback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Struct.cpp">
+      <Filter>Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\R_MESSAGE.cpp">
+      <Filter>Net\Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\R_LOBBY.cpp">
+      <Filter>Net\Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Core.cpp" />
+    <ClCompile Include="..\Classes\sgcl\_API\sgapiClient.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Classes\sgcl\ImagePackManager.h">
+      <Filter>Game\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ImagePack.h">
+      <Filter>Game\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\DataManager.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\JsonUtilEx.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ComboKeyList.h">
+      <Filter>Game\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Actor.h">
+      <Filter>Game\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Character.h">
+      <Filter>Game\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Projectile.h">
+      <Filter>Game\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Monster.h">
+      <Filter>Game\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ActorSprite.h">
+      <Filter>Game\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ActorPartSprite.h">
+      <Filter>Game\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ActorPartAnimation.h">
+      <Filter>Game\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\FrameTexture.h">
+      <Filter>Game\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\SGAction.h">
+      <Filter>Game\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ComboTree.h">
+      <Filter>Game\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Define_Animation.h">
+      <Filter>Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Define_Action.h">
+      <Filter>Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\GunnerIdle.h">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\GunnerGunShot.h">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\GunnerJump.h">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\GunnerRun.h">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\GunnerSliding.h">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\GunnerWalk.h">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\AllActions.h">
+      <Filter>Game\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Define_Projectile.h">
+      <Filter>Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\CharInfoLoader.h">
+      <Filter>Data\Char</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\CharInfo.h">
+      <Filter>Data\Char</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\MonsterInfoLoader.h">
+      <Filter>Data\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\MonsterInfo.h">
+      <Filter>Data\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ProjectileInfo.h">
+      <Filter>Data\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ProjectileInfoLoader.h">
+      <Filter>Data\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\TileInfoLoader.h">
+      <Filter>Data\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\TileInfo.h">
+      <Filter>Data\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\MapObjectInfoLoader.h">
+      <Filter>Data\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\MapObjectInfo.h">
+      <Filter>Data\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\MapObject.h">
+      <Filter>Game\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\GunnerHit.h">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\GunnerAction.h">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\AIInfo.h">
+      <Filter>Data\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\AIInfoLoader.h">
+      <Filter>Data\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\SGVec2Ex.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\SteinsGateApp.h" />
+    <ClInclude Include="..\Classes\sgcl\AttackDataInfoLoader.h">
+      <Filter>Data\AttackData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\AttackDataInfo.h">
+      <Filter>Data\AttackData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\GunnerFallDown.h">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\HitRecorder.h">
+      <Filter>Game\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\GunnerSitRecover.h">
+      <Filter>Game\Action\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Define_ActorListener.h">
+      <Filter>Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\IActorListener.h">
+      <Filter>Game\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ActionInfo.h">
+      <Filter>Data\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ActionInfoLoader.h">
+      <Filter>Data\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\CharAnimationInfoLoader.h">
+      <Filter>Data\CharAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Effect.h">
+      <Filter>Game\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Define_Effect.h">
+      <Filter>Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\EffectInfo.h">
+      <Filter>Data\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\EffectInfoLoader.h">
+      <Filter>Data\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ChannelSelectScene.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\LoginScene.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\GameScene.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\MapLayer.h">
+      <Filter>Game\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UILayer.h">
+      <Filter>Game\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UIInfo.h">
+      <Filter>Data\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UIInfoLoader.h">
+      <Filter>Data\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UIElement.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UIButton.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UIGroup.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UI_Login.h">
+      <Filter>Game\UI_Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UILabel.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UISprite.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Player.h">
+      <Filter>Game\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\PlayerPool.h">
+      <Filter>Game\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\PlayerController.h">
+      <Filter>Game\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UIEditBox.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UICheckBox.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Define_UI.h">
+      <Filter>Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UIRootGroupManager.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UIToggleButton.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UIProgressBar.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UIStatic.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UI_Inventory.h">
+      <Filter>Game\UI_Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UIScrollBar.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UIRootGroup.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\WndMessage.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Win32Helper.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\NetClientGroup.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\NetCore.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UI_Popup.h">
+      <Filter>Game\UI_Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UI_Test.h">
+      <Filter>Game\UI_Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\R_AUTHENTICATION.h">
+      <Filter>Net\Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\S_AUTH.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\S_GAME_UDP.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\S_GAME.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\S_LOBBY.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\S_AREA.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\S_CHAT.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\CommandSynchronizer.h">
+      <Filter>Net\Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ConnectionSynchronizer.h">
+      <Filter>Net\Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\C_AUTH.h">
+      <Filter>Net\Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\C_AREA.h">
+      <Filter>Net\Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\C_CHAT.h">
+      <Filter>Net\Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\C_GAME.h">
+      <Filter>Net\Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\C_LOBBY.h">
+      <Filter>Net\Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Define_Popup.h">
+      <Filter>Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\FrameEventLoader.h">
+      <Filter>Data\FrameEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\FrameEvent.h">
+      <Filter>Data\FrameEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ActorListenerCollection.h">
+      <Filter>Game\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ClientTextInfoLoader.h">
+      <Filter>Data\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\IComponent.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\IUpdatable.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ComponentCollection.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ActorComponent.h">
+      <Filter>Game\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\MoveComponent.h">
+      <Filter>Game\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\PhysicsComponent.h">
+      <Filter>Game\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\AIComponent.h">
+      <Filter>Game\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\CharacterListener_Gunner.h">
+      <Filter>Game\Listener\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ProjectileListener_GunnerBullet.h">
+      <Filter>Game\Listener\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\CharacterListener.h">
+      <Filter>Game\Listener\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ProjectileListener.h">
+      <Filter>Game\Listener\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\MonsterListener.h">
+      <Filter>Game\Listener\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\MonsterListener_NormalGoblin.h">
+      <Filter>Game\Listener\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\MonsterListener_DarkGoblin.h">
+      <Filter>Game\Listener\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Define_Event.h">
+      <Filter>Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\FallDownActivity_Goblin.h">
+      <Filter>Game\AI\Activity\FallDown</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\FallDownActivity.h">
+      <Filter>Game\AI\Activity\FallDown</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\HitActivity.h">
+      <Filter>Game\AI\Activity\Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\HitActivity_Goblin.h">
+      <Filter>Game\AI\Activity\Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\IdleActivity.h">
+      <Filter>Game\AI\Activity\Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\SitActivity.h">
+      <Filter>Game\AI\Activity\Sit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\WalkActivity.h">
+      <Filter>Game\AI\Activity\Walk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\IdleActivity_Goblin.h">
+      <Filter>Game\AI\Activity\Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\WalkActivity_Goblin.h">
+      <Filter>Game\AI\Activity\Walk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\SitActivity_Goblin.h">
+      <Filter>Game\AI\Activity\Sit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\NetClientEventListener.h">
+      <Filter>Net\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UI_ChannelSelect.h">
+      <Filter>Game\UI_Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ChannelInfo.h">
+      <Filter>Data\Channel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ChannelInfoLoader.h">
+      <Filter>Data\Channel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\TimeManager.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\FontManager.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Global.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Inven.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\PopupManager.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\GameCoreHeader.h" />
+    <ClInclude Include="..\Classes\sgcl\GameCore.h" />
+    <ClInclude Include="..\Classes\sgcl\WorldScene.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\SceneBase.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\VisualHelper.h">
+      <Filter>Game\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ActorListenerManager.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\UIManager.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\MimicCamera.h">
+      <Filter>Game\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Contents.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\AIActivity.h">
+      <Filter>Game\AI\Activity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\AttackActivity.h">
+      <Filter>Game\AI\Activity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\AttackActivity_Goblin.h">
+      <Filter>Game\AI\Activity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ActorManager.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\ActionMgr.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\HostPlayer.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\AuthenticationComponent.h">
+      <Filter>Net\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Callback_POPUP_TIMEOUT.h">
+      <Filter>Game\Callback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Namespace.h" />
+    <ClInclude Include="..\Classes\sgcl\Const.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Struct.h">
+      <Filter>Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Struct_ACTOR.h">
+      <Filter>Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Struct_CHANNEL.h">
+      <Filter>Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Const_HOST.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Const_NETGROUP.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Const_TIMEOUT.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Define.h">
+      <Filter>Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\R_MESSAGE.h">
+      <Filter>Net\Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\R_LOBBY.h">
+      <Filter>Net\Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Core.h" />
+    <ClInclude Include="..\Classes\sgcl\_API\sgapiClient.h">
+      <Filter>API</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

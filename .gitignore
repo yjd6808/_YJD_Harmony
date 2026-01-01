@@ -17,6 +17,7 @@ out/
 
 packages/
 Output/
+Intermediate/
 Projects/*/Output/
 Projects/*/Intermediate/
 ThirdParty/Build/

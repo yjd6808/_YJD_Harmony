@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Research">
+      <UniqueIdentifier>{33aad24f-8892-4b0e-9aaf-b514ee916c2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Container">
+      <UniqueIdentifier>{65a3e965-cbea-4849-b815-c8292693dfa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pool">
+      <UniqueIdentifier>{624e25c1-080c-44d2-9e87-8a3645cf371c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Sources\jc_gbench\Container\HashMapTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gbench\Container\HeapifyTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gbench\Container\HashMapIterationTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gbench\Container\HashMapMemoryPoolTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gbench\Pool\MemoryPoolTest.cpp">
+      <Filter>Pool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gbench\Research\VirtualAllocTest.cpp">
+      <Filter>Research</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gbench\Research\AllocationTest.cpp">
+      <Filter>Research</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gbench\Core.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\jc_gbench\Core.h" />
+  </ItemGroup>
+</Project>

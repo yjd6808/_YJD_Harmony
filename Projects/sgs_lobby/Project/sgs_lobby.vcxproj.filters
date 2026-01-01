@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Sources\sgs_lobby\main.cpp" />
+    <ClCompile Include="..\Sources\sgs_lobby\LobbyCore.cpp" />
+    <ClCompile Include="..\Sources\sgs_lobby\Core.cpp" />
+    <ClCompile Include="..\Sources\sgs_lobby\ListenerLobbyServer.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs_lobby\R_LOBBY.cpp">
+      <Filter>Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs_lobby\S_AUTHENTICATION_IS.cpp">
+      <Filter>Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs_lobby\LobbyInterServerClientNetGroup.cpp" />
+    <ClCompile Include="..\Sources\sgs_lobby\LobbyNetGroup.cpp" />
+    <ClCompile Include="..\Sources\sgs_lobby\LobbyNetMaster.cpp" />
+    <ClCompile Include="..\Sources\sgs_lobby\Q_LOBBY.cpp">
+      <Filter>Query</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs_lobby\LobbyServer.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs_lobby\LobbySession.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs_lobby\LobbyContents.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs_lobby\R_AUTHENTICATION.cpp">
+      <Filter>Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs_lobby\S_LOBBY.cpp">
+      <Filter>Send</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\sgs_lobby\LobbyCoreHeader.h" />
+    <ClInclude Include="..\Sources\sgs_lobby\LobbyCore.h" />
+    <ClInclude Include="..\Sources\sgs_lobby\Core.h" />
+    <ClInclude Include="..\Sources\sgs_lobby\R_LOBBY.h">
+      <Filter>Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs_lobby\ListenerLobbyServer.h">
+      <Filter>Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs_lobby\S_AUTHENTICATION_IS.h">
+      <Filter>Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs_lobby\LobbyInterServerClientNetGroup.h" />
+    <ClInclude Include="..\Sources\sgs_lobby\LobbyNetGroup.h" />
+    <ClInclude Include="..\Sources\sgs_lobby\LobbyNetMaster.h" />
+    <ClInclude Include="..\Sources\sgs_lobby\Q_LOBBY.h">
+      <Filter>Query</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs_lobby\LobbyServer.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs_lobby\LobbySession.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs_lobby\LobbyContents.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs_lobby\R_AUTHENTICATION.h">
+      <Filter>Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs_lobby\S_LOBBY.h">
+      <Filter>Send</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Recv">
+      <UniqueIdentifier>{775bf26d-5d03-472e-892e-6fb4ea8d4ca5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Send">
+      <UniqueIdentifier>{b14ebb94-abc9-4678-83bf-ecef8247cc36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Listener">
+      <UniqueIdentifier>{a9efac3b-967a-4517-90db-7dbafbee409d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Query">
+      <UniqueIdentifier>{48b1d56e-da03-4184-9565-ead55f0a7a31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents">
+      <UniqueIdentifier>{fe79c973-98af-462a-a693-69f34dcce325}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Host">
+      <UniqueIdentifier>{34c7c14a-ff4a-4cd9-8fe9-13e8b5e97685}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

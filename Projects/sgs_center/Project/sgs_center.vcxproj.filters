@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Sources\sgs_center\main.cpp" />
+    <ClCompile Include="..\Sources\sgs_center\CenterCore.cpp" />
+    <ClCompile Include="..\Sources\sgs_center\Core.cpp" />
+    <ClCompile Include="..\Sources\sgs_center\CenterNetMaster.cpp" />
+    <ClCompile Include="..\Sources\sgs_center\CenterNetGroup.cpp" />
+    <ClCompile Include="..\Sources\sgs_center\ListenerCenterServer.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs_center\S_SETUP_IS.cpp">
+      <Filter>Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs_center\R_SETUP.cpp">
+      <Filter>Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs_center\CenterInterServerClientNetGroup.cpp" />
+    <ClCompile Include="..\Sources\sgs_center\BootStateManager.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs_center\CenterServer.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs_center\CenterSession.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs_center\CenterContents.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs_center\R_PING.cpp">
+      <Filter>Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs_center\R_MESSAGE.cpp">
+      <Filter>Recv</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\sgs_center\CenterCoreHeader.h" />
+    <ClInclude Include="..\Sources\sgs_center\CenterCore.h" />
+    <ClInclude Include="..\Sources\sgs_center\Core.h" />
+    <ClInclude Include="..\Sources\sgs_center\CenterNetMaster.h" />
+    <ClInclude Include="..\Sources\sgs_center\CenterNetGroup.h" />
+    <ClInclude Include="..\Sources\sgs_center\ListenerCenterServer.h">
+      <Filter>Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs_center\S_SETUP_IS.h">
+      <Filter>Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs_center\R_SETUP.h">
+      <Filter>Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs_center\CenterInterServerClientNetGroup.h" />
+    <ClInclude Include="..\Sources\sgs_center\BootStateManager.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs_center\CenterServer.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs_center\CenterSession.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs_center\CenterContents.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs_center\R_PING.h">
+      <Filter>Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs_center\R_MESSAGE.h">
+      <Filter>Recv</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Listener">
+      <UniqueIdentifier>{7bbab08f-50d0-4c07-8e61-d773b12cd13f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Recv">
+      <UniqueIdentifier>{a2682916-a9ed-46a9-9276-73c5d77d6882}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Send">
+      <UniqueIdentifier>{1accb1ca-c832-4eb7-85eb-3da32e43ca08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents">
+      <UniqueIdentifier>{dccda24d-5e50-4953-a362-f8c7be496cd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Host">
+      <UniqueIdentifier>{58865f5d-d1f2-4c5c-98cd-8e1f0dfbbc22}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

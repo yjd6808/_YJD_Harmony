@@ -1,0 +1,237 @@
+#include "Core.h"
+#include "SteinsGateApp.h"
+#include "GameCoreHeader.h"
+
+#include <jc/Logger/ConsoleLogger.h>
+
+#include <sg/LogSpecifier.h>
+#include <sg/AudioPlayer.h>
+#include <sg/SgaElementInitializer.h>
+#include <sg/ClientInfo.h>
+#include <sg/Config.h>
+
+#include <sgcl/Win32Helper.h>
+#include <sgcl/WorldScene.h>
+
+#include "_API/sgapiClient.h"
+
+#define APP_NAME "SteinsGate-Client"
+
+USING_NS_CC;
+USING_NS_JC;
+USING_NS_JC_DETAIL;
+USING_NS_JNET;
+USING_NS_JNET_DETAIL;
+
+//////////////////////////////////////////////////////////////////////////////////////////
+SteinsGateApp::SteinsGateApp()
+: pWndProcHook_(nullptr)
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+SteinsGateApp::~SteinsGateApp()
+{
+	// 여기서 코코스관련 오브젝트 삭제되도록 하면 릭 발생위험 있음.
+	// 예를 들어서 Label의 경우 _fontAtlas 멤버 변수가 포함되어있는데
+	// 라벨같은 코코스 오브젝트는 메인 함수의 Application->run() 함수 마무리단계에서 FontAtlasCache::purgeCachedData() 함수의 호출로 해제되도록 되어있다.
+	// 근데 내가 코코스 게임엔진의 모든 리소스가 종료되고 나서도 코코스 오브젝트 레퍼런스를 유지하고 있어버리면
+	// 일일히 찾아서 해제해줄 수가 없다.
+	// 따라서 WorldScene 삭제시 해제해주도록 하자.
+	if (pWndProcHook_ != nullptr)
+		UnhookWindowsHookEx(pWndProcHook_);
+
+	SgaElementInitializer::Finalize();
+	AudioPlayer::Finalize();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void SteinsGateApp::SetDesignResolutionSize(float _width, float _height)
+{
+	auto pDirector = Director::getInstance();
+	auto pGlView = pDirector->getOpenGLView();
+
+	jc_assert_msg(pView_, "아직 View가 설정되지 않았습니다.");
+	pView_->setDesignResolutionSize(_width, _height, pGlView->getResolutionPolicy());
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+c2d::rect SteinsGateApp::GetDesignResolutionRect() const
+{
+	c2d::size size = pView_->getDesignResolutionSize();
+	return c2d::rect{ 0, 0, size.width, size.height };
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+c2d::size SteinsGateApp::GetUIResolutionSize() const
+{
+	ClientInfo* pInfo = g_cConfigRuntime.GetClientInfo();
+	return c2d::size{ pInfo->uiResolutionWidth_, pInfo->uiResolutionHeight_ };
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+c2d::vec2 SteinsGateApp::GetUIScaleFactor() const
+{
+	ClientInfo* pInfo = g_cConfigRuntime.GetClientInfo();
+	c2d::size designSize = pView_->getDesignResolutionSize();
+	return c2d::vec2{ designSize.width / pInfo->uiResolutionWidth_, designSize.height / pInfo->uiResolutionHeight_ };
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+float SteinsGateApp::GetUIScaleXFactor() const
+{
+	ClientInfo* pInfo = g_cConfigRuntime.GetClientInfo();
+	return pView_->getDesignResolutionSize().width / pInfo->uiResolutionWidth_;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+float SteinsGateApp::GetUIScaleYFactor() const
+{
+	ClientInfo* pInfo = g_cConfigRuntime.GetClientInfo();
+	return pView_->getDesignResolutionSize().height / pInfo->uiResolutionHeight_;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void SteinsGateApp::SetFrameSize(float _width, float _height)
+{
+	jc_assert_msg(pView_, "아직 View가 설정되지 않았습니다.");
+	pView_->setFrameSize(_width, _height);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void SteinsGateApp::initGLContextAttrs()
+{
+	GLContextAttrs glContextAttrs = { 8, 8, 8, 8, 24, 8, 0 };
+	GLView::setGLContextAttrs(glContextAttrs);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool SteinsGateApp::applicationDidFinishLaunching()
+{
+	// ======================================================
+	// 메인 리소스 초기화
+	// ======================================================
+	InitializeJCore();
+	sgapiBase::Init(dbg_new sgapiClient);
+	Winsock::Initialize(2, 2);
+	AudioPlayer::Initilize();
+	SgaElementInitializer::Initialize();
+	FileUtils::getInstance()->setPopupNotify(false); // 파일못찾은 경우 알람 안하도록 함
+	jc::Console::SetSize(1200, 800);
+
+	InitializeNetLogger(LOG_SPECIFIER_CLIENT);
+	InitializeDefaultLogger(LOG_SPECIFIER_CLIENT);
+	InitializeCommonCore();
+
+	CreateOpenGLWindow(); // 윈도우 생성 후 클라이언트 코어 로딩
+	InitializeClientCore();
+	InitializeClientLogo(true, 5);
+	
+	sg::Contents.Initialize();
+	CreateWorldScene();
+	
+	InitializeWindowProcedure();
+
+	return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void SteinsGateApp::CreateOpenGLWindow()
+{
+	ClientInfo* pClientInfo = g_cConfigRuntime.GetClientInfo();
+	jc_assert(pClientInfo);
+
+	auto pDirector = Director::getInstance();
+	auto pGlView = pDirector->getOpenGLView();
+	Rect frameRect{ 0, 0, pClientInfo->frameWidth_, pClientInfo->frameHeight_ };
+
+	if (pGlView == nullptr)
+	{
+		pGlView = pClientInfo->fullScreen_
+			? GLViewImpl::createWithFullScreen(APP_NAME)
+			: GLViewImpl::createWithRect(APP_NAME, frameRect, 1.0f, pClientInfo->resizable_);
+		pGlView->setDesignResolutionSize(
+			pClientInfo->gameResolutionWidth_,
+			pClientInfo->gameResolutionHeight_,
+			(ResolutionPolicy)pClientInfo->gameResolutionPolicy_);
+	}
+
+	pDirector->setOpenGLView(pGlView);
+	pDirector->setDisplayStats(false);
+	pDirector->setAnimationInterval(1.0f / 120);
+	pDirector->setContentScaleFactor(1.0f);
+
+	Win32Helper::LazyInit();
+
+	pView_ = static_cast<GLViewImpl*>(pGlView);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void SteinsGateApp::CreateWorldScene()
+{
+	auto pScene = WorldScene::Get();
+	pScene->setAnchorPoint(Vec2::ZERO);
+	jc_assert_msg(pScene, "월드씬 생성에 실패했습니다.");
+	Director::getInstance()->runWithScene(pScene);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+LRESULT CALLBACK SteinsGateApp::GLFWWindowHookProc(int _code, WPARAM _wParam, LPARAM _lParam)
+{
+	SteinsGateApp* pApp = static_cast<SteinsGateApp*>(Application::getInstance());
+	Scene* pRunningScene = Director::getInstance()->getRunningScene();
+	WorldScene* pWorld;
+
+	if (pRunningScene != nullptr && pApp != nullptr && (pWorld = dynamic_cast<WorldScene*>(pRunningScene)) != nullptr)
+	{
+	}
+
+	_LogDebug_("%d", _code);
+	return ::CallNextHookEx(NULL, _code, _wParam, _lParam);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+LRESULT CALLBACK SteinsGateApp::GLFWWindowProc(HWND _pHwnd, UINT _uMsg, WPARAM _wParam, LPARAM _lParam)
+{
+	SteinsGateApp* pApp = static_cast<SteinsGateApp*>(Application::getInstance());
+	Scene* pRunningScene = Director::getInstance()->getRunningScene();
+	WorldScene* pWorld = nullptr;
+
+	return ::CallWindowProcW(pApp->GetPrevWndProc(), _pHwnd, _uMsg, _wParam, _lParam);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void SteinsGateApp::InitializeWindowProcedure()
+{
+	return;
+
+	const HWND pWndCocos = Director::getInstance()->getOpenGLView()->getWin32Window();
+	// TODO: SetWindowsHookExA 함수로 후킹하면 메모리릭이 대량 발생하는데.. 원인을 잘 모르겠다.
+	/*
+	 const DWORD dwThreadId = GetWindowThreadProcessId(pWndCocos, NULL);
+	 const HINSTANCE hInstance = ::GetModuleHandleW(nullptr);
+	 pWndProcHook_ = SetWindowsHookExA(WH_CALLWNDPROC, GLFWWindowHookProc, hInstance, dwThreadId);
+	 if (pWndProcHook_ == nullptr)
+		 _LogError_("코코스 윈도우 프로시저 후킹에 실패했습니다.");
+	*/
+
+	// TODO: SetWindowLongPtrW로 프로시저 처리해도 릭 발생함. 원인을 잘 모르겠다. (동일한 원인 같은데)
+	// pPrevWndProc_ = (WNDPROC)SetWindowLongPtrW(pWndCocos, GWLP_WNDPROC, (LONG_PTR)GLFWWindowProc);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void SteinsGateApp::applicationDidEnterBackground()
+{
+	Director::getInstance()->stopAnimation();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void SteinsGateApp::applicationWillEnterForeground()
+{
+	Director::getInstance()->startAnimation();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void SteinsGateApp::applicationDidExit()
+{
+}

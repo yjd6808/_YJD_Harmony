@@ -1,0 +1,23 @@
+/*
+ * 작성자: 윤정도
+ * 생성일: 2/8/2023 1:34:01 PM
+ * =====================
+ *
+ */
+
+
+#pragma once
+
+#include <jnet/EventListener/SessionEventListener.h>
+
+NS_JNET_BEGIN
+
+class JCORE_NOVTABLE ClientEventListener : public SessionEventListener
+{
+public:
+	virtual void OnConnectFailed(Session* _pSession, Int32U _errorCode) {} // Tcp클라이언트 전용
+};
+
+
+
+NS_JNET_END

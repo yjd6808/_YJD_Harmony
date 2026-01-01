@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup Condition="'$(Platform)' == 'Win32'">
+    <MySQLVersion>57</MySQLVersion>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Platform)' == 'x64'">
+    <MySQLVersion>80</MySQLVersion>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Projects\sgs\Sources;$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+
+    <Link>
+      <AdditionalDependencies>libmysql.lib;sgs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+</Project>

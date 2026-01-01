@@ -1,6 +1,6 @@
-# ÀÛ¼ºÀÚ : À±Á¤µµ
-#   ¸ñÀû : ¶óÀÌºê·¯¸® ÇÁ·ÎÁ§Æ®ÀÇ Æ÷½ºÆ® ºôµå ÀÌº¥Æ®¸¦ ¼öÇàÇÕ´Ï´Ù.
-#          Çì´õ ÆÄÀÏµé°ú Ãâ·ÂµÈ ¶óÀÌºê·¯¸® ÆÄÀÏÀ» º¹»çÇÕ´Ï´Ù.
+ï»¿# ì‘ì„±ì : ìœ¤ì •ë„
+#   ëª©ì  : ë¼ì´ë¸ŒëŸ¬ë¦¬ í”„ë¡œì íŠ¸ì˜ í¬ìŠ¤íŠ¸ ë¹Œë“œ ì´ë²¤íŠ¸ë¥¼ ìˆ˜í–‰í•©ë‹ˆë‹¤.
+#          í—¤ë” íŒŒì¼ë“¤ê³¼ ì¶œë ¥ëœ ë¼ì´ë¸ŒëŸ¬ë¦¬ íŒŒì¼ì„ ë³µì‚¬í•©ë‹ˆë‹¤.
 
 using module '.\FileUtil.psm1'
 
@@ -16,18 +16,18 @@ using namespace System.Diagnostics;
     [string][Alias('c')]$Configuration
 )
 
-# Å×½ºÆ®
+# í…ŒìŠ¤íŠ¸
 # $Configuration = 'Debug'
 # $Platform = 'Win32'
 # $ProjectName = 'JCore'
 
 if (($Platform -ne 'x64') -and ($Platform -ne 'Win32')) {
-    Write-Host '-f Win32 ¶Ç´Â -f x64 ¿É¼ÇÀÌ ÇÊ¿äÇÕ´Ï´Ù.'
+    Write-Host '-f Win32 ë˜ëŠ” -f x64 ì˜µì…˜ì´ í•„ìš”í•©ë‹ˆë‹¤.'
     exit 3
 }
 
 if (($Configuration -ne 'Debug') -and ($Configuration -ne 'Release')) {
-    Write-Host '-c Debug ¶Ç´Â -c Release ¿É¼ÇÀÌ ÇÊ¿äÇÕ´Ï´Ù.'
+    Write-Host '-c Debug ë˜ëŠ” -c Release ì˜µì…˜ì´ í•„ìš”í•©ë‹ˆë‹¤.'
     exit 2
 }
 
@@ -43,7 +43,7 @@ $LibraryPath = [Path]::Combine($ProjectPath, 'Output', $Platform, $Configuration
 $LibraryFilePath = Join-Path $LibraryPath ([String]::Format("{0}.lib", $ProjectName))
 $LibraryPdbPath = Join-Path $LibraryPath ([String]::Format("{0}.pdb", $ProjectName))
 
-Write-Host '[Post-Build Event °æ·Î Á¤º¸]'
+Write-Host '[Post-Build Event ê²½ë¡œ ì •ë³´]'
 Write-Host 'SolutionPath : ' $SolutionPath
 Write-Host 'SolutionOutputPath : ' $SolutionOutputPath
 Write-Host 'OutputIncludePath : ' $OutputIncludePath
@@ -57,21 +57,21 @@ Write-Host 'LibraryFilePath : ' $LibraryFilePath
 
 if (!(Test-Path $SourcesPath)) {
     Write-Host $SourcesPath 
-    Write-Host '¼Ò½º ÆÄÀÏ °æ·Î°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.'
+    Write-Host 'ì†ŒìŠ¤ íŒŒì¼ ê²½ë¡œê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.'
     exit 1
 }
 
 if (!(Test-Path $LibraryFilePath)) {
     Write-Host $LibraryFilePath
-    Write-Host 'Ãâ·ÂµÈ ¶óÀÌºê·¯¸® ÆÄÀÏÀÌ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.'
+    Write-Host 'ì¶œë ¥ëœ ë¼ì´ë¸ŒëŸ¬ë¦¬ íŒŒì¼ì´ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.'
     exit 1
 }
 
-Write-Host 'Post Build Event¸¦ ½ÃÀÛÇÕ´Ï´Ù.'
-Write-Host $SourcesPath 'Æú´õ¸¦ ºñ¿ó´Ï´Ù.'
+Write-Host 'Post Build Eventë¥¼ ì‹œì‘í•©ë‹ˆë‹¤.'
+Write-Host $SourcesPath 'í´ë”ë¥¼ ë¹„ì›ë‹ˆë‹¤.'
 [Directory]::Delete($OutputIncludePath, $True);
 
-Write-Host 'Çì´õÆÄÀÏµéÀ» º¹»çÇÕ´Ï´Ù.'
+Write-Host 'í—¤ë”íŒŒì¼ë“¤ì„ ë³µì‚¬í•©ë‹ˆë‹¤.'
 
 foreach ($HeaderFile in [FileUtil]::GetChildrenInDirectory($SourcesPath, $True, $True)) {
 
@@ -87,28 +87,28 @@ foreach ($HeaderFile in [FileUtil]::GetChildrenInDirectory($SourcesPath, $True, 
     $DetinationDirectoryPath = Join-Path $OutputIncludePath $SubPath
     $DetinationFilePath = Join-Path $DetinationDirectoryPath $HeaderFileName
 
-    # Áß°£ °æ·Î ¾øÀ» °æ¿ì »ı¼º
+    # ì¤‘ê°„ ê²½ë¡œ ì—†ì„ ê²½ìš° ìƒì„±
     if ((Test-Path $DetinationDirectoryPath) -eq $False) {
         New-Item -Type Directory $DetinationDirectoryPath
     }
 
     Copy-Item $HeaderFile -Destination $DetinationFilePath
-    Write-Host $DetinationFilePath º¹»ç¿Ï·á
+    Write-Host $DetinationFilePath ë³µì‚¬ì™„ë£Œ
 }
 
 
-Write-Host '¶óÀÌºê·¯¸® ÆÄÀÏÀ» º¹»çÇÕ´Ï´Ù.'
+Write-Host 'ë¼ì´ë¸ŒëŸ¬ë¦¬ íŒŒì¼ì„ ë³µì‚¬í•©ë‹ˆë‹¤.'
 $LibraryFileName = [Path]::GetFileName($LibraryFilePath)
 
-# lib/$Configuraton °æ·Î ¾øÀ» ¼ö ÀÖÀ¸´Ï »ı¼º
+# lib/$Configuraton ê²½ë¡œ ì—†ì„ ìˆ˜ ìˆìœ¼ë‹ˆ ìƒì„±
 if ((Test-Path $OutputLibraryPath) -eq $False) {
     New-Item -Type Directory $OutputLibraryPath
 }
 
 Copy-Item $LibraryFilePath -Destination $OutputLibraryPath
-Write-Host (Join-Path $OutputLibraryPath $LibraryFileName) º¹»ç¿Ï·á
+Write-Host (Join-Path $OutputLibraryPath $LibraryFileName) ë³µì‚¬ì™„ë£Œ
 
 
-Write-Host 'Post Build Event¸¦ ¿Ï·áÇÏ¿´½À´Ï´Ù.'
+Write-Host 'Post Build Eventë¥¼ ì™„ë£Œí•˜ì˜€ìŠµë‹ˆë‹¤.'
 
 

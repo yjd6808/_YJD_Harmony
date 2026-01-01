@@ -1,0 +1,244 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Sources\jnet\Core.cpp" />
+    <ClCompile Include="..\Sources\jnet\IPAddress.cpp" />
+    <ClCompile Include="..\Sources\jnet\IPEndPoint.cpp" />
+    <ClCompile Include="..\Sources\jnet\Socket.cpp" />
+    <ClCompile Include="..\Sources\jnet\Winsock.cpp" />
+    <ClCompile Include="..\Sources\jnet\Host\TcpServer.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\Host\Session.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\Host\SessionContainer.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\IOCP\IOCP.cpp">
+      <Filter>IOCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\IOCP\IOCPWorker.cpp">
+      <Filter>IOCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\Host\TcpClient.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\IOCP\IOCPPostOrder.cpp">
+      <Filter>IOCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlappedAccept.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlappedConnect.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlappedRecv.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlappedSend.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlapped.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlappedDisconnect.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\Host\UdpClient.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlappedSendTo.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlappedRecvFrom.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\Host\Host.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\NetGroupMgr.cpp" />
+    <ClCompile Include="..\Sources\jnet\Host\TcpSession.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\Buffer\CommandBuffer.cpp">
+      <Filter>Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\Packet\Packet.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\NetGroup.cpp" />
+    <ClCompile Include="..\Sources\jnet\Packet\CommandParser.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\NetLoggerDefine.cpp" />
+    <ClCompile Include="..\Sources\jnet\Packet\CommandNameDictionary.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\Packet\SendHelper.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\Config.cpp" />
+    <ClCompile Include="..\Sources\jnet\Packet\Command.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\Packet\PacketParser.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\Packet\PacketViewer.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\jnet\Core.h" />
+    <ClInclude Include="..\Sources\jnet\IPEndPoint.h" />
+    <ClInclude Include="..\Sources\jnet\IPAddress.h" />
+    <ClInclude Include="..\Sources\jnet\Protocol.h" />
+    <ClInclude Include="..\Sources\jnet\Socket.h" />
+    <ClInclude Include="..\Sources\jnet\ByteOrder.h" />
+    <ClInclude Include="..\Sources\jnet\Winsock.h" />
+    <ClInclude Include="..\Sources\jnet\Host\TcpServer.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Host\SessionContainer.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Host\Server.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\IOCP\IOCPWorker.h">
+      <Filter>IOCP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\IOCP\IOCP.h">
+      <Filter>IOCP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Host\TcpClient.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\IOCP\IOCPPostOrder.h">
+      <Filter>IOCP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Worker.h" />
+    <ClInclude Include="..\Sources\jnet\WorkerGroup.h" />
+    <ClInclude Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlappedAccept.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlappedConnect.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlappedRecv.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlappedSend.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlapped.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlappedDisconnect.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Namespace.h" />
+    <ClInclude Include="..\Sources\jnet\Buffer\BufferAbstract.h">
+      <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Buffer\StaticBuffer.h">
+      <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Host\Session.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Host\TcpSession.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Buffer\CommandBuffer.h">
+      <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Host\UdpClient.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlappedSendTo.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlappedRecvFrom.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Host\Host.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\NetGroupMgr.h" />
+    <ClInclude Include="..\Sources\jnet\EventListener\SessionEventListener.h">
+      <Filter>EventListener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\EventListener\ServerEventListener.h">
+      <Filter>EventListener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\EventListener\ClientEventListener.h">
+      <Filter>EventListener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Packet\Packet.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Packet\Command.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\NetGroup.h" />
+    <ClInclude Include="..\Sources\jnet\Packet\CommandParser.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\NetLoggerDefine.h" />
+    <ClInclude Include="..\Sources\jnet\IOCP\IOCPTask.h">
+      <Filter>IOCP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlappedTask.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Packet\SendHelper.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Packet\CommandNameDictionary.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Host\ISessionContainer.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Config.h" />
+    <ClInclude Include="..\Sources\jnet\Packet\PacketParser.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Packet\PacketViewer.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Host">
+      <UniqueIdentifier>{c5acf45c-4f39-40a4-ba4b-5317d30049ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IOCP">
+      <UniqueIdentifier>{5578a5b5-a949-409d-be0b-72ad6147d5f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IOCPOverlapped">
+      <UniqueIdentifier>{d1067032-1442-4f1d-9a8c-7a577b68be80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Packet">
+      <UniqueIdentifier>{9e8e93e2-56cf-4941-a5af-677ab1610c42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Buffer">
+      <UniqueIdentifier>{0ac9912d-3fa8-4c08-a330-c450b5db4d1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EventListener">
+      <UniqueIdentifier>{ea21f6b0-8056-4e44-b45f-9aa1d81306b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Natvis">
+      <UniqueIdentifier>{19b633a7-838c-4959-98c8-068e13bc5cd9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="..\Sources\jnet\Natvis\Session.natvis">
+      <Filter>Natvis</Filter>
+    </Natvis>
+    <Natvis Include="..\Sources\jnet\Natvis\IPEndPoint.natvis">
+      <Filter>Natvis</Filter>
+    </Natvis>
+  </ItemGroup>
+</Project>

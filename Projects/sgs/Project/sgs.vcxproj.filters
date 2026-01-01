@@ -1,0 +1,329 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\Sources\sgs\Core.h" />
+    <ClInclude Include="..\Sources\sgs\ServerCore.h" />
+    <ClInclude Include="..\Sources\sgs\ServerCoreHeader.h" />
+    <ClInclude Include="..\Sources\sgs\S_SETUP_IS_COMMON.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\R_SETUP_COMMON.h">
+      <Filter>Net\Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\CommonNetGroup.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\CommonNetGroupMgr.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\CmdHost.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\ListenerServerCommon.h">
+      <Filter>Net\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\ListenerClientCommon.h">
+      <Filter>Net\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\InterServerClientNetGroup.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\InterServerSendHelper.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\InterServerCmdDefine.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\InterServerRecvHelper.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\CmdRelay.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\TimeManager.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\CLIListenerCommon.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\RuntimeConfigCommon.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\ListenerHelperCommon.h">
+      <Filter>Net\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\ListenerInterServerClient.h">
+      <Filter>Net\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\IComponent.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\IUpdatable.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\UpdatableCollection.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\CommonServer.h">
+      <Filter>Net\Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\ServerContents.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\ServerEnum.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\ServerConst.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\ServerConst_PROCESS.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\ServerConst_NETGROUP.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\ServerConst_HOST.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\CommonSession.h">
+      <Filter>Net\Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\ComponentCollection.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\ServerConst_COMPONENT.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\AuthenticationComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\UnauthenticatedSessionManager.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\CmdHost_PING.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\CmdHost_SETUP.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\CmdHost_MESSAGE.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\CmdRelay_AUTHENTICATION.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\SessionComponent.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\ISessionEventHandler.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\CmdRelay_TEST.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\R_PING_COMMON.h">
+      <Filter>Net\Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\R_MESSAGE_COMMON.h">
+      <Filter>Net\Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\R_TEST_COMMON.h">
+      <Filter>Net\Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\S_TEST_IS_COMMON.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\S_MESSAGE_IS_COMMON.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\S_PING_IS_COMMON.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\S_MESSAGE_COMMON.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\QueryDefine.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\QueryHelper.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\StatementType.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\MysqlConnection.h">
+      <Filter>Database\Mysql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\MysqlConnectionPool.h">
+      <Filter>Database\Mysql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\MysqlDatabase.h">
+      <Filter>Database\Mysql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\MysqlQuery.h">
+      <Filter>Database\Mysql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\MysqlStatementBuilder.h">
+      <Filter>Database\Mysql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgs\QueryDefine_AUTH.h">
+      <Filter>Database\Define</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Sources\sgs\Core.cpp" />
+    <ClCompile Include="..\Sources\sgs\ServerCore.cpp" />
+    <ClCompile Include="..\Sources\sgs\S_SETUP_IS_COMMON.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\R_SETUP_COMMON.cpp">
+      <Filter>Net\Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\CommonNetGroup.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\CommonNetGroupMgr.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\ListenerServerCommon.cpp">
+      <Filter>Net\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\ListenerClientCommon.cpp">
+      <Filter>Net\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\InterServerClientNetGroup.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\InterServerSendHelper.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\InterServerRecvHelper.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\TimeManager.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\CLIListenerCommon.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\RuntimeConfigCommon.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\ListenerHelperCommon.cpp">
+      <Filter>Net\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\ListenerInterServerClient.cpp">
+      <Filter>Net\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\UpdatableCollection.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\CommonServer.cpp">
+      <Filter>Net\Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\ServerContents.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\ServerEnum.cpp">
+      <Filter>Enum</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\CommonSession.cpp">
+      <Filter>Net\Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\ComponentCollection.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\AuthenticationComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\UnauthenticatedSessionManager.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\SessionComponent.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\R_PING_COMMON.cpp">
+      <Filter>Net\Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\R_MESSAGE_COMMON.cpp">
+      <Filter>Net\Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\R_TEST_COMMON.cpp">
+      <Filter>Net\Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\S_TEST_IS_COMMON.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\S_MESSAGE_IS_COMMON.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\S_PING_IS_COMMON.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\S_MESSAGE_COMMON.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\MysqlConnection.cpp">
+      <Filter>Database\Mysql</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\MysqlConnectionPool.cpp">
+      <Filter>Database\Mysql</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\MysqlDatabase.cpp">
+      <Filter>Database\Mysql</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\MysqlQuery.cpp">
+      <Filter>Database\Mysql</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgs\MysqlStatementBuilder.cpp">
+      <Filter>Database\Mysql</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Database">
+      <UniqueIdentifier>{b67e8325-f0df-4416-9a2c-c3994194080e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net">
+      <UniqueIdentifier>{49b73bd5-7afb-4461-b558-0644e505ebff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{47a75455-218d-4948-bee5-5a8abccab001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Recv">
+      <UniqueIdentifier>{7d6217ad-83c2-431a-b2c7-71c666320a1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Send">
+      <UniqueIdentifier>{6b1f231b-af01-479d-8ae0-4738e1d223af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Cmd">
+      <UniqueIdentifier>{26966038-820f-486e-9eab-255c8f6394ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Listener">
+      <UniqueIdentifier>{c33adf12-f613-4b94-95f7-fdd3446da358}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{e6d8fe09-415a-4176-8d54-77235b91080c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Host">
+      <UniqueIdentifier>{1276ae53-d126-4fe3-943e-41b0bf69f0f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents">
+      <UniqueIdentifier>{9c30e36e-d7bf-4f68-9df8-a1fc168a182f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Const">
+      <UniqueIdentifier>{2f5494b8-ae54-445c-a598-9e6457f835fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enum">
+      <UniqueIdentifier>{84690f22-67e2-430f-94ef-504880346a34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{c7afc042-9e6c-4936-b9bf-debc998d46a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\Mysql">
+      <UniqueIdentifier>{e41719f4-8ed7-4099-883d-93349ca6f03c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\Define">
+      <UniqueIdentifier>{b3953115-9b4c-4cce-9ca3-3b366468ae35}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

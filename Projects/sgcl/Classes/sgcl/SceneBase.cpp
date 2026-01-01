@@ -1,0 +1,94 @@
+/*
+ * 작성자: 윤정도
+ * 생성일: 2/5/2023 10:41:04 AM
+ * =====================
+ * 씬 호출 과정 테스트
+ *
+ *  1. 생성자
+ *	2. init
+ *	3. onEnter
+ *	4. onEnterTransitionDidFinish
+ *	5. removechild로 씬 해제
+ *	6. onExitTransitionDidStart
+ *  7. onExit
+ *	8. 메모리 해제
+ */
+
+
+#include "Core.h"
+#include "GameCoreHeader.h"
+#include "SceneBase.h"
+
+#include <sgcl/WorldScene.h>
+#include <sgcl/UILayer.h>
+#include <sgcl/ImagePackManager.h>
+
+USING_NS_CC;
+USING_NS_JC;
+
+//////////////////////////////////////////////////////////////////////////////////////////
+SceneBase::SceneBase()
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+SceneBase::~SceneBase()
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool SceneBase::init()
+{
+	_LogDebug_("%s 씬 초기화", SceneType::Name[GetType()]);
+
+	if (!Scene::init())
+		return false;
+
+	pWorldScene_ = WorldScene::Get();
+	pUILayer_ = &pWorldScene_->GetUILayer();
+
+	removeChild(_defaultCamera);
+
+	// 필수, 엔진에서 디폴트 카메라 접근하는 경우가 있음.
+	// Scene::onProjectionChanged 함수 참고.
+	// 디폴트 카메라는 removeChild하면 레퍼런스카운트가 1남아서 알아서 오토릴리즈 되기때문에 nullptr로
+	// 초기화만 해주면 문제 없음
+	_defaultCamera = nullptr;
+
+	return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void SceneBase::onEnter()
+{
+	_LogDebug_("%s 씬을 시작", SceneType::Name[GetType()]);
+	Scene::onEnter();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void SceneBase::onExit()
+{
+	_LogDebug_("%s 씬을 종료", SceneType::Name[GetType()]);
+	Scene::onExit();
+	pUILayer_->ClearUnload();
+	g_cImagePackMgr.ReleaseAllFrameTexture();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void SceneBase::onEnterTransitionDidFinish()
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void SceneBase::onExitTransitionDidStart()
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void SceneBase::removeAllChildren()
+{
+	// Scene::removeAllChildren() 함수는 디폴트 카메라를 삭제하지 않기 때문에
+	// 디폴트 카메라라도 삭제해주도록 하기 위해서 오버라이딩 구현함
+
+	Node::removeAllChildren();
+}
