@@ -30,7 +30,7 @@
 
 #include "platform/CCPlatformMacros.h"
 #include "base/CCRef.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
 #undef NEAR

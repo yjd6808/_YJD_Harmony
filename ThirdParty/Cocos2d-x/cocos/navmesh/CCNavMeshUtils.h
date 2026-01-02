@@ -30,7 +30,7 @@
 #if CC_USE_NAVMESH
 
 #include "platform/CCPlatformMacros.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 
 #include "recast/Detour/DetourCommon.h"
 #include "recast/Detour/DetourNavMesh.h"

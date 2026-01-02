@@ -96,11 +96,8 @@ void FinalizeClientCore()
 	JC_DELETE_SINGLETON_SAFE(sg::Net);
 
 	g_cDescMgr.Free();
-	
-	sg::Contents.Finalize();
 	g_cFontMgr.Free();
 	g_cImagePackMgr.Free();
 
-
-	sgapiBase::Free();
+	sg::Contents.Finalize();
 }

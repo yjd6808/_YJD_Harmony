@@ -28,7 +28,7 @@
 #define __CC_PU_PARTICLE_3D_EMITTER_H__
 
 #include "base/CCRef.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 #include "extensions/Particle3D/CCParticle3DEmitter.h"
 #include "extensions/Particle3D/PU/CCPUDynamicAttribute.h"
 #include "extensions/Particle3D/PU/CCPUParticleSystem3D.h"

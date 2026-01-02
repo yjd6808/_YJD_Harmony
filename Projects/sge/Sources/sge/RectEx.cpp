@@ -35,7 +35,7 @@ bool RectEx::Intersect(const cc::rect& _rc, const cc::rect& _rc2, cc::rect& _int
 //////////////////////////////////////////////////////////////////////////////////////////
 void RectEx::Log(const cc::rect& _rc)
 {
-	jc::Console::WriteLine("::  [%d, %d],  [%d, %d]",
+	jc::Console::WriteLine(":: 최소 [%d, %d], 최대 [%d, %d]",
 		int(_rc.getMinX()), int(_rc.getMinY()), int(_rc.getWidth()), int(_rc.getHeight()));
 }
 

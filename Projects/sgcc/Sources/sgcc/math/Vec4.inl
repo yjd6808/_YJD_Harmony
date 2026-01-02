@@ -1,5 +1,5 @@
-#include "math/Mat4.h"
-#include "math/Vec4.h"
+#include "sgcc/math/Mat4.h"
+#include "sgcc/math/Vec4.h"
 
 NS_CC_MATH_BEGIN
 

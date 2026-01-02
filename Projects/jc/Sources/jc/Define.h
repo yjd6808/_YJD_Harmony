@@ -216,4 +216,16 @@
 	JC_GETTER(type, function_name, variable_name)				\
 	JC_SETTER(type, function_name, variable_name)
 
+	#if defined(STATIC_LIB_JC)
+		#define JC_DLL	// 다른 프로젝트에서는 이프로젝트가 정적 라이브러리임을 알려주는 용도
+	#else
+		// 아직 dll 지원안하므로 주석처리해놓음
+		#define JC_DLL
+		//#if defined(JC_DLL_EXPORT)
+		//	#define JC_DLL     __declspec(dllexport)
+		//#else         /* use a DLL library */
+		//	#define JC_DLL     __declspec(dllimport)
+		//#endif
+	#endif
+
 #endif

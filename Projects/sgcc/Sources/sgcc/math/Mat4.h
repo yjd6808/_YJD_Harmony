@@ -1,8 +1,8 @@
 ﻿#ifndef MATH_MAT4_H
 #define MATH_MAT4_H
 
-#include "math/Vec3.h"
-#include "math/Vec4.h"
+#include "sgcc/math/Vec3.h"
+#include "sgcc/math/Vec4.h"
 
 #ifdef __SSE__
 #include <xmmintrin.h>
@@ -969,6 +969,6 @@ NS_CC_MATH_END
  end of base group
  @}
  */
-#include "math/Mat4.inl"
+#include "sgcc/math/Mat4.inl"
 
 #endif // MATH_MAT4_H

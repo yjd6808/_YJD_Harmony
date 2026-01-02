@@ -26,7 +26,7 @@
 #ifndef __CC_RAY_H_
 #define __CC_RAY_H_
 
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 #include "3d/CCAABB.h"
 #include "3d/CCOBB.h"
 #include "3d/CCPlane.h"

@@ -2,12 +2,18 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\Sources;$(ProjectDir)..\Sources\$(ProjectName);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
 
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)Output\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
+
+  <Target Name="DebugProps" BeforeTargets="Build">
+    <Message Text=".*`*.*`*.*`*.*`*.*`*.*`*.*`*.*`*.*`*." Importance="high"  />
+    <Message Text="Project: $(MSBuildProjectName), ConfigType: $(ConfigurationType)" Importance="high"  />
+    <Message Text=".*`*.*`*.*`*.*`*.*`*.*`*.*`*.*`*.*`*." Importance="high"  />
+  </Target>
 
 </Project>

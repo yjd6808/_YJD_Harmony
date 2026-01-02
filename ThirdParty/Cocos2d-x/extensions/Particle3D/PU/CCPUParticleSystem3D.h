@@ -29,7 +29,7 @@
 
 #include "2d/CCNode.h"
 #include "base/CCProtocols.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 #include "extensions/Particle3D/CCParticleSystem3D.h"
 #include <vector>
 #include <map>

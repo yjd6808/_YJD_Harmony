@@ -1,5 +1,5 @@
 ﻿#include "Core.h"
-#include "math/Quaternion.h"
+#include "sgcc/math/Quaternion.h"
 
 NS_CC_MATH_BEGIN
 

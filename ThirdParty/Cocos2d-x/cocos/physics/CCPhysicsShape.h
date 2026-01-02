@@ -30,7 +30,7 @@
 #if CC_USE_PHYSICS
 
 #include "base/CCRef.h"
-#include "math/CCGeometry.h"
+#include "sgcc/math/CCGeometry.h"
 
 struct cpShape;
 

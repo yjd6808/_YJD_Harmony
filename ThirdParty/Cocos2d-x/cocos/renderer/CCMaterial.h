@@ -37,10 +37,10 @@
 #include "renderer/CCTechnique.h"
 #include "base/CCRef.h"
 #include "base/CCVector.h"
-#include "math/Vec2.h"
-#include "math/Vec3.h"
-#include "math/Vec4.h"
-#include "math/Mat4.h"
+#include "sgcc/math/Vec2.h"
+#include "sgcc/math/Vec3.h"
+#include "sgcc/math/Vec4.h"
+#include "sgcc/math/Mat4.h"
 #include "platform/CCPlatformMacros.h"
 
 

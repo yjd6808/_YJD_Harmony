@@ -151,6 +151,9 @@ int main()
 	if (a == b)
 		std::cout << "aa\n";
 
+	Random r;
+	float fsefes = r.GenerateF(0.f, 1.f);
+
 	Console::WriteLine("%d", sizeof(Example0));
 	Console::WriteLine("%d", sizeof(Example1));
 	Console::WriteLine("%d", sizeof(Example2));
@@ -168,14 +171,6 @@ int main()
 
 	HashMap<int, int> map{};
 	CIndexedMemoryPool pool(map);
-
-	auto fsefes = MakeShared<CIndexedMemoryPool>(HashMap<int, int> {});
-	fsefes->DynamicPop(4343);
-
-	pool.DynamicPop(500);
-
-
-
 
 	Vector v{ 5, 2, 7, 3, 8, 1 };	v.ForEach([](int val) { std::cout << val << " "; }); std::cout << "\n";
 	Arrays::MakeHeap(v.Source(), v.Size());	// Max Heap으로 만든다.

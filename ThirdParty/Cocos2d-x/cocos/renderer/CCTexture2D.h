@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include <unordered_map>
 
 #include "base/CCRef.h"
-#include "math/CCGeometry.h"
+#include "sgcc/math/CCGeometry.h"
 #include "base/ccTypes.h"
 
 NS_CC_BEGIN

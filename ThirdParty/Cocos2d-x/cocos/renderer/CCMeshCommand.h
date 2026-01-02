@@ -30,7 +30,7 @@
 #include "renderer/CCRenderCommand.h"
 #include "renderer/CCGLProgram.h"
 #include "renderer/CCRenderState.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 
 NS_CC_BEGIN
 

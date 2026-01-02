@@ -30,7 +30,7 @@
 #if CC_USE_PHYSICS
 
 #include "2d/CCComponent.h"
-#include "math/CCGeometry.h"
+#include "sgcc/math/CCGeometry.h"
 #include "physics/CCPhysicsShape.h"
 #include "base/CCVector.h"
 

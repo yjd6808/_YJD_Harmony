@@ -28,7 +28,7 @@
 #define __CC_PU_PARTICLE_3D_RIBBON_TRAIL_H__
 
 #include "base/CCRef.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 #include "extensions/Particle3D/PU/CCPUBillboardChain.h"
 #include <vector>
 #include <unordered_map>

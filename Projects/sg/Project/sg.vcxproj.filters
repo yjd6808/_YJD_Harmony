@@ -211,6 +211,9 @@
     <ClCompile Include="..\Sources\sg\_Util\DescBase.cpp">
       <Filter>_Util</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Projectile.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\sg\Core.h" />
@@ -497,6 +500,9 @@
     </ClInclude>
     <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Server.h">
       <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Projectile.h">
+      <Filter>_Struct</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

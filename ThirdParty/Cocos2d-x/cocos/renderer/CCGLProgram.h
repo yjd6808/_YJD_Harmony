@@ -38,7 +38,7 @@ THE SOFTWARE.
 #include "base/CCRef.h"
 #include "base/ccTypes.h"
 #include "platform/CCGL.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 
 /**
  * @addtogroup renderer

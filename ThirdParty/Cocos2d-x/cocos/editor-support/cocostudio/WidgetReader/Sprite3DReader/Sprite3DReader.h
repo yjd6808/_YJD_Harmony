@@ -26,7 +26,7 @@
 #ifndef __cocos2d_libs__Sprite3DReader__
 #define __cocos2d_libs__Sprite3DReader__
 
-#include "math/Vec2.h"
+#include "sgcc/math/Vec2.h"
 #include "editor-support/cocostudio/CocosStudioExport.h"
 #include "editor-support/cocostudio/WidgetReader/NodeReaderProtocol.h"
 #include "editor-support/cocostudio/WidgetReader/NodeReaderDefine.h"

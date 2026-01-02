@@ -83,6 +83,6 @@
 #define USING_NS_CC_MATH 
 #endif
 
-#include "DLLExport.h"
+#include "sgcc/DLLExport.h"
 
 #endif // __CCMATHBASE_H__

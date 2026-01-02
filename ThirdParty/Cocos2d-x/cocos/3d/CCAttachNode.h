@@ -26,7 +26,7 @@
 #ifndef __CCATTACHNODE_H__
 #define __CCATTACHNODE_H__
 
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 #include "2d/CCNode.h"
 
 NS_CC_BEGIN

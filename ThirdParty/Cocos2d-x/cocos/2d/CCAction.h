@@ -30,7 +30,7 @@ THE SOFTWARE.
 #define __ACTIONS_CCACTION_H__
 
 #include "base/CCRef.h"
-#include "math/CCGeometry.h"
+#include "sgcc/math/CCGeometry.h"
 #include "base/CCScriptSupport.h"
 
 NS_CC_BEGIN

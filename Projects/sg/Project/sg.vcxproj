@@ -92,6 +92,7 @@
     <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_MapPhysics.cpp" />
     <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_MonsterBase.cpp" />
     <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_MonsterStat.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Projectile.cpp" />
     <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Server.cpp" />
     <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Tile.cpp" />
     <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_UI.cpp" />
@@ -250,6 +251,7 @@
     <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_MapPhysics.h" />
     <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_MonsterBase.h" />
     <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_MonsterStat.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Projectile.h" />
     <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Server.h" />
     <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Tile.h" />
     <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_UI.h" />

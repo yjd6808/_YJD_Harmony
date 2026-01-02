@@ -168,6 +168,30 @@ void SteinsGateApp::CreateOpenGLWindow()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+void SteinsGateApp::applicationDidExit(ExitStep _step)
+{
+	switch (_step)
+	{
+	case ExitStep::EXIT_GAME_LOOP:
+		{
+		}
+		break;
+	case ExitStep::EXIT_DIRECTOR: // 월드씬 정리 된 후 호출
+		{
+		}
+		break;
+	case ExitStep::EXIT_GLVIEW: // GLVIew까지 정리된 후 호출
+		{
+
+
+		}
+		break;
+	}
+
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
 void SteinsGateApp::CreateWorldScene()
 {
 	auto pScene = WorldScene::Get();
@@ -230,9 +254,4 @@ void SteinsGateApp::applicationDidEnterBackground()
 void SteinsGateApp::applicationWillEnterForeground()
 {
 	Director::getInstance()->startAnimation();
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void SteinsGateApp::applicationDidExit()
-{
 }

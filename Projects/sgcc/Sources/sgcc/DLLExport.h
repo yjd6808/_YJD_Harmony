@@ -8,11 +8,13 @@
 #pragma once
 
 #if defined(STATIC_LIB_STEINSGATE_COCOS)
-    #define SGCC_DLL
+	#define SGCC_DLL
 #else
-	#if defined(SGCC_DLL_EXPORT)
-		#define SGCC_DLL     __declspec(dllexport)
-	#else         /* use a DLL library */
-		#define SGCC_DLL     __declspec(dllimport)
-	#endif
+	#define SGCC_DLL
+	// 아직 dll 지원안함.
+	//#if defined(SGCC_DLL_EXPORT)
+	//	#define SGCC_DLL     __declspec(dllexport)
+	//#else         /* use a DLL library */
+	//	#define SGCC_DLL     __declspec(dllimport)
+	//#endif
 #endif

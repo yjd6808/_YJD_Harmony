@@ -28,7 +28,7 @@
 #define __CC_PU_PARTICLE_3D_SLAVE_BEHAVIOUR_H__
 
 #include "base/CCRef.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 #include "extensions/Particle3D/PU/CCPUParticleSystem3D.h"
 #include "extensions/Particle3D/PU/CCPUBehaviour.h"
 #include <vector>

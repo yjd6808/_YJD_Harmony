@@ -37,7 +37,7 @@ THE SOFTWARE.
 #include "base/CCRef.h"
 #include "base/CCVector.h"
 #include "2d/CCScene.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 #include "platform/CCGL.h"
 #include "platform/CCGLView.h"
 

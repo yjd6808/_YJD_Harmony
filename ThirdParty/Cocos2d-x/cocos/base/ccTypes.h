@@ -31,10 +31,10 @@ THE SOFTWARE.
 
 #include <string>
 
-#include "math/CCGeometry.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCGeometry.h"
+#include "sgcc/math/CCMath.h"
 #include "base/CCRef.h"
-#include "base/ccTypesBase.h"		// jdyun 여기로 분리함 (슈타인즈 게이트 기반 프로젝트에서도 써야하기 때문)
+#include "sgcc/base/ccTypesBase.h"		// jdyun 여기로 분리함 (슈타인즈 게이트 기반 프로젝트에서도 써야하기 때문)
 #include "platform/CCGL.h"
 
 /**

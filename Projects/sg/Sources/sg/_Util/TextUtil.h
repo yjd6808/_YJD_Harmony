@@ -8,9 +8,6 @@
 
 #pragma once
 
-
-#include "Core.h"
-
 class TextUtil
 {
 public:

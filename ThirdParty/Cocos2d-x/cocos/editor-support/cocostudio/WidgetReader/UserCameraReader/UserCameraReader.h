@@ -26,7 +26,7 @@
 #ifndef __cocos2d_libs__UserCameraReader__
 #define __cocos2d_libs__UserCameraReader__
 
-#include "math/Vec2.h"
+#include "sgcc/math/Vec2.h"
 #include "editor-support/cocostudio/CocosStudioExport.h"
 #include "editor-support/cocostudio/WidgetReader/NodeReaderProtocol.h"
 #include "editor-support/cocostudio/WidgetReader/NodeReaderDefine.h"

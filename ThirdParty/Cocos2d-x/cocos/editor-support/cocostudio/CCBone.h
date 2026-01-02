@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include "editor-support/cocostudio/CCDisplayManager.h"
 #include "editor-support/cocostudio/CocosStudioExport.h"
 #include "2d/CCNode.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 
 namespace cocostudio {
 

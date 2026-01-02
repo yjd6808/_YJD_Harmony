@@ -27,7 +27,7 @@ THE SOFTWARE.
 #ifndef __PLATFORM_CCNS_H__
 #define __PLATFORM_CCNS_H__
 
-#include "math/CCGeometry.h"
+#include "sgcc/math/CCGeometry.h"
 
 NS_CC_BEGIN
 

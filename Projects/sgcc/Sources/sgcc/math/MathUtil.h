@@ -27,7 +27,7 @@
 #include <xmmintrin.h>
 #endif
 
-#include "math/CCMathBase.h"
+#include "sgcc/math/CCMathBase.h"
 
 /**
  * @addtogroup base

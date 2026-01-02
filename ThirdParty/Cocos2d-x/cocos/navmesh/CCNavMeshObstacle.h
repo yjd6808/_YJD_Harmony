@@ -32,7 +32,7 @@
 #include "2d/CCComponent.h"
 
 #include "base/CCRef.h"
-#include "math/Vec3.h"
+#include "sgcc/math/Vec3.h"
 #include "recast/Detour/DetourNavMesh.h"
 #include "recast/DetourTileCache/DetourTileCache.h"
 

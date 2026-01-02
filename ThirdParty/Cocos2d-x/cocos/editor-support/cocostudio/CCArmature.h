@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include "editor-support/cocostudio/CCSpriteFrameCacheHelper.h"
 #include "editor-support/cocostudio/CCArmatureDataManager.h"
 #include "editor-support/cocostudio/CocosStudioExport.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 
 class b2Body;
 struct cpBody;

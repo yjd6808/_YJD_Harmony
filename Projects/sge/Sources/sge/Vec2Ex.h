@@ -8,8 +8,6 @@
 
 #pragma once
 
-
-#include "Core.h"
 #include <jc/Math.h>
 
 struct Vec2Ex

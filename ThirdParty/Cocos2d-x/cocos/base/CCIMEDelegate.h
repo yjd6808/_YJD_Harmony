@@ -28,7 +28,7 @@ THE SOFTWARE.
 #define __CC_IME_DELEGATE_H__
 
 #include <string>
-#include "math/CCGeometry.h"
+#include "sgcc/math/CCGeometry.h"
 #include "base/CCEventKeyboard.h"
 
 /**

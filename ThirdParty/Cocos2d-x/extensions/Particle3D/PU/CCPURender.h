@@ -30,7 +30,7 @@
 #include <vector>
 
 #include "base/CCRef.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 #include "extensions/Particle3D/CCParticle3DRender.h"
 #include "renderer/CCRenderState.h"
 

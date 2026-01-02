@@ -11,7 +11,7 @@
 #include <random>
 
 NS_JC_BEGIN
-struct Random final
+struct JC_DLL Random final
 {
 	Random();
 

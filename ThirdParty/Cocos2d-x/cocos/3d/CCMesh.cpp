@@ -39,7 +39,7 @@
 #include "renderer/CCPass.h"
 #include "renderer/CCRenderer.h"
 #include "renderer/CCVertexAttribBinding.h"
-#include "math/Mat4.h"
+#include "sgcc/math/Mat4.h"
 
 using namespace std;
 

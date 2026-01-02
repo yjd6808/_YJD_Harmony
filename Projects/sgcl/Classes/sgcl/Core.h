@@ -15,7 +15,6 @@
 #include <sgcl/Const.h>
 #include <sgcl/GameCore.h>
 
-
 #ifdef _DEBUG
 #define SG_LOG_TICK(_time, _fmt, ...)            \
         static float Timer;                          \

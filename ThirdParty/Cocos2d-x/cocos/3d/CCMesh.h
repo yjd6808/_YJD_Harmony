@@ -33,7 +33,7 @@
 #include "3d/CCAABB.h"
 
 #include "base/CCRef.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 #include "renderer/CCMeshCommand.h"
 
 NS_CC_BEGIN

@@ -31,7 +31,7 @@
 
 #include "chipmunk/chipmunk.h"
 #include "platform/CCPlatformMacros.h"
-#include "math/CCGeometry.h"
+#include "sgcc/math/CCGeometry.h"
 
 NS_CC_BEGIN
 

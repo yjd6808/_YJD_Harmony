@@ -28,7 +28,7 @@
 #define __CC_PU_PARTICLE_3D_SPHERE_H__
 
 #include "base/CCRef.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 #include "3d/CCAABB.h"
 #include <vector>
 

@@ -30,7 +30,7 @@
 #if CC_USE_NAVMESH
 
 #include "base/CCRef.h"
-#include "math/Vec3.h"
+#include "sgcc/math/Vec3.h"
 #include "recast/Detour/DetourNavMesh.h"
 #include "recast/Detour/DetourNavMeshQuery.h"
 #include "recast/DetourCrowd/DetourCrowd.h"

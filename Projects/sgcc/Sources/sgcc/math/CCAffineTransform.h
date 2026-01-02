@@ -1,8 +1,8 @@
 ﻿#ifndef __MATH_CCAFFINETRANSFORM_H__
 #define __MATH_CCAFFINETRANSFORM_H__
 
-#include "math/CCGeometry.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCGeometry.h"
+#include "sgcc/math/CCMath.h"
 
 /**
  * @addtogroup base

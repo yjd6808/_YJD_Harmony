@@ -87,15 +87,15 @@ THE SOFTWARE.
 #include "base/CCEventType.h"
 
 // math
-#include "math/CCAffineTransform.h"
-#include "math/CCGeometry.h"
-#include "math/CCVertex.h"
-#include "math/Mat4.h"
-#include "math/MathUtil.h"
-#include "math/Quaternion.h"
-#include "math/Vec2.h"
-#include "math/Vec3.h"
-#include "math/Vec4.h"
+#include "sgcc/math/CCAffineTransform.h"
+#include "sgcc/math/CCGeometry.h"
+#include "sgcc/math/CCVertex.h"
+#include "sgcc/math/Mat4.h"
+#include "sgcc/math/MathUtil.h"
+#include "sgcc/math/Quaternion.h"
+#include "sgcc/math/Vec2.h"
+#include "sgcc/math/Vec3.h"
+#include "sgcc/math/Vec4.h"
 
 // actions
 #include "2d/CCAction.h"

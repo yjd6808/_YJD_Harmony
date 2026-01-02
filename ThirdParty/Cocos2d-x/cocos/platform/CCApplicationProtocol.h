@@ -61,6 +61,13 @@ public:
         OS_WP8          /**< Windows Phone 8 Applications */
     };
 
+	enum class ExitStep
+	{
+		EXIT_GAME_LOOP,
+		EXIT_DIRECTOR,
+		EXIT_GLVIEW,
+	};
+
     /**
      * @js NA
      * @lua NA
@@ -80,9 +87,8 @@ public:
     virtual bool applicationDidFinishLaunching() = 0;
 
 
-
-    // 애플리케이션 종료전 호출
-    virtual void applicationDidExit() = 0;
+	// 애플리케이션 종료 후 호출
+	virtual void applicationDidExit(ExitStep _step) = 0;
 
 
     /**

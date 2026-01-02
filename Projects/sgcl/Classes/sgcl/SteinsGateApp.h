@@ -45,6 +45,11 @@ public:
 	bool applicationDidFinishLaunching() override;
 
 	/**
+	 * \brief 앱 종료시 호출
+	 */
+	void applicationDidExit(ExitStep _step) override;
+
+	/**
 	@brief  백그라운드 어플리케이션으로 이동시 호출
 	@param  애플리케이션 포인터
 	*/
@@ -55,11 +60,6 @@ public:
 	@param  애플리케이션 포인터
 	*/
 	void applicationWillEnterForeground() override;
-
-	/**
-	 * \brief 앱 종료시 호출
-	 */
-	void applicationDidExit() override;
 
 public:
 	cocos2d::GLViewImpl* pView_;

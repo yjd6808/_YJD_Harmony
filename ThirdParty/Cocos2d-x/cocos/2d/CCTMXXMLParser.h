@@ -32,7 +32,7 @@ THE SOFTWARE.
 
 /// @cond DO_NOT_SHOW
 
-#include "math/CCGeometry.h"
+#include "sgcc/math/CCGeometry.h"
 #include "platform/CCSAXParser.h"
 #include "base/CCVector.h"
 #include "base/CCValue.h"

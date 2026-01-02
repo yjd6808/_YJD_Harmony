@@ -23,7 +23,7 @@
 #ifndef MATH_VEC2_H
 #define MATH_VEC2_H
 
-#include "math/CCMathBase.h"
+#include "sgcc/math/CCMathBase.h"
 
 /**
  * @addtogroup base
@@ -764,6 +764,6 @@ NS_CC_MATH_END
  @}
  */
 
-#include "math/Vec2.inl"
+#include "sgcc/math/Vec2.inl"
 
 #endif // MATH_VEC2_H

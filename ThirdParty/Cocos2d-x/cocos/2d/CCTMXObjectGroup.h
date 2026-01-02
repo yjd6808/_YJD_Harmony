@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __CCTMX_OBJECT_GROUP_H__
 #define __CCTMX_OBJECT_GROUP_H__
 
-#include "math/CCGeometry.h"
+#include "sgcc/math/CCGeometry.h"
 #include "base/CCValue.h"
 #include "base/CCRef.h"
 

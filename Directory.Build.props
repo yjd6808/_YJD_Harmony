@@ -1,6 +1,10 @@
 <Project>
 	<Import Project="$(MSBuildThisFileDirectory)Props/base.props" 
 			Condition="
+	'$(MSBuildProjectName)' == 'jc' 					OR 
+	'$(MSBuildProjectName)' == 'jc_gbench' 				OR 
+	'$(MSBuildProjectName)' == 'jc_gtest' 				OR 
+	'$(MSBuildProjectName)' == 'jcr' 					OR 
 	'$(MSBuildProjectName)' == 'jnet_gbench' 			OR 
 	'$(MSBuildProjectName)' == 'jnet_gtest' 			OR
 	'$(MSBuildProjectName)' == 'jnetr_common'			OR

@@ -24,7 +24,7 @@
 #define MATH_VEC3_H
 
 #include <cmath>
-#include "math/CCMathBase.h"
+#include "sgcc/math/CCMathBase.h"
 
 /**
  * @addtogroup base
@@ -508,6 +508,6 @@ NS_CC_MATH_END
  end of base group
  @}
  */
-#include "math/Vec3.inl"
+#include "sgcc/math/Vec3.inl"
 
 #endif // MATH_VEC3_H

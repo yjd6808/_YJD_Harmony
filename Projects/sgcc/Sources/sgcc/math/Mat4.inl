@@ -18,7 +18,7 @@
  This file was modified to fit the cocos2d-x project
  */
 
-#include "math/Mat4.h"
+#include "sgcc/math/Mat4.h"
 
 NS_CC_MATH_BEGIN
 

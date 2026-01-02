@@ -26,8 +26,8 @@
 #include "deprecated/CCDeprecated.h"
 
 #include "platform/CCPlatformMacros.h"
-#include "math/Vec2.h"
-#include "math/CCGeometry.h"
+#include "sgcc/math/Vec2.h"
+#include "sgcc/math/CCGeometry.h"
 #include "base/ccTypes.h"
 #include "renderer/CCGLProgram.h"
 #include "2d/CCDrawingPrimitives.h"

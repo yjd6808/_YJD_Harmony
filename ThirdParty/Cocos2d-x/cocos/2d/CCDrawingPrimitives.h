@@ -44,7 +44,7 @@ THE SOFTWARE.
 
 #include "base/ccTypes.h"
 #include "base/ccMacros.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 
 /**
  @file

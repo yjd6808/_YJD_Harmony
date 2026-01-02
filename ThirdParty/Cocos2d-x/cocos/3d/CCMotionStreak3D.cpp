@@ -26,7 +26,7 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "3d/CCMotionStreak3D.h"
-#include "math/CCVertex.h"
+#include "sgcc/math/CCVertex.h"
 #include "base/CCDirector.h"
 #include "renderer/CCTextureCache.h"
 #include "renderer/ccGLStateCache.h"

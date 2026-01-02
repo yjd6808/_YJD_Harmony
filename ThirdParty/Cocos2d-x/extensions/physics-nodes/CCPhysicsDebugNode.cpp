@@ -27,7 +27,7 @@
 #endif
 
 #include "base/ccTypes.h"
-#include "math/CCGeometry.h"
+#include "sgcc/math/CCGeometry.h"
 
 
 #include <stdlib.h>

@@ -8,7 +8,7 @@
 
 #pragma once
 
-
+#include <sg/_Struct/SteinsGate_ChannelBase.h>
 #include <sgcl/UIRootGroup.h>
 
 #define SG_UI_CHANNELSELECT_MAX_CHANNEL_COUNT	10

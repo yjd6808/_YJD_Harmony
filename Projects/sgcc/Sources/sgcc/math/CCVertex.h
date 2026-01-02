@@ -1,7 +1,7 @@
 ﻿#ifndef __CCVERTEX_H__
 #define __CCVERTEX_H__
 
-#include "math/Vec2.h"
+#include "sgcc/math/Vec2.h"
 
 /**
  * @addtogroup base

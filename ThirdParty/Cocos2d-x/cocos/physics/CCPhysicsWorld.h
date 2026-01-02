@@ -31,7 +31,7 @@
 
 #include <list>
 #include "base/CCVector.h"
-#include "math/CCGeometry.h"
+#include "sgcc/math/CCGeometry.h"
 #include "physics/CCPhysicsBody.h"
 
 struct cpSpace;

@@ -27,7 +27,7 @@
 #define __CC_PLANE_H_
 
 #include "base/ccMacros.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 
 NS_CC_BEGIN
 

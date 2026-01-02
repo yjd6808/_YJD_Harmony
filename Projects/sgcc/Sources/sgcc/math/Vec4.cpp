@@ -1,8 +1,8 @@
 ﻿#include "Core.h"
-#include "math/Vec4.h"
+#include "sgcc/math/Vec4.h"
 
 #include <cmath>
-#include "math/MathUtil.h"
+#include "sgcc/math/MathUtil.h"
 
 NS_CC_MATH_BEGIN
 

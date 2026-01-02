@@ -1,5 +1,5 @@
 ﻿#include "Core.h"
-#include "math/MathUtil.h"
+#include "sgcc/math/MathUtil.h"
 
 #if defined (__SSE__)
 #define USE_SSE
@@ -7,18 +7,18 @@
 #endif
 
 #ifdef INCLUDE_NEON32
-#include "math/MathUtilNeon.inl"
+#include "sgcc/math/MathUtilNeon.inl"
 #endif
 
 #ifdef INCLUDE_NEON64
-#include "math/MathUtilNeon64.inl"
+#include "sgcc/math/MathUtilNeon64.inl"
 #endif
 
 #ifdef INCLUDE_SSE
-#include "math/MathUtilSSE.inl"
+#include "sgcc/math/MathUtilSSE.inl"
 #endif
 
-#include "math/MathUtil.inl"
+#include "sgcc/math/MathUtil.inl"
 
 NS_CC_MATH_BEGIN
 

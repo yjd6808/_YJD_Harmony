@@ -125,8 +125,7 @@ int Application::run()
         }
     }
 
-
-    applicationDidExit();
+    applicationDidExit(ExitStep::EXIT_GAME_LOOP);
 
     // Director should still do a cleanup if the window was closed manually.
     if (glview->isOpenGLReady())
@@ -134,8 +133,12 @@ int Application::run()
         director->end();
         director->mainLoop();
         director = nullptr;
+
+		applicationDidExit(ExitStep::EXIT_DIRECTOR);
     }
+
     glview->release();
+	applicationDidExit(ExitStep::EXIT_GLVIEW);
 
     ///////////////////////////////////////////////////////////////////////////
     /////////////// restoring timer resolution

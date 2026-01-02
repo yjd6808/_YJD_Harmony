@@ -29,7 +29,7 @@
 #include <vector>
 
 #include "vr/CCVRDistortion.h"
-#include "math/Vec2.h"
+#include "sgcc/math/Vec2.h"
 #include "platform/CCGL.h"
 
 NS_CC_BEGIN

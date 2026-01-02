@@ -28,7 +28,7 @@
 
 #include "base/CCRef.h"
 #include "base/ccConfig.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 
 #if CC_USE_3D_PHYSICS
 

@@ -1,5 +1,5 @@
 ﻿#include "Core.h"
-#include "math/CCVertex.h"
+#include "sgcc/math/CCVertex.h"
 
 NS_CC_BEGIN
 

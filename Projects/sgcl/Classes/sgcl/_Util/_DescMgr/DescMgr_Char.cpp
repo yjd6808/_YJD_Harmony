@@ -9,6 +9,8 @@
 #include "Core.h"
 #include "DescMgr_Char.h"
 
+#include <sg/_Struct/SteinsGate_Item.h>
+
 #include <sgcl/JsonUtilEx.h>
 #include <sgcl/VisualHelper.h>
 

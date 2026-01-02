@@ -30,7 +30,7 @@
 #include <vector>
 #include "renderer/CCRenderState.h"
 #include "base/CCRef.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 
 
 NS_CC_BEGIN

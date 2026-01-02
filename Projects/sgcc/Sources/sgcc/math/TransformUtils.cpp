@@ -1,6 +1,6 @@
 ﻿#include "Core.h"
-#include "math/TransformUtils.h"
-#include "math/CCAffineTransform.h"
+#include "sgcc/math/TransformUtils.h"
+#include "sgcc/math/CCAffineTransform.h"
 
 namespace cocos2d {
 

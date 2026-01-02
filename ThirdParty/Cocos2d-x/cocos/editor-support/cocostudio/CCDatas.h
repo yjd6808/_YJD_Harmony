@@ -30,7 +30,7 @@ THE SOFTWARE.
 #include "base/ccTypes.h"
 #include "base/CCVector.h"
 #include "base/CCMap.h"
-#include "math/CCAffineTransform.h"
+#include "sgcc/math/CCAffineTransform.h"
 
 #include "editor-support/cocostudio/CCArmatureDefine.h"
 #include "2d/CCTweenFunction.h"

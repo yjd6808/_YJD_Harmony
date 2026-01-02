@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "Core.h"
-
 class RectEx : cc::rect
 {
 public:

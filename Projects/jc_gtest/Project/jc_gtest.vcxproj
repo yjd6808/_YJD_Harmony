@@ -151,25 +151,25 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>$(SolutionDir)Projects\jc\Sources;$(ProjectDir)..\Sources;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\jc\Output\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects\jc\Sources;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>$(SolutionDir)Projects\jc\Sources;$(ProjectDir)..\Sources;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\jc\Output\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects\jc\Sources;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>$(SolutionDir)Projects\jc\Sources;$(ProjectDir)..\Sources;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\jc\Output\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects\jc\Sources;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>$(SolutionDir)Projects\jc\Sources;$(ProjectDir)..\Sources;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\jc\Output\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects\jc\Sources;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup />

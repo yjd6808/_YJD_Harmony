@@ -1,8 +1,8 @@
 ﻿#include "Core.h"
-#include "math/Mat4.h"
+#include "sgcc/math/Mat4.h"
 
-#include "math/Quaternion.h"
-#include "math/MathUtil.h"
+#include "sgcc/math/Quaternion.h"
+#include "sgcc/math/MathUtil.h"
 
 NS_CC_MATH_BEGIN
 

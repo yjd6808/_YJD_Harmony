@@ -26,7 +26,7 @@
 #ifndef __PHYSICS_3D_VIEWER_H__
 #define __PHYSICS_3D_VIEWER_H__
 
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 #include "base/CCRef.h"
 #include "base/ccTypes.h"
 #include "base/ccConfig.h"

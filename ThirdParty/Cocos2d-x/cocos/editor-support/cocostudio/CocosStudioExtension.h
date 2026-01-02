@@ -26,7 +26,7 @@
 #ifndef __COCOSSTUDIOEXTENSION_H__
 #define __COCOSSTUDIOEXTENSION_H__
 
-#include "math/CCAffineTransform.h"
+#include "sgcc/math/CCAffineTransform.h"
 
 NS_CC_BEGIN
 

@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include "2d/CCNode.h"
 #include "2d/CCAutoPolygon.h"
 #include "base/CCRef.h"
-#include "math/CCGeometry.h"
+#include "sgcc/math/CCGeometry.h"
 
 NS_CC_BEGIN
 

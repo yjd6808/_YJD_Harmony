@@ -25,7 +25,7 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "Core.h"
-#include "math/CCGeometry.h"
+#include "sgcc/math/CCGeometry.h"
 
 #include <algorithm>
 #include <cmath>

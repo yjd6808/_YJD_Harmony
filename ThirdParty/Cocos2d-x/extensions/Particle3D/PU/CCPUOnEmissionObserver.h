@@ -28,7 +28,7 @@
 #define __CC_PU_PARTICLE_3D_ON_EMISSION_OBSERVER_H__
 
 #include "base/CCRef.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 #include "extensions/Particle3D/PU/CCPUObserver.h"
 #include <vector>
 #include <string>

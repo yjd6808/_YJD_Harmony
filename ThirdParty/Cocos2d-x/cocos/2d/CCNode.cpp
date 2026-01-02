@@ -44,7 +44,7 @@ THE SOFTWARE.
 #include "renderer/CCGLProgram.h"
 #include "renderer/CCGLProgramState.h"
 #include "renderer/CCMaterial.h"
-#include "math/TransformUtils.h"
+#include "sgcc/math/TransformUtils.h"
 
 
 #if CC_NODE_RENDER_SUBPIXEL

@@ -27,7 +27,7 @@
 #define __PHYSICS_3D_COMPONENT_H__
 
 #include "base/ccConfig.h"
-#include "math/CCMath.h"
+#include "sgcc/math/CCMath.h"
 
 #include "2d/CCComponent.h"
 

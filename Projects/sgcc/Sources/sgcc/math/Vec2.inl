@@ -18,7 +18,7 @@
  This file was modified to fit the cocos2d-x project
  */
 
-#include "math/Vec2.h"
+#include "sgcc/math/Vec2.h"
 
 NS_CC_MATH_BEGIN
 

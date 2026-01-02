@@ -344,6 +344,7 @@ void UI_ChannelSelect::ChannelButton::InitMonsterSprites(UI_ChannelSelect* _pRoo
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::ChannelButton::SetChannelInfo(const LobbyChannelInfo& _channelInfo, char _sequence)
 {
 	pInfo_ = g_cDescMgr.GetChannelInfo(_channelInfo.type_);
@@ -351,9 +352,10 @@ void UI_ChannelSelect::ChannelButton::SetChannelInfo(const LobbyChannelInfo& _ch
 	pLabelName_->setText(StringUtils::format(szFmtName.Source(), _channelInfo.number_, pInfo_->name_.Source(), _sequence));
 
 	pLabelDensity_->setText(ChannelDensity::Name[_channelInfo.desity_]);
-	pLabelDensity_->setColor(ChannelDensityEx::Color[_channelInfo.desity_]);
+	pLabelDensity_->setColor(ChannelDensity::Color[_channelInfo.desity_]);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 bool UI_ChannelSelect::ChannelButton::ContainsPoint(const cc::vec2& _pos)
 {
 	for (int i = 0; i < EnteranceType::Max; ++i)
@@ -367,6 +369,7 @@ bool UI_ChannelSelect::ChannelButton::ContainsPoint(const cc::vec2& _pos)
 	return false;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::OnInit()
 {
 	monsterSpriteSgaIndex_ = g_cImagePackMgr.GetPackIndexDefault(SG_MONSTER_SPRITE_SGA);
@@ -442,6 +445,7 @@ void UI_ChannelSelect::OnLoaded()
 	pChannelButtons_[3]->SetState(ChannelButton::sNormal);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::OnUnloaded()
 {
 	for (int i = 0; i < SG_UI_CHANNELSELECT_MAX_CHANNEL_COUNT; ++i)
@@ -452,12 +456,14 @@ void UI_ChannelSelect::OnUnloaded()
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::OnUpdate(float _dt)
 {
 	UpdateServerSelectionSpriteOpacity(_dt);
 	UpdateBackgroundGearRotation(_dt);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::OnMouseDown(cc::EventMouse* _pMouseEvent)
 {
 	const cc::vec2 cursorPos = _pMouseEvent->getCursorPos();
@@ -483,6 +489,7 @@ void UI_ChannelSelect::OnMouseDown(cc::EventMouse* _pMouseEvent)
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::OnMouseMove(cc::EventMouse* _pMouseEvent)
 {
 	const cc::vec2 cursorPos = _pMouseEvent->getCursorPos();
@@ -505,6 +512,7 @@ void UI_ChannelSelect::OnMouseMove(cc::EventMouse* _pMouseEvent)
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _state)
 {
 	UNUSED(_state);
@@ -522,6 +530,7 @@ void UI_ChannelSelect::OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleS
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::UpdateServerSelectionSpriteOpacity(float _dt)
 {
 	if (selectedServer_ == GameServerType::Max)
@@ -548,12 +557,14 @@ void UI_ChannelSelect::UpdateServerSelectionSpriteOpacity(float _dt)
 	pServerButtons_[selectedServer_]->pSpriteSelectedBackground_->setOpacityF(serverButtonSelectionOpacity_);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::UpdateBackgroundGearRotation(float _dt)
 {
 	cc::Sprite* pGearSprite = pSpriteBackgroundGear_->Source();
 	pGearSprite->setRotation(pGearSprite->getRotation() + _dt * SG_BACKGROUND_GEAR_SPEED);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::SelectServer(GameServerType_t _serverType)
 {
 	if (selectedServer_ == _serverType)
@@ -573,6 +584,7 @@ void UI_ChannelSelect::SelectServer(GameServerType_t _serverType)
 	S_LOBBY::SEND_CLO_LoadChannelInfo(_serverType);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::SelectChannel(int _channelIndex)
 {
 	if (selectedChannelIndex_ == _channelIndex)
@@ -592,6 +604,7 @@ void UI_ChannelSelect::SelectChannel(int _channelIndex)
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::SelectChannelTab(ChannelTab _tab)
 {
 	channelTab_ = _tab;
@@ -608,6 +621,7 @@ void UI_ChannelSelect::SelectChannelTab(ChannelTab _tab)
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::EnterChannel(GameServerType_t _serverType, int _channelIndex)
 {
 	UNUSED(_serverType);

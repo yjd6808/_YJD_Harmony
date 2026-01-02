@@ -8,16 +8,19 @@
 
 #pragma once
 
-#include <sgcl/Core.h>
-#include "WorldScene.h"
-
 JC_SENUM_BEGIN(SceneType)
 Login,
 ChannelSelect,
 Game,
 None,
 Max = None
-JC_SENUM_END(SceneType)
+JC_SENUM_MIDDLE(SceneType)
+static constexpr const char* NAME[Max] = {
+	"로그인",
+	"채널 선택",
+	"게임",
+};
+JC_SENUM_MIDDLE_END(SceneType)
 
 class WorldScene;
 class UILayer;
