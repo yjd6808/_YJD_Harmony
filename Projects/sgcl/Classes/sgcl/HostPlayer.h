@@ -14,9 +14,7 @@
 #include <sgcl/ActionMgr.h>
 
 
-class HostPlayer
-	: public Player
-	  , public jc::SingletonPointer<HostPlayer>
+class HostPlayer : public Player, public jc::SingletonPointer<HostPlayer>
 {
 private:
 	friend class TSingleton;

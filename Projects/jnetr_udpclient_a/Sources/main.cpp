@@ -1,4 +1,4 @@
-#include <jnet/Core.h>
+﻿#include <jnet/Core.h>
 #include <jnet/Winsock.h>
 #include <jnetr_common/UdpClientNetGroup.h>
 #include <jnetr_common/Command.h>

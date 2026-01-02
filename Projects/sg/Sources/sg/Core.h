@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/9/2023 12:04:30 AM
  * =====================
@@ -83,9 +83,7 @@
 
 #include <sgcc/Core.h>
 
-#include <sg/Enum.h>
 #include <sg/Const.h>
-#include <sg/Struct.h>
 #include <sg/Logo.h>
 #include <sg/CommonCore.h>
 #include <sg/_Util/JsonUtil.h>
@@ -98,6 +96,13 @@
 #define SG_CACHELINE_SIZE        64
 #define SG_FLT_EPSILON           0.0001f
 #define SG_PI                    3.141592f
+
+// 로컬라이즈
+#define SG_LOCAL(text)				(text)			// SG_LT로 변환됨
+#define SG_LOCAL_RAW(text)			(text)			// SG_LT_RAW로 변환됨
+
+#define SG_LT(textKey)				(g_cDescMgr.GetText(textKey))
+#define SG_LT_RAW(textKey)			(g_cDescMgr.GetTextRaw(textKey))
 
 // 설정 디파인
 #define CONF_GET_STRING(code)		(g_cConfigArgs.Props()[code].Ref<jc::String>())

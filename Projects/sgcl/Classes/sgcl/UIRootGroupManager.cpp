@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 3/20/2023 9:32:27 PM
  * =====================
@@ -8,6 +8,8 @@
 #include "Core.h"
 #include "GameCoreHeader.h"
 #include "UIRootGroupManager.h"
+
+#include <sg/_Util/DescLoaderMgr.h>
 
 #include <sgcl/Define_UI.h>
 #include <sgcl/UI_Login.h>
@@ -22,8 +24,7 @@
 template <typename TMasterGroup>
 TMasterGroup* CreateRootGroup(UIRootGroupManager* _pParent, const UIGroupElemInfo* _pMasterGroupInfo)
 {
-	DataManager* pDataManager = DataManager::Get();
-	UIElementInfo* pInfo = pDataManager->GetUIElementInfo(_pMasterGroupInfo->code_);
+	UIElementInfo* pInfo = g_cDescMgr.GetUIElementInfo(_pMasterGroupInfo->code_);
 	jc_assert_msg(pInfo->type_ == UIElementType::Group, "그룹 엘리먼트 타입이 아닙니다.");
 	TMasterGroup* pGroup = dbg_new TMasterGroup(static_cast<UIGroupInfo*>(pInfo));
 	pGroup->init();
@@ -83,7 +84,7 @@ void UIRootGroupManager::ForEach(const jc::Action<UIRootGroup*>& _action)
 //////////////////////////////////////////////////////////////////////////////////////////
 UIRootGroupManager* UIRootGroupManager::CreateRetain()
 {
-	UIGroupInfo* pGroupInfo = static_cast<UIGroupInfo*>(sg::DataManager->GetUIElementInfo(GROUP_MASTER));
+	UIGroupInfo* pGroupInfo = static_cast<UIGroupInfo*>(g_cDescMgr.GetUIElementInfo(GROUP_MASTER));
 	UIRootGroupManager* pRoot = dbg_new UIRootGroupManager(pGroupInfo);
 	pRoot->Init();
 	pRoot->autorelease();

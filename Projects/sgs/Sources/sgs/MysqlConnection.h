@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <mysql.h>
 #include <jc/Primitives/String.h>

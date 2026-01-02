@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/3/2023 8:34:29 AM [SteinsGate-Server.Auth 프로젝트 복사 생성]
  * =====================
@@ -27,9 +27,9 @@ NS_SG_END
 void InitializeLobbyCore()
 {
 	sg::DataManager              = DataManager::Get();
-	sg::ServerProcessInfoPackage = sg::DataManager->GetServerProcessInfoPackage(1);               // 공통 라이브러리 주입
+	sg::ServerProcessInfoPackage = g_cDescMgr.GetServerProcessInfoPackage(1);               // 공통 라이브러리 주입
 	sg::ServerProcessInfo        = &sg::ServerProcessInfoPackage->lobby_;                           // 공통 라이브러리 주입
-	sg::GameDB                   = dbg_new MysqlDatabase(sg::DataManager->GetDatabaseInfo(DatabaseType::Game));
+	sg::GameDB                   = dbg_new MysqlDatabase(g_cDescMgr.GetDatabaseInfo(DatabaseType::Game));
 	sg::GameDB->Initialize(ServerProcessType::Lobby);
 	sg::NetGroupMgr                = LobbyNetMaster::Get();
 	sg::NetGroupMgr->SetProcessInfo(sg::ServerProcessInfo);
@@ -43,7 +43,7 @@ void InitializeLobbyCore()
 	if (sg::CLIThread)
 		sg::CLIThread->SetListener(dbg_new CLIListener);
 
-	sg::ServerProcessInfoPackage     = sg::DataManager->GetServerProcessInfoPackage(1);       // 위에서 주입됨
+	sg::ServerProcessInfoPackage     = g_cDescMgr.GetServerProcessInfoPackage(1);       // 위에서 주입됨
 	sg::CharCommon                   = nullptr;                                                 // 사용안함
 	sg::ThreadPool                   = dbg_new ThreadPool{ 2 };
 	sg::Scheduler                    = dbg_new Scheduler{ 2 };

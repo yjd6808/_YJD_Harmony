@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 1:57:14 PM
  * =====================
@@ -7,18 +7,17 @@
 
 
 #include "Core.h"
-#include "ProjectileInfoLoader.h"
+#include "DescMgr_Projectile.h"
 
 #include <sgcl/ImagePackManager.h>
-#include <sgcl/DataManager.h>
+#include <sg/_Util/DescLoaderMgr.h>
 #include <sgcl/JsonUtilEx.h>
 
 USING_NS_JC;
 USING_NS_JS;
 
-ProjectileInfoLoader::ProjectileInfoLoader(DescLoaderMgr* _pManager, ActorType_t _actorType)
-: DescLoaderAbstract(_pManager)
-, actorType_(_actorType)
+ProjectileInfoLoader::ProjectileInfoLoader(ActorType_t _actorType)
+: actorType_(_actorType)
 {
 }
 
@@ -76,7 +75,7 @@ void ProjectileInfoLoader::ReadOverridedProjectileInfo(Json::Value& _projectileR
                                                        OUT ProjectileInfo* _pProjectileInfo)
 {
 	ImagePackManager* pPackManager = ImagePackManager::Get();
-	DataManager* pDataManager = DataManager::Get();
+	DescLoaderMgr* pDataManager = DescLoaderMgr::Get();
 
 	(void)pPackManager; // currently only used by commented-out code
 
@@ -200,7 +199,7 @@ void ProjectileInfoLoader::ReadProjectileInfo(Json::Value& _projectileRoot, OUT 
 {
 	// 초기화 안된 변수가 없어야함
 	ImagePackManager* pPackManager = ImagePackManager::Get();
-	DataManager* pDataManager = DataManager::Get();
+	DescLoaderMgr* pDataManager = DescLoaderMgr::Get();
 
 	(void)pPackManager; // currently only used by commented-out code
 

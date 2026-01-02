@@ -1,4 +1,4 @@
-#include "Core.h"
+﻿#include "Core.h"
 #include "MysqlConnection.h"
 
 #include <jc/Utils/Console.h>

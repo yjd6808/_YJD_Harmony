@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/3/2023 4:43:09 PM
  * =====================
@@ -6,19 +6,15 @@
  */
 
 #include "Core.h"
-#include "EffectInfoLoader.h"
+#include "DescMgr_Effect.h"
 
-#include <sgcl/ImagePackManager.h>
-#include <sgcl/DataManager.h>
-#include <sgcl/Global.h>
 #include <sgcl/JsonUtilEx.h>
 
 USING_NS_JS;
 USING_NS_JC;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-EffectInfoLoader::EffectInfoLoader(DescLoaderMgr* _pManager)
-: DescLoaderAbstract(_pManager)
+EffectInfoLoader::EffectInfoLoader()
 {
 }
 

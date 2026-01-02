@@ -1,15 +1,13 @@
-#include "Core.h"
+﻿#include "Core.h"
 #include "DescMgr_CharAnimation.h"
 
-#include <sgcl/Struct.h>
-#include <sgcl/JsonUtilEx.h>
+#include <sg/_Util/JsonUtil.h>
 
 USING_NS_JS;
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-CharAnimationInfoLoader::CharAnimationInfoLoader(DescLoaderMgr* _pManager)
-: DescLoaderAbstract(_pManager)
+CharAnimationInfoLoader::CharAnimationInfoLoader()
 {
 }
 
@@ -30,7 +28,7 @@ bool CharAnimationInfoLoader::Load()
 			{
 				Value& animationRoot = animationListRoot[(ArrayIndex)i];
 				AnimationInfo* pInfo = dbg_new AnimationInfo(animationRoot["frames"].size());
-				JsonUtilEx::ParseAnimationInfo(animationRoot, *pInfo);
+				JsonUtil::ParseAnimationInfo(animationRoot, *pInfo);
 				charAnimationList_[charCode].PushBack(pInfo);
 				AddData(pInfo);
 			}

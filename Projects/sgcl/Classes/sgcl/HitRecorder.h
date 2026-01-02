@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include <sgcl/Core.h>
-#include <sgcl/FrameEvent.h>
+#include <sg/_Struct/SteinsGate_FrameEvent.h>
 
 class ActorPartAnimation;
 class Actor;

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/2/2026 12:04:30 AM
  * =====================
@@ -15,18 +15,26 @@
 
 #include <jc/Type.h>
 
+#ifndef NS_CC_BEGIN
+#define NS_CC_BEGIN  namespace cocos2d {
+#endif
+
+#ifndef NS_CC_END
+#define NS_CC_END  }
+#endif
+
 #include <sgcc/math/CCMath.h>
 #include <sgcc/math/CCGeometry.h>
 #include <sgcc/base/ccTypesBase.h>
 #include <sgcc/DLLExport.h>
 
-namespace cc = cocos2d;
-
 namespace cocos2d
 {
-	using vec2 = cc::Vec2;
-	using vec3 = cc::Vec3;
-	using vec4 = cc::Vec4;
-	using size = cc::Size;
-	using rect = cc::Rect;
+	using vec2 = cocos2d::Vec2;
+	using vec3 = cocos2d::Vec3;
+	using vec4 = cocos2d::Vec4;
+	using size = cocos2d::Size;
+	using rect = cocos2d::Rect;
 }
+
+namespace cc = cocos2d;

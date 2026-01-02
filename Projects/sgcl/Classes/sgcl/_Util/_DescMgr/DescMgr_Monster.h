@@ -1,6 +1,6 @@
-/*
- * À±Á¤µµ
- * ÀÛ¼ºÀÏ: 1/20/2023 1:44:11 PM
+ï»¿/*
+ * ìœ¤ì •ë„
+ * ì‘ì„±ì¼: 1/20/2023 1:44:11 PM
  * =====================
  *
  */
@@ -9,14 +9,13 @@
 #pragma once
 
 
-#include <sgcl/MonsterInfo.h>
-#include <sg/MonsterBaseInfoLoader.h>
-
+#include <sg/_Struct/SteinsGate_Monster.h>
+#include <sg/_Util/_DescMgr/DescMgr_MonsterBase.h>
 
 struct MonsterInfoLoader : MonsterBaseInfoLoader
 {
 public:
-	MonsterInfoLoader(DescLoaderMgr* _pManager);
+	MonsterInfoLoader();
 	~MonsterInfoLoader() override = default;
 
 	bool Load() override;

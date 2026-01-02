@@ -1,4 +1,4 @@
-#include "Core.h"
+﻿#include "Core.h"
 #include "ServerCoreHeader.h"
 #include "MysqlStatementBuilder.h"
 

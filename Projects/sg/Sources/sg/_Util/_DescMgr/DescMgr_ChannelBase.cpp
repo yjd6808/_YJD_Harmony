@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/21/2023 8:36:33 AM
  * =====================
@@ -8,15 +8,13 @@
 #include "Core.h"
 #include "DescMgr_ChannelBase.h"
 
-#include <sg/DescLoaderMgr.h>
 #include <sg/_Util/JsonUtil.h>
 
 USING_NS_JS;
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ChannelBaseInfoLoader::ChannelBaseInfoLoader(DescLoaderMgr* _pManager)
-: DescLoaderAbstract(_pManager)
+ChannelBaseInfoLoader::ChannelBaseInfoLoader()
 {
 }
 

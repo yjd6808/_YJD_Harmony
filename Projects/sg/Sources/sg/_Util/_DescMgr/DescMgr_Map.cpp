@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/25/2023 11:33:20 AM
  * =====================
@@ -6,7 +6,7 @@
  */
 
 #include "Core.h"
-#include "MapInfoLoader.h"
+#include "DescMgr_Map.h"
 
 #include <sg/_Util/JsonUtil.h>
 
@@ -14,8 +14,7 @@ USING_NS_JC;
 USING_NS_JS;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MapInfoLoader::MapInfoLoader(DescLoaderMgr* _pManager)
-: DescLoaderAbstract(_pManager)
+MapInfoLoader::MapInfoLoader()
 {
 }
 
@@ -38,14 +37,14 @@ bool MapInfoLoader::Load()
 		return false;
 	}
 
-	directoryTree.SetCallback("map/map_of_dungeon", JCORE_CALLBACK_3(MapInfoLoader::OnDungeonMapRootLoaded, this));
-	directoryTree.SetCallback("map/map_of_dungeon_area", JCORE_CALLBACK_3(MapInfoLoader::OnAreaRootLoaded, this));
-	directoryTree.SetCallback("map/map_of_private", JCORE_CALLBACK_3(MapInfoLoader::OnPrivateMapRootLoaded, this));
-	directoryTree.SetCallback("map/map_of_private_area", JCORE_CALLBACK_3(MapInfoLoader::OnAreaRootLoaded, this));
-	directoryTree.SetCallback("map/map_of_town", JCORE_CALLBACK_3(MapInfoLoader::OnTownMapRootLoaded, this));
-	directoryTree.SetCallback("map/map_of_town_area", JCORE_CALLBACK_3(MapInfoLoader::OnAreaRootLoaded, this));
+	directoryTree.SetCallback("map/map_of_dungeon", JC_CALLBACK_3(MapInfoLoader::OnDungeonMapRootLoaded, this));
+	directoryTree.SetCallback("map/map_of_dungeon_area", JC_CALLBACK_3(MapInfoLoader::OnAreaRootLoaded, this));
+	directoryTree.SetCallback("map/map_of_private", JC_CALLBACK_3(MapInfoLoader::OnPrivateMapRootLoaded, this));
+	directoryTree.SetCallback("map/map_of_private_area", JC_CALLBACK_3(MapInfoLoader::OnAreaRootLoaded, this));
+	directoryTree.SetCallback("map/map_of_town", JC_CALLBACK_3(MapInfoLoader::OnTownMapRootLoaded, this));
+	directoryTree.SetCallback("map/map_of_town_area", JC_CALLBACK_3(MapInfoLoader::OnAreaRootLoaded, this));
 
-	directoryTree.SetCallbackCommon(JCORE_CALLBACK_3(MapInfoLoader::TestOnCommon, this));
+	directoryTree.SetCallbackCommon(JC_CALLBACK_3(MapInfoLoader::TestOnCommon, this));
 	directoryTree.Load();
 
 	Loaded();
@@ -113,7 +112,7 @@ void MapInfoLoader::OnAreaRootLoaded(Value& _areaRoot, const jc::String& _fileNa
 //////////////////////////////////////////////////////////////////////////////////////////
 void MapInfoLoader::TestOnCommon(Value& _mapRoot, const jc::String& _fileName, DirectoryTreeNode* _pCurNode)
 {
-	JCORE_PASS;
+	JC_PASS;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

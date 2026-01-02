@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/15/2023 8:11:04 PM
  * =====================
@@ -10,7 +10,7 @@
 #include "UIManager.h"
 
 #include <sg/Config.h>
-#include <sg/ClientInfo.h>
+#include <sg/_Struct/SteinsGate_Client.h>
 
 #include <sgcl/UIGroup.h>
 #include <sgcl/UIRootGroup.h>

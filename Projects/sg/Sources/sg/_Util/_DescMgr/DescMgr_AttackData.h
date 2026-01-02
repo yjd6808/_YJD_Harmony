@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/24/2023 9:27:09 AM
  * =====================
@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include <sgcl/AttackDataInfo.h>
+#include <sg/_Struct/SteinsGate_AttackData.h>
 #include <sg/_Util/DescLoaderAbstract.h>
 
 struct AttackDataInfoLoader : DescLoaderAbstract
 {
 public:
-	AttackDataInfoLoader(DescLoaderMgr* _pManager, ActorType_t _actorType);
+	AttackDataInfoLoader(ActorType_t _actorType);
 	~AttackDataInfoLoader() override = default;
 
 	bool Load() override;

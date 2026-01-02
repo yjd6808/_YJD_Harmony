@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/18/2023 10:32:04 PM
  * =====================
@@ -11,9 +11,9 @@
 
 #include <bitset>
 
-#include <sg/CharCommonInfo.h>
+#include <sg/_Struct/SteinsGate_CharCommon.h>
 
-#include <sgcl/DataManager.h>
+#include <sg/_Util/DescLoaderMgr.h>
 #include <sgcl/VisualHelper.h>
 
 USING_NS_JC;
@@ -38,7 +38,7 @@ Inven::~Inven()
 void Inven::Init()
 {
 	// TODO: 우선 디폴트로 채워놓음
-	CharCommonInfo* pCommon = sg::DataManager->GetCharCommonInfo(1);
+	CharCommonInfo* pCommon = g_cDescMgr.GetCharCommonInfo(1);
 
 	for (int i = 0; i < InvenItemType::Max; ++i)
 	{
@@ -65,7 +65,7 @@ VisualInfo Inven::GetVisualInfo(int _defaultCharType)
 {
 	VisualInfo info;
 
-	CharInfo* pCharInfo = sg::DataManager->GetCharInfo(_defaultCharType);
+	CharInfo* pCharInfo = g_cDescMgr.GetCharInfo(_defaultCharType);
 	bool equipped[VisualType::Max]{}; // 착용중인지
 	VisualData data;
 

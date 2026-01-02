@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/25/2023 11:32:50 AM
  * =====================
@@ -10,7 +10,7 @@
 
 
 #include <sg/_Util/DescBase.h>
-#include <sgcl/Struct.h>
+#include <sg/_Struct/SteinsGate_Map.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////
 struct MapObjectInfo : SDescBase

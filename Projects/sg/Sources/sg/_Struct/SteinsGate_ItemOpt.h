@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/18/2023 7:23:41 PM
  * =====================
@@ -10,6 +10,7 @@
 
 
 #include <sg/_Util/DescBase.h>
+#include "SteinsGate_Item.h"
 
 struct ItemOptLevel
 {

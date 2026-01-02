@@ -1,4 +1,4 @@
-#include "Core.h"
+﻿#include "Core.h"
 #include "MysqlConnectionPool.h"
 
 #include <sgs/MysqlConnection.h>

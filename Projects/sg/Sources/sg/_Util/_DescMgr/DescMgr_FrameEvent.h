@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include <sgcl/FrameEvent.h>
+#include <sg/_Struct/SteinsGate_FrameEvent.h>
 #include <sg/_Util/DescLoaderAbstract.h>
 
 struct FrameEventLoader : DescLoaderAbstract
 {
 public:
-	FrameEventLoader(DescLoaderMgr* _pManager, ActorType_t _actorType);
+	FrameEventLoader(ActorType_t _actorType);
 	~FrameEventLoader() override = default;
 
 	bool Load() override;

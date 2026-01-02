@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/15/2023 8:07:08 PM
  * =====================
@@ -30,7 +30,7 @@ protected:
 	void OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _state) override;
 	bool OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) override;
 	bool OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) override;
-	void OnEditBoxEditingDidEndWithAction(UIEditBox* _pEditBox, c2d_ui::EditBoxDelegate::EditBoxEndAction _endAction) override;
+	void OnEditBoxEditingDidEndWithAction(UIEditBox* _pEditBox, cc_ui::EditBoxDelegate::EditBoxEndAction _endAction) override;
 
 public:
 	void SetTab(Tab _tab);

@@ -1,4 +1,4 @@
-#include "Core.h"
+﻿#include "Core.h"
 #include "AuthCoreHeader.h"
 
 #include <jc/Random.h>

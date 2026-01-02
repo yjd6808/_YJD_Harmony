@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/21/2023 6:38:03 AM
  * =====================
@@ -7,17 +7,15 @@
 
 
 #include "Core.h"
-#include "ItemOptInfoLoader.h"
+#include "DescMgr_ItemOpt.h"
 
-#include <sg/DescLoaderMgr.h>
 #include <sg/_Util/JsonUtil.h>
 
 USING_NS_JS;
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ItemOptInfoLoader::ItemOptInfoLoader(DescLoaderMgr* _pManager)
-: DescLoaderAbstract(_pManager)
+ItemOptInfoLoader::ItemOptInfoLoader()
 {
 }
 

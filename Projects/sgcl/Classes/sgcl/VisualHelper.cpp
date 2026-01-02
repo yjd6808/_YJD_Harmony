@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/20/2023 6:18:47 AM
  * =====================
@@ -9,7 +9,7 @@
 #include "VisualHelper.h"
 #include "GameCoreHeader.h"
 
-#include <sg/ItemInfo.h>
+#include <sg/_Struct/SteinsGate_Item.h>
 #include <sgcl/ImagePackManager.h>
 
 USING_NS_JS;
@@ -19,7 +19,7 @@ USING_NS_CC;
 //////////////////////////////////////////////////////////////////////////////////////////
 int VisualHelper::GetVisualData(OUT VisualData& _visualData, int _code)
 {
-	ItemVisualInfo* pVisualInfo = sg::DataManager->GetVisualInfo(_code);
+	ItemVisualInfo* pVisualInfo = g_cDescMgr.GetVisualInfo(_code);
 	CharType_t charType = pVisualInfo->GetCharType();
 	ItemType_t itemType = pVisualInfo->GetItemType();
 	VisualType_t visualType = pVisualInfo->GetVisualType();

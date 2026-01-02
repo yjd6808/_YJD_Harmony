@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/3/2023 3:47:17 PM
  * =====================
@@ -10,7 +10,7 @@
 
 #include <sgcl/ImagePackManager.h>
 #include <sgcl/ActorSprite.h>
-#include <sgcl/DataManager.h>
+#include <sg/_Util/DescLoaderMgr.h>
 #include <sgcl/HostPlayer.h>
 #include <sgcl/Global.h>
 

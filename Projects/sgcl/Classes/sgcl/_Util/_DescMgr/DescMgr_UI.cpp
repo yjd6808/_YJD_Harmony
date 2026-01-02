@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/15/2023 1:30:20 AM
  * =====================
@@ -8,19 +8,18 @@
 #include "Core.h"
 #include "DescMgr_UI.h"
 
-#include <sgcl/ImagePackManager.h>
 #include <sgcl/JsonUtilEx.h>
-#include <sgcl/DataManager.h>
-#include <sgcl/FontManager.h>
+#include <sg/_Util/DescLoaderMgr.h>
 
-#include "UICheckBox.h"
+#include <sgcl/ImagePackManager.h>
+#include <sgcl/FontManager.h>
+#include <sgcl/UICheckBox.h>
 
 USING_NS_JC;
 USING_NS_JS;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UIInfoLoader::UIInfoLoader(DescLoaderMgr* _pManager)
-: DescLoaderAbstract(_pManager)
+UIInfoLoader::UIInfoLoader()
 {
 }
 
@@ -175,7 +174,6 @@ UIElementInfo* UIInfoLoader::ReadElementButton(Json::Value& _buttonRoot)
 UIElementInfo* UIInfoLoader::ReadElementLabel(Json::Value& _labelRoot)
 {
 	UILabelInfo* pInfo = dbg_new UILabelInfo();
-	DataManager* pDataManager = DataManager::Get();
 	ReadElementCommon(_labelRoot, pInfo);
 
 	const jc::String fontName = JsonUtilEx::GetString(_labelRoot[JSON_FONT_KEY]);
@@ -237,7 +235,7 @@ UIElementInfo* UIInfoLoader::ReadElementEditBox(Json::Value& _editBoxRoot)
 	JsonUtilEx::ParseColor4B(_editBoxRoot[JSON_PLACEHOLDER_FONT_COLOR_KEY], pInfo->PlaceHolderFontColor);
 	pInfo->PlaceholderFontSize = _editBoxRoot[JSON_PLACEHOLDER_FONT_SIZE_KEY].asInt();
 	pInfo->MaxLength = _editBoxRoot[JSON_MAX_LENGTH_KEY].asInt();
-	pInfo->InputMode = c2d_ui::EditBox::InputMode(_editBoxRoot[JSON_INPUT_MODE_KEY].asInt());
+	pInfo->InputMode = (EditBoxInputMode)_editBoxRoot[JSON_INPUT_MODE_KEY].asInt();
 
 	return pInfo;
 }

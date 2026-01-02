@@ -1,4 +1,4 @@
-/*
+﻿/*
 	작성자 : 윤정도
 
 	IOCP 워커쓰레드에 PostQueuedCompletionStatus의 CompletionKey값으로 전달해줄 객체

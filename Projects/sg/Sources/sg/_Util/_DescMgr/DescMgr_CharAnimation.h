@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include <sg/_Util/DescLoaderAbstract.h>
 
 struct CharAnimationInfoLoader : DescLoaderAbstract
 {
 public:
-	CharAnimationInfoLoader(DescLoaderMgr* _pManager);
+	CharAnimationInfoLoader();
 	~CharAnimationInfoLoader() override = default;
 
 	ConfigFileType_t GetConfigFileType() override { return ConfigFileType::Char_Animation; }

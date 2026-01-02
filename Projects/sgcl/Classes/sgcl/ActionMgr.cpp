@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/22/2023 9:01:05 AM
  * =====================
@@ -9,7 +9,7 @@
 #include "ActionMgr.h"
 
 #include <sgcl/SGAction.h>
-#include <sgcl/DataManager.h>
+#include <sg/_Util/DescLoaderMgr.h>
 #include <sgcl/AllActions.h>
 #include <sgcl/Define_Action.h>
 #include <sgcl/FrameTexture.h>
@@ -56,17 +56,16 @@ void ActionMgr::Init(int _charType)
 //////////////////////////////////////////////////////////////////////////////////////////
 void ActionMgr::InitGunnerActions()
 {
-	DataManager* pConfig = DataManager::Get();
-
-	baseAction_[BaseAction::Idle] = dbg_new GunnerIdle(player_, pConfig->GetActionInfo(DEF_ACTION_GUNNER_IDLE));
-	baseAction_[BaseAction::Walk] = dbg_new GunnerWalk(player_, pConfig->GetActionInfo(DEF_ACTION_GUNNER_WALK));
-	baseAction_[BaseAction::Run] = dbg_new GunnerRun(player_, pConfig->GetActionInfo(DEF_ACTION_GUNNER_RUN));
-	baseAction_[BaseAction::Attack] = dbg_new  GunnerGunShot(player_, pConfig->GetActionInfo(DEF_ACTION_GUNNER_GUN_SHOT));
-	baseAction_[BaseAction::Sliding] = dbg_new GunnerSliding(player_, pConfig->GetActionInfo(DEF_ACTION_GUNNER_SLIDING));
-	baseAction_[BaseAction::Jump] = dbg_new GunnerJump(player_, pConfig->GetActionInfo(DEF_ACTION_GUNNER_JUMP));
-	baseAction_[BaseAction::Hit] = dbg_new GunnerHit(player_, pConfig->GetActionInfo(DEF_ACTION_GUNNER_HIT));
-	baseAction_[BaseAction::FallDown] = dbg_new GunnerFallDown(player_, pConfig->GetActionInfo(DEF_ACTION_GUNNER_FALL_DOWN));
-	baseAction_[BaseAction::SitRecover] = dbg_new GunnerSitRecover(player_, pConfig->GetActionInfo(DEF_ACTION_GUNNER_SIT_RECOVER));
+	auto& descMgr = g_cDescMgr;
+	baseAction_[BaseAction::Idle] = dbg_new GunnerIdle(player_, descMgr.GetActionInfo(DEF_ACTION_GUNNER_IDLE));
+	baseAction_[BaseAction::Walk] = dbg_new GunnerWalk(player_, descMgr.GetActionInfo(DEF_ACTION_GUNNER_WALK));
+	baseAction_[BaseAction::Run] = dbg_new GunnerRun(player_, descMgr.GetActionInfo(DEF_ACTION_GUNNER_RUN));
+	baseAction_[BaseAction::Attack] = dbg_new  GunnerGunShot(player_, descMgr.GetActionInfo(DEF_ACTION_GUNNER_GUN_SHOT));
+	baseAction_[BaseAction::Sliding] = dbg_new GunnerSliding(player_, descMgr.GetActionInfo(DEF_ACTION_GUNNER_SLIDING));
+	baseAction_[BaseAction::Jump] = dbg_new GunnerJump(player_, descMgr.GetActionInfo(DEF_ACTION_GUNNER_JUMP));
+	baseAction_[BaseAction::Hit] = dbg_new GunnerHit(player_, descMgr.GetActionInfo(DEF_ACTION_GUNNER_HIT));
+	baseAction_[BaseAction::FallDown] = dbg_new GunnerFallDown(player_, descMgr.GetActionInfo(DEF_ACTION_GUNNER_FALL_DOWN));
+	baseAction_[BaseAction::SitRecover] = dbg_new GunnerSitRecover(player_, descMgr.GetActionInfo(DEF_ACTION_GUNNER_SIT_RECOVER));
 
 	actionMap_.Insert(DEF_ACTION_GUNNER_IDLE, baseAction_[BaseAction::Idle]);
 	actionMap_.Insert(DEF_ACTION_GUNNER_WALK, baseAction_[BaseAction::Walk]);

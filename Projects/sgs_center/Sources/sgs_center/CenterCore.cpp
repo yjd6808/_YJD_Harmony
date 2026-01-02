@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 3/24/2023 2:18:17 PM
  * =====================
@@ -28,9 +28,9 @@ NS_SG_END
 void InitializeCenterCore() 
 {
 	sg::DataManager = DataManager::Get();
-	sg::ServerProcessInfoPackage = sg::DataManager->GetServerProcessInfoPackage(1);
+	sg::ServerProcessInfoPackage = g_cDescMgr.GetServerProcessInfoPackage(1);
 	sg::ServerProcessInfo = &sg::ServerProcessInfoPackage->center_;
-	sg::GameDB = dbg_new MysqlDatabase(sg::DataManager->GetDatabaseInfo(DatabaseType::Game));
+	sg::GameDB = dbg_new MysqlDatabase(g_cDescMgr.GetDatabaseInfo(DatabaseType::Game));
 	sg::GameDB->Initialize(ServerProcessType::Center);
 	sg::NetGroupMgr = CenterNetMaster::Get();
 	sg::NetGroupMgr->Initialize();
@@ -43,7 +43,7 @@ void InitializeCenterCore()
 	if (sg::CLIThread)
 		sg::CLIThread->SetListener(dbg_new CLIListener);
 
-	sg::ServerProcessInfoPackage = sg::DataManager->GetServerProcessInfoPackage(1);		// 위에서 주입됨
+	sg::ServerProcessInfoPackage = g_cDescMgr.GetServerProcessInfoPackage(1);		// 위에서 주입됨
 	sg::CharCommon = nullptr;													// 사용안함
 	sg::ThreadPool = dbg_new ThreadPool{ 2 };
 	sg::Scheduler = dbg_new Scheduler{ 2 };

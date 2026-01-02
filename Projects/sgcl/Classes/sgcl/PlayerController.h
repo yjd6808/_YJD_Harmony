@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 10:25:33 AM
  * =====================
@@ -7,9 +7,7 @@
 
 #pragma once
 
-#include <sgcl/Core.h>
-
-#include <jc/Time.h>
+#include <sg/_Struct/SteinsGate_Action.h>
 
 struct MapAreaInfo;
 

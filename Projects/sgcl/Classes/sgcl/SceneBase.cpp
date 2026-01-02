@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/5/2023 10:41:04 AM
  * =====================
@@ -39,7 +39,7 @@ SceneBase::~SceneBase()
 //////////////////////////////////////////////////////////////////////////////////////////
 bool SceneBase::init()
 {
-	_LogDebug_("%s 씬 초기화", SceneType::Name[GetType()]);
+	_LogDebug_("%s 씬 초기화", SceneType::NAME[GetType()]);
 
 	if (!Scene::init())
 		return false;
@@ -61,14 +61,14 @@ bool SceneBase::init()
 //////////////////////////////////////////////////////////////////////////////////////////
 void SceneBase::onEnter()
 {
-	_LogDebug_("%s 씬을 시작", SceneType::Name[GetType()]);
+	_LogDebug_("%s 씬을 시작", SceneType::NAME[GetType()]);
 	Scene::onEnter();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void SceneBase::onExit()
 {
-	_LogDebug_("%s 씬을 종료", SceneType::Name[GetType()]);
+	_LogDebug_("%s 씬을 종료", SceneType::NAME[GetType()]);
 	Scene::onExit();
 	pUILayer_->ClearUnload();
 	g_cImagePackMgr.ReleaseAllFrameTexture();

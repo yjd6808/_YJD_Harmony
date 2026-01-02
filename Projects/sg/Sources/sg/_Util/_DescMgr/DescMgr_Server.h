@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/21/2023 7:01:42 AM
  * =====================
@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include <sg/ServerProcessInfo.h>
+#include <sg/_Struct/SteinsGate_Server.h>
 #include <sg/_Util/DescLoaderAbstract.h>
 
 struct ServerInfoLoader : DescLoaderAbstract
 {
 public:
-	ServerInfoLoader(DescLoaderMgr* _pManager);
+	ServerInfoLoader();
 	~ServerInfoLoader() override = default;
 
 	ConfigFileType_t GetConfigFileType() override { return ConfigFileType::Server; }

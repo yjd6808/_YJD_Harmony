@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 1:44:44 PM
  * =====================
@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include <sg/ItemInfo.h>
+#include <sg/_Struct/SteinsGate_Item.h>
 #include <sg/_Util/DescLoaderAbstract.h>
 
 struct ItemInfoLoader : DescLoaderAbstract
 {
 public:
-	ItemInfoLoader(DescLoaderMgr* _pManager);
+	ItemInfoLoader();
 
 	ConfigFileType_t GetConfigFileType() override { return ConfigFileType::Item; }
 	void LoadArmor(const jc::String& _equipItemArmorPath, int _armorType, int _equipItemType);

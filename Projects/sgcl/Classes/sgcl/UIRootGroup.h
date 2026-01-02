@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 3/22/2023 12:50:32 AM
  * =====================
@@ -69,7 +69,7 @@ public:
 	virtual void OnEditBoxEditingDidBegin(UIEditBox* _pEditBox);
 	virtual void OnEditBoxTextChanged(UIEditBox* _pEditBox, const std::string& _str);
 	virtual void OnEditBoxReturn(UIEditBox* _pEditBox);
-	virtual void OnEditBoxEditingDidEndWithAction(UIEditBox* _pEditBox, c2d_ui::EditBoxDelegate::EditBoxEndAction _endAction);
+	virtual void OnEditBoxEditingDidEndWithAction(UIEditBox* _pEditBox, cc_ui::EditBoxDelegate::EditBoxEndAction _endAction);
 
 	// 마스터 그룹에서 마우스 이벤트 발생시
 	virtual void OnMouseEnter(cc::EventMouse* _pMouseEvent);

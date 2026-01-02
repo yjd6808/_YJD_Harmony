@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 4/26/2023 12:33:39 AM
  * =====================
@@ -33,7 +33,7 @@ PopupManager::~PopupManager()
 //////////////////////////////////////////////////////////////////////////////////////////
 UI_Popup* PopupManager::CreatePopup()
 {
-	UIElementInfo* pInfo = sg::DataManager->GetUIElementInfo(GROUP_UI_POPUP);
+	UIElementInfo* pInfo = g_cDescMgr.GetUIElementInfo(GROUP_UI_POPUP);
 	jc_assert_msg(pInfo->type_ == UIElementType::Group, "그룹 엘리먼트 타입이 아닙니다.");
 
 	UIRootGroup* pPopupGroup = dbg_new UI_Popup(static_cast<UIGroupInfo*>(pInfo));

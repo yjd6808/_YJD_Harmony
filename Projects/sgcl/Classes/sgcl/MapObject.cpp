@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/25/2023 4:37:14 PM
  * =====================
@@ -9,7 +9,7 @@
 #include "MapObject.h"
 
 #include <sgcl/ImagePackManager.h>
-#include <sgcl/DataManager.h>
+#include <sg/_Util/DescLoaderMgr.h>
 #include <sgcl/ActorSprite.h>
 #include <sgcl/Define_Animation.h>
 

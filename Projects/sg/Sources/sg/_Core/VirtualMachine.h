@@ -1,4 +1,4 @@
-// 현재 프로세스의 컨텍스트를 나타냄
+﻿// 현재 프로세스의 컨텍스트를 나타냄
 // 스크립트 수행등 수행
 
 #pragma once
@@ -24,13 +24,11 @@ public:
 	jc::ThreadPool& ThreadPool() const { return *pThreadPool_; }
 	jc::Scheduler&	Scheduler() const { return *pScheduler_; }
 	jnet::CommandNameDictionary& CommandNameDictionary() const { return *pCmdNameMap_; }
-	DescLoaderMgr&	DescLoaderMgr() const { return *pDescLoaderMgr_; }
 
 private:
 	CLIThread*		 pCliThread_ = nullptr;
 	RuntimeConfig*	 pConfigRuntime_ = nullptr;
 	CharCommonInfo*  pCharCommonInfo_ = nullptr;
-	::DescLoaderMgr* pDescLoaderMgr_ = nullptr;
 	jc::ThreadPool*	 pThreadPool_ = nullptr;
 	jc::Scheduler*	 pScheduler_ = nullptr;
 	jnet::CommandNameDictionary*	pCmdNameMap_ = nullptr;

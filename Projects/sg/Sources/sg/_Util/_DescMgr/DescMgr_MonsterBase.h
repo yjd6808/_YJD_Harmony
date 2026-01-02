@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/17/2023 10:45:23 PM
  * =====================
@@ -9,13 +9,13 @@
 #pragma once
 
 
-#include <sg/MonsterBaseInfo.h>
+#include <sg/_Struct/SteinsGate_MonsterBase.h>
 #include <sg/_Util/DescLoaderAbstract.h>
 
 struct MonsterBaseInfoLoader : DescLoaderAbstract
 {
 public:
-	MonsterBaseInfoLoader(DescLoaderMgr* _pManager);
+	MonsterBaseInfoLoader();
 	~MonsterBaseInfoLoader() override = default;
 
 	ConfigFileType_t GetConfigFileType() override

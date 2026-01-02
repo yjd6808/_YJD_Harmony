@@ -1,4 +1,4 @@
-/*
+﻿/*
 	작성자 : 윤정도
 	StaticStringTest 입니다.
 */

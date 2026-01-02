@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/24/2023 9:27:09 AM
  * =====================
@@ -13,7 +13,7 @@ struct ClientTextInfoLoader : DescLoaderAbstract
 {
 	inline static jc::String DummyText{ "메시지가 엄떠용 ㅠㅠ" };
 
-	explicit ClientTextInfoLoader(DescLoaderMgr* _pManager);
+	explicit ClientTextInfoLoader();
 	bool Load() override;
 	ConfigFileType_t GetConfigFileType() override { return ConfigFileType::ClientText; }
 

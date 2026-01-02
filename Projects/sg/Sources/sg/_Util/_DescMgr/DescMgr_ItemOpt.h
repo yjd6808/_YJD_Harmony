@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/21/2023 6:37:55 AM
  * =====================
@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include <sg/ItemOptInfo.h>
+#include <sg/_Struct/SteinsGate_ItemOpt.h>
 #include <sg/_Util/DescLoaderAbstract.h>
 
 struct ItemOptInfoLoader : DescLoaderAbstract
 {
 public:
-	ItemOptInfoLoader(DescLoaderMgr* _pManager);
+	ItemOptInfoLoader();
 	~ItemOptInfoLoader() override = default;
 
 	ConfigFileType_t GetConfigFileType() override

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <jc/Container/HashMap.h>
 

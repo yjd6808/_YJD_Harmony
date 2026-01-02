@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 3/22/2023 2:23:20 AM
  * =====================
@@ -323,7 +323,7 @@ void UIScrollBar::CreateSprites()
 		if (i == INDEX_THUMB_NORMAL || i == INDEX_THUMB_PRESSED)
 		{
 			SpriteFrame* pFrame = SpriteFrame::createWithTexture(pTexture->GetTexture(), pTexture->GetRect());
-			c2d_ui::Scale9Sprite* pScale9 = c2d_ui::Scale9Sprite::createWithSpriteFrame(pFrame);
+			cc_ui::Scale9Sprite* pScale9 = cc_ui::Scale9Sprite::createWithSpriteFrame(pFrame);
 			pSprite = pScale9;
 
 			// 높이는 일단 암거나 지정, 어차피 이후 updateThumbSize() 함수에서 업데이트를 하기 때문..

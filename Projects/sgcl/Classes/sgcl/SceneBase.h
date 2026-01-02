@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/5/2023 10:24:22 AM
  * =====================
@@ -9,8 +9,15 @@
 #pragma once
 
 #include <sgcl/Core.h>
+#include "WorldScene.h"
 
-#include <sgcl/Struct.h>
+JC_SENUM_BEGIN(SceneType)
+Login,
+ChannelSelect,
+Game,
+None,
+Max = None
+JC_SENUM_END(SceneType)
 
 class WorldScene;
 class UILayer;

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/22/2023 12:15:28 AM
  * =====================
@@ -9,6 +9,7 @@
 #pragma once
 
 #include <sg/_Util/DescBase.h>
+#include <sg/_Struct/SteinsGate_Item.h>
 
 struct CharCommonInfo : SDescBase
 {

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 1:44:55 PM
  * =====================
@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include <sgcl/ProjectileInfo.h>
+#include <sg/_Struct/SteinsGate_Projectile.h>
 #include <sg/_Util/DescLoaderAbstract.h>
 
 struct ProjectileInfoLoader : DescLoaderAbstract
 {
 public:
-	ProjectileInfoLoader(DescLoaderMgr* _pManager, ActorType_t _actorType);
+	ProjectileInfoLoader(ActorType_t _actorType);
 	~ProjectileInfoLoader() override = default;
 
 	ConfigFileType_t GetConfigFileType() override

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/2/2023 6:10:07 PM
  * =====================
@@ -14,7 +14,7 @@
 #include "Core.h"
 #include "ActorManager.h"
 
-#include <sgcl/DataManager.h>
+#include <sg/_Util/DescLoaderMgr.h>
 #include <sgcl/ActorListenerManager.h>
 #include <sgcl/MapLayer.h>
 #include <sgcl/AIComponent.h>
@@ -252,7 +252,7 @@ Character* ActorManager::CreateCharacterOnMap(CharType_t _charType, float _x, fl
 {
 	jc_assert_msg(pMapLayer_, "맵 레이어 생성 및 init 후 캐릭터를 생성해주세요");
 
-	CharBaseInfo* pCharInfo = sg::DataManager->GetCharInfo(_charType);
+	CharBaseInfo* pCharInfo = g_cDescMgr.GetCharInfo(_charType);
 	Character* pCharacter = Character::Create(pCharInfo, _visualInfo);
 
 	pCharacter->SetPositionRealCenter(_x, _y);
@@ -271,7 +271,7 @@ Projectile* ActorManager::CreateProejctileOnMap(Actor* _pSpawner, int _projectil
 {
 	jc_assert_msg(pMapLayer_, "맵 레이어 생성 및 init 후 프로젝틸을 생성해주세요");
 
-	ProjectileInfo* pInfo = sg::DataManager->GetProjectileInfo(_pSpawner->GetType(), _projectileId);
+	ProjectileInfo* pInfo = g_cDescMgr.GetProjectileInfo(_pSpawner->GetType(), _projectileId);
 
 
 	if (!projectilePool_.Exist(_projectileId))
@@ -317,8 +317,8 @@ Monster* ActorManager::CreateMonsterOnMap(int _monsterCode, int _aiCode, float _
 {
 	jc_assert_msg(pMapLayer_, "맵 레이어 생성 및 init 후 몬스터를 생성해주세요");
 
-	MonsterInfo* pMonsterInfo = sg::DataManager->GetMonsterInfo(_monsterCode);
-	AIInfo* pAIInfo = sg::DataManager->GetAiInfo(_aiCode);
+	MonsterInfo* pMonsterInfo = g_cDescMgr.GetMonsterInfo(_monsterCode);
+	AIInfo* pAIInfo = g_cDescMgr.GetAiInfo(_aiCode);
 
 	if (!monsterPool_.Exist(_monsterCode))
 	{
@@ -363,7 +363,7 @@ MapObject* ActorManager::CreateMapObjectOnMap(int _mapObjectCode, float _x, floa
 {
 	jc_assert_msg(pMapLayer_, "맵 레이어 생성 및 init 후 옵스터클을 생성해주세요");
 
-	MapObjectInfo* pMapObjectInfo = sg::DataManager->GetMapObjectInfo(_mapObjectCode);
+	MapObjectInfo* pMapObjectInfo = g_cDescMgr.GetMapObjectInfo(_mapObjectCode);
 
 	if (!mapObjectPool_.Exist(_mapObjectCode))
 	{
@@ -517,7 +517,7 @@ Effect* ActorManager::CreateEffectOnMap(int _effectCode)
 {
 	jc_assert_msg(pMapLayer_, "맵 레이어 생성 및 init 후 이펙트를 생성해주세요");
 
-	EffectInfo* pEffectInfo = sg::DataManager->GetEffectInfo(_effectCode);
+	EffectInfo* pEffectInfo = g_cDescMgr.GetEffectInfo(_effectCode);
 
 	if (!effectPool_.Exist(_effectCode))
 	{

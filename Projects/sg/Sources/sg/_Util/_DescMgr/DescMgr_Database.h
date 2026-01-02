@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 3/24/2023 1:44:44 PM
  * =====================
@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include <sg/DatabaseInfo.h>
+#include <sg/_Struct/SteinsGate_Database.h>
 #include <sg/_Util/DescLoaderAbstract.h>
 
 struct DatabaseInfoLoader : DescLoaderAbstract
 {
 public:
-	DatabaseInfoLoader(DescLoaderMgr* _pManager);
+	DatabaseInfoLoader();
 
 	bool Load() override;
 

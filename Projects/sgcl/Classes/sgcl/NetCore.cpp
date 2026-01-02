@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 5/6/2023 8:29:57 AM
  * =====================
@@ -10,9 +10,9 @@
 #include "NetCore.h"
 
 #include <sg/Config.h>
-#include <sgcl/AuthenticationComponent.h>
+#include <sg/_Struct/SteinsGate_Client.h>
 
-#include "sg/ClientInfo.h"
+#include <sgcl/AuthenticationComponent.h>
 
 USING_NS_JC;
 USING_NS_CC;

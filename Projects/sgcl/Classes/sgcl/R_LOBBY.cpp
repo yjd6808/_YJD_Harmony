@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/27/2023 6:18:07 PM
  * =====================
@@ -28,7 +28,7 @@ void R_LOBBY::RECV_LOC_JoinLobbyAck(UNUSED Session* _pSession, ICommand* _pComma
 	LOC_JoinLobbyAck* pCmd = (LOC_JoinLobbyAck*)_pCommand;
 	sg::Contents.PopupManager->CloseByTag(DEF_POPUP_AUTHENTICATION_LOBBY_BEGIN);
 	sg::Contents.PopupManager->ShowNone(
-		SG_TEXT_RAW("LOBBY_LOADING_CHANNEL_INFO"), false, Const::Timeout::LoadingChannel);
+		SG_LOCAL_RAW("LOBBY_LOADING_CHANNEL_INFO"), false, Const::Timeout::LoadingChannel);
 	g_cWorld.ReserveScene(SceneType::ChannelSelect);
 	g_cUIMgr.GetUI_ChannelSelect().SelectServer(pCmd->DefaultSelectedServer);
 }

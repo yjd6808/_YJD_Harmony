@@ -181,7 +181,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\ComboKeyList.cpp" />
     <ClCompile Include="..\Classes\sgcl\ActionMgr.cpp">
       <SubType>
       </SubType>
@@ -203,10 +202,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\ActorPartSprite.cpp" />
-    <ClCompile Include="..\Classes\sgcl\DataManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\FrameTexture.cpp">
       <SubType>
       </SubType>
@@ -403,6 +398,13 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\_API\sgapiClient.cpp" />
+    <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Char.cpp" />
+    <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Effect.cpp" />
+    <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_MapObject.cpp" />
+    <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Monster.cpp" />
+    <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Projectile.cpp" />
+    <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Tile.cpp" />
+    <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\sgcl\ActorListenerCollection.h" />
@@ -579,7 +581,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\ComboTree.h" />
-    <ClInclude Include="..\Classes\sgcl\ComboKeyList.h" />
     <ClInclude Include="..\Classes\sgcl\ActionMgr.h">
       <SubType>
       </SubType>
@@ -699,10 +700,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\FrameTexture.h" />
-    <ClInclude Include="..\Classes\sgcl\DataManager.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\ImagePack.h">
       <SubType>
       </SubType>
@@ -823,6 +820,13 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\_API\sgapiClient.h" />
+    <ClInclude Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Char.h" />
+    <ClInclude Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Effect.h" />
+    <ClInclude Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_MapObject.h" />
+    <ClInclude Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Monster.h" />
+    <ClInclude Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Projectile.h" />
+    <ClInclude Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Tile.h" />
+    <ClInclude Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_UI.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F0278B0E-1014-4730-B622-67B9073F8C60}</ProjectGuid>
@@ -949,7 +953,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(EngineRoot);$(EngineRoot)external;$(EngineRoot)external/$(Platform)/include;$(EngineRoot)cocos\audio\include;$(EngineRoot)extensions;..\Classes;$(SolutionDir)Projects\sge\Sources;..;%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_SG_CLIENT;SEND_HELPER_NONE_THREAD_LOCAL_INFORMATION;WIN32;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;COCOS2D_DEBUG=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;JSON_USE_EXCEPTION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>STATIC_LIB_STEINSGATE_COCOS;_SG_CLIENT;SEND_HELPER_NONE_THREAD_LOCAL_INFORMATION;WIN32;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;COCOS2D_DEBUG=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;JSON_USE_EXCEPTION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -982,7 +986,7 @@ xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(EngineRoot);$(EngineRoot)external;$(EngineRoot)external/$(Platform)/include;$(EngineRoot)cocos\audio\include;$(EngineRoot)extensions;..\Classes;$(SolutionDir)Projects\sge\Sources;..;%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_SG_CLIENT;WIN32;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;COCOS2D_DEBUG=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>STATIC_LIB_STEINSGATE_COCOS;_SG_CLIENT;WIN32;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;COCOS2D_DEBUG=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -1038,7 +1042,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>$(EngineRoot);$(EngineRoot)external;$(EngineRoot)external/$(Platform)/include;$(EngineRoot)cocos\audio\include;$(EngineRoot)extensions;..\Classes;$(SolutionDir)Projects\sge\Sources;..;%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_SG_CLIENT;SEND_HELPER_NONE_THREAD_LOCAL_INFORMATION;WIN32;NDEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>STATIC_LIB_STEINSGATE_COCOS;_SG_CLIENT;SEND_HELPER_NONE_THREAD_LOCAL_INFORMATION;WIN32;NDEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -1077,7 +1081,7 @@ xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>$(EngineRoot);$(EngineRoot)external;$(EngineRoot)external/$(Platform)/include;$(EngineRoot)cocos\audio\include;$(EngineRoot)extensions;..\Classes;$(SolutionDir)Projects\sge\Sources;..;%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_SG_CLIENT;WIN32;NDEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>STATIC_LIB_STEINSGATE_COCOS;_SG_CLIENT;WIN32;NDEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>Use</PrecompiledHeader>

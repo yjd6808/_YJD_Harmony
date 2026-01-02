@@ -1,4 +1,4 @@
-#include <jnet/Core.h>
+﻿#include <jnet/Core.h>
 #include <jnet/Winsock.h>
 #include <jnet/Host/TcpServer.h>
 #include <jnetr_common/ServerNetGroupMgr.h>

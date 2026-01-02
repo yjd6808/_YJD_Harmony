@@ -124,8 +124,11 @@
     <Filter Include="API">
       <UniqueIdentifier>{479489ea-0bba-482a-9a03-dd3222c23497}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_DescMgr">
+    <Filter Include="_Util">
       <UniqueIdentifier>{c229c058-5c89-42fa-96aa-4107a44b8854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Util\_DescMgr">
+      <UniqueIdentifier>{4b0e5bc3-759b-41bb-9996-1158d56b4ebe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -135,14 +138,8 @@
     <ClCompile Include="..\Classes\sgcl\ImagePack.cpp">
       <Filter>Game\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\DataManager.cpp">
-      <Filter>_DescMgr</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\JsonUtilEx.cpp">
       <Filter>Util</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\ComboKeyList.cpp">
-      <Filter>Game\Action</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Actor.cpp">
       <Filter>Game\Actor</Filter>
@@ -496,6 +493,27 @@
     <ClCompile Include="..\Classes\sgcl\_API\sgapiClient.cpp">
       <Filter>API</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_UI.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Char.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Effect.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Tile.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Monster.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Projectile.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_MapObject.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\sgcl\ImagePackManager.h">
@@ -504,14 +522,8 @@
     <ClInclude Include="..\Classes\sgcl\ImagePack.h">
       <Filter>Game\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\DataManager.h">
-      <Filter>_DescMgr</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\JsonUtilEx.h">
       <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\ComboKeyList.h">
-      <Filter>Game\Action</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Actor.h">
       <Filter>Game\Actor</Filter>
@@ -922,6 +934,27 @@
     <ClInclude Include="..\Classes\sgcl\Core.h" />
     <ClInclude Include="..\Classes\sgcl\_API\sgapiClient.h">
       <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_UI.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Char.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Effect.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Tile.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Monster.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Projectile.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_MapObject.h">
+      <Filter>_Util\_DescMgr</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

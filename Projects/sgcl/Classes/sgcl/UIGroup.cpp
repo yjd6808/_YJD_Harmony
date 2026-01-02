@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/15/2023 4:49:38 PM
  * =====================
@@ -351,7 +351,7 @@ UIStatic* UIGroup::FindStatic(int _staticCode)
 //////////////////////////////////////////////////////////////////////////////////////////
 void UIGroup::AddUIElement(UIGroupElemInfo* _pGroupElemInfo)
 {
-	UIElementInfo* pElementInfo = sg::DataManager->GetUIElementInfo(_pGroupElemInfo->code_);
+	UIElementInfo* pElementInfo = g_cDescMgr.GetUIElementInfo(_pGroupElemInfo->code_);
 	UIElement* pChildElement = nullptr;
 
 	switch (pElementInfo->type_)

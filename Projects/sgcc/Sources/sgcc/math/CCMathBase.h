@@ -59,14 +59,6 @@
  * @}
  */
 
-#ifndef NS_CC_BEGIN
-#define NS_CC_BEGIN  namespace cocos2d {
-#endif
-
-#ifndef NS_CC_END
-#define NS_CC_END  }
-#endif
-
 #ifndef CC_DEGREES_TO_RADIANS
 #define CC_DEGREES_TO_RADIANS(__ANGLE__) ((__ANGLE__) * 0.01745329252f) // PI / 180
 #endif

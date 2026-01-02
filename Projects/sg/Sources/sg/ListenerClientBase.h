@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 5/12/2023 9:36:48 AM
  * =====================
@@ -9,7 +9,6 @@
 #pragma once
 
 #include <jnet/EventListener/ClientEventListener.h>
-#include <sg/Enum.h>
 
 class JC_NOVTABLE ListenerClientBase : public jnet::ClientEventListener
 {

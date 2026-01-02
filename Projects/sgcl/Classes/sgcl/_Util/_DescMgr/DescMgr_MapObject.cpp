@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/25/2023 11:32:31 AM
  * =====================
@@ -7,16 +7,15 @@
 
 
 #include "Core.h"
-#include "MapObjectInfoLoader.h"
+#include "DescMgr_MapObject.h"
 
-#include <sgcl/ImagePackManager.h>
 #include <sgcl/JsonUtilEx.h>
 
 USING_NS_JC;
 USING_NS_JS;
 
-MapObjectInfoLoader::MapObjectInfoLoader(DescLoaderMgr* _pManager)
-: DescLoaderAbstract(_pManager)
+//////////////////////////////////////////////////////////////////////////////////////////
+MapObjectInfoLoader::MapObjectInfoLoader()
 {
 }
 
@@ -67,8 +66,6 @@ bool MapObjectInfoLoader::Load()
 			pInfo->isZOrederable_ = JsonUtilEx::GetBooleanDefault(mapObjectRoot["z_orderable"], false);
 			JsonUtilEx::ParseThicknessInfo(mapObjectRoot["thickness_box"], pInfo->thicknessBox_);
 			JsonUtilEx::ParseActorSpriteData(mapObjectRoot["actor_sprite_data"], &pInfo->pSpriteData_);
-
-
 			AddData(pInfo);
 		}
 	}

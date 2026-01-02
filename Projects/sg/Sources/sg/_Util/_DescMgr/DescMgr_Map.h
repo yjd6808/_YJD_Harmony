@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/25/2023 11:33:11 AM
  * =====================
@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include <sg/MapInfo.h>
+#include <sg/_Struct/SteinsGate_Map.h>
 #include <sg/_Util/DescLoaderAbstract.h>
 
 struct MapInfoLoader : DescLoaderAbstract
 {
 public:
-	MapInfoLoader(DescLoaderMgr* _pManager);
+	MapInfoLoader();
 	~MapInfoLoader() override;
 
 	bool Load() override;

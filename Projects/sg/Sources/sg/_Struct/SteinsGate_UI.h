@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/15/2023 1:29:35 AM
  * =====================
@@ -9,6 +9,58 @@
 #pragma once
 
 #include <sg/_Util/DescBase.h>
+
+//////////////////////////////////////////////////////////////////////////////////////////
+JC_SENUM_BEGIN(HAlignment)
+	Left,
+	Center,
+	Right
+JC_SENUM_END(HAlignment)
+
+//////////////////////////////////////////////////////////////////////////////////////////
+JC_SENUM_BEGIN(VAlignment)
+	Top,
+	Center,
+	Bottom
+JC_SENUM_END(VAlignment)
+
+//////////////////////////////////////////////////////////////////////////////////////////
+JC_SENUM_BEGIN(UIElementType)
+		Group,
+		Button,
+		Label,
+		Sprite,
+		EditBox,
+		CheckBox,
+		ToggleButton,
+		ScrollBar,
+		ProgressBar,
+		Static,
+		Max
+
+JC_SENUM_MIDDLE(UIElementType)
+static constexpr const char* Name[Max]{
+	"그룹",
+	"버튼",
+	"라벨",
+	"스프라이트",
+	"에딧박스",
+	"체크박스",
+	"토글버튼",
+	"스크롤바",
+	"프로그래스바",
+	"스태틱"
+};
+JC_SENUM_MIDDLE_END(UIElementType)
+
+//////////////////////////////////////////////////////////////////////////////////////////
+JC_SENUM_BEGIN(ProgressIncreaseDirection)
+	LeftRight,
+	RightLeft,
+	TopBottom,
+	BottomTop
+JC_SENUM_END(ProgressIncreaseDirection)
+
 
  //////////////////////////////////////////////////////////////////////////////////////////
 struct UIElementInfo : SDescBase

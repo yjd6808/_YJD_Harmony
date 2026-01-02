@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/15/2023 8:07:34 PM
  * =====================
@@ -70,7 +70,7 @@ void UI_Login::OnInit()
 	pEditBoxId_ = g_cUIMgr.GetEditBox(UI_LOGIN_LOGIN_BOX_EDITBOX_ID);
 	pEditBoxId_->SetMaxLength(Const::StringLen::AccountId);
 	pEditBoxPassword_ = g_cUIMgr.GetEditBox(UI_LOGIN_LOGIN_BOX_EDITBOX_PW);
-	pEditBoxPassword_->SetInputFlag(c2d_ui::EditBox::InputFlag::PASSWORD);
+	pEditBoxPassword_->SetInputFlag(cc_ui::EditBox::InputFlag::PASSWORD);
 	pEditBoxPassword_->SetMaxLength(Const::StringLen::AccountPass);
 }
 
@@ -143,7 +143,7 @@ bool UI_Login::OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pE
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UI_Login::OnEditBoxEditingDidEndWithAction(UIEditBox* _pEditBox, c2d_ui::EditBoxDelegate::EditBoxEndAction _endAction)
+void UI_Login::OnEditBoxEditingDidEndWithAction(UIEditBox* _pEditBox, cc_ui::EditBoxDelegate::EditBoxEndAction _endAction)
 {
 	if (_endAction == EditBoxDelegate::EditBoxEndAction::RETURN)
 	{
@@ -173,7 +173,7 @@ void UI_Login::Login()
 {
 	if (pEditBoxId_->GetText().length() == 0 || pEditBoxPassword_->GetText().length() == 0)
 	{
-		sg::Contents.PopupManager->ShowOk(SG_TEXT_RAW("LOGIN_REQUIRED_ID_PASS"));
+		sg::Contents.PopupManager->ShowOk(SG_LOCAL_RAW("LOGIN_REQUIRED_ID_PASS"));
 		return;
 	}
 
@@ -182,10 +182,10 @@ void UI_Login::Login()
 
 	if (!sg::Net->ConnectAuthTcp())
 	{
-		sg::Contents.PopupManager->ShowOk(SG_TEXT_RAW("CONNECT_AUTH_FAILED_UNCONNECTABLE_STATE"));
+		sg::Contents.PopupManager->ShowOk(SG_LOCAL_RAW("CONNECT_AUTH_FAILED_UNCONNECTABLE_STATE"));
 		return;
 	}
-
-	sg::Contents.PopupManager->ShowNone(
-		SG_TEXT_RAW_FMT_STD("CONNECT_SERVER", ServerType::Name[ServerType::Auth]), DEF_POPUP_CONNECT_AUTH);
+	
+	std::string msg = StringUtils::format(SG_LOCAL_RAW("CONNECT_SERVER", ServerType::Name[ServerType::Auth]));
+	sg::Contents.PopupManager->ShowNone(msg, DEF_POPUP_CONNECT_AUTH);
 }

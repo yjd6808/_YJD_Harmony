@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/24/2023 9:27:21 AM
  * =====================
@@ -6,9 +6,9 @@
  */
 
 #include "Core.h"
-#include "ClientTextInfoLoader.h"
+#include "DescMgr_ClientText.h"
 
-#include <sgcl/JsonUtilEx.h>
+#include <sg/_Util/JsonUtil.h>
 
 #define MAX_ID_LEN      63
 #define MAX_TEXT_LEN    511
@@ -17,9 +17,8 @@ USING_NS_JS;
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ClientTextInfoLoader::ClientTextInfoLoader(DescLoaderMgr* _pManager)
-: DescLoaderAbstract(_pManager)
-, textMap_(1024)
+ClientTextInfoLoader::ClientTextInfoLoader()
+: textMap_(1024)
 {
 }
 

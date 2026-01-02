@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 3/22/2023 12:52:57 AM
  * =====================
@@ -133,7 +133,7 @@ void UIRootGroup::OnEditBoxReturn(UIEditBox* _pEditBox)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIRootGroup::OnEditBoxEditingDidEndWithAction(UIEditBox* _pEditBox, c2d_ui::EditBoxDelegate::EditBoxEndAction _endAction)
+void UIRootGroup::OnEditBoxEditingDidEndWithAction(UIEditBox* _pEditBox, cc_ui::EditBoxDelegate::EditBoxEndAction _endAction)
 {
 }
 

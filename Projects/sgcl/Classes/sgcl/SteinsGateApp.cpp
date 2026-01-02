@@ -1,13 +1,14 @@
-#include "Core.h"
+﻿#include "Core.h"
 #include "SteinsGateApp.h"
 #include "GameCoreHeader.h"
 
 #include <jc/Logger/ConsoleLogger.h>
 
+#include <sg/_Struct/SteinsGate_Client.h>
+
 #include <sg/LogSpecifier.h>
 #include <sg/AudioPlayer.h>
 #include <sg/_Sga/SgaElementInitializer.h>
-#include <sg/ClientInfo.h>
 #include <sg/Config.h>
 
 #include <sgcl/Win32Helper.h>

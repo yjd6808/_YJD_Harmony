@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 7/23/2023 4:27:54 AM
  * =====================
@@ -6,11 +6,9 @@
  */
 
 #include "Core.h"
-#include "FrameEventLoader.h"
+#include "DescMgr_FrameEvent.h"
 
-#include <sgcl/ImagePackManager.h>
-#include <sgcl/Global.h>
-#include <sgcl/JsonUtilEx.h>
+#include <sg/_Util/JsonUtil.h>
 
 #include <jc/FileSystem/Path.h>
 
@@ -18,9 +16,8 @@ USING_NS_JS;
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-FrameEventLoader::FrameEventLoader(DescLoaderMgr* _pManager, ActorType_t _actorType)
-: DescLoaderAbstract(_pManager)
-, actorType_(_actorType)
+FrameEventLoader::FrameEventLoader(ActorType_t _actorType)
+: actorType_(_actorType)
 {
 }
 
@@ -42,7 +39,7 @@ bool FrameEventLoader::Load()
 			FrameEvent* pFrameEvent = nullptr;
 			const FrameEventType_t frameEventType = (FrameEventType_t)frameEventRoot["type"].asInt();
 			const int frameEventCode = frameEventRoot["code"].asInt();
-			//const jc::String name = JsonUtilEx::getString(frameEventRoot["name"]);
+			//const jc::String name = JsonUtil::getString(frameEventRoot["name"]);
 
 			switch (frameEventType)
 			{
@@ -98,5 +95,5 @@ void FrameEventLoader::ReadFrameEventAttackBoxInstant(Value& _frameEventRoot,
                                                       OUT FrameEventAttackBoxInstant* _pFrameEvent)
 {
 	_pFrameEvent->attackDataCode_ = _frameEventRoot["attack_data_code"].asInt();
-	JsonUtilEx::ParseActorRect(_frameEventRoot["actor_rect"], _pFrameEvent->rect_);
+	JsonUtil::ParseActorRect(_frameEventRoot["actor_rect"], _pFrameEvent->rect_);
 }

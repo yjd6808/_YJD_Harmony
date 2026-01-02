@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/2/2023 4:53:48 PM
  * =====================
@@ -11,7 +11,7 @@
 #include <sgcl/Projectile.h>
 #include <sgcl/HostPlayer.h>
 #include <sgcl/ActorPartAnimation.h>
-#include <sgcl/AttackDataInfo.h>
+#include <sg/_Struct/SteinsGate_AttackData.h>
 #include <sgcl/Define_Effect.h>
 #include <sgcl/Define_Event.h>
 #include <sgcl/ActorManager.h>

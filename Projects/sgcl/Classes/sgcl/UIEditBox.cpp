@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/22/2023 7:59:06 PM
  * =====================
@@ -95,7 +95,7 @@ bool UIEditBox::init()
 	pEditBox_ = EditBox::create(uiSize_, "");
 	pListener_ = dbg_new Listener(this);
 
-	pEditBoxImpl_ = (c2d_ui::EditBoxImplWin*)pEditBox_->getImpl();
+	pEditBoxImpl_ = (cc_ui::EditBoxImplWin*)pEditBox_->getImpl();
 	nativeHandle_ = pEditBoxImpl_->getNativeHandle();
 	pLabel_ = pEditBoxImpl_->getLabel();
 	pLabelPlaceHolder_ = pEditBoxImpl_->getLabelPlaceholder();
@@ -110,7 +110,7 @@ bool UIEditBox::init()
 	pEditBox_->setPlaceholderFontSize(placeholderFontSizeInitial_);
 	pEditBox_->setAnchorPoint(Vec2::ZERO);
 	pEditBox_->setMaxLength(pInfo_->MaxLength);
-	pEditBox_->setInputMode(pInfo_->InputMode);
+	pEditBox_->setInputMode((cc_ui::EditBox::InputMode)pInfo_->InputMode);
 	pEditBox_->setDelegate(pListener_);
 	pEditBox_->setPassiveFocusable(true);
 	this->addChild(pEditBox_);
@@ -161,7 +161,7 @@ void UIEditBox::SetReturnCallback(const jc::Action<UIEditBox*>& _fnEditBoxReturn
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIEditBox::SetLoseFocusCallback(const jc::Action<UIEditBox*, c2d_ui::EditBoxDelegate::EditBoxEndAction>& _fnLoseFocus) const
+void UIEditBox::SetLoseFocusCallback(const jc::Action<UIEditBox*, cc_ui::EditBoxDelegate::EditBoxEndAction>& _fnLoseFocus) const
 {
 	pListener_->fnEditBoxEditingDidEndWithAction_ = _fnLoseFocus;
 }
@@ -226,13 +226,13 @@ void UIEditBox::Focus()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIEditBox::SetInputFlag(c2d_ui::EditBox::InputFlag _inputFlag)
+void UIEditBox::SetInputFlag(cc_ui::EditBox::InputFlag _inputFlag)
 {
 	pEditBox_->setInputFlag(_inputFlag);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIEditBox::SetInputMode(c2d_ui::EditBox::InputMode _inputMode)
+void UIEditBox::SetInputMode(cc_ui::EditBox::InputMode _inputMode)
 {
 	pEditBox_->setInputMode(_inputMode);
 }
@@ -245,7 +245,7 @@ bool UIEditBox::OnMouseUpContainedInternalDetail(cc::EventMouse* /*_pMouseEvent*
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIEditBox::Listener::editBoxEditingDidBegin(c2d_ui::EditBox* /* editBox */)
+void UIEditBox::Listener::editBoxEditingDidBegin(cc_ui::EditBox* /* editBox */)
 {
 	if (fnEditBoxEditingDidBegin_)
 	{
@@ -256,12 +256,12 @@ void UIEditBox::Listener::editBoxEditingDidBegin(c2d_ui::EditBox* /* editBox */)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIEditBox::Listener::nativeEditBoxFocused(c2d_ui::EditBox* /* editBox */)
+void UIEditBox::Listener::nativeEditBoxFocused(cc_ui::EditBox* /* editBox */)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIEditBox::Listener::editBoxTextChanged(c2d_ui::EditBox* /* editBox */, const std::string& _text)
+void UIEditBox::Listener::editBoxTextChanged(cc_ui::EditBox* /* editBox */, const std::string& _text)
 {
 	if (fnEditBoxTextChanged_)
 	{
@@ -272,7 +272,7 @@ void UIEditBox::Listener::editBoxTextChanged(c2d_ui::EditBox* /* editBox */, con
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIEditBox::Listener::editBoxReturn(c2d_ui::EditBox* /* editBox */)
+void UIEditBox::Listener::editBoxReturn(cc_ui::EditBox* /* editBox */)
 {
 	if (fnEditBoxReturn_)
 	{
@@ -283,7 +283,7 @@ void UIEditBox::Listener::editBoxReturn(c2d_ui::EditBox* /* editBox */)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIEditBox::Listener::editBoxEditingDidEndWithAction(c2d_ui::EditBox* /* editBox */, EditBoxEndAction _editBoxEndAction)
+void UIEditBox::Listener::editBoxEditingDidEndWithAction(cc_ui::EditBox* /* editBox */, EditBoxEndAction _editBoxEndAction)
 {
 	if (fnEditBoxEditingDidEndWithAction_)
 	{

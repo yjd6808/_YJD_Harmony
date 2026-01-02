@@ -1,4 +1,4 @@
-#include "Core.h"
+﻿#include "Core.h"
 #include "ActorPartSprite.h"
 
 #include <sge/RectPoly.h>

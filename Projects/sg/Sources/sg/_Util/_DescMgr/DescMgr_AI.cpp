@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/29/2023 2:53:06 PM
  * =====================
@@ -8,14 +8,13 @@
 #include "Core.h"
 #include "DescMgr_AI.h"
 
-#include <sgcl/JsonUtilEx.h>
+#include <sg/_Util/JsonUtil.h>
 
 USING_NS_JC;
 USING_NS_JS;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-AIInfoLoader::AIInfoLoader(DescLoaderMgr* _pManager)
-: DescLoaderAbstract(_pManager)
+AIInfoLoader::AIInfoLoader()
 {
 }
 
@@ -55,12 +54,12 @@ bool AIInfoLoader::Load()
 void AIInfoLoader::ReadAiInfo(Json::Value& _aiRoot, OUT AIInfo* _pAiInfo)
 {
 	_pAiInfo->code_ = _aiRoot["code"].asInt();
-	JsonUtilEx::ParseFloatNumberN(_aiRoot["wander_prob"], _pAiInfo->wanderProbs_, AIWanderDecision::Max - 1);
-	JsonUtilEx::ParseFloatNumberN(_aiRoot["track_prob"], _pAiInfo->trackProbs_, AITrackDecision::Max - 1);
-	JsonUtilEx::ParseFloatNumberN(_aiRoot["angry_prob"], _pAiInfo->angryProbs_, AIAngryDecision::Max - 1);
-	JsonUtilEx::ParseFloatNumberN(_aiRoot["idle_time"], _pAiInfo->idleTime_, 2);
-	JsonUtilEx::ParseFloatNumberN(_aiRoot["wander_walk_time"], _pAiInfo->wanderWalkTime_, 2);
-	JsonUtilEx::ParseFloatNumberN(_aiRoot["track_walk_time"], _pAiInfo->trackWalkTime_, 2);
+	JsonUtil::ParseFloatNumberN(_aiRoot["wander_prob"], _pAiInfo->wanderProbs_, AIWanderDecision::Max - 1);
+	JsonUtil::ParseFloatNumberN(_aiRoot["track_prob"], _pAiInfo->trackProbs_, AITrackDecision::Max - 1);
+	JsonUtil::ParseFloatNumberN(_aiRoot["angry_prob"], _pAiInfo->angryProbs_, AIAngryDecision::Max - 1);
+	JsonUtil::ParseFloatNumberN(_aiRoot["idle_time"], _pAiInfo->idleTime_, 2);
+	JsonUtil::ParseFloatNumberN(_aiRoot["wander_walk_time"], _pAiInfo->wanderWalkTime_, 2);
+	JsonUtil::ParseFloatNumberN(_aiRoot["track_walk_time"], _pAiInfo->trackWalkTime_, 2);
 	_pAiInfo->forceTrack_ = _aiRoot["force_track"].asBool();
 	_pAiInfo->forceAngry_ = _aiRoot["force_angry"].asBool();
 	_pAiInfo->sightRadious_ = _aiRoot["sight_radious"].asFloat();

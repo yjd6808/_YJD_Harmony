@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2023 10:06:01 AM
  * =====================
@@ -12,7 +12,7 @@
 #include <sge/RectPoly.h>
 
 #include <sgcl/MapLayer.h>
-#include <sgcl/AttackDataInfo.h>
+#include <sg/_Struct/SteinsGate_AttackData.h>
 
 USING_NS_JC;
 USING_NS_CC;
@@ -446,7 +446,7 @@ void PhysicsComponent::UpdateDebugSub1(float _dt)
 		return;
 	}
 
-	const FrameEvent* pFrameEvent = sg::DataManager->GetFrameEvent(pActor_->GetType(), frameInfo.frameEventCode_);
+	const FrameEvent* pFrameEvent = g_cDescMgr.GetFrameEvent(pActor_->GetType(), frameInfo.frameEventCode_);
 
 	if (pFrameEvent && pFrameEvent->type_ != FrameEventType::AttackBoxInstant)
 	{

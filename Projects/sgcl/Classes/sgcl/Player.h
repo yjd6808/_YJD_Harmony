@@ -1,4 +1,4 @@
- 
+﻿ 
 /*
  * 작성자: 윤정도
  * 생성일: 2/4/2023 9:36:43 PM
@@ -21,9 +21,4 @@ public:
 
 	void Initialize() override;
 	void InitPlayerData();
-
-	PlayerData& GetPlayerData() { return playerData_; }
-
-protected:
-	PlayerData playerData_;
 };

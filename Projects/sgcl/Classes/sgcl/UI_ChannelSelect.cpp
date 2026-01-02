@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/19/2023 1:07:34 PM
  * =====================
@@ -9,9 +9,10 @@
 #include "GameCoreHeader.h"
 #include "UI_ChannelSelect.h"
 
+#include <sg/_Struct/SteinsGate_Channel.h>
+
 #include <sgcl/Define_UI.h>
 #include <sgcl/Define_Popup.h>
-#include <sgcl/ChannelInfo.h>
 #include <sgcl/S_LOBBY.h>
 
 #include <sge/RectEx.h>
@@ -345,7 +346,7 @@ void UI_ChannelSelect::ChannelButton::InitMonsterSprites(UI_ChannelSelect* _pRoo
 
 void UI_ChannelSelect::ChannelButton::SetChannelInfo(const LobbyChannelInfo& _channelInfo, char _sequence)
 {
-	pInfo_ = sg::DataManager->GetChannelInfo(_channelInfo.type_);
+	pInfo_ = g_cDescMgr.GetChannelInfo(_channelInfo.type_);
 	const jc::String& szFmtName = pLabelName_->getInfo()->text_; // szFmtName = "ch%02d.%s %c"
 	pLabelName_->setText(StringUtils::format(szFmtName.Source(), _channelInfo.number_, pInfo_->name_.Source(), _sequence));
 

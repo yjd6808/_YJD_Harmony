@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include <sgcl/EffectInfo.h>
+#include <sg/_Struct/SteinsGate_Effect.h>
 #include <sg/_Util/DescLoaderAbstract.h>
 
 struct EffectInfoLoader : DescLoaderAbstract
 {
 public:
-	EffectInfoLoader(DescLoaderMgr* _pManager);
+	EffectInfoLoader();
 
 	ConfigFileType_t GetConfigFileType() override
 	{

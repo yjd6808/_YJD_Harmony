@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/27/2023 5:07:00 PM
  * =====================
@@ -11,7 +11,6 @@
 
 #include <jc/Primitives/StaticString.h>
 #include <jnet/Packet/Command.h>
-#include <sg/Struct.h>
 
 // ======================= CMD LIST =======================
 // SC_ClientText	: 클라이언트 텍스트 키값을 서버측에서 전달

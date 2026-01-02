@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/17/2023 11:24:37 PM
  * =====================
@@ -188,10 +188,7 @@ void DescLoaderAbstract::DirectoryTree::ClearRecursive(DirectoryTreeNode* _pNode
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-DescLoaderAbstract::DescLoaderAbstract(DescLoaderMgr* _pManager)
-: configPath_(nullptr)
-, pManager_(_pManager)
-, configDataMap_()
+DescLoaderAbstract::DescLoaderAbstract()
 {
 }
 
@@ -209,7 +206,7 @@ void DescLoaderAbstract::LoadDepedencies()
 {
 	for (ConfigFileType_t dependency : GetDependencies())
 	{
-		pManager_->Load(dependency);
+		g_cDescMgr.Load(dependency);
 	}
 }
 

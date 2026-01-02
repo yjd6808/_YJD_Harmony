@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/16/2023 7:12:53 AM
  * =====================
@@ -10,9 +10,8 @@
 
 #include <jc/Logger/ConsoleLogger.h>
 
-#include <sg/ClientInfo.h>
+#include <sg/_Struct/SteinsGate_Client.h>
 #include <sg/_API/sgapi_Util.h>
-
 
 #define SG_RUNTIME_CONFIG_FILENAME "runtime_config.json"
 

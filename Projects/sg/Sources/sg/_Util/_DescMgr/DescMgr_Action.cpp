@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 1:57:14 PM
  * =====================
@@ -8,8 +8,7 @@
 #include "Core.h"
 #include "DescMgr_Action.h"
 
-#include <sgcl/ImagePackManager.h>
-#include <sgcl/JsonUtilEx.h>
+#include <sg/_Util/JsonUtil.h>
 
 #include <json.h>
 #include <fstream>
@@ -19,8 +18,7 @@ USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // ActionInfoLoader
-ActionInfoLoader::ActionInfoLoader(DescLoaderMgr* _pManager)
-: DescLoaderAbstract(_pManager)
+ActionInfoLoader::ActionInfoLoader()
 {
 }
 
@@ -63,7 +61,7 @@ bool ActionInfoLoader::Load()
 //////////////////////////////////////////////////////////////////////////////////////////
 void ActionInfoLoader::ReadActionInfo(Json::Value& _actionRoot, OUT ActionInfo* _pActionInfo)
 {
-	_pActionInfo->ActionName = JsonUtilEx::GetString(_actionRoot["name"]);
+	_pActionInfo->ActionName = JsonUtil::GetString(_actionRoot["name"]);
 	_pActionInfo->code_ = _actionRoot["code"].asInt();
 	_pActionInfo->ForceCancelable = _actionRoot["force_cancelable"].asBool();
 	_pActionInfo->Moveable = _actionRoot["moveable"].asBool();
@@ -73,7 +71,7 @@ void ActionInfoLoader::ReadActionInfo(Json::Value& _actionRoot, OUT ActionInfo* 
 	if (_actionRoot.isMember("command"))
 	{
 		Value& commandRoot = _actionRoot["command"];
-		jc::String command = JsonUtilEx::GetString(commandRoot);
+		jc::String command = JsonUtil::GetString(commandRoot);
 		ComboKeyList keyList;
 
 		for (int k = 0; k < command.Length(); ++k)

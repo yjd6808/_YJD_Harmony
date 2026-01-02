@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/7/2023 11:32:58 AM
  * =====================
@@ -7,14 +7,13 @@
 
 
 #include "Core.h"
-#include "MapPhysicsInfoLoader.h"
+#include "DescMgr_MapPhysics.h"
 
 USING_NS_JC;
 USING_NS_JS;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-MapPhysicsInfoLoader::MapPhysicsInfoLoader(DescLoaderMgr* _pMgr)
-: DescLoaderAbstract(_pMgr)
+MapPhysicsInfoLoader::MapPhysicsInfoLoader()
 {
 }
 
@@ -56,7 +55,7 @@ bool MapPhysicsInfoLoader::Load()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void MapPhysicsInfoLoader::ReadMapPhysicsInfo(Value& _mapRoot, MapPhysicsInfo* _pMapPhysicsInfo)
+void MapPhysicsInfoLoader::ReadMapPhysicsInfo(Value& _mapRoot, OUT MapPhysicsInfo* _pMapPhysicsInfo)
 {
 	_pMapPhysicsInfo->code_ = _mapRoot["code"].asInt();
 	_pMapPhysicsInfo->gravity_ = _mapRoot["gravity"].asFloat();

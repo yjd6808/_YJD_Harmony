@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 1:57:14 PM
  * =====================
@@ -9,7 +9,6 @@
 #include "Core.h"
 #include "DescMgr_Char.h"
 
-#include <sgcl/CharInfo.h>
 #include <sgcl/JsonUtilEx.h>
 #include <sgcl/VisualHelper.h>
 
@@ -18,8 +17,7 @@ USING_NS_JS;
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-CharInfoLoader::CharInfoLoader(DescLoaderMgr* _pManager)
-: CharBaseInfoLoader(_pManager)
+CharInfoLoader::CharInfoLoader()
 {
 }
 

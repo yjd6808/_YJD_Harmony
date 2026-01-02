@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <jc/Random.h>
 #include <jc/TypeTraits.h>

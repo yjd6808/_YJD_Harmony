@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 9:14:07 AM
  * =====================
@@ -409,7 +409,7 @@ void Actor::RunFrameEvent(int _frameEventCode)
 	if (_frameEventCode == InvalidValue_v)
 		return;
 
-	FrameEvent* pFrameEvent = sg::DataManager->GetFrameEvent(GetType(), _frameEventCode);
+	FrameEvent* pFrameEvent = g_cDescMgr.GetFrameEvent(GetType(), _frameEventCode);
 
 	if (pFrameEvent == nullptr)
 		return;

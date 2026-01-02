@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 
  * !F$ 1/20/2023 1:57:14 PM
  * =====================
@@ -6,18 +6,15 @@
  */
 
 #include "Core.h"
-#include "MonsterInfoLoader.h"
+#include "DescMgr_Monster.h"
 
-#include <sgcl/ImagePackManager.h>
-#include <sgcl/Global.h>
 #include <sgcl/JsonUtilEx.h>
 
 USING_NS_JS;
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MonsterInfoLoader::MonsterInfoLoader(DescLoaderMgr* _pManager)
-: MonsterBaseInfoLoader(_pManager)
+MonsterInfoLoader::MonsterInfoLoader()
 {
 }
 
@@ -46,7 +43,7 @@ bool MonsterInfoLoader::Load()
 	}
 	catch (std::exception& exception)
 	{
-		_LogError_("%s OeYj( uJm)uA$.)%s", GetConfigFileName(), exception.what());
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), exception.what());
 		return false;
 	}
 

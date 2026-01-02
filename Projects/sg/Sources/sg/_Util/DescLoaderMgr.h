@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/16/2023 6:39:51 PM
  * =====================
@@ -28,21 +28,21 @@ struct MapPhysicsInfo;
 
 
 // ------------------ 클라것들
-class MonsterInfo;
-class ActionInfo;
-class ProjectileInfo;
-class CharInfo;
-class AnimationInfo;
-class TileInfo;
-class MapObjectInfo;
-class AIInfo;
-class AttackDataInfo;
-class EffectInfo;
-class UIElementInfo;
-class FrameEvent;
-class ChannelInfo;
+struct MonsterInfo;
+struct ActionInfo;
+struct ProjectileInfo;
+struct CharInfo;
+struct AnimationInfo;
+struct TileInfo;
+struct MapObjectInfo;
+struct AIInfo;
+struct AttackDataInfo;
+struct EffectInfo;
+struct UIElementInfo;
+struct FrameEvent;
+struct ChannelInfo;
 
-class DescLoaderMgr
+class DescLoaderMgr : public jc::SingletonPointer<DescLoaderMgr>
 {
 public:
 	DescLoaderMgr();
@@ -51,7 +51,10 @@ public:
 	void LoadAll();
 	bool Load(ConfigFileType_t _configFileType);
 	void Unload(ConfigFileType_t _configFileType);
-	void FinalizeLoader();
+	void Clear();	// unload + detete
+
+	void AddLoader(DescLoaderAbstract* _pLoader);
+
 	SDescBase* GetData(ConfigFileType_t _configFileType, int _code);
 
 	// ------------------ 기본
@@ -87,6 +90,12 @@ public:
 	FrameEvent*						GetFrameEvent(ActorType_t _actorType, int _frameEventCode);
 	ChannelInfo*					GetChannelInfo(int _channelCode);
 
+	char*							GetTextRaw(const char* _textId);
+	jc::String&						GetText(const char* _textId);
+	jc::String&						GetText(const jc::String& _textId);
+
 protected:
-	DescLoaderAbstract*		m_pConfigFileLoaders[ConfigFileType::Max];
+	DescLoaderAbstract* m_pConfigFileLoaders[ConfigFileType::Max]{};
 };
+
+#define g_cDescMgr	(*DescLoaderMgr::Get())

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/21/2023 9:30:34 AM
  * =====================
@@ -9,7 +9,7 @@
 #pragma once
 
 #include <sgs_game/Game.h>
-#include <sgs/ServerProcessInfo.h>
+#include <sgs/SeteinsGate_Server.h>
 
 class Channel
 {

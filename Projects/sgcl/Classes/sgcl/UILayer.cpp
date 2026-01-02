@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/14/2023 10:12:23 PM
  * =====================
@@ -9,7 +9,7 @@
 #include "GameCoreHeader.h"
 #include "UILayer.h"
 
-#include <sgcl/DataManager.h>
+#include <sg/_Util/DescLoaderMgr.h>
 #include <sgcl/UIStatic.h>
 #include <sgcl/UIManager.h>
 #include <sgcl/UIRootGroup.h>

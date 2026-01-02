@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 3:55:09 PM
  * =====================
@@ -7,6 +7,8 @@
 
 
 #pragma once
+
+#include <sg/_Struct/SteinsGate_CharBase.h>
 
 struct JsonUtil
 {
@@ -35,4 +37,10 @@ public:
 	static int GetIntDefault(Json::Value& _value, int _defaultValue = 0);
 	static bool GetBooleanDefault(Json::Value& _value, bool _defaultValue = false);
 	static float GetFloatDefault(Json::Value& _value, float _defaultValue = 0);
+
+	static void ParseAnimationInfo(Json::Value& _animationRoot, OUT AnimationInfo& _info);
+	static void ParseActorRect(Json::Value& _root, OUT ActorRect& _actorRect);
+	static void ParseColor4B(Json::Value& _root, OUT cc::Color4B& _color);
+	static void ParseSize(Json::Value& _root, OUT cc::size& _size);
+	static void ParseVec2(Json::Value& _root, OUT cc::vec2& _vec);
 };

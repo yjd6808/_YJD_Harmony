@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/6/2023 1:02:27 AM
  * =====================
@@ -16,7 +16,7 @@
 #include <sgcl/GameCore.h>
 
 
-#ifdef DebugMode
+#ifdef _DEBUG
 #define SG_LOG_TICK(_time, _fmt, ...)            \
         static float Timer;                          \
         Timer += dt;                                 \

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/21/2023 8:36:33 AM
  * =====================
@@ -8,15 +8,13 @@
 #include "Core.h"
 #include "DescMgr_Channel.h"
 
-#include <sg/DescLoaderMgr.h>
 #include <sg/_Util/JsonUtil.h>
 
 USING_NS_JS;
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ChannelInfoLoader::ChannelInfoLoader(DescLoaderMgr* _pManager)
-: ChannelBaseInfoLoader(_pManager)
+ChannelInfoLoader::ChannelInfoLoader()
 {
 }
 
@@ -59,6 +57,5 @@ void ChannelInfoLoader::ReadChannelInfo(Json::Value& _channelRoot, OUT ChannelIn
 	JsonUtil::ParseIntNumber2(
 		_channelRoot["monster_sprite"],
 		_pChannelInfo->selectedSpriteIndex_,
-		_pChannelInfo->normalSpriteIndex_
-	);
+		_pChannelInfo->normalSpriteIndex_);
 }

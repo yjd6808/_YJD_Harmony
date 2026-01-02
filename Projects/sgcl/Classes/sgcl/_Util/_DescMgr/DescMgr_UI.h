@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/15/2023 1:30:10 AM
  * =====================
@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include <sgcl/UIInfo.h>
+#include <sg/_Struct/SteinsGate_UI.h>
 #include <sg/_Util/DescLoaderAbstract.h>
 
 struct UIInfoLoader : DescLoaderAbstract
 {
 public:
-	UIInfoLoader(DescLoaderMgr* _pManager);
+	UIInfoLoader();
 	ConfigFileType_t GetConfigFileType() override { return ConfigFileType::UI; }
 
 	bool Load() override;

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 1:44:28 PM
  * =====================
@@ -13,7 +13,7 @@
 struct ActionInfoLoader : DescLoaderAbstract
 {
 public:
-	ActionInfoLoader(DescLoaderMgr* _pManager);
+	ActionInfoLoader();
 	~ActionInfoLoader() override = default;
 
 	ConfigFileType_t GetConfigFileType() override;

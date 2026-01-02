@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/5/2023 9:51:57 AM
  * =====================
@@ -21,7 +21,7 @@
 
 #include <sgcl/ActorManager.h>
 #include <sgcl/HostPlayer.h>
-#include <sgcl/DataManager.h>
+#include <sg/_Util/DescLoaderMgr.h>
 #include <sgcl/ImagePackManager.h>
 #include <sgcl/ActorListenerManager.h>
 #include <sgcl/Global.h>

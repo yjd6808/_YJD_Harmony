@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 9:30:07 AM
  * =====================
@@ -14,7 +14,7 @@
 
 #include <sgcl/ImagePackManager.h>
 #include <sgcl/ActorSprite.h>
-#include <sgcl/DataManager.h>
+#include <sg/_Util/DescLoaderMgr.h>
 #include <sgcl/HostPlayer.h>
 #include <sgcl/Define_Action.h>
 #include <sgcl/ActorManager.h>
@@ -73,7 +73,7 @@ void Character::InitActorSpriteData(const VisualInfo& _visualInfo)
 {
 	jc_assert(m_pBaseInfo != nullptr);
 	JC_DELETE_SAFE(m_pSpriteData);
-	jc::Vector<AnimationInfo*>& animationList = sg::DataManager->GetCharAnimationInfoList(m_pBaseInfo->code_);
+	jc::Vector<AnimationInfo*>& animationList = g_cDescMgr.GetCharAnimationInfoList(m_pBaseInfo->code_);
 	m_pSpriteData = dbg_new ActorSpriteData(ActorPartSpritePositioningRule::InFrameSize, 15, animationList.Size());
 	m_pSpriteData->parts_ = _visualInfo;
 	m_pSpriteData->parts_.Sort(

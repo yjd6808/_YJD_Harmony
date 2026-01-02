@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/21/2023 7:01:50 AM
  * =====================
@@ -6,7 +6,7 @@
  */
 
 #include "Core.h"
-#include "ServerInfoLoader.h"
+#include "DescMgr_Server.h"
 
 #include <sg/_Util/JsonUtil.h>
 
@@ -15,8 +15,7 @@ USING_NS_JC;
 USING_NS_JNET;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ServerInfoLoader::ServerInfoLoader(DescLoaderMgr* _pManager)
-: DescLoaderAbstract(_pManager)
+ServerInfoLoader::ServerInfoLoader()
 {
 }
 

@@ -10,6 +10,24 @@
 
 #include <sg/_Util/DescBase.h>
 
+JC_SENUM_BEGIN(MapObjectType)
+	Obstacle,
+	Begin = Obstacle,
+	Gate,
+	End = Gate,
+JC_SENUM_END(MapObjectType)
+
+JC_SENUM_BEGIN(MapType)
+	Dungeon,
+	Private,
+	Town
+JC_SENUM_END(MapType)
+
+JC_SENUM_BEGIN(MapBundleType)
+	Dungeon,
+	Town
+JC_SENUM_END(MapBundleType)
+
 //////////////////////////////////////////////////////////////////////////////////////////
 struct MapObjectPositionInfo
 {

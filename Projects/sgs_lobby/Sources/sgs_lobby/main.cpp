@@ -1,4 +1,4 @@
-#include "Core.h"
+﻿#include "Core.h"
 #include "LobbyCoreHeader.h"
 
 #include <jc/Random.h>

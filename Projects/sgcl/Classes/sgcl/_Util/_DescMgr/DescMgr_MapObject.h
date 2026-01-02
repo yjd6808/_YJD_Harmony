@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 
  * 
  * =====================
@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include <sgcl/MapObjectInfo.h>
+#include <sg/_Struct/SteinsGate_MapObject.h>
 #include <sg/_Util/DescLoaderAbstract.h>
 
 struct MapObjectInfoLoader : DescLoaderAbstract
 {
 public:
-	MapObjectInfoLoader(DescLoaderMgr* _pManager);
+	MapObjectInfoLoader();
 	~MapObjectInfoLoader() override = default;
 
 	bool Load() override;

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 5/10/2023 3:37:40 AM
  * =====================
@@ -10,7 +10,6 @@
 #include <jnet/Packet/Command.h>
 
 #include <jc/Primitives/StaticString.h>
-#include <sg/Struct.h>
 
  // ======================= CMD LIST =======================
  // ======================= CMD LIST =======================

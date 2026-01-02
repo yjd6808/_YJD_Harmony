@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/25/2023 7:39:05 PM
  * =====================
@@ -9,7 +9,6 @@
 
 #include <jc/Primitives/StaticString.h>
 #include <jnet/Packet/Command.h>
-#include <sg/Struct.h>
 
 // ======================= CMD LIST =======================
 // CLO_JoinLobby

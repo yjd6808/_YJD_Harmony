@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자 : 윤정도
  */
 
@@ -9,8 +9,9 @@
 #include <sge/RectEx.h>
 #include <sge/RectPoly.h>
 
+#include <sg/_Struct/SteinsGate_Tile.h>
+
 #include <sgcl/Define_Action.h>
-#include <sgcl/TileInfo.h>
 #include <sgcl/ImagePackManager.h>
 
 USING_NS_CC;
@@ -107,9 +108,9 @@ void MapLayer::update(float _dt)
 //////////////////////////////////////////////////////////////////////////////////////////
 void MapLayer::LoadMap(int _mapCode)
 {
-	pMapInfo_ = sg::DataManager->GetMapInfo(_mapCode);
-	pMapAreaInfo_ = sg::DataManager->GetMapAreaInfo(_mapCode);
-	pMapPhysicsInfo_ = sg::DataManager->GetMapPhysicsInfo(pMapInfo_->physicsCode_);
+	pMapInfo_ = g_cDescMgr.GetMapInfo(_mapCode);
+	pMapAreaInfo_ = g_cDescMgr.GetMapAreaInfo(_mapCode);
+	pMapPhysicsInfo_ = g_cDescMgr.GetMapPhysicsInfo(pMapInfo_->physicsCode_);
 
 	// 배경 로딩
 
@@ -121,7 +122,7 @@ void MapLayer::LoadMap(int _mapCode)
 			const float tileXPos = Const::Map::TileWidth * j;
 			const float tileYPos = Const::Map::TileHeight * k;
 
-			const TileInfo* pTileInfo = sg::DataManager->GetTileInfo(pMapInfo_->tileArray_[i][j]);
+			const TileInfo* pTileInfo = g_cDescMgr.GetTileInfo(pMapInfo_->tileArray_[i][j]);
 			FrameTexture* pFrameTexture = g_cImagePackMgr.GetPack(pTileInfo->sgaIndex_)->CreateFrameTexture(
 				pTileInfo->imgIndex_, pTileInfo->spriteIndex_);
 

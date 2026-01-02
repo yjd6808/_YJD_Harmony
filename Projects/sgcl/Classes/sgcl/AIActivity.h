@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/29/2023 4:57:59 AM
  * =====================
@@ -7,9 +7,7 @@
 
 #pragma once
 
-#include <jc/Declspec.h>
-
-#include <sgcl/Struct.h>
+#include <sg/_Struct/SteinsGate_AI.h>
 #include <sgcl/HitRecorder.h>
 
 class ActorPartAnimation;

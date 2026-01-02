@@ -1,4 +1,4 @@
-#define GROUP_MASTER	0
+﻿#define GROUP_MASTER	0
 // ========================================
 
 

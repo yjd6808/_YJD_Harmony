@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/18/2023 4:24:01 AM
  * =====================
@@ -9,9 +9,33 @@
 #include "GameCore.h"
 #include "GameCoreHeader.h"
 
+#include <sg/_Util/DescLoaderMgr.h>
+
 #include <sgcl/_API/sgapiClient.h>
 #include <sgcl/ImagePackManager.h>
 #include <sgcl/FontManager.h>
+
+#include <sg/_Util/_DescMgr/DescMgr_Action.h>
+#include <sg/_Util/_DescMgr/DescMgr_AI.h>
+#include <sg/_Util/_DescMgr/DescMgr_AttackData.h>
+#include <sg/_Util/_DescMgr/DescMgr_Channel.h>
+#include <sg/_Util/_DescMgr/DescMgr_CharAnimation.h>
+#include <sg/_Util/_DescMgr/DescMgr_CharCommon.h>
+#include <sg/_Util/_DescMgr/DescMgr_ClientText.h>
+#include <sg/_Util/_DescMgr/DescMgr_FrameEvent.h>
+#include <sg/_Util/_DescMgr/DescMgr_Item.h>
+#include <sg/_Util/_DescMgr/DescMgr_ItemOpt.h>
+#include <sg/_Util/_DescMgr/DescMgr_Map.h>
+#include <sg/_Util/_DescMgr/DescMgr_MapPhysics.h>
+#include <sg/_Util/_DescMgr/DescMgr_Server.h>
+
+#include <sgcl/_Util/_DescMgr/DescMgr_Char.h>
+#include <sgcl/_Util/_DescMgr/DescMgr_Effect.h>
+#include <sgcl/_Util/_DescMgr/DescMgr_Tile.h>
+#include <sgcl/_Util/_DescMgr/DescMgr_UI.h>
+#include <sgcl/_Util/_DescMgr/DescMgr_MapObject.h>
+#include <sgcl/_Util/_DescMgr/DescMgr_Monster.h>
+#include <sgcl/_Util/_DescMgr/DescMgr_Projectile.h>
 
 // ===========================================================
 //     슈타인즈 게이트 모든 세계션이 만나는 곳
@@ -21,14 +45,12 @@
 NS_SG_BEGIN
 ::SteinsGateApp* App;
 ::Contents Contents;
-::DataManager* DataManager;
 ::NetCore* Net;
 NS_SG_END
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void InitializeClientCore()
 {
-	sg::DataManager = DataManager::Get();
 	sg::App = (SteinsGateApp*)cocos2d::Application::getInstance();
 	sg::Net = NetCore::Get();
 
@@ -36,12 +58,33 @@ void InitializeClientCore()
 	g_cFontMgr.Init();
 	Global::Get()->init();
 
-	if (sg::DataManager)
-	{
-		sg::DataManager->LoadAll();
-		sg::CharCommon = sg::DataManager->GetCharCommonInfo(1);
-		sg::ServerProcessInfoPackage = sg::DataManager->GetServerProcessInfoPackage(1);
-	}
+	g_cDescMgr.AddLoader(dbg_new EffectInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new MapInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new MapPhysicsInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new MapObjectInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new MonsterInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new FrameEventLoader(ActorType::Monster));
+	g_cDescMgr.AddLoader(dbg_new ProjectileInfoLoader(ActorType::Monster));
+	g_cDescMgr.AddLoader(dbg_new AttackDataInfoLoader(ActorType::Monster));
+	g_cDescMgr.AddLoader(dbg_new ServerInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new TileInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new UIInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new ActionInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new AIInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new AttackDataInfoLoader(ActorType::Character));
+	g_cDescMgr.AddLoader(dbg_new ProjectileInfoLoader(ActorType::Character));
+	g_cDescMgr.AddLoader(dbg_new ChannelInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new CharAnimationInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new FrameEventLoader(ActorType::Character));
+	g_cDescMgr.AddLoader(dbg_new CharInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new ClientTextInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new ItemInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new ItemOptInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new CharCommonInfoLoader());
+	g_cDescMgr.LoadAll();
+	
+	sg::CharCommon = g_cDescMgr.GetCharCommonInfo(1);
+	sg::ServerProcessInfoPackage = g_cDescMgr.GetServerProcessInfoPackage(1);
 
 	if (sg::Net)
 		sg::Net->Initialize();
@@ -52,7 +95,7 @@ void FinalizeClientCore()
 {
 	JC_DELETE_SINGLETON_SAFE(sg::Net);
 
-	sg::DataManager->Free();
+	g_cDescMgr.Free();
 	
 	sg::Contents.Finalize();
 	g_cFontMgr.Free();

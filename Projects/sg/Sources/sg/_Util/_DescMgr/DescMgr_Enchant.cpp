@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/22/2023 12:15:55 AM
  * =====================
@@ -7,9 +7,9 @@
 
 
 #include "Core.h"
-#include "EnchantInfoLoader.h"
+#include "DescMgr_Enchant.h"
 
-#include <sg/DescLoaderMgr.h>
+#include <sg/_Util/DescLoaderMgr.h>
 #include <sg/_Util/JsonUtil.h>
 
 
@@ -17,8 +17,7 @@ USING_NS_JS;
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-EnchantInfoLoader::EnchantInfoLoader(DescLoaderMgr* _pManager)
-: DescLoaderAbstract(_pManager)
+EnchantInfoLoader::EnchantInfoLoader()
 {
 }
 
@@ -78,7 +77,7 @@ void EnchantInfoLoader::ReadEnchantInfo(Json::Value& _enchantRoot, OUT EnchantIn
 		jc_assert_msg(optValListRoot.size() == Const::Item::MaxEnchantLevel, "방어구 보너스 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)",
 		               optValListRoot.size(), Const::Item::MaxEnchantLevel);
 
-		_pEnchantInfo->armorBonusOptList_[i].opt_ = pManager_->GetItemOptInfo(optName);
+		_pEnchantInfo->armorBonusOptList_[i].opt_ = g_cDescMgr.GetItemOptInfo(optName);
 
 		for (int j = 0; j < Const::Item::MaxEnchantLevel; j++)
 		{
@@ -95,7 +94,7 @@ void EnchantInfoLoader::ReadEnchantInfo(Json::Value& _enchantRoot, OUT EnchantIn
 		jc_assert_msg(optValListRoot.size() == Const::Item::MaxEnchantLevel, "악세서리 보너스 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)",
 		               optValListRoot.size(), Const::Item::MaxEnchantLevel);
 
-		_pEnchantInfo->accessoryBonusOptList_[i].opt_ = pManager_->GetItemOptInfo(optName);
+		_pEnchantInfo->accessoryBonusOptList_[i].opt_ = g_cDescMgr.GetItemOptInfo(optName);
 
 		for (int j = 0; j < Const::Item::MaxEnchantLevel; j++)
 		{

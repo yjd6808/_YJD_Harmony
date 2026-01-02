@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 10:25:01 AM
  * =====================
@@ -12,7 +12,7 @@
 #include <sg/_Struct/SteinsGate_Char.h>
 #include <sgcl/MapLayer.h>
 #include <sgcl/Define_Action.h>
-#include <sgcl/AttackDataInfo.h>
+#include <sg/_Struct/SteinsGate_AttackData.h>
 #include <sgcl/CharacterListener.h>
 #include <sgcl/Inven.h>
 
@@ -34,9 +34,9 @@ HostPlayer::~HostPlayer()
 //////////////////////////////////////////////////////////////////////////////////////////
 void HostPlayer::Initialize()
 {
-	playerData_.CharType = CharType::Gunner;
-	m_VisualInfo = sg::Contents.Inven->GetVisualInfo(playerData_.CharType);
-	m_pBaseInfo = sg::DataManager->GetCharInfo(playerData_.CharType);
+	CharType_t charType = CharType::Gunner;
+	m_VisualInfo = sg::Contents.Inven->GetVisualInfo(charType);
+	m_pBaseInfo = g_cDescMgr.GetCharInfo(charType);
 
 	Player::Initialize();
 	InitActionManager();

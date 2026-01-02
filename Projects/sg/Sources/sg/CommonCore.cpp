@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/21/2023 3:35:17 AM
  * =====================
@@ -17,8 +17,9 @@
 #include <sg/CLIListener.h>
 
 #include <sg/_Struct/SteinsGate_Char.h>
-#include <sg/_Struct/SteinsGate_ServerProcess.h>
-#include <sg/DescLoaderMgr.h>
+#include <sg/_Struct/SteinsGate_Server.h>
+
+#include <sg/_Util/DescLoaderMgr.h>
 #include <sg/Config.h>
 
 #include <sg/_Core/VirtualMachine.h>

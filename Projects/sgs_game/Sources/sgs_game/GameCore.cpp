@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/3/2023 9:10:29 AM [SteinsGate-Server.Lobby 프로젝트 복사 생성]
  * =====================
@@ -29,10 +29,10 @@ NS_SG_END
 void InitializeGameCore(GameServerType_t _gameServerType)
 {
 	sg::GameServerType			= _gameServerType;
-	sg::ServerProcessInfoPackage	= sg::DataManager->GetServerProcessInfoPackage(1);					// 공통 라이브러리 주입
+	sg::ServerProcessInfoPackage	= g_cDescMgr.GetServerProcessInfoPackage(1);					// 공통 라이브러리 주입
 	sg::GameServerProcessInfo		= sg::ServerProcessInfoPackage->GetGameServerProcessInfo(_gameServerType);
 	sg::ServerProcessInfo			= sg::GameServerProcessInfo;		// 공통 라이브러리 주입
-	sg::GameDB					= dbg_new MysqlDatabase(sg::DataManager->GetDatabaseInfo(DatabaseType::Game));
+	sg::GameDB					= dbg_new MysqlDatabase(g_cDescMgr.GetDatabaseInfo(DatabaseType::Game));
 	sg::GameDB->Initialize(ServerProcessType::Game);
 	sg::NetGroupMgr					= GameNetMaster::Get();
 	sg::NetGroupMgr->SetProcessInfo(sg::ServerProcessInfo);

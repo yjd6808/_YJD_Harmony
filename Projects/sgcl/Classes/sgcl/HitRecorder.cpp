@@ -8,9 +8,10 @@
 #include "Core.h"
 #include "HitRecorder.h"
 
+#include <sg/_Util/DescLoaderMgr.h>
+
 #include <sgcl/Actor.h>
 #include <sgcl/MapLayer.h>
-#include <sgcl/DataManager.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////
 HitRecorder::HitRecorder(Actor* _pOwner, Actor* _pRecorder)
@@ -64,7 +65,7 @@ void HitRecorder::Record(const ActorRect& _absoluteActorRect, int _attackDataCod
 	for (int i = 0; i < hitPossibleList_.Size(); ++i)
 	{
 		HitInfo& hitInfo = hitPossibleList_[i];
-		hitInfo.pAttackDataInfo_ = DataManager::Get()->GetAttackDataInfo(pOwner_->GetType(), _attackDataCode);
+		hitInfo.pAttackDataInfo_ = g_cDescMgr.GetAttackDataInfo(pOwner_->GetType(), _attackDataCode);
 		hitInfo.pAttacker_ = pRecorder_;
 
 		singleHitEvent_.Invoke(hitInfo);
