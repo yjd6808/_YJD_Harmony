@@ -36,7 +36,7 @@ UILayer* UILayer::Create()
 		return pLayer;
 	}
 
-	JCORE_DELETE_SAFE(pLayer);
+	JC_DELETE_SAFE(pLayer);
 	return nullptr;
 }
 
@@ -53,7 +53,7 @@ bool UILayer::init()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILayer::OnMouseMove(c2d::EventMouse* _pMouseEvent)
+void UILayer::OnMouseMove(cc::EventMouse* _pMouseEvent)
 {
 	const Vec2 absolutePosition = _pMouseEvent->getCursorPos();
 	UIGroup* pTopGroup = nullptr;
@@ -92,7 +92,7 @@ void UILayer::OnMouseMove(c2d::EventMouse* _pMouseEvent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILayer::OnMouseDown(c2d::EventMouse* _pMouseEvent)
+void UILayer::OnMouseDown(cc::EventMouse* _pMouseEvent)
 {
 	const Vec2 absolutePosition = _pMouseEvent->getCursorPos();
 	UIGroup* pTopGroup = nullptr;
@@ -124,7 +124,7 @@ void UILayer::OnMouseDown(c2d::EventMouse* _pMouseEvent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILayer::OnMouseUp(c2d::EventMouse* _pMouseEvent)
+void UILayer::OnMouseUp(cc::EventMouse* _pMouseEvent)
 {
 	const Vec2 absolutePosition = _pMouseEvent->getCursorPos();
 	UIGroup* pTopGroup = nullptr;
@@ -163,7 +163,7 @@ void UILayer::OnMouseUp(c2d::EventMouse* _pMouseEvent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILayer::OnMouseScroll(c2d::EventMouse* _pMouseEvent) const
+void UILayer::OnMouseScroll(cc::EventMouse* _pMouseEvent) const
 {
 	for (int i = static_cast<int>(_children.size()) - 1; i >= 0; --i)
 	{
@@ -199,7 +199,7 @@ void UILayer::update(float _delta)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILayer::onKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent)
+void UILayer::onKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 	for (int i = static_cast<int>(_children.size()) - 1; i >= 0; --i)
 	{
@@ -213,7 +213,7 @@ void UILayer::onKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pE
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILayer::onKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent)
+void UILayer::onKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 	for (int i = static_cast<int>(_children.size()) - 1; i >= 0; --i)
 	{

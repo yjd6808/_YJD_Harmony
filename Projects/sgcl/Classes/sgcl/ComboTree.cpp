@@ -120,7 +120,7 @@ SGComboTree::SGComboTree()
 SGComboTree::~SGComboTree()
 {
 	RemoveAll();
-	JCORE_DELETE_SAFE(rootNode_);
+	JC_DELETE_SAFE(rootNode_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

@@ -60,34 +60,34 @@ void PropertyStatics::Initialize() {
 void PropertyStatics::Finalize() {
 	for (int i = 0; i < PropertyType::Max; ++i) {
 		for (int j = 0; j < PropertyType::Max; ++j) {
-			JCORE_DELETE_SAFE(BinaryOperatorSelectors[i][j]);
+			JC_DELETE_SAFE(BinaryOperatorSelectors[i][j]);
 		}
 	}
 
 	for (int i = 0; i < PropertyBinaryOperatorType::Max; ++i) {
-		JCORE_DELETE_SAFE(BinaryOperators_bool[i]);
-		JCORE_DELETE_SAFE(BinaryOperators_Int8[i]);
-		JCORE_DELETE_SAFE(BinaryOperators_Int8U[i]);
-		JCORE_DELETE_SAFE(BinaryOperators_Int16[i]);
-		JCORE_DELETE_SAFE(BinaryOperators_Int16U[i]);
-		JCORE_DELETE_SAFE(BinaryOperators_Int[i]);
-		JCORE_DELETE_SAFE(BinaryOperators_Int32U[i]);
-		JCORE_DELETE_SAFE(BinaryOperators_Int32L[i]);
-		JCORE_DELETE_SAFE(BinaryOperators_Int32UL[i]);
-		JCORE_DELETE_SAFE(BinaryOperators_Int64[i]);
-		JCORE_DELETE_SAFE(BinaryOperators_Int64U[i]);
-		JCORE_DELETE_SAFE(BinaryOperators_Float[i]);
-		JCORE_DELETE_SAFE(BinaryOperators_Double[i]);
-		JCORE_DELETE_SAFE(BinaryOperators_LDouble[i]);
-		JCORE_DELETE_SAFE(BinaryOperators_String[i]);
+		JC_DELETE_SAFE(BinaryOperators_bool[i]);
+		JC_DELETE_SAFE(BinaryOperators_Int8[i]);
+		JC_DELETE_SAFE(BinaryOperators_Int8U[i]);
+		JC_DELETE_SAFE(BinaryOperators_Int16[i]);
+		JC_DELETE_SAFE(BinaryOperators_Int16U[i]);
+		JC_DELETE_SAFE(BinaryOperators_Int[i]);
+		JC_DELETE_SAFE(BinaryOperators_Int32U[i]);
+		JC_DELETE_SAFE(BinaryOperators_Int32L[i]);
+		JC_DELETE_SAFE(BinaryOperators_Int32UL[i]);
+		JC_DELETE_SAFE(BinaryOperators_Int64[i]);
+		JC_DELETE_SAFE(BinaryOperators_Int64U[i]);
+		JC_DELETE_SAFE(BinaryOperators_Float[i]);
+		JC_DELETE_SAFE(BinaryOperators_Double[i]);
+		JC_DELETE_SAFE(BinaryOperators_LDouble[i]);
+		JC_DELETE_SAFE(BinaryOperators_String[i]);
 	}
 
 	for (int i = 0; i < PropertyType::Max; ++i) {
-		JCORE_DELETE_SAFE(UnaryOperators[i]);
+		JC_DELETE_SAFE(UnaryOperators[i]);
 	}
 
 	for (int i = 0; i < PropertyType::Max; ++i) {
-		JCORE_DELETE_SAFE(Factorys[i]);
+		JC_DELETE_SAFE(Factorys[i]);
 	}
 
 	Property<bool>::FreeAllObjects();

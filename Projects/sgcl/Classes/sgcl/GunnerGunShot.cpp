@@ -144,7 +144,7 @@ void GunnerGunShot::OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* 
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerGunShot::OnKeyPressed(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode)
+void GunnerGunShot::OnKeyPressed(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode)
 {
 	const ControlKey_t key = _pController->ConvertControlKey(_keyCode);
 

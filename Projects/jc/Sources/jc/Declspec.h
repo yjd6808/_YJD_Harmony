@@ -14,6 +14,6 @@
 
  // novtable이란?
  // @내가 쓴 글 : https://blog.naver.com/wjdeh313/222733324896
-#define JCORE_NOVTABLE	__declspec(novtable)
-#define JCORE_EXPORT    __declspec(dllexport)
-#define JCORE_IMPORT    __declspec(dllimport)
+#define JC_NOVTABLE	__declspec(novtable)
+#define JC_EXPORT    __declspec(dllexport)
+#define JC_IMPORT    __declspec(dllimport)

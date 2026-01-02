@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="math">
+      <UniqueIdentifier>{fbf91de8-f469-4ebe-afd8-da282fb552df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{05c0ec02-b692-446c-92a7-bb7951f01965}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Sources\sgcc\math\CCGeometry.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgcc\math\CCVertex.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgcc\math\Mat4.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgcc\math\MathUtil.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgcc\math\Quaternion.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgcc\math\TransformUtils.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgcc\math\Vec2.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgcc\math\Vec3.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgcc\math\Vec4.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgcc\math\CCAffineTransform.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgcc\Core.cpp" />
+    <ClCompile Include="..\Sources\sgcc\base\ccTypesBase.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\sgcc\math\CCGeometry.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgcc\math\CCMath.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgcc\math\CCMathBase.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgcc\math\CCVertex.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgcc\math\Mat4.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgcc\math\MathUtil.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgcc\math\Quaternion.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgcc\math\TransformUtils.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgcc\math\Vec2.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgcc\math\Vec3.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgcc\math\Vec4.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgcc\math\CCAffineTransform.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgcc\Core.h" />
+    <ClInclude Include="..\Sources\sgcc\DLLExport.h" />
+    <ClInclude Include="..\Sources\sgcc\base\ccTypesBase.h">
+      <Filter>base</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Sources\sgcc\math\Mat4.inl">
+      <Filter>math</Filter>
+    </None>
+    <None Include="..\Sources\sgcc\math\MathUtil.inl">
+      <Filter>math</Filter>
+    </None>
+    <None Include="..\Sources\sgcc\math\MathUtilNeon.inl">
+      <Filter>math</Filter>
+    </None>
+    <None Include="..\Sources\sgcc\math\MathUtilNeon64.inl">
+      <Filter>math</Filter>
+    </None>
+    <None Include="..\Sources\sgcc\math\MathUtilSSE.inl">
+      <Filter>math</Filter>
+    </None>
+    <None Include="..\Sources\sgcc\math\Quaternion.inl">
+      <Filter>math</Filter>
+    </None>
+    <None Include="..\Sources\sgcc\math\Vec2.inl">
+      <Filter>math</Filter>
+    </None>
+    <None Include="..\Sources\sgcc\math\Vec3.inl">
+      <Filter>math</Filter>
+    </None>
+    <None Include="..\Sources\sgcc\math\Vec4.inl">
+      <Filter>math</Filter>
+    </None>
+  </ItemGroup>
+</Project>

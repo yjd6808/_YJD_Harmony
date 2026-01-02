@@ -35,7 +35,7 @@ public:
 	virtual void UpdateMoveImpl(float _dt, MoveComponent* _pMoveComponent, bool _arrivedX, bool _arrivedY, Direction_t _lr, Direction_t _ud) = 0;
 
 protected:
-	c2d::vec2 destination_;
+	cc::vec2 destination_;
 	Actor* pTarget_;
 	Mode mode_;
 };

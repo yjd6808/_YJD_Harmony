@@ -23,7 +23,7 @@ CommonNetGroup::CommonNetGroup()
 //////////////////////////////////////////////////////////////////////////////////////////
 CommonNetGroup::~CommonNetGroup()
 {
-	JCORE_DELETE_SAFE(pParser_);
+	JC_DELETE_SAFE(pParser_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -45,7 +45,7 @@ void CommonNetGroup::Initialize()
 void CommonNetGroup::Finalize()
 {
 	NetGroup::Finalize();
-	JCORE_DELETE_SAFE(pParser_);
+	JC_DELETE_SAFE(pParser_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -91,7 +91,7 @@ void CommonNetGroup::ProcessOrder(CenterOrder_t _order)
 //////////////////////////////////////////////////////////////////////////////////////////
 void CommonNetGroup::LaunchServer()
 {
-	JCORE_LOCK_GUARD(serverBootLock_);
+	JC_LOCK_GUARD(serverBootLock_);
 	const ServerBootState_t state = sg::CommonServer->GetBootState();
 
 	if (state == ServerBootState::Launched || state == ServerBootState::Launching)
@@ -104,7 +104,7 @@ void CommonNetGroup::LaunchServer()
 //////////////////////////////////////////////////////////////////////////////////////////
 void CommonNetGroup::StopServer()
 {
-	JCORE_LOCK_GUARD(serverBootLock_);
+	JC_LOCK_GUARD(serverBootLock_);
 	const ServerBootState_t state = sg::CommonServer->GetBootState();
 
 	if (state == ServerBootState::Stopped || state == ServerBootState::Stopping)

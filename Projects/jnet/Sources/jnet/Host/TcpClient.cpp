@@ -31,7 +31,7 @@ TcpClient::~TcpClient()
 {
 	Disconnect();
 	WaitForZeroPending();
-	JCORE_DELETE_SAFE(pEventListener_);
+	JC_DELETE_SAFE(pEventListener_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

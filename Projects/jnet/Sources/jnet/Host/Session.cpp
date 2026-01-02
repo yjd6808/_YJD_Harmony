@@ -47,7 +47,7 @@ int _sendBufferSize)
 //////////////////////////////////////////////////////////////////////////////////////////
 Session::~Session()
 {
-	JCORE_DELETE_SAFE(packetParser_);
+	JC_DELETE_SAFE(packetParser_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -182,7 +182,7 @@ int Session::Send(IPacket* _pPacket, bool _releasePacket)
 
 	if (_releasePacket)
 	{
-		JCORE_RELEASE_SAFE(_pPacket);
+		JC_RELEASE_SAFE(_pPacket);
 	}
 
 	return sent;
@@ -275,7 +275,7 @@ bool Session::SendAsync(const CommandBufferPtr& _pBuffer)
 //////////////////////////////////////////////////////////////////////////////////////////
 CommandBufferPacket* Session::GetCommandBufferForSending()
 {
-	JCORE_LOCK_GUARD(sendBufferLock_);
+	JC_LOCK_GUARD(sendBufferLock_);
 
 	if (sendBuffer_->GetCommandCount() == 0)
 	{
@@ -416,7 +416,7 @@ bool Session::RecvFromAsync()
 //////////////////////////////////////////////////////////////////////////////////////////
 void Session::SendAlloc(ICommand* _pCmd)
 {
-	JCORE_LOCK_GUARD(sendBufferLock_);
+	JC_LOCK_GUARD(sendBufferLock_);
 
 	const int cmdSize = _pCmd->GetLength();
 	if (sendBuffer_->GetWritePos() + cmdSize >= MAX_MSS)

@@ -11,7 +11,7 @@
 #include <jnet/EventListener/ClientEventListener.h>
 #include <sg/Enum.h>
 
-class JCORE_NOVTABLE ListenerClientBase : public jnet::ClientEventListener
+class JC_NOVTABLE ListenerClientBase : public jnet::ClientEventListener
 {
 public:
 	~ListenerClientBase() override = 0;

@@ -16,7 +16,7 @@ NS_JC_BEGIN
 // 전방 선언
 template <typename, typename> class Collection;
 template <typename T, typename TAllocator>
-class JCORE_NOVTABLE Iterator
+class JC_NOVTABLE Iterator
 {
 public:
 	using TCollection = Collection<T, TAllocator>;

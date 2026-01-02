@@ -33,6 +33,6 @@ sgapiBase* sgapiBase::Get()
 //////////////////////////////////////////////////////////////////////////////////////////
 void sgapiBase::Free()
 {
-	JCORE_DELETE_SAFE(API);
+	JC_DELETE_SAFE(API);
 	isDeleted_ = true;
 }

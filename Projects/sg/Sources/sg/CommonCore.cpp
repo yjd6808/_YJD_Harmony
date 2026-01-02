@@ -16,8 +16,8 @@
 #include <sg/CLIThread.h>
 #include <sg/CLIListener.h>
 
-#include <sg/CharCommonInfo.h>
-#include <sg/ServerProcessInfo.h>
+#include <sg/_Struct/SteinsGate_Char.h>
+#include <sg/_Struct/SteinsGate_ServerProcess.h>
 #include <sg/DescLoaderMgr.h>
 #include <sg/Config.h>
 

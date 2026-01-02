@@ -9,7 +9,7 @@
 #include "Vec2Ex.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
-void Vec2Ex::Log(const c2d::vec2& _vec)
+void Vec2Ex::Log(const cc::vec2& _vec)
 {
 	jc::Console::WriteLine(":: 위치 [%d, %d]", int(_vec.x), int(_vec.y));
 }

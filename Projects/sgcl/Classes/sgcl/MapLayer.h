@@ -3,13 +3,13 @@
  */
 #pragma once
 
-#include <sg/MapInfo.h>
-#include <sg/MapPhysicsInfo.h>
+#include <sg/_Struct/SteinsGate_Map.h>
+#include <sg/_Struct/SteinsGate_MapPhysics.h>
 
 #include <sgcl/ActorManager.h>
 #include <sgcl/MimicCamera.h>
 
-class MapLayer : public c2d::Layer
+class MapLayer : public cc::Layer
 {
 public:
 	MapLayer();
@@ -25,10 +25,10 @@ public:
 	Character* FindNearestCharacterInRadious(Actor* _pStdActor, float _radious, OUT float& _enemyDist);
 	bool CollectEnemiesInActorRect(Actor* _pAttacker, const ActorRect& _rect, OUT jc::Vector<HitInfo>& _hitTargets);
 	bool CollectEnemiesInActor(Actor* _pCollector, OUT jc::Vector<HitInfo>& _hitTargets);
-	bool IsCollideWithMapObjects(const c2d::rect& _rect) const;
+	bool IsCollideWithMapObjects(const cc::rect& _rect) const;
 
-	void onKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent) override;
-	void onKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent) override;
+	void onKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) override;
+	void onKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) override;
 
 	MapPhysicsInfo* GetMapPhysicsInfo() const;
 	MapAreaInfo* GetMapAreaInfo() const;

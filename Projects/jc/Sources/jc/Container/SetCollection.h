@@ -19,7 +19,7 @@ NS_JC_BEGIN
 =====================================================================================*/
 
 template <typename TKey, typename TAllocator>
-class JCORE_NOVTABLE SetCollection : public Collection<TKey, TAllocator>
+class JC_NOVTABLE SetCollection : public Collection<TKey, TAllocator>
 {
 	using TCollection = Collection<TKey, TAllocator>;
 	using TSetCollectionIterator = SetCollectionIterator<TKey, TAllocator>;

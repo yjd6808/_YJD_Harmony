@@ -309,11 +309,11 @@ void AIComponent::RunActivity(AIActivityType_t _activityType)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::vec2 AIComponent::GetRandomSightPos()
+cc::vec2 AIComponent::GetRandomSightPos()
 {
-	c2d::vec2 curPos = pActor_->GetPositionRealCenter();
+	cc::vec2 curPos = pActor_->GetPositionRealCenter();
 	float randRad = jc::Random::GenerateF(0.0f, 2 * SG_PI);
-	c2d::vec2 dstPos{
+	cc::vec2 dstPos{
 		curPos.x + pAIInfo_->sightRadious_ * cosf(randRad),
 		curPos.y + pAIInfo_->sightRadious_ * sinf(randRad)
 	};

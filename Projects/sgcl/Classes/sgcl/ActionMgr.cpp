@@ -87,28 +87,28 @@ void ActionMgr::Update(float _dt)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ActionMgr::OnKeyPressed(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode)
+void ActionMgr::OnKeyPressed(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode)
 {
 	if (runningAction_)
 		runningAction_->OnKeyPressed(_pController, _keyCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ActionMgr::OnKeyReleased(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode)
+void ActionMgr::OnKeyReleased(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode)
 {
 	if (runningAction_)
 		runningAction_->OnKeyReleased(_pController, _keyCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ActionMgr::OnKeyPressedBefore(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode)
+void ActionMgr::OnKeyPressedBefore(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode)
 {
 	if (runningAction_)
 		runningAction_->OnKeyPressedBefore(_pController, _keyCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ActionMgr::OnKeyReleasedBefore(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode)
+void ActionMgr::OnKeyReleasedBefore(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode)
 {
 	if (runningAction_)
 		runningAction_->OnKeyReleasedBefore(_pController, _keyCode);

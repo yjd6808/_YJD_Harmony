@@ -12,7 +12,7 @@
 
 NS_JNET_BEGIN
 
-class JCORE_NOVTABLE NetGroupMgr
+class JC_NOVTABLE NetGroupMgr
 {
 public:
 	NetGroupMgr();

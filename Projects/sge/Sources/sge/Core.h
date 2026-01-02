@@ -15,23 +15,10 @@
 #include <sge/Color.h>
 
 #define USING_NS_CCUI	using namespace cocos2d::ui
-
-namespace c2d	= cocos2d;
-namespace c2d_ui = cocos2d::ui;
+namespace cc_ui		= cocos2d::ui;
 
 // 코코스
 namespace cocos2d
 {
-	using vec2		= c2d::Vec2;
-	using vec3		= c2d::Vec3;
-	using vec4		= c2d::Vec4;
-	using size		= c2d::Size;
-	using rect		= c2d::Rect;
-
-	using Texture   = c2d::Texture2D;
-
-	namespace ui
-	{
-
-	}
+	using Texture   = cc::Texture2D;
 }

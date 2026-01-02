@@ -33,7 +33,7 @@ public:
 
 	void SetCheck(bool _checked);
 	void SetEnabled(bool _enabled) override;
-	void SetUISize(const c2d::size& _size) override;
+	void SetUISize(const cc::size& _size) override;
 	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
 	void SetInfoCheckBox(UICheckBoxInfo* _pInfo, bool _infoOwner);
 	bool IsChecked() const;
@@ -42,11 +42,11 @@ public:
 	jc::String ToString() override { return jc::StringUtil::Format("체크박스(%d)", pInfo_->code_); }
 
 protected:
-	bool OnMouseUpContainedInternalDetail(c2d::EventMouse* _pMouseEvent) override;
+	bool OnMouseUpContainedInternalDetail(cc::EventMouse* _pMouseEvent) override;
 
 private:
 	UICheckBoxInfo* pInfo_;
 	FrameTexture* pTexture_[TEXTURE_COUNT];
-	c2d::Sprite* pSprite_[TEXTURE_COUNT];
+	cc::Sprite* pSprite_[TEXTURE_COUNT];
 	bool checked_;
 };

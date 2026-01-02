@@ -20,7 +20,7 @@ protected:
 	virtual void WorkerThread() = 0;
 	virtual bool PreStop() = 0;			// true시 Join실행
 public:
-	RunnableThread(int _joinTimeoutMiliSeconds = JCORE_INFINITE);
+	RunnableThread(int _joinTimeoutMiliSeconds = JC_INFINITE);
 	~RunnableThread() override;
 
 	void SetJoinTimeout(int _joinTimeoutMiliSeconds);

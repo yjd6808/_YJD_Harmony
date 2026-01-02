@@ -52,7 +52,7 @@ class SingletonStaticPointer : private NonCopyableNonMovable
 	{
 		~Guard()
 		{
-			JCORE_DELETE_SAFE(ms_pInst);
+			JC_DELETE_SAFE(ms_pInst);
 		}
 	};
 
@@ -83,7 +83,7 @@ public:
 
 	static void Free()
 	{
-		JCORE_DELETE_SAFE(ms_pInst);
+		JC_DELETE_SAFE(ms_pInst);
 	}
 
 	inline static T* ms_pInst;
@@ -104,7 +104,7 @@ public:
 	{
 		if (ms_pInst == nullptr)
 		{
-			// JCORE_LOCK_GUARD(ms_Lock);
+			// JC_LOCK_GUARD(ms_Lock);
 			// TODO: 락가드 사용시 오류난다. 인증/로비/게임 서버 프로젝트에서 jnet::NetGroupMgr 소멸시 넷그룹 해쉬맵 제거되면서 오류가 발생함. 왜 그런지 모르겠다.
 			// 해쉬맵 말고 다른 컨테이너를 사용할땐 문제가 없는데..
 			// 추정: 느낌이 이 코드실행이전에 가상함수 테이블이 소멸되어서 그런건가?
@@ -131,12 +131,12 @@ public:
 	{
 		if (ms_pInst != nullptr)
 		{
-			// JCORE_LOCK_GUARD(ms_Lock);
+			// JC_LOCK_GUARD(ms_Lock);
 
 			ms_Lock.Lock();
 			if (ms_pInst != nullptr)
 			{
-				JCORE_DELETE_SAFE(ms_pInst);
+				JC_DELETE_SAFE(ms_pInst);
 				ms_bDeleted = true;
 			}
 			ms_Lock.Unlock();

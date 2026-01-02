@@ -15,7 +15,7 @@
 class WorldScene;
 class UILayer;
 
-class SceneBase : public c2d::Scene
+class SceneBase : public cc::Scene
 {
 public:
 	SceneBase();
@@ -30,13 +30,13 @@ public:
 
 	virtual SceneType_t GetType() = 0;
 
-	virtual bool OnMouseMove(c2d::EventMouse* _pMouseEvent) { return true; }
-	virtual bool OnMouseDown(c2d::EventMouse* _pMouseEvent) { return true; }
-	virtual bool OnMouseUp(c2d::EventMouse* _pMouseEvent) { return true; }
-	virtual bool OnMouseScroll(c2d::EventMouse* _pMouseEvent) { return true; }
+	virtual bool OnMouseMove(cc::EventMouse* _pMouseEvent) { return true; }
+	virtual bool OnMouseDown(cc::EventMouse* _pMouseEvent) { return true; }
+	virtual bool OnMouseUp(cc::EventMouse* _pMouseEvent) { return true; }
+	virtual bool OnMouseScroll(cc::EventMouse* _pMouseEvent) { return true; }
 
-	virtual void OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent) = 0;
-	virtual void OnKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent) = 0;
+	virtual void OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) = 0;
+	virtual void OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) = 0;
 
 protected:
 	WorldScene* pWorldScene_ = nullptr;

@@ -15,7 +15,7 @@
 class CommonServer;
 class CommonSession;
 
-class JCORE_NOVTABLE CommonNetGroup : public jnet::NetGroup
+class JC_NOVTABLE CommonNetGroup : public jnet::NetGroup
 {
 public:
 	CommonNetGroup();

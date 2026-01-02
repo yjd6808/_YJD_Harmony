@@ -485,7 +485,7 @@ class TreeTable<Pack<TKey, TKeyComparator, TAllocator>, ETreeTableImplementation
     {
         if(_pNode == pRoot_)
         {
-            JCORE_ALLOCATOR_STATIC_DEALLOCATE_AND_DESTROY_SAFE(TTreeNode, pRoot_);
+            JC_ALLOCATOR_STATIC_DEALLOCATE_AND_DESTROY_SAFE(TTreeNode, pRoot_);
             return;
         }
 
@@ -497,7 +497,7 @@ class TreeTable<Pack<TKey, TKeyComparator, TAllocator>, ETreeTableImplementation
                 _pNode->pParent_->pRight_ = nullptr;
         }
 
-        JCORE_ALLOCATOR_STATIC_DEALLOCATE_AND_DESTROY_SAFE(TTreeNode, _pNode);
+        JC_ALLOCATOR_STATIC_DEALLOCATE_AND_DESTROY_SAFE(TTreeNode, _pNode);
     }
 
     // 삭제 위반 수정
@@ -895,7 +895,7 @@ class TreeTable<Pack<TKey, TKeyComparator, TAllocator>, ETreeTableImplementation
             return;
         DeleteNodeRecursive(_pNode->pLeft_);
         DeleteNodeRecursive(_pNode->pRight_);
-        JCORE_ALLOCATOR_STATIC_DEALLOCATE_AND_DESTROY_SAFE(TTreeNode, _pNode);
+        JC_ALLOCATOR_STATIC_DEALLOCATE_AND_DESTROY_SAFE(TTreeNode, _pNode);
     }
     static void MaxHeightRecursive(TTreeNode* _pNode, int _height, int& _maxHeight)
     {
@@ -1629,7 +1629,7 @@ class TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, ETreeTableImplem
     {
         if(_pNode == pRoot_)
         {
-            JCORE_ALLOCATOR_STATIC_DEALLOCATE_AND_DESTROY_SAFE(TTreeNode, pRoot_);
+            JC_ALLOCATOR_STATIC_DEALLOCATE_AND_DESTROY_SAFE(TTreeNode, pRoot_);
             return;
         }
 
@@ -1641,7 +1641,7 @@ class TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, ETreeTableImplem
                 _pNode->pParent_->pRight_ = nullptr;
         }
 
-        JCORE_ALLOCATOR_STATIC_DEALLOCATE_AND_DESTROY_SAFE(TTreeNode, _pNode);
+        JC_ALLOCATOR_STATIC_DEALLOCATE_AND_DESTROY_SAFE(TTreeNode, _pNode);
     }
 
     // 삭제 위반 수정
@@ -2053,7 +2053,7 @@ class TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, ETreeTableImplem
             return;
         DeleteNodeRecursive(_pNode->pLeft_);
         DeleteNodeRecursive(_pNode->pRight_);
-        JCORE_ALLOCATOR_STATIC_DEALLOCATE_AND_DESTROY_SAFE(TTreeNode, _pNode);
+        JC_ALLOCATOR_STATIC_DEALLOCATE_AND_DESTROY_SAFE(TTreeNode, _pNode);
     }
     static void MaxHeightRecursive(TTreeNode* _pNode, int _height, int& _maxHeight)
     {

@@ -45,7 +45,7 @@ int main()
     }
 
 	Thread::Sleep(5000);
-    JCORE_DELETE_SAFE(pClientGroup);
+    JC_DELETE_SAFE(pClientGroup);
 
     FinalizeNetLogger();
     FinalizeJCore();

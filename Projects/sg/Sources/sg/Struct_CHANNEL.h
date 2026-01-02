@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <sg/_Struct/SteinsGate_ChannelBase.h>
+
 struct LobbyChannelInfo
 {
 	int type_;

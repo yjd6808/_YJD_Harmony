@@ -62,7 +62,7 @@ void ConnectionSynchronizer::ProcessConnections()
 {
 	ResultQueue* pQueue;
 	{
-		JCORE_LOCK_GUARD(lock_);
+		JC_LOCK_GUARD(lock_);
 
 		if (connectionResultQueue_->Size() == 0)
 		{
@@ -141,8 +141,8 @@ void ConnectionSynchronizer::Finalize()
 		}
 	}
 
-	JCORE_DELETE_SAFE(connectionResultQueue_);
-	JCORE_DELETE_SAFE(swapQueue_);
+	JC_DELETE_SAFE(connectionResultQueue_);
+	JC_DELETE_SAFE(swapQueue_);
 
 	ConnectionResult::FreeAllObjects();
 	DisconnectionResult::FreeAllObjects();
@@ -152,7 +152,7 @@ void ConnectionSynchronizer::Finalize()
 void ConnectionSynchronizer::EnqueueConnection(ClientConnectServerType_t _listenerType, jnet::Session* _pSession,
                                                bool _success, Int32U _errorCode)
 {
-	JCORE_LOCK_GUARD(lock_);
+	JC_LOCK_GUARD(lock_);
 	ConnectionResult* pResult = dbg_new ConnectionResult;
 	pResult->connType_ = eConnection;
 	pResult->success_ = _success;
@@ -165,7 +165,7 @@ void ConnectionSynchronizer::EnqueueConnection(ClientConnectServerType_t _listen
 //////////////////////////////////////////////////////////////////////////////////////////
 void ConnectionSynchronizer::EnqueueDisconnection(ClientConnectServerType_t _listenerType, jnet::Session* _pSession)
 {
-	JCORE_LOCK_GUARD(lock_);
+	JC_LOCK_GUARD(lock_);
 	DisconnectionResult* pResult = dbg_new DisconnectionResult;
 	pResult->connType_ = eDisconnection;
 	pResult->listenerType_ = _listenerType;

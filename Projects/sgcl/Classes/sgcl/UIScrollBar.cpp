@@ -147,7 +147,7 @@ void UIScrollBar::SetLinkElement(UIElement* _pElement)
 	                            CC_CALLBACK_1(UIScrollBar::OnLinkElementMouseScroll, this));
 }
 
-void UIScrollBar::OnLinkElementMouseScroll(c2d::EventMouse* _pMouseEvent)
+void UIScrollBar::OnLinkElementMouseScroll(cc::EventMouse* _pMouseEvent)
 {
 	if (pLinkElement_ == nullptr)
 	{
@@ -166,7 +166,7 @@ void UIScrollBar::OnLinkElementMouseScroll(c2d::EventMouse* _pMouseEvent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIScrollBar::SetInitialUISize(c2d::size _size)
+void UIScrollBar::SetInitialUISize(cc::size _size)
 {
 	UIElement::SetInitialUISize(_size);
 
@@ -237,7 +237,7 @@ bool UIScrollBar::init()
 		downButtonHeight_ = DEFAULT_SIZE15.height;
 	}
 
-	SetInitialUISize(pInfo_->TrackSize + c2d::size{ 0, upButtonHeight_ + downButtonHeight_ });
+	SetInitialUISize(pInfo_->TrackSize + cc::size{ 0, upButtonHeight_ + downButtonHeight_ });
 	isInitialized_ = true;
 	return true;
 }
@@ -331,7 +331,7 @@ void UIScrollBar::CreateSprites()
 		}
 		else
 		{
-			const c2d::size spriteSize = pTexture->GetSize();
+			const cc::size spriteSize = pTexture->GetSize();
 			const float widthScaleX = uiSize_.width / spriteSize.width;
 
 			pSprite = Sprite::createWithTexture(pTexture->GetTexture());
@@ -482,7 +482,7 @@ void UIScrollBar::SetRowCountPerPage(int _count)
 	UpdateThumbPosition();
 }
 
-void UIScrollBar::SetUISize(const c2d::size& _contentSize)
+void UIScrollBar::SetUISize(const cc::size& _contentSize)
 {
 	if (!isResizable_)
 	{
@@ -533,7 +533,7 @@ void UIScrollBar::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 
 	if (isInfoOwner_)
 	{
-		JCORE_DELETE_SAFE(pInfo_);
+		JC_DELETE_SAFE(pInfo_);
 	}
 
 	pBaseInfo_ = _pInfo;
@@ -546,50 +546,50 @@ void UIScrollBar::SetInfoScrollBar(UIScrollBarInfo* _pInfo, bool _infoOwner)
 	SetInfo(_pInfo, _infoOwner);
 }
 
-bool UIScrollBar::IsUpButtonContainPoint(c2d::vec2 _pos)
+bool UIScrollBar::IsUpButtonContainPoint(cc::vec2 _pos)
 {
 	if (pSprites_[INDEX_UP_NORMAL] == nullptr)
 	{
 		return false;
 	}
 
-	const c2d::vec2 upButtonPos = pSprites_[INDEX_UP_NORMAL]->getPosition();
-	const Rect upButtonBoundingBox = { _position + upButtonPos, c2d::size{ uiSize_.width, upButtonHeight_ } };
+	const cc::vec2 upButtonPos = pSprites_[INDEX_UP_NORMAL]->getPosition();
+	const Rect upButtonBoundingBox = { _position + upButtonPos, cc::size{ uiSize_.width, upButtonHeight_ } };
 	return upButtonBoundingBox.containsPoint(_pos);
 }
 
-bool UIScrollBar::IsDownButtonContainPoint(c2d::vec2 _pos)
+bool UIScrollBar::IsDownButtonContainPoint(cc::vec2 _pos)
 {
 	if (pSprites_[INDEX_DOWN_NORMAL] == nullptr)
 	{
 		return false;
 	}
 
-	const c2d::vec2 downButtonPos = pSprites_[INDEX_DOWN_NORMAL]->getPosition();
-	const Rect downButtonBoundingBox = { _position + downButtonPos, c2d::size{ uiSize_.width, downButtonHeight_ } };
+	const cc::vec2 downButtonPos = pSprites_[INDEX_DOWN_NORMAL]->getPosition();
+	const Rect downButtonBoundingBox = { _position + downButtonPos, cc::size{ uiSize_.width, downButtonHeight_ } };
 	return downButtonBoundingBox.containsPoint(_pos);
 }
 
-bool UIScrollBar::IsThumbButtonContainPoint(c2d::vec2 _pos)
+bool UIScrollBar::IsThumbButtonContainPoint(cc::vec2 _pos)
 {
 	if (pSprites_[INDEX_THUMB_NORMAL] == nullptr)
 	{
 		return false;
 	}
 
-	const c2d::vec2 thumbButtonPos = pSprites_[INDEX_THUMB_NORMAL]->getPosition();
+	const cc::vec2 thumbButtonPos = pSprites_[INDEX_THUMB_NORMAL]->getPosition();
 	const Rect thumbButtonBoundingBox = { _position + thumbButtonPos, pSprites_[INDEX_THUMB_NORMAL]->getContentSize() };
 	return thumbButtonBoundingBox.containsPoint(_pos);
 }
 
-void UIScrollBar::OnMouseLeaveInternalDetail(c2d::EventMouse* /*_pMouseEvent*/)
+void UIScrollBar::OnMouseLeaveInternalDetail(cc::EventMouse* /*_pMouseEvent*/)
 {
 	// setVisibleStateNormal();
 }
 
-bool UIScrollBar::OnMouseMoveInternalDetail(c2d::EventMouse* _pMouseEvent)
+bool UIScrollBar::OnMouseMoveInternalDetail(cc::EventMouse* _pMouseEvent)
 {
-	const c2d::vec2 cursorPos = _pMouseEvent->getCursorPos();
+	const cc::vec2 cursorPos = _pMouseEvent->getCursorPos();
 
 	if (!dragBegin_)
 	{
@@ -604,9 +604,9 @@ bool UIScrollBar::OnMouseMoveInternalDetail(c2d::EventMouse* _pMouseEvent)
 	return false;
 }
 
-bool UIScrollBar::OnMouseDownInternalDetail(c2d::EventMouse* _pMouseEvent)
+bool UIScrollBar::OnMouseDownInternalDetail(cc::EventMouse* _pMouseEvent)
 {
-	const c2d::vec2 cursorPos = _pMouseEvent->getCursorPos();
+	const cc::vec2 cursorPos = _pMouseEvent->getCursorPos();
 
 	const bool upButtonContained = IsUpButtonContainPoint(cursorPos);
 	const bool downButtonContained = IsDownButtonContainPoint(cursorPos);
@@ -645,15 +645,15 @@ bool UIScrollBar::OnMouseDownInternalDetail(c2d::EventMouse* _pMouseEvent)
 	return false;
 }
 
-void UIScrollBar::OnMouseUpInternalDetail(c2d::EventMouse* /*_pMouseEvent*/)
+void UIScrollBar::OnMouseUpInternalDetail(cc::EventMouse* /*_pMouseEvent*/)
 {
 	SetVisibleStateNormal();
 	dragBegin_ = false;
 }
 
-bool UIScrollBar::OnMouseUpContainedInternalDetail(c2d::EventMouse* _pMouseEvent)
+bool UIScrollBar::OnMouseUpContainedInternalDetail(cc::EventMouse* _pMouseEvent)
 {
-	const c2d::vec2 cursorPos = _pMouseEvent->getCursorPos();
+	const cc::vec2 cursorPos = _pMouseEvent->getCursorPos();
 
 	if (IsUpButtonContainPoint(cursorPos))
 	{
@@ -678,7 +678,7 @@ bool UIScrollBar::OnMouseUpContainedInternalDetail(c2d::EventMouse* _pMouseEvent
 	return true;
 }
 
-bool UIScrollBar::OnMouseScrollInternalDetail(c2d::EventMouse* _pMouseEvent)
+bool UIScrollBar::OnMouseScrollInternalDetail(cc::EventMouse* _pMouseEvent)
 {
 	if (_pMouseEvent->getScrollY() < 0)
 	{

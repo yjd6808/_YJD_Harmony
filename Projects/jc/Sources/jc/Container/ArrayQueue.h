@@ -178,7 +178,7 @@ public:
 		{
 			if (_removeHeap)
 			{
-				JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(this->pArray_, sizeof(T) * this->capacity_);
+				JC_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(this->pArray_, sizeof(T) * this->capacity_);
 			}
 			return;
 		}
@@ -209,7 +209,7 @@ public:
 
 		if (_removeHeap)
 		{
-			JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(this->pArray_, sizeof(T) * this->capacity_);
+			JC_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(this->pArray_, sizeof(T) * this->capacity_);
 		}
 	}
 
@@ -332,7 +332,7 @@ protected:
 					sizeof(T) * beginToTailSize);
 			}
 
-			JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(this->pArray_, sizeof(T) * this->capacity_);
+			JC_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(this->pArray_, sizeof(T) * this->capacity_);
 		}
 
 		this->pArray_ = pNewArray;

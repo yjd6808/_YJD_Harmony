@@ -12,7 +12,7 @@
 
 class MapLayer;
 
-class MimicCamera : public c2d::Node
+class MimicCamera : public cc::Node
 {
 public:
 	MimicCamera();

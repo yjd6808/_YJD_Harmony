@@ -29,14 +29,14 @@ public:
 	const std::string& getString() const { return pLabel_->getString(); }
 	void setText(const std::string& _text);
 	void setText(const std::string& _text, float _fontSize);
-	void setText(const std::string& _text, float _fontSize, const c2d::size& _dimension);
-	void SetUISize(const c2d::size& _contentSize) override;
+	void setText(const std::string& _text, float _fontSize, const cc::size& _dimension);
+	void SetUISize(const cc::size& _contentSize) override;
 	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
 	void setInfoLabel(UILabelInfo* _pInfo, bool _infoOwner);
 	void setVAlignment(VAlignment_t _valign);
 	void setHAlignment(HAlignment_t _halign);
 
-	void SetInitialUISize(c2d::size _size) override;
+	void SetInitialUISize(cc::size _size) override;
 	void setEnableFontAutoScaling(bool _enableScaling) { fontAutoScaling_ = _enableScaling; }
 	bool isFontAutoScalingEnabled() const { return fontAutoScaling_; }
 
@@ -45,7 +45,7 @@ public:
 	float getInitialFontSize() const { return initialFontSize_; }
 	int getLineCount() const;
 
-	c2d::Label* source() const { return pLabel_; }
+	cc::Label* source() const { return pLabel_; }
 	UILabelInfo* getInfo() const { return pInfo_; }
 	UIElementType_t GetElementType() override { return UIElementType::Label; }
 	jc::String ToString() override { return jc::StringUtil::Format("라벨(%d)", pInfo_->code_); }
@@ -55,5 +55,5 @@ private:
 	float fontSize_;
 	bool fontAutoScaling_; // UI 사이즈 변경시 변경된 사이즈 비율에 맞게 폰트 크기도 변경시킬지 여부
 	UILabelInfo* pInfo_;
-	c2d::Label* pLabel_;
+	cc::Label* pLabel_;
 };

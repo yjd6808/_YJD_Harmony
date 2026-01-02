@@ -17,7 +17,7 @@
 NS_JNET_BEGIN
 
 class Session;
-class JCORE_NOVTABLE PacketParser
+class JC_NOVTABLE PacketParser
 {
 public:
 	PacketParser(Session* _pSession);

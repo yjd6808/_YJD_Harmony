@@ -117,8 +117,8 @@ SpriteFrameTexture* Global::getDefaultFrameTexture()
 		0xFF, 0xFF, 0xFF, 0xFF
 	};
 
-	c2d::Texture* pDefaultTexture = dbg_new c2d::Texture;
-	pDefaultTexture->initWithData(white2x2TextureData, sizeof(white2x2TextureData), c2d::Texture::PixelFormat::RGB888, 2,
+	cc::Texture* pDefaultTexture = dbg_new cc::Texture;
+	pDefaultTexture->initWithData(white2x2TextureData, sizeof(white2x2TextureData), cc::Texture::PixelFormat::RGB888, 2,
 	                              2, { 2, 2 });
 	pDefaultFrameTexture_ = dbg_new SpriteFrameDefaultTexture(pDefaultTexture, { 0, 0, 2, 2, 2, 2 });
 	pDefaultFrameTexture_->autorelease();

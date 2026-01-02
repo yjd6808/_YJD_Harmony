@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sgcl/ActionInfo.h>
+#include <sg/_Struct/SteinsGate_Action.h>
 #include <sgcl/HitRecorder.h>
 
 struct ActionInfo;
@@ -32,10 +32,10 @@ public:
 	{
 	} // 실행 직전 호출 (초기화 용도)
 	virtual bool OnConditionCheck() = 0;
-	virtual void OnKeyPressed(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode);
-	virtual void OnKeyReleased(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode);
-	virtual void OnKeyPressedBefore(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode);
-	virtual void OnKeyReleasedBefore(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode);
+	virtual void OnKeyPressed(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode);
+	virtual void OnKeyReleased(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode);
+	virtual void OnKeyPressedBefore(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode);
+	virtual void OnKeyReleasedBefore(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode);
 	virtual void OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame);
 	virtual void OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame);
 	virtual void OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame);

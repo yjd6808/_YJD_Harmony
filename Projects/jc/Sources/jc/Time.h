@@ -127,7 +127,7 @@ enum class TimeStandard
 
 // https://www.c-sharpcorner.com/blogs/date-and-time-format-in-c-sharp-programming1
 
-JCORE_SENUM_BEGIN(DateFormat)
+JC_SENUM_BEGIN(DateFormat)
 d,			// 일 표시 -> 1 ~ 31
 dd,			// 일 표시 -> 01 ~ 31
 ddd,		// 요일 축약 이름-> Mon, Tue, Wed 
@@ -161,7 +161,7 @@ ffff,		// 마이크로초 100의 자리까지 표시	10.123456 -> 1234
 fffff,		// 마이크로초 10의 자리까지 표시	10.123456 -> 12345
 ffffff,		// 마이크로초 1의 자리까지 표시		10.123456 -> 123456
 // fffffff  // 나노초 100의 자리까지 표시 -> 마이크로초 까지만 지원하므로 제외한다.
-JCORE_SENUM_MIDDLE(DateFormat)
+JC_SENUM_MIDDLE(DateFormat)
 static constexpr const char* ToString[] = {
 		"d",
 		"dd",
@@ -196,7 +196,7 @@ static constexpr const char* ToString[] = {
 		"fffff",
 		"ffffff"
 };
-JCORE_SENUM_MIDDLE_END(DateFormat)
+JC_SENUM_MIDDLE_END(DateFormat)
 
 /* =================================================================================== 
 	시간 단위
@@ -711,7 +711,7 @@ struct StopWatch<StopWatchMode::HighResolution>
 	Int64U StartCounter{};
 };
 
-JCORE_ENUM_CLASS_BIT_OPERATION_OVERLOADING(TimeCounterAttribute)
+JC_ENUM_CLASS_BIT_OPERATION_OVERLOADING(TimeCounterAttribute)
 enum class TimeCounterAttribute
 {
 	None				= 0b0000,

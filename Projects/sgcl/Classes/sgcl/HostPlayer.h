@@ -35,8 +35,8 @@ public:
 
 	void update(float _dt) override;
 
-	void OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent);
-	void OnKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent);
+	void OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent);
+	void OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent);
 	void OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
 	void OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;
 	void OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture) override;

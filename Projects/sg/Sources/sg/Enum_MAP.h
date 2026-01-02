@@ -10,26 +10,26 @@
 
 #include <jc/Define.h>
 
-JCORE_SENUM_BEGIN(MapObjectType)
+JC_SENUM_BEGIN(MapObjectType)
 	Obstacle,
 	Begin = Obstacle,
 	Gate,
 	End = Gate,
-JCORE_SENUM_END(MapObjectType)
+JC_SENUM_END(MapObjectType)
 
 // ==========================================================================================
 
-JCORE_SENUM_BEGIN(MapType)
+JC_SENUM_BEGIN(MapType)
 	Dungeon,
 	Private,
 	Town
-JCORE_SENUM_END(MapType)
+JC_SENUM_END(MapType)
 
 // ==========================================================================================
 
-JCORE_SENUM_BEGIN(MapBundleType)
+JC_SENUM_BEGIN(MapBundleType)
 	Dungeon,
 	Town
-JCORE_SENUM_END(MapBundleType)
+JC_SENUM_END(MapBundleType)
 
 // ==========================================================================================

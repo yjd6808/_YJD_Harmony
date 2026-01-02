@@ -13,18 +13,18 @@ public:
 	// 게임 해상도
 	void SetDesignResolutionSize(float _width, float _height);
 	void SetDesignResolutionSize(const cocos2d::Size& _resolutionSize) { SetDesignResolutionSize(_resolutionSize.width, _resolutionSize.height); }
-	c2d::size GetDesignResolutionSize() const { return pView_->getDesignResolutionSize(); }
-	c2d::rect GetDesignResolutionRect() const;
+	cc::size GetDesignResolutionSize() const { return pView_->getDesignResolutionSize(); }
+	cc::rect GetDesignResolutionRect() const;
 	ResolutionPolicy GetResolutionPolicy() const { return pView_->getResolutionPolicy(); }
-	c2d::size GetUIResolutionSize() const;
-	c2d::vec2 GetUIScaleFactor() const;
+	cc::size GetUIResolutionSize() const;
+	cc::vec2 GetUIScaleFactor() const;
 	float GetUIScaleXFactor() const;
 	float GetUIScaleYFactor() const;
 
 	// 게임 윈도우 크기
 	void SetFrameSize(float _width, float _height);
 	void SetFrameSize(const cocos2d::Size& _frameSize) { SetFrameSize(_frameSize.width, _frameSize.height); }
-	c2d::size GetFrameSize() const { return pView_->getFrameSize(); }
+	cc::size GetFrameSize() const { return pView_->getFrameSize(); }
 
 	void CreateOpenGLWindow();
 	void CreateWorldScene();

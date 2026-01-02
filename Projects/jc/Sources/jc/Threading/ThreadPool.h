@@ -118,7 +118,7 @@ struct TaskResult
 template <typename T>
 class TaskContextImpl;
 
-class JCORE_NOVTABLE TaskContext
+class JC_NOVTABLE TaskContext
 {
 public:
 	enum State

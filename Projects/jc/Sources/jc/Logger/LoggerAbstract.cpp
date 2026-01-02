@@ -33,7 +33,7 @@ LoggerAbstract::~LoggerAbstract()
 {
 	if (m_bOptionOwner && m_pOption)
 	{
-		JCORE_DELETE_SAFE(m_pOption);
+		JC_DELETE_SAFE(m_pOption);
 	}
 }
 

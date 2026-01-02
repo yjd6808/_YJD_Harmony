@@ -9,7 +9,7 @@
 #pragma once
 
 #include <sgcl/Actor.h>
-#include <sgcl/CharInfo.h>
+#include <sg/_Struct/SteinsGate_Char.h>
 
 class Character : public Actor
 {

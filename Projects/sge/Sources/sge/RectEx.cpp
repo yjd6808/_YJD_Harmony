@@ -10,7 +10,7 @@
 #include "RectEx.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool RectEx::Intersect(const c2d::rect& _rc, const c2d::rect& _rc2, c2d::rect& _intersectRect)
+bool RectEx::Intersect(const cc::rect& _rc, const cc::rect& _rc2, cc::rect& _intersectRect)
 {
 	if (!_rc.intersectsRect(_rc2))
 	{
@@ -33,14 +33,14 @@ bool RectEx::Intersect(const c2d::rect& _rc, const c2d::rect& _rc2, c2d::rect& _
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void RectEx::Log(const c2d::rect& _rc)
+void RectEx::Log(const cc::rect& _rc)
 {
 	jc::Console::WriteLine("::  [%d, %d],  [%d, %d]",
 		int(_rc.getMinX()), int(_rc.getMinY()), int(_rc.getWidth()), int(_rc.getHeight()));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool RectEx::IntersectY(const c2d::rect& _lhs, const c2d::rect& _rhs)
+bool RectEx::IntersectY(const cc::rect& _lhs, const cc::rect& _rhs)
 {
 	if (_lhs.origin.y > _rhs.origin.y &&
 		_lhs.origin.y < _rhs.origin.y + _rhs.size.height)
@@ -58,13 +58,13 @@ bool RectEx::IntersectY(const c2d::rect& _lhs, const c2d::rect& _rhs)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool RectEx::ContainsX(const c2d::rect& _rc, const float _x)
+bool RectEx::ContainsX(const cc::rect& _rc, const float _x)
 {
 	return _x > _rc.origin.x && _x < _rc.origin.x + _rc.size.width;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool RectEx::ContainsY(const c2d::rect& _rc, const float _y)
+bool RectEx::ContainsY(const cc::rect& _rc, const float _y)
 {
 	return _y > _rc.origin.y && _y < _rc.origin.y + _rc.size.height;
 }

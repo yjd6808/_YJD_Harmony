@@ -31,7 +31,7 @@ void IOCPOverlappedSendTo::Process(BOOL _result, Int32UL _bytesTransferred, IOCP
 {
 	(void)_pCompletionKey;
 
-	JCORE_REF_COUNT_GUARD(sentPacket_, false);
+	JC_REF_COUNT_GUARD(sentPacket_, false);
 	const SOCKET sentSocket = sender_->SocketHandle();
 	Int32U errorCode = 0;
 

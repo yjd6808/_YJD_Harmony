@@ -25,8 +25,8 @@ TcpServer::~TcpServer()
 {
 	TcpServer::Stop();
 
-	JCORE_DELETE_SAFE(pSessionContainer_);
-	JCORE_DELETE_SAFE(pServerEventListener_);
+	JC_DELETE_SAFE(pSessionContainer_);
+	JC_DELETE_SAFE(pServerEventListener_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -126,35 +126,35 @@ void TcpServer::SessionReceivedRaw(TcpSession* _pSession, char* _pData, int _len
 //////////////////////////////////////////////////////////////////////////////////////////
 ISessionContainer* TcpServer::GetSessionContainer()
 {
-	JCORE_LOCK_GUARD(lock_);
+	JC_LOCK_GUARD(lock_);
 	return pSessionContainer_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ServerEventListener* TcpServer::GetEventListener()
 {
-	JCORE_LOCK_GUARD(lock_);
+	JC_LOCK_GUARD(lock_);
 	return pServerEventListener_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void TcpServer::SetSesssionContainer(ISessionContainer* _pContainer)
 {
-	JCORE_LOCK_GUARD(lock_);
+	JC_LOCK_GUARD(lock_);
 	pSessionContainer_ = _pContainer;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void TcpServer::SetEventListener(ServerEventListener* _pListener)
 {
-	JCORE_LOCK_GUARD(lock_);
+	JC_LOCK_GUARD(lock_);
 	pServerEventListener_ = _pListener;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void TcpServer::Initialize()
 {
-	JCORE_LOCK_GUARD(lock_);
+	JC_LOCK_GUARD(lock_);
 
 	if (!CreateSocket(TransportProtocol::TCP))
 	{
@@ -201,7 +201,7 @@ bool TcpServer::Start(const IPv4EndPoint& _localEndPoint)
 		TcpServer* server_;
 	} notifier{this};
 
-	JCORE_LOCK_GUARD(lock_);
+	JC_LOCK_GUARD(lock_);
 
 	if (state_ != eInitailized)
 	{
@@ -271,7 +271,7 @@ bool TcpServer::Start(const IPv4EndPoint& _localEndPoint)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool TcpServer::Stop()
 {
-	JCORE_LOCK_GUARD(lock_);
+	JC_LOCK_GUARD(lock_);
 
 	if (state_ == eStopped)
 	{

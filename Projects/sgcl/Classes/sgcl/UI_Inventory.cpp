@@ -73,13 +73,13 @@ void UI_Inventory::OnUpdate(float _dt)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UI_Inventory::OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent)
+bool UI_Inventory::OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UI_Inventory::OnKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent)
+bool UI_Inventory::OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 	return true;
 }

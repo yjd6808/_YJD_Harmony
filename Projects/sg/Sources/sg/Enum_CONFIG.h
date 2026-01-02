@@ -11,7 +11,7 @@
 
 #include <jc/Define.h>
 
-JCORE_SENUM_BEGIN(ConfigFileType)
+JC_SENUM_BEGIN(ConfigFileType)
 		Effect,
 		Begin = Effect,
 		Map,
@@ -42,7 +42,7 @@ JCORE_SENUM_BEGIN(ConfigFileType)
 		Database,
 		End,
 		Max = End
-	JCORE_SENUM_MIDDLE(ConfigFileType)
+	JC_SENUM_MIDDLE(ConfigFileType)
 
 	static constexpr const char* FileName[Max]{
 		"effect.json", // 파일
@@ -74,4 +74,4 @@ JCORE_SENUM_BEGIN(ConfigFileType)
 		"database.json" // 파일
 
 	};
-JCORE_SENUM_MIDDLE_END(ConfigFileType)
+JC_SENUM_MIDDLE_END(ConfigFileType)

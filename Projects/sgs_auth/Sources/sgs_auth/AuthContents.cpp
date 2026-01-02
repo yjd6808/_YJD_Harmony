@@ -23,5 +23,5 @@ void AuthContents::Initialize() {
 void AuthContents::Finalize() {
 	ClearSchedule();
 
-	JCORE_DELETE_SINGLETON_SAFE(AuthenticationManager);
+	JC_DELETE_SINGLETON_SAFE(AuthenticationManager);
 }

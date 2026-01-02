@@ -26,20 +26,20 @@ public:
 	void Load() override;
 	void Unload() override;
 
-	void SetCapInsets(const c2d::rect& _insets);
-	void SetUISize(const c2d::size& _size) override;
+	void SetCapInsets(const cc::rect& _insets);
+	void SetUISize(const cc::size& _size) override;
 	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
 	void SetInfoSprite(UISpriteInfo* _pInfo, bool _infoOwner);
 	void setOpacity(GLubyte _opacity) override;
 	bool IsScale9() const { return pInfo_->scale9_; }
 
 	UISpriteInfo* GetInfo() const { return pInfo_; }
-	c2d::Sprite* Source() const { return pSprite_; }
+	cc::Sprite* Source() const { return pSprite_; }
 	UIElementType_t GetElementType() override { return UIElementType::Sprite; }
 	jc::String ToString() override { return jc::StringUtil::Format("스프라이트(%d)", pInfo_->code_); }
 
 private:
 	UISpriteInfo* pInfo_;
 	FrameTexture* pTexture_;
-	c2d::Sprite* pSprite_;
+	cc::Sprite* pSprite_;
 };

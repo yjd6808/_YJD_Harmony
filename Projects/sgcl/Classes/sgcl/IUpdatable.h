@@ -10,7 +10,7 @@
 
 #include <jc/Declspec.h>
 
-class JCORE_NOVTABLE IUpdatable
+class JC_NOVTABLE IUpdatable
 {
 public:
 	virtual ~IUpdatable() = default;

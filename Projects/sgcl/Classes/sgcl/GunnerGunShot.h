@@ -21,7 +21,7 @@ public:
 	void OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
 	void OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
 	void OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
-	void OnKeyPressed(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode) override;
+	void OnKeyPressed(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode) override;
 
 	void OnUpdate(float _deltaTime) override;
 	void UpdateDownKeyCheck(PlayerController* _pController);

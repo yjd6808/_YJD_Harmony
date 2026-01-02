@@ -26,14 +26,14 @@ struct IPropertyValueBinaryOperatorSelector;
 struct PropertyBase;
 
 
-struct JCORE_NOVTABLE IPropertyValueBinaryOperatorSelector
+struct JC_NOVTABLE IPropertyValueBinaryOperatorSelector
 {
 	virtual ~IPropertyValueBinaryOperatorSelector() = default;
 	virtual void Select(int* _pDecayedLhs, int* _pDecayedRhs, PropertyBinaryOperatorType_t _binaryOperator) = 0;
 };
 
 
-struct JCORE_NOVTABLE IPropertyValueUnaryOperator
+struct JC_NOVTABLE IPropertyValueUnaryOperator
 {
 	virtual ~IPropertyValueUnaryOperator() = default;
 	virtual void PrefixIncrement(PropertyBase* _pProperty) = 0;
@@ -43,7 +43,7 @@ struct JCORE_NOVTABLE IPropertyValueUnaryOperator
 };
 
 template <typename Ty>
-struct JCORE_NOVTABLE IPropertyValueBinaryOperator
+struct JC_NOVTABLE IPropertyValueBinaryOperator
 {
 	using ValTy = Ty;
 	static constexpr PropertyType_t LeftOperandType = PropertyTypeGetter<Ty>::Type;

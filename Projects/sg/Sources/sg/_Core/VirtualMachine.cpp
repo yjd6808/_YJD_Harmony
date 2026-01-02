@@ -41,11 +41,11 @@ VirtualMachine::~VirtualMachine()
 		pCliThread_->Join();
 	}
 
-	JCORE_DELETE_SAFE(pCmdNameMap_);
-	JCORE_DELETE_SAFE(pScheduler_);
-	JCORE_DELETE_SAFE(pThreadPool_);
-	JCORE_DELETE_SAFE(pDescLoaderMgr_);
-	JCORE_DELETE_SAFE(pCliThread_);
+	JC_DELETE_SAFE(pCmdNameMap_);
+	JC_DELETE_SAFE(pScheduler_);
+	JC_DELETE_SAFE(pThreadPool_);
+	JC_DELETE_SAFE(pDescLoaderMgr_);
+	JC_DELETE_SAFE(pCliThread_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

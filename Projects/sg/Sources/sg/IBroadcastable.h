@@ -12,7 +12,7 @@
 #include <jc/Declspec.h>
 #include <jnet/Packet/Packet.h>
 
-struct JCORE_NOVTABLE IBroadcastable
+struct JC_NOVTABLE IBroadcastable
 {
 	virtual ~IBroadcastable() = default;
 	virtual void BroadcastPacket(jnet::IPacket* _pPacket) = 0;

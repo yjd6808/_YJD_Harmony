@@ -18,7 +18,7 @@ struct Win32Helper
 
 	static void LazyInit();
 
-	static c2d::vec2 GetWindowPos();
-	static c2d::rect GetWindowRect();
-	static c2d::vec2 GetCursorPos();
+	static cc::vec2 GetWindowPos();
+	static cc::rect GetWindowRect();
+	static cc::vec2 GetCursorPos();
 };

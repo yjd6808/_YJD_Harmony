@@ -50,12 +50,12 @@ UIElement::~UIElement()
 {
 	for (int i = 0; i < eMouseEventMax; ++i)
 	{
-		JCORE_DELETE_SAFE(pMouseEventMap_[i]);
+		JC_DELETE_SAFE(pMouseEventMap_[i]);
 	}
 
 	if (isInfoOwner_)
 	{
-		JCORE_DELETE_SAFE(pBaseInfo_);
+		JC_DELETE_SAFE(pBaseInfo_);
 	}
 }
 
@@ -115,7 +115,7 @@ void UIElement::RestoreState(State _state)
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIElement::ApplyUIScaleFactor(OUT c2d::size& _size)
+void UIElement::ApplyUIScaleFactor(OUT cc::size& _size)
 {
 	vec2 factor = sg::App->GetUIScaleFactor();
 	_size.width *= factor.x;
@@ -123,7 +123,7 @@ void UIElement::ApplyUIScaleFactor(OUT c2d::size& _size)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIElement::ApplyUIScaleFactor(OUT c2d::vec2& _vec2)
+void UIElement::ApplyUIScaleFactor(OUT cc::vec2& _vec2)
 {
 	vec2 factor = sg::App->GetUIScaleFactor();
 	_vec2.x *= factor.x;
@@ -144,7 +144,7 @@ void UIElement::ApplyUIScaleFactorY(OUT float& _y)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UIElement::IsContainPoint(c2d::EventMouse* _mouseEvent)
+bool UIElement::IsContainPoint(cc::EventMouse* _mouseEvent)
 {
 	Vec2 mousePos = _mouseEvent->getCursorPos();
 
@@ -159,7 +159,7 @@ bool UIElement::IsContainPoint(c2d::EventMouse* _mouseEvent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIElement::SetInitialUISize(c2d::size _size)
+void UIElement::SetInitialUISize(cc::size _size)
 {
 	if (isInitialized_)
 	{
@@ -187,7 +187,7 @@ void UIElement::LogWarnInvalidInfo(UIElementType_t _targetType)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UIElement::OnMouseDownInternal(c2d::EventMouse* _mouseEvent)
+bool UIElement::OnMouseDownInternal(cc::EventMouse* _mouseEvent)
 {
 	if (state_ == eDisabled)
 		return true;
@@ -233,7 +233,7 @@ bool UIElement::OnMouseDownInternal(c2d::EventMouse* _mouseEvent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UIElement::OnMouseMoveInternal(c2d::EventMouse* _mouseEvent)
+bool UIElement::OnMouseMoveInternal(cc::EventMouse* _mouseEvent)
 {
 	const DragState& dragState = g_cUIMgr.GetDragState();
 
@@ -298,7 +298,7 @@ bool UIElement::OnMouseMoveInternal(c2d::EventMouse* _mouseEvent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UIElement::OnMouseUpInternal(c2d::EventMouse* _mouseEvent)
+bool UIElement::OnMouseUpInternal(cc::EventMouse* _mouseEvent)
 {
 	// 기본적으로 싱글 엘리먼트 드래그만 지원하기 떄문에 마우스를 땠을때 드래그 해제 처리는 WorldScene::onMouseUp에서 처리함
 
@@ -335,7 +335,7 @@ bool UIElement::OnMouseUpInternal(c2d::EventMouse* _mouseEvent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UIElement::OnMouseScrollInternal(c2d::EventMouse* _mouseEvent)
+bool UIElement::OnMouseScrollInternal(cc::EventMouse* _mouseEvent)
 {
 	if (state_ == eDisabled)
 		return true;
@@ -358,28 +358,28 @@ bool UIElement::OnMouseScrollInternal(c2d::EventMouse* _mouseEvent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIElement::OnMouseEnterInternalDetail(c2d::EventMouse* _mouseEvent)
+void UIElement::OnMouseEnterInternalDetail(cc::EventMouse* _mouseEvent)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIElement::OnMouseLeaveInternalDetail(c2d::EventMouse* _mouseEvent)
+void UIElement::OnMouseLeaveInternalDetail(cc::EventMouse* _mouseEvent)
 {
 }
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UIElement::OnMouseMoveInternalDetail(c2d::EventMouse* _mouseEvent) { return true; }
-bool UIElement::OnMouseDownInternalDetail(c2d::EventMouse* _mouseEvent) { return true; }
+bool UIElement::OnMouseMoveInternalDetail(cc::EventMouse* _mouseEvent) { return true; }
+bool UIElement::OnMouseDownInternalDetail(cc::EventMouse* _mouseEvent) { return true; }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIElement::OnMouseUpInternalDetail(c2d::EventMouse* _mouseEvent)
+void UIElement::OnMouseUpInternalDetail(cc::EventMouse* _mouseEvent)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UIElement::OnMouseUpContainedInternalDetail(c2d::EventMouse* _mouseEvent) { return true; }
-bool UIElement::OnMouseScrollInternalDetail(c2d::EventMouse* _mouseEvent) { return true; }
+bool UIElement::OnMouseUpContainedInternalDetail(cc::EventMouse* _mouseEvent) { return true; }
+bool UIElement::OnMouseScrollInternalDetail(cc::EventMouse* _mouseEvent) { return true; }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void UIElement::UpdateState()
@@ -387,7 +387,7 @@ void UIElement::UpdateState()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::vec2 UIElement::GetAbsolutePosition() const
+cc::vec2 UIElement::GetAbsolutePosition() const
 {
 	Vec2 thisAbsolutePos = _position;
 	UIElement* pCur = pParent_;
@@ -400,13 +400,13 @@ c2d::vec2 UIElement::GetAbsolutePosition() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::vec2 UIElement::GetRelativePositionOnElement(const c2d::vec2& _absolutePos) const
+cc::vec2 UIElement::GetRelativePositionOnElement(const cc::vec2& _absolutePos) const
 {
 	return _absolutePos - GetAbsolutePosition();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::vec2 UIElement::GetPositionCenter() const
+cc::vec2 UIElement::GetPositionCenter() const
 {
 	return {
 		_position.x + uiSize_.width / 2.0f,
@@ -414,7 +414,7 @@ c2d::vec2 UIElement::GetPositionCenter() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::vec2 UIElement::GetPositionRightTop() const
+cc::vec2 UIElement::GetPositionRightTop() const
 {
 	return {
 		_position.x + uiSize_.width,
@@ -428,14 +428,14 @@ c2d::vec2 UIElement::GetPositionRightTop() const
 //  => 그룹(사각형) 중앙점 기준으로 엘리먼트 중점의 상대적 위치를 반환한다.
 // valign: top, halign: left인 경우
 //  => 그룹(사각형) 좌상단점 기준으로 엘리먼트 좌상단점의 상대적 위치를 반환한다.
-c2d::vec2 UIElement::GetRelativePosition()
+cc::vec2 UIElement::GetRelativePosition()
 {
 	Size parentSize = GetParentSize();
 	return CalculateRelativePosition(parentSize);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::rect UIElement::GetParentAbsoluteRect()
+cc::rect UIElement::GetParentAbsoluteRect()
 {
 	return IsRootGroup() 
 		? sg::App->GetDesignResolutionRect()
@@ -443,15 +443,15 @@ c2d::rect UIElement::GetParentAbsoluteRect()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::rect UIElement::GetParentRect()
+cc::rect UIElement::GetParentRect()
 {
 	return IsRootGroup()
 		? sg::App->GetDesignResolutionRect()
-		: c2d::rect{ 0, 0, pParent_->uiSize_.width, pParent_->uiSize_.height };
+		: cc::rect{ 0, 0, pParent_->uiSize_.width, pParent_->uiSize_.height };
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::size UIElement::GetParentSize()
+cc::size UIElement::GetParentSize()
 {
 	return IsRootGroup() 
 	? sg::App->GetDesignResolutionSize()
@@ -485,7 +485,7 @@ float UIElement::GetAbsoluteScaleY()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::vec2 UIElement::GetAbsoluteScale()
+cc::vec2 UIElement::GetAbsoluteScale()
 {
 	float thisScaleX = _scaleX;
 	float thisScaleY = _scaleY;
@@ -500,9 +500,9 @@ c2d::vec2 UIElement::GetAbsoluteScale()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::rect UIElement::GetWorldBoundingBox() const
+cc::rect UIElement::GetWorldBoundingBox() const
 {
-	c2d::vec2 origin;
+	cc::vec2 origin;
 
 	/*
 	 * 그룹마스터와 마스터 그룹들은 비쥬얼 부모(_parent)가 존재하지 않는다.
@@ -531,13 +531,13 @@ void UIElement::SetEnabled(bool _enabled)
 // 예를들어 모두 중앙 정렬된 엘리먼트인 경우의 사각형의 크기가 200, 200이라고 가정하고 origin은 0, 0이라고하자.
 // 이때 엘리먼트의 크기가 50 x 40이면
 // (100 - 25, 100 - 20)이 엘리먼트의 좌하단 좌표이다.
-c2d::vec2 UIElement::CalculateZeroPosition(const c2d::rect& _rc) const
+cc::vec2 UIElement::CalculateZeroPosition(const cc::rect& _rc) const
 {
 	return CalculateZeroPosition(_rc, pBaseInfo_->hAlignment_, pBaseInfo_->vAlignment_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::vec2 UIElement::CalculateZeroPosition(const c2d::rect& _rc, HAlignment_t _halign, VAlignment_t _valign) const
+cc::vec2 UIElement::CalculateZeroPosition(const cc::rect& _rc, HAlignment_t _halign, VAlignment_t _valign) const
 {
 	float xPos = 0;
 	float yPos = 0;
@@ -568,7 +568,7 @@ c2d::vec2 UIElement::CalculateZeroPosition(const c2d::rect& _rc, HAlignment_t _h
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 사이즈 내부에서 현재 엘리먼트의 정렬기준에 따른 위치를 반환한다.
-c2d::vec2 UIElement::CalculateRelativePosition(const c2d::size& _parentSize) const
+cc::vec2 UIElement::CalculateRelativePosition(const cc::size& _parentSize) const
 {
 	Vec2 pos;
 	switch (pBaseInfo_->hAlignment_)
@@ -631,7 +631,7 @@ void UIElement::SetRelativePosition(UIElement* _pTarget, float _x, float _y, HAl
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIElement::SetRelativePosition(const c2d::vec2& _pos)
+void UIElement::SetRelativePosition(const cc::vec2& _pos)
 {
 	SetRelativePosition(_pos.x, _pos.y);
 }
@@ -648,7 +648,7 @@ void UIElement::InvokeMouseEvent(MouseEventType _mouseEventType, cocos2d::EventM
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIElement::AddMouseEvent(MouseEventType _mouseEventType, int _id, const jc::Action<c2d::EventMouse*>& _fn)
+void UIElement::AddMouseEvent(MouseEventType _mouseEventType, int _id, const jc::Action<cc::EventMouse*>& _fn)
 {
 	if (pMouseEventMap_[_mouseEventType] == nullptr)
 		pMouseEventMap_[_mouseEventType] = new SGMouseEventList;
@@ -657,7 +657,7 @@ void UIElement::AddMouseEvent(MouseEventType _mouseEventType, int _id, const jc:
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIElement::AddMouseEvent(MouseEventType _mouseEventType, int _id, jc::Action<c2d::EventMouse*>&& _fn)
+void UIElement::AddMouseEvent(MouseEventType _mouseEventType, int _id, jc::Action<cc::EventMouse*>&& _fn)
 {
 	if (pMouseEventMap_[_mouseEventType] == nullptr)
 		pMouseEventMap_[_mouseEventType] = new SGMouseEventList;

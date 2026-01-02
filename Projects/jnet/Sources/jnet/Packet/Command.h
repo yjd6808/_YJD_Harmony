@@ -247,10 +247,10 @@ NS_JNET_END
 // count = 0으로 둔 이유는 static cmmand와 dynamic command간 상호호환을 위해서이다.
 #define CMD_FUNC_DEF_NAME(struct)                          static constexpr const char* _Name() { return #struct; }
 #define CMD_FUNC_DEF_COMMAND(cmd)                          static constexpr int _Command() { return cmd; }
-#define CMD_FUNC_DEF_SIZE(...)                             JCORE_CONCAT_ARGS(CMD_FUNC_DEF_SIZE_, JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__)
+#define CMD_FUNC_DEF_SIZE(...)                             JC_CONCAT_ARGS(CMD_FUNC_DEF_SIZE_, JC_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__)
 #define CMD_FUNC_DEF_SIZE_1(struct)                        static constexpr int _Size(int count = 0) { (void)count; return sizeof(struct); } // static command 전용
 #define CMD_FUNC_DEF_SIZE_2(struct, countable_elem_type)   static constexpr int _Size(int count) { return sizeof(struct) + static_cast<int>(sizeof(countable_elem_type)) * count; } // dynamic command 전용
-#define CMD_FUNC_DEF_CONSTRUCT(...)                        JCORE_CONCAT_ARGS(CMD_FUNC_DEF_CONSTRUCT_, JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__)
+#define CMD_FUNC_DEF_CONSTRUCT(...)                        JC_CONCAT_ARGS(CMD_FUNC_DEF_CONSTRUCT_, JC_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__)
 #define CMD_FUNC_DEF_CONSTRUCT_1(struct)                   static void _Construct(void* _p, int count = 0) { (void)count; return jc::Memory::PlacementNew(*static_cast<struct*>(_p)); }
 #define CMD_FUNC_DEF_CONSTRUCT_2(struct, countable_elem_type)                                                                                                     \
 	static void _Construct(void* _p, int count)                                                                                                                   \
@@ -317,7 +317,7 @@ NS_JNET_END
 
 
 // @https://stackoverflow.com/questions/35196871/what-is-the-optimal-order-of-members-in-a-class
-#define DYNAMIC_CMD_BEGIN(...)                          JCORE_CONCAT_ARGS(DYNAMIC_CMD_BEGIN_IMPL_, JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__)
+#define DYNAMIC_CMD_BEGIN(...)                          JC_CONCAT_ARGS(DYNAMIC_CMD_BEGIN_IMPL_, JC_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__)
 #define DYNAMIC_CMD_BEGIN_IMPL_3(__struct__, __cmd_id__, __countable_elem_type__) DYNAMIC_CMD_BEGIN_IMPL_4(__struct__, __cmd_id__, __countable_elem_type__, true)
 #define DYNAMIC_CMD_BEGIN_IMPL_4(__struct__, __cmd_id__, __countable_elem_type__, __construct_countable_elem__)                                              \
 	struct __struct__ : jnet::DynamicCommand                                                                                                          \

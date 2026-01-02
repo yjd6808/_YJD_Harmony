@@ -13,7 +13,7 @@
 #include <jnet/IOCP/IOCP.h>
 
 NS_JNET_BEGIN
-class JCORE_NOVTABLE NetGroup
+class JC_NOVTABLE NetGroup
 {
 public:
 	NetGroup();

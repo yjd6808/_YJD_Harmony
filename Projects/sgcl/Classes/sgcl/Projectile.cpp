@@ -57,8 +57,8 @@ void Projectile::InitThicknessBox(const ThicknessBox& _thicknessBox)
 	// 두께빡스 위치 자동지정
 	if (_thicknessBox.relativeY_ <= 0.0f)
 	{
-		c2d::vec2 spawnerCanvasPos = spawner_->GetCanvasPositionReal();
-		c2d::vec2 spawnerGroundPos = spawner_->GetPositionRealCenter();
+		cc::vec2 spawnerCanvasPos = spawner_->GetCanvasPositionReal();
+		cc::vec2 spawnerGroundPos = spawner_->GetPositionRealCenter();
 
 		// 스포너의 캔버스 기준상에서 프로젝틸의 절대 y 위치를 구한다.
 		// 스포너의 절대 그라운드 위치 중앙 y 위치에서 빼주면 됨.
@@ -69,8 +69,8 @@ void Projectile::InitThicknessBox(const ThicknessBox& _thicknessBox)
 
 void Projectile::InitPosition()
 {
-	c2d::size spawnerCanvsSize = spawner_->GetCanvasSize();
-	c2d::vec2 spawnerCanvasPos = spawner_->GetCanvasPositionReal();
+	cc::size spawnerCanvsSize = spawner_->GetCanvasSize();
+	cc::vec2 spawnerCanvasPos = spawner_->GetCanvasPositionReal();
 
 	SetSpriteDirection(spawner_->GetSpriteDirection());
 

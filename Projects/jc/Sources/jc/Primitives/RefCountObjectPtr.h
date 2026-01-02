@@ -17,7 +17,7 @@
  *			// RefCount == 2
  *		}
  *		// RefCount == 1
- *		JCORE_RELEASE_SAFE(pRef) // RefCount == 0 -> ReleaseAction 호출
+ *		JC_RELEASE_SAFE(pRef) // RefCount == 0 -> ReleaseAction 호출
  *	}
  */
 
@@ -157,6 +157,6 @@ private:
 NS_JC_END
 
 
-#define JCORE_REF_COUNT_GUARD(...)				JCORE_EXPAND_1(JCORE_CONCAT_ARGS(JCORE_REF_COUNT_GUARD_, JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__)) 
-#define JCORE_REF_COUNT_GUARD_1(ref)			jc::RefCountObjectPtr<jc::RefCountObject> JCORE_CONCAT_COUNTER(__ref_count_guard__)(ref)
-#define JCORE_REF_COUNT_GUARD_2(ref, add_ref)	jc::RefCountObjectPtr<jc::RefCountObject> JCORE_CONCAT_COUNTER(__ref_count_guard__)(ref, add_ref)
+#define JC_REF_COUNT_GUARD(...)				JC_EXPAND_1(JC_CONCAT_ARGS(JC_REF_COUNT_GUARD_, JC_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__)) 
+#define JC_REF_COUNT_GUARD_1(ref)			jc::RefCountObjectPtr<jc::RefCountObject> JC_CONCAT_COUNTER(__ref_count_guard__)(ref)
+#define JC_REF_COUNT_GUARD_2(ref, add_ref)	jc::RefCountObjectPtr<jc::RefCountObject> JC_CONCAT_COUNTER(__ref_count_guard__)(ref, add_ref)

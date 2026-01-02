@@ -23,7 +23,7 @@ public:
 	void OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
 	void OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
 	void OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
-	void OnKeyPressed(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode) override;
+	void OnKeyPressed(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode) override;
 
 	void UpdateJumpUp(Character* _pChar, float _dt);
 	void UpdateJumpDown(Character* _pChar, float _dt);

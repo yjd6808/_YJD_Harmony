@@ -43,32 +43,32 @@ void UIRootGroup::OnRemoved()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIRootGroup::OnMouseEnterTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent)
+void UIRootGroup::OnMouseEnterTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIRootGroup::OnMouseMoveTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent)
+void UIRootGroup::OnMouseMoveTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIRootGroup::OnMouseDownTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent)
+void UIRootGroup::OnMouseDownTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIRootGroup::OnMouseUpTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent)
+void UIRootGroup::OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIRootGroup::OnMouseLeaveTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent)
+void UIRootGroup::OnMouseLeaveTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIRootGroup::OnMouseScrollTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent)
+void UIRootGroup::OnMouseScrollTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent)
 {
 }
 
@@ -138,31 +138,31 @@ void UIRootGroup::OnEditBoxEditingDidEndWithAction(UIEditBox* _pEditBox, c2d_ui:
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIRootGroup::OnMouseEnter(c2d::EventMouse* _pMouseEvent)
+void UIRootGroup::OnMouseEnter(cc::EventMouse* _pMouseEvent)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIRootGroup::OnMouseMove(c2d::EventMouse* _pMouseEvent)
+void UIRootGroup::OnMouseMove(cc::EventMouse* _pMouseEvent)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIRootGroup::OnMouseDown(c2d::EventMouse* _pMouseEvent)
+void UIRootGroup::OnMouseDown(cc::EventMouse* _pMouseEvent)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIRootGroup::OnMouseUp(c2d::EventMouse* _pMouseEvent)
+void UIRootGroup::OnMouseUp(cc::EventMouse* _pMouseEvent)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIRootGroup::OnMouseLeave(c2d::EventMouse* _pMouseEvent)
+void UIRootGroup::OnMouseLeave(cc::EventMouse* _pMouseEvent)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIRootGroup::OnMouseScroll(c2d::EventMouse* _pMouseEvent)
+void UIRootGroup::OnMouseScroll(cc::EventMouse* _pMouseEvent)
 {
 }

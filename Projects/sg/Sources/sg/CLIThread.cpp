@@ -52,13 +52,13 @@ CLIThread::CLIThread()
 //////////////////////////////////////////////////////////////////////////////////////////
 CLIThread::~CLIThread()
 {
-	JCORE_DELETE_SAFE(pListener_);
+	JC_DELETE_SAFE(pListener_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void CLIThread::SetListener(CLIListener* _pListener)
 {
-	JCORE_LOCK_GUARD(lock_);
+	JC_LOCK_GUARD(lock_);
 	pListener_ = _pListener;
 }
 
@@ -83,7 +83,7 @@ void CLIThread::WorkerThread()
 	while (isRunning_)
 	{
 		String inputLine = Console::ReadLine();
-		JCORE_LOCK_GUARD(lock_);
+		JC_LOCK_GUARD(lock_);
 
 		Input input = { inputLine.Split(" ") };
 
@@ -113,7 +113,7 @@ void CLIThread::ProcessInputs()
 	if (inputQueue_.IsEmpty())
 		return;
 	{
-		JCORE_LOCK_GUARD(lock_);
+		JC_LOCK_GUARD(lock_);
 		while (!inputQueue_.IsEmpty())
 		{
 			processingInputs.PushBack(Move(inputQueue_.Front()));

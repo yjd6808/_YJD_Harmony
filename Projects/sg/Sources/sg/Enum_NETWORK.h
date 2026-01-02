@@ -10,18 +10,18 @@
 
 #include <jc/Define.h>
 
-JCORE_SENUM_BEGIN(GamePlayMode)
+JC_SENUM_BEGIN(GamePlayMode)
 		Single,
 		Lan,
 		Wan,
 		Max
-	JCORE_SENUM_MIDDLE(GamePlayMode)
+	JC_SENUM_MIDDLE(GamePlayMode)
 
 	static constexpr bool IsNetworkMode[Max]{
 		false,
 		true,
 	};
 
-JCORE_SENUM_MIDDLE_END(GamePlayMode)
+JC_SENUM_MIDDLE_END(GamePlayMode)
 
 // ==========================================================================================

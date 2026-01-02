@@ -9,7 +9,7 @@
 #include "SGVec2Ex.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGVec2Ex::GetLookDirection(const c2d::vec2& _from, const c2d::vec2& _to, OUT Direction_t& _lr,
+void SGVec2Ex::GetLookDirection(const cc::vec2& _from, const cc::vec2& _to, OUT Direction_t& _lr,
                                 OUT Direction_t& _ud)
 {
 	_lr = Direction::Left;
@@ -38,7 +38,7 @@ void SGVec2Ex::GetLookDirectionX(float _fromX, float _toX, SpriteDirection_t& _l
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGVec2Ex::GetLookDirectionX(const c2d::vec2& _from, const c2d::vec2& _to, SpriteDirection_t& _lr)
+void SGVec2Ex::GetLookDirectionX(const cc::vec2& _from, const cc::vec2& _to, SpriteDirection_t& _lr)
 {
 	_lr = SpriteDirection::Left;
 

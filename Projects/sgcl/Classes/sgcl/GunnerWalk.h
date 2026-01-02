@@ -15,8 +15,8 @@ public:
 	GunnerWalk(HostPlayer* _pHostPlayer, ActionInfo* _pActionInfo);
 
 	void OnActionBegin() override;
-	void OnKeyPressed(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode) override;
-	void OnKeyReleased(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode) override;
+	void OnKeyPressed(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode) override;
+	void OnKeyReleased(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode) override;
 	bool IsHorizontalKeyPressed(PlayerController* _pController);
 	bool IsVerticalKeyPressed(PlayerController* _pController);
 };

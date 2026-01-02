@@ -43,7 +43,7 @@ Character::Character(CharBaseInfo* _pCharInfo, const VisualInfo& _visualInfo)
 //////////////////////////////////////////////////////////////////////////////////////////
 Character::~Character()
 {
-	JCORE_DELETE_SAFE(m_pSpriteData);
+	JC_DELETE_SAFE(m_pSpriteData);
 	_LogDebug_("캐릭터 소멸");
 }
 
@@ -72,7 +72,7 @@ void Character::Initialize()
 void Character::InitActorSpriteData(const VisualInfo& _visualInfo)
 {
 	jc_assert(m_pBaseInfo != nullptr);
-	JCORE_DELETE_SAFE(m_pSpriteData);
+	JC_DELETE_SAFE(m_pSpriteData);
 	jc::Vector<AnimationInfo*>& animationList = sg::DataManager->GetCharAnimationInfoList(m_pBaseInfo->code_);
 	m_pSpriteData = dbg_new ActorSpriteData(ActorPartSpritePositioningRule::InFrameSize, 15, animationList.Size());
 	m_pSpriteData->parts_ = _visualInfo;

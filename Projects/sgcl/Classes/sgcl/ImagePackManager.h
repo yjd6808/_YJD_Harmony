@@ -38,7 +38,7 @@ public:
 	int GetImgIndexUnsafe(int _sgaIndex, const char* _pImgName);
 	int GetImgIndexUnsafe(int _sgaIndex, const jc::String& _imgName);
 
-	c2d::size GetTextureSize(int _packIndex, int _imgIndex, int _frameIndex);
+	cc::size GetTextureSize(int _packIndex, int _imgIndex, int _frameIndex);
 
 	void ReleaseFrameTexture(int _packIndex, int _imgIndex, int _frameIndex);
 	void ReleaseFrameTexture(const SgaResourceIndex& _sgaResourceIndex);

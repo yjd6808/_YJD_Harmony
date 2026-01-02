@@ -94,9 +94,9 @@ void WalkActivity::UpdateMove(float _dt)
 {
 	Direction_t lr;
 	Direction_t ud;
-	c2d::rect thicknessPosLR = pActor_->GetThicknessBoxRect();
-	c2d::rect thicknessPosUD = thicknessPosLR;
-	c2d::vec2 center = thicknessPosLR.getMid();
+	cc::rect thicknessPosLR = pActor_->GetThicknessBoxRect();
+	cc::rect thicknessPosUD = thicknessPosLR;
+	cc::vec2 center = thicknessPosLR.getMid();
 
 	SGVec2Ex::GetLookDirection(center, destination_, lr, ud);
 

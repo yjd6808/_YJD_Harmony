@@ -14,7 +14,7 @@ NS_JC_BEGIN
 WinHandle WinApi::InvalidHandleValue = INVALID_HANDLE_VALUE;
 
 bool
-JCORE_CDECL
+JC_CDECL
 WinApi::SetConsoleCursorPosition( WinHandle _stdoutHandle,  int _x,  int _y)
 {
 	COORD p;
@@ -24,7 +24,7 @@ WinApi::SetConsoleCursorPosition( WinHandle _stdoutHandle,  int _x,  int _y)
 }
 
 bool
-JCORE_CDECL
+JC_CDECL
 WinApi::GetConsoleCursorPosition( WinHandle _stdoutHandle, OUT int& _x, OUT int& _y)
 {
 	CONSOLE_SCREEN_BUFFER_INFO cbsi;
@@ -40,7 +40,7 @@ WinApi::GetConsoleCursorPosition( WinHandle _stdoutHandle, OUT int& _x, OUT int&
 }
 
 bool
-JCORE_CDECL
+JC_CDECL
 WinApi::SetConsoleTextAttribute( WinHandle _stdoutHandle,  Int16 _attribute)
 {
 	return ::SetConsoleTextAttribute(_stdoutHandle, _attribute) != 0;
@@ -48,7 +48,7 @@ WinApi::SetConsoleTextAttribute( WinHandle _stdoutHandle,  Int16 _attribute)
 
 
 bool
-JCORE_CDECL
+JC_CDECL
 WinApi::SetConsoleOutputCodePage( Int _codePage)
 {
 	return ::SetConsoleOutputCP(_codePage) != 0;
@@ -56,37 +56,37 @@ WinApi::SetConsoleOutputCodePage( Int _codePage)
 
 
 Int
-JCORE_CDECL
+JC_CDECL
 WinApi::GetConsoleOutputCodePage()
 {
 	return static_cast<int>(::GetConsoleOutputCP());
 }
 
 WinHandle
-JCORE_CDECL
+JC_CDECL
 WinApi::GetStdoutHandle()
 {
 	return ::GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
 WinHandle
-JCORE_CDECL
+JC_CDECL
 WinApi::GetStdinHandle()
 {
 	return ::GetStdHandle(STD_INPUT_HANDLE);
 }
 
 WinHandle
-JCORE_CDECL
+JC_CDECL
 WinApi::CreateEventA(bool _initialState, bool _manualReset, const char* _pName)
 {
 	return ::CreateEventA(nullptr, _manualReset ? TRUE : FALSE, _initialState ? TRUE : FALSE, _pName);
 }
 
 Int32UL
-JCORE_CDECL
+JC_CDECL
 WinApi::WaitForMultipleObjectsEx( Int32U _eventCount,  WinHandle* _handles,  bool _waitAll,
-                                  Int32U _timeout /*= JCORE_INFINITE */,  bool _alertable /*= false */)
+                                  Int32U _timeout /*= JC_INFINITE */,  bool _alertable /*= false */)
 {
 	BOOL bWaitAll = _waitAll ? TRUE : FALSE;
 	BOOL bAlertable = _alertable ? TRUE : FALSE;
@@ -97,49 +97,49 @@ WinApi::WaitForMultipleObjectsEx( Int32U _eventCount,  WinHandle* _handles,  boo
 }
 
 Int32UL
-JCORE_CDECL
+JC_CDECL
 WinApi::WaitForSingleObject(WinHandle _handle, Int32U _timeout)
 {
 	return ::WaitForSingleObject(_handle, _timeout);
 }
 
 Int32UL
-JCORE_CDECL
+JC_CDECL
 WinApi::GetLastError()
 {
 	return ::GetLastError();
 }
 
 bool
-JCORE_CDECL
+JC_CDECL
 WinApi::SetEvent( WinHandle _handle)
 {
 	return ::SetEvent(_handle) != 0;
 }
 
 bool
-JCORE_CDECL
+JC_CDECL
 WinApi::ResetEvent( WinHandle _handle)
 {
 	return ::ResetEvent(_handle) != 0;
 }
 
 bool
-JCORE_CDECL
+JC_CDECL
 WinApi::CloseHandle( WinHandle _handle)
 {
 	return ::CloseHandle(_handle) != 0;
 }
 
 int
-JCORE_CDECL
+JC_CDECL
 WinApi::GetThreadPriority( WinHandle _threadHandle)
 {
 	return ::GetThreadPriority(_threadHandle);
 }
 
 bool
-JCORE_CDECL
+JC_CDECL
 WinApi::SetThreadPriority( WinHandle _threadHandle,  int _priority)
 {
 	return ::SetThreadPriority(_threadHandle, _priority) != 0;
@@ -147,14 +147,14 @@ WinApi::SetThreadPriority( WinHandle _threadHandle,  int _priority)
 
 
 Int32U
-JCORE_CDECL
+JC_CDECL
 WinApi::GetCurrentThreadId()
 {
 	return ::GetCurrentThreadId();
 }
 
 Int32U
-JCORE_CDECL
+JC_CDECL
 WinApi::GetModuleFilePath(WinModule _module, char* _filenameBuffer, int _filenameBufferCapacity)
 {
 	return GetModuleFileNameA((HMODULE)_module, _filenameBuffer, _filenameBufferCapacity);

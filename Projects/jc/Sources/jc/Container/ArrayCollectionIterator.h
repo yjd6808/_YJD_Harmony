@@ -13,7 +13,7 @@ class CVoidOwner;
 template <typename, typename> class ArrayCollection;
 
 template <typename T, typename TAllocator>
-class JCORE_NOVTABLE ArrayCollectionIterator : public Iterator<T, TAllocator>
+class JC_NOVTABLE ArrayCollectionIterator : public Iterator<T, TAllocator>
 {
 	using TIterator			= Iterator<T, TAllocator>;
 	using TArrayCollection	= ArrayCollection<T, TAllocator>;

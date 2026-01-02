@@ -73,13 +73,13 @@ void UILabel::setText(const std::string& _text, float _fontSize)
 	setContentSize({ pInfo_->size_.width, pInfo_->size_.height });
 }
 
-void UILabel::setText(const std::string& _text, float _fontSize, const c2d::size& _dimension)
+void UILabel::setText(const std::string& _text, float _fontSize, const cc::size& _dimension)
 {
 	pLabel_->initWithTTF(_text, getFontPath().Source(), _fontSize);
 	setContentSize(_dimension);
 }
 
-void UILabel::SetUISize(const c2d::size& _contentSize)
+void UILabel::SetUISize(const cc::size& _contentSize)
 {
 	if (!isResizable_)
 	{
@@ -117,7 +117,7 @@ void UILabel::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 
 	if (isInfoOwner_)
 	{
-		JCORE_DELETE_SAFE(pInfo_);
+		JC_DELETE_SAFE(pInfo_);
 	}
 
 	pBaseInfo_ = _pInfo;
@@ -165,7 +165,7 @@ bool UILabel::init()
 
 	SetInitialUISize(pInfo_->size_);
 
-	pLabel_ = c2d::Label::createWithTTF(pInfo_->text_.ToStd(), getFontPath().Source(), static_cast<int>(fontSize_), Size::ZERO);
+	pLabel_ = cc::Label::createWithTTF(pInfo_->text_.ToStd(), getFontPath().Source(), static_cast<int>(fontSize_), Size::ZERO);
 	pLabel_->setHorizontalAlignment((TextHAlignment)pInfo_->textHAlignment_);
 	pLabel_->setVerticalAlignment((TextVAlignment)pInfo_->textVAlignment_);
 	pLabel_->setDimensions(uiSize_.width, uiSize_.height);
@@ -179,7 +179,7 @@ bool UILabel::init()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILabel::SetInitialUISize(c2d::size _size)
+void UILabel::SetInitialUISize(cc::size _size)
 {
 	UIElement::SetInitialUISize(_size);
 	float fontSize = pInfo_->fontSize_;

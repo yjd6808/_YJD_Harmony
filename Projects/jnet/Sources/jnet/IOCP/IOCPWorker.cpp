@@ -87,7 +87,7 @@ void IOCPWorker::WorkerThread(void* _pParam)
 
 		if (pIocpOverlapped)
 		{
-			JCORE_REF_COUNT_GUARD(pIocpOverlapped, false);
+			JC_REF_COUNT_GUARD(pIocpOverlapped, false);
 			// 각 오버랩 타입에 맞게 작업 처리
 			pIocpOverlapped->Process(result, numberOfBytesTransffered, pPostOrder);
 			continue;
@@ -95,7 +95,7 @@ void IOCPWorker::WorkerThread(void* _pParam)
 
 		if (numberOfBytesTransffered == 0 && pPostOrder)
 		{
-			JCORE_REF_COUNT_GUARD(pPostOrder, false);
+			JC_REF_COUNT_GUARD(pPostOrder, false);
 
 			// 실제 로직처리는 IOCPPostOrder의 Process() 함수에서 진행
 			switch (pPostOrder->Process(this))

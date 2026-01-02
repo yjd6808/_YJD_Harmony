@@ -25,11 +25,11 @@ protected:
 	void OnInit() override;
 	void OnLoaded() override;
 	void OnUpdate(float _dt) override;
-	void OnMouseDownTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent) override;
-	void OnMouseUpTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent) override;
+	void OnMouseDownTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent) override;
+	void OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent) override;
 	void OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _state) override;
-	bool OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent) override;
-	bool OnKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent) override;
+	bool OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) override;
+	bool OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) override;
 	void OnEditBoxEditingDidEndWithAction(UIEditBox* _pEditBox, c2d_ui::EditBoxDelegate::EditBoxEndAction _endAction) override;
 
 public:

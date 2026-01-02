@@ -10,7 +10,7 @@
 #include <sgcl/Core.h>
 #include <sgcl/UIGroup.h>
 
-class UILayer : public c2d::Layer
+class UILayer : public cc::Layer
 {
 public:
 	UILayer();
@@ -19,14 +19,14 @@ public:
 
 	bool init() override;
 
-	void OnMouseMove(c2d::EventMouse* _pMouseEvent);
-	void OnMouseDown(c2d::EventMouse* _pMouseEvent);
-	void OnMouseUp(c2d::EventMouse* _pMouseEvent);
-	void OnMouseScroll(c2d::EventMouse* _pMouseEvent) const;
+	void OnMouseMove(cc::EventMouse* _pMouseEvent);
+	void OnMouseDown(cc::EventMouse* _pMouseEvent);
+	void OnMouseUp(cc::EventMouse* _pMouseEvent);
+	void OnMouseScroll(cc::EventMouse* _pMouseEvent) const;
 
 	void update(float _delta) override;
-	void onKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent) override;
-	void onKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent) override;
+	void onKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) override;
+	void onKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) override;
 
 	UIRootGroup* FindGroup(int _groupCode);
 

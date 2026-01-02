@@ -20,7 +20,7 @@ enum class LoggerType
 };
 
 class LoggerOption;
-class JCORE_NOVTABLE LoggerAbstract
+class JC_NOVTABLE LoggerAbstract
 {
 public:
 	using TLockGuard = RecursiveLockGuard;
@@ -80,7 +80,7 @@ protected:
 	RecursiveLock m_Lock;
 };
 
-class JCORE_NOVTABLE LoggerOption
+class JC_NOVTABLE LoggerOption
 {
 public:
 	LoggerOption();

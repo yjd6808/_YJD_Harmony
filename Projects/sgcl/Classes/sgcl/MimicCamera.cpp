@@ -61,8 +61,8 @@ void MimicCamera::UpdateView(float _dt)
 	if (pAreaInfo == nullptr)
 		return;
 
-	c2d::size mapSize{ pAreaInfo->GetAreaWidth(), pAreaInfo->GetAreaHeight() };
-	c2d::size winSize = _director->getWinSize();
+	cc::size mapSize{ pAreaInfo->GetAreaWidth(), pAreaInfo->GetAreaHeight() };
+	cc::size winSize = _director->getWinSize();
 
 	Vec2 mapLayerPos = pMapLayer->getPosition();
 	Vec2 playerNodePos = pTarget_->GetPositionRealCenter();

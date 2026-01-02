@@ -39,7 +39,7 @@ UIEditBox::UIEditBox(UIRootGroup* _pRoot, UIGroup* _pParent, UIEditBoxInfo* _pEd
 //////////////////////////////////////////////////////////////////////////////////////////
 UIEditBox::~UIEditBox()
 {
-	JCORE_DELETE_SAFE(pListener_);
+	JC_DELETE_SAFE(pListener_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -119,7 +119,7 @@ bool UIEditBox::init()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIEditBox::SetInitialUISize(c2d::size _size)
+void UIEditBox::SetInitialUISize(cc::size _size)
 {
 	UIElement::SetInitialUISize(_size);
 
@@ -167,7 +167,7 @@ void UIEditBox::SetLoseFocusCallback(const jc::Action<UIEditBox*, c2d_ui::EditBo
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIEditBox::SetUISize(const c2d::size& _size)
+void UIEditBox::SetUISize(const cc::size& _size)
 {
 	if (!isResizable_)
 	{
@@ -205,7 +205,7 @@ void UIEditBox::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 
 	if (isInfoOwner_)
 	{
-		JCORE_DELETE_SAFE(pInfo_);
+		JC_DELETE_SAFE(pInfo_);
 	}
 
 	pBaseInfo_ = _pInfo;
@@ -238,7 +238,7 @@ void UIEditBox::SetInputMode(c2d_ui::EditBox::InputMode _inputMode)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UIEditBox::OnMouseUpContainedInternalDetail(c2d::EventMouse* /*_pMouseEvent*/)
+bool UIEditBox::OnMouseUpContainedInternalDetail(cc::EventMouse* /*_pMouseEvent*/)
 {
 	pEditBox_->openKeyboard();
 	return false;

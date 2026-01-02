@@ -55,7 +55,7 @@ void SGLoginScene::update(float _dt)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGLoginScene::OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent)
+void SGLoginScene::OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 	if (_keyCode == EventKeyboard::KeyCode::KEY_F8)
 	{
@@ -68,6 +68,6 @@ void SGLoginScene::OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGLoginScene::OnKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent)
+void SGLoginScene::OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 }

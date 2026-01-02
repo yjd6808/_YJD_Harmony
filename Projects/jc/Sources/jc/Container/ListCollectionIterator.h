@@ -14,7 +14,7 @@ template <typename, typename> class ListCollection;
 template <typename, typename> class ListNode;
 
 template <typename T, typename TAllocator>
-class JCORE_NOVTABLE ListCollectionIterator : public Iterator<T, TAllocator>
+class JC_NOVTABLE ListCollectionIterator : public Iterator<T, TAllocator>
 {
 	using TIterator = Iterator<T, TAllocator>;
 	using TListNode = ListNode<T, TAllocator>;

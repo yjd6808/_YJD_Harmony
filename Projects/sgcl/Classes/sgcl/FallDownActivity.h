@@ -10,7 +10,7 @@
 
 #include <sgcl/AIActivity.h>
 
-class JCORE_NOVTABLE FallDownActivity : public AIActivity
+class JC_NOVTABLE FallDownActivity : public AIActivity
 {
 public:
 	FallDownActivity(Actor* _pActor);

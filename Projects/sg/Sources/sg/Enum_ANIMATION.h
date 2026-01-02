@@ -8,20 +8,20 @@
 
 #pragma once
 
-JCORE_SENUM_BEGIN(FrameEventType)
+JC_SENUM_BEGIN(FrameEventType)
 	None,
 	Spawn,
 	AttackBoxInstant,
 	Max
-JCORE_SENUM_END(FrameEventType)
+JC_SENUM_END(FrameEventType)
 
 // ==========================================================================================
 
-JCORE_SENUM_BEGIN(FrameEventSpawnType)
+JC_SENUM_BEGIN(FrameEventSpawnType)
 	Projectile,
 	AttackBox,
 	Max
-JCORE_SENUM_END(FrameEventSpawnType)
+JC_SENUM_END(FrameEventSpawnType)
 
 // ==========================================================================================
 
@@ -43,8 +43,8 @@ JCORE_SENUM_END(FrameEventSpawnType)
  * [InIgnoredFrameSize]
  * 프레임없이 
  */
-JCORE_SENUM_BEGIN(ActorPartSpritePositioningRule)
+JC_SENUM_BEGIN(ActorPartSpritePositioningRule)
 	InFrameSize, // 캐릭터 모션
 	InCustomFrameSize, // 맵 오브젝트(게이트, 장애물)
 	InIgnoredFrameSize // 프로젝틸
-JCORE_SENUM_END(ActorPartSpritePositioningRule)
+JC_SENUM_END(ActorPartSpritePositioningRule)

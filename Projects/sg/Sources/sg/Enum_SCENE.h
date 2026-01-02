@@ -10,16 +10,16 @@
 
 #include <jc/Define.h>
 
-JCORE_SENUM_BEGIN(SceneType)
+JC_SENUM_BEGIN(SceneType)
 		Login,
 		ChannelSelect,
 		Game,
 		None,
 		Max = None
-	JCORE_SENUM_MIDDLE(SceneType)
+	JC_SENUM_MIDDLE(SceneType)
 	static constexpr const char* Name[Max]{
 		"로그인",
 		"채널 선택",
 		"게임",
 	};
-JCORE_SENUM_MIDDLE_END(SceneType)
+JC_SENUM_MIDDLE_END(SceneType)

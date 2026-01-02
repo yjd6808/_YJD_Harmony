@@ -32,6 +32,6 @@ void InitializeDefaultLogger(const char* _pSpecifier)
 //////////////////////////////////////////////////////////////////////////////////////////
 void FinalizeDefaultLogger()
 {
-	JCORE_DELETE_SAFE(Logger_v);
+	JC_DELETE_SAFE(Logger_v);
 }
 

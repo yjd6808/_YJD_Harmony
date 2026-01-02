@@ -49,8 +49,8 @@ void MoveComponent::OnUpdate(float _dt)
 	// 이 적용된 값 때문에 Down에서 lb, rb 충돌 체크가 항상 참이 되어버림
 	// --------------------------------------------------------------
 	//  23/01/28 -> 좌,우,위,아래 모두 독립적으로 가능하도록 추가
-	c2d::rect thicknessPosLR = pActor_->GetThicknessBoxRect();
-	c2d::rect thicknessPosUD = thicknessPosLR;
+	cc::rect thicknessPosLR = pActor_->GetThicknessBoxRect();
+	cc::rect thicknessPosUD = thicknessPosLR;
 
 	thicknessPosLR.origin.x += speed_.x;
 	thicknessPosUD.origin.y += speed_.y;
@@ -75,10 +75,10 @@ void MoveComponent::OnUpdate(float _dt)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MoveComponent::UpdateLeftMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const c2d::rect& _thicknessRect)
+void MoveComponent::UpdateLeftMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const cc::rect& _thicknessRect)
 {
-	c2d::vec2 lb{ _thicknessRect.origin.x, _thicknessRect.origin.y };
-	c2d::vec2 lt{ _thicknessRect.origin.x, _thicknessRect.origin.y + _thicknessRect.size.height };
+	cc::vec2 lb{ _thicknessRect.origin.x, _thicknessRect.origin.y };
+	cc::vec2 lt{ _thicknessRect.origin.x, _thicknessRect.origin.y + _thicknessRect.size.height };
 
 	// lb, lt 체크
 	if (_pAreaInfo->CheckWall(lb.x, lb.y) || _pAreaInfo->CheckWall(lt.x, lt.y) || _pMapLayer->
@@ -91,10 +91,10 @@ void MoveComponent::UpdateLeftMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MoveComponent::UpdateRightMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const c2d::rect& _thicknessRect)
+void MoveComponent::UpdateRightMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const cc::rect& _thicknessRect)
 {
-	c2d::vec2 rb{ _thicknessRect.origin.x + _thicknessRect.size.width, _thicknessRect.origin.y };
-	c2d::vec2 rt{
+	cc::vec2 rb{ _thicknessRect.origin.x + _thicknessRect.size.width, _thicknessRect.origin.y };
+	cc::vec2 rt{
 		_thicknessRect.origin.x + _thicknessRect.size.width, _thicknessRect.origin.y + _thicknessRect.size.height
 	};
 
@@ -109,10 +109,10 @@ void MoveComponent::UpdateRightMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInf
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MoveComponent::UpdateUpMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const c2d::rect& _thicknessRect)
+void MoveComponent::UpdateUpMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const cc::rect& _thicknessRect)
 {
-	c2d::vec2 lt{ _thicknessRect.origin.x, _thicknessRect.origin.y + _thicknessRect.size.height };
-	c2d::vec2 rt{
+	cc::vec2 lt{ _thicknessRect.origin.x, _thicknessRect.origin.y + _thicknessRect.size.height };
+	cc::vec2 rt{
 		_thicknessRect.origin.x + _thicknessRect.size.width, _thicknessRect.origin.y + _thicknessRect.size.height
 	};
 
@@ -127,10 +127,10 @@ void MoveComponent::UpdateUpMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, 
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MoveComponent::UpdateDownMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const c2d::rect& _thicknessRect)
+void MoveComponent::UpdateDownMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo, const cc::rect& _thicknessRect)
 {
-	c2d::vec2 lb{ _thicknessRect.origin.x, _thicknessRect.origin.y };
-	c2d::vec2 rb{ _thicknessRect.origin.x + _thicknessRect.size.width, _thicknessRect.origin.y };
+	cc::vec2 lb{ _thicknessRect.origin.x, _thicknessRect.origin.y };
+	cc::vec2 rb{ _thicknessRect.origin.x + _thicknessRect.size.width, _thicknessRect.origin.y };
 
 	// lb, rb 체크
 	if (_pAreaInfo->CheckWall(lb.x, lb.y) || _pAreaInfo->CheckWall(rb.x, rb.y) || _pMapLayer->
@@ -143,7 +143,7 @@ void MoveComponent::UpdateDownMove(MapLayer* _pMapLayer, MapAreaInfo* _pAreaInfo
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MoveComponent::SetSpeed(const c2d::vec2& _speed)
+void MoveComponent::SetSpeed(const cc::vec2& _speed)
 {
 	speed_ = _speed;
 }
@@ -156,7 +156,7 @@ void MoveComponent::SetSpeed(float _x, float _y)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-const c2d::vec2& MoveComponent::GetSpeed() const
+const cc::vec2& MoveComponent::GetSpeed() const
 {
 	return speed_;
 }

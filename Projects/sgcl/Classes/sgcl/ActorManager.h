@@ -53,24 +53,24 @@ public:
 
 	// spawner 캔버스 기준 상대좌표로 이펙트를 만든다.
 	Effect* CreateEffectOnMapBySpawner(Actor* _pSpawner, int _effectCode, float _offsetX, float _offsetY);
-	Effect* CreateEffectOnMapBySpawner(Actor* _pSpawner, int _effectCode, const c2d::vec2& _offset);
+	Effect* CreateEffectOnMapBySpawner(Actor* _pSpawner, int _effectCode, const cc::vec2& _offset);
 
 	// 이펙트를 Attcher에게 붙인다.
 	Effect* CreateEffectOnMapByAttacher(Actor* _pAttacher, int _effectCode, float _offsetX, float _offsetY);
-	Effect* CreateEffectOnMapByAttacher(Actor* _pAttacher, int _effectCode, const c2d::vec2& _offset);
+	Effect* CreateEffectOnMapByAttacher(Actor* _pAttacher, int _effectCode, const cc::vec2& _offset);
 
 	// 절대적인 위치에 이펙트 생성
 	Effect* CreateEffectOnMapAbsolute(int _effectCode, SpriteDirection_t _direction, float _x, float _y, int _zOrder);
-	Effect* CreateEffectOnMapAbsolute(int _effectCode, SpriteDirection_t _direction, const c2d::vec2& _pos, int _zOrder);
+	Effect* CreateEffectOnMapAbsolute(int _effectCode, SpriteDirection_t _direction, const cc::vec2& _pos, int _zOrder);
 	Effect* CreateEffectOnMapAbsolute(int _effectCode, float _x, float _y, int _zOrder);
-	Effect* CreateEffectOnMapAbsolute(int _effectCode, const c2d::vec2& _pos, int _zOrder);
+	Effect* CreateEffectOnMapAbsolute(int _effectCode, const cc::vec2& _pos, int _zOrder);
 
 
 	// 대상과 충돌한 지점에 이펙트 생성
 	Effect* CreateEffectOnMapTargetCollision(int _effectCode, SpriteDirection_t _direction, const HitInfo& _info, bool _randomRotation = false);
 	Effect* CreateEffectOnMapTargetCollision(int _effectCode, const HitInfo& _info, bool _randomRotation = false);
 	Effect* CreateEffectOnMapTargetCollision(int _effectCode, const HitInfo& _info, float _offsetX, float _offsetY, bool _randomRotation = false);
-	Effect* CreateEffectOnMapTargetCollision(int _effectCode, const HitInfo& _info, const c2d::vec2& _offset, bool _randomRotation = false);
+	Effect* CreateEffectOnMapTargetCollision(int _effectCode, const HitInfo& _info, const cc::vec2& _offset, bool _randomRotation = false);
 
 	// 일단 생성
 	Effect* CreateEffectOnMap(int _effectCode);

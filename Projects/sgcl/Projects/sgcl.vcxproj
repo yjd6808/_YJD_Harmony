@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -32,7 +32,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\ChannelInfoLoader.cpp" />
     <ClCompile Include="..\Classes\sgcl\Contents.cpp">
       <SubType>
       </SubType>
@@ -51,12 +50,10 @@
     <ClCompile Include="..\Classes\sgcl\IActorListener.cpp" />
     <ClCompile Include="..\Classes\sgcl\ActorListenerCollection.cpp" />
     <ClCompile Include="..\Classes\sgcl\CharacterListener.cpp" />
-    <ClCompile Include="..\Classes\sgcl\ClientTextInfoLoader.cpp" />
     <ClCompile Include="..\Classes\sgcl\ComponentCollection.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\FrameEventLoader.cpp" />
     <ClCompile Include="..\Classes\sgcl\CommandSynchronizer.cpp">
       <SubType>
       </SubType>
@@ -112,25 +109,14 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\AIInfo.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\AIInfoLoader.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\AttackDataInfoLoader.cpp" />
     <ClCompile Include="..\Classes\sgcl\MimicCamera.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\CharAnimationInfoLoader.cpp" />
     <ClCompile Include="..\Classes\sgcl\Effect.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\EffectInfoLoader.cpp" />
     <ClCompile Include="..\Classes\sgcl\FontManager.cpp">
       <SubType>
       </SubType>
@@ -178,19 +164,11 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\SitActivity_Goblin.cpp" />
-    <ClCompile Include="..\Classes\sgcl\UIInfo.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\UI_ChannelSelect.cpp" />
     <ClCompile Include="..\Classes\sgcl\WalkActivity.cpp" />
     <ClCompile Include="..\Classes\sgcl\NetClientEventListener.cpp" />
     <ClCompile Include="..\Classes\sgcl\NetClientGroup.cpp" />
     <ClCompile Include="..\Classes\sgcl\MapObject.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\MapObjectInfoLoader.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -204,7 +182,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\ComboKeyList.cpp" />
-    <ClCompile Include="..\Classes\sgcl\ActionInfoLoader.cpp" />
     <ClCompile Include="..\Classes\sgcl\ActionMgr.cpp">
       <SubType>
       </SubType>
@@ -225,7 +202,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\CharInfoLoader.cpp" />
     <ClCompile Include="..\Classes\sgcl\ActorPartSprite.cpp" />
     <ClCompile Include="..\Classes\sgcl\DataManager.cpp">
       <SubType>
@@ -262,7 +238,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\MonsterInfoLoader.cpp" />
     <ClCompile Include="..\Classes\sgcl\HostPlayer.cpp">
       <SubType>
       </SubType>
@@ -283,11 +258,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\ProjectileInfo.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\ProjectileInfoLoader.cpp" />
     <ClCompile Include="..\Classes\sgcl\ProjectileListener.cpp">
       <SubType>
       </SubType>
@@ -329,10 +299,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\TileInfoLoader.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\TimeManager.cpp">
       <SubType>
       </SubType>
@@ -358,10 +324,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\UIRootGroupManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\UIInfoLoader.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -457,10 +419,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\ChannelInfo.h" />
-    <ClInclude Include="..\Classes\sgcl\ChannelInfoLoader.h" />
     <ClInclude Include="..\Classes\sgcl\CharacterListener.h" />
-    <ClInclude Include="..\Classes\sgcl\ClientTextInfoLoader.h" />
     <ClInclude Include="..\Classes\sgcl\ComponentCollection.h" />
     <ClInclude Include="..\Classes\sgcl\Const.h" />
     <ClInclude Include="..\Classes\sgcl\Const_HOST.h" />
@@ -477,8 +436,6 @@
     <ClInclude Include="..\Classes\sgcl\Define_Event.h" />
     <ClInclude Include="..\Classes\sgcl\FallDownActivity.h" />
     <ClInclude Include="..\Classes\sgcl\FallDownActivity_Goblin.h" />
-    <ClInclude Include="..\Classes\sgcl\FrameEvent.h" />
-    <ClInclude Include="..\Classes\sgcl\FrameEventLoader.h" />
     <ClInclude Include="..\Classes\sgcl\ConnectionSynchronizer.h">
       <SubType>
       </SubType>
@@ -536,14 +493,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\AIInfo.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\AIInfoLoader.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\AllActions.h">
       <SubType>
       </SubType>
@@ -573,13 +522,10 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\AttackDataInfo.h" />
-    <ClInclude Include="..\Classes\sgcl\AttackDataInfoLoader.h" />
     <ClInclude Include="..\Classes\sgcl\MimicCamera.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\CharAnimationInfoLoader.h" />
     <ClInclude Include="..\Classes\sgcl\NetClientEventListener.h" />
     <ClInclude Include="..\Classes\sgcl\NetClientGroup.h" />
     <ClInclude Include="..\Classes\sgcl\NetCore.h">
@@ -671,8 +617,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\EffectInfo.h" />
-    <ClInclude Include="..\Classes\sgcl\EffectInfoLoader.h" />
     <ClInclude Include="..\Classes\sgcl\FontManager.h">
       <SubType>
       </SubType>
@@ -742,14 +686,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\MapObjectInfo.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\MapObjectInfoLoader.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\HostPlayer.h">
       <SubType>
       </SubType>
@@ -762,27 +698,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\ActionInfoLoader.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\CharInfoLoader.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\MonsterInfo.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\FrameTexture.h" />
-    <ClInclude Include="..\Classes\sgcl\ActionInfo.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\CharInfo.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\DataManager.h">
       <SubType>
       </SubType>
@@ -793,10 +709,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\ImagePackManager.h" />
     <ClInclude Include="..\Classes\sgcl\GameScene.h" />
-    <ClInclude Include="..\Classes\sgcl\MonsterInfoLoader.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Player.h">
       <SubType>
       </SubType>
@@ -814,14 +726,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\ProjectileInfo.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\ProjectileInfoLoader.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\ProjectileListener.h">
       <SubType>
       </SubType>
@@ -835,14 +739,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Struct.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\TileInfo.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\TileInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -864,14 +760,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\UIRootGroupManager.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\UIInfo.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\UIInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>

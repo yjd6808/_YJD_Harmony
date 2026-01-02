@@ -81,12 +81,14 @@
 #include <set>
 #include <map>
 
+#include <sgcc/Core.h>
+
 #include <sg/Enum.h>
 #include <sg/Const.h>
 #include <sg/Struct.h>
 #include <sg/Logo.h>
 #include <sg/CommonCore.h>
-#include <sg/JsonUtil.h>
+#include <sg/_Util/JsonUtil.h>
 
 #include <sg/_Core/VirtualMachine.h>
 

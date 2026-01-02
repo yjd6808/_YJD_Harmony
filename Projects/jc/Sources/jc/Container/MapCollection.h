@@ -16,7 +16,7 @@ NS_JC_BEGIN
 =====================================================================================*/
 
 template <typename TKey, typename TValue, typename TAllocator>
-class JCORE_NOVTABLE MapCollection : public Collection<Pair<TKey, TValue>, TAllocator>
+class JC_NOVTABLE MapCollection : public Collection<Pair<TKey, TValue>, TAllocator>
 {
 	using TKeyValuePair = Pair<TKey, TValue>;
 	using TCollection = Collection<TKeyValuePair, TAllocator>;

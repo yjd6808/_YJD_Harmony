@@ -23,8 +23,8 @@ public:
 	void OnLoaded() override;
 	void OnAdded() override;
 	void OnUpdate(float _dt) override;
-	bool OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent) override;
-	bool OnKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent) override;
+	bool OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) override;
+	bool OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) override;
 
 private:
 	UISprite* pBackground_;

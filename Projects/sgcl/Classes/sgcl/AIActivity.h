@@ -16,7 +16,7 @@ class ActorPartAnimation;
 class FrameTexture;
 struct AIInfo;
 
-class JCORE_NOVTABLE AIActivity
+class JC_NOVTABLE AIActivity
 {
 public:
 	enum State

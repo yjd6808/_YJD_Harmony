@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -24,14 +24,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\sg\ChannelBaseInfoLoader.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\DescLoaderAbstract.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Sources\sg\CLIListener.cpp">
       <SubType>
       </SubType>
@@ -52,21 +44,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\sg\DatabaseInfoLoader.cpp" />
-    <ClCompile Include="..\Sources\sg\EnchantInfoLoader.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Sources\sg\CLIThread.cpp" />
-    <ClCompile Include="..\Sources\sg\Enum_CHARACTER.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\ItemInfoLoader.cpp" />
-    <ClCompile Include="..\Sources\sg\ItemOptInfoLoader.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Sources\sg\ListenerClientBase.cpp" />
     <ClCompile Include="..\Sources\sg\ListenerHelperBase.cpp" />
     <ClCompile Include="..\Sources\sg\ListenerServerBase.cpp" />
@@ -74,10 +52,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\sg\MapInfo.cpp" />
-    <ClCompile Include="..\Sources\sg\MapPhysicsInfoLoader.cpp" />
-    <ClCompile Include="..\Sources\sg\MapInfoLoader.cpp" />
-    <ClCompile Include="..\Sources\sg\MonsterStatInfoLoader.cpp" />
     <ClCompile Include="..\Sources\sg\Position.cpp">
       <SubType>
       </SubType>
@@ -86,44 +60,79 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\sg\ServerInfoLoader.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\ServerProcessInfo.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\SgaElement.cpp" />
-    <ClCompile Include="..\Sources\sg\SgaElementInitilizer.cpp" />
-    <ClCompile Include="..\Sources\sg\SgaImage.cpp" />
-    <ClCompile Include="..\Sources\sg\SgaLinkSprite.cpp" />
-    <ClCompile Include="..\Sources\sg\SgaLoader.cpp" />
-    <ClCompile Include="..\Sources\sg\SgaPackage.cpp" />
-    <ClCompile Include="..\Sources\sg\SgaSound.cpp" />
-    <ClCompile Include="..\Sources\sg\SgaSprite.cpp" />
-    <ClCompile Include="..\Sources\sg\CharBaseInfoLoader.cpp" />
-    <ClCompile Include="..\Sources\sg\DescLoaderMgr.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\CharCommonInfoLoader.cpp" />
     <ClCompile Include="..\Sources\sg\Enum.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\sg\JsonUtil.cpp" />
-    <ClCompile Include="..\Sources\sg\MonsterBaseInfoLoader.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Sources\sg\Struct.cpp" />
-    <ClCompile Include="..\Sources\sg\TextParser.cpp" />
     <ClCompile Include="..\Sources\sg\_API\sgapiBase.cpp" />
     <ClCompile Include="..\Sources\sg\_API\sgapi_Util.cpp" />
     <ClCompile Include="..\Sources\sg\_Core\VirtualMachine.cpp" />
     <ClCompile Include="..\Sources\sg\_Object\_Character\StackingBuffer.cpp" />
     <ClCompile Include="..\Sources\sg\_Object\_Character\StackingBufferMgr.cpp" />
+    <ClCompile Include="..\Sources\sg\_Sga\SgaElement.cpp" />
+    <ClCompile Include="..\Sources\sg\_Sga\SgaElementInitilizer.cpp" />
+    <ClCompile Include="..\Sources\sg\_Sga\SgaImage.cpp" />
+    <ClCompile Include="..\Sources\sg\_Sga\SgaLinkSprite.cpp" />
+    <ClCompile Include="..\Sources\sg\_Sga\SgaLoader.cpp" />
+    <ClCompile Include="..\Sources\sg\_Sga\SgaPackage.cpp" />
+    <ClCompile Include="..\Sources\sg\_Sga\SgaSound.cpp" />
+    <ClCompile Include="..\Sources\sg\_Sga\SgaSprite.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Action.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_AI.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_AttackData.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Channel.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_ChannelBase.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Char.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_CharBase.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_CharCommon.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Client.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Database.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Effect.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Enchant.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_FrameEvent.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Item.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_ItemOpt.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Map.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_MapObject.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_MapPhysics.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Monster.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_MonsterBase.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_MonsterStat.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Projectile.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_ServerProcess.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Tile.cpp" />
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_UI.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\DescLoaderAbstract.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\DescLoaderMgr.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\JsonUtil.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\TextUtil.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Action.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_AI.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_AttackData.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Channel.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ChannelBase.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Char.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_CharAnimation.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_CharBase.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_CharCommon.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ClientText.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Database.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Effect.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Enchant.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_FrameEvent.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Item.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ItemOpt.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Map.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MapObject.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MapPhysics.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Monster.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MonsterBase.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MonsterStat.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Projectile.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Server.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Tile.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\sg\AudioPlayer.h" />
@@ -131,15 +140,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sg\ChannelBaseInfo.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\ChannelBaseInfoLoader.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\ClientInfo.h" />
     <ClInclude Include="..\Sources\sg\Cmd_CHAT.h" />
     <ClInclude Include="..\Sources\sg\Cmd.h">
       <SubType>
@@ -150,10 +150,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Cmd_MESSAGE.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\DescBase.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -186,21 +182,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sg\DescLoaderAbstract.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\sg\CommonCore.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\DatabaseInfo.h" />
-    <ClInclude Include="..\Sources\sg\DatabaseInfoLoader.h" />
-    <ClInclude Include="..\Sources\sg\EnchantInfo.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\EnchantInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -213,14 +195,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Enum_AUTHENTICATION.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\Enum_CHANNEL.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\Enum_CHARACTER.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -265,12 +239,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sg\ItemInfo.h" />
-    <ClInclude Include="..\Sources\sg\ItemInfoLoader.h" />
-    <ClInclude Include="..\Sources\sg\ItemOptInfoLoader.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\sg\ListenerClientBase.h" />
     <ClInclude Include="..\Sources\sg\ListenerServerBase.h" />
     <ClInclude Include="..\Sources\sg\ListenerHelperBase.h" />
@@ -282,12 +250,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sg\MapPhysicsInfo.h" />
-    <ClInclude Include="..\Sources\sg\MapInfo.h" />
-    <ClInclude Include="..\Sources\sg\MapPhysicsInfoLoader.h" />
-    <ClInclude Include="..\Sources\sg\MapInfoLoader.h" />
-    <ClInclude Include="..\Sources\sg\MonsterStatInfo.h" />
-    <ClInclude Include="..\Sources\sg\MonsterStatInfoLoader.h" />
     <ClInclude Include="..\Sources\sg\Namepsace.h">
       <SubType>
       </SubType>
@@ -300,56 +262,8 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sg\ServerProcessInfo.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\ServerInfoLoader.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\SgaColorFormat.h" />
-    <ClInclude Include="..\Sources\sg\SgaCompressMode.h" />
-    <ClInclude Include="..\Sources\sg\SgaElement.h" />
-    <ClInclude Include="..\Sources\sg\SgaElementInitializer.h" />
-    <ClInclude Include="..\Sources\sg\SgaImage.h" />
-    <ClInclude Include="..\Sources\sg\SgaLinkSprite.h" />
-    <ClInclude Include="..\Sources\sg\SgaLoader.h" />
-    <ClInclude Include="..\Sources\sg\SgaPackage.h" />
-    <ClInclude Include="..\Sources\sg\SgaSound.h" />
-    <ClInclude Include="..\Sources\sg\SgaSprite.h" />
-    <ClInclude Include="..\Sources\sg\SgaSpriteAbstract.h" />
-    <ClInclude Include="..\Sources\sg\SgaSpriteHelper.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\SgaSpriteRect.h" />
-    <ClInclude Include="..\Sources\sg\CharBaseInfo.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\CharBaseInfoLoader.h" />
-    <ClInclude Include="..\Sources\sg\DescLoaderMgr.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\CharCommonInfo.h" />
-    <ClInclude Include="..\Sources\sg\CharCommonInfoLoader.h" />
     <ClInclude Include="..\Sources\sg\Const.h" />
     <ClInclude Include="..\Sources\sg\Enum.h" />
-    <ClInclude Include="..\Sources\sg\ItemOptInfo.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\JsonUtil.h" />
-    <ClInclude Include="..\Sources\sg\MonsterBaseInfo.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\MonsterBaseInfoLoader.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\sg\Cmd_AUTHENTICATION.h">
       <SubType>
       </SubType>
@@ -379,7 +293,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sg\TextParser.h" />
     <ClInclude Include="..\Sources\sg\TypeTraits.h">
       <SubType>
       </SubType>
@@ -389,6 +302,75 @@
     <ClInclude Include="..\Sources\sg\_Core\VirtualMachine.h" />
     <ClInclude Include="..\Sources\sg\_Object\_Character\StackingBuffer.h" />
     <ClInclude Include="..\Sources\sg\_Object\_Character\StackingBufferMgr.h" />
+    <ClInclude Include="..\Sources\sg\_Sga\SgaColorFormat.h" />
+    <ClInclude Include="..\Sources\sg\_Sga\SgaCompressMode.h" />
+    <ClInclude Include="..\Sources\sg\_Sga\SgaElement.h" />
+    <ClInclude Include="..\Sources\sg\_Sga\SgaElementInitializer.h" />
+    <ClInclude Include="..\Sources\sg\_Sga\SgaImage.h" />
+    <ClInclude Include="..\Sources\sg\_Sga\SgaLinkSprite.h" />
+    <ClInclude Include="..\Sources\sg\_Sga\SgaLoader.h" />
+    <ClInclude Include="..\Sources\sg\_Sga\SgaPackage.h" />
+    <ClInclude Include="..\Sources\sg\_Sga\SgaSound.h" />
+    <ClInclude Include="..\Sources\sg\_Sga\SgaSprite.h" />
+    <ClInclude Include="..\Sources\sg\_Sga\SgaSpriteAbstract.h" />
+    <ClInclude Include="..\Sources\sg\_Sga\SgaSpriteHelper.h" />
+    <ClInclude Include="..\Sources\sg\_Sga\SgaSpriteRect.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Action.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_AI.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_AttackData.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Channel.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_ChannelBase.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Char.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_CharBase.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_CharCommon.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Client.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Database.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Effect.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Enchant.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_FrameEvent.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Item.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_ItemOpt.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Map.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_MapObject.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_MapPhysics.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Monster.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_MonsterBase.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_MonsterStat.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Projectile.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_ServerProcess.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Tile.h" />
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_UI.h" />
+    <ClInclude Include="..\Sources\sg\_Util\DescBase.h" />
+    <ClInclude Include="..\Sources\sg\_Util\DescLoaderAbstract.h" />
+    <ClInclude Include="..\Sources\sg\_Util\DescLoaderMgr.h" />
+    <ClInclude Include="..\Sources\sg\_Util\JsonUtil.h" />
+    <ClInclude Include="..\Sources\sg\_Util\TextUtil.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Action.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_AI.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_AttackData.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Channel.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ChannelBase.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Char.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_CharAnimation.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_CharBase.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_CharCommon.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ClientText.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Database.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Effect.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Enchant.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_FrameEvent.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Item.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ItemOpt.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Map.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MapObject.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MapPhysics.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Monster.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MonsterBase.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MonsterStat.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Projectile.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Server.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Tile.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_UI.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

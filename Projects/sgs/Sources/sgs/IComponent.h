@@ -18,7 +18,7 @@ public:															\
 	int GetType() const override { return component_type; }		\
 	static int Type() { return component_type; }
 
-struct JCORE_NOVTABLE IComponent : jc::RefCountObject
+struct JC_NOVTABLE IComponent : jc::RefCountObject
 {
 	~IComponent() override = default;
 

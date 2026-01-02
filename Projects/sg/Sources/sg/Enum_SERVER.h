@@ -12,7 +12,7 @@
 
 
 // 전체 서버 종류
-JCORE_SENUM_BEGIN(ServerType)
+JC_SENUM_BEGIN(ServerType)
 		Auth,
 		Begin = Auth,
 		Lobby,
@@ -22,7 +22,7 @@ JCORE_SENUM_BEGIN(ServerType)
 		Center,
 		End = Center,
 		Max
-	JCORE_SENUM_MIDDLE(ServerType)
+	JC_SENUM_MIDDLE(ServerType)
 
 	static constexpr const char* Name[Max]{
 		"인증",
@@ -33,23 +33,23 @@ JCORE_SENUM_BEGIN(ServerType)
 		"중앙"
 	};
 
-JCORE_SENUM_MIDDLE_END(ServerType)
+JC_SENUM_MIDDLE_END(ServerType)
 
 // ==========================================================================================
 
 
-JCORE_SENUM_BEGIN(SingleServerType)
+JC_SENUM_BEGIN(SingleServerType)
 	Center,
 	Begin = Center,
 	Auth,
 	Lobby,
 	End = Lobby,
 	Max
-JCORE_SENUM_END(SingleServerType)
+JC_SENUM_END(SingleServerType)
 
 // ==========================================================================================
 
-JCORE_SENUM_BEGIN(GameServerType)
+JC_SENUM_BEGIN(GameServerType)
 		Begin,
 		Luke = Begin,
 		Hilder,
@@ -61,7 +61,7 @@ JCORE_SENUM_BEGIN(GameServerType)
 		Seria,
 		End = Seria,
 		Max
-	JCORE_SENUM_MIDDLE(GameServerType)
+	JC_SENUM_MIDDLE(GameServerType)
 	static constexpr const char* Name[Max]{
 		"루크",
 		"힐더",
@@ -72,11 +72,11 @@ JCORE_SENUM_BEGIN(GameServerType)
 		"카인",
 		"세리아"
 	};
-JCORE_SENUM_MIDDLE_END(GameServerType)
+JC_SENUM_MIDDLE_END(GameServerType)
 
 // ==========================================================================================
 
-JCORE_SENUM_BEGIN(ServerProcessType)
+JC_SENUM_BEGIN(ServerProcessType)
 		None,
 		Auth,				// 1
 		Begin = Auth,
@@ -84,7 +84,7 @@ JCORE_SENUM_BEGIN(ServerProcessType)
 		Lobby,				// 3
 		Game,				// 4
 		End = Game
-	JCORE_SENUM_MIDDLE(ServerProcessType)
+	JC_SENUM_MIDDLE(ServerProcessType)
 	static constexpr int Count = End;	// 4
 	static constexpr const char* Name[Count + 1]{
 		"없음",
@@ -94,12 +94,12 @@ JCORE_SENUM_BEGIN(ServerProcessType)
 		"게임",
 	};
 
-JCORE_SENUM_MIDDLE_END(ServerProcessType)
+JC_SENUM_MIDDLE_END(ServerProcessType)
 
 // ==========================================================================================
 
 // 클라이언트가 게임을 플레이하는 동안 한번이라도 접속하게되는 서버타입
-JCORE_SENUM_BEGIN(ClientConnectServerType)
+JC_SENUM_BEGIN(ClientConnectServerType)
 	Auth,
 	Begin = Auth,
 	Lobby,
@@ -108,7 +108,7 @@ JCORE_SENUM_BEGIN(ClientConnectServerType)
 	Area,
 	End = Area,
 	Max
-JCORE_SENUM_END(ClientConnectServerType)
+JC_SENUM_END(ClientConnectServerType)
 
 
 // ==========================================================================================

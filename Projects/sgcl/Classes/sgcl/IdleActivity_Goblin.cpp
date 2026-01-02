@@ -9,7 +9,7 @@
 #include "IdleActivity_Goblin.h"
 
 #include <sgcl/Monster.h>
-#include <sgcl/AIInfo.h>
+#include <sg/_Struct/SteinsGate_AI.h>
 #include <sgcl/Define_Animation.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////

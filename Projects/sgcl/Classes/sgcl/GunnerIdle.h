@@ -20,8 +20,8 @@ public:
 	void OnActionEnd() override;
 
 	void OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFrame) override;
-	void OnKeyPressed(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode) override;
-	void OnKeyReleasedBefore(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode) override;
+	void OnKeyPressed(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode) override;
+	void OnKeyReleasedBefore(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode) override;
 	void FixFreezedState(PlayerController* _pController, ControlKey_t _releasedKey);
 
 private:

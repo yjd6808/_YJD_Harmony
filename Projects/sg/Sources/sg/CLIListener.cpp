@@ -15,16 +15,16 @@ USING_NS_JC;
 //////////////////////////////////////////////////////////////////////////////////////////
 CLIListener::CLIListener()
 {
-	cliTable_.Insert("help", JCORE_CALLBACK_2(CLIListener::CLI_HelpBase, this));
-	cliTable_.Insert(ConfigRuntime::SEND_COMMAND_FILTER_KEY, JCORE_CALLBACK_2(CLIListener::CLI_SendCommandFilter, this));
-	cliTable_.Insert(ConfigRuntime::RECV_COMMAND_FILTER_KEY, JCORE_CALLBACK_2(CLIListener::CLI_RecvCommandFilter, this));
-	cliTable_.Insert(ConfigRuntime::SHOW_SEND_COMMAND_KEY, JCORE_CALLBACK_2(CLIListener::CLI_ShowSendCommand, this));
-	cliTable_.Insert(ConfigRuntime::SHOW_RECV_COMMAND_KEY, JCORE_CALLBACK_2(CLIListener::CLI_ShowRecvCommand, this));
-	cliTable_.Insert(ConfigRuntime::SHOW_SEND_PACKET_HEX_KEY, JCORE_CALLBACK_2(CLIListener::CLI_ShowSendPacketHex, this));
-	cliTable_.Insert(ConfigRuntime::SHOW_RECV_PACKET_HEX_KEY, JCORE_CALLBACK_2(CLIListener::CLI_ShowRecvPacketHex, this));
-	cliTable_.Insert("console_log", JCORE_CALLBACK_2(CLIListener::CLI_ConsoleLog, this));
-	cliTable_.Insert("console_net_log", JCORE_CALLBACK_2(CLIListener::CLI_ConsoleNetLog, this));
-	cliTable_.Insert("runtime_config", JCORE_CALLBACK_2(CLIListener::CLI_ConfigRuntime, this));
+	cliTable_.Insert("help", JC_CALLBACK_2(CLIListener::CLI_HelpBase, this));
+	cliTable_.Insert(ConfigRuntime::SEND_COMMAND_FILTER_KEY, JC_CALLBACK_2(CLIListener::CLI_SendCommandFilter, this));
+	cliTable_.Insert(ConfigRuntime::RECV_COMMAND_FILTER_KEY, JC_CALLBACK_2(CLIListener::CLI_RecvCommandFilter, this));
+	cliTable_.Insert(ConfigRuntime::SHOW_SEND_COMMAND_KEY, JC_CALLBACK_2(CLIListener::CLI_ShowSendCommand, this));
+	cliTable_.Insert(ConfigRuntime::SHOW_RECV_COMMAND_KEY, JC_CALLBACK_2(CLIListener::CLI_ShowRecvCommand, this));
+	cliTable_.Insert(ConfigRuntime::SHOW_SEND_PACKET_HEX_KEY, JC_CALLBACK_2(CLIListener::CLI_ShowSendPacketHex, this));
+	cliTable_.Insert(ConfigRuntime::SHOW_RECV_PACKET_HEX_KEY, JC_CALLBACK_2(CLIListener::CLI_ShowRecvPacketHex, this));
+	cliTable_.Insert("console_log", JC_CALLBACK_2(CLIListener::CLI_ConsoleLog, this));
+	cliTable_.Insert("console_net_log", JC_CALLBACK_2(CLIListener::CLI_ConsoleNetLog, this));
+	cliTable_.Insert("runtime_config", JC_CALLBACK_2(CLIListener::CLI_ConfigRuntime, this));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

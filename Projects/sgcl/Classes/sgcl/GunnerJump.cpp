@@ -13,7 +13,7 @@
 #include <sgcl/Define_Animation.h>
 #include <sgcl/Define_Projectile.h>
 #include <sgcl/Define_Action.h>
-#include <sgcl/CharInfo.h>
+#include <sg/_Struct/SteinsGate_Char.h>
 
 #include "PhysicsComponent.h"
 
@@ -155,7 +155,7 @@ void GunnerJump::OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pFra
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerJump::OnKeyPressed(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode)
+void GunnerJump::OnKeyPressed(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode)
 {
 	ControlKey_t controlKey = _pController->ConvertControlKey(_keyCode);
 	Character* pCharacter = pPlayer_;

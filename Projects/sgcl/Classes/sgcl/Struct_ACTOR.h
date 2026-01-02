@@ -10,10 +10,10 @@
 
 struct ActorRect
 {
-	c2d::rect thicknessRect_;
-	c2d::rect bodyRect_;
+	cc::rect thicknessRect_;
+	cc::rect bodyRect_;
 
-	bool IsCollide(const ActorRect& _rect, SpriteDirection_t& _otherHitDirection, c2d::rect& _hitRect);
+	bool IsCollide(const ActorRect& _rect, SpriteDirection_t& _otherHitDirection, cc::rect& _hitRect);
 };
 
 struct HitInfo
@@ -21,6 +21,6 @@ struct HitInfo
 	Actor* pAttacker_;
 	Actor* pHitTarget_;
 	SpriteDirection_t hitDirection_;
-	c2d::rect hitRect_;
+	cc::rect hitRect_;
 	AttackDataInfo* pAttackDataInfo_;
 };

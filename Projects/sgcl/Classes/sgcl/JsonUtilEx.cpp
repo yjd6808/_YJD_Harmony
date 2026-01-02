@@ -10,7 +10,7 @@
 #include "JsonUtilEx.h"
 
 #include <sg/Struct.h>
-#include <sg/TextParser.h>
+#include <sg/TextUtil.h>
 
 #include <sgcl/ImagePackManager.h>
 
@@ -39,7 +39,7 @@ void JsonUtilEx::ParseAnimationInfo(Json::Value& _animationRoot, AnimationInfo& 
 
 		int frameLength;
 		const char* pFrame = GetStringRaw(frameRoot, &frameLength);
-		TextParser::ParseFrameInfo(pFrame, frameLength, frameIndex, delay, frameEventId);
+		TextUtil::ParseFrameInfo(pFrame, frameLength, frameIndex, delay, frameEventId);
 		_info.frames_.EmplaceBack(frameIndex, (float)delay / 1000.0f, frameEventId);
 	}
 }
@@ -137,7 +137,7 @@ void JsonUtilEx::ParseActorSpriteData(Json::Value& _actorSpriteDataRoot, OUT Act
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void JsonUtilEx::ParseColor4B(Json::Value& _root, OUT c2d::Color4B& _color)
+void JsonUtilEx::ParseColor4B(Json::Value& _root, OUT cc::Color4B& _color)
 {
 	int r;
 	int g;
@@ -157,13 +157,13 @@ void JsonUtilEx::ParseColor4B(Json::Value& _root, OUT c2d::Color4B& _color)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void JsonUtilEx::ParseSize(Json::Value& _root, c2d::size& _size)
+void JsonUtilEx::ParseSize(Json::Value& _root, cc::size& _size)
 {
 	ParseFloatNumber2(_root, _size.width, _size.height);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void JsonUtilEx::ParseVec2(Json::Value& _root, c2d::vec2& _vec)
+void JsonUtilEx::ParseVec2(Json::Value& _root, cc::vec2& _vec)
 {
 	ParseFloatNumber2(_root, _vec.x, _vec.y);
 }

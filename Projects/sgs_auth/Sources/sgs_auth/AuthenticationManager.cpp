@@ -19,28 +19,28 @@ USING_NS_JC;
 //////////////////////////////////////////////////////////////////////////////////////////
 AuthenticationData* AuthenticationManager::Issue(const  AccountData& _accountData)
 {
-	JCORE_LOCK_GUARD(lock_);
+	JC_LOCK_GUARD(lock_);
 	return IssueRaw(_accountData);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 bool AuthenticationManager::Exist(AuthenticationSerial_t _serial, const char* _pAccountId)
 {
-	JCORE_LOCK_GUARD(lock_);
+	JC_LOCK_GUARD(lock_);
 	return FindRaw(_serial, _pAccountId) != nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 AuthenticationData* AuthenticationManager::Update(AuthenticationSerial_t _serial, const char* _pAccountId, AuthenticationState_t _state)
 {
-	JCORE_LOCK_GUARD(lock_);
+	JC_LOCK_GUARD(lock_);
 	return UpdateRaw(_serial, _pAccountId, _state);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void AuthenticationManager::Clear()
 {
-	JCORE_LOCK_GUARD(lock_);
+	JC_LOCK_GUARD(lock_);
 	serialDataMap_.ForEachValueDelete();
 	serialDataMap_.Clear();
 	timeDataMap_.Clear();
@@ -50,7 +50,7 @@ void AuthenticationManager::Clear()
 //////////////////////////////////////////////////////////////////////////////////////////
 bool AuthenticationManager::Remove(AuthenticationSerial_t _serial, const char* _pAccountId)
 {
-	JCORE_LOCK_GUARD(lock_);
+	JC_LOCK_GUARD(lock_);
 	return RemoveRaw(_serial, _pAccountId);
 }
 
@@ -61,7 +61,7 @@ void AuthenticationManager::OnScheduled(SchedulerTask* _pTask)
 
 	const DateTime now = DateTime::Now();
 	{
-		JCORE_LOCK_GUARD(lock_);
+		JC_LOCK_GUARD(lock_);
 		auto it = timeDataMap_.Begin();
 
 		while (it->HasNext())

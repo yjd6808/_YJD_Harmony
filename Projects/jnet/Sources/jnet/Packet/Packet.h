@@ -59,9 +59,9 @@ enum class PacketDetailType
 #define JNET_PACKET_POOLING_ARGS_WITH_PACKET_2(argty1, argty2)              pPacket, allocator, arg1, arg2
 #define JNET_PACKET_POOLING_ARGS_WITH_PACKET_3(argty1, argty2, argty3)      pPacket, allocator, arg1, arg2, arg3
 
-#define JNET_PACKET_POOLING_PARAMS(...)                         JCORE_EXPAND_1(JCORE_CONCAT_2(JNET_PACKET_POOLING_PARAMS_, JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__))
-#define JNET_PACKET_POOLING_ARGS(...)                           JCORE_EXPAND_1(JCORE_CONCAT_2(JNET_PACKET_POOLING_ARGS_,   JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__))
-#define JNET_PACKET_POOLING_ARGS_WITH_PACKET(...)               JCORE_EXPAND_1(JCORE_CONCAT_2(JNET_PACKET_POOLING_ARGS_WITH_PACKET_, JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__))
+#define JNET_PACKET_POOLING_PARAMS(...)                         JC_EXPAND_1(JC_CONCAT_2(JNET_PACKET_POOLING_PARAMS_, JC_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__))
+#define JNET_PACKET_POOLING_ARGS(...)                           JC_EXPAND_1(JC_CONCAT_2(JNET_PACKET_POOLING_ARGS_,   JC_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__))
+#define JNET_PACKET_POOLING_ARGS_WITH_PACKET(...)               JC_EXPAND_1(JC_CONCAT_2(JNET_PACKET_POOLING_ARGS_WITH_PACKET_, JC_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__))
 
 #define JNET_PACKET_POOLING_CREATE(...)                                                                 \
 	static TPacket* Create(JNET_PACKET_POOLING_PARAMS(__VA_ARGS__))                                      \
@@ -510,7 +510,7 @@ public:
 		}
 		else
 		{
-			JCORE_DELETE_ARRAY_SAFE(dynamicBuf_);
+			JC_DELETE_ARRAY_SAFE(dynamicBuf_);
 		}
 	}
 
@@ -766,7 +766,7 @@ public:
 		}
 		else
 		{
-			JCORE_DELETE_ARRAY_SAFE(pDynamicBuf_);
+			JC_DELETE_ARRAY_SAFE(pDynamicBuf_);
 		}
 	}
 
@@ -811,6 +811,6 @@ public:
 using ISendPacketPtr = jc::SharedPtr<IPacket>;
 using ISendPacketGuard = jc::RefCountObjectPtr<IPacket>;
 
-#define JNET_SEND_PACKET_AUTO_RELEASE_GUARD(packet) ISendPacketGuard JCORE_CONCAT_COUNTER(__autorelease_guard__)(packet, false)
+#define JNET_SEND_PACKET_AUTO_RELEASE_GUARD(packet) ISendPacketGuard JC_CONCAT_COUNTER(__autorelease_guard__)(packet, false)
 
 NS_JNET_END

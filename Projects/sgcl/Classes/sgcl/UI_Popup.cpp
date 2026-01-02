@@ -98,7 +98,7 @@ void UI_Popup::OnUpdate(float _dt)
 	}
 }
 
-void UI_Popup::OnMouseUpTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent)
+void UI_Popup::OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent)
 {
 	switch (_pElement->GetCode())
 	{
@@ -128,23 +128,23 @@ void UI_Popup::OnMouseUpTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEve
 	}
 }
 
-bool UI_Popup::OnMouseMoveInternalDetail(c2d::EventMouse* _pMouseEvent)
+bool UI_Popup::OnMouseMoveInternalDetail(cc::EventMouse* _pMouseEvent)
 {
 	return false;
 }
 
 // 팝업이 활성화된 동안 해당 팝업보다 우선순위(_localZOrder)가 낮은 대상에게는 이벤트가 전파되지 않도록 하기 위해
-bool UI_Popup::OnMouseDownInternalDetail(c2d::EventMouse* _pMouseEvent)
+bool UI_Popup::OnMouseDownInternalDetail(cc::EventMouse* _pMouseEvent)
 {
 	return false;
 }
 
-bool UI_Popup::OnMouseScrollInternalDetail(c2d::EventMouse* _pMouseEvent)
+bool UI_Popup::OnMouseScrollInternalDetail(cc::EventMouse* _pMouseEvent)
 {
 	return false;
 }
 
-bool UI_Popup::OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent)
+bool UI_Popup::OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 	if (attributeFlag_.Check(eCloseWithEsc) && _keyCode == EventKeyboard::KeyCode::KEY_ESCAPE)
 	{
@@ -155,7 +155,7 @@ bool UI_Popup::OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _p
 	return true;
 }
 
-bool UI_Popup::OnKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent)
+bool UI_Popup::OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 	return true;
 }

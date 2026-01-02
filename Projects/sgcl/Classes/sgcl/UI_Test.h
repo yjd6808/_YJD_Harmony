@@ -25,17 +25,17 @@ protected:
 	void OnLoaded() override;
 	void OnUpdate(float _dt) override;
 	void OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _state) override;
-	void OnMouseUpTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent) override;
+	void OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent) override;
 
 private:
 	UIGroup* pGroup01_;
 	UIGroup* pGroup02_;
 
-	c2d::size groupO1DefaultSize_;
-	c2d::size groupO2DefaultSize_;
+	cc::size groupO1DefaultSize_;
+	cc::size groupO2DefaultSize_;
 
 	int fontCode_;
-	jc::Vector<c2d::Label*> testLabelList_;
+	jc::Vector<cc::Label*> testLabelList_;
 	bool testFont_;
 
 	float scale_;

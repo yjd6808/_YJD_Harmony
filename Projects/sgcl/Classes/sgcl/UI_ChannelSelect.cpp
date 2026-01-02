@@ -58,12 +58,12 @@ UI_ChannelSelect::~UI_ChannelSelect()
 {
 	for (int i = 0; i < SG_UI_CHANNELSELECT_MAX_CHANNEL_COUNT; ++i)
 	{
-		JCORE_DELETE_SAFE(pChannelButtons_[i]);
+		JC_DELETE_SAFE(pChannelButtons_[i]);
 	}
 
 	for (int i = 0; i < GameServerType::Max; ++i)
 	{
-		JCORE_DELETE_SAFE(pServerButtons_[i]);
+		JC_DELETE_SAFE(pServerButtons_[i]);
 	}
 }
 
@@ -158,13 +158,13 @@ void UI_ChannelSelect::ServerButton::Disabled()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UI_ChannelSelect::ServerButton::ContainsPoint(const c2d::vec2& _pos)
+bool UI_ChannelSelect::ServerButton::ContainsPoint(const cc::vec2& _pos)
 {
 	if (!pSpriteNormalText_->isVisible())
 		return false;
 
 
-	const c2d::rect box = pSpriteNormalText_->GetWorldBoundingBox();
+	const cc::rect box = pSpriteNormalText_->GetWorldBoundingBox();
 
 	if (box.containsPoint(_pos))
 	{
@@ -353,7 +353,7 @@ void UI_ChannelSelect::ChannelButton::SetChannelInfo(const LobbyChannelInfo& _ch
 	pLabelDensity_->setColor(ChannelDensityEx::Color[_channelInfo.desity_]);
 }
 
-bool UI_ChannelSelect::ChannelButton::ContainsPoint(const c2d::vec2& _pos)
+bool UI_ChannelSelect::ChannelButton::ContainsPoint(const cc::vec2& _pos)
 {
 	for (int i = 0; i < EnteranceType::Max; ++i)
 	{
@@ -407,7 +407,7 @@ void UI_ChannelSelect::OnLoaded()
 {
 	SelectChannelTab(ChannelTab::Teen);
 
-	c2d::Sprite* pGearSprite = pSpriteBackgroundGear_->Source();
+	cc::Sprite* pGearSprite = pSpriteBackgroundGear_->Source();
 	pGearSprite->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	pGearSprite->setPosition(sg::App->GetDesignResolutionSize() / 2);
 
@@ -457,9 +457,9 @@ void UI_ChannelSelect::OnUpdate(float _dt)
 	UpdateBackgroundGearRotation(_dt);
 }
 
-void UI_ChannelSelect::OnMouseDown(c2d::EventMouse* _pMouseEvent)
+void UI_ChannelSelect::OnMouseDown(cc::EventMouse* _pMouseEvent)
 {
-	const c2d::vec2 cursorPos = _pMouseEvent->getCursorPos();
+	const cc::vec2 cursorPos = _pMouseEvent->getCursorPos();
 
 	for (int i = 0; i < GameServerType::Max; ++i)
 	{
@@ -482,9 +482,9 @@ void UI_ChannelSelect::OnMouseDown(c2d::EventMouse* _pMouseEvent)
 	}
 }
 
-void UI_ChannelSelect::OnMouseMove(c2d::EventMouse* _pMouseEvent)
+void UI_ChannelSelect::OnMouseMove(cc::EventMouse* _pMouseEvent)
 {
-	const c2d::vec2 cursorPos = _pMouseEvent->getCursorPos();
+	const cc::vec2 cursorPos = _pMouseEvent->getCursorPos();
 
 	for (int i = 0; i < SG_UI_CHANNELSELECT_MAX_CHANNEL_COUNT; ++i)
 	{
@@ -549,7 +549,7 @@ void UI_ChannelSelect::UpdateServerSelectionSpriteOpacity(float _dt)
 
 void UI_ChannelSelect::UpdateBackgroundGearRotation(float _dt)
 {
-	c2d::Sprite* pGearSprite = pSpriteBackgroundGear_->Source();
+	cc::Sprite* pGearSprite = pSpriteBackgroundGear_->Source();
 	pGearSprite->setRotation(pGearSprite->getRotation() + _dt * SG_BACKGROUND_GEAR_SPEED);
 }
 

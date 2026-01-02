@@ -33,7 +33,7 @@ void MysqlStatementBuilder::Finalize()
 	if (ms_pConn)
 	{
 		ms_pConn->Disconnect();
-		JCORE_DELETE_SAFE(ms_pConn);
+		JC_DELETE_SAFE(ms_pConn);
 		ms_pConn = nullptr;
 	}
 }

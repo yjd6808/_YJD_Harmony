@@ -217,7 +217,7 @@ ConsoleKeyInfo Console::ReadKey(const char* _pMsg)
     char keyChar;
     VirtualKey virtualKey;
 
-    JCORE_LOCK_GUARD(s_Lock);
+    JC_LOCK_GUARD(s_Lock);
 
     for (;;)
     {

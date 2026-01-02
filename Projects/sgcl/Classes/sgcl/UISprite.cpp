@@ -68,7 +68,7 @@ bool UISprite::init()
 		return false;
 	}
 
-	c2d::size initialSize = pInfo_->size_;
+	cc::size initialSize = pInfo_->size_;
 
 	if (int(initialSize.width) == 0 || int(initialSize.width) == 0)
 	{
@@ -142,7 +142,7 @@ void UISprite::Unload()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UISprite::SetCapInsets(const c2d::rect& _insets)
+void UISprite::SetCapInsets(const cc::rect& _insets)
 {
 	if (!pInfo_->scale9_)
 	{
@@ -160,7 +160,7 @@ void UISprite::SetCapInsets(const c2d::rect& _insets)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UISprite::SetUISize(const c2d::size& _size)
+void UISprite::SetUISize(const cc::size& _size)
 {
 	if (!isResizable_)
 	{
@@ -204,7 +204,7 @@ void UISprite::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 
 	if (isInfoOwner_)
 	{
-		JCORE_DELETE_SAFE(pBaseInfo_);
+		JC_DELETE_SAFE(pBaseInfo_);
 	}
 
 	pBaseInfo_ = _pInfo;

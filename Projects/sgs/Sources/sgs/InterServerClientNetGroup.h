@@ -11,7 +11,7 @@
 
 #include <jnet/NetGroup.h>
 
-class JCORE_NOVTABLE InterServerClientNetGroup : public jnet::NetGroup
+class JC_NOVTABLE InterServerClientNetGroup : public jnet::NetGroup
 {
 public:
 	InterServerClientNetGroup();

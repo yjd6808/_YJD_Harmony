@@ -1,19 +1,19 @@
-﻿#if !defined(__JCORE_DEFINE_H__)
+﻿#if !defined(__JC_DEFINE_H__)
 
-    #define __JCORE_DEFINE_H__
+    #define __JC_DEFINE_H__
 
 	// https://stackoverflow.com/questions/8487986/file-macro-shows-full-path
-	#define JCORE_FILENAME (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
-	#define JCORE_PASS do { int JCORE_CONCAT_COUNTER(__pass__); } while(0)
+	#define JC_FILENAME (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
+	#define JC_PASS do { int JC_CONCAT_COUNTER(__pass__); } while(0)
 
 	#ifdef _DEBUG
-		#define JCORE_INLINE_HEADER_MESSAGE(format, ...) inline auto JCORE_CONCAT_COUNTER(_) = [] { return Console::WriteLine(format, __VA_ARGS__); }()
-		#define JCORE_INLINE_CLASS_MESSAGE(format, ...)	inline static auto JCORE_CONCAT_COUNTER(_) = [] { return Console::WriteLine(format, __VA_ARGS__); }()
-		#define JCORE_INLINE_RETURN_MESSAGE(type, value, format, ...) []()->type { Console::WriteLine(format, __VA_ARGS__); return value; }()
+		#define JC_INLINE_HEADER_MESSAGE(format, ...) inline auto JC_CONCAT_COUNTER(_) = [] { return Console::WriteLine(format, __VA_ARGS__); }()
+		#define JC_INLINE_CLASS_MESSAGE(format, ...)	inline static auto JC_CONCAT_COUNTER(_) = [] { return Console::WriteLine(format, __VA_ARGS__); }()
+		#define JC_INLINE_RETURN_MESSAGE(type, value, format, ...) []()->type { Console::WriteLine(format, __VA_ARGS__); return value; }()
 	#else
-		#define JCORE_INLINE_HEADER_MESSAGE(format) 
-		#define JCORE_INLINE_CLASS_MESSAGE(format) 
-		#define JCORE_INLINE_RETURN_MESSAGE(type, value, format, ...)	value
+		#define JC_INLINE_HEADER_MESSAGE(format) 
+		#define JC_INLINE_CLASS_MESSAGE(format) 
+		#define JC_INLINE_RETURN_MESSAGE(type, value, format, ...)	value
 	#endif
 	/* !! 주의해서 쓸 것 !!
 	 * 헤더파일에서 사용시 멀티플 TU에서 정의되지 않도록 JCoreInlineHeaderMessage를 사용하고
@@ -38,16 +38,16 @@
 	 */
 
 
-    #define JCORE_STDCALL        __stdcall
-    #define JCORE_CDECL          __cdecl
-    #define JCORE_FORCEINLINE    __forceinline
-    #define JCORE_INFINITE       0xffffffff
+    #define JC_STDCALL        __stdcall
+    #define JC_CDECL          __cdecl
+    #define JC_FORCEINLINE    __forceinline
+    #define JC_INFINITE       0xffffffff
 
-    #define JCORE_MAKE_NULL(x	)		\
+    #define JC_MAKE_NULL(x	)		\
     do {								\
         (x) = nullptr;					\
     } while (0)
-    #define JCORE_DELETE_SAFE(x)		\
+    #define JC_DELETE_SAFE(x)		\
     do {								\
 	    if (x) {						\
 		    delete (x);					\
@@ -55,7 +55,7 @@
 	    }								\
     } while (0)
 
-	#define JCORE_DELETE_SINGLETON_SAFE(x)	\
+	#define JC_DELETE_SINGLETON_SAFE(x)	\
     do {									\
 	    if (x) {							\
 		    x->Free();						\
@@ -63,7 +63,7 @@
 	    }									\
     } while (0)
 
-    #define JCORE_DELETE_ARRAY_SAFE(x)	\
+    #define JC_DELETE_ARRAY_SAFE(x)	\
     do {								\
 	    if (x) {						\
 		    delete[] (x);				\
@@ -71,7 +71,7 @@
 	    }								\
     } while (0)		
 
-	#define JCORE_RELEASE_SAFE(x)		\
+	#define JC_RELEASE_SAFE(x)		\
     do {								\
 	    if (x) {						\
 		    x->Release();				\
@@ -79,7 +79,7 @@
 	    }								\
     } while (0)
 
-	#define JCORE_ALLOCATOR_STATIC_DEALLOCATE_SAFE(type, ptr)		\
+	#define JC_ALLOCATOR_STATIC_DEALLOCATE_SAFE(type, ptr)		\
     do {															\
 	    if ((ptr)) {												\
 		    TAllocator::template DeallocateStatic<type>(ptr);		\
@@ -87,7 +87,7 @@
 	    }															\
     } while (0)		
 
-	#define JCORE_ALLOCATOR_STATIC_DEALLOCATE_AND_DESTROY_SAFE(type, ptr)		\
+	#define JC_ALLOCATOR_STATIC_DEALLOCATE_AND_DESTROY_SAFE(type, ptr)		\
     do {																		\
 	    if ((ptr)) {															\
 			Memory::PlacementDelete(ptr);										\
@@ -96,7 +96,7 @@
 	    }																		\
     } while (0)		
 
-	#define JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(ptr, size)		\
+	#define JC_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(ptr, size)		\
 	do {													\
 	    if ((ptr)) {										\
 		    TAllocator::DeallocateDynamic((ptr), (size));	\
@@ -106,15 +106,15 @@
 
 
 
-	#define	JCORE_PLACEMENT_DELETE_ARRAY_SAFE(arr, size)				\
+	#define	JC_PLACEMENT_DELETE_ARRAY_SAFE(arr, size)				\
 	do {													\
 	    if ((arr)) {										\
 		    Memory::PlacementDeleteArray((arr), (size));	\
 	    }													\
     } while (0)	
 	
-	#define JCORE_LEAK_CHECK_ASSERT		jc::AutoMemoryLeakDetector JCORE_CONCAT_COUNTER(_) {[](Int32U leakedBytes ) { jc_assert_msg(leakedBytes == 0, "%u 바이트 메모리 릭이 있습니다.", leakedBytes); }}
-	#define JCORE_DEFAULT_CODE_PAGE		jc::CodePage::UTF8
+	#define JC_LEAK_CHECK_ASSERT		jc::AutoMemoryLeakDetector JC_CONCAT_COUNTER(_) {[](Int32U leakedBytes ) { jc_assert_msg(leakedBytes == 0, "%u 바이트 메모리 릭이 있습니다.", leakedBytes); }}
+	#define JC_DEFAULT_CODE_PAGE		jc::CodePage::UTF8
 
 	// 필드 어노테이션
 	#ifndef OUT
@@ -145,29 +145,29 @@
 	#define UNUSED
 	#endif
 	
-	#define JCORE_SWAP(val1, val2, type) do { type temp = val1; val1 = val2; val2 = temp; } while (0)
+	#define JC_SWAP(val1, val2, type) do { type temp = val1; val1 = val2; val2 = temp; } while (0)
 
 	// Cocos2d-x에서 자주사용하던 바인딩
-	#define JCORE_CALLBACK_0(__selector__,__target__, ...) std::bind(&__selector__,__target__, ##__VA_ARGS__)
-	#define JCORE_CALLBACK_1(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, ##__VA_ARGS__)
-	#define JCORE_CALLBACK_2(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, std::placeholders::_2, ##__VA_ARGS__)
-	#define JCORE_CALLBACK_3(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, ##__VA_ARGS__)
+	#define JC_CALLBACK_0(__selector__,__target__, ...) std::bind(&__selector__,__target__, ##__VA_ARGS__)
+	#define JC_CALLBACK_1(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, ##__VA_ARGS__)
+	#define JC_CALLBACK_2(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, std::placeholders::_2, ##__VA_ARGS__)
+	#define JC_CALLBACK_3(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, ##__VA_ARGS__)
 
 	// 부모 클래스 팡션 숨기는법
 	// https://stackoverflow.com/questions/4908539/a-way-in-c-to-hide-a-specific-function
-	#define JCORE_HIDE_BASE_CLASS_METHOD(base_class_type, method) private: using base_class_type::method;
+	#define JC_HIDE_BASE_CLASS_METHOD(base_class_type, method) private: using base_class_type::method;
 
 
 	 // enum class 쓰긴 싫고 enum은 타입 이름이 겹쳐서 싫고 대안으로 struct안에 enum 끼여서 쓰는건 어떨까?
 	 // 이번에 개발 할때 써보고 영 아니면 폐기하는걸로, 쓴지 하루지났는데 아직 갠찮은듯
-	#define JCORE_SENUM_BEGIN(enum_name) struct enum_name { enum_name() = delete; enum _ {
-	#define JCORE_SENUM_INHERIT_BEGIN(enum_name, base_enum) struct enum_name : base_enum { enum_name() = delete; enum _ {
-	#define JCORE_SENUM_MIDDLE(enum_name) }; using enum_name##_t = enum_name::_;
-	#define JCORE_SENUM_MIDDLE_END(enum_name) }; using enum_name##_t = enum_name::_;
-	#define JCORE_SENUM_END(enum_name) }; }; using enum_name##_t = enum_name::_;
+	#define JC_SENUM_BEGIN(enum_name) struct enum_name { enum_name() = delete; enum _ {
+	#define JC_SENUM_INHERIT_BEGIN(enum_name, base_enum) struct enum_name : base_enum { enum_name() = delete; enum _ {
+	#define JC_SENUM_MIDDLE(enum_name) }; using enum_name##_t = enum_name::_;
+	#define JC_SENUM_MIDDLE_END(enum_name) }; using enum_name##_t = enum_name::_;
+	#define JC_SENUM_END(enum_name) }; }; using enum_name##_t = enum_name::_;
 
 
-	#define JCORE_ENUM_CLASS_BIT_OPERATION_OVERLOADING(enum_class)			\
+	#define JC_ENUM_CLASS_BIT_OPERATION_OVERLOADING(enum_class)			\
 	enum class enum_class;													\
 	constexpr enum_class operator&(enum_class lhs, enum_class rhs) {		\
 		return enum_class(int(lhs) & int(rhs));								\
@@ -202,18 +202,18 @@
 
 
 	// 템플릿 전방선언시 갯수를 표시해서 좀 더 알아보기 쉽게 하기 위함.
-	#define JCORE_FORWARD_TEMPLATE(n)	JCORE_FORWARD_TEMPLATE_##n
-	#define JCORE_FORWARD_TEMPLATE_1	template <typename>
-	#define JCORE_FORWARD_TEMPLATE_2	template <typename, typename>
-	#define JCORE_FORWARD_TEMPLATE_3	template <typename, typename, typename>
-	#define JCORE_FORWARD_TEMPLATE_4	template <typename, typename, typename, typename>
+	#define JC_FORWARD_TEMPLATE(n)	JC_FORWARD_TEMPLATE_##n
+	#define JC_FORWARD_TEMPLATE_1	template <typename>
+	#define JC_FORWARD_TEMPLATE_2	template <typename, typename>
+	#define JC_FORWARD_TEMPLATE_3	template <typename, typename, typename>
+	#define JC_FORWARD_TEMPLATE_4	template <typename, typename, typename, typename>
 
 
 	// 게터/세터
-	#define JCORE_GETTER(type, function_name, variable_name)  type Get##function_name() const { return variable_name; }
-	#define JCORE_SETTER(type, function_name, variable_name)  void Set##function_name(type _##function_name) { variable_name = _##function_name; }
-	#define JCORE_GETTER_SETTER(type, function_name, variable_name)	\
-	JCORE_GETTER(type, function_name, variable_name)				\
-	JCORE_SETTER(type, function_name, variable_name)
+	#define JC_GETTER(type, function_name, variable_name)  type Get##function_name() const { return variable_name; }
+	#define JC_SETTER(type, function_name, variable_name)  void Set##function_name(type _##function_name) { variable_name = _##function_name; }
+	#define JC_GETTER_SETTER(type, function_name, variable_name)	\
+	JC_GETTER(type, function_name, variable_name)				\
+	JC_SETTER(type, function_name, variable_name)
 
 #endif

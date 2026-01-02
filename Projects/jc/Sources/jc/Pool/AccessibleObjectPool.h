@@ -90,8 +90,8 @@ public:
 			return;
 		}
 
-		JCORE_LIB_LOCK_GUARD(Sync);
-		JCORE_DELETE_SAFE(AccessTableForSwap);
+		JC_LIB_LOCK_GUARD(Sync);
+		JC_DELETE_SAFE(AccessTableForSwap);
 
 		AccessTableForSwap = dbg_new TAccessTable(_capacity, nullptr);
 
@@ -101,14 +101,14 @@ public:
 		}
 
 		Capacity = _capacity;
-		JCORE_SWAP(AccessTable, AccessTableForSwap, TAccessTable*);
+		JC_SWAP(AccessTable, AccessTableForSwap, TAccessTable*);
 	}
 
 	static T* Pop()
 	{
 		jc_assert_msg(AccessTable != nullptr, "초기화를 우선 해주세요.");
 
-		JCORE_LIB_LOCK_GUARD(Sync);
+		JC_LIB_LOCK_GUARD(Sync);
 		if (Count == Capacity)
 		{
 			Expand(Capacity * 4);
@@ -136,7 +136,7 @@ public:
 
 	static void Push(T* _pObject)
 	{
-		JCORE_LIB_LOCK_GUARD(Sync);
+		JC_LIB_LOCK_GUARD(Sync);
 		jc_assert(Pool.Exist(_pObject) == false);
 		Pool.PushFront(_pObject);
 	}
@@ -160,7 +160,7 @@ public:
 
 	static void FreeAllObjects()
 	{
-		JCORE_LIB_LOCK_GUARD(Sync);
+		JC_LIB_LOCK_GUARD(Sync);
 		jc_assert_msg(Count == Pool.Size(), "%s 아직 반환되지 않은 오브젝트가 %d개 존재합니다.", typeid(T).name(), Count - Pool.Size());
 
 		for (int index = 0; index < Count; ++index)
@@ -168,28 +168,28 @@ public:
 			DeleteObject(AccessTable->At(index));
 		}
 
-		JCORE_DELETE_SAFE(AccessTable);
-		JCORE_DELETE_SAFE(AccessTableForSwap);
+		JC_DELETE_SAFE(AccessTable);
+		JC_DELETE_SAFE(AccessTableForSwap);
 	}
 
 	// 메모리 할당된 모든 객체수
 	static int GetTotalCount()
 	{
-		JCORE_LIB_LOCK_GUARD(Sync);
+		JC_LIB_LOCK_GUARD(Sync);
 		return Count;
 	}
 
 	// 메모리 할당된 모든 객체들 중 실제 사용중인 객체 수
 	static int GetActiveCount()
 	{
-		JCORE_LIB_LOCK_GUARD(Sync);
+		JC_LIB_LOCK_GUARD(Sync);
 		return Count - Pool.Size();
 	}
 
 	// 메모리 할당된 모든 객체들 중 사용이 끝나고 반환된 객체 수
 	static int GetRelasedCount()
 	{
-		JCORE_LIB_LOCK_GUARD(Sync);
+		JC_LIB_LOCK_GUARD(Sync);
 		return Pool.Size();
 	}
 

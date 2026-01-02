@@ -66,8 +66,8 @@ public:
 	{
 		Clear();
 
-		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pTable_, capacity_);
-		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pTable_, capacity_ * sizeof(TBucket));
+		JC_PLACEMENT_DELETE_ARRAY_SAFE(pTable_, capacity_);
+		JC_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pTable_, capacity_ * sizeof(TBucket));
 	}
 
 public:
@@ -105,8 +105,8 @@ public:
 	{
 		Clear();
 
-		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pTable_, capacity_);
-		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pTable_, sizeof(TBucket) * capacity_);
+		JC_PLACEMENT_DELETE_ARRAY_SAFE(pTable_, capacity_);
+		JC_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pTable_, sizeof(TBucket) * capacity_);
 
 		size_ = _other.size_;
 		capacity_ = _other.capacity_;
@@ -372,8 +372,8 @@ public:
 			}
 		}
 
-		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pTable_, previousCapacity);
-		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pTable_, sizeof(TBucket) * previousCapacity);
+		JC_PLACEMENT_DELETE_ARRAY_SAFE(pTable_, previousCapacity);
+		JC_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pTable_, sizeof(TBucket) * previousCapacity);
 		pTable_ = pNewTable;
 	}
 
@@ -573,8 +573,8 @@ public:
 	{
 		Clear();
 
-		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pTable_, capacity_);
-		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pTable_, capacity_ * sizeof(TBucket));
+		JC_PLACEMENT_DELETE_ARRAY_SAFE(pTable_, capacity_);
+		JC_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pTable_, capacity_ * sizeof(TBucket));
 	}
 
 public:
@@ -612,8 +612,8 @@ public:
 	{
 		Clear();
 
-		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pTable_, capacity_);
-		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pTable_, sizeof(TBucket) * capacity_);
+		JC_PLACEMENT_DELETE_ARRAY_SAFE(pTable_, capacity_);
+		JC_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pTable_, sizeof(TBucket) * capacity_);
 
 		size_ = _other.size_;
 		capacity_ = _other.capacity_;
@@ -982,8 +982,8 @@ public:
 			}
 		}
 
-		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pTable_, previousCapacity);
-		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pTable_, sizeof(TBucket) * previousCapacity);
+		JC_PLACEMENT_DELETE_ARRAY_SAFE(pTable_, previousCapacity);
+		JC_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pTable_, sizeof(TBucket) * previousCapacity);
 		pTable_ = pNewTable;
 	}
 

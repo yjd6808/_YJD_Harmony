@@ -89,12 +89,12 @@ void UI_Login::OnUpdate(float _dt)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UI_Login::OnMouseDownTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent)
+void UI_Login::OnMouseDownTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UI_Login::OnMouseUpTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent)
+void UI_Login::OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent)
 {
 	switch (_pElement->GetCode())
 	{
@@ -126,7 +126,7 @@ void UI_Login::OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _st
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UI_Login::OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent)
+bool UI_Login::OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 	if (_keyCode == EventKeyboard::KeyCode::KEY_ENTER)
 	{
@@ -137,7 +137,7 @@ bool UI_Login::OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _p
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UI_Login::OnKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent)
+bool UI_Login::OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 	return true;
 }

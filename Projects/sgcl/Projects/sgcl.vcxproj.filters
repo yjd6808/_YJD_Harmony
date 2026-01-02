@@ -1,38 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Data">
-      <UniqueIdentifier>{c229c058-5c89-42fa-96aa-4107a44b8854}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Projectile">
-      <UniqueIdentifier>{c8ab47bd-66a6-43b5-a4a9-eb39aec47249}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Tile">
-      <UniqueIdentifier>{2f9a977b-b328-4a02-baab-7ae19e2c593a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\AI">
-      <UniqueIdentifier>{aa9500ff-549d-4d4e-a96c-163a6cd1ef3d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{8999073e-667a-4980-89a7-1353515ef72b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\AttackData">
-      <UniqueIdentifier>{e39a0561-addf-41aa-89b8-849512666201}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Action">
-      <UniqueIdentifier>{0520369f-7e38-45ca-a074-74c59d0d3cb2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\CharAnimation">
-      <UniqueIdentifier>{ec65ec03-91ef-490c-8f38-45cecb6661cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Effect">
-      <UniqueIdentifier>{926d1f0b-a511-4c7f-91aa-587ab0ce672f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\UI">
-      <UniqueIdentifier>{e1a5f450-8532-48da-ae6e-44f1e0253f12}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Char">
-      <UniqueIdentifier>{775407e0-933b-4f9f-a0db-5fb53a3fe12b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Net">
       <UniqueIdentifier>{afca49d9-5dad-4dcb-8803-7f73c14f3200}</UniqueIdentifier>
@@ -52,23 +22,8 @@
     <Filter Include="Net\Sync">
       <UniqueIdentifier>{0754ca7c-0ffe-457e-8016-747afd443af4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data\MapObject">
-      <UniqueIdentifier>{2b54d70f-de2d-4218-b6da-f13abcaa0677}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\FrameEvent">
-      <UniqueIdentifier>{d5a45180-26a8-4266-a6b7-f2cb9e3600b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Text">
-      <UniqueIdentifier>{f98a811f-e686-4426-ba7c-4fe2cc0b617e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Monster">
-      <UniqueIdentifier>{2ba3e7ea-9add-427b-84b3-8539777e05e9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Base">
       <UniqueIdentifier>{f3c8eaa2-3cff-4932-a33b-be045449ca55}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Channel">
-      <UniqueIdentifier>{7ce628d4-c979-4b15-b8d3-f03c3611a513}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game">
       <UniqueIdentifier>{6ffa8ec9-2e87-47f2-90e3-73d68df33274}</UniqueIdentifier>
@@ -169,6 +124,9 @@
     <Filter Include="API">
       <UniqueIdentifier>{479489ea-0bba-482a-9a03-dd3222c23497}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_DescMgr">
+      <UniqueIdentifier>{c229c058-5c89-42fa-96aa-4107a44b8854}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\sgcl\ImagePackManager.cpp">
@@ -178,7 +136,7 @@
       <Filter>Game\Texture</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\DataManager.cpp">
-      <Filter>Data</Filter>
+      <Filter>_DescMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\JsonUtilEx.cpp">
       <Filter>Util</Filter>
@@ -234,21 +192,6 @@
     <ClCompile Include="..\Classes\sgcl\GunnerGunShot.cpp">
       <Filter>Game\Action\Gunner</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\CharInfoLoader.cpp">
-      <Filter>Data\Char</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\MonsterInfoLoader.cpp">
-      <Filter>Data\Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\ProjectileInfoLoader.cpp">
-      <Filter>Data\Projectile</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\TileInfoLoader.cpp">
-      <Filter>Data\Tile</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\MapObjectInfoLoader.cpp">
-      <Filter>Data\MapObject</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\MapObject.cpp">
       <Filter>Game\Actor</Filter>
     </ClCompile>
@@ -258,19 +201,10 @@
     <ClCompile Include="..\Classes\sgcl\GunnerAction.cpp">
       <Filter>Game\Action\Gunner</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\AIInfoLoader.cpp">
-      <Filter>Data\AI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\AIInfo.cpp">
-      <Filter>Data\AI</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\SGVec2Ex.cpp">
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\SteinsGateApp.cpp" />
-    <ClCompile Include="..\Classes\sgcl\AttackDataInfoLoader.cpp">
-      <Filter>Data\AttackData</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\GunnerFallDown.cpp">
       <Filter>Game\Action\Gunner</Filter>
     </ClCompile>
@@ -280,21 +214,9 @@
     <ClCompile Include="..\Classes\sgcl\GunnerSitRecover.cpp">
       <Filter>Game\Action\Gunner</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\ActionInfoLoader.cpp">
-      <Filter>Data\Action</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\main.cpp" />
-    <ClCompile Include="..\Classes\sgcl\CharAnimationInfoLoader.cpp">
-      <Filter>Data\CharAnimation</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Effect.cpp">
       <Filter>Game\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\EffectInfoLoader.cpp">
-      <Filter>Data\Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\ProjectileInfo.cpp">
-      <Filter>Data\Projectile</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\ChannelSelectScene.cpp">
       <Filter>Game\Scene</Filter>
@@ -310,9 +232,6 @@
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\UILayer.cpp">
       <Filter>Game\Layer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\UIInfoLoader.cpp">
-      <Filter>Data\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\UIGroup.cpp">
       <Filter>Game\UI</Filter>
@@ -428,17 +347,11 @@
     <ClCompile Include="..\Classes\sgcl\C_AREA.cpp">
       <Filter>Net\Connection</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\FrameEventLoader.cpp">
-      <Filter>Data\FrameEvent</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\IActorListener.cpp">
       <Filter>Game\Listener</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\ActorListenerCollection.cpp">
       <Filter>Game\Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\ClientTextInfoLoader.cpp">
-      <Filter>Data\Text</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\ComponentCollection.cpp">
       <Filter>Base</Filter>
@@ -508,12 +421,6 @@
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\UI_ChannelSelect.cpp">
       <Filter>Game\UI_Implementation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\ChannelInfoLoader.cpp">
-      <Filter>Data\Channel</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\UIInfo.cpp">
-      <Filter>Data\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\FontManager.cpp">
       <Filter>Game\Contents</Filter>
@@ -598,7 +505,7 @@
       <Filter>Game\Texture</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\DataManager.h">
-      <Filter>Data</Filter>
+      <Filter>_DescMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\JsonUtilEx.h">
       <Filter>Util</Filter>
@@ -666,36 +573,6 @@
     <ClInclude Include="..\Classes\sgcl\Define_Projectile.h">
       <Filter>Define</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\CharInfoLoader.h">
-      <Filter>Data\Char</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\CharInfo.h">
-      <Filter>Data\Char</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\MonsterInfoLoader.h">
-      <Filter>Data\Monster</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\MonsterInfo.h">
-      <Filter>Data\Monster</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\ProjectileInfo.h">
-      <Filter>Data\Projectile</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\ProjectileInfoLoader.h">
-      <Filter>Data\Projectile</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\TileInfoLoader.h">
-      <Filter>Data\Tile</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\TileInfo.h">
-      <Filter>Data\Tile</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\MapObjectInfoLoader.h">
-      <Filter>Data\MapObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\MapObjectInfo.h">
-      <Filter>Data\MapObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\MapObject.h">
       <Filter>Game\Actor</Filter>
     </ClInclude>
@@ -705,22 +582,10 @@
     <ClInclude Include="..\Classes\sgcl\GunnerAction.h">
       <Filter>Game\Action\Gunner</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\AIInfo.h">
-      <Filter>Data\AI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\AIInfoLoader.h">
-      <Filter>Data\AI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\SGVec2Ex.h">
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\SteinsGateApp.h" />
-    <ClInclude Include="..\Classes\sgcl\AttackDataInfoLoader.h">
-      <Filter>Data\AttackData</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\AttackDataInfo.h">
-      <Filter>Data\AttackData</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\GunnerFallDown.h">
       <Filter>Game\Action\Gunner</Filter>
     </ClInclude>
@@ -736,26 +601,11 @@
     <ClInclude Include="..\Classes\sgcl\IActorListener.h">
       <Filter>Game\Listener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\ActionInfo.h">
-      <Filter>Data\Action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\ActionInfoLoader.h">
-      <Filter>Data\Action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\CharAnimationInfoLoader.h">
-      <Filter>Data\CharAnimation</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Effect.h">
       <Filter>Game\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Define_Effect.h">
       <Filter>Define</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\EffectInfo.h">
-      <Filter>Data\Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\EffectInfoLoader.h">
-      <Filter>Data\Effect</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\ChannelSelectScene.h">
       <Filter>Game\Scene</Filter>
@@ -771,12 +621,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\UILayer.h">
       <Filter>Game\Layer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\UIInfo.h">
-      <Filter>Data\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\UIInfoLoader.h">
-      <Filter>Data\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\UIElement.h">
       <Filter>Game\UI</Filter>
@@ -898,17 +742,8 @@
     <ClInclude Include="..\Classes\sgcl\Define_Popup.h">
       <Filter>Define</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\FrameEventLoader.h">
-      <Filter>Data\FrameEvent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\FrameEvent.h">
-      <Filter>Data\FrameEvent</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\ActorListenerCollection.h">
       <Filter>Game\Listener</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\ClientTextInfoLoader.h">
-      <Filter>Data\Text</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\IComponent.h">
       <Filter>Base</Filter>
@@ -990,12 +825,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\UI_ChannelSelect.h">
       <Filter>Game\UI_Implementation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\ChannelInfo.h">
-      <Filter>Data\Channel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\ChannelInfoLoader.h">
-      <Filter>Data\Channel</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\TimeManager.h">
       <Filter>Game\Contents</Filter>

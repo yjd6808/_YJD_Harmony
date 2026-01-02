@@ -180,7 +180,7 @@ void PhysicsComponent::UpdateFriction(float _dt)
 		return;
 	}
 
-	c2d::rect groundRect = pActor_->GetThicknessBoxRect();
+	cc::rect groundRect = pActor_->GetThicknessBoxRect();
 	groundRect.origin.x += velocity_.x * _dt;
 
 	if (pActor_->IsOnTheGround())
@@ -267,7 +267,7 @@ void PhysicsComponent::Hit(const HitInfo& _hitInfo)
 {
 	const Actor* pAttacker = _hitInfo.pAttacker_;
 	const SpriteDirection_t hitDirection = _hitInfo.hitDirection_;
-	const c2d::rect& hitRect = _hitInfo.hitRect_;
+	const cc::rect& hitRect = _hitInfo.hitRect_;
 	const AttackDataInfo* pAttackDataInfo = _hitInfo.pAttackDataInfo_;
 
 	float forceX = 500.0f;

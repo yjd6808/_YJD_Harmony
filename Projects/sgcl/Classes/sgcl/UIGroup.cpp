@@ -24,7 +24,7 @@
 USING_NS_CC;
 USING_NS_JC;
 
-#define SG_CURSOR_POSITION_GUARD(mouse_event, cursor_pos) UIGroup::CursorPositionGuard JCORE_CONCAT_COUNTER(__guard__)(mouse_event, cursor_pos)
+#define SG_CURSOR_POSITION_GUARD(mouse_event, cursor_pos) UIGroup::CursorPositionGuard JC_CONCAT_COUNTER(__guard__)(mouse_event, cursor_pos)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 UIGroup::UIGroup(UIRootGroup* _pRoot, UIGroup* _pParent)
@@ -183,10 +183,10 @@ void UIGroup::AddChild(UIElement* _pChild)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UIGroup::OnMouseDownInternal(c2d::EventMouse* _pMouseEvent)
+bool UIGroup::OnMouseDownInternal(cc::EventMouse* _pMouseEvent)
 {
-	const c2d::vec2 mousePos = _pMouseEvent->getCursorPos();
-	const c2d::vec2 relativePos = mousePos - _position;
+	const cc::vec2 mousePos = _pMouseEvent->getCursorPos();
+	const cc::vec2 relativePos = mousePos - _position;
 	_pMouseEvent->setCursorPosition(relativePos);
 	SG_CURSOR_POSITION_GUARD(_pMouseEvent, mousePos);
 
@@ -203,10 +203,10 @@ bool UIGroup::OnMouseDownInternal(c2d::EventMouse* _pMouseEvent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UIGroup::OnMouseMoveInternal(c2d::EventMouse* _pMouseEvent)
+bool UIGroup::OnMouseMoveInternal(cc::EventMouse* _pMouseEvent)
 {
-	const c2d::vec2 mousePos = _pMouseEvent->getCursorPos();
-	const c2d::vec2 relativePos = mousePos - _position;
+	const cc::vec2 mousePos = _pMouseEvent->getCursorPos();
+	const cc::vec2 relativePos = mousePos - _position;
 	_pMouseEvent->setCursorPosition(relativePos);
 	SG_CURSOR_POSITION_GUARD(_pMouseEvent, mousePos);
 
@@ -224,10 +224,10 @@ bool UIGroup::OnMouseMoveInternal(c2d::EventMouse* _pMouseEvent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UIGroup::OnMouseUpInternal(c2d::EventMouse* _pMouseEvent)
+bool UIGroup::OnMouseUpInternal(cc::EventMouse* _pMouseEvent)
 {
-	const c2d::vec2 mousePos = _pMouseEvent->getCursorPos();
-	const c2d::vec2 relativePos = mousePos - _position;
+	const cc::vec2 mousePos = _pMouseEvent->getCursorPos();
+	const cc::vec2 relativePos = mousePos - _position;
 	_pMouseEvent->setCursorPosition(relativePos);
 	SG_CURSOR_POSITION_GUARD(_pMouseEvent, mousePos);
 
@@ -244,10 +244,10 @@ bool UIGroup::OnMouseUpInternal(c2d::EventMouse* _pMouseEvent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UIGroup::OnMouseScrollInternal(c2d::EventMouse* _pMouseEvent)
+bool UIGroup::OnMouseScrollInternal(cc::EventMouse* _pMouseEvent)
 {
-	const c2d::vec2 mousePos = _pMouseEvent->getCursorPos();
-	const c2d::vec2 relativePos = mousePos - _position;
+	const cc::vec2 mousePos = _pMouseEvent->getCursorPos();
+	const cc::vec2 relativePos = mousePos - _position;
 	_pMouseEvent->setCursorPosition(relativePos);
 	SG_CURSOR_POSITION_GUARD(_pMouseEvent, mousePos);
 
@@ -464,7 +464,7 @@ void UIGroup::RestoreState(State _state)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIGroup::SetUISize(const c2d::size& _contentSize)
+void UIGroup::SetUISize(const cc::size& _contentSize)
 {
 	if (!isResizable_)
 	{
@@ -501,7 +501,7 @@ void UIGroup::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 
 	if (isInfoOwner_)
 	{
-		JCORE_DELETE_SAFE(groupInfo_);
+		JC_DELETE_SAFE(groupInfo_);
 	}
 
 	pBaseInfo_ = _pInfo;

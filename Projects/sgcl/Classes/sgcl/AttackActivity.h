@@ -10,7 +10,7 @@
 
 #include <sgcl/AIActivity.h>
 
-class JCORE_NOVTABLE AttackActivity : public AIActivity
+class JC_NOVTABLE AttackActivity : public AIActivity
 {
 public:
 	AttackActivity(Actor* _pActor);

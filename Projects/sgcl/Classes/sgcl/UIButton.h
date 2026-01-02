@@ -27,7 +27,7 @@ public:
 	void Unload() override;
 
 	void SetVisibleState(State _state);
-	void SetUISize(const c2d::size& _size) override;
+	void SetUISize(const cc::size& _size) override;
 	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
 	void SetInfoButton(UIButtonInfo* _pInfo, bool _infoOwner);
 	void SetEnabled(bool _enabled) override;
@@ -36,14 +36,14 @@ public:
 	jc::String ToString() override { return jc::StringUtil::Format("버튼(%d)", buttonInfo_->code_); }
 
 protected:
-	void OnMouseEnterInternalDetail(c2d::EventMouse* _pMouseEvent) override;
-	void OnMouseLeaveInternalDetail(c2d::EventMouse* _pMouseEvent) override;
-	bool OnMouseMoveInternalDetail(c2d::EventMouse* _pMouseEvent) override;
-	bool OnMouseDownInternalDetail(c2d::EventMouse* _pMouseEvent) override;
-	void OnMouseUpInternalDetail(c2d::EventMouse* _pMouseEvent) override;
+	void OnMouseEnterInternalDetail(cc::EventMouse* _pMouseEvent) override;
+	void OnMouseLeaveInternalDetail(cc::EventMouse* _pMouseEvent) override;
+	bool OnMouseMoveInternalDetail(cc::EventMouse* _pMouseEvent) override;
+	bool OnMouseDownInternalDetail(cc::EventMouse* _pMouseEvent) override;
+	void OnMouseUpInternalDetail(cc::EventMouse* _pMouseEvent) override;
 
 private:
 	UIButtonInfo* buttonInfo_;
 	FrameTexture* texture_[eMax];
-	c2d::Sprite* sprite_[eMax];
+	cc::Sprite* sprite_[eMax];
 };

@@ -24,7 +24,7 @@ MysqlDatabase::~MysqlDatabase()
 	if (initialized_)
 	{
 		Finalize();
-		JCORE_DELETE_SAFE(iocp_);
+		JC_DELETE_SAFE(iocp_);
 	}
 }
 
@@ -62,7 +62,7 @@ bool MysqlDatabase::Initialize(ServerProcessType_t _serverProcessType)
 	// 커넥션 풀 초기화
 	if (!connectionPool_->Init(connectionPoolSize))
 	{
-		JCORE_DELETE_SAFE(connectionPool_);
+		JC_DELETE_SAFE(connectionPool_);
 		_LogError_("DB 커넥션 풀 초기화 실패");
 		return false;
 	}
@@ -104,7 +104,7 @@ void MysqlDatabase::Finalize()
 	_LogInfo_("%s %s 파괴완료", info_->name_.Source(), IOCP::TypeName());
 
 	if (connectionPool_)
-		JCORE_DELETE_SAFE(connectionPool_);
+		JC_DELETE_SAFE(connectionPool_);
 	_LogInfo_("%s %s 파괴완료", info_->name_.Source(), IOCP::TypeName(), MysqlConnectionPool::TypeName());
 
 	MysqlStatementBuilder::Finalize();

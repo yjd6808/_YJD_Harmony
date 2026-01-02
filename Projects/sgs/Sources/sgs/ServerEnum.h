@@ -11,25 +11,25 @@
 #include <sg/Enum.h>
 
 
-JCORE_SENUM_BEGIN(CenterOrder)
+JC_SENUM_BEGIN(CenterOrder)
 		LaunchServer,
 		StopServer,
 		Max
-	JCORE_SENUM_MIDDLE(CenterOrder)
+	JC_SENUM_MIDDLE(CenterOrder)
 	static constexpr const char* Name[Max]{
 		"서버 시작",
 		"서버 중지"
 	};
-JCORE_SENUM_MIDDLE_END(CenterOrder)
+JC_SENUM_MIDDLE_END(CenterOrder)
 
-JCORE_SENUM_BEGIN(ServerBootState)
+JC_SENUM_BEGIN(ServerBootState)
 		Stopping,
 		Stopped,
 		Launching,
 		Launched,
 		Error,
 		Max
-	JCORE_SENUM_MIDDLE(ServerBootState)
+	JC_SENUM_MIDDLE(ServerBootState)
 
 	static constexpr const char* Name[Max]{
 		"중지중",
@@ -39,4 +39,4 @@ JCORE_SENUM_BEGIN(ServerBootState)
 		"오류발생",
 	};
 
-JCORE_SENUM_MIDDLE_END(ServerBootState)
+JC_SENUM_MIDDLE_END(ServerBootState)

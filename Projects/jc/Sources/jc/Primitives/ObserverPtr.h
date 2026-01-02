@@ -93,7 +93,7 @@ protected:
 
 		if (!m_bNoDelete)
 		{
-			JCORE_DELETE_SAFE(m_pPointer);
+			JC_DELETE_SAFE(m_pPointer);
 		}
 
 		m_pPointer = nullptr;
@@ -102,7 +102,7 @@ protected:
 
 		if (m_pCounter->counter_ == 0)
 		{
-			JCORE_DELETE_SAFE(m_pCounter);
+			JC_DELETE_SAFE(m_pCounter);
 		}
 	}
 
@@ -116,7 +116,7 @@ protected:
 		m_pCounter->counter_--;
 		if (m_pCounter->counter_ == 0)
 		{
-			JCORE_DELETE_SAFE(m_pCounter);
+			JC_DELETE_SAFE(m_pCounter);
 		}
 	}
 
@@ -249,7 +249,7 @@ public:
 
 
  =====================================================================================*/
-struct JCORE_NOVTABLE PtrCounter
+struct JC_NOVTABLE PtrCounter
 {
 	virtual void DestroyObject()
 	{
@@ -394,7 +394,7 @@ protected:
 		}
 		else
 		{
-			JCORE_DELETE_SAFE(m_pPointer);
+			JC_DELETE_SAFE(m_pPointer);
 		}
 
 		m_pCounter->alive_ = false;
@@ -411,7 +411,7 @@ protected:
 		m_pCounter->counter_--;
 		if (m_pCounter->counter_ == 0)
 		{
-			JCORE_DELETE_SAFE(m_pCounter);
+			JC_DELETE_SAFE(m_pCounter);
 		}
 	}
 

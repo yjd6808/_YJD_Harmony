@@ -187,7 +187,7 @@ public:
 		}
 	}
 
-	TResult& Wait(int _timeout = JCORE_INFINITE)
+	TResult& Wait(int _timeout = JC_INFINITE)
 	{
 		if (state_ >= IOCPTaskState::eReady)
 		{
@@ -217,7 +217,7 @@ public:
 		}
 
 		{
-			JCORE_LOCK_GUARD(continuousTaskLock_);
+			JC_LOCK_GUARD(continuousTaskLock_);
 			continuousTask_ = pTask;
 		}
 		return pTask;

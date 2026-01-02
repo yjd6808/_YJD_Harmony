@@ -10,8 +10,8 @@
 #include "ImagePack.h"
 
 #include <jc/FileSystem/Path.h>
-#include <sg/SgaSpriteAbstract.h>
-#include <sg/SgaColorFormat.h>
+#include <sg/_Sga/SgaSpriteAbstract.h>
+#include <sg/_Sga/SgaColorFormat.h>
 
 #include <sgcl/ImagePackManager.h>
 

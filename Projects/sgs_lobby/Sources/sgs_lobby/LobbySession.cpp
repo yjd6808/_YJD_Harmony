@@ -47,7 +47,7 @@ void LobbySession::OnDisconnected()
 	components_.OnDisconnected();
 	components_.Clear();
 
-	JCORE_RELEASE_SAFE(authenticationComponent_);
+	JC_RELEASE_SAFE(authenticationComponent_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

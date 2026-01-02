@@ -139,7 +139,7 @@ struct __struct__ : HostStaticCommand {                                         
 #define HOST_STATIC_CMD_END };
 
 
-#define HOST_DYNAMIC_CMD_BEGIN(...)     JCORE_CONCAT_ARGS(HOST_DYNAMIC_CMD_BEGIN_IMPL_, JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__)
+#define HOST_DYNAMIC_CMD_BEGIN(...)     JC_CONCAT_ARGS(HOST_DYNAMIC_CMD_BEGIN_IMPL_, JC_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__)
 #define HOST_DYNAMIC_CMD_BEGIN_IMPL_3(__struct__, __cmd__, __countable_elem_type__) HOST_DYNAMIC_CMD_BEGIN_IMPL_4(__struct__, __cmd__, __countable_elem_type__, true)
 #define HOST_DYNAMIC_CMD_BEGIN_IMPL_4(__struct__, __cmd__, __countable_elem_type__, __construct_countable_elem__)   \
 struct __struct__ : HostDynamicCommand {                                                                            \
@@ -176,7 +176,7 @@ struct __struct__ : RelayStaticCommand {                                   \
 #define RELAY_STATIC_CMD_END };
 
 
-#define RELAY_DYNAMIC_CMD_BEGIN(...)     JCORE_CONCAT_ARGS(RELAY_DYNAMIC_CMD_BEGIN_IMPL_, JCORE_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__)
+#define RELAY_DYNAMIC_CMD_BEGIN(...)     JC_CONCAT_ARGS(RELAY_DYNAMIC_CMD_BEGIN_IMPL_, JC_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__)
 #define RELAY_DYNAMIC_CMD_BEGIN_IMPL_3(__struct__, __cmd__, __countable_elem_type__) RELAY_DYNAMIC_CMD_BEGIN_IMPL_4(__struct__, __cmd__, __countable_elem_type__, true)
 #define RELAY_DYNAMIC_CMD_BEGIN_IMPL_4(__struct__, __cmd__, __countable_elem_type__, __construct_countable_elem__)   \
 struct __struct__ : RelayDynamicCommand {                                                                           \

@@ -28,7 +28,7 @@ MapLayer* MapLayer::Create()
 		return pMap;
 	}
 
-	JCORE_DELETE_SAFE(pMap);
+	JC_DELETE_SAFE(pMap);
 	return nullptr;
 }
 
@@ -61,13 +61,13 @@ bool MapLayer::init()
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MapLayer::onKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent)
+void MapLayer::onKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 	HostPlayer::Get()->OnKeyPressed(_keyCode, _pEvent);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MapLayer::onKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent)
+void MapLayer::onKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 	HostPlayer::Get()->OnKeyReleased(_keyCode, _pEvent);
 }
@@ -125,7 +125,7 @@ void MapLayer::LoadMap(int _mapCode)
 			FrameTexture* pFrameTexture = g_cImagePackMgr.GetPack(pTileInfo->sgaIndex_)->CreateFrameTexture(
 				pTileInfo->imgIndex_, pTileInfo->spriteIndex_);
 
-			c2d::Sprite* pTileSprite = c2d::Sprite::createWithTexture(pFrameTexture->GetTexture());
+			cc::Sprite* pTileSprite = cc::Sprite::createWithTexture(pFrameTexture->GetTexture());
 			pTileSprite->setAnchorPoint(Vec2::ZERO);
 			pTileSprite->setPosition(tileXPos, tileYPos);
 			this->addChild(pTileSprite);
@@ -150,7 +150,7 @@ void MapLayer::LoadMap(int _mapCode)
 Character* MapLayer::FindNearestCharacterInRadious(Actor* _pStdActor, float _radious, float& _enemyDist)
 {
 	int allyFlag = _pStdActor->GetAllyFlag();
-	c2d::vec2 stdPos = _pStdActor->GetPositionRealCenter();
+	cc::vec2 stdPos = _pStdActor->GetPositionRealCenter();
 	Character* pNearestCharacter = nullptr;
 	float minDist = FLT_MAX;
 	CharacterList& characterList = pActorBox_->GetCharacterList();
@@ -187,7 +187,7 @@ bool MapLayer::CollectEnemiesInActorRect(
 	for (int i = 0; i < physcisActorList.Size(); ++i)
 	{
 		auto pHitTarget = physcisActorList[i]; // 공격받을 대상
-		c2d::rect hitRect;
+		cc::rect hitRect;
 		SpriteDirection_t hitDirection;
 
 		if (pHitTarget->GetAllyFlag() == _pAttacker->GetAllyFlag())
@@ -213,13 +213,13 @@ bool MapLayer::CollectEnemiesInActor(Actor* _pCollector, OUT jc::Vector<HitInfo>
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool MapLayer::IsCollideWithMapObjects(const c2d::rect& _rect) const
+bool MapLayer::IsCollideWithMapObjects(const cc::rect& _rect) const
 {
 	MapObjectList& collidableMapObjects = pActorBox_->GetCollidableMapObjectList();
 
 	for (int i = 0; i < collidableMapObjects.Size(); ++i)
 	{
-		c2d::rect thicknessBox = collidableMapObjects[i]->GetThicknessBoxRect();
+		cc::rect thicknessBox = collidableMapObjects[i]->GetThicknessBoxRect();
 
 		if (thicknessBox.intersectsRect(_rect))
 			return true;

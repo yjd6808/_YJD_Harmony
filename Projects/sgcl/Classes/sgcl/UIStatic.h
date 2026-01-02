@@ -28,7 +28,7 @@ public:
 	void Unload() override;
 
 	void SetDebugVisible(bool _visible);
-	void SetUISize(const c2d::size& _contentSize) override;
+	void SetUISize(const cc::size& _contentSize) override;
 	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
 	void SetInfoStatic(UIStaticInfo* _pInfo, bool _infoOwner);
 
@@ -40,5 +40,5 @@ private:
 	bool visible_;
 	UIStaticInfo* pInfo_;
 	FrameTexture* pDebugTexture_;
-	c2d::Sprite* pDebugSprite_;
+	cc::Sprite* pDebugSprite_;
 };

@@ -10,8 +10,8 @@
 #include "GameCoreHeader.h"
 
 #include <sg/Config.h>
-#include <sg/SgaLoader.h>
-#include <sg/SgaElementInitializer.h>
+#include <sg/_Sga/SgaLoader.h>
+#include <sg/_Sga/SgaElementInitializer.h>
 
 #include <sgcl/Global.h>
 
@@ -28,7 +28,7 @@ ImagePackManager::~ImagePackManager()
 {
 	for (int i = 0; i < Const::Resource::MaxSgaFileCount; ++i)
 	{
-		JCORE_DELETE_SAFE(loadedPackages_[i]);
+		JC_DELETE_SAFE(loadedPackages_[i]);
 	}
 }
 
@@ -233,7 +233,7 @@ int ImagePackManager::GetImgIndexUnsafe(int _sgaIndex, const jc::String& _imgNam
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::size ImagePackManager::GetTextureSize(int _packIndex, int _imgIndex, int _frameIndex)
+cc::size ImagePackManager::GetTextureSize(int _packIndex, int _imgIndex, int _frameIndex)
 {
 	const ImagePack* pPack = GetPackUnsafe(_packIndex);
 	if (pPack == nullptr)

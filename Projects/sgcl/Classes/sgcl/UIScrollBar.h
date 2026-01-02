@@ -46,7 +46,7 @@ public:
 	void SetRowPos(int _pos);
 	void SetRowCount(int _count);
 	void SetRowCountPerPage(int _count);
-	void SetUISize(const c2d::size& _contentSize) override;
+	void SetUISize(const cc::size& _contentSize) override;
 	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
 	void SetInfoScrollBar(UIScrollBarInfo* _pInfo, bool _infoOwner);
 	int GetRowPos() const { return pos_; }
@@ -56,9 +56,9 @@ public:
 	void SetEnabled(bool _enabled) override;
 	void SetLinkElement(UIElement* _pElement);
 
-	bool IsUpButtonContainPoint(c2d::vec2 _pos);
-	bool IsDownButtonContainPoint(c2d::vec2 _pos);
-	bool IsThumbButtonContainPoint(c2d::vec2 _pos);
+	bool IsUpButtonContainPoint(cc::vec2 _pos);
+	bool IsDownButtonContainPoint(cc::vec2 _pos);
+	bool IsThumbButtonContainPoint(cc::vec2 _pos);
 
 	void RestoreState(State _state) override;
 
@@ -67,16 +67,16 @@ public:
 	jc::String ToString() override { return jc::StringUtil::Format("스크롤바(%d)", pInfo_->code_); }
 
 protected:
-	void OnMouseLeaveInternalDetail(c2d::EventMouse* _pMouseEvent) override;
-	bool OnMouseMoveInternalDetail(c2d::EventMouse* _pMouseEvent) override;
-	bool OnMouseDownInternalDetail(c2d::EventMouse* _pMouseEvent) override;
-	void OnMouseUpInternalDetail(c2d::EventMouse* _pMouseEvent) override;
-	bool OnMouseUpContainedInternalDetail(c2d::EventMouse* _pMouseEvent) override;
-	bool OnMouseScrollInternalDetail(c2d::EventMouse* _pMouseEvent) override;
+	void OnMouseLeaveInternalDetail(cc::EventMouse* _pMouseEvent) override;
+	bool OnMouseMoveInternalDetail(cc::EventMouse* _pMouseEvent) override;
+	bool OnMouseDownInternalDetail(cc::EventMouse* _pMouseEvent) override;
+	void OnMouseUpInternalDetail(cc::EventMouse* _pMouseEvent) override;
+	bool OnMouseUpContainedInternalDetail(cc::EventMouse* _pMouseEvent) override;
+	bool OnMouseScrollInternalDetail(cc::EventMouse* _pMouseEvent) override;
 
-	void OnLinkElementMouseScroll(c2d::EventMouse* _pMouseEvent);
+	void OnLinkElementMouseScroll(cc::EventMouse* _pMouseEvent);
 
-	void SetInitialUISize(c2d::size _size) override;
+	void SetInitialUISize(cc::size _size) override;
 
 private:
 	int rowCount_;
@@ -97,5 +97,5 @@ private:
 	UIElement* pLinkElement_;
 	UIScrollBarInfo* pInfo_;
 	FrameTexture* pTextures_[TEXTURE_COUNT];
-	c2d::Sprite* pSprites_[TEXTURE_COUNT];
+	cc::Sprite* pSprites_[TEXTURE_COUNT];
 };

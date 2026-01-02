@@ -24,7 +24,7 @@ void GunnerWalk::OnActionBegin()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerWalk::OnKeyPressed(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode)
+void GunnerWalk::OnKeyPressed(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode)
 {
 	ActionMgr* pActionManager = pPlayer_->GetActionManager();
 
@@ -41,7 +41,7 @@ void GunnerWalk::OnKeyPressed(PlayerController* _pController, c2d::EventKeyboard
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerWalk::OnKeyReleased(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode)
+void GunnerWalk::OnKeyReleased(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode)
 {
 	ControlKey_t releasedKey = _pController->GetLastestReleasedKey();
 	ActionMgr* pActionManager = pPlayer_->GetActionManager();

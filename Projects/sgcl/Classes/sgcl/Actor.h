@@ -7,13 +7,13 @@
  *                      SGActor
  *                         |
  *               ┌─────────┴────────────┐
- *           c2d::DrawNode(두께 박스)      SGActorSprite
+ *           cc::DrawNode(두께 박스)      SGActorSprite
  *                                         |
  *                                     캔버스 노드
  *                                         |
  *                               SGActorPartSprite
  *                                         |
- *                               c2d::DrawNode(히트박스)        
+ *                               cc::DrawNode(히트박스)        
  *
  */
 
@@ -30,11 +30,11 @@
 class Actor;
 class MapLayer;
 
-class Actor : public c2d::Node
+class Actor : public cc::Node
 {
-	JCORE_HIDE_BASE_CLASS_METHOD(c2d::Node, addComponent)
-	JCORE_HIDE_BASE_CLASS_METHOD(c2d::Node, init)
-	JCORE_HIDE_BASE_CLASS_METHOD(c2d::Node, cleanup)
+	JC_HIDE_BASE_CLASS_METHOD(cc::Node, addComponent)
+	JC_HIDE_BASE_CLASS_METHOD(cc::Node, init)
+	JC_HIDE_BASE_CLASS_METHOD(cc::Node, cleanup)
 
 public:
 	enum CleanUpFlag
@@ -74,19 +74,19 @@ public:
 	virtual ActorType_t		GetType() const = 0;
 	const char*				GetTypeName() const;
 	ActorRect				GetActorRect() const;
-	c2d::rect				GetThicknessBoxRect() const;
-	c2d::vec2				GetPositionReal() const;
+	cc::rect				GetThicknessBoxRect() const;
+	cc::vec2				GetPositionReal() const;
 	float					GetPositionRealX() const;
 	float					GetPositionRealY() const;
 	float					GetPositionActorY() const;
-	c2d::vec2				GetPositionRealCenter() const;
+	cc::vec2				GetPositionRealCenter() const;
 	float					GetPositionRealCenterX() const;
 	float					GetPositionRealCenterY() const;
-	c2d::vec2				GetCanvasPositionReal() const;
-	c2d::size				GetCanvasSize() const;
-	c2d::rect				GetHitBox() const;
+	cc::vec2				GetCanvasPositionReal() const;
+	cc::size				GetCanvasSize() const;
+	cc::rect				GetHitBox() const;
 	ThicknessBox			GetThicknessBox() const;
-	c2d::DrawNode*			GetThicknessBoxNode() const;
+	cc::DrawNode*			GetThicknessBoxNode() const;
 	ActorSprite*			GetActorSprite() const;
 	SpriteDirection_t		GetSpriteDirection() const;
 
@@ -100,11 +100,11 @@ public:
 	ActorListenerCollection& GetListenerCollection() { return listeners_; }
 
 	void					SetPositionReal(float _x, float _y);
-	void					SetPositionReal(const c2d::vec2& _v);
+	void					SetPositionReal(const cc::vec2& _v);
 	void					SetPositionRealX(float _x);
 	void					SetPositionRealY(float _y);
 	void					SetPositionRealCenter(float _x, float _y);
-	void					SetPositionRealCenter(const c2d::vec2& _v);
+	void					SetPositionRealCenter(const cc::vec2& _v);
 	void					SetAllyFlag(int _flag) { allyFlag_ = _flag; }
 	void					SetMapLayer(MapLayer* _pMapLayer);
 	void					SetActorId(int _id);
@@ -125,8 +125,8 @@ public:
 	void					SetForwardDirection();
 	void					SetBackwardDirection();
 
-	bool					IsCollide(Actor* _pOther, OUT SpriteDirection_t& _otherHitDirection, OUT c2d::rect& _hitRect);
-	bool					IsCollide(const ActorRect& _otherRect, OUT SpriteDirection_t& _otherHitDirection, OUT c2d::rect& _hitRect);
+	bool					IsCollide(Actor* _pOther, OUT SpriteDirection_t& _otherHitDirection, OUT cc::rect& _hitRect);
+	bool					IsCollide(const ActorRect& _otherRect, OUT SpriteDirection_t& _otherHitDirection, OUT cc::rect& _hitRect);
 	bool					IsCollide(const ActorRect& _otherRect);
 	bool					IsOnTheGround();
 
@@ -160,7 +160,7 @@ protected:
 	int cleanUpFlag_; // 클린업 될 때 수행할 작업 플래그
 	bool isCleanUp_; // 액터가 될 예정 혹은 제거되었는지 여부
 
-	NOT_NULL c2d::DrawNode* pThicknessBox_; // TODO: Debug 시각화를 위해 노드로 표현하였다. 추후에는 단순 렉트로 표현해도 됨
+	NOT_NULL cc::DrawNode* pThicknessBox_; // TODO: Debug 시각화를 위해 노드로 표현하였다. 추후에는 단순 렉트로 표현해도 됨
 	NULLABLE Actor* pAttacher_; // 내가 누구에게 붙어있는가?
 	jc::Vector<Actor*> attches_; // 내게 붙어 있는 녀석들
 };

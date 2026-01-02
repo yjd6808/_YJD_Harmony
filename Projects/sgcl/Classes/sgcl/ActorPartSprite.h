@@ -13,22 +13,22 @@
 
 class ActorSprite;
 
-class ActorPartSprite : public c2d::Sprite
+class ActorPartSprite : public cc::Sprite
 {
 public:
 	static ActorPartSprite* Create(
 		int _frameCount,
 		ActorSprite* _pActor,
-		c2d::Node* _pCanvas,
-		c2d::DrawNode* _pBoundingBox,
+		cc::Node* _pCanvas,
+		cc::DrawNode* _pBoundingBox,
 		const ActorPartSpriteData& _partData,
 		jc::Vector<AnimationInfo>* _pAnimations);
 
 	ActorPartSprite(
 		int _frameCount,
 		ActorSprite* _pActor,
-		c2d::Node* _pCanvas,
-		c2d::DrawNode* _pBoundingBox,
+		cc::Node* _pCanvas,
+		cc::DrawNode* _pBoundingBox,
 		const ActorPartSpriteData& _partData,
 		jc::Vector<AnimationInfo>* _pAnimations);
 
@@ -48,8 +48,8 @@ public:
 	void SetPartIndex(int _index) { partIndex_ = _index; }
 	int GetPartIndex() { return partIndex_; }
 	ActorType_t GetActorType();
-	c2d::Node* GetCanvas() { return canvas_; }
-	c2d::DrawNode* GetPartBoundingBox() { return boundingBox_; }
+	cc::Node* GetCanvas() { return canvas_; }
+	cc::DrawNode* GetPartBoundingBox() { return boundingBox_; }
 	ActorSprite* GetActorSprite() { return pActorSprite_; }
 	const ActorPartSpriteData& GetPartData() { return partData_; }
 	ActorPartAnimation* GetRunningAnimation() { return runningAnimation_; }
@@ -70,8 +70,8 @@ private:
 	jc::Vector<AnimationInfo>* pAnimationInfoList_;
 
 	// 자체 데이터
-	c2d::Node* canvas_;
-	c2d::DrawNode* boundingBox_;
+	cc::Node* canvas_;
+	cc::DrawNode* boundingBox_;
 	ActorPartAnimation* runningAnimation_;
 	jc::HashMap<int, ActorPartAnimation*> animationMap_;
 	jc::Vector<ActorPartAnimation*> animationList_;

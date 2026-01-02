@@ -50,7 +50,7 @@ void InitializeClientCore()
 //////////////////////////////////////////////////////////////////////////////////////////
 void FinalizeClientCore()
 {
-	JCORE_DELETE_SINGLETON_SAFE(sg::Net);
+	JC_DELETE_SINGLETON_SAFE(sg::Net);
 
 	sg::DataManager->Free();
 	

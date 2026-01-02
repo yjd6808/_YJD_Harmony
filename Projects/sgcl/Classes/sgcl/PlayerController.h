@@ -35,15 +35,15 @@ public:
 
 	void Init();
 	void Update(float _delta);
-	void OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent);
+	void OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent);
 	void OnKeyPressed(ControlKey_t _pressedKey);
-	void OnKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent);
+	void OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent);
 	void OnKeyReleased(ControlKey_t _releasedKey);
 
 	SpriteDirection_t GetSpriteDirection();
 	ControlKey_t GetLastestReleasedKey() { return lastestReleasedKey_.controlKey_; }
 	ControlKey_t GetLastestPressedKey() { return lastestPressedKey_.controlKey_; }
-	ControlKey_t ConvertControlKey(c2d::EventKeyboard::KeyCode _keyCode);
+	ControlKey_t ConvertControlKey(cc::EventKeyboard::KeyCode _keyCode);
 
 	bool IsKeyPressed(ControlKey_t _controlKey);
 	bool IsMoveKeyPressed();

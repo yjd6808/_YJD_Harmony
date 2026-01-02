@@ -41,12 +41,12 @@ protected:
 	void OnRemoved() override;
 
 	void OnUpdate(float _dt) override;
-	void OnMouseUpTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent) override;
-	bool OnMouseMoveInternalDetail(c2d::EventMouse* _pMouseEvent) override;
-	bool OnMouseDownInternalDetail(c2d::EventMouse* _pMouseEvent) override;
-	bool OnMouseScrollInternalDetail(c2d::EventMouse* _pMouseEvent) override;
-	bool OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent) override;
-	bool OnKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent) override;
+	void OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent) override;
+	bool OnMouseMoveInternalDetail(cc::EventMouse* _pMouseEvent) override;
+	bool OnMouseDownInternalDetail(cc::EventMouse* _pMouseEvent) override;
+	bool OnMouseScrollInternalDetail(cc::EventMouse* _pMouseEvent) override;
+	bool OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) override;
+	bool OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) override;
 
 public:
 	void SetType(Type _type);

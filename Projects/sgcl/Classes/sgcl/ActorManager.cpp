@@ -417,8 +417,8 @@ Effect* ActorManager::CreateEffectOnMapBySpawner(Actor* _pSpawner, int _effectCo
 {
 	Effect* pEffect = CreateEffectOnMap(_effectCode);
 
-	c2d::size spawnerCanvsSize = _pSpawner->GetCanvasSize();
-	c2d::vec2 spawnerCanvasPos = _pSpawner->GetCanvasPositionReal();
+	cc::size spawnerCanvsSize = _pSpawner->GetCanvasSize();
+	cc::vec2 spawnerCanvasPos = _pSpawner->GetCanvasPositionReal();
 
 	pEffect->SetSpriteDirection(_pSpawner->GetSpriteDirection());
 
@@ -441,7 +441,7 @@ Effect* ActorManager::CreateEffectOnMapBySpawner(Actor* _pSpawner, int _effectCo
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Effect* ActorManager::CreateEffectOnMapBySpawner(Actor* _pSpawner, int _effectCode, const c2d::vec2& _offset)
+Effect* ActorManager::CreateEffectOnMapBySpawner(Actor* _pSpawner, int _effectCode, const cc::vec2& _offset)
 {
 	return CreateEffectOnMapBySpawner(_pSpawner, _effectCode, _offset.x, _offset.y);
 }
@@ -457,7 +457,7 @@ Effect* ActorManager::CreateEffectOnMapAbsolute(int _effectCode, SpriteDirection
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Effect* ActorManager::CreateEffectOnMapAbsolute(int _effectCode, SpriteDirection_t _direction, const c2d::vec2& _pos, int _zOrder)
+Effect* ActorManager::CreateEffectOnMapAbsolute(int _effectCode, SpriteDirection_t _direction, const cc::vec2& _pos, int _zOrder)
 {
 	return CreateEffectOnMapAbsolute(_effectCode, _direction, _pos.x, _pos.y, _zOrder);
 }
@@ -472,7 +472,7 @@ Effect* ActorManager::CreateEffectOnMapAbsolute(int _effectCode, float _x, float
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Effect* ActorManager::CreateEffectOnMapAbsolute(int _effectCode, const c2d::vec2& _pos, int _zOrder)
+Effect* ActorManager::CreateEffectOnMapAbsolute(int _effectCode, const cc::vec2& _pos, int _zOrder)
 {
 	return CreateEffectOnMapAbsolute(_effectCode, _pos.x, _pos.y, _zOrder);
 }
@@ -507,7 +507,7 @@ Effect* ActorManager::CreateEffectOnMapTargetCollision(int _effectCode, const Hi
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Effect* ActorManager::CreateEffectOnMapTargetCollision(int _effectCode, const HitInfo& _info, const c2d::vec2& _offset, bool _randomRotation)
+Effect* ActorManager::CreateEffectOnMapTargetCollision(int _effectCode, const HitInfo& _info, const cc::vec2& _offset, bool _randomRotation)
 {
 	return CreateEffectOnMapTargetCollision(_effectCode, _info, _offset.x, _offset.y, _randomRotation);
 }

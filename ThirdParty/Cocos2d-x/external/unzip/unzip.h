@@ -44,7 +44,9 @@
 #define _unz64_H
 
 // #include "platform/CCPlatformDefine.h"
+#ifndef CC_DLL
 #define CC_DLL
+#endif
 
 #ifndef _ZLIB_H
 #include "zlib.h"

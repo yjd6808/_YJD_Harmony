@@ -9,7 +9,7 @@
 #include "GameCoreHeader.h"
 #include "HostPlayer.h"
 
-#include <sgcl/CharInfo.h>
+#include <sg/_Struct/SteinsGate_Char.h>
 #include <sgcl/MapLayer.h>
 #include <sgcl/Define_Action.h>
 #include <sgcl/AttackDataInfo.h>
@@ -84,13 +84,13 @@ void HostPlayer::Hit(const HitInfo& _hitInfo)
 //////////////////////////////////////////////////////////////////////////////////////////
 void HostPlayer::RemoveActionManager()
 {
-	JCORE_DELETE_SAFE(pActionManager_);
+	JC_DELETE_SAFE(pActionManager_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void HostPlayer::RemoveController()
 {
-	JCORE_DELETE_SAFE(pController_);
+	JC_DELETE_SAFE(pController_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -106,14 +106,14 @@ void HostPlayer::update(float _dt)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent)
+void HostPlayer::OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent)
 {
 	if (pController_)
 		pController_->OnKeyPressed(_keyCode, _pEvent);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void HostPlayer::OnKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent)
+void HostPlayer::OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent)
 {
 	if (pController_)
 		pController_->OnKeyReleased(_keyCode, _pEvent);

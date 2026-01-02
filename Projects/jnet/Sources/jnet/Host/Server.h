@@ -4,7 +4,7 @@
 
 NS_JNET_BEGIN
 
-class JCORE_NOVTABLE Server : public Host
+class JC_NOVTABLE Server : public Host
 {
 public:
 	Server(const IOCPPtr& _pIocp)

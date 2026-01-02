@@ -125,7 +125,7 @@ void UICheckBox::SetEnabled(bool _enabled)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UICheckBox::SetUISize(const c2d::size& _size)
+void UICheckBox::SetUISize(const cc::size& _size)
 {
 	if (!isResizable_)
 		return;
@@ -163,7 +163,7 @@ void UICheckBox::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 
 	if (isInfoOwner_)
 	{
-		JCORE_DELETE_SAFE(pInfo_);
+		JC_DELETE_SAFE(pInfo_);
 	}
 
 	pBaseInfo_ = _pInfo;
@@ -293,7 +293,7 @@ void UICheckBox::Unload()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool UICheckBox::OnMouseUpContainedInternalDetail(c2d::EventMouse* /*_pMouseEvent*/)
+bool UICheckBox::OnMouseUpContainedInternalDetail(cc::EventMouse* /*_pMouseEvent*/)
 {
 	if (state_ != eDisabled)
 		SetCheck(!checked_);

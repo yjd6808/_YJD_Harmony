@@ -55,7 +55,7 @@ void IOCP::Destroy()
 		iocpHandle_ = INVALID_HANDLE_VALUE;
 	}
 
-	JCORE_DELETE_SAFE(workerManager_);
+	JC_DELETE_SAFE(workerManager_);
 	state_ = State::Destroyed;
 }
 
@@ -69,7 +69,7 @@ void IOCP::Run()
 	}
 
 	{
-		JCORE_LOCK_GUARD(workerManagerLock_);
+		JC_LOCK_GUARD(workerManagerLock_);
 		workerManager_->Run();
 	}
 	state_ = State::Running;
@@ -88,7 +88,7 @@ void IOCP::Join()
 	WaitForZeroPending();
 
 	{
-		JCORE_LOCK_GUARD(workerManagerLock_);
+		JC_LOCK_GUARD(workerManagerLock_);
 		workerManager_->Join();
 	}
 	state_ = State::Joined;
@@ -114,7 +114,7 @@ void IOCP::WaitForZeroPending()
 //////////////////////////////////////////////////////////////////////////////////////////
 jc::Vector<Int32U> IOCP::GetWorkThreadIdList()
 {
-	JCORE_LOCK_GUARD(workerManagerLock_);
+	JC_LOCK_GUARD(workerManagerLock_);
 	jc::Vector<Int32U> threadIdList(workerManager_->workers_.Size());
 	for (int index = 0; index < workerManager_->workers_.Size(); ++index)
 	{

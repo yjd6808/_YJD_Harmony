@@ -71,7 +71,7 @@ void CommandSynchronizer::Initialize()
 void CommandSynchronizer::EnqueueCommand(ClientConnectServerType_t _listenerType, jnet::Session* _pSession,
                                          jnet::ICommand* _pCmd)
 {
-	JCORE_LOCK_GUARD(*tlsCommandQueueHolder.pLock_);
+	JC_LOCK_GUARD(*tlsCommandQueueHolder.pLock_);
 	auto pHolder = dbg_new CommandHolder(_listenerType, _pSession, _pCmd);
 	tlsCommandQueueHolder.pQueue_->Enqueue(pHolder);
 }
@@ -83,7 +83,7 @@ void CommandSynchronizer::ProcessCommands()
 		CommandQueueHolder* pIOCPCommandQueueHolder = iocpThreadAccessCommandQueueList_[i].value_;
 		CommandQueue* pQueue;
 		{
-			JCORE_LOCK_GUARD(*pIOCPCommandQueueHolder->pLock_);
+			JC_LOCK_GUARD(*pIOCPCommandQueueHolder->pLock_);
 			pQueue = pIOCPCommandQueueHolder->pQueue_;
 			pIOCPCommandQueueHolder->pQueue_ = swapCommandQueue_[i];
 			swapCommandQueue_[i] = pQueue;
@@ -153,10 +153,10 @@ void CommandSynchronizer::Finalize()
 			}
 		}
 
-		JCORE_DELETE_SAFE(pIOCPPacketQueueHolder->pQueue_);
-		JCORE_DELETE_SAFE(pIOCPPacketQueueHolder->pLock_);
-		JCORE_DELETE_SAFE(pIOCPPacketQueueHolder->pMemPool_);
-		JCORE_DELETE_SAFE(swapCommandQueue_[i]);
+		JC_DELETE_SAFE(pIOCPPacketQueueHolder->pQueue_);
+		JC_DELETE_SAFE(pIOCPPacketQueueHolder->pLock_);
+		JC_DELETE_SAFE(pIOCPPacketQueueHolder->pMemPool_);
+		JC_DELETE_SAFE(swapCommandQueue_[i]);
 	}
 	iocpThreadAccessCommandQueueList_.Clear();
 	swapCommandQueue_.Clear();

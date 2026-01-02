@@ -67,7 +67,7 @@ private:
 	bool useElasticity_;
 	bool bounced_;
 
-	c2d::vec2 velocity_;
+	cc::vec2 velocity_;
 
 	float weight_;
 	float upTime_;
@@ -77,6 +77,6 @@ private:
 
 	// 디버깅 용
 	float atkBoxInstantElapsedTime_;
-	c2d::DrawNode* atkThicknessBox_;
-	c2d::DrawNode* atkHitBox_;
+	cc::DrawNode* atkThicknessBox_;
+	cc::DrawNode* atkHitBox_;
 };

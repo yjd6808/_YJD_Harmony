@@ -13,7 +13,7 @@
 #include <sg/ListenerClientBase.h>
 #include <jnet/Packet/CommandParser.h>
 
-class JCORE_NOVTABLE ListenerClientCommon : public ListenerClientBase
+class JC_NOVTABLE ListenerClientCommon : public ListenerClientBase
 {
 protected:
 	ListenerClientCommon(jnet::CommandParser* _pParser);

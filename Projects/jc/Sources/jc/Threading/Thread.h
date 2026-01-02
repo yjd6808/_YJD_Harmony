@@ -63,7 +63,7 @@ public:
 public:
     int Start(TRunnable&& fn, void* param = nullptr);
     void AutoJoin(bool enabled) { m_bAutoJoin = enabled; }
-    JoinResult Join(int timeoutMiliSeconds = JCORE_INFINITE);
+    JoinResult Join(int timeoutMiliSeconds = JC_INFINITE);
     bool Joinable();
     void Abort();
     bool SetPriority(int priority);
@@ -76,7 +76,7 @@ public:
     static bool IsMainThread() { return ms_uiMainThreadId == GetThreadId(); }
 	static void Sleep(Int32U ms);
 private:
-    static Int32U JCORE_STDCALL ThreadRoutine(void* param);
+    static Int32U JC_STDCALL ThreadRoutine(void* param);
 protected:
     WinHandle m_hHandle;
     String m_Name;

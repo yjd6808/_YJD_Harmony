@@ -12,13 +12,13 @@
 
 bool UnauthenticatedSessionManager::Add(AuthenticationSerial_t _serial, CommonSession* _pSession)
 {
-	JCORE_LOCK_GUARD(sync_);
+	JC_LOCK_GUARD(sync_);
 	return sessionMap_.Insert(_serial, _pSession);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 bool UnauthenticatedSessionManager::Remove(AuthenticationSerial_t _serial)
 {
-	JCORE_LOCK_GUARD(sync_);
+	JC_LOCK_GUARD(sync_);
 	return sessionMap_.Remove(_serial);
 }

@@ -135,7 +135,7 @@ public:
 
 			if (pPool_[index])
 			{
-				JCORE_DELETE_SAFE(pPool_[index]);
+				JC_DELETE_SAFE(pPool_[index]);
 			}
 
 			pPool_[index] = dbg_new CMemoryChunckQueue(size, countValue);
@@ -152,7 +152,7 @@ public:
 
 		for (int i = 0; i < detail::MemoryBlockSizeMapSize_v; ++i)
 		{
-			JCORE_DELETE_SAFE(pPool_[i]);
+			JC_DELETE_SAFE(pPool_[i]);
 		}
 	}
 

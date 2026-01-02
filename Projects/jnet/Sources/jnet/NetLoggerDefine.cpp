@@ -32,6 +32,6 @@ void InitializeNetLogger(const char* _pSpecifier)
 //////////////////////////////////////////////////////////////////////////////////////////
 void FinalizeNetLogger()
 {
-	JCORE_DELETE_SAFE(NetLogger_v);
+	JC_DELETE_SAFE(NetLogger_v);
 }
 

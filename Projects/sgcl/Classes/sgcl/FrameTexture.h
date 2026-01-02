@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sg/SgaSpriteRect.h>
+#include <sg/_Sga/SgaSpriteRect.h>
 
 #include <sgcl/Core.h>
 
@@ -38,10 +38,10 @@ public:
 	virtual float GetYF() = 0;
 	virtual float GetFrameWidthF() = 0;
 	virtual float GetFrameHeightF() = 0;
-	virtual c2d::Texture* GetTexture() = 0;
+	virtual cc::Texture* GetTexture() = 0;
 	virtual bool IsLinearDodged() = 0;
-	virtual c2d::size GetSize() = 0;
-	virtual c2d::rect GetRect() = 0;
+	virtual cc::size GetSize() = 0;
+	virtual cc::rect GetRect() = 0;
 	virtual jc::String ToString() = 0;
 	virtual bool IsDefaultTexture() const { return false; }
 
@@ -57,7 +57,7 @@ protected:
 class SpriteFrameTexture : public FrameTexture
 {
 public:
-	SpriteFrameTexture(c2d::Texture* _texture, const SgaSpriteRect& _rect, int _frameIndex, bool _dummy, bool _linearDodge)
+	SpriteFrameTexture(cc::Texture* _texture, const SgaSpriteRect& _rect, int _frameIndex, bool _dummy, bool _linearDodge)
 	: FrameTexture(_frameIndex)
 	, rect_(_rect)
 	, pTexture_(_texture)
@@ -81,19 +81,19 @@ public:
 	float GetYF() override { return (float)rect_.y_; }
 	float GetFrameWidthF() override { return (float)rect_.frameWidth_; }
 	float GetFrameHeightF() override { return (float)rect_.frameHeight_; }
-	c2d::size GetSize() override { return { (float)rect_.width_, (float)rect_.height_ }; }
+	cc::size GetSize() override { return { (float)rect_.width_, (float)rect_.height_ }; }
 	jc::String ToString() override { return jc::StringUtil::Format("프레임(%d)", frameIndex_); }
 
 
 	int GetTargetFrameIndex() override { return frameIndex_; }
 	const SgaSpriteRect& GetFullRect() override { return rect_; }
 
-	c2d::rect GetRect() override
+	cc::rect GetRect() override
 	{
 		return { (float)rect_.x_, (float)rect_.y_, (float)rect_.width_, (float)rect_.height_ };
 	}
 
-	c2d::Texture* GetTexture() override { return pTexture_; }
+	cc::Texture* GetTexture() override { return pTexture_; }
 
 	bool IsLink() override { return false; }
 	bool IsDummy() override { return isDummy_; }
@@ -101,7 +101,7 @@ public:
 
 protected:
 	SgaSpriteRect rect_;
-	c2d::Texture* pTexture_;
+	cc::Texture* pTexture_;
 
 	bool isDummy_;
 	bool isLinearDodged_;
@@ -130,8 +130,8 @@ public:
 	float GetYF() override { return 0; }
 	float GetFrameWidthF() override { return 0; }
 	float GetFrameHeightF() override { return 1; }
-	c2d::size GetSize() override { return { 1, 1 }; }
-	c2d::rect GetRect() override { return { 0, 0, 1, 1 }; }
+	cc::size GetSize() override { return { 1, 1 }; }
+	cc::rect GetRect() override { return { 0, 0, 1, 1 }; }
 
 	int GetTargetFrameIndex() override { return targetFrameIndex_; }
 	jc::String ToString() override { return jc::StringUtil::Format("프레임(%d) 링크(%d)", frameIndex_, targetFrameIndex_); }
@@ -140,7 +140,7 @@ public:
 #pragma warning(disable: 4172) // return local variable address
 	const SgaSpriteRect& GetFullRect() override { return {}; }
 #pragma warning(pop)
-	c2d::Texture* GetTexture() override { return nullptr; }
+	cc::Texture* GetTexture() override { return nullptr; }
 
 	bool IsLink() override { return true; }
 	bool IsDummy() override { return false; }
@@ -153,7 +153,7 @@ protected:
 class SpriteFrameDefaultTexture : public SpriteFrameTexture
 {
 public:
-	SpriteFrameDefaultTexture(c2d::Texture* _texture, const SgaSpriteRect& _rect)
+	SpriteFrameDefaultTexture(cc::Texture* _texture, const SgaSpriteRect& _rect)
 	: SpriteFrameTexture(_texture, _rect, 0, false, false)
 	{
 	}

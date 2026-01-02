@@ -32,9 +32,9 @@ struct DragState
 
 	UIElement* pHostElement_; // 드래그 주체
 	UIElement* pTargetElement_; // 실제로 드래깅될 대상
-	c2d::vec2 startElementPosition_;
-	c2d::vec2 startCursorPosition_;
-	c2d::vec2 dragDelta_;
+	cc::vec2 startElementPosition_;
+	cc::vec2 startCursorPosition_;
+	cc::vec2 dragDelta_;
 	bool isDragging_;
 };
 
@@ -62,8 +62,8 @@ public:
 	void CallUiElementsUpdateCallback(float _dt);
 
 	void Draginit(const DragState& _state);
-	void DragEnter(const c2d::EventMouse* _pMouseEvent);
-	void DragMove(const c2d::EventMouse* _pMouseEvent);
+	void DragEnter(const cc::EventMouse* _pMouseEvent);
+	void DragMove(const cc::EventMouse* _pMouseEvent);
 	void DragEnd();
 
 	bool IsDragging() { return dragState_.isDragging_; }

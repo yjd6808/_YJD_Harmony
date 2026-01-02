@@ -10,14 +10,14 @@
 
 #include <jc/Define.h>
 
-JCORE_SENUM_BEGIN(InvenItemType)
+JC_SENUM_BEGIN(InvenItemType)
 		Quest,
 		Etc,
 		Consume,
 		Equip,
 		Avatar,
 		Max
-	JCORE_SENUM_MIDDLE(InvenItemType)
+	JC_SENUM_MIDDLE(InvenItemType)
 
 	static constexpr bool Stackable[Max]{
 		true,
@@ -34,13 +34,12 @@ JCORE_SENUM_BEGIN(InvenItemType)
 		"equip",
 		"avatar"
 	};
-JCORE_SENUM_MIDDLE_END(InvenItemType)
+JC_SENUM_MIDDLE_END(InvenItemType)
 
 
 // ==========================================================================================
-
 // https://wiki.dfo-world.com/view/Armor
-JCORE_SENUM_BEGIN(ItemType)
+JC_SENUM_BEGIN(ItemType)
 		Shoulder, // 어깨
 		Begin = Shoulder,
 		BeginEquip = Begin,
@@ -62,7 +61,7 @@ JCORE_SENUM_BEGIN(ItemType)
 		Quest, // 퀘스트
 		End,
 		Max = End
-	JCORE_SENUM_MIDDLE(ItemType)
+	JC_SENUM_MIDDLE(ItemType)
 
 	inline static constexpr bool IsEquip[Max]{
 		true, // 어깨
@@ -132,13 +131,13 @@ JCORE_SENUM_BEGIN(ItemType)
 		"quest" // 퀘스트
 	};
 
-JCORE_SENUM_MIDDLE_END(ItemType)
+JC_SENUM_MIDDLE_END(ItemType)
 
 
 // ==========================================================================================
 
 
-JCORE_SENUM_BEGIN(EquipArmorType)
+JC_SENUM_BEGIN(EquipArmorType)
 		Cloth, // 천
 		Begin = Cloth,
 		Leather, // 가죽
@@ -147,7 +146,7 @@ JCORE_SENUM_BEGIN(EquipArmorType)
 		Place, // 판금
 		End,
 		Max = End
-	JCORE_SENUM_MIDDLE(EquipArmorType)
+	JC_SENUM_MIDDLE(EquipArmorType)
 
 	static constexpr const char* Name[Max]{
 		"cloth",
@@ -157,11 +156,11 @@ JCORE_SENUM_BEGIN(EquipArmorType)
 		"plate"
 	};
 
-JCORE_SENUM_MIDDLE_END(EquipArmorType)
+JC_SENUM_MIDDLE_END(EquipArmorType)
 
 // ==========================================================================================
 
-JCORE_SENUM_BEGIN(RarityType)
+JC_SENUM_BEGIN(RarityType)
 		Normal,
 		Begin = Normal,
 		Magic,
@@ -171,7 +170,7 @@ JCORE_SENUM_BEGIN(RarityType)
 		Epic,
 		End = Epic,
 		Max
-	JCORE_SENUM_MIDDLE(RarityType)
+	JC_SENUM_MIDDLE(RarityType)
 
 	static constexpr const char* Name[Max]{
 		"Normal",
@@ -200,11 +199,11 @@ JCORE_SENUM_BEGIN(RarityType)
 		0
 	};
 
-JCORE_SENUM_MIDDLE_END(RarityType)
+JC_SENUM_MIDDLE_END(RarityType)
 
 // ==========================================================================================
 
-JCORE_SENUM_BEGIN(ItemOptType)
+JC_SENUM_BEGIN(ItemOptType)
 		Begin = 1,
 		Str = Begin, // 1
 		Dex, // 2
@@ -235,8 +234,7 @@ JCORE_SENUM_BEGIN(ItemOptType)
 		MoveSpeedInTown, // 27
 		End = MoveSpeedInTown,
 		Max
-	JCORE_SENUM_MIDDLE(ItemOptType)
+	JC_SENUM_MIDDLE(ItemOptType)
 
-JCORE_SENUM_MIDDLE_END(ItemOptType)
-
+JC_SENUM_MIDDLE_END(ItemOptType)
 // ==========================================================================================

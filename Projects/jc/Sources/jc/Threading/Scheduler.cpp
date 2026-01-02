@@ -15,7 +15,7 @@ NS_JC_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 Scheduler::Scheduler(int _threadCount)
 	: m_pThreadPool(dbg_new ThreadPool(_threadCount))
-	, m_SchedulingThread(JCORE_CALLBACK_0(Scheduler::SchedulingRoutine, this))
+	, m_SchedulingThread(JC_CALLBACK_0(Scheduler::SchedulingRoutine, this))
 	, m_eState(State::Running)
 {
 }
@@ -23,7 +23,7 @@ Scheduler::Scheduler(int _threadCount)
 //////////////////////////////////////////////////////////////////////////////////////////
 Scheduler::~Scheduler()
 {
-	JCORE_DELETE_SAFE(m_pThreadPool);
+	JC_DELETE_SAFE(m_pThreadPool);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

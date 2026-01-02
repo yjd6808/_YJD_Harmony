@@ -13,7 +13,7 @@
 #include <sg/ListenerServerBase.h>
 #include <sg/Enum.h>
 
-class JCORE_NOVTABLE ListenerServerCommon : public ListenerServerBase
+class JC_NOVTABLE ListenerServerCommon : public ListenerServerBase
 {
 public:
 	ListenerServerCommon(jnet::CommandParser* _pParser);

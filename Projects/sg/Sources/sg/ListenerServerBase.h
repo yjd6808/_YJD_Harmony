@@ -10,7 +10,7 @@
 
 #include <jnet/EventListener/ServerEventListener.h>
 
-class JCORE_NOVTABLE ListenerServerBase : public jnet::ServerEventListener
+class JC_NOVTABLE ListenerServerBase : public jnet::ServerEventListener
 {
 public:
 	~ListenerServerBase() override = 0;

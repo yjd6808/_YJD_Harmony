@@ -23,5 +23,5 @@ void CenterContents::Finalize()
 {
 	ClearSchedule();
 
-	JCORE_DELETE_SINGLETON_SAFE(BootStateManager);
+	JC_DELETE_SINGLETON_SAFE(BootStateManager);
 }

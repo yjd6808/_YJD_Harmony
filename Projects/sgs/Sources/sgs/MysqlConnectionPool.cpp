@@ -88,7 +88,7 @@ MysqlConnection* MysqlConnectionPool::GetConnection()
 
 		if (!pConn->IsConnected())
 		{
-			JCORE_DELETE_SAFE(pConn);
+			JC_DELETE_SAFE(pConn);
 			pConn = CreateConnection();
 		}
 

@@ -2,86 +2,8 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\Sources\sg\Core.cpp" />
-    <ClCompile Include="..\Sources\sg\SgaElement.cpp">
-      <Filter>Sga</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\SgaElementInitilizer.cpp">
-      <Filter>Sga</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\SgaImage.cpp">
-      <Filter>Sga</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\SgaLinkSprite.cpp">
-      <Filter>Sga</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\SgaLoader.cpp">
-      <Filter>Sga</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\SgaPackage.cpp">
-      <Filter>Sga</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\SgaSound.cpp">
-      <Filter>Sga</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\SgaSprite.cpp">
-      <Filter>Sga</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\DescLoaderMgr.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\MonsterBaseInfoLoader.cpp">
-      <Filter>Data\MonsterBase</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\TextParser.cpp">
-      <Filter>Util</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\JsonUtil.cpp">
-      <Filter>Util</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\DescLoaderAbstract.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\CharBaseInfoLoader.cpp">
-      <Filter>Data\CharBase</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\ItemInfoLoader.cpp">
-      <Filter>Data\Item</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\sg\CommonCore.cpp" />
-    <ClCompile Include="..\Sources\sg\ItemOptInfoLoader.cpp">
-      <Filter>Data\ItemOpt</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\ServerInfoLoader.cpp">
-      <Filter>Data\Server</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\ChannelBaseInfoLoader.cpp">
-      <Filter>Data\ChannelBase</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\EnchantInfoLoader.cpp">
-      <Filter>Data\Enchant</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\DatabaseInfoLoader.cpp">
-      <Filter>Data\Database</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\sg\Logo.cpp" />
-    <ClCompile Include="..\Sources\sg\CharCommonInfoLoader.cpp">
-      <Filter>Data\CharCommon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\ServerProcessInfo.cpp">
-      <Filter>Data\Server</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\MapInfoLoader.cpp">
-      <Filter>Data\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\MapInfo.cpp">
-      <Filter>Data\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\MapPhysicsInfoLoader.cpp">
-      <Filter>Data\MapPhysics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\MonsterStatInfoLoader.cpp">
-      <Filter>Data\MonsterStat</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\sg\CLIThread.cpp">
       <Filter>System</Filter>
     </ClCompile>
@@ -113,12 +35,9 @@
       <Filter>Const</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sg\Struct.cpp">
-      <Filter>Struct</Filter>
+      <Filter>_Struct</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sg\Enum.cpp">
-      <Filter>Enum</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\Enum_CHARACTER.cpp">
       <Filter>Enum</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sg\_Object\_Character\StackingBufferMgr.cpp">
@@ -136,144 +55,207 @@
     <ClCompile Include="..\Sources\sg\_API\sgapi_Util.cpp">
       <Filter>API</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Sga\SgaSound.cpp">
+      <Filter>_Sga</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Sga\SgaSprite.cpp">
+      <Filter>_Sga</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Sga\SgaElement.cpp">
+      <Filter>_Sga</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Sga\SgaElementInitilizer.cpp">
+      <Filter>_Sga</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Sga\SgaImage.cpp">
+      <Filter>_Sga</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Sga\SgaLinkSprite.cpp">
+      <Filter>_Sga</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Sga\SgaLoader.cpp">
+      <Filter>_Sga</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Sga\SgaPackage.cpp">
+      <Filter>_Sga</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_AI.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Map.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Projectile.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_ServerProcess.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_UI.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_AttackData.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_ChannelBase.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_CharBase.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_CharCommon.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Client.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Database.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Effect.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Action.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Channel.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Char.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Enchant.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Item.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_ItemOpt.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_MapObject.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_MapPhysics.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Monster.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_MonsterBase.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_MonsterStat.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Tile.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_FrameEvent.cpp">
+      <Filter>_Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\DescLoaderAbstract.cpp">
+      <Filter>_Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\DescLoaderMgr.cpp">
+      <Filter>_Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\JsonUtil.cpp">
+      <Filter>_Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\TextUtil.cpp">
+      <Filter>_Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_AI.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_AttackData.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Channel.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ChannelBase.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Char.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_CharAnimation.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_CharBase.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_CharCommon.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ClientText.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Database.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Effect.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Enchant.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_FrameEvent.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Item.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ItemOpt.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Map.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MapObject.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MapPhysics.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Monster.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MonsterBase.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MonsterStat.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Projectile.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Server.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Tile.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_UI.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Action.cpp">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\sg\Core.h" />
-    <ClInclude Include="..\Sources\sg\SgaColorFormat.h">
-      <Filter>Sga</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\SgaCompressMode.h">
-      <Filter>Sga</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\SgaElement.h">
-      <Filter>Sga</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\SgaElementInitializer.h">
-      <Filter>Sga</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\SgaImage.h">
-      <Filter>Sga</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\SgaLinkSprite.h">
-      <Filter>Sga</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\SgaLoader.h">
-      <Filter>Sga</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\SgaPackage.h">
-      <Filter>Sga</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\SgaSound.h">
-      <Filter>Sga</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\SgaSprite.h">
-      <Filter>Sga</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\SgaSpriteAbstract.h">
-      <Filter>Sga</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\SgaSpriteRect.h">
-      <Filter>Sga</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\MonsterBaseInfo.h">
-      <Filter>Data\MonsterBase</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\MonsterBaseInfoLoader.h">
-      <Filter>Data\MonsterBase</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\JsonUtil.h">
-      <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\TextParser.h">
-      <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\DescLoaderAbstract.h">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\DescBase.h">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\CharBaseInfo.h">
-      <Filter>Data\CharBase</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\CharBaseInfoLoader.h">
-      <Filter>Data\CharBase</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\ItemOptInfo.h">
-      <Filter>Data\ItemOpt</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\ItemInfoLoader.h">
-      <Filter>Data\Item</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\ItemInfo.h">
-      <Filter>Data\Item</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\sg\CommonCore.h" />
-    <ClInclude Include="..\Sources\sg\ItemOptInfoLoader.h">
-      <Filter>Data\ItemOpt</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\ServerProcessInfo.h">
-      <Filter>Data\Server</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\ServerInfoLoader.h">
-      <Filter>Data\Server</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\ChannelBaseInfo.h">
-      <Filter>Data\ChannelBase</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\ChannelBaseInfoLoader.h">
-      <Filter>Data\ChannelBase</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\EnchantInfo.h">
-      <Filter>Data\Enchant</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\EnchantInfoLoader.h">
-      <Filter>Data\Enchant</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\SgaSpriteHelper.h">
-      <Filter>Sga</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\sg\TypeTraits.h" />
-    <ClInclude Include="..\Sources\sg\DatabaseInfoLoader.h">
-      <Filter>Data\Database</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\DatabaseInfo.h">
-      <Filter>Data\Database</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\sg\Logo.h" />
-    <ClInclude Include="..\Sources\sg\CharCommonInfoLoader.h">
-      <Filter>Data\CharCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\CharCommonInfo.h">
-      <Filter>Data\CharCommon</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\sg\LogSpecifier.h" />
-    <ClInclude Include="..\Sources\sg\DescLoaderMgr.h">
-      <Filter>Data</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\sg\Cmd_AUTHENTICATION.h">
       <Filter>Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Cmd_CHAT.h">
       <Filter>Net\Cmd</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\MapInfo.h">
-      <Filter>Data\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\MapInfoLoader.h">
-      <Filter>Data\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\MapPhysicsInfo.h">
-      <Filter>Data\MapPhysics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\MapPhysicsInfoLoader.h">
-      <Filter>Data\MapPhysics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\MonsterStatInfo.h">
-      <Filter>Data\MonsterStat</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\MonsterStatInfoLoader.h">
-      <Filter>Data\MonsterStat</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\CLIThread.h">
       <Filter>System</Filter>
@@ -313,15 +295,9 @@
       <Filter>Const</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Struct.h">
-      <Filter>Struct</Filter>
+      <Filter>_Struct</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Enum.h">
-      <Filter>Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\Enum_CHANNEL.h">
-      <Filter>Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\Enum_CHARACTER.h">
       <Filter>Enum</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Enum_AI.h">
@@ -400,22 +376,22 @@
       <Filter>Const</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Struct_ANIMATION.h">
-      <Filter>Struct</Filter>
+      <Filter>_Struct</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Struct_ACTOR.h">
-      <Filter>Struct</Filter>
+      <Filter>_Struct</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Struct_ITEM.h">
-      <Filter>Struct</Filter>
+      <Filter>_Struct</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Struct_RESOURCE.h">
-      <Filter>Struct</Filter>
+      <Filter>_Struct</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Struct_AUTHENTICATION.h">
-      <Filter>Struct</Filter>
+      <Filter>_Struct</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Struct_CHANNEL.h">
-      <Filter>Struct</Filter>
+      <Filter>_Struct</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Const_TIMEOUT.h">
       <Filter>Const</Filter>
@@ -435,67 +411,226 @@
     <ClInclude Include="..\Sources\sg\_API\sgapiBase.h">
       <Filter>API</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sg\ClientInfo.h">
-      <Filter>Data\ClientInfo</Filter>
+    <ClInclude Include="..\Sources\sg\_Sga\SgaPackage.h">
+      <Filter>_Sga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Sga\SgaSound.h">
+      <Filter>_Sga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Sga\SgaSprite.h">
+      <Filter>_Sga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Sga\SgaSpriteAbstract.h">
+      <Filter>_Sga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Sga\SgaSpriteHelper.h">
+      <Filter>_Sga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Sga\SgaSpriteRect.h">
+      <Filter>_Sga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Sga\SgaColorFormat.h">
+      <Filter>_Sga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Sga\SgaCompressMode.h">
+      <Filter>_Sga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Sga\SgaElement.h">
+      <Filter>_Sga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Sga\SgaElementInitializer.h">
+      <Filter>_Sga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Sga\SgaImage.h">
+      <Filter>_Sga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Sga\SgaLinkSprite.h">
+      <Filter>_Sga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Sga\SgaLoader.h">
+      <Filter>_Sga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Action.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_AI.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_AttackData.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Channel.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_ChannelBase.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Char.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_CharBase.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_CharCommon.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Client.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Database.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Effect.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Enchant.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Item.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_ItemOpt.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Map.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_MapObject.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_MapPhysics.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Monster.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_MonsterBase.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_MonsterStat.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Projectile.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_ServerProcess.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Tile.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_UI.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_FrameEvent.h">
+      <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\DescBase.h">
+      <Filter>_Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\DescLoaderAbstract.h">
+      <Filter>_Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\DescLoaderMgr.h">
+      <Filter>_Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\JsonUtil.h">
+      <Filter>_Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\TextUtil.h">
+      <Filter>_Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Action.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_AI.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_AttackData.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Channel.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ChannelBase.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Char.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_CharAnimation.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_CharBase.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_CharCommon.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ClientText.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Database.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Effect.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Enchant.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_FrameEvent.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Item.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ItemOpt.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Map.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MapObject.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MapPhysics.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Monster.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MonsterBase.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MonsterStat.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Projectile.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Server.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Tile.h">
+      <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_UI.h">
+      <Filter>_Util\_DescMgr</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Data">
-      <UniqueIdentifier>{1edcb01f-acdf-4c32-aa70-a5f17ddc8615}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Util">
-      <UniqueIdentifier>{6490a88f-7352-4290-bdc4-4cd44e99280e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\CharBase">
-      <UniqueIdentifier>{c4c23334-31c3-447c-a7c6-d8e43d1e5968}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\ItemOpt">
-      <UniqueIdentifier>{4c789653-6ad2-47f4-a466-d695070aa351}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Item">
-      <UniqueIdentifier>{cd4145a7-98cf-4050-acbe-defa7ebbcc35}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sga">
-      <UniqueIdentifier>{8c39330d-5cc1-4ca6-b0dc-4fe8ee5021e7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Server">
-      <UniqueIdentifier>{527118c2-9bf2-4cd7-a878-360b0f1d3879}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Enchant">
-      <UniqueIdentifier>{7ecb621d-16c9-4574-9790-51505d3f1d42}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Database">
-      <UniqueIdentifier>{fc0ef7b1-0e5f-4208-8da9-997f50e6e087}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\CharCommon">
-      <UniqueIdentifier>{7d01469f-122b-464d-b700-a03cd2e3f866}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Net">
       <UniqueIdentifier>{9c008121-a467-48e8-9eaf-74f475cfd80b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Net\Cmd">
       <UniqueIdentifier>{6468c181-5a92-447d-becd-6ce66d66ea74}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data\Map">
-      <UniqueIdentifier>{150a3c40-2749-4017-aa09-04204413547d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\MapPhysics">
-      <UniqueIdentifier>{b68a5418-4661-4f7f-b071-5af45a7ca187}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\MonsterBase">
-      <UniqueIdentifier>{2f9aa599-999d-4d63-bf3e-df9f190b26cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\MonsterStat">
-      <UniqueIdentifier>{7e87883b-be6f-4b81-85d1-7040d281963d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{df07d7b3-ec11-400e-bd40-3989d5caf2ff}</UniqueIdentifier>
     </Filter>
     <Filter Include="Net\Listener">
       <UniqueIdentifier>{a08a2ead-fee0-4ee6-aa74-41901c3681e6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\ChannelBase">
-      <UniqueIdentifier>{a7851926-c0b9-465c-99d8-b322f51ea50f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Base">
       <UniqueIdentifier>{56aa07c9-aebe-44d8-8e9b-36b92699697e}</UniqueIdentifier>
@@ -509,9 +644,6 @@
     <Filter Include="Const">
       <UniqueIdentifier>{4e039b5b-c76e-49e1-80d1-5c5e42dae4b9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Struct">
-      <UniqueIdentifier>{cee0fccc-495f-40e7-a9f1-67de833ca29e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object">
       <UniqueIdentifier>{c863910e-9069-4ec0-b514-fe7fef29315e}</UniqueIdentifier>
     </Filter>
@@ -524,8 +656,17 @@
     <Filter Include="API">
       <UniqueIdentifier>{97e44d9e-ed96-413d-bcd4-a812b5eda99e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data\ClientInfo">
-      <UniqueIdentifier>{560bff2c-d723-4286-a5dc-0c7b613b054a}</UniqueIdentifier>
+    <Filter Include="_Sga">
+      <UniqueIdentifier>{8c39330d-5cc1-4ca6-b0dc-4fe8ee5021e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Struct">
+      <UniqueIdentifier>{cee0fccc-495f-40e7-a9f1-67de833ca29e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Util">
+      <UniqueIdentifier>{1edcb01f-acdf-4c32-aa70-a5f17ddc8615}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Util\_DescMgr">
+      <UniqueIdentifier>{933527eb-3b05-4964-834c-49b992e043cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

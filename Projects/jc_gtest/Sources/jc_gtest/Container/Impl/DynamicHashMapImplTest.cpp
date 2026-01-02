@@ -50,7 +50,7 @@ public:
 	~Bucket() {
 		Clear();
 
-		JCORE_DELETE_SAFE(Head);
+		JC_DELETE_SAFE(Head);
 	}
 
 	TNode* FirstElement() {
@@ -107,7 +107,7 @@ public:
 		if (pCur == Tail)
 			Tail = pPrev;
 		pPrev->Next = pCur->Next;
-		JCORE_DELETE_SAFE(pCur);
+		JC_DELETE_SAFE(pCur);
 		Count--;
 		return true;
 	}
@@ -120,7 +120,7 @@ public:
 			pDel = pCur;
 			pCur = pCur->Next;
 
-			JCORE_DELETE_SAFE(pDel);
+			JC_DELETE_SAFE(pDel);
 		}
 
 		Tail = Head;
@@ -154,7 +154,7 @@ public:
 		m_iMask = capacity - 1;
 	}
 	~HashMap() {
-		JCORE_DELETE_ARRAY_SAFE(m_Table);
+		JC_DELETE_ARRAY_SAFE(m_Table);
 	}
 public:
 
@@ -225,7 +225,7 @@ public:
 			}
 		}
 
-		JCORE_DELETE_ARRAY_SAFE(m_Table);
+		JC_DELETE_ARRAY_SAFE(m_Table);
 
 		m_Table = pNewTable;
 	}

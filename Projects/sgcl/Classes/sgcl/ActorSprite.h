@@ -14,14 +14,14 @@
 
 class Actor;
 
-class ActorSprite : public c2d::Sprite
+class ActorSprite : public cc::Sprite
 {
 public:
 	struct PartData
 	{
-		c2d::Sprite* canvas_;
+		cc::Sprite* canvas_;
 		ActorPartSprite* pPart_;
-		c2d::DrawNode* boundingBox_;
+		cc::DrawNode* boundingBox_;
 
 		bool operator==(const PartData& _other);
 	};
@@ -49,10 +49,10 @@ public:
 
 	ActorPartSprite* GetBodyPart();
 	Actor* GetActor() { return pActor_; }
-	c2d::Node* GetBodyCanvas();
-	c2d::size GetBodyCanvasSize();
-	c2d::size GetBodyPartSize();
-	c2d::vec2 GetBodyPartPosition();
+	cc::Node* GetBodyCanvas();
+	cc::size GetBodyCanvasSize();
+	cc::size GetBodyPartSize();
+	cc::vec2 GetBodyPartPosition();
 	PartData CreatePart(const ActorPartSpriteData& _partSpriteData, int _frameCount);
 
 	jc::Vector<PartData>& GetParts() { return parts_; }

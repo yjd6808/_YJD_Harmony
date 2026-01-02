@@ -113,7 +113,7 @@ void UI_Test::OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _sta
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UI_Test::OnMouseUpTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent)
+void UI_Test::OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent)
 {
 	CC_UNUSED_PARAM(_pMouseEvent);
 

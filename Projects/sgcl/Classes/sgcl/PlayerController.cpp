@@ -8,7 +8,7 @@
 #include "Core.h"
 #include "PlayerController.h"
 
-#include <sg/MapInfo.h>
+#include <sg/_Struct/SteinsGate_Map.h>
 
 #include <sgcl/HostPlayer.h>
 #include <sgcl/SGAction.h>
@@ -44,17 +44,17 @@ PlayerController::~PlayerController()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 void PlayerController::Init()
 {
-	for (int index = 0; index < int(c2d::EventKeyboard::KeyCode::MAX); ++index)
+	for (int index = 0; index < int(cc::EventKeyboard::KeyCode::MAX); ++index)
 	{
 		cocosKeyCodeToControlKeyMap_[index] = ControlKey::None;
 	}
 
-	cocosKeyCodeToControlKeyMap_[int(c2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW)] = ControlKey::Left;
-	cocosKeyCodeToControlKeyMap_[int(c2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW)] = ControlKey::Right;
-	cocosKeyCodeToControlKeyMap_[int(c2d::EventKeyboard::KeyCode::KEY_UP_ARROW)] = ControlKey::Up;
-	cocosKeyCodeToControlKeyMap_[int(c2d::EventKeyboard::KeyCode::KEY_DOWN_ARROW)] = ControlKey::Down;
-	cocosKeyCodeToControlKeyMap_[int(c2d::EventKeyboard::KeyCode::KEY_X)] = ControlKey::Attack;
-	cocosKeyCodeToControlKeyMap_[int(c2d::EventKeyboard::KeyCode::KEY_C)] = ControlKey::Jump;
+	cocosKeyCodeToControlKeyMap_[int(cc::EventKeyboard::KeyCode::KEY_LEFT_ARROW)] = ControlKey::Left;
+	cocosKeyCodeToControlKeyMap_[int(cc::EventKeyboard::KeyCode::KEY_RIGHT_ARROW)] = ControlKey::Right;
+	cocosKeyCodeToControlKeyMap_[int(cc::EventKeyboard::KeyCode::KEY_UP_ARROW)] = ControlKey::Up;
+	cocosKeyCodeToControlKeyMap_[int(cc::EventKeyboard::KeyCode::KEY_DOWN_ARROW)] = ControlKey::Down;
+	cocosKeyCodeToControlKeyMap_[int(cc::EventKeyboard::KeyCode::KEY_X)] = ControlKey::Attack;
+	cocosKeyCodeToControlKeyMap_[int(cc::EventKeyboard::KeyCode::KEY_C)] = ControlKey::Jump;
 	cabUseCommand_ = true;
 }
 
@@ -65,7 +65,7 @@ void PlayerController::Update(float _delta)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PlayerController::OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent)
+void PlayerController::OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent)
 {
 	ControlKey_t pressedControlKey = cocosKeyCodeToControlKeyMap_[int(_keyCode)];
 	if (pressedControlKey == ControlKey::None)
@@ -76,7 +76,7 @@ void PlayerController::OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, cocos2
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PlayerController::OnKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent)
+void PlayerController::OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cocos2d::Event* _pEvent)
 {
 	ControlKey_t releasedControlKey = cocosKeyCodeToControlKeyMap_[int(_keyCode)];
 	if (releasedControlKey == ControlKey::None)
@@ -312,7 +312,7 @@ void PlayerController::ReflectPressedMoveKeys()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-ControlKey_t PlayerController::ConvertControlKey(c2d::EventKeyboard::KeyCode _keyCode)
+ControlKey_t PlayerController::ConvertControlKey(cc::EventKeyboard::KeyCode _keyCode)
 {
 	return cocosKeyCodeToControlKeyMap_[int(_keyCode)];
 }

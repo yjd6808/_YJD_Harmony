@@ -18,7 +18,7 @@
 
 
 #define SG_OPERATION_OPERATE(rhs_type) void Operate(ValTy& lhs, rhs_type rhs) override
-#define SG_OPERATION_BODY(def, ...)      JCORE_EXPAND_1(JCORE_CONCAT_ARGS(SG_OPERATION_BODY_, JCORE_ARGS_COUNT(__VA_ARGS__))(def, __VA_ARGS__))
+#define SG_OPERATION_BODY(def, ...)      JC_EXPAND_1(JC_CONCAT_ARGS(SG_OPERATION_BODY_, JC_ARGS_COUNT(__VA_ARGS__))(def, __VA_ARGS__))
 #define SG_OPERATION_BODY_0(def, ...)        { using RTy = decltype(rhs); def; __VA_ARGS__; }
 #define SG_OPERATION_BODY_1(def, _log, ...)  { using RTy = decltype(rhs); def; _log(LeftOperandType, PropertyTypeDescription<decltype(rhs)>::Type, OPERATION); __VA_ARGS__; }
 #define SG_OPERATION_DEF_END    };

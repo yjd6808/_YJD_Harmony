@@ -12,23 +12,23 @@
 #include <jc/Define.h>
 
 
-JCORE_SENUM_BEGIN(HAlignment)
+JC_SENUM_BEGIN(HAlignment)
 	Left,
 	Center,
 	Right
-JCORE_SENUM_END(HAlignment)
+JC_SENUM_END(HAlignment)
 
 // ==========================================================================================
 
-JCORE_SENUM_BEGIN(VAlignment)
+JC_SENUM_BEGIN(VAlignment)
 	Top,
 	Center,
 	Bottom
-JCORE_SENUM_END(VAlignment)
+JC_SENUM_END(VAlignment)
 
 // ==========================================================================================
 
-JCORE_SENUM_BEGIN(UIElementType)
+JC_SENUM_BEGIN(UIElementType)
 		Group,
 		Button,
 		Label,
@@ -41,7 +41,7 @@ JCORE_SENUM_BEGIN(UIElementType)
 		Static,
 		Max
 
-	JCORE_SENUM_MIDDLE(UIElementType)
+	JC_SENUM_MIDDLE(UIElementType)
 
 	static constexpr const char* Name[Max]{
 		"그룹",
@@ -57,15 +57,15 @@ JCORE_SENUM_BEGIN(UIElementType)
 	};
 
 
-JCORE_SENUM_MIDDLE_END(UIElementType)
+JC_SENUM_MIDDLE_END(UIElementType)
 
 // ==========================================================================================
 
-JCORE_SENUM_BEGIN(ProgressIncreaseDirection)
+JC_SENUM_BEGIN(ProgressIncreaseDirection)
 	LeftRight,
 	RightLeft,
 	TopBottom,
 	BottomTop
-JCORE_SENUM_END(ProgressIncreaseDirection)
+JC_SENUM_END(ProgressIncreaseDirection)
 
 // ==========================================================================================

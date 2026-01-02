@@ -24,11 +24,11 @@ public:
 
 	float CalcDelta();
 
-	JCORE_GETTER(Int32U, Id, id_)
-	JCORE_GETTER(Int32U, Type, type_)
-	JCORE_GETTER(float, DeltaPerSec, deltaPerSec_)
-	JCORE_GETTER(Int32U, Duration, duration_)
-	JCORE_GETTER(bool, IsPercentStacking, isPercentStacking_)
+	JC_GETTER(Int32U, Id, id_)
+	JC_GETTER(Int32U, Type, type_)
+	JC_GETTER(float, DeltaPerSec, deltaPerSec_)
+	JC_GETTER(Int32U, Duration, duration_)
+	JC_GETTER(bool, IsPercentStacking, isPercentStacking_)
 
 private:
 	Int32U id_; // 아이디

@@ -18,7 +18,7 @@ template <typename, typename>
 struct Pair;
 
 template <typename TKey, typename TValue, typename TAllocator>
-class JCORE_NOVTABLE MapCollectionIterator : public Iterator<Pair<TKey, TValue>, TAllocator>
+class JC_NOVTABLE MapCollectionIterator : public Iterator<Pair<TKey, TValue>, TAllocator>
 {
 	using TKeyValuePair = Pair<TKey, TValue>;
 	using TIterator		= Iterator<TKeyValuePair, TAllocator>;

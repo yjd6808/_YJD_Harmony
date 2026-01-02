@@ -37,7 +37,7 @@ public:
 
 	void SetVisibleState(State _state);
 	void SetEnabled(bool _enabled) override;
-	void SetUISize(const c2d::size& _contentSize) override;
+	void SetUISize(const cc::size& _contentSize) override;
 	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
 	void SetInfoToggleButton(UIToggleButtonInfo* _pInfo, bool _infoOwner);
 
@@ -49,16 +49,16 @@ public:
 	jc::String ToString() override { return jc::StringUtil::Format("토글버튼(%d)", pInfo_->code_); }
 
 protected:
-	void OnMouseEnterInternalDetail(c2d::EventMouse* _pMouseEvent) override;
-	void OnMouseLeaveInternalDetail(c2d::EventMouse* _pMouseEvent) override;
-	bool OnMouseMoveInternalDetail(c2d::EventMouse* _pMouseEvent) override;
-	bool OnMouseDownInternalDetail(c2d::EventMouse* _pMouseEvent) override;
-	void OnMouseUpInternalDetail(c2d::EventMouse* _pMouseEvent) override;
-	bool OnMouseUpContainedInternalDetail(c2d::EventMouse* _pMouseEvent) override;
+	void OnMouseEnterInternalDetail(cc::EventMouse* _pMouseEvent) override;
+	void OnMouseLeaveInternalDetail(cc::EventMouse* _pMouseEvent) override;
+	bool OnMouseMoveInternalDetail(cc::EventMouse* _pMouseEvent) override;
+	bool OnMouseDownInternalDetail(cc::EventMouse* _pMouseEvent) override;
+	void OnMouseUpInternalDetail(cc::EventMouse* _pMouseEvent) override;
+	bool OnMouseUpContainedInternalDetail(cc::EventMouse* _pMouseEvent) override;
 
 private:
 	ToggleState toggleState_;
 	UIToggleButtonInfo* pInfo_;
 	FrameTexture* pTextures_[2][eMax];
-	c2d::Sprite* pSprites_[2][eMax];
+	cc::Sprite* pSprites_[2][eMax];
 };

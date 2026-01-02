@@ -84,7 +84,7 @@ public:
 
 	static void FreeAllObjects()
 	{
-		JCORE_LIB_LOCK_GUARD(Lock);
+		JC_LIB_LOCK_GUARD(Lock);
 
 		if (AllocatedCount != 0)
 		{
@@ -118,7 +118,7 @@ public:
 
 	void* operator new(size_t _size, int _blockUse, char const* _pFileName, int _lineNumber)
 	{
-		JCORE_LIB_LOCK_GUARD(Lock);
+		JC_LIB_LOCK_GUARD(Lock);
 
 		T* pInst;
 		if (Head != nullptr)
@@ -139,7 +139,7 @@ public:
 
 	void* operator new(size_t _size)
 	{
-		JCORE_LIB_LOCK_GUARD(Lock);
+		JC_LIB_LOCK_GUARD(Lock);
 
 		T* pInst;
 		if (Head != nullptr)
@@ -168,7 +168,7 @@ public:
 
 		T* pInst = static_cast<T*>(_pObject);
 
-		JCORE_LIB_LOCK_GUARD(Lock);
+		JC_LIB_LOCK_GUARD(Lock);
 		if (pInst->pNext_)
 		{
 			_LogWarn_("풀에서 관리중인 객체를 삭제할려고 시도했습니다.");

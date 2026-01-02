@@ -45,7 +45,7 @@ ActorSprite* ActorSprite::Create(Actor* _pActor, ActorSpriteData* _pActorSpriteD
 		return pSprite;
 	}
 
-	JCORE_DELETE_SAFE(pSprite);
+	JC_DELETE_SAFE(pSprite);
 	return pSprite;
 }
 
@@ -205,25 +205,25 @@ ActorPartSprite* ActorSprite::GetBodyPart()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::Node* ActorSprite::GetBodyCanvas()
+cc::Node* ActorSprite::GetBodyCanvas()
 {
 	return parts_[0].pPart_->GetCanvas();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::size ActorSprite::GetBodyCanvasSize()
+cc::size ActorSprite::GetBodyCanvasSize()
 {
 	return parts_[0].pPart_->GetCanvas()->getContentSize();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::size ActorSprite::GetBodyPartSize()
+cc::size ActorSprite::GetBodyPartSize()
 {
 	return parts_[0].pPart_->GetPartBoundingBox()->getContentSize();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::vec2 ActorSprite::GetBodyPartPosition()
+cc::vec2 ActorSprite::GetBodyPartPosition()
 {
 	return parts_[0].pPart_->getPosition();
 }
@@ -234,12 +234,12 @@ ActorSprite::PartData ActorSprite::CreatePart(const ActorPartSpriteData& _partSp
 	PartData partData;
 
 	// 캔버스 위에 파츠를 그린다.
-	partData.canvas_ = c2d::Sprite::create();
+	partData.canvas_ = cc::Sprite::create();
 	partData.canvas_->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
 	partData.canvas_->setContentSize({ 0, 0 });
 	partData.canvas_->setCascadeOpacityEnabled(false);
 	partData.canvas_->setOpacity(0);
-	partData.boundingBox_ = c2d::DrawNode::create();
+	partData.boundingBox_ = cc::DrawNode::create();
 	partData.pPart_ = ActorPartSprite::Create(
 		_frameCount,
 		this,

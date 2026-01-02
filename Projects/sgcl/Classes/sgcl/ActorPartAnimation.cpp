@@ -56,7 +56,7 @@ ActorPartAnimation* ActorPartAnimation::Create(
 		return pAnimation;
 	}
 
-	JCORE_DELETE_SAFE(pAnimation);
+	JC_DELETE_SAFE(pAnimation);
 	return nullptr;
 }
 
@@ -345,7 +345,7 @@ FrameTexture* ActorPartAnimation::ChangeTexture(int _frameIndexInAnimation)
 	// 일단 문제 생기면 Sprite 풀을 구성해놓고 교체해주는 방식으로 바꾸는 걸로
 	// 이것도 완성하면 나중에... ㅋㅋ 뭔 전부 나중이야
 	pTarget_->initWithTexture(pFrameTexture->GetTexture());
-	pTarget_->setAnchorPoint(pTarget_->GetActorType() == ActorType::Projectile ? c2d::vec2::ANCHOR_MIDDLE : c2d::vec2::ZERO);
+	pTarget_->setAnchorPoint(pTarget_->GetActorType() == ActorType::Projectile ? cc::vec2::ANCHOR_MIDDLE : cc::vec2::ZERO);
 	pTarget_->setOpacity(255);
 	return pFrameTexture;
 }

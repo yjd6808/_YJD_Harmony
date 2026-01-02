@@ -9,7 +9,7 @@
 #pragma once
 
 #include <sgcl/Actor.h>
-#include <sgcl/ProjectileInfo.h>
+#include <sg/_Struct/SteinsGate_Projectile.h>
 
 class Projectile : public Actor
 {

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <sgcl/AIInfo.h>
+#include <sg/_Struct/SteinsGate_AI.h>
 #include <sgcl/AttackActivity.h>
 #include <sgcl/FallDownActivity.h>
 #include <sgcl/HitActivity.h>
@@ -53,7 +53,7 @@ public:
 	void RunActivity(AIActivity* _pActivity);
 	void RunActivity(AIActivityType_t _activityType);
 
-	c2d::vec2				GetRandomSightPos();
+	cc::vec2				GetRandomSightPos();
 	AIInfo*				GetAiInfo() { return pAIInfo_; }
 	AIState_t			GetState() { return state_; }
 	Actor*				GetTarget() { return pTarget_; }

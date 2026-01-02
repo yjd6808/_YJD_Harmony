@@ -30,5 +30,5 @@ void ServerContents::Initialize()
 //////////////////////////////////////////////////////////////////////////////////////////
 void ServerContents::Finalize()
 {
-	JCORE_DELETE_SAFE(UnauthenticatedSessionManager);
+	JC_DELETE_SAFE(UnauthenticatedSessionManager);
 }

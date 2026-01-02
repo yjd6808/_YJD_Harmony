@@ -47,13 +47,13 @@ void GunnerIdle::OnAnimationEnd(ActorPartAnimation* _pAnimation, FrameTexture* _
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerIdle::OnKeyPressed(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode)
+void GunnerIdle::OnKeyPressed(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode)
 {
 	_pController->ReflectPressedMoveKeys();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GunnerIdle::OnKeyReleasedBefore(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode)
+void GunnerIdle::OnKeyReleasedBefore(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode)
 {
 	ControlKey_t releasedKey = _pController->ConvertControlKey(_keyCode);
 

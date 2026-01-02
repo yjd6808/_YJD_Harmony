@@ -102,7 +102,7 @@ void UIProgressBar::Load()
 	pProgressSprite_ = Sprite::create();
 	pProgressSprite_->initWithTexture(pTexture_->GetTexture());
 
-	pProgressBar_ = c2d::ProgressTimer::create(pProgressSprite_);
+	pProgressBar_ = cc::ProgressTimer::create(pProgressSprite_);
 	pProgressBar_->setPercentage(0);
 	pProgressBar_->setType(ProgressTimer::Type::BAR);
 	pProgressBar_->setScale(scaleX, scaleY);
@@ -151,7 +151,7 @@ void UIProgressBar::Unload()
 	init();
 }
 
-void UIProgressBar::SetUISize(const c2d::size& _size)
+void UIProgressBar::SetUISize(const cc::size& _size)
 {
 	if (!isResizable_)
 	{
@@ -187,7 +187,7 @@ void UIProgressBar::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 
 	if (isInfoOwner_)
 	{
-		JCORE_DELETE_SAFE(pBaseInfo_);
+		JC_DELETE_SAFE(pBaseInfo_);
 	}
 
 	pBaseInfo_ = _pInfo;

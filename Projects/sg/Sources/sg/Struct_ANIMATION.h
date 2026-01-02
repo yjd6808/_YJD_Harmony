@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <sg/DescBase.h>
-#include <sg/SgaSpriteRect.h>
+#include <sg/_Util/DescBase.h>
+#include <sg/_Sga/SgaSpriteRect.h>
 
 struct FrameInfo
 {

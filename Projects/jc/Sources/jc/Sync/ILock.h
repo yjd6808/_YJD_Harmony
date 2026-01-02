@@ -24,7 +24,7 @@ enum LockType
     eUnusedLock
 };
 
-struct JCORE_NOVTABLE ILock
+struct JC_NOVTABLE ILock
 {
 	ILock() = default;
 	virtual ~ILock() = default;
@@ -37,5 +37,5 @@ struct JCORE_NOVTABLE ILock
 
 NS_JC_END;
 
-#define JCORE_LOCK_GUARD(lock)		jc::LockGuard<jc::ILock> JCORE_CONCAT_COUNTER(__lock_guard__)(lock)
-#define JCORE_LIB_LOCK_GUARD(lock)	jc::JCoreLibLockGuard<jc::ILock> JCORE_CONCAT_COUNTER(__lock_guard__)(lock)
+#define JC_LOCK_GUARD(lock)		jc::LockGuard<jc::ILock> JC_CONCAT_COUNTER(__lock_guard__)(lock)
+#define JC_LIB_LOCK_GUARD(lock)	jc::JCoreLibLockGuard<jc::ILock> JC_CONCAT_COUNTER(__lock_guard__)(lock)

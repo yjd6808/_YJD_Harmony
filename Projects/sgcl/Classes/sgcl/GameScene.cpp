@@ -31,7 +31,7 @@ SGGameScene::~SGGameScene()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGGameScene::OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent)
+void SGGameScene::OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 	if (mapLayer_)
 		mapLayer_->onKeyPressed(_keyCode, _pEvent);
@@ -54,7 +54,7 @@ void SGGameScene::OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event*
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGGameScene::OnKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent)
+void SGGameScene::OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 	if (mapLayer_)
 		mapLayer_->onKeyReleased(_keyCode, _pEvent);

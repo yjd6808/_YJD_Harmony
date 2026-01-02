@@ -17,7 +17,7 @@ class MimicCamera;
 class MapLayer;
 class GridLayer;
 
-class WorldScene final : public c2d::Scene
+class WorldScene final : public cc::Scene
 {
 private:
 	friend class TSingleton;
@@ -37,18 +37,18 @@ public:
 	void UpdateTime(float _dt);
 
 	void OnWndMessageReceived(int _code, WPARAM _wParam, LPARAM _lParam);
-	void OnWndFocused(c2d::EventCustom* _pCustom);
-	void OnWndLostFocused(c2d::EventCustom* _pCustom);
-	void OnWndResized(c2d::EventCustom* _pCustom);
-	void OnWndCursorEnter(c2d::EventCustom* _pCustom);
-	void OnWndCursorLeave(c2d::EventCustom* _pCustom);
+	void OnWndFocused(cc::EventCustom* _pCustom);
+	void OnWndLostFocused(cc::EventCustom* _pCustom);
+	void OnWndResized(cc::EventCustom* _pCustom);
+	void OnWndCursorEnter(cc::EventCustom* _pCustom);
+	void OnWndCursorLeave(cc::EventCustom* _pCustom);
 
-	void OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent) const;
-	void OnKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent) const;
-	void OnMouseMove(c2d::EventMouse* _pMouseEvent) const;
-	void OnMouseDown(c2d::EventMouse* _pMouseEvent) const;
-	void OnMouseUp(c2d::EventMouse* _pMouseEvent) const;
-	void OnMouseScroll(c2d::EventMouse* _pMouseEvent) const;
+	void OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) const;
+	void OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) const;
+	void OnMouseMove(cc::EventMouse* _pMouseEvent) const;
+	void OnMouseDown(cc::EventMouse* _pMouseEvent) const;
+	void OnMouseUp(cc::EventMouse* _pMouseEvent) const;
+	void OnMouseScroll(cc::EventMouse* _pMouseEvent) const;
 
 	void onExit() override;
 

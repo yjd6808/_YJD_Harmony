@@ -9,7 +9,7 @@
 
 
 #include <sgcl/SGAction.h>
-#include <sgcl/CharInfo.h>
+#include <sg/_Struct/SteinsGate_Char.h>
 
 class GunnerAction : public SGAction
 {

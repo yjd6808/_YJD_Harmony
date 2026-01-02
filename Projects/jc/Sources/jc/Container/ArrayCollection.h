@@ -129,7 +129,7 @@ public:
 
 		if (_removeHeap)
 		{
-			JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pArray_, sizeof(T) * capacity_);
+			JC_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pArray_, sizeof(T) * capacity_);
 		}
 	}
 

@@ -37,12 +37,12 @@ public:
 		poly_[3].y = _y + _height;
 	}
 
-	RectPoly(const c2d::vec2& _origin, const c2d::size& _size)
+	RectPoly(const cc::vec2& _origin, const cc::size& _size)
 		: RectPoly(_origin.x, _origin.y, _size.width, _size.height)
 	{
 	}
 
-	c2d::vec2* source()
+	cc::vec2* source()
 	{
 		return poly_;
 	}
@@ -52,7 +52,7 @@ public:
 		return { _leftBottomX, _leftBottomY, _width, _height };
 	}
 
-	static RectPoly createFromLeftBottom(const c2d::vec2& _leftBottom, const c2d::size& _size)
+	static RectPoly createFromLeftBottom(const cc::vec2& _leftBottom, const cc::size& _size)
 	{
 		return { _leftBottom.x, _leftBottom.y, _size.width, _size.height };
 	}
@@ -62,9 +62,9 @@ public:
 		return { _rightTopX - _width, _rightTopY - _height, _width, _height };
 	}
 
-	static RectPoly createFromRightTop(const c2d::vec2& _rightTop, const c2d::size& _size)
+	static RectPoly createFromRightTop(const cc::vec2& _rightTop, const cc::size& _size)
 	{
-		return { c2d::vec2{ _rightTop.x - _size.width, _rightTop.y - _size.height }, _size };
+		return { cc::vec2{ _rightTop.x - _size.width, _rightTop.y - _size.height }, _size };
 	}
 
 	static RectPoly createFromCenter(float _centerX, float _centerY, float _width, float _height)
@@ -72,11 +72,11 @@ public:
 		return { _centerX - _width / 2, _centerY / _height / 2, _width, _height };
 	}
 
-	static RectPoly createFromCenter(const c2d::vec2& _center, const c2d::size& _size)
+	static RectPoly createFromCenter(const cc::vec2& _center, const cc::size& _size)
 	{
-		return { c2d::vec2{ _center.x - _size.width / 2, _center.y - _size.height / 2 }, _size };
+		return { cc::vec2{ _center.x - _size.width / 2, _center.y - _size.height / 2 }, _size };
 	}
 
 private:
-	c2d::vec2 poly_[4];
+	cc::vec2 poly_[4];
 };

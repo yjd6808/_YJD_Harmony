@@ -8,6 +8,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcocos2d", "ThirdParty\Cocos2d-x\cocos\2d\libcocos2d.vcxproj", "{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "librecast", "ThirdParty\Cocos2d-x\external\recast\proj.win32\librecast.vcxproj", "{41E34993-647E-4282-8384-4AB1AE31A452}"
+	ProjectSection(ProjectDependencies) = postProject
+		{45E38EED-167C-456A-996E-6D2AE793A911} = {45E38EED-167C-456A-996E-6D2AE793A911}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SteinsGate", "SteinsGate", "{1CE4EEBA-FA07-4A76-8E0E-036750344AE6}"
 EndProject
@@ -109,6 +112,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sgcl", "Projects\sgcl\Proje
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libSpine", "ThirdParty\Cocos2d-x\cocos\editor-support\spine\proj.win32\libSpine.vcxproj", "{B7C2A162-DEC9-4418-972E-240AB3CBFCAE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{45E38EED-167C-456A-996E-6D2AE793A911} = {45E38EED-167C-456A-996E-6D2AE793A911}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sgs", "Projects\sgs\Project\sgs.vcxproj", "{59C54A2A-4525-46F7-9F25-CCCA6D58151F}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -136,6 +142,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sgs_lobby", "Projects\sgs_l
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Base", "Base", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sgcc", "Projects\sgcc\Project\sgcc.vcxproj", "{45E38EED-167C-456A-996E-6D2AE793A911}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -353,6 +361,14 @@ Global
 		{807F840B-0920-4665-8105-94AC7C94B538}.Release|x64.Build.0 = Release|x64
 		{807F840B-0920-4665-8105-94AC7C94B538}.Release|x86.ActiveCfg = Release|Win32
 		{807F840B-0920-4665-8105-94AC7C94B538}.Release|x86.Build.0 = Release|Win32
+		{45E38EED-167C-456A-996E-6D2AE793A911}.Debug|x64.ActiveCfg = Debug|x64
+		{45E38EED-167C-456A-996E-6D2AE793A911}.Debug|x64.Build.0 = Debug|x64
+		{45E38EED-167C-456A-996E-6D2AE793A911}.Debug|x86.ActiveCfg = Debug|Win32
+		{45E38EED-167C-456A-996E-6D2AE793A911}.Debug|x86.Build.0 = Debug|Win32
+		{45E38EED-167C-456A-996E-6D2AE793A911}.Release|x64.ActiveCfg = Release|x64
+		{45E38EED-167C-456A-996E-6D2AE793A911}.Release|x64.Build.0 = Release|x64
+		{45E38EED-167C-456A-996E-6D2AE793A911}.Release|x86.ActiveCfg = Release|Win32
+		{45E38EED-167C-456A-996E-6D2AE793A911}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -390,6 +406,7 @@ Global
 		{EE3650D7-28FB-4CD7-9836-606010001E90} = {9D7356D0-B912-44B2-BF18-60E410CB7623}
 		{807F840B-0920-4665-8105-94AC7C94B538} = {9D7356D0-B912-44B2-BF18-60E410CB7623}
 		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {1CE4EEBA-FA07-4A76-8E0E-036750344AE6}
+		{45E38EED-167C-456A-996E-6D2AE793A911} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C994231-C2E1-4E94-8705-982F33CCBE70}

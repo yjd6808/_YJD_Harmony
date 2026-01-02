@@ -46,14 +46,14 @@ constexpr void BindSelectResult(TQryResultT&& _v, MysqlQuerySelect* _query)
 	Visitable<jc::NakedType_t<TQryResultT>>::BindSelectResult(jc::Forward<TQryResultT>(_v), _query);
 }
 
-#define QRY_STRUCT_FIELD_NAMES(...)		JCORE_EVEN_ARGS(__VA_ARGS__)
-#define QRY_STRUCT_VARIABLE_NAMES(...)	JCORE_ODD_ARGS(__VA_ARGS__)
+#define QRY_STRUCT_FIELD_NAMES(...)		JC_EVEN_ARGS(__VA_ARGS__)
+#define QRY_STRUCT_VARIABLE_NAMES(...)	JC_ODD_ARGS(__VA_ARGS__)
 
 // 쿼리 구조체 적용자
-#define QRY_STRUCT_APPLY_FN_DEF(pair)						QRY_STRUCT_APPLY_FN_DEF_(JCORE_EXPAND_ARGS pair)		// (1,2) => 1,2로 벗겨서 전달
-#define QRY_STRUCT_APPLY_FN_DEF_(...)						JCORE_EXPAND_1(QRY_STRUCT_APPLY_FN_DEF__(__VA_ARGS__))	// MSVC는 __VA_ARGS__가 하나의 인자로 취급되므로 확장시켜서 전달
+#define QRY_STRUCT_APPLY_FN_DEF(pair)						QRY_STRUCT_APPLY_FN_DEF_(JC_EXPAND_ARGS pair)		// (1,2) => 1,2로 벗겨서 전달
+#define QRY_STRUCT_APPLY_FN_DEF_(...)						JC_EXPAND_1(QRY_STRUCT_APPLY_FN_DEF__(__VA_ARGS__))	// MSVC는 __VA_ARGS__가 하나의 인자로 취급되므로 확장시켜서 전달
 #define QRY_STRUCT_APPLY_FN_DEF__(variableName, fieldName)	SelectResultBinder::BindField(fieldName, v.variableName, query);
-#define QRY_STRUCT_APPLY(...) JCORE_APPLY_FN(QRY_STRUCT_APPLY_FN_DEF, JCORE_GROUP_OF(2, __VA_ARGS__))
+#define QRY_STRUCT_APPLY(...) JC_APPLY_FN(QRY_STRUCT_APPLY_FN_DEF, JC_GROUP_OF(2, __VA_ARGS__))
 
 // 결과 바인딩이 가능하도록 쿼리 구조체 등록 (무조건 Qry 네임스페이스 내부에서 사용할 것)
 #define REGISTER_QRY_STRUCT(struct_name, ...)																			\

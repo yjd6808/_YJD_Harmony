@@ -10,42 +10,42 @@
 
 #include <jc/Define.h>
 
-JCORE_SENUM_BEGIN(AIState)
+JC_SENUM_BEGIN(AIState)
 	None,
 	Wander,
 	Track,
 	Angry
-JCORE_SENUM_END(AIState)
+JC_SENUM_END(AIState)
 
 // ==========================================================================================
 
-JCORE_SENUM_BEGIN(AIWanderDecision)
+JC_SENUM_BEGIN(AIWanderDecision)
 	Walk,
 	Idle,
 	Max
-JCORE_SENUM_END(AIWanderDecision)
+JC_SENUM_END(AIWanderDecision)
 
 // ==========================================================================================
 
-JCORE_SENUM_BEGIN(AITrackDecision)
+JC_SENUM_BEGIN(AITrackDecision)
 	Wander,
 	Attack,
 	Follow,
 	Max
-JCORE_SENUM_END(AITrackDecision)
+JC_SENUM_END(AITrackDecision)
 
 // ==========================================================================================
 
-JCORE_SENUM_BEGIN(AIAngryDecision)
+JC_SENUM_BEGIN(AIAngryDecision)
 	Wander,
 	Track,
 	Attack,
 	Max
-JCORE_SENUM_END(AIAngryDecision)
+JC_SENUM_END(AIAngryDecision)
 
 // ==========================================================================================
 
-JCORE_SENUM_BEGIN(AIActivityType)
+JC_SENUM_BEGIN(AIActivityType)
 		Idle,
 		Walk,
 		Attack,
@@ -55,7 +55,7 @@ JCORE_SENUM_BEGIN(AIActivityType)
 		// TODO: Custom 몬스터 특수행동 그런거 추가할 수 있을 듯?
 		Max,
 		None
-	JCORE_SENUM_MIDDLE(AIActivityType)
+	JC_SENUM_MIDDLE(AIActivityType)
 	static constexpr const char* Name[Max]{
 		"Idle",
 		"Walk",
@@ -65,6 +65,6 @@ JCORE_SENUM_BEGIN(AIActivityType)
 		"Sit"
 	};
 
-JCORE_SENUM_MIDDLE_END(AIActivityType)
+JC_SENUM_MIDDLE_END(AIActivityType)
 
 // ==========================================================================================

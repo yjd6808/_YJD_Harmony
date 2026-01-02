@@ -28,13 +28,13 @@ public:
 	c2d_ui::EditBox* Source() const { return pEditBox_; }
 	jc::String ToString() override { return jc::StringUtil::Format("에딧박스(%d)", pInfo_->code_); }
 
-	void SetInitialUISize(c2d::size _size) override;
+	void SetInitialUISize(cc::size _size) override;
 	void SetMaxLength(int _maxLength);
 	void SetTextEditBeginCallback(const jc::Action<UIEditBox*>& _fnTextEditBegin) const;
 	void SetTextChangedCallback(const jc::Action<UIEditBox*, const jc::String&>& _fnTextChanged) const;
 	void SetReturnCallback(const jc::Action<UIEditBox*>& _fnEditBoxReturn) const;
 	void SetLoseFocusCallback(const jc::Action<UIEditBox*, c2d_ui::EditBoxDelegate::EditBoxEndAction>& _fnLoseFocus) const;
-	void SetUISize(const c2d::size& _size) override;
+	void SetUISize(const cc::size& _size) override;
 	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
 	void SetInfoEditBox(UIEditBoxInfo* _pInfo, bool _infoOwner);
 
@@ -43,7 +43,7 @@ public:
 	void SetInputMode(c2d_ui::EditBox::InputMode _inputMode);
 	// ANY 모드에서는 VK_RETURN이 안먹히므로 오류라고 생각하지 말것
 protected:
-	bool OnMouseUpContainedInternalDetail(c2d::EventMouse* /*_pMouseEvent*/) override;
+	bool OnMouseUpContainedInternalDetail(cc::EventMouse* /*_pMouseEvent*/) override;
 
 private:
 	struct Listener : cocos2d::ui::EditBoxDelegate
@@ -100,8 +100,8 @@ private:
 
 	HWND nativeHandle_{};
 	UIEditBoxInfo* pInfo_;
-	c2d::Label* pLabel_{};
-	c2d::Label* pLabelPlaceHolder_{};
+	cc::Label* pLabel_{};
+	cc::Label* pLabelPlaceHolder_{};
 	c2d_ui::EditBoxImplWin* pEditBoxImpl_{};
 	c2d_ui::EditBox* pEditBox_;
 	Listener* pListener_;

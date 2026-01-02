@@ -80,7 +80,7 @@ void UIButton::SetVisibleState(State _state)
 	state_ = _state;
 }
 
-void UIButton::SetUISize(const c2d::size& _size)
+void UIButton::SetUISize(const cc::size& _size)
 {
 	if (!isResizable_)
 	{
@@ -121,7 +121,7 @@ void UIButton::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 
 	if (isInfoOwner_)
 	{
-		JCORE_DELETE_SAFE(buttonInfo_);
+		JC_DELETE_SAFE(buttonInfo_);
 	}
 
 	pBaseInfo_ = _pInfo;
@@ -167,28 +167,28 @@ void UIButton::RestoreState(State _state)
 	}
 }
 
-void UIButton::OnMouseEnterInternalDetail(c2d::EventMouse* _pMouseEvent)
+void UIButton::OnMouseEnterInternalDetail(cc::EventMouse* _pMouseEvent)
 {
 	SetVisibleState(eOver);
 }
 
-void UIButton::OnMouseLeaveInternalDetail(c2d::EventMouse* _pMouseEvent)
+void UIButton::OnMouseLeaveInternalDetail(cc::EventMouse* _pMouseEvent)
 {
 	SetVisibleState(eNormal);
 }
 
-bool UIButton::OnMouseMoveInternalDetail(c2d::EventMouse* _pMouseEvent)
+bool UIButton::OnMouseMoveInternalDetail(cc::EventMouse* _pMouseEvent)
 {
 	return false;
 }
 
-bool UIButton::OnMouseDownInternalDetail(c2d::EventMouse* _pMouseEvent)
+bool UIButton::OnMouseDownInternalDetail(cc::EventMouse* _pMouseEvent)
 {
 	SetVisibleState(ePressed);
 	return false;
 }
 
-void UIButton::OnMouseUpInternalDetail(c2d::EventMouse* _pMouseEvent)
+void UIButton::OnMouseUpInternalDetail(cc::EventMouse* _pMouseEvent)
 {
 	SetVisibleState(eNormal);
 }

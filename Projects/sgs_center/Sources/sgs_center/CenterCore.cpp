@@ -69,10 +69,10 @@ void FinalizeCenterCore()
 {
 	sg::Contents.Finalize();
 
-	JCORE_DELETE_SAFE(sg::GameDB);
-	JCORE_DELETE_SINGLETON_SAFE(sg::TimeManager);
-	JCORE_DELETE_SINGLETON_SAFE(sg::RuntimeConfig);
-	JCORE_DELETE_SINGLETON_SAFE(sg::NetGroupMgr);
-	JCORE_DELETE_SINGLETON_SAFE(sg::DataManager);
+	JC_DELETE_SAFE(sg::GameDB);
+	JC_DELETE_SINGLETON_SAFE(sg::TimeManager);
+	JC_DELETE_SINGLETON_SAFE(sg::RuntimeConfig);
+	JC_DELETE_SINGLETON_SAFE(sg::NetGroupMgr);
+	JC_DELETE_SINGLETON_SAFE(sg::DataManager);
 
 }

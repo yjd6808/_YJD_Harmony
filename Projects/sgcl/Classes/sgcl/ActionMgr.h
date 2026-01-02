@@ -25,10 +25,10 @@ public:
 	void InitGunnerActions();
 
 	void Update(float _dt);
-	void OnKeyPressed(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode);
-	void OnKeyReleased(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode);
-	void OnKeyPressedBefore(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode); // 키가 눌려진 상태가 수정되기전 호출
-	void OnKeyReleasedBefore(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode); // 키가 안눌려진 상태가 수정되기전 호출
+	void OnKeyPressed(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode);
+	void OnKeyReleased(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode);
+	void OnKeyPressedBefore(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode); // 키가 눌려진 상태가 수정되기전 호출
+	void OnKeyReleasedBefore(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode); // 키가 안눌려진 상태가 수정되기전 호출
 	void OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
 	void OnFrameEnd(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);
 	void OnAnimationBegin(ActorPartAnimation* _pAnimation, FrameTexture* _pTexture);

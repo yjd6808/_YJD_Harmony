@@ -13,7 +13,7 @@
 #include <jnet/IOCP/IOCP.h>
 
 NS_JNET_BEGIN
-class JCORE_NOVTABLE Host
+class JC_NOVTABLE Host
 {
 public:
 	Host(const IOCPPtr& _pIocp)

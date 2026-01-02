@@ -16,7 +16,7 @@ NS_JC_BEGIN
 
 class SchedulerTask;
 using SchedulerTaskCallback = Action<SchedulerTask*>;
-class JCORE_NOVTABLE SchedulerTask
+class JC_NOVTABLE SchedulerTask
 {
 public:
 	virtual ~SchedulerTask() = default;
@@ -32,7 +32,7 @@ protected:
 };
 
 // 스케쥴 작업을 상속받은 클래스 자체에 반복작업 내용을 정의 가능하도록 한다.
-class JCORE_NOVTABLE SchedulerTaskRunnable : public SchedulerTask
+class JC_NOVTABLE SchedulerTaskRunnable : public SchedulerTask
 {
 public:
 	SchedulerTaskRunnable() : at_(DateTime::Now()) {}

@@ -14,5 +14,5 @@
 
 struct Vec2Ex
 {
-	static void Log(const c2d::vec2& _vec);
+	static void Log(const cc::vec2& _vec);
 };

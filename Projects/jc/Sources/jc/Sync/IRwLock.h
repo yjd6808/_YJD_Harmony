@@ -18,7 +18,7 @@ enum RwLockType
     eNormalRwLock
 };
 
-struct JCORE_NOVTABLE IRwLock
+struct JC_NOVTABLE IRwLock
 {
     IRwLock() = default;
     virtual ~IRwLock() = default;

@@ -391,7 +391,7 @@ struct Arrays final
 		{
 			for (int index = 0; index < Size; ++index)
 			{
-				JCORE_DELETE_SAFE(_arr[index]);
+				JC_DELETE_SAFE(_arr[index]);
 			}
 		}
 	}
@@ -408,7 +408,7 @@ struct Arrays final
 		{
 			for (int index = 0; index < _size; ++index)
 			{
-				JCORE_DELETE_SAFE(_pArr[index]);
+				JC_DELETE_SAFE(_pArr[index]);
 			}
 		}
 	}

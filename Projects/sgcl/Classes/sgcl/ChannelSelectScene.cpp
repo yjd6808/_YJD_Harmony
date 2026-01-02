@@ -59,7 +59,7 @@ void SGChannelSelectScene::update(float _dt)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGChannelSelectScene::OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent)
+void SGChannelSelectScene::OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 	if (_keyCode == EventKeyboard::KeyCode::KEY_F8)
 	{
@@ -72,6 +72,6 @@ void SGChannelSelectScene::OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SGChannelSelectScene::OnKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent)
+void SGChannelSelectScene::OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 }

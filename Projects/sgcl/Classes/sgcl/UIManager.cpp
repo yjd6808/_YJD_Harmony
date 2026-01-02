@@ -144,7 +144,7 @@ void UIManager::Draginit(const DragState& _state)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIManager::DragEnter(const c2d::EventMouse* _pMouseEvent)
+void UIManager::DragEnter(const cc::EventMouse* _pMouseEvent)
 {
 	UIElement* pDragElement = dragState_.pTargetElement_;
 	const Vec2 dragDelta = _pMouseEvent->getStartCursorPos() - dragState_.startCursorPosition_;
@@ -157,7 +157,7 @@ void UIManager::DragEnter(const c2d::EventMouse* _pMouseEvent)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIManager::DragMove(const c2d::EventMouse* _pMouseEvent)
+void UIManager::DragMove(const cc::EventMouse* _pMouseEvent)
 {
 	UIElement* pDragElement = dragState_.pTargetElement_;
 	const Vec2 dragDelta = _pMouseEvent->getStartCursorPos() - dragState_.startCursorPosition_;

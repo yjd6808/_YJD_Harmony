@@ -138,7 +138,7 @@ void GameNetGroup::OnUpdate(const TimeSpan& _elapsed)
 //////////////////////////////////////////////////////////////////////////////////////////
 void GameNetGroup::LaunchServer()
 {
-	JCORE_LOCK_GUARD(serverBootLock_);
+	JC_LOCK_GUARD(serverBootLock_);
 
 	static CommonServer* s_Servers[3];
 	static CommonServer* s_FailedServer[3];
@@ -174,7 +174,7 @@ void GameNetGroup::LaunchServer()
 //////////////////////////////////////////////////////////////////////////////////////////
 void GameNetGroup::StopServer()
 {
-	JCORE_LOCK_GUARD(serverBootLock_);
+	JC_LOCK_GUARD(serverBootLock_);
 
 	static CommonServer* s_Servers[3];
 	static CommonServer* s_FailedServer[3];

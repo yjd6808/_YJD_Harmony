@@ -15,7 +15,7 @@ public:
 	GunnerRun(HostPlayer* _pPlayer, ActionInfo* _pActionInfo);
 
 	void OnActionBegin() override;
-	void OnKeyPressed(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode) override;
-	void OnKeyReleased(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode) override;
-	void OnKeyReleasedBefore(PlayerController* _pController, c2d::EventKeyboard::KeyCode _keyCode) override;
+	void OnKeyPressed(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode) override;
+	void OnKeyReleased(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode) override;
+	void OnKeyReleasedBefore(PlayerController* _pController, cc::EventKeyboard::KeyCode _keyCode) override;
 };

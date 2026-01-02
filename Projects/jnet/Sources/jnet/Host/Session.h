@@ -18,7 +18,7 @@
 NS_JNET_BEGIN
 
 class IOCPOverlapped;
-class JCORE_NOVTABLE Session : public Host
+class JC_NOVTABLE Session : public Host
 {
 public:
 	Session(const IOCPPtr& _pIocp,
@@ -58,7 +58,7 @@ public:
 	template <typename TCommand>
 	TCommand& SendAlloc(int _count = 0)
 	{
-		JCORE_LOCK_GUARD(sendBufferLock_);
+		JC_LOCK_GUARD(sendBufferLock_);
 		CMD_CHECK_BASE_OF_COMMAND(TCommand)
 		DYNAMIC_CMD_CHECK_ZERO_SIZE_ARRAY_FIELD(TCommand)
 

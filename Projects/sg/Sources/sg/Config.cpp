@@ -71,7 +71,7 @@ ConfigRuntime::ConfigRuntime()
 //////////////////////////////////////////////////////////////////////////////////////////
 ConfigRuntime::~ConfigRuntime()
 {
-	JCORE_DELETE_SAFE(pClientInfo_);
+	JC_DELETE_SAFE(pClientInfo_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -230,7 +230,7 @@ void ConfigRuntime::ReadClient(Json::Value& _clientRoot)
 void ConfigRuntime::WriteCore(Value& _root)
 {
 	{
-		// JCORE_LOCK_GUARD(FilterLock);
+		// JC_LOCK_GUARD(FilterLock);
 		recvCommandFilter_.ForEach([&_root](Cmd_t _cmd)
 		{
 			_root[RECV_COMMAND_FILTER_KEY].append(_cmd);
@@ -281,7 +281,7 @@ void ConfigRuntime::ShowCommandFilter(jnet::Transmission _transmission)
 	jc::HashSet<Cmd_t>& filter = _transmission == jnet::Transmission::Send ? sendCommandFilter_ : recvCommandFilter_;
 
 	{
-		// JCORE_LOCK_GUARD(FilterLock);
+		// JC_LOCK_GUARD(FilterLock);
 		int i = 0;
 		filter.ForEach([&](Cmd_t _cmd)
 		{
@@ -301,7 +301,7 @@ void ConfigRuntime::ShowCommandFilter(jnet::Transmission _transmission)
 //////////////////////////////////////////////////////////////////////////////////////////
 void ConfigRuntime::FilterCommand(jnet::Transmission _transmission, Cmd_t _cmd)
 {
-	// JCORE_LOCK_GUARD(FilterLock);
+	// JC_LOCK_GUARD(FilterLock);
 	jc::HashSet<Cmd_t>& filter = _transmission == jnet::Transmission::Send ? sendCommandFilter_ : recvCommandFilter_;
 	filter.Insert(_cmd);
 }
@@ -309,7 +309,7 @@ void ConfigRuntime::FilterCommand(jnet::Transmission _transmission, Cmd_t _cmd)
 //////////////////////////////////////////////////////////////////////////////////////////
 void ConfigRuntime::UnfilterCommand(jnet::Transmission _transmission, Cmd_t _cmd)
 {
-	// JCORE_LOCK_GUARD(FilterLock);
+	// JC_LOCK_GUARD(FilterLock);
 	jc::HashSet<Cmd_t>& filter = _transmission == jnet::Transmission::Send ? sendCommandFilter_ : recvCommandFilter_;
 	filter.Remove(_cmd);
 }
@@ -317,7 +317,7 @@ void ConfigRuntime::UnfilterCommand(jnet::Transmission _transmission, Cmd_t _cmd
 //////////////////////////////////////////////////////////////////////////////////////////
 bool ConfigRuntime::IsFilteredCommand(jnet::Transmission _transmission, Cmd_t _cmd)
 {
-	// JCORE_LOCK_GUARD(FilterLock);
+	// JC_LOCK_GUARD(FilterLock);
 	jc::HashSet<Cmd_t>& filter = _transmission == jnet::Transmission::Send ? sendCommandFilter_ : recvCommandFilter_;
 	return filter.Exist(_cmd);
 }

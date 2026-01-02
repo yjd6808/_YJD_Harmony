@@ -102,7 +102,7 @@ constexpr S case4 CASE_4(1, 2);		// constexpr S case4{1, 2};로 확장됨
 // CASE4에서 발생한 마이크로소프트 전처리기만의 고유 문제를 확장 매크로를 활용해서 해결
 #define CASE_5_ELEMENTS(a, b)	{ a, b }
 #define CASE_5(a, b)			CASE_5_(CASE_5_ELEMENTS(a, b))
-#define CASE_5_(...)			JCORE_EXPAND_1(CASE_5__(__VA_ARGS__))		// 확장 매크로 수행
+#define CASE_5_(...)			JC_EXPAND_1(CASE_5__(__VA_ARGS__))		// 확장 매크로 수행
 #define CASE_5__(a, b)			a, b
 
 constexpr S case5 CASE_5(1, 2);		// constexpr S case5{1, 2};로 확장됨

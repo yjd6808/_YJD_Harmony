@@ -102,7 +102,7 @@ void Thread::Sleep(Int32U _milliseconds)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Int32U JCORE_STDCALL Thread::ThreadRoutine(void* _pParam)
+Int32U JC_STDCALL Thread::ThreadRoutine(void* _pParam)
 {
     {
         auto* pRecvParam = static_cast<ThreadParam*>(_pParam);

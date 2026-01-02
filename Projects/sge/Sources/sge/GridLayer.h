@@ -30,7 +30,7 @@ public:
 private:
 	int interval_;
 	GridEvent userGridEvent_ = GridEvent::NoOption;
-	c2d::DrawNode* drawNode_;
+	cc::DrawNode* drawNode_;
 public:
 	void DrawGridWindow(const int _interval, const cocos2d::Color4F& _color);
 	static GridLayer* create(const int _interval, const cocos2d::Color4F& _color, const GridEvent _userGridEvent);

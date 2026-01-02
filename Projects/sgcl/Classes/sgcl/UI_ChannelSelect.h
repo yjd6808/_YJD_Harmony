@@ -41,7 +41,7 @@ public:
 		void Normal();
 		void Disabled();
 
-		bool ContainsPoint(const c2d::vec2& _pos);
+		bool ContainsPoint(const cc::vec2& _pos);
 
 		GameServerType_t type_;
 		UIGroup* pGroup_;
@@ -79,7 +79,7 @@ public:
 		void InitMonsterSprites(UI_ChannelSelect* _pRootGroup);
 		void SetChannelInfo(const LobbyChannelInfo& _channelInfo, char _sequence);
 
-		bool ContainsPoint(const c2d::vec2& _pos);
+		bool ContainsPoint(const cc::vec2& _pos);
 
 		int index_;
 		UIToggleButton* pToggleBtnEnteranceBackground_[EnteranceType::Max];
@@ -97,8 +97,8 @@ protected:
 	void OnUnloaded() override;
 	void OnUpdate(float _dt) override;
 
-	void OnMouseDown(c2d::EventMouse* _pMouseEvent) override;
-	void OnMouseMove(c2d::EventMouse* _pMouseEvent) override;
+	void OnMouseDown(cc::EventMouse* _pMouseEvent) override;
+	void OnMouseMove(cc::EventMouse* _pMouseEvent) override;
 	void OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _state) override;
 
 	int GetMonsterSpriteSgaIndex() const { return monsterSpriteSgaIndex_; }

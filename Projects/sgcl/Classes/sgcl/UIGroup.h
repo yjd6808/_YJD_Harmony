@@ -24,11 +24,11 @@ class UIStatic;
 
 class UIGroup : public UIElement
 {
-	JCORE_HIDE_BASE_CLASS_METHOD(Node, addChild)
+	JC_HIDE_BASE_CLASS_METHOD(Node, addChild)
 
 	struct CursorPositionGuard
 	{
-		CursorPositionGuard(c2d::EventMouse* _pMouseEvent, const c2d::vec2& _cursorPosition)
+		CursorPositionGuard(cc::EventMouse* _pMouseEvent, const cc::vec2& _cursorPosition)
 		: pEvent_(_pMouseEvent)
 		, resetCursorPosition_(_cursorPosition)
 		{
@@ -44,8 +44,8 @@ class UIGroup : public UIElement
 			pEvent_->setCursorPosition(resetCursorPosition_);
 		}
 
-		c2d::EventMouse* pEvent_;
-		c2d::vec2 resetCursorPosition_;
+		cc::EventMouse* pEvent_;
+		cc::vec2 resetCursorPosition_;
 	};
 
 public:
@@ -68,17 +68,17 @@ public:
 	void AddChild(UIElement* _pChild);
 
 	// 이하 자식들 오버라이딩을 금하기 위해 파이널로 처리
-	bool OnMouseDownInternal(c2d::EventMouse* _pMouseEvent) final;
-	bool OnMouseMoveInternal(c2d::EventMouse* _pMouseEvent) final;
-	bool OnMouseUpInternal(c2d::EventMouse* _pMouseEvent) final;
-	bool OnMouseScrollInternal(c2d::EventMouse* _pMouseEvent) final;
+	bool OnMouseDownInternal(cc::EventMouse* _pMouseEvent) final;
+	bool OnMouseMoveInternal(cc::EventMouse* _pMouseEvent) final;
+	bool OnMouseUpInternal(cc::EventMouse* _pMouseEvent) final;
+	bool OnMouseScrollInternal(cc::EventMouse* _pMouseEvent) final;
 
 	virtual void OnUpdate(float _dt)
 	{
 	}
 
-	virtual bool OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent) { return true; }
-	virtual bool OnKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent) { return true; }
+	virtual bool OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) { return true; }
+	virtual bool OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) { return true; }
 
 	UIElementType_t GetElementType() override { return UIElementType::Group; }
 	jc::String ToString() override { return jc::StringUtil::Format("그룹(%d)", groupInfo_->code_); }
@@ -152,7 +152,7 @@ public:
 	void RestoreState(State _state) override;
 	void ResetChildrenPosition() { InitChildrenPosition(); }
 
-	void SetUISize(const c2d::size& _contentSize) override;
+	void SetUISize(const cc::size& _contentSize) override;
 	void SetInfo(UIElementInfo* _pInfo, bool _infoOwner) override;
 	void SetInfoGroup(UIGroupInfo* _pInfo, bool _infoOwner);
 

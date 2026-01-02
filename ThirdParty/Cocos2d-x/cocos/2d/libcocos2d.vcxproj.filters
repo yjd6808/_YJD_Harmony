@@ -28,9 +28,6 @@
     <Filter Include="platform\win32\compat">
       <UniqueIdentifier>{3622d05e-fcef-4d4b-a51d-771d1c13a2ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="math">
-      <UniqueIdentifier>{a565f213-2d13-4d2d-a3a0-5b2d06cbd05f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="external">
       <UniqueIdentifier>{ec174f10-2de3-4568-9f30-b2f0a4e9396e}</UniqueIdentifier>
     </Filter>
@@ -696,36 +693,6 @@
     </ClCompile>
     <ClCompile Include="..\renderer\CCTextureCache.cpp">
       <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\math\CCAffineTransform.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\math\CCGeometry.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\math\CCVertex.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\math\Mat4.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\math\MathUtil.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\math\Quaternion.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\math\TransformUtils.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\math\Vec2.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\math\Vec3.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\math\Vec4.cpp">
-      <Filter>math</Filter>
     </ClCompile>
     <ClCompile Include="..\platform\CCFileUtils.cpp">
       <Filter>platform</Filter>
@@ -2451,42 +2418,6 @@
     <ClInclude Include="..\platform\win32\compat\stdint.h">
       <Filter>platform\win32\compat</Filter>
     </ClInclude>
-    <ClInclude Include="..\math\CCAffineTransform.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\math\CCGeometry.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\math\CCMath.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\math\CCMathBase.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\math\CCVertex.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\math\Mat4.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\math\MathUtil.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\math\Quaternion.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\math\TransformUtils.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\math\Vec2.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\math\Vec3.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\math\Vec4.h">
-      <Filter>math</Filter>
-    </ClInclude>
     <ClInclude Include="..\platform\CCApplicationProtocol.h">
       <Filter>platform</Filter>
     </ClInclude>
@@ -3915,27 +3846,6 @@
     <ClInclude Include="..\precheader.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\math\Mat4.inl">
-      <Filter>math</Filter>
-    </None>
-    <None Include="..\math\MathUtil.inl">
-      <Filter>math</Filter>
-    </None>
-    <None Include="..\math\MathUtilNeon.inl">
-      <Filter>math</Filter>
-    </None>
-    <None Include="..\math\Quaternion.inl">
-      <Filter>math</Filter>
-    </None>
-    <None Include="..\math\Vec2.inl">
-      <Filter>math</Filter>
-    </None>
-    <None Include="..\math\Vec3.inl">
-      <Filter>math</Filter>
-    </None>
-    <None Include="..\math\Vec4.inl">
-      <Filter>math</Filter>
-    </None>
     <None Include="cocos2d.def" />
     <None Include="..\3d\CCAnimationCurve.inl">
       <Filter>3d</Filter>

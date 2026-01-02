@@ -11,7 +11,7 @@
 USING_NS_CC;
 USING_NS_JC;
 
-static c2d::size GetMonitorSizeFromPoint(POINT _point);
+static cc::size GetMonitorSizeFromPoint(POINT _point);
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void Win32Helper::LazyInit()
@@ -22,36 +22,36 @@ void Win32Helper::LazyInit()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::vec2 Win32Helper::GetWindowPos()
+cc::vec2 Win32Helper::GetWindowPos()
 {
 	RECT rect;
 	::GetWindowRect(ViewHandle, &rect);
-	const c2d::size monitorSize = GetMonitorSizeFromPoint({ rect.left, rect.bottom });
+	const cc::size monitorSize = GetMonitorSizeFromPoint({ rect.left, rect.bottom });
 	return { (float)rect.left, monitorSize.height - rect.bottom };
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::rect Win32Helper::GetWindowRect()
+cc::rect Win32Helper::GetWindowRect()
 {
 	RECT rect;
 	::GetWindowRect(ViewHandle, &rect);
-	const c2d::size monitorSize = GetMonitorSizeFromPoint({ rect.left, rect.bottom });
+	const cc::size monitorSize = GetMonitorSizeFromPoint({ rect.left, rect.bottom });
 	return {
 		(float)rect.left, monitorSize.height - rect.bottom, (float)rect.right - rect.left, (float)rect.bottom - rect.top
 	};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::vec2 Win32Helper::GetCursorPos()
+cc::vec2 Win32Helper::GetCursorPos()
 {
 	POINT cursorPos;
 	::GetCursorPos(&cursorPos);
-	const c2d::size monitorSize = GetMonitorSizeFromPoint(cursorPos);
+	const cc::size monitorSize = GetMonitorSizeFromPoint(cursorPos);
 	return { (float)cursorPos.x, monitorSize.height - cursorPos.y };
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-static c2d::size GetMonitorSizeFromPoint(POINT _point)
+static cc::size GetMonitorSizeFromPoint(POINT _point)
 {
 	const HMONITOR pMonitor = MonitorFromPoint(_point, MONITOR_DEFAULTTONEAREST);
 	MONITORINFO monitorInfo;

@@ -23,7 +23,7 @@ ProgressNotifier::ProgressNotifier(int _maxStep)
 ProgressNotifier::~ProgressNotifier()
 {
 	if (m_bListenerOwner && m_pListener)
-		JCORE_DELETE_SAFE(m_pListener);
+		JC_DELETE_SAFE(m_pListener);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

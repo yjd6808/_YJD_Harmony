@@ -16,7 +16,7 @@
 
 NS_JC_BEGIN
 
-JCORE_SENUM_BEGIN(PropertyType)
+JC_SENUM_BEGIN(PropertyType)
 Bool,
 Int8,
 Int8U,
@@ -35,7 +35,7 @@ String,
 CharPtr,
 Unknown,
 Max
-JCORE_SENUM_MIDDLE(PropertyType)
+JC_SENUM_MIDDLE(PropertyType)
 static constexpr const char* NAME[Max]
 {
 	"Bool",
@@ -244,16 +244,16 @@ static constexpr bool IsConvertiable(PropertyType_t _lhs, PropertyType_t _rhs)
 	return false;
 }
 
-JCORE_SENUM_MIDDLE_END(PropertyType)
+JC_SENUM_MIDDLE_END(PropertyType)
 
 
-JCORE_SENUM_BEGIN(PropertyUnaryOperatorType)
+JC_SENUM_BEGIN(PropertyUnaryOperatorType)
 PrefixIncrement,
 PrefixDecrement,
 PostfixIncrement,
 PostfixDecrement,
 Max
-JCORE_SENUM_MIDDLE(PropertyUnaryOperatorType)
+JC_SENUM_MIDDLE(PropertyUnaryOperatorType)
 static constexpr const char* NAME[Max] =
 {
 	"++",
@@ -262,10 +262,10 @@ static constexpr const char* NAME[Max] =
 	"--(int)",
 };
 
-JCORE_SENUM_MIDDLE_END(PropertyUnaryOperatorType)
+JC_SENUM_MIDDLE_END(PropertyUnaryOperatorType)
 
 
-JCORE_SENUM_BEGIN(PropertyBinaryOperatorType)
+JC_SENUM_BEGIN(PropertyBinaryOperatorType)
 Store,
 Move,
 Plus,
@@ -281,7 +281,7 @@ LessEqual,
 Less,
 Unknwon,
 Max
-JCORE_SENUM_MIDDLE(PropertyBinaryOperatorType)
+JC_SENUM_MIDDLE(PropertyBinaryOperatorType)
 
 static constexpr const char* NAME[Max] =
 {
@@ -301,7 +301,7 @@ static constexpr const char* NAME[Max] =
 	"Unknown"
 };
 
-JCORE_SENUM_MIDDLE_END(PropertyBinaryOperatorType)
+JC_SENUM_MIDDLE_END(PropertyBinaryOperatorType)
 
 
 NS_JC_END

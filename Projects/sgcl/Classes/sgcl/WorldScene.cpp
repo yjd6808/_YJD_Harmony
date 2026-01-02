@@ -194,30 +194,30 @@ void WorldScene::OnWndMessageReceived(int _code, WPARAM _wParam, LPARAM _lParam)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void WorldScene::OnWndFocused(c2d::EventCustom* _pCustom)
+void WorldScene::OnWndFocused(cc::EventCustom* _pCustom)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void WorldScene::OnWndLostFocused(c2d::EventCustom* _pCustom)
+void WorldScene::OnWndLostFocused(cc::EventCustom* _pCustom)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void WorldScene::OnWndResized(c2d::EventCustom* _pCustom)
+void WorldScene::OnWndResized(cc::EventCustom* _pCustom)
 {
-	c2d::size size = _director->getOpenGLView()->getFrameSize();
+	cc::size size = _director->getOpenGLView()->getFrameSize();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void WorldScene::OnWndCursorEnter(c2d::EventCustom* _pCustom)
+void WorldScene::OnWndCursorEnter(cc::EventCustom* _pCustom)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void WorldScene::OnWndCursorLeave(c2d::EventCustom* _pCustom)
+void WorldScene::OnWndCursorLeave(cc::EventCustom* _pCustom)
 {
-	const c2d::vec2 leavePos = Win32Helper::GetCursorPos();
+	const cc::vec2 leavePos = Win32Helper::GetCursorPos();
 	EventMouse* pEventMouse = dbg_new EventMouse(EventMouse::MouseEventType::MOUSE_MOVE);
 	pEventMouse->setCursorPosition(leavePos.x, leavePos.y);
 
@@ -230,7 +230,7 @@ void WorldScene::OnWndCursorLeave(c2d::EventCustom* _pCustom)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void WorldScene::OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent) const
+void WorldScene::OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) const
 {
 	if (_keyCode == EventKeyboard::KeyCode::KEY_F1)
 	{
@@ -296,7 +296,7 @@ void WorldScene::OnKeyPressed(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* 
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void WorldScene::OnKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event* _pEvent) const
+void WorldScene::OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) const
 {
 	if (pRunningScene_)
 	{
@@ -310,7 +310,7 @@ void WorldScene::OnKeyReleased(c2d::EventKeyboard::KeyCode _keyCode, c2d::Event*
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void WorldScene::OnMouseMove(c2d::EventMouse* _pMouseEvent) const
+void WorldScene::OnMouseMove(cc::EventMouse* _pMouseEvent) const
 {
 	if (pRunningScene_)
 	{
@@ -324,7 +324,7 @@ void WorldScene::OnMouseMove(c2d::EventMouse* _pMouseEvent) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void WorldScene::OnMouseDown(c2d::EventMouse* _pMouseEvent) const
+void WorldScene::OnMouseDown(cc::EventMouse* _pMouseEvent) const
 {
 	if (pRunningScene_)
 	{
@@ -338,7 +338,7 @@ void WorldScene::OnMouseDown(c2d::EventMouse* _pMouseEvent) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void WorldScene::OnMouseUp(c2d::EventMouse* _pMouseEvent) const
+void WorldScene::OnMouseUp(cc::EventMouse* _pMouseEvent) const
 {
 	if (pRunningScene_)
 	{
@@ -354,7 +354,7 @@ void WorldScene::OnMouseUp(c2d::EventMouse* _pMouseEvent) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void WorldScene::OnMouseScroll(c2d::EventMouse* _pMouseEvent) const
+void WorldScene::OnMouseScroll(cc::EventMouse* _pMouseEvent) const
 {
 	if (pRunningScene_)
 	{

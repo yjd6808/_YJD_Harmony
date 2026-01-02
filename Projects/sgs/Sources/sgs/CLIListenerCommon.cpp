@@ -15,8 +15,8 @@ USING_NS_JC;
 //////////////////////////////////////////////////////////////////////////////////////////
 CLIListenerCommon::CLIListenerCommon()
 {
-	table_.Insert("help", JCORE_CALLBACK_2(CLIListenerCommon::CLI_HelpCommon, this));
-	table_.Insert("exit", JCORE_CALLBACK_2(CLIListenerCommon::CLI_ExitCommon, this));
+	table_.Insert("help", JC_CALLBACK_2(CLIListenerCommon::CLI_HelpCommon, this));
+	table_.Insert("exit", JC_CALLBACK_2(CLIListenerCommon::CLI_ExitCommon, this));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

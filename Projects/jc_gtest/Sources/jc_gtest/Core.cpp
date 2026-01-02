@@ -21,14 +21,14 @@ TEST(JCoreTest, DeleteSafe)
 {
 	int* szAlloc = new int;
 	*szAlloc = 20;
-	JCORE_DELETE_SAFE(szAlloc);
+	JC_DELETE_SAFE(szAlloc);
 	EXPECT_TRUE(szAlloc == NULL);
 }
 
 TEST(JCoreTest, DeleteArraySafe) 
 {
 	int* szAlloc = new int[512];
-	JCORE_DELETE_ARRAY_SAFE(szAlloc);
+	JC_DELETE_ARRAY_SAFE(szAlloc);
 	EXPECT_TRUE(szAlloc == NULL);
 }
 

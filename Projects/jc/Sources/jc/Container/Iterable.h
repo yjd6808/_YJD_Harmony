@@ -16,7 +16,7 @@ NS_JC_BEGIN
 // 전방 선언
 template <typename, typename> class Iterator;
 template <typename T, typename TAllocator>
-class JCORE_NOVTABLE Iterable
+class JC_NOVTABLE Iterable
 {
 public:
 	using TIterator = Iterator<T, TAllocator>;

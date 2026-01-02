@@ -17,7 +17,7 @@ class HostPlayer;
 class HitRecorder;
 class AIActivity;
 
-class JCORE_NOVTABLE IActorListener
+class JC_NOVTABLE IActorListener
 {
 public:
 	enum Type

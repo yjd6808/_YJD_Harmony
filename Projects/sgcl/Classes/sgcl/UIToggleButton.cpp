@@ -102,7 +102,7 @@ void UIToggleButton::SetEnabled(bool _enabled)
 	SetVisibleState(eDisabled);
 }
 
-void UIToggleButton::SetUISize(const c2d::size& _contentSize)
+void UIToggleButton::SetUISize(const cc::size& _contentSize)
 {
 	if (!isResizable_)
 		return;
@@ -140,7 +140,7 @@ void UIToggleButton::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 
 	if (isInfoOwner_)
 	{
-		JCORE_DELETE_SAFE(pInfo_);
+		JC_DELETE_SAFE(pInfo_);
 	}
 
 	pBaseInfo_ = _pInfo;
@@ -240,33 +240,33 @@ void UIToggleButton::Unload()
 	isLoaded_ = false;
 }
 
-void UIToggleButton::OnMouseEnterInternalDetail(c2d::EventMouse* _pMouseEvent)
+void UIToggleButton::OnMouseEnterInternalDetail(cc::EventMouse* _pMouseEvent)
 {
 	SetVisibleState(eOver);
 }
 
-void UIToggleButton::OnMouseLeaveInternalDetail(c2d::EventMouse* _pMouseEvent)
+void UIToggleButton::OnMouseLeaveInternalDetail(cc::EventMouse* _pMouseEvent)
 {
 	SetVisibleState(State::eNormal);
 }
 
-bool UIToggleButton::OnMouseMoveInternalDetail(c2d::EventMouse* _pMouseEvent)
+bool UIToggleButton::OnMouseMoveInternalDetail(cc::EventMouse* _pMouseEvent)
 {
 	return true;
 }
 
-bool UIToggleButton::OnMouseDownInternalDetail(c2d::EventMouse* _pMouseEvent)
+bool UIToggleButton::OnMouseDownInternalDetail(cc::EventMouse* _pMouseEvent)
 {
 	SetVisibleState(ePressed);
 	return false;
 }
 
-void UIToggleButton::OnMouseUpInternalDetail(c2d::EventMouse* _pMouseEvent)
+void UIToggleButton::OnMouseUpInternalDetail(cc::EventMouse* _pMouseEvent)
 {
 	SetVisibleState(State::eNormal);
 }
 
-bool UIToggleButton::OnMouseUpContainedInternalDetail(c2d::EventMouse* _pMouseEvent)
+bool UIToggleButton::OnMouseUpContainedInternalDetail(cc::EventMouse* _pMouseEvent)
 {
 	toggleState_ = toggleState_ == ToggleState::eNormal ? ToggleState::eToggled : ToggleState::eNormal;
 	pRootGroup_->OnToggleStateChanged(this, toggleState_);

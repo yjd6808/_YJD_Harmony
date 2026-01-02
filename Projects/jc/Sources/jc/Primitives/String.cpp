@@ -109,7 +109,7 @@ String::String(String&& _str) noexcept
 }
 
 String::~String() {
-	JCORE_DELETE_ARRAY_SAFE(m_pBuffer);
+	JC_DELETE_ARRAY_SAFE(m_pBuffer);
 }
 
 /* ========================================================== */
@@ -117,7 +117,7 @@ String::~String() {
 //////////////////////////////////////////////////////////////////////////////////////////
 void String::ExchangeSource(char* _pSrc, int _len)
 {
-	JCORE_DELETE_ARRAY_SAFE(m_pBuffer);
+	JC_DELETE_ARRAY_SAFE(m_pBuffer);
 	m_pBuffer = _pSrc;
 	m_iLen = _len;
 	m_iCapacity = _len + 1;
@@ -224,7 +224,7 @@ void String::Resize(const int capacity) {
 	m_iCapacity = capacity;
 
 	StringUtil::Copy(m_pBuffer, m_iCapacity, pTempBuffer);
-	JCORE_DELETE_ARRAY_SAFE(pTempBuffer);
+	JC_DELETE_ARRAY_SAFE(pTempBuffer);
 }
 
 // len길이가 현재 capacity를 초과할 경우 확장을 해준다.
@@ -617,7 +617,7 @@ Vector<String> String::Split(const char* delimiter, const bool includeEmpty) con
 }
 
 void String::Initialize(int capacity) {
-	JCORE_DELETE_ARRAY_SAFE(m_pBuffer);
+	JC_DELETE_ARRAY_SAFE(m_pBuffer);
 
 	m_pBuffer = dbg_new char[capacity];
 	m_iLen = 0;
@@ -711,7 +711,7 @@ String& String::operator+=(const char* str) {
 
 String& String::operator=(const String& other) {
 	if (other.m_pBuffer == nullptr) {
-		JCORE_DELETE_ARRAY_SAFE(m_pBuffer);
+		JC_DELETE_ARRAY_SAFE(m_pBuffer);
 		m_iLen = 0;
 		m_iCapacity = 0;
 	} else {
@@ -727,7 +727,7 @@ String& String::operator=(const String& other) {
 // @참고 : https://modoocode.com/227
 String& String::operator=(String&& other) noexcept {
 	// 기존 문자열 제거해줘야함
-	JCORE_DELETE_ARRAY_SAFE(m_pBuffer);
+	JC_DELETE_ARRAY_SAFE(m_pBuffer);
 
 	// 이동 생성자 학습 후 적용
 	m_iCapacity = other.m_iCapacity;
@@ -753,7 +753,7 @@ String& String::operator=(const char* other) {
 }
 
 String& String::operator=(std::nullptr_t other) {
-	JCORE_DELETE_ARRAY_SAFE(m_pBuffer);
+	JC_DELETE_ARRAY_SAFE(m_pBuffer);
 
 	m_iCapacity = 0;
 	m_iLen = 0;

@@ -9,7 +9,7 @@
 
 #include <sgcl/AIActivity.h>
 
-class JCORE_NOVTABLE HitActivity : public AIActivity
+class JC_NOVTABLE HitActivity : public AIActivity
 {
 public:
 	HitActivity(Actor* _pActor);

@@ -29,7 +29,7 @@ CMemoryChunckQueue::~CMemoryChunckQueue()
 
 	while (!chunkQueue_.IsEmpty())
 	{
-		JCORE_DELETE_ARRAY_SAFE(chunkQueue_.Top());
+		JC_DELETE_ARRAY_SAFE(chunkQueue_.Top());
 		chunkQueue_.Pop();
 	}
 }

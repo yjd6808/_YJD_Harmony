@@ -16,7 +16,7 @@ class IPacket;
 class RecvedCommandPacket;
 
 class Session;
-class JCORE_NOVTABLE SessionEventListener
+class JC_NOVTABLE SessionEventListener
 {
 public:
 	SessionEventListener() = default;

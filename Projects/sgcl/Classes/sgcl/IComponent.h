@@ -17,7 +17,7 @@ public:															\
 	Type GetType() const override { return component_type; }	\
 	static Type Type() { return component_type; }
 
-class JCORE_NOVTABLE IComponent
+class JC_NOVTABLE IComponent
 {
 public:
 	enum Type

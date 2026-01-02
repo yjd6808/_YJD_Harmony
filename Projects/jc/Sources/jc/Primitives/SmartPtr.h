@@ -119,7 +119,7 @@ constexpr decltype(auto) MakeUnique(Args&&... _args)
 }
 
 
-struct JCORE_NOVTABLE UniqueBase
+struct JC_NOVTABLE UniqueBase
 {
 	virtual ~UniqueBase() = default;
 	virtual void DeleteSelf() = 0;
@@ -425,7 +425,7 @@ public:
 };
 
 
-struct JCORE_NOVTABLE ControlBlock
+struct JC_NOVTABLE ControlBlock
 {
 	ControlBlock() = default;
 	virtual ~ControlBlock() = default;

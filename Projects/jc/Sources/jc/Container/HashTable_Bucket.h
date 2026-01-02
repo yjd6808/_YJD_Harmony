@@ -150,8 +150,8 @@ struct Bucket<TKey, TAllocator>
     }
     ~Bucket()
     {
-        JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pDynamicArray_, size_);
-        JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pDynamicArray_, sizeof(TBucketNode) * capacity_);
+        JC_PLACEMENT_DELETE_ARRAY_SAFE(pDynamicArray_, size_);
+        JC_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pDynamicArray_, sizeof(TBucketNode) * capacity_);
     }
 
     template <typename... Args>
@@ -222,7 +222,7 @@ struct Bucket<TKey, TAllocator>
 
     void Clear()
     {
-        JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pDynamicArray_, size_);
+        JC_PLACEMENT_DELETE_ARRAY_SAFE(pDynamicArray_, size_);
         size_ = 0;
     }
 
@@ -331,8 +331,8 @@ struct Bucket<TKey, TValue, TAllocator>
 
     ~Bucket()
     {
-        JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pDynamicArray_, size_);
-        JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pDynamicArray_, sizeof(TBucketNode) * capacity_);
+        JC_PLACEMENT_DELETE_ARRAY_SAFE(pDynamicArray_, size_);
+        JC_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(pDynamicArray_, sizeof(TBucketNode) * capacity_);
     }
 
     template <typename... Args>
@@ -410,7 +410,7 @@ struct Bucket<TKey, TValue, TAllocator>
 
     void Clear()
     {
-        JCORE_PLACEMENT_DELETE_ARRAY_SAFE(pDynamicArray_, size_);
+        JC_PLACEMENT_DELETE_ARRAY_SAFE(pDynamicArray_, size_);
         size_ = 0;
     }
 

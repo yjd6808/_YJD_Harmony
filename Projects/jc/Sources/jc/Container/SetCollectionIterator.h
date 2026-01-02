@@ -15,7 +15,7 @@ class CVoidOwner;
 template <typename, typename> struct Pair;
 
 template <typename TKey, typename TAllocator>
-class JCORE_NOVTABLE SetCollectionIterator : public Iterator<TKey, TAllocator>
+class JC_NOVTABLE SetCollectionIterator : public Iterator<TKey, TAllocator>
 {
 	using TIterator = Iterator<TKey, TAllocator>;
 

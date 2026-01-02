@@ -15,8 +15,8 @@ USING_NS_JC;
 ActorPartSprite* ActorPartSprite::Create(
 	int _frameCount,
 	ActorSprite* _pActor,
-	c2d::Node* _pCanvas,
-	c2d::DrawNode* _pBoundingBox,
+	cc::Node* _pCanvas,
+	cc::DrawNode* _pBoundingBox,
 	const ActorPartSpriteData& _partData,
 	jc::Vector<AnimationInfo>* _pAnimations
 )
@@ -30,7 +30,7 @@ ActorPartSprite* ActorPartSprite::Create(
 		return pPartSprite;
 	}
 
-	JCORE_DELETE_SAFE(pPartSprite);
+	JC_DELETE_SAFE(pPartSprite);
 	return nullptr;
 }
 
@@ -38,8 +38,8 @@ ActorPartSprite* ActorPartSprite::Create(
 ActorPartSprite::ActorPartSprite(
 	int _frameCount,
 	ActorSprite* _pActor,
-	c2d::Node* _pCanvas,
-	c2d::DrawNode* _pBoundingBox,
+	cc::Node* _pCanvas,
+	cc::DrawNode* _pBoundingBox,
 	const ActorPartSpriteData& _partData,
 	jc::Vector<AnimationInfo>* _pAnimations)
 : partIndex_(0)
@@ -231,7 +231,7 @@ void ActorPartSprite::OnFrameBegin(ActorPartAnimation* _pAnimation, FrameTexture
 
 	if (partIndex_ == 0)
 	{
-		c2d::rect boundingBox = getBoundingBox();
+		cc::rect boundingBox = getBoundingBox();
 
 		RectPoly poly = projectile
 			                ? RectPoly::createFromCenter({ 0, 0 }, boundingBox.size)

@@ -69,8 +69,8 @@ void NetCore::Finalize()
 {
 	NetGroupMgr::Finalize();
 
-	JCORE_DELETE_SINGLETON_SAFE(pCommandSynchronizer_);
-	JCORE_DELETE_SINGLETON_SAFE(pConnectionSynchronizer_);
+	JC_DELETE_SINGLETON_SAFE(pCommandSynchronizer_);
+	JC_DELETE_SINGLETON_SAFE(pConnectionSynchronizer_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

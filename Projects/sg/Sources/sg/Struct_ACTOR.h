@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <sg/SgaSpriteRect.h>
+#include <sg/_Sga/SgaSpriteRect.h>
 #include <sg/Struct_ANIMATION.h>
 
 struct ThicknessBox

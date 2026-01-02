@@ -6,7 +6,7 @@
 
 #include <sg/LogSpecifier.h>
 #include <sg/AudioPlayer.h>
-#include <sg/SgaElementInitializer.h>
+#include <sg/_Sga/SgaElementInitializer.h>
 #include <sg/ClientInfo.h>
 #include <sg/Config.h>
 
@@ -56,25 +56,25 @@ void SteinsGateApp::SetDesignResolutionSize(float _width, float _height)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::rect SteinsGateApp::GetDesignResolutionRect() const
+cc::rect SteinsGateApp::GetDesignResolutionRect() const
 {
-	c2d::size size = pView_->getDesignResolutionSize();
-	return c2d::rect{ 0, 0, size.width, size.height };
+	cc::size size = pView_->getDesignResolutionSize();
+	return cc::rect{ 0, 0, size.width, size.height };
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::size SteinsGateApp::GetUIResolutionSize() const
+cc::size SteinsGateApp::GetUIResolutionSize() const
 {
 	ClientInfo* pInfo = g_cConfigRuntime.GetClientInfo();
-	return c2d::size{ pInfo->uiResolutionWidth_, pInfo->uiResolutionHeight_ };
+	return cc::size{ pInfo->uiResolutionWidth_, pInfo->uiResolutionHeight_ };
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::vec2 SteinsGateApp::GetUIScaleFactor() const
+cc::vec2 SteinsGateApp::GetUIScaleFactor() const
 {
 	ClientInfo* pInfo = g_cConfigRuntime.GetClientInfo();
-	c2d::size designSize = pView_->getDesignResolutionSize();
-	return c2d::vec2{ designSize.width / pInfo->uiResolutionWidth_, designSize.height / pInfo->uiResolutionHeight_ };
+	cc::size designSize = pView_->getDesignResolutionSize();
+	return cc::vec2{ designSize.width / pInfo->uiResolutionWidth_, designSize.height / pInfo->uiResolutionHeight_ };
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

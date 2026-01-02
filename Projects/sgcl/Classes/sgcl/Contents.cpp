@@ -31,16 +31,16 @@ void Contents::Initialize()
 //////////////////////////////////////////////////////////////////////////////////////////
 void Contents::Finalize()
 {
-	JCORE_DELETE_SINGLETON_SAFE(TimeManager);
-	JCORE_DELETE_SINGLETON_SAFE(PopupManager);
+	JC_DELETE_SINGLETON_SAFE(TimeManager);
+	JC_DELETE_SINGLETON_SAFE(PopupManager);
 
 	g_cUIMgr.Free();
 
-	JCORE_DELETE_SINGLETON_SAFE(Player);
-	JCORE_DELETE_SINGLETON_SAFE(Inven);
-	JCORE_DELETE_SINGLETON_SAFE(ActorListenerManager);
-	JCORE_DELETE_SINGLETON_SAFE(ActorManager);
-	JCORE_DELETE_SINGLETON_SAFE(Global);
+	JC_DELETE_SINGLETON_SAFE(Player);
+	JC_DELETE_SINGLETON_SAFE(Inven);
+	JC_DELETE_SINGLETON_SAFE(ActorListenerManager);
+	JC_DELETE_SINGLETON_SAFE(ActorManager);
+	JC_DELETE_SINGLETON_SAFE(Global);
 
-	// JCORE_MAKE_NULL(World); // 월드는 코코스에서 알아서 제거해줌
+	// JC_MAKE_NULL(World); // 월드는 코코스에서 알아서 제거해줌
 }

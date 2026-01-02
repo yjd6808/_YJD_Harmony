@@ -47,12 +47,12 @@ public:
 	virtual void OnRemoved();
 
 	// 마스터 그룹 자식들중에서 발생하는 이벤트들
-	virtual void OnMouseEnterTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent);
-	virtual void OnMouseMoveTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent);
-	virtual void OnMouseDownTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent);
-	virtual void OnMouseUpTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent);
-	virtual void OnMouseLeaveTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent);
-	virtual void OnMouseScrollTarget(UIElement* _pElement, c2d::EventMouse* _pMouseEvent);
+	virtual void OnMouseEnterTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseMoveTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseDownTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseLeaveTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseScrollTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent);
 
 	virtual void OnDragEnter(UIElement* _pElement, const DragState& _dragState);
 	virtual void OnDragMove(UIElement* _pElement, const DragState& _dragState);
@@ -72,12 +72,12 @@ public:
 	virtual void OnEditBoxEditingDidEndWithAction(UIEditBox* _pEditBox, c2d_ui::EditBoxDelegate::EditBoxEndAction _endAction);
 
 	// 마스터 그룹에서 마우스 이벤트 발생시
-	virtual void OnMouseEnter(c2d::EventMouse* _pMouseEvent);
-	virtual void OnMouseMove(c2d::EventMouse* _pMouseEvent);
-	virtual void OnMouseDown(c2d::EventMouse* _pMouseEvent);
-	virtual void OnMouseUp(c2d::EventMouse* _pMouseEvent);
-	virtual void OnMouseLeave(c2d::EventMouse* _pMouseEvent);
-	virtual void OnMouseScroll(c2d::EventMouse* _pMouseEvent);
+	virtual void OnMouseEnter(cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseMove(cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseDown(cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseUp(cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseLeave(cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseScroll(cc::EventMouse* _pMouseEvent);
 
 	jc::String ToString() override
 	{

@@ -214,7 +214,7 @@ public:
 			jc_assert_msg(blockSize <= MAX_ALLOCATABLE_SIZE, "이 풀 인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트 블록을 초기화하려함)", MAX_ALLOCATABLE_SIZE, blockSize);
 			jc_assert_msg(detail::AllocationLengthMapConverter::ValidateSize(blockSize), "뭐야! 사이즈가 안맞자나!");
 			if (poolChunkQueueArray_Member[allocationIndex])
-				JCORE_DELETE_SAFE(poolChunkQueueArray_Member[allocationIndex]);
+				JC_DELETE_SAFE(poolChunkQueueArray_Member[allocationIndex]);
 
 			poolChunkQueueArray_Member[allocationIndex] = dbg_new CMemoryChunckQueue(blockSize, blockCount);
 			AddInitBlock(allocationIndex, blockCount);
@@ -230,7 +230,7 @@ public:
 
 		for (int boundaryIndex = 0; boundaryIndex <= HIGH_BOUNDARY_INDEX; ++boundaryIndex)
 		{
-			JCORE_DELETE_SAFE(poolChunkQueueArray_Member[boundaryIndex]);
+			JC_DELETE_SAFE(poolChunkQueueArray_Member[boundaryIndex]);
 		}
 
 		if (poolTargeterLow_Member != nullptr)
@@ -239,7 +239,7 @@ public:
 			{
 				poolTargeterLow_Member->At(targetIndex) = nullptr;
 			}
-			JCORE_DELETE_SAFE(poolTargeterLow_Member);
+			JC_DELETE_SAFE(poolTargeterLow_Member);
 		}
 
 		if (poolTargeterHigh_Member != nullptr)
@@ -248,7 +248,7 @@ public:
 			{
 				poolTargeterHigh_Member->At(targetIndex) = nullptr;
 			}
-			JCORE_DELETE_SAFE(poolTargeterHigh_Member);
+			JC_DELETE_SAFE(poolTargeterHigh_Member);
 		}
 	}
 

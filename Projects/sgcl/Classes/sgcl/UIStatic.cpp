@@ -124,7 +124,7 @@ void UIStatic::SetDebugVisible(bool _visible)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIStatic::SetUISize(const c2d::size& _contentSize)
+void UIStatic::SetUISize(const cc::size& _contentSize)
 {
 	if (!isResizable_)
 		return;
@@ -154,7 +154,7 @@ void UIStatic::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 
 	if (isInfoOwner_)
 	{
-		JCORE_DELETE_SAFE(pInfo_);
+		JC_DELETE_SAFE(pInfo_);
 	}
 
 	pBaseInfo_ = _pInfo;

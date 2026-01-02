@@ -39,7 +39,7 @@ Actor::Actor()
 //////////////////////////////////////////////////////////////////////////////////////////
 Actor::~Actor()
 {
-	JCORE_DELETE_SAFE(pHitRecorder_);
+	JC_DELETE_SAFE(pHitRecorder_);
 	listeners_.DeleteAll();
 }
 
@@ -91,10 +91,10 @@ void Actor::InitThicknessBox(const ThicknessBox& _thicknessBox)
 
 	if (pThicknessBox_ == nullptr)
 	{
-		pThicknessBox_ = c2d::DrawNode::create();
+		pThicknessBox_ = cc::DrawNode::create();
 		pThicknessBox_->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 		pThicknessBox_->setOpacity(125);
-		pThicknessBox_->drawPolygon(poly.source(), 4, {}, 1, c2d::Color4F{ ColorList::Brightgreen_v });
+		pThicknessBox_->drawPolygon(poly.source(), 4, {}, 1, cc::Color4F{ ColorList::Brightgreen_v });
 		this->addChild(pThicknessBox_);
 	}
 	pThicknessBox_->setPositionX(_thicknessBox.relativeX_);
@@ -173,14 +173,14 @@ ThicknessBox Actor::GetThicknessBox() const
 {
 	jc_assert_msg(pThicknessBox_, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 
-	c2d::vec2 pos = pThicknessBox_->getPosition();
-	c2d::size size = pThicknessBox_->getContentSize();
+	cc::vec2 pos = pThicknessBox_->getPosition();
+	cc::size size = pThicknessBox_->getContentSize();
 
 	return { pos.x, pos.y, size.width, size.height };
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::DrawNode* Actor::GetThicknessBoxNode() const
+cc::DrawNode* Actor::GetThicknessBoxNode() const
 {
 	jc_assert_msg(pThicknessBox_, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	return pThicknessBox_;
@@ -194,7 +194,7 @@ Rect Actor::GetThicknessBoxRect() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::vec2 Actor::GetPositionReal() const
+cc::vec2 Actor::GetPositionReal() const
 {
 	jc_assert_msg(pThicknessBox_, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	ThicknessBox thicknessBox = GetThicknessBox();
@@ -230,7 +230,7 @@ float Actor::GetPositionActorY() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::vec2 Actor::GetPositionRealCenter() const
+cc::vec2 Actor::GetPositionRealCenter() const
 {
 	jc_assert_msg(pThicknessBox_, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	Vec2 thisPos = getPosition();
@@ -254,23 +254,23 @@ float Actor::GetPositionRealCenterY() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::vec2 Actor::GetCanvasPositionReal() const
+cc::vec2 Actor::GetCanvasPositionReal() const
 {
 	jc_assert_msg(pActorSprite_, "액터 스프라이트가 없습니다.");
-	c2d::size contentSize = pActorSprite_->GetBodyCanvas()->getContentSize();
-	c2d::vec2 canvasRealPos = this->getPosition() - (contentSize / 2) + pActorSprite_->getPosition();
+	cc::size contentSize = pActorSprite_->GetBodyCanvas()->getContentSize();
+	cc::vec2 canvasRealPos = this->getPosition() - (contentSize / 2) + pActorSprite_->getPosition();
 	return canvasRealPos;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::size Actor::GetCanvasSize() const
+cc::size Actor::GetCanvasSize() const
 {
 	jc_assert_msg(pActorSprite_, "액터 스프라이트가 없습니다.");
 	return pActorSprite_->GetBodyCanvasSize();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-c2d::rect Actor::GetHitBox() const
+cc::rect Actor::GetHitBox() const
 {
 	jc_assert_msg(pActorSprite_, "액터 스프라이트가 없습니다.");
 	// 위치: 캔버스 좌하단 절대 좌표 + 캔버스 좌하단 기준 스킨 파츠 좌표
@@ -319,7 +319,7 @@ void Actor::SetPositionReal(float _x, float _y)
 	setPosition(_x, _y);
 }
 
-void Actor::SetPositionReal(const c2d::vec2& _v)
+void Actor::SetPositionReal(const cc::vec2& _v)
 {
 	SetPositionReal(_v.x, _v.y);
 }
@@ -351,7 +351,7 @@ void Actor::SetPositionRealCenter(float _x, float _y)
 	);
 }
 
-void Actor::SetPositionRealCenter(const c2d::vec2& _v)
+void Actor::SetPositionRealCenter(const cc::vec2& _v)
 {
 	SetPositionRealCenter(_v.x, _v.y);
 }
@@ -522,18 +522,18 @@ void Actor::SetBackwardDirection()
 	pActorSprite_->SetBackwardDirection();
 }
 
-bool Actor::IsCollide(Actor* _pOther, SpriteDirection_t& _otherHitDirection, c2d::rect& _hitRect)
+bool Actor::IsCollide(Actor* _pOther, SpriteDirection_t& _otherHitDirection, cc::rect& _hitRect)
 {
-	c2d::rect myThick = GetThicknessBoxRect();
-	c2d::rect otherBox = _pOther->GetThicknessBoxRect();
+	cc::rect myThick = GetThicknessBoxRect();
+	cc::rect otherBox = _pOther->GetThicknessBoxRect();
 
 	if (!RectEx::IntersectY(myThick, otherBox))
 	{
 		return false;
 	}
 
-	c2d::rect myHit = GetHitBox();
-	c2d::rect targetHit = _pOther->GetHitBox();
+	cc::rect myHit = GetHitBox();
+	cc::rect targetHit = _pOther->GetHitBox();
 
 	if (RectEx::Intersect(myHit, targetHit, _hitRect))
 	{
@@ -544,16 +544,16 @@ bool Actor::IsCollide(Actor* _pOther, SpriteDirection_t& _otherHitDirection, c2d
 	return false;
 }
 
-bool Actor::IsCollide(const ActorRect& _otherRect, SpriteDirection_t& _otherHitDirection, c2d::rect& _hitRect)
+bool Actor::IsCollide(const ActorRect& _otherRect, SpriteDirection_t& _otherHitDirection, cc::rect& _hitRect)
 {
-	c2d::rect myThick = GetThicknessBoxRect();
+	cc::rect myThick = GetThicknessBoxRect();
 
 	if (!RectEx::IntersectY(myThick, _otherRect.thicknessRect_))
 	{
 		return false;
 	}
 
-	c2d::rect myHit = GetHitBox();
+	cc::rect myHit = GetHitBox();
 
 	if (RectEx::Intersect(myHit, _otherRect.bodyRect_, _hitRect))
 	{
@@ -568,14 +568,14 @@ bool Actor::IsCollide(const ActorRect& _otherRect, SpriteDirection_t& _otherHitD
 
 bool Actor::IsCollide(const ActorRect& _otherRect)
 {
-	c2d::rect myThick = GetThicknessBoxRect();
+	cc::rect myThick = GetThicknessBoxRect();
 
 	if (!RectEx::IntersectY(myThick, _otherRect.thicknessRect_))
 	{
 		return false;
 	}
 
-	c2d::rect myHit = GetHitBox();
+	cc::rect myHit = GetHitBox();
 	return myHit.intersectsRect(_otherRect.bodyRect_);
 }
 
@@ -656,8 +656,8 @@ void Actor::ClearCleanUpFlag()
 ActorRect Actor::ConvertAbsoluteActorRect(Actor* _pStdActor, const ActorRect& _relativeRect)
 {
 	ActorRect absoluteActorRect;
-	const c2d::size spawnerCanvasSize = _pStdActor->GetCanvasSize();
-	const c2d::vec2 spawnerCanvasPos = _pStdActor->GetCanvasPositionReal();
+	const cc::size spawnerCanvasSize = _pStdActor->GetCanvasSize();
+	const cc::vec2 spawnerCanvasPos = _pStdActor->GetCanvasPositionReal();
 
 	if (_pStdActor->GetSpriteDirection() == SpriteDirection::Right)
 	{
