@@ -19,18 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Sources\sgs_game\AreaServer.cpp" />
-    <ClCompile Include="..\Sources\sgs_game\AreaSession.cpp" />
-    <ClCompile Include="..\Sources\sgs_game\Channel.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_game\ChannelManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_game\ChatServer.cpp" />
-    <ClCompile Include="..\Sources\sgs_game\ChatSession.cpp" />
     <ClCompile Include="..\Sources\sgs_game\Core.cpp">
       <SubType>
       </SubType>
@@ -39,90 +27,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs_game\GameContents.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_game\GameInterServerClientNetGroup.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_game\ListenerAreaServer.cpp" />
-    <ClCompile Include="..\Sources\sgs_game\ListenerChatServer.cpp" />
-    <ClCompile Include="..\Sources\sgs_game\ListenerLogicServer.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_game\GameNetGroup.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_game\GameNetMaster.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_game\LogicServer.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_game\LogicSession.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Sources\sgs_game\main.cpp" />
-    <ClCompile Include="..\Sources\sgs_game\GameCore.cpp" />
-    <ClCompile Include="..\Sources\sgs_game\Q_CHAR.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\sgs_game\AreaServer.h" />
-    <ClInclude Include="..\Sources\sgs_game\AreaSession.h" />
-    <ClInclude Include="..\Sources\sgs_game\Channel.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_game\ChannelManager.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_game\ChatServer.h" />
-    <ClInclude Include="..\Sources\sgs_game\ChatSession.h" />
     <ClInclude Include="..\Sources\sgs_game\Core.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_game\GameContents.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_game\GameInterServerClientNetGroup.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_game\ListenerAreaServer.h" />
-    <ClInclude Include="..\Sources\sgs_game\ListenerChatServer.h" />
-    <ClInclude Include="..\Sources\sgs_game\ListenerLogicServer.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_game\GameNetGroup.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_game\LogicServer.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_game\GameNetMaster.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_game\GameCore.h" />
-    <ClInclude Include="..\Sources\sgs_game\GameCoreHeader.h" />
-    <ClInclude Include="..\Sources\sgs_game\Q_CHAR.h" />
-    <ClInclude Include="..\Sources\sgs_game\LogicSession.h">
       <SubType>
       </SubType>
     </ClInclude>

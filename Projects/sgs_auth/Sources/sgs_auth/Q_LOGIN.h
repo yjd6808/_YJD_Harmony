@@ -2,7 +2,6 @@
 
 #include <jc/Define.h>
 
-#include <sg/Struct.h>
 #include <sgs/QueryHelper.h>
 
 struct Q_LOGIN : Qry::QryHelper<Q_LOGIN>

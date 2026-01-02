@@ -43,12 +43,6 @@
     <ClInclude Include="..\Sources\sgs\TimeManager.h">
       <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs\CLIListenerCommon.h">
-      <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs\RuntimeConfigCommon.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\sgs\ListenerHelperCommon.h">
       <Filter>Net\Listener</Filter>
     </ClInclude>
@@ -203,12 +197,6 @@
     <ClCompile Include="..\Sources\sgs\TimeManager.cpp">
       <Filter>Net</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs\CLIListenerCommon.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs\RuntimeConfigCommon.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\sgs\ListenerHelperCommon.cpp">
       <Filter>Net\Listener</Filter>
     </ClCompile>
@@ -285,9 +273,6 @@
     </Filter>
     <Filter Include="Net">
       <UniqueIdentifier>{49b73bd5-7afb-4461-b558-0644e505ebff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="System">
-      <UniqueIdentifier>{47a75455-218d-4948-bee5-5a8abccab001}</UniqueIdentifier>
     </Filter>
     <Filter Include="Net\Recv">
       <UniqueIdentifier>{7d6217ad-83c2-431a-b2c7-71c666320a1c}</UniqueIdentifier>

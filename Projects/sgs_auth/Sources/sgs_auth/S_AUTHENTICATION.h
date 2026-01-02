@@ -10,7 +10,6 @@
 
 
 #include <jnet/Packet/SendHelper.h>
-#include <sg/Struct.h>
 
 struct S_AUTHENTICATION : jnet::SendHelper<S_AUTHENTICATION>
 {

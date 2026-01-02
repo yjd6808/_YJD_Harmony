@@ -6,6 +6,7 @@
 #pragma once
 
 NS_JC_BEGIN
+
 struct Math final
 {
 	template <typename T>

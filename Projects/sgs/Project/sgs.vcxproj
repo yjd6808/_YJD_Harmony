@@ -23,7 +23,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs\CLIListenerCommon.h" />
     <ClInclude Include="..\Sources\sgs\CmdHost_MESSAGE.h">
       <SubType>
       </SubType>
@@ -124,7 +123,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs\RuntimeConfigCommon.h" />
     <ClInclude Include="..\Sources\sgs\ServerConst.h">
       <SubType>
       </SubType>
@@ -185,7 +183,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs\CLIListenerCommon.cpp" />
     <ClCompile Include="..\Sources\sgs\CommonSession.cpp">
       <SubType>
       </SubType>
@@ -215,7 +212,6 @@
     <ClCompile Include="..\Sources\sgs\MysqlDatabase.cpp" />
     <ClCompile Include="..\Sources\sgs\MysqlQuery.cpp" />
     <ClCompile Include="..\Sources\sgs\MysqlStatementBuilder.cpp" />
-    <ClCompile Include="..\Sources\sgs\RuntimeConfigCommon.cpp" />
     <ClCompile Include="..\Sources\sgs\R_MESSAGE_COMMON.cpp">
       <SubType>
       </SubType>

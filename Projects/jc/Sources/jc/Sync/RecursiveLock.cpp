@@ -18,8 +18,8 @@ template class LockGuard<RecursiveLock>;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 RecursiveLock::RecursiveLock()
-	: m_lockedThreadId(0)
-	, m_recursion(0)
+: m_lockedThreadId(0)
+, m_recursion(0)
 {
 }
 

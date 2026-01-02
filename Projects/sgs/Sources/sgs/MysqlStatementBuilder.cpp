@@ -2,7 +2,7 @@
 #include "ServerCoreHeader.h"
 #include "MysqlStatementBuilder.h"
 
-#include <sg/DatabaseInfo.h>
+#include <sg/_Struct/SteinsGate_Database.h>
 
 MysqlConnection* MysqlStatementBuilder::ms_pConn = nullptr;
 //////////////////////////////////////////////////////////////////////////////////////////

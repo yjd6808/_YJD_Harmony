@@ -13,7 +13,7 @@ NS_JC_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
 AutoResetEvent::AutoResetEvent(AutoResetEvent&& _other) noexcept
-	: WaitHandle(Move(_other))
+: WaitHandle(Move(_other))
 {
 }
 

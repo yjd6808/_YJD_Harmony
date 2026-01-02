@@ -51,8 +51,7 @@ void CommonNetGroupMgr::ProcessMainUpdate()
 	pulser.Start();
 	while (running_)
 	{
-		if (sg::CLIThread)
-			sg::CLIThread->ProcessInputs();
+		g_cVM.Go(elapsed);
 
 		ProcessSubUpdate(elapsed);
 		OnUpdate(elapsed);

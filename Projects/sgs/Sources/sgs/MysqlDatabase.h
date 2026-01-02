@@ -40,10 +40,11 @@
 
 #include <jnet/IOCP/IOCPTask.h>
 
+#include <sg/_Struct/SteinsGate_Database.h>
+
 #include <sgs/MysqlConnectionPool.h>
 #include <sgs/MysqlStatementBuilder.h>
 #include <sgs/MysqlQuery.h>
-#include <sg/DatabaseInfo.h>
 
 using MysqlQueryTask = jnet::IOCPTask<MysqlQueryPtr>;
 using MysqlQueryTaskPtr = jc::SharedPtr<MysqlQueryTask>;

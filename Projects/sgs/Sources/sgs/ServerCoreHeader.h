@@ -8,10 +8,9 @@
 
 #pragma once
 
-#include <sg/SeteinsGate_Server.h>
+#include <sg/_Struct/SteinsGate_Server.h>
 #include <sgs/CommonNetGroupMgr.h>
 #include <sgs/CommonNetGroup.h>
 #include <sgs/CommonServer.h>
 #include <sgs/InterServerClientNetGroup.h>
 #include <sgs/TimeManager.h>
-#include <sgs/RuntimeConfigCommon.h>

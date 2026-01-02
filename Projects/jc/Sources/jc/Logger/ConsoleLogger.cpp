@@ -14,8 +14,8 @@ NS_JC_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ConsoleLogger::ConsoleLogger()
-	: LoggerAbstract(&ConsoleLoggerOption::Default)
-	, m_szBuffer(4096)
+: LoggerAbstract(&ConsoleLoggerOption::Default)
+, m_szBuffer(4096)
 {
 }
 

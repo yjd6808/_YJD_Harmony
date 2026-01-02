@@ -11,7 +11,6 @@
 #include <jnet/Packet/CommandParser.h>
 
 #include <sg/ListenerServerBase.h>
-#include <sg/Enum.h>
 
 class JC_NOVTABLE ListenerServerCommon : public ListenerServerBase
 {

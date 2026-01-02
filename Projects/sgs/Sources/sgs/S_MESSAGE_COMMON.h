@@ -10,7 +10,6 @@
 
 
 #include <jnet/Packet/SendHelper.h>
-#include <sg/Struct.h>
 
 struct S_MESSAGE_COMMON : jnet::SendHelper<S_MESSAGE_COMMON>
 {

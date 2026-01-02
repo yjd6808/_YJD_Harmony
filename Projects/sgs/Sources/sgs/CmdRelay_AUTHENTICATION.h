@@ -9,7 +9,6 @@
 #pragma once
 
 #include <jc/Primitives/StaticString.h>
-#include <sg/Struct.h>
 #include <sgs/InterServerCmdDefine.h>
 
 // ======================= CMD LIST =======================

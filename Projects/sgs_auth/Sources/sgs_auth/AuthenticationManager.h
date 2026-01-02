@@ -18,7 +18,6 @@
 #include <jc/Container/TreeMap.h>
 #include <jc/Container/HashMap.h>
 
-#include <sg/Struct.h>
 
 class AuthenticationManager : public jc::SingletonPointer<AuthenticationManager>
 {
