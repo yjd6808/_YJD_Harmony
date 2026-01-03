@@ -201,7 +201,7 @@ NS_DETAIL_BEGIN
 	template <typename TCommand>
 	struct HasDynamicFiled
 	{
-		template <typename = jc::DefaultEnableIf_t<std::is_union_v<TCommand::__ZeroSizeArray__>>>
+		template <typename = jc::DefaultEnableIf_t<std::is_union_v<TCommand::_ArrayField__>>>
 		static constexpr bool Check(int*)
 		{
 			return true;
@@ -240,7 +240,7 @@ NS_JNET_END
 // 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
 #define CMD_CHECK_BASE_OF_COMMAND(command)                 static_assert(jc::IsBaseOf_v<jnet::ICommand, command>, "... " #command " must be derived type of ICommand");
 // 스타릭 커맨드는 무조건 통과, 다이나믹 커맨드일 경우 다이나믹 필드가 있는지 체크
-#define DYNAMIC_CMD_CHECK_ZERO_SIZE_ARRAY_FIELD(command)   static_assert(jc::Or_v<jnet::IsStaticCommand_v<command>, jc::And_v<jnet::IsDynamicCommand_v<command>, jnet::HasDynamicField_v<command>>>, "... " #command " has no zero size array field");
+#define DYNAMIC_CMD_CHECK_ARRAY_FIELD(command)   static_assert(jc::Or_v<jnet::IsStaticCommand_v<command>, jc::And_v<jnet::IsDynamicCommand_v<command>, jnet::HasDynamicField_v<command>>>, "... " #command " has no zero size array field");
 
 
 // 스타릭 커맨드, 다이나믹 커맨드 공통 함수 정의
@@ -270,13 +270,13 @@ NS_JNET_END
 // 다이나믹 커맨드 공통 기능 정의
 #define DYNAMIC_CMD_USING_COUNTABLE_ELEMENT(element_type)                 using TCountableElement = element_type;
 #define DYNAMIC_CMD_DECL_COUNTABLE_ELEMENT(contruct_countable_elem)       static constexpr bool ConstructCountableElement = contruct_countable_elem;
-#define DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(elem_name)                  \
-	union __ZeroSizeArray__                                                                                                                                \
+#define DYNAMIC_CMD_ADD_ARRAY_FIELD(elem_name)                  \
+	union _ArrayField__                                                                                                                                \
 	{                                                                                                                                                      \
-		__ZeroSizeArray__() {}                                                                                                                              \
-		~__ZeroSizeArray__() {}                                                                                                                             \
+		_ArrayField__() {}                                                                                                                              \
+		~_ArrayField__() {}                                                                                                                             \
 		TCountableElement elem_name;                                                                                                                        \
-	} object_[0];                                                                                                                                          \
+	} object_[1];                                                                                                                                          \
                                                                                                                                                         \
 	TCountableElement* elem_name()                                                                                                                        \
 	{                                                                                                                                                      \

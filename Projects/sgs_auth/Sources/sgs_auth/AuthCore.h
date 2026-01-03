@@ -17,8 +17,6 @@ class AuthNetMaster;
 class AuthNetGroup;
 class AuthServer;
 class AuthenticationManager;
-
-struct RuntimeConfig;
 struct AuthContents;
 
 NS_SG_BEGIN
@@ -27,7 +25,6 @@ extern ::MysqlDatabase*    GameDB;
 extern ::AuthNetMaster*    NetGroupMgr;
 extern ::AuthNetGroup*     NetGroup;
 extern ::AuthServer*       Server;
-extern ::RuntimeConfig*    RuntimeConfig;
 extern ::AuthContents      Contents;
 NS_SG_END
 

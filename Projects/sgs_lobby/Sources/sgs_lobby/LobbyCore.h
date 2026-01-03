@@ -16,8 +16,6 @@ class MysqlDatabase;
 class LobbyNetMaster;
 class LobbyNetGroup;
 class LobbyServer;
-
-struct RuntimeConfig;
 struct LobbyContents;
 
 NS_SG_BEGIN
@@ -26,7 +24,6 @@ extern ::MysqlDatabase*    GameDB;
 extern ::LobbyNetMaster*   NetGroupMgr;
 extern ::LobbyNetGroup*    NetGroup;
 extern ::LobbyServer*      Server;
-extern ::RuntimeConfig*    RuntimeConfig;
 extern ::LobbyContents     Contents;
 NS_SG_END
 

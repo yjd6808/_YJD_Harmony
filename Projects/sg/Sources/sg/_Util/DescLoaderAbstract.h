@@ -145,6 +145,7 @@ public:
 
 	void AddData(SDescBase* _pData);
 	SDescBase* GetData(int _code);
+	SDescBase* GetDataAny();
 
 private:
 	bool isLoaded_ = false;

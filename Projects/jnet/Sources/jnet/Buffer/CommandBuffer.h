@@ -33,7 +33,7 @@ public:
 	TCommand& Alloc(int _count)
 	{
 		CMD_CHECK_BASE_OF_COMMAND(TCommand)
-		DYNAMIC_CMD_CHECK_ZERO_SIZE_ARRAY_FIELD(TCommand)
+		DYNAMIC_CMD_CHECK_ARRAY_FIELD(TCommand)
 
 		const int cmdSize = TCommand::_Size(_count);
 #if _DEBUG

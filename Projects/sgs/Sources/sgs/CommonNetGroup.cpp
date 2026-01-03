@@ -31,7 +31,7 @@ void CommonNetGroup::Initialize()
 {
 	if (sg::ServerProcessInfo == nullptr)
 	{
-		_LogWarn_("서버 정보가 없어서 네트그룹 초기화 실패 [메인 네트그룹]");
+		_LogError_("서버 정보가 없어서 네트그룹 초기화 실패 [메인 네트그룹]");
 		return;
 	}
 

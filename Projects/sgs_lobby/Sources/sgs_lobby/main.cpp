@@ -9,7 +9,7 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-int main()
+int main(int _argc, char** _argv)
 {
 	new char; // 릭 확인용
 
@@ -19,7 +19,7 @@ int main()
 	Random::EngineInitialize();
 	Winsock::Initialize(2, 2);
 	Console::SetSize(800, 400);
-	InitializeJCore();
+	InitializeJCore(_argc, _argv);
 	InitializeNetLogger(LOG_SPECIFIER_LOBBY);
 	InitializeDefaultLogger(LOG_SPECIFIER_LOBBY);
 	InitializeCommonCore();

@@ -123,9 +123,9 @@ private:
 	jc::Properties<> properties_;
 };
 
-int main() 
+int main(int _argc, char** _argv) 
 {
-	InitializeJCore();
+	InitializeJCore(_argc, _argv);
 	InitializeDefaultLogger();
 
 

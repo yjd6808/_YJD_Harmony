@@ -17,8 +17,8 @@ bool MapAreaInfo::CheckWall(float _x, float _y) const
 	if (_x < 0.0f || _y < 0.0f)
 		return true;
 
-	int blockX = _x / Const::Map::MapAreaBlockSize;
-	int blockY = _y / Const::Map::MapAreaBlockSize;
+	int blockX = int(_x / Const::Map::MapAreaBlockSize);
+	int blockY = int(_y / Const::Map::MapAreaBlockSize);
 	int width = area_[0].Length();
 	int height = area_.Size();
 
@@ -40,11 +40,11 @@ bool MapAreaInfo::CheckWall(float _x, float _y) const
 //////////////////////////////////////////////////////////////////////////////////////////
 float MapAreaInfo::GetAreaWidth()
 {
-	return GetAreaHorizontolBlockCount() * Const::Map::MapAreaBlockSize;
+	return GetAreaHorizontolBlockCount() * (float)Const::Map::MapAreaBlockSize;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 float MapAreaInfo::GetAreaHeight()
 {
-	return GetAreaVerticalBlockCount() * Const::Map::MapAreaBlockSize;
+	return GetAreaVerticalBlockCount() * (float)Const::Map::MapAreaBlockSize;
 }

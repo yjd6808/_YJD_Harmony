@@ -24,7 +24,7 @@ int main(int _argc, char* _pArgv[])
 	Random::EngineInitialize();
     Winsock::Initialize(2, 2);
     Console::SetSize(800, 400);
-    InitializeJCore();
+    InitializeJCore(_argc, _argv);
     InitializeNetLogger(logSpecifier.Source());
     InitializeDefaultLogger(logSpecifier.Source());
     InitializeCommonCore();

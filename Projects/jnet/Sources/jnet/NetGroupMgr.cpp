@@ -25,10 +25,7 @@ NetGroupMgr::~NetGroupMgr() = default;
 void NetGroupMgr::Finalize()
 {
 	if (finalized_)
-	{
-		jc_assert(false);
 		return;
-	}
 
 	netGroupMap_.ForEachValue([](NetGroupPtr& _pGroupPtr)
 	{

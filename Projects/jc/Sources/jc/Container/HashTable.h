@@ -193,6 +193,25 @@ public:
 		return true;
 	}
 
+	TKey* Any() const 
+	{
+		if (size_ == 0)
+		{
+			return nullptr;
+		}
+		TBucket* pCurrentBucket = pHeadBucket_;
+		while (pCurrentBucket != nullptr)
+		{
+			for (int i = 0; i < pCurrentBucket->size_; ++i)
+			{
+				return &pCurrentBucket->GetAt(i).data_;
+			}
+
+			pCurrentBucket = pCurrentBucket->pNext_;
+		}
+		return nullptr;
+	}
+
 	void DisjointBucket(TBucket* _pBucket)
 	{
 		if (_pBucket == pHeadBucket_)
@@ -703,6 +722,48 @@ public:
 		}
 
 		return pValue;
+	}
+
+	TKey* AnyKey() const
+	{
+		if (pTable_ == nullptr)
+		{
+			return nullptr;
+		}
+		TBucket* pCurrentBucket = pHeadBucket_;
+
+		while (pCurrentBucket != nullptr)
+		{
+			for (int i = 0; i < pCurrentBucket->size_; ++i)
+			{
+				TBucketNode& node = pCurrentBucket->GetAt(i);
+				return &node.data_.key_;
+			}
+
+			pCurrentBucket = pCurrentBucket->pNext_;
+		}
+		return nullptr;
+	}
+
+	TValue* AnyValue() const
+	{
+		if (pTable_ == nullptr)
+		{
+			return nullptr;
+		}
+		TBucket* pCurrentBucket = pHeadBucket_;
+
+		while (pCurrentBucket != nullptr)
+		{
+			for (int i = 0; i < pCurrentBucket->size_; ++i)
+			{
+				TBucketNode& node = pCurrentBucket->GetAt(i);
+				return &node.data_.value_;
+			}
+
+			pCurrentBucket = pCurrentBucket->pNext_;
+		}
+		return nullptr;
 	}
 
 	template <typename Ky>

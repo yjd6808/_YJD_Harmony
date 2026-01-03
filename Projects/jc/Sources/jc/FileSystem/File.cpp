@@ -105,7 +105,7 @@ bool File::Copy(const char* _pSrcPath, const char* _pDstPath)
 	}
 
 	Byte buff[FILE_READ_COUNT];
-	int readCount = 0;
+	size_t readCount = 0;
 
 	while ((readCount = CRuntime::FileRead(buff, 1, FILE_READ_COUNT, pSrcStream)) != 0)
 	{
@@ -170,7 +170,7 @@ void File::WriteAllText(const char* _pContent, const int _contentLength, const c
 		throw RuntimeException("해당 파일이 이미 쓰기 모드로 사용중인듯?");
 	}
 
-	int writeCount = CRuntime::FileWrite(_pContent, _contentLength, 1, pStream);
+	size_t writeCount = CRuntime::FileWrite(_pContent, _contentLength, 1, pStream);
 
 	if (writeCount != 1)
 	{
@@ -196,7 +196,7 @@ void File::WriteAllBytes(const Byte* _pContent, const int _contentLength, const 
 		throw RuntimeException("해당 파일이 이미 쓰기 모드로 사용중인듯?");
 	}
 
-	int writeCount = CRuntime::FileWrite(_pContent, _contentLength, 1, pStream);
+	size_t writeCount = CRuntime::FileWrite(_pContent, _contentLength, 1, pStream);
 
 	if (writeCount != 1)
 	{
@@ -229,7 +229,7 @@ String File::ReadAllText(const char* _pPath)
 	int readCount;
 	int offset = 0;
 
-	while ((readCount = CRuntime::FileRead(buffer.Source() + offset, 1, FILE_READ_COUNT, pStream)) != 0)
+	while ((readCount = (int)CRuntime::FileRead(buffer.Source() + offset, 1, FILE_READ_COUNT, pStream)) != 0)
 	{
 		offset += readCount;
 		int nextLength = offset + FILE_READ_COUNT + 1; // 확장시 NULL 문자 고려해야함

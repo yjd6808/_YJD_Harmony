@@ -126,12 +126,12 @@ void MapInfoLoader::ReadMapCommonInfo(Value& _mapRoot, OUT MapInfo* _pMapInfo)
 	_pMapInfo->name_ = JsonUtil::GetString(_mapRoot["name"]);
 	_pMapInfo->physicsCode_ = _mapRoot["physics"].asInt();
 
-	for (int j = 0; j < npcListRoot.size(); ++j)
+	for (ArrayIndex j = 0; j < npcListRoot.size(); ++j)
 	{
 		// TODO: NPC 추가시 구현 필요
 	}
 
-	for (int j = 0; j < mapObjectListRoot.size(); ++j)
+	for (ArrayIndex j = 0; j < mapObjectListRoot.size(); ++j)
 	{
 		Value& mapObjectRoot = mapObjectListRoot[j];
 		MapObjectPositionInfo mapObjectInfo;

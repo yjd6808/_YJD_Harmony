@@ -9,11 +9,16 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 int main(int _argc, char** _argv)
 {
+	struct Check : jc::ObjectPool<Check> {
+		int a = 20;
+	};
+
+	Check* a = dbg_new Check();
+	delete a;
 	int result = -1;
 	{
-		jc::Env::InitArgs(_argc, _argv);
-		SteinsGateApp app;
-		result = cocos2d::Application::getInstance()->run();
+		SteinsGateApp app(_argc, _argv);
+		result = app.run();
 	}
 	return result;
 }

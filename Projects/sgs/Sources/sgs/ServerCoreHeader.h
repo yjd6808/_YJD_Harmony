@@ -9,6 +9,7 @@
 #pragma once
 
 #include <sg/_Struct/SteinsGate_Server.h>
+
 #include <sgs/CommonNetGroupMgr.h>
 #include <sgs/CommonNetGroup.h>
 #include <sgs/CommonServer.h>

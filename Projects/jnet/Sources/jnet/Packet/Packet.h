@@ -733,7 +733,7 @@ private:
 template <typename TCommand>
 class SinglePacket<TCommand, false> : public CommandPacket
 {
-	DYNAMIC_CMD_CHECK_ZERO_SIZE_ARRAY_FIELD(TCommand)
+	DYNAMIC_CMD_CHECK_ARRAY_FIELD(TCommand)
 
 	using TPacket = SinglePacket<TCommand>;
 

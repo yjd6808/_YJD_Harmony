@@ -288,3 +288,11 @@ SDescBase* DescLoaderAbstract::GetData(int _code)
 	jc_assert_msg(configDataMap_.Exist(_code), "%s 파일에서 읽은 데이터중 %d의 코드에 해당하는 데이터는 존재하지 않습니다.", GetConfigFileName(), _code);
 	return configDataMap_[_code];
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
+SDescBase* DescLoaderAbstract::GetDataAny()
+{
+	SDescBase** pFound = configDataMap_.AnyValue();
+	if (pFound == nullptr) return nullptr;
+	return *pFound;
+}

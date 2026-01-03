@@ -33,7 +33,6 @@ protected:
 	virtual void InitializeInterServerTcp() = 0;
 	virtual void InitializeInterServerUdp() = 0;
 
-
 	virtual void OnUpdate(const jc::TimeSpan& _elapsed) = 0; // 중앙 서버만 false
 	virtual bool IsPeerServer() { return true; }
 

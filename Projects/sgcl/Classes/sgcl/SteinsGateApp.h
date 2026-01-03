@@ -5,7 +5,7 @@
 class SteinsGateApp : public cocos2d::Application
 {
 public:
-	SteinsGateApp();
+	SteinsGateApp(int _argc, char** _argv);
 	~SteinsGateApp() override;
 
 	void initGLContextAttrs() override;
@@ -65,6 +65,9 @@ public:
 	cocos2d::GLViewImpl* pView_;
 
 private:
+	int argc_ = 0;
+	char** argv_ = nullptr;
+
 	HHOOK pWndProcHook_;
 	WNDPROC pPrevWndProc_;
 };

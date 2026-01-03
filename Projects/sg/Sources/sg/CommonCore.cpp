@@ -29,9 +29,7 @@ USING_NS_JNET;
 
 NS_SG_BEGIN
 CharCommonInfo* CharCommon;
-::ServerProcessInfoPackage* ServerProcessInfoPackage;
 jnet::CommandNameDictionary CommandNameDictionary;
-::DescLoaderMgr* DescLoaderMgr;
 NS_SG_END
 
 //////////////////////////////////////////////////////////////////////////////////////////

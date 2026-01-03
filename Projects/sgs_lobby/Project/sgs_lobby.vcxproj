@@ -217,8 +217,8 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
+      <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -240,8 +240,8 @@ xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll
       <AdditionalDependencies>jc.lib;jnet.lib;ws2_32.lib;Mswsock.lib;libmysql.lib;sg.lib;sgs.lib;jsoncpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
+      <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -272,8 +272,8 @@ xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
+      <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -300,8 +300,8 @@ xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll
       <AdditionalDependencies>jc.lib;jnet.lib;ws2_32.lib;Mswsock.lib;libmysql.lib;sg.lib;sgs.lib;jsoncpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
+      <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

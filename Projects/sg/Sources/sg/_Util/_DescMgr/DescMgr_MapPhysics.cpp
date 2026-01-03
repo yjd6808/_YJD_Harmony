@@ -36,7 +36,7 @@ bool MapPhysicsInfoLoader::Load()
 	{
 		Json::Value& physicsListRoot = root["physics"];
 
-		for (int i = 0; i < physicsListRoot.size(); ++i)
+		for (ArrayIndex i = 0; i < physicsListRoot.size(); ++i)
 		{
 			Value& physicsRoot = physicsListRoot[i];
 			MapPhysicsInfo* pMapPhysicsInfo = dbg_new MapPhysicsInfo;

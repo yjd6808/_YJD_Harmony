@@ -56,6 +56,7 @@ public:
 	void AddLoader(DescLoaderAbstract* _pLoader);
 
 	SDescBase* GetData(ConfigFileType_t _configFileType, int _code);
+	SDescBase* GetDataAny(ConfigFileType_t _configFileType);
 
 	// ------------------ 기본
 	MonsterBaseInfo*				GetMobBaseInfo(int _monsterCode);
@@ -67,7 +68,7 @@ public:
 	ItemOptInfo*					GetItemOptInfo(const jc::String& _itemOptEngName);
 	ChannelBaseInfo*				GetChannelBaseInfo(int _channelCode);
 	EnchantInfo*					GetEnchantInfo(int _enchantCode);
-	ServerProcessInfoPackage*		GetServerProcessInfoPackage(int _serverCode);
+	ServerProcessInfoPackage*		GetServerProcessInfoPackage();
 	DatabaseInfo*					GetDatabaseInfo(int _databaseCode);
 	CharCommonInfo*					GetCharCommonInfo(int _charCommonCode);
 	MapInfo*						GetMapInfo(int _mapCode);

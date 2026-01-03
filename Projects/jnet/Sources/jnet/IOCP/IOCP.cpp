@@ -11,11 +11,11 @@ NS_JNET_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
 IOCP::IOCP(int _threadCount)
-	: state_(State::Initialized)
-	, iocpHandle_(INVALID_HANDLE_VALUE)
-	, threadCount_(_threadCount)
-	, workerManager_(nullptr)
-	, name_(0)
+: state_(State::Initialized)
+, iocpHandle_(INVALID_HANDLE_VALUE)
+, threadCount_(_threadCount)
+, workerManager_(nullptr)
+, name_(0)
 {
 	if ((iocpHandle_ = CreateIoCompletionPort(INVALID_HANDLE_VALUE, nullptr, 0, static_cast<Int32UL>(_threadCount))) == INVALID_HANDLE_VALUE)
 	{

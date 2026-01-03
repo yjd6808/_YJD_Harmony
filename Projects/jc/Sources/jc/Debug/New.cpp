@@ -9,13 +9,10 @@
 #include <jc/Memory.h>
 #include <jc/FileSystem/Path.h>
 
-#include <stacktrace>
 #include <crtdbg.h>
 
 USING_NS_JC;
 USING_NS_STD;
-
-
 
 /* 
 

@@ -4,7 +4,7 @@
 
 	// https://stackoverflow.com/questions/8487986/file-macro-shows-full-path
 	#define JC_FILENAME (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
-	#define JC_PASS do { int JC_CONCAT_COUNTER(__pass__); } while(0)
+	#define JC_PASS do { (void)0; } while(0)
 
 	#ifdef _DEBUG
 		#define JC_INLINE_HEADER_MESSAGE(format, ...) inline auto JC_CONCAT_COUNTER(_) = [] { return Console::WriteLine(format, __VA_ARGS__); }()

@@ -365,7 +365,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
       <BrowseInformation>true</BrowseInformation>
@@ -394,7 +394,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
       <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\Zlib12\include;$(SolutionDir)ThirdParty\JsonCpp195\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -419,7 +419,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
       <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\Zlib12\include;$(SolutionDir)ThirdParty\JsonCpp195\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -443,7 +443,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
       <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\Zlib12\include;$(SolutionDir)ThirdParty\JsonCpp195\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>

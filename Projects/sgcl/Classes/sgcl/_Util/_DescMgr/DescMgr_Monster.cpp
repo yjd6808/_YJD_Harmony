@@ -32,7 +32,7 @@ bool MonsterInfoLoader::Load()
 	{
 		Json::Value monsterListRoot = root["monsters"];
 
-		for (int i = 0; i < monsterListRoot.size(); ++i)
+		for (ArrayIndex i = 0; i < monsterListRoot.size(); ++i)
 		{
 			Value& monterRoot = monsterListRoot[i];
 			MonsterInfo* pMonsterInfo = dbg_new MonsterInfo();

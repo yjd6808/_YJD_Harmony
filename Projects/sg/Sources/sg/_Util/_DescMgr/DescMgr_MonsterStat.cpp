@@ -32,7 +32,7 @@ bool MonsterStatInfoLoader::Load()
 	{
 		Value& monsterListRoot = configRoot["monsters"];
 
-		for (int index = 0; index < monsterListRoot.size(); ++index)
+		for (ArrayIndex index = 0; index < monsterListRoot.size(); ++index)
 		{
 			Value& monsterRoot = monsterListRoot[index];
 			MonsterStatInfo* pMonsterStatInfo = dbg_new MonsterStatInfo;

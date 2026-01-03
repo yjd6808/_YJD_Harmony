@@ -118,6 +118,16 @@ public:
 		return hashTable_.Find(_key);
 	}
 
+	TKey* AnyKey() const
+	{
+		return hashTable_.AnyKey();
+	}
+
+	TValue* AnyValue() const
+	{
+		return hashTable_.AnyValue();
+	}
+
 	TValue& Get(const TKey& _key) const override
 	{
 		return hashTable_.Get(_key);

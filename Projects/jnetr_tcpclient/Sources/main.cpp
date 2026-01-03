@@ -17,12 +17,12 @@ bool SelectMenu(int _menu);
 TcpClientNetGroup* pClientGroup;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int main()
+int main(int _argc, char** _argv)
 {
     DefaultParserType = PacketParser::Command;
 
     Winsock::Initialize(2, 2);
-    InitializeJCore();
+    InitializeJCore(_argc, _argv);
     InitializeNetLogger();
     pClientGroup = dbg_new TcpClientNetGroup;
     pClientGroup->Initialize();

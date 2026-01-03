@@ -60,7 +60,7 @@ jc::String JsonUtil::GetString(Json::Value& _value)
 	const char* pBegin;
 	const char* pEnd;
 	_value.getString(&pBegin, &pEnd);
-	const int length = pEnd - pBegin;
+	const int length = int(pEnd - pBegin);
 	return { pBegin, length + 1 };
 }
 
@@ -72,7 +72,7 @@ const char* JsonUtil::GetStringRaw(Json::Value& _value, OUT_OPT int* _pLength /*
 	const char* pEnd;
 	_value.getString(&pBegin, &pEnd);
 	if (_pLength != nullptr)
-		*_pLength = pEnd - pBegin;
+		*_pLength = int(pEnd - pBegin);
 	return pBegin;
 }
 
@@ -220,8 +220,8 @@ void JsonUtil::ParseAnimationInfo(Json::Value& _animationRoot, AnimationInfo& _i
 //////////////////////////////////////////////////////////////////////////////////////////
 void JsonUtil::ParseActorRect(Json::Value& _root, ActorRect& _actorRect)
 {
-	int actorRectData[8];
-	ParseIntNumberN(_root, actorRectData, sizeof(actorRectData) / sizeof(int));
+	float actorRectData[8];
+	ParseFloatNumberN(_root, actorRectData, sizeof(actorRectData) / sizeof(float));
 
 	_actorRect.thicknessRect_.origin.x = actorRectData[0];
 	_actorRect.thicknessRect_.origin.y = actorRectData[1];

@@ -8,12 +8,12 @@ USING_NS_JC;
 USING_NS_JNET;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int main()
+int main(int _argc, char** _argv)
 {
 	DefaultParserType = PacketParser::Command;
 
 	Winsock::Initialize(2, 2);
-	InitializeJCore();
+	InitializeJCore(_argc, _argv);
 	InitializeNetLogger();
 	{
 		ServerNetGroupMgr mgr;

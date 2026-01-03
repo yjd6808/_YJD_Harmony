@@ -23,6 +23,9 @@ void ConfigArgs::Load()
 {
 	const Vector<jc::String>& args = Env::GetArgs();
 
+	if (args.Size() <= 1)
+		return;
+
 	jc::String arg = Env::GetArgs().At(1);
 	jc::StringTokenizer tokenizer(arg);
 	tokenizer.AddDelim('=');
@@ -150,7 +153,7 @@ void ConfigRuntime::Save()
 		{
 			throw std::exception("Value 문자열 변환중 오류 발생");
 		}
-		File::WriteAllText(content.c_str(), content.length(), runtimeConfigPath.Source());
+		File::WriteAllText(content.c_str(), (int)content.length(), runtimeConfigPath.Source());
 		_LogInfo_("런타임 설정파일(%s) 저장완료", SG_RUNTIME_CONFIG_FILENAME);
 	}
 	catch (std::exception& ex)

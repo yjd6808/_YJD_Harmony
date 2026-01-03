@@ -38,7 +38,7 @@ bool UIInfoLoader::Load()
 		// ========================================================================
 		Json::Value& elementListRoot = root[JSON_ELEMENTS_KEY];
 
-		for (int i = 0; i < elementListRoot.size(); ++i)
+		for (ArrayIndex i = 0; i < elementListRoot.size(); ++i)
 		{
 			Json::Value& elementRoot = elementListRoot[i];
 
@@ -78,7 +78,7 @@ bool UIInfoLoader::Load()
 		// ========================================================================
 		Json::Value& groupListRoot = root[JSON_GROUPS_KEY];
 
-		for (int i = 0; i < groupListRoot.size(); ++i)
+		for (ArrayIndex i = 0; i < groupListRoot.size(); ++i)
 		{
 			Json::Value& groupRoot = groupListRoot[i];
 			Json::Value& groupElementInfoListRoot = groupRoot[JSON_CHILDREN_KEY];
@@ -131,7 +131,7 @@ void UIInfoLoader::ReadElementGroup(Json::Value& _groupRoot, UIGroupInfo* _pGrou
 
 	Json::Value& groupElementInfoListRoot = _groupRoot[JSON_CHILDREN_KEY];
 
-	for (int i = 0; i < groupElementInfoListRoot.size(); ++i)
+	for (ArrayIndex i = 0; i < groupElementInfoListRoot.size(); ++i)
 	{
 		Json::Value& groupElementInfoRoot = groupElementInfoListRoot[i];
 		UIGroupElemInfo groupElementInfo;

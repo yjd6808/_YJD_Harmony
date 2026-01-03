@@ -33,7 +33,7 @@ bool ServerInfoLoader::Load()
 	{
 		Json::Value& serverInfoRootList = root["server"];
 
-		for (int serverInfoIndex = 0; serverInfoIndex < serverInfoRootList.size(); ++serverInfoIndex)
+		for (ArrayIndex serverInfoIndex = 0; serverInfoIndex < serverInfoRootList.size(); ++serverInfoIndex)
 		{
 			Value& serverInfoRoot = serverInfoRootList[serverInfoIndex];
 			Value& gameServerInfoListRoot = serverInfoRoot["game"];
@@ -231,7 +231,7 @@ void ServerInfoLoader::ReadGameInfo(Value& _serverRoot, OUT ServerProcessInfoPac
 		info.bindInterServerUdp_ = IPv4EndPoint{ Move(bindInterServerUdp) };
 		info.bindInterServerTcp_ = IPv4EndPoint{ Move(bindInterServerTcp) };
 
-		for (int channelIndex = 0; channelIndex < gameChannelListRoot.size(); ++channelIndex)
+		for (ArrayIndex channelIndex = 0; channelIndex < gameChannelListRoot.size(); ++channelIndex)
 		{
 			int channelNumber;
 			int channelType;

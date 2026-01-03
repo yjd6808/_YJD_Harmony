@@ -18,7 +18,7 @@ class InterServerClientNetGroup;
 class TimeManager;
 
 struct ServerProcessInfo;
-struct RuntimeConfigCommon;
+struct ServerProcessInfoPackage;
 struct ServerContents;
 
 NS_JNET_BEGIN
@@ -30,12 +30,12 @@ NS_SG_BEGIN
 extern ::CommonNetGroupMgr* CommonNetGroupMgr;
 extern ::CommonNetGroup* CommonNetGroup;
 extern ::CommonServer* CommonServer;
-extern ::RuntimeConfigCommon* CommonRuntimeConfig;
 extern ::ServerContents* CommonContents;
 extern ::InterServerClientNetGroup* InterServerClientNetGroup;
 extern ::jnet::TcpClient* InterServerClientTcp;
 extern ::jnet::UdpClient* InterServerClientUdp;
 extern ::ServerProcessInfo* ServerProcessInfo;
+extern ::ServerProcessInfoPackage* ServerProcessInfoPackage;
 extern ::TimeManager* TimeManager;
 NS_SG_END
 

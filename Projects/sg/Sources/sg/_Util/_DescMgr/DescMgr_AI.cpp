@@ -32,7 +32,7 @@ bool AIInfoLoader::Load()
 	{
 		Json::Value aiListRoot = root["ai"];
 
-		for (int i = 0; i < aiListRoot.size(); ++i)
+		for (ArrayIndex i = 0; i < aiListRoot.size(); ++i)
 		{
 			Value& aiRoot = aiListRoot[i];
 			AIInfo* pInfo = dbg_new AIInfo;

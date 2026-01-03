@@ -972,10 +972,10 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"</Command>
+      <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -1004,10 +1004,10 @@ xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration
       <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"</Command>
+      <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -1024,7 +1024,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     </CustomBuildStep>
     <ClCompile>
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdcpplatest</LanguageStandard>
-      <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpp20</LanguageStandard>
+      <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpplatest</LanguageStandard>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/utf-8 /Zm500</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/utf-8 /Zm200</AdditionalOptions>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Core.h</PrecompiledHeaderFile>
@@ -1050,7 +1050,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
       <DebugInformationFormat>None</DebugInformationFormat>
       <DisableSpecificWarnings>4267;4251;4244;4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/utf-8 /Zm500</AdditionalOptions>
       <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
@@ -1066,10 +1066,10 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"</Command>
+      <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -1089,7 +1089,7 @@ xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration
       <DebugInformationFormat>None</DebugInformationFormat>
       <DisableSpecificWarnings>4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/utf-8 /Zm200</AdditionalOptions>
       <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
@@ -1104,10 +1104,10 @@ xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"</Command>
+      <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>

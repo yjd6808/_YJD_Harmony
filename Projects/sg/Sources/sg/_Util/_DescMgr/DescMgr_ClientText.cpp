@@ -36,7 +36,7 @@ bool ClientTextInfoLoader::Load()
 		jc::String idString{ MAX_ID_LEN + 1 };
 		jc::String textString{ MAX_TEXT_LEN + 1 };
 
-		for (int i = 0; i < clientInfoListRoot.size(); ++i)
+		for (ArrayIndex i = 0; i < clientInfoListRoot.size(); ++i)
 		{
 			Value& clientRoot = clientInfoListRoot[i];
 

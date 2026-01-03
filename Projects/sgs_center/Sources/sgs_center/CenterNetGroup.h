@@ -29,8 +29,8 @@ protected:
 	void InitializeServer() override;
 	void OnUpdate(const jc::TimeSpan& _elapsed) override;
 
-	jnet::ISessionContainer* m_pCenterSessionContainer;
-	CenterServer* m_pCenterTcp;
+	jnet::ISessionContainer* m_pCenterSessionContainer = nullptr;
+	CenterServer* m_pCenterTcp = nullptr;
 };
 
 

@@ -158,6 +158,11 @@ public:
 		return pInst;
 	}
 
+	void operator delete(void* _pObject, int /*_blockUse*/, char const* /*_pFileName*/, int /*_lineNumber*/)
+	{
+		TPool::operator delete(_pObject);
+	}
+
 	void operator delete(void* _pObject)
 	{
 		if (_pObject == nullptr)

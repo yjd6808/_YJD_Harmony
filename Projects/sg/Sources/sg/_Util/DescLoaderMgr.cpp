@@ -73,8 +73,17 @@ void DescLoaderMgr::LoadAll()
 //////////////////////////////////////////////////////////////////////////////////////////
 SDescBase* DescLoaderMgr::GetData(ConfigFileType_t _configFileType, int _code)
 {
+	jc_assert(m_pConfigFileLoaders[_configFileType] != nullptr);
 	jc_assert_msg(_configFileType >= ConfigFileType::Begin && _configFileType <= ConfigFileType::End, "올바르지 않은 ConfigFileType 입니다.");
 	return m_pConfigFileLoaders[_configFileType]->GetData(_code);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+SDescBase* DescLoaderMgr::GetDataAny(ConfigFileType_t _configFileType)
+{
+	jc_assert(m_pConfigFileLoaders[_configFileType] != nullptr);
+	jc_assert_msg(_configFileType >= ConfigFileType::Begin && _configFileType <= ConfigFileType::End, "올바르지 않은 ConfigFileType 입니다.");
+	return m_pConfigFileLoaders[_configFileType]->GetDataAny();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -207,10 +216,10 @@ EnchantInfo* DescLoaderMgr::GetEnchantInfo(int _enchantCode)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ServerProcessInfoPackage* DescLoaderMgr::GetServerProcessInfoPackage(int _serverCode)
+ServerProcessInfoPackage* DescLoaderMgr::GetServerProcessInfoPackage()
 {
 	constexpr auto CONFIG_TYPE = ConfigFileType::Server;
-	const auto pRet = dynamic_cast<ServerProcessInfoPackage*>(GetData(CONFIG_TYPE, _serverCode));
+	const auto pRet = dynamic_cast<ServerProcessInfoPackage*>(GetDataAny(CONFIG_TYPE));
 	jc_assert_msg(pRet, "서버 인포 타입이 아닙니다.");
 	return pRet;
 }

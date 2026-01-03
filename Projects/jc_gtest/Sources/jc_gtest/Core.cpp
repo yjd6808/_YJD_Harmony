@@ -39,7 +39,7 @@ TEST(JCoreTest, DeleteArraySafe)
 int main(int _argc, char** _argv) 
 {
 	::testing::InitGoogleTest(&_argc, _argv);
-	InitializeJCore();
+	InitializeJCore(_argc, _argv);
 	Random::EngineInitialize();
 	const int ret = RUN_ALL_TESTS();
 	PropertyStatics::Finalize();

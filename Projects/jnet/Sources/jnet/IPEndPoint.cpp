@@ -184,13 +184,13 @@ IPv4EndPoint IPv4EndPoint::Parse(const char* _pEndPointAddr)
 	int port = -1;
 	if (!StringUtil::TryToNumber<Int>(port, portString.Source))
 	{
-		jc_assert(false, "올바른 포트번호가 아닙니다.");
+		jc_assert_msg(false, "올바른 포트번호가 아닙니다.");
 		return Invalid;
 	}
 
 	if (port < 0 || port > 0xffff)
 	{
-		jc_assert(false, "올바르지 않은 EndPoint 형식입니다. 포트번호는 0이상 65535이하만 가능합니다.");
+		jc_assert_msg(false, "올바르지 않은 EndPoint 형식입니다. 포트번호는 0이상 65535이하만 가능합니다.");
 		return Invalid;
 	}
 

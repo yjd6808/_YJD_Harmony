@@ -33,7 +33,7 @@ bool EnchantInfoLoader::Load()
 	{
 		Json::Value& enchantInfoListRoot = root["enchant"];
 
-		for (int i = 0; i < enchantInfoListRoot.size(); ++i)
+		for (ArrayIndex i = 0; i < enchantInfoListRoot.size(); ++i)
 		{
 			Value& enchantInfoRoot = enchantInfoListRoot[i];
 			EnchantInfo* pEnchantInfo = dbg_new EnchantInfo();

@@ -9,7 +9,9 @@
 #include "AuthCore.h"
 #include "AuthCoreHeader.h"
 
-#include <sgs_auth/CLIListener.h>
+#include <sg/_Util/DescLoaderMgr.h>
+#include <sg/_Util/_DescMgr/DescMgr_Server.h>
+#include <sg/_Util/_DescMgr/DescMgr_Database.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -20,14 +22,16 @@ NS_SG_BEGIN
 ::AuthNetGroup*     NetGroup;
 ::AuthServer*       Server;
 ::AuthContents      Contents;
-::RuntimeConfig*    RuntimeConfig;
 NS_SG_END
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void InitializeAuthCore()
 {
-	sg::DataManager                     = DataManager::Get();
-	sg::ServerProcessInfoPackage        = g_cDescMgr.GetServerProcessInfoPackage(1);
+	g_cDescMgr.AddLoader(dbg_new ServerInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new DatabaseInfoLoader());
+	g_cDescMgr.LoadAll();
+
+	sg::ServerProcessInfoPackage        = g_cDescMgr.GetServerProcessInfoPackage();
 	sg::ServerProcessInfo               = &sg::ServerProcessInfoPackage->auth_;
 	sg::GameDB                          = dbg_new MysqlDatabase(g_cDescMgr.GetDatabaseInfo(DatabaseType::Game));
 	sg::GameDB->Initialize(ServerProcessType::Auth);
@@ -36,14 +40,8 @@ void InitializeAuthCore()
 	sg::NetGroup                        = sg::NetGroupMgr->GetNetGroup(Const::NetGroup::MainId).Get<AuthNetGroup*>();
 	sg::Server	                        = sg::NetGroup->GetAuthTcp();
 
-	// BASE INJECTION
-	sg::ServerProcessInfoPackage        = g_cDescMgr.GetServerProcessInfoPackage(1);       // 위에서 주입됨
-	sg::CharCommon                      = nullptr;                                                 // 사용안함
-	sg::ThreadPool                      = dbg_new ThreadPool{ 2 };
-	sg::Scheduler                       = dbg_new Scheduler{ 2 };
-
 	// COMMON INJECTION
-	sg::CommonNetGroupMgr                 = sg::NetGroupMgr;
+	sg::CommonNetGroupMgr               = sg::NetGroupMgr;
 	sg::CommonNetGroup                  = sg::NetGroup;
 	sg::CommonServer                    = sg::Server;
 	sg::CommonContents                  = &sg::Contents;
@@ -59,10 +57,11 @@ void InitializeAuthCore()
 ////////////////////////////////////////////////////////////////////////////////////////
 void FinalizeAuthCore()
 {
+	sg::NetGroupMgr->Finalize();
 	sg::Contents.Finalize();
 
 	JC_DELETE_SAFE(sg::GameDB);
 	JC_DELETE_SINGLETON_SAFE(sg::TimeManager);
 	JC_DELETE_SINGLETON_SAFE(sg::NetGroupMgr);
-	JC_DELETE_SINGLETON_SAFE(sg::DataManager);
+	g_cDescMgr.Free();
 }

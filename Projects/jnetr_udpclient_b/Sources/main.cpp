@@ -17,12 +17,12 @@ bool SelectMenu(int _menu);
 UdpClientNetGroup* pClientGroup;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int main()
+int main(int _argc, char** _argv)
 {
 	DefaultParserType = PacketParser::Command;
 
 	Winsock::Initialize(2, 2);
-	InitializeJCore();
+	InitializeJCore(_argc, _argv);
 
 	pClientGroup = dbg_new UdpClientNetGroup{ "UDP B" };
 	pClientGroup->Initialize();

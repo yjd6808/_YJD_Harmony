@@ -33,7 +33,7 @@ bool DatabaseInfoLoader::Load()
 	{
 		Value& databaseListRoot = root["database"];
 
-		for (int i = 0; i < databaseListRoot.size(); ++i)
+		for (ArrayIndex i = 0; i < databaseListRoot.size(); ++i)
 		{
 			Value& databaseRoot = databaseListRoot[i];
 			DatabaseInfo* pDatabaseInfo = dbg_new DatabaseInfo;

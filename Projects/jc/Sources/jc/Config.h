@@ -18,7 +18,7 @@ NS_JC_BEGIN
  * AppExited 상태를 변경해서 NormalLock 사용하는 기능들애 대해서 락을 처리하지 않도록 하기 위함이다.
  */
 
-void InitializeJCore();
+void InitializeJCore(int _argc, char** _argv);
 void FinalizeJCore();
 
 extern bool AppExited;

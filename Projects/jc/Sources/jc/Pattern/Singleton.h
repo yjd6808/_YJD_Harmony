@@ -143,6 +143,11 @@ public:
 		}
 	}
 
+	static bool Singleton_IsDeleted() 
+	{ 
+		return ms_bDeleted;
+	}
+
 private:
 	inline static T* ms_pInst;
 	inline static NormalLock ms_Lock;

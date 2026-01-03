@@ -21,7 +21,7 @@
 #pragma pack(push, CMD_ALIGNMENT)
 
 HOST_DYNAMIC_CMD_BEGIN(SS_HostMessage, CMDID_SS_HostMessage, jc::StaticString<1>)
-	HOST_DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(Msg)
+	HOST_DYNAMIC_CMD_ADD_ARRAY_FIELD(Msg)
 HOST_DYNAMIC_CMD_END
 
 // ===============================================================================================================

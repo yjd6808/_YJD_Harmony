@@ -148,7 +148,7 @@ void ItemInfoLoader::LoadAccessory(const jc::String& _equipAccessoryPath, int _e
 
 	Json::Value& accessoryListRoot = root[ItemType::Name[_equipItemType]];
 
-	for (int i = 0; i < accessoryListRoot.size(); ++i)
+	for (ArrayIndex i = 0; i < accessoryListRoot.size(); ++i)
 	{
 		Json::Value& accessoryRoot = accessoryListRoot[i];
 		ItemArmorInfo* pAccessoryInfo = dbg_new ItemArmorInfo;
@@ -170,7 +170,7 @@ void ItemInfoLoader::LoadArmor(const jc::String& _equipItemArmorPath, int _armor
 	const char* armorTypeName = EquipArmorType::Name[_armorType];
 	Json::Value& armorListRoot = root[armorTypeName];
 
-	for (int i = 0; i < armorListRoot.size(); ++i)
+	for (ArrayIndex i = 0; i < armorListRoot.size(); ++i)
 	{
 		Json::Value& armorRoot = armorListRoot[i];
 		ItemArmorInfo* pArmorInfo = dbg_new ItemArmorInfo;
@@ -193,7 +193,7 @@ void ItemInfoLoader::LoadAvatar(const jc::String& _equipItemAvatarPath, int _cha
 		const char* avatarPartName = AvatarType::Name[avatarTypeIndex];
 		Json::Value& avatarPartListRoot = root[avatarPartName];
 
-		for (int i = 0; i < avatarPartListRoot.size(); ++i)
+		for (ArrayIndex i = 0; i < avatarPartListRoot.size(); ++i)
 		{
 			Json::Value& armorRoot = avatarPartListRoot[i];
 			ItemAvatarInfo* pAvatarInfo = dbg_new ItemAvatarInfo;
@@ -217,7 +217,7 @@ void ItemInfoLoader::LoadWeapon(const jc::String& _equipItemWeaponPath, int _cha
 		const char* weaponName = WeaponType::Name[weaponTypeIndex];
 		Json::Value& weaponListRoot = root[weaponName];
 
-		for (int i = 0; i < weaponListRoot.size(); ++i)
+		for (ArrayIndex i = 0; i < weaponListRoot.size(); ++i)
 		{
 			Json::Value& weaponRoot = weaponListRoot[i];
 			ItemWeaponInfo* pWeaponInfo = dbg_new ItemWeaponInfo;

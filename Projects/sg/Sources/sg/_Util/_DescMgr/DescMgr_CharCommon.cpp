@@ -33,7 +33,7 @@ bool CharCommonInfoLoader::Load()
 	{
 		Value& charCommonInfoListRoot = root["common"];
 
-		for (int i = 0; i < charCommonInfoListRoot.size(); ++i)
+		for (ArrayIndex i = 0; i < charCommonInfoListRoot.size(); ++i)
 		{
 			Value& charCommonInfoRoot = charCommonInfoListRoot[i];
 			CharCommonInfo* pCharCommonInfo = dbg_new CharCommonInfo(charCommonInfoRoot["exp"].size() + 1);
@@ -62,7 +62,7 @@ void CharCommonInfoLoader::ReadCharCommonInfo(Value& _charCommonRoot, CharCommon
 	_pCharCommonInfo->defaultInvenSlotCount_[InvenItemType::Avatar] = _charCommonRoot["default_avatar_slot_count"].asInt();
 
 	Value& expRoot = _charCommonRoot["exp"];
-	for (int i = 0; i < expRoot.size(); ++i)
+	for (ArrayIndex i = 0; i < expRoot.size(); ++i)
 	{
 		_pCharCommonInfo->expTables_.PushBack(expRoot[i].asInt());
 	}

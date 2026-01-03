@@ -84,7 +84,6 @@ void InitializeClientCore()
 	g_cDescMgr.LoadAll();
 	
 	sg::CharCommon = g_cDescMgr.GetCharCommonInfo(1);
-	sg::ServerProcessInfoPackage = g_cDescMgr.GetServerProcessInfoPackage(1);
 
 	if (sg::Net)
 		sg::Net->Initialize();

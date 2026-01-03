@@ -9,6 +9,7 @@
 #include <jc/Config.h>
 #include <jc/Time.h>
 #include <jc/Container/PropertyStatics.h>
+#include <jc/Env.h>
 
 #include <timeapi.h>
 
@@ -18,7 +19,7 @@ bool AppExited = false;
 Int32U AppStartUpTimeTGT_v = ::timeGetTime();
 Int64 AppStartUpTime_v = DateTime::Now().Tick;
 
-void InitializeJCore()
+void InitializeJCore(int _argc, char** _argv)
 {
 	// 콘솔출력 인코딩 설정
 	//  - 전 소스파일 UTF8 통일
@@ -39,6 +40,7 @@ void InitializeJCore()
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 
 	// 프로퍼티 초기화
+	Env::InitArgs(_argc, _argv);
 	PropertyStatics::Initialize();
 }
 

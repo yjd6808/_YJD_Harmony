@@ -36,7 +36,7 @@ bool ItemOptInfoLoader::Load()
 		int optCount = static_cast<int>(itemOptListRoot.size());
 		dataMapByName_.ExpandIfNeeded(optCount);
 
-		for (int i = 0; i < itemOptListRoot.size(); ++i)
+		for (ArrayIndex i = 0; i < itemOptListRoot.size(); ++i)
 		{
 			Value& itemOptRoot = itemOptListRoot[i];
 			int levelOptCount = itemOptRoot["lv"].size();
@@ -70,7 +70,7 @@ void ItemOptInfoLoader::ReadItemOptInfo(Json::Value& _optRoot, ItemOptInfo* _pOp
 
 	Value& optLevelListRoot = _optRoot["lv"];
 
-	for (int i = 0; i < optLevelListRoot.size(); ++i)
+	for (ArrayIndex i = 0; i < optLevelListRoot.size(); ++i)
 	{
 		int level;
 		int minValue;

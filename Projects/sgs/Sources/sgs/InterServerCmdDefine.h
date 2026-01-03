@@ -120,8 +120,8 @@ template <typename T> constexpr bool IsInterServerCommand_v = IsInterServerComma
 template <typename T> constexpr bool IsInterServerHostCommand_v = IsInterServerHostCommand<T>::VALUE;
 template <typename T> constexpr bool IsInterServerRelayCommand_v = IsInterServerRelayCommand<T>::VALUE;
 
-#define HOST_DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(struct)        DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(struct)
-#define RELAY_DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(struct)       DYNAMIC_CMD_ADD_ZERO_SIZE_ARRAY_FIELD(struct)
+#define HOST_DYNAMIC_CMD_ADD_ARRAY_FIELD(struct)        DYNAMIC_CMD_ADD_ARRAY_FIELD(struct)
+#define RELAY_DYNAMIC_CMD_ADD_ARRAY_FIELD(struct)       DYNAMIC_CMD_ADD_ARRAY_FIELD(struct)
 
 #define HOST_STATIC_CMD_BEGIN(__struct__, __cmd__)                                                \
 struct __struct__ : HostStaticCommand {                                                           \

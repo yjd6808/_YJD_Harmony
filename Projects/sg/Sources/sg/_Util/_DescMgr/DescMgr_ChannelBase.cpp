@@ -32,7 +32,7 @@ bool ChannelBaseInfoLoader::Load()
 	{
 		Json::Value& channelInfoRootList = root["channel"];
 
-		for (int i = 0; i < channelInfoRootList.size(); ++i)
+		for (ArrayIndex i = 0; i < channelInfoRootList.size(); ++i)
 		{
 			Value& channelInfoRoot = channelInfoRootList[i];
 			ChannelBaseInfo* pChannelInfo = dbg_new ChannelBaseInfo;

@@ -9,26 +9,30 @@
 #include "CenterCore.h"
 #include "CenterCoreHeader.h"
 
-#include <sgs_center/CLIListener.h>
+#include <sg/_Util/DescLoaderMgr.h>
+#include <sg/_Util/_DescMgr/DescMgr_Server.h>
+#include <sg/_Util/_DescMgr/DescMgr_Database.h>
 
 USING_NS_JC;
 USING_NS_JNET;
 
 NS_SG_BEGIN
-::DataManager* DataManager;
-::MysqlDatabase* GameDB;
-::CenterNetMaster* NetGroupMgr;
-::CenterNetGroup* NetGroup;
-::CenterServer* Server;
-::RuntimeConfig* RuntimeConfig;
+::DataManager*		DataManager;
+::MysqlDatabase*	GameDB;
+::CenterNetMaster*	NetGroupMgr;
+::CenterNetGroup*	NetGroup;
+::CenterServer*		Server;
 ::CenterContents	Contents;
 NS_SG_END
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void InitializeCenterCore() 
 {
-	sg::DataManager = DataManager::Get();
-	sg::ServerProcessInfoPackage = g_cDescMgr.GetServerProcessInfoPackage(1);
+	g_cDescMgr.AddLoader(dbg_new ServerInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new DatabaseInfoLoader());
+	g_cDescMgr.LoadAll();
+
+	sg::ServerProcessInfoPackage = g_cDescMgr.GetServerProcessInfoPackage();
 	sg::ServerProcessInfo = &sg::ServerProcessInfoPackage->center_;
 	sg::GameDB = dbg_new MysqlDatabase(g_cDescMgr.GetDatabaseInfo(DatabaseType::Game));
 	sg::GameDB->Initialize(ServerProcessType::Center);
@@ -36,29 +40,14 @@ void InitializeCenterCore()
 	sg::NetGroupMgr->Initialize();
 	sg::NetGroup = sg::NetGroupMgr->GetNetGroup(Const::NetGroup::MainId).Get<CenterNetGroup*>();
 	sg::Server = sg::NetGroup->GetCenterTcp();
-	sg::RuntimeConfig = RuntimeConfig::Get();
-	sg::RuntimeConfig->Load();
-
-	// BASE INJECTION
-	if (sg::CLIThread)
-		sg::CLIThread->SetListener(dbg_new CLIListener);
-
-	sg::ServerProcessInfoPackage = g_cDescMgr.GetServerProcessInfoPackage(1);		// 위에서 주입됨
-	sg::CharCommon = nullptr;													// 사용안함
-	sg::ThreadPool = dbg_new ThreadPool{ 2 };
-	sg::Scheduler = dbg_new Scheduler{ 2 };
-	sg::RuntimeConfig = sg::RuntimeConfig;
-
-	// COMMON INJECTION
+	
 	sg::CommonNetGroupMgr = sg::NetGroupMgr;
 	sg::CommonNetGroup = sg::NetGroup;
 	sg::CommonServer = sg::Server;
-	sg::CommonRuntimeConfig = sg::RuntimeConfig;
 	sg::CommonContents = &sg::Contents;
 	sg::InterServerClientNetGroup = sg::NetGroupMgr->GetNetGroup(Const::NetGroup::InterServerId).Get<InterServerClientNetGroup*>();
 	sg::InterServerClientTcp = sg::InterServerClientNetGroup ? sg::InterServerClientNetGroup->GetInterServerClientTcp() : nullptr;
 	sg::InterServerClientUdp = sg::InterServerClientNetGroup ? sg::InterServerClientNetGroup->GetInterServerClientUdp() : nullptr;
-	sg::ServerProcessInfo = &sg::ServerProcessInfoPackage->center_;
 	sg::TimeManager = TimeManager::Get();
 
 	sg::Contents.Initialize();
@@ -67,12 +56,11 @@ void InitializeCenterCore()
 //////////////////////////////////////////////////////////////////////////////////////////
 void FinalizeCenterCore() 
 {
+	sg::NetGroupMgr->Finalize();
 	sg::Contents.Finalize();
 
 	JC_DELETE_SAFE(sg::GameDB);
 	JC_DELETE_SINGLETON_SAFE(sg::TimeManager);
-	JC_DELETE_SINGLETON_SAFE(sg::RuntimeConfig);
 	JC_DELETE_SINGLETON_SAFE(sg::NetGroupMgr);
-	JC_DELETE_SINGLETON_SAFE(sg::DataManager);
-
+	g_cDescMgr.Free();
 }

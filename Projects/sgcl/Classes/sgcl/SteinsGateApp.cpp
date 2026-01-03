@@ -25,8 +25,10 @@ USING_NS_JNET;
 USING_NS_JNET_DETAIL;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-SteinsGateApp::SteinsGateApp()
+SteinsGateApp::SteinsGateApp(int _argc, char** _argv)
 : pWndProcHook_(nullptr)
+, argc_(_argc)
+, argv_(_argv)
 {
 }
 
@@ -112,7 +114,7 @@ bool SteinsGateApp::applicationDidFinishLaunching()
 	// ======================================================
 	// 메인 리소스 초기화
 	// ======================================================
-	InitializeJCore();
+	InitializeJCore(argc_, argv_);
 	sgapiBase::Init(dbg_new sgapiClient);
 	Winsock::Initialize(2, 2);
 	AudioPlayer::Initilize();

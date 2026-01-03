@@ -186,6 +186,6 @@ void UI_Login::Login()
 		return;
 	}
 	
-	std::string msg = StringUtils::format(SG_LOCAL_RAW("CONNECT_SERVER", ServerType::Name[ServerType::Auth]));
+	std::string msg = StringUtils::format(SG_LOCAL_RAW("CONNECT_SERVER"), ServerType::Name[ServerType::Auth]);
 	sg::Contents.PopupManager->ShowNone(msg, DEF_POPUP_CONNECT_AUTH);
 }
