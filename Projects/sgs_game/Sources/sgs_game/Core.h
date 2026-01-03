@@ -10,5 +10,3 @@
 #pragma once
 
 #include <sgs/Core.h>
-
-#include <sgs_game/GameCore.h>
