@@ -16,8 +16,7 @@ USING_NS_CC;
 USING_NS_JNET;
 
 bool CommandSynchronizer::RegistrationEnd = false;
-CommandSynchronizer::CommandQueueHolder thread_local CommandSynchronizer::tlsCommandQueueHolder =
-	RegisterPacketQueueAddress(64);
+CommandSynchronizer::CommandQueueHolder thread_local CommandSynchronizer::tlsCommandQueueHolder = RegisterPacketQueueAddress(64);
 
 CommandSynchronizer::CommandQueueHolder CommandSynchronizer::RegisterPacketQueueAddress(int _initCapacity)
 {
@@ -31,8 +30,8 @@ CommandSynchronizer::CommandQueueHolder CommandSynchronizer::RegisterPacketQueue
 	return { _initCapacity };
 }
 
-CommandSynchronizer::CommandHolder::CommandHolder(ClientConnectServerType_t _listenerType, jnet::Session* _pSender,
-                                                  jnet::ICommand* _pCopy)
+//////////////////////////////////////////////////////////////////////////////////////////
+CommandSynchronizer::CommandHolder::CommandHolder(ClientConnectServerType_t _listenerType, jnet::Session* _pSender, jnet::ICommand* _pCopy)
 {
 	int unused;
 	pSender_ = _pSender;
@@ -43,24 +42,26 @@ CommandSynchronizer::CommandHolder::CommandHolder(ClientConnectServerType_t _lis
 	Memory::CopyUnsafe(pCommand_, _pCopy, cmdLength);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 CommandSynchronizer::CommandHolder::~CommandHolder()
 {
 	pMemPool_->DynamicPush(pCommand_, pCommand_->GetLength());
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////
 CommandSynchronizer::CommandSynchronizer()
 : packetQueueCount_(0)
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 CommandSynchronizer::~CommandSynchronizer()
 {
 	// IOCP 쓰레드가 삭제되기전 동적할당해준 패킷데이터들과 커맨드 홀더들을 해제해줘야한다.
 	Finalize();
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////
 void CommandSynchronizer::Initialize()
 {
 	FilterUnusedCommandQueue();
@@ -68,6 +69,7 @@ void CommandSynchronizer::Initialize()
 	RegistrationEnd = true;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void CommandSynchronizer::EnqueueCommand(ClientConnectServerType_t _listenerType, jnet::Session* _pSession,
                                          jnet::ICommand* _pCmd)
 {
@@ -76,6 +78,7 @@ void CommandSynchronizer::EnqueueCommand(ClientConnectServerType_t _listenerType
 	tlsCommandQueueHolder.pQueue_->Enqueue(pHolder);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void CommandSynchronizer::ProcessCommands()
 {
 	for (int i = 0; i < packetQueueCount_; ++i)
@@ -99,7 +102,7 @@ void CommandSynchronizer::ProcessCommands()
 	}
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////
 void CommandSynchronizer::FilterUnusedCommandQueue()
 {
 	// 필터완료 전까지는 IOCP쓰레드가 아닌 쓰레드도 생성될 수 있으므로. 완료전까지 생성된 쓸모없는 패킷큐는 걸러줘야함
@@ -112,6 +115,7 @@ void CommandSynchronizer::FilterUnusedCommandQueue()
 	packetQueueCount_ = iocpThreadAccessCommandQueueList_.Size();
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void CommandSynchronizer::AllocateCommandQueue()
 {
 	auto fnAllocator = [this](const IOCPThreadId$CommandQueuePair& pair)
@@ -128,6 +132,7 @@ void CommandSynchronizer::AllocateCommandQueue()
 	iocpThreadAccessCommandQueueList_.ForEach(fnAllocator);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void CommandSynchronizer::Finalize()
 {
 	for (int i = 0; i < packetQueueCount_; ++i)

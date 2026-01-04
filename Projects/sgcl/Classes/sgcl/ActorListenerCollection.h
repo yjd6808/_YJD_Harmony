@@ -11,6 +11,8 @@
 
 #include <sgcl/IActorListener.h>
 
+struct HitInfo;
+
 class ActorListenerCollection
 {
 public:

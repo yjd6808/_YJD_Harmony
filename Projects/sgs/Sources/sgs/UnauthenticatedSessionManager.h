@@ -8,9 +8,7 @@
 
 #pragma once
 
-#include <sg/ICreatable.h>
-
-class UnauthenticatedSessionManager : public ICreatable<UnauthenticatedSessionManager>
+class UnauthenticatedSessionManager
 {
 public:
 	bool Add(AuthenticationSerial_t _serial, CommonSession* _pSession);

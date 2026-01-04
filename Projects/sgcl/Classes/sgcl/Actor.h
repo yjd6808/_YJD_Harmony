@@ -30,6 +30,8 @@
 class Actor;
 class MapLayer;
 
+struct HitInfo;
+
 class Actor : public cc::Node
 {
 	JC_HIDE_BASE_CLASS_METHOD(cc::Node, addComponent)

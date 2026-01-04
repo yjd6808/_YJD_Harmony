@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <sgcl/Struct.h>
 #include <sgcl/Projectile.h>
 #include <sgcl/Monster.h>
 #include <sgcl/MapObject.h>
@@ -23,6 +22,8 @@ using MapObjectList = jc::Vector<MapObject*>;
 using EffectList = jc::Vector<Effect*>;
 
 class MapLayer;
+
+struct HitInfo;
 
 class ActorManager final : public jc::SingletonPointer<ActorManager>
 {

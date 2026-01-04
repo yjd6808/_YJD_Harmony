@@ -9,6 +9,8 @@
 
 #include <sgcl/ActorComponent.h>
 
+struct HitInfo;
+
 class PhysicsComponent : public ActorComponent, public IUpdatable
 {
 public:

@@ -8,6 +8,8 @@
 #include "Core.h"
 #include "AttackActivity_Goblin.h"
 
+#include <sgcl/_Struct/CL_Character.h>
+
 #include <sgcl/Monster.h>
 #include <sgcl/ActorManager.h>
 #include <sgcl/PhysicsComponent.h>

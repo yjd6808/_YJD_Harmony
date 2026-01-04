@@ -11,8 +11,10 @@
 
 #include <sge/RectPoly.h>
 
-#include <sgcl/MapLayer.h>
 #include <sg/_Struct/SteinsGate_AttackData.h>
+
+#include <sgcl/_Struct/CL_Character.h>
+#include <sgcl/MapLayer.h>
 
 USING_NS_JC;
 USING_NS_CC;

@@ -10,6 +10,7 @@
 #include "GameCoreHeader.h"
 
 #include <sg/_Util/DescLoaderMgr.h>
+#include <sg/_Core/VirtualMachine.h>
 
 #include <sgcl/_API/sgapiClient.h>
 #include <sgcl/ImagePackManager.h>
@@ -49,6 +50,22 @@ NS_SG_BEGIN
 NS_SG_END
 
 //////////////////////////////////////////////////////////////////////////////////////////
+bool CLI_Help(int _argc, jc::String* _pArgv)
+{
+	jc::String helpText{ 1024 };
+	helpText += " - exit: 애플리케이션을 종료합니다.\n";
+	jc::Console::WriteLine(helpText.Source());
+	return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CLI_Exit(int _argc, jc::String* _pArgv)
+{
+	cocos2d::Director::getInstance()->end();
+	return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 void InitializeClientCore()
 {
 	sg::App = (SteinsGateApp*)cocos2d::Application::getInstance();
@@ -56,6 +73,8 @@ void InitializeClientCore()
 
 	g_cImagePackMgr.LoadAllPackages();
 	g_cFontMgr.Init();
+	g_cVM.AddCLICallback("help", CLI_Help);
+	g_cVM.AddCLICallback("exit", CLI_Exit);
 	Global::Get()->init();
 
 	g_cDescMgr.AddLoader(dbg_new EffectInfoLoader());

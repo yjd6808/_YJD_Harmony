@@ -11,6 +11,7 @@
 #include <sgcl/Core.h>
 
 class MapLayer;
+class Actor;
 
 class MimicCamera : public cc::Node
 {

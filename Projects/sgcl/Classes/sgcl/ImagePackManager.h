@@ -62,4 +62,5 @@ private:
 	int loadedPackageCount_{};
 };
 
-#define g_cImagePackMgr (*ImagePackManager::Get())
+JC_DECL_SINGLETON_VAR(ImagePackManager);
+#define g_cImagePackMgr JC_DECL_SINGLETON_BODY(ImagePackManager)

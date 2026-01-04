@@ -20,7 +20,7 @@ void ServerContents::Initialize()
 	}
 	else if (sg::ServerProcessInfo->processType_ == ServerProcessType::Lobby)
 	{
-		UnauthenticatedSessionManager = UnauthenticatedSessionManager::CreateInstance();
+		UnauthenticatedSessionManager = dbg_new::UnauthenticatedSessionManager();
 	}
 	else if (sg::ServerProcessInfo->processType_ == ServerProcessType::Game)
 	{

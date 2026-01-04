@@ -10,8 +10,11 @@
 
 #include <sg/_Struct/SteinsGate_FrameEvent.h>
 
+#include <sgcl/_Struct/CL_Character.h>
+
 class ActorPartAnimation;
 class Actor;
+struct HitInfo;
 
 // 타격받은 대상 정보를 기록하는 용도
 using SGHitInfoList = jc::Vector<HitInfo>;

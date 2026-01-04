@@ -13,6 +13,8 @@
 #include <sge/RectEx.h>
 #include <sge/Color.h>
 
+#include <sgcl/_Struct/CL_Character.h>
+
 #include <sgcl/Global.h>
 #include <sgcl/MapLayer.h>
 #include <sgcl/PhysicsComponent.h>

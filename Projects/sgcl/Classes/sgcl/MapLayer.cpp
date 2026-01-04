@@ -11,6 +11,8 @@
 
 #include <sg/_Struct/SteinsGate_Tile.h>
 
+#include <sgcl/_Struct/CL_Character.h>
+
 #include <sgcl/Define_Action.h>
 #include <sgcl/ImagePackManager.h>
 

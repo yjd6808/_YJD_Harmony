@@ -4,12 +4,14 @@ class CLIListener
 {
 public:
 	using TCLI_Callback = jc::Func<bool, int, jc::String*>;
-	using TCLI_CallbackExternal = jc::Func<bool, CLIListener*, int, jc::String*>;
-	using TCLI_Table = jc::HashMap<jc::String, TCLI_Callback>;
+	using TCLI_CallbackList = jc::Vector<TCLI_Callback>;
+	using TCLI_CallbackExternal = jc::Func<bool, int, jc::String*>;
+
+	using TCLI_Table = jc::HashMap<jc::String, TCLI_CallbackList>;
 
 	CLIListener();
 
-	void AddCallback(const jc::String& _key, const TCLI_Callback& _callback);
+	void AddCallback(const jc::String& _key, const jc::Func<bool, int, jc::String*>& _callBack);
 
 	bool OnInputProcessing(int _argc, jc::String* _pArgv);
 private:
@@ -32,7 +34,7 @@ protected:
 	 * \param _table
 	 * \return 이벤트 터널링 여부
 	 */
-	bool ExecuteCommand(int _argc, jc::String* _pArgv,  TCLI_Table& _table);
+	bool ExecuteCommand(int _argc, jc::String* _pArgv);
 
 	jc::LoggerAbstract::Level ConvertLogLevel(const jc::String& _logLevelString);
 	int ToNumber(const jc::String& _numString, int _argIndex);

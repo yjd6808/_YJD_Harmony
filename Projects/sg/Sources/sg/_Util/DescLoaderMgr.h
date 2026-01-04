@@ -95,8 +95,9 @@ public:
 	jc::String&						GetText(const char* _textId);
 	jc::String&						GetText(const jc::String& _textId);
 
-protected:
+private:
 	DescLoaderAbstract* m_pConfigFileLoaders[ConfigFileType::Max]{};
 };
 
-#define g_cDescMgr	(*DescLoaderMgr::Get())
+JC_DECL_SINGLETON_VAR(DescLoaderMgr);
+#define g_cDescMgr JC_DECL_SINGLETON_BODY(DescLoaderMgr)

@@ -538,49 +538,25 @@ class Vector : public ArrayCollection<T, TAllocator>
         return ContainerType::Vector;
     }
 
-    struct SIterator
-    {
-        using iterator_category = std::forward_iterator_tag;
-        using difference_type = std::ptrdiff_t;
-        using value_type = T;
-        using pointer = T*;
-        using reference = T&;
+	struct SIterator
+	{
+		using iterator_category = std::forward_iterator_tag;
+		using difference_type = std::ptrdiff_t;
+		using value_type = T;
+		using pointer = T*;
+		using reference = T&;
 
-        SIterator(const TEnumerator& _enumerator) : enumerator_(_enumerator)
-        {
-        }
+		SIterator(const TEnumerator& enumerator) : m_it(enumerator) {}
 
-        reference operator*() const
-        {
-            return *enumerator_->Current();
-        }
-        pointer operator->()
-        {
-            return &enumerator_->Current();
-        }
-        SIterator& operator++()
-        {
-            enumerator_->Next();
-            return *this;
-        }
-        SIterator operator++(int)
-        {
-            SIterator tmp = *this;
-            ++(*this);
-            return tmp;
-        }
-        friend bool operator==(const SIterator& _a, const SIterator& _b)
-        {
-            return _a.enumerator_ == _b.enumerator_;
-        }
-        friend bool operator!=(const SIterator& _a, const SIterator& _b)
-        {
-            return _a.enumerator_ == _b.enumerator_;
-        }
-
-      private:
-        TEnumerator enumerator_;
-    };
+		reference operator*() const { return *m_it->Current(); }
+		pointer operator->() { return &m_it->Current(); }
+		SIterator& operator++() { m_it->Next(); return *this; }
+		SIterator operator++(int) { SIterator tmp = *this; ++(*this); return tmp; }
+		friend bool operator== (const SIterator& a, const SIterator& b) { return a.m_it == b.m_it; }
+		friend bool operator!= (const SIterator& a, const SIterator& b) { return a.m_it == b.m_it; }
+	private:
+		TEnumerator m_it;
+	};
 
     SIterator begin()
     {

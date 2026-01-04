@@ -15,42 +15,57 @@ USING_NS_JC;
 //////////////////////////////////////////////////////////////////////////////////////////
 CLIListener::CLIListener()
 {
-	cliTable_.Insert("help", JC_CALLBACK_2(CLIListener::CLI_HelpBase, this));
-	cliTable_.Insert(ConfigRuntime::SEND_COMMAND_FILTER_KEY, JC_CALLBACK_2(CLIListener::CLI_SendCommandFilter, this));
-	cliTable_.Insert(ConfigRuntime::RECV_COMMAND_FILTER_KEY, JC_CALLBACK_2(CLIListener::CLI_RecvCommandFilter, this));
-	cliTable_.Insert(ConfigRuntime::SHOW_SEND_COMMAND_KEY, JC_CALLBACK_2(CLIListener::CLI_ShowSendCommand, this));
-	cliTable_.Insert(ConfigRuntime::SHOW_RECV_COMMAND_KEY, JC_CALLBACK_2(CLIListener::CLI_ShowRecvCommand, this));
-	cliTable_.Insert(ConfigRuntime::SHOW_SEND_PACKET_HEX_KEY, JC_CALLBACK_2(CLIListener::CLI_ShowSendPacketHex, this));
-	cliTable_.Insert(ConfigRuntime::SHOW_RECV_PACKET_HEX_KEY, JC_CALLBACK_2(CLIListener::CLI_ShowRecvPacketHex, this));
-	cliTable_.Insert("console_log", JC_CALLBACK_2(CLIListener::CLI_ConsoleLog, this));
-	cliTable_.Insert("console_net_log", JC_CALLBACK_2(CLIListener::CLI_ConsoleNetLog, this));
-	cliTable_.Insert("runtime_config", JC_CALLBACK_2(CLIListener::CLI_ConfigRuntime, this));
+	AddCallback("help", JC_CALLBACK_2(CLIListener::CLI_HelpBase, this));
+	AddCallback(ConfigRuntime::SEND_COMMAND_FILTER_KEY, JC_CALLBACK_2(CLIListener::CLI_SendCommandFilter, this));
+	AddCallback(ConfigRuntime::RECV_COMMAND_FILTER_KEY, JC_CALLBACK_2(CLIListener::CLI_RecvCommandFilter, this));
+	AddCallback(ConfigRuntime::SHOW_SEND_COMMAND_KEY, JC_CALLBACK_2(CLIListener::CLI_ShowSendCommand, this));
+	AddCallback(ConfigRuntime::SHOW_RECV_COMMAND_KEY, JC_CALLBACK_2(CLIListener::CLI_ShowRecvCommand, this));
+	AddCallback(ConfigRuntime::SHOW_SEND_PACKET_HEX_KEY, JC_CALLBACK_2(CLIListener::CLI_ShowSendPacketHex, this));
+	AddCallback(ConfigRuntime::SHOW_RECV_PACKET_HEX_KEY, JC_CALLBACK_2(CLIListener::CLI_ShowRecvPacketHex, this));
+	AddCallback("console_log", JC_CALLBACK_2(CLIListener::CLI_ConsoleLog, this));
+	AddCallback("console_net_log", JC_CALLBACK_2(CLIListener::CLI_ConsoleNetLog, this));
+	AddCallback("runtime_config", JC_CALLBACK_2(CLIListener::CLI_ConfigRuntime, this));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void CLIListener::AddCallback(const jc::String& _key, const TCLI_Callback& _callback)
+void CLIListener::AddCallback(const jc::String& _key, const jc::Func<bool, int, jc::String*>& _callBack)
 {
-	if (cliTable_.Insert(_key, _callback) == false)
+	TCLI_CallbackList* pCallbackList = cliTable_.Find(_key);
+	if (pCallbackList == nullptr)
 	{
-		jc_assert_msg(false, "%s 키가 중복됩니다.", _key.Source());
+		TCLI_CallbackList list;
+		list.PushBack(_callBack);
+		cliTable_.Insert(_key, list);
+	}
+	else
+	{
+		pCallbackList->PushBack(_callBack);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool CLIListener::ExecuteCommand(int _argc, String* _pArgv, TCLI_Table& _table)
+bool CLIListener::ExecuteCommand(int _argc, String* _pArgv)
 {
-	const TCLI_Callback* pCallback = _table.Find(_pArgv[0].Source());
-	if (pCallback)
+	TCLI_CallbackList* pCallbackList = cliTable_.Find(_pArgv[0].Source());
+	if (pCallbackList == nullptr)
+		return false;
+
+	if (pCallbackList && pCallbackList->Size() > 0)
 	{
-		return (*pCallback)(_argc, _pArgv);
+		for (int i = 0; i < pCallbackList->Size(); ++i)
+			if (pCallbackList->At(i)(_argc, _pArgv))
+				break;
+
+		return true;
 	}
-	return true;
+
+	return false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 bool CLIListener::OnInputProcessing(int _argc, String* _pArgv)
 {
-	return ExecuteCommand(_argc, _pArgv, cliTable_);
+	return ExecuteCommand(_argc, _pArgv);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -91,7 +106,7 @@ bool CLIListener::CLI_HelpBase(int /*_argc*/, jc::String* /*_pArgv*/)
 	helpText += "\t\t* white\n";
 	helpText += " - runtime_config [save|delete]: 런타임 설정을 저장 또는 삭제합니다.";
 	Console::WriteLine(helpText.Source());
-	return true;
+	return false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

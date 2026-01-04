@@ -4,13 +4,9 @@
 #pragma once
 
 class CLIThread;
-struct RuntimeConfig;
-struct CharCommonInfo;
-class DescLoaderMgr;
-
+class CLIListener;
 class jc::ThreadPool;
 class jc::Scheduler;
-class jnet::CommandNameDictionary;
 
 class VirtualMachine : public jc::SingletonPointer<VirtualMachine>
 {
@@ -21,17 +17,16 @@ public:
 	void Init();
 	void Go(const jc::TimeSpan& _dt);
 
+	void AddCLICallback(const jc::String& _cmdLine, const jc::Func<bool, int, jc::String*>& _callback);
+
 	jc::ThreadPool& ThreadPool() const { return *pThreadPool_; }
 	jc::Scheduler&	Scheduler() const { return *pScheduler_; }
-	jnet::CommandNameDictionary& CommandNameDictionary() const { return *pCmdNameMap_; }
 
 private:
+	CLIListener*	 pCLIListener_ = nullptr;
 	CLIThread*		 pCliThread_ = nullptr;
-	RuntimeConfig*	 pConfigRuntime_ = nullptr;
-	CharCommonInfo*  pCharCommonInfo_ = nullptr;
 	jc::ThreadPool*	 pThreadPool_ = nullptr;
 	jc::Scheduler*	 pScheduler_ = nullptr;
-	jnet::CommandNameDictionary*	pCmdNameMap_ = nullptr;
 };
 
 #define g_cVM (*VirtualMachine::Get())

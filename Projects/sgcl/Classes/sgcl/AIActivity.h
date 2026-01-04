@@ -8,6 +8,8 @@
 #pragma once
 
 #include <sg/_Struct/SteinsGate_AI.h>
+
+#include <sgcl/_Struct/CL_Character.h>
 #include <sgcl/HitRecorder.h>
 
 class ActorPartAnimation;

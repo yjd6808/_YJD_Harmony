@@ -154,4 +154,7 @@ private:
 	inline static bool ms_bDeleted;
 };
 
+#define JC_DECL_SINGLETON_VAR(type_name) inline type_name* __s##type_name;
+#define JC_DECL_SINGLETON_BODY(type_name) (*(__s##type_name ? __s##type_name : (__s##type_name = type_name::Get())))
+
 NS_JC_END

@@ -643,15 +643,30 @@ struct IsValidAllocator
 
 	static constexpr bool IS_VALID_DEALLOCATE_RETURN_TYPE = TestDeallocateReturn1() && TestDeallocateReturn1();
 	static constexpr bool IS_VALID_DEALLOCATE_PARAM_TYPE = TestDeallocateParam1() && TestDeallocateParam2();
-	static constexpr bool VALID = IS_VALID_ALLOCATE_RETURN_TYPE && IS_VALID_ALLOCATE_PARAM_TYPE && IS_VALID_DEALLOCATE_PARAM_TYPE &&
+	static constexpr bool VALID = 
+		IS_VALID_ALLOCATE_RETURN_TYPE && 
+		IS_VALID_ALLOCATE_PARAM_TYPE && 
+		IS_VALID_DEALLOCATE_PARAM_TYPE &&
 		IS_VALID_DEALLOCATE_PARAM_TYPE;
 };
+
+//
+//template <typename T, typename... Args>
+//constexpr bool IsAllSameType()
+//{
+//	bool result = true;
+//	std::initializer_list<bool>{ (result &= std::is_same_v<T, Args>)... };
+//	return result;
+//}
 
 NS_DETAIL_END
 
 
 template <typename Lhs, typename Rhs>
 constexpr bool IsSameType_v = std::is_same_v<Lhs, Rhs>;
+
+//template <typename T, typename... Args>
+//constexpr bool IsAllSameType_v = detail::IsAllSameType<T, Args...>();
 
 // From에서 To로 암묵적 변환이 가능한지
 // 즉 To ? = From이 가능한지
@@ -786,6 +801,5 @@ constexpr bool IsFunctor_v = detail::IsFunctor::VALUE<Fn>;
 
 template <typename Fn>
 constexpr bool IsCallable_v = detail::IsCallable<Fn>::VALUE;
-
 
 NS_JC_END

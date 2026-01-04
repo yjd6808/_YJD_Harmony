@@ -21,7 +21,6 @@ NS_SG_BEGIN
 ::LobbyNetMaster*   NetGroupMgr;
 ::LobbyNetGroup*    NetGroup;
 ::LobbyServer*      Server;
-::RuntimeConfig*    RuntimeConfig;
 ::LobbyContents     Contents;
 NS_SG_END
 

@@ -40,7 +40,6 @@ VirtualMachine::~VirtualMachine()
 		pCliThread_->Join();
 	}
 
-	JC_DELETE_SAFE(pCmdNameMap_);
 	JC_DELETE_SAFE(pScheduler_);
 	JC_DELETE_SAFE(pThreadPool_);
 	JC_DELETE_SAFE(pCliThread_);
@@ -49,16 +48,22 @@ VirtualMachine::~VirtualMachine()
 //////////////////////////////////////////////////////////////////////////////////////////
 void VirtualMachine::Init()
 {
+	pCLIListener_ = dbg_new CLIListener;
 	pCliThread_ = dbg_new CLIThread;
-	pCliThread_->SetListener(dbg_new CLIListener);
+	pCliThread_->SetListener(pCLIListener_);
 	pCliThread_->Start();
 	pThreadPool_ = dbg_new jc::ThreadPool(2);
 	pScheduler_ = dbg_new jc::Scheduler(2);
-	pCmdNameMap_ = dbg_new jnet::CommandNameDictionary;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void VirtualMachine::Go(const jc::TimeSpan& _dt)
 {
 	pCliThread_->ProcessInputs();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void VirtualMachine::AddCLICallback(const jc::String& _cmdLine, const jc::Func<bool, int, jc::String*>& _callback)
+{
+	pCLIListener_->AddCallback(_cmdLine, _callback);
 }

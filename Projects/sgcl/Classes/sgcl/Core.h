@@ -9,9 +9,7 @@
 #pragma once
 
 #include <sge/Core.h>
-#include <sg/Logo.h>
 
-#include <sgcl/Struct.h>
 #include <sgcl/Const.h>
 #include <sgcl/GameCore.h>
 

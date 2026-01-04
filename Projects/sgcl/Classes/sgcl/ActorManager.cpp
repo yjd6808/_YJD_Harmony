@@ -15,6 +15,9 @@
 #include "ActorManager.h"
 
 #include <sg/_Util/DescLoaderMgr.h>
+
+#include <sgcl/_Struct/CL_Character.h>
+
 #include <sgcl/ActorListenerManager.h>
 #include <sgcl/MapLayer.h>
 #include <sgcl/AIComponent.h>

@@ -112,9 +112,6 @@
     <Filter Include="Const">
       <UniqueIdentifier>{e9085bd4-65c5-4e18-92a8-d143f75158e9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Struct">
-      <UniqueIdentifier>{ee93dcde-8922-4bb3-b234-f260a8e990d9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Define">
       <UniqueIdentifier>{438654f5-eaff-4964-afe5-bea9e182e705}</UniqueIdentifier>
     </Filter>
@@ -129,6 +126,9 @@
     </Filter>
     <Filter Include="_Util\_DescMgr">
       <UniqueIdentifier>{4b0e5bc3-759b-41bb-9996-1158d56b4ebe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Struct">
+      <UniqueIdentifier>{8c36a814-9086-489d-b95a-7e0ec0d5f7e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -479,9 +479,6 @@
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Callback_POPUP_TIMEOUT.cpp">
       <Filter>Game\Callback</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Struct.cpp">
-      <Filter>Struct</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\R_MESSAGE.cpp">
       <Filter>Net\Recv</Filter>
@@ -904,15 +901,6 @@
     <ClInclude Include="..\Classes\sgcl\Const.h">
       <Filter>Const</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Struct.h">
-      <Filter>Struct</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Struct_ACTOR.h">
-      <Filter>Struct</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Struct_CHANNEL.h">
-      <Filter>Struct</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Const_HOST.h">
       <Filter>Const</Filter>
     </ClInclude>
@@ -955,6 +943,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_MapObject.h">
       <Filter>_Util\_DescMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Struct\CL_Character.h">
+      <Filter>_Struct</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

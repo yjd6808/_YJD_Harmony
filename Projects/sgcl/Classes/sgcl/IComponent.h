@@ -10,8 +10,6 @@
 
 #include <jc/Declspec.h>
 
-#include <sgcl/Struct.h>
-
 #define SG_COMPONENT_TYPE_GETTER(component_type)				\
 public:															\
 	Type GetType() const override { return component_type; }	\

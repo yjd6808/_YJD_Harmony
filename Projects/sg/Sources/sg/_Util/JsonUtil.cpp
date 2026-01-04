@@ -107,7 +107,7 @@ void JsonUtil::ParseThicknessInfo(Json::Value& _thicknessRoot, OUT ThicknessBox&
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void JsonUtil::ParseIntNumber2(Json::Value& _root, int& _num1, int& _num2)
+void JsonUtil::ParseIntNumber2(Json::Value& _root, OUT int& _num1, OUT int& _num2)
 {
 	int num[2];
 	TextUtil::ParseIntNumbers(GetString(_root), num, 2);
@@ -190,7 +190,7 @@ bool JsonUtil::GetBooleanDefault(Json::Value& _value, bool _defaultValue /* = fa
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void JsonUtil::ParseAnimationInfo(Json::Value& _animationRoot, AnimationInfo& _info)
+void JsonUtil::ParseAnimationInfo(Json::Value& _animationRoot, OUT AnimationInfo& _info)
 {
 	_info.name_ = GetStringOrNull(_animationRoot["name"]);
 	_info.code_ = GetIntDefault(_animationRoot["code"], 1);
@@ -218,7 +218,7 @@ void JsonUtil::ParseAnimationInfo(Json::Value& _animationRoot, AnimationInfo& _i
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void JsonUtil::ParseActorRect(Json::Value& _root, ActorRect& _actorRect)
+void JsonUtil::ParseActorRect(Json::Value& _root, OUT ActorRect& _actorRect)
 {
 	float actorRectData[8];
 	ParseFloatNumberN(_root, actorRectData, sizeof(actorRectData) / sizeof(float));

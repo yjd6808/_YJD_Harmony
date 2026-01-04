@@ -90,9 +90,6 @@
 
 #include <sg/_Core/VirtualMachine.h>
 
-#include <sg/IBroadcastable.h>
-#include <sg/ICreatable.h>
-
 #define SG_CACHELINE_SIZE        64
 #define SG_FLT_EPSILON           0.0001f
 #define SG_PI                    3.141592f

@@ -9,6 +9,7 @@
 #include "MimicCamera.h"
 #include "GameCoreHeader.h"
 
+#include <sgcl/Actor.h>
 #include <sgcl/MapLayer.h>
 
 USING_NS_CC;

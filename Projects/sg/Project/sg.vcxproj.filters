@@ -22,9 +22,6 @@
     <ClCompile Include="..\Sources\sg\ListenerHelperBase.cpp">
       <Filter>Net\Listener</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sg\Position.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\sg\AudioPlayer.cpp">
       <Filter>System</Filter>
     </ClCompile>
@@ -44,10 +41,10 @@
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sg\_API\sgapiBase.cpp">
-      <Filter>API</Filter>
+      <Filter>_API</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sg\_API\sgapi_Util.cpp">
-      <Filter>API</Filter>
+      <Filter>_API</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sg\_Sga\SgaSound.cpp">
       <Filter>_Sga</Filter>
@@ -218,7 +215,6 @@
   <ItemGroup>
     <ClInclude Include="..\Sources\sg\Core.h" />
     <ClInclude Include="..\Sources\sg\CommonCore.h" />
-    <ClInclude Include="..\Sources\sg\TypeTraits.h" />
     <ClInclude Include="..\Sources\sg\Logo.h" />
     <ClInclude Include="..\Sources\sg\LogSpecifier.h" />
     <ClInclude Include="..\Sources\sg\Cmd_AUTHENTICATION.h">
@@ -244,12 +240,6 @@
     </ClInclude>
     <ClInclude Include="..\Sources\sg\ListenerHelperBase.h">
       <Filter>Net\Listener</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\IBroadcastable.h">
-      <Filter>Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\Position.h">
-      <Filter>Base</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Namepsace.h" />
     <ClInclude Include="..\Sources\sg\AudioPlayer.h">
@@ -297,9 +287,6 @@
     <ClInclude Include="..\Sources\sg\Const_MONSTER.h">
       <Filter>Const</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sg\ICreatable.h">
-      <Filter>Base</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\sg\Cmd_MESSAGE.h">
       <Filter>Net\Cmd</Filter>
     </ClInclude>
@@ -319,10 +306,10 @@
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\_API\sgapi_Util.h">
-      <Filter>API</Filter>
+      <Filter>_API</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\_API\sgapiBase.h">
-      <Filter>API</Filter>
+      <Filter>_API</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\_Sga\SgaPackage.h">
       <Filter>_Sga</Filter>
@@ -518,9 +505,6 @@
     <Filter Include="Net\Listener">
       <UniqueIdentifier>{a08a2ead-fee0-4ee6-aa74-41901c3681e6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Base">
-      <UniqueIdentifier>{56aa07c9-aebe-44d8-8e9b-36b92699697e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Contents">
       <UniqueIdentifier>{93b72f5d-322a-4129-9fb9-1d3c09f8d2ee}</UniqueIdentifier>
     </Filter>
@@ -536,9 +520,6 @@
     <Filter Include="Object\Character\Buffer">
       <UniqueIdentifier>{83bd29c4-7086-4f8b-bbf7-60e764ef1422}</UniqueIdentifier>
     </Filter>
-    <Filter Include="API">
-      <UniqueIdentifier>{97e44d9e-ed96-413d-bcd4-a812b5eda99e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="_Sga">
       <UniqueIdentifier>{8c39330d-5cc1-4ca6-b0dc-4fe8ee5021e7}</UniqueIdentifier>
     </Filter>
@@ -550,6 +531,9 @@
     </Filter>
     <Filter Include="_Util\_DescMgr">
       <UniqueIdentifier>{933527eb-3b05-4964-834c-49b992e043cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_API">
+      <UniqueIdentifier>{97e44d9e-ed96-413d-bcd4-a812b5eda99e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

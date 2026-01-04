@@ -9,12 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 int main(int _argc, char** _argv)
 {
-	struct Check : jc::ObjectPool<Check> {
-		int a = 20;
-	};
-
-	Check* a = dbg_new Check();
-	delete a;
 	int result = -1;
 	{
 		SteinsGateApp app(_argc, _argv);

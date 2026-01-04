@@ -27,8 +27,7 @@ public:
 
 	static void ParseIntNumber2(Json::Value& _root, OUT int& _num1, OUT int& _num2);
 	static void ParseIntNumber3(Json::Value& _root, OUT int& _num1, OUT int& _num2, OUT int& _num3);
-	static void ParseIntNumber4(Json::Value& _root, OUT int& _num1, OUT int& _num2, OUT int& _num3,
-	                            OUT int& _num4);
+	static void ParseIntNumber4(Json::Value& _root, OUT int& _num1, OUT int& _num2, OUT int& _num3, OUT int& _num4);
 	static void ParseIntNumberN(Json::Value& _root, OUT int* _pNumArr, int _count);
 
 	static void ParseFloatNumber2(Json::Value& _root, OUT float& _num1, OUT float& _num2);

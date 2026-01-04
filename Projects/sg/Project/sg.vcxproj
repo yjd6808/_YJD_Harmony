@@ -52,10 +52,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\sg\Position.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Sources\sg\Config.cpp">
       <SubType>
       </SubType>
@@ -173,15 +169,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sg\IBroadcastable.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\sg\CLIThread.h" />
-    <ClInclude Include="..\Sources\sg\ICreatable.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\sg\ListenerClientBase.h" />
     <ClInclude Include="..\Sources\sg\ListenerServerBase.h" />
     <ClInclude Include="..\Sources\sg\ListenerHelperBase.h" />
@@ -197,20 +185,12 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sg\Position.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\sg\Config.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Const.h" />
     <ClInclude Include="..\Sources\sg\Cmd_AUTHENTICATION.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\TypeTraits.h">
       <SubType>
       </SubType>
     </ClInclude>
