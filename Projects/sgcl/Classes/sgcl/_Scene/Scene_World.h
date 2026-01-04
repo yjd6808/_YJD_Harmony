@@ -10,8 +10,8 @@
 
 #include <sgcl/Core.h>
 
-#include <sgcl/SceneBase.h>
-#include <sgcl/UILayer.h>
+#include <sgcl/_Scene/Scene_Base.h>
+#include <sgcl/_Layer/Layer_UI.h>
 
 class MimicCamera;
 class MapLayer;

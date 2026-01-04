@@ -9,7 +9,7 @@
 #include "GameCoreHeader.h"
 #include "UI_Test.h"
 
-#include <sgcl/WorldScene.h>
+#include <sgcl/_Scene/Scene_World.h>
 #include <sgcl/Define_UI.h>
 #include <sgcl/UIManager.h>
 #include <sgcl/FontManager.h>

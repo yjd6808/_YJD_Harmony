@@ -8,10 +8,23 @@
 
 #pragma once
 
-#include <sge/Core.h>
+#include <cocos2d.h>
+#include <cocos/ui/CocosGUI.h>
 
+#include <sg/Core.h>
+
+#include <sgcl/_Core/Color.h>
+
+#include <sgcl/Namespace.h>
 #include <sgcl/Const.h>
 #include <sgcl/GameCore.h>
+
+ // 코코스
+namespace cocos2d
+{
+	using Texture = cc::Texture2D;
+}
+
 
 #ifdef _DEBUG
 #define SG_LOG_TICK(_time, _fmt, ...)            \

@@ -8,10 +8,10 @@
 
 #include "Core.h"
 #include "GameCoreHeader.h"
-#include "LoginScene.h"
+#include "Scene_Login.h"
 
-#include <sgcl/WorldScene.h>
-#include <sgcl/UILayer.h>
+#include <sgcl/_Scene/Scene_World.h>
+#include <sgcl/_Layer/Layer_UI.h>
 #include <sgcl/Define_UI.h>
 
 USING_NS_CC;

@@ -13,7 +13,6 @@
 #include <sgcl/ActorSprite.h>
 #include <sgcl/ProjectileListener.h>
 
-#include <sge/RectPoly.h>
 
 USING_NS_JC;
 USING_NS_CC;

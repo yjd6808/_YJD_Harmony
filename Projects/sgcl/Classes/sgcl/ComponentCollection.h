@@ -8,9 +8,6 @@
 
 #pragma once
 
-#include <jc/Container/Vector.h>
-#include <jc/TypeTraits.h>
-
 #include <sgcl/IUpdatable.h>
 #include <sgcl/IComponent.h>
 

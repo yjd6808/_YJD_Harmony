@@ -11,7 +11,7 @@
 #include <sg/_Util/DescLoaderMgr.h>
 
 #include <sgcl/Actor.h>
-#include <sgcl/MapLayer.h>
+#include <sgcl/_Layer/Layer_Map.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////
 HitRecorder::HitRecorder(Actor* _pOwner, Actor* _pRecorder)

@@ -8,16 +8,16 @@
 
 #include "Core.h"
 #include "GameCoreHeader.h"
-#include "WorldScene.h"
+#include "_Scene/Scene_World.h"
 
 #include <sg/_API/sgapiBase.h>
 
-#include <sge/GridLayer.h>
+#include <sgcl/_Layer/Layer_Grid.h>
 
 #include <sgcl/_Scene/Scene_Login.h>
 #include <sgcl/_Scene/Scene_Game.h>
 #include <sgcl/_Scene/Scene_ChannelSelect.h>
-#include <sgcl/UILayer.h>
+#include <sgcl/_Layer/Layer_UI.h>
 
 #include <sgcl/ActorManager.h>
 #include <sgcl/HostPlayer.h>

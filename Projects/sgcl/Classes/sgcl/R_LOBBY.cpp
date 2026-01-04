@@ -12,7 +12,7 @@
 
 #include <sg/Cmd_LOBBY.h>
 
-#include <sgcl/WorldScene.h>
+#include <sgcl/_Scene/Scene_World.h>
 #include <sgcl/UIManager.h>
 
 #include <sgcl/Define_Popup.h>

@@ -10,7 +10,7 @@
 #include "HostPlayer.h"
 
 #include <sg/_Struct/SteinsGate_Char.h>
-#include <sgcl/MapLayer.h>
+#include <sgcl/_Layer/Layer_Map.h>
 #include <sgcl/Define_Action.h>
 #include <sg/_Struct/SteinsGate_AttackData.h>
 #include <sgcl/CharacterListener.h>

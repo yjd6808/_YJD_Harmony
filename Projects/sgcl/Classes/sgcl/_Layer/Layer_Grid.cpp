@@ -6,7 +6,7 @@
  */
 
 #include "Core.h"
-#include "GridLayer.h"
+#include "Layer_Grid.h"
 
 USING_NS_CC;
 

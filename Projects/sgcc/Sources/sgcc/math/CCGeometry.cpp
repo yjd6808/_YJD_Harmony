@@ -274,4 +274,67 @@ Rect Rect::unionWithRect(const Rect & rect) const
 
 const Rect Rect::ZERO = Rect(0, 0, 0, 0);
 
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Rect::Intersect(const Rect& _rc, const Rect& _rc2, Rect& _intersectRect)
+{
+	if (!_rc.intersectsRect(_rc2))
+	{
+		return false;
+	}
+
+	const float x = std::max(_rc.getMinX(), _rc2.getMinX());
+	const float y = std::max(_rc.getMinY(), _rc2.getMinY());
+	const float width = std::min(_rc.getMaxX(), _rc2.getMaxX()) - x;
+	const float height = std::min(_rc.getMaxY(), _rc2.getMaxY()) - y;
+
+	_intersectRect.origin.x = x;
+	_intersectRect.origin.y = y;
+	_intersectRect.size.width = width;
+	_intersectRect.size.height = height;
+
+	return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+std::string Rect::ToString() const
+{
+	return std::format(":: 최소 [{}, {}], 최대 [{}, {}]",
+		static_cast<int>(getMinX()),
+		static_cast<int>(getMinY()),
+		static_cast<int>(getWidth()),
+		static_cast<int>(getHeight()));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Rect::IntersectY(const Rect& _lhs, const Rect& _rhs)
+{
+	if (_lhs.origin.y > _rhs.origin.y &&
+		_lhs.origin.y < _rhs.origin.y + _rhs.size.height)
+	{
+		return true;
+	}
+
+	if (_lhs.origin.y + _lhs.size.height > _rhs.origin.y &&
+		_lhs.origin.y + _lhs.size.height < _rhs.origin.y + _rhs.size.height)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Rect::ContainsX(const Rect& _rc, const float _x)
+{
+	return _x > _rc.origin.x && _x < _rc.origin.x + _rc.size.width;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool Rect::ContainsY(const Rect& _rc, const float _y)
+{
+	return _y > _rc.origin.y && _y < _rc.origin.y + _rc.size.height;
+}
+
+
 NS_CC_END

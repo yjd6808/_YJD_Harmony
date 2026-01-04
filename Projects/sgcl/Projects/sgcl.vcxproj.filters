@@ -43,12 +43,6 @@
     <Filter Include="Game\Contents">
       <UniqueIdentifier>{aa3b8aac-e53b-4ec7-ad62-2aaa73674992}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Layer">
-      <UniqueIdentifier>{3d065bfc-aa30-4c21-ac0a-778e58e49571}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Scene">
-      <UniqueIdentifier>{ad27e0ec-46ef-42d3-8cd8-4c190b5b8213}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\UI">
       <UniqueIdentifier>{0d7eb5f0-5cd7-445d-825e-1d7b3e291f6f}</UniqueIdentifier>
     </Filter>
@@ -118,9 +112,6 @@
     <Filter Include="Game\UI_Implementation">
       <UniqueIdentifier>{1fffd7f0-6d76-4c4d-9c61-517e54eb58cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="API">
-      <UniqueIdentifier>{479489ea-0bba-482a-9a03-dd3222c23497}</UniqueIdentifier>
-    </Filter>
     <Filter Include="_Util">
       <UniqueIdentifier>{c229c058-5c89-42fa-96aa-4107a44b8854}</UniqueIdentifier>
     </Filter>
@@ -129,6 +120,18 @@
     </Filter>
     <Filter Include="_Struct">
       <UniqueIdentifier>{8c36a814-9086-489d-b95a-7e0ec0d5f7e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_API">
+      <UniqueIdentifier>{479489ea-0bba-482a-9a03-dd3222c23497}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Core">
+      <UniqueIdentifier>{d7baa28c-cb03-4ae5-99a5-32505d89c2d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Scene">
+      <UniqueIdentifier>{7603b825-fe8f-401d-b536-2ec077a13e97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Layer">
+      <UniqueIdentifier>{8c5b8a70-ff4f-4aa3-9ffc-dc29159ec0f9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -214,21 +217,6 @@
     <ClCompile Include="..\Classes\sgcl\main.cpp" />
     <ClCompile Include="..\Classes\sgcl\Effect.cpp">
       <Filter>Game\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\ChannelSelectScene.cpp">
-      <Filter>Game\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\LoginScene.cpp">
-      <Filter>Game\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\GameScene.cpp">
-      <Filter>Game\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\MapLayer.cpp">
-      <Filter>Game\Layer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\UILayer.cpp">
-      <Filter>Game\Layer</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\UIGroup.cpp">
       <Filter>Game\UI</Filter>
@@ -435,12 +423,6 @@
       <Filter>Game\Contents</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\GameCore.cpp" />
-    <ClCompile Include="..\Classes\sgcl\WorldScene.cpp">
-      <Filter>Game\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\SceneBase.cpp">
-      <Filter>Game\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\VisualHelper.cpp">
       <Filter>Game\Helper</Filter>
     </ClCompile>
@@ -488,7 +470,7 @@
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Core.cpp" />
     <ClCompile Include="..\Classes\sgcl\_API\sgapiClient.cpp">
-      <Filter>API</Filter>
+      <Filter>_API</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_UI.cpp">
       <Filter>_Util\_DescMgr</Filter>
@@ -510,6 +492,33 @@
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_MapObject.cpp">
       <Filter>_Util\_DescMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Core\Color.cpp">
+      <Filter>_Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Scene\Scene_World.cpp">
+      <Filter>_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Scene\Scene_Base.cpp">
+      <Filter>_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Scene\Scene_ChannelSelect.cpp">
+      <Filter>_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Scene\Scene_Game.cpp">
+      <Filter>_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Scene\Scene_Login.cpp">
+      <Filter>_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Layer\Layer_Map.cpp">
+      <Filter>_Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Layer\Layer_UI.cpp">
+      <Filter>_Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Layer\Layer_Grid.cpp">
+      <Filter>_Layer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -615,21 +624,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Define_Effect.h">
       <Filter>Define</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\ChannelSelectScene.h">
-      <Filter>Game\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\LoginScene.h">
-      <Filter>Game\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\GameScene.h">
-      <Filter>Game\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\MapLayer.h">
-      <Filter>Game\Layer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\UILayer.h">
-      <Filter>Game\Layer</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\UIElement.h">
       <Filter>Game\UI</Filter>
@@ -852,12 +846,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\GameCoreHeader.h" />
     <ClInclude Include="..\Classes\sgcl\GameCore.h" />
-    <ClInclude Include="..\Classes\sgcl\WorldScene.h">
-      <Filter>Game\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\SceneBase.h">
-      <Filter>Game\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\VisualHelper.h">
       <Filter>Game\Helper</Filter>
     </ClInclude>
@@ -921,7 +909,7 @@
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Core.h" />
     <ClInclude Include="..\Classes\sgcl\_API\sgapiClient.h">
-      <Filter>API</Filter>
+      <Filter>_API</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_UI.h">
       <Filter>_Util\_DescMgr</Filter>
@@ -946,6 +934,33 @@
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\_Struct\CL_Character.h">
       <Filter>_Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Core\Color.h">
+      <Filter>_Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Scene\Scene_World.h">
+      <Filter>_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Scene\Scene_Base.h">
+      <Filter>_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Scene\Scene_ChannelSelect.h">
+      <Filter>_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Scene\Scene_Game.h">
+      <Filter>_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Scene\Scene_Login.h">
+      <Filter>_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Layer\Layer_Map.h">
+      <Filter>_Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Layer\Layer_UI.h">
+      <Filter>_Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Layer\Layer_Grid.h">
+      <Filter>_Layer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

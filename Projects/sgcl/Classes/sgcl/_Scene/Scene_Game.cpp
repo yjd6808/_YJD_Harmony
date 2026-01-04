@@ -7,11 +7,10 @@
 
 #include "Core.h"
 #include "GameCoreHeader.h"
-#include "_Scene/Scene_Game.h"
+#include "Scene_Game.h"
 
-#include <sge/GridLayer.h>
-
-#include <sgcl/WorldScene.h>
+#include <sgcl/_Layer/Layer_Grid.h>
+#include <sgcl/_Scene/Scene_World.h>
 
 USING_NS_CC;
 

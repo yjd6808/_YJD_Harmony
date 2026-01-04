@@ -10,7 +10,6 @@
 #include "GameCoreHeader.h"
 #include "UIScrollBar.h"
 
-#include <sge/RectEx.h>
 
 #include <sgcl/UIRootGroup.h>
 #include <sgcl/Define_Event.h>

@@ -4,10 +4,8 @@
 
 #include "Core.h"
 #include "GameCoreHeader.h"
-#include "MapLayer.h"
+#include "Layer_Map.h"
 
-#include <sge/RectEx.h>
-#include <sge/RectPoly.h>
 
 #include <sg/_Struct/SteinsGate_Tile.h>
 

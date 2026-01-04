@@ -9,7 +9,7 @@
 #include "GameCoreHeader.h"
 #include "AIComponent.h"
 
-#include <sgcl/MapLayer.h>
+#include <sgcl/_Layer/Layer_Map.h>
 #include <sgcl/SGVec2Ex.h>
 
 USING_NS_JC;

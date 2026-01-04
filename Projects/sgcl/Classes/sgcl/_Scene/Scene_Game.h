@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <sgcl/SceneBase.h>
-#include <sgcl/MapLayer.h>
+#include <sgcl/_Scene/Scene_Base.h>
+#include <sgcl/_Layer/Layer_Map.h>
 
 class GridLayer;
 class SGGameScene : public SceneBase

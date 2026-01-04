@@ -2,17 +2,8 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\Sources\sge\Core.cpp" />
-    <ClCompile Include="..\Sources\sge\Color.cpp" />
-    <ClCompile Include="..\Sources\sge\GridLayer.cpp" />
-    <ClCompile Include="..\Sources\sge\RectEx.cpp" />
-    <ClCompile Include="..\Sources\sge\Vec2Ex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\sge\Core.h" />
-    <ClInclude Include="..\Sources\sge\Color.h" />
-    <ClInclude Include="..\Sources\sge\RectEx.h" />
-    <ClInclude Include="..\Sources\sge\Vec2Ex.h" />
-    <ClInclude Include="..\Sources\sge\GridLayer.h" />
-    <ClInclude Include="..\Sources\sge\RectPoly.h" />
   </ItemGroup>
 </Project>

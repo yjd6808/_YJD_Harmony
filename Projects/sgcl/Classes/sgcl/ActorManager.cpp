@@ -19,7 +19,7 @@
 #include <sgcl/_Struct/CL_Character.h>
 
 #include <sgcl/ActorListenerManager.h>
-#include <sgcl/MapLayer.h>
+#include <sgcl/_Layer/Layer_Map.h>
 #include <sgcl/AIComponent.h>
 
 USING_NS_CC;

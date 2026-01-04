@@ -9,8 +9,6 @@
 #include "GameCoreHeader.h"
 #include "Character.h"
 
-#include <sge/RectEx.h>
-#include <sge/RectEx.h>
 
 #include <sgcl/ImagePackManager.h>
 #include <sgcl/ActorSprite.h>

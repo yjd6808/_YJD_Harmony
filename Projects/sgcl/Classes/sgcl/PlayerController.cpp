@@ -12,7 +12,7 @@
 
 #include <sgcl/HostPlayer.h>
 #include <sgcl/SGAction.h>
-#include <sgcl/MapLayer.h>
+#include <sgcl/_Layer/Layer_Map.h>
 #include <sgcl/MoveComponent.h>
 
 USING_NS_CC;

@@ -406,7 +406,6 @@ struct CharBaseInfo : SDescBase
 	~CharBaseInfo() override = default;
 
 	// 캐릭터 기본 정보
-	// int Code;        // 캐릭터 타입
 	int hp_;
 	int mp_;
 	int strength_;

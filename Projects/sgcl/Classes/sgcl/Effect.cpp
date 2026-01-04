@@ -14,7 +14,6 @@
 #include <sgcl/HostPlayer.h>
 #include <sgcl/Global.h>
 
-#include <sge/RectPoly.h>
 
 USING_NS_JC;
 USING_NS_CC;

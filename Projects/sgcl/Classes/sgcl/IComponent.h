@@ -18,12 +18,13 @@ public:															\
 class JC_NOVTABLE IComponent
 {
 public:
+	// 캐릭터 컴포넌트 타입
 	enum Type
 	{
-		eMove,
-		eAI,
-		ePhysics,
-		eAuthentication
+		eMove				= 0,
+		eAI					= 1,
+		ePhysics			= 2,
+		eAuthentication		= 3,
 	};
 
 	virtual ~IComponent() = default;

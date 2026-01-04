@@ -14,3 +14,6 @@
 #define NS_CALLBACK_END   }
 
 #define USING_NS_CALLBACK	using namespace Callback
+#define USING_NS_CCUI		using namespace cocos2d::ui
+
+namespace cc_ui = cocos2d::ui;

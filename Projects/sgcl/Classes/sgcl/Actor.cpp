@@ -9,14 +9,9 @@
 #include "GameCoreHeader.h"
 #include "Actor.h"
 
-#include <sge/RectPoly.h>
-#include <sge/RectEx.h>
-#include <sge/Color.h>
-
 #include <sgcl/_Struct/CL_Character.h>
-
 #include <sgcl/Global.h>
-#include <sgcl/MapLayer.h>
+#include <sgcl/_Layer/Layer_Map.h>
 #include <sgcl/PhysicsComponent.h>
 #include <sgcl/AIComponent.h>
 
@@ -529,7 +524,7 @@ bool Actor::IsCollide(Actor* _pOther, SpriteDirection_t& _otherHitDirection, cc:
 	cc::rect myThick = GetThicknessBoxRect();
 	cc::rect otherBox = _pOther->GetThicknessBoxRect();
 
-	if (!RectEx::IntersectY(myThick, otherBox))
+	if (!rect::IntersectY(myThick, otherBox))
 	{
 		return false;
 	}
@@ -537,7 +532,7 @@ bool Actor::IsCollide(Actor* _pOther, SpriteDirection_t& _otherHitDirection, cc:
 	cc::rect myHit = GetHitBox();
 	cc::rect targetHit = _pOther->GetHitBox();
 
-	if (RectEx::Intersect(myHit, targetHit, _hitRect))
+	if (rect::Intersect(myHit, targetHit, _hitRect))
 	{
 		_otherHitDirection = targetHit.getMidX() > myHit.getMidX() ? SpriteDirection::Left : SpriteDirection::Right;
 		return true;
@@ -550,14 +545,14 @@ bool Actor::IsCollide(const ActorRect& _otherRect, SpriteDirection_t& _otherHitD
 {
 	cc::rect myThick = GetThicknessBoxRect();
 
-	if (!RectEx::IntersectY(myThick, _otherRect.thicknessRect_))
+	if (!rect::IntersectY(myThick, _otherRect.thicknessRect_))
 	{
 		return false;
 	}
 
 	cc::rect myHit = GetHitBox();
 
-	if (RectEx::Intersect(myHit, _otherRect.bodyRect_, _hitRect))
+	if (rect::Intersect(myHit, _otherRect.bodyRect_, _hitRect))
 	{
 		_otherHitDirection = _otherRect.bodyRect_.getMidX() > myHit.getMidX()
 			                     ? SpriteDirection::Left
@@ -572,7 +567,7 @@ bool Actor::IsCollide(const ActorRect& _otherRect)
 {
 	cc::rect myThick = GetThicknessBoxRect();
 
-	if (!RectEx::IntersectY(myThick, _otherRect.thicknessRect_))
+	if (!rect::IntersectY(myThick, _otherRect.thicknessRect_))
 	{
 		return false;
 	}

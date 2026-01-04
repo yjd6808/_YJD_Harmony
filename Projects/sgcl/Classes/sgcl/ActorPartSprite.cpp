@@ -1,7 +1,6 @@
 ﻿#include "Core.h"
 #include "ActorPartSprite.h"
 
-#include <sge/RectPoly.h>
 #include <sgcl/ActorSprite.h>
 #include <sgcl/ImagePackManager.h>
 #include <sgcl/Global.h>

@@ -11,13 +11,11 @@
   </ItemDefinitionGroup>
 
   <Target Name="DebugProps" BeforeTargets="Build">
-    <Message Text=".*`*.*`*.*`*.*`*.*`*.*`*.*`*.*`*.*`*." Importance="high"  />
+    <Message Text="&gt;&gt;&gt;&gt;──────────────────────────────────────────" Importance="high"  />
     <Message Text="MSBuildProjectName: $(MSBuildProjectName)" Importance="high"  />
     <Message Text="ConfigurationType: $(ConfigurationType)" Importance="high"  />
     <Message Text="ProjectDir: $(ProjectDir)" Importance="high"  />
     <Message Text="ProjectName: $(ProjectName)" Importance="high"  />
-    
-    <Message Text=".*`*.*`*.*`*.*`*.*`*.*`*.*`*.*`*.*`*." Importance="high"  />
   </Target>
 
 </Project>

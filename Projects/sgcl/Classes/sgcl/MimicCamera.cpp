@@ -10,7 +10,7 @@
 #include "GameCoreHeader.h"
 
 #include <sgcl/Actor.h>
-#include <sgcl/MapLayer.h>
+#include <sgcl/_Layer/Layer_Map.h>
 
 USING_NS_CC;
 USING_NS_JC;

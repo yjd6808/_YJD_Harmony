@@ -6,9 +6,9 @@
  */
 
 #include "Core.h"
-#include "ChannelSelectScene.h"
+#include "_Scene/Scene_ChannelSelect.h"
 
-#include <sgcl/WorldScene.h>
+#include <sgcl/_Scene/Scene_World.h>
 #include <sgcl/Define_UI.h>
 #include <sgcl/S_LOBBY.h>
 

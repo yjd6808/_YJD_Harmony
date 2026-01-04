@@ -149,10 +149,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\LoginScene.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\AttackActivity.cpp" />
     <ClCompile Include="..\Classes\sgcl\HitActivity.cpp" />
     <ClCompile Include="..\Classes\sgcl\IdleActivity.cpp">
@@ -224,7 +220,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\ImagePackManager.cpp" />
-    <ClCompile Include="..\Classes\sgcl\GameScene.cpp" />
     <ClCompile Include="..\Classes\sgcl\JsonUtilEx.cpp">
       <SubType>
       </SubType>
@@ -257,15 +252,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\SceneBase.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\ChannelSelectScene.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\MapLayer.cpp" />
     <ClCompile Include="..\Classes\sgcl\S_AREA.cpp">
       <SubType>
       </SubType>
@@ -322,10 +308,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\UILayer.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\UIManager.cpp">
       <SubType>
       </SubType>
@@ -372,10 +354,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\WorldScene.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Core.cpp">
       <SubType>
       </SubType>
@@ -394,6 +372,15 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\_API\sgapiClient.cpp" />
+    <ClCompile Include="..\Classes\sgcl\_Core\Color.cpp" />
+    <ClCompile Include="..\Classes\sgcl\_Layer\Layer_Grid.cpp" />
+    <ClCompile Include="..\Classes\sgcl\_Layer\Layer_Map.cpp" />
+    <ClCompile Include="..\Classes\sgcl\_Layer\Layer_UI.cpp" />
+    <ClCompile Include="..\Classes\sgcl\_Scene\Scene_Base.cpp" />
+    <ClCompile Include="..\Classes\sgcl\_Scene\Scene_ChannelSelect.cpp" />
+    <ClCompile Include="..\Classes\sgcl\_Scene\Scene_Game.cpp" />
+    <ClCompile Include="..\Classes\sgcl\_Scene\Scene_Login.cpp" />
+    <ClCompile Include="..\Classes\sgcl\_Scene\Scene_World.cpp" />
     <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Char.cpp" />
     <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Effect.cpp" />
     <ClCompile Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_MapObject.cpp" />
@@ -654,10 +641,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\LoginScene.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Monster.h">
       <SubType>
       </SubType>
@@ -696,7 +679,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\ImagePackManager.h" />
-    <ClInclude Include="..\Classes\sgcl\GameScene.h" />
     <ClInclude Include="..\Classes\sgcl\Player.h">
       <SubType>
       </SubType>
@@ -715,14 +697,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\ProjectileListener.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\SceneBase.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\ChannelSelectScene.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -748,10 +722,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\UILabel.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\UILayer.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -792,11 +762,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\WndMessage.h" />
     <ClInclude Include="..\Classes\sgcl\Core.h" />
-    <ClInclude Include="..\Classes\sgcl\MapLayer.h" />
-    <ClInclude Include="..\Classes\sgcl\WorldScene.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\UI_Inventory.h" />
     <ClInclude Include="..\Classes\sgcl\UI_Login.h">
       <SubType>
@@ -807,6 +772,15 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\_API\sgapiClient.h" />
+    <ClInclude Include="..\Classes\sgcl\_Core\Color.h" />
+    <ClInclude Include="..\Classes\sgcl\_Layer\Layer_Grid.h" />
+    <ClInclude Include="..\Classes\sgcl\_Layer\Layer_Map.h" />
+    <ClInclude Include="..\Classes\sgcl\_Layer\Layer_UI.h" />
+    <ClInclude Include="..\Classes\sgcl\_Scene\Scene_Base.h" />
+    <ClInclude Include="..\Classes\sgcl\_Scene\Scene_ChannelSelect.h" />
+    <ClInclude Include="..\Classes\sgcl\_Scene\Scene_Game.h" />
+    <ClInclude Include="..\Classes\sgcl\_Scene\Scene_Login.h" />
+    <ClInclude Include="..\Classes\sgcl\_Scene\Scene_World.h" />
     <ClInclude Include="..\Classes\sgcl\_Struct\CL_Character.h" />
     <ClInclude Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Char.h" />
     <ClInclude Include="..\Classes\sgcl\_Util\_DescMgr\DescMgr_Effect.h" />

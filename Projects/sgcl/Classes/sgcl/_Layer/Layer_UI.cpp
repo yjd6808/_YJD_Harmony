@@ -7,7 +7,7 @@
 
 #include "Core.h"
 #include "GameCoreHeader.h"
-#include "UILayer.h"
+#include "Layer_UI.h"
 
 #include <sg/_Util/DescLoaderMgr.h>
 #include <sgcl/UIStatic.h>

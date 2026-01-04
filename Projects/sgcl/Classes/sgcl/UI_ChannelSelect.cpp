@@ -15,9 +15,6 @@
 #include <sgcl/Define_Popup.h>
 #include <sgcl/S_LOBBY.h>
 
-#include <sge/RectEx.h>
-#include <sge/Vec2Ex.h>
-
 #include <sgcl/ImagePackManager.h>
 #include <sgcl/UIManager.h>
 
@@ -164,15 +161,7 @@ bool UI_ChannelSelect::ServerButton::ContainsPoint(const cc::vec2& _pos)
 	if (!pSpriteNormalText_->isVisible())
 		return false;
 
-
 	const cc::rect box = pSpriteNormalText_->GetWorldBoundingBox();
-
-	if (box.containsPoint(_pos))
-	{
-		RectEx::Log(box);
-		Vec2Ex::Log(_pos);
-	}
-
 	return box.containsPoint(_pos);
 }
 

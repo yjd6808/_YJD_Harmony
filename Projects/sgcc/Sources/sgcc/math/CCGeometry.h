@@ -225,6 +225,197 @@ public:
     void merge(const Rect& rect);
     /**An empty Rect.*/
     static const Rect ZERO;
+
+	/*
+	 * \brief 인터섹트 결과와 더불어 겹쳐진 영역의 위치를 반환하도록 한다.
+	 * 하단 테스트코드 참고
+	 */
+	static bool Intersect(const Rect& _rc, const Rect& _rc2, Rect& _intersectRect);
+	std::string ToString() const;
+
+	/*
+	{
+		Rect r1{ 200, 200, 100, 100 };
+		Rect r2{ 250, 250, 100, 100 };
+		Rect r3;
+		if (rect::intersect(r1, r2, r3)) {
+			Log("%d, %d\n", int(r3.getMinX()), int(r3.getMinY()));
+			Log("%d, %d\n", int(r3.getWidth()), int(r3.getHeight()));
+		}
+	}
+
+	{
+		Rect r1{ 200, 200, 100, 100 };
+		Rect r2{ 250, 150, 100, 100 };
+		Rect r3;
+		if (rect::intersect(r1, r2, r3)) {
+			Log("%d, %d\n", int(r3.getMinX()), int(r3.getMinY()));
+			Log("%d, %d\n", int(r3.getWidth()), int(r3.getHeight()));
+		}
+	}
+
+
+	{
+		Rect r1{ 200, 200, 100, 100 };
+		Rect r2{ 150, 150, 100, 100 };
+		Rect r3;
+		if (rect::intersect(r1, r2, r3)) {
+			Log("%d, %d\n", int(r3.getMinX()), int(r3.getMinY()));
+			Log("%d, %d\n", int(r3.getWidth()), int(r3.getHeight()));
+		}
+	}
+	{
+		Rect r1{ 200, 200, 100, 100 };
+		Rect r2{ 150, 250, 100, 100 };
+		Rect r3;
+		if (rect::intersect(r1, r2, r3)) {
+			Log("%d, %d\n", int(r3.getMinX()), int(r3.getMinY()));
+			Log("%d, %d\n", int(r3.getWidth()), int(r3.getHeight()));
+		}
+	}
+
+	{
+		Rect r2{ 200, 200, 100, 100 };
+		Rect r1{ 250, 250, 100, 100 };
+		Rect r3;
+		if (rect::intersect(r1, r2, r3)) {
+			Log("%d, %d\n", int(r3.getMinX()), int(r3.getMinY()));
+			Log("%d, %d\n", int(r3.getWidth()), int(r3.getHeight()));
+		}
+	}
+
+	{
+		Rect r2{ 200, 200, 100, 100 };
+		Rect r1{ 250, 150, 100, 100 };
+		Rect r3;
+		if (rect::intersect(r1, r2, r3)) {
+			Log("%d, %d\n", int(r3.getMinX()), int(r3.getMinY()));
+			Log("%d, %d\n", int(r3.getWidth()), int(r3.getHeight()));
+		}
+	}
+
+
+	{
+		Rect r2{ 200, 200, 100, 100 };
+		Rect r1{ 150, 150, 100, 100 };
+		Rect r3;
+		if (rect::intersect(r1, r2, r3)) {
+			Log("%d, %d\n", int(r3.getMinX()), int(r3.getMinY()));
+			Log("%d, %d\n", int(r3.getWidth()), int(r3.getHeight()));
+		}
+	}
+	{
+		Rect r2{ 200, 200, 100, 100 };
+		Rect r1{ 150, 250, 100, 100 };
+		Rect r3;
+		if (rect::intersect(r1, r2, r3)) {
+			Log("%d, %d\n", int(r3.getMinX()), int(r3.getMinY()));
+			Log("%d, %d\n", int(r3.getWidth()), int(r3.getHeight()));
+		}
+	}
+
+	250, 250
+	50, 50
+	250, 200
+	50, 50
+	200, 200
+	50, 50
+	200, 250
+	50, 50
+
+	250, 250
+	50, 50
+	250, 200
+	50, 50
+	200, 200
+	50, 50
+	200, 250
+	50, 50
+
+	*/
+
+
+	// lhs와 rhs의 세로길이가 겹치는지
+	static bool IntersectY(const Rect& _lhs, const Rect& _rhs);
+
+	// rc의 가로길이와 pos의 x좌표가 겹치는지
+	static bool ContainsX(const Rect& _rc, const float _x);
+
+	// rc의 세로길이와 pos의 y좌표가 겹치는지
+	static bool ContainsY(const Rect& _rc, const float _y);
+};
+
+class SGCC_DLL RectPoly
+{
+public:
+	RectPoly()
+	{
+	}
+
+	RectPoly(const RectPoly& _other)
+	{
+		poly_[0] = _other.poly_[0];
+		poly_[1] = _other.poly_[1];
+		poly_[2] = _other.poly_[2];
+		poly_[3] = _other.poly_[3];
+	}
+
+	RectPoly(float _x, float _y, float _width, float _height)
+	{
+		poly_[0].x = _x;
+		poly_[0].y = _y;
+
+		poly_[1].x = _x + _width;
+		poly_[1].y = _y;
+
+		poly_[2].x = _x + _width;
+		poly_[2].y = _y + _height;
+
+		poly_[3].x = _x;
+		poly_[3].y = _y + _height;
+	}
+
+	RectPoly(const Vec2& _origin, const Size& _size) : RectPoly(_origin.x, _origin.y, _size.width, _size.height)
+	{
+	}
+
+	Vec2* source()
+	{
+		return poly_;
+	}
+
+	static RectPoly createFromLeftBottom(float _leftBottomX, float _leftBottomY, float _width, float _height)
+	{
+		return { _leftBottomX, _leftBottomY, _width, _height };
+	}
+
+	static RectPoly createFromLeftBottom(const Vec2& _leftBottom, const Size& _size)
+	{
+		return { _leftBottom.x, _leftBottom.y, _size.width, _size.height };
+	}
+
+	static RectPoly createFromRightTop(float _rightTopX, float _rightTopY, float _width, float _height)
+	{
+		return { _rightTopX - _width, _rightTopY - _height, _width, _height };
+	}
+
+	static RectPoly createFromRightTop(const Vec2& _rightTop, const Size& _size)
+	{
+		return { Vec2{ _rightTop.x - _size.width, _rightTop.y - _size.height }, _size };
+	}
+
+	static RectPoly createFromCenter(float _centerX, float _centerY, float _width, float _height)
+	{
+		return { _centerX - _width / 2, _centerY / _height / 2, _width, _height };
+	}
+
+	static RectPoly createFromCenter(const Vec2& _center, const Size& _size)
+	{
+		return { Vec2{ _center.x - _size.width / 2, _center.y - _size.height / 2 }, _size };
+	}
+
+private:
+	Vec2 poly_[4];
 };
 
 NS_CC_END
