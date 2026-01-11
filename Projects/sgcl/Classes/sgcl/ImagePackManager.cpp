@@ -7,13 +7,11 @@
 
 #include "Core.h"
 #include "ImagePackManager.h"
-#include "GameCoreHeader.h"
 
-#include <sg/Config.h>
+#include <sg/_Core/AppConfig.h>
 #include <sg/_Sga/SgaLoader.h>
 #include <sg/_Sga/SgaElementInitializer.h>
 
-#include <sgcl/Global.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -21,6 +19,34 @@ USING_NS_JC;
 //////////////////////////////////////////////////////////////////////////////////////////
 ImagePackManager::ImagePackManager()
 {
+	for (int i = 0; i < CharType::Max; ++i)
+	{
+		for (int j = 0; j < AvatarType::Max; ++j)
+		{
+			avatarPackName_[i][j] = StringUtil::Format("%s_avatar_%s.sga", CharType::Name[i], AvatarType::Name[j]);
+		}
+	}
+
+	weaponPackName_[WeaponType::Automatic] = "gunner_weapon_auto.sga";
+	weaponPackName_[WeaponType::Bowgun] = "gunner_weapon_bowgun.sga";
+	weaponPackName_[WeaponType::HandCannon] = "gunner_weapon_hcan.sga";
+	weaponPackName_[WeaponType::Musket] = "gunner_weapon_musket.sga";
+	weaponPackName_[WeaponType::Revolver] = "gunner_weapon_rev.sga";
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+const jc::String& ImagePackManager::GetAvatarSgaName(int _charType, int _avatarType)
+{
+	jc_assert_msg(_charType >= CharType::Begin && _charType >= CharType::End, "올바르지 않은 캐릭터 타입입니다. [1]");
+	jc_assert_msg(_avatarType >= AvatarType::Begin && _avatarType < AvatarType::Max, "올바르지 않은 비주얼 아바타 타입입니다.");
+	return avatarPackName_[_charType][_avatarType];
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+const jc::String& ImagePackManager::GetWeaponSgaName(int _weaponType)
+{
+	jc_assert_msg(_weaponType >= WeaponType::Begin && _weaponType < WeaponType::Max, "올바르지 않은 비주얼 아바타 타입입니다.");
+	return weaponPackName_[_weaponType];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -37,7 +63,7 @@ void ImagePackManager::LoadAllPackages()
 {
 	constexpr int THREAD_COUNT = Const::Resource::MaxSgaParallelLoadingThreadCount;
 
-	const jc::String& resDataPath = CONF_GET_STRING(CONF_PROP_RES_DATA_IMAGE_PATH);
+	const jc::String& resDataPath = g_cAppConfig.resDataImagePath_;
 	jc::Thread loaderThread[THREAD_COUNT];
 	jc::Vector<jc::String> paths = Directory::Files(resDataPath, false);
 	jc::Vector<jc::String> sgaPaths;
@@ -146,7 +172,7 @@ ImagePack* ImagePackManager::GetAvatarPack(CharType_t _charType, AvatarType_t _a
 
 	if (avatarPacks_[_charType][_avatarType] == nullptr)
 	{
-		const jc::String& sgaName = Global::Get()->getAvatarSgaName(_charType, _avatarType);
+		const jc::String& sgaName = g_cImagePackMgr.GetAvatarSgaName(_charType, _avatarType);
 		avatarPacks_[_charType][_avatarType] = GetPack(sgaName);
 	}
 
@@ -160,7 +186,7 @@ ImagePack* ImagePackManager::GetWeaponPack(WeaponType_t _weaponType)
 
 	if (weaponPacks_[_weaponType] == nullptr)
 	{
-		const jc::String& sgaName = Global::Get()->getWeaponSgaName(_weaponType);
+		const jc::String& sgaName = g_cImagePackMgr.GetWeaponSgaName(_weaponType);
 		weaponPacks_[_weaponType] = GetPack(sgaName);
 	}
 

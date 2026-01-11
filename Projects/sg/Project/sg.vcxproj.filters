@@ -4,15 +4,6 @@
     <ClCompile Include="..\Sources\sg\Core.cpp" />
     <ClCompile Include="..\Sources\sg\CommonCore.cpp" />
     <ClCompile Include="..\Sources\sg\Logo.cpp" />
-    <ClCompile Include="..\Sources\sg\CLIThread.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\CLIListener.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\Config.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\sg\ListenerClientBase.cpp">
       <Filter>Net\Listener</Filter>
     </ClCompile>
@@ -21,9 +12,6 @@
     </ClCompile>
     <ClCompile Include="..\Sources\sg\ListenerHelperBase.cpp">
       <Filter>Net\Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\AudioPlayer.cpp">
-      <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sg\BaseContents.cpp">
       <Filter>Contents</Filter>
@@ -36,9 +24,6 @@
     </ClCompile>
     <ClCompile Include="..\Sources\sg\_Object\_Character\StackingBuffer.cpp">
       <Filter>Object\Character\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\_Core\VirtualMachine.cpp">
-      <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sg\_API\sgapiBase.cpp">
       <Filter>_API</Filter>
@@ -211,6 +196,24 @@
     <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Projectile.cpp">
       <Filter>_Struct</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Core\CLIThread.cpp">
+      <Filter>_Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Core\AppConfig.cpp">
+      <Filter>_Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Core\VirtualMachine.cpp">
+      <Filter>_Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Core\AudioPlayer.cpp">
+      <Filter>_Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Core\CLIListener.cpp">
+      <Filter>_Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Core\CLIFunctions.cpp">
+      <Filter>_Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\sg\Core.h" />
@@ -223,15 +226,6 @@
     <ClInclude Include="..\Sources\sg\Cmd_CHAT.h">
       <Filter>Net\Cmd</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sg\CLIThread.h">
-      <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\Config.h">
-      <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\CLIListener.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\sg\ListenerClientBase.h">
       <Filter>Net\Listener</Filter>
     </ClInclude>
@@ -242,9 +236,6 @@
       <Filter>Net\Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Namepsace.h" />
-    <ClInclude Include="..\Sources\sg\AudioPlayer.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\sg\BaseContents.h">
       <Filter>Contents</Filter>
     </ClInclude>
@@ -301,9 +292,6 @@
     </ClInclude>
     <ClInclude Include="..\Sources\sg\_Object\_Character\StackingBuffer.h">
       <Filter>Object\Character\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\_Core\VirtualMachine.h">
-      <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\_API\sgapi_Util.h">
       <Filter>_API</Filter>
@@ -491,6 +479,25 @@
     <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Projectile.h">
       <Filter>_Struct</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Core\CLIThread.h">
+      <Filter>_Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Core\AppConfig.h">
+      <Filter>_Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Core\VirtualMachine.h">
+      <Filter>_Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Core\AudioPlayer.h">
+      <Filter>_Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Core\CLIListener.h">
+      <Filter>_Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Core\CLIFunctions_Linker.h">
+      <Filter>_Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\DLLExport.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Net">
@@ -498,9 +505,6 @@
     </Filter>
     <Filter Include="Net\Cmd">
       <UniqueIdentifier>{6468c181-5a92-447d-becd-6ce66d66ea74}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="System">
-      <UniqueIdentifier>{df07d7b3-ec11-400e-bd40-3989d5caf2ff}</UniqueIdentifier>
     </Filter>
     <Filter Include="Net\Listener">
       <UniqueIdentifier>{a08a2ead-fee0-4ee6-aa74-41901c3681e6}</UniqueIdentifier>
@@ -534,6 +538,9 @@
     </Filter>
     <Filter Include="_API">
       <UniqueIdentifier>{97e44d9e-ed96-413d-bcd4-a812b5eda99e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Core">
+      <UniqueIdentifier>{7620bfe4-6c2d-410d-b10c-112174c789cf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

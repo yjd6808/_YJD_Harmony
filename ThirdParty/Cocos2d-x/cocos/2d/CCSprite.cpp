@@ -349,13 +349,15 @@ Sprite::~Sprite()
  *
  * The test is in "TestCpp/SpriteTest/Sprite without texture".
  */
-static unsigned char cc_2x2_white_image[] = {
-    // RGBA8888
-    0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF
-};
+
+// Texture2D.h로 옮김
+//static unsigned char cc_2x2_white_image[] = {
+//    // RGBA8888
+//    0xFF, 0xFF, 0xFF, 0xFF,
+//    0xFF, 0xFF, 0xFF, 0xFF,
+//    0xFF, 0xFF, 0xFF, 0xFF,
+//    0xFF, 0xFF, 0xFF, 0xFF
+//};
 
 #define CC_2x2_WHITE_IMAGE_KEY  "/cc_2x2_white_image"
 
@@ -391,7 +393,7 @@ void Sprite::setTexture(Texture2D *texture)
         if (texture == nullptr)
         {
             Image* image = new (std::nothrow) Image();
-            bool CC_UNUSED isOK = image->initWithRawData(cc_2x2_white_image, sizeof(cc_2x2_white_image), 2, 2, 8);
+            bool CC_UNUSED isOK = image->initWithRawData(Texture2D::cc_2x2_white_image, sizeof(Texture2D::cc_2x2_white_image), 2, 2, 8);
             CCASSERT(isOK, "The 2x2 empty texture was created unsuccessfully.");
 
             texture = _director->getTextureCache()->addImage(image, CC_2x2_WHITE_IMAGE_KEY);

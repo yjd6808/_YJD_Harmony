@@ -9,8 +9,10 @@
 #include "GameCoreHeader.h"
 #include "Actor.h"
 
+#include <sg/_Util/DescLoaderMgr.h>
+
+#include <sgcl/_Core/AppConfig_Props.h>
 #include <sgcl/_Struct/CL_Character.h>
-#include <sgcl/Global.h>
 #include <sgcl/_Layer/Layer_Map.h>
 #include <sgcl/PhysicsComponent.h>
 #include <sgcl/AIComponent.h>
@@ -135,7 +137,7 @@ void Actor::update(float _dt)
 	listeners_.OnUpdate(_dt);
 	components_.OnUpdate(_dt);
 
-	if (sg::Contents.Global->DrawThicknessBox)
+	if (g_cAppProps.GetBool(CONF_PROPS_DRAW_THICKNESS_BOX))
 		pThicknessBox_->setOpacity(0);
 	else
 		pThicknessBox_->setOpacity(125);

@@ -20,7 +20,7 @@ public:
 	{
 	}
 
-	~FrameTexture() override;
+	virtual ~FrameTexture() override;
 
 	virtual int GetWidth() = 0;
 	virtual int GetHeight() = 0;
@@ -94,6 +94,9 @@ public:
 	}
 
 	cc::Texture* GetTexture() override { return pTexture_; }
+
+	static SpriteFrameTexture* GetDefault();
+	static void				   FreeDefault();
 
 	bool IsLink() override { return false; }
 	bool IsDummy() override { return isDummy_; }

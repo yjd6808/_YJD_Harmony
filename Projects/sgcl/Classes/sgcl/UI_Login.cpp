@@ -7,7 +7,6 @@
 
 
 #include "Core.h"
-#include "GameCoreHeader.h"
 #include "UI_Login.h"
 
 #include <sgcl/Define_UI.h>
@@ -15,8 +14,10 @@
 #include <sgcl/S_AUTH.h>
 #include <sgcl/_Scene/Scene_World.h>
 #include <sgcl/UIManager.h>
+#include <sgcl/NetCore.h>
+#include <sgcl/Contents.h>
 
-#include "AuthenticationComponent.h"
+#include <sgcl/AuthenticationComponent.h>
 
 
 
@@ -177,10 +178,9 @@ void UI_Login::Login()
 		return;
 	}
 
-	AuthenticationComponent* pAuthenticationComponent = sg::Net->GetAuthenticationComponent();
-	pAuthenticationComponent->SetAccountIdPass(pEditBoxId_->GetText().c_str(), pEditBoxPassword_->GetText().c_str());
+	g_cNet.authentication_.SetAccountIdPass(pEditBoxId_->GetText().c_str(), pEditBoxPassword_->GetText().c_str());
 
-	if (!sg::Net->ConnectAuthTcp())
+	if (!g_cNet.ConnectAuthTcp())
 	{
 		sg::Contents.PopupManager->ShowOk(SG_LOCAL_RAW("CONNECT_AUTH_FAILED_UNCONNECTABLE_STATE"));
 		return;

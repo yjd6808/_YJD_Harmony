@@ -1,11 +1,10 @@
 ﻿/*
  * 작성자: 윤정도
- * 생성일: 2/19/2023 1:55:40 AM
+ * 생성일: 8/16/2023 6:26:28 AM
  * =====================
  *
  */
 
-
 #pragma once
 
-#include <sgcl/Contents.h>
+extern SG_DLL void CLI_ForceLinkage();

@@ -6,9 +6,9 @@
  */
 
 #include "Core.h"
-#include "GameCoreHeader.h"
 #include "UIGroup.h"
 
+#include <sg/_Util/DescLoaderMgr.h>
 
 #include <sgcl/UIRootGroup.h>
 #include <sgcl/UIButton.h>

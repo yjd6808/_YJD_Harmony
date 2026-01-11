@@ -7,9 +7,10 @@
 
 #include "Core.h"
 #include "VisualHelper.h"
-#include "GameCoreHeader.h"
 
+#include <sg/_Util/DescLoaderMgr.h>
 #include <sg/_Struct/SteinsGate_Item.h>
+
 #include <sgcl/ImagePackManager.h>
 
 USING_NS_JS;

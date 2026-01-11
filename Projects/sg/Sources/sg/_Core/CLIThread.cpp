@@ -128,7 +128,7 @@ void CLIThread::ProcessInputs()
 
 		if (pListener_)
 		{
-			pListener_->OnInputProcessing(input.arguments_.Size(), &input.arguments_[0]);
+			pListener_->ParseInput(input.arguments_.Size(), &input.arguments_[0]);
 		}
 	}
 }

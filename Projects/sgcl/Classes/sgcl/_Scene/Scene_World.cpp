@@ -7,24 +7,26 @@
 
 
 #include "Core.h"
-#include "GameCoreHeader.h"
-#include "_Scene/Scene_World.h"
+#include "Scene_World.h"
 
 #include <sg/_API/sgapiBase.h>
+#include <sg/_Util/DescLoaderMgr.h>
 
 #include <sgcl/_Layer/Layer_Grid.h>
+#include <sgcl/_Core/AppConfig_Props.h>
 
 #include <sgcl/_Scene/Scene_Login.h>
 #include <sgcl/_Scene/Scene_Game.h>
 #include <sgcl/_Scene/Scene_ChannelSelect.h>
 #include <sgcl/_Layer/Layer_UI.h>
+#include <sgcl/NetCore.h>
+#include <sgcl/Contents.h>
+#include <sgcl/SteinsGateApp.h>
 
 #include <sgcl/ActorManager.h>
 #include <sgcl/HostPlayer.h>
-#include <sg/_Util/DescLoaderMgr.h>
 #include <sgcl/ImagePackManager.h>
 #include <sgcl/ActorListenerManager.h>
-#include <sgcl/Global.h>
 #include <sgcl/UIManager.h>
 #include <sgcl/FontManager.h>
 #include <sgcl/WndMessage.h>
@@ -177,7 +179,7 @@ void WorldScene::UpdateScene(float _dt)
 //////////////////////////////////////////////////////////////////////////////////////////
 void WorldScene::UpdateNet(float _dt)
 {
-	sg::Net->PollNetEvents();
+	g_cNet.PollNetEvents();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -234,23 +236,23 @@ void WorldScene::OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _p
 {
 	if (_keyCode == EventKeyboard::KeyCode::KEY_F1)
 	{
-		Global::Get()->toggleDrawBodyBoundingBox();
+		g_cAppProps.ToggleBool(CONF_PROPS_DRAW_BODY_BOUNDING_BOX);
 	}
 	else if (_keyCode == EventKeyboard::KeyCode::KEY_F2)
 	{
-		Global::Get()->toggleDrawThicknessBox();
+		g_cAppProps.ToggleBool(CONF_PROPS_DRAW_THICKNESS_BOX);
 	}
 	else if (_keyCode == EventKeyboard::KeyCode::KEY_F3)
 	{
-		Global::Get()->toggleDrawAttackBox();
+		g_cAppProps.ToggleBool(CONF_PROPS_DRAW_ATTACK_BOX);
 	}
 	else if (_keyCode == EventKeyboard::KeyCode::KEY_F4)
 	{
-		Global::Get()->toggleDrawEffect();
+		g_cAppProps.ToggleBool(CONF_PROPS_DRAW_EFFECT);
 	}
 	else if (_keyCode == EventKeyboard::KeyCode::KEY_F5)
 	{
-		Global::Get()->toggleDrawUIStatic();
+		g_cAppProps.ToggleBool(CONF_PROPS_DRAW_UI_STATIC);
 	}
 	else if (_keyCode == EventKeyboard::KeyCode::KEY_F6)
 	{
@@ -269,8 +271,8 @@ void WorldScene::OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _p
 		// m_UISize를 사용하지 않고 기존 노드 변수인 _contentSize와 _scale을 활용해서 UI가 "해상도에 맞게" 보이도록 해줘야함.
 		// 코드를 좀 많이 수정해줘야할 것 같다.
 
-		sg::App->SetDesignResolutionSize(640.0f, 480.0f);
-		sg::App->SetFrameSize(960.0f, 720.0f);
+		g_cApp.SetDesignResolutionSize(640.0f, 480.0f);
+		g_cApp.SetFrameSize(960.0f, 720.0f);
 	}
 	else if (_keyCode == EventKeyboard::KeyCode::KEY_ESCAPE)
 	{

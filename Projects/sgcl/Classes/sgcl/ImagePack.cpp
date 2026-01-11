@@ -98,7 +98,7 @@ FrameTexture* ImagePack::CreateFrameTexture(int _imgIndex, int _frameIndex, bool
 {
 	if (_frameIndex == InvalidValue_v)
 	{
-		return Global::Get()->getDefaultFrameTexture();
+		return SpriteFrameTexture::GetDefault();
 	}
 
 	SgaResourceIndex resourceIndex;
@@ -122,14 +122,14 @@ FrameTexture* ImagePack::CreateFrameTexture(int _imgIndex, int _frameIndex, bool
 	if (!image.IndexLoaded() && !image.LoadIndexOnly())
 	{
 		_LogWarn_("%s (Img로딩 실패)", resourceIndex.ToString().Source());
-		return sg::Contents.Global->getDefaultFrameTexture();
+		return SpriteFrameTexture::GetDefault();
 	}
 
 	if (_frameIndex < 0 || _frameIndex >= image.Count())
 	{
 		_LogWarn_("%s (올바르지 않은 인덱스 범위)", resourceIndex.ToString().Source());
 		jc_assert(false);
-		return sg::Contents.Global->getDefaultFrameTexture();
+		return SpriteFrameTexture::GetDefault();
 	}
 
 	SgaSpriteAbstract& sprite = image.GetAtRef(_frameIndex);
@@ -148,7 +148,7 @@ FrameTexture* ImagePack::CreateFrameTexture(int _imgIndex, int _frameIndex, bool
 	if (sprite.IsDummy())
 	{
 		_LogWarn_("%s (더미 스프라이트)", resourceIndex.ToString().Source());
-		return sg::Contents.Global->getDefaultFrameTexture();
+		return SpriteFrameTexture::GetDefault();
 	}
 
 	if (!sprite.Loaded())

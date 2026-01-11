@@ -6,14 +6,16 @@
 
 
 #include "Core.h"
-#include "GameCoreHeader.h"
 #include "UI_ChannelSelect.h"
 
+#include <sg/_Util/DescLoaderMgr.h>
 #include <sg/_Struct/SteinsGate_Channel.h>
 
 #include <sgcl/Define_UI.h>
 #include <sgcl/Define_Popup.h>
 #include <sgcl/S_LOBBY.h>
+#include <sgcl/Contents.h>
+#include <sgcl/SteinsGateApp.h>
 
 #include <sgcl/ImagePackManager.h>
 #include <sgcl/UIManager.h>
@@ -402,7 +404,7 @@ void UI_ChannelSelect::OnLoaded()
 
 	cc::Sprite* pGearSprite = pSpriteBackgroundGear_->Source();
 	pGearSprite->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	pGearSprite->setPosition(sg::App->GetDesignResolutionSize() / 2);
+	pGearSprite->setPosition(g_cApp.GetDesignResolutionSize() / 2);
 
 	for (int i = 0; i < SG_UI_CHANNELSELECT_MAX_CHANNEL_COUNT; ++i)
 	{

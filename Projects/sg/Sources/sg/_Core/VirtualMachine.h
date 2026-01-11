@@ -17,10 +17,9 @@ public:
 	void Init();
 	void Go(const jc::TimeSpan& _dt);
 
-	void AddCLICallback(const jc::String& _cmdLine, const jc::Func<bool, int, jc::String*>& _callback);
-
-	jc::ThreadPool& ThreadPool() const { return *pThreadPool_; }
-	jc::Scheduler&	Scheduler() const { return *pScheduler_; }
+	jc::ThreadPool&		GetThreadPool() const { return *pThreadPool_; }
+	jc::Scheduler&		GetScheduler() const { return *pScheduler_; }
+	CLIListener&		GetCLIListener() const { return *pCLIListener_; }
 
 private:
 	CLIListener*	 pCLIListener_ = nullptr;
@@ -29,4 +28,10 @@ private:
 	jc::Scheduler*	 pScheduler_ = nullptr;
 };
 
-#define g_cVM (*VirtualMachine::Get())
+JC_DECL_SINGLETON_VAR(VirtualMachine)
+#define g_cVM JC_DECL_SINGLETON_BODY(VirtualMachine)
+#define g_cCLIListener (g_cVM.GetCLIListener())
+#define g_cThreadPool  (g_cVM.GetThreadPool())
+#define g_cScheduler   (g_cVM.GetScheduler())
+
+

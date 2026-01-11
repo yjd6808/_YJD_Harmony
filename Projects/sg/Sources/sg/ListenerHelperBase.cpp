@@ -11,7 +11,7 @@
 
 #include <jnet/Packet/PacketViewer.h>
 
-#include <sg/Config.h>
+#include <sg/_Core/AppConfig.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -21,17 +21,17 @@ void ListenerHelperBase::LogCommand(TransportProtocol _protocol, Transmission _t
 {
 	const Cmd_t id = _pCommand->GetId();
 
-	if (_transmission == Transmission::Recv && !g_cConfigRuntime.showRecvCommand_)
+	if (_transmission == Transmission::Recv && !g_cAppConfig.showRecvCommand_)
 	{
 		return;
 	}
 
-	if (_transmission == Transmission::Send && !g_cConfigRuntime.showSendCommand_)
+	if (_transmission == Transmission::Send && !g_cAppConfig.showSendCommand_)
 	{
 		return;
 	}
 
-	if (g_cConfigRuntime.IsFilteredCommand(_transmission, id))
+	if (g_cAppConfig.IsFilteredCommand(_transmission, id))
 	{
 		return;
 	}
@@ -50,7 +50,7 @@ void ListenerHelperBase::LogCommand(TransportProtocol _protocol, Transmission _t
 //////////////////////////////////////////////////////////////////////////////////////////
 void ListenerHelperBase::LogPacketHex(RecvedCommandPacket* _pRecvPacket)
 {
-	if (g_cConfigRuntime.showRecvPacketHex_)
+	if (g_cAppConfig.showRecvPacketHex_)
 	{
 		PacketViewer::View(_pRecvPacket);
 	}
@@ -59,7 +59,7 @@ void ListenerHelperBase::LogPacketHex(RecvedCommandPacket* _pRecvPacket)
 //////////////////////////////////////////////////////////////////////////////////////////
 void ListenerHelperBase::LogPacketHex(IPacket* _pSentPacket)
 {
-	if (g_cConfigRuntime.showSendPacketHex_)
+	if (g_cAppConfig.showSendPacketHex_)
 	{
 		PacketViewer::View(_pSentPacket);
 	}

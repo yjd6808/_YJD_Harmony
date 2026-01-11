@@ -6,14 +6,14 @@
  */
 
 #include "Core.h"
-#include "GameCoreHeader.h"
 #include "PhysicsComponent.h"
 
-
+#include <sg/_Util/DescLoaderMgr.h>
 #include <sg/_Struct/SteinsGate_AttackData.h>
 
 #include <sgcl/_Struct/CL_Character.h>
 #include <sgcl/_Layer/Layer_Map.h>
+#include <sgcl/_Core/AppConfig_Props.h>
 
 USING_NS_JC;
 USING_NS_CC;
@@ -403,7 +403,8 @@ bool PhysicsComponent::HasForce()
 //////////////////////////////////////////////////////////////////////////////////////////
 void PhysicsComponent::UpdateDebug(float _dt)
 {
-	if (!Global::Get()->DrawAttackBox)
+	
+	if (!g_cAppProps.GetBool(CONF_PROPS_DRAW_ATTACK_BOX))
 	{
 		if (atkThicknessBox_)
 		{

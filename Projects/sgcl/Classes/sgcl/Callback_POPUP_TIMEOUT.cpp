@@ -7,9 +7,9 @@
 
 
 #include "Core.h"
-#include "GameCoreHeader.h"
 #include "Callback_POPUP_TIMEOUT.h"
 
+#include <sgcl/NetCore.h>
 #include <sgcl/AuthenticationComponent.h>
 
 
@@ -19,7 +19,7 @@ namespace Popup
 //////////////////////////////////////////////////////////////////////////////////////
 void LobbyAuthenticationTimeout::operator()()
 {
-	if (sg::Net->GetAuthenticationComponent()->GetState() == AuthenticationState::LobbyWait)
+	if (g_cNet.authentication_.GetState() == AuthenticationState::LobbyWait)
 	{
 	}
 }

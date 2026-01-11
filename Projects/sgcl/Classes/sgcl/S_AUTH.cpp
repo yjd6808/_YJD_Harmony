@@ -7,11 +7,11 @@
 
 
 #include "Core.h"
-#include "GameCoreHeader.h"
 #include "S_AUTH.h"
 
 #include <sg/Cmd_AUTHENTICATION.h>
 #include <sgcl/AuthenticationComponent.h>
+#include <sgcl/NetCore.h>
 
 USING_NS_JC;
 USING_NS_CC;
@@ -21,7 +21,7 @@ USING_NS_JNET;
 void S_AUTH::SEND_CAU_Login()
 {
 	const auto sending = SendBegin<CAU_Login>();
-	const AccountData& accountData = sg::Net->GetAuthenticationComponent()->GetAccountData();
+	const AccountData& accountData = g_cNet.authentication_.GetAccountData();
 	sending.Cmd.id_.SetString(accountData.id_);
 	sending.Cmd.pass_.SetString(accountData.pass_);
 }

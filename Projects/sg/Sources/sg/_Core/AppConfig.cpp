@@ -6,7 +6,7 @@
  */
 
 #include "Core.h"
-#include "Config.h"
+#include "AppConfig.h"
 
 #include <jc/Logger/ConsoleLogger.h>
 
@@ -19,18 +19,28 @@ USING_NS_JC;
 USING_NS_JS;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ConfigArgs::ConfigArgs()
-: properties_()
+AppConfig::AppConfig()
+: showRecvCommand_(true)
+, showSendCommand_(true)
+, showRecvPacketHex_(false)
+, showSendPacketHex_(false)
+, showConsoleLog_{ true, true, true, true, true }
+, showConsoleNetLog_{ true, true, true, true, true }
+, recvCommandFilter_(512)
+, sendCommandFilter_(512)
 {
+	Arrays::Copy(consoleLogColor_, ConsoleLoggerOption::Default.LogColors);
+	Arrays::Copy(consoleNetLogColor_, ConsoleLoggerOption::Default.LogColors);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ConfigArgs::~ConfigArgs()
+AppConfig::~AppConfig()
 {
+	JC_DELETE_SAFE(pClientInfo_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConfigArgs::Load()
+void AppConfig::ReadEnvArgs()
 {
 	const Vector<jc::String>& args = Env::GetArgs();
 
@@ -57,38 +67,17 @@ void ConfigArgs::Load()
 		jc::String srcDataPath = jc::Path::Combine(*pAssetPath, "src_data");
 		jc::String resDataPath = jc::Path::Combine(*pAssetPath, "res_data");
 
-		CONF_SET(CONF_PROP_ASSET_PATH, *pAssetPath);
-		CONF_SET(CONF_PROP_SRC_DATA_PATH, srcDataPath);
-		CONF_SET(CONF_PROP_RES_DATA_PATH, resDataPath);
-		CONF_SET(CONF_PROP_RES_DATA_FONT_PATH, jc::Path::Combine(resDataPath, "font"));
-		CONF_SET(CONF_PROP_RES_DATA_IMAGE_PATH, jc::Path::Combine(resDataPath, "image"));
-		CONF_SET(CONF_PROP_RES_DATA_SOUND_PATH, jc::Path::Combine(resDataPath, "sound"));
+		assetPath_ = *pAssetPath;
+		srcDataPath_ = srcDataPath;
+		resDataPath_ = resDataPath;
+		resDataFontPath_ = jc::Path::Combine(resDataPath, "font");
+		resDataImagePath_ = jc::Path::Combine(resDataPath, "image");
+		resDataSoundPath_ = jc::Path::Combine(resDataPath, "sound");
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ConfigRuntime::ConfigRuntime()
-: showRecvCommand_(true)
-, showSendCommand_(true)
-, showRecvPacketHex_(false)
-, showSendPacketHex_(false)
-, showConsoleLog_{ true, true, true, true, true }
-, showConsoleNetLog_{ true, true, true, true, true }
-, recvCommandFilter_(512)
-, sendCommandFilter_(512)
-{
-	Arrays::Copy(consoleLogColor_, ConsoleLoggerOption::Default.LogColors);
-	Arrays::Copy(consoleNetLogColor_, ConsoleLoggerOption::Default.LogColors);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-ConfigRuntime::~ConfigRuntime()
-{
-	JC_DELETE_SAFE(pClientInfo_);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void ConfigRuntime::Load()
+void AppConfig::LoadConfFile()
 {
 	if (!File::Exist(SG_RUNTIME_CONFIG_FILENAME))
 	{
@@ -124,7 +113,7 @@ void ConfigRuntime::Load()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConfigRuntime::Delete()
+void AppConfig::DeleteConfFile()
 {
 	if (!File::Exist(SG_RUNTIME_CONFIG_FILENAME))
 	{
@@ -140,10 +129,10 @@ void ConfigRuntime::Delete()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConfigRuntime::Save()
+void AppConfig::SaveConfiFile()
 {
 	const jc::String exeDirectoryPath = Env::CurrentDirectory();
-	const jc::String runtimeConfigPath = jc::Path::Combine(exeDirectoryPath, SG_RUNTIME_CONFIG_FILENAME);
+	const jc::String runtimeAppConfigPath = jc::Path::Combine(exeDirectoryPath, SG_RUNTIME_CONFIG_FILENAME);
 
 	try
 	{
@@ -164,7 +153,7 @@ void ConfigRuntime::Save()
 		{
 			throw std::exception("Value 문자열 변환중 오류 발생");
 		}
-		File::WriteAllText(content.c_str(), (int)content.length(), runtimeConfigPath.Source());
+		File::WriteAllText(content.c_str(), (int)content.length(), runtimeAppConfigPath.Source());
 		_LogInfo_("런타임 설정파일(%s) 저장완료", SG_RUNTIME_CONFIG_FILENAME);
 	}
 	catch (std::exception& ex)
@@ -174,7 +163,7 @@ void ConfigRuntime::Save()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConfigRuntime::ReadCore(Value& _root)
+void AppConfig::ReadCore(Value& _root)
 {
 	for (Value& v : _root[RECV_COMMAND_FILTER_KEY])
 	{
@@ -217,7 +206,7 @@ void ConfigRuntime::ReadCore(Value& _root)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConfigRuntime::ReadClient(Json::Value& _clientRoot)
+void AppConfig::ReadClient(Json::Value& _clientRoot)
 {
 	if (pClientInfo_ == nullptr)
 	{
@@ -240,7 +229,7 @@ void ConfigRuntime::ReadClient(Json::Value& _clientRoot)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConfigRuntime::WriteCore(Value& _root)
+void AppConfig::WriteCore(Value& _root)
 {
 	{
 		// JC_LOCK_GUARD(FilterLock);
@@ -283,12 +272,12 @@ void ConfigRuntime::WriteCore(Value& _root)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConfigRuntime::WriteClient(Json::Value& _clientRoot)
+void AppConfig::WriteClient(Json::Value& _clientRoot)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConfigRuntime::ShowCommandFilter(jnet::Transmission _transmission)
+void AppConfig::ShowCommandFilter(jnet::Transmission _transmission)
 {
 	jc::String commands{ 1024 };
 	jc::HashSet<Cmd_t>& filter = _transmission == jnet::Transmission::Send ? sendCommandFilter_ : recvCommandFilter_;
@@ -312,7 +301,7 @@ void ConfigRuntime::ShowCommandFilter(jnet::Transmission _transmission)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConfigRuntime::FilterCommand(jnet::Transmission _transmission, Cmd_t _cmd)
+void AppConfig::FilterCommand(jnet::Transmission _transmission, Cmd_t _cmd)
 {
 	// JC_LOCK_GUARD(FilterLock);
 	jc::HashSet<Cmd_t>& filter = _transmission == jnet::Transmission::Send ? sendCommandFilter_ : recvCommandFilter_;
@@ -320,7 +309,7 @@ void ConfigRuntime::FilterCommand(jnet::Transmission _transmission, Cmd_t _cmd)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConfigRuntime::UnfilterCommand(jnet::Transmission _transmission, Cmd_t _cmd)
+void AppConfig::UnfilterCommand(jnet::Transmission _transmission, Cmd_t _cmd)
 {
 	// JC_LOCK_GUARD(FilterLock);
 	jc::HashSet<Cmd_t>& filter = _transmission == jnet::Transmission::Send ? sendCommandFilter_ : recvCommandFilter_;
@@ -328,7 +317,7 @@ void ConfigRuntime::UnfilterCommand(jnet::Transmission _transmission, Cmd_t _cmd
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool ConfigRuntime::IsFilteredCommand(jnet::Transmission _transmission, Cmd_t _cmd)
+bool AppConfig::IsFilteredCommand(jnet::Transmission _transmission, Cmd_t _cmd)
 {
 	// JC_LOCK_GUARD(FilterLock);
 	jc::HashSet<Cmd_t>& filter = _transmission == jnet::Transmission::Send ? sendCommandFilter_ : recvCommandFilter_;
@@ -336,7 +325,7 @@ bool ConfigRuntime::IsFilteredCommand(jnet::Transmission _transmission, Cmd_t _c
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConfigRuntime::ApplyLoggerOption()
+void AppConfig::ApplyLoggerOption()
 {
 	if (Logger_v == nullptr)
 	{
@@ -367,7 +356,7 @@ void ConfigRuntime::ApplyLoggerOption()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConfigRuntime::ApplyNetLoggerOption()
+void AppConfig::ApplyNetLoggerOption()
 {
 	if (NetLogger_v == nullptr)
 	{

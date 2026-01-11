@@ -9,8 +9,11 @@
 #include "GameCoreHeader.h"
 #include "NetCore.h"
 
-#include <sg/Config.h>
+#include <sg/_Core/AppConfig.h>
 #include <sg/_Struct/SteinsGate_Client.h>
+
+#include <sgcl/CommandSynchronizer.h>
+#include <sgcl/ConnectionSynchronizer.h>
 
 #include <sgcl/AuthenticationComponent.h>
 
@@ -29,8 +32,7 @@ NetCore::NetCore()
 , pAreaTcp_(nullptr)
 , pCommandSynchronizer_(CommandSynchronizer::Get())
 , pConnectionSynchronizer_(ConnectionSynchronizer::Get())
-, componentCollection_()
-, pAuthentication_(nullptr)
+, authentication_(*dbg_new AuthenticationComponent())
 {
 	SetName("클라");
 }
@@ -49,8 +51,9 @@ void NetCore::Initialize()
 	pNetClientGroup_ = centerNetGroup.Get<NetClientGroup*>();
 	pNetClientGroup_->Initialize();
 
-	pCommandSynchronizer_->Initialize(); // 이녀석은 무조건 IOCP 초기화이후 수행
+	pCommandSynchronizer_->Initialize();
 	pConnectionSynchronizer_->Initialize();
+
 
 	pAuthTcp_ = pNetClientGroup_->pAuthTcp_;
 	pLobbyTcp_ = pNetClientGroup_->pLobbyTcp_;
@@ -58,10 +61,6 @@ void NetCore::Initialize()
 	pLogicUdp_ = pNetClientGroup_->pLogicUdp_;
 	pChatTcp_ = pNetClientGroup_->pChatTcp_;
 	pAreaTcp_ = pNetClientGroup_->pAreaTcp_;
-
-	pAuthentication_ = dbg_new AuthenticationComponent;
-
-	componentCollection_.Add(pAuthentication_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -90,12 +89,6 @@ void NetCore::RunCommand(jnet::Session* _pSession, ICommand* _pCmd)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetCore::InitializeComponents()
-{
-	componentCollection_.Initialize();
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
 bool NetCore::ConnectAuthTcp()
 {
 	if (pAuthTcp_ == nullptr)
@@ -103,7 +96,7 @@ bool NetCore::ConnectAuthTcp()
 		return false;
 	}
 
-	return pAuthTcp_->ConnectAsync(g_cConfigRuntime.GetClientInfo()->remoteAuth_);
+	return pAuthTcp_->ConnectAsync(g_cAppConfig.GetClientInfo()->remoteAuth_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -114,5 +107,5 @@ bool NetCore::ConnectLobbyTcp()
 		return false;
 	}
 
-	return pLobbyTcp_->ConnectAsync(g_cConfigRuntime.GetClientInfo()->remoteLobby_);
+	return pLobbyTcp_->ConnectAsync(g_cAppConfig.GetClientInfo()->remoteLobby_);
 }

@@ -12,6 +12,7 @@
 
 #include <sg/Cmd_LOBBY.h>
 #include <sgcl/AuthenticationComponent.h>
+#include <sgcl/NetCore.h>
 
 USING_NS_JC;
 USING_NS_CC;
@@ -21,9 +22,8 @@ USING_NS_JNET;
 void S_LOBBY::SEND_CLO_JoinLobby()
 {
 	const auto sending = SendBegin<CLO_JoinLobby>();
-	const AuthenticationComponent* pAuthenticationComponent = sg::Net->GetAuthenticationComponent();
-	sending.Cmd.AccountId = pAuthenticationComponent->GetAccountData().id_;
-	sending.Cmd.Serial = pAuthenticationComponent->GetSerial();
+	sending.Cmd.AccountId = g_cNet.authentication_.GetAccountData().id_;
+	sending.Cmd.Serial = g_cNet.authentication_.GetSerial();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

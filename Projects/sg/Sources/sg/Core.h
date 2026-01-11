@@ -84,6 +84,7 @@
 #include <sgcc/Core.h>
 
 #include <sg/Const.h>
+#include <sg/DLLExport.h>
 #include <sg/Logo.h>
 #include <sg/CommonCore.h>
 #include <sg/_Util/JsonUtil.h>
@@ -100,17 +101,3 @@
 
 #define SG_LT(textKey)				(g_cDescMgr.GetText(textKey))
 #define SG_LT_RAW(textKey)			(g_cDescMgr.GetTextRaw(textKey))
-
-// 설정 디파인
-#define CONF_GET_STRING(code)		(g_cConfigArgs.Props()[code].Ref<jc::String>())
-#define CONF_GET_INT(code)			(g_cConfigArgs.Props()[code].Ref<int>())
-
-#define CONF_SET(code, value)		(g_cConfigArgs.Props().Set(code, value))
-#define CONF_GET(code)				(g_cConfigArgs.Props()[code])
-
-#define CONF_PROP_ASSET_PATH				0		// (string)
-#define CONF_PROP_RES_DATA_PATH				1		// (string)
-#define CONF_PROP_RES_DATA_FONT_PATH		2		// (string)
-#define CONF_PROP_RES_DATA_IMAGE_PATH		3		// (string)
-#define CONF_PROP_RES_DATA_SOUND_PATH		4		// (string)
-#define CONF_PROP_SRC_DATA_PATH				5		// (string)

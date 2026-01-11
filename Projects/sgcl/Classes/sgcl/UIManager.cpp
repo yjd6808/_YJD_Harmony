@@ -9,14 +9,14 @@
 #include "GameCoreHeader.h"
 #include "UIManager.h"
 
-#include <sg/Config.h>
+#include <sg/_Core/AppConfig.h>
 #include <sg/_Struct/SteinsGate_Client.h>
 
 #include <sgcl/UIGroup.h>
 #include <sgcl/UIRootGroup.h>
-#include <sgcl/Global.h>
 
 #include <sgcl/Define_UI.h>
+#include <sgcl/PopupManager.h>
 
 #include <sgcl/UI_Inventory.h>
 #include <sgcl/UI_Login.h>
@@ -35,12 +35,14 @@ UIManager::UIManager()
 , loadedUITexture_(1024) // 창을 64개까지 만들일이 있을려나 ㅋㅋ
 , uiElementMap_(512)
 , masterUIGroups_(64)
+, popup_(*PopupManager::Get())
 //////////////////////////////////////////////////////////////////////////////////////////
 {
 	pInventory_ = nullptr;
 	pLogin_ = nullptr;
 	pTest_ = nullptr;
 	pChannelSelect_ = nullptr;
+
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -62,14 +64,14 @@ UIManager::~UIManager()
 void UIManager::Init()
 {
 	pRootGroupMgr_ = UIRootGroupManager::CreateRetain();
-	pRootGroupMgr_->ForEach([this](UIRootGroup* _pRootGroup) { RegisterMasterGroup(_pRootGroup); });
+	pRootGroupMgr_->ForEach([this](UIRootGroup* _pRootGroup) { RegisterRootGroup(_pRootGroup); });
 	pRootGroupMgr_->ForEach([this](UIRootGroup* _pRootGroup) { _pRootGroup->OnInit(); });
 
 	InitPublic();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UIManager::RegisterMasterGroup(UIRootGroup* _pGroup)
+void UIManager::RegisterRootGroup(UIRootGroup* _pGroup)
 {
 	_pGroup->retain(); // 그룹마스터에서 생성/관리하기때문에 리테인했고 UIManager에서도 마스터를 참조하므로, 리테인해줘야함. 빼먹고있었넹
 	uiElementMap_.Insert(_pGroup->GetCode(), _pGroup);
@@ -209,7 +211,7 @@ FrameTexture* UIManager::CreateUITexture(int _sga, int _img, int _frame, bool _l
 	{
 		g_cImagePackMgr.LogTexture("UIManager::createUITexture()", SgaResourceIndex{ _sga, _img, _frame },
 		                                       LoggerAbstract::eWarn);
-		return sg::Contents.Global->getDefaultFrameTexture();
+		return SpriteFrameTexture::GetDefault();
 	}
 
 	FrameTexture* pTexture = pPack->CreateFrameTexture(_img, _frame, _linearDodge);

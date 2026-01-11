@@ -19,7 +19,7 @@ void BaseContents::AddSchedule(jc::SchedulerTaskRunnable* _pSchedule)
 {
 	_pSchedule->Initialize();
 	schedules_.PushBack(_pSchedule);
-	g_cVM.Scheduler().AddFirstTask(_pSchedule);
+	g_cScheduler.AddFirstTask(_pSchedule);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

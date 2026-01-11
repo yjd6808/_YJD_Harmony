@@ -6,13 +6,14 @@
  */
 
 #include "Core.h"
-#include "GameCoreHeader.h"
 #include "Layer_UI.h"
 
 #include <sg/_Util/DescLoaderMgr.h>
 #include <sgcl/UIStatic.h>
 #include <sgcl/UIManager.h>
 #include <sgcl/UIRootGroup.h>
+#include <sgcl/SteinsGateApp.h>
+#include <sgcl/_Core/AppConfig_Props.h>
 
 USING_NS_CC;
 USING_NS_CCUI;
@@ -48,7 +49,7 @@ bool UILayer::init()
 		return false;
 	}
 
-	_contentSize = sg::App->GetDesignResolutionSize();
+	_contentSize = g_cApp.GetDesignResolutionSize();
 	return true;
 }
 
@@ -190,7 +191,7 @@ void UILayer::update(float _delta)
 		UIRootGroup* pUiGroup = static_cast<UIRootGroup*>(_children.at(i));
 		pUiGroup->ForEachRecursiveSpecificType<UIStatic>([](UIStatic* _pChild)
 		{
-			_pChild->SetDebugVisible(sg::Contents.Global->DrawUIStatic);
+			_pChild->SetDebugVisible(g_cAppProps.GetBool(CONF_PROPS_DRAW_UI_STATIC));
 		});
 		pUiGroup->OnUpdate(_delta);
 	}

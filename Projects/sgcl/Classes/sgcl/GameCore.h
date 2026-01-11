@@ -10,14 +10,10 @@
 
 #include <sg/CommonCore.h>
 
-class SteinsGateApp;
-class NetCore;
 struct Contents;
 
 NS_SG_BEGIN
-extern ::SteinsGateApp* App;
 extern ::Contents Contents;
-extern ::NetCore* Net;
 NS_SG_END
 
 void InitializeClientCore();

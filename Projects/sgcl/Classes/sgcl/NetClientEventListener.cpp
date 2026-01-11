@@ -7,9 +7,9 @@
 
 
 #include "Core.h"
-#include "GameCoreHeader.h"
 #include "NetClientEventListener.h"
 
+#include <sgcl/NetCore.h>
 #include <sgcl/CommandSynchronizer.h>
 #include <sgcl/ConnectionSynchronizer.h>
 
@@ -67,7 +67,7 @@ void NetClientEventListener::OnReceived(Session* _pSession, RecvedCommandPacket*
 void NetClientEventListener::SyncConnectionResult(ClientConnectServerType_t _listenerType, Session* _pSession,
                                                   bool _success, Int32U _errorCode)
 {
-	ConnectionSynchronizer* pSynchronizer = sg::Net->GetConnectionSynchronizer();
+	ConnectionSynchronizer* pSynchronizer = g_cNet.GetConnectionSynchronizer();
 
 	if (pSynchronizer == nullptr)
 	{
@@ -82,7 +82,7 @@ void NetClientEventListener::SyncConnectionResult(ClientConnectServerType_t _lis
 //////////////////////////////////////////////////////////////////////////////////////////
 void NetClientEventListener::SyncDisconnectionResult(ClientConnectServerType_t _listenerType, Session* _pSession)
 {
-	ConnectionSynchronizer* pSynchronizer = sg::Net->GetConnectionSynchronizer();
+	ConnectionSynchronizer* pSynchronizer = g_cNet.GetConnectionSynchronizer();
 
 	if (pSynchronizer == nullptr)
 	{
@@ -97,7 +97,7 @@ void NetClientEventListener::SyncDisconnectionResult(ClientConnectServerType_t _
 void NetClientEventListener::SyncReceivedCommand(ClientConnectServerType_t _listenerType, jnet::Session* _pSession,
                                                  ICommand* _pCmd)
 {
-	CommandSynchronizer* pSynchronizer = sg::Net->GetCommandSynchronizer();
+	CommandSynchronizer* pSynchronizer = g_cNet.GetCommandSynchronizer();
 
 	if (pSynchronizer == nullptr)
 	{

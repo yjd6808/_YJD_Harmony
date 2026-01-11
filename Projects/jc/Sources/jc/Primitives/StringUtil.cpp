@@ -96,9 +96,28 @@ int StringUtil::CopyUnsafe(char* buffer, const char* copy) {
 	return iSize;
 }
 
-bool StringUtil::IsEqual(const char* src, const int srcLen, const char* dst, const int dstLen) {
-	for (int i = 0, j = 0; i < srcLen && j < dstLen; i++, j++) {
-		if (*(src + i) != *(dst + j)) {
+//////////////////////////////////////////////////////////////////////////////////////////
+bool StringUtil::IsEqual(const char* src, const char* dst, bool _compareCase/*= true*/)
+{
+	return IsEqual(src, Length(src), dst, Length(dst), _compareCase);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool StringUtil::IsEqual(const char* src, const int srcLen, const char* dst, const int dstLen, bool _compareCase /*= true*/) 
+{
+	for (int i = 0, j = 0; i < srcLen && j < dstLen; i++, j++) 
+	{
+		if (_compareCase == false) 
+		{
+			if (tolower(*(src + i)) != tolower(*(dst + j))) 
+			{
+				return false;
+			}
+			continue;
+		}
+
+		if (*(src + i) != *(dst + j)) 
+		{
 			return false;
 		}
 	}

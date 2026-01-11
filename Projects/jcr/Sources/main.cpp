@@ -151,6 +151,10 @@ int main(int _argc, char** _argv)
 	if (a == b)
 		std::cout << "aa\n";
 
+	Properties props223;
+	props223.SetU32(1, 500);
+	Int32U value = props223.GetU64(1);
+
 	Random r;
 	float fsefes = r.GenerateF(0.f, 1.f);
 

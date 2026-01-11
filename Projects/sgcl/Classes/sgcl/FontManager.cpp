@@ -10,7 +10,7 @@
 #include "FontManager.h"
 #include "GameCoreHeader.h"
 
-#include <sg/Config.h>
+#include <sg/_Core/AppConfig.h>
 
 #include <jc/FileSystem/Directory.h>
 #include <jc/FileSystem/Path.h>
@@ -33,7 +33,7 @@ FontManager::~FontManager()
 //////////////////////////////////////////////////////////////////////////////////////////
 void FontManager::Init()
 {
-	const jc::String& fontDir = CONF_GET_STRING(CONF_PROP_RES_DATA_FONT_PATH);
+	const jc::String& fontDir = g_cAppConfig.resDataFontPath_;
 	Vector<jc::String> fontFiles = Directory::Files(fontDir);
 
 	for (int index = 0; index < fontFiles.Size(); ++index)
@@ -57,7 +57,7 @@ jc::String& FontManager::GetFontName(int _fontCode)
 jc::String FontManager::GetFontPath(int _fontCode)
 {
 	const jc::String& fontName = GetFontName(_fontCode);
-	const jc::String fontPath = jc::Path::Combine(CONF_GET_STRING(CONF_PROP_RES_DATA_FONT_PATH), fontName);
+	const jc::String fontPath = jc::Path::Combine(g_cAppConfig.resDataFontPath_, fontName);
 	return fontPath;
 }
 

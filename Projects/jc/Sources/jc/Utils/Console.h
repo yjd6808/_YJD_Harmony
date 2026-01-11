@@ -117,7 +117,7 @@ public:
     static ConsoleColor ConvertColorString(const String& _colorString);
 
     template <typename... TArgs>
-    static int Write(ConsoleColor _color, char* _pFormat, TArgs&&... _args)
+    static int Write(ConsoleColor _color, const char* _pFormat, TArgs&&... _args)
     {
         TLockGuard guard(ms_ConsoleLock);
         ConsoleColor prevColor = ms_iDefaultColor;
@@ -128,7 +128,7 @@ public:
     }
 
     template <Int32U FormatBufferLen, typename... TArgs>
-    static int Write(ConsoleColor _color, const char(&_format)[FormatBufferLen], TArgs&&... _args)
+    static int Write(ConsoleColor _color, char(&_format)[FormatBufferLen], TArgs&&... _args)
     {
         TLockGuard guard(ms_ConsoleLock);
         ConsoleColor prevColor = ms_iDefaultColor;
@@ -139,7 +139,7 @@ public:
     }
 
     template <typename... TArgs>
-    static int Write(char* _pFormat, TArgs&&... _args)
+    static int Write(const char* _pFormat, TArgs&&... _args)
     {
         char buf[TempBufferLen];
         sprintf_s(buf, TempBufferLen, _pFormat);
@@ -148,7 +148,7 @@ public:
     }
 
     template <Int32U FormatBufferLen, typename... TArgs>
-    static int Write(const char(&_format)[FormatBufferLen], TArgs&&... _args)
+    static int Write(char(&_format)[FormatBufferLen], TArgs&&... _args)
     {
         TLockGuard guard(ms_ConsoleLock);
         return printf_s(_format, Forward<TArgs>(_args)...);
@@ -174,7 +174,7 @@ public:
     static ConsoleKeyInfo ReadKeyWhile(const char* _pMsg, ConsoleKey _key);
 
     template <typename... TArgs>
-    static int WriteLine(ConsoleColor _color, char* _pFormat, TArgs&&... _args)
+    static int WriteLine(ConsoleColor _color, const char* _pFormat, TArgs&&... _args)
     {
         TLockGuard guard(ms_ConsoleLock);
         ConsoleColor prevColor = ms_iDefaultColor;
@@ -185,7 +185,7 @@ public:
     }
 
     template <Int32U FormatBufferLen, typename... TArgs>
-    static int WriteLine(ConsoleColor _color, const char(&_format)[FormatBufferLen], TArgs&&... _args)
+    static int WriteLine(ConsoleColor _color, char(&_format)[FormatBufferLen], TArgs&&... _args)
     {
         TLockGuard guard(ms_ConsoleLock);
         ConsoleColor prevColor = ms_iDefaultColor;
@@ -196,7 +196,7 @@ public:
     }
 
     template <typename... TArgs>
-    static int WriteLine(char* _pFormat, TArgs&&... _args)
+    static int WriteLine(const char* _pFormat, TArgs&&... _args)
     {
         if constexpr (sizeof...(_args) == 0)
         {
@@ -205,15 +205,13 @@ public:
         }
         else
         {
-            char buf[TempBufferLen + 1];
-            sprintf_s(buf, TempBufferLen + 1, _pFormat);
             TLockGuard guard(ms_ConsoleLock);
-            return Math::Min(printf_s("\n"), printf_s(buf, Forward<TArgs>(_args)...));
+            return Math::Min(printf_s("\n"), printf_s(_pFormat, Forward<TArgs>(_args)...));
         }
     }
 
     template <Int32U FormatBufferLen, typename... TArgs>
-    static int WriteLine(const char(&_format)[FormatBufferLen], TArgs&&... _args)
+    static int WriteLine(char(&_format)[FormatBufferLen], TArgs&&... _args)
     {
         TLockGuard guard(ms_ConsoleLock);
         return Math::Min(printf_s("\n"), printf_s(_format, Forward<TArgs>(_args)...));

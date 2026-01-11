@@ -97,6 +97,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jnetr_udpclient_b", "Projec
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sg", "Projects\sg\Project\sg.vcxproj", "{0A422C66-4F4D-424C-835F-2B9A99FE2737}"
 	ProjectSection(ProjectDependencies) = postProject
+		{45E38EED-167C-456A-996E-6D2AE793A911} = {45E38EED-167C-456A-996E-6D2AE793A911}
 		{5ADBA306-F356-4E21-B037-9EF477DC321E} = {5ADBA306-F356-4E21-B037-9EF477DC321E}
 	EndProjectSection
 EndProject

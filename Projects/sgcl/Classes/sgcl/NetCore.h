@@ -8,15 +8,12 @@
 #pragma once
 
 #include <sgcl/NetClientGroup.h>
-#include <sgcl/CommandSynchronizer.h>
-#include <sgcl/ConnectionSynchronizer.h>
-#include <sgcl/ComponentCollection.h>
 
+class CommandSynchronizer;
+class ConnectionSynchronizer;
 class AuthenticationComponent;
 
-class NetCore
-	: public jnet::NetGroupMgr
-	, public jc::SingletonPointer<NetCore>
+class NetCore : public jnet::NetGroupMgr, public jc::SingletonPointer<NetCore>
 {
 	friend class TSingleton;
 	NetCore();
@@ -36,15 +33,14 @@ public:
 	jnet::TcpClient* GetChatTcp() const { return pChatTcp_; }
 	jnet::TcpClient* GetAreaTcp() const { return pAreaTcp_; }
 
-	CommandSynchronizer* GetCommandSynchronizer() const { return pCommandSynchronizer_; }
-	ConnectionSynchronizer* GetConnectionSynchronizer() const { return pConnectionSynchronizer_; }
-
-	void InitializeComponents();
-
-	AuthenticationComponent* GetAuthenticationComponent() const { return pAuthentication_; }
+	CommandSynchronizer* GetCommandSynchronizer() { return pCommandSynchronizer_; }
+	ConnectionSynchronizer* GetConnectionSynchronizer() { return pConnectionSynchronizer_; }
 
 	bool ConnectAuthTcp();
 	bool ConnectLobbyTcp();
+
+public:
+	AuthenticationComponent&	authentication_;
 
 private:
 	NetClientGroup* pNetClientGroup_;
@@ -57,7 +53,7 @@ private:
 
 	CommandSynchronizer* pCommandSynchronizer_;
 	ConnectionSynchronizer* pConnectionSynchronizer_;
-	ComponentCollection componentCollection_;
-
-	AuthenticationComponent* pAuthentication_;
 };
+
+JC_DECL_SINGLETON_VAR(NetCore);
+#define g_cNet JC_DECL_SINGLETON_BODY(NetCore)

@@ -271,7 +271,7 @@ void UIScrollBar::Load()
 	//                       디폴트 컬러링
 	// 디폴트 텍스쳐인 경우 업버튼, 다운버튼, 손잡이, 트랙 색을 지정해서 구분 가능토록 만든다.
 	// =============================================================
-	const FrameTexture* pDefaultTexture = sg::Contents.Global->getDefaultFrameTexture();
+	const FrameTexture* pDefaultTexture = SpriteFrameTexture::GetDefault();
 
 	// 업 버튼
 	if (pTextures_[INDEX_UP_NORMAL] == pDefaultTexture)

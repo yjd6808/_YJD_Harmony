@@ -11,8 +11,8 @@
 
 #include <jc/Threading/Scheduler.h>
 
-#include <sg/Config.h>
-#include <sg/CLIThread.h>
+#include <sg/_Core/AppConfig.h>
+#include <sg/_Core/CLIThread.h>
 
 USING_NS_JC;
 
@@ -60,10 +60,4 @@ void VirtualMachine::Init()
 void VirtualMachine::Go(const jc::TimeSpan& _dt)
 {
 	pCliThread_->ProcessInputs();
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void VirtualMachine::AddCLICallback(const jc::String& _cmdLine, const jc::Func<bool, int, jc::String*>& _callback)
-{
-	pCLIListener_->AddCallback(_cmdLine, _callback);
 }

@@ -3,10 +3,9 @@
  */
 
 #include "Core.h"
-#include "GameCoreHeader.h"
 #include "Layer_Map.h"
 
-
+#include <sg/_Util/DescLoaderMgr.h>
 #include <sg/_Struct/SteinsGate_Tile.h>
 
 #include <sgcl/_Struct/CL_Character.h>

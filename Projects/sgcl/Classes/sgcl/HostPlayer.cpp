@@ -9,10 +9,12 @@
 #include "GameCoreHeader.h"
 #include "HostPlayer.h"
 
+#include <sg/_Util/DescLoaderMgr.h>
 #include <sg/_Struct/SteinsGate_Char.h>
+#include <sg/_Struct/SteinsGate_AttackData.h>
+
 #include <sgcl/_Layer/Layer_Map.h>
 #include <sgcl/Define_Action.h>
-#include <sg/_Struct/SteinsGate_AttackData.h>
 #include <sgcl/CharacterListener.h>
 #include <sgcl/Inven.h>
 

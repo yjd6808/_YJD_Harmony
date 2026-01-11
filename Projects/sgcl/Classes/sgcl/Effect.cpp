@@ -12,7 +12,7 @@
 #include <sgcl/ActorSprite.h>
 #include <sg/_Util/DescLoaderMgr.h>
 #include <sgcl/HostPlayer.h>
-#include <sgcl/Global.h>
+#include <sgcl/_Core/AppConfig_Props.h>
 
 
 USING_NS_JC;
@@ -70,7 +70,7 @@ void Effect::update(float _delta)
 {
 	Actor::update(_delta);
 
-	if (Global::Get()->DrawEffect)
+	if (g_cAppProps.GetBool(CONF_PROPS_DRAW_EFFECT))
 	{
 		pActorSprite_->GetParts().ForEach([](ActorSprite::PartData& part) { part.pPart_->setOpacity(255); });
 	}

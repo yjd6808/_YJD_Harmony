@@ -9,7 +9,7 @@
 #include "DescLoaderMgr.h"
 
 #include <sg/_Util/JsonUtil.h>
-#include <sg/Config.h>
+#include <sg/_Core/AppConfig.h>
 
 #include <filesystem>
 #include <fstream>
@@ -149,7 +149,7 @@ void DescLoaderAbstract::DirectoryTree::ConstructTreeRecursive(
 //////////////////////////////////////////////////////////////////////////////////////////
 void DescLoaderAbstract::DirectoryTree::LoadRecursive(DirectoryTree* _pTree, DirectoryTreeNode* _pNode)
 {
-	const jc::String& srcDataPath = CONF_GET_STRING(CONF_PROP_SRC_DATA_PATH);
+	const jc::String& srcDataPath = g_cAppConfig.srcDataPath_;
 	const jc::String directoryFullPath = jc::Path::Combine(srcDataPath, _pNode->directoryName_);
 
 	for (const std::filesystem::directory_entry& directoryEntry : std::filesystem::directory_iterator(directoryFullPath.Source()))
@@ -213,7 +213,7 @@ void DescLoaderAbstract::LoadDepedencies()
 //////////////////////////////////////////////////////////////////////////////////////////
 bool DescLoaderAbstract::LoadJson(OUT Json::Value& _root)
 {
-	const jc::String& srcDataPath = CONF_GET_STRING(CONF_PROP_SRC_DATA_PATH);
+	const jc::String& srcDataPath = g_cAppConfig.srcDataPath_;
 	jc::String configPath = jc::Path::Combine(srcDataPath, GetConfigFileName());
 
 	if (jc::Path::Extension(configPath) != ".json")
@@ -241,7 +241,7 @@ bool DescLoaderAbstract::LoadJson(OUT Json::Value& _root)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool DescLoaderAbstract::LoadDirectory(OUT DirectoryTree& _directoryTree)
 {
-	const jc::String& srcDataPath = CONF_GET_STRING(CONF_PROP_SRC_DATA_PATH);
+	const jc::String& srcDataPath = g_cAppConfig.srcDataPath_;
 	const jc::String directoryPath = jc::Path::Combine(srcDataPath, GetConfigFileName());
 
 	if (!jc::Directory::Exist(directoryPath))

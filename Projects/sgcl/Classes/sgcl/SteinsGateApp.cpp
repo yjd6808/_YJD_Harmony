@@ -7,9 +7,9 @@
 #include <sg/_Struct/SteinsGate_Client.h>
 
 #include <sg/LogSpecifier.h>
-#include <sg/AudioPlayer.h>
+#include <sg/_Core/AudioPlayer.h>
 #include <sg/_Sga/SgaElementInitializer.h>
-#include <sg/Config.h>
+#include <sg/_Core/AppConfig.h>
 
 #include <sgcl/Win32Helper.h>
 #include <sgcl/_Scene/Scene_World.h>
@@ -30,6 +30,7 @@ SteinsGateApp::SteinsGateApp(int _argc, char** _argv)
 , argc_(_argc)
 , argv_(_argv)
 {
+	g_cApp; // 초기화
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -42,10 +43,15 @@ SteinsGateApp::~SteinsGateApp()
 	// 일일히 찾아서 해제해줄 수가 없다.
 	// 따라서 WorldScene 삭제시 해제해주도록 하자.
 	if (pWndProcHook_ != nullptr)
+	{
 		UnhookWindowsHookEx(pWndProcHook_);
+		pWndProcHook_ = nullptr;
+	}
 
 	SgaElementInitializer::Finalize();
 	AudioPlayer::Finalize();
+
+	__sSteinsGateApp = nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -68,14 +74,14 @@ cc::rect SteinsGateApp::GetDesignResolutionRect() const
 //////////////////////////////////////////////////////////////////////////////////////////
 cc::size SteinsGateApp::GetUIResolutionSize() const
 {
-	ClientInfo* pInfo = g_cConfigRuntime.GetClientInfo();
+	ClientInfo* pInfo = g_cAppConfig.GetClientInfo();
 	return cc::size{ pInfo->uiResolutionWidth_, pInfo->uiResolutionHeight_ };
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 cc::vec2 SteinsGateApp::GetUIScaleFactor() const
 {
-	ClientInfo* pInfo = g_cConfigRuntime.GetClientInfo();
+	ClientInfo* pInfo = g_cAppConfig.GetClientInfo();
 	cc::size designSize = pView_->getDesignResolutionSize();
 	return cc::vec2{ designSize.width / pInfo->uiResolutionWidth_, designSize.height / pInfo->uiResolutionHeight_ };
 }
@@ -83,14 +89,14 @@ cc::vec2 SteinsGateApp::GetUIScaleFactor() const
 //////////////////////////////////////////////////////////////////////////////////////////
 float SteinsGateApp::GetUIScaleXFactor() const
 {
-	ClientInfo* pInfo = g_cConfigRuntime.GetClientInfo();
+	ClientInfo* pInfo = g_cAppConfig.GetClientInfo();
 	return pView_->getDesignResolutionSize().width / pInfo->uiResolutionWidth_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 float SteinsGateApp::GetUIScaleYFactor() const
 {
-	ClientInfo* pInfo = g_cConfigRuntime.GetClientInfo();
+	ClientInfo* pInfo = g_cAppConfig.GetClientInfo();
 	return pView_->getDesignResolutionSize().height / pInfo->uiResolutionHeight_;
 }
 
@@ -141,7 +147,7 @@ bool SteinsGateApp::applicationDidFinishLaunching()
 //////////////////////////////////////////////////////////////////////////////////////////
 void SteinsGateApp::CreateOpenGLWindow()
 {
-	ClientInfo* pClientInfo = g_cConfigRuntime.GetClientInfo();
+	ClientInfo* pClientInfo = g_cAppConfig.GetClientInfo();
 	jc_assert(pClientInfo);
 
 	auto pDirector = Director::getInstance();

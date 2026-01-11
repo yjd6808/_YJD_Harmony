@@ -19,12 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Sources\sg\AudioPlayer.cpp" />
     <ClCompile Include="..\Sources\sg\BaseContents.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\CLIListener.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -44,7 +39,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\sg\CLIThread.cpp" />
     <ClCompile Include="..\Sources\sg\ListenerClientBase.cpp" />
     <ClCompile Include="..\Sources\sg\ListenerHelperBase.cpp" />
     <ClCompile Include="..\Sources\sg\ListenerServerBase.cpp" />
@@ -52,12 +46,13 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\sg\Config.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Sources\sg\_API\sgapiBase.cpp" />
     <ClCompile Include="..\Sources\sg\_API\sgapi_Util.cpp" />
+    <ClCompile Include="..\Sources\sg\_Core\AudioPlayer.cpp" />
+    <ClCompile Include="..\Sources\sg\_Core\CLIFunctions.cpp" />
+    <ClCompile Include="..\Sources\sg\_Core\CLIListener.cpp" />
+    <ClCompile Include="..\Sources\sg\_Core\CLIThread.cpp" />
+    <ClCompile Include="..\Sources\sg\_Core\AppConfig.cpp" />
     <ClCompile Include="..\Sources\sg\_Core\VirtualMachine.cpp" />
     <ClCompile Include="..\Sources\sg\_Object\_Character\StackingBuffer.cpp" />
     <ClCompile Include="..\Sources\sg\_Object\_Character\StackingBufferMgr.cpp" />
@@ -118,7 +113,6 @@
     <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Server.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\sg\AudioPlayer.h" />
     <ClInclude Include="..\Sources\sg\BaseContents.h">
       <SubType>
       </SubType>
@@ -133,10 +127,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Cmd_MESSAGE.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\CLIListener.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -169,7 +159,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sg\CLIThread.h" />
+    <ClInclude Include="..\Sources\sg\DLLExport.h" />
     <ClInclude Include="..\Sources\sg\ListenerClientBase.h" />
     <ClInclude Include="..\Sources\sg\ListenerServerBase.h" />
     <ClInclude Include="..\Sources\sg\ListenerHelperBase.h" />
@@ -185,10 +175,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sg\Config.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\sg\Const.h" />
     <ClInclude Include="..\Sources\sg\Cmd_AUTHENTICATION.h">
       <SubType>
@@ -196,6 +182,11 @@
     </ClInclude>
     <ClInclude Include="..\Sources\sg\_API\sgapiBase.h" />
     <ClInclude Include="..\Sources\sg\_API\sgapi_Util.h" />
+    <ClInclude Include="..\Sources\sg\_Core\AudioPlayer.h" />
+    <ClInclude Include="..\Sources\sg\_Core\CLIFunctions_Linker.h" />
+    <ClInclude Include="..\Sources\sg\_Core\CLIListener.h" />
+    <ClInclude Include="..\Sources\sg\_Core\CLIThread.h" />
+    <ClInclude Include="..\Sources\sg\_Core\AppConfig.h" />
     <ClInclude Include="..\Sources\sg\_Core\VirtualMachine.h" />
     <ClInclude Include="..\Sources\sg\_Object\_Character\StackingBuffer.h" />
     <ClInclude Include="..\Sources\sg\_Object\_Character\StackingBufferMgr.h" />

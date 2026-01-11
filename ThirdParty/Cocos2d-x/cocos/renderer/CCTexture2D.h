@@ -418,6 +418,11 @@ public:
 public:
     /** Get pixel info map, the key-value pairs is PixelFormat and PixelFormatInfo.*/
     static const PixelFormatInfoMap& getPixelFormatInfoMap();
+
+	// 슈타인즈게이트용으로 추가함.
+	static unsigned char cc_2x2_white_image[16];
+
+	static Texture2D* create2x2DefaultTexture();
     
 private:
     /**

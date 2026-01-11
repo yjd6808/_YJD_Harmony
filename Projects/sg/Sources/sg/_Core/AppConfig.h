@@ -12,30 +12,24 @@
 #include <jc/Container/Properties.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////
-struct ConfigArgs final : jc::SingletonPointer<ConfigArgs>
-{
-private:
-	friend class TSingleton;
-	ConfigArgs();
-	~ConfigArgs();
-
-public:
-	void Load();
-	jc::Properties<>& Props() { return properties_; }
-private:
-	jc::Properties<> properties_;
-};
-
-//////////////////////////////////////////////////////////////////////////////////////////
 struct ClientInfo;
-struct ConfigRuntime : jc::SingletonPointer<ConfigRuntime>
+struct AppConfig : jc::SingletonPointer<AppConfig>
 {
-	ConfigRuntime();
-	virtual ~ConfigRuntime();
+	AppConfig();
+	virtual ~AppConfig();
 
-	void Load();
-	void Delete();
-	void Save();
+	// Command Arguments
+	jc::String assetPath_;
+	jc::String srcDataPath_;
+	jc::String resDataPath_;
+	jc::String resDataFontPath_;
+	jc::String resDataImagePath_;
+	jc::String resDataSoundPath_;
+
+	void ReadEnvArgs();
+	void LoadConfFile();
+	void DeleteConfFile();
+	void SaveConfiFile();
 
 	void ReadCore(Json::Value& _root);
 	void ReadClient(Json::Value& _clientRoot);
@@ -80,15 +74,16 @@ struct ConfigRuntime : jc::SingletonPointer<ConfigRuntime>
 	static constexpr char SHOW_CONSOLE_LOG_KEY[] = "show_console_log";
 	static constexpr char SHOW_CONSOLE_NET_LOG_KEY[] = "show_console_net_log";
 
+	jc::Properties<> props_;
 private:
 	// 테이블 크기를 크게 잡더라도 버킷 내부에서 확장이 발생할 수 있어서 락이 필요하지만 디버깅용으로만 쓰기땜에 락은 우선보류..
 	jc::HashSet<Cmd_t> recvCommandFilter_;
 	jc::HashSet<Cmd_t> sendCommandFilter_;
 	jc::NormalLock filterLock_;
-	jc::Properties<> properties_;
 	ClientInfo* pClientInfo_ = nullptr;
 };
 
-#define g_cConfigRuntime		(*ConfigRuntime::Get())
-#define g_cConfigArgs			(*ConfigArgs::Get())
+JC_DECL_SINGLETON_VAR(AppConfig)
+#define g_cAppConfig JC_DECL_SINGLETON_BODY(AppConfig)
+#define g_cAppProps		(g_cAppConfig.props_)
 

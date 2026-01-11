@@ -13,6 +13,7 @@
 
 #define SG_UI_CHANNELSELECT_MAX_CHANNEL_COUNT	10
 
+struct ChannelInfo;
 class UI_ChannelSelect : public UIRootGroup
 {
 public:

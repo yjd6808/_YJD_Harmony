@@ -101,7 +101,8 @@ public:
 	static bool IsNullOrEmpty(const char* str);
 	static int Copy(char* buffer, int bufferSize, const char* copy);
 	static int CopyUnsafe(char* buffer, const char* copy);
-	static bool IsEqual(const char* src, int srcLen, const char* dst, int dstLen);
+	static bool IsEqual(const char* src, const char* dst, bool _compareCase = true);
+	static bool IsEqual(const char* src, int srcLen, const char* dst, int dstLen, bool _compareCase = true);
 	static void Swap(String& src, String& dst);
 	static int Find(const char* source, int sourceLen, int startIdx, int endIdx, const char* str);
 	static int Find(const char* source, int sourceLen, int startIdx, int endIdx, const char* str, int strLen);
@@ -236,4 +237,6 @@ private:
 };
 
 NS_JC_END
+
+#define JC_FMT(...) jc::StringUtil::Format(__VA_ARGS__)
 

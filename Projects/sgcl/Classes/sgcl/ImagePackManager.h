@@ -20,6 +20,9 @@ public:
 	void LoadAllPackages();
 	void UnloadPackData(int _packIndex);
 
+	const jc::String& GetAvatarSgaName(int _charType, int _avatarType);
+	const jc::String& GetWeaponSgaName(int _weaponType);
+
 	ImagePack* GetPack(const jc::String& _packName);
 	ImagePack* GetPack(const char* _pPackName);
 	ImagePack* GetPackUnsafe(const jc::String& _packName);
@@ -58,6 +61,10 @@ private:
 	ImagePack* loadedPackages_[Const::Resource::MaxSgaFileCount]{};
 	ImagePack* avatarPacks_[CharType::Max][AvatarType::Max]{};
 	ImagePack* weaponPacks_[WeaponType::Max]{};
+
+	jc::String avatarPackName_[CharType::Max][AvatarType::Max];
+	jc::String weaponPackName_[WeaponType::Max];
+
 	CachedTextureCounter textureCounter_;
 	int loadedPackageCount_{};
 };

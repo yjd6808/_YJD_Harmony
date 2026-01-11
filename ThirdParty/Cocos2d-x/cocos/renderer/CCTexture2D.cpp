@@ -1440,6 +1440,22 @@ const Texture2D::PixelFormatInfoMap& Texture2D::getPixelFormatInfoMap()
     return _pixelFormatInfoTables;
 }
 
+unsigned char Texture2D::cc_2x2_white_image[16]
+{
+	// RGBA8888
+	0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF
+};
+
+Texture2D* Texture2D::create2x2DefaultTexture()
+{
+	Texture2D* pDefaultTexture = new Texture2D;
+	pDefaultTexture->initWithData(cc_2x2_white_image, sizeof(cc_2x2_white_image), Texture2D::PixelFormat::RGB888, 2, 2, { 2, 2 });
+	return pDefaultTexture;
+}
+
 void Texture2D::addSpriteFrameCapInset(SpriteFrame* spritframe, const Rect& capInsets)
 {
     if(nullptr == _ninePatchInfo)

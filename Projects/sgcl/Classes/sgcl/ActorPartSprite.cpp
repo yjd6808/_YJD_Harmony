@@ -3,7 +3,7 @@
 
 #include <sgcl/ActorSprite.h>
 #include <sgcl/ImagePackManager.h>
-#include <sgcl/Global.h>
+#include <sgcl/_Core/AppConfig_Props.h>
 
 #include "Actor.h"
 
@@ -17,8 +17,8 @@ ActorPartSprite* ActorPartSprite::Create(
 	cc::Node* _pCanvas,
 	cc::DrawNode* _pBoundingBox,
 	const ActorPartSpriteData& _partData,
-	jc::Vector<AnimationInfo>* _pAnimations
-)
+	jc::Vector<AnimationInfo>* _pAnimations)
+//////////////////////////////////////////////////////////////////////////////////////////
 {
 	ActorPartSprite* pPartSprite = dbg_new ActorPartSprite(_frameCount, _pActor, _pCanvas, _pBoundingBox, _partData,
 	                                                       _pAnimations);
@@ -90,7 +90,7 @@ void ActorPartSprite::InitFrames()
 
 		if (frames_[i] == nullptr)
 		{
-			frames_[i] = Global::Get()->getDefaultFrameTexture();
+			frames_[i] = SpriteFrameTexture::GetDefault();
 		}
 
 		frames_[i]->retain();
@@ -125,7 +125,7 @@ void ActorPartSprite::update(float _dt)
 //////////////////////////////////////////////////////////////////////////////////////////
 void ActorPartSprite::UpdateBoundingBoxVisibleState()
 {
-	if (Global::Get()->DrawBodyBoundingBox)
+	if (g_cAppProps.GetBool(CONF_PROPS_DRAW_BODY_BOUNDING_BOX))
 	{
 		boundingBox_->setOpacity(255);
 	}

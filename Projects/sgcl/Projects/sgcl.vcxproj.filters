@@ -520,6 +520,9 @@
     <ClCompile Include="..\Classes\sgcl\_Layer\Layer_Grid.cpp">
       <Filter>_Layer</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Core\CLIFunctions.cpp">
+      <Filter>_Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\sgcl\ImagePackManager.h">
@@ -961,6 +964,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\_Layer\Layer_Grid.h">
       <Filter>_Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Core\AppConfig_Props.h">
+      <Filter>_Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

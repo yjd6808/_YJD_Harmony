@@ -202,10 +202,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Global.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\GunnerGunShot.cpp" />
     <ClCompile Include="..\Classes\sgcl\GunnerIdle.cpp">
       <SubType>
@@ -372,6 +368,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\_API\sgapiClient.cpp" />
+    <ClCompile Include="..\Classes\sgcl\_Core\CLIFunctions.cpp" />
     <ClCompile Include="..\Classes\sgcl\_Core\Color.cpp" />
     <ClCompile Include="..\Classes\sgcl\_Layer\Layer_Grid.cpp" />
     <ClCompile Include="..\Classes\sgcl\_Layer\Layer_Map.cpp" />
@@ -772,6 +769,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\_API\sgapiClient.h" />
+    <ClInclude Include="..\Classes\sgcl\_Core\AppConfig_Props.h" />
     <ClInclude Include="..\Classes\sgcl\_Core\Color.h" />
     <ClInclude Include="..\Classes\sgcl\_Layer\Layer_Grid.h" />
     <ClInclude Include="..\Classes\sgcl\_Layer\Layer_Map.h" />

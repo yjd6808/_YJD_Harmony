@@ -14,17 +14,17 @@ NS_JC_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 LoggerAbstract::LoggerAbstract(LoggerOption* _pOption)
-	: m_bAutoFlush(false)
-	, m_bUseLock(true)
-	, m_bOptionOwner(false)
-	, m_pOption(_pOption) // yyyy-MM-dd
-	, m_szDateTimeFormat("HH:mm:ss")
-	, m_szLevelText{
-		"Info  ",
-		"Warn  ",
-		"Error ",
-		"Debug ",
-		"Normal" }
+: m_bAutoFlush(false)
+, m_bUseLock(true)
+, m_bOptionOwner(false)
+, m_pOption(_pOption) // yyyy-MM-dd
+, m_szDateTimeFormat("HH:mm:ss")
+, m_szLevelText{
+	"Info  ",
+	"Warn  ",
+	"Error ",
+	"Debug ",
+	"Normal" }
 {
 }
 
@@ -196,6 +196,23 @@ void LoggerAbstract::SetEnableLog(Level _level, bool _enabled)
 void LoggerAbstract::SetEnablePlainLog(bool _enabled)
 {
 	m_pOption->EnablePlainLog = _enabled;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+LoggerAbstract::Level LoggerAbstract::ConvertLogLevel(const jc::String& _logLevelString)
+{
+	return ConvertLogLevel(_logLevelString.SafeSource());
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+LoggerAbstract::Level LoggerAbstract::ConvertLogLevel(const char* _logLevelString)
+{
+	if (StringUtil::IsEqual(_logLevelString, "debug")) return LoggerAbstract::eDebug;
+	if (StringUtil::IsEqual(_logLevelString, "warn")) return LoggerAbstract::eWarn;
+	if (StringUtil::IsEqual(_logLevelString, "error")) return LoggerAbstract::eError;
+	if (StringUtil::IsEqual(_logLevelString, "info")) return LoggerAbstract::eInfo;
+	if (StringUtil::IsEqual(_logLevelString, "normal")) return LoggerAbstract::eInfo;
+	return LoggerAbstract::eMax;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

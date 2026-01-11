@@ -21,7 +21,7 @@ struct Property : PropertyBase, ObjectPool<Property<T>>
 	static_assert(PropertyType::CAN_CONSTRUCT[TYPE], "... T is not constructable type, so cannot use this property");
 
 	Property()
-		: value_(0)
+	: value_(0)
 	{
 	}
 

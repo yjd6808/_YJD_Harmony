@@ -13,14 +13,14 @@
 #include <jc/Threading/ThreadPool.h>
 #include <jc/Threading/Scheduler.h>
 
-#include <sg/CLIThread.h>
-#include <sg/CLIListener.h>
+#include <sg/_Core/CLIThread.h>
+#include <sg/_Core/CLIListener.h>
 
 #include <sg/_Struct/SteinsGate_Char.h>
 #include <sg/_Struct/SteinsGate_Server.h>
 
 #include <sg/_Util/DescLoaderMgr.h>
-#include <sg/Config.h>
+#include <sg/_Core/AppConfig.h>
 
 #include <sg/_Core/VirtualMachine.h>
 
@@ -38,8 +38,8 @@ void InitializeCommonCore()
 	DefaultParserType = PacketParser::Command;
 
 	// 설정 
-	g_cConfigArgs.Load();
-	g_cConfigRuntime.Load();
+	g_cAppConfig.ReadEnvArgs();
+	g_cAppConfig.LoadConfFile();
 
 	g_cVM.Init();
 
@@ -61,7 +61,7 @@ void FinalizeCommonCore()
 {
 	g_cVM.Free();
 
-	g_cConfigRuntime.Free();
-	g_cConfigArgs.Free();
+	g_cAppConfig.SaveConfiFile();
+	g_cAppConfig.Free();
 }
 

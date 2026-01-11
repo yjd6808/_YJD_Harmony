@@ -71,3 +71,6 @@ private:
 	HHOOK pWndProcHook_;
 	WNDPROC pPrevWndProc_;
 };
+
+inline SteinsGateApp* __sSteinsGateApp;
+#define g_cApp (*(__sSteinsGateApp ? __sSteinsGateApp : (__sSteinsGateApp = static_cast<SteinsGateApp*>(SteinsGateApp::getInstance()))))

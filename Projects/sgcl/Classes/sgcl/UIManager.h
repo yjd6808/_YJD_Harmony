@@ -44,6 +44,8 @@ class UI_Popup;
 class UI_Test;
 class UI_ChannelSelect;
 
+class PopupManager;
+
 //////////////////////////////////////////////////////////////////////////////////////////
 class UIManager final : public jc::SingletonPointer<UIManager>
 {
@@ -55,7 +57,7 @@ private:
 public:
 	void Init();
 	void InitPublic();
-	void RegisterMasterGroup(UIRootGroup* _pGroup);
+	void RegisterRootGroup(UIRootGroup* _pGroup);
 	void RegisterUITexture(SgaResourceIndex _index);
 	void UnloadAll();
 	void OnUpdate(float _dt);
@@ -113,7 +115,11 @@ private:
 
 		return (TElement*)pElement;
 	}
+	
+	// 매니저들
+	PopupManager&		popup_;
 
+	// 루트 그룹들
 	UI_Inventory*		pInventory_;
 	UI_Login*			pLogin_;
 	UI_Test*			pTest_;

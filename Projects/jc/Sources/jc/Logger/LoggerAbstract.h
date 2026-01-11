@@ -68,6 +68,9 @@ public:
 	virtual LoggerType GetType() const = 0;
 	LoggerOption* GetLoggerOption() { return m_pOption; }
 
+	static Level ConvertLogLevel(const String& _logLevelString);
+	static Level ConvertLogLevel(const char* _logLevelString);
+
 protected:
 	bool m_bAutoFlush;
 	bool m_bUseLock;

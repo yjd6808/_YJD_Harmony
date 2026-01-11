@@ -7,13 +7,14 @@
 
 
 #include "Core.h"
-#include "GameCoreHeader.h"
 #include "R_AUTHENTICATION.h"
 
 #include <sg/Cmd_AUTHENTICATION.h>
 
 #include <sgcl/Define_Popup.h>
 #include <sgcl/S_AUTH.h>
+#include <sgcl/Contents.h>
+#include <sgcl/NetCore.h>
 #include <sgcl/AuthenticationComponent.h>
 
 #include <sgcl/Callback_POPUP_TIMEOUT.h>
@@ -37,7 +38,7 @@ void R_AUTHENTICATION::RECV_AUC_LoginAck(Session* _pSession, ICommand* _pCommand
 			std::string msg1 = StringUtils::format(SG_LOCAL_RAW("CONNECT_SERVER"), ServerType::Name[ServerType::Lobby]);
 			sg::Contents.PopupManager->ShowNone(msg1, DEF_POPUP_CONNECT_LOBBY, false, Const::Timeout::LobbyConnection);
 
-			if (!sg::Net->ConnectLobbyTcp())
+			if (!g_cNet.ConnectLobbyTcp())
 			{
 				std::string msg2 = StringUtils::format(SG_LOCAL_RAW("CONNECT_LOBBY_FAILED_WITH_CODE"), Winsock::LastError());
 				sg::Contents.PopupManager->CloseByTag(DEF_POPUP_CONNECT_LOBBY);
@@ -45,10 +46,9 @@ void R_AUTHENTICATION::RECV_AUC_LoginAck(Session* _pSession, ICommand* _pCommand
 				break;
 			}
 
-			AuthenticationComponent* pAuthenticationComponent = sg::Net->GetAuthenticationComponent();
-			pAuthenticationComponent->SetState(AuthenticationState::LobbyWait);
-			pAuthenticationComponent->SetSerial(pLoginAck->serial_);
-			pAuthenticationComponent->SetLastServer(pLoginAck->lastServer_);
+			g_cNet.authentication_.SetState(AuthenticationState::LobbyWait);
+			g_cNet.authentication_.SetSerial(pLoginAck->serial_);
+			g_cNet.authentication_.SetLastServer(pLoginAck->lastServer_);
 			break;
 		}
 	case LoginResult::RegisterSuccess:

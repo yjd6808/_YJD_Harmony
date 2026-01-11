@@ -12,13 +12,11 @@
 #include <sgcl/Inven.h>
 #include <sgcl/ActorListenerManager.h>
 #include <sgcl/ActorManager.h>
-#include <sgcl/Global.h>
 #include <sgcl/PopupManager.h>
 #include <sgcl/TimeManager.h>
 
 struct Contents
 {
-	::Global* Global;
 	::HostPlayer* Player;
 	::Inven* Inven;
 	::ActorListenerManager* ActorListenerManager;

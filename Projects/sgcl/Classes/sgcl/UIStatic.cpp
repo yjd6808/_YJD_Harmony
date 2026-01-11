@@ -83,7 +83,7 @@ void UIStatic::Load()
 	if (isLoaded_)
 		return;
 
-	pDebugTexture_ = sg::Contents.Global->getDefaultFrameTexture();
+	pDebugTexture_ = SpriteFrameTexture::GetDefault();
 	pDebugTexture_->retain();
 
 	const Size spriteSize = pDebugTexture_->GetSize();
@@ -134,7 +134,7 @@ void UIStatic::SetUISize(const cc::size& _contentSize)
 	if (!isLoaded_)
 		return;
 
-	pDebugTexture_ = sg::Contents.Global->getDefaultFrameTexture();
+	pDebugTexture_ = SpriteFrameTexture::GetDefault();
 
 	const Size spriteSize = pDebugTexture_->GetSize();
 	const float scaleX = uiSize_.width / spriteSize.width;

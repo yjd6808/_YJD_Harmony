@@ -7,9 +7,9 @@
 
 
 #include "Core.h"
-#include "GameCoreHeader.h"
 #include "CommandSynchronizer.h"
 
+#include <sgcl/NetCore.h>
 
 USING_NS_JC;
 USING_NS_CC;
@@ -95,7 +95,7 @@ void CommandSynchronizer::ProcessCommands()
 		while (!pQueue->IsEmpty())
 		{
 			CommandHolder* pHolder = pQueue->Front();
-			sg::Net->RunCommand(pHolder->pSender_, pHolder->pCommand_);
+			g_cNet.RunCommand(pHolder->pSender_, pHolder->pCommand_);
 			pQueue->Dequeue();
 			delete pHolder;
 		}
@@ -106,7 +106,7 @@ void CommandSynchronizer::ProcessCommands()
 void CommandSynchronizer::FilterUnusedCommandQueue()
 {
 	// 필터완료 전까지는 IOCP쓰레드가 아닌 쓰레드도 생성될 수 있으므로. 완료전까지 생성된 쓸모없는 패킷큐는 걸러줘야함
-	jc::Vector<Int32U> iocpThreadIdList = sg::Net->GetGroup()->GetIocp()->GetWorkThreadIdList();
+	jc::Vector<Int32U> iocpThreadIdList = g_cNet.GetGroup()->GetIocp()->GetWorkThreadIdList();
 	auto fnContained = [&iocpThreadIdList](const IOCPThreadId$CommandQueuePair& pair)
 	{
 		return iocpThreadIdList.Exist(pair.key_);

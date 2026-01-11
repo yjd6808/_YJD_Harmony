@@ -7,12 +7,15 @@
 
 #include "Core.h"
 #include "GameCore.h"
-#include "GameCoreHeader.h"
 
 #include <sg/_Util/DescLoaderMgr.h>
 #include <sg/_Core/VirtualMachine.h>
+#include <sg/_Core/AppConfig.h>
 
 #include <sgcl/_API/sgapiClient.h>
+#include <sgcl/NetCore.h>
+#include <sgcl/Contents.h>
+
 #include <sgcl/ImagePackManager.h>
 #include <sgcl/FontManager.h>
 
@@ -44,38 +47,15 @@
 // ===========================================================
 
 NS_SG_BEGIN
-::SteinsGateApp* App;
 ::Contents Contents;
-::NetCore* Net;
 NS_SG_END
-
-//////////////////////////////////////////////////////////////////////////////////////////
-bool CLI_Help(int _argc, jc::String* _pArgv)
-{
-	jc::String helpText{ 1024 };
-	helpText += " - exit: 애플리케이션을 종료합니다.\n";
-	jc::Console::WriteLine(helpText.Source());
-	return true;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-bool CLI_Exit(int _argc, jc::String* _pArgv)
-{
-	cocos2d::Director::getInstance()->end();
-	return true;
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void InitializeClientCore()
 {
-	sg::App = (SteinsGateApp*)cocos2d::Application::getInstance();
-	sg::Net = NetCore::Get();
-
+	g_cNet.Initialize();
 	g_cImagePackMgr.LoadAllPackages();
 	g_cFontMgr.Init();
-	g_cVM.AddCLICallback("help", CLI_Help);
-	g_cVM.AddCLICallback("exit", CLI_Exit);
-	Global::Get()->init();
 
 	g_cDescMgr.AddLoader(dbg_new EffectInfoLoader());
 	g_cDescMgr.AddLoader(dbg_new MapInfoLoader());
@@ -103,19 +83,16 @@ void InitializeClientCore()
 	g_cDescMgr.LoadAll();
 	
 	sg::CharCommon = g_cDescMgr.GetCharCommonInfo(1);
-
-	if (sg::Net)
-		sg::Net->Initialize();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void FinalizeClientCore()
 {
-	JC_DELETE_SINGLETON_SAFE(sg::Net);
-
+	g_cNet.Free();
 	g_cDescMgr.Free();
 	g_cFontMgr.Free();
 	g_cImagePackMgr.Free();
-
+	
 	sg::Contents.Finalize();
+	SpriteFrameTexture::FreeDefault();
 }

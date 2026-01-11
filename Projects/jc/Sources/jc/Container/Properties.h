@@ -89,10 +89,92 @@ public:
 
 		pProperty->Set(Forward<Vy>(_value));
 		return pProperty;
-		
 	}
 
+	template <typename Ky> void SetStrng(Ky&& _propertyKey, const String& _value) { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetStrng(Ky&& _propertyKey, String&& _value) { Set(Forward<Ky>(_propertyKey), Move(_value)); }
+	template <typename Ky> void SetStrng(Ky&& _propertyKey, const char* _value) { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetFloat(Ky&& _propertyKey, float _value) { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetDouble(Ky&& _propertyKey, double _value) { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetBool(Ky&& _propertyKey, bool _value) { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetU8(Ky&& _propertyKey, Int8U _value) { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetS8(Ky&& _propertyKey, Int8 _value) { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetU16(Ky&& _propertyKey, Int16U _value) { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetS16(Ky&& _propertyKey, Int16 _value) { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetU32(Ky&& _propertyKey, Int32U _value) { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetS32(Ky&& _propertyKey, Int32 _value)  { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetU64(Ky&& _propertyKey, Int64U _value) { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetS64(Ky&& _propertyKey, Int64 _value) { Set(Forward<Ky>(_propertyKey), _value); }
 
+#define __DEF_TRY_GETTER(method_name, type)														\
+	template <typename Ky> bool method_name(Ky&& _propertyKey, OUT type& _value) 				\
+	{ 																							\
+		PropertyBase* pProp = Get(Forward<Ky>(_propertyKey));									\
+		if (pProp == nullptr) return false;														\
+		if (pProp->GetType() != PropertyTypeGetter<NaturalType_t<type>>::Type)					\
+		{ jc_assert_msg(false, "property key type mismatched."); return false; }				\
+		_value = pProp->Ref<type>();															\
+		return true;																			\
+	}
+
+	__DEF_TRY_GETTER(GetString, String)
+	__DEF_TRY_GETTER(GetFloat, float)
+	__DEF_TRY_GETTER(GetDouble, double)
+	__DEF_TRY_GETTER(GetBool, bool)
+	__DEF_TRY_GETTER(GetU8, Int8U)
+	__DEF_TRY_GETTER(GetS8, Int8)
+	__DEF_TRY_GETTER(GetU16, Int16U)
+	__DEF_TRY_GETTER(GetS16, Int16)
+	__DEF_TRY_GETTER(GetU32, Int32U)
+	__DEF_TRY_GETTER(GetS32, Int32)
+	__DEF_TRY_GETTER(GetU64, Int64U)
+	__DEF_TRY_GETTER(GetS64, Int64)
+
+#define __DEF_GETTER(method_name, type)															\
+	template <typename Ky> type method_name(Ky&& _propertyKey) 									\
+	{ 																							\
+		PropertyBase* pProp = Get(Forward<Ky>(_propertyKey));									\
+		if (pProp == nullptr) { return type(); }												\
+		if (pProp->GetType() != PropertyTypeGetter<NaturalType_t<type>>::Type)					\
+		{ jc_assert_msg(false, "property key type mismatched."); return type(); }				\
+		return pProp->Ref<type>();																\
+	}
+
+	__DEF_GETTER(GetString, String)
+	__DEF_GETTER(GetFloat, float)
+	__DEF_GETTER(GetDouble, double)
+	__DEF_GETTER(GetBool, bool)
+	__DEF_GETTER(GetU8, Int8U)
+	__DEF_GETTER(GetS8, Int8)
+	__DEF_GETTER(GetU16, Int16U)
+	__DEF_GETTER(GetS16, Int16)
+	__DEF_GETTER(GetU32, Int32U)
+	__DEF_GETTER(GetS32, Int32)
+	__DEF_GETTER(GetU64, Int64U)
+	__DEF_GETTER(GetS64, Int64)
+
+	template <typename Ky> 
+	bool ToggleBool(Ky&& _propertyKey)
+	{
+		PropertyBase* pProp = Get(Forward<Ky>(_propertyKey));
+		if (pProp == nullptr) 
+		{ 
+			SetBool(Forward<Ky>(_propertyKey), true);
+			return false;  // 기존에 없었으므로 false 반환
+		}
+		if (pProp->GetType() != PropertyTypeGetter<NaturalType_t<bool>>::Type)
+		{
+			jc_assert_msg(false, "property key type mismatched."); 
+			return false; 
+		}
+		bool& v = pProp->Ref<bool>();
+		v = !v;
+		return true;
+	}
+
+	#undef __DEF_GETTER
+	#undef __DEF_TRY_GETTER
+	
 	template <typename Ky>
 	PropertyBase* Get(Ky&& _propertyKey) const
 	{

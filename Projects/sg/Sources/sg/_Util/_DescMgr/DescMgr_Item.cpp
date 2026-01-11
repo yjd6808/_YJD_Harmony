@@ -9,7 +9,7 @@
 #include "Core.h"
 #include "DescMgr_Item.h"
 
-#include <sg/Config.h>
+#include <sg/_Core/AppConfig.h>
 #include <sg/_Util/JsonUtil.h>
 
 
@@ -23,7 +23,7 @@ ItemInfoLoader::ItemInfoLoader()
 //////////////////////////////////////////////////////////////////////////////////////////
 bool ItemInfoLoader::Load()
 {
-	const jc::String& srcDataPath = CONF_GET_STRING(CONF_PROP_SRC_DATA_PATH);
+	const jc::String& srcDataPath = g_cAppConfig.srcDataPath_;
 	jc::String itemRootPath = jc::Path::Combine(srcDataPath, GetConfigFileName());
 
 	if (!jc::Directory::Exist(itemRootPath))

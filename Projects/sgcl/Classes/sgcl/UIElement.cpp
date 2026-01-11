@@ -6,14 +6,12 @@
  */
 
 #include "Core.h"
-#include "GameCoreHeader.h"
 #include "UIElement.h"
 
-
+#include <sgcl/SteinsGateApp.h>
 #include <sgcl/UIRootGroup.h>
 #include <sgcl/Define_UI.h>
-
-#include "UIManager.h"
+#include <sgcl/UIManager.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -117,7 +115,7 @@ void UIElement::RestoreState(State _state)
 //////////////////////////////////////////////////////////////////////////////////////////
 void UIElement::ApplyUIScaleFactor(OUT cc::size& _size)
 {
-	vec2 factor = sg::App->GetUIScaleFactor();
+	vec2 factor = g_cApp.GetUIScaleFactor();
 	_size.width *= factor.x;
 	_size.height *= factor.y;
 }
@@ -125,7 +123,7 @@ void UIElement::ApplyUIScaleFactor(OUT cc::size& _size)
 //////////////////////////////////////////////////////////////////////////////////////////
 void UIElement::ApplyUIScaleFactor(OUT cc::vec2& _vec2)
 {
-	vec2 factor = sg::App->GetUIScaleFactor();
+	vec2 factor = g_cApp.GetUIScaleFactor();
 	_vec2.x *= factor.x;
 	_vec2.y *= factor.y;
 }
@@ -134,13 +132,13 @@ void UIElement::ApplyUIScaleFactor(OUT cc::vec2& _vec2)
 //////////////////////////////////////////////////////////////////////////////////////////
 void UIElement::ApplyUIScaleFactorX(OUT float& _x)
 {
-	_x *= sg::App->GetUIScaleXFactor();
+	_x *= g_cApp.GetUIScaleXFactor();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void UIElement::ApplyUIScaleFactorY(OUT float& _y)
 {
-	_y *= sg::App->GetUIScaleYFactor();
+	_y *= g_cApp.GetUIScaleYFactor();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -438,7 +436,7 @@ cc::vec2 UIElement::GetRelativePosition()
 cc::rect UIElement::GetParentAbsoluteRect()
 {
 	return IsRootGroup() 
-		? sg::App->GetDesignResolutionRect()
+		? g_cApp.GetDesignResolutionRect()
 		: pParent_->GetWorldBoundingBox();
 }
 
@@ -446,7 +444,7 @@ cc::rect UIElement::GetParentAbsoluteRect()
 cc::rect UIElement::GetParentRect()
 {
 	return IsRootGroup()
-		? sg::App->GetDesignResolutionRect()
+		? g_cApp.GetDesignResolutionRect()
 		: cc::rect{ 0, 0, pParent_->uiSize_.width, pParent_->uiSize_.height };
 }
 
@@ -454,7 +452,7 @@ cc::rect UIElement::GetParentRect()
 cc::size UIElement::GetParentSize()
 {
 	return IsRootGroup() 
-	? sg::App->GetDesignResolutionSize()
+	? g_cApp.GetDesignResolutionSize()
 	: pParent_->uiSize_;
 }
 
