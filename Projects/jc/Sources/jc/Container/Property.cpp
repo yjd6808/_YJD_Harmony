@@ -25,4 +25,4 @@ Property<Double> Property<Double>::Default;
 Property<LDouble> Property<LDouble>::Default;
 Property<String> Property<String>::Default;
 
-NS_JC_END
+NS_END

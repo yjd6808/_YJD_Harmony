@@ -92,4 +92,4 @@ protected:
 using ThreadPtr = SharedPtr<Thread>;
 using ThreadWPtr = WeakPtr<Thread>;
 
-NS_JC_END;
+NS_END;

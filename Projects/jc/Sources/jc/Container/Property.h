@@ -59,4 +59,4 @@ struct Property : PropertyBase, ObjectPool<Property<T>>
 	static Property<T> Default;
 };
 
-NS_JC_END
+NS_END

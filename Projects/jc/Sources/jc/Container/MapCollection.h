@@ -201,4 +201,4 @@ public:
 template <typename TKey, typename TValue, typename TAllocator>
 MapCollection<TKey, TValue, TAllocator>::~MapCollection() noexcept {}
 
-NS_JC_END
+NS_END

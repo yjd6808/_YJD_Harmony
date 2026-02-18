@@ -18,10 +18,12 @@ public:
 	NetGroupMgr();
 	virtual ~NetGroupMgr();
 
-	virtual void Initialize() = 0;
+	virtual bool Initialize() = 0;
 	virtual void Finalize();
 
 	void SetName(const jc::String& _name);
+	void SetValidator(const jc::Predicate<NetGroupPtr>& _validator) { validator_ = _validator; }
+	void SetValidator(jc::Predicate<NetGroupPtr>&& _validator) { validator_ = std::move(_validator); }
 
 	void AddNetGroup(int _groupId, const NetGroupPtr& _pGroupPtr);
 	NetGroupPtr GetNetGroup(int _id);
@@ -30,8 +32,10 @@ public:
 
 protected:
 	jc::HashMap<int, NetGroupPtr> netGroupMap_;
+	jc::Predicate<NetGroupPtr> validator_;
+
 	bool finalized_;
 	jc::String name_;
 };
 
-NS_JNET_END
+NS_END

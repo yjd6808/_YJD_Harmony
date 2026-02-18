@@ -68,4 +68,4 @@ public:
 	static ConsoleLoggerOption Default;
 };
 
-NS_JC_END
+NS_END

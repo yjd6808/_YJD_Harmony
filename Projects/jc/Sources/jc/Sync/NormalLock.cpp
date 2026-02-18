@@ -66,4 +66,4 @@ bool NormalLock::IsLocked()
 	return ownedThreadId_ != -1;
 }
 
-NS_JC_END
+NS_END

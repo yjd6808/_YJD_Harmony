@@ -27,4 +27,4 @@ void InitializePropertyOperatorLDouble();
 void InitializePropertyOperatorString();
 void InitializePropertyOperatorUnary();
 
-NS_JC_END
+NS_END

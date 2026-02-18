@@ -13,7 +13,7 @@ NS_STD_BEGIN
 // STD 바인더 포워딩
 template <typename, typename, typename...>
 class _Binder;
-NS_STD_END
+NS_END
 
 NS_JC_BEGIN
 // 외부에 감추고자하는 구현
@@ -659,7 +659,7 @@ struct IsValidAllocator
 //	return result;
 //}
 
-NS_DETAIL_END
+NS_END
 
 
 template <typename Lhs, typename Rhs>
@@ -802,4 +802,4 @@ constexpr bool IsFunctor_v = detail::IsFunctor::VALUE<Fn>;
 template <typename Fn>
 constexpr bool IsCallable_v = detail::IsCallable<Fn>::VALUE;
 
-NS_JC_END
+NS_END

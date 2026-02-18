@@ -39,4 +39,4 @@ struct PropertyFactory : IPropertyFactory
 
 #pragma warning(pop)
 
-NS_JC_END
+NS_END

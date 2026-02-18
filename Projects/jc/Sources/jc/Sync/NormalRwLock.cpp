@@ -104,4 +104,4 @@ bool NormalRwLock::IsReadLocked()
 }
 
 
-NS_JC_END
+NS_END

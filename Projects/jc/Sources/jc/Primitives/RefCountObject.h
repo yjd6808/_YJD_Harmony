@@ -27,4 +27,4 @@ private:
     Atomic<int> m_iRef;
 };
 
-NS_JC_END
+NS_END

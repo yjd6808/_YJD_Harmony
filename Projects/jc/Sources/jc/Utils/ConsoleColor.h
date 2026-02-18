@@ -27,5 +27,5 @@ enum ConsoleColor
     White,
     Max
 };
-NS_JC_END
+NS_END
 

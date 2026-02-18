@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <sg/Namepsace.h>
+#include <sg/Namespace.h>
 
 NS_CONST_BEGIN
 namespace Server
@@ -19,4 +19,4 @@ namespace Server
 inline constexpr int MaxProcessId = 32;
 }
 
-NS_CONST_END
+NS_END

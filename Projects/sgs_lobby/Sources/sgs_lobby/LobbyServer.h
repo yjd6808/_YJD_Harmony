@@ -9,9 +9,9 @@
 #pragma once
 
 
-#include <sgs/CommonServer.h>
+#include <sgs/_Net/NetServer.h>
 
-class LobbyServer final : public CommonServer
+class LobbyServer final : public sg::NetServer
 {
 public:
 	LobbyServer(const jnet::IOCPPtr& _pIocp, const jc::MemoryPoolAbstractPtr& _pBufferAllocator);

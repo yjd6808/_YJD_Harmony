@@ -55,4 +55,4 @@ constexpr int BitIsSet32(int source, int target) {
 	return (source & target) == target;
 }
 
-NS_JC_END
+NS_END

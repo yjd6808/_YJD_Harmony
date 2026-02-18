@@ -25,7 +25,7 @@ extern ::LobbyNetMaster*   NetGroupMgr;
 extern ::LobbyNetGroup*    NetGroup;
 extern ::LobbyServer*      Server;
 extern ::LobbyContents     Contents;
-NS_SG_END
+NS_END
 
 void InitializeLobbyCore();
 void FinalizeLobbyCore();

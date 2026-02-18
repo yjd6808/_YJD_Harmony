@@ -102,4 +102,4 @@ constexpr bool IsComparator_v = true;
 //constexpr bool IsComparator_v = IsCallable_v<TComparator>;
 
 
-NS_JC_END
+NS_END

@@ -216,10 +216,10 @@ EnchantInfo* DescLoaderMgr::GetEnchantInfo(int _enchantCode)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ServerProcessInfoPackage* DescLoaderMgr::GetServerProcessInfoPackage()
+ServerProcessInfo* DescLoaderMgr::GetServerProcessInfo()
 {
-	constexpr auto CONFIG_TYPE = ConfigFileType::Server;
-	const auto pRet = dynamic_cast<ServerProcessInfoPackage*>(GetDataAny(CONFIG_TYPE));
+	constexpr auto CONFIG_TYPE = ConfigFileType::ServerInfo;
+	const auto pRet = dynamic_cast<ServerProcessInfo*>(GetDataAny(CONFIG_TYPE));
 	jc_assert_msg(pRet, "서버 인포 타입이 아닙니다.");
 	return pRet;
 }

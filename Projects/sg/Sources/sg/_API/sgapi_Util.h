@@ -8,4 +8,8 @@
 
 #pragma once
 
-bool sgapi_IsClient();
+SG_DLL bool			sgapi_IsClient();
+SG_DLL bool			sgapi_IsServer();
+SG_DLL bool			sgapi_IsInterServerClient();
+
+SG_DLL int			sgapi_GetServerProcessType();

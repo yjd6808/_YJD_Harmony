@@ -28,7 +28,6 @@ private:
 	jc::Scheduler*	 pScheduler_ = nullptr;
 };
 
-JC_DECL_SINGLETON_VAR(VirtualMachine)
 #define g_cVM JC_DECL_SINGLETON_BODY(VirtualMachine)
 #define g_cCLIListener (g_cVM.GetCLIListener())
 #define g_cThreadPool  (g_cVM.GetThreadPool())

@@ -97,4 +97,4 @@ bool operator==(std::nullptr_t, const CVoidWatcher& _rhs)
 
 
 
-NS_JC_END
+NS_END

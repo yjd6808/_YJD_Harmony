@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <jc/Container/Properties.h>
+#include <jc/Sync/SpinLock.h>
 
 #include <jnet/Socket.h>
 #include <jnet/IOCP/IOCP.h>
@@ -16,6 +18,8 @@ NS_JNET_BEGIN
 class JC_NOVTABLE Host
 {
 public:
+	using PropertyKeyType = int;
+
 	Host(const IOCPPtr& _pIocp)
 	: pIocp_(_pIocp)
 	, socket_(TransportProtocol::None, INVALID_SOCKET)
@@ -56,8 +60,9 @@ public:
 
 	virtual void Initialize() = 0;
 	virtual Type GetType() const = 0;
+	virtual const char* GetName() const { return TypeName(); } // 호스트 이름을 디폴트로 함.
 	virtual DetailType GetDetailType() const = 0;
-	virtual const char* TypeName() = 0;
+	virtual const char* TypeName() const = 0;
 
 	State GetState()
 	{
@@ -102,8 +107,11 @@ protected:
 	Socketv4 socket_;
 	jc::AtomicInt state_;
 	bool iocpConnected_;
+
+	jc::SpinLock propLock_;
+	jc::Properties<PropertyKeyType> props_;
 };
 
 using HostPtr = jc::SharedPtr<Host>;
 
-NS_JNET_END
+NS_END

@@ -125,4 +125,4 @@ protected:
 	friend class THashMap;
 };
 
-NS_JC_END
+NS_END

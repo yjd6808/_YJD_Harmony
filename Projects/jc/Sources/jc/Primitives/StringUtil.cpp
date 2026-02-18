@@ -371,6 +371,8 @@ template <> String StringUtil::ToString(Int16 value) { return std::to_string(val
 template <> String StringUtil::ToString(Int16U value) { return std::to_string(value); }
 template <> String StringUtil::ToString(Int32 value) { return std::to_string(value); }
 template <> String StringUtil::ToString(Int32U value) { return std::to_string(value); }
+template <> String StringUtil::ToString(const String& value) { return value; }
+template <> String StringUtil::ToString(String&& value) { return std::move(value); }
 
 
 /*
@@ -415,5 +417,5 @@ inline constexpr auto StringUtil::TrimFront(const char(&str)[Size], const char d
 
 */
 
-NS_JC_END
+NS_END
 

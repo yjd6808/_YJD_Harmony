@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sgs/CommonNetGroup.h>
+#include <sgs/_Net/NetGroup_Main.h>
 #include <sgs_auth/AuthServer.h>
 
 class AuthNetGroup final : public CommonNetGroup
@@ -20,9 +20,9 @@ public:
 	AuthServer* GetAuthTcp() const { return pAuthTcp_; }
 	jnet::ISessionContainer* GetSessionContainer(ServerType_t _type) override;
 	jnet::ISessionContainer* GetAuthSessionContainer() const { return pAuthSessionContainer_; }
-	CommonSession* GetSessionFromContainer(int _handle) override;
+	sg::NetSession* GetSessionFromContainer(int _handle) override;
 
-	CommonServer* GetMainTcp() const override { return pAuthTcp_; }
+	sg::NetServer* GetMainTcp() const override { return pAuthTcp_; }
 protected:
 	void InitializeBufferPool() override;
 	void InitializeIOCP() override;

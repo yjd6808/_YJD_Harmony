@@ -81,7 +81,7 @@ NS_JNET_BEGIN
 		return false;
 	}	
 
-	NS_DETAIL_END
+	NS_END
 
 /*=====================================================================================
 						Socket
@@ -759,4 +759,4 @@ int SocketOption::IsKeepAliveEnabled() const
 	return option != FALSE ? TRUE : FALSE;
 }
 
-NS_JNET_END
+NS_END

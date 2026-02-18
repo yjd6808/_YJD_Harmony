@@ -217,10 +217,10 @@ LoggerAbstract::Level LoggerAbstract::ConvertLogLevel(const char* _logLevelStrin
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 LoggerOption::LoggerOption()
-	: ShowLevel(true)
-	, ShowDateTime(true)
-	, ShowHeader(true)
-	, EnablePlainLog(true)
+: ShowLevel(true)
+, ShowDateTime(true)
+, ShowHeader(true)
+, EnablePlainLog(true)
 {
 	Arrays::Fill(EnableLog, true);
 }
@@ -288,4 +288,4 @@ String LoggerAbstract::CreateHeader(Level _level)
 	return header;
 }
 
-NS_JC_END
+NS_END

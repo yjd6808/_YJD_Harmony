@@ -15,7 +15,7 @@ USING_NS_JNET;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 CenterServer::CenterServer(const IOCPPtr& _pIocp, const MemoryPoolAbstractPtr& _pBufferAllocator)
-	: CommonServer(_pIocp, _pBufferAllocator)
+	: sg::NetServer(_pIocp, _pBufferAllocator)
 	, startupLaunching_(true)
 {
 }
@@ -105,6 +105,6 @@ bool CenterServer::IsConnected(int _serverId)
 //////////////////////////////////////////////////////////////////////////////////////////
 void CenterServer::OnUpdate(const TimeSpan& _elapsed)
 {
-	CommonServer::OnUpdate(_elapsed);
+	sg::NetServer::OnUpdate(_elapsed);
 }
 

@@ -1,0 +1,12 @@
+﻿/*
+ * 작성자: 윤정도
+ * 생성일: 2/15/2026 3:04:30 PM
+ * =====================
+ *
+ */
+
+
+#pragma once
+
+#include <jnet/Core.h>
+#include <sgcc/Core.h>

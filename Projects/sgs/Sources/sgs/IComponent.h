@@ -18,6 +18,8 @@ public:															\
 	int GetType() const override { return component_type; }		\
 	static int Type() { return component_type; }
 
+NS_SG_BEGIN
+
 struct JC_NOVTABLE IComponent : jc::RefCountObject
 {
 	~IComponent() override = default;
@@ -26,3 +28,5 @@ struct JC_NOVTABLE IComponent : jc::RefCountObject
 	virtual int GetType() const = 0;
 	void ReleaseAction() override { delete this; }
 };
+
+NS_END

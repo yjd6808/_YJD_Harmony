@@ -14,8 +14,8 @@
 NS_JC_BEGIN
 	NS_DETAIL_BEGIN
 	void __DebugAssertMsgImpl(const char* _expectStr, const char* _filePath, int _lineNum, const char* _functionName, const char* _fmt, ...);
-	NS_DETAIL_END
-NS_JC_END
+	NS_END
+NS_END
 
 
 #ifndef DebugAssert

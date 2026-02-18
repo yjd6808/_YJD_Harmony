@@ -25,7 +25,7 @@ NS_JNET_BEGIN
 class ServerNetGroupMgr : public NetGroupMgr
 {
 public:
-	void Initialize() override;
+	bool Initialize() override;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -101,4 +101,4 @@ private:
 };
 
 
-NS_JNET_END
+NS_END

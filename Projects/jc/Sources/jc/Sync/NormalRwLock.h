@@ -42,5 +42,5 @@ using NormalReadLockGuard = RwLockGuard<NormalRwLock, RwLockMode::Read>;
 extern template NormalWriteLockGuard;
 extern template NormalReadLockGuard;
 
-NS_JC_END
+NS_END
 

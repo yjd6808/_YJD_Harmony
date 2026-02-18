@@ -115,4 +115,4 @@ void ServerListener::OnStopped()
 	Console::WriteLine("[%s] 종료되었습니다.", name_.Source());
 }
 
-NS_JNET_END
+NS_END

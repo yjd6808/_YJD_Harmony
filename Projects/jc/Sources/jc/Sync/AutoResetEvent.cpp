@@ -24,6 +24,6 @@ AutoResetEvent& AutoResetEvent::operator=(AutoResetEvent&& _other) noexcept
 	return *this;
 }
 
-NS_JC_END
+NS_END
  
 

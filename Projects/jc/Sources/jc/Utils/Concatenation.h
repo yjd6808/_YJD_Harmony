@@ -60,4 +60,4 @@ static R CopyConcat(T&& _a1, TOther&&... _strings)
 	return ret;
 }
 
-NS_JC_END
+NS_END

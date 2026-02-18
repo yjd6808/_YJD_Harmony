@@ -26,4 +26,4 @@ bool CommandParser::RunCommand(Session* _pSession, ICommand* _pCommand) const
 	return true;
 }
 
-NS_JNET_END
+NS_END

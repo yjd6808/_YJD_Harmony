@@ -5,6 +5,7 @@
 	'$(MSBuildProjectName)' == 'jc_gbench' 				OR 
 	'$(MSBuildProjectName)' == 'jc_gtest' 				OR 
 	'$(MSBuildProjectName)' == 'jcr' 					OR 
+	'$(MSBuildProjectName)' == 'jnet'					OR
 	'$(MSBuildProjectName)' == 'jnet_gbench' 			OR 
 	'$(MSBuildProjectName)' == 'jnet_gtest' 			OR
 	'$(MSBuildProjectName)' == 'jnetr_common'			OR
@@ -12,6 +13,7 @@
 	'$(MSBuildProjectName)' == 'jnetr_tcpserver'		OR
 	'$(MSBuildProjectName)' == 'jnetr_udpclient_a'		OR
 	'$(MSBuildProjectName)' == 'jnetr_udpclient_b'		OR
+	'$(MSBuildProjectName)' == 'jdb'					OR
 	'$(MSBuildProjectName)' == 'sgcc'					OR
 	'$(MSBuildProjectName)' == 'sg'						OR
 	'$(MSBuildProjectName)' == 'sge'					OR
@@ -20,12 +22,30 @@
 	'$(MSBuildProjectName)' == 'sgs_auth'				OR
 	'$(MSBuildProjectName)' == 'sgs_center'				OR
 	'$(MSBuildProjectName)' == 'sgs_game'				OR
-	'$(MSBuildProjectName)' == 'sgs_lobby'
+	'$(MSBuildProjectName)' == 'sgs_lobby'				OR
+
+	'$(MSBuildProjectName)' == 'sgt'					OR
+	'$(MSBuildProjectName)' == 'sgtc'					OR
+	'$(MSBuildProjectName)' == 'sgts'
+			" />
+
+	<Import Project="$(MSBuildThisFileDirectory)Props/database.props" 
+			Condition="
+	'$(MSBuildProjectName)' == 'jdb'					OR
+	'$(MSBuildProjectName)' == 'sgs_auth'				OR
+	'$(MSBuildProjectName)' == 'sgs_game'
+			" />
+
+	<Import Project="$(MSBuildThisFileDirectory)Props/jdb.props" 
+			Condition="
+	'$(MSBuildProjectName)' == 'sgs_auth'				OR
+	'$(MSBuildProjectName)' == 'sgs_game'
 			" />
 
 
 	<Import Project="$(MSBuildThisFileDirectory)Props/harmony.props" 
 			Condition="
+	'$(MSBuildProjectName)' == 'jdb' 					OR 
 	'$(MSBuildProjectName)' == 'jnet_gbench' 			OR 
 	'$(MSBuildProjectName)' == 'jnet_gtest' 			OR
 	'$(MSBuildProjectName)' == 'jnetr_common'			OR
@@ -41,7 +61,11 @@
 	'$(MSBuildProjectName)' == 'sgs_auth'				OR
 	'$(MSBuildProjectName)' == 'sgs_center'				OR
 	'$(MSBuildProjectName)' == 'sgs_game'				OR
-	'$(MSBuildProjectName)' == 'sgs_lobby'
+	'$(MSBuildProjectName)' == 'sgs_lobby'				OR
+
+	'$(MSBuildProjectName)' == 'sgt'					OR
+	'$(MSBuildProjectName)' == 'sgtc'					OR
+	'$(MSBuildProjectName)' == 'sgts'
 			" />
 
 	<Import Project="$(MSBuildThisFileDirectory)Props/sgcc_cocos.props" 
@@ -61,7 +85,11 @@
 	'$(MSBuildProjectName)' == 'sgs_auth'				OR
 	'$(MSBuildProjectName)' == 'sgs_center'				OR
 	'$(MSBuildProjectName)' == 'sgs_game'				OR
-	'$(MSBuildProjectName)' == 'sgs_lobby'
+	'$(MSBuildProjectName)' == 'sgs_lobby'				OR
+
+	'$(MSBuildProjectName)' == 'sgt'					OR
+	'$(MSBuildProjectName)' == 'sgtc'					OR
+	'$(MSBuildProjectName)' == 'sgts'
 			" />
 
 
@@ -84,4 +112,10 @@
 	'$(MSBuildProjectName)' == 'sgs_game'				OR
 	'$(MSBuildProjectName)' == 'sgs_lobby'
           " />
+
+  	<Import Project="$(MSBuildThisFileDirectory)Props/sgt.props" 
+			Condition="
+	'$(MSBuildProjectName)' == 'sgtc'					OR
+	'$(MSBuildProjectName)' == 'sgts'
+			" />
 </Project>

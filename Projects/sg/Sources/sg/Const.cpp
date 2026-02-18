@@ -6,7 +6,7 @@
  */
 
 #include "Core.h"
-#include <sg/Namepsace.h>
+#include <sg/Namespace.h>
 
 NS_CONST_BEGIN
 // 소스파일
@@ -38,4 +38,4 @@ namespace Map
 }
 
 
-NS_CONST_END
+NS_END

@@ -193,7 +193,7 @@ template <Int32U> struct StaticString;
 
 	
 
-	NS_DETAIL_END
+	NS_END
 
 
 template <typename T>
@@ -262,4 +262,4 @@ template <typename T>
 constexpr bool IsDateTime_v = detail::IsDateTime<T>::VALUE;
 
 
-NS_JC_END
+NS_END

@@ -31,4 +31,4 @@ private:
 using SpinLockGuard = LockGuard<SpinLock>;
 extern template       LockGuard<SpinLock>;
 
-NS_JC_END
+NS_END

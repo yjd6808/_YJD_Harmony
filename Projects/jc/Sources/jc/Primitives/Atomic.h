@@ -262,5 +262,5 @@ using AtomicWideChar = Atomic<WideChar>;
 using AtomicIntPtr   = Atomic<IntPtr>;
 
 
-NS_JC_END
+NS_END
 

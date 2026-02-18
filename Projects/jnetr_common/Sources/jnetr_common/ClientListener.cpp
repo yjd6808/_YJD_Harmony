@@ -64,4 +64,4 @@ void ClientListener::OnConnectFailed(Session* _pSession, Int32U _errorMessage)
 	Console::WriteLine("[%s] 서버 접속에 실패했습니다 (오류코드: %u)", name_.Source(), _errorMessage);
 }
 
-NS_JNET_END
+NS_END

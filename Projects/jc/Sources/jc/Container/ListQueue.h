@@ -84,4 +84,4 @@ protected:
 	friend class TListQueueIterator;
 };
 
-NS_JC_END
+NS_END

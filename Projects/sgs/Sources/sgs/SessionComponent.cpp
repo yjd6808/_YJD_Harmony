@@ -6,11 +6,12 @@
  */
 
 #include "Core.h"
-#include "ServerCoreHeader.h"
 #include "SessionComponent.h"
 
+USING_NS_SG;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-SessionComponent::SessionComponent(CommonSession* _pSession)
+SessionComponent::SessionComponent(sg::NetSession* _pSession)
 : pSession_(_pSession)
 {
 }

@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <sg/Namepsace.h>
+#include <sg/Namespace.h>
 
 NS_CONST_BEGIN
 namespace FPS
@@ -34,4 +34,4 @@ constexpr float _17 = 17.0f / 60.0f;
 constexpr float _18 = 18.0f / 60.0f; // 0.3	
 }
 
-NS_CONST_END
+NS_END

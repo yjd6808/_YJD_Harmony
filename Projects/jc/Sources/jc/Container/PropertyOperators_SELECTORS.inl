@@ -94,4 +94,4 @@ void InitializePropertyOperatorSelectors()
 	CreateSelectors<PropertyType_t(0), PropertyType_t(0)>();
 }
 
-NS_JC_END
+NS_END

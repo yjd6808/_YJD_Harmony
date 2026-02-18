@@ -163,4 +163,4 @@ enum class ConsoleKey
     OemClear = 0xFE
 };
 
-NS_JC_END
+NS_END

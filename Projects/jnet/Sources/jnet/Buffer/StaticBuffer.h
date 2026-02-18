@@ -30,4 +30,4 @@ private:
 	char buffer_[BufferSize] = {};
 };
 
-NS_JNET_END
+NS_END

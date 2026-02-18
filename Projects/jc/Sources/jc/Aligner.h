@@ -14,7 +14,7 @@ struct alignas(64) Aligner : T {
 	using Type = T;
 };
 
-NS_JC_END
+NS_END
 
 /*
  *	struct A

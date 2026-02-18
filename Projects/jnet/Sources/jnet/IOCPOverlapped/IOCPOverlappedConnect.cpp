@@ -53,4 +53,4 @@ void IOCPOverlappedConnect::Process(BOOL _result, Int32UL _bytesTransferred, IOC
 	}
 }
 
-NS_JNET_END
+NS_END

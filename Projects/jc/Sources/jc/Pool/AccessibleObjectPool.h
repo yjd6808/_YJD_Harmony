@@ -229,4 +229,4 @@ private:
 	inline static LinkedList<T*> Pool;
 };
 
-NS_JC_END
+NS_END

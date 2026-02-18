@@ -25,7 +25,7 @@ enum CodePage
     UTF32BE = 12001
 };
 
-NS_JC_END
+NS_END
 
 
 

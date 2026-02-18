@@ -192,4 +192,4 @@ struct SendHelper : SendHelperBase
 #endif
 };
 
-NS_JNET_END
+NS_END

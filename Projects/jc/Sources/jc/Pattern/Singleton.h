@@ -148,13 +148,61 @@ public:
 		return ms_bDeleted;
 	}
 
+public:
+	inline static T* __sSingletonInst = nullptr;	// 직접 접근 금지. JC_DECL_SINGLETON_BODY 매크로에서만 사용
 private:
 	inline static T* ms_pInst;
 	inline static NormalLock ms_Lock;
 	inline static bool ms_bDeleted;
 };
 
-#define JC_DECL_SINGLETON_VAR(type_name) inline type_name* __s##type_name;
-#define JC_DECL_SINGLETON_BODY(type_name) (*(__s##type_name ? __s##type_name : (__s##type_name = type_name::Get())))
 
-NS_JC_END
+template <typename T>
+class SingletonSPointer : private NonCopyableNonMovable
+{
+protected:
+	using ReturnTy = jc::SharedPtr<T>;
+
+	SingletonSPointer() = default;
+	~SingletonSPointer() = default;
+
+public:
+	using TSingleton = SingletonSPointer<T>;
+
+	static T* Get()
+	{
+		// 최초 접근 시에만 생성
+		if (ms_pInst == nullptr)
+		{
+			ms_pInst = MakeShared<T>();
+		}
+
+		return ms_pInst.GetPtr();
+	}
+
+	static jc::SharedPtr<T> GetShared()
+	{
+		if (ms_pInst == nullptr)
+		{
+			ms_pInst = MakeShared<T>();
+		}
+
+		return ms_pInst;
+	}
+
+	static void Free()
+	{
+		ms_pInst = nullptr;
+	}
+
+public:
+	inline static T* __sSingletonInst = nullptr;
+private:
+	inline static SharedPtr<T> ms_pInst;
+};
+
+
+#define JC_DECL_SINGLETON_BODY(type_name) \
+	(*(type_name::__sSingletonInst ? type_name::__sSingletonInst : (type_name::__sSingletonInst = type_name::Get())))
+
+NS_END

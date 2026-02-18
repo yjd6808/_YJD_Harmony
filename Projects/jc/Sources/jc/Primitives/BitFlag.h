@@ -140,4 +140,4 @@ struct BitFlag
 	int Value;
 };
 
-NS_JC_END
+NS_END

@@ -30,7 +30,7 @@ constexpr bool IsDynamicCastable()
 	return IsBaseOf_v<T, U> || IsBaseOf_v<U, T>;
 }
 
-NS_DETAIL_END
+NS_END
 
 class CVoidOwner;
 class CVoidWatcher;
@@ -843,4 +843,4 @@ bool operator==(const CVoidWatcher& _lhs, std::nullptr_t);
 bool operator==(std::nullptr_t, const CVoidWatcher& _rhs);
 
 
-NS_JC_END
+NS_END

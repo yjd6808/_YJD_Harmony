@@ -23,4 +23,4 @@ public:
 	virtual bool Stop() = 0;
 };
 
-NS_JNET_END
+NS_END

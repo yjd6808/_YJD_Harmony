@@ -23,7 +23,7 @@ struct InterServerSendHelperBase : jnet::SendHelperBase
 	{
 		jnet::Session* sender_; // 패킷을 전송할 호스트
 		jnet::SendStrategy strategy_;
-		jnet::IPv4EndPoint destination_;
+		jnet::IPv4EndPoint destination_; // udp 전송시 목적지
 		int toId_;
 
 		Information();
@@ -41,15 +41,11 @@ struct InterServerSendHelperBase : jnet::SendHelperBase
 	static void InitSingleServerDestinations();
 
 	static void FlushSendBuffer();
-	static void SetInformation(jnet::Session* _pSender, jnet::SendStrategy _strategy,
-	                           int _toServerId = InvalidValue_v);
-	static void SetInformation(jnet::Session* _pSender, jnet::SendStrategy _strategy,
-	                           SingleServerType_t _toServerType);
+	static void SetInformation(jnet::Session* _pSender, jnet::SendStrategy _strategy, int _toServerId = InvalidValue_v);
+	static void SetInformation(jnet::Session* _pSender, jnet::SendStrategy _strategy, SingleServerType_t _toServerType);
 	static void SendEnd(jnet::IPacket* _packet);
-
 	static bool IsValidInformation(jnet::Session* _pSender, jnet::SendStrategy _strategy, int _toServerId);
-
-	static int GetSenderId();
+	static int GetSenderProcessType();
 
 	inline static thread_local Information SendInformation;
 	inline static /* readonly */ int SingleServerId[SingleServerType::Max];
@@ -91,7 +87,7 @@ struct InterServerSendHelper : InterServerSendHelperBase
 	{
 		if constexpr (IsInterServerRelayCommand_v<TCommand>)
 		{
-			_cmd.From = GetSenderId();
+			_cmd.From = GetSenderProcessType();
 
 			if (SendInformation.toId_ == InvalidValue_v)
 			{

@@ -6,7 +6,6 @@
  */
 
 #include "Core.h"
-#include "ServerCoreHeader.h"
 #include "S_TEST_IS_COMMON.h"
 
 #include <sgs/CmdRelay_TEST.h>

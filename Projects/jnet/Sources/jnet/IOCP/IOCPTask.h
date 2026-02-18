@@ -13,6 +13,7 @@
 #include <jc/Sync/SpinLock.h>
 
 #include <jnet/IOCP/IOCP.h>
+#include <jnet/IOCPOverlapped/IOCPOverlappedTask.h>
 
 #define IOCPTASK_FAILED	50000
 
@@ -73,19 +74,6 @@ using IOCPTaskAbstractPtr = jc::SharedPtr<IOCPTaskAbstract>;
 
 template <typename T>
 using FnTask = std::function<void(IOCPTaskResult<T>&)>;
-
-
-struct IOCPTaskState
-{
-	enum _
-	{
-		eInitialized,
-		eRunning,
-		eReady,
-		eFinished
-	};
-};
-
 
 class IOCPTaskAbstract : public jc::MakeSharedFromThis<IOCPTaskAbstract>
 {
@@ -223,6 +211,22 @@ public:
 		return pTask;
 	}
 
+	void Call()
+	{
+		if (fnTask_)
+		{
+			fnTask_(*result_);
+		}
+	}
+
+	void CallFinally()
+	{
+		if (fnFinally_)
+		{
+			fnFinally_(*result_);
+		}
+	}
+
 private:
 	static constexpr bool IsVoidTask = jc::IsVoidType_v<T>;
 
@@ -232,4 +236,4 @@ private:
 	template <typename> friend class IOCPOverlappedTask;
 };
 
-NS_JNET_END
+NS_END

@@ -31,7 +31,7 @@
 #include <sg/_Util/_DescMgr/DescMgr_ItemOpt.h>
 #include <sg/_Util/_DescMgr/DescMgr_Map.h>
 #include <sg/_Util/_DescMgr/DescMgr_MapPhysics.h>
-#include <sg/_Util/_DescMgr/DescMgr_Server.h>
+#include <sg/_Util/_DescMgr/DescMgr_ServerInfo.h>
 
 #include <sgcl/_Util/_DescMgr/DescMgr_Char.h>
 #include <sgcl/_Util/_DescMgr/DescMgr_Effect.h>
@@ -48,7 +48,7 @@
 
 NS_SG_BEGIN
 ::Contents Contents;
-NS_SG_END
+NS_END
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void InitializeClientCore()

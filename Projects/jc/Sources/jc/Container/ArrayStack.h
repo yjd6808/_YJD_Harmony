@@ -137,4 +137,4 @@ protected:
 	friend class ArrayStackIteratorAlias;
 };
 
-NS_JC_END
+NS_END

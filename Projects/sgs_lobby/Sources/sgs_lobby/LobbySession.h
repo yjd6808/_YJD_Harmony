@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <sgs/CommonSession.h>
+#include <sgs/NetSession.h>
 
 class AuthenticationComponent;
-class LobbySession : public CommonSession
+class LobbySession : public sg::NetSession
 {
 public:
 	LobbySession(

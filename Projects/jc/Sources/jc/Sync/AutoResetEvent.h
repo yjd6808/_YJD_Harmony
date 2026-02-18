@@ -26,4 +26,4 @@ public:
     AutoResetEvent& operator=(AutoResetEvent&& other) noexcept;
 };
 
-NS_JC_END 
+NS_END 

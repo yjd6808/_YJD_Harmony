@@ -22,4 +22,4 @@ private:
 	Session* receivedSession_;
 };
 
-NS_JNET_END
+NS_END

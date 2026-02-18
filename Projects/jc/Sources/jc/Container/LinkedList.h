@@ -174,4 +174,4 @@ protected:
     template <typename, typename, typename> friend class CHashMapIterator;
 };
 
-NS_JC_END
+NS_END

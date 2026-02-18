@@ -30,14 +30,14 @@ USING_NS_JNET;
 NS_SG_BEGIN
 CharCommonInfo* CharCommon;
 jnet::CommandNameDictionary CommandNameDictionary;
-NS_SG_END
+NS_END
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void InitializeCommonCore()
 {
 	DefaultParserType = PacketParser::Command;
 
-	// 설정 
+	// 설정
 	g_cAppConfig.ReadEnvArgs();
 	g_cAppConfig.LoadConfFile();
 

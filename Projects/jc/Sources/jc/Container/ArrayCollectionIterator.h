@@ -95,4 +95,4 @@ ArrayCollectionIterator<T, TAllocator>::~ArrayCollectionIterator() noexcept
 	// UNUSED
 }
 
-NS_JC_END
+NS_END

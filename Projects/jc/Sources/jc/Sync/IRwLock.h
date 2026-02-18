@@ -34,5 +34,5 @@ struct JC_NOVTABLE IRwLock
     virtual bool IsReadLocked() = 0;
 };
 
-NS_JC_END;
+NS_END;
 

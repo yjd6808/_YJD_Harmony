@@ -6,6 +6,8 @@
 
 #include <sg/LogSpecifier.h>
 
+#include <sgs/_API/sgapiServerBase.h>
+
 USING_NS_JC;
 USING_NS_JNET;
 
@@ -18,6 +20,7 @@ int main(int _argc, char** _argv)
     new char;
 
     Winsock::Initialize(2, 2);
+	sgapiBase::Init(dbg_new sgapiServerBase);
     Console::SetSize(800, 400);
     InitializeJCore(_argc, _argv);
     InitializeNetLogger(LOG_SPECIFIER_CENTER);

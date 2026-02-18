@@ -46,4 +46,4 @@ protected:
 
 using WorkerPtr = jc::SharedPtr<Worker>;
 
-NS_JNET_END
+NS_END

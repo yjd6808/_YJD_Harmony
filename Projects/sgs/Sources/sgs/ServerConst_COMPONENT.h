@@ -14,4 +14,4 @@ namespace Component
 constexpr int Authentication = 1;
 }
 
-NS_CONST_END
+NS_END

@@ -111,4 +111,4 @@ public:
 	char color_;
 };
 
-NS_JC_END
+NS_END

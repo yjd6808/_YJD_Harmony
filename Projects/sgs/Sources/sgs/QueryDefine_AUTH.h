@@ -8,10 +8,7 @@
 
 #pragma once
 
-#include <sgs/QueryDefine.h>
-
-NS_QRY_BEGIN
-
+#include <jdb/QueryDefine.h>
 
 // ==================================================================
 // SelectAccountInfoList
@@ -72,5 +69,3 @@ REGISTER_QRY_STRUCT
 QRY_INSERT_STATEMENT_BEGIN(InsertAccountInfo)
 static constexpr const char* Script = "insert into t_account (c_account_id, c_account_pass) values (?, ?)";
 QRY_INSERT_STATEMENT_END
-
-NS_QRY_END

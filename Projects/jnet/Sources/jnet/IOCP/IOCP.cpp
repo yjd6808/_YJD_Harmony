@@ -150,4 +150,4 @@ void IOCP::SetName(const jc::String& _name)
 	name_ = _name;
 }
 
-NS_JNET_END
+NS_END

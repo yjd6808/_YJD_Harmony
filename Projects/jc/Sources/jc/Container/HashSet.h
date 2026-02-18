@@ -172,4 +172,4 @@ protected:
 	friend class THashSetIterator;
 };
 
-NS_JC_END
+NS_END

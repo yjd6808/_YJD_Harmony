@@ -126,4 +126,4 @@ jc::String Winsock::ErrorMessageUTF8(Int32U _errorCode)
 	return utf8String;
 }
 
-NS_JNET_END
+NS_END

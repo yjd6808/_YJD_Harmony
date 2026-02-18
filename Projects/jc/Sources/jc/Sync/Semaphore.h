@@ -37,4 +37,4 @@ private:
 using SemaphoreGuard =  LockGuard<Semaphore>;
 extern template         LockGuard<Semaphore>;
 
-NS_JC_END
+NS_END

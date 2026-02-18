@@ -279,4 +279,4 @@ void InitializePropertyOperatorInt64()
 
 }
 
-NS_JC_END
+NS_END

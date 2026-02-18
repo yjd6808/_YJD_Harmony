@@ -194,4 +194,4 @@ private:
 	inline static TLock Lock;
 };
 
-NS_JC_END
+NS_END

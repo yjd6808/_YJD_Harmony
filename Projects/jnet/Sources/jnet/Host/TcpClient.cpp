@@ -22,6 +22,7 @@ TcpClient::TcpClient(
 	int _recvBufferSize)
 	: Session(_pIocp, _pBufferAllocator, _pParser, _recvBufferSize, _sendBufferSize)
 	, pEventListener_(nullptr)
+//////////////////////////////////////////////////////////////////////////////////////////
 {
 	TcpClient::Initialize();
 }
@@ -333,4 +334,4 @@ void TcpClient::ConnectFailed(Int32U _errorCode)
 	Initialize();
 }
 
-NS_JNET_END
+NS_END

@@ -4,15 +4,6 @@
     <ClCompile Include="..\Sources\sg\Core.cpp" />
     <ClCompile Include="..\Sources\sg\CommonCore.cpp" />
     <ClCompile Include="..\Sources\sg\Logo.cpp" />
-    <ClCompile Include="..\Sources\sg\ListenerClientBase.cpp">
-      <Filter>Net\Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\ListenerServerBase.cpp">
-      <Filter>Net\Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\ListenerHelperBase.cpp">
-      <Filter>Net\Listener</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\sg\BaseContents.cpp">
       <Filter>Contents</Filter>
     </ClCompile>
@@ -184,7 +175,7 @@
     <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MonsterStat.cpp">
       <Filter>_Util\_DescMgr</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Server.cpp">
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ServerInfo.cpp">
       <Filter>_Util\_DescMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Action.cpp">
@@ -214,6 +205,15 @@
     <ClCompile Include="..\Sources\sg\_Core\CLIFunctions.cpp">
       <Filter>_Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Net\NetListenerHelper.cpp">
+      <Filter>_Net\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Net\NetServerListener.cpp">
+      <Filter>_Net\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sg\_Net\NetClientListener.cpp">
+      <Filter>_Net\Listener</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\sg\Core.h" />
@@ -221,32 +221,23 @@
     <ClInclude Include="..\Sources\sg\Logo.h" />
     <ClInclude Include="..\Sources\sg\LogSpecifier.h" />
     <ClInclude Include="..\Sources\sg\Cmd_AUTHENTICATION.h">
-      <Filter>Net\Cmd</Filter>
+      <Filter>_Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Cmd_CHAT.h">
-      <Filter>Net\Cmd</Filter>
+      <Filter>_Net\Cmd</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sg\ListenerClientBase.h">
-      <Filter>Net\Listener</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\ListenerServerBase.h">
-      <Filter>Net\Listener</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\ListenerHelperBase.h">
-      <Filter>Net\Listener</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\Namepsace.h" />
+    <ClInclude Include="..\Sources\sg\Namespace.h" />
     <ClInclude Include="..\Sources\sg\BaseContents.h">
       <Filter>Contents</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Cmd_LOBBY.h">
-      <Filter>Net\Cmd</Filter>
+      <Filter>_Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Const.h">
       <Filter>Const</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Cmd.h">
-      <Filter>Net\Cmd</Filter>
+      <Filter>_Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Const_FPS.h">
       <Filter>Const</Filter>
@@ -279,7 +270,7 @@
       <Filter>Const</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Cmd_MESSAGE.h">
-      <Filter>Net\Cmd</Filter>
+      <Filter>_Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\Const_AUTHENTICATION.h">
       <Filter>Const</Filter>
@@ -473,7 +464,7 @@
     <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MonsterStat.h">
       <Filter>_Util\_DescMgr</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Server.h">
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ServerInfo.h">
       <Filter>_Util\_DescMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Projectile.h">
@@ -498,17 +489,17 @@
       <Filter>_Core</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\DLLExport.h" />
+    <ClInclude Include="..\Sources\sg\_Net\NetClientListener.h">
+      <Filter>_Net\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Net\NetListenerHelper.h">
+      <Filter>_Net\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sg\_Net\NetServerListener.h">
+      <Filter>_Net\Listener</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Net">
-      <UniqueIdentifier>{9c008121-a467-48e8-9eaf-74f475cfd80b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Net\Cmd">
-      <UniqueIdentifier>{6468c181-5a92-447d-becd-6ce66d66ea74}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Net\Listener">
-      <UniqueIdentifier>{a08a2ead-fee0-4ee6-aa74-41901c3681e6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Contents">
       <UniqueIdentifier>{93b72f5d-322a-4129-9fb9-1d3c09f8d2ee}</UniqueIdentifier>
     </Filter>
@@ -541,6 +532,15 @@
     </Filter>
     <Filter Include="_Core">
       <UniqueIdentifier>{7620bfe4-6c2d-410d-b10c-112174c789cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Net">
+      <UniqueIdentifier>{9c008121-a467-48e8-9eaf-74f475cfd80b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Net\Cmd">
+      <UniqueIdentifier>{6468c181-5a92-447d-becd-6ce66d66ea74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Net\Listener">
+      <UniqueIdentifier>{a08a2ead-fee0-4ee6-aa74-41901c3681e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -14,7 +14,7 @@
 NS_JC_BEGIN
 NS_DETAIL_BEGIN
 	constexpr int INVALID_INDEX = -1;
-NS_DETAIL_END
+NS_END
 
 struct Arrays final
 {
@@ -748,4 +748,4 @@ private:
 
 using Arrays = Arrays;
 
-NS_JC_END
+NS_END

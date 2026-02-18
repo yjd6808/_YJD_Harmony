@@ -7,7 +7,6 @@
 
 
 #include "Core.h"
-#include "ServerCoreHeader.h"
 #include "R_TEST_COMMON.h"
 
 #include <sgs/S_SETUP_IS_COMMON.h>

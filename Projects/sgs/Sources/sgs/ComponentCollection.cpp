@@ -7,8 +7,9 @@
 
 
 #include "Core.h"
-#include "ServerCoreHeader.h"
 #include "ComponentCollection.h"
+
+USING_NS_SG;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ComponentCollection::ComponentCollection()

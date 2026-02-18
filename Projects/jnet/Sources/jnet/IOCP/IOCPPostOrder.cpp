@@ -28,4 +28,4 @@ int IOCPPostOrder::Process(IOCPWorker* _pWorker)
 	}
 }
 
-NS_JNET_END
+NS_END

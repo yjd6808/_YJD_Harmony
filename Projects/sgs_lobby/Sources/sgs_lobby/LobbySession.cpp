@@ -23,7 +23,7 @@ LobbySession::LobbySession(TcpServer* _pServer,
 	int _recvBufferSize,
 	int _sendBufferSize)
 	//////////////////////////////////////////////////////////////////////////////////////////
-: CommonSession(_pServer, _pIocp, _pBufferAllocator, _recvBufferSize, _sendBufferSize)
+: sg::NetSession(_pServer, _pIocp, _pBufferAllocator, _recvBufferSize, _sendBufferSize)
 , authenticationComponent_(nullptr)
 {
 }

@@ -28,4 +28,4 @@ constexpr int ChatUdpId = 14;
 }
 
 
-NS_CONST_END
+NS_END

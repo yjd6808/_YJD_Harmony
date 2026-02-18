@@ -60,4 +60,4 @@ private:
 	Handle m_Handle;
 };
 
-NS_JC_END
+NS_END

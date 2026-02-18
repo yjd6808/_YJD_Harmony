@@ -28,12 +28,12 @@ UdpClientNetGroup::~UdpClientNetGroup()
 //////////////////////////////////////////////////////////////////////////////////////////
 void UdpClientNetGroup::Initialize()
 {
-	CreateIocp(8);
+	CreateIOCP(8);
 	CreateBufferPool({
 		{ 8192, 1 }
 	});
 
-	RunIocp();
+	RunIOCP();
 
 	UdpClientPtr pUdpClient = MakeShared<UdpClient>(pIocp_, pBufferPool_);
 
@@ -43,4 +43,4 @@ void UdpClientNetGroup::Initialize()
 	udpClient_->SetEventListener(dbg_new ClientListener{ name_ });
 }
 
-NS_JNET_END
+NS_END

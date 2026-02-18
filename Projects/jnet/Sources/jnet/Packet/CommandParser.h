@@ -47,4 +47,4 @@ private:
 	jc::HashMap<Cmd_t, jc::Action<Session*, ICommand*>> commandActionMap_;
 };
 
-NS_JNET_END
+NS_END

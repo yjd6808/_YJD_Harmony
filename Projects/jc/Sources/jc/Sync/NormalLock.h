@@ -41,4 +41,4 @@ private:
 using NormalLockGuard = LockGuard<NormalLock>;
 extern template         LockGuard<NormalLock>;
 
-NS_JC_END
+NS_END

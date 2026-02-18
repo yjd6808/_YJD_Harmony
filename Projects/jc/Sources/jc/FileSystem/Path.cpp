@@ -216,4 +216,4 @@ String Path::Extension(const String& _path)
 	return "";
 }
 
-NS_JC_END
+NS_END

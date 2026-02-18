@@ -42,4 +42,4 @@ private:
 	static void FilesRecursive(Vector<String, CDefaultAllocator>& _files, String _path, bool _recursive);
 };
 
-NS_JC_END
+NS_END

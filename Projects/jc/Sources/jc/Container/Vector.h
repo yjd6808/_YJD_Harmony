@@ -571,4 +571,4 @@ class Vector : public ArrayCollection<T, TAllocator>
     friend class TVectorIterator;
 };
 
-NS_JC_END
+NS_END

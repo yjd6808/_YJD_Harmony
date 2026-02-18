@@ -17,10 +17,11 @@
 
 USING_NS_JC;
 USING_NS_JNET;
+USING_NS_SG;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ListenerCenterServer::ListenerCenterServer(CenterServer* _pServer, jnet::CommandParser* _pParser)
-	: ListenerServerCommon(_pParser)
+	: NetServerListener(_pParser)
 	, centerTcp_(_pServer)
 {
 }
@@ -28,19 +29,19 @@ ListenerCenterServer::ListenerCenterServer(CenterServer* _pServer, jnet::Command
 //////////////////////////////////////////////////////////////////////////////////////////
 void ListenerCenterServer::OnStarted()
 {
-	ListenerServerCommon::OnStarted();
+	NetServerListener::OnStarted();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void ListenerCenterServer::OnConnected(Session* _pConnectedSession)
 {
-	ListenerServerCommon::OnConnected(_pConnectedSession);
+	NetServerListener::OnConnected(_pConnectedSession);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void ListenerCenterServer::OnDisconnected(Session* _pDisconnectedSession, Int32U _errorCode)
 {
-	ListenerServerCommon::OnDisconnected(_pDisconnectedSession, _errorCode);
+	NetServerListener::OnDisconnected(_pDisconnectedSession, _errorCode);
 	CenterSession* pSession = (CenterSession*)_pDisconnectedSession;
 
 	if (pSession->IsValid())
@@ -52,7 +53,7 @@ void ListenerCenterServer::OnDisconnected(Session* _pDisconnectedSession, Int32U
 //////////////////////////////////////////////////////////////////////////////////////////
 void ListenerCenterServer::OnSent(Session* _pSender, IPacket* _pSentPacket, Int32UL _sentBytes)
 {
-	ListenerServerCommon::OnSent(_pSender, _pSentPacket, _sentBytes);
+	NetServerListener::OnSent(_pSender, _pSentPacket, _sentBytes);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -88,7 +89,7 @@ void ListenerCenterServer::OnReceived(Session* _pSession, RecvedCommandPacket* _
 				// 클라(나)가 수신처인 경우 그대로 처리
 				if (pInterServerCmd->To == sg::ServerProcessInfo->serverId_)
 				{
-					ListenerServerCommon::OnReceived(_pSession, _pCmd);
+					NetServerListener::OnReceived(_pSession, _pCmd);
 				}
 				else
 				{
@@ -98,7 +99,7 @@ void ListenerCenterServer::OnReceived(Session* _pSession, RecvedCommandPacket* _
 			else if (ListenerHelperCommon::IsHostCommand(_pCmd))
 			{
 				// 호스트 커맨드인 경우
-				ListenerServerCommon::OnReceived(_pSession, _pCmd);
+				NetServerListener::OnReceived(_pSession, _pCmd);
 			}
 			else
 			{
@@ -117,7 +118,7 @@ void ListenerCenterServer::OnReceived(Session* _pSession, RecvedCommandPacket* _
 //////////////////////////////////////////////////////////////////////////////////////////
 void ListenerCenterServer::OnStopped()
 {
-	ListenerServerCommon::OnStopped();
+	NetServerListener::OnStopped();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

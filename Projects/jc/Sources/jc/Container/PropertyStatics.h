@@ -42,4 +42,4 @@ struct PropertyStatics
 	inline static thread_local bool							ComparisonResult{};
 };
 
-NS_JC_END
+NS_END

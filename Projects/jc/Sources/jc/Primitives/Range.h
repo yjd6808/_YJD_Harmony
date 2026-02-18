@@ -47,4 +47,4 @@ using RangeLDouble = Range<LDouble>;
 using RangeByte = Range<Byte>;
 using RangeWideChar = Range<WideChar>;
 
-NS_JC_END
+NS_END

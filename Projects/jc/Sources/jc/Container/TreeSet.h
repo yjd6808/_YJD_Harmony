@@ -188,4 +188,4 @@ class TreeSet : public SetCollection<TKey, TAllocator>
     friend class TTreeSetIterator;
 }; // class TreeSet<TKey>
 
-NS_JC_END
+NS_END

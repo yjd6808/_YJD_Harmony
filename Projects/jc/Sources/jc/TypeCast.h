@@ -32,6 +32,6 @@ T* ToPtr(T& obj) { return &obj; }
 template<typename T>
 T* ToPtr(T* obj) { return obj; }
 
-NS_JC_END
+NS_END
 
  

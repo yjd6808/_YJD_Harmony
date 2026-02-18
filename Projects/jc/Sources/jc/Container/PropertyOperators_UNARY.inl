@@ -126,4 +126,4 @@ void InitializePropertyOperatorUnary()
 	CreateUnaryOperators<PropertyType_t(0)>();
 }
 
-NS_JC_END
+NS_END

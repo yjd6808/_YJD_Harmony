@@ -362,6 +362,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\jc\DLLExport.h" />
     <ClInclude Include="..\Sources\jc\Encoding\CodePage.h">
       <SubType>
       </SubType>

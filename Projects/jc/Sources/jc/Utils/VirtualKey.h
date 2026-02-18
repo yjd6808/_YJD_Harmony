@@ -181,4 +181,4 @@ enum class VirtualKey
     OEMClear = 0xFE
 };
 
-NS_JC_END
+NS_END

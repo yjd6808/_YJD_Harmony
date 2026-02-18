@@ -80,4 +80,4 @@ private:
 
 using CommandBufferPtr = jc::SharedPtr<CommandBuffer>;
 
-NS_JNET_END
+NS_END

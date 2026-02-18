@@ -48,4 +48,4 @@ constexpr char TransmissionName(Transmission _transmission)
 	return 'X';
 }
 
-NS_JNET_END
+NS_END

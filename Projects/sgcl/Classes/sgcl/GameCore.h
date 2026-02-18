@@ -14,7 +14,7 @@ struct Contents;
 
 NS_SG_BEGIN
 extern ::Contents Contents;
-NS_SG_END
+NS_END
 
 void InitializeClientCore();
 void FinalizeClientCore();

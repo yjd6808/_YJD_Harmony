@@ -52,7 +52,7 @@ bool TileInfoLoader::Load()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TileInfoLoader::ReadTileInfo(Json::Value& _tileRoot, TileInfo* _pTileInfo)
+void TileInfoLoader::ReadTileInfo(Json::Value& _tileRoot, OUT TileInfo* _pTileInfo)
 {
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 	_pTileInfo->code_ = _tileRoot["code"].asInt();

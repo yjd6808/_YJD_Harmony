@@ -93,4 +93,4 @@ protected:
 	friend class TTreeSet;
 };
 
-NS_JC_END
+NS_END

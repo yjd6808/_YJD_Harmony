@@ -33,4 +33,4 @@ AutMemoryPoolLeakDetector::~AutMemoryPoolLeakDetector()
 	}
 }
 
-NS_JC_END
+NS_END

@@ -282,6 +282,6 @@ struct Hasher64<String>
 };
 
 
-NS_JC_END
+NS_END
 
 #pragma warning (pop)

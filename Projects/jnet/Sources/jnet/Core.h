@@ -18,6 +18,7 @@
 
 #include <jnet/NetLoggerDefine.h>
 #include <jnet/Config.h>
+#include <jnet/Winsock.h>
 #include <jnet/Namespace.h>
 
 #define MAX_MSS 1460
@@ -28,4 +29,4 @@
 
 NS_JNET_BEGIN
 inline int DbgFlag_v = 0; // 외부 프로젝트에서 jnet 프로젝트에 브레이크 포인트 걸기위해 추가함.
-NS_JNET_END
+NS_END

@@ -12,6 +12,7 @@
 void sgapiBase::Init(sgapiBase* _api)
 {
 	API = _api;
+	API->Init();
 	isInitialized_ = true;
 }
 

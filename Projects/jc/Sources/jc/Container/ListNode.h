@@ -56,7 +56,7 @@ template <typename T>
 class CListNode<T&> {  };
 */
 
-NS_JC_END
+NS_END
 
 
 #pragma warning(pop)

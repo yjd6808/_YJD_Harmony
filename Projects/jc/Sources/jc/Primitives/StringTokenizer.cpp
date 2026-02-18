@@ -88,4 +88,4 @@ String StringTokenizer::Next(OUT char* _catchedDelim /*= nullptr*/)
 }
 
 
-NS_JC_END
+NS_END

@@ -39,4 +39,4 @@ private:
 
 using ByteArraySegment = CArraySegment<Byte>;
 
-NS_JC_END
+NS_END

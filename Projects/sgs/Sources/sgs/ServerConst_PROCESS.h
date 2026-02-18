@@ -17,4 +17,4 @@ constexpr int LoopPerSecondGame = 4;
 constexpr int LoopPerSecondCenter = 10;
 }
 
-NS_CONST_END
+NS_END

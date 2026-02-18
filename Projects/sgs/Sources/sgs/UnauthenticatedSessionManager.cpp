@@ -7,10 +7,13 @@
 
 
 #include "Core.h"
-#include "ServerCoreHeader.h"
 #include "UnauthenticatedSessionManager.h"
 
-bool UnauthenticatedSessionManager::Add(AuthenticationSerial_t _serial, CommonSession* _pSession)
+#include <sgs/_Net/NetSession.h>
+
+USING_NS_SG;
+
+bool UnauthenticatedSessionManager::Add(AuthenticationSerial_t _serial, sg::NetSession* _pSession)
 {
 	JC_LOCK_GUARD(sync_);
 	return sessionMap_.Insert(_serial, _pSession);

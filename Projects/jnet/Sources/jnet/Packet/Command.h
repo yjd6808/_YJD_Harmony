@@ -214,7 +214,7 @@ NS_DETAIL_BEGIN
 
 		static constexpr bool VALUE = Check(nullptr);
 	};
-NS_DETAIL_END
+NS_END
 
 	template <typename T> 
 	constexpr bool IsStaticCommand_v = detail::IsStaticCommand<T>::VALUE;
@@ -225,7 +225,7 @@ NS_DETAIL_END
 	template <typename TCommand>
 	constexpr bool HasDynamicField_v = detail::HasDynamicFiled<TCommand>::VALUE;
 
-NS_JNET_END
+NS_END
 
 #pragma pack(pop) // #pragma pack(push, CMD_ALIGNMENT)
 

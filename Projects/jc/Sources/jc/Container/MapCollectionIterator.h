@@ -37,4 +37,4 @@ MapCollectionIterator<TKey, TValue, TAllocator>::~MapCollectionIterator() noexce
 {
 }
 
-NS_JC_END
+NS_END

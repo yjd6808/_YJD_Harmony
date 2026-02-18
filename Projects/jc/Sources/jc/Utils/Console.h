@@ -228,7 +228,7 @@ public:
     static int GetOutputCodePage();
 };
 
-NS_JC_END
+NS_END
 
 
 

@@ -67,4 +67,4 @@ private:
 	TAction m_Callback;
 };
 
-NS_JC_END
+NS_END

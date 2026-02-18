@@ -379,4 +379,4 @@ public:
 	friend class THashMapIterator;
 }; // class HashMap<TKey, TValue, TAllocator>
 
-NS_JC_END
+NS_END

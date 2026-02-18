@@ -25,7 +25,7 @@ extern ::CenterNetMaster* NetGroupMgr;
 extern ::CenterNetGroup* NetGroup;
 extern ::CenterServer* Server;
 extern ::CenterContents		Contents;
-NS_SG_END
+NS_END
 
 void InitializeCenterCore();
 void FinalizeCenterCore();

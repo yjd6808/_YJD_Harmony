@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <sgs/InterServerClientNetGroup.h>
+#include <sgs/_Net/NetGroup_InterServ.h>
 
-class AuthInterServerClientNetGroup : public InterServerClientNetGroup
+class AuthInterServerClientNetGroup : public NetGroup_InterServ
 {
 public:
 	AuthInterServerClientNetGroup();

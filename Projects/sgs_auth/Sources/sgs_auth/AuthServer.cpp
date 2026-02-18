@@ -17,7 +17,7 @@ USING_NS_JNET;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 AuthServer::AuthServer(const IOCPPtr& _pIocp, const MemoryPoolAbstractPtr& _pBufferAllocator)
-: CommonServer(_pIocp, _pBufferAllocator)
+: sg::NetServer(_pIocp, _pBufferAllocator)
 {
 }
 
@@ -30,5 +30,5 @@ jnet::TcpSession* AuthServer::CreateSession()
 //////////////////////////////////////////////////////////////////////////////////////////
 void AuthServer::OnUpdate(const TimeSpan& _elapsed)
 {
-	CommonServer::OnUpdate(_elapsed);
+	sg::NetServer::OnUpdate(_elapsed);
 }

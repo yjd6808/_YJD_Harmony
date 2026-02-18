@@ -91,4 +91,4 @@ protected:
 
 using WaitHandlePtr = jc::SharedPtr<WaitHandle>;
 
-NS_JC_END
+NS_END

@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <sg/Namepsace.h>
+#include <sg/Namespace.h>
 
 NS_CONST_BEGIN
 namespace Resource
@@ -18,4 +18,4 @@ constexpr int MaxSgaFileCount = 200;
 constexpr int MaxSgaParallelLoadingThreadCount = 8;
 }
 
-NS_CONST_END
+NS_END

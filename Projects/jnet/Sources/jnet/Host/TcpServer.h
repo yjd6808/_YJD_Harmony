@@ -22,7 +22,7 @@ public:
 	TcpServer(const IOCPPtr& _pIocp, const jc::MemoryPoolAbstractPtr& _pBufferAllocator);
 	~TcpServer() override;
 
-	// 커스텀 생성을 위한 버철
+	// 커스텀 생성을 위한 버철 (안씀 말고)
 	virtual TcpSession* CreateSession();
 	virtual ISessionContainer* CreateSessionContainer();
 
@@ -49,7 +49,7 @@ public:
 	void SessionReceivedRaw(TcpSession* _pSession, char* _pData, int _len);
 
 	IPv4EndPoint GetBindEndPoint() const { return socket_.GetLocalEndPoint(); }
-	const char* TypeName() override { return "TCP 서버"; }
+	const char* TypeName() const override { return "TCP 서버"; }
 	DetailType GetDetailType() const override { return eTcpListener; }
 
 protected:
@@ -63,4 +63,4 @@ protected:
 using TcpServerPtr = jc::SharedPtr<TcpServer>;
 using TcpServerWPtr = jc::WeakPtr<TcpServer>;
 
-NS_JNET_END
+NS_END

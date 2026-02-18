@@ -341,5 +341,5 @@ public:
 	friend struct TreeMapValueCollectionIterator;
 }; // class CTreeMap<TKey, TValue>
 
-NS_JC_END
+NS_END
 

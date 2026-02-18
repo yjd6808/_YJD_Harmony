@@ -29,6 +29,17 @@ class Server;
 class ServerEventListener
 {
 public:
+	using FnStarted = jc::Action<>;
+	using FnStartFailed = jc::Action<Int32U>;
+	using FnStopped = jc::Action<>;
+	using FnConnected = jc::Action<Session*>;
+	using FnConnectFailed = jc::Action<Session*, Int32U>;
+	using FnDisconnected = jc::Action<Session*, Int32U>;
+	using FnSent = jc::Action<Session*, IPacket*, Int32UL>;
+	using FnReceivedRaw = jc::Action<Session*, char*, int>;
+	using FnReceived = jc::Action<Session*, ICommand*>;
+	using FnReceivedPacket = jc::Action<Session*, RecvedCommandPacket*>;
+
 	virtual ~ServerEventListener() = default;
 	virtual void OnStarted() {}
 	virtual void OnStartFailed(Int32U _errorCode) {}
@@ -42,6 +53,40 @@ public:
 	virtual void OnReceivedRaw(Session* _pSession, char* _pData, int _len) {}
 	virtual void OnReceived(Session* _pSession, ICommand* _pRecvCmd) {}
 	virtual void OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket) {}
+
+	void SetStartedCallback(const FnStarted& _fn) { fnStarted_ = _fn; }
+	void SetStartFailedCallback(const FnStartFailed& _fn) { fnStartFailed_ = _fn; }
+	void SetStoppedCallback(const FnStopped& _fn) { fnStopped_ = _fn; }
+	void SetConnectedCallback(const FnConnected& _fn) { fnConnected_ = _fn; }
+	void SetConnectFailedCallback(const FnConnectFailed& _fn) { fnConnectFailed_ = _fn; }
+	void SetDisconnectedCallback(const FnDisconnected& _fn) { fnDisconnected_ = _fn; }
+	void SetSentCallback(const FnSent& _fn) { fnSent_ = _fn; }
+	void SetReceivedRawCallback(const FnReceivedRaw& _fn) { fnReceivedRaw_ = _fn; }
+	void SetReceivedCallback(const FnReceived& _fn) { fnReceived_ = _fn; }
+	void SetReceivedPacketCallback(const FnReceivedPacket& _fn) { fnReceivedPacket_ = _fn; }
+
+	void SetStartedCallback(FnStarted&& _fn) { fnStarted_ = std::move(_fn); }
+	void SetStartFailedCallback(FnStartFailed&& _fn) { fnStartFailed_ = std::move(_fn); }
+	void SetStoppedCallback(FnStopped&& _fn) { fnStopped_ = std::move(_fn); }
+	void SetConnectedCallback(FnConnected&& _fn) { fnConnected_ = std::move(_fn); }
+	void SetConnectFailedCallback(FnConnectFailed&& _fn) { fnConnectFailed_ = std::move(_fn); }
+	void SetDisconnectedCallback(FnDisconnected&& _fn) { fnDisconnected_ = std::move(_fn); }
+	void SetSentCallback(FnSent&& _fn) { fnSent_ = std::move(_fn); }
+	void SetReceivedRawCallback(FnReceivedRaw&& _fn) { fnReceivedRaw_ = std::move(_fn); }
+	void SetReceivedCallback(FnReceived&& _fn) { fnReceived_ = std::move(_fn); }
+	void SetReceivedPacketCallback(FnReceivedPacket&& _fn) { fnReceivedPacket_ = std::move(_fn); }
+
+private:
+	FnStarted fnStarted_; 
+	FnStartFailed fnStartFailed_; 
+	FnStopped fnStopped_; 
+	FnConnected fnConnected_; 
+	FnConnectFailed fnConnectFailed_; 
+	FnDisconnected fnDisconnected_; 
+	FnSent fnSent_; 
+	FnReceivedRaw fnReceivedRaw_; 
+	FnReceived fnReceived_; 
+	FnReceivedPacket fnReceivedPacket_;
 };
 
-NS_JNET_END
+NS_END

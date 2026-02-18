@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sgs/CommonNetGroup.h>
+#include <sgs/_Net/NetGroup_Main.h>
 #include <sgs_lobby/LobbyServer.h>
 
 class LobbyNetGroup final : public CommonNetGroup
@@ -17,11 +17,11 @@ public:
 	LobbyNetGroup();
 	~LobbyNetGroup() override;
 
-	CommonServer* GetMainTcp() const override { return m_pLobbyTcp; }
+	sg::NetServer* GetMainTcp() const override { return m_pLobbyTcp; }
 	LobbyServer* GetLobbyTcp() const { return m_pLobbyTcp; }
 	jnet::ISessionContainer* GetLobbySessionContainer() const { return m_pLobbySessionContainer; }
 	jnet::ISessionContainer* GetSessionContainer(ServerType_t _type) override;
-	CommonSession* GetSessionFromContainer(int _handle) override;
+	sg::NetSession* GetSessionFromContainer(int _handle) override;
 
 protected:
 	void InitializeBufferPool() override;

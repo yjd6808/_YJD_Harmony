@@ -7,8 +7,9 @@
 
 
 #include "Core.h"
-#include "ServerCoreHeader.h"
 #include "UpdatableCollection.h"
+
+USING_NS_SG;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void UpdatableCollection::Update(const jc::TimeSpan& _elapsed)

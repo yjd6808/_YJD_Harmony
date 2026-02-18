@@ -39,4 +39,4 @@ private:
 using EventLockGuard = LockGuard<EventLock>;
 extern template         LockGuard<EventLock>;
 
-NS_JC_END;
+NS_END;

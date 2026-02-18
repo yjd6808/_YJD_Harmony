@@ -24,4 +24,4 @@ const char* CommandNameDictionary::Get(Cmd_t _command) const
 	return commandNameMap_.Get(_command);
 }
 
-NS_JNET_END
+NS_END

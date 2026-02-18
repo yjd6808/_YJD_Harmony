@@ -12,10 +12,13 @@
 #include <sgs/SessionComponent.h>
 #include <sgs/ISessionEventHandler.h>
 
+NS_SG_BEGIN
+
+class NetSession;
 class AuthenticationComponent : public SessionComponent
 {
 public:
-	AuthenticationComponent(CommonSession* _pSession);
+	AuthenticationComponent(sg::NetSession* _pSession);
 
 	void Initialize() override;
 	void OnConnected() override;
@@ -38,3 +41,5 @@ private:
 	AuthenticationState_t state_;
 	AuthenticationSerial_t serial_;
 };
+
+NS_END

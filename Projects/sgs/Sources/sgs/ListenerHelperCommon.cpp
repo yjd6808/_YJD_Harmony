@@ -7,13 +7,13 @@
 
 
 #include "Core.h"
-#include "ServerCoreHeader.h"
 #include "ListenerHelperCommon.h"
 
 #include <sgs/InterServerCmdDefine.h>
 
 USING_NS_JC;
 USING_NS_JNET;
+USING_NS_SG;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 bool ListenerHelperCommon::IsRelayCommand(ICommand* _pCommand)

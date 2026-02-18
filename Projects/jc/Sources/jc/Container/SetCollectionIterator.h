@@ -33,4 +33,4 @@ SetCollectionIterator<TKey, TAllocator>::~SetCollectionIterator() noexcept
 {
 }
 
-NS_JC_END
+NS_END

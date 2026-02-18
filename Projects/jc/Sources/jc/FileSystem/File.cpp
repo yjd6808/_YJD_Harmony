@@ -244,4 +244,4 @@ String File::ReadAllText(const char* _pPath)
 	return buffer;
 }
 
-NS_JC_END
+NS_END

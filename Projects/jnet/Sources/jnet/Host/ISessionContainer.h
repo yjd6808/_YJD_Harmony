@@ -35,4 +35,4 @@ public:
 	virtual bool IsValidHandle(int _handleIndex) = 0;
 };
 
-NS_JNET_END
+NS_END

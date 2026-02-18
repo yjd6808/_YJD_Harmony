@@ -37,4 +37,4 @@ bool SendHelperBase::IsValidInformation(Session* _pSender, SendStrategy _strateg
 	return true;
 }
 
-NS_JNET_END
+NS_END

@@ -34,7 +34,6 @@ NS_JC_BEGIN
 
  ==================================================================== */
 
-
 // 반환값이 없는 대리자
 template <typename... Args>
 using Action = std::function<void(Args...)>;
@@ -47,4 +46,4 @@ using Func = std::function<R(Args...)>;
 template <typename... Args>
 using Predicate = std::function<bool(Args...)>;
 
-NS_JC_END
+NS_END

@@ -26,6 +26,6 @@ public:
     ManualResetEvent& operator=(ManualResetEvent&& other) noexcept;
 };
 
-NS_JC_END 
+NS_END 
 
 

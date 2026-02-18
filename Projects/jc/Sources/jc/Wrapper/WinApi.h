@@ -333,5 +333,5 @@ extern template struct Interlocked<Int64>;
 extern template struct Interlocked<Int64U>;
 extern template struct Interlocked<bool>;
 
-NS_JC_END
+NS_END
 

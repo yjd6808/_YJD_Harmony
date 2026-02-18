@@ -194,4 +194,4 @@ void Directory::FilesRecursive(Vector<String>& _files, String _path, bool _recur
 	}
 }
 
-NS_JC_END
+NS_END

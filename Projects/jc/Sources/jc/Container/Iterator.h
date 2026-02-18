@@ -68,4 +68,4 @@ protected:
 	};
 };
 
-NS_JC_END
+NS_END

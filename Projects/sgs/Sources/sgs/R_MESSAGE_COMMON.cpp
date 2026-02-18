@@ -7,7 +7,6 @@
 
 
 #include "Core.h"
-#include "ServerCoreHeader.h"
 #include "R_MESSAGE_COMMON.h"
 
 #include <sgs/CmdHost.h>

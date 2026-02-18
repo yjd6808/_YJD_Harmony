@@ -16,6 +16,7 @@
 #include <jc/Time.h>
 #include <jc/Stream.h>
 #include <jc/Env.h>
+#include <jc/Event.h>
 #include <jc/Random.h>
 #include <jc/Bit.h>
 #include <jc/Functional.h>
@@ -83,6 +84,7 @@
 
 #include <sgcc/Core.h>
 
+#include <sg/Namespace.h>
 #include <sg/Const.h>
 #include <sg/DLLExport.h>
 #include <sg/Logo.h>

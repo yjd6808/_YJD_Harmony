@@ -277,4 +277,4 @@ void InitializePropertyOperatorFloat()
 	PropertyStatics::BinaryOperators_Float[PropertyBinaryOperatorType::Less]			= dbg_new PropertyValueBinaryOperator_Float_Less{};
 }
 
-NS_JC_END
+NS_END

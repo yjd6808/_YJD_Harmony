@@ -7,7 +7,6 @@
 
 
 #include "Core.h"
-#include "ServerCoreHeader.h"
 #include "S_MESSAGE_COMMON.h"
 
 #include <sg/Cmd_MESSAGE.h>

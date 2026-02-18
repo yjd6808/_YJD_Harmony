@@ -33,4 +33,4 @@ template <typename T, typename TAllocator = CDefaultAllocator>
 using Enumerator = SharedPtr<Iterator<T, TAllocator>>;
 
 
-NS_JC_END
+NS_END

@@ -327,4 +327,4 @@ private:
 
 using IndexedMemoryPoolPtr = SharedPtr<CIndexedMemoryPool>;
 
-NS_JC_END
+NS_END

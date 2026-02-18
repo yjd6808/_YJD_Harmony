@@ -20,7 +20,7 @@ USING_NS_JNET;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 LobbyNetMaster::LobbyNetMaster()
-	: CommonNetGroupMgr(Const::Process::LoopPerSecondLobby)
+	: NetCore(Const::Process::LoopPerSecondLobby)
 {
 	SetName("로비");
 }
@@ -33,7 +33,7 @@ LobbyNetMaster::~LobbyNetMaster()
 //////////////////////////////////////////////////////////////////////////////////////////
 void LobbyNetMaster::Initialize()
 {
-	CommonNetGroupMgr::Initialize();
+	NetCore::Initialize();
 
 	const auto lobbyNetGroup = MakeShared<LobbyNetGroup>();
 	const auto interServerNetGroup = MakeShared<LobbyInterServerClientNetGroup>();

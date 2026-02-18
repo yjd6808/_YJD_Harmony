@@ -18,6 +18,4 @@ public:
 	virtual void OnConnectFailed(Session* _pSession, Int32U _errorCode) {} // Tcp클라이언트 전용
 };
 
-
-
-NS_JNET_END
+NS_END

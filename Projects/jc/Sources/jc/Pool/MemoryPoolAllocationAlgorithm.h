@@ -25,5 +25,5 @@ enum MemoryPoolAllocationAlgorithm
 	NS_DETAIL_BEGIN
 	template <MemoryPoolAllocationAlgorithm Algorithm>
 	inline constexpr bool IsValidMemoryPoolAllocationAlgorithm = Algorithm >= eBinarySearch && Algorithm <= eMemoryPoolAllocationAlgorithmMax;
-	NS_DETAIL_END
-NS_JC_END
+	NS_END
+NS_END

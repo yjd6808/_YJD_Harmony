@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <sg/Namepsace.h>
+#include <sg/Namespace.h>
 
 NS_CONST_BEGIN
 namespace StringLen
@@ -20,4 +20,4 @@ constexpr int AccountPass = 16;
 constexpr int ClientTextKey = 48;
 }
 
-NS_CONST_END
+NS_END

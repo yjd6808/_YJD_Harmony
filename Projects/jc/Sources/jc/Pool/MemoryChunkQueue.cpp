@@ -67,4 +67,4 @@ void* CMemoryChunckQueue::Pop(OUT bool& _newAlloc)
 }
 
 
-NS_JC_END
+NS_END

@@ -12,7 +12,7 @@
 #include <jnet/Host/SessionContainer.h>
 
 #include <sg/Cmd_AUTHENTICATION.h>
-#include <sgs/CommonSession.h>
+#include <sgs/NetSession.h>
 #include <sgs/CmdRelay_AUTHENTICATION.h>
 
 #include <sgs_auth/AuthServer.h>
@@ -47,7 +47,7 @@ jnet::ISessionContainer* AuthNetGroup::GetSessionContainer(ServerType_t _type)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-CommonSession* AuthNetGroup::GetSessionFromContainer(int _handle)
+sg::NetSession* AuthNetGroup::GetSessionFromContainer(int _handle)
 {
 	if (!Const::Host::AuthHandleRange.Contain(_handle))
 	{
@@ -55,7 +55,7 @@ CommonSession* AuthNetGroup::GetSessionFromContainer(int _handle)
 		return nullptr;
 	}
 
-	return dynamic_cast<CommonSession*>(pAuthSessionContainer_->Get(_handle));
+	return dynamic_cast<sg::NetSession*>(pAuthSessionContainer_->Get(_handle));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

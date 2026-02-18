@@ -23,4 +23,4 @@ struct ValidType : ValidConstant<true> {};
 struct InvalidType : ValidConstant<false> {};
 
 
-NS_JC_END
+NS_END

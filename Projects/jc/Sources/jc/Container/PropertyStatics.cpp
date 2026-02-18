@@ -107,4 +107,4 @@ void PropertyStatics::Finalize() {
 	Property<String>::FreeAllObjects();
 }
 
-NS_JC_END
+NS_END

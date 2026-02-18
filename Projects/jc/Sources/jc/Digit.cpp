@@ -22,4 +22,4 @@ int Digit::Length(int _num)
 	return len;
 }
 
-NS_JC_END
+NS_END

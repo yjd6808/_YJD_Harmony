@@ -55,9 +55,9 @@ NetClientGroup::~NetClientGroup()
 //////////////////////////////////////////////////////////////////////////////////////////
 void NetClientGroup::Initialize()
 {
-	CreateIocp(4);
+	CreateIOCP(4);
 	CreateBufferPool({});
-	RunIocp();
+	RunIOCP();
 
 	auto pAuthTcp = MakeShared<TcpClient>(pIocp_, pBufferPool_, nullptr, AUTH_RECV_BUFFER_SIZE, AUTH_SEND_BUFFER_SIZE);
 	auto pLobbyTcp = MakeShared<TcpClient>(pIocp_, pBufferPool_, nullptr, LOBBY_RECV_BUFFER_SIZE, LOBBY_SEND_BUFFER_SIZE);
@@ -66,10 +66,10 @@ void NetClientGroup::Initialize()
 	AddHost(Const::Host::LobbyTcpId, pLobbyTcp);
 
 	pAuthTcp_ = pAuthTcp.Get<TcpClient*>();
-	pAuthTcp_->SetEventListener(dbg_new NetClientEventListener{ ClientConnectServerType::Auth });
+	pAuthTcp_->SetEventListener(dbg_new NetClientListenerImpl{ ServerType::Auth });
 
 	pLobbyTcp_ = pLobbyTcp.Get<TcpClient*>();
-	pLobbyTcp_->SetEventListener(dbg_new NetClientEventListener{ ClientConnectServerType::Lobby });
+	pLobbyTcp_->SetEventListener(dbg_new NetClientListenerImpl{ ServerType::Lobby });
 
 	// ======================================================================================
 	// 샌더 초기화

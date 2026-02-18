@@ -58,4 +58,4 @@ struct Math final
 	}
 };
 
-NS_JC_END
+NS_END

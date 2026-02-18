@@ -38,5 +38,5 @@ struct NatvisFloat1
 	float f{};
 };
 
-NS_DETAIL_END
-NS_JC_END
+NS_END
+NS_END

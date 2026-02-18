@@ -11,5 +11,4 @@
 #include <sg/Const.h>
 
 #include <sgs/ServerConst_HOST.h>
-#include <sgs/ServerConst_NETGROUP.h>
 #include <sgs/ServerConst_PROCESS.h>

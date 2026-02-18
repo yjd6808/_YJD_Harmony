@@ -6,7 +6,6 @@
  */
 
 #include "Core.h"
-#include "ServerCoreHeader.h"
 #include "S_MESSAGE_IS_COMMON.h"
 
 #include <sgs/CmdHost_MESSAGE.h>

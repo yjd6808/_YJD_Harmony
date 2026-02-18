@@ -53,4 +53,4 @@ bool EventLock::IsLocked()
 	return m_bLocked;
 }
 
-NS_JC_END
+NS_END

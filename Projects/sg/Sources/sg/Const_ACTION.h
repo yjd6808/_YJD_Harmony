@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <sg/Namepsace.h>
+#include <sg/Namespace.h>
 #include <sg/Const_FPS.h>
 
 NS_CONST_BEGIN
@@ -20,4 +20,4 @@ inline constexpr float ComboSequenceDelay = FPS::_18; // 콤보 입력 제한 �
 }
 
 
-NS_CONST_END
+NS_END

@@ -22,4 +22,4 @@ private:
 	TcpSession* acceptedSession_;
 };
 
-NS_JNET_END
+NS_END

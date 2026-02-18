@@ -164,4 +164,4 @@ private:
 	TCollection* pCollection_;
 };
 
-NS_JC_END
+NS_END

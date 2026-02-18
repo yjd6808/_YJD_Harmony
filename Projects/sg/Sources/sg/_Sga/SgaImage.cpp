@@ -10,8 +10,6 @@
 #include <sg/_Sga/SgaSprite.h>
 #include <sg/_Sga/SgaElementInitializer.h>
 
-#include "SgaPackage.h"
-
 USING_NS_JC;
 USING_NS_JS;
 

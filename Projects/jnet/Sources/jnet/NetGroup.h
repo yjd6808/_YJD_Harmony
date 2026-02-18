@@ -20,12 +20,17 @@ public:
 	explicit NetGroup(const jc::String& _name);
 	virtual ~NetGroup();
 
-	void CreateIocp(int _threadCount);
+	void SetValidator(const jc::Predicate<const HostPtr&>& _fnValidator) { fnValidator_ = _fnValidator; }
+	void SetAddHostAction(const jc::Action<const HostPtr&>& _fnAddHost) { fnAddHost_ = _fnAddHost; }
+	void SetValidator(jc::Predicate<const HostPtr&>&& _fnValidator) { fnValidator_ = std::move(_fnValidator); }
+	void SetAddHostAction(jc::Action<const HostPtr&>&& _fnAddHost) { fnAddHost_ = std::move(_fnAddHost); }
+	void SetName(const jc::String& _name);
+
+	void CreateIOCP(int _threadCount);
 	void CreateBufferPool(const jc::HashMap<int, int>& _poolInfo);
-	void RunIocp();
+	void RunIOCP();
 	IOCPPtr GetIocp();
 	bool AddHost(int _id, const HostPtr& _pHost);
-	void SetName(const jc::String& _name);
 
 	template <typename T>
 	T* GetHost(int _id)
@@ -53,15 +58,20 @@ public:
 	virtual void Finalize();
 
 	static constexpr const char* TypeName() { return "네트그룹"; }
-
 protected:
+	jc::Predicate<const HostPtr&> fnValidator_;
+	jc::Action<const HostPtr&> fnAddHost_;
+
 	IOCPPtr pIocp_;
 	jc::HashMap<int, HostPtr> hostMap_;
+	jc::Vector<HostPtr> hostList_;
 	jc::MemoryPoolAbstractPtr pBufferPool_;
 	jc::String name_;
 	bool finalized_;
+
+
 };
 
 using NetGroupPtr = jc::SharedPtr<NetGroup>;
 
-NS_JNET_END
+NS_END

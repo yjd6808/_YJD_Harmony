@@ -17,4 +17,4 @@ enum FileMode
 	eAppend             // 이어서 작성용
 };
 
-NS_JC_END
+NS_END

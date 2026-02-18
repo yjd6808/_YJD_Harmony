@@ -35,7 +35,7 @@ struct JC_NOVTABLE ILock
 	virtual bool IsLocked() = 0;
 };
 
-NS_JC_END;
+NS_END;
 
 #define JC_LOCK_GUARD(lock)		jc::LockGuard<jc::ILock> JC_CONCAT_COUNTER(__lock_guard__)(lock)
 #define JC_LIB_LOCK_GUARD(lock)	jc::JCoreLibLockGuard<jc::ILock> JC_CONCAT_COUNTER(__lock_guard__)(lock)

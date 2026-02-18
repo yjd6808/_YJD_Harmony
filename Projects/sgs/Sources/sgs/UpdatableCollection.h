@@ -11,6 +11,8 @@
 #include <jc/Container/Vector.h>
 #include <sgs/IUpdatable.h>
 
+NS_SG_BEGIN
+
 class UpdatableCollection
 {
 public:
@@ -43,3 +45,5 @@ private:
 	jc::HashMap<int, IUpdatable*> updatableMap_;
 	jc::Vector<IUpdatable*> updatable_;
 };
+
+NS_END

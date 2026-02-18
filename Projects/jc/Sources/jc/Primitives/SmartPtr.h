@@ -92,7 +92,7 @@ static void PreventCreatingObjectPoolItem()
 	static_assert(!IsBaseOf_v<ObjectPool<T>, T>, "... cannot create object pool item using this method");
 }
 
-NS_DETAIL_END
+NS_END
 
 
 // 전방 선언
@@ -1467,4 +1467,4 @@ bool operator!=(std::nullptr_t, const WeakPtr<T>& _rhs)
 }
 
 
-NS_JC_END
+NS_END

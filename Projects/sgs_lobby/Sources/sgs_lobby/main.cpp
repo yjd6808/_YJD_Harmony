@@ -6,6 +6,8 @@
 #include <sgs_lobby/LobbyContents.h>
 #include <sg/LogSpecifier.h>
 
+#include <sgs/_API/sgapiServerBase.h>
+
 USING_NS_JC;
 USING_NS_JNET;
 
@@ -17,6 +19,7 @@ int main(int _argc, char** _argv)
 	// 메인 리소스 초기화
 	//////////////////////////////////////////////////////////////////////////////////////////
 	Random::EngineInitialize();
+	sgapiBase::Init(dbg_new sgapiServerBase);
 	Winsock::Initialize(2, 2);
 	Console::SetSize(800, 400);
 	InitializeJCore(_argc, _argv);
@@ -30,7 +33,7 @@ int main(int _argc, char** _argv)
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// 메인 루틴
 	//////////////////////////////////////////////////////////////////////////////////////////
-	if (sg::InterServerClientNetGroup && sg::InterServerClientNetGroup->ConnectCenterServer(5))
+	if (sg::NetGroup_InterServ && sg::NetGroup_InterServ->ConnectCenterServer(5))
 	{
 		sg::NetGroupMgr->ProcessMainUpdate();
 	}

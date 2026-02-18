@@ -43,4 +43,4 @@ protected:
 	jc::HashMap<Cmd_t, const char*> commandNameMap_;
 };
 
-NS_JNET_END
+NS_END

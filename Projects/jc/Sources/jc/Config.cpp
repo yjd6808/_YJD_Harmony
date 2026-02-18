@@ -41,6 +41,9 @@ void InitializeJCore(int _argc, char** _argv)
 
 	// 프로퍼티 초기화
 	Env::InitArgs(_argc, _argv);
+	Env::CurrentDirectory(); // 캐싱
+	Env::ModulePath();	// 캐싱
+	Env::ModuleName();	// 캐싱
 	PropertyStatics::Initialize();
 }
 
@@ -51,4 +54,4 @@ void FinalizeJCore()
 }
 
 
-NS_JC_END
+NS_END

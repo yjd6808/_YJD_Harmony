@@ -110,4 +110,4 @@ void PacketViewer::Hex(char* _pData, int _len, OUT String& _hex)
 	}
 }
 
-NS_JNET_END
+NS_END

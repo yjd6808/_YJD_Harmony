@@ -19,7 +19,7 @@ NS_JNET_BEGIN
  * ============================================================================= */
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ServerNetGroupMgr::Initialize()
+bool ServerNetGroupMgr::Initialize()
 {
 	NetGroupPtr pLoginChannelNetGroup = MakeShared<ServerLoginChannelNetGroup>();
 	NetGroupPtr pGameNetGroup = MakeShared<ServerGameNetGroup>();
@@ -32,6 +32,7 @@ void ServerNetGroupMgr::Initialize()
 	pLoginChannelNetGroup->Initialize();
 	pGameNetGroup->Initialize();
 	pUdpNetGroup->Initialize();
+	return true;
 }
 
 
@@ -56,12 +57,12 @@ ServerLoginChannelNetGroup::~ServerLoginChannelNetGroup()
 //////////////////////////////////////////////////////////////////////////////////////////
 void ServerLoginChannelNetGroup::Initialize()
 {
-	CreateIocp(4);
+	CreateIOCP(4);
 	CreateBufferPool({
 		{ 8192, 30 }
 	});
 
-	RunIocp();
+	RunIOCP();
 
 	TcpServerPtr pLoginServer = MakeShared<TcpServer>(pIocp_, pBufferPool_);
 	pLoginServer->Start(IPv4EndPoint{ SERVER_LOGIN_TCP_ADDR });
@@ -100,12 +101,12 @@ ServerGameNetGroup::~ServerGameNetGroup()
 //////////////////////////////////////////////////////////////////////////////////////////
 void ServerGameNetGroup::Initialize()
 {
-	CreateIocp(4);
+	CreateIOCP(4);
 	CreateBufferPool({
 		{ 8192, 30 }
 	});
 
-	RunIocp();
+	RunIOCP();
 
 	TcpServerPtr pGameServer = MakeShared<TcpServer>(pIocp_, pBufferPool_);
 	pGameServer->Start(IPv4EndPoint{ SERVER_GAME_TCP_ADDR });
@@ -137,12 +138,12 @@ ServerUdpNetGroup::~ServerUdpNetGroup()
 //////////////////////////////////////////////////////////////////////////////////////////
 void ServerUdpNetGroup::Initialize()
 {
-	CreateIocp(4);
+	CreateIOCP(4);
 	CreateBufferPool({
 		{ 8192, 30 }
 	});
 
-	RunIocp();
+	RunIOCP();
 
 	UdpClientPtr pLoginUdp = MakeShared<UdpClient>(pIocp_, pBufferPool_);
 	pLoginUdp->Bind(IPv4EndPoint{ SERVER_LOGIN_UDP_ADDR });
@@ -169,4 +170,4 @@ void ServerUdpNetGroup::Initialize()
 }
 
 
-NS_JNET_END
+NS_END

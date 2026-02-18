@@ -69,4 +69,4 @@ public:
 	jc::String ToString() const override { return ""; }
 };
 
-NS_JNET_END
+NS_END

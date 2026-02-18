@@ -356,6 +356,6 @@ std::ostream& operator<<(std::ostream& os, const StaticString<ParamSize>& str) {
 	return os << str.Source;
 }
 
-NS_JC_END
+NS_END
 
 #pragma warning(pop)

@@ -10,10 +10,10 @@
 
 #include <jc/Aligner.h>
 
-#include <sgs/CommonServer.h>
+#include <sgs/_Net/NetServer.h>
 #include <sgs_center/CenterSession.h>
 
-class CenterServer final : public CommonServer
+class CenterServer final : public sg::NetServer
 {
 public:
 	CenterServer(const jnet::IOCPPtr& _pIocp, const jc::MemoryPoolAbstractPtr& _pBufferAllocator);

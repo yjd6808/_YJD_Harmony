@@ -58,4 +58,4 @@ void ConditionVariable::NotifyAll()
 	WakeAllConditionVariable((PCONDITION_VARIABLE)&m_Handle);
 }
 
-NS_JC_END
+NS_END

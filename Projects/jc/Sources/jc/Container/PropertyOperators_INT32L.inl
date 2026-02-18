@@ -278,4 +278,4 @@ void InitializePropertyOperatorInt32L()
 	PropertyStatics::BinaryOperators_Int32L[PropertyBinaryOperatorType::Less]			= dbg_new PropertyValueBinaryOperator_Int32L_Less{};
 }
 
-NS_JC_END
+NS_END

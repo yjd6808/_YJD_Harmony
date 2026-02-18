@@ -9,7 +9,7 @@
 #pragma once
 
 #include <jc/Primitives/Range.h>
-#include <sg/Namepsace.h>
+#include <sg/Namespace.h>
 
 NS_CONST_BEGIN
 namespace Timeout
@@ -24,4 +24,4 @@ constexpr int Game = 1800;
 }
 
 
-NS_CONST_END
+NS_END

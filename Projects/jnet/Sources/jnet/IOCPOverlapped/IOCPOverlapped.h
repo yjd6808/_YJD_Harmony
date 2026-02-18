@@ -50,4 +50,4 @@ protected:
 
 using IOCPOverlappedPtr = jc::SharedPtr<IOCPOverlapped>;
 
-NS_JNET_END
+NS_END

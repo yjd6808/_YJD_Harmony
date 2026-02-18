@@ -30,6 +30,6 @@ protected:
 	int m_timeoutMiliSecond;
 };
 
-NS_JC_END
+NS_END
 
 

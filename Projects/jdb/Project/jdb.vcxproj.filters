@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Sources\jdb\Core.cpp" />
+    <ClCompile Include="..\Sources\jdb\MySQL\MysqlConnectionPool.cpp">
+      <Filter>MySQL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jdb\MySQL\MysqlDatabase.cpp">
+      <Filter>MySQL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jdb\MySQL\MysqlQuery.cpp">
+      <Filter>MySQL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jdb\MySQL\MysqlStatementBuilder.cpp">
+      <Filter>MySQL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jdb\MySQL\MysqlConnection.cpp">
+      <Filter>MySQL</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\jdb\Core.h" />
+    <ClInclude Include="..\Sources\jdb\DLLExport.h" />
+    <ClInclude Include="..\Sources\jdb\QueryDefine.h" />
+    <ClInclude Include="..\Sources\jdb\QueryHelper.h" />
+    <ClInclude Include="..\Sources\jdb\StatementType.h" />
+    <ClInclude Include="..\Sources\jdb\Structure.h" />
+    <ClInclude Include="..\Sources\jdb\MySQL\MysqlConnectionPool.h">
+      <Filter>MySQL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jdb\MySQL\MysqlDatabase.h">
+      <Filter>MySQL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jdb\MySQL\MysqlQuery.h">
+      <Filter>MySQL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jdb\MySQL\MysqlStatementBuilder.h">
+      <Filter>MySQL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jdb\MySQL\MysqlConnection.h">
+      <Filter>MySQL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jdb\Namespace.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="SQLServer">
+      <UniqueIdentifier>{f00236eb-e951-4e91-9f1e-0a8838e04e47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MySQL">
+      <UniqueIdentifier>{3f2969ed-266c-45cb-846e-c561446728aa}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

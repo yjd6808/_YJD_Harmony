@@ -18,47 +18,47 @@ class Event
 
 	struct Holder
 	{
-		int ID;
-		TAction Action;
+		int id_;
+		TAction action_;
 
 		template <typename TInvoker>
-		Holder(int id, TInvoker&& fn)
-			: ID(id)
-			, Action(Forward<TInvoker>(fn))
+		Holder(int _id, TInvoker&& _fn)
+			: id_(_id)
+			, action_(Forward<TInvoker>(_fn))
 		{}
 
-		template <typename... _Args>
-		void Invoke(_Args&&... args) {
-			this->Action.operator()(Forward<_Args>(args)...);
+		template <typename... ParamArgs>
+		void Invoke(ParamArgs&&... _args) {
+			this->action_.operator()(Forward<ParamArgs>(_args)...);
 		}
 
-		const type_info& TargetType() { return this->Action.target_type(); }
+		const type_info& TargetType() { return this->action_.target_type(); }
 	};
 public:
-	Event(int capacity = 2) : m_Chain(capacity) {}
+	Event(int _capacity = 2) : m_Chain(_capacity) {}
 	~Event() { Clear(); }
 
-	bool Register(int id, const TAction& fn) {
-		if (IsRegistered(id)) {
+	bool Register(int _id, const TAction& _fn) {
+		if (IsRegistered(_id)) {
 			return false;
 		}
 
-		m_Chain.PushBack({ id, fn });
+		m_Chain.PushBack({ _id, _fn });
 		return true;
 	}
 
-	bool Register(int id, TAction&& fn) {
-		if (IsRegistered(id)) {
+	bool Register(int _id, TAction&& _fn) {
+		if (IsRegistered(_id)) {
 			return false;
 		}
 
-		m_Chain.PushBack({ id, Move(fn) });
+		m_Chain.PushBack({ _id, Move(_fn) });
 		return true;
 	}
 
-	bool Unregister(int id) {
+	bool Unregister(int _id) {
 		for (int i = 0; i < m_Chain.Size(); ++i) {
-			if (m_Chain[i].ID == id) {
+			if (m_Chain[i].ID == _id) {
 				m_Chain.RemoveAt(i);
 				return true;
 			}
@@ -67,9 +67,9 @@ public:
 		return false;
 	}
 
-	bool IsRegistered(int id) const {
+	bool IsRegistered(int _id) const {
 		for (int i = 0; i < m_Chain.Size(); ++i) {
-			if (m_Chain[i].ID == id) {
+			if (m_Chain[i].ID == _id) {
 				return true;
 			}
 		}
@@ -81,10 +81,10 @@ public:
 		m_Chain.Clear();
 	}
 
-	template <typename... _Args>
-	void Invoke(_Args&&... params) {
+	template <typename... ParamArgs>
+	void Invoke(ParamArgs&&... _params) {
 		for (int i = 0; i < m_Chain.Size(); ++i) {
-			m_Chain[i].Action(Forward<_Args>(params)...);
+			m_Chain[i].Action(Forward<ParamArgs>(_params)...);
 		}
 		// m_Chain.ForEach([&params...](Holder* holder) {
 		// 	  holder->Invoke(Forward<_Args>(params)...);
@@ -95,9 +95,9 @@ public:
 		return m_Chain.Size();
 	}
 
-	template <typename... _Args>
-	void operator()(_Args&&... args) {
-		Invoke(Forward<_Args>(args)...);
+	template <typename... ParamArgs>
+	void operator()(ParamArgs&&... _args) {
+		Invoke(Forward<ParamArgs>(_args)...);
 	}
 private:
 	Vector<Holder> m_Chain;
@@ -105,4 +105,4 @@ private:
 
 
 
-NS_JC_END
+NS_END

@@ -41,7 +41,7 @@ public:
 	void Sent(IPacket* _pSentPacket, Int32UL _receivedBytes) override;
 	Type GetType() const override { return eSession; }
 	DetailType GetDetailType() const override { return eTcpSession; }
-	const char* TypeName() override { return "TCP 세션"; }
+	const char* TypeName() const override { return "TCP 세션"; }
 
 protected:
 	TcpServer* pServer_;
@@ -49,4 +49,4 @@ protected:
 
 using TcpSessionPtr = jc::SharedPtr<TcpSession>;
 
-NS_JNET_END
+NS_END

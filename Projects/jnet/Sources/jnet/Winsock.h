@@ -26,4 +26,4 @@ private:
 	static bool Finalized;
 };
 
-NS_JNET_END
+NS_END

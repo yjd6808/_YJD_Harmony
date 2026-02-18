@@ -85,4 +85,4 @@ bool RecursiveLock::IsLocked()
 /*size_t RecursiveLock::GetCurrentThreadId() {
 	return std::hash<std::thread::id>{}(std::this_thread::get_id());
 }*/
-NS_JC_END
+NS_END

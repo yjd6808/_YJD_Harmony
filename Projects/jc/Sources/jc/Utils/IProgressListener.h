@@ -37,4 +37,4 @@ struct CallbackProgressListener : IProgressListener
 	Action<int, int> FinishedCallback;
 };
 
-NS_JC_END
+NS_END

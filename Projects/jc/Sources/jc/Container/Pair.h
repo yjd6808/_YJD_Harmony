@@ -21,4 +21,4 @@ constexpr Pair<NaturalType_t<TKey>, NaturalType_t<TValue>> MakePair(TKey&& _key,
 	return { Forward<TKey>(_key), Forward<TValue>(_value) };
 }
 
-NS_JC_END
+NS_END

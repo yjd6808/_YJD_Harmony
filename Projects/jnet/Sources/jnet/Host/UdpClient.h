@@ -41,7 +41,7 @@ public:
 	void Sent(IPacket* _pSentPacket, Int32UL _sentBytes) override;
 	Type GetType() const override { return eClient; }
 	DetailType GetDetailType() const override { return eUdpClient; }
-	const char* TypeName() override { return "UDP 클라"; }
+	const char* TypeName() const override { return "UDP 클라"; }
 	void SetEventListener(ClientEventListener* _pListener) { pEventListener_ = _pListener; }
 
 protected:
@@ -51,4 +51,4 @@ protected:
 using UdpClientPtr = jc::SharedPtr<UdpClient>;
 using UdpClientWPtr = jc::WeakPtr<UdpClient>;
 
-NS_JNET_END
+NS_END

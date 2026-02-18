@@ -275,4 +275,4 @@ void InitializePropertyOperatorDouble()
 	PropertyStatics::BinaryOperators_Double[PropertyBinaryOperatorType::Less]			= dbg_new PropertyValueBinaryOperator_Double_Less{};
 }
 
-NS_JC_END
+NS_END

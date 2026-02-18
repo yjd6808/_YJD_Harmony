@@ -7,7 +7,6 @@
 
 
 #include "Core.h"
-#include "ServerCoreHeader.h"
 #include "S_PING_IS_COMMON.h"
 
 #include <sgs/CmdHost_PING.h>

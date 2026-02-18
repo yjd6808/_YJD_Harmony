@@ -193,7 +193,7 @@ void Thread::Abort()
     m_eState = eAborted;
 }
 
-NS_JC_END
+NS_END
 
 
 

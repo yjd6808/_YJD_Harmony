@@ -105,4 +105,4 @@ void Memory::Set(void* _src, const int _srcCapacity, const Byte _value)
 }
 
 
-NS_JC_END
+NS_END

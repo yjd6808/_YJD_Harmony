@@ -92,7 +92,7 @@ namespace SGToolsCommon.Sga
             if (!IsValidPackageName(packageName))
                 throw new Exception("올바르지 않은 패키지 이름입니다.");
 
-            SgaImage img = PackageMap[packageName].GetElement(imgName) as SgaImage;
+            SgaImage? img = PackageMap[packageName].GetElement(imgName) as SgaImage;
 
             if (img == null)
                 throw new Exception("해당 SgaElement는 SgaImage타입이 아닙니다.");

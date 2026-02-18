@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Classes\sgtc\App.cpp" />
+    <ClCompile Include="..\Classes\sgtc\main.cpp" />
+    <ClCompile Include="..\Classes\sgtc\Core.cpp" />
+    <ClCompile Include="..\Classes\sgtc\_Scene\Scene_World.cpp">
+      <Filter>_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgtc\_Scene\Scene_Base.cpp">
+      <Filter>_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgtc\_Scene\Scene_Game.cpp">
+      <Filter>_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgtc\_Layer\Layer_Game.cpp">
+      <Filter>_Layer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Classes\sgtc\App.h" />
+    <ClInclude Include="..\Classes\sgtc\Core.h" />
+    <ClInclude Include="..\Classes\sgtc\_Scene\Scene_World.h">
+      <Filter>_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgtc\_Scene\Scene_Base.h">
+      <Filter>_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgtc\_Scene\Scene_Game.h">
+      <Filter>_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgtc\_Layer\Layer_Game.h">
+      <Filter>_Layer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="_Scene">
+      <UniqueIdentifier>{bf0dcf74-6866-4a5c-9166-7f74eeccc65e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Layer">
+      <UniqueIdentifier>{b9ce8888-534d-48e4-85ef-71b7cb46a0ef}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

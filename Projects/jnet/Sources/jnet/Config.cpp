@@ -59,4 +59,4 @@ int DefaultParserType = PacketParser::Type::Raw;
  */
 bool NonblokingSocket = true;
 
-NS_JNET_END
+NS_END

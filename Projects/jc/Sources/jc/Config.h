@@ -25,4 +25,4 @@ extern bool AppExited;
 extern Int32U AppStartUpTimeTGT_v;
 extern long long AppStartUpTime_v;
 
-NS_JC_END
+NS_END

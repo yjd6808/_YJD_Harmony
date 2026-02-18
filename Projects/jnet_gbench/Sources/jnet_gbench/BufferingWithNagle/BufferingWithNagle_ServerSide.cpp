@@ -48,9 +48,9 @@ struct tagServerGroup : NetGroup
 	//////////////////////////////////////////////////////////////////////////////////////
 	void Initialize() override
 	{
-		CreateIocp(8);
+		CreateIOCP(8);
 		CreateBufferPool({});
-		RunIocp();
+		RunIOCP();
 		auto pServer = MakeShared<TcpServer>(pIocp_, pBufferPool_);
 		pServer->SetEventListener(dbg_new ServerListener);
 		pServer->Start(IPv4EndPoint::Parse(JNET_RESEARCH_BIND_ADDR));

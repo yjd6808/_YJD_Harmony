@@ -18,4 +18,4 @@ enum FileAccess
 	eReadWrite
 };
 
-NS_JC_END
+NS_END

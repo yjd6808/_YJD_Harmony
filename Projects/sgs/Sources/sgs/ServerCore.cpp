@@ -7,30 +7,31 @@
 
 #include "Core.h"
 #include "ServerCore.h"
-#include "ServerCoreHeader.h"
 
 #include <sgs/CmdHost.h>
 #include <sgs/CmdRelay.h>
 
+#include <sg/_Util/DescLoaderMgr.h>
+#include <sg/_Util/_DescMgr/DescMgr_Database.h>
+#include <sg/_Util/_DescMgr/DescMgr_ServerInfo.h>
+
+#include <sgs/_Net/NetCore.h>
+#include <sgs/UnauthenticatedSessionManager.h>
+
 USING_NS_JC;
 USING_NS_JNET;
-
-NS_SG_BEGIN
-::CommonNetGroupMgr* CommonNetGroupMgr; // 메인 서버 프로그램에서 주입해줄 것
-::CommonNetGroup* CommonNetGroup; // 메인 서버 프로그램에서 주입해줄 것
-::CommonServer* CommonServer; // 메인 서버 프로그램에서 주입해줄 것
-::ServerContents* CommonContents; // 메인 서버 프로그램에서 주입해줄 것
-::InterServerClientNetGroup* InterServerClientNetGroup; // 메인 서버 프로그램에서 주입해줄 것
-::TcpClient* InterServerClientTcp; // 메인 서버 프로그램에서 주입해줄 것
-::UdpClient* InterServerClientUdp; // 메인 서버 프로그램에서 주입해줄 것
-::ServerProcessInfo* ServerProcessInfo; // 메인 서버 프로그램에서 주입해줄 것
-::ServerProcessInfoPackage* ServerProcessInfoPackage; // 메인 서버 프로그램에서 주입해줄 것
-::TimeManager* TimeManager; // 메인 서버 프로그램에서 주입해줄 것
-NS_SG_END
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void InitializeServerCore()
 {
+	g_cDescMgr.AddLoader(dbg_new ServerInfoLoader());
+	g_cDescMgr.AddLoader(dbg_new DatabaseInfoLoader());
+	g_cDescMgr.LoadAll();
+	g_cNetCore.Initialize();
+
+	g_cUnauthenticatedSessionManager; // 생성
+
+
 	// 공통 커맨드 이름 등록
 	// [ INTER_SERVER - HOST ]
 	// ============================================================
@@ -67,4 +68,11 @@ void InitializeServerCore()
 //////////////////////////////////////////////////////////////////////////////////////////
 void FinalizeServerCore()
 {
+	g_cUnauthenticatedSessionManager.Free();
+
+	g_cNetCore.Finalize();
+	g_cNetCore.Free();
+
+	g_cDescMgr.Clear();
+	g_cDescMgr.Free();
 }

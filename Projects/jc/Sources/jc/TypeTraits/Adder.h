@@ -25,7 +25,7 @@ NS_JC_BEGIN
 		using Type = T&&;
 	};
 
-	NS_DETAIL_END
+	NS_END
 
 
 template <typename T>
@@ -35,4 +35,4 @@ template <typename T>
 using AddRValueRef_t = typename detail::AddRValueReference<T>::Type;
 
 
-NS_JC_END
+NS_END

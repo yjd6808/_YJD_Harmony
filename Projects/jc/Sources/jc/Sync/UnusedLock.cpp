@@ -9,7 +9,7 @@
 
 NS_JC_BEGIN
 template class LockGuard<UnusedLock>;
-NS_JC_END
+NS_END
 
 
 

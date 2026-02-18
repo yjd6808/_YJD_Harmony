@@ -20,7 +20,7 @@ JC_SENUM_BEGIN(ConfigFileType)
 	Monster_Attack_Data,
 	Monster_Projectile,
 	Monster_Stat,
-	Server,
+	ServerInfo,
 	Tile,
 	UI,
 	Action,
@@ -52,7 +52,7 @@ static constexpr const char* FileName[Max]{
 	"monster_attack_data.json", // 파일
 	"monster_projectile.json", // 파일
 	"monster_stat.json", // 파일
-	"server.json", // 파일
+	"server_info.json", // 파일
 	"tile.json", // 파일
 	"ui.json", // 파일
 	"action.json", // 파일
@@ -132,6 +132,7 @@ public:
 	virtual bool LoadDirectory(OUT DirectoryTree& _directoryTree);
 	virtual bool Load() = 0;
 	virtual void Unload();
+	virtual bool UseSrcDataPath() const { return true; }
 
 	virtual std::initializer_list<ConfigFileType_t> GetDependencies() { return {}; }
 	int GetDependenciesCount() { return static_cast<int>(GetDependencies().size()); }

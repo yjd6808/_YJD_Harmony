@@ -423,4 +423,4 @@ template struct Interlocked<Int64>;
 template struct Interlocked<Int64U>;
 template struct Interlocked<bool>;
 
-NS_JC_END
+NS_END

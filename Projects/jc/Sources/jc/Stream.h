@@ -128,4 +128,4 @@ protected:
 
 using StreamPtr = SharedPtr<Stream>;
 
-NS_JC_END
+NS_END

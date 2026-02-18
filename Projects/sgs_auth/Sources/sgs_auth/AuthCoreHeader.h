@@ -9,7 +9,6 @@
 #pragma once
 
 #include <sgs/ServerCoreHeader.h>
-#include <sgs/MysqlDatabase.h>
 
 #include <sgs_auth/AuthNetMaster.h>
 #include <sgs_auth/AuthNetGroup.h>

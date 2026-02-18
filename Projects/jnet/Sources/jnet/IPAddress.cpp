@@ -116,4 +116,4 @@ IPv4Address IPv4Address::Parse(const char* _pHostOrderedAddressString)
 	return result;
 }
 
-NS_JNET_END
+NS_END

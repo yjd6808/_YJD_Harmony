@@ -13,5 +13,6 @@ class sgapiClient : public sgapiBase
 {
 public:
 	virtual bool sgapi_IsClient() override { return true; }
+	virtual bool sgapi_IsServer() override { return false; }
 };
 

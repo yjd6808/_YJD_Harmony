@@ -68,7 +68,7 @@ public:
 	ItemOptInfo*					GetItemOptInfo(const jc::String& _itemOptEngName);
 	ChannelBaseInfo*				GetChannelBaseInfo(int _channelCode);
 	EnchantInfo*					GetEnchantInfo(int _enchantCode);
-	ServerProcessInfoPackage*		GetServerProcessInfoPackage();
+	ServerProcessInfo*				GetServerProcessInfo();
 	DatabaseInfo*					GetDatabaseInfo(int _databaseCode);
 	CharCommonInfo*					GetCharCommonInfo(int _charCommonCode);
 	MapInfo*						GetMapInfo(int _mapCode);
@@ -99,5 +99,4 @@ private:
 	DescLoaderAbstract* m_pConfigFileLoaders[ConfigFileType::Max]{};
 };
 
-JC_DECL_SINGLETON_VAR(DescLoaderMgr);
 #define g_cDescMgr JC_DECL_SINGLETON_BODY(DescLoaderMgr)

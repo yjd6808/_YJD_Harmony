@@ -9,11 +9,12 @@
 
 #include <jc/Container/HashMap.h>
 
-#include <sgs/ListenerServerCommon.h>
+#include <sg/_Net/NetServerListener.h>
+
 #include <sgs/CmdHost.h>
 #include <sgs_center/CenterServer.h>
 
-class ListenerCenterServer : public ListenerServerCommon
+class ListenerCenterServer : public sg::NetServerListener
 {
 public:
 	ListenerCenterServer(CenterServer* _pServer, jnet::CommandParser* _pParser);

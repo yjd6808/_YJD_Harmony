@@ -98,4 +98,4 @@ void PacketCommandParser::Received(Int32UL _receivedBytes)
 	}
 }
 
-NS_JNET_END
+NS_END

@@ -63,4 +63,4 @@ protected:
 using IOCPPtr = jc::SharedPtr<IOCP>;
 using IOCPWPtr = jc::WeakPtr<IOCP>;
 
-NS_JNET_END
+NS_END

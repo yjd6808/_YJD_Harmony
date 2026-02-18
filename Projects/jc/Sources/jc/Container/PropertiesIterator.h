@@ -127,4 +127,4 @@ protected:
 	friend class TProperties;
 };
 
-NS_JC_END
+NS_END

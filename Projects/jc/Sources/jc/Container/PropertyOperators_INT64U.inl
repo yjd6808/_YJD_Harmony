@@ -277,4 +277,4 @@ void InitializePropertyOperatorInt64U()
 	PropertyStatics::BinaryOperators_Int64U[PropertyBinaryOperatorType::Less]            = dbg_new PropertyValueBinaryOperator_Int64U_Less{};
 }
 
-NS_JC_END
+NS_END

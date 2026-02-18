@@ -43,23 +43,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs_auth\ListenerAuthServer.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Sources\sgs_auth\AuthNetGroup.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_auth\AuthNetMaster.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_auth\AuthServer.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_auth\AuthSession.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -100,19 +84,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs_auth\ListenerAuthServer.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\sgs_auth\AuthNetGroup.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_auth\AuthServer.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_auth\AuthNetMaster.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -120,10 +92,6 @@
     <ClInclude Include="..\Sources\sgs_auth\AuthCoreHeader.h" />
     <ClInclude Include="..\Sources\sgs_auth\Q_LOGIN.h" />
     <ClInclude Include="..\Sources\sgs_auth\R_AUTHENTICATION.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_auth\AuthSession.h">
       <SubType>
       </SubType>
     </ClInclude>

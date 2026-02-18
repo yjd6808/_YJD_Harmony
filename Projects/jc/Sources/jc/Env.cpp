@@ -12,22 +12,54 @@
 
 #include <timeapi.h>
 
-NS_JC_BEGIN
+#include "FileSystem/Path.h"
 
-SpinLock	Env::tgt64_lock_;
-Int32U		Env::tgt64_lastTime_;
-Int32U		Env::tgt64_highPart_;
+NS_JC_BEGIN
+String			Env::currentDirectory_;
+String			Env::modulePath_;
+String			Env::moduleName_;
+
+SpinLock		Env::tgt64_lock_;
+Int32U			Env::tgt64_lastTime_;
+Int32U			Env::tgt64_highPart_;
 Vector<String>	Env::args_;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-String Env::CurrentDirectory() 
+const String& Env::CurrentDirectory() 
 {
-	char szFileName[MAX_PATH];
-	int iLen = WinApi::GetModuleFilePath(NULL, szFileName, MAX_PATH);
+	if (currentDirectory_.Length() > 0) // 멀티쓰레드 동작시 문제없도록 Config.h에서 미리 호출해놓도록 함.
+		return currentDirectory_;
 
-	while (szFileName[--iLen] != '\\') {}
-	if (iLen > 0) szFileName[iLen] = NULL;
-	return szFileName;
+	char modulePath[MAX_PATH];
+	int iLen = WinApi::GetModuleFilePath(NULL, modulePath, MAX_PATH);
+
+	while (modulePath[--iLen] != '\\') {}
+	if (iLen > 0) modulePath[iLen] = NULL;
+	currentDirectory_ = modulePath;
+	return currentDirectory_;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+const String& Env::ModulePath()
+{
+	if (modulePath_.Length() > 0) // 멀티쓰레드 동작시 문제없도록 Config.h에서 미리 호출해놓도록 함.
+		return modulePath_;
+
+	char filePath[MAX_PATH];
+	int iLen = WinApi::GetModuleFilePath(NULL, filePath, MAX_PATH);
+	modulePath_ = filePath;
+	return modulePath_;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+const String& Env::ModuleName()
+{
+	if (moduleName_.Length() > 0)
+		return moduleName_;
+
+	String modulePath = ModulePath();
+	moduleName_ = jc::Path::FileName(modulePath);
+	return moduleName_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -78,4 +110,4 @@ void Env::InitArgs(int _argc, char** _argv)
 	}
 }
 
-NS_JC_END
+NS_END

@@ -94,4 +94,4 @@ bool Random::Chance(double _percentProbability)
 	return GenerateF(0.0, 100.0) <= _percentProbability;
 }
 
-NS_JC_END
+NS_END

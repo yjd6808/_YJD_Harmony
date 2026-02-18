@@ -10,7 +10,7 @@
 #include "LobbyCoreHeader.h"
 
 #include <sg/_Util/DescLoaderMgr.h>
-#include <sg/_Util/_DescMgr/DescMgr_Server.h>
+#include <sg/_Util/_DescMgr/DescMgr_ServerInfo.h>
 #include <sg/_Util/_DescMgr/DescMgr_Database.h>
 
 USING_NS_JC;
@@ -22,7 +22,7 @@ NS_SG_BEGIN
 ::LobbyNetGroup*    NetGroup;
 ::LobbyServer*      Server;
 ::LobbyContents     Contents;
-NS_SG_END
+NS_END
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void InitializeLobbyCore()
@@ -45,9 +45,9 @@ void InitializeLobbyCore()
 	sg::CommonNetGroup = sg::NetGroup;
 	sg::CommonServer = sg::Server;
 	sg::CommonContents = &sg::Contents;
-	sg::InterServerClientNetGroup = sg::NetGroupMgr->GetNetGroup(Const::NetGroup::InterServerId).Get<InterServerClientNetGroup*>();
-	sg::InterServerClientTcp = sg::InterServerClientNetGroup ? sg::InterServerClientNetGroup->GetInterServerClientTcp() : nullptr;
-	sg::InterServerClientUdp = sg::InterServerClientNetGroup ? sg::InterServerClientNetGroup->GetInterServerClientUdp() : nullptr;
+	sg::NetGroup_InterServ = sg::NetGroupMgr->GetNetGroup(Const::NetGroup::InterServerId).Get<NetGroup_InterServ*>();
+	sg::InterServerClientTcp = sg::NetGroup_InterServ ? sg::NetGroup_InterServ->GetInterServerClientTcp() : nullptr;
+	sg::InterServerClientUdp = sg::NetGroup_InterServ ? sg::NetGroup_InterServ->GetInterServerClientUdp() : nullptr;
 	sg::ServerProcessInfo = &sg::ServerProcessInfoPackage->lobby_;
 	sg::TimeManager = TimeManager::Get();
 

@@ -67,4 +67,4 @@ struct JC_NOVTABLE IPropertyValueBinaryOperator
 	virtual void Operate(Ty& _lhs, char* _pRhs) = 0;
 };
 
-NS_JC_END
+NS_END

@@ -299,4 +299,4 @@ protected:
 
 using MemoryPoolAbstractPtr = SharedPtr<MemoryPoolAbstract>;
 
-NS_JC_END
+NS_END

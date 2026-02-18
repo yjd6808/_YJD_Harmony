@@ -2,9 +2,9 @@
 
 #include <jc/Define.h>
 
-#include <sgs/QueryHelper.h>
+#include <jdb/QueryHelper.h>
 
-struct Q_LOGIN : Qry::QryHelper<Q_LOGIN>
+struct Q_LOGIN : jdb::QryHelper<Q_LOGIN>
 {
 	static void SelectAccountInfoList(const char* _pAccountId);
 	static bool RegisterAccount(const char* _pAccountId, const char* _pAccountPass);

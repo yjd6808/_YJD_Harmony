@@ -29,5 +29,5 @@ constexpr bool IsSpace(const char ch) {
 	return ch == ' ' || ch == '\t' || ch == '\n' || ch == '\v' || ch == '\r' || ch == '\f';
 }
 
-NS_JC_END
+NS_END
 

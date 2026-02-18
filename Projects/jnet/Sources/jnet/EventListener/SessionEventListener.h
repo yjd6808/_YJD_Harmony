@@ -19,6 +19,14 @@ class Session;
 class JC_NOVTABLE SessionEventListener
 {
 public:
+	using FnConnected = jc::Action<jnet::Session*>;
+	using FnConnectFailed = jc::Action<jnet::Session*, Int32U>;
+	using FnDisconnected = jc::Action<jnet::Session*, Int32U>;
+	using FnSent = jc::Action<jnet::Session*, jnet::IPacket*, Int32UL>;
+	using FnReceivedRaw = jc::Action<jnet::Session*, char*, int>;
+	using FnReceivedCmd = jc::Action<jnet::Session*, jnet::ICommand*>;
+	using FnReceivedPacket = jc::Action<jnet::Session*, jnet::RecvedCommandPacket*>;
+
 	SessionEventListener() = default;
 	virtual ~SessionEventListener() = default;
 
@@ -28,6 +36,31 @@ public:
 	virtual void OnReceivedRaw(Session* _pSession, char* _pData, int _len) {}
 	virtual void OnReceived(Session* _pSession, ICommand* _pRecvCmd) {}
 	virtual void OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket) {}
+
+	void SetConnectedCallback(const FnConnected& _fn) { fnConnected_ = _fn; }
+	void SetConnectFailedCallback(const FnConnectFailed& _fn) { fnConnectFailed_ = _fn; }
+	void SetDisconnectedCallback(const FnDisconnected& _fn) { fnDisconnected_ = _fn; }
+	void SetSentCallback(const FnSent& _fn) { fnSent_ = _fn; }
+	void SetReceivedRawCallback(const FnReceivedRaw& _fn) { fnReceivedRaw_ = _fn; }
+	void SetReceivedCmdCallback(const FnReceivedCmd& _fn) { fnReceivedCmd_ = _fn; }
+	void SetReceivedPacketCallback(const FnReceivedPacket& _fn) { fnReceivedPacket_ = _fn; }
+
+	void SetConnectedCallback(FnConnected&& _fn) { fnConnected_ = std::move(_fn); }
+	void SetConnectFailedCallback(FnConnectFailed&& _fn) { fnConnectFailed_ = std::move(_fn); }
+	void SetDisconnectedCallback(FnDisconnected&& _fn) { fnDisconnected_ = std::move(_fn); }
+	void SetSentCallback(FnSent&& _fn) { fnSent_ = std::move(_fn); }
+	void SetReceivedRawCallback(FnReceivedRaw&& _fn) { fnReceivedRaw_ = std::move(_fn); }
+	void SetReceivedCmdCallback(FnReceivedCmd&& _fn) { fnReceivedCmd_ = std::move(_fn); }
+	void SetReceivedPacketCallback(FnReceivedPacket&& _fn) { fnReceivedPacket_ = std::move(_fn); }
+
+protected:
+	FnConnected fnConnected_;
+	FnConnectFailed fnConnectFailed_;
+	FnDisconnected fnDisconnected_;
+	FnSent fnSent_;
+	FnReceivedRaw fnReceivedRaw_;
+	FnReceivedCmd fnReceivedCmd_;
+	FnReceivedPacket fnReceivedPacket_;
 };
 
-NS_JNET_END
+NS_END

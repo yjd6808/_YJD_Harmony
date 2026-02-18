@@ -203,4 +203,4 @@ IPv4EndPoint IPv4EndPoint::Parse(const String& _endPointAddr)
 	return Parse(_endPointAddr.Source());
 }
 
-NS_JNET_END
+NS_END

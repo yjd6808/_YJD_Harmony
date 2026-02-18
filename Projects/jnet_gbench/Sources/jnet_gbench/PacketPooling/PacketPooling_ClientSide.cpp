@@ -56,9 +56,9 @@ struct tagClientGroup : NetGroup
 	tagClientGroup() : NetGroup("클라이언트") {}
 
 	void Initialize() override {
-		CreateIocp(TestClientCount * 2);
+		CreateIOCP(TestClientCount * 2);
 		CreateBufferPool({});
-		RunIocp();
+		RunIOCP();
 
 		for (int i = 0; i < TestClientCount; ++i) {
 			auto pClient = MakeShared<TcpClient>(pIocp_, pBufferPool_);

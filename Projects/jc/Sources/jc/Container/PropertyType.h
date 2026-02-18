@@ -304,4 +304,4 @@ static constexpr const char* NAME[Max] =
 JC_SENUM_MIDDLE_END(PropertyBinaryOperatorType)
 
 
-NS_JC_END
+NS_END

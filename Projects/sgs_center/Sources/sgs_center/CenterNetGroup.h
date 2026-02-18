@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sgs/CommonNetGroup.h>
+#include <sgs/_Net/NetGroup_Main.h>
 #include <sgs_center/CenterServer.h>
 
 class CenterNetGroup final : public CommonNetGroup
@@ -17,11 +17,11 @@ public:
 	CenterNetGroup();
 	~CenterNetGroup() override;
 
-	CommonServer* GetMainTcp() const override { return m_pCenterTcp; }
+	sg::NetServer* GetMainTcp() const override { return m_pCenterTcp; }
 	CenterServer* GetCenterTcp() const { return m_pCenterTcp; }
 	jnet::ISessionContainer* GetSessionSessionContainer() const { return m_pCenterSessionContainer; }
 	jnet::ISessionContainer* GetSessionContainer(ServerType_t _type) override;
-	CommonSession* GetSessionFromContainer(int _handle) override;
+	sg::NetSession* GetSessionFromContainer(int _handle) override;
 protected:
 	void InitializeBufferPool() override;
 	void InitializeIOCP() override;

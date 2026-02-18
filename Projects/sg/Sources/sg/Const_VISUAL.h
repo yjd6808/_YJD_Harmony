@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <sg/Namepsace.h>
+#include <sg/Namespace.h>
 
 NS_CONST_BEGIN
 namespace Visual
@@ -17,4 +17,4 @@ namespace Visual
 constexpr int MaxShapeCount = 3;
 }
 
-NS_CONST_END
+NS_END

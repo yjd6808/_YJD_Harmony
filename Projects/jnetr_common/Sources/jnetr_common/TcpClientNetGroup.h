@@ -40,4 +40,4 @@ private:
 	TcpClientWPtr gameClient_;
 };
 
-NS_JNET_END
+NS_END

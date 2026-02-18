@@ -27,4 +27,4 @@ class AutoRef<T*, TAction>
 {
 };
 
-NS_JC_END
+NS_END

@@ -41,4 +41,4 @@ void IOCPOverlappedSend::Process(BOOL _result, Int32UL _bytesTransferred, IOCPPo
 	sender_->Sent(sentPacket_, _bytesTransferred);
 }
 
-NS_JNET_END
+NS_END

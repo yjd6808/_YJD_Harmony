@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sg/Namepsace.h>
+#include <sg/Namespace.h>
 
 #define NS_CALLBACK_BEGIN namespace Callback {
 #define NS_CALLBACK_END   }

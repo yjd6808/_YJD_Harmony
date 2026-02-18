@@ -13,10 +13,13 @@
 
 NS_JC_BEGIN
 
-class Env
+class JC_DLL Env
 {
 public:
-	static String	CurrentDirectory();
+	static const String& CurrentDirectory();
+	static const String& ModulePath();
+	static const String& ModuleName();
+
 	static Int32U   TimeGetTime();
 	static TimeSpan AppTime();			// 앱 실행후 시간이 얼마나 결과했는지
 	static Int32U	AppTimeTgt();		// 앱 실행후 시간이 얼마나 결과했는지
@@ -28,10 +31,14 @@ public:
 	static int GetArgsCount() { return args_.Size(); }
 
 private:
+	static String		currentDirectory_; // a/b/c
+	static String 		modulePath_;	// a/b/c/d.exe
+	static String 		moduleName_;	// d.exe
+
 	static SpinLock		tgt64_lock_;
 	static Int32U		tgt64_lastTime_;
 	static Int32U		tgt64_highPart_;
 	static Vector<String>	args_;
 };
 
-NS_JC_END
+NS_END

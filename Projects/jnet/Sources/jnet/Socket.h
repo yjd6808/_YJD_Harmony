@@ -15,7 +15,7 @@ NS_JNET_BEGIN
 	NS_DETAIL_BEGIN
 		bool UseConnectEx();
 		bool UseDisconnectEx();
-	NS_DETAIL_END
+	NS_END
 
 class SocketOption
 {
@@ -209,4 +209,4 @@ class Socketv6 final : public Socket
 };
 
 
-NS_JNET_END
+NS_END

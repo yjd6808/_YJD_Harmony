@@ -36,7 +36,7 @@ int main(int _argc, char* _pArgv[])
   //  // 메인 루틴
   //  //////////////////////////////////////////////////////////////////////////////////////
 
-  //  if (sg::InterServerClientNetGroup && sg::InterServerClientNetGroup->ConnectCenterServer(5))
+  //  if (sg::NetGroup_InterServ && sg::NetGroup_InterServ->ConnectCenterServer(5))
   //  {
 		//sg::NetGroupMgr->ProcessMainUpdate();
   //  }

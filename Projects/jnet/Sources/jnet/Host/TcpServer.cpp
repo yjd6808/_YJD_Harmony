@@ -302,4 +302,4 @@ bool TcpServer::Stop()
 	return true;
 }
 
-NS_JNET_END
+NS_END

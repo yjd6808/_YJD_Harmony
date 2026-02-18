@@ -9,12 +9,15 @@
 #include "AuthCore.h"
 #include "AuthCoreHeader.h"
 
+#include <jdb/MySQL/MysqlDatabase.h>
+
 #include <sg/_Util/DescLoaderMgr.h>
-#include <sg/_Util/_DescMgr/DescMgr_Server.h>
+#include <sg/_Util/_DescMgr/DescMgr_ServerInfo.h>
 #include <sg/_Util/_DescMgr/DescMgr_Database.h>
 
 USING_NS_JC;
 USING_NS_JNET;
+USING_NS_JDB;
 
 NS_SG_BEGIN
 ::MysqlDatabase*    GameDB;
@@ -22,20 +25,20 @@ NS_SG_BEGIN
 ::AuthNetGroup*     NetGroup;
 ::AuthServer*       Server;
 ::AuthContents      Contents;
-NS_SG_END
+NS_END
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void InitializeAuthCore()
 {
-	g_cDescMgr.AddLoader(dbg_new ServerInfoLoader());
-	g_cDescMgr.AddLoader(dbg_new DatabaseInfoLoader());
-	g_cDescMgr.LoadAll();
+	DatabaseInfo* pDbInfo = g_cDescMgr.GetDatabaseInfo(DatabaseType::Game);
+
+	g_cNetGroup_InterServ.Initialize();
 
 	sg::ServerProcessInfoPackage        = g_cDescMgr.GetServerProcessInfoPackage();
 	sg::ServerProcessInfo               = &sg::ServerProcessInfoPackage->auth_;
-	sg::GameDB                          = dbg_new MysqlDatabase(g_cDescMgr.GetDatabaseInfo(DatabaseType::Game));
-	sg::GameDB->Initialize(ServerProcessType::Auth);
-	sg::NetGroupMgr                       = AuthNetMaster::Get();
+	sg::GameDB                          = dbg_new MysqlDatabase();
+	sg::GameDB->Initialize();
+	sg::NetGroupMgr                      = AuthNetMaster::Get();
 	sg::NetGroupMgr->Initialize();
 	sg::NetGroup                        = sg::NetGroupMgr->GetNetGroup(Const::NetGroup::MainId).Get<AuthNetGroup*>();
 	sg::Server	                        = sg::NetGroup->GetAuthTcp();
@@ -45,9 +48,9 @@ void InitializeAuthCore()
 	sg::CommonNetGroup                  = sg::NetGroup;
 	sg::CommonServer                    = sg::Server;
 	sg::CommonContents                  = &sg::Contents;
-	sg::InterServerClientNetGroup       = sg::NetGroupMgr->GetNetGroup(Const::NetGroup::InterServerId).Get<InterServerClientNetGroup*>();
-	sg::InterServerClientTcp            = sg::InterServerClientNetGroup ? sg::InterServerClientNetGroup->GetInterServerClientTcp() : nullptr;
-	sg::InterServerClientUdp            = sg::InterServerClientNetGroup ? sg::InterServerClientNetGroup->GetInterServerClientUdp() : nullptr;
+	sg::NetGroup_InterServ       = sg::NetGroupMgr->GetNetGroup(Const::NetGroup::InterServerId).Get<NetGroup_InterServ*>();
+	sg::InterServerClientTcp            = sg::NetGroup_InterServ ? sg::NetGroup_InterServ->GetInterServerClientTcp() : nullptr;
+	sg::InterServerClientUdp            = sg::NetGroup_InterServ ? sg::NetGroup_InterServ->GetInterServerClientUdp() : nullptr;
 	sg::ServerProcessInfo               = &sg::ServerProcessInfoPackage->auth_;
 	sg::TimeManager                     = TimeManager::Get();
 

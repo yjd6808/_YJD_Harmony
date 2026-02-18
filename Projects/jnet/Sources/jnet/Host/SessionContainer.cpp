@@ -180,4 +180,4 @@ bool SessionContainer::IsValidHandle(int _handleIndex)
 	return true;
 }
 
-NS_JNET_END
+NS_END

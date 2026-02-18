@@ -159,4 +159,4 @@ struct CRuntime {
 	 */
 	static bool JC_CDECL FileRename(const char* _pOldPath, const char* _pNewPath, bool _overwrite = true);
 };
-NS_JC_END
+NS_END

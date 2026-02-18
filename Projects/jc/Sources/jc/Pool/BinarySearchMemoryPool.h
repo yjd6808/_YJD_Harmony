@@ -167,4 +167,4 @@ private:
 
 using BinaryMemoryPoolPtr = SharedPtr<CBinarySearchMemoryPool>;
 
-NS_JC_END
+NS_END

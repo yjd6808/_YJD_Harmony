@@ -30,4 +30,4 @@ public:
 	static String Extension(const String& _path);
 };
 
-NS_JC_END
+NS_END

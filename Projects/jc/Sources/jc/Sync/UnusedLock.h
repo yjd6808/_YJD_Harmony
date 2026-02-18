@@ -32,5 +32,5 @@ bool IsLocked() override { return false; }
 using UnusedLockGuard = LockGuard<UnusedLock>;
 extern template         LockGuard<UnusedLock>;
 
-NS_JC_END;
+NS_END;
 

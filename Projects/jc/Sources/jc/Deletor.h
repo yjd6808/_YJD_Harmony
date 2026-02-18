@@ -180,4 +180,4 @@ struct PlacementDeletor<T[ArraySize], Option> : PlacementDeletorBase<T[ArraySize
 };
 
 
-NS_JC_END
+NS_END

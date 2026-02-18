@@ -22,11 +22,13 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-void R_AUTHENTICATION::RECV_CAU_Login(Session* session, ICommand* cmd) {
-	CAU_Login* pCmd = (CAU_Login*)cmd;
+//////////////////////////////////////////////////////////////////////////////////////////
+void R_AUTHENTICATION::RECV_CAU_Login(Session* _session, ICommand* _cmd)
+{
+	CAU_Login* pCmd = (CAU_Login*)_cmd;
 
 	S_AUTHENTICATION::AutoFlush _;
-	S_AUTHENTICATION::SetInformation(session, SendStrategy::SendAlloc);
+	S_AUTHENTICATION::SetInformation(_session, SendStrategy::SendAlloc);
 	AccountData accountData;
 
 	LoginResult_t eResult = LoginResult::LoginSuccess;
@@ -73,9 +75,10 @@ void R_AUTHENTICATION::RECV_CAU_Login(Session* session, ICommand* cmd) {
 	S_AUTHENTICATION::SEND_AUC_LoginAck(eResult, accountData.lastServer_, pAuthenticationData->serial_);
 }
 
-
-void R_AUTHENTICATION::RECV_SAU_AuthenticationCheck(Session* session, ICommand* cmd) {
-	SAU_AuthenticationCheck* pCmd = (SAU_AuthenticationCheck*)cmd;
+//////////////////////////////////////////////////////////////////////////////////////////
+void R_AUTHENTICATION::RECV_SAU_AuthenticationCheck(Session* _session, ICommand* _cmd)
+{
+	SAU_AuthenticationCheck* pCmd = (SAU_AuthenticationCheck*)_cmd;
 	ServerProcessType_t eReplyServer = ServerProcessType::None;
 	AuthenticationData* pAuthenticationData = nullptr;
 

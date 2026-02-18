@@ -12,7 +12,7 @@
 #include <jnet/Host/SessionContainer.h>
 
 #include <sg/Cmd_LOBBY.h>
-#include <sgs/CommonSession.h>
+#include <sgs/NetSession.h>
 #include <sgs/CmdRelay_AUTHENTICATION.h>
 
 #include <sgs_lobby/LobbyServer.h>
@@ -45,7 +45,7 @@ jnet::ISessionContainer* LobbyNetGroup::GetSessionContainer(ServerType_t _type)
 	return nullptr;
 }
 
-CommonSession* LobbyNetGroup::GetSessionFromContainer(int _handle)
+sg::NetSession* LobbyNetGroup::GetSessionFromContainer(int _handle)
 {
 	if (!Const::Host::LobbyHandleRange.Contain(_handle))
 	{
@@ -53,7 +53,7 @@ CommonSession* LobbyNetGroup::GetSessionFromContainer(int _handle)
 		return nullptr;
 	}
 
-	return dynamic_cast<CommonSession*>(m_pLobbySessionContainer->Get(_handle));
+	return dynamic_cast<sg::NetSession*>(m_pLobbySessionContainer->Get(_handle));
 }
 
 void LobbyNetGroup::InitializeBufferPool()

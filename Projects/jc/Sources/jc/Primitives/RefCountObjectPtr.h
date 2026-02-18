@@ -154,7 +154,7 @@ private:
 	template <typename> friend class RefCountObjectPtr;
 };
 
-NS_JC_END
+NS_END
 
 
 #define JC_REF_COUNT_GUARD(...)				JC_EXPAND_1(JC_CONCAT_ARGS(JC_REF_COUNT_GUARD_, JC_ARGS_COUNT(__VA_ARGS__))(__VA_ARGS__)) 

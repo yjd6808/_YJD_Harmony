@@ -7,7 +7,6 @@
 
 
 #include "Core.h"
-#include "ServerCoreHeader.h"
 #include "InterServerRecvHelper.h"
 
 #include <sg/Const.h>

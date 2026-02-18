@@ -1840,8 +1840,8 @@ TimeSpan StopWatch<StopWatchMode::HighResolution>::GetElapsed() {
 	return (StopCounter - StartCounter) / Precision;
 }
 
-bool TimeCounter::ElapsedSeconds(float _seconds) {
-
+bool TimeCounter::ElapsedSeconds(float _seconds)
+{
 	if (AttributeFlag.Check(TimeCounterAttribute::DontFire))
 		return false;
 
@@ -1899,5 +1899,5 @@ bool TimeCounterF::ElapsedSeconds(float _seconds) {
 	return bTimeOver;
 }
 
-NS_JC_END
+NS_END
 

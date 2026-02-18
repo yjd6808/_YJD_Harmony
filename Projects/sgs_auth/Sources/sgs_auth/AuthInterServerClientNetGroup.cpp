@@ -11,7 +11,7 @@
 #include "AuthInterServerClientNetGroup.h"
 
 #include <sgs/CmdHost.h>
-#include <sgs/ListenerInterServerClient.h>
+#include <sgs/_Net/NetClientListener_InterServ.h>
 #include <sgs/CmdRelay_AUTHENTICATION.h>
 
 #include <sgs_auth/R_AUTHENTICATION.h>
@@ -37,7 +37,7 @@ AuthInterServerClientNetGroup::~AuthInterServerClientNetGroup()
 //////////////////////////////////////////////////////////////////////////////////////////
 void AuthInterServerClientNetGroup::InitializeParser()
 {
-	InterServerClientNetGroup::InitializeParser();
+	NetGroup_InterServ::InitializeParser();
 
 	// AUTHENTICATION
 	pParser_->AddCommand<SAU_AuthenticationCheck>(R_AUTHENTICATION::RECV_SAU_AuthenticationCheck);
@@ -64,7 +64,7 @@ void AuthInterServerClientNetGroup::InitializeInterServerTcp()
 	AddHost(Const::Host::AuthInterServerTcpId, pInterServerClient);
 
 	pInterServerClientTcp_ = pInterServerClient.Get<TcpClient*>();
-	pInterServerClientTcp_->SetEventListener(dbg_new ListenerInterServerClient{ ServerProcessType::Auth, pParser_ });
+	pInterServerClientTcp_->SetEventListener(dbg_new NetClientListener_InterServ{ ServerProcessType::Auth, pParser_ });
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -75,7 +75,7 @@ void AuthInterServerClientNetGroup::InitializeInterServerUdp()
 	AddHost(Const::Host::AuthInterServerUdpId, pInterServerClient);
 
 	pInterServerClientUdp_ = pInterServerClient.Get<UdpClient*>();
-	pInterServerClientUdp_->SetEventListener(dbg_new ListenerInterServerClient{ ServerProcessType::Auth, pParser_ });
+	pInterServerClientUdp_->SetEventListener(dbg_new NetClientListener_InterServ{ ServerProcessType::Auth, pParser_ });
 	pInterServerClientUdp_->RecvFromAsync();
 }
 

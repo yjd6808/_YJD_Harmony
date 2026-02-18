@@ -19,4 +19,4 @@ constexpr float LobbyAuthentication = 15.0f;
 constexpr float LoadingChannel = 5.0f;
 }
 
-NS_CONST_END
+NS_END

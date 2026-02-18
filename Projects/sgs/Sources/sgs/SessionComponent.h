@@ -7,16 +7,20 @@
 
 #pragma once
 
-#include <sgs/CommonSession.h>
+#include <sgs/_Net/NetSession.h>
 #include <sgs/IComponent.h>
 #include <sgs/ISessionEventHandler.h>
+
+NS_SG_BEGIN
 
 class SessionComponent : public IComponent, public ISessionEventHandler
 {
 public:
-	SessionComponent(CommonSession* _pSession);
-	CommonSession* GetSession() const { return pSession_; }
+	SessionComponent(sg::NetSession* _pSession);
+	sg::NetSession* GetSession() const { return pSession_; }
 
 protected:
-	CommonSession* pSession_;
+	sg::NetSession* pSession_;
 };
+
+NS_END

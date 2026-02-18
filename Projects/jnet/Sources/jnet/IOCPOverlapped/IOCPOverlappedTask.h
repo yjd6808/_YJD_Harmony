@@ -6,16 +6,18 @@
 
 
 #include <jnet/IOCPOverlapped/IOCPOverlapped.h>
-#include <jnet/IOCP/IOCPTask.h>
+#include <jnet/IOCP/IOCPTaskState.h>
 
 NS_JNET_BEGIN
+
+template <typename T>
+class IOCPTask;		// 전방 선언
 
 template <typename T>
 class IOCPOverlappedTask : public IOCPOverlapped
 {
 	using TIOCPTask = IOCPTask<T>;
 	using TIOCPTaskPtr = jc::SharedPtr<IOCPTask<T>>;
-	using TFnTask = FnTask<T>;
 
 public:
 	IOCPOverlappedTask(IOCP* _pIocp, TIOCPTaskPtr _pIocpTask)
@@ -41,7 +43,7 @@ public:
 			return;
 		}
 
-		pTask->fnTask_(*pTask->result_);
+		pTask->Call();
 		pTask->state_ = IOCPTaskState::eReady;
 		pTask->waitHandle_.Signal();
 
@@ -61,9 +63,9 @@ public:
 	{
 		TIOCPTask* pTask = task_.GetPtr();
 
-		if (pTask->fnFinally_)
+		if (pTask)
 		{
-			pTask->fnFinally_(*pTask->result_);
+			pTask->CallFinally();
 		}
 	}
 
@@ -71,4 +73,4 @@ private:
 	TIOCPTaskPtr task_;
 };
 
-NS_JNET_END
+NS_END

@@ -181,4 +181,4 @@ bool CRuntime::FileRename(const char* _pOldPath, const char* _pNewPath, bool _ov
     return ::rename(_pOldPath, _pNewPath) == 0;
 }
 
-NS_JC_END
+NS_END

@@ -702,4 +702,4 @@ protected:
 template <typename T, typename TAllocator>
 ArrayCollection<T, TAllocator>::~ArrayCollection() noexcept {}
 
-NS_JC_END
+NS_END

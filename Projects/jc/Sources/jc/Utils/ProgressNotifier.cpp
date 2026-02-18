@@ -141,4 +141,4 @@ void QuantityProgressNotifier::Progress(int _step)
 	m_iNextNotificationStepQuantity += m_iNextNotificationStepQuantity;
 }
 
-NS_JC_END
+NS_END

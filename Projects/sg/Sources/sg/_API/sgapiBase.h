@@ -7,13 +7,23 @@
 
 #pragma once
 
-class sgapiBase
+class SG_DLL sgapiBase
 {
 public:
-	virtual bool sgapi_IsClient() { return false; }
+	// ----------------------------------------------------------------
+	// 공통
 
+	virtual bool sgapi_IsClient() { return false; }
+	virtual bool sgapi_IsServer() { return false; }
+
+	// ----------------------------------------------------------------
+	// 서버
+	virtual bool		sgapi_IsInterServerClient() { return false; }
+	virtual int			sgapi_GetServerProcessType() { return 0; } // ServerProcessType::None
 public:
 	virtual ~sgapiBase() = default;
+	virtual void Init();
+
 	static void Init(sgapiBase* _api);
 	static sgapiBase* Get();
 	static void Free();

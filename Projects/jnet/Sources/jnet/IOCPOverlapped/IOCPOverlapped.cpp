@@ -67,4 +67,4 @@ bool IOCPOverlapped::IsFailed(BOOL _result, Int32U& _errorCode)
 	return false;
 }
 
-NS_JNET_END
+NS_END

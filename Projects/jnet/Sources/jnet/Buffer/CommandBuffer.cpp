@@ -140,4 +140,4 @@ void CommandBuffer::Alloc(ICommand* _pCmd)
 	AddPacketLength(cmdSize);
 }
 
-NS_JNET_END
+NS_END

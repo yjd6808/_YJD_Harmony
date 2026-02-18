@@ -9,9 +9,9 @@
 #pragma once
 
 
-#include <sgs/CommonServer.h>
+#include <sgs/_Net/NetServer.h>
 
-class AuthServer final : public CommonServer
+class AuthServer final : public sg::NetServer
 {
 public:
 	AuthServer(const jnet::IOCPPtr& _pIocp, const jc::MemoryPoolAbstractPtr& _pBufferAllocator);

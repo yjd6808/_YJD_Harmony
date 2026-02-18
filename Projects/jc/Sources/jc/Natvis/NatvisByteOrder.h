@@ -20,5 +20,5 @@ union NatvisByteOrderInt16U {
 	Int16U val; // 0xaabb
 };
 
-NS_DETAIL_END
-NS_JC_END
+NS_END
+NS_END

@@ -9,9 +9,9 @@
 #pragma once
 
 
-#include <sgs/InterServerClientNetGroup.h>
+#include <sgs/_Net/NetGroup_InterServ.h>
 
-class CenterInterServerClientNetGroup : public InterServerClientNetGroup
+class CenterInterServerClientNetGroup : public NetGroup_InterServ
 {
 public:
 	CenterInterServerClientNetGroup();

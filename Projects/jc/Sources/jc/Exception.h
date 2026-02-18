@@ -67,4 +67,4 @@ struct NotImplementedException : public Exception
 };
 
 
-NS_JC_END
+NS_END

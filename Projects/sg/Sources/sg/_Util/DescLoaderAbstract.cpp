@@ -213,8 +213,11 @@ void DescLoaderAbstract::LoadDepedencies()
 //////////////////////////////////////////////////////////////////////////////////////////
 bool DescLoaderAbstract::LoadJson(OUT Json::Value& _root)
 {
-	const jc::String& srcDataPath = g_cAppConfig.srcDataPath_;
-	jc::String configPath = jc::Path::Combine(srcDataPath, GetConfigFileName());
+	jc::String configPath = GetConfigFileName();
+	if (UseSrcDataPath())
+	{
+		configPath = jc::Path::Combine(g_cAppConfig.srcDataPath_, GetConfigFileName());
+	}
 
 	if (jc::Path::Extension(configPath) != ".json")
 	{

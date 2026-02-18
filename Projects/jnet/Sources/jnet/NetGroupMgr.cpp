@@ -46,6 +46,13 @@ void NetGroupMgr::SetName(const jc::String& _name)
 //////////////////////////////////////////////////////////////////////////////////////////
 void NetGroupMgr::AddNetGroup(int _groupId, const NetGroupPtr& _pGroupPtr)
 {
+	if (validator_ != nullptr && !validator_(_pGroupPtr))
+	{
+		jc_assert(false);
+		_NetLogWarn_("유효하지 않은 네트 그룹입니다.");
+		return;
+	}
+
 	if (!netGroupMap_.Insert(_groupId, _pGroupPtr))
 	{
 		_NetLogWarn_("이미 해당 네트 그룹이 있습니다.");
@@ -66,4 +73,4 @@ NetGroupPtr NetGroupMgr::GetNetGroup(int _id)
 	return *pFind;
 }
 
-NS_JNET_END
+NS_END

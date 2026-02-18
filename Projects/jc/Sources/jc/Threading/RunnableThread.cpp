@@ -57,4 +57,4 @@ Thread::JoinResult RunnableThread::Stop()
 	return eNotJoinable;
 }
 
-NS_JC_END
+NS_END

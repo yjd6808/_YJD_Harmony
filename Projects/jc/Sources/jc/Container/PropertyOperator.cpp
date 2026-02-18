@@ -50,4 +50,4 @@ void LogOperation(PropertyType_t _lhs, PropertyType_t _rhs, PropertyBinaryOperat
 	          PropertyType::NAME[_rhs]);
 }
 
-NS_JC_END
+NS_END

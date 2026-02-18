@@ -236,7 +236,7 @@ private:
 	}
 };
 
-NS_JC_END
+NS_END
 
 #define JC_FMT(...) jc::StringUtil::Format(__VA_ARGS__)
 

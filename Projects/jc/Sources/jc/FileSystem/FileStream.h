@@ -50,4 +50,4 @@ protected:
 
 using FileStreamPtr = SharedPtr<FileStream>;
 
-NS_JC_END
+NS_END

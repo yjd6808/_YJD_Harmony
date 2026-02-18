@@ -93,5 +93,5 @@ struct AllocationLengthMapConverter
 	}
 };
 
-NS_DETAIL_END
-NS_JC_END
+NS_END
+NS_END

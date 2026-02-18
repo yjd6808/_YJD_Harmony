@@ -24,6 +24,6 @@ ManualResetEvent& ManualResetEvent::operator=(ManualResetEvent&& _other) noexcep
 	return *this;
 }
 
-NS_JC_END
+NS_END
 
 

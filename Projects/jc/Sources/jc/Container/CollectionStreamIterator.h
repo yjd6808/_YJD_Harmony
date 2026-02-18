@@ -97,4 +97,4 @@ protected:
 	friend class TCollectionStream;
 };
 
-NS_JC_END
+NS_END

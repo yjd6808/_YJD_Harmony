@@ -21,4 +21,4 @@ extern int DefaultRecvBufferSize;
 extern int DefaultParserType;
 extern bool NonblokingSocket;
 
-NS_JNET_END
+NS_END

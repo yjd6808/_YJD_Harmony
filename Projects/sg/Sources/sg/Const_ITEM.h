@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <sg/Namepsace.h>
+#include <sg/Namespace.h>
 
 NS_CONST_BEGIN
 namespace Item
@@ -19,4 +19,4 @@ constexpr int MaxEnchantLevel = 25;
 constexpr int ArmorEnchantBonusOptCount = 2;
 }
 
-NS_CONST_END
+NS_END

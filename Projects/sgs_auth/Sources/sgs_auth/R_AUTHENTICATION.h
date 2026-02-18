@@ -12,9 +12,9 @@
 
 struct R_AUTHENTICATION
 {
-	static void RECV_CAU_Login(jnet::Session* session, jnet::ICommand* cmd);
+	static void RECV_CAU_Login(jnet::Session* _session, jnet::ICommand* _cmd);
 
 
 	// IS
-	static void RECV_SAU_AuthenticationCheck(jnet::Session* session, jnet::ICommand* cmd);
+	static void RECV_SAU_AuthenticationCheck(jnet::Session* _session, jnet::ICommand* _cmd);
 };

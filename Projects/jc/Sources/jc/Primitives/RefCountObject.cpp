@@ -33,5 +33,5 @@ void RefCountObject::Release(int _count)
     }
 }
 
-NS_JC_END
+NS_END
 

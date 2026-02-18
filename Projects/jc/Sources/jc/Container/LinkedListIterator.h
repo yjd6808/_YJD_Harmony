@@ -68,4 +68,4 @@ public:
 	friend class TLinkedList;
 };
 
-NS_JC_END
+NS_END

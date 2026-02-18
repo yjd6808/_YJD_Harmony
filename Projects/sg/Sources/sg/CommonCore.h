@@ -8,18 +8,18 @@
 
 #pragma once
 
-#include <sg/Namepsace.h>
+#include <sg/Namespace.h>
 
 NS_JNET_BEGIN
 class CommandNameDictionary;
-NS_JNET_END
+NS_END
 
 struct CharCommonInfo;
 
 NS_SG_BEGIN
 extern CharCommonInfo* CharCommon;
 extern jnet::CommandNameDictionary CommandNameDictionary;
-NS_SG_END
+NS_END
 
 void InitializeCommonCore();
 void FinalizeCommonCore();

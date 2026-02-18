@@ -132,4 +132,4 @@ WaitHandle* WaitHandle::WaitAny(WaitHandle* _pHandles, Int32U _count, OUT_OPT In
 }
 
 
-NS_JC_END
+NS_END

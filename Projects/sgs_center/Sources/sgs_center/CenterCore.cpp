@@ -10,7 +10,7 @@
 #include "CenterCoreHeader.h"
 
 #include <sg/_Util/DescLoaderMgr.h>
-#include <sg/_Util/_DescMgr/DescMgr_Server.h>
+#include <sg/_Util/_DescMgr/DescMgr_ServerInfo.h>
 #include <sg/_Util/_DescMgr/DescMgr_Database.h>
 
 USING_NS_JC;
@@ -23,7 +23,7 @@ NS_SG_BEGIN
 ::CenterNetGroup*	NetGroup;
 ::CenterServer*		Server;
 ::CenterContents	Contents;
-NS_SG_END
+NS_END
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void InitializeCenterCore() 
@@ -45,9 +45,9 @@ void InitializeCenterCore()
 	sg::CommonNetGroup = sg::NetGroup;
 	sg::CommonServer = sg::Server;
 	sg::CommonContents = &sg::Contents;
-	sg::InterServerClientNetGroup = sg::NetGroupMgr->GetNetGroup(Const::NetGroup::InterServerId).Get<InterServerClientNetGroup*>();
-	sg::InterServerClientTcp = sg::InterServerClientNetGroup ? sg::InterServerClientNetGroup->GetInterServerClientTcp() : nullptr;
-	sg::InterServerClientUdp = sg::InterServerClientNetGroup ? sg::InterServerClientNetGroup->GetInterServerClientUdp() : nullptr;
+	sg::NetGroup_InterServ = sg::NetGroupMgr->GetNetGroup(Const::NetGroup::InterServerId).Get<NetGroup_InterServ*>();
+	sg::InterServerClientTcp = sg::NetGroup_InterServ ? sg::NetGroup_InterServ->GetInterServerClientTcp() : nullptr;
+	sg::InterServerClientUdp = sg::NetGroup_InterServ ? sg::NetGroup_InterServ->GetInterServerClientUdp() : nullptr;
 	sg::TimeManager = TimeManager::Get();
 
 	sg::Contents.Initialize();

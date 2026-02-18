@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include <sgs/ListenerServerCommon.h>
+#include <sgs/_Net/NetServerListener.h>
 #include <sgs_lobby/LobbyServer.h>
 
-class ListenerLobbyServer : public ListenerServerCommon
+class ListenerLobbyServer : public NetServerListener
 {
 public:
 	ListenerLobbyServer(LobbyServer* _pServer, jnet::CommandParser* _pParser);

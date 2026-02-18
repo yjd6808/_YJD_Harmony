@@ -228,4 +228,4 @@ bool FileStream::IsClosed()
 	return m_hHandle == nullptr;
 }
 
-NS_JC_END
+NS_END

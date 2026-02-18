@@ -115,4 +115,4 @@ protected:
 
 using SessionPtr = jc::SharedPtr<Session>;
 
-NS_JNET_END
+NS_END

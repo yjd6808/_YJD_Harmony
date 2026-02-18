@@ -825,6 +825,6 @@ void String::ThrowIfInvalidIndex(const int idx) const {
 }
 
 
-NS_JC_END
+NS_END
 
 

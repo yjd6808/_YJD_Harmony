@@ -34,7 +34,7 @@ NS_JC_BEGIN
 		if (PreventUnrechableCode) std::abort();
 
 	}
-	NS_DETAIL_END
+	NS_END
 
-NS_JC_END
+NS_END
 

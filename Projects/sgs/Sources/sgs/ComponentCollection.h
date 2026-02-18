@@ -18,6 +18,8 @@
 #include <sgs/IComponent.h>
 #include <sgs/ISessionEventHandler.h>
 
+NS_SG_BEGIN
+
 class ComponentCollection : public IUpdatable, public ISessionEventHandler
 {
 public:
@@ -78,3 +80,5 @@ private:
 	jc::Vector<IUpdatable*> updatables_;
 	jc::Vector<ISessionEventHandler*> sessionEventHandlers_;
 };
+
+NS_END

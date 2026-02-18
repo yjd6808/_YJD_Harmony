@@ -121,4 +121,4 @@ void Stream::WriteString(const String& _str, bool _withNull)
 }
 
 
-NS_JC_END
+NS_END

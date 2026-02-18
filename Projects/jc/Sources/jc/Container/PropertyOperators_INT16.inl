@@ -310,4 +310,4 @@ void InitializePropertyOperatorInt16()
 		PropertyValueBinaryOperator_Int16_Less{};
 }
 
-NS_JC_END
+NS_END

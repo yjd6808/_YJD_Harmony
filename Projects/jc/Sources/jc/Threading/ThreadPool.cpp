@@ -208,4 +208,4 @@ int ThreadPool::WaitingTaskCount()
 	return waitingTasks_.Size();
 }
 
-NS_JC_END
+NS_END

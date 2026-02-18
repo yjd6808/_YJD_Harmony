@@ -102,4 +102,4 @@ public:
 inline LoggerOption::~LoggerOption() { /* Abstract */ }
 
 
-NS_JC_END
+NS_END

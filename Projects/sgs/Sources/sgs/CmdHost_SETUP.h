@@ -36,8 +36,7 @@ HOST_STATIC_CMD_END
 // ===============================================================================================================
 
 HOST_STATIC_CMD_BEGIN(SCE_ItsMe, CMDID_SCE_ItsMe)
-	ServerProcessType_t ClientServerType;
-	int ServerId;
+	ServerProcessType_t ProcessType;
 HOST_STATIC_CMD_END
 
 // ===============================================================================================================
@@ -49,6 +48,7 @@ HOST_STATIC_CMD_END
 
 HOST_STATIC_CMD_BEGIN(CES_YouNeedToDoThis, CMDID_CES_YouNeedToDoThis)
 	CenterOrder_t Order;
+	jc::StaticString<32> Args;
 HOST_STATIC_CMD_END
 
 // ===============================================================================================================

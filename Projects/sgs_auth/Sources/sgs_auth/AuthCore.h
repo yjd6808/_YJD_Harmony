@@ -11,8 +11,11 @@
 
 #include <sgs/ServerCore.h>
 
-class DataManager;
+NS_JDB_BEGIN
 class MysqlDatabase;
+NS_END
+
+class DataManager;
 class AuthNetMaster;
 class AuthNetGroup;
 class AuthServer;
@@ -21,12 +24,12 @@ struct AuthContents;
 
 NS_SG_BEGIN
 extern ::DataManager*      DataManager;
-extern ::MysqlDatabase*    GameDB;
+extern ::jdb::MysqlDatabase* GameDB;
 extern ::AuthNetMaster*    NetGroupMgr;
 extern ::AuthNetGroup*     NetGroup;
 extern ::AuthServer*       Server;
 extern ::AuthContents      Contents;
-NS_SG_END
+NS_END
 
 void InitializeAuthCore();
 void FinalizeAuthCore();

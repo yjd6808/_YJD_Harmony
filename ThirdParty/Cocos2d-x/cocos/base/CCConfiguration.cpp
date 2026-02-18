@@ -67,6 +67,7 @@ Configuration::Configuration()
 bool Configuration::init()
 {
 	_valueDict["cocos2d.x.version"] = Value(cocos2dVersion());
+	_valueDict["cocos2d.x.gl.projection"] = Value("2d"); // jdyun cocos2d-x 디폴트 gl projection이 3d 였는데 2d로 바꿔봄.
 
 
 #if CC_ENABLE_PROFILERS
@@ -350,6 +351,10 @@ void Configuration::setValue(const std::string& key, const Value& value)
 //
 void Configuration::loadConfigFile(const std::string& filename)
 {
+	// jdyun 해당 기능은 현재 쓰지 않는다.
+	// 어떻게 쓰는지도 모름. 
+	CC_ASSERT(false);
+
 	ValueMap dict = FileUtils::getInstance()->getValueMapFromFile(filename);
 	CCASSERT(!dict.empty(), "cannot create dictionary");
 

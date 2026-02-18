@@ -74,4 +74,4 @@ AutoMemoryLeakDetector::~AutoMemoryLeakDetector()
 	m_bDetecting = false;
 }
 
-NS_JC_END
+NS_END

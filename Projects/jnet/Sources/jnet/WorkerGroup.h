@@ -98,4 +98,4 @@ private:
 	friend class IOCP;
 };
 
-NS_JNET_END
+NS_END

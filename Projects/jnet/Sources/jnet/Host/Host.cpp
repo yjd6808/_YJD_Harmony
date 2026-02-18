@@ -65,4 +65,4 @@ bool Host::ConnectIocp()
 }
 
 
-NS_JNET_END
+NS_END

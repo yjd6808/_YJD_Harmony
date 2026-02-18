@@ -30,4 +30,4 @@ private:
 	friend struct IOCPPostOrder;
 };
 
-NS_JNET_END
+NS_END

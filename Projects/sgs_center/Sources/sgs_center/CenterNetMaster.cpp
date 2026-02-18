@@ -18,7 +18,7 @@ USING_NS_JC;
 USING_NS_JNET;
 
 CenterNetMaster::CenterNetMaster()
-: CommonNetGroupMgr(Const::Process::LoopPerSecondCenter)
+: NetCore(Const::Process::LoopPerSecondCenter)
 {
 	SetName("센터");
 }
@@ -29,7 +29,7 @@ CenterNetMaster::~CenterNetMaster()
 
 void CenterNetMaster::Initialize()
 {
-	CommonNetGroupMgr::Initialize();
+	NetCore::Initialize();
 
 	const auto pCenterNetGroup = MakeShared<CenterNetGroup>();
 	const auto pInterServerNetGroup = MakeShared<CenterInterServerClientNetGroup>();

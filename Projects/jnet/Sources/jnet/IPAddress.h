@@ -135,4 +135,4 @@ private:
 	Int64U addrLow_ = 0;
 };
 
-NS_JNET_END
+NS_END

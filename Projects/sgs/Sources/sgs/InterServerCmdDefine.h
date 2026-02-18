@@ -73,7 +73,7 @@ struct Command<InterServerCmdType::RelayDynamic> : ICommand, Dynamicity, RelayCo
 	static constexpr bool IsHost = false;
 };
 
-NS_JNET_END
+NS_END
 
 
 #pragma pack(pop)
@@ -186,7 +186,7 @@ struct __struct__ : RelayDynamicCommand {                                       
 	__struct__(int _count) {                                                                                       \
 		type_ = InterServerCmdType::RelayDynamic;                                                                   \
 		cmdId_ = __cmd__;                                                                                              \
-		cmdLength_ = _Size(_count);                                                                                    \
+		cmdLength_ = (CmdLen_t)_Size(_count);                                                                                    \
 		count_ = _count;                                                                                            \
 	}                                                                                                              \
 	CMD_FUNC_DEF_NAME(__struct__)                                                                                  \

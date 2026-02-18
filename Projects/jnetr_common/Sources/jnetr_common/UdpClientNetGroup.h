@@ -30,4 +30,4 @@ private:
 	UdpClientWPtr udpClient_;
 };
 
-NS_JNET_END
+NS_END

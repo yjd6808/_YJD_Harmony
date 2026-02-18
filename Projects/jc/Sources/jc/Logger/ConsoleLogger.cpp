@@ -279,4 +279,4 @@ ConsoleLoggerOption& ConsoleLoggerOption::operator=(const ConsoleLoggerOption& _
 	return *this;
 }
 
-NS_JC_END
+NS_END

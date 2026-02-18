@@ -6,7 +6,6 @@
  */
 
 #include "Core.h"
-#include "ServerCoreHeader.h"
 #include "S_SETUP_IS_COMMON.h"
 
 #include <sgs/CmdHost_SETUP.h>
@@ -15,11 +14,10 @@ USING_NS_JC;
 USING_NS_JNET;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool S_SETUP_IS_COMMON::SEND_SCE_ItsMe(ServerProcessType_t _clientType, int _serverId)
+bool S_SETUP_IS_COMMON::SEND_SCE_ItsMe(ServerProcessType_t _clientType)
 {
 	auto sending = SendBegin<SCE_ItsMe>();
-	sending.cmd_.ClientServerType = _clientType;
-	sending.cmd_.ServerId = _serverId;
+	sending.cmd_.ProcessType = _clientType;
 	return true;
 }
 
@@ -34,8 +32,7 @@ bool S_SETUP_IS_COMMON::SEND_SCE_NotifyBootState(int _serverId, ServerType_t _se
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool S_SETUP_IS_COMMON::SEND_SCE_NotifyOrderFailed(int _serverId, ServerType_t _serverType, CenterOrder_t _failedOrder,
-                                                   Int32U _errorCode)
+bool S_SETUP_IS_COMMON::SEND_SCE_NotifyOrderFailed(int _serverId, ServerType_t _serverType, CenterOrder_t _failedOrder, Int32U _errorCode)
 {
 	auto sending = SendBegin<SCE_NotifyOrderFailed>();
 	sending.cmd_.ErrorCode = _errorCode;

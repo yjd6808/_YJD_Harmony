@@ -24,4 +24,4 @@ private:
 	IPacket* sentPacket_;
 };
 
-NS_JNET_END
+NS_END

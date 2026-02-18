@@ -3,11 +3,7 @@
   <ItemGroup>
     <ClCompile Include="..\Sources\sgs_auth\main.cpp" />
     <ClCompile Include="..\Sources\sgs_auth\AuthCore.cpp" />
-    <ClCompile Include="..\Sources\sgs_auth\AuthNetMaster.cpp" />
     <ClCompile Include="..\Sources\sgs_auth\AuthNetGroup.cpp" />
-    <ClCompile Include="..\Sources\sgs_auth\ListenerAuthServer.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\sgs_auth\S_AUTHENTICATION_IS.cpp">
       <Filter>Send</Filter>
     </ClCompile>
@@ -30,24 +26,14 @@
       <Filter>Contents</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs_auth\AuthInterServerClientNetGroup.cpp" />
-    <ClCompile Include="..\Sources\sgs_auth\AuthServer.cpp">
-      <Filter>Host</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_auth\AuthSession.cpp">
-      <Filter>Host</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\sgs_auth\Core.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\sgs_auth\AuthCoreHeader.h" />
     <ClInclude Include="..\Sources\sgs_auth\AuthCore.h" />
-    <ClInclude Include="..\Sources\sgs_auth\AuthNetMaster.h" />
     <ClInclude Include="..\Sources\sgs_auth\AuthNetGroup.h" />
     <ClInclude Include="..\Sources\sgs_auth\R_AUTHENTICATION.h">
       <Filter>Recv</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_auth\ListenerAuthServer.h">
-      <Filter>Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs_auth\S_AUTHENTICATION_IS.h">
       <Filter>Send</Filter>
@@ -68,12 +54,6 @@
     <ClInclude Include="..\Sources\sgs_auth\AuthenticationManagerSchedule.h">
       <Filter>Contents</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs_auth\AuthSession.h">
-      <Filter>Host</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_auth\AuthServer.h">
-      <Filter>Host</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\sgs_auth\Core.h" />
   </ItemGroup>
   <ItemGroup>
@@ -83,17 +63,11 @@
     <Filter Include="Send">
       <UniqueIdentifier>{b14ebb94-abc9-4678-83bf-ecef8247cc36}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Listener">
-      <UniqueIdentifier>{a9efac3b-967a-4517-90db-7dbafbee409d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Query">
       <UniqueIdentifier>{48b1d56e-da03-4184-9565-ead55f0a7a31}</UniqueIdentifier>
     </Filter>
     <Filter Include="Contents">
       <UniqueIdentifier>{fe79c973-98af-462a-a693-69f34dcce325}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Host">
-      <UniqueIdentifier>{99a0955d-a924-487f-a894-69665fd2dc8a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

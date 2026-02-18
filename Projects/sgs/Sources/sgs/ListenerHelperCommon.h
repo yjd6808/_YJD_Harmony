@@ -8,9 +8,11 @@
 
 #pragma once
 
-#include <sg/ListenerHelperBase.h>
+#include <sg/_Net/NetListenerHelper.h>
 
-struct ListenerHelperCommon : ListenerHelperBase
+NS_SG_BEGIN
+
+struct ListenerHelperCommon : NetListenerHelper
 {
 	static bool IsRelayCommand(jnet::ICommand* _pCommand);
 	static bool IsHostCommand(jnet::ICommand* _pCommand);
@@ -18,3 +20,5 @@ struct ListenerHelperCommon : ListenerHelperBase
 	static bool IsDynamicCommand(jnet::ICommand* _pCommand);
 	static bool IsInterServerCommand(jnet::ICommand* _pCommand);
 };
+
+NS_END

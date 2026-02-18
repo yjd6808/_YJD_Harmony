@@ -82,4 +82,4 @@ void Semaphore::Release(int _count)
 		Unlock();
 }
 
-NS_JC_END
+NS_END

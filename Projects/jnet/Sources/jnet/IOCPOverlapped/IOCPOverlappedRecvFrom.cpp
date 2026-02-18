@@ -43,4 +43,4 @@ void IOCPOverlappedRecvFrom::Process(BOOL _result, Int32UL _bytesTransferred, IO
 	}
 }
 
-NS_JNET_END
+NS_END

@@ -27,4 +27,4 @@ private:
 	static void Hex(char* _pData, int _len, OUT jc::String& _hex);
 };
 
-NS_JNET_END
+NS_END

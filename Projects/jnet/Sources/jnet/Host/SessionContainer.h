@@ -62,4 +62,4 @@ protected:
 	ContainerType sessionList_; // TODO: StaticVector
 };
 
-NS_JNET_END
+NS_END

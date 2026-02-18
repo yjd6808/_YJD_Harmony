@@ -11,7 +11,7 @@
 
 #include <jnet/Host/SessionContainer.h>
 
-#include <sgs/CommonSession.h>
+#include <sgs/NetSession.h>
 
 #include <sgs_center/ListenerCenterServer.h>
 #include <sgs_center/R_MESSAGE.h>
@@ -46,7 +46,7 @@ jnet::ISessionContainer* CenterNetGroup::GetSessionContainer(ServerType_t _type)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-CommonSession* CenterNetGroup::GetSessionFromContainer(int _handle)
+sg::NetSession* CenterNetGroup::GetSessionFromContainer(int _handle)
 {
 	if (!Const::Host::LobbyHandleRange.Contain(_handle))
 	{
@@ -54,7 +54,7 @@ CommonSession* CenterNetGroup::GetSessionFromContainer(int _handle)
 		return nullptr;
 	}
 
-	return dynamic_cast<CommonSession*>(m_pCenterSessionContainer->Get(_handle));
+	return dynamic_cast<sg::NetSession*>(m_pCenterSessionContainer->Get(_handle));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

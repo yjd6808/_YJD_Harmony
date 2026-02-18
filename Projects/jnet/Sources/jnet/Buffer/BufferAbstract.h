@@ -269,6 +269,6 @@ protected:
 
 using BufferAbstractPtr = jc::SharedPtr<BufferAbstract>;
 
-NS_JNET_END
+NS_END
 
 

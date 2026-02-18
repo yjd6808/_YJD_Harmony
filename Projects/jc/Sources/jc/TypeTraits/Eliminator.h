@@ -129,4 +129,4 @@ using NaturalType_t = typename NaturalType<T>::Type;
 template <typename T>
 using NakedType_t= RemoveArray_t<RemovePointer_t<NaturalType_t<T>>>;
 
-NS_JC_END
+NS_END

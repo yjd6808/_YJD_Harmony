@@ -15,21 +15,23 @@ JC_SENUM_BEGIN(ServerType)
 	Auth,
 	Begin = Auth,
 	Lobby,
-	Logic,
+	Game,
 	Chat,
 	Area,
 	Center,
-	End = Center,
+	None,
+	End = None,
 	Max
 JC_SENUM_MIDDLE(ServerType)
 
 static constexpr const char* Name[Max]{
 	"인증",
 	"로비",
-	"로직",
+	"게임",
 	"채팅",
 	"지역",
-	"중앙"
+	"중앙",
+	"알 수 없음"
 };
 
 JC_SENUM_MIDDLE_END(ServerType)
@@ -57,7 +59,8 @@ JC_SENUM_BEGIN(GameServerType)
 	Cain,
 	Seria,
 	End = Seria,
-	Max
+	None,
+	Max = None
 JC_SENUM_MIDDLE(GameServerType)
 static constexpr const char* Name[Max]{
 	"루크",
@@ -67,7 +70,7 @@ static constexpr const char* Name[Max]{
 	"카시아스",
 	"디레지에",
 	"카인",
-	"세리아"
+	"세리아",
 };
 JC_SENUM_MIDDLE_END(GameServerType)
 
@@ -79,7 +82,7 @@ JC_SENUM_BEGIN(ServerProcessType)
 		Center,				// 2
 		Lobby,				// 3
 		Game,				// 4
-		End = Game
+		End = Game,
 JC_SENUM_MIDDLE(ServerProcessType)
 static constexpr int Count = End;	// 4
 static constexpr const char* Name[Count + 1]{
@@ -91,19 +94,6 @@ static constexpr const char* Name[Count + 1]{
 };
 
 JC_SENUM_MIDDLE_END(ServerProcessType)
-
-//////////////////////////////////////////////////////////////////////////////////////////
-// 클라이언트가 게임을 플레이하는 동안 한번이라도 접속하게되는 서버타입
-JC_SENUM_BEGIN(ClientConnectServerType)
-	Auth,
-	Begin = Auth,
-	Lobby,
-	Logic,
-	Chat,
-	Area,
-	End = Area,
-	Max
-JC_SENUM_END(ClientConnectServerType)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 JC_SENUM_BEGIN(GamePlayMode)
@@ -121,81 +111,77 @@ static constexpr bool IsNetworkMode[Max]{
 JC_SENUM_MIDDLE_END(GamePlayMode)
 
 //////////////////////////////////////////////////////////////////////////////////////////
-struct ServerProcessInfo
+struct NetServerInfo	// 서브 프로세스는 여러개의 서버를 가질 수 있음.
 {
-	ServerProcessType_t processType_;
-	jc::String name_;
-
-	// JSON에서 읽은 데이터
-	jnet::IPv4EndPoint bindInterServerUdp_;
-	jnet::IPv4EndPoint bindInterServerTcp_; // 중앙서버X
-	jnet::IPv4EndPoint bindTcp_; // 게임서버는 로직서버
-	jnet::IPv4EndPoint bindUdp_; // 게임서버는 로직서버
-	jnet::IPv4EndPoint remoteInterServerEp_;
+	int serverType_ = -1;
+	jc::String serverName_;
+	int maxSessionCount_ = 50;
+	int tcpRecvBufferSize_ = 2048;
+	int tcpSendBufferSize_ = 2048;
+	int udpRecvBufferSize_ = 2048;
+	int udpSendBufferSize_ = 2048;
+	jnet::IPv4EndPoint bindTcp_;
+	jnet::IPv4EndPoint bindUdp_;
 	jnet::IPv4EndPoint remoteEp_;
-	int serverId_ = -1;
-	int maxSessionCount_ = 0;
+
+	static NetServerInfo dummy_;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
-struct GameChannelInfo
+struct NetInterServerInfo
 {
-	int channelNumber_;
-	int channelType_;
-	int maxPlayerCount_;
+	jnet::IPv4EndPoint bindTcp_;
+	jnet::IPv4EndPoint bindUdp_;
+	jnet::IPv4EndPoint remoteCenterServerEp_;
+	int iocpThreadCount_ = 2;
+	int tcpRecvBufferSize_ = 2048;
+	int tcpSendBufferSize_ = 2048;
+	int udpRecvBufferSize_ = 2048;
+	int udpSendBufferSize_ = 2048;
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////
+struct ServerProcessInfo : SDescBase
+{
+	jc::String processName_;
+	int mainIOCPThreadCount_ = 8;
+	int updatePerSecond_ = 10;
+	jc::Vector<NetServerInfo> mainServerInfoList_;	// 이 프로세스에서 구동하는 서버 정보
+
+	virtual ~ServerProcessInfo() override = default;
+	virtual const NetInterServerInfo& GetInterServerInfo() const { return dummyInterServerInfo_; }
+private:
+	inline static NetInterServerInfo dummyInterServerInfo_;
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////
+struct AuthServerProcessInfo : ServerProcessInfo
+{
+	NetInterServerInfo interServerInfo_;
+
+	virtual const NetInterServerInfo& GetInterServerInfo() const override { return interServerInfo_; }
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////
+struct LobbyServerProcessInfo : ServerProcessInfo
+{
+	NetInterServerInfo interServerInfo_;
+
+	virtual const NetInterServerInfo& GetInterServerInfo() const override { return interServerInfo_; }
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////
+struct CenterServerProcessInfo : ServerProcessInfo
+{
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
 struct GameServerProcessInfo : ServerProcessInfo
 {
-	GameServerProcessInfo()
-	: gameServerType_()
-	, active_(false)
-	, gameChannelInfoList_(1)
-	{
-	}
-
-	GameServerProcessInfo(int _channelCount)
-	: gameServerType_()
-	, active_(false)
-	, gameChannelInfoList_(_channelCount)
-	{
-	}
-
+	NetInterServerInfo interServerInfo_;
 	GameServerType_t gameServerType_;
-	jnet::IPv4EndPoint bindChatTcp_;
-	jnet::IPv4EndPoint bindChatUdp_;
-	jnet::IPv4EndPoint remoteChat_;
+	int channelNumber_ = -1;
+	int channelType_ = -1;
 
-	jnet::IPv4EndPoint bindAreaTcp_;
-	jnet::IPv4EndPoint bindAreaUdp_;
-	jnet::IPv4EndPoint remoteArea_;
-
-	bool active_;
-	jc::Vector<GameChannelInfo> gameChannelInfoList_;
-};
-
-//////////////////////////////////////////////////////////////////////////////////////////
-struct ServerProcessInfoPackage : SDescBase
-{
-	ServerProcessInfoPackage(int _activeGameServerCount)
-	: auth_(), center_(), lobby_(), gameServerList_(_activeGameServerCount)
-	, activeServerIdList_(3 + _activeGameServerCount), infoMap_{}
-	// 인증 + 로비 + 중앙 + 게임 서버들
-	{
-	}
-
-	~ServerProcessInfoPackage() override = default;
-
-	jc::String GetServerProcessName(int _serverId);
-	ServerProcessInfo* GetServerProcessInfo(int _serverId);
-	GameServerProcessInfo* GetGameServerProcessInfo(GameServerType_t _gameServerType);
-
-	jc::String name_;
-	ServerProcessInfo auth_;
-	ServerProcessInfo center_;
-	ServerProcessInfo lobby_;
-	jc::Vector<GameServerProcessInfo> gameServerList_;
-	jc::Vector<int> activeServerIdList_;
-	ServerProcessInfo* infoMap_[Const::Server::MaxProcessId];
+	virtual const NetInterServerInfo& GetInterServerInfo() const override { return interServerInfo_; }
 };

@@ -139,4 +139,4 @@ void UdpClient::Sent(IPacket* _pSentPacket, Int32UL _sentBytes)
 	}
 }
 
-NS_JNET_END
+NS_END

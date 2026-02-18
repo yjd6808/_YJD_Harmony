@@ -305,4 +305,4 @@ ThreadPool::JoinStrategy Scheduler::ConverToThreadPoolStrategy(JoinStrategy _str
 	return ThreadPool::JoinStrategy::WaitOnlyRunningTask;
 }
 
-NS_JC_END
+NS_END

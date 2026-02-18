@@ -24,4 +24,4 @@ struct MemoryPoolCaptured
 
 using MemoryPoolCapturedPtr = SharedPtr<MemoryPoolCaptured>;
 
-NS_JC_END
+NS_END

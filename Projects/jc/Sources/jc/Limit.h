@@ -21,7 +21,7 @@ NS_DETAIL_BEGIN
 	{
 	};
 
-NS_DETAIL_END
+NS_END
 
 constexpr char MaxChar_v = (1 << 7) - 1;
 constexpr char MinChar_v = (1 << 7);
@@ -57,6 +57,6 @@ constexpr int BitCount(T&& _val)
 	return sizeof(_val) * BytePerBit_v;
 }
 
-NS_JC_END
+NS_END
 
 #pragma warning (pop)

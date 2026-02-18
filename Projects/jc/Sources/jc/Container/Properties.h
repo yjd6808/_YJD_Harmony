@@ -45,17 +45,17 @@ public:
 			return nullptr;
 		}
 
-		PropertyBase** ppProperty = properties_.Find(Forward<Ky>(_propertyKey));
-		if (ppProperty != nullptr)
-		{
-			_LogWarn_("%s 프로퍼티에 %s타입으로 이미 사용중입니다.", GetPropertyName(_propertyKey), PropertyType::NAME[(*ppProperty)->GetType()]);
-			return nullptr;
-		}
-
 		IPropertyFactory* pFactory = PropertyStatics::Factorys[_type];
 		if (pFactory == nullptr)
 		{
 			_LogWarn_("%s 타입의 프로퍼티 팩토리가 없습니다.", PropertyType::NAME[_type]);
+			return nullptr;
+		}
+
+		PropertyBase** ppProperty = properties_.Find(Forward<Ky>(_propertyKey));
+		if (ppProperty != nullptr)
+		{
+			_LogWarn_("%s 프로퍼티에 %s타입으로 이미 사용중입니다.", jc::StringUtil::ToString(Forward<Ky>(_propertyKey)).SafeSource(), PropertyType::NAME[(*ppProperty)->GetType()]);
 			return nullptr;
 		}
 
@@ -106,6 +106,7 @@ public:
 	template <typename Ky> void SetU64(Ky&& _propertyKey, Int64U _value) { Set(Forward<Ky>(_propertyKey), _value); }
 	template <typename Ky> void SetS64(Ky&& _propertyKey, Int64 _value) { Set(Forward<Ky>(_propertyKey), _value); }
 
+#undef __DEF_TRY_GETTER
 #define __DEF_TRY_GETTER(method_name, type)														\
 	template <typename Ky> bool method_name(Ky&& _propertyKey, OUT type& _value) 				\
 	{ 																							\
@@ -130,6 +131,7 @@ public:
 	__DEF_TRY_GETTER(GetU64, Int64U)
 	__DEF_TRY_GETTER(GetS64, Int64)
 
+#undef __DEF_GETTER
 #define __DEF_GETTER(method_name, type)															\
 	template <typename Ky> type method_name(Ky&& _propertyKey) 									\
 	{ 																							\
@@ -256,28 +258,6 @@ public:
 			properties_.pTailBucket_ ? properties_.pTailBucket_->size_ - 1 : -1);
 	}
 
-	static void SetPropertyNameMap(const TNameMap& _nameMap)
-	{
-		PropertyNameMap = _nameMap;
-	}
-
-	static void SetPropertyNameMap(TNameMap&& _nameMap)
-	{
-		PropertyNameMap = Move(_nameMap);
-	}
-
-	template <typename Ky>
-	static const char* GetPropertyName(Ky&& _propertyKey)
-	{
-		const char** ppszName = PropertyNameMap.Find(Forward<Ky>(_propertyKey));
-		if (ppszName == nullptr)
-		{
-			return "프로퍼티명 없음";
-		}
-
-		return *ppszName;
-	}
-
 	template <typename Consumer>
 	void ForEach(Consumer&& _consumer)
 	{
@@ -304,6 +284,4 @@ private:
 	friend class TPropertiesIterator;
 };
 
-NS_JC_END
-
-
+NS_END

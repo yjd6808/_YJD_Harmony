@@ -33,8 +33,14 @@ NetGroup::NetGroup(const String& _name)
 NetGroup::~NetGroup() = default;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetGroup::CreateIocp(int _threadCount)
+void NetGroup::CreateIOCP(int _threadCount)
 {
+	if (_threadCount == 0)
+	{
+		jc_assert_msg(false, "IOCP 쓰레드 수는 0보다 커야합니다.");
+		return;
+	}
+
 	pIocp_ = MakeShared<IOCP>(_threadCount);
 	pIocp_->SetName(name_);
 }
@@ -46,7 +52,7 @@ void NetGroup::CreateBufferPool(const HashMap<int, int>& _poolInfo)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetGroup::RunIocp()
+void NetGroup::RunIOCP()
 {
 	pIocp_->Run();
 }
@@ -68,7 +74,18 @@ bool NetGroup::AddHost(int _id, const HostPtr& _pHost)
 		return false;
 	}
 
+	if (fnValidator_ && !fnValidator_(_pHost))
+	{
+		_NetLogWarn_("%d(%s) 호스트가 %s 넷그룹의 유효성 검사를 통과하지 못했습니다.", _id, _pHost->GetName(), name_.Source());
+		return false;
+	}
+
 	hostMap_.Insert(_id, _pHost);
+	hostList_.PushBack(_pHost);
+	if (fnAddHost_)
+	{
+		fnAddHost_(_pHost);
+	}
 	return true;
 }
 
@@ -87,12 +104,14 @@ void NetGroup::Finalize()
 		return;
 	}
 
-	hostMap_.ForEachValue([](const HostPtr& _pHost)
-	{
-		jc_assert_msg(_pHost.RefCount() == 1, "넷 그룹 소멸전에 외부 레퍼런스를 모두 정리해주세요. (윅포를 사용해주세요)");
-	});
+	hostMap_.Clear(); // ref release (2 -> 1)
 
-	hostMap_.Clear();
+	for (int i = 0; i < hostList_.Size(); ++i)
+	{
+		jc_assert_msg(hostList_[i].RefCount() == 1, "넷 그룹 소멸전에 외부 레퍼런스를 모두 정리해주세요. (윅포를 사용해주세요)");
+	}
+
+	hostList_.Clear(); // ref release (1 -> 0), all host invalidated.
 	_LogInfo_("%s %s 호스트 정리완료", name_.Source(), TypeName());
 
 	if (pIocp_.Exist())
@@ -109,4 +128,4 @@ void NetGroup::Finalize()
 	finalized_ = true;
 }
 
-NS_JNET_END
+NS_END

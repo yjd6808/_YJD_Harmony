@@ -39,9 +39,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\sg\ListenerClientBase.cpp" />
-    <ClCompile Include="..\Sources\sg\ListenerHelperBase.cpp" />
-    <ClCompile Include="..\Sources\sg\ListenerServerBase.cpp" />
     <ClCompile Include="..\Sources\sg\Logo.cpp">
       <SubType>
       </SubType>
@@ -54,6 +51,9 @@
     <ClCompile Include="..\Sources\sg\_Core\CLIThread.cpp" />
     <ClCompile Include="..\Sources\sg\_Core\AppConfig.cpp" />
     <ClCompile Include="..\Sources\sg\_Core\VirtualMachine.cpp" />
+    <ClCompile Include="..\Sources\sg\_Net\NetClientListener.cpp" />
+    <ClCompile Include="..\Sources\sg\_Net\NetListenerHelper.cpp" />
+    <ClCompile Include="..\Sources\sg\_Net\NetServerListener.cpp" />
     <ClCompile Include="..\Sources\sg\_Object\_Character\StackingBuffer.cpp" />
     <ClCompile Include="..\Sources\sg\_Object\_Character\StackingBufferMgr.cpp" />
     <ClCompile Include="..\Sources\sg\_Sga\SgaElement.cpp" />
@@ -110,7 +110,7 @@
     <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MapPhysics.cpp" />
     <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MonsterBase.cpp" />
     <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MonsterStat.cpp" />
-    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Server.cpp" />
+    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ServerInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\sg\BaseContents.h">
@@ -160,9 +160,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\DLLExport.h" />
-    <ClInclude Include="..\Sources\sg\ListenerClientBase.h" />
-    <ClInclude Include="..\Sources\sg\ListenerServerBase.h" />
-    <ClInclude Include="..\Sources\sg\ListenerHelperBase.h" />
     <ClInclude Include="..\Sources\sg\Logo.h">
       <SubType>
       </SubType>
@@ -171,7 +168,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sg\Namepsace.h">
+    <ClInclude Include="..\Sources\sg\Namespace.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -188,6 +185,9 @@
     <ClInclude Include="..\Sources\sg\_Core\CLIThread.h" />
     <ClInclude Include="..\Sources\sg\_Core\AppConfig.h" />
     <ClInclude Include="..\Sources\sg\_Core\VirtualMachine.h" />
+    <ClInclude Include="..\Sources\sg\_Net\NetClientListener.h" />
+    <ClInclude Include="..\Sources\sg\_Net\NetListenerHelper.h" />
+    <ClInclude Include="..\Sources\sg\_Net\NetServerListener.h" />
     <ClInclude Include="..\Sources\sg\_Object\_Character\StackingBuffer.h" />
     <ClInclude Include="..\Sources\sg\_Object\_Character\StackingBufferMgr.h" />
     <ClInclude Include="..\Sources\sg\_Sga\SgaColorFormat.h" />
@@ -249,7 +249,7 @@
     <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MapPhysics.h" />
     <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MonsterBase.h" />
     <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_MonsterStat.h" />
-    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Server.h" />
+    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ServerInfo.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -7,9 +7,13 @@
 
 #pragma once
 
+NS_SG_BEGIN
+
 struct ISessionEventHandler
 {
 	virtual ~ISessionEventHandler() = default;
 	virtual void OnConnected() = 0;
 	virtual void OnDisconnected() = 0;
 };
+
+NS_END

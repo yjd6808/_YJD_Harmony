@@ -4,24 +4,6 @@
     <Filter Include="Util">
       <UniqueIdentifier>{8999073e-667a-4980-89a7-1353515ef72b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Net">
-      <UniqueIdentifier>{afca49d9-5dad-4dcb-8803-7f73c14f3200}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Net\Listener">
-      <UniqueIdentifier>{374a8a12-c841-4241-8c2e-917902a40305}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Net\Send">
-      <UniqueIdentifier>{189d1ff7-f473-4a4d-8bc7-2f009d21e5ad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Net\Recv">
-      <UniqueIdentifier>{95abad0d-5fc9-48a1-a3f1-0039e977b60b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Net\Connection">
-      <UniqueIdentifier>{bf59ba58-2f02-44e4-a7cd-452836a2dd40}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Net\Sync">
-      <UniqueIdentifier>{0754ca7c-0ffe-457e-8016-747afd443af4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Base">
       <UniqueIdentifier>{f3c8eaa2-3cff-4932-a33b-be045449ca55}</UniqueIdentifier>
     </Filter>
@@ -97,9 +79,6 @@
     <Filter Include="Game\AI\Routine">
       <UniqueIdentifier>{adb72265-b421-4f78-832c-a1afd2ee293b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Net\Component">
-      <UniqueIdentifier>{223c4637-eb44-4a0e-9cec-3b21c0835806}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Callback">
       <UniqueIdentifier>{7a35713c-d4d7-4039-97f1-3be5de1e23bb}</UniqueIdentifier>
     </Filter>
@@ -132,6 +111,21 @@
     </Filter>
     <Filter Include="_Layer">
       <UniqueIdentifier>{8c5b8a70-ff4f-4aa3-9ffc-dc29159ec0f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Net">
+      <UniqueIdentifier>{afca49d9-5dad-4dcb-8803-7f73c14f3200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Net\Send">
+      <UniqueIdentifier>{189d1ff7-f473-4a4d-8bc7-2f009d21e5ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Net\Recv">
+      <UniqueIdentifier>{95abad0d-5fc9-48a1-a3f1-0039e977b60b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Net\Connection">
+      <UniqueIdentifier>{bf59ba58-2f02-44e4-a7cd-452836a2dd40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Net\Component">
+      <UniqueIdentifier>{223c4637-eb44-4a0e-9cec-3b21c0835806}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -279,7 +273,7 @@
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\NetClientGroup.cpp">
-      <Filter>Net</Filter>
+      <Filter>_Net</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\UI_Popup.cpp">
       <Filter>Game\UI_Implementation</Filter>
@@ -287,50 +281,41 @@
     <ClCompile Include="..\Classes\sgcl\UI_Test.cpp">
       <Filter>Game\UI_Implementation</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\NetCore.cpp">
-      <Filter>Net</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\R_AUTHENTICATION.cpp">
-      <Filter>Net\Recv</Filter>
+      <Filter>_Net\Recv</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\S_AUTH.cpp">
-      <Filter>Net\Send</Filter>
+      <Filter>_Net\Send</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\S_GAME_UDP.cpp">
-      <Filter>Net\Send</Filter>
+      <Filter>_Net\Send</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\S_GAME.cpp">
-      <Filter>Net\Send</Filter>
+      <Filter>_Net\Send</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\S_LOBBY.cpp">
-      <Filter>Net\Send</Filter>
+      <Filter>_Net\Send</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\S_AREA.cpp">
-      <Filter>Net\Send</Filter>
+      <Filter>_Net\Send</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\S_CHAT.cpp">
-      <Filter>Net\Send</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\CommandSynchronizer.cpp">
-      <Filter>Net\Sync</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\ConnectionSynchronizer.cpp">
-      <Filter>Net\Sync</Filter>
+      <Filter>_Net\Send</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\C_AUTH.cpp">
-      <Filter>Net\Connection</Filter>
+      <Filter>_Net\Connection</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\C_CHAT.cpp">
-      <Filter>Net\Connection</Filter>
+      <Filter>_Net\Connection</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\C_GAME.cpp">
-      <Filter>Net\Connection</Filter>
+      <Filter>_Net\Connection</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\C_LOBBY.cpp">
-      <Filter>Net\Connection</Filter>
+      <Filter>_Net\Connection</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\C_AREA.cpp">
-      <Filter>Net\Connection</Filter>
+      <Filter>_Net\Connection</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\IActorListener.cpp">
       <Filter>Game\Listener</Filter>
@@ -401,16 +386,10 @@
     <ClCompile Include="..\Classes\sgcl\SitActivity_Goblin.cpp">
       <Filter>Game\AI\Activity\Sit</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\NetClientEventListener.cpp">
-      <Filter>Net\Listener</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\UI_ChannelSelect.cpp">
       <Filter>Game\UI_Implementation</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\FontManager.cpp">
-      <Filter>Game\Contents</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Global.cpp">
       <Filter>Game\Contents</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Inven.cpp">
@@ -457,16 +436,16 @@
       <Filter>Game\Contents</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\AuthenticationComponent.cpp">
-      <Filter>Net\Component</Filter>
+      <Filter>_Net\Component</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Callback_POPUP_TIMEOUT.cpp">
       <Filter>Game\Callback</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\R_MESSAGE.cpp">
-      <Filter>Net\Recv</Filter>
+      <Filter>_Net\Recv</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\R_LOBBY.cpp">
-      <Filter>Net\Recv</Filter>
+      <Filter>_Net\Recv</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Core.cpp" />
     <ClCompile Include="..\Classes\sgcl\_API\sgapiClient.cpp">
@@ -522,6 +501,18 @@
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\_Core\CLIFunctions.cpp">
       <Filter>_Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Net\NetClientListenerImpl.cpp">
+      <Filter>_Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Net\CommandSynchronizer.cpp">
+      <Filter>_Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Net\ConnectionSynchronizer.cpp">
+      <Filter>_Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\_Net\NetCore.cpp">
+      <Filter>_Net</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -692,10 +683,7 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\NetClientGroup.h">
-      <Filter>Net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\NetCore.h">
-      <Filter>Net</Filter>
+      <Filter>_Net</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\UI_Popup.h">
       <Filter>Game\UI_Implementation</Filter>
@@ -704,46 +692,40 @@
       <Filter>Game\UI_Implementation</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\R_AUTHENTICATION.h">
-      <Filter>Net\Recv</Filter>
+      <Filter>_Net\Recv</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\S_AUTH.h">
-      <Filter>Net\Send</Filter>
+      <Filter>_Net\Send</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\S_GAME_UDP.h">
-      <Filter>Net\Send</Filter>
+      <Filter>_Net\Send</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\S_GAME.h">
-      <Filter>Net\Send</Filter>
+      <Filter>_Net\Send</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\S_LOBBY.h">
-      <Filter>Net\Send</Filter>
+      <Filter>_Net\Send</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\S_AREA.h">
-      <Filter>Net\Send</Filter>
+      <Filter>_Net\Send</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\S_CHAT.h">
-      <Filter>Net\Send</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\CommandSynchronizer.h">
-      <Filter>Net\Sync</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\ConnectionSynchronizer.h">
-      <Filter>Net\Sync</Filter>
+      <Filter>_Net\Send</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\C_AUTH.h">
-      <Filter>Net\Connection</Filter>
+      <Filter>_Net\Connection</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\C_AREA.h">
-      <Filter>Net\Connection</Filter>
+      <Filter>_Net\Connection</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\C_CHAT.h">
-      <Filter>Net\Connection</Filter>
+      <Filter>_Net\Connection</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\C_GAME.h">
-      <Filter>Net\Connection</Filter>
+      <Filter>_Net\Connection</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\C_LOBBY.h">
-      <Filter>Net\Connection</Filter>
+      <Filter>_Net\Connection</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Define_Popup.h">
       <Filter>Define</Filter>
@@ -826,9 +808,6 @@
     <ClInclude Include="..\Classes\sgcl\SitActivity_Goblin.h">
       <Filter>Game\AI\Activity\Sit</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\NetClientEventListener.h">
-      <Filter>Net\Listener</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\UI_ChannelSelect.h">
       <Filter>Game\UI_Implementation</Filter>
     </ClInclude>
@@ -883,7 +862,7 @@
       <Filter>Game\Contents</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\AuthenticationComponent.h">
-      <Filter>Net\Component</Filter>
+      <Filter>_Net\Component</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Callback_POPUP_TIMEOUT.h">
       <Filter>Game\Callback</Filter>
@@ -905,10 +884,10 @@
       <Filter>Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\R_MESSAGE.h">
-      <Filter>Net\Recv</Filter>
+      <Filter>_Net\Recv</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\R_LOBBY.h">
-      <Filter>Net\Recv</Filter>
+      <Filter>_Net\Recv</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Core.h" />
     <ClInclude Include="..\Classes\sgcl\_API\sgapiClient.h">
@@ -967,6 +946,18 @@
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\_Core\AppConfig_Props.h">
       <Filter>_Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Net\NetClientListenerImpl.h">
+      <Filter>_Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Net\CommandSynchronizer.h">
+      <Filter>_Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Net\ConnectionSynchronizer.h">
+      <Filter>_Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\_Net\NetCore.h">
+      <Filter>_Net</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -83,7 +83,6 @@ private:
 	ClientInfo* pClientInfo_ = nullptr;
 };
 
-JC_DECL_SINGLETON_VAR(AppConfig)
-#define g_cAppConfig JC_DECL_SINGLETON_BODY(AppConfig)
+#define g_cAppConfig	JC_DECL_SINGLETON_BODY(AppConfig)
 #define g_cAppProps		(g_cAppConfig.props_)
 

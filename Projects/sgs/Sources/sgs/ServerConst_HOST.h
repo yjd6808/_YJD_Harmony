@@ -50,4 +50,4 @@ constexpr jc::Range CenterHandleRange = { SeqUnit * 6, SeqUnit * 7 }; // 600000 
 }
 
 
-NS_CONST_END
+NS_END

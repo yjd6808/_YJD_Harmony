@@ -70,6 +70,6 @@ protected:
     CVoidOwner owner_;
 };
 
-NS_JC_END
+NS_END
 
 #pragma warning(pop)

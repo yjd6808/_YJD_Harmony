@@ -276,4 +276,4 @@ void InitializePropertyOperatorBool()
 	PropertyStatics::BinaryOperators_bool[PropertyBinaryOperatorType::Less]				= dbg_new PropertyValueBinaryOperator_bool_Less{};
 }
 
-NS_JC_END
+NS_END

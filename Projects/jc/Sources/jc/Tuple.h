@@ -65,4 +65,4 @@ constexpr auto MakeTuple(Args&&... _args)
 }
 
 
-NS_JC_END
+NS_END

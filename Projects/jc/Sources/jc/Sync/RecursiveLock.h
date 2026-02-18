@@ -32,4 +32,4 @@ private:
 using RecursiveLockGuard = LockGuard<RecursiveLock>;
 extern template            LockGuard<RecursiveLock>;
 
-NS_JC_END
+NS_END

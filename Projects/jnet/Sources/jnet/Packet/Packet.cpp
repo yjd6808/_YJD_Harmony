@@ -53,4 +53,4 @@ CommandBufferPacket::CommandBufferPacket(const jc::MemoryPoolAbstractPtr& _alloc
 {
 }
 
-NS_JNET_END
+NS_END

@@ -20,4 +20,4 @@ ICommand* ICommand::Clone() const
 	return pCopy;
 }
 
-NS_JNET_END
+NS_END

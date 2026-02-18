@@ -75,7 +75,7 @@ NS_JC_BEGIN
 	constexpr Int64 ADBegin_v	  = (DaysPer400Years_v * 1969) / 400;	// Epoch 시간 1970년 1월 1일까지의 일 수
 	constexpr Int64 ADBeginTick_v = ADBegin_v * TicksPerDay_v;			// Epoch 시간 1970년 1월 1일까지의 마이크로초
 
-	NS_DETAIL_END
+	NS_END
 
 
 enum class DatePart
@@ -779,5 +779,5 @@ struct TimeCounterF : TimeCounterBase
 	TimeSpanF Elapsed;
 };
 
-NS_JC_END
+NS_END
 

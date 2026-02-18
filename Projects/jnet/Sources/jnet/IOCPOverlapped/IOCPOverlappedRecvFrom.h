@@ -26,4 +26,4 @@ private:
 	Session* receiver_;
 };
 
-NS_JNET_END
+NS_END

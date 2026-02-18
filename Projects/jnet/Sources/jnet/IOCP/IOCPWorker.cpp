@@ -119,4 +119,4 @@ THREAD_END:
 	state_ = State::eJoinWait;
 }
 
-NS_JNET_END
+NS_END

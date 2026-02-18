@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <sgs/CommonNetGroupMgr.h>
+#include <sgs/_Net/NetGroupMgr.h>
 
 class LobbyNetMaster final
-	: public CommonNetGroupMgr
+	: public NetCore
 	, public jc::SingletonPointer<LobbyNetMaster>
 {
 	friend class TSingleton;

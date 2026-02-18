@@ -10,7 +10,7 @@
 #include "CenterCoreHeader.h"
 #include "CenterInterServerClientNetGroup.h"
 
-#include <sgs/ListenerInterServerClient.h>
+#include <sgs/_Net/NetClientListener_InterServ.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -55,7 +55,7 @@ void CenterInterServerClientNetGroup::InitializeInterServerUdp()
 	pInterServerClient->Bind(sg::ServerProcessInfoPackage->center_.bindInterServerUdp_);
 	AddHost(Const::Host::CenterInterServerUdpId, pInterServerClient);
 	pInterServerClientUdp_ = pInterServerClient.Get<UdpClient*>();
-	pInterServerClientUdp_->SetEventListener(dbg_new ListenerInterServerClient{ ServerProcessType::Center, pParser_ });
+	pInterServerClientUdp_->SetEventListener(dbg_new NetClientListener_InterServ{ ServerProcessType::Center, pParser_ });
 	pInterServerClientUdp_->RecvFromAsync();
 }
 

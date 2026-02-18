@@ -17,4 +17,4 @@ namespace NetGroup
 constexpr int MainId = 1;
 }
 
-NS_CONST_END
+NS_END

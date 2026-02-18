@@ -813,4 +813,4 @@ using ISendPacketGuard = jc::RefCountObjectPtr<IPacket>;
 
 #define JNET_SEND_PACKET_AUTO_RELEASE_GUARD(packet) ISendPacketGuard JC_CONCAT_COUNTER(__autorelease_guard__)(packet, false)
 
-NS_JNET_END
+NS_END

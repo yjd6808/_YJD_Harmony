@@ -145,4 +145,4 @@ void TcpSession::Sent(IPacket* _pSentPacket, Int32UL _receivedBytes)
 	pServer_->SessionSent(this, _pSentPacket, _receivedBytes);
 }
 
-NS_JNET_END
+NS_END

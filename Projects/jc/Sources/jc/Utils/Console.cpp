@@ -329,5 +329,5 @@ int Console::GetOutputCodePage()
     return WinApi::GetConsoleOutputCodePage();
 }
 
-NS_JC_END
+NS_END
 

@@ -115,5 +115,5 @@ private:
 	Int32U maxRepeat_;
 };
 
-NS_JC_END
+NS_END
 

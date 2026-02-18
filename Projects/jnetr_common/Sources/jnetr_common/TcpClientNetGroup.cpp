@@ -28,12 +28,12 @@ TcpClientNetGroup::~TcpClientNetGroup()
 //////////////////////////////////////////////////////////////////////////////////////////
 void TcpClientNetGroup::Initialize()
 {
-	CreateIocp(8);
+	CreateIOCP(8);
 	CreateBufferPool({
 		{ 8192, 10 }
 	});
 
-	RunIocp();
+	RunIOCP();
 
 	TcpClientPtr pLoginClient = MakeShared<TcpClient>(pIocp_, pBufferPool_);
 	TcpClientPtr pChannelClient = MakeShared<TcpClient>(pIocp_, pBufferPool_);
@@ -51,4 +51,4 @@ void TcpClientNetGroup::Initialize()
 	gameClient_->SetEventListener(dbg_new ClientListener{ "게임 클라" });
 }
 
-NS_JNET_END
+NS_END

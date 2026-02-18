@@ -40,4 +40,4 @@ class AutoPtr<T&, TAction>
 {
 };
 
-NS_JC_END
+NS_END

@@ -27,4 +27,4 @@ struct IOCPPostOrder : jc::RefCountObject
 	void ReleaseAction() override { delete this; }
 };
 
-NS_JNET_END
+NS_END

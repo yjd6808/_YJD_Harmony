@@ -526,4 +526,4 @@ private:
 
 using ThreadPoolPtr = SharedPtr<ThreadPool>;
 
-NS_JC_END
+NS_END

@@ -25,6 +25,7 @@
 #include <exception>
 #include <random>
 
+#include <jc/DLLExport.h>
 #include <jc/Debug/MemoryLeakDetector.h>
 #include <jc/Debug/New.h>
 

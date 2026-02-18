@@ -6,8 +6,9 @@
  */
 
 #include "Core.h"
-#include "ServerCoreHeader.h"
 #include "InterServerSendHelper.h"
+
+#include <sgs/_Net/NetCore.h>
 
 USING_NS_JNET;
 
@@ -46,13 +47,12 @@ void InterServerSendHelperBase::SetInformation(Session* _pSender, SendStrategy _
 		return;
 
 	SendInformation.toId_ = _toServerId;
-	SendInformation.destination_ = sg::ServerProcessInfoPackage->infoMap_[SendInformation.toId_]->
-		remoteInterServerEp_;
+	// TODO: 리팩토링해야함. 다 지워야함.
+	// SendInformation.destination_ = sg::ServerProcessInfoPackage->infoMap_[SendInformation.toId_]->remoteInterServerEp_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void InterServerSendHelperBase::SetInformation(Session* _pSender, SendStrategy _strategy,
-                                               SingleServerType_t _toServerType)
+void InterServerSendHelperBase::SetInformation(Session* _pSender, SendStrategy _strategy, SingleServerType_t _toServerType)
 {
 	jc_assert(_toServerType >= SingleServerType::Begin && _toServerType <= SingleServerType::End);
 
@@ -64,7 +64,7 @@ void InterServerSendHelperBase::SetInformation(Session* _pSender, SendStrategy _
 	SendInformation.sender_ = _pSender;
 	SendInformation.strategy_ = _strategy;
 	SendInformation.toId_ = SingleServerId[_toServerType];
-	SendInformation.destination_ = sg::ServerProcessInfoPackage->infoMap_[SendInformation.toId_]->remoteInterServerEp_;
+	// SendInformation.destination_ = sg::ServerProcessInfoPackage->infoMap_[SendInformation.toId_]->remoteInterServerEp_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -107,25 +107,7 @@ bool InterServerSendHelperBase::IsValidInformation(Session* _pSender, SendStrate
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void InterServerSendHelperBase::InitSingleServerIds()
+int InterServerSendHelperBase::GetSenderProcessType()
 {
-	SingleServerId[SingleServerType::Center] = sg::ServerProcessInfoPackage->center_.serverId_;
-	SingleServerId[SingleServerType::Auth] = sg::ServerProcessInfoPackage->auth_.serverId_;
-	SingleServerId[SingleServerType::Lobby] = sg::ServerProcessInfoPackage->lobby_.serverId_;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void InterServerSendHelperBase::InitSingleServerDestinations()
-{
-	SingleServerInterServerEP[SingleServerType::Center] = sg::ServerProcessInfoPackage->center_.remoteInterServerEp_;
-	SingleServerInterServerEP[SingleServerType::Auth] = sg::ServerProcessInfoPackage->auth_.remoteInterServerEp_;
-	SingleServerInterServerEP[SingleServerType::Lobby] = sg::ServerProcessInfoPackage->lobby_.remoteInterServerEp_;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-int InterServerSendHelperBase::GetSenderId()
-{
-	const int senderId = sg::ServerProcessInfo->serverId_;
-	jc_assert(senderId >= 0 && senderId <= Const::Server::MaxProcessId);
-	return int(senderId);
+	return g_cNetCore.GetProcessType();
 }
