@@ -12,7 +12,6 @@
 #include <sgs/CmdRelay.h>
 
 #include <sg/_Util/DescLoaderMgr.h>
-#include <sg/_Util/_DescMgr/DescMgr_Database.h>
 #include <sg/_Util/_DescMgr/DescMgr_ServerInfo.h>
 
 #include <sgs/_Net/NetCore.h>
@@ -25,7 +24,6 @@ USING_NS_JNET;
 void InitializeServerCore()
 {
 	g_cDescMgr.AddLoader(dbg_new ServerInfoLoader());
-	g_cDescMgr.AddLoader(dbg_new DatabaseInfoLoader());
 	g_cDescMgr.LoadAll();
 	g_cNetCore.Initialize();
 

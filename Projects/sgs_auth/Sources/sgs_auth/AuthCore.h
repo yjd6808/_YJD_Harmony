@@ -11,25 +11,5 @@
 
 #include <sgs/ServerCore.h>
 
-NS_JDB_BEGIN
-class MysqlDatabase;
-NS_END
-
-class DataManager;
-class AuthNetMaster;
-class AuthNetGroup;
-class AuthServer;
-class AuthenticationManager;
-struct AuthContents;
-
-NS_SG_BEGIN
-extern ::DataManager*      DataManager;
-extern ::jdb::MysqlDatabase* GameDB;
-extern ::AuthNetMaster*    NetGroupMgr;
-extern ::AuthNetGroup*     NetGroup;
-extern ::AuthServer*       Server;
-extern ::AuthContents      Contents;
-NS_END
-
 void InitializeAuthCore();
 void FinalizeAuthCore();

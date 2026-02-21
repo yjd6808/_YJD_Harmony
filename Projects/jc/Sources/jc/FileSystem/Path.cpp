@@ -35,7 +35,14 @@ String Path::FileNameWithoutExt(const char* _pPath)
 {
 	const String fileName = FileName(_pPath);
 	int lastPeriodIndex = fileName.FindReverse(".");
-	return lastPeriodIndex == -1 ? lastPeriodIndex : fileName.GetRange(0, lastPeriodIndex);
+
+	// 점이 없으면 전체 파일 이름 반환
+	if (lastPeriodIndex == -1)
+	{
+		return fileName;
+	}
+
+	return fileName.SubStr(0, lastPeriodIndex);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -11,12 +11,15 @@
 #include <random>
 
 NS_JC_BEGIN
-struct JC_DLL Random final
+
+struct JC_DLL Random
 {
-	Random();
+	Random(bool _init = false);
+
+	void Initialize();
 
 	template <typename T>
-	static T Generate(T _inclusiveBegin, T _inclusiveEnd)
+	T Generate(T _inclusiveBegin, T _inclusiveEnd)
 	{
 		if (_inclusiveBegin > _inclusiveEnd)
 		{
@@ -24,11 +27,11 @@ struct JC_DLL Random final
 		}
 
 		std::uniform_int_distribution<T> dist(_inclusiveBegin, _inclusiveEnd);
-		return dist(DefaultRandomEngine);
+		return dist(engine_);
 	}
 
 	template <typename T>
-	static T GenerateF(T _inclusiveBegin, T _inclusiveEnd)
+	T GenerateF(T _inclusiveBegin, T _inclusiveEnd)
 	{
 		if (_inclusiveBegin > _inclusiveEnd)
 		{
@@ -36,21 +39,21 @@ struct JC_DLL Random final
 		}
 
 		std::uniform_real_distribution<T> dist(_inclusiveBegin, _inclusiveEnd);
-		return dist(DefaultRandomEngine);
+		return dist(engine_);
 	}
 
-	static int GenerateInt(int _inclusiveBegin, int _exclusiveEnd);
-	static double GenerateDouble(double _inclusiveBegin, double _inclusiveEnd);
+	int GenerateInt(int _inclusiveBegin, int _exclusiveEnd);
+	double GenerateDouble(double _inclusiveBegin, double _inclusiveEnd);
 
 	template <typename T>
-	static const T& Pick(std::initializer_list<T> _ilist)
+	const T& Pick(std::initializer_list<T> _ilist)
 	{
 		if (_ilist.size() == 0)
 		{
 			throw InvalidArgumentException("최소 1개이상의 엘리먼트가 있어야합니다.");
 		}
 
-		const int selectedIndex = Random::GenerateInt(0, static_cast<int>(_ilist.size()));
+		const int selectedIndex = GenerateInt(0, static_cast<int>(_ilist.size()));
 		int index = 0;
 		for (const T& value : _ilist)
 		{
@@ -66,14 +69,14 @@ struct JC_DLL Random final
 	}
 
 	template <typename T, typename TAllocator>
-	static T& Pick(const Collection<T, TAllocator>& _collection)
+	T& Pick(const Collection<T, TAllocator>& _collection)
 	{
 		if (_collection.Size() == 0)
 		{
 			throw InvalidArgumentException("최소 1개이상의 엘리먼트가 있어야합니다.");
 		}
 
-		const int selectedIndex = Random::GenerateInt(0, _collection.Size());
+		const int selectedIndex = GenerateInt(0, _collection.Size());
 		auto it = _collection.Begin();
 
 		for (int index = 0; index < _collection.Size(); ++index)
@@ -89,20 +92,20 @@ struct JC_DLL Random final
 		return it->Current();
 	}
 
-	static char GenerateAlphabat();
+	char GenerateAlphabat();
 
 	// 파라메터: 백분율로 표현된 확률
 	// ex) Chance(70.0f) -> 70% 확률로 true 반환
-	static bool Chance(float _percentProbability);
-	static bool Chance(double _percentProbability);
-	static void EngineInitialize();
+	bool Chance(float _percentProbability);
+	bool Chance(double _percentProbability);
 
-	static void WriteRandomAlphabatTextBuffered(int _length, char* _pBuff, int _capacity);
+	void WriteRandomAlphabatTextBuffered(int _length, char* _pBuff, int _capacity);
 
-private:
-	inline static bool Initialized;
-	inline static std::mt19937 DefaultRandomEngine;
-	inline static std::random_device RandomDevice;
+protected:
+	bool initialized_;
+	std::mt19937 engine_;
+	std::random_device device_;
+	std::random_device::result_type seed_;
 };
 
 NS_DETAIL_BEGIN
@@ -115,7 +118,6 @@ template <template <typename> typename TCollection, typename T>
 struct RandomPicker<TCollection<T>>
 {
 };
-
 NS_END
 
 NS_END

@@ -43,6 +43,7 @@ void InitializeJCore(int _argc, char** _argv)
 	Env::InitArgs(_argc, _argv);
 	Env::CurrentDirectory(); // 캐싱
 	Env::ModulePath();	// 캐싱
+	Env::ModuleFileName();	// 캐싱
 	Env::ModuleName();	// 캐싱
 	PropertyStatics::Initialize();
 }

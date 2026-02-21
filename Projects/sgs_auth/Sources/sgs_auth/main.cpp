@@ -1,13 +1,12 @@
 ﻿#include "Core.h"
-#include "AuthCoreHeader.h"
 
 #include <jc/Random.h>
 
 #include <sg/LogSpecifier.h>
 
 #include <sgs/_API/sgapiServerBase.h>
-
-#include <sgs_auth/AuthContents.h>
+#include <sgs/_Net/NetCore.h>
+#include <sgs/_Net/NetGroup_InterServ.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -20,13 +19,12 @@ int main(int _argc, char** _argv)
 	// 메인 리소스 초기화
 	//////////////////////////////////////////////////////////////////////////////////////
 
-	Random::EngineInitialize();
-	sgapiBase::Init(dbg_new sgapiServerBase);
 	Winsock::Initialize(2, 2);
 	Console::SetSize(800, 400);
 	InitializeJCore(_argc, _argv);
 	InitializeNetLogger(LOG_SPECIFIER_AUTH);
 	InitializeDefaultLogger(LOG_SPECIFIER_AUTH);
+	sgapiBase::Init(dbg_new sgapiServerBase);
 	InitializeCommonCore();
 	InitializeServerCore();
 	InitializeServerAuthLogo(true, 24);

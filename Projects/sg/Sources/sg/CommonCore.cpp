@@ -27,6 +27,8 @@
 USING_NS_JC;
 USING_NS_JNET;
 
+SG_DLL jc::Random __globalRandomInstance;
+
 NS_SG_BEGIN
 CharCommonInfo* CharCommon;
 jnet::CommandNameDictionary CommandNameDictionary;
@@ -36,6 +38,8 @@ NS_END
 void InitializeCommonCore()
 {
 	DefaultParserType = PacketParser::Command;
+
+	g_cRandom.Initialize();
 
 	// 설정
 	g_cAppConfig.ReadEnvArgs();

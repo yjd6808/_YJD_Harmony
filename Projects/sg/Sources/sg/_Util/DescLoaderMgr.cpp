@@ -15,7 +15,6 @@
 #include <sg/_Struct/SteinsGate_MonsterBase.h>
 #include <sg/_Struct/SteinsGate_Item.h>
 #include <sg/_Struct/SteinsGate_MapPhysics.h>
-#include <sg/_Struct/SteinsGate_Database.h>
 #include <sg/_Struct/SteinsGate_CharCommon.h>
 
 #include <sg/_Struct/SteinsGate_Action.h>
@@ -221,15 +220,6 @@ ServerProcessInfo* DescLoaderMgr::GetServerProcessInfo()
 	constexpr auto CONFIG_TYPE = ConfigFileType::ServerInfo;
 	const auto pRet = dynamic_cast<ServerProcessInfo*>(GetDataAny(CONFIG_TYPE));
 	jc_assert_msg(pRet, "서버 인포 타입이 아닙니다.");
-	return pRet;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-DatabaseInfo* DescLoaderMgr::GetDatabaseInfo(int _databaseCode)
-{
-	constexpr auto CONFIG_TYPE = ConfigFileType::Database;
-	const auto pRet = dynamic_cast<DatabaseInfo*>(GetData(CONFIG_TYPE, _databaseCode));
-	jc_assert_msg(pRet, "데이터베이스 인포 타입이 아닙니다.");
 	return pRet;
 }
 

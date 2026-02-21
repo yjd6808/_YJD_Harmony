@@ -87,9 +87,6 @@ void NetGroup_InterServ::Initialize()
 	pUdp_ = pUdp.Get<UdpClient*>();
 	pUdp_->SetEventListener(dbg_new NetClientListener_InterServ{ processType, pParser_ });
 	pUdp_->RecvFromAsync();
-
-	InterServerSendHelperBase::InitSingleServerIds();
-	InterServerSendHelperBase::InitSingleServerDestinations();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -144,7 +141,7 @@ bool NetGroup_InterServ::ConnectCenterServer(int _tryCount)
 	const NetInterServerInfo& interserverInfo = g_cNetCore.GetInterServerInfo();
 	if (!interserverInfo.remoteCenterServerEp_.IsValidRemoteEndPoint())
 	{
-		jc_assert(false, "중앙서버 원격 엔드포인트가 유효하지 않습니다.");
+		jc_assert_msg(false, "중앙서버 원격 엔드포인트가 유효하지 않습니다.");
 		return false;
 	}
 

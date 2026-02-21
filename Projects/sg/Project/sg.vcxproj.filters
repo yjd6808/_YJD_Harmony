@@ -73,9 +73,6 @@
     <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Client.cpp">
       <Filter>_Struct</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Database.cpp">
-      <Filter>_Struct</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Effect.cpp">
       <Filter>_Struct</Filter>
     </ClCompile>
@@ -146,9 +143,6 @@
       <Filter>_Util\_DescMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ClientText.cpp">
-      <Filter>_Util\_DescMgr</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Database.cpp">
       <Filter>_Util\_DescMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Enchant.cpp">
@@ -356,9 +350,6 @@
     <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Client.h">
       <Filter>_Struct</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Database.h">
-      <Filter>_Struct</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Effect.h">
       <Filter>_Struct</Filter>
     </ClInclude>
@@ -435,9 +426,6 @@
       <Filter>_Util\_DescMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ClientText.h">
-      <Filter>_Util\_DescMgr</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Database.h">
       <Filter>_Util\_DescMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Enchant.h">

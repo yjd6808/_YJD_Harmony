@@ -141,6 +141,26 @@ struct NetInterServerInfo
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
+struct NetDBInfo_MySQL
+{
+	jc::String name_; // DB 접속에 중요한 정보는 아님
+	jc::String hostName_; // "127.0.0.1, localhost
+	Int16U connPort_; // 3306
+	jc::String accountId_; // root
+	jc::String accountPass_; // 1234
+	jc::String schemaName_; // steinsgate
+	int connPoolSize_ = 10;
+	int maxConnection_ = 5;
+	int iocpThreadCount_ = 2;
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////
+struct NetDBInfo_SQLServer
+{
+
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////
 struct ServerProcessInfo : SDescBase
 {
 	jc::String processName_;
@@ -149,17 +169,23 @@ struct ServerProcessInfo : SDescBase
 	jc::Vector<NetServerInfo> mainServerInfoList_;	// 이 프로세스에서 구동하는 서버 정보
 
 	virtual ~ServerProcessInfo() override = default;
-	virtual const NetInterServerInfo& GetInterServerInfo() const { return dummyInterServerInfo_; }
+	virtual const NetInterServerInfo& GetInterServerInfo() const { jc_assert(false); return dummyInterServerInfo_; }
+	virtual const NetDBInfo_MySQL& GetDBInfo_MySQL() const { jc_assert(false); return dummyInterDBInfo1_; }
+	virtual const NetDBInfo_SQLServer& GetDBInfo_SQLServer() const { jc_assert(false); return dummyInterDBInfo2_; }
 private:
 	inline static NetInterServerInfo dummyInterServerInfo_;
+	inline static NetDBInfo_MySQL dummyInterDBInfo1_;
+	inline static NetDBInfo_SQLServer dummyInterDBInfo2_;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
 struct AuthServerProcessInfo : ServerProcessInfo
 {
 	NetInterServerInfo interServerInfo_;
+	NetDBInfo_MySQL databaseInfo_;
 
 	virtual const NetInterServerInfo& GetInterServerInfo() const override { return interServerInfo_; }
+	virtual const NetDBInfo_MySQL& GetDBInfo_MySQL() const override { return databaseInfo_; }
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////

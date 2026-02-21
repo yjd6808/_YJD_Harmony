@@ -6,7 +6,6 @@
  */
 
 #include "Core.h"
-#include "AuthCoreHeader.h"
 #include "AuthenticationManager.h"
 
 #include <jc/Random.h>
@@ -57,7 +56,7 @@ bool AuthenticationManager::Remove(AuthenticationSerial_t _serial, const char* _
 //////////////////////////////////////////////////////////////////////////////////////////
 void AuthenticationManager::OnScheduled(SchedulerTask* _pTask)
 {
-	static Vector<AuthenticationData*> expiredList;
+	Vector<AuthenticationData*> expiredList;
 
 	const DateTime now = DateTime::Now();
 	{
@@ -342,7 +341,7 @@ bool AuthenticationManager::GenerateSerial(OUT AuthenticationSerial_t& _serial)
 
 	do
 	{
-		generatedSerial = Random::GenerateInt(Const::Authentication::SerialRange.Min, Const::Authentication::SerialRange.Max);
+		generatedSerial = g_cRandom.GenerateInt(Const::Authentication::SerialRange.Min, Const::Authentication::SerialRange.Max);
 
 		if (!FindRaw(generatedSerial))
 		{
@@ -406,4 +405,13 @@ bool AuthenticationManager::GenerateTimeId(OUT DateTime& _timeId, Authentication
 
 	_timeId = generatedTime;
 	return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationManager::Schedule::OnScheduled()
+{
+	if (!AuthenticationManager::Singleton_IsDeleted()) // TODO: 싱글톤 삭제될 때 호출되는 케이스는 애초에 없어야한다. 매니저 삭제전에 스케쥴러가 먼저 정지가 되어야함,
+	{
+		AuthenticationManager::Get()->OnScheduled(this);
+	}
 }

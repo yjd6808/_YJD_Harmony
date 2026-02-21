@@ -18,6 +18,7 @@ class JC_DLL Env
 public:
 	static const String& CurrentDirectory();
 	static const String& ModulePath();
+	static const String& ModuleFileName();	// 확장자 포함
 	static const String& ModuleName();
 
 	static Int32U   TimeGetTime();
@@ -33,7 +34,8 @@ public:
 private:
 	static String		currentDirectory_; // a/b/c
 	static String 		modulePath_;	// a/b/c/d.exe
-	static String 		moduleName_;	// d.exe
+	static String 		moduleFileName_;	// d.exe
+	static String 		moduleName_;	// d
 
 	static SpinLock		tgt64_lock_;
 	static Int32U		tgt64_lastTime_;

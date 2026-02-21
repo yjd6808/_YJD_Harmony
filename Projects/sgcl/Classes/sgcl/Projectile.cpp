@@ -109,7 +109,7 @@ void Projectile::InitComponents()
 // 프로젝틸은 파츠, 애니메이션 다 1개씩임
 void Projectile::InitActorSprite()
 {
-	const float rotation = baseInfo_->rotation_ + jc::Random::GenerateF(baseInfo_->ramdomRotationRangeMin_,
+	const float rotation = baseInfo_->rotation_ + g_cRandom.GenerateF(baseInfo_->ramdomRotationRangeMin_,
 	                                                                   baseInfo_->ramdomRotationRangeMax_);
 
 	if (!pActorSprite_)

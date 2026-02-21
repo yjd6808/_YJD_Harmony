@@ -489,7 +489,7 @@ Effect* ActorManager::CreateEffectOnMapTargetCollision(int _effectCode, SpriteDi
 
 	if (_randomRotation)
 	{
-		pEffect->setRotation(jc::Random::GenerateF(0.0f, 360.0f));
+		pEffect->setRotation(g_cRandom.GenerateF(0.0f, 360.0f));
 	}
 
 	return pEffect;

@@ -6,7 +6,6 @@
  */
 
 #include "Core.h"
-#include "AuthCoreHeader.h"
 #include "S_AUTHENTICATION_IS.h"
 
 #include <sgs/CmdRelay_AUTHENTICATION.h>

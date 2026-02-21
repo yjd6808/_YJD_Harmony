@@ -27,7 +27,7 @@ void IdleActivity_Goblin::OnUpdate(float _dt)
 //////////////////////////////////////////////////////////////////////////////////////////
 void IdleActivity_Goblin::OnActivitySelectFromAiRoutine(AIInfo* _pAiInfo, AIState_t _aiState)
 {
-	limitTime_ = jc::Random::GenerateF(_pAiInfo->idleTime_[0], _pAiInfo->idleTime_[1]);
+	limitTime_ = g_cRandom.GenerateF(_pAiInfo->idleTime_[0], _pAiInfo->idleTime_[1]);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

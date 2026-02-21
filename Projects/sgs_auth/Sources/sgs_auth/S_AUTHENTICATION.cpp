@@ -6,7 +6,6 @@
  */
 
 #include "Core.h"
-#include "AuthCoreHeader.h"
 #include "S_AUTHENTICATION.h"
 
 #include <sg/Cmd_AUTHENTICATION.h>

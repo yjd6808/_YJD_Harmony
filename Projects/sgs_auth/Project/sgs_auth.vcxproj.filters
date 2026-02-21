@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="..\Sources\sgs_auth\main.cpp" />
     <ClCompile Include="..\Sources\sgs_auth\AuthCore.cpp" />
-    <ClCompile Include="..\Sources\sgs_auth\AuthNetGroup.cpp" />
     <ClCompile Include="..\Sources\sgs_auth\S_AUTHENTICATION_IS.cpp">
       <Filter>Send</Filter>
     </ClCompile>
@@ -19,19 +18,10 @@
     <ClCompile Include="..\Sources\sgs_auth\AuthenticationManager.cpp">
       <Filter>Contents</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs_auth\AuthenticationManagerSchedule.cpp">
-      <Filter>Contents</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_auth\AuthContents.cpp">
-      <Filter>Contents</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_auth\AuthInterServerClientNetGroup.cpp" />
     <ClCompile Include="..\Sources\sgs_auth\Core.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\sgs_auth\AuthCoreHeader.h" />
     <ClInclude Include="..\Sources\sgs_auth\AuthCore.h" />
-    <ClInclude Include="..\Sources\sgs_auth\AuthNetGroup.h" />
     <ClInclude Include="..\Sources\sgs_auth\R_AUTHENTICATION.h">
       <Filter>Recv</Filter>
     </ClInclude>
@@ -45,13 +35,6 @@
       <Filter>Query</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs_auth\AuthenticationManager.h">
-      <Filter>Contents</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_auth\AuthContents.h">
-      <Filter>Contents</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_auth\AuthInterServerClientNetGroup.h" />
-    <ClInclude Include="..\Sources\sgs_auth\AuthenticationManagerSchedule.h">
       <Filter>Contents</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs_auth\Core.h" />

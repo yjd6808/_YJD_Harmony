@@ -19,8 +19,6 @@ struct ItemOptInfo;
 struct ItemOptInfo;
 struct ChannelBaseInfo;
 struct EnchantInfo;
-struct ServerProcessInfoPackage;
-struct DatabaseInfo;
 struct CharCommonInfo;
 struct MapInfo;
 struct MapAreaInfo;
@@ -69,7 +67,6 @@ public:
 	ChannelBaseInfo*				GetChannelBaseInfo(int _channelCode);
 	EnchantInfo*					GetEnchantInfo(int _enchantCode);
 	ServerProcessInfo*				GetServerProcessInfo();
-	DatabaseInfo*					GetDatabaseInfo(int _databaseCode);
 	CharCommonInfo*					GetCharCommonInfo(int _charCommonCode);
 	MapInfo*						GetMapInfo(int _mapCode);
 	MapAreaInfo*					GetMapAreaInfo(int _mapCode);

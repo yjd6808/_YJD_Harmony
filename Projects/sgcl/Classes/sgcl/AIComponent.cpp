@@ -213,7 +213,7 @@ void AIComponent::UpdateDirection()
 //////////////////////////////////////////////////////////////////////////////////////////
 void AIComponent::SelectWanderActivity()
 {
-	const float rnd = Random::GenerateF(0.0f, 100.0f);
+	const float rnd = g_cRandom.GenerateF(0.0f, 100.0f);
 	activityState_ = AIState::Wander;
 
 	if (rnd < pAIInfo_->wanderProbs_[AIWanderDecision::Walk])
@@ -230,7 +230,7 @@ void AIComponent::SelectWanderActivity()
 //////////////////////////////////////////////////////////////////////////////////////////
 void AIComponent::SelectTrackActivity()
 {
-	const float rnd = jc::Random::GenerateF(0.0f, 100.0f);
+	const float rnd = g_cRandom.GenerateF(0.0f, 100.0f);
 
 	if (rnd < pAIInfo_->trackProbs_[AITrackDecision::Wander])
 	{
@@ -255,7 +255,7 @@ void AIComponent::SelectTrackActivity()
 //////////////////////////////////////////////////////////////////////////////////////////
 void AIComponent::SelectAngryActivity()
 {
-	const float rnd = jc::Random::GenerateF(0.0f, 100.0f);
+	const float rnd = g_cRandom.GenerateF(0.0f, 100.0f);
 
 	if (rnd < pAIInfo_->angryProbs_[AIAngryDecision::Wander])
 	{
@@ -312,13 +312,13 @@ void AIComponent::RunActivity(AIActivityType_t _activityType)
 cc::vec2 AIComponent::GetRandomSightPos()
 {
 	cc::vec2 curPos = pActor_->GetPositionRealCenter();
-	float randRad = jc::Random::GenerateF(0.0f, 2 * SG_PI);
+	float randRad = g_cRandom.GenerateF(0.0f, 2 * SG_PI);
 	cc::vec2 dstPos{
 		curPos.x + pAIInfo_->sightRadious_ * cosf(randRad),
 		curPos.y + pAIInfo_->sightRadious_ * sinf(randRad)
 	};
 
-	return curPos.lerp(dstPos, jc::Random::GenerateF(SightRandomPosMinAlpha, 1.0f));
+	return curPos.lerp(dstPos, g_cRandom.GenerateF(SightRandomPosMinAlpha, 1.0f));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

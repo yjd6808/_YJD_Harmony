@@ -22,7 +22,7 @@ public:
 	virtual int			sgapi_GetServerProcessType() { return 0; } // ServerProcessType::None
 public:
 	virtual ~sgapiBase() = default;
-	virtual void Init();
+	virtual void Init() {}
 
 	static void Init(sgapiBase* _api);
 	static sgapiBase* Get();

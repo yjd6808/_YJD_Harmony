@@ -37,15 +37,16 @@ TEST(ArraysTest, Sort) {
 		vector<int> standard;	// STL 정렬 알고리즘 적용
 		vector<int> target;		// 내가 구현한 정렬 알고리즘 적용
 		std::string failed_flag;
+		Random r(true);
 
 		for (int k = 0; k < SORT_ALGO_COUNT; ++k) {
 			for (int i = 0; i < 500; i++) {
-				const int element_count = Random::GenerateInt(1, 10);
+				const int element_count = r.GenerateInt(1, 10);
 				standard.clear();
 				target.clear();
 
 				for (int j = 0; j < element_count; j++) {
-					int new_val = Random::GenerateInt(0, 50);
+					int new_val = r.GenerateInt(0, 50);
 					standard.push_back(new_val);
 					target.push_back(new_val);
 				}
@@ -226,14 +227,15 @@ TEST(ArraysTest, Heapify) {
 		"sift_up"
 	};
 
+	Random r(true);
 
 	for (int k = 0; k < HEAPIFY_TYPE; ++k) {
 		for (int i = 0; i < 300; ++i) {
-			const int element_count = Random::GenerateInt(1, 10);
+			const int element_count = r.GenerateInt(1, 10);
 			v.clear();
 
 			for (int j = 0; j < element_count; j++) {
-				int new_val = Random::GenerateInt(0, 50);
+				int new_val = r.GenerateInt(0, 50);
 				v.push_back(new_val);
 			}
 

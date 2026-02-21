@@ -17,7 +17,9 @@
 NS_JC_BEGIN
 String			Env::currentDirectory_;
 String			Env::modulePath_;
+String			Env::moduleFileName_;
 String			Env::moduleName_;
+
 
 SpinLock		Env::tgt64_lock_;
 Int32U			Env::tgt64_lastTime_;
@@ -52,13 +54,24 @@ const String& Env::ModulePath()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+const String& Env::ModuleFileName()
+{
+	if (moduleFileName_.Length() > 0)
+		return moduleFileName_;
+
+	String modulePath = ModulePath();
+	moduleFileName_ = jc::Path::FileName(modulePath);
+	return moduleFileName_;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 const String& Env::ModuleName()
 {
 	if (moduleName_.Length() > 0)
 		return moduleName_;
 
 	String modulePath = ModulePath();
-	moduleName_ = jc::Path::FileName(modulePath);
+	moduleName_ = jc::Path::FileNameWithoutExt(modulePath);
 	return moduleName_;
 }
 

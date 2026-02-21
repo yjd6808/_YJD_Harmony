@@ -177,11 +177,12 @@ TEST(TreeSetTest, MemoryPool) {
 TEST(TreeSetTest, Sort) {
 	LeakCheck;
 
+	Random r(true);
 	TreeSet<int> testSet;
 	bool check[100]{};		// 현재 set가 unique여부를 보장하지 않는다는 가정하에 많든 채
 	for (int i = 0; i < 100; ++i) {
 		while (true) {
-			int v = Random::GenerateInt(0, 100);
+			int v = r.GenerateInt(0, 100);
 			if (!check[v]) {
 				check[v] = true;
 				testSet.Insert(v);

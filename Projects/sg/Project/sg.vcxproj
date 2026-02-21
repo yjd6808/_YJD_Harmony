@@ -73,7 +73,6 @@
     <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_CharBase.cpp" />
     <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_CharCommon.cpp" />
     <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Client.cpp" />
-    <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Database.cpp" />
     <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Effect.cpp" />
     <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_Enchant.cpp" />
     <ClCompile Include="..\Sources\sg\_Struct\SteinsGate_FrameEvent.cpp" />
@@ -101,7 +100,6 @@
     <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_CharBase.cpp" />
     <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_CharCommon.cpp" />
     <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ClientText.cpp" />
-    <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Database.cpp" />
     <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Enchant.cpp" />
     <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_FrameEvent.cpp" />
     <ClCompile Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Item.cpp" />
@@ -212,7 +210,6 @@
     <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_CharBase.h" />
     <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_CharCommon.h" />
     <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Client.h" />
-    <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Database.h" />
     <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Effect.h" />
     <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_Enchant.h" />
     <ClInclude Include="..\Sources\sg\_Struct\SteinsGate_FrameEvent.h" />
@@ -240,7 +237,6 @@
     <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_CharBase.h" />
     <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_CharCommon.h" />
     <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_ClientText.h" />
-    <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Database.h" />
     <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Enchant.h" />
     <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_FrameEvent.h" />
     <ClInclude Include="..\Sources\sg\_Util\_DescMgr\DescMgr_Item.h" />

@@ -23,4 +23,6 @@ public:
 
 	static void ReadCommonInfo(Json::Value& _serverRoot, OUT ServerProcessInfo* _pServerInfo);
 	static void ReadInterServInfo(Json::Value& _serverRoot, OUT NetInterServerInfo& _interServerInfo);
+	static void ReadDbInfo(Json::Value& _databaseRoot, OUT NetDBInfo_MySQL& _dbInfo);
+	static void ReadDbInfo(Json::Value& _databaseRoot, OUT NetDBInfo_SQLServer& _dbInfo);
 };

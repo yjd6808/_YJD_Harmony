@@ -50,13 +50,16 @@ bool ServerInfoLoader::Load()
 					AuthServerProcessInfo* pServerInfoDetail = dbg_new AuthServerProcessInfo();
 					pServerInfo = pServerInfoDetail;
 					ReadInterServInfo(serverInfoRoot, pServerInfoDetail->interServerInfo_);
+					ReadDbInfo(serverInfoRoot["database_0"], pServerInfoDetail->databaseInfo_);
 				}
+				break;
 			case ServerProcessType::Lobby:
 				{
 					LobbyServerProcessInfo* pServerInfoDetail = dbg_new LobbyServerProcessInfo();
 					pServerInfo = pServerInfoDetail;
 					ReadInterServInfo(serverInfoRoot, pServerInfoDetail->interServerInfo_);
 				}
+				break;
 			case ServerProcessType::Game:
 				{
 					GameServerProcessInfo* pServerInfoDetail = dbg_new GameServerProcessInfo();
@@ -100,11 +103,11 @@ void ServerInfoLoader::ReadCommonInfo(Json::Value& _serverRoot, OUT ServerProces
 		Value& netServerInfo = netServerInfoList[i];
 
 		NetServerInfo info;
-		jc::String bindTcp = JsonUtil::GetString(_serverRoot["bind_tcp"]);
-		jc::String bindUdp = JsonUtil::GetString(_serverRoot["bind_udp"]);
-		jc::String remote = JsonUtil::GetString(_serverRoot["remote_ep"]);
+		jc::String bindTcp = JsonUtil::GetString(netServerInfo["bind_tcp"]);
+		jc::String bindUdp = JsonUtil::GetString(netServerInfo["bind_udp"]);
+		jc::String remote = JsonUtil::GetString(netServerInfo["remote_ep"]);
 
-		info.serverType_ = _serverRoot["server_type"].asInt();
+		info.serverType_ = netServerInfo["server_type"].asInt();
 		info.serverName_ = JsonUtil::GetStringOrDefault(netServerInfo["server_name"]);
 		info.bindTcp_ = IPv4EndPoint{ bindTcp };
 		info.bindUdp_ = IPv4EndPoint{ bindUdp };
@@ -133,5 +136,24 @@ void ServerInfoLoader::ReadInterServInfo(Json::Value& _serverRoot, OUT NetInterS
 	_interServerInfo.udpRecvBufferSize_ = _serverRoot["interserver_udp_recv_buffer_size"].asInt();
 	_interServerInfo.udpSendBufferSize_ = _serverRoot["interserver_udp_send_buffer_size"].asInt();
 	_interServerInfo.iocpThreadCount_ = _serverRoot["interserver_iocp_thread_count"].asInt();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void ServerInfoLoader::ReadDbInfo(Json::Value& _databaseRoot, OUT NetDBInfo_MySQL& _dbInfo)
+{
+	_dbInfo.name_ = JsonUtil::GetString(_databaseRoot["name"]);
+	_dbInfo.hostName_ = JsonUtil::GetString(_databaseRoot["hostname"]);
+	_dbInfo.connPort_ = (Int16U)_databaseRoot["connection_port"].asInt();
+	_dbInfo.schemaName_ = JsonUtil::GetString(_databaseRoot["schema_name"]);
+	_dbInfo.accountId_ = JsonUtil::GetString(_databaseRoot["account_id"]);
+	_dbInfo.accountPass_ = JsonUtil::GetString(_databaseRoot["account_pass"]);
+	_dbInfo.connPoolSize_ = _databaseRoot["connection_pool_size"].asInt();
+	_dbInfo.maxConnection_ = _databaseRoot["max_connection"].asInt();
+	_dbInfo.iocpThreadCount_ = _databaseRoot["iocp_thread_count"].asInt();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void ServerInfoLoader::ReadDbInfo(Json::Value& _databaseRoot, OUT  NetDBInfo_SQLServer& _dbInfo)
+{
 }
 

@@ -10,9 +10,11 @@
 
 #include "jc/Container/PropertyStatics.h"
 
+static Random g_cR;
+
 int R(int _min, int _max) 
 {
-	return Random::GenerateInt(_min, _max);
+	return g_cR.GenerateInt(_min, _max);
 }
 
 #if TEST_CoreTest == ON
@@ -40,7 +42,7 @@ int main(int _argc, char** _argv)
 {
 	::testing::InitGoogleTest(&_argc, _argv);
 	InitializeJCore(_argc, _argv);
-	Random::EngineInitialize();
+	g_cR.Initialize();
 	const int ret = RUN_ALL_TESTS();
 	PropertyStatics::Finalize();
 	FinalizeJCore();

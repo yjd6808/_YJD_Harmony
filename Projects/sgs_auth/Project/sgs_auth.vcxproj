@@ -27,23 +27,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs_auth\AuthContents.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_auth\AuthInterServerClientNetGroup.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Sources\sgs_auth\AuthenticationManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_auth\AuthenticationManagerSchedule.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_auth\AuthNetGroup.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -68,28 +52,11 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs_auth\AuthContents.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_auth\AuthInterServerClientNetGroup.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\sgs_auth\AuthenticationManager.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs_auth\AuthenticationManagerSchedule.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_auth\AuthNetGroup.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\sgs_auth\AuthCore.h" />
-    <ClInclude Include="..\Sources\sgs_auth\AuthCoreHeader.h" />
     <ClInclude Include="..\Sources\sgs_auth\Q_LOGIN.h" />
     <ClInclude Include="..\Sources\sgs_auth\R_AUTHENTICATION.h">
       <SubType>
@@ -198,7 +165,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>jsoncpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libmysql.lib;jsoncpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -206,7 +173,10 @@
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -229,7 +199,10 @@ xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -261,7 +234,10 @@ xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -289,7 +265,10 @@ xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

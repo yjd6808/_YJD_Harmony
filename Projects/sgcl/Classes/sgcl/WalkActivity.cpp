@@ -33,14 +33,14 @@ void WalkActivity::OnActivitySelectFromAiRoutine(AIInfo* _pAiInfo, AIState_t _ai
 	{
 	case AIState::Wander:
 		{
-			limitTime_ = jc::Random::GenerateF(_pAiInfo->wanderWalkTime_[0], _pAiInfo->wanderWalkTime_[1]);
+			limitTime_ = g_cRandom.GenerateF(_pAiInfo->wanderWalkTime_[0], _pAiInfo->wanderWalkTime_[1]);
 			destination_ = pAIComponent->GetRandomSightPos();
 			mode_ = eWander;
 			break;
 		}
 	case AIState::Track:
 		{
-			limitTime_ = jc::Random::GenerateF(_pAiInfo->trackWalkTime_[0], _pAiInfo->trackWalkTime_[1]);
+			limitTime_ = g_cRandom.GenerateF(_pAiInfo->trackWalkTime_[0], _pAiInfo->trackWalkTime_[1]);
 			mode_ = eTrack;
 			break;
 		}

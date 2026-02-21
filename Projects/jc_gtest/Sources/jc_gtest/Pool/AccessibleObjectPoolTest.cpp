@@ -32,7 +32,7 @@ constexpr int ElementCount = 100;
 constexpr int ThreadSize = 16;
 
 TEST(AccessibleObjectPoolTest, General) {
-	Random::EngineInitialize();
+	Random r(true);
 	Data::InitPool(ElementCount, 10);
 	ThreadPool th(ThreadSize);
 	Task<void> tasks[ThreadSize];
@@ -47,7 +47,7 @@ TEST(AccessibleObjectPoolTest, General) {
 				EXPECT_FALSE(maps[id].item1);		// 중복된 ID 발급 확인
 
 				// 40%확률로 데이터를 도로 집어넣는다.
-				if (Random::Chance(40.0f)) {
+				if (r.Chance(40.0f)) {
 					Data::Push(data);
 					++pushCount[i];
 				}

@@ -21,7 +21,7 @@ int main(int _argc, char* _pArgv[])
 	int gameServerType = parse_args(_argc, _pArgv);
 	const String logSpecifier = StringUtil::Format(LOG_SPECIFIER_GAME, GameServerType::Name[gameServerType]);
 
-	Random::EngineInitialize();
+	Random::Initialize();
     Winsock::Initialize(2, 2);
     Console::SetSize(800, 400);
     InitializeJCore(_argc, _argv);

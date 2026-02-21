@@ -10,20 +10,25 @@
 NS_JC_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Random::Random()
+Random::Random(bool _init /*= false */)
+: initialized_(false)
+, seed_(0)
 {
-	// 처음 한번만 초기화를 하자.
-	if (!Initialized)
+	if (_init)
 	{
-		Initialized = true;
-		DefaultRandomEngine.seed(RandomDevice());
+		Initialize();
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Random::EngineInitialize()
+void Random::Initialize()
 {
-	DefaultRandomEngine.seed(RandomDevice());
+	if (!initialized_)
+	{
+		initialized_ = true;
+		seed_ = device_();
+		engine_.seed(seed_);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -60,7 +65,7 @@ int Random::GenerateInt(int _inclusiveBegin, int _exclusiveEnd)
 	}
 
 	std::uniform_int_distribution<> dist(_inclusiveBegin, _exclusiveEnd - 1);
-	return dist(DefaultRandomEngine);
+	return dist(engine_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -72,7 +77,7 @@ double Random::GenerateDouble(double _inclusiveBegin, double _inclusiveEnd)
 	}
 
 	std::uniform_real_distribution<> dist(_inclusiveBegin, _inclusiveEnd);
-	return dist(DefaultRandomEngine);
+	return dist(engine_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

@@ -58,7 +58,7 @@ public:
 
 	bool Unregister(int _id) {
 		for (int i = 0; i < m_Chain.Size(); ++i) {
-			if (m_Chain[i].ID == _id) {
+			if (m_Chain[i].id_ == _id) {
 				m_Chain.RemoveAt(i);
 				return true;
 			}
@@ -69,7 +69,7 @@ public:
 
 	bool IsRegistered(int _id) const {
 		for (int i = 0; i < m_Chain.Size(); ++i) {
-			if (m_Chain[i].ID == _id) {
+			if (m_Chain[i].id_ == _id) {
 				return true;
 			}
 		}
@@ -84,7 +84,7 @@ public:
 	template <typename... ParamArgs>
 	void Invoke(ParamArgs&&... _params) {
 		for (int i = 0; i < m_Chain.Size(); ++i) {
-			m_Chain[i].Action(Forward<ParamArgs>(_params)...);
+			m_Chain[i].action_(Forward<ParamArgs>(_params)...);
 		}
 		// m_Chain.ForEach([&params...](Holder* holder) {
 		// 	  holder->Invoke(Forward<_Args>(params)...);

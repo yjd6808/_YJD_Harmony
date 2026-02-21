@@ -58,42 +58,42 @@ public:
 	}
 
 	template <typename TCallback>
-	void Interval(TCallback&& callback, TimeSpan interval, Int32U repeat = INFINITE) {
+	void Interval(TCallback&& _callback, TimeSpan _interval, Int32U _repeat = INFINITE) {
 		ValidateCallbackType<TCallback>();
 
 		AddFirstTask(dbg_new SchedulerTaskRepeat{
 			DateTime::Now(),
-			interval,
-			Forward<TCallback>(callback),
-			repeat
+			_interval,
+			Forward<TCallback>(_callback),
+			_repeat
 		});
 	}
 
 	template <typename TCallback>
-	void OnceAt(TCallback&& callback, DateTime at) {
+	void OnceAt(TCallback&& _callback, DateTime _at) {
 		ValidateCallbackType<TCallback>();
 
 		AddFirstTask(dbg_new SchedulerTaskOnce{
-			at,
-			Forward<TCallback>(callback)
+			_at,
+			Forward<TCallback>(_callback)
 		});
 	}
 
 	template <typename TCallback>
-	void Once(TCallback&& callback) {
+	void Once(TCallback&& _callback) {
 		ValidateCallbackType<TCallback>();
 
 		AddFirstTask(dbg_new SchedulerTaskOnce{
 			DateTime::Now(),
-			Forward<TCallback>(callback)
+			Forward<TCallback>(_callback)
 		});
 	}
 
 	void AddFirstTask(SchedulerTask* _pTask);
 	void AddTask(SchedulerTask* _pTask);
 	int WaitingTaskCount();
-	bool HasRunningTask() { return m_pRunningTask != nullptr; }
-	void Join(JoinStrategy strategy = JoinStrategy::WaitOnlyRunningTask);
+	bool HasRunningTask() { return runningTaskCount_ > 0; }
+	void Join(JoinStrategy _strategy = JoinStrategy::WaitOnlyRunningTask);
 protected:
 	void AddTaskRaw(SchedulerTask* _pTask);
 	bool HaveEarlierTask(const DateTime& _waitUntil);
@@ -104,16 +104,16 @@ protected:
 	bool HaveExecutableTaskRaw(IN_OUT Int64U* _pExecutableTaskLimitTime = nullptr);
 	void ClearWaitingTaskListRaw();
 
-	static ThreadPool::JoinStrategy ConverToThreadPoolStrategy(JoinStrategy strategy);
+	static ThreadPool::JoinStrategy ConverToThreadPoolStrategy(JoinStrategy _strategy);
 
-	TreeMap<Int64U, TaskList*> m_tmWaitTasks;
-	ConditionVariable m_CondVar;
-	NormalLock m_Lock;
-	ThreadPool* m_pThreadPool;
-	Thread m_SchedulingThread;
-	Atomic<SchedulerTask*> m_pRunningTask;
-	HashMap<SchedulerTask*, SchedulerTask*> m_ScheduledTaskMap;			// 대기 작업맵에서 Pop되어 스케쥴링 진행중인 작업들 목록;
-	State m_eState;
+	TreeMap<Int64U, TaskList*> waitTasksMap_;
+	ConditionVariable condVar_;
+	NormalLock lock_;
+	ThreadPool* pThreadPool_;
+	Thread schedulingThread_;
+	Atomic<int> runningTaskCount_ = 0;
+	HashMap<SchedulerTask*, SchedulerTask*> scheduledTaskMap_;			// 대기 작업맵에서 Pop되어 스케쥴링 진행중인 작업들 목록;
+	State state_;
 };
 
 

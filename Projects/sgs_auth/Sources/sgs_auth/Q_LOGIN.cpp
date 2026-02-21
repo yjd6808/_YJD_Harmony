@@ -6,7 +6,6 @@
  */
 
 #include "Core.h"
-#include "AuthCoreHeader.h"
 #include "Q_LOGIN.h"
 
 #include <sgs/QueryDefine_AUTH.h>
@@ -18,8 +17,9 @@ USING_NS_JDB;
 //////////////////////////////////////////////////////////////////////////////////////////
 void Q_LOGIN::SelectAccountInfoList(const char* _pAccountId)
 {
+	MysqlDatabase* pDatabase = nullptr;
 	SelectAccountInfoListResult result;
-	SelectAccountInfoList::Execute<THelper>(sg::GameDB, result);
+	SelectAccountInfoList::Execute<THelper>(pDatabase, result);
 
 	do
 	{
@@ -30,16 +30,18 @@ void Q_LOGIN::SelectAccountInfoList(const char* _pAccountId)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool Q_LOGIN::RegisterAccount(const char* _pAccountId, const char* _pAccountPass)
 {
+	MysqlDatabase* pDatabase = nullptr;
 	InsertResult result;
-	InsertAccountInfo::Execute<THelper>(sg::GameDB, result, _pAccountId, _pAccountPass);
+	InsertAccountInfo::Execute<THelper>(pDatabase, result, _pAccountId, _pAccountPass);
 	return IsSuccess;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 bool Q_LOGIN::SelectAccountInfo(const char* _pAccountId, OUT AccountData& _accountData)
 {
+	MysqlDatabase* pDatabase = nullptr;
 	SelectAccountInfoResult result;
-	SelectAccountInfo::Execute<THelper>(sg::GameDB, result, _pAccountId);
+	SelectAccountInfo::Execute<THelper>(pDatabase, result, _pAccountId);
 
 	// 쿼리는 성공했지만 바인딩된 결과물이 없으면 실패로 간주
 	if (!IsSuccess || !result.HasBindedResult)

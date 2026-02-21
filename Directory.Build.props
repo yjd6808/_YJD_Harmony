@@ -118,4 +118,5 @@
 	'$(MSBuildProjectName)' == 'sgtc'					OR
 	'$(MSBuildProjectName)' == 'sgts'
 			" />
+
 </Project>

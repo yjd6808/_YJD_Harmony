@@ -20,7 +20,7 @@ public:
 
 	bool Initialize() override;
 
-	int GetProcessType();
+	int GetProcessType() { return processType_; }
 	const ServerProcessInfo& GetProcessInfo() { return *pProcessInfo_; }
 	const NetInterServerInfo& GetInterServerInfo() const { return pProcessInfo_->GetInterServerInfo(); }
 	const jc::Vector<NetServerInfo>& GetMainServerInfoList() const { return pProcessInfo_->mainServerInfoList_; }

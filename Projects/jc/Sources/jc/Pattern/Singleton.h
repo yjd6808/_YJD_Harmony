@@ -137,6 +137,7 @@ public:
 			if (ms_pInst != nullptr)
 			{
 				JC_DELETE_SAFE(ms_pInst);
+				__sSingletonInst = nullptr;
 				ms_bDeleted = true;
 			}
 			ms_Lock.Unlock();
@@ -193,6 +194,7 @@ public:
 	static void Free()
 	{
 		ms_pInst = nullptr;
+		__sSingletonInst = nullptr;
 	}
 
 public:

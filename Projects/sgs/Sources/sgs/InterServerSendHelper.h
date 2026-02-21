@@ -37,9 +37,6 @@ struct InterServerSendHelperBase : jnet::SendHelperBase
 		}
 	};
 
-	static void InitSingleServerIds();
-	static void InitSingleServerDestinations();
-
 	static void FlushSendBuffer();
 	static void SetInformation(jnet::Session* _pSender, jnet::SendStrategy _strategy, int _toServerId = InvalidValue_v);
 	static void SetInformation(jnet::Session* _pSender, jnet::SendStrategy _strategy, SingleServerType_t _toServerType);

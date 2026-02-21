@@ -37,7 +37,6 @@ JC_SENUM_BEGIN(ConfigFileType)
 	Item,
 	ItemOpt,
 	Enchant,
-	Database,
 	End,
 	Max = End
 JC_SENUM_MIDDLE(ConfigFileType)
@@ -69,7 +68,6 @@ static constexpr const char* FileName[Max]{
 	"item", // 디렉토리
 	"item_opt.json", // 파일
 	"enchant.json", // 파일
-	"database.json" // 파일
 
 };
 JC_SENUM_MIDDLE_END(ConfigFileType)

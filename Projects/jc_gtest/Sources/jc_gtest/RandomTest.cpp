@@ -11,10 +11,10 @@ TEST(RandomTest, RandomTestInt)
 {
 	vector vec(Max_v, 0);
 
-	Random::EngineInitialize();
+	Random r(true);
 	for (int i = 0; i < Max_v; ++i)
 	{
-		++vec[jc::Random::GenerateInt(0, Max_v)];
+		++vec[r.GenerateInt(0, Max_v)];
 	}
 
 	int equal = 0;
@@ -36,10 +36,11 @@ TEST(RandomTest, RandomTestDouble)
 		Int64U conv;
 		double original;
 	} a;
+	Random r(true);
 	vector vec(Max_v, 0);
 	for (int i = 0; i < Max_v; ++i)
 	{
-		a.original = jc::Random::GenerateDouble(0, Max_v);
+		a.original = r.GenerateDouble(0, Max_v);
 		++vec[a.conv % Max_v];
 	}
 

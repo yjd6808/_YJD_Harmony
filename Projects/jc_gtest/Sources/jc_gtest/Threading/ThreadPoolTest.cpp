@@ -13,7 +13,6 @@
 
 TEST(ThreadPoolTest, General) {
 	LeakCheck;
-	Random::EngineInitialize();
 	int r = 0;
 	for (;;)
 	{

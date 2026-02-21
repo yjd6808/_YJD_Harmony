@@ -10,10 +10,12 @@ class jc::Scheduler;
 
 class VirtualMachine : public jc::SingletonPointer<VirtualMachine>
 {
-public:
+protected:
+	friend class TSingleton;
 	VirtualMachine();
 	~VirtualMachine();
 
+public:
 	void Init();
 	void Go(const jc::TimeSpan& _dt);
 
