@@ -8,7 +8,6 @@
 
 
 #include "Core.h"
-#include "CenterCoreHeader.h"
 #include "R_MESSAGE.h"
 
 #include <sgs/CmdHost_MESSAGE.h>

@@ -8,7 +8,6 @@
 
 
 #include "Core.h"
-#include "CenterCoreHeader.h"
 #include "R_SETUP.h"
 
 #include <sgs/CmdHost.h>
@@ -22,27 +21,26 @@ void R_SETUP::RECV_SCE_ItsMe(Session* _pSession, ICommand* _pCmd)
 {
 	S_SETUP_IS::SetInformation(_pSession, SendStrategy::SendAsync, LastFromId);
 	SCE_ItsMe* pCmd = (SCE_ItsMe*)_pCmd;
-	CenterSession* pSession = (CenterSession*)_pSession;
 
-	if (pCmd->ClientServerType < ServerProcessType::Begin || pCmd->ClientServerType > ServerProcessType::End) {
+	if (pCmd->ProcessType < ServerProcessType::Begin || pCmd->ProcessType > ServerProcessType::End) {
 		_LogWarn_("누군지 알 수 없는 세션이 접속을 시도하였습니다.");
-		pSession->Disconnect();
+		_pSession->Disconnect();
 		return;
 	}
 
-	if (sg::Server->IsConnected(pSession)) {
+	if (sg::Server->IsConnected(_pSession)) {
 		// 이미 처리된 세션
 		return;
 	}
 
 	if (sg::Server->GetCenterSession(pCmd->ServerId) != nullptr) {
-		_LogWarn_("%s서버는 이미 접속중입니다.", ServerProcessType::Name[pCmd->ClientServerType]);
+		_LogWarn_("%s서버는 이미 접속중입니다.", ServerProcessType::Name[pCmd->ProcessType]);
 		S_SETUP_IS::SEND_CES_AlreadyConnected();
 		return;
 	}
 
-	pSession->SetClientInformation(pCmd->ClientServerType, pCmd->ServerId);
-	sg::Server->AddSession(pSession);
+	_pSession->SetClientInformation(pCmd->ProcessType, pCmd->ServerId);
+	sg::Server->AddSession(_pSession);
 	S_SETUP_IS::SEND_CES_YouNeedToDoThis(CenterOrder::LaunchServer);
 }
 
@@ -50,7 +48,6 @@ void R_SETUP::RECV_SCE_ItsMe(Session* _pSession, ICommand* _pCmd)
 void R_SETUP::RECV_SCE_NotifyBootState(Session* _pSession, ICommand* _pCmd)
 {
 	SCE_NotifyBootState* pCmd = (SCE_NotifyBootState*)_pCmd;
-	CenterSession* pSession = (CenterSession*)_pSession;
 
 	ServerProcessInfo* pInfo = sg::ServerProcessInfoPackage->GetServerProcessInfo(pCmd->ServerId);
 	const String& serverName = pInfo == nullptr ? StringUtil::Format("알 수 없음(%d)", pCmd->ServerId) : pInfo->name_;
@@ -61,7 +58,6 @@ void R_SETUP::RECV_SCE_NotifyBootState(Session* _pSession, ICommand* _pCmd)
 void R_SETUP::RECV_SCE_NotifyOrderFailed(jnet::Session* _pSession, jnet::ICommand* _pCmd)
 {
 	SCE_NotifyOrderFailed* pCmd = (SCE_NotifyOrderFailed*)_pCmd;
-	CenterSession* pSession = (CenterSession*)_pSession;
 
 	ServerProcessInfo* pInfo = sg::ServerProcessInfoPackage->GetServerProcessInfo(pCmd->ServerId);
 	const String& serverName = pInfo == nullptr ? StringUtil::Format("알 수 없음(%d)", pCmd->ServerId) : pInfo->name_;
@@ -69,6 +65,5 @@ void R_SETUP::RECV_SCE_NotifyOrderFailed(jnet::Session* _pSession, jnet::IComman
 		serverName.Source(),
 		ServerType::Name[pCmd->ServerType],
 		CenterOrder::Name[pCmd->Order],
-		pCmd->ErrorCode
-	);
+		pCmd->ErrorCode);
 }

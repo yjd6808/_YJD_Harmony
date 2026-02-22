@@ -7,60 +7,37 @@
 
 #include "Core.h"
 #include "CenterCore.h"
-#include "CenterCoreHeader.h"
 
 #include <sg/_Util/DescLoaderMgr.h>
-#include <sg/_Util/_DescMgr/DescMgr_ServerInfo.h>
-#include <sg/_Util/_DescMgr/DescMgr_Database.h>
+
+#include "R_MESSAGE.h"
+#include "R_PING.h"
+#include "R_SETUP.h"
+#include "sgs/CmdHost_MESSAGE.h"
+#include "sgs/CmdHost_PING.h"
+#include "sgs/CmdHost_SETUP.h"
+#include "sgs/_Net/NetGroup_InterServ.h"
+#include "sgs/_Net/NetGroup_Main.h"
 
 USING_NS_JC;
 USING_NS_JNET;
 
-NS_SG_BEGIN
-::DataManager*		DataManager;
-::MysqlDatabase*	GameDB;
-::CenterNetMaster*	NetGroupMgr;
-::CenterNetGroup*	NetGroup;
-::CenterServer*		Server;
-::CenterContents	Contents;
-NS_END
-
 //////////////////////////////////////////////////////////////////////////////////////////
 void InitializeCenterCore() 
 {
-	g_cDescMgr.AddLoader(dbg_new ServerInfoLoader());
-	g_cDescMgr.AddLoader(dbg_new DatabaseInfoLoader());
-	g_cDescMgr.LoadAll();
+	// SETUP
+	g_cNetGroup_Main.Parser().AddCommand<SCE_ItsMe>(R_SETUP::RECV_SCE_ItsMe);
+	g_cNetGroup_Main.Parser().AddCommand<SCE_NotifyBootState>(R_SETUP::RECV_SCE_NotifyBootState);
 
-	sg::ServerProcessInfoPackage = g_cDescMgr.GetServerProcessInfoPackage();
-	sg::ServerProcessInfo = &sg::ServerProcessInfoPackage->center_;
-	sg::GameDB = dbg_new MysqlDatabase(g_cDescMgr.GetDatabaseInfo(DatabaseType::Game));
-	sg::GameDB->Initialize(ServerProcessType::Center);
-	sg::NetGroupMgr = CenterNetMaster::Get();
-	sg::NetGroupMgr->Initialize();
-	sg::NetGroup = sg::NetGroupMgr->GetNetGroup(Const::NetGroup::MainId).Get<CenterNetGroup*>();
-	sg::Server = sg::NetGroup->GetCenterTcp();
-	
-	sg::CommonNetGroupMgr = sg::NetGroupMgr;
-	sg::CommonNetGroup = sg::NetGroup;
-	sg::CommonServer = sg::Server;
-	sg::CommonContents = &sg::Contents;
-	sg::NetGroup_InterServ = sg::NetGroupMgr->GetNetGroup(Const::NetGroup::InterServerId).Get<NetGroup_InterServ*>();
-	sg::InterServerClientTcp = sg::NetGroup_InterServ ? sg::NetGroup_InterServ->GetInterServerClientTcp() : nullptr;
-	sg::InterServerClientUdp = sg::NetGroup_InterServ ? sg::NetGroup_InterServ->GetInterServerClientUdp() : nullptr;
-	sg::TimeManager = TimeManager::Get();
+	// MESSAGE
+	g_cNetGroup_Main.Parser().AddCommand<SS_HostMessage>(R_MESSAGE::RECV_SS_HostMessage);
 
-	sg::Contents.Initialize();
+	// PING
+	g_cNetGroup_Main.Parser().AddCommand<SCE_TimeSync>(R_PING::RECV_SCE_TimeSync);
+
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void FinalizeCenterCore() 
 {
-	sg::NetGroupMgr->Finalize();
-	sg::Contents.Finalize();
-
-	JC_DELETE_SAFE(sg::GameDB);
-	JC_DELETE_SINGLETON_SAFE(sg::TimeManager);
-	JC_DELETE_SINGLETON_SAFE(sg::NetGroupMgr);
-	g_cDescMgr.Free();
 }

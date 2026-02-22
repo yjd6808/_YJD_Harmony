@@ -69,28 +69,6 @@ Session* SessionContainer::Get(int _handle)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool SessionContainer::Remove(int _handle)
-{
-	const int handleIndex = _handle - initialHandleSeq_;
-
-	if (!IsValidHandle(handleIndex))
-	{
-		_NetLogWarn_("세션 컨테이너 인덱스 범위를 벗어난 핸들입니다. %d", 3);
-		return false;
-	}
-
-	Session* pSession = sessionList_[handleIndex];
-	if (pSession)
-	{
-		delete pSession;
-		sessionList_[handleIndex] = nullptr;
-		return true;
-	}
-
-	return false;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
 void SessionContainer::DisconnectAll()
 {
 	const int size = sessionList_.Size();

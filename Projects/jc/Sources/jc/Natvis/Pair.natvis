@@ -18,9 +18,9 @@
 	https://learn.microsoft.com/en-us/visualstudio/debugger/format-specifiers-in-cpp?view=vs-2022#BKMK_Visual_Studio_2012_format_specifiers
 	-->
 	
-	<Type Name="JCore::Pair&lt;*,*&gt;">
+	<Type Name="jc::Pair&lt;*,*&gt;">
 		<DisplayString>
-			{{ key={Key}, value={Value}  }}
+			{{ key={key_}, value={value_}  }}
 		</DisplayString>
 	</Type>
 	

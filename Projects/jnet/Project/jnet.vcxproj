@@ -155,10 +155,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\jnet\Host\ISessionContainer.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\jnet\Host\Server.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

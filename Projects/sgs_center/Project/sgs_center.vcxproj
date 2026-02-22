@@ -31,25 +31,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs_center\CenterContents.cpp" />
-    <ClCompile Include="..\Sources\sgs_center\CenterInterServerClientNetGroup.cpp" />
-    <ClCompile Include="..\Sources\sgs_center\CenterNetGroup.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_center\CenterNetMaster.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_center\CenterServer.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_center\CenterSession.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs_center\ListenerCenterServer.cpp" />
     <ClCompile Include="..\Sources\sgs_center\main.cpp" />
     <ClCompile Include="..\Sources\sgs_center\CenterCore.cpp" />
     <ClCompile Include="..\Sources\sgs_center\R_MESSAGE.cpp" />
@@ -72,27 +53,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs_center\CenterContents.h" />
-    <ClInclude Include="..\Sources\sgs_center\CenterInterServerClientNetGroup.h" />
-    <ClInclude Include="..\Sources\sgs_center\CenterNetGroup.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_center\CenterServer.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_center\CenterNetMaster.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\sgs_center\CenterCore.h" />
-    <ClInclude Include="..\Sources\sgs_center\CenterCoreHeader.h" />
-    <ClInclude Include="..\Sources\sgs_center\CenterSession.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs_center\ListenerCenterServer.h" />
     <ClInclude Include="..\Sources\sgs_center\R_MESSAGE.h" />
     <ClInclude Include="..\Sources\sgs_center\R_PING.h" />
     <ClInclude Include="..\Sources\sgs_center\R_SETUP.h">

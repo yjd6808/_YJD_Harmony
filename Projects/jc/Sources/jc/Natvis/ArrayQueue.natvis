@@ -18,14 +18,15 @@
 	-->
 
 
-	<Type Name="JCore::ArrayQueue&lt;*&gt;">
+	<Type Name="jc::ArrayQueue&lt;*&gt;">
 		<DisplayString>
-			size={m_iSize}
+			{{ size={size_} }}
 		</DisplayString>
 		<Expand>
-			<Item Name="[size]" ExcludeView="simple">m_iSize</Item>
-			<Item Name="[capacity]" ExcludeView="simple">m_iCapacity</Item>
-			
+			<Item Name="[size]" ExcludeView="simple">size_</Item>
+			<Item Name="[capacity]" ExcludeView="simple">capacity_</Item>
+			<Item Name="[head]" ExcludeView="simple">head_</Item>
+			<Item Name="[tail]" ExcludeView="simple">tail_</Item>
 			
 			<!--
 			
@@ -53,46 +54,45 @@
 						return false;
 					}
 
-					// m_iTail <= m_iHead
+					// m_iTail &lt;= m_iHead
 					if (pQueue->IsForwardedHead()) {	
-						if (idx >= pQueue->m_iHead && idx < pQueue->Capacity())
+						if (idx &gt;= pQueue->m_iHead &amp;&amp; idx &lt; pQueue->Capacity())
 							return true;
 							
-						if (idx >= 0			   && idx < pQueue->m_iTail)
+						if (idx &gt;= 0			   &amp;&amp; idx &lt; pQueue->m_iTail)
 							return true;
-					} 
+					}
 
-					return idx >= pQueue->m_iHead && idx < pQueue->m_iTail;
+					return idx &gt;= pQueue->m_iHead &amp;&amp; idx &lt; pQueue->m_iTail;
 				}
 	
-			
 			-->
 			
 			<CustomListItems>
-				<Variable Name="iCur" InitialValue="m_iHead"/>
+				<Variable Name="cur" InitialValue="head_"/>
 				<Loop>
 					
-					<If Condition="m_iSize == 0">
+					<If Condition="size_ == 0">
 						<Break/>
 					</If>
 
-					<Item>m_pArray[iCur]</Item>
-					<Exec>iCur++</Exec>
+					<Item>pArray_[cur]</Item>
+					<Exec>cur++</Exec>
 
-					<If Condition="iCur == m_iCapacity">
-						<Exec>iCur = 0</Exec>
+					<If Condition="cur == capacity_">
+						<Exec>cur = 0</Exec>
 					</If>
 
 
-					<If Condition="m_iTail &lt;= m_iHead">
+					<If Condition="tail_ &lt;= head_">
 						<!-- 포워드 헤드 -->
-						<If Condition="iCur &gt;= m_iTail &amp;&amp; iCur &lt; m_iHead">
+						<If Condition="cur &gt;= tail_ &amp;&amp; cur &lt; head_">
 							<Break/>
 						</If>
 					</If>
 					<Else>
 						<!-- 포워드 테일 -->
-						<If Condition="(iCur &gt;= m_iHead &amp;&amp; iCur &lt; m_iTail) != 1">
+						<If Condition="(cur &gt;= head_ &amp;&amp; cur &lt; tail_) != 1">
 							<Break/>
 						</If>
 					</Else>

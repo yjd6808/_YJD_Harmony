@@ -17,8 +17,8 @@
 	https://learn.microsoft.com/en-us/visualstudio/debugger/format-specifiers-in-cpp?view=vs-2022#BKMK_Visual_Studio_2012_format_specifiers
 	-->
 
-	<Type Name="JCore::Atomic&lt;*&gt;">
-		<DisplayString>{ m_Value }</DisplayString>
+	<Type Name="jc::Atomic&lt;*&gt;">
+		<DisplayString>{ value_ }</DisplayString>
 	</Type>
 
 </AutoVisualizer>

@@ -21,6 +21,8 @@ int main(int _argc, char** _argv)
 {
     DefaultParserType = PacketParser::Command;
 
+	IPv4EndPoint a{ "127.0.0.1:5555" };
+
     Winsock::Initialize(2, 2);
     InitializeJCore(_argc, _argv);
     InitializeNetLogger();

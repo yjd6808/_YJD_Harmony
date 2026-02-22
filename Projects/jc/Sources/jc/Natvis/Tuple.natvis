@@ -17,15 +17,15 @@
 	https://learn.microsoft.com/en-us/visualstudio/debugger/format-specifiers-in-cpp?view=vs-2022#BKMK_Visual_Studio_2012_format_specifiers
 	-->
 
-	<Type Name="JCore::Tuple&lt;*&gt;">
+	<Type Name="jc::Tuple&lt;*&gt;">
 		<DisplayString>
-			{item1}
+			{{ item1={item1} }}
 		</DisplayString>
 	</Type>
 	
-	<Type Name="JCore::Tuple&lt;*,*&gt;">
+	<Type Name="jc::Tuple&lt;*,*&gt;">
 		<DisplayString>
-			{item1} {item2}
+			{{ item1={item1} item2={item2} }}
 		</DisplayString>
 		<Expand>
 			<Item Name="[item1]">item1</Item>
@@ -33,9 +33,9 @@
 		</Expand>
 	</Type>
 
-	<Type Name="JCore::Tuple&lt;*,*,*&gt;">
+	<Type Name="jc::Tuple&lt;*,*,*&gt;">
 		<DisplayString>
-			{item1} {item2} {item3}
+			{{ item1={item1} item=2{item2} item3={item3} }}
 		</DisplayString>
 		<Expand>
 			<Item Name="[item1]">item1</Item>
@@ -45,9 +45,9 @@
 	</Type>
 
 
-	<Type Name="JCore::Tuple&lt;*,*,*,*&gt;">
+	<Type Name="jc::Tuple&lt;*,*,*,*&gt;">
 		<DisplayString>
-			{item1} {item2} {item3} {item4}
+			{{ item1={item1} item2={item2} item3={item3} item4={item4} }}
 		</DisplayString>
 		<Expand>
 			<Item Name="[item1]">item1</Item>
@@ -57,9 +57,9 @@
 		</Expand>
 	</Type>
 
-	<Type Name="JCore::Tuple&lt;*,*,*,*,*&gt;">
+	<Type Name="jc::Tuple&lt;*,*,*,*,*&gt;">
 		<DisplayString>
-			{item1} {item2} {item3} {item4}
+			{{ item1={item1} item2={item2} item3={item3} item4={item4} item5={item5} }}
 		</DisplayString>
 		<Expand>
 			<Item Name="[item1]">item1</Item>

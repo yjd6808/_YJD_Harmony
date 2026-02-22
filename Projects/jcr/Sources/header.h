@@ -19,6 +19,7 @@
 #include <jc/Container/ArrayQueue.h>
 #include <jc/Container/Vector.h>
 #include <jc/Container/Properties.h>
+#include <jc/Container/ListStack.h>
 
 #include <jc/Primitives/Atomic.h>
 #include <jc/Primitives/SmartPtr.h>
@@ -36,6 +37,8 @@
 #include <jc/Pool/IndexedMemoryPool.h>
 #include <jc/Pool/AccessibleObjectPool.h>
 #include <jc/Pool/ObjectPool.h>
+
+#include <jc/Pattern/Singleton.h>
 
 #include <jc/Sync/SpinLock.h>
 #include <jc/Sync/WaitHandle.h>

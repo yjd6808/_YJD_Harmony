@@ -17,20 +17,18 @@
 	https://learn.microsoft.com/en-us/visualstudio/debugger/format-specifiers-in-cpp?view=vs-2022#BKMK_Visual_Studio_2012_format_specifiers
 	-->
 
-	<Type Name="JCore::TreeSet&lt;*&gt;">
-		<Intrinsic Name="_size" Expression="Table.m_iSize"/>
+	<Type Name="jc::TreeSet&lt;*&gt;">
 		<DisplayString>
-			size={_size()}
+			{{ size={table_.size_} }}
 		</DisplayString>
 		<Expand>
-			<Item Name="[size]">this-&gt;Table.m_iSize</Item>
-			<Item Name="[root element]">Table.m_pRoot-&gt;Data</Item>
+			<Item Name="[size]">table_.size_</Item>
+			<Item Name="[root element]">table_.pRoot_-&gt;data_</Item>
 			<TreeItems>
-				<HeadPointer>Table.m_pRoot</HeadPointer>
-				<LeftPointer>Left</LeftPointer>
-				<RightPointer>Right</RightPointer>
-				<!--<ValueNode Condition="!((bool)_Isnil)">_Myval</ValueNode>-->
-				<ValueNode>Data</ValueNode>
+				<HeadPointer>table_.pRoot_</HeadPointer>
+				<LeftPointer>pLeft_</LeftPointer>
+				<RightPointer>pRight_</RightPointer>
+				<ValueNode>data_</ValueNode>
 			</TreeItems>
 		</Expand>
 	</Type>

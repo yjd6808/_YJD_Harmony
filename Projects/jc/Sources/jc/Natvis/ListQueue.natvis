@@ -18,16 +18,16 @@
 	https://learn.microsoft.com/en-us/visualstudio/debugger/format-specifiers-in-cpp?view=vs-2022#BKMK_Visual_Studio_2012_format_specifiers
 	-->
 
-	<Type Name="JCore::ListQueue&lt;*&gt;">
+	<Type Name="jc::ListQueue&lt;*&gt;">
 		<DisplayString>
-			size={m_iSize}
+			{{ size={size_ } }}
 		</DisplayString>
 		<Expand>
 			<LinkedListItems>
-				<Size>m_iSize</Size>
-				<HeadPointer>m_pHead</HeadPointer>
-				<NextPointer>Next</NextPointer>
-				<ValueNode>Value</ValueNode>
+				<Size>size_</Size>
+				<HeadPointer>pHead_</HeadPointer>
+				<NextPointer>pNext_</NextPointer>
+				<ValueNode>value_</ValueNode>
 			</LinkedListItems>
 		</Expand>
 	</Type>

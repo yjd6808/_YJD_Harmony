@@ -8,7 +8,6 @@
 
 
 #include "Core.h"
-#include "CenterCoreHeader.h"
 #include "R_PING.h"
 
 #include <sgs/CmdHost_PING.h>
@@ -21,7 +20,6 @@ USING_NS_JNET;
 void R_PING::RECV_SCE_TimeSync(jnet::Session* _pSession, jnet::ICommand* _pCommand)
 {
 	SCE_TimeSync* pTimeSyncCommand = (SCE_TimeSync*)_pCommand;
-	CenterSession* pSession = (CenterSession*)_pSession;
 
 	S_SETUP_IS::AutoFlush autoFlush;
 	S_SETUP_IS::SetInformation(_pSession, SendStrategy::SendAsync);

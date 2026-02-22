@@ -17,14 +17,16 @@
 	https://learn.microsoft.com/en-us/visualstudio/debugger/format-specifiers-in-cpp?view=vs-2022#BKMK_Visual_Studio_2012_format_specifiers
 	-->
 
-	<Type Name="JNetwork::Session">
+	<Type Name="jnet::Session">
 		<DisplayString>
-			pending={m_iOveralappedPendingCount}
+			{{ handle={handle_}, local={localEndPoint_}, remote={remoteEndPoint_}, pending={overlappedPendingCount_} }}
 		</DisplayString>
 		<Expand>
-			<Item Name="[pending]" ExcludeView="simple">m_iOveralappedPendingCount</Item>
-			<Item Name="[local_ep]" ExcludeView="simple">m_LocalEndPoint</Item>
-			<Item Name="[remote_ep]" ExcludeView="simple">m_RemoteEndPoint</Item>
+			<Item Name="[handle]" ExcludeView="simple">handle_</Item>
+			<Item Name="[pending]" ExcludeView="simple">overlappedPendingCount_</Item>
+			<Item Name="[pending_data_size]" ExcludeView="simple">pendingData_.size_</Item>
+			<Item Name="[local_ep]" ExcludeView="simple">localEndPoint_</Item>
+			<Item Name="[remote_ep]" ExcludeView="simple">remoteEndPoint_</Item>
 		</Expand>
 	</Type>
 

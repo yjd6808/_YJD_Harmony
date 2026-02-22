@@ -6,7 +6,7 @@
 
 
 #include <jnet/Host/Server.h>
-#include <jnet/Host/ISessionContainer.h>
+#include <jnet/Host/SessionContainer.h>
 #include <jnet/Host/TcpSession.h>
 #include <jnet/EventListener/ServerEventListener.h>
 
@@ -24,16 +24,16 @@ public:
 
 	// 커스텀 생성을 위한 버철 (안씀 말고)
 	virtual TcpSession* CreateSession();
-	virtual ISessionContainer* CreateSessionContainer();
+	virtual SessionContainer* CreateSessionContainer();
 
 	virtual void OnStarted() {}
 	virtual void OnStartFailed(Int32U _errorCode) {}
 	virtual void OnStopped() {}
 
-	ISessionContainer* GetSessionContainer();
+	SessionContainer* GetSessionContainer();
 	ServerEventListener* GetEventListener();
 
-	void SetSesssionContainer(ISessionContainer* _pContainer);
+	void SetSesssionContainer(SessionContainer* _pContainer);
 	void SetEventListener(ServerEventListener* _pListener);
 
 	bool Start(const IPv4EndPoint& _localEndPoint) override;
@@ -57,7 +57,7 @@ protected:
 	jc::NormalLock lock_;
 
 	ServerEventListener* pServerEventListener_;
-	ISessionContainer* pSessionContainer_;
+	SessionContainer* pSessionContainer_;
 };
 
 using TcpServerPtr = jc::SharedPtr<TcpServer>;

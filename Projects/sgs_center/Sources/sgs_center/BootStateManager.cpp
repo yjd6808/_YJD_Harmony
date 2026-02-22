@@ -6,7 +6,6 @@
  */
 
 #include "Core.h"
-#include "CenterCoreHeader.h"
 #include "BootStateManager.h"
 
 USING_NS_JC;

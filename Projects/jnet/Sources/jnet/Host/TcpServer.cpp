@@ -36,7 +36,7 @@ TcpSession* TcpServer::CreateSession()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ISessionContainer* TcpServer::CreateSessionContainer()
+SessionContainer* TcpServer::CreateSessionContainer()
 {
 	// 디폴트 세션 컨테이너, 서버시작전 외부에서 주입해줄 경우 호출안됨
 	return dbg_new SessionContainer(10);
@@ -124,7 +124,7 @@ void TcpServer::SessionReceivedRaw(TcpSession* _pSession, char* _pData, int _len
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ISessionContainer* TcpServer::GetSessionContainer()
+SessionContainer* TcpServer::GetSessionContainer()
 {
 	JC_LOCK_GUARD(lock_);
 	return pSessionContainer_;
@@ -138,7 +138,7 @@ ServerEventListener* TcpServer::GetEventListener()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TcpServer::SetSesssionContainer(ISessionContainer* _pContainer)
+void TcpServer::SetSesssionContainer(SessionContainer* _pContainer)
 {
 	JC_LOCK_GUARD(lock_);
 	pSessionContainer_ = _pContainer;

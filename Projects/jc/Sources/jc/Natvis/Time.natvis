@@ -17,7 +17,7 @@
 	https://learn.microsoft.com/en-us/visualstudio/debugger/format-specifiers-in-cpp?view=vs-2022#BKMK_Visual_Studio_2012_format_specifiers
 	-->
 
-	<Type Name="JCore::DateTime;">
+	<Type Name="jc::DateTime;">
 		<DisplayString>
 			{Tick}
 		</DisplayString>
@@ -29,7 +29,7 @@
 
 	
 	
-	<Type Name="JCore::DateAndTime;">
+	<Type Name="jc::DateAndTime;">
 		<DisplayString>
 			{Year}년 {(int)Month}월 {(int)Day}일 {(int)Hour}시 {(int)Minute}분 {(int)Second}.{MiliSecond}초
 		</DisplayString>
@@ -46,7 +46,7 @@
 	</Type>
 
 
-	<Type Name="JCore::Date;">
+	<Type Name="jc::Date;">
 		<DisplayString>
 			{Year}년 {(int)Month}월 {(int)Day}일
 		</DisplayString>
@@ -57,7 +57,7 @@
 		</Expand>
 	</Type>
 
-	<Type Name="JCore::Time;">
+	<Type Name="jc::Time;">
 		<DisplayString>
 			{(int)Hour}시 {(int)Minute}분 {(int)Second}.{MiliSecond}초
 		</DisplayString>
@@ -71,43 +71,43 @@
 	</Type>
 
 	
-	<Type Name="JCore::TimeSpan;">
+	<Type Name="jc::TimeSpan;">
 		<DisplayString>
-			{(double)Tick / JCore::Detail::TicksPerSecond_v,g}초
+			{(double)Tick / jc::detail::TicksPerSecond_v,g}초
 		</DisplayString>
 		<Expand>
 			
 			<!-- 주소를 획득하기위한 꼼수를 생각해냈다.-->
 			<CustomListItems>
-				<Variable Name="dTotalDay" InitialValue="(float)Tick / Detail::TicksPerDay_v"/>
-				<Item Name="[total day]">(JCore::Detail::NatvisFloat6*)&amp;dTotalDay,na</Item>
+				<Variable Name="dTotalDay" InitialValue="(float)Tick / detail::TicksPerDay_v"/>
+				<Item Name="[total day]">(jc::detail::NatvisFloat6*)&amp;dTotalDay,na</Item>
 			</CustomListItems>
 			<CustomListItems>
-				<Variable Name="dTotalHour" InitialValue="(float)Tick / Detail::TicksPerHour_v"/>
-				<Item Name="[total hour]">(JCore::Detail::NatvisFloat6*)&amp;dTotalHour,na</Item>
+				<Variable Name="dTotalHour" InitialValue="(float)Tick / detail::TicksPerHour_v"/>
+				<Item Name="[total hour]">(jc::detail::NatvisFloat6*)&amp;dTotalHour,na</Item>
 			</CustomListItems>
 			<CustomListItems>
-				<Variable Name="dTotalMinute" InitialValue="(float)Tick / Detail::TicksPerMinute_v"/>
-				<Item Name="[total minute]">(JCore::Detail::NatvisFloat6*)&amp;dTotalMinute,na</Item>
+				<Variable Name="dTotalMinute" InitialValue="(float)Tick / detail::TicksPerMinute_v"/>
+				<Item Name="[total minute]">(jc::detail::NatvisFloat6*)&amp;dTotalMinute,na</Item>
 			</CustomListItems>
 			<CustomListItems>
-				<Variable Name="dTotalSecond" InitialValue="(float)Tick / Detail::TicksPerSecond_v"/>
-				<Item Name="[total second]">(JCore::Detail::NatvisFloat6*)&amp;dTotalSecond,na</Item>
+				<Variable Name="dTotalSecond" InitialValue="(float)Tick / detail::TicksPerSecond_v"/>
+				<Item Name="[total second]">(jc::detail::NatvisFloat6*)&amp;dTotalSecond,na</Item>
 			</CustomListItems>
 			<CustomListItems>
-				<Variable Name="dTotalMiliSecond" InitialValue="(float)Tick / Detail::TicksPerMiliSecond_v"/>
-				<Item Name="[total mili]">(JCore::Detail::NatvisFloat6*)&amp;dTotalMiliSecond,na</Item>
+				<Variable Name="dTotalMiliSecond" InitialValue="(float)Tick / detail::TicksPerMiliSecond_v"/>
+				<Item Name="[total mili]">(jc::detail::NatvisFloat6*)&amp;dTotalMiliSecond,na</Item>
 			</CustomListItems>
 			<Item Name="[total micro]" ExcludeView="simple">Tick</Item>
 
 
 			
-			<Item Name="[day]" ExcludeView="simple">int(Tick / Detail::TicksPerDay_v)</Item>
-			<Item Name="[hour]" ExcludeView="simple">(Tick / Detail::TicksPerHour_v) % Detail::MaxHour_v</Item>
-			<Item Name="[minute]" ExcludeView="simple">(Tick / Detail::TicksPerMinute_v) % Detail::MaxMinute_v</Item>
-			<Item Name="[second]" ExcludeView="simple">(Tick / Detail::TicksPerSecond_v) % Detail::MaxSecond_v</Item>
-			<Item Name="[mili]" ExcludeView="simple">(Tick / Detail::TicksPerMiliSecond_v) % Detail::MaxMiliSecond_v</Item>
-			<Item Name="[micro]" ExcludeView="simple">Tick % Detail::MaxMicroSecond_v</Item>
+			<Item Name="[day]" ExcludeView="simple">int(Tick / detail::TicksPerDay_v)</Item>
+			<Item Name="[hour]" ExcludeView="simple">(Tick / detail::TicksPerHour_v) % detail::MaxHour_v</Item>
+			<Item Name="[minute]" ExcludeView="simple">(Tick / detail::TicksPerMinute_v) % detail::MaxMinute_v</Item>
+			<Item Name="[second]" ExcludeView="simple">(Tick / detail::TicksPerSecond_v) % detail::MaxSecond_v</Item>
+			<Item Name="[mili]" ExcludeView="simple">(Tick / detail::TicksPerMiliSecond_v) % detail::MaxMiliSecond_v</Item>
+			<Item Name="[micro]" ExcludeView="simple">Tick % detail::MaxMicroSecond_v</Item>
 
 		</Expand>
 	</Type>

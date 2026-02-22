@@ -199,9 +199,6 @@
     <ClInclude Include="..\Sources\jnet\Packet\CommandNameDictionary.h">
       <Filter>Packet</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\jnet\Host\ISessionContainer.h">
-      <Filter>Host</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\jnet\Config.h" />
     <ClInclude Include="..\Sources\jnet\Packet\PacketParser.h">
       <Filter>Packet</Filter>

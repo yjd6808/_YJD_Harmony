@@ -17,53 +17,24 @@
 	https://learn.microsoft.com/en-us/visualstudio/debugger/format-specifiers-in-cpp?view=vs-2022#BKMK_Visual_Studio_2012_format_specifiers
 	-->
 
-	<Type Name="JCore::HashSet&lt;*&gt;">
-		<Intrinsic Name="_size" Expression="Table.m_iSize"/>
+	<Type Name="jc::HashSet&lt;*&gt;">
 		<DisplayString>
-			size={_size()}
+			{{ size={ table_.size_ } }}
 		</DisplayString>
 		<Expand>
-			<Item Name="[size]" ExcludeView="simple">Table.m_iSize</Item>
-			<Item Name="[capacity]" ExcludeView="simple">Table.m_iCapacity</Item>
-			<!--
-			함수 호출은 안되네 ㅠㅠ
-			<Item Name="[bucket_count]" ExcludeView="simple">{this-&gt;bucketCount()}</Item>
-			-->
+			<Item Name="[size]" ExcludeView="simple">table_.size_</Item>
+			<Item Name="[capacity]" ExcludeView="simple">table_.capacity_</Item>
 			
-			
-			<!--
-				HasNext() {
-					if (m_pCurrentBucket != nullptr && m_iCurrentBucketIndex < m_pCurrentBucket->Size)
-						return true;
-					return false
-				}
-				
-				Next() {
-					TBucketNode& val = m_pCurrentBucket->GetAt(m_iCurrentBucketIndex++);
-
-					if (m_iCurrentBucketIndex < m_pCurrentBucket->Size) {
-						return val.Pair;
-					}
-
-					m_pCurrentBucket = m_pCurrentBucket->Next;
-
-					if (m_pCurrentBucket) {
-						m_iCurrentBucketIndex = 0;
-					}
-					return val.Pair;
-				}
-			-->
-				
 			<CustomListItems MaxItemsPerView="5000" ExcludeView="Test">
-				<Variable Name="pCurBucket" InitialValue="Table.m_pHeadBucket" />
+				<Variable Name="pCurBucket" InitialValue="table_.pHeadBucket_" />
 				<Variable Name="iCurBucketIndex" InitialValue="0" />
 				<Loop>
-					<If Condition="pCurBucket != 0 &amp;&amp; iCurBucketIndex &lt; pCurBucket-&gt;Size">
-						<Item>pCurBucket-&gt;DynamicArray[iCurBucketIndex].Data</Item>	
+					<If Condition="pCurBucket != 0 &amp;&amp; iCurBucketIndex &lt; pCurBucket-&gt;size_">
+						<Item>pCurBucket-&gt;pDynamicArray_[iCurBucketIndex].data_</Item>	
 						<Exec>iCurBucketIndex++</Exec>
-						<If Condition="iCurBucketIndex &gt;= pCurBucket-&gt;Size">
+						<If Condition="iCurBucketIndex &gt;= pCurBucket-&gt;size_">
 							<Exec>iCurBucketIndex = 0</Exec>
-							<Exec>pCurBucket = pCurBucket-&gt;Next</Exec>
+							<Exec>pCurBucket = pCurBucket-&gt;pNext_</Exec>
 						</If>
 
 						<If Condition="pCurBucket == 0">

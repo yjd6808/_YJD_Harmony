@@ -7,7 +7,6 @@
 
 
 #include "Core.h"
-#include "CenterCoreHeader.h"
 #include "S_SETUP_IS.h"
 
 #include <sgs/CmdHost.h>

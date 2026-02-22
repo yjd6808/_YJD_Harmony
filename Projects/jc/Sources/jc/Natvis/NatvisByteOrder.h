@@ -10,8 +10,9 @@ NS_JC_BEGIN
 NS_DETAIL_BEGIN
 
 // 일단 포트 변환땜에 하나만 만듬
-union NatvisByteOrderInt16U {
-	struct
+union NatvisByteOrderInt16U
+{
+	struct Field
 	{
 		Int8U seg1; // 0xbb
 		Int8U seg2; // 0xaa

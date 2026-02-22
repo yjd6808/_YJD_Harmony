@@ -17,12 +17,26 @@
 	https://learn.microsoft.com/en-us/visualstudio/debugger/format-specifiers-in-cpp?view=vs-2022#BKMK_Visual_Studio_2012_format_specifiers
 	-->
 
-	<Type Name="JCore::SharedPtr&lt;*&gt;">
-		<DisplayString>ptr={m_pPtr,na}, r={m_pControlBlock-&gt;ReferenceCount}, w={m_pControlBlock-&gt;WeakCount}</DisplayString>
+	<Type Name="jc::SharedPtr&lt;*&gt;">
+		<AlternativeType Name="jc::WeakPtr&lt;*&gt;"/>
+		<DisplayString Condition="pPtr_ &amp;&amp; pControlBlock_" >{{ ptr={pPtr_,na}, r={pControlBlock_-&gt;referenceCount_}, w={pControlBlock_-&gt;weakCount_} }}</DisplayString>
+		<DisplayString Condition="pPtr_" >{{ ptr={pPtr_,na}, ControlBlock Destroyed. }}</DisplayString>
+		<DisplayString>{{ ptr={pPtr_}, ControlBlock Destroyed. }}</DisplayString>
 		<Expand>
-			<Item Name="ptr">m_pPtr</Item>
-			<Item Name="r">m_pControlBlock-&gt;ReferenceCount</Item>
-			<Item Name="w">m_pControlBlock-&gt;WeakCount</Item>
+			<Item Name="ptr" Condition="pPtr_">pPtr_</Item>
+			<Item Name="ptr" Condition="pPtr_ == 0">"Empty"</Item>
+			<Item Name="r" Condition="pControlBlock_">pControlBlock_-&gt;referenceCount_</Item>
+			<Item Name="r" Condition="pControlBlock_ == 0">"ControlBlock Destroyed."</Item>
+			<Item Name="w" Condition="pControlBlock_">pControlBlock_-&gt;weakCount_</Item>
+			<Item Name="w" Condition="pControlBlock_ == 0">"ControlBlock Destroyed."</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="jc::UniquePtr&lt;*&gt;">
+		<DisplayString>ptr={pPtr_,na}, len={size_}</DisplayString>
+		<Expand>
+			<Item Name="ptr">pPtr_</Item>
+			<Item Name="length">size_</Item>
 		</Expand>
 	</Type>
 	

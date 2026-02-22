@@ -8,8 +8,6 @@
 
 #pragma once
 
-
-
 class BootStateManager : public jc::SingletonStaticPointer<BootStateManager>
 {
 	friend class TSingleton;
@@ -21,9 +19,10 @@ public:
 	void SetState(int _serverId, ServerBootState_t _state);
 	ServerBootState_t GetState(int _serverId);
 
-	ServerBootState_t states_[Const::Server::MaxProcessId];
+	ServerBootState_t states_[ServerType::Max];
 };
 
+#define g_cBootStateManager JC_DECL_SINGLETON_BODY(BootStateManager)
 
 
 

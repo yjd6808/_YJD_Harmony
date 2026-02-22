@@ -17,9 +17,9 @@
 	https://learn.microsoft.com/en-us/visualstudio/debugger/format-specifiers-in-cpp?view=vs-2022#BKMK_Visual_Studio_2012_format_specifiers
 	-->
 
-	<Type Name="JNetwork::IPv4EndPoint">
+	<Type Name="jnet::IPv4EndPoint">
 		<DisplayString>
-			{(int)InternetAddr.sin_addr.S_un.S_un_b.s_b1,d}.{(int)InternetAddr.sin_addr.S_un.S_un_b.s_b2,d}.{(int)InternetAddr.sin_addr.S_un.S_un_b.s_b3,d}.{(int)InternetAddr.sin_addr.S_un.S_un_b.s_b4,d}:{(JCore::Detail::NatvisByteOrderInt16U*)&amp;InternetAddr.sin_port,na}
+			{(int)InternetAddr.sin_addr.S_un.S_un_b.s_b1,d}.{(int)InternetAddr.sin_addr.S_un.S_un_b.s_b2,d}.{(int)InternetAddr.sin_addr.S_un.S_un_b.s_b3,d}.{(int)InternetAddr.sin_addr.S_un.S_un_b.s_b4,d}:{(jc::detail::NatvisByteOrderInt16U*)&amp;InternetAddr.sin_port,na}
 		</DisplayString>
 	</Type>
 
