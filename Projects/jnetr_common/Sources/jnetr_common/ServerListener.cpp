@@ -38,14 +38,14 @@ void ServerListener::OnConnected(Session* _pConnectedSession)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ServerListener::OnDisconnected(Session* _pDisconnectedSession, Int32U _errorCode)
+void ServerListener::OnDisconnected(Session* _pDisconnectedSession, _u32 _errorCode)
 {
 	Console::WriteLine("[%s] %s 클라이언트가 접속해제하였습니다.",
 	                   name_.Source(), _pDisconnectedSession->GetRemoteEndPoint().ToString().Source());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ServerListener::OnSent(Session* _pSender, IPacket* _pPacket, Int32UL _sentBytes)
+void ServerListener::OnSent(Session* _pSender, IPacket* _pPacket, _u32l _sentBytes)
 {
 	//Console::WriteLine("[%s] 송신 : %d 바이트", name_.Source(), _pPacket->GetPacketLength());
 }

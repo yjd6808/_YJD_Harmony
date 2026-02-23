@@ -37,8 +37,8 @@ struct InterServerCmdType : jnet::CmdType
 NS_JNET_BEGIN
 struct RelayCommandBase
 {
-	Int8 From = -1;
-	Int8 To = -1;
+	_s8 From = -1;
+	_s8 To = -1;
 };
 
 template <>

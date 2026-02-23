@@ -22,13 +22,13 @@
 =====================================================================================*/
 
 // 패킷 헤더
-using CmdCnt_t = Int16U;
-using PktLen_t = Int16U;
+using CmdCnt_t = _u16;
+using PktLen_t = _u16;
 
 // 커맨드 헤더
-using CmdType_t = Int8U;
-using Cmd_t = Int16U;
-using CmdLen_t = Int16U;
+using CmdType_t = _u8;
+using Cmd_t = _u16;
+using CmdLen_t = _u16;
 
 #define CMD_ALIGNMENT 4
 
@@ -136,7 +136,7 @@ struct GenericCommand : ICommand
 		value_ = T();
 	}
 
-	explicit GenericCommand(const Int16U _command)
+	explicit GenericCommand(const _u16 _command)
 	{
 		type_ = CmdType::Generic;
 		cmdId_ = _command;

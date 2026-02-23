@@ -45,7 +45,7 @@ struct Comparator<const char*>
 		return StringUtil::CTCompare(_lhs, _rhs.Source());
 	}
 
-	template <Int32U Size>
+	template <_u32 Size>
 	int operator()(const char* _lhs, const StaticString<Size>& _rhs) const
 	{
 		return StringUtil::CTCompare(_lhs, _rhs.Source());
@@ -68,7 +68,7 @@ struct Comparator<String>
 		return _lhs.Compare(_rhs);
 	}
 
-	template <Int32U Size>
+	template <_u32 Size>
 	int operator()(const String& _lhs, const StaticString<Size>& _rhs)
 	{
 		return _lhs.Compare(_rhs.Source);

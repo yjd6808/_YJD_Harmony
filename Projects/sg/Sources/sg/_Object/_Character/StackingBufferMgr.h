@@ -13,18 +13,18 @@
 class CStackingBufferMgr
 {
 public:
-	void Add(Int32U _id, Int32U _type, float _deltaPerSec, Int32U _duration, bool _isPercentStacking = false,
+	void Add(_u32 _id, _u32 _type, float _deltaPerSec, _u32 _duration, bool _isPercentStacking = false,
 	         float _percentBase = 0.f);
-	bool Remove(Int32U _id);
+	bool Remove(_u32 _id);
 
-	bool IsExist(Int32U _id) const;
+	bool IsExist(_u32 _id) const;
 	bool IsDirty() const;
 
-	CStackingBuffer& Get(Int32U _id);
-	const CStackingBuffer& Get(Int32U _id) const;
+	CStackingBuffer& Get(_u32 _id);
+	const CStackingBuffer& Get(_u32 _id) const;
 
 	void ResetDirtyAll();
 
 private:
-	jc::HashMap<Int32U, CStackingBuffer> map_;
+	jc::HashMap<_u32, CStackingBuffer> map_;
 };

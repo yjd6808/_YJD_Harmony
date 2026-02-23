@@ -31,7 +31,7 @@ public:
 	WaitHandle(WaitHandle&& _handle) noexcept; // 이동 생성만 허용
 	virtual ~WaitHandle();
 
-	bool Wait(Int32U _timeout = JC_INFINITE, OUT Int32U* _result = nullptr);
+	bool Wait(_u32 _timeout = JC_INFINITE, OUT _u32* _result = nullptr);
 	bool Signal();
 	bool Reset();
 	const String& Name() { return name_; }
@@ -40,14 +40,14 @@ public:
 	void operator=(WaitHandle&& _other) noexcept;
 
 public:
-	static bool WaitAll(WaitHandle* _handles, Int32U _count, OUT_OPT Int32U* _result = nullptr);
-	static WaitHandle* WaitAny(WaitHandle* _handles, Int32U _count, OUT_OPT Int32U* _result = nullptr);
+	static bool WaitAll(WaitHandle* _handles, _u32 _count, OUT_OPT _u32* _result = nullptr);
+	static WaitHandle* WaitAny(WaitHandle* _handles, _u32 _count, OUT_OPT _u32* _result = nullptr);
 
 	template <typename TCollection>
-	static bool WaitAll(const TCollection& _handles, OUT_OPT Int32UL* _result = nullptr)
+	static bool WaitAll(const TCollection& _handles, OUT_OPT _u32l* _result = nullptr)
 	{
 		jc_assert(_handles.Size() <= MAXIMUM_WAIT_OBJECTS && _handles.Size() > 0);
-		WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
+		_whandle waitHandles[MAXIMUM_WAIT_OBJECTS];
 
 		auto it = _handles.Begin();
 		int idx = 0;
@@ -55,7 +55,7 @@ public:
 		{
 			waitHandles[idx++] = it->Next().handle_;
 		}
-		const Int32UL ret = WinApi::WaitForMultipleObjectsEx(_handles.Size(), waitHandles, true);
+		const _u32l ret = WinApi::WaitForMultipleObjectsEx(_handles.Size(), waitHandles, true);
 
 		if (_result)
 			*_result = ret;
@@ -67,7 +67,7 @@ public:
 	static WaitHandle* WaitAny(Collection<WaitHandle, TAllocator>& _handles)
 	{
 		jc_assert(_handles.Size() <= MAXIMUM_WAIT_OBJECTS && _handles.Size() > 0);
-		WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
+		_whandle waitHandles[MAXIMUM_WAIT_OBJECTS];
 
 		auto iterator = _handles.Begin();
 		int index = 0;
@@ -76,7 +76,7 @@ public:
 			waitHandles[index++] = iterator->Next().handle_;
 		}
 
-		Int32U waitResult = WinApi::WaitForMultipleObjectsEx(_handles.Size(), waitHandles, false);
+		_u32 waitResult = WinApi::WaitForMultipleObjectsEx(_handles.Size(), waitHandles, false);
 
 		if (waitResult >= WAIT_OBJECT_0 && waitResult <= WAIT_OBJECT_0 + _handles.Size() - 1)
 			return _handles.Extension().IndexOf(static_cast<int>(waitResult - WAIT_OBJECT_0));
@@ -85,7 +85,7 @@ public:
 	}
 
 protected:
-	WinHandle handle_;
+	_whandle handle_;
 	String name_;
 };
 

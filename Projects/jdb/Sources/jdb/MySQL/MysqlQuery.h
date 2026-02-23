@@ -86,7 +86,7 @@ public:
 	int GetErrorCode() const { return errorCode_; }
 
 	// Insert Update Delete는 영향받은 행 수를 반환한다.
-	virtual Int32U GetRowCount() const;
+	virtual _u32 GetRowCount() const;
 
 	StatementType GetStatementType() { return statementType_; }
 
@@ -135,10 +135,10 @@ public:
 	~MysqlQueryInsert() override = default;
 
 	bool Execute() override;
-	Int64U GetInsertId() const { return insertId_; }
+	_u64 GetInsertId() const { return insertId_; }
 
 private:
-	Int64U insertId_;
+	_u64 insertId_;
 };
 
 // 기존의 모든 행 로딩 방식에서 Lazy Loading 방식으로 변경
@@ -190,8 +190,8 @@ public:
 		return jc::StringUtil::ToNumber<TInteger>(pRawString);
 	}
 
-	Int32U GetRowCount() const override;
-	Int32U GetFieldCount() const;
+	_u32 GetRowCount() const override;
+	_u32 GetFieldCount() const;
 
 private:
 	MYSQL_RES* sqlResult_;

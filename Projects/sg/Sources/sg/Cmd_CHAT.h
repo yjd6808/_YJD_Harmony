@@ -14,7 +14,7 @@
  // ======================= CMD LIST =======================
  // ======================= CMD LIST =======================
 
-inline constexpr Int16U TotalChatCmdCount_v = 0;
+inline constexpr _u16 TotalChatCmdCount_v = 0;
 
 #pragma pack(push, CMD_ALIGNMENT)
 #pragma pack(pop)

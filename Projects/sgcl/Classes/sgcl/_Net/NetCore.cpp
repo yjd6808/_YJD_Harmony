@@ -82,7 +82,7 @@ void NetCore::PollNetEvents()
 //////////////////////////////////////////////////////////////////////////////////////////
 void NetCore::RunCommand(jnet::Session* _pSession, ICommand* _pCmd)
 {
-	if (pNetClientGroup_->GetParser()->RunCommand(_pSession, _pCmd) == false)
+	if (pNetClientGroup_->Parser().RunCommand(_pSession, _pCmd) == false)
 	{
 		_NetLogWarn_("처리 불가능한 커맨드(%d) 수신", _pCmd->GetId());
 	}

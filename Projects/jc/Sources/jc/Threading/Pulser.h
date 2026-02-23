@@ -21,9 +21,9 @@ struct PulserStatistics
 	{
 	}
 
-	Int32U sleepIntervalLast_; // 마지막으로 실제로 Sleep한 시간
-	Int32U totalSleepTime_; // 얼마나 잤는지 (누계)
-	Int32U pulseCount_; // 몇번 Sleep에서 깨어났는지 0으로 돌아가도록 unsigned로둠
+	_u32 sleepIntervalLast_; // 마지막으로 실제로 Sleep한 시간
+	_u32 totalSleepTime_; // 얼마나 잤는지 (누계)
+	_u32 pulseCount_; // 몇번 Sleep에서 깨어났는지 0으로 돌아가도록 unsigned로둠
 
 	void Reset()
 	{
@@ -74,13 +74,13 @@ public:
 		eExactCycle
 	};
 
-	Pulser(Int32U _intervalMiliseconds, Mode _mode = eSliceCycle,  PulserStatistics* _pStatistics = nullptr);
+	Pulser(_u32 _intervalMiliseconds, Mode _mode = eSliceCycle,  PulserStatistics* _pStatistics = nullptr);
 	~Pulser();
 
 	void Start();
 	TimeSpan Wait();
 
-	Int32U interval_;
+	_u32 interval_;
 	TWatch watch_;
 	PulserStatistics* pStatistics_;
 

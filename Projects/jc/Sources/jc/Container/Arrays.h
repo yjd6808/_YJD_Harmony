@@ -18,35 +18,35 @@ NS_END
 
 struct Arrays final
 {
-	template <typename T, Int32U Size>
+	template <typename T, _u32 Size>
 	static constexpr int Size(T (&_array)[Size])
 	{
 		return Size;
 	}
 
 	// 길이를 아는 경우
-	template <typename T, Int32U Size>
+	template <typename T, _u32 Size>
 	static void Sort(T (&_arr)[Size])
 	{
 		QuickSort(_arr, 0, Size - 1, NaturalOrder{});
 	}
 
 	// 길이를 아는 경우
-	template <typename T, Int32U Size, typename TPredicate>
+	template <typename T, _u32 Size, typename TPredicate>
 	static void Sort(T (&_arr)[Size], TPredicate&& _predicate)
 	{
 		QuickSort(_arr, 0, Size - 1, Forward<TPredicate>(_predicate));
 	}
 
 	// 길이를 아는 경우
-	template <typename T, Int32U Size>
+	template <typename T, _u32 Size>
 	static void InsertionSort(T (&_arr)[Size])
 	{
 		InsertionSortImpl(_arr, Size, NaturalOrder{});
 	}
 
 	// 길이를 아는 경우
-	template <typename T, Int32U Size, typename TPredicate>
+	template <typename T, _u32 Size, typename TPredicate>
 	static void InsertionSort(T (&_arr)[Size], TPredicate&& _predicate)
 	{
 		InsertionSortImpl(_arr, Size, Forward<TPredicate>(_predicate));
@@ -105,14 +105,14 @@ struct Arrays final
 	}
 
 	// 길이를 아는 경우
-	template <typename T, Int32U Size>
+	template <typename T, _u32 Size>
 	static void HeapSort(T (&_arr)[Size])
 	{
 		HeapSortImpl(_arr, Size, NaturalOrder{});
 	}
 
 	// 길이를 아는 경우
-	template <typename T, Int32U Size, typename TPredicate>
+	template <typename T, _u32 Size, typename TPredicate>
 	static void HeapSort(T (&_arr)[Size], TPredicate&& _predicate)
 	{
 		HeapSortImpl(_arr, Size, Forward<TPredicate>(_predicate));
@@ -155,7 +155,7 @@ struct Arrays final
 	/// <summary>
 	/// 첫 원소부터 선형 탐색
 	/// </summary>
-	template <typename T, Int32U Size>
+	template <typename T, _u32 Size>
 	static int LinearSearch(T (&_arr)[Size], const T& _data)
 	{
 		return LinearSearch(_arr, Size, _data);
@@ -181,7 +181,7 @@ struct Arrays final
 	/// <summary>
 	/// 마지막 원소부터 선형 탐색
 	/// </summary>
-	template <typename T, Int32U Size>
+	template <typename T, _u32 Size>
 	static int LinearSearchReverse(T (&_arr)[Size], const T& _data)
 	{
 		return LinearSearchReverse(_arr, Size, _data);
@@ -204,7 +204,7 @@ struct Arrays final
 		return detail::INVALID_INDEX;
 	}
 
-	template <typename T, Int32U Size>
+	template <typename T, _u32 Size>
 	static int BinarySearch(T (&_arr)[Size], const T& _data)
 	{
 		return BinarySearch(_arr, Size, _data);
@@ -243,7 +243,7 @@ struct Arrays final
 	/// <summary>
 	/// data가 처음으로 시작되는 위치(인덱스)를 반환한다.
 	/// </summary>
-	template <typename T, Int32U Size>
+	template <typename T, _u32 Size>
 	static int LowerBound(const T (&_arr)[Size], const T& _data)
 	{
 		return LowerBound(_arr, Size, _data);
@@ -311,7 +311,7 @@ struct Arrays final
 	/// <summary>
 	/// data 보다 큰 값들 중에서 가장 작은 값의 위치(인덱스)를 반환한다.
 	/// </summary>
-	template <typename T, Int32U Size>
+	template <typename T, _u32 Size>
 	static int UpperBound(T (&_arr)[Size], const T& _data)
 	{
 		return UpperBound(_arr, Size, _data);
@@ -326,7 +326,7 @@ struct Arrays final
 		return static_cast<int>(std::upper_bound(_pArr, _pArr + _arrSize, _data) - _pArr);
 	}
 
-	template <typename T, Int32U Size>
+	template <typename T, _u32 Size>
 	static bool AllEqual(T (&_arr)[Size])
 	{
 		return AllEqual(_arr, Size);
@@ -348,7 +348,7 @@ struct Arrays final
 		return true;
 	}
 
-	template <typename T, Int32U Size, typename TVal>
+	template <typename T, _u32 Size, typename TVal>
 	static bool AllEqual(T (&_arr)[Size], const TVal& _value)
 	{
 		return AllEqual(_arr, Size, _value);
@@ -369,7 +369,7 @@ struct Arrays final
 		return true;
 	}
 
-	template <typename T, Int32U Size, typename TAction>
+	template <typename T, _u32 Size, typename TAction>
 	static void ForEach(T (&_arr)[Size], TAction&& _action)
 	{
 		ForEach(Move(_arr), Size, Move(_action));
@@ -384,7 +384,7 @@ struct Arrays final
 		}
 	}
 
-	template <typename T, Int32U Size>
+	template <typename T, _u32 Size>
 	static void ForEachDelete(T (&_arr)[Size])
 	{
 		if constexpr (IsPointerType_v<T>)
@@ -427,13 +427,13 @@ struct Arrays final
 		return detail::INVALID_INDEX;
 	}
 
-	template <typename T, Int32U Size, typename TPredicate>
+	template <typename T, _u32 Size, typename TPredicate>
 	static int FindIf(const T (&_arr)[Size], TPredicate&& _predicate)
 	{
 		return FindIf(_arr, Size, Forward<TPredicate>(_predicate));
 	}
 
-	template <typename T, Int32U Size, typename TVal>
+	template <typename T, _u32 Size, typename TVal>
 	static void Fill(T (&_arr)[Size], TVal&& _value)
 	{
 		for (int index = 0; index < Size; ++index)
@@ -451,7 +451,7 @@ struct Arrays final
 		}
 	}
 
-	template <typename T, Int32U Size>
+	template <typename T, _u32 Size>
 	static void Copy(T (&_destination)[Size], const T (&_source)[Size])
 	{
 		for (int index = 0; index < Size; ++index)
@@ -496,7 +496,7 @@ struct Arrays final
 		Swap(pArr, _left, _right);
 	}
 
-	template <typename T, Int32U Size>
+	template <typename T, _u32 Size>
 	static void MakeHeap(T (&_arr)[Size])
 	{
 		MakeHeapRange(_arr, 0, Size - 1, NaturalOrder{}); // call [2]
@@ -597,7 +597,7 @@ struct Arrays final
 		}
 	}
 
-	template <typename T, Int32U Size>
+	template <typename T, _u32 Size>
 	static void PushHeap(T (&_arr)[Size])
 	{
 		HeapifySiftUp(_arr, Size, NaturalOrder{});
@@ -627,7 +627,7 @@ struct Arrays final
 		HeapifySiftUp(_pArr + _start, _end - _start + 1, Forward<TPredicate>(_predicate));
 	}
 
-	template <typename T, Int32U Size>
+	template <typename T, _u32 Size>
 	static void PopHeap(T (&_arr)[Size])
 	{
 		Swap(_arr, 0, Size - 1);

@@ -11,21 +11,21 @@
 #include <jc/Wrapper/WinApi.h>
 
 NS_JC_BEGIN
-WinHandle WinApi::InvalidHandleValue = INVALID_HANDLE_VALUE;
+_whandle WinApi::InvalidHandleValue = INVALID_HANDLE_VALUE;
 
 bool
 JC_CDECL
-WinApi::SetConsoleCursorPosition( WinHandle _stdoutHandle,  int _x,  int _y)
+WinApi::SetConsoleCursorPosition( _whandle _stdoutHandle,  int _x,  int _y)
 {
 	COORD p;
-	p.X = static_cast<Int16>(_x);
-	p.Y = static_cast<Int16>(_y);
+	p.X = static_cast<_s16>(_x);
+	p.Y = static_cast<_s16>(_y);
 	return ::SetConsoleCursorPosition(_stdoutHandle, p) != 0;
 }
 
 bool
 JC_CDECL
-WinApi::GetConsoleCursorPosition( WinHandle _stdoutHandle, OUT int& _x, OUT int& _y)
+WinApi::GetConsoleCursorPosition( _whandle _stdoutHandle, OUT int& _x, OUT int& _y)
 {
 	CONSOLE_SCREEN_BUFFER_INFO cbsi;
 
@@ -41,7 +41,7 @@ WinApi::GetConsoleCursorPosition( WinHandle _stdoutHandle, OUT int& _x, OUT int&
 
 bool
 JC_CDECL
-WinApi::SetConsoleTextAttribute( WinHandle _stdoutHandle,  Int16 _attribute)
+WinApi::SetConsoleTextAttribute( _whandle _stdoutHandle,  _s16 _attribute)
 {
 	return ::SetConsoleTextAttribute(_stdoutHandle, _attribute) != 0;
 }
@@ -49,44 +49,44 @@ WinApi::SetConsoleTextAttribute( WinHandle _stdoutHandle,  Int16 _attribute)
 
 bool
 JC_CDECL
-WinApi::SetConsoleOutputCodePage( Int _codePage)
+WinApi::SetConsoleOutputCodePage( _s32 _codePage)
 {
 	return ::SetConsoleOutputCP(_codePage) != 0;
 }
 
 
-Int
+_s32
 JC_CDECL
 WinApi::GetConsoleOutputCodePage()
 {
 	return static_cast<int>(::GetConsoleOutputCP());
 }
 
-WinHandle
+_whandle
 JC_CDECL
 WinApi::GetStdoutHandle()
 {
 	return ::GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
-WinHandle
+_whandle
 JC_CDECL
 WinApi::GetStdinHandle()
 {
 	return ::GetStdHandle(STD_INPUT_HANDLE);
 }
 
-WinHandle
+_whandle
 JC_CDECL
 WinApi::CreateEventA(bool _initialState, bool _manualReset, const char* _pName)
 {
 	return ::CreateEventA(nullptr, _manualReset ? TRUE : FALSE, _initialState ? TRUE : FALSE, _pName);
 }
 
-Int32UL
+_u32l
 JC_CDECL
-WinApi::WaitForMultipleObjectsEx( Int32U _eventCount,  WinHandle* _handles,  bool _waitAll,
-                                  Int32U _timeout /*= JC_INFINITE */,  bool _alertable /*= false */)
+WinApi::WaitForMultipleObjectsEx( _u32 _eventCount,  _whandle* _handles,  bool _waitAll,
+                                  _u32 _timeout /*= JC_INFINITE */,  bool _alertable /*= false */)
 {
 	BOOL bWaitAll = _waitAll ? TRUE : FALSE;
 	BOOL bAlertable = _alertable ? TRUE : FALSE;
@@ -96,14 +96,14 @@ WinApi::WaitForMultipleObjectsEx( Int32U _eventCount,  WinHandle* _handles,  boo
 	return result;
 }
 
-Int32UL
+_u32l
 JC_CDECL
-WinApi::WaitForSingleObject(WinHandle _handle, Int32U _timeout)
+WinApi::WaitForSingleObject(_whandle _handle, _u32 _timeout)
 {
 	return ::WaitForSingleObject(_handle, _timeout);
 }
 
-Int32UL
+_u32l
 JC_CDECL
 WinApi::GetLastError()
 {
@@ -112,50 +112,50 @@ WinApi::GetLastError()
 
 bool
 JC_CDECL
-WinApi::SetEvent( WinHandle _handle)
+WinApi::SetEvent( _whandle _handle)
 {
 	return ::SetEvent(_handle) != 0;
 }
 
 bool
 JC_CDECL
-WinApi::ResetEvent( WinHandle _handle)
+WinApi::ResetEvent( _whandle _handle)
 {
 	return ::ResetEvent(_handle) != 0;
 }
 
 bool
 JC_CDECL
-WinApi::CloseHandle( WinHandle _handle)
+WinApi::CloseHandle( _whandle _handle)
 {
 	return ::CloseHandle(_handle) != 0;
 }
 
 int
 JC_CDECL
-WinApi::GetThreadPriority( WinHandle _threadHandle)
+WinApi::GetThreadPriority( _whandle _threadHandle)
 {
 	return ::GetThreadPriority(_threadHandle);
 }
 
 bool
 JC_CDECL
-WinApi::SetThreadPriority( WinHandle _threadHandle,  int _priority)
+WinApi::SetThreadPriority( _whandle _threadHandle,  int _priority)
 {
 	return ::SetThreadPriority(_threadHandle, _priority) != 0;
 }
 
 
-Int32U
+_u32
 JC_CDECL
 WinApi::GetCurrentThreadId()
 {
 	return ::GetCurrentThreadId();
 }
 
-Int32U
+_u32
 JC_CDECL
-WinApi::GetModuleFilePath(WinModule _module, char* _filenameBuffer, int _filenameBufferCapacity)
+WinApi::GetModuleFilePath(_wmodule _module, char* _filenameBuffer, int _filenameBufferCapacity)
 {
 	return GetModuleFileNameA((HMODULE)_module, _filenameBuffer, _filenameBufferCapacity);
 }
@@ -410,17 +410,17 @@ bool Interlocked<bool>::Read(bool* _destination)
 	return TInterlocked::Read(reinterpret_cast<Boundary8*>(_destination));
 }
 
-template struct Interlocked<Int8>;
-template struct Interlocked<Int8U>;
-template struct Interlocked<Int16>;
-template struct Interlocked<Int16U>;
-template struct Interlocked<WideChar>;
-template struct Interlocked<Int32>;
-template struct Interlocked<Int32U>;
-template struct Interlocked<Int32L>;
-template struct Interlocked<Int32UL>;
-template struct Interlocked<Int64>;
-template struct Interlocked<Int64U>;
+template struct Interlocked<_s8>;
+template struct Interlocked<_u8>;
+template struct Interlocked<_s16>;
+template struct Interlocked<_u16>;
+template struct Interlocked<_s16c>;
+template struct Interlocked<_s32>;
+template struct Interlocked<_u32>;
+template struct Interlocked<_s32l>;
+template struct Interlocked<_u32l>;
+template struct Interlocked<_s64>;
+template struct Interlocked<_u64>;
 template struct Interlocked<bool>;
 
 NS_END

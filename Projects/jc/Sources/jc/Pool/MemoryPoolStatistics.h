@@ -19,32 +19,32 @@ NS_JC_BEGIN
 class CMemoryPoolStatistics
 {
 public:
-	Int64U GetInitAllocated()
+	_u64 GetInitAllocated()
 	{
 		return initAllocted_;
 	}
 
-	Int64U GetNewAllocated()
+	_u64 GetNewAllocated()
 	{
 		return newAlloctaed_;
 	}
 
-	Int64U GetTotalAllocated()
+	_u64 GetTotalAllocated()
 	{
 		return initAllocted_ + newAlloctaed_;	// 메모리풀이 관리중인 메모리 크기
 	}
 
-	Int64U GetTotalUsed()
+	_u64 GetTotalUsed()
 	{
 		return totalUsed_;
 	}
 
-	Int64U GetTotalUsing()
+	_u64 GetTotalUsing()
 	{
 		return totalUsing_;
 	}
 
-	Int64U GetTotalReturned()
+	_u64 GetTotalReturned()
 	{
 		return totalReturned_;
 	}
@@ -70,13 +70,13 @@ public:
 	}
 
 protected:
-	void AddInitBlock(Int32 _blockIndex, Int32 _blockCount)
+	void AddInitBlock(_s32 _blockIndex, _s32 _blockCount)
 	{
-		initAllocted_ += static_cast<Int64U>(detail::AllocationLengthMapConverter::ToSize(_blockIndex)) * _blockCount;
+		initAllocted_ += static_cast<_u64>(detail::AllocationLengthMapConverter::ToSize(_blockIndex)) * _blockCount;
 		blockTotalCounter_[_blockIndex] += _blockCount;
 	}
 
-	void AddAllocated(Int32 _blockIndex, bool _createNew)
+	void AddAllocated(_s32 _blockIndex, bool _createNew)
 	{
 		int size = detail::AllocationLengthMapConverter::ToSize(_blockIndex);
 
@@ -94,9 +94,9 @@ protected:
 		++blockUsedCounter_[_blockIndex];
 	}
 
-	void AddDeallocated(Int32 _blockIndex)
+	void AddDeallocated(_s32 _blockIndex)
 	{
-		const Int32 returnedSize = detail::AllocationLengthMapConverter::ToSize(_blockIndex);
+		const _s32 returnedSize = detail::AllocationLengthMapConverter::ToSize(_blockIndex);
 
 		--blockUsingCounter_[_blockIndex];
 		totalUsing_ -= returnedSize;

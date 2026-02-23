@@ -75,12 +75,12 @@ protected:
 	int dataLength_;
 	bool loaded_;
 
-	template <Int32>
+	template <_s32>
 	friend class SgaElementInitializerImpl;
 	friend class SgaLoader;
 };
 
 using SgaSpritePtr = jc::SharedPtr<SgaSprite>;
-using SgaSpriteDataPtr = jc::SharedPtr<Byte[]>;
+using SgaSpriteDataPtr = jc::SharedPtr<_u8[]>;
 
 #pragma warning (pop)

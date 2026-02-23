@@ -20,7 +20,7 @@ Color3B::Color3B(const Color3B& other)
 , b(other.b)
 {}
 
-Color3B::Color3B(Int8U _r, Int8U _g, Int8U _b)
+Color3B::Color3B(_u8 _r, _u8 _g, _u8 _b)
 : r(_r)
 , g(_g)
 , b(_b)
@@ -33,9 +33,9 @@ Color3B::Color3B(const Color4B& color)
 {}
 
 Color3B::Color3B(const Color4F& color)
-: r(Int8U(color.r * 255.0f))
-, g(Int8U(color.g * 255.0f))
-, b(Int8U(color.b * 255.0f))
+: r(_u8(color.r * 255.0f))
+, g(_u8(color.g * 255.0f))
+, b(_u8(color.b * 255.0f))
 {}
 
 bool Color3B::operator==(const Color3B& right) const
@@ -79,14 +79,14 @@ Color4B::Color4B()
 , a(0)
 {}
 
-Color4B::Color4B(Int8U _r, Int8U _g, Int8U _b, Int8U _a)
+Color4B::Color4B(_u8 _r, _u8 _g, _u8 _b, _u8 _a)
 : r(_r)
 , g(_g)
 , b(_b)
 , a(_a)
 {}
 
-Color4B::Color4B(const Color3B& color, Int8U _a)
+Color4B::Color4B(const Color3B& color, _u8 _a)
 : r(color.r)
 , g(color.g)
 , b(color.b)
@@ -94,10 +94,10 @@ Color4B::Color4B(const Color3B& color, Int8U _a)
 {}
 
 Color4B::Color4B(const Color4F& color)
-: r(Int8U(color.r * 255))
-, g(Int8U(color.g * 255))
-, b(Int8U(color.b * 255))
-, a(Int8U(color.a * 255))
+: r(_u8(color.r * 255))
+, g(_u8(color.g * 255))
+, b(_u8(color.b * 255))
+, a(_u8(color.a * 255))
 {}
 
 bool Color4B::operator==(const Color4B& right) const

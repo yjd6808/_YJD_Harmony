@@ -36,7 +36,7 @@ public:
 	virtual const char* GetName() const override { return serverInfo_.serverName_.SafeSource(); }
 
 	virtual void OnStarted() override;
-	virtual void OnStartFailed(Int32U _errorCode) override;
+	virtual void OnStartFailed(_u32 _errorCode) override;
 	virtual void OnStopped() override;
 	virtual void OnUpdate(const jc::TimeSpan& _elapsed) override;
 

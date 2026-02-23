@@ -13,8 +13,8 @@
 
 NS_JC_BEGIN
 
-Int32U Thread::ms_uiMainThreadId = WinApi::GetCurrentThreadId();
-thread_local Int32U Thread::tls_uiThreadId = 0;
+_u32 Thread::ms_uiMainThreadId = WinApi::GetCurrentThreadId();
+thread_local _u32 Thread::tls_uiThreadId = 0;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 Thread::Thread(TRunnable&& _fn, void* _pParam, const char* _pName, bool _autoJoin)
@@ -61,7 +61,7 @@ int Thread::GetPriority()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Int32U Thread::GetId()
+_u32 Thread::GetId()
 {
     if (m_eState >= eRunning)
         return m_uiThreadId;
@@ -87,7 +87,7 @@ Thread& Thread::operator=(Thread&& _other) noexcept
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Int32U Thread::GetThreadId()
+_u32 Thread::GetThreadId()
 {
     if (tls_uiThreadId != 0)
         return tls_uiThreadId;
@@ -96,13 +96,13 @@ Int32U Thread::GetThreadId()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Thread::Sleep(Int32U _milliseconds)
+void Thread::Sleep(_u32 _milliseconds)
 {
     ::Sleep(_milliseconds);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Int32U JC_STDCALL Thread::ThreadRoutine(void* _pParam)
+_u32 JC_STDCALL Thread::ThreadRoutine(void* _pParam)
 {
     {
         auto* pRecvParam = static_cast<ThreadParam*>(_pParam);
@@ -132,7 +132,7 @@ int Thread::Start(TRunnable&& _fn, void* _pParam)
     pStartParam->Self = this;
     pStartParam->ThreadFunc = Move(_fn);
 
-    m_hHandle = reinterpret_cast<WinHandle>(CRuntime::BeginThreadEx(ThreadRoutine, pStartParam));
+    m_hHandle = reinterpret_cast<_whandle>(CRuntime::BeginThreadEx(ThreadRoutine, pStartParam));
     
     if (m_hHandle == NULL)
     {
@@ -158,7 +158,7 @@ Thread::JoinResult Thread::Join(int _timeoutMiliSeconds)
     if (state == eJoined)
         return eAlreadyJoined;
 
-    const Int32U waitResult = WinApi::WaitForSingleObject(m_hHandle, _timeoutMiliSeconds);
+    const _u32 waitResult = WinApi::WaitForSingleObject(m_hHandle, _timeoutMiliSeconds);
 
     if (waitResult == WAIT_TIMEOUT)
     {

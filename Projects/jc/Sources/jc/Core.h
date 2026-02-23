@@ -24,6 +24,7 @@
 #include <winnt.h>
 #include <exception>
 #include <random>
+#include <cstddef>
 
 #include <jc/DLLExport.h>
 #include <jc/Debug/MemoryLeakDetector.h>

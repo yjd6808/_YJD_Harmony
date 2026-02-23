@@ -30,21 +30,21 @@ struct Range
 };
 
 
-using RangeInt64 = Range<Int64>;
-using RangeInt64U = Range<Int64U>;
-using RangeInt = Range<Int>;
-using RangeInt32 = Range<Int32>;
-using RangeInt32U = Range<Int32U>;
-using RangeInt32L = Range<Int32L>;
-using RangeInt32UL = Range<Int32UL>;
-using RangeInt16 = Range<Int16>;
-using RangeInt16U = Range<Int16U>;
-using RangeInt8 = Range<Int8>;
-using RangeInt8U = Range<Int8U>;
-using RangeChar = Range<Char>;
-using RangeDouble = Range<Double>;
-using RangeLDouble = Range<LDouble>;
-using RangeByte = Range<Byte>;
-using RangeWideChar = Range<WideChar>;
+using RangeInt64 = Range<_s64>;
+using RangeInt64U = Range<_u64>;
+using RangeInt = Range<_s32>;
+using RangeInt32 = Range<_s32>;
+using RangeInt32U = Range<_u32>;
+using RangeInt32L = Range<_s32l>;
+using RangeInt32UL = Range<_u32l>;
+using RangeInt16 = Range<_s16>;
+using RangeInt16U = Range<_u16>;
+using RangeInt8 = Range<_s8>;
+using RangeInt8U = Range<_u8>;
+using RangeChar = Range<_s8>;
+using RangeDouble = Range<_f64>;
+using RangeLDouble = Range<_f64l>;
+using RangeByte = Range<_u8>;
+using RangeWideChar = Range<_s16c>;
 
 NS_END

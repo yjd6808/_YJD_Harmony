@@ -12,7 +12,7 @@
 
 NS_JC_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
-Pulser::Pulser(Int32U _intervalMiliseconds, Mode _mode /* = eSliceCycle */,  PulserStatistics* _pStatistics /* = nullptr */)
+Pulser::Pulser(_u32 _intervalMiliseconds, Mode _mode /* = eSliceCycle */,  PulserStatistics* _pStatistics /* = nullptr */)
 : interval_(_intervalMiliseconds)
 , pStatistics_(_pStatistics)
 {
@@ -50,7 +50,7 @@ TimeSpan Pulser::SliceWaitor::Wait()
 
 	for (;;)
 	{
-		const auto workTimeMs = (Int32U)workTime.GetTotalMiliSecondsInt();
+		const auto workTimeMs = (_u32)workTime.GetTotalMiliSecondsInt();
 		if (workTimeMs >= pulser_.interval_)
 		{
 			break;
@@ -63,7 +63,7 @@ TimeSpan Pulser::SliceWaitor::Wait()
 	if (pulser_.pStatistics_)
 	{
 		pulser_.pStatistics_->pulseCount_ += 1;
-		pulser_.pStatistics_->sleepIntervalLast_ = (Int32U)workTime.GetTotalMiliSecondsInt();
+		pulser_.pStatistics_->sleepIntervalLast_ = (_u32)workTime.GetTotalMiliSecondsInt();
 		pulser_.pStatistics_->totalSleepTime_ += pulser_.pStatistics_->sleepIntervalLast_;
 	}
 
@@ -75,7 +75,7 @@ TimeSpan Pulser::SliceWaitor::Wait()
 TimeSpan Pulser::ExactWaitor::Wait()
 {
 	TimeSpan workTime = pulser_.watch_.GetElapsed();
-	Int32U workTimeMs = (Int32U)workTime.GetTotalMiliSecondsInt();
+	_u32 workTimeMs = (_u32)workTime.GetTotalMiliSecondsInt();
 
 	if (workTimeMs <= pulser_.interval_)
 	{
@@ -93,7 +93,7 @@ TimeSpan Pulser::ExactWaitor::Wait()
 	if (pulser_.pStatistics_)
 	{
 		pulser_.pStatistics_->pulseCount_ += 1;
-		pulser_.pStatistics_->sleepIntervalLast_ = (Int32U)workTime.GetTotalMiliSecondsInt();
+		pulser_.pStatistics_->sleepIntervalLast_ = (_u32)workTime.GetTotalMiliSecondsInt();
 		pulser_.pStatistics_->totalSleepTime_ += pulser_.pStatistics_->sleepIntervalLast_;
 	}
 

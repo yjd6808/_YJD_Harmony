@@ -206,7 +206,7 @@ JC_SENUM_BEGIN(ItemOptType)
 	Begin = 1,
 	Str = Begin, // 1
 	Dex, // 2
-	Int, // 3
+	_s32, // 3
 	Vit, // 4
 	Energe, // 5
 	Lift, // 6

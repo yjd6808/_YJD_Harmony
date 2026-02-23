@@ -13,7 +13,7 @@
 
 NS_JNET_BEGIN
 
-template <Int32U BufferSize>
+template <_u32 BufferSize>
 class StaticBuffer : public BufferAbstract
 {
 	using TBuffer = StaticBuffer<BufferSize>;

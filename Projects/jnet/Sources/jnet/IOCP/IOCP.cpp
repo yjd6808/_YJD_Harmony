@@ -17,7 +17,7 @@ IOCP::IOCP(int _threadCount)
 , workerManager_(nullptr)
 , name_(0)
 {
-	if ((iocpHandle_ = CreateIoCompletionPort(INVALID_HANDLE_VALUE, nullptr, 0, static_cast<Int32UL>(_threadCount))) == INVALID_HANDLE_VALUE)
+	if ((iocpHandle_ = CreateIoCompletionPort(INVALID_HANDLE_VALUE, nullptr, 0, static_cast<_u32l>(_threadCount))) == INVALID_HANDLE_VALUE)
 	{
 		jc_assert_msg(false, "IOCP를 생성하는데 실패했습니다.");
 	}
@@ -112,10 +112,10 @@ void IOCP::WaitForZeroPending()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-jc::Vector<Int32U> IOCP::GetWorkThreadIdList()
+jc::Vector<_u32> IOCP::GetWorkThreadIdList()
 {
 	JC_LOCK_GUARD(workerManagerLock_);
-	jc::Vector<Int32U> threadIdList(workerManager_->workers_.Size());
+	jc::Vector<_u32> threadIdList(workerManager_->workers_.Size());
 	for (int index = 0; index < workerManager_->workers_.Size(); ++index)
 	{
 		threadIdList.PushBack(workerManager_->workers_[index]->GetThreadId());
@@ -124,7 +124,7 @@ jc::Vector<Int32U> IOCP::GetWorkThreadIdList()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool IOCP::Connect(WinHandle _handle, ULONG_PTR _completionKey) const
+bool IOCP::Connect(_whandle _handle, ULONG_PTR _completionKey) const
 {
 	// @참고: https://learn.microsoft.com/en-us/windows/win32/fileio/createiocompletionport
 	// 연결시 NumberOfConcurrentThreads 파라미터 값은 무시된다.
@@ -133,13 +133,13 @@ bool IOCP::Connect(WinHandle _handle, ULONG_PTR _completionKey) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-BOOL IOCP::GetStatus(Int32UL* _pNumberOfBytesTransffered, PULONG_PTR _pCompletionKey, LPOVERLAPPED* _ppOverlapped) const
+BOOL IOCP::GetStatus(_u32l* _pNumberOfBytesTransffered, PULONG_PTR _pCompletionKey, LPOVERLAPPED* _ppOverlapped) const
 {
 	return GetQueuedCompletionStatus(iocpHandle_, _pNumberOfBytesTransffered, _pCompletionKey, _ppOverlapped, INFINITE);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-BOOL IOCP::Post(Int32UL _numberOfBytesTransferred, ULONG_PTR _completionKey, LPOVERLAPPED _pOverlapped) const
+BOOL IOCP::Post(_u32l _numberOfBytesTransferred, ULONG_PTR _completionKey, LPOVERLAPPED _pOverlapped) const
 {
 	return PostQueuedCompletionStatus(iocpHandle_, _numberOfBytesTransferred, _completionKey, _pOverlapped);
 }

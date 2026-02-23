@@ -12,7 +12,7 @@ NS_JDB_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 MysqlConnectionPool::MysqlConnectionPool(
 	const String& _hostName,
-	Int16U _port,
+	_u16 _port,
 	const String& _id,
 	const String& _pass,
 	const String& _schemaName,

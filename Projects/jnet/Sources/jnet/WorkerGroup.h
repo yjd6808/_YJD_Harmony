@@ -66,7 +66,7 @@ public:
 			workers_[i]->JoinWait(&handles_[i]);
 		}
 
-		Int32UL waitResult;
+		_u32l waitResult;
 		if (jc::WaitHandle::WaitAll(handles_, &waitResult) == false)
 		{
 			_NetLogError_("워커그룹 Join시도중 오류 발생 (%ul)", waitResult);

@@ -21,8 +21,8 @@ public:
 protected:
 	void OnStarted() override;
 	void OnConnected(Session* _pConnectedSession) override;
-	void OnDisconnected(Session* _pDisconnectedSession, Int32U _errorCode) override;
-	void OnSent(Session* _pSender, IPacket* _pPacket, Int32UL _sentBytes) override;
+	void OnDisconnected(Session* _pDisconnectedSession, _u32 _errorCode) override;
+	void OnSent(Session* _pSender, IPacket* _pPacket, _u32l _sentBytes) override;
 	void OnReceived(Session* _pReceiver, ICommand* _pCmd) override;
 	void OnStopped() override;
 

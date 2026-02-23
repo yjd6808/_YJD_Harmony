@@ -34,13 +34,13 @@ void NetClientListener_InterServ::OnConnected(Session* _pSession)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetClientListener_InterServ::OnDisconnected(Session* _pSession, Int32U _errorCode)
+void NetClientListener_InterServ::OnDisconnected(Session* _pSession, _u32 _errorCode)
 {
 	NetClientListener::OnDisconnected(_pSession, _errorCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetClientListener_InterServ::OnSent(Session* _pSession, IPacket* _pSentPacket, Int32UL _sentBytes)
+void NetClientListener_InterServ::OnSent(Session* _pSession, IPacket* _pSentPacket, _u32l _sentBytes)
 {
 	NetClientListener::OnSent(_pSession, _pSentPacket, _sentBytes);
 }
@@ -58,7 +58,7 @@ void NetClientListener_InterServ::OnReceived(Session* _pSession, RecvedCommandPa
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetClientListener_InterServ::OnConnectFailed(Session* _pSession, Int32U _errorCode)
+void NetClientListener_InterServ::OnConnectFailed(Session* _pSession, _u32 _errorCode)
 {
 	NetClientListener::OnConnectFailed(_pSession, _errorCode);
 }

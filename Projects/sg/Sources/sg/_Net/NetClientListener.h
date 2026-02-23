@@ -20,9 +20,9 @@ public:
 
 protected:
 	virtual void OnConnected(jnet::Session* _pSession) override;
-	virtual void OnConnectFailed(jnet::Session* _pSession, Int32U _errorCode) override;
-	virtual void OnDisconnected(jnet::Session* _pSession, Int32U _errorCode) override;
-	virtual void OnSent(jnet::Session* _pSession, jnet::IPacket* _pSentPacket, Int32UL _sentBytes) override;
+	virtual void OnConnectFailed(jnet::Session* _pSession, _u32 _errorCode) override;
+	virtual void OnDisconnected(jnet::Session* _pSession, _u32 _errorCode) override;
+	virtual void OnSent(jnet::Session* _pSession, jnet::IPacket* _pSentPacket, _u32l _sentBytes) override;
 	virtual void OnReceived(jnet::Session* _pSession, jnet::ICommand* _pRecvCmd) override;
 	virtual void OnReceived(jnet::Session* _pSession, jnet::RecvedCommandPacket* _pRecvPacket) override;
 

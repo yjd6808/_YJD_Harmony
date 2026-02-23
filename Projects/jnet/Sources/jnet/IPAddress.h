@@ -1,7 +1,7 @@
 ﻿/*
 	작성자 : 윤정도
 
-	IP주소를 기본적으로 Host Byte Order로 저장한다.
+	IP주소를 기본적으로 Host _u8 Order로 저장한다.
 	IPv4 주소, IPv6 주소를 다루는 클래스
  */
 
@@ -15,11 +15,11 @@
 
 NS_JNET_BEGIN
 #ifdef UNICODE
-constexpr Int32U IPv4Len_v = 40;
-constexpr Int32U IPv6Len_v = 80;
+constexpr _u32 IPv4Len_v = 40;
+constexpr _u32 IPv6Len_v = 80;
 #else
-constexpr Int32U IPv4Len_v = 20;
-constexpr Int32U IPv6Len_v = 40;
+constexpr _u32 IPv4Len_v = 20;
+constexpr _u32 IPv6Len_v = 40;
 #endif
 
 class IPAddress
@@ -37,7 +37,7 @@ class IPv4Address : public IPAddress
 public:
 	IPv4Address() = default;
 
-	explicit IPv4Address(Int32UL _hostOrderedAddress)
+	explicit IPv4Address(_u32l _hostOrderedAddress)
 	: address_{.addr_ = _hostOrderedAddress}
 	{
 	}
@@ -53,7 +53,7 @@ public:
 		return InternetProtocol::IPv4;
 	}
 
-	Int32UL GetAddress() const
+	_u32l GetAddress() const
 	{
 		return address_.addr_;
 	}
@@ -67,7 +67,7 @@ public:
 	///     GetAddressOctet(3) -> 1
 	///     GetAddressOctet(4) -> 예외 던짐
 	/// </summary>
-	Byte GetAddressOctet(int _index) const;
+	_u8 GetAddressOctet(int _index) const;
 
 	bool operator==(const IPv4Address& _other) const
 	{
@@ -115,8 +115,8 @@ public:
 private:
 	union
 	{
-		Byte seg_[4];
-		Int32UL addr_{};
+		_u8 seg_[4];
+		_u32l addr_{};
 	} address_{};
 };
 
@@ -131,8 +131,8 @@ public:
 	}
 
 private:
-	Int64U addrHigh_ = 0;
-	Int64U addrLow_ = 0;
+	_u64 addrHigh_ = 0;
+	_u64 addrLow_ = 0;
 };
 
 NS_END

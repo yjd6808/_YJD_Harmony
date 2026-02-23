@@ -18,8 +18,8 @@ class MemoryPoolAbstract;
 struct MemoryPoolCaptured
 {
 	MemoryPoolAbstract* pPool_{};
-	Int64U totalLeaks_{};
-	Int32 leakBlocks_[detail::MemoryBlockSizeMapSize_v]{};
+	_u64 totalLeaks_{};
+	_s32 leakBlocks_[detail::MemoryBlockSizeMapSize_v]{};
 };
 
 using MemoryPoolCapturedPtr = SharedPtr<MemoryPoolCaptured>;

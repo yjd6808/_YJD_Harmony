@@ -14,11 +14,11 @@ union NatvisByteOrderInt16U
 {
 	struct Field
 	{
-		Int8U seg1; // 0xbb
-		Int8U seg2; // 0xaa
+		_u8 seg1; // 0xbb
+		_u8 seg2; // 0xaa
 	} segs;
 
-	Int16U val; // 0xaabb
+	_u16 val; // 0xaabb
 };
 
 NS_END

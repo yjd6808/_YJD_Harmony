@@ -244,22 +244,22 @@ private:
     void* value_;
 };
 
-using AtomicInt64    = Atomic<Int64>;
-using AtomicInt64U   = Atomic<Int64U>;
-using AtomicInt      = Atomic<Int>;
-using AtomicInt32    = Atomic<Int32>;
-using AtomicInt32U   = Atomic<Int32U>;
-using AtomicInt32L   = Atomic<Int32L>;
-using AtomicInt32UL  = Atomic<Int32UL>;
-using AtomicInt16    = Atomic<Int16>;
-using AtomicInt16U   = Atomic<Int16U>;
-using AtomicInt8     = Atomic<Int8>;
-using AtomicInt8U    = Atomic<Int8U>;
-using AtomicChar     = Atomic<Char>;
+using AtomicInt64    = Atomic<_s64>;
+using AtomicInt64U   = Atomic<_u64>;
+using AtomicInt      = Atomic<_s32>;
+using AtomicInt32    = Atomic<_s32>;
+using AtomicInt32U   = Atomic<_u32>;
+using AtomicInt32L   = Atomic<_s32l>;
+using AtomicInt32UL  = Atomic<_u32l>;
+using AtomicInt16    = Atomic<_s16>;
+using AtomicInt16U   = Atomic<_u16>;
+using AtomicInt8     = Atomic<_s8>;
+using AtomicInt8U    = Atomic<_u8>;
+using AtomicChar     = Atomic<_s8>;
 using AtomicBool     = Atomic<bool>;
-using AtomicByte     = Atomic<Byte>;
-using AtomicWideChar = Atomic<WideChar>;
-using AtomicIntPtr   = Atomic<IntPtr>;
+using AtomicByte     = Atomic<_u8>;
+using AtomicWideChar = Atomic<_s16c>;
+using AtomicIntPtr   = Atomic<_ptr>;
 
 
 NS_END

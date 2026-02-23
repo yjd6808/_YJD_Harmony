@@ -37,13 +37,13 @@ void ListenerLobbyServer::OnConnected(Session* _pConnectedSession)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ListenerLobbyServer::OnDisconnected(Session* _pDisconnectedSession, Int32U _errorCode)
+void ListenerLobbyServer::OnDisconnected(Session* _pDisconnectedSession, _u32 _errorCode)
 {
 	NetServerListener::OnDisconnected(_pDisconnectedSession, _errorCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ListenerLobbyServer::OnSent(Session* _pSender, IPacket* _pSentPacket, Int32UL _sentBytes)
+void ListenerLobbyServer::OnSent(Session* _pSender, IPacket* _pSentPacket, _u32l _sentBytes)
 {
 	NetServerListener::OnSent(_pSender, _pSentPacket, _sentBytes);
 }

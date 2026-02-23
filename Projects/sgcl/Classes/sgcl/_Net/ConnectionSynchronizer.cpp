@@ -149,8 +149,8 @@ void ConnectionSynchronizer::Finalize()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConnectionSynchronizer::EnqueueConnection(ClientConnectServerType_t _listenerType, jnet::Session* _pSession,
-                                               bool _success, Int32U _errorCode)
+void ConnectionSynchronizer::EnqueueConnection(ServerType_t _listenerType, jnet::Session* _pSession,
+                                               bool _success, _u32 _errorCode)
 {
 	JC_LOCK_GUARD(lock_);
 	ConnectionResult* pResult = dbg_new ConnectionResult;
@@ -163,7 +163,7 @@ void ConnectionSynchronizer::EnqueueConnection(ClientConnectServerType_t _listen
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConnectionSynchronizer::EnqueueDisconnection(ClientConnectServerType_t _listenerType, jnet::Session* _pSession)
+void ConnectionSynchronizer::EnqueueDisconnection(ServerType_t _listenerType, jnet::Session* _pSession)
 {
 	JC_LOCK_GUARD(lock_);
 	DisconnectionResult* pResult = dbg_new DisconnectionResult;

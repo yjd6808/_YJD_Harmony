@@ -15,11 +15,11 @@ using namespace std;
 
 constexpr int MaxDataCount = 1000000;// 최대로 테스트할 데이터 수
 constexpr float SuccessRatio = 50.0;	 // 중복률 통과 율
-vector<Int32U> gec;
+vector<_u32> gec;
 Random g_rand;
 
 template <typename T>
-bool CheckDuplicateRatio(vector<Int32U>& vec) {
+bool CheckDuplicateRatio(vector<_u32>& vec) {
 	int iOriginalSize = vec.size();
 	vec.erase(std::unique(vec.begin(), vec.end()), vec.end());
 
@@ -36,42 +36,42 @@ bool CheckDuplicateRatio(vector<Int32U>& vec) {
 
 
 TEST(HasherTest, Integer) {
-	for (Int8 i = MinInt8_v; i < MaxInt8_v; i += 1) {
-		gec.push_back(Hasher<Int8>()(i));
+	for (_s8 i = MinInt8_v; i < MaxInt8_v; i += 1) {
+		gec.push_back(Hasher<_s8>()(i));
 	}
 
-	EXPECT_TRUE(CheckDuplicateRatio<Int8>(gec));
+	EXPECT_TRUE(CheckDuplicateRatio<_s8>(gec));
 
-	for (Int8U i = 0; i < MaxInt8U_v; i += 1) {
-		gec.push_back(Hasher<Int8U>()(i));
+	for (_u8 i = 0; i < MaxInt8U_v; i += 1) {
+		gec.push_back(Hasher<_u8>()(i));
 	}
 
-	EXPECT_TRUE(CheckDuplicateRatio<Int8U>(gec));
+	EXPECT_TRUE(CheckDuplicateRatio<_u8>(gec));
 
-	for (Int16 i = MinInt16_v; i < MaxInt16_v; i += 1) {
-		gec.push_back(Hasher<Int16>()(i));
+	for (_s16 i = MinInt16_v; i < MaxInt16_v; i += 1) {
+		gec.push_back(Hasher<_s16>()(i));
 	}
 	
-	EXPECT_TRUE(CheckDuplicateRatio<Int16>(gec));
+	EXPECT_TRUE(CheckDuplicateRatio<_s16>(gec));
 
-	for (Int16U i = 0; i < MaxInt16U_v; i += 1) {
-		gec.push_back(Hasher<Int16U>()(i));
+	for (_u16 i = 0; i < MaxInt16U_v; i += 1) {
+		gec.push_back(Hasher<_u16>()(i));
 	}
 
-	EXPECT_TRUE(CheckDuplicateRatio<Int16U>(gec));
+	EXPECT_TRUE(CheckDuplicateRatio<_u16>(gec));
 
 
-	for (Int32 i = 0; i < MaxDataCount; i += 1) {
-		gec.push_back(Hasher<Int32>()(i));
+	for (_s32 i = 0; i < MaxDataCount; i += 1) {
+		gec.push_back(Hasher<_s32>()(i));
 	}
 
-	EXPECT_TRUE(CheckDuplicateRatio<Int32>(gec));
+	EXPECT_TRUE(CheckDuplicateRatio<_s32>(gec));
 
-	for (Int32U i = 0; i < MaxDataCount; i += 1) {
-		gec.push_back(Hasher<Int32U>()(i));
+	for (_u32 i = 0; i < MaxDataCount; i += 1) {
+		gec.push_back(Hasher<_u32>()(i));
 	}
 
-	EXPECT_TRUE(CheckDuplicateRatio<Int32U>(gec));
+	EXPECT_TRUE(CheckDuplicateRatio<_u32>(gec));
 
 }
 

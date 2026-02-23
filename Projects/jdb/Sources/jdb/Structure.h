@@ -14,7 +14,7 @@ struct MysqlDatabaseInfo
 {
 	jc::String name_;
 	jc::String hostName_;
-	Int16U connPort_ = 0;
+	_u16 connPort_ = 0;
 	jc::String accountId_;
 	jc::String accountPass_;
 	jc::String schemaName_;

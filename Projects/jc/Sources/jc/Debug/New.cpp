@@ -63,11 +63,11 @@ USING_NS_STD;
  using ignore_malloc_string = std::basic_string<char, std::char_traits<char>, malloc_allocator<char, _IGNORE_BLOCK>>;
  using ignore_umap = std::unordered_map<char*, char*, std::hash<char*>, std::equal_to<char*>, malloc_allocator<std::pair<char*, char*>>> ;
 
- Size_t __stdcall malloc_string_fill(
-     const Size_t sz, void* str, void* context, const _Stacktrace_string_fill_callback callback) {
+ _sz __stdcall malloc_string_fill(
+     const _sz sz, void* str, void* context, const _Stacktrace_string_fill_callback callback) {
      if (callback) {
          static_cast<ignore_malloc_string*>(str)->resize_and_overwrite(sz,
-             [callback, context](char* data, Size_t size) noexcept { return callback(data, size, context); });
+             [callback, context](char* data, _sz size) noexcept { return callback(data, size, context); });
          return static_cast<ignore_malloc_string*>(str)->size();
      }
      else {

@@ -27,7 +27,7 @@
  *		return;
  *	
  *	do {
- *		auto c1 = q->GetNumber<Int32>("c_account_id");
+ *		auto c1 = q->GetNumber<_s32>("c_account_id");
  *		auto c2 = q->GetString("c_id");
  *		auto c3 = q->GetString("c_pass");
  *		auto c4 = q->GetNumber<double>("c_created2");

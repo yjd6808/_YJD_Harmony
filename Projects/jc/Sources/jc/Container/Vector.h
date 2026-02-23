@@ -88,7 +88,7 @@ class Vector : public ArrayCollection<T, TAllocator>
         this->SetAt(this->size_++, _data);
     }
 
-    template <Int32U Size>
+    template <_u32 Size>
     void PushBack(const T (&_data)[Size])
     {
         this->ExpandIfNeeded(this->Size() + Size);

@@ -26,7 +26,7 @@ IOCPOverlapped::~IOCPOverlapped()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IOCPOverlapped::Process(BOOL _result, Int32UL _bytesTransferred, IOCPPostOrder* _pCompletionKey)
+void IOCPOverlapped::Process(BOOL _result, _u32l _bytesTransferred, IOCPPostOrder* _pCompletionKey)
 {
 	(void)_result;
 	(void)_bytesTransferred;
@@ -34,7 +34,7 @@ void IOCPOverlapped::Process(BOOL _result, Int32UL _bytesTransferred, IOCPPostOr
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool IOCPOverlapped::IsFailed(SOCKET _socket, BOOL _result, Int32UL _bytesTransferred, OUT Int32U& _errorCode)
+bool IOCPOverlapped::IsFailed(SOCKET _socket, BOOL _result, _u32l _bytesTransferred, OUT _u32& _errorCode)
 {
 	(void)_bytesTransferred;
 
@@ -45,8 +45,8 @@ bool IOCPOverlapped::IsFailed(SOCKET _socket, BOOL _result, Int32UL _bytesTransf
 		// 따라서 WSAGetOverlappedResult함수로 올바른 소켓 오류 코드를 얻어야한다.
 		// @참고 : TCP/IP 윈도우 소켓 프로그래밍 463p
 
-		Int32UL transferred = 0;
-		Int32UL flag = 0;
+		_u32l transferred = 0;
+		_u32l flag = 0;
 		WSAGetOverlappedResult(_socket, this, &transferred, FALSE, &flag);
 		_errorCode = Winsock::LastError();
 		return true;
@@ -56,7 +56,7 @@ bool IOCPOverlapped::IsFailed(SOCKET _socket, BOOL _result, Int32UL _bytesTransf
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool IOCPOverlapped::IsFailed(BOOL _result, Int32U& _errorCode)
+bool IOCPOverlapped::IsFailed(BOOL _result, _u32& _errorCode)
 {
 	if (_result == FALSE)
 	{

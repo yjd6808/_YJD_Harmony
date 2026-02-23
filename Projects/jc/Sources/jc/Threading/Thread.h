@@ -69,24 +69,24 @@ public:
     bool SetPriority(int priority);
     int GetPriority();
     int GetState() { return m_eState; }
-    Int32U GetId();
+    _u32 GetId();
 
-    static Int32U GetThreadId();
-    static Int32U GetMainThreadId() { return ms_uiMainThreadId; }
+    static _u32 GetThreadId();
+    static _u32 GetMainThreadId() { return ms_uiMainThreadId; }
     static bool IsMainThread() { return ms_uiMainThreadId == GetThreadId(); }
-	static void Sleep(Int32U ms);
+	static void Sleep(_u32 ms);
 private:
-    static Int32U JC_STDCALL ThreadRoutine(void* param);
+    static _u32 JC_STDCALL ThreadRoutine(void* param);
 protected:
-    WinHandle m_hHandle;
+    _whandle m_hHandle;
     String m_Name;
-    Int32U m_uiThreadId;
+    _u32 m_uiThreadId;
     AtomicInt m_eState;
     Semaphore m_RunningSignal;
     bool m_bAutoJoin;
 
-    static Int32U ms_uiMainThreadId;
-    static thread_local Int32U tls_uiThreadId;
+    static _u32 ms_uiMainThreadId;
+    static thread_local _u32 tls_uiThreadId;
 };
 
 using ThreadPtr = SharedPtr<Thread>;

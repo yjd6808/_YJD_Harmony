@@ -51,7 +51,7 @@ public:
 protected:
 	int targetFrameIndex_;
 
-	template <Int32>
+	template <_s32>
 	friend class SgaElementInitializerImpl;
 	friend class SgaLoader;
 };

@@ -179,7 +179,7 @@ public:
 
 	WSABUF GetRemainBuffer()
 	{
-		return { (Int32U)bufferSize_ - writePos_, buffer_ + writePos_ };
+		return { (_u32)bufferSize_ - writePos_, buffer_ + writePos_ };
 	}
 
 	int GetRemainBufferSize() const

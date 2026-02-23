@@ -14,7 +14,7 @@
 
 #include "SgaPackage.h"
 
-template <Int32>
+template <_s32>
 class SgaElementInitializerImpl;
 
 class SgaSpriteAbstract
@@ -82,7 +82,7 @@ protected:
 	int m_iFrameIndex;
 	int m_eColorFormat;
 
-	template <Int32>
+	template <_s32>
 	friend class SgaElementInitializerImpl;
 	friend class SgaLoader;
 };

@@ -29,7 +29,7 @@ void SgaElementInitializerImpl<0>::Initialize(const SgaElementPtr& _pElement, St
 	if (_indexOnly)
 		return;
 
-	auto pData = MakeShared<Byte[]>(sound.indexLength_);
+	auto pData = MakeShared<_u8[]>(sound.indexLength_);
 	_stream.Read(pData.GetPtr(), 0, pData.Length());
 	sound.pData_ = pData;
 }
@@ -85,7 +85,7 @@ void SgaElementInitializerImpl<1>::Initialize(const SgaElementPtr& _pElement, St
 		}
 
 		// 헤더 바로 뒤에 데이터가 위치함
-		auto pData = MakeShared<Byte[]>(pSprite->dataLength_);
+		auto pData = MakeShared<_u8[]>(pSprite->dataLength_);
 		_stream.Read(pData.GetPtr(), 0, pData.Length());
 		pSprite->pData_ = pData;
 		pSprite->loaded_ = true;
@@ -158,7 +158,7 @@ void SgaElementInitializerImpl<2>::Initialize(const SgaElementPtr& _pElement, St
 			continue;
 		}
 
-		auto pData = MakeShared<Byte[]>(sprite.dataLength_);
+		auto pData = MakeShared<_u8[]>(sprite.dataLength_);
 		_stream.Read(pData.GetPtr(), 0, pData.Length());
 		sprite.pData_ = pData;
 		sprite.loaded_ = true;

@@ -122,7 +122,7 @@ void Console::SetColor(ConsoleColor _color)
     TLockGuard guard(ms_ConsoleLock);
     jc_assert_msg(ms_hStdout != WinApi::InvalidHandleValue, "출력 핸들이 이상합니다.");
     ms_iDefaultColor = _color;
-    ::SetConsoleTextAttribute(ms_hStdout, static_cast<Int16>(_color));
+    ::SetConsoleTextAttribute(ms_hStdout, static_cast<_s16>(_color));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -131,7 +131,7 @@ void Console::GetColor(ConsoleColor _color)
     TLockGuard guard(ms_ConsoleLock);
     jc_assert_msg(ms_hStdout != WinApi::InvalidHandleValue, "출력 핸들이 이상합니다.");
     ms_iDefaultColor = _color;
-    ::SetConsoleTextAttribute(ms_hStdout, static_cast<Int16>(_color));
+    ::SetConsoleTextAttribute(ms_hStdout, static_cast<_s16>(_color));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -308,7 +308,7 @@ bool Console::SetOutputCodePage(int _codePage)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool Console::SetEnableVTMode(bool _enabled)
 {
-    Int32UL mode = 0;
+    _u32l mode = 0;
     if (!GetConsoleMode(ms_hStdout, &mode))
         return false;
 

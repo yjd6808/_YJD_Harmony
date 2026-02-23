@@ -35,8 +35,8 @@ public:
 		return m_eAccess;
 	}
 
-	int Read(OUT Byte* _pBytes, int _offset, int _len) override;
-	void Write(const Byte* _pBytes, int _offset, int _len) override;
+	int Read(OUT _u8* _pBytes, int _offset, int _len) override;
+	void Write(const _u8* _pBytes, int _offset, int _len) override;
 	void Seek(int _offset, Origin _origin = Origin::eBegin) override;
 	bool Flush() override;
 	void Close() override;
@@ -45,7 +45,7 @@ public:
 protected:
 	FileAccess m_eAccess;
 	FileMode m_eMode;
-	IoHandle m_hHandle;
+	_iohandle m_hHandle;
 };
 
 using FileStreamPtr = SharedPtr<FileStream>;

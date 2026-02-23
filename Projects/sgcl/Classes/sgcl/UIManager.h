@@ -127,7 +127,7 @@ private:
 
 	DragState dragState_;
 	UIRootGroupManager* pRootGroupMgr_;
-	jc::HashMap<Int32U, SgaResourceIndex> loadedUITexture_; // 어떤 이미지 팩 로딩했는지 기록용
+	jc::HashMap<_u32, SgaResourceIndex> loadedUITexture_; // 어떤 이미지 팩 로딩했는지 기록용
 	jc::HashMap<int, UIElement*> uiElementMap_;
 	jc::HashMap<int, UIRootGroup*> masterUIGroups_;
 	jc::HashMap<UIElement*, jc::Event<UIElement*, float>> uiElementsUpdateEvent_;

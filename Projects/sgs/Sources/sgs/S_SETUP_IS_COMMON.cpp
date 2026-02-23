@@ -32,7 +32,7 @@ bool S_SETUP_IS_COMMON::SEND_SCE_NotifyBootState(int _serverId, ServerType_t _se
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool S_SETUP_IS_COMMON::SEND_SCE_NotifyOrderFailed(int _serverId, ServerType_t _serverType, CenterOrder_t _failedOrder, Int32U _errorCode)
+bool S_SETUP_IS_COMMON::SEND_SCE_NotifyOrderFailed(int _serverId, ServerType_t _serverType, CenterOrder_t _failedOrder, _u32 _errorCode)
 {
 	auto sending = SendBegin<SCE_NotifyOrderFailed>();
 	sending.cmd_.ErrorCode = _errorCode;

@@ -15,7 +15,7 @@
 
 class AudioPlayer
 {
-	using SoundDataPtr = jc::SharedPtr<Byte[]>;
+	using SoundDataPtr = jc::SharedPtr<_u8[]>;
 
 public:
 	AudioPlayer()
@@ -39,7 +39,7 @@ public:
 
 	void PlayOnce();
 	void PlayNew(const SoundDataPtr& _pSoundData, bool _repeat = false);
-	void PlayNew(Byte* _pMem, int _len, bool _repeat);
+	void PlayNew(_u8* _pMem, int _len, bool _repeat);
 	void PlayRepeat();
 	void Pause();
 	void Stop();
@@ -50,7 +50,7 @@ public:
 	static bool Stop(int _handle);
 	static bool Pause(int _handle);
 	static bool Close(int _handle);
-	static Int64U GetPosition(int _handle);
+	static _u64 GetPosition(int _handle);
 
 	static bool Initilize();
 	static bool Finalize();

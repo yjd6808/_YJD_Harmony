@@ -31,7 +31,7 @@ struct ClientListener : ClientEventListener
 		ConnectionCheck += 1;
 	}
 
-	void OnSent(Session* _pSession, IPacket* _pSentPacket, Int32UL _sentBytes) override {
+	void OnSent(Session* _pSession, IPacket* _pSentPacket, _u32l _sentBytes) override {
 		if (Mode == TestMode::OnSending && (++SendCounter) == TestClientCount * TestSendCount) {
 			TestFinished.Signal();
 		}

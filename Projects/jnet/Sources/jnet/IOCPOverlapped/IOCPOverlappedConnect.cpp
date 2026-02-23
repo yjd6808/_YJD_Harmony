@@ -23,12 +23,12 @@ IOCPOverlappedConnect::~IOCPOverlappedConnect()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IOCPOverlappedConnect::Process(BOOL _result, Int32UL _bytesTransferred, IOCPPostOrder* _pCompletionKey)
+void IOCPOverlappedConnect::Process(BOOL _result, _u32l _bytesTransferred, IOCPPostOrder* _pCompletionKey)
 {
 	(void)_pCompletionKey;
 
 	const SOCKET connectedSocket = client_->SocketHandle();
-	Int32U errorCode = 0;
+	_u32 errorCode = 0;
 	if (IsFailed(connectedSocket, _result, _bytesTransferred, errorCode))
 	{
 		client_->Disconnect();

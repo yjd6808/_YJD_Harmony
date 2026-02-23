@@ -8,7 +8,7 @@ NS_JC_BEGIN
 class DateTime;
 class String;
 
-template <Int32U> struct StaticString;
+template <_u32> struct StaticString;
 
 	NS_DETAIL_BEGIN
     // 포인터 타입인지 확인하는 템플릿
@@ -65,27 +65,27 @@ template <Int32U> struct StaticString;
 
     // short
     template <>
-    struct IsIntegerType<Int16> : TrueType {};
+    struct IsIntegerType<_s16> : TrueType {};
     template <>
-    struct IsIntegerType<Int16U> : TrueType {};
+    struct IsIntegerType<_u16> : TrueType {};
 
     // int
     template <>
-    struct IsIntegerType<Int32> : TrueType {};
+    struct IsIntegerType<_s32> : TrueType {};
     template <>
-    struct IsIntegerType<Int32U> : TrueType {};
+    struct IsIntegerType<_u32> : TrueType {};
 
     // long
     template <>
-    struct IsIntegerType<Int32L> : TrueType {};
+    struct IsIntegerType<_s32l> : TrueType {};
     template <>
-    struct IsIntegerType<Int32UL> : TrueType {};
+    struct IsIntegerType<_u32l> : TrueType {};
 
     // long long
     template <>
-    struct IsIntegerType<Int64> : TrueType {};
+    struct IsIntegerType<_s64> : TrueType {};
     template <>
-    struct IsIntegerType<Int64U> : TrueType {};
+    struct IsIntegerType<_u64> : TrueType {};
 
     // 실수 타입인지 확인하는 템플릿
     template <typename T>
@@ -121,11 +121,11 @@ template <Int32U> struct StaticString;
     struct IsStringType<const wchar_t*> : TrueType {};
     template <>
     struct IsStringType<String> : TrueType {};
-    template <Int32U Size>
+    template <_u32 Size>
     struct IsStringType<StaticString<Size>> : TrueType {};
-    template <Int32U Size>
+    template <_u32 Size>
     struct IsStringType<char[Size]> : TrueType {};
-    template <Int32U Size>
+    template <_u32 Size>
     struct IsStringType<wchar_t[Size]> : TrueType {};
 
     // 배열 타입인지 확인
@@ -135,14 +135,14 @@ template <Int32U> struct StaticString;
     template <typename T>
     struct IsArrayType<T[]> : TrueType {};
 
-    template <typename T, Int32U ArraySize>
+    template <typename T, _u32 ArraySize>
     struct IsArrayType<T[ArraySize]> : TrueType {};
 
     // 정적 배열 타입인지
     template <typename T>
     struct IsStaticArrayType : FalseType {};
 
-    template <typename T, Int32U ArraySize>
+    template <typename T, _u32 ArraySize>
     struct IsStaticArrayType<T[ArraySize]> : TrueType {};
 
     // 동적 배열 타입인지
@@ -163,29 +163,29 @@ template <Int32U> struct StaticString;
 
 
     template <typename T>   struct IsInt8 : FalseType {};
-    template <>             struct IsInt8<Int8> : TrueType {};
+    template <>             struct IsInt8<_s8> : TrueType {};
     template <typename T>   struct IsInt8U : FalseType {};
-    template <>             struct IsInt8U<Int8U> : TrueType {};
+    template <>             struct IsInt8U<_u8> : TrueType {};
     template <typename T>   struct IsInt16 : FalseType {};
-    template <>             struct IsInt16<Int16> : TrueType {};
+    template <>             struct IsInt16<_s16> : TrueType {};
     template <typename T>   struct IsInt16U : FalseType {};
-    template <>             struct IsInt16U<Int16U> : TrueType {};
+    template <>             struct IsInt16U<_u16> : TrueType {};
     template <typename T>   struct IsInt32 : FalseType {};
-    template <>             struct IsInt32<Int32> : TrueType {};
+    template <>             struct IsInt32<_s32> : TrueType {};
     template <typename T>   struct IsInt32U : FalseType {};
-    template <>             struct IsInt32U<Int32U> : TrueType {};
+    template <>             struct IsInt32U<_u32> : TrueType {};
     template <typename T>   struct IsInt32L : FalseType {};
-    template <>             struct IsInt32L<Int32L> : TrueType {};
+    template <>             struct IsInt32L<_s32l> : TrueType {};
     template <typename T>   struct IsInt32UL : FalseType {};
-    template <>             struct IsInt32UL<Int32UL> : TrueType {};
+    template <>             struct IsInt32UL<_u32l> : TrueType {};
     template <typename T>   struct IsInt64 : FalseType {};
-    template <>             struct IsInt64<Int64> : TrueType {};
+    template <>             struct IsInt64<_s64> : TrueType {};
     template <typename T>   struct IsInt64U : FalseType {};
-    template <>             struct IsInt64U<Int64U> : TrueType {};
+    template <>             struct IsInt64U<_u64> : TrueType {};
     template <typename T>   struct IsDouble : FalseType {};
-    template <>             struct IsDouble<Double> : TrueType {};
+    template <>             struct IsDouble<_f64> : TrueType {};
     template <typename T>   struct IsLDouble : FalseType {};
-    template <>             struct IsLDouble<LDouble> : TrueType {};
+    template <>             struct IsLDouble<_f64l> : TrueType {};
     template <typename T>   struct IsString : FalseType {};
     template <>             struct IsString<String> : TrueType {};
     template <typename T>   struct IsDateTime : FalseType {};

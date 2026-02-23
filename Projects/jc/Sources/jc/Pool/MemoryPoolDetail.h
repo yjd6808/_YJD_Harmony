@@ -37,7 +37,7 @@ inline constexpr int MemoryBlockSizeMapSize_v = sizeof(MemoryBlockSizeMap_v) / s
 //  6을    -> 64바이트로 변환 해주는 기능 수행
 struct AllocationLengthMapConverter
 {
-	template <Int32 Size, Int32 Index = 0>
+	template <_s32 Size, _s32 Index = 0>
 	static constexpr int ToIndex()
 	{
 		static_assert(Index >= 0 && Index < MemoryBlockSizeMapSize_v, "... cannot find valid index [AllocationLengthMapConverter]");
@@ -48,28 +48,28 @@ struct AllocationLengthMapConverter
 	}
 
 
-	template <Int32 Index>
+	template <_s32 Index>
 	static constexpr int ToSize()
 	{
 		static_assert(Index >= 0 && Index < MemoryBlockSizeMapSize_v, "... cannot find valid size [AllocationLengthMapConverter]");
 		return MemoryBlockSizeMap_v[Index];
 	}
 
-	static int ToIndex(Int32 _size)
+	static int ToIndex(_s32 _size)
 	{
 		int iIndex = Arrays::LowerBound(detail::MemoryBlockSizeMap_v, _size);
 		jc_assert_msg(iIndex >= 0 && iIndex < MemoryBlockSizeMapSize_v, "전달한 Size로 할당가능한 사이즈에 맞는 풀이 없어요");
 		return iIndex;
 	}
 
-	static int ToSize(Int32 _index)
+	static int ToSize(_s32 _index)
 	{
 		jc_assert_msg(_index >= 0 && _index < MemoryBlockSizeMapSize_v, "전달한 Index에 해당하는 풀이 없어요");
 		return detail::MemoryBlockSizeMap_v[_index];
 	}
 
 	// Set Bit 계산
-	template <Int32 Size>
+	template <_s32 Size>
 	static constexpr bool ValidateSize()
 	{
 		static_assert(Size > 0, "... Size must be greater than 0");
@@ -86,7 +86,7 @@ struct AllocationLengthMapConverter
 	}
 
 	// 런타임에는 성능이 중요하니 내장함수를 사용하자.
-	static bool ValidateSize(Int32 _size)
+	static bool ValidateSize(_s32 _size)
 	{
 		jc_assert_msg(_size > 0, "사이즈가 0보다는 무조건 커야돼요");
 		return __popcnt(_size) == 1;

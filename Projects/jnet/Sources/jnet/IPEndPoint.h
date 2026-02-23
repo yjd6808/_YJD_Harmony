@@ -1,7 +1,7 @@
 ﻿/*
 	작성자 : 윤정도
 
-	IP주소를 기본적으로 Host Byte Order로 저장한다.
+	IP주소를 기본적으로 Host _u8 Order로 저장한다.
 	IPv4 주소, IPv6 주소를 다루는 클래스
  */
 
@@ -31,13 +31,13 @@ public:
 	IPv4EndPoint(const SOCKADDR_IN& _other);
 	explicit IPv4EndPoint(const char* _pEndPointString);
 	explicit IPv4EndPoint(const jc::String& _endPointString);
-	IPv4EndPoint(IPv4Address _address, Int16U _port);
+	IPv4EndPoint(IPv4Address _address, _u16 _port);
 
 	InternetProtocol GetProtocol() const override;
 	jc::String ToString() const override;
 
 	IPv4Address GetAddress() const;
-	Int16U GetPort() const;
+	_u16 GetPort() const;
 	int Size() const { return sizeof(InternetAddr); }
 
 	bool IsValidRemoteEndPoint() const;

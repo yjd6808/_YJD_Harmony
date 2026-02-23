@@ -31,14 +31,14 @@ public:
 	void FlushSendBuffer() override;
 	void SetRemoteEndpoint(const IPv4EndPoint& _remoteEndPoint);
 	void Connected() override;
-	void ConnectFailed(Int32U _errorCode) override;
-	void Disconnected(Int32U _errorCode) override;
+	void ConnectFailed(_u32 _errorCode) override;
+	void Disconnected(_u32 _errorCode) override;
 
 	void NotifyCommand(ICommand* _pCmd) override;
 	void NotifyPacket(RecvedCommandPacket* _pPacket) override;
 	void NotifyRaw(char* _pData, int _len) override;
 
-	void Sent(IPacket* _pSentPacket, Int32UL _sentBytes) override;
+	void Sent(IPacket* _pSentPacket, _u32l _sentBytes) override;
 	Type GetType() const override { return eClient; }
 	DetailType GetDetailType() const override { return eUdpClient; }
 	const char* TypeName() const override { return "UDP 클라"; }

@@ -182,7 +182,7 @@ public:
 			return *result_;
 		}
 
-		Int32U errorCode;
+		_u32 errorCode;
 		const bool wait = waitHandle_.Wait(_timeout, &errorCode);
 
 		if (!wait)

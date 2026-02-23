@@ -29,11 +29,11 @@ struct BucketNode
 {
     using TThis = BucketNode<T>;
 
-    BucketNode(const T& _data, Int32U _hash) : hash_(_hash)
+    BucketNode(const T& _data, _u32 _hash) : hash_(_hash)
     {
 		new (&data_) T(_data);
     }
-    BucketNode(T&& _data, Int32U _hash) : hash_(_hash)
+    BucketNode(T&& _data, _u32 _hash) : hash_(_hash)
     {
         // 호출됨: HashTable:Insert()
 		new (&data_) T(Move(_data));
@@ -69,7 +69,7 @@ struct BucketNode
     {
 		T data_;
     };
-    Int32U hash_; // 처음에 한번 계산해놓으면 성능이 좀더 개선될 듯?
+    _u32 hash_; // 처음에 한번 계산해놓으면 성능이 좀더 개선될 듯?
 };
 
 template <typename TKey, typename TValue>
@@ -78,11 +78,11 @@ struct BucketNode<Pair<TKey, TValue>>
     using TPair = Pair<TKey, TValue>;
     using TThis = BucketNode<Pair<TKey, TValue>>;
 
-    BucketNode(const TPair& _data, Int32U _hash) : hash_(_hash)
+    BucketNode(const TPair& _data, _u32 _hash) : hash_(_hash)
     {
 		new (&data_) TPair(_data);
     }
-    BucketNode(TPair&& _data, Int32U _hash) : hash_(_hash)
+    BucketNode(TPair&& _data, _u32 _hash) : hash_(_hash)
     {
         // 호출됨: HashTable:Insert()
 		new (&data_) TPair(Move(_data));
@@ -118,7 +118,7 @@ struct BucketNode<Pair<TKey, TValue>>
     {
 		Pair<TKey, TValue> data_;
     };
-    Int32U hash_;
+    _u32 hash_;
 };
 
 /* ==============================================================

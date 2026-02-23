@@ -20,9 +20,9 @@ class JC_NOVTABLE SessionEventListener
 {
 public:
 	using FnConnected = jc::Action<jnet::Session*>;
-	using FnConnectFailed = jc::Action<jnet::Session*, Int32U>;
-	using FnDisconnected = jc::Action<jnet::Session*, Int32U>;
-	using FnSent = jc::Action<jnet::Session*, jnet::IPacket*, Int32UL>;
+	using FnConnectFailed = jc::Action<jnet::Session*, _u32>;
+	using FnDisconnected = jc::Action<jnet::Session*, _u32>;
+	using FnSent = jc::Action<jnet::Session*, jnet::IPacket*, _u32l>;
 	using FnReceivedRaw = jc::Action<jnet::Session*, char*, int>;
 	using FnReceivedCmd = jc::Action<jnet::Session*, jnet::ICommand*>;
 	using FnReceivedPacket = jc::Action<jnet::Session*, jnet::RecvedCommandPacket*>;
@@ -31,8 +31,8 @@ public:
 	virtual ~SessionEventListener() = default;
 
 	virtual void OnConnected(Session* _pSession) {}
-	virtual void OnDisconnected(Session* _pSession, Int32U _errorCode) {}
-	virtual void OnSent(Session* _pSession, IPacket* _pSentPacket, Int32UL _sentBytes) {}
+	virtual void OnDisconnected(Session* _pSession, _u32 _errorCode) {}
+	virtual void OnSent(Session* _pSession, IPacket* _pSentPacket, _u32l _sentBytes) {}
 	virtual void OnReceivedRaw(Session* _pSession, char* _pData, int _len) {}
 	virtual void OnReceived(Session* _pSession, ICommand* _pRecvCmd) {}
 	virtual void OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket) {}

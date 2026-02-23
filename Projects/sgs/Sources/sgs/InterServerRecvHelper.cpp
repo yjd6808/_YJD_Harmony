@@ -12,4 +12,4 @@
 #include <sg/Const.h>
 
 
-thread_local Int8 InterServerRecvHelper::LastFromId = InvalidValue_v;
+thread_local _s8 InterServerRecvHelper::LastFromId = InvalidValue_v;

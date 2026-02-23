@@ -14,7 +14,7 @@
 #include <sgcl/Define_Popup.h>
 #include <sgcl/S_AUTH.h>
 #include <sgcl/Contents.h>
-#include <sgcl/NetCore.h>
+#include <sgcl/_Net/NetCore.h>
 #include <sgcl/AuthenticationComponent.h>
 
 #include <sgcl/Callback_POPUP_TIMEOUT.h>

@@ -24,7 +24,7 @@ NS_JC_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool File::Exist(const char* _pPath)
 {
-	IoHandle pHandle = CRuntime::FileOpen(_pPath, "rb");
+	_iohandle pHandle = CRuntime::FileOpen(_pPath, "rb");
 	bool exists = false;
 
 	if (pHandle)
@@ -45,7 +45,7 @@ bool File::Exist(const String& _path)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 long File::Size(const char* _pPath)
 {
-	IoHandle pHandle = CRuntime::FileOpen(_pPath, "rb");
+	_iohandle pHandle = CRuntime::FileOpen(_pPath, "rb");
 	long size = -1;
 
 	if (pHandle && CRuntime::FileSeekEnd(pHandle, 0))
@@ -90,21 +90,21 @@ bool File::Move(const String& _srcPath, const String& _dstPath)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool File::Copy(const char* _pSrcPath, const char* _pDstPath)
 {
-	IoHandle pSrcStream = CRuntime::FileOpen(_pSrcPath, "rb");
+	_iohandle pSrcStream = CRuntime::FileOpen(_pSrcPath, "rb");
 
 	if (pSrcStream == nullptr)
 	{
 		return false;
 	}
 
-	IoHandle pDstStream = CRuntime::FileOpen(_pDstPath, "wb");
+	_iohandle pDstStream = CRuntime::FileOpen(_pDstPath, "wb");
 
 	if (pDstStream == nullptr)
 	{
 		return false;
 	}
 
-	Byte buff[FILE_READ_COUNT];
+	_u8 buff[FILE_READ_COUNT];
 	size_t readCount = 0;
 
 	while ((readCount = CRuntime::FileRead(buff, 1, FILE_READ_COUNT, pSrcStream)) != 0)
@@ -163,7 +163,7 @@ void File::WriteAllText(const char* _pContent, const int _contentLength, const c
 {
 	char mode[MODE_BUFFER_SIZE];
 	FormatFileMode(mode, MODE_BUFFER_SIZE, "w", CodePage::ANSI);
-	IoHandle pStream = CRuntime::FileOpen(_pPath, mode);
+	_iohandle pStream = CRuntime::FileOpen(_pPath, mode);
 
 	if (pStream == nullptr)
 	{
@@ -187,9 +187,9 @@ void File::WriteAllText(const String& _content, const char* _pPath)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-void File::WriteAllBytes(const Byte* _pContent, const int _contentLength, const char* _pPath)
+void File::WriteAllBytes(const _u8* _pContent, const int _contentLength, const char* _pPath)
 {
-	IoHandle pStream = CRuntime::FileOpen(_pPath, "wb");
+	_iohandle pStream = CRuntime::FileOpen(_pPath, "wb");
 
 	if (pStream == nullptr)
 	{
@@ -211,7 +211,7 @@ String File::ReadAllText(const char* _pPath)
 {
 	char modeBuffer[MODE_BUFFER_SIZE];
 	FormatFileMode(modeBuffer, MODE_BUFFER_SIZE, "r", CodePage::ANSI);
-	IoHandle pStream = CRuntime::FileOpen(_pPath, modeBuffer);
+	_iohandle pStream = CRuntime::FileOpen(_pPath, modeBuffer);
 
 	if (pStream == nullptr)
 	{

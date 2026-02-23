@@ -30,7 +30,7 @@ public:
 		Custom
 	};
 
-	virtual void Received(Int32UL _receivedBytes) = 0;
+	virtual void Received(_u32l _receivedBytes) = 0;
 	virtual Type GetType() const = 0;
 
 	static PacketParser* Create(int _type, Session* _pSession);
@@ -43,7 +43,7 @@ class PacketRawParser : public PacketParser
 {
 public:
 	PacketRawParser(Session* _pSession);
-	void Received(Int32UL _receivedBytes) override;
+	void Received(_u32l _receivedBytes) override;
 	Type GetType() const override
 	{
 		return Type::Raw;
@@ -54,7 +54,7 @@ class PacketCommandParser : public PacketParser
 {
 public:
 	PacketCommandParser(Session* _pSession);
-	void Received(Int32UL _receivedBytes) override;
+	void Received(_u32l _receivedBytes) override;
 	Type GetType() const override
 	{
 		return Type::Command;

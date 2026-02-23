@@ -154,25 +154,25 @@ struct IsPrimitiveTypes
 	}
 };
 
-template <Int64U Left, Int64U Right>
+template <_u64 Left, _u64 Right>
 struct Less
 {
 	static constexpr bool VALUE = Left < Right;
 };
 
-template <Int64U Left, Int64U Right>
+template <_u64 Left, _u64 Right>
 struct Greater
 {
 	static constexpr bool VALUE = Left > Right;
 };
 
-template <Int64U Left, Int64U Right>
+template <_u64 Left, _u64 Right>
 struct LessEqual
 {
 	static constexpr bool VALUE = Left <= Right;
 };
 
-template <Int64U Left, Int64U Right>
+template <_u64 Left, _u64 Right>
 struct GreaterEqual
 {
 	static constexpr bool VALUE = Left >= Right;
@@ -328,7 +328,7 @@ struct ParameterPackCombine<FirstPack, __End__>
 // IndexOf_t<1, int, long, double> = long
 // IndexOf_t<2, int, long, double> = double
 // IndexOf_t<3, int, long, double> = __End__
-template <Int Index, Int TargetIndex, typename First, typename... Rest>
+template <_s32 Index, _s32 TargetIndex, typename First, typename... Rest>
 struct IndexOf
 {
 	using Type = typename Conditional<Index == TargetIndex,
@@ -336,7 +336,7 @@ struct IndexOf
 	                                  typename IndexOf<Index + 1, TargetIndex, Rest...>::Type>::Type;
 };
 
-template <Int Index, Int TargetIndex>
+template <_s32 Index, _s32 TargetIndex>
 struct IndexOf<Index, TargetIndex, __End__>
 {
 	using Type = __End__;
@@ -770,7 +770,7 @@ constexpr bool IsEnd_v = detail::IsEnd<T>::VALUE;
 template <typename T>
 constexpr bool IsStart_v = detail::IsStart<T>::VALUE;
 
-template <Int Index, typename... Args>
+template <_s32 Index, typename... Args>
 using IndexOf_t = typename detail::EndAssert<typename detail::IndexOf<0, Index, Args..., detail::__End__>::Type>::Type;
 
 template <typename Fn>

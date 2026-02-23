@@ -97,14 +97,14 @@ public:
 	template <typename Ky> void SetFloat(Ky&& _propertyKey, float _value) { Set(Forward<Ky>(_propertyKey), _value); }
 	template <typename Ky> void SetDouble(Ky&& _propertyKey, double _value) { Set(Forward<Ky>(_propertyKey), _value); }
 	template <typename Ky> void SetBool(Ky&& _propertyKey, bool _value) { Set(Forward<Ky>(_propertyKey), _value); }
-	template <typename Ky> void SetU8(Ky&& _propertyKey, Int8U _value) { Set(Forward<Ky>(_propertyKey), _value); }
-	template <typename Ky> void SetS8(Ky&& _propertyKey, Int8 _value) { Set(Forward<Ky>(_propertyKey), _value); }
-	template <typename Ky> void SetU16(Ky&& _propertyKey, Int16U _value) { Set(Forward<Ky>(_propertyKey), _value); }
-	template <typename Ky> void SetS16(Ky&& _propertyKey, Int16 _value) { Set(Forward<Ky>(_propertyKey), _value); }
-	template <typename Ky> void SetU32(Ky&& _propertyKey, Int32U _value) { Set(Forward<Ky>(_propertyKey), _value); }
-	template <typename Ky> void SetS32(Ky&& _propertyKey, Int32 _value)  { Set(Forward<Ky>(_propertyKey), _value); }
-	template <typename Ky> void SetU64(Ky&& _propertyKey, Int64U _value) { Set(Forward<Ky>(_propertyKey), _value); }
-	template <typename Ky> void SetS64(Ky&& _propertyKey, Int64 _value) { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetU8(Ky&& _propertyKey, _u8 _value) { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetS8(Ky&& _propertyKey, _s8 _value) { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetU16(Ky&& _propertyKey, _u16 _value) { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetS16(Ky&& _propertyKey, _s16 _value) { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetU32(Ky&& _propertyKey, _u32 _value) { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetS32(Ky&& _propertyKey, _s32 _value)  { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetU64(Ky&& _propertyKey, _u64 _value) { Set(Forward<Ky>(_propertyKey), _value); }
+	template <typename Ky> void SetS64(Ky&& _propertyKey, _s64 _value) { Set(Forward<Ky>(_propertyKey), _value); }
 
 #undef __DEF_TRY_GETTER
 #define __DEF_TRY_GETTER(method_name, type)														\
@@ -122,14 +122,14 @@ public:
 	__DEF_TRY_GETTER(GetFloat, float)
 	__DEF_TRY_GETTER(GetDouble, double)
 	__DEF_TRY_GETTER(GetBool, bool)
-	__DEF_TRY_GETTER(GetU8, Int8U)
-	__DEF_TRY_GETTER(GetS8, Int8)
-	__DEF_TRY_GETTER(GetU16, Int16U)
-	__DEF_TRY_GETTER(GetS16, Int16)
-	__DEF_TRY_GETTER(GetU32, Int32U)
-	__DEF_TRY_GETTER(GetS32, Int32)
-	__DEF_TRY_GETTER(GetU64, Int64U)
-	__DEF_TRY_GETTER(GetS64, Int64)
+	__DEF_TRY_GETTER(GetU8, _u8)
+	__DEF_TRY_GETTER(GetS8, _s8)
+	__DEF_TRY_GETTER(GetU16, _u16)
+	__DEF_TRY_GETTER(GetS16, _s16)
+	__DEF_TRY_GETTER(GetU32, _u32)
+	__DEF_TRY_GETTER(GetS32, _s32)
+	__DEF_TRY_GETTER(GetU64, _u64)
+	__DEF_TRY_GETTER(GetS64, _s64)
 
 #undef __DEF_GETTER
 #define __DEF_GETTER(method_name, type)															\
@@ -146,14 +146,14 @@ public:
 	__DEF_GETTER(GetFloat, float)
 	__DEF_GETTER(GetDouble, double)
 	__DEF_GETTER(GetBool, bool)
-	__DEF_GETTER(GetU8, Int8U)
-	__DEF_GETTER(GetS8, Int8)
-	__DEF_GETTER(GetU16, Int16U)
-	__DEF_GETTER(GetS16, Int16)
-	__DEF_GETTER(GetU32, Int32U)
-	__DEF_GETTER(GetS32, Int32)
-	__DEF_GETTER(GetU64, Int64U)
-	__DEF_GETTER(GetS64, Int64)
+	__DEF_GETTER(GetU8, _u8)
+	__DEF_GETTER(GetS8, _s8)
+	__DEF_GETTER(GetU16, _u16)
+	__DEF_GETTER(GetS16, _s16)
+	__DEF_GETTER(GetU32, _u32)
+	__DEF_GETTER(GetS32, _s32)
+	__DEF_GETTER(GetU64, _u64)
+	__DEF_GETTER(GetS64, _s64)
 
 	template <typename Ky> 
 	bool ToggleBool(Ky&& _propertyKey)

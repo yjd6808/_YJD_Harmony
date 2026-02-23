@@ -38,7 +38,7 @@ public:
 	int SetLingerEnabled(bool _enabled) const;
 	int SetReuseAddrEnabled(bool _enabled) const;
 	int SetExclusiveReuseAddrEnabled(bool _enabled) const;
-	int SetLingerTimeout(Int16U _timeout) const;
+	int SetLingerTimeout(_u16 _timeout) const;
 	int SetKeepAliveEnabled(bool _enabled) const;
 	int SetUpdateAcceptContext(SOCKET _listeningSocket) const;
 	
@@ -129,8 +129,8 @@ public:
 
 	// 반환값 실패시 FALSE, WSAGetLastError로 확인
 	//       성공시 TRUE
-	int AcceptEx(SOCKET _listeningSocket, void* _pOutputBuffer, Int32UL _receiveDataLength, OUT Int32UL* _pReceivedBytes, LPOVERLAPPED _pOverlapped) const;
-	static void AcceptExResult(char* _pBuffer, Int32UL _receiveDataLength, OUT IPv4EndPoint* _pLocalEndPoint, OUT IPv4EndPoint* _pRemoteEndPoint);
+	int AcceptEx(SOCKET _listeningSocket, void* _pOutputBuffer, _u32l _receiveDataLength, OUT _u32l* _pReceivedBytes, LPOVERLAPPED _pOverlapped) const;
+	static void AcceptExResult(char* _pBuffer, _u32l _receiveDataLength, OUT IPv4EndPoint* _pLocalEndPoint, OUT IPv4EndPoint* _pRemoteEndPoint);
 
 	// 반환값 실패시 SOCKET_ERROR
 	//       성공시 0
@@ -138,28 +138,28 @@ public:
 
 	// 반환값 실패시 FALSE, WSAGetLastError로 확인
 	//       성공시 TRUE
-	int ConnectEx(const IPv4EndPoint& _ipv4EndPoint, LPOVERLAPPED _pOverlapped, char* _pSendBuffer, Int32UL _sendBufferSize, OUT Int32UL* _pSentBytes) const;
-	int DisconnectEx(LPOVERLAPPED _pOverlapped, Int32UL _flag);
+	int ConnectEx(const IPv4EndPoint& _ipv4EndPoint, LPOVERLAPPED _pOverlapped, char* _pSendBuffer, _u32l _sendBufferSize, OUT _u32l* _pSentBytes) const;
+	int DisconnectEx(LPOVERLAPPED _pOverlapped, _u32l _flag);
 	 
-	int Send(char* _pBuff, Int32U _length, Int32U _flag = 0) const;
-	int SendTo(char* _pBuff, Int32U _length, const IPv4EndPoint& _ipv4EndPoint, Int32U _flag = 0) const;
+	int Send(char* _pBuff, _u32 _length, _u32 _flag = 0) const;
+	int SendTo(char* _pBuff, _u32 _length, const IPv4EndPoint& _ipv4EndPoint, _u32 _flag = 0) const;
 
 	// 반환: 연결이 정상적으로 닫힌경우 0반환
 	//      오류가 발생하지 않은 경우 수신된 바이트 크기를 반환
-	int Receive(char* _pBuff, Int32U _bufferSize, Int32U _flag = 0) const;
-	int ReceiveFrom(char* _pBuff, Int32U _bufferSize, OUT IPv4EndPoint* _pIpv4EndPoint, Int32U _flag = 0) const;
+	int Receive(char* _pBuff, _u32 _bufferSize, _u32 _flag = 0) const;
+	int ReceiveFrom(char* _pBuff, _u32 _bufferSize, OUT IPv4EndPoint* _pIpv4EndPoint, _u32 _flag = 0) const;
 
 	int SendEx(
 		LPWSABUF _pBuf,
-		OUT Int32UL* _pBytesSent,
+		OUT _u32l* _pBytesSent,
 		LPOVERLAPPED _pOverlapped,
 		LPWSAOVERLAPPED_COMPLETION_ROUTINE _pCompRoutine = nullptr,
-		Int32U _flag = 0
+		_u32 _flag = 0
 	) const;
 
 	int SendToEx(
 		LPWSABUF _pBuffers,
-		OUT Int32UL* _pBytesSent,
+		OUT _u32l* _pBytesSent,
 		LPOVERLAPPED _pOverlapped,
 		const IPv4EndPoint& _to,
 		LPWSAOVERLAPPED_COMPLETION_ROUTINE _pCompRoutine = nullptr
@@ -167,19 +167,19 @@ public:
 
 	int ReceiveEx(
 		LPWSABUF _pBuf,
-		OUT Int32UL* _pBytesReceived,
+		OUT _u32l* _pBytesReceived,
 		LPOVERLAPPED _pOverlapped,
 		LPWSAOVERLAPPED_COMPLETION_ROUTINE _pCompRoutine = nullptr,
-		Int32U _flag = 0
+		_u32 _flag = 0
 	) const;
 
 	int ReceiveFromEx(
 		LPWSABUF _pBuf,
-		OUT Int32UL* _pBytesReceived,
+		OUT _u32l* _pBytesReceived,
 		LPOVERLAPPED _pOverlapped,
 		OUT SOCKADDR_IN* _pSenderAddr,
 		LPWSAOVERLAPPED_COMPLETION_ROUTINE _pCompRoutine = nullptr,
-		Int32U _flag = 0
+		_u32 _flag = 0
 	) const;
 
 	IPv4EndPoint GetLocalEndPoint() const;
@@ -201,10 +201,10 @@ class Socketv6 final : public Socket
 	int Listen(int connectionWaitingQueueSize = 15);
 	int Accept(Socketv6& serverSocket);
 	int Connet(const IPv6EndPoint& ipv6EndPoint);
-	int Send(char* buff, Int32U len, Int32U flag = 0);
-	int SendTo(char* buff, Int32U len, const IPv6EndPoint& ipv6EndPoint, Int32U flag = 0);
-	int Receive(char* buff, Int32U buffSize, Int32U flag = 0);
-	int ReceiveFrom(char* buff, Int32U buffSize, Int32U flag = 0);
+	int Send(char* buff, _u32 len, _u32 flag = 0);
+	int SendTo(char* buff, _u32 len, const IPv6EndPoint& ipv6EndPoint, _u32 flag = 0);
+	int Receive(char* buff, _u32 buffSize, _u32 flag = 0);
+	int ReceiveFrom(char* buff, _u32 buffSize, _u32 flag = 0);
 	*/
 };
 

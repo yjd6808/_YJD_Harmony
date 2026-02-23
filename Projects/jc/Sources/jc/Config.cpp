@@ -16,8 +16,8 @@
 NS_JC_BEGIN
 
 bool AppExited = false;
-Int32U AppStartUpTimeTGT_v = ::timeGetTime();
-Int64 AppStartUpTime_v = DateTime::Now().Tick;
+_u32 AppStartUpTimeTGT_v = ::timeGetTime();
+_s64 AppStartUpTime_v = DateTime::Now().Tick;
 
 void InitializeJCore(int _argc, char** _argv)
 {

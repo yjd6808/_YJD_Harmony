@@ -9,7 +9,7 @@
 #include "Core.h"
 #include "Callback_POPUP_TIMEOUT.h"
 
-#include <sgcl/NetCore.h>
+#include <sgcl/_Net/NetCore.h>
 #include <sgcl/AuthenticationComponent.h>
 
 

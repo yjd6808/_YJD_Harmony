@@ -90,7 +90,7 @@ void Scheduler::Join(JoinStrategy _strategy)
 //////////////////////////////////////////////////////////////////////////////////////////
 void Scheduler::AddTaskRaw(SchedulerTask* _pTask)
 {
-	Int64U atTick = _pTask->At().Tick;
+	_u64 atTick = _pTask->At().Tick;
 	if (!waitTasksMap_.Exist(atTick))
 	{
 		waitTasksMap_.Insert(atTick, dbg_new TaskList{ _pTask });
@@ -121,7 +121,7 @@ void Scheduler::SchedulingRoutine() {
 	bool bHaveExecutableTasks = false;               // 실행가능한 작업이 있는 경우
 	bool bHaveWaitTasks = false;
 	DateTime dtWaitUntil = 0;
-	Int64U uiExecutableTaskLimitTime = 0;
+	_u64 uiExecutableTaskLimitTime = 0;
 	
 	auto fnWait = [&]()->bool {
 		bExit = false;
@@ -171,7 +171,7 @@ void Scheduler::SchedulingRoutine() {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Scheduler::ExecuteTasks(TaskList& _scheduledTasks, const Int64U* _pExecutableTaskLimitTime)
+void Scheduler::ExecuteTasks(TaskList& _scheduledTasks, const _u64* _pExecutableTaskLimitTime)
 {
 	const int taskCount = PopTasks(_scheduledTasks, _pExecutableTaskLimitTime);
 	
@@ -212,7 +212,7 @@ void Scheduler::ExecuteTasks(TaskList& _scheduledTasks, const Int64U* _pExecutab
  * \return 실행가능한 작업 수
  */
 //////////////////////////////////////////////////////////////////////////////////////////
-int Scheduler::PopTasks(OUT Vector<SchedulerTask*>& _executableTasks, const Int64U* _pExecutableTaskLimitTime)
+int Scheduler::PopTasks(OUT Vector<SchedulerTask*>& _executableTasks, const _u64* _pExecutableTaskLimitTime)
 {
 	_executableTasks.Clear();
 
@@ -228,7 +228,7 @@ int Scheduler::PopTasks(OUT Vector<SchedulerTask*>& _executableTasks, const Int6
 	{
 		auto& currentValue = iterator->Current();
 
-		const Int64U& expiredTaskKey = currentValue.key_;
+		const _u64& expiredTaskKey = currentValue.key_;
 		const TaskList* pExpiredTaskList = currentValue.value_;
 
 		if (expiredTaskKey >= *_pExecutableTaskLimitTime)
@@ -263,16 +263,16 @@ int Scheduler::WaitingTaskListCountRaw()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool Scheduler::HaveExecutableTaskRaw(IN_OUT Int64U* _pExecutableTaskLimitTime)
+bool Scheduler::HaveExecutableTaskRaw(IN_OUT _u64* _pExecutableTaskLimitTime)
 {
 	if (waitTasksMap_.Size() == 0)
 	{
 		return false;
 	}
 
-	Int64U firstElementAt;
+	_u64 firstElementAt;
 	const DateTime now = DateTime::Now();
-	const Int64U* pNotExpiredKey = waitTasksMap_.UpperBoundKey(now.Tick); // 아직 시간이 만료되지 않은 첫 원소
+	const _u64* pNotExpiredKey = waitTasksMap_.UpperBoundKey(now.Tick); // 아직 시간이 만료되지 않은 첫 원소
 
 	if (pNotExpiredKey)
 		*_pExecutableTaskLimitTime = *pNotExpiredKey;

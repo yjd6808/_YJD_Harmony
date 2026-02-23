@@ -22,8 +22,8 @@ String			Env::moduleName_;
 
 
 SpinLock		Env::tgt64_lock_;
-Int32U			Env::tgt64_lastTime_;
-Int32U			Env::tgt64_highPart_;
+_u32			Env::tgt64_lastTime_;
+_u32			Env::tgt64_highPart_;
 Vector<String>	Env::args_;
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -76,7 +76,7 @@ const String& Env::ModuleName()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Int32U Env::TimeGetTime()
+_u32 Env::TimeGetTime()
 {
 	return ::timeGetTime();
 }
@@ -87,14 +87,14 @@ TimeSpan Env::AppTime() {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Int32U Env::AppTimeTgt()
+_u32 Env::AppTimeTgt()
 {
 	return ::timeGetTime() - AppStartUpTimeTGT_v;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 TimeSpan Env::SystemTime() {
-	return { Int64(::GetTickCount64()) * 1000 };
+	return { _s64(::GetTickCount64()) * 1000 };
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -109,7 +109,7 @@ TimeSpan Env::SystemTimeTgt()
 	}
 	tgt64_lastTime_ = current;
 
-	Int64 result = (static_cast<Int64>(tgt64_highPart_) << 32) | current;
+	_s64 result = (static_cast<_s64>(tgt64_highPart_) << 32) | current;
 	return { result };
 }
 

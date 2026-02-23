@@ -10,19 +10,19 @@
 
 NS_JC_BEGIN
 Property<bool> Property<bool>::Default;
-Property<Int8> Property<Int8>::Default;
-Property<Int8U> Property<Int8U>::Default;
-Property<Int16> Property<Int16>::Default;
-Property<Int16U> Property<Int16U>::Default;
-Property<Int> Property<Int>::Default;
-Property<Int32U> Property<Int32U>::Default;
-Property<Int32L> Property<Int32L>::Default;
-Property<Int32UL> Property<Int32UL>::Default;
-Property<Int64> Property<Int64>::Default;
-Property<Int64U> Property<Int64U>::Default;
-Property<Float> Property<Float>::Default;
-Property<Double> Property<Double>::Default;
-Property<LDouble> Property<LDouble>::Default;
+Property<_s8> Property<_s8>::Default;
+Property<_u8> Property<_u8>::Default;
+Property<_s16> Property<_s16>::Default;
+Property<_u16> Property<_u16>::Default;
+Property<_s32> Property<_s32>::Default;
+Property<_u32> Property<_u32>::Default;
+Property<_s32l> Property<_s32l>::Default;
+Property<_u32l> Property<_u32l>::Default;
+Property<_s64> Property<_s64>::Default;
+Property<_u64> Property<_u64>::Default;
+Property<_f32> Property<_f32>::Default;
+Property<_f64> Property<_f64>::Default;
+Property<_f64l> Property<_f64l>::Default;
 Property<String> Property<String>::Default;
 
 NS_END

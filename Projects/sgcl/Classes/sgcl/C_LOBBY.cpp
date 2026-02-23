@@ -29,7 +29,7 @@ void C_LOBBY::OnConnected(Session* _pSession)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void C_LOBBY::OnConnectFailed(Session* _pSession, Int32U _errorCode)
+void C_LOBBY::OnConnectFailed(Session* _pSession, _u32 _errorCode)
 {
 	std::string msg = StringUtils::format(
 		SG_LOCAL_RAW("CONNECT_SERVER_FAILED_WITH_MESSAGE"), 

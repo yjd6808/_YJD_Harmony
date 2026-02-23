@@ -15,9 +15,9 @@ CRuntime::System(const char* _pCmd)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IntPtr
+_ptr
 JC_CDECL
-CRuntime::BeginThreadEx(CRuntime::ThreadFunc _fn, void* _pArg, Int32U _stackSize, Int32U _initFlag)
+CRuntime::BeginThreadEx(CRuntime::ThreadFunc _fn, void* _pArg, _u32 _stackSize, _u32 _initFlag)
 {
     return ::_beginthreadex(NULL, _stackSize, _fn, _pArg, _initFlag, NULL);
 }
@@ -25,22 +25,22 @@ CRuntime::BeginThreadEx(CRuntime::ThreadFunc _fn, void* _pArg, Int32U _stackSize
 //////////////////////////////////////////////////////////////////////////////////////////
 void
 JC_CDECL
-CRuntime::EndThreadEx(Int32U _exitCode)
+CRuntime::EndThreadEx(_u32 _exitCode)
 {
     ::_endthreadex(_exitCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Int
+_s32
 JC_CDECL
 CRuntime::ErrorNo()
 {
-    Int errorCode = *::_errno();
+    _s32 errorCode = *::_errno();
     return errorCode;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IoHandle
+_iohandle
 JC_CDECL
 CRuntime::FileOpen(const char* _pFilename, const char* _pMode)
 {
@@ -61,7 +61,7 @@ CRuntime::FileOpen(const char* _pFilename, const char* _pMode)
 //////////////////////////////////////////////////////////////////////////////////////////
 size_t
 JC_CDECL
-CRuntime::FileWrite(const void* _pBuffer, size_t _size, size_t _count, IoHandle _pStream)
+CRuntime::FileWrite(const void* _pBuffer, size_t _size, size_t _count, _iohandle _pStream)
 {
     return ::fwrite(_pBuffer, _size, _count, (FILE*)_pStream);
 }
@@ -69,7 +69,7 @@ CRuntime::FileWrite(const void* _pBuffer, size_t _size, size_t _count, IoHandle 
 //////////////////////////////////////////////////////////////////////////////////////////
 size_t
 JC_CDECL
-CRuntime::FileRead(void* _pBuffer, size_t _size, size_t _count, IoHandle _pStream)
+CRuntime::FileRead(void* _pBuffer, size_t _size, size_t _count, _iohandle _pStream)
 {
     return ::fread(_pBuffer, _size, _count, (FILE*)_pStream);
 }
@@ -77,13 +77,13 @@ CRuntime::FileRead(void* _pBuffer, size_t _size, size_t _count, IoHandle _pStrea
 //////////////////////////////////////////////////////////////////////////////////////////
 int
 JC_CDECL
-CRuntime::FileReadChar(IoHandle _pStream)
+CRuntime::FileReadChar(_iohandle _pStream)
 {
     return ::fgetc((FILE*)_pStream);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool CRuntime::FileHasError(IoHandle _pStream)
+bool CRuntime::FileHasError(_iohandle _pStream)
 {
     // 오류 발생시 0이 아닌값, 오류가 없는 경우 0을 반환
     return ::ferror((FILE*)_pStream) != 0;
@@ -92,7 +92,7 @@ bool CRuntime::FileHasError(IoHandle _pStream)
 //////////////////////////////////////////////////////////////////////////////////////////
 long
 JC_CDECL
-CRuntime::FileTell(IoHandle _pStream)
+CRuntime::FileTell(_iohandle _pStream)
 {
     long result = ::ftell((FILE*)_pStream);
     return result == -1L ? *_errno() : result;
@@ -101,7 +101,7 @@ CRuntime::FileTell(IoHandle _pStream)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool
 JC_CDECL
-CRuntime::FileSeek(IoHandle _pStream, long _offset, int _origin)
+CRuntime::FileSeek(_iohandle _pStream, long _offset, int _origin)
 {
     // 커서를 성공적으로 움직이는데 성공시 0, 실패시 0이 아닌 값을 반환한다.
     return ::fseek((FILE*)_pStream, _offset, _origin) == 0;
@@ -110,7 +110,7 @@ CRuntime::FileSeek(IoHandle _pStream, long _offset, int _origin)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool
 JC_CDECL
-CRuntime::FileSeekBegin(IoHandle _pStream, long _offset)
+CRuntime::FileSeekBegin(_iohandle _pStream, long _offset)
 {
     return FileSeek(_pStream, _offset, SEEK_SET);
 }
@@ -118,7 +118,7 @@ CRuntime::FileSeekBegin(IoHandle _pStream, long _offset)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool
 JC_CDECL
-CRuntime::FileSeekCur(IoHandle _pStream, long _offset)
+CRuntime::FileSeekCur(_iohandle _pStream, long _offset)
 {
     return FileSeek(_pStream, _offset, SEEK_CUR);
 }
@@ -126,7 +126,7 @@ CRuntime::FileSeekCur(IoHandle _pStream, long _offset)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool
 JC_CDECL
-CRuntime::FileSeekEnd(IoHandle _pStream, long _offset)
+CRuntime::FileSeekEnd(_iohandle _pStream, long _offset)
 {
     return FileSeek(_pStream, _offset, SEEK_END);
 }
@@ -134,7 +134,7 @@ CRuntime::FileSeekEnd(IoHandle _pStream, long _offset)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool
 JC_CDECL
-CRuntime::FileFlush(IoHandle _pStream)
+CRuntime::FileFlush(_iohandle _pStream)
 {
     // 성공적으로 반영했다면 0
     // 실패한 경우 EOF를 반환하고 해당 파일 스트림의 error flag가 set 된다.
@@ -145,7 +145,7 @@ CRuntime::FileFlush(IoHandle _pStream)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool
 JC_CDECL
-CRuntime::FileEOF(IoHandle _pStream)
+CRuntime::FileEOF(_iohandle _pStream)
 {
     // 끝까지 도달한 경우 0이 아닌 값, 아직 여유가 있는 경우 0
     return ::feof((FILE*)_pStream) != 0;
@@ -154,7 +154,7 @@ CRuntime::FileEOF(IoHandle _pStream)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool
 JC_CDECL
-CRuntime::FileClose(IoHandle _pStream)
+CRuntime::FileClose(_iohandle _pStream)
 {
     // 성공시 0반환, 실패시 EOF 반환
     return ::fclose((FILE*)_pStream) == 0;

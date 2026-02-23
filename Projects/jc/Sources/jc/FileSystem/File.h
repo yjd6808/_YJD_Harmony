@@ -38,11 +38,11 @@ public:
 	// "abcd", 4 (NULL 문자는 뺀 길이를 전달해줘야함)
 	static void WriteAllText(const char* _pContent, int _contentLength, const char* _pPath);
 	static void WriteAllText(const String& _content, const char* _pPath);
-	static void WriteAllBytes(const Byte* _pContent, int _contentLength, const char* _pPath);
+	static void WriteAllBytes(const _u8* _pContent, int _contentLength, const char* _pPath);
 
 	static String ReadAllText(const char* _pPath);
 
-	template <Int32U ContentLength>
+	template <_u32 ContentLength>
 	static void WriteAllText(const char (&_content)[ContentLength], const char* _pPath)
 	{
 		// NULL 문자 뺀 길이를 전달

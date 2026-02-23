@@ -346,37 +346,37 @@ void StringUtil::ConcatInnerFront(char* buf, int bufCapacity, const char* concat
 // https://github.com/otland/forgottenserver/blob/545516299b607ef25471f84d1805a22311ab72de/src/pugicast.h
 template <> float StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtof(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr); }
 template <> double StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtod(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr); }
-template <> Int32L StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10); }
-template <> Int64 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtoll(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10); }
-template <> Int32UL StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10); }
-template <> Int64U StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtoull(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10); }
-template <> Char StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<Char>(std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
-template <> WideChar StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<WideChar>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
-template <> Byte StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<Byte>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
-template <> Int16 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<Int16>(std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
-template <> Int16U StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<Int16U>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
-template <> Int32 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<Int32>(std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
-template <> Int32U StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<Int32U>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
+template <> _s32l StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10); }
+template <> _s64 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtoll(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10); }
+template <> _u32l StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10); }
+template <> _u64 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtoull(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10); }
+template <> _s8 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<_s8>(std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
+template <> _s16c StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<_s16c>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
+template <> _u8 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<_u8>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
+template <> _s16 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<_s16>(std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
+template <> _u16 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<_u16>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
+template <> _s32 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<_s32>(std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
+template <> _u32 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<_u32>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
 
 template <> String StringUtil::ToString(bool value) { return value ? "true" : "false"; }
 template <> String StringUtil::ToString(float value) { return std::to_string(value); }
 template <> String StringUtil::ToString(double value) { return std::to_string(value); }
-template <> String StringUtil::ToString(Int32L value) { return std::to_string(value); }
-template <> String StringUtil::ToString(Int64 value) { return std::to_string(value); }
-template <> String StringUtil::ToString(Int32UL value) { return std::to_string(value); }
-template <> String StringUtil::ToString(Int64U value) { return std::to_string(value); }
-template <> String StringUtil::ToString(Char value) { return std::to_string(value); }
-template <> String StringUtil::ToString(Byte value) { return std::to_string(value); }
-template <> String StringUtil::ToString(Int16 value) { return std::to_string(value); }
-template <> String StringUtil::ToString(Int16U value) { return std::to_string(value); }
-template <> String StringUtil::ToString(Int32 value) { return std::to_string(value); }
-template <> String StringUtil::ToString(Int32U value) { return std::to_string(value); }
+template <> String StringUtil::ToString(_s32l value) { return std::to_string(value); }
+template <> String StringUtil::ToString(_s64 value) { return std::to_string(value); }
+template <> String StringUtil::ToString(_u32l value) { return std::to_string(value); }
+template <> String StringUtil::ToString(_u64 value) { return std::to_string(value); }
+template <> String StringUtil::ToString(_s8 value) { return std::to_string(value); }
+template <> String StringUtil::ToString(_u8 value) { return std::to_string(value); }
+template <> String StringUtil::ToString(_s16 value) { return std::to_string(value); }
+template <> String StringUtil::ToString(_u16 value) { return std::to_string(value); }
+template <> String StringUtil::ToString(_s32 value) { return std::to_string(value); }
+template <> String StringUtil::ToString(_u32 value) { return std::to_string(value); }
 template <> String StringUtil::ToString(const String& value) { return value; }
 template <> String StringUtil::ToString(String&& value) { return std::move(value); }
 
 
 /*
-constexpr Int64 StringUtil::ConvertInt64(const char* src, const int len) {
+constexpr _s64 StringUtil::ConvertInt64(const char* src, const int len) {
 
 	return 0;
 }
@@ -386,7 +386,7 @@ inline constexpr W StringUtil::Getter() {
 	return W();
 }
 
-template<Int32U Size>
+template<_u32 Size>
 inline constexpr auto StringUtil::TrimFront(const char(&str)[Size], const char delimiter) {
 	constexpr int iLen = Size - 1;
 	int iTrimEndIdx = -1;

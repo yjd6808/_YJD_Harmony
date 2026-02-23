@@ -43,7 +43,7 @@ void TcpSession::Initialize()
 //////////////////////////////////////////////////////////////////////////////////////////
 bool TcpSession::AcceptAsync()
 {
-	Int32UL receivedBytes = 0;
+	_u32l receivedBytes = 0;
 
 	SOCKET listeningSocket = pServer_->SocketHandle();
 	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedAccept(this, pIocp_.GetPtr());
@@ -59,7 +59,7 @@ bool TcpSession::AcceptAsync()
 		&receivedBytes,
 		pOverlapped) == FALSE)
 	{
-		Int32U errorCode = Winsock::LastError();
+		_u32 errorCode = Winsock::LastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
 			_NetLogWarn_("세션 AcceptEx 실패 (%d:%s)", errorCode, Winsock::LastErrorMessageUTF8().Source());
@@ -78,7 +78,7 @@ void TcpSession::AcceptWait()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool TcpSession::Accepted(Int32UL _receivedBytes)
+bool TcpSession::Accepted(_u32l _receivedBytes)
 {
 	(void)_receivedBytes;
 
@@ -127,20 +127,20 @@ void TcpSession::Connected()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TcpSession::ConnectFailed(Int32U _errorCode)
+void TcpSession::ConnectFailed(_u32 _errorCode)
 {
 	pServer_->SessionConnectFailed(this, _errorCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TcpSession::Disconnected(Int32U _errorCode)
+void TcpSession::Disconnected(_u32 _errorCode)
 {
 	OnDisconnected();
 	pServer_->SessionDisconnected(this, _errorCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TcpSession::Sent(IPacket* _pSentPacket, Int32UL _receivedBytes)
+void TcpSession::Sent(IPacket* _pSentPacket, _u32l _receivedBytes)
 {
 	pServer_->SessionSent(this, _pSentPacket, _receivedBytes);
 }

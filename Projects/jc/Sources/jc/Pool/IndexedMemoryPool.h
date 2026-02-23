@@ -107,7 +107,7 @@ public:
 
 	// TODO: 메모리할당 규칙이 Low와 High가 틀리기떄문에 벌어지는 현상이다.
 	//       BinarySearch와 Indexed를 똑같이 사용하기 위해서는 "요청한" 값을 기록해놓고 "요청한" 값을 반납해야한다.
-	//		 예를들어 617 Byte를 요청하면 1024바이트가 실제 할당되는데
+	//		 예를들어 617 _u8를 요청하면 1024바이트가 실제 할당되는데
 	//       CBinarySearchMemoryPool의 경우 617바이트로 반환하든지, 1024바이트로 반환하든지 모두 올바른 반환이 이뤄지지만
 	//       IndexedMemoryPool의 경우 617바이트로 반환해야지 올바른 반환이 이뤄진다.
 	void* DynamicPop(int _requestSize, int& _realAllocatedSize) override

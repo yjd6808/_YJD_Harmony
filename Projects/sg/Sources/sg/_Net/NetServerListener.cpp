@@ -39,7 +39,7 @@ void NetServerListener::OnConnected(Session* _pConnectedSession)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetServerListener::OnDisconnected(Session* _pDisconnectedSession, Int32U _errorCode)
+void NetServerListener::OnDisconnected(Session* _pDisconnectedSession, _u32 _errorCode)
 {
 	const IPv4EndPoint& remoteEndPoint = _pDisconnectedSession->GetRemoteEndPoint();
 	const String remoteEndPointString = remoteEndPoint.ToString();
@@ -48,7 +48,7 @@ void NetServerListener::OnDisconnected(Session* _pDisconnectedSession, Int32U _e
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetServerListener::OnSent(Session* _pSender, IPacket* _pSentPacket, Int32UL _sentBytes)
+void NetServerListener::OnSent(Session* _pSender, IPacket* _pSentPacket, _u32l _sentBytes)
 {
 	if (_pSentPacket->GetType() == PacketType::Command)
 	{

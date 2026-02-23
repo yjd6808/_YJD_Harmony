@@ -126,7 +126,7 @@ bool Session::Disconnect()
 //////////////////////////////////////////////////////////////////////////////////////////
 int Session::Send(char* _pData, int _len)
 {
-	Int32U sendPendingErrorCode = 0;
+	_u32 sendPendingErrorCode = 0;
 	int sent = SendPending(sendPendingErrorCode);
 	const int pendingSent = sent;
 
@@ -148,7 +148,7 @@ int Session::Send(char* _pData, int _len)
 
 		if (sendResult == SOCKET_ERROR)
 		{
-			const Int32U errorCode = Winsock::LastError();
+			const _u32 errorCode = Winsock::LastError();
 			if (errorCode == WSAEWOULDBLOCK)
 			{
 				PushPendingData(_pData, _len);
@@ -189,7 +189,7 @@ int Session::Send(IPacket* _pPacket, bool _releasePacket)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int Session::SendPending(OUT Int32U& _errorCode)
+int Session::SendPending(OUT _u32& _errorCode)
 {
 	char* pPendingData = pendingData_.Source();
 	int pendingDataCount = pendingData_.Size(); // 보내야하는 바이트 수
@@ -242,7 +242,7 @@ bool Session::SendAsync(IPacket* _pPacket)
 {
 	_pPacket->AddRef();
 	WSABUF buf = _pPacket->GetWSABuf();
-	Int32UL sendBytes = 0;
+	_u32l sendBytes = 0;
 	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedSend(this, pIocp_.GetPtr(), _pPacket);
 
 	// 0으로 즉시 성공하더라도 IOCP 워커에서 오버랩이 처리되므로 여기서 삭제를 해줄필요가 없다.
@@ -250,7 +250,7 @@ bool Session::SendAsync(IPacket* _pPacket)
 
 	if (sendResult == SOCKET_ERROR)
 	{
-		Int32U errorCode = Winsock::LastError();
+		_u32 errorCode = Winsock::LastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
 			_NetLogError_("SendAsync 실패 (%u)", errorCode);
@@ -322,13 +322,13 @@ bool Session::SendToAsync(IPacket* _pPacket, const IPv4EndPoint& _destination)
 
 	_pPacket->AddRef();
 	WSABUF buf = _pPacket->GetWSABuf();
-	Int32UL sendBytes = 0;
+	_u32l sendBytes = 0;
 	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedSendTo(this, pIocp_.GetPtr(), _pPacket);
 
 	const int result = socket_.SendToEx(&buf, &sendBytes, pOverlapped, _destination);
 	if (result == SOCKET_ERROR)
 	{
-		Int32U errorCode = Winsock::LastError();
+		_u32 errorCode = Winsock::LastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
 			jc_assert_msg(false, "SendToAsync 실패 (%d)", errorCode);
@@ -362,14 +362,14 @@ bool Session::SendToAsync(IPacket* _pPacket)
 bool Session::RecvAsync()
 {
 	WSABUF buf = recvBuffer_->GetRemainBuffer();
-	Int32UL receivedBytes = 0;
+	_u32l receivedBytes = 0;
 	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedRecv(this, pIocp_.GetPtr());
 
 	const int result = socket_.ReceiveEx(&buf, &receivedBytes, pOverlapped);
 
 	if (result == SOCKET_ERROR)
 	{
-		Int32U errorCode = Winsock::LastError();
+		_u32 errorCode = Winsock::LastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
 			_NetLogError_("RecvAsync 실패 (%u)", errorCode);
@@ -390,7 +390,7 @@ bool Session::RecvFromAsync()
 	}
 
 	WSABUF buf = recvBuffer_->GetRemainBuffer();
-	Int32UL receivedBytes = 0;
+	_u32l receivedBytes = 0;
 	IOCPOverlappedRecvFrom* pRecvFromOverlapped = dbg_new IOCPOverlappedRecvFrom(this, pIocp_.GetPtr());
 
 	const int result = socket_.ReceiveFromEx(
@@ -401,7 +401,7 @@ bool Session::RecvFromAsync()
 
 	if (result == SOCKET_ERROR)
 	{
-		Int32U errorCode = Winsock::LastError();
+		_u32 errorCode = Winsock::LastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
 			jc_assert_msg(false, "RecvFromAsync 실패 (%d)", errorCode);
@@ -433,7 +433,7 @@ void Session::SendAlloc(ICommand* _pCmd)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Session::Received(Int32UL _receivedBytes)
+void Session::Received(_u32l _receivedBytes)
 {
 	// 0 byte를 수신하는 경우
 	// Page-Lock 방지를 위한 0 byte가 들어올 수 있음 (TODO: 아직 0 byte recv는 구현안함)

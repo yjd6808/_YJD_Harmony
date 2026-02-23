@@ -30,13 +30,13 @@ void ClientListener::OnConnected(Session* _pSession)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-void ClientListener::OnDisconnected(Session* _pSession, Int32U _errorCode)
+void ClientListener::OnDisconnected(Session* _pSession, _u32 _errorCode)
 {
 	Console::WriteLine("[%s] 연결이 종료되었습니다.", name_.Source());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-void ClientListener::OnSent(Session* _pSession, IPacket* _pSentPacket, Int32UL _sentBytes)
+void ClientListener::OnSent(Session* _pSession, IPacket* _pSentPacket, _u32l _sentBytes)
 {
 	CommandPacket* pSentPacket = dynamic_cast<CommandPacket*>(_pSentPacket);
 	if (pSentPacket == nullptr)
@@ -59,7 +59,7 @@ void ClientListener::OnReceived(Session* _pSession, ICommand* _pCommand)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-void ClientListener::OnConnectFailed(Session* _pSession, Int32U _errorMessage)
+void ClientListener::OnConnectFailed(Session* _pSession, _u32 _errorMessage)
 {
 	Console::WriteLine("[%s] 서버 접속에 실패했습니다 (오류코드: %u)", name_.Source(), _errorMessage);
 }

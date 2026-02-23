@@ -33,7 +33,7 @@ TEST(RandomTest, RandomTestDouble)
 {
 	union Gr
 	{
-		Int64U conv;
+		_u64 conv;
 		double original;
 	} a;
 	Random r(true);

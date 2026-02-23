@@ -45,7 +45,7 @@ StatementType MysqlQuery::ParseStatement(const String& _statement)
 	return statement;
 }
 
-Int32U MysqlQuery::GetRowCount() const
+_u32 MysqlQuery::GetRowCount() const
 {
 	if (!IsSuccess())
 	{
@@ -53,7 +53,7 @@ Int32U MysqlQuery::GetRowCount() const
 		return 0;
 	}
 
-	return (Int32U)mysql_affected_rows(conn_->GetConnection());
+	return (_u32)mysql_affected_rows(conn_->GetConnection());
 }
 
 bool MysqlQueryUpdate::Execute()
@@ -186,7 +186,7 @@ DateTime MysqlQuerySelect::GetDateTime(const char* _pFieldName)
 	return parsed;
 }
 
-Int32U MysqlQuerySelect::GetRowCount() const
+_u32 MysqlQuerySelect::GetRowCount() const
 {
 	if (!IsSuccess())
 	{
@@ -194,10 +194,10 @@ Int32U MysqlQuerySelect::GetRowCount() const
 		return 0;
 	}
 
-	return (Int32U)mysql_num_rows(sqlResult_);
+	return (_u32)mysql_num_rows(sqlResult_);
 }
 
-Int32U MysqlQuerySelect::GetFieldCount() const
+_u32 MysqlQuerySelect::GetFieldCount() const
 {
 	if (!IsSuccess())
 	{

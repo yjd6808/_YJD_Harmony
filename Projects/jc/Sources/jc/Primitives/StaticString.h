@@ -17,17 +17,17 @@
 
 NS_JC_BEGIN
 
-template <Int32U Size>
+template <_u32 Size>
 struct StaticString
 {
 	char Source[Size] = "";
 
-	template <Int32U ParamSize>
+	template <_u32 ParamSize>
 	constexpr bool operator==(const char(&_str)[ParamSize]) const {
 		return StringUtil::CTCompare(Source, _str) == 0;
 	}
 
-	template <Int32U ParamSize>
+	template <_u32 ParamSize>
 	constexpr bool operator!=(const char(&_str)[ParamSize]) const {
 		return StringUtil::CTCompare(Source, _str) != 0;
 	}
@@ -48,12 +48,12 @@ struct StaticString
 		return StringUtil::CTCompare(Source, _str.Source()) != 0;
 	}
 
-	template <Int32U ParamSize>
+	template <_u32 ParamSize>
 	constexpr bool operator==(const StaticString<ParamSize>& _str) const {
 		return Compare(_str) == 0;
 	}
 
-	template <Int32U ParamSize>
+	template <_u32 ParamSize>
 	constexpr bool operator!=(const StaticString<ParamSize>& _str) const {
 		return Compare(_str) != 0;
 	}
@@ -78,17 +78,17 @@ struct StaticString
 		return StringUtil::CTCompare(Source, _pStr);
 	}
 
-	template <Int32U ParamSize>
+	template <_u32 ParamSize>
 	constexpr int Compare(const StaticString<ParamSize>& _str) const {
 		return StringUtil::CTCompare(Source, _str.Source);
 	}
 
-	template <Int32U ParamSize>
+	template <_u32 ParamSize>
 	constexpr void CopyFrom(const char(&_str)[ParamSize]) const {
 		CopyFrom(0, StringUtil::CTLength2(_str) - 1, _str);
 	}
 
-	template <Int32U ParamSize>
+	template <_u32 ParamSize>
 	constexpr void CopyFrom(int _startIndex, int _endIndex, const char(&_str)[ParamSize]) const {
 		const int thisLength = Size - 1;
 		int copyCount = 0;
@@ -109,7 +109,7 @@ struct StaticString
 	}
 
 
-	template <Int32U ParamSize>
+	template <_u32 ParamSize>
 	constexpr bool StartWith(const char(&str)[ParamSize]) const {
 		const int iStrLen = ParamSize - 1;
 		const int iThisLen = Length();
@@ -127,7 +127,7 @@ struct StaticString
 		return true;
 	}
 
-	template <Int32U ParamSize>
+	template <_u32 ParamSize>
 	constexpr bool EndWith(const char(&_str)[ParamSize]) const {
 		const int strLength = ParamSize - 1;
 		const int thisLength = Length();
@@ -153,12 +153,12 @@ struct StaticString
 	}
 
 	
-	template <Int32U ParamSize>
+	template <_u32 ParamSize>
 	constexpr int Find(const char(&str)[ParamSize]) const {
 		return Find(0, Size - 2, str);
 	}
 
-	template <Int32U ParamSize>
+	template <_u32 ParamSize>
 	constexpr int Find(const int startIdx, const int endIdx, const char(&str)[ParamSize]) const {
 		if (str[0] == '\0') {
 			return startIdx;
@@ -200,13 +200,13 @@ struct StaticString
 		return -1;
 	}
 
-	template <Int32U ParamSize>
+	template <_u32 ParamSize>
 	constexpr bool Contain(const char(&str)[ParamSize]) const {
 		return Find(0, Size - 2, str) != -1;
 	}
 
 	// 기존 문자열은 건드릴 수 없기때문에 새로 생성해서 반환함
-	template <Int32U ParamSize>
+	template <_u32 ParamSize>
 	constexpr StaticString<Size> Remove(const char(&str)[ParamSize]) const {
 		const int iStartIdx = Find(str);
 
@@ -255,7 +255,7 @@ struct StaticString
 	// StaticString<32> a;
 	// StaticString<32> b;
 	// s.operator=(b); // 실행해도 안들어옴, 어셈블리 확인하면 하나씩 복사해주는 코드가 알아서들어가는 걸로보인다.
-	template <Int32U SrcSize>
+	template <_u32 SrcSize>
 	StaticString<Size>& operator=(const StaticString<SrcSize>&& str) {
 		int iCopySize = StringUtil::Copy(Source, Size, str.Source);
 		jc_assert_msg(iCopySize != -1, "복사에 실패했습니다.");
@@ -275,7 +275,7 @@ struct StaticString
 		return StringUtil::CopyUnsafe(Source, str.c_str());
 	}
 
-	template <Int32U ParamSize>
+	template <_u32 ParamSize>
 	int SetStringUnsafe(const StaticString<ParamSize>& str) {
 		return StringUtil::CopyUnsafe(Source, str.Source);
 	}
@@ -288,7 +288,7 @@ struct StaticString
 		return StringUtil::Copy(Source, Size, str.Source());
 	}
 
-	template <Int32U ParamSize>
+	template <_u32 ParamSize>
 	int SetString(const StaticString<ParamSize>& str) {
 		return StringUtil::Copy(Source, Size, str.Source);
 	}
@@ -301,7 +301,7 @@ struct StaticString
 		return StringUtil::Copy(Source, count, str.Source());
 	}
 
-	template <Int32U ParamSize>
+	template <_u32 ParamSize>
 	int SetString(const StaticString<ParamSize>& str, int count) {
 		return StringUtil::Copy(Source, count, str.Source);
 	}
@@ -346,12 +346,12 @@ struct StaticString
 	}
 
 
-	template <Int32U ParamSize>
+	template <_u32 ParamSize>
 	friend std::ostream& operator<<(std::ostream& os, const StaticString<ParamSize>& str);
 };
 
 
-template<Int32U ParamSize>
+template<_u32 ParamSize>
 std::ostream& operator<<(std::ostream& os, const StaticString<ParamSize>& str) {
 	return os << str.Source;
 }

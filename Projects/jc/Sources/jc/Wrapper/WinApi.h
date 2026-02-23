@@ -28,15 +28,15 @@ struct WinApi {
 
     struct CriticalSection;
     struct CriticalSectionDebug {
-        Int16       Type;
-        Int16       CreatorBackTraceIndex;
+        _s16       Type;
+        _s16       CreatorBackTraceIndex;
         CriticalSection* CriticalSection;
         ListEntry   ProcessLocksList;
-        Int32UL     EntryCount;
-        Int32UL     ContentionCount;
-        Int32UL     Flags;
-        Int16       CreatorBackTraceIndexHigh;
-        Int16       SpareWORD;
+        _u32l     EntryCount;
+        _u32l     ContentionCount;
+        _u32l     Flags;
+        _s16       CreatorBackTraceIndexHigh;
+        _s16       SpareWORD;
     };
 	#pragma pack(push, 8)
     struct CriticalSection {
@@ -47,31 +47,31 @@ struct WinApi {
         //  section for the resource
         //
 
-        Int32L LockCount;
-        Int32L RecursionCount;
-        WinHandle OwningThread;        // from the thread's ClientId->UniqueThread
-        WinHandle LockSemaphore;
-        IntPtr SpinCount;            // force size on 64-bit systems when packed
+        _s32l LockCount;
+        _s32l RecursionCount;
+        _whandle OwningThread;        // from the thread's ClientId->UniqueThread
+        _whandle LockSemaphore;
+        _ptr SpinCount;            // force size on 64-bit systems when packed
     };
 	#pragma pack(pop)
 
 	#pragma endregion
 
-    static WinHandle InvalidHandleValue;
+    static _whandle InvalidHandleValue;
 
-    static bool            JC_CDECL SetConsoleCursorPosition( WinHandle _stdoutHandle,  int _x,  int _y);
-	static bool            JC_CDECL GetConsoleCursorPosition( WinHandle _stdoutHandle, OUT int& _x, OUT int& _y);
-	static bool            JC_CDECL SetConsoleTextAttribute( WinHandle _stdoutHandle,  Int16 _attribute);
-	static bool            JC_CDECL SetConsoleOutputCodePage( Int32 _codePage);
-	static Int             JC_CDECL GetConsoleOutputCodePage();
+    static bool            JC_CDECL SetConsoleCursorPosition( _whandle _stdoutHandle,  int _x,  int _y);
+	static bool            JC_CDECL GetConsoleCursorPosition( _whandle _stdoutHandle, OUT int& _x, OUT int& _y);
+	static bool            JC_CDECL SetConsoleTextAttribute( _whandle _stdoutHandle,  _s16 _attribute);
+	static bool            JC_CDECL SetConsoleOutputCodePage( _s32 _codePage);
+	static _s32             JC_CDECL GetConsoleOutputCodePage();
 
 
 	/** https://learn.microsoft.com/en-us/windows/console/getstdhandle
 	 * \brief Retrieves a handle to the specified standard device
 	 * \return The standard output device. Initially, this is the active console screen buffer,
 	 */
-	static WinHandle       JC_CDECL GetStdoutHandle();
-	static WinHandle       JC_CDECL GetStdinHandle();
+	static _whandle       JC_CDECL GetStdoutHandle();
+	static _whandle       JC_CDECL GetStdinHandle();
 
 
 
@@ -83,7 +83,7 @@ struct WinApi {
 	 * \return If the function succeeds, the return value is a handle to the event object. If the named event object existed before the function call, the function returns a handle to the existing object and GetLastError returns ERROR_ALREADY_EXISTS.
 	 *         If the function fails, the return value is NULL. To get extended error information, call GetLastError.
 	 */
-	static WinHandle       JC_CDECL CreateEventA(bool _initialState,  bool _manualReset, IN_OPT const char* _pName = nullptr);
+	static _whandle       JC_CDECL CreateEventA(bool _initialState,  bool _manualReset, IN_OPT const char* _pName = nullptr);
 
 	/** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitformultipleobjectsex
 	 * \brief Waits until one or all of the specified objects are in the signaled state, an I/O completion routine or asynchronous procedure call (APC) is queued to the thread, or the time-out interval elapses.
@@ -94,9 +94,9 @@ struct WinApi {
 	 * \param _alertable If this parameter is TRUE and the thread is in the waiting state, the function returns when the system queues an I/O completion routine or APC, and the thread runs the routine or function. Otherwise, the function does not return and the completion routine or APC function is not executed.
 	 * \return If the function succeeds, the return value indicates the event that caused the function to return. It can be one of the following values. (Note that WAIT_OBJECT_0 is defined as 0 and WAIT_ABANDONED_0 is defined as 0x00000080L.)
 	 */
-	static Int32UL          JC_CDECL WaitForMultipleObjectsEx(Int32U _eventCount, WinHandle* _pHandles, bool _waitAll, Int32U _timeout = JC_INFINITE, bool _alertable = false);
-	static Int32UL          JC_CDECL WaitForSingleObject(WinHandle _handle, Int32U _timeout = JC_INFINITE);
-	static Int32UL          JC_CDECL GetLastError();
+	static _u32l          JC_CDECL WaitForMultipleObjectsEx(_u32 _eventCount, _whandle* _pHandles, bool _waitAll, _u32 _timeout = JC_INFINITE, bool _alertable = false);
+	static _u32l          JC_CDECL WaitForSingleObject(_whandle _handle, _u32 _timeout = JC_INFINITE);
+	static _u32l          JC_CDECL GetLastError();
 
 
 	/** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-setevent#return-value
@@ -104,21 +104,21 @@ struct WinApi {
 	 * \param _handle  A handle to the event object. The CreateEvent or OpenEvent function returns this handle.
 	 * \return If the function succeeds, the return value is nonzero.
 	 */
-	static bool            JC_CDECL SetEvent(WinHandle _handle);
+	static bool            JC_CDECL SetEvent(_whandle _handle);
 
 	/** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-resetevent
 	 * \brief Sets the specified event object to the nonsignaled state.
 	 * \param _handle A handle to the event object. The CreateEvent or OpenEvent function returns this handle.
 	 * \return If the function succeeds, the return value is nonzero.
 	 */
-	static bool            JC_CDECL ResetEvent(WinHandle _handle);
+	static bool            JC_CDECL ResetEvent(_whandle _handle);
 
 	/** https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle
 	 * \brief Closes an open object handle.
 	 * \param _handle A valid handle to an open object.
 	 * \return If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call GetLastError.
 	 */
-	static bool            JC_CDECL CloseHandle( WinHandle _handle);
+	static bool            JC_CDECL CloseHandle( _whandle _handle);
 
 
 	/** https://learn.microsoft.com/ko-kr/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadpriority
@@ -134,7 +134,7 @@ struct WinApi {
 	 * THREAD_PRIORITY_NORMAL           0
 	 * THREAD_PRIORITY_TIME_CRITICAL    15
 	 */
-	static int             JC_CDECL GetThreadPriority(WinHandle _threadHandle);
+	static int             JC_CDECL GetThreadPriority(_whandle _threadHandle);
 
 	/** https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadpriority
 	 * \brief Sets the priority value for the specified thread. This value, together with the priority class of the thread's process, determines the thread's base priority level.
@@ -142,14 +142,14 @@ struct WinApi {
 	 * \param _priority The priority value for the thread.
 	 * \return If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call GetLastError.
 	 */
-	static bool            JC_CDECL SetThreadPriority( WinHandle _threadHandle,  Int _priority);
+	static bool            JC_CDECL SetThreadPriority( _whandle _threadHandle,  _s32 _priority);
 
 	/** https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadid
 	 * \brief Retrieves the thread identifier of the calling thread.
 	 * \remarks Until the thread terminates, the thread identifier uniquely identifies the thread throughout the system.
 	 * \return The return value is the thread identifier of the calling thread.
 	 */
-	static Int32U          JC_CDECL GetCurrentThreadId();
+	static _u32          JC_CDECL GetCurrentThreadId();
 
 
 	/**
@@ -157,17 +157,17 @@ struct WinApi {
 	 * Retrieves the fully qualified path for the file that contains the specified module. The module must have been loaded by the current process.
 	 * \return the return value is the length of the string that is copied to the buffer
 	 */
-	static Int32U          JC_CDECL GetModuleFilePath(IN_OPT WinModule _module, OUT char* _pFilenameBuffer,  int _filenameBufferCapacity);
+	static _u32          JC_CDECL GetModuleFilePath(IN_OPT _wmodule _module, OUT char* _pFilenameBuffer,  int _filenameBufferCapacity);
     
 }; // struct WinApi
 
 
 
 
-using Boundary8 = Int8;          // 8  bit 레지스터 (al)
-using Boundary16 = Int16;        // 16 bit 레지스터 (ax)
-using Boundary32 = Int32L;       // 32 bit 레지스터 (eax)
-using Boundary64 = Int64;        // 64 bit 레지스터 (rax)
+using Boundary8 = _s8;          // 8  bit 레지스터 (al)
+using Boundary16 = _s16;        // 16 bit 레지스터 (ax)
+using Boundary32 = _s32l;       // 32 bit 레지스터 (eax)
+using Boundary64 = _s64;        // 64 bit 레지스터 (rax)
 
 // 함수는 부분 특수화 땜에 클래스로 만듬
 // 함수 인자/반환값 설명은 마이크로소프트 웹에서 복사해옴
@@ -320,17 +320,17 @@ struct Interlocked<bool> final
 }; // struct Interlocked final
 
 
-extern template struct Interlocked<Int8>;
-extern template struct Interlocked<Int8U>;
-extern template struct Interlocked<Int16>;
-extern template struct Interlocked<Int16U>;
-extern template struct Interlocked<WideChar>;
-extern template struct Interlocked<Int32>;
-extern template struct Interlocked<Int32U>;
-extern template struct Interlocked<Int32L>;
-extern template struct Interlocked<Int32UL>;
-extern template struct Interlocked<Int64>;
-extern template struct Interlocked<Int64U>;
+extern template struct Interlocked<_s8>;
+extern template struct Interlocked<_u8>;
+extern template struct Interlocked<_s16>;
+extern template struct Interlocked<_u16>;
+extern template struct Interlocked<_s16c>;
+extern template struct Interlocked<_s32>;
+extern template struct Interlocked<_u32>;
+extern template struct Interlocked<_s32l>;
+extern template struct Interlocked<_u32l>;
+extern template struct Interlocked<_s64>;
+extern template struct Interlocked<_u64>;
 extern template struct Interlocked<bool>;
 
 NS_END

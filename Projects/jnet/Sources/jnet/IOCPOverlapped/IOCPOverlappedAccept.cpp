@@ -24,12 +24,12 @@ IOCPOverlappedAccept::~IOCPOverlappedAccept()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IOCPOverlappedAccept::Process(BOOL _result, Int32UL _bytesTransferred, IOCPPostOrder* _pCompletionKey)
+void IOCPOverlappedAccept::Process(BOOL _result, _u32l _bytesTransferred, IOCPPostOrder* _pCompletionKey)
 {
 	(void)_pCompletionKey;
 
 	const SOCKET acceptedSocket = acceptedSession_->SocketHandle();
-	Int32U errorCode = 0;
+	_u32 errorCode = 0;
 	if (IsFailed(acceptedSocket, _result, _bytesTransferred, errorCode))
 	{
 		acceptedSession_->Disconnect();

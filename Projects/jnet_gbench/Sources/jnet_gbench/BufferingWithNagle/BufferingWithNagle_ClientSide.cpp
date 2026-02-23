@@ -123,7 +123,7 @@ void ClientSide::StartTest()
 			// 동기 송신인 경우 버퍼에 남아있는거 다 보냄
 			for (;;)
 			{
-				Int32U e;
+				_u32 e;
 				ClientList[i]->SendPending(e);
 
 				if (!ClientList[i]->HasPendingData())

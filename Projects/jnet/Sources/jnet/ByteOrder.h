@@ -52,8 +52,8 @@ struct ByteOrder final
 		T result = 0;
 		const int size = sizeof(T);
 
-		Byte* pDst = (Byte*)&result;
-		const Byte* pSrc = (Byte*)&_val;
+		_u8* pDst = (_u8*)&result;
+		const _u8* pSrc = (_u8*)&_val;
 
 		for (int index = size - 1, offset = 0; index >= 0; --index, offset++)
 		{
@@ -77,8 +77,8 @@ struct ByteOrder final
 		T result = 0;
 		const int size = sizeof(T);
 
-		Byte* pDst = (Byte*)&result;
-		const Byte* pSrc = (Byte*)&_val;
+		_u8* pDst = (_u8*)&result;
+		const _u8* pSrc = (_u8*)&_val;
 
 		for (int index = size - 1, offset = 0; index >= 0; --index, offset++)
 		{

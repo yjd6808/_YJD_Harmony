@@ -145,7 +145,7 @@ struct NetDBInfo_MySQL
 {
 	jc::String name_; // DB 접속에 중요한 정보는 아님
 	jc::String hostName_; // "127.0.0.1, localhost
-	Int16U connPort_; // 3306
+	_u16 connPort_; // 3306
 	jc::String accountId_; // root
 	jc::String accountPass_; // 1234
 	jc::String schemaName_; // steinsgate

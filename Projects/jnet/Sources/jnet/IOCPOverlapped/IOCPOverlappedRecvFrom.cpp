@@ -24,12 +24,12 @@ IOCPOverlappedRecvFrom::~IOCPOverlappedRecvFrom()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IOCPOverlappedRecvFrom::Process(BOOL _result, Int32UL _bytesTransferred, IOCPPostOrder* _pCompletionKey)
+void IOCPOverlappedRecvFrom::Process(BOOL _result, _u32l _bytesTransferred, IOCPPostOrder* _pCompletionKey)
 {
 	(void)_pCompletionKey;
 
 	const SOCKET receiveSocket = receiver_->SocketHandle();
-	Int32U errorCode = 0;
+	_u32 errorCode = 0;
 	if (IsFailed(receiveSocket, _result, _bytesTransferred, errorCode) || _bytesTransferred == 0)
 	{
 		return;

@@ -13,7 +13,7 @@
 #include <sg/_Core/AppConfig.h>
 
 #include <sgcl/_API/sgapiClient.h>
-#include <sgcl/NetCore.h>
+#include <sgcl/_Net/NetCore.h>
 #include <sgcl/Contents.h>
 
 #include <sgcl/ImagePackManager.h>

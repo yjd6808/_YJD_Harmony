@@ -18,7 +18,7 @@ static constexpr const char* Script = "select c_uid, c_account_id, c_account_pas
 QRY_SELECT_STATEMENT_END
 
 QRY_SELECT_RESULT_BEGIN(SelectAccountInfoListResult)
-Int32 AccountId;
+_s32 AccountId;
 jc::String Id;
 jc::String Pass;
 jc::DateTime Created;
@@ -48,7 +48,7 @@ jc::String Id;
 jc::String Pass;
 jc::DateTime Created;
 jc::DateTime Logined;
-Int32 LastServer;
+_s32 LastServer;
 QRY_SELECT_RESULT_END
 
 

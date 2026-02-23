@@ -38,8 +38,8 @@ struct JC_NOVTABLE IPropertyValueUnaryOperator
 	virtual ~IPropertyValueUnaryOperator() = default;
 	virtual void PrefixIncrement(PropertyBase* _pProperty) = 0;
 	virtual void PrefixDecrement(PropertyBase* _pProperty) = 0;
-	virtual Int64 PostfixIncrement(PropertyBase* _pProperty) = 0;
-	virtual Int64 PostfixDecrement(PropertyBase* _pProperty) = 0;
+	virtual _s64 PostfixIncrement(PropertyBase* _pProperty) = 0;
+	virtual _s64 PostfixDecrement(PropertyBase* _pProperty) = 0;
 };
 
 template <typename Ty>
@@ -49,20 +49,20 @@ struct JC_NOVTABLE IPropertyValueBinaryOperator
 	static constexpr PropertyType_t LeftOperandType = PropertyTypeGetter<Ty>::Type;
 
 	virtual ~IPropertyValueBinaryOperator() = default;
-	virtual void Operate(Ty& _lhs, const Int64& _rhs) = 0;
-	virtual void Operate(Ty& _lhs, const Int64U& _rhs) = 0;
-	virtual void Operate(Ty& _lhs, const Int& _rhs) = 0;
-	virtual void Operate(Ty& _lhs, const Int32U& _rhs) = 0;
-	virtual void Operate(Ty& _lhs, const Int32L& _rhs) = 0;
-	virtual void Operate(Ty& _lhs, const Int32UL& _rhs) = 0;
-	virtual void Operate(Ty& _lhs, const Int16& _rhs) = 0;
-	virtual void Operate(Ty& _lhs, const Int16U& _rhs) = 0;
+	virtual void Operate(Ty& _lhs, const _s64& _rhs) = 0;
+	virtual void Operate(Ty& _lhs, const _u64& _rhs) = 0;
+	virtual void Operate(Ty& _lhs, const _s32& _rhs) = 0;
+	virtual void Operate(Ty& _lhs, const _u32& _rhs) = 0;
+	virtual void Operate(Ty& _lhs, const _s32l& _rhs) = 0;
+	virtual void Operate(Ty& _lhs, const _u32l& _rhs) = 0;
+	virtual void Operate(Ty& _lhs, const _s16& _rhs) = 0;
+	virtual void Operate(Ty& _lhs, const _u16& _rhs) = 0;
 	virtual void Operate(Ty& _lhs, const bool& _rhs) = 0;
-	virtual void Operate(Ty& _lhs, const Int8& _rhs) = 0;
-	virtual void Operate(Ty& _lhs, const Int8U& _rhs) = 0;
-	virtual void Operate(Ty& _lhs, const Float& _rhs) = 0;
-	virtual void Operate(Ty& _lhs, const Double& _rhs) = 0;
-	virtual void Operate(Ty& _lhs, const LDouble& _rhs) = 0;
+	virtual void Operate(Ty& _lhs, const _s8& _rhs) = 0;
+	virtual void Operate(Ty& _lhs, const _u8& _rhs) = 0;
+	virtual void Operate(Ty& _lhs, const _f32& _rhs) = 0;
+	virtual void Operate(Ty& _lhs, const _f64& _rhs) = 0;
+	virtual void Operate(Ty& _lhs, const _f64l& _rhs) = 0;
 	virtual void Operate(Ty& _lhs, const String& _rhs) = 0;
 	virtual void Operate(Ty& _lhs, char* _pRhs) = 0;
 };

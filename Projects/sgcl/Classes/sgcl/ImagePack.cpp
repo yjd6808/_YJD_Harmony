@@ -259,12 +259,12 @@ jc::String ImagePack::GetImgNameOrDefault(const int _imgIndex, const jc::String&
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ImagePack::ApplyLinearDodge(Byte* _pPixelData, int _len) const
+void ImagePack::ApplyLinearDodge(_u8* _pPixelData, int _len) const
 {
 	for (int i = 0; i < _len; i += 4)
 	{
-		const Byte max = Math::Max(_pPixelData[i + 0], Math::Max(_pPixelData[i + 1], _pPixelData[i + 2]));
-		const Byte sub = 0xff - max;
+		const _u8 max = Math::Max(_pPixelData[i + 0], Math::Max(_pPixelData[i + 1], _pPixelData[i + 2]));
+		const _u8 sub = 0xff - max;
 
 		/* a */
 		_pPixelData[i + 3] = Math::Min(_pPixelData[i + 3], max);

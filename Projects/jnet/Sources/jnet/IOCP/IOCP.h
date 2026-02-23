@@ -36,12 +36,12 @@ public:
 	void DecreasePendingCount() { --pendingOverlappedCount_; }
 	int GetPendingCount() { return pendingOverlappedCount_; }
 	void WaitForZeroPending();
-	jc::Vector<Int32U> GetWorkThreadIdList();
+	jc::Vector<_u32> GetWorkThreadIdList();
 	State GetState() const { return state_; }
 
-	bool Connect(WinHandle _handle, ULONG_PTR _completionKey) const;
-	BOOL GetStatus(Int32UL* _pNumberOfBytesTransffered, PULONG_PTR _pCompletionKey, LPOVERLAPPED* _ppOverlapped) const;
-	BOOL Post(Int32UL _numberOfBytesTransferred, ULONG_PTR _completionKey, LPOVERLAPPED _pOverlapped) const;
+	bool Connect(_whandle _handle, ULONG_PTR _completionKey) const;
+	BOOL GetStatus(_u32l* _pNumberOfBytesTransffered, PULONG_PTR _pCompletionKey, LPOVERLAPPED* _ppOverlapped) const;
+	BOOL Post(_u32l _numberOfBytesTransferred, ULONG_PTR _completionKey, LPOVERLAPPED _pOverlapped) const;
 
 	void SetName(const jc::String& _name);
 	const jc::String& GetName() const { return name_; }
@@ -50,8 +50,8 @@ public:
 
 protected:
 	State state_;
-	WinHandle iocpHandle_;
-	Int32UL threadCount_;
+	_whandle iocpHandle_;
+	_u32l threadCount_;
 	WorkerGroup* workerManager_;
 	jc::AtomicInt pendingOverlappedCount_; // TODO: IOCP에서 팬딩 카운트를 기록하면 경합이 심하지 않을까?
 	jc::NormalLock workerManagerLock_;

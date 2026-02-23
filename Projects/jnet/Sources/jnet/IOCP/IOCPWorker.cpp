@@ -75,7 +75,7 @@ void IOCPWorker::WorkerThread(void* _pParam)
 
 	for (;;)
 	{
-		Int32UL numberOfBytesTransffered;
+		_u32l numberOfBytesTransffered;
 		ULONG_PTR completionKey = NULL;
 		OVERLAPPED* pOverlapped = nullptr;
 

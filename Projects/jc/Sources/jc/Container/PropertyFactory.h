@@ -22,7 +22,7 @@ struct IPropertyFactory
 #pragma warning(disable: 4291)
 
 /*
-	'void *jc::ObjectPool<Property<Float>>::operator new(size_t,int,const char *,int)':
+	'void *jc::ObjectPool<Property<_f32>>::operator new(size_t,int,const char *,int)':
     no matching operator delete found; memory will not be freed if initialization throws an exception
 */
 template <typename T>

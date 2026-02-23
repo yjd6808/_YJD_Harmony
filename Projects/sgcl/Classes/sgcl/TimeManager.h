@@ -26,12 +26,12 @@ public:
 	void UpdateAppTime();
 	void UpdateServerTime();
 
-	Int64 GetAppStartUpTick() const
+	_s64 GetAppStartUpTick() const
 	{
 		return appStartupTime_.Tick;
 	}
 
-	Int64 GetAppTick() const
+	_s64 GetAppTick() const
 	{
 		return appTime_.Tick;
 	}

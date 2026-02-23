@@ -46,7 +46,7 @@ public:
 	static constexpr void ValidateCallbackType() { static_assert(IsSchedulerTaskCallback_v<RemoveConstReference_t<TCallback>>, "... TCallback is not SchedulerTaskCallBack type (std::function<void(SchedulerTask*)>)"); }
 
 	template <typename TCallback>
-	void IntervalAt(TCallback&& _callback, DateTime _at, TimeSpan _interval, Int32U _repeat = INFINITE) {
+	void IntervalAt(TCallback&& _callback, DateTime _at, TimeSpan _interval, _u32 _repeat = INFINITE) {
 		ValidateCallbackType<TCallback>();
 
 		AddFirstTask(dbg_new SchedulerTaskRepeat{
@@ -58,7 +58,7 @@ public:
 	}
 
 	template <typename TCallback>
-	void Interval(TCallback&& _callback, TimeSpan _interval, Int32U _repeat = INFINITE) {
+	void Interval(TCallback&& _callback, TimeSpan _interval, _u32 _repeat = INFINITE) {
 		ValidateCallbackType<TCallback>();
 
 		AddFirstTask(dbg_new SchedulerTaskRepeat{
@@ -98,15 +98,15 @@ protected:
 	void AddTaskRaw(SchedulerTask* _pTask);
 	bool HaveEarlierTask(const DateTime& _waitUntil);
 	void SchedulingRoutine();
-	void ExecuteTasks(TaskList& _scheduledTasks, const Int64U* _pExecutableTaskLimitTime);
-	int PopTasks(OUT Vector<SchedulerTask*>& _executableTasks, const Int64U* _pExecutableTaskLimitTime);
+	void ExecuteTasks(TaskList& _scheduledTasks, const _u64* _pExecutableTaskLimitTime);
+	int PopTasks(OUT Vector<SchedulerTask*>& _executableTasks, const _u64* _pExecutableTaskLimitTime);
 	int WaitingTaskListCountRaw();
-	bool HaveExecutableTaskRaw(IN_OUT Int64U* _pExecutableTaskLimitTime = nullptr);
+	bool HaveExecutableTaskRaw(IN_OUT _u64* _pExecutableTaskLimitTime = nullptr);
 	void ClearWaitingTaskListRaw();
 
 	static ThreadPool::JoinStrategy ConverToThreadPoolStrategy(JoinStrategy _strategy);
 
-	TreeMap<Int64U, TaskList*> waitTasksMap_;
+	TreeMap<_u64, TaskList*> waitTasksMap_;
 	ConditionVariable condVar_;
 	NormalLock lock_;
 	ThreadPool* pThreadPool_;

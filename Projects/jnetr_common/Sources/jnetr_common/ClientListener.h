@@ -19,10 +19,10 @@ public:
 	ClientListener(const jc::String& _name);
 protected:
 	void OnConnected(Session* _pSession) override;
-	void OnDisconnected(Session* _pSession, Int32U _errorCode) override;
-	void OnSent(Session* _pSession, IPacket* _pSentPacket, Int32UL _sentBytes) override;
+	void OnDisconnected(Session* _pSession, _u32 _errorCode) override;
+	void OnSent(Session* _pSession, IPacket* _pSentPacket, _u32l _sentBytes) override;
 	void OnReceived(Session* _pSession, ICommand* _pCommand) override;
-	void OnConnectFailed(Session* _pSession, Int32U _errorMessage) override;
+	void OnConnectFailed(Session* _pSession, _u32 _errorMessage) override;
 private:
 	jc::String name_;
 };

@@ -24,7 +24,7 @@ void C_GAME::OnConnected(Session* _pSession)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void C_GAME::OnConnectFailed(Session* _pSession, Int32U _errorCode)
+void C_GAME::OnConnectFailed(Session* _pSession, _u32 _errorCode)
 {
 }
 

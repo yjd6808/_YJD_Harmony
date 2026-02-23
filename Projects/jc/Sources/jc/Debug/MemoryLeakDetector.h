@@ -55,7 +55,7 @@ protected:
 
 class AutoMemoryLeakDetector : public MemoryLeakDetector
 {
-	using TAction = Action<Int32U>;
+	using TAction = Action<_u32>;
 
 public:
 	AutoMemoryLeakDetector();

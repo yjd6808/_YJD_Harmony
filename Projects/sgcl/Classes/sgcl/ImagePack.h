@@ -45,7 +45,7 @@ public:
 	int GetImgIndexUnsafe(const char* _imgName) const;
 	jc::String GetImgName(const int _imgIndex) const;
 	jc::String GetImgNameOrDefault(const int _imgIndex, const jc::String& _defaultValue) const;
-	void ApplyLinearDodge(Byte* _pPixelData, int _len) const;
+	void ApplyLinearDodge(_u8* _pPixelData, int _len) const;
 
 	int GetPackIndex() { return index_; }
 
@@ -56,5 +56,5 @@ private:
 	int index_;
 	bool hasLoadedData_; // 하나라도 로딩한 데이터가 있는지
 	SgaPackagePtr pPackage_;
-	jc::HashMap<Int64, FrameTexture*> textureCacheMap_;
+	jc::HashMap<_s64, FrameTexture*> textureCacheMap_;
 };

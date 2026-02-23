@@ -66,19 +66,19 @@ void PropertyStatics::Finalize() {
 
 	for (int i = 0; i < PropertyBinaryOperatorType::Max; ++i) {
 		JC_DELETE_SAFE(BinaryOperators_bool[i]);
-		JC_DELETE_SAFE(BinaryOperators_Int8[i]);
-		JC_DELETE_SAFE(BinaryOperators_Int8U[i]);
-		JC_DELETE_SAFE(BinaryOperators_Int16[i]);
-		JC_DELETE_SAFE(BinaryOperators_Int16U[i]);
-		JC_DELETE_SAFE(BinaryOperators_Int[i]);
-		JC_DELETE_SAFE(BinaryOperators_Int32U[i]);
-		JC_DELETE_SAFE(BinaryOperators_Int32L[i]);
-		JC_DELETE_SAFE(BinaryOperators_Int32UL[i]);
-		JC_DELETE_SAFE(BinaryOperators_Int64[i]);
-		JC_DELETE_SAFE(BinaryOperators_Int64U[i]);
-		JC_DELETE_SAFE(BinaryOperators_Float[i]);
-		JC_DELETE_SAFE(BinaryOperators_Double[i]);
-		JC_DELETE_SAFE(BinaryOperators_LDouble[i]);
+		JC_DELETE_SAFE(BinaryOperators__s8[i]);
+		JC_DELETE_SAFE(BinaryOperators__u8[i]);
+		JC_DELETE_SAFE(BinaryOperators__s16[i]);
+		JC_DELETE_SAFE(BinaryOperators__u16[i]);
+		JC_DELETE_SAFE(BinaryOperators__s32[i]);
+		JC_DELETE_SAFE(BinaryOperators__u32[i]);
+		JC_DELETE_SAFE(BinaryOperators__s32l[i]);
+		JC_DELETE_SAFE(BinaryOperators__u32l[i]);
+		JC_DELETE_SAFE(BinaryOperators__s64[i]);
+		JC_DELETE_SAFE(BinaryOperators__u64[i]);
+		JC_DELETE_SAFE(BinaryOperators__f32[i]);
+		JC_DELETE_SAFE(BinaryOperators__f64[i]);
+		JC_DELETE_SAFE(BinaryOperators__f64l[i]);
 		JC_DELETE_SAFE(BinaryOperators_String[i]);
 	}
 
@@ -91,19 +91,19 @@ void PropertyStatics::Finalize() {
 	}
 
 	Property<bool>::FreeAllObjects();
-	Property<Int8>::FreeAllObjects();
-	Property<Int8U>::FreeAllObjects();
-	Property<Int16>::FreeAllObjects();
-	Property<Int16U>::FreeAllObjects();
-	Property<Int>::FreeAllObjects();
-	Property<Int32U>::FreeAllObjects();
-	Property<Int32L>::FreeAllObjects();
-	Property<Int32UL>::FreeAllObjects();
-	Property<Int64>::FreeAllObjects();
-	Property<Int64U>::FreeAllObjects();
-	Property<Float>::FreeAllObjects();
-	Property<Double>::FreeAllObjects();
-	Property<LDouble>::FreeAllObjects();
+	Property<_s8>::FreeAllObjects();
+	Property<_u8>::FreeAllObjects();
+	Property<_s16>::FreeAllObjects();
+	Property<_u16>::FreeAllObjects();
+	Property<_s32>::FreeAllObjects();
+	Property<_u32>::FreeAllObjects();
+	Property<_s32l>::FreeAllObjects();
+	Property<_u32l>::FreeAllObjects();
+	Property<_s64>::FreeAllObjects();
+	Property<_u64>::FreeAllObjects();
+	Property<_f32>::FreeAllObjects();
+	Property<_f64>::FreeAllObjects();
+	Property<_f64l>::FreeAllObjects();
 	Property<String>::FreeAllObjects();
 }
 

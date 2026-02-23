@@ -23,7 +23,7 @@ public:
 	static void CopyUnsafeReverse(void* _dst, const void* _src, int _srcCopyByte);
 
 
-	static void Set(void* _src, int _srcCapacity, Byte _value);
+	static void Set(void* _src, int _srcCapacity, _u8 _value);
 
 	// 자료형 T 크기 단위로 복사를 진행합니다.
 	template <typename T>
@@ -31,8 +31,8 @@ public:
 	{
 		const int kiDataTypeSize = sizeof(T);
 
-		Byte* pSrc = (Byte*)_src;
-		const Byte* pValue = (Byte*)&_value;
+		_u8* pSrc = (_u8*)_src;
+		const _u8* pValue = (_u8*)&_value;
 
 		for (int i = 0; i < _srcCapacity; i++)
 		{
@@ -43,7 +43,7 @@ public:
 
 	// 메모리풀 구현전 임시로 사용할 메모리 할당 해제 함수
 	template <typename T>
-	static T Allocate(const Int32U _size)
+	static T Allocate(const _u32 _size)
 	{
 		static_assert(IsPointerType_v<T>, "only cast to pointer type");
 
@@ -135,6 +135,64 @@ public:
 		{
 			PlacementDelete(_arr[i]);
 		}
+	}
+
+
+	static _u32 CalcU32_LEB128(_u32 _value)
+	{
+		_u32 count = 0;
+		do
+		{
+			// 7비트씩 자르며 진행
+			_value >>= 7;
+			++count;
+		} while (_value != 0);
+
+		return count;
+	}
+
+	// LEB128로 정수를 기록한다.
+	static _u32 WriteU32_LEB128(_u8* _pBytes, _u32 _capacity, _u32 _value)
+	{
+		if (_capacity <= sizeof(_u32))
+			return 0xffffffff;
+
+		_u32 i = 0;
+		do
+		{
+			_u8 byte = static_cast<_u8>(_value & 0x7F);
+			_value >>= 7;
+			if (_value != 0)
+				byte |= 0x80;		// 다음 바이트가 더 있음을 표시
+			_pBytes[i++] = byte;
+		} while (_value != 0);
+		return i;
+	}
+
+	static _u32 ReadU32_LEB128(const _u8* _pBytes, _u32 _capacity, OUT _u32& _value)
+	{
+		_value = 0;
+		_u32 shift = 0;
+
+		for (_u32 i = 0; i < _capacity; ++i)
+		{
+			const _u8 byte = _pBytes[i];
+
+			_value |= static_cast<_u32>(byte & 0x7F) << shift;	// 7비트씩 누적
+
+			if ((byte & 0x80) == 0)
+			{
+				// 마지막 바이트: i + 1 == 사용한 바이트 수
+				return i + 1;
+			}
+
+			shift += 7;
+			if (shift >= 32)
+			{
+				return 0xffffffff; // U32 범위를 벗어나는 잘못된 LEB128
+			}
+		}
+		return 0xffffffff;
 	}
 };
 

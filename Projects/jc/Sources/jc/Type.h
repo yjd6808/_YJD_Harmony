@@ -5,33 +5,34 @@
 
 #pragma once
 
-using Int64		= long long;
-using Int64U	= unsigned long long;
-using Int		= int;
-using Int32		= int;
-using Int32U	= unsigned int;
-using Int32L	= long;
-using Int32UL	= unsigned long;
-using Int16		= short;
-using Int16U	= unsigned short;
-using Int8		= char;
-using Int8U		= unsigned char;
-using Char		= char;
-using Float		= float;
-using Double	= double;
-using LDouble	= long double;
-using Byte		= unsigned char;
-using WideChar	= wchar_t;
+using _s64		= long long;
+using _u64		= unsigned long long;
+using object_id = _u64;
+using _s32		= int;
+using _s32		= int;
+using _u32		= unsigned int;
+using _s32l		= long;
+using _u32l		= unsigned long;
+using _s16		= short;
+using _u16		= unsigned short;
+using _s8		= char;
+using _u8		= unsigned char;
+using _s8		= char;
+using _f32		= float;
+using _f64		= double;
+using _f64l		= long double;
+using _u8		= unsigned char;
+using _s16c		= wchar_t;
 
 #ifdef _WIN64
-using IntPtr = Int64;
-using Size_t = unsigned long long;
+using _ptr = _s64;
+using _sz = unsigned long long;
 #else
-using IntPtr = Int32U;
-using Size_t = unsigned int;
+using _ptr = _u32;
+using _sz = unsigned int;
 #endif
 
-using WinHandle = void*;
-using WinModule = void*;
-using IoHandle = void*;
+using _whandle = void*;
+using _wmodule = void*;
+using _iohandle = void*;
 

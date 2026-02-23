@@ -116,19 +116,19 @@ public:
 	int Replace(int _offset, const String& _from, const String& _to);
 	void ReplaceAll(const char* _pFrom, const char* _pTo);
 
-	bool Contain(const char* str) const;
-	bool Contain(const String& str) const;
-	void Format(const char* format, ...);
+	bool Contain(const char* _str) const;
+	bool Contain(const String& _str) const;
+	void Format(const char* _format, ...);
 	
-	void SetAt(int idx, char ch);
-	char GetAt(int idx) const ;
-	String GetRange(int startIdx, int endIdx) const;
+	void SetAt(int _idx, char _ch);
+	char GetAt(int _idx) const ;
+	String GetRange(int _startIdx, int _endIdx) const;
 	String SubStr(int _startIdx, int _count) const;
 
 	// 동적할당된 문자열, 길이, 할당된 크기를 반환한다.
-	Tuple<char*, int, int> GetRangeUnsafe(int startIdx, int endIdx) const;
-	Vector<String, CDefaultAllocator> Split(const char* delimiter, bool includeEmpty = false) const;
-	void Initialize(int capacity = DEFAULT_BUFFER_SIZE);
+	Tuple<char*, int, int> GetRangeUnsafe(int _startIdx, int _endIdx) const;
+	Vector<String, CDefaultAllocator> Split(const char* _delimiter, bool _includeEmpty = false) const;
+	void Initialize(int _capacity = DEFAULT_BUFFER_SIZE);
 
 	String ToLowerCase() const;
 	String ToUpperCase() const;
@@ -140,9 +140,9 @@ public:
 	char& operator[](int _index) const;
 
 	template <typename T>
-	String operator+(const T& other) { 
+	String operator+(const T& _other) { 
 		String temp = *this;
-		temp.Append(other);
+		temp.Append(_other);
 		return temp;
 	}
 
@@ -151,19 +151,19 @@ public:
 	String operator+(const char* _pStr) const;
 
 	template <typename T>
-	String& operator+=(const T& other) { Append(other);  return *this; }
+	String& operator+=(const T& _other) { Append(_other);  return *this; }
 	String& operator+=(const String& _other);
 	String& operator+=(char _ch);
 	String& operator+=(char* _pStr);
 	String& operator+=(const char* _pStr);
 
 	template <typename T>
-	String& operator=(const T& other) {
+	String& operator=(const T& _other) {
 		if (m_pBuffer == nullptr)
 			Initialize();
 
 		Clear();
-		Append(other);
+		Append(_other);
 		return *this;
 	}
 

@@ -19,7 +19,7 @@
 #include <sgcl/_Scene/Scene_Game.h>
 #include <sgcl/_Scene/Scene_ChannelSelect.h>
 #include <sgcl/_Layer/Layer_UI.h>
-#include <sgcl/NetCore.h>
+#include <sgcl/_Net/NetCore.h>
 #include <sgcl/Contents.h>
 #include <sgcl/SteinsGateApp.h>
 
@@ -147,7 +147,7 @@ void WorldScene::update(float _dt)
 	// 델타타임(float dt)은 long long 타입의 마이크로초단위 델타값을 float 타입으로, 단위 및 타입 변환을 수행한 것이므로
 	// 다시 복구 변환가능함. 코코스엔진의 아래 코드 참고할 것
 	// Director::drawScene() -> Director::calculateDeltaTime()
-	TimeSpan tsdt = Int64(_dt * 1'000'000);
+	TimeSpan tsdt = _s64(_dt * 1'000'000);
 
 	g_cVM.Go(tsdt);
 

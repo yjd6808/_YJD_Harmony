@@ -27,14 +27,14 @@ class ConnectionSynchronizer final : public jc::SingletonPointer<ConnectionSynch
 		virtual ~ResultBase() = default;
 
 		Type connType_;
-		ClientConnectServerType_t listenerType_;
+		ServerType_t listenerType_;
 		jnet::Session* pSession_;
 	};
 
 	struct ConnectionResult : ResultBase, jc::ObjectPool<ConnectionResult>
 	{
 		bool success_;
-		Int32U errorCode_;
+		_u32 errorCode_;
 	};
 
 	struct DisconnectionResult : ResultBase, jc::ObjectPool<DisconnectionResult>
@@ -46,8 +46,8 @@ class ConnectionSynchronizer final : public jc::SingletonPointer<ConnectionSynch
 	void Finalize();
 
 public:
-	void EnqueueConnection(ClientConnectServerType_t _listenerType, jnet::Session* _pSession, bool _success, Int32U _errorCode);
-	void EnqueueDisconnection(ClientConnectServerType_t _listenerType, jnet::Session* _pSession);
+	void EnqueueConnection(ServerType_t _listenerType, jnet::Session* _pSession, bool _success, _u32 _errorCode);
+	void EnqueueDisconnection(ServerType_t _listenerType, jnet::Session* _pSession);
 	void Initialize();
 	void ProcessConnections();
 
@@ -55,7 +55,7 @@ private:
 	using ResultQueue = jc::ArrayQueue<ResultBase*>;
 
 	jc::Action<jnet::Session*> onConnected_[ServerType::Max];
-	jc::Action<jnet::Session*, Int32U> onConnectFailed_[ServerType::Max];
+	jc::Action<jnet::Session*, _u32> onConnectFailed_[ServerType::Max];
 	jc::Action<jnet::Session*> onDisconnected_[ServerType::Max];
 
 	jc::NormalLock lock_;

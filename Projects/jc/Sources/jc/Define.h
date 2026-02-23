@@ -113,7 +113,7 @@
 	    }													\
     } while (0)	
 	
-	#define JC_LEAK_CHECK_ASSERT		jc::AutoMemoryLeakDetector JC_CONCAT_COUNTER(_) {[](Int32U leakedBytes ) { jc_assert_msg(leakedBytes == 0, "%u 바이트 메모리 릭이 있습니다.", leakedBytes); }}
+	#define JC_LEAK_CHECK_ASSERT		jc::AutoMemoryLeakDetector JC_CONCAT_COUNTER(_) {[](_u32 leakedBytes ) { jc_assert_msg(leakedBytes == 0, "%u 바이트 메모리 릭이 있습니다.", leakedBytes); }}
 	#define JC_DEFAULT_CODE_PAGE		jc::CodePage::UTF8
 
 	// 필드 어노테이션

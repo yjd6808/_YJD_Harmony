@@ -85,9 +85,9 @@ SgaElementPtr SgaLoader::ReadElement(Stream& _stream, SgaElement::Header& _heade
 
 	if (elementFlag == SgaLoader::ImgFlag)
 	{
-		Int32 indexLength = static_cast<Int32>(_stream.ReadInt64());
-		Int32 version = _stream.ReadInt32();
-		Int32 spriteCount = _stream.ReadInt32();
+		_s32 indexLength = static_cast<_s32>(_stream.ReadInt64());
+		_s32 version = _stream.ReadInt32();
+		_s32 spriteCount = _stream.ReadInt32();
 
 		pElement = SgaImage::Create(_header, spriteCount);
 		pElement->indexLength_ = indexLength;
@@ -105,10 +105,10 @@ SgaElementPtr SgaLoader::ReadElement(Stream& _stream, SgaElement::Header& _heade
 
 	if (elementFlag == SgaLoader::SpriteFlag)
 	{
-		Int32 indexLength = _stream.ReadInt32();
+		_s32 indexLength = _stream.ReadInt32();
 		_stream.Seek(2, Stream::eCurrent);
-		Int32 version = _stream.ReadInt32();
-		Int32 spriteCount = _stream.ReadInt32();
+		_s32 version = _stream.ReadInt32();
+		_s32 spriteCount = _stream.ReadInt32();
 
 		pElement = SgaImage::Create(_header, spriteCount);
 		pElement->indexLength_ = indexLength;

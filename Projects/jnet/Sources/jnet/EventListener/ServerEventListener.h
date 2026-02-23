@@ -30,26 +30,26 @@ class ServerEventListener
 {
 public:
 	using FnStarted = jc::Action<>;
-	using FnStartFailed = jc::Action<Int32U>;
+	using FnStartFailed = jc::Action<_u32>;
 	using FnStopped = jc::Action<>;
 	using FnConnected = jc::Action<Session*>;
-	using FnConnectFailed = jc::Action<Session*, Int32U>;
-	using FnDisconnected = jc::Action<Session*, Int32U>;
-	using FnSent = jc::Action<Session*, IPacket*, Int32UL>;
+	using FnConnectFailed = jc::Action<Session*, _u32>;
+	using FnDisconnected = jc::Action<Session*, _u32>;
+	using FnSent = jc::Action<Session*, IPacket*, _u32l>;
 	using FnReceivedRaw = jc::Action<Session*, char*, int>;
 	using FnReceived = jc::Action<Session*, ICommand*>;
 	using FnReceivedPacket = jc::Action<Session*, RecvedCommandPacket*>;
 
 	virtual ~ServerEventListener() = default;
 	virtual void OnStarted() {}
-	virtual void OnStartFailed(Int32U _errorCode) {}
+	virtual void OnStartFailed(_u32 _errorCode) {}
 	virtual void OnStopped() {}
 
 	// TODO: 함수명 Accept로 변경할것, 관련해서 TcpServer, Session도 수정해야할듯?
 	virtual void OnConnected(Session* _pSession) {}
-	virtual void OnConnectFailed(Session* _pSession, Int32U _errorCode) {}
-	virtual void OnDisconnected(Session* _pSession, Int32U _errorCode) {}
-	virtual void OnSent(Session* _pSession, IPacket* _pSentPacket, Int32UL _sentBytes) {}
+	virtual void OnConnectFailed(Session* _pSession, _u32 _errorCode) {}
+	virtual void OnDisconnected(Session* _pSession, _u32 _errorCode) {}
+	virtual void OnSent(Session* _pSession, IPacket* _pSentPacket, _u32l _sentBytes) {}
 	virtual void OnReceivedRaw(Session* _pSession, char* _pData, int _len) {}
 	virtual void OnReceived(Session* _pSession, ICommand* _pRecvCmd) {}
 	virtual void OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket) {}

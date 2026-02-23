@@ -31,38 +31,38 @@ struct SPropertyValueBinaryOperatorSelector : IPropertyValueBinaryOperatorSelect
 			ArgTy pRhs = (ArgTy)_pDecayedRhs;
 
 			if constexpr (Type == PropertyType::Bool)            PropertyStatics::BinaryOperators_bool[_binaryOperator]->Operate(*pLhs, pRhs);
-			else if constexpr (Type == PropertyType::Int8)       PropertyStatics::BinaryOperators_Int8[_binaryOperator]->Operate(*pLhs, pRhs);
-			else if constexpr (Type == PropertyType::Int8U)      PropertyStatics::BinaryOperators_Int8U[_binaryOperator]->Operate(*pLhs, pRhs);
-			else if constexpr (Type == PropertyType::Int16)      PropertyStatics::BinaryOperators_Int16[_binaryOperator]->Operate(*pLhs, pRhs);
-			else if constexpr (Type == PropertyType::Int16U)     PropertyStatics::BinaryOperators_Int16U[_binaryOperator]->Operate(*pLhs, pRhs);
-			else if constexpr (Type == PropertyType::Int)        PropertyStatics::BinaryOperators_Int[_binaryOperator]->Operate(*pLhs, pRhs);
-			else if constexpr (Type == PropertyType::Int32U)     PropertyStatics::BinaryOperators_Int32U[_binaryOperator]->Operate(*pLhs, pRhs);
-			else if constexpr (Type == PropertyType::Int32L)     PropertyStatics::BinaryOperators_Int32L[_binaryOperator]->Operate(*pLhs, pRhs);
-			else if constexpr (Type == PropertyType::Int32UL)    PropertyStatics::BinaryOperators_Int32UL[_binaryOperator]->Operate(*pLhs, pRhs);
-			else if constexpr (Type == PropertyType::Int64)      PropertyStatics::BinaryOperators_Int64[_binaryOperator]->Operate(*pLhs, pRhs);
-			else if constexpr (Type == PropertyType::Int64U)     PropertyStatics::BinaryOperators_Int64U[_binaryOperator]->Operate(*pLhs, pRhs);
-			else if constexpr (Type == PropertyType::Float)      PropertyStatics::BinaryOperators_Float[_binaryOperator]->Operate(*pLhs, pRhs);
-			else if constexpr (Type == PropertyType::Double)     PropertyStatics::BinaryOperators_Double[_binaryOperator]->Operate(*pLhs, pRhs);
-			else if constexpr (Type == PropertyType::LDouble)    PropertyStatics::BinaryOperators_LDouble[_binaryOperator]->Operate(*pLhs, pRhs);
+			else if constexpr (Type == PropertyType::_s8)       PropertyStatics::BinaryOperators__s8[_binaryOperator]->Operate(*pLhs, pRhs);
+			else if constexpr (Type == PropertyType::_u8)      PropertyStatics::BinaryOperators__u8[_binaryOperator]->Operate(*pLhs, pRhs);
+			else if constexpr (Type == PropertyType::_s16)      PropertyStatics::BinaryOperators__s16[_binaryOperator]->Operate(*pLhs, pRhs);
+			else if constexpr (Type == PropertyType::_u16)     PropertyStatics::BinaryOperators__u16[_binaryOperator]->Operate(*pLhs, pRhs);
+			else if constexpr (Type == PropertyType::_s32)        PropertyStatics::BinaryOperators__s32[_binaryOperator]->Operate(*pLhs, pRhs);
+			else if constexpr (Type == PropertyType::_u32)     PropertyStatics::BinaryOperators__u32[_binaryOperator]->Operate(*pLhs, pRhs);
+			else if constexpr (Type == PropertyType::_s32l)     PropertyStatics::BinaryOperators__s32l[_binaryOperator]->Operate(*pLhs, pRhs);
+			else if constexpr (Type == PropertyType::_u32l)    PropertyStatics::BinaryOperators__u32l[_binaryOperator]->Operate(*pLhs, pRhs);
+			else if constexpr (Type == PropertyType::_s64)      PropertyStatics::BinaryOperators__s64[_binaryOperator]->Operate(*pLhs, pRhs);
+			else if constexpr (Type == PropertyType::_u64)     PropertyStatics::BinaryOperators__u64[_binaryOperator]->Operate(*pLhs, pRhs);
+			else if constexpr (Type == PropertyType::_f32)      PropertyStatics::BinaryOperators__f32[_binaryOperator]->Operate(*pLhs, pRhs);
+			else if constexpr (Type == PropertyType::_f64)     PropertyStatics::BinaryOperators__f64[_binaryOperator]->Operate(*pLhs, pRhs);
+			else if constexpr (Type == PropertyType::_f64l)    PropertyStatics::BinaryOperators__f64l[_binaryOperator]->Operate(*pLhs, pRhs);
 			else if constexpr (Type == PropertyType::String)     PropertyStatics::BinaryOperators_String[_binaryOperator]->Operate(*pLhs, pRhs);
 		}
 		else
 		{
 			ArgTy* pRhs = (ArgTy*)_pDecayedRhs;
 			if constexpr (Type == PropertyType::Bool)            PropertyStatics::BinaryOperators_bool[_binaryOperator]->Operate(*pLhs, *pRhs);
-			else if constexpr (Type == PropertyType::Int8)       PropertyStatics::BinaryOperators_Int8[_binaryOperator]->Operate(*pLhs, *pRhs);
-			else if constexpr (Type == PropertyType::Int8U)      PropertyStatics::BinaryOperators_Int8U[_binaryOperator]->Operate(*pLhs, *pRhs);
-			else if constexpr (Type == PropertyType::Int16)      PropertyStatics::BinaryOperators_Int16[_binaryOperator]->Operate(*pLhs, *pRhs);
-			else if constexpr (Type == PropertyType::Int16U)     PropertyStatics::BinaryOperators_Int16U[_binaryOperator]->Operate(*pLhs, *pRhs);
-			else if constexpr (Type == PropertyType::Int)        PropertyStatics::BinaryOperators_Int[_binaryOperator]->Operate(*pLhs, *pRhs);
-			else if constexpr (Type == PropertyType::Int32U)     PropertyStatics::BinaryOperators_Int32U[_binaryOperator]->Operate(*pLhs, *pRhs);
-			else if constexpr (Type == PropertyType::Int32L)     PropertyStatics::BinaryOperators_Int32L[_binaryOperator]->Operate(*pLhs, *pRhs);
-			else if constexpr (Type == PropertyType::Int32UL)    PropertyStatics::BinaryOperators_Int32UL[_binaryOperator]->Operate(*pLhs, *pRhs);
-			else if constexpr (Type == PropertyType::Int64)      PropertyStatics::BinaryOperators_Int64[_binaryOperator]->Operate(*pLhs, *pRhs);
-			else if constexpr (Type == PropertyType::Int64U)     PropertyStatics::BinaryOperators_Int64U[_binaryOperator]->Operate(*pLhs, *pRhs);
-			else if constexpr (Type == PropertyType::Float)      PropertyStatics::BinaryOperators_Float[_binaryOperator]->Operate(*pLhs, *pRhs);
-			else if constexpr (Type == PropertyType::Double)     PropertyStatics::BinaryOperators_Double[_binaryOperator]->Operate(*pLhs, *pRhs);
-			else if constexpr (Type == PropertyType::LDouble)    PropertyStatics::BinaryOperators_LDouble[_binaryOperator]->Operate(*pLhs, *pRhs);
+			else if constexpr (Type == PropertyType::_s8)       PropertyStatics::BinaryOperators__s8[_binaryOperator]->Operate(*pLhs, *pRhs);
+			else if constexpr (Type == PropertyType::_u8)      PropertyStatics::BinaryOperators__u8[_binaryOperator]->Operate(*pLhs, *pRhs);
+			else if constexpr (Type == PropertyType::_s16)      PropertyStatics::BinaryOperators__s16[_binaryOperator]->Operate(*pLhs, *pRhs);
+			else if constexpr (Type == PropertyType::_u16)     PropertyStatics::BinaryOperators__u16[_binaryOperator]->Operate(*pLhs, *pRhs);
+			else if constexpr (Type == PropertyType::_s32)        PropertyStatics::BinaryOperators__s32[_binaryOperator]->Operate(*pLhs, *pRhs);
+			else if constexpr (Type == PropertyType::_u32)     PropertyStatics::BinaryOperators__u32[_binaryOperator]->Operate(*pLhs, *pRhs);
+			else if constexpr (Type == PropertyType::_s32l)     PropertyStatics::BinaryOperators__s32l[_binaryOperator]->Operate(*pLhs, *pRhs);
+			else if constexpr (Type == PropertyType::_u32l)    PropertyStatics::BinaryOperators__u32l[_binaryOperator]->Operate(*pLhs, *pRhs);
+			else if constexpr (Type == PropertyType::_s64)      PropertyStatics::BinaryOperators__s64[_binaryOperator]->Operate(*pLhs, *pRhs);
+			else if constexpr (Type == PropertyType::_u64)     PropertyStatics::BinaryOperators__u64[_binaryOperator]->Operate(*pLhs, *pRhs);
+			else if constexpr (Type == PropertyType::_f32)      PropertyStatics::BinaryOperators__f32[_binaryOperator]->Operate(*pLhs, *pRhs);
+			else if constexpr (Type == PropertyType::_f64)     PropertyStatics::BinaryOperators__f64[_binaryOperator]->Operate(*pLhs, *pRhs);
+			else if constexpr (Type == PropertyType::_f64l)    PropertyStatics::BinaryOperators__f64l[_binaryOperator]->Operate(*pLhs, *pRhs);
 			else if constexpr (Type == PropertyType::String)     PropertyStatics::BinaryOperators_String[_binaryOperator]->Operate(*pLhs, *pRhs);
 		}
 	}

@@ -25,7 +25,7 @@ NS_JNET_BEGIN
 			return false;
 
 		{
-			Int32UL bytes;
+			_u32l bytes;
 			int result = WSAIoctl(
 				dummySocket.Handle,
 				SIO_GET_EXTENSION_FUNCTION_POINTER,
@@ -243,7 +243,7 @@ Socketv4 Socketv4::Accept()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int Socketv4::AcceptEx(SOCKET _listeningSocket, void* _pOutputBuffer, Int32UL _receiveDataLength, OUT Int32UL* _pReceivedBytes, LPOVERLAPPED _pOverlapped) const
+int Socketv4::AcceptEx(SOCKET _listeningSocket, void* _pOutputBuffer, _u32l _receiveDataLength, OUT _u32l* _pReceivedBytes, LPOVERLAPPED _pOverlapped) const
 {
 	// @참고 : https://docs.microsoft.com/en-us/windows/win32/api/mswsock/nf-mswsock-acceptex
 	// sListenSocket : 서버 소켓
@@ -256,7 +256,7 @@ int Socketv4::AcceptEx(SOCKET _listeningSocket, void* _pOutputBuffer, Int32UL _r
 	//					 로컬 주소, 원격 주소를 제외한 크기를 전달해줘야한다.
 	// dwLocalAddressLength : 로컬 주소 정보 크기를 전달한다. 전송 프로토콜의 최대 주소 크기보다 16바이트 이상 커야한다.
 	// dwRemoteAddressLength : 원격 주소 정보 크기를 전달한다. 전송 프로토콜의 최대 주소 크기보다 16바이트 이상 커야한다.
-	// lpdwBytesReceived : 전송받은 데이터 크기를 저장할 Int32UL*를 전달한다. 만약 바로 완료된 경우 여기 데이터가 담길 것이다.
+	// lpdwBytesReceived : 전송받은 데이터 크기를 저장할 _u32l*를 전달한다. 만약 바로 완료된 경우 여기 데이터가 담길 것이다.
 	//				   GetLastError()의 ERROR_IO_PENDING 오류를 받는 경우에는 완료 통지 방식으로 데이터를 읽어야한다. (오버랩 말하는 듯?)
 	// lpOverlapped : NULL을 절대 전달하면 안된다. 수신한 정보가 비동기적으로 완료될 수 있으므로 오버랩 정보를 전달해야함.
 
@@ -272,7 +272,7 @@ int Socketv4::AcceptEx(SOCKET _listeningSocket, void* _pOutputBuffer, Int32UL _r
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Socketv4::AcceptExResult(char* _pBuffer, Int32UL _receiveDataLength, OUT IPv4EndPoint* _pLocalEndPoint, OUT IPv4EndPoint* _pRemoteEndPoint)
+void Socketv4::AcceptExResult(char* _pBuffer, _u32l _receiveDataLength, OUT IPv4EndPoint* _pLocalEndPoint, OUT IPv4EndPoint* _pRemoteEndPoint)
 {
 	LPSOCKADDR_IN pLocalSockAddrIn;
 	LPSOCKADDR_IN pRemoteSockAddrIn;
@@ -356,7 +356,7 @@ int Socketv4::Connect(const IPv4EndPoint& _ipv4EndPoint) const
 // [in]			lpOverlapped : 절대 NULL 전달하면 안됨
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int Socketv4::ConnectEx(const IPv4EndPoint& _ipv4EndPoint, LPOVERLAPPED _pOverlapped, char* _pSendBuffer, Int32UL _sendBufferSize, OUT Int32UL* _pSentBytes) const
+int Socketv4::ConnectEx(const IPv4EndPoint& _ipv4EndPoint, LPOVERLAPPED _pOverlapped, char* _pSendBuffer, _u32l _sendBufferSize, OUT _u32l* _pSentBytes) const
 {
 	SOCKADDR_IN address;
 	address.sin_family = AF_INET;
@@ -377,7 +377,7 @@ int Socketv4::ConnectEx(const IPv4EndPoint& _ipv4EndPoint, LPOVERLAPPED _pOverla
 // @참고: https://learn.microsoft.com/en-us/windows/win32/api/mswsock/nc-mswsock-lpfn_connectex
 // 커넥션 오리엔티드 소켓만 사용가능
 //////////////////////////////////////////////////////////////////////////////////////////
-int Socketv4::DisconnectEx(LPOVERLAPPED _pOverlapped, Int32UL _flag)
+int Socketv4::DisconnectEx(LPOVERLAPPED _pOverlapped, _u32l _flag)
 {
 	jc_assert_msg(lpfnDisconnectEx != nullptr, "DisconnectEx 함수를 사용할려면 먼저 UseDisconnectEx를 호출해주세요");
 	jc_assert_msg(Protocol == TransportProtocol::TCP, "커넥션 오리엔티드 소켓만 사용가능합니다.");
@@ -385,13 +385,13 @@ int Socketv4::DisconnectEx(LPOVERLAPPED _pOverlapped, Int32UL _flag)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int Socketv4::Send(char* _pBuff, Int32U _length, Int32U _flag) const
+int Socketv4::Send(char* _pBuff, _u32 _length, _u32 _flag) const
 {
 	return send(Handle, _pBuff, static_cast<int>(_length), static_cast<int>(_flag));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int Socketv4::SendTo(char* _pBuff, Int32U _length, const IPv4EndPoint& _ipv4EndPoint, Int32U _flag) const
+int Socketv4::SendTo(char* _pBuff, _u32 _length, const IPv4EndPoint& _ipv4EndPoint, _u32 _flag) const
 {
 	SOCKADDR_IN address;
 	address.sin_family = AF_INET;
@@ -407,13 +407,13 @@ int Socketv4::SendTo(char* _pBuff, Int32U _length, const IPv4EndPoint& _ipv4EndP
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int Socketv4::Receive(char* _pBuff, Int32U _bufferSize, Int32U _flag) const
+int Socketv4::Receive(char* _pBuff, _u32 _bufferSize, _u32 _flag) const
 {
 	return recv(Handle, _pBuff, static_cast<int>(_bufferSize), static_cast<int>(_flag));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int Socketv4::ReceiveFrom(char* _pBuff, Int32U _bufferSize, OUT IPv4EndPoint* _pIpv4EndPoint, Int32U _flag) const
+int Socketv4::ReceiveFrom(char* _pBuff, _u32 _bufferSize, OUT IPv4EndPoint* _pIpv4EndPoint, _u32 _flag) const
 {
 	SOCKADDR_IN address;
 	int addressSize = sizeof(SOCKADDR_IN);
@@ -432,10 +432,10 @@ int Socketv4::ReceiveFrom(char* _pBuff, Int32U _bufferSize, OUT IPv4EndPoint* _p
 //////////////////////////////////////////////////////////////////////////////////////////
 int Socketv4::SendEx(
 	LPWSABUF _pBuf,
-	OUT Int32UL* _pBytesSent,
+	OUT _u32l* _pBytesSent,
 	LPOVERLAPPED _pOverlapped,
 	LPWSAOVERLAPPED_COMPLETION_ROUTINE _pCompRoutine,
-	Int32U _flag) const
+	_u32 _flag) const
 {
 	return WSASend(Handle, _pBuf, 1, _pBytesSent, _flag, _pOverlapped, _pCompRoutine);
 }
@@ -443,7 +443,7 @@ int Socketv4::SendEx(
 //////////////////////////////////////////////////////////////////////////////////////////
 int Socketv4::SendToEx(
 	LPWSABUF _pBuffers,
-	OUT Int32UL* _pBytesSent,
+	OUT _u32l* _pBytesSent,
 	LPOVERLAPPED _pOverlapped,
 	const IPv4EndPoint& _to,
 	LPWSAOVERLAPPED_COMPLETION_ROUTINE _pCompRoutine) const
@@ -467,22 +467,22 @@ int Socketv4::SendToEx(
 //////////////////////////////////////////////////////////////////////////////////////////
 int Socketv4::ReceiveEx(
 	LPWSABUF _pBuf,
-	OUT Int32UL* _pBytesReceived,
+	OUT _u32l* _pBytesReceived,
 	LPOVERLAPPED _pOverlapped,
 	LPWSAOVERLAPPED_COMPLETION_ROUTINE _pCompRoutine,
-	Int32U _flag) const
+	_u32 _flag) const
 {
-	return WSARecv(Handle, _pBuf, 1, _pBytesReceived, reinterpret_cast<Int32UL*>(&_flag), _pOverlapped, _pCompRoutine);
+	return WSARecv(Handle, _pBuf, 1, _pBytesReceived, reinterpret_cast<_u32l*>(&_flag), _pOverlapped, _pCompRoutine);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 int Socketv4::ReceiveFromEx(
 	LPWSABUF _pBuf,
-	OUT Int32UL* _pBytesReceived,
+	OUT _u32l* _pBytesReceived,
 	LPOVERLAPPED _pOverlapped,
 	OUT SOCKADDR_IN* _pSenderAddr,
 	LPWSAOVERLAPPED_COMPLETION_ROUTINE _pCompRoutine,
-	Int32U _flag) const
+	_u32 _flag) const
 {
 	int addressLength = sizeof(SOCKADDR_IN);
 	return WSARecvFrom(
@@ -490,7 +490,7 @@ int Socketv4::ReceiveFromEx(
 		_pBuf,
 		1,
 		_pBytesReceived,
-		reinterpret_cast<Int32UL*>(&_flag),
+		reinterpret_cast<_u32l*>(&_flag),
 		reinterpret_cast<sockaddr*>(_pSenderAddr),
 		&addressLength,
 		_pOverlapped,
@@ -586,7 +586,7 @@ int SocketOption::SetExclusiveReuseAddrEnabled(bool _enabled) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int SocketOption::SetLingerTimeout(Int16U _timeout) const
+int SocketOption::SetLingerTimeout(_u16 _timeout) const
 {
 	LINGER linger;
 	linger.l_onoff = TRUE;

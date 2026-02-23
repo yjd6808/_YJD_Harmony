@@ -37,6 +37,6 @@ private:
 	int length_;
 };
 
-using ByteArraySegment = CArraySegment<Byte>;
+using ByteArraySegment = CArraySegment<_u8>;
 
 NS_END

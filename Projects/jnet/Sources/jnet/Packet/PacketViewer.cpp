@@ -99,8 +99,8 @@ void PacketViewer::Hex(char* _pData, int _len, OUT String& _hex)
 
 	for (int index = 0; index < _len; ++index)
 	{
-		byteBuf[0] = Digit::HexChar[Byte(_pData[index]) / 0x10];
-		byteBuf[1] = Digit::HexChar[Byte(_pData[index]) % 0x10];
+		byteBuf[0] = Digit::HexChar[_u8(_pData[index]) / 0x10];
+		byteBuf[1] = Digit::HexChar[_u8(_pData[index]) % 0x10];
 		_hex += byteBuf;
 
 		if (index != 0 && index % 10 == 9)

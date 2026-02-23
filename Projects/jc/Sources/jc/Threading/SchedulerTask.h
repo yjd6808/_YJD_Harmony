@@ -25,7 +25,7 @@ public:
 	virtual bool CanNextCall() = 0;
 	virtual bool HasCallbackFunc() const { return false; }
 	virtual bool Executed() const { return m_bExecuted; }
-	virtual Int32U MaxRepeatCount() { return 1; }
+	virtual _u32 MaxRepeatCount() { return 1; }
 	virtual void CallCallback() = 0;
 protected:
 	AtomicBool m_bExecuted = false;
@@ -87,7 +87,7 @@ class SchedulerTaskRepeat : public SchedulerTask
 {
 public:
 	template <typename TCallback>
-	SchedulerTaskRepeat(DateTime _at, TimeSpan _interval, TCallback&& _callback, Int32U _repeat = INFINITE)
+	SchedulerTaskRepeat(DateTime _at, TimeSpan _interval, TCallback&& _callback, _u32 _repeat = INFINITE)
 	: at_(_at.Tick)
 	, interval_(_interval)
 	, callback_(Forward<TCallback>(_callback))
@@ -98,7 +98,7 @@ public:
 	DateTime At() override { return { at_.Load() }; }
 	TimeSpan Interval() override { return interval_; }
 	bool CanNextCall() override { return curRepeat_ < maxRepeat_; }
-	Int32U MaxRepeatCount() override { return maxRepeat_; }
+	_u32 MaxRepeatCount() override { return maxRepeat_; }
 	void CallCallback() override 
 	{
 		m_bExecuted = true;
@@ -112,7 +112,7 @@ private:
 	TimeSpan interval_;
 	SchedulerTaskCallback callback_;
 	AtomicInt32U curRepeat_;
-	Int32U maxRepeat_;
+	_u32 maxRepeat_;
 };
 
 NS_END

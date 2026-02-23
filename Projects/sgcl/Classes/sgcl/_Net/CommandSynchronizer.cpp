@@ -9,7 +9,7 @@
 #include "Core.h"
 #include "_Net/CommandSynchronizer.h"
 
-#include <sgcl/NetCore.h>
+#include <sgcl/_Net/NetCore.h>
 
 USING_NS_JC;
 USING_NS_CC;
@@ -31,13 +31,13 @@ CommandSynchronizer::CommandQueueHolder CommandSynchronizer::RegisterPacketQueue
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-CommandSynchronizer::CommandHolder::CommandHolder(ClientConnectServerType_t _listenerType, jnet::Session* _pSender, jnet::ICommand* _pCopy)
+CommandSynchronizer::CommandHolder::CommandHolder(ServerType_t _listenerType, jnet::Session* _pSender, jnet::ICommand* _pCopy)
 {
 	int unused;
 	pSender_ = _pSender;
 	listenerType_ = _listenerType;
 	pMemPool_ = tlsCommandQueueHolder.pMemPool_;
-	Int32U cmdLength = _pCopy->GetLength();
+	_u32 cmdLength = _pCopy->GetLength();
 	pCommand_ = (jnet::ICommand*)tlsCommandQueueHolder.pMemPool_->DynamicPop(cmdLength, unused);
 	Memory::CopyUnsafe(pCommand_, _pCopy, cmdLength);
 }
@@ -70,7 +70,7 @@ void CommandSynchronizer::Initialize()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void CommandSynchronizer::EnqueueCommand(ClientConnectServerType_t _listenerType, jnet::Session* _pSession,
+void CommandSynchronizer::EnqueueCommand(ServerType_t _listenerType, jnet::Session* _pSession,
                                          jnet::ICommand* _pCmd)
 {
 	JC_LOCK_GUARD(*tlsCommandQueueHolder.pLock_);
@@ -106,7 +106,7 @@ void CommandSynchronizer::ProcessCommands()
 void CommandSynchronizer::FilterUnusedCommandQueue()
 {
 	// 필터완료 전까지는 IOCP쓰레드가 아닌 쓰레드도 생성될 수 있으므로. 완료전까지 생성된 쓸모없는 패킷큐는 걸러줘야함
-	jc::Vector<Int32U> iocpThreadIdList = g_cNet.GetGroup()->GetIocp()->GetWorkThreadIdList();
+	jc::Vector<_u32> iocpThreadIdList = g_cNet.GetGroup()->GetIocp()->GetWorkThreadIdList();
 	auto fnContained = [&iocpThreadIdList](const IOCPThreadId$CommandQueuePair& pair)
 	{
 		return iocpThreadIdList.Exist(pair.key_);

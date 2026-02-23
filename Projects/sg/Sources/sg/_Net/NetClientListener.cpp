@@ -35,7 +35,7 @@ void NetClientListener::OnConnected(jnet::Session* _pSession)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetClientListener::OnConnectFailed(jnet::Session* _pSession, Int32U _errorCode)
+void NetClientListener::OnConnectFailed(jnet::Session* _pSession, _u32 _errorCode)
 {
 	_LogInfo_("연결 실패 (%d)", _errorCode);
 
@@ -46,7 +46,7 @@ void NetClientListener::OnConnectFailed(jnet::Session* _pSession, Int32U _errorC
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetClientListener::OnDisconnected(jnet::Session* _pSession, Int32U _errorCode)
+void NetClientListener::OnDisconnected(jnet::Session* _pSession, _u32 _errorCode)
 {
 	const IPv4EndPoint& remoteEndPoint = _pSession->GetRemoteEndPoint();
 	const String remoteEndPointString = remoteEndPoint.ToString();
@@ -60,7 +60,7 @@ void NetClientListener::OnDisconnected(jnet::Session* _pSession, Int32U _errorCo
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetClientListener::OnSent(jnet::Session* _pSession, IPacket* _pSentPacket, Int32UL _sentBytes)
+void NetClientListener::OnSent(jnet::Session* _pSession, IPacket* _pSentPacket, _u32l _sentBytes)
 {
 	const TransportProtocol protocol = _pSession->Protocol();
 

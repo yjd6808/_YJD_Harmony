@@ -22,7 +22,7 @@ void InitializeJCore(int _argc, char** _argv);
 void FinalizeJCore();
 
 extern bool AppExited;
-extern Int32U AppStartUpTimeTGT_v;
+extern _u32 AppStartUpTimeTGT_v;
 extern long long AppStartUpTime_v;
 
 NS_END

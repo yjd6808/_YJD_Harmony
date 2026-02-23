@@ -93,8 +93,8 @@ class Console
 	using TLockGuard = RecursiveLockGuard;
     using TLock = RecursiveLock;
 
-    inline static WinHandle     ms_hStdout = (WinHandle)-1;
-    inline static WinHandle     ms_hStdin = (WinHandle)-1;
+    inline static _whandle     ms_hStdout = (_whandle)-1;
+    inline static _whandle     ms_hStdin = (_whandle)-1;
     inline static ConsoleColor  ms_iDefaultColor = LightGray;
     inline static TLock         ms_ConsoleLock{};
     inline static bool          ms_UseConsoleLock{};
@@ -127,7 +127,7 @@ public:
         return ret;
     }
 
-    template <Int32U FormatBufferLen, typename... TArgs>
+    template <_u32 FormatBufferLen, typename... TArgs>
     static int Write(ConsoleColor _color, char(&_format)[FormatBufferLen], TArgs&&... _args)
     {
         TLockGuard guard(ms_ConsoleLock);
@@ -141,13 +141,18 @@ public:
     template <typename... TArgs>
     static int Write(const char* _pFormat, TArgs&&... _args)
     {
-        char buf[TempBufferLen];
-        sprintf_s(buf, TempBufferLen, _pFormat);
-        TLockGuard guard(ms_ConsoleLock);
-        return printf_s(buf, Forward<TArgs>(_args)...);
+		char buf[TempBufferLen];
+		int written = sprintf_s(buf, TempBufferLen, _pFormat, Forward<TArgs>(_args)...);
+		if (written <= 0)
+		{
+			return written;
+		}
+
+		TLockGuard guard(ms_ConsoleLock);
+		return printf_s("%s", buf);
     }
 
-    template <Int32U FormatBufferLen, typename... TArgs>
+    template <_u32 FormatBufferLen, typename... TArgs>
     static int Write(char(&_format)[FormatBufferLen], TArgs&&... _args)
     {
         TLockGuard guard(ms_ConsoleLock);
@@ -184,7 +189,7 @@ public:
         return 0;
     }
 
-    template <Int32U FormatBufferLen, typename... TArgs>
+    template <_u32 FormatBufferLen, typename... TArgs>
     static int WriteLine(ConsoleColor _color, char(&_format)[FormatBufferLen], TArgs&&... _args)
     {
         TLockGuard guard(ms_ConsoleLock);
@@ -210,7 +215,7 @@ public:
         }
     }
 
-    template <Int32U FormatBufferLen, typename... TArgs>
+    template <_u32 FormatBufferLen, typename... TArgs>
     static int WriteLine(char(&_format)[FormatBufferLen], TArgs&&... _args)
     {
         TLockGuard guard(ms_ConsoleLock);

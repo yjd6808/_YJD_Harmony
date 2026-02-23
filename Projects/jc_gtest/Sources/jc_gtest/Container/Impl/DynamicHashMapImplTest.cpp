@@ -144,8 +144,8 @@ private:
 	using TNode				= typename LinkedListNode<TKey, TValue>;
 	using TBucket			= typename Bucket<TKey, TValue>;
 
-	static constexpr Int32U	ms_iBucketExpandingFactor = 8;	// 테이블 크기만큼 데이터가 들어가면 확장하는데 몇배나 확장할 지
-	static constexpr Int32U	ms_iTableDefaultCapacity = 16;	// 테이블 초기 크기
+	static constexpr _u32	ms_iBucketExpandingFactor = 8;	// 테이블 크기만큼 데이터가 들어가면 확장하는데 몇배나 확장할 지
+	static constexpr _u32	ms_iTableDefaultCapacity = 16;	// 테이블 초기 크기
 public:
 	HashMap(int capacity = ms_iTableDefaultCapacity) {
 		m_Table = new TBucket[capacity];
@@ -173,7 +173,7 @@ public:
 			Resize(m_iCapacity * ms_iBucketExpandingFactor);
 		}
 
-		Int32U iHashVal = Hash(key);
+		_u32 iHashVal = Hash(key);
 		m_Table[iHashVal].Add(
 			Forward<KeyType>(key), 
 			Forward<ValueType>(val)
@@ -182,7 +182,7 @@ public:
 	}
 
 	bool Remove(const TKey& key) {
-		Int32U iHashVal = Hash(key);
+		_u32 iHashVal = Hash(key);
 		if (m_Table[iHashVal].Remove(key)) {
 			m_iSize--;
 			return true;
@@ -216,7 +216,7 @@ public:
 			TNode* pCur = m_Table[i].FirstElement();
 
 			while (pCur != nullptr) {
-				Int32U uiHash = Hash(pCur->Key);
+				_u32 uiHash = Hash(pCur->Key);
 				pNewTable[uiHash].Add(
 					Move(pCur->Key),
 					Move(pCur->Value)
@@ -245,16 +245,16 @@ public:
 		return m_iSize;
 	}
 private:
-	Int32U Hash(const TKey& val) const {
+	_u32 Hash(const TKey& val) const {
 		return m_Hasher(val) & m_iMask;
 	}
 
 	TNode* FindNode(const TKey& key) const {
-		Int32U iHashVal = Hash(key);
+		_u32 iHashVal = Hash(key);
 		return FindNode(key, iHashVal);
 	}
 
-	TNode* FindNode(const TKey& key, Int32U hashval) const {
+	TNode* FindNode(const TKey& key, _u32 hashval) const {
 		TBucket& bucket = m_Table[hashval];
 		return bucket.Find(key);
 	}

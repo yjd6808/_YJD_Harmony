@@ -27,7 +27,7 @@ public:
 };
 
 
-template <Int32 Version>
+template <_s32 Version>
 class SgaElementInitializerImpl : public SgaElementInitializer
 {
 public:

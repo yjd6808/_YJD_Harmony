@@ -27,7 +27,7 @@ public:
 	virtual SessionContainer* CreateSessionContainer();
 
 	virtual void OnStarted() {}
-	virtual void OnStartFailed(Int32U _errorCode) {}
+	virtual void OnStartFailed(_u32 _errorCode) {}
 	virtual void OnStopped() {}
 
 	SessionContainer* GetSessionContainer();
@@ -40,10 +40,10 @@ public:
 	bool Stop() override;
 
 	void Initialize() override;
-	void SessionDisconnected(TcpSession* _pSession, Int32U _errorCode);
+	void SessionDisconnected(TcpSession* _pSession, _u32 _errorCode);
 	void SessionConnected(TcpSession* _pSession);
-	void SessionConnectFailed(TcpSession* _pSession, Int32U _errorCode);
-	void SessionSent(TcpSession* _pSession, IPacket* _pSentPacket, Int32UL _receivedBytes);
+	void SessionConnectFailed(TcpSession* _pSession, _u32 _errorCode);
+	void SessionSent(TcpSession* _pSession, IPacket* _pSentPacket, _u32l _receivedBytes);
 	void SessionReceived(TcpSession* _pSession, ICommand* _pCommand);
 	void SessionReceived(TcpSession* _pSession, RecvedCommandPacket* _pRecvPacket);
 	void SessionReceivedRaw(TcpSession* _pSession, char* _pData, int _len);

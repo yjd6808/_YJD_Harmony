@@ -25,7 +25,7 @@ AutMemoryPoolLeakDetector::AutMemoryPoolLeakDetector(MemoryPoolAbstract* _pPool,
 AutMemoryPoolLeakDetector::~AutMemoryPoolLeakDetector()
 {
 	int detail[detail::MemoryBlockSizeMapSize_v];
-	Int64U totalLeak = m_Pool->StopDetectLeak(detail);
+	_u64 totalLeak = m_Pool->StopDetectLeak(detail);
 
 	if (m_Callback)
 	{

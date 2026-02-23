@@ -50,36 +50,36 @@ public:
     }
 
 #if _DEBUG
-    Int64U GetTotalAllocated()
+    _u64 GetTotalAllocated()
     {
         return statistics_.GetTotalAllocated();
     }
 
-    Int64U GetTotalUsed()
+    _u64 GetTotalUsed()
     {
         return statistics_.GetTotalUsed();
     }
 
-    Int64U GetTotalReturned()
+    _u64 GetTotalReturned()
     {
         return statistics_.GetTotalReturned();
     }
 
-    Int64U GetInitAllocated()
+    _u64 GetInitAllocated()
     {
         return statistics_.GetInitAllocated();
     }
 
-    Int64U GetNewAllocated()
+    _u64 GetNewAllocated()
     {
         return statistics_.GetNewAllocated();
     }
 
-    Int64U GetTotalUsing()
+    _u64 GetTotalUsing()
     {
         return statistics_.GetTotalUsing();
         /*
-        Int64U usingSize = 0;
+        _u64 usingSize = 0;
         for (int i = 0; i < detail::MemoryBlockSizeMapSize_v; ++i)
         {
             usingSize = GetBlockUsingCounter(i) * detail::AllocationLengthMapConverter::ToSize(i);
@@ -129,15 +129,15 @@ public:
     }
 
     template <bool KeepDetectingState = true>    // 릭 디텍팅 상태를 복구할지
-    Int64U StopDetectLeak(OUT_OPT int* _pDetail = nullptr)
+    _u64 StopDetectLeak(OUT_OPT int* _pDetail = nullptr)
     {
         jc_assert_msg(Detecting(), "어라? StartDetectLeak()이 호출되지 않았어요.");
-        Int64U leakedBytes = 0;
+        _u64 leakedBytes = 0;
 
         for (int i = 0; i < detail::MemoryBlockSizeMapSize_v; ++i)
         {
             int leakedBlockCount = pBlockUsedCounter_[i] - pBlockReturnedCounter_[i];
-            leakedBytes += static_cast<Int64U>(leakedBlockCount) * detail::AllocationLengthMapConverter::ToSize(i);
+            leakedBytes += static_cast<_u64>(leakedBlockCount) * detail::AllocationLengthMapConverter::ToSize(i);
             if (_pDetail)
                 _pDetail[i] = leakedBlockCount;
 
@@ -168,19 +168,19 @@ public:
     }
 
 protected:
-    void AddInitBlock(Int32 _blockIndex, Int32 _blockCount)
+    void AddInitBlock(_s32 _blockIndex, _s32 _blockCount)
     {
         statistics_.AddInitBlock(_blockIndex, _blockCount);
     }
 
-    void AddAllocated(Int32 _blockIndex, bool _createNew)
+    void AddAllocated(_s32 _blockIndex, bool _createNew)
     {
         statistics_.AddAllocated(_blockIndex, _createNew);
         if (detecting_)
             ++pBlockUsedCounter_[_blockIndex];
     }
 
-    void AddDeallocated(Int32 _blockIndex)
+    void AddDeallocated(_s32 _blockIndex)
     {
         statistics_.AddDeallocated(_blockIndex);
         if (detecting_)
@@ -198,32 +198,32 @@ protected:
     AtomicInt pBlockReturnedCounter_[detail::MemoryBlockSizeMapSize_v]{};     // 블록 종류별로 몇번 반환되었는지
 #else
 public:
-    Int64U GetTotalAllocated()
+    _u64 GetTotalAllocated()
     {
         return 0;
     }
 
-    Int64U GetTotalUsed()
+    _u64 GetTotalUsed()
     {
         return 0;
     }
 
-    Int64U GetTotalReturned()
+    _u64 GetTotalReturned()
     {
         return 0;
     }
 
-    Int64U GetInitAllocated()
+    _u64 GetInitAllocated()
     {
         return 0;
     }
 
-    Int64U GetNewAllocated()
+    _u64 GetNewAllocated()
     {
         return 0;
     }
 
-    Int64U GetTotalUsing()
+    _u64 GetTotalUsing()
     {
         return 0;
     }
@@ -262,7 +262,7 @@ public:
     }
 
     template <bool KeepDetectingState = true>
-    Int64U StopDetectLeak(OUT_OPT int* _pDetail = nullptr)
+    _u64 StopDetectLeak(OUT_OPT int* _pDetail = nullptr)
     {
         return 0;
     }
@@ -277,15 +277,15 @@ public:
     }
 
 protected:
-    void AddInitBlock(Int32 _blockIndex, Int32 _blockCount)
+    void AddInitBlock(_s32 _blockIndex, _s32 _blockCount)
     {
     }
 
-    void AddAllocated(Int32 _blockIndex, bool _createNew)
+    void AddAllocated(_s32 _blockIndex, bool _createNew)
     {
     }
 
-    void AddDeallocated(Int32 _blockIndex)
+    void AddDeallocated(_s32 _blockIndex)
     {
     }
 #endif

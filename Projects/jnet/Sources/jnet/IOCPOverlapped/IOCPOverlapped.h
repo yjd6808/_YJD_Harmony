@@ -36,12 +36,12 @@ public:
 	~IOCPOverlapped() override;
 
 public:
-	virtual void Process(BOOL _result, Int32UL _bytesTransferred, IOCPPostOrder* _pCompletionKey) = 0;
+	virtual void Process(BOOL _result, _u32l _bytesTransferred, IOCPPostOrder* _pCompletionKey) = 0;
 	Type GetType() const { return type_; }
 
 	void ReleaseAction() override { delete this; } // TODO: 풀링
-	bool IsFailed(BOOL _result, OUT Int32U& _errorCode);
-	bool IsFailed(SOCKET _socket, BOOL _result, Int32UL _bytesTransferred, OUT Int32U& _errorCode);
+	bool IsFailed(BOOL _result, OUT _u32& _errorCode);
+	bool IsFailed(SOCKET _socket, BOOL _result, _u32l _bytesTransferred, OUT _u32& _errorCode);
 
 protected:
 	Type type_;

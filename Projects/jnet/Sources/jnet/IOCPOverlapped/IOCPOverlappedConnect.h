@@ -17,7 +17,7 @@ public:
 	~IOCPOverlappedConnect() override;
 
 public:
-	void Process(BOOL _result, Int32UL _bytesTransferred, IOCPPostOrder* _pCompletionKey) override;
+	void Process(BOOL _result, _u32l _bytesTransferred, IOCPPostOrder* _pCompletionKey) override;
 
 private:
 	TcpClient* client_;

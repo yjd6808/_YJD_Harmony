@@ -25,13 +25,13 @@ IOCPOverlappedSend::~IOCPOverlappedSend()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IOCPOverlappedSend::Process(BOOL _result, Int32UL _bytesTransferred, IOCPPostOrder* _pCompletionKey)
+void IOCPOverlappedSend::Process(BOOL _result, _u32l _bytesTransferred, IOCPPostOrder* _pCompletionKey)
 {
 	(void)_pCompletionKey;
 
 	JC_REF_COUNT_GUARD(sentPacket_, false);
 	const SOCKET sentSocket = sender_->SocketHandle();
-	Int32U errorCode = 0;
+	_u32 errorCode = 0;
 
 	if (IsFailed(sentSocket, _result, _bytesTransferred, errorCode) || _bytesTransferred == 0)
 	{

@@ -82,7 +82,7 @@ bool TcpClient::Connect(const IPv4EndPoint& _remoteEndPoint, int _timeoutMillise
 
 	if (socket_.Option().SetNonBlockingEnabled(true) == SOCKET_ERROR)
 	{
-		const Int32U errorCode = Winsock::LastError();
+		const _u32 errorCode = Winsock::LastError();
 
 		if (pEventListener_)
 		{
@@ -95,7 +95,7 @@ bool TcpClient::Connect(const IPv4EndPoint& _remoteEndPoint, int _timeoutMillise
 
 	if (socket_.Connect(_remoteEndPoint) == SOCKET_ERROR)
 	{
-		const Int32U errorCode = Winsock::LastError();
+		const _u32 errorCode = Winsock::LastError();
 
 		if (errorCode != WSAEWOULDBLOCK)
 		{
@@ -208,7 +208,7 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& _destination)
 
 	// 연결 후 곧장 데이터 전송 테스트
 	// 패킷은 모두 오버랩 Process에서 해제하도록 한다.
-	Int32UL sentBytes = 0;
+	_u32l sentBytes = 0;
 	auto pDummyPacket =
 #if TEST_DUMMY_PACKET_TRANSFER
 		GenerateTestDummyPacket();
@@ -227,7 +227,7 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& _destination)
 #endif
 		&sentBytes) == FALSE)
 	{
-		const Int32U errorCode = Winsock::LastError();
+		const _u32 errorCode = Winsock::LastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
 			jc_assert_msg(false, "서버 접속에 실패하였습니다. (%u)", errorCode);
@@ -247,7 +247,7 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& _destination)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TcpClient::Disconnected(Int32U _errorCode)
+void TcpClient::Disconnected(_u32 _errorCode)
 {
 	if (pEventListener_)
 	{
@@ -285,7 +285,7 @@ void TcpClient::NotifyRaw(char* _pData, int _len)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TcpClient::Sent(IPacket* _pSentPacket, Int32UL _sentBytes)
+void TcpClient::Sent(IPacket* _pSentPacket, _u32l _sentBytes)
 {
 	if (pEventListener_)
 	{
@@ -324,7 +324,7 @@ void TcpClient::Connected()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TcpClient::ConnectFailed(Int32U _errorCode)
+void TcpClient::ConnectFailed(_u32 _errorCode)
 {
 	if (pEventListener_)
 	{

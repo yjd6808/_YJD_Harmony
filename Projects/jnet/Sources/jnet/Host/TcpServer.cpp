@@ -43,7 +43,7 @@ SessionContainer* TcpServer::CreateSessionContainer()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TcpServer::SessionDisconnected(TcpSession* _pSession, Int32U _errorCode)
+void TcpServer::SessionDisconnected(TcpSession* _pSession, _u32 _errorCode)
 {
 	if (pServerEventListener_)
 	{
@@ -79,7 +79,7 @@ void TcpServer::SessionConnected(TcpSession* _pSession)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TcpServer::SessionConnectFailed(TcpSession* _pSession, Int32U _errorCode)
+void TcpServer::SessionConnectFailed(TcpSession* _pSession, _u32 _errorCode)
 {
 	if (pServerEventListener_)
 	{
@@ -88,7 +88,7 @@ void TcpServer::SessionConnectFailed(TcpSession* _pSession, Int32U _errorCode)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TcpServer::SessionSent(TcpSession* _pSession, IPacket* _pSentPacket, Int32UL _receivedBytes)
+void TcpServer::SessionSent(TcpSession* _pSession, IPacket* _pSentPacket, _u32l _receivedBytes)
 {
 	if (pServerEventListener_)
 	{
@@ -197,7 +197,7 @@ bool TcpServer::Start(const IPv4EndPoint& _localEndPoint)
 			server_->OnStartFailed(errorCode_);
 		}
 
-		Int32U errorCode_;
+		_u32 errorCode_;
 		TcpServer* server_;
 	} notifier{this};
 

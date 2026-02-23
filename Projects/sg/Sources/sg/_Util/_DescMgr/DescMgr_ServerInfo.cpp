@@ -143,7 +143,7 @@ void ServerInfoLoader::ReadDbInfo(Json::Value& _databaseRoot, OUT NetDBInfo_MySQ
 {
 	_dbInfo.name_ = JsonUtil::GetString(_databaseRoot["name"]);
 	_dbInfo.hostName_ = JsonUtil::GetString(_databaseRoot["hostname"]);
-	_dbInfo.connPort_ = (Int16U)_databaseRoot["connection_port"].asInt();
+	_dbInfo.connPort_ = (_u16)_databaseRoot["connection_port"].asInt();
 	_dbInfo.schemaName_ = JsonUtil::GetString(_databaseRoot["schema_name"]);
 	_dbInfo.accountId_ = JsonUtil::GetString(_databaseRoot["account_id"]);
 	_dbInfo.accountPass_ = JsonUtil::GetString(_databaseRoot["account_pass"]);

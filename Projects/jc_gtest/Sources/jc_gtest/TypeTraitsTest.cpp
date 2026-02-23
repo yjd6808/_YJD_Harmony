@@ -49,18 +49,18 @@ TEST(TypeTraitsTest, IsFloatType) {
 }
 
 TEST(TypeTraitsTest, IsIntegerType) {
-	EXPECT_TRUE((IsIntegerType_v<Int64>));
-	EXPECT_TRUE((IsIntegerType_v<Int64U>));
-	EXPECT_TRUE((IsIntegerType_v<Int32>));
-	EXPECT_TRUE((IsIntegerType_v<Int32U>));
-	EXPECT_TRUE((IsIntegerType_v<Int32L>));
-	EXPECT_TRUE((IsIntegerType_v<Int32UL>));
-	EXPECT_TRUE((IsIntegerType_v<Int16>));
-	EXPECT_TRUE((IsIntegerType_v<Int16U>));
+	EXPECT_TRUE((IsIntegerType_v<_s64>));
+	EXPECT_TRUE((IsIntegerType_v<_u64>));
+	EXPECT_TRUE((IsIntegerType_v<_s32>));
+	EXPECT_TRUE((IsIntegerType_v<_u32>));
+	EXPECT_TRUE((IsIntegerType_v<_s32l>));
+	EXPECT_TRUE((IsIntegerType_v<_u32l>));
+	EXPECT_TRUE((IsIntegerType_v<_s16>));
+	EXPECT_TRUE((IsIntegerType_v<_u16>));
 
 
-	EXPECT_TRUE((IsIntegerType_v<const Int32U&&>));
-	EXPECT_TRUE((IsIntegerType_v<const volatile Int32U&>));
+	EXPECT_TRUE((IsIntegerType_v<const _u32&&>));
+	EXPECT_TRUE((IsIntegerType_v<const volatile _u32&>));
 }
 
 TEST(TypeTraitsTest, Move) {

@@ -25,13 +25,13 @@ SgaDataPtr SgaSprite::Decompress()
 	int decompressedSize = rect_.width_ * rect_.height_ * (m_eColorFormat == SgaColorFormat::eArgb8888 ? 4 : 2);
 
 	SgaDataPtr pDecompressedData = nullptr;
-	Byte* pReadData = pData_.GetPtr();
+	_u8* pReadData = pData_.GetPtr();
 
 	if (compressMode_ == SgaCompressMode::eZlib)
 	{
-		Int32UL decompressedSizeTemp;
-		pDecompressedData = MakeShared<Byte[]>(decompressedSize);
-		Byte* pDecompressedRawPtr = pDecompressedData.GetPtr();
+		_u32l decompressedSizeTemp;
+		pDecompressedData = MakeShared<_u8[]>(decompressedSize);
+		_u8* pDecompressedRawPtr = pDecompressedData.GetPtr();
 		uncompress(pDecompressedRawPtr, &decompressedSizeTemp, pData_.GetPtr(), dataLength_);
 		pReadData = pDecompressedRawPtr;
 	}
@@ -47,17 +47,17 @@ SgaDataPtr SgaSprite::Decompress()
 	}
 
 	int bitSize32 = decompressedSize * 2;
-	auto pBits32 = MakeShared<Byte[]>(bitSize32);
+	auto pBits32 = MakeShared<_u8[]>(bitSize32);
 
-	Byte* pRaw32Bytes = pBits32.GetPtr();
-	Byte readBytes[2];
+	_u8* pRaw32Bytes = pBits32.GetPtr();
+	_u8 readBytes[2];
 
 	for (int i = 0, j = 0; i < bitSize32; i += 4, j += 2)
 	{
-		Byte a = 0;
-		Byte r = 0;
-		Byte g = 0;
-		Byte b = 0;
+		_u8 a = 0;
+		_u8 r = 0;
+		_u8 g = 0;
+		_u8 b = 0;
 
 		readBytes[0] = pReadData[j];
 		readBytes[1] = pReadData[j + 1];
@@ -66,22 +66,22 @@ SgaDataPtr SgaSprite::Decompress()
 		switch (m_eColorFormat)
 		{
 		case SgaColorFormat::eArgb1555:
-			a = static_cast<Byte>(readBytes[1] >> 7);
-			r = static_cast<Byte>((readBytes[1] >> 2) & 0x1f);
-			g = static_cast<Byte>((readBytes[0] >> 5) | ((readBytes[1] & 3) << 3));
-			b = static_cast<Byte>(readBytes[0] & 0x1f);
-			a = static_cast<Byte>(a * 0xff);
-			r = static_cast<Byte>((r << 3) | (r >> 2));
-			g = static_cast<Byte>((g << 3) | (g >> 2));
-			b = static_cast<Byte>((b << 3) | (b >> 2));
+			a = static_cast<_u8>(readBytes[1] >> 7);
+			r = static_cast<_u8>((readBytes[1] >> 2) & 0x1f);
+			g = static_cast<_u8>((readBytes[0] >> 5) | ((readBytes[1] & 3) << 3));
+			b = static_cast<_u8>(readBytes[0] & 0x1f);
+			a = static_cast<_u8>(a * 0xff);
+			r = static_cast<_u8>((r << 3) | (r >> 2));
+			g = static_cast<_u8>((g << 3) | (g >> 2));
+			b = static_cast<_u8>((b << 3) | (b >> 2));
 			break;
 
 		// 순서: A A A A R R R R | G G G G B B B B
 		case SgaColorFormat::eArgb4444:
-			a = static_cast<Byte>(readBytes[1] & 0xf0);
-			r = static_cast<Byte>((readBytes[1] & 0xf) << 4);
-			g = static_cast<Byte>(readBytes[0] & 0xf0);
-			b = static_cast<Byte>((readBytes[0] & 0xf) << 4);
+			a = static_cast<_u8>(readBytes[1] & 0xf0);
+			r = static_cast<_u8>((readBytes[1] & 0xf) << 4);
+			g = static_cast<_u8>(readBytes[0] & 0xf0);
+			b = static_cast<_u8>((readBytes[0] & 0xf) << 4);
 			break;
 		default:
 			jc_assert(false);
@@ -111,7 +111,7 @@ bool SgaSprite::Load()
 		return false;
 	}
 
-	pData_ = MakeShared<Byte[]>(dataLength_);
+	pData_ = MakeShared<_u8[]>(dataLength_);
 	Stream& stream = pPackage->StreamRef();
 	stream.Seek(dataOffset_);
 	stream.Read(pData_.GetPtr(), 0, dataLength_);

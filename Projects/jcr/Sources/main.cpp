@@ -81,6 +81,25 @@ int main(int _argc, char** _argv)
 		Time time = now.ToTime();
 		TimeSpan ts = TimeSpan::FromSecond(5);
 
+		jc::CMessage msg1(32, 5);
+		msg1.WriteU32(120);
+		msg1.WriteU32(120);
+		msg1.WriteU32(120);
+		msg1.WriteU32(120);
+		msg1.WriteString("abcdefg1");
+		msg1.WriteString("abcdefg2");
+		msg1.WriteString("abcdefg3");
+		msg1.WriteString("abcdefg4");
+
+		_u32 a1 = msg1.ReadU32();
+		_u32 a2 = msg1.ReadU32();
+		_u32 a3 = msg1.ReadU32();
+		_u32 a4 = msg1.ReadU32();
+		String str1 = msg1.ReadString();
+		String str2 = msg1.ReadString();
+		String str3 = msg1.ReadString();
+		String str4 = msg1.ReadString();
+
 		// 브레이크포인트 찍어서 각 변수들 natvis 확인
 		(void)vec;
 		(void)arrStack;
@@ -107,10 +126,9 @@ int main(int _argc, char** _argv)
 
 	}
 
+	Console::Write("%s", "x키 입력시 종료");
+	//Console::ReadKeyWhile("X키 입력시 종료", ConsoleKey::X);
 	FinalizeDefaultLogger();
 	FinalizeJCore();
-
-	return Console::ReadKeyWhile("X키 입력시 종료", ConsoleKey::X) ? 0 : -1;
-
-
+	return 0;
 }

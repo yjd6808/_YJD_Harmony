@@ -288,12 +288,12 @@ public:
 	RecvedCommandPacket() = delete;
 	~RecvedCommandPacket() = delete;
 
-	Int16U GetPacketLength() const
+	_u16 GetPacketLength() const
 	{
 		return packetLength_;
 	}
 
-	Int16U GetCommandCount() const
+	_u16 GetCommandCount() const
 	{
 		return commandCount_;
 	}
@@ -304,8 +304,8 @@ public:
 	RecvedCommandPacket* Clone() const;
 
 protected:
-	Int16U commandCount_{};
-	Int16U packetLength_{};
+	_u16 commandCount_{};
+	_u16 packetLength_{};
 };
 
 

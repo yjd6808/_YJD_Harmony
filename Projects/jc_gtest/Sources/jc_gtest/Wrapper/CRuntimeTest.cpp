@@ -13,11 +13,11 @@
 #if TEST_CRuntimeTest == ON
 
 TEST(CRuntimeTest, FileIOTest) {
-	IoHandle hHandle = CRuntime::FileOpen("a.bin", "wb+");
+	_iohandle hHandle = CRuntime::FileOpen("a.bin", "wb+");
 
 	EXPECT_EQ(CRuntime::FileTell(hHandle), 0);
 
-	Byte wbuff[] {
+	_u8 wbuff[] {
 		1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 	};
 
@@ -26,7 +26,7 @@ TEST(CRuntimeTest, FileIOTest) {
 	EXPECT_EQ(size, 2);
 	EXPECT_EQ(CRuntime::FileTell(hHandle), 8);
 
-	Byte rbuff[100];
+	_u8 rbuff[100];
 
 	// wb+로 열어서 그런가 끝에서 읽으면 0바이트를 읽네
 	// 커서위치를 한번도 안바꾼 상태면 끝자락에서 데이터가 읽어지고 읽은 만큼 0을 쓴다.

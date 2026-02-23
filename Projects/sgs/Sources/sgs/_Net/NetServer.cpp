@@ -62,7 +62,7 @@ void NetServer::OnStarted()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void NetServer::OnStartFailed(Int32U _errorCode)
+void NetServer::OnStartFailed(_u32 _errorCode)
 {
 	bootState_ = ServerBootState::Stopped;
 	// 중앙서버는 자신이 부트상태를 관리하므로

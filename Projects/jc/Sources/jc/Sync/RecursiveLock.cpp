@@ -26,7 +26,7 @@ RecursiveLock::RecursiveLock()
 //////////////////////////////////////////////////////////////////////////////////////////
 void RecursiveLock::Lock()
 {
-	const Int32U lockedThreadId = WinApi::GetCurrentThreadId();
+	const _u32 lockedThreadId = WinApi::GetCurrentThreadId();
 
 	// 일반 변수를 여러 쓰레드에서 접근해서 undefined behavior라고 생각할 수 있지만
 	// 동시에 여러 쓰레드가 Lock()을 통과하더라도 결국 m_lock.Lock()에서 하나의 쓰레드만 통과 가능하므로 문제가 안된다.
@@ -44,7 +44,7 @@ void RecursiveLock::Lock()
 //////////////////////////////////////////////////////////////////////////////////////////
 bool RecursiveLock::TryLock()
 {
-	const Int32U lockedThreadId = WinApi::GetCurrentThreadId();
+	const _u32 lockedThreadId = WinApi::GetCurrentThreadId();
 
 	if (m_lock.TryLock())
 	{
@@ -65,7 +65,7 @@ bool RecursiveLock::TryLock()
 //////////////////////////////////////////////////////////////////////////////////////////
 void RecursiveLock::Unlock()
 {
-	const Int32U lockedThreadId = WinApi::GetCurrentThreadId();
+	const _u32 lockedThreadId = WinApi::GetCurrentThreadId();
 	jc_assert(m_lockedThreadId == lockedThreadId);
 	jc_assert(m_recursion > 0);
 

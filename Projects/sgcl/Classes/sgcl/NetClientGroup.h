@@ -29,10 +29,9 @@ public:
 	jnet::TcpClient* pChatTcp_;
 	jnet::UdpClient* pChatUdp_;
 
-	jnet::CommandParser* GetParser() { return &parser_; }
-
+	jnet::CommandParser& Parser() { return *pParser_; }
 private:
-	jnet::CommandParser parser_;
+	jnet::CommandParser* pParser_;
 
 	friend class NetCore;
 };

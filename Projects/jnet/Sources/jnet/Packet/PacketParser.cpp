@@ -39,7 +39,7 @@ PacketRawParser::PacketRawParser(Session* _pSession)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PacketRawParser::Received(Int32UL _receivedBytes)
+void PacketRawParser::Received(_u32l _receivedBytes)
 {
 	CommandBuffer* pRecvBuffer = session_->GetRecvBuffer().GetPtr();
 	pRecvBuffer->MoveWritePos(_receivedBytes);
@@ -55,7 +55,7 @@ PacketCommandParser::PacketCommandParser(Session* _pSession)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void PacketCommandParser::Received(Int32UL _receivedBytes)
+void PacketCommandParser::Received(_u32l _receivedBytes)
 {
 	CommandBuffer* pRecvBuffer = session_->GetRecvBuffer().GetPtr();
 	pRecvBuffer->MoveWritePos(_receivedBytes);

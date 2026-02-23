@@ -83,7 +83,7 @@ public:
 			for (int i = 0; i < pOtherBucketCurrent->size_; ++i)
 			{
 				TBucketNode& node = pOtherBucketCurrent->GetAt(i);
-				Int32U bucketIndex = BucketIndex(node.hash_);
+				_u32 bucketIndex = BucketIndex(node.hash_);
 				TBucket& bucket = pTable_[bucketIndex];
 
 				if (bucket.IsEmpty())
@@ -148,8 +148,8 @@ public:
 			return false;
 		}
 
-		Int32U hashValue = Hash(_key);
-		Int32U bucketIndex = BucketIndex(hashValue);
+		_u32 hashValue = Hash(_key);
+		_u32 bucketIndex = BucketIndex(hashValue);
 		TBucket& bucket = pTable_[bucketIndex];
 
 		if (bucket.IsEmpty())
@@ -380,7 +380,7 @@ public:
 			for (int j = 0; j < previousBucket.size_; ++j)
 			{
 				TBucketNode& bucketNode = previousBucket.GetAt(j);
-				Int32U bucketIndex = BucketIndex(bucketNode.hash_);
+				_u32 bucketIndex = BucketIndex(bucketNode.hash_);
 
 				if (pNewTable[bucketIndex].IsEmpty())
 				{
@@ -485,19 +485,19 @@ protected:
 		pTailBucket_ = _pBucket;
 	}
 
-	Int32U BucketIndex(const Int32U _hash) const
+	_u32 BucketIndex(const _u32 _hash) const
 	{
 		return _hash % capacity_;
 	}
 
 	template <typename Ky>
-	Int32U Hash(const Ky& _key) const
+	_u32 Hash(const Ky& _key) const
 	{
 		return THasher()(_key);
 	}
 
 	template <typename Ky>
-	Int32U HashBucket(const Ky& _key) const
+	_u32 HashBucket(const Ky& _key) const
 	{
 		return BucketIndex(Hash(_key));
 	}
@@ -507,15 +507,15 @@ protected:
 		return size_ == capacity_;
 	}
 
-	static constexpr Int32U TABLE_EXPANDING_FACTOR = 4; // 테이블 크기만큼 데이터가 들어가면 확장하는데 몇배나 확장할 지
-	static constexpr Int32U TABLE_DEFAULT_CAPACITY = 16; // 테이블 초기 크기
+	static constexpr _u32 TABLE_EXPANDING_FACTOR = 4; // 테이블 크기만큼 데이터가 들어가면 확장하는데 몇배나 확장할 지
+	static constexpr _u32 TABLE_DEFAULT_CAPACITY = 16; // 테이블 초기 크기
 
 protected:
 	TBucket* pTable_;
 	TBucket* pHeadBucket_;
 	TBucket* pTailBucket_;
-	Int32 capacity_;
-	Int32 size_;
+	_s32 capacity_;
+	_s32 size_;
 
 	template <typename, typename>
 	friend class HashSet;
@@ -609,7 +609,7 @@ public:
 			for (int i = 0; i < pOtherBucketCurrent->size_; ++i)
 			{
 				TBucketNode& node = pOtherBucketCurrent->GetAt(i);
-				Int32U bucketIndex = BucketIndex(node.hash_);
+				_u32 bucketIndex = BucketIndex(node.hash_);
 				TBucket& bucket = pTable_[bucketIndex];
 
 				if (bucket.IsEmpty())
@@ -679,8 +679,8 @@ public:
 			return false;
 		}
 
-		Int32U hashValue = Hash(_key);
-		Int32U bucketIndex = BucketIndex(hashValue);
+		_u32 hashValue = Hash(_key);
+		_u32 bucketIndex = BucketIndex(hashValue);
 		TBucket& bucket = pTable_[bucketIndex];
 
 		if (bucket.IsEmpty())
@@ -1032,7 +1032,7 @@ public:
 			for (int j = 0; j < previousBucket.size_; ++j)
 			{
 				TBucketNode& bucketNode = previousBucket.GetAt(j);
-				Int32U bucketIndex = BucketIndex(bucketNode.hash_);
+				_u32 bucketIndex = BucketIndex(bucketNode.hash_);
 
 				if (pNewTable[bucketIndex].IsEmpty())
 				{
@@ -1137,19 +1137,19 @@ protected:
 		pTailBucket_ = _pBucket;
 	}
 
-	Int32U BucketIndex(const Int32U _hash) const
+	_u32 BucketIndex(const _u32 _hash) const
 	{
 		return _hash % capacity_;
 	}
 
 	template <typename Ky>
-	Int32U Hash(const Ky& _key) const
+	_u32 Hash(const Ky& _key) const
 	{
 		return THasher()(_key);
 	}
 
 	template <typename Ky>
-	Int32U HashBucket(const Ky& _key) const
+	_u32 HashBucket(const Ky& _key) const
 	{
 		return BucketIndex(Hash(_key));
 	}
@@ -1159,15 +1159,15 @@ protected:
 		return size_ == capacity_;
 	}
 
-	static constexpr Int32U TABLE_EXPANDING_FACTOR = 4; // 테이블 크기만큼 데이터가 들어가면 확장하는데 몇배나 확장할 지
-	static constexpr Int32U TABLE_DEFAULT_CAPACITY = 16; // 테이블 초기 크기
+	static constexpr _u32 TABLE_EXPANDING_FACTOR = 4; // 테이블 크기만큼 데이터가 들어가면 확장하는데 몇배나 확장할 지
+	static constexpr _u32 TABLE_DEFAULT_CAPACITY = 16; // 테이블 초기 크기
 
 protected:
 	TBucket* pTable_;
 	TBucket* pHeadBucket_;
 	TBucket* pTailBucket_;
-	Int32 capacity_;
-	Int32 size_;
+	_s32 capacity_;
+	_s32 size_;
 
 	template <typename, typename, typename>
 	friend class HashMap;

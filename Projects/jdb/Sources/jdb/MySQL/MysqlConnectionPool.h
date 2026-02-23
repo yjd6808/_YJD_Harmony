@@ -38,7 +38,7 @@ private:
 private:
 	MysqlConnectionPool(
 		const jc::String& _hostName,
-		Int16U _port,
+		_u16 _port,
 		const jc::String& _id,
 		const jc::String& _pass,
 		const jc::String& _schemaName,
@@ -49,8 +49,8 @@ private:
 	jc::String accountId_;
 	jc::String accountPass_;
 	jc::String schemeName_;
-	Int16U port_;
-	Int32U maxConnection_;
+	_u16 port_;
+	_u32 maxConnection_;
 
 	int currentConnectionSize_;
 	jc::NormalLock mutex_;

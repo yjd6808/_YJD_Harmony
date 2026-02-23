@@ -14,7 +14,7 @@
 #include <sgcl/S_AUTH.h>
 #include <sgcl/_Scene/Scene_World.h>
 #include <sgcl/UIManager.h>
-#include <sgcl/NetCore.h>
+#include <sgcl/_Net/NetCore.h>
 #include <sgcl/Contents.h>
 
 #include <sgcl/AuthenticationComponent.h>

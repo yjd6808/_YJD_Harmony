@@ -18,7 +18,9 @@ NS_JC_BEGIN
 String String::Empty;
 String String::Null(0);
 
-String::String() {
+//////////////////////////////////////////////////////////////////////////////////////////
+String::String()
+{
 	Initialize();
 }
 
@@ -369,50 +371,59 @@ int String::FindReverse(const char* str) const {
 	return FindReverse(0, m_iLen - 1, str);
 }
 
-
-void String::Clear() {
-	ThrowIfNotInitialized();
-	m_iLen = 0;
-	m_pBuffer[m_iLen] = NULL;
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::Clear()
+{
+	if (m_pBuffer)
+	{
+		m_iLen = 0;
+		m_pBuffer[m_iLen] = NULL;
+	}
 }
 
-void String::Clear(int offset, int len) {
-	ThrowIfInvalidIndex(offset);
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::Clear(int _offset, int _len)
+{
+	ThrowIfInvalidIndex(_offset);
 
-	const int iRemoveLen = offset + len > m_iLen ? m_iLen - offset : len;	// 예를들어 abcdefg에서 offset 6에 len 100뭐 이렇게 넣으면 len이 1이 되도록 해줘야함
-	const int iMoveCharCount = m_iLen - offset - iRemoveLen;
+	const int iRemoveLen = _offset + _len > m_iLen ? m_iLen - _offset : _len;	// 예를들어 abcdefg에서 offset 6에 len 100뭐 이렇게 넣으면 len이 1이 되도록 해줘야함
+	const int iMoveCharCount = m_iLen - _offset - iRemoveLen;
 
 	Memory::CopyUnsafe(
-		m_pBuffer + offset, 
-		m_pBuffer + offset + len, 
+		m_pBuffer + _offset, 
+		m_pBuffer + _offset + _len, 
 		iMoveCharCount);
 
 	m_iLen -= iRemoveLen;
 	m_pBuffer[m_iLen] = NULL;
 }
 
-int String::Count(const char* str) const {
-	return Count(0, m_iLen - 1, str);
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::Count(const char* _str) const
+{
+	return Count(0, m_iLen - 1, _str);
 }
 
-int String::Count(const String& val) const {
-	return Count(0, m_iLen - 1, val.Source());
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::Count(const String& _val) const
+{
+	return Count(0, m_iLen - 1, _val.Source());
 }
 
 /**
  * \brief  startIdx(포함) ~ endIdx (endIdx)사이의 str문자열 갯수를 반환해버렷!
  * O(n)
  */
-int String::Count(const int startIdx, const int endIdx, const char* str) const {
+int String::Count(const int _startIdx, const int _endIdx, const char* _str) const {
 	ThrowIfNotInitialized();
-	ThrowIfInvalidRangeIndex(startIdx, endIdx);
+	ThrowIfInvalidRangeIndex(_startIdx, _endIdx);
 
-	const int iStrLen = StringUtil::Length(str);
+	const int iStrLen = StringUtil::Length(_str);
 
 	int iOffset = 0;
 	int iCount = 0;
 
-	while (iOffset <= endIdx && (iOffset = Find(iOffset, endIdx, str)) != -1) {
+	while (iOffset <= _endIdx && (iOffset = Find(iOffset, _endIdx, _str)) != -1) {
 		iCount++;
 		iOffset += iStrLen;
 	}
@@ -482,21 +493,21 @@ int String::Replace(int offset, const String& from, const String& to) {
 	return Replace(Find(offset, from), from.Length(), to);
 }
 
-bool String::Contain(const char* str) const {
-	return Find(str) != -1;
+bool String::Contain(const char* _str) const {
+	return Find(_str) != -1;
 }
 
-bool String::Contain(const String& str) const {
-	return Find(str.m_pBuffer) != -1;
+bool String::Contain(const String& _str) const {
+	return Find(_str.m_pBuffer) != -1;
 }
 
 
 // @참고 : https://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf
-void String::Format(const char* format, ...) {
+void String::Format(const char* _format, ...) {
 	va_list args;
-	va_start(args, format);
+	va_start(args, _format);
 
-	const int iExpectedLen = vsnprintf(nullptr, 0, format, args); // 포맷 변환시 필요한 문자열 길이를 획득
+	const int iExpectedLen = vsnprintf(nullptr, 0, _format, args); // 포맷 변환시 필요한 문자열 길이를 획득
 
 	if (iExpectedLen <= 0) {
 		throw RuntimeException("문자열 포맷 수행중 오류가 발생하였습니다.");
@@ -506,7 +517,7 @@ void String::Format(const char* format, ...) {
 		Resize(iExpectedLen + DEFAULT_BUFFER_SIZE);
 	}
 
-	vsnprintf(m_pBuffer, m_iCapacity, format, args);
+	vsnprintf(m_pBuffer, m_iCapacity, _format, args);
 	m_pBuffer[iExpectedLen] = NULL;
 	m_iLen = iExpectedLen;
 	
@@ -530,18 +541,18 @@ void String::ReplaceAll(const char* from, const char* to) {
 	}
 }
 
-void String::SetAt(const int idx, const char ch) {
-	ThrowIfInvalidIndex(idx);
-	m_pBuffer[idx] = ch;
+void String::SetAt(const int _idx, const char _ch) {
+	ThrowIfInvalidIndex(_idx);
+	m_pBuffer[_idx] = _ch;
 }
 
-char String::GetAt(const int idx) const {
-	ThrowIfInvalidIndex(idx);
-	return m_pBuffer[idx];
+char String::GetAt(const int _idx) const {
+	ThrowIfInvalidIndex(_idx);
+	return m_pBuffer[_idx];
 }
 
-String String::GetRange(const int startIdx, const int endIdx) const {
-	return StringUtil::GetRange(m_pBuffer, m_iLen, startIdx, endIdx);
+String String::GetRange(const int _startIdx, const int _endIdx) const {
+	return StringUtil::GetRange(m_pBuffer, m_iLen, _startIdx, _endIdx);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -560,26 +571,26 @@ String String::SubStr(int _startIdx, int _count) const
 }
 
 // 기존 문자열의 시작인덱스(포함)부터 종료인덱스(포함)까지의 부분 문자열을 반환합니다.
-Tuple<char*, int, int> String::GetRangeUnsafe(const int startIdx, const int endIdx) const {
-	return StringUtil::GetRangeUnsafe(m_pBuffer, m_iLen, startIdx, endIdx);
+Tuple<char*, int, int> String::GetRangeUnsafe(const int _startIdx, const int _endIdx) const {
+	return StringUtil::GetRangeUnsafe(m_pBuffer, m_iLen, _startIdx, _endIdx);
 }
 
 // delimiter 문자열 기준으로 분리합니다.
 // includeEmpty가 true일 경우 분리된 토큰 문자열이 비어있더라도 포함 시킵니다.
 // TODO: 코드 더러움, 다시 짤 것 - 2023/02/06
 // O(n)
-Vector<String> String::Split(const char* delimiter, const bool includeEmpty) const {
+Vector<String> String::Split(const char* _delimiter, const bool _includeEmpty) const {
 	Vector<String> vecTokens;
-	int iOffset = Find(delimiter);
+	int iOffset = Find(_delimiter);
 
 	if (iOffset == -1) {
 		vecTokens.EmplaceBack(m_pBuffer);
 		return vecTokens;
 	}
 
-	const int iDelimiterLen = StringUtil::Length(delimiter);
+	const int iDelimiterLen = StringUtil::Length(_delimiter);
 	if (iOffset - 1 < 0) {
-		if (includeEmpty) {
+		if (_includeEmpty) {
 			vecTokens.EmplaceBack(EmptySource);
 		}
 	} else {
@@ -589,14 +600,14 @@ Vector<String> String::Split(const char* delimiter, const bool includeEmpty) con
 	iOffset += iDelimiterLen;
 
 	while (iOffset < m_iLen) {
-		const int iNextOffset = Find(iOffset, m_iLen - 1, delimiter);
+		const int iNextOffset = Find(iOffset, m_iLen - 1, _delimiter);
 
 		if (iNextOffset == -1) {
 			break;
 		}
 		
 		if (iNextOffset <= iOffset) {
-			if (includeEmpty) {
+			if (_includeEmpty) {
 				vecTokens.EmplaceBack(EmptySource);
 			}
 		} else {
@@ -608,7 +619,7 @@ Vector<String> String::Split(const char* delimiter, const bool includeEmpty) con
 	if (iOffset < m_iLen) {
 		vecTokens.EmplaceBack(GetRange(iOffset, m_iLen - 1));
 	} else {
-		if (includeEmpty) {
+		if (_includeEmpty) {
 			vecTokens.EmplaceBack(EmptySource);
 		}
 	}
@@ -616,15 +627,25 @@ Vector<String> String::Split(const char* delimiter, const bool includeEmpty) con
 	return vecTokens;
 }
 
-void String::Initialize(int capacity) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::Initialize(int _capacity)
+{
 	JC_DELETE_ARRAY_SAFE(m_pBuffer);
 
-	m_pBuffer = dbg_new char[capacity];
-	m_iLen = 0;
-	m_iCapacity = capacity;
-	m_pBuffer[0] = NULL;
+	if (_capacity <= 0)
+	{
+		m_pBuffer = nullptr;
+		m_iLen = 0;
+		m_iCapacity = 0;
+	}
+	else
+	{
+		m_pBuffer = dbg_new char[_capacity];
+		m_iLen = 0;
+		m_iCapacity = _capacity;
+		m_pBuffer[0] = NULL;
+	}
 }
-
 
 String String::ToLowerCase() const {
 	String copy = *this;

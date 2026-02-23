@@ -34,7 +34,7 @@ public:
 	virtual void JoinWait(jc::WaitHandle* _pWaitHandle) = 0;
 	virtual void Join() = 0;
 	virtual void WorkerThread(void* _pParam) = 0;
-	Int32U GetThreadId()
+	_u32 GetThreadId()
 	{
 		return thread_.GetId();
 	}

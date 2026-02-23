@@ -68,13 +68,13 @@ void NetCore::ProcessMainLoop()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetCore::UpdateServerTime(Int64 _sendTime, Int64 _centerTime)
+void NetCore::UpdateServerTime(_s64 _sendTime, _s64 _centerTime)
 {
 	if (_centerTime < centerServerTime_) // 시간 역행 금지
 		return;
 
-	Int64 now = DateTime::Now().Tick;
-	Int64 rtt = now - _sendTime;
+	_s64 now = DateTime::Now().Tick;
+	_s64 rtt = now - _sendTime;
 
 	centerServerPrevTime_ = centerServerTime_;
 	centerServerTime_ = _centerTime;
@@ -103,10 +103,10 @@ void NetCore::UpdateServerTime(Int64 _sendTime, Int64 _centerTime)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Int64 NetCore::GetTime()
+_s64 NetCore::GetTime()
 {
-	Int64 now = DateTime::Now().Tick;
-	Int64 serverTime = now + centerServerTimeDiff_; // 오차만큼 더해줌.
+	_s64 now = DateTime::Now().Tick;
+	_s64 serverTime = now + centerServerTimeDiff_; // 오차만큼 더해줌.
 	return serverTime;
 }
 

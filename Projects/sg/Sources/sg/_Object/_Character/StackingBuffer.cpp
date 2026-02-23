@@ -10,10 +10,10 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////
 CStackingBuffer::CStackingBuffer(
-	Int32 _id,
+	_s32 _id,
 	float _deltaPerSec,
-	Int32U _duration,
-	Int32U _type,
+	_u32 _duration,
+	_u32 _type,
 	bool _isPercentStacking,
 	float _percentBase)
 {
@@ -23,8 +23,8 @@ CStackingBuffer::CStackingBuffer(
 //////////////////////////////////////////////////////////////////////////////////////////
 float CStackingBuffer::CalcDelta()
 {
-	Int32U currTime = jc::Env::TimeGetTime();
-	Int32U elapsedTime = currTime - lastCalcTime_;
+	_u32 currTime = jc::Env::TimeGetTime();
+	_u32 elapsedTime = currTime - lastCalcTime_;
 
 	if (elapsedTime > duration_)
 		elapsedTime = duration_;

@@ -43,6 +43,7 @@ NetClientGroup::NetClientGroup()
 , pAreaUdp_(nullptr)
 , pChatTcp_(nullptr)
 , pChatUdp_(nullptr)
+, pParser_(dbg_new jnet::CommandParser())
 {
 	SetName("클라");
 }
@@ -87,13 +88,13 @@ void NetClientGroup::Initialize()
 	// ======================================================================================
 
 	// AUTHENTICATION
-	parser_.AddCommand<AUC_LoginAck>(R_AUTHENTICATION::RECV_AUC_LoginAck);
+	pParser_->AddCommand<AUC_LoginAck>(R_AUTHENTICATION::RECV_AUC_LoginAck);
 
 	// LOBBY
-	parser_.AddCommand<LOC_JoinLobbyAck>(R_LOBBY::RECV_LOC_JoinLobbyAck);
+	pParser_->AddCommand<LOC_JoinLobbyAck>(R_LOBBY::RECV_LOC_JoinLobbyAck);
 
 	// MESSAGE
-	parser_.AddCommand<SC_ClientText>(R_MESSAGE::RECV_SC_ClientText);
+	pParser_->AddCommand<SC_ClientText>(R_MESSAGE::RECV_SC_ClientText);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

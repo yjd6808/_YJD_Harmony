@@ -23,7 +23,7 @@ private:
 	template <typename T>
 	struct Setter;
 
-	template <Int32U Size>
+	template <_u32 Size>
 	struct Setter<const char[Size]>
 	{
 		void operator()(TFieldMap& _argMap, int _idx, const char* _pStr) const
@@ -32,7 +32,7 @@ private:
 		}
 	};
 
-	template <Int32U Size>
+	template <_u32 Size>
 	struct Setter<char[Size]>
 	{
 		void operator()(TFieldMap& _argMap, int _idx, const char* _pStr) const
@@ -51,9 +51,9 @@ private:
 	};
 
 	template <>
-	struct Setter<Int64>
+	struct Setter<_s64>
 	{
-		void operator()(TFieldMap& _argMap, int _idx, const Int64 _val) const
+		void operator()(TFieldMap& _argMap, int _idx, const _s64 _val) const
 		{
 			_argMap[_idx] = _val;
 		}

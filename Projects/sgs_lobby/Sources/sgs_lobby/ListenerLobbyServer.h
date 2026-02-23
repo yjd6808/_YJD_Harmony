@@ -17,8 +17,8 @@ public:
 protected:
 	void OnStarted() override;
 	void OnConnected(jnet::Session* _pConnectedSession) override;
-	void OnDisconnected(jnet::Session* _pDisconnectedSession, Int32U _errorCode) override;
-	void OnSent(jnet::Session* _pSender, jnet::IPacket* _pSentPacket, Int32UL _sentBytes) override;
+	void OnDisconnected(jnet::Session* _pDisconnectedSession, _u32 _errorCode) override;
+	void OnSent(jnet::Session* _pSender, jnet::IPacket* _pSentPacket, _u32l _sentBytes) override;
 	void OnReceived(jnet::Session* _pReceiver, jnet::ICommand* _pRecvCmd) override;
 	void OnReceived(jnet::Session* _pSession, jnet::RecvedCommandPacket* _pRecvPacket) override;
 	void OnStopped() override;

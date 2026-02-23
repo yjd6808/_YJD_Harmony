@@ -144,7 +144,7 @@ public:
 		return iLength;
 	}
 
-	template <Int32U Len>
+	template <_u32 Len>
 	static constexpr int CTLength(const char(&str)[Len]) {
 		return Len;
 	}

@@ -7,9 +7,9 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 TEST(ByteOrderTest, ByteOrderTest)
 {
-	constexpr Int32U val = 0xaabbccdd;
+	constexpr _u32 val = 0xaabbccdd;
 
-	const Int32U valToNetwork = htonl(val);
+	const _u32 valToNetwork = htonl(val);
 	EXPECT_TRUE(valToNetwork == ByteOrder::HostToNetwork(val));
 	EXPECT_TRUE(ntohl(valToNetwork) == ByteOrder::NetworkToHost(valToNetwork));
 }

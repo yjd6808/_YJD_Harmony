@@ -189,8 +189,8 @@ private:
 	T* pNext_;
 
 	inline static T* Head = nullptr;
-	inline static Int32U TotalCount = 0;
-	inline static Int32U AllocatedCount = 0;
+	inline static _u32 TotalCount = 0;
+	inline static _u32 AllocatedCount = 0;
 	inline static TLock Lock;
 };
 

@@ -26,13 +26,13 @@ public:
 	{
 	}
 
-	void Process(BOOL _result, Int32UL _numberOfBytesTransferred, IOCPPostOrder* _pCompletionKey) override
+	void Process(BOOL _result, _u32l _numberOfBytesTransferred, IOCPPostOrder* _pCompletionKey) override
 	{
 		(void)_numberOfBytesTransferred;
 		(void)_pCompletionKey;
 
 		TIOCPTask* pTask = task_.GetPtr();
-		Int32U errorCode;
+		_u32 errorCode;
 
 		if (IsFailed(_result, errorCode))
 		{

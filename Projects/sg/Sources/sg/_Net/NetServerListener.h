@@ -20,8 +20,8 @@ public:
 protected:
 	virtual void OnStarted() override;
 	virtual void OnConnected(jnet::Session* _pConnectedSession) override;
-	virtual void OnDisconnected(jnet::Session* _pDisconnectedSession, Int32U _errorCode) override;
-	virtual void OnSent(jnet::Session* _pSender, jnet::IPacket* _pSentPacket, Int32UL _sentBytes) override;
+	virtual void OnDisconnected(jnet::Session* _pDisconnectedSession, _u32 _errorCode) override;
+	virtual void OnSent(jnet::Session* _pSender, jnet::IPacket* _pSentPacket, _u32l _sentBytes) override;
 	virtual void OnReceived(jnet::Session* _pReceiver, jnet::ICommand* _pRecvCmd) override;	// 커맨드 하나
 	virtual void OnReceived(jnet::Session* _pReceiver, jnet::RecvedCommandPacket* _pRecvPacket) override; // 패킷 (최소 1개 이상의 커맨드를 담고있음)
 	virtual void OnStopped() override;

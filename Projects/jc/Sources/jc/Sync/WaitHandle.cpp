@@ -35,12 +35,12 @@ WaitHandle::~WaitHandle()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool WaitHandle::Wait(Int32U _timeout, OUT Int32U* _pResult)
+bool WaitHandle::Wait(_u32 _timeout, OUT _u32* _pResult)
 {
 	if (handle_ == nullptr)
 		return false;
 
-	const Int32U waitResult = WinApi::WaitForMultipleObjectsEx(1, &handle_, true, _timeout);
+	const _u32 waitResult = WinApi::WaitForMultipleObjectsEx(1, &handle_, true, _timeout);
 
 	if (_pResult)
 		*_pResult = waitResult;
@@ -86,16 +86,16 @@ void WaitHandle::operator=(WaitHandle&& _other) noexcept
 // static
 // =====================================================================
 //////////////////////////////////////////////////////////////////////////////////////////
-bool WaitHandle::WaitAll(WaitHandle* _pHandles, Int32U _count, OUT_OPT Int32U* _pResult)
+bool WaitHandle::WaitAll(WaitHandle* _pHandles, _u32 _count, OUT_OPT _u32* _pResult)
 {
 	jc_assert(_count <= MAXIMUM_WAIT_OBJECTS);
-	WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
-	for (Int32U index = 0; index < _count; ++index)
+	_whandle waitHandles[MAXIMUM_WAIT_OBJECTS];
+	for (_u32 index = 0; index < _count; ++index)
 	{
 		waitHandles[index] = _pHandles[index].handle_;
 	}
 
-	const Int32UL waitResult = WinApi::WaitForMultipleObjectsEx(_count, waitHandles, true);
+	const _u32l waitResult = WinApi::WaitForMultipleObjectsEx(_count, waitHandles, true);
 
 	if (_pResult)
 		*_pResult = waitResult;
@@ -110,17 +110,17 @@ bool WaitHandle::WaitAll(WaitHandle* _pHandles, Int32U _count, OUT_OPT Int32U* _
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-WaitHandle* WaitHandle::WaitAny(WaitHandle* _pHandles, Int32U _count, OUT_OPT Int32U* _pResult)
+WaitHandle* WaitHandle::WaitAny(WaitHandle* _pHandles, _u32 _count, OUT_OPT _u32* _pResult)
 {
 	jc_assert(_count <= MAXIMUM_WAIT_OBJECTS);
-	WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
+	_whandle waitHandles[MAXIMUM_WAIT_OBJECTS];
 
-	for (Int32U index = 0; index < _count; ++index)
+	for (_u32 index = 0; index < _count; ++index)
 	{
 		waitHandles[index] = _pHandles[index].handle_;
 	}
 
-	const Int32U waitResult = WinApi::WaitForMultipleObjectsEx(_count, waitHandles, false);
+	const _u32 waitResult = WinApi::WaitForMultipleObjectsEx(_count, waitHandles, false);
 
 	if (_pResult)
 		*_pResult = waitResult;

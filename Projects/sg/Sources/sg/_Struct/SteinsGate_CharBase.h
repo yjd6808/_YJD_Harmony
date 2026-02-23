@@ -489,7 +489,7 @@ JC_SENUM_BEGIN(LoginResult)
 JC_SENUM_END(LoginResult)
 
 //////////////////////////////////////////////////////////////////////////////////////////
-using AuthenticationSerial_t = Int32;
+using AuthenticationSerial_t = _s32;
 struct AuthenticationData
 {
 	AuthenticationState_t state_;

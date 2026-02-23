@@ -25,7 +25,7 @@ bool SgaSound::Load(bool _indexOnly)
 	if (!pParent_.Exist())
 		return false;
 
-	pData_ = MakeShared<Byte[]>(indexLength_);
+	pData_ = MakeShared<_u8[]>(indexLength_);
 	pParent_->StreamRef().Seek(indexOffset_);
 	pParent_->StreamRef().Read(pData_.GetPtr(), 0, pData_.Length());
 	return true;

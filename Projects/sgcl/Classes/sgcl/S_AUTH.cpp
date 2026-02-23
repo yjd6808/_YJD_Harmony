@@ -11,7 +11,7 @@
 
 #include <sg/Cmd_AUTHENTICATION.h>
 #include <sgcl/AuthenticationComponent.h>
-#include <sgcl/NetCore.h>
+#include <sgcl/_Net/NetCore.h>
 
 USING_NS_JC;
 USING_NS_CC;

@@ -184,11 +184,11 @@ void PrintFormat(Args&&... args) {
 
 // https://stackoverflow.com/questions/1082192/how-to-generate-random-variable-names-in-c-using-macros
 #define LeakCheckConcat(a, b) LeakCheckConcatInner(a, b)
-#define LeakCheckConcatInner(a, b) a##b {[](Int32U unfreedBytes) { FAIL() << unfreedBytes << " 바이트 메모리릭\n"; }}
+#define LeakCheckConcatInner(a, b) a##b {[](_u32 unfreedBytes) { FAIL() << unfreedBytes << " 바이트 메모리릭\n"; }}
 #define LeakCheck AutoMemoryLeakDetector LeakCheckConcat(LeakCheck, __COUNTER__)
 
 #define MemoryPoolLeakCheckConcat(a, b) MemoryPoolLeakCheckConcatInner(a, b)
-#define MemoryPoolLeakCheckConcatInner(a, b) a##b {&jc::ArrayAllocatorPool_v, [](Int64U unDeallocatedBytes, int* detail) { \
+#define MemoryPoolLeakCheckConcatInner(a, b) a##b {&jc::ArrayAllocatorPool_v, [](_u64 unDeallocatedBytes, int* detail) { \
     if (unDeallocatedBytes > 0) \
 		FAIL(); \
 }};

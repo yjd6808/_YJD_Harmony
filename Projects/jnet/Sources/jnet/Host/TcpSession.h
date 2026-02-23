@@ -33,12 +33,12 @@ public:
 
 	void Initialize() override;
 	void Connected() override;
-	void ConnectFailed(Int32U _errorCode) override;
-	void Disconnected(Int32U _errorCode) override;
+	void ConnectFailed(_u32 _errorCode) override;
+	void Disconnected(_u32 _errorCode) override;
 	bool AcceptAsync();
 	void AcceptWait();
-	bool Accepted(Int32UL _receivedBytes);
-	void Sent(IPacket* _pSentPacket, Int32UL _receivedBytes) override;
+	bool Accepted(_u32l _receivedBytes);
+	void Sent(IPacket* _pSentPacket, _u32l _receivedBytes) override;
 	Type GetType() const override { return eSession; }
 	DetailType GetDetailType() const override { return eTcpSession; }
 	const char* TypeName() const override { return "TCP 세션"; }

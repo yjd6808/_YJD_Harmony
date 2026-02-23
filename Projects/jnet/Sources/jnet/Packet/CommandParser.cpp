@@ -15,7 +15,7 @@ NS_JNET_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 bool CommandParser::RunCommand(Session* _pSession, ICommand* _pCommand) const
 {
-	const Int16 commandId = _pCommand->GetId();
+	const _s16 commandId = _pCommand->GetId();
 
 	if (!commandActionMap_.Exist(commandId))
 	{

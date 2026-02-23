@@ -8,7 +8,7 @@
 
 #include <jc/Container/Vector.h>
 
-using SgaDataPtr = jc::SharedPtr<Byte[]>;
+using SgaDataPtr = jc::SharedPtr<_u8[]>;
 class SgaLoader;
 class SgaPackage;
 
@@ -64,17 +64,17 @@ public:
 
 	SgaPackage* GetParent();
 
-	Int32 GetVersion()
+	_s32 GetVersion()
 	{
 		return version_;
 	}
 
-	Int32 GetIndexOffset()
+	_s32 GetIndexOffset()
 	{
 		return indexOffset_;
 	}
 
-	Int32 GetIndexLength()
+	_s32 GetIndexLength()
 	{
 		return indexLength_;
 	}
@@ -120,9 +120,9 @@ protected:
 	Type type_;
 	Header header_;
 
-	Int32 version_ = 0;
-	Int32 indexOffset_ = 0; // 인덱스 옵셋 (사운드 데이터는 데이터 시작 위치를 의미)
-	Int32 indexLength_ = 0; // 인덱스 길이 (사운드 데이터는 데이터 길이를 의미)
+	_s32 version_ = 0;
+	_s32 indexOffset_ = 0; // 인덱스 옵셋 (사운드 데이터는 데이터 시작 위치를 의미)
+	_s32 indexLength_ = 0; // 인덱스 길이 (사운드 데이터는 데이터 길이를 의미)
 
 	// ========================================
 	// 기본
@@ -130,7 +130,7 @@ protected:
 	jc::WeakPtr<SgaPackage> pParent_;
 	bool isIndexLoaded_;
 
-	template <Int32>
+	template <_s32>
 	friend class SgaElementInitializerImpl;
 	friend class SgaPackage;
 	friend class SgaLoader;

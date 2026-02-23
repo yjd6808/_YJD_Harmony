@@ -39,7 +39,7 @@ public:
 
 	int Send(char* _pData, int _len);
 	int Send(IPacket* _pPacket, bool _releasePacket = true);
-	int SendPending(OUT Int32U& _errorCode);
+	int SendPending(OUT _u32& _errorCode);
 	void PushPendingData(char* _pData, int _len);
 	bool HasPendingData() const { return pendingData_.Size() > 0; }
 	bool PendingDataSize() const { return pendingData_.Size(); }
@@ -78,10 +78,10 @@ public:
 	CommandBufferPacket* GetCommandBufferForSending();
 	virtual void FlushSendBuffer();
 	virtual void Connected() = 0;
-	virtual void ConnectFailed(Int32U _errorCode) = 0;
-	virtual void Disconnected(Int32U _errorCode) = 0;
-	virtual void Received(Int32UL _receivedBytes);
-	virtual void Sent(IPacket* _pSentPacket, Int32UL _receivedBytes) = 0;
+	virtual void ConnectFailed(_u32 _errorCode) = 0;
+	virtual void Disconnected(_u32 _errorCode) = 0;
+	virtual void Received(_u32l _receivedBytes);
+	virtual void Sent(IPacket* _pSentPacket, _u32l _receivedBytes) = 0;
 
 	virtual void NotifyRaw(char* _pData, int _len) = 0;
 	virtual void NotifyCommand(ICommand* _pCmd) = 0;

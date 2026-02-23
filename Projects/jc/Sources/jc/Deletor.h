@@ -67,9 +67,9 @@ struct PlacementDeletorBase
 template <typename T>
 struct PlacementDeletorBase<T[]>
 {
-	static void DestroyObject(T* _ptr, Int32U _size)
+	static void DestroyObject(T* _ptr, _u32 _size)
 	{
-		for (Int32U i = 0; i < _size; i++)
+		for (_u32 i = 0; i < _size; i++)
 		{
 			_ptr[i].~T();
 		}
@@ -80,9 +80,9 @@ struct PlacementDeletorBase<T[]>
 		operator delete[](_ptr);
 	}
 
-	void DeleteBoth(T* _ptr, Int32U _size)
+	void DeleteBoth(T* _ptr, _u32 _size)
 	{
-		for (Int32U i = 0; i < _size; i++)
+		for (_u32 i = 0; i < _size; i++)
 		{
 			_ptr[i].~T();
 		}
@@ -91,12 +91,12 @@ struct PlacementDeletorBase<T[]>
 	}
 };
 
-template <typename T, Int32U ArraySize>
+template <typename T, _u32 ArraySize>
 struct PlacementDeletorBase<T[ArraySize]>
 {
 	static void DestroyObject(T* _ptr)
 	{
-		for (Int32U i = 0; i < ArraySize; i++)
+		for (_u32 i = 0; i < ArraySize; i++)
 		{
 			_ptr[i].~T();
 		}
@@ -109,7 +109,7 @@ struct PlacementDeletorBase<T[ArraySize]>
 
 	void DeleteBoth(T* _ptr)
 	{
-		for (Int32U i = 0; i < ArraySize; i++)
+		for (_u32 i = 0; i < ArraySize; i++)
 		{
 			_ptr[i].~T();
 		}
@@ -142,7 +142,7 @@ struct PlacementDeletor : PlacementDeletorBase<T>
 template <typename T, DeletorOption Option>
 struct PlacementDeletor<T[], Option> : PlacementDeletorBase<T[]>
 {
-	void operator()(T* _ptr, Int32U _size)
+	void operator()(T* _ptr, _u32 _size)
 	{
 		if constexpr (Option == DeletorOption::Both)
 		{
@@ -159,7 +159,7 @@ struct PlacementDeletor<T[], Option> : PlacementDeletorBase<T[]>
 	}
 };
 
-template <typename T, Int32U ArraySize, DeletorOption Option>
+template <typename T, _u32 ArraySize, DeletorOption Option>
 struct PlacementDeletor<T[ArraySize], Option> : PlacementDeletorBase<T[ArraySize]>
 {
 	void operator()(T* ptr)

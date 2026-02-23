@@ -16,7 +16,7 @@ NS_JC_BEGIN
 class AutMemoryPoolLeakDetector
 {
 	using TOut = int*;
-	using TAction = Action<Int64U, int*>;
+	using TAction = Action<_u64, int*>;
 
 public:
 	AutMemoryPoolLeakDetector(MemoryPoolAbstract* _pPool, const TAction& _action);

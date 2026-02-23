@@ -14,6 +14,6 @@
 struct C_GAME
 {
 	static void OnConnected(jnet::Session* _pSession);
-	static void OnConnectFailed(jnet::Session* _pSession, Int32U _errorCode);
+	static void OnConnectFailed(jnet::Session* _pSession, _u32 _errorCode);
 	static void OnDisconnected(jnet::Session* _pSession);
 };

@@ -20,6 +20,7 @@
 #include <jc/Container/Vector.h>
 #include <jc/Container/Properties.h>
 #include <jc/Container/ListStack.h>
+#include <jc/Container/CMessage.h>
 
 #include <jc/Primitives/Atomic.h>
 #include <jc/Primitives/SmartPtr.h>

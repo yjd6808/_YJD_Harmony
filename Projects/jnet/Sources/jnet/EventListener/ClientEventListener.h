@@ -15,7 +15,7 @@ NS_JNET_BEGIN
 class JC_NOVTABLE ClientEventListener : public SessionEventListener
 {
 public:
-	virtual void OnConnectFailed(Session* _pSession, Int32U _errorCode) {} // Tcp클라이언트 전용
+	virtual void OnConnectFailed(Session* _pSession, _u32 _errorCode) {} // Tcp클라이언트 전용
 };
 
 NS_END

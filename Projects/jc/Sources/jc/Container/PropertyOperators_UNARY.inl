@@ -25,13 +25,13 @@ struct SPropertyValueUnaryOperator : IPropertyValueUnaryOperator
 		_LogWarn_("%s타입은 %s연산이 불가능합니다.", _pProperty->GetTypeName(), "Prefix --");
 	}
 
-	Int64 PostfixIncrement(PropertyBase* _pProperty) override
+	_s64 PostfixIncrement(PropertyBase* _pProperty) override
 	{
 		_LogWarn_("%s타입은 %s연산이 불가능합니다.", _pProperty->GetTypeName(), "Postfix ++");
 		return 0;
 	}
 
-	Int64 PostfixDecrement(PropertyBase* _pProperty) override
+	_s64 PostfixDecrement(PropertyBase* _pProperty) override
 	{
 		_LogWarn_("%s타입은 %s연산이 불가능합니다.", _pProperty->GetTypeName(), "Postfix --");
 		return 0;
@@ -41,65 +41,65 @@ struct SPropertyValueUnaryOperator : IPropertyValueUnaryOperator
 
 
 template <>
-struct SPropertyValueUnaryOperator<PropertyType::Int> : IPropertyValueUnaryOperator
+struct SPropertyValueUnaryOperator<PropertyType::_s32> : IPropertyValueUnaryOperator
 {
 	void PrefixIncrement(PropertyBase* _pProperty) override
 	{
-		Int32& value = *(Int32*)_pProperty->GetDecayedValue();
+		_s32& value = *(_s32*)_pProperty->GetDecayedValue();
 		++value;
 	}
 
 	void PrefixDecrement(PropertyBase* _pProperty) override
 	{
-		Int32& value = *(Int32*)_pProperty->GetDecayedValue();
+		_s32& value = *(_s32*)_pProperty->GetDecayedValue();
 		++value;
 	}
 
-	Int64 PostfixIncrement(PropertyBase* _pProperty) override
+	_s64 PostfixIncrement(PropertyBase* _pProperty) override
 	{
-		Int32& value = *(Int32*)_pProperty->GetDecayedValue();
-		Int32 result = value;
+		_s32& value = *(_s32*)_pProperty->GetDecayedValue();
+		_s32 result = value;
 		++value;
-		return static_cast<Int64>(result);
+		return static_cast<_s64>(result);
 	}
 
-	Int64 PostfixDecrement(PropertyBase* _pProperty) override
+	_s64 PostfixDecrement(PropertyBase* _pProperty) override
 	{
-		Int32& value = *(Int32*)_pProperty->GetDecayedValue();
-		Int32 result = value;
+		_s32& value = *(_s32*)_pProperty->GetDecayedValue();
+		_s32 result = value;
 		--value;
-		return static_cast<Int64>(result);
+		return static_cast<_s64>(result);
 	}
 };
 
 
 template <>
-struct SPropertyValueUnaryOperator<PropertyType::Int64> : IPropertyValueUnaryOperator
+struct SPropertyValueUnaryOperator<PropertyType::_s64> : IPropertyValueUnaryOperator
 {
 	void PrefixIncrement(PropertyBase* _pProperty) override
 	{
-		Int64& value = *(Int64*)_pProperty->GetDecayedValue();
+		_s64& value = *(_s64*)_pProperty->GetDecayedValue();
 		++value;
 	}
 
 	void PrefixDecrement(PropertyBase* _pProperty) override
 	{
-		Int64& value = *(Int64*)_pProperty->GetDecayedValue();
+		_s64& value = *(_s64*)_pProperty->GetDecayedValue();
 		--value;
 	}
 
-	Int64 PostfixIncrement(PropertyBase* _pProperty) override
+	_s64 PostfixIncrement(PropertyBase* _pProperty) override
 	{
-		Int64& value = *(Int64*)_pProperty->GetDecayedValue();
-		Int64 result = value;
+		_s64& value = *(_s64*)_pProperty->GetDecayedValue();
+		_s64 result = value;
 		++value;
 		return result;
 	}
 
-	Int64 PostfixDecrement(PropertyBase* _pProperty) override
+	_s64 PostfixDecrement(PropertyBase* _pProperty) override
 	{
-		Int64& value = *(Int64*)_pProperty->GetDecayedValue();
-		Int64 result = value;
+		_s64& value = *(_s64*)_pProperty->GetDecayedValue();
+		_s64 result = value;
 		--value;
 		return result;
 	}

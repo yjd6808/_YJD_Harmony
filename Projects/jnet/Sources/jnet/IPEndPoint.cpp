@@ -68,7 +68,7 @@ IPv4EndPoint::IPv4EndPoint(const jc::String& _endPointString)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IPv4EndPoint::IPv4EndPoint(IPv4Address _address, Int16U _port)
+IPv4EndPoint::IPv4EndPoint(IPv4Address _address, _u16 _port)
 : InternetAddr()
 {
 	InternetAddr.sin_family = AF_INET;
@@ -143,7 +143,7 @@ IPv4Address IPv4EndPoint::GetAddress() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Int16U IPv4EndPoint::GetPort() const
+_u16 IPv4EndPoint::GetPort() const
 {
 	return ByteOrder::NetworkToHost(InternetAddr.sin_port);
 }
@@ -182,7 +182,7 @@ IPv4EndPoint IPv4EndPoint::Parse(const char* _pEndPointAddr)
 	(void)portStringLength; // length currently unused but kept for potential validation
 
 	int port = -1;
-	if (!StringUtil::TryToNumber<Int>(port, portString.Source))
+	if (!StringUtil::TryToNumber<_s32>(port, portString.Source))
 	{
 		jc_assert_msg(false, "올바른 포트번호가 아닙니다.");
 		return Invalid;
@@ -194,7 +194,7 @@ IPv4EndPoint IPv4EndPoint::Parse(const char* _pEndPointAddr)
 		return Invalid;
 	}
 
-	return IPv4EndPoint(IPv4Address{addressString.Source}, static_cast<Int16U>(port));
+	return IPv4EndPoint(IPv4Address{addressString.Source}, static_cast<_u16>(port));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

@@ -81,7 +81,7 @@ void UdpClient::Connected()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UdpClient::ConnectFailed(Int32U _errorCode)
+void UdpClient::ConnectFailed(_u32 _errorCode)
 {
 	// UDP는 연결이라는 개념이 존재하지 않는다. 이 함수는 아무데서도 호출하지 않음
 	// 추후 ReliableUDP를 구현하게된다면 활용할 듯?
@@ -93,7 +93,7 @@ void UdpClient::ConnectFailed(Int32U _errorCode)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UdpClient::Disconnected(Int32U _errorCode)
+void UdpClient::Disconnected(_u32 _errorCode)
 {
 	// UDP는 연결이 끊긴다는 개념이 존재하지 않는다. 이 함수는 아무데서도 호출하지 않음
 	// 추후 ReliableUDP를 구현하게된다면 활용할 듯?
@@ -131,7 +131,7 @@ void UdpClient::NotifyRaw(char* _pData, int _len)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UdpClient::Sent(IPacket* _pSentPacket, Int32UL _sentBytes)
+void UdpClient::Sent(IPacket* _pSentPacket, _u32l _sentBytes)
 {
 	if (pEventListener_)
 	{

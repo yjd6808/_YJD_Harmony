@@ -34,82 +34,82 @@ String Stream::ReadString()
 	return szRet;
 }
 
-Int8 Stream::ReadInt8()
+_s8 Stream::ReadInt8()
 {
-	Int8 iRet;
-	if (Read((Byte*)&iRet, 0, sizeof(Int8)) != sizeof(Int8))
+	_s8 iRet;
+	if (Read((_u8*)&iRet, 0, sizeof(_s8)) != sizeof(_s8))
 	{
-		throw RuntimeException("스트림에서 Int8을 읽는데 실패했습니다.");
+		throw RuntimeException("스트림에서 _s8을 읽는데 실패했습니다.");
 	}
 	return iRet;
 }
 
-Byte Stream::ReadByte()
+_u8 Stream::ReadByte()
 {
-	Byte iRet;
-	if (Read(&iRet, 0, sizeof(Byte)) != sizeof(Byte))
+	_u8 iRet;
+	if (Read(&iRet, 0, sizeof(_u8)) != sizeof(_u8))
 	{
-		throw RuntimeException("스트림에서 Byte을 읽는데 실패했습니다.");
+		throw RuntimeException("스트림에서 _u8을 읽는데 실패했습니다.");
 	}
 	return iRet;
 }
 
-Int16 Stream::ReadInt16()
+_s16 Stream::ReadInt16()
 {
-	Int16 iRet;
-	if (Read((Byte*)&iRet, 0, sizeof(Int16)) != sizeof(Int16))
+	_s16 iRet;
+	if (Read((_u8*)&iRet, 0, sizeof(_s16)) != sizeof(_s16))
 	{
-		throw RuntimeException("스트림에서 Int16을 읽는데 실패했습니다.");
+		throw RuntimeException("스트림에서 _s16을 읽는데 실패했습니다.");
 	}
 	return iRet;
 }
 
-Int16U Stream::ReadInt16U()
+_u16 Stream::ReadInt16U()
 {
-	Int16 iRet;
-	if (Read((Byte*)&iRet, 0, sizeof(Int16U)) != sizeof(Int16U))
+	_s16 iRet;
+	if (Read((_u8*)&iRet, 0, sizeof(_u16)) != sizeof(_u16))
 	{
-		throw RuntimeException("스트림에서 Int16U을 읽는데 실패했습니다.");
+		throw RuntimeException("스트림에서 _u16을 읽는데 실패했습니다.");
 	}
 	return iRet;
 }
 
-Int32 Stream::ReadInt32()
+_s32 Stream::ReadInt32()
 {
-	Int32 iRet;
-	if (Read((Byte*)&iRet, 0, sizeof(Int32)) != sizeof(Int32))
+	_s32 iRet;
+	if (Read((_u8*)&iRet, 0, sizeof(_s32)) != sizeof(_s32))
 	{
-		throw RuntimeException("스트림에서 Int32을 읽는데 실패했습니다.");
+		throw RuntimeException("스트림에서 _s32을 읽는데 실패했습니다.");
 	}
 	return iRet;
 }
 
-Int32U Stream::ReadInt32U()
+_u32 Stream::ReadInt32U()
 {
-	Int32U iRet;
-	if (Read((Byte*)&iRet, 0, sizeof(Int32U)) != sizeof(Int32U))
+	_u32 iRet;
+	if (Read((_u8*)&iRet, 0, sizeof(_u32)) != sizeof(_u32))
 	{
-		throw RuntimeException("스트림에서 Int32U을 읽는데 실패했습니다.");
+		throw RuntimeException("스트림에서 _u32을 읽는데 실패했습니다.");
 	}
 	return iRet;
 }
 
-Int64 Stream::ReadInt64()
+_s64 Stream::ReadInt64()
 {
-	Int64 iRet;
-	if (Read((Byte*)&iRet, 0, sizeof(Int64)) != sizeof(Int64))
+	_s64 iRet;
+	if (Read((_u8*)&iRet, 0, sizeof(_s64)) != sizeof(_s64))
 	{
-		throw RuntimeException("스트림에서 Int64을 읽는데 실패했습니다.");
+		throw RuntimeException("스트림에서 _s64을 읽는데 실패했습니다.");
 	}
 	return iRet;
 }
 
-Int64U Stream::ReadInt64U()
+_u64 Stream::ReadInt64U()
 {
-	Int64U iRet;
-	if (Read((Byte*)&iRet, 0, sizeof(Int64U)) != sizeof(Int64U))
+	_u64 iRet;
+	if (Read((_u8*)&iRet, 0, sizeof(_u64)) != sizeof(_u64))
 	{
-		throw RuntimeException("스트림에서 Int64U을 읽는데 실패했습니다.");
+		throw RuntimeException("스트림에서 _u64을 읽는데 실패했습니다.");
 	}
 	return iRet;
 }
@@ -117,7 +117,7 @@ Int64U Stream::ReadInt64U()
 
 void Stream::WriteString(const String& _str, bool _withNull)
 {
-	Write((Byte*)_str.Source(), _withNull ? _str.Length() + 1 : _str.Length());
+	Write((_u8*)_str.Source(), _withNull ? _str.Length() + 1 : _str.Length());
 }
 
 

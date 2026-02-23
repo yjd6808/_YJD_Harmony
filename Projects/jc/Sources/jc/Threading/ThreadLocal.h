@@ -27,7 +27,7 @@ NS_JC_BEGIN
 template <typename T, typename TAllocator = CDefaultAllocator>
 class ThreadLocal
 {
-	using TlsObjectId = Int64U;
+	using TlsObjectId = _u64;
 	using TlsRefMap = HashMap<TlsObjectId, T, TAllocator>;
 	using TlsRefMapPtr = SharedPtr<TlsRefMap>;
 	using TlsValueMaps = LinkedList<WeakPtr<TlsRefMap>, TAllocator>;

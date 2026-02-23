@@ -24,6 +24,8 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc\Container\CMessage.cpp" />
+    <ClCompile Include="..\Sources\jc\Container\MemoryStream.cpp" />
     <ClCompile Include="..\Sources\jc\Container\Property.cpp" />
     <ClCompile Include="..\Sources\jc\Container\PropertyBase.cpp" />
     <ClCompile Include="..\Sources\jc\Container\PropertyFactory.cpp" />
@@ -208,6 +210,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc\Primitives\Span.cpp" />
     <ClCompile Include="..\Sources\jc\Primitives\String.cpp" />
     <ClCompile Include="..\Sources\jc\Primitives\StringTokenizer.cpp" />
     <ClCompile Include="..\Sources\jc\Primitives\StringUtil.cpp" />
@@ -281,6 +284,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\jc\Container\CMessage.h" />
     <ClInclude Include="..\Sources\jc\Container\CollectionStream.h" />
     <ClInclude Include="..\Sources\jc\Container\CollectionStreamIterator.h">
       <SubType>
@@ -304,6 +308,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\jc\Container\MemoryStream.h" />
     <ClInclude Include="..\Sources\jc\Container\Properties.h" />
     <ClInclude Include="..\Sources\jc\Container\PropertiesIterator.h">
       <SubType>
@@ -578,6 +583,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\Primitives\SmartPtr.h" />
+    <ClInclude Include="..\Sources\jc\Primitives\Span.h" />
     <ClInclude Include="..\Sources\jc\Primitives\StaticString.h" />
     <ClInclude Include="..\Sources\jc\Primitives\String.h" />
     <ClInclude Include="..\Sources\jc\Primitives\StringTokenizer.h" />

@@ -25,7 +25,7 @@ public:
 	bool IsLocked() override;
 private:
 	NormalLock m_lock;
-	Int32U m_lockedThreadId;
+	_u32 m_lockedThreadId;
 	int m_recursion;
 };
 

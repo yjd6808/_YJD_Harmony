@@ -65,7 +65,7 @@ HOST_STATIC_CMD_BEGIN(SCE_NotifyOrderFailed, CMDID_SCE_NotifyOrderFailed)
 	int ServerId;
 	ServerType_t ServerType;
 	CenterOrder_t Order;
-	Int32U ErrorCode;
+	_u32 ErrorCode;
 HOST_STATIC_CMD_END
 
 // ===============================================================================================================

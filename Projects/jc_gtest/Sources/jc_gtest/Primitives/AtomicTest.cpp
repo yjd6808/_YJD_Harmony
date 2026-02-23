@@ -51,21 +51,21 @@ TEST(AtomicTest, Integer) {
     }
 
     {
-        Atomic<Int32U> k = 1;
-        Atomic<Int> s = k;
+        Atomic<_u32> k = 1;
+        Atomic<_s32> s = k;
         EXPECT_TRUE(s == 1);
         EXPECT_TRUE(s-- == 1);
         EXPECT_TRUE(s == 0);
     }
 
     {
-        Atomic<Int> s = 0;
+        Atomic<_s32> s = 0;
         EXPECT_TRUE(s += 100 == 100);
         EXPECT_TRUE(s -= 100 == 0);
     }
 
     {
-        Atomic<Int> s = 0;
+        Atomic<_s32> s = 0;
         EXPECT_TRUE((s |= 0b0101) == 0b0101);
         EXPECT_TRUE((s |= 0b0010) == 0b0111);
         EXPECT_TRUE((s |= 0b1000) == 0b1111);

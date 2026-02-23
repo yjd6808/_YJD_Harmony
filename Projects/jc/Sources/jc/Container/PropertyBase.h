@@ -176,8 +176,8 @@ struct PropertyBase
 
 	PropertyBase& operator++();
 	PropertyBase& operator--();
-	Int64 operator++(int);
-	Int64 operator--(int);
+	_s64 operator++(int);
+	_s64 operator--(int);
 };
 
 

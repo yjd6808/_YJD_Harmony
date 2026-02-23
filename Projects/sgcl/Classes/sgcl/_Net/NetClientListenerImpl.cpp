@@ -17,13 +17,14 @@ USING_NS_JC;
 USING_NS_CC;
 USING_NS_JNET;
 
-static void SyncConnectionResult(ClientConnectServerType_t _listenerType, jnet::Session* _pSession, bool _success, Int32U _errorCode);
-static void SyncDisconnectionResult(ClientConnectServerType_t _listenerType, jnet::Session* _pSession);
-static void SyncReceivedCommand(ClientConnectServerType_t _listenerType, jnet::Session* _pSession, jnet::ICommand* _pCmd);
+static void SyncConnectionResult(ServerType_t _listenerType, jnet::Session* _pSession, bool _success, _u32 _errorCode);
+static void SyncDisconnectionResult(ServerType_t _listenerType, jnet::Session* _pSession);
+static void SyncReceivedCommand(ServerType_t _listenerType, jnet::Session* _pSession, jnet::ICommand* _pCmd);
 
 //////////////////////////////////////////////////////////////////////////////////////////
-NetClientListenerImpl::NetClientListenerImpl(ClientConnectServerType_t _connectedServerType)
-: connectedServerType_(_connectedServerType)
+NetClientListenerImpl::NetClientListenerImpl(ServerType_t _connectedServerType)
+: NetClientListener(nullptr)
+, connectedServerType_(_connectedServerType)
 {
 }
 
@@ -35,21 +36,21 @@ void NetClientListenerImpl::OnConnected(Session* _pSession)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetClientListenerImpl::OnDisconnected(Session* _pSession, Int32U _errorCode)
+void NetClientListenerImpl::OnDisconnected(Session* _pSession, _u32 _errorCode)
 {
 	NetClientListener::OnDisconnected(_pSession, _errorCode);
 	SyncDisconnectionResult(connectedServerType_, _pSession);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetClientListenerImpl::OnConnectFailed(Session* _pSession, Int32U _errorCode)
+void NetClientListenerImpl::OnConnectFailed(Session* _pSession, _u32 _errorCode)
 {
 	NetClientListener::OnConnectFailed(_pSession, _errorCode);
 	SyncConnectionResult(connectedServerType_, _pSession, false, _errorCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetClientListenerImpl::OnSent(Session* _pSession, IPacket* _pSendPacket, Int32UL _sentBytes)
+void NetClientListenerImpl::OnSent(Session* _pSession, IPacket* _pSendPacket, _u32l _sentBytes)
 {
 	NetClientListener::OnSent(_pSession, _pSendPacket, _sentBytes);
 }
@@ -69,10 +70,10 @@ void NetClientListenerImpl::OnReceived(Session* _pSession, RecvedCommandPacket* 
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void SyncConnectionResult(
-	ClientConnectServerType_t _listenerType, 
+	ServerType_t _listenerType, 
 	Session* _pSession,
 	bool _success, 
-	Int32U _errorCode)
+	_u32 _errorCode)
 //////////////////////////////////////////////////////////////////////////////////////////
 {
 	ConnectionSynchronizer* pSynchronizer = g_cNet.GetConnectionSynchronizer();
@@ -88,7 +89,7 @@ void SyncConnectionResult(
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SyncDisconnectionResult(ClientConnectServerType_t _listenerType, Session* _pSession)
+void SyncDisconnectionResult(ServerType_t _listenerType, Session* _pSession)
 {
 	ConnectionSynchronizer* pSynchronizer = g_cNet.GetConnectionSynchronizer();
 
@@ -102,7 +103,7 @@ void SyncDisconnectionResult(ClientConnectServerType_t _listenerType, Session* _
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void SyncReceivedCommand(ClientConnectServerType_t _listenerType, jnet::Session* _pSession, ICommand* _pCmd)
+void SyncReceivedCommand(ServerType_t _listenerType, jnet::Session* _pSession, ICommand* _pCmd)
 {
 	CommandSynchronizer* pSynchronizer = g_cNet.GetCommandSynchronizer();
 

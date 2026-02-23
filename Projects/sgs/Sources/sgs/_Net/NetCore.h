@@ -34,9 +34,9 @@ public:
 	void SetUpdateCallback(jc::Action<const jc::TimeSpan&>&& _fnUpdate) { fnUpdate_ = std::move(_fnUpdate); }
 	void SetStoppedCallback(jc::Action<>&& _fnStopped) { fnStopped_ = std::move(_fnStopped); }
 
-	void	UpdateServerTime(Int64 _sendTime, Int64 _centerTime);
-	Int64	GetTime();
-	Int64	GetTimeDiff() const { return centerServerTimeDiff_; }
+	void	UpdateServerTime(_s64 _sendTime, _s64 _centerTime);
+	_s64	GetTime();
+	_s64	GetTimeDiff() const { return centerServerTimeDiff_; }
 private:
 	void OnUpdate(const jc::TimeSpan& _elapsed);
 
@@ -55,15 +55,15 @@ private:
 	// 모든 서버의 시간이 동일하기 위해서, 중앙서버의 시간을 기준으로 피어 서버들이 시간 동기화를 한다.
 	// 피어 서버들이 중앙 서버와 시간 정보를 기록한다.
 	// 매번 정확한 시간 정보를 얻기 위해 중앙 서버에 시간정보를 물어보는건 엄청난 낭비이다.
-	Int64 centerServerPrevTime_ = -1;
-	Int64 centerServerTime_ = -1;
-	Int64 centerServerTimeDiff_ = -1; // 피어 서버와 중앙 서버의 시간 차이
+	_s64 centerServerPrevTime_ = -1;
+	_s64 centerServerTime_ = -1;
+	_s64 centerServerTimeDiff_ = -1; // 피어 서버와 중앙 서버의 시간 차이
 	static constexpr int RTT_QUEUE_MAX_SIZE = 10;
-	Int64 rttQueue_[RTT_QUEUE_MAX_SIZE];
-	Int32 rttQueueIndex_ = 0;
-	Int32 rttQueueSize_ = 0;
-	Int64 rttSum_ = 0;
-	Int64 avgRtt_ = 0;
+	_s64 rttQueue_[RTT_QUEUE_MAX_SIZE];
+	_s32 rttQueueIndex_ = 0;
+	_s32 rttQueueSize_ = 0;
+	_s64 rttSum_ = 0;
+	_s64 avgRtt_ = 0;
 };
 
 NS_END

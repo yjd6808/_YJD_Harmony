@@ -63,37 +63,37 @@ public:
 	}
 
 	// bytes의 offset 위치부터 len 만큼 스트림으로부터 읽어서 저장한다.
-	virtual int Read(OUT Byte* _pBytes, int _offset, int _length) = 0;
+	virtual int Read(OUT _u8* _pBytes, int _offset, int _length) = 0;
 
 	String ReadString();
-	Int8 ReadInt8();
-	Byte ReadByte();
-	Int16 ReadInt16();
-	Int16U ReadInt16U();
-	Int32 ReadInt32();
-	Int32U ReadInt32U();
-	Int64 ReadInt64();
-	Int64U ReadInt64U();
+	_s8 ReadInt8();
+	_u8 ReadByte();
+	_s16 ReadInt16();
+	_u16 ReadInt16U();
+	_s32 ReadInt32();
+	_u32 ReadInt32U();
+	_s64 ReadInt64();
+	_u64 ReadInt64U();
 
 	// bytes의 offset 위치부터 len만큼 스트림에 작성한다.
-	virtual void Write(const Byte* _pBytes, int _offset, int _length) = 0;
+	virtual void Write(const _u8* _pBytes, int _offset, int _length) = 0;
 
 	// bytes의 0위치부터 len만큼 스트림에 작성한다.
-	virtual void Write(const Byte* _pBytes, int _length)
+	virtual void Write(const _u8* _pBytes, int _length)
 	{
 		jc_assert_msg(CanWrite(), "해당 스트림에 Write 할 수 없습니다.");
 		Write(_pBytes, 0, _length);
 	}
 
 	void WriteString(const String& str, bool withNull = true);
-	void WriteInt8(Int8 data) { Write((const Byte*)&data, 0, sizeof(Int8)); }
-	void WriteInt8U(Int8U data) { Write(&data, 0, sizeof(Int8U)); }
-	void WriteInt16(Int16 data) { Write((const Byte*)&data, 0, sizeof(Int16)); }
-	void WriteInt16U(Int16U data) { Write((const Byte*)&data, 0, sizeof(Int16U)); }
-	void WriteInt32(Int32 data) { Write((const Byte*)&data, 0, sizeof(Int32)); }
-	void WriteInt32U(Int32U data) { Write((const Byte*)&data, 0, sizeof(Int32U)); }
-	void WriteInt64(Int64 data) { Write((const Byte*)&data, 0, sizeof(Int64)); }
-	void WriteInt64U(Int64U data) { Write((const Byte*)&data, 0, sizeof(Int64U)); }
+	void WriteInt8(_s8 data) { Write((const _u8*)&data, 0, sizeof(_s8)); }
+	void WriteInt8U(_u8 data) { Write(&data, 0, sizeof(_u8)); }
+	void WriteInt16(_s16 data) { Write((const _u8*)&data, 0, sizeof(_s16)); }
+	void WriteInt16U(_u16 data) { Write((const _u8*)&data, 0, sizeof(_u16)); }
+	void WriteInt32(_s32 data) { Write((const _u8*)&data, 0, sizeof(_s32)); }
+	void WriteInt32U(_u32 data) { Write((const _u8*)&data, 0, sizeof(_u32)); }
+	void WriteInt64(_s64 data) { Write((const _u8*)&data, 0, sizeof(_s64)); }
+	void WriteInt64U(_u64 data) { Write((const _u8*)&data, 0, sizeof(_u64)); }
 
 
 	// 커서의 위치를 옮긴다.

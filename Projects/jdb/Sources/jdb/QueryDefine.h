@@ -187,7 +187,7 @@ struct InsertResult : Result
 {
 	MysqlQueryInsertPtr Query;
 
-	Int64U GetInsertId() {
+	_u64 GetInsertId() {
 		QRY_RESULT_DEBUG_ASSERT
 			if (Query->IsFailed()) return 0;
 		return Query->GetInsertId();

@@ -21,9 +21,9 @@ public:
 	static const String& ModuleFileName();	// 확장자 포함
 	static const String& ModuleName();
 
-	static Int32U   TimeGetTime();
+	static _u32   TimeGetTime();
 	static TimeSpan AppTime();			// 앱 실행후 시간이 얼마나 결과했는지
-	static Int32U	AppTimeTgt();		// 앱 실행후 시간이 얼마나 결과했는지
+	static _u32	AppTimeTgt();		// 앱 실행후 시간이 얼마나 결과했는지
 	static TimeSpan SystemTime();		// OS 실행후 시간이 얼마나 경과했는지
 	static TimeSpan SystemTimeTgt();	// OS 실행후 시간이 얼마나 경과했는지 (TimeGetTime64)
 
@@ -38,8 +38,8 @@ private:
 	static String 		moduleName_;	// d
 
 	static SpinLock		tgt64_lock_;
-	static Int32U		tgt64_lastTime_;
-	static Int32U		tgt64_highPart_;
+	static _u32		tgt64_lastTime_;
+	static _u32		tgt64_highPart_;
 	static Vector<String>	args_;
 };
 

@@ -141,7 +141,7 @@ FileStream::~FileStream()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int FileStream::Read(OUT Byte* _pBytes, int _offset, int _len)
+int FileStream::Read(OUT _u8* _pBytes, int _offset, int _len)
 {
 	jc_assert_msg(CanRead(), "읽기가 불가능한 스트림입니다.");
 	jc_assert_msg(m_hHandle, "스트림이 닫혀 있습니다.");
@@ -160,7 +160,7 @@ int FileStream::Read(OUT Byte* _pBytes, int _offset, int _len)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void FileStream::Write(const Byte* _pBytes, int _offset, int _len)
+void FileStream::Write(const _u8* _pBytes, int _offset, int _len)
 {
 	jc_assert_msg(CanWrite(), "쓰기가 불가능한 스트림입니다.");
 	jc_assert_msg(m_hHandle, "스트림이 닫혀 있습니다.");

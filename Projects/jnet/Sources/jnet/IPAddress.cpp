@@ -21,7 +21,7 @@ IPv4Address::IPv4Address(const char* _pHostOrderedAddressString)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Byte IPv4Address::GetAddressOctet(int _index) const
+_u8 IPv4Address::GetAddressOctet(int _index) const
 {
 	if (_index < 0 || _index > 3)
 	{
@@ -90,7 +90,7 @@ IPv4Address IPv4Address::Parse(const char* _pHostOrderedAddressString)
 			temp.Source[tempIndex] = '\0';
 			const int value = atoi(temp.Source);
 			jc_assert_msg(value <= 255, "올바른 IPv4 주소를 전달해주세요. 255.255.255.255보다 큰 IP 주소입니다.");
-			result.address_.seg_[3 - step] = static_cast<Byte>(value);
+			result.address_.seg_[3 - step] = static_cast<_u8>(value);
 			++step;
 			tempIndex = -1;
 		}
@@ -111,7 +111,7 @@ IPv4Address IPv4Address::Parse(const char* _pHostOrderedAddressString)
 	temp.Source[tempIndex] = '\0';
 	const int value = atoi(temp.Source);
 	jc_assert_msg(value <= 255, "올바른 IPv4 주소를 전달해주세요. 255.255.255.255보다 큰 IP 주소입니다.");
-	result.address_.seg_[0] = static_cast<Byte>(value);
+	result.address_.seg_[0] = static_cast<_u8>(value);
 
 	return result;
 }

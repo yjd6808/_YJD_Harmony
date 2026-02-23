@@ -36,10 +36,10 @@ public:
 protected:
 	SgaDataPtr pData_;
 
-	template <Int32>
+	template <_s32>
 	friend class SgaElementInitializerImpl;
 	friend class SgaLoader;
 };
 
 using SgaSoundPtr = jc::SharedPtr<SgaSound>;
-using SgaSoundDataPtr = jc::SharedPtr<Byte[]>;
+using SgaSoundDataPtr = jc::SharedPtr<_u8[]>;

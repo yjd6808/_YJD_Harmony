@@ -81,7 +81,7 @@ struct RemoveArray<T[]>
     using Type = T;
 };
 
-template <typename T, Int32U ArraySize>
+template <typename T, _u32 ArraySize>
 struct RemoveArray<T[ArraySize]>
 {
     using Type = T;

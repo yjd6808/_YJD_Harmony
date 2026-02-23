@@ -15,44 +15,44 @@ NS_JC_BEGIN
 
 // 할당가능한 최적의 타입, 직접 사용 금지, PropertyTypeDescription을 통해서 사용할 것 (const, volatile, 레퍼런스 타입등에 대해서 특수화 안되어있기 때문)
 template <PropertyType_t Type> struct PropertyDataTypeGetter { using Ty = void; };
-template <> struct PropertyDataTypeGetter<PropertyType::Int64> { using Ty = Int64; };
-template <> struct PropertyDataTypeGetter<PropertyType::Int64U> { using Ty = Int64U; };
-template <> struct PropertyDataTypeGetter<PropertyType::Int> { using Ty = Int; };
-template <> struct PropertyDataTypeGetter<PropertyType::Int32U> { using Ty = Int32U; };
-template <> struct PropertyDataTypeGetter<PropertyType::Int32L> { using Ty = Int32L; };
-template <> struct PropertyDataTypeGetter<PropertyType::Int32UL> { using Ty = Int32UL; };
-template <> struct PropertyDataTypeGetter<PropertyType::Int16> { using Ty = Int16; };
-template <> struct PropertyDataTypeGetter<PropertyType::Int16U> { using Ty = Int16U; };
+template <> struct PropertyDataTypeGetter<PropertyType::_s64> { using Ty = _s64; };
+template <> struct PropertyDataTypeGetter<PropertyType::_u64> { using Ty = _u64; };
+template <> struct PropertyDataTypeGetter<PropertyType::_s32> { using Ty = _s32; };
+template <> struct PropertyDataTypeGetter<PropertyType::_u32> { using Ty = _u32; };
+template <> struct PropertyDataTypeGetter<PropertyType::_s32l> { using Ty = _s32l; };
+template <> struct PropertyDataTypeGetter<PropertyType::_u32l> { using Ty = _u32l; };
+template <> struct PropertyDataTypeGetter<PropertyType::_s16> { using Ty = _s16; };
+template <> struct PropertyDataTypeGetter<PropertyType::_u16> { using Ty = _u16; };
 template <> struct PropertyDataTypeGetter<PropertyType::Bool> { using Ty = bool; };
-template <> struct PropertyDataTypeGetter<PropertyType::Int8> { using Ty = Int8; };
-template <> struct PropertyDataTypeGetter<PropertyType::Int8U> { using Ty = Int8U; };
-template <> struct PropertyDataTypeGetter<PropertyType::Float> { using Ty = Float; };
-template <> struct PropertyDataTypeGetter<PropertyType::Double> { using Ty = Double; };
-template <> struct PropertyDataTypeGetter<PropertyType::LDouble> { using Ty = LDouble; };
+template <> struct PropertyDataTypeGetter<PropertyType::_s8> { using Ty = _s8; };
+template <> struct PropertyDataTypeGetter<PropertyType::_u8> { using Ty = _u8; };
+template <> struct PropertyDataTypeGetter<PropertyType::_f32> { using Ty = _f32; };
+template <> struct PropertyDataTypeGetter<PropertyType::_f64> { using Ty = _f64; };
+template <> struct PropertyDataTypeGetter<PropertyType::_f64l> { using Ty = _f64l; };
 template <> struct PropertyDataTypeGetter<PropertyType::String> { using Ty = String; };
 template <> struct PropertyDataTypeGetter<PropertyType::CharPtr> { using Ty = char*; };
 
 
 // 인자로 전달된 타입
 template <typename T> struct PropertyTypeGetter { static constexpr PropertyType_t Type = PropertyType::Unknown; };
-template <> struct PropertyTypeGetter<Int64> { static constexpr PropertyType_t Type = PropertyType::Int64; };
-template <> struct PropertyTypeGetter<Int64U> { static constexpr PropertyType_t Type = PropertyType::Int64U; };
-template <> struct PropertyTypeGetter<Int> { static constexpr PropertyType_t Type = PropertyType::Int; };
-template <> struct PropertyTypeGetter<Int32U> { static constexpr PropertyType_t Type = PropertyType::Int32U; };
-template <> struct PropertyTypeGetter<Int32L> { static constexpr PropertyType_t Type = PropertyType::Int32L; };
-template <> struct PropertyTypeGetter<Int32UL> { static constexpr PropertyType_t Type = PropertyType::Int32UL; };
-template <> struct PropertyTypeGetter<Int16> { static constexpr PropertyType_t Type = PropertyType::Int16; };
-template <> struct PropertyTypeGetter<Int16U> { static constexpr PropertyType_t Type = PropertyType::Int16U; };
+template <> struct PropertyTypeGetter<_s64> { static constexpr PropertyType_t Type = PropertyType::_s64; };
+template <> struct PropertyTypeGetter<_u64> { static constexpr PropertyType_t Type = PropertyType::_u64; };
+template <> struct PropertyTypeGetter<_s32> { static constexpr PropertyType_t Type = PropertyType::_s32; };
+template <> struct PropertyTypeGetter<_u32> { static constexpr PropertyType_t Type = PropertyType::_u32; };
+template <> struct PropertyTypeGetter<_s32l> { static constexpr PropertyType_t Type = PropertyType::_s32l; };
+template <> struct PropertyTypeGetter<_u32l> { static constexpr PropertyType_t Type = PropertyType::_u32l; };
+template <> struct PropertyTypeGetter<_s16> { static constexpr PropertyType_t Type = PropertyType::_s16; };
+template <> struct PropertyTypeGetter<_u16> { static constexpr PropertyType_t Type = PropertyType::_u16; };
 template <> struct PropertyTypeGetter<bool> { static constexpr PropertyType_t Type = PropertyType::Bool; };
-template <> struct PropertyTypeGetter<Int8> { static constexpr PropertyType_t Type = PropertyType::Int8; };
-template <> struct PropertyTypeGetter<Int8U> { static constexpr PropertyType_t Type = PropertyType::Int8U; };
-template <> struct PropertyTypeGetter<Float> { static constexpr PropertyType_t Type = PropertyType::Float; };
-template <> struct PropertyTypeGetter<Double> { static constexpr PropertyType_t Type = PropertyType::Double; };
-template <> struct PropertyTypeGetter<LDouble> { static constexpr PropertyType_t Type = PropertyType::LDouble; };
+template <> struct PropertyTypeGetter<_s8> { static constexpr PropertyType_t Type = PropertyType::_s8; };
+template <> struct PropertyTypeGetter<_u8> { static constexpr PropertyType_t Type = PropertyType::_u8; };
+template <> struct PropertyTypeGetter<_f32> { static constexpr PropertyType_t Type = PropertyType::_f32; };
+template <> struct PropertyTypeGetter<_f64> { static constexpr PropertyType_t Type = PropertyType::_f64; };
+template <> struct PropertyTypeGetter<_f64l> { static constexpr PropertyType_t Type = PropertyType::_f64l; };
 template <> struct PropertyTypeGetter<String> { static constexpr PropertyType_t Type = PropertyType::String; };
 template <> struct PropertyTypeGetter<char*> { static constexpr PropertyType_t Type = PropertyType::CharPtr; };
 
-template <Int64U> struct PropertyBinaryOperatorTypeGetter { static constexpr PropertyBinaryOperatorType_t Type = PropertyBinaryOperatorType::Unknwon; };
+template <_u64> struct PropertyBinaryOperatorTypeGetter { static constexpr PropertyBinaryOperatorType_t Type = PropertyBinaryOperatorType::Unknwon; };
 template <> struct PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()("+")> { static constexpr PropertyBinaryOperatorType_t Type = PropertyBinaryOperatorType::Plus; };
 template <> struct PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()("-")> { static constexpr PropertyBinaryOperatorType_t Type = PropertyBinaryOperatorType::Minus; };
 template <> struct PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()("*")> { static constexpr PropertyBinaryOperatorType_t Type = PropertyBinaryOperatorType::Multiply; };

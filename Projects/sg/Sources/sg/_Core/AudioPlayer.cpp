@@ -70,7 +70,7 @@ void AudioPlayer::PlayRepeat()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void AudioPlayer::PlayNew(Byte* _pMem, int _len, bool _repeat)
+void AudioPlayer::PlayNew(_u8* _pMem, int _len, bool _repeat)
 {
 	if (handle_ != 0)
 	{
@@ -146,7 +146,7 @@ bool AudioPlayer::Close(int _handle)
 }
 
 // https://www.un4seen.com/doc/#bass/BASS_ChannelGetPosition.html
-Int64U AudioPlayer::GetPosition(int _handle)
+_u64 AudioPlayer::GetPosition(int _handle)
 {
 	return BASS_ChannelGetPosition(_handle, BASS_POS_BYTE);
 }

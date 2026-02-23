@@ -33,7 +33,7 @@ TEST(MemoryPoolTest, SingleFullIndexing) {
 template <typename TPool>
 static void TestPool(TPool& pool) {
 
-	constexpr Int64U uiExpectTotalAllocated = (32 + 2 * 32 + 4 * 32 + 8 * 32 + 16 * 32);
+	constexpr _u64 uiExpectTotalAllocated = (32 + 2 * 32 + 4 * 32 + 8 * 32 + 16 * 32);
 
 	// ========================================
 	// 할당이 제대로 이뤄지는지 테스트
@@ -52,7 +52,7 @@ static void TestPool(TPool& pool) {
 	EXPECT_TRUE(pool.GetInitAllocated() == uiExpectTotalAllocated);
 
 	void* pAlloc = pool.StaticPop<13>(); // 13바이트 요청 / 16바이트 할당해줌
-	Int64U uiTotalLeaked = pool.StopDetectLeak<true>(leakDetail);
+	_u64 uiTotalLeaked = pool.StopDetectLeak<true>(leakDetail);
 	EXPECT_TRUE(leakDetail[detail::AllocationLengthMapConverter::ToIndex(13)] == 1);		// 16바이트 블록 1개 릭
 	EXPECT_TRUE(uiTotalLeaked == 16);	// 총 16바이트 릭
 

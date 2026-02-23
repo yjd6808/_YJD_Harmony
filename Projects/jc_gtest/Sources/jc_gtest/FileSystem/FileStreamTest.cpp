@@ -20,10 +20,10 @@ TEST(FileStreamTest, BasicTest) {
 	CRuntime::FileDelete("b.dat");
 	CRuntime::FileDelete("c.dat");
 
-	Byte wbuff[] { 1, 2, 3, 4, 5 };
-	Byte wbuff2[] {  6, 7, 8, 9, 10 };
+	_u8 wbuff[] { 1, 2, 3, 4, 5 };
+	_u8 wbuff2[] {  6, 7, 8, 9, 10 };
 	
-	Byte rbuff[100]{};
+	_u8 rbuff[100]{};
 
 	//  ===================== Write =========================================
 	{
@@ -51,7 +51,7 @@ TEST(FileStreamTest, BasicTest) {
 
 	//  ===================== Read =========================================
 	{
-		Arrays::Fill(rbuff, (Byte)0);
+		Arrays::Fill(rbuff, (_u8)0);
 		FileStream stream("a.dat", FileAccess::eRead, FileMode::eOpen);		// 정상 (a.dat을 위에서 만들었으므로)
 		int offset = 0;
 		EXPECT_EQ(stream.Read(rbuff, offset, 5), 5); offset += 5;
@@ -85,7 +85,7 @@ TEST(FileStreamTest, BasicTest) {
 	}
 
 	{
-		Arrays::Fill(rbuff, (Byte)0);
+		Arrays::Fill(rbuff, (_u8)0);
 		FileStream stream("a.dat", FileAccess::eReadWrite, FileMode::eOpen);		// 정상 (a.dat을 위에서 만들었으므로)
 		EXPECT_EQ(stream.GetLength(), 20);	// 위에서 20바이트만큼 썼으므로
 		EXPECT_EQ(stream.GetOffset(), 0);	// 아직 아무런 작업을 하지 않았으므로

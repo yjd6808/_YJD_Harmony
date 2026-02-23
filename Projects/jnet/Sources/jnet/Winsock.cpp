@@ -23,12 +23,12 @@ bool Winsock::Initialized = false;
 
 	함수 설명 : 윈도우 소켓 라이브러리 사용을 위한 초기 작업을 진행합니다.
 */
-bool Winsock::Initialize(Byte _highVersion, Byte _lowVersion)
+bool Winsock::Initialize(_u8 _highVersion, _u8 _lowVersion)
 {
 	const WORD requestVersion = MAKEWORD(_lowVersion, _highVersion);
 
 	WSADATA wsaData;
-	const Int32UL ret = WSAStartup(requestVersion, &wsaData);
+	const _u32l ret = WSAStartup(requestVersion, &wsaData);
 	WSASetLastError(ret);
 
 	const BYTE retLowVersion = LOBYTE(wsaData.wVersion);
@@ -64,7 +64,7 @@ bool Winsock::Finalize()
 	return Finalized = true;
 }
 
-Int32U Winsock::LastError()
+_u32 Winsock::LastError()
 {
 	return WSAGetLastError();
 }
@@ -74,7 +74,7 @@ jc::String Winsock::LastErrorMessageUTF8()
 	return ErrorMessageUTF8(::WSAGetLastError());
 }
 
-jc::String Winsock::ErrorMessageMBCS(Int32U _errorCode)
+jc::String Winsock::ErrorMessageMBCS(_u32 _errorCode)
 {
 	constexpr int BUF_SIZE = 512;
 
@@ -89,7 +89,7 @@ jc::String Winsock::ErrorMessageMBCS(Int32U _errorCode)
 	return mbcsString;
 }
 
-jc::String Winsock::ErrorMessageUTF8(Int32U _errorCode)
+jc::String Winsock::ErrorMessageUTF8(_u32 _errorCode)
 {
 	// MBCS -> UTF16 -> UTF8보다는 바로 UTF16 -> UTF8로 변환이 당연히 낫겟지?
 	// 근데, FormatMessage에서 곧바로 UTF8 문자열을 반환 받는 방법은 없나..

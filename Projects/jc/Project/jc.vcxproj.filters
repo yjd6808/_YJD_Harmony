@@ -237,6 +237,15 @@
     <ClCompile Include="..\Sources\jc\Primitives\StringTokenizer.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc\Container\MemoryStream.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc\Container\CMessage.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc\Primitives\Span.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jc\Core.h" />
@@ -662,6 +671,15 @@
       <Filter>Primitives</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\DLLExport.h" />
+    <ClInclude Include="..\Sources\jc\Container\MemoryStream.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\Container\CMessage.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\Primitives\Span.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\jc\Natvis\ListQueue.natvis">
