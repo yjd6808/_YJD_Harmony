@@ -25,7 +25,7 @@ using _u8		= unsigned char;
 using _s16c		= wchar_t;
 
 #ifdef _WIN64
-using _ptr = _s64;
+using _ptr = _u64;
 using _sz = unsigned long long;
 #else
 using _ptr = _u32;

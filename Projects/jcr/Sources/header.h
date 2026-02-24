@@ -8,7 +8,6 @@
 #include <jc/ByteUnit.h>
 #include <jc/Env.h>
 
-#include <jc/Natvis/NatvisByteOrder.h>
 #include <jc/Utils/Concatenation.h>
 
 #include <jc/Container/HashMap.h>

@@ -26,9 +26,9 @@ class CMessageContext;
 struct CMessageHeader
 {
 	object_id targetId_ = 0;
-	int msgId_ = 0;
-	_u16 writeOffset_ = 0;		// 요소를 몇개 Write 했는지
+	_u32 msgId_ = 0;
 	_u32 writeMemOffset_ = 0;	// 요소를 몇byte 만큼 Write 했는지 = 전체 메모리중 사용한 메모리 크기 = 스트림으로 전달될 메모리 크기 (접두 메모리 + CMessageHeader + 사용한 요소 메모리(용량이 아님))
+	_u16 writeOffset_ = 0;		// 요소를 몇개 Write 했는지
 };
 #pragma pack(pop)
 
@@ -40,24 +40,26 @@ struct CMessage_VariantTraits
 	static constexpr _u8 MEM_SIZE = 0; // 계산할 수 없음
 };
 
-template <> struct CMessage_VariantTraits<_u8> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_u8); static constexpr _u8 VARIANT_TYPE = 1; };
 template <> struct CMessage_VariantTraits<_s8> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_s8); static constexpr _u8 VARIANT_TYPE = 1; };
-template <> struct CMessage_VariantTraits<_u16> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_u16); static constexpr _u8 VARIANT_TYPE = 2; };
-template <> struct CMessage_VariantTraits<_s16> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_s16); static constexpr _u8 VARIANT_TYPE = 2; };
-template <> struct CMessage_VariantTraits<_s32> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_s32); static constexpr _u8 VARIANT_TYPE = 3; };
-template <> struct CMessage_VariantTraits<_s32l> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_s32l); static constexpr _u8 VARIANT_TYPE = 3; };
-template <> struct CMessage_VariantTraits<_u32> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_u32); static constexpr _u8 VARIANT_TYPE = 3; };
-template <> struct CMessage_VariantTraits<_u32l> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_u32l); static constexpr _u8 VARIANT_TYPE = 3; };
-template <> struct CMessage_VariantTraits<_u64> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_u64); static constexpr _u8 VARIANT_TYPE = 4; };
-template <> struct CMessage_VariantTraits<_s64> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_s64); static constexpr _u8 VARIANT_TYPE = 4; };
-template <> struct CMessage_VariantTraits<_f32> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_f32); static constexpr _u8 VARIANT_TYPE = 5; };
-template <> struct CMessage_VariantTraits<_f64> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_f64); static constexpr _u8 VARIANT_TYPE = 6; };
-template <> struct CMessage_VariantTraits<void*> { static constexpr _u8 MEM_SIZE = 1 + sizeof(void*); static constexpr _u8 VARIANT_TYPE = 7; };
+template <> struct CMessage_VariantTraits<_u8> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_u8); static constexpr _u8 VARIANT_TYPE = 2; };
+template <> struct CMessage_VariantTraits<_s16> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_s16); static constexpr _u8 VARIANT_TYPE = 3; };
+template <> struct CMessage_VariantTraits<_u16> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_u16); static constexpr _u8 VARIANT_TYPE = 4; };
+template <> struct CMessage_VariantTraits<_s32> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_s32); static constexpr _u8 VARIANT_TYPE = 5; };
+template <> struct CMessage_VariantTraits<_s32l> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_s32l); static constexpr _u8 VARIANT_TYPE = 5; };
+template <> struct CMessage_VariantTraits<_u32> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_u32); static constexpr _u8 VARIANT_TYPE = 6; };
+template <> struct CMessage_VariantTraits<_u32l> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_u32l); static constexpr _u8 VARIANT_TYPE = 6; };
+template <> struct CMessage_VariantTraits<_u64> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_u64); static constexpr _u8 VARIANT_TYPE = 7; };
+template <> struct CMessage_VariantTraits<_s64> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_s64); static constexpr _u8 VARIANT_TYPE = 8; };
+template <> struct CMessage_VariantTraits<_f32> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_f32); static constexpr _u8 VARIANT_TYPE = 9; };
+template <> struct CMessage_VariantTraits<_f64> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_f64); static constexpr _u8 VARIANT_TYPE = 10; };
+template <> struct CMessage_VariantTraits<void*> { static constexpr _u8 MEM_SIZE = 1 + sizeof(void*); static constexpr _u8 VARIANT_TYPE = 11; };
 
 //////////////////////////////////////////////////////////////////////////////////////////
 class JC_DLL CMessage
 {
 public:
+	static constexpr _u16 MESSAGE_HEADER_SIZE = sizeof(CMessageHeader);
+
 	CMessage(_u32 _prefixMemCapacity, _u32 _elemMemCapacity, int _msgId = 0, object_id _targetId = 0);
 	CMessage(const CMessage& _other);
 	CMessage(CMessage&& _other) noexcept;
@@ -67,9 +69,13 @@ public:
 	{
 		vt_none,
 		vt_s8,
+		vt_u8,
 		vt_s16,
+		vt_u16,
 		vt_s32,
+		vt_u32,
 		vt_s64,
+		vt_u64,
 		vt_f32,
 		vt_f64,
 		vt_ptr,
@@ -109,7 +115,7 @@ public:
 	String		ReadString();
 	bool		ReadBinary(Span<_u8> _buffer, _u32& _outLen);
 	bool		ReadBinary(_u8* _pBytes, _u32 _capacity, _u32& _outLen);
-
+		
 	bool		TryReadS8(_s8& _value);
 	bool		TryReadU8(_u8& _value);
 	bool		TryReadS16(_s16& _value);
@@ -127,7 +133,11 @@ public:
 	bool		TryReadBinary(Span<_u8> _buffer, _u32& _outLen);
 	bool		TryReadBinary(_u8* _pBytes, _u32 _capacity, _u32& _outLen);
 
+	VariantType	GetCurrentVT() const;
 
+	String		Dump() const { return Dump(*this);}
+	static String	Dump(const CMessage& _other);
+	static _u32		GetElemSize(_u8 _typeCode);
 private:
 	CMessageContext* pContext_ = nullptr; // 참조 카운트 기반 공유 컨텍스트
 };
@@ -145,11 +155,15 @@ public:
 	_u32 GetCapacityElem() const { return memCapacity_ - prefixMemCapacity_ - sizeof(CMessageHeader); }
 	_u32 GetCapacityPrefix() const { return prefixMemCapacity_; }
 
+	_u32 GetHeaderSize() const { return prefixMemCapacity_ + sizeof(CMessageHeader); }
+
 	_u16 GetWriteOffset() const { return GetMsgHeader().writeOffset_; }
 	_u32 GetWriteMemOffset() const { return GetMsgHeader().writeMemOffset_; }
 
 	_u16 GetReadOffset() const { return readOffset_; }
 	_u32 GetReadMemOffset() const { return readMemOffset_; }
+
+	CMessage::VariantType GetCurrentVT() const;
 
 	bool EnsureCapacity(_u32 _requiredCapacity);
 
@@ -161,8 +175,9 @@ public:
 
 		CMessageHeader* pHeader = GetMsgHeaderPtr();
 		constexpr _u8 ELEM_SIZE = TypeTraits<T>::MEM_SIZE;	// 타입 정보(1) + 실제 값 크기
+		const _u16 HEADER_SIZE = GetHeaderSize();
 
-		_u32 requiredMemCapacity = pHeader->writeMemOffset_ + ELEM_SIZE;
+		_u32 requiredMemCapacity = HEADER_SIZE + pHeader->writeMemOffset_ + ELEM_SIZE;
 		bool expandNeed = requiredMemCapacity > memCapacity_;
 		if (expandNeed)
 		{
@@ -177,7 +192,7 @@ public:
 		{
 			pHeader = GetMsgHeaderPtr(); // 버퍼 확장되었으니 헤더 위치 갱신
 		}
-		_u8* pWrite = pBuf_ + pHeader->writeMemOffset_;
+		_u8* pWrite = pBuf_ + HEADER_SIZE + pHeader->writeMemOffset_;
 
 		// 1) 타입 코드 기록
 		*pWrite = static_cast<_u8>(TypeTraits<T>::VARIANT_TYPE);
@@ -222,8 +237,9 @@ public:
 	int TryReadValue(T& _outValue)
 	{
 		static_assert(TypeTraits<T>::VARIANT_TYPE != 0, "Unsupported type for CMessageContext::TryReadValue");
+		const CMessageHeader& header = GetMsgHeader();
+		const _u16 HEADER_SIZE = GetHeaderSize();
 
-		CMessageHeader& header = GetMsgHeader();
 		// 요소 갯수 기준으로 먼저 범위 체크
 		if (readOffset_ >= header.writeOffset_) 
 			return -1;
@@ -234,7 +250,7 @@ public:
 		if (remaining < ELEM_SIZE)
 			return -2;
 
-		_u8* pRead = pBuf_ + readMemOffset_;
+		_u8* pRead = pBuf_ + HEADER_SIZE + readMemOffset_;
 		const _u8 typeCode = *pRead;
 		++pRead;
 
@@ -261,6 +277,8 @@ public:
 
 	int		TryReadBinaryImpl(CMessage::VariantType _expectedType, _u8** _ppBuf, _u32 _capacity, OUT _u32& _outLen);
 	const char* GetBinaryReadErrorMessage(int _errorCode);
+
+	jc::String Dump() const;
 
 	_u32	prefixMemCapacity_ = 0;			// 접두 메모리 크기
 	_u32	memCapacity_ = 0;				// 전체 메모리 용량

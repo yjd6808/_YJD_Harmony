@@ -14,7 +14,6 @@
 #include <jc/Tuple.h>
 #include <jc/Comparator.h>
 #include <jc/Primitives/BitFlag.h>
-#include <jc/Natvis/NatvisFloat.h>
 #include <jc/Container/Vector.h>
 
 

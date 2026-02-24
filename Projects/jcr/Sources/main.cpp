@@ -82,23 +82,36 @@ int main(int _argc, char** _argv)
 		TimeSpan ts = TimeSpan::FromSecond(5);
 
 		jc::CMessage msg1(32, 5);
-		msg1.WriteU32(120);
-		msg1.WriteU32(120);
-		msg1.WriteU32(120);
-		msg1.WriteU32(120);
+		_u8* check = dbg_new _u8[32];
+		check[0] = 20;
+		check[4] = 20;
+		check[8] = 20;
+		check[16] = 20;
+
+		msg1.WriteS8(-50);
+		msg1.WriteU8(160);
+		msg1.WriteS16(-30000);
+		msg1.WriteU16(60000);
+		msg1.WriteS32(-2000000000);
+		msg1.WriteU32(4000000000);
+		msg1.WriteS64(-9000000000000000000LL);
+		msg1.WriteU64(18000000000000000000ULL);
+		msg1.WritePtr(dbg_new int(0));
+		msg1.WriteFloat(3.141592f);
+		msg1.WriteDouble(2.718281828459045);
+		msg1.WriteBinary(check, 32);
+		msg1.WriteBinary(check, 32);
 		msg1.WriteString("abcdefg1");
 		msg1.WriteString("abcdefg2");
 		msg1.WriteString("abcdefg3");
 		msg1.WriteString("abcdefg4");
 
-		_u32 a1 = msg1.ReadU32();
-		_u32 a2 = msg1.ReadU32();
-		_u32 a3 = msg1.ReadU32();
-		_u32 a4 = msg1.ReadU32();
-		String str1 = msg1.ReadString();
-		String str2 = msg1.ReadString();
-		String str3 = msg1.ReadString();
-		String str4 = msg1.ReadString();
+		auto a = msg1.GetCurrentVT();
+		msg1.ReadS8();
+		a = msg1.GetCurrentVT();
+
+		Console::WriteLine(msg1.Dump().SafeSource());
+		
 
 		// 브레이크포인트 찍어서 각 변수들 natvis 확인
 		(void)vec;

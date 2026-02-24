@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+	<!-- 참고: https://stackoverflow.com/questions/31689857/natvis-floating-pro시전 
+	     낫비스 플로팅 프로시전 -->
+	<Type Name="jc::detail::NatvisFloat6">
+		<DisplayString>{(long long)f}.{((long long)(f*10))%10}{((long long)(f*100))%10}{((long long)(f*1000))%10}{((long long)(f*10000))%10}{((long long)(f*100000))%10}{((long long)(f*1000000))%10}</DisplayString>
+	</Type>
+	<Type Name="jc::detail::NatvisFloat5">
+		<DisplayString>{(long long)f}.{((long long)(f*10))%10}{((long long)(f*100))%10}{((long long)(f*1000))%10}{((long long)(f*10000))%10}{((long long)(f*100000))%10}</DisplayString>
+	</Type>
+	<Type Name="jc::detail::NatvisFloat4">
+		<DisplayString>{(long long)f}.{((long long)(f*10))%10}{((long long)(f*100))%10}{((long long)(f*1000))%10}{((long long)(f*10000))%10}</DisplayString>
+	</Type>
+	<Type Name="jc::detail::NatvisFloat3">
+		<DisplayString>{(long long)f}.{((long long)(f*10))%10}{((long long)(f*100))%10}{((long long)(f*1000))%10}</DisplayString>
+	</Type>
+	<Type Name="jc::detail::NatvisFloat2">
+		<DisplayString>{(long long)f}.{((long long)(f*10))%10}{((long long)(f*100))%10}</DisplayString>
+	</Type>
+	<Type Name="jc::detail::NatvisFloat1">
+		<DisplayString>{(long long)f}.{((long long)(f*10))%10}</DisplayString>
+	</Type>
+
+	<Type Name="jc::detail::NatvisDouble6">
+		<DisplayString>{(long long)f}.{((long long)(f*10))%10}{((long long)(f*100))%10}{((long long)(f*1000))%10}{((long long)(f*10000))%10}{((long long)(f*100000))%10}{((long long)(f*1000000))%10}</DisplayString>
+	</Type>
+	<Type Name="jc::detail::NatvisDouble5">
+		<DisplayString>{(long long)f}.{((long long)(f*10))%10}{((long long)(f*100))%10}{((long long)(f*1000))%10}{((long long)(f*10000))%10}{((long long)(f*100000))%10}</DisplayString>
+	</Type>
+	<Type Name="jc::detail::NatvisDouble4">
+		<DisplayString>{(long long)f}.{((long long)(f*10))%10}{((long long)(f*100))%10}{((long long)(f*1000))%10}{((long long)(f*10000))%10}</DisplayString>
+	</Type>
+	<Type Name="jc::detail::NatvisDouble3">
+		<DisplayString>{(long long)f}.{((long long)(f*10))%10}{((long long)(f*100))%10}{((long long)(f*1000))%10}</DisplayString>
+	</Type>
+	<Type Name="jc::detail::NatvisDouble2">
+		<DisplayString>{(long long)f}.{((long long)(f*10))%10}{((long long)(f*100))%10}</DisplayString>
+	</Type>
+	<Type Name="jc::detail::NatvisDouble1">
+		<DisplayString>{(long long)f}.{((long long)(f*10))%10}</DisplayString>
+	</Type>
+
+	<Type Name="jc::detail::NatvisByteOrderInt16U">
+		<DisplayString>
+			<!--(segs.seg1 << 8) + segs.seg2;-->
+			{(long long)(segs.seg1 &lt;&lt; 8) + segs.seg2}
+		</DisplayString>
+	</Type>
+
+	<Type Name="jc::detail::_u8n"><DisplayString>value_</DisplayString></Type>
+	<Type Name="jc::detail::_u16n"><DisplayString>value_</DisplayString></Type>
+	<Type Name="jc::detail::_u32n"><DisplayString>value_</DisplayString></Type>
+	<Type Name="jc::detail::_u64n"><DisplayString>value_</DisplayString></Type>
+	<Type Name="jc::detail::_s8n"><DisplayString>value_</DisplayString></Type>
+	<Type Name="jc::detail::_s16n"><DisplayString>value_</DisplayString></Type>
+	<Type Name="jc::detail::_s32n"><DisplayString>value_</DisplayString></Type>
+	<Type Name="jc::detail::_s64n"><DisplayString>value_</DisplayString></Type>
+	<Type Name="jc::detail::_f32n"><DisplayString>value_</DisplayString></Type>
+	<Type Name="jc::detail::_f64n"><DisplayString>value_</DisplayString></Type>
+	
+	<Type Name="jc::detail::CMessage_BinaryLengthText"><DisplayString>{ value_ } bytes (binary)</DisplayString></Type>
+	<Type Name="jc::detail::CMessage_VariantTraits_s8"><DisplayString>{ (int)value_ } ({ value_,X }) (s8)</DisplayString></Type>
+	<Type Name="jc::detail::CMessage_VariantTraits_u8"><DisplayString>{ (unsigned)value_ } ({ value_,X }) (u8)</DisplayString></Type>
+	<Type Name="jc::detail::CMessage_VariantTraits_s16"><DisplayString>{ value_ } ({value_,X}) (s16)</DisplayString></Type>
+	<Type Name="jc::detail::CMessage_VariantTraits_u16"><DisplayString>{ value_ } ({value_,X}) (u16)</DisplayString></Type>
+	<Type Name="jc::detail::CMessage_VariantTraits_s32"><DisplayString>{ value_ } ({value_,X}) (s32)</DisplayString></Type>
+	<Type Name="jc::detail::CMessage_VariantTraits_u32"><DisplayString>{ value_ } ({value_,X}) (u32)</DisplayString></Type>
+	<Type Name="jc::detail::CMessage_VariantTraits_s64"><DisplayString>{ value_ } ({value_,X}) (s64)</DisplayString></Type>
+	<Type Name="jc::detail::CMessage_VariantTraits_u64"><DisplayString>{ value_ } ({value_,X}) (u64)</DisplayString></Type>
+	<Type Name="jc::detail::CMessage_VariantTraits_f32"><DisplayString>{ (jc::detail::NatvisFloat6*)&amp;value_,na } (f32)</DisplayString></Type>
+	<Type Name="jc::detail::CMessage_VariantTraits_f64"><DisplayString>{ (jc::detail::NatvisDouble6*)&amp;value_,na } (f64)</DisplayString></Type>
+	<Type Name="jc::detail::CMessage_VariantTraits_ptr"><DisplayString>{ value_,X } (ptr)</DisplayString></Type>
+	
+</AutoVisualizer>

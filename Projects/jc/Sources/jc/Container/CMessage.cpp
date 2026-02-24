@@ -7,8 +7,10 @@
 
 #include <jc/Core.h>
 #include <jc/Container/CMessage.h>
+#include <jc/Primitives/StringUtil.h>
 
 NS_JC_BEGIN
+
 //////////////////////////////////////////////////////////////////////////////////////////
 CMessage::CMessage(_u32 _prefixMemCapacity, _u32 _elemMemCapacity, int _msgId /*= 0*/, object_id _targetId /*= 0*/)
 {
@@ -365,18 +367,51 @@ bool CMessage::TryReadBinary(_u8* _pBytes, _u32 _capacity, _u32& _outLen)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+CMessage::VariantType CMessage::GetCurrentVT() const
+{
+	jc_assert(pContext_);
+	return pContext_->GetCurrentVT();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+String CMessage::Dump(const CMessage& _other)
+{
+	jc_assert(_other.pContext_);
+	return _other.pContext_->Dump();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u32 CMessage::GetElemSize(_u8 _typeCode)
+{
+	switch (_typeCode)
+	{
+	case CMessage::vt_s8:	return CMessage_VariantTraits<_s8>::MEM_SIZE;
+	case CMessage::vt_u8:	return CMessage_VariantTraits<_u8>::MEM_SIZE;
+	case CMessage::vt_s16:	return CMessage_VariantTraits<_s16>::MEM_SIZE;
+	case CMessage::vt_u16:	return CMessage_VariantTraits<_u16>::MEM_SIZE;
+	case CMessage::vt_s32:	return CMessage_VariantTraits<_s32>::MEM_SIZE;
+	case CMessage::vt_u32:	return CMessage_VariantTraits<_u32>::MEM_SIZE;
+	case CMessage::vt_s64:	return CMessage_VariantTraits<_s64>::MEM_SIZE;
+	case CMessage::vt_u64:	return CMessage_VariantTraits<_u64>::MEM_SIZE;
+	case CMessage::vt_f32:	return CMessage_VariantTraits<_f32>::MEM_SIZE;
+	case CMessage::vt_f64:	return CMessage_VariantTraits<_f64>::MEM_SIZE;
+	case CMessage::vt_ptr:	return CMessage_VariantTraits<void*>::MEM_SIZE;
+	}
+	return 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 CMessageContext::CMessageContext(_u32 _prefixMemCapacity, _u32 _elemMemCapacity, int _msgId, object_id _targetId)
 {
-	_u32 elemWriteOffset = _prefixMemCapacity + sizeof(CMessageHeader);
 	prefixMemCapacity_ = _prefixMemCapacity;
-	readMemOffset_ = elemWriteOffset; // 시작 위치
+	readMemOffset_ = 0; // 시작 위치
 	readOffset_ = 0;
-	memCapacity_ = elemWriteOffset + _elemMemCapacity;
+	memCapacity_ = _prefixMemCapacity + sizeof(CMessageHeader) + _elemMemCapacity;
 	pBuf_ = Memory::Allocate<_u8*>(memCapacity_);
 
 	CMessageHeader& header = GetMsgHeader();
 	header.writeOffset_ = 0;
-	header.writeMemOffset_ = elemWriteOffset;	// 사용한 요소 메모리가 없는 상태의 수치로 초기화
+	header.writeMemOffset_ = 0;	// 사용한 요소 메모리가 없는 상태의 수치로 초기화
 	header.msgId_ = _msgId;
 	header.targetId_ = _targetId;
 }
@@ -394,6 +429,31 @@ CMessageHeader* CMessageContext::GetMsgHeaderPtr() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+CMessage::VariantType CMessageContext::GetCurrentVT() const
+{
+	const CMessageHeader& header = GetMsgHeader();
+
+	// 요소를 하나도 안 썼거나, 이미 전부 읽었으면 invalid 처리
+	if (readOffset_ >= header.writeOffset_ || header.writeMemOffset_ == 0)
+	{
+		return CMessage::vt_none;
+	}
+
+	// 남은 요소 메모리 범위 체크
+	const _u32 remaining = header.writeMemOffset_ - readMemOffset_;
+	if (remaining == 0)
+	{
+		return CMessage::vt_none;
+	}
+
+	// 현재 읽기 위치의 타입 코드만 확인
+	const _u8* pRead = pBuf_ + GetHeaderSize() + readMemOffset_;
+	const _u8 typeCode = *pRead;
+
+	return static_cast<CMessage::VariantType>(typeCode);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 bool CMessageContext::EnsureCapacity(_u32 _requiredCapacity)
 {
 	if (_requiredCapacity <= memCapacity_)
@@ -406,10 +466,11 @@ bool CMessageContext::EnsureCapacity(_u32 _requiredCapacity)
 		newCapacity *= 2;
 	}
 
-	_u8* pNewBuf = Memory::Allocate<_u8*>(newCapacity);
+	newCapacity += 1; // 1바이트만큼 추가해서 할당 (natvis에서 null terminator로 표현용도), 어차피 stream으로 보낼때는 writeMemOffset 만큼만 보낼거라서 문제 없음
+	_u8* pNewBuf = Memory::Allocate<_u8*>(newCapacity); 
 
 	// 현재까지 사용 중인 영역만 복사 (prefix + header + used elements)
-	Memory::CopyUnsafe(pNewBuf, pBuf_, writeMemOffset);
+	Memory::CopyUnsafe(pNewBuf, pBuf_, GetHeaderSize() + writeMemOffset);
 	Memory::Deallocate(pBuf_);
 	pBuf_ = pNewBuf;
 	memCapacity_ = newCapacity;
@@ -431,11 +492,12 @@ void CMessageContext::WriteBinary(const _u8* _pBytes, _u32 _len)
 //////////////////////////////////////////////////////////////////////////////////////////
 void CMessageContext::WriteBinaryImpl(CMessage::VariantType _type, const _u8* _pBytes, _u32 _len)
 {
-	CMessageHeader& header = GetMsgHeader();
+	CMessageHeader* pHeader = GetMsgHeaderPtr();
+	const _u16 HEADER_SIZE = GetHeaderSize();
 
 	_u32 lengthMemSize = Memory::CalcU32_LEB128(_len);
 	_u16 elemSize = static_cast<_u16>(1 + lengthMemSize + _len);
-	_u32 requiredMemCapacity = header.writeMemOffset_ + elemSize; // 타입 정보 + 길이 정보 + 데이터
+	_u32 requiredMemCapacity = HEADER_SIZE + pHeader->writeMemOffset_ + elemSize; // 타입 정보 + 길이 정보 + 데이터
 	bool expandNeed = requiredMemCapacity > memCapacity_;
 	if (expandNeed)
 	{
@@ -446,8 +508,12 @@ void CMessageContext::WriteBinaryImpl(CMessage::VariantType _type, const _u8* _p
 		}
 	}
 
-	if (expandNeed) header = GetMsgHeader(); // 확장되었으니 갱신
-	_u8* pWrite = pBuf_ + header.writeMemOffset_;
+	if (expandNeed)
+	{
+		pHeader = GetMsgHeaderPtr(); // 확장되었으니 갱신
+	}
+
+	_u8* pWrite = pBuf_ + HEADER_SIZE + pHeader->writeMemOffset_;
 
 	// 1) 타입 기록
 	*pWrite = static_cast<_u8>(_type);
@@ -467,8 +533,8 @@ void CMessageContext::WriteBinaryImpl(CMessage::VariantType _type, const _u8* _p
 	Memory::CopyUnsafe(pWrite, _pBytes, static_cast<int>(_len));
 
 	// 헤더 갱신
-	++header.writeOffset_;
-	header.writeMemOffset_ += elemSize;
+	++pHeader->writeOffset_;
+	pHeader->writeMemOffset_ += elemSize;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -583,7 +649,10 @@ int CMessageContext::TryReadBinaryImpl(CMessage::VariantType _expectedType, _u8*
 {
 	if (_ppBuf == nullptr)
 		return -8;
-	CMessageHeader& header = GetMsgHeader();
+
+	const CMessageHeader& header = GetMsgHeader();
+	const _u16 HEADER_SIZE = GetHeaderSize();
+
 	// 요소 갯수 기준으로 먼저 범위 체크
 	if (readOffset_ >= header.writeOffset_)
 		return -1;
@@ -593,7 +662,7 @@ int CMessageContext::TryReadBinaryImpl(CMessage::VariantType _expectedType, _u8*
 	if (remaining == 0) // 타입길이 정보가 없는 경우
 		return -2;
 
-	_u8* pRead = pBuf_ + readMemOffset_;
+	_u8* pRead = pBuf_ + HEADER_SIZE + readMemOffset_; // 요소 메모리 시작 위치
 	const _u8 typeCode = *pRead;
 	if (typeCode != static_cast<_u8>(_expectedType)) // 예상한 타입이 아닌 경우
 		return -3;
@@ -658,6 +727,219 @@ const char* CMessageContext::GetBinaryReadErrorMessage(int _errorCode)
 	case -8: return "_ppBuf is nullptr";
 	default: return "unknown";
 	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+jc::String CMessageContext::Dump() const
+{
+	jc::String str(1024);
+	const CMessageHeader& header = GetMsgHeader();
+	const _u16 HEADER_SIZE = GetHeaderSize();
+
+	_u8*	pRead = pBuf_ + HEADER_SIZE;
+	_u32	remaining = header.writeMemOffset_;
+	_u8		typeCode = 0;
+
+	while (true)
+	{
+		if (remaining == 0)
+			break;
+
+		typeCode = *pRead;
+		--remaining;
+		if (remaining == 0)
+		{
+			str += "  <invalid element: missing type code>\n";
+			break;
+		}
+		++pRead;
+
+		switch (typeCode)
+		{
+		case CMessage::vt_s8:
+		case CMessage::vt_u8:
+			{
+				if (remaining < 1)
+				{
+					str += "  <invalid element length for s8>\n";
+					break;
+				}
+
+				if (typeCode == CMessage::vt_s8)
+				{
+					_s32 value = *reinterpret_cast<_s8*>(pRead);
+					str += StringUtil::Format("  s8: %d", value);
+				}
+				else
+				{
+					_s32 value = *reinterpret_cast<_u8*>(pRead);
+					str += StringUtil::Format("  u8: %d", value);
+				}
+				
+				remaining -= 1;
+				pRead += 1;
+			}
+			break;
+		case CMessage::vt_s16:
+		case CMessage::vt_u16:
+			{
+				if (remaining < 2)
+				{
+					str += "  <invalid element length for s16>\n";
+					break;
+				}
+
+				if (typeCode == CMessage::vt_s16)
+				{
+					_s32 value = *reinterpret_cast<_s16*>(pRead);
+					str += StringUtil::Format("  s16: %d", value);
+				}
+				else
+				{
+					_s32 value = *reinterpret_cast<_u16*>(pRead);
+					str += StringUtil::Format("  u16: %d", value);
+				}
+				remaining -= 2;
+				pRead += 2;
+			}
+			break;
+		case CMessage::vt_s32:
+		case CMessage::vt_u32:
+			{
+				if (remaining < 4)
+				{
+					str += "  <invalid element length for s32>\n";
+					break;
+				}
+
+				if (typeCode == CMessage::vt_s32)
+				{
+					_s64 value = *reinterpret_cast<_s32*>(pRead);
+					str += StringUtil::Format("  s32: %lld", value);
+				}
+				else
+				{
+					_s64 value = *reinterpret_cast<_u32*>(pRead);
+					str += StringUtil::Format("  u32: %lld", value);
+				}
+				remaining -= 4;
+				pRead += 4;
+			}
+			break;
+		case CMessage::vt_s64:
+		case CMessage::vt_u64:
+			{
+				if (remaining < 8)
+				{
+					str += "  <invalid element length for s64>\n";
+					break;
+				}
+
+				if (typeCode == CMessage::vt_s64)
+				{
+					_s64 value = *reinterpret_cast<_s64*>(pRead);
+					str += StringUtil::Format("  s64: %lld", value);
+				}
+				else
+				{
+					_u64 value = *reinterpret_cast<_u64*>(pRead);
+					str += StringUtil::Format("  u64: %llu", value);
+				}
+				
+				remaining -= 8;
+				pRead += 8;
+			}
+			break;
+		case CMessage::vt_f32:
+			{
+				if (remaining < 4)
+				{
+					str += "  <invalid element length for f32>\n";
+					break;
+				}
+
+				_f32 value = *reinterpret_cast<_f32*>(pRead);
+				str += StringUtil::Format("  f32: %.3f", value);
+				remaining -= 4;
+				pRead += 4;
+			}
+			break;
+		case CMessage::vt_f64:
+			{
+				if (remaining < 8)
+				{
+					str += "  <invalid element length for f64>\n";
+					break;
+				}
+
+				_f64 value = *reinterpret_cast<_f64*>(pRead);
+				str += StringUtil::Format("  f64: %.3lf", value);
+				remaining -= 8;
+				pRead += 8;
+			}
+			break;
+		case CMessage::vt_ptr:
+			{
+				if (remaining < sizeof(void*))
+				{
+					str += "  <invalid element length for pointer>\n";
+					break;
+				}
+
+				_ptr value = *reinterpret_cast<_ptr*>(pRead);
+				str += StringUtil::Format("  ptr: 0x%p", value);
+				remaining -= sizeof(_ptr);
+				pRead += sizeof(_ptr);
+			}
+			break;
+		case CMessage::vt_binary:
+		case CMessage::vt_string:
+			{
+				_u32 length = 0;
+				_u32 readLenBytes = Memory::ReadU32_LEB128(pRead, remaining, length);
+				if (readLenBytes == 0xffffffff)
+				{
+					str += "  <invalid LEB128 length info>\n";
+					break;
+				}
+
+				remaining -= readLenBytes;
+				pRead += readLenBytes;
+
+				if (remaining < length)
+				{
+					str += "  <invalid element length for binary/string data>\n";
+				}
+
+				if (length == 0)
+				{
+					// empty
+					str += typeCode == CMessage::vt_string ? "  String: \"\"" : "  Binary: <empty>";
+				}
+				else if (typeCode == CMessage::vt_string)
+				{
+					_u8* pBuf = pRead;
+					_u8 backup = pBuf[length];
+					pBuf[length] = '\0'; // null terminator for safe dumping as string
+					str += "  String: \"";
+					str += (char*)pBuf;
+					pBuf[length] = backup;
+					pRead += length;
+					remaining -= length;
+				}
+				else
+				{
+					str += StringUtil::Format("  Binary: %d bytes", length);
+					pRead += length;
+					remaining -= length;
+				}
+			}
+			break;
+		}
+		str += "\n";
+	}
+
+	return str;
 }
 
 NS_END

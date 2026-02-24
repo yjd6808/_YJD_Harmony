@@ -512,12 +512,6 @@
     <ClInclude Include="..\Sources\jc\Debug\New.h">
       <Filter>Debug</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\Natvis\NatvisFloat.h">
-      <Filter>Natvis</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\Natvis\NatvisByteOrder.h">
-      <Filter>Natvis</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\jc\Utils\Concatenation.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -680,6 +674,9 @@
     <ClInclude Include="..\Sources\jc\Primitives\Span.h">
       <Filter>Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\jc\Natvis\NatvisHelper.h">
+      <Filter>Natvis</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\jc\Natvis\ListQueue.natvis">
@@ -688,7 +685,7 @@
     <Natvis Include="..\Sources\jc\Natvis\ListStack.natvis">
       <Filter>Natvis</Filter>
     </Natvis>
-    <Natvis Include="..\Sources\jc\Natvis\NatvisFloat.natvis">
+    <Natvis Include="..\Sources\jc\Natvis\NatvisHelper.natvis">
       <Filter>Natvis</Filter>
     </Natvis>
     <Natvis Include="..\Sources\jc\Natvis\Pair.natvis">
@@ -724,9 +721,6 @@
     <Natvis Include="..\Sources\jc\Natvis\LinkedList.natvis">
       <Filter>Natvis</Filter>
     </Natvis>
-    <Natvis Include="..\Sources\jc\Natvis\NatvisByteOrder.natvis">
-      <Filter>Natvis</Filter>
-    </Natvis>
     <Natvis Include="..\Sources\jc\Natvis\TreeMap.natvis">
       <Filter>Natvis</Filter>
     </Natvis>
@@ -734,6 +728,9 @@
       <Filter>Natvis</Filter>
     </Natvis>
     <Natvis Include="..\Sources\jc\Natvis\HashSet.natvis">
+      <Filter>Natvis</Filter>
+    </Natvis>
+    <Natvis Include="..\Sources\jc\Natvis\CMessage.natvis">
       <Filter>Natvis</Filter>
     </Natvis>
   </ItemGroup>

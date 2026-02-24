@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+	<!--
+	작성자: 윤정도
+	작성일: 26/02/24
+		
+	[커스텀 리스트 아이템 사용법]
+	https://learn.microsoft.com/en-us/visualstudio/debugger/create-custom-views-of-native-objects?view=vs-2019#customlistitems-expansion
+	
+	[낫비스 오류 출력법]
+	Under Tools > Options (or Debug > Options) > 
+	Debugging > Output Window, set Natvis diagnostic messages 
+	(C++ only) to Error, Warning, or Verbose, and then select OK.
+	
+	[낫비스 포맷팅]
+	https://learn.microsoft.com/en-us/visualstudio/debugger/format-specifiers-in-cpp?view=vs-2022#BKMK_Visual_Studio_2012_format_specifiers
+	-->
+	
+	<Type Name="jc::CMessage">
+		<!-- 툴팁 첫 줄에 CMessageContext 처럼 보이도록 -->
+		<DisplayString Condition="pContext_ != nullptr">{pContext_,na}</DisplayString>
+		<DisplayString>[empty]</DisplayString>
+
+		<Expand>
+			<ExpandedItem>pContext_</ExpandedItem>
+		</Expand>
+	</Type>
+
+	<Type Name="jc::CMessageContext">
+		<Intrinsic Name="GetMsgHeader" Expression="(jc::CMessageHeader*)(pBuf_ + prefixMemCapacity_)" />
+		<Intrinsic Name="GetMsgHeader_TargetId" Expression="GetMsgHeader()-&gt;targetId_" />
+		<Intrinsic Name="GetMsgHeader_MsgId" Expression="GetMsgHeader()-&gt;msgId_" />
+		<Intrinsic Name="GetMsgHeader_WriteMemOffset" Expression="GetMsgHeader()-&gt;writeMemOffset_" />
+		<Intrinsic Name="GetMsgHeader_WriteOffset" Expression="GetMsgHeader()-&gt;writeOffset_" />
+		<Intrinsic Name="GetHeaderSize" Expression="prefixMemCapacity_ + jc::CMessage::MESSAGE_HEADER_SIZE" />
+		
+		<DisplayString>
+			{{ size={GetMsgHeader_WriteOffset()}, msg_id={GetMsgHeader_MsgId()}, target_id={GetMsgHeader_TargetId()} }}
+		</DisplayString>
+		<Expand>
+			<Item Name="[target_id]">GetMsgHeader_TargetId()</Item>
+			<Item Name="[msg_id]">GetMsgHeader_MsgId()</Item>
+			<Item Name="[size]">GetMsgHeader_WriteOffset()</Item>
+			<Item Name="[read_offset]">readOffset_</Item>
+			<Item Name="[mem_capacity]">memCapacity_</Item>
+			<Item Name="[mem_writeoffset]">GetMsgHeader_WriteMemOffset()</Item>
+			<Item Name="[mem_readoffset]">readMemOffset_</Item>
+			
+			<CustomListItems MaxItemsPerView="64">
+				<Variable Name="pCur"			InitialValue="pBuf_ + GetHeaderSize()"/>
+				<Variable Name="pBase"			InitialValue="pBuf_ + GetHeaderSize()"/>
+				<Variable Name="readOffset"		InitialValue="0"/>
+				<Variable Name="readMemOffset"	InitialValue="0"/>
+				<Variable Name="writeOffset"	InitialValue="GetMsgHeader_WriteOffset()"/>
+				<Variable Name="writeMemOffset"	InitialValue="GetMsgHeader_WriteMemOffset()"/>
+				<Variable Name="typeCode"		InitialValue="0"/>
+				<Variable Name="isValidTypeCode" InitialValue="0"/>
+				
+				<!-- Memory::ReadU32_LEB128 계산용 변수 -->
+				<Variable Name="len"			InitialValue="0"/>
+				<Variable Name="shift"			InitialValue="0"/>
+				<Variable Name="readBytesLen"	InitialValue="0"/>
+				<Variable Name="lenByte"		InitialValue="0"/>
+
+				<Loop Condition="readOffset &lt; writeOffset">
+					
+					<If Condition="readMemOffset &gt;= writeMemOffset">
+						<Break/>
+					</If>
+					
+					<Exec>pCur = pBase + readMemOffset</Exec>
+					<Exec>typeCode = *pCur</Exec>
+					<Exec>readMemOffset += 1</Exec>
+					<Exec>pCur += 1</Exec>
+					<Exec>isValidTypeCode = 0</Exec>
+					<If Condition="readMemOffset &gt;= writeMemOffset">
+						<Break/>
+					</If>
+
+					<!-- s8 -->
+					<If Condition="typeCode == (unsigned char)jc::CMessage::vt_s8">
+						<Item>(jc::detail::CMessage_VariantTraits_s8*)pCur,na</Item>
+						<Exec>pCur += 1</Exec>
+						<Exec>readMemOffset = readMemOffset += 1</Exec>
+						<Exec>readOffset += 1</Exec>
+						<Exec>isValidTypeCode = 1</Exec>
+					</If>
+					<If Condition="typeCode == (unsigned char)jc::CMessage::vt_u8">
+						<Item>(jc::detail::CMessage_VariantTraits_u8*)pCur,na</Item>
+						<Exec>pCur += 1</Exec>
+						<Exec>readMemOffset = readMemOffset += 1</Exec>
+						<Exec>readOffset += 1</Exec>
+						<Exec>isValidTypeCode = 1</Exec>
+					</If>
+					<If Condition="typeCode == (unsigned char)jc::CMessage::vt_s16">
+						<Item>(jc::detail::CMessage_VariantTraits_s16*)pCur,na</Item>
+						<Exec>pCur += 2</Exec>
+						<Exec>readMemOffset = readMemOffset += 2</Exec>
+						<Exec>readOffset += 1</Exec>
+						<Exec>isValidTypeCode = 1</Exec>
+					</If>
+					<If Condition="typeCode == (unsigned char)jc::CMessage::vt_u16">
+						<Item>(jc::detail::CMessage_VariantTraits_u16*)pCur,na</Item>
+						<Exec>pCur += 2</Exec>
+						<Exec>readMemOffset = readMemOffset += 2</Exec>
+						<Exec>readOffset += 1</Exec>
+						<Exec>isValidTypeCode = 1</Exec>
+					</If>
+					<If Condition="typeCode == (unsigned char)jc::CMessage::vt_s32">
+						<Item>(jc::detail::CMessage_VariantTraits_s32*)pCur,na</Item>
+						<Exec>pCur += 4</Exec>
+						<Exec>readMemOffset = readMemOffset += 4</Exec>
+						<Exec>readOffset += 1</Exec>
+						<Exec>isValidTypeCode = 1</Exec>
+					</If>
+					<If Condition="typeCode == (unsigned char)jc::CMessage::vt_u32">
+						<Item>(jc::detail::CMessage_VariantTraits_u32*)pCur,na</Item>
+						<Exec>pCur += 4</Exec>
+						<Exec>readMemOffset = readMemOffset += 4</Exec>
+						<Exec>readOffset += 1</Exec>
+						<Exec>isValidTypeCode = 1</Exec>
+					</If>
+					<If Condition="typeCode == (unsigned char)jc::CMessage::vt_s64">
+						<Item>(jc::detail::CMessage_VariantTraits_s64*)pCur,na</Item>
+						<Exec>pCur += 8</Exec>
+						<Exec>readMemOffset = readMemOffset += 8</Exec>
+						<Exec>readOffset += 1</Exec>
+						<Exec>isValidTypeCode = 1</Exec>
+					</If>
+					<If Condition="typeCode == (unsigned char)jc::CMessage::vt_u64">
+						<Item>(jc::detail::CMessage_VariantTraits_u64*)pCur,na</Item>
+						<Exec>pCur += 8</Exec>
+						<Exec>readMemOffset = readMemOffset += 8</Exec>
+						<Exec>readOffset += 1</Exec>
+						<Exec>isValidTypeCode = 1</Exec>
+					</If>
+					<If Condition="typeCode == (unsigned char)jc::CMessage::vt_f32">
+						<Item>(jc::detail::CMessage_VariantTraits_f32*)pCur,na</Item>
+						<Exec>pCur += 4</Exec>
+						<Exec>readMemOffset = readMemOffset += 4</Exec>
+						<Exec>readOffset += 1</Exec>
+						<Exec>isValidTypeCode = 1</Exec>
+					</If>
+					<If Condition="typeCode == (unsigned char)jc::CMessage::vt_f64">
+						<Item>(jc::detail::CMessage_VariantTraits_f64*)pCur,na</Item>
+						<Exec>pCur += 8</Exec>
+						<Exec>readMemOffset = readMemOffset += 8</Exec>
+						<Exec>readOffset += 1</Exec>
+						<Exec>isValidTypeCode = 1</Exec>
+					</If>
+					<If Condition="typeCode == (unsigned char)jc::CMessage::vt_ptr">
+						<Item>(jc::detail::CMessage_VariantTraits_ptr*)pCur,na</Item>
+						<Exec>pCur += jc::detail::_ptrn::SIZE</Exec>
+						<Exec>readMemOffset += jc::detail::_ptrn::SIZE</Exec>
+						<Exec>readOffset += 1</Exec>
+						<Exec>isValidTypeCode = 1</Exec>
+					</If>
+					<If Condition="typeCode == (unsigned char)jc::CMessage::vt_string || typeCode == (unsigned char)jc::CMessage::vt_binary">
+						<Exec>len = 0</Exec>
+						<Exec>shift = 0</Exec>
+						<Exec>readBytesLen = 0</Exec>
+						<Exec>lenByte = 0</Exec>
+						
+						<!--
+							vt_string / vt_binary layout:
+							| type(1) | length(LEB128) | data[length] |
+						-->
+						<!-- Decode LEB128 length from pCur -->
+						<Loop Condition="true">
+							<If Condition="readBytesLen &gt;= 5">
+								<!-- U32 LEB128 should never need &gt; 5 bytes; treat as invalid -->
+								<Exec>isValidTypeCode = 0</Exec>
+								<Break/>
+							</If>
+
+							<Exec>lenByte = pCur[readBytesLen]</Exec>
+							<Exec>len = len | ((unsigned int)(lenByte &amp; 0x7F) &lt;&lt; shift)</Exec>
+							<Exec>shift = shift + 7</Exec>
+
+							<If Condition="(lenByte &amp; 0x80) == 0">
+								<!-- last byte of LEB128 -->
+								<Exec>readBytesLen += 1</Exec>
+								<Break/>
+							</If>
+
+							<Exec>readBytesLen += 1</Exec>
+						</Loop>
+					
+						<Exec>pCur += readBytesLen</Exec>
+						<Exec>readMemOffset += readBytesLen</Exec>
+
+						<If Condition="len == 0">
+							<If Condition="typeCode == (unsigned char)jc::CMessage::vt_string">
+								<Item>""</Item>
+							</If>
+							<If Condition="typeCode == (unsigned char)jc::CMessage::vt_binary">
+								<Item>"&lt;empty binary&gt;"</Item>
+							</If>
+						</If>
+						<If Condition="len != 0">
+							<If Condition="typeCode == (unsigned char)jc::CMessage::vt_string">
+								<Item>(const char*)pCur,[len]s8</Item>
+							</If>
+							<If Condition="typeCode == (unsigned char)jc::CMessage::vt_binary">
+								<Item>(jc::detail::CMessage_BinaryLengthText*)&amp;len,na</Item>
+							</If>
+						</If>
+						
+						<Exec>readMemOffset += len</Exec>
+						<Exec>readOffset += 1</Exec>
+						<Exec>isValidTypeCode = 1</Exec>
+					</If>
+
+					<If Condition="isValidTypeCode == 0">
+						<Break/>
+					</If>
+				</Loop>
+				
+			</CustomListItems>
+		</Expand>
+	</Type>
+
+</AutoVisualizer>
