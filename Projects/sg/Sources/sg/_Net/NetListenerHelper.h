@@ -16,7 +16,7 @@ NS_SG_BEGIN
 struct NetListenerHelper
 {
 	static void LogCommand(jnet::TransportProtocol _protocol, jnet::Transmission _transmission, jnet::ICommand* _pCommand);
-	static void LogPacketHex(jnet::RecvedCommandPacket* _pRecvPacket);
+	static void LogPacketHex(jnet::RecvedCmdPacket* _pRecvPacket);
 	static void LogPacketHex(jnet::IPacket* _pSentPacket);
 };
 

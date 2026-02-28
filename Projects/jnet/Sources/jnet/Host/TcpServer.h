@@ -45,7 +45,7 @@ public:
 	void SessionConnectFailed(TcpSession* _pSession, _u32 _errorCode);
 	void SessionSent(TcpSession* _pSession, IPacket* _pSentPacket, _u32l _receivedBytes);
 	void SessionReceived(TcpSession* _pSession, ICommand* _pCommand);
-	void SessionReceived(TcpSession* _pSession, RecvedCommandPacket* _pRecvPacket);
+	void SessionReceived(TcpSession* _pSession, RecvedCmdPacket* _pRecvPacket);
 	void SessionReceivedRaw(TcpSession* _pSession, char* _pData, int _len);
 
 	IPv4EndPoint GetBindEndPoint() const { return socket_.GetLocalEndPoint(); }

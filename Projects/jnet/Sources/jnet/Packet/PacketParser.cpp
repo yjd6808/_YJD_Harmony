@@ -65,19 +65,19 @@ void PacketCommandParser::Received(_u32l _receivedBytes)
 		const int readableBufferSize = pRecvBuffer->GetReadableBufferSize();
 
 		// 패킷의 헤더 크기만큼 데이터를 수신하지 않았으면 모일때까지 기다린다.
-		if (readableBufferSize < PACKET_HEADER_SIZE)
+		if (readableBufferSize < COMMAND_PACKET_HEADER_SIZE)
 			return;
 
 		// 패킷 헤더 길이 + 패킷 길이 만큼 수신하지 않았으면 다시 모일때까지 기다린다.
-		RecvedCommandPacket* pPacket = pRecvBuffer->Peek<RecvedCommandPacket*>();
+		RecvedCmdPacket* pPacket = pRecvBuffer->Peek<RecvedCmdPacket*>();
 		const int packetLength = pPacket->GetPacketLength();
 
-		if (readableBufferSize < (PACKET_HEADER_SIZE + packetLength))
+		if (readableBufferSize < (COMMAND_PACKET_HEADER_SIZE + packetLength))
 		{
 			return;
 		}
 
-		pRecvBuffer->MoveReadPos(PACKET_HEADER_SIZE);
+		pRecvBuffer->MoveReadPos(COMMAND_PACKET_HEADER_SIZE);
 		session_->NotifyPacket(pPacket);
 
 		for (int commandIndex = 0; commandIndex < pPacket->GetCommandCount(); ++commandIndex)

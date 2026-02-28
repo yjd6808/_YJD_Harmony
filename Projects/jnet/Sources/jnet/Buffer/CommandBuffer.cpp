@@ -59,10 +59,10 @@ CommandBufferPtr CommandBuffer::Create(const jc::MemoryPoolAbstractPtr& _allocat
 //////////////////////////////////////////////////////////////////////////////////////////
 void CommandBuffer::Initialize()
 {
-	jc::Arrays::Fill(buffer_, PACKET_HEADER_SIZE, (char)0);
+	jc::Arrays::Fill(buffer_, COMMAND_PACKET_HEADER_SIZE, (char)0);
 
-	readPos_ += PACKET_HEADER_SIZE;
-	writePos_ += PACKET_HEADER_SIZE;
+	readPos_ += COMMAND_PACKET_HEADER_SIZE;
+	writePos_ += COMMAND_PACKET_HEADER_SIZE;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -92,7 +92,7 @@ bool CommandBuffer::IsValid() const
 	int commandCount = dbgBuffer.GetCommandCount();
 	int packetLen = dbgBuffer.GetPacketLength();
 
-	dbgBuffer.MoveReadPos(PACKET_HEADER_SIZE);
+	dbgBuffer.MoveReadPos(COMMAND_PACKET_HEADER_SIZE);
 
 	for (int i = 0; i < commandCount; i++)
 	{

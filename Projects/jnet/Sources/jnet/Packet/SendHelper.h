@@ -107,7 +107,7 @@ struct SendHelper : SendHelperBase
 			return TSending<TCommand>(SendInformation.Sender->template SendAlloc<TCommand>(_count), nullptr);
 		}
 
-		auto pPacket = SinglePacket<TCommand>::Create(SendInformation.MemPool, _count);    // 해제는 소멸자에서함
+		auto pPacket = SingleCmdPacket<TCommand>::Create(SendInformation.MemPool, _count);    // 해제는 소멸자에서함
 
 		if (pPacket->cmd_.GetLength() >= 2500)
 		{

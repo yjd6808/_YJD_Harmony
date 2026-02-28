@@ -107,7 +107,7 @@ static void SendMsg(UdpClient* _pClient, const IPv4EndPoint& _target)
 	StringUtil::CopyUnsafe(msg2.Msg(), s.Source);
 
 	// 다이나믹 패킷을 활용한 전송
-	auto pPacket = dbg_new DynamicPacket<DynamicMessage, DynamicMessage, DynamicMessage>(length, length, length);
+	auto pPacket = dbg_new DynamicCmdPacket<DynamicMessage, DynamicMessage, DynamicMessage>(length, length, length);
 	auto pMsg3 = pPacket->Get<0>();
 	auto pMsg4 = pPacket->Get<1>();
 	auto pMsg5 = pPacket->Get<2>();
@@ -127,8 +127,8 @@ static void SendMsg(UdpClient* _pClient, const IPv4EndPoint& _target)
 	StringUtil::CopyUnsafe(msg8.Msg(), s.Source);
 
 	// 싱글 패킷 전송 (스태틱, 다이나믹 커맨드 아무거나 가능)
-	// auto pMsg9 = dbg_new SinglePacket<DynamicMessage>(); assert 발사: 다이나믹 커맨드는 명시적으로 무조건 사이즈 전달
-	auto pMsg9 = dbg_new SinglePacket<DynamicMessage>(length);
+	// auto pMsg9 = dbg_new SingleCmdPacket<DynamicMessage>(); assert 발사: 다이나믹 커맨드는 명시적으로 무조건 사이즈 전달
+	auto pMsg9 = dbg_new SingleCmdPacket<DynamicMessage>(length);
 	StringUtil::CopyUnsafe(pMsg9->cmd_.Msg(), s.Source);
 
 	_pClient->SendToAsync(pMsg9, _target);

@@ -54,7 +54,7 @@ void UdpClient::Initialize()
 //////////////////////////////////////////////////////////////////////////////////////////
 void UdpClient::FlushSendBuffer()
 {
-	CommandBufferPacket* pWrappedPacket = GetCommandBufferForSending();
+	CmdBufferPacket* pWrappedPacket = GetCommandBufferForSending();
 	if (pWrappedPacket)
 	{
 		SendToAsync(pWrappedPacket, remoteEndPoint_);
@@ -113,7 +113,7 @@ void UdpClient::NotifyCommand(ICommand* _pCmd)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UdpClient::NotifyPacket(RecvedCommandPacket* _pPacket)
+void UdpClient::NotifyPacket(RecvedCmdPacket* _pPacket)
 {
 	if (pEventListener_)
 	{

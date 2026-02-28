@@ -21,7 +21,7 @@ NS_JNET_BEGIN
 
 class ICommand;
 class IPacket;
-class RecvedCommandPacket;
+class RecvedCmdPacket;
 class TcpServer;
 class Session;
 class Server;
@@ -38,7 +38,7 @@ public:
 	using FnSent = jc::Action<Session*, IPacket*, _u32l>;
 	using FnReceivedRaw = jc::Action<Session*, char*, int>;
 	using FnReceived = jc::Action<Session*, ICommand*>;
-	using FnReceivedPacket = jc::Action<Session*, RecvedCommandPacket*>;
+	using FnReceivedPacket = jc::Action<Session*, RecvedCmdPacket*>;
 
 	virtual ~ServerEventListener() = default;
 	virtual void OnStarted() {}
@@ -52,7 +52,7 @@ public:
 	virtual void OnSent(Session* _pSession, IPacket* _pSentPacket, _u32l _sentBytes) {}
 	virtual void OnReceivedRaw(Session* _pSession, char* _pData, int _len) {}
 	virtual void OnReceived(Session* _pSession, ICommand* _pRecvCmd) {}
-	virtual void OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket) {}
+	virtual void OnReceived(Session* _pSession, RecvedCmdPacket* _pRecvPacket) {}
 
 	void SetStartedCallback(const FnStarted& _fn) { fnStarted_ = _fn; }
 	void SetStartFailedCallback(const FnStartFailed& _fn) { fnStartFailed_ = _fn; }

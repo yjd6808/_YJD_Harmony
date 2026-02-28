@@ -34,7 +34,7 @@ using CmdLen_t = _u16;
 
 NS_JNET_BEGIN
 
-inline constexpr int PACKET_HEADER_SIZE = sizeof(CmdCnt_t) + sizeof(PktLen_t);
+inline constexpr int COMMAND_PACKET_HEADER_SIZE = sizeof(CmdCnt_t) + sizeof(PktLen_t);
 inline constexpr int COMMAND_HEADER_SIZE = sizeof(CmdType_t) + sizeof(Cmd_t) + sizeof(CmdLen_t);
 
 #pragma pack(push, CMD_ALIGNMENT)

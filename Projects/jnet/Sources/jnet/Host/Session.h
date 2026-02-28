@@ -54,6 +54,7 @@ public:
 	bool RecvFromAsync();
 
 	void SendAlloc(ICommand* _pCmd);
+
 	template <typename TCommand>
 	TCommand& SendAlloc(int _count = 0)
 	{
@@ -75,7 +76,7 @@ public:
 		return sendBuffer_->Alloc<TCommand>(_count);
 	}
 
-	CommandBufferPacket* GetCommandBufferForSending();
+	CmdBufferPacket* GetCommandBufferForSending();
 	virtual void FlushSendBuffer();
 	virtual void Connected() = 0;
 	virtual void ConnectFailed(_u32 _errorCode) = 0;
@@ -85,7 +86,7 @@ public:
 
 	virtual void NotifyRaw(char* _pData, int _len) = 0;
 	virtual void NotifyCommand(ICommand* _pCmd) = 0;
-	virtual void NotifyPacket(RecvedCommandPacket* _pPacket) = 0;
+	virtual void NotifyPacket(RecvedCmdPacket* _pPacket) = 0;
 
 	int  AddPendingCount()      { return ++overlappedPendingCount_; }
 	int  DecreasePendingCount() { return --overlappedPendingCount_; }

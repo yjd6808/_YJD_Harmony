@@ -20,7 +20,7 @@ protected:
 	void OnDisconnected(jnet::Session* _pDisconnectedSession, _u32 _errorCode) override;
 	void OnSent(jnet::Session* _pSender, jnet::IPacket* _pSentPacket, _u32l _sentBytes) override;
 	void OnReceived(jnet::Session* _pReceiver, jnet::ICommand* _pRecvCmd) override;
-	void OnReceived(jnet::Session* _pSession, jnet::RecvedCommandPacket* _pRecvPacket) override;
+	void OnReceived(jnet::Session* _pSession, jnet::RecvedCmdPacket* _pRecvPacket) override;
 	void OnStopped() override;
 
 	ServerType_t GetServerType() override

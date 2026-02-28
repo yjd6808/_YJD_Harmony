@@ -106,7 +106,7 @@ void TcpServer::SessionReceived(TcpSession* _pSession, ICommand* _pCommand)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TcpServer::SessionReceived(TcpSession* _pSession, RecvedCommandPacket* _pRecvPacket)
+void TcpServer::SessionReceived(TcpSession* _pSession, RecvedCmdPacket* _pRecvPacket)
 {
 	if (pServerEventListener_)
 	{

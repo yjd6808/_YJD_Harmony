@@ -31,18 +31,18 @@ class BufferAbstract
 {
 public:
 	BufferAbstract()
-		: buffer_(nullptr)
-		, bufferSize_(0)
-		, readPos_(0)
-		, writePos_(0)
+	: buffer_(nullptr)
+	, readPos_(0)
+	, writePos_(0)
+	, bufferSize_(0)
 	{
 	}
 
 	BufferAbstract(char* _pBuffer, int _bufferSize)
-		: buffer_(_pBuffer)
-		, bufferSize_(_bufferSize)
-		, readPos_(0)
-		, writePos_(0)
+	: buffer_(_pBuffer)
+	, readPos_(0)
+	, writePos_(0)
+	, bufferSize_(_bufferSize)
 	{
 	}
 

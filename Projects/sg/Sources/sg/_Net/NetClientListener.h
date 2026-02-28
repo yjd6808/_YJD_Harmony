@@ -24,7 +24,7 @@ protected:
 	virtual void OnDisconnected(jnet::Session* _pSession, _u32 _errorCode) override;
 	virtual void OnSent(jnet::Session* _pSession, jnet::IPacket* _pSentPacket, _u32l _sentBytes) override;
 	virtual void OnReceived(jnet::Session* _pSession, jnet::ICommand* _pRecvCmd) override;
-	virtual void OnReceived(jnet::Session* _pSession, jnet::RecvedCommandPacket* _pRecvPacket) override;
+	virtual void OnReceived(jnet::Session* _pSession, jnet::RecvedCmdPacket* _pRecvPacket) override;
 
 private:
 	jnet::CommandParser* pParser_ = nullptr;

@@ -11,10 +11,10 @@
 
 NS_JNET_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
-void RecvedCommandPacket::ForEach(const jc::Action<ICommand*>& _consumer)
+void RecvedCmdPacket::ForEach(const jc::Action<ICommand*>& _consumer)
 {
 	int commandIndex = 0;
-	char* pCommandData = reinterpret_cast<char*>(this) + PACKET_HEADER_SIZE;
+	char* pCommandData = reinterpret_cast<char*>(this) + COMMAND_PACKET_HEADER_SIZE;
 
 	while (commandIndex < commandCount_)
 	{
@@ -27,10 +27,10 @@ void RecvedCommandPacket::ForEach(const jc::Action<ICommand*>& _consumer)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-RecvedCommandPacket* RecvedCommandPacket::Clone() const
+RecvedCmdPacket* RecvedCmdPacket::Clone() const
 {
-	RecvedCommandPacket* pCopy = reinterpret_cast<RecvedCommandPacket*>(dbg_new char[PACKET_HEADER_SIZE + packetLength_]);
-	const char* pCommandData = reinterpret_cast<const char*>(this) + PACKET_HEADER_SIZE;
+	RecvedCmdPacket* pCopy = reinterpret_cast<RecvedCmdPacket*>(dbg_new char[COMMAND_PACKET_HEADER_SIZE + packetLength_]);
+	const char* pCommandData = reinterpret_cast<const char*>(this) + COMMAND_PACKET_HEADER_SIZE;
 
 	jc::Memory::CopyUnsafe(pCopy, pCommandData, packetLength_); // 데이터영역 복사
 	pCopy->packetLength_ = packetLength_;
@@ -39,16 +39,16 @@ RecvedCommandPacket* RecvedCommandPacket::Clone() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-CommandBufferPacket::CommandBufferPacket(const CommandBufferPtr& _buffer)
-: CommandPacket(_buffer->GetCommandCount(), _buffer->GetPacketLength())
+CmdBufferPacket::CmdBufferPacket(const CommandBufferPtr& _buffer)
+: CmdPacket(_buffer->GetCommandCount(), _buffer->GetPacketLength())
 , buffer_(_buffer)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-CommandBufferPacket::CommandBufferPacket(const jc::MemoryPoolAbstractPtr& _allocator,
+CmdBufferPacket::CmdBufferPacket(const jc::MemoryPoolAbstractPtr& _allocator,
                                          const CommandBufferPtr& _buffer)
-: CommandPacket(_allocator, _buffer->GetCommandCount(), _buffer->GetPacketLength())
+: CmdPacket(_allocator, _buffer->GetCommandCount(), _buffer->GetPacketLength())
 , buffer_(_buffer)
 {
 }

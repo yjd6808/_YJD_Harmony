@@ -66,7 +66,7 @@ void NetClientListener::OnSent(jnet::Session* _pSession, IPacket* _pSentPacket, 
 
 	if (_pSentPacket->GetType() == PacketType::Command)
 	{
-		CommandPacket* pPacket = static_cast<CommandPacket*>(_pSentPacket);
+		CmdPacket* pPacket = static_cast<CmdPacket*>(_pSentPacket);
 		pPacket->ForEach([&](ICommand* _cmd) { sg::NetListenerHelper::LogCommand(protocol, Transmission::Send, _cmd); });
 	}
 
@@ -103,7 +103,7 @@ void NetClientListener::OnReceived(jnet::Session* _pSession, ICommand* _pRecvCmd
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetClientListener::OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket)
+void NetClientListener::OnReceived(Session* _pSession, RecvedCmdPacket* _pRecvPacket)
 {
 	sg::NetListenerHelper::LogPacketHex(_pRecvPacket);
 

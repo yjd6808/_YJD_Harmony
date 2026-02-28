@@ -17,7 +17,7 @@ struct PacketViewer
 {
 	static void View(IPacket* _pPacket);
 	static void View(char* _pData, int _len);
-	static void View(RecvedCommandPacket* _pPacket);
+	static void View(RecvedCmdPacket* _pPacket);
 	static void View(ICommand* _pCmd);
 
 private:

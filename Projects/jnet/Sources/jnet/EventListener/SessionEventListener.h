@@ -13,7 +13,7 @@ NS_JNET_BEGIN
 
 class ICommand;
 class IPacket;
-class RecvedCommandPacket;
+class RecvedCmdPacket;
 
 class Session;
 class JC_NOVTABLE SessionEventListener
@@ -25,7 +25,7 @@ public:
 	using FnSent = jc::Action<jnet::Session*, jnet::IPacket*, _u32l>;
 	using FnReceivedRaw = jc::Action<jnet::Session*, char*, int>;
 	using FnReceivedCmd = jc::Action<jnet::Session*, jnet::ICommand*>;
-	using FnReceivedPacket = jc::Action<jnet::Session*, jnet::RecvedCommandPacket*>;
+	using FnReceivedPacket = jc::Action<jnet::Session*, jnet::RecvedCmdPacket*>;
 
 	SessionEventListener() = default;
 	virtual ~SessionEventListener() = default;
@@ -35,7 +35,7 @@ public:
 	virtual void OnSent(Session* _pSession, IPacket* _pSentPacket, _u32l _sentBytes) {}
 	virtual void OnReceivedRaw(Session* _pSession, char* _pData, int _len) {}
 	virtual void OnReceived(Session* _pSession, ICommand* _pRecvCmd) {}
-	virtual void OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket) {}
+	virtual void OnReceived(Session* _pSession, RecvedCmdPacket* _pRecvPacket) {}
 
 	void SetConnectedCallback(const FnConnected& _fn) { fnConnected_ = _fn; }
 	void SetConnectFailedCallback(const FnConnectFailed& _fn) { fnConnectFailed_ = _fn; }

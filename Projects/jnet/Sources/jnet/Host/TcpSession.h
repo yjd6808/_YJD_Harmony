@@ -28,7 +28,7 @@ public:
 	virtual void OnDisconnected() {}
 
 	void NotifyCommand(ICommand* _pCmd) override;
-	void NotifyPacket(RecvedCommandPacket* _pRecvPacket) override;
+	void NotifyPacket(RecvedCmdPacket* _pRecvPacket) override;
 	void NotifyRaw(char* _pData, int _len) override;
 
 	void Initialize() override;

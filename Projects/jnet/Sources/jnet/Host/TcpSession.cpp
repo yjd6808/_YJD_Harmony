@@ -107,7 +107,7 @@ void TcpSession::NotifyCommand(ICommand* _pCmd)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TcpSession::NotifyPacket(RecvedCommandPacket* _pRecvPacket)
+void TcpSession::NotifyPacket(RecvedCmdPacket* _pRecvPacket)
 {
 	pServer_->SessionReceived(this, _pRecvPacket);
 }

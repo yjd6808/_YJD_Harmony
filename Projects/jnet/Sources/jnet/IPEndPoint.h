@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <jc/Natvis/NatvisByteOrder.h>
 #include <jnet/IPAddress.h>
 
 NS_JNET_BEGIN

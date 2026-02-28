@@ -60,7 +60,7 @@ void ServerListener::OnReceived(Session* _pReceiver, ICommand* _pCmd)
 		Console::WriteLine("[%s] 스태틱 메시지를 수신했습니다. : %s", name_.Source(), pMsg->msg_.Source);
 
 		// 스태틱 패킷 에코 진행
-		auto pPacket = dbg_new StaticPacket<StaticMessage>();
+		auto pPacket = dbg_new StaticCmdPacket<StaticMessage>();
 		StaticMessage* pArg1 = pPacket->Get<0>();
 		pArg1->msg_.SetString(pMsg->msg_);
 
@@ -87,14 +87,14 @@ void ServerListener::OnReceived(Session* _pReceiver, ICommand* _pCmd)
 		Console::WriteLine("[%s] 다이나믹 메시지를 수신했습니다. : %s(길이 : %d)", name_.Source(), pDynamicMessage->Msg(), len);
 
 		MemoryPoolAbstractPtr pMemoryPool;
-		auto pPacket2 = dbg_new DynamicPacket<DynamicMessage>(pMemoryPool, len + 2);
-		auto pPacket3 = dbg_new DynamicPacket<DynamicMessage>(nullptr, len + 2);
+		auto pPacket2 = dbg_new DynamicCmdPacket<DynamicMessage>(pMemoryPool, len + 2);
+		auto pPacket3 = dbg_new DynamicCmdPacket<DynamicMessage>(nullptr, len + 2);
 		pPacket2->Release();
 		pPacket3->Release();
 
 
 		// 다이나믹 패킷 에코 진행
-		auto pPacket = dbg_new DynamicPacket<DynamicMessage>(len + 1);
+		auto pPacket = dbg_new DynamicCmdPacket<DynamicMessage>(len + 1);
 		DynamicMessage* pMsg = pPacket->Get<0>();
 		StringUtil::CopyUnsafe(pMsg->Msg(), pDynamicMessage->Msg());
 

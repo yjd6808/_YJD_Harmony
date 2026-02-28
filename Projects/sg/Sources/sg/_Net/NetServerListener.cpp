@@ -52,7 +52,7 @@ void NetServerListener::OnSent(Session* _pSender, IPacket* _pSentPacket, _u32l _
 {
 	if (_pSentPacket->GetType() == PacketType::Command)
 	{
-		CommandPacket* pPacket = static_cast<CommandPacket*>(_pSentPacket);
+		CmdPacket* pPacket = static_cast<CmdPacket*>(_pSentPacket);
 		pPacket->ForEach([&](ICommand* _pCmd)
 		{
 			NetListenerHelper::LogCommand(_pSender->Protocol(), Transmission::Send, _pCmd);
@@ -82,7 +82,7 @@ void NetServerListener::OnReceived(Session* _pReceiver, ICommand* _pRecvCmd)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetServerListener::OnReceived(Session* _pReceiver, RecvedCommandPacket* _pRecvPacket)
+void NetServerListener::OnReceived(Session* _pReceiver, RecvedCmdPacket* _pRecvPacket)
 {
 	NetListenerHelper::LogPacketHex(_pRecvPacket);
 }

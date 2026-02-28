@@ -63,7 +63,7 @@ void NetClientListenerImpl::OnReceived(Session* _pSession, ICommand* _pRecvCmd)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetClientListenerImpl::OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket)
+void NetClientListenerImpl::OnReceived(Session* _pSession, RecvedCmdPacket* _pRecvPacket)
 {
 	NetClientListener::OnReceived(_pSession, _pRecvPacket);
 }

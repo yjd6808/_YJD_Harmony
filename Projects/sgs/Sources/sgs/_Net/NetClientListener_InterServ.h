@@ -22,7 +22,7 @@ protected:
 	void OnDisconnected(jnet::Session* _pSession, _u32 _errorCode) override;
 	void OnSent(jnet::Session* _pSession, jnet::IPacket* _pSentPacket, _u32l _sentBytes) override;
 	void OnReceived(jnet::Session* _pSession, jnet::ICommand* _pRecvCmd) override;
-	void OnReceived(jnet::Session* _pSession, jnet::RecvedCommandPacket* _pRecvPacket) override;
+	void OnReceived(jnet::Session* _pSession, jnet::RecvedCmdPacket* _pRecvPacket) override;
 	void OnConnectFailed(jnet::Session* _pSession, _u32 _errorCode) override;
 
 private:

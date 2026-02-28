@@ -52,7 +52,7 @@ void NetClientListener_InterServ::OnReceived(Session* _pSession, ICommand* _pRec
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetClientListener_InterServ::OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket)
+void NetClientListener_InterServ::OnReceived(Session* _pSession, RecvedCmdPacket* _pRecvPacket)
 {
 	NetClientListener::OnReceived(_pSession, _pRecvPacket);
 }

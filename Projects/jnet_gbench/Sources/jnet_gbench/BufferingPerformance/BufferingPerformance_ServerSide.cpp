@@ -31,7 +31,7 @@ struct ServerListener : ServerEventListener
 		}
 
 		const int ack = ++RecvCounter;
-		auto pPacket = dbg_new SinglePacket<SC_TEST>();
+		auto pPacket = dbg_new SingleCmdPacket<SC_TEST>();
 		JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
 		pPacket->cmd_.Ack = ack;
 		_pSession->SendAsync(pPacket);

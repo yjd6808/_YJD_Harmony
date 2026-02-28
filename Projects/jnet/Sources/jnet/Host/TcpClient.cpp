@@ -36,9 +36,9 @@ TcpClient::~TcpClient()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-static StaticPacket<GenericCommand<int>, GenericCommand<int>>* GenerateTestDummyPacket()
+static StaticCmdPacket<GenericCommand<int>, GenericCommand<int>>* GenerateTestDummyPacket()
 {
-	auto* pDummyPacket = dbg_new StaticPacket<GenericCommand<int>, GenericCommand<int>>;
+	auto* pDummyPacket = dbg_new StaticCmdPacket<GenericCommand<int>, GenericCommand<int>>;
 	pDummyPacket->Get<0>()->SetId(1);
 	pDummyPacket->Get<0>()->value_ = 2;
 	pDummyPacket->Get<1>()->SetId(3);
@@ -267,7 +267,7 @@ void TcpClient::NotifyCommand(ICommand* _pCmd)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TcpClient::NotifyPacket(RecvedCommandPacket* _pPacket)
+void TcpClient::NotifyPacket(RecvedCmdPacket* _pPacket)
 {
 	if (pEventListener_)
 	{

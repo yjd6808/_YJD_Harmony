@@ -55,7 +55,7 @@ void ListenerLobbyServer::OnReceived(Session* _pReceiver, ICommand* _pRecvCmd)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ListenerLobbyServer::OnReceived(Session* _pSession, RecvedCommandPacket* _pRecvPacket)
+void ListenerLobbyServer::OnReceived(Session* _pSession, RecvedCmdPacket* _pRecvPacket)
 {
 	NetServerListener::OnReceived(_pSession, _pRecvPacket);
 }

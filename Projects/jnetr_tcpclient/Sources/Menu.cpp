@@ -94,7 +94,7 @@ static void SendMsg(TcpClient* _pClient)
 	StringUtil::CopyUnsafe(msg2.Msg(), inputString.Source);
 
 	// 다이나믹 패킷을 활용한 전송
-	auto pPacket1 = dbg_new DynamicPacket<DynamicMessage, DynamicMessage, DynamicMessage>(length, length, length);
+	auto pPacket1 = dbg_new DynamicCmdPacket<DynamicMessage, DynamicMessage, DynamicMessage>(length, length, length);
 	auto pMsg3 = pPacket1->Get<0>();
 	auto pMsg4 = pPacket1->Get<1>();
 	auto pMsg5 = pPacket1->Get<2>();
@@ -114,12 +114,12 @@ static void SendMsg(TcpClient* _pClient)
 	StringUtil::CopyUnsafe(msg8.Msg(), inputString.Source);
 
 	// 싱글 패킷 전송 (스태틱, 다이나믹 커맨드 아무거나 가능)
-	// auto msg9 = dbg_new SinglePacket<DynamicMessage>(); assert 발사: 다이나믹 커맨드는 명시적으로 무조건 사이즈 전달
-	auto pMsg9 = dbg_new SinglePacket<DynamicMessage>(length);
+	// auto msg9 = dbg_new SingleCmdPacket<DynamicMessage>(); assert 발사: 다이나믹 커맨드는 명시적으로 무조건 사이즈 전달
+	auto pMsg9 = dbg_new SingleCmdPacket<DynamicMessage>(length);
 	StringUtil::CopyUnsafe(pMsg9->cmd_.Msg(), inputString.Source);
 
 	// 스태틱 패킷 전송
-	auto pPacket = dbg_new StaticPacket<StaticMessage>();
+	auto pPacket = dbg_new StaticCmdPacket<StaticMessage>();
 	StaticMessage* pArg1 = pPacket->Get<0>();
 	pArg1->msg_.SetString(inputString);
 	auto wsaBuf = pPacket->GetWSABuf();

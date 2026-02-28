@@ -38,7 +38,7 @@ void ClientListener::OnDisconnected(Session* _pSession, _u32 _errorCode)
 ////////////////////////////////////////////////////////////////////////////////////////
 void ClientListener::OnSent(Session* _pSession, IPacket* _pSentPacket, _u32l _sentBytes)
 {
-	CommandPacket* pSentPacket = dynamic_cast<CommandPacket*>(_pSentPacket);
+	CmdPacket* pSentPacket = dynamic_cast<CmdPacket*>(_pSentPacket);
 	if (pSentPacket == nullptr)
 	{
 		jc_assert(false);

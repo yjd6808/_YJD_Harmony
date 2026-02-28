@@ -119,7 +119,7 @@ struct InterServerSendHelper : InterServerSendHelperBase
 			return TSending<TCommand>(cmd, nullptr);
 		}
 
-		auto pPacket = dbg_new jnet::SinglePacket<TCommand>(_count);
+		auto pPacket = dbg_new jnet::SingleCmdPacket<TCommand>(_count);
 		InitCommand(pPacket->cmd_);
 		return TSending<TCommand>(pPacket->cmd_, pPacket);
 	}

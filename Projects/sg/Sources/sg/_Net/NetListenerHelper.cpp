@@ -48,7 +48,7 @@ void NetListenerHelper::LogCommand(TransportProtocol _protocol, Transmission _tr
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetListenerHelper::LogPacketHex(RecvedCommandPacket* _pRecvPacket)
+void NetListenerHelper::LogPacketHex(RecvedCmdPacket* _pRecvPacket)
 {
 	if (g_cAppConfig.showRecvPacketHex_)
 	{
