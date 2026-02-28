@@ -88,29 +88,55 @@ int main(int _argc, char** _argv)
 		check[8] = 20;
 		check[16] = 20;
 
-		msg1.WriteS8(-50);
-		msg1.WriteU8(160);
-		msg1.WriteS16(-30000);
-		msg1.WriteU16(60000);
-		msg1.WriteS32(-2000000000);
-		msg1.WriteU32(4000000000);
-		msg1.WriteS64(-9000000000000000000LL);
-		msg1.WriteU64(18000000000000000000ULL);
-		msg1.WritePtr(dbg_new int(0));
-		msg1.WriteFloat(3.141592f);
-		msg1.WriteDouble(2.718281828459045);
-		msg1.WriteBinary(check, 32);
-		msg1.WriteBinary(check, 32);
-		msg1.WriteString("abcdefg1");
-		msg1.WriteString("abcdefg2");
-		msg1.WriteString("abcdefg3");
-		msg1.WriteString("abcdefg4");
+		{
+			int* pfsef = dbg_new int();
+			_s8* pS8 = nullptr;
+			msg1.WriteS8(-50);
+			msg1.WriteS8(-100);
+			msg1.WriteU8(160);
+			msg1.WriteS16(-30000);
+			msg1.WriteU16(60000);
+			msg1.WriteS32(-2000000000);
+			msg1.WriteU32(4000000000);
+			msg1.WriteS64(-9000000000000000000LL);
+			msg1.WriteU64(18000000000000000000ULL);
+			msg1.WritePtr(pfsef);
+			msg1.WriteFloat(3.141592f);
+			msg1.WriteDouble(2.718281828459045);
+			msg1.WriteBinary(check, 32);
+			msg1.WriteBinary(check, 32);
+			msg1.WriteString("abcdefg1");
+			msg1.WriteString("abcdefg2");
+			msg1.WriteString("abcdefg3");
+			msg1.WriteString("abcdefg4");
 
-		auto a = msg1.GetCurrentVT();
-		msg1.ReadS8();
-		a = msg1.GetCurrentVT();
+			auto a = msg1.GetCurrentVT();
+			msg1.ReadS8();
+			a = msg1.GetCurrentVT();
+			msg1.ReadS8();
 
-		Console::WriteLine(msg1.Dump().SafeSource());
+			a = msg1.ReadAny();
+
+			msg1.SetReadOffset(0);
+			a = msg1.ReadAny();
+
+
+			msg1.SetReadOffset(10);
+			_f32 fesf = msg1.ReadFloat();
+
+			msg1.SetReadOffset(8);
+			_u64 fsefesf = msg1.ReadU64();
+
+			msg1.SetReadOffset(14);
+			String sefse = msg1.ReadString();
+
+			msg1.SetWriteOffset(14);
+			msg1.SetReadOffset(14);
+			msg1.WriteString("aaa");
+			String fsef = msg1.ReadString();
+			Console::WriteLine(msg1.Dump().SafeSource());
+			delete pfsef;
+		}
 		
 
 		// 브레이크포인트 찍어서 각 변수들 natvis 확인

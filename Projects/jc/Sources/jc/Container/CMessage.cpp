@@ -22,7 +22,9 @@ CMessage::CMessage(const CMessage& _other) : pContext_(_other.pContext_)
 {
 	// 공유 컨텍스트의 참조 카운트를 증가시켜 안전하게 공유한다.
 	if (pContext_)
+	{
 		pContext_->AddRef();
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -38,95 +40,61 @@ CMessage::~CMessage()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void CMessage::WriteS8(_s8 _value)
+void CMessage::ResetWriteOffset()
 {
 	jc_assert(pContext_);
-	pContext_->WriteValue<CMessage_VariantTraits, _s8>(_value);
+	return pContext_->ResetWriteOffset();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void CMessage::WriteU8(_u8 _value)
+void CMessage::ResetReadOffset()
 {
 	jc_assert(pContext_);
-	pContext_->WriteValue<CMessage_VariantTraits, _u8>(_value);
+	return pContext_->ResetReadOffset();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void CMessage::WriteS16(_s16 _value)
+void CMessage::SetWriteOffset(_u16 _writeOffset)
 {
 	jc_assert(pContext_);
-	pContext_->WriteValue<CMessage_VariantTraits, _s16>(_value);
+	return pContext_->SetWriteOffset(_writeOffset);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void CMessage::WriteU16(_u16 _value)
+void CMessage::SetReadOffset(_u16 _readOffset)
 {
 	jc_assert(pContext_);
-	pContext_->WriteValue<CMessage_VariantTraits, _u16>(_value);
+	return pContext_->SetReadOffset(_readOffset);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void CMessage::WriteS32(_s32 _value)
+_u16 CMessage::GetWriteOffset() const
 {
 	jc_assert(pContext_);
-	pContext_->WriteValue<CMessage_VariantTraits, _s32>(_value);
+	return pContext_->GetWriteOffset();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void CMessage::WriteS32L(_s32l _value)
+_u16 CMessage::GetReadOffset() const
 {
 	jc_assert(pContext_);
-	pContext_->WriteValue<CMessage_VariantTraits, _s32l>(_value);
+	return pContext_->GetReadOffset();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void CMessage::WriteU32(_u32 _value)
-{
-	jc_assert(pContext_);
-	pContext_->WriteValue<CMessage_VariantTraits, _u32>(_value);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void CMessage::WriteU32L(_u32l _value)
-{
-	jc_assert(pContext_);
-	pContext_->WriteValue<CMessage_VariantTraits, _u32l>(_value);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void CMessage::WriteS64(_s64 _value)
-{
-	jc_assert(pContext_);
-	pContext_->WriteValue<CMessage_VariantTraits, _s64>(_value);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void CMessage::WriteU64(_u64 _value)
-{
-	jc_assert(pContext_);
-	pContext_->WriteValue<CMessage_VariantTraits, _u64>(_value);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void CMessage::WriteFloat(_f32 _value)
-{
-	jc_assert(pContext_);
-	pContext_->WriteValue<CMessage_VariantTraits, _f32>(_value);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void CMessage::WriteDouble(_f64 _value)
-{
-	jc_assert(pContext_);
-	pContext_->WriteValue<CMessage_VariantTraits, _f64>(_value);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void CMessage::WritePtr(void* _value)
-{
-	jc_assert(pContext_);
-	pContext_->WriteValue<CMessage_VariantTraits, void*>(_value);
-}
+void CMessage::WriteS8(_s8 _value) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _s8>(_value); }
+void CMessage::WriteU8(_u8 _value) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _u8>(_value); }
+void CMessage::WriteS16(_s16 _value) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _s16>(_value); }
+void CMessage::WriteU16(_u16 _value) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _u16>(_value); }
+void CMessage::WriteS32(_s32 _value) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _s32>(_value); }
+void CMessage::WriteS32L(_s32l _value) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _s32l>(_value); }
+void CMessage::WriteU32(_u32 _value) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _u32>(_value); }
+void CMessage::WriteU32L(_u32l _value) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _u32l>(_value); }
+void CMessage::WriteS64(_s64 _value) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _s64>(_value); }
+void CMessage::WriteU64(_u64 _value) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _u64>(_value); }
+void CMessage::WriteFloat(_f32 _value) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _f32>(_value); }
+void CMessage::WriteDouble(_f64 _value) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _f64>(_value); }
+void CMessage::WritePtr(void* _value) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, void*>(_value); }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteString(const String& _str)
@@ -140,6 +108,43 @@ void CMessage::WriteBinary(const _u8* _pBytes, const _u32 _len)
 {
 	jc_assert(pContext_);
 	pContext_->WriteBinary(_pBytes, _len);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void CMessage::WriteBinaryDummy(_u32 _len)
+{
+	static _u8 dummy[256]{};
+	if (_len > sizeof(dummy))
+	{
+		WriteBinary(dummy, _len);
+	}
+	else
+	{
+		_u8* pDummy = dbg_new _u8[_len]{};
+		WriteBinary(pDummy, _len);
+		delete[] pDummy;
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void CMessage::WriteS8(_s8 _value, OUT _s8** _ppAddr) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _s8>(_value, _ppAddr); }
+void CMessage::WriteU8(_u8 _value, OUT _u8** _ppAddr) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _u8>(_value, _ppAddr); }
+void CMessage::WriteS16(_s16 _value, OUT _s16** _ppAddr) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _s16>(_value, _ppAddr); }
+void CMessage::WriteU16(_u16 _value, OUT _u16** _ppAddr) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _u16>(_value, _ppAddr); }
+void CMessage::WriteS32(_s32 _value, OUT _s32** _ppAddr) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _s32>(_value, _ppAddr); }
+void CMessage::WriteS32L(_s32l _value, OUT _s32l** _ppAddr) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _s32l>(_value, _ppAddr); }
+void CMessage::WriteU32(_u32 _value, OUT _u32** _ppAddr) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _u32>(_value, _ppAddr); }
+void CMessage::WriteU32L(_u32l _value, OUT _u32l** _ppAddr) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _u32l>(_value, _ppAddr); }
+void CMessage::WriteS64(_s64 _value, OUT _s64** _ppAddr) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _s64>(_value, _ppAddr); }
+void CMessage::WriteU64(_u64 _value, OUT _u64** _ppAddr) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _u64>(_value, _ppAddr); }
+void CMessage::WriteFloat(_f32 _value, OUT _f32** _ppAddr) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _f32>(_value, _ppAddr); }
+void CMessage::WriteDouble(_f64 _value, OUT _f64** _ppAddr) { jc_assert(pContext_); pContext_->WriteValue<CMessage_VariantTraits, _f64>(_value, _ppAddr); }
+
+//////////////////////////////////////////////////////////////////////////////////////////
+CMessage::VariantType CMessage::ReadAny()
+{
+	jc_assert(pContext_);
+	return pContext_->ReadAny(nullptr);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -367,6 +372,30 @@ bool CMessage::TryReadBinary(_u8* _pBytes, _u32 _capacity, _u32& _outLen)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+String CMessage::Dump() const
+{
+	return Dump(*this);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u8* CMessage::GetValue(_u32 _offset, OUT VariantType& _type, OUT _u32& _elemValueSize) const
+{
+	jc_assert(pContext_);
+	return pContext_->GetValue((_u16)_offset, _type, _elemValueSize);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+CMessage::VariantType CMessage::GetVT(_u32 _offset)
+{
+	jc_assert(pContext_);
+	VariantType type;
+	_u32 elemValueSize = 0;
+	if (pContext_->GetValue((_u16)_offset, type, elemValueSize) != nullptr)
+		return type;
+	return vt_none;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 CMessage::VariantType CMessage::GetCurrentVT() const
 {
 	jc_assert(pContext_);
@@ -381,23 +410,9 @@ String CMessage::Dump(const CMessage& _other)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_u32 CMessage::GetElemSize(_u8 _typeCode)
+_u32 CMessage::GetElemMemSize(_u8 _typeCode)
 {
-	switch (_typeCode)
-	{
-	case CMessage::vt_s8:	return CMessage_VariantTraits<_s8>::MEM_SIZE;
-	case CMessage::vt_u8:	return CMessage_VariantTraits<_u8>::MEM_SIZE;
-	case CMessage::vt_s16:	return CMessage_VariantTraits<_s16>::MEM_SIZE;
-	case CMessage::vt_u16:	return CMessage_VariantTraits<_u16>::MEM_SIZE;
-	case CMessage::vt_s32:	return CMessage_VariantTraits<_s32>::MEM_SIZE;
-	case CMessage::vt_u32:	return CMessage_VariantTraits<_u32>::MEM_SIZE;
-	case CMessage::vt_s64:	return CMessage_VariantTraits<_s64>::MEM_SIZE;
-	case CMessage::vt_u64:	return CMessage_VariantTraits<_u64>::MEM_SIZE;
-	case CMessage::vt_f32:	return CMessage_VariantTraits<_f32>::MEM_SIZE;
-	case CMessage::vt_f64:	return CMessage_VariantTraits<_f64>::MEM_SIZE;
-	case CMessage::vt_ptr:	return CMessage_VariantTraits<void*>::MEM_SIZE;
-	}
-	return 0;
+	return _typeCode < vt_max ? MEM_SIZE[_typeCode] : 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -429,7 +444,141 @@ CMessageHeader* CMessageContext::GetMsgHeaderPtr() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+void CMessageContext::SetReadOffset(_u16 _readOffset)
+{
+	_u16 writeOffset = GetWriteOffset();
+	_u16 readOffset = Math::Min(_readOffset, writeOffset);	// 당연히 쓰기 옵셋이하밖에 설정 못함.
+	if (readOffset == readOffset_)
+		return; // 변경 없음
+
+	if (readOffset == 0)
+	{
+		ResetReadOffset();
+		return;
+	}
+
+	readMemOffset_ = CalcMemOffset(readOffset);
+	readOffset_ = readOffset; // CalcMemOffset 내부에서 readOffset_을 활용하기 때문에 밑에서 넣어줄것
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void CMessageContext::SetWriteOffset(_u16 _writeOffset)
+{
+	auto& header = GetMsgHeader();
+	_u16 srcWriteOffset = header.writeOffset_;
+	_u16 dstWriteOffset = Math::Min(_writeOffset, srcWriteOffset); // 쓰기 옵셋은 당연히 더 크게 설정 불가능 (내리는 것만 가능)
+	if (dstWriteOffset == srcWriteOffset)
+		return;
+
+	if (dstWriteOffset == 0)
+	{
+		ResetWriteOffset();
+		return;
+	}
+
+	header.writeMemOffset_ = CalcMemOffset(dstWriteOffset);
+	header.writeOffset_ = dstWriteOffset;
+
+	if (readOffset_ > dstWriteOffset)
+	{
+		readMemOffset_ = header.writeMemOffset_;
+		readOffset_ = dstWriteOffset;
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void CMessageContext::ResetReadOffset()
+{
+	readOffset_ = 0;
+	readMemOffset_ = 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void CMessageContext::ResetWriteOffset()
+{
+	auto& header = GetMsgHeader();
+	header.writeOffset_ = 0;
+	header.writeMemOffset_ = 0;
+	ResetReadOffset(); // 쓰기 옵셋이 초기화되면 읽기 옵셋도 초기화되어야함
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// : _offset일 때의 메모리 옵셋을 계산한다.
+_u32 CMessageContext::CalcMemOffset(_u16 _offset) const
+{
+	CMessageHeader& header = GetMsgHeader();
+	const _u16 HEADER_SIZE = GetHeaderSize();
+
+	if (_offset > header.writeOffset_)
+	{
+		_offset = header.writeOffset_;
+	}
+
+	if (_offset > readOffset_) 
+	{
+		// 운이 좋다. 읽기 옵셋보다 write offset이 더 많이 올라가있어서, 현재 읽기 위치에서부터 계산할 수 있다.
+		_u32 remaining = header.writeMemOffset_ - readMemOffset_;
+		_u32 memOffset = readMemOffset_;
+		_u8* pRead = pBuf_ + HEADER_SIZE + readMemOffset_;
+
+		for (_u16 i = readOffset_; i < _offset; ++i)
+		{
+			_u32 memSize = 0;
+			CMessage::VariantType typeCode = PeekVT(pRead, remaining, &memSize);
+			if (typeCode == CMessage::vt_none)
+				return Memory::INVALID_OFFSET;
+			if (remaining < memSize)
+				return Memory::INVALID_OFFSET;
+
+			remaining -= memSize;
+			memOffset += memSize;
+			pRead += memSize;
+		}
+		return memOffset;
+	}
+
+	// 처음부터 읽어야한다.
+	_u32 remaining = header.writeMemOffset_;
+	_u32 memOffset = 0;
+	_u8* pRead = pBuf_ + HEADER_SIZE;
+
+	for (_u16 i = 0; i < _offset; ++i)
+	{
+		if (remaining == 0)
+		{
+			jc_assert(false);
+			return memOffset;
+		}
+
+		_u32 memSize = 0;
+		CMessage::VariantType typeCode = PeekVT(pRead, remaining, &memSize);
+		if (typeCode == CMessage::vt_none)
+		{
+			return memOffset;
+		}
+
+		if (remaining < memSize)
+		{
+			jc_assert(false);
+			return memOffset;
+		}
+
+		remaining -= memSize;
+		memOffset += memSize;
+		pRead += memSize;
+	}
+
+	return memOffset;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 CMessage::VariantType CMessageContext::GetCurrentVT() const
+{
+	return GetCurrentVT(nullptr);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+CMessage::VariantType CMessageContext::GetCurrentVT(OUT _u32* _pMemSize) const
 {
 	const CMessageHeader& header = GetMsgHeader();
 
@@ -447,10 +596,8 @@ CMessage::VariantType CMessageContext::GetCurrentVT() const
 	}
 
 	// 현재 읽기 위치의 타입 코드만 확인
-	const _u8* pRead = pBuf_ + GetHeaderSize() + readMemOffset_;
-	const _u8 typeCode = *pRead;
-
-	return static_cast<CMessage::VariantType>(typeCode);
+	_u8* pRead = pBuf_ + GetHeaderSize() + readMemOffset_;
+	return PeekVT(pRead, remaining, _pMemSize);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -522,7 +669,7 @@ void CMessageContext::WriteBinaryImpl(CMessage::VariantType _type, const _u8* _p
 	// 2) 길이 LEB128 기록
 	const _u32 writtenLenBytes = Memory::WriteU32_LEB128(pWrite, memCapacity_ - static_cast<_u32>(pWrite - pBuf_), _len);
 	// 실패(0xffffffff) 시 방어
-	if (writtenLenBytes == 0xffffffff)
+	if (writtenLenBytes == Memory::INVALID_OFFSET)
 	{
 		jc_assert(false);
 		return;
@@ -535,6 +682,32 @@ void CMessageContext::WriteBinaryImpl(CMessage::VariantType _type, const _u8* _p
 	// 헤더 갱신
 	++pHeader->writeOffset_;
 	pHeader->writeMemOffset_ += elemSize;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+CMessage::VariantType CMessageContext::ReadAny(OUT _u32* _pMemSize /*= nullptr*/)
+{
+	CMessageHeader& header = GetMsgHeader();
+
+	if (readOffset_ >= header.writeOffset_)
+	{
+		jc_assert_msg(false, "CMessageContext::ReadAny - no more elements to read");
+		return CMessage::vt_none;
+	}
+
+	_u32 memSize = 0;
+	auto vt = GetCurrentVT(&memSize);
+	if (vt != CMessage::vt_none)
+	{
+		if (_pMemSize)
+		{
+			*_pMemSize = memSize;
+		}
+
+		readOffset_++;
+		readMemOffset_ += memSize;
+	}
+	return vt;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -671,7 +844,7 @@ int CMessageContext::TryReadBinaryImpl(CMessage::VariantType _expectedType, _u8*
 	++pRead; // 타입 코드 읽었으니 다음으로 이동
 	_u32 length = 0;
 	_u32 readLenBytes = Memory::ReadU32_LEB128(pRead, remaining - 1, length);
-	if (readLenBytes == 0xffffffff)
+	if (readLenBytes == Memory::INVALID_OFFSET)
 		return -5; // LEB128 길이 정보가 잘못된 경우
 	_u32 totalSize = 1 + readLenBytes + length; // 타입 코드 + 길이 정보 + 실제 데이터
 	if (remaining < totalSize)
@@ -727,6 +900,40 @@ const char* CMessageContext::GetBinaryReadErrorMessage(int _errorCode)
 	case -8: return "_ppBuf is nullptr";
 	default: return "unknown";
 	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u8* CMessageContext::GetValue(_u16 _offset, OUT CMessage::VariantType& _type, OUT _u32& _elemValueSize)
+{
+	CMessage::VariantType type = CMessage::vt_none;
+	_u32 memSize = 0;
+	_u32 vtSize = 0;
+
+	CMessageHeader& header = GetMsgHeader();
+
+	if (_offset == 0)
+	{
+		_u8* pRead = pBuf_ + GetHeaderSize();
+		type = PeekVT(pRead, header.writeMemOffset_, &memSize, &vtSize);
+		if (type == CMessage::vt_none)
+			return nullptr;
+		_type = type;
+		_elemValueSize = memSize - 1 - vtSize;
+		return pRead + 1 + vtSize;
+	}
+
+	if (_offset > header.writeOffset_)
+		return nullptr;
+	_u32 memOffset = CalcMemOffset(_offset - 1);
+	if (memOffset == Memory::INVALID_OFFSET)
+		return nullptr;
+	if (memOffset >= header.writeMemOffset_)
+		return nullptr;
+	_u8* pRead = pBuf_ + GetHeaderSize() + memOffset;
+	type = PeekVT(pRead, header.writeMemOffset_ - memOffset, &memSize, &vtSize);
+	_type = type;
+	_elemValueSize = memSize - 1 - vtSize;
+	return pRead + 1 + vtSize;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -897,7 +1104,7 @@ jc::String CMessageContext::Dump() const
 			{
 				_u32 length = 0;
 				_u32 readLenBytes = Memory::ReadU32_LEB128(pRead, remaining, length);
-				if (readLenBytes == 0xffffffff)
+				if (readLenBytes == Memory::INVALID_OFFSET)
 				{
 					str += "  <invalid LEB128 length info>\n";
 					break;
@@ -940,6 +1147,73 @@ jc::String CMessageContext::Dump() const
 	}
 
 	return str;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+CMessage::VariantType CMessageContext::PeekVT(_u8* _pBuf, _u32 _capacity, OUT _u32* _pMemSize /*= nullptr*/, OUT _u32* _pVTSize /*= nullptr*/)
+{
+	if (_pBuf == nullptr || _capacity == 0)
+	{
+		jc_assert(false);
+		return CMessage::vt_none;
+	}
+
+	const _u8 typeCode = *_pBuf;
+	const _u32 elemMemSize = CMessage::GetElemMemSize(typeCode);
+
+	if (_pMemSize)
+	{
+		if (elemMemSize == CMessage::MEM_SIZE_VARIANT) // 가변요소
+		{
+			if (_capacity < 2)
+			{
+				jc_assert(false);
+				return CMessage::vt_none;
+			}
+
+			_u32 length = 0;
+			_u32 readLenBytes = Memory::ReadU32_LEB128(_pBuf + 1, _capacity - 1, length);
+			if (readLenBytes == 0xffffffff)
+			{
+				jc_assert(false);
+				return CMessage::vt_none;
+			}
+
+			const _u32 variantElemMemSize = 1 + readLenBytes + length; // 타입 코드(1바이트) + 길이 정보 + 실제 데이터
+			if (_capacity < variantElemMemSize)
+			{
+				jc_assert(false);
+				return CMessage::vt_none;
+			}
+
+			if (_pVTSize)
+			{
+				*_pVTSize = readLenBytes; // 길이 정보 + 실제 데이터
+			}
+			*_pMemSize = variantElemMemSize; // 타입 코드(1바이트) + 길이 정보 + 실제 데이터
+		}
+		else if (elemMemSize > 0)
+		{
+			if (_capacity < elemMemSize)
+			{
+				jc_assert(false);
+				return CMessage::vt_none;
+			}
+
+			if (_pVTSize)
+			{
+				*_pVTSize = 0;
+			}
+
+			*_pMemSize = elemMemSize;
+		}
+		else
+		{
+			jc_assert(false); // 이런 경우는 없어야함.
+			return CMessage::vt_none;
+		}
+	}
+	return static_cast<CMessage::VariantType>(typeCode);
 }
 
 NS_END

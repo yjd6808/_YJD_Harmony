@@ -164,8 +164,8 @@ int Session::Send(char* _pData, int _len)
 		_len -= sendResult;
 		sent += sendResult;
 
-		// 다 보낸 경우 나가도록
-		if (sent - pendingSent >= _len)
+		// 남은 데이터가 없으면 종료
+		if (_len <= 0)
 		{
 			break;
 		}
@@ -231,7 +231,7 @@ void Session::PushPendingData(char* _pData, int _len)
 {
 	if (pendingData_.Source() == nullptr)
 	{
-		pendingData_.Reserve(_len + 1);
+		pendingData_.Reserve(_len * 2 + 1);
 	}
 
 	pendingData_.PushBack(_pData, _len);
@@ -258,6 +258,10 @@ bool Session::SendAsync(IPacket* _pPacket)
 			pOverlapped->Release();
 			return false;
 		}
+	}
+	else if (iocpConnected_ == false)
+	{
+		jc_assert(false); // IOCP 연결안하고 쓰는건 일단 고려안하고 있음
 	}
 
 	return true;

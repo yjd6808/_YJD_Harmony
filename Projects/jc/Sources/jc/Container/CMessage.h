@@ -22,6 +22,9 @@ NS_JC_BEGIN
 
 class CMessageContext;
 
+template <typename T, typename TAllocator>
+class Vector;
+
 #pragma pack(push, 1) // 네트워크 스트림으로 전달도 가능하기 때문에 패킹은 1로 고정한다.
 struct CMessageHeader
 {
@@ -37,7 +40,7 @@ template <typename T>
 struct CMessage_VariantTraits
 {
 	static constexpr _u8 VARIANT_TYPE = 0; // 정의되지 않은 타입
-	static constexpr _u8 MEM_SIZE = 0; // 계산할 수 없음
+	static constexpr _u8 MEM_SIZE = 77; // 계산할 수 없음
 };
 
 template <> struct CMessage_VariantTraits<_s8> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_s8); static constexpr _u8 VARIANT_TYPE = 1; };
@@ -58,8 +61,6 @@ template <> struct CMessage_VariantTraits<void*> { static constexpr _u8 MEM_SIZE
 class JC_DLL CMessage
 {
 public:
-	static constexpr _u16 MESSAGE_HEADER_SIZE = sizeof(CMessageHeader);
-
 	CMessage(_u32 _prefixMemCapacity, _u32 _elemMemCapacity, int _msgId = 0, object_id _targetId = 0);
 	CMessage(const CMessage& _other);
 	CMessage(CMessage&& _other) noexcept;
@@ -81,7 +82,42 @@ public:
 		vt_ptr,
 		vt_string,
 		vt_binary,
+		vt_max,
 	};
+
+	static constexpr _u16 MESSAGE_HEADER_SIZE = sizeof(CMessageHeader);
+	static constexpr _u8  MEM_SIZE_VARIANT = 77; // 요소 크기가 가변적인 타입의 메모리 크기를 지칭함
+	static constexpr _u8  MEM_SIZE[vt_max]
+	{
+		0,
+		CMessage_VariantTraits<_s8>::MEM_SIZE,
+		CMessage_VariantTraits<_u8>::MEM_SIZE,
+		CMessage_VariantTraits<_s16>::MEM_SIZE,
+		CMessage_VariantTraits<_u16>::MEM_SIZE,
+		CMessage_VariantTraits<_s32>::MEM_SIZE,
+		CMessage_VariantTraits<_u32>::MEM_SIZE,
+		CMessage_VariantTraits<_s64>::MEM_SIZE,
+		CMessage_VariantTraits<_u64>::MEM_SIZE,
+		CMessage_VariantTraits<_f32>::MEM_SIZE,
+		CMessage_VariantTraits<_f64>::MEM_SIZE,
+		CMessage_VariantTraits<void*>::MEM_SIZE,
+		MEM_SIZE_VARIANT,
+		MEM_SIZE_VARIANT,
+	};
+
+	void		ResetWriteOffset();	// write offset을 초기화한다. 그에 맞춰서 write mem offset도 초기화된다.
+	void		ResetReadOffset();	// read offset을 초기화한다. 그에 맞춰서 read mem offset도 초기화된다.
+
+	void		SetWriteOffset(_u16 _writeOffset); // write offset을 옮긴다. write mem offset은 write offset에 맞춰서 자동으로 계산한다. (내리는 것만 가능)
+	void		SetReadOffset(_u16 _readOffset); // write offset과 write mem offset, read offset과 read mem offset을 모두 초기화한다.
+
+	_u16		GetWriteOffset() const;
+	_u16		GetReadOffset() const;
+
+	// 좀더 안전하게 내부 포인터값을 얻을 수 있도록 함.
+	_u8*		GetValue(_u32 _offset, OUT VariantType& _type, OUT _u32& _elemValueSize) const;
+	VariantType GetVT(_u32 _offset);
+	VariantType	GetCurrentVT() const;
 
 	void		WriteS8(_s8 _value);
 	void		WriteU8(_u8 _value);
@@ -98,7 +134,25 @@ public:
 	void		WritePtr(void* _value);
 	void		WriteString(const String& _str);
 	void		WriteBinary(const _u8* _pBytes, _u32 _len);
+	void		WriteBinaryDummy(_u32 _len);
 
+	// 해당 값을 저장하고 저장된 값의 메모리 주소를 얻음. 밖에서도 조작가능하도록 하기 위함. (포인터는 당연히 눈치껏 CMessage 소멸되기전에만 사용)
+	// 아래 함수는 내부 버퍼 확장이 발생할 경우 포인터가 무효화될 수 있음. (눈치껏 똑바로 쓸 것)
+	// 위험함.
+	void		WriteS8(_s8 _value, OUT _s8** _ppAddr);
+	void		WriteU8(_u8 _value, OUT _u8** _ppAddr);
+	void		WriteS16(_s16 _value, OUT _s16** _ppAddr);
+	void		WriteU16(_u16 _value, OUT _u16** _ppAddr);
+	void		WriteS32(_s32 _value, OUT _s32** _ppAddr);
+	void		WriteS32L(_s32l _value, OUT _s32l** _ppAddr);
+	void		WriteU32(_u32 _value, OUT _u32** _ppAddr);
+	void		WriteU32L(_u32l _value, OUT _u32l** _ppAddr);
+	void		WriteS64(_s64 _value, OUT _s64** _ppAddr);
+	void		WriteU64(_u64 _value, OUT _u64** _ppAddr);
+	void		WriteFloat(_f32 _value, OUT _f32** _ppAddr);
+	void		WriteDouble(_f64 _value, OUT _f64** _ppAddr);
+
+	VariantType	ReadAny();	// read offset을 하나 증가시키면서 해당 요소 타입을 반환한다. (read_offset을 증가 시키고 싶을 때)
 	_s8			ReadS8();
 	_u8			ReadU8();
 	_s16		ReadS16();
@@ -133,11 +187,9 @@ public:
 	bool		TryReadBinary(Span<_u8> _buffer, _u32& _outLen);
 	bool		TryReadBinary(_u8* _pBytes, _u32 _capacity, _u32& _outLen);
 
-	VariantType	GetCurrentVT() const;
-
-	String		Dump() const { return Dump(*this);}
+	String			Dump() const;
 	static String	Dump(const CMessage& _other);
-	static _u32		GetElemSize(_u8 _typeCode);
+	static _u32		GetElemMemSize(_u8 _typeCode);
 private:
 	CMessageContext* pContext_ = nullptr; // 참조 카운트 기반 공유 컨텍스트
 };
@@ -163,12 +215,21 @@ public:
 	_u16 GetReadOffset() const { return readOffset_; }
 	_u32 GetReadMemOffset() const { return readMemOffset_; }
 
+	void SetReadOffset(_u16 _readOffset);
+	void SetWriteOffset(_u16 _writeOffset);
+
+	void ResetReadOffset();
+	void ResetWriteOffset();
+
+	_u32 CalcMemOffset(_u16 _offset) const;
+
 	CMessage::VariantType GetCurrentVT() const;
+	CMessage::VariantType GetCurrentVT(OUT _u32* _pMemSize) const;
 
 	bool EnsureCapacity(_u32 _requiredCapacity);
 
 	template <template <typename> class TypeTraits, typename T>
-	void WriteValue(T _value)
+	void WriteValue(T _value, T** _ppOut = nullptr)
 	{
 		// 지원 안되는 타입이면 컴파일 타임 에러
 		static_assert(TypeTraits<T>::VARIANT_TYPE != 0, "Unsupported type for CMessageContext::WriteValue");
@@ -200,6 +261,11 @@ public:
 
 		// 2) 실제 값 기록
 		*reinterpret_cast<T*>(pWrite) = _value;
+
+		if (_ppOut)
+		{
+			*_ppOut = reinterpret_cast<T*>(pWrite);
+		}
 
 		++pHeader->writeOffset_;
 		pHeader->writeMemOffset_ += ELEM_SIZE;
@@ -267,18 +333,23 @@ public:
 	void	WriteBinary(const _u8* _pBytes, _u32 _len);
 	void	WriteBinaryImpl(CMessage::VariantType _type, const _u8* _pBytes, _u32 _len);
 
-	String	ReadString();
-	bool	ReadBinary(Span<_u8> _buffer, OUT _u32& _outLen);
-	bool 	ReadBinary(_u8* _pBytes, _u32 _capacity, OUT _u32& _outLen);
+	CMessage::VariantType		ReadAny(OUT _u32* _pMemSize);
+	String						ReadString();
+	bool						ReadBinary(Span<_u8> _buffer, OUT _u32& _outLen);
+	bool 						ReadBinary(_u8* _pBytes, _u32 _capacity, OUT _u32& _outLen);
 
-	bool	TryReadString(OUT String& _value);
-	bool	TryReadBinary(Span<_u8> _buffer, OUT _u32& _outLen);
-	bool	TryReadBinary(_u8* _pBytes, _u32 _capacity, OUT _u32& _outLen);
+	bool						TryReadString(OUT String& _value);
+	bool						TryReadBinary(Span<_u8> _buffer, OUT _u32& _outLen);
+	bool						TryReadBinary(_u8* _pBytes, _u32 _capacity, OUT _u32& _outLen);
 
-	int		TryReadBinaryImpl(CMessage::VariantType _expectedType, _u8** _ppBuf, _u32 _capacity, OUT _u32& _outLen);
-	const char* GetBinaryReadErrorMessage(int _errorCode);
+	int							TryReadBinaryImpl(CMessage::VariantType _expectedType, _u8** _ppBuf, _u32 _capacity, OUT _u32& _outLen);
+	const char*					GetBinaryReadErrorMessage(int _errorCode);
+
+	_u8*		GetValue(_u16 _offset, OUT CMessage::VariantType& _type, OUT _u32& _elemValueSize);
 
 	jc::String Dump() const;
+
+	static CMessage::VariantType PeekVT(_u8* _pBuf, _u32 _capacity, OUT _u32* _pMemSize = nullptr, OUT _u32* _pVTSize = nullptr);
 
 	_u32	prefixMemCapacity_ = 0;			// 접두 메모리 크기
 	_u32	memCapacity_ = 0;				// 전체 메모리 용량

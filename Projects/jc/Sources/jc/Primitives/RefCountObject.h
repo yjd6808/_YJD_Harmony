@@ -22,7 +22,7 @@ struct RefCountObject
 	// m_iRef가 0이하가 되는 순간이 2회 이상인 경우가 되면 안됨.
 	void Release(int _count = 1);
 protected:
-    virtual void ReleaseAction() {}
+	virtual void ReleaseAction() { delete this; }
 private:
     Atomic<int> m_iRef;
 };

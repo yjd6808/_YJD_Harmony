@@ -169,6 +169,7 @@ public:
 		return i;
 	}
 
+	static constexpr _u32 INVALID_OFFSET = 0xffffffff;
 	static _u32 ReadU32_LEB128(const _u8* _pBytes, _u32 _capacity, OUT _u32& _value)
 	{
 		_value = 0;
@@ -189,10 +190,10 @@ public:
 			shift += 7;
 			if (shift >= 32)
 			{
-				return 0xffffffff; // U32 범위를 벗어나는 잘못된 LEB128
+				return INVALID_OFFSET; // U32 범위를 벗어나는 잘못된 LEB128
 			}
 		}
-		return 0xffffffff;
+		return INVALID_OFFSET;
 	}
 };
 
