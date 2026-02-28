@@ -53,8 +53,10 @@ public:
 		TCommand::_Construct(pCmd, _count);
 
 		MoveReadPos(cmdSize);
-		AddCommandCount();
-		AddPacketLength(cmdSize);
+
+		PacketHeader& header = GetPacketHeader();
+		++header.cmdCount_;
+		header.payloadLen_ += cmdSize;
 		return *pCmd;
 	}
 
@@ -62,16 +64,15 @@ public:
 
 	static jc::SharedPtr<CommandBuffer> Create(const jc::MemoryPoolAbstractPtr& _allocator, int _bufferSize = 6000);
 
-	void Initialize();
-	void AddCommandCount();
-	void AddPacketLength(int _size);
-	bool IsValid() const;
-	int GetBufferRequestSize()
-	{
-		return requestBufferSize_;
-	}
-	CmdCnt_t GetCommandCount();
-	PktLen_t GetPacketLength();
+	void			Initialize();
+	bool			IsValid() const;
+	
+	int				GetBufferRequestSize() { return requestBufferSize_; }
+	CmdCnt_t		GetCommandCount();
+	PktLen_t		GetPayloadLength();
+
+private:
+	PacketHeader&	GetPacketHeader() { return *reinterpret_cast<PacketHeader*>(buffer_); }
 
 private:
 	int requestBufferSize_;

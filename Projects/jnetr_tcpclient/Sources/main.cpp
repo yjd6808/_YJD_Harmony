@@ -19,8 +19,6 @@ TcpClientNetGroup* pClientGroup;
 //////////////////////////////////////////////////////////////////////////////////////////
 int main(int _argc, char** _argv)
 {
-    DefaultParserType = PacketParser::Command;
-
 	IPv4EndPoint a{ "127.0.0.1:5555" };
 
     Winsock::Initialize(2, 2);
@@ -46,12 +44,12 @@ int main(int _argc, char** _argv)
         }
     }
 
-	Thread::Sleep(5000);
     JC_DELETE_SAFE(pClientGroup);
 
     FinalizeNetLogger();
     FinalizeJCore();
     Winsock::Finalize();
+	
     return 0;
 }
 

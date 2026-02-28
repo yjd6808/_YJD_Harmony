@@ -20,14 +20,24 @@ USING_NS_JC;
 USING_NS_JNET;
 USING_NS_JDB;
 
+static AuthenticationManager::Schedule* scheduleAuthMgr;
+
 ////////////////////////////////////////////////////////////////////////////////////////
 void InitializeAuthCore()
 {
-	g_cScheduler.AddFirstTask(dbg_new AuthenticationManager::Schedule);
+	g_cAuthMgr;
+	g_cScheduler.AddFirstTask(scheduleAuthMgr = dbg_new AuthenticationManager::Schedule);
 	g_cNetGroup_InterServ.Parser().AddCommand<SAU_AuthenticationCheck>(R_AUTHENTICATION::RECV_SAU_AuthenticationCheck);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 void FinalizeAuthCore()
 {
+	// 해당 스케쥴에서 g_cAuthMgr를 접근한다. 미리 스케쥴을 종료시킨다.
+	if (scheduleAuthMgr)
+	{
+		scheduleAuthMgr->Disable();
+	}
+
+	g_cAuthMgr.Free();
 }

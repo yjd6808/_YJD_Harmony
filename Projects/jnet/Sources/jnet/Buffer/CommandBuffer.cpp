@@ -59,24 +59,16 @@ CommandBufferPtr CommandBuffer::Create(const jc::MemoryPoolAbstractPtr& _allocat
 //////////////////////////////////////////////////////////////////////////////////////////
 void CommandBuffer::Initialize()
 {
-	jc::Arrays::Fill(buffer_, COMMAND_PACKET_HEADER_SIZE, (char)0);
+	jc::Arrays::Fill(buffer_, PACKET_HEADER_SIZE, (char)0);
 
-	readPos_ += COMMAND_PACKET_HEADER_SIZE;
-	writePos_ += COMMAND_PACKET_HEADER_SIZE;
-}
+	PacketHeader& header = GetPacketHeader();
+	header.packetType_ = PacketType::Command;
+	header.magicNumber_ = PACKET_MAGIC_NUMBER;
+	header.payloadLen_ = 0;
+	header.cmdCount_ = 0;
 
-//////////////////////////////////////////////////////////////////////////////////////////
-void CommandBuffer::AddCommandCount()
-{
-	CmdCnt_t& commandCount = *(CmdCnt_t*)buffer_;
-	++commandCount;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void CommandBuffer::AddPacketLength(int _size)
-{
-	PktLen_t& pktLen = *(PktLen_t*)(buffer_ + sizeof(CmdCnt_t));
-	pktLen += _size;
+	readPos_ += PACKET_HEADER_SIZE;
+	writePos_ += PACKET_HEADER_SIZE;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -90,9 +82,9 @@ bool CommandBuffer::IsValid() const
 	dbgBuffer.MoveWritePos(writePos);
 
 	int commandCount = dbgBuffer.GetCommandCount();
-	int packetLen = dbgBuffer.GetPacketLength();
+	int packetLen = dbgBuffer.GetPayloadLength();
 
-	dbgBuffer.MoveReadPos(COMMAND_PACKET_HEADER_SIZE);
+	dbgBuffer.MoveReadPos(PACKET_HEADER_SIZE);
 
 	for (int i = 0; i < commandCount; i++)
 	{
@@ -111,15 +103,13 @@ bool CommandBuffer::IsValid() const
 //////////////////////////////////////////////////////////////////////////////////////////
 CmdCnt_t CommandBuffer::GetCommandCount()
 {
-	CmdCnt_t& commandCount = *(CmdCnt_t*)buffer_;
-	return commandCount;
+	return GetPacketHeader().cmdCount_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-PktLen_t CommandBuffer::GetPacketLength()
+PktLen_t CommandBuffer::GetPayloadLength()
 {
-	PktLen_t& pktLen = *(PktLen_t*)(buffer_ + sizeof(CmdCnt_t));
-	return pktLen;
+	return GetPacketHeader().payloadLen_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -135,9 +125,9 @@ void CommandBuffer::Alloc(ICommand* _pCmd)
 	char* pMem = Peek<char*>();
 	jc::Memory::CopyUnsafe(pMem, _pCmd, cmdSize);
 	MoveReadPos(cmdSize);
-
-	AddCommandCount();
-	AddPacketLength(cmdSize);
+	PacketHeader& header = GetPacketHeader();
+	++header.cmdCount_;
+	header.payloadLen_ += cmdSize;
 }
 
 NS_END

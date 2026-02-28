@@ -263,6 +263,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Packet\PacketHeader.h" />
     <ClInclude Include="..\Sources\jnet\Packet\PacketParser.h" />
     <ClInclude Include="..\Sources\jnet\Packet\PacketViewer.h" />
     <ClInclude Include="..\Sources\jnet\Packet\SendHelper.h">

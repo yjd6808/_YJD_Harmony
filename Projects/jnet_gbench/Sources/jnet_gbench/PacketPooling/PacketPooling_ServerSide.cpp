@@ -38,7 +38,6 @@ struct ServerListener : ServerEventListener
 				TlsMemPool = MakeShared<CBinarySearchMemoryPool>();
 
 			auto pPacket = SingleCmdPacket<SC_TEST>::Create(TlsMemPool);
-			JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
 			pPacket->cmd_.Ack = ack;
 			_pSession->SendAsync(pPacket);
 		}

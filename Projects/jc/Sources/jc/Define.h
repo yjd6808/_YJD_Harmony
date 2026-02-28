@@ -161,6 +161,7 @@
 	 // enum class 쓰긴 싫고 enum은 타입 이름이 겹쳐서 싫고 대안으로 struct안에 enum 끼여서 쓰는건 어떨까?
 	 // 이번에 개발 할때 써보고 영 아니면 폐기하는걸로, 쓴지 하루지났는데 아직 갠찮은듯
 	#define JC_SENUM_BEGIN(enum_name) struct enum_name { enum_name() = delete; enum _ {
+	#define JC_SENUM_BEGIN_2(enum_name, type) struct enum_name { enum_name() = delete; enum _ : type {
 	#define JC_SENUM_INHERIT_BEGIN(enum_name, base_enum) struct enum_name : base_enum { enum_name() = delete; enum _ {
 	#define JC_SENUM_MIDDLE(enum_name) }; using enum_name##_t = enum_name::_;
 	#define JC_SENUM_MIDDLE_END(enum_name) }; using enum_name##_t = enum_name::_;

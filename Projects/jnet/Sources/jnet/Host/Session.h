@@ -104,7 +104,7 @@ protected:
 	jc::RecursiveLock sendBufferLock_;
 	jc::Vector<char> pendingData_;
 
-	PacketParser* packetParser_;
+	PacketParser packetParser_;
 
 	CommandBufferPtr recvBuffer_;
 	CommandBufferPtr sendBuffer_;

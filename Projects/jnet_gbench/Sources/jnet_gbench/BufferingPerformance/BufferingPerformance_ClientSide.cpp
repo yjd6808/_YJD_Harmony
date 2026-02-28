@@ -115,7 +115,6 @@ void ClientSide::StartTest()
 			for (int j = 0; j < TestSendCount; ++j)
 			{
 				auto pPacket = dbg_new SingleCmdPacket<CS_TEST>();
-				JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
 				pPacket->cmd_.Seq = i * TestSendCount + j;
 				ClientList[i]->SendAsync(pPacket);
 			}

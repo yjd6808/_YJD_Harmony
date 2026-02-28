@@ -410,6 +410,9 @@ bool AuthenticationManager::GenerateTimeId(OUT DateTime& _timeId, Authentication
 //////////////////////////////////////////////////////////////////////////////////////////
 void AuthenticationManager::Schedule::OnScheduled()
 {
+	if (isRunning_ == false)
+		return;
+
 	if (!AuthenticationManager::Singleton_IsDeleted()) // TODO: 싱글톤 삭제될 때 호출되는 케이스는 애초에 없어야한다. 매니저 삭제전에 스케쥴러가 먼저 정지가 되어야함,
 	{
 		AuthenticationManager::Get()->OnScheduled(this);

@@ -21,7 +21,7 @@ NS_JNET_BEGIN
 
 class ICommand;
 class IPacket;
-class RecvedCmdPacket;
+struct RecvedCmdPacket;
 class TcpServer;
 class Session;
 class Server;

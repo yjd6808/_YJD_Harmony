@@ -45,10 +45,14 @@ public:
 		void Initialize() override {}
 		void Finalize() override {}
 
+		void Disable() { isRunning_ = false; }
+
 		jc::TimeSpan Interval() override
 		{
-			return jc::TimeSpan::FromMiliSeocnd(994);
+			return jc::TimeSpan::FromMiliSeocnd(1);
 		}
+	private:
+		jc::AtomicBool isRunning_ = true;
 	};
 private:
 	AuthenticationData* IssueRaw(const  AccountData& _accountData);

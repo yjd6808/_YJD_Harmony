@@ -53,8 +53,7 @@ void PacketViewer::View(jnet::IPacket* _pPacket)
 
 	if (_pPacket->GetType() == jnet::PacketType::Command)
 	{
-		View(jnet::Transmission::Send, wsaBuf.buf, wsaBuf.len,
-		     static_cast<jnet::CmdPacket*>(_pPacket)->GetCommandCount());
+		View(jnet::Transmission::Send, wsaBuf.buf, wsaBuf.len, static_cast<jnet::CmdPacket*>(_pPacket)->GetCommandCount());
 	}
 	else if (_pPacket->GetType() == jnet::PacketType::Raw)
 	{
@@ -69,8 +68,19 @@ void PacketViewer::View(jnet::IPacket* _pPacket)
 ////////////////////////////////////////////////////////////////////////////////////////////
 void PacketViewer::View(jnet::RecvedCmdPacket* _pPacket)
 {
-	View(jnet::Transmission::Recv, reinterpret_cast<char*>(_pPacket),
-	     _pPacket->GetPacketLength() + jnet::COMMAND_PACKET_HEADER_SIZE, _pPacket->GetCommandCount());
+	
+	if (_pPacket->header_.packetType_ == jnet::PacketType::Raw)
+	{
+	}
+	else if (_pPacket->header_.packetType_ == jnet::PacketType::Command)
+	{
+		View(jnet::Transmission::Recv, (char*)_pPacket, jnet::PACKET_HEADER_SIZE + _pPacket->header_.payloadLen_, _pPacket->header_.cmdCount_);
+	}
+	else
+	{
+		jc_assert(false);
+	}
+	
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +95,7 @@ void PacketViewer::View(jnet::ICommand* _pCmd)
 		return;
 	}
 
-	Hex(reinterpret_cast<char*>(_pCmd), cmdLen, hex);
+	Hex((char*)_pCmd, cmdLen, hex);
 	_LogPlain_("[커맨드 뷰]\n커맨드 타입:%d\n커맨드: %d\n크기: %d\n헥스\n%s", _pCmd->GetType(), _pCmd->GetId(), cmdLen, hex.Source());
 }
 

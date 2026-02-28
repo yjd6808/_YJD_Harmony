@@ -37,8 +37,6 @@ NS_END
 //////////////////////////////////////////////////////////////////////////////////////////
 void InitializeCommonCore()
 {
-	DefaultParserType = PacketParser::Command;
-
 	g_cRandom.Initialize();
 
 	// 설정

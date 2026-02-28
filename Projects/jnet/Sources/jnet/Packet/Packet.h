@@ -28,13 +28,6 @@
 
 NS_JNET_BEGIN
 
-enum class PacketType
-{
-	Raw,
-	Command,
-	Message,
-};
-
 // 매크로 처리로 인해 라인 디버깅이 힘들 수 있음
 #define JNET_PACKET_POOLING_PARAMS_0()                          const jc::MemoryPoolAbstractPtr& allocator
 #define JNET_PACKET_POOLING_PARAMS_1(argty1)                    const jc::MemoryPoolAbstractPtr& allocator, argty1 arg1
@@ -103,11 +96,13 @@ public:
 	~IPacket() override = default;
 
 	virtual WSABUF GetWSABuf() const = 0;
-	virtual PacketType GetType() const = 0;
 	virtual int SizeOf() const = 0;
-
+	PktLen_t GetPacketLength() const { return header_.payloadLen_; }
+	PacketType_t GetType() const { return static_cast<PacketType_t>(header_.packetType_); }
+	MagicNum_t GetMagicNumber() const { return header_.magicNumber_; }
 protected:
 	jc::MemoryPoolAbstractPtr allocator_; // 소멸 시 반환될 메모리풀
+	PacketHeader header_{};
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -118,15 +113,56 @@ class RawPacket : public IPacket
 public:
 	RawPacket(char* _pData, int _length)
 	{
-		buf_.buf = _pData;
-		buf_.len = _length;
+		jc_assert(_pData != nullptr);
+		jc_assert(_length > 0);
+
+		header_.packetType_ = PacketType::Raw;
+		header_.payloadLen_ = static_cast<PktLen_t>(_length);
+
+		const int totalLen = PACKET_HEADER_SIZE + _length;
+
+		char* pBuf = dbg_new char[totalLen];
+
+		buf_.buf = pBuf;
+		buf_.len = totalLen;
+
+		std::memcpy(pBuf, &header_, sizeof(header_));
+		std::memcpy(pBuf + PACKET_HEADER_SIZE, _pData, _length);
 	}
 
 	RawPacket(const jc::MemoryPoolAbstractPtr& _allocator, char* _pData, int _length)
-		: IPacket(_allocator)
+	: IPacket(_allocator)
 	{
-		buf_.buf = _pData;
-		buf_.len = _length;
+		jc_assert(_pData != nullptr);
+		jc_assert(_length > 0);
+
+		header_.packetType_ = PacketType::Raw;
+		header_.payloadLen_ = static_cast<PktLen_t>(_length);
+
+		const int totalLen = PACKET_HEADER_SIZE + _length;
+
+		// 여기에서 메모리풀 사용
+		char* pBuf = allocator_.Exist()
+			? static_cast<char*>(allocator_->DynamicPop(totalLen))
+			: dbg_new char[totalLen];
+
+		buf_.buf = pBuf;
+		buf_.len = totalLen;
+
+		std::memcpy(pBuf, &header_, sizeof(header_));
+		std::memcpy(pBuf + PACKET_HEADER_SIZE, _pData, _length);
+	}
+
+	~RawPacket()
+	{
+		if (allocator_.Exist())
+		{
+			allocator_->DynamicPush(buf_.buf, static_cast<int>(buf_.len));
+		}
+		else
+		{
+			JC_DELETE_ARRAY_SAFE(buf_.buf);
+		}
 	}
 
 	JNET_PACKET_POOLING_CREATE(char*, int)
@@ -135,11 +171,6 @@ public:
 	WSABUF GetWSABuf() const override
 	{
 		return buf_;
-	}
-
-	PacketType GetType() const override
-	{
-		return PacketType::Raw;
 	}
 
 	int SizeOf() const override
@@ -165,7 +196,7 @@ private:
 	===================================================================================================
    CmdPacket  |  GenericCommand<A>  |  GenericCommand<B> | CmdPacket | GenericCommand<C>  |
 	===================================================================================================
-	COMMAND_PACKET_HEADER_SIZE      GetPacketLength()
+	PACKET_HEADER_SIZE      GetPacketLength()
 		   ↓                        ↓
 		   4      sizeof(GenericCommand<A>) + sizeof(GenericCommand<B>)
 
@@ -175,41 +206,39 @@ struct CmdPacket : IPacket
 {
 	CmdPacket() = default;
 
-	explicit CmdPacket(const jc::MemoryPoolAbstractPtr& _allocator)
-		: IPacket(_allocator)
+	explicit CmdPacket(const jc::MemoryPoolAbstractPtr& _allocator) : IPacket(_allocator)
 	{
+		header_.packetType_ = PacketType::Command;
 	}
 
 	CmdPacket(CmdCnt_t _commandCount, PktLen_t _packetLength)
-		: commandCount_(_commandCount)
-		, packetLength_(_packetLength)
 	{
+		header_.packetType_ = PacketType::Command;
+		header_.cmdCount_ = _commandCount;
+		header_.payloadLen_ = _packetLength;
 	}
 
 	CmdPacket(const jc::MemoryPoolAbstractPtr& _allocator, CmdCnt_t _commandCount, PktLen_t _packetLength)
-		: IPacket(_allocator)
-		, commandCount_(_commandCount)
-		, packetLength_(_packetLength)
+	: IPacket(_allocator)
 	{
+		header_.packetType_ = PacketType::Command;
+		header_.cmdCount_ = _commandCount;
+		header_.payloadLen_ = _packetLength;
 	}
 
 	~CmdPacket() override = default;
 
-	PktLen_t GetPacketLength() const
-	{
-		return packetLength_;
-	}
 
 	CmdCnt_t GetCommandCount() const
 	{
-		return commandCount_;
+		return header_.cmdCount_;
 	}
 
 	virtual char* GetCommandSource() const = 0; // 커맨드 시작위치 반환
 
 	ICommand* GetCommand(int _index)
 	{
-		if (_index >= commandCount_ || _index < 0)
+		if (_index >= header_.cmdCount_ || _index < 0)
 		{
 			return nullptr;
 		}
@@ -218,7 +247,7 @@ struct CmdPacket : IPacket
 		char* pCommandData = GetCommandSource();
 		int index = 0;
 
-		while (index < commandCount_)
+		while (index < header_.cmdCount_)
 		{
 			pCommand = reinterpret_cast<ICommand*>(pCommandData);
 
@@ -239,7 +268,7 @@ struct CmdPacket : IPacket
 		int commandIndex = 0;
 		char* pCommandData = GetCommandSource();
 
-		while (commandIndex < commandCount_)
+		while (commandIndex < header_.cmdCount_)
 		{
 			ICommand* pCurrentCommand = reinterpret_cast<ICommand*>(pCommandData);
 			_consumer(pCurrentCommand);
@@ -254,44 +283,22 @@ struct CmdPacket : IPacket
 			++commandIndex;
 		}
 	}
-
-	PacketType GetType() const override
-	{
-		return PacketType::Command;
-	}
-
-protected:
-	CmdCnt_t commandCount_{};
-	PktLen_t packetLength_{}; /// IPacket 크기를 제외한 커맨드들의 총 크기
-	// ICommand의 CmdLen은 헤더 포함이지만 이녀석은 포함안됨
 };
 
 
 // 패킷을 받을 때는 가상 함수 테이블이 없는 구조체로 받자.
-class RecvedCmdPacket
+
+struct RecvedCmdPacket
 {
-public:
 	RecvedCmdPacket() = delete;
 	~RecvedCmdPacket() = delete;
 
-	_u16 GetPacketLength() const
-	{
-		return packetLength_;
-	}
-
-	_u16 GetCommandCount() const
-	{
-		return commandCount_;
-	}
-
 	void ForEach(const jc::Action<ICommand*>& _consumer);
+	RecvedCmdPacket* Clone() const; // 삭제 시 필히 Delete 함수를 호출해서 삭제해줄 것.
+	void Delete();
 
-	// 삭제 시 필히 char*로 캐스팅 후 delete[] 해줄 것
-	RecvedCmdPacket* Clone() const;
-
-protected:
-	_u16 commandCount_{};
-	_u16 packetLength_{};
+	PacketHeader header_;
+	char payload_[1];		// raw bytes
 };
 
 /*=====================================================================================
@@ -316,7 +323,7 @@ public:
 
 	WSABUF GetWSABuf() const override
 	{
-		return {static_cast<ULONG>(buffer_->GetWritePos()), buffer_->Source()};
+		return {static_cast<ULONG>(pBuf_->GetWritePos()), pBuf_->Source()};
 	}
 
 	int SizeOf() const override
@@ -324,19 +331,12 @@ public:
 		return sizeof(TPacket);
 	}
 
-	PacketType GetType() const override
-	{
-		return PacketType::Command;
-	}
-
 	char* GetCommandSource() const override
 	{
-		return buffer_->Source() + COMMAND_PACKET_HEADER_SIZE;
+		return pBuf_->Source() + PACKET_HEADER_SIZE;
 	}
-
-
 private:
-	CommandBufferPtr buffer_;
+	CommandBufferPtr pBuf_;
 };
 
 /*=====================================================================================
@@ -388,18 +388,17 @@ public:
 
 		*/
 		// 패킷 상위 4바이트는 패킷 헤더로 사용한다.
-		*(CmdCnt_t*)(buffer_ + 0) = commandCount_;
-		*(PktLen_t*)(buffer_ + sizeof(CmdCnt_t)) = packetLength_;
+		std::memcpy((char*)pBuf_, &header_, sizeof(header_));
 
 		WSABUF wsaBuf;
-		wsaBuf.len = COMMAND_PACKET_HEADER_SIZE + packetLength_;
-		wsaBuf.buf = (char*)buffer_;
+		wsaBuf.len = PACKET_HEADER_SIZE + header_.payloadLen_;
+		wsaBuf.buf = (char*)pBuf_;
 		return wsaBuf;
 	}
 
 	char* GetCommandSource() const override
 	{
-		return const_cast<char*>(buffer_) + COMMAND_PACKET_HEADER_SIZE;
+		return const_cast<char*>(pBuf_) + PACKET_HEADER_SIZE;
 	}
 
 private:
@@ -432,7 +431,7 @@ private:
 
 	char* CommandBuf() const
 	{
-		return const_cast<char*>(buffer_) + COMMAND_PACKET_HEADER_SIZE; // 상위 4바이트는 헤더로 사용
+		return const_cast<char*>(pBuf_) + PACKET_HEADER_SIZE; // 상위 4바이트는 헤더로 사용
 	}
 
 public:
@@ -460,7 +459,7 @@ private:
 	static constexpr int PACKET_LEN = (... + static_cast<int>(sizeof(CommandArgs)));
 	static constexpr int COMMAND_COUNT = sizeof...(CommandArgs);
 
-	char buffer_[PACKET_LEN + COMMAND_PACKET_HEADER_SIZE]{};
+	char pBuf_[PACKET_LEN + PACKET_HEADER_SIZE]{};
 };
 
 
@@ -505,23 +504,23 @@ public:
 
 		InitializeCountRecursive<0>(_counts...);
 
-		packetLength_ = cmdEndPos_[COMMAND_COUNT];
-		commandCount_ = COMMAND_COUNT;
+		header_.payloadLen_ = cmdEndPos_[COMMAND_COUNT];
+		header_.cmdCount_ = COMMAND_COUNT;
 
 		if (_nullableAllocator != nullptr)
 		{
 			if constexpr (!std::is_null_pointer_v<TAllocator>)
 			{
-				dynamicBuf_ = static_cast<char*>(_nullableAllocator->DynamicPop(COMMAND_PACKET_HEADER_SIZE + packetLength_));
+				pBuf_ = static_cast<char*>(_nullableAllocator->DynamicPop(PACKET_HEADER_SIZE + header_.payloadLen_));
 			}
 			else
 			{
-				dynamicBuf_ = dbg_new char[COMMAND_PACKET_HEADER_SIZE + packetLength_];
+				pBuf_ = dbg_new char[PACKET_HEADER_SIZE + header_.payloadLen_];
 			}
 		}
 		else
 		{
-			dynamicBuf_ = dbg_new char[COMMAND_PACKET_HEADER_SIZE + packetLength_];
+			pBuf_ = dbg_new char[PACKET_HEADER_SIZE + header_.payloadLen_];
 		}
 
 		ConstructRecursive<0>(_counts...);
@@ -531,11 +530,11 @@ public:
 	{
 		if (allocator_.Exist())
 		{
-			allocator_->DynamicPush(dynamicBuf_, COMMAND_PACKET_HEADER_SIZE + packetLength_);
+			allocator_->DynamicPush(pBuf_, PACKET_HEADER_SIZE + header_.payloadLen_);
 		}
 		else
 		{
-			JC_DELETE_ARRAY_SAFE(dynamicBuf_);
+			JC_DELETE_ARRAY_SAFE(pBuf_);
 		}
 	}
 
@@ -544,18 +543,17 @@ public:
 
 	WSABUF GetWSABuf() const override
 	{
-		*reinterpret_cast<CmdCnt_t*>(dynamicBuf_ + 0) = commandCount_;
-		*reinterpret_cast<PktLen_t*>(dynamicBuf_ + sizeof(CmdCnt_t)) = packetLength_;
+		std::memcpy((char*)pBuf_, &header_, sizeof(header_));
 
 		WSABUF wsaBuf;
-		wsaBuf.len = COMMAND_PACKET_HEADER_SIZE + packetLength_;
-		wsaBuf.buf = dynamicBuf_;
+		wsaBuf.len = PACKET_HEADER_SIZE + header_.payloadLen_;
+		wsaBuf.buf = pBuf_;
 		return wsaBuf;
 	}
 
 	char* GetCommandSource() const override
 	{
-		return dynamicBuf_ + COMMAND_PACKET_HEADER_SIZE;
+		return pBuf_ + PACKET_HEADER_SIZE;
 	}
 
 	template <int Index>
@@ -619,14 +617,14 @@ private:
 
 	char* CommandBuf() const
 	{
-		return dynamicBuf_ + COMMAND_PACKET_HEADER_SIZE;
+		return pBuf_ + PACKET_HEADER_SIZE;
 	}
 
 private:
 	static constexpr int COMMAND_COUNT = sizeof...(CommandArgs);
 
 	int cmdEndPos_[COMMAND_COUNT + 1]{}; // 각 커맨드 길이 임시 기록용
-	char* dynamicBuf_{};
+	char* pBuf_{};
 };
 
 
@@ -647,38 +645,37 @@ class SingleCmdPacket<TCommand, true> : public CmdPacket
 {
 	CMD_CHECK_BASE_OF_COMMAND(TCommand)
 
-		using TPacket = SingleCmdPacket<TCommand>;
+	using TPacket = SingleCmdPacket<TCommand>;
 
 public:
 	// count 매개변수는 다이나믹 커맨드 처리를 위한 특수화 SingleCmdPacket과의 호환성을 위해 둠
 	explicit SingleCmdPacket(int _count = 0)
-		: CmdPacket(1, static_cast<PktLen_t>(sizeof(TCommand)))
-		, cmd_(*reinterpret_cast<TCommand*>(buffer_ + COMMAND_PACKET_HEADER_SIZE))
+	: CmdPacket(1, static_cast<PktLen_t>(sizeof(TCommand)))
+	, cmd_(*reinterpret_cast<TCommand*>(pBuf_ + PACKET_HEADER_SIZE))
 	{
 		(void)_count;
 		jc::Memory::PlacementNew(cmd_);
 	}
 
 	SingleCmdPacket(const jc::MemoryPoolAbstractPtr& _allocator, int _count)
-		: CmdPacket(_allocator, 1, static_cast<PktLen_t>(sizeof(TCommand)))
-		, cmd_(*reinterpret_cast<TCommand*>(buffer_ + COMMAND_PACKET_HEADER_SIZE))
+	: CmdPacket(_allocator, 1, static_cast<PktLen_t>(sizeof(TCommand)))
+	, cmd_(*reinterpret_cast<TCommand*>(pBuf_ + PACKET_HEADER_SIZE))
 	{
 		(void)_count;
 		jc::Memory::PlacementNew(cmd_);
 	}
 
 	JNET_PACKET_POOLING_CREATE()
-		JNET_PACKET_POOLING_CREATE(int)
-		JNET_PACKET_POOLING_RELEASE(SingleCmdPacket)
+	JNET_PACKET_POOLING_CREATE(int)
+	JNET_PACKET_POOLING_RELEASE(SingleCmdPacket)
 
-		WSABUF GetWSABuf() const override
+	WSABUF GetWSABuf() const override
 	{
-		*reinterpret_cast<CmdCnt_t*>((char*)buffer_ + 0) = commandCount_;
-		*reinterpret_cast<PktLen_t*>((char*)buffer_ + sizeof(CmdCnt_t)) = packetLength_;
+		std::memcpy((char*)pBuf_, &header_, sizeof(header_));
 
 		WSABUF wsaBuf;
-		wsaBuf.len = COMMAND_PACKET_HEADER_SIZE + packetLength_;
-		wsaBuf.buf = (char*)buffer_;
+		wsaBuf.len = PACKET_HEADER_SIZE + header_.payloadLen_;
+		wsaBuf.buf = (char*)pBuf_;
 		return wsaBuf;
 	}
 
@@ -689,22 +686,22 @@ public:
 
 	char* GetCommandSource() const override
 	{
-		return const_cast<char*>(buffer_) + COMMAND_PACKET_HEADER_SIZE;
+		return const_cast<char*>(pBuf_) + PACKET_HEADER_SIZE;
 	}
 
 	TCommand& cmd_;
 private:
-	char buffer_[COMMAND_PACKET_HEADER_SIZE + static_cast<int>(sizeof(TCommand))]{};
+	char pBuf_[PACKET_HEADER_SIZE + static_cast<int>(sizeof(TCommand))]{};
 };
 
 
-// 다이나믹 커맨드 전용
+// 다이나izm 커맨드 전용
 template <typename TCommand>
 class SingleCmdPacket<TCommand, false> : public CmdPacket
 {
 	DYNAMIC_CMD_CHECK_ARRAY_FIELD(TCommand)
 
-		using TPacket = SingleCmdPacket<TCommand>;
+	using TPacket = SingleCmdPacket<TCommand>;
 
 public:
 	explicit SingleCmdPacket(int _count)
@@ -717,11 +714,11 @@ public:
 	// count가 0일 경우 구조체 일부가 잘리기 때문에 PlacementNew 수행시 메모리 커럽션이 발생하게 된다. 따라서 생성시에는 count가 0이더라도 1로 가정하고 처리하도록 한다.
 	//   -> 이제 0으로 사용가능, Flexible Array를 사용하기 약속함
 	SingleCmdPacket(const jc::MemoryPoolAbstractPtr& _allocator, int _count)
-		: CmdPacket(_allocator, 1, static_cast<PktLen_t>(TCommand::_Size(_count)))
-		, pDynamicBuf_(_allocator.Exist()
-			? static_cast<char*>(_allocator->DynamicPop(COMMAND_PACKET_HEADER_SIZE + TCommand::_Size(_count)))
-			: dbg_new char[COMMAND_PACKET_HEADER_SIZE + TCommand::_Size(_count)])
-		, cmd_(*reinterpret_cast<TCommand*>(pDynamicBuf_ + COMMAND_PACKET_HEADER_SIZE))
+	: CmdPacket(_allocator, 1, static_cast<PktLen_t>(TCommand::_Size(_count)))
+	, pBuf_(_allocator.Exist()
+		? static_cast<char*>(_allocator->DynamicPop(PACKET_HEADER_SIZE + TCommand::_Size(_count)))
+		: dbg_new char[PACKET_HEADER_SIZE + TCommand::_Size(_count)])
+	, cmd_(*reinterpret_cast<TCommand*>(pBuf_ + PACKET_HEADER_SIZE))
 	{
 		// m_pDynamicBuf가 최소 sizeof(TCommand)보다는 커야지 메모리 커럽션이 발생하지 않는다.
 		TCommand::_Construct(&cmd_, _count);
@@ -731,26 +728,25 @@ public:
 	{
 		if (allocator_.Exist())
 		{
-			allocator_->DynamicPush(pDynamicBuf_, COMMAND_PACKET_HEADER_SIZE + TCommand::_Size(cmd_.count_));
+			allocator_->DynamicPush(pBuf_, PACKET_HEADER_SIZE + TCommand::_Size(cmd_.count_));
 		}
 		else
 		{
-			JC_DELETE_ARRAY_SAFE(pDynamicBuf_);
+			JC_DELETE_ARRAY_SAFE(pBuf_);
 		}
 	}
 
 	JNET_PACKET_POOLING_CREATE()
-		JNET_PACKET_POOLING_CREATE(int)
-		JNET_PACKET_POOLING_RELEASE(SingleCmdPacket)
+	JNET_PACKET_POOLING_CREATE(int)
+	JNET_PACKET_POOLING_RELEASE(SingleCmdPacket)
 
-		WSABUF GetWSABuf() const override
+	WSABUF GetWSABuf() const override
 	{
-		*reinterpret_cast<CmdCnt_t*>(pDynamicBuf_ + 0) = commandCount_;
-		*reinterpret_cast<PktLen_t*>(pDynamicBuf_ + sizeof(CmdCnt_t)) = packetLength_;
+		std::memcpy((char*)pBuf_, &header_, sizeof(header_));
 
 		WSABUF wsaBuf;
-		wsaBuf.len = COMMAND_PACKET_HEADER_SIZE + packetLength_;
-		wsaBuf.buf = pDynamicBuf_;
+		wsaBuf.len = PACKET_HEADER_SIZE + header_.payloadLen_;
+		wsaBuf.buf = pBuf_;
 		return wsaBuf;
 	}
 
@@ -761,13 +757,13 @@ public:
 
 	char* GetCommandSource() const override
 	{
-		return pDynamicBuf_ + COMMAND_PACKET_HEADER_SIZE;
+		return pBuf_ + PACKET_HEADER_SIZE;
 	}
 
 	// @참고: https://stackoverflow.com/questions/2669888/initialization-order-of-class-data-members
 	// 클래스 필드는 배열한 순서대로 초기화가 이뤄진다.
 	// 따라서 참조커맨드는 무조건 다이나믹 버퍼가 초기화된 후 초기화해줘야한다.
-	char* pDynamicBuf_;
+	char* pBuf_;
 	TCommand& cmd_;
 };
 

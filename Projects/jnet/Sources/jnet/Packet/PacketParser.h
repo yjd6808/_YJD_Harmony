@@ -17,48 +17,15 @@
 NS_JNET_BEGIN
 
 class Session;
-class JC_NOVTABLE PacketParser
+class PacketParser
 {
 public:
 	PacketParser(Session* _pSession);
-	virtual ~PacketParser() = default;
+	~PacketParser() = default;
 
-	enum Type
-	{
-		Raw,                // OnReceivedRaw    -> char     단위로 파싱
-		Command,            // OnReceived       -> ICommand 단위로 파싱
-		Custom
-	};
-
-	virtual void Received(_u32l _receivedBytes) = 0;
-	virtual Type GetType() const = 0;
-
-	static PacketParser* Create(int _type, Session* _pSession);
-
+	void Received(_u32l _receivedBytes);
 protected:
 	Session* session_;
-};
-
-class PacketRawParser : public PacketParser
-{
-public:
-	PacketRawParser(Session* _pSession);
-	void Received(_u32l _receivedBytes) override;
-	Type GetType() const override
-	{
-		return Type::Raw;
-	}
-};
-
-class PacketCommandParser : public PacketParser
-{
-public:
-	PacketCommandParser(Session* _pSession);
-	void Received(_u32l _receivedBytes) override;
-	Type GetType() const override
-	{
-		return Type::Command;
-	}
 };
 
 NS_END

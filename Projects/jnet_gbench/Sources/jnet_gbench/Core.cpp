@@ -31,7 +31,6 @@ int main(int _argc, char** _argv)
     Winsock::Initialize(2, 2);
     InitializeJCore(_argc, _argv);
 
-    DefaultParserType = PacketParser::Command;
     ::benchmark::RunSpecifiedBenchmarks();
     ::benchmark::Shutdown();
 

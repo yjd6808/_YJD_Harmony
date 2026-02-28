@@ -31,23 +31,17 @@ int _sendBufferSize)
 , handle_(-1)
 , bufferAllocator_(_pBufferAllocator)
 , pendingData_(0) // Lazy-Allocation
-, packetParser_(_pPacketParser)
+, packetParser_(this)
 , recvBuffer_(nullptr)
 , sendBuffer_(nullptr)
 {
 	recvBuffer_ = MakeShared<CommandBuffer>(bufferAllocator_,_recvBufferSize <= 0 ? DefaultRecvBufferSize : _recvBufferSize);
 	sendBuffer_ = MakeShared<CommandBuffer>(bufferAllocator_,_sendBufferSize <= 0 ? DefaultSendBufferSize : _sendBufferSize);
-
-	if (packetParser_ == nullptr)
-	{
-		packetParser_ = PacketParser::Create(DefaultParserType, this);
-	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 Session::~Session()
 {
-	JC_DELETE_SAFE(packetParser_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -144,7 +138,7 @@ int Session::Send(char* _pData, int _len)
 
 	for (;;)
 	{
-		const int sendResult = socket_.Send(_pData, _len);
+		const int sendResult = socket_.Send((char*)_pData, _len);
 
 		if (sendResult == SOCKET_ERROR)
 		{
@@ -201,7 +195,7 @@ int Session::SendPending(OUT _u32& _errorCode)
 
 	for (;;)
 	{
-		const int sendResult = socket_.Send(pPendingData, pendingDataCount);
+		const int sendResult = socket_.Send((char*)pPendingData, pendingDataCount);
 		if (sendResult == SOCKET_ERROR)
 		{
 			_errorCode = Winsock::LastError();
@@ -240,7 +234,11 @@ void Session::PushPendingData(char* _pData, int _len)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool Session::SendAsync(IPacket* _pPacket)
 {
-	_pPacket->AddRef();
+#if _DEBUG
+	jc_assert(_pPacket->GetMagicNumber() == PACKET_MAGIC_NUMBER);
+	jc_assert(_pPacket->GetType() != PacketType::None);
+#endif
+
 	WSABUF buf = _pPacket->GetWSABuf();
 	_u32l sendBytes = 0;
 	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedSend(this, pIocp_.GetPtr(), _pPacket);
@@ -308,7 +306,6 @@ CmdBufferPacket* Session::GetCommandBufferForSending()
 void Session::FlushSendBuffer()
 {
 	CmdBufferPacket* pWrappedPacket = GetCommandBufferForSending();
-	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pWrappedPacket);
 	if (pWrappedPacket)
 	{
 		SendAsync(pWrappedPacket);
@@ -447,7 +444,7 @@ void Session::Received(_u32l _receivedBytes)
 		return;
 	}
 
-	packetParser_->Received(_receivedBytes);
+	packetParser_.Received(_receivedBytes);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

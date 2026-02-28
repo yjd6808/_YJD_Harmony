@@ -8,22 +8,17 @@
 
 #pragma once
 
-#include <jc/Type.h>
 #include <jc/Macro.h>
 #include <jc/Memory.h>
 #include <jc/TypeTraits.h>
 
-#include <jnet/Namespace.h>
+#include <jnet/Packet/PacketHeader.h>
 
 
 /*=====================================================================================
 								 커맨드 객체
 					  패킷에 커맨드를 담아서 전송한다.
 =====================================================================================*/
-
-// 패킷 헤더
-using CmdCnt_t = _u16;
-using PktLen_t = _u16;
 
 // 커맨드 헤더
 using CmdType_t = _u8;
@@ -34,7 +29,6 @@ using CmdLen_t = _u16;
 
 NS_JNET_BEGIN
 
-inline constexpr int COMMAND_PACKET_HEADER_SIZE = sizeof(CmdCnt_t) + sizeof(PktLen_t);
 inline constexpr int COMMAND_HEADER_SIZE = sizeof(CmdType_t) + sizeof(Cmd_t) + sizeof(CmdLen_t);
 
 #pragma pack(push, CMD_ALIGNMENT)

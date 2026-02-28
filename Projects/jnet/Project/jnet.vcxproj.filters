@@ -209,6 +209,9 @@
     <ClInclude Include="..\Sources\jnet\IOCP\IOCPTaskState.h">
       <Filter>IOCP</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Packet\PacketHeader.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Host">

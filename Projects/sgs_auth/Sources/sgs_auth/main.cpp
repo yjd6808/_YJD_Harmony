@@ -22,6 +22,7 @@ int main(int _argc, char** _argv)
 	Winsock::Initialize(2, 2);
 	Console::SetSize(800, 400);
 	InitializeJCore(_argc, _argv);
+	_CrtSetBreakAlloc(2453);
 	InitializeNetLogger(LOG_SPECIFIER_AUTH);
 	InitializeDefaultLogger(LOG_SPECIFIER_AUTH);
 	sgapiBase::Init(dbg_new sgapiServerBase);
@@ -34,7 +35,7 @@ int main(int _argc, char** _argv)
 	// 메인 루틴
 	//////////////////////////////////////////////////////////////////////////////////////
 
-	if (g_cNetGroup_InterServ.ConnectCenterServer(5))
+	if (g_cNetGroup_InterServ.ConnectCenterServer(1))
 	{
 		g_cNetCore.ProcessMainLoop();
 	}
@@ -50,5 +51,6 @@ int main(int _argc, char** _argv)
 	FinalizeNetLogger();
 	FinalizeJCore();
 	Winsock::Finalize();
+	sgapiBase::Free();
 	return Console::ReadKeyWhile("X키 입력시 종료", ConsoleKey::X);
 }

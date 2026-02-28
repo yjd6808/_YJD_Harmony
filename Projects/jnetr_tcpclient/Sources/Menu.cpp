@@ -98,35 +98,33 @@ static void SendMsg(TcpClient* _pClient)
 	auto pMsg3 = pPacket1->Get<0>();
 	auto pMsg4 = pPacket1->Get<1>();
 	auto pMsg5 = pPacket1->Get<2>();
-
 	StringUtil::CopyUnsafe(pMsg3->Msg(), inputString.Source);
 	StringUtil::CopyUnsafe(pMsg4->Msg(), inputString.Source);
 	StringUtil::CopyUnsafe(pMsg5->Msg(), inputString.Source);
+	_pClient->SendAsync(pPacket1);
 
 	// 커맨드 버퍼를 활용한 전송 테스트
 	CommandBufferPtr pBuffer = CommandBuffer::Create(_pClient->GetBufferAllocator());
 	DynamicMessage& msg6 = pBuffer->Alloc<DynamicMessage>(length);
 	DynamicMessage& msg7 = pBuffer->Alloc<DynamicMessage>(length);
 	DynamicMessage& msg8 = pBuffer->Alloc<DynamicMessage>(length);
-
 	StringUtil::CopyUnsafe(msg6.Msg(), inputString.Source);
 	StringUtil::CopyUnsafe(msg7.Msg(), inputString.Source);
 	StringUtil::CopyUnsafe(msg8.Msg(), inputString.Source);
+	_pClient->SendAsync(pBuffer);
 
 	// 싱글 패킷 전송 (스태틱, 다이나믹 커맨드 아무거나 가능)
-	// auto msg9 = dbg_new SingleCmdPacket<DynamicMessage>(); assert 발사: 다이나믹 커맨드는 명시적으로 무조건 사이즈 전달
+	// assert 발사: 다이나믹 커맨드는 명시적으로 무조건 사이즈 전달
 	auto pMsg9 = dbg_new SingleCmdPacket<DynamicMessage>(length);
 	StringUtil::CopyUnsafe(pMsg9->cmd_.Msg(), inputString.Source);
-
+	_pClient->SendAsync(pMsg9);
+	
 	// 스태틱 패킷 전송
 	auto pPacket = dbg_new StaticCmdPacket<StaticMessage>();
 	StaticMessage* pArg1 = pPacket->Get<0>();
 	pArg1->msg_.SetString(inputString);
 	auto wsaBuf = pPacket->GetWSABuf();
-
 	_pClient->SendAsync(pPacket);
-	_pClient->SendAsync(pMsg9);
-	_pClient->SendAsync(pBuffer);
-	_pClient->SendAsync(pPacket1);
+
 	_pClient->FlushSendBuffer();
 }

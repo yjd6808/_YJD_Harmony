@@ -10,8 +10,6 @@ USING_NS_JNET;
 //////////////////////////////////////////////////////////////////////////////////////////
 int main(int _argc, char** _argv)
 {
-	DefaultParserType = PacketParser::Command;
-
 	Winsock::Initialize(2, 2);
 	InitializeJCore(_argc, _argv);
 	InitializeNetLogger();

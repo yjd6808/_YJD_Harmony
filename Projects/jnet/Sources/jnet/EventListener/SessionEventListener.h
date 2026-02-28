@@ -13,7 +13,7 @@ NS_JNET_BEGIN
 
 class ICommand;
 class IPacket;
-class RecvedCmdPacket;
+struct RecvedCmdPacket;
 
 class Session;
 class JC_NOVTABLE SessionEventListener

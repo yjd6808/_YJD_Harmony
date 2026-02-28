@@ -19,14 +19,14 @@ class MemoryPoolAbstract
 {
 public:
     MemoryPoolAbstract()
-        : name_(0)
-        , initialized_(false)
+    : name_(0)
+    , initialized_(false)
     {
     }
 
     MemoryPoolAbstract(const String& _name)
-        : name_(_name)
-        , initialized_(false)
+    : name_(_name)
+    , initialized_(false)
     {
     }
 
