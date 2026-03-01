@@ -21,7 +21,7 @@ PacketParser::PacketParser(Session* _pSession)
 //////////////////////////////////////////////////////////////////////////////////////////
 void PacketParser::Received(_u32l _receivedBytes)
 {
-	CommandBuffer* pRecvBuffer = session_->GetRecvBuffer().GetPtr();
+	PacketBuffer* pRecvBuffer = session_->GetRecvBuffer().GetPtr();
 	pRecvBuffer->MoveWritePos(_receivedBytes);
 	for (;;)
 	{
@@ -53,7 +53,7 @@ void PacketParser::Received(_u32l _receivedBytes)
 		else if (pHeader->packetType_ == PacketType::Command)
 		{
 			pRecvBuffer->MoveReadPos(PACKET_HEADER_SIZE);
-			for (int i = 0; i < pHeader->cmdCount_; ++i)
+			for (int i = 0; i < pHeader->elemCount_; ++i)
 			{
 				ICommand* pCmd = pRecvBuffer->Peek<ICommand*>();
 				CmdLen_t cmdLen = pCmd->GetLength();

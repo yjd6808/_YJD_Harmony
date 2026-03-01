@@ -27,7 +27,7 @@
 		</Expand>
 	</Type>
 
-	<Type Name="jc::CMessageContext">
+	<Type Name="jc::CMessageView">
 		<Intrinsic Name="GetMsgHeader" Expression="(jc::CMessageHeader*)(pBuf_ + prefixMemCapacity_)" />
 		<Intrinsic Name="GetMsgHeader_TargetId" Expression="GetMsgHeader()-&gt;targetId_" />
 		<Intrinsic Name="GetMsgHeader_MsgId" Expression="GetMsgHeader()-&gt;msgId_" />

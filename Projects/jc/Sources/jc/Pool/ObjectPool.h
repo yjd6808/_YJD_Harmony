@@ -31,7 +31,7 @@
 #include <jc/Config.h>
 #include <jc/Memory.h>
 #include <jc/Primitives/SmartPtr.h>
-#include <jc/Sync/NormalLock.h>
+#include <jc/Sync/SpinLock.h>
 
 NS_JC_BEGIN
 
@@ -40,13 +40,13 @@ class ObjectPool
 {
 public:
 	using TPool = ObjectPool<T>;
-	using TLock = NormalLock;
+	using TLock = SpinLock;
 
 	struct LockGuard;
 	struct AtExitCallback;
 
 	ObjectPool()
-		: pNext_(nullptr)
+	: pNext_(nullptr)
 	{
 	}
 

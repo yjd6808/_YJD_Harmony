@@ -8,6 +8,16 @@
 #include <jnet/IOCP/IOCPPostOrder.h>
 #include <jnet/IOCPOverlapped/IOCPOverlapped.h>
 
+#ifdef USE_OVERLAPPED_STATIC_POOL
+#include <jnet/IOCPOverlapped/IOCPOverlappedAccept.h>
+#include <jnet/IOCPOverlapped/IOCPOverlappedConnect.h>
+#include <jnet/IOCPOverlapped/IOCPOverlappedDisconnect.h>
+#include <jnet/IOCPOverlapped/IOCPOverlappedRecv.h>
+#include <jnet/IOCPOverlapped/IOCPOverlappedRecvFrom.h>
+#include <jnet/IOCPOverlapped/IOCPOverlappedSend.h>
+#include <jnet/IOCPOverlapped/IOCPOverlappedSendTo.h>
+#endif
+
 NS_JNET_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 IOCPOverlapped::IOCPOverlapped(IOCP* _pIocp, Type _type)
@@ -53,6 +63,19 @@ bool IOCPOverlapped::IsFailed(SOCKET _socket, BOOL _result, _u32l _bytesTransfer
 	}
 
 	return false;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void IOCPOverlapped::__FreeAllObjects()
+{
+#ifdef USE_OVERLAPPED_STATIC_POOL
+	IOCPOverlappedAccept::FreeAllObjects();
+	IOCPOverlappedConnect::FreeAllObjects();
+	IOCPOverlappedRecv::FreeAllObjects();
+	IOCPOverlappedRecvFrom::FreeAllObjects();
+	IOCPOverlappedSend::FreeAllObjects();
+	IOCPOverlappedSendTo::FreeAllObjects();
+#endif
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

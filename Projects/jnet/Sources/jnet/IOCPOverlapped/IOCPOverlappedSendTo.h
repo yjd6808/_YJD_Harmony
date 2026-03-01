@@ -14,6 +14,9 @@
 NS_JNET_BEGIN
 
 class IOCPOverlappedSendTo : public IOCPOverlapped
+#ifdef USE_OVERLAPPED_STATIC_POOL
+	, public jc::ObjectPool<IOCPOverlappedSendTo>
+#endif
 {
 public:
 	IOCPOverlappedSendTo(Session* _pSender, IOCP* _pIocp, IPacket* _pSentPacket);

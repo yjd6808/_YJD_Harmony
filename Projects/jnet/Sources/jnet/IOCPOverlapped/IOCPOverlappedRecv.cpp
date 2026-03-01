@@ -38,7 +38,6 @@ void IOCPOverlappedRecv::Process(BOOL _result, _u32l _bytesTransferred, IOCPPost
 
 	receivedSession_->Received(_bytesTransferred);
 
-	// TODO: 리시브 오버랩 재사용 기능 구현
 	if (!receivedSession_->RecvAsync())
 	{
 		errorCode = Winsock::LastError();

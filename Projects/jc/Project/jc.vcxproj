@@ -205,6 +205,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc\Pool\PooledMemoryChunk.cpp" />
     <ClCompile Include="..\Sources\jc\Primitives\ObserverPtr.cpp" />
     <ClCompile Include="..\Sources\jc\Primitives\RefCountObject.cpp">
       <SubType>
@@ -557,6 +558,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\Pool\ObjectPool.h" />
+    <ClInclude Include="..\Sources\jc\Pool\PooledMemoryChunk.h" />
     <ClInclude Include="..\Sources\jc\Primitives\ArraySegment.h">
       <SubType>
       </SubType>

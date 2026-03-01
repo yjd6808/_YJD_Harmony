@@ -74,7 +74,7 @@ void PacketViewer::View(jnet::RecvedCmdPacket* _pPacket)
 	}
 	else if (_pPacket->header_.packetType_ == jnet::PacketType::Command)
 	{
-		View(jnet::Transmission::Recv, (char*)_pPacket, jnet::PACKET_HEADER_SIZE + _pPacket->header_.payloadLen_, _pPacket->header_.cmdCount_);
+		View(jnet::Transmission::Recv, (char*)_pPacket, jnet::PACKET_HEADER_SIZE + _pPacket->header_.payloadLen_, _pPacket->header_.elemCount_);
 	}
 	else
 	{

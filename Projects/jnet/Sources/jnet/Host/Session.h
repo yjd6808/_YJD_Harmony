@@ -17,6 +17,7 @@
 NS_JNET_BEGIN
 
 class IOCPOverlapped;
+
 class JC_NOVTABLE Session : public Host
 {
 public:
@@ -29,8 +30,8 @@ public:
 
 	const IPv4EndPoint& GetLocalEndPoint() const { return localEndPoint_; }
 	const IPv4EndPoint& GetRemoteEndPoint() const { return remoteEndPoint_; }
-	CommandBufferPtr GetRecvBuffer() { return recvBuffer_; }
-	CommandBufferPtr GetSendBuffer() { return sendBuffer_; }
+	PacketBufferPtr GetRecvBuffer() { return recvBuffer_; }
+	PacketBufferPtr GetSendBuffer() { return sendBuffer_; }
 	jc::MemoryPoolAbstractPtr GetBufferAllocator() { return bufferAllocator_; }
 
 	void Initialize() override;
@@ -45,25 +46,28 @@ public:
 	bool PendingDataSize() const { return pendingData_.Size(); }
 
 	bool SendAsync(IPacket* _pPacket);
-	bool SendAsync(const CommandBufferPtr& _pBuffer);
+	bool SendAsync(const PacketBufferPtr& _pBuffer);
 	bool SendToAsync(IPacket* _pPacket);
 	bool SendToAsync(IPacket* _pPacket, const IPv4EndPoint& _destination);
-	bool SendToAsync(const CommandBufferPtr& _pBuffer, const IPv4EndPoint& _destination);
+	bool SendToAsync(const PacketBufferPtr& _pBuffer, const IPv4EndPoint& _destination);
 
 	bool RecvAsync();
 	bool RecvFromAsync();
 
-	void SendAlloc(ICommand* _pCmd);
+	void EnqueueCmd(ICommand* _pCmd, bool _flushIfOverflow = true);
+	jc::CMessage EnqueueMsg(bool _flushIfOverflow = true);
 
 	template <typename TCommand>
-	TCommand& SendAlloc(int _count = 0)
+	TCommand& EnqueueCmd(int _count = 0, bool _flushIfOverflow = true)
 	{
 		JC_LOCK_GUARD(sendBufferLock_);
+
+		// 커맨드 유효성 검사
 		CMD_CHECK_BASE_OF_COMMAND(TCommand)
 		DYNAMIC_CMD_CHECK_ARRAY_FIELD(TCommand)
 
 		const int cmdSize = TCommand::_Size(_count);
-		if (sendBuffer_->GetWritePos() + cmdSize >= MAX_MSS)
+		if (_flushIfOverflow && sendBuffer_->GetWritePos() + cmdSize >= MAX_MSS)
 		{
 			FlushSendBuffer();
 		}
@@ -73,7 +77,7 @@ public:
 			"버퍼의 남은 공간에 넣을 커맨드가 너무 큽니다. (CmdSize: %d, RemainBufferCapacity: %d)",
 			cmdSize,
 			sendBuffer_->GetRemainBufferSize());
-		return sendBuffer_->Alloc<TCommand>(_count);
+		return sendBuffer_->EmplaceCmd<TCommand>(_count);
 	}
 
 	CmdBufferPacket* GetCommandBufferForSending();
@@ -105,9 +109,8 @@ protected:
 	jc::Vector<char> pendingData_;
 
 	PacketParser packetParser_;
-
-	CommandBufferPtr recvBuffer_;
-	CommandBufferPtr sendBuffer_;
+	PacketBufferPtr recvBuffer_;
+	PacketBufferPtr sendBuffer_;
 
 	IPv4EndPoint localEndPoint_;
 	IPv4EndPoint remoteEndPoint_;

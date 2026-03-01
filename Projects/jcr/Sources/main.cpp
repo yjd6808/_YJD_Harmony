@@ -81,14 +81,14 @@ int main(int _argc, char** _argv)
 		Time time = now.ToTime();
 		TimeSpan ts = TimeSpan::FromSecond(5);
 
-		jc::CMessage msg1(32, 5);
-		_u8* check = dbg_new _u8[32];
-		check[0] = 20;
-		check[4] = 20;
-		check[8] = 20;
-		check[16] = 20;
 
 		{
+			jc::CMessage msg1(32, 5);
+			_u8* check = dbg_new _u8[32];
+			check[0] = 20;
+			check[4] = 20;
+			check[8] = 20;
+			check[16] = 20;
 			int* pfsef = dbg_new int();
 			_s8* pS8 = nullptr;
 			msg1.WriteS8(-50);
@@ -136,6 +136,7 @@ int main(int _argc, char** _argv)
 			String fsef = msg1.ReadString();
 			Console::WriteLine(msg1.Dump().SafeSource());
 			delete pfsef;
+			delete[] check;
 		}
 		
 

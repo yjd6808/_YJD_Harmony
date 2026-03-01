@@ -33,7 +33,11 @@ struct ClientListener : ClientEventListener
 
 	void OnSent(Session* _pSession, IPacket* _pSentPacket, _u32l _sentBytes) override {
 		if (Mode == TestMode::OnSending && (++SendCounter) == TestClientCount * TestSendCount) {
-			TestFinished.Signal();
+			{
+				LockGuard lg(TestLock);
+				++TestStep;
+			}
+			TestCondVar.NotifyOne();
 		}
 	}
 
@@ -46,7 +50,11 @@ struct ClientListener : ClientEventListener
 		const int count = ++RecvCounter;
 
 		if (count == TestSendCount * TestClientCount) {
-			TestFinished.Signal();
+			{
+				LockGuard lg(TestLock);
+				++TestStep;
+			}
+			TestCondVar.NotifyOne();
 		}
 	}
 };
@@ -56,7 +64,7 @@ struct tagClientGroup : NetGroup
 	tagClientGroup() : NetGroup("클라이언트") {}
 
 	void Initialize() override {
-		CreateIOCP(TestClientCount * 2);
+		CreateIOCP(4);
 		CreateBufferPool({});
 		RunIOCP();
 

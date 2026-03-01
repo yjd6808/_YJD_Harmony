@@ -10,13 +10,20 @@
 NS_JNET_BEGIN
 
 class IOCPOverlappedAccept : public IOCPOverlapped
+#ifdef USE_OVERLAPPED_STATIC_POOL
+	, public jc::ObjectPool<IOCPOverlappedAccept>
+#endif
 {
 public:
 	IOCPOverlappedAccept(TcpSession* _pSession, IOCP* _pIocp);
 	~IOCPOverlappedAccept() override;
 
 public:
-	void Process(BOOL _result, _u32l _bytesTransferred, IOCPPostOrder* _pCompletionKey) override;
+	virtual void Process(BOOL _result, _u32l _bytesTransferred, IOCPPostOrder* _pCompletionKey) override;	
+	virtual void ReleaseAction() override 
+	{ 
+		delete this; 
+	}
 
 private:
 	TcpSession* acceptedSession_;

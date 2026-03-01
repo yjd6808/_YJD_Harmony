@@ -30,10 +30,12 @@ int main(int _argc, char** _argv)
 
     Winsock::Initialize(2, 2);
     InitializeJCore(_argc, _argv);
+	InitializeJNet(_argc, _argv);
 
     ::benchmark::RunSpecifiedBenchmarks();
     ::benchmark::Shutdown();
 
+	FinalizeJNet();
     FinalizeJCore();
     Winsock::Finalize();
     return 0;

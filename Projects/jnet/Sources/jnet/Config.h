@@ -12,6 +12,9 @@
 
 NS_JNET_BEGIN
 
+void InitializeJNet(int _argc, char** _argv);
+void FinalizeJNet();
+
 extern bool DisableSendBuffering;
 extern bool DisableRecvBuffering;
 

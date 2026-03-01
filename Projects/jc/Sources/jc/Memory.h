@@ -93,6 +93,10 @@ public:
 			else
 				::new(AddressOf(_ref)) GenType(Forward<Args>(_args)...); // (2)		
 		}
+		else
+		{
+			jc_assert(false);
+		}
 	}
 
 	template <bool Ignore = false, typename T, typename... Args>

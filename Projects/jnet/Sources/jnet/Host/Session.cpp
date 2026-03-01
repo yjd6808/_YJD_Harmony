@@ -7,7 +7,7 @@
 #include <jnet/Config.h>
 
 #include <jnet/Host/Session.h>
-#include <jnet/Buffer/CommandBuffer.h>
+#include <jnet/Buffer/PacketBuffer.h>
 
 #include <jnet/IOCPOverlapped/IOCPOverlappedRecv.h>
 #include <jnet/IOCPOverlapped/IOCPOverlappedSend.h>
@@ -21,11 +21,11 @@ USING_NS_JC;
 NS_JNET_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 Session::Session(
-const IOCPPtr& _pIocp,
-const MemoryPoolAbstractPtr& _pBufferAllocator,
-PacketParser* _pPacketParser,
-int _recvBufferSize,
-int _sendBufferSize)
+	const IOCPPtr& _pIocp,
+	const MemoryPoolAbstractPtr& _pBufferAllocator,
+	PacketParser* _pPacketParser,
+	int _recvBufferSize,
+	int _sendBufferSize)
 //////////////////////////////////////////////////////////////////////////////////////////
 : Host(_pIocp)
 , handle_(-1)
@@ -35,8 +35,8 @@ int _sendBufferSize)
 , recvBuffer_(nullptr)
 , sendBuffer_(nullptr)
 {
-	recvBuffer_ = MakeShared<CommandBuffer>(bufferAllocator_,_recvBufferSize <= 0 ? DefaultRecvBufferSize : _recvBufferSize);
-	sendBuffer_ = MakeShared<CommandBuffer>(bufferAllocator_,_sendBufferSize <= 0 ? DefaultSendBufferSize : _sendBufferSize);
+	recvBuffer_ = MakeShared<PacketBuffer>(bufferAllocator_,_recvBufferSize <= 0 ? DefaultRecvBufferSize : _recvBufferSize);
+	sendBuffer_ = MakeShared<PacketBuffer>(bufferAllocator_,_sendBufferSize <= 0 ? DefaultSendBufferSize : _sendBufferSize);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -266,7 +266,7 @@ bool Session::SendAsync(IPacket* _pPacket)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool Session::SendAsync(const CommandBufferPtr& _pBuffer)
+bool Session::SendAsync(const PacketBufferPtr& _pBuffer)
 {
 #ifdef DebugMode
 	jc_assert_msg(_pBuffer->IsValid(), "보내고자하는 커맨드 버퍼 데이터가 이상합니다.");
@@ -279,13 +279,13 @@ CmdBufferPacket* Session::GetCommandBufferForSending()
 {
 	JC_LOCK_GUARD(sendBufferLock_);
 
-	if (sendBuffer_->GetCommandCount() == 0)
+	if (sendBuffer_->GetElemCount() == 0)
 	{
 		return nullptr;
 	}
 
-	CommandBufferPtr pNewSendBuffer = MakeShared<CommandBuffer>(bufferAllocator_, sendBuffer_->GetBufferRequestSize());
-	CommandBufferPtr pOldSendBuffer = sendBuffer_;
+	PacketBufferPtr pNewSendBuffer = MakeShared<PacketBuffer>(bufferAllocator_, sendBuffer_->GetBufferRequestSize());
+	PacketBufferPtr pOldSendBuffer = sendBuffer_;
 
 	sendBuffer_ = pNewSendBuffer;
 
@@ -343,7 +343,7 @@ bool Session::SendToAsync(IPacket* _pPacket, const IPv4EndPoint& _destination)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool Session::SendToAsync(const CommandBufferPtr& _pBuffer, const IPv4EndPoint& _destination)
+bool Session::SendToAsync(const PacketBufferPtr& _pBuffer, const IPv4EndPoint& _destination)
 {
 #ifdef DebugMode
 	jc_assert_msg(_pBuffer->IsValid(), "보내고자하는 커맨드 버퍼 데이터가 이상합니다.");
@@ -415,12 +415,11 @@ bool Session::RecvFromAsync()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Session::SendAlloc(ICommand* _pCmd)
+void Session::EnqueueCmd(ICommand* _pCmd, bool _flushIfOverflow /*= true*/)
 {
 	JC_LOCK_GUARD(sendBufferLock_);
-
 	const int cmdSize = _pCmd->GetLength();
-	if (sendBuffer_->GetWritePos() + cmdSize >= MAX_MSS)
+	if (_flushIfOverflow && sendBuffer_->GetWritePos() + cmdSize >= MAX_MSS)
 	{
 		FlushSendBuffer();
 	}
@@ -430,7 +429,19 @@ void Session::SendAlloc(ICommand* _pCmd)
 		"버퍼의 남은 공간에 넣을 커맨드가 너무 큽니다. (CmdSize: %d, RemainBufferCapacity: %d)",
 		cmdSize,
 		sendBuffer_->GetRemainBufferSize());
-	sendBuffer_->Alloc(_pCmd);
+	sendBuffer_->EmplaceCmd(_pCmd);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+jc::CMessage Session::EnqueueMsg(bool _flushIfOverflow /*= true*/)
+{
+	JC_LOCK_GUARD(sendBufferLock_);
+	if (_flushIfOverflow && sendBuffer_->GetWritePos() >= MAX_MSS)
+	{
+		FlushSendBuffer();
+	}
+
+	return sendBuffer_->EmplaceMsg();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -473,13 +484,14 @@ void Session::WaitForZeroPending()
 			equalCount++;
 		}
 
-		if (equalCount >= 1'000'000)
+		if (equalCount >= 1'000)
 		{
 			equalCount = 0;
 			_NetLogWarn_("펜딩 카운트 기달 %d", pending);
 		}
 
 		previousPendingCount = pending;
+		Thread::Sleep(10);
 	}
 }
 

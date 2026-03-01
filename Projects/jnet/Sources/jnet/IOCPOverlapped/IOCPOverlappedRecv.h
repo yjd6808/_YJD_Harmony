@@ -10,6 +10,9 @@
 NS_JNET_BEGIN
 
 class IOCPOverlappedRecv : public IOCPOverlapped
+#ifdef USE_OVERLAPPED_STATIC_POOL
+	, public jc::ObjectPool<IOCPOverlappedRecv>
+#endif
 {
 public:
 	IOCPOverlappedRecv(Session* _pSession, IOCP* _pIocp);

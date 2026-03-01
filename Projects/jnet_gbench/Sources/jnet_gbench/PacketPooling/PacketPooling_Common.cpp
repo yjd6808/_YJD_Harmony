@@ -13,7 +13,9 @@ NS_PACKET_POOLING_BEGIN
 int TestClientCount;
 int TestSendCount;
 bool UsePooling;
-AutoResetEvent TestFinished(false);
+NormalLock TestLock;
+ConditionVariable TestCondVar;
+int TestStep;
 TestMode Mode;
 thread_local SharedPtr<CBinarySearchMemoryPool> TlsMemPool;
 NS_PACKET_POOLING_END

@@ -100,8 +100,8 @@ static void SendMsg(UdpClient* _pClient, const IPv4EndPoint& _target)
 	int length = s.LengthWithNull();
 
 	// 클라이언트 송신 버퍼를 활용한 전송
-	StaticMessage& msg1 = _pClient->SendAlloc<StaticMessage>();
-	DynamicMessage& msg2 = _pClient->SendAlloc<DynamicMessage>(length);
+	StaticMessage& msg1 = _pClient->EnqueueCmd<StaticMessage>();
+	DynamicMessage& msg2 = _pClient->EnqueueCmd<DynamicMessage>(length);
 
 	StringUtil::CopyUnsafe(msg1.msg_.Source, s.Source);
 	StringUtil::CopyUnsafe(msg2.Msg(), s.Source);
@@ -117,10 +117,10 @@ static void SendMsg(UdpClient* _pClient, const IPv4EndPoint& _target)
 	StringUtil::CopyUnsafe(pMsg5->Msg(), s.Source);
 
 	// 커맨드 버퍼를 활용한 전송 테스트
-	CommandBufferPtr pBuffer = CommandBuffer::Create(_pClient->GetBufferAllocator());
-	DynamicMessage& msg6 = pBuffer->Alloc<DynamicMessage>(length);
-	DynamicMessage& msg7 = pBuffer->Alloc<DynamicMessage>(length);
-	DynamicMessage& msg8 = pBuffer->Alloc<DynamicMessage>(length);
+	PacketBufferPtr pBuffer = PacketBuffer::Create(_pClient->GetBufferAllocator());
+	DynamicMessage& msg6 = pBuffer->EmplaceCmd<DynamicMessage>(length);
+	DynamicMessage& msg7 = pBuffer->EmplaceCmd<DynamicMessage>(length);
+	DynamicMessage& msg8 = pBuffer->EmplaceCmd<DynamicMessage>(length);
 
 	StringUtil::CopyUnsafe(msg6.Msg(), s.Source);
 	StringUtil::CopyUnsafe(msg7.Msg(), s.Source);

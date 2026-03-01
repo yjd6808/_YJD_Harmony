@@ -11,6 +11,9 @@
 NS_JNET_BEGIN
 
 class IOCPOverlappedConnect : public IOCPOverlapped
+#ifdef USE_OVERLAPPED_STATIC_POOL
+	, public jc::ObjectPool<IOCPOverlappedConnect>
+#endif
 {
 public:
 	IOCPOverlappedConnect(TcpClient* _pClient, IOCP* _pIocp, IPacket* _pSentPacket);

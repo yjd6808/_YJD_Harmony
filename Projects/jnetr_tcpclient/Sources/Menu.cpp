@@ -87,8 +87,8 @@ static void SendMsg(TcpClient* _pClient)
 	int length = inputString.LengthWithNull();
 
 	// 클라이언트 송신 버퍼를 활용한 전송
-	StaticMessage& msg1 = _pClient->SendAlloc<StaticMessage>();
-	DynamicMessage& msg2 = _pClient->SendAlloc<DynamicMessage>(length);
+	StaticMessage& msg1 = _pClient->EnqueueCmd<StaticMessage>();
+	DynamicMessage& msg2 = _pClient->EnqueueCmd<DynamicMessage>(length);
 
 	StringUtil::CopyUnsafe(msg1.msg_.Source, inputString.Source);
 	StringUtil::CopyUnsafe(msg2.Msg(), inputString.Source);
@@ -104,10 +104,10 @@ static void SendMsg(TcpClient* _pClient)
 	_pClient->SendAsync(pPacket1);
 
 	// 커맨드 버퍼를 활용한 전송 테스트
-	CommandBufferPtr pBuffer = CommandBuffer::Create(_pClient->GetBufferAllocator());
-	DynamicMessage& msg6 = pBuffer->Alloc<DynamicMessage>(length);
-	DynamicMessage& msg7 = pBuffer->Alloc<DynamicMessage>(length);
-	DynamicMessage& msg8 = pBuffer->Alloc<DynamicMessage>(length);
+	PacketBufferPtr pBuffer = PacketBuffer::Create(_pClient->GetBufferAllocator());
+	DynamicMessage& msg6 = pBuffer->EmplaceCmd<DynamicMessage>(length);
+	DynamicMessage& msg7 = pBuffer->EmplaceCmd<DynamicMessage>(length);
+	DynamicMessage& msg8 = pBuffer->EmplaceCmd<DynamicMessage>(length);
 	StringUtil::CopyUnsafe(msg6.Msg(), inputString.Source);
 	StringUtil::CopyUnsafe(msg7.Msg(), inputString.Source);
 	StringUtil::CopyUnsafe(msg8.Msg(), inputString.Source);
@@ -127,4 +127,24 @@ static void SendMsg(TcpClient* _pClient)
 	_pClient->SendAsync(pPacket);
 
 	_pClient->FlushSendBuffer();
+
+
+	jc::CMessage legMsg = _pClient->EnqueueMsg();
+	legMsg.WriteU32(1234);
+	legMsg.WriteString("abcdefg");
+
+	jc::CMessage legMsg2 = _pClient->EnqueueMsg();
+	legMsg2.WriteU32(5678);
+	legMsg2.WriteString("hijklmn");
+
+	_u32 aaa = legMsg.ReadU32();
+	String bbb = legMsg.ReadString();
+
+	aaa = legMsg2.ReadU32();
+	bbb = legMsg2.ReadString();
+
+
+	int a = 30;
+
+
 }

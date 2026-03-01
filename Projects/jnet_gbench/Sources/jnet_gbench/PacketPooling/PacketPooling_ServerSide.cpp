@@ -43,7 +43,11 @@ struct ServerListener : ServerEventListener
 		}
 		else if (Mode == TestMode::OnSending && ack == TestSendCount * TestClientCount)
 		{
-			TestFinished.Signal();
+			{
+				LockGuard lg(TestLock);
+				++TestStep;
+			}
+			TestCondVar.NotifyOne();
 		}
 	}
 };
@@ -59,12 +63,13 @@ struct tagServerGroup : NetGroup
 	//////////////////////////////////////////////////////////////////////////////////////
 	void Initialize() override
 	{
-		CreateIOCP(8);
+		CreateIOCP(4);
 		CreateBufferPool({});
 		RunIOCP();
 
 		auto pServer = MakeShared<TcpServer>(pIocp_, pBufferPool_);
 		pServer->SetEventListener(dbg_new ServerListener);
+		pServer->SetSesssionContainer(dbg_new SessionContainer(TestClientCount));
 		pServer->Start(IPv4EndPoint::Parse(JNET_RESEARCH_BIND_ADDR));
 		AddHost(0, pServer);
 		finalized_ = false;

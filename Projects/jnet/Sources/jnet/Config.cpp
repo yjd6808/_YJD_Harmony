@@ -8,7 +8,22 @@
 #include <jnet/Core.h>
 #include <jnet/Packet/PacketParser.h>
 
+#include <jnet/IOCPOverlapped/IOCPOverlapped.h>
+
 NS_JNET_BEGIN
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void InitializeJNet(int _argc, char** _argv)
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void FinalizeJNet()
+{
+#ifdef USE_OVERLAPPED_STATIC_POOL
+	IOCPOverlapped::__FreeAllObjects();
+#endif
+}
 
 /* 옵션을 켤시 송신 버퍼링을 하지 않도록 한다.
  *

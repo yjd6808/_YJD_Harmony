@@ -21,6 +21,8 @@
 NS_JC_BEGIN
 
 class CMessageContext;
+class CMessageView;
+class MemoryPoolAbstract;
 
 template <typename T, typename TAllocator>
 class Vector;
@@ -61,10 +63,14 @@ template <> struct CMessage_VariantTraits<void*> { static constexpr _u8 MEM_SIZE
 class JC_DLL CMessage
 {
 public:
+	CMessage();
 	CMessage(_u32 _prefixMemCapacity, _u32 _elemMemCapacity, int _msgId = 0, object_id _targetId = 0);
 	CMessage(const CMessage& _other);
 	CMessage(CMessage&& _other) noexcept;
 	~CMessage();
+
+	CMessage& operator=(const CMessage& _other);
+	CMessage& operator=(CMessage&& _other);
 
 	enum VariantType
 	{
@@ -85,6 +91,8 @@ public:
 		vt_max,
 	};
 
+	static CMessage Null;
+	static constexpr _u32 DEFAULT_ELEM_MEM_CAPACITY = 256;
 	static constexpr _u16 MESSAGE_HEADER_SIZE = sizeof(CMessageHeader);
 	static constexpr _u8  MEM_SIZE_VARIANT = 77; // 요소 크기가 가변적인 타입의 메모리 크기를 지칭함
 	static constexpr _u8  MEM_SIZE[vt_max]
@@ -105,11 +113,20 @@ public:
 		MEM_SIZE_VARIANT,
 	};
 
+	bool		IsNull() const;
+	bool		IsEmpty() const;
+
+	void		ReadyDefaultContext();
+
 	void		ResetWriteOffset();	// write offset을 초기화한다. 그에 맞춰서 write mem offset도 초기화된다.
 	void		ResetReadOffset();	// read offset을 초기화한다. 그에 맞춰서 read mem offset도 초기화된다.
 
 	void		SetWriteOffset(_u16 _writeOffset); // write offset을 옮긴다. write mem offset은 write offset에 맞춰서 자동으로 계산한다. (내리는 것만 가능)
 	void		SetReadOffset(_u16 _readOffset); // write offset과 write mem offset, read offset과 read mem offset을 모두 초기화한다.
+
+	void		SetMsgId(_u32 _msgId);
+	void		SetTargetId(object_id _targetId);
+	void		SetContext(CMessageView* _pView);
 
 	_u16		GetWriteOffset() const;
 	_u16		GetReadOffset() const;
@@ -136,7 +153,7 @@ public:
 	void		WriteBinary(const _u8* _pBytes, _u32 _len);
 	void		WriteBinaryDummy(_u32 _len);
 
-	// 해당 값을 저장하고 저장된 값의 메모리 주소를 얻음. 밖에서도 조작가능하도록 하기 위함. (포인터는 당연히 눈치껏 CMessage 소멸되기전에만 사용)
+	// 해당 값을 저장하고 저장된 값의 메모리 주소를 얻음. 밖에서도 조작가능하도록 하기 위함. (포인터는 당연히 눈치껏 CMessage 소멸되기전까지 사용)
 	// 아래 함수는 내부 버퍼 확장이 발생할 경우 포인터가 무효화될 수 있음. (눈치껏 똑바로 쓸 것)
 	// 위험함.
 	void		WriteS8(_s8 _value, OUT _s8** _ppAddr);
@@ -191,14 +208,15 @@ public:
 	static String	Dump(const CMessage& _other);
 	static _u32		GetElemMemSize(_u8 _typeCode);
 private:
-	CMessageContext* pContext_ = nullptr; // 참조 카운트 기반 공유 컨텍스트
+	CMessageView* pContext_ = nullptr; // 참조 카운트 기반 공유 컨텍스트
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
-class JC_DLL CMessageContext : public RefCountObject
+class JC_DLL CMessageView : public RefCountObject
 {
 public:
-	CMessageContext(_u32 _prefixMemCapacity, _u32 _elemMemCapacity, int _msgId = 0, object_id _targetId = 0);
+	CMessageView(_u8* _pBuf, _u32 _prefixMemCapacity, _u32 _memCapacity, const jc::SharedPtr<MemoryPoolAbstract>& _pMemOwner = {});
+	virtual ~CMessageView();
 
 	CMessageHeader& GetMsgHeader() const;
 	CMessageHeader* GetMsgHeaderPtr() const;
@@ -215,6 +233,18 @@ public:
 	_u16 GetReadOffset() const { return readOffset_; }
 	_u32 GetReadMemOffset() const { return readMemOffset_; }
 
+	// 기본 구현은 확장을 허용하지 않으며, 파생 클래스(CMessageContext)에서만 실제 확장을 수행한다.
+	virtual bool EnsureCapacity(_u32 _requiredCapacity)
+	{
+		if (_requiredCapacity <= memCapacity_)
+			return false;
+		jc_assert(false); // 뷰는 기본적으로 메모리 확장을 지원하지 않음
+		return false;
+	}
+
+	virtual bool IsView() const { return true; } // 기본적으로 읽기 전용 뷰로 간주. 파생 클래스에서 필요에 따라 재정의 가능.
+	bool IsValid() const;
+
 	void SetReadOffset(_u16 _readOffset);
 	void SetWriteOffset(_u16 _writeOffset);
 
@@ -226,40 +256,31 @@ public:
 	CMessage::VariantType GetCurrentVT() const;
 	CMessage::VariantType GetCurrentVT(OUT _u32* _pMemSize) const;
 
-	bool EnsureCapacity(_u32 _requiredCapacity);
-
 	template <template <typename> class TypeTraits, typename T>
 	void WriteValue(T _value, T** _ppOut = nullptr)
 	{
-		// 지원 안되는 타입이면 컴파일 타임 에러
-		static_assert(TypeTraits<T>::VARIANT_TYPE != 0, "Unsupported type for CMessageContext::WriteValue");
+		static_assert(TypeTraits<T>::VARIANT_TYPE != 0, "Unsupported type for CMessageView::WriteValue");
 
 		CMessageHeader* pHeader = GetMsgHeaderPtr();
-		constexpr _u8 ELEM_SIZE = TypeTraits<T>::MEM_SIZE;	// 타입 정보(1) + 실제 값 크기
+		constexpr _u8 ELEM_SIZE = TypeTraits<T>::MEM_SIZE;
 		const _u16 HEADER_SIZE = GetHeaderSize();
 
 		_u32 requiredMemCapacity = HEADER_SIZE + pHeader->writeMemOffset_ + ELEM_SIZE;
-		bool expandNeed = requiredMemCapacity > memCapacity_;
-		if (expandNeed)
+		if (requiredMemCapacity > memCapacity_)
 		{
+			// 파생 클래스에서 확장을 시도할 수 있도록 가상 함수 호출
 			if (!EnsureCapacity(requiredMemCapacity))
 			{
 				jc_assert(false);
 				return;
 			}
+			// 확장에 성공한 경우, 헤더 포인터를 다시 얻는다.
+			pHeader = GetMsgHeaderPtr();
 		}
 
-		if (expandNeed)
-		{
-			pHeader = GetMsgHeaderPtr(); // 버퍼 확장되었으니 헤더 위치 갱신
-		}
 		_u8* pWrite = pBuf_ + HEADER_SIZE + pHeader->writeMemOffset_;
-
-		// 1) 타입 코드 기록
 		*pWrite = static_cast<_u8>(TypeTraits<T>::VARIANT_TYPE);
 		++pWrite;
-
-		// 2) 실제 값 기록
 		*reinterpret_cast<T*>(pWrite) = _value;
 
 		if (_ppOut)
@@ -271,7 +292,6 @@ public:
 		pHeader->writeMemOffset_ += ELEM_SIZE;
 	}
 
-	// 기본 Read: 타입 불일치 또는 범위 초과 시 assert 후 false 반환
 	template <template <typename> class TypeTraits, typename T>
 	T ReadValue()
 	{
@@ -280,37 +300,33 @@ public:
 		switch (result)
 		{
 		case 0:
-			// ok
 			break;
 		case -1:
-			jc_assert_msg(false, "CMessageContext::ReadValue - no more elements to read");
+			jc_assert_msg(false, "CMessageView::ReadValue - no more elements to read");
 			break;
 		case -2:
-			jc_assert_msg(false, "CMessageContext::ReadValue - not enough bytes for element");
+			jc_assert_msg(false, "CMessageView::ReadValue - not enough bytes for element");
 			break;
 		case -3:
-			jc_assert_msg(false, "CMessageContext::ReadValue - variant type mismatch");
+			jc_assert_msg(false, "CMessageView::ReadValue - variant type mismatch");
 			break;
 		default:
-			jc_assert_msg(false, "CMessageContext::ReadValue - unknown read error");
+			jc_assert_msg(false, "CMessageView::ReadValue - unknown read error");
 			break;
 		}
 		return value;
 	}
 
-	// 안전한 TryRead: 타입/범위 체크 후 실패 시 false 반환
 	template <template <typename> class TypeTraits, typename T>
 	int TryReadValue(T& _outValue)
 	{
-		static_assert(TypeTraits<T>::VARIANT_TYPE != 0, "Unsupported type for CMessageContext::TryReadValue");
+		static_assert(TypeTraits<T>::VARIANT_TYPE != 0, "Unsupported type for CMessageView::TryReadValue");
 		const CMessageHeader& header = GetMsgHeader();
 		const _u16 HEADER_SIZE = GetHeaderSize();
 
-		// 요소 갯수 기준으로 먼저 범위 체크
-		if (readOffset_ >= header.writeOffset_) 
+		if (readOffset_ >= header.writeOffset_)
 			return -1;
 
-		// 남은 데이터가 최소 타입 코드 + 값 크기보다 작은 경우 실패
 		const _u32 remaining = readMemOffset_ >= header.writeMemOffset_ ? 0 : header.writeMemOffset_ - readMemOffset_;
 		constexpr _u8 ELEM_SIZE = TypeTraits<T>::MEM_SIZE;
 		if (remaining < ELEM_SIZE)
@@ -329,35 +345,45 @@ public:
 		return 0;
 	}
 
-	void	WriteString(const String& _str);
-	void	WriteBinary(const _u8* _pBytes, _u32 _len);
-	void	WriteBinaryImpl(CMessage::VariantType _type, const _u8* _pBytes, _u32 _len);
+	void		WriteString(const String& _str);
+	void		WriteBinary(const _u8* _pBytes, _u32 _len);
+	void		WriteBinaryImpl(CMessage::VariantType _type, const _u8* _pBytes, _u32 _len);
 
-	CMessage::VariantType		ReadAny(OUT _u32* _pMemSize);
-	String						ReadString();
-	bool						ReadBinary(Span<_u8> _buffer, OUT _u32& _outLen);
-	bool 						ReadBinary(_u8* _pBytes, _u32 _capacity, OUT _u32& _outLen);
+	CMessage::VariantType	ReadAny(OUT _u32* _pMemSize);
+	String					ReadString();
+	bool					ReadBinary(Span<_u8> _buffer, OUT _u32& _outLen);
+	bool 					ReadBinary(_u8* _pBytes, _u32 _capacity, OUT _u32& _outLen);
 
-	bool						TryReadString(OUT String& _value);
-	bool						TryReadBinary(Span<_u8> _buffer, OUT _u32& _outLen);
-	bool						TryReadBinary(_u8* _pBytes, _u32 _capacity, OUT _u32& _outLen);
+	bool					TryReadString(OUT String& _value);
+	bool					TryReadBinary(Span<_u8> _buffer, OUT _u32& _outLen);
+	bool					TryReadBinary(_u8* _pBytes, _u32 _capacity, OUT _u32& _outLen);
 
-	int							TryReadBinaryImpl(CMessage::VariantType _expectedType, _u8** _ppBuf, _u32 _capacity, OUT _u32& _outLen);
-	const char*					GetBinaryReadErrorMessage(int _errorCode);
+	int						TryReadBinaryImpl(CMessage::VariantType _expectedType, _u8** _ppBuf, _u32 _capacity, OUT _u32& _outLen);
+	const char*				GetBinaryReadErrorMessage(int _errorCode);
 
-	_u8*		GetValue(_u16 _offset, OUT CMessage::VariantType& _type, OUT _u32& _elemValueSize);
+	_u8*					GetValue(_u16 _offset, OUT CMessage::VariantType& _type, OUT _u32& _elemValueSize);
 
-	jc::String Dump() const;
+	jc::String				Dump() const;
 
 	static CMessage::VariantType PeekVT(_u8* _pBuf, _u32 _capacity, OUT _u32* _pMemSize = nullptr, OUT _u32* _pVTSize = nullptr);
 
-	_u32	prefixMemCapacity_ = 0;			// 접두 메모리 크기
-	_u32	memCapacity_ = 0;				// 전체 메모리 용량
-	_u32	readMemOffset_ = 0;				// 요소 메모리를 얼만큼 읽었는지
-	_u16	readOffset_ = 0;				// 요소 메모리를 몇개나 읽었는지
+	jc::SharedPtr<MemoryPoolAbstract> pMemOwner_ = nullptr;
+	_u32	prefixMemCapacity_ = 0;		// 접두 메모리 크기
+	_u32	memCapacity_ = 0;			// 전체 메모리 용량
+	_u32	readMemOffset_ = 0;			// 요소 메모리를 얼만큼 읽었는지
+	_u16	readOffset_ = 0;			// 요소 메모리를 몇개나 읽었는지
 	_u8*	pBuf_ = nullptr;
+};
 
-	friend class CMessage;
+//////////////////////////////////////////////////////////////////////////////////////////
+class JC_DLL CMessageContext : public CMessageView
+{
+public:
+	CMessageContext(_u32 _prefixMemCapacity, _u32 _elemMemCapacity, int _msgId = 0, object_id _targetId = 0);
+	virtual ~CMessageContext();
+
+	virtual bool EnsureCapacity(_u32 _requiredCapacity) override;
+	virtual bool IsView() const override { return false; }
 };
 
 NS_END

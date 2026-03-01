@@ -61,7 +61,7 @@
     <ClCompile Include="..\Sources\jnet\Host\TcpSession.cpp">
       <Filter>Host</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jnet\Buffer\CommandBuffer.cpp">
+    <ClCompile Include="..\Sources\jnet\Buffer\PacketBuffer.cpp">
       <Filter>Buffer</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\jnet\Packet\Packet.cpp">
@@ -87,6 +87,9 @@
     </ClCompile>
     <ClCompile Include="..\Sources\jnet\Packet\PacketViewer.cpp">
       <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\Buffer\PooledStreamBuffer.cpp">
+      <Filter>Buffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -139,7 +142,7 @@
       <Filter>IOCPOverlapped</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jnet\Namespace.h" />
-    <ClInclude Include="..\Sources\jnet\Buffer\BufferAbstract.h">
+    <ClInclude Include="..\Sources\jnet\Buffer\StreamBuffer.h">
       <Filter>Buffer</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jnet\Buffer\StaticBuffer.h">
@@ -151,7 +154,7 @@
     <ClInclude Include="..\Sources\jnet\Host\TcpSession.h">
       <Filter>Host</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\jnet\Buffer\CommandBuffer.h">
+    <ClInclude Include="..\Sources\jnet\Buffer\PacketBuffer.h">
       <Filter>Buffer</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jnet\Host\UdpClient.h">
@@ -211,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="..\Sources\jnet\Packet\PacketHeader.h">
       <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Buffer\PooledStreamBuffer.h">
+      <Filter>Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

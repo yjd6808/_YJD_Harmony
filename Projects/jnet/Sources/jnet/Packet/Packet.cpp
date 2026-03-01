@@ -22,7 +22,7 @@ void RecvedCmdPacket::ForEach(const jc::Action<ICommand*>& _consumer)
 		return;
 	}
 
-	while (i < header_.cmdCount_)
+	while (i < header_.elemCount_)
 	{
 		ICommand* pCmd = reinterpret_cast<ICommand*>(pRead);
 		_consumer(pCmd);
@@ -48,15 +48,15 @@ void RecvedCmdPacket::Delete()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-CmdBufferPacket::CmdBufferPacket(const CommandBufferPtr& _buffer)
-: CmdPacket(_buffer->GetCommandCount(), _buffer->GetPayloadLength())
+CmdBufferPacket::CmdBufferPacket(const PacketBufferPtr& _buffer)
+: CmdPacket(_buffer->GetElemCount(), _buffer->GetPayloadLength())
 , pBuf_(_buffer)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-CmdBufferPacket::CmdBufferPacket(const jc::MemoryPoolAbstractPtr& _allocator, const CommandBufferPtr& _buffer)
-: CmdPacket(_allocator, _buffer->GetCommandCount(), _buffer->GetPayloadLength())
+CmdBufferPacket::CmdBufferPacket(const jc::MemoryPoolAbstractPtr& _allocator, const PacketBufferPtr& _buffer)
+: CmdPacket(_allocator, _buffer->GetElemCount(), _buffer->GetPayloadLength())
 , pBuf_(_buffer)
 {
 }

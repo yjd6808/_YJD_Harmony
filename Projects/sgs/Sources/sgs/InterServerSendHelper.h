@@ -114,7 +114,7 @@ struct InterServerSendHelper : InterServerSendHelperBase
 
 		if (SendInformation.strategy_ == jnet::SendStrategy::SendAlloc)
 		{
-			TCommand& cmd = SendInformation.sender_->template SendAlloc<TCommand>(_count);
+			TCommand& cmd = SendInformation.sender_->template EnqueueCmd<TCommand>(_count);
 			InitCommand(cmd);
 			return TSending<TCommand>(cmd, nullptr);
 		}

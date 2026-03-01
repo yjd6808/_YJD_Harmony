@@ -22,7 +22,9 @@ enum class TestMode
 extern int TestClientCount;
 extern int TestSendCount;
 extern bool UsePooling;
-extern AutoResetEvent TestFinished;		// 테스트 완료여부
+extern NormalLock TestLock;
+extern ConditionVariable TestCondVar;
+extern int TestStep;
 extern thread_local SharedPtr<CBinarySearchMemoryPool> TlsMemPool;
 extern TestMode Mode;
 

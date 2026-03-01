@@ -104,7 +104,7 @@ struct SendHelper : SendHelperBase
 
 		if (SendInformation.Strategy == SendStrategy::SendAlloc)
 		{
-			return TSending<TCommand>(SendInformation.Sender->template SendAlloc<TCommand>(_count), nullptr);
+			return TSending<TCommand>(SendInformation.Sender->template EnqueueCmd<TCommand>(_count), nullptr);
 		}
 
 		auto pPacket = SingleCmdPacket<TCommand>::Create(SendInformation.MemPool, _count);    // 해제는 소멸자에서함

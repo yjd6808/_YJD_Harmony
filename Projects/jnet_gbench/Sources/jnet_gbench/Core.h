@@ -36,6 +36,6 @@ USING_NS_BENCHMARK;
 #define ON							1
 #define OFF							0
 
-#define BufferingPerformanceTest	ON
+#define BufferingPerformanceTest	OFF
 #define BufferingWithNagleTest		OFF
-#define PacketPoolingTest			OFF
+#define PacketPoolingTest			ON

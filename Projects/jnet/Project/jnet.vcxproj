@@ -19,10 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Sources\jnet\Buffer\CommandBuffer.cpp">
+    <ClCompile Include="..\Sources\jnet\Buffer\PacketBuffer.cpp">
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\jnet\Buffer\PooledStreamBuffer.cpp" />
     <ClCompile Include="..\Sources\jnet\Config.cpp" />
     <ClCompile Include="..\Sources\jnet\Host\Host.cpp">
       <SubType>
@@ -137,8 +138,9 @@
     <ClCompile Include="..\Sources\jnet\Winsock.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\jnet\Buffer\BufferAbstract.h" />
-    <ClInclude Include="..\Sources\jnet\Buffer\CommandBuffer.h">
+    <ClInclude Include="..\Sources\jnet\Buffer\PooledStreamBuffer.h" />
+    <ClInclude Include="..\Sources\jnet\Buffer\StreamBuffer.h" />
+    <ClInclude Include="..\Sources\jnet\Buffer\PacketBuffer.h">
       <SubType>
       </SubType>
     </ClInclude>

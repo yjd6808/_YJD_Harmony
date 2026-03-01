@@ -8,19 +8,19 @@
 
 #pragma once
 
-#include <jnet/Buffer/BufferAbstract.h>
+#include <jnet/Buffer/StreamBuffer.h>
 
 
 NS_JNET_BEGIN
 
 template <_u32 BufferSize>
-class StaticBuffer : public BufferAbstract
+class StaticBuffer : public StreamBuffer
 {
 	using TBuffer = StaticBuffer<BufferSize>;
 
 public:
 	StaticBuffer()
-		: BufferAbstract(buffer_, BufferSize)
+		: StreamBuffer(buffer_, BufferSize)
 	{
 	}
 

@@ -23,7 +23,7 @@
 #include <WinSock2.h>
 
 #include <jnet/Namespace.h>
-#include <jnet/Buffer/CommandBuffer.h>
+#include <jnet/Buffer/PacketBuffer.h>
 #include <jnet/Packet/Command.h>
 
 NS_JNET_BEGIN
@@ -97,7 +97,7 @@ public:
 
 	virtual WSABUF GetWSABuf() const = 0;
 	virtual int SizeOf() const = 0;
-	PktLen_t GetPacketLength() const { return header_.payloadLen_; }
+	PaloadLen_t GetPacketLength() const { return header_.payloadLen_; }
 	PacketType_t GetType() const { return static_cast<PacketType_t>(header_.packetType_); }
 	MagicNum_t GetMagicNumber() const { return header_.magicNumber_; }
 protected:
@@ -117,7 +117,7 @@ public:
 		jc_assert(_length > 0);
 
 		header_.packetType_ = PacketType::Raw;
-		header_.payloadLen_ = static_cast<PktLen_t>(_length);
+		header_.payloadLen_ = static_cast<PaloadLen_t>(_length);
 
 		const int totalLen = PACKET_HEADER_SIZE + _length;
 
@@ -137,7 +137,7 @@ public:
 		jc_assert(_length > 0);
 
 		header_.packetType_ = PacketType::Raw;
-		header_.payloadLen_ = static_cast<PktLen_t>(_length);
+		header_.payloadLen_ = static_cast<PaloadLen_t>(_length);
 
 		const int totalLen = PACKET_HEADER_SIZE + _length;
 
@@ -211,34 +211,34 @@ struct CmdPacket : IPacket
 		header_.packetType_ = PacketType::Command;
 	}
 
-	CmdPacket(CmdCnt_t _commandCount, PktLen_t _packetLength)
+	CmdPacket(ElemCnt_t _commandCount, PaloadLen_t _packetLength)
 	{
 		header_.packetType_ = PacketType::Command;
-		header_.cmdCount_ = _commandCount;
+		header_.elemCount_ = _commandCount;
 		header_.payloadLen_ = _packetLength;
 	}
 
-	CmdPacket(const jc::MemoryPoolAbstractPtr& _allocator, CmdCnt_t _commandCount, PktLen_t _packetLength)
+	CmdPacket(const jc::MemoryPoolAbstractPtr& _allocator, ElemCnt_t _commandCount, PaloadLen_t _packetLength)
 	: IPacket(_allocator)
 	{
 		header_.packetType_ = PacketType::Command;
-		header_.cmdCount_ = _commandCount;
+		header_.elemCount_ = _commandCount;
 		header_.payloadLen_ = _packetLength;
 	}
 
 	~CmdPacket() override = default;
 
 
-	CmdCnt_t GetCommandCount() const
+	ElemCnt_t GetCommandCount() const
 	{
-		return header_.cmdCount_;
+		return header_.elemCount_;
 	}
 
 	virtual char* GetCommandSource() const = 0; // 커맨드 시작위치 반환
 
 	ICommand* GetCommand(int _index)
 	{
-		if (_index >= header_.cmdCount_ || _index < 0)
+		if (_index >= header_.elemCount_ || _index < 0)
 		{
 			return nullptr;
 		}
@@ -247,7 +247,7 @@ struct CmdPacket : IPacket
 		char* pCommandData = GetCommandSource();
 		int index = 0;
 
-		while (index < header_.cmdCount_)
+		while (index < header_.elemCount_)
 		{
 			pCommand = reinterpret_cast<ICommand*>(pCommandData);
 
@@ -268,7 +268,7 @@ struct CmdPacket : IPacket
 		int commandIndex = 0;
 		char* pCommandData = GetCommandSource();
 
-		while (commandIndex < header_.cmdCount_)
+		while (commandIndex < header_.elemCount_)
 		{
 			ICommand* pCurrentCommand = reinterpret_cast<ICommand*>(pCommandData);
 			_consumer(pCurrentCommand);
@@ -315,10 +315,10 @@ class CmdBufferPacket : public CmdPacket
 	using TPacket = CmdBufferPacket;
 
 public:
-	explicit CmdBufferPacket(const CommandBufferPtr& _buffer);
-	CmdBufferPacket(const jc::MemoryPoolAbstractPtr& _allocator, const CommandBufferPtr& _buffer);
+	explicit CmdBufferPacket(const PacketBufferPtr& _buffer);
+	CmdBufferPacket(const jc::MemoryPoolAbstractPtr& _allocator, const PacketBufferPtr& _buffer);
 
-	JNET_PACKET_POOLING_CREATE(const CommandBufferPtr&)
+	JNET_PACKET_POOLING_CREATE(const PacketBufferPtr&)
 	JNET_PACKET_POOLING_RELEASE(CmdBufferPacket)
 
 	WSABUF GetWSABuf() const override
@@ -336,7 +336,7 @@ public:
 		return pBuf_->Source() + PACKET_HEADER_SIZE;
 	}
 private:
-	CommandBufferPtr pBuf_;
+	PacketBufferPtr pBuf_;
 };
 
 /*=====================================================================================
@@ -505,7 +505,7 @@ public:
 		InitializeCountRecursive<0>(_counts...);
 
 		header_.payloadLen_ = cmdEndPos_[COMMAND_COUNT];
-		header_.cmdCount_ = COMMAND_COUNT;
+		header_.elemCount_ = COMMAND_COUNT;
 
 		if (_nullableAllocator != nullptr)
 		{
@@ -650,15 +650,15 @@ class SingleCmdPacket<TCommand, true> : public CmdPacket
 public:
 	// count 매개변수는 다이나믹 커맨드 처리를 위한 특수화 SingleCmdPacket과의 호환성을 위해 둠
 	explicit SingleCmdPacket(int _count = 0)
-	: CmdPacket(1, static_cast<PktLen_t>(sizeof(TCommand)))
+	: CmdPacket(1, static_cast<PaloadLen_t>(sizeof(TCommand)))
 	, cmd_(*reinterpret_cast<TCommand*>(pBuf_ + PACKET_HEADER_SIZE))
 	{
 		(void)_count;
 		jc::Memory::PlacementNew(cmd_);
 	}
 
-	SingleCmdPacket(const jc::MemoryPoolAbstractPtr& _allocator, int _count)
-	: CmdPacket(_allocator, 1, static_cast<PktLen_t>(sizeof(TCommand)))
+	SingleCmdPacket(const jc::MemoryPoolAbstractPtr& _allocator, int _count = 0)
+	: CmdPacket(_allocator, 1, static_cast<PaloadLen_t>(sizeof(TCommand)))
 	, cmd_(*reinterpret_cast<TCommand*>(pBuf_ + PACKET_HEADER_SIZE))
 	{
 		(void)_count;
@@ -714,7 +714,7 @@ public:
 	// count가 0일 경우 구조체 일부가 잘리기 때문에 PlacementNew 수행시 메모리 커럽션이 발생하게 된다. 따라서 생성시에는 count가 0이더라도 1로 가정하고 처리하도록 한다.
 	//   -> 이제 0으로 사용가능, Flexible Array를 사용하기 약속함
 	SingleCmdPacket(const jc::MemoryPoolAbstractPtr& _allocator, int _count)
-	: CmdPacket(_allocator, 1, static_cast<PktLen_t>(TCommand::_Size(_count)))
+	: CmdPacket(_allocator, 1, static_cast<PaloadLen_t>(TCommand::_Size(_count)))
 	, pBuf_(_allocator.Exist()
 		? static_cast<char*>(_allocator->DynamicPop(PACKET_HEADER_SIZE + TCommand::_Size(_count)))
 		: dbg_new char[PACKET_HEADER_SIZE + TCommand::_Size(_count)])
