@@ -25,7 +25,7 @@ IOCPOverlappedSend::~IOCPOverlappedSend()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IOCPOverlappedSend::Process(BOOL _result, _u32l _bytesTransferred, IOCPPostOrder* _pCompletionKey)
+void IOCPOverlappedSend::Process(BOOL _result, _u32l _bytesTransferred, NULLABLE IOCPPostOrder* _pCompletionKey, IOCPWorker* _pWorker)
 {
 	(void)_pCompletionKey;
 

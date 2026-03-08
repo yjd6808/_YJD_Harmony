@@ -6,7 +6,6 @@
  */
 
 #include "Core.h"
-#include "LobbyCoreHeader.h"
 #include "S_LOBBY.h"
 
 #include <sg/Cmd_LOBBY.h>

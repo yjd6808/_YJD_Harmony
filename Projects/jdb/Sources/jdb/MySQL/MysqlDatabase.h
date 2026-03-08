@@ -45,6 +45,8 @@
 #include "MysqlStatementBuilder.h"
 #include "MysqlQuery.h"
 
+#define IOCP_TASK_TYPE_MYSQL (1)
+
 NS_JDB_BEGIN
 
 using MysqlQueryTask = jnet::IOCPTask<MysqlQueryPtr>;
@@ -55,10 +57,10 @@ using MysqlQueryTaskPtr = jc::SharedPtr<MysqlQueryTask>;
 class JDB_DLL MysqlDatabase
 {
 public:
-	MysqlDatabase(const MysqlDatabaseInfo& _info);
+	MysqlDatabase();
 	virtual ~MysqlDatabase();
 
-	bool Initialize();
+	bool Initialize(const MysqlDatabaseInfo& _info);
 	void Finalize();
 
 	MysqlConnectionPool* GetConnectionPool() const { return connectionPool_; }
@@ -88,7 +90,10 @@ public:
 
 		MysqlQueryPtr pQuery = MysqlQuery::Create(connectionPool_->GetConnection(), _statement,
 		                                          jc::Forward<Args>(_args)...);
-		return MysqlQueryTask::Run(iocp_, taskFunc, finallyFunc, pQuery);
+		auto pTask = MysqlQueryTask::Create(iocp_, taskFunc, finallyFunc, pQuery);
+		pTask->SetType(IOCP_TASK_TYPE_MYSQL);
+		pTask->Start();
+		return pTask;
 	}
 
 	/*

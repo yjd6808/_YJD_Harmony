@@ -25,13 +25,13 @@
       <Filter>_Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\IComponent.h">
-      <Filter>Base</Filter>
+      <Filter>_Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\IUpdatable.h">
-      <Filter>Base</Filter>
+      <Filter>_Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\UpdatableCollection.h">
-      <Filter>Base</Filter>
+      <Filter>_Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\ServerEnum.h">
       <Filter>Enum</Filter>
@@ -46,16 +46,13 @@
       <Filter>Const</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\ComponentCollection.h">
-      <Filter>Base</Filter>
+      <Filter>_Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\ServerConst_COMPONENT.h">
       <Filter>Const</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\AuthenticationComponent.h">
       <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\sgs\UnauthenticatedSessionManager.h">
-      <Filter>Lobby</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\CmdHost_PING.h">
       <Filter>_Net\Cmd</Filter>
@@ -70,10 +67,10 @@
       <Filter>_Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\SessionComponent.h">
-      <Filter>Base</Filter>
+      <Filter>_Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\ISessionEventHandler.h">
-      <Filter>Base</Filter>
+      <Filter>_Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\CmdRelay_TEST.h">
       <Filter>_Net\Cmd</Filter>
@@ -126,6 +123,9 @@
     <ClInclude Include="..\Sources\sgs\_API\sgapiServerBase.h">
       <Filter>_API</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\sgs\_Net\GameDB.h">
+      <Filter>_Net\Database</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\sgs\Core.cpp" />
@@ -143,22 +143,19 @@
       <Filter>_Net</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\UpdatableCollection.cpp">
-      <Filter>Base</Filter>
+      <Filter>_Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\ServerEnum.cpp">
       <Filter>Enum</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\ComponentCollection.cpp">
-      <Filter>Base</Filter>
+      <Filter>_Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\AuthenticationComponent.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs\UnauthenticatedSessionManager.cpp">
-      <Filter>Lobby</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\sgs\SessionComponent.cpp">
-      <Filter>Base</Filter>
+      <Filter>_Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\R_PING_COMMON.cpp">
       <Filter>_Net\Recv</Filter>
@@ -205,11 +202,11 @@
     <ClCompile Include="..\Sources\sgs\_API\sgapiServerBase.cpp">
       <Filter>_API</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\sgs\_Net\GameDB.cpp">
+      <Filter>_Net\Database</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Base">
-      <UniqueIdentifier>{e6d8fe09-415a-4176-8d54-77235b91080c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Const">
       <UniqueIdentifier>{2f5494b8-ae54-445c-a598-9e6457f835fb}</UniqueIdentifier>
     </Filter>
@@ -237,8 +234,11 @@
     <Filter Include="_Net\Cmd">
       <UniqueIdentifier>{26966038-820f-486e-9eab-255c8f6394ec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lobby">
-      <UniqueIdentifier>{9c30e36e-d7bf-4f68-9df8-a1fc168a182f}</UniqueIdentifier>
+    <Filter Include="_Util">
+      <UniqueIdentifier>{e6d8fe09-415a-4176-8d54-77235b91080c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Net\Database">
+      <UniqueIdentifier>{f261f596-57e0-41e0-b8aa-ed3239e9ca96}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

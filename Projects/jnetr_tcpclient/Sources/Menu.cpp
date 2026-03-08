@@ -12,6 +12,7 @@
 #include <jnet/Winsock.h>
 #include <jnetr_common/TcpClientNetGroup.h>
 #include <jnetr_common/Command.h>
+#include <jnetr_common/Message.h>
 #include <jnetr_common/Config.h>
 
 #include "Menu.h"
@@ -130,10 +131,12 @@ static void SendMsg(TcpClient* _pClient)
 
 
 	jc::CMessage legMsg = _pClient->EnqueueMsg();
+	legMsg.SetMsgId(NET_TEST_MSG_1);
 	legMsg.WriteU32(1234);
 	legMsg.WriteString("abcdefg");
 
 	jc::CMessage legMsg2 = _pClient->EnqueueMsg();
+	legMsg2.SetMsgId(NET_TEST_MSG_2);
 	legMsg2.WriteU32(5678);
 	legMsg2.WriteString("hijklmn");
 
@@ -142,9 +145,5 @@ static void SendMsg(TcpClient* _pClient)
 
 	aaa = legMsg2.ReadU32();
 	bbb = legMsg2.ReadString();
-
-
-	int a = 30;
-
-
+	_pClient->FlushSendBuffer();
 }

@@ -28,7 +28,6 @@ Session::Session(
 	int _sendBufferSize)
 //////////////////////////////////////////////////////////////////////////////////////////
 : Host(_pIocp)
-, handle_(-1)
 , bufferAllocator_(_pBufferAllocator)
 , pendingData_(0) // Lazy-Allocation
 , packetParser_(this)
@@ -271,11 +270,11 @@ bool Session::SendAsync(const PacketBufferPtr& _pBuffer)
 #ifdef DebugMode
 	jc_assert_msg(_pBuffer->IsValid(), "보내고자하는 커맨드 버퍼 데이터가 이상합니다.");
 #endif
-	return SendAsync(dbg_new CmdBufferPacket(_pBuffer));
+	return SendAsync(dbg_new PacketBufferPacket(_pBuffer));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-CmdBufferPacket* Session::GetCommandBufferForSending()
+PacketBufferPacket* Session::GetCommandBufferForSending()
 {
 	JC_LOCK_GUARD(sendBufferLock_);
 
@@ -289,7 +288,7 @@ CmdBufferPacket* Session::GetCommandBufferForSending()
 
 	sendBuffer_ = pNewSendBuffer;
 
-	CmdBufferPacket* pWrappedPacket = dbg_new CmdBufferPacket(pOldSendBuffer);
+	PacketBufferPacket* pWrappedPacket = dbg_new PacketBufferPacket(pOldSendBuffer);
 
 #ifdef DebugMode
 	if (!pOldSendBuffer->IsValid())
@@ -305,7 +304,7 @@ CmdBufferPacket* Session::GetCommandBufferForSending()
 //////////////////////////////////////////////////////////////////////////////////////////
 void Session::FlushSendBuffer()
 {
-	CmdBufferPacket* pWrappedPacket = GetCommandBufferForSending();
+	PacketBufferPacket* pWrappedPacket = GetCommandBufferForSending();
 	if (pWrappedPacket)
 	{
 		SendAsync(pWrappedPacket);
@@ -348,7 +347,7 @@ bool Session::SendToAsync(const PacketBufferPtr& _pBuffer, const IPv4EndPoint& _
 #ifdef DebugMode
 	jc_assert_msg(_pBuffer->IsValid(), "보내고자하는 커맨드 버퍼 데이터가 이상합니다.");
 #endif
-	auto pPacket = dbg_new CmdBufferPacket(_pBuffer);
+	auto pPacket = dbg_new PacketBufferPacket(_pBuffer);
 	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
 	return SendToAsync(pPacket, _destination);
 }

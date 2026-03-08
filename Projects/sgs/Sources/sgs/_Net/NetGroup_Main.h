@@ -28,6 +28,8 @@ public:
 
 	virtual void OnUpdate(const jc::TimeSpan& _elapsed);
 
+	NetSession* GetSession(object_id _handle);
+
 	void ProcessOrder(CenterOrder_t _order, jc::String _arg);
 	void LaunchServer();
 	void StopServer();

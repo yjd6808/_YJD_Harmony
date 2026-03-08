@@ -39,7 +39,7 @@ public:
 		static_assert(jc::IsNaturalType_v<TComponent>, "... TComponent must be natural type");
 		static_assert(jc::IsBaseOf_v<IComponent, TComponent>, "... TComponent must be derived from IComponent");
 
-		IComponent** pFoundComponent = componentMap_.Find(TComponent::GetType());
+		IComponent** pFoundComponent = componentMap_.Find(TComponent::Type());
 
 		if (pFoundComponent == nullptr)
 		{

@@ -8,14 +8,12 @@ USING_NS_JC;
 USING_NS_JC;
 USING_NS_JNET;
 USING_NS_STD;
-
-NS_JDB_BEGIN
+USING_NS_JDB;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MysqlDatabase::MysqlDatabase(const MysqlDatabaseInfo& _info)
+MysqlDatabase::MysqlDatabase()
 : iocp_(nullptr)
 , connectionPool_(nullptr)
-, info_(_info)
 , initialized_(false)
 {
 }
@@ -31,7 +29,7 @@ MysqlDatabase::~MysqlDatabase()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool MysqlDatabase::Initialize()
+bool MysqlDatabase::Initialize(const MysqlDatabaseInfo& _info)
 {
 	if (initialized_)
 	{
@@ -39,6 +37,7 @@ bool MysqlDatabase::Initialize()
 		return false;
 	}
 
+	info_ = _info;
 	const int connectionPoolSize = info_.connPoolSize_;
 	const int maxConnection = info_.maxConnection_;
 	const int threadCount = info_.iocpThreadCount_;
@@ -98,12 +97,11 @@ void MysqlDatabase::Finalize()
 	iocp_->Destroy();
 	_LogInfo_("%s %s 파괴완료", info_.name_.Source(), IOCP::TypeName());
 
-	if (connectionPool_)
-		JC_DELETE_SAFE(connectionPool_);
+	// 커넥션풀이 먼저 소멸되어야함.
+	JC_DELETE_SAFE(connectionPool_);
+	JC_DELETE_SAFE(iocp_);
+
 	_LogInfo_("%s %s 파괴완료", info_.name_.Source(), IOCP::TypeName(), MysqlConnectionPool::TypeName());
 
 	MysqlStatementBuilder::Finalize();
 }
-
-
-NS_END

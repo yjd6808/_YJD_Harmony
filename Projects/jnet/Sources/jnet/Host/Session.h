@@ -66,21 +66,23 @@ public:
 		CMD_CHECK_BASE_OF_COMMAND(TCommand)
 		DYNAMIC_CMD_CHECK_ARRAY_FIELD(TCommand)
 
+		PacketBuffer* pBuffer = sendBuffer_.GetPtr();
+
 		const int cmdSize = TCommand::_Size(_count);
-		if (_flushIfOverflow && sendBuffer_->GetWritePos() + cmdSize >= MAX_MSS)
+		if (_flushIfOverflow && pBuffer->GetWritePos() + cmdSize >= MAX_MSS)
 		{
 			FlushSendBuffer();
 		}
 
 		jc_assert_msg(
-			cmdSize <= sendBuffer_->GetRemainBufferSize(),
+			cmdSize <= pBuffer->GetRemainBufferSize(),
 			"버퍼의 남은 공간에 넣을 커맨드가 너무 큽니다. (CmdSize: %d, RemainBufferCapacity: %d)",
 			cmdSize,
-			sendBuffer_->GetRemainBufferSize());
-		return sendBuffer_->EmplaceCmd<TCommand>(_count);
+			pBuffer->GetRemainBufferSize());
+		return pBuffer->EmplaceCmd<TCommand>(_count);
 	}
 
-	CmdBufferPacket* GetCommandBufferForSending();
+	PacketBufferPacket* GetCommandBufferForSending();
 	virtual void FlushSendBuffer();
 	virtual void Connected() = 0;
 	virtual void ConnectFailed(_u32 _errorCode) = 0;
@@ -90,19 +92,15 @@ public:
 
 	virtual void NotifyRaw(char* _pData, int _len) = 0;
 	virtual void NotifyCommand(ICommand* _pCmd) = 0;
-	virtual void NotifyPacket(RecvedCmdPacket* _pPacket) = 0;
+	virtual void NotifyPacket(RecvedPacket* _pPacket) = 0;
+	virtual void NotifyMessage(jc::CMessage _msg) = 0;
 
 	int  AddPendingCount()      { return ++overlappedPendingCount_; }
 	int  DecreasePendingCount() { return --overlappedPendingCount_; }
 	int  GetPendingCount()      { return overlappedPendingCount_; }
 	void WaitForZeroPending();
 
-	void SetHandle(int _handle) { handle_ = _handle; }
-	int GetHandle() const { return handle_; }
-
 protected:
-	int handle_;
-
 	jc::AtomicInt overlappedPendingCount_;
 	jc::MemoryPoolAbstractPtr bufferAllocator_;
 	jc::RecursiveLock sendBufferLock_;

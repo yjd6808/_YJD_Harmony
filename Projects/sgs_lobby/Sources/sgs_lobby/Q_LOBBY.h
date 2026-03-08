@@ -9,8 +9,8 @@
 
 #include <jc/Define.h>
 
-#include <sgs/QueryHelper.h>
+#include <jdb/QueryHelper.h>
 
-struct Q_LOBBY : Qry::QryHelper<Q_LOBBY>
+struct Q_LOBBY : jdb::QryHelper<Q_LOBBY>
 {
 };

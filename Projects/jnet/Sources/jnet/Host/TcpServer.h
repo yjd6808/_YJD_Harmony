@@ -44,9 +44,10 @@ public:
 	void SessionConnected(TcpSession* _pSession);
 	void SessionConnectFailed(TcpSession* _pSession, _u32 _errorCode);
 	void SessionSent(TcpSession* _pSession, IPacket* _pSentPacket, _u32l _receivedBytes);
-	void SessionReceived(TcpSession* _pSession, ICommand* _pCommand);
-	void SessionReceived(TcpSession* _pSession, RecvedCmdPacket* _pRecvPacket);
+	void SessionReceivedCmd(TcpSession* _pSession, ICommand* _pCommand);
 	void SessionReceivedRaw(TcpSession* _pSession, char* _pData, int _len);
+	void SessionReceivedMsg(TcpSession* _pSession, jc::CMessage _msg);
+	void SessionReceivedPacket(TcpSession* _pSession, RecvedPacket* _pRecvPacket);
 
 	IPv4EndPoint GetBindEndPoint() const { return socket_.GetLocalEndPoint(); }
 	const char* TypeName() const override { return "TCP 서버"; }

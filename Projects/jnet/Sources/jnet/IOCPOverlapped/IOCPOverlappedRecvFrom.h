@@ -24,7 +24,7 @@ public:
 	~IOCPOverlappedRecvFrom() override;
 
 public:
-	void Process(BOOL _result, _u32l _bytesTransferred, IOCPPostOrder* _pCompletionKey) override;
+	void Process(BOOL _result, _u32l _bytesTransferred, NULLABLE IOCPPostOrder* _pCompletionKey, IOCPWorker* _pWorker) override;
 
 private:
 	Session* receiver_;

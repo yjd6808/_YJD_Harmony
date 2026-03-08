@@ -23,12 +23,13 @@
 
 NS_JNET_BEGIN
 
+class IOCPWorker;
 class IOCPOverlapped : public OVERLAPPED, public jc::RefCountObject
 {
 public:
 	enum class Type
 	{
-		Custom,
+		Task,
 		Accept,
 		Connect,
 		Disconnect,
@@ -37,6 +38,7 @@ public:
 		ReceiveFrom,
 		SendTo,
 		Max,
+		None,
 	};
 
 public:
@@ -44,7 +46,8 @@ public:
 	~IOCPOverlapped() override;
 
 public:
-	virtual void Process(BOOL _result, _u32l _bytesTransferred, IOCPPostOrder* _pCompletionKey) = 0;
+	virtual void Process(BOOL _result, _u32l _bytesTransferred, NULLABLE IOCPPostOrder* _pCompletionKey, IOCPWorker* _pWorker) = 0;
+
 	Type GetType() const { return type_; }
 
 	void ReleaseAction() override { delete this; }

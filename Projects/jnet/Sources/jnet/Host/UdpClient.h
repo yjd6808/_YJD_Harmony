@@ -34,9 +34,10 @@ public:
 	void ConnectFailed(_u32 _errorCode) override;
 	void Disconnected(_u32 _errorCode) override;
 
-	void NotifyCommand(ICommand* _pCmd) override;
-	void NotifyPacket(RecvedCmdPacket* _pPacket) override;
-	void NotifyRaw(char* _pData, int _len) override;
+	virtual void NotifyCommand(ICommand* _pCmd) override;
+	virtual void NotifyMessage(jc::CMessage _msg) override;
+	virtual void NotifyPacket(RecvedPacket* _pPacket) override;
+	virtual void NotifyRaw(char* _pData, int _len) override;
 
 	void Sent(IPacket* _pSentPacket, _u32l _sentBytes) override;
 	Type GetType() const override { return eClient; }

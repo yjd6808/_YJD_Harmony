@@ -23,7 +23,7 @@ IOCPOverlappedConnect::~IOCPOverlappedConnect()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IOCPOverlappedConnect::Process(BOOL _result, _u32l _bytesTransferred, IOCPPostOrder* _pCompletionKey)
+void IOCPOverlappedConnect::Process(BOOL _result, _u32l _bytesTransferred, NULLABLE IOCPPostOrder* _pCompletionKey, IOCPWorker* _pWorker)
 {
 	(void)_pCompletionKey;
 

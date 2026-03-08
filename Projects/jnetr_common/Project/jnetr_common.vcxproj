@@ -32,6 +32,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\jnetr_common\Message.h" />
     <ClInclude Include="..\Sources\jnetr_common\ServerListener.h" />
     <ClInclude Include="..\Sources\jnetr_common\TcpClientNetGroup.h" />
     <ClInclude Include="..\Sources\jnetr_common\ServerNetGroupMgr.h" />

@@ -18,6 +18,17 @@ USING_NS_JNET;
 USING_NS_SG;
 
 //////////////////////////////////////////////////////////////////////////////////////////
+void NetListenerHelper::LogRaw(jnet::TransportProtocol _protocol, jnet::Transmission _transmission, WSABUF _buf)
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void NetListenerHelper::LogMessage(jnet::TransportProtocol _protocol, jnet::Transmission _transmission, const jc::CMessage& _msg)
+{
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 void NetListenerHelper::LogCommand(TransportProtocol _protocol, Transmission _transmission, ICommand* _pCommand)
 {
 	const Cmd_t id = _pCommand->GetId();
@@ -48,7 +59,7 @@ void NetListenerHelper::LogCommand(TransportProtocol _protocol, Transmission _tr
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetListenerHelper::LogPacketHex(RecvedCmdPacket* _pRecvPacket)
+void NetListenerHelper::LogPacketHex(RecvedPacket* _pRecvPacket)
 {
 	if (g_cAppConfig.showRecvPacketHex_)
 	{

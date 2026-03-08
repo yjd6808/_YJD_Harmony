@@ -11,7 +11,7 @@
 #include <sgs/CmdRelay_AUTHENTICATION.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void S_AUTHENTICATION_IS::SEND_AUS_AuthenticationCheckAck(bool _success, int _sessionHandle, GameServerType_t _lastServer)
+void S_AUTHENTICATION_IS::SEND_AUS_AuthenticationCheckAck(bool _success, object_id _sessionHandle, GameServerType_t _lastServer)
 {
 	const auto sending = SendBegin<AUS_AuthenticationCheckAck>();
 	sending.cmd_.Success = _success;

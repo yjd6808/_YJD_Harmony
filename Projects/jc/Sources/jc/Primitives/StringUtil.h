@@ -34,9 +34,10 @@ public:
 	// FillLeft(20, '0', 4) -> 0020
 	template <typename T>
 	static String FillLeft(const T& v, char paddingCharacter, int len) {
-		if (len >= 1023) {
+		if (len >= 1023) 
+		{
 			jc_assert(false);
-			return { 0 };
+			return jc::String(0);
 		}
 
 		char szFill[1024];

@@ -301,7 +301,7 @@ TEST(VectorTest, MemoryPool) {
 	MemoryPoolLeakCheck;
 
 	Vector<String, CDefaultArrayAllocator> l;
-	for (int i = 0; i < 100'000; i++) l.PushBack(1);
+	for (int i = 0; i < 100'000; i++) l.PushBack(jc::String(100));
 }
 
 // 생성자 테스트

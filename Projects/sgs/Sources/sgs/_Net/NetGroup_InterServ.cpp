@@ -73,12 +73,14 @@ void NetGroup_InterServ::Initialize()
 		pIocp_, pBufferPool_, nullptr,
 		clientInfo.tcpRecvBufferSize_, clientInfo.tcpSendBufferSize_);
 	pTcp->Bind(clientInfo.bindTcp_);
+	pTcp->SetHandle(SH_INTER_SERV_TCP);
 	AddHost(0, pTcp);
 
 	auto pUdp = MakeShared<UdpClient>(
 		pIocp_, pBufferPool_, nullptr,
 		clientInfo.udpRecvBufferSize_, clientInfo.udpSendBufferSize_);
 	pUdp->Bind(clientInfo.bindUdp_);
+	pUdp->SetHandle(SH_INTER_SERV_UDP);
 	AddHost(1, pUdp);
 
 	pTcp_ = pTcp.Get<TcpClient*>();

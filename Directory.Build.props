@@ -14,6 +14,7 @@
 	'$(MSBuildProjectName)' == 'jnetr_udpclient_a'		OR
 	'$(MSBuildProjectName)' == 'jnetr_udpclient_b'		OR
 	'$(MSBuildProjectName)' == 'jdb'					OR
+	'$(MSBuildProjectName)' == 'jdbr'					OR
 	'$(MSBuildProjectName)' == 'sgcc'					OR
 	'$(MSBuildProjectName)' == 'sg'						OR
 	'$(MSBuildProjectName)' == 'sge'					OR
@@ -32,13 +33,21 @@
 	<Import Project="$(MSBuildThisFileDirectory)Props/database.props" 
 			Condition="
 	'$(MSBuildProjectName)' == 'jdb'					OR
+	'$(MSBuildProjectName)' == 'jdbr'					OR
+	'$(MSBuildProjectName)' == 'sgs'					OR
 	'$(MSBuildProjectName)' == 'sgs_auth'				OR
+	'$(MSBuildProjectName)' == 'sgs_center'				OR
+	'$(MSBuildProjectName)' == 'sgs_lobby'				OR
 	'$(MSBuildProjectName)' == 'sgs_game'
 			" />
 
 	<Import Project="$(MSBuildThisFileDirectory)Props/jdb.props" 
 			Condition="
+	'$(MSBuildProjectName)' == 'jdbr'					OR
+	'$(MSBuildProjectName)' == 'sgs'					OR
 	'$(MSBuildProjectName)' == 'sgs_auth'				OR
+	'$(MSBuildProjectName)' == 'sgs_center'				OR
+	'$(MSBuildProjectName)' == 'sgs_lobby'				OR
 	'$(MSBuildProjectName)' == 'sgs_game'
 			" />
 
@@ -46,6 +55,7 @@
 	<Import Project="$(MSBuildThisFileDirectory)Props/harmony.props" 
 			Condition="
 	'$(MSBuildProjectName)' == 'jdb' 					OR 
+	'$(MSBuildProjectName)' == 'jdbr' 					OR 
 	'$(MSBuildProjectName)' == 'jnet_gbench' 			OR 
 	'$(MSBuildProjectName)' == 'jnet_gtest' 			OR
 	'$(MSBuildProjectName)' == 'jnetr_common'			OR

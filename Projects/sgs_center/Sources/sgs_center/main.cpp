@@ -6,6 +6,10 @@
 #include <sg/LogSpecifier.h>
 
 #include <sgs/_API/sgapiServerBase.h>
+#include <sgs/_Net/NetGroup_Main.h>
+#include <sgs/_Net/NetCore.h>
+
+#include <sgs_center/CenterCore.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -33,11 +37,8 @@ int main(int _argc, char** _argv)
     // 메인 루틴
     //////////////////////////////////////////////////////////////////////////////////////
 
-    if (sg::NetGroup)
-        sg::NetGroup->LaunchServer();
-
-    if (sg::NetGroupMgr)
-        sg::NetGroupMgr->ProcessMainUpdate();
+	g_cNetGroup_Main.LaunchServer();
+	g_cNetCore.ProcessMainLoop();
 
     //////////////////////////////////////////////////////////////////////////////////////
     // 메인 리소스 정리

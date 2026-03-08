@@ -258,20 +258,29 @@ void TcpClient::Disconnected(_u32 _errorCode)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TcpClient::NotifyCommand(ICommand* _pCmd)
+void TcpClient::NotifyMessage(jc::CMessage _msg)
 {
 	if (pEventListener_)
 	{
-		pEventListener_->OnReceived(this, _pCmd);
+		pEventListener_->OnReceivedMsg(this, _msg);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TcpClient::NotifyPacket(RecvedCmdPacket* _pPacket)
+void TcpClient::NotifyCommand(ICommand* _pCmd)
 {
 	if (pEventListener_)
 	{
-		pEventListener_->OnReceived(this, _pPacket);
+		pEventListener_->OnReceivedCmd(this, _pCmd);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpClient::NotifyPacket(RecvedPacket* _pPacket)
+{
+	if (pEventListener_)
+	{
+		pEventListener_->OnReceivedPacket(this, _pPacket);
 	}
 }
 

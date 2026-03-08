@@ -239,7 +239,7 @@ jc::String ImagePack::GetImgName(const int _imgIndex) const
 
 	if (pElement == nullptr)
 	{
-		return { 0 };
+		return jc::String( 0 );
 	}
 
 	return pElement->GetName();

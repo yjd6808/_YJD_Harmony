@@ -9,7 +9,7 @@
 #include "Core.h"
 #include "AuthenticationComponent.h"
 
-#include <sgs/UnauthenticatedSessionManager.h>
+// #include <sgs/UnauthenticatedSessionManager.h>
 #include <sgs/_Net/NetSession.h>
 
 USING_NS_SG;
@@ -70,8 +70,8 @@ void AuthenticationComponent::SetAccountId(const char* _pAccountId)
 //////////////////////////////////////////////////////////////////////////////////////////
 void AuthenticationComponent::RemoveUnauthenticatedSession()
 {
-	if (!g_cUnauthenticatedSessionManager.Remove(serial_))
+	/*if (!g_cUnauthenticatedSessionManager.Remove(serial_))
 	{
 		_LogWarn_("미인증 세션목록에 %d 시리얼에 해당하는 세션이 없습니다.", serial_);
-	}
+	}*/
 }

@@ -13,7 +13,7 @@
 
 struct S_AUTHENTICATION_IS : InterServerSendHelper<S_AUTHENTICATION_IS>
 {
-	static void SEND_SAU_AuthenticationCheck(int _sessionHandle, const char* _pAccountId, AuthenticationSerial_t _serial);
+	static void SEND_SAU_AuthenticationCheck(object_id _sessionHandle, const char* _pAccountId, AuthenticationSerial_t _serial);
 };
 
 

@@ -27,9 +27,10 @@ public:
 	virtual void OnConnected() {}
 	virtual void OnDisconnected() {}
 
-	void NotifyCommand(ICommand* _pCmd) override;
-	void NotifyPacket(RecvedCmdPacket* _pRecvPacket) override;
-	void NotifyRaw(char* _pData, int _len) override;
+	virtual void NotifyCommand(ICommand* _pCmd) override;
+	virtual void NotifyMessage(jc::CMessage _msg) override;
+	virtual void NotifyPacket(RecvedPacket* _pRecvPacket) override;
+	virtual void NotifyRaw(char* _pData, int _len) override;
 
 	void Initialize() override;
 	void Connected() override;

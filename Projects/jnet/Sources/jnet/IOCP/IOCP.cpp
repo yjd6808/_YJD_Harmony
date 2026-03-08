@@ -7,7 +7,10 @@
 #include <jnet/WorkerGroup.h>
 #include <jnet/IOCP/IOCPWorker.h>
 
-NS_JNET_BEGIN
+#include <jc/Threading/Pulser.h>
+
+USING_NS_JC;
+USING_NS_JNET;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 IOCP::IOCP(int _threadCount)
@@ -39,6 +42,7 @@ IOCP::~IOCP()
 	{
 		Destroy();
 	}
+
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -97,17 +101,27 @@ void IOCP::Join()
 //////////////////////////////////////////////////////////////////////////////////////////
 void IOCP::WaitForZeroPending()
 {
+	Pulser pulser(10, Pulser::eSliceCycle);
+	TimeCounter logCounter(TimeCounterAttribute::TimeOverReset);
+
+	pulser.Start();
+
 	while (true)
 	{
-		int pending = pendingOverlappedCount_;
+		TimeSpan elapsed = pulser.Wait();
+		logCounter.Elapsed += elapsed;
 
-		if (pending == 0)
+		int pending = pendingOverlappedCount_;
+		if (pending <= 0)
 		{
+			jc_assert_msg(pending >= 0, "멍미 펜딩 카운트가 움수 인뎁쇼 (%d)", pending);
 			break;
 		}
 
-		jc_assert_msg(pending >= 0, "멍미 펜딩 카운트가 움수 인뎁쇼 (%d)", pending);
-		jc::Thread::Sleep(10);
+		if (logCounter.ElapsedSeconds(1))
+		{
+			_NetLogDebug_("IOCP::WaitForZeroPending - pendingOverlappedCount_: %d", pending);
+		}
 	}
 }
 
@@ -150,4 +164,56 @@ void IOCP::SetName(const jc::String& _name)
 	name_ = _name;
 }
 
-NS_END
+//////////////////////////////////////////////////////////////////////////////////////////
+void IOCP::SetListener(const jc::SharedPtr<IOCPTaskListener>& _pListener)
+{
+	if (state_ == State::Destroyed)
+	{
+		jc_assert_msg(false, "Destroyed 상태의 IOCP는 리스너를 등록할 수 없습니다.");
+		return;
+	}
+
+	if (pListener_ != nullptr)
+	{
+		jc_assert_msg(false, "이미 리스너가 등록되어 있습니다.");
+		return;
+	}
+
+	pListener_ = _pListener;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+int IOCP::PollTasks()
+{
+	// 단일 쓰레드에서만 호출되도록 해야함. (일반적으로 메인쓰레드)
+
+	if (pListener_ == nullptr)
+	{
+		_NetLogWarn_("IOCP에 리스너가 등록되지 않았습니다. PollTasks를 호출하기 전에 SetListener로 리스너를 등록해주세요.");
+		return 0;
+	}
+
+	cachedTaskList_.Clear();
+	{
+		JC_LOCK_GUARD(workerManagerLock_);
+		auto& workers = workerManager_->workers_;
+		for (int i = 0; i < workers.Size(); ++i)
+		{
+			IOCPWorker* pWorker = static_cast<IOCPWorker*>(workers[i]);
+			if (!pWorker->HasTask())
+				continue;
+
+			pWorker->PopAllTasksWithSwap(cachedTaskList_);
+		}
+	}
+
+	auto pListener = pListener_.GetPtr();
+	int processedTaskCount = 0;
+	for (int i = 0; i < cachedTaskList_.Size(); ++i)
+	{
+		IOCPTaskAbstractPtr& pTask = cachedTaskList_[i];
+		pListener->OnTaskCompleted(pTask.GetPtr());
+		++processedTaskCount;
+	}
+	return processedTaskCount;
+}

@@ -7,3 +7,7 @@
 
 
 #pragma once
+
+#include <sge/DLLExport.h>
+
+extern void SGE_DLL test__sge();

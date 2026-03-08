@@ -92,6 +92,7 @@ public:
 	};
 
 	static CMessage Null;
+	static constexpr _u32 USAGE_NONE = 0;
 	static constexpr _u32 DEFAULT_ELEM_MEM_CAPACITY = 256;
 	static constexpr _u16 MESSAGE_HEADER_SIZE = sizeof(CMessageHeader);
 	static constexpr _u8  MEM_SIZE_VARIANT = 77; // 요소 크기가 가변적인 타입의 메모리 크기를 지칭함
@@ -126,7 +127,12 @@ public:
 
 	void		SetMsgId(_u32 _msgId);
 	void		SetTargetId(object_id _targetId);
+	void		SetUsage(_u32 _usage);
 	void		SetContext(CMessageView* _pView);
+
+	_u32		GetMsgId() const;
+	object_id	GetTargetId() const;
+	_u32		GetUsage() const;
 
 	_u16		GetWriteOffset() const;
 	_u16		GetReadOffset() const;
@@ -225,6 +231,10 @@ public:
 	_u32 GetCapacityElem() const { return memCapacity_ - prefixMemCapacity_ - sizeof(CMessageHeader); }
 	_u32 GetCapacityPrefix() const { return prefixMemCapacity_; }
 
+	_u32 GetMsgId() const { return GetMsgHeader().msgId_; }
+	object_id GetTargetId() const { return GetMsgHeader().targetId_; }
+	_u32 GetUsage() const { return usage_; }
+
 	_u32 GetHeaderSize() const { return prefixMemCapacity_ + sizeof(CMessageHeader); }
 
 	_u16 GetWriteOffset() const { return GetMsgHeader().writeOffset_; }
@@ -233,17 +243,19 @@ public:
 	_u16 GetReadOffset() const { return readOffset_; }
 	_u32 GetReadMemOffset() const { return readMemOffset_; }
 
-	// 기본 구현은 확장을 허용하지 않으며, 파생 클래스(CMessageContext)에서만 실제 확장을 수행한다.
-	virtual bool EnsureCapacity(_u32 _requiredCapacity)
-	{
-		if (_requiredCapacity <= memCapacity_)
-			return false;
-		jc_assert(false); // 뷰는 기본적으로 메모리 확장을 지원하지 않음
-		return false;
-	}
+	void InitHeader();
+
+	virtual void ReleaseAction() override;
+	virtual bool EnsureCapacity(_u32 _requiredCapacity);
 
 	virtual bool IsView() const { return true; } // 기본적으로 읽기 전용 뷰로 간주. 파생 클래스에서 필요에 따라 재정의 가능.
 	bool IsValid() const;
+	bool IsReleased() const { return isReleased_; }
+
+	void SetMsgId(_u32 _msgId);
+	void SetTargetId(object_id _targetId);
+	void SetUsage(_u32 _usage);
+	void SetStackAllocatedContext(bool _v); // 스택에 할당된 컨텍스트로 설정. (메모리 풀에서 할당된 버퍼가 아님을 명시적으로 나타냄)
 
 	void SetReadOffset(_u16 _readOffset);
 	void SetWriteOffset(_u16 _writeOffset);
@@ -367,11 +379,14 @@ public:
 
 	static CMessage::VariantType PeekVT(_u8* _pBuf, _u32 _capacity, OUT _u32* _pMemSize = nullptr, OUT _u32* _pVTSize = nullptr);
 
-	jc::SharedPtr<MemoryPoolAbstract> pMemOwner_ = nullptr;
-	_u32	prefixMemCapacity_ = 0;		// 접두 메모리 크기
-	_u32	memCapacity_ = 0;			// 전체 메모리 용량
-	_u32	readMemOffset_ = 0;			// 요소 메모리를 얼만큼 읽었는지
-	_u16	readOffset_ = 0;			// 요소 메모리를 몇개나 읽었는지
+	jc::SharedPtr<MemoryPoolAbstract> pMemOwner_ = nullptr; // pBuf_의 소유권자 (pBuf_는 이 메모리풀에서 할당받은 메모리 청크에서 일부분을 나타낸다.)
+	_u32	usage_ = CMessage::USAGE_NONE;	// 이 메시지의 사용처
+	_u32	prefixMemCapacity_ = 0;			// 접두 메모리 크기
+	_u32	memCapacity_ = 0;				// 전체 메모리 용량
+	_u32	readMemOffset_ = 0;				// 요소 메모리를 얼만큼 읽었는지
+	_u16	readOffset_ = 0;				// 요소 메모리를 몇개나 읽었는지
+	bool	isStackAllocatedContext_ = false; // 스택에 할당된 컨텍스트인지
+	bool	isReleased_ = false;			// Release된 개체인지.
 	_u8*	pBuf_ = nullptr;
 };
 

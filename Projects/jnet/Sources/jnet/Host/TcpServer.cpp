@@ -97,20 +97,20 @@ void TcpServer::SessionSent(TcpSession* _pSession, IPacket* _pSentPacket, _u32l 
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TcpServer::SessionReceived(TcpSession* _pSession, ICommand* _pCommand)
+void TcpServer::SessionReceivedCmd(TcpSession* _pSession, ICommand* _pCommand)
 {
 	if (pServerEventListener_)
 	{
-		pServerEventListener_->OnReceived(_pSession, _pCommand);
+		pServerEventListener_->OnReceivedCmd(_pSession, _pCommand);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TcpServer::SessionReceived(TcpSession* _pSession, RecvedCmdPacket* _pRecvPacket)
+void TcpServer::SessionReceivedPacket(TcpSession* _pSession, RecvedPacket* _pRecvPacket)
 {
 	if (pServerEventListener_)
 	{
-		pServerEventListener_->OnReceived(_pSession, _pRecvPacket);
+		pServerEventListener_->OnReceivedPacket(_pSession, _pRecvPacket);
 	}
 }
 
@@ -120,6 +120,15 @@ void TcpServer::SessionReceivedRaw(TcpSession* _pSession, char* _pData, int _len
 	if (pServerEventListener_)
 	{
 		pServerEventListener_->OnReceivedRaw(_pSession, _pData, _len);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpServer::SessionReceivedMsg(TcpSession* _pSession, jc::CMessage _msg)
+{
+	if (pServerEventListener_)
+	{
+		pServerEventListener_->OnReceivedMsg(_pSession, _msg);
 	}
 }
 

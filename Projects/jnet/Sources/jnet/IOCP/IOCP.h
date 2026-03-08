@@ -5,13 +5,15 @@
 #pragma once
 
 #include <jnet/WorkerGroup.h>
-
+#include <jnet/IOCP/IOCPTaskListener.h>
+#include <jnet/IOCP/IOCPTaskAbstract.h>
 
 #define IOCP_POST_ORDER_TERMINATE	0x01
 #define IOCP_POST_ORDER_ERROR	   -0x01
 
 NS_JNET_BEGIN
 
+class IOCPTaskAbstract;
 class IOCPWorker;
 class IOCP
 {
@@ -46,6 +48,9 @@ public:
 	void SetName(const jc::String& _name);
 	const jc::String& GetName() const { return name_; }
 
+	void SetListener(const jc::SharedPtr<IOCPTaskListener>& _pListener);
+	int PollTasks();
+
 	static constexpr const char* TypeName() { return "IOCP"; }
 
 protected:
@@ -56,11 +61,12 @@ protected:
 	jc::AtomicInt pendingOverlappedCount_; // TODO: IOCP에서 팬딩 카운트를 기록하면 경합이 심하지 않을까?
 	jc::NormalLock workerManagerLock_;
 	jc::String name_;
-	// 현재 I/O 완료를 대기중인 오버랩 수를 기록한다.
-	// IOCP를 종료할 때 이 팬딩 카운트가 0이 되면 IOCP 쓰레드를 해제하도록 한다.
+	jc::SharedPtr<IOCPTaskListener> pListener_;
+	jc::Vector<IOCPTaskAbstractPtr> cachedTaskList_;
 };
 
 using IOCPPtr = jc::SharedPtr<IOCP>;
 using IOCPWPtr = jc::WeakPtr<IOCP>;
+using IOCPTaskListenerPtr = jc::SharedPtr<IOCPTaskListener>;
 
 NS_END

@@ -89,7 +89,7 @@ jc::String JsonUtil::GetStringOrDefault(Json::Value& _value, const jc::String& _
 jc::String JsonUtil::GetStringOrNull(Json::Value& _value)
 {
 	if (_value.empty())
-		return { 0 };
+		return jc::String( 0 );
 
 	return GetString(_value);
 }

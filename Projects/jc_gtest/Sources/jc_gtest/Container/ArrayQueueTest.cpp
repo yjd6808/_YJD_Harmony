@@ -309,7 +309,7 @@ TEST(ArrayQueueTest, MemoryPool) {
 	MemoryPoolLeakCheck;
 
 	ArrayQueue<String, CDefaultArrayAllocator> q;
-	for (int i = 0; i < 100'000; i++) q.Enqueue(1);
+	for (int i = 0; i < 100'000; i++) q.Enqueue(jc::String(100));
 }
 
 TEST(ArrayQueueTest, ZeroCapacityTest) {

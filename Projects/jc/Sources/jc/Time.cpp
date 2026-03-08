@@ -897,7 +897,8 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 		8, /* fff		*/
 		8, /* ffff		*/
 		8, /* fffff		*/
-		8  /* ffffff	*/
+		8, /* ffffff	*/
+		8  /* fffffff	*/
 	};
 
 
@@ -1069,15 +1070,16 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 			// 4) ffff라면? 상위 3자리 숫자, 하위 3자리 숫자 / 100 * 100 => 하위 3자리 숫자의 1과 10의 자리수를 없애야하므로 100으로 나눈 후 100을 곱해준다.
 			// 생략...
 
-			if (szDateStringToken.Length() >= 7) {
-				// 소수점 자릿수가 7자리 이상인 경우는 오류로 판정함
-				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
-				break;
+			if (szDateStringToken.Length() >= 7) 
+			{
+				// nothing to do.
 			}
-
-			// 6자리가 될 수 있도록 나머지 자리는 0으로 채워준다.
-			while (szDateStringToken.Length() < 6)
-				szDateStringToken += '0';
+			else
+			{
+				// 6자리가 될 수 있도록 나머지 자리는 0으로 채워준다.
+				while (szDateStringToken.Length() < 6)
+					szDateStringToken += '0';
+			}
 
 			// 상위 3자리(밀리초), 하위 3자리 숫자(마이크로초)로 분리
 			char upper[4]{};
@@ -1820,7 +1822,9 @@ _u64 StopWatch<StopWatchMode::HighResolution>::Start() {
 	return StartCounter;
 }
 
-TimeSpan StopWatch<StopWatchMode::HighResolution>::Stop() {
+//////////////////////////////////////////////////////////////////////////////////////////
+TimeSpan StopWatch<StopWatchMode::HighResolution>::Stop()
+{
 	_u64 StopCounter;
 	if (!QueryPerformanceCounter((LARGE_INTEGER*)&StopCounter)) {
 		jc_assert_msg(false, "쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)", ::GetLastError());
@@ -1831,7 +1835,9 @@ TimeSpan StopWatch<StopWatchMode::HighResolution>::Stop() {
 	return uiGap / Precision;
 }
 
-TimeSpan StopWatch<StopWatchMode::HighResolution>::GetElapsed() {
+//////////////////////////////////////////////////////////////////////////////////////////
+TimeSpan StopWatch<StopWatchMode::HighResolution>::GetElapsed()
+{
 	_u64 StopCounter;
 	if (!QueryPerformanceCounter((LARGE_INTEGER*)&StopCounter)) {
 		jc_assert_msg(false, "쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)", ::GetLastError());
@@ -1840,6 +1846,7 @@ TimeSpan StopWatch<StopWatchMode::HighResolution>::GetElapsed() {
 	return (StopCounter - StartCounter) / Precision;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 bool TimeCounter::ElapsedSeconds(float _seconds)
 {
 	if (AttributeFlag.Check(TimeCounterAttribute::DontFire))

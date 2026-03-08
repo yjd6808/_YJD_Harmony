@@ -9,5 +9,3 @@
 #pragma once
 
 #include <sgs/Core.h>
-
-#include <sgs_center/CenterCore.h>

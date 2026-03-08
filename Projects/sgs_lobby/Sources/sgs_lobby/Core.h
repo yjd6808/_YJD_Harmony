@@ -8,5 +8,3 @@
 #pragma once
 
 #include <sgs/Core.h>
-
-#include <sgs_lobby/LobbyCore.h>

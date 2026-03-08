@@ -65,7 +65,6 @@ void InitializeClientCore()
 	g_cDescMgr.AddLoader(dbg_new FrameEventLoader(ActorType::Monster));
 	g_cDescMgr.AddLoader(dbg_new ProjectileInfoLoader(ActorType::Monster));
 	g_cDescMgr.AddLoader(dbg_new AttackDataInfoLoader(ActorType::Monster));
-	g_cDescMgr.AddLoader(dbg_new ServerInfoLoader());
 	g_cDescMgr.AddLoader(dbg_new TileInfoLoader());
 	g_cDescMgr.AddLoader(dbg_new UIInfoLoader());
 	g_cDescMgr.AddLoader(dbg_new ActionInfoLoader());

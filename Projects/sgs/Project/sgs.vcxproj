@@ -119,15 +119,12 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs\UnauthenticatedSessionManager.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\sgs\UpdatableCollection.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\_API\sgapiServerBase.h" />
+    <ClInclude Include="..\Sources\sgs\_Net\GameDB.h" />
     <ClInclude Include="..\Sources\sgs\_Net\NetClientListener_InterServ.h" />
     <ClInclude Include="..\Sources\sgs\_Net\NetCore.h" />
     <ClInclude Include="..\Sources\sgs\_Net\NetGroup_InterServ.h" />
@@ -192,15 +189,12 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs\UnauthenticatedSessionManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Sources\sgs\UpdatableCollection.cpp">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\_API\sgapiServerBase.cpp" />
+    <ClCompile Include="..\Sources\sgs\_Net\GameDB.cpp" />
     <ClCompile Include="..\Sources\sgs\_Net\NetClientListener_InterServ.cpp" />
     <ClCompile Include="..\Sources\sgs\_Net\NetCore.cpp" />
     <ClCompile Include="..\Sources\sgs\_Net\NetGroup_InterServ.cpp" />

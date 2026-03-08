@@ -8,6 +8,3 @@
 #pragma once
 
 #include <sgs/Core.h>
-#include <jdb/Core.h>
-
-#include <sgs_auth/AuthCore.h>

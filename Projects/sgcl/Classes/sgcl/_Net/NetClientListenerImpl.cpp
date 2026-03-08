@@ -56,16 +56,16 @@ void NetClientListenerImpl::OnSent(Session* _pSession, IPacket* _pSendPacket, _u
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetClientListenerImpl::OnReceived(Session* _pSession, ICommand* _pRecvCmd)
+void NetClientListenerImpl::OnReceivedCmd(Session* _pSession, ICommand* _pRecvCmd)
 {
-	NetClientListener::OnReceived(_pSession, _pRecvCmd);
+	NetClientListener::OnReceivedCmd(_pSession, _pRecvCmd);
 	SyncReceivedCommand(connectedServerType_, _pSession, _pRecvCmd);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetClientListenerImpl::OnReceived(Session* _pSession, RecvedCmdPacket* _pRecvPacket)
+void NetClientListenerImpl::OnReceivedPacket(Session* _pSession, RecvedPacket* _pRecvPacket)
 {
-	NetClientListener::OnReceived(_pSession, _pRecvPacket);
+	NetClientListener::OnReceivedPacket(_pSession, _pRecvPacket);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

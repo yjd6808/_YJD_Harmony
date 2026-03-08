@@ -15,7 +15,6 @@
 #include <sg/_Util/_DescMgr/DescMgr_ServerInfo.h>
 
 #include <sgs/_Net/NetCore.h>
-#include <sgs/UnauthenticatedSessionManager.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -26,9 +25,6 @@ void InitializeServerCore()
 	g_cDescMgr.AddLoader(dbg_new ServerInfoLoader());
 	g_cDescMgr.LoadAll();
 	g_cNetCore.Initialize();
-
-	g_cUnauthenticatedSessionManager; // 생성
-
 
 	// 공통 커맨드 이름 등록
 	// [ INTER_SERVER - HOST ]
@@ -66,8 +62,6 @@ void InitializeServerCore()
 //////////////////////////////////////////////////////////////////////////////////////////
 void FinalizeServerCore()
 {
-	g_cUnauthenticatedSessionManager.Free();
-
 	g_cNetCore.Finalize();
 	g_cNetCore.Free();
 

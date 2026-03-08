@@ -30,6 +30,11 @@
     <ClCompile Include="..\Sources\jdb\MySQL\MysqlDatabase.cpp" />
     <ClCompile Include="..\Sources\jdb\MySQL\MysqlQuery.cpp" />
     <ClCompile Include="..\Sources\jdb\MySQL\MysqlStatementBuilder.cpp" />
+    <ClCompile Include="..\Sources\jdb\SQLServer\SqlServerConnection.cpp" />
+    <ClCompile Include="..\Sources\jdb\SQLServer\SqlServerConnectionPool.cpp" />
+    <ClCompile Include="..\Sources\jdb\SQLServer\SqlServerDatabase.cpp" />
+    <ClCompile Include="..\Sources\jdb\SQLServer\SqlServerQuery.cpp" />
+    <ClCompile Include="..\Sources\jdb\SQLServer\SqlServerStatementBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jdb\Core.h" />
@@ -42,6 +47,11 @@
     <ClInclude Include="..\Sources\jdb\Namespace.h" />
     <ClInclude Include="..\Sources\jdb\QueryDefine.h" />
     <ClInclude Include="..\Sources\jdb\QueryHelper.h" />
+    <ClInclude Include="..\Sources\jdb\SQLServer\SqlServerConnection.h" />
+    <ClInclude Include="..\Sources\jdb\SQLServer\SqlServerConnectionPool.h" />
+    <ClInclude Include="..\Sources\jdb\SQLServer\SqlServerDatabase.h" />
+    <ClInclude Include="..\Sources\jdb\SQLServer\SqlServerQuery.h" />
+    <ClInclude Include="..\Sources\jdb\SQLServer\SqlServerStatementBuilder.h" />
     <ClInclude Include="..\Sources\jdb\StatementType.h" />
     <ClInclude Include="..\Sources\jdb\Structure.h" />
   </ItemGroup>

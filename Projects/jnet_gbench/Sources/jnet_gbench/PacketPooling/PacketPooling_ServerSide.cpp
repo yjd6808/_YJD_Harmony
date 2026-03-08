@@ -22,7 +22,7 @@ static AtomicInt RecvCounter;
 struct ServerListener : ServerEventListener
 {
 	//////////////////////////////////////////////////////////////////////////////////////
-	void OnReceived(Session* _pSession, ICommand* _pCmd) override
+	void OnReceivedCmd(Session* _pSession, ICommand* _pCmd) override
 	{
 		if (_pCmd->GetId() != CMDID_CS_TEST)
 		{

@@ -851,11 +851,11 @@
   <PropertyGroup>
     <_ProjectFileVersion>12.0.21005.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
@@ -879,7 +879,7 @@
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration);$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)..\Classes;$(SolutionDir)ThirdParty\Bass24\include</IncludePath>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration);$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
@@ -889,7 +889,7 @@
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration);$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)..\Classes;$(SolutionDir)ThirdParty\Bass24\include</IncludePath>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -915,9 +915,14 @@
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"</Command>
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -947,9 +952,14 @@ xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configurat
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"</Command>
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -1008,9 +1018,14 @@ xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configurat
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"</Command>
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -1046,9 +1061,14 @@ xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configurat
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"</Command>
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>

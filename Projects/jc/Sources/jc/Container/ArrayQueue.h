@@ -25,24 +25,24 @@ class ArrayQueue final : public ArrayCollection<T, TAllocator>
 
 public:
 	ArrayQueue(int _capacity = TArrayCollection::DEFAULT_CAPACITY)
-		: TArrayCollection(_capacity)
+	: TArrayCollection(_capacity)
 	{
 	}
 
 	ArrayQueue(const TArrayQueue& _other)
-		: TArrayCollection(_other.Capacity())
+	: TArrayCollection(_other.Capacity())
 	{
 		operator=(_other);
 	}
 
 	ArrayQueue(TArrayQueue&& _other) noexcept
-		: TArrayCollection()
+	: TArrayCollection()
 	{
 		operator=(Move(_other));
 	}
 
 	ArrayQueue(std::initializer_list<T> _ilist)
-		: TArrayCollection(_ilist)
+	: TArrayCollection(_ilist)
 	{
 		operator=(_ilist);
 	}

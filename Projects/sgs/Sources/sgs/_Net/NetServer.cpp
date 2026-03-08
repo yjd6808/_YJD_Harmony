@@ -58,7 +58,7 @@ void NetServer::OnStarted()
 		return;
 
 	S_SETUP_IS_COMMON::SetInformation(g_cNetGroup_InterServ.GetTcp(), SendStrategy::SendAsync);
-	S_SETUP_IS_COMMON::SEND_SCE_NotifyBootState(serverId_, (ServerType_t)serverInfo_.serverType_, ServerBootState::Launched);
+	S_SETUP_IS_COMMON::SEND_SCE_NotifyBootState(handle_, (ServerType_t)serverInfo_.serverType_, ServerBootState::Launched);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ void NetServer::OnStartFailed(_u32 _errorCode)
 	if (serverInfo_.serverType_ == ServerType::Center)
 		return;
 	S_SETUP_IS_COMMON::SetInformation(g_cNetGroup_InterServ.GetTcp(), SendStrategy::SendAsync);
-	S_SETUP_IS_COMMON::SEND_SCE_NotifyOrderFailed(serverId_, (ServerType_t)serverInfo_.serverType_, CenterOrder::LaunchServer, _errorCode);
+	S_SETUP_IS_COMMON::SEND_SCE_NotifyOrderFailed(handle_, (ServerType_t)serverInfo_.serverType_, CenterOrder::LaunchServer, _errorCode);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,7 +81,7 @@ void NetServer::OnStopped()
 		return;
 
 	S_SETUP_IS_COMMON::SetInformation(g_cNetGroup_InterServ.GetTcp(), SendStrategy::SendAsync);
-	S_SETUP_IS_COMMON::SEND_SCE_NotifyBootState(serverId_, (ServerType_t)serverInfo_.serverType_, ServerBootState::Stopped);
+	S_SETUP_IS_COMMON::SEND_SCE_NotifyBootState(handle_, (ServerType_t)serverInfo_.serverType_, ServerBootState::Stopped);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

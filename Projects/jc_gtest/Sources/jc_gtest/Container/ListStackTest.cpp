@@ -191,7 +191,7 @@ TEST(ListStackTest, MemoryPool) {
 	MemoryPoolLeakCheck;
 
 	ListStack<String, CDefaultArrayAllocator> l;
-	for (int i = 0; i < 100'000; i++) l.Push(1);
+	for (int i = 0; i < 100'000; i++) l.Push(jc::String(100));
 }
 
 

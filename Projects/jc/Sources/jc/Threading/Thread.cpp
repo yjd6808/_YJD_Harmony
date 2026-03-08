@@ -106,19 +106,21 @@ _u32 JC_STDCALL Thread::ThreadRoutine(void* _pParam)
 {
     {
         auto* pRecvParam = static_cast<ThreadParam*>(_pParam);
-        Thread* pThis = pRecvParam->Self;
-        TRunnable runnable = Move(pRecvParam->ThreadFunc);
-        void* pParam = pRecvParam->Param;
+		{
+			Thread* pThis = pRecvParam->Self;
+			TRunnable runnable = Move(pRecvParam->ThreadFunc);
+			void* pParam = pRecvParam->Param;
 
-        pThis->m_uiThreadId = Thread::GetThreadId();
-        pThis->m_RunningSignal.Release();
-        runnable(pParam);
-        pThis->m_eState = eJoinWait;
+			pThis->m_uiThreadId = Thread::GetThreadId();
+			pThis->m_RunningSignal.Release();
+			runnable(pParam);
+			pThis->m_eState = eJoinWait;
+		}
 
         delete pRecvParam;
     }
 
-    CRuntime::EndThreadEx(0);       // 스택프레임 해제가 안되고 종료되네..(그래서 강제로 스코프 만듬)
+	CRuntime::EndThreadEx(0);
     return 0;
 }
 

@@ -8,8 +8,8 @@
 #include <jc/Utils/ProgressNotifier.h>
 
 USING_NS_JC;
+USING_NS_JNET;
 
-NS_JNET_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 SessionContainer::SessionContainer(int _capacity)
 : handleSeq_(0)
@@ -26,16 +26,16 @@ SessionContainer::~SessionContainer()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int SessionContainer::CreateHandle()
+object_id SessionContainer::CreateHandle()
 {
-	return initialHandleSeq_ + Interlocked<int>::Increment(&handleSeq_) - 1;
+	return initialHandleSeq_ + Interlocked<object_id>::Increment(&handleSeq_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 bool SessionContainer::Add(Session* _pSession)
 {
-	const int handle = _pSession->GetHandle();
-	const int handleIndex = handle - initialHandleSeq_;
+	const object_id handle = _pSession->GetHandle();
+	const int handleIndex = static_cast<int>(handle - initialHandleSeq_ - 1);
 
 	if (!IsValidHandle(handleIndex))
 	{
@@ -55,10 +55,10 @@ bool SessionContainer::Add(Session* _pSession)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Session* SessionContainer::Get(int _handle)
+Session* SessionContainer::Get(object_id _handle)
 {
-	const int handleIndex = _handle - initialHandleSeq_;
-
+	const int handleIndex = static_cast<int>(_handle - initialHandleSeq_ - 1);
+		
 	if (!IsValidHandle(handleIndex))
 	{
 		_NetLogWarn_("세션 컨테이너 인덱스 범위를 벗어난 핸들입니다. %d", 2);
@@ -80,9 +80,9 @@ void SessionContainer::DisconnectAll()
 	};
 	notifier.SetListener(pListener, true);
 
-	for (int index = 0; index < size; ++index)
+	for (int i = 0; i < size; ++i)
 	{
-		Session* pSession = sessionList_[index];
+		Session* pSession = sessionList_[i];
 
 		if (!pSession)
 		{
@@ -92,7 +92,7 @@ void SessionContainer::DisconnectAll()
 		pSession->Disconnect();
 		pSession->WaitForZeroPending();
 
-		notifier.Progress(index + 1);
+		notifier.Progress(i + 1);
 	}
 
 	_NetLogDebug_("모든 세션 연결종료 완료");
@@ -102,16 +102,16 @@ void SessionContainer::DisconnectAll()
 void SessionContainer::Clear()
 {
 	const int size = sessionList_.Size();
-	for (int index = 0; index < size; ++index)
+	for (int i = 0; i < size; ++i)
 	{
-		Session* pSession = sessionList_[index];
+		Session* pSession = sessionList_[i];
 
 		if (pSession)
 		{
 			delete pSession;
 		}
 
-		sessionList_[index] = nullptr;
+		sessionList_[i] = nullptr;
 	}
 
 	size_ = 0;
@@ -136,9 +136,9 @@ void SessionContainer::ForEach(Action<Session*> _fn)
 void SessionContainer::ForEachConnected(Action<Session*> _fn)
 {
 	const int size = sessionList_.Size();
-	for (int index = 0; index < size; ++index)
+	for (int i = 0; i < size; ++i)
 	{
-		Session* pSession = sessionList_[index];
+		Session* pSession = sessionList_[i];
 
 		if (pSession && pSession->GetState() == Host::eConnected)
 		{
@@ -158,4 +158,3 @@ bool SessionContainer::IsValidHandle(int _handleIndex)
 	return true;
 }
 
-NS_END

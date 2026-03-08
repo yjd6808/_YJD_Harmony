@@ -15,6 +15,7 @@
     </ClCompile>
 
     <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

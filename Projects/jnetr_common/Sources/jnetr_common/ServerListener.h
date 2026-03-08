@@ -23,7 +23,7 @@ protected:
 	void OnConnected(Session* _pConnectedSession) override;
 	void OnDisconnected(Session* _pDisconnectedSession, _u32 _errorCode) override;
 	void OnSent(Session* _pSender, IPacket* _pPacket, _u32l _sentBytes) override;
-	void OnReceived(Session* _pReceiver, ICommand* _pCmd) override;
+	void OnReceivedCmd(Session* _pReceiver, ICommand* _pCmd) override;
 	void OnStopped() override;
 
 private:

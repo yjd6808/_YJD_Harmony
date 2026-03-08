@@ -7,61 +7,30 @@
 
 #include "Core.h"
 #include "LobbyCore.h"
-#include "LobbyCoreHeader.h"
 
-#include <sg/_Util/DescLoaderMgr.h>
-#include <sg/_Util/_DescMgr/DescMgr_ServerInfo.h>
-#include <sg/_Util/_DescMgr/DescMgr_Database.h>
+#include <sgs_lobby/UnauthenticatedSessionManager.h>
+
+#include "R_AUTHENTICATION.h"
+#include "R_LOBBY.h"
+#include "sg/Cmd_LOBBY.h"
+#include "sgs/CmdRelay_AUTHENTICATION.h"
+#include "sgs/_Net/NetGroup_InterServ.h"
+#include "sgs/_Net/NetGroup_Main.h"
 
 USING_NS_JC;
 USING_NS_JNET;
 
-NS_SG_BEGIN
-::MysqlDatabase*    GameDB;
-::LobbyNetMaster*   NetGroupMgr;
-::LobbyNetGroup*    NetGroup;
-::LobbyServer*      Server;
-::LobbyContents     Contents;
-NS_END
-
 //////////////////////////////////////////////////////////////////////////////////////////
 void InitializeLobbyCore()
 {
-	g_cDescMgr.AddLoader(dbg_new ServerInfoLoader());
-	g_cDescMgr.AddLoader(dbg_new DatabaseInfoLoader());
-	g_cDescMgr.LoadAll();
+	g_cUnauthenticatedSessionManager; // 생성
 
-	sg::ServerProcessInfoPackage = g_cDescMgr.GetServerProcessInfoPackage();
-	sg::ServerProcessInfo = &sg::ServerProcessInfoPackage->lobby_;
-	sg::GameDB = dbg_new MysqlDatabase(g_cDescMgr.GetDatabaseInfo(DatabaseType::Game));
-	sg::GameDB->Initialize(ServerProcessType::Lobby);
-	sg::NetGroupMgr = LobbyNetMaster::Get();
-	sg::NetGroupMgr->Initialize();
-	sg::NetGroup = sg::NetGroupMgr->GetNetGroup(Const::NetGroup::MainId).Get<LobbyNetGroup*>();
-	sg::Server = sg::NetGroup->GetLobbyTcp();
-
-	// COMMON INJECTION
-	sg::CommonNetGroupMgr = sg::NetGroupMgr;
-	sg::CommonNetGroup = sg::NetGroup;
-	sg::CommonServer = sg::Server;
-	sg::CommonContents = &sg::Contents;
-	sg::NetGroup_InterServ = sg::NetGroupMgr->GetNetGroup(Const::NetGroup::InterServerId).Get<NetGroup_InterServ*>();
-	sg::InterServerClientTcp = sg::NetGroup_InterServ ? sg::NetGroup_InterServ->GetInterServerClientTcp() : nullptr;
-	sg::InterServerClientUdp = sg::NetGroup_InterServ ? sg::NetGroup_InterServ->GetInterServerClientUdp() : nullptr;
-	sg::ServerProcessInfo = &sg::ServerProcessInfoPackage->lobby_;
-	sg::TimeManager = TimeManager::Get();
-
-	sg::Contents.Initialize();
+	g_cNetGroup_InterServ.Parser().AddCommand<SAU_AuthenticationCheck>(R_AUTHENTICATION::RECV_AUS_AuthenticationCheckAck);
+	g_cNetGroup_Main.Parser().AddCommand<CLO_JoinLobby>(R_LOBBY::RECV_CLO_JoinLobby);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void FinalizeLobbyCore()
 {
-	sg::NetGroupMgr->Finalize();
-	sg::Contents.Finalize();
-
-	JC_DELETE_SAFE(sg::GameDB);
-	JC_DELETE_SINGLETON_SAFE(sg::TimeManager);
-	JC_DELETE_SINGLETON_SAFE(sg::NetGroupMgr);
-	g_cDescMgr.Free();
+	g_cUnauthenticatedSessionManager.Free();
 }

@@ -9,9 +9,10 @@
 #include <jnet/Core.h>
 #include <jnet/Host/Session.h>
 
+#include "PacketReader.h"
+
 
 NS_JNET_BEGIN
-
 //////////////////////////////////////////////////////////////////////////////////////////
 PacketParser::PacketParser(Session* _pSession)
 : session_(_pSession)
@@ -23,57 +24,70 @@ void PacketParser::Received(_u32l _receivedBytes)
 {
 	PacketBuffer* pRecvBuffer = session_->GetRecvBuffer().GetPtr();
 	pRecvBuffer->MoveWritePos(_receivedBytes);
+
+	PacketReader reader(pRecvBuffer->GetReadableBuffer());
+
 	for (;;)
 	{
-		const int readableBufferSize = pRecvBuffer->GetReadableBufferSize();
+		PacketElementView view;
+		_u32 readMemSize = 0;
+		const int r = reader.Next(view, readMemSize);
 
-		// 패킷의 헤더 크기만큼 데이터를 수신하지 않았으면 모일때까지 기다린다.
-		if (readableBufferSize < PACKET_HEADER_SIZE)
-			return;
-
-		PacketHeader* pHeader = pRecvBuffer->Peek<PacketHeader*>();
-		if (pHeader->magicNumber_ != PACKET_MAGIC_NUMBER)
+		if (r == PacketReader::rrSuccess)
 		{
-			_NetLogWarn_("패킷 매직넘버가 이상합니다. 패킷이 잘못된 것 같습니다.");
-			pRecvBuffer->ResetPosition();
-			return;
-		}
-
-		_u16 packetLength = PACKET_HEADER_SIZE + pHeader->payloadLen_;
-		if (readableBufferSize < packetLength)
-			return; // 모일때까지 기달
-
-		RecvedCmdPacket* pPacket = pRecvBuffer->Peek<RecvedCmdPacket*>();
-		session_->NotifyPacket(pPacket);
-		if (pHeader->packetType_ == PacketType::Raw)
-		{
-			session_->NotifyRaw(pPacket->payload_, pHeader->payloadLen_);
-			pRecvBuffer->MoveReadPos(packetLength);
-		}
-		else if (pHeader->packetType_ == PacketType::Command)
-		{
-			pRecvBuffer->MoveReadPos(PACKET_HEADER_SIZE);
-			for (int i = 0; i < pHeader->elemCount_; ++i)
+			if (view.type_ == static_cast<_u8>(PacketType::Raw))
 			{
-				ICommand* pCmd = pRecvBuffer->Peek<ICommand*>();
-				CmdLen_t cmdLen = pCmd->GetLength();
-				session_->NotifyCommand(pCmd);
-
-				if (pRecvBuffer->MoveReadPos(cmdLen) == false)
-				{
-					_NetLogWarn_("커맨드 크기가 이상합니다.");
-					pRecvBuffer->ResetPosition();
-					return;
-				}
+				session_->NotifyRaw(view.raw_.buf, static_cast<int>(view.raw_.len));
 			}
+			else if (view.type_ == static_cast<_u8>(PacketType::Command))
+			{
+				session_->NotifyCommand(view.cmd_);
+			}
+			else if (view.type_ == static_cast<_u8>(PacketType::Message))
+			{
+				session_->NotifyMessage(view.msg_);
+			}
+
+			pRecvBuffer->MoveReadPos(static_cast<int>(readMemSize));
+		}
+		else if (r == PacketReader::rrReadEnd)
+		{
+			pRecvBuffer->PopReads();
+			break;
 		}
 		else
 		{
-			jc_assert(false);
+			switch (r)
+			{
+			case PacketReader::rrInvalidPacket_MagicNumberMismatch:
+				_NetLogWarn_("패킷 매직넘버가 이상합니다. 패킷이 잘못된 것 같습니다.");
+				pRecvBuffer->ResetPosition();
+				break;
+			case PacketReader::rrInvalidPacket_UnknownPacketType:
+				_NetLogWarn_("알 수 없는 패킷 타입입니다.");
+				pRecvBuffer->ResetPosition();
+				break;
+			case PacketReader::rrInvalidCmd:
+				_NetLogWarn_("커맨드 크기가 이상합니다.");
+				pRecvBuffer->ResetPosition();
+				break;
+			case PacketReader::rrInvalidMsg:
+				_NetLogWarn_("메시지 크기가 이상합니다.");
+				pRecvBuffer->ResetPosition();
+				break;
+				// 아직 데이터가 덜 모인 경우: readPos를 옮기지 않고 다음 수신을 기다린다.
+			case PacketReader::rrReadHeaderFailed_InsufficientHeaderSize:
+			case PacketReader::rrReadHeaderFailed_InsufficientPaylodeLen:
+				break;
+			default:
+				_NetLogWarn_("PacketParser 알 수 없는 오류 (%d)", r);
+				pRecvBuffer->ResetPosition();
+				break;
+			}
+			break;
 		}
 
-		pRecvBuffer->PopReads();
+		
 	}
 }
-
 NS_END

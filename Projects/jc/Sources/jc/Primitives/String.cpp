@@ -647,24 +647,26 @@ void String::Initialize(int _capacity)
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 String String::ToLowerCase() const {
 	String copy = *this;
 
 	for (int i = 0; i < copy.Length(); i++) {
 		if (IsUpperCaseAlphabat(copy[i])) {
-			copy[i] -= static_cast<char>(32);
+			copy[i] += static_cast<char>(32);
 		}
 	}
 
 	return copy;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 String String::ToUpperCase() const {
 	String copy = *this;
 
 	for (int i = 0; i < copy.Length(); i++) {
 		if (IsLowerCaseAlphabat(copy[i])) {
-			copy[i] += static_cast<char>(32);
+			copy[i] -= static_cast<char>(32);
 		}
 	}
 

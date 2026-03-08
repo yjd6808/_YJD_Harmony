@@ -279,7 +279,7 @@ TEST(ListQueueTest, MemoryPool) {
 	MemoryPoolLeakCheck;
 
 	ListQueue<String, CDefaultArrayAllocator> l;
-	for (int i = 0; i < 100'000; i++) l.Enqueue(1);
+	for (int i = 0; i < 100'000; i++) l.Enqueue(jc::String(100));
 }
 
 #endif // TEST_ListQueueTest == ON

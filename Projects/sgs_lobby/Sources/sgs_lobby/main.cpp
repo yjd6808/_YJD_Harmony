@@ -1,12 +1,14 @@
 ﻿#include "Core.h"
-#include "LobbyCoreHeader.h"
 
 #include <jc/Random.h>
 
-#include <sgs_lobby/LobbyContents.h>
 #include <sg/LogSpecifier.h>
 
 #include <sgs/_API/sgapiServerBase.h>
+#include <sgs/_Net/NetCore.h>
+#include <sgs/_Net/NetGroup_InterServ.h>
+
+#include <sgs_lobby/LobbyCore.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -18,7 +20,6 @@ int main(int _argc, char** _argv)
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// 메인 리소스 초기화
 	//////////////////////////////////////////////////////////////////////////////////////////
-	Random::Initialize();
 	sgapiBase::Init(dbg_new sgapiServerBase);
 	Winsock::Initialize(2, 2);
 	Console::SetSize(800, 400);
@@ -33,9 +34,9 @@ int main(int _argc, char** _argv)
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// 메인 루틴
 	//////////////////////////////////////////////////////////////////////////////////////////
-	if (sg::NetGroup_InterServ && sg::NetGroup_InterServ->ConnectCenterServer(5))
+	if (g_cNetGroup_InterServ.ConnectCenterServer(999))
 	{
-		sg::NetGroupMgr->ProcessMainUpdate();
+		g_cNetCore.ProcessMainLoop();
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////

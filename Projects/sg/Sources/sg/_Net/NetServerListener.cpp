@@ -9,6 +9,8 @@
 #include "Core.h"
 #include "_Net/NetServerListener.h"
 
+#include <jnet/Packet/PacketReader.h>
+
 #include <sg/_Net/NetListenerHelper.h>
 
 USING_NS_JC;
@@ -50,20 +52,29 @@ void NetServerListener::OnDisconnected(Session* _pDisconnectedSession, _u32 _err
 //////////////////////////////////////////////////////////////////////////////////////////
 void NetServerListener::OnSent(Session* _pSender, IPacket* _pSentPacket, _u32l _sentBytes)
 {
-	if (_pSentPacket->GetType() == PacketType::Command)
+	PacketReader reader(_pSentPacket->GetWSABuf());
+	PacketElementView view;
+	while (reader.Next(view) == PacketReader::rrSuccess)
 	{
-		CmdPacket* pPacket = static_cast<CmdPacket*>(_pSentPacket);
-		pPacket->ForEach([&](ICommand* _pCmd)
+		if (view.type_ == static_cast<_u8>(PacketType::Raw))
 		{
-			NetListenerHelper::LogCommand(_pSender->Protocol(), Transmission::Send, _pCmd);
-		});
+			NetListenerHelper::LogRaw(_pSender->Protocol(), Transmission::Send, view.raw_);
+		}
+		else if (view.type_ == static_cast<_u8>(PacketType::Command))
+		{
+			NetListenerHelper::LogCommand(_pSender->Protocol(), Transmission::Send, view.cmd_);
+		}
+		else if (view.type_ == static_cast<_u8>(PacketType::Message))
+		{
+			NetListenerHelper::LogMessage(_pSender->Protocol(), Transmission::Send, view.msg_);
+		}
 	}
 
 	NetListenerHelper::LogPacketHex(_pSentPacket);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetServerListener::OnReceived(Session* _pReceiver, ICommand* _pRecvCmd)
+void NetServerListener::OnReceivedCmd(Session* _pReceiver, ICommand* _pRecvCmd)
 {
 	NetListenerHelper::LogCommand(_pReceiver->Protocol(), Transmission::Recv, _pRecvCmd);
 
@@ -82,7 +93,7 @@ void NetServerListener::OnReceived(Session* _pReceiver, ICommand* _pRecvCmd)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetServerListener::OnReceived(Session* _pReceiver, RecvedCmdPacket* _pRecvPacket)
+void NetServerListener::OnReceivedPacket(Session* _pReceiver, RecvedPacket* _pRecvPacket)
 {
 	NetListenerHelper::LogPacketHex(_pRecvPacket);
 }

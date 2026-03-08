@@ -103,13 +103,19 @@ bool TcpSession::Accepted(_u32l _receivedBytes)
 //////////////////////////////////////////////////////////////////////////////////////////
 void TcpSession::NotifyCommand(ICommand* _pCmd)
 {
-	pServer_->SessionReceived(this, _pCmd);
+	pServer_->SessionReceivedCmd(this, _pCmd);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void TcpSession::NotifyPacket(RecvedCmdPacket* _pRecvPacket)
+void TcpSession::NotifyMessage(jc::CMessage _msg)
 {
-	pServer_->SessionReceived(this, _pRecvPacket);
+	pServer_->SessionReceivedMsg(this, _msg);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void TcpSession::NotifyPacket(RecvedPacket* _pRecvPacket)
+{
+	pServer_->SessionReceivedPacket(this, _pRecvPacket);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

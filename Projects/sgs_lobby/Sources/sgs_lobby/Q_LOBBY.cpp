@@ -6,7 +6,6 @@
  */
 
 #include "Core.h"
-#include "LobbyCoreHeader.h"
 #include "Q_LOBBY.h"
 
 USING_NS_JC;

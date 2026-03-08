@@ -46,6 +46,19 @@ NetCore::~NetCore()
 //////////////////////////////////////////////////////////////////////////////////////////
 bool NetCore::Initialize()
 {
+	if (g_cAppConfig.mode_ == SGCL_MODE_NORMAL)
+	{
+		if (jc::String* pAuthEp = g_cAppConfig.argsMap_.Find("auth_ep"))
+		{
+			authEp_ = jnet::IPv4EndPoint::Parse(pAuthEp->Source());
+		}
+
+		if (authEp_.IsValidRemoteEndPoint() == false)
+		{
+			throw jc::RuntimeException("NetCore::Initialize, 인증 서버의 IP주소 또는 포트가 유효하지 않습니다.");
+		}
+	}
+
 	const auto centerNetGroup = MakeShared<NetClientGroup>();
 	AddNetGroup(1, centerNetGroup);
 	pNetClientGroup_ = centerNetGroup.Get<NetClientGroup*>();

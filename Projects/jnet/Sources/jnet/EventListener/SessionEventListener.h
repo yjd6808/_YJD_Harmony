@@ -9,11 +9,15 @@
 
 #include <jnet/Namespace.h>
 
+NS_JC_BEGIN
+class CMessage;
+NS_END;
+
 NS_JNET_BEGIN
 
 class ICommand;
 class IPacket;
-struct RecvedCmdPacket;
+struct RecvedPacket;
 
 class Session;
 class JC_NOVTABLE SessionEventListener
@@ -25,7 +29,8 @@ public:
 	using FnSent = jc::Action<jnet::Session*, jnet::IPacket*, _u32l>;
 	using FnReceivedRaw = jc::Action<jnet::Session*, char*, int>;
 	using FnReceivedCmd = jc::Action<jnet::Session*, jnet::ICommand*>;
-	using FnReceivedPacket = jc::Action<jnet::Session*, jnet::RecvedCmdPacket*>;
+	using FnReceivedMsg = jc::Action<jnet::Session*, jc::CMessage>;
+	using FnReceivedPacket = jc::Action<jnet::Session*, jnet::RecvedPacket*>;
 
 	SessionEventListener() = default;
 	virtual ~SessionEventListener() = default;
@@ -34,8 +39,9 @@ public:
 	virtual void OnDisconnected(Session* _pSession, _u32 _errorCode) {}
 	virtual void OnSent(Session* _pSession, IPacket* _pSentPacket, _u32l _sentBytes) {}
 	virtual void OnReceivedRaw(Session* _pSession, char* _pData, int _len) {}
-	virtual void OnReceived(Session* _pSession, ICommand* _pRecvCmd) {}
-	virtual void OnReceived(Session* _pSession, RecvedCmdPacket* _pRecvPacket) {}
+	virtual void OnReceivedCmd(Session* _pSession, ICommand* _pRecvCmd) {}
+	virtual void OnReceivedMsg(Session* _pSession, jc::CMessage _msg) {}
+	virtual void OnReceivedPacket(Session* _pSession, RecvedPacket* _pRecvPacket) {}
 
 	void SetConnectedCallback(const FnConnected& _fn) { fnConnected_ = _fn; }
 	void SetConnectFailedCallback(const FnConnectFailed& _fn) { fnConnectFailed_ = _fn; }
@@ -43,6 +49,7 @@ public:
 	void SetSentCallback(const FnSent& _fn) { fnSent_ = _fn; }
 	void SetReceivedRawCallback(const FnReceivedRaw& _fn) { fnReceivedRaw_ = _fn; }
 	void SetReceivedCmdCallback(const FnReceivedCmd& _fn) { fnReceivedCmd_ = _fn; }
+	void SetReceivedMsgCallback(const FnReceivedMsg& _fn) { fnReceivedMsg_ = _fn; }
 	void SetReceivedPacketCallback(const FnReceivedPacket& _fn) { fnReceivedPacket_ = _fn; }
 
 	void SetConnectedCallback(FnConnected&& _fn) { fnConnected_ = std::move(_fn); }
@@ -51,6 +58,7 @@ public:
 	void SetSentCallback(FnSent&& _fn) { fnSent_ = std::move(_fn); }
 	void SetReceivedRawCallback(FnReceivedRaw&& _fn) { fnReceivedRaw_ = std::move(_fn); }
 	void SetReceivedCmdCallback(FnReceivedCmd&& _fn) { fnReceivedCmd_ = std::move(_fn); }
+	void SetReceivedMsgCallback(FnReceivedMsg&& _fn) { fnReceivedMsg_ = std::move(_fn); }
 	void SetReceivedPacketCallback(FnReceivedPacket&& _fn) { fnReceivedPacket_ = std::move(_fn); }
 
 protected:
@@ -60,6 +68,7 @@ protected:
 	FnSent fnSent_;
 	FnReceivedRaw fnReceivedRaw_;
 	FnReceivedCmd fnReceivedCmd_;
+	FnReceivedMsg fnReceivedMsg_;
 	FnReceivedPacket fnReceivedPacket_;
 };
 

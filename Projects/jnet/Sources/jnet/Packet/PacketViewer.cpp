@@ -53,7 +53,7 @@ void PacketViewer::View(jnet::IPacket* _pPacket)
 
 	if (_pPacket->GetType() == jnet::PacketType::Command)
 	{
-		View(jnet::Transmission::Send, wsaBuf.buf, wsaBuf.len, static_cast<jnet::CmdPacket*>(_pPacket)->GetCommandCount());
+		View(jnet::Transmission::Send, wsaBuf.buf, wsaBuf.len, _pPacket->GetElemCount());
 	}
 	else if (_pPacket->GetType() == jnet::PacketType::Raw)
 	{
@@ -66,7 +66,7 @@ void PacketViewer::View(jnet::IPacket* _pPacket)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-void PacketViewer::View(jnet::RecvedCmdPacket* _pPacket)
+void PacketViewer::View(jnet::RecvedPacket* _pPacket)
 {
 	
 	if (_pPacket->header_.packetType_ == jnet::PacketType::Raw)

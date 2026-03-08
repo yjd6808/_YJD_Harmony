@@ -22,14 +22,14 @@
 #pragma pack(push, CMD_ALIGNMENT)
 
 RELAY_STATIC_CMD_BEGIN(SAU_AuthenticationCheck, CMDID_SAU_AuthenticationCheck)
-	int SessionHandle;
+	object_id SessionHandle;
 	jc::StaticString<Const::StringLen::AccountId> AccountId;
 	ServerProcessType_t RequestedServer; // 요청한 서버
 	AuthenticationSerial_t Serial; // 체크해야하는 시리얼
 RELAY_STATIC_CMD_END
 
 RELAY_STATIC_CMD_BEGIN(AUS_AuthenticationCheckAck, CMDID_AUS_AuthenticationCheckAck)
-	int SessionHandle;
+	object_id SessionHandle;
 	GameServerType_t LastServer;
 	bool Success; // 실패시 만료 혹은 이상한유저
 RELAY_STATIC_CMD_END

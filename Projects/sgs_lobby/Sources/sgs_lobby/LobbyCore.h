@@ -11,21 +11,5 @@
 
 #include <sgs/ServerCore.h>
 
-class DataManager;
-class MysqlDatabase;
-class LobbyNetMaster;
-class LobbyNetGroup;
-class LobbyServer;
-struct LobbyContents;
-
-NS_SG_BEGIN
-extern ::DataManager*      DataManager;
-extern ::MysqlDatabase*    GameDB;
-extern ::LobbyNetMaster*   NetGroupMgr;
-extern ::LobbyNetGroup*    NetGroup;
-extern ::LobbyServer*      Server;
-extern ::LobbyContents     Contents;
-NS_END
-
 void InitializeLobbyCore();
 void FinalizeLobbyCore();

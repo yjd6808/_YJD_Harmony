@@ -16,8 +16,8 @@ struct S_SETUP_IS_COMMON : InterServerSendHelper<S_SETUP_IS_COMMON>
 {
 	// HOST
 	static bool SEND_SCE_ItsMe(ServerProcessType_t _clientType);
-	static bool SEND_SCE_NotifyBootState(int _serverId, ServerType_t _serverType, ServerBootState_t _state);
-	static bool SEND_SCE_NotifyOrderFailed(int _serverId, ServerType_t _serverType, CenterOrder_t _failedOrder, _u32 _errorCode);
+	static bool SEND_SCE_NotifyBootState(object_id _serverHandle, ServerType_t _serverType, ServerBootState_t _state);
+	static bool SEND_SCE_NotifyOrderFailed(object_id _serverHandle, ServerType_t _serverType, CenterOrder_t _failedOrder, _u32 _errorCode);
 
 	// RELAY
 };

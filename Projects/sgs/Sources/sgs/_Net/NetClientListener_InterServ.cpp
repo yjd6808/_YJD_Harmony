@@ -46,15 +46,15 @@ void NetClientListener_InterServ::OnSent(Session* _pSession, IPacket* _pSentPack
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetClientListener_InterServ::OnReceived(Session* _pSession, ICommand* _pRecvCmd)
+void NetClientListener_InterServ::OnReceivedCmd(Session* _pSession, ICommand* _pRecvCmd)
 {
-	NetClientListener::OnReceived(_pSession, _pRecvCmd);
+	NetClientListener::OnReceivedCmd(_pSession, _pRecvCmd);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetClientListener_InterServ::OnReceived(Session* _pSession, RecvedCmdPacket* _pRecvPacket)
+void NetClientListener_InterServ::OnReceivedPacket(Session* _pSession, RecvedPacket* _pRecvPacket)
 {
-	NetClientListener::OnReceived(_pSession, _pRecvPacket);
+	NetClientListener::OnReceivedPacket(_pSession, _pRecvPacket);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

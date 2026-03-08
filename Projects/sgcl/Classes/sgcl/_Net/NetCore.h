@@ -36,11 +36,15 @@ public:
 	CommandSynchronizer* GetCommandSynchronizer() { return pCommandSynchronizer_; }
 	ConnectionSynchronizer* GetConnectionSynchronizer() { return pConnectionSynchronizer_; }
 
+	const jnet::IPv4EndPoint& GetAuthServerEndPoint() const { return authEp_; }
+
 	bool ConnectAuthTcp();
 	bool ConnectLobbyTcp();
 
 public:
 	AuthenticationComponent&	authentication_;
+
+	jnet::IPv4EndPoint authEp_;
 
 private:
 	NetClientGroup* pNetClientGroup_;

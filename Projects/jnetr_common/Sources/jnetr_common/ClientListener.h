@@ -13,6 +13,7 @@
 #include <jc/Primitives/String.h>
 
 NS_JNET_BEGIN
+
 class ClientListener : public ClientEventListener
 {
 public:
@@ -21,7 +22,8 @@ protected:
 	void OnConnected(Session* _pSession) override;
 	void OnDisconnected(Session* _pSession, _u32 _errorCode) override;
 	void OnSent(Session* _pSession, IPacket* _pSentPacket, _u32l _sentBytes) override;
-	void OnReceived(Session* _pSession, ICommand* _pCommand) override;
+	void OnReceivedCmd(Session* _pSession, ICommand* _pCommand) override;
+	void OnReceivedMsg(Session* _pSession, jc::CMessage _msg) override;
 	void OnConnectFailed(Session* _pSession, _u32 _errorMessage) override;
 private:
 	jc::String name_;

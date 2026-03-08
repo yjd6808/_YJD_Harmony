@@ -54,7 +54,7 @@ HOST_STATIC_CMD_END
 // ===============================================================================================================
 
 HOST_STATIC_CMD_BEGIN(SCE_NotifyBootState, CMDID_SCE_NotifyBootState)
-	int ServerId;
+	object_id ServerHandle;
 	ServerType_t ServerType;
 	ServerBootState_t State;
 HOST_STATIC_CMD_END
@@ -62,7 +62,7 @@ HOST_STATIC_CMD_END
 // ===============================================================================================================
 
 HOST_STATIC_CMD_BEGIN(SCE_NotifyOrderFailed, CMDID_SCE_NotifyOrderFailed)
-	int ServerId;
+	object_id ServerHandle;
 	ServerType_t ServerType;
 	CenterOrder_t Order;
 	_u32 ErrorCode;

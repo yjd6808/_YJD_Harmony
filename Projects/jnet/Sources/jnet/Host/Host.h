@@ -21,7 +21,8 @@ public:
 	using PropertyKeyType = int;
 
 	Host(const IOCPPtr& _pIocp)
-	: pIocp_(_pIocp)
+	: handle_(-1)
+	, pIocp_(_pIocp)
 	, socket_(TransportProtocol::None, INVALID_SOCKET)
 	, state_(eNone)
 	, iocpConnected_(false)
@@ -102,7 +103,11 @@ public:
 		return socket_.Protocol;
 	}
 
+	void SetHandle(object_id _handle) { handle_ = _handle; }
+	object_id GetHandle() const { return handle_; }
 protected:
+	object_id handle_;
+
 	IOCPPtr pIocp_;
 	Socketv4 socket_;
 	jc::AtomicInt state_;

@@ -11,7 +11,7 @@
 
 NS_JNET_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
-void RecvedCmdPacket::ForEach(const jc::Action<ICommand*>& _consumer)
+void RecvedPacket::ForEach(const jc::Action<ICommand*>& _consumer)
 {
 	int i = 0;
 	char* pRead = payload_;
@@ -33,32 +33,19 @@ void RecvedCmdPacket::ForEach(const jc::Action<ICommand*>& _consumer)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-RecvedCmdPacket* RecvedCmdPacket::Clone() const
+RecvedPacket* RecvedPacket::Clone() const
 {
-	RecvedCmdPacket* pCopy = reinterpret_cast<RecvedCmdPacket*>(dbg_new _u8[PACKET_HEADER_SIZE + header_.payloadLen_]);
+	RecvedPacket* pCopy = reinterpret_cast<RecvedPacket*>(dbg_new _u8[PACKET_HEADER_SIZE + header_.payloadLen_]);
 	const _u8* pRead = reinterpret_cast<const _u8*>(this) + PACKET_HEADER_SIZE;
 	jc::Memory::CopyUnsafe(pCopy, pRead, header_.payloadLen_); // 데이터영역 복사
 	return pCopy;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void RecvedCmdPacket::Delete()
+void RecvedPacket::Delete()
 {
 	delete[] reinterpret_cast<_u8*>(this);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-CmdBufferPacket::CmdBufferPacket(const PacketBufferPtr& _buffer)
-: CmdPacket(_buffer->GetElemCount(), _buffer->GetPayloadLength())
-, pBuf_(_buffer)
-{
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-CmdBufferPacket::CmdBufferPacket(const jc::MemoryPoolAbstractPtr& _allocator, const PacketBufferPtr& _buffer)
-: CmdPacket(_allocator, _buffer->GetElemCount(), _buffer->GetPayloadLength())
-, pBuf_(_buffer)
-{
-}
 
 NS_END

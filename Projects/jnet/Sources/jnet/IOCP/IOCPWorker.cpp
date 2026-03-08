@@ -11,17 +11,23 @@
 #include <jc/Primitives/RefCountObjectPtr.h>
 
 USING_NS_JC;
+USING_NS_JNET;
 
-NS_JNET_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 IOCPWorker::IOCPWorker(IOCP* _pIocp)
 : Worker()
 , iocp_(_pIocp)
+, taskQueue_(dbg_new jc::ListQueue<IOCPTaskAbstractPtr>())
+, swapTaskQueue_(dbg_new jc::ListQueue<IOCPTaskAbstractPtr>())
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IOCPWorker::~IOCPWorker() = default;
+IOCPWorker::~IOCPWorker()
+{
+	JC_DELETE_SAFE(taskQueue_);
+	JC_DELETE_SAFE(swapTaskQueue_);
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void IOCPWorker::Run(void* _pParam)
@@ -33,7 +39,7 @@ void IOCPWorker::Run(void* _pParam)
 	//  ==> 내가 구현한 쓰레드로 변경
 
 	state_ = State::eRunning;
-	thread_ = Thread([this](void* _pThreadParam)
+	thread_.Start([this](void* _pThreadParam)
 	{
 		WorkerThread(_pThreadParam);
 	});
@@ -84,12 +90,14 @@ void IOCPWorker::WorkerThread(void* _pParam)
 		IOCPPostOrder* pPostOrder = reinterpret_cast<IOCPPostOrder*>(completionKey);
 		IOCPOverlapped* pIocpOverlapped = static_cast<IOCPOverlapped*>(pOverlapped);
 		// dynamic_cast를 하고싶지만 OVERLAPPED는 가상 구조체가 아님
+		IOCPOverlapped::Type type = IOCPOverlapped::Type::None;
 
 		if (pIocpOverlapped)
 		{
+			type = pIocpOverlapped->GetType();
 			JC_REF_COUNT_GUARD(pIocpOverlapped, false);
 			// 각 오버랩 타입에 맞게 작업 처리
-			pIocpOverlapped->Process(result, numberOfBytesTransffered, pPostOrder);
+			pIocpOverlapped->Process(result, numberOfBytesTransffered, pPostOrder, this);
 			continue;
 		}
 
@@ -119,4 +127,33 @@ THREAD_END:
 	state_ = State::eJoinWait;
 }
 
-NS_END
+//////////////////////////////////////////////////////////////////////////////////////////
+void IOCPWorker::EnqueueTask(const IOCPTaskAbstractPtr& _pTask)
+{
+	JC_LOCK_GUARD(taskQueueLock_);
+	taskQueue_->Enqueue(_pTask);
+	hasTask_.Store(true);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void IOCPWorker::PopAllTasksWithSwap(jc::Vector<IOCPTaskAbstractPtr>& _v)
+{
+	// 여러쓰레드에서 호출 금지. 무조건 하나의 쓰레드만 이 함수를 호출해야한다.
+	jc::ListQueue<IOCPTaskAbstractPtr>* pQueue = nullptr;
+	{
+		JC_LOCK_GUARD(taskQueueLock_);
+		hasTask_.Store(false);
+		pQueue = taskQueue_;
+		taskQueue_ = swapTaskQueue_;
+		swapTaskQueue_ = pQueue;
+	}
+
+	if (pQueue->Size() > 0)
+	{
+		while (!pQueue->IsEmpty())
+		{
+			_v.PushBack(pQueue->Front());
+			pQueue->Dequeue();
+		}
+	}
+}

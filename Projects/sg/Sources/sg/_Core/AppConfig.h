@@ -19,12 +19,14 @@ struct AppConfig : jc::SingletonPointer<AppConfig>
 	virtual ~AppConfig();
 
 	// Command Arguments
+	int mode_ = 0;
 	jc::String assetPath_;
 	jc::String srcDataPath_;
 	jc::String resDataPath_;
 	jc::String resDataFontPath_;
 	jc::String resDataImagePath_;
 	jc::String resDataSoundPath_;
+	jc::HashMap<jc::String, jc::String> argsMap_;
 
 	void ReadEnvArgs();
 	void LoadConfFile();

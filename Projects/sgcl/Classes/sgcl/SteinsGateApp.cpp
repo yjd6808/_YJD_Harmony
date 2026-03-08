@@ -120,26 +120,35 @@ bool SteinsGateApp::applicationDidFinishLaunching()
 	// ======================================================
 	// 메인 리소스 초기화
 	// ======================================================
-	InitializeJCore(argc_, argv_);
-	sgapiBase::Init(dbg_new sgapiClient);
-	Winsock::Initialize(2, 2);
-	AudioPlayer::Initilize();
-	SgaElementInitializer::Initialize();
-	FileUtils::getInstance()->setPopupNotify(false); // 파일못찾은 경우 알람 안하도록 함
-	jc::Console::SetSize(1200, 800);
 
-	InitializeNetLogger(LOG_SPECIFIER_CLIENT);
-	InitializeDefaultLogger(LOG_SPECIFIER_CLIENT);
-	InitializeCommonCore();
+	try
+	{
+		InitializeJCore(argc_, argv_);
+		sgapiBase::Init(dbg_new sgapiClient);
+		Winsock::Initialize(2, 2);
+		AudioPlayer::Initilize();
+		SgaElementInitializer::Initialize();
+		FileUtils::getInstance()->setPopupNotify(false); // 파일못찾은 경우 알람 안하도록 함
+		jc::Console::SetSize(1200, 800);
 
-	CreateOpenGLWindow(); // 윈도우 생성 후 클라이언트 코어 로딩
-	InitializeClientCore();
-	InitializeClientLogo(true, 5);
-	
-	sg::Contents.Initialize();
-	CreateWorldScene();
-	
-	InitializeWindowProcedure();
+		InitializeNetLogger(LOG_SPECIFIER_CLIENT);
+		InitializeDefaultLogger(LOG_SPECIFIER_CLIENT);
+		InitializeCommonCore();
+
+		CreateOpenGLWindow(); // 윈도우 생성 후 클라이언트 코어 로딩
+		InitializeClientCore();
+		InitializeClientLogo(true, 5);
+
+		sg::Contents.Initialize();
+		CreateWorldScene();
+
+		InitializeWindowProcedure();
+	}
+	catch (std::exception& exception)
+	{
+		_LogError_("애플리케이션 초기화 중 오류가 발생하였습니다.\n%s", exception.what());
+		return false;
+	}
 
 	return true;
 }

@@ -8,6 +8,7 @@
 #pragma once
 
 #include <jnet/NetGroupMgr.h>
+#include "NetSession.h"
 
 struct ServerProcessInfo;
 
@@ -25,14 +26,14 @@ public:
 	const NetInterServerInfo& GetInterServerInfo() const { return pProcessInfo_->GetInterServerInfo(); }
 	const jc::Vector<NetServerInfo>& GetMainServerInfoList() const { return pProcessInfo_->mainServerInfoList_; }
 
-	void ProcessMainLoop();
-	void Terminate() { running_ = false; }
+	void	ProcessMainLoop();
+	void	Terminate() { running_ = false; }
 
-	void SetUpdateCallback(const jc::Action<const jc::TimeSpan&>& _fnUpdate) { fnUpdate_ = _fnUpdate; }
-	void SetStoppedCallback(const jc::Action<>& _fnStopped) { fnStopped_ = _fnStopped; }
+	void	SetUpdateCallback(const jc::Action<const jc::TimeSpan&>& _fnUpdate) { fnUpdate_ = _fnUpdate; }
+	void	SetStoppedCallback(const jc::Action<>& _fnStopped) { fnStopped_ = _fnStopped; }
 
-	void SetUpdateCallback(jc::Action<const jc::TimeSpan&>&& _fnUpdate) { fnUpdate_ = std::move(_fnUpdate); }
-	void SetStoppedCallback(jc::Action<>&& _fnStopped) { fnStopped_ = std::move(_fnStopped); }
+	void	SetUpdateCallback(jc::Action<const jc::TimeSpan&>&& _fnUpdate) { fnUpdate_ = std::move(_fnUpdate); }
+	void	SetStoppedCallback(jc::Action<>&& _fnStopped) { fnStopped_ = std::move(_fnStopped); }
 
 	void	UpdateServerTime(_s64 _sendTime, _s64 _centerTime);
 	_s64	GetTime();
@@ -69,3 +70,6 @@ private:
 NS_END
 
 #define g_cNetCore JC_DECL_SINGLETON_BODY(sg::NetCore)
+
+#define get_server_id_from_session_handle(handle)		((handle) / NET_SESSION_HANDLE_UNIT)
+#define get_server_type_from_session_handle(handle)		(get_server_id_from_session_handle(handle) >= NET_GAME_SERVER_UNIT ? ServerType::Game : get_server_id_from_session_handle(handle))

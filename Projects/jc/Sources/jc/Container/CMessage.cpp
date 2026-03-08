@@ -133,14 +133,21 @@ void CMessage::SetReadOffset(_u16 _readOffset)
 void CMessage::SetMsgId(_u32 _msgId)
 {
 	ReadyDefaultContext();
-	pContext_->GetMsgHeader().msgId_ = _msgId;
+	pContext_->SetMsgId(_msgId);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::SetTargetId(object_id _targetId)
 {
 	ReadyDefaultContext();
-	pContext_->GetMsgHeader().targetId_ = _targetId;
+	pContext_->SetTargetId(_targetId);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void CMessage::SetUsage(_u32 _usage)
+{
+	ReadyDefaultContext();
+	pContext_->SetUsage(_usage);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -158,6 +165,24 @@ void CMessage::SetContext(CMessageView* _pView)
 
 	JC_RELEASE_SAFE(pContext_);
 	pContext_ = _pView;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u32 CMessage::GetMsgId() const
+{
+	return IsNull() ? 0 : pContext_->GetMsgId();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+object_id CMessage::GetTargetId() const
+{
+	return IsNull() ? 0 : pContext_->GetTargetId();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u32 CMessage::GetUsage() const
+{
+	return IsNull() ? 0 : pContext_->GetUsage();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -532,12 +557,6 @@ CMessageView::CMessageView(_u8* _pBuf, _u32 _prefixMemCapacity, _u32 _memCapacit
 			jc_assert_msg(false, "CMessageView constructor - buffer too small for header");
 			return;
 		}
-
-		CMessageHeader& header = GetMsgHeader();
-		header.writeOffset_ = 0;
-		header.writeMemOffset_ = 0;
-		header.msgId_ = 0;
-		header.targetId_ = 0;
 	}
 }
 
@@ -561,8 +580,54 @@ CMessageHeader* CMessageView::GetMsgHeaderPtr() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+void CMessageView::InitHeader()
+{
+	CMessageHeader& header = GetMsgHeader();
+	header.writeOffset_ = 0;
+	header.writeMemOffset_ = 0;
+	header.msgId_ = 0;
+	header.targetId_ = 0;
+
+	readOffset_ = 0;
+	readMemOffset_ = 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void CMessageView::ReleaseAction()
+{
+	if (isReleased_)
+		return;
+
+	if (isStackAllocatedContext_)
+	{
+		pMemOwner_ = nullptr;
+		pBuf_ = nullptr;
+		usage_ = CMessage::USAGE_NONE;
+		prefixMemCapacity_ = 0;
+		readMemOffset_ = 0;
+		readOffset_ = 0;
+		memCapacity_ = 0;
+	}
+	else
+	{
+		delete this;
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CMessageView::EnsureCapacity(_u32 _requiredCapacity)
+{
+	if (_requiredCapacity <= memCapacity_)
+		return false;
+	jc_assert(false); // 뷰는 기본적으로 메모리 확장을 지원하지 않음
+	return false;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 bool CMessageView::IsValid() const
 {
+	if (isReleased_)
+		return false;
 	if (pBuf_ == nullptr || memCapacity_ < GetHeaderSize())
 		return false;
 	const CMessageHeader& header = GetMsgHeader();
@@ -571,6 +636,30 @@ bool CMessageView::IsValid() const
 	if (header.writeOffset_ > 0 && header.writeMemOffset_ == 0)
 		return false;
 	return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void CMessageView::SetMsgId(_u32 _msgId)
+{
+	GetMsgHeader().msgId_ = _msgId;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void CMessageView::SetTargetId(object_id _targetId)
+{
+	GetMsgHeader().targetId_ = _targetId;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void CMessageView::SetUsage(_u32 _usage)
+{
+	usage_ = _usage;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void CMessageView::SetStackAllocatedContext(bool _v)
+{
+	isStackAllocatedContext_ = _v;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -635,7 +724,7 @@ void CMessageView::ResetWriteOffset()
 //////////////////////////////////////////////////////////////////////////////////////////
 _u32 CMessageView::CalcMemOffset(_u16 _offset) const
 {
-	CMessageHeader& header = const_cast<CMessageView*>(this)->GetMsgHeader();
+	CMessageHeader& header = this->GetMsgHeader();
 	const _u16 HEADER_SIZE = GetHeaderSize();
 
 	if (_offset > header.writeOffset_)
@@ -707,7 +796,7 @@ CMessage::VariantType CMessageView::GetCurrentVT() const
 //////////////////////////////////////////////////////////////////////////////////////////
 CMessage::VariantType CMessageView::GetCurrentVT(OUT _u32* _pMemSize) const
 {
-	const CMessageHeader& header = const_cast<CMessageView*>(this)->GetMsgHeader();
+	const CMessageHeader& header = this->GetMsgHeader();
 
 	if (readOffset_ >= header.writeOffset_ || header.writeMemOffset_ == 0)
 	{
@@ -1027,7 +1116,7 @@ _u8* CMessageView::GetValue(_u16 _offset, OUT CMessage::VariantType& _type, OUT 
 jc::String CMessageView::Dump() const
 {
 	jc::String str(1024);
-	const CMessageHeader& header = const_cast<CMessageView*>(this)->GetMsgHeader();
+	const CMessageHeader& header = GetMsgHeader();
 	const _u16 HEADER_SIZE = GetHeaderSize();
 
 	_u8*	pRead = pBuf_ + HEADER_SIZE;
@@ -1066,7 +1155,7 @@ jc::String CMessageView::Dump() const
 				}
 				else
 				{
-					_s32 value = *reinterpret_cast<_u8*>(pRead);
+					_s32 value = *pRead;
 					str += StringUtil::Format("  u8: %d", value);
 				}
 				

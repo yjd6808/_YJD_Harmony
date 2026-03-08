@@ -21,72 +21,34 @@ NS_JNET_BEGIN
 
 class ICommand;
 class IPacket;
-struct RecvedCmdPacket;
+struct RecvedPacket;
 class TcpServer;
 class Session;
 class Server;
 
-class ServerEventListener
+class ServerEventListener : public SessionEventListener
 {
 public:
 	using FnStarted = jc::Action<>;
 	using FnStartFailed = jc::Action<_u32>;
 	using FnStopped = jc::Action<>;
-	using FnConnected = jc::Action<Session*>;
-	using FnConnectFailed = jc::Action<Session*, _u32>;
-	using FnDisconnected = jc::Action<Session*, _u32>;
-	using FnSent = jc::Action<Session*, IPacket*, _u32l>;
-	using FnReceivedRaw = jc::Action<Session*, char*, int>;
-	using FnReceived = jc::Action<Session*, ICommand*>;
-	using FnReceivedPacket = jc::Action<Session*, RecvedCmdPacket*>;
 
 	virtual ~ServerEventListener() = default;
 	virtual void OnStarted() {}
 	virtual void OnStartFailed(_u32 _errorCode) {}
 	virtual void OnStopped() {}
-
-	// TODO: 함수명 Accept로 변경할것, 관련해서 TcpServer, Session도 수정해야할듯?
-	virtual void OnConnected(Session* _pSession) {}
 	virtual void OnConnectFailed(Session* _pSession, _u32 _errorCode) {}
-	virtual void OnDisconnected(Session* _pSession, _u32 _errorCode) {}
-	virtual void OnSent(Session* _pSession, IPacket* _pSentPacket, _u32l _sentBytes) {}
-	virtual void OnReceivedRaw(Session* _pSession, char* _pData, int _len) {}
-	virtual void OnReceived(Session* _pSession, ICommand* _pRecvCmd) {}
-	virtual void OnReceived(Session* _pSession, RecvedCmdPacket* _pRecvPacket) {}
 
 	void SetStartedCallback(const FnStarted& _fn) { fnStarted_ = _fn; }
 	void SetStartFailedCallback(const FnStartFailed& _fn) { fnStartFailed_ = _fn; }
 	void SetStoppedCallback(const FnStopped& _fn) { fnStopped_ = _fn; }
-	void SetConnectedCallback(const FnConnected& _fn) { fnConnected_ = _fn; }
-	void SetConnectFailedCallback(const FnConnectFailed& _fn) { fnConnectFailed_ = _fn; }
-	void SetDisconnectedCallback(const FnDisconnected& _fn) { fnDisconnected_ = _fn; }
-	void SetSentCallback(const FnSent& _fn) { fnSent_ = _fn; }
-	void SetReceivedRawCallback(const FnReceivedRaw& _fn) { fnReceivedRaw_ = _fn; }
-	void SetReceivedCallback(const FnReceived& _fn) { fnReceived_ = _fn; }
-	void SetReceivedPacketCallback(const FnReceivedPacket& _fn) { fnReceivedPacket_ = _fn; }
-
 	void SetStartedCallback(FnStarted&& _fn) { fnStarted_ = std::move(_fn); }
 	void SetStartFailedCallback(FnStartFailed&& _fn) { fnStartFailed_ = std::move(_fn); }
 	void SetStoppedCallback(FnStopped&& _fn) { fnStopped_ = std::move(_fn); }
-	void SetConnectedCallback(FnConnected&& _fn) { fnConnected_ = std::move(_fn); }
-	void SetConnectFailedCallback(FnConnectFailed&& _fn) { fnConnectFailed_ = std::move(_fn); }
-	void SetDisconnectedCallback(FnDisconnected&& _fn) { fnDisconnected_ = std::move(_fn); }
-	void SetSentCallback(FnSent&& _fn) { fnSent_ = std::move(_fn); }
-	void SetReceivedRawCallback(FnReceivedRaw&& _fn) { fnReceivedRaw_ = std::move(_fn); }
-	void SetReceivedCallback(FnReceived&& _fn) { fnReceived_ = std::move(_fn); }
-	void SetReceivedPacketCallback(FnReceivedPacket&& _fn) { fnReceivedPacket_ = std::move(_fn); }
-
 private:
 	FnStarted fnStarted_; 
 	FnStartFailed fnStartFailed_; 
 	FnStopped fnStopped_; 
-	FnConnected fnConnected_; 
-	FnConnectFailed fnConnectFailed_; 
-	FnDisconnected fnDisconnected_; 
-	FnSent fnSent_; 
-	FnReceivedRaw fnReceivedRaw_; 
-	FnReceived fnReceived_; 
-	FnReceivedPacket fnReceivedPacket_;
 };
 
 NS_END

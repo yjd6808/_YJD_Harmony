@@ -18,7 +18,8 @@
 #include <jnet/IOCPOverlapped/IOCPOverlappedSendTo.h>
 #endif
 
-NS_JNET_BEGIN
+USING_NS_JNET;
+
 //////////////////////////////////////////////////////////////////////////////////////////
 IOCPOverlapped::IOCPOverlapped(IOCP* _pIocp, Type _type)
 : OVERLAPPED()
@@ -33,14 +34,6 @@ IOCPOverlapped::IOCPOverlapped(IOCP* _pIocp, Type _type)
 IOCPOverlapped::~IOCPOverlapped()
 {
 	pIocp_->DecreasePendingCount();
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void IOCPOverlapped::Process(BOOL _result, _u32l _bytesTransferred, IOCPPostOrder* _pCompletionKey)
-{
-	(void)_result;
-	(void)_bytesTransferred;
-	(void)_pCompletionKey;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -79,7 +72,7 @@ void IOCPOverlapped::__FreeAllObjects()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool IOCPOverlapped::IsFailed(BOOL _result, _u32& _errorCode)
+bool IOCPOverlapped::IsFailed(BOOL _result, OUT _u32& _errorCode)
 {
 	if (_result == FALSE)
 	{
@@ -89,5 +82,3 @@ bool IOCPOverlapped::IsFailed(BOOL _result, _u32& _errorCode)
 
 	return false;
 }
-
-NS_END

@@ -13,7 +13,7 @@
 
 struct S_AUTHENTICATION_IS : InterServerSendHelper<S_AUTHENTICATION_IS>
 {
-	static void SEND_AUS_AuthenticationCheckAck(bool _success, int _sessionHandle, GameServerType_t _lastServer);
+	static void SEND_AUS_AuthenticationCheckAck(bool _success, object_id _sessionHandle, GameServerType_t _lastServer);
 };
 
 

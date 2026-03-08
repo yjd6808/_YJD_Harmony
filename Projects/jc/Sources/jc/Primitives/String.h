@@ -32,7 +32,7 @@ public:
 	static String Null;
 
 	String();
-	String(int _capacity);
+	explicit String(int _capacity);
 	String(const char* _pStr, int _capacity);
 	String(const char* _pStr);
 	String(char _ch, int _count);

@@ -22,22 +22,22 @@ bool S_SETUP_IS_COMMON::SEND_SCE_ItsMe(ServerProcessType_t _clientType)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool S_SETUP_IS_COMMON::SEND_SCE_NotifyBootState(int _serverId, ServerType_t _serverType, ServerBootState_t _state)
+bool S_SETUP_IS_COMMON::SEND_SCE_NotifyBootState(object_id _serverHandle, ServerType_t _serverType, ServerBootState_t _state)
 {
 	auto sending = SendBegin<SCE_NotifyBootState>();
 	sending.cmd_.State = _state;
 	sending.cmd_.ServerType = _serverType;
-	sending.cmd_.ServerId = _serverId;
+	sending.cmd_.ServerHandle = _serverHandle;
 	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool S_SETUP_IS_COMMON::SEND_SCE_NotifyOrderFailed(int _serverId, ServerType_t _serverType, CenterOrder_t _failedOrder, _u32 _errorCode)
+bool S_SETUP_IS_COMMON::SEND_SCE_NotifyOrderFailed(object_id _serverHandle, ServerType_t _serverType, CenterOrder_t _failedOrder, _u32 _errorCode)
 {
 	auto sending = SendBegin<SCE_NotifyOrderFailed>();
 	sending.cmd_.ErrorCode = _errorCode;
 	sending.cmd_.ServerType = _serverType;
-	sending.cmd_.ServerId = _serverId;
+	sending.cmd_.ServerHandle = _serverHandle;
 	sending.cmd_.Order = _failedOrder;
 	return true;
 }

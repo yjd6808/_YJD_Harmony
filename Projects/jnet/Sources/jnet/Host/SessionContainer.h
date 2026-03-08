@@ -16,14 +16,14 @@ public:
 	SessionContainer(int _capacity);
 	~SessionContainer();
 
-	void		SetInitialHandleSeq(int _initialHandleSeq) { initialHandleSeq_ = _initialHandleSeq; }
-	int			GetInitialHandleSeq() const { return initialHandleSeq_; }
-	int			CreateHandle();
+	void		SetInitialHandleSeq(object_id _initialHandleSeq) { initialHandleSeq_ = _initialHandleSeq; }
+	object_id	GetInitialHandleSeq() const { return initialHandleSeq_; }
+	object_id	CreateHandle();
 	void		ResetHandleSeq() { handleSeq_ = 0; }
 	int			Capacity() { return sessionList_.Capacity(); }
 	bool		Add(Session* _pSession);
 	int			Size() const { return size_; }
-	Session*	Get(int _handle);
+	Session*	Get(object_id _handle);
 	void		DisconnectAll();
 	void		Clear();
 	void		ForEach(jc::Action<Session*> _fn);
@@ -31,8 +31,8 @@ public:
 	bool		IsValidHandle(int _handleIndex);
 
 protected:
-	int handleSeq_;
-	int initialHandleSeq_;
+	object_id handleSeq_;
+	object_id initialHandleSeq_;
 	int size_;
 	jc::Vector<Session*> sessionList_; // TODO: StaticVector
 };

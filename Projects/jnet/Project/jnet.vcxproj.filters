@@ -91,6 +91,12 @@
     <ClCompile Include="..\Sources\jnet\Buffer\PooledStreamBuffer.cpp">
       <Filter>Buffer</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\jnet\Packet\PacketReader.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlappedTask.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jnet\Core.h" />
@@ -217,6 +223,15 @@
     </ClInclude>
     <ClInclude Include="..\Sources\jnet\Buffer\PooledStreamBuffer.h">
       <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Packet\PacketReader.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\IOCP\IOCPTaskListener.h">
+      <Filter>IOCP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\IOCP\IOCPTaskAbstract.h">
+      <Filter>IOCP</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

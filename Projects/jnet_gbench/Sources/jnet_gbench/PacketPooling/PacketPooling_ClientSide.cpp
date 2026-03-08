@@ -41,7 +41,7 @@ struct ClientListener : ClientEventListener
 		}
 	}
 
-	void OnReceived(Session* _pSession, ICommand* _pCmd) override {
+	void OnReceivedCmd(Session* _pSession, ICommand* _pCmd) override {
 		if (_pCmd->GetId() != CMDID_SC_TEST) {
 			jc_assert(false);
 			return;

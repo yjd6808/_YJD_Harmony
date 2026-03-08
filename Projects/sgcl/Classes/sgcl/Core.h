@@ -12,6 +12,7 @@
 #include <cocos/ui/CocosGUI.h>
 
 #include <sg/Core.h>
+#include <sge/Core.h>
 
 #include <sgcl/_Core/Color.h>
 
@@ -25,6 +26,7 @@ namespace cocos2d
 	using Texture = cc::Texture2D;
 }
 
+#define SGCL_MODE_NORMAL				(1)
 
 #ifdef _DEBUG
 #define SG_LOG_TICK(_time, _fmt, ...)            \

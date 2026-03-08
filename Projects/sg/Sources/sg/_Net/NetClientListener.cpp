@@ -8,6 +8,8 @@
 #include "Core.h"
 #include "NetClientListener.h"
 
+#include <jnet/Packet/PacketReader.h>
+
 #include <sg/_Net/NetListenerHelper.h>
 
 USING_NS_JC;
@@ -64,10 +66,22 @@ void NetClientListener::OnSent(jnet::Session* _pSession, IPacket* _pSentPacket, 
 {
 	const TransportProtocol protocol = _pSession->Protocol();
 
-	if (_pSentPacket->GetType() == PacketType::Command)
+	PacketReader reader(_pSentPacket->GetWSABuf());
+	PacketElementView view;
+	while (reader.Next(view) == PacketReader::rrSuccess)
 	{
-		CmdPacket* pPacket = static_cast<CmdPacket*>(_pSentPacket);
-		pPacket->ForEach([&](ICommand* _cmd) { sg::NetListenerHelper::LogCommand(protocol, Transmission::Send, _cmd); });
+		if (view.type_ == static_cast<_u8>(PacketType::Raw))
+		{
+			NetListenerHelper::LogRaw(protocol, Transmission::Send, view.raw_);
+		}
+		else if (view.type_ == static_cast<_u8>(PacketType::Command))
+		{
+			NetListenerHelper::LogCommand(protocol, Transmission::Send, view.cmd_);
+		}
+		else if (view.type_ == static_cast<_u8>(PacketType::Message))
+		{
+			NetListenerHelper::LogMessage(protocol, Transmission::Send, view.msg_);
+		}
 	}
 
 	sg::NetListenerHelper::LogPacketHex(_pSentPacket);
@@ -79,7 +93,7 @@ void NetClientListener::OnSent(jnet::Session* _pSession, IPacket* _pSentPacket, 
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetClientListener::OnReceived(jnet::Session* _pSession, ICommand* _pRecvCmd)
+void NetClientListener::OnReceivedCmd(jnet::Session* _pSession, ICommand* _pRecvCmd)
 {
 	sg::NetListenerHelper::LogCommand(_pSession->Protocol(), Transmission::Recv, _pRecvCmd);
 
@@ -103,7 +117,7 @@ void NetClientListener::OnReceived(jnet::Session* _pSession, ICommand* _pRecvCmd
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void NetClientListener::OnReceived(Session* _pSession, RecvedCmdPacket* _pRecvPacket)
+void NetClientListener::OnReceivedPacket(Session* _pSession, RecvedPacket* _pRecvPacket)
 {
 	sg::NetListenerHelper::LogPacketHex(_pRecvPacket);
 

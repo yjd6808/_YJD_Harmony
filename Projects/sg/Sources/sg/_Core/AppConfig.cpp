@@ -62,6 +62,11 @@ void AppConfig::ReadEnvArgs()
 		argMap.Insert(key, value);
 	}
 
+	if (jc::String* pMode = argMap.Find("mode"))
+	{
+		mode_ = StringUtil::ToNumber<int>(pMode->SafeSource());
+	}
+
 	if (jc::String* pAssetPath = argMap.Find("assets"))
 	{
 		jc::String srcDataPath = jc::Path::Combine(*pAssetPath, "src_data");
@@ -74,6 +79,8 @@ void AppConfig::ReadEnvArgs()
 		resDataImagePath_ = jc::Path::Combine(resDataPath, "image");
 		resDataSoundPath_ = jc::Path::Combine(resDataPath, "sound");
 	}
+
+	argsMap_ = Move(argMap);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

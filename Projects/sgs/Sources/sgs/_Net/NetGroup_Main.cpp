@@ -55,12 +55,12 @@ void NetGroup_Main::Initialize()
 		NetServerInfo& serverInfo = processInfo.mainServerInfoList_[i];
 		auto pServer = MakeShared<NetServer>(pIocp_, pBufferPool_);
 		int idx = serverInfo.serverType_;
-		int serverId = idx;
+		object_id serverHandle = make_net_server_handle(NET_GID_MAIN, idx);
 
 		// 게임서버 프로세스이고, 게임서버인 경우
 		if (processType == ServerProcessType::Game && idx == ServerType::Game)
 		{
-			serverId = NET_GAME_SERVER_UNIT + (gameServerType + 1) + channelNumber;
+			serverHandle = make_net_game_server_handle(NET_GID_MAIN, gameServerType, channelNumber);
 		}
 
 		AddHost(idx, pServer);
@@ -68,12 +68,12 @@ void NetGroup_Main::Initialize()
 		// 모든 서버상 세션의 ID를 고유하게 만듬.
 		// 예시) 게임서버 프로세스의 서버 ID는 1001
 		// 		그러면 이 게임서버 프로세스에서 구동하는 모든 서버의 세션 ID는 1001xxxxx가 된다.
-		pSessionContainerArr_[idx] = dbg_new SessionContainer(serverInfo.maxSessionCount_);
-		pSessionContainerArr_[idx]->SetInitialHandleSeq(serverId * NET_SESSION_HANDLE_UNIT);
+		pSessionContainerArr_[idx] = dbg_new SessionContainer(serverInfo.maxSessionCount_); // 0번 인덱스는 안씀
+		pSessionContainerArr_[idx]->SetInitialHandleSeq(serverHandle);
 
 		pServerArr_[idx] = pServer.Get<NetServer*>();
+		pServerArr_[idx]->SetHandle(serverHandle);
 		pServerArr_[idx]->SetServerInfo(serverInfo);
-		pServerArr_[idx]->SetServerId(serverId);
 		pServerArr_[idx]->SetSesssionContainer(pSessionContainerArr_[idx]);
 		pServerArr_[idx]->SetEventListener(dbg_new NetServerListener { pServerArr_[idx], pParser_ });
 
@@ -104,6 +104,35 @@ bool NetGroup_Main::AddUpdatable(int _id, IUpdatable* _pUpdatable)
 void NetGroup_Main::OnUpdate(const TimeSpan& _elapsed)
 {
 	updatableCollection_.Update(_elapsed);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+NetSession* NetGroup_Main::GetSession(object_id _handle)
+{
+	if (get_group_id_from_sh(_handle) != NET_GID_MAIN)
+	{
+		jc_assert(false); // 이상한 거 전달함.
+		return nullptr;
+	}
+
+	_u8 hostClass = get_host_class_from_sh(_handle);
+	_u16 sessionIdx = get_session_idx_from_sh(_handle);
+	if (sessionIdx == 0)
+	{
+		jc_assert(false); // 세션 인덱스는 1부터 시작해야함.
+		return nullptr;
+	}
+
+	if (hostClass == nhGameServer)
+	{
+		return (NetSession*)pSessionContainerArr_[ServerType::Game]->Get(sessionIdx);
+	}
+	if (hostClass == nhServer)
+	{
+		return (NetSession*)pSessionContainerArr_[get_server_type_from_sh(_handle)]->Get(sessionIdx);
+	}
+	jc_assert(false); // 이상한 거 전달함.
+	return nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

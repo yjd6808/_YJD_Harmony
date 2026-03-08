@@ -5,5 +5,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\sge\Core.h" />
+    <ClInclude Include="..\Sources\sge\DLLExport.h" />
   </ItemGroup>
 </Project>

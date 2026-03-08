@@ -17,6 +17,21 @@
     <ClCompile Include="..\Sources\jdb\MySQL\MysqlConnection.cpp">
       <Filter>MySQL</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\jdb\SQLServer\SqlServerDatabase.cpp">
+      <Filter>SQLServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jdb\SQLServer\SqlServerQuery.cpp">
+      <Filter>SQLServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jdb\SQLServer\SqlServerStatementBuilder.cpp">
+      <Filter>SQLServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jdb\SQLServer\SqlServerConnection.cpp">
+      <Filter>SQLServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jdb\SQLServer\SqlServerConnectionPool.cpp">
+      <Filter>SQLServer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jdb\Core.h" />
@@ -41,6 +56,21 @@
       <Filter>MySQL</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jdb\Namespace.h" />
+    <ClInclude Include="..\Sources\jdb\SQLServer\SqlServerDatabase.h">
+      <Filter>SQLServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jdb\SQLServer\SqlServerQuery.h">
+      <Filter>SQLServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jdb\SQLServer\SqlServerStatementBuilder.h">
+      <Filter>SQLServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jdb\SQLServer\SqlServerConnection.h">
+      <Filter>SQLServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jdb\SQLServer\SqlServerConnectionPool.h">
+      <Filter>SQLServer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="SQLServer">

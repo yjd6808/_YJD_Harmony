@@ -33,6 +33,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\sge\DLLExport.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{13FE9916-2585-4CE2-9ECC-5CFDDD3B7339}</ProjectGuid>
@@ -238,9 +239,8 @@
       </Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">if not exist "$(ProjectDir)..\Resources" (
-  md $(ProjectDir)..\Resources
-)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -280,9 +280,8 @@
       </Command>
     </PreLinkEvent>
     <PreBuildEvent>
-      <Command>if not exist "$(ProjectDir)..\Resources" (
-  md $(ProjectDir)..\Resources
-)</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -321,7 +320,8 @@
       </Command>
     </PreLinkEvent>
     <PreBuildEvent>
-      <Command>탱크파이터 예제 프로그램은 x86 플랫폼으로만 빌드 가능합니다.</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

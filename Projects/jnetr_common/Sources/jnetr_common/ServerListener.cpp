@@ -51,7 +51,7 @@ void ServerListener::OnSent(Session* _pSender, IPacket* _pPacket, _u32l _sentByt
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ServerListener::OnReceived(Session* _pReceiver, ICommand* _pCmd)
+void ServerListener::OnReceivedCmd(Session* _pReceiver, ICommand* _pCmd)
 {
 	// 수신한 메시지 출력
 	if (_pCmd->GetId() == CMD_SATIC_MESSAGE)

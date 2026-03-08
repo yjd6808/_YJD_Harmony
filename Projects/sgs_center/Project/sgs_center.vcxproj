@@ -170,7 +170,10 @@
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -193,7 +196,10 @@ xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -225,7 +231,10 @@ xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -253,7 +262,10 @@ xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
-xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q /D "$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
