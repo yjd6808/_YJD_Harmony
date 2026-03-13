@@ -247,11 +247,13 @@
       <Filter>Primitives</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\jc\Pool\PooledMemoryChunk.cpp" />
+    <ClCompile Include="..\Sources\jc\Primitives\StringView.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jc\Core.h" />
     <ClInclude Include="..\Sources\jc\Type.h" />
-    <ClInclude Include="..\Sources\jc\Random.h" />
     <ClInclude Include="..\Sources\jc\Tuple.h" />
     <ClInclude Include="..\Sources\jc\Math.h" />
     <ClInclude Include="..\Sources\jc\Container\Arrays.h">
@@ -681,6 +683,13 @@
     <ClInclude Include="..\Sources\jc\Pool\PooledMemoryChunk.h">
       <Filter>Pool</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\jc\Primitives\StringView.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\Container\DataMap.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\Random.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\jc\Natvis\ListQueue.natvis">

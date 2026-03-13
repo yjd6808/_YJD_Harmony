@@ -143,6 +143,15 @@
     <ClCompile Include="..\Sources\jc_gtest\Pool\AccessibleObjectPoolTest.cpp">
       <Filter>Pool</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\DataMapTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\CMessageTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Primitives\StringViewTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jc_gtest\Core.h" />

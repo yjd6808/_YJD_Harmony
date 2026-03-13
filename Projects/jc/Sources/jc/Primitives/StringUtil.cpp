@@ -11,112 +11,140 @@
 
 NS_JC_BEGIN
 
-Vector<String, CDefaultAllocator> StringUtil::Split(String& src, const char* delimiter) {
-	return src.Split(delimiter);
+//////////////////////////////////////////////////////////////////////////////////////////
+Vector<String, CDefaultAllocator> StringUtil::Split(String& _src, const char* _pDelimiter)
+{
+	return _src.Split(_pDelimiter);
 }
 
-String StringUtil::Format(const char* format, ...) {
+//////////////////////////////////////////////////////////////////////////////////////////
+Vector<String, CDefaultAllocator> StringUtil::Split(String& _src, char _delimiter)
+{
+	return _src.Split(_delimiter);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+String StringUtil::Format(const char* _pFormat, ...)
+{
 	va_list args;
-	va_start(args, format);
-	String szResult = Format(format, args);
+	va_start(args, _pFormat);
+	String szResult = Format(_pFormat, args);
 	va_end(args);
 	return szResult;
 }
 
-String StringUtil::Format(const char* format, va_list args) {
-	const int iExpectedLen = vsnprintf(nullptr, 0, format, args); // 포맷 변환시 필요한 문자열 길이를 획득
+//////////////////////////////////////////////////////////////////////////////////////////
+String StringUtil::Format(const char* _pFormat, va_list _args)
+{
+	const int iExpectedLen = vsnprintf(nullptr, 0, _pFormat, _args);
 
-	if (iExpectedLen <= 0) {
+	if (iExpectedLen <= 0)
+	{
 		throw RuntimeException("문자열 포맷 수행중 오류가 발생하였습니다.");
 	}
 
 	String szResult(iExpectedLen + 1 + String::DEFAULT_BUFFER_SIZE);
-	vsnprintf(szResult.Source(), szResult.Capacity(), format, args);
-	szResult.SetAt(iExpectedLen, NULL);
-	szResult.m_iLen = iExpectedLen;
+	vsnprintf(szResult.Source(), szResult.Capacity(), _pFormat, _args);
+	szResult.SetAtForce(iExpectedLen, NULL);
+	szResult.len_ = iExpectedLen;
 	return szResult;
 }
 
-void StringUtil::FormatBuffer(char* buff, const int buffCapacity, const char* format, ...) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void StringUtil::FormatBuffer(char* _pBuff, const int _buffCapacity, const char* _pFormat, ...)
+{
 	va_list args;
-	va_start(args, format);
-	FormatBuffer(buff, buffCapacity, format, args);
+	va_start(args, _pFormat);
+	FormatBuffer(_pBuff, _buffCapacity, _pFormat, args);
 	va_end(args);
 }
 
-void StringUtil::FormatBuffer(char* buff, const int buffCapacity, const char* format, va_list args) {
-	const int iExpectedLen = vsnprintf(nullptr, 0, format, args); // 포맷 변환시 필요한 문자열 길이를 획득
+//////////////////////////////////////////////////////////////////////////////////////////
+void StringUtil::FormatBuffer(char* _pBuff, const int _buffCapacity, const char* _pFormat, va_list _args)
+{
+	const int iExpectedLen = vsnprintf(nullptr, 0, _pFormat, _args);
 	jc_assert_msg(iExpectedLen > 0, "문자열 포맷 수행중 오류가 발생하였습니다.");
-	jc_assert_msg(iExpectedLen < buffCapacity, "문자열 포맷 수행중 오류가 발생하였습니다. (문자열 길이가 버퍼의 용량을 초과합니다.)");
-	vsnprintf(buff, buffCapacity, format, args);
+	jc_assert_msg(iExpectedLen < _buffCapacity, "문자열 포맷 수행중 오류가 발생하였습니다. (문자열 길이가 버퍼의 용량을 초과합니다.)");
+	vsnprintf(_pBuff, _buffCapacity, _pFormat, _args);
 }
 
-
-bool StringUtil::IsNullOrEmpty(const char* str) {
-	if (str == nullptr) return true;
-	if (str[0] == '\0') return true;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool StringUtil::IsNullOrEmpty(const char* _pStr)
+{
+	if (_pStr == nullptr)
+		return true;
+	if (_pStr[0] == '\0')
+		return true;
 	return false;
 }
 
-int StringUtil::Copy(char* buffer, const int bufferSize, const char* copy) {
-	if (buffer == nullptr || copy == nullptr) {
-		return -1;
-	}
-
-	int iSize = 0;
-	char* pBuffer = buffer;
-
-	while (*copy != NULL && iSize < bufferSize) {
-		*buffer = *copy;
-		buffer++;
-		copy++;
-		iSize++;
-	}
-
-	pBuffer[iSize] = NULL;
-	return iSize;
-}
-
-int StringUtil::CopyUnsafe(char* buffer, const char* copy) {
-	if (buffer == nullptr || copy == nullptr) {
-		return -1;
-	}
-
-	int iSize = 0;
-	char* pBuffer = buffer;
-
-	while (*copy != NULL) {
-		*buffer = *copy;
-		buffer++;
-		copy++;
-		iSize++;
-	}
-
-	pBuffer[iSize] = NULL;
-	return iSize;
-}
-
 //////////////////////////////////////////////////////////////////////////////////////////
-bool StringUtil::IsEqual(const char* src, const char* dst, bool _compareCase/*= true*/)
+int StringUtil::Copy(char* _pBuffer, const int _bufferSize, const char* _pCopy)
 {
-	return IsEqual(src, Length(src), dst, Length(dst), _compareCase);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-bool StringUtil::IsEqual(const char* src, const int srcLen, const char* dst, const int dstLen, bool _compareCase /*= true*/) 
-{
-	for (int i = 0, j = 0; i < srcLen && j < dstLen; i++, j++) 
+	if (_pBuffer == nullptr || _pCopy == nullptr)
 	{
-		if (_compareCase == false) 
+		return -1;
+	}
+
+	int iSize = 0;
+	char* pBuffer = _pBuffer;
+
+	while (*_pCopy != NULL && iSize < _bufferSize)
+	{
+		*_pBuffer = *_pCopy;
+		_pBuffer++;
+		_pCopy++;
+		iSize++;
+	}
+
+	pBuffer[iSize] = NULL;
+	return iSize;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+int StringUtil::CopyUnsafe(char* _pBuffer, const char* _pCopy)
+{
+	if (_pBuffer == nullptr || _pCopy == nullptr)
+	{
+		return -1;
+	}
+
+	int iSize = 0;
+	char* pBuffer = _pBuffer;
+
+	while (*_pCopy != NULL)
+	{
+		*_pBuffer = *_pCopy;
+		_pBuffer++;
+		_pCopy++;
+		iSize++;
+	}
+
+	pBuffer[iSize] = NULL;
+	return iSize;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool StringUtil::IsEqual(const char* _pSrc, const char* _pDst, bool _bCompareCase/*= true*/)
+{
+	return IsEqual(_pSrc, Length(_pSrc), _pDst, Length(_pDst), _bCompareCase);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool StringUtil::IsEqual(const char* _pSrc, const int _srcLen, const char* _pDst, const int _dstLen, bool _bCompareCase /*= true*/)
+{
+	for (int i = 0, j = 0; i < _srcLen && j < _dstLen; i++, j++)
+	{
+		if (_bCompareCase == false)
 		{
-			if (tolower(*(src + i)) != tolower(*(dst + j))) 
+			if (tolower(*(_pSrc + i)) != tolower(*(_pDst + j)))
 			{
 				return false;
 			}
 			continue;
 		}
 
-		if (*(src + i) != *(dst + j)) 
+		if (*(_pSrc + i) != *(_pDst + j))
 		{
 			return false;
 		}
@@ -124,49 +152,62 @@ bool StringUtil::IsEqual(const char* src, const int srcLen, const char* dst, con
 	return true;
 }
 
-void StringUtil::Swap(String& src, String& dst) {
-	String temp = std::move(src);
-	src = std::move(dst);
-	dst = std::move(temp);
+//////////////////////////////////////////////////////////////////////////////////////////
+void StringUtil::Swap(String& _src, String& _dst)
+{
+	String temp = std::move(_src);
+	_src = std::move(_dst);
+	_dst = std::move(temp);
 }
 
-int StringUtil::Find(const char* source, int sourceLen, int startIdx, int endIdx, const char* str) {
-	return Find(source, sourceLen, startIdx, endIdx, str, Length(str));
+//////////////////////////////////////////////////////////////////////////////////////////
+int StringUtil::Find(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr)
+{
+	return Find(_pSource, _sourceLen, _startIdx, _endIdx, _pStr, Length(_pStr));
 }
 
-const char* StringUtil::SkipLeadingChar(const char* str, char skipChar) {
-	const int iPos = FindCharUncontained(str, skipChar);
-	return str + iPos;
+//////////////////////////////////////////////////////////////////////////////////////////
+const char* StringUtil::SkipLeadingChar(const char* _pStr, char _skipChar)
+{
+	const int iPos = FindCharUncontained(_pStr, _skipChar);
+	return _pStr + iPos;
 }
 
-const char* StringUtil::SkipLeadingNumberZero(const char* str) {
-	
-	const int iStrLen = Length(str);
+//////////////////////////////////////////////////////////////////////////////////////////
+const char* StringUtil::SkipLeadingNumberZero(const char* _pStr)
+{
+	const int iStrLen = Length(_pStr);
 
-	if (iStrLen == 0) {
-		return str;
+	if (iStrLen == 0)
+	{
+		return _pStr;
 	}
 
-	// 전부 0인경우가 있을 수 있으므로 전체 스킵된 경우 0으로 처리되도록 한다.
-	const char* szSkippedLeadingZero = SkipLeadingChar(str, '0');
-	if (szSkippedLeadingZero == str + iStrLen) {
+	const char* szSkippedLeadingZero = SkipLeadingChar(_pStr, '0');
+	if (szSkippedLeadingZero == _pStr + iStrLen)
+	{
 		return "0";
 	}
 
 	return szSkippedLeadingZero;
 }
 
-int StringUtil::FindChar(const char* source, char ch) {
+//////////////////////////////////////////////////////////////////////////////////////////
+int StringUtil::FindChar(const char* _pSource, char _ch)
+{
 	int i = 0;
 
-	while (true) {
-		const char sch = *(source + i);
+	while (true)
+	{
+		const char sch = *(_pSource + i);
 
-		if (sch == NULL) {
+		if (sch == NULL)
+		{
 			return -1;
 		}
 
-		if (sch == ch) {
+		if (sch == _ch)
+		{
 			return i;
 		}
 
@@ -174,29 +215,39 @@ int StringUtil::FindChar(const char* source, char ch) {
 	}
 }
 
-int StringUtil::FindCharReverse(const char* source, char ch) {
-	return FindCharReverse(source, Length(source), ch);
+//////////////////////////////////////////////////////////////////////////////////////////
+int StringUtil::FindCharReverse(const char* _pSource, char _ch)
+{
+	return FindCharReverse(_pSource, Length(_pSource), _ch);
 }
 
-int StringUtil::FindCharReverse(const char* source, int len, char ch) {
-	while ((--len) >= 0) {
-		if (source[len] == ch)
-			return len;
+//////////////////////////////////////////////////////////////////////////////////////////
+int StringUtil::FindCharReverse(const char* _pSource, int _len, char _ch)
+{
+	while ((--_len) >= 0)
+	{
+		if (_pSource[_len] == _ch)
+			return _len;
 	}
 	return -1;
 }
 
-int StringUtil::FindCharUncontained(const char* source, char ch) {
+//////////////////////////////////////////////////////////////////////////////////////////
+int StringUtil::FindCharUncontained(const char* _pSource, char _ch)
+{
 	int i = 0;
 
-	while (true) {
-		const char sch = *(source + i);
+	while (true)
+	{
+		const char sch = *(_pSource + i);
 
-		if (sch == NULL) {
+		if (sch == NULL)
+		{
 			return i;
 		}
 
-		if (sch != ch) {
+		if (sch != _ch)
+		{
 			return i;
 		}
 
@@ -204,32 +255,38 @@ int StringUtil::FindCharUncontained(const char* source, char ch) {
 	}
 }
 
-// 문자열의 startIdx(시작인덱스 - 포함)부터 endIdx(종료인덱스 - 포함) 포함하여 str문자열이 있을 경우의 위치 인덱스를 반환해줍니다.
-// O(n)
-int StringUtil::Find(const char* source, int sourceLen, int startIdx, int endIdx, const char* str, int strLen) {
-	const int iFindStrLen = strLen;
-	const int iSearchLen = endIdx - startIdx + 1;
+//////////////////////////////////////////////////////////////////////////////////////////
+int StringUtil::Find(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr, int _strLen)
+{
+	const int iFindStrLen = _strLen;
+	const int iSearchLen = _endIdx - _startIdx + 1;
 
-	if (strLen == 0) {
+	if (_strLen == 0)
+	{
 		return 0;
 	}
 
-	if (startIdx > endIdx || startIdx < 0 || endIdx >= sourceLen) {
+	if (_startIdx > _endIdx || _startIdx < 0 || _endIdx >= _sourceLen)
+	{
 		return -1;
 	}
 
-	if (iFindStrLen > iSearchLen) {
+	if (iFindStrLen > iSearchLen)
+	{
 		return -1;
 	}
 
-	for (int i = startIdx; i <= endIdx; i++) {
+	for (int i = _startIdx; i <= _endIdx; i++)
+	{
 		int iContinuous = 0;
 
-		while (iContinuous < iFindStrLen && source[i + iContinuous] == str[iContinuous]) {
+		while (iContinuous < iFindStrLen && _pSource[i + iContinuous] == _pStr[iContinuous])
+		{
 			iContinuous++;
 		}
 
-		if (iContinuous == iFindStrLen) {
+		if (iContinuous == iFindStrLen)
+		{
 			return i;
 		}
 	}
@@ -237,77 +294,93 @@ int StringUtil::Find(const char* source, int sourceLen, int startIdx, int endIdx
 	return -1;
 }
 
-int StringUtil::Find(const char* source, int sourceLen, int startIdx, const char* str) {
-	return Find(source, sourceLen, startIdx, sourceLen - 1, str);
+//////////////////////////////////////////////////////////////////////////////////////////
+int StringUtil::Find(const char* _pSource, int _sourceLen, int _startIdx, const char* _pStr)
+{
+	return Find(_pSource, _sourceLen, _startIdx, _sourceLen - 1, _pStr);
 }
 
-int StringUtil::FindAll(OUT int* positionArray, const char* source, const char* str) {
-	const int iSourceLength = Length(source);
-	return FindAll(positionArray, source, iSourceLength, 0, iSourceLength - 1, str);
+//////////////////////////////////////////////////////////////////////////////////////////
+int StringUtil::FindAll(OUT int* _pPositionArray, const char* _pSource, const char* _pStr)
+{
+	const int iSourceLength = Length(_pSource);
+	return FindAll(_pPositionArray, _pSource, iSourceLength, 0, iSourceLength - 1, _pStr);
 }
 
-int StringUtil::FindAll(int* positionArray, const char* source, int sourceLen, const char* str) {
-	return FindAll(positionArray, source, sourceLen, 0, sourceLen - 1, str);
+//////////////////////////////////////////////////////////////////////////////////////////
+int StringUtil::FindAll(int* _pPositionArray, const char* _pSource, int _sourceLen, const char* _pStr)
+{
+	return FindAll(_pPositionArray, _pSource, _sourceLen, 0, _sourceLen - 1, _pStr);
 }
 
-int StringUtil::FindAll(int* positionArray, const char* source, int sourceLen, int startIdx, int endIdx, const char* str) {
-	if (endIdx < startIdx) {
+//////////////////////////////////////////////////////////////////////////////////////////
+int StringUtil::FindAll(int* _pPositionArray, const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr)
+{
+	if (_endIdx < _startIdx)
+	{
 		return 0;
 	}
 
 	int iCount = 0;
 	int iFindPos = -1;
-	int iStrLength = Length(str);
+	int iStrLength = Length(_pStr);
 
-	while ((iFindPos = Find(source, sourceLen, startIdx, endIdx, str, iStrLength)) != -1) {
-		positionArray[iCount++] = iFindPos;
-		startIdx = iFindPos + iStrLength;
+	while ((iFindPos = Find(_pSource, _sourceLen, _startIdx, _endIdx, _pStr, iStrLength)) != -1)
+	{
+		_pPositionArray[iCount++] = iFindPos;
+		_startIdx = iFindPos + iStrLength;
 	}
 
 	return iCount;
 }
 
-String StringUtil::GetRange(const char* source, int sourceLen, int startIdx, int endIdx) {
+//////////////////////////////////////////////////////////////////////////////////////////
+String StringUtil::GetRange(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx)
+{
 	String subString{0};
 
-	auto [pBuffer, iLen, iCapacity] = GetRangeUnsafe(source, sourceLen, startIdx, endIdx);
+	auto [pBuffer, iLen, iCapacity] = GetRangeUnsafe(_pSource, _sourceLen, _startIdx, _endIdx);
 
-	subString.m_pBuffer = pBuffer;
-	subString.m_iLen = iLen;
-	subString.m_iCapacity = iCapacity;
+	subString.pBuffer_ = pBuffer;
+	subString.len_ = iLen;
+	subString.capacity_ = iCapacity;
 
 	return subString;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-String StringUtil::SubStr(const char* source, int sourceLen, int startIdx, int count)
+String StringUtil::SubStr(const char* _pSource, int _sourceLen, int _startIdx, int _count)
 {
-	if (startIdx < 0 || startIdx >= sourceLen || count < 0) 
+	if (_startIdx < 0 || _startIdx >= _sourceLen || _count < 0)
 	{
 		throw OutOfRangeException("인덱스 범위를 벗어났습니다.");
 	}
 
-	int endIdx = startIdx + count - 1;
-	if (endIdx >= sourceLen) 
+	int endIdx = _startIdx + _count - 1;
+	if (endIdx >= _sourceLen)
 	{
-		endIdx = sourceLen - 1;
+		endIdx = _sourceLen - 1;
 	}
-	return GetRange(source, sourceLen, startIdx, endIdx);
+	return GetRange(_pSource, _sourceLen, _startIdx, endIdx);
 }
 
-Tuple<char*, int, int> StringUtil::GetRangeUnsafe(const char* source, int sourceLen, int startIdx, int endIdx) {
-	if (startIdx > endIdx || startIdx < 0 || endIdx >= sourceLen) {
+//////////////////////////////////////////////////////////////////////////////////////////
+Tuple<char*, int, int> StringUtil::GetRangeUnsafe(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx)
+{
+	if (_startIdx > _endIdx || _startIdx < 0 || _endIdx >= _sourceLen)
+	{
 		throw OutOfRangeException("인덱스 범위를 벗어났습니다.");
 	}
 
-	const char* pStr = source + startIdx;
-	int iCurIdx = startIdx;
+	const char* pStr = _pSource + _startIdx;
+	int iCurIdx = _startIdx;
 	int iIdx = 0;
-	const int iAllocCapacity = endIdx - startIdx + 10;
+	const int iAllocCapacity = _endIdx - _startIdx + 10;
 	char* szRange = dbg_new char[iAllocCapacity];
 
-	while (iCurIdx <= endIdx) {
-		szRange[iIdx] = source[iCurIdx];
+	while (iCurIdx <= _endIdx)
+	{
+		szRange[iIdx] = _pSource[iCurIdx];
 		iCurIdx++;
 		iIdx++;
 	}
@@ -316,106 +389,205 @@ Tuple<char*, int, int> StringUtil::GetRangeUnsafe(const char* source, int source
 	return { szRange, iIdx, iAllocCapacity };
 }
 
-
-void StringUtil::ConcatInnerBack(char* buf, int buflen, int bufCapacity, const char* concatStr, int concatStrLen) {
-	jc_assert_msg(buflen + concatStrLen + 1 <= bufCapacity, "버퍼 용량을 초과할 수 없습니다.");
-	Memory::CopyUnsafe(buf + buflen, concatStr, concatStrLen);
-	buf[buflen + concatStrLen] = NULL;
-
+//////////////////////////////////////////////////////////////////////////////////////////
+void StringUtil::ConcatInnerBack(char* _pBuf, int _buflen, int _bufCapacity, const char* _pConcatStr, int _concatStrLen)
+{
+	jc_assert_msg(_buflen + _concatStrLen + 1 <= _bufCapacity, "버퍼 용량을 초과할 수 없습니다.");
+	Memory::CopyUnsafe(_pBuf + _buflen, _pConcatStr, _concatStrLen);
+	_pBuf[_buflen + _concatStrLen] = NULL;
 }
 
-void StringUtil::ConcatInnerBack(char* buf, int bufCapacity, const char* cancatStr) {
-	int iBufLen = Length(buf);
-	int iConcatLen = Length(cancatStr);
-	ConcatInnerBack(buf, iBufLen, bufCapacity, cancatStr, iConcatLen);
+//////////////////////////////////////////////////////////////////////////////////////////
+void StringUtil::ConcatInnerBack(char* _pBuf, int _bufCapacity, const char* _pConcatStr)
+{
+	int iBufLen = Length(_pBuf);
+	int iConcatLen = Length(_pConcatStr);
+	ConcatInnerBack(_pBuf, iBufLen, _bufCapacity, _pConcatStr, iConcatLen);
 }
 
-void StringUtil::ConcatInnerFront(char* buf, int buflen, int bufCapacity, const char* concatStr, int concatStrLen) {
-	jc_assert_msg(buflen + concatStrLen + 1 <= bufCapacity, "버퍼 용량을 초과할 수 없습니다.");
-	Memory::CopyUnsafeReverse(buf + concatStrLen, buf, buflen);
-	Memory::CopyUnsafe(buf, concatStr, concatStrLen);
-	buf[buflen + concatStrLen] = NULL;
+//////////////////////////////////////////////////////////////////////////////////////////
+void StringUtil::ConcatInnerFront(char* _pBuf, int _buflen, int _bufCapacity, const char* _pConcatStr, int _concatStrLen)
+{
+	jc_assert_msg(_buflen + _concatStrLen + 1 <= _bufCapacity, "버퍼 용량을 초과할 수 없습니다.");
+	Memory::CopyUnsafeReverse(_pBuf + _concatStrLen, _pBuf, _buflen);
+	Memory::CopyUnsafe(_pBuf, _pConcatStr, _concatStrLen);
+	_pBuf[_buflen + _concatStrLen] = NULL;
 }
 
-void StringUtil::ConcatInnerFront(char* buf, int bufCapacity, const char* concatStr) {
-	int iBufLen = Length(buf);
-	int iConcatLen = Length(concatStr);
-	ConcatInnerFront(buf, iBufLen, bufCapacity, concatStr, iConcatLen);
+//////////////////////////////////////////////////////////////////////////////////////////
+void StringUtil::ConcatInnerFront(char* _pBuf, int _bufCapacity, const char* _pConcatStr)
+{
+	int iBufLen = Length(_pBuf);
+	int iConcatLen = Length(_pConcatStr);
+	ConcatInnerFront(_pBuf, iBufLen, _bufCapacity, _pConcatStr, iConcatLen);
 }
 
-// https://github.com/otland/forgottenserver/blob/545516299b607ef25471f84d1805a22311ab72de/src/pugicast.h
-template <> float StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtof(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr); }
-template <> double StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtod(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr); }
-template <> _s32l StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10); }
-template <> _s64 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtoll(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10); }
-template <> _u32l StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10); }
-template <> _u64 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtoull(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10); }
-template <> _s8 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<_s8>(std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
-template <> _s16c StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<_s16c>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
-template <> _u8 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<_u8>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
-template <> _s16 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<_s16>(std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
-template <> _u16 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<_u16>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
-template <> _s32 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<_s32>(std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
-template <> _u32 StringUtil::ToNumber(const char* str, OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<_u32>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
-
-template <> String StringUtil::ToString(bool value) { return value ? "true" : "false"; }
-template <> String StringUtil::ToString(float value) { return std::to_string(value); }
-template <> String StringUtil::ToString(double value) { return std::to_string(value); }
-template <> String StringUtil::ToString(_s32l value) { return std::to_string(value); }
-template <> String StringUtil::ToString(_s64 value) { return std::to_string(value); }
-template <> String StringUtil::ToString(_u32l value) { return std::to_string(value); }
-template <> String StringUtil::ToString(_u64 value) { return std::to_string(value); }
-template <> String StringUtil::ToString(_s8 value) { return std::to_string(value); }
-template <> String StringUtil::ToString(_u8 value) { return std::to_string(value); }
-template <> String StringUtil::ToString(_s16 value) { return std::to_string(value); }
-template <> String StringUtil::ToString(_u16 value) { return std::to_string(value); }
-template <> String StringUtil::ToString(_s32 value) { return std::to_string(value); }
-template <> String StringUtil::ToString(_u32 value) { return std::to_string(value); }
-template <> String StringUtil::ToString(const String& value) { return value; }
-template <> String StringUtil::ToString(String&& value) { return std::move(value); }
-
-
-/*
-constexpr _s64 StringUtil::ConvertInt64(const char* src, const int len) {
-
-	return 0;
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> float StringUtil::ToNumber(const char* _pStr, OUT char** _ppEndptr /* = nullptr */, bool _ignoreLeadingZero /* = true */ )
+{
+	return std::strtof(_ignoreLeadingZero ? SkipLeadingNumberZero(_pStr) : _pStr, _ppEndptr);
 }
 
-template <typename W>
-inline constexpr W StringUtil::Getter() {
-	return W();
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> double StringUtil::ToNumber(const char* _pStr, OUT char** _ppEndptr /* = nullptr */, bool _ignoreLeadingZero /* = true */ )
+{
+	return std::strtod(_ignoreLeadingZero ? SkipLeadingNumberZero(_pStr) : _pStr, _ppEndptr);
 }
 
-template<_u32 Size>
-inline constexpr auto StringUtil::TrimFront(const char(&str)[Size], const char delimiter) {
-	constexpr int iLen = Size - 1;
-	int iTrimEndIdx = -1;
-	for (int i = 0; i < iLen; i++) {
-		if (str[i] != delimiter) {
-			iTrimEndIdx = i;
-		}
-	}
-
-	StaticString<iLen> ret{};
-	char* ptr = (char*)ret.Source;
-
-	// 트림이 어디서 끝나는지 알 수 없으므로 전부 널로 넣어주자
-	for (int i = 0; i < iLen; i++) {
-		*ptr = NULL;
-		ptr++;
-	}
-
-	ptr = (char*)ret.Source;
-
-	for (int i = iTrimEndIdx; i < iLen; i++) {
-		*ptr = str[i];
-		ptr++;
-	}
-
-	return ret;
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> _s32l StringUtil::ToNumber(const char* _pStr, OUT char** _ppEndptr /* = nullptr */, bool _ignoreLeadingZero /* = true */ )
+{
+	return std::strtol(_ignoreLeadingZero ? SkipLeadingNumberZero(_pStr) : _pStr, _ppEndptr, 10);
 }
 
-*/
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> _s64 StringUtil::ToNumber(const char* _pStr, OUT char** _ppEndptr /* = nullptr */, bool _ignoreLeadingZero /* = true */ )
+{
+	return std::strtoll(_ignoreLeadingZero ? SkipLeadingNumberZero(_pStr) : _pStr, _ppEndptr, 10);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> _u32l StringUtil::ToNumber(const char* _pStr, OUT char** _ppEndptr /* = nullptr */, bool _ignoreLeadingZero /* = true */ )
+{
+	return std::strtoul(_ignoreLeadingZero ? SkipLeadingNumberZero(_pStr) : _pStr, _ppEndptr, 10);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> _u64 StringUtil::ToNumber(const char* _pStr, OUT char** _ppEndptr /* = nullptr */, bool _ignoreLeadingZero /* = true */ )
+{
+	return std::strtoull(_ignoreLeadingZero ? SkipLeadingNumberZero(_pStr) : _pStr, _ppEndptr, 10);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> _s8 StringUtil::ToNumber(const char* _pStr, OUT char** _ppEndptr /* = nullptr */, bool _ignoreLeadingZero /* = true */ )
+{
+	return static_cast<_s8>(std::strtol(_ignoreLeadingZero ? SkipLeadingNumberZero(_pStr) : _pStr, _ppEndptr, 10));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> _s16c StringUtil::ToNumber(const char* _pStr, OUT char** _ppEndptr /* = nullptr */, bool _ignoreLeadingZero /* = true */ )
+{
+	return static_cast<_s16c>(std::strtoul(_ignoreLeadingZero ? SkipLeadingNumberZero(_pStr) : _pStr, _ppEndptr, 10));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> _u8 StringUtil::ToNumber(const char* _pStr, OUT char** _ppEndptr /* = nullptr */, bool _ignoreLeadingZero /* = true */ )
+{
+	return static_cast<_u8>(std::strtoul(_ignoreLeadingZero ? SkipLeadingNumberZero(_pStr) : _pStr, _ppEndptr, 10));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> _s16 StringUtil::ToNumber(const char* _pStr, OUT char** _ppEndptr /* = nullptr */, bool _ignoreLeadingZero /* = true */ )
+{
+	return static_cast<_s16>(std::strtol(_ignoreLeadingZero ? SkipLeadingNumberZero(_pStr) : _pStr, _ppEndptr, 10));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> _u16 StringUtil::ToNumber(const char* _pStr, OUT char** _ppEndptr /* = nullptr */, bool _ignoreLeadingZero /* = true */ )
+{
+	return static_cast<_u16>(std::strtoul(_ignoreLeadingZero ? SkipLeadingNumberZero(_pStr) : _pStr, _ppEndptr, 10));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> _s32 StringUtil::ToNumber(const char* _pStr, OUT char** _ppEndptr /* = nullptr */, bool _ignoreLeadingZero /* = true */ )
+{
+	return static_cast<_s32>(std::strtol(_ignoreLeadingZero ? SkipLeadingNumberZero(_pStr) : _pStr, _ppEndptr, 10));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> _u32 StringUtil::ToNumber(const char* _pStr, OUT char** _ppEndptr /* = nullptr */, bool _ignoreLeadingZero /* = true */ )
+{
+	return static_cast<_u32>(std::strtoul(_ignoreLeadingZero ? SkipLeadingNumberZero(_pStr) : _pStr, _ppEndptr, 10));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> String StringUtil::ToString(bool _value)
+{
+	return _value ? "true" : "false";
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> String StringUtil::ToString(float _value)
+{
+	return std::to_string(_value);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> String StringUtil::ToString(double _value)
+{
+	return std::to_string(_value);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> String StringUtil::ToString(_s32l _value)
+{
+	return std::to_string(_value);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> String StringUtil::ToString(_s64 _value)
+{
+	return std::to_string(_value);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> String StringUtil::ToString(_u32l _value)
+{
+	return std::to_string(_value);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> String StringUtil::ToString(_u64 _value)
+{
+	return std::to_string(_value);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> String StringUtil::ToString(_s8 _value)
+{
+	return std::to_string(_value);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> String StringUtil::ToString(_u8 _value)
+{
+	return std::to_string(_value);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> String StringUtil::ToString(_s16 _value)
+{
+	return std::to_string(_value);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> String StringUtil::ToString(_u16 _value)
+{
+	return std::to_string(_value);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> String StringUtil::ToString(_s32 _value)
+{
+	return std::to_string(_value);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> String StringUtil::ToString(_u32 _value)
+{
+	return std::to_string(_value);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> String StringUtil::ToString(const String& _value)
+{
+	return _value;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+template <> String StringUtil::ToString(String&& _value)
+{
+	return std::move(_value);
+}
 
 NS_END
-

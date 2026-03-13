@@ -23,18 +23,19 @@ class String;
 class StringUtil final
 {
 public:
-	static Vector<String, CDefaultAllocator> Split(String& src, const char* delimiter);
-	static String Format(const char* format, ...);
-	static String Format(const char* format, va_list args);
-	static void FormatBuffer(char* buff, int buffCapacity, const char* format, ...);
-	static void FormatBuffer(char* buff, int buffCapacity, const char* format, va_list va);
+	static Vector<String, CDefaultAllocator> Split(String& _src, const char* _pDelimiter);
+	static Vector<String, CDefaultAllocator> Split(String& _src, char _delimiter);
+	static String Format(const char* _pFormat, ...);
+	static String Format(const char* _pFormat, va_list _args);
+	static void FormatBuffer(char* _pBuff, int _buffCapacity, const char* _pFormat, ...);
+	static void FormatBuffer(char* _pBuff, int _buffCapacity, const char* _pFormat, va_list _args);
 
 
 	// FillLeft(20, '0', 3) -> 020
 	// FillLeft(20, '0', 4) -> 0020
 	template <typename T>
-	static String FillLeft(const T& v, char paddingCharacter, int len) {
-		if (len >= 1023) 
+	static String FillLeft(const T& _v, char _paddingCharacter, int _len) {
+		if (_len >= 1023) 
 		{
 			jc_assert(false);
 			return jc::String(0);
@@ -42,12 +43,12 @@ public:
 
 		char szFill[1024];
 		String szRet;
-		szRet += v;
+		szRet += _v;
 
-		const int iFillCount = len - szRet.Length();
+		const int iFillCount = _len - szRet.Length();
 		int i = 0;
 		for (i = 0; i < iFillCount; ++i) {
-			szFill[i] = paddingCharacter;
+			szFill[i] = _paddingCharacter;
 		}
 		szFill[i] = '\0';
 		szRet.Insert(0, szFill);
@@ -55,86 +56,86 @@ public:
 	}
 
 	template <typename TInteger>
-	static TInteger ToNumber(const char* str, OUT char** endptr = nullptr, bool ignoreLeadingZero = true);
+	static TInteger ToNumber(const char* _pStr, OUT char** _ppEndptr = nullptr, bool _ignoreLeadingZero = true);
 
 
 	// https://stackoverflow.com/questions/26080829/detecting-strtol-failure
 	template <typename TInteger>
-	static bool TryToNumber(OUT TInteger& val, const char* str, bool ignoreLeadingZero = true) {
+	static bool TryToNumber(OUT TInteger& _val, const char* _pStr, bool _ignoreLeadingZero = true) {
 		errno = 0;
 		char* pEnd = nullptr;
-		TInteger v = ToNumber<TInteger>(str, &pEnd, ignoreLeadingZero);
+		TInteger v = ToNumber<TInteger>(_pStr, &pEnd, _ignoreLeadingZero);
 
-		if (pEnd == str) {	// 숫자 못찾는 경우 에로노 셋안됨;
+		if (pEnd == _pStr) {	// 숫자 못찾는 경우 에로노 셋안됨;
 			return false;
 		}
 
 		if (errno != 0) {
 			return false;
 		}
-		val = v;
+		_val = v;
 		return true;
 	}
 
-	static const char* SkipLeadingChar(const char* str, char skipChar);
-	static const char* SkipLeadingNumberZero(const char* str);
+	static const char* SkipLeadingChar(const char* _pStr, char _skipChar);
+	static const char* SkipLeadingNumberZero(const char* _pStr);
 
 	template <typename TInteger>
-	static String ToString(TInteger integer);
+	static String ToString(TInteger _integer);
 
-	constexpr static int Length(const char* str) {
-		if (str == nullptr) {
+	constexpr static int Length(const char* _pStr) {
+		if (_pStr == nullptr) {
 			return -1;
 		}
 
 		int iSize = 0;
-		while (*str != NULL) {
+		while (*_pStr != NULL) {
 			iSize++;
-			str++;
+			_pStr++;
 		}
 		return iSize;
 	}
 
-	constexpr static int LengthWithNull(const char* str) {
-		return Length(str) + 1;
+	constexpr static int LengthWithNull(const char* _pStr) {
+		return Length(_pStr) + 1;
 	}
 
-	static bool IsNullOrEmpty(const char* str);
-	static int Copy(char* buffer, int bufferSize, const char* copy);
-	static int CopyUnsafe(char* buffer, const char* copy);
-	static bool IsEqual(const char* src, const char* dst, bool _compareCase = true);
-	static bool IsEqual(const char* src, int srcLen, const char* dst, int dstLen, bool _compareCase = true);
-	static void Swap(String& src, String& dst);
-	static int Find(const char* source, int sourceLen, int startIdx, int endIdx, const char* str);
-	static int Find(const char* source, int sourceLen, int startIdx, int endIdx, const char* str, int strLen);
-	static int Find(const char* source, int sourceLen, int startIdx, const char* str);
-	static int FindAll(OUT int* positionArray, const char* source, const char* str);
-	static int FindAll(OUT int* positionArray, const char* source, int sourceLen, const char* str);
-	static int FindAll(OUT int* positionArray, const char* source, int sourceLen, int startIdx, int endIdx, const char* str);
-	static int FindChar(const char* source, char ch);
-	static int FindCharReverse(const char* source, char ch);
-	static int FindCharReverse(const char* source, int len, char ch);
-	static int FindCharUncontained(const char* source, char ch);
-	static String GetRange(const char* source, int sourceLen, int startIdx, int endIdx);
-	static String SubStr(const char* source, int sourceLen, int startIdx, int count);
-	static Tuple<char*, int, int> GetRangeUnsafe(const char* source, int sourceLen, int startIdx, int endIdx);
+	static bool IsNullOrEmpty(const char* _pStr);
+	static int Copy(char* _pBuffer, int _bufferSize, const char* _pCopy);
+	static int CopyUnsafe(char* _pBuffer, const char* _pCopy);
+	static bool IsEqual(const char* _pSrc, const char* _pDst, bool _bCompareCase = true);
+	static bool IsEqual(const char* _pSrc, int _srcLen, const char* _pDst, int _dstLen, bool _bCompareCase = true);
+	static void Swap(String& _src, String& _dst);
+	static int Find(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr);
+	static int Find(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr, int _strLen);
+	static int Find(const char* _pSource, int _sourceLen, int _startIdx, const char* _pStr);
+	static int FindAll(OUT int* _pPositionArray, const char* _pSource, const char* _pStr);
+	static int FindAll(OUT int* _pPositionArray, const char* _pSource, int _sourceLen, const char* _pStr);
+	static int FindAll(OUT int* _pPositionArray, const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr);
+	static int FindChar(const char* _pSource, char _ch);
+	static int FindCharReverse(const char* _pSource, char _ch);
+	static int FindCharReverse(const char* _pSource, int _len, char _ch);
+	static int FindCharUncontained(const char* _pSource, char _ch);
+	static String GetRange(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx);
+	static String SubStr(const char* _pSource, int _sourceLen, int _startIdx, int _count);
+	static Tuple<char*, int, int> GetRangeUnsafe(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx);
 
 	// buf에 str 문자열 추가함
 	// 반환 결과 합쳐진 문자열의 길이
-	static void ConcatInnerBack(char* buf, int buflen, int bufCapacity, const char* concatStr, int concatStrLen);
-	static void ConcatInnerBack(char* buf, int bufCapacity, const char* concatStr);
+	static void ConcatInnerBack(char* _pBuf, int _buflen, int _bufCapacity, const char* _pConcatStr, int _concatStrLen);
+	static void ConcatInnerBack(char* _pBuf, int _bufCapacity, const char* _pConcatStr);
 
-	static void ConcatInnerFront(char* buf, int buflen, int bufCapacity, const char* concatStr, int concatStrLen);
-	static void ConcatInnerFront(char* buf, int bufCapacity, const char* concatStr);
+	static void ConcatInnerFront(char* _pBuf, int _buflen, int _bufCapacity, const char* _pConcatStr, int _concatStrLen);
+	static void ConcatInnerFront(char* _pBuf, int _bufCapacity, const char* _pConcatStr);
 
 	// 컴파일 타임용
-	static constexpr int CTLength(const char* str) {
-		return CTLengthRecursive(str, 0);
+	static constexpr int CTLength(const char* _pStr) {
+		return CTLengthRecursive(_pStr, 0);
 	}
 
 	// 컴파일 타임용
-	static constexpr int CTLength2(const char* str) {
-		char* pStr = (char*)str;
+	static constexpr int CTLength2(const char* _pStr) {
+		char* pStr = (char*)_pStr;
 		int iLength = 0;
 
 		while (*pStr != '\0') {
@@ -145,34 +146,34 @@ public:
 		return iLength;
 	}
 
-	template <_u32 Len>
-	static constexpr int CTLength(const char(&str)[Len]) {
-		return Len;
+	template <_u32 LEN>
+	static constexpr int CTLength(const char(&_str)[LEN]) {
+		return LEN;
 	}
 
 	// 문자열에서 문자를 찾아서 인덱스값을 반환 0번 인덱스부터 올라가면서 하나씩 검사
-	static constexpr int CTCountChar(const char* str, const char ch) {
-		return CTCountCharRecursive(str, ch, 0, 0);
+	static constexpr int CTCountChar(const char* _pStr, const char _ch) {
+		return CTCountCharRecursive(_pStr, _ch, 0, 0);
 	}
 
 	// 문자열에서 문자를 찾아서 인덱스값을 반환 0번 인덱스부터 올라가면서 하나씩 검사
-	static constexpr int CTFindChar(const char* str, const char ch) {
-		return CTFindCharRecursive(str, ch, 0);
+	static constexpr int CTFindChar(const char* _pStr, const char _ch) {
+		return CTFindCharRecursive(_pStr, _ch, 0);
 	}
 
 	// 문자열에서 문자를 찾아서 인덱스값을 반환 마지막 인덱스부터 내려가면서 하나씩 검사
-	static constexpr int CTFindCharReverse(const char* str, const char ch) {
-		const int strLen = CTLength(str);
-		return CTFindCharReverseRecursive(str + strLen - 1, ch, strLen);
+	static constexpr int CTFindCharReverse(const char* _pStr, const char _ch) {
+		const int STR_LEN = CTLength(_pStr);
+		return CTFindCharReverseRecursive(_pStr + STR_LEN - 1, _ch, STR_LEN);
 	}
 
 	template <typename T, typename U>
-	static constexpr int CTCompare(T&& src, U&& dst) {
-		const int iSrcLen = CTLength(src);
-		const int iDstLen = CTLength(dst);
+	static constexpr int CTCompare(T&& _src, U&& _dst) {
+		const int ISRC_LEN = CTLength(_src);
+		const int IDST_LEN = CTLength(_dst);
 
-		char* pSrc = (char*)src;
-		char* pDst = (char*)dst;
+		char* pSrc = (char*)_src;
+		char* pDst = (char*)_dst;
 
 		while (*pDst != NULL && *pSrc != NULL) {
 			if (*pDst > *pSrc)
@@ -184,56 +185,56 @@ public:
 			++pSrc;
 		}
 
-		if (iDstLen > iSrcLen)
+		if (IDST_LEN > ISRC_LEN)
 			return -1;
-		else if (iDstLen < iSrcLen)
+		else if (IDST_LEN < ISRC_LEN)
 			return 1;
 
 		return 0;
 	}
 private:
-	static constexpr int CTLengthRecursive(const char* str, const int position) {
-		return *str != '\0' ? CTLengthRecursive(str + 1, position + 1) : position;
+	static constexpr int CTLengthRecursive(const char* _pStr, const int _position) {
+		return *_pStr != '\0' ? CTLengthRecursive(_pStr + 1, _position + 1) : _position;
 	}
 
-	static constexpr int CTFindCharRecursive(const char* str, const char ch, const int position) {
+	static constexpr int CTFindCharRecursive(const char* _pStr, const char _ch, const int _position) {
 
-		if (*str == '\0') {
+		if (*_pStr == '\0') {
 			return -1;
 		}
 
-		if (*str == ch) {
-			return position;
+		if (*_pStr == _ch) {
+			return _position;
 		}
 
-		return CTFindCharRecursive(str + 1, ch, position + 1);
+		return CTFindCharRecursive(_pStr + 1, _ch, _position + 1);
 	}
 
-	static constexpr int CTFindCharReverseRecursive(const char* str, const char ch, const int position) {
+	static constexpr int CTFindCharReverseRecursive(const char* _pStr, const char _ch, const int _position) {
 
-		if (position == 0) {
+		if (_position == 0) {
 			return -1;
 		}
 
 		// 인덱스로 반환하자.
-		if (*str == ch) {
-			return position - 1;
+		if (*_pStr == _ch) {
+			return _position - 1;
 		}
 
-		return CTFindCharReverseRecursive(str - 1, ch, position - 1);
+		return CTFindCharReverseRecursive(_pStr - 1, _ch, _position - 1);
 	}
 
-	static constexpr int CTCountCharRecursive(const char* str, const char ch, const int position, int count) {
+	static constexpr int CTCountCharRecursive(const char* _pStr, const char _ch, const int _position, int _count) {
 
-		if (*str == '\0') {
-			return count;
+		if (*_pStr == '\0') {
+			return _count;
 		}
 
-		if (*str == ch) {
-			count++;
+		if (*_pStr == _ch) {
+			_count++;
 		}
 
-		return CTCountCharRecursive(str + 1, ch, position + 1, count);
+		return CTCountCharRecursive(_pStr + 1, _ch, _position + 1, _count);
 	}
 };
 

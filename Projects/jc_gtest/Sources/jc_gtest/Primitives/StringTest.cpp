@@ -49,9 +49,9 @@ TEST(StringTest, Compare) {
 	EXPECT_TRUE(szStr4.compare(szStr6) == 1);	// abcd와 a를 비교하면 abcd가 더 크다.
 }
 
-
 // String::operator> < >= <= 함수 테스트
-TEST(StringTest, ComparisonOperator) {
+TEST(StringTest, ComparisonOperator)
+{
 	const String str1 = "abcd";
 	const String str2 = "abc";
 	const String str3 = "ab";
@@ -72,8 +72,6 @@ TEST(StringTest, Split) {
 	String szStr3 = "_bbbbb_";
 	String szStr4 = "_bbbbb";
 	String szStr5 = "_";
-
-	
 
 	{
 		LeakCheck;

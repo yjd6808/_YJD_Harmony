@@ -10,6 +10,8 @@
 #include <ostream>
 
 #include <jc/Namespace.h>
+#include <jc/Type.h>
+#include <jc/Define.h>
 
 NS_JC_BEGIN
 
@@ -28,8 +30,8 @@ class String final
 
 	inline static const char* EmptySource = "";
 public:
-	static String Empty;
-	static String Null;
+	static const String Empty;
+	static const String Null;
 
 	String();
 	explicit String(int _capacity);
@@ -41,19 +43,19 @@ public:
 	String(String&& _str) noexcept;
 	~String();
 public:
-	char* Source() const { return m_pBuffer; }
-	const char* SafeSource() const { return m_pBuffer != nullptr ? m_pBuffer : EmptySource; }
-	int Capacity() const { return m_iCapacity; }
-	int Length() const { return m_iLen; }
-	int LengthWithNull() const { return m_iLen + 1; }
-	void SetLength(int _length) { m_iLen = _length; }
+	char* Source() const { return pBuffer_; }
+	const char* SafeSource() const { return pBuffer_ != nullptr ? pBuffer_ : EmptySource; }
+	int Capacity() const { return capacity_; }
+	int Length() const { return len_; }
+	int LengthWithNull() const { return len_ + 1; }
+	void SetLength(int _length) { len_ = _length; }
 	void ExchangeSource(char* _pSrc, int _len);
-	bool IsEmpty() const { return m_iLen == 0; }
-    bool IsNull() const { return m_pBuffer == nullptr; }
-	bool IsValidIndex(const int _index) const { return _index >= 0 || _index < m_iLen; }
-	bool IsValidIndexRange(const int _startIndex, const int _endIndex) const 
+	bool IsEmpty() const { return len_ == 0; }
+    bool IsNull() const { return pBuffer_ == nullptr; }
+	bool IsValidIndex(const int _idx) const { return _idx >= 0 && _idx < len_; }
+	bool IsValidIndexRange(const int _startIdx, const int _endIdx) const 
 	{
-		return _startIndex <= _endIndex && _startIndex >= 0 && _endIndex < m_iLen;
+		return _startIdx <= _endIdx && _startIdx >= 0 && _endIdx < len_;
 	}
 
 	template <typename T>
@@ -70,30 +72,30 @@ public:
 	void Append(const String& _str);
 	void Append(String&& _str);
 
-	void Insert(int _index, const char* _pStr);
-	void Insert(int _index, const String& _str);
+	void Insert(int _idx, const char* _pStr);
+	void Insert(int _idx, const String& _str);
 
 	void Resize(int _capacity);
 	void ResizeIfNeeded(int _length);		// len이 m_iCapcity 이상일 경우에 x2해서 확장
 
 	int Compare(const String& _str) const;
 	int Compare(const char* _pStr, int _strLen = -1) const;
-	Vector<int, CDefaultAllocator> FindAll(int _startIndex, int _endIndex, const char* _pStr) const;
+	Vector<int, CDefaultAllocator> FindAll(int _startIdx, int _endIdx, const char* _pStr) const;
 	Vector<int, CDefaultAllocator> FindAll(const char* _pStr) const;
 	Vector<int, CDefaultAllocator> FindAll(const String& _str) const;
-	int Find(int _startIndex, int _endIndex, const char* _pStr) const;
-	int Find(int _startIndex, const char* _pStr) const;
-	int Find(int _startIndex, const String& _str) const;
+	int Find(int _startIdx, int _endIdx, const char* _pStr) const;
+	int Find(int _startIdx, const char* _pStr) const;
+	int Find(int _startIdx, const String& _str) const;
 	int Find(const char* _pStr) const;
 	int Find(const String& _str) const;
-	int FindReverse(int _startIndex, int _endIndex, const char* _pStr) const;
+	int FindReverse(int _startIdx, int _endIdx, const char* _pStr) const;
 	int FindReverse(const String& _str) const;
 	int FindReverse(const char* _pStr) const;
 
-	bool EndWith(const String& _str) const { return FindReverse(_str.Source()) == m_iLen - _str.Length();  }
+	bool EndWith(const String& _str) const { return FindReverse(_str.Source()) == len_ - _str.Length();  }
 	bool StartWith(const String& _str) const { return Find(_str) == 0; }
 
-	char Last() const { return GetAt(m_iLen - 1); }
+	char Last() const { return GetAt(len_ - 1); }
 	char First() const { return GetAt(0); }
 
 	void Clear();
@@ -101,8 +103,8 @@ public:
 
 	int Count(const char* _pStr) const;
 	int Count(const String& _value) const;
-	int Count(int _startIndex, int _endIndex, const char* _pStr) const;
-	int Count(int _startIndex, int _endIndex, const String& _value) const;
+	int Count(int _startIdx, int _endIdx, const char* _pStr) const;
+	int Count(int _startIdx, int _endIdx, const String& _value) const;
 
 	int Replace(const char* _pFrom, const String& _to);
 	int Replace(const String& _from, const String& _to);
@@ -116,11 +118,12 @@ public:
 	int Replace(int _offset, const String& _from, const String& _to);
 	void ReplaceAll(const char* _pFrom, const char* _pTo);
 
-	bool Contain(const char* _str) const;
+	bool Contain(const char* _pStr) const;
 	bool Contain(const String& _str) const;
 	void Format(const char* _format, ...);
 	
 	void SetAt(int _idx, char _ch);
+	void SetAtForce(int _idx, char _ch);
 	char GetAt(int _idx) const ;
 	String GetRange(int _startIdx, int _endIdx) const;
 	String SubStr(int _startIdx, int _count) const;
@@ -128,16 +131,40 @@ public:
 	// 동적할당된 문자열, 길이, 할당된 크기를 반환한다.
 	Tuple<char*, int, int> GetRangeUnsafe(int _startIdx, int _endIdx) const;
 	Vector<String, CDefaultAllocator> Split(const char* _delimiter, bool _includeEmpty = false) const;
+	Vector<String, CDefaultAllocator> Split(char _delimiter, bool _includeEmpty = false) const;
+	
 	void Initialize(int _capacity = DEFAULT_BUFFER_SIZE);
 
 	String ToLowerCase() const;
 	String ToUpperCase() const;
-
 	int LeadingZeroCount() const;
 
 	std::string ToStd();
+
+	_s8 ToInt8(bool _ignoreLeadingZero = true) const;
+	_u8 ToUInt8(bool _ignoreLeadingZero = true) const;
+	_s16 ToInt16(bool _ignoreLeadingZero = true) const;
+	_u16 ToUInt16(bool _ignoreLeadingZero = true) const;
+	_s32 ToInt32(bool _ignoreLeadingZero = true) const;
+	_u32 ToUInt32(bool _ignoreLeadingZero = true) const;
+	_s64 ToInt64(bool _ignoreLeadingZero = true) const;
+	_u64 ToUInt64(bool _ignoreLeadingZero = true) const;
+	_f32 ToFloat(bool _ignoreLeadingZero = true) const;
+	_f64 ToDouble(bool _ignoreLeadingZero = true) const;
+
+	bool TryToInt8(OUT _s8& _outValue, bool _ignoreLeadingZero = true) const;
+	bool TryToUInt8(OUT _u8& _outValue, bool _ignoreLeadingZero = true) const;
+	bool TryToInt16(OUT _s16& _outValue, bool _ignoreLeadingZero = true) const;
+	bool TryToUInt16(OUT _u16& _outValue, bool _ignoreLeadingZero = true) const;
+	bool TryToInt32(OUT _s32& _outValue, bool _ignoreLeadingZero = true) const;
+	bool TryToUInt32(OUT _u32& _outValue, bool _ignoreLeadingZero = true) const;
+	bool TryToInt64(OUT _s64& _outValue, bool _ignoreLeadingZero = true) const;
+	bool TryToUInt64(OUT _u64& _outValue, bool _ignoreLeadingZero = true) const;
+	bool TryToFloat(OUT _f32& _outValue, bool _ignoreLeadingZero = true) const;
+	bool TryToDouble(OUT _f64& _outValue, bool _ignoreLeadingZero = true) const;
+
 public:
-	char& operator[](int _index) const;
+	char& operator[](int _idx) const;
 
 	template <typename T>
 	String operator+(const T& _other) { 
@@ -159,7 +186,7 @@ public:
 
 	template <typename T>
 	String& operator=(const T& _other) {
-		if (m_pBuffer == nullptr)
+		if (pBuffer_ == nullptr)
 			Initialize();
 
 		Clear();
@@ -185,13 +212,13 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& _os, const String& _src);
 private:
-	void ThrowIfInvalidRangeIndex(int _startIndex, int _endIndex) const;
+	void ThrowIfInvalidRangeIndex(int _startIdx, int _endIdx) const;
 	void ThrowIfNotInitialized() const;
-	void ThrowIfInvalidIndex(int _index) const;
+	void ThrowIfInvalidIndex(int _idx) const;
 private:
-	char* m_pBuffer{};
-	int m_iLen{};
-	int m_iCapacity{};
+	char* pBuffer_{};
+	int len_{};
+	int capacity_{};
 	
 	friend class StringUtil;
 };

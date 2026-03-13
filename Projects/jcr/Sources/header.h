@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <jc/Random.h>
+#include <jc/Type.h>
 #include <jc/TypeTraits.h>
 #include <jc/Time.h>
 #include <jc/Ascii.h>
@@ -20,10 +21,12 @@
 #include <jc/Container/Properties.h>
 #include <jc/Container/ListStack.h>
 #include <jc/Container/CMessage.h>
+#include <jc/Container/DataMap.h>
 
 #include <jc/Primitives/Atomic.h>
 #include <jc/Primitives/SmartPtr.h>
 #include <jc/Primitives/String.h>
+#include <jc/Primitives/StringView.h>
 #include <jc/Primitives/StaticString.h>
 #include <jc/Primitives/RefCountObjectPtr.h>
 

@@ -903,7 +903,7 @@ public:
 	// 동적할당 안하고 해쉬맵 순회할 수 있도록 기능 구현
 	// ==========================================
 	template <typename Consumer>
-	void ForEach(Consumer&& _consumer)
+	void ForEach(Consumer&& _consumer) const
 	{
 		TBucket* pCurrentBucket = pHeadBucket_;
 
@@ -920,7 +920,7 @@ public:
 	}
 
 	template <typename Consumer>
-	void ForEachKey(Consumer&& _consumer)
+	void ForEachKey(Consumer&& _consumer) const
 	{
 		TBucket* pCurrentBucket = pHeadBucket_;
 
@@ -937,7 +937,7 @@ public:
 	}
 
 	template <typename Consumer>
-	void ForEachValue(Consumer&& _consumer)
+	void ForEachValue(Consumer&& _consumer) const
 	{
 		TBucket* pCurrentBucket = pHeadBucket_;
 

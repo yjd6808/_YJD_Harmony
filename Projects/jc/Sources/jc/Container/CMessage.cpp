@@ -219,6 +219,7 @@ void CMessage::WriteU64(_u64 _value) { ReadyDefaultContext(); pContext_->WriteVa
 void CMessage::WriteFloat(_f32 _value) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _f32>(_value); }
 void CMessage::WriteDouble(_f64 _value) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _f64>(_value); }
 void CMessage::WritePtr(void* _value) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, void*>(_value); }
+void CMessage::WriteBool(bool _value) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, bool>(_value); }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteString(const String& _str)
@@ -363,6 +364,13 @@ void* CMessage::ReadPtr()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+bool CMessage::ReadBool()
+{
+	ReadyDefaultContext();
+	return pContext_->ReadValue<CMessage_VariantTraits, bool>();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 String CMessage::ReadString()
 {
 	ReadyDefaultContext();
@@ -472,6 +480,13 @@ bool CMessage::TryReadPtr(void*& _value)
 {
 	ReadyDefaultContext();
 	return pContext_->TryReadValue<CMessage_VariantTraits, void*>(_value) == 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CMessage::TryReadBool(bool& _value)
+{
+	ReadyDefaultContext();
+	return pContext_->TryReadValue<CMessage_VariantTraits, bool>(_value) == 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -1100,7 +1115,7 @@ _u8* CMessageView::GetValue(_u16 _offset, OUT CMessage::VariantType& _type, OUT 
 
 	if (_offset > header.writeOffset_)
 		return nullptr;
-	_u32 memOffset = CalcMemOffset(_offset - 1);
+	_u32 memOffset = CalcMemOffset(_offset);
 	if (memOffset == Memory::INVALID_OFFSET)
 		return nullptr;
 	if (memOffset >= header.writeMemOffset_)

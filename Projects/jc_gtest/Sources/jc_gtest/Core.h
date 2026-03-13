@@ -47,7 +47,7 @@ USING_NS_STD;
 //출력 여부
 #define Print	OFF
 
-#define TestEnabled                 ON     // 전체 테스트 수행 여부
+#define TestEnabled                 OFF     // 전체 테스트 수행 여부
 #define BaseTestEnabled             ON      // jc 테스트 수행 여부
 #define ContainerTestEnabled        ON      // jc::Container 테스트 수행 여부
 #define ContainerImplTestEnabled    OFF     // 컨테이너 개발 테스트 코드를 수행 여부
@@ -61,8 +61,7 @@ USING_NS_STD;
 
 // 개별 테스트 수행시 사용
 #if TestEnabled == OFF
-	#define	TEST_VectorTest					    ON
-	#define	TEST_PathTest					    ON
+	#define	TEST_StringViewTest					ON
 #endif
 
 #if TestEnabled == ON
@@ -72,8 +71,10 @@ USING_NS_STD;
         #define	TEST_ArrayStackTest				    ON
         #define	TEST_ArrayQueueTest				    ON
         #define	TEST_ArraysTest					    ON
+		#define TEST_CMessageTest					ON
         #define TEST_HashMapTest                    ON
 		#define TEST_HashSetTest                    ON
+		#define TEST_DataMapTest                    ON
 		#define TEST_TreeMapTest                    ON
 		#define TEST_TreeSetTest                    ON
         #define	TEST_LinkedListTest					ON
@@ -118,6 +119,7 @@ USING_NS_STD;
         #define TEST_SmartPtrTest			    ON
         #define TEST_StaticStringTest           ON
         #define TEST_StringTest					ON
+        #define TEST_StringViewTest				ON
         #define TEST_StringUtilTest				ON
 
     #endif

@@ -58,6 +58,7 @@ template <> struct CMessage_VariantTraits<_s64> { static constexpr _u8 MEM_SIZE 
 template <> struct CMessage_VariantTraits<_f32> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_f32); static constexpr _u8 VARIANT_TYPE = 9; };
 template <> struct CMessage_VariantTraits<_f64> { static constexpr _u8 MEM_SIZE = 1 + sizeof(_f64); static constexpr _u8 VARIANT_TYPE = 10; };
 template <> struct CMessage_VariantTraits<void*> { static constexpr _u8 MEM_SIZE = 1 + sizeof(void*); static constexpr _u8 VARIANT_TYPE = 11; };
+template <> struct CMessage_VariantTraits<bool> { static constexpr _u8 MEM_SIZE = 1 + sizeof(bool); static constexpr _u8 VARIANT_TYPE = 1; };
 
 //////////////////////////////////////////////////////////////////////////////////////////
 class JC_DLL CMessage
@@ -86,6 +87,7 @@ public:
 		vt_f32,
 		vt_f64,
 		vt_ptr,
+		vt_bool,
 		vt_string,
 		vt_binary,
 		vt_max,
@@ -110,6 +112,7 @@ public:
 		CMessage_VariantTraits<_f32>::MEM_SIZE,
 		CMessage_VariantTraits<_f64>::MEM_SIZE,
 		CMessage_VariantTraits<void*>::MEM_SIZE,
+		CMessage_VariantTraits<bool>::MEM_SIZE,
 		MEM_SIZE_VARIANT,
 		MEM_SIZE_VARIANT,
 	};
@@ -155,6 +158,7 @@ public:
 	void		WriteFloat(_f32 _value);
 	void		WriteDouble(_f64 _value);
 	void		WritePtr(void* _value);
+	void		WriteBool(bool _value);
 	void		WriteString(const String& _str);
 	void		WriteBinary(const _u8* _pBytes, _u32 _len);
 	void		WriteBinaryDummy(_u32 _len);
@@ -189,6 +193,7 @@ public:
 	_f32		ReadFloat();
 	_f64		ReadDouble();
 	void*		ReadPtr();
+	bool		ReadBool();
 	String		ReadString();
 	bool		ReadBinary(Span<_u8> _buffer, _u32& _outLen);
 	bool		ReadBinary(_u8* _pBytes, _u32 _capacity, _u32& _outLen);
@@ -206,6 +211,7 @@ public:
 	bool		TryReadFloat(_f32& _value);
 	bool		TryReadDouble(_f64& _value);
 	bool		TryReadPtr(void*& _value);
+	bool		TryReadBool(bool& _value);
 	bool		TryReadString(String& _value);
 	bool		TryReadBinary(Span<_u8> _buffer, _u32& _outLen);
 	bool		TryReadBinary(_u8* _pBytes, _u32 _capacity, _u32& _outLen);

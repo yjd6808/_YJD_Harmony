@@ -215,6 +215,7 @@
     <ClCompile Include="..\Sources\jc\Primitives\String.cpp" />
     <ClCompile Include="..\Sources\jc\Primitives\StringTokenizer.cpp" />
     <ClCompile Include="..\Sources\jc\Primitives\StringUtil.cpp" />
+    <ClCompile Include="..\Sources\jc\Primitives\StringView.cpp" />
     <ClCompile Include="..\Sources\jc\Random.cpp" />
     <ClCompile Include="..\Sources\jc\Stream.cpp">
       <SubType>
@@ -299,6 +300,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\jc\Container\DataMap.h" />
     <ClInclude Include="..\Sources\jc\Container\HashSet.h" />
     <ClInclude Include="..\Sources\jc\Container\HashSetIterator.h" />
     <ClInclude Include="..\Sources\jc\Container\HashTable.h">
@@ -596,6 +598,7 @@
     <ClInclude Include="..\Sources\jc\Math.h" />
     <ClInclude Include="..\Sources\jc\Limit.h" />
     <ClInclude Include="..\Sources\jc\Memory.h" />
+    <ClInclude Include="..\Sources\jc\Primitives\StringView.h" />
     <ClInclude Include="..\Sources\jc\Random.h" />
     <ClInclude Include="..\Sources\jc\Stream.h">
       <SubType>

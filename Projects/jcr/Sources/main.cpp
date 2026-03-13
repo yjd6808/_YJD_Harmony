@@ -5,6 +5,8 @@ int main(int _argc, char** _argv)
 	InitializeJCore(_argc, _argv);
 	InitializeDefaultLogger();
 
+	//_CrtSetBreakAlloc(886);
+
 	{
 		// Vector / ArrayStack / ArrayQueue
 		Vector<int> vec;
@@ -137,6 +139,11 @@ int main(int _argc, char** _argv)
 			Console::WriteLine(msg1.Dump().SafeSource());
 			delete pfsef;
 			delete[] check;
+
+			CDataMap map;
+			map.SetS32("intKey", -123);
+			map.SetString("abcd", "ffesfes");
+			map.SetString("abcd", "ffesfesfsefse");
 		}
 		
 

@@ -15,8 +15,8 @@
 
 NS_JC_BEGIN
 
-String String::Empty;
-String String::Null(0);
+const String String::Empty;
+const String String::Null(0);
 
 //////////////////////////////////////////////////////////////////////////////////////////
 String::String()
@@ -29,9 +29,9 @@ String::String(const int _capacity)
 {
 	if (_capacity == 0)
 	{
-		m_pBuffer = nullptr;
-		m_iCapacity = 0;
-		m_iLen = 0;
+		pBuffer_ = nullptr;
+		capacity_ = 0;
+		len_ = 0;
 	}
 	else
 	{
@@ -44,9 +44,9 @@ String::String(const char* _pStr, const int _capacity)
 {
 	if (_pStr == nullptr)
 	{
-		m_pBuffer = nullptr;
-		m_iCapacity = 0;
-		m_iLen = 0;
+		pBuffer_ = nullptr;
+		capacity_ = 0;
+		len_ = 0;
 		return;
 	}
 
@@ -64,29 +64,29 @@ String::String(const char* _pStr, const int _capacity)
 		return;
 	}
 
-	m_pBuffer = dbg_new char[expectedCapacity];
-	m_iCapacity = expectedCapacity;
-	m_iLen = length;
+	pBuffer_ = dbg_new char[expectedCapacity];
+	capacity_ = expectedCapacity;
+	len_ = length;
 
-	StringUtil::Copy(m_pBuffer, m_iCapacity, _pStr);
+	StringUtil::Copy(pBuffer_, capacity_, _pStr);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 String::String(const char* _pStr)
-	: String(_pStr, DEFAULT_BUFFER_SIZE)
+: String(_pStr, DEFAULT_BUFFER_SIZE)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 String::String(char _ch, int _count)
 {
-	m_pBuffer = dbg_new char[_count + DEFAULT_BUFFER_SIZE];
-	m_iCapacity = _count + DEFAULT_BUFFER_SIZE;
-	m_iLen = _count;
+	pBuffer_ = dbg_new char[_count + DEFAULT_BUFFER_SIZE];
+	capacity_ = _count + DEFAULT_BUFFER_SIZE;
+	len_ = _count;
 
 	for (int i = 0; i < _count; ++i)
 	{
-		m_pBuffer[i] = _ch;
+		pBuffer_[i] = _ch;
 	}
 }
 
@@ -98,195 +98,228 @@ String::String(const std::string& _str)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 String::String(const String& _str)
-	: String(_str.m_pBuffer)
+	: String(_str.pBuffer_)
 {
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////////////
 String::String(String&& _str) noexcept
 {
-	// 이동 대입 연산자 호출
 	this->operator=(Move(_str));
 }
 
-String::~String() {
-	JC_DELETE_ARRAY_SAFE(m_pBuffer);
+//////////////////////////////////////////////////////////////////////////////////////////
+String::~String()
+{
+	JC_DELETE_ARRAY_SAFE(pBuffer_);
 }
-
-/* ========================================================== */
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void String::ExchangeSource(char* _pSrc, int _len)
 {
-	JC_DELETE_ARRAY_SAFE(m_pBuffer);
-	m_pBuffer = _pSrc;
-	m_iLen = _len;
-	m_iCapacity = _len + 1;
+	JC_DELETE_ARRAY_SAFE(pBuffer_);
+	pBuffer_ = _pSrc;
+	len_ = _len;
+	capacity_ = _len + 1;
 }
 
-/* ========================================================== */
-
-void String::Append(const char ch) {
-	const int iDstLen = m_iLen + 1;
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::Append(const char _ch)
+{
+	const int iDstLen = len_ + 1;
 	ResizeIfNeeded(iDstLen);
 
-	Memory::CopyUnsafe(m_pBuffer + m_iLen, &ch, 1);
-	m_pBuffer[iDstLen] = NULL;
-	m_iLen = iDstLen;
+	Memory::CopyUnsafe(pBuffer_ + len_, &_ch, 1);
+	pBuffer_[iDstLen] = NULL;
+	len_ = iDstLen;
 }
 
-void String::Append(char* str) {
-	if (str == nullptr) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::Append(char* _str)
+{
+	if (_str == nullptr)
+	{
 		throw NullPointerException("추가하고자 하는 문자열이 nullptr 입니다.");
 	}
 
-	const int iStrLen = StringUtil::Length(str);
-	const int iDstLen = m_iLen + iStrLen;
+	const int iStrLen = StringUtil::Length(_str);
+	const int iDstLen = len_ + iStrLen;
 	ResizeIfNeeded(iDstLen);
 
-	Memory::CopyUnsafe(m_pBuffer + m_iLen, str, iStrLen);
-	m_pBuffer[iDstLen] = NULL;
-	m_iLen = iDstLen;
+	Memory::CopyUnsafe(pBuffer_ + len_, _str, iStrLen);
+	pBuffer_[iDstLen] = NULL;
+	len_ = iDstLen;
 }
 
-void String::Append(const char* str) {
-	if (str == nullptr) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::Append(const char* _str)
+{
+	if (_str == nullptr)
+	{
 		throw NullPointerException("추가하고자 하는 문자열이 nullptr 입니다.");
 	}
 
-	const int iStrLen = StringUtil::Length(str);
-	const int iDstLen = m_iLen + iStrLen;
+	const int iStrLen = StringUtil::Length(_str);
+	const int iDstLen = len_ + iStrLen;
 	ResizeIfNeeded(iDstLen);
 
-	Memory::CopyUnsafe(m_pBuffer + m_iLen, str, iStrLen);
-	m_pBuffer[iDstLen] = NULL;
-	m_iLen = iDstLen;
+	Memory::CopyUnsafe(pBuffer_ + len_, _str, iStrLen);
+	pBuffer_[iDstLen] = NULL;
+	len_ = iDstLen;
 }
 
-
-void String::Append(const std::string& str) {
-	if (str.empty()) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::Append(const std::string& _str)
+{
+	if (_str.empty())
+	{
 		return;
 	}
 
-	Append(str.c_str());
+	Append(_str.c_str());
 }
 
-void String::Append(const String& str) {
-	if (str.Length() == 0) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::Append(const String& _str)
+{
+	if (_str.Length() == 0)
+	{
 		return;
 	}
 
-	Append(str.m_pBuffer);
+	Append(_str.pBuffer_);
 }
 
-void String::Append(String&& str) {
-	if (str.Length() == 0) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::Append(String&& _str)
+{
+	if (_str.Length() == 0)
+	{
 		return;
 	}
 
-	Append(str.m_pBuffer);
+	Append(_str.pBuffer_);
 }
 
-void String::Insert(const int idx, const char* str) {
-	const int iLen = StringUtil::Length(str);
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::Insert(const int _idx, const char* _pStr)
+{
+	const int iLen = StringUtil::Length(_pStr);
 
-	ThrowIfInvalidIndex(idx);
-	ResizeIfNeeded(m_iLen + iLen);
+	// 빈 문자열 삽입은 무시
+	if (iLen == 0)
+	{
+		return;
+	}
 
-	// 문자열 길이만큼 뒤로 밀어줌
-	// 기존문자열이 완전히 비어있거나, 맨뒤에 삽입하는 경우
-	// m_iLen - idx가 0이 되버려서 아예 복사핧 데이터가 없는 경우가 있을 수 있다.
-	if (m_iLen - idx > 0) {
+	// 인덱스 범위 검사: [0, len_] 범위 허용 (len_은 끝 위치)
+	if (_idx < 0 || _idx > len_)
+	{
+		throw OutOfRangeException("인덱스가 범위를 벗어났습니다.");
+	}
+
+	ResizeIfNeeded(len_ + iLen);
+
+	if (len_ - _idx > 0)
+	{
 		Memory::CopyReverse(
-			m_pBuffer + idx + iLen,
-			m_iCapacity - idx - iLen,
-			m_pBuffer + idx,
-			m_iLen - idx);
+			pBuffer_ + _idx + iLen,
+			capacity_ - _idx - iLen,
+			pBuffer_ + _idx,
+			len_ - _idx);
 	}
 
-	for (int i = 0; i < iLen; ++i) {
-		m_pBuffer[i + idx] = str[i];
+	for (int i = 0; i < iLen; ++i)
+	{
+		pBuffer_[i + _idx] = _pStr[i];
 	}
 
-	m_iLen += iLen;
-	m_pBuffer[m_iLen] = NULL;
+	len_ += iLen;
+	pBuffer_[len_] = NULL;
 }
 
-void String::Insert(const int idx, const String& str) {
-	Insert(idx, str.Source());
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::Insert(const int _idx, const String& _str)
+{
+	Insert(_idx, _str.SafeSource());
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::Resize(const int _capacity)
+{
+	char* pTempBuffer = pBuffer_;
 
-void String::Resize(const int capacity) {
-	char* pTempBuffer = m_pBuffer;
+	pBuffer_ = dbg_new char[_capacity];
+	capacity_ = _capacity;
 
-	m_pBuffer = dbg_new char[capacity];
-	m_iCapacity = capacity;
-
-	StringUtil::Copy(m_pBuffer, m_iCapacity, pTempBuffer);
+	StringUtil::Copy(pBuffer_, capacity_, pTempBuffer);
 	JC_DELETE_ARRAY_SAFE(pTempBuffer);
 }
 
-// len길이가 현재 capacity를 초과할 경우 확장을 해준다.
-void String::ResizeIfNeeded(int len) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::ResizeIfNeeded(int _len)
+{
 	bool bNeedResize = false;
-	if (len >= m_iCapacity) {
-		len *= EXPANDING_FACTOR;
+	if (_len >= capacity_)
+	{
+		_len *= EXPANDING_FACTOR;
 		bNeedResize = true;
 	}
 
 	if (bNeedResize)
-		Resize(len + 1);
+		Resize(_len + 1);
 }
 
-
-int String::Compare(const String& str) const {
-	return Compare(str.Source());
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::Compare(const String& _str) const
+{
+	return Compare(_str.SafeSource(), _str.len_);
 }
 
-// 0  : 같음
-// 1  : 기존 문자열(this)이 우선순위가 더 큼
-// -1 : 비교 문자열(str)이 우선순위가 더 큼
-// O(n)
-int String::Compare(const char* str, const int strLen) const {
-	const int iStrLen = strLen == -1 ? StringUtil::Length(str) : strLen;
-	char* pSrc = m_pBuffer;
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::Compare(const char* _str, const int _strLen) const
+{
+	const int iStrLen = _strLen == -1 ? StringUtil::Length(_str) : _strLen;
+	const char* pSrc = SafeSource();
 
-	while (*pSrc != NULL && *str != NULL) {
-		if (*pSrc > *str)
+	while (*pSrc != NULL && *_str != NULL)
+	{
+		if (*pSrc > *_str)
 			return 1;
-		if (*pSrc < *str)
+		if (*pSrc < *_str)
 			return -1;
 
 		pSrc++;
-		str++;
+		_str++;
 	}
 
-	if (m_iLen > iStrLen)
+	if (len_ > iStrLen)
 		return 1;
-	if (m_iLen < iStrLen)
+	if (len_ < iStrLen)
 		return -1;
 
 	return 0;
 }
 
-Vector<int, CDefaultAllocator> String::FindAll(int startIdx, int endIdx, const char* str) const {
-
+//////////////////////////////////////////////////////////////////////////////////////////
+Vector<int, CDefaultAllocator> String::FindAll(int _startIdx, int _endIdx, const char* _pStr) const
+{
 	Vector<int, CDefaultAllocator> offsets;
-	const int iStrLen = StringUtil::Length(str);
+	const int iStrLen = StringUtil::Length(_pStr);
 
-	if (iStrLen == 0) {
+	if (iStrLen == 0)
+	{
 		return offsets;
 	}
 
-	ThrowIfInvalidRangeIndex(startIdx, endIdx);
+	ThrowIfInvalidRangeIndex(_startIdx, _endIdx);
 
-	for (int i = startIdx; i <= endIdx; ) {
-		int iFind = Find(i, endIdx, str);
+	for (int i = _startIdx; i <= _endIdx; )
+	{
+		int iFind = Find(i, _endIdx, _pStr);
 
-		if (iFind == -1) {
+		if (iFind == -1)
+		{
 			break;
 		}
 
@@ -294,265 +327,315 @@ Vector<int, CDefaultAllocator> String::FindAll(int startIdx, int endIdx, const c
 		i += iFind + iStrLen;
 	}
 
-	
 	return offsets;
 }
 
-// 문자열을 찾음 : 시작 인덱스 반환
-// 문자열을 못찾음 : -1을 반환
-Vector<int, CDefaultAllocator> String::FindAll(const char* str) const {
-	return FindAll(0, m_iLen - 1, str);
+//////////////////////////////////////////////////////////////////////////////////////////
+Vector<int, CDefaultAllocator> String::FindAll(const char* _pStr) const
+{
+	return FindAll(0, len_ - 1, _pStr);
 }
 
-Vector<int, CDefaultAllocator> String::FindAll(const String& str) const {
-	return FindAll(str.m_pBuffer);
+//////////////////////////////////////////////////////////////////////////////////////////
+Vector<int, CDefaultAllocator> String::FindAll(const String& _str) const
+{
+	return FindAll(_str.pBuffer_);
 }
 
-int String::Find(int startIdx, int endIdx, const char* str) const {
-	return StringUtil::Find(m_pBuffer, m_iLen, startIdx, endIdx, str);
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::Find(int _startIdx, int _endIdx, const char* _pStr) const
+{
+	return StringUtil::Find(pBuffer_, len_, _startIdx, _endIdx, _pStr);
 }
 
-int String::Find(int startIdx, const char* str) const {
-	return Find(startIdx, m_iLen - 1, str);
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::Find(int _startIdx, const char* _pStr) const
+{
+	return Find(_startIdx, len_ - 1, _pStr);
 }
 
-// 문자열을 찾음 : 시작 인덱스 반환
-// 문자열을 못찾음 : -1을 반환
-int String::Find(const char* str) const {
-	return Find(0, m_iLen - 1, str);
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::Find(const char* _pStr) const
+{
+	return Find(0, len_ - 1, _pStr);
 }
 
-int String::Find(const String& str) const {
-	return Find(str.m_pBuffer);
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::Find(const String& _str) const
+{
+	return Find(_str.pBuffer_);
 }
 
-int String::Find(int startIdx, const String& str) const {
-	return Find(startIdx, m_iLen - 1, str.Source());
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::Find(int _startIdx, const String& _str) const
+{
+	return Find(_startIdx, len_ - 1, _str.SafeSource());
 }
 
-// 문자열의 startIdx(시작인덱스 - 포함)부터 endIdx(종료인덱스 - 포함) 포함하여 str문자열이 있을 경우의 위치 인덱스를 반환해줍니다.
-// Find 함수와 결과는 완전히 동일하지만 탐색 방향이 반대입니다.
-// O(n)
-int String::FindReverse(int startIdx, int endIdx, const char* str) const {
-	const int iFindStrLen = StringUtil::Length(str);
-	const int iSrcLen = endIdx - startIdx + 1;
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::FindReverse(int _startIdx, int _endIdx, const char* _pStr) const
+{
+	const int iFindStrLen = StringUtil::Length(_pStr);
+	const int iSrcLen = _endIdx - _startIdx + 1;
 
-	if (iFindStrLen == 0) {
+	if (iFindStrLen == 0)
+	{
 		return 0;
 	}
 
-	ThrowIfInvalidRangeIndex(startIdx, endIdx);
+	ThrowIfInvalidRangeIndex(_startIdx, _endIdx);
 
-	if (iFindStrLen > iSrcLen) {
+	if (iFindStrLen > iSrcLen)
+	{
 		return -1;
 	}
 
-	for (int i = endIdx; i >= startIdx; i--) {
+	for (int i = _endIdx; i >= _startIdx; i--)
+	{
 		int iContinuous = 0;
 
-		while (iContinuous < iFindStrLen && m_pBuffer[i + iContinuous] == str[iContinuous]) {
+		while (iContinuous < iFindStrLen && pBuffer_[i + iContinuous] == _pStr[iContinuous])
+		{
 			iContinuous++;
 		}
 
-		if (iContinuous == iFindStrLen) {
+		if (iContinuous == iFindStrLen)
+		{
 			return i;
 		}
 	}
 
 	return -1;
-
 }
 
-int String::FindReverse(const String& str) const {
-	return FindReverse(0, m_iLen - 1, str.m_pBuffer);
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::FindReverse(const String& _str) const
+{
+	return FindReverse(0, len_ - 1, _str.pBuffer_);
 }
 
-int String::FindReverse(const char* str) const {
-	return FindReverse(0, m_iLen - 1, str);
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::FindReverse(const char* _pStr) const
+{
+	return FindReverse(0, len_ - 1, _pStr);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void String::Clear()
 {
-	if (m_pBuffer)
+	if (pBuffer_)
 	{
-		m_iLen = 0;
-		m_pBuffer[m_iLen] = NULL;
+		len_ = 0;
+		pBuffer_[len_] = NULL;
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void String::Clear(int _offset, int _len)
+void String::Clear(int _offset, int _length)
 {
-	ThrowIfInvalidIndex(_offset);
+	if (_offset >= len_)
+		return;
 
-	const int iRemoveLen = _offset + _len > m_iLen ? m_iLen - _offset : _len;	// 예를들어 abcdefg에서 offset 6에 len 100뭐 이렇게 넣으면 len이 1이 되도록 해줘야함
-	const int iMoveCharCount = m_iLen - _offset - iRemoveLen;
+	const int iRemoveLen = _offset + _length > len_ ? len_ - _offset : _length;
+	const int iMoveCharCount = len_ - _offset - iRemoveLen;
 
 	Memory::CopyUnsafe(
-		m_pBuffer + _offset, 
-		m_pBuffer + _offset + _len, 
+		pBuffer_ + _offset,
+		pBuffer_ + _offset + iRemoveLen,
 		iMoveCharCount);
 
-	m_iLen -= iRemoveLen;
-	m_pBuffer[m_iLen] = NULL;
+	len_ -= iRemoveLen;
+	pBuffer_[len_] = NULL;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int String::Count(const char* _str) const
+int String::Count(const char* _pStr) const
 {
-	return Count(0, m_iLen - 1, _str);
+	return Count(0, len_ - 1, _pStr);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int String::Count(const String& _val) const
+int String::Count(const String& _value) const
 {
-	return Count(0, m_iLen - 1, _val.Source());
+	return Count(0, len_ - 1, _value.SafeSource());
 }
 
-/**
- * \brief  startIdx(포함) ~ endIdx (endIdx)사이의 str문자열 갯수를 반환해버렷!
- * O(n)
- */
-int String::Count(const int _startIdx, const int _endIdx, const char* _str) const {
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::Count(const int _startIdx, const int _endIdx, const char* _pStr) const
+{
 	ThrowIfNotInitialized();
 	ThrowIfInvalidRangeIndex(_startIdx, _endIdx);
 
-	const int iStrLen = StringUtil::Length(_str);
+	const int iStrLen = StringUtil::Length(_pStr);
 
 	int iOffset = 0;
 	int iCount = 0;
 
-	while (iOffset <= _endIdx && (iOffset = Find(iOffset, _endIdx, _str)) != -1) {
+	while (iOffset <= _endIdx && (iOffset = Find(iOffset, _endIdx, _pStr)) != -1)
+	{
 		iCount++;
 		iOffset += iStrLen;
 	}
 	return iCount;
 }
 
-int String::Count(const int startIdx, const int endIdx, const String& val) const {
-	return Count(startIdx, endIdx, val.Source());
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::Count(const int _startIdx, const int _endIdx, const String& _value) const
+{
+	return Count(_startIdx, _endIdx, _value.SafeSource());
 }
 
-int String::Replace(const char* from, const String& to) {
-	return Replace(Find(from), StringUtil::Length(from), to);
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::Replace(const char* _pFrom, const String& _to)
+{
+	return Replace(Find(_pFrom), StringUtil::Length(_pFrom), _to);
 }
 
-int String::Replace(const String& from, const String& to) {
-	return Replace(Find(from.Source()), from.Length(), to);
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::Replace(const String& _from, const String& _to)
+{
+	return Replace(Find(_from.SafeSource()), _from.Length(), _to);
 }
 
-int String::Replace(int offset, int len, const String& to) {
-	if (offset == -1)
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::Replace(int _offset, int _length, const String& _to)
+{
+	if (_offset == -1)
 		return -1;
 
-	ThrowIfInvalidIndex(offset);
-	const int iLen = offset + len > m_iLen ? m_iLen - offset : len;	// 예를들어 abcdefg에서 offset 6에 len 100뭐 이렇게 넣으면 len이 1이 되도록 해줘야함
+	ThrowIfInvalidIndex(_offset);
+	const int iLen = _offset + _length > len_ ? len_ - _offset : _length;
 
-	
-	if (iLen < to.Length()) {
-		// 치환하고자하는 문자열의 길이가 더 긴 경우 긴 만큼만 뒤로 밀어준 다음 사이에 하나하나 복사해준다.
-		ResizeIfNeeded(m_iLen + to.Length() - iLen);	// 확장해줘야할 수 있음
+	if (iLen < _to.Length())
+	{
+		ResizeIfNeeded(len_ + _to.Length() - iLen);
 
 		Memory::CopyUnsafeReverse(
-			m_pBuffer + offset + to.Length(),
-			m_pBuffer + offset + iLen,
-			m_iLen - offset - iLen
+			pBuffer_ + _offset + _to.Length(),
+			pBuffer_ + _offset + iLen,
+			len_ - _offset - iLen
 		);
 
-		for (int i = 0; i < to.Length(); ++i) {
-			m_pBuffer[offset + i] = to[i];
+		for (int i = 0; i < _to.Length(); ++i)
+		{
+			pBuffer_[_offset + i] = _to[i];
 		}
 
-		m_iLen += to.Length() - iLen;
-	} else {
-		// 치환하고자하는 문자열의 길이가 같거나 짧은 경우 
+		len_ += _to.Length() - iLen;
+	}
+	else
+	{
 		Memory::CopyUnsafe(
-			m_pBuffer + offset + to.Length(),
-			m_pBuffer + offset + iLen,
-			m_iLen - offset - to.Length()
+			pBuffer_ + _offset + _to.Length(),
+			pBuffer_ + _offset + iLen,
+			len_ - _offset - _to.Length()
 		);
 
-		for (int i = 0; i < to.Length(); ++i) {
-			m_pBuffer[offset + i] = to[i];
+		for (int i = 0; i < _to.Length(); ++i)
+		{
+			pBuffer_[_offset + i] = _to[i];
 		}
 
-		m_iLen -= iLen - to.Length();
+		len_ -= iLen - _to.Length();
 	}
 
-	m_pBuffer[m_iLen] = NULL;
-	const int iNextOffset = offset + to.Length();
-	return iNextOffset >= m_iLen ? -1 : iNextOffset;	// 다음 포지션 반환
+	pBuffer_[len_] = NULL;
+	const int iNextOffset = _offset + _to.Length();
+	return iNextOffset >= len_ ? -1 : iNextOffset;
 }
 
-int String::Replace(int offset, const char* from, const String& to) {
-	return Replace(Find(offset, from), StringUtil::Length(from), to);
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::Replace(int _offset, const char* _pFrom, const String& _to)
+{
+	return Replace(Find(_offset, _pFrom), StringUtil::Length(_pFrom), _to);
 }
 
-int String::Replace(int offset, const String& from, const String& to) {
-	return Replace(Find(offset, from), from.Length(), to);
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::Replace(int _offset, const String& _from, const String& _to)
+{
+	return Replace(Find(_offset, _from), _from.Length(), _to);
 }
 
-bool String::Contain(const char* _str) const {
-	return Find(_str) != -1;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::Contain(const char* _pStr) const
+{
+	return Find(_pStr) != -1;
 }
 
-bool String::Contain(const String& _str) const {
-	return Find(_str.m_pBuffer) != -1;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::Contain(const String& _str) const
+{
+	return Find(_str.pBuffer_) != -1;
 }
 
-
-// @참고 : https://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf
-void String::Format(const char* _format, ...) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::Format(const char* _format, ...)
+{
 	va_list args;
 	va_start(args, _format);
 
-	const int iExpectedLen = vsnprintf(nullptr, 0, _format, args); // 포맷 변환시 필요한 문자열 길이를 획득
+	const int iExpectedLen = vsnprintf(nullptr, 0, _format, args);
 
-	if (iExpectedLen <= 0) {
+	if (iExpectedLen <= 0)
+	{
 		throw RuntimeException("문자열 포맷 수행중 오류가 발생하였습니다.");
 	}
 
-	if (m_iCapacity < iExpectedLen + 1) {
+	if (capacity_ < iExpectedLen + 1)
+	{
 		Resize(iExpectedLen + DEFAULT_BUFFER_SIZE);
 	}
 
-	vsnprintf(m_pBuffer, m_iCapacity, _format, args);
-	m_pBuffer[iExpectedLen] = NULL;
-	m_iLen = iExpectedLen;
+	vsnprintf(pBuffer_, capacity_, _format, args);
+	pBuffer_[iExpectedLen] = NULL;
+	len_ = iExpectedLen;
 	
 	va_end(args);
 }
 
-
-// 문자열 버퍼(m_pBuffer)에서 from 문자열을 검색하여 to 문자열로 변환합니다.
-// O(n)
-void String::ReplaceAll(const char* from, const char* to) {
-	const int iFromLen = StringUtil::Length(from);
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::ReplaceAll(const char* _pFrom, const char* _pTo)
+{
+	const int iFromLen = StringUtil::Length(_pFrom);
 	
-	if (iFromLen == 0) {
-		*this = to;
+	if (iFromLen == 0)
+	{
+		*this = _pTo;
 		return;
 	}
 
 	int iReplaceOffset = 0;
-	while ((iReplaceOffset = Replace(iReplaceOffset, from, to)) != -1) {
+	while ((iReplaceOffset = Replace(iReplaceOffset, _pFrom, _pTo)) != -1)
+	{
 		// EMPTY
 	}
 }
 
-void String::SetAt(const int _idx, const char _ch) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::SetAt(const int _idx, const char _ch)
+{
 	ThrowIfInvalidIndex(_idx);
-	m_pBuffer[_idx] = _ch;
+	pBuffer_[_idx] = _ch;
 }
 
-char String::GetAt(const int _idx) const {
-	ThrowIfInvalidIndex(_idx);
-	return m_pBuffer[_idx];
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::SetAtForce(int _idx, char _ch)
+{
+	if (_idx < 0 || _idx >= capacity_)
+		return;
+	pBuffer_[_idx] = _ch;
 }
 
-String String::GetRange(const int _startIdx, const int _endIdx) const {
-	return StringUtil::GetRange(m_pBuffer, m_iLen, _startIdx, _endIdx);
+//////////////////////////////////////////////////////////////////////////////////////////
+char String::GetAt(const int _idx) const
+{
+	return pBuffer_[_idx];
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+String String::GetRange(const int _startIdx, const int _endIdx) const
+{
+	return StringUtil::GetRange(pBuffer_, len_, _startIdx, _endIdx);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -563,64 +646,104 @@ String String::SubStr(int _startIdx, int _count) const
 	{
 		throw InvalidArgumentException("부분 문자열의 길이는 0 이상이어야 합니다.");
 	}
-	if (_startIdx + _count > m_iLen)
+	if (_startIdx + _count > len_)
 	{
-		_count = m_iLen - _startIdx;
+		_count = len_ - _startIdx;
 	}
 	return GetRange(_startIdx, _startIdx + _count - 1);
 }
 
-// 기존 문자열의 시작인덱스(포함)부터 종료인덱스(포함)까지의 부분 문자열을 반환합니다.
-Tuple<char*, int, int> String::GetRangeUnsafe(const int _startIdx, const int _endIdx) const {
-	return StringUtil::GetRangeUnsafe(m_pBuffer, m_iLen, _startIdx, _endIdx);
+//////////////////////////////////////////////////////////////////////////////////////////
+Tuple<char*, int, int> String::GetRangeUnsafe(const int _startIdx, const int _endIdx) const
+{
+	return StringUtil::GetRangeUnsafe(pBuffer_, len_, _startIdx, _endIdx);
 }
 
-// delimiter 문자열 기준으로 분리합니다.
-// includeEmpty가 true일 경우 분리된 토큰 문자열이 비어있더라도 포함 시킵니다.
-// TODO: 코드 더러움, 다시 짤 것 - 2023/02/06
-// O(n)
-Vector<String> String::Split(const char* _delimiter, const bool _includeEmpty) const {
+//////////////////////////////////////////////////////////////////////////////////////////
+Vector<String> String::Split(const char* _delimiter, const bool _includeEmpty) const
+{
 	Vector<String> vecTokens;
 	int iOffset = Find(_delimiter);
 
-	if (iOffset == -1) {
-		vecTokens.EmplaceBack(m_pBuffer);
+	if (iOffset == -1)
+	{
+		vecTokens.EmplaceBack(pBuffer_);
 		return vecTokens;
 	}
 
 	const int iDelimiterLen = StringUtil::Length(_delimiter);
-	if (iOffset - 1 < 0) {
-		if (_includeEmpty) {
+	if (iOffset - 1 < 0)
+	{
+		if (_includeEmpty)
+		{
 			vecTokens.EmplaceBack(EmptySource);
 		}
-	} else {
+	}
+	else
+	{
 		vecTokens.EmplaceBack(GetRange(0, iOffset - 1));
 	}
 
 	iOffset += iDelimiterLen;
 
-	while (iOffset < m_iLen) {
-		const int iNextOffset = Find(iOffset, m_iLen - 1, _delimiter);
+	while (iOffset < len_)
+	{
+		const int iNextOffset = Find(iOffset, len_ - 1, _delimiter);
 
-		if (iNextOffset == -1) {
+		if (iNextOffset == -1)
+		{
 			break;
 		}
 		
-		if (iNextOffset <= iOffset) {
-			if (_includeEmpty) {
+		if (iNextOffset <= iOffset)
+		{
+			if (_includeEmpty)
+			{
 				vecTokens.EmplaceBack(EmptySource);
 			}
-		} else {
+		}
+		else
+		{
 			vecTokens.EmplaceBack(GetRange(iOffset, iNextOffset - 1));
 		}
 		iOffset = iNextOffset + 1;
 	}
 
-	if (iOffset < m_iLen) {
-		vecTokens.EmplaceBack(GetRange(iOffset, m_iLen - 1));
-	} else {
-		if (_includeEmpty) {
+	if (iOffset < len_)
+	{
+		vecTokens.EmplaceBack(GetRange(iOffset, len_ - 1));
+	}
+	else
+	{
+		if (_includeEmpty)
+		{
 			vecTokens.EmplaceBack(EmptySource);
+		}
+	}
+
+	return vecTokens;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+Vector<String> String::Split(const char _delimiter, const bool _includeEmpty) const
+{
+	Vector<String> vecTokens;
+	int iOffset = 0;
+
+	for (int i = 0; i <= len_; i++)
+	{
+		if (i == len_ || pBuffer_[i] == _delimiter)
+		{
+			if (i > iOffset)
+			{
+				vecTokens.EmplaceBack(GetRange(iOffset, i - 1));
+			}
+			else if (_includeEmpty)
+			{
+				vecTokens.EmplaceBack(EmptySource);
+			}
+
+			iOffset = i + 1;
 		}
 	}
 
@@ -630,29 +753,32 @@ Vector<String> String::Split(const char* _delimiter, const bool _includeEmpty) c
 //////////////////////////////////////////////////////////////////////////////////////////
 void String::Initialize(int _capacity)
 {
-	JC_DELETE_ARRAY_SAFE(m_pBuffer);
+	JC_DELETE_ARRAY_SAFE(pBuffer_);
 
 	if (_capacity <= 0)
 	{
-		m_pBuffer = nullptr;
-		m_iLen = 0;
-		m_iCapacity = 0;
+		pBuffer_ = nullptr;
+		len_ = 0;
+		capacity_ = 0;
 	}
 	else
 	{
-		m_pBuffer = dbg_new char[_capacity];
-		m_iLen = 0;
-		m_iCapacity = _capacity;
-		m_pBuffer[0] = NULL;
+		pBuffer_ = dbg_new char[_capacity];
+		len_ = 0;
+		capacity_ = _capacity;
+		pBuffer_[0] = NULL;
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-String String::ToLowerCase() const {
+String String::ToLowerCase() const
+{
 	String copy = *this;
 
-	for (int i = 0; i < copy.Length(); i++) {
-		if (IsUpperCaseAlphabat(copy[i])) {
+	for (int i = 0; i < copy.Length(); i++)
+	{
+		if (IsUpperCaseAlphabat(copy[i]))
+		{
 			copy[i] += static_cast<char>(32);
 		}
 	}
@@ -661,11 +787,14 @@ String String::ToLowerCase() const {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-String String::ToUpperCase() const {
+String String::ToUpperCase() const
+{
 	String copy = *this;
 
-	for (int i = 0; i < copy.Length(); i++) {
-		if (IsLowerCaseAlphabat(copy[i])) {
+	for (int i = 0; i < copy.Length(); i++)
+	{
+		if (IsLowerCaseAlphabat(copy[i]))
+		{
 			copy[i] -= static_cast<char>(32);
 		}
 	}
@@ -673,10 +802,13 @@ String String::ToUpperCase() const {
 	return copy;
 }
 
-int String::LeadingZeroCount() const {
+//////////////////////////////////////////////////////////////////////////////////////////
+int String::LeadingZeroCount() const
+{
 	int iCount = 0;
-	for (int i = 0; i < m_iLen; ++i) {
-		if (m_pBuffer[i] == '0')
+	for (int i = 0; i < len_; ++i)
+	{
+		if (pBuffer_[i] == '0')
 			++iCount;
 		else
 			break;
@@ -685,168 +817,344 @@ int String::LeadingZeroCount() const {
 	return iCount;
 }
 
-std::string String::ToStd() {
+//////////////////////////////////////////////////////////////////////////////////////////
+std::string String::ToStd()
+{
 	return Source();
 }
 
-char& String::operator[](const int idx) const {
-	ThrowIfInvalidIndex(idx);
-	return m_pBuffer[idx];
+//////////////////////////////////////////////////////////////////////////////////////////
+char& String::operator[](const int _idx) const
+{
+	ThrowIfInvalidIndex(_idx);
+	return pBuffer_[_idx];
 }
 
-String String::operator+(const String& other) const {
+//////////////////////////////////////////////////////////////////////////////////////////
+String String::operator+(const String& _other) const
+{
 	String temp = *this;
-	temp.Append(other);
+	temp.Append(_other);
 	return temp;
 }
 
-String String::operator+(const char ch) const {
+//////////////////////////////////////////////////////////////////////////////////////////
+String String::operator+(const char _ch) const
+{
 	String temp = *this;
-	temp.Append(ch);
+	temp.Append(_ch);
 	return temp;
 }
 
-String String::operator+(const char* str) const {
+//////////////////////////////////////////////////////////////////////////////////////////
+String String::operator+(const char* _pStr) const
+{
 	String temp = *this;
-	temp.Append(str);
+	temp.Append(_pStr);
 	return temp;
 }
 
-String& String::operator+=(const String& other) {
-	Append(other);
+//////////////////////////////////////////////////////////////////////////////////////////
+String& String::operator+=(const String& _other)
+{
+	Append(_other);
 	return *this;
 }
 
-String& String::operator+=(const char ch) {
-	Append(ch);
+//////////////////////////////////////////////////////////////////////////////////////////
+String& String::operator+=(const char _ch)
+{
+	Append(_ch);
 	return *this;
 }
 
-String& String::operator+=(char* str) {
-	Append(str);
+//////////////////////////////////////////////////////////////////////////////////////////
+String& String::operator+=(char* _pStr)
+{
+	Append(_pStr);
 	return *this;
 }
 
-String& String::operator+=(const char* str) {
-	Append(str);
+//////////////////////////////////////////////////////////////////////////////////////////
+String& String::operator+=(const char* _pStr)
+{
+	Append(_pStr);
 	return *this;
 }
 
-String& String::operator=(const String& other) {
-	if (other.m_pBuffer == nullptr) {
-		JC_DELETE_ARRAY_SAFE(m_pBuffer);
-		m_iLen = 0;
-		m_iCapacity = 0;
-	} else {
-		ResizeIfNeeded(other.m_iLen);
-		m_iLen = other.m_iLen;
-		Memory::CopyUnsafe(m_pBuffer, other.m_pBuffer, m_iLen);
-		m_pBuffer[m_iLen] = NULL;
+//////////////////////////////////////////////////////////////////////////////////////////
+String& String::operator=(const String& _other)
+{
+	if (_other.pBuffer_ == nullptr)
+	{
+		JC_DELETE_ARRAY_SAFE(pBuffer_);
+		len_ = 0;
+		capacity_ = 0;
+	}
+	else
+	{
+		ResizeIfNeeded(_other.len_);
+		len_ = _other.len_;
+		Memory::CopyUnsafe(pBuffer_, _other.pBuffer_, len_);
+		pBuffer_[len_] = NULL;
 	}
 	return *this;
 }
 
-// 씹어먹는 C++ 이동 생성자 & 이동 대입 연산자
-// @참고 : https://modoocode.com/227
-String& String::operator=(String&& other) noexcept {
-	// 기존 문자열 제거해줘야함
-	JC_DELETE_ARRAY_SAFE(m_pBuffer);
+//////////////////////////////////////////////////////////////////////////////////////////
+String& String::operator=(String&& _other) noexcept
+{
+	JC_DELETE_ARRAY_SAFE(pBuffer_);
 
-	// 이동 생성자 학습 후 적용
-	m_iCapacity = other.m_iCapacity;
-	m_iLen = other.m_iLen;
-	m_pBuffer = other.m_pBuffer;
+	capacity_ = _other.capacity_;
+	len_ = _other.len_;
+	pBuffer_ = _other.pBuffer_;
 
-	other.m_pBuffer = nullptr;
+	_other.pBuffer_ = nullptr;
 	return *this;
 }
 
-String& String::operator=(const char* other) {
-	const int iToLen = StringUtil::Length(other);
+//////////////////////////////////////////////////////////////////////////////////////////
+String& String::operator=(const char* _other)
+{
+	const int iToLen = StringUtil::Length(_other);
 	const int iExpectedCapaity = iToLen + 10;
 
-	if (iExpectedCapaity > m_iCapacity) {
+	if (iExpectedCapaity > capacity_)
+	{
 		Initialize(iExpectedCapaity + DEFAULT_BUFFER_SIZE);
 	}
 
-	StringUtil::Copy(m_pBuffer, m_iCapacity, other);
-	m_iLen = iToLen;
+	StringUtil::Copy(pBuffer_, capacity_, _other);
+	len_ = iToLen;
 
 	return *this;
 }
 
-String& String::operator=(std::nullptr_t other) {
-	JC_DELETE_ARRAY_SAFE(m_pBuffer);
+//////////////////////////////////////////////////////////////////////////////////////////
+String& String::operator=(std::nullptr_t _other)
+{
+	JC_DELETE_ARRAY_SAFE(pBuffer_);
 
-	m_iCapacity = 0;
-	m_iLen = 0;
+	capacity_ = 0;
+	len_ = 0;
 
 	return *this;
 }
 
-bool String::operator==(const String& other) const {
-	return Compare(other) == 0;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::operator==(const String& _other) const
+{
+	return Compare(_other) == 0;
 }
 
-bool String::operator==(const char* other) const {
-	return Compare(other) == 0;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::operator==(const char* _pOther) const
+{
+	return Compare(_pOther) == 0;
 }
 
-bool String::operator<(const String& other) const {
-	return Compare(other) < 0;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::operator<(const String& _other) const
+{
+	return Compare(_other) < 0;
 }
 
-bool String::operator<(const char* other) const {
-	return Compare(other) < 0;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::operator<(const char* _pOther) const
+{
+	return Compare(_pOther) < 0;
 }
 
-bool String::operator>(const String& other) const {
-	return Compare(other) > 0;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::operator>(const String& _other) const
+{
+	return Compare(_other) > 0;
 }
 
-bool String::operator>(const char* other) const {
-	return Compare(other) > 0;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::operator>(const char* _pOther) const
+{
+	return Compare(_pOther) > 0;
 }
 
-bool String::operator<=(const String& other) const {
-	return Compare(other) <= 0;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::operator<=(const String& _other) const
+{
+	return Compare(_other) <= 0;
 }
 
-bool String::operator<=(const char* other) const {
-	return Compare(other) <= 0;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::operator<=(const char* _pOther) const
+{
+	return Compare(_pOther) <= 0;
 }
 
-bool String::operator>=(const String& other) const {
-	return Compare(other) >= 0;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::operator>=(const String& _other) const
+{
+	return Compare(_other) >= 0;
 }
 
-bool String::operator>=(const char* other) const {
-	return Compare(other) >= 0;
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::operator>=(const char* _pOther) const
+{
+	return Compare(_pOther) >= 0;
 }
 
-std::ostream& operator<<(std::ostream& os, const String& src) {
-	os << src.m_pBuffer;
-	return os;
+//////////////////////////////////////////////////////////////////////////////////////////
+std::ostream& operator<<(std::ostream& _os, const String& _src)
+{
+	_os << _src.pBuffer_;
+	return _os;
 }
 
-void String::ThrowIfInvalidRangeIndex(const int startIdx, const int endIdx) const {
-	if (!IsValidIndexRange(startIdx, endIdx)) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::ThrowIfInvalidRangeIndex(const int _startIdx, const int _endIdx) const
+{
+	if (!IsValidIndexRange(_startIdx, _endIdx))
+	{
 		throw OutOfRangeException("인덱스 범위를 벗어났습니다.");
 	}
 }
 
-void String::ThrowIfNotInitialized() const {
-	if (m_pBuffer == nullptr) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::ThrowIfNotInitialized() const
+{
+	if (pBuffer_ == nullptr)
+	{
 		throw NullPointerException("String을 먼저 초기화해주세요.");
 	}
 }
 
-void String::ThrowIfInvalidIndex(const int idx) const {
-	if (!IsValidIndex(idx)) {
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::ThrowIfInvalidIndex(const int _idx) const
+{
+	if (!IsValidIndex(_idx))
+	{
 		throw OutOfRangeException("인덱스가 범위를 벗어났습니다.");
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+_s8 String::ToInt8(bool _ignoreLeadingZero) const
+{
+	return StringUtil::ToNumber<_s8>(SafeSource(), nullptr, _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u8 String::ToUInt8(bool _ignoreLeadingZero) const
+{
+	return StringUtil::ToNumber<_u8>(SafeSource(), nullptr, _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s16 String::ToInt16(bool _ignoreLeadingZero) const
+{
+	return StringUtil::ToNumber<_s16>(SafeSource(), nullptr, _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u16 String::ToUInt16(bool _ignoreLeadingZero) const
+{
+	return StringUtil::ToNumber<_u16>(SafeSource(), nullptr, _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s32 String::ToInt32(bool _ignoreLeadingZero) const
+{
+	return StringUtil::ToNumber<_s32>(SafeSource(), nullptr, _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u32 String::ToUInt32(bool _ignoreLeadingZero) const
+{
+	return StringUtil::ToNumber<_u32>(SafeSource(), nullptr, _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s64 String::ToInt64(bool _ignoreLeadingZero) const
+{
+	return StringUtil::ToNumber<_s64>(SafeSource(), nullptr, _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u64 String::ToUInt64(bool _ignoreLeadingZero) const
+{
+	return StringUtil::ToNumber<_u64>(SafeSource(), nullptr, _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_f32 String::ToFloat(bool _ignoreLeadingZero) const
+{
+	return StringUtil::ToNumber<_f32>(SafeSource(), nullptr, _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_f64 String::ToDouble(bool _ignoreLeadingZero) const
+{
+	return StringUtil::ToNumber<_f64>(SafeSource(), nullptr, _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::TryToInt8(OUT _s8& _outValue, bool _ignoreLeadingZero) const
+{
+	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::TryToUInt8(OUT _u8& _outValue, bool _ignoreLeadingZero) const
+{
+	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::TryToInt16(OUT _s16& _outValue, bool _ignoreLeadingZero) const
+{
+	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::TryToUInt16(OUT _u16& _outValue, bool _ignoreLeadingZero) const
+{
+	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::TryToInt32(OUT _s32& _outValue, bool _ignoreLeadingZero) const
+{
+	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::TryToUInt32(OUT _u32& _outValue, bool _ignoreLeadingZero) const
+{
+	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::TryToInt64(OUT _s64& _outValue, bool _ignoreLeadingZero) const
+{
+	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::TryToUInt64(OUT _u64& _outValue, bool _ignoreLeadingZero) const
+{
+	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::TryToFloat(OUT _f32& _outValue, bool _ignoreLeadingZero) const
+{
+	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool String::TryToDouble(OUT _f64& _outValue, bool _ignoreLeadingZero) const
+{
+	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+}
 
 NS_END
 

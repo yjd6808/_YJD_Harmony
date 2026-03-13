@@ -12,12 +12,12 @@ NS_JDB_BEGIN
 
 struct MysqlDatabaseInfo
 {
-	jc::String name_;
-	jc::String hostName_;
-	_u16 connPort_ = 0;
-	jc::String accountId_;
-	jc::String accountPass_;
-	jc::String schemaName_;
+	jc::String name_;			// 게임DB
+	jc::String hostName_;		// 127.0..1
+	_u16 connPort_ = 0;			// 3306
+	jc::String accountId_;		// root
+	jc::String accountPass_;	// 1234
+	jc::String schemaName_;		// steinsgate
 	int maxConnection_ = 0;
 	int connPoolSize_ = 0;
 	int iocpThreadCount_ = 0;

@@ -15,6 +15,8 @@
 #include <sstream>
 
 #include <jc/Core.h>
+
+#include <jc/Container/DataMap.h>
 #include <jc/Container/CMessage.h>
 
 #include <jnet/NetLoggerDefine.h>

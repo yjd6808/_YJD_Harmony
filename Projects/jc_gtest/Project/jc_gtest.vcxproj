@@ -23,6 +23,8 @@
     <ClCompile Include="..\Sources\jc_gtest\Container\ArrayQueueTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Container\ArrayStackTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Container\ArraysTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\Container\CMessageTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\Container\DataMapTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Container\HashMapTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Container\HashSetTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Container\Impl\AVLTreeImplTest.cpp" />
@@ -93,6 +95,7 @@
     <ClCompile Include="..\Sources\jc_gtest\Primitives\StaticStringTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Primitives\StringTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Primitives\StringUtilTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\Primitives\StringViewTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\RAII\AutoPtrTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\RAII\AutoRefTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\RandomTest.cpp" />
