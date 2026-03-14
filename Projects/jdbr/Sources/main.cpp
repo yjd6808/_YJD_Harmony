@@ -1,6 +1,7 @@
 ﻿#include <jdb/Core.h>
 
 #include "jc/Threading/Pulser.h"
+#include "jdb/SQLServer/SqlServerDatabase.h"
 
 USING_NS_JC;
 
@@ -10,7 +11,8 @@ int main(int _argc, char** _argv)
 	InitializeDefaultLogger();
 	InitializeNetLogger();
 
-	jdb::SqlServerDatabaseInfo info;
+	jdb::DatabaseInfo info;
+	info.type_ = jdb::DatabaseType::SQLServer;
 	info.name_ = "게임DB";
 	info.hostName_ = "127.0.0.1";
 	info.connPort_ = 1433;
@@ -19,53 +21,172 @@ int main(int _argc, char** _argv)
 	info.dbName_ = "steinsgate";
 	info.maxConnection_ = 100;
 	info.connPoolSize_ = 10;
-	info.iocpThreadCount_ = 4;
+	info.iocpThreadCount_ = 12;
+	info.iocpPollingMode_ = true;
 
-	jdb::SqlServerDatabase sqlServerDb;
-	if (sqlServerDb.Initialize(info) == false)
-		return -1;
-
-	sqlServerDb.SetOnTaskCompletedCallback([](jnet::IOCPTaskAbstract* _pTask)
+	jdb::IDatabasePtr pDb = jc::MakeShared<jdb::SqlServerDatabase>();
+	jdb::IDatabase& db = *pDb.GetPtr();
+	if (db.Initialize(info) == false)
 	{
-		if (_pTask->GetType() != IOCP_TASK_TYPE_SQL_SERVER)
-			return;
+		FinalizeNetLogger();
+		FinalizeDefaultLogger();
+		FinalizeJCore();
+		return -1;
+	}
 
-		// PollEvents에서 호출되는 콜백이므로 메인 쓰레드에서만 호출된다.
-		jc_assert(Thread::GetMainThreadId() == Thread::GetThreadId());
-		auto pTask = (jnet::IOCPTask<jdb::SqlServerQueryPtr>*)_pTask;
-		pTask->Wait();
-		jdb::SqlServerQuery* pResult = pTask->GetResult().value_.GetPtr();
+	static constexpr int QID_SELECT_1 = 100;
+	static constexpr int QID_SELECT_2 = 101; // t_test
+	static constexpr int QID_INSERT_1 = 200;
+	static constexpr int QID_INSERT_2 = 201; // t_test
+	static constexpr int QID_DELETE_1 = 300;
 
+	// jdb::SqlServerStatementBuilder::Build("abcd {0} {1} {0}", 10, 2);
+
+	db.SetQueryCompletedCallback([](jdb::IQuery& _query)
+	{
+		_u32 affectedRowCount = 0;
+		switch (_query.GetId())
+		{
+		case QID_SELECT_1:
+			{
+				affectedRowCount = _query.GetRowCount();
+				jc::String s1 = _query.GetString(0);
+				jc::String s2 = _query.GetString(1);
+
+				_query.Next();
+				s1 = _query.GetString(0);
+				s2 = _query.GetString(1);
+
+			}
+			break;
+		case QID_SELECT_2:
+			{
+				affectedRowCount = _query.GetRowCount();
+				_u32 fieldCount = _query.GetFieldCount();
+
+				// c_uid, c_float, c_double, c_s8, c_s16, c_s32, c_s64, c_u8, c_u16, c_u32, c_u64, c_datetime FROM dbo.t_test
+				do
+				{
+					jc::String s1 = _query.GetString(0);
+					jc::String s2 = _query.GetString(1);
+					jc::String s3 = _query.GetString(2);
+					jc::String s4 = _query.GetString(3);
+					jc::String s5 = _query.GetString(4);
+					jc::String s6 = _query.GetString(5);
+					jc::String s7 = _query.GetString(6);
+					jc::String s8 = _query.GetString(7);
+					jc::String s9 = _query.GetString(8);
+					jc::String s10 = _query.GetString(9);
+					jc::String s11 = _query.GetString(10);
+					jc::String s12 = _query.GetString(11);
+
+					int c1 = _query.GetS32(0);
+					_f32 c2 = _query.GetFloat(1);
+					_f64 c3 = _query.GetDouble(2);
+
+					_s8 c4 = _query.GetS8(3);
+					_s16 c5 = _query.GetS16(4);
+					_s32 c6 = _query.GetS32(5);
+					_s64 c7 = _query.GetS64(6);
+
+					_u8 c8 = _query.GetU8(7);
+					_u16 c9 = _query.GetU16(8);
+					_u32 c10 = _query.GetU32(9);
+					_u64 c11 = _query.GetU64(10);
+					jc::DateTime c12 = _query.GetDateTime(11);
+
+				} while (_query.Next());
+
+				
+			}
+			break;
+		case QID_INSERT_1:
+			{
+				affectedRowCount = _query.GetRowCount();
+			}
+			break;
+		case QID_DELETE_1:
+			{
+				affectedRowCount = _query.GetRowCount();
+			}
+			break;
+		}
+
+		return;
 	});
 
 	// ------------------------------------------
 	// insert 테스트
+	int x = 5;
 	{
-		// auto pInsertQuery = sqlServerDb.Query("INSERT INTO t_account (c_account_id, c_account_pass) VALUES('user03', 'pass03'); ");
-		// _u32 rowCount = pInsertQuery->GetRowCount();
-		// jc_assert_msg(rowCount == 1, "영향받은 행 갯수가 1이 아닙니다. rowCount: %u", rowCount);
+
+		
+		String id = StringUtil::Format("test%d", x);
+		String pass = StringUtil::Format("pass%d", x);
+		db.QueryAsync(QID_INSERT_1, "INSERT INTO t_account (c_account_id, c_account_pass) VALUES({0}, {1}); ", id, pass);
+		 
+		 // jc_assert_msg(rowCount == 1, "영향받은 행 갯수가 1이 아닙니다. rowCount: %u", rowCount);
+
+		jc::String text = 
+			"INSERT INTO dbo.t_test ("
+				"c_float,"
+				"c_double,"
+				"c_s8,"
+				"c_s16,"
+				"c_s32,"
+				"c_s64,"
+				"c_u8,"
+				"c_u16,"
+				"c_u32,"
+				"c_u64,"
+				"c_datetime)"
+			"VALUES ("
+				"1.5,"
+				"3.141592,"
+				"-10,"
+				"-200,"
+				"-30000,"
+				"-9000000000,"
+				"200,"
+				"50000,"
+				"3000000000,"
+				"1000000000000000000,"
+			"SYSDATETIME());";
+		db.QueryAsync(QID_INSERT_2, text);
 	}
+
+	// ------------------------------------------
+	// delete 테스트
+	{
+		db.QueryAsync(QID_DELETE_1, "DELETE FROM t_account WHERE c_account_id = {0}", StringUtil::Format("test%d", x));
+	}
+
+
+
 
 
 	// ------------------------------------------
 	// select 테스트
+
+	db.QueryAsync(QID_SELECT_2, "SELECT c_uid, c_float, c_double, c_s8, c_s16, c_s32, c_s64, c_u8, c_u16, c_u32, c_u64, c_datetime FROM dbo.t_test");
+
 	constexpr int TCNT = 2;
 	bool runningThread[TCNT]{};
 	Thread thread[TCNT];
 	{
 		for (int i = 0; i < TCNT; ++i)
 		{
-			thread[i].Start([i, &sqlServerDb, &runningThread](void* _param)
+			thread[i].Start([i, &db, &runningThread](void* _param)
 			{
 				runningThread[i] = true;
 				while (runningThread[i])
 				{
-					auto pQuery = sqlServerDb.QueryAsync(100, "select * from t_account");
+					auto pQuery = db.QueryAsync(QID_SELECT_1, "select * from t_account");
 				}
 			});
 		}
 
-		auto pQuery = sqlServerDb.QueryAsync(100, "select * from t_account");
+		auto pQuery = db.QueryAsync(QID_SELECT_1, "select * from t_account");
 	}
 
 	Console::Write("%s\n", "x키 입력시 종료");
@@ -83,12 +204,12 @@ int main(int _argc, char** _argv)
 		TimeSpan elapsed = pulser.Wait();
 		updateCounter.Elapsed += elapsed;
 
-		int processCount = sqlServerDb.PollEvents();
+		int processCount = db.PollEvents();
 		pollingEventCountPerSec += processCount;
 
 		if (updateCounter.ElapsedSeconds(1))
 		{
-			Console::Write("SQL Server 이벤트 수: %d\n", pollingEventCountPerSec);
+			Console::Write("SQL Server 이벤트 수: %d, 수행 대기중 오버랩 수: %d\n", pollingEventCountPerSec, db.GetPendingQueryCount());
 			pollingEventCountPerSec = 0;
 		}
 
@@ -104,7 +225,7 @@ int main(int _argc, char** _argv)
 		thread[i].Join();
 	}
 
-	sqlServerDb.Finalize();
+	db.Finalize();
 	FinalizeNetLogger();
 	FinalizeDefaultLogger();
 	FinalizeJCore();

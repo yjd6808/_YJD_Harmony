@@ -1,6 +1,6 @@
 ﻿/*
  *	작성자 : 윤정도
- *	사용 에시코드
+ *	사용 예시코드
  *
  *	--계정 테이블
  *	create table t_account(
@@ -13,133 +13,37 @@
  *	);
  *	
  *	char id[] = "wjdeh818";
- *	auto spQueryTask = sg::GameDB->QueryAsync("insert into t_account (c_id, c_pass) values (?, ?)", id, id);
+ *	auto stmt = PreparedStatement(MysqlStatementBuilder::Build("insert into t_account (c_id, c_pass) values (?, ?)", id, id));
+ *	auto spQueryTask = sg::GameDB->QueryAsync(stmt);
  *	auto& queryResult = spQueryTask->Wait();
  *	
- *	SharedPtr<MysqlQuerySelect> q = sg::GameDB->Query(
- *		"select c_account_id, c_id, c_pass, unix_timestamp(c_created) as c_created, unix_timestamp(c_created2) as c_created2, unix_timestamp(c_logined) as c_logined from t_account"
- *	);
+ *	auto stmt2 = PreparedStatement(MysqlStatementBuilder::Build(
+ *		"select c_account_id, c_id, c_pass, unix_timestamp(c_created) as c_created from t_account"
+ *	));
+ *	SharedPtr<IQuery> q = sg::GameDB->Query(stmt2);
  *	
  *	int iFieldCount = q->GetFieldCount();
  *	int iRowCount = q->GetRowCount();
- *	
- *	if (!q->HasNext())
- *		return;
- *	
- *	do {
- *		auto c1 = q->GetNumber<_s32>("c_account_id");
- *		auto c2 = q->GetString("c_id");
- *		auto c3 = q->GetString("c_pass");
- *		auto c4 = q->GetNumber<double>("c_created2");
- *	
- *		DateTime dtCreated = DateTime::FromUnixTime(c4).FormatMysqlTime();
- *	} while (q->Next());
  */
 
 #pragma once
 
-#include <jnet/IOCP/IOCPTask.h>
-#include <jdb/Structure.h>
-
-#include "MysqlConnectionPool.h"
-#include "MysqlStatementBuilder.h"
-#include "MysqlQuery.h"
-
-#define IOCP_TASK_TYPE_MYSQL (1)
+#include <jdb/IDatabase.h>
+#include <jdb/ConnectionPool.h>
 
 NS_JDB_BEGIN
 
-using MysqlQueryTask = jnet::IOCPTask<MysqlQueryPtr>;
-using MysqlQueryTaskPtr = jc::SharedPtr<MysqlQueryTask>;
-
-#define IOCPTASK_FAILED_DB	50001
-
-class JDB_DLL MysqlDatabase
+class JDB_DLL MysqlDatabase : public IDatabase
 {
 public:
 	MysqlDatabase();
-	virtual ~MysqlDatabase();
+	~MysqlDatabase() override;
 
-	bool Initialize(const MysqlDatabaseInfo& _info);
-	void Finalize();
+protected:
+	virtual IQueryPtr CreateQuery(IConnection* _pConn, const PreparedStatement& _stmt) const override;
+	virtual int GetTaskType() const override { return IOCP_TASK_TYPE_MYSQL; }
+	virtual _u32 GetQueryFailedErrorCode() const override { return IOCPTASK_FAILED_DB; }
 
-	MysqlConnectionPool* GetConnectionPool() const { return connectionPool_; }
-
-	/*
-	 * 비동기 Query 실행
-	*/
-	template <typename... Args>
-	MysqlQueryTaskPtr QueryAsync(const jc::String& _statement, Args&&... _args)
-	{
-		if (connectionPool_ == nullptr)
-		{
-			jc_assert_msg(false, "커넥션 풀이 초기화되지 않았습니다. 데이터베이스가 연결되어있는지 확인해주세요.");
-			return nullptr;
-		}
-
-		const auto& taskFunc = [this](MysqlQueryTask::TResult& _result)
-		{
-			_result.success_ = _result.value_->Execute();
-			_result.errorCode_ = !_result.success_ ? IOCPTASK_FAILED_DB : 0;
-		};
-
-		const auto& finallyFunc = [this](MysqlQueryTask::TResult& _result)
-		{
-			connectionPool_->ReleaseConnection(_result.value_->GetConnection());
-		};
-
-		MysqlQueryPtr pQuery = MysqlQuery::Create(connectionPool_->GetConnection(), _statement,
-		                                          jc::Forward<Args>(_args)...);
-		auto pTask = MysqlQueryTask::Create(iocp_, taskFunc, finallyFunc, pQuery);
-		pTask->SetType(IOCP_TASK_TYPE_MYSQL);
-		pTask->Start();
-		return pTask;
-	}
-
-	/*
-	 * 동기화 Query 실행
-	 * 스마트 포인터로 알아서 해제해주므로 상관없다.
-	 */
-
-	template <typename... Args>
-	MysqlQueryPtr Query(const jc::String& _statement, Args&&... _args)
-	{
-		if (connectionPool_ == nullptr)
-		{
-			jc_assert_msg(false, "커넥션 풀이 초기화되지 않았습니다. 데이터베이스가 연결되어있는지 확인해주세요.");
-			return nullptr;
-		}
-
-		auto pConn = connectionPool_->GetConnection();
-		AutoReleaseConnection autoRelease(pConn, connectionPool_);
-
-		if (pConn == nullptr)
-		{
-			// 실패
-			jc_assert_msg(false, "MysqlDatabase::Query() 커넥션 풀에서 가져오기 실패");
-			return nullptr;
-		}
-
-		MysqlQueryPtr pQuery = MysqlQuery::Create(pConn, _statement, jc::Forward<Args>(_args)...);
-
-		if (pQuery == nullptr)
-		{
-			jc_assert_msg(false, "MysqlDatabase::Query() 쿼리문 파싱 실패");
-			return nullptr;
-		}
-
-		pQuery->Execute();
-		return pQuery;
-	}
-
-private:
-	jnet::IOCP* iocp_;
-	MysqlConnectionPool* connectionPool_;
-	MysqlDatabaseInfo info_{};
-	bool initialized_;
-
-	// 쿼리 수행 통계
-	// 실패 등 처리할 것들은 여기다가 추가 하면 된다
 };
 
 NS_END

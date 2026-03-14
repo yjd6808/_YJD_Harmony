@@ -47,6 +47,9 @@ public:
 		return state_;
 	}
 
+	void SetOwnerId(int _ownerId) { ownerId_ = _ownerId; }
+	int GetOwnerId() const { return ownerId_; }
+
 	void SetId(int _id) { id_ = _id; }
 	int GetId() const { return id_; }
 
@@ -58,6 +61,8 @@ protected:
 	jc::AtomicInt state_;
 
 	IOCP* iocp_;
+
+	int ownerId_ = -1;
 	int id_;
 	int type_;
 

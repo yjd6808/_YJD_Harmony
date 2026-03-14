@@ -1,0 +1,174 @@
+SQL Server Data Type Reference
+(Microsoft SQL Server)
+
+------------------------------------------------------------
+INTEGER TYPES
+------------------------------------------------------------
+
+TINYINT
+size  : 1 byte
+range : 0 ~ 255
+note  : only unsigned integer type
+
+SMALLINT
+size  : 2 bytes
+range : -32,768 ~ 32,767
+
+INT
+size  : 4 bytes
+range : -2,147,483,648 ~ 2,147,483,647
+
+BIGINT
+size  : 8 bytes
+range : -9,223,372,036,854,775,808
+        ~ 9,223,372,036,854,775,807
+
+
+------------------------------------------------------------
+FLOATING POINT TYPES
+------------------------------------------------------------
+
+REAL
+size      : 4 bytes
+precision : ~7 decimal digits
+range     : ±3.40E38
+c++ type  : float
+
+FLOAT
+size      : 8 bytes
+precision : ~15 decimal digits
+range     : ±1.79E308
+c++ type  : double
+
+FLOAT(n) rule
+
+n = 1 ~ 24  → REAL (4 bytes)
+n = 25 ~ 53 → FLOAT (8 bytes)
+
+
+------------------------------------------------------------
+EXACT NUMERIC TYPES
+------------------------------------------------------------
+
+DECIMAL(p,s) / NUMERIC(p,s)
+
+precision : up to 38 digits
+scale     : decimal digits
+
+example
+
+DECIMAL(10,2)
+
+range
+
+-99999999.99
+~ 99999999.99
+
+storage size
+
+precision 1-9   : 5 bytes
+precision 10-19 : 9 bytes
+precision 20-28 : 13 bytes
+precision 29-38 : 17 bytes
+
+
+------------------------------------------------------------
+DATE AND TIME TYPES
+------------------------------------------------------------
+
+DATE
+size  : 3 bytes
+range : 0001-01-01 ~ 9999-12-31
+
+TIME
+size  : 3 ~ 5 bytes
+range : 00:00:00 ~ 23:59:59.9999999
+
+DATETIME
+size      : 8 bytes
+range     : 1753-01-01 ~ 9999-12-31
+precision : ~3.33 ms
+
+SMALLDATETIME
+size  : 4 bytes
+range : 1900-01-01 ~ 2079-06-06
+precision : 1 minute
+
+DATETIME2
+size      : 6 ~ 8 bytes
+range     : 0001-01-01 ~ 9999-12-31
+precision : up to 100ns
+
+recommended
+
+DATETIME2(3)  → millisecond precision
+
+
+------------------------------------------------------------
+STRING TYPES
+------------------------------------------------------------
+
+CHAR(n)
+type : fixed length string
+size : n bytes
+max  : 8000
+
+VARCHAR(n)
+type : variable length string
+size : n bytes
+max  : 8000
+
+VARCHAR(MAX)
+max size : 2GB
+
+NCHAR(n)
+type : fixed length unicode string
+size : 2n bytes
+max  : 4000
+
+NVARCHAR(n)
+type : variable unicode string
+size : 2n bytes
+max  : 4000
+
+NVARCHAR(MAX)
+max size : 2GB
+
+
+------------------------------------------------------------
+BINARY TYPES
+------------------------------------------------------------
+
+BINARY(n)
+fixed binary
+max size : 8000 bytes
+
+VARBINARY(n)
+variable binary
+max size : 8000 bytes
+
+VARBINARY(MAX)
+max size : 2GB
+
+
+------------------------------------------------------------
+OTHER TYPES
+------------------------------------------------------------
+
+BIT
+size : 1 bit
+value : 0 or 1
+
+UNIQUEIDENTIFIER
+size : 16 bytes
+value : GUID
+
+ROWVERSION
+size : 8 bytes
+auto increment binary
+
+XML
+xml document storage
+
+SQL_VARIANT
+can store multiple SQL types

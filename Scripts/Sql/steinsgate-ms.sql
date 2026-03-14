@@ -159,3 +159,27 @@ CREATE TABLE dbo.t_friendship (
         FOREIGN KEY (c_ack_character_uid) REFERENCES dbo.t_character(c_uid) ON DELETE NO ACTION
 );
 GO
+
+
+CREATE TABLE dbo.t_test
+(
+    c_uid       INT             NOT NULL IDENTITY(1,1),
+
+    c_float     REAL,
+    c_double    FLOAT,
+
+    c_s8        SMALLINT,
+    c_s16       SMALLINT,
+    c_s32       INT,
+    c_s64       BIGINT,
+
+    c_u8        TINYINT,
+    c_u16       INT,
+    c_u32       BIGINT,
+    c_u64       DECIMAL(20,0),
+
+    c_datetime  DATETIME2,
+
+    CONSTRAINT t_test_pk PRIMARY KEY (c_uid)
+);
+GO

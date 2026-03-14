@@ -152,9 +152,44 @@ Example:
 if (value == 0)
     return;
 
+
 ---
 
-## 3. Function Visual Separators (.cpp only)
+## 3. Virtual Function Rules
+
+### Virtual Functions
+
+Rule:
+- All virtual functions MUST explicitly include the `virtual` keyword.
+
+Example:
+
+virtual void Update();
+
+---
+
+### Overridden Functions
+
+Rule:
+- If a function overrides a base class virtual function, it MUST include both `virtual` and `override`.
+
+Example:
+
+virtual void Update() override;
+
+---
+
+### Summary
+
+Virtual function:
+virtual ReturnType FunctionName(...);
+
+Overridden function:
+virtual ReturnType FunctionName(...) override;
+
+---
+
+## 4. Function Visual Separators (.cpp only)
 
 Each function must begin with a visual separator made of '/'.
 

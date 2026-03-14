@@ -21,12 +21,23 @@
 	<Type Name="jc::String;">
 		<!-- 유니코드 문자열 포맷: s8(UTF-8), su(UTF-16), s32(UTF-32)  -->
 		<!-- 기본: na  -->
-		<DisplayString>{m_pBuffer,s8}</DisplayString>
-		<StringView Condition="m_pBuffer">m_pBuffer,na</StringView>
+		<DisplayString>{pBuffer_,s8}</DisplayString>
+		<StringView Condition="pBuffer_">pBuffer_,na</StringView>
 		<Expand>
 			<ArrayItems>
-				<Size>m_iLen</Size>
-				<ValuePointer>m_pBuffer</ValuePointer>
+				<Size>len_</Size>
+				<ValuePointer>pBuffer_</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+	
+	<Type Name="jc::StringView;">
+		<DisplayString>{pBuf_,s8}</DisplayString>
+		<StringView Condition="pBuf_">pBuf_,na</StringView>
+		<Expand>
+			<ArrayItems>
+				<Size>len_</Size>
+				<ValuePointer>pBuf_</ValuePointer>
 			</ArrayItems>
 		</Expand>
 	</Type>

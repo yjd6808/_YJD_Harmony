@@ -80,6 +80,7 @@ using FnTask = std::function<void(IOCPTaskResult<T>&)>;
 template <typename T>
 class IOCPTask : public IOCPTaskAbstract
 {
+public:
 	using TIOCPTask = IOCPTask<T>;
 	using TIOCPTaskPtr = jc::SharedPtr<IOCPTask<T>>;
 

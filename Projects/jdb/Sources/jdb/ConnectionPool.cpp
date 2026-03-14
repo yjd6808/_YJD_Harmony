@@ -1,27 +1,36 @@
-﻿#include "Core.h"
-#include "MysqlConnectionPool.h"
+/*
+ * 작성자: 윤정도
+ * 생성일: 3/13/2026
+ * =====================
+ *
+ * 통합 커넥션 풀 구현
+ */
 
-#include "MysqlConnection.h"
+#include "Core.h"
+#include "ConnectionPool.h"
 
-USING_NS_JC;
+#include "IConnection.h"
+
 USING_NS_JC;
 USING_NS_STD;
 
 NS_JDB_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MysqlConnectionPool::MysqlConnectionPool(
+ConnectionPool::ConnectionPool(
+	DatabaseType _dbType,
 	const String& _hostName,
 	_u16 _port,
 	const String& _id,
 	const String& _pass,
-	const String& _schemaName,
+	const String& _dbName,
 	const int _maxConn)
 //////////////////////////////////////////////////////////////////////////////////////////
-: hostName_(_hostName)
+: dbType_(_dbType)
+, hostName_(_hostName)
 , accountId_(_id)
 , accountPass_(_pass)
-, schemeName_(_schemaName)
+, dbName_(_dbName)
 , port_(_port)
 , maxConnection_(_maxConn)
 , currentConnectionSize_(0)
@@ -29,18 +38,18 @@ MysqlConnectionPool::MysqlConnectionPool(
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MysqlConnectionPool::~MysqlConnectionPool()
+ConnectionPool::~ConnectionPool()
 {
 	TerminateAllConnections();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool MysqlConnectionPool::Init(const uint32_t _initConn)
+bool ConnectionPool::Init(const uint32_t _initConn)
 {
 	NormalLockGuard guard(mutex_);
 	for (int index = 0; index < static_cast<int>(_initConn); ++index)
 	{
-		MysqlConnection* pConn = CreateConnection();
+		IConnection* pConn = CreateConnection();
 		if (pConn)
 		{
 			connectionList_.PushBack(pConn);
@@ -55,10 +64,10 @@ bool MysqlConnectionPool::Init(const uint32_t _initConn)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MysqlConnectionPool::TerminateAllConnections()
+void ConnectionPool::TerminateAllConnections()
 {
 	NormalLockGuard guard(mutex_);
-	connectionList_.Extension().ForEach([this](MysqlConnection* _pConnection)
+	connectionList_.Extension().ForEach([this](IConnection* _pConnection)
 	{
 		TerminateConnection(_pConnection);
 	});
@@ -68,7 +77,7 @@ void MysqlConnectionPool::TerminateAllConnections()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MysqlConnectionPool::TerminateConnection(MysqlConnection* _pConnection)
+void ConnectionPool::TerminateConnection(IConnection* _pConnection)
 {
 	if (_pConnection)
 	{
@@ -78,9 +87,9 @@ void MysqlConnectionPool::TerminateConnection(MysqlConnection* _pConnection)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MysqlConnection* MysqlConnectionPool::GetConnection()
+IConnection* ConnectionPool::GetConnection()
 {
-	MysqlConnection* pConn = nullptr;
+	IConnection* pConn = nullptr;
 	NormalLockGuard guard(mutex_);
 
 	if (connectionList_.Size() > 0)
@@ -113,7 +122,7 @@ MysqlConnection* MysqlConnectionPool::GetConnection()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void MysqlConnectionPool::ReleaseConnection(MysqlConnection* _pConnection)
+void ConnectionPool::ReleaseConnection(IConnection* _pConnection)
 {
 	if (_pConnection)
 	{
@@ -123,16 +132,23 @@ void MysqlConnectionPool::ReleaseConnection(MysqlConnection* _pConnection)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MysqlConnection* MysqlConnectionPool::CreateConnection() const
+IConnection* ConnectionPool::CreateConnection() const
 {
-	MysqlConnection* pConnection = dbg_new MysqlConnection();
+	IConnection* pConnection = nullptr;
 
-	if (pConnection == nullptr)
+	if (dbType_ == DatabaseType::MySQL)
 	{
-		return nullptr;
+		pConnection = dbg_new MysqlConnection();
+	}
+	else
+	{
+		pConnection = dbg_new SqlServerConnection();
 	}
 
-	if (!pConnection->Connect(hostName_, port_, accountId_, accountPass_, schemeName_))
+	if (pConnection == nullptr)
+		return nullptr;
+
+	if (!pConnection->Connect(hostName_, port_, accountId_, accountPass_, dbName_))
 	{
 		delete pConnection;
 		return nullptr;

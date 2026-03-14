@@ -19,28 +19,34 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Sources\jdb\ConnectionPool.cpp" />
     <ClCompile Include="..\Sources\jdb\Core.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Sources\jdb\IDatabase.cpp" />
+    <ClCompile Include="..\Sources\jdb\IQuery.cpp" />
+    <ClCompile Include="..\Sources\jdb\JdbUtil.cpp" />
     <ClCompile Include="..\Sources\jdb\MySQL\MysqlConnection.cpp" />
-    <ClCompile Include="..\Sources\jdb\MySQL\MysqlConnectionPool.cpp" />
     <ClCompile Include="..\Sources\jdb\MySQL\MysqlDatabase.cpp" />
     <ClCompile Include="..\Sources\jdb\MySQL\MysqlQuery.cpp" />
     <ClCompile Include="..\Sources\jdb\MySQL\MysqlStatementBuilder.cpp" />
     <ClCompile Include="..\Sources\jdb\SQLServer\SqlServerConnection.cpp" />
-    <ClCompile Include="..\Sources\jdb\SQLServer\SqlServerConnectionPool.cpp" />
     <ClCompile Include="..\Sources\jdb\SQLServer\SqlServerDatabase.cpp" />
     <ClCompile Include="..\Sources\jdb\SQLServer\SqlServerQuery.cpp" />
     <ClCompile Include="..\Sources\jdb\SQLServer\SqlServerStatementBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Sources\jdb\ConnectionPool.h" />
     <ClInclude Include="..\Sources\jdb\Core.h" />
     <ClInclude Include="..\Sources\jdb\DLLExport.h" />
+    <ClInclude Include="..\Sources\jdb\IConnection.h" />
+    <ClInclude Include="..\Sources\jdb\IDatabase.h" />
+    <ClInclude Include="..\Sources\jdb\IQuery.h" />
+    <ClInclude Include="..\Sources\jdb\JdbUtil.h" />
     <ClInclude Include="..\Sources\jdb\MySQL\MysqlConnection.h" />
-    <ClInclude Include="..\Sources\jdb\MySQL\MysqlConnectionPool.h" />
     <ClInclude Include="..\Sources\jdb\MySQL\MysqlDatabase.h" />
     <ClInclude Include="..\Sources\jdb\MySQL\MysqlQuery.h" />
     <ClInclude Include="..\Sources\jdb\MySQL\MysqlStatementBuilder.h" />
@@ -48,7 +54,6 @@
     <ClInclude Include="..\Sources\jdb\QueryDefine.h" />
     <ClInclude Include="..\Sources\jdb\QueryHelper.h" />
     <ClInclude Include="..\Sources\jdb\SQLServer\SqlServerConnection.h" />
-    <ClInclude Include="..\Sources\jdb\SQLServer\SqlServerConnectionPool.h" />
     <ClInclude Include="..\Sources\jdb\SQLServer\SqlServerDatabase.h" />
     <ClInclude Include="..\Sources\jdb\SQLServer\SqlServerQuery.h" />
     <ClInclude Include="..\Sources\jdb\SQLServer\SqlServerStatementBuilder.h" />

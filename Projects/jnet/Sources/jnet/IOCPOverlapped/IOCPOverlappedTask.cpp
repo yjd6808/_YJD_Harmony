@@ -44,7 +44,14 @@ void IOCPOverlappedTask::Process(BOOL _result, _u32l _numberOfBytesTransferred, 
 		pTask->pContinuousTaskLock_->Unlock();
 	}
 
-	_pWorker->EnqueueTask(task_);
+	if (pIocp_->IsPollingMode())
+	{
+		_pWorker->EnqueueTask(task_);
+	}
+	else
+	{
+		pIocp_->OnTaskCompleted(pTask);
+	}
 
 	pTask->state_ = IOCPTaskState::eFinished;
 	ProcessFinally();

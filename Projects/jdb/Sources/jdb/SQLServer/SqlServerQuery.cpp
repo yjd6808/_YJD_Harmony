@@ -6,66 +6,9 @@ USING_NS_STD;
 USING_NS_JDB;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-SqlServerQuery::SqlServerQuery(SqlServerConnection* _pConn, const String& _preparedStatement, StatementType _type)
-: statementType_(_type)
-, conn_(_pConn)
-, preparedStatement_(_preparedStatement)
-, errorCode_(0)
-, hStmt_(SQL_NULL_HSTMT)
-{
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
 SqlServerQuery::~SqlServerQuery()
 {
 	FreeStatement();
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-StatementType SqlServerQuery::ParseStatement(const String& _statement)
-{
-	StatementType statement = StatementType::None;
-	const String statementPrefix = _statement.GetRange(0, 5).ToLowerCase();
-
-	if (statementPrefix.Find("select") == 0)
-	{
-		statement = StatementType::Select;
-	}
-	else if (statementPrefix.Find("update") == 0)
-	{
-		statement = StatementType::Update;
-	}
-	else if (statementPrefix.Find("insert") == 0)
-	{
-		statement = StatementType::Insert;
-	}
-	else if (statementPrefix.Find("delete") == 0)
-	{
-		statement = StatementType::Delete;
-	}
-	else
-	{
-		jc_assert_msg(false, "올바른 스테이트먼트가 아닙니다.");
-	}
-
-	return statement;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-_u32 SqlServerQuery::GetRowCount() const
-{
-	if (!IsSuccess())
-	{
-		_LogError_("%s 쿼리 수행이 실패하여 영향받은 행 갯수를 가져오지 못했습니다.", StatementName(statementType_));
-		return 0;
-	}
-
-	if (hStmt_ == SQL_NULL_HSTMT)
-		return 0;
-
-	SQLLEN rowCount = 0;
-	SQLRowCount(hStmt_, &rowCount);
-	return static_cast<_u32>(rowCount);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -76,11 +19,13 @@ void SqlServerQuery::ExtractError(SQLHSTMT _hStmt)
 	SQLCHAR messageText[512];
 	SQLSMALLINT textLength;
 
-	SQLRETURN ret = SQLGetDiagRecA(SQL_HANDLE_STMT, _hStmt, 1, sqlState, &nativeError, messageText, sizeof(messageText), &textLength);
+	SQLRETURN ret = SQLGetDiagRecA(SQL_HANDLE_STMT, _hStmt, 1, sqlState, &nativeError,
+	                               messageText, sizeof(messageText), &textLength);
 
 	if (SQL_SUCCEEDED(ret))
 	{
 		errorCode_ = static_cast<int>(nativeError);
+		errorMsg_ = jc::String((char*)messageText);
 	}
 	else
 	{
@@ -101,7 +46,9 @@ void SqlServerQuery::FreeStatement()
 //////////////////////////////////////////////////////////////////////////////////////////
 bool SqlServerQueryUpdate::Execute()
 {
-	SQLRETURN ret = SQLAllocHandle(SQL_HANDLE_STMT, conn_->GetConnection(), &hStmt_);
+	auto pSqlServerConn = AsSqlServerConn(pConn_);
+
+	SQLRETURN ret = SQLAllocHandle(SQL_HANDLE_STMT, pSqlServerConn->GetConnection(), &hStmt_);
 	if (!SQL_SUCCEEDED(ret))
 	{
 		errorCode_ = -1;
@@ -109,30 +56,27 @@ bool SqlServerQueryUpdate::Execute()
 		return false;
 	}
 
-	ret = SQLExecDirectA(hStmt_, (SQLCHAR*)preparedStatement_.Source(), SQL_NTS);
+	ret = SQLExecDirectA(hStmt_, (SQLCHAR*)ptmt_.SafeSource(), SQL_NTS);
 	if (!SQL_SUCCEEDED(ret))
 	{
-		SQLCHAR sqlState[6];
-		SQLINTEGER nativeError = 0;
-		SQLCHAR messageText[512];
-		SQLSMALLINT textLength;
-
-		SQLGetDiagRecA(SQL_HANDLE_STMT, hStmt_, 1, sqlState, &nativeError, messageText, sizeof(messageText), &textLength);
-		errorCode_ = static_cast<int>(nativeError);
-
-		const String errorString((char*)messageText);
-		if (errorString.Length() > 2)
-			_LogError_("SQLServer UPDATE 오류 : %s", errorString.Source());
+		ExtractError(hStmt_);
+		_LogError_("SQLServer UPDATE 오류 (errorCode=%d, %s)", errorCode_, errorMsg_.SafeSource());
 		return false;
 	}
 
+	SQLLEN rowCount = 0;
+	SQLRowCount(hStmt_, &rowCount);
+	rowCount_ = static_cast<_u32>(rowCount);
+	FreeStatement(); // 빨리 반환.
 	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 bool SqlServerQueryDelete::Execute()
 {
-	SQLRETURN ret = SQLAllocHandle(SQL_HANDLE_STMT, conn_->GetConnection(), &hStmt_);
+	auto pSqlServerConn = AsSqlServerConn(pConn_);
+
+	SQLRETURN ret = SQLAllocHandle(SQL_HANDLE_STMT, pSqlServerConn->GetConnection(), &hStmt_);
 	if (!SQL_SUCCEEDED(ret))
 	{
 		errorCode_ = -1;
@@ -140,30 +84,27 @@ bool SqlServerQueryDelete::Execute()
 		return false;
 	}
 
-	ret = SQLExecDirectA(hStmt_, (SQLCHAR*)preparedStatement_.Source(), SQL_NTS);
+	ret = SQLExecDirectA(hStmt_, (SQLCHAR*)ptmt_.SafeSource(), SQL_NTS);
 	if (!SQL_SUCCEEDED(ret))
 	{
-		SQLCHAR sqlState[6];
-		SQLINTEGER nativeError = 0;
-		SQLCHAR messageText[512];
-		SQLSMALLINT textLength;
-
-		SQLGetDiagRecA(SQL_HANDLE_STMT, hStmt_, 1, sqlState, &nativeError, messageText, sizeof(messageText), &textLength);
-		errorCode_ = static_cast<int>(nativeError);
-
-		const String errorString((char*)messageText);
-		if (errorString.Length() > 2)
-			_LogError_("SQLServer DELETE 오류 : %s", errorString.Source());
+		ExtractError(hStmt_);
+		_LogError_("SQLServer DELETE 오류 (errorCode=%d, %s)", errorCode_, errorMsg_.SafeSource());
 		return false;
 	}
 
+	SQLLEN rowCount = 0;
+	SQLRowCount(hStmt_, &rowCount);
+	rowCount_ = static_cast<_u32>(rowCount);
+	FreeStatement(); // 빨리 반환.
 	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 bool SqlServerQueryInsert::Execute()
 {
-	SQLRETURN ret = SQLAllocHandle(SQL_HANDLE_STMT, conn_->GetConnection(), &hStmt_);
+	auto pSqlServerConn = AsSqlServerConn(pConn_);
+
+	SQLRETURN ret = SQLAllocHandle(SQL_HANDLE_STMT, pSqlServerConn->GetConnection(), &hStmt_);
 	if (!SQL_SUCCEEDED(ret))
 	{
 		errorCode_ = -1;
@@ -171,26 +112,22 @@ bool SqlServerQueryInsert::Execute()
 		return false;
 	}
 
-	ret = SQLExecDirectA(hStmt_, (SQLCHAR*)preparedStatement_.Source(), SQL_NTS);
+	ret = SQLExecDirectA(hStmt_, (SQLCHAR*)ptmt_.SafeSource(), SQL_NTS);
 	if (!SQL_SUCCEEDED(ret))
 	{
-		SQLCHAR sqlState[6];
-		SQLINTEGER nativeError = 0;
-		SQLCHAR messageText[512];
-		SQLSMALLINT textLength;
-
-		SQLGetDiagRecA(SQL_HANDLE_STMT, hStmt_, 1, sqlState, &nativeError, messageText, sizeof(messageText), &textLength);
-		errorCode_ = static_cast<int>(nativeError);
-
-		const String errorString((char*)messageText);
-		if (errorString.Length() > 2)
-			_LogError_("SQLServer INSERT 오류 : %s", errorString.Source());
+		FreeStatement();
+		ExtractError(hStmt_);
+		_LogError_("SQLServer INSERT 오류 (errorCode=%d, %s)", errorCode_, errorMsg_.SafeSource());
 		return false;
 	}
 
+	SQLLEN rowCount = 0;
+	SQLRowCount(hStmt_, &rowCount);
+	rowCount_ = static_cast<_u32>(rowCount);
+
 	// SCOPE_IDENTITY()로 마지막 삽입 ID를 가져온다
 	SQLHSTMT hIdentityStmt = SQL_NULL_HSTMT;
-	ret = SQLAllocHandle(SQL_HANDLE_STMT, conn_->GetConnection(), &hIdentityStmt);
+	ret = SQLAllocHandle(SQL_HANDLE_STMT, pSqlServerConn->GetConnection(), &hIdentityStmt);
 	if (SQL_SUCCEEDED(ret))
 	{
 		ret = SQLExecDirectA(hIdentityStmt, (SQLCHAR*)"SELECT SCOPE_IDENTITY()", SQL_NTS);
@@ -203,14 +140,12 @@ bool SqlServerQueryInsert::Execute()
 				SQLLEN indicator;
 				ret = SQLGetData(hIdentityStmt, 1, SQL_C_CHAR, idBuffer, sizeof(idBuffer), &indicator);
 				if (SQL_SUCCEEDED(ret) && indicator != SQL_NULL_DATA)
-				{
 					insertId_ = jc::StringUtil::ToNumber<_u64>((char*)idBuffer);
-				}
 			}
 		}
 		SQLFreeHandle(SQL_HANDLE_STMT, hIdentityStmt);
 	}
-
+	FreeStatement(); // 빨리 반환.
 	return true;
 }
 
@@ -220,9 +155,7 @@ int SqlServerQuerySelect::GetFieldIndex(const char* _pFieldName)
 	const int* pIndex = fieldList_.Find(_pFieldName);
 
 	if (pIndex == nullptr)
-	{
 		return -1;
-	}
 
 	return *pIndex;
 }
@@ -230,7 +163,7 @@ int SqlServerQuerySelect::GetFieldIndex(const char* _pFieldName)
 //////////////////////////////////////////////////////////////////////////////////////////
 const char* SqlServerQuerySelect::GetRawString(const char* _pFieldName)
 {
-	if (!IsSuccess())
+	if (IsFailed())
 	{
 		_LogError_("쿼리 수행결과가 존재하지 않습니다. %s", "GetRawString()");
 		return nullptr;
@@ -246,10 +179,8 @@ const char* SqlServerQuerySelect::GetRawString(const char* _pFieldName)
 
 	const jc::String* pData = nullptr;
 	if (fieldIndex >= 0 && fieldIndex < rowData_.Size())
-	{
 		pData = &rowData_[fieldIndex];
-	}
-	
+
 	if (pData == nullptr || pData->IsEmpty())
 		return nullptr;
 
@@ -259,7 +190,7 @@ const char* SqlServerQuerySelect::GetRawString(const char* _pFieldName)
 //////////////////////////////////////////////////////////////////////////////////////////
 const char* SqlServerQuerySelect::GetRawString(int _fieldIndex)
 {
-	if (!IsSuccess())
+	if (IsFailed())
 	{
 		_LogError_("쿼리 수행결과가 존재하지 않습니다. %s", "GetRawString()");
 		return nullptr;
@@ -267,32 +198,19 @@ const char* SqlServerQuerySelect::GetRawString(int _fieldIndex)
 
 	if (_fieldIndex < 0 || _fieldIndex >= static_cast<int>(columnCount_))
 	{
-		_LogError_("필드 인덱스(%d)가 범위를 벗어났습니다. (0~%d) %s", _fieldIndex, columnCount_ - 1, "GetRawString()");
+		_LogError_("필드 인덱스(%d)가 범위를 벗어났습니다. (0~%d) %s",
+		           _fieldIndex, columnCount_ - 1, "GetRawString()");
 		return nullptr;
 	}
 
 	const jc::String* pData = nullptr;
 	if (_fieldIndex >= 0 && _fieldIndex < rowData_.Size())
-	{
 		pData = &rowData_[_fieldIndex];
-	}
-	
+
 	if (pData == nullptr || pData->IsEmpty())
 		return nullptr;
 
 	return pData->Source();
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-String SqlServerQuerySelect::GetString(const char* _pFieldName)
-{
-	return GetRawString(_pFieldName);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-String SqlServerQuerySelect::GetString(int _fieldIndex)
-{
-	return GetRawString(_fieldIndex);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -312,7 +230,9 @@ DateTime SqlServerQuerySelect::ParseStringToDateTime(const char* _pRawString)
 	// SQL Server datetime2 포맷: yyyy-MM-dd HH:mm:ss.fffffff
 	static constexpr char DATE_FORMAT[64] = "yyyy-MM-dd HH:mm:ss%s";
 
-	if (_pRawString == nullptr) return 0;
+	if (_pRawString == nullptr)
+		return 0;
+
 	DateTime parsed;
 
 	char dateFormatBuffer[64];
@@ -334,7 +254,7 @@ DateTime SqlServerQuerySelect::ParseStringToDateTime(const char* _pRawString)
 	}
 
 	// SQL Server는 최대 7자리 소수점(datetime2)
-	if (decimalPlaceCount >= 7) 
+	if (decimalPlaceCount >= 7)
 		decimalPlaceCount = 6; // 내가 구현한 DateTime은 6자리 까지만 지원한다.
 
 	StringUtil::FormatBuffer(dateFormatBuffer, 64, DATE_FORMAT, DECIMAL_POINT_FORMATS[decimalPlaceCount]);
@@ -358,117 +278,9 @@ DateTime SqlServerQuerySelect::GetDateTime(int _fieldIndex)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_u32 SqlServerQuerySelect::GetU32(const char* _pFieldName)
-{
-	return GetNumber<_u32>(_pFieldName);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-_u32 SqlServerQuerySelect::GetU32(int _fieldIndex)
-{
-	return GetNumber<_u32>(_fieldIndex);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-_s32 SqlServerQuerySelect::GetS32(const char* _pFieldName)
-{
-	return GetNumber<_s32>(_pFieldName);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-_s32 SqlServerQuerySelect::GetS32(int _fieldIndex)
-{
-	return GetNumber<_s32>(_fieldIndex);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-_u16 SqlServerQuerySelect::GetU16(const char* _pFieldName)
-{
-	return GetNumber<_u16>(_pFieldName);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-_u16 SqlServerQuerySelect::GetU16(int _fieldIndex)
-{
-	return GetNumber<_u16>(_fieldIndex);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-_s16 SqlServerQuerySelect::GetS16(const char* _pFieldName)
-{
-	return GetNumber<_s16>(_pFieldName);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-_s16 SqlServerQuerySelect::GetS16(int _fieldIndex)
-{
-	return GetNumber<_s16>(_fieldIndex);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-_u8 SqlServerQuerySelect::GetU8(const char* _pFieldName)
-{
-	return GetNumber<_u8>(_pFieldName);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-_u8 SqlServerQuerySelect::GetU8(int _fieldIndex)
-{
-	return GetNumber<_u8>(_fieldIndex);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-_s8 SqlServerQuerySelect::GetS8(const char* _pFieldName)
-{
-	return GetNumber<_s8>(_pFieldName);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-_s8 SqlServerQuerySelect::GetS8(int _fieldIndex)
-{
-	return GetNumber<_s8>(_fieldIndex);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-_u64 SqlServerQuerySelect::GetU64(const char* _pFieldName)
-{
-	return GetNumber<_u64>(_pFieldName);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-_u64 SqlServerQuerySelect::GetU64(int _fieldIndex)
-{
-	return GetNumber<_u64>(_fieldIndex);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-_s64 SqlServerQuerySelect::GetS64(const char* _pFieldName)
-{
-	return GetNumber<_s64>(_pFieldName);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-_s64 SqlServerQuerySelect::GetS64(int _fieldIndex)
-{
-	return GetNumber<_s64>(_fieldIndex);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-_u32 SqlServerQuerySelect::GetRowCount() const
-{
-	if (!IsSuccess())
-	{
-		_LogError_("쿼리 수행결과가 존재하지 않습니다. GetRowCount()");
-		return 0;
-	}
-
-	return rowCount_;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
 _u32 SqlServerQuerySelect::GetFieldCount() const
 {
-	if (!IsSuccess())
+	if (IsFailed())
 	{
 		_LogError_("쿼리 수행결과가 존재하지 않습니다. GetFieldCount()");
 		return 0;
@@ -480,7 +292,9 @@ _u32 SqlServerQuerySelect::GetFieldCount() const
 //////////////////////////////////////////////////////////////////////////////////////////
 bool SqlServerQuerySelect::Execute()
 {
-	SQLRETURN ret = SQLAllocHandle(SQL_HANDLE_STMT, conn_->GetConnection(), &hStmt_);
+	auto pSqlServerConn = AsSqlServerConn(pConn_);
+
+	SQLRETURN ret = SQLAllocHandle(SQL_HANDLE_STMT, pSqlServerConn->GetConnection(), &hStmt_);
 	if (!SQL_SUCCEEDED(ret))
 	{
 		errorCode_ = -1;
@@ -492,20 +306,12 @@ bool SqlServerQuerySelect::Execute()
 	// 커넥션 풀로 커넥션 반환 후에도 결과셋을 안전하게 사용할 수 있다.
 	SQLSetStmtAttr(hStmt_, SQL_ATTR_CURSOR_TYPE, (SQLPOINTER)SQL_CURSOR_STATIC, 0);
 
-	ret = SQLExecDirectA(hStmt_, (SQLCHAR*)preparedStatement_.Source(), SQL_NTS);
+	ret = SQLExecDirectA(hStmt_, (SQLCHAR*)ptmt_.SafeSource(), SQL_NTS);
 	if (!SQL_SUCCEEDED(ret))
 	{
-		SQLCHAR sqlState[6];
-		SQLINTEGER nativeError = 0;
-		SQLCHAR messageText[512];
-		SQLSMALLINT textLength;
-
-		SQLGetDiagRecA(SQL_HANDLE_STMT, hStmt_, 1, sqlState, &nativeError, messageText, sizeof(messageText), &textLength);
-		errorCode_ = static_cast<int>(nativeError);
-
-		const String errorString((char*)messageText);
-		if (errorString.Length() > 2)
-			_LogError_("SQLServer SELECT 오류 : %s", errorString.Source());
+		FreeStatement();
+		ExtractError(hStmt_);
+		_LogError_("SQLServer SELECT 오류 (errorCode=%d, %s)", errorCode_, errorMsg_.SafeSource());
 		return false;
 	}
 
@@ -521,7 +327,8 @@ bool SqlServerQuerySelect::Execute()
 		SQLSMALLINT decimalDigits;
 		SQLSMALLINT nullable;
 
-		SQLDescribeColA(hStmt_, i, columnName, sizeof(columnName), &nameLength, &dataType, &columnSize, &decimalDigits, &nullable);
+		SQLDescribeColA(hStmt_, i, columnName, sizeof(columnName), &nameLength,
+		                &dataType, &columnSize, &decimalDigits, &nullable);
 		int index = static_cast<int>(i - 1);
 		jc::String fieldName((char*)columnName);
 		fieldList_.Insert(fieldName, index);
@@ -580,18 +387,15 @@ void SqlServerQuerySelect::LoadCurrentRowData()
 	rowData_.Clear();
 	rowData_.Resize(columnCount_);
 
+	SQLCHAR buffer[4096];
+	SQLLEN len = SQL_NULL_DATA;
+
 	for (SQLSMALLINT i = 1; i <= columnCount_; ++i)
 	{
-		SQLCHAR buffer[4096];
-		SQLLEN indicator;
-		SQLRETURN ret = SQLGetData(hStmt_, i, SQL_C_CHAR, buffer, sizeof(buffer), &indicator);
-		if (SQL_SUCCEEDED(ret) && indicator != SQL_NULL_DATA)
-		{
+		SQLRETURN ret = SQLGetData(hStmt_, i, SQL_C_CHAR, buffer, sizeof(buffer), &len);
+		if (SQL_SUCCEEDED(ret) && len != SQL_NULL_DATA)
 			rowData_[i - 1] = jc::String((char*)buffer);
-		}
 		else
-		{
-			rowData_[i - 1] = jc::String();
-		}
+			rowData_[i - 1] = jc::String(0);
 	}
 }

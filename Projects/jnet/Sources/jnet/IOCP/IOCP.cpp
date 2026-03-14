@@ -165,34 +165,15 @@ void IOCP::SetName(const jc::String& _name)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IOCP::SetListener(const jc::SharedPtr<IOCPTaskListener>& _pListener)
-{
-	if (state_ == State::Destroyed)
-	{
-		jc_assert_msg(false, "Destroyed 상태의 IOCP는 리스너를 등록할 수 없습니다.");
-		return;
-	}
-
-	if (pListener_ != nullptr)
-	{
-		jc_assert_msg(false, "이미 리스너가 등록되어 있습니다.");
-		return;
-	}
-
-	pListener_ = _pListener;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
 int IOCP::PollTasks()
 {
-	// 단일 쓰레드에서만 호출되도록 해야함. (일반적으로 메인쓰레드)
-
-	if (pListener_ == nullptr)
+	if (pollingMode_ == false)
 	{
-		_NetLogWarn_("IOCP에 리스너가 등록되지 않았습니다. PollTasks를 호출하기 전에 SetListener로 리스너를 등록해주세요.");
+		jc_assert_msg(false, "폴링 모드가 아닙니다. PollTasks를 호출하기 전에 SetPollingMode(true)로 폴링 모드로 설정해주세요.");
 		return 0;
 	}
 
+	// 단일 쓰레드에서만 호출되도록 해야함. (일반적으로 메인쓰레드)
 	cachedTaskList_.Clear();
 	{
 		JC_LOCK_GUARD(workerManagerLock_);
@@ -207,13 +188,29 @@ int IOCP::PollTasks()
 		}
 	}
 
-	auto pListener = pListener_.GetPtr();
 	int processedTaskCount = 0;
-	for (int i = 0; i < cachedTaskList_.Size(); ++i)
+	if (fnTaskCompleted_)
 	{
-		IOCPTaskAbstractPtr& pTask = cachedTaskList_[i];
-		pListener->OnTaskCompleted(pTask.GetPtr());
-		++processedTaskCount;
+		for (int i = 0; i < cachedTaskList_.Size(); ++i)
+		{
+			IOCPTaskAbstractPtr& pTask = cachedTaskList_[i];
+			fnTaskCompleted_(pTask.GetPtr());
+			++processedTaskCount;
+		}
 	}
 	return processedTaskCount;
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void IOCP::OnTaskCompleted(IOCPTaskAbstract* _pTask)
+{
+	// polling 모드가 아닌 경우에 IOCPOverlappedTask에서 호출됨.
+	if (pollingMode_ == false)
+	{
+		if (fnTaskCompleted_)
+		{
+			fnTaskCompleted_(_pTask);
+		}
+	}
+}
+	

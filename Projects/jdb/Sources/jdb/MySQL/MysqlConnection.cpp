@@ -11,9 +11,8 @@ NS_JDB_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 MysqlConnection::MysqlConnection()
 : mySqlConn_(nullptr)
-, isConnected_(false)
-, port_(0)
 {
+	dbType_ = DatabaseType::MySQL;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +34,7 @@ bool MysqlConnection::Connect(const jc::String& _hostname, const uint16_t& _port
 	username_ = _username;
 	password_ = _password;
 	port_ = _port;
-	schemaName_ = _dbName;
+	dbName_ = _dbName;
 	isConnected_ = false;
 
 	MYSQL* pMySqlConnRet = nullptr;
@@ -45,12 +44,14 @@ bool MysqlConnection::Connect(const jc::String& _hostname, const uint16_t& _port
 	mysql_options(mySqlConn_, MYSQL_INIT_COMMAND, "SET NAMES utf8");
 
 	pMySqlConnRet = mysql_real_connect(mySqlConn_, hostname_.Source(), username_.Source(), password_.Source(),
-	                                   schemaName_.Source(), port_, NULL, 0);
+	                                   dbName_.Source(), port_, NULL, 0);
 
 	if (pMySqlConnRet == nullptr)
 	{
 		isConnected_ = false;
 		_LogError_("MySQL 데이터베이스 연결 실패 : %s", mysql_error(mySqlConn_));
+		mysql_close(mySqlConn_);
+		mySqlConn_ = nullptr;
 	}
 	else
 	{
@@ -73,7 +74,7 @@ void MysqlConnection::Disconnect()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool MysqlConnection::SelectDB(const jc::String& _schemaName)
+bool MysqlConnection::SelectDB(const jc::String& _dbName)
 {
 	if (!isConnected_)
 	{
@@ -81,14 +82,14 @@ bool MysqlConnection::SelectDB(const jc::String& _schemaName)
 		return false;
 	}
 
-	if (mysql_select_db(mySqlConn_, _schemaName.Source()) != 0)
+	if (mysql_select_db(mySqlConn_, _dbName.Source()) != 0)
 	{
 		_LogError_("SelectDB() 실패 : mysql_select_db() 호출 실패 : %s", mysql_error(mySqlConn_));
 		return false;
 	}
 
-	schemaName_ = _schemaName.Source();
-	_LogDebug_("SelectDB() 성공 : \"%s\"", _schemaName.Source());
+	dbName_ = _dbName.Source();
+	_LogDebug_("SelectDB() 성공 : \"%s\"", _dbName.Source());
 	return true;
 }
 
@@ -117,15 +118,20 @@ int MysqlConnection::GetLastErrorCode() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-MYSQL* MysqlConnection::GetConnection() const
+int MysqlConnection::GetLastError(OUT jc::String& _str) const
 {
-	return mySqlConn_;
+	int errorCode = GetLastErrorCode();
+	if (errorCode >= 0)
+	{
+		_str = GetLastErrorString();
+	}
+	return errorCode;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool MysqlConnection::IsConnected() const
+MYSQL* MysqlConnection::GetConnection() const
 {
-	return isConnected_;
+	return mySqlConn_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -137,8 +143,9 @@ jc::String MysqlConnection::EscapeString(const jc::String& _value) const
 		return "";
 	}
 
-	char temp[1024];
-	jc::String escapedString(_value.Length() * 2 + 1);
+	thread_local char temp[4096];
+	thread_local jc::String escapedString;
+	escapedString.Clear();
 
 	mysql_real_escape_string(mySqlConn_, temp, _value.Source(), _value.Length());
 

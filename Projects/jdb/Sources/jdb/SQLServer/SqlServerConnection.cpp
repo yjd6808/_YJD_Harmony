@@ -12,15 +12,14 @@ NS_JDB_BEGIN
 SqlServerConnection::SqlServerConnection()
 : hEnv_(SQL_NULL_HENV)
 , hDbc_(SQL_NULL_HDBC)
-, isConnected_(false)
-, port_(0)
 {
+	dbType_ = DatabaseType::SQLServer;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 SqlServerConnection::~SqlServerConnection()
 {
-	Disconnect();
+	SqlServerConnection::Disconnect();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -71,7 +70,7 @@ bool SqlServerConnection::Connect(const jc::String& _hostname, const uint16_t& _
 	SQLSetConnectAttr(hDbc_, SQL_LOGIN_TIMEOUT, (SQLPOINTER)5, 0);
 
 	// 연결 문자열 구성 (MARS_Connection=Yes: 커넥션 풀에서 커넥션 반환 후에도 SELECT 결과셋 안전하게 사용)
-	// ODB 드라이버 보는 방법
+	// ODBC 드라이버 보는 방법
 	// MARS_Connection은 SQL Server에서 다중 활성 결과 집합(Multiple Active Result Sets)을 허용하는 옵션입니다. 이
 	// 옵션이 활성화되면 하나의 연결에서 여러 개의 결과 집합을 동시에 사용할 수 있습니다.
 	char connStr[512];
@@ -184,6 +183,19 @@ int SqlServerConnection::GetLastErrorCode() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+int SqlServerConnection::GetLastError(OUT jc::String& _str) const
+{
+	if (!isConnected_)
+	{
+		_LogWarn_("GetLastError() 실패 : SQLServer 데이터베이스에 연결되어 있지 않습니다.");
+		_str = "연결 안되있음";
+		return -2;
+	}
+
+	return GetDiagnostic(SQL_HANDLE_DBC, hDbc_, _str);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 SQLHDBC SqlServerConnection::GetConnection() const
 {
 	return hDbc_;
@@ -193,12 +205,6 @@ SQLHDBC SqlServerConnection::GetConnection() const
 SQLHENV SqlServerConnection::GetEnvironment() const
 {
 	return hEnv_;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-bool SqlServerConnection::IsConnected() const
-{
-	return isConnected_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -302,6 +308,21 @@ bool SqlServerConnection::SetAutoCommit(bool _enable)
 	}
 
 	return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+int SqlServerConnection::GetDiagnostic(SQLSMALLINT _handleType, SQLHANDLE _handle, OUT jc::String& _msg) const
+{
+	SQLCHAR sqlState[6];
+	SQLINTEGER nativeError = 0;
+	SQLCHAR messageText[512];
+	SQLSMALLINT textLength;
+	SQLRETURN ret = SQLGetDiagRecA(_handleType, _handle, 1, sqlState, &nativeError, messageText, sizeof(messageText), &textLength);
+	if (SQL_SUCCEEDED(ret))
+	{
+		_msg = jc::String((char*)messageText);
+	}
+	return nativeError;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

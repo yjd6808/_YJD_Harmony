@@ -1,7 +1,8 @@
 ﻿#include "Core.h"
 #include "SqlServerDatabase.h"
 
-#include "SqlServerConnectionPool.h"
+#include "SqlServerQuery.h"
+#include "SqlServerConnection.h"
 #include "SqlServerStatementBuilder.h"
 
 USING_NS_JC;
@@ -11,9 +12,7 @@ USING_NS_JDB;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 SqlServerDatabase::SqlServerDatabase()
-: iocp_(nullptr)
-, connectionPool_(nullptr)
-, initialized_(false)
+: initialized_(false)
 {
 }
 
@@ -22,114 +21,8 @@ SqlServerDatabase::~SqlServerDatabase()
 {
 	if (initialized_)
 	{
-		Finalize();
+		SqlServerDatabase::Finalize();
 	}
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-bool SqlServerDatabase::Initialize(const SqlServerDatabaseInfo& _info)
-{
-	if (initialized_)
-	{
-		_LogError_("이미 생성된 객체입니다.");
-		return false;
-	}
-
-	info_ = _info;
-	const int connectionPoolSize = info_.connPoolSize_;
-	const int maxConnection = info_.maxConnection_;
-	const int threadCount = info_.iocpThreadCount_;
-
-	if (connectionPool_ == nullptr)
-	{
-		connectionPool_ = dbg_new SqlServerConnectionPool(
-			info_.hostName_,
-			info_.connPort_,
-			info_.accountId_,
-			info_.accountPass_,
-			info_.dbName_,
-			maxConnection);
-	}
-
-	// 커넥션 풀 초기화
-	if (!connectionPool_->Init(connectionPoolSize))
-	{
-		JC_DELETE_SAFE(connectionPool_);
-		_LogError_("SQLServer 커넥션 풀 초기화 실패");
-		return false;
-	}
-
-	// 빌더 초기화
-	if (!SqlServerStatementBuilder::Initialize(info_))
-	{
-		_LogError_("SQLServer 스테이트먼트 빌더 초기화 실패");
-		return false;
-	}
-
-	_LogInfo_("SQLServer 커넥션 풀(크기: %d) 초기화 [%s:%d]",
-	          connectionPoolSize,
-	          info_.hostName_.Source(),
-	          info_.connPort_
-	);
-
-	iocp_ = dbg_new IOCP(threadCount);
-	iocp_->SetName(info_.name_);
-	iocp_->Run();
-	initialized_ = true;
-	_LogInfo_("%s %s 실행완료 (쓰레드 수: %d)", info_.name_.Source(), IOCP::TypeName(), threadCount);
-	return true;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void SqlServerDatabase::Finalize()
-{
-	if (initialized_ == false)
-		return;
-
-	_LogInfo_("%s 파괴시작", info_.name_.Source());
-
-	iocp_->Join();
-	_LogInfo_("%s %s 쪼인완료", info_.name_.Source(), IOCP::TypeName());
-
-	iocp_->Destroy();
-	_LogInfo_("%s %s 파괴완료", info_.name_.Source(), IOCP::TypeName());
-
-	// 커넥션 풀을 파괴하기 전에 iocp를 우선적으로 파괴해야한다.
-	JC_DELETE_SAFE(iocp_);	
-	JC_DELETE_SAFE(connectionPool_);
-
-	_LogInfo_("%s %s 파괴완료", info_.name_.Source(), SqlServerConnectionPool::TypeName());
-	
-	SqlServerStatementBuilder::Finalize();
-	initialized_ = false;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void SqlServerDatabase::SetListener(const jnet::IOCPTaskListenerPtr& _pListener)
-{
-	iocp_->SetListener(_pListener);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void SqlServerDatabase::SetListener(jnet::IOCPTaskListenerPtr&& _pListener)
-{
-	iocp_->SetListener(jc::Move(_pListener));
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void SqlServerDatabase::SetOnTaskCompletedCallback(const jnet::IOCPTaskListener::FnOnTaskCompleted& _fn)
-{
-	jnet::IOCPTaskListenerPtr pListener = jc::MakeShared<jnet::IOCPTaskListener>();
-	pListener->SetTaskCompletedCallback(_fn);
-	iocp_->SetListener(pListener);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void SqlServerDatabase::SetOnTaskCompletedCallback(jnet::IOCPTaskListener::FnOnTaskCompleted&& _fn)
-{
-	jnet::IOCPTaskListenerPtr pListener = jc::MakeShared<jnet::IOCPTaskListener>();
-	pListener->SetTaskCompletedCallback(jc::Move(_fn));
-	iocp_->SetListener(pListener);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -141,7 +34,7 @@ SqlServerConnection* SqlServerDatabase::BeginTransaction()
 		return nullptr;
 	}
 
-	auto pConn = connectionPool_->GetConnection();
+	auto pConn = static_cast<SqlServerConnection*>(connectionPool_->GetConnection());
 	if (pConn == nullptr)
 	{
 		jc_assert_msg(false, "SqlServerDatabase::BeginTransaction() 커넥션 풀에서 가져오기 실패");
@@ -186,8 +79,49 @@ bool SqlServerDatabase::RollbackTransaction(SqlServerConnection* _pConn)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int SqlServerDatabase::PollEvents()
+IQueryPtr SqlServerDatabase::CreateQuery(IConnection* _pConn, const PreparedStatement& _stmt) const
 {
-	return iocp_->PollTasks();
+	const String& stmtStr = _stmt.GetStatement();
+	if (stmtStr.IsEmpty())
+		return nullptr;
+
+	const StatementType type = IQuery::ParseStatement(stmtStr);
+
+	IQueryPtr pQuery;
+	switch (type)
+	{
+	case StatementType::Select: pQuery = MakeShared<SqlServerQuerySelect>(); break;
+	case StatementType::Update: pQuery = MakeShared<SqlServerQueryUpdate>(); break;
+	case StatementType::Delete: pQuery = MakeShared<SqlServerQueryDelete>(); break;
+	case StatementType::Insert: pQuery = MakeShared<SqlServerQueryInsert>(); break;
+	default:
+		jc_assert_msg(false, "올바르지 않은 스테이트먼트입니다.");
+		return nullptr;
+	}
+
+	pQuery->pConn_             = _pConn;
+	pQuery->stmtType_          = type;
+	pQuery->ptmt_ = stmtStr;
+	return pQuery;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+IQueryPtr SqlServerDatabase::QueryOnConnection(SqlServerConnection* _pConn, const PreparedStatement& _stmt)
+{
+	if (_pConn == nullptr)
+	{
+		jc_assert_msg(false, "SqlServerDatabase::QueryOnConnection() 커넥션이 NULL입니다.");
+		return nullptr;
+	}
+
+	IQueryPtr pQuery = CreateQuery(_pConn, _stmt);
+
+	if (pQuery == nullptr)
+	{
+		jc_assert_msg(false, "SqlServerDatabase::QueryOnConnection() 쿼리문 파싱 실패");
+		return nullptr;
+	}
+
+	pQuery->Execute();
+	return pQuery;
+}

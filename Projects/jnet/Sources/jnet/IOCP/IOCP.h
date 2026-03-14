@@ -26,6 +26,7 @@ public:
 		Destroyed
 	};
 
+	using FnTaskCompleted = jc::Action<IOCPTaskAbstract*>;
 public:
 	IOCP(int _threadCount);
 	virtual ~IOCP();
@@ -48,8 +49,12 @@ public:
 	void SetName(const jc::String& _name);
 	const jc::String& GetName() const { return name_; }
 
-	void SetListener(const jc::SharedPtr<IOCPTaskListener>& _pListener);
-	int PollTasks();
+	void SetCompletedCallback(FnTaskCompleted _fnTaskCompleted) { fnTaskCompleted_ = _fnTaskCompleted; }
+	void SetPollingMode(bool _pollingMode) { pollingMode_ = _pollingMode; }
+	bool IsPollingMode() const { return pollingMode_; }
+	int	 PollTasks();
+
+	void OnTaskCompleted(IOCPTaskAbstract* _pTask);
 
 	static constexpr const char* TypeName() { return "IOCP"; }
 
@@ -58,10 +63,11 @@ protected:
 	_whandle iocpHandle_;
 	_u32l threadCount_;
 	WorkerGroup* workerManager_;
+	FnTaskCompleted fnTaskCompleted_ = nullptr;
+	bool pollingMode_ = false;			   // 다른 스레드에서 결과를 받아 처리하는 용도 (Run 수행전에 설정해줄 것)
 	jc::AtomicInt pendingOverlappedCount_; // TODO: IOCP에서 팬딩 카운트를 기록하면 경합이 심하지 않을까?
 	jc::NormalLock workerManagerLock_;
 	jc::String name_;
-	jc::SharedPtr<IOCPTaskListener> pListener_;
 	jc::Vector<IOCPTaskAbstractPtr> cachedTaskList_;
 };
 
