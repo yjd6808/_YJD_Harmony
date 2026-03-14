@@ -177,14 +177,7 @@ const char* SqlServerQuerySelect::GetRawString(const char* _pFieldName)
 		return nullptr;
 	}
 
-	const jc::String* pData = nullptr;
-	if (fieldIndex >= 0 && fieldIndex < rowData_.Size())
-		pData = &rowData_[fieldIndex];
-
-	if (pData == nullptr || pData->IsEmpty())
-		return nullptr;
-
-	return pData->Source();
+	return row_[fieldIndex].pBuf_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -203,14 +196,7 @@ const char* SqlServerQuerySelect::GetRawString(int _fieldIndex)
 		return nullptr;
 	}
 
-	const jc::String* pData = nullptr;
-	if (_fieldIndex >= 0 && _fieldIndex < rowData_.Size())
-		pData = &rowData_[_fieldIndex];
-
-	if (pData == nullptr || pData->IsEmpty())
-		return nullptr;
-
-	return pData->Source();
+	return row_[_fieldIndex].pBuf_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -290,6 +276,64 @@ _u32 SqlServerQuerySelect::GetFieldCount() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+SQLULEN SqlServerQuerySelect::CalculateOptimalBufferSize(SQLSMALLINT _sqlType, SQLULEN _columnSize)
+{
+	switch (_sqlType)
+	{
+	case SQL_CHAR:
+	case SQL_VARCHAR:
+		return _columnSize + 1;
+
+	case SQL_WCHAR:
+	case SQL_WVARCHAR:
+		return (_columnSize + 1) * sizeof(SQLWCHAR);
+
+	case SQL_GUID:
+		return 37;
+
+	case SQL_TINYINT:
+	case SQL_SMALLINT:
+	case SQL_INTEGER:
+	case SQL_BIGINT:
+	case SQL_REAL:
+	case SQL_FLOAT:
+	case SQL_DOUBLE:
+	case SQL_NUMERIC:
+	case SQL_DECIMAL:
+		return 32; // safe numeric buffer
+
+	case SQL_TYPE_DATE:
+		return 16;
+
+	case SQL_TYPE_TIME:
+		return 16;
+
+	case SQL_TYPE_TIMESTAMP:
+		return 32;
+
+	case SQL_LONGVARCHAR:
+	case SQL_WLONGVARCHAR:
+	case SQL_LONGVARBINARY:
+		return COL_BUFFER_SIZE;
+
+	default:
+		return COL_BUFFER_SIZE;
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+SqlServerQuerySelect::~SqlServerQuerySelect()
+{
+	int size = row_.Size();
+	for (int i = 0; i < size; ++i)
+	{
+		JC_DELETE_ARRAY_SAFE(row_[i].pBuf_);
+		row_[i].capacity_ = 0;
+		row_[i].length_ = 0;
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 bool SqlServerQuerySelect::Execute()
 {
 	auto pSqlServerConn = AsSqlServerConn(pConn_);
@@ -317,7 +361,7 @@ bool SqlServerQuerySelect::Execute()
 
 	// 필드 정보 수집
 	SQLNumResultCols(hStmt_, &columnCount_);
-
+	row_.Resize(columnCount_);
 	for (SQLSMALLINT i = 1; i <= columnCount_; ++i)
 	{
 		SQLCHAR columnName[256];
@@ -329,33 +373,46 @@ bool SqlServerQuerySelect::Execute()
 
 		SQLDescribeColA(hStmt_, i, columnName, sizeof(columnName), &nameLength,
 		                &dataType, &columnSize, &decimalDigits, &nullable);
-		int index = static_cast<int>(i - 1);
+
+		int index = i - 1;
 		jc::String fieldName((char*)columnName);
-		fieldList_.Insert(fieldName, index);
+
+		SQLULEN bufferSize = CalculateOptimalBufferSize(dataType, columnSize);
+		ColumnBinder& col = row_[index];
+		col.pBuf_ = dbg_new char[bufferSize];
+		col.capacity_ = bufferSize;
+
+		SQLRETURN bindRet = SQLBindCol(hStmt_, i, SQL_C_CHAR, col.pBuf_, bufferSize, &col.length_);
+		if (!SQL_SUCCEEDED(bindRet))
+		{
+			col.pBuf_[0] = '\0';
+			_LogWarn_("SQLServer SELECT 컬럼 바인딩 실패 (필드: %s)", fieldName.SafeSource());
+		}
 	}
 
-	// 정적 커서를 이용한 전체 행 수 계산
-	// 마지막 행으로 이동하여 행 번호를 가져온다.
-	ret = SQLFetchScroll(hStmt_, SQL_FETCH_LAST, 0);
-	if (SQL_SUCCEEDED(ret))
-	{
-		SQLULEN rowNumber = 0;
-		SQLGetStmtAttr(hStmt_, SQL_ATTR_ROW_NUMBER, &rowNumber, 0, NULL);
-		rowCount_ = static_cast<_u32>(rowNumber);
-
-		// 첫 번째 행으로 복귀
-		SQLFetchScroll(hStmt_, SQL_FETCH_FIRST, 0);
-		hasCurrentRow_ = true;
-		LoadCurrentRowData();
-	}
-	else
-	{
-		hasCurrentRow_ = false;
-		rowCount_ = 0;
-	}
-
-	return true;
+	return Next();
 }
+
+// 아래 방식은 내부에서 처음부터 반복문 돌면서 행 수를 계산하기 때문에 성능이 좋지 않다. 어쩔 수 없지만 rowCount_ 정보를 미리 얻을 순 없다..
+// 정적 커서를 이용한 전체 행 수 계산
+// 마지막 행으로 이동하여 행 번호를 가져온다.
+// ret = SQLFetchScroll(hStmt_, SQL_FETCH_LAST, 0);
+// if (SQL_SUCCEEDED(ret))
+// {
+// 	SQLULEN rowNumber = 0;
+// 	SQLGetStmtAttr(hStmt_, SQL_ATTR_ROW_NUMBER, &rowNumber, 0, NULL);
+// 	rowCount_ = static_cast<_u32>(rowNumber);
+// 
+// 	// 첫 번째 행으로 복귀
+// 	SQLFetchScroll(hStmt_, SQL_FETCH_FIRST, 0);
+// 	hasCurrentRow_ = true;
+// 	LoadCurrentRowData();
+// }
+// else
+// {
+// 	hasCurrentRow_ = false;
+// 	rowCount_ = 0;
+// }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 bool SqlServerQuerySelect::HasNext() const
@@ -370,32 +427,21 @@ bool SqlServerQuerySelect::Next()
 		return false;
 
 	SQLRETURN ret = SQLFetch(hStmt_);
-	if (SQL_SUCCEEDED(ret))
+	if (ret == SQL_NO_DATA)
+	{
+		hasCurrentRow_ = false;
+		return false;
+	}
+
+	if (ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO)
 	{
 		hasCurrentRow_ = true;
-		LoadCurrentRowData();
+		++rowCount_;
 		return true;
 	}
 
 	hasCurrentRow_ = false;
+	ExtractError(hStmt_);
+	_LogError_("SQLFetch failed: %s", errorMsg_.SafeSource());
 	return false;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void SqlServerQuerySelect::LoadCurrentRowData()
-{
-	rowData_.Clear();
-	rowData_.Resize(columnCount_);
-
-	SQLCHAR buffer[4096];
-	SQLLEN len = SQL_NULL_DATA;
-
-	for (SQLSMALLINT i = 1; i <= columnCount_; ++i)
-	{
-		SQLRETURN ret = SQLGetData(hStmt_, i, SQL_C_CHAR, buffer, sizeof(buffer), &len);
-		if (SQL_SUCCEEDED(ret) && len != SQL_NULL_DATA)
-			rowData_[i - 1] = jc::String((char*)buffer);
-		else
-			rowData_[i - 1] = jc::String(0);
-	}
 }

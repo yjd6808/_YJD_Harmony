@@ -49,7 +49,6 @@ int main(int _argc, char** _argv)
 		{
 		case QID_SELECT_1:
 			{
-				affectedRowCount = _query.GetRowCount();
 				jc::String s1 = _query.GetString(0);
 				jc::String s2 = _query.GetString(1);
 
@@ -61,7 +60,7 @@ int main(int _argc, char** _argv)
 			break;
 		case QID_SELECT_2:
 			{
-				affectedRowCount = _query.GetRowCount();
+				
 				_u32 fieldCount = _query.GetFieldCount();
 
 				// c_uid, c_float, c_double, c_s8, c_s16, c_s32, c_s64, c_u8, c_u16, c_u32, c_u64, c_datetime FROM dbo.t_test
@@ -79,24 +78,30 @@ int main(int _argc, char** _argv)
 					jc::String s10 = _query.GetString(9);
 					jc::String s11 = _query.GetString(10);
 					jc::String s12 = _query.GetString(11);
+					jc::String s13 = _query.GetString(11);
+					jc::String s14 = _query.GetString(11);
+					jc::String s15 = _query.GetString(11);
 
-					int c1 = _query.GetS32(0);
-					_f32 c2 = _query.GetFloat(1);
-					_f64 c3 = _query.GetDouble(2);
-
-					_s8 c4 = _query.GetS8(3);
-					_s16 c5 = _query.GetS16(4);
-					_s32 c6 = _query.GetS32(5);
-					_s64 c7 = _query.GetS64(6);
-
-					_u8 c8 = _query.GetU8(7);
-					_u16 c9 = _query.GetU16(8);
-					_u32 c10 = _query.GetU32(9);
-					_u64 c11 = _query.GetU64(10);
-					jc::DateTime c12 = _query.GetDateTime(11);
+					int col = 0;
+					int c1 = _query.GetS32(col++);
+					jc::String c1_1 = _query.GetString(col++);
+					jc::String c1_2 = _query.GetString(col++);
+					jc::String c1_3 = _query.GetString(col++);
+					_f32 c2 = _query.GetFloat(col++);
+					_f64 c3 = _query.GetDouble(col++);
+					_s8 c4 = _query.GetS8(col++);
+					_s16 c5 = _query.GetS16(col++);
+					_s32 c6 = _query.GetS32(col++);
+					_s64 c7 = _query.GetS64(col++);
+					_u8 c8 = _query.GetU8(col++);
+					_u16 c9 = _query.GetU16(col++);
+					_u32 c10 = _query.GetU32(col++);
+					_u64 c11 = _query.GetU64(col++);
+					jc::DateTime c12 = _query.GetDateTime(col++);
 
 				} while (_query.Next());
 
+				affectedRowCount = _query.GetRowCount(); // 끝까지 읽었으니 여기서 RowCount가 유효하다.
 				
 			}
 			break;
@@ -131,6 +136,9 @@ int main(int _argc, char** _argv)
 			"INSERT INTO dbo.t_test ("
 				"c_float,"
 				"c_double,"
+				"c_varchar,"
+				"c_char,"
+				"c_nvarchar,"
 				"c_s8,"
 				"c_s16,"
 				"c_s32,"
@@ -143,6 +151,9 @@ int main(int _argc, char** _argv)
 			"VALUES ("
 				"1.5,"
 				"3.141592,"
+				"{0},"
+				"{1},"
+				"{2},"
 				"-10,"
 				"-200,"
 				"-30000,"
@@ -152,7 +163,7 @@ int main(int _argc, char** _argv)
 				"3000000000,"
 				"1000000000000000000,"
 			"SYSDATETIME());";
-		db.QueryAsync(QID_INSERT_2, text);
+		db.QueryAsync(QID_INSERT_2, text, "abcd", "efgh", "00");
 	}
 
 	// ------------------------------------------
@@ -168,7 +179,7 @@ int main(int _argc, char** _argv)
 	// ------------------------------------------
 	// select 테스트
 
-	db.QueryAsync(QID_SELECT_2, "SELECT c_uid, c_float, c_double, c_s8, c_s16, c_s32, c_s64, c_u8, c_u16, c_u32, c_u64, c_datetime FROM dbo.t_test");
+	db.QueryAsync(QID_SELECT_2, "SELECT c_uid, c_varchar, c_char, c_nvarchar, c_float, c_double, c_s8, c_s16, c_s32, c_s64, c_u8, c_u16, c_u32, c_u64, c_datetime FROM dbo.t_test");
 
 	constexpr int TCNT = 2;
 	bool runningThread[TCNT]{};
@@ -181,12 +192,13 @@ int main(int _argc, char** _argv)
 				runningThread[i] = true;
 				while (runningThread[i])
 				{
-					auto pQuery = db.QueryAsync(QID_SELECT_1, "select * from t_account");
+					// auto pQuery = db.QueryAsync(QID_SELECT_1, "select * from t_account");
+					// Sleep(1);
 				}
 			});
 		}
 
-		auto pQuery = db.QueryAsync(QID_SELECT_1, "select * from t_account");
+		//auto pQuery = db.QueryAsync(QID_SELECT_1, "select * from t_account");
 	}
 
 	Console::Write("%s\n", "x키 입력시 종료");

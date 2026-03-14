@@ -160,10 +160,17 @@ CREATE TABLE dbo.t_friendship (
 );
 GO
 
+IF OBJECT_ID('dbo.t_test', 'U') IS NOT NULL
+    DROP TABLE dbo.t_account;
+GO
 
 CREATE TABLE dbo.t_test
 (
     c_uid       INT             NOT NULL IDENTITY(1,1),
+
+    c_varchar   VARCHAR(20),
+    c_char      CHAR(20),
+    c_nvarchar  NVARCHAR(20),
 
     c_float     REAL,
     c_double    FLOAT,

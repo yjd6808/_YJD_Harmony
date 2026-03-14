@@ -39,7 +39,6 @@ public:
 		TBuilder::Set(fieldMap, 0, jc::Forward<T>(_arg), jc::Forward<Args>(_args)...);
 		return jc::String(JdbUtil::ReplacePlaceholders(_statement, fieldMap, ARG_COUNT));
 	}
-
 };
 
 NS_END

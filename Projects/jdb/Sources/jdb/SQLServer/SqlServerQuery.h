@@ -93,7 +93,7 @@ public:
 	{
 	}
 
-	virtual	~SqlServerQuerySelect() override = default;
+	virtual	~SqlServerQuerySelect() override;
 	virtual	virtual bool Execute() override;
 	virtual	bool         HasNext() const override;
 	virtual	bool         Next() override;
@@ -105,12 +105,22 @@ public:
 	virtual	_u32         GetFieldCount() const override;
 
 private:
-	void         LoadCurrentRowData();
 	jc::DateTime ParseStringToDateTime(const char* _pRawString);
 
+	static SQLULEN CalculateOptimalBufferSize(SQLSMALLINT _sqlType, SQLULEN _columnSize);
 private:
+	static constexpr int COL_BUFFER_SIZE = 1024;
+
+	struct ColumnBinder
+	{
+		char* pBuf_ = nullptr;
+		SQLLEN length_ = 0;
+		SQLLEN capacity_ = 0;
+	};
+
 	jc::HashMap<jc::String, int> fieldList_;
-	jc::Vector<jc::String>       rowData_;
+	jc::Vector<ColumnBinder>	 row_;
+
 	SQLSMALLINT                  columnCount_;
 	bool                         hasCurrentRow_;
 };

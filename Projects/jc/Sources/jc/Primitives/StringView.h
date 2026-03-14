@@ -27,6 +27,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////////////////////
 	const char* Source() const;
 	const char* SafeSource() const;
+	_u32* LengthPtr() { return &len_; }
 	_u32 Length() const;
 	_u32 LengthWithNull() const;
 	bool IsEmpty() const;

@@ -32,6 +32,8 @@ public:
 	bool IsFailed()  const { return errorCode_ != 0; }
 	int  GetErrorCode() const { return errorCode_; }
 
+	// select의 경우 Execute이후 Next로 커서가 끝까지 도달한 경우에 rowCount_가 유효하다.
+	// update, delete, insert의 경우 Execute가 성공한 경우 유효하다.
 	_u32 GetRowCount() const { return rowCount_; }
 
 	StatementType GetStatementType() const { return stmtType_; }

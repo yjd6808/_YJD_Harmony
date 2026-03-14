@@ -38,6 +38,8 @@
 #include <jc/Assert.h>
 #include <jc/Bit.h>
 
+#include <jc/Primitives/StringView.h>
+
 #include <jc/Pool/ObjectPool.h>
 
 #pragma warning(pop)
