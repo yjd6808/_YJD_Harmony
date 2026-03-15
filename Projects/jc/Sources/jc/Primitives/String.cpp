@@ -123,6 +123,195 @@ void String::ExchangeSource(char* _pSrc, int _len)
 	capacity_ = _len + 1;
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// 제네릭 Append 템플릿 구현 (기본값)
+template <typename T>
+void String::Append(const T& _str)
+{
+	// std::to_string을 사용하여 변환
+	std::string s = std::to_string(_str);
+	Append(s.c_str(), (int)s.length());
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// _s32 특수화 (최적화)
+template <>
+void String::Append<_s32>(const _s32& _val)
+{
+	char buffer[32];
+	const int len = snprintf(buffer, sizeof(buffer), "%d", _val);
+	if (len > 0)
+	{
+		Append(buffer, len);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// _u32 특수화 (최적화)
+template <>
+void String::Append<_u32>(const _u32& _val)
+{
+	char buffer[32];
+	const int len = snprintf(buffer, sizeof(buffer), "%u", _val);
+	if (len > 0)
+	{
+		Append(buffer, len);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// _s32l 특수화 (최적화)
+template <>
+void String::Append<_s32l>(const _s32l& _val)
+{
+	char buffer[32];
+	const int len = snprintf(buffer, sizeof(buffer), "%ld", _val);
+	if (len > 0)
+	{
+		Append(buffer, len);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// _u32l 특수화 (최적화)
+template <>
+void String::Append<_u32l>(const _u32l& _val)
+{
+	char buffer[32];
+	const int len = snprintf(buffer, sizeof(buffer), "%lu", _val);
+	if (len > 0)
+	{
+		Append(buffer, len);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// _s64 특수화 (최적화)
+template <>
+void String::Append<_s64>(const _s64& _val)
+{
+	char buffer[32];
+	const int len = snprintf(buffer, sizeof(buffer), "%lld", _val);
+	if (len > 0)
+	{
+		Append(buffer, len);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// _u64 특수화 (최적화)
+template <>
+void String::Append<_u64>(const _u64& _val)
+{
+	char buffer[32];
+	const int len = snprintf(buffer, sizeof(buffer), "%llu", _val);
+	if (len > 0)
+	{
+		Append(buffer, len);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// _s16 특수화 (최적화)
+template <>
+void String::Append<_s16>(const _s16& _val)
+{
+	char buffer[16];
+	const int len = snprintf(buffer, sizeof(buffer), "%hd", _val);
+	if (len > 0)
+	{
+		Append(buffer, len);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// _u16 특수화 (최적화)
+template <>
+void String::Append<_u16>(const _u16& _val)
+{
+	char buffer[16];
+	const int len = snprintf(buffer, sizeof(buffer), "%hu", _val);
+	if (len > 0)
+	{
+		Append(buffer, len);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// _s8 특수화 (최적화)
+template <>
+void String::Append<_s8>(const _s8& _val)
+{
+	char buffer[8];
+	const int len = snprintf(buffer, sizeof(buffer), "%d", static_cast<int>(_val));
+	if (len > 0)
+	{
+		Append(buffer, len);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// _u8 특수화 (최적화)
+template <>
+void String::Append<_u8>(const _u8& _val)
+{
+	char buffer[8];
+	const int len = snprintf(buffer, sizeof(buffer), "%u", static_cast<unsigned int>(_val));
+	if (len > 0)
+	{
+		Append(buffer, len);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// _f32 특수화 (최적화)
+template <>
+void String::Append<_f32>(const _f32& _val)
+{
+	char buffer[32];
+	const int len = snprintf(buffer, sizeof(buffer), "%g", _val);
+	if (len > 0)
+	{
+		Append(buffer, len);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// _f64 특수화 (최적화)
+template <>
+void String::Append<_f64>(const _f64& _val)
+{
+	char buffer[32];
+	const int len = snprintf(buffer, sizeof(buffer), "%g", _val);
+	if (len > 0)
+	{
+		Append(buffer, len);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// _f64l 특수화 (최적화)
+template <>
+void String::Append<_f64l>(const _f64l& _val)
+{
+	char buffer[32];
+	const int len = snprintf(buffer, sizeof(buffer), "%Lg", _val);
+	if (len > 0)
+	{
+		Append(buffer, len);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// bool 특수화 (최적화)
+template <>
+void String::Append<bool>(const bool& _val)
+{
+	int len = _val ? 4 : 5; // "true"는 4글자, "false"는 5글자
+	Append(_val ? "true" : "false", len);
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////
 void String::Append(const char _ch)
 {
@@ -135,37 +324,42 @@ void String::Append(const char _ch)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void String::Append(char* _str)
+void String::Append(const char* _pStr)
 {
-	if (_str == nullptr)
+	if (_pStr == nullptr)
 	{
 		throw NullPointerException("추가하고자 하는 문자열이 nullptr 입니다.");
 	}
 
-	const int iStrLen = StringUtil::Length(_str);
+	const int iStrLen = StringUtil::Length(_pStr);
 	const int iDstLen = len_ + iStrLen;
 	ResizeIfNeeded(iDstLen);
 
-	Memory::CopyUnsafe(pBuffer_ + len_, _str, iStrLen);
+	Memory::CopyUnsafe(pBuffer_ + len_, _pStr, iStrLen);
 	pBuffer_[iDstLen] = NULL;
 	len_ = iDstLen;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void String::Append(const char* _str)
+void String::Append(const char* _pStr, int _len)
 {
-	if (_str == nullptr)
+	if (_pStr == nullptr)
 	{
 		throw NullPointerException("추가하고자 하는 문자열이 nullptr 입니다.");
 	}
 
-	const int iStrLen = StringUtil::Length(_str);
-	const int iDstLen = len_ + iStrLen;
+	const int iDstLen = len_ + _len;
 	ResizeIfNeeded(iDstLen);
 
-	Memory::CopyUnsafe(pBuffer_ + len_, _str, iStrLen);
+	Memory::CopyUnsafe(pBuffer_ + len_, _pStr, _len);
 	pBuffer_[iDstLen] = NULL;
 	len_ = iDstLen;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void String::Append(char* _pStr)
+{
+	Append(const_cast<const char*>(_pStr));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

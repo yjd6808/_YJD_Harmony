@@ -56,6 +56,13 @@ struct Math final
 	{
 		return _arg < 0 ? _arg * -1 : _arg;
 	}
+
+	template <typename T>
+	static constexpr T Clamp(const T _value, const T _min, const T _max)
+	{
+		return _value < _min ? _min : (_value > _max ? _max : _value);
+	}
+
 };
 
 NS_END

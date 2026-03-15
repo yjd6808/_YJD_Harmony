@@ -63,7 +63,7 @@ bool MysqlQueryInsert::Execute()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int MysqlQuerySelect::GetFieldIndex(const char* _pFieldName)
+int MysqlQuerySelect::GetColIndex(const char* _pFieldName)
 {
 	const int* pIndex = fieldList_.Find(_pFieldName);
 
@@ -82,7 +82,7 @@ const char* MysqlQuerySelect::GetRawString(const char* _pFieldName)
 		return nullptr;
 	}
 
-	const int fieldIndex = GetFieldIndex(_pFieldName);
+	const int fieldIndex = GetColIndex(_pFieldName);
 
 	if (fieldIndex == -1)
 	{
@@ -173,7 +173,7 @@ DateTime MysqlQuerySelect::GetDateTime(int _fieldIndex)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_u32 MysqlQuerySelect::GetFieldCount() const
+_u32 MysqlQuerySelect::GetColCount() const
 {
 	if (IsFailed())
 	{
@@ -241,7 +241,168 @@ bool MysqlQuerySelect::HasNext() const
 bool MysqlQuerySelect::Next()
 {
 	sqlRow_ = mysql_fetch_row(sqlResult_);
+	colReadOffset_ = 0;
 	return sqlRow_ != nullptr;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s8 MysqlQuerySelect::GetS8(int _fieldIdx)
+{
+	const char* pRawString = GetRawString(_fieldIdx);
+	if (pRawString == nullptr) return 0;
+	return jc::StringUtil::ToNumber<_s8>(pRawString);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u8 MysqlQuerySelect::GetU8(int _fieldIdx)
+{
+	const char* pRawString = GetRawString(_fieldIdx);
+	if (pRawString == nullptr) return 0;
+	return jc::StringUtil::ToNumber<_u8>(pRawString);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s16 MysqlQuerySelect::GetS16(int _fieldIdx)
+{
+	const char* pRawString = GetRawString(_fieldIdx);
+	if (pRawString == nullptr) return 0;
+	return jc::StringUtil::ToNumber<_s16>(pRawString);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u16 MysqlQuerySelect::GetU16(int _fieldIdx)
+{
+	const char* pRawString = GetRawString(_fieldIdx);
+	if (pRawString == nullptr) return 0;
+	return jc::StringUtil::ToNumber<_u16>(pRawString);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s32 MysqlQuerySelect::GetS32(int _fieldIdx)
+{
+	const char* pRawString = GetRawString(_fieldIdx);
+	if (pRawString == nullptr) return 0;
+	return jc::StringUtil::ToNumber<_s32>(pRawString);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u32 MysqlQuerySelect::GetU32(int _fieldIdx)
+{
+	const char* pRawString = GetRawString(_fieldIdx);
+	if (pRawString == nullptr) return 0;
+	return jc::StringUtil::ToNumber<_u32>(pRawString);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s64 MysqlQuerySelect::GetS64(int _fieldIdx)
+{
+	const char* pRawString = GetRawString(_fieldIdx);
+	if (pRawString == nullptr) return 0;
+	return jc::StringUtil::ToNumber<_s64>(pRawString);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u64 MysqlQuerySelect::GetU64(int _fieldIdx)
+{
+	const char* pRawString = GetRawString(_fieldIdx);
+	if (pRawString == nullptr) return 0;
+	return jc::StringUtil::ToNumber<_u64>(pRawString);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_f32 MysqlQuerySelect::GetFloat(int _fieldIdx)
+{
+	const char* pRawString = GetRawString(_fieldIdx);
+	if (pRawString == nullptr) return 0.0f;
+	return jc::StringUtil::ToNumber<_f32>(pRawString);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_f64 MysqlQuerySelect::GetDouble(int _fieldIdx)
+{
+	const char* pRawString = GetRawString(_fieldIdx);
+	if (pRawString == nullptr) return 0.0;
+	return jc::StringUtil::ToNumber<_f64>(pRawString);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+jc::StringView MysqlQuerySelect::ReadRawString()
+{
+	const char* pRaw = GetRawString(static_cast<int>(colReadOffset_++));
+	return pRaw ? jc::StringView(pRaw) : jc::StringView();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+jc::String MysqlQuerySelect::ReadString()
+{
+	const char* pRaw = GetRawString(static_cast<int>(colReadOffset_++));
+	return pRaw ? jc::String(pRaw) : jc::String();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s8 MysqlQuerySelect::ReaS8()
+{
+	return GetS8(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u8 MysqlQuerySelect::ReadU8()
+{
+	return GetU8(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s16 MysqlQuerySelect::ReadS16()
+{
+	return GetS16(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u16 MysqlQuerySelect::ReadU16()
+{
+	return GetU16(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s32 MysqlQuerySelect::ReadS32()
+{
+	return GetS32(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u32 MysqlQuerySelect::ReadU32()
+{
+	return GetU32(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s64 MysqlQuerySelect::ReadS64()
+{
+	return GetS64(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u64 MysqlQuerySelect::ReadU64()
+{
+	return GetU64(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_f32 MysqlQuerySelect::ReadFloat()
+{
+	return GetFloat(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_f64 MysqlQuerySelect::ReadDouble()
+{
+	return GetDouble(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+jc::DateTime MysqlQuerySelect::ReadDateTime()
+{
+	return GetDateTime(static_cast<int>(colReadOffset_++));
 }
 
 NS_END

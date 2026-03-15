@@ -10,16 +10,16 @@
 
 NS_JDB_BEGIN
 
-enum class DatabaseType
+enum DatabaseType
 {
-	None,
-	MySQL,
-	SQLServer,
+	dbtNone,
+	dbtMySQL,
+	dbtSQLServer,
 };
 
 struct DatabaseInfo
 {
-	DatabaseType type_ = DatabaseType::MySQL;
+	DatabaseType type_ = DatabaseType::dbtMySQL;
 	int id_ = -1;				// DB 구분용 ID (예: 게임DB, 로그DB 등) 데이터 파일/헤더파일 모두 정의하여 사용하여 고유 ID로 사용하는 용도
 
 	jc::String name_;			// 게임DB
@@ -32,10 +32,7 @@ struct DatabaseInfo
 	int connPoolSize_ = 0;
 	int iocpThreadCount_ = 0;
 	bool iocpPollingMode_ = false;
+	int iocpBatchSize_ = 16; // 한번에 처리가능한 최대 
 };
-
-// 하위 호환용 별칭
-using MysqlDatabaseInfo = DatabaseInfo;
-using SqlServerDatabaseInfo = DatabaseInfo;
 
 NS_END

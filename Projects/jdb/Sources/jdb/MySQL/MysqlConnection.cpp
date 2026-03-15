@@ -12,7 +12,7 @@ NS_JDB_BEGIN
 MysqlConnection::MysqlConnection()
 : mySqlConn_(nullptr)
 {
-	dbType_ = DatabaseType::MySQL;
+	dbType_ = DatabaseType::dbtMySQL;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

@@ -14,6 +14,7 @@
 #include <jc/Primitives/String.h>
 #include <jc/Primitives/SmartPtr.h>
 #include <jc/Type.h>
+#include <jc/TypeTraits.h>
 
 #include <jdb/Namespace.h>
 #include <jdb/DLLExport.h>
@@ -48,128 +49,85 @@ public:
 	// SELECT 전용 메서드 (기본 구현: 무동작)
 	virtual bool         HasNext() const                        { return false; }
 	virtual bool         Next()                                 { return false; }
-	virtual int          GetFieldIndex(const char* _pFieldName) { return -1; }
+	virtual int          GetColIndex(const char* _pFieldName) { return -1; }
+	virtual _u32         GetColCount() const { return 0; }
+	virtual int			 GetColType(int _fieldIndex) { return -1; }
+
 	virtual const char*  GetRawString(const char* _pFieldName)  { return nullptr; }
 	virtual const char*  GetRawString(int _fieldIndex)          { return nullptr; }
 	virtual jc::DateTime GetDateTime(const char* _pFieldName)   { return 0; }
 	virtual jc::DateTime GetDateTime(int _fieldIndex)           { return 0; }
-	virtual _u32         GetFieldCount() const                  { return 0; }
+	
+	virtual jc::String	 GetString(const char* _pFieldName) { return GetRawString(_pFieldName); }
+	virtual jc::String	 GetString(int _fieldIndex) { return GetRawString(_fieldIndex); }
 
-	jc::String GetString(const char* _pFieldName) { return GetRawString(_pFieldName); }
-	jc::String GetString(int _fieldIndex)          { return GetRawString(_fieldIndex); }
-
-
+	// ===========================================================================================
+	// 타입 읽기 메서드 (SELECT 전용)
+	// ===========================================================================================
+	virtual _s8 GetS8(int _fieldIdx)      { return 0; }
+	virtual _u8 GetU8(int _fieldIdx)      { return 0; }
+	virtual _s16 GetS16(int _fieldIdx)    { return 0; }
+	virtual _u16 GetU16(int _fieldIdx)    { return 0; }
+	virtual _s32 GetS32(int _fieldIdx)    { return 0; }
+	virtual _u32 GetU32(int _fieldIdx)    { return 0; }
+	virtual _s64 GetS64(int _fieldIdx)    { return 0; }
+	virtual _u64 GetU64(int _fieldIdx)    { return 0; }
+	virtual _f32 GetFloat(int _fieldIdx)  { return 0.0f; }
+	virtual _f64 GetDouble(int _fieldIdx) { return 0.0; }
+	virtual jc::Date GetDate(int _fieldIdx) { return {}; }
+	virtual jc::Time GetTime(int _fieldIdx) { return {}; }
 
 	template <typename T>
 	T GetNumber(const char* _pFieldName)
 	{
-		const char* pRawString = GetRawString(_pFieldName);
-		if (pRawString == nullptr)
-			return 0;
-		return jc::StringUtil::ToNumber<T>(pRawString);
+		int idx = GetColIndex(_pFieldName);
+		if (idx == -1) return T{};
+		return GetNumber<T>(idx);
 	}
 
 	template <typename T>
-	T GetNumber(int _fieldIndex)
+	T GetNumber(int _fieldIdx)
 	{
-		const char* pRawString = GetRawString(_fieldIndex);
-		if (pRawString == nullptr)
-			return 0;
-		return jc::StringUtil::ToNumber<T>(pRawString);
-	}
-
-	template <typename T>
-	bool TryGetNumber(const char* _pFieldName, T& _val, T _defaultValue = 0)
-	{
-		const char* pRawString = GetRawString(_pFieldName);
-		if (pRawString == nullptr)
+		if constexpr (jc::IsSameType_v<T, _s8>)           return static_cast<T>(GetS8(_fieldIdx));
+		else if constexpr (jc::IsSameType_v<T, _u8>)      return static_cast<T>(GetU8(_fieldIdx));
+		else if constexpr (jc::IsSameType_v<T, _s16>)     return static_cast<T>(GetS16(_fieldIdx));
+		else if constexpr (jc::IsSameType_v<T, _u16>)     return static_cast<T>(GetU16(_fieldIdx));
+		else if constexpr (jc::IsSameType_v<T, _s32>)     return static_cast<T>(GetS32(_fieldIdx));
+		else if constexpr (jc::IsSameType_v<T, _u32>)     return static_cast<T>(GetU32(_fieldIdx));
+		else if constexpr (jc::IsSameType_v<T, _s64>)     return static_cast<T>(GetS64(_fieldIdx));
+		else if constexpr (jc::IsSameType_v<T, _u64>)     return static_cast<T>(GetU64(_fieldIdx));
+		else if constexpr (jc::IsSameType_v<T, _f32>)     return static_cast<T>(GetFloat(_fieldIdx));
+		else if constexpr (jc::IsSameType_v<T, _f64>)     return static_cast<T>(GetDouble(_fieldIdx));
+		else if constexpr (jc::IsSameType_v<T, bool>)     return GetU8(_fieldIdx) != 0;
+		else if constexpr (jc::IsSameType_v<T, _s32l>)    return static_cast<T>(GetS32(_fieldIdx));
+		else if constexpr (jc::IsSameType_v<T, _u32l>)    return static_cast<T>(GetU32(_fieldIdx));
+		else if constexpr (jc::IsSameType_v<T, _s16c>)    return static_cast<T>(GetS16(_fieldIdx));
+		else
 		{
-			_val = _defaultValue;
-			return false;
+			static_assert(sizeof(T) == 0, "지원하지 않는 타입입니다.");
+			return T{};
 		}
-		_val = jc::StringUtil::ToNumber<T>(pRawString);
-		return true;
 	}
 
-	template <typename T>
-	bool TryGetNumber(int _fieldIndex, T& _val, T _defaultValue = 0)
-	{
-		const char* pRawString = GetRawString(_fieldIndex);
-		if (pRawString == nullptr)
-		{
-			_val = _defaultValue;
-			return false;
-		}
-		_val = jc::StringUtil::ToNumber<T>(pRawString);
-		return true;
-	}
-
-		// ===========================================================================================
-	// 구체적 타입별 GetXXX 메서드
-	// ===========================================================================================
-
-	// _s8 (signed char)
-	_s8 GetS8(const char* _pFieldName) { return GetNumber<_s8>(_pFieldName); }
-	_s8 GetS8(int _fieldIndex) { return GetNumber<_s8>(_fieldIndex); }
-	bool TryGetS8(const char* _pFieldName, _s8& _val, _s8 _defaultValue = 0) { return TryGetNumber(_pFieldName, _val, _defaultValue); }
-	bool TryGetS8(int _fieldIndex, _s8& _val, _s8 _defaultValue = 0) { return TryGetNumber(_fieldIndex, _val, _defaultValue); }
-
-	// _u8 (unsigned char)
-	_u8 GetU8(const char* _pFieldName) { return GetNumber<_u8>(_pFieldName); }
-	_u8 GetU8(int _fieldIndex) { return GetNumber<_u8>(_fieldIndex); }
-	bool TryGetU8(const char* _pFieldName, _u8& _val, _u8 _defaultValue = 0) { return TryGetNumber(_pFieldName, _val, _defaultValue); }
-	bool TryGetU8(int _fieldIndex, _u8& _val, _u8 _defaultValue = 0) { return TryGetNumber(_fieldIndex, _val, _defaultValue); }
-
-	// _s16 (short)
-	_s16 GetS16(const char* _pFieldName) { return GetNumber<_s16>(_pFieldName); }
-	_s16 GetS16(int _fieldIndex) { return GetNumber<_s16>(_fieldIndex); }
-	bool TryGetS16(const char* _pFieldName, _s16& _val, _s16 _defaultValue = 0) { return TryGetNumber(_pFieldName, _val, _defaultValue); }
-	bool TryGetS16(int _fieldIndex, _s16& _val, _s16 _defaultValue = 0) { return TryGetNumber(_fieldIndex, _val, _defaultValue); }
-
-	// _u16 (unsigned short)
-	_u16 GetU16(const char* _pFieldName) { return GetNumber<_u16>(_pFieldName); }
-	_u16 GetU16(int _fieldIndex) { return GetNumber<_u16>(_fieldIndex); }
-	bool TryGetU16(const char* _pFieldName, _u16& _val, _u16 _defaultValue = 0) { return TryGetNumber(_pFieldName, _val, _defaultValue); }
-	bool TryGetU16(int _fieldIndex, _u16& _val, _u16 _defaultValue = 0) { return TryGetNumber(_fieldIndex, _val, _defaultValue); }
-
-	// _s32 (int)
-	_s32 GetS32(const char* _pFieldName) { return GetNumber<_s32>(_pFieldName); }
-	_s32 GetS32(int _fieldIndex) { return GetNumber<_s32>(_fieldIndex); }
-	bool TryGetS32(const char* _pFieldName, _s32& _val, _s32 _defaultValue = 0) { return TryGetNumber(_pFieldName, _val, _defaultValue); }
-	bool TryGetS32(int _fieldIndex, _s32& _val, _s32 _defaultValue = 0) { return TryGetNumber(_fieldIndex, _val, _defaultValue); }
-
-	// _u32 (unsigned int)
-	_u32 GetU32(const char* _pFieldName) { return GetNumber<_u32>(_pFieldName); }
-	_u32 GetU32(int _fieldIndex) { return GetNumber<_u32>(_fieldIndex); }
-	bool TryGetU32(const char* _pFieldName, _u32& _val, _u32 _defaultValue = 0) { return TryGetNumber(_pFieldName, _val, _defaultValue); }
-	bool TryGetU32(int _fieldIndex, _u32& _val, _u32 _defaultValue = 0) { return TryGetNumber(_fieldIndex, _val, _defaultValue); }
-
-	// _s64 (long long)
-	_s64 GetS64(const char* _pFieldName) { return GetNumber<_s64>(_pFieldName); }
-	_s64 GetS64(int _fieldIndex) { return GetNumber<_s64>(_fieldIndex); }
-	bool TryGetS64(const char* _pFieldName, _s64& _val, _s64 _defaultValue = 0) { return TryGetNumber(_pFieldName, _val, _defaultValue); }
-	bool TryGetS64(int _fieldIndex, _s64& _val, _s64 _defaultValue = 0) { return TryGetNumber(_fieldIndex, _val, _defaultValue); }
-
-	// _u64 (unsigned long long)
-	_u64 GetU64(const char* _pFieldName) { return GetNumber<_u64>(_pFieldName); }
-	_u64 GetU64(int _fieldIndex) { return GetNumber<_u64>(_fieldIndex); }
-	bool TryGetU64(const char* _pFieldName, _u64& _val, _u64 _defaultValue = 0) { return TryGetNumber(_pFieldName, _val, _defaultValue); }
-	bool TryGetU64(int _fieldIndex, _u64& _val, _u64 _defaultValue = 0) { return TryGetNumber(_fieldIndex, _val, _defaultValue); }
-
-	// _f32 (float)
-	_f32 GetFloat(const char* _pFieldName) { return GetNumber<_f32>(_pFieldName); }
-	_f32 GetFloat(int _fieldIndex) { return GetNumber<_f32>(_fieldIndex); }
-	bool TryGetFloat(const char* _pFieldName, _f32& _val, _f32 _defaultValue = 0.0f) { return TryGetNumber(_pFieldName, _val, _defaultValue); }
-	bool TryGetFloat(int _fieldIndex, _f32& _val, _f32 _defaultValue = 0.0f) { return TryGetNumber(_fieldIndex, _val, _defaultValue); }
-
-	// _f64 (double)
-	_f64 GetDouble(const char* _pFieldName) { return GetNumber<_f64>(_pFieldName); }
-	_f64 GetDouble(int _fieldIndex) { return GetNumber<_f64>(_fieldIndex); }
-	bool TryGetDouble(const char* _pFieldName, _f64& _val, _f64 _defaultValue = 0.0) { return TryGetNumber(_pFieldName, _val, _defaultValue); }
-	bool TryGetDouble(int _fieldIndex, _f64& _val, _f64 _defaultValue = 0.0) { return TryGetNumber(_fieldIndex, _val, _defaultValue); }
+	virtual void		   ResetColReadOffset() { }
+	virtual jc::StringView ReadRawString() { return jc::StringView{}; }
+	virtual jc::String	   ReadString() { return jc::String(); }
+	virtual _s8			   ReaS8() { return 0; }
+	virtual _u8			   ReadU8() { return 0; }
+	virtual _s16		   ReadS16() { return 0; }
+	virtual _u16		   ReadU16() { return 0; }
+	virtual _s32		   ReadS32() { return 0; }
+	virtual _u32		   ReadU32() { return 0; }
+	virtual _s64		   ReadS64() { return 0; }
+	virtual _u64		   ReadU64() { return 0; }
+	virtual _f32		   ReadFloat() { return 0.0f; }
+	virtual _f64		   ReadDouble() { return 0.0; }
+	virtual jc::DateTime   ReadDateTime() { return 0; }
 
 	// INSERT 전용 메서드 (기본 구현: 무동작)
 	virtual _u64 GetInsertId() const { return 0; }
+
+
 
 protected:
 	int			  id_ = 0;

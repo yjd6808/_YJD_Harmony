@@ -35,7 +35,7 @@ public:
 	bool IsConnected() const { return isConnected_; }
 
 protected:
-	DatabaseType dbType_ = DatabaseType::None;
+	DatabaseType dbType_ = DatabaseType::dbtNone;
 
 	jc::String hostname_;
 	jc::String username_;

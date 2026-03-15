@@ -44,17 +44,21 @@ public:
 
 	bool Connect(_whandle _handle, ULONG_PTR _completionKey) const;
 	BOOL GetStatus(_u32l* _pNumberOfBytesTransffered, PULONG_PTR _pCompletionKey, LPOVERLAPPED* _ppOverlapped) const;
+	BOOL GetStatusEx(LPOVERLAPPED_ENTRY _pEntries, _u32l _count, _u32l* _pNumEntriesRemoved) const;
 	BOOL Post(_u32l _numberOfBytesTransferred, ULONG_PTR _completionKey, LPOVERLAPPED _pOverlapped) const;
 
-	void SetName(const jc::String& _name);
-	const jc::String& GetName() const { return name_; }
+	void	SetName(const jc::String& _name);
+	const	jc::String& GetName() const { return name_; }
 
-	void SetCompletedCallback(FnTaskCompleted _fnTaskCompleted) { fnTaskCompleted_ = _fnTaskCompleted; }
-	void SetPollingMode(bool _pollingMode) { pollingMode_ = _pollingMode; }
-	bool IsPollingMode() const { return pollingMode_; }
-	int	 PollTasks();
+	void	SetPollingMode(bool _pollingMode) { pollingMode_ = _pollingMode; }
+	bool	IsPollingMode() const { return pollingMode_; }
+	int		PollTasks();
 
-	void OnTaskCompleted(IOCPTaskAbstract* _pTask);
+	void	SetBatchSize(int _batchSize) { jc_assert(_batchSize > 0); batchSize_ = jc::Math::Clamp(_batchSize, 1, MAX_BATCH_SIZE); }
+	int		GetBatchSize() const { return batchSize_; }
+
+	void	SetCompletedCallback(FnTaskCompleted _fnTaskCompleted) { fnTaskCompleted_ = _fnTaskCompleted; }
+	void	OnTaskCompleted(IOCPTaskAbstract* _pTask);
 
 	static constexpr const char* TypeName() { return "IOCP"; }
 
@@ -65,8 +69,10 @@ protected:
 	WorkerGroup* workerManager_;
 	FnTaskCompleted fnTaskCompleted_ = nullptr;
 	bool pollingMode_ = false;			   // 다른 스레드에서 결과를 받아 처리하는 용도 (Run 수행전에 설정해줄 것)
+	int batchSize_ = 4;
+	static constexpr int MAX_BATCH_SIZE = 64;
 	jc::AtomicInt pendingOverlappedCount_; // TODO: IOCP에서 팬딩 카운트를 기록하면 경합이 심하지 않을까?
-	jc::NormalLock workerManagerLock_;
+	jc::NormalLock lock_;
 	jc::String name_;
 	jc::Vector<IOCPTaskAbstractPtr> cachedTaskList_;
 };

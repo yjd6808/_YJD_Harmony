@@ -23,6 +23,8 @@ class String;
 class StringUtil final
 {
 public:
+	static jc::String ToUtf8(const wchar_t* _pStr, int _length);
+
 	static Vector<String, CDefaultAllocator> Split(String& _src, const char* _pDelimiter);
 	static Vector<String, CDefaultAllocator> Split(String& _src, char _delimiter);
 	static String Format(const char* _pFormat, ...);

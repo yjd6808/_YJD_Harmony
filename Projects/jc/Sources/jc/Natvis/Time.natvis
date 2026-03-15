@@ -59,7 +59,7 @@
 
 	<Type Name="jc::Time;">
 		<DisplayString>
-			{(int)Hour}시 {(int)Minute}분 {(int)Second}.{MiliSecond}초
+			{(int)Hour}시 {(int)Minute}분 {(int)Second}.{MiliSecond}{MicroSecond}초
 		</DisplayString>
 		<Expand>
 			<Item Name="[hour]" ExcludeView="simple">(int)Hour</Item>

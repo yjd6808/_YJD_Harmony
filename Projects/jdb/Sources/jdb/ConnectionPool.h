@@ -38,6 +38,7 @@ public:
 	bool Init(uint32_t _initConn);
 	IConnection* GetConnection();
 	void ReleaseConnection(IConnection* _pConnection);
+	void GetConnCount(OUT int& _usingConnCount, OUT int& _availableConnCount) const;
 
 private:
 	void TerminateAllConnections();
@@ -53,8 +54,8 @@ private:
 	_u16 port_;
 	_u32 maxConnection_;
 
-	int currentConnectionSize_;
-	jc::NormalLock mutex_;
+	int usingConnCount_ = 0;
+	mutable jc::NormalLock mutex_;
 	jc::LinkedList<IConnection*> connectionList_;
 };
 

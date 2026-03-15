@@ -26,7 +26,7 @@
     <ClCompile Include="..\Sources\jdb\SQLServer\SqlServerConnection.cpp">
       <Filter>SQLServer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jdb\JdbUtil.cpp" />
+    <ClCompile Include="..\Sources\jdb\Util.cpp" />
     <ClCompile Include="..\Sources\jdb\ConnectionPool.cpp" />
     <ClCompile Include="..\Sources\jdb\IDatabase.cpp" />
     <ClCompile Include="..\Sources\jdb\IQuery.cpp" />
@@ -65,7 +65,7 @@
     </ClInclude>
     <ClInclude Include="..\Sources\jdb\IConnection.h" />
     <ClInclude Include="..\Sources\jdb\IDatabase.h" />
-    <ClInclude Include="..\Sources\jdb\JdbUtil.h" />
+    <ClInclude Include="..\Sources\jdb\Util.h" />
     <ClInclude Include="..\Sources\jdb\ConnectionPool.h" />
     <ClInclude Include="..\Sources\jdb\IQuery.h" />
   </ItemGroup>

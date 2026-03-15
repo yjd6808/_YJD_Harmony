@@ -94,12 +94,38 @@ public:
 	virtual bool Execute() override;
 	virtual bool         HasNext() const override;
 	virtual bool         Next() override;
-	virtual int          GetFieldIndex(const char* _pFieldName) override;
+	virtual int          GetColIndex(const char* _pFieldName) override;
 	virtual const char*  GetRawString(const char* _pFieldName) override;
 	virtual const char*  GetRawString(int _fieldIndex) override;
 	virtual jc::DateTime GetDateTime(const char* _pFieldName) override;
 	virtual jc::DateTime GetDateTime(int _fieldIndex) override;
-	virtual _u32         GetFieldCount() const override;
+	virtual _u32         GetColCount() const override;
+
+	virtual _s8  GetS8(int _fieldIdx) override;
+	virtual _u8  GetU8(int _fieldIdx) override;
+	virtual _s16 GetS16(int _fieldIdx) override;
+	virtual _u16 GetU16(int _fieldIdx) override;
+	virtual _s32 GetS32(int _fieldIdx) override;
+	virtual _u32 GetU32(int _fieldIdx) override;
+	virtual _s64 GetS64(int _fieldIdx) override;
+	virtual _u64 GetU64(int _fieldIdx) override;
+	virtual _f32 GetFloat(int _fieldIdx) override;
+	virtual _f64 GetDouble(int _fieldIdx) override;
+
+	virtual void		   ResetColReadOffset() override { colReadOffset_ = 0; }
+	virtual jc::StringView ReadRawString() override;
+	virtual jc::String	   ReadString() override;
+	virtual _s8			   ReaS8() override;
+	virtual _u8			   ReadU8() override;
+	virtual _s16		   ReadS16() override;
+	virtual _u16		   ReadU16() override;
+	virtual _s32		   ReadS32() override;
+	virtual _u32		   ReadU32() override;
+	virtual _s64		   ReadS64() override;
+	virtual _u64		   ReadU64() override;
+	virtual _f32		   ReadFloat() override;
+	virtual _f64		   ReadDouble() override;
+	virtual jc::DateTime   ReadDateTime() override;
 
 private:
 	jc::DateTime ParseRawStringToDateTime(const char* _pRawString);
@@ -107,6 +133,7 @@ private:
 private:
 	MYSQL_RES* sqlResult_;
 	MYSQL_ROW  sqlRow_;
+	_u32       colReadOffset_ = 0;
 
 	jc::HashMap<jc::String, int> fieldList_;
 };

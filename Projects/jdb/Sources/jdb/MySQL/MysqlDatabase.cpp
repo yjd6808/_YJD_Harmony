@@ -26,7 +26,7 @@ MysqlDatabase::~MysqlDatabase()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IQueryPtr MysqlDatabase::CreateQuery(IConnection* _pConn, const PreparedStatement& _stmt) const
+IQueryPtr MysqlDatabase::CreateQuery(IConnection* _pConn, const Ptmt& _stmt) const
 {
 	const String& stmtStr = _stmt.GetStatement();
 	if (stmtStr.IsEmpty())

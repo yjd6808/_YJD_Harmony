@@ -33,7 +33,6 @@ ConnectionPool::ConnectionPool(
 , dbName_(_dbName)
 , port_(_port)
 , maxConnection_(_maxConn)
-, currentConnectionSize_(0)
 {
 }
 
@@ -53,7 +52,6 @@ bool ConnectionPool::Init(const uint32_t _initConn)
 		if (pConn)
 		{
 			connectionList_.PushBack(pConn);
-			++currentConnectionSize_;
 		}
 		else
 		{
@@ -72,7 +70,6 @@ void ConnectionPool::TerminateAllConnections()
 		TerminateConnection(_pConnection);
 	});
 
-	currentConnectionSize_ = 0;
 	connectionList_.Clear();
 }
 
@@ -103,9 +100,9 @@ IConnection* ConnectionPool::GetConnection()
 			pConn = CreateConnection();
 		}
 
-		if (pConn == nullptr)
+		if (pConn != nullptr)
 		{
-			--currentConnectionSize_;
+			++usingConnCount_;
 		}
 
 		return pConn;
@@ -114,7 +111,7 @@ IConnection* ConnectionPool::GetConnection()
 	pConn = CreateConnection();
 	if (pConn)
 	{
-		++currentConnectionSize_;
+		++usingConnCount_;
 		return pConn;
 	}
 
@@ -128,7 +125,16 @@ void ConnectionPool::ReleaseConnection(IConnection* _pConnection)
 	{
 		NormalLockGuard guard(mutex_);
 		connectionList_.PushBack(_pConnection);
+		--usingConnCount_;
 	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void ConnectionPool::GetConnCount(OUT int& _usingConnCount, OUT int& _availableConnCount) const
+{
+	NormalLockGuard guard(mutex_);
+	_usingConnCount = usingConnCount_;
+	_availableConnCount = connectionList_.Size();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -136,7 +142,7 @@ IConnection* ConnectionPool::CreateConnection() const
 {
 	IConnection* pConnection = nullptr;
 
-	if (dbType_ == DatabaseType::MySQL)
+	if (dbType_ == DatabaseType::dbtMySQL)
 	{
 		pConnection = dbg_new MysqlConnection();
 	}

@@ -12,6 +12,62 @@
 NS_JC_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
+jc::String StringUtil::ToUtf8(const wchar_t* _pStr, int _length)
+{
+	if (_pStr == nullptr)
+		return jc::String();
+
+	int wcharCount = _length;
+
+	// null terminated 처리
+	if (_length < 0)
+		wcharCount = static_cast<int>(wcslen(_pStr));
+
+	// 필요한 UTF8 길이 계산
+	int size = WideCharToMultiByte(
+		CP_UTF8,
+		0,
+		_pStr,
+		wcharCount,
+		nullptr,
+		0,
+		nullptr,
+		nullptr
+	);
+
+	if (size <= 0)
+	{
+		jc_assert_msg(false, "WideCharToMultiByte size 계산 실패. 오류 코드: %d", GetLastError());
+		return jc::String();
+	}
+
+	char* buf = dbg_new char[size + 1];
+
+	int r = WideCharToMultiByte(
+		CP_UTF8,
+		0,
+		_pStr,
+		wcharCount,
+		buf,
+		size,
+		nullptr,
+		nullptr);
+
+	if (r <= 0)
+	{
+		jc_assert_msg(false, "WideCharToMultiByte 변환 실패. 오류 코드: %d", GetLastError());
+		delete[] buf;
+		return jc::String();
+	}
+
+	buf[r] = '\0';
+
+	jc::String result(0);
+	result.ExchangeSource(buf, r);
+	return result;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 Vector<String, CDefaultAllocator> StringUtil::Split(String& _src, const char* _pDelimiter)
 {
 	return _src.Split(_pDelimiter);

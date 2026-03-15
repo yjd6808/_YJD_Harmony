@@ -73,7 +73,7 @@ void IOCP::Run()
 	}
 
 	{
-		JC_LOCK_GUARD(workerManagerLock_);
+		JC_LOCK_GUARD(lock_);
 		workerManager_->Run();
 	}
 	state_ = State::Running;
@@ -92,7 +92,7 @@ void IOCP::Join()
 	WaitForZeroPending();
 
 	{
-		JC_LOCK_GUARD(workerManagerLock_);
+		JC_LOCK_GUARD(lock_);
 		workerManager_->Join();
 	}
 	state_ = State::Joined;
@@ -128,7 +128,7 @@ void IOCP::WaitForZeroPending()
 //////////////////////////////////////////////////////////////////////////////////////////
 jc::Vector<_u32> IOCP::GetWorkThreadIdList()
 {
-	JC_LOCK_GUARD(workerManagerLock_);
+	JC_LOCK_GUARD(lock_);
 	jc::Vector<_u32> threadIdList(workerManager_->workers_.Size());
 	for (int index = 0; index < workerManager_->workers_.Size(); ++index)
 	{
@@ -153,6 +153,25 @@ BOOL IOCP::GetStatus(_u32l* _pNumberOfBytesTransffered, PULONG_PTR _pCompletionK
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+BOOL IOCP::GetStatusEx(LPOVERLAPPED_ENTRY _pEntries, _u32l _count, _u32l* _pNumEntriesRemoved) const
+{
+	//////////////////////////////////////////////////////////////////////////////////////
+	// GetQueuedCompletionStatusEx를 사용하여 배치로 이벤트 처리
+	ULONG numEntriesRemoved = 0;
+	const BOOL result = GetQueuedCompletionStatusEx(
+		iocpHandle_,
+		_pEntries,
+		_count,
+		&numEntriesRemoved,
+		INFINITE,
+		FALSE
+	);
+
+	*_pNumEntriesRemoved = numEntriesRemoved;
+	return result;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 BOOL IOCP::Post(_u32l _numberOfBytesTransferred, ULONG_PTR _completionKey, LPOVERLAPPED _pOverlapped) const
 {
 	return PostQueuedCompletionStatus(iocpHandle_, _numberOfBytesTransferred, _completionKey, _pOverlapped);
@@ -174,16 +193,12 @@ int IOCP::PollTasks()
 	}
 
 	// 단일 쓰레드에서만 호출되도록 해야함. (일반적으로 메인쓰레드)
-	cachedTaskList_.Clear();
 	{
-		JC_LOCK_GUARD(workerManagerLock_);
+		JC_LOCK_GUARD(lock_);
 		auto& workers = workerManager_->workers_;
 		for (int i = 0; i < workers.Size(); ++i)
 		{
 			IOCPWorker* pWorker = static_cast<IOCPWorker*>(workers[i]);
-			if (!pWorker->HasTask())
-				continue;
-
 			pWorker->PopAllTasksWithSwap(cachedTaskList_);
 		}
 	}
@@ -198,6 +213,8 @@ int IOCP::PollTasks()
 			++processedTaskCount;
 		}
 	}
+
+	cachedTaskList_.Clear();
 	return processedTaskCount;
 }
 

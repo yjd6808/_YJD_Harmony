@@ -59,15 +59,11 @@ public:
 	}
 
 	template <typename T>
-	void Append(const T& _str) 
-	{
-		std::stringstream ss;
-		ss << _str;
-		Append(ss.str());
-	}
+	void Append(const T& _str);
 	void Append(char _ch);
-	void Append(char* _pStr);
 	void Append(const char* _pStr);
+	void Append(const char* _pStr, int _len);
+	void Append(char* _pStr);
 	void Append(const std::string& _str);
 	void Append(const String& _str);
 	void Append(String&& _str);

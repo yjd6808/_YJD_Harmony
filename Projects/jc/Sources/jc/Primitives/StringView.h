@@ -20,7 +20,6 @@ public:
 	StringView(char* _pStr);
 	StringView(char* _pStr, _u32 _len);
 	StringView(const String& _str);
-	StringView(String&& _str) = delete; // 무브 하면 안됨. (이 개체는 소유권을 가지고 있지 않음.)
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// 기본 정보 & 상태 조회

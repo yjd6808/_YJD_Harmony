@@ -13,7 +13,7 @@ SqlServerConnection::SqlServerConnection()
 : hEnv_(SQL_NULL_HENV)
 , hDbc_(SQL_NULL_HDBC)
 {
-	dbType_ = DatabaseType::SQLServer;
+	dbType_ = DatabaseType::dbtSQLServer;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

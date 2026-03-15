@@ -1,5 +1,8 @@
-﻿#include "Core.h"
+#include "Core.h"
 #include "SqlServerQuery.h"
+
+#include <type_traits>
+#include <cstring>
 
 USING_NS_JC;
 USING_NS_STD;
@@ -150,9 +153,9 @@ bool SqlServerQueryInsert::Execute()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int SqlServerQuerySelect::GetFieldIndex(const char* _pFieldName)
+int SqlServerQuerySelect::GetColIndex(const char* _pFieldName)
 {
-	const int* pIndex = fieldList_.Find(_pFieldName);
+	const int* pIndex = colNameMap_.Find(_pFieldName);
 
 	if (pIndex == nullptr)
 		return -1;
@@ -169,7 +172,7 @@ const char* SqlServerQuerySelect::GetRawString(const char* _pFieldName)
 		return nullptr;
 	}
 
-	const int fieldIndex = GetFieldIndex(_pFieldName);
+	const int fieldIndex = GetColIndex(_pFieldName);
 
 	if (fieldIndex == -1)
 	{
@@ -181,7 +184,7 @@ const char* SqlServerQuerySelect::GetRawString(const char* _pFieldName)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-const char* SqlServerQuerySelect::GetRawString(int _fieldIndex)
+const char* SqlServerQuerySelect::GetRawString(int _colIdx)
 {
 	if (IsFailed())
 	{
@@ -189,14 +192,14 @@ const char* SqlServerQuerySelect::GetRawString(int _fieldIndex)
 		return nullptr;
 	}
 
-	if (_fieldIndex < 0 || _fieldIndex >= static_cast<int>(columnCount_))
+	if (_colIdx < 0 || _colIdx >= static_cast<int>(colCount_))
 	{
-		_LogError_("필드 인덱스(%d)가 범위를 벗어났습니다. (0~%d) %s",
-		           _fieldIndex, columnCount_ - 1, "GetRawString()");
+		_LogError_("컬럼 인덱스(%d)가 범위를 벗어났습니다. (0~%d) %s",
+			_colIdx, colCount_ - 1, "GetRawString()");
 		return nullptr;
 	}
 
-	return row_[_fieldIndex].pBuf_;
+	return row_[_colIdx].pBuf_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -252,19 +255,64 @@ DateTime SqlServerQuerySelect::ParseStringToDateTime(const char* _pRawString)
 //////////////////////////////////////////////////////////////////////////////////////////
 DateTime SqlServerQuerySelect::GetDateTime(const char* _pFieldName)
 {
-	const char* pRawString = GetRawString(_pFieldName);
-	return ParseStringToDateTime(pRawString);
+	const int fieldIndex = GetColIndex(_pFieldName);
+	if (fieldIndex == -1)
+	{
+		_LogError_("%s 필드를 찾지 못했습니다. GetDateTime()", _pFieldName);
+		return 0;
+	}
+	return GetDateTime(fieldIndex);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-DateTime SqlServerQuerySelect::GetDateTime(int _fieldIndex)
+DateTime SqlServerQuerySelect::GetDateTime(int _colIdx)
 {
-	const char* pRawString = GetRawString(_fieldIndex);
-	return ParseStringToDateTime(pRawString);
+	if (IsFailed() || _colIdx < 0 || _colIdx >= static_cast<int>(colCount_))
+		return 0;
+
+	ColumnBinder& col = row_[_colIdx];
+	if (col.length_ == SQL_NULL_DATA || col.length_ <= 0)
+		return 0;
+
+	const SQLSMALLINT sqlType = colInfoList_[_colIdx].type_;
+
+	switch (sqlType)
+	{
+	case SQL_CHAR:
+	case SQL_VARCHAR:
+		{
+			col.pBuf_[col.length_] = '\0';
+			return ParseStringToDateTime(col.pBuf_);
+		}
+	case SQL_TYPE_TIMESTAMP:
+	case SQL_DATETIME:
+		{
+			auto* pTs = reinterpret_cast<const SQL_TIMESTAMP_STRUCT*>(col.pBuf_);
+			const _s32 milli = static_cast<_s32>(pTs->fraction / 1000000);
+			const _s32 micro = static_cast<_s32>((pTs->fraction % 1000000) / 1000);
+			return jc::DateAndTime(
+				pTs->year, pTs->month, pTs->day,
+				pTs->hour, pTs->minute, pTs->second,
+				milli, micro
+			).ToDateTime();
+		}
+	case SQL_TYPE_DATE:
+		{
+			auto* pDs = reinterpret_cast<const SQL_DATE_STRUCT*>(col.pBuf_);
+			return jc::DateAndTime(pDs->year, pDs->month, pDs->day, 0, 0, 0, 0, 0).ToDateTime();
+		}
+	case SQL_TYPE_TIME:
+		{
+			auto* pTs2 = reinterpret_cast<const SQL_TIME_STRUCT*>(col.pBuf_);
+			return jc::DateAndTime(0, 1, 1, pTs2->hour, pTs2->minute, pTs2->second, 0, 0).ToDateTime();
+		}
+	default:
+		return ParseStringToDateTime(col.pBuf_);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_u32 SqlServerQuerySelect::GetFieldCount() const
+_u32 SqlServerQuerySelect::GetColCount() const
 {
 	if (IsFailed())
 	{
@@ -272,11 +320,22 @@ _u32 SqlServerQuerySelect::GetFieldCount() const
 		return 0;
 	}
 
-	return fieldList_.Size();
+	return colNameMap_.Size();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-SQLULEN SqlServerQuerySelect::CalculateOptimalBufferSize(SQLSMALLINT _sqlType, SQLULEN _columnSize)
+int SqlServerQuerySelect::GetColType(int _colIdx) const
+{
+	if (_colIdx < 0 || _colIdx >= static_cast<int>(colCount_))
+	{
+		_LogError_("컬럼 인덱스(%d)가 범위를 벗어났습니다. (0~%d)", _colIdx, colCount_ - 1);
+		return -1;
+	}
+	return colInfoList_[_colIdx].type_;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+SQLULEN SqlServerQuerySelect::CalculateOptimalBufferSize_SQL_C_CHAR(SQLSMALLINT _sqlType, SQLULEN _columnSize)
 {
 	switch (_sqlType)
 	{
@@ -360,34 +419,39 @@ bool SqlServerQuerySelect::Execute()
 	}
 
 	// 필드 정보 수집
-	SQLNumResultCols(hStmt_, &columnCount_);
-	row_.Resize(columnCount_);
-	for (SQLSMALLINT i = 1; i <= columnCount_; ++i)
+	SQLNumResultCols(hStmt_, &colCount_);
+	row_.Resize(colCount_);
+	colInfoList_.Resize(colCount_);
+
+	for (SQLSMALLINT i = 1; i <= colCount_; ++i)
 	{
 		SQLCHAR columnName[256];
-		SQLSMALLINT nameLength;
-		SQLSMALLINT dataType;
-		SQLULEN columnSize;
-		SQLSMALLINT decimalDigits;
-		SQLSMALLINT nullable;
+		SQLSMALLINT nameLength = 0;
+		SQLSMALLINT dataType = 0;
+		SQLULEN columnSize = 0;
+		SQLSMALLINT decimalDigits = 0;
+		SQLSMALLINT nullable = 0;
 
 		SQLDescribeColA(hStmt_, i, columnName, sizeof(columnName), &nameLength,
-		                &dataType, &columnSize, &decimalDigits, &nullable);
+			&dataType, &columnSize, &decimalDigits, &nullable);
 
 		int index = i - 1;
 		jc::String fieldName((char*)columnName);
 
-		SQLULEN bufferSize = CalculateOptimalBufferSize(dataType, columnSize);
 		ColumnBinder& col = row_[index];
-		col.pBuf_ = dbg_new char[bufferSize];
-		col.capacity_ = bufferSize;
-
-		SQLRETURN bindRet = SQLBindCol(hStmt_, i, SQL_C_CHAR, col.pBuf_, bufferSize, &col.length_);
+		col.capacity_ = columnSize + 1;
+		col.pBuf_ = dbg_new char[col.capacity_];
+		col.pBuf_[columnSize] = '\0'; // 안전을 위해 널 종료
+		
+		SQLRETURN bindRet = SQLBindCol(hStmt_, i, SQL_C_BINARY, col.pBuf_, col.capacity_, &col.length_);
 		if (!SQL_SUCCEEDED(bindRet))
 		{
 			col.pBuf_[0] = '\0';
 			_LogWarn_("SQLServer SELECT 컬럼 바인딩 실패 (필드: %s)", fieldName.SafeSource());
 		}
+
+		colInfoList_[index].type_ = dataType;
+		colInfoList_[index].name_ = Move(fieldName);
 	}
 
 	return Next();
@@ -437,6 +501,7 @@ bool SqlServerQuerySelect::Next()
 	{
 		hasCurrentRow_ = true;
 		++rowCount_;
+		colReadOffset_ = 0; // 자동 초기화
 		return true;
 	}
 
@@ -444,4 +509,410 @@ bool SqlServerQuerySelect::Next()
 	ExtractError(hStmt_);
 	_LogError_("SQLFetch failed: %s", errorMsg_.SafeSource());
 	return false;
+}
+
+namespace
+{
+jc::String ConvertString(char* _pBuf, SQLLEN _length, SQLSMALLINT _sqlType)
+{
+	if (_length == SQL_NULL_DATA || _length <= 0)
+		return jc::String::Empty;
+
+	switch (_sqlType)
+	{
+	case SQL_CHAR:
+		{
+			// char타입은 0x20(공백)으로 패딩되므로, 널 종료 위치를 찾아서 문자열을 복사한다.
+			int nullPos = -1;
+			for (int i = 0; i < _length; ++i)
+			{
+				if (_pBuf[i] == 0x20)
+				{
+					nullPos = i;
+					break;
+				}
+			}
+			char* pNewBuf = dbg_new char[_length + 1];
+			Memory::CopyUnsafe(pNewBuf, _pBuf, nullPos != -1 ? nullPos : static_cast<int>(_length));
+			pNewBuf[nullPos != -1 ? nullPos : static_cast<int>(_length)] = '\0';
+
+			jc::String str(0);
+			str.ExchangeSource(pNewBuf, nullPos != -1 ? nullPos : static_cast<int>(_length));
+			return str;
+		}
+	case SQL_VARCHAR:
+		{
+			char* pNewBuf = dbg_new char[_length + 1];
+			Memory::CopyUnsafe(pNewBuf, _pBuf, static_cast<int>(_length));
+			pNewBuf[_length] = '\0';
+			jc::String str(0);
+			str.ExchangeSource(pNewBuf, static_cast<int>(_length));
+			return str;
+		}
+	case SQL_WVARCHAR:
+		{
+			wchar_t* pWBuf = reinterpret_cast<wchar_t*>(_pBuf);
+			return jc::StringUtil::ToUtf8(pWBuf, _length / sizeof(wchar_t));
+		}
+	default:
+		{
+			_pBuf[_length] = '\0';
+			jc_assert_msg(false, "문자열 변환을 지원하지 않는 SQL 타입입니다. SQL 타입: %d", _sqlType);
+			return jc::String(_pBuf);
+		}
+	}
+}
+
+template <typename T>
+T ConvertAuto(char* _pBuf, SQLLEN _length, SQLSMALLINT _sqlType)
+{
+	if (_length == SQL_NULL_DATA || _length <= 0)
+		return T{};
+
+	switch (_sqlType)
+	{
+	case SQL_BIT:
+	case SQL_TINYINT:
+		{
+			_u8 v;
+			memcpy(&v, _pBuf, sizeof(v));
+			return static_cast<T>(v);
+		}
+	case SQL_SMALLINT:
+		{
+			_s16 v;
+			memcpy(&v, _pBuf, sizeof(v));
+			return static_cast<T>(v);
+		}
+	case SQL_INTEGER:
+		{
+			_s32 v;
+			memcpy(&v, _pBuf, sizeof(v));
+			return static_cast<T>(v);
+		}
+	case SQL_BIGINT:
+		{
+			_s64 v;
+			memcpy(&v, _pBuf, sizeof(v));
+			return static_cast<T>(v);
+		}
+	case SQL_REAL:
+		{
+			_f32 v;
+			memcpy(&v, _pBuf, sizeof(v));
+			return static_cast<T>(v);
+		}
+	case SQL_FLOAT:
+	case SQL_DOUBLE:
+		{
+			_f64 v;
+			memcpy(&v, _pBuf, sizeof(v));
+			return static_cast<T>(v);
+		}
+	case SQL_NUMERIC:
+	case SQL_DECIMAL:
+		{
+			auto* pNumeric = reinterpret_cast<const SQL_NUMERIC_STRUCT*>(_pBuf);
+			_u64 val = 0;
+			memcpy(&val, pNumeric->val, sizeof(val));
+
+			if constexpr (std::is_floating_point_v<T>)
+			{
+				_f64 result = static_cast<_f64>(val);
+				for (SQLSCHAR i = 0; i < pNumeric->scale; ++i)
+					result /= 10.0;
+				if (pNumeric->sign == 0)
+					result = -result;
+				return static_cast<T>(result);
+			}
+			else
+			{
+				_s64 result = static_cast<_s64>(val);
+				for (SQLSCHAR i = 0; i < pNumeric->scale; ++i)
+					result /= 10;
+				if (pNumeric->sign == 0)
+					result = -result;
+				return static_cast<T>(result);
+			}
+		}
+	default:
+		{
+			// 문자열 타입 (CHAR, VARCHAR 등): 널 종료 후 StringUtil::ToNumber 폴백
+			_pBuf[_length] = '\0';
+			return jc::StringUtil::ToNumber<T>(_pBuf);
+		}
+	}
+}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+jc::String SqlServerQuerySelect::GetString(int _colIdx)
+{
+	if (_colIdx < 0 || _colIdx >= static_cast<int>(colCount_))
+		return 0;
+
+	ColumnBinder& col = row_[_colIdx];
+	return ConvertString(col.pBuf_, col.length_, colInfoList_[_colIdx].type_);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s8 SqlServerQuerySelect::GetS8(int _colIdx)
+{
+	if (_colIdx < 0 || _colIdx >= static_cast<int>(colCount_))
+		return 0;
+
+	ColumnBinder& col = row_[_colIdx];
+	return ConvertAuto<_s8>(col.pBuf_, col.length_, colInfoList_[_colIdx].type_);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u8 SqlServerQuerySelect::GetU8(int _colIdx)
+{
+	if (_colIdx < 0 || _colIdx >= static_cast<int>(colCount_))
+		return 0;
+
+	ColumnBinder& col = row_[_colIdx];
+	return ConvertAuto<_u8>(col.pBuf_, col.length_, colInfoList_[_colIdx].type_);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s16 SqlServerQuerySelect::GetS16(int _colIdx)
+{
+	if (_colIdx < 0 || _colIdx >= static_cast<int>(colCount_))
+		return 0;
+
+	ColumnBinder& col = row_[_colIdx];
+	return ConvertAuto<_s16>(col.pBuf_, col.length_, colInfoList_[_colIdx].type_);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u16 SqlServerQuerySelect::GetU16(int _colIdx)
+{
+	if (_colIdx < 0 || _colIdx >= static_cast<int>(colCount_))
+		return 0;
+
+	ColumnBinder& col = row_[_colIdx];
+	return ConvertAuto<_u16>(col.pBuf_, col.length_, colInfoList_[_colIdx].type_);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s32 SqlServerQuerySelect::GetS32(int _colIdx)
+{
+	if (_colIdx < 0 || _colIdx >= static_cast<int>(colCount_))
+		return 0;
+
+	ColumnBinder& col = row_[_colIdx];
+	return ConvertAuto<_s32>(col.pBuf_, col.length_, colInfoList_[_colIdx].type_);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u32 SqlServerQuerySelect::GetU32(int _colIdx)
+{
+	if (_colIdx < 0 || _colIdx >= static_cast<int>(colCount_))
+		return 0;
+
+	ColumnBinder& col = row_[_colIdx];
+	return ConvertAuto<_u32>(col.pBuf_, col.length_, colInfoList_[_colIdx].type_);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s64 SqlServerQuerySelect::GetS64(int _colIdx)
+{
+	if (_colIdx < 0 || _colIdx >= static_cast<int>(colCount_))
+		return 0;
+
+	ColumnBinder& col = row_[_colIdx];
+	return ConvertAuto<_s64>(col.pBuf_, col.length_, colInfoList_[_colIdx].type_);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u64 SqlServerQuerySelect::GetU64(int _colIdx)
+{
+	if (_colIdx < 0 || _colIdx >= static_cast<int>(colCount_))
+		return 0;
+
+	ColumnBinder& col = row_[_colIdx];
+	return ConvertAuto<_u64>(col.pBuf_, col.length_, colInfoList_[_colIdx].type_);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_f32 SqlServerQuerySelect::GetFloat(int _colIdx)
+{
+	if (_colIdx < 0 || _colIdx >= static_cast<int>(colCount_))
+		return 0.0f;
+
+	ColumnBinder& col = row_[_colIdx];
+	return ConvertAuto<_f32>(col.pBuf_, col.length_, colInfoList_[_colIdx].type_);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_f64 SqlServerQuerySelect::GetDouble(int _colIdx)
+{
+	if (_colIdx < 0 || _colIdx >= static_cast<int>(colCount_))
+		return 0.0;
+
+	ColumnBinder& col = row_[_colIdx];
+	return ConvertAuto<_f64>(col.pBuf_, col.length_, colInfoList_[_colIdx].type_);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+jc::Date SqlServerQuerySelect::GetDate(int _colIdx)
+{
+	if (IsFailed() || _colIdx < 0 || _colIdx >= static_cast<int>(colCount_))
+		return {};
+
+	ColumnBinder& col = row_[_colIdx];
+	if (col.length_ == SQL_NULL_DATA || col.length_ <= 0)
+		return {};
+
+	const SQLSMALLINT sqlType = colInfoList_[_colIdx].type_;
+
+	switch (sqlType)
+	{
+	case SQL_DATETIME:
+		{
+			auto* pTs = reinterpret_cast<const SQL_TIMESTAMP_STRUCT*>(col.pBuf_);
+			return jc::Date(pTs->year, pTs->month, pTs->day);
+		}
+	case SQL_TYPE_DATE:
+		{
+			auto* pDs = reinterpret_cast<const SQL_DATE_STRUCT*>(col.pBuf_);
+			return jc::Date{ pDs->year, pDs->month, pDs->day };
+		}
+	default:
+		{
+			jc_assert_msg(false, "지원하지 않는 SQL 타입입니다. (SQL 타입: %d)", sqlType);
+			return jc::Date{};
+		}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+jc::Time SqlServerQuerySelect::GetTime(int _colIdx)
+{
+	if (IsFailed() || _colIdx < 0 || _colIdx >= static_cast<int>(colCount_))
+		return {};
+
+	ColumnBinder& col = row_[_colIdx];
+	if (col.length_ == SQL_NULL_DATA || col.length_ <= 0)
+		return {};
+
+	const SQLSMALLINT sqlType = colInfoList_[_colIdx].type_;
+
+	switch (sqlType)
+	{
+	case SQL_DATETIME:
+		{
+			auto* pTs = reinterpret_cast<const SQL_TIMESTAMP_STRUCT*>(col.pBuf_);
+			return jc::Time{ pTs->hour, pTs->minute, pTs->second, static_cast<_s32>(pTs->fraction / 1000000), static_cast<_s32>((pTs->fraction % 1000000) / 1000) };
+		}
+	case SQL_TYPE_TIME:
+		{
+			auto* pDs = reinterpret_cast<const SQL_TIME_STRUCT*>(col.pBuf_);
+			return jc::Time{ pDs->hour, pDs->minute, pDs->second, 0, 0 };
+		}
+	case SQL_SS_TIME2:
+		{
+			auto* pTime2 = reinterpret_cast<const SQL_SS_TIME2_STRUCT*>(col.pBuf_);
+			_s16 mili = static_cast<_s16>(pTime2->fraction / 1000000);
+			_s16 micro = static_cast<_s16>((pTime2->fraction % 1000000) / 1000);
+			return jc::Time{ pTime2->hour, pTime2->minute, pTime2->second, mili, micro};
+		}
+	default:
+		{
+			jc_assert_msg(false, "지원하지 않는 SQL 타입입니다. (SQL 타입: %d)", sqlType);
+			return {};
+		}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+jc::StringView SqlServerQuerySelect::ReadRawString()
+{
+	if (colReadOffset_ >= static_cast<_u32>(colCount_))
+	{
+		jc_assert_msg(false, "컬럼을 모두 읽었습니다. 더 이상 읽을 컬럼이 없습니다.");
+		return jc::StringView();
+	}
+	ColumnBinder& col = row_[colReadOffset_++];
+	return jc::StringView(col.pBuf_);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+jc::String SqlServerQuerySelect::ReadString()
+{
+	if (colReadOffset_ >= static_cast<_u32>(colCount_))
+	{
+		jc_assert_msg(false, "컬럼을 모두 읽었습니다. 더 이상 읽을 컬럼이 없습니다.");
+		return jc::String();
+	}
+	_u32 colIdx = colReadOffset_++;
+	ColumnBinder& col = row_[colIdx];
+	return ConvertString(col.pBuf_, col.length_, colInfoList_[colIdx].type_);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s8 SqlServerQuerySelect::ReaS8()
+{
+	return GetS8(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u8 SqlServerQuerySelect::ReadU8()
+{
+	return GetU8(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s16 SqlServerQuerySelect::ReadS16()
+{
+	return GetS16(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u16 SqlServerQuerySelect::ReadU16()
+{
+	return GetU16(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s32 SqlServerQuerySelect::ReadS32()
+{
+	return GetS32(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u32 SqlServerQuerySelect::ReadU32()
+{
+	return GetU32(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s64 SqlServerQuerySelect::ReadS64()
+{
+	return GetS64(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u64 SqlServerQuerySelect::ReadU64()
+{
+	return GetU64(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_f32 SqlServerQuerySelect::ReadFloat()
+{
+	return GetFloat(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_f64 SqlServerQuerySelect::ReadDouble()
+{
+	return GetDouble(static_cast<int>(colReadOffset_++));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+DateTime SqlServerQuerySelect::ReadDateTime()
+{
+	return GetDateTime(static_cast<int>(colReadOffset_++));
 }

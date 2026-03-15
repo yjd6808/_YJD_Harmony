@@ -17,6 +17,11 @@ USING_NS_JDB;
 //////////////////////////////////////////////////////////////////////////////////////////
 int IDatabase::PollEvents()
 {
+	if (iocp_ == nullptr)
+	{
+		jc_assert_msg(false, "IOCP가 초기화되지 않았습니다. IOCP를 사용하는 데이터베이스인지 확인해주세요.");
+		return -1;
+	}
 	return iocp_->PollTasks();
 }
 
@@ -56,7 +61,7 @@ bool IDatabase::Initialize(const DatabaseInfo& _info)
 
 	// 빌더 커넥션 초기화
 	// String Escape 하나를 위해서 어쩔수없이 초기화함;
-	if (info_.type_ == DatabaseType::MySQL)
+	if (info_.type_ == DatabaseType::dbtMySQL)
 	{
 		if (!MysqlStatementBuilder::Initialize(info_))
 		{
@@ -64,7 +69,7 @@ bool IDatabase::Initialize(const DatabaseInfo& _info)
 			return false;
 		}
 	}
-	else if (info_.type_ == DatabaseType::SQLServer)
+	else if (info_.type_ == DatabaseType::dbtSQLServer)
 	{
 		if (!SqlServerStatementBuilder::Initialize(info_))
 		{
@@ -78,12 +83,21 @@ bool IDatabase::Initialize(const DatabaseInfo& _info)
 		info_.hostName_.Source(),
 		info_.connPort_);
 
-	iocp_ = dbg_new jnet::IOCP(threadCount);
-	iocp_->SetPollingMode(info_.iocpPollingMode_);
-	iocp_->SetCompletedCallback(QueryCompletedCallbackFunctor{this});
-	iocp_->Run();
+	if (threadCount > 0)
+	{
+		iocp_ = dbg_new jnet::IOCP(threadCount);
+		iocp_->SetName(info_.name_);
+		iocp_->SetBatchSize(info_.iocpBatchSize_);
+		iocp_->SetPollingMode(info_.iocpPollingMode_);
+		iocp_->SetCompletedCallback(QueryCompletedCallbackFunctor{ this });
+		iocp_->Run();
+		_LogInfo_("%s %s 실행완료 (쓰레드 수: %d)", info_.name_.Source(), jnet::IOCP::TypeName(), threadCount);
+	}
+	else
+	{
+		_LogInfo_("%s 쓰레딩 사용안함. (QueryAsync 사용 불가능.)", info_.name_.Source());
+	}
 	initialized_ = true;
-	_LogInfo_("%s %s 실행완료 (쓰레드 수: %d)", info_.name_.Source(), jnet::IOCP::TypeName(), threadCount);
 	return true;
 }
 
@@ -96,11 +110,14 @@ void IDatabase::Finalize()
 	_LogInfo_("%s 파괴시작", info_.name_.Source());
 	initialized_ = false;
 
-	iocp_->Join();
-	_LogInfo_("%s %s 쪼인완료", info_.name_.Source(), jnet::IOCP::TypeName());
+	if (iocp_)
+	{
+		iocp_->Join();
+		_LogInfo_("%s %s 쪼인완료", info_.name_.Source(), jnet::IOCP::TypeName());
 
-	iocp_->Destroy();
-	_LogInfo_("%s %s 파괴완료", info_.name_.Source(), jnet::IOCP::TypeName());
+		iocp_->Destroy();
+		_LogInfo_("%s %s 파괴완료", info_.name_.Source(), jnet::IOCP::TypeName());
+	}
 
 	// iocp가 먼저 소멸되어야함. 태스크가 커넥션을 참조하기 때문.
 	JC_DELETE_SAFE(iocp_);
@@ -108,24 +125,24 @@ void IDatabase::Finalize()
 
 	_LogInfo_("%s 커넥션 풀 파괴완료", info_.name_.Source());
 
-	if (info_.type_ == DatabaseType::MySQL)
+	if (info_.type_ == DatabaseType::dbtMySQL)
 	{
 		MysqlStatementBuilder::Finalize();
 	}
-	else if (info_.type_ == DatabaseType::SQLServer)
+	else if (info_.type_ == DatabaseType::dbtSQLServer)
 	{
 		SqlServerStatementBuilder::Finalize();
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IQueryPtr IDatabase::Query(const PreparedStatement& _stmt) const
+IQueryPtr IDatabase::Query(const Ptmt& _ptmt) const
 {
-	return Query(0, _stmt);
+	return Query(0, _ptmt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IQueryPtr IDatabase::Query(int _id, const PreparedStatement& _stmt) const
+IQueryPtr IDatabase::Query(int _id, const Ptmt& _ptmt) const
 {
 	if (connectionPool_ == nullptr)
 	{
@@ -142,7 +159,7 @@ IQueryPtr IDatabase::Query(int _id, const PreparedStatement& _stmt) const
 
 	AutoReleaseConnection autoRelease(pConn, connectionPool_);
 
-	IQueryPtr pQuery = CreateQuery(pConn, _stmt);
+	IQueryPtr pQuery = CreateQuery(pConn, _ptmt);
 
 	if (pQuery == nullptr)
 	{
@@ -160,20 +177,25 @@ IQueryPtr IDatabase::Query(int _id, const PreparedStatement& _stmt) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IQueryTaskPtr IDatabase::QueryAsync(const PreparedStatement& _stmt) const
+IQueryTaskPtr IDatabase::QueryAsync(const Ptmt& _ptmt) const
 {
-	return QueryAsyncInternal(0, _stmt);
+	return QueryAsyncInternal(0, _ptmt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IQueryTaskPtr IDatabase::QueryAsync(int _id, const PreparedStatement& _stmt) const
+IQueryTaskPtr IDatabase::QueryAsync(int _id, const Ptmt& _ptmt) const
 {
-	return QueryAsyncInternal(_id, _stmt);
+	return QueryAsyncInternal(_id, _ptmt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IQueryTaskPtr IDatabase::QueryAsyncInternal(int _id, const PreparedStatement& _stmt) const
+IQueryTaskPtr IDatabase::QueryAsyncInternal(int _id, const Ptmt& _stmt) const
 {
+	if (iocp_ == nullptr)
+	{
+		jc_assert_msg(false, "IOCP가 초기화되지 않았습니다. 쓰레딩이 필요한 기능을 사용하려면 IOCP를 초기화해주세요.");
+		return nullptr;
+	}
 	if (connectionPool_ == nullptr)
 	{
 		jc_assert_msg(false, "커넥션 풀이 초기화되지 않았습니다.");

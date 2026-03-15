@@ -79,7 +79,7 @@ bool SqlServerDatabase::RollbackTransaction(SqlServerConnection* _pConn)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IQueryPtr SqlServerDatabase::CreateQuery(IConnection* _pConn, const PreparedStatement& _stmt) const
+IQueryPtr SqlServerDatabase::CreateQuery(IConnection* _pConn, const Ptmt& _stmt) const
 {
 	const String& stmtStr = _stmt.GetStatement();
 	if (stmtStr.IsEmpty())
@@ -106,7 +106,7 @@ IQueryPtr SqlServerDatabase::CreateQuery(IConnection* _pConn, const PreparedStat
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IQueryPtr SqlServerDatabase::QueryOnConnection(SqlServerConnection* _pConn, const PreparedStatement& _stmt)
+IQueryPtr SqlServerDatabase::QueryOnConnection(SqlServerConnection* _pConn, const Ptmt& _stmt)
 {
 	if (_pConn == nullptr)
 	{

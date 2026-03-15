@@ -7,17 +7,17 @@
  */
 
 #include "Core.h"
-#include "JdbUtil.h"
+#include "Util.h"
 
 USING_NS_JC;
 
 NS_JDB_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
-String JdbUtil::ReplacePlaceholders(const String& _statement, const String* _pArgs, int _argCount)
+String Util::ReplacePlaceholders(const String& _stmt, const String* _pArgs, int _argCount)
 {
-	const char* pSrc = _statement.Source();
-	const int len = _statement.Length();
+	const char* pSrc = _stmt.Source();
+	const int len = _stmt.Length();
 
 	String result(len * 2);
 
@@ -43,6 +43,10 @@ String JdbUtil::ReplacePlaceholders(const String& _statement, const String* _pAr
 					i = numEnd;
 					continue;
 				}
+
+				// Query(select * from t_test where c_uid = {0}, {1}, "abcd")
+				// -> {1}에 대응하는 인자를 못찾음
+				jc_assert_msg(false, "cannot find {%d} argument.\nsource: %s", index, pSrc);
 			}
 		}
 
@@ -51,5 +55,7 @@ String JdbUtil::ReplacePlaceholders(const String& _statement, const String* _pAr
 
 	return result;
 }
+
+
 
 NS_END

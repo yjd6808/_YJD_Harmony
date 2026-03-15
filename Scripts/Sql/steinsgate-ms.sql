@@ -168,24 +168,26 @@ CREATE TABLE dbo.t_test
 (
     c_uid       INT             NOT NULL IDENTITY(1,1),
 
-    c_varchar   VARCHAR(20),
-    c_char      CHAR(20),
-    c_nvarchar  NVARCHAR(20),
+    c_varchar   VARCHAR(20)     default '한글varchar',
+    c_char      CHAR(20)        default '한글char',
+    c_nvarchar  NVARCHAR(20)    default '한글nvarchar',
 
-    c_float     REAL,
-    c_double    FLOAT,
+    c_float     REAL            default 0.001,
+    c_double    FLOAT           default 0.000001,
 
-    c_s8        SMALLINT,
-    c_s16       SMALLINT,
-    c_s32       INT,
-    c_s64       BIGINT,
+    c_s8        SMALLINT        default 0,
+    c_s16       SMALLINT        default 0,
+    c_s32       INT             default 0,
+    c_s64       BIGINT          default 0,
 
-    c_u8        TINYINT,
-    c_u16       INT,
-    c_u32       BIGINT,
-    c_u64       DECIMAL(20,0),
+    c_u8        TINYINT         default 0,
+    c_u16       INT             default 0,
+    c_u32       BIGINT          default 0,
+    c_u64       DECIMAL(20,0)   default 0,
 
-    c_datetime  DATETIME2,
+    c_datetime  DATETIME2       default SYSDATETIME(),
+    c_date      DATE            default SYSDATETIME(),
+    c_time      TIME            default SYSDATETIME(),
 
     CONSTRAINT t_test_pk PRIMARY KEY (c_uid)
 );
