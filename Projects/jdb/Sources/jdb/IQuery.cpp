@@ -14,6 +14,13 @@ USING_NS_JC;
 NS_JDB_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
+void IQuery::Init(IConnection* _pConn, const jc::String& _ptmt)
+{
+	pConn_ = _pConn;
+	ptmt_ = _ptmt;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 StatementType IQuery::ParseStatement(const String& _statement)
 {
 	const String statementPrefix = _statement.GetRange(0, 5).ToLowerCase();

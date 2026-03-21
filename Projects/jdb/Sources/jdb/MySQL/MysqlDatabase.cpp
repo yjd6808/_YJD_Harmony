@@ -26,13 +26,13 @@ MysqlDatabase::~MysqlDatabase()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IQueryPtr MysqlDatabase::CreateQuery(IConnection* _pConn, const Ptmt& _stmt) const
+IQueryPtr MysqlDatabase::CreateQuery(IConnection* _pConn, const Ptmt& _ptmt) const
 {
-	const String& stmtStr = _stmt.GetStatement();
-	if (stmtStr.IsEmpty())
+	const String& ptmtStr = _ptmt.GetStatement();
+	if (ptmtStr.IsEmpty())
 		return nullptr;
 
-	const StatementType type = IQuery::ParseStatement(stmtStr);
+	const StatementType type = IQuery::ParseStatement(ptmtStr);
 
 	IQueryPtr pQuery;
 	switch (type)
@@ -46,8 +46,6 @@ IQueryPtr MysqlDatabase::CreateQuery(IConnection* _pConn, const Ptmt& _stmt) con
 		return nullptr;
 	}
 
-	pQuery->pConn_             = _pConn;
-	pQuery->stmtType_          = type;
-	pQuery->ptmt_ = stmtStr;
+	pQuery->Init(_pConn, ptmtStr);
 	return pQuery;
 }

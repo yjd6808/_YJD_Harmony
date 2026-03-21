@@ -10,7 +10,16 @@ IF EXISTS (SELECT name FROM sys.databases WHERE name = N'steinsgate')
 GO
 
 CREATE DATABASE steinsgate
-    COLLATE Korean_Wansung_CI_AS;
+	-- 문자열 비교 규칙
+	COLLATE Korean_100_CS_AS_WS_SC_UTF8
+	-- 모든 테이블의 char, varchar 데이터 타입이 UTF8로 저장될 수 있도록 UTF8 collation을 적용한다.
+	-- CS = Case Sensitive
+	-- AS = Accent Sensitive (한국은 영향 거의 없음)
+	-- WS = Width Sensitive (전각 반각 문자 구분)
+	-- SC = Supplementary Character support(유니코드 보조 문자 영역 - 서로게이트 페어 지원)
+	-- UTF8 = char, nvarchar에서도 유니코드 표현가능
+	-- 참고. "리두미 SQLServer.txt" 파일에 자세히 정리해놓음
+
 GO
 
 USE steinsgate;

@@ -938,7 +938,9 @@ protected:
 	template <typename> friend class BasePtr;
 };
 
-template <typename T> template <typename U, DefaultEnableIf_t<IsPointerType_v<U>>> void BasePtr<T>::MakeShared(U _ptr)
+template <typename T>
+template <typename U, DefaultEnableIf_t<IsPointerType_v<U>>>
+void BasePtr<T>::MakeShared(U _ptr)
 {
 	pControlBlock_ = dbg_new SharedObject<U, CDefaultAllocator>(_ptr);
 	pPtr_ = _ptr;

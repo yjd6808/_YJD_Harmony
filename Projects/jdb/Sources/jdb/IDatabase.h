@@ -25,6 +25,12 @@
 
 NS_JDB_BEGIN
 
+struct JDB_DLL Stmt
+{
+	jc::StringView stmt_;
+	int argCount_ = 0;
+};
+
 class JDB_DLL Ptmt
 {
 public:

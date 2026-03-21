@@ -13,12 +13,16 @@ USING_NS_JC;
 #define Query	Query
 #endif
 
+// constexpr jdb::Stmt STMT_SELECT_1{ "SELECT c_account_id FROM t_account", 50 };
 
 int main(int _argc, char** _argv) 
 {
 	InitializeJCore(_argc, _argv);
 	InitializeDefaultLogger();
 	InitializeNetLogger();
+
+	jdb::SqlServerStatementBuilder::Initialize({});
+	jdb::Ptmt ptmt22 = jdb::Ptmt::Build(jdb::dbtSQLServer, "{0}{2}", 10, 20);
 
 	jdb::DatabaseInfo info;
 	info.type_ = jdb::DatabaseType::dbtSQLServer;

@@ -47,7 +47,7 @@ public:
 	IQueryPtr            QueryOnConnection(SqlServerConnection* _pConn, const Ptmt& _stmt);
 
 protected:
-	IQueryPtr	CreateQuery(IConnection* _pConn, const Ptmt& _stmt) const override;
+	IQueryPtr	CreateQuery(IConnection* _pConn, const Ptmt& _ptmt) const override;
 	int			GetTaskType() const override { return IOCP_TASK_TYPE_SQL_SERVER; }
 	_u32		GetQueryFailedErrorCode() const override { return IOCPTASK_FAILED_SQLSERVER; }
 

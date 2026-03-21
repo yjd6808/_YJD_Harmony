@@ -40,7 +40,7 @@ public:
 	~MysqlDatabase() override;
 
 protected:
-	virtual IQueryPtr CreateQuery(IConnection* _pConn, const Ptmt& _stmt) const override;
+	virtual IQueryPtr CreateQuery(IConnection* _pConn, const Ptmt& _ptmt) const override;
 	virtual int GetTaskType() const override { return IOCP_TASK_TYPE_MYSQL; }
 	virtual _u32 GetQueryFailedErrorCode() const override { return IOCPTASK_FAILED_DB; }
 

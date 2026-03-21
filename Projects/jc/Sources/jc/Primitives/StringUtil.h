@@ -131,26 +131,22 @@ public:
 	static void ConcatInnerFront(char* _pBuf, int _bufCapacity, const char* _pConcatStr);
 
 	// 컴파일 타임용
-	static constexpr int CTLength(const char* _pStr) {
-		return CTLengthRecursive(_pStr, 0);
-	}
-
-	// 컴파일 타임용
-	static constexpr int CTLength2(const char* _pStr) {
-		char* pStr = (char*)_pStr;
+	static constexpr int CTLength(const char* _pStr)
+	{
 		int iLength = 0;
-
-		while (*pStr != '\0') {
+		while (*_pStr != '\0') 
+		{
 			iLength++;
-			pStr++;
+			_pStr++;
 		}
 
 		return iLength;
 	}
 
-	template <_u32 LEN>
-	static constexpr int CTLength(const char(&_str)[LEN]) {
-		return LEN;
+	template <_u32 CAP>
+	static constexpr int CTLength(const char(&_str)[CAP])
+	{
+		return CAP - 1;
 	}
 
 	// 문자열에서 문자를 찾아서 인덱스값을 반환 0번 인덱스부터 올라가면서 하나씩 검사
@@ -158,9 +154,153 @@ public:
 		return CTCountCharRecursive(_pStr, _ch, 0, 0);
 	}
 
+	static constexpr int CTCount(const char* _pStr, const char* _pTarget) {
+		const int STR_LEN = CTLength(_pStr);
+		const int TARGET_LEN = CTLength(_pTarget);
+		if (TARGET_LEN == 0 || TARGET_LEN > STR_LEN)
+			return 0;
+		int count = 0;
+		for (int i = 0; i <= STR_LEN - TARGET_LEN; ++i) {
+			bool match = true;
+			for (int j = 0; j < TARGET_LEN; ++j) {
+				if (_pStr[i + j] != _pTarget[j]) {
+					match = false;
+					break;
+				}
+			}
+			if (match)
+				count++;
+		}
+		return count;
+	}
+
+	static constexpr int CTToInt32(const char* _pStr)
+	{
+		return CTToNumber<_s32>(_pStr);
+	}
+
+	static constexpr _s64 CTToInt64(const char* _pStr)
+	{
+		return CTToNumber<_s64>(_pStr);
+	}
+
+	static constexpr int CTFind(const char* _pSource, const char* _pTarget)
+	{
+		return CTFind(_pSource, _pTarget, 0);
+	}
+
+	static constexpr int CTFind(const char* _pSource, const char* _pTarget, int _startOffset)
+	{
+		const int SOURCE_LEN = CTLength(_pSource);
+		const int TARGET_LEN = CTLength(_pTarget);
+
+		if (TARGET_LEN == 0 || TARGET_LEN > SOURCE_LEN)
+			return -1;
+
+		// 외부 루프 + 내부 루프 = 복잡
+		for (int i = _startOffset; i <= SOURCE_LEN - TARGET_LEN; ++i) {
+			bool match = true;
+			for (int j = 0; j < TARGET_LEN; ++j) {
+				if (_pSource[i + j] != _pTarget[j]) {
+					match = false;
+					break;
+				}
+			}
+			if (match)
+				return i;
+		}
+		return -1;
+	}
+
+	static constexpr void CTZeroMemory(char* _pBuffer, int _bufferSize)
+	{
+		if (_pBuffer == nullptr || _bufferSize <= 0)
+		{
+			return;
+		}
+		for (int i = 0; i < _bufferSize; ++i)
+		{
+			_pBuffer[i] = 0;
+		}
+	}
+
+	static constexpr void CTTrimLeft(char* _pBuffer, int _bufferSize, char _ch = ' ')
+	{
+		if (_pBuffer == nullptr || _bufferSize <= 0)
+		{
+			return;
+		}
+		int i = 0;
+		while (i < _bufferSize && _pBuffer[i] == _ch)
+		{
+			i++;
+		}
+		if (i > 0)
+		{
+			for (int j = 0; j < _bufferSize - i; ++j)
+			{
+				_pBuffer[j] = _pBuffer[j + i];
+			}
+			for (int j = _bufferSize - i; j < _bufferSize; ++j)
+			{
+				_pBuffer[j] = 0;
+			}
+		}
+	}
+
+	static constexpr void CTTrimRight(char* _pBuffer, int _bufferSize, char _ch = ' ')
+	{
+		if (_pBuffer == nullptr || _bufferSize <= 0)
+		{
+			return;
+		}
+		int i = _bufferSize - 1;
+		while (i >= 0 && _pBuffer[i] == _ch)
+		{
+			i--;
+		}
+		if (i < _bufferSize - 1)
+		{
+			for (int j = i + 1; j < _bufferSize; ++j)
+			{
+				_pBuffer[j] = 0;
+			}
+		}
+	}
+
+	static constexpr void CTTrim(char* _pBuffer, int _bufferSize, char _ch = ' ')
+	{
+		CTTrimLeft(_pBuffer, _bufferSize, _ch);
+		CTTrimRight(_pBuffer, _bufferSize, _ch);
+	}
+
+
+	static constexpr void CTCopy(char* _pBuffer, int _bufferSize, const char* _pCopy, int _count)
+	{
+		if (_pBuffer == nullptr || _pCopy == nullptr || _bufferSize <= 0)
+		{
+			return;
+		}
+		int iSize = 0;
+		while (*_pCopy != NULL && iSize < _bufferSize - 1 && iSize < _count)
+		{
+			*_pBuffer = *_pCopy;
+			_pBuffer++;
+			_pCopy++;
+			iSize++;
+		}
+		*_pBuffer = NULL;
+	}
+
 	// 문자열에서 문자를 찾아서 인덱스값을 반환 0번 인덱스부터 올라가면서 하나씩 검사
-	static constexpr int CTFindChar(const char* _pStr, const char _ch) {
+	static constexpr int CTFindChar(const char* _pStr, const char _ch)
+	{
 		return CTFindCharRecursive(_pStr, _ch, 0);
+	}
+
+	static constexpr int CTFindChar(const char* _pStr, const char _ch, int _startOffset)
+	{
+		return CTFindCharRecursive(_pStr + _startOffset, _ch, _startOffset);
 	}
 
 	// 문자열에서 문자를 찾아서 인덱스값을 반환 마지막 인덱스부터 내려가면서 하나씩 검사
@@ -195,6 +335,30 @@ public:
 		return 0;
 	}
 private:
+	template <typename T>
+	static constexpr int CTToNumber(const char* _pStr)
+	{
+		T result = 0;
+		int sign = 1;
+		const char* p = _pStr;
+		if (*p == '-') {
+			sign = -1;
+			p++;
+		}
+
+		// 90123
+		// result = 0 * 10 + (9 - '0') = 9
+		// result = 9 * 10 + (0 - '0') = 90
+		// result = 90 * 10 + (1 - '0') = 901
+
+		while (*p >= '0' && *p <= '9')
+		{
+			result = result * 10 + (*p - '0');
+			p++;
+		}
+		return sign * result;
+	}
+
 	static constexpr int CTLengthRecursive(const char* _pStr, const int _position) {
 		return *_pStr != '\0' ? CTLengthRecursive(_pStr + 1, _position + 1) : _position;
 	}

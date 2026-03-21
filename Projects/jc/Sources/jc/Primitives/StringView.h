@@ -4,8 +4,9 @@
 #include <jc/TypeTraits.h>
 #include <jc/Define.h>
 
-NS_JC_BEGIN
+#include "StringUtil.h"
 
+NS_JC_BEGIN
 class String;
 class CDefaultAllocator;
 template <typename, typename> class Vector;
@@ -20,6 +21,29 @@ public:
 	StringView(char* _pStr);
 	StringView(char* _pStr, _u32 _len);
 	StringView(const String& _str);
+
+	// StringView s = "abcd"를 할 경우
+	// const char[N] -> const char*로 암묵적 처리되어 아래코드로 들어오게 된다.
+	// 이를 방지하게 위해 T가 const char*인 경우에만 허용하도록 SFINAE 처리한다.
+	template <typename T, DefaultEnableIf_t<std::is_same_v<T, const char*>> = nullptr>
+	StringView(T _pStr)
+	{
+		pBuf_ = const_cast<char*>(_pStr);
+		len_ = StringUtil::CTLength(_pStr);
+	}
+
+	template <_u32 N>
+	constexpr StringView(const char(&_str)[N])
+	{
+		pBuf_ = const_cast<char*>(_str);
+		len_ = StringUtil::CTLength<N>(_str);
+	}
+
+	constexpr StringView(const StringView& _view)
+	{
+		pBuf_ = _view.pBuf_;
+		len_ = _view.len_;
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// 기본 정보 & 상태 조회

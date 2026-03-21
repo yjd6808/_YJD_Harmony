@@ -110,7 +110,6 @@ template <_u32> struct StaticString;
     // 문자열 타입인지 확인하는 템플릿
     template <typename T>
     struct IsStringType : FalseType {};
-
     template <>
     struct IsStringType<char*> : TrueType {};
     template <>
@@ -127,6 +126,8 @@ template <_u32> struct StaticString;
     struct IsStringType<char[Size]> : TrueType {};
     template <_u32 Size>
     struct IsStringType<wchar_t[Size]> : TrueType {};
+	template <_u32 Size>
+	struct IsStringType<const char[Size]> : TrueType {};
 
     // 배열 타입인지 확인
     template <typename T>
@@ -219,6 +220,9 @@ constexpr bool IsCharaterType_v = detail::IsCharaterType<NaturalType_t<T>>::VALU
 
 template <typename T>
 constexpr bool IsStringType_v = detail::IsStringType<NaturalType_t<T>>::VALUE;
+
+template <typename T>
+constexpr bool IsCompileStringType_v = IsStringType_v<T> && detail::IsArrayType<NaturalType_t<T>>::VALUE;
 
 template <typename T>
 constexpr bool IsArrayType_v = detail::IsArrayType<NaturalType_t<T>>::VALUE;

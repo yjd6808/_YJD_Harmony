@@ -1,0 +1,1 @@
+powershell -ExecutionPolicy Bypass -File "FileCounter.ps1" > "FileCount.txt"

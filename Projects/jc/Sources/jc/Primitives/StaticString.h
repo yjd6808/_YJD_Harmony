@@ -63,11 +63,11 @@ struct StaticString
 	}
 
 	constexpr int Length() const {
-		return StringUtil::CTLength2(Source);
+		return StringUtil::CTLength(Source);
 	}
 
 	constexpr int LengthWithNull() const {
-		return StringUtil::CTLength2(Source) + 1;
+		return StringUtil::CTLength(Source) + 1;
 	}
 
 	static constexpr int Capacity() {
@@ -85,7 +85,7 @@ struct StaticString
 
 	template <_u32 ParamSize>
 	constexpr void CopyFrom(const char(&_str)[ParamSize]) const {
-		CopyFrom(0, StringUtil::CTLength2(_str) - 1, _str);
+		CopyFrom(0, StringUtil::CTLength(_str) - 1, _str);
 	}
 
 	template <_u32 ParamSize>

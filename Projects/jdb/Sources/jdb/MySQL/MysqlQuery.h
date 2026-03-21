@@ -44,6 +44,7 @@ protected:
 class MysqlQueryUpdate : public MysqlQuery
 {
 public:
+	MysqlQueryUpdate() { stmtType_ = StatementType::Update; }
 	virtual ~MysqlQueryUpdate() override = default;
 	virtual bool Execute() override;
 };
@@ -55,6 +56,7 @@ public:
 class MysqlQueryDelete : public MysqlQuery
 {
 public:
+	MysqlQueryDelete() { stmtType_ = StatementType::Delete; }
 	virtual ~MysqlQueryDelete() override = default;
 	virtual bool Execute() override;
 };
@@ -66,7 +68,7 @@ public:
 class MysqlQueryInsert : public MysqlQuery
 {
 public:
-	MysqlQueryInsert() : insertId_(0) {}
+	MysqlQueryInsert() : insertId_(0) { stmtType_ = StatementType::Insert; }
 	~MysqlQueryInsert() override = default;
 
 	virtual _u64 GetInsertId() const override { return insertId_; }
@@ -87,6 +89,7 @@ public:
 	: sqlResult_(nullptr)
 	, sqlRow_(nullptr)
 	{
+		stmtType_ = StatementType::Select;
 	}
 
 	~MysqlQuerySelect() override;

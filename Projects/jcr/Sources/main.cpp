@@ -1,11 +1,92 @@
 ﻿#include "header.h"
 
+
+constexpr int PLACEHOLDER_MAX = 100;
+constexpr int PLACEHOLDER_ERROR_CAN_NOT_FIND_OPEN_BRACE		= -1;	
+constexpr int PLACEHOLDER_ERROR_INVALID_FORMAT				= -2;			
+constexpr int PLACEHOLDER_ERROR_CAN_NOT_FIND_CLOSE_BRACE	= -3;
+constexpr int PLACEHOLDER_ERROR_TOO_LONG_CONTENT			= -4;
+constexpr int PLACEHOLDER_ERROR_NON_NUMERIC_CONTENT			= -5;
+constexpr int PLACEHOLDER_ERROR_INVALID_NUMBER				= -6;
+constexpr int PLACEHOLDER_ERROR_MISSING_NUMBER				= -7;
+
+struct CTPlaceholderInfo
+{
+	int errorCode_ = 0;
+	int count_ = 0;
+	int map_[PLACEHOLDER_MAX]{};
+
+	static constexpr CTPlaceholderInfo Error(int _errorCode)
+	{
+		CTPlaceholderInfo r;
+		r.errorCode_ = _errorCode;
+		return r;
+	}
+};
+
+constexpr CTPlaceholderInfo CTPlaceholderParse(const char* _pStr)
+{
+	
+	// {0}, {1}, {2} ... 이런식으로 포맷팅할 때, 몇 개의 플레이스홀더가 있는지 세는 함수
+	// 중간에 비는게 있으면 -1을 반환하여 올바르지 않은 플레이스 홀더를 나타내도록 한다.
+	char temp[32]{};
+	int i = 0;
+	int len = StringUtil::CTLength(_pStr);
+	int maxNum = -1;
+	CTPlaceholderInfo r;
+	do
+	{
+		i = StringUtil::CTFindChar(_pStr, '{', i);
+		if (i <= -1)
+			return CTPlaceholderInfo::Error(-1); // { 문자가 없는 경우
+		if (i + 1 >= len)
+			return CTPlaceholderInfo::Error(-2); // {이 마지막 문자인 경우
+		int e = StringUtil::CTFindChar(_pStr, '}', i + 1);
+		if (e <= -1)
+			return CTPlaceholderInfo::Error(-3); // { 다음에 } 문자가 없는 경우
+		int sz = e - i - 1;
+		if (sz >= 32)
+			return CTPlaceholderInfo::Error(-4); // 플레이스홀더 내용이 말도 안되는 경우
+		StringUtil::CTCopy(temp, 32, _pStr + i + 1, sz);
+		for (int k = 0; k < sz; ++k)
+			if (temp[k] < '0' || temp[k] > '9')
+				return CTPlaceholderInfo::Error(-5); // 플레이스홀더 내용이 숫자가 아닌 경우
+		int num = StringUtil::CTToInt32(temp);
+		if (num < 0 || num >= PLACEHOLDER_MAX)
+			return CTPlaceholderInfo::Error(-6); // 플레이스홀더 번호가 음수이거나 최대 번호(100)를 넘는 경우
+		++r.map_[num]; // 존재하는 플레이스홀더 표시
+		if (num > maxNum)
+			maxNum = num;
+		StringUtil::CTZeroMemory(temp, 32);
+		i = e + 1;
+	} while (i < len);
+
+	for (int j = 0; j <= maxNum; ++j)
+		if (r.map_[j] == 0) // 플레이스홀더 번호가 중간에 비어있는 경우 {0}{1}{3}
+			return CTPlaceholderInfo::Error(-7);
+	int count = 0;
+	for (int j = 0; j <= maxNum; ++j)
+		count += r.map_[j];
+	r.count_ = count;
+	return r;
+}
+
+
+
 int main(int _argc, char** _argv) 
 {
 	InitializeJCore(_argc, _argv);
 	InitializeDefaultLogger();
 
 	//_CrtSetBreakAlloc(886);
+
+	constexpr int map[100]{};
+	constexpr CTPlaceholderInfo ct = CTPlaceholderParse("{0} {1}       {2}");
+	static_assert(ct.errorCode_ == 0);
+	static_assert(ct.count_ == 3);
+
+	static_assert(StringUtil::CTFind("a select b", "select") == 2);
+	static_assert(StringUtil::CTCount("a select b", "e") == 2);
 
 	{
 		// Vector / ArrayStack / ArrayQueue

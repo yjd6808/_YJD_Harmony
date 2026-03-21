@@ -48,6 +48,7 @@ protected:
 class SqlServerQueryUpdate : public SqlServerQuery
 {
 public:
+	SqlServerQueryUpdate() { stmtType_ = StatementType::Update; }
 	virtual~SqlServerQueryUpdate() override = default;
 	virtual bool Execute() override;
 };
@@ -59,6 +60,7 @@ public:
 class SqlServerQueryDelete : public SqlServerQuery
 {
 public:
+	SqlServerQueryDelete() { stmtType_ = StatementType::Delete; }
 	~SqlServerQueryDelete() override = default;
 
 	virtual bool Execute() override;
@@ -71,7 +73,10 @@ public:
 class SqlServerQueryInsert : public SqlServerQuery
 {
 public:
-	SqlServerQueryInsert() : insertId_(0) {}
+	SqlServerQueryInsert() : insertId_(0)
+	{
+		stmtType_ = StatementType::Insert;
+	}
 	virtual ~SqlServerQueryInsert() override = default;
 	virtual _u64 GetInsertId() const override { return insertId_; }
 	virtual bool Execute() override;
@@ -91,6 +96,7 @@ public:
 	: colCount_(0)
 	, hasCurrentRow_(false)
 	{
+		stmtType_ = StatementType::Select;
 	}
 
 	virtual	~SqlServerQuerySelect() override;

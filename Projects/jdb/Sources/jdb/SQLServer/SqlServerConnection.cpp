@@ -3,6 +3,8 @@
 
 #include <jc/Utils/Console.h>
 
+#include "SqlServerQuery.h"
+
 USING_NS_JC;
 USING_NS_STD;
 
@@ -83,7 +85,11 @@ bool SqlServerConnection::Connect(const jc::String& _hostname, const uint16_t& _
 
 	ret = SQLDriverConnectA(hDbc_, NULL, (SQLCHAR*)connStr, SQL_NTS, outConnStr, sizeof(outConnStr), &outConnStrLen, SQL_DRIVER_NOPROMPT);
 
-	if (!SQL_SUCCEEDED(ret))
+	if (SQL_SUCCEEDED(ret))
+	{
+		isConnected_ = true;
+	}
+	else
 	{
 		isConnected_ = false;
 		_LogError_("SQLServer 데이터베이스 연결 실패 : %s", GetDiagnosticMessage(SQL_HANDLE_DBC, hDbc_).Source());
@@ -91,10 +97,6 @@ bool SqlServerConnection::Connect(const jc::String& _hostname, const uint16_t& _
 		SQLFreeHandle(SQL_HANDLE_ENV, hEnv_);
 		hDbc_ = SQL_NULL_HDBC;
 		hEnv_ = SQL_NULL_HENV;
-	}
-	else
-	{
-		isConnected_ = true;
 	}
 
 	return isConnected_;

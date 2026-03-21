@@ -42,7 +42,46 @@ IP 포트 사용하여 접속 방법
 512MB 하니까 메모리 부족으로 제대로 수행이 안됨.
 
 
-
 -----------------------------------------------------------
 SQL 덤프 방법
 데이터 베이스 우클릭 -> 테스크 -> 스크립트 생성
+
+-----------------------------------------------------------
+SQL char, varchar, nvarcar, nchar
+-> nchar, nvarchar은 무조건 utf16으로 저장함. (모든 글자 2바이트)
+-> char, varchar은 테이블의 column collation에 맞춰서 저장됨. (알파벳은 1바이트 한글은 2바이트 뭐 이렇게 이상하게 저장됨.)
+jc프로젝트는 모든 문자열은 utf8을 기준으로 작성되었다.
+jdb 프로젝트도 따라서 char, varchar 컬럼은 UTF8로 가정하고 그냥 binary 그대로 읽어들이도록 작성하였다.
+(SqlServerQuerySelect::Execute(), SqlServerQuerySelect::GetString 참고)
+
+결론: sql server의 데이터베이스는 기본적으로 collation을 utf8로 설정하여 char, varchar이 utf8로 저장될 수 있도록 해야한다.
+
+1. 데이터베이스 Collation 변경방법: 데이터 베이스 속성 -> 옵션 -> 데이터 정렬
+적용 방법. 데이터 베이스 Collation 변경 후 테이블을 지웠다가 생성하면 데이터베이스 Collation 기준으로 각 컬럼별 Collation이 적용된다. 
+(그냥 데이터베이스만 변경만 해놓으면 테이블까지 자동 변경은 안됨.)
+※ 주의. sql 파일이 열려있으면 하나의 세션이 열린것으로 간주하고 데이터 정렬 변경 중 오류가 발생할 것이다.
+모든 sql 파일을 닫고 난 후 수행하자.
+
+
+	-- DB Collation 확인 쿼리
+	SELECT DATABASEPROPERTYEX(DB_NAME(), 'Collation');
+
+	-- 바이너리 길이 확인 쿼리
+	select datalength(c_varchar), datalength(c_char), datalength(c_nvarchar) from t_test;
+	insert into t_test (c_varchar) values ('a한');
+	insert into t_test (c_varchar) values ('한글nvarchar');
+	insert into t_test (c_char) values ('a한');
+	insert into t_test (c_char) values ('한글nvarchar');
+	insert into t_test (c_nvarchar) values ('a한');
+	insert into t_test (c_nvarchar) values ('한글nvarchar');
+
+	-- 테이블의 특정 컬럼 collation 확인 쿼리
+	SELECT TABLE_NAME, COLUMN_NAME, COLLATION_NAME
+	FROM INFORMATION_SCHEMA.COLUMNS
+	WHERE TABLE_NAME = 't_test'
+	AND COLUMN_NAME = 'c_char';
+
+
+
+
+

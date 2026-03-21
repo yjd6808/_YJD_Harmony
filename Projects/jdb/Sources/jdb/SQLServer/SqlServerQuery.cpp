@@ -513,136 +513,136 @@ bool SqlServerQuerySelect::Next()
 
 namespace
 {
-jc::String ConvertString(char* _pBuf, SQLLEN _length, SQLSMALLINT _sqlType)
-{
-	if (_length == SQL_NULL_DATA || _length <= 0)
-		return jc::String::Empty;
-
-	switch (_sqlType)
+	jc::String ConvertString(char* _pBuf, SQLLEN _length, SQLSMALLINT _sqlType)
 	{
-	case SQL_CHAR:
+		if (_length == SQL_NULL_DATA || _length <= 0)
+			return jc::String::Empty;
+
+		switch (_sqlType)
 		{
-			// char타입은 0x20(공백)으로 패딩되므로, 널 종료 위치를 찾아서 문자열을 복사한다.
-			int nullPos = -1;
-			for (int i = 0; i < _length; ++i)
+		case SQL_CHAR:
 			{
-				if (_pBuf[i] == 0x20)
+				// char타입은 0x20(공백)으로 패딩되므로, 널 종료 위치를 찾아서 문자열을 복사한다.
+				int nullPos = -1;
+				for (int i = 0; i < _length; ++i)
 				{
-					nullPos = i;
-					break;
+					if (_pBuf[i] == 0x20)
+					{
+						nullPos = i;
+						break;
+					}
+				}
+				char* pNewBuf = dbg_new char[_length + 1];
+				Memory::CopyUnsafe(pNewBuf, _pBuf, nullPos != -1 ? nullPos : static_cast<int>(_length));
+				pNewBuf[nullPos != -1 ? nullPos : static_cast<int>(_length)] = '\0';
+
+				jc::String str(0);
+				str.ExchangeSource(pNewBuf, nullPos != -1 ? nullPos : static_cast<int>(_length));
+				return str;
+			}
+		case SQL_VARCHAR:
+			{
+				char* pNewBuf = dbg_new char[_length + 1];
+				Memory::CopyUnsafe(pNewBuf, _pBuf, static_cast<int>(_length));
+				pNewBuf[_length] = '\0';
+				jc::String str(0);
+				str.ExchangeSource(pNewBuf, static_cast<int>(_length));
+				return str;
+			}
+		case SQL_WVARCHAR:
+			{
+				wchar_t* pWBuf = reinterpret_cast<wchar_t*>(_pBuf);
+				return jc::StringUtil::ToUtf8(pWBuf, _length / sizeof(wchar_t));
+			}
+		default:
+			{
+				_pBuf[_length] = '\0';
+				jc_assert_msg(false, "문자열 변환을 지원하지 않는 SQL 타입입니다. SQL 타입: %d", _sqlType);
+				return jc::String(_pBuf);
+			}
+		}
+	}
+
+	template <typename T>
+	T ConvertAuto(char* _pBuf, SQLLEN _length, SQLSMALLINT _sqlType)
+	{
+		if (_length == SQL_NULL_DATA || _length <= 0)
+			return T{};
+
+		switch (_sqlType)
+		{
+		case SQL_BIT:
+		case SQL_TINYINT:
+			{
+				_u8 v;
+				memcpy(&v, _pBuf, sizeof(v));
+				return static_cast<T>(v);
+			}
+		case SQL_SMALLINT:
+			{
+				_s16 v;
+				memcpy(&v, _pBuf, sizeof(v));
+				return static_cast<T>(v);
+			}
+		case SQL_INTEGER:
+			{
+				_s32 v;
+				memcpy(&v, _pBuf, sizeof(v));
+				return static_cast<T>(v);
+			}
+		case SQL_BIGINT:
+			{
+				_s64 v;
+				memcpy(&v, _pBuf, sizeof(v));
+				return static_cast<T>(v);
+			}
+		case SQL_REAL:
+			{
+				_f32 v;
+				memcpy(&v, _pBuf, sizeof(v));
+				return static_cast<T>(v);
+			}
+		case SQL_FLOAT:
+		case SQL_DOUBLE:
+			{
+				_f64 v;
+				memcpy(&v, _pBuf, sizeof(v));
+				return static_cast<T>(v);
+			}
+		case SQL_NUMERIC:
+		case SQL_DECIMAL:
+			{
+				auto* pNumeric = reinterpret_cast<const SQL_NUMERIC_STRUCT*>(_pBuf);
+				_u64 val = 0;
+				memcpy(&val, pNumeric->val, sizeof(val));
+
+				if constexpr (std::is_floating_point_v<T>)
+				{
+					_f64 result = static_cast<_f64>(val);
+					for (SQLSCHAR i = 0; i < pNumeric->scale; ++i)
+						result /= 10.0;
+					if (pNumeric->sign == 0)
+						result = -result;
+					return static_cast<T>(result);
+				}
+				else
+				{
+					_s64 result = static_cast<_s64>(val);
+					for (SQLSCHAR i = 0; i < pNumeric->scale; ++i)
+						result /= 10;
+					if (pNumeric->sign == 0)
+						result = -result;
+					return static_cast<T>(result);
 				}
 			}
-			char* pNewBuf = dbg_new char[_length + 1];
-			Memory::CopyUnsafe(pNewBuf, _pBuf, nullPos != -1 ? nullPos : static_cast<int>(_length));
-			pNewBuf[nullPos != -1 ? nullPos : static_cast<int>(_length)] = '\0';
-
-			jc::String str(0);
-			str.ExchangeSource(pNewBuf, nullPos != -1 ? nullPos : static_cast<int>(_length));
-			return str;
-		}
-	case SQL_VARCHAR:
-		{
-			char* pNewBuf = dbg_new char[_length + 1];
-			Memory::CopyUnsafe(pNewBuf, _pBuf, static_cast<int>(_length));
-			pNewBuf[_length] = '\0';
-			jc::String str(0);
-			str.ExchangeSource(pNewBuf, static_cast<int>(_length));
-			return str;
-		}
-	case SQL_WVARCHAR:
-		{
-			wchar_t* pWBuf = reinterpret_cast<wchar_t*>(_pBuf);
-			return jc::StringUtil::ToUtf8(pWBuf, _length / sizeof(wchar_t));
-		}
-	default:
-		{
-			_pBuf[_length] = '\0';
-			jc_assert_msg(false, "문자열 변환을 지원하지 않는 SQL 타입입니다. SQL 타입: %d", _sqlType);
-			return jc::String(_pBuf);
-		}
-	}
-}
-
-template <typename T>
-T ConvertAuto(char* _pBuf, SQLLEN _length, SQLSMALLINT _sqlType)
-{
-	if (_length == SQL_NULL_DATA || _length <= 0)
-		return T{};
-
-	switch (_sqlType)
-	{
-	case SQL_BIT:
-	case SQL_TINYINT:
-		{
-			_u8 v;
-			memcpy(&v, _pBuf, sizeof(v));
-			return static_cast<T>(v);
-		}
-	case SQL_SMALLINT:
-		{
-			_s16 v;
-			memcpy(&v, _pBuf, sizeof(v));
-			return static_cast<T>(v);
-		}
-	case SQL_INTEGER:
-		{
-			_s32 v;
-			memcpy(&v, _pBuf, sizeof(v));
-			return static_cast<T>(v);
-		}
-	case SQL_BIGINT:
-		{
-			_s64 v;
-			memcpy(&v, _pBuf, sizeof(v));
-			return static_cast<T>(v);
-		}
-	case SQL_REAL:
-		{
-			_f32 v;
-			memcpy(&v, _pBuf, sizeof(v));
-			return static_cast<T>(v);
-		}
-	case SQL_FLOAT:
-	case SQL_DOUBLE:
-		{
-			_f64 v;
-			memcpy(&v, _pBuf, sizeof(v));
-			return static_cast<T>(v);
-		}
-	case SQL_NUMERIC:
-	case SQL_DECIMAL:
-		{
-			auto* pNumeric = reinterpret_cast<const SQL_NUMERIC_STRUCT*>(_pBuf);
-			_u64 val = 0;
-			memcpy(&val, pNumeric->val, sizeof(val));
-
-			if constexpr (std::is_floating_point_v<T>)
+		default:
 			{
-				_f64 result = static_cast<_f64>(val);
-				for (SQLSCHAR i = 0; i < pNumeric->scale; ++i)
-					result /= 10.0;
-				if (pNumeric->sign == 0)
-					result = -result;
-				return static_cast<T>(result);
-			}
-			else
-			{
-				_s64 result = static_cast<_s64>(val);
-				for (SQLSCHAR i = 0; i < pNumeric->scale; ++i)
-					result /= 10;
-				if (pNumeric->sign == 0)
-					result = -result;
-				return static_cast<T>(result);
+				// 문자열 타입 (CHAR, VARCHAR 등): 널 종료 후 StringUtil::ToNumber 폴백
+				_pBuf[_length] = '\0';
+				return jc::StringUtil::ToNumber<T>(_pBuf);
 			}
 		}
-	default:
-		{
-			// 문자열 타입 (CHAR, VARCHAR 등): 널 종료 후 StringUtil::ToNumber 폴백
-			_pBuf[_length] = '\0';
-			return jc::StringUtil::ToNumber<T>(_pBuf);
-		}
 	}
-}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
