@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sgcl/IComponent.h>
+#include "sgcl/IComponent.h"
 
 class AuthenticationComponent : public IComponent
 {

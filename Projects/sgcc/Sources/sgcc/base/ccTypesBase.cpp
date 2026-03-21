@@ -1,5 +1,4 @@
-﻿#include "Core.h"
-#include "ccTypesBase.h"
+﻿#include "ccTypesBase.h"
 
 NS_CC_BEGIN
 

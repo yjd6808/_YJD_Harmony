@@ -1,11 +1,10 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	이전에 작성한 AVL 트리 성능 개선
 	 - 메모이제이션을 적용합니다.
 */
 
-#include <jc_gtest/Core.h>
-#include <jc/TypeTraits.h>
+#include "jc/TypeTraits.h"
 
 using namespace std;
 

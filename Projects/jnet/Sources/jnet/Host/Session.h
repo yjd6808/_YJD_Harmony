@@ -5,14 +5,13 @@
 
 #pragma once
 
-#include <jc/Sync/RecursiveLock.h>
+#include "jc/Sync/RecursiveLock.h"
 
-#include <jnet/Host/Host.h>
-
-#include <jnet/EventListener/ServerEventListener.h>
-
-#include <jnet/Packet/Packet.h>
-#include <jnet/Packet/PacketParser.h>
+#include "jnet/Define.h"
+#include "jnet/Host/Host.h"
+#include "jnet/EventListener/ServerEventListener.h"
+#include "jnet/Packet/Packet.h"
+#include "jnet/Packet/PacketParser.h"
 
 NS_JNET_BEGIN
 

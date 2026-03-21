@@ -6,7 +6,6 @@
  * 통합 커넥션 풀 구현
  */
 
-#include "Core.h"
 #include "ConnectionPool.h"
 
 #include "IConnection.h"

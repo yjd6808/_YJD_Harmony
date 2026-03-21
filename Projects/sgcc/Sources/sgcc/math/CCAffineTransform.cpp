@@ -1,5 +1,4 @@
-﻿#include "Core.h"
-#include "sgcc/math/CCAffineTransform.h"
+﻿#include "sgcc/math/CCAffineTransform.h"
 
 using namespace std;
 

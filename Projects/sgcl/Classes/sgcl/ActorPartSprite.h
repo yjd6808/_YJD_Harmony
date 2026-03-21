@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include <sgcl/Core.h>
-#include <sgcl/ActorPartAnimation.h>
+#include "sgcl/ActorPartAnimation.h"
 
 class ActorSprite;
 

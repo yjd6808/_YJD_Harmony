@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/7/2023 8:21:08 AM
  * =====================
@@ -6,13 +6,13 @@
  */
 
 
-#include <jc_gtest/Core.h>
 
-#include <jc/FileSystem/File.h>
+#include "jc/FileSystem/File.h"
 
 #if TEST_FileUtilTest == ON
 
-TEST(FileUtilsTest, BasicTest) {
+TEST(FileUtilsTest, BasicTest)
+{
 	CRuntime::FileDelete("a.txt");
 	CRuntime::FileDelete("b.txt");
 

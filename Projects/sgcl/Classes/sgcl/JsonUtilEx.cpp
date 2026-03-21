@@ -1,14 +1,13 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 3:56:56 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "JsonUtilEx.h"
 
-#include <sgcl/ImagePackManager.h>
+#include "sgcl/ImagePackManager.h"
 
 USING_NS_JC;
 

@@ -1,11 +1,10 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	StringUtil 클래스 테스트입니다.
 */
 
-#include <jc_gtest/Core.h>
-#include <jc/Primitives/String.h>
-#include <jc/Primitives/StringUtil.h>
+#include "jc/Primitives/String.h"
+#include "jc/Primitives/StringUtil.h"
 
 
 

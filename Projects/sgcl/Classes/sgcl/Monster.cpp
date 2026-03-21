@@ -1,18 +1,17 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 9:30:45 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "Monster.h"
 
-#include <sg/_Struct/SteinsGate_AttackData.h>
-#include <sgcl/MoveComponent.h>
-#include <sgcl/PhysicsComponent.h>
-#include <sgcl/AIComponent.h>
+#include "sg/_Struct/SteinsGate_AttackData.h"
+#include "sgcl/MoveComponent.h"
+#include "sgcl/PhysicsComponent.h"
+#include "sgcl/AIComponent.h"
 
 USING_NS_CC;
 USING_NS_JC;

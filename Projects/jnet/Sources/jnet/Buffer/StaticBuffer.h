@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <jnet/Buffer/StreamBuffer.h>
+#include "jnet/Buffer/StreamBuffer.h"
 
 
 NS_JNET_BEGIN

@@ -1,11 +1,10 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/3/2023 8:32:39 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "SteinsGate_Projectile.h"
 
 USING_NS_JC;

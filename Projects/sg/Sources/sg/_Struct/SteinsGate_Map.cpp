@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/26/2023 2:28:26 PM
  * =====================
@@ -6,10 +6,9 @@
  */
 
 
-#include "Core.h"
 #include "SteinsGate_Map.h"
 
-#include <sg/Const.h>
+#include "sg/Const.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 bool MapAreaInfo::CheckWall(float _x, float _y) const

@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <jc/Sync/ILock.h>
+#include "jc/Sync/ILock.h"
 
 NS_JC_BEGIN
 

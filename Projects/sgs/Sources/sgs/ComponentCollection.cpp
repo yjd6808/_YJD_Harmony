@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/26/2023 5:04:25 PM
  * =====================
@@ -6,7 +6,6 @@
  */
 
 
-#include "Core.h"
 #include "ComponentCollection.h"
 
 USING_NS_SG;

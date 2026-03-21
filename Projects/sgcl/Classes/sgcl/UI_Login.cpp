@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/15/2023 8:07:34 PM
  * =====================
@@ -6,18 +6,17 @@
  */
 
 
-#include "Core.h"
 #include "UI_Login.h"
 
-#include <sgcl/Define_UI.h>
-#include <sgcl/Define_Popup.h>
-#include <sgcl/S_AUTH.h>
-#include <sgcl/_Scene/Scene_World.h>
-#include <sgcl/UIManager.h>
-#include <sgcl/_Net/NetCore.h>
-#include <sgcl/Contents.h>
+#include "sgcl/Define_UI.h"
+#include "sgcl/Define_Popup.h"
+#include "sgcl/S_AUTH.h"
+#include "sgcl/_Scene/Scene_World.h"
+#include "sgcl/UIManager.h"
+#include "sgcl/_Net/NetCore.h"
+#include "sgcl/Contents.h"
 
-#include <sgcl/AuthenticationComponent.h>
+#include "sgcl/AuthenticationComponent.h"
 
 
 

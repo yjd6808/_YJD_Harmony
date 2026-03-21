@@ -1,22 +1,21 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 1:42:47 AM
  * =====================
  * 
  */
 
-#include "Core.h"
-#include <sg/_Sga/SgaLoader.h>
-#include <sg/_Sga/SgaSprite.h>
-#include <sg/_Sga/SgaSound.h>
-#include <sg/_Sga/SgaElementInitializer.h>
+#include "sg/_Sga/SgaLoader.h"
+#include "sg/_Sga/SgaSprite.h"
+#include "sg/_Sga/SgaSound.h"
+#include "sg/_Sga/SgaElementInitializer.h"
 
-#include <jc/Primitives/String.h>
+#include "jc/Primitives/String.h"
 
-#include <jc/Tuple.h>
-#include <jc/FileSystem/FileStream.h>
-#include <jc/FileSystem/Directory.h>
-#include <jc/FileSystem/Path.h>
+#include "jc/Tuple.h"
+#include "jc/FileSystem/FileStream.h"
+#include "jc/FileSystem/Directory.h"
+#include "jc/FileSystem/Path.h"
 
 USING_NS_JC;
 

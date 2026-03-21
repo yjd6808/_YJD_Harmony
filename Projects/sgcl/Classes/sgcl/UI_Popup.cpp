@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 4/26/2023 12:10:03 AM
  * =====================
@@ -6,11 +6,10 @@
  */
 
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "UI_Popup.h"
 
-#include <sgcl/Define_UI.h>
+#include "sgcl/Define_UI.h"
 
 USING_NS_CC;
 USING_NS_CCUI;

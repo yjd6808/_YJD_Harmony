@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include <jc/Sync/NormalLock.h>
-#include <jc/Time.h>
+#include "jc/Sync/NormalLock.h"
+#include "jc/Time.h"
 
 NS_JC_BEGIN
 
@@ -18,7 +18,7 @@ struct CvStatus { enum _ { eTimeout, eNoTimeout }; };
 
 class ConditionVariable final
 {
-	struct Handle { PVOID Ptr; };
+	struct Handle { void* Ptr; };
 public:
 	ConditionVariable();
 

@@ -51,6 +51,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\sgs\PCH\Core.h" />
     <ClInclude Include="..\Sources\sgs\R_MESSAGE_COMMON.h">
       <SubType>
       </SubType>
@@ -98,7 +99,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\R_SETUP_COMMON.h" />
-    <ClInclude Include="..\Sources\sgs\Core.h" />
     <ClInclude Include="..\Sources\sgs\ServerCore.h" />
     <ClInclude Include="..\Sources\sgs\ServerEnum.h">
       <SubType>
@@ -150,6 +150,12 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\ListenerHelperCommon.cpp" />
+    <ClCompile Include="..\Sources\sgs\PCH\Core.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\Sources\sgs\R_MESSAGE_COMMON.cpp">
       <SubType>
       </SubType>
@@ -162,12 +168,6 @@
     <ClCompile Include="..\Sources\sgs\R_TEST_COMMON.cpp">
       <SubType>
       </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\sgs\Core.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\ServerCore.cpp" />
     <ClCompile Include="..\Sources\sgs\ServerEnum.cpp">
@@ -255,25 +255,25 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
     <IncludePath>$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\Zlib12\include;$(SolutionDir)ThirdParty\JsonCpp195\include;$(SolutionDir)ThirdParty\MySQL80\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform);$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
     <IncludePath>$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\Zlib12\include;$(SolutionDir)ThirdParty\JsonCpp195\include;$(SolutionDir)ThirdParty\MySQL80\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform);$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
     <IncludePath>$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\Zlib12\include;$(SolutionDir)ThirdParty\JsonCpp195\include;$(SolutionDir)ThirdParty\MySQL80\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform);$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
     <IncludePath>$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\Zlib12\include;$(SolutionDir)ThirdParty\JsonCpp195\include;$(SolutionDir)ThirdParty\MySQL80\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform);$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\;$(LibraryPath)</LibraryPath>

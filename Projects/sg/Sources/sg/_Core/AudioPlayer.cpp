@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 10:58:34 PM
  * =====================
@@ -6,10 +6,9 @@
  */
 
 
-#include "Core.h"
 #include "AudioPlayer.h"
 
-#include <bass.h>
+#include "bass.h"
 
 USING_NS_JC;
 

@@ -1,18 +1,17 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 4/26/2023 12:33:39 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "PopupManager.h"
 
-#include <sg/_Util/DescLoaderMgr.h>
+#include "sg/_Util/DescLoaderMgr.h"
 
-#include <sgcl/_Scene/Scene_World.h>
-#include <sgcl/Define_UI.h>
+#include "sgcl/_Scene/Scene_World.h"
+#include "sgcl/Define_UI.h"
 
 USING_NS_CC;
 USING_NS_CCUI;

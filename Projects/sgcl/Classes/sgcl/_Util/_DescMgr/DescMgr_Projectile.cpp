@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 1:57:14 PM
  * =====================
@@ -6,12 +6,11 @@
  */
 
 
-#include "Core.h"
 #include "DescMgr_Projectile.h"
 
-#include <sgcl/ImagePackManager.h>
-#include <sg/_Util/DescLoaderMgr.h>
-#include <sgcl/JsonUtilEx.h>
+#include "sgcl/ImagePackManager.h"
+#include "sg/_Util/DescLoaderMgr.h"
+#include "sgcl/JsonUtilEx.h"
 
 USING_NS_JC;
 USING_NS_JS;

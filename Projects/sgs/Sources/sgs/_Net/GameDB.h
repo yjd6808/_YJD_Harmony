@@ -9,7 +9,7 @@
 
 NS_SG_BEGIN
 
-class SG_DLL GameDB : public jdb::MysqlDatabase, public jc::SingletonPointer<GameDB>
+class SG_DLL GameDB : public jc::SingletonPointer<GameDB>
 {
 
 };

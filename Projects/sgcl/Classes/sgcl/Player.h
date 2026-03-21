@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include <sgcl/Character.h>
+#include "sgcl/Character.h"
 
 class MapLayer;
 

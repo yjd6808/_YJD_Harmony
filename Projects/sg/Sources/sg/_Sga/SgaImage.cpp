@@ -1,14 +1,13 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 5:42:12 PM
  * =====================
  *
  */
 
-#include "Core.h"
-#include <sg/_Sga/SgaImage.h>
-#include <sg/_Sga/SgaSprite.h>
-#include <sg/_Sga/SgaElementInitializer.h>
+#include "sg/_Sga/SgaImage.h"
+#include "sg/_Sga/SgaSprite.h"
+#include "sg/_Sga/SgaElementInitializer.h"
 
 USING_NS_JC;
 USING_NS_JS;

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <sgs/InterServerSendHelper.h>
+#include "sgs/InterServerSendHelper.h"
 
 struct S_PING_IS_COMMON : InterServerSendHelper<S_PING_IS_COMMON>
 {

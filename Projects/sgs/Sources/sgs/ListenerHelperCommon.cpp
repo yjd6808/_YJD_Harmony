@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 6/17/2023 11:26:26 PM
  * =====================
@@ -6,10 +6,9 @@
  */
 
 
-#include "Core.h"
 #include "ListenerHelperCommon.h"
 
-#include <sgs/InterServerCmdDefine.h>
+#include "sgs/InterServerCmdDefine.h"
 
 USING_NS_JC;
 USING_NS_JNET;

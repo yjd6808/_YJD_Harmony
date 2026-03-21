@@ -1,9 +1,9 @@
 ﻿#pragma once
 
-#include <jc/Type.h>
-#include <jc/Define.h>
+#include "jc/Type.h"
+#include "jc/Define.h"
 
-#include <jnet/Namespace.h>
+#include "jnet/Namespace.h"
 
 NS_JNET_BEGIN
 

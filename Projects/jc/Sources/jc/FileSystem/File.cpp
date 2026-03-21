@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/7/2023 8:24:47 AM
  * =====================
@@ -6,14 +6,13 @@
  */
 
 
-#include <jc/Core.h>
-#include <jc/Exception.h>
+#include "jc/Exception.h"
 
-#include <jc/FileSystem/File.h>
-#include <jc/Primitives/String.h>
-#include <jc/Wrapper/CRuntime.h>
+#include "jc/FileSystem/File.h"
+#include "jc/Primitives/String.h"
+#include "jc/Wrapper/CRuntime.h"
 
-#include <jc/Primitives/StringUtil.h>
+#include "jc/Primitives/StringUtil.h"
 
 #define MODE_BUFFER_SIZE		32
 #define FILE_READ_COUNT			64

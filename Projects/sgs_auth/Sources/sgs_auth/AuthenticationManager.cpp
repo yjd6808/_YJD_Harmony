@@ -1,14 +1,13 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 6/14/2023 11:55:59 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "AuthenticationManager.h"
 
-#include <jc/Random.h>
+#include "jc/Random.h"
 
 #define TIMEID_GENERATION_RETRY_COUNT        10
 #define SERIAL_GENERATION_RETRY_COUNT        10

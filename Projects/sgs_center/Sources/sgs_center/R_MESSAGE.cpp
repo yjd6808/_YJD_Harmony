@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 4/18/2023 2:20:54 PM
  * =====================
@@ -7,10 +7,9 @@
 
 
 
-#include "Core.h"
 #include "R_MESSAGE.h"
 
-#include <sgs/CmdHost_MESSAGE.h>
+#include "sgs/CmdHost_MESSAGE.h"
 
 USING_NS_JC;
 USING_NS_JNET;

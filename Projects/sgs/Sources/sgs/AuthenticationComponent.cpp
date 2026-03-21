@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/26/2023 5:29:23 PM
  * =====================
@@ -6,11 +6,10 @@
  */
 
 
-#include "Core.h"
 #include "AuthenticationComponent.h"
 
 // #include <sgs/UnauthenticatedSessionManager.h>
-#include <sgs/_Net/NetSession.h>
+#include "sgs/_Net/NetSession.h"
 
 USING_NS_SG;
 

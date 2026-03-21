@@ -2,7 +2,7 @@
 #define MATH_VEC4_H
 
 #ifdef __SSE__
-#include <xmmintrin.h>
+#include "xmmintrin.h"
 #endif
 
 #include "sgcc/math/CCMathBase.h"

@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jc/TypeCast.h>
-#include <jc/Primitives/String.h>
+#include "jc/TypeCast.h"
+#include "jc/Primitives/String.h"
 
 NS_JC_BEGIN
 

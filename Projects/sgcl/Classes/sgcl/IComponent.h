@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <jc/Declspec.h>
+#include "jc/Declspec.h"
 
 #define SG_COMPONENT_TYPE_GETTER(component_type)				\
 public:															\

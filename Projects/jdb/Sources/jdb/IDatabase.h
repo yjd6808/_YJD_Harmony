@@ -9,19 +9,19 @@
 
 #pragma once
 
-#include <jc/Primitives/String.h>
+#include "jc/Primitives/String.h"
 
-#include <jnet/IOCP/IOCPTask.h>
-#include <jnet/IOCP/IOCPTaskListener.h>
+#include "jnet/IOCP/IOCPTask.h"
+#include "jnet/IOCP/IOCPTaskListener.h"
 
-#include <jdb/Namespace.h>
-#include <jdb/DLLExport.h>
-#include <jdb/IQuery.h>
-#include <jdb/Structure.h>
-#include <jdb/Util.h>
+#include "jdb/Namespace.h"
+#include "jdb/DLLExport.h"
+#include "jdb/IQuery.h"
+#include "jdb/Structure.h"
+#include "jdb/Util.h"
 
-#include <jdb/MySQL/MysqlStatementBuilder.h>
-#include <jdb/SQLServer/SqlServerStatementBuilder.h>
+#include "jdb/MySQL/MysqlStatementBuilder.h"
+#include "jdb/SQLServer/SqlServerStatementBuilder.h"
 
 NS_JDB_BEGIN
 

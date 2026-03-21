@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/23/2023 9:19:50 PM (크리스마스 2일전 토요일날 작성함)
  * =====================
@@ -30,12 +30,11 @@
  */
 
 
-#include <jnet_gbench/Core.h>
 
 #include "PacketPooling_ClientSide.h"
 #include "PacketPooling_ServerSide.h"
 #include "PacketPooling_Common.h"
-#include <jc/Utils/ProgressNotifier.h>
+#include "jc/Utils/ProgressNotifier.h"
 
 USING_NS_PACKET_POOLING;
 

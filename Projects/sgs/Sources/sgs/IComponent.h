@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <jc/Declspec.h>
-#include <jc/Primitives/RefCountObject.h>
+#include "jc/Declspec.h"
+#include "jc/Primitives/RefCountObject.h"
 
-#include <sgs/ServerConst_COMPONENT.h>
+#include "sgs/ServerConst_COMPONENT.h"
 
 #define SG_COMPONENT_TYPE_GETTER(component_type)				\
 public:															\

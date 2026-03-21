@@ -1,11 +1,10 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 5/9/2023 2:07:30 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "S_GAME_UDP.h"
 

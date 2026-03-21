@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <sg/_Struct/SteinsGate_Action.h>
-#include <sgcl/HitRecorder.h>
+#include "sg/_Struct/SteinsGate_Action.h"
+#include "sgcl/HitRecorder.h"
 
 struct ActionInfo;
 

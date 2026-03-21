@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <sg/_Util/DescBase.h>
-#include <sg/_Struct/SteinsGate_Server.h>
-#include <sg/_Sga/SgaSpriteRect.h>
+#include "sg/_Util/DescBase.h"
+#include "sg/_Struct/SteinsGate_Server.h"
+#include "sg/_Sga/SgaSpriteRect.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 JC_SENUM_BEGIN(CharType)

@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include <jc/Sync/WaitHandle.h>
-#include <jc/Primitives/RefCountObject.h>
+#include "jc/Sync/WaitHandle.h"
+#include "jc/Primitives/RefCountObject.h"
 
-#include <jnet/Namespace.h>
+#include "jnet/Namespace.h"
 
 NS_JNET_BEGIN
 

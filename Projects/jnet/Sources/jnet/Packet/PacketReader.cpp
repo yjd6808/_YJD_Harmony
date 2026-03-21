@@ -1,12 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/3/2026 9:17:36 PM
  * =====================
  */
 
 
-#include <jnet/Core.h>
-#include <jnet/Packet/PacketReader.h>
+#include "jnet/Packet/PacketReader.h"
 
 USING_NS_JNET;
 

@@ -1,19 +1,18 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/15/2023 1:30:20 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "DescMgr_UI.h"
 
-#include <sgcl/JsonUtilEx.h>
-#include <sg/_Util/DescLoaderMgr.h>
+#include "sgcl/JsonUtilEx.h"
+#include "sg/_Util/DescLoaderMgr.h"
 
-#include <sgcl/ImagePackManager.h>
-#include <sgcl/FontManager.h>
-#include <sgcl/UICheckBox.h>
+#include "sgcl/ImagePackManager.h"
+#include "sgcl/FontManager.h"
+#include "sgcl/UICheckBox.h"
 
 USING_NS_JC;
 USING_NS_JS;

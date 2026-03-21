@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 9:21:07 AM
  * =====================
@@ -7,8 +7,7 @@
 
 
 
-#include <jc_gtest/Core.h>
-#include <jc/FileSystem/Path.h>
+#include "jc/FileSystem/Path.h"
 
 #if TEST_PathTest == ON
 

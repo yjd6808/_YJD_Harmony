@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <sgs/ServerCore.h>
+#include "sgs/ServerCore.h"
 
 void InitializeCenterCore();
 void FinalizeCenterCore();

@@ -1,14 +1,12 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	HashSet 클래스를 테스트합니다.
 */
 
 
-#include <jc_gtest/Core.h>
 
-#include <jc/Core.h>
-#include <jc/Container/HashSet.h>
-#include <jc/Random.h>
+#include "jc/Container/HashSet.h"
+#include "jc/Random.h"
 
 USING_NS_STD;
 

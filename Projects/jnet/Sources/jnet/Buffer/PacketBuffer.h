@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <jnet/Buffer/PooledStreamBuffer.h>
-#include <jnet/Packet/Command.h>
+#include "jnet/Buffer/PooledStreamBuffer.h"
+#include "jnet/Packet/Command.h"
 
 NS_JNET_BEGIN
 

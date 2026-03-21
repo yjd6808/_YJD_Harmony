@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <jnet/Packet/Command.h>
+#include "jnet/Packet/Command.h"
 
  // 커맨드 ID
 #define CMDID_SC_TEST			100

@@ -13,10 +13,8 @@
 
 #pragma once
 
-
-#include <sgcl/Core.h>
-#include <sgcl/FrameTexture.h>
-#include <sg/_Struct/SteinsGate_FrameEvent.h>
+#include "sgcl/FrameTexture.h"
+#include "sg/_Struct/SteinsGate_FrameEvent.h"
 
 class ActorPartSprite;
 class ActorPartAnimation : public cocos2d::Ref

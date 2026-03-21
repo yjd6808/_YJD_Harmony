@@ -1,19 +1,18 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 6:36:25 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "ImagePack.h"
 
-#include <jc/FileSystem/Path.h>
-#include <sg/_Sga/SgaSpriteAbstract.h>
-#include <sg/_Sga/SgaColorFormat.h>
+#include "jc/FileSystem/Path.h"
+#include "sg/_Sga/SgaSpriteAbstract.h"
+#include "sg/_Sga/SgaColorFormat.h"
 
-#include <sgcl/ImagePackManager.h>
+#include "sgcl/ImagePackManager.h"
 
 USING_NS_CC;
 USING_NS_JC;

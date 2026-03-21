@@ -1,11 +1,10 @@
-﻿/*
+/*
 	작성자 : 윤정도
 */
 
 
-#include <jc_gtest/Core.h>
 
-#include <jc/Container/LinkedList.h>
+#include "jc/Container/LinkedList.h"
 
 
 

@@ -1,11 +1,10 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/26/2023 5:00:15 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "NetSession.h"
 
 USING_NS_JC;

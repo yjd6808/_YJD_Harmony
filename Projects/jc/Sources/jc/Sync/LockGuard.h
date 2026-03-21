@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <jc/Config.h>
+#include "jc/Config.h"
 
 NS_JC_BEGIN
 

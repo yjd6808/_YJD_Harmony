@@ -19,7 +19,7 @@
     </ClCompile>
 
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\;$(ODBCDir)\Lib\$(Platform);$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\MySQL$(MySQLVersion)\lib\$(Platform)\;$(ODBCDir)\Lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libmysql.lib;msodbcsql17.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

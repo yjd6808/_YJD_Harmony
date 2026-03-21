@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <jdb/IConnection.h>
+#include "jdb/IConnection.h"
 
 NS_JDB_BEGIN
 

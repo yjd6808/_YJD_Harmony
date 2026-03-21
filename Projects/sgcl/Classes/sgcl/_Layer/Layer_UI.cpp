@@ -1,19 +1,18 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/14/2023 10:12:23 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "Layer_UI.h"
 
-#include <sg/_Util/DescLoaderMgr.h>
-#include <sgcl/UIStatic.h>
-#include <sgcl/UIManager.h>
-#include <sgcl/UIRootGroup.h>
-#include <sgcl/SteinsGateApp.h>
-#include <sgcl/_Core/AppConfig_Props.h>
+#include "sg/_Util/DescLoaderMgr.h"
+#include "sgcl/UIStatic.h"
+#include "sgcl/UIManager.h"
+#include "sgcl/UIRootGroup.h"
+#include "sgcl/SteinsGateApp.h"
+#include "sgcl/_Core/AppConfig_Props.h"
 
 USING_NS_CC;
 USING_NS_CCUI;

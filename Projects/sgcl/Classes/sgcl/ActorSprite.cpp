@@ -1,15 +1,14 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 1:09:44 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "ActorSprite.h"
 
-#include <sgcl/Actor.h>
+#include "sgcl/Actor.h"
 
 #include "ImagePackManager.h"
 

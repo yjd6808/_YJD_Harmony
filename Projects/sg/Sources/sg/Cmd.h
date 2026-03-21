@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sg/Cmd_AUTHENTICATION.h>
-#include <sg/Cmd_CHAT.h>
-#include <sg/Cmd_LOBBY.h>
-#include <sg/Cmd_MESSAGE.h>
+#include "sg/Cmd_AUTHENTICATION.h"
+#include "sg/Cmd_CHAT.h"
+#include "sg/Cmd_LOBBY.h"
+#include "sg/Cmd_MESSAGE.h"

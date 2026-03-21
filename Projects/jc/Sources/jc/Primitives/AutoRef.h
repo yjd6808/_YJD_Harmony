@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <jc/Functional.h>
-#include <jc/TypeCast.h>
+#include "jc/Functional.h"
+#include "jc/TypeCast.h"
 
 NS_JC_BEGIN
 

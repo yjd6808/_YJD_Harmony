@@ -1,18 +1,17 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/29/2023 8:01:53 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "FallDownActivity_Goblin.h"
 
-#include <sgcl/Monster.h>
-#include <sgcl/Define_Animation.h>
+#include "sgcl/Monster.h"
+#include "sgcl/Define_Animation.h"
 
-#include <sgcl/PhysicsComponent.h>
-#include <sgcl/AIComponent.h>
+#include "sgcl/PhysicsComponent.h"
+#include "sgcl/AIComponent.h"
 
 FallDownActivity_Goblin::FallDownActivity_Goblin(Actor* _pActor)
 : FallDownActivity(_pActor)

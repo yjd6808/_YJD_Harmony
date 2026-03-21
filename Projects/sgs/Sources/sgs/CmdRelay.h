@@ -12,5 +12,5 @@
 
 #pragma once
 
-#include <sgs/CmdRelay_AUTHENTICATION.h>
-#include <sgs/CmdRelay_TEST.h>
+#include "sgs/CmdRelay_AUTHENTICATION.h"
+#include "sgs/CmdRelay_TEST.h"

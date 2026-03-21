@@ -1,13 +1,12 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/11/2023 4:13:58 PM
  * =====================
  *
  */
 
-#include <jnetr_common/Core.h>
-#include <jnetr_common/UdpClientNetGroup.h>
-#include <jnetr_common/Command.h>
+#include "jnetr_common/UdpClientNetGroup.h"
+#include "jnetr_common/Command.h"
 
 USING_NS_JC;
 

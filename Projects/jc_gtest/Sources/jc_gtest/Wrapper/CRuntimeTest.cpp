@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/7/2023 6:37:50 AM
  * =====================
@@ -7,8 +7,7 @@
 
 
 
-#include <jc_gtest/Core.h>
-#include <jc/Wrapper/CRuntime.h>
+#include "jc/Wrapper/CRuntime.h"
 
 #if TEST_CRuntimeTest == ON
 

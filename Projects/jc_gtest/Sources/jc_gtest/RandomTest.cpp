@@ -1,5 +1,4 @@
-﻿#include <jc_gtest/Core.h>
-#include <jc/Random.h>
+#include "jc/Random.h"
 
 using namespace std;
 

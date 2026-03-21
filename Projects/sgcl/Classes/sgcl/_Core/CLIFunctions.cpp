@@ -1,6 +1,5 @@
-﻿#include "Core.h"
 
-#include <sg/_Core/CLIListener.h>
+#include "sg/_Core/CLIListener.h"
 
 REGISTER_CLI_FUNCTION("exit", CLI_Exit, 
 	"프로그램을 종료합니다."

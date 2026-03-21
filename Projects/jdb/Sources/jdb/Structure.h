@@ -3,10 +3,10 @@
  */
 #pragma once
 
-#include <jc/Primitives/String.h>
-#include <jc/Type.h>
+#include "jc/Primitives/String.h"
+#include "jc/Type.h"
 
-#include <jdb/Namespace.h>
+#include "jdb/Namespace.h"
 
 NS_JDB_BEGIN
 

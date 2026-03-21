@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <jc/Define.h>
+#include "jc/Define.h"
 
-#include <jdb/QueryHelper.h>
+#include "jdb/QueryHelper.h"
 
 struct Q_LOBBY : jdb::QryHelper<Q_LOBBY>
 {

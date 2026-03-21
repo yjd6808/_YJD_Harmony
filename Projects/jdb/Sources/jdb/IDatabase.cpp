@@ -6,7 +6,6 @@
  * 통합 Database 클래스 구현
  */
 
-#include "Core.h"
 #include "IDatabase.h"
 
 #include "ConnectionPool.h"

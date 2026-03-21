@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <jnet/IPAddress.h>
+#include "jnet/IPAddress.h"
 
 NS_JNET_BEGIN
 

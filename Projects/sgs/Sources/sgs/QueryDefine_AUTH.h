@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <jdb/QueryDefine.h>
+#include "jdb/QueryDefine.h"
 
 // ==================================================================
 // SelectAccountInfoList

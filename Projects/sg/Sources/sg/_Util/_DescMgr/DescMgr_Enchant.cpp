@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/22/2023 12:15:55 AM
  * =====================
@@ -6,11 +6,10 @@
  */
 
 
-#include "Core.h"
 #include "DescMgr_Enchant.h"
 
-#include <sg/_Util/DescLoaderMgr.h>
-#include <sg/_Util/JsonUtil.h>
+#include "sg/_Util/DescLoaderMgr.h"
+#include "sg/_Util/JsonUtil.h"
 
 
 USING_NS_JS;

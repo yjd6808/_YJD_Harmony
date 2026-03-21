@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/15/2023 2:38:08 AM
  * =====================
@@ -6,14 +6,13 @@
  */
 
 
-#include "Core.h"
 #include "FontManager.h"
 #include "GameCoreHeader.h"
 
-#include <sg/_Core/AppConfig.h>
+#include "sg/_Core/AppConfig.h"
 
-#include <jc/FileSystem/Directory.h>
-#include <jc/FileSystem/Path.h>
+#include "jc/FileSystem/Directory.h"
+#include "jc/FileSystem/Path.h"
 
 USING_NS_JC;
 USING_NS_JS;

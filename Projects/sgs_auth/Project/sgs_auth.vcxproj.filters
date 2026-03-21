@@ -18,7 +18,9 @@
     <ClCompile Include="..\Sources\sgs_auth\AuthenticationManager.cpp">
       <Filter>Contents</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs_auth\Core.cpp" />
+    <ClCompile Include="..\Sources\sgs_auth\PCH\Core.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\sgs_auth\AuthCore.h" />
@@ -37,7 +39,9 @@
     <ClInclude Include="..\Sources\sgs_auth\AuthenticationManager.h">
       <Filter>Contents</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs_auth\Core.h" />
+    <ClInclude Include="..\Sources\sgs_auth\PCH\Core.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Recv">
@@ -51,6 +55,9 @@
     </Filter>
     <Filter Include="Contents">
       <UniqueIdentifier>{fe79c973-98af-462a-a693-69f34dcce325}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{6bad4521-3146-42d1-99d3-c2e42d2c1c90}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\Sources\sg\Core.cpp" />
     <ClCompile Include="..\Sources\sg\CommonCore.cpp" />
     <ClCompile Include="..\Sources\sg\Logo.cpp" />
     <ClCompile Include="..\Sources\sg\BaseContents.cpp">
@@ -208,9 +207,11 @@
     <ClCompile Include="..\Sources\sg\_Net\NetClientListener.cpp">
       <Filter>_Net\Listener</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\sg\PCH\Core.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\sg\Core.h" />
     <ClInclude Include="..\Sources\sg\CommonCore.h" />
     <ClInclude Include="..\Sources\sg\Logo.h" />
     <ClInclude Include="..\Sources\sg\LogSpecifier.h" />
@@ -486,6 +487,9 @@
     <ClInclude Include="..\Sources\sg\_Net\NetServerListener.h">
       <Filter>_Net\Listener</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\sg\PCH\Core.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Contents">
@@ -529,6 +533,9 @@
     </Filter>
     <Filter Include="_Net\Listener">
       <UniqueIdentifier>{a08a2ead-fee0-4ee6-aa74-41901c3681e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{ccec2be1-2646-4dd3-abb1-c82ac23dbef6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

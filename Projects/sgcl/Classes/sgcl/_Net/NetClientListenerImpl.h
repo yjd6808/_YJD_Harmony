@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <sg/_Net/NetClientListener.h>
-#include <sg/_Net/NetListenerHelper.h>
+#include "sg/_Net/NetClientListener.h"
+#include "sg/_Net/NetListenerHelper.h"
 
 class NetClientListenerImpl : public sg::NetClientListener
 {

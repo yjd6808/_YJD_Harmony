@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 표준 해쉬맵과 내가 구현한 해쉬맵 성능 비교
  * =====================================================================
@@ -41,10 +41,9 @@
  * 
  */
 
-#include <jc_gbench/Core.h>
-#include <jc/Container/HashMap.h>
+#include "jc/Container/HashMap.h"
 
-#include <unordered_map>
+#include "unordered_map"
 
 
 #if HashMapTest == ON

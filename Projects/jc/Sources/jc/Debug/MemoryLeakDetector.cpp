@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/19/2022 5:10:28 AM
  * =====================
@@ -6,8 +6,7 @@
  */
 
 
-#include <jc/Core.h>
-#include <jc/Debug/MemoryLeakDetector.h>
+#include "jc/Debug/MemoryLeakDetector.h"
 
 NS_JC_BEGIN
 

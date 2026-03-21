@@ -1,14 +1,13 @@
-﻿#include "Core.h"
 
-#include <jc/Random.h>
+#include "jc/Random.h"
 
-#include <sg/LogSpecifier.h>
+#include "sg/LogSpecifier.h"
 
-#include <sgs/_API/sgapiServerBase.h>
-#include <sgs/_Net/NetCore.h>
-#include <sgs/_Net/NetGroup_InterServ.h>
+#include "sgs/_API/sgapiServerBase.h"
+#include "sgs/_Net/NetCore.h"
+#include "sgs/_Net/NetGroup_InterServ.h"
 
-#include <sgs_auth/AuthCore.h>
+#include "sgs_auth/AuthCore.h"
 
 USING_NS_JC;
 USING_NS_JNET;

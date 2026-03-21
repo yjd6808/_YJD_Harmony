@@ -1,12 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/7/2023 6:20:03 PM
  * =====================
  *
  */
 
-#include <jc/Core.h>
-#include <jc/Pool/MemoryChuckQueue.h>
+#include "jc/Pool/MemoryChuckQueue.h"
 
 NS_JC_BEGIN
 

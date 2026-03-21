@@ -9,12 +9,12 @@
 #pragma once
 
 
-#include <jc/Sync/ManualResetEvent.h>
-#include <jc/Sync/SpinLock.h>
+#include "jc/Sync/ManualResetEvent.h"
+#include "jc/Sync/SpinLock.h"
 
-#include <jnet/IOCP/IOCP.h>
-#include <jnet/IOCPOverlapped/IOCPOverlappedTask.h>
-#include <jnet/IOCP/IOCPTaskAbstract.h>
+#include "jnet/IOCP/IOCP.h"
+#include "jnet/IOCPOverlapped/IOCPOverlappedTask.h"
+#include "jnet/IOCP/IOCPTaskAbstract.h"
 
 #define IOCPTASK_FAILED	50000
 

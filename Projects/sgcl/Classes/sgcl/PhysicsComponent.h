@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <sgcl/ActorComponent.h>
+#include "sgcl/ActorComponent.h"
 
 struct HitInfo;
 

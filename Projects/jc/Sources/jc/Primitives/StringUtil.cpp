@@ -1,13 +1,12 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	문자열 조작을 도와주는 클래스입니다.
 */
 
-#include <jc/Core.h>
-#include <jc/Primitives/String.h>
-#include <jc/Primitives/StringUtil.h>
-#include <jc/Exception.h>
-#include <jc/Container/Vector.h>
+#include "jc/Primitives/String.h"
+#include "jc/Primitives/StringUtil.h"
+#include "jc/Exception.h"
+#include "jc/Container/Vector.h"
 
 NS_JC_BEGIN
 

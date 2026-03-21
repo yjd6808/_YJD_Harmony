@@ -1,6 +1,5 @@
-﻿#include <jc_gtest/Core.h>
-#include <jc/Primitives/Atomic.h>
-#include <jc/Sync/NormalRwLock.h>
+#include "jc/Primitives/Atomic.h"
+#include "jc/Sync/NormalRwLock.h"
 
 #if TEST_NormalRwLockTest == ON
 

@@ -9,9 +9,9 @@
 #pragma once
 
 
-#include <sgcl/Player.h>
-#include <sgcl/PlayerController.h>
-#include <sgcl/ActionMgr.h>
+#include "sgcl/Player.h"
+#include "sgcl/PlayerController.h"
+#include "sgcl/ActionMgr.h"
 
 
 class HostPlayer : public Player, public jc::SingletonPointer<HostPlayer>

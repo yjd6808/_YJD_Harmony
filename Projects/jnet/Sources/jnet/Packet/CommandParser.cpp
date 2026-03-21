@@ -1,12 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/25/2023 12:19:48 AM
  * =====================
  *
  */
 
-#include <jnet/Core.h>
-#include <jnet/Packet/CommandParser.h>
+#include "jnet/Packet/CommandParser.h"
 
 USING_NS_JC;
 

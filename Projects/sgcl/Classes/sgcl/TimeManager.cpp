@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 5/5/2023 10:36:06 AM
  * =====================
@@ -6,7 +6,6 @@
  */
 
 
-#include "Core.h"
 #include "TimeManager.h"
 
 USING_NS_JC;

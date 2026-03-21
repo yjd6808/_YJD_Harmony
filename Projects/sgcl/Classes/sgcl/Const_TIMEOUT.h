@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sgcl/Namespace.h>
+#include "sgcl/Namespace.h"
 
 NS_CONST_BEGIN
 namespace Timeout

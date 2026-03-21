@@ -1,11 +1,10 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/17/2023 11:21:30 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "DescBase.h"
 
 USING_NS_JC;

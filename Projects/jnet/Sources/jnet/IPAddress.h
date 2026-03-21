@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include <jc/Type.h>
-#include <jc/Primitives/String.h>
+#include "jc/Type.h"
+#include "jc/Primitives/String.h"
 
-#include <jnet/Protocol.h>
+#include "jnet/Protocol.h"
 
 
 NS_JNET_BEGIN

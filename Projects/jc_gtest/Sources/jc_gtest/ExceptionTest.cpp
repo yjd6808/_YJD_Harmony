@@ -1,14 +1,13 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	커스텀 예외 테스트
 */
 
 
-#include <jc_gtest/Core.h>
 
 #if TEST_ExceptionTest == ON
 
-#include <jc/Exception.h>
+#include "jc/Exception.h"
 
 
 using namespace std;

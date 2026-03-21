@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/16/2023 6:26:28 AM
  * =====================
@@ -6,7 +6,6 @@
  */
 
 
-#include "Core.h"
 #include "CLIListener.h"
 #include "CLIFunctions_Linker.h"
 #include "AppConfig.h"

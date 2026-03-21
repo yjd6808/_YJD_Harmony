@@ -1,8 +1,7 @@
-﻿#include <jc/Core.h>
-#include <jc/Wrapper/CRuntime.h>
+#include "jc/Wrapper/CRuntime.h"
 
-#include <cstdlib>
-#include <process.h>
+#include "cstdlib"
+#include "process.h"
 
 NS_JC_BEGIN
 

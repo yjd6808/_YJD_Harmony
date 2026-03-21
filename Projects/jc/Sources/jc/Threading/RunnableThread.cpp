@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 4/14/2023 2:17:13 PM
  * =====================
@@ -6,8 +6,7 @@
  */
 
 
-#include <jc/Core.h>
-#include <jc/Threading/RunnableThread.h>
+#include "jc/Threading/RunnableThread.h"
 
 NS_JC_BEGIN
 

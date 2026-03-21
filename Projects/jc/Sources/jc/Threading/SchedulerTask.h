@@ -8,9 +8,13 @@
 
 #pragma once
 
-#include <jc/Time.h>
-#include <jc/Functional.h>
-#include <jc/Sync/SpinLock.h>
+#include "jc/Time.h"
+#include "jc/Functional.h"
+#include "jc/Sync/SpinLock.h"
+
+#ifndef INFINITE
+#define INFINITE 0xFFFFFFFF
+#endif
 
 NS_JC_BEGIN
 

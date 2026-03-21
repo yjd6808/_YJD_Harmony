@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include <jc/Type.h>
-#include <jc/Primitives/String.h>
+#include "jc/Type.h"
+#include "jc/Primitives/String.h"
 
-#include <jnet/Namespace.h>
+#include "jnet/Namespace.h"
 
 NS_JNET_BEGIN
 

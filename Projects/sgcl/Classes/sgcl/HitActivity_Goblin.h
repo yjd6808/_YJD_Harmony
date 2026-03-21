@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <sgcl/HitActivity.h>
+#include "sgcl/HitActivity.h"
 
 class HitActivity_Goblin : public HitActivity
 {

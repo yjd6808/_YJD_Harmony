@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/9/2023 7:24:50 PM
  * =====================
@@ -6,8 +6,7 @@
  */
 
 
-#include <jnet/Core.h>
-#include <jnet/Host/Session.h>
+#include "jnet/Host/Session.h"
 
 #include "PacketReader.h"
 

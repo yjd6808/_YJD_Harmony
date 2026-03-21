@@ -1,24 +1,23 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 9:30:07 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "Character.h"
 
 
-#include <sgcl/ImagePackManager.h>
-#include <sgcl/ActorSprite.h>
-#include <sg/_Util/DescLoaderMgr.h>
-#include <sgcl/HostPlayer.h>
-#include <sgcl/Define_Action.h>
-#include <sgcl/ActorManager.h>
-#include <sgcl/CharacterListener.h>
-#include <sgcl/MoveComponent.h>
-#include <sgcl/PhysicsComponent.h>
+#include "sgcl/ImagePackManager.h"
+#include "sgcl/ActorSprite.h"
+#include "sg/_Util/DescLoaderMgr.h"
+#include "sgcl/HostPlayer.h"
+#include "sgcl/Define_Action.h"
+#include "sgcl/ActorManager.h"
+#include "sgcl/CharacterListener.h"
+#include "sgcl/MoveComponent.h"
+#include "sgcl/PhysicsComponent.h"
 
 USING_NS_JC;
 USING_NS_CC;

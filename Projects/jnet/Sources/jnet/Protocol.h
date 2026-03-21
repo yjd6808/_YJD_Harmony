@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <WinSock2.h>
-#include <jnet/Namespace.h>
+#include "WinSock2.h"
+#include "jnet/Namespace.h"
 
 NS_JNET_BEGIN
 

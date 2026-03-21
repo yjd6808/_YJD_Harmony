@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include <jdb/IDatabase.h>
-#include <jdb/ConnectionPool.h>
+#include "jdb/IDatabase.h"
+#include "jdb/ConnectionPool.h"
 
 #include "SqlServerConnection.h"
 

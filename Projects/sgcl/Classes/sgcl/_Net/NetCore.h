@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <sgcl/NetClientGroup.h>
+#include "sgcl/NetClientGroup.h"
 
 class CommandSynchronizer;
 class ConnectionSynchronizer;

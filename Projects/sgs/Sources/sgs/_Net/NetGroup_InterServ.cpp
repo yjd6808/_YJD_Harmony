@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 6/16/2023 2:25:07 AM
  * =====================
@@ -6,22 +6,21 @@
  */
 
 
-#include "Core.h"
 #include "NetGroup_InterServ.h"
 
-#include <sg/_API/sgapi_Util.h>
+#include "sg/_API/sgapi_Util.h"
 
-#include <sgs/_Net/NetCore.h>
-#include <sgs/_Net/NetClientListener_InterServ.h>
+#include "sgs/_Net/NetCore.h"
+#include "sgs/_Net/NetClientListener_InterServ.h"
 
-#include <sgs/InterServerSendHelper.h>
-#include <sgs/R_SETUP_COMMON.h>
-#include <sgs/R_PING_COMMON.h>
-#include <sgs/R_TEST_COMMON.h>
-#include <sgs/S_PING_IS_COMMON.h>
+#include "sgs/InterServerSendHelper.h"
+#include "sgs/R_SETUP_COMMON.h"
+#include "sgs/R_PING_COMMON.h"
+#include "sgs/R_TEST_COMMON.h"
+#include "sgs/S_PING_IS_COMMON.h"
 
-#include <sgs/CmdHost.h>
-#include <sgs/CmdRelay.h>
+#include "sgs/CmdHost.h"
+#include "sgs/CmdRelay.h"
 
 
 USING_NS_JC;

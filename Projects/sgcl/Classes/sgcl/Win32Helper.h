@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <sgcl/Core.h>
 
 struct Win32Helper
 {

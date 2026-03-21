@@ -1,13 +1,12 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
-#include <jnet/Core.h>
-#include <jnet/Winsock.h>
+#include "jnet/Winsock.h"
 
-#include <jnet/Host/TcpClient.h>
+#include "jnet/Host/TcpClient.h"
 
-#include <jnet/IOCPOverlapped/IOCPOverlappedConnect.h>
+#include "jnet/IOCPOverlapped/IOCPOverlappedConnect.h"
 
 USING_NS_JC;
 

@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include <jc/Type.h>
-#include <jc/TypeTraits.h>
-#include <jc/Exception.h>
-#include <jc/Debug/New.h>
+#include "jc/Type.h"
+#include "jc/TypeTraits.h"
+#include "jc/Exception.h"
+#include "jc/Debug/New.h"
 
 NS_JC_BEGIN
 class Memory final

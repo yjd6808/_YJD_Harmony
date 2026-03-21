@@ -8,15 +8,15 @@
 
 #pragma once
 
-#include <jc/TypeTraits.h>
-#include <jc/Primitives/RefCountObjectPtr.h>
+#include "jc/TypeTraits.h"
+#include "jc/Primitives/RefCountObjectPtr.h"
 
-#include <jc/Container/Vector.h>
-#include <jc/Container/HashMap.h>
+#include "jc/Container/Vector.h"
+#include "jc/Container/HashMap.h"
 
-#include <sgs/IUpdatable.h>
-#include <sgs/IComponent.h>
-#include <sgs/ISessionEventHandler.h>
+#include "sgs/IUpdatable.h"
+#include "sgs/IComponent.h"
+#include "sgs/ISessionEventHandler.h"
 
 NS_SG_BEGIN
 

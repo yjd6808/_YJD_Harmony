@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <jc/Sync/WaitHandle.h>
+#include "jc/Sync/WaitHandle.h"
 
 NS_JC_BEGIN
 

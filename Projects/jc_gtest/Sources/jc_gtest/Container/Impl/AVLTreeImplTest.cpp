@@ -1,10 +1,9 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	AVL 트리 학습 후 구현해보기
 */
 
-#include <jc_gtest/Core.h>
-#include <jc/TypeTraits.h>
+#include "jc/TypeTraits.h"
 
 using namespace std;
 

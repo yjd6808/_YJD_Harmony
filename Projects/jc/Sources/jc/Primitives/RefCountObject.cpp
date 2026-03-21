@@ -1,12 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 7/30/2023 6:38:28 PM
  * =====================
  *
  */
 
-#include <jc/Core.h>
-#include <jc/Primitives/RefCountObject.h>
+#include "jc/Primitives/RefCountObject.h"
 
 NS_JC_BEGIN
 

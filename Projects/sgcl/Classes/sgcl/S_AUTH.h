@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <jnet/Packet/SendHelper.h>
+#include "jnet/Packet/SendHelper.h"
 
 struct S_AUTH : jnet::SendHelper<S_AUTH>
 {

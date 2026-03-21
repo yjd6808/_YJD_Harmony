@@ -1,13 +1,12 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/2/2023 3:16:42 PM
  * =====================
  *
  */
 
-#include <jc_gbench/Core.h>
-#include <jc/Pool/IndexedMemoryPool.h>
-#include <jc/Pool/BinarySearchMemoryPool.h>
+#include "jc/Pool/IndexedMemoryPool.h"
+#include "jc/Pool/BinarySearchMemoryPool.h"
 
 #if IndexMemoryPoolTest == ON
 
@@ -20,8 +19,6 @@ struct TestStruct
 constexpr int DataCount = 1024 * 1024;
 constexpr int DataSize = sizeof(TestStruct);
 vector<TestStruct*> Box(DataCount, nullptr);
-
-
 
 static void BM_IndexedPoolDynamic(State& state) {
 	CIndexedMemoryPool pool

@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <sgcl/IActorListener.h>
-#include <sgcl/Character.h>
+#include "sgcl/IActorListener.h"
+#include "sgcl/Character.h"
 
 #define SG_CHARACTER_LISTENER_FACTORY(Type)                            \
 public:                                                                \

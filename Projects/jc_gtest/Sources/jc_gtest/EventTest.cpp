@@ -1,5 +1,4 @@
-﻿#include <jc_gtest/Core.h>
-#include <jc/Event.h>
+#include "jc/Event.h"
 
 
 

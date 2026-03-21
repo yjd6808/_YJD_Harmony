@@ -7,8 +7,7 @@
  */
 #pragma once
 
-#include <cstdlib>
-#include <jc/Namespace.h>
+#include "jc/Namespace.h"
 
 // 헤더파일 의존성 회피를 위함
 NS_JC_BEGIN

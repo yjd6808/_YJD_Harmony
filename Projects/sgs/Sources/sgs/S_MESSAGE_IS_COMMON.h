@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <sgs/InterServerSendHelper.h>
-#include <sgs/ServerEnum.h>
-#include <jnet/Packet/SendHelper.h>
+#include "sgs/InterServerSendHelper.h"
+#include "sgs/ServerEnum.h"
+#include "jnet/Packet/SendHelper.h"
 
 struct S_MESSAGE_IS_COMMON : InterServerSendHelper<S_MESSAGE_IS_COMMON>
 {

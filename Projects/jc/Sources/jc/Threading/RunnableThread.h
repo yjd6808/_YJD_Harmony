@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <jc/Threading/Thread.h>
+#include "jc/Threading/Thread.h"
 
 NS_JC_BEGIN
 

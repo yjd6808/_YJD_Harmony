@@ -8,8 +8,8 @@
 #pragma once
 
 
-#include <sgcl/SGAction.h>
-#include <sg/_Struct/SteinsGate_Char.h>
+#include "sgcl/SGAction.h"
+#include "sg/_Struct/SteinsGate_Char.h"
 
 class GunnerAction : public SGAction
 {

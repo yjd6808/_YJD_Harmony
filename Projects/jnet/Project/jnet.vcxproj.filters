@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\Sources\jnet\Core.cpp" />
     <ClCompile Include="..\Sources\jnet\IPAddress.cpp" />
     <ClCompile Include="..\Sources\jnet\IPEndPoint.cpp" />
     <ClCompile Include="..\Sources\jnet\Socket.cpp" />
@@ -97,9 +96,11 @@
     <ClCompile Include="..\Sources\jnet\IOCPOverlapped\IOCPOverlappedTask.cpp">
       <Filter>IOCPOverlapped</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\jnet\PCH\Core.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\jnet\Core.h" />
     <ClInclude Include="..\Sources\jnet\IPEndPoint.h" />
     <ClInclude Include="..\Sources\jnet\IPAddress.h" />
     <ClInclude Include="..\Sources\jnet\Protocol.h" />
@@ -233,6 +234,10 @@
     <ClInclude Include="..\Sources\jnet\IOCP\IOCPTaskAbstract.h">
       <Filter>IOCP</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\jnet\PCH\Core.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jnet\Define.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Host">
@@ -255,6 +260,9 @@
     </Filter>
     <Filter Include="Natvis">
       <UniqueIdentifier>{19b633a7-838c-4959-98c8-068e13bc5cd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{780bcb8a-0ee0-4c51-a65c-d0f503dd4ffc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

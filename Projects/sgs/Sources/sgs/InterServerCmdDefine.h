@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <jc/Define.h>
-#include <jnet/Packet/Command.h>
-#include <sg/Const.h>
+#include "jc/Define.h"
+#include "jnet/Packet/Command.h"
+#include "sg/Const.h"
 
 
 struct InterServerCmdType : jnet::CmdType

@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\Sources\jnet_gbench\Core.cpp" />
     <ClCompile Include="..\Sources\jnet_gbench\BufferingPerformance\BufferingPerformance_ClientSide.cpp">
       <Filter>BufferingPerformance</Filter>
     </ClCompile>
@@ -38,9 +37,11 @@
     <ClCompile Include="..\Sources\jnet_gbench\PacketPooling\PacketPooling.cpp">
       <Filter>PacketPooling</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\jnet_gbench\PCH\Core.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\jnet_gbench\Core.h" />
     <ClInclude Include="..\Sources\jnet_gbench\BufferingPerformance\BufferingPerformance_ServerSide.h">
       <Filter>BufferingPerformance</Filter>
     </ClInclude>
@@ -70,6 +71,9 @@
     <ClInclude Include="..\Sources\jnet_gbench\PacketPooling\PacketPooling_ServerSide.h">
       <Filter>PacketPooling</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\jnet_gbench\PCH\Core.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="BufferingPerformance">
@@ -80,6 +84,9 @@
     </Filter>
     <Filter Include="PacketPooling">
       <UniqueIdentifier>{486b1bab-f1a8-4d14-a710-91d6d39d3189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{5506dfbf-1758-4ab4-8b49-291b7cae89b9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

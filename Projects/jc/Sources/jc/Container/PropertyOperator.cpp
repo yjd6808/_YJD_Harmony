@@ -1,13 +1,12 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/29/2023 6:04:02 PM
  * =====================
  *
  */
 
-#include <jc/Core.h>
-#include <jc/Container/PropertyOperator.h>
-#include <jc/Container/Property.h>
+#include "jc/Container/PropertyOperator.h"
+#include "jc/Container/Property.h"
 
 NS_JC_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

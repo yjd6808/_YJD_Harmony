@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 4/19/2023 3:46:12 PM
  * =====================
@@ -6,10 +6,9 @@
  */
 
 
-#include "Core.h"
 #include "S_PING_IS_COMMON.h"
 
-#include <sgs/CmdHost_PING.h>
+#include "sgs/CmdHost_PING.h"
 
 USING_NS_JC;
 USING_NS_JNET;

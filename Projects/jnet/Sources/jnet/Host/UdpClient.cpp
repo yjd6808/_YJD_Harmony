@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/8/2023 2:33:47 PM
  * =====================
@@ -6,9 +6,8 @@
  */
 
 
-#include <jnet/Core.h>
-#include <jnet/Winsock.h>
-#include <jnet/Host/UdpClient.h>
+#include "jnet/Winsock.h"
+#include "jnet/Host/UdpClient.h"
 
 NS_JNET_BEGIN
 USING_NS_JC;

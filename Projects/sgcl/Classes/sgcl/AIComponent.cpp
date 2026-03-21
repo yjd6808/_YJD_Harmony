@@ -1,16 +1,15 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/9/2023 10:08:14 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "AIComponent.h"
 
-#include <sgcl/_Layer/Layer_Map.h>
-#include <sgcl/SGVec2Ex.h>
+#include "sgcl/_Layer/Layer_Map.h"
+#include "sgcl/SGVec2Ex.h"
 
 USING_NS_JC;
 USING_NS_CC;

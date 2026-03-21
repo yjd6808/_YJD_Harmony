@@ -5,13 +5,13 @@
 
 #pragma once
 
-#include <string>
-#include <sstream>
-#include <ostream>
+#include "string"
+#include "sstream"
+#include "ostream"
 
-#include <jc/Namespace.h>
-#include <jc/Type.h>
-#include <jc/Define.h>
+#include "jc/Namespace.h"
+#include "jc/Type.h"
+#include "jc/Define.h"
 
 NS_JC_BEGIN
 

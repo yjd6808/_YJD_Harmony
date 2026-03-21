@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sg/_Struct/SteinsGate_ChannelBase.h>
+#include "sg/_Struct/SteinsGate_ChannelBase.h"
 
 struct ChannelInfo : ChannelBaseInfo
 {

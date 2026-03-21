@@ -1,4 +1,3 @@
-﻿#include "Core.h"
 #include "MysqlQuery.h"
 
 USING_NS_JC;

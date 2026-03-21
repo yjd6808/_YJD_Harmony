@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jc/Container/PropertyOperator.h>
-#include <jc/Container/PropertyFactory.h>
+#include "jc/Container/PropertyOperator.h"
+#include "jc/Container/PropertyFactory.h"
 
 NS_JC_BEGIN
 

@@ -1,11 +1,10 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	다이나믹 해쉬맵을 구현해봅니다.
 */
 
 
-#include <jc_gtest/Core.h>
-#include <jc/Hasher.h>
+#include "jc/Hasher.h"
 
 
 using namespace std;

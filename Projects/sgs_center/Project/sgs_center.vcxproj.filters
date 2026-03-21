@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="..\Sources\sgs_center\main.cpp" />
     <ClCompile Include="..\Sources\sgs_center\CenterCore.cpp" />
-    <ClCompile Include="..\Sources\sgs_center\Core.cpp" />
     <ClCompile Include="..\Sources\sgs_center\S_SETUP_IS.cpp">
       <Filter>Send</Filter>
     </ClCompile>
@@ -19,10 +18,12 @@
     <ClCompile Include="..\Sources\sgs_center\R_MESSAGE.cpp">
       <Filter>Recv</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\sgs_center\PCH\Core.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\sgs_center\CenterCore.h" />
-    <ClInclude Include="..\Sources\sgs_center\Core.h" />
     <ClInclude Include="..\Sources\sgs_center\S_SETUP_IS.h">
       <Filter>Send</Filter>
     </ClInclude>
@@ -38,6 +39,9 @@
     <ClInclude Include="..\Sources\sgs_center\R_MESSAGE.h">
       <Filter>Recv</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\sgs_center\PCH\Core.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Recv">
@@ -48,6 +52,9 @@
     </Filter>
     <Filter Include="Contents">
       <UniqueIdentifier>{dccda24d-5e50-4953-a362-f8c7be496cd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{033c726b-1368-4927-a764-915e0724620f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

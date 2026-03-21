@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <jc/Container/PropertyStatics.h>
-#include <jc/Container/PropertyBase.h>
-#include <jc/Pool/ObjectPool.h>
+#include "jc/Container/PropertyStatics.h"
+#include "jc/Container/PropertyBase.h"
+#include "jc/Pool/ObjectPool.h"
 
 NS_JC_BEGIN
 

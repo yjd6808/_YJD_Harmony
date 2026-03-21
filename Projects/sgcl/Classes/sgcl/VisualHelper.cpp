@@ -1,17 +1,16 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/20/2023 6:18:47 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "VisualHelper.h"
 
-#include <sg/_Util/DescLoaderMgr.h>
-#include <sg/_Struct/SteinsGate_Item.h>
+#include "sg/_Util/DescLoaderMgr.h"
+#include "sg/_Struct/SteinsGate_Item.h"
 
-#include <sgcl/ImagePackManager.h>
+#include "sgcl/ImagePackManager.h"
 
 USING_NS_JS;
 USING_NS_JC;

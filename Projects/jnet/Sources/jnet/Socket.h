@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include <jc/Type.h>
+#include "jc/Type.h"
 
-#include <jnet/Protocol.h>
-#include <jnet/IPEndPoint.h>
+#include "jnet/Protocol.h"
+#include "jnet/IPEndPoint.h"
 
 
 NS_JNET_BEGIN

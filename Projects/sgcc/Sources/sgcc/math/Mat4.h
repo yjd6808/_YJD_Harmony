@@ -5,7 +5,7 @@
 #include "sgcc/math/Vec4.h"
 
 #ifdef __SSE__
-#include <xmmintrin.h>
+#include "xmmintrin.h"
 #endif
 
 /**

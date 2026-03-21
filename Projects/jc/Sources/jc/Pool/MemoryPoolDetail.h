@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jc/Type.h>
-#include <jc/Container/Arrays.h>
+#include "jc/Type.h"
+#include "jc/Container/Arrays.h"
 
 
 NS_JC_BEGIN

@@ -1,29 +1,27 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	StringView Å¬·¡½º Å×½ºÆ®ÀÔ´Ï´Ù.
+	ï¿½Û¼ï¿½ï¿½ï¿½ : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	StringView Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®ï¿½Ô´Ï´ï¿½.
 */
 
 
-#include <jc_gtest/Core.h>
-#include <jc/Core.h>
-#include <jc/Primitives/StringView.h>
-#include <jc/Primitives/String.h>
-#include <jc/Container/Vector.h>
+#include "jc/Primitives/StringView.h"
+#include "jc/Primitives/String.h"
+#include "jc/Container/Vector.h"
 
 
 using namespace std;
 
 #if TEST_StringViewTest == ON
 
-// StringView »ý¼ºÀÚ Å×½ºÆ®
+// StringView ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®
 TEST(StringViewTest, Constructor) {
-	// ±âº» »ý¼ºÀÚ
+	// ï¿½âº» ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	StringView view1;
 	EXPECT_TRUE(view1.IsNull());
 	EXPECT_TRUE(view1.IsEmpty());
 	EXPECT_EQ(view1.Length(), 0);
 
-	// char* »ý¼ºÀÚ
+	// char* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	const char* pStr = "abcd";
 	StringView view2(const_cast<char*>(pStr));
 	EXPECT_FALSE(view2.IsNull());
@@ -31,18 +29,18 @@ TEST(StringViewTest, Constructor) {
 	EXPECT_EQ(view2.Length(), 4);
 	EXPECT_EQ(view2.Source(), pStr);
 
-	// char*, length »ý¼ºÀÚ
+	// char*, length ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	StringView view3(const_cast<char*>(pStr), 2);
 	EXPECT_EQ(view3.Length(), 2);
 
-	// String »ý¼ºÀÚ
+	// String ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	String szStr = "hello";
 	StringView view4(szStr);
 	EXPECT_EQ(view4.Length(), 5);
 	EXPECT_EQ(view4.Source(), szStr.Source());
 }
 
-// StringView ±âº» Á¤º¸ Á¶È¸ Å×½ºÆ®
+// StringView ï¿½âº» ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸ ï¿½×½ï¿½Æ®
 TEST(StringViewTest, BasicInformation) {
 	const char* pStr = "test";
 	StringView view(const_cast<char*>(pStr));
@@ -65,25 +63,25 @@ TEST(StringViewTest, BasicInformation) {
 	EXPECT_FALSE(emptyView.IsNull());
 }
 
-// StringView ÀÎµ¦½º °ËÁõ Å×½ºÆ®
+// StringView ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®
 TEST(StringViewTest, IndexValidation) {
 	const char* pStr = "abcde";
 	StringView view(const_cast<char*>(pStr));
 
-	// À¯È¿ÇÑ ÀÎµ¦½º
+	// ï¿½ï¿½È¿ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½
 	EXPECT_TRUE(view.IsValidIndex(0));
 	EXPECT_TRUE(view.IsValidIndex(4));
 	EXPECT_FALSE(view.IsValidIndex(5));
 	EXPECT_FALSE(view.IsValidIndex(-1));
 
-	// ¹üÀ§ °ËÁõ
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	EXPECT_TRUE(view.IsValidIndexRange(0, 4));
 	EXPECT_TRUE(view.IsValidIndexRange(1, 3));
 	EXPECT_FALSE(view.IsValidIndexRange(0, 5));
 	EXPECT_FALSE(view.IsValidIndexRange(4, 3));
 }
 
-// StringView ¹®ÀÚ Á¢±Ù Å×½ºÆ®
+// StringView ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®
 TEST(StringViewTest, CharacterAccess) {
 	const char* pStr = "abcde";
 	StringView view(const_cast<char*>(pStr));
@@ -106,12 +104,12 @@ TEST(StringViewTest, CharacterAccess) {
 	EXPECT_EQ(emptyView.Last(), '\0');
 }
 
-// StringView::Find Å×½ºÆ®
+// StringView::Find ï¿½×½ï¿½Æ®
 TEST(StringViewTest, Find) {
 	const char* pStr = "abcdefg";
 	StringView view(const_cast<char*>(pStr));
 
-	// ±âº» Find
+	// ï¿½âº» Find
 	EXPECT_EQ(view.Find("g"), 6);
 	EXPECT_EQ(view.Find("fg"), 5);
 	EXPECT_EQ(view.Find("efg"), 4);
@@ -122,54 +120,54 @@ TEST(StringViewTest, Find) {
 	EXPECT_EQ(view.Find("-abcdefg"), -1);
 	EXPECT_EQ(view.Find("abcdefg-"), -1);
 
-	// ¿ÞÂÊ¿¡¼­ °Ë»ç
+	// ï¿½ï¿½ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½
 	EXPECT_EQ(view.Find("a"), 0);
 	EXPECT_EQ(view.Find("ab"), 0);
 	EXPECT_EQ(view.Find("abc"), 0);
 
-	// ½ÃÀÛ À§Ä¡ ÁöÁ¤
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
 	EXPECT_EQ(view.Find(0, "a"), 0);
 	EXPECT_EQ(view.Find(1, "a"), -1);
 	EXPECT_EQ(view.Find(4, "e"), 4);
 
-	// ¹üÀ§ ÁöÁ¤
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	EXPECT_EQ(view.Find(0, 2, "abc"), 0);
 	EXPECT_EQ(view.Find(1, 2, "abc"), -1);
 	EXPECT_EQ(view.Find(4, 6, "efg"), 4);
 	EXPECT_EQ(view.Find(0, 5, "abcdefg"), -1);
 
-	// StringView¿Í String Å¸ÀÔ
+	// StringViewï¿½ï¿½ String Å¸ï¿½ï¿½
 	StringView searchView(const_cast<char*>("cd"));
 	String searchStr("cd");
 	EXPECT_EQ(view.Find(searchView), 2);
 	EXPECT_EQ(view.Find(searchStr), 2);
 }
 
-// StringView::FindReverse Å×½ºÆ®
+// StringView::FindReverse ï¿½×½ï¿½Æ®
 TEST(StringViewTest, FindReverse) {
 	const char* pStr = "abcdefg";
 	StringView view(const_cast<char*>(pStr));
 
-	// ±âº» FindReverse
+	// ï¿½âº» FindReverse
 	EXPECT_EQ(view.FindReverse("g"), 6);
 	EXPECT_EQ(view.FindReverse("fg"), 5);
 	EXPECT_EQ(view.FindReverse("efg"), 4);
 	EXPECT_EQ(view.FindReverse("abcdefg"), 0);
 	EXPECT_EQ(view.FindReverse("-abcdefg"), -1);
 
-	// ¹üÀ§ ÁöÁ¤
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	EXPECT_EQ(view.FindReverse(0, 6, "abcdefg"), 0);
 	EXPECT_EQ(view.FindReverse(1, 6, "abcdefg"), -1);
 	EXPECT_EQ(view.FindReverse(0, 5, "abcdefg"), -1);
 
-	// StringView¿Í String Å¸ÀÔ
+	// StringViewï¿½ï¿½ String Å¸ï¿½ï¿½
 	StringView searchView(const_cast<char*>("cd"));
 	String searchStr("cd");
 	EXPECT_EQ(view.FindReverse(searchView), 2);
 	EXPECT_EQ(view.FindReverse(searchStr), 2);
 }
 
-// StringView::StartWith Å×½ºÆ®
+// StringView::StartWith ï¿½×½ï¿½Æ®
 TEST(StringViewTest, StartWith) {
 	const char* pStr = "abcdefg";
 	StringView view(const_cast<char*>(pStr));
@@ -180,13 +178,13 @@ TEST(StringViewTest, StartWith) {
 	EXPECT_FALSE(view.StartWith(StringView(const_cast<char*>("b"))));
 	EXPECT_FALSE(view.StartWith(StringView(const_cast<char*>("abcdefgh"))));
 
-	// String Å¸ÀÔ
+	// String Å¸ï¿½ï¿½
 	String prefixStr("abc");
 	EXPECT_TRUE(view.StartWith(prefixStr));
 	EXPECT_FALSE(view.StartWith(String("xyz")));
 }
 
-// StringView::EndWith Å×½ºÆ®
+// StringView::EndWith ï¿½×½ï¿½Æ®
 TEST(StringViewTest, EndWith) {
 	const char* pStr = "abcdefg";
 	StringView view(const_cast<char*>(pStr));
@@ -197,13 +195,13 @@ TEST(StringViewTest, EndWith) {
 	EXPECT_FALSE(view.EndWith(StringView(const_cast<char*>("f"))));
 	EXPECT_FALSE(view.EndWith(StringView(const_cast<char*>("xabcdefg"))));
 
-	// String Å¸ÀÔ
+	// String Å¸ï¿½ï¿½
 	String suffixStr("efg");
 	EXPECT_TRUE(view.EndWith(suffixStr));
 	EXPECT_FALSE(view.EndWith(String("xyz")));
 }
 
-// StringView::Contain Å×½ºÆ®
+// StringView::Contain ï¿½×½ï¿½Æ®
 TEST(StringViewTest, Contain) {
 	const char* pStr = "abcdefg";
 	StringView view(const_cast<char*>(pStr));
@@ -214,14 +212,14 @@ TEST(StringViewTest, Contain) {
 	EXPECT_FALSE(view.Contain("xyz"));
 	EXPECT_FALSE(view.Contain("abcdefgh"));
 
-	// StringView¿Í String Å¸ÀÔ
+	// StringViewï¿½ï¿½ String Å¸ï¿½ï¿½
 	StringView searchView(const_cast<char*>("cd"));
 	String searchStr("cd");
 	EXPECT_TRUE(view.Contain(searchView));
 	EXPECT_TRUE(view.Contain(searchStr));
 }
 
-// StringView::Count Å×½ºÆ®
+// StringView::Count ï¿½×½ï¿½Æ®
 TEST(StringViewTest, Count) {
 	const char* pStr = "aabbccaa";
 	StringView view(const_cast<char*>(pStr));
@@ -233,18 +231,18 @@ TEST(StringViewTest, Count) {
 	EXPECT_EQ(view.Count("cc"), 1);
 	EXPECT_EQ(view.Count("xyz"), 0);
 
-	// StringView¿Í String Å¸ÀÔ
+	// StringViewï¿½ï¿½ String Å¸ï¿½ï¿½
 	StringView searchView(const_cast<char*>("aa"));
 	String searchStr("aa");
 	EXPECT_EQ(view.Count(searchView), 2);
 	EXPECT_EQ(view.Count(searchStr), 2);
 
-	// ¹üÀ§ ÁöÁ¤
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	EXPECT_EQ(view.Count(0, 3, "a"), 2);
 	EXPECT_EQ(view.Count(4, 7, "a"), 2);
 }
 
-// StringView::Compare Å×½ºÆ®
+// StringView::Compare ï¿½×½ï¿½Æ®
 TEST(StringViewTest, Compare) {
 	const char* pStr1 = "abcd";
 	const char* pStr2 = "abc";
@@ -292,7 +290,7 @@ TEST(StringViewTest, Compare) {
 	EXPECT_TRUE(vec[2].Length() == 0);
 }
 
-// StringView::Comparison Operators Å×½ºÆ®
+// StringView::Comparison Operators ï¿½×½ï¿½Æ®
 TEST(StringViewTest, ComparisonOperators) {
 	const char* pStr1 = "abcd";
 	const char* pStr2 = "abc";
@@ -323,14 +321,14 @@ TEST(StringViewTest, ComparisonOperators) {
 	EXPECT_TRUE(view1 >= view3);
 	EXPECT_TRUE(view1 >= view2);
 
-	// String Å¸ÀÔ
+	// String Å¸ï¿½ï¿½
 	String str2("abc");
 	EXPECT_TRUE(view1 > str2);
 	EXPECT_TRUE(view1 >= str2);
 	EXPECT_FALSE(view1 < str2);
 }
 
-// StringView::Split Å×½ºÆ®
+// StringView::Split ï¿½×½ï¿½Æ®
 TEST(StringViewTest, Split) {
 	const char* pStr1 = "abcd_cd_efg";
 	const char* pStr2 = "___";
@@ -381,7 +379,7 @@ TEST(StringViewTest, Split) {
 	}
 }
 
-// StringView::SubStr Å×½ºÆ®
+// StringView::SubStr ï¿½×½ï¿½Æ®
 TEST(StringViewTest, SubStr) {
 	const char* pStr = "abcdefg";
 	StringView view(const_cast<char*>(pStr));
@@ -403,7 +401,7 @@ TEST(StringViewTest, SubStr) {
 	EXPECT_TRUE(sub4.IsEmpty());
 }
 
-// StringView::GetRange Å×½ºÆ®
+// StringView::GetRange ï¿½×½ï¿½Æ®
 TEST(StringViewTest, GetRange) {
 	const char* pStr = "abcdefg";
 	StringView view(const_cast<char*>(pStr));
@@ -425,7 +423,7 @@ TEST(StringViewTest, GetRange) {
 	EXPECT_TRUE(range4.IsEmpty());
 }
 
-// StringView::ToLowerCase Å×½ºÆ®
+// StringView::ToLowerCase ï¿½×½ï¿½Æ®
 TEST(StringViewTest, ToLowerCase) {
 	const char* pStr = "AbCdEfG";
 	StringView view(const_cast<char*>(pStr));
@@ -442,7 +440,7 @@ TEST(StringViewTest, ToLowerCase) {
 	EXPECT_TRUE(emptyLower.IsEmpty());
 }
 
-// StringView::ToUpperCase Å×½ºÆ®
+// StringView::ToUpperCase ï¿½×½ï¿½Æ®
 TEST(StringViewTest, ToUpperCase) {
 	const char* pStr = "AbCdEfG";
 	StringView view(const_cast<char*>(pStr));
@@ -459,7 +457,7 @@ TEST(StringViewTest, ToUpperCase) {
 	EXPECT_TRUE(emptyUpper.IsEmpty());
 }
 
-// StringView::Type Conversion Å×½ºÆ® - ToInt32, ToUInt32 µî
+// StringView::Type Conversion ï¿½×½ï¿½Æ® - ToInt32, ToUInt32 ï¿½ï¿½
 TEST(StringViewTest, TypeConversion) {
 	const char* pStr1 = "12345";
 	const char* pStr2 = "3.14";
@@ -500,7 +498,7 @@ TEST(StringViewTest, TypeConversion) {
 	EXPECT_EQ(int64View.ToInt64(), 9223372036854775807LL);
 }
 
-// StringView::TryToXXX Å×½ºÆ®
+// StringView::TryToXXX ï¿½×½ï¿½Æ®
 TEST(StringViewTest, TryTypeConversion) {
 	const char* pValidInt = "12345";
 	const char* pInvalidInt = "abc";
@@ -548,7 +546,7 @@ TEST(StringViewTest, TryTypeConversion) {
 	EXPECT_EQ(int64Result, 9223372036854775807LL);
 }
 
-// StringView »ý¼ºÀÚ¿¡¼­ String °´Ã¼ »ç¿ë Å×½ºÆ®
+// StringView ï¿½ï¿½ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ String ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®
 TEST(StringViewTest, StringInteroperability) {
 	String szStr = "hello world";
 	StringView view(szStr);
@@ -558,14 +556,14 @@ TEST(StringViewTest, StringInteroperability) {
 	EXPECT_TRUE(view == "hello world");
 	EXPECT_TRUE(view == szStr);
 
-	// ¹®ÀÚ¿­ ±æÀÌ º¯°æ Å×½ºÆ®
+	// ï¿½ï¿½ï¿½Ú¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®
 	String szStr2 = "a";
 	StringView view2(szStr2);
 	EXPECT_EQ(view2.Length(), 1);
 	EXPECT_EQ(view2[0], 'a');
 }
 
-// StringView ¿§Áö ÄÉÀÌ½º Å×½ºÆ®
+// StringView ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½×½ï¿½Æ®
 TEST(StringViewTest, EdgeCases) {
 	// Null StringView with operations
 	StringView nullView;
@@ -592,7 +590,7 @@ TEST(StringViewTest, EdgeCases) {
 	EXPECT_TRUE(singleView == "x");
 }
 
-// StringView ¹üÀ§ °Ë»ç Å×½ºÆ®
+// StringView ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½ ï¿½×½ï¿½Æ®
 TEST(StringViewTest, RangeOperations) {
 	const char* pStr = "0123456789";
 	StringView view(const_cast<char*>(pStr));

@@ -9,16 +9,16 @@
 
 #pragma once
 
-#include <jc/Assert.h>
-#include <jc/Time.h>
-#include <jc/Primitives/String.h>
-#include <jc/Primitives/SmartPtr.h>
-#include <jc/Type.h>
-#include <jc/TypeTraits.h>
+#include "jc/Assert.h"
+#include "jc/Time.h"
+#include "jc/Primitives/String.h"
+#include "jc/Primitives/SmartPtr.h"
+#include "jc/Type.h"
+#include "jc/TypeTraits.h"
 
-#include <jdb/Namespace.h>
-#include <jdb/DLLExport.h>
-#include <jdb/StatementType.h>
+#include "jdb/Namespace.h"
+#include "jdb/DLLExport.h"
+#include "jdb/StatementType.h"
 
 NS_JDB_BEGIN
 

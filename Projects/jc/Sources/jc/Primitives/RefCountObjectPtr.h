@@ -25,8 +25,8 @@
 #pragma once
 
 
-#include <jc/Primitives/RefCountObject.h>
-#include <jc/TypeCast.h>
+#include "jc/Primitives/RefCountObject.h"
+#include "jc/TypeCast.h"
 
 NS_JC_BEGIN
 

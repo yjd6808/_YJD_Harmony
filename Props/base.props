@@ -3,7 +3,8 @@
   
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Sources;$(ProjectDir)..\Sources\$(ProjectName)\PCH;$(ProjectDir)..\Classes;$(ProjectDir)..\Classes\$(ProjectName)\PCH;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>Core.h;%(ForcedIncludeFiles)</ForcedIncludeFiles> 
     </ClCompile>
 
     <Link>

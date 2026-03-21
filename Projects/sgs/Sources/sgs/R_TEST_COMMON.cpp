@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/26/2023 11:55:04 PM
  * =====================
@@ -6,11 +6,10 @@
  */
 
 
-#include "Core.h"
 #include "R_TEST_COMMON.h"
 
-#include <sgs/S_SETUP_IS_COMMON.h>
-#include <sgs/CmdRelay_TEST.h>
+#include "sgs/S_SETUP_IS_COMMON.h"
+#include "sgs/CmdRelay_TEST.h"
 
 USING_NS_JC;
 USING_NS_JNET;

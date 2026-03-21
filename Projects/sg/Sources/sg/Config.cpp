@@ -1,10 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/16/2023 7:12:53 AM
  * =====================
  *
  */
 
+#include "sg/Core.h"
 #include "Core.h"
 #include "Config.h"
 

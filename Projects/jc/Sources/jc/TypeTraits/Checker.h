@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include <jc/TypeTraits/IntegralConstant.h>
-#include <jc/TypeTraits/Eliminator.h>
+#include "jc/TypeTraits/IntegralConstant.h"
+#include "jc/TypeTraits/Eliminator.h"
 
 NS_JC_BEGIN
 

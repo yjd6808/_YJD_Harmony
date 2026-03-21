@@ -1,16 +1,15 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/10/2023 11:51:44 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "ImagePackManager.h"
 
-#include <sg/_Core/AppConfig.h>
-#include <sg/_Sga/SgaLoader.h>
-#include <sg/_Sga/SgaElementInitializer.h>
+#include "sg/_Core/AppConfig.h"
+#include "sg/_Sga/SgaLoader.h"
+#include "sg/_Sga/SgaElementInitializer.h"
 
 
 USING_NS_CC;

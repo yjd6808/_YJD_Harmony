@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sg/Const.h>
+#include "sg/Const.h"
 
-#include <sgs/ServerConst_HOST.h>
-#include <sgs/ServerConst_PROCESS.h>
+#include "sgs/ServerConst_HOST.h"
+#include "sgs/ServerConst_PROCESS.h"

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <sg/_Struct/SteinsGate_Action.h>
+#include "sg/_Struct/SteinsGate_Action.h"
 
 struct MapAreaInfo;
 

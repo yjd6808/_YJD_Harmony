@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <jc/Type.h>
-#include <jc/Define.h>
-#include <jc/Encoding/CodePage.h>
+#include "jc/Type.h"
+#include "jc/Define.h"
+#include "jc/Encoding/CodePage.h"
 
 
 NS_JC_BEGIN

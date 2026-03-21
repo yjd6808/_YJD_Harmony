@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <jc/TypeTraits.h>
+#include "jc/TypeTraits.h"
 
-#include <jnet/Namespace.h>
+#include "jnet/Namespace.h"
 
 NS_JDB_BEGIN
 

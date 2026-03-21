@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/16/2023 6:40:01 PM
  * =====================
@@ -6,31 +6,30 @@
  */
 
 
-#include "Core.h"
 #include "DescLoaderMgr.h"
 
-#include <sg/_Struct/SteinsGate_ChannelBase.h>
-#include <sg/_Struct/SteinsGate_Enchant.h>
-#include <sg/_Struct/SteinsGate_Server.h>
-#include <sg/_Struct/SteinsGate_MonsterBase.h>
-#include <sg/_Struct/SteinsGate_Item.h>
-#include <sg/_Struct/SteinsGate_MapPhysics.h>
-#include <sg/_Struct/SteinsGate_CharCommon.h>
+#include "sg/_Struct/SteinsGate_ChannelBase.h"
+#include "sg/_Struct/SteinsGate_Enchant.h"
+#include "sg/_Struct/SteinsGate_Server.h"
+#include "sg/_Struct/SteinsGate_MonsterBase.h"
+#include "sg/_Struct/SteinsGate_Item.h"
+#include "sg/_Struct/SteinsGate_MapPhysics.h"
+#include "sg/_Struct/SteinsGate_CharCommon.h"
 
-#include <sg/_Struct/SteinsGate_Action.h>
-#include <sg/_Struct/SteinsGate_Char.h>
-#include <sg/_Struct/SteinsGate_Tile.h>
-#include <sg/_Struct/SteinsGate_AI.h>
-#include <sg/_Struct/SteinsGate_AttackData.h>
-#include <sg/_Struct/SteinsGate_Effect.h>
-#include <sg/_Struct/SteinsGate_UI.h>
-#include <sg/_Struct/SteinsGate_FrameEvent.h>
-#include <sg/_Struct/SteinsGate_Channel.h>
+#include "sg/_Struct/SteinsGate_Action.h"
+#include "sg/_Struct/SteinsGate_Char.h"
+#include "sg/_Struct/SteinsGate_Tile.h"
+#include "sg/_Struct/SteinsGate_AI.h"
+#include "sg/_Struct/SteinsGate_AttackData.h"
+#include "sg/_Struct/SteinsGate_Effect.h"
+#include "sg/_Struct/SteinsGate_UI.h"
+#include "sg/_Struct/SteinsGate_FrameEvent.h"
+#include "sg/_Struct/SteinsGate_Channel.h"
 
-#include <sg/_Util/_DescMgr/DescMgr_Map.h>
-#include <sg/_Util/_DescMgr/DescMgr_ItemOpt.h>
-#include <sg/_Util/_DescMgr/DescMgr_ClientText.h>
-#include <sg/_Util/_DescMgr/DescMgr_CharAnimation.h>
+#include "sg/_Util/_DescMgr/DescMgr_Map.h"
+#include "sg/_Util/_DescMgr/DescMgr_ItemOpt.h"
+#include "sg/_Util/_DescMgr/DescMgr_ClientText.h"
+#include "sg/_Util/_DescMgr/DescMgr_CharAnimation.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 DescLoaderMgr::DescLoaderMgr()

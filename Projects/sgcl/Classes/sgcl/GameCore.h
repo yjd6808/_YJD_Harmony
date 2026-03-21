@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sg/CommonCore.h>
+#include "sg/CommonCore.h"
 
 struct Contents;
 

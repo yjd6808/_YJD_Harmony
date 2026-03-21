@@ -1,5 +1,4 @@
-﻿#include "Core.h"
-#include "sgcc/math/MathUtil.h"
+﻿#include "sgcc/math/MathUtil.h"
 
 #if defined (__SSE__)
 #define USE_SSE

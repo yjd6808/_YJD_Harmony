@@ -1,18 +1,17 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 5:00:40 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "SgaSprite.h"
 
-#include <sg/_Sga/SgaPackage.h>
-#include <sg/_Sga/SgaColorFormat.h>
+#include "sg/_Sga/SgaPackage.h"
+#include "sg/_Sga/SgaColorFormat.h"
 
-#include <jc/Stream.h>
-#include <zlib.h>
+#include "jc/Stream.h"
+#include "zlib.h"
 
 USING_NS_JC;
 

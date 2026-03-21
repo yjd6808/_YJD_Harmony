@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/9/2022 6:14:18 PM
  * =====================
@@ -7,9 +7,8 @@
 
 
 
-#include <jc_gtest/Core.h>
-#include <jc/Container/Vector.h>
-#include <jc/Sync/WaitHandle.h>
+#include "jc/Container/Vector.h"
+#include "jc/Sync/WaitHandle.h"
 
 #if TEST_WaitHandleTest == ON
 

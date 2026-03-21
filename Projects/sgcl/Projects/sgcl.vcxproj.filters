@@ -127,6 +127,9 @@
     <Filter Include="_Net\Component">
       <UniqueIdentifier>{223c4637-eb44-4a0e-9cec-3b21c0835806}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{a0af26ea-6a39-4a91-a60d-790cf9d980be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\sgcl\ImagePackManager.cpp">
@@ -447,7 +450,6 @@
     <ClCompile Include="..\Classes\sgcl\R_LOBBY.cpp">
       <Filter>_Net\Recv</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Core.cpp" />
     <ClCompile Include="..\Classes\sgcl\_API\sgapiClient.cpp">
       <Filter>_API</Filter>
     </ClCompile>
@@ -513,6 +515,9 @@
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\_Net\NetCore.cpp">
       <Filter>_Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\PCH\Core.cpp">
+      <Filter>PCH</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -889,7 +894,6 @@
     <ClInclude Include="..\Classes\sgcl\R_LOBBY.h">
       <Filter>_Net\Recv</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Core.h" />
     <ClInclude Include="..\Classes\sgcl\_API\sgapiClient.h">
       <Filter>_API</Filter>
     </ClInclude>
@@ -958,6 +962,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\_Net\NetCore.h">
       <Filter>_Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\PCH\Core.h">
+      <Filter>PCH</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

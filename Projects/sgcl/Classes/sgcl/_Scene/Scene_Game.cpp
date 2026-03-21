@@ -1,16 +1,15 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  *
  * Cocos2d-x 자체는 다 쓰레드 세이프 하지 않음
  *
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "Scene_Game.h"
 
-#include <sgcl/_Layer/Layer_Grid.h>
-#include <sgcl/_Scene/Scene_World.h>
+#include "sgcl/_Layer/Layer_Grid.h"
+#include "sgcl/_Scene/Scene_World.h"
 
 USING_NS_CC;
 

@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include <jnet/Host/Session.h>
-#include <sgs/ServerEnum.h>
-#include <sgs/InterServerSendHelper.h>
+#include "jnet/Host/Session.h"
+#include "sgs/ServerEnum.h"
+#include "sgs/InterServerSendHelper.h"
 
-#include <sgs/CmdHost.h>
+#include "sgs/CmdHost.h"
 
 struct S_SETUP_IS : InterServerSendHelper<S_SETUP_IS>
 {

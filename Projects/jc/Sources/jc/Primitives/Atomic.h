@@ -12,8 +12,8 @@
 
 #pragma once
 
-#include <jc/TypeTraits.h>
-#include <jc/Wrapper/WinApi.h>
+#include "jc/TypeTraits.h"
+#include "jc/Wrapper/WinApi.h"
 
 NS_JC_BEGIN
 

@@ -1,17 +1,16 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 10/27/2023 1:05:36 PM
  * =====================
  *
  */
 
-#include <jc/Core.h>
-#include <jc/Config.h>
-#include <jc/Time.h>
-#include <jc/Container/PropertyStatics.h>
-#include <jc/Env.h>
+#include "jc/Config.h"
+#include "jc/Time.h"
+#include "jc/Container/PropertyStatics.h"
+#include "jc/Env.h"
 
-#include <timeapi.h>
+#include "timeapi.h"
 
 NS_JC_BEGIN
 

@@ -5,9 +5,11 @@
 #pragma once
 
 
-#include <jc/Container/Vector.h>
-#include <jc/Sync/AutoResetEvent.h>
-#include <jnet/Worker.h>
+#include "jc/Container/Vector.h"
+#include "jc/Sync/AutoResetEvent.h"
+
+#include "jnet/Worker.h"
+#include "jnet/NetLoggerDefine.h"
 
 NS_JNET_BEGIN
 class WorkerGroup final

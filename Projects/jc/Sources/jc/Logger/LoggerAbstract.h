@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <jc/Declspec.h>
-#include <jc/Primitives/String.h>
-#include <jc/Sync/RecursiveLock.h>
+#include "jc/Declspec.h"
+#include "jc/Primitives/String.h"
+#include "jc/Sync/RecursiveLock.h"
 
 NS_JC_BEGIN
 

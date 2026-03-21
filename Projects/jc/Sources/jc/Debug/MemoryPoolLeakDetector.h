@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jc/Functional.h>
-#include <jc/Pool/MemoryPoolAbstract.h>
+#include "jc/Functional.h"
+#include "jc/Pool/MemoryPoolAbstract.h"
 
 NS_JC_BEGIN
 

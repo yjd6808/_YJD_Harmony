@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 4/19/2023 3:22:29 PM
  * =====================
@@ -6,13 +6,12 @@
  */
 
 
-#include "Core.h"
 #include "R_SETUP_COMMON.h"
 
-#include <sgs/CmdHost.h>
-#include <sgs/_Net/NetCore.h>
-#include <sgs/S_SETUP_IS_COMMON.h>
-#include <sgs/_Net/NetGroup_Main.h>
+#include "sgs/CmdHost.h"
+#include "sgs/_Net/NetCore.h"
+#include "sgs/S_SETUP_IS_COMMON.h"
+#include "sgs/_Net/NetGroup_Main.h"
 
 USING_NS_JC;
 USING_NS_JNET;

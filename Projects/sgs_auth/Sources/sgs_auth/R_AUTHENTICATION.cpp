@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 4/19/2023 3:32:23 PM
  * =====================
@@ -7,16 +7,15 @@
 
 
 
-#include "Core.h"
 #include "R_AUTHENTICATION.h"
 
-#include <sg/Cmd_AUTHENTICATION.h>
-#include <sgs/CmdRelay_AUTHENTICATION.h>
-#include <sgs/S_MESSAGE_COMMON.h>
+#include "sg/Cmd_AUTHENTICATION.h"
+#include "sgs/CmdRelay_AUTHENTICATION.h"
+#include "sgs/S_MESSAGE_COMMON.h"
 
-#include <sgs_auth/Q_LOGIN.h>
-#include <sgs_auth/S_AUTHENTICATION.h>
-#include <sgs_auth/S_AUTHENTICATION_IS.h>
+#include "sgs_auth/Q_LOGIN.h"
+#include "sgs_auth/S_AUTHENTICATION.h"
+#include "sgs_auth/S_AUTHENTICATION_IS.h"
 
 #include "AuthenticationManager.h"
 #include "sgs/_Net/NetGroup_InterServ.h"

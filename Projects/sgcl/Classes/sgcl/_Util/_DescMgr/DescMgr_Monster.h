@@ -9,8 +9,8 @@
 #pragma once
 
 
-#include <sg/_Struct/SteinsGate_Monster.h>
-#include <sg/_Util/_DescMgr/DescMgr_MonsterBase.h>
+#include "sg/_Struct/SteinsGate_Monster.h"
+#include "sg/_Util/_DescMgr/DescMgr_MonsterBase.h"
 
 struct MonsterInfoLoader : MonsterBaseInfoLoader
 {

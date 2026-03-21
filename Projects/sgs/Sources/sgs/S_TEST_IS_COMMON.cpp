@@ -1,14 +1,13 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 4/19/2023 4:01:24 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "S_TEST_IS_COMMON.h"
 
-#include <sgs/CmdRelay_TEST.h>
+#include "sgs/CmdRelay_TEST.h"
 
 
 USING_NS_JC;

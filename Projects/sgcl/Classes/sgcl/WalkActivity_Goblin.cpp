@@ -1,18 +1,17 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/29/2023 8:01:53 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "WalkActivity_Goblin.h"
 
-#include <sgcl/Monster.h>
-#include <sgcl/SGVec2Ex.h>
-#include <sgcl/Define_Animation.h>
-#include <sgcl/MoveComponent.h>
-#include <sgcl/AIComponent.h>
+#include "sgcl/Monster.h"
+#include "sgcl/SGVec2Ex.h"
+#include "sgcl/Define_Animation.h"
+#include "sgcl/MoveComponent.h"
+#include "sgcl/AIComponent.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 WalkActivity_Goblin::WalkActivity_Goblin(Actor* _pActor)

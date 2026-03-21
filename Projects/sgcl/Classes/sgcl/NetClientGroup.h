@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <sgcl/_Net/NetClientListenerImpl.h>
+#include "sgcl/_Net/NetClientListenerImpl.h"
 
 class NetClientGroup final : public jnet::NetGroup
 {

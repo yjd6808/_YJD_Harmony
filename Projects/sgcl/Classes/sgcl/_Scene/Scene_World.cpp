@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/5/2023 9:51:57 AM
  * =====================
@@ -6,31 +6,30 @@
  */
 
 
-#include "Core.h"
 #include "Scene_World.h"
 
-#include <sg/_API/sgapiBase.h>
-#include <sg/_Util/DescLoaderMgr.h>
+#include "sg/_API/sgapiBase.h"
+#include "sg/_Util/DescLoaderMgr.h"
 
-#include <sgcl/_Layer/Layer_Grid.h>
-#include <sgcl/_Core/AppConfig_Props.h>
+#include "sgcl/_Layer/Layer_Grid.h"
+#include "sgcl/_Core/AppConfig_Props.h"
 
-#include <sgcl/_Scene/Scene_Login.h>
-#include <sgcl/_Scene/Scene_Game.h>
-#include <sgcl/_Scene/Scene_ChannelSelect.h>
-#include <sgcl/_Layer/Layer_UI.h>
-#include <sgcl/_Net/NetCore.h>
-#include <sgcl/Contents.h>
-#include <sgcl/SteinsGateApp.h>
+#include "sgcl/_Scene/Scene_Login.h"
+#include "sgcl/_Scene/Scene_Game.h"
+#include "sgcl/_Scene/Scene_ChannelSelect.h"
+#include "sgcl/_Layer/Layer_UI.h"
+#include "sgcl/_Net/NetCore.h"
+#include "sgcl/Contents.h"
+#include "sgcl/SteinsGateApp.h"
 
-#include <sgcl/ActorManager.h>
-#include <sgcl/HostPlayer.h>
-#include <sgcl/ImagePackManager.h>
-#include <sgcl/ActorListenerManager.h>
-#include <sgcl/UIManager.h>
-#include <sgcl/FontManager.h>
-#include <sgcl/WndMessage.h>
-#include <sgcl/Win32Helper.h>
+#include "sgcl/ActorManager.h"
+#include "sgcl/HostPlayer.h"
+#include "sgcl/ImagePackManager.h"
+#include "sgcl/ActorListenerManager.h"
+#include "sgcl/UIManager.h"
+#include "sgcl/FontManager.h"
+#include "sgcl/WndMessage.h"
+#include "sgcl/Win32Helper.h"
 
 
 USING_NS_CC;

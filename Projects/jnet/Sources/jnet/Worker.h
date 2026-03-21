@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include <jc/Type.h>
+#include "jc/Type.h"
 
-#include <jc/Threading/Thread.h>
+#include "jc/Threading/Thread.h"
 
-#include <jnet/Namespace.h>
+#include "jnet/Namespace.h"
 
 NS_JNET_BEGIN
 

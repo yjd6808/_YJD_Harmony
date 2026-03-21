@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include <jnet/Namespace.h>
+#include "jnet/Namespace.h"
 
 NS_JDB_BEGIN
 

@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <jnet/Host/UdpClient.h>
-#include <jnet/NetGroup.h>
+#include "jnet/Host/UdpClient.h"
+#include "jnet/NetGroup.h"
 
-#include <jnetr_common/ClientListener.h>
+#include "jnetr_common/ClientListener.h"
 
 NS_JNET_BEGIN
 

@@ -13,10 +13,10 @@
 #pragma once
 
 
-#include <jc/Threading/Scheduler.h>
+#include "jc/Threading/Scheduler.h"
 
-#include <jc/Container/TreeMap.h>
-#include <jc/Container/HashMap.h>
+#include "jc/Container/TreeMap.h"
+#include "jc/Container/HashMap.h"
 
 class AuthenticationManager : public jc::SingletonPointer<AuthenticationManager>
 {

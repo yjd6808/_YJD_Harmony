@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/10/2023 11:41:19 AM
  * =====================
@@ -6,10 +6,9 @@
  */
 
 
-#include <jnet/Core.h>
-#include <jnet/NetGroup.h>
+#include "jnet/NetGroup.h"
 
-#include <jc/Pool/IndexedMemoryPool.h>
+#include "jc/Pool/IndexedMemoryPool.h"
 
 
 USING_NS_JC;

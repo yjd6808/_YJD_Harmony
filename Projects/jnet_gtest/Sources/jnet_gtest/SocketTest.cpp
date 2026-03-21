@@ -1,4 +1,3 @@
-﻿#include <jnet_gtest/Core.h>
 
 #if TEST_SocketTest == ON
 

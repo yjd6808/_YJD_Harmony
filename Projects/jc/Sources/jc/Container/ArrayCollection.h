@@ -5,12 +5,12 @@
 
 #pragma once
 
-#include <jc/Memory.h>
-#include <jc/Comparator.h>
+#include "jc/Memory.h"
+#include "jc/Comparator.h"
 
-#include <jc/Container/Arrays.h>
-#include <jc/Container/Collection.h>
-#include <jc/Container/ArrayCollectionIterator.h>
+#include "jc/Container/Arrays.h"
+#include "jc/Container/Collection.h"
+#include "jc/Container/ArrayCollectionIterator.h"
 
 
 NS_JC_BEGIN

@@ -5,11 +5,10 @@
 
 #pragma once
 
-#include <jc/Type.h>
-#include <jc/Core.h>
-#include <jc/TypeTraits.h>
-#include <jc/Comparator.h>
-#include <jc/Exception.h>
+#include "jc/Type.h"
+#include "jc/TypeTraits.h"
+#include "jc/Comparator.h"
+#include "jc/Exception.h"
 
 NS_JC_BEGIN
 NS_DETAIL_BEGIN

@@ -7,14 +7,14 @@
 
 #pragma once
 
-#include <sg/_Struct/SteinsGate_AI.h>
-#include <sgcl/AttackActivity.h>
-#include <sgcl/FallDownActivity.h>
-#include <sgcl/HitActivity.h>
-#include <sgcl/IdleActivity.h>
-#include <sgcl/WalkActivity.h>
-#include <sgcl/SitActivity.h>
-#include <sgcl/ActorComponent.h>
+#include "sg/_Struct/SteinsGate_AI.h"
+#include "sgcl/AttackActivity.h"
+#include "sgcl/FallDownActivity.h"
+#include "sgcl/HitActivity.h"
+#include "sgcl/IdleActivity.h"
+#include "sgcl/WalkActivity.h"
+#include "sgcl/SitActivity.h"
+#include "sgcl/ActorComponent.h"
 
 class AIComponent : public ActorComponent, public IUpdatable
 {

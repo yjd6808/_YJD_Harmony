@@ -1,9 +1,8 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
 
-#include "Core.h"
 #include "Color.h"
 
 cc::Color3B ColorList::AbsoluteZero_v =                { 0x00, 0x48, 0xBA };

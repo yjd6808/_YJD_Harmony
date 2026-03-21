@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <jnet/Packet/Command.h>
-#include <jc/Primitives/StaticString.h>
+#include "jnet/Packet/Command.h"
+#include "jc/Primitives/StaticString.h"
 
 #define CMD_SATIC_MESSAGE						100
 #define CMD_DYNAMIC_MESSAGE						101

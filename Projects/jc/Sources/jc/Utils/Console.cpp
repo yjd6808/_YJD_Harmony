@@ -1,11 +1,10 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
-#include <jc/Core.h>
-#include <jc/Utils/Console.h>
+#include "jc/Utils/Console.h"
 
-#include <Windows.h>
+#include "Windows.h"
 
 #include "jc/Threading/Thread.h"
 

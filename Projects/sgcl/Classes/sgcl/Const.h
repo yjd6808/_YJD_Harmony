@@ -8,6 +8,6 @@
 
 #pragma once
 
-#include <sgcl/Const_HOST.h>
-#include <sgcl/Const_NETGROUP.h>
-#include <sgcl/Const_TIMEOUT.h>
+#include "sgcl/Const_HOST.h"
+#include "sgcl/Const_NETGROUP.h"
+#include "sgcl/Const_TIMEOUT.h"

@@ -1,5 +1,4 @@
-﻿#include <jc/Core.h>
-#include <jc/Sync/Semaphore.h>
+#include "jc/Sync/Semaphore.h"
 
 NS_JC_BEGIN
 template class LockGuard<Semaphore>;

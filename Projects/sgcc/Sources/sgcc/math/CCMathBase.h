@@ -64,12 +64,12 @@
 #endif
 
 #ifndef CC_ASSERT
-#include <assert.h>
+#include "assert.h"
 #define CC_ASSERT(cond) assert(cond)
 #endif
 
 #ifndef GP_ASSERT
-#include <assert.h>
+#include "assert.h"
 #define GP_ASSERT(cond) assert(cond)
 #endif
 

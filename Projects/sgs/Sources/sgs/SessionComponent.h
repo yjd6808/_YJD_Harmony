@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <sgs/_Net/NetSession.h>
-#include <sgs/IComponent.h>
-#include <sgs/ISessionEventHandler.h>
+#include "sgs/_Net/NetSession.h"
+#include "sgs/IComponent.h"
+#include "sgs/ISessionEventHandler.h"
 
 NS_SG_BEGIN
 

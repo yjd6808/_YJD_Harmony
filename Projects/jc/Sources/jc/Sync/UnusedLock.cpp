@@ -1,11 +1,10 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * =====================
  *
  */
 
-#include <jc/Core.h>
-#include <jc/Sync/UnusedLock.h>
+#include "jc/Sync/UnusedLock.h"
 
 NS_JC_BEGIN
 template class LockGuard<UnusedLock>;

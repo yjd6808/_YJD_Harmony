@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <sg/Namespace.h>
+#include "sg/Namespace.h"
 
 NS_JC_BEGIN
 struct TimeSpan;

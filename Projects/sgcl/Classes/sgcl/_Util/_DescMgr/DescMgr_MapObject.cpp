@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/25/2023 11:32:31 AM
  * =====================
@@ -6,10 +6,9 @@
  */
 
 
-#include "Core.h"
 #include "DescMgr_MapObject.h"
 
-#include <sgcl/JsonUtilEx.h>
+#include "sgcl/JsonUtilEx.h"
 
 USING_NS_JC;
 USING_NS_JS;

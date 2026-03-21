@@ -9,8 +9,8 @@
 #pragma once
 
 
-#include <sg/_Sga/SgaSpriteAbstract.h>
-#include <jc/Primitives/SmartPtr.h>
+#include "sg/_Sga/SgaSpriteAbstract.h"
+#include "jc/Primitives/SmartPtr.h"
 
 #pragma warning (push, 0)
 #pragma warning (disable: 26495) // member variable 'Value' is not initialized

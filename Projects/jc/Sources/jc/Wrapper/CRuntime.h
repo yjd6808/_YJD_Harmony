@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jc/Define.h>
-#include <jc/Type.h>
+#include "jc/Define.h"
+#include "jc/Type.h"
 
 NS_JC_BEGIN
 struct CRuntime {

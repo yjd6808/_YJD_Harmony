@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <jc/Pool/PooledMemoryChunk.h>
+#include "jc/Pool/PooledMemoryChunk.h"
 
-#include <jnet/Buffer/StreamBuffer.h>
+#include "jnet/Buffer/StreamBuffer.h"
 
 NS_JNET_BEGIN
 

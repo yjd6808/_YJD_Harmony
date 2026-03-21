@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/5/2023 9:51:57 AM
  * =====================
@@ -6,7 +6,6 @@
  */
 
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "WorldScene.h"
 

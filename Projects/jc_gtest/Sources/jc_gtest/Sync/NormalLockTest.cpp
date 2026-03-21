@@ -1,5 +1,4 @@
-﻿#include <jc_gtest/Core.h>
-#include <jc/Sync/NormalLock.h>
+#include "jc/Sync/NormalLock.h"
 
 #if TEST_NormalLockTest == ON
 

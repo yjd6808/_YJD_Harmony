@@ -1,14 +1,13 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/25/2023 11:33:20 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "DescMgr_Map.h"
 
-#include <sg/_Util/JsonUtil.h>
+#include "sg/_Util/JsonUtil.h"
 
 USING_NS_JC;
 USING_NS_JS;

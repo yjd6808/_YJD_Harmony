@@ -1,5 +1,4 @@
-﻿#include <jc_gtest/Core.h>
-#include <jc/Sync/EventLock.h>
+#include "jc/Sync/EventLock.h"
 
 #if TEST_EventLockTest == ON
 

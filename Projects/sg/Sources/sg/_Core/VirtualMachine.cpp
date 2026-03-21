@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/16/2023 6:26:28 AM
  * =====================
@@ -6,13 +6,12 @@
  */
 
 
-#include "Core.h"
 #include "VirtualMachine.h"
 
-#include <jc/Threading/Scheduler.h>
+#include "jc/Threading/Scheduler.h"
 
-#include <sg/_Core/AppConfig.h>
-#include <sg/_Core/CLIThread.h>
+#include "sg/_Core/AppConfig.h"
+#include "sg/_Core/CLIThread.h"
 
 USING_NS_JC;
 

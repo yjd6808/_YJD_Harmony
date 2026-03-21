@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sg/_Struct/SteinsGate_CharBase.h>
+#include "sg/_Struct/SteinsGate_CharBase.h"
 
 struct JsonUtil
 {

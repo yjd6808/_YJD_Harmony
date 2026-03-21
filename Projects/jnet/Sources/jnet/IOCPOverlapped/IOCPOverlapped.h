@@ -4,12 +4,12 @@
 
 #pragma once
 
-#include <WinSock2.h>
+#include "WinSock2.h"
 
-#include <jc/Primitives/RefCountObject.h>
+#include "jc/Primitives/RefCountObject.h"
 
-#include <jnet/IOCP/IOCP.h>
-#include <jnet/IOCP/IOCPPostOrder.h>
+#include "jnet/IOCP/IOCP.h"
+#include "jnet/IOCP/IOCPPostOrder.h"
 
 // 오브젝트 풀링을 사용할 경우 4%더 성능 저하가 있음.
 // 아무래도 전역 오브렉트 풀이라.. 락에서 병목 생기는 듯
@@ -17,7 +17,7 @@
 // #define USE_OVERLAPPED_STATIC_POOL
 
 #ifdef USE_OVERLAPPED_STATIC_POOL
-#include <jc/Pool/ObjectPool.h>
+#include "jc/Pool/ObjectPool.h"
 #endif
 
 

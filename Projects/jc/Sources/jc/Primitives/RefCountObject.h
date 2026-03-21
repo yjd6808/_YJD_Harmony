@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <jc/Assert.h>
-#include <jc/Primitives/Atomic.h>
+#include "jc/Assert.h"
+#include "jc/Primitives/Atomic.h"
 
 NS_JC_BEGIN
 

@@ -9,12 +9,12 @@
 
 #pragma once
 
-#include <jc/Container/LinkedList.h>
-#include <jc/Sync/NormalLock.h>
-#include <jc/Primitives/String.h>
+#include "jc/Container/LinkedList.h"
+#include "jc/Sync/NormalLock.h"
+#include "jc/Primitives/String.h"
 
-#include <jdb/Namespace.h>
-#include <jdb/DLLExport.h>
+#include "jdb/Namespace.h"
+#include "jdb/DLLExport.h"
 
 NS_JDB_BEGIN
 

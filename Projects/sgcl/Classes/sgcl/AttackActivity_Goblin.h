@@ -8,7 +8,7 @@
 #pragma once
 
 
-#include <sgcl/AttackActivity.h>
+#include "sgcl/AttackActivity.h"
 
 class AttackActivity_Goblin : public AttackActivity
 {

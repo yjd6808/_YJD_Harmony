@@ -8,10 +8,8 @@
 
 #pragma once
 
-#include <jc/Type.h>
-#include <jc/Define.h>
-#include <jc/Primitives/String.h>
-#include <jc/Primitives/SmartPtr.h>
+#include "jc/Primitives/String.h"
+#include "jc/Primitives/SmartPtr.h"
 
 
 NS_JC_BEGIN

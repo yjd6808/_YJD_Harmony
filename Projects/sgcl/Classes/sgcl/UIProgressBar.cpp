@@ -1,16 +1,15 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/21/2023 3:16:12 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "UIProgressBar.h"
 
-#include <sgcl/UIRootGroup.h>
-#include <sgcl/UIManager.h>
+#include "sgcl/UIRootGroup.h"
+#include "sgcl/UIManager.h"
 
 USING_NS_CC;
 USING_NS_JC;

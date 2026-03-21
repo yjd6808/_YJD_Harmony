@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/22/2023 12:52:57 AM
  * =====================
@@ -6,7 +6,6 @@
  */
 
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "UIRootGroup.h"
 

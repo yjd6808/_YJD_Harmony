@@ -1,11 +1,10 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
-#include <jnet/Core.h>
-#include <jnet/Winsock.h>
+#include "jnet/Winsock.h"
 
-#include <jnet/IOCPOverlapped/IOCPOverlappedRecv.h>
+#include "jnet/IOCPOverlapped/IOCPOverlappedRecv.h"
 
 NS_JNET_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////

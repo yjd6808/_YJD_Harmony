@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <sg/_Util/DescLoaderAbstract.h>
-#include <sg/_Struct/SteinsGate_Action.h>
+#include "sg/_Util/DescLoaderAbstract.h"
+#include "sg/_Struct/SteinsGate_Action.h"
 
 struct ActionInfoLoader : DescLoaderAbstract
 {

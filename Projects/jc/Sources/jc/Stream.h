@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <jc/Type.h>
-#include <jc/Assert.h>
-#include <jc/Define.h>
+#include "jc/Type.h"
+#include "jc/Assert.h"
+#include "jc/Define.h"
 
 NS_JC_BEGIN
 template <typename T>

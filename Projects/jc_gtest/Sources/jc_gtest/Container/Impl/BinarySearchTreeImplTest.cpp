@@ -1,10 +1,9 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	이진 탐색 트리 테스트 구현
 */
 
-#include <jc_gtest/Core.h>
-#include <jc/Primitives/String.h>
+#include "jc/Primitives/String.h"
 
 using namespace std;
 

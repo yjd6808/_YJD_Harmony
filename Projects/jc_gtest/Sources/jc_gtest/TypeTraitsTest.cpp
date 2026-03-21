@@ -1,15 +1,13 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	PCH 겸.. jc 테스트입니다.
 */
 
-#include <jc_gtest/Core.h>
 
-#include <jc/TypeCast.h>
-#include <jc/TypeTraits.h>
-#include <jc/Primitives/String.h>
-#include <jc/Allocator/DefaultArrayAllocator.h>
-#include <jc/Core.h>
+#include "jc/TypeCast.h"
+#include "jc/TypeTraits.h"
+#include "jc/Primitives/String.h"
+#include "jc/Allocator/DefaultArrayAllocator.h"
 
 
 using namespace std;

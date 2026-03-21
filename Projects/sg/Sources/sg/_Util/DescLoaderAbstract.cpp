@@ -1,18 +1,17 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/17/2023 11:24:37 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "DescLoaderMgr.h"
 
-#include <sg/_Util/JsonUtil.h>
-#include <sg/_Core/AppConfig.h>
+#include "sg/_Util/JsonUtil.h"
+#include "sg/_Core/AppConfig.h"
 
-#include <filesystem>
-#include <fstream>
+#include "filesystem"
+#include "fstream"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 bool DescLoaderAbstract::DirectoryTree::Init(const jc::String& _rootDirectoryName)

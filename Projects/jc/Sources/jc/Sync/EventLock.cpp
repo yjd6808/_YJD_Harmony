@@ -1,11 +1,10 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * =====================
  *
  */
 
-#include <jc/Core.h>
-#include <jc/Sync/EventLock.h>
+#include "jc/Sync/EventLock.h"
 
 NS_JC_BEGIN
 

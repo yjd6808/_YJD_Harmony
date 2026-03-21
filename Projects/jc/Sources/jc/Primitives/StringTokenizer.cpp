@@ -1,11 +1,10 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 7/7/2024 9:10:17 PM
  * =====================
  *
  */
 
-#include <jc/Core.h>
 #include "StringTokenizer.h"
 
 NS_JC_BEGIN

@@ -1,9 +1,8 @@
-﻿#include "Core.h"
 #include "ActorPartSprite.h"
 
-#include <sgcl/ActorSprite.h>
-#include <sgcl/ImagePackManager.h>
-#include <sgcl/_Core/AppConfig_Props.h>
+#include "sgcl/ActorSprite.h"
+#include "sgcl/ImagePackManager.h"
+#include "sgcl/_Core/AppConfig_Props.h"
 
 #include "Actor.h"
 

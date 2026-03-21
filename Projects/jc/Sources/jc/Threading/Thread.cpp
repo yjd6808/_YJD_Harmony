@@ -1,15 +1,14 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/9/2022 8:11:16 PM
  * =====================
  *
  */
 
-#include <jc/Core.h>
-#include <jc/TypeCast.h>
-#include <jc/Threading/Thread.h>
-#include <jc/Wrapper/CRuntime.h>
-#include <jc/Wrapper/WinApi.h>
+#include "jc/TypeCast.h"
+#include "jc/Threading/Thread.h"
+#include "jc/Wrapper/CRuntime.h"
+#include "jc/Wrapper/WinApi.h"
 
 NS_JC_BEGIN
 

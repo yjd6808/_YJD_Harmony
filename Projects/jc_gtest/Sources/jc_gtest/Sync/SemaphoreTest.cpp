@@ -1,7 +1,6 @@
-﻿#include <jc_gtest/Core.h>
-#include <jc/Sync/Semaphore.h>
+#include "jc/Sync/Semaphore.h"
 
-#include <mutex>
+#include "mutex"
 
 #if TEST_SemaphoreTest == ON
 

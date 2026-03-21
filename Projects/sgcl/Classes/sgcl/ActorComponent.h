@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include <sgcl/IUpdatable.h>
-#include <sgcl/IComponent.h>
+#include "sgcl/IUpdatable.h"
+#include "sgcl/IComponent.h"
 
-#include <sgcl/Actor.h>
+#include "sgcl/Actor.h"
 
 class ActorComponent : public IComponent
 {

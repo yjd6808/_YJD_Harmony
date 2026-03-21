@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <jc/TypeTraits.h>
+#include "jc/TypeTraits.h"
 
 NS_JC_BEGIN
 

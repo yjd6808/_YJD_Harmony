@@ -1,14 +1,13 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/3/2023 4:43:09 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "DescMgr_Effect.h"
 
-#include <sgcl/JsonUtilEx.h>
+#include "sgcl/JsonUtilEx.h"
 
 USING_NS_JS;
 USING_NS_JC;

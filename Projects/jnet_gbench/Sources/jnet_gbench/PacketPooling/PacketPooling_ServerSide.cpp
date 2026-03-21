@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/23/2023 9:19:50 PM
  * =====================
@@ -6,8 +6,7 @@
  */
 
 
-#include <jnet_gbench/Core.h>
-#include <jnet_gbench/Cmdlist.h>
+#include "jnet_gbench/Cmdlist.h"
 
 #include "PacketPooling_ServerSide.h"
 #include "PacketPooling_Common.h"

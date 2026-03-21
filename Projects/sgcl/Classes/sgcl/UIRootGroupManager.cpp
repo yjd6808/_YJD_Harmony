@@ -1,21 +1,20 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/20/2023 9:32:27 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "UIRootGroupManager.h"
 
-#include <sg/_Util/DescLoaderMgr.h>
+#include "sg/_Util/DescLoaderMgr.h"
 
-#include <sgcl/Define_UI.h>
-#include <sgcl/UI_Login.h>
-#include <sgcl/UI_Inventory.h>
-#include <sgcl/UI_Test.h>
-#include <sgcl/UI_ChannelSelect.h>
+#include "sgcl/Define_UI.h"
+#include "sgcl/UI_Login.h"
+#include "sgcl/UI_Inventory.h"
+#include "sgcl/UI_Test.h"
+#include "sgcl/UI_ChannelSelect.h"
 
 // TODO: 문제점: 기본 해상도로 두고 확대하면 텍스쳐는 당연히 흐릿해지는게 맞는데 라벨(글자)도 흐릿해지는데..
 // 라벨 스케일링시 자동으로 스케일된 크기만큼 폰트 크기가 재조정될 수 있어야한다.

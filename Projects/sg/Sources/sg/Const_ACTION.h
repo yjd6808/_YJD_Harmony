@@ -9,8 +9,8 @@
 #pragma once
 
 
-#include <sg/Namespace.h>
-#include <sg/Const_FPS.h>
+#include "sg/Namespace.h"
+#include "sg/Const_FPS.h"
 
 NS_CONST_BEGIN
 namespace Action

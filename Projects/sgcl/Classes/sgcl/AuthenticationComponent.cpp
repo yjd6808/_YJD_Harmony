@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/25/2023 6:19:51 PM
  * =====================
@@ -6,7 +6,6 @@
  */
 
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "AuthenticationComponent.h"
 

@@ -1,15 +1,14 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/22/2023 11:41:05 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GunnerIdle.h"
 
-#include <sgcl/HostPlayer.h>
-#include <sgcl/Define_Animation.h>
+#include "sgcl/HostPlayer.h"
+#include "sgcl/Define_Animation.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 GunnerIdle::GunnerIdle(HostPlayer* _pPlayer, ActionInfo* _pActionInfo)

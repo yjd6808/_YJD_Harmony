@@ -9,10 +9,10 @@
 
 #pragma once
 
-#include <jnet/Host/Session.h>
-#include <jnet/Packet/Packet.h>
+#include "jnet/Host/Session.h"
+#include "jnet/Packet/Packet.h"
 
-#include <jc/Pattern/NonCopyableh.h>
+#include "jc/Pattern/NonCopyableh.h"
 
 NS_JNET_BEGIN
 

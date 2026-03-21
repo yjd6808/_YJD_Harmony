@@ -1,14 +1,13 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/24/2023 9:27:21 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "DescMgr_ClientText.h"
 
-#include <sg/_Util/JsonUtil.h>
+#include "sg/_Util/JsonUtil.h"
 
 #define MAX_ID_LEN      63
 #define MAX_TEXT_LEN    511

@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jc/Primitives/StaticString.h>
-#include <sgs/InterServerCmdDefine.h>
+#include "jc/Primitives/StaticString.h"
+#include "sgs/InterServerCmdDefine.h"
 
 // ======================= CMD LIST =======================
 // SS_P2PRelayStaticTest				: Static 커맨드를 릴레이 P2P 송신 테스트

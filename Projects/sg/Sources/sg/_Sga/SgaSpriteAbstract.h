@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <sg/_Sga/SgaImage.h>
-#include <sg/_Sga/SgaCompressMode.h>
-#include <sg/_Sga/SgaSpriteRect.h>
+#include "sg/_Sga/SgaImage.h"
+#include "sg/_Sga/SgaCompressMode.h"
+#include "sg/_Sga/SgaSpriteRect.h"
 
 #include "SgaPackage.h"
 

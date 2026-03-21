@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <sg/_Util/DescBase.h>
+#include "sg/_Util/DescBase.h"
 #include "SteinsGate_Item.h"
 
 struct ItemOptLevel

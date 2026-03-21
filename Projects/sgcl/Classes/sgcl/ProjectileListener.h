@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <sgcl/IActorListener.h>
-#include <sgcl/Projectile.h>
+#include "sgcl/IActorListener.h"
+#include "sgcl/Projectile.h"
 
 #define SG_PROJECTILE_LISTENER_FACTORY(Type)                                                \
 public:                                                                                     \

@@ -1,4 +1,3 @@
-﻿#include "Core.h"
 #include "SqlServerDatabase.h"
 
 #include "SqlServerQuery.h"

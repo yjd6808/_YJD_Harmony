@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <jc/Primitives/StaticString.h>
-#include <sgs/ServerEnum.h>
-#include <sgs/InterServerCmdDefine.h>
+#include "jc/Primitives/StaticString.h"
+#include "sgs/ServerEnum.h"
+#include "sgs/InterServerCmdDefine.h"
 
 // ======================= CMD LIST =======================
 // SS_HostMessage			: 서버/클라간 주고받는 문자열 메시지

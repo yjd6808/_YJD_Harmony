@@ -1,14 +1,13 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/29/2023 3:04:07 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "SteinsGate_AI.h"
 
-#include <jc/Assert.h>
+#include "jc/Assert.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 AIInfo::AIInfo(const AIInfo& _other)

@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include <jc/Namespace.h>
-#include <jc/Limit.h>
-#include <jc/Type.h>
+#include "jc/Namespace.h"
+#include "jc/Limit.h"
+#include "jc/Type.h"
 
 NS_JC_BEGIN
 

@@ -1,12 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/21/2023 2:28:57 PM
  * =====================
  *
  */
 
-#include "Core.h"
-#include <sg/Namespace.h>
+#include "sg/Namespace.h"
 
 NS_CONST_BEGIN
 // 소스파일

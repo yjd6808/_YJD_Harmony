@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jc/Primitives/Range.h>
-#include <sg/Namespace.h>
+#include "jc/Primitives/Range.h"
+#include "sg/Namespace.h"
 
 NS_CONST_BEGIN
 namespace Authentication

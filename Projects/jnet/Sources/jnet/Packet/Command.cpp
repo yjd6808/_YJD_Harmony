@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/9/2023 7:24:50 PM
  * =====================
@@ -6,8 +6,7 @@
  */
 
 
-#include <jnet/Core.h>
-#include <jnet/Packet/Command.h>
+#include "jnet/Packet/Command.h"
 
 
 NS_JNET_BEGIN

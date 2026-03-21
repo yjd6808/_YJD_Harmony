@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/22/2023 11:41:05 AM
  * =====================
@@ -6,17 +6,16 @@
  * 
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "GunnerGunShot.h"
 
-#include <sgcl/HostPlayer.h>
-#include <sgcl/Define_Animation.h>
-#include <sgcl/Define_Projectile.h>
-#include <sgcl/Define_Action.h>
-#include <sgcl/Define_Effect.h>
-#include <sgcl/Define_Event.h>
-#include <sgcl/PhysicsComponent.h>
+#include "sgcl/HostPlayer.h"
+#include "sgcl/Define_Animation.h"
+#include "sgcl/Define_Projectile.h"
+#include "sgcl/Define_Action.h"
+#include "sgcl/Define_Effect.h"
+#include "sgcl/Define_Event.h"
+#include "sgcl/PhysicsComponent.h"
 
 #define MaxWaitRightShotTime 0.1f // (6fps)
 

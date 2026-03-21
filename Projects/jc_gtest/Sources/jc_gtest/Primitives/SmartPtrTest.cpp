@@ -1,13 +1,12 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	스마트 포인터 동작테스트
 */
 
 
-#include <jc_gtest/Core.h>
 
 
-#include <jc/Primitives/SmartPtr.h>
+#include "jc/Primitives/SmartPtr.h"
 
 #include "jc/Primitives/StaticString.h"
 

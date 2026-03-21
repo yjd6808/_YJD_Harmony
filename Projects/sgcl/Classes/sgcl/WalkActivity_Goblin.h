@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <sgcl/WalkActivity.h>
+#include "sgcl/WalkActivity.h"
 
 class WalkActivity_Goblin : public WalkActivity
 {

@@ -1,8 +1,7 @@
-﻿/*
+/*
  * 작성자: 윤정도
  */
 
-#include <jc_gbench/Core.h>
 
 /*
  * Reserve와 Commit 성능 테스트

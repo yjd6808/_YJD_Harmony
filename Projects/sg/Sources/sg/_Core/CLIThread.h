@@ -6,10 +6,10 @@
 
 #pragma once
 
-#include <jc/Threading/RunnableThread.h>
-#include <jc/Container/ArrayQueue.h>
+#include "jc/Threading/RunnableThread.h"
+#include "jc/Container/ArrayQueue.h"
 
-#include <sg/_Core/CLIListener.h>
+#include "sg/_Core/CLIListener.h"
 
 class CLIThread : public jc::RunnableThread
 {

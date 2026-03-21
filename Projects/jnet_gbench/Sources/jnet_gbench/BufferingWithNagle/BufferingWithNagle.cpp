@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/23/2023 9:19:50 PM (크리스마스 2일전 토요일날 작성함)
  * =====================
@@ -100,7 +100,6 @@
  */
 
 
-#include <jnet_gbench/Core.h>
 
 #include "BufferingWithNagle_ClientSide.h"
 #include "BufferingWithNagle_ServerSide.h"

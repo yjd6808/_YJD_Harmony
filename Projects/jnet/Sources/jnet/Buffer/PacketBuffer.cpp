@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/9/2023 9:56:28 PM
  * =====================
@@ -6,9 +6,8 @@
  */
 
 
-#include <jnet/Core.h>
-#include <jnet/Buffer/PacketBuffer.h>
-#include <jnet/Packet/Packet.h>
+#include "jnet/Buffer/PacketBuffer.h"
+#include "jnet/Packet/Packet.h"
 
 USING_NS_JNET;
 

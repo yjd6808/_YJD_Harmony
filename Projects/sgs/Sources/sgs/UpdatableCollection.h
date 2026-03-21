@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jc/Container/Vector.h>
-#include <sgs/IUpdatable.h>
+#include "jc/Container/Vector.h"
+#include "sgs/IUpdatable.h"
 
 NS_SG_BEGIN
 

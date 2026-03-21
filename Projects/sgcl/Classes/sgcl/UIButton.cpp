@@ -1,17 +1,16 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/15/2023 4:55:50 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "UIButton.h"
 
-#include <sgcl/UIRootGroup.h>
-#include <sgcl/UIManager.h>
-#include <sgcl/ImagePackManager.h>
+#include "sgcl/UIRootGroup.h"
+#include "sgcl/UIManager.h"
+#include "sgcl/ImagePackManager.h"
 
 USING_NS_CC;
 USING_NS_JC;

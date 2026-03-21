@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <jc/Primitives/String.h>
+#include "jc/Primitives/String.h"
 
-#include <jdb/Structure.h>
-#include <jdb/DLLExport.h>
+#include "jdb/Structure.h"
+#include "jdb/DLLExport.h"
 
 NS_JDB_BEGIN
 

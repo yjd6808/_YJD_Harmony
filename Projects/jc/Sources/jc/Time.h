@@ -10,11 +10,11 @@
 
 #pragma once
 
-#include <jc/Type.h>
-#include <jc/Tuple.h>
-#include <jc/Comparator.h>
-#include <jc/Primitives/BitFlag.h>
-#include <jc/Container/Vector.h>
+#include "jc/Type.h"
+#include "jc/Tuple.h"
+#include "jc/Comparator.h"
+#include "jc/Primitives/BitFlag.h"
+#include "jc/Container/Vector.h"
 
 
 NS_JC_BEGIN

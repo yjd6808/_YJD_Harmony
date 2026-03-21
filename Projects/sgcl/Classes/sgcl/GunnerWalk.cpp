@@ -1,15 +1,14 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/22/2023 11:41:05 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GunnerWalk.h"
 
-#include <sgcl/HostPlayer.h>
-#include <sgcl/Define_Animation.h>
+#include "sgcl/HostPlayer.h"
+#include "sgcl/Define_Animation.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 GunnerWalk::GunnerWalk(HostPlayer* _pHostPlayer, ActionInfo* _pActionInfo)

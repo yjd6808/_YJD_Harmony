@@ -1,12 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 6/8/2023 2:49:34 PM
  * =====================
  *
  */
 
-#include <jc/Core.h>
-#include <jc/Threading/ThreadPool.h>
+#include "jc/Threading/ThreadPool.h"
 
 NS_JC_BEGIN
 // =============================================================================================

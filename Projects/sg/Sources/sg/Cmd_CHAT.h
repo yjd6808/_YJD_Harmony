@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <jnet/Packet/Command.h>
+#include "jnet/Packet/Command.h"
 
-#include <jc/Primitives/StaticString.h>
+#include "jc/Primitives/StaticString.h"
 
  // ======================= CMD LIST =======================
  // ======================= CMD LIST =======================

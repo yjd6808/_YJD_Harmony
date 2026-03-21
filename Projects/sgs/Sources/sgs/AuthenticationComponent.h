@@ -9,8 +9,8 @@
 #pragma once
 
 
-#include <sgs/SessionComponent.h>
-#include <sgs/ISessionEventHandler.h>
+#include "sgs/SessionComponent.h"
+#include "sgs/ISessionEventHandler.h"
 
 NS_SG_BEGIN
 

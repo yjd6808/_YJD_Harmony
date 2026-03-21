@@ -1,13 +1,12 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	시간 관련 기능 테스트
 */
 
 
-#include <jc_gtest/Core.h>
-#include <jc/Primitives/String.h>
-#include <jc/Exception.h>
-#include <jc/Time.h>
+#include "jc/Primitives/String.h"
+#include "jc/Exception.h"
+#include "jc/Time.h"
 
 
 using namespace std;

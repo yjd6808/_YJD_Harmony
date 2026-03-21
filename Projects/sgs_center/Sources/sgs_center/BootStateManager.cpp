@@ -1,11 +1,10 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/22/2023 4:38:40 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "BootStateManager.h"
 
 USING_NS_JC;

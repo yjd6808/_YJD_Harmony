@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <jnet/NetGroupMgr.h>
+#include "jnet/NetGroupMgr.h"
 #include "NetSession.h"
 
 struct ServerProcessInfo;

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sgcl/MonsterListener.h>
+#include "sgcl/MonsterListener.h"
 
 class MonsterListener_NormalGoblin : public MonsterListener
 {

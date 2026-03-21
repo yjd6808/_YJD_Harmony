@@ -1,4 +1,3 @@
-﻿#include "Core.h"
 #include "../Structure.h"
 
 #include "SqlServerStatementBuilder.h"

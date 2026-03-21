@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <jc/Sync/NormalLock.h>
+#include "jc/Sync/NormalLock.h"
 
 NS_JC_BEGIN
 

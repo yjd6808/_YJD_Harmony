@@ -1,4 +1,3 @@
-#include "jc/Core.h"
 #include "PooledMemoryChunk.h"
 
 USING_NS_JC;

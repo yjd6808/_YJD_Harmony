@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/27/2023 4:14:29 PM
  * =====================
@@ -7,16 +7,15 @@
 
 
 
-#include "Core.h"
 #include "R_AUTHENTICATION.h"
 
-#include <sgs/AuthenticationComponent.h>
-#include <sgs/CmdRelay_AUTHENTICATION.h>
-#include <sgs/S_MESSAGE_COMMON.h>
-#include <sgs/_Net/NetGroup_Main.h>
+#include "sgs/AuthenticationComponent.h"
+#include "sgs/CmdRelay_AUTHENTICATION.h"
+#include "sgs/S_MESSAGE_COMMON.h"
+#include "sgs/_Net/NetGroup_Main.h"
 
-#include <sgs_lobby/UnauthenticatedSessionManager.h>
-#include <sgs_lobby/S_LOBBY.h>
+#include "sgs_lobby/UnauthenticatedSessionManager.h"
+#include "sgs_lobby/S_LOBBY.h"
 
 
 USING_NS_JC;

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 4/21/2023 9:02:24 PM
  * =====================
@@ -6,11 +6,10 @@
  */
 
 
-#include "Core.h"
 #include "NetServer.h"
 #include "NetSession.h"
 
-#include <sgs/S_SETUP_IS_COMMON.h>
+#include "sgs/S_SETUP_IS_COMMON.h"
 
 #include "NetGroup_InterServ.h"
 

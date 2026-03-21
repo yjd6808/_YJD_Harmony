@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 9:30:27 AM
  * =====================
@@ -6,12 +6,11 @@
  */
 
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "Projectile.h"
 
-#include <sgcl/ActorSprite.h>
-#include <sgcl/ProjectileListener.h>
+#include "sgcl/ActorSprite.h"
+#include "sgcl/ProjectileListener.h"
 
 
 USING_NS_JC;

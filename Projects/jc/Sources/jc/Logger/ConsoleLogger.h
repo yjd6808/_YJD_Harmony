@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jc/Utils/ConsoleColor.h>
-#include <jc/Logger/LoggerAbstract.h>
+#include "jc/Utils/ConsoleColor.h"
+#include "jc/Logger/LoggerAbstract.h"
 
 NS_JC_BEGIN
 

@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include <jc/Time.h>
+#include "jc/Time.h"
 #include "SqlServerConnection.h"
 
 NS_JDB_BEGIN

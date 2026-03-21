@@ -16,15 +16,15 @@
 
 #pragma once
 
-#include <jc/Macro.h>
-#include <jc/TypeTraits.h>
-#include <jc/Primitives/RefCountObjectPtr.h>
+#include "jc/Macro.h"
+#include "jc/TypeTraits.h"
+#include "jc/Primitives/RefCountObjectPtr.h"
 
-#include <WinSock2.h>
+#include "WinSock2.h"
 
-#include <jnet/Namespace.h>
-#include <jnet/Buffer/PacketBuffer.h>
-#include <jnet/Packet/Command.h>
+#include "jnet/Namespace.h"
+#include "jnet/Buffer/PacketBuffer.h"
+#include "jnet/Packet/Command.h"
 
 NS_JNET_BEGIN
 

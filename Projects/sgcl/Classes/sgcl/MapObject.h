@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <sgcl/Actor.h>
-#include <sg/_Struct/SteinsGate_MapObject.h>
+#include "sgcl/Actor.h"
+#include "sg/_Struct/SteinsGate_MapObject.h"
 
 class MapObject : public Actor
 {

@@ -1,6 +1,5 @@
-﻿
-#include <jc_gtest/Core.h>
-#include <jc/Memory.h>
+
+#include "jc/Memory.h"
 
 
 

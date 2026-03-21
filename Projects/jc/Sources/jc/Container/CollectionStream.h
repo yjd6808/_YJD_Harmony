@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include <jc/Comparator.h>
-#include <jc/Container/CollectionType.h>
-#include <jc/Container/ContainerType.h>
-#include <jc/Container/CollectionStreamIterator.h>
+#include "jc/Comparator.h"
+#include "jc/Container/CollectionType.h"
+#include "jc/Container/ContainerType.h"
+#include "jc/Container/CollectionStreamIterator.h"
 
 NS_JC_BEGIN
 

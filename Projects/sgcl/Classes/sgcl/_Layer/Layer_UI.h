@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include <sgcl/Core.h>
-#include <sgcl/UIGroup.h>
+#include "sgcl/UIGroup.h"
 
 class UILayer : public cc::Layer
 {

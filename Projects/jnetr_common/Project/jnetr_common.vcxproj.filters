@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Sources\jnetr_common\ClientListener.cpp" />
+    <ClCompile Include="..\Sources\jnetr_common\ServerListener.cpp" />
+    <ClCompile Include="..\Sources\jnetr_common\TcpClientNetGroup.cpp" />
+    <ClCompile Include="..\Sources\jnetr_common\ServerNetGroupMgr.cpp" />
+    <ClCompile Include="..\Sources\jnetr_common\UdpClientNetGroup.cpp" />
+    <ClCompile Include="..\Sources\jnetr_common\PCH\Core.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\jnetr_common\ClientListener.h" />
+    <ClInclude Include="..\Sources\jnetr_common\Command.h" />
+    <ClInclude Include="..\Sources\jnetr_common\Config.h" />
+    <ClInclude Include="..\Sources\jnetr_common\Message.h" />
+    <ClInclude Include="..\Sources\jnetr_common\ServerListener.h" />
+    <ClInclude Include="..\Sources\jnetr_common\TcpClientNetGroup.h" />
+    <ClInclude Include="..\Sources\jnetr_common\ServerNetGroupMgr.h" />
+    <ClInclude Include="..\Sources\jnetr_common\UdpClientNetGroup.h" />
+    <ClInclude Include="..\Sources\jnetr_common\PCH\Core.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{25a162e0-3ce0-4240-9e6c-0b0ac81c9327}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <jc/Declspec.h>
-#include <jc/Primitives/ObserverPtr.h>
+#include "jc/Declspec.h"
+#include "jc/Primitives/ObserverPtr.h"
 
 NS_JC_BEGIN
 

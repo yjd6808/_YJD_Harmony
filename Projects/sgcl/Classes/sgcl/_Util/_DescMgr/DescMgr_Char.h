@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <sg/_Util/_DescMgr/DescMgr_CharBase.h>
-#include <sg/_Struct/SteinsGate_Char.h>
+#include "sg/_Util/_DescMgr/DescMgr_CharBase.h"
+#include "sg/_Struct/SteinsGate_Char.h"
 
 struct CharInfoLoader : CharBaseInfoLoader
 {

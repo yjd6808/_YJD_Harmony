@@ -1,16 +1,15 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/31/2023 10:33:18 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GunnerFallDown.h"
 
-#include <sgcl/HostPlayer.h>
-#include <sgcl/Define_Animation.h>
-#include <sgcl/PhysicsComponent.h>
+#include "sgcl/HostPlayer.h"
+#include "sgcl/Define_Animation.h"
+#include "sgcl/PhysicsComponent.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 GunnerFallDown::GunnerFallDown(HostPlayer* _pPlayer, ActionInfo* _pActionInfo)

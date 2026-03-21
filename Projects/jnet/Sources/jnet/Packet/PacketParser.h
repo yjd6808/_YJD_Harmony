@@ -9,10 +9,10 @@
 
 #pragma once
 
-#include <jc/Type.h>
-#include <jc/Declspec.h>
+#include "jc/Type.h"
+#include "jc/Declspec.h"
 
-#include <jnet/Namespace.h>
+#include "jnet/Namespace.h"
 
 NS_JNET_BEGIN
 

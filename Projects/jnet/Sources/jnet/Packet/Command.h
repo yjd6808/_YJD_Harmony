@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include <jc/Macro.h>
-#include <jc/Memory.h>
-#include <jc/TypeTraits.h>
+#include "jc/Macro.h"
+#include "jc/Memory.h"
+#include "jc/TypeTraits.h"
 
-#include <jnet/Packet/PacketHeader.h>
+#include "jnet/Packet/PacketHeader.h"
 
 
 /*=====================================================================================

@@ -1,16 +1,15 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 4:36:58 AM
  * =====================
  *
  */
 
-#include "Core.h"
-#include <sg/_Sga/SgaLoader.h>
-#include <sg/_Sga/SgaPackage.h>
+#include "sg/_Sga/SgaLoader.h"
+#include "sg/_Sga/SgaPackage.h"
 
-#include <jc/FileSystem/FileStream.h>
-#include <jc/FileSystem/Path.h>
+#include "jc/FileSystem/FileStream.h"
+#include "jc/FileSystem/Path.h"
 
 USING_NS_JC;
 

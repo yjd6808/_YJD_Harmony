@@ -1,20 +1,19 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/24/2023 10:26:28 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "NetCore.h"
 
-#include <sg/_API/sgapi_Util.h>
-#include <sg/_Util/DescLoaderMgr.h>
-#include <sg/_Struct/SteinsGate_Server.h>
+#include "sg/_API/sgapi_Util.h"
+#include "sg/_Util/DescLoaderMgr.h"
+#include "sg/_Struct/SteinsGate_Server.h"
 
-#include <sgs/_Net/NetGroup_Main.h>
-#include <sgs/_Net/NetGroup_InterServ.h>
-#include <sgs/InterServerSendHelper.h>
+#include "sgs/_Net/NetGroup_Main.h"
+#include "sgs/_Net/NetGroup_InterServ.h"
+#include "sgs/InterServerSendHelper.h"
 
 USING_NS_JC;
 USING_NS_JNET;

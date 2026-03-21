@@ -10,6 +10,9 @@
     <Filter Include="Pool">
       <UniqueIdentifier>{624e25c1-080c-44d2-9e87-8a3645cf371c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{046a54bd-3ab8-4a99-abc7-6da2957214b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\jc_gbench\Container\HashMapTest.cpp">
@@ -33,9 +36,13 @@
     <ClCompile Include="..\Sources\jc_gbench\Research\AllocationTest.cpp">
       <Filter>Research</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gbench\Core.cpp" />
+    <ClCompile Include="..\Sources\jc_gbench\PCH\Core.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\jc_gbench\Core.h" />
+    <ClInclude Include="..\Sources\jc_gbench\PCH\Core.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

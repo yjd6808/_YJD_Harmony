@@ -1,14 +1,13 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/29/2023 6:51:07 PM
  * =====================
  *
  */
 
-#include <jc/Core.h>
 
-#include <jc/Threading/Thread.h>
-#include <jc/Threading/Pulser.h>
+#include "jc/Threading/Thread.h"
+#include "jc/Threading/Pulser.h"
 
 NS_JC_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////

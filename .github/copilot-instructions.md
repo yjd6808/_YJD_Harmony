@@ -1,6 +1,8 @@
 # Basic Rule
 
 1. Answer using korean language.
+2. When I ask for an answer, do not provide the direct solution. Instead, offer hints, guiding questions, or partial insights that help me arrive at the solution on my own.
+But, For simple or repetitive tasks, you can just provide the direct answer.
 
 # Workflow
 

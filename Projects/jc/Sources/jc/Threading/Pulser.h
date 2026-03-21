@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jc/Time.h>
-#include <jc/Pattern/NonCopyableh.h>
+#include "jc/Time.h"
+#include "jc/Pattern/NonCopyableh.h"
 
 NS_JC_BEGIN
 struct PulserStatistics

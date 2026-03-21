@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jc/Logger/LoggerAbstract.h>
-#include <jc/Container/Properties.h>
+#include "jc/Logger/LoggerAbstract.h"
+#include "jc/Container/Properties.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 struct ClientInfo;

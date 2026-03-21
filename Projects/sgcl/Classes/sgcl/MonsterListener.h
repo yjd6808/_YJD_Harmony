@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <sgcl/IActorListener.h>
-#include <sgcl/Monster.h>
+#include "sgcl/IActorListener.h"
+#include "sgcl/Monster.h"
 
 #define SG_MONSTER_LISTENER_FACTORY(Type)                              \
 public:                                                                \

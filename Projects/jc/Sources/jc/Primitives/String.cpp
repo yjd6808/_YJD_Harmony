@@ -1,17 +1,16 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	operator 함수 학습을 위해 제작해본 문자열 클래스입니다.
 */
 
 
-#include <jc/Core.h>
-#include <jc/Primitives/String.h>
-#include <jc/Primitives/StringUtil.h>
-#include <jc/Memory.h>
-#include <jc/Exception.h>
-#include <jc/Ascii.h>
-#include <jc/Tuple.h>
-#include <jc/Container/Vector.h>
+#include "jc/Primitives/String.h"
+#include "jc/Primitives/StringUtil.h"
+#include "jc/Memory.h"
+#include "jc/Exception.h"
+#include "jc/Ascii.h"
+#include "jc/Tuple.h"
+#include "jc/Container/Vector.h"
 
 NS_JC_BEGIN
 

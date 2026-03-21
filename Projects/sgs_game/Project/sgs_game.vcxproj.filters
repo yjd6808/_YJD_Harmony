@@ -2,9 +2,18 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\Sources\sgs_game\main.cpp" />
-    <ClCompile Include="..\Sources\sgs_game\Core.cpp" />
+    <ClCompile Include="..\Sources\sgs_game\PCH\Core.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\sgs_game\Core.h" />
+    <Filter Include="PCH">
+      <UniqueIdentifier>{92e872ff-cea6-4b47-9472-99f34cab2d9c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\sgs_game\PCH\Core.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

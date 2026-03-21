@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/9/2022 2:24:27 PM
  * =====================
@@ -6,10 +6,9 @@
  */
 
 
-#include <jc/Core.h>
-#include <jc/Wrapper/WinApi.h>
-#include <jc/Sync/WaitHandle.h>
-#include <jc/Container/Collection.h>
+#include "jc/Wrapper/WinApi.h"
+#include "jc/Sync/WaitHandle.h"
+#include "jc/Container/Collection.h"
 
 NS_JC_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////

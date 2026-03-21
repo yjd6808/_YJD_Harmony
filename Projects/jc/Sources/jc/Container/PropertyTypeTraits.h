@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jc/Container/PropertyType.h>
-#include <jc/Hasher.h>
+#include "jc/Container/PropertyType.h"
+#include "jc/Hasher.h"
 
 NS_JC_BEGIN
 

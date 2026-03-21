@@ -1,14 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 11/17/2023 5:35:22 PM
  * =====================
  * MakeHeap의 SiftUp방식과 SiftDown방식 성능비교
  */
 
-
-
-#include <jc_gbench/Core.h>
-#include <jc/Container/Arrays.h>
+#include "jc/Container/Arrays.h"
 
 #if HeapifyTest == ON
 

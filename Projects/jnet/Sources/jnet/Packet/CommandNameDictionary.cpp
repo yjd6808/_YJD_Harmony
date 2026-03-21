@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 7/3/2023 5:46:32 PM
  * =====================
@@ -6,8 +6,7 @@
  */
 
 
-#include <jnet/Core.h>
-#include <jnet/Packet/CommandNameDictionary.h>
+#include "jnet/Packet/CommandNameDictionary.h"
 
 USING_NS_JC;
 

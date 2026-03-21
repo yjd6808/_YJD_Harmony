@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <jc/Type.h>
-#include <jc/Namespace.h>
+#include "jc/Type.h"
+#include "jc/Namespace.h"
 
 #pragma warning (push)
 #pragma warning (disable : 4307)	// '+': signed integral constant overflow

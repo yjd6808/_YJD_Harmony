@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/2/2023 4:44:55 PM
  * =====================
@@ -6,20 +6,19 @@
  */
 
 
-#include "Core.h"
 #include "ActorListenerManager.h"
 
-#include <sgcl/Define_ActorListener.h>
+#include "sgcl/Define_ActorListener.h"
 
 // 캐릭터 리스너
-#include <sgcl/ProjectileListener_GunnerBullet.h>
+#include "sgcl/ProjectileListener_GunnerBullet.h"
 
 // 몬스터 리스너
-#include <sgcl/MonsterListener_NormalGoblin.h>
-#include <sgcl/MonsterListener_DarkGoblin.h>
+#include "sgcl/MonsterListener_NormalGoblin.h"
+#include "sgcl/MonsterListener_DarkGoblin.h"
 
 // 프로젝틸 리스너
-#include <sgcl/CharacterListener_Gunner.h>
+#include "sgcl/CharacterListener_Gunner.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ActorListenerManager::ActorListenerManager()

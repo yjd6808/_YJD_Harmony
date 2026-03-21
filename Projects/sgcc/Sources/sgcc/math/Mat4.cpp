@@ -1,5 +1,4 @@
-﻿#include "Core.h"
-#include "sgcc/math/Mat4.h"
+﻿#include "sgcc/math/Mat4.h"
 
 #include "sgcc/math/Quaternion.h"
 #include "sgcc/math/MathUtil.h"

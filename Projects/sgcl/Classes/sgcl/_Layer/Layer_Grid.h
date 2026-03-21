@@ -5,7 +5,7 @@
 
 #ifndef  _DFGRID_VIWER_H__
 #define  _DFGRID_VIWER_H__
-#include <cocos2d.h>
+#include "cocos2d.h"
 
 class GridLayer : public cocos2d::Layer
 {

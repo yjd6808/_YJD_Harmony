@@ -1,7 +1,6 @@
-﻿/*
+/*
  * 작성자: 윤정도
  */
-#include <jc_gbench/Core.h>
 
 /*
  * VirtualAlloc, new, operator new의 성능을 테스트해보도록 한다.

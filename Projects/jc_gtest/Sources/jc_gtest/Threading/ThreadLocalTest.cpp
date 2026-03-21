@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/20/2022 3:23:36 PM
  * =====================
@@ -6,8 +6,7 @@
  */
 
 
-#include <jc_gtest/Core.h>
-#include <jc/Threading/ThreadLocal.h>
+#include "jc/Threading/ThreadLocal.h"
 
 
 #if TEST_ThreadLocalTest == ON

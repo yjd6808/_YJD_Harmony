@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <sg/_Util/DescBase.h>
-#include <sg/_Struct/SteinsGate_CharBase.h>
+#include "sg/_Util/DescBase.h"
+#include "sg/_Struct/SteinsGate_CharBase.h"
 
 
 JC_SENUM_BEGIN(InvenItemType)

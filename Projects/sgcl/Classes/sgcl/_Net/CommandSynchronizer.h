@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <sgcl/Core.h>
 
 class CommandSynchronizer final : public jc::SingletonPointer<CommandSynchronizer>
 {

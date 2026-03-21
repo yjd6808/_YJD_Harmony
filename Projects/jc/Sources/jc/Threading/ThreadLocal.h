@@ -15,10 +15,10 @@
 
 #pragma once
 
-#include <jc/Sync/NormalRwLock.h>
-#include <jc/Container/LinkedList.h>
-#include <jc/Container/HashMap.h>
-#include <jc/Threading/Thread.h>
+#include "jc/Sync/NormalRwLock.h"
+#include "jc/Container/LinkedList.h"
+#include "jc/Container/HashMap.h"
+#include "jc/Threading/Thread.h"
 
 
 NS_JC_BEGIN

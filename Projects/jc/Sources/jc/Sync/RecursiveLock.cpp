@@ -1,16 +1,15 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * =====================
  */
 
 
 
-#include <jc/Core.h>
-#include <jc/Sync/LockGuard.h>
-#include <jc/Sync/RecursiveLock.h>
-#include <jc/Exception.h>
+#include "jc/Sync/LockGuard.h"
+#include "jc/Sync/RecursiveLock.h"
+#include "jc/Exception.h"
 
-#include <cassert>
+#include "cassert"
 
 NS_JC_BEGIN
 

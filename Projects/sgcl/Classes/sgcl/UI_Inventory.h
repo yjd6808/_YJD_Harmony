@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sgcl/UIRootGroup.h>
+#include "sgcl/UIRootGroup.h"
 
 #define MAX_INVEN_SLOT_COUNT		32
 #define INVEN_ITEM_COUNT_PER_ROW	8

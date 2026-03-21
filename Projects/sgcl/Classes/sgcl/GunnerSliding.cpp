@@ -1,20 +1,19 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/22/2023 11:41:05 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GunnerSliding.h"
 
-#include <sgcl/HostPlayer.h>
-#include <sgcl/Define_Action.h>
-#include <sgcl/Define_Animation.h>
-#include <sgcl/Define_Effect.h>
-#include <sgcl/Define_Event.h>
-#include <sgcl/ActorManager.h>
-#include <sgcl/PhysicsComponent.h>
+#include "sgcl/HostPlayer.h"
+#include "sgcl/Define_Action.h"
+#include "sgcl/Define_Animation.h"
+#include "sgcl/Define_Effect.h"
+#include "sgcl/Define_Event.h"
+#include "sgcl/ActorManager.h"
+#include "sgcl/PhysicsComponent.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 GunnerSliding::GunnerSliding(HostPlayer* _pPlayer, ActionInfo* _pActionInfo)

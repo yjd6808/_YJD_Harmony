@@ -27,16 +27,16 @@
     <ClCompile Include="..\Sources\jnet_gbench\BufferingWithNagle\BufferingWithNagle_Common.cpp" />
     <ClCompile Include="..\Sources\jnet_gbench\BufferingWithNagle\BufferingWithNagle.cpp" />
     <ClCompile Include="..\Sources\jnet_gbench\BufferingWithNagle\BufferingWithNagle_ServerSide.cpp" />
-    <ClCompile Include="..\Sources\jnet_gbench\Core.cpp">
+    <ClCompile Include="..\Sources\jnet_gbench\PacketPooling\PacketPooling.cpp" />
+    <ClCompile Include="..\Sources\jnet_gbench\PacketPooling\PacketPooling_ClientSide.cpp" />
+    <ClCompile Include="..\Sources\jnet_gbench\PacketPooling\PacketPooling_Common.cpp" />
+    <ClCompile Include="..\Sources\jnet_gbench\PacketPooling\PacketPooling_ServerSide.cpp" />
+    <ClCompile Include="..\Sources\jnet_gbench\PCH\Core.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Sources\jnet_gbench\PacketPooling\PacketPooling.cpp" />
-    <ClCompile Include="..\Sources\jnet_gbench\PacketPooling\PacketPooling_ClientSide.cpp" />
-    <ClCompile Include="..\Sources\jnet_gbench\PacketPooling\PacketPooling_Common.cpp" />
-    <ClCompile Include="..\Sources\jnet_gbench\PacketPooling\PacketPooling_ServerSide.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jnet_gbench\BufferingPerformance\BufferingPerformance_ClientSide.h" />
@@ -46,11 +46,11 @@
     <ClInclude Include="..\Sources\jnet_gbench\BufferingWithNagle\BufferingWithNagle_Common.h" />
     <ClInclude Include="..\Sources\jnet_gbench\BufferingWithNagle\BufferingWithNagle_ServerSide.h" />
     <ClInclude Include="..\Sources\jnet_gbench\Cmdlist.h" />
-    <ClInclude Include="..\Sources\jnet_gbench\Core.h" />
     <ClInclude Include="..\Sources\jnet_gbench\Namespace.h" />
     <ClInclude Include="..\Sources\jnet_gbench\PacketPooling\PacketPooling_ClientSide.h" />
     <ClInclude Include="..\Sources\jnet_gbench\PacketPooling\PacketPooling_Common.h" />
     <ClInclude Include="..\Sources\jnet_gbench\PacketPooling\PacketPooling_ServerSide.h" />
+    <ClInclude Include="..\Sources\jnet_gbench\PCH\Core.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -108,30 +108,30 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
-    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\jc\Sources;$(SolutionDir)Projects\jnet\Sources;$(SolutionDir)ThirdParty\GoogleBenchmark\include</IncludePath>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>$(SolutionDir)ThirdParty\GoogleBenchmark\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ThirdParty\Build\$(Platform)\lib\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\jc\Sources;$(SolutionDir)Projects\jnet\Sources;$(SolutionDir)ThirdParty\GoogleBenchmark\include</IncludePath>
+    <IncludePath>$(SolutionDir)ThirdParty\GoogleBenchmark\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ThirdParty\Build\$(Platform)\lib\$(Configuration);$(LibraryPath)</LibraryPath>
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
-    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\jc\Sources;$(SolutionDir)Projects\jnet\Sources;$(SolutionDir)ThirdParty\GoogleBenchmark\include</IncludePath>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>$(SolutionDir)ThirdParty\GoogleBenchmark\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ThirdParty\Build\$(Platform)\lib\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\jc\Sources;$(SolutionDir)Projects\jnet\Sources;$(SolutionDir)ThirdParty\GoogleBenchmark\include</IncludePath>
+    <IncludePath>$(SolutionDir)ThirdParty\GoogleBenchmark\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ThirdParty\Build\$(Platform)\lib\$(Configuration);$(LibraryPath)</LibraryPath>
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -142,7 +142,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/utf-8</AdditionalOptions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>$(ProjectName)/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
@@ -163,7 +163,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/utf-8</AdditionalOptions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>$(ProjectName)/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
@@ -190,7 +190,7 @@
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>$(ProjectName)/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
@@ -219,7 +219,7 @@
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>$(ProjectName)/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>

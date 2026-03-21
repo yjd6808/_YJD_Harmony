@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jnet/Packet/Packet.h>
-#include <jnet/Protocol.h>
+#include "jnet/Packet/Packet.h"
+#include "jnet/Protocol.h"
 
 NS_JNET_BEGIN
 

@@ -1,11 +1,10 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/23/2023 12:43:02 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "Win32Helper.h"
 
 USING_NS_CC;

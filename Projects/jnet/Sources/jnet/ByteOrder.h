@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <jc/TypeTraits.h>
-#include <jc/Memory.h>
+#include "jc/TypeTraits.h"
+#include "jc/Memory.h"
 
 NS_JNET_BEGIN
 

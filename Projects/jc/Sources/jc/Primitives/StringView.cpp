@@ -1,8 +1,7 @@
-#include <jc/Core.h>
-#include <jc/Primitives/StringView.h>
-#include <jc/Primitives/String.h>
-#include <jc/Primitives/StringUtil.h>
-#include <jc/Container/Vector.h>
+#include "jc/Primitives/StringView.h"
+#include "jc/Primitives/String.h"
+#include "jc/Primitives/StringUtil.h"
+#include "jc/Container/Vector.h"
 
 USING_NS_JC;
 

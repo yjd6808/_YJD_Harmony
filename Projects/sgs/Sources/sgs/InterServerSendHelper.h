@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include <jc/Container/Vector.h>
-#include <jnet/Packet/SendHelper.h>
+#include "jc/Container/Vector.h"
+#include "jnet/Packet/SendHelper.h"
 
-#include <sgs/InterServerCmdDefine.h>
-#include <sgs/ServerEnum.h>
+#include "sgs/InterServerCmdDefine.h"
+#include "sgs/ServerEnum.h"
 
 template <typename T>
 struct InterServerSendHelper;

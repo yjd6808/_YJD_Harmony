@@ -1,12 +1,11 @@
-﻿/*
+/*
  *	작성자 : 윤정도
  */
 
-#include <jnet/Core.h>
-#include <jnet/Socket.h>
-#include <jnet/ByteOrder.h>
+#include "jnet/Socket.h"
+#include "jnet/ByteOrder.h"
 
-#include <MSWSock.h>
+#include "MSWSock.h"
 
 static LPFN_DISCONNECTEX lpfnDisconnectEx = nullptr;
 static LPFN_CONNECTEX lpfnConnectEx = nullptr;

@@ -6,7 +6,7 @@
  */
 
 #pragma once
-#include <jnet_gbench/Namespace.h>
+#include "jnet_gbench/Namespace.h"
 
 NS_BUFFERING_WITH_NAGLE_BEGIN
 

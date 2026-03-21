@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 3:38:32 PM
  * =====================
@@ -9,14 +9,13 @@
  * Begin, End 둘중 하나만 호출하도록 구현하면 뭔가 좀 깔끔하지 않아서. 일단 둘다 호출하도록 만듬
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "ActorPartAnimation.h"
 
-#include <sgcl/ActorPartSprite.h>
-#include <sgcl/ImagePackManager.h>
-#include <sgcl/ActorSprite.h>
-#include <sgcl/Actor.h>
+#include "sgcl/ActorPartSprite.h"
+#include "sgcl/ImagePackManager.h"
+#include "sgcl/ActorSprite.h"
+#include "sgcl/Actor.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ActorPartAnimation::ActorPartAnimation(

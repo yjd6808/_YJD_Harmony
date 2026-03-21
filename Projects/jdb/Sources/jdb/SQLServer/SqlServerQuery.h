@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <jc/Assert.h>
-#include <jc/Time.h>
-#include <jc/Container/HashMap.h>
-#include <jc/Container/Vector.h>
+#include "jc/Assert.h"
+#include "jc/Time.h"
+#include "jc/Container/HashMap.h"
+#include "jc/Container/Vector.h"
 
 #include "SqlServerConnection.h"
 #include "../IQuery.h"

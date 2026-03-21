@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/24/2023 10:37:07 PM
  * =====================
@@ -6,12 +6,11 @@
  */
 
 
-#include "Core.h"
-#include "_Net/NetServerListener.h"
+#include "NetServerListener.h"
 
-#include <jnet/Packet/PacketReader.h>
+#include "jnet/Packet/PacketReader.h"
 
-#include <sg/_Net/NetListenerHelper.h>
+#include "sg/_Net/NetListenerHelper.h"
 
 USING_NS_JC;
 USING_NS_JNET;

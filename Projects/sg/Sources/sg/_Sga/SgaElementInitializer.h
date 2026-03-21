@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <sg/_Sga/SgaElement.h>
+#include "sg/_Sga/SgaElement.h"
 
-#include <jc/Primitives/ArraySegment.h>
-#include <jc/Stream.h>
+#include "jc/Primitives/ArraySegment.h"
+#include "jc/Stream.h"
 
 
 class SgaElementInitializer

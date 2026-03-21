@@ -11,9 +11,9 @@
 
 #pragma once
 
-#include <jc/TypeTraits.h>
-#include <jc/Macro.h>
-#include <jc/Logger/LoggerDefine.h>
+#include "jc/TypeTraits.h"
+#include "jc/Macro.h"
+#include "jc/Logger/LoggerDefine.h"
 
 #include "IQuery.h"
 #include "IDatabase.h"

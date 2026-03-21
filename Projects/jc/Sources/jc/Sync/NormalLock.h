@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <jc/Sync/ILock.h>
-#include <jc/Primitives/Atomic.h>
-#include <jc/Wrapper/WinApi.h>
+#include "jc/Sync/ILock.h"
+#include "jc/Primitives/Atomic.h"
+#include "jc/Wrapper/WinApi.h"
 
 NS_JC_BEGIN
 

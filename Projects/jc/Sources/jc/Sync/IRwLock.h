@@ -8,8 +8,8 @@
 #pragma once
 
 
-#include <jc/Declspec.h>
-#include <jc/Sync/LockGuard.h>
+#include "jc/Declspec.h"
+#include "jc/Sync/LockGuard.h"
 
 NS_JC_BEGIN
 

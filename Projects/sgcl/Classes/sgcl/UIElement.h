@@ -8,11 +8,10 @@
 
 #pragma once
 
-#include <sgcl/Core.h>
 
-#include <sg/_Struct/SteinsGate_UI.h>
-#include <sgcl/FrameTexture.h>
-#include <sg/_Sga/SgaSpriteHelper.h>
+#include "sg/_Struct/SteinsGate_UI.h"
+#include "sgcl/FrameTexture.h"
+#include "sg/_Sga/SgaSpriteHelper.h"
 
 enum MouseEventType
 {

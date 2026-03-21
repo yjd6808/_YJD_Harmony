@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/23/2023 9:19:50 PM
  * =====================
@@ -6,12 +6,10 @@
  */
 
 
-#include <jnet_gbench/Core.h>
-#include <jnet_gbench/Cmdlist.h>
+#include "jnet_gbench/Cmdlist.h"
 
 #include "BufferingWithNagle_ClientSide.h"
 #include "BufferingWithNagle_Common.h"
-
 
 USING_NS_JC;
 USING_NS_JNET;

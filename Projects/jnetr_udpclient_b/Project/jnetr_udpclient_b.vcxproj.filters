@@ -1,10 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\Sources\main.cpp" />
-    <ClCompile Include="..\Sources\Menu.cpp" />
+    <ClInclude Include="..\Sources\jnetr_udpclient_b\Menu.h" />
+    <ClInclude Include="..\Sources\jnetr_udpclient_b\Core.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\Menu.h" />
+    <ClCompile Include="..\Sources\jnetr_udpclient_b\Core.cpp" />
+    <ClCompile Include="..\Sources\jnetr_udpclient_b\main.cpp" />
+    <ClCompile Include="..\Sources\jnetr_udpclient_b\Menu.cpp" />
   </ItemGroup>
 </Project>

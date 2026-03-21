@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/26/2023 5:29:57 AM
  * =====================
@@ -13,9 +13,8 @@
 
 
 
-#include <jc_gbench/Core.h>
-#include <jc/Container/HashMap.h>
-#include <jc/Pool/BinarySearchMemoryPool.h>
+#include "jc/Container/HashMap.h"
+#include "jc/Pool/BinarySearchMemoryPool.h"
 
 
 #if HashMapMemoryPoolTest == ON

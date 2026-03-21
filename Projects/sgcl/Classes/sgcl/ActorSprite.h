@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include <sgcl/Core.h>
-#include <sgcl/ActorPartSprite.h>
+#include "sgcl/ActorPartSprite.h"
 
 
 class Actor;

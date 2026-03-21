@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jc/Primitives/StaticString.h>
-#include <jnet/Packet/Command.h>
+#include "jc/Primitives/StaticString.h"
+#include "jnet/Packet/Command.h"
 
 // ======================= CMD LIST =======================
 // CAU_Login

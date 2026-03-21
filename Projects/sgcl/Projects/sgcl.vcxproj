@@ -63,6 +63,12 @@
     <ClCompile Include="..\Classes\sgcl\C_GAME.cpp" />
     <ClCompile Include="..\Classes\sgcl\C_LOBBY.cpp" />
     <ClCompile Include="..\Classes\sgcl\CharacterListener_Gunner.cpp" />
+    <ClCompile Include="..\Classes\sgcl\PCH\Core.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\PhysicsComponent.cpp">
       <SubType>
       </SubType>
@@ -337,14 +343,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Core.cpp">
-      <SubType>
-      </SubType>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\UI_Inventory.cpp" />
     <ClCompile Include="..\Classes\sgcl\UI_Login.cpp">
       <SubType>
@@ -462,6 +460,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\PCH\Core.h" />
     <ClInclude Include="..\Classes\sgcl\PhysicsComponent.h">
       <SubType>
       </SubType>
@@ -736,7 +735,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\WndMessage.h" />
-    <ClInclude Include="..\Classes\sgcl\Core.h" />
     <ClInclude Include="..\Classes\sgcl\UI_Inventory.h" />
     <ClInclude Include="..\Classes\sgcl\UI_Login.h">
       <SubType>

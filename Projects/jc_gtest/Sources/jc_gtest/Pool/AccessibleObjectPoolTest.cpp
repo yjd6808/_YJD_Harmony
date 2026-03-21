@@ -1,20 +1,14 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 10/14/2023 3:53:56 PM
  * =====================
  *
  */
 
+#include "jc/Random.h"
+#include "jc/Pool/AccessibleObjectPool.h"
 
-#include <jc_gtest/Core.h>
-
-#include <jc/Random.h>
-#include <jc/Pool/AccessibleObjectPool.h>
-
-#include <jc/Threading/ThreadPool.h>
-
-
-
+#include "jc/Threading/ThreadPool.h"
 
 using namespace std;
 

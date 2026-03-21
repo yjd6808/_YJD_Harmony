@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <sgcl/IUpdatable.h>
-#include <sgcl/IComponent.h>
+#include "sgcl/IUpdatable.h"
+#include "sgcl/IComponent.h"
 
 class ComponentCollection : public IUpdatable
 {

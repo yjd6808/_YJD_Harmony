@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <sgcl/Actor.h>
-#include <sg/_Struct/SteinsGate_Char.h>
+#include "sgcl/Actor.h"
+#include "sg/_Struct/SteinsGate_Char.h"
 
 class Character : public Actor
 {

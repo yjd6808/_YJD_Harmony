@@ -1,14 +1,13 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/24/2023 2:18:17 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "CenterCore.h"
 
-#include <sg/_Util/DescLoaderMgr.h>
+#include "sg/_Util/DescLoaderMgr.h"
 
 #include "R_MESSAGE.h"
 #include "R_PING.h"

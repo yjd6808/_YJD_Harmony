@@ -1,20 +1,19 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/2/2023 4:53:48 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "ProjectileListener_GunnerBullet.h"
 
-#include <sgcl/Projectile.h>
-#include <sgcl/HostPlayer.h>
-#include <sgcl/ActorPartAnimation.h>
-#include <sg/_Struct/SteinsGate_AttackData.h>
-#include <sgcl/Define_Effect.h>
-#include <sgcl/Define_Event.h>
-#include <sgcl/ActorManager.h>
+#include "sgcl/Projectile.h"
+#include "sgcl/HostPlayer.h"
+#include "sgcl/ActorPartAnimation.h"
+#include "sg/_Struct/SteinsGate_AttackData.h"
+#include "sgcl/Define_Effect.h"
+#include "sgcl/Define_Event.h"
+#include "sgcl/ActorManager.h"
 
 ProjectileListener_GunnerBullet::ProjectileListener_GunnerBullet(Projectile* _pProjectile, Actor* _pSpawner)
 : ProjectileListener(_pProjectile, _pSpawner)

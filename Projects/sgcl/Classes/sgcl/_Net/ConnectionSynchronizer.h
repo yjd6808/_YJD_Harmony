@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <sgcl/Core.h>
 
 
 class ConnectionSynchronizer final : public jc::SingletonPointer<ConnectionSynchronizer>

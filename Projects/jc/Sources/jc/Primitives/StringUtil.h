@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include <jc/Type.h>
-#include <jc/Define.h>
-#include <jc/Assert.h>
-#include <jc/Namespace.h>
+#include "jc/Type.h"
+#include "jc/Define.h"
+#include "jc/Assert.h"
+#include "jc/Namespace.h"
 
 NS_JC_BEGIN
 

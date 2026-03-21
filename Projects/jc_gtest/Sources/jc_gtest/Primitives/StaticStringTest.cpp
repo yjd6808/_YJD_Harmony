@@ -1,13 +1,11 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	StaticStringTest 입니다.
 */
 
 
-#include <jc_gtest/Core.h>
-#include <jc/Core.h>
-#include <jc/Primitives/String.h>
-#include <jc/Primitives/StaticString.h>
+#include "jc/Primitives/String.h"
+#include "jc/Primitives/StaticString.h"
 
 
 using namespace std;

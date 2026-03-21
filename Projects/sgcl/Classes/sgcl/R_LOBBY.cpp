@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/27/2023 6:18:07 PM
  * =====================
@@ -6,17 +6,16 @@
  */
 
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "R_LOBBY.h"
 
-#include <sg/Cmd_LOBBY.h>
+#include "sg/Cmd_LOBBY.h"
 
-#include <sgcl/_Scene/Scene_World.h>
-#include <sgcl/UIManager.h>
+#include "sgcl/_Scene/Scene_World.h"
+#include "sgcl/UIManager.h"
 
-#include <sgcl/Define_Popup.h>
-#include <sgcl/UI_ChannelSelect.h>
+#include "sgcl/Define_Popup.h"
+#include "sgcl/UI_ChannelSelect.h"
 
 USING_NS_JC;
 USING_NS_CC;

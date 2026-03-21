@@ -1,16 +1,15 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/29/2023 8:01:53 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "IdleActivity_Goblin.h"
 
-#include <sgcl/Monster.h>
-#include <sg/_Struct/SteinsGate_AI.h>
-#include <sgcl/Define_Animation.h>
+#include "sgcl/Monster.h"
+#include "sg/_Struct/SteinsGate_AI.h"
+#include "sgcl/Define_Animation.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 IdleActivity_Goblin::IdleActivity_Goblin(Actor* _pActor)

@@ -1,17 +1,16 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/31/2023 6:17:15 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "HitRecorder.h"
 
-#include <sg/_Util/DescLoaderMgr.h>
+#include "sg/_Util/DescLoaderMgr.h"
 
-#include <sgcl/Actor.h>
-#include <sgcl/_Layer/Layer_Map.h>
+#include "sgcl/Actor.h"
+#include "sgcl/_Layer/Layer_Map.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 HitRecorder::HitRecorder(Actor* _pOwner, Actor* _pRecorder)

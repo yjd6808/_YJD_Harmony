@@ -1,15 +1,14 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
-#include <jnet/Core.h>
-#include <jnet/Winsock.h>
+#include "jnet/Winsock.h"
 
-#include <jc/Primitives/AutoPtr.h>
+#include "jc/Primitives/AutoPtr.h"
 
-#include <jnet/IOCP/IOCP.h>
-#include <jnet/IOCP/IOCPPostOrder.h>
-#include <jnet/IOCP/IOCPWorker.h>
+#include "jnet/IOCP/IOCP.h"
+#include "jnet/IOCP/IOCPPostOrder.h"
+#include "jnet/IOCP/IOCPWorker.h"
 
 NS_JNET_BEGIN
 

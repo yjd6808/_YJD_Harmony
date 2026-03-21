@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 5/10/2023 3:20:39 AM
  * =====================
@@ -6,14 +6,13 @@
  */
 
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "C_AUTH.h"
 
-#include <sg/Cmd_AUTHENTICATION.h>
-#include <sgcl/S_AUTH.h>
-#include <sgcl/Define_Popup.h>
-#include <sgcl/AuthenticationComponent.h>
+#include "sg/Cmd_AUTHENTICATION.h"
+#include "sgcl/S_AUTH.h"
+#include "sgcl/Define_Popup.h"
+#include "sgcl/AuthenticationComponent.h"
 
 USING_NS_JC;
 USING_NS_CC;

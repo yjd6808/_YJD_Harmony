@@ -1,16 +1,15 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/21/2023 7:01:50 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "DescMgr_ServerInfo.h"
 
-#include <sg/_API/sgapi_Util.h>
+#include "sg/_API/sgapi_Util.h"
 
-#include <sg/_Util/JsonUtil.h>
+#include "sg/_Util/JsonUtil.h"
 
 USING_NS_JS;
 USING_NS_JC;

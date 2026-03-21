@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/13/2026
  * =====================
@@ -6,7 +6,6 @@
  * IQuery 공통 구현
  */
 
-#include "Core.h"
 #include "IQuery.h"
 
 USING_NS_JC;

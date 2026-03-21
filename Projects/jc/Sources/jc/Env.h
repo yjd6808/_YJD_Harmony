@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <jc/Time.h>
-#include <jc/Sync/SpinLock.h>
-#include <jc/Container/Vector.h>
+#include "jc/Time.h"
+#include "jc/Sync/SpinLock.h"
+#include "jc/Container/Vector.h"
 
 NS_JC_BEGIN
 

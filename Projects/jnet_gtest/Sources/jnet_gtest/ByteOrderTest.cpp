@@ -1,6 +1,5 @@
-﻿#include <jnet_gtest/Core.h>
 
-#include <jnet/ByteOrder.h>
+#include "jnet/ByteOrder.h"
 
 #if TEST_ByteOrderTest == ON
 

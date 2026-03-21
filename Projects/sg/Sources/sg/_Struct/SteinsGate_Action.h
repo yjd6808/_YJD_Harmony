@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <sg/_Util/DescBase.h>
-#include <sg/_Struct/SteinsGate_CharBase.h>
+#include "sg/_Util/DescBase.h"
+#include "sg/_Struct/SteinsGate_CharBase.h"
 
-#include <jc/Primitives/SmartPtr.h>
+#include "jc/Primitives/SmartPtr.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 인덱스 기반 타입이므로 무조건 0부터 시작해야한다.

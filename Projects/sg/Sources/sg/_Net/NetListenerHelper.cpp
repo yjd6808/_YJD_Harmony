@@ -1,17 +1,14 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 6/17/2023 11:26:26 PM
  * =====================
  *
  */
 
+#include "NetListenerHelper.h"
+#include "jnet/Packet/PacketViewer.h"
 
-#include "Core.h"
-#include "_Net/NetListenerHelper.h"
-
-#include <jnet/Packet/PacketViewer.h>
-
-#include <sg/_Core/AppConfig.h>
+#include "sg/_Core/AppConfig.h"
 
 USING_NS_JC;
 USING_NS_JNET;

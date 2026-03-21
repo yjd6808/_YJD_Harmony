@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <sg/_Sga/SgaElement.h>
+#include "sg/_Sga/SgaElement.h"
 
 
 class SgaSpriteAbstract;

@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jc/Container/PropertyType.h>
-#include <jc/Container/PropertyTypeTraits.h>
+#include "jc/Container/PropertyType.h"
+#include "jc/Container/PropertyTypeTraits.h"
 
 NS_JC_BEGIN
 

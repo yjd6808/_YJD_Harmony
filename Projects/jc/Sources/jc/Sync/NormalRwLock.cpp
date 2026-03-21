@@ -1,11 +1,10 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * =====================
  *
  */
 
-#include <jc/Core.h>
-#include <jc/Sync/NormalRwLock.h>
+#include "jc/Sync/NormalRwLock.h"
 
 NS_JC_BEGIN
 

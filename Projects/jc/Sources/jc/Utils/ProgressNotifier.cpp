@@ -1,12 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/18/2023 5:12:08 AM
  * =====================
  *
  */
 
-#include <jc/Core.h>
-#include <jc/Utils/ProgressNotifier.h>
+#include "jc/Utils/ProgressNotifier.h"
 
 NS_JC_BEGIN
 

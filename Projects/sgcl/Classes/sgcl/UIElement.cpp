@@ -1,17 +1,16 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/15/2023 6:35:08 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "UIElement.h"
 
-#include <sgcl/SteinsGateApp.h>
-#include <sgcl/UIRootGroup.h>
-#include <sgcl/Define_UI.h>
-#include <sgcl/UIManager.h>
+#include "sgcl/SteinsGateApp.h"
+#include "sgcl/UIRootGroup.h"
+#include "sgcl/Define_UI.h"
+#include "sgcl/UIManager.h"
 
 USING_NS_CC;
 USING_NS_JC;

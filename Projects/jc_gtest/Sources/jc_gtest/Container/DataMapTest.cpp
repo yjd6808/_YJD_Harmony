@@ -1,13 +1,10 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	CDataMap 클래스를 테스트합니다.
 */
 
 
-#include <jc_gtest/Core.h>
-
-#include <jc/Core.h>
-#include <jc/Container/DataMap.h>
+#include "jc/Container/DataMap.h"
 
 USING_NS_STD;
 USING_NS_JC;

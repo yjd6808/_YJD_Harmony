@@ -1,10 +1,9 @@
-﻿/*
+/*
  *	작성자 : 윤정도
  *	메모리 조작을 도와주는 클래스입니다.
  */
 
-#include <jc/Core.h>
-#include <jc/Memory.h>
+#include "jc/Memory.h"
 
 NS_JC_BEGIN
 // memcpy_s와 기능이 동일합니다.

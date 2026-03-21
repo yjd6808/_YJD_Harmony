@@ -28,10 +28,11 @@
 
 #pragma once
 
-#include <jc/Config.h>
-#include <jc/Memory.h>
-#include <jc/Primitives/SmartPtr.h>
-#include <jc/Sync/SpinLock.h>
+#include "jc/Memory.h"
+#include "jc/Primitives/SmartPtr.h"
+#include "jc/Logger/LoggerDefine.h"
+#include "jc/Sync/SpinLock.h"
+#include "jc/Sync/LockGuard.h"
 
 NS_JC_BEGIN
 

@@ -1,14 +1,13 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	포인터 감시자 테스트
 */
 
 
-#include <jc_gtest/Core.h>
 
 
-#include <jc/TypeCast.h>
-#include <jc/Primitives/ObserverPtr.h>
+#include "jc/TypeCast.h"
+#include "jc/Primitives/ObserverPtr.h"
 
 
 using namespace std;

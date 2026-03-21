@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include <jc/Namespace.h>
-#include <jc/Type.h>
+#include "jc/Namespace.h"
+#include "jc/Type.h"
 
 // 23년 02월 06일 오전 11시
 // https://stackoverflow.com/questions/31689857/natvis-floating-point-format

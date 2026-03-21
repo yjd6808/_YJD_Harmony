@@ -1,12 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 6/14/2023 4:54:02 AM
  * =====================
  *
  */
 
-#include <jc/Core.h>
-#include <jc/Digit.h>
+#include "jc/Digit.h"
 
 NS_JC_BEGIN
 

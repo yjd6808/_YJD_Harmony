@@ -1,16 +1,15 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/28/2023 8:43:58 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GunnerAction.h"
 #include "GameCoreHeader.h"
 
-#include <sg/_Util/DescLoaderMgr.h>
-#include <sgcl/HostPlayer.h>
+#include "sg/_Util/DescLoaderMgr.h"
+#include "sgcl/HostPlayer.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 GunnerAction::GunnerAction(HostPlayer* _pHostPlayer, ActionInfo* _pActionInfo)

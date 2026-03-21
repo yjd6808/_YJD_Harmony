@@ -11,9 +11,9 @@
 
 #pragma once
 
-#include <jc/Assert.h>
-#include <jc/Time.h>
-#include <jc/Container/HashMap.h>
+#include "jc/Assert.h"
+#include "jc/Time.h"
+#include "jc/Container/HashMap.h"
 
 #include "MysqlConnection.h"
 #include "../IQuery.h"

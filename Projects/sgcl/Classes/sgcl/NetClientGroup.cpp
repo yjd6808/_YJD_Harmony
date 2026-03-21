@@ -1,26 +1,25 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/24/2023 10:26:49 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "NetClientGroup.h"
 
-#include <sg/Cmd.h>
+#include "sg/Cmd.h"
 
-#include <sgcl/S_AUTH.h>
-#include <sgcl/S_LOBBY.h>
-#include <sgcl/S_GAME.h>
-#include <sgcl/S_GAME_UDP.h>
-#include <sgcl/S_CHAT.h>
-#include <sgcl/S_AREA.h>
+#include "sgcl/S_AUTH.h"
+#include "sgcl/S_LOBBY.h"
+#include "sgcl/S_GAME.h"
+#include "sgcl/S_GAME_UDP.h"
+#include "sgcl/S_CHAT.h"
+#include "sgcl/S_AREA.h"
 
-#include <sgcl/R_AUTHENTICATION.h>
-#include <sgcl/R_MESSAGE.h>
-#include <sgcl/R_LOBBY.h>
+#include "sgcl/R_AUTHENTICATION.h"
+#include "sgcl/R_MESSAGE.h"
+#include "sgcl/R_LOBBY.h"
 
 USING_NS_JC;
 USING_NS_CC;

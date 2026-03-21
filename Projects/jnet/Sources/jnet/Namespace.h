@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <jc/Namespace.h>
+#include "jc/Namespace.h"
 
 #define NS_JNET_BEGIN			namespace jnet {
 #define USING_NS_JNET			using namespace jnet

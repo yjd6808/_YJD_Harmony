@@ -1,5 +1,4 @@
-﻿#include <jc_gtest/Core.h>
-#include <jc/Sync/RecursiveLock.h>
+#include "jc/Sync/RecursiveLock.h"
 
 #if TEST_RecursiveLockTest == ON
 

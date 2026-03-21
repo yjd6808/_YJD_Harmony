@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <jnet/Packet/SendHelper.h>
+#include "jnet/Packet/SendHelper.h"
 
 struct S_MESSAGE_COMMON : jnet::SendHelper<S_MESSAGE_COMMON>
 {

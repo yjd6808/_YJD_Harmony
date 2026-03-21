@@ -1,14 +1,13 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
-#include <jnet/Core.h>
-#include <jnet/IPAddress.h>
+#include "jnet/IPAddress.h"
 
-#include <jc/Primitives/StaticString.h>
-#include <jc/Ascii.h>
-#include <jc/Exception.h>
-#include <jc/Limit.h>
+#include "jc/Primitives/StaticString.h"
+#include "jc/Ascii.h"
+#include "jc/Exception.h"
+#include "jc/Limit.h"
 
 NS_JNET_BEGIN
 

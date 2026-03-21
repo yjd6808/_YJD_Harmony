@@ -1,19 +1,18 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 5/10/2023 2:51:45 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "_Net/ConnectionSynchronizer.h"
 
-#include <sgcl/C_AUTH.h>
-#include <sgcl/C_LOBBY.h>
-#include <sgcl/C_GAME.h>
-#include <sgcl/C_CHAT.h>
-#include <sgcl/C_AREA.h>
+#include "sgcl/C_AUTH.h"
+#include "sgcl/C_LOBBY.h"
+#include "sgcl/C_GAME.h"
+#include "sgcl/C_CHAT.h"
+#include "sgcl/C_AREA.h"
 
 USING_NS_JC;
 USING_NS_CC;

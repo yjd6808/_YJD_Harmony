@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sg/Namespace.h>
+#include "sg/Namespace.h"
 
 extern SG_DLL jc::Random __globalRandomInstance;
 #define g_cRandom __globalRandomInstance

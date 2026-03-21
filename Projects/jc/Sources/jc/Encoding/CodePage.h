@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <jc/Namespace.h>
+#include "jc/Namespace.h"
 
 NS_JC_BEGIN
 

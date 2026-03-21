@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <jc/Primitives/StaticString.h>
-#include <sgs/ServerEnum.h>
-#include <sgs/InterServerCmdDefine.h>
+#include "jc/Primitives/StaticString.h"
+#include "sgs/ServerEnum.h"
+#include "sgs/InterServerCmdDefine.h"
 
 // ======================= CMD LIST =======================
 // CES_WhoAreYou			: 서버가 접속한 클라이언트가 누군지 물어봄

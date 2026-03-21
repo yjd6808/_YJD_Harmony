@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <jnet/NetGroup.h>
+#include "jnet/NetGroup.h"
 
 NS_JNET_BEGIN
 

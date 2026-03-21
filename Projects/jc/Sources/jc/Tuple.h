@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <jc/TypeCast.h>
+#include "jc/TypeCast.h"
 
 NS_JC_BEGIN
 

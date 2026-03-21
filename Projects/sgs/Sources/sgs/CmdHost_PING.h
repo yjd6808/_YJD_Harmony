@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <jc/Primitives/StaticString.h>
-#include <sgs/ServerEnum.h>
-#include <sgs/InterServerCmdDefine.h>
+#include "jc/Primitives/StaticString.h"
+#include "sgs/ServerEnum.h"
+#include "sgs/InterServerCmdDefine.h"
 
 // ======================= CMD LIST =======================
 // SCE_TimeSync				: 시간 정보 요청

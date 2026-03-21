@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="..\Sources\sgs\Core.h" />
     <ClInclude Include="..\Sources\sgs\ServerCore.h" />
     <ClInclude Include="..\Sources\sgs\S_SETUP_IS_COMMON.h">
       <Filter>_Net\Send</Filter>
@@ -126,9 +125,11 @@
     <ClInclude Include="..\Sources\sgs\_Net\GameDB.h">
       <Filter>_Net\Database</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\sgs\PCH\Core.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Sources\sgs\Core.cpp" />
     <ClCompile Include="..\Sources\sgs\ServerCore.cpp" />
     <ClCompile Include="..\Sources\sgs\S_SETUP_IS_COMMON.cpp">
       <Filter>_Net\Send</Filter>
@@ -205,6 +206,9 @@
     <ClCompile Include="..\Sources\sgs\_Net\GameDB.cpp">
       <Filter>_Net\Database</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\sgs\PCH\Core.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Const">
@@ -239,6 +243,9 @@
     </Filter>
     <Filter Include="_Net\Database">
       <UniqueIdentifier>{f261f596-57e0-41e0-b8aa-ed3239e9ca96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{f3a9cc85-85e6-40bf-b9a3-b888f28110ce}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -1,15 +1,14 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/1/2023 7:02:29 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GunnerSitRecover.h"
 
-#include <sgcl/HostPlayer.h>
-#include <sgcl/Define_Animation.h>
+#include "sgcl/HostPlayer.h"
+#include "sgcl/Define_Animation.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 GunnerSitRecover::GunnerSitRecover(HostPlayer* _pPlayer, ActionInfo* _pActionInfo)

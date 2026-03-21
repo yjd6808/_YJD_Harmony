@@ -1,20 +1,19 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	뮤텍스 테스트
 */
 
 
-#include <jc_gtest/Core.h>
 
 #if TEST_LockGuardTest == ON
 
-#include <jc/Sync/EventLock.h>
-#include <jc/Sync/NormalLock.h>
-#include <jc/Sync/NormalRwLock.h>
-#include <jc/Sync/RecursiveLock.h>
-#include <jc/Sync/Semaphore.h>
-#include <jc/Sync/SpinLock.h>
-#include <jc/Exception.h>
+#include "jc/Sync/EventLock.h"
+#include "jc/Sync/NormalLock.h"
+#include "jc/Sync/NormalRwLock.h"
+#include "jc/Sync/RecursiveLock.h"
+#include "jc/Sync/Semaphore.h"
+#include "jc/Sync/SpinLock.h"
+#include "jc/Exception.h"
 
 namespace LockGuardTest {
 

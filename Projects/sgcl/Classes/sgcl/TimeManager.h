@@ -13,7 +13,6 @@
 
 
 
-#include <sgcl/Core.h>
 
 class TimeManager : public jc::SingletonPointer<TimeManager>
 {

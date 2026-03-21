@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <sg/_Struct/SteinsGate_Projectile.h>
-#include <sg/_Util/DescLoaderAbstract.h>
+#include "sg/_Struct/SteinsGate_Projectile.h"
+#include "sg/_Util/DescLoaderAbstract.h"
 
 struct ProjectileInfoLoader : DescLoaderAbstract
 {

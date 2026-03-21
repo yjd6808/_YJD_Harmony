@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <jc/Primitives/SmartPtr.h>
-#include <jc/Declspec.h>
+#include "jc/Primitives/SmartPtr.h"
+#include "jc/Declspec.h"
 
 NS_JC_BEGIN
 

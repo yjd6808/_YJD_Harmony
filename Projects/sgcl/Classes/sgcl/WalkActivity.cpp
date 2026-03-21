@@ -1,16 +1,15 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/29/2023 8:01:53 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "WalkActivity.h"
 
-#include <sgcl/AIComponent.h>
-#include <sgcl/MoveComponent.h>
-#include <sgcl/SGVec2Ex.h>
+#include "sgcl/AIComponent.h"
+#include "sgcl/MoveComponent.h"
+#include "sgcl/SGVec2Ex.h"
 
 #define DestinationMinDistX 7.0f	// 목표지점까지 거리가 이정도 이내이면 도착했다고 판정
 #define DestinationMinDistY 5.0f

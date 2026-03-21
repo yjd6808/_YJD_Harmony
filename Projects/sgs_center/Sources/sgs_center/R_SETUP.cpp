@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 4/18/2023 2:20:54 PM
  * =====================
@@ -7,11 +7,10 @@
 
 
 
-#include "Core.h"
 #include "R_SETUP.h"
 
-#include <sgs/CmdHost.h>
-#include <sgs_center/S_SETUP_IS.h>
+#include "sgs/CmdHost.h"
+#include "sgs_center/S_SETUP_IS.h"
 
 USING_NS_JC;
 USING_NS_JNET;

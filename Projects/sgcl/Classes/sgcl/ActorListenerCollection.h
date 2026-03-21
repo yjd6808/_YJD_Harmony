@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include <sgcl/IActorListener.h>
+#include "sgcl/IActorListener.h"
 
 struct HitInfo;
 

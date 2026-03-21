@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/15/2022 11:33:33 PM
  * =====================
@@ -6,9 +6,8 @@
  */
 
 
-#include <jc_gtest/Core.h>
-#include <jc/Pool/BinarySearchMemoryPool.h>
-#include <jc/Pool/IndexedMemoryPool.h>
+#include "jc/Pool/BinarySearchMemoryPool.h"
+#include "jc/Pool/IndexedMemoryPool.h"
 
 using namespace std;
 

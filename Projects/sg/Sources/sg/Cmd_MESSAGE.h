@@ -9,8 +9,8 @@
 #pragma once
 
 
-#include <jc/Primitives/StaticString.h>
-#include <jnet/Packet/Command.h>
+#include "jc/Primitives/StaticString.h"
+#include "jnet/Packet/Command.h"
 
 // ======================= CMD LIST =======================
 // SC_ClientText	: 클라이언트 텍스트 키값을 서버측에서 전달

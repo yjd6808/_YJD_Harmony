@@ -1,11 +1,10 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
-#include <jnet/Core.h>
-#include <jnet/Host/SessionContainer.h>
+#include "jnet/Host/SessionContainer.h"
 
-#include <jc/Utils/ProgressNotifier.h>
+#include "jc/Utils/ProgressNotifier.h"
 
 USING_NS_JC;
 USING_NS_JNET;

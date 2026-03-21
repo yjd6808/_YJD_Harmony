@@ -1,7 +1,6 @@
-﻿#include "Core.h"
 #include "DescMgr_CharAnimation.h"
 
-#include <sg/_Util/JsonUtil.h>
+#include "sg/_Util/JsonUtil.h"
 
 USING_NS_JS;
 USING_NS_JC;

@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <jnet/Host/TcpServer.h>
+#include "jnet/Host/TcpServer.h"
 
-#include <sgs/ServerEnum.h>
-#include <sgs/IUpdatable.h>
+#include "sgs/ServerEnum.h"
+#include "sgs/IUpdatable.h"
 
 struct NetServerInfo;
 

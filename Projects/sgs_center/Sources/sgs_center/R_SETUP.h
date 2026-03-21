@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jnet/Host/Session.h>
-#include <sgs/InterServerRecvHelper.h>
+#include "jnet/Host/Session.h"
+#include "sgs/InterServerRecvHelper.h"
 
 struct R_SETUP : InterServerRecvHelper
 {

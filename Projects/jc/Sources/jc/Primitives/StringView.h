@@ -1,8 +1,8 @@
 #pragma once
 
-#include <jc/Type.h>
-#include <jc/TypeTraits.h>
-#include <jc/Define.h>
+#include "jc/Type.h"
+#include "jc/TypeTraits.h"
+#include "jc/Define.h"
 
 #include "StringUtil.h"
 

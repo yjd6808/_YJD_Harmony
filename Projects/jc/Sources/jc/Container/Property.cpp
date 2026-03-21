@@ -1,12 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/28/2023 5:32:51 PM
  * =====================
  *
  */
 
-#include <jc/Core.h>
-#include <jc/Container/Property.h>
+#include "jc/Container/Property.h"
 
 NS_JC_BEGIN
 Property<bool> Property<bool>::Default;

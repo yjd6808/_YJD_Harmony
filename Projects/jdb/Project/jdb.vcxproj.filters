@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\Sources\jdb\Core.cpp" />
     <ClCompile Include="..\Sources\jdb\MySQL\MysqlDatabase.cpp">
       <Filter>MySQL</Filter>
     </ClCompile>
@@ -30,9 +29,11 @@
     <ClCompile Include="..\Sources\jdb\ConnectionPool.cpp" />
     <ClCompile Include="..\Sources\jdb\IDatabase.cpp" />
     <ClCompile Include="..\Sources\jdb\IQuery.cpp" />
+    <ClCompile Include="..\Sources\jdb\PCH\Core.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\jdb\Core.h" />
     <ClInclude Include="..\Sources\jdb\DLLExport.h" />
     <ClInclude Include="..\Sources\jdb\QueryDefine.h" />
     <ClInclude Include="..\Sources\jdb\QueryHelper.h" />
@@ -68,6 +69,9 @@
     <ClInclude Include="..\Sources\jdb\Util.h" />
     <ClInclude Include="..\Sources\jdb\ConnectionPool.h" />
     <ClInclude Include="..\Sources\jdb\IQuery.h" />
+    <ClInclude Include="..\Sources\jdb\PCH\Core.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="SQLServer">
@@ -75,6 +79,9 @@
     </Filter>
     <Filter Include="MySQL">
       <UniqueIdentifier>{3f2969ed-266c-45cb-846e-c561446728aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{3c48c192-c29f-4aeb-b730-d06182fe31eb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

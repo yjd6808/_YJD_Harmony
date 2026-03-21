@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jnet/Packet/Command.h>
-#include <jnet/Protocol.h>
+#include "jnet/Packet/Command.h"
+#include "jnet/Protocol.h"
 
 NS_SG_BEGIN
 

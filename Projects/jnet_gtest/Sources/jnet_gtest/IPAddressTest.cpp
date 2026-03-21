@@ -1,6 +1,5 @@
-﻿#include <jnet_gtest/Core.h>
 
-#include <jnet/IPAddress.h>
+#include "jnet/IPAddress.h"
 
 #if TEST_IPAddressTest == ON
 

@@ -8,16 +8,16 @@
 
 #pragma once
 
-#include <jc/TypeTraits.h>
-#include <jc/Sync/ConditionVariable.h>
-#include <jc/Container/ArrayQueue.h>
-#include <jc/Container/Vector.h>
-#include <jc/Threading/RunnableThread.h>
+#include "jc/TypeTraits.h"
+#include "jc/Sync/ConditionVariable.h"
+#include "jc/Container/ArrayQueue.h"
+#include "jc/Container/Vector.h"
+#include "jc/Threading/RunnableThread.h"
 
 #define TASKPOOL_DEBUG_LOG_ENABLE	0
 
 #if TASKPOOL_DEBUG_LOG_ENABLE
-#include <jc/Utils/Console.h>
+#include "jc/Utils/Console.h"
 #define TASKPOOL_LOG(fmt, ...) Console::WriteLine(fmt, __VA_ARGS__)
 #else
 #define TASKPOOL_LOG(fmt, ...)

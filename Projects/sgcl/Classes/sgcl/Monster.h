@@ -9,11 +9,11 @@
 #pragma once
 
 
-#include <sg/_Struct/SteinsGate_MonsterStat.h>
+#include "sg/_Struct/SteinsGate_MonsterStat.h"
 
-#include <sgcl/Actor.h>
-#include <sg/_Struct/SteinsGate_Monster.h>
-#include <sg/_Struct/SteinsGate_AI.h>
+#include "sgcl/Actor.h"
+#include "sg/_Struct/SteinsGate_Monster.h"
+#include "sg/_Struct/SteinsGate_AI.h"
 
 class Monster : public Actor
 {

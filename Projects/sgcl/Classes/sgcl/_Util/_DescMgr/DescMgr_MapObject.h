@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <sg/_Struct/SteinsGate_MapObject.h>
-#include <sg/_Util/DescLoaderAbstract.h>
+#include "sg/_Struct/SteinsGate_MapObject.h"
+#include "sg/_Util/DescLoaderAbstract.h"
 
 struct MapObjectInfoLoader : DescLoaderAbstract
 {

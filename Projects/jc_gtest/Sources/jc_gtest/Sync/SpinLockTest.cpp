@@ -1,5 +1,4 @@
-﻿#include <jc_gtest/Core.h>
-#include <jc/Sync/SpinLock.h>
+#include "jc/Sync/SpinLock.h"
 
 #if TEST_SpinLockTest == ON
 

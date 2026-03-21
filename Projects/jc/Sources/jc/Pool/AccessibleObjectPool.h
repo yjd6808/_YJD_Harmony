@@ -26,10 +26,10 @@
 
 #pragma once
 
-#include <jc/Container/Vector.h>
-#include <jc/Container/LinkedList.h>
+#include "jc/Container/Vector.h"
+#include "jc/Container/LinkedList.h"
 
-#include <jc/Sync/RecursiveLock.h>
+#include "jc/Sync/RecursiveLock.h"
 
 NS_JC_BEGIN
 

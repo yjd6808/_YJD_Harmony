@@ -1,11 +1,10 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * =====================
  *
  */
 
-#include <jc/Core.h>
-#include <jc/Sync/SpinLock.h>
+#include "jc/Sync/SpinLock.h"
 
 NS_JC_BEGIN
 template class LockGuard<SpinLock>;

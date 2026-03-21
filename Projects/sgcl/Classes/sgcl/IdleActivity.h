@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <sgcl/AIActivity.h>
+#include "sgcl/AIActivity.h"
 
 class IdleActivity : public AIActivity
 {

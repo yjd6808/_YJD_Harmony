@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <sgcl/IdleActivity.h>
+#include "sgcl/IdleActivity.h"
 
 class IdleActivity_Goblin : public IdleActivity
 {

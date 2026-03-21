@@ -7,11 +7,13 @@
 
 #pragma once
 
-#include <jc/Primitives/SmartPtr.h>
-#include <jc/Container/HashMap.h>
+#include "jc/Utils/Console.h"
 
-#include <jc/Pool/MemoryPoolStatistics.h>
-#include <jc/Pool/MemoryPoolCaptured.h>
+#include "jc/Primitives/SmartPtr.h"
+#include "jc/Container/HashMap.h"
+
+#include "jc/Pool/MemoryPoolStatistics.h"
+#include "jc/Pool/MemoryPoolCaptured.h"
 
 NS_JC_BEGIN
 

@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include <sgcl/Core.h>
-#include <sgcl/JsonUtilEx.h>
+#include "sgcl/JsonUtilEx.h"
 
 struct AnimationInfo;
 

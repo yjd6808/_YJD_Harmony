@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 1:57:14 PM
  * =====================
@@ -6,13 +6,12 @@
  */
 
 
-#include "Core.h"
 #include "DescMgr_Char.h"
 
-#include <sg/_Struct/SteinsGate_Item.h>
+#include "sg/_Struct/SteinsGate_Item.h"
 
-#include <sgcl/JsonUtilEx.h>
-#include <sgcl/VisualHelper.h>
+#include "sgcl/JsonUtilEx.h"
+#include "sgcl/VisualHelper.h"
 
 USING_NS_CC;
 USING_NS_JS;

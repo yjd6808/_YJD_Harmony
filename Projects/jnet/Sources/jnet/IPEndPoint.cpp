@@ -1,16 +1,15 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
-#include <jnet/Core.h>
-#include <jnet/IPEndPoint.h>
+#include "jnet/IPEndPoint.h"
 
-#include <jc/Primitives/StaticString.h>
-#include <jc/Primitives/StringUtil.h>
-#include <jc/Exception.h>
-#include <jc/Ascii.h>
+#include "jc/Primitives/StaticString.h"
+#include "jc/Primitives/StringUtil.h"
+#include "jc/Exception.h"
+#include "jc/Ascii.h"
 
-#include <jnet/ByteOrder.h>
+#include "jnet/ByteOrder.h"
 
 NS_JNET_BEGIN
 USING_NS_JC;

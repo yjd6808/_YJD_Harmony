@@ -1,10 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\Sources\sge\Core.cpp" />
+    <ClInclude Include="..\Sources\sge\DLLExport.h" />
+    <ClInclude Include="..\Sources\sge\PCH\Core.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\sge\Core.h" />
-    <ClInclude Include="..\Sources\sge\DLLExport.h" />
+    <Filter Include="PCH">
+      <UniqueIdentifier>{ef3e4210-7533-4855-96e8-8187db831520}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Sources\sge\PCH\Core.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

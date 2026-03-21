@@ -1,17 +1,16 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 4/21/2023 1:52:07 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "NetGroup_Main.h"
 
-#include <sg/_Net/NetServerListener.h>
+#include "sg/_Net/NetServerListener.h"
 
-#include <sgs/_Net/NetCore.h>
-#include <sgs/_Net/NetServer.h>
+#include "sgs/_Net/NetCore.h"
+#include "sgs/_Net/NetServer.h"
 
 USING_NS_JC;
 USING_NS_JNET;

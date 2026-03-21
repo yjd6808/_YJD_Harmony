@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/16/2023 5:54:22 PM
  * =====================
@@ -6,13 +6,12 @@
  */
 
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "UISprite.h"
 
-#include <sgcl/UIRootGroup.h>
-#include <sgcl/UIManager.h>
-#include <sgcl/ImagePackManager.h>
+#include "sgcl/UIRootGroup.h"
+#include "sgcl/UIManager.h"
+#include "sgcl/ImagePackManager.h"
 
 USING_NS_CC;
 USING_NS_CCUI;

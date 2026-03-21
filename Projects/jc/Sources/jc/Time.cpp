@@ -1,20 +1,19 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	간단한 시간을 다룰 수 있는 기능을 추가합니다.
 	스톱워치 기능
 */
 
-#include <jc/Core.h>
-#include <jc/Time.h>
-#include <jc/Math.h>
-#include <jc/Ascii.h>
-#include <jc/Exception.h>
-#include <jc/Container/HashMap.h>
-#include <jc/Primitives/String.h>
-#include <jc/Primitives/StaticString.h>
+#include "jc/Time.h"
+#include "jc/Math.h"
+#include "jc/Ascii.h"
+#include "jc/Exception.h"
+#include "jc/Container/HashMap.h"
+#include "jc/Primitives/String.h"
+#include "jc/Primitives/StaticString.h"
 
-#include <chrono>
-#include <timezoneapi.h>
+#include "chrono"
+#include "timezoneapi.h"
 
 using namespace std;
 

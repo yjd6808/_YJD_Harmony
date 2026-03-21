@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jc/Type.h>
-#include <jc/Define.h>
+#include "jc/Type.h"
+#include "jc/Define.h"
 
 /*
  * 정녕.. 그냥 new와 operator new에 파일명 라인 출력을 할 수 없는건가..

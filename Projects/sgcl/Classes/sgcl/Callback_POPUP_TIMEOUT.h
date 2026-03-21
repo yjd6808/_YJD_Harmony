@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sgcl/Namespace.h>
+#include "sgcl/Namespace.h"
 
 NS_CALLBACK_BEGIN
 namespace Popup

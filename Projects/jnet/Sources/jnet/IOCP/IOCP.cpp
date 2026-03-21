@@ -1,13 +1,12 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
-#include <jnet/Core.h>
-#include <jnet/IOCP/IOCP.h>
-#include <jnet/WorkerGroup.h>
-#include <jnet/IOCP/IOCPWorker.h>
+#include "jnet/IOCP/IOCP.h"
+#include "jnet/WorkerGroup.h"
+#include "jnet/IOCP/IOCPWorker.h"
 
-#include <jc/Threading/Pulser.h>
+#include "jc/Threading/Pulser.h"
 
 USING_NS_JC;
 USING_NS_JNET;

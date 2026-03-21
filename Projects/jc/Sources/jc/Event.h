@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include <jc/Functional.h>
-#include <jc/TypeTraits.h>
-#include <jc/Container/Vector.h>
+#include "jc/Functional.h"
+#include "jc/TypeTraits.h"
+#include "jc/Container/Vector.h"
 
 NS_JC_BEGIN
 

@@ -1,12 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/15/2023 3:46:10 PM
  * =====================
  *
  */
 
-#include <jc_gtest/Core.h>
-#include <jc/Primitives/BitFlag.h>
+#include "jc/Primitives/BitFlag.h"
 
 #if TEST_BitFlagTest == ON
 

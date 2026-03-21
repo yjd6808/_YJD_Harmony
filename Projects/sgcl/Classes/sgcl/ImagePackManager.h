@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <sgcl/ImagePack.h>
+#include "sgcl/ImagePack.h"
 
 class ImagePackManager final : public jc::SingletonPointer<ImagePackManager>
 {

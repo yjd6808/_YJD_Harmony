@@ -8,8 +8,8 @@
  
 #pragma once
 
-#include <jc/Utils/IProgressListener.h>
-#include <jc/Functional.h>
+#include "jc/Utils/IProgressListener.h"
+#include "jc/Functional.h"
 
 NS_JC_BEGIN
 

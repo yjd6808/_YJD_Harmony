@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <sg/_Struct/SteinsGate_CharBase.h>
+#include "sg/_Struct/SteinsGate_CharBase.h"
 
 class Actor;
 struct AttackDataInfo;

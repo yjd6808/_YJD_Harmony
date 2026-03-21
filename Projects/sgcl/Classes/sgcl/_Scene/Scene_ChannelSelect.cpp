@@ -1,16 +1,15 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/5/2023 10:28:18 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "_Scene/Scene_ChannelSelect.h"
 
-#include <sgcl/_Scene/Scene_World.h>
-#include <sgcl/Define_UI.h>
-#include <sgcl/S_LOBBY.h>
+#include "sgcl/_Scene/Scene_World.h"
+#include "sgcl/Define_UI.h"
+#include "sgcl/S_LOBBY.h"
 
 USING_NS_CC;
 USING_NS_JC;

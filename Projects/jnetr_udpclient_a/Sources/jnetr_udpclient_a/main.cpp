@@ -1,0 +1,85 @@
+﻿#include "jnetr_common/PCH/Core.h"
+#include "jnetr_common/UdpClientNetGroup.h"
+#include "jnetr_common/Command.h"
+#include "jnetr_common/Config.h"
+
+#include "menu.h"
+
+USING_NS_JNET;
+USING_NS_STD;
+USING_NS_JC;
+
+void PrintMenu();
+bool SelectMenu(int _menu);
+
+UdpClientNetGroup* pClientGroup;
+
+//////////////////////////////////////////////////////////////////////////////////////////
+int main(int _argc, char** _argv)
+{
+	Winsock::Initialize(2, 2);
+	InitializeJCore(_argc, _argv);
+
+	pClientGroup = dbg_new UdpClientNetGroup{"UDP A"};
+	pClientGroup->Initialize();
+
+	for (;;)
+	{
+		PrintMenu();
+		int menu;
+
+		if (!(cin >> menu).good())
+		{
+			cout << "메뉴를 똑바로 선택하지 않았군요, 종료합니다.\n";
+			break;
+		}
+
+		if (!SelectMenu(menu))
+		{
+			break;
+		}
+	}
+
+	JC_DELETE_SAFE(pClientGroup);
+
+	FinalizeJCore();
+	Winsock::Finalize();
+	return 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void PrintMenu()
+{
+	cout << "1. 로그인 UDP 연결\n";
+	cout << "2. 채널 UDP 연결\n";
+	cout << "3. 게임 UDP 연결\n";
+	cout << "4. 클라B UDP 연결\n";
+	cout << "5. 로그인 UDP 메시지 전송\n";
+	cout << "6. 채널 UDP 메시지 전송\n";
+	cout << "7. 게임 UDP 메시지 전송\n";
+	cout << "8. 클라B UDP 메시지 전송\n";
+	cout << "9. 바인드 + 수신대기\n";
+	cout << "10. 연결 종료\n";
+	cout << "메뉴 선택: ";
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool SelectMenu(int _menu)
+{
+	switch (_menu)
+	{
+	case eConnectLogin:     ConnectLogin();     break;
+	case eConnectChannel:   ConnectChannel();   break;
+	case eConnectGame:      ConnectGame();      break;
+	case eConnectClientB:   ConnectClientB();   break;
+	case eSendLogin:        SendLogin();        break;
+	case eSendChannel:      SendChannel();      break;
+	case eSendGame:         SendGame();         break;
+	case eSendClientB:      SendClientB();      break;
+	case eBindRecvFrom:     BindRecvFrom();     break;
+	case eDisconnect:       Disconnect();       break;
+	default: return false;
+	}
+
+	return true;
+}

@@ -8,16 +8,16 @@
 
 #pragma once
 
-#include <sgcl/UIGroup.h>
-#include <sgcl/UIButton.h>
-#include <sgcl/UISprite.h>
-#include <sgcl/UILabel.h>
-#include <sgcl/UICheckBox.h>
-#include <sgcl/UIEditBox.h>
-#include <sgcl/UIToggleButton.h>
-#include <sgcl/UIProgressBar.h>
-#include <sgcl/UIScrollBar.h>
-#include <sgcl/UIStatic.h>
+#include "sgcl/UIGroup.h"
+#include "sgcl/UIButton.h"
+#include "sgcl/UISprite.h"
+#include "sgcl/UILabel.h"
+#include "sgcl/UICheckBox.h"
+#include "sgcl/UIEditBox.h"
+#include "sgcl/UIToggleButton.h"
+#include "sgcl/UIProgressBar.h"
+#include "sgcl/UIScrollBar.h"
+#include "sgcl/UIStatic.h"
 
 struct DragState;
 

@@ -1,15 +1,14 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/22/2023 7:59:06 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "UIEditBox.h"
 #include "GameCoreHeader.h"
 
-#include <sgcl/UIRootGroup.h>
+#include "sgcl/UIRootGroup.h"
 
 USING_NS_CC;
 USING_NS_CCUI;

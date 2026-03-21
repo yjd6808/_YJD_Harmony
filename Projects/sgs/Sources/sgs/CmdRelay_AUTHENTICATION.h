@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jc/Primitives/StaticString.h>
-#include <sgs/InterServerCmdDefine.h>
+#include "jc/Primitives/StaticString.h"
+#include "sgs/InterServerCmdDefine.h"
 
 // ======================= CMD LIST =======================
 // SAU_AuthenticationCheck		: 로비/게임이 인증시리얼 체크를 위해 인증서버에 물어봄

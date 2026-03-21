@@ -9,10 +9,10 @@
 #pragma once
 
 
-#include <jc/Stream.h>
+#include "jc/Stream.h"
 
-#include <jc/FileSystem/FileAccess.h>
-#include <jc/FileSystem/FileMode.h>
+#include "jc/FileSystem/FileAccess.h"
+#include "jc/FileSystem/FileMode.h"
 
 NS_JC_BEGIN
 

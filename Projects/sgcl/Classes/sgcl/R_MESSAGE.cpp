@@ -1,21 +1,20 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/27/2023 5:21:32 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "R_MESSAGE.h"
 
-#include <sg/Cmd_MESSAGE.h>
+#include "sg/Cmd_MESSAGE.h"
 
-#include <sgcl/Define_Popup.h>
-#include <sgcl/S_AUTH.h>
-#include <sgcl/AuthenticationComponent.h>
+#include "sgcl/Define_Popup.h"
+#include "sgcl/S_AUTH.h"
+#include "sgcl/AuthenticationComponent.h"
 
-#include <sgcl/Callback_POPUP_TIMEOUT.h>
+#include "sgcl/Callback_POPUP_TIMEOUT.h"
 
 USING_NS_JC;
 USING_NS_CC;

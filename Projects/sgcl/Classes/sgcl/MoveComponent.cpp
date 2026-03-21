@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/9/2023 4:24:01 AM
  * =====================
@@ -6,11 +6,10 @@
  */
 
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "MoveComponent.h"
 
-#include <sgcl/_Layer/Layer_Map.h>
+#include "sgcl/_Layer/Layer_Map.h"
 
 USING_NS_JC;
 USING_NS_CC;

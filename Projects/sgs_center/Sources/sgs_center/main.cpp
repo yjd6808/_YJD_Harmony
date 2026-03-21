@@ -1,15 +1,14 @@
-﻿//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
 // main
 //////////////////////////////////////////////////////////////////////////////////////////
-#include "Core.h"
 
-#include <sg/LogSpecifier.h>
+#include "sg/LogSpecifier.h"
 
-#include <sgs/_API/sgapiServerBase.h>
-#include <sgs/_Net/NetGroup_Main.h>
-#include <sgs/_Net/NetCore.h>
+#include "sgs/_API/sgapiServerBase.h"
+#include "sgs/_Net/NetGroup_Main.h"
+#include "sgs/_Net/NetCore.h"
 
-#include <sgs_center/CenterCore.h>
+#include "sgs_center/CenterCore.h"
 
 USING_NS_JC;
 USING_NS_JNET;

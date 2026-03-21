@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sg/_Core/AppConfig.h>
+#include "sg/_Core/AppConfig.h"
 
 // void toggleDrawThicknessBox();
 // void toggleDrawBodyBoundingBox();

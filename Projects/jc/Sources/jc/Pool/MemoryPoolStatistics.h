@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include <jc/Sync/ILock.h>
-#include <jc/Pool/MemoryPoolDetail.h>
+#include "jc/Sync/ILock.h"
+#include "jc/Pool/MemoryPoolDetail.h"
 
 
 NS_JC_BEGIN

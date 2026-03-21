@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jc/Container/PropertyTypeTraits.h>
-#include <jc/Container/PropertyStatics.h>
+#include "jc/Container/PropertyTypeTraits.h"
+#include "jc/Container/PropertyStatics.h"
 
 #include "Property.h"
 

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 5/9/2023 4:46:07 AM
  * =====================
@@ -6,10 +6,9 @@
  */
 
 
-#include "Core.h"
 #include "_Net/CommandSynchronizer.h"
 
-#include <sgcl/_Net/NetCore.h>
+#include "sgcl/_Net/NetCore.h"
 
 USING_NS_JC;
 USING_NS_CC;

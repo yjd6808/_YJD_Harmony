@@ -76,7 +76,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jnetr_common", "Projects\jn
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jnetr_tcpclient", "Projects\jnetr_tcpclient\Project\jnetr_tcpclient.vcxproj", "{D4072F29-4BBA-4686-BD94-73BD73E960F1}"
 	ProjectSection(ProjectDependencies) = postProject
-		{5ADBA306-F356-4E21-B037-9EF477DC321E} = {5ADBA306-F356-4E21-B037-9EF477DC321E}
+		{F1F50093-ABEE-4EA6-BF7A-7583CDFFD414} = {F1F50093-ABEE-4EA6-BF7A-7583CDFFD414}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jnetr_tcpserver", "Projects\jnetr_tcpserver\Project\jnetr_tcpserver.vcxproj", "{AF76CC7C-83B4-4B7C-A737-333DCC649CB1}"

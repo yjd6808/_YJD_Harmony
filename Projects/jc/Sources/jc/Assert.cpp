@@ -1,13 +1,12 @@
-﻿/*
+/*
  *	작성자 : 윤정도
  *	작성일 : 2023/02/05(일요일 오후 3시 35분 경)
  */
 
 
-#include <jc/Core.h>
-#include <jc/Assert.h>
-#include <jc/Primitives/StringUtil.h>
-#include <jc/FileSystem/Path.h>
+#include "jc/Assert.h"
+#include "jc/Primitives/StringUtil.h"
+#include "jc/FileSystem/Path.h"
 
 NS_JC_BEGIN
 	NS_DETAIL_BEGIN

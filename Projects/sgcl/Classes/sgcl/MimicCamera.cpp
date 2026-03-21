@@ -1,16 +1,15 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/22/2023 6:32:00 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "MimicCamera.h"
 #include "GameCoreHeader.h"
 
-#include <sgcl/Actor.h>
-#include <sgcl/_Layer/Layer_Map.h>
+#include "sgcl/Actor.h"
+#include "sgcl/_Layer/Layer_Map.h"
 
 USING_NS_CC;
 USING_NS_JC;

@@ -19,13 +19,12 @@
 
 #pragma once
 
-#include <sgcl/Core.h>
 
-#include <sgcl/ActorSprite.h>
-#include <sgcl/HitRecorder.h>
-#include <sgcl/ActorListenerCollection.h>
+#include "sgcl/ActorSprite.h"
+#include "sgcl/HitRecorder.h"
+#include "sgcl/ActorListenerCollection.h"
 
-#include <sgcl/ComponentCollection.h>
+#include "sgcl/ComponentCollection.h"
 
 class Actor;
 class MapLayer;

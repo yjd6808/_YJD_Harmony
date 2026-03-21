@@ -1,4 +1,3 @@
-﻿#include "Core.h"
 #include "MysqlDatabase.h"
 
 #include "MysqlQuery.h"

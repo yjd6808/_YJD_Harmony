@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include <jc/Container/Properties.h>
-#include <jc/Sync/SpinLock.h>
+#include "jc/Container/Properties.h"
+#include "jc/Sync/SpinLock.h"
 
-#include <jnet/Socket.h>
-#include <jnet/IOCP/IOCP.h>
+#include "jnet/Socket.h"
+#include "jnet/IOCP/IOCP.h"
 
 NS_JNET_BEGIN
 class JC_NOVTABLE Host

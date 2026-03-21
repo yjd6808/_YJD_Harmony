@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <sgcl/_Struct/CL_Character.h>
+#include "sgcl/_Struct/CL_Character.h"
 
 class Actor;
 class ActorPartAnimation;

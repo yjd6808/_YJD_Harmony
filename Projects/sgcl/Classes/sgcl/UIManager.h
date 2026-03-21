@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include <sgcl/ImagePack.h>
-#include <sgcl/UIRootGroupManager.h>
+#include "sgcl/ImagePack.h"
+#include "sgcl/UIRootGroupManager.h"
 
 struct DragState
 {

@@ -15,8 +15,8 @@
 
 #pragma once
 
-#include <jc/Primitives/RefCountObject.h>
-#include <jc/Primitives/Span.h>
+#include "jc/Primitives/RefCountObject.h"
+#include "jc/Primitives/Span.h"
 
 NS_JC_BEGIN
 

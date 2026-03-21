@@ -1,12 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/8/2023 6:04:33 PM
  * =====================
  *
  */
 
-#include <jnet/Core.h>
-#include <jnet/IOCPOverlapped/IOCPOverlappedRecvFrom.h>
+#include "jnet/IOCPOverlapped/IOCPOverlappedRecvFrom.h"
 
 NS_JNET_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 5/10/2023 3:20:39 AM
  * =====================
@@ -6,11 +6,10 @@
  */
 
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "C_CHAT.h"
 
-#include <sgcl/S_Chat.h>
+#include "sgcl/S_Chat.h"
 
 USING_NS_JC;
 USING_NS_CC;

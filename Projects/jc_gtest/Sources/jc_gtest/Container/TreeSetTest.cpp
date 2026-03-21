@@ -1,15 +1,13 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/15/2023 7:40:18 AM
  * =====================
  * TreeSet 클래스를 테스트합니다.
  */
 
-#include <jc_gtest/Core.h>
 
-#include <jc/Core.h>
-#include <jc/Container/TreeSet.h>
-#include <jc/Random.h>
+#include "jc/Container/TreeSet.h"
+#include "jc/Random.h"
 
 USING_NS_STD;
 

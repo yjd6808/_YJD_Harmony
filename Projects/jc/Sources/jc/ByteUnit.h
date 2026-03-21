@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <jc/Type.h>
+#include "jc/Type.h"
 
 NS_JC_BEGIN
 
@@ -20,8 +20,6 @@ enum ByteUnit
 	eTeraByte,
 	eByteUnitMax = eTeraByte
 };
-
-
 
 template <ByteUnit From, ByteUnit To, typename T>
 constexpr T ConvertByteUnit(T from) {

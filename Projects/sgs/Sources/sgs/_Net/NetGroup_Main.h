@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include <jnet/NetGroup.h>
-#include <jnet/Host/SessionContainer.h>
+#include "jnet/NetGroup.h"
+#include "jnet/Host/SessionContainer.h"
 
-#include <sgs/IUpdatable.h>
-#include <sgs/UpdatableCollection.h>
+#include "sgs/IUpdatable.h"
+#include "sgs/UpdatableCollection.h"
 
 NS_SG_BEGIN
 

@@ -1,12 +1,11 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	해쉬 생성기 테스트
 */
 
 
-#include <jc_gtest/Core.h>
-#include <jc/Random.h>
-#include <jc/Hasher.h>
+#include "jc/Random.h"
+#include "jc/Hasher.h"
 
 
 using namespace std;

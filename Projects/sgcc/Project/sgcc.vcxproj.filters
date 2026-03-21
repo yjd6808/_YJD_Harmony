@@ -7,6 +7,9 @@
     <Filter Include="base">
       <UniqueIdentifier>{05c0ec02-b692-446c-92a7-bb7951f01965}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{1b3f8868-c00d-417f-96e6-0fd0f7ae3f9f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\sgcc\math\CCGeometry.cpp">
@@ -39,9 +42,11 @@
     <ClCompile Include="..\Sources\sgcc\math\CCAffineTransform.cpp">
       <Filter>math</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgcc\Core.cpp" />
     <ClCompile Include="..\Sources\sgcc\base\ccTypesBase.cpp">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgcc\PCH\Core.cpp">
+      <Filter>PCH</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -81,10 +86,12 @@
     <ClInclude Include="..\Sources\sgcc\math\CCAffineTransform.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgcc\Core.h" />
     <ClInclude Include="..\Sources\sgcc\DLLExport.h" />
     <ClInclude Include="..\Sources\sgcc\base\ccTypesBase.h">
       <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgcc\PCH\Core.h">
+      <Filter>PCH</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

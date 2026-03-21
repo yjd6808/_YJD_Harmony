@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include <crtdbg.h>
+#include "crtdbg.h"
 
-#include <jc/Type.h>
-#include <jc/TypeCast.h>
-#include <jc/Functional.h>
+#include "jc/Type.h"
+#include "jc/TypeCast.h"
+#include "jc/Functional.h"
 
 
 NS_JC_BEGIN

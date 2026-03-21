@@ -24,11 +24,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#include "Core.h"
 #include "sgcc/math/CCGeometry.h"
 
-#include <algorithm>
-#include <cmath>
+#include "algorithm"
+#include "cmath"
 
 // implementation of Vec2
 NS_CC_BEGIN

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/1/2023 10:17:26 AM
  * =====================
@@ -6,11 +6,10 @@
  */
 
 
-#include "Core.h"
 #include "SitActivity_Goblin.h"
 
-#include <sgcl/Monster.h>
-#include <sgcl/Define_Animation.h>
+#include "sgcl/Monster.h"
+#include "sgcl/Define_Animation.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 SitActivity_Goblin::SitActivity_Goblin(Actor* _pActor)

@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <sgcl/Core.h>
 
 class MapLayer;
 class Actor;

@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include <jc/Namespace.h>
-#include <jc/Functional.h>
+#include "jc/Namespace.h"
+#include "jc/Functional.h"
 
 NS_JC_BEGIN
 

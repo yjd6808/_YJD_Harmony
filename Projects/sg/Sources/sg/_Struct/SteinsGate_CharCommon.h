@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <sg/_Util/DescBase.h>
-#include <sg/_Struct/SteinsGate_Item.h>
+#include "sg/_Util/DescBase.h"
+#include "sg/_Struct/SteinsGate_Item.h"
 
 struct CharCommonInfo : SDescBase
 {

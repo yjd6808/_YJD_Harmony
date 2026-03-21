@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <jc/Type.h>
+#include "jc/Type.h"
 
 struct InterServerRecvHelper
 {

@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <sgcl/SitActivity.h>
+#include "sgcl/SitActivity.h"
 
 class SitActivity_Goblin : public SitActivity
 {

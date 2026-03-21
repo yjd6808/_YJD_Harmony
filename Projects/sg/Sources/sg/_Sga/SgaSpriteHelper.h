@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sg/_Sga/SgaSpriteAbstract.h>
+#include "sg/_Sga/SgaSpriteAbstract.h"
 
 struct SgaSpriteHelper
 {

@@ -1,14 +1,13 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 5/14/2023 12:02:07 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "Q_LOGIN.h"
 
-#include <sgs/QueryDefine_AUTH.h>
+#include "sgs/QueryDefine_AUTH.h"
 
 USING_NS_JC;
 USING_NS_JNET;

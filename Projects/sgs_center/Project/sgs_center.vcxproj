@@ -23,16 +23,14 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs_center\Core.cpp">
-      <SubType>
-      </SubType>
+    <ClCompile Include="..\Sources\sgs_center\main.cpp" />
+    <ClCompile Include="..\Sources\sgs_center\CenterCore.cpp" />
+    <ClCompile Include="..\Sources\sgs_center\PCH\Core.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs_center\main.cpp" />
-    <ClCompile Include="..\Sources\sgs_center\CenterCore.cpp" />
     <ClCompile Include="..\Sources\sgs_center\R_MESSAGE.cpp" />
     <ClCompile Include="..\Sources\sgs_center\R_PING.cpp" />
     <ClCompile Include="..\Sources\sgs_center\R_SETUP.cpp">
@@ -49,11 +47,8 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs_center\Core.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\sgs_center\CenterCore.h" />
+    <ClInclude Include="..\Sources\sgs_center\PCH\Core.h" />
     <ClInclude Include="..\Sources\sgs_center\R_MESSAGE.h" />
     <ClInclude Include="..\Sources\sgs_center\R_PING.h" />
     <ClInclude Include="..\Sources\sgs_center\R_SETUP.h">
@@ -121,7 +116,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <IncludePath>$(SolutionDir)ThirdParty\MySQL57\include;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
     <LibraryPath>$(SolutionDir)ThirdParty\MySQL57\lib\$(Platform)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -130,12 +125,12 @@
     <LibraryPath>$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <IncludePath>$(SolutionDir)ThirdParty\MySQL57\include;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
     <LibraryPath>$(SolutionDir)ThirdParty\MySQL57\lib\$(Platform)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -144,7 +139,7 @@
     <LibraryPath>$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

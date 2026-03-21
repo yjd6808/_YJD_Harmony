@@ -1,24 +1,23 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/19/2023 1:07:34 PM
  * =====================
  */
 
 
-#include "Core.h"
 #include "UI_ChannelSelect.h"
 
-#include <sg/_Util/DescLoaderMgr.h>
-#include <sg/_Struct/SteinsGate_Channel.h>
+#include "sg/_Util/DescLoaderMgr.h"
+#include "sg/_Struct/SteinsGate_Channel.h"
 
-#include <sgcl/Define_UI.h>
-#include <sgcl/Define_Popup.h>
-#include <sgcl/S_LOBBY.h>
-#include <sgcl/Contents.h>
-#include <sgcl/SteinsGateApp.h>
+#include "sgcl/Define_UI.h"
+#include "sgcl/Define_Popup.h"
+#include "sgcl/S_LOBBY.h"
+#include "sgcl/Contents.h"
+#include "sgcl/SteinsGateApp.h"
 
-#include <sgcl/ImagePackManager.h>
-#include <sgcl/UIManager.h>
+#include "sgcl/ImagePackManager.h"
+#include "sgcl/UIManager.h"
 
 USING_NS_CC;
 USING_NS_CCUI;

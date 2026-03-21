@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include <jc/Container/Collection.h>
-#include <jc/Container/HashTable.h>
-#include <jc/Container/Property.h>
-#include <jc/Container/PropertiesIterator.h>
-#include <jc/TypeTraits.h>
+#include "jc/Container/Collection.h"
+#include "jc/Container/HashTable.h"
+#include "jc/Container/Property.h"
+#include "jc/Container/PropertiesIterator.h"
+#include "jc/TypeTraits.h"
 
 NS_JC_BEGIN
 

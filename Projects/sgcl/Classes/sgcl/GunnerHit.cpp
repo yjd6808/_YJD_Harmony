@@ -1,16 +1,15 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/27/2023 8:03:49 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GunnerHit.h"
 
-#include <sgcl/HostPlayer.h>
-#include <sgcl/Define_Animation.h>
-#include <sgcl/PhysicsComponent.h>
+#include "sgcl/HostPlayer.h"
+#include "sgcl/Define_Animation.h"
+#include "sgcl/PhysicsComponent.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 GunnerHit::GunnerHit(HostPlayer* _pPlayer, ActionInfo* _pActionInfo)

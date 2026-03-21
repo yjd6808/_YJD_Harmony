@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <sgcl/UIRootGroup.h>
+#include "sgcl/UIRootGroup.h"
 
 #define SG_POPUP_NO_TIMEOUT	-1	// 타임아웃 시간 음수로 지정시, 타임아웃 기능 사용안하도록 함
 

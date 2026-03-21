@@ -4,10 +4,12 @@
 
 #pragma once
 
-#include <jc/Type.h>
-#include <jc/Declspec.h>
+#include "jc/Type.h"
+#include "jc/Declspec.h"
 
-#include <jnet/Namespace.h>
+#include "jc/Container/CMessage.h"
+
+#include "jnet/Namespace.h"
 
 NS_JC_BEGIN
 class CMessage;

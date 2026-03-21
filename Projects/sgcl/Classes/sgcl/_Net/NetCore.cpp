@@ -1,21 +1,20 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 5/6/2023 8:29:57 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "NetCore.h"
 
-#include <sg/_Core/AppConfig.h>
-#include <sg/_Struct/SteinsGate_Client.h>
+#include "sg/_Core/AppConfig.h"
+#include "sg/_Struct/SteinsGate_Client.h"
 
-#include <sgcl/_Net/CommandSynchronizer.h>
-#include <sgcl/_Net/ConnectionSynchronizer.h>
+#include "sgcl/_Net/CommandSynchronizer.h"
+#include "sgcl/_Net/ConnectionSynchronizer.h"
 
-#include <sgcl/AuthenticationComponent.h>
+#include "sgcl/AuthenticationComponent.h"
 
 USING_NS_JC;
 USING_NS_CC;

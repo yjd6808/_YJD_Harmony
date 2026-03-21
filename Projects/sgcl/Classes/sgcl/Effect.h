@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <sgcl/Actor.h>
-#include <sg/_Struct/SteinsGate_Effect.h>
+#include "sgcl/Actor.h"
+#include "sg/_Struct/SteinsGate_Effect.h"
 
 class Effect : public Actor
 {

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <jnet/Packet/SendHelper.h>
+#include "jnet/Packet/SendHelper.h"
 
 struct S_GAME : jnet::SendHelper<S_GAME>
 {

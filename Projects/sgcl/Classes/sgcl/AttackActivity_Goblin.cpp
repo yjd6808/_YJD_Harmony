@@ -1,21 +1,20 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/29/2023 8:01:53 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "AttackActivity_Goblin.h"
 
-#include <sgcl/_Struct/CL_Character.h>
+#include "sgcl/_Struct/CL_Character.h"
 
-#include <sgcl/Monster.h>
-#include <sgcl/ActorManager.h>
-#include <sgcl/PhysicsComponent.h>
-#include <sgcl/Define_Animation.h>
-#include <sgcl/Define_Event.h>
-#include <sgcl/Define_Effect.h>
+#include "sgcl/Monster.h"
+#include "sgcl/ActorManager.h"
+#include "sgcl/PhysicsComponent.h"
+#include "sgcl/Define_Animation.h"
+#include "sgcl/Define_Event.h"
+#include "sgcl/Define_Effect.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 AttackActivity_Goblin::AttackActivity_Goblin(Actor* _pActor)

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/10/2022 6:27:55 PM
  * =====================
@@ -6,9 +6,8 @@
  */
 
 
-#include <jc_gtest/Core.h>
-#include <jc/Threading/Thread.h>
-#include <jc/Container/Vector.h>
+#include "jc/Threading/Thread.h"
+#include "jc/Container/Vector.h"
 
 USING_NS_STD;
 

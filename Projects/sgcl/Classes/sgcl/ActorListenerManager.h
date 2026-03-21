@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <sgcl/CharacterListener.h>
-#include <sgcl/MonsterListener.h>
-#include <sgcl/ProjectileListener.h>
+#include "sgcl/CharacterListener.h"
+#include "sgcl/MonsterListener.h"
+#include "sgcl/ProjectileListener.h"
 
 class ActorListenerManager final : public jc::SingletonPointer<ActorListenerManager>
 {

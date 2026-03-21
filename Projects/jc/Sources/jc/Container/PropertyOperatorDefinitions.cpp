@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/30/2023 5:44:33 PM
  * =====================
@@ -6,8 +6,7 @@
  */
 
 
-#include <jc/Core.h>
-#include <jc/Container/PropertyOperatorDefinitions.h>
+#include "jc/Container/PropertyOperatorDefinitions.h"
 
 #include "PropertyOperators_UNARY.inl"
 #include "PropertyOperators_SELECTORS.inl"

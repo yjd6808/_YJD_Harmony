@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/5/2023 10:41:04 AM
  * =====================
@@ -15,13 +15,12 @@
  */
 
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "_Scene/Scene_Base.h"
 
-#include <sgcl/_Scene/Scene_World.h>
-#include <sgcl/_Layer/Layer_UI.h>
-#include <sgcl/ImagePackManager.h>
+#include "sgcl/_Scene/Scene_World.h"
+#include "sgcl/_Layer/Layer_UI.h"
+#include "sgcl/ImagePackManager.h"
 
 USING_NS_CC;
 USING_NS_JC;

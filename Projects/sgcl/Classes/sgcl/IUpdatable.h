@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <jc/Declspec.h>
+#include "jc/Declspec.h"
 
 class JC_NOVTABLE IUpdatable
 {

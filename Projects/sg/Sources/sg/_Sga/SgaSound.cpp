@@ -1,13 +1,12 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 6:25:59 AM
  * =====================
  *
  */
 
-#include "Core.h"
-#include <sg/_Sga/SgaSound.h>
-#include <sg/_Sga/SgaPackage.h>
+#include "sg/_Sga/SgaSound.h"
+#include "sg/_Sga/SgaPackage.h"
 
 USING_NS_JC;
 

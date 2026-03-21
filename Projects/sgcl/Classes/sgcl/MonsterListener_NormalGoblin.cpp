@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/2/2023 10:30:26 AM
  * =====================
@@ -6,18 +6,17 @@
  */
 
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "MonsterListener_NormalGoblin.h"
 
-#include <sgcl/AIComponent.h>
+#include "sgcl/AIComponent.h"
 
-#include <sgcl/WalkActivity_Goblin.h>
-#include <sgcl/IdleActivity_Goblin.h>
-#include <sgcl/AttackActivity_Goblin.h>
-#include <sgcl/HitActivity_Goblin.h>
-#include <sgcl/FallDownActivity_Goblin.h>
-#include <sgcl/SitActivity_Goblin.h>
+#include "sgcl/WalkActivity_Goblin.h"
+#include "sgcl/IdleActivity_Goblin.h"
+#include "sgcl/AttackActivity_Goblin.h"
+#include "sgcl/HitActivity_Goblin.h"
+#include "sgcl/FallDownActivity_Goblin.h"
+#include "sgcl/SitActivity_Goblin.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void MonsterListener_NormalGoblin::OnCreated()

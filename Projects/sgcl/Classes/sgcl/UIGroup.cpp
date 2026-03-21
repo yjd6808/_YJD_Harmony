@@ -1,25 +1,24 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/15/2023 4:49:38 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "UIGroup.h"
 
-#include <sg/_Util/DescLoaderMgr.h>
+#include "sg/_Util/DescLoaderMgr.h"
 
-#include <sgcl/UIRootGroup.h>
-#include <sgcl/UIButton.h>
-#include <sgcl/UILabel.h>
-#include <sgcl/UISprite.h>
-#include <sgcl/UIEditBox.h>
-#include <sgcl/UICheckBox.h>
-#include <sgcl/UIToggleButton.h>
-#include <sgcl/UIScrollBar.h>
-#include <sgcl/UIProgressBar.h>
-#include <sgcl/UIStatic.h>
+#include "sgcl/UIRootGroup.h"
+#include "sgcl/UIButton.h"
+#include "sgcl/UILabel.h"
+#include "sgcl/UISprite.h"
+#include "sgcl/UIEditBox.h"
+#include "sgcl/UICheckBox.h"
+#include "sgcl/UIToggleButton.h"
+#include "sgcl/UIScrollBar.h"
+#include "sgcl/UIProgressBar.h"
+#include "sgcl/UIStatic.h"
 
 USING_NS_CC;
 USING_NS_JC;

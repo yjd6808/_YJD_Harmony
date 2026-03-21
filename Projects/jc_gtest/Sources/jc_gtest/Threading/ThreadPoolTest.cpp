@@ -1,13 +1,12 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 6/13/2023 5:22:49 AM
  * =====================
  *
  */
 
-#include <jc_gtest/Core.h>
-#include <jc/Threading/ThreadPool.h>
-#include <jc/Random.h>
+#include "jc/Threading/ThreadPool.h"
+#include "jc/Random.h"
 
 #if TEST_ThreadPoolTest == ON
 

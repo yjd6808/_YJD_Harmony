@@ -1,13 +1,12 @@
-﻿/*
+/*
  *	작성자 : 윤정도
  */
 
 
-#include <jnet/Core.h>
-#include <jnet/Winsock.h>
-#include <jnet/Socket.h>
+#include "jnet/Winsock.h"
+#include "jnet/Socket.h"
 
-#include <jc/Primitives/StringUtil.h>
+#include "jc/Primitives/StringUtil.h"
 
 NS_JNET_BEGIN
 bool Winsock::Finalized = false;

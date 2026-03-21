@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include <sgcl/HostPlayer.h>
-#include <sgcl/Inven.h>
-#include <sgcl/ActorListenerManager.h>
-#include <sgcl/ActorManager.h>
-#include <sgcl/PopupManager.h>
-#include <sgcl/TimeManager.h>
+#include "sgcl/HostPlayer.h"
+#include "sgcl/Inven.h"
+#include "sgcl/ActorListenerManager.h"
+#include "sgcl/ActorManager.h"
+#include "sgcl/PopupManager.h"
+#include "sgcl/TimeManager.h"
 
 struct Contents
 {

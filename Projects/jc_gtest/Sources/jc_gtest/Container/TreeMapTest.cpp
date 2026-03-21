@@ -1,13 +1,11 @@
-﻿/*
+/*
 	작성자 : 윤정도
 */
 
 
-#include <jc_gtest/Core.h>
 
-#include <jc/Core.h>
-#include <jc/Container/TreeMap.h>
-#include <jc/Random.h>
+#include "jc/Container/TreeMap.h"
+#include "jc/Random.h"
 
 
 using namespace std;

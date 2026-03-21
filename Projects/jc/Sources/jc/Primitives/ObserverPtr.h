@@ -9,12 +9,12 @@
 
 #pragma once
 
-#include <jc/Declspec.h>
-#include <jc/Exception.h>
-#include <jc/TypeTraits.h>
-#include <jc/Assert.h>
-#include <jc/Define.h>
-#include <jc/Debug/New.h>
+#include "jc/Declspec.h"
+#include "jc/Exception.h"
+#include "jc/TypeTraits.h"
+#include "jc/Assert.h"
+#include "jc/Define.h"
+#include "jc/Debug/New.h"
 
 NS_JC_BEGIN
 NS_DETAIL_BEGIN

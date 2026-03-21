@@ -6,7 +6,6 @@
  * jdb 공통 유틸리티 구현
  */
 
-#include "Core.h"
 #include "Util.h"
 
 USING_NS_JC;

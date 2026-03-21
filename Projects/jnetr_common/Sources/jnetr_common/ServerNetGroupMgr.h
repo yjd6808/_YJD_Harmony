@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include <jnet/Host/TcpServer.h>
-#include <jnet/Host/UdpClient.h>
-#include <jnet/NetGroupMgr.h>
+#include "jnet/Host/TcpServer.h"
+#include "jnet/Host/UdpClient.h"
+#include "jnet/NetGroupMgr.h"
 
-#include <jnetr_common/ServerListener.h>
-#include <jnetr_common/ClientListener.h>
+#include "jnetr_common/ServerListener.h"
+#include "jnetr_common/ClientListener.h"
 
 NS_JNET_BEGIN
 

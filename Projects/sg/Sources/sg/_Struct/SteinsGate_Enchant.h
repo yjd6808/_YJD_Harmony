@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <sg/_Struct/SteinsGate_ItemOpt.h>
-#include <sg/_Util/DescBase.h>
+#include "sg/_Struct/SteinsGate_ItemOpt.h"
+#include "sg/_Util/DescBase.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 struct EnchantBonusOptInfo

@@ -1,14 +1,13 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 6/16/2023 4:05:43 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "InterServerSendHelper.h"
 
-#include <sgs/_Net/NetCore.h>
+#include "sgs/_Net/NetCore.h"
 
 USING_NS_JNET;
 

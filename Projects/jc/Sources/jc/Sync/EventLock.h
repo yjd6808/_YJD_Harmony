@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <jc/Sync/ILock.h>
-#include <jc/Sync/WaitHandle.h>
-#include <jc/Primitives/Atomic.h>
+#include "jc/Sync/ILock.h"
+#include "jc/Sync/WaitHandle.h"
+#include "jc/Primitives/Atomic.h"
 
 NS_JC_BEGIN
 

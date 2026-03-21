@@ -1,11 +1,10 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	난수 생성기
 */
 
-#include <jc/Core.h>
-#include <jc/Random.h>
-#include <jc/Exception.h>
+#include "jc/Random.h"
+#include "jc/Exception.h"
 
 NS_JC_BEGIN
 

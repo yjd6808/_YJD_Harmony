@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/8/2022 5:32:07 PM
  * =====================
@@ -7,8 +7,7 @@
 
 
 
-#include <jc_gtest/Core.h>
-#include <jc/Primitives/Atomic.h>
+#include "jc/Primitives/Atomic.h"
 
 using namespace jc;
 

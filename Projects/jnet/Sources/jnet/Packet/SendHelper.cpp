@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/27/2023 1:12:34 PM
  * =====================
@@ -6,8 +6,7 @@
  */
 
 
-#include <jnet/Core.h>
-#include <jnet/Packet/SendHelper.h>
+#include "jnet/Packet/SendHelper.h"
 
 NS_JNET_BEGIN
 

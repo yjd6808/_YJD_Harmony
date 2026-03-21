@@ -1,13 +1,12 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/9/2022 6:25:16 PM
  * =====================
  *
  */
 
-#include <jc/Core.h>
-#include <jc/TypeCast.h>
-#include <jc/Sync/ManualResetEvent.h>
+#include "jc/TypeCast.h"
+#include "jc/Sync/ManualResetEvent.h"
 
 NS_JC_BEGIN
 

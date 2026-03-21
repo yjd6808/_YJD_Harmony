@@ -1,13 +1,12 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/22/2026
  * =====================
  */
 
 
-#include <jc/Core.h>
-#include <jc/Container/CMessage.h>
-#include <jc/Primitives/StringUtil.h>
+#include "jc/Container/CMessage.h"
+#include "jc/Primitives/StringUtil.h"
 
 USING_NS_JC;
 

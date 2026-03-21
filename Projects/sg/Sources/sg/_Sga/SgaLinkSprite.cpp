@@ -1,12 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 6:25:27 AM
  * =====================
  *
  */
 
-#include "Core.h"
-#include <sg/_Sga/SgaLinkSprite.h>
+#include "sg/_Sga/SgaLinkSprite.h"
 
 USING_NS_JC;
 

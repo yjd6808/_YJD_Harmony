@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/2/2023 6:10:07 PM
  * =====================
@@ -11,16 +11,15 @@
  * 전체 정리 순서
  */
 
-#include "Core.h"
 #include "ActorManager.h"
 
-#include <sg/_Util/DescLoaderMgr.h>
+#include "sg/_Util/DescLoaderMgr.h"
 
-#include <sgcl/_Struct/CL_Character.h>
+#include "sgcl/_Struct/CL_Character.h"
 
-#include <sgcl/ActorListenerManager.h>
-#include <sgcl/_Layer/Layer_Map.h>
-#include <sgcl/AIComponent.h>
+#include "sgcl/ActorListenerManager.h"
+#include "sgcl/_Layer/Layer_Map.h"
+#include "sgcl/AIComponent.h"
 
 USING_NS_CC;
 USING_NS_JC;

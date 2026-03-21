@@ -1,14 +1,13 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/16/2023 9:02:57 PM
  * =====================
  *
  */
 
-#include <jc/Core.h>
-#include <jc/Time.h>
-#include <jc/Container/Arrays.h>
-#include <jc/Logger/ConsoleLogger.h>
+#include "jc/Time.h"
+#include "jc/Container/Arrays.h"
+#include "jc/Logger/ConsoleLogger.h"
 
 NS_JC_BEGIN
 

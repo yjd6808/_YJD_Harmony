@@ -20,14 +20,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\jdb\ConnectionPool.cpp" />
-    <ClCompile Include="..\Sources\jdb\Core.cpp">
+    <ClCompile Include="..\Sources\jdb\IDatabase.cpp" />
+    <ClCompile Include="..\Sources\jdb\IQuery.cpp" />
+    <ClCompile Include="..\Sources\jdb\PCH\Core.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Sources\jdb\IDatabase.cpp" />
-    <ClCompile Include="..\Sources\jdb\IQuery.cpp" />
     <ClCompile Include="..\Sources\jdb\Util.cpp" />
     <ClCompile Include="..\Sources\jdb\MySQL\MysqlConnection.cpp" />
     <ClCompile Include="..\Sources\jdb\MySQL\MysqlDatabase.cpp" />
@@ -40,11 +40,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jdb\ConnectionPool.h" />
-    <ClInclude Include="..\Sources\jdb\Core.h" />
     <ClInclude Include="..\Sources\jdb\DLLExport.h" />
     <ClInclude Include="..\Sources\jdb\IConnection.h" />
     <ClInclude Include="..\Sources\jdb\IDatabase.h" />
     <ClInclude Include="..\Sources\jdb\IQuery.h" />
+    <ClInclude Include="..\Sources\jdb\PCH\Core.h" />
     <ClInclude Include="..\Sources\jdb\Util.h" />
     <ClInclude Include="..\Sources\jdb\MySQL\MysqlConnection.h" />
     <ClInclude Include="..\Sources\jdb\MySQL\MysqlDatabase.h" />
@@ -113,25 +113,25 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
     <IncludePath>$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
     <IncludePath>$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
     <IncludePath>$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
     <IncludePath>$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>

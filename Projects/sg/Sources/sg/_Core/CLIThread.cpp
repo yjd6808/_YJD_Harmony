@@ -1,11 +1,10 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
-#include "Core.h"
 #include "CLIThread.h"
 
-#include <csignal>
+#include "csignal"
 
 USING_NS_JC;
 USING_NS_JNET;

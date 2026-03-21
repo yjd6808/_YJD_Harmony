@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <jc/Sync/NormalLock.h>
-#include <jc/Container/ArrayStack.h>
+#include "jc/Sync/NormalLock.h"
+#include "jc/Container/ArrayStack.h"
 
 NS_JC_BEGIN
 

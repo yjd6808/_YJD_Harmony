@@ -1,13 +1,11 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	String 클래스 테스트입니다.
 */
 
 
-#include <jc_gtest/Core.h>
-#include <jc/Core.h>
-#include <jc/Primitives/String.h>
-#include <jc/Container/Vector.h>
+#include "jc/Primitives/String.h"
+#include "jc/Container/Vector.h"
 
 
 using namespace std;

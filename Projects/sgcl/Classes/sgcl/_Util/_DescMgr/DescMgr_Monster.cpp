@@ -1,14 +1,13 @@
-﻿/*
+/*
  * 
  * !F$ 1/20/2023 1:57:14 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "DescMgr_Monster.h"
 
-#include <sgcl/JsonUtilEx.h>
+#include "sgcl/JsonUtilEx.h"
 
 USING_NS_JS;
 USING_NS_JC;

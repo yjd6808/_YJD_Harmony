@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include <sgcl/Core.h>
-#include <sg/_Struct/SteinsGate_Item.h>
+#include "sg/_Struct/SteinsGate_Item.h"
 
 class Inven final : public jc::SingletonPointer<Inven>
 {

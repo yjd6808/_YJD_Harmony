@@ -9,6 +9,6 @@
 
 #pragma once
 
-#include <sgs/CmdHost_MESSAGE.h>
-#include <sgs/CmdHost_PING.h>
-#include <sgs/CmdHost_SETUP.h>
+#include "sgs/CmdHost_MESSAGE.h"
+#include "sgs/CmdHost_PING.h"
+#include "sgs/CmdHost_SETUP.h"

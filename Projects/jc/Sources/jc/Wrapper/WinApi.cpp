@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/6/2022 1:57:55 PM
  * =====================
@@ -6,9 +6,8 @@
  */
 
 
-#include <jc/Core.h>
-#include <jc/Limit.h>
-#include <jc/Wrapper/WinApi.h>
+#include "jc/Limit.h"
+#include "jc/Wrapper/WinApi.h"
 
 NS_JC_BEGIN
 _whandle WinApi::InvalidHandleValue = INVALID_HANDLE_VALUE;

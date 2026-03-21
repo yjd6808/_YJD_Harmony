@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include <sg/_Sga/SgaElement.h>
+#include "sg/_Sga/SgaElement.h"
 
-#include <jc/Stream.h>
-#include <jc/Container/HashMap.h>
-#include <jc/Primitives/String.h>
+#include "jc/Stream.h"
+#include "jc/Container/HashMap.h"
+#include "jc/Primitives/String.h"
 
 class SgaLoader;
 

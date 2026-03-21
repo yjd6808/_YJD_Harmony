@@ -8,9 +8,8 @@
 
 #pragma once
 
-#include <sg/_Sga/SgaSpriteRect.h>
+#include "sg/_Sga/SgaSpriteRect.h"
 
-#include <sgcl/Core.h>
 
 class FrameTexture : public cocos2d::Ref
 {

@@ -22,9 +22,9 @@
 
 #pragma once
 
-#include <jc/Pattern/NonCopyableh.h>
-#include <jc/Sync/NormalLock.h>
-#include <jc/Debug/New.h>
+#include "jc/Pattern/NonCopyableh.h"
+#include "jc/Sync/NormalLock.h"
+#include "jc/Debug/New.h"
 
 NS_JC_BEGIN
 

@@ -1,14 +1,12 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
-#include <jnet/Core.h>
-#include <jnet/Winsock.h>
-#include <jnet/IOCP/IOCPWorker.h>
-#include <jnet/IOCP/IOCPPostOrder.h>
-#include <jnet/IOCPOverlapped/IOCPOverlapped.h>
+#include "jnet/IOCP/IOCPWorker.h"
+#include "jnet/IOCP/IOCPPostOrder.h"
+#include "jnet/IOCPOverlapped/IOCPOverlapped.h"
 
-#include <jc/Primitives/RefCountObjectPtr.h>
+#include "jc/Primitives/RefCountObjectPtr.h"
 
 USING_NS_JC;
 USING_NS_JNET;

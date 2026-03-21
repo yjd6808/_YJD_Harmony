@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <jc/TypeTraits/Eliminator.h>
+#include "jc/TypeTraits/Eliminator.h"
 
 NS_JC_BEGIN
 

@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include <sgcl/Projectile.h>
-#include <sgcl/Monster.h>
-#include <sgcl/MapObject.h>
-#include <sgcl/HostPlayer.h>
-#include <sgcl/Effect.h>
+#include "sgcl/Projectile.h"
+#include "sgcl/Monster.h"
+#include "sgcl/MapObject.h"
+#include "sgcl/HostPlayer.h"
+#include "sgcl/Effect.h"
 
 using ActorList = jc::Vector<Actor*>;
 using CharacterList = jc::Vector<Character*>;

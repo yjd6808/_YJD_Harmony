@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/3/2023 8:34:29 AM [SteinsGate-Server.Auth 프로젝트 복사 생성]
  * =====================
@@ -7,17 +7,16 @@
 
 
 
-#include "Core.h"
 #include "R_LOBBY.h"
 
-#include <sg/Cmd_LOBBY.h>
+#include "sg/Cmd_LOBBY.h"
 
-#include <sgs/AuthenticationComponent.h>
-#include <sgs/_Net/NetGroup_InterServ.h>
+#include "sgs/AuthenticationComponent.h"
+#include "sgs/_Net/NetGroup_InterServ.h"
 
-#include <sgs_lobby/Q_LOBBY.h>
-#include <sgs_lobby/S_AUTHENTICATION_IS.h>
-#include <sgs_lobby/UnauthenticatedSessionManager.h>
+#include "sgs_lobby/Q_LOBBY.h"
+#include "sgs_lobby/S_AUTHENTICATION_IS.h"
+#include "sgs_lobby/UnauthenticatedSessionManager.h"
 
 USING_NS_JC;
 USING_NS_JNET;

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <sgcl/UIRootGroup.h>
+#include "sgcl/UIRootGroup.h"
 
 class UIRootGroupManager : public cocos2d::Ref
 {

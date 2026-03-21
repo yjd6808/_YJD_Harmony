@@ -1,11 +1,10 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 5/19/2024 9:18:17 AM
  * =====================
  *
  */
 
-#include <jc/Core.h>
 #include "MemoryStream.h"
 
 //MemoryStream MemoryStream::Null;

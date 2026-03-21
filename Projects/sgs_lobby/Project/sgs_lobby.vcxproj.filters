@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="..\Sources\sgs_lobby\main.cpp" />
     <ClCompile Include="..\Sources\sgs_lobby\LobbyCore.cpp" />
-    <ClCompile Include="..\Sources\sgs_lobby\Core.cpp" />
     <ClCompile Include="..\Sources\sgs_lobby\R_LOBBY.cpp">
       <Filter>Recv</Filter>
     </ClCompile>
@@ -22,10 +21,12 @@
     <ClCompile Include="..\Sources\sgs_lobby\UnauthenticatedSessionManager.cpp">
       <Filter>Contents</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\sgs_lobby\PCH\Core.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\sgs_lobby\LobbyCore.h" />
-    <ClInclude Include="..\Sources\sgs_lobby\Core.h" />
     <ClInclude Include="..\Sources\sgs_lobby\R_LOBBY.h">
       <Filter>Recv</Filter>
     </ClInclude>
@@ -44,6 +45,9 @@
     <ClInclude Include="..\Sources\sgs_lobby\UnauthenticatedSessionManager.h">
       <Filter>Contents</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\sgs_lobby\PCH\Core.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Recv">
@@ -57,6 +61,9 @@
     </Filter>
     <Filter Include="Contents">
       <UniqueIdentifier>{e6b1604c-4b91-439d-945c-5ce34ff24dfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{4ad50942-47bd-42f2-90ca-9b269d9f14a5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

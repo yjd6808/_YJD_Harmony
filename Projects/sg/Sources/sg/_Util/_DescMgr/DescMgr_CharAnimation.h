@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <sg/_Util/DescLoaderAbstract.h>
+#include "sg/_Util/DescLoaderAbstract.h"
 
 struct CharAnimationInfoLoader : DescLoaderAbstract
 {

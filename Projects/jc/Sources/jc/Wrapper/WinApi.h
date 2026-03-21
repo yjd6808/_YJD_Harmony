@@ -12,9 +12,9 @@
 
 #pragma once
 
-#include <jc/Type.h>
-#include <jc/Define.h>
-#include <jc/TypeTraits.h>
+#include "jc/Type.h"
+#include "jc/Define.h"
+#include "jc/TypeTraits.h"
 
 
 NS_JC_BEGIN

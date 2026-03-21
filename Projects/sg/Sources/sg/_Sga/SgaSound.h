@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <sg/_Sga/SgaElement.h>
-#include <jc/Container/Vector.h>
+#include "sg/_Sga/SgaElement.h"
+#include "jc/Container/Vector.h"
 
 class SgaSound : public SgaElement
 {

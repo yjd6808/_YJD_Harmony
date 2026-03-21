@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include <sgcl/Core.h>
-#include <sgcl/_Scene/Scene_Base.h>
+#include "sgcl/_Scene/Scene_Base.h"
 
 class SGChannelSelectScene : public SceneBase
 {

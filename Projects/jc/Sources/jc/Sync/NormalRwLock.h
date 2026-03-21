@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <jc/Sync/IRwLock.h>
-#include <jc/Sync/ConditionVariable.h>
+#include "jc/Sync/IRwLock.h"
+#include "jc/Sync/ConditionVariable.h"
 
 NS_JC_BEGIN
 

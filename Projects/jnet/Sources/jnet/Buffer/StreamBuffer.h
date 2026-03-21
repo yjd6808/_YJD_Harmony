@@ -17,12 +17,12 @@
 
 #pragma once
 
-#include <jc/Memory.h>
-#include <jc/Math.h>
-#include <jc/Primitives/SmartPtr.h>
+#include "jc/Memory.h"
+#include "jc/Math.h"
+#include "jc/Primitives/SmartPtr.h"
 
-#include <WinSock2.h>
-#include <jnet/Namespace.h>
+#include "WinSock2.h"
+#include "jnet/Namespace.h"
 
 
 NS_JNET_BEGIN

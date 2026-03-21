@@ -5,12 +5,12 @@
 
 #pragma once
 
-#include <jc/Primitives/StringUtil.h>
-#include <jc/Primitives/String.h>
-#include <jc/Primitives/StaticString.h>
+#include "jc/Primitives/StringUtil.h"
+#include "jc/Primitives/String.h"
+#include "jc/Primitives/StaticString.h"
 
-#include <jc/TypeTraits/IntegralConstant.h>
-#include <jc/TypeCast.h>
+#include "jc/TypeTraits/IntegralConstant.h"
+#include "jc/TypeCast.h"
 
 NS_JC_BEGIN
 template <typename T>

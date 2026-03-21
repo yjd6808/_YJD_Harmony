@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <jnet/Host/TcpSession.h>
+#include "jnet/Host/TcpSession.h"
 
-#include <sgs/ComponentCollection.h>
+#include "sgs/ComponentCollection.h"
 
 NS_SG_BEGIN
 

@@ -1,7 +1,6 @@
-﻿#include "Core.h"
 #include "MysqlConnection.h"
 
-#include <jc/Utils/Console.h>
+#include "jc/Utils/Console.h"
 
 USING_NS_JC;
 USING_NS_STD;

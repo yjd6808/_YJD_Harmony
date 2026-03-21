@@ -6,10 +6,10 @@
 
 #pragma once
 
-#include <jc/Primitives/RefCountObjectPtr.h>
+#include "jc/Primitives/RefCountObjectPtr.h"
 
-#include <jnet/Namespace.h>
-#include <jnet/Packet/Packet.h>
+#include "jnet/Namespace.h"
+#include "jnet/Packet/Packet.h"
 
 NS_JNET_BEGIN
 

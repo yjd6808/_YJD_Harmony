@@ -1,18 +1,17 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/22/2023 9:01:05 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "ActionMgr.h"
 
-#include <sgcl/SGAction.h>
-#include <sg/_Util/DescLoaderMgr.h>
-#include <sgcl/AllActions.h>
-#include <sgcl/Define_Action.h>
-#include <sgcl/FrameTexture.h>
+#include "sgcl/SGAction.h"
+#include "sg/_Util/DescLoaderMgr.h"
+#include "sgcl/AllActions.h"
+#include "sgcl/Define_Action.h"
+#include "sgcl/FrameTexture.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ActionMgr::ActionMgr(HostPlayer* _pPlayer)

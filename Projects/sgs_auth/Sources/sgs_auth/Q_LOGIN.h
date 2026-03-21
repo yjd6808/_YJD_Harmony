@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include <jc/Define.h>
+#include "jc/Define.h"
 
-#include <jdb/QueryHelper.h>
+#include "jdb/QueryHelper.h"
 
 struct Q_LOGIN : jdb::QryHelper<Q_LOGIN>
 {

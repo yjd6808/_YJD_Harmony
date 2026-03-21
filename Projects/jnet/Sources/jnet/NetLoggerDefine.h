@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <jc/Logger/LoggerAbstract.h>
+#include "jc/Logger/LoggerAbstract.h"
 
 extern jc::LoggerAbstract* NetLogger_v;
 

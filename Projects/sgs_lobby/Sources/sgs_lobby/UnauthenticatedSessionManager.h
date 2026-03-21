@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <jc/Pattern/Singleton.h>
+#include "jc/Pattern/Singleton.h"
 
 NS_SG_BEGIN
 

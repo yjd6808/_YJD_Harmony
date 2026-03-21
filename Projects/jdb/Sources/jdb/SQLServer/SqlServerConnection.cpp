@@ -1,7 +1,6 @@
-﻿#include "Core.h"
 #include "SqlServerConnection.h"
 
-#include <jc/Utils/Console.h>
+#include "jc/Utils/Console.h"
 
 #include "SqlServerQuery.h"
 

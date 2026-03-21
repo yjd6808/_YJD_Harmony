@@ -1,28 +1,27 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/21/2023 3:35:17 AM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "CommonCore.h"
 
-#include <sg/Cmd.h>
-#include <sg/LogSpecifier.h>
-#include <jc/Threading/ThreadPool.h>
-#include <jc/Threading/Scheduler.h>
+#include "sg/Cmd.h"
+#include "sg/LogSpecifier.h"
+#include "jc/Threading/ThreadPool.h"
+#include "jc/Threading/Scheduler.h"
 
-#include <sg/_Core/CLIThread.h>
-#include <sg/_Core/CLIListener.h>
+#include "sg/_Core/CLIThread.h"
+#include "sg/_Core/CLIListener.h"
 
-#include <sg/_Struct/SteinsGate_Char.h>
-#include <sg/_Struct/SteinsGate_Server.h>
+#include "sg/_Struct/SteinsGate_Char.h"
+#include "sg/_Struct/SteinsGate_Server.h"
 
-#include <sg/_Util/DescLoaderMgr.h>
-#include <sg/_Core/AppConfig.h>
+#include "sg/_Util/DescLoaderMgr.h"
+#include "sg/_Core/AppConfig.h"
 
-#include <sg/_Core/VirtualMachine.h>
+#include "sg/_Core/VirtualMachine.h"
 
 USING_NS_JC;
 USING_NS_JNET;

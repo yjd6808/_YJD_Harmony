@@ -1,14 +1,13 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 4/19/2023 3:23:52 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "S_AUTHENTICATION.h"
 
-#include <sg/Cmd_AUTHENTICATION.h>
+#include "sg/Cmd_AUTHENTICATION.h"
 
 USING_NS_JC;
 USING_NS_JNET;

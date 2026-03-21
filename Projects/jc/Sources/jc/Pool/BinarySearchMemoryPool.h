@@ -8,14 +8,14 @@
 
 #pragma once
 
-#include <jc/Limit.h>
+#include "jc/Limit.h"
 
-#include <jc/Container/Arrays.h>
-#include <jc/Container/HashMap.h>
+#include "jc/Container/Arrays.h"
+#include "jc/Container/HashMap.h"
 
-#include <jc/Pool/MemoryPoolAllocationAlgorithm.h>
-#include <jc/Pool/MemoryPoolAbstract.h>
-#include <jc/Pool/MemoryChuckQueue.h>
+#include "jc/Pool/MemoryPoolAllocationAlgorithm.h"
+#include "jc/Pool/MemoryPoolAbstract.h"
+#include "jc/Pool/MemoryChuckQueue.h"
 
 
 NS_JC_BEGIN

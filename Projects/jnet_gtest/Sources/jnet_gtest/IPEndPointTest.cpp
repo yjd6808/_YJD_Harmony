@@ -1,6 +1,5 @@
-﻿#include <jnet_gtest/Core.h>
 
-#include <jnet/IPEndPoint.h>
+#include "jnet/IPEndPoint.h"
 
 #if TEST_IPEndPointTest == ON
 

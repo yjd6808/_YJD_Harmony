@@ -1,20 +1,19 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/18/2023 10:32:04 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "Inven.h"
 
-#include <bitset>
+#include "bitset"
 
-#include <sg/_Struct/SteinsGate_CharCommon.h>
+#include "sg/_Struct/SteinsGate_CharCommon.h"
 
-#include <sg/_Util/DescLoaderMgr.h>
-#include <sgcl/VisualHelper.h>
+#include "sg/_Util/DescLoaderMgr.h"
+#include "sgcl/VisualHelper.h"
 
 USING_NS_JC;
 USING_NS_JS;

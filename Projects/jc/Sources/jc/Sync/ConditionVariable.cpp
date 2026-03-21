@@ -1,12 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 6/3/2023 8:39:55 PM
  */
 
 
 
-#include <jc/Core.h>
-#include <jc/Sync/ConditionVariable.h>
+#include "jc/Sync/ConditionVariable.h"
 
 NS_JC_BEGIN
 

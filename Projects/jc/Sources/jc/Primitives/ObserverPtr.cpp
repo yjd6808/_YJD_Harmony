@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	해당 포인터가 살아있는지 여부를 알 수 있는 스마트 포인터, 쓰레드 세이프 하지 않음
 
@@ -6,8 +6,7 @@
 	Watcher : 주인을 감시하는 놈 => 오너의 포인터 정보를 복사하여 접근하여 사용 가능
 */
 
-#include <jc/Core.h>
-#include <jc/Primitives/ObserverPtr.h>
+#include "jc/Primitives/ObserverPtr.h"
 
 NS_JC_BEGIN
 

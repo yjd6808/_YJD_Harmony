@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include <jnet/NetGroup.h>
-#include <sgs/IUpdatable.h>
+#include "jnet/NetGroup.h"
+#include "sgs/IUpdatable.h"
 
 NS_SG_BEGIN
 

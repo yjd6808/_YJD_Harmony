@@ -1,12 +1,11 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	배열기반 스택 테스트
 */
 
 
-#include <jc_gtest/Core.h>
-#include <jc/Random.h>
-#include <jc/Container/ArrayStack.h>
+#include "jc/Random.h"
+#include "jc/Container/ArrayStack.h"
 
 
 using namespace std;

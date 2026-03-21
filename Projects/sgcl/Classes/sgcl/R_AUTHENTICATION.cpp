@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 5/8/2023 1:57:39 PM
  * =====================
@@ -6,18 +6,17 @@
  */
 
 
-#include "Core.h"
 #include "R_AUTHENTICATION.h"
 
-#include <sg/Cmd_AUTHENTICATION.h>
+#include "sg/Cmd_AUTHENTICATION.h"
 
-#include <sgcl/Define_Popup.h>
-#include <sgcl/S_AUTH.h>
-#include <sgcl/Contents.h>
-#include <sgcl/_Net/NetCore.h>
-#include <sgcl/AuthenticationComponent.h>
+#include "sgcl/Define_Popup.h"
+#include "sgcl/S_AUTH.h"
+#include "sgcl/Contents.h"
+#include "sgcl/_Net/NetCore.h"
+#include "sgcl/AuthenticationComponent.h"
 
-#include <sgcl/Callback_POPUP_TIMEOUT.h>
+#include "sgcl/Callback_POPUP_TIMEOUT.h"
 
 USING_NS_JC;
 USING_NS_CC;

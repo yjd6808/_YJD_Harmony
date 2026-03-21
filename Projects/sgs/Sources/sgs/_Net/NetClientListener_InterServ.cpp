@@ -1,17 +1,16 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 4/5/2023 2:08:27 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "NetClientListener_InterServ.h"
 
-#include <jnet/Packet/SendHelper.h>
+#include "jnet/Packet/SendHelper.h"
 
-#include <sgs/S_SETUP_IS_COMMON.h>
-#include <sgs/R_SETUP_COMMON.h>
+#include "sgs/S_SETUP_IS_COMMON.h"
+#include "sgs/R_SETUP_COMMON.h"
 
 USING_NS_JC;
 USING_NS_JNET;

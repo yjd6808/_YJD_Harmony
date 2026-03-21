@@ -8,7 +8,7 @@
 #pragma once
 
 
-#include <sgcl/AIActivity.h>
+#include "sgcl/AIActivity.h"
 
 class JC_NOVTABLE AttackActivity : public AIActivity
 {

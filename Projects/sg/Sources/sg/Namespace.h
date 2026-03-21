@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <jnet/Namespace.h>
+#include "jnet/Namespace.h"
 
 #define NS_CONST_BEGIN	namespace Const {
 #define NS_SG_BEGIN		namespace sg {

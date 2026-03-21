@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include <jc/Type.h>
-#include <jc/Primitives/SmartPtr.h>
+#include "jc/Type.h"
+#include "jc/Primitives/SmartPtr.h"
 
 
 class AudioPlayer

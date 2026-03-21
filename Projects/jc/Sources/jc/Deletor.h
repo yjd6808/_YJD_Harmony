@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <jc/Type.h>
+#include "jc/Type.h"
 
 NS_JC_BEGIN
 // void 타입으로 삭제할 경우 소멸자가 호출되지 않는다

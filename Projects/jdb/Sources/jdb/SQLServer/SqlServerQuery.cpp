@@ -1,8 +1,7 @@
-#include "Core.h"
 #include "SqlServerQuery.h"
 
-#include <type_traits>
-#include <cstring>
+#include "type_traits"
+#include "cstring"
 
 USING_NS_JC;
 USING_NS_STD;

@@ -1,18 +1,17 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/3/2023 3:47:17 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "Effect.h"
 
-#include <sgcl/ImagePackManager.h>
-#include <sgcl/ActorSprite.h>
-#include <sg/_Util/DescLoaderMgr.h>
-#include <sgcl/HostPlayer.h>
-#include <sgcl/_Core/AppConfig_Props.h>
+#include "sgcl/ImagePackManager.h"
+#include "sgcl/ActorSprite.h"
+#include "sg/_Util/DescLoaderMgr.h"
+#include "sgcl/HostPlayer.h"
+#include "sgcl/_Core/AppConfig_Props.h"
 
 
 USING_NS_JC;

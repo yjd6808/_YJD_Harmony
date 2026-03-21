@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <sgs/InterServerSendHelper.h>
+#include "sgs/InterServerSendHelper.h"
 
 struct S_AUTHENTICATION_IS : InterServerSendHelper<S_AUTHENTICATION_IS>
 {

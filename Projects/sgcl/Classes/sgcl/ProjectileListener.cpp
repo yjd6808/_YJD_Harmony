@@ -1,14 +1,13 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/2/2023 4:50:11 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "ProjectileListener.h"
 
-#include <sgcl/Projectile.h>
+#include "sgcl/Projectile.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ProjectileListener::ProjectileListener(Projectile* _pProjectile, Actor* _pSpawner)

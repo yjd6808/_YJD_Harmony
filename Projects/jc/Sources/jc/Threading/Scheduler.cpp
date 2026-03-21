@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 6/13/2023 4:54:05 AM
  * =====================
@@ -6,9 +6,8 @@
  */
 
 
-#include <jc/Core.h>
-#include <jc/Limit.h>
-#include <jc/Threading/Scheduler.h>
+#include "jc/Limit.h"
+#include "jc/Threading/Scheduler.h"
 
 NS_JC_BEGIN
 

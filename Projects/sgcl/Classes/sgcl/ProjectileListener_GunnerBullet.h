@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <sgcl/ProjectileListener.h>
-#include <sgcl/HitRecorder.h>
+#include "sgcl/ProjectileListener.h"
+#include "sgcl/HitRecorder.h"
 
 class ProjectileListener_GunnerBullet : public ProjectileListener
 {

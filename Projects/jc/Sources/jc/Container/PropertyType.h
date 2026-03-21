@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include <jc/Namespace.h>
-#include <jc/Define.h>
-#include <jc/Declspec.h>
-#include <jc/Macro.h>
-#include <jc/Type.h>
+#include "jc/Namespace.h"
+#include "jc/Define.h"
+#include "jc/Declspec.h"
+#include "jc/Macro.h"
+#include "jc/Type.h"
 
 NS_JC_BEGIN
 

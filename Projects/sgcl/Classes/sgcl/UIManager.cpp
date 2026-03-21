@@ -1,29 +1,28 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/15/2023 8:11:04 PM
  * =====================
  *
  */
 
-#include "Core.h"
 #include "GameCoreHeader.h"
 #include "UIManager.h"
 
-#include <sg/_Core/AppConfig.h>
-#include <sg/_Struct/SteinsGate_Client.h>
+#include "sg/_Core/AppConfig.h"
+#include "sg/_Struct/SteinsGate_Client.h"
 
-#include <sgcl/UIGroup.h>
-#include <sgcl/UIRootGroup.h>
+#include "sgcl/UIGroup.h"
+#include "sgcl/UIRootGroup.h"
 
-#include <sgcl/Define_UI.h>
-#include <sgcl/PopupManager.h>
+#include "sgcl/Define_UI.h"
+#include "sgcl/PopupManager.h"
 
-#include <sgcl/UI_Inventory.h>
-#include <sgcl/UI_Login.h>
-#include <sgcl/UI_Popup.h>
-#include <sgcl/UI_Test.h>
-#include <sgcl/UI_ChannelSelect.h>
-#include <sgcl/ImagePackManager.h>
+#include "sgcl/UI_Inventory.h"
+#include "sgcl/UI_Login.h"
+#include "sgcl/UI_Popup.h"
+#include "sgcl/UI_Test.h"
+#include "sgcl/UI_ChannelSelect.h"
+#include "sgcl/ImagePackManager.h"
 
 
 USING_NS_CC;

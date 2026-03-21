@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <jc/Pool/MemoryPoolAbstract.h>
-#include <jnet/Host/Host.h>
-#include <jnet/IOCP/IOCP.h>
+#include "jc/Pool/MemoryPoolAbstract.h"
+#include "jnet/Host/Host.h"
+#include "jnet/IOCP/IOCP.h"
 
 NS_JNET_BEGIN
 class JC_NOVTABLE NetGroup

@@ -9,11 +9,11 @@
 #pragma once
 
 
-#include <sg/_Sga/SgaSpriteAbstract.h>
-#include <sg/_Sga/SgaPackage.h>
-#include <sg/_Sga/SgaImage.h>
+#include "sg/_Sga/SgaSpriteAbstract.h"
+#include "sg/_Sga/SgaPackage.h"
+#include "sg/_Sga/SgaImage.h"
 
-#include <sgcl/FrameTexture.h>
+#include "sgcl/FrameTexture.h"
 
 struct CachedTextureCounter
 {

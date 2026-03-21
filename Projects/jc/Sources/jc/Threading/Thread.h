@@ -9,14 +9,14 @@
 
 #pragma once
 
-#include <jc/Type.h>
-#include <jc/Functional.h>
-#include <jc/Event.h>
-#include <jc/Sync/Semaphore.h>
+#include "jc/Type.h"
+#include "jc/Functional.h"
+#include "jc/Event.h"
+#include "jc/Sync/Semaphore.h"
 
-#include <jc/Primitives/SmartPtr.h>
-#include <jc/Primitives/Atomic.h>
-#include <jc/Primitives/String.h>
+#include "jc/Primitives/SmartPtr.h"
+#include "jc/Primitives/Atomic.h"
+#include "jc/Primitives/String.h"
 
 NS_JC_BEGIN
 

@@ -1,14 +1,13 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * =====================
  *
  */
 
-#include <jc/Core.h>
-#include <jc/Exception.h>
-#include <jc/Sync/LockGuard.h>
-#include <jc/Sync/NormalLock.h>
-#include <jc/Threading/Thread.h>
+#include "jc/Exception.h"
+#include "jc/Sync/LockGuard.h"
+#include "jc/Sync/NormalLock.h"
+#include "jc/Threading/Thread.h"
 
 
 NS_JC_BEGIN
