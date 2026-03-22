@@ -5,3 +5,8 @@
  *
  */
 
+#include "jdb/Util.h"
+
+jdb::StmtTemplate _stmtList[stmtMax]
+{
+};

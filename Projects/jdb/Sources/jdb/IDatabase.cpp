@@ -135,13 +135,13 @@ void IDatabase::Finalize()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IQueryPtr IDatabase::Query(const Ptmt& _ptmt) const
+IQueryPtr IDatabase::Query(const BoundStmt& _stmt) const
 {
-	return Query(0, _ptmt);
+	return Query(0, _stmt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IQueryPtr IDatabase::Query(int _id, const Ptmt& _ptmt) const
+IQueryPtr IDatabase::Query(int _id, const BoundStmt& _stmt) const
 {
 	if (connectionPool_ == nullptr)
 	{
@@ -158,7 +158,7 @@ IQueryPtr IDatabase::Query(int _id, const Ptmt& _ptmt) const
 
 	AutoReleaseConnection autoRelease(pConn, connectionPool_);
 
-	IQueryPtr pQuery = CreateQuery(pConn, _ptmt);
+	IQueryPtr pQuery = CreateQuery(pConn, _stmt);
 
 	if (pQuery == nullptr)
 	{
@@ -176,19 +176,19 @@ IQueryPtr IDatabase::Query(int _id, const Ptmt& _ptmt) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IQueryTaskPtr IDatabase::QueryAsync(const Ptmt& _ptmt) const
+IQueryTaskPtr IDatabase::QueryAsync(const BoundStmt& _stmt) const
 {
-	return QueryAsyncInternal(0, _ptmt);
+	return QueryAsyncInternal(0, _stmt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IQueryTaskPtr IDatabase::QueryAsync(int _id, const Ptmt& _ptmt) const
+IQueryTaskPtr IDatabase::QueryAsync(int _id, const BoundStmt& _stmt) const
 {
-	return QueryAsyncInternal(_id, _ptmt);
+	return QueryAsyncInternal(_id, _stmt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IQueryTaskPtr IDatabase::QueryAsyncInternal(int _id, const Ptmt& _stmt) const
+IQueryTaskPtr IDatabase::QueryAsyncInternal(int _id, const BoundStmt& _stmt) const
 {
 	if (iocp_ == nullptr)
 	{

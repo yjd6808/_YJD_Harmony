@@ -29,7 +29,7 @@ class JDB_DLL IQuery
 public:
 	virtual ~IQuery() = default;
 
-	void Init(IConnection* _pConn, const jc::String& _ptmt);
+	void Init(IConnection* _pConn, const jc::String& _stmt);
 
 	bool IsSuccess() const { return errorCode_ == 0; }
 	bool IsFailed()  const { return errorCode_ != 0; }

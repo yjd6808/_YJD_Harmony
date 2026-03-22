@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{6bad4521-3146-42d1-99d3-c2e42d2c1c90}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Sources\sgs_query\main.cpp" />
+    <ClCompile Include="..\Sources\sgs_query\QueryCore.cpp" />
+    <ClCompile Include="..\Sources\sgs_query\PCH\Core.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\sgs_query\QueryCore.h" />
+    <ClInclude Include="..\Sources\sgs_query\PCH\Core.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -97,6 +97,6 @@ void R_AUTHENTICATION::RECV_SAU_AuthenticationCheck(Session* _session, ICommand*
 	const GameServerType_t eLastServer = GameServerType::Hilder;		// 힐더서버를 디폴트로...
 	const bool bAuthenticated = pAuthenticationData != nullptr;			// 업데이트가 성공적으로 끝나서 올바른 AuthenticationData를 반환한 경우
 
-	S_AUTHENTICATION_IS::SetInformation(g_cNetGroup_InterServ.GetTcp(), SendStrategy::SendAsync, eReplyServer);
+	S_AUTHENTICATION_IS::SetInformation(g_cNetGroup_InterServ.GetCenterTcp(), SendStrategy::SendAsync, eReplyServer);
 	S_AUTHENTICATION_IS::SEND_AUS_AuthenticationCheckAck(bAuthenticated, pCmd->SessionHandle, pAuthenticationData->accountData_.lastServer_);
 }

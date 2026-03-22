@@ -72,6 +72,13 @@ bool ServerInfoLoader::Load()
 					pServerInfo = pServerInfoDetail;
 				}
 				break;
+			case ServerProcessType::Query:
+				{
+					QueryServerProcessInfo* pServerInfoDetail = dbg_new QueryServerProcessInfo();
+					pServerInfo = pServerInfoDetail;
+					ReadInterServInfo(serverInfoRoot, pServerInfoDetail->interServerInfo_);
+				}
+				break;
 			}
 			jc_assert(pServerInfo != nullptr);
 			ReadCommonInfo(serverInfoRoot, pServerInfo);

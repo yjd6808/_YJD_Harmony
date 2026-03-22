@@ -607,4 +607,127 @@ TEST(StringViewTest, RangeOperations) {
 	EXPECT_EQ(view.FindReverse(0, 8, "7"), 7);
 }
 
+// StringView caseSensitive 검색 테스트
+TEST(StringViewTest, FindCaseSensitive) {
+	const char* pStr = "Hello World ABCDEFG";
+	StringView view(const_cast<char*>(pStr));
+
+	// caseSensitive = true (기본값)
+	EXPECT_EQ(view.Find("Hello"), 0);
+	EXPECT_EQ(view.Find("hello"), -1);
+	EXPECT_EQ(view.Find("WORLD"), -1);
+	EXPECT_EQ(view.Find("ABCDEFG"), 12);
+
+	// caseSensitive = false
+	EXPECT_EQ(view.Find("hello", false), 0);
+	EXPECT_EQ(view.Find("HELLO", false), 0);
+	EXPECT_EQ(view.Find("world", false), 6);
+	EXPECT_EQ(view.Find("WORLD", false), 6);
+	EXPECT_EQ(view.Find("abcdefg", false), 12);
+
+	// 범위 지정 + caseSensitive = false
+	EXPECT_EQ(view.Find(0, 4, "hello", false), 0);
+	EXPECT_EQ(view.Find(1, 4, "hello", false), -1);
+	EXPECT_EQ(view.Find(6, 10, "world", false), 6);
+}
+
+// StringView::FindReverse caseSensitive 테스트
+TEST(StringViewTest, FindReverseCaseSensitive) {
+	const char* pStr = "AbcABCAbc";
+	StringView view(const_cast<char*>(pStr));
+
+	// caseSensitive = true (기본값)
+	EXPECT_EQ(view.FindReverse("Abc"), 6);
+	EXPECT_EQ(view.FindReverse("abc"), -1);
+	EXPECT_EQ(view.FindReverse("ABC"), 3);
+
+	// caseSensitive = false
+	EXPECT_EQ(view.FindReverse("abc", false), 6);
+	EXPECT_EQ(view.FindReverse("ABC", false), 6);
+
+	// 범위 지정 + caseSensitive = false
+	EXPECT_EQ(view.FindReverse(0, 5, "abc", false), 3);
+	EXPECT_EQ(view.FindReverse(0, 2, "abc", false), 0);
+}
+
+// StringView::Count caseSensitive 테스트
+TEST(StringViewTest, CountCaseSensitive) {
+	const char* pStr = "HellohelloHELLO";
+	StringView view(const_cast<char*>(pStr));
+
+	// caseSensitive = true (기본값)
+	EXPECT_EQ(view.Count("hello"), 1);
+	EXPECT_EQ(view.Count("Hello"), 1);
+	EXPECT_EQ(view.Count("HELLO"), 1);
+
+	// caseSensitive = false
+	EXPECT_EQ(view.Count("hello", false), 3);
+	EXPECT_EQ(view.Count("HELLO", false), 3);
+
+	// 범위 지정 + caseSensitive = false
+	EXPECT_EQ(view.Count(0, 9, "hello", false), 2);
+	EXPECT_EQ(view.Count(5, 14, "hello", false), 2);
+}
+
+// StringView::StartWith caseSensitive 테스트
+TEST(StringViewTest, StartWithCaseSensitive) {
+	const char* pStr = "HelloWorld";
+	StringView view(const_cast<char*>(pStr));
+
+	// caseSensitive = true (기본값)
+	EXPECT_TRUE(view.StartWith(StringView(const_cast<char*>("Hello"))));
+	EXPECT_FALSE(view.StartWith(StringView(const_cast<char*>("hello"))));
+
+	// caseSensitive = false
+	EXPECT_TRUE(view.StartWith(StringView(const_cast<char*>("hello")), false));
+	EXPECT_TRUE(view.StartWith(StringView(const_cast<char*>("HELLO")), false));
+	EXPECT_FALSE(view.StartWith(StringView(const_cast<char*>("world")), false));
+
+	// String 타입 + caseSensitive = false
+	EXPECT_TRUE(view.StartWith(String("hello"), false));
+	EXPECT_TRUE(view.StartWith(String("HELLO"), false));
+}
+
+// StringView::EndWith caseSensitive 테스트
+TEST(StringViewTest, EndWithCaseSensitive) {
+	const char* pStr = "HelloWorld";
+	StringView view(const_cast<char*>(pStr));
+
+	// caseSensitive = true (기본값)
+	EXPECT_TRUE(view.EndWith(StringView(const_cast<char*>("World"))));
+	EXPECT_FALSE(view.EndWith(StringView(const_cast<char*>("world"))));
+
+	// caseSensitive = false
+	EXPECT_TRUE(view.EndWith(StringView(const_cast<char*>("world")), false));
+	EXPECT_TRUE(view.EndWith(StringView(const_cast<char*>("WORLD")), false));
+	EXPECT_FALSE(view.EndWith(StringView(const_cast<char*>("hello")), false));
+
+	// String 타입 + caseSensitive = false
+	EXPECT_TRUE(view.EndWith(String("world"), false));
+	EXPECT_TRUE(view.EndWith(String("WORLD"), false));
+}
+
+// StringView::Contain caseSensitive 테스트
+TEST(StringViewTest, ContainCaseSensitive) {
+	const char* pStr = "Hello World";
+	StringView view(const_cast<char*>(pStr));
+
+	// caseSensitive = true (기본값)
+	EXPECT_TRUE(view.Contain("World"));
+	EXPECT_FALSE(view.Contain("world"));
+	EXPECT_FALSE(view.Contain("HELLO"));
+
+	// caseSensitive = false
+	EXPECT_TRUE(view.Contain("world", false));
+	EXPECT_TRUE(view.Contain("HELLO", false));
+	EXPECT_TRUE(view.Contain("hello world", false));
+	EXPECT_FALSE(view.Contain("xyz", false));
+
+	// StringView 타입 + caseSensitive = false
+	EXPECT_TRUE(view.Contain(StringView(const_cast<char*>("WORLD")), false));
+
+	// String 타입 + caseSensitive = false
+	EXPECT_TRUE(view.Contain(String("hello"), false));
+}
+
 #endif // TEST_StringViewTest == ON

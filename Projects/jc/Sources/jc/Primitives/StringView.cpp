@@ -8,11 +8,6 @@ USING_NS_JC;
 //////////////////////////////////////////////////////////////////////////////////////////
 // 생성자
 //////////////////////////////////////////////////////////////////////////////////////////
-StringView::StringView() : pBuf_(nullptr), len_(0)
-{
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
 StringView::StringView(char* _pStr) : pBuf_(_pStr)
 {
 	if (_pStr)
@@ -117,7 +112,7 @@ char StringView::operator[](_s32 _index) const
 //////////////////////////////////////////////////////////////////////////////////////////
 // 검색 & 찾기 연산
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringView::Find(const char* _pStr) const
+_s32 StringView::Find(const char* _pStr, bool _caseSensitive /*= true*/) const
 {
 	if (!_pStr || !pBuf_)
 		return -1;
@@ -136,7 +131,9 @@ _s32 StringView::Find(const char* _pStr) const
 		bool match = true;
 		for (_u32 j = 0; j < searchLen; j++)
 		{
-			if (pBuf_[i + j] != _pStr[j])
+			char a = _caseSensitive ? pBuf_[i + j] : static_cast<char>(tolower(pBuf_[i + j]));
+			char b = _caseSensitive ? _pStr[j] : static_cast<char>(tolower(_pStr[j]));
+			if (a != b)
 			{
 				match = false;
 				break;
@@ -149,17 +146,17 @@ _s32 StringView::Find(const char* _pStr) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringView::Find(const StringView& _str) const
+_s32 StringView::Find(const StringView& _str, bool _caseSensitive /*= true*/) const
 {
-	return Find(_str.Source());
+	return Find(_str.Source(), _caseSensitive);
 }
 
-_s32 StringView::Find(const String& _str) const
+_s32 StringView::Find(const String& _str, bool _caseSensitive /*= true*/) const
 {
-	return Find(_str.Source());
+	return Find(_str.Source(), _caseSensitive);
 }
 
-_s32 StringView::Find(_s32 _startIndex, const char* _pStr) const
+_s32 StringView::Find(_s32 _startIndex, const char* _pStr, bool _caseSensitive /*= true*/) const
 {
 	if (!_pStr || !pBuf_ || _startIndex < 0 || _startIndex >= static_cast<_s32>(len_))
 		return -1;
@@ -178,7 +175,9 @@ _s32 StringView::Find(_s32 _startIndex, const char* _pStr) const
 		bool match = true;
 		for (_u32 j = 0; j < searchLen; j++)
 		{
-			if (pBuf_[i + j] != _pStr[j])
+			char a = _caseSensitive ? pBuf_[i + j] : static_cast<char>(tolower(pBuf_[i + j]));
+			char b = _caseSensitive ? _pStr[j] : static_cast<char>(tolower(_pStr[j]));
+			if (a != b)
 			{
 				match = false;
 				break;
@@ -191,18 +190,18 @@ _s32 StringView::Find(_s32 _startIndex, const char* _pStr) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringView::Find(_s32 _startIndex, const StringView& _str) const
+_s32 StringView::Find(_s32 _startIndex, const StringView& _str, bool _caseSensitive /*= true*/) const
 {
-	return Find(_startIndex, _str.Source());
+	return Find(_startIndex, _str.Source(), _caseSensitive);
 }
 
-_s32 StringView::Find(_s32 _startIndex, const String& _str) const
+_s32 StringView::Find(_s32 _startIndex, const String& _str, bool _caseSensitive /*= true*/) const
 {
-	return Find(_startIndex, _str.Source());
+	return Find(_startIndex, _str.Source(), _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringView::Find(_s32 _startIndex, _s32 _endIndex, const char* _pStr) const
+_s32 StringView::Find(_s32 _startIndex, _s32 _endIndex, const char* _pStr, bool _caseSensitive /*= true*/) const
 {
 	if (!_pStr || !pBuf_ || !IsValidIndexRange(_startIndex, _endIndex))
 		return -1;
@@ -223,7 +222,9 @@ _s32 StringView::Find(_s32 _startIndex, _s32 _endIndex, const char* _pStr) const
 		bool match = true;
 		for (_u32 j = 0; j < searchLen; j++)
 		{
-			if (pBuf_[i + j] != _pStr[j])
+			char a = _caseSensitive ? pBuf_[i + j] : static_cast<char>(tolower(pBuf_[i + j]));
+			char b = _caseSensitive ? _pStr[j] : static_cast<char>(tolower(_pStr[j]));
+			if (a != b)
 			{
 				match = false;
 				break;
@@ -236,7 +237,7 @@ _s32 StringView::Find(_s32 _startIndex, _s32 _endIndex, const char* _pStr) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringView::FindReverse(const char* _pStr) const
+_s32 StringView::FindReverse(const char* _pStr, bool _caseSensitive /*= true*/) const
 {
 	if (!_pStr || !pBuf_)
 		return -1;
@@ -255,7 +256,9 @@ _s32 StringView::FindReverse(const char* _pStr) const
 		bool match = true;
 		for (_u32 j = 0; j < searchLen; j++)
 		{
-			if (pBuf_[i + j] != _pStr[j])
+			char a = _caseSensitive ? pBuf_[i + j] : static_cast<char>(tolower(pBuf_[i + j]));
+			char b = _caseSensitive ? _pStr[j] : static_cast<char>(tolower(_pStr[j]));
+			if (a != b)
 			{
 				match = false;
 				break;
@@ -268,17 +271,17 @@ _s32 StringView::FindReverse(const char* _pStr) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringView::FindReverse(const StringView& _str) const
+_s32 StringView::FindReverse(const StringView& _str, bool _caseSensitive /*= true*/) const
 {
-	return FindReverse(_str.Source());
+	return FindReverse(_str.Source(), _caseSensitive);
 }
 
-_s32 StringView::FindReverse(const String& _str) const
+_s32 StringView::FindReverse(const String& _str, bool _caseSensitive /*= true*/) const
 {
-	return FindReverse(_str.Source());
+	return FindReverse(_str.Source(), _caseSensitive);
 }
 
-_s32 StringView::FindReverse(_s32 _startIndex, _s32 _endIndex, const char* _pStr) const
+_s32 StringView::FindReverse(_s32 _startIndex, _s32 _endIndex, const char* _pStr, bool _caseSensitive /*= true*/) const
 {
 	if (!_pStr || !pBuf_ || !IsValidIndexRange(_startIndex, _endIndex))
 		return -1;
@@ -299,7 +302,9 @@ _s32 StringView::FindReverse(_s32 _startIndex, _s32 _endIndex, const char* _pStr
 		bool match = true;
 		for (_u32 j = 0; j < searchLen; j++)
 		{
-			if (pBuf_[i + j] != _pStr[j])
+			char a = _caseSensitive ? pBuf_[i + j] : static_cast<char>(tolower(pBuf_[i + j]));
+			char b = _caseSensitive ? _pStr[j] : static_cast<char>(tolower(_pStr[j]));
+			if (a != b)
 			{
 				match = false;
 				break;
@@ -314,7 +319,7 @@ _s32 StringView::FindReverse(_s32 _startIndex, _s32 _endIndex, const char* _pStr
 //////////////////////////////////////////////////////////////////////////////////////////
 // 패턴 매칭 & 문자열 내용
 //////////////////////////////////////////////////////////////////////////////////////////
-bool StringView::StartWith(const StringView& _str) const
+bool StringView::StartWith(const StringView& _str, bool _caseSensitive /*= true*/) const
 {
 	if (_str.Length() > len_ || !pBuf_)
 		return false;
@@ -322,13 +327,15 @@ bool StringView::StartWith(const StringView& _str) const
 	const char* pSearchStr = _str.Source();
 	for (_u32 i = 0; i < _str.Length(); i++)
 	{
-		if (pBuf_[i] != pSearchStr[i])
+		char a = _caseSensitive ? pBuf_[i] : static_cast<char>(tolower(pBuf_[i]));
+		char b = _caseSensitive ? pSearchStr[i] : static_cast<char>(tolower(pSearchStr[i]));
+		if (a != b)
 			return false;
 	}
 	return true;
 }
 
-bool StringView::StartWith(const String& _str) const
+bool StringView::StartWith(const String& _str, bool _caseSensitive /*= true*/) const
 {
 	if (_str.Length() > static_cast<_s32>(len_) || !pBuf_)
 		return false;
@@ -336,13 +343,15 @@ bool StringView::StartWith(const String& _str) const
 	const char* pSearchStr = _str.Source();
 	for (_u32 i = 0; i < static_cast<_u32>(_str.Length()); i++)
 	{
-		if (pBuf_[i] != pSearchStr[i])
+		char a = _caseSensitive ? pBuf_[i] : static_cast<char>(tolower(pBuf_[i]));
+		char b = _caseSensitive ? pSearchStr[i] : static_cast<char>(tolower(pSearchStr[i]));
+		if (a != b)
 			return false;
 	}
 	return true;
 }
 
-bool StringView::EndWith(const StringView& _str) const
+bool StringView::EndWith(const StringView& _str, bool _caseSensitive /*= true*/) const
 {
 	if (_str.Length() > len_ || !pBuf_)
 		return false;
@@ -351,13 +360,15 @@ bool StringView::EndWith(const StringView& _str) const
 	_u32 offset = len_ - _str.Length();
 	for (_u32 i = 0; i < _str.Length(); i++)
 	{
-		if (pBuf_[offset + i] != pSearchStr[i])
+		char a = _caseSensitive ? pBuf_[offset + i] : static_cast<char>(tolower(pBuf_[offset + i]));
+		char b = _caseSensitive ? pSearchStr[i] : static_cast<char>(tolower(pSearchStr[i]));
+		if (a != b)
 			return false;
 	}
 	return true;
 }
 
-bool StringView::EndWith(const String& _str) const
+bool StringView::EndWith(const String& _str, bool _caseSensitive /*= true*/) const
 {
 	if (_str.Length() > static_cast<_s32>(len_) || !pBuf_)
 		return false;
@@ -366,32 +377,34 @@ bool StringView::EndWith(const String& _str) const
 	_u32 offset = len_ - _str.Length();
 	for (_u32 i = 0; i < static_cast<_u32>(_str.Length()); i++)
 	{
-		if (pBuf_[offset + i] != pSearchStr[i])
+		char a = _caseSensitive ? pBuf_[offset + i] : static_cast<char>(tolower(pBuf_[offset + i]));
+		char b = _caseSensitive ? pSearchStr[i] : static_cast<char>(tolower(pSearchStr[i]));
+		if (a != b)
 			return false;
 	}
 	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool StringView::Contain(const char* _str) const
+bool StringView::Contain(const char* _str, bool _caseSensitive /*= true*/) const
 {
-	return Find(_str) != -1;
+	return Find(_str, _caseSensitive) != -1;
 }
 
-bool StringView::Contain(const StringView& _str) const
+bool StringView::Contain(const StringView& _str, bool _caseSensitive /*= true*/) const
 {
-	return Find(_str) != -1;
+	return Find(_str, _caseSensitive) != -1;
 }
 
-bool StringView::Contain(const String& _str) const
+bool StringView::Contain(const String& _str, bool _caseSensitive /*= true*/) const
 {
-	return Find(_str) != -1;
+	return Find(_str, _caseSensitive) != -1;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 개수 세기 연산
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringView::Count(const char* _pStr) const
+_s32 StringView::Count(const char* _pStr, bool _caseSensitive /*= true*/) const
 {
 	if (!_pStr || !pBuf_)
 		return 0;
@@ -409,7 +422,9 @@ _s32 StringView::Count(const char* _pStr) const
 		bool match = true;
 		for (_u32 j = 0; j < searchLen; j++)
 		{
-			if (pBuf_[i + j] != _pStr[j])
+			char a = _caseSensitive ? pBuf_[i + j] : static_cast<char>(tolower(pBuf_[i + j]));
+			char b = _caseSensitive ? _pStr[j] : static_cast<char>(tolower(_pStr[j]));
+			if (a != b)
 			{
 				match = false;
 				break;
@@ -424,17 +439,17 @@ _s32 StringView::Count(const char* _pStr) const
 	return count;
 }
 
-_s32 StringView::Count(const StringView& _value) const
+_s32 StringView::Count(const StringView& _value, bool _caseSensitive /*= true*/) const
 {
-	return Count(_value.Source());
+	return Count(_value.Source(), _caseSensitive);
 }
 
-_s32 StringView::Count(const String& _value) const
+_s32 StringView::Count(const String& _value, bool _caseSensitive /*= true*/) const
 {
-	return Count(_value.Source());
+	return Count(_value.Source(), _caseSensitive);
 }
 
-_s32 StringView::Count(_s32 _startIndex, _s32 _endIndex, const char* _pStr) const
+_s32 StringView::Count(_s32 _startIndex, _s32 _endIndex, const char* _pStr, bool _caseSensitive /*= true*/) const
 {
 	if (!_pStr || !pBuf_ || !IsValidIndexRange(_startIndex, _endIndex))
 		return 0;
@@ -456,7 +471,9 @@ _s32 StringView::Count(_s32 _startIndex, _s32 _endIndex, const char* _pStr) cons
 		bool match = true;
 		for (_u32 j = 0; j < searchLen; j++)
 		{
-			if (pBuf_[i + j] != _pStr[j])
+			char a = _caseSensitive ? pBuf_[i + j] : static_cast<char>(tolower(pBuf_[i + j]));
+			char b = _caseSensitive ? _pStr[j] : static_cast<char>(tolower(_pStr[j]));
+			if (a != b)
 			{
 				match = false;
 				break;
@@ -471,14 +488,14 @@ _s32 StringView::Count(_s32 _startIndex, _s32 _endIndex, const char* _pStr) cons
 	return count;
 }
 
-_s32 StringView::Count(_s32 _startIndex, _s32 _endIndex, const StringView& _value) const
+_s32 StringView::Count(_s32 _startIndex, _s32 _endIndex, const StringView& _value, bool _caseSensitive /*= true*/) const
 {
-	return Count(_startIndex, _endIndex, _value.Source());
+	return Count(_startIndex, _endIndex, _value.Source(), _caseSensitive);
 }
 
-_s32 StringView::Count(_s32 _startIndex, _s32 _endIndex, const String& _value) const
+_s32 StringView::Count(_s32 _startIndex, _s32 _endIndex, const String& _value, bool _caseSensitive /*= true*/) const
 {
-	return Count(_startIndex, _endIndex, _value.Source());
+	return Count(_startIndex, _endIndex, _value.Source(), _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

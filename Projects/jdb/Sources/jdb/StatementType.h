@@ -13,7 +13,8 @@ enum class StatementType
 	Select,
 	Update,
 	Delete,
-	Insert
+	Insert,
+	Etc,
 };
 
 constexpr const char* StatementName(StatementType _statementType)

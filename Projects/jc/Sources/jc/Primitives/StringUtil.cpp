@@ -216,12 +216,6 @@ void StringUtil::Swap(String& _src, String& _dst)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int StringUtil::Find(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr)
-{
-	return Find(_pSource, _sourceLen, _startIdx, _endIdx, _pStr, Length(_pStr));
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
 const char* StringUtil::SkipLeadingChar(const char* _pStr, char _skipChar)
 {
 	const int iPos = FindCharUncontained(_pStr, _skipChar);
@@ -311,7 +305,7 @@ int StringUtil::FindCharUncontained(const char* _pSource, char _ch)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int StringUtil::Find(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr, int _strLen)
+int StringUtil::Find(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr, int _strLen, bool _caseSensitive /*= true*/)
 {
 	const int iFindStrLen = _strLen;
 	const int iSearchLen = _endIdx - _startIdx + 1;
@@ -335,9 +329,19 @@ int StringUtil::Find(const char* _pSource, int _sourceLen, int _startIdx, int _e
 	{
 		int iContinuous = 0;
 
-		while (iContinuous < iFindStrLen && _pSource[i + iContinuous] == _pStr[iContinuous])
+		if (_caseSensitive)
 		{
-			iContinuous++;
+			while (iContinuous < iFindStrLen && _pSource[i + iContinuous] == _pStr[iContinuous])
+			{
+				iContinuous++;
+			}
+		}
+		else
+		{
+			while (iContinuous < iFindStrLen && tolower(_pSource[i + iContinuous]) == tolower(_pStr[iContinuous]))
+			{
+				iContinuous++;
+			}
 		}
 
 		if (iContinuous == iFindStrLen)
@@ -350,26 +354,32 @@ int StringUtil::Find(const char* _pSource, int _sourceLen, int _startIdx, int _e
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int StringUtil::Find(const char* _pSource, int _sourceLen, int _startIdx, const char* _pStr)
+int StringUtil::Find(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr, bool _caseSensitive /*= true*/)
 {
-	return Find(_pSource, _sourceLen, _startIdx, _sourceLen - 1, _pStr);
+	return Find(_pSource, _sourceLen, _startIdx, _endIdx, _pStr, Length(_pStr), _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int StringUtil::FindAll(OUT int* _pPositionArray, const char* _pSource, const char* _pStr)
+int StringUtil::Find(const char* _pSource, int _sourceLen, int _startIdx, const char* _pStr, bool _caseSensitive /*= true*/)
+{
+	return Find(_pSource, _sourceLen, _startIdx, _sourceLen - 1, _pStr, _caseSensitive);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+int StringUtil::FindAll(OUT int* _pPositionArray, const char* _pSource, const char* _pStr, bool _caseSensitive /*= true*/)
 {
 	const int iSourceLength = Length(_pSource);
-	return FindAll(_pPositionArray, _pSource, iSourceLength, 0, iSourceLength - 1, _pStr);
+	return FindAll(_pPositionArray, _pSource, iSourceLength, 0, iSourceLength - 1, _pStr, _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int StringUtil::FindAll(int* _pPositionArray, const char* _pSource, int _sourceLen, const char* _pStr)
+int StringUtil::FindAll(int* _pPositionArray, const char* _pSource, int _sourceLen, const char* _pStr, bool _caseSensitive /*= true*/)
 {
-	return FindAll(_pPositionArray, _pSource, _sourceLen, 0, _sourceLen - 1, _pStr);
+	return FindAll(_pPositionArray, _pSource, _sourceLen, 0, _sourceLen - 1, _pStr, _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int StringUtil::FindAll(int* _pPositionArray, const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr)
+int StringUtil::FindAll(int* _pPositionArray, const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr, bool _caseSensitive /*= true*/)
 {
 	if (_endIdx < _startIdx)
 	{
@@ -380,7 +390,7 @@ int StringUtil::FindAll(int* _pPositionArray, const char* _pSource, int _sourceL
 	int iFindPos = -1;
 	int iStrLength = Length(_pStr);
 
-	while ((iFindPos = Find(_pSource, _sourceLen, _startIdx, _endIdx, _pStr, iStrLength)) != -1)
+	while ((iFindPos = Find(_pSource, _sourceLen, _startIdx, _endIdx, _pStr, iStrLength, _caseSensitive)) != -1)
 	{
 		_pPositionArray[iCount++] = iFindPos;
 		_startIdx = iFindPos + iStrLength;
@@ -450,14 +460,6 @@ void StringUtil::ConcatInnerBack(char* _pBuf, int _buflen, int _bufCapacity, con
 	jc_assert_msg(_buflen + _concatStrLen + 1 <= _bufCapacity, "버퍼 용량을 초과할 수 없습니다.");
 	Memory::CopyUnsafe(_pBuf + _buflen, _pConcatStr, _concatStrLen);
 	_pBuf[_buflen + _concatStrLen] = NULL;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void StringUtil::ConcatInnerBack(char* _pBuf, int _bufCapacity, const char* _pConcatStr)
-{
-	int iBufLen = Length(_pBuf);
-	int iConcatLen = Length(_pConcatStr);
-	ConcatInnerBack(_pBuf, iBufLen, _bufCapacity, _pConcatStr, iConcatLen);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

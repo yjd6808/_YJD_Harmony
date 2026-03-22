@@ -27,14 +27,15 @@ public:
 	virtual void OnUpdate(const jc::TimeSpan& _elapsed) override;
 
 	jnet::CommandParser&	Parser() { return *pParser_; }
-	jnet::TcpClient*		GetTcp() const { return pTcp_; }
-	jnet::UdpClient*		GetUdp() const { return pUdp_; }
+	jnet::TcpClient*		GetCenterTcp() const { return pCenterTcp_; }
+	jnet::UdpClient*		GetCenterUdp() const { return pCenterUdp_; }
 
-protected:
+private:
 	void SyncPeerServerTime(const jc::TimeSpan& _elapsed);
 
-	jnet::TcpClient* pTcp_;
-	jnet::UdpClient* pUdp_;
+	jnet::TcpClient* pCenterTcp_;
+	jnet::UdpClient* pCenterUdp_;
+
 	jnet::CommandParser* pParser_;
 };
 

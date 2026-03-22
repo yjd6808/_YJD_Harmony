@@ -13,7 +13,7 @@ USING_NS_JC;
 NS_JDB_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
-String Util::ReplacePlaceholders(const String& _stmt, const String* _pArgs, int _argCount)
+String Util::ReplacePlaceholders(const StringView& _stmt, const String* _pArgs, int _argCount)
 {
 	const char* pSrc = _stmt.Source();
 	const int len = _stmt.Length();

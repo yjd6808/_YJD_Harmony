@@ -29,8 +29,8 @@ USING_NS_SG;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 NetGroup_InterServ::NetGroup_InterServ()
-: pTcp_(nullptr)
-, pUdp_(nullptr)
+: pCenterTcp_(nullptr)
+, pCenterUdp_(nullptr)
 , pParser_(dbg_new jnet::CommandParser)
 {
 }
@@ -82,12 +82,12 @@ void NetGroup_InterServ::Initialize()
 	pUdp->SetHandle(SH_INTER_SERV_UDP);
 	AddHost(1, pUdp);
 
-	pTcp_ = pTcp.Get<TcpClient*>();
-	pTcp_->SetEventListener(dbg_new NetClientListener_InterServ{ processType, pParser_ });
+	pCenterTcp_ = pTcp.Get<TcpClient*>();
+	pCenterTcp_->SetEventListener(dbg_new NetClientListener_InterServ{ processType, pParser_ });
 
-	pUdp_ = pUdp.Get<UdpClient*>();
-	pUdp_->SetEventListener(dbg_new NetClientListener_InterServ{ processType, pParser_ });
-	pUdp_->RecvFromAsync();
+	pCenterUdp_ = pUdp.Get<UdpClient*>();
+	pCenterUdp_->SetEventListener(dbg_new NetClientListener_InterServ{ processType, pParser_ });
+	pCenterUdp_->RecvFromAsync();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -109,7 +109,7 @@ void NetGroup_InterServ::SyncPeerServerTime(const TimeSpan& _elapsed)
 {
 	// 피어서버는 중앙서버로 주기적으로(10초 정도마다) 시간 동기화 요청 수행
 	// 따라서 중앙서버에서는 이 기능을 수행해서는 안된다.
-	if (pTcp_ == nullptr || pTcp_->GetState() != Host::eConnected)
+	if (pCenterTcp_ == nullptr || pCenterTcp_->GetState() != Host::eConnected)
 		return;
 
 	static TimeCounter syncTimer(TimeCounterAttribute::FirstCheckFire | TimeCounterAttribute::TimeOverReset);
@@ -120,14 +120,14 @@ void NetGroup_InterServ::SyncPeerServerTime(const TimeSpan& _elapsed)
 		return;
 	}
 
-	S_PING_IS_COMMON::SetInformation(pTcp_, SendStrategy::SendAsync);
+	S_PING_IS_COMMON::SetInformation(pCenterTcp_, SendStrategy::SendAsync);
 	S_PING_IS_COMMON::SEND_SCE_TimeSync();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 bool NetGroup_InterServ::ConnectCenterServer(int _tryCount)
 {
-	if (pTcp_ == nullptr)
+	if (pCenterTcp_ == nullptr)
 	{
 		_LogWarn_("인터서버 TCP 클라이언트가 초기화되어있지 않습니다.");
 		return false;
@@ -150,7 +150,7 @@ bool NetGroup_InterServ::ConnectCenterServer(int _tryCount)
 	int tryCountIndex = 0;
 
 	_LogDebug_("중앙 서버에 접속을 시도합니다...");
-	while (!pTcp_->Connect(interserverInfo.remoteCenterServerEp_, CONNECTION_TIMEOUT))
+	while (!pCenterTcp_->Connect(interserverInfo.remoteCenterServerEp_, CONNECTION_TIMEOUT))
 	{
 		++tryCountIndex;
 
@@ -160,7 +160,7 @@ bool NetGroup_InterServ::ConnectCenterServer(int _tryCount)
 		}
 	}
 
-	if (pTcp_->GetState() == Host::eConnected)
+	if (pCenterTcp_->GetState() == Host::eConnected)
 	{
 		return true;
 	}

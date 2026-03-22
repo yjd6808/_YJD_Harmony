@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "jdb/IConnection.h"
+#include "mysql.h"
 
 NS_JDB_BEGIN
 

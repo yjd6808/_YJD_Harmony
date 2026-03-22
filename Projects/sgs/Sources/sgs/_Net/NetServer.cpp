@@ -56,7 +56,7 @@ void NetServer::OnStarted()
 	if (serverInfo_.serverType_ == ServerType::Center)
 		return;
 
-	S_SETUP_IS_COMMON::SetInformation(g_cNetGroup_InterServ.GetTcp(), SendStrategy::SendAsync);
+	S_SETUP_IS_COMMON::SetInformation(g_cNetGroup_InterServ.GetCenterTcp(), SendStrategy::SendAsync);
 	S_SETUP_IS_COMMON::SEND_SCE_NotifyBootState(handle_, (ServerType_t)serverInfo_.serverType_, ServerBootState::Launched);
 }
 
@@ -67,7 +67,7 @@ void NetServer::OnStartFailed(_u32 _errorCode)
 	// 중앙서버는 자신이 부트상태를 관리하므로
 	if (serverInfo_.serverType_ == ServerType::Center)
 		return;
-	S_SETUP_IS_COMMON::SetInformation(g_cNetGroup_InterServ.GetTcp(), SendStrategy::SendAsync);
+	S_SETUP_IS_COMMON::SetInformation(g_cNetGroup_InterServ.GetCenterTcp(), SendStrategy::SendAsync);
 	S_SETUP_IS_COMMON::SEND_SCE_NotifyOrderFailed(handle_, (ServerType_t)serverInfo_.serverType_, CenterOrder::LaunchServer, _errorCode);
 }
 
@@ -79,7 +79,7 @@ void NetServer::OnStopped()
 	if (serverInfo_.serverType_ == ServerType::Center)
 		return;
 
-	S_SETUP_IS_COMMON::SetInformation(g_cNetGroup_InterServ.GetTcp(), SendStrategy::SendAsync);
+	S_SETUP_IS_COMMON::SetInformation(g_cNetGroup_InterServ.GetCenterTcp(), SendStrategy::SendAsync);
 	S_SETUP_IS_COMMON::SEND_SCE_NotifyBootState(handle_, (ServerType_t)serverInfo_.serverType_, ServerBootState::Stopped);
 }
 

@@ -23,10 +23,12 @@
 	'$(MSBuildProjectName)' == 'sge'					OR
 	'$(MSBuildProjectName)' == 'sgcl'					OR
 	'$(MSBuildProjectName)' == 'sgs'					OR
+
 	'$(MSBuildProjectName)' == 'sgs_auth'				OR
 	'$(MSBuildProjectName)' == 'sgs_center'				OR
 	'$(MSBuildProjectName)' == 'sgs_game'				OR
 	'$(MSBuildProjectName)' == 'sgs_lobby'				OR
+	'$(MSBuildProjectName)' == 'sgs_query'				OR
 
 	'$(MSBuildProjectName)' == 'sgt'					OR
 	'$(MSBuildProjectName)' == 'sgtc'					OR
@@ -42,6 +44,7 @@
 	'$(MSBuildProjectName)' == 'sgs_auth'				OR
 	'$(MSBuildProjectName)' == 'sgs_center'				OR
 	'$(MSBuildProjectName)' == 'sgs_lobby'				OR
+	'$(MSBuildProjectName)' == 'sgs_query'				OR
 	'$(MSBuildProjectName)' == 'sgs_game'
 			" />
 
@@ -53,6 +56,7 @@
 	'$(MSBuildProjectName)' == 'sgs_auth'				OR
 	'$(MSBuildProjectName)' == 'sgs_center'				OR
 	'$(MSBuildProjectName)' == 'sgs_lobby'				OR
+	'$(MSBuildProjectName)' == 'sgs_query'				OR
 	'$(MSBuildProjectName)' == 'sgs_game'
 			" />
 
@@ -83,6 +87,7 @@
 	'$(MSBuildProjectName)' == 'sgs_center'				OR
 	'$(MSBuildProjectName)' == 'sgs_game'				OR
 	'$(MSBuildProjectName)' == 'sgs_lobby'				OR
+	'$(MSBuildProjectName)' == 'sgs_query'				OR
 
 	'$(MSBuildProjectName)' == 'sgt'					OR
 	'$(MSBuildProjectName)' == 'sgtc'					OR
@@ -110,6 +115,7 @@
 	'$(MSBuildProjectName)' == 'sgs_center'				OR
 	'$(MSBuildProjectName)' == 'sgs_game'				OR
 	'$(MSBuildProjectName)' == 'sgs_lobby'				OR
+	'$(MSBuildProjectName)' == 'sgs_query'				OR
 
 	'$(MSBuildProjectName)' == 'sgt'					OR
 	'$(MSBuildProjectName)' == 'sgtc'					OR
@@ -134,6 +140,7 @@
 	'$(MSBuildProjectName)' == 'sgs_center'				OR
 	'$(MSBuildProjectName)' == 'sgs_game'				OR
 	'$(MSBuildProjectName)' == 'sgs_lobby'				OR
+	'$(MSBuildProjectName)' == 'sgs_query'				OR
 
 	'$(MSBuildProjectName)' == 'sgt'					OR
 	'$(MSBuildProjectName)' == 'sgtc'					OR
@@ -149,6 +156,7 @@
 	'$(MSBuildProjectName)' == 'sgs_auth'				OR
 	'$(MSBuildProjectName)' == 'sgs_center'				OR
 	'$(MSBuildProjectName)' == 'sgs_game'				OR
+	'$(MSBuildProjectName)' == 'sgs_query'				OR
 	'$(MSBuildProjectName)' == 'sgs_lobby'
           " />
 
@@ -158,6 +166,7 @@
 	'$(MSBuildProjectName)' == 'sgs_auth'				OR
 	'$(MSBuildProjectName)' == 'sgs_center'				OR
 	'$(MSBuildProjectName)' == 'sgs_game'				OR
+	'$(MSBuildProjectName)' == 'sgs_query'				OR
 	'$(MSBuildProjectName)' == 'sgs_lobby'
           " />
 

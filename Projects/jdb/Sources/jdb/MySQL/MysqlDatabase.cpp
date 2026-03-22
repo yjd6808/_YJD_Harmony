@@ -25,16 +25,14 @@ MysqlDatabase::~MysqlDatabase()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IQueryPtr MysqlDatabase::CreateQuery(IConnection* _pConn, const Ptmt& _ptmt) const
+IQueryPtr MysqlDatabase::CreateQuery(IConnection* _pConn, const BoundStmt& _stmt) const
 {
-	const String& ptmtStr = _ptmt.GetStatement();
+	const String& ptmtStr = _stmt.text_;
 	if (ptmtStr.IsEmpty())
 		return nullptr;
 
-	const StatementType type = IQuery::ParseStatement(ptmtStr);
-
 	IQueryPtr pQuery;
-	switch (type)
+	switch (_stmt.info_.type_)
 	{
 	case StatementType::Select: pQuery = MakeShared<MysqlQuerySelect>(); break;
 	case StatementType::Update: pQuery = MakeShared<MysqlQueryUpdate>(); break;

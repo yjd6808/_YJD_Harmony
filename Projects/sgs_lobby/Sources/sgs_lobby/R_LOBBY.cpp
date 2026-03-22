@@ -47,7 +47,7 @@ void R_LOBBY::RECV_CLO_JoinLobby(Session* _pSession, ICommand* _pCmd)
 	pAuthenticationComponent->SetState(AuthenticationState::LobbyWait);
 	pAuthenticationComponent->SetAccountId(pCmd->AccountId.Source);
 
-	S_AUTHENTICATION_IS::SetInformation(g_cNetGroup_InterServ.GetTcp(), SendStrategy::SendAsync, SingleServerType::Auth);
+	S_AUTHENTICATION_IS::SetInformation(g_cNetGroup_InterServ.GetCenterTcp(), SendStrategy::SendAsync, SingleServerType::Auth);
 	S_AUTHENTICATION_IS::SEND_SAU_AuthenticationCheck(pSession->GetHandle(), pCmd->AccountId.Source, pCmd->Serial);
 
 }

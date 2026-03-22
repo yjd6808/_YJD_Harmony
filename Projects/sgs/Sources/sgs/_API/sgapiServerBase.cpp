@@ -31,6 +31,7 @@ void sgapiServerBase::Init()
 	else if (moduleName == "sgs_center")
 	{
 		serverProcessType_ = ServerProcessType::Center;
+		isInterServerClient_ = false;
 	}
 	else if (moduleName == "sgs_lobby")
 	{
@@ -41,6 +42,11 @@ void sgapiServerBase::Init()
 	{
 		serverProcessType_ = ServerProcessType::Game;
 		isInterServerClient_ = true;
+	}
+	else if (moduleName == "sgs_query")
+	{
+		serverProcessType_ = ServerProcessType::Query;
+		isInterServerClient_ = true;	// 쿼리 서버는 중앙서버에 접속하지만.. 접속이 언제든지 연결/해제 되어도 상관없다.
 	}
 	else
 	{

@@ -4,9 +4,12 @@
 #pragma once
 
 #include "jc/Primitives/String.h"
+#include "jc/Primitives/StringView.h"
 #include "jc/Type.h"
 
 #include "jdb/Namespace.h"
+#include "jdb/StatementType.h"
+#include "jdb/DLLExport.h"
 
 NS_JDB_BEGIN
 
@@ -33,6 +36,20 @@ struct DatabaseInfo
 	int iocpThreadCount_ = 0;
 	bool iocpPollingMode_ = false;
 	int iocpBatchSize_ = 16; // 한번에 처리가능한 최대 
+};
+
+#define STMT_PLACEHOLDER_MAX 64
+struct JDB_DLL StmtTemplate
+{
+	jc::StringView text_;
+	jdb::StatementType type_ = jdb::StatementType::None;
+	int argCount_ = 0;
+};
+
+struct JDB_DLL BoundStmt
+{
+	jc::String	text_;
+	StmtTemplate	info_;
 };
 
 NS_END

@@ -23,6 +23,7 @@ class CDefaultAllocator;
 template <typename, typename>
 class Vector;
 
+class StringView;
 class String final
 {
 	inline static constexpr int DEFAULT_BUFFER_SIZE = 32;	// 초기 버퍼의 크기
@@ -66,6 +67,7 @@ public:
 	void Append(char* _pStr);
 	void Append(const std::string& _str);
 	void Append(const String& _str);
+	void Append(const StringView& _str);
 	void Append(String&& _str);
 
 	void Insert(int _idx, const char* _pStr);
@@ -76,20 +78,20 @@ public:
 
 	int Compare(const String& _str) const;
 	int Compare(const char* _pStr, int _strLen = -1) const;
-	Vector<int, CDefaultAllocator> FindAll(int _startIdx, int _endIdx, const char* _pStr) const;
-	Vector<int, CDefaultAllocator> FindAll(const char* _pStr) const;
-	Vector<int, CDefaultAllocator> FindAll(const String& _str) const;
-	int Find(int _startIdx, int _endIdx, const char* _pStr) const;
-	int Find(int _startIdx, const char* _pStr) const;
-	int Find(int _startIdx, const String& _str) const;
-	int Find(const char* _pStr) const;
-	int Find(const String& _str) const;
-	int FindReverse(int _startIdx, int _endIdx, const char* _pStr) const;
-	int FindReverse(const String& _str) const;
-	int FindReverse(const char* _pStr) const;
+	Vector<int, CDefaultAllocator> FindAll(int _startIdx, int _endIdx, const char* _pStr, bool _caseSensitive = true) const;
+	Vector<int, CDefaultAllocator> FindAll(const char* _pStr, bool _caseSensitive = true) const;
+	Vector<int, CDefaultAllocator> FindAll(const String& _str, bool _caseSensitive = true) const;
+	int Find(int _startIdx, int _endIdx, const char* _pStr, bool _caseSensitive = true) const;
+	int Find(int _startIdx, const char* _pStr, bool _caseSensitive = true) const;
+	int Find(int _startIdx, const String& _str, bool _caseSensitive = true) const;
+	int Find(const char* _pStr, bool _caseSensitive = true) const;
+	int Find(const String& _str, bool _caseSensitive = true) const;
+	int FindReverse(int _startIdx, int _endIdx, const char* _pStr, bool _caseSensitive = true) const;
+	int FindReverse(const String& _str, bool _caseSensitive = true) const;
+	int FindReverse(const char* _pStr, bool _caseSensitive = true) const;
 
-	bool EndWith(const String& _str) const { return FindReverse(_str.Source()) == len_ - _str.Length();  }
-	bool StartWith(const String& _str) const { return Find(_str) == 0; }
+	bool EndWith(const String& _str, bool _caseSensitive = true) const { return FindReverse(_str.Source(), _caseSensitive) == len_ - _str.Length(); }
+	bool StartWith(const String& _str, bool _caseSensitive = true) const { return Find(_str, _caseSensitive) == 0; }
 
 	char Last() const { return GetAt(len_ - 1); }
 	char First() const { return GetAt(0); }
@@ -97,22 +99,22 @@ public:
 	void Clear();
 	void Clear(int _offset, int _length);		// offset 인덱스에서 len만큼 없앰
 
-	int Count(const char* _pStr) const;
-	int Count(const String& _value) const;
-	int Count(int _startIdx, int _endIdx, const char* _pStr) const;
-	int Count(int _startIdx, int _endIdx, const String& _value) const;
+	int Count(const char* _pStr, bool _caseSensitive = true) const;
+	int Count(const String& _value, bool _caseSensitive = true) const;
+	int Count(int _startIdx, int _endIdx, const char* _pStr, bool _caseSensitive = true) const;
+	int Count(int _startIdx, int _endIdx, const String& _value, bool _caseSensitive = true) const;
 
-	int Replace(const char* _pFrom, const String& _to);
-	int Replace(const String& _from, const String& _to);
+	int Replace(const char* _pFrom, const String& _to, bool _caseSensitive = true);
+	int Replace(const String& _from, const String& _to, bool _caseSensitive = true);
 
 	// offset 인덱스에서 len길이만큼 to문자열로 변경 후 offset + len(이후 위치)을 반환
 	// from을 찾지 못했거나 마지막 위치에 도달한 경우 -1을 반환
 	int Replace(int _offset, int _length, const String& _to);
 
 	// offset 인덱스부터 from을 찾아서 to로 바꿈
-	int Replace(int _offset, const char* _pFrom, const String& _to);	
-	int Replace(int _offset, const String& _from, const String& _to);
-	void ReplaceAll(const char* _pFrom, const char* _pTo);
+	int Replace(int _offset, const char* _pFrom, const String& _to, bool _caseSensitive = true);	
+	int Replace(int _offset, const String& _from, const String& _to, bool _caseSensitive = true);
+	void ReplaceAll(const char* _pFrom, const char* _pTo, bool _caseSensitive = true);
 
 	bool Contain(const char* _pStr) const;
 	bool Contain(const String& _str) const;

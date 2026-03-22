@@ -20,7 +20,9 @@ const String String::Null(0);
 //////////////////////////////////////////////////////////////////////////////////////////
 String::String()
 {
-	Initialize();
+	pBuffer_ = nullptr;
+	capacity_ = 0;
+	len_ = 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -384,6 +386,12 @@ void String::Append(const String& _str)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+void String::Append(const StringView& _str)
+{
+	Append(_str.SafeSource(), (int)_str.Length());
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 void String::Append(String&& _str)
 {
 	if (_str.Length() == 0)
@@ -495,7 +503,7 @@ int String::Compare(const char* _str, const int _strLen) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Vector<int, CDefaultAllocator> String::FindAll(int _startIdx, int _endIdx, const char* _pStr) const
+Vector<int, CDefaultAllocator> String::FindAll(int _startIdx, int _endIdx, const char* _pStr, bool _caseSensitive /*= true*/) const
 {
 	Vector<int, CDefaultAllocator> offsets;
 	const int iStrLen = StringUtil::Length(_pStr);
@@ -509,7 +517,7 @@ Vector<int, CDefaultAllocator> String::FindAll(int _startIdx, int _endIdx, const
 
 	for (int i = _startIdx; i <= _endIdx; )
 	{
-		int iFind = Find(i, _endIdx, _pStr);
+		int iFind = Find(i, _endIdx, _pStr, _caseSensitive);
 
 		if (iFind == -1)
 		{
@@ -517,56 +525,56 @@ Vector<int, CDefaultAllocator> String::FindAll(int _startIdx, int _endIdx, const
 		}
 
 		offsets.PushBack(iFind);
-		i += iFind + iStrLen;
+		i = iFind + iStrLen;
 	}
 
 	return offsets;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Vector<int, CDefaultAllocator> String::FindAll(const char* _pStr) const
+Vector<int, CDefaultAllocator> String::FindAll(const char* _pStr, bool _caseSensitive /*= true*/) const
 {
-	return FindAll(0, len_ - 1, _pStr);
+	return FindAll(0, len_ - 1, _pStr, _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Vector<int, CDefaultAllocator> String::FindAll(const String& _str) const
+Vector<int, CDefaultAllocator> String::FindAll(const String& _str, bool _caseSensitive /*= true*/) const
 {
-	return FindAll(_str.pBuffer_);
+	return FindAll(_str.pBuffer_, _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int String::Find(int _startIdx, int _endIdx, const char* _pStr) const
+int String::Find(int _startIdx, int _endIdx, const char* _pStr, bool _caseSensitive /*= true*/) const
 {
-	return StringUtil::Find(pBuffer_, len_, _startIdx, _endIdx, _pStr);
+	return StringUtil::Find(pBuffer_, len_, _startIdx, _endIdx, _pStr, _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int String::Find(int _startIdx, const char* _pStr) const
+int String::Find(int _startIdx, const char* _pStr, bool _caseSensitive /*= true*/) const
 {
-	return Find(_startIdx, len_ - 1, _pStr);
+	return Find(_startIdx, len_ - 1, _pStr, _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int String::Find(const char* _pStr) const
+int String::Find(const char* _pStr, bool _caseSensitive /*= true*/) const
 {
-	return Find(0, len_ - 1, _pStr);
+	return Find(0, len_ - 1, _pStr, _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int String::Find(const String& _str) const
+int String::Find(const String& _str, bool _caseSensitive /*= true*/) const
 {
-	return Find(_str.pBuffer_);
+	return Find(_str.pBuffer_, _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int String::Find(int _startIdx, const String& _str) const
+int String::Find(int _startIdx, const String& _str, bool _caseSensitive /*= true*/) const
 {
-	return Find(_startIdx, len_ - 1, _str.SafeSource());
+	return Find(_startIdx, len_ - 1, _str.SafeSource(), _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int String::FindReverse(int _startIdx, int _endIdx, const char* _pStr) const
+int String::FindReverse(int _startIdx, int _endIdx, const char* _pStr, bool _caseSensitive /*= true*/) const
 {
 	const int iFindStrLen = StringUtil::Length(_pStr);
 	const int iSrcLen = _endIdx - _startIdx + 1;
@@ -587,9 +595,19 @@ int String::FindReverse(int _startIdx, int _endIdx, const char* _pStr) const
 	{
 		int iContinuous = 0;
 
-		while (iContinuous < iFindStrLen && pBuffer_[i + iContinuous] == _pStr[iContinuous])
+		if (_caseSensitive)
 		{
-			iContinuous++;
+			while (iContinuous < iFindStrLen && pBuffer_[i + iContinuous] == _pStr[iContinuous])
+			{
+				iContinuous++;
+			}
+		}
+		else
+		{
+			while (iContinuous < iFindStrLen && tolower(pBuffer_[i + iContinuous]) == tolower(_pStr[iContinuous]))
+			{
+				iContinuous++;
+			}
 		}
 
 		if (iContinuous == iFindStrLen)
@@ -602,15 +620,15 @@ int String::FindReverse(int _startIdx, int _endIdx, const char* _pStr) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int String::FindReverse(const String& _str) const
+int String::FindReverse(const String& _str, bool _caseSensitive /*= true*/) const
 {
-	return FindReverse(0, len_ - 1, _str.pBuffer_);
+	return FindReverse(0, len_ - 1, _str.pBuffer_, _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int String::FindReverse(const char* _pStr) const
+int String::FindReverse(const char* _pStr, bool _caseSensitive /*= true*/) const
 {
-	return FindReverse(0, len_ - 1, _pStr);
+	return FindReverse(0, len_ - 1, _pStr, _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -642,29 +660,29 @@ void String::Clear(int _offset, int _length)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int String::Count(const char* _pStr) const
+int String::Count(const char* _pStr, bool _caseSensitive /*= true*/) const
 {
-	return Count(0, len_ - 1, _pStr);
+	return Count(0, len_ - 1, _pStr, _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int String::Count(const String& _value) const
+int String::Count(const String& _value, bool _caseSensitive /*= true*/) const
 {
-	return Count(0, len_ - 1, _value.SafeSource());
+	return Count(0, len_ - 1, _value.SafeSource(), _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int String::Count(const int _startIdx, const int _endIdx, const char* _pStr) const
+int String::Count(const int _startIdx, const int _endIdx, const char* _pStr, bool _caseSensitive /*= true*/) const
 {
 	ThrowIfNotInitialized();
 	ThrowIfInvalidRangeIndex(_startIdx, _endIdx);
 
 	const int iStrLen = StringUtil::Length(_pStr);
 
-	int iOffset = 0;
+	int iOffset = _startIdx;
 	int iCount = 0;
 
-	while (iOffset <= _endIdx && (iOffset = Find(iOffset, _endIdx, _pStr)) != -1)
+	while (iOffset <= _endIdx && (iOffset = Find(iOffset, _endIdx, _pStr, _caseSensitive)) != -1)
 	{
 		iCount++;
 		iOffset += iStrLen;
@@ -673,21 +691,21 @@ int String::Count(const int _startIdx, const int _endIdx, const char* _pStr) con
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int String::Count(const int _startIdx, const int _endIdx, const String& _value) const
+int String::Count(const int _startIdx, const int _endIdx, const String& _value, bool _caseSensitive /*= true*/) const
 {
-	return Count(_startIdx, _endIdx, _value.SafeSource());
+	return Count(_startIdx, _endIdx, _value.SafeSource(), _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int String::Replace(const char* _pFrom, const String& _to)
+int String::Replace(const char* _pFrom, const String& _to, bool _caseSensitive /*= true*/)
 {
-	return Replace(Find(_pFrom), StringUtil::Length(_pFrom), _to);
+	return Replace(Find(_pFrom, _caseSensitive), StringUtil::Length(_pFrom), _to);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int String::Replace(const String& _from, const String& _to)
+int String::Replace(const String& _from, const String& _to, bool _caseSensitive /*= true*/)
 {
-	return Replace(Find(_from.SafeSource()), _from.Length(), _to);
+	return Replace(Find(_from.SafeSource(), _caseSensitive), _from.Length(), _to);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -738,15 +756,15 @@ int String::Replace(int _offset, int _length, const String& _to)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int String::Replace(int _offset, const char* _pFrom, const String& _to)
+int String::Replace(int _offset, const char* _pFrom, const String& _to, bool _caseSensitive /*= true*/)
 {
-	return Replace(Find(_offset, _pFrom), StringUtil::Length(_pFrom), _to);
+	return Replace(Find(_offset, _pFrom, _caseSensitive), StringUtil::Length(_pFrom), _to);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int String::Replace(int _offset, const String& _from, const String& _to)
+int String::Replace(int _offset, const String& _from, const String& _to, bool _caseSensitive /*= true*/)
 {
-	return Replace(Find(_offset, _from), _from.Length(), _to);
+	return Replace(Find(_offset, _from, _caseSensitive), _from.Length(), _to);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -787,7 +805,7 @@ void String::Format(const char* _format, ...)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void String::ReplaceAll(const char* _pFrom, const char* _pTo)
+void String::ReplaceAll(const char* _pFrom, const char* _pTo, bool _caseSensitive /*= true*/)
 {
 	const int iFromLen = StringUtil::Length(_pFrom);
 	
@@ -798,7 +816,7 @@ void String::ReplaceAll(const char* _pFrom, const char* _pTo)
 	}
 
 	int iReplaceOffset = 0;
-	while ((iReplaceOffset = Replace(iReplaceOffset, _pFrom, _pTo)) != -1)
+	while ((iReplaceOffset = Replace(iReplaceOffset, _pFrom, _pTo, _caseSensitive)) != -1)
 	{
 		// EMPTY
 	}

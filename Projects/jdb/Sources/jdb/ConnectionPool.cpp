@@ -10,6 +10,8 @@
 
 #include "IConnection.h"
 
+#include "SQLServer/SqlServerConnection.h"
+
 USING_NS_JC;
 USING_NS_STD;
 

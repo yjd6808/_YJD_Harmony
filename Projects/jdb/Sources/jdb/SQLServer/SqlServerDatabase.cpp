@@ -78,16 +78,14 @@ bool SqlServerDatabase::RollbackTransaction(SqlServerConnection* _pConn)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IQueryPtr SqlServerDatabase::CreateQuery(IConnection* _pConn, const Ptmt& _ptmt) const
+IQueryPtr SqlServerDatabase::CreateQuery(IConnection* _pConn, const BoundStmt& _stmt) const
 {
-	const String& ptmtStr = _ptmt.GetStatement();
+	const String& ptmtStr = _stmt.text_;
 	if (ptmtStr.IsEmpty())
 		return nullptr;
 
-	const StatementType type = IQuery::ParseStatement(ptmtStr);
-
 	IQueryPtr pQuery;
-	switch (type)
+	switch (_stmt.info_.type_)
 	{
 	case StatementType::Select: pQuery = MakeShared<SqlServerQuerySelect>(); break;
 	case StatementType::Update: pQuery = MakeShared<SqlServerQueryUpdate>(); break;
@@ -103,7 +101,7 @@ IQueryPtr SqlServerDatabase::CreateQuery(IConnection* _pConn, const Ptmt& _ptmt)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IQueryPtr SqlServerDatabase::QueryOnConnection(SqlServerConnection* _pConn, const Ptmt& _stmt)
+IQueryPtr SqlServerDatabase::QueryOnConnection(SqlServerConnection* _pConn, const BoundStmt& _stmt)
 {
 	if (_pConn == nullptr)
 	{

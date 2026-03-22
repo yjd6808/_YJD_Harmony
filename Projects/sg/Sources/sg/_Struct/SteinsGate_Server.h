@@ -19,6 +19,7 @@ JC_SENUM_BEGIN(ServerType)
 	Chat,
 	Area,
 	Center,
+	Query,
 	None,
 	End = None,
 	Max
@@ -82,6 +83,7 @@ JC_SENUM_BEGIN(ServerProcessType)
 		Center,				// 2
 		Lobby,				// 3
 		Game,				// 4
+		Query,				// 5
 		End = Game,
 JC_SENUM_MIDDLE(ServerProcessType)
 static constexpr int Count = End;	// 4
@@ -210,4 +212,13 @@ struct GameServerProcessInfo : ServerProcessInfo
 	int channelType_ = -1;
 
 	virtual const NetInterServerInfo& GetInterServerInfo() const override { return interServerInfo_; }
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////
+struct QueryServerProcessInfo : ServerProcessInfo
+{
+	NetInterServerInfo interServerInfo_;
+	NetDBInfo_MySQL databaseInfo_;
+	virtual const NetInterServerInfo& GetInterServerInfo() const override { return interServerInfo_; }
+	virtual const NetDBInfo_MySQL& GetDBInfo_MySQL() const override { return databaseInfo_; }
 };

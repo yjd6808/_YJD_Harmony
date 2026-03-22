@@ -29,5 +29,17 @@ constexpr bool IsSpace(const char ch) {
 	return ch == ' ' || ch == '\t' || ch == '\n' || ch == '\v' || ch == '\r' || ch == '\f';
 }
 
+constexpr char ToLower(const char ch) {
+	return  (ch >= 'A' && ch <= 'Z')
+	? (ch - 'A' + 'a')	// 대문자인 경우 소문자로 변경
+	: ch;
+}
+
+constexpr char ToUpper(const char ch) {
+	return (ch >= 'a' && ch <= 'z')
+	? (ch - 'a' + 'A')	// 소문자인 경우 대문자로 변경
+	: ch;
+}
+
 NS_END
 

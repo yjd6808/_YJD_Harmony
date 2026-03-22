@@ -13,16 +13,30 @@ USING_NS_JC;
 #define Query	Query
 #endif
 
-// constexpr jdb::Stmt STMT_SELECT_1{ "SELECT c_account_id FROM t_account", 50 };
+void check(const jdb::StmtTemplate& _stmt)
+{
+	auto fsef =&_stmt;
+}
 
+constexpr jdb::StmtTemplate abcdefg = jdb::Util::CTParseStmt("select legend {0}, {1}");
+
+// constexpr jdb::Stmt STMT_SELECT_1{ "SELECT c_account_id FROM t_account", 50 };
 int main(int _argc, char** _argv) 
 {
 	InitializeJCore(_argc, _argv);
 	InitializeDefaultLogger();
 	InitializeNetLogger();
 
+	auto fsef = &abcdefg;
+	Console::WriteLine("stmt text: %p", fsef->text_.SafeSource());
+	check(abcdefg);
+	// constexpr jdb::StatementType t = jdb::Util::CTParseStmtType("select");
+	// constexpr jdb::Util::PlaceholderInfo info = jdb::Util::CTParsePlaceholder("fsefes");
+
 	jdb::SqlServerStatementBuilder::Initialize({});
-	jdb::Ptmt ptmt22 = jdb::Ptmt::Build(jdb::dbtSQLServer, "{0}{2}", 10, 20);
+
+	jdb::StmtTemplate stmt = jdb::Util::CTParseStmt("{0}{1}");
+	jdb::BoundStmt ptmt22 = jdb::Util::BuildStmt(jdb::dbtSQLServer, stmt, 10, 20);
 
 	jdb::DatabaseInfo info;
 	info.type_ = jdb::DatabaseType::dbtSQLServer;
@@ -122,7 +136,7 @@ int main(int _argc, char** _argv)
 		
 		String id = StringUtil::Format("test%d", x);
 		String pass = StringUtil::Format("pass%d", x);
-		db.Query(QID_INSERT_1, "INSERT INTO t_account (c_account_id, c_account_pass) VALUES({0}, {1}); ", id, pass);
+		db.Query(QID_INSERT_1, MS_STMT("INSERT INTO t_account (c_account_id, c_account_pass) VALUES({0}, {1}); ", id, pass));
 		 
 		 // jc_assert_msg(rowCount == 1, "영향받은 행 갯수가 1이 아닙니다. rowCount: %u", rowCount);
 		// db.Query("delete from t_test");
@@ -168,17 +182,16 @@ int main(int _argc, char** _argv)
 	// ------------------------------------------
 	// delete 테스트
 	{
-		db.Query(QID_DELETE_1, "DELETE FROM t_account WHERE c_account_id = {0}", StringUtil::Format("test%d", x));
+		db.Query(QID_DELETE_1, MS_STMT("DELETE FROM t_account WHERE c_account_id = {0}", StringUtil::Format("test%d", x)));
 	}
 
-	jdb::Ptmt ptmt = jdb::Ptmt::Build(jdb::dbtSQLServer, "{0}{1}{0}", 10, 20);
 
 
 
 	// ------------------------------------------
 	// select 테스트
 
-	db.Query(QID_SELECT_2, "SELECT c_uid, c_varchar, c_char, c_nvarchar, c_float, c_double, c_s8, c_s16, c_s32, c_s64, c_u8, c_u16, c_u32, c_u64, c_datetime, c_date, c_time FROM dbo.t_test");
+	db.Query(QID_SELECT_2, MS_STMT("SELECT c_uid, c_varchar, c_char, c_nvarchar, c_float, c_double, c_s8, c_s16, c_s32, c_s64, c_u8, c_u16, c_u32, c_u64, c_datetime, c_date, c_time FROM dbo.t_test"));
 	
 
 
@@ -193,7 +206,7 @@ int main(int _argc, char** _argv)
 			runningThread[i] = true;
 			while (runningThread[i])
 			{
-				auto pQuery = db.Query(QID_SELECT_1, "select * from t_account");
+				auto pQuery = db.Query(QID_SELECT_1, MS_STMT("select * from t_account"));
 				++counter;
 				Sleep(1);
 

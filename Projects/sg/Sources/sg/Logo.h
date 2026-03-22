@@ -21,3 +21,4 @@ void InitializeServerCenterLogo(bool _print, int _leftPadding);
 void InitializeServerAuthLogo(bool _print, int _leftPadding);
 void InitializeServerGameLogo(bool _print, int _leftPadding);
 void InitializeServerLobbyLogo(bool _print, int _leftPadding);
+void InitializeServerQueryLogo(bool _print, int _leftPadding);

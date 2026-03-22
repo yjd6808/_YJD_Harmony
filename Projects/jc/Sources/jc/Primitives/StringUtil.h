@@ -8,6 +8,7 @@
 #include "jc/Type.h"
 #include "jc/Define.h"
 #include "jc/Assert.h"
+#include "jc/Ascii.h"
 #include "jc/Namespace.h"
 
 NS_JC_BEGIN
@@ -108,12 +109,12 @@ public:
 	static bool IsEqual(const char* _pSrc, const char* _pDst, bool _bCompareCase = true);
 	static bool IsEqual(const char* _pSrc, int _srcLen, const char* _pDst, int _dstLen, bool _bCompareCase = true);
 	static void Swap(String& _src, String& _dst);
-	static int Find(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr);
-	static int Find(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr, int _strLen);
-	static int Find(const char* _pSource, int _sourceLen, int _startIdx, const char* _pStr);
-	static int FindAll(OUT int* _pPositionArray, const char* _pSource, const char* _pStr);
-	static int FindAll(OUT int* _pPositionArray, const char* _pSource, int _sourceLen, const char* _pStr);
-	static int FindAll(OUT int* _pPositionArray, const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr);
+	static int Find(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr, bool _caseSensitive = true);
+	static int Find(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr, int _strLen, bool _caseSensitive = true);
+	static int Find(const char* _pSource, int _sourceLen, int _startIdx, const char* _pStr, bool _caseSensitive = true);
+	static int FindAll(OUT int* _pPositionArray, const char* _pSource, const char* _pStr, bool _caseSensitive = true);
+	static int FindAll(OUT int* _pPositionArray, const char* _pSource, int _sourceLen, const char* _pStr, bool _caseSensitive = true);
+	static int FindAll(OUT int* _pPositionArray, const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr, bool _caseSensitive = true);
 	static int FindChar(const char* _pSource, char _ch);
 	static int FindCharReverse(const char* _pSource, char _ch);
 	static int FindCharReverse(const char* _pSource, int _len, char _ch);
@@ -125,7 +126,9 @@ public:
 	// buf에 str 문자열 추가함
 	// 반환 결과 합쳐진 문자열의 길이
 	static void ConcatInnerBack(char* _pBuf, int _buflen, int _bufCapacity, const char* _pConcatStr, int _concatStrLen);
-	static void ConcatInnerBack(char* _pBuf, int _bufCapacity, const char* _pConcatStr);
+	// static void ConcatInnerBack(char* _pBuf, int _bufCapacity, const char* _pConcatStr);
+	// static void ConcatInnerBack(char* _pBuf, int _buflen, int _bufCapacity, const char* _pConcatStr, int _concatStrLen);
+	// static void ConcatInnerBack(char* _pBuf, int _bufCapacity, const char* _pConcatStr);
 
 	static void ConcatInnerFront(char* _pBuf, int _buflen, int _bufCapacity, const char* _pConcatStr, int _concatStrLen);
 	static void ConcatInnerFront(char* _pBuf, int _bufCapacity, const char* _pConcatStr);
@@ -184,24 +187,35 @@ public:
 		return CTToNumber<_s64>(_pStr);
 	}
 
-	static constexpr int CTFind(const char* _pSource, const char* _pTarget)
+	static constexpr int CTFind(const char* _pSource, const char* _pTarget, bool _caseSensitive = true)
 	{
-		return CTFind(_pSource, _pTarget, 0);
+		return CTFind(_pSource, _pTarget, 0, _caseSensitive);
 	}
 
-	static constexpr int CTFind(const char* _pSource, const char* _pTarget, int _startOffset)
+	static constexpr int CTFind(const char* _pSource, const char* _pTarget, int _startOffset, bool _caseSensitive =  true)
 	{
 		const int SOURCE_LEN = CTLength(_pSource);
 		const int TARGET_LEN = CTLength(_pTarget);
+		return CTFind(_pSource, SOURCE_LEN, _pTarget, TARGET_LEN, _startOffset, _caseSensitive);
+	}
 
-		if (TARGET_LEN == 0 || TARGET_LEN > SOURCE_LEN)
+	static constexpr int CTFind(
+		const char* _pSource,
+		int _sourceLen,
+		const char* _pTarget,
+		int _targetLen,
+		int _startOffset, 
+		bool _caseSensitive = true)
+	{
+
+		if (_targetLen == 0 || _targetLen > _sourceLen)
 			return -1;
 
 		// 외부 루프 + 내부 루프 = 복잡
-		for (int i = _startOffset; i <= SOURCE_LEN - TARGET_LEN; ++i) {
+		for (int i = _startOffset; i <= _sourceLen - _targetLen; ++i) {
 			bool match = true;
-			for (int j = 0; j < TARGET_LEN; ++j) {
-				if (_pSource[i + j] != _pTarget[j]) {
+			for (int j = 0; j < _targetLen; ++j) {
+				if (_caseSensitive ? _pSource[i + j] != _pTarget[j] : jc::ToLower(_pSource[i + j]) != jc::ToLower(_pTarget[j])) {
 					match = false;
 					break;
 				}
@@ -336,7 +350,7 @@ public:
 	}
 private:
 	template <typename T>
-	static constexpr int CTToNumber(const char* _pStr)
+	static constexpr T CTToNumber(const char* _pStr)
 	{
 		T result = 0;
 		int sign = 1;

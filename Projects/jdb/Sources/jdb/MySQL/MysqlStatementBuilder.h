@@ -111,14 +111,14 @@ public:
 	};
 
 	template <typename T>
-	constexpr static void Set(jc::String(&_fieldMap)[Util::MAX_ARGS], int _idx, T&& _arg)
+	constexpr static void Set(jc::String(&_fieldMap)[STMT_PLACEHOLDER_MAX], int _idx, T&& _arg)
 	{
 		using TNatural = jc::NaturalType_t<T>;
 		Setter<TNatural>()(_fieldMap, _idx, jc::Forward<T>(_arg));
 	}
 
 	template <typename T, typename... Args>
-	constexpr static void Set(jc::String(&_fieldMap)[Util::MAX_ARGS], int _idx, T&& _arg, Args&&... _args)
+	constexpr static void Set(jc::String(&_fieldMap)[STMT_PLACEHOLDER_MAX], int _idx, T&& _arg, Args&&... _args)
 	{
 		using TNatural = jc::NaturalType_t<T>;
 		Setter<TNatural>()(_fieldMap, _idx, jc::Forward<T>(_arg));

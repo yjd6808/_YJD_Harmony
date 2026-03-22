@@ -484,6 +484,122 @@ TEST(StringTest, Clear) {
 	EXPECT_TRUE(szSource == "a");
 }
 
+TEST(StringTest, FindCaseSensitive)
+{
+	String szSource = "Hello World ABCDEFG";
+
+	// caseSensitive = true (기본값)
+	EXPECT_TRUE(szSource.Find("Hello") == 0);
+	EXPECT_TRUE(szSource.Find("hello") == -1);
+	EXPECT_TRUE(szSource.Find("WORLD") == -1);
+	EXPECT_TRUE(szSource.Find("ABCDEFG") == 12);
+
+	// caseSensitive = false
+	EXPECT_TRUE(szSource.Find("hello", false) == 0);
+	EXPECT_TRUE(szSource.Find("HELLO", false) == 0);
+	EXPECT_TRUE(szSource.Find("world", false) == 6);
+	EXPECT_TRUE(szSource.Find("WORLD", false) == 6);
+	EXPECT_TRUE(szSource.Find("abcdefg", false) == 12);
+
+	// 범위 지정 + caseSensitive = false
+	EXPECT_TRUE(szSource.Find(0, 4, "hello", false) == 0);
+	EXPECT_TRUE(szSource.Find(1, 4, "hello", false) == -1);
+	EXPECT_TRUE(szSource.Find(6, 10, "world", false) == 6);
+}
+
+TEST(StringTest, FindReverseCaseSensitive)
+{
+	String szSource = "AbcABCAbc";
+
+	// caseSensitive = true (기본값)
+	EXPECT_TRUE(szSource.FindReverse("Abc") == 6);
+	EXPECT_TRUE(szSource.FindReverse("abc") == -1);
+	EXPECT_TRUE(szSource.FindReverse("ABC") == 3);
+
+	// caseSensitive = false
+	EXPECT_TRUE(szSource.FindReverse("abc", false) == 6);
+	EXPECT_TRUE(szSource.FindReverse("ABC", false) == 6);
+
+	// 범위 지정 + caseSensitive = false
+	EXPECT_TRUE(szSource.FindReverse(0, 5, "abc", false) == 3);
+	EXPECT_TRUE(szSource.FindReverse(0, 2, "abc", false) == 0);
+}
+
+TEST(StringTest, FindAllCaseSensitive) {
+	String szSource = "AbcABCabc";
+
+	// caseSensitive = true (기본값)
+	Vector<int> result1 = szSource.FindAll("abc");
+	EXPECT_TRUE(result1.Size() == 1);
+	EXPECT_TRUE(result1[0] == 6);
+
+	// caseSensitive = false
+	Vector<int> result2 = szSource.FindAll("abc", false);
+	EXPECT_TRUE(result2.Size() == 3);
+	if (result2.Size() == 3) {
+		EXPECT_TRUE(result2[0] == 0);
+		EXPECT_TRUE(result2[1] == 3);
+		EXPECT_TRUE(result2[2] == 6);
+	}
+}
+
+TEST(StringTest, CountCaseSensitive) {
+	String szSource = "HellohelloHELLO";
+
+	// caseSensitive = true (기본값)
+	EXPECT_TRUE(szSource.Count("hello") == 1);
+	EXPECT_TRUE(szSource.Count("Hello") == 1);
+	EXPECT_TRUE(szSource.Count("HELLO") == 1);
+
+	// caseSensitive = false
+	EXPECT_TRUE(szSource.Count("hello", false) == 3);
+	EXPECT_TRUE(szSource.Count("HELLO", false) == 3);
+
+	// 범위 지정 + caseSensitive = false
+	EXPECT_TRUE(szSource.Count(0, 9, "hello", false) == 2);
+	EXPECT_TRUE(szSource.Count(5, 14, "hello", false) == 2);
+}
+
+TEST(StringTest, ReplaceCaseSensitive) {
+	// caseSensitive = true (기본값)
+	String szSource = "HellohelloHELLO";
+	szSource.Replace("hello", "world");
+	EXPECT_TRUE(szSource == "HelloworldHELLO");
+
+	// caseSensitive = false
+	szSource = "HellohelloHELLO";
+	szSource.Replace("hello", String("world"), false);
+	EXPECT_TRUE(szSource == "worldhelloHELLO");
+}
+
+TEST(StringTest, ReplaceAllCaseSensitive) {
+	// caseSensitive = true (기본값)
+	String szSource = "HellohelloHELLO";
+	szSource.ReplaceAll("hello", "world");
+	EXPECT_TRUE(szSource == "HelloworldHELLO");
+
+	// caseSensitive = false
+	szSource = "HellohelloHELLO";
+	szSource.ReplaceAll("hello", "world", false);
+	EXPECT_TRUE(szSource == "worldworldworld");
+}
+
+TEST(StringTest, StartWithEndWithCaseSensitive) {
+	String szSource = "HelloWorld";
+
+	// caseSensitive = true (기본값)
+	EXPECT_TRUE(szSource.StartWith(String("Hello")));
+	EXPECT_FALSE(szSource.StartWith(String("hello")));
+	EXPECT_TRUE(szSource.EndWith(String("World")));
+	EXPECT_FALSE(szSource.EndWith(String("world")));
+
+	// caseSensitive = false
+	EXPECT_TRUE(szSource.StartWith(String("hello"), false));
+	EXPECT_TRUE(szSource.StartWith(String("HELLO"), false));
+	EXPECT_TRUE(szSource.EndWith(String("world"), false));
+	EXPECT_TRUE(szSource.EndWith(String("WORLD"), false));
+}
+
 #endif // TEST_StringTest == ON
 
 
