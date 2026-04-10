@@ -1,86 +1,82 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/9/2023 2:54:52 PM
  *
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SGToolsCommon.Extension
 {
     public static class ColorEx
     {
-        public static string ToFullString4B(this Color color)
-            => $"{color.R} {color.G} {color.B} {color.A}";
+        //////////////////////////////////////////////////////////////////////////////////
+        public static string ToFullString4B(this Color _color)
+            => $"{_color.R} {_color.G} {_color.B} {_color.A}";
 
-        public static Color ParseFullString4B(string fullstr)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static Color ParseFullString4B(string _fullstr)
         {
             int[] n = new int[4];
-            StringEx.ParseIntNumberN(fullstr, n);
+            StringEx.ParseIntNumberN(_fullstr, n);
             return Color.FromArgb((Byte)n[3], (Byte)n[0], (Byte)n[1], (Byte)n[2]);
         }
 
-
-        public static Color AddAllWithoutAlpha(this Color me, byte all)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static Color AddAllWithoutAlpha(this Color _me, byte _all)
         {
-            me.R = me.R + all > byte.MaxValue ? byte.MaxValue : (byte)(me.R + all);
-            me.G = me.G + all > byte.MaxValue ? byte.MaxValue : (byte)(me.G + all);
-            me.B = me.B + all > byte.MaxValue ? byte.MaxValue : (byte)(me.B + all);
-            return me;
+            _me.R = _me.R + _all > byte.MaxValue ? byte.MaxValue : (byte)(_me.R + _all);
+            _me.G = _me.G + _all > byte.MaxValue ? byte.MaxValue : (byte)(_me.G + _all);
+            _me.B = _me.B + _all > byte.MaxValue ? byte.MaxValue : (byte)(_me.B + _all);
+            return _me;
         }
 
-        public static Color Add(this Color me, byte r, byte g, byte b, byte a)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static Color Add(this Color _me, byte _r, byte _g, byte _b, byte _a)
         {
-            me.R = me.R + r > byte.MaxValue ? byte.MaxValue : (byte)(me.R + r);
-            me.G = me.G + g > byte.MaxValue ? byte.MaxValue : (byte)(me.G + g);
-            me.B = me.B + b > byte.MaxValue ? byte.MaxValue : (byte)(me.B + b);
-            me.A = me.A + a > byte.MaxValue ? byte.MaxValue : (byte)(me.A + a);
-            return me;
+            _me.R = _me.R + _r > byte.MaxValue ? byte.MaxValue : (byte)(_me.R + _r);
+            _me.G = _me.G + _g > byte.MaxValue ? byte.MaxValue : (byte)(_me.G + _g);
+            _me.B = _me.B + _b > byte.MaxValue ? byte.MaxValue : (byte)(_me.B + _b);
+            _me.A = _me.A + _a > byte.MaxValue ? byte.MaxValue : (byte)(_me.A + _a);
+            return _me;
         }
 
-        public static Color Add(this Color me, byte r, byte g, byte b)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static Color Add(this Color _me, byte _r, byte _g, byte _b)
         {
-            me.R = me.R + r > byte.MaxValue ? byte.MaxValue : (byte)(me.R + r);
-            me.G = me.G + g > byte.MaxValue ? byte.MaxValue : (byte)(me.G + g);
-            me.B = me.B + b > byte.MaxValue ? byte.MaxValue : (byte)(me.B + b);
-            return me;
+            _me.R = _me.R + _r > byte.MaxValue ? byte.MaxValue : (byte)(_me.R + _r);
+            _me.G = _me.G + _g > byte.MaxValue ? byte.MaxValue : (byte)(_me.G + _g);
+            _me.B = _me.B + _b > byte.MaxValue ? byte.MaxValue : (byte)(_me.B + _b);
+            return _me;
         }
 
-        public static Color AddA(this Color me, byte a)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static Color AddA(this Color _me, byte _a)
         {
-            me.A = me.A + a > byte.MaxValue ? byte.MaxValue : (byte)(me.A + a);
-            return me;
+            _me.A = _me.A + _a > byte.MaxValue ? byte.MaxValue : (byte)(_me.A + _a);
+            return _me;
         }
 
-        public static Color AddR(this Color me, byte r)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static Color AddR(this Color _me, byte _r)
         {
-            me.R = me.R + r > byte.MaxValue ? byte.MaxValue : (byte)(me.R + r);
-            return me;
+            _me.R = _me.R + _r > byte.MaxValue ? byte.MaxValue : (byte)(_me.R + _r);
+            return _me;
         }
 
-        public static Color AddG(this Color me, byte g)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static Color AddG(this Color _me, byte _g)
         {
-            me.G = me.G + g > byte.MaxValue ? byte.MaxValue : (byte)(me.G + g);
-            return me;
+            _me.G = _me.G + _g > byte.MaxValue ? byte.MaxValue : (byte)(_me.G + _g);
+            return _me;
         }
 
-        public static Color AddB(this Color me, byte b)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static Color AddB(this Color _me, byte _b)
         {
-            me.B = me.B + b > byte.MaxValue ? byte.MaxValue : (byte)(me.B + b);
-            return me;
+            _me.B = _me.B + _b > byte.MaxValue ? byte.MaxValue : (byte)(_me.B + _b);
+            return _me;
         }
     }
 }

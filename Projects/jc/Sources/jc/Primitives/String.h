@@ -161,6 +161,8 @@ public:
 	bool TryToFloat(OUT _f32& _outValue, bool _ignoreLeadingZero = true) const;
 	bool TryToDouble(OUT _f64& _outValue, bool _ignoreLeadingZero = true) const;
 
+	char PopBack();
+
 public:
 	char& operator[](int _idx) const;
 

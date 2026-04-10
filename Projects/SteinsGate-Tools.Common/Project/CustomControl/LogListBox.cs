@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/9/2023 12:34:42 PM
  *
@@ -6,136 +6,54 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 using SGToolsCommon.Resource;
 
 namespace SGToolsCommon.CustomControl
 {
     public class LogData
     {
-        public LogData(string log, object data, BitmapImage headerImageSource, Brush foreground = null)
-        {
-            Log = log;
-            Data = data;
-            HeaderImageSource = headerImageSource;
-
-            if (foreground != null)
-                Foreground = foreground;
-        }
-
-        
         public string Log { get; set; }
         public object Data { get; set; }
         public Brush Foreground { get; } = Brushes.Black;
         public BitmapImage HeaderImageSource { get; }
         public bool HasData => Data != null;
-    }
 
+        //////////////////////////////////////////////////////////////////////////////////
+        public LogData(string _log, object _data, BitmapImage _headerImageSource, Brush _foreground = null)
+        {
+            Log = _log;
+            Data = _data;
+            HeaderImageSource = _headerImageSource;
+
+            if (_foreground != null)
+                Foreground = _foreground;
+        }
+    }
 
     public class LogClickEventArgs : RoutedEventArgs
     {
         public LogData LogData { get; }
 
-        public LogClickEventArgs(RoutedEvent routedEvent, LogData logData) : base(routedEvent)
-            => LogData = logData;
+        //////////////////////////////////////////////////////////////////////////////////
+        public LogClickEventArgs(RoutedEvent _routedEvent, LogData _logData) : base(_routedEvent)
+            => LogData = _logData;
     }
-
 
     public class LogListBox : ListBox, INotifyPropertyChanged
     {
-        public ObservableCollection<LogData> Logs { get; } = new ();
-
-        public LogData LastLog
-        {
-            get => _lastLog;
-            set
-            {
-                _lastLog = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private LogData _lastLog;
-
-        public LogListBox()
-        {
-            Loaded += OnLoaded;
-        }
-
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Binding sourceBinding = new Binding(nameof(Logs));
-            sourceBinding.Source = this;
-            SetBinding(ItemsSourceProperty, sourceBinding);
-        }
-
-        public void AddLog(Exception e)
-        {
-            StackFrame frame = (new StackTrace(e, true)).GetFrame(0);
-            string lastFrameInfo = $"{System.IO.Path.GetFileName(frame.GetFileName())}\n{frame.GetMethod().Name}()\n{frame.GetFileLineNumber()}";
-            AddLog(e.Message + "\n" + lastFrameInfo, null, IconCommonType.NotUsable, Brushes.Crimson);
-        }
-
-        public void AddLog(string log, object data = null, IconCommonType type = IconCommonType.Info, Brush brush = null)
-        {
-            if (Logs.Count > MaxItemCount)
-                Logs.RemoveAt(0);
-
-            LastLog = new LogData(log, data, R.GetIconCommon(type), brush);
-            Logs.Add(LastLog);
-
-            if (Logs.Count > 0)
-                ScrollIntoView(Logs.Last());
-        }
-
-        public void AddDispatchedLog(string log, object data = null, IconCommonType type = IconCommonType.Info, Brush brush = null)
-            => Dispatcher.BeginInvoke(() => AddLog(log, data, type, brush));
-
-        public void AddDispatchedLog(Exception e)
-            => Dispatcher.BeginInvoke(() => AddLog(e));
-
-        public void Clear()
-        {
-            Logs.Clear();
-            LastLog = null;
-        }
-
-        protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
-        {
-            base.OnMouseDoubleClick(e);
-
-            RoutedEventArgs newEventArgs = new LogClickEventArgs(LogClickEvent, SelectedItem as LogData);
-            RaiseEvent(newEventArgs);
-        }
-
-        public int MaxItemCount
-        {
-            get => (int)GetValue(MaxItemCountProperty);
-            set => SetValue(MaxItemCountProperty, value);
-        }
-
-        public event RoutedEventHandler LogClick
-        {
-            add { AddHandler(LogClickEvent, value); }
-            remove { RemoveHandler(LogClickEvent, value); }
-        }
+        private LogData lastLog_;
 
         public static DependencyProperty MaxItemCountProperty = DependencyProperty.Register(
             nameof(MaxItemCount),
@@ -151,12 +69,95 @@ namespace SGToolsCommon.CustomControl
             typeof(LogListBox)
         );
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public ObservableCollection<LogData> Logs { get; } = new();
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        public LogData LastLog
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            get => lastLog_;
+            set
+            {
+                lastLog_ = value;
+                OnPropertyChanged();
+            }
         }
 
+        public int MaxItemCount
+        {
+            get => (int)GetValue(MaxItemCountProperty);
+            set => SetValue(MaxItemCountProperty, value);
+        }
+
+        public event RoutedEventHandler LogClick
+        {
+            add { AddHandler(LogClickEvent, value); }
+            remove { RemoveHandler(LogClickEvent, value); }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public LogListBox()
+        {
+            Loaded += OnLoaded;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public void AddLog(Exception _e)
+        {
+            StackFrame frame = (new StackTrace(_e, true)).GetFrame(0);
+            string lastFrameInfo = $"{System.IO.Path.GetFileName(frame.GetFileName())}\n{frame.GetMethod().Name}()\n{frame.GetFileLineNumber()}";
+            AddLog(_e.Message + "\n" + lastFrameInfo, null, IconCommonType.NotUsable, Brushes.Crimson);
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public void AddLog(string _log, object _data = null, IconCommonType _type = IconCommonType.Info, Brush _brush = null)
+        {
+            if (Logs.Count > MaxItemCount)
+                Logs.RemoveAt(0);
+
+            LastLog = new LogData(_log, _data, R.GetIconCommon(_type), _brush);
+            Logs.Add(LastLog);
+
+            if (Logs.Count > 0)
+                ScrollIntoView(Logs.Last());
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public void AddDispatchedLog(string _log, object _data = null, IconCommonType _type = IconCommonType.Info, Brush _brush = null)
+            => Dispatcher.BeginInvoke(() => AddLog(_log, _data, _type, _brush));
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public void AddDispatchedLog(Exception _e)
+            => Dispatcher.BeginInvoke(() => AddLog(_e));
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public void Clear()
+        {
+            Logs.Clear();
+            LastLog = null;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        protected override void OnMouseDoubleClick(MouseButtonEventArgs _e)
+        {
+            base.OnMouseDoubleClick(_e);
+
+            RoutedEventArgs newEventArgs = new LogClickEventArgs(LogClickEvent, SelectedItem as LogData);
+            RaiseEvent(newEventArgs);
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        protected virtual void OnPropertyChanged([CallerMemberName] string? _propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(_propertyName));
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        private void OnLoaded(object _sender, RoutedEventArgs _e)
+        {
+            Binding sourceBinding = new Binding(nameof(Logs));
+            sourceBinding.Source = this;
+            SetBinding(ItemsSourceProperty, sourceBinding);
+        }
     }
 }

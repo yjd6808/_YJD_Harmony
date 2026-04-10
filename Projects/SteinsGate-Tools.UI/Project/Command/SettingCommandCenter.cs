@@ -1,26 +1,12 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/28/2023 12:22:59 AM
  *
  */
 
 using SGToolsCommon.Command;
-using SGToolsUI.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SGToolsUI.Command.SettingViewCommand;
+using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.Command
 {
@@ -33,13 +19,14 @@ namespace SGToolsUI.Command
         // =================================================
         public CommandAbstract SaveAndClose { get; }
         public CommandAbstract Close { get; }
-        public SettingCommandCenter(SettingViewModel viewModel)
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public SettingCommandCenter(SettingViewModel _viewModel)
         {
-            ViewModel = viewModel;
+            ViewModel = _viewModel;
 
             Add(SaveAndClose = new SaveAndClose(ViewModel));
             Add(Close        = new Close(ViewModel));
         }
-
     }
 }

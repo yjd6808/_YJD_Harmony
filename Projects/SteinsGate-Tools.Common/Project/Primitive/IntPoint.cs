@@ -1,25 +1,17 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/9/2023 2:59:35 PM
  *
  */
 
-
 using System;
 using System.ComponentModel;
-using System.Globalization;
-using System.Threading;
 using System.Windows;
-using System.Windows.Converters;
-using System.Windows.Markup;
-using SGToolsCommon.Primitive.Converter;
-using Vanara.PInvoke;
 
+using SGToolsCommon.Primitive.Converter;
 
 namespace SGToolsCommon.Primitive
 {
-
-
     [TypeConverter(typeof(IntPointConverter))]
     public struct IntPoint
     {
@@ -28,84 +20,98 @@ namespace SGToolsCommon.Primitive
         public int X { get; set; }
         public int Y { get; set; }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public IntPoint()
         {
             X = 0;
             Y = 0;
         }
 
-        public IntPoint(int x, int y)
+        //////////////////////////////////////////////////////////////////////////////////
+        public IntPoint(int _x, int _y)
         {
-            X = x;
-            Y = y;
+            X = _x;
+            Y = _y;
         }
 
-        public static implicit operator Point(IntPoint p)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static implicit operator Point(IntPoint _p)
         {
-            return new Point(p.X, p.Y);
+            return new Point(_p.X, _p.Y);
         }
 
-        public static implicit operator IntPoint(Point p)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static implicit operator IntPoint(Point _p)
         {
-            return new IntPoint((int)p.X, (int)p.Y);
+            return new IntPoint((int)_p.X, (int)_p.Y);
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
+        public static IntPoint Add(IntPoint _lhs, IntPoint _rhs)
+        {
+            _lhs.X += _rhs.X;
+            _lhs.Y += _rhs.Y;
+            return _lhs;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public static IntVector Subtract(IntPoint _lhs, IntPoint _rhs)
+        {
+            IntVector v = new IntVector();
+            v.X = _lhs.X - _rhs.X;
+            v.Y = _lhs.Y - _rhs.Y;
+            return v;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public static IntPoint Subtract(IntPoint _lhs, IntVector _rhs)
+        {
+            IntPoint v = new IntPoint();
+            v.X = _lhs.X - _rhs.X;
+            v.Y = _lhs.Y - _rhs.Y;
+            return v;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public static bool operator==(IntPoint _lhs, IntPoint _rhs)
+        {
+            return _lhs.X == _rhs.X && _lhs.Y == _rhs.Y;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public static bool operator !=(IntPoint _lhs, IntPoint _rhs)
+        {
+            return !(_lhs == _rhs);
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
         public Point ToPoint()
         {
             return new Point(X, Y);
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
+        public double Distance(IntPoint _other)
+        {
+            return Math.Sqrt(Math.Pow(X - _other.X, 2) + Math.Pow(Y - _other.Y, 2));
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override bool Equals(object? _obj)
+        {
+            if (_obj == null) return false;
+            if (!(_obj is IntPoint)) return false;
+            return this == (IntPoint)_obj;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override int GetHashCode()
+            => base.GetHashCode();
+
+        //////////////////////////////////////////////////////////////////////////////////
         public override string ToString()
         {
             return $"{X},{Y}";
         }
-
-        public static IntPoint Add(IntPoint lhs, IntPoint rhs)
-        {
-            lhs.X += rhs.X;
-            lhs.Y += rhs.Y;
-            return lhs;
-        }
-
-        public static IntVector Subtract(IntPoint lhs, IntPoint rhs)
-        {
-            IntVector v = new IntVector();
-            v.X = lhs.X - rhs.X;
-            v.Y = lhs.Y - rhs.Y;
-            return v;
-        }
-
-        public static IntPoint Subtract(IntPoint lhs, IntVector rhs)
-        {
-            IntPoint v = new IntPoint();
-            v.X = lhs.X - rhs.X;
-            v.Y = lhs.Y - rhs.Y;
-            return v;
-        }
-
-        public static bool operator==(IntPoint lhs, IntPoint rhs)
-        {
-            return lhs.X == rhs.X && lhs.Y == rhs.Y;
-        }
-
-        public static bool operator !=(IntPoint lhs, IntPoint rhs)
-        {
-            return !(lhs == rhs);
-        }
-
-        public double Distance(IntPoint other)
-        {
-            return Math.Sqrt(Math.Pow(X - other.X, 2) + Math.Pow(Y - other.Y, 2));
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj == null) return false;
-            if (!(obj is IntPoint)) return false;
-            return this == (IntPoint)obj;
-        }
-
-        public override int GetHashCode()
-            => base.GetHashCode();
     }
 }

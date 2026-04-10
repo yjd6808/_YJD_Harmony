@@ -120,4 +120,5 @@ struct RandomPicker<TCollection<T>>
 };
 NS_END
 
+inline Random globalRandomInstance;
 NS_END

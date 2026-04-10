@@ -1,24 +1,12 @@
-﻿/*
+/*
  * https://stackoverflow.com/questions/20494740/collapseall-items-of-a-treeview-within-wpf-application
  * 생성일: 3/3/2023 1:22:48 PM
  *
  */
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SGToolsCommon.Extension
 {
@@ -26,51 +14,24 @@ namespace SGToolsCommon.Extension
     {
         public static class TreeViewExtensions
         {
-            public static void SetExpansion(this TreeView treeView, bool isExpanded) =>
-              SetExpansion((ItemsControl)treeView, isExpanded);
+            //////////////////////////////////////////////////////////////////////////////////
+            public static void SetExpansion(this TreeView _treeView, bool _isExpanded) =>
+                SetExpansion((ItemsControl)_treeView, _isExpanded);
 
-            static void SetExpansion(ItemsControl parent, bool isExpanded)
-            {
-                if (parent is TreeViewItem tvi)
-                    tvi.IsExpanded = isExpanded;
-
-                if (parent.HasItems)
-                    foreach (var item in parent.Items.Cast<object>()
-                  .Select(i => GetTreeViewItem(parent, i, isExpanded)))
-                        SetExpansion(item, isExpanded);
-            }
-
-            static TreeViewItem GetTreeViewItem(
-              ItemsControl parent, object item, bool isExpanded)
-            {
-                if (item is TreeViewItem tvi)
-                    return tvi;
-
-                var result = ContainerFromItem(parent, item);
-                if (result == null && isExpanded)
-                {
-                    parent.UpdateLayout();
-                    result = ContainerFromItem(parent, item);
-                }
-                return result;
-            }
-
-            static TreeViewItem ContainerFromItem(ItemsControl parent, object item) =>
-              (TreeViewItem)parent.ItemContainerGenerator.ContainerFromItem(item);
-
+            //////////////////////////////////////////////////////////////////////////////////
             // 바인딩된 원소로부터 TreeViewItem을 얻음
-            public static TreeViewItem GetTreeViewItem(this ItemsControl treeView,  object item)
+            public static TreeViewItem GetTreeViewItem(this ItemsControl _treeView, object _item)
             {
-                if (treeView.ItemContainerGenerator.ContainerFromItem(item) is TreeViewItem container)
+                if (_treeView.ItemContainerGenerator.ContainerFromItem(_item) is TreeViewItem container)
                     return container;
 
-                if (treeView.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
+                if (_treeView.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
                 {
-                    foreach (var childItem in treeView.Items)
+                    foreach (object childItem in _treeView.Items)
                     {
-                        if (treeView.ItemContainerGenerator.ContainerFromItem(childItem) is TreeViewItem childContainer)
+                        if (_treeView.ItemContainerGenerator.ContainerFromItem(childItem) is TreeViewItem childContainer)
                         {
-                            var targetContainer = childContainer.GetTreeViewItem(item);
+                            TreeViewItem targetContainer = childContainer.GetTreeViewItem(_item);
                             if (targetContainer != null)
                                 return targetContainer;
                         }
@@ -79,6 +40,37 @@ namespace SGToolsCommon.Extension
 
                 return null;
             }
+
+            //////////////////////////////////////////////////////////////////////////////////
+            private static void SetExpansion(ItemsControl _parent, bool _isExpanded)
+            {
+                if (_parent is TreeViewItem tvi)
+                    tvi.IsExpanded = _isExpanded;
+
+                if (_parent.HasItems)
+                    foreach (TreeViewItem item in _parent.Items.Cast<object>()
+                        .Select(i => GetTreeViewItem(_parent, i, _isExpanded)))
+                        SetExpansion(item, _isExpanded);
+            }
+
+            //////////////////////////////////////////////////////////////////////////////////
+            private static TreeViewItem GetTreeViewItem(ItemsControl _parent, object _item, bool _isExpanded)
+            {
+                if (_item is TreeViewItem tvi)
+                    return tvi;
+
+                TreeViewItem result = ContainerFromItem(_parent, _item);
+                if (result == null && _isExpanded)
+                {
+                    _parent.UpdateLayout();
+                    result = ContainerFromItem(_parent, _item);
+                }
+                return result;
+            }
+
+            //////////////////////////////////////////////////////////////////////////////////
+            private static TreeViewItem ContainerFromItem(ItemsControl _parent, object _item) =>
+                (TreeViewItem)_parent.ItemContainerGenerator.ContainerFromItem(_item);
         }
     }
 }

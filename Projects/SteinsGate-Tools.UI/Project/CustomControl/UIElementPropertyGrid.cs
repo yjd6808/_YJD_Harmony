@@ -1,50 +1,29 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/6/2023 7:04:01 AM
  *
  */
 
-using SGToolsUI.ViewModel;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using SGToolsCommon;
-using SGToolsCommon.Extension;
-using SGToolsCommon.Sga;
-using Xceed.Wpf.Toolkit.PropertyGrid;
-using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
-using System.Reflection.PortableExecutable;
 using Newtonsoft.Json.Linq;
-using System.Windows.Threading;
-using Xceed.Wpf.AvalonDock.Controls;
-using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
-using PropertyItem = Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem;
-using System.Drawing.Imaging;
+using SGToolsCommon.Extension;
 using SGToolsCommon.Model;
 using SGToolsCommon.Primitive;
-using SGToolsUI.ModelTemplate.Main;
+using SGToolsCommon.Sga;
 using SGToolsUI.Model.Main;
+using SGToolsUI.ModelTemplate.Main;
+using SGToolsUI.ViewModel;
+using Xceed.Wpf.Toolkit.PropertyGrid;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
+using PropertyItem = Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem;
 
 namespace SGToolsUI.CustomControl
 {
-
-
     public class UIElementPropertyGrid : PropertyGrid, IDataDragReceiver, IKeyboardInputReceiver
     {
         public MainViewModel ViewModel { get; private set; }
@@ -52,28 +31,31 @@ namespace SGToolsUI.CustomControl
         public ContextMenu ContextMenu { get; private set; }
         public MenuItem ClearMenuItem { get; private set; }
         public PropertyItemsControl PropertyItemsControl { get; private set; }
-        private const BindingFlags PropertyFlag = BindingFlags.GetProperty | BindingFlags.SetProperty | BindingFlags.Public | BindingFlags.Instance;
-        private string _selectProperty;
 
+        private const BindingFlags PropertyFlag = BindingFlags.GetProperty | BindingFlags.SetProperty | BindingFlags.Public | BindingFlags.Instance;
+        private string selectProperty_;
+
+        //////////////////////////////////////////////////////////////////////////////////
         public UIElementPropertyGrid()
         {
             Loaded += OnLoaded;
             SelectedPropertyItemChanged += OnSelectedPropertyItemChanged;
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void OnLoaded(object _sender, RoutedEventArgs _e)
         {
             InitializeViewModel();
             InitializeDescriptor();
             InitializeContextMenu();
         }
 
-        
-
+        //////////////////////////////////////////////////////////////////////////////////
         private void InitializeDescriptor()
         {
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         private void InitializeViewModel()
         {
             ViewModel = DataContext as MainViewModel;
@@ -84,13 +66,15 @@ namespace SGToolsUI.CustomControl
 
             if (ViewModel == null)
                 throw new Exception("UIElementTreeView에서 뷰모델 초기화 실패");
+
             ScrollViewer = ViewModel.View.UIElementTreeViewScrollViewer;
             PropertyItemsControl = this.FindChild<PropertyItemsControl>();
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         private void InitializeContextMenu()
         {
-            ClearMenuItem = new MenuItemEx();
+            ClearMenuItem = new MenuItem();
             ClearMenuItem.Header = "스프라이트 초기화";
             ClearMenuItem.Click += ClearMenuItemOnClick;
 
@@ -101,17 +85,18 @@ namespace SGToolsUI.CustomControl
             AdvancedOptionsMenu = ContextMenu;
         }
 
-        private void ContextMenuOnOpened(object sender, RoutedEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void ContextMenuOnOpened(object _sender, RoutedEventArgs _e)
         {
             PropertyItem item = SelectedPropertyItem as PropertyItem;
             if (item == null) return;
             ClearMenuItem.IsEnabled = item.PropertyType == typeof(SGUISpriteInfo);
         }
 
-
-        private void OnSelectedPropertyItemChanged(object sender, RoutedPropertyChangedEventArgs<PropertyItemBase> e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void OnSelectedPropertyItemChanged(object _sender, RoutedPropertyChangedEventArgs<PropertyItemBase> _e)
         {
-            PropertyItem selectedProperty = e.NewValue as PropertyItem;
+            PropertyItem selectedProperty = _e.NewValue as PropertyItem;
             ViewModel.FocusedKeyboardInputReceiver = this;
 
             if (selectedProperty == null)
@@ -140,48 +125,10 @@ namespace SGToolsUI.CustomControl
             ViewModel.View.SpriteListBox.ScrollIntoView(spriteInfo.Sprite);
         }
 
-        public void DragEnd(IntPoint p, object data)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void DragEnd(IntPoint _p, object _data)
         {
-
-            /* 프로퍼티 그리드 내부 부모 관계도 (위에서부터 시작)
-             * ContentPresenter
-             * ContentControl: 없음
-             * Border
-             * Grid
-             * Border
-             * Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem
-             * VirtualizingStackPanel
-             * ItemsPresenter
-             * ContentPresenter
-             * Border
-             * Border
-             * Grid
-             * Expander Header:버튼 Content:
-             * Border
-             * GroupItem: 버튼
-             * VirtualizingStackPanel
-             * ItemsPresenter
-             * ScrollContentPresenter
-             * Grid
-             * ScrollViewer
-             * Border
-             * Xceed.Wpf.Toolkit.PropertyGrid.PropertyItemsControl Items.Count: 12
-             * Grid
-             * Grid
-             * Border
-             * SGToolsUI.CustomControl.UIElementPropertyGrid
-             * Grid
-             * Canvas
-             * Grid
-             * DockPanel
-             * ContentPresenter
-             * Grid
-             * Border
-             * SGToolsUI.View.MainView
-             */
-
-
-            SgaSprite sprite = data as SgaSprite;
+            SgaSprite sprite = _data as SgaSprite;
 
             if (sprite == null)
                 return;
@@ -221,41 +168,43 @@ namespace SGToolsUI.CustomControl
                 propInfo.SetValue(element, new SGUISpriteInfo(sprite));
         }
 
-        public bool TryGetSpriteInfoProperty(PropertyItem propertyItem, out PropertyInfo propInfo, out SGUIElement element, out SGUISpriteInfo spriteInfo)
+        //////////////////////////////////////////////////////////////////////////////////
+        public bool TryGetSpriteInfoProperty(PropertyItem _propertyItem, out PropertyInfo _propInfo, out SGUIElement _element, out SGUISpriteInfo _spriteInfo)
         {
-            spriteInfo = new SGUISpriteInfo();
-            element = propertyItem.Instance as SGUIElement;
-            propInfo = null;
-            string propName = propertyItem.PropertyName;
+            _spriteInfo = new SGUISpriteInfo();
+            _element = _propertyItem.Instance as SGUIElement;
+            _propInfo = null;
+            string propName = _propertyItem.PropertyName;
 
-            if (element == null)
+            if (_element == null)
                 return false;
 
-            propInfo = element.GetType().GetProperty(propName, PropertyFlag);
+            _propInfo = _element.GetType().GetProperty(propName, PropertyFlag);
 
-            if (propInfo == null)
+            if (_propInfo == null)
                 return false;
 
-            if (propInfo.PropertyType != typeof(SGUISpriteInfo))
+            if (_propInfo.PropertyType != typeof(SGUISpriteInfo))
                 return false;
 
-            spriteInfo = (SGUISpriteInfo)propInfo.GetValue(element);
+            _spriteInfo = (SGUISpriteInfo)_propInfo.GetValue(_element);
             return true;
         }
 
-        public bool TrySetSpriteInfoProperty(PropertyItem propertyItem, SGUISpriteInfo spriteInfo)
+        //////////////////////////////////////////////////////////////////////////////////
+        public bool TrySetSpriteInfoProperty(PropertyItem _propertyItem, SGUISpriteInfo _spriteInfo)
         {
-            SGUIElement element = propertyItem.Instance as SGUIElement;
+            SGUIElement element = _propertyItem.Instance as SGUIElement;
             if (element == null) return false;
 
-            PropertyInfo propInfo = element.GetType().GetProperty(propertyItem.PropertyName, PropertyFlag);
+            PropertyInfo propInfo = element.GetType().GetProperty(_propertyItem.PropertyName, PropertyFlag);
             if (propInfo == null) return false;
-            propInfo.SetValue(element, spriteInfo);
+            propInfo.SetValue(element, _spriteInfo);
             return true;
         }
 
-      
-        private void ClearMenuItemOnClick(object sender, RoutedEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void ClearMenuItemOnClick(object _sender, RoutedEventArgs _e)
         {
             PropertyItem item = ClearMenuItem.DataContext as PropertyItem;
             if (item == null) return;
@@ -263,8 +212,8 @@ namespace SGToolsUI.CustomControl
             TrySetSpriteInfoProperty(item, SGUISpriteInfo.Empty);
         }
 
-
-        public void OnKeyDown(SGKey key)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void OnKeyDown(SGKey _key)
         {
             SGUIElement element = SelectedObject as SGUIElement;
 
@@ -286,31 +235,32 @@ namespace SGToolsUI.CustomControl
             }
         }
 
-        public void OnKeyUp(SGKey key)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void OnKeyUp(SGKey _key)
         {
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public void OnLostFocus()
         {
             this.FocusClear();
         }
 
-        public bool ContainPoint(IntPoint p) => SGToolsCommon.Extension.VisualEx.ContainPoint(this, p);
+        //////////////////////////////////////////////////////////////////////////////////
+        public bool ContainPoint(IntPoint _p)
+            => SGToolsCommon.Extension.VisualEx.ContainPoint(this, _p);
 
-        public void SelectPropertyValue(bool newObject, ref string propertyName)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void SelectPropertyValue(bool _newObject, ref string _propertyName)
         {
             for (int i = 0; i < PropertyItemsControl.Items.Count; ++i)
             {
                 var propertyItem = PropertyItemsControl.Items[i] as PropertyItem;
                 if (propertyItem == null) continue;
-                if (propertyItem.PropertyName != propertyName) continue;
+                if (propertyItem.PropertyName != _propertyName) continue;
 
-                // 새롭게 할당된 오브젝트라면
-                // 아직 하위 비주얼 UI 컨트롤들이 로딩되지 않은 상태라서 포커스를 잡을 수 없다.
-                // 로딩되면 포커스를 잡아주도록 하자.
-                // propertyItem.Editor.Focus();를 직접적으로 수행할 수가 없음
-                if (newObject)
-                    propertyItem.Loaded += (sender, args) => SelectValue(propertyItem);
+                if (_newObject)
+                    propertyItem.Loaded += (_sender, _args) => SelectValue(propertyItem);
                 else
                     SelectValue(propertyItem);
                 break;
@@ -322,30 +272,25 @@ namespace SGToolsUI.CustomControl
             }
         }
 
-        public void SelectWithPropertyFocus(SGUIElement selectedElement, string propertyName)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void SelectWithPropertyFocus(SGUIElement _selectedElement, string _propertyName)
         {
             // 이미 할당된 경우
-            if (SelectedObject == selectedElement)
+            if (SelectedObject == _selectedElement)
             {
-                SelectPropertyValue(false, ref propertyName);
+                SelectPropertyValue(false, ref _propertyName);
                 return;
             }
 
-            // 오브젝트 변경전 프로퍼티 아이템 수 : 카운트 0 (제일 초기)
-            SelectedObject = selectedElement;
-            // 오브젝트 변경후 프로퍼티 아이템 수 : 카운트 多 프로퍼티 아이템 세팅됨.
-            SelectPropertyValue(true, ref propertyName);
+            SelectedObject = _selectedElement;
+            SelectPropertyValue(true, ref _propertyName);
         }
 
-        private void OnSelectedObjectChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void OnSelectedObjectChanged(object _sender, RoutedPropertyChangedEventArgs<object> _e)
         {
-            string defaultSelectedPropertyName = _selectProperty.Length == 0 ? SGUIElement.VisualNameKey : _selectProperty;
-
-            
-
-            _selectProperty = string.Empty;
+            string defaultSelectedPropertyName = selectProperty_.Length == 0 ? SGUIElement.VisualNameKey : selectProperty_;
+            selectProperty_ = string.Empty;
         }
     }
-
- 
 }

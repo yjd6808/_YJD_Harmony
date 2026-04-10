@@ -1,35 +1,23 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/27/2023 12:56:58 AM
  *
  */
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Markup;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SGToolsCommon.Converter
 {
     public class AddConverter : MarkupExtension, IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        //////////////////////////////////////////////////////////////////////////////////
+        public object Convert(object _value, Type _targetType, object _parameter, CultureInfo _culture)
         {
-            
-
-            switch (Type.GetTypeCode(targetType))
+            switch (Type.GetTypeCode(_targetType))
             {
                 case TypeCode.Byte:
                 case TypeCode.SByte:
@@ -40,22 +28,22 @@ namespace SGToolsCommon.Converter
                 case TypeCode.Int32:
                 case TypeCode.Int64:
                 case TypeCode.Decimal:
-                    if (parameter is string)
-                        return (long)value + long.Parse((string)parameter);
+                    if (_parameter is string)
+                        return (long)_value + long.Parse((string)_parameter);
 
-                    return (long)value + (long)parameter;
+                    return (long)_value + (long)_parameter;
                 case TypeCode.Double:
                 case TypeCode.Single:
-                    if (parameter is string)
-                        return (double)value + double.Parse((string)parameter);
+                    if (_parameter is string)
+                        return (double)_value + double.Parse((string)_parameter);
 
-                    return (double)value + (double)parameter;
+                    return (double)_value + (double)_parameter;
                 default:
                 {
-                    Thickness v = (Thickness)value;
-                    if (targetType == typeof(Thickness))
+                    Thickness v = (Thickness)_value;
+                    if (_targetType == typeof(Thickness))
                     {
-                        if (parameter is Thickness thickness)
+                        if (_parameter is Thickness thickness)
                         {
                             v.Left += thickness.Left;
                             v.Top += thickness.Top;
@@ -64,7 +52,7 @@ namespace SGToolsCommon.Converter
                             return v;
                         }
 
-                        double parsed = double.Parse((string)parameter);
+                        double parsed = double.Parse((string)_parameter);
                         v.Left += parsed;
                         v.Top += parsed;
                         v.Right += parsed;
@@ -77,12 +65,14 @@ namespace SGToolsCommon.Converter
             throw new ArgumentException("Parameter를 TargetType에 맞게 변환할 수 없습니다.");
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        //////////////////////////////////////////////////////////////////////////////////
+        public object ConvertBack(object _value, Type _targetType, object _parameter, CultureInfo _culture)
         {
             return null;
         }
 
-        public override object ProvideValue(IServiceProvider serviceProvider)
+        //////////////////////////////////////////////////////////////////////////////////
+        public override object ProvideValue(IServiceProvider _serviceProvider)
         {
             return this;
         }

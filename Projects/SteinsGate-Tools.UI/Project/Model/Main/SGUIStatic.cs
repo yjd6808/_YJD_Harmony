@@ -1,91 +1,80 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/19/2023 2:50:54 PM
  *
  */
 
+using System.ComponentModel;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
-using SGToolsCommon.Sga;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SGToolsCommon.Primitive;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model.Main
 {
-
     [CategoryOrder(Constant.StaticCategoryName, Constant.OtherCategoryOrder)]
     public class SGUIStatic : SGUIElement, ISizeRestorable
     {
         public const int OrderSize = 1;
 
+        public static int Seq;
+
+        private IntSize visualSize_;
+
+        //////////////////////////////////////////////////////////////////////////////////
         public SGUIStatic()
         {
-            _visualSize = Constant.DefaultVisualSize;
+            visualSize_ = Constant.DefaultVisualSize;
         }
-
 
         [ReadOnly(false)]
         [Category(Constant.StaticCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
         public override IntSize VisualSize
         {
-            get => _visualSize;
+            get => visualSize_;
             set
             {
-                _visualSize = value;
+                visualSize_ = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualRect));
             }
         }
 
-        [Browsable(false)] public override double VisibleOpacity => _visible ? 0.5 : 0;
-        
-
+        [Browsable(false)] public override double VisibleOpacity => visible_ ? 0.5 : 0;
 
         public override SGUIElementType UIElementType => SGUIElementType.Static;
         [Browsable(false)] public override bool Manipulatable => true;
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override object Clone()
         {
             SGUIStatic sprite = new SGUIStatic();
             sprite.CopyFrom(this);
-            sprite._visualSize = _visualSize;
+            sprite.visualSize_ = visualSize_;
             return sprite;
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override JObject ToJObject()
         {
             JObject root = base.ToJObject();
-            root[JsonVisualSizeKey] = _visualSize.ToFullString();
+            root[JsonVisualSizeKey] = visualSize_.ToFullString();
             return root;
         }
 
-        public override void ParseJObject(JObject root)
+        //////////////////////////////////////////////////////////////////////////////////
+        public override void ParseJObject(JObject _root)
         {
-            base.ParseJObject(root);
+            base.ParseJObject(_root);
 
-            string sizeString = (string)root[JsonVisualSizeKey];
-            _visualSize = SizeEx.ParseFullString(sizeString);
+            string sizeString = (string)_root[JsonVisualSizeKey];
+            visualSize_ = SizeEx.ParseFullString(sizeString);
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override void CreateInit() => VisualName = $"스태틱_{Seq++}";
-        public static int Seq;
-        private IntSize _visualSize;
 
+        //////////////////////////////////////////////////////////////////////////////////
         public void RestoreSize()
             => VisualSize = Constant.DefaultVisualSize;
     }

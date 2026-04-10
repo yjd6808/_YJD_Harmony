@@ -1,35 +1,23 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/3/2023 2:22:36 PM
  *
  */
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using SGToolsCommon;
+
 using SGToolsCommon.Extension;
+
 using Vanara.PInvoke;
 
 namespace SGToolsCommon.Model
 {
-
     public enum SGKey
     {
         LeftCtrl,
@@ -57,7 +45,7 @@ namespace SGToolsCommon.Model
         Max
     }
 
-    public delegate void KeyDownHandler(SGKey key);
+    public delegate void KeyDownHandler(SGKey _key);
 
     public class KeyState : IDisposable
     {
@@ -68,49 +56,69 @@ namespace SGToolsCommon.Model
         [StructLayout(LayoutKind.Explicit, Size = Constant.CacheAlignSize, Pack = 8)]
         private struct KeyElement
         {
-            public KeyElement(Key key)
-            {
-                Key = key;
-                Pressed = false;
-                FireContinuous = false;
-                FireDelayCurMs = 0;
-                FireDelayMs = 150;
-            }
-
             [FieldOffset(0)] public Key Key;
             [FieldOffset(8)] public bool Pressed;
             [FieldOffset(16)] public bool FireContinuous;   // 키를 누르고있으면 연속 키입력 이벤트를 보낼지 설정
             [FieldOffset(24)] public long FireDelayCurMs;
             [FieldOffset(32)] public long FireDelayMs;
+
+            //////////////////////////////////////////////////////////////////////////////////
+            public KeyElement(Key _key)
+            {
+                Key = _key;
+                Pressed = false;
+                FireContinuous = false;
+                FireDelayCurMs = 0;
+                FireDelayMs = 150;
+            }
         }
 
+        private readonly KeyElement[] keys_;
+        private readonly Thread keyCaptureThread_;
+        private volatile bool isRunning_;
+        private long previousTick_;
+        private Stopwatch stopWatch_ = new();
+        private AutoResetEvent finishHandle_;
+
+        public event KeyDownHandler KeyDown;
+        public event KeyDownHandler KeyUp;
+
+        public bool IsShiftPressed => IsPressed(SGKey.LeftShift);
+        public bool IsAltPressed => IsPressed(SGKey.LeftAlt);
+        public bool IsCtrlPressed => IsPressed(SGKey.LeftCtrl);
+
+        public bool IsModifierKeyPressed => keys_[(int)SGKey.LeftShift].Pressed ||
+                                            keys_[(int)SGKey.LeftAlt].Pressed ||
+                                            keys_[(int)SGKey.LeftCtrl].Pressed;
+
+        private long ElapsedDeltaMs => (stopWatch_.ElapsedTicks - previousTick_) / 10000; // 틱이 100나노초 단위이므로, 밀리초단위로 변환
+
+        //////////////////////////////////////////////////////////////////////////////////
         public KeyState()
         {
-            _keys = new KeyElement[(int)SGKey.Max];
-            _keys[(int)SGKey.LeftCtrl] = new KeyElement(Key.LeftCtrl);
-            _keys[(int)SGKey.LeftAlt] = new KeyElement(Key.LeftAlt);
-            _keys[(int)SGKey.LeftShift] = new KeyElement(Key.LeftShift);
-            _keys[(int)SGKey.Delete] = new KeyElement(Key.Delete);
-            _keys[(int)SGKey.Space] = new KeyElement(Key.Space);
-            _keys[(int)SGKey.Enter] = new KeyElement(Key.Enter);
-            _keys[(int)SGKey.Left] = new KeyElement(Key.Left);
-            _keys[(int)SGKey.Up] = new KeyElement(Key.Up);
-            _keys[(int)SGKey.Right] = new KeyElement(Key.Right);
-            _keys[(int)SGKey.Down] = new KeyElement(Key.Down);
-            _keys[(int)SGKey.X] = new KeyElement(Key.X);
-            _keys[(int)SGKey.C] = new KeyElement(Key.C);
-            _keys[(int)SGKey.V] = new KeyElement(Key.V);
-            _keys[(int)SGKey.S] = new KeyElement(Key.S);
-            _keys[(int)SGKey.L] = new KeyElement(Key.L);
-            _keys[(int)SGKey.Z] = new KeyElement(Key.Z);
-            _keys[(int)SGKey.B] = new KeyElement(Key.B);
-            _keys[(int)SGKey.Escape] = new KeyElement(Key.Escape);
-            _keys[(int)SGKey.F2] = new KeyElement(Key.F2);
-            _keys[(int)SGKey.F6] = new KeyElement(Key.F6);
-            _keys[(int)SGKey.F7] = new KeyElement(Key.F7);
-            _keys[(int)SGKey.F8] = new KeyElement(Key.F8);
-            
-
+            keys_ = new KeyElement[(int)SGKey.Max];
+            keys_[(int)SGKey.LeftCtrl] = new KeyElement(Key.LeftCtrl);
+            keys_[(int)SGKey.LeftAlt] = new KeyElement(Key.LeftAlt);
+            keys_[(int)SGKey.LeftShift] = new KeyElement(Key.LeftShift);
+            keys_[(int)SGKey.Delete] = new KeyElement(Key.Delete);
+            keys_[(int)SGKey.Space] = new KeyElement(Key.Space);
+            keys_[(int)SGKey.Enter] = new KeyElement(Key.Enter);
+            keys_[(int)SGKey.Left] = new KeyElement(Key.Left);
+            keys_[(int)SGKey.Up] = new KeyElement(Key.Up);
+            keys_[(int)SGKey.Right] = new KeyElement(Key.Right);
+            keys_[(int)SGKey.Down] = new KeyElement(Key.Down);
+            keys_[(int)SGKey.X] = new KeyElement(Key.X);
+            keys_[(int)SGKey.C] = new KeyElement(Key.C);
+            keys_[(int)SGKey.V] = new KeyElement(Key.V);
+            keys_[(int)SGKey.S] = new KeyElement(Key.S);
+            keys_[(int)SGKey.L] = new KeyElement(Key.L);
+            keys_[(int)SGKey.Z] = new KeyElement(Key.Z);
+            keys_[(int)SGKey.B] = new KeyElement(Key.B);
+            keys_[(int)SGKey.Escape] = new KeyElement(Key.Escape);
+            keys_[(int)SGKey.F2] = new KeyElement(Key.F2);
+            keys_[(int)SGKey.F6] = new KeyElement(Key.F6);
+            keys_[(int)SGKey.F7] = new KeyElement(Key.F7);
+            keys_[(int)SGKey.F8] = new KeyElement(Key.F8);
 
             // 방향키 연속키입력 허용
             SetEnableFireContinuous(SGKey.Left, true);
@@ -118,77 +126,16 @@ namespace SGToolsCommon.Model
             SetEnableFireContinuous(SGKey.Right, true);
             SetEnableFireContinuous(SGKey.Down, true);
 
-
-
-            _isRunning = true;
-            _finishHandle = new AutoResetEvent(false);
-            _keyCaptureThread = new Thread(CaptureThreadRoutine);
-            _keyCaptureThread.Start();
+            isRunning_ = true;
+            finishHandle_ = new AutoResetEvent(false);
+            keyCaptureThread_ = new Thread(CaptureThreadRoutine);
+            keyCaptureThread_.Start();
         }
 
-        private void CaptureThreadRoutine()
-        {
-            _stopWatch.Start();
-            while (_isRunning)
-            {
-                Application.Current?.Dispatcher.Invoke(CaptureKeyState);
-                _previousTick = _stopWatch.ElapsedTicks;
-                Thread.Sleep(10);
-            }
-            _finishHandle.Set();
-        }
-
-        private void CaptureKeyState()
-        {
-            if (!WindowEx.IsMainWindowForeground())
-                return;
-
-            SGKey sgKey;
-            Key wpfKey;
-            bool isKeyDown;
-
-            for (int i = 0; i < _keys.Length; ++i)
-            {
-                sgKey = (SGKey)i;
-                wpfKey = _keys[i].Key;
-                isKeyDown = Keyboard.IsKeyDown(wpfKey);
-                bool isKeyDownInvoked = false;
-
-                if (isKeyDown && !_keys[i].Pressed)
-                {
-                    _keys[i].Pressed = true;
-                    KeyDown?.Invoke(sgKey);
-                    isKeyDownInvoked = true;
-                }
-
-                if (!isKeyDown && _keys[i].Pressed)
-                {
-                    _keys[i].FireDelayCurMs = 0;
-                    _keys[i].Pressed = false;
-                    KeyUp?.Invoke(sgKey);
-                }
-
-                // 키 입력이벤트를 수행안했고, 키가 눌린 상태이고, 해당 키가 연속 키입력을 허용하는 경우
-                // 따다다다다다 키이벤트 보낸다.
-                if (!isKeyDownInvoked && isKeyDown && _keys[i].FireContinuous)
-                {
-                    _keys[i].FireDelayCurMs += ElapsedDeltaMs;
-
-                    if (_keys[i].FireDelayCurMs >= _keys[i].FireDelayMs)
-                    {
-                        _keys[i].FireDelayCurMs = 0;
-                        KeyDown?.Invoke(sgKey);
-                    }
-                }
-            }
-        }
-
-        private long ElapsedDeltaMs => (_stopWatch.ElapsedTicks - _previousTick) / 10000; // 틱이 100나노초 단위이므로, 밀리초단위로 변환
-
+        //////////////////////////////////////////////////////////////////////////////////
         public void Dispose()
         {
-            _isRunning = false;
-
+            isRunning_ = false;
 
             /*
              * 외부쓰레드에서 종료를 안받으면 데드락이 걸릴 수가 있다.
@@ -210,37 +157,79 @@ namespace SGToolsCommon.Model
              */
             Task.Run(() =>
             {
-                _finishHandle.WaitOne();
-                _keyCaptureThread.Join();
+                finishHandle_.WaitOne();
+                keyCaptureThread_.Join();
             });
         }
 
-
-        public void SetEnableFireContinuous(SGKey key, bool fire, long delay = 70)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void SetEnableFireContinuous(SGKey _key, bool _fire, long _delay = 70)
         {
-            int idx = (int)key;
-
-            _keys[idx].FireContinuous = fire;
-            _keys[idx].FireDelayMs = delay;
+            int idx = (int)_key;
+            keys_[idx].FireContinuous = _fire;
+            keys_[idx].FireDelayMs = _delay;
         }
-        public bool IsPressed(SGKey key) => _keys[(int)key].Pressed;
-        public bool IsShiftPressed => IsPressed(SGKey.LeftShift);
-        public bool IsAltPressed => IsPressed(SGKey.LeftAlt);
-        public bool IsCtrlPressed => IsPressed(SGKey.LeftCtrl);
 
-        public bool IsModifierKeyPressed => _keys[(int)SGKey.LeftShift].Pressed ||
-                                            _keys[(int)SGKey.LeftAlt].Pressed ||
-                                            _keys[(int)SGKey.LeftCtrl].Pressed;
+        //////////////////////////////////////////////////////////////////////////////////
+        public bool IsPressed(SGKey _key) => keys_[(int)_key].Pressed;
 
+        //////////////////////////////////////////////////////////////////////////////////
+        private void CaptureThreadRoutine()
+        {
+            stopWatch_.Start();
+            while (isRunning_)
+            {
+                Application.Current?.Dispatcher.Invoke(CaptureKeyState);
+                previousTick_ = stopWatch_.ElapsedTicks;
+                Thread.Sleep(10);
+            }
+            finishHandle_.Set();
+        }
 
-        private readonly KeyElement[] _keys;
-        private readonly Thread _keyCaptureThread;
-        private volatile bool _isRunning;
-        private long _previousTick;
-        private Stopwatch _stopWatch = new();
-        public event KeyDownHandler KeyDown;
-        public event KeyDownHandler KeyUp;
-        private AutoResetEvent _finishHandle;
+        //////////////////////////////////////////////////////////////////////////////////
+        private void CaptureKeyState()
+        {
+            if (!WindowEx.IsMainWindowForeground())
+                return;
+
+            SGKey sgKey;
+            Key wpfKey;
+            bool isKeyDown;
+
+            for (int i = 0; i < keys_.Length; ++i)
+            {
+                sgKey = (SGKey)i;
+                wpfKey = keys_[i].Key;
+                isKeyDown = Keyboard.IsKeyDown(wpfKey);
+                bool isKeyDownInvoked = false;
+
+                if (isKeyDown && !keys_[i].Pressed)
+                {
+                    keys_[i].Pressed = true;
+                    KeyDown?.Invoke(sgKey);
+                    isKeyDownInvoked = true;
+                }
+
+                if (!isKeyDown && keys_[i].Pressed)
+                {
+                    keys_[i].FireDelayCurMs = 0;
+                    keys_[i].Pressed = false;
+                    KeyUp?.Invoke(sgKey);
+                }
+
+                // 키 입력이벤트를 수행안했고, 키가 눌린 상태이고, 해당 키가 연속 키입력을 허용하는 경우
+                // 따다다다다다 키이벤트 보낸다.
+                if (!isKeyDownInvoked && isKeyDown && keys_[i].FireContinuous)
+                {
+                    keys_[i].FireDelayCurMs += ElapsedDeltaMs;
+
+                    if (keys_[i].FireDelayCurMs >= keys_[i].FireDelayMs)
+                    {
+                        keys_[i].FireDelayCurMs = 0;
+                        KeyDown?.Invoke(sgKey);
+                    }
+                }
+            }
+        }
     }
 }
-

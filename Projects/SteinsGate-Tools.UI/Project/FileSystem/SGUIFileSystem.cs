@@ -1,23 +1,8 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/10/2023 4:23:52 PM
  *
  */
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SGToolsUI.FileSystem
 {
@@ -32,6 +17,7 @@ namespace SGToolsUI.FileSystem
         Load,       // 정해진 경로의 파일 로딩
         LoadAs      // 다이얼로그로 선택한 파일로딩
     }
+
     public enum SaveType
     {
         Save,       // 정해진 경로의 파일 로딩(예를들어서 실행파일 경로의 data.json, 게임 데이터 저장 경로)

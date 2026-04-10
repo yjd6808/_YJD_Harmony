@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/9/2023 10:44:24 AM
  * 소비자1개인 비동기 순차 작업처리용 잡뀨
@@ -21,45 +21,42 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Shell;
 
 namespace SGToolsCommon
 {
     public class JobEvent
     {
-        public JobEvent(Action job, SemaphoreSlim notifier, Action<Exception> errorHandler)
+        private Action Job { get; }
+        private Action<Exception> ErrorHandler { get; }
+        private bool failed_;
+
+        public SemaphoreSlim Notifier { get; }
+        public Exception Exception { get; private set; }
+        public bool IsFailed => failed_;
+        public bool IsSuccess => !failed_;
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public JobEvent(Action _job, SemaphoreSlim _notifier, Action<Exception> _errorHandler)
         {
-            Job = job;
-            ErrorHandler = errorHandler;
-            Notifier = notifier;
-            _failed = false;
+            Job = _job;
+            ErrorHandler = _errorHandler;
+            Notifier = _notifier;
+            failed_ = false;
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public void Do()
         {
             try
             {
                 Job();
-                _failed = false;
+                failed_ = false;
             }
             catch (Exception e)
             {
-                _failed = true;
+                failed_ = true;
                 Exception = e;
                 if (ErrorHandler != null)
                     ErrorHandler(e);
@@ -69,94 +66,83 @@ namespace SGToolsCommon
                 Notifier.Release(1);
             }
         }
-
-        private Action Job { get; }
-        private Action<Exception> ErrorHandler { get; }
-        public SemaphoreSlim Notifier { get; }
-        public Exception Exception { get; private set; }
-        public bool IsFailed => _failed;
-        public bool IsSuccess => !_failed;
-        private bool _failed;
     }
-
-
-
 
     public class JobQueue : Bindable, IDisposable
     {
+        private ConcurrentQueue<JobEvent> jobQueue_;
+        private Queue<SemaphoreSlim> notifierPool_;
+        private SemaphoreSlim jobSignal_;
+        private Thread jobThread_;
+        private volatile bool isRunning_;
 
+        public bool Running => isRunning_;
+        public bool DoingJob => jobQueue_.Count > 0;
+
+        //////////////////////////////////////////////////////////////////////////////////
         public JobQueue()
         {
-            _isRunning = true;
-            _notifierPool = new Queue<SemaphoreSlim>(32);
-            _jobQueue = new ConcurrentQueue<JobEvent>();
-            _jobSignal = new SemaphoreSlim(0, int.MaxValue);
-            _jobThread = new Thread(JobProcessingRoutine);
-            _jobThread.Start();
+            isRunning_ = true;
+            notifierPool_ = new Queue<SemaphoreSlim>(32);
+            jobQueue_ = new ConcurrentQueue<JobEvent>();
+            jobSignal_ = new SemaphoreSlim(0, int.MaxValue);
+            jobThread_ = new Thread(JobProcessingRoutine);
+            jobThread_.Start();
 
             for (int i = 0; i < 32; ++i)
-                _notifierPool.Enqueue(new SemaphoreSlim(0, 1));
+                notifierPool_.Enqueue(new SemaphoreSlim(0, 1));
         }
 
-        public Task<JobEvent> Enqueue(Action job, Action<Exception> errorHandler = null)
+        //////////////////////////////////////////////////////////////////////////////////
+        public Task<JobEvent> Enqueue(Action _job, Action<Exception> _errorHandler = null)
         {
             SemaphoreSlim notifier;
 
-            if (_notifierPool.Count == 0)
+            if (notifierPool_.Count == 0)
                 notifier = new SemaphoreSlim(0, 1);
             else
-                notifier = _notifierPool.Dequeue();
+                notifier = notifierPool_.Dequeue();
 
-            JobEvent jobEvent = new JobEvent(job, notifier, errorHandler);
+            JobEvent jobEvent = new JobEvent(_job, notifier, _errorHandler);
             Task<JobEvent> task = Task.Run(() =>
             {
                 jobEvent.Notifier.Wait();
-                _notifierPool.Enqueue(jobEvent.Notifier);
+                notifierPool_.Enqueue(jobEvent.Notifier);
                 return jobEvent;
             });
-            
-            _jobQueue.Enqueue(jobEvent);
-            _jobSignal.Release(1);
-            
+
+            jobQueue_.Enqueue(jobEvent);
+            jobSignal_.Release(1);
+
             return task;
         }
 
-
-
+        //////////////////////////////////////////////////////////////////////////////////
         public void Dispose()
         {
             // 내부에서 UI쓰레드 관련 작업 처리를 할 수 있으므로 다른 쓰레드로 Join 하자.
-            _isRunning = false;
-            Task.Run(() => _jobThread.Join());
+            isRunning_ = false;
+            Task.Run(() => jobThread_.Join());
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         private void JobProcessingRoutine()
         {
             while (true)
             {
-                if (!_isRunning)
+                if (!isRunning_)
                     return;
 
-                if (_jobSignal.Wait(50))
+                if (jobSignal_.Wait(50))
                     ProcessJob();
             }
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         private void ProcessJob()
         {
-            JobEvent job;
-
-            if (_jobQueue.TryDequeue(out job))
+            if (jobQueue_.TryDequeue(out JobEvent job))
                 job.Do();
         }
-
-        public bool Running => _isRunning;
-        public bool DoingJob => _jobQueue.Count > 0;
-
-        private ConcurrentQueue<JobEvent> _jobQueue;
-        private Queue<SemaphoreSlim> _notifierPool;
-        private SemaphoreSlim _jobSignal;
-        private Thread _jobThread;
-        private volatile bool _isRunning;
     }
 }

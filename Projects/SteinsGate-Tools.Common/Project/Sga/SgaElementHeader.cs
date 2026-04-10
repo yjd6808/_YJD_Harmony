@@ -1,11 +1,8 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/27/2023 2:41:09 AM
  *
  */
-
-using System.IO;
-using System.Windows.Controls;
 
 namespace SGToolsCommon.Sga
 {
@@ -17,6 +14,5 @@ namespace SGToolsCommon.Sga
         public int Length { get; set; }
         public string Name { get; set; }
         public string NameWithoutExt { get; set; }
-        // public ListBoxItem Item { get; set; }
     }
 }

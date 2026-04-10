@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/27/2023 8:33:20 AM
  *
@@ -7,21 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using MoreLinq.Extensions;
 using SGToolsCommon;
 using SGToolsCommon.CustomControl;
 using SGToolsCommon.CustomView;
@@ -41,6 +29,22 @@ namespace SGToolsUI.ViewModel
 {
     public class MainViewModel : Bindable
     {
+        private SelectMode uiElementSelectMode_;
+        private KeyState keyState_ = new();
+        private ZoomState zoomState_ = new();
+        private Vector mouseOnWindow_ = new(0, 0);
+        private Vector mouseOnMonitor_ = new(0, 0);
+        private Vector mouseOnCanvas_ = new(0, 0);
+        private string resourceSelectionStatus_ = string.Empty;
+        private string canvasSelectionStatus_ = string.Empty;
+        private bool isEventMode_ = false;
+        private SgaPackage selectedPackage_ = new();
+        private SgaImage selectedImage_ = new();
+        private IKeyboardInputReceiver selectedKeyboardInputReceiver_;
+        private SgaSpriteAbstract selectedSprite_ = new SgaSprite();
+        private SGUIGroupMaster groupMaster_;
+
+        //////////////////////////////////////////////////////////////////////////////////
         public MainViewModel()
         {
             PackManager = SgaManager.Instance;
@@ -62,6 +66,7 @@ namespace SGToolsUI.ViewModel
             DragState = new DataDragState();
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public void Loaded()
         {
             KeyboardInputReceivers.Add(View.UIElementTreeView);
@@ -69,7 +74,7 @@ namespace SGToolsUI.ViewModel
             KeyboardInputReceivers.Add(View.CanvasShapesControl);
 
             double zoomLevelDelta = (double)Setting.ZoomLevel / 100 - 1.0;
-            
+
             ZoomState.ZoomLevelY += zoomLevelDelta * Constant.ResolutionRatio;
             ZoomState.ZoomLevelX += zoomLevelDelta;
 
@@ -82,7 +87,7 @@ namespace SGToolsUI.ViewModel
             });
 
             LogBox.Style = (Style)Application.Current.FindResource("LogListBox");
-            
+
             if (Setting.ShowLogViewWhenProgramLaunched)
                 LogView.Show();
 
@@ -138,7 +143,6 @@ namespace SGToolsUI.ViewModel
                         }
                     }
                 }
-
             });
             this.GroupMaster.Children.Add(new SGUIGroup()
             {
@@ -169,10 +173,10 @@ namespace SGToolsUI.ViewModel
                         VisualName = "그룹 2-6",
                         Children = new ObservableCollection<SGUIElement>()
                         {
-                            new SGUIButton() { VisualName ="버튼 2-6-1"},
-                            new SGUIButton() { VisualName ="버튼 2-6-2"},
-                            new SGUIButton() { VisualName ="버튼 2-6-3"},
-                            new SGUIButton() { VisualName ="버튼 2-6-4"},
+                            new SGUIButton() { VisualName = "버튼 2-6-1"},
+                            new SGUIButton() { VisualName = "버튼 2-6-2"},
+                            new SGUIButton() { VisualName = "버튼 2-6-3"},
+                            new SGUIButton() { VisualName = "버튼 2-6-4"},
                             new SGUIGroup()
                             {
                                 VisualName = "그룹 2-6-5"
@@ -182,26 +186,23 @@ namespace SGToolsUI.ViewModel
                 }
             });
 
-
-
             this.GroupMaster.Children.Add(new SGUIGroup() { VisualName = "그룹 3" });
             this.GroupMaster.Children.Add(new SGUIGroup() { VisualName = "그룹 4" });
 
-
-            void DebugManualUpdate(SGUIGroup group)
+            void DebugManualUpdate(SGUIGroup _group)
             {
-                group.VisualSize = new Size(Constant.ResolutionWidth, Constant.ResolutionHeight);
-                group.ViewModel = this;
+                _group.VisualSize = new Size(Constant.ResolutionWidth, Constant.ResolutionHeight);
+                _group.ViewModel = this;
 
-                if (!group.IsMaster)
+                if (!_group.IsMaster)
                 {
-                    this.GroupMaster.AddGroup(group);
-                    group.SetDepth(group.Parent.Depth + 1);
+                    this.GroupMaster.AddGroup(_group);
+                    _group.SetDepth(_group.Parent.Depth + 1);
                 }
 
-                group.Children.ForEach(x =>
+                _group.Children.ForEach((_, x) =>
                 {
-                    x.Parent = group;
+                    x.Parent = _group;
                     x.ViewModel = this;
 
                     if (x.IsGroup)
@@ -211,7 +212,7 @@ namespace SGToolsUI.ViewModel
                 });
             }
 
-            // 임시데이트 기본 데이터 주입
+            // 임시데이터 기본 데이터 주입
             DebugManualUpdate(this.GroupMaster);
 
             #endregion
@@ -224,134 +225,133 @@ namespace SGToolsUI.ViewModel
 
         public ZoomState ZoomState
         {
-            get => _zoomState;
+            get => zoomState_;
             set
             {
-                _zoomState = value;
+                zoomState_ = value;
                 OnPropertyChanged();
             }
         }
 
         public KeyState KeyState
         {
-            get => _keyState;
+            get => keyState_;
             set
             {
-                _keyState = value;
+                keyState_ = value;
                 OnPropertyChanged();
             }
         }
 
-
         public string ResourceSelectionStatus
         {
-            get => _resourceSelectionStatus;
+            get => resourceSelectionStatus_;
             set
             {
-                _resourceSelectionStatus = value;
+                resourceSelectionStatus_ = value;
                 OnPropertyChanged();
             }
         }
 
         public string CanvasSelectionStatus
         {
-            get => _canvasSelectionStatus;
+            get => canvasSelectionStatus_;
             set
             {
-                _canvasSelectionStatus = value;
+                canvasSelectionStatus_ = value;
                 OnPropertyChanged();
             }
         }
 
         public Vector MouseOnMonitor
         {
-            get => _mouseOnMonitor;
+            get => mouseOnMonitor_;
             set
             {
-                _mouseOnMonitor = value;
+                mouseOnMonitor_ = value;
                 OnPropertyChanged();
             }
         }
 
         public Vector MouseOnWindow
         {
-            get => _mouseOnWindow;
+            get => mouseOnWindow_;
             set
             {
-                _mouseOnWindow = value;
+                mouseOnWindow_ = value;
                 OnPropertyChanged();
             }
         }
 
         public Vector MouseOnCanvas
         {
-            get => _mouseOnCanvas;
+            get => mouseOnCanvas_;
             set
             {
-                _mouseOnCanvas = value;
+                mouseOnCanvas_ = value;
                 OnPropertyChanged();
             }
         }
 
         public SgaPackage SelectedPackage
         {
-            get => _selectedPackage;
+            get => selectedPackage_;
             set
             {
-                _selectedPackage = value;
+                selectedPackage_ = value;
                 OnPropertyChanged();
             }
         }
 
         public SgaImage SelectedImage
         {
-            get => _selectedImage;
+            get => selectedImage_;
             set
             {
-                _selectedImage = value;
+                selectedImage_ = value;
                 OnPropertyChanged();
             }
         }
 
         public SgaSpriteAbstract SelectedSprite
         {
-            get => _selectedSprite;
+            get => selectedSprite_;
             set
             {
-                _selectedSprite = value;
+                selectedSprite_ = value;
                 OnPropertyChanged();
             }
         }
 
         public SGUIGroupMaster GroupMaster
         {
-            get => _groupMaster;
+            get => groupMaster_;
             set
             {
-                if (_groupMaster != null)
-                    _groupMaster.Clear();
+                if (groupMaster_ != null)
+                    groupMaster_.Clear();
 
-                _groupMaster = value;
+                groupMaster_ = value;
                 OnPropertyChanged();
             }
         }
 
         public SelectMode UIElementSelectMode
         {
-            get => _uiElementSelectMode;
+            get => uiElementSelectMode_;
             set
             {
-                _uiElementSelectMode = value;
+                uiElementSelectMode_ = value;
                 OnPropertyChanged();
             }
         }
 
         public bool IsEventMode //  클릭 등 이벤트 처리를 간접적으로 수행하기 위한 용도/ UIElementItemsControl.cs, OnMouseDownEventMode()
         {
-            get => _isEventMode;
+            get => isEventMode_;
             set
             {
-                _isEventMode = value;
+                isEventMode_ = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(IsNotEventMode));
             }
@@ -359,13 +359,13 @@ namespace SGToolsUI.ViewModel
 
         public IKeyboardInputReceiver? FocusedKeyboardInputReceiver
         {
-            get => _focusedKeyboardInputReceiver;
+            get => selectedKeyboardInputReceiver_;
             set
             {
-                if (_focusedKeyboardInputReceiver != null && _focusedKeyboardInputReceiver != value)
-                    _focusedKeyboardInputReceiver.OnLostFocus();
+                if (selectedKeyboardInputReceiver_ != null && selectedKeyboardInputReceiver_ != value)
+                    selectedKeyboardInputReceiver_.OnLostFocus();
 
-                _focusedKeyboardInputReceiver = value;
+                selectedKeyboardInputReceiver_ = value;
                 OnPropertyChanged();
             }
         }
@@ -373,7 +373,7 @@ namespace SGToolsUI.ViewModel
         public bool IsNotEventMode => !IsEventMode;
         public bool Terminated { get; set; }
         public DataDragState DragState { get; }
-        public JobQueue JobQueue { get; } = new ();
+        public JobQueue JobQueue { get; } = new();
         public LogListBox LogBox { get; }
         public LogView LogView { get; }
         public ProgressView ProgressView { get; } = new();
@@ -384,24 +384,5 @@ namespace SGToolsUI.ViewModel
         public SGUIExporter Exporter { get; }
         public List<IKeyboardInputReceiver> KeyboardInputReceivers = new();
         public readonly Action<Exception> LogErrorHandler;
-
-        private SelectMode _uiElementSelectMode;
-        private KeyState _keyState = new ();
-        private ZoomState _zoomState = new ();
-        private Vector _mouseOnWindow = new (0, 0);
-        private Vector _mouseOnMonitor = new(0, 0);
-        private Vector _mouseOnCanvas = new(0, 0);
-        private string _resourceSelectionStatus = string.Empty;
-        private string _canvasSelectionStatus = string.Empty;
-        private bool _isEventMode = false;
-        private SgaPackage _selectedPackage = new ();
-        private SgaImage _selectedImage = new ();
-        private IKeyboardInputReceiver _focusedKeyboardInputReceiver;
-        
-        private SgaSpriteAbstract _selectedSprite = new SgaSprite();
-        private SGUIGroupMaster _groupMaster;
     }
-
-   
 }
-

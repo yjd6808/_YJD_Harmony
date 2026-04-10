@@ -1,161 +1,141 @@
-﻿/*
+/*
  * 복붙
  * 생성일: 2/27/2023 3:39:31 AM
  */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SGToolsCommon.Extension
 {
     public static class StreamEx
     {
+        //////////////////////////////////////////////////////////////////////////////////
+        public static int Read(this Stream _stream, byte[] _buf)
+            => _stream.Read(_buf, 0, _buf.Length);
 
-        public static int Read(this Stream stream, byte[] buf)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static int Read(this Stream _stream, int _length, out byte[] _buf)
         {
-            return stream.Read(buf, 0, buf.Length);
+            _buf = new byte[_length];
+            return _stream.Read(_buf, 0, _length);
         }
 
-        public static int Read(this Stream stream, int length, out byte[] buf)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static byte[] Read(this Stream _stream, int _length)
         {
-            buf = new byte[length];
-            return stream.Read(buf, 0, length);
-        }
-
-        public static byte[] Read(this Stream stream, int length)
-        {
-            var buf = new byte[length];
-            stream.Read(buf, 0, length);
+            var buf = new byte[_length];
+            _stream.Read(buf, 0, _length);
             return buf;
         }
 
-        public static void Write(this Stream stream, byte[] buf)
-        {
-            stream.Write(buf, 0, buf.Length);
-        }
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void Write(this Stream _stream, byte[] _buf)
+            => _stream.Write(_buf, 0, _buf.Length);
 
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void Seek(this Stream _stream, long _offset)
+            => _stream.Seek(_offset, SeekOrigin.Current);
 
-        public static void Seek(this Stream stream, long offset)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static int ReadInt(this Stream _stream)
         {
-            stream.Seek(offset, SeekOrigin.Current);
-        }
-
-        public static int ReadInt(this Stream stream)
-        {
-            stream.Read(4, out var buf);
+            _stream.Read(4, out var buf);
             return BitConverter.ToInt32(buf, 0);
         }
 
-        public static uint ReadUInt(this Stream stream)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static uint ReadUInt(this Stream _stream)
         {
-            stream.Read(4, out var buf);
+            _stream.Read(4, out var buf);
             return BitConverter.ToUInt32(buf, 0);
         }
 
-        public static void WriteInt(this Stream stream, int data)
-        {
-            stream.Write(BitConverter.GetBytes(data));
-        }
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void WriteInt(this Stream _stream, int _data)
+            => _stream.Write(BitConverter.GetBytes(_data));
 
-        public static void WriteUInt(this Stream stream, uint data)
-        {
-            stream.Write(BitConverter.GetBytes(data));
-        }
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void WriteUInt(this Stream _stream, uint _data)
+            => _stream.Write(BitConverter.GetBytes(_data));
 
-        public static short ReadShort(this Stream stream)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static short ReadShort(this Stream _stream)
         {
             var buf = new byte[2];
-            stream.Read(buf, 0, buf.Length);
+            _stream.Read(buf, 0, buf.Length);
             return BitConverter.ToInt16(buf, 0);
         }
 
-        public static ushort ReadUShort(this Stream stream)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static ushort ReadUShort(this Stream _stream)
         {
             var buf = new byte[2];
-            stream.Read(buf, 0, buf.Length);
+            _stream.Read(buf, 0, buf.Length);
             return BitConverter.ToUInt16(buf, 0);
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void WriteShort(this Stream _stream, short _s)
+            => _stream.Write(BitConverter.GetBytes(_s));
 
-        public static void WriteShort(this Stream stream, short s)
-        {
-            stream.Write(BitConverter.GetBytes(s));
-        }
-
-        
-        public static long ReadLong(this Stream stream)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static long ReadLong(this Stream _stream)
         {
             var buf = new byte[8];
-            stream.Read(buf, 0, buf.Length);
+            _stream.Read(buf, 0, buf.Length);
             return BitConverter.ToInt64(buf, 0);
         }
 
-        public static void WriteLong(this Stream stream, long l)
-        {
-            stream.Write(BitConverter.GetBytes(l));
-        }
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void WriteLong(this Stream _stream, long _l)
+            => _stream.Write(BitConverter.GetBytes(_l));
 
-        public static string ReadString(this Stream stream)
-        {
-            return ReadString(stream, Encoding.Default);
-        }
+        //////////////////////////////////////////////////////////////////////////////////
+        public static string ReadString(this Stream _stream)
+            => ReadString(_stream, Encoding.Default);
 
-        public static void WriteString(this Stream stream, string str)
-        {
-            WriteString(stream, str, Encoding.Default, true);
-        }
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void WriteString(this Stream _stream, string _str)
+            => WriteString(_stream, _str, Encoding.Default, true);
 
-        public static string ReadString(this Stream stream, Encoding encoding)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static string ReadString(this Stream _stream, Encoding _encoding)
         {
             var ms = new MemoryStream();
-            var j = 0;
-            while ((j = stream.ReadByte()) != 0 && j != -1)
-            {
+            int j;
+            while ((j = _stream.ReadByte()) != 0 && j != -1)
                 ms.WriteByte((byte)j);
-            }
             ms.Close();
-            return encoding.GetString(ms.ToArray());
+            return _encoding.GetString(ms.ToArray());
         }
 
-        public static void WriteString(this Stream stream, string str, Encoding encoding)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void WriteString(this Stream _stream, string _str, Encoding _encoding)
+            => WriteString(_stream, _str, _encoding, true);
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void WriteString(this Stream _stream, string _str, Encoding _encoding, bool _split)
         {
-            WriteString(stream, str, encoding, true);
+            _stream.Write(_encoding.GetBytes(_str));
+            if (_split)
+                _stream.WriteByte(0);
         }
 
-        public static void WriteString(this Stream stream, string str, Encoding encoding, bool split)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static byte[] ReadToEnd(this Stream _stream)
         {
-            stream.Write(encoding.GetBytes(str));
-            if (split)
-            {
-                stream.WriteByte(0);
-            }
-        }
-
-        public static byte[] ReadToEnd(this Stream stream)
-        {
-            var buf = new byte[stream.Length - stream.Position];
-            stream.Read(buf, 0, buf.Length);
+            var buf = new byte[_stream.Length - _stream.Position];
+            _stream.Read(buf, 0, buf.Length);
             return buf;
         }
 
-        public static void ReadToEnd(this Stream stream, out byte[] buf)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void ReadToEnd(this Stream _stream, out byte[] _buf)
         {
-            buf = new byte[stream.Length - stream.Position];
-            stream.Read(buf, 0, buf.Length);
+            _buf = new byte[_stream.Length - _stream.Position];
+            _stream.Read(_buf, 0, _buf.Length);
         }
-
     }
 }

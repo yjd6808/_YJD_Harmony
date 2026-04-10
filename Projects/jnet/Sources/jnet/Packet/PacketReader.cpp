@@ -64,7 +64,7 @@ int PacketReader::Next(OUT PacketElementView& _view, OUT _u32& _readMemSize)
 			pHeader = (PacketHeader*)(packetBuf_.buf + currHeaderMemOffset_);
 			if (pHeader->magicNumber_ != PACKET_MAGIC_NUMBER)
 				return rrInvalidPacket_MagicNumberMismatch;
-			if ((PACKET_HEADER_SIZE + pHeader->payloadLen_) > remaining)
+			if (static_cast<_u32>(PACKET_HEADER_SIZE + pHeader->payloadLen_) > remaining)
 				return rrReadHeaderFailed_InsufficientPaylodeLen; // 패킷이 완전히 도착하지 않은 상태
 
 			readMemOffset_ += PACKET_HEADER_SIZE;

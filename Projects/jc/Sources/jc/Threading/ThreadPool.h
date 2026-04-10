@@ -118,10 +118,9 @@ struct TaskResult
 template <typename T>
 class TaskContextImpl;
 
-class JC_NOVTABLE TaskContext
+struct TaskState
 {
-public:
-	enum State
+	enum
 	{
 		eRunningWait,
 		eRunning,
@@ -129,8 +128,14 @@ public:
 		eCancelled
 	};
 
+	AtomicInt value_ = eRunningWait;
+};
+
+class JC_NOVTABLE TaskContext
+{
+public:
 	TaskContext()
-	: m_eState(eRunningWait)
+	: state_(TaskState::eRunningWait)
 	, m_DebugName(0)
 	{
 	}
@@ -147,20 +152,20 @@ public:
 	template <typename T>
 	TaskWaitResult Wait(OUT T* _pValue, TaskGetValueStrategy _getValueStrategy)
 	{
-		int eState;
+		int state;
 		TaskWaitResult eResult = TaskWaitResult::Success;
 
 		TASKPOOL_LOG("%s Wait Step Begin", m_DebugName.Source());
-		NormalLockGuard guard(m_CtxLock);
-		m_CtxCondVar.Wait(guard, [this, &eState]
+		NormalLockGuard guard(ctxLock_);
+		ctxCondVar_.Wait(guard, [this, &state]
 		{
-			eState = m_eState;
-			TASKPOOL_LOG("%s Wait State: %s", m_DebugName.Source(), ToStateString(eState));
-			return eState == eFinished || eState == eCancelled;
+			state = state_.value_;
+			TASKPOOL_LOG("%s Wait State: %s", m_DebugName.Source(), ToStateString(state));
+			return state == TaskState::eFinished || state == TaskState::eCancelled;
 		});
 
 		TASKPOOL_LOG("%s Wait Step End", m_DebugName.Source());
-		if (eState == eCancelled)
+		if (state == TaskState::eCancelled)
 			return TaskWaitResult::Cancelled;
 
 		if constexpr (!IsVoidType_v<T>)
@@ -180,13 +185,13 @@ public:
 	TaskWaitResult TryWait(OUT T* _pValue, TaskGetValueStrategy _getValueStrategy)
 	{
 		TaskWaitResult eResult = TaskWaitResult::Success;
-		NormalLockGuard guard(m_CtxLock);
-		const int eState = m_eState;
+		NormalLockGuard guard(ctxLock_);
+		const int eState = state_.value_;
 
-		if (eState == eCancelled)
+		if (eState == TaskState::eCancelled)
 			return TaskWaitResult::Cancelled;
 
-		if (eState != eFinished)
+		if (eState != TaskState::eFinished)
 		{
 			return TaskWaitResult::ValueNotExist;
 		}
@@ -204,12 +209,13 @@ public:
 		return eResult;
 	}
 
-	AtomicInt GetState() { return m_eState; }
+	int					GetState() { return state_.value_; }
+	const TaskState&	GetTaskState() const { return state_; }
 
 private:
-	ConditionVariable m_CtxCondVar;
-	NormalLock m_CtxLock;
-	AtomicInt m_eState;
+	ConditionVariable ctxCondVar_;
+	NormalLock ctxLock_;
+	TaskState state_;
 	String m_DebugName;
 };
 
@@ -253,14 +259,14 @@ struct TaskBase
 {
 	~TaskBase() = default;
 
-	TaskContext::State GetContextState()
+	int GetContextState()
 	{
 		if (pContext == nullptr)
 		{
 			jc_assert(false);
-			return TaskContext::State::eFinished;
+			return TaskState::eFinished;
 		}
-		return (TaskContext::State)pContext->GetState().Load();
+		return pContext->GetState();
 	}
 
 	void SetDebugName(const String& _name)
@@ -448,16 +454,15 @@ protected:
 
 private:
 	// 쓰레드풀 변수 참조용
-	ConditionVariable& m_PoolCondVar;
-	ConditionVariable& m_JoinCondVar;
-	NormalLock& m_PoolLock;
-	int& m_ePoolState;
-	TaskQueue& m_qPoolWaitingTasks;
+	ConditionVariable& poolCondVar_;
+	ConditionVariable& joinCondVar_;
+	NormalLock& poolLock_;
+	int& poolState_;
+	TaskQueue& poolWaitingTasks_;
 
 	NormalLock m_Lock;
 	int m_iCode;
 	AtomicBool m_bJoinWait;
-	AtomicBool m_bThisStopFlag; // 쓰레드 개별 중지 요청
 	TaskContextPtr m_spRunningTask;
 };
 

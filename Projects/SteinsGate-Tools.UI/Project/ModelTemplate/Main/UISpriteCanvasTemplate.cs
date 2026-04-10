@@ -1,53 +1,39 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/14/2023 11:00:42 PM
  *
- *  
  */
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using SGToolsCommon.Extension;
 using SGToolsUI.Model.Main;
 
 namespace SGToolsUI.ModelTemplate.Main
 {
     public partial class UISpriteCanvasTemplate : ResourceDictionary
     {
+        //////////////////////////////////////////////////////////////////////////////////
         public UISpriteCanvasTemplate()
         {
         }
 
-        private bool TryCast(object sender, out Image img, out SGUISprite sprite)
+        //////////////////////////////////////////////////////////////////////////////////
+        private bool TryCast(object _sender, out Image _img, out SGUISprite _sprite)
         {
-            img = sender as Image;
-            sprite = null;
+            _img = _sender as Image;
+            _sprite = null;
 
-            if (img != null)
-                sprite = img.DataContext as SGUISprite;
+            if (_img != null)
+                _sprite = _img.DataContext as SGUISprite;
 
-            return img != null && sprite != null;
+            return _img != null && _sprite != null;
         }
 
-
-        private void SpriteImage_OnLoaded(object sender, RoutedEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void SpriteImage_OnLoaded(object _sender, RoutedEventArgs _e)
         {
-            if (!TryCast(sender, out Image img, out SGUISprite sprote))
+            if (!TryCast(_sender, out Image img, out SGUISprite sprite))
                 return;
-
         }
     }
 }

@@ -1,0 +1,6 @@
+==================================================
+[LFH_BEFORE]
+[ 0] Heap Base: 0x0000000000080000
+BlockFirst: 0x0000000000080000, BlockLast: 0x00000000000B2000, Commit: 0x  1000, Uncommit: 0x31000, EntryCount:   0
+[ 1] Heap Base: 0x00000000026B0000
+BlockFirst: 0x00000000026B0750, BlockLast: 0x00000000030BF000, Commit: 0x803000, Uncommit: 0x20d000, EntryCount: 1042

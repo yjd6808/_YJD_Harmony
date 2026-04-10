@@ -1,13 +1,10 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/9/2023 2:59:35 PM
  *
  */
 
-
 using System.Windows;
-using System.Windows.Media.Media3D;
-
 
 namespace SGToolsCommon.Primitive
 {
@@ -21,7 +18,18 @@ namespace SGToolsCommon.Primitive
         public int Top => Y;
         public int Right => X + Width;
         public int Bottom => Y + Height;
+        public IntPoint Location
+        {
+            get => new IntPoint(X, Y);
+            set { X = value.X; Y = value.Y; }
+        }
+        public IntSize Size
+        {
+            get => new IntSize(Width, Height);
+            set { Width = value.Width; Height = value.Height; }
+        }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public IntRect()
         {
             X = 0;
@@ -30,35 +38,41 @@ namespace SGToolsCommon.Primitive
             Height = 0;
         }
 
-        public IntRect(int x, int y, int width, int height)
+        //////////////////////////////////////////////////////////////////////////////////
+        public IntRect(int _x, int _y, int _width, int _height)
         {
-            X = x;
-            Y = y;
-            Width = width;
-            Height = height;
+            X = _x;
+            Y = _y;
+            Width = _width;
+            Height = _height;
         }
 
-        public static implicit operator Rect(IntRect rc)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static implicit operator Rect(IntRect _rc)
         {
-            return new Rect(rc.X, rc.Y, rc.Width, rc.Height);
+            return new Rect(_rc.X, _rc.Y, _rc.Width, _rc.Height);
         }
 
-        public static implicit operator IntRect(Rect rc)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static implicit operator IntRect(Rect _rc)
         {
-            return new IntRect((int)rc.X, (int)rc.Y, (int)rc.Width, (int)rc.Height);
+            return new IntRect((int)_rc.X, (int)_rc.Y, (int)_rc.Width, (int)_rc.Height);
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public IntRect ToRect()
         {
             return new Rect((int)X, (int)Y, (int)Width, (int)Height);
         }
 
-        public bool Contains(IntRect otherRect)
+        //////////////////////////////////////////////////////////////////////////////////
+        public bool Contains(IntRect _otherRect)
         {
-            return (otherRect.X >= X && otherRect.X + otherRect.Width <= X + Width &&
-                    otherRect.Y >= Y && otherRect.Y + otherRect.Height <= Y + Height);
+            return (_otherRect.X >= X && _otherRect.X + _otherRect.Width <= X + Width &&
+                    _otherRect.Y >= Y && _otherRect.Y + _otherRect.Height <= Y + Height);
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override string ToString()
         {
             return $"{X} {Y} {Width} {Height}";

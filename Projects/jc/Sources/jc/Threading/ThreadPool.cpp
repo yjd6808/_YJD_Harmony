@@ -13,10 +13,10 @@ NS_JC_BEGIN
 // =============================================================================================
 const char* TaskContext::ToStateString(int _state)
 {
-	if (_state == eRunningWait) return "RunningWait";
-	else if (_state == eRunning) return "Running";
-	else if (_state == eFinished) return "Finished";
-	else if (_state == eCancelled) return "Cancelled";
+	if (_state == TaskState::eRunningWait) return "RunningWait";
+	if (_state == TaskState::eRunning) return "Running";
+	if (_state == TaskState::eFinished) return "Finished";
+	if (_state == TaskState::eCancelled) return "Cancelled";
 	return "none";
 }
 
@@ -25,15 +25,15 @@ void TaskContext::Run()
 {
 	{
 		TASKPOOL_LOG("%s 실행 Begin", m_DebugName.Source());
-		NormalLockGuard guard(m_CtxLock);
-		if (m_eState == eCancelled)
+		NormalLockGuard guard(ctxLock_);
+		if (state_.value_ == TaskState::eCancelled)
 		{
 			TASKPOOL_LOG("%s 실행 Cancel 리턴", m_DebugName.Source());
 			return;
 		}
-		m_eState = eRunning;
+		state_.value_ = TaskState::eRunning;
 		RunImpl();
-		m_eState = eFinished;
+		state_.value_ = TaskState::eFinished;
 		// (1)
 	}
 
@@ -44,7 +44,7 @@ void TaskContext::Run()
 	// Notification Miss가 발생하게 되어버림
 	//  ==> Race Condition이 발생함.
 	// m_eState = eFinished;
-	m_CtxCondVar.NotifyAll();
+	ctxCondVar_.NotifyAll();
 	TASKPOOL_LOG("%s 실행 End", m_DebugName.Source());
 }
 
@@ -52,10 +52,10 @@ void TaskContext::Run()
 void TaskContext::Cancel()
 {
 	{
-		NormalLockGuard guard(m_CtxLock);
-		m_eState = eCancelled;
+		NormalLockGuard guard(ctxLock_);
+		state_.value_ = TaskState::eCancelled;
 	}
-	m_CtxCondVar.NotifyAll();
+	ctxCondVar_.NotifyAll();
 }
 
 
@@ -71,11 +71,11 @@ TaskThread::TaskThread(
 	int _code)
 //////////////////////////////////////////////////////////////////////////////////////////
 : RunnableThread()
-, m_PoolCondVar(_poolCv)
-, m_JoinCondVar(_joinCv)
-, m_PoolLock(_poolLock)
-, m_ePoolState(_poolState)
-, m_qPoolWaitingTasks(_poolTaskQueue)
+, poolCondVar_(_poolCv)
+, joinCondVar_(_joinCv)
+, poolLock_(_poolLock)
+, poolState_(_poolState)
+, poolWaitingTasks_(_poolTaskQueue)
 , m_iCode(_code)
 , m_bJoinWait(false)
 {
@@ -120,17 +120,17 @@ void TaskThread::WorkerThread()
 		if (bExit)
 			break;
 
-		NormalLockGuard guard(m_PoolLock);
-		m_PoolCondVar.Wait(guard, [this, &iCount, &bExit]
+		NormalLockGuard guard(poolLock_);
+		poolCondVar_.Wait(guard, [this, &iCount, &bExit]
 		{
-			iCount = m_qPoolWaitingTasks.Size();
+			iCount = poolWaitingTasks_.Size();
 			bExit = false;
 
-			if (m_ePoolState == ThreadPool::State::eJoinWaitAll)
+			if (poolState_ == ThreadPool::State::eJoinWaitAll)
 			{
 				bExit = iCount <= 0;
 			}
-			else if (m_ePoolState == ThreadPool::State::eJoinWaitOnlyRunningTask)
+			else if (poolState_ == ThreadPool::State::eJoinWaitOnlyRunningTask)
 			{
 				bExit = true;
 			}
@@ -138,17 +138,18 @@ void TaskThread::WorkerThread()
 			return bExit || iCount > 0;
 		});
 
-		m_qPoolWaitingTasks.TryDequeue(spRunningTask);
+		poolWaitingTasks_.TryDequeue(spRunningTask);
 	}
 
 	TASKPOOL_LOG("쓰레드 %d 종료됨", m_iCode);
 	m_bJoinWait = true;
-	m_JoinCondVar.NotifyOne();
+	joinCondVar_.NotifyOne();
 }
 
 
 // =============================================================================================
-// ThreadPool// =============================================================================================
+// ThreadPool
+// =============================================================================================
 
 ThreadPool::ThreadPool(int _poolSize)
 : threads_(_poolSize)

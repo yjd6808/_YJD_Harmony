@@ -1367,6 +1367,17 @@ bool String::TryToDouble(OUT _f64& _outValue, bool _ignoreLeadingZero) const
 	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+char String::PopBack()
+{
+	if (len_ == 0 || pBuffer_ == nullptr)
+		return '\0';
+
+	char popped = pBuffer_[len_ - 1];
+	pBuffer_[--len_] = NULL;
+	return popped;
+}
+
 NS_END
 
 

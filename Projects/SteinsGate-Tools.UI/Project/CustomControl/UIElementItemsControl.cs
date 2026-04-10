@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  */
 
@@ -6,35 +6,24 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Shapes;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.CompilerServices;
-using System.Security.RightsManagement;
-using System.Windows.Data;
 using MoreLinq;
 using SGToolsCommon.Extension;
-using SGToolsUI.View;
-using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
-using SGToolsUI.ViewModel;
-using System.Xml.Linq;
-using Accessibility;
-using MoreLinq.Extensions;
-using SGToolsCommon.CustomStyle;
 using SGToolsCommon.Model;
 using SGToolsCommon.Primitive;
-using SGToolsUI.Extension;
 using SGToolsUI.Command.MainViewCommand;
-using Xceed.Wpf.AvalonDock.Controls;
-using SGToolsCommon.Sga;
+using SGToolsUI.Extension;
 using SGToolsUI.Model.Main;
+using SGToolsUI.ViewModel;
+using SGToolsUI.View;
+using SGToolsCommon.Sga;
+using SGToolsCommon.CustomStyle;
 
 namespace SGToolsUI.CustomControl
 {
@@ -49,46 +38,47 @@ namespace SGToolsUI.CustomControl
 
     public class UIElementItemsControl : ItemsControl, INotifyPropertyChanged, IDataDragReceiver
     {
-        public bool IsManipulationMode => _manipulationMode != Positioning.Center;
+        public bool IsManipulationMode => manipulationMode_ != Positioning.Center;
         public MainViewModel ViewModel { get; private set; }
-        public Canvas CanvasPanel => _canvasPanel;
-        public ItemsPresenter Presenter => _canvasPresenter;
+        public Canvas CanvasPanel => canvasPanel_;
+        public ItemsPresenter Presenter => canvasPresenter_;
 
-        
-        private Canvas _canvasPanel;
-        private ItemsPresenter _canvasPresenter;
-        private bool _isShiftMove;
-        private DragState _dragState;
-        private ShiftKeyMoving _shiftKeyMoving = ShiftKeyMoving.None;
-        private IntPoint _dragMoveStartPosition;
-        private List<MovingElement> _movingElements;
-        private SGUIElement _prevSelectElement;                     // 이전에 마우스 포인터를 찍었을때 선택한 엘리먼트
+        private Canvas canvasPanel_;
+        private ItemsPresenter canvasPresenter_;
+        private bool isShiftMove_;
+        private DragState dragState_;
+        private ShiftKeyMoving shiftKeyMoving_ = ShiftKeyMoving.None;
+        private IntPoint dragMoveStartPosition_;
+        private List<MovingElement> movingElements_;
+        private SGUIElement prevSelectElement_;  // 이전에 마우스 포인터를 찍었을때 선택한 엘리먼트
 
         // 매니퓰레이션관련
-        private SGUIElement _manipulationTarget;
-        private Positioning _manipulationMode = Positioning.Center; // Center는 아무 상태도 아닐때를 말한다.
-        private Positioning _prevManipulationMode;
-        private IntSize _manipulationStartTargetSize;
-        private IntPoint _manipulationStartPosition;
-        private IntPoint _manipulationStartTargetPosition;
-        public delegate bool ManipulatorMethod(IntPoint pos, IntVector move, out IntPoint manipulatedPosition, out IntSize manipulatedSize);
-        private List<ManipulatorMethod> _manipulators = new ();
+        private SGUIElement manipulationTarget_;
+        private Positioning manipulationMode_ = Positioning.Center;  // Center는 아무 상태도 아닐때를 말한다.
+        private Positioning prevManipulationMode_;
+        private IntSize manipulationStartTargetSize_;
+        private IntPoint manipulationStartPosition_;
+        private IntPoint manipulationStartTargetPosition_;
+        public delegate bool ManipulatorMethod(IntPoint _pos, IntVector _move, out IntPoint _manipulatedPosition, out IntSize _manipulatedSize);
+        private List<ManipulatorMethod> manipulators_ = new();
 
-
-        private ContextMenu _contextMenu;
-        private MenuItem _attributeMenuItem;
-        private MenuItem _deleteMenuItem;
-        private MenuItem _restoreSizeMenuItem;
+        private ContextMenu contextMenu_;
+        private MenuItem attributeMenuItem_;
+        private MenuItem deleteMenuItem_;
+        private MenuItem restoreSizeMenuItem_;
 
         // ======================================================================
         //             초기화
         // ======================================================================
+
+        //////////////////////////////////////////////////////////////////////////////////
         public UIElementItemsControl()
         {
             Loaded += OnLoaded;
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void OnLoaded(object _sender, RoutedEventArgs _e)
         {
             InitializeViewModel();
             InitializePanel();
@@ -96,36 +86,35 @@ namespace SGToolsUI.CustomControl
             InitializeManipulators();
         }
 
-        
-
+        //////////////////////////////////////////////////////////////////////////////////
         private void InitializeContextMenu()
         {
             if (DesignerProperties.GetIsInDesignMode(this))
                 return;
 
-            _contextMenu = new ContextMenu();
-            _attributeMenuItem = new MenuItem();
-            _attributeMenuItem.Style = (Style)Application.Current.FindResource(CustomStyleKey.MenuItemSparkKey);
-            _attributeMenuItem.Header = "속성";
-            _attributeMenuItem.Command = ViewModel.Commander.SelectPropertyGridElement;
+            contextMenu_ = new ContextMenu();
+            attributeMenuItem_ = new MenuItem();
+            attributeMenuItem_.Style = (Style)Application.Current.FindResource(CustomStyleKey.MenuItemSparkKey);
+            attributeMenuItem_.Header = "속성";
+            attributeMenuItem_.Command = ViewModel.Commander.SelectPropertyGridElement;
 
-            _deleteMenuItem = new MenuItem();
-            _deleteMenuItem.Style = (Style)Application.Current.FindResource(CustomStyleKey.MenuItemDeleteKey);
-            _deleteMenuItem.Header = "삭제";
-            _deleteMenuItem.Command = ViewModel.Commander.DeleteUIElement;
+            deleteMenuItem_ = new MenuItem();
+            deleteMenuItem_.Style = (Style)Application.Current.FindResource(CustomStyleKey.MenuItemDeleteKey);
+            deleteMenuItem_.Header = "삭제";
+            deleteMenuItem_.Command = ViewModel.Commander.DeleteUIElement;
 
             // SGUISprite에만 적용될 메뉴
-            _restoreSizeMenuItem = new MenuItem();
-            _restoreSizeMenuItem.Header = "크기 복구";
-            _restoreSizeMenuItem.Command = new RestoreSizeCommand();
+            restoreSizeMenuItem_ = new MenuItem();
+            restoreSizeMenuItem_.Header = "크기 복구";
+            restoreSizeMenuItem_.Command = new RestoreSizeCommand();
 
+            contextMenu_.Items.Add(attributeMenuItem_);
+            contextMenu_.Items.Add(deleteMenuItem_);
 
-            _contextMenu.Items.Add(_attributeMenuItem);
-            _contextMenu.Items.Add(_deleteMenuItem);
-
-            _canvasPanel.ContextMenu = _contextMenu;
+            canvasPanel_.ContextMenu = contextMenu_;
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         private void InitializeViewModel()
         {
             ViewModel = DataContext as MainViewModel;
@@ -138,44 +127,43 @@ namespace SGToolsUI.CustomControl
                 throw new Exception("UIElementsControl에서 뷰모델 초기화 실패");
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         private void InitializePanel()
         {
-            _canvasPresenter = this.FindChild<ItemsPresenter>();
-            _canvasPanel = _canvasPresenter.FindChild<Canvas>();
+            canvasPresenter_ = this.FindChild<ItemsPresenter>();
+            canvasPanel_ = canvasPresenter_.FindChild<Canvas>();
 
-            if (_canvasPresenter == null)
+            if (canvasPresenter_ == null)
                 throw new Exception("캔버스 프레젠터를 찾지 못했슴당.");
 
-            if (_canvasPanel == null)
+            if (canvasPanel_ == null)
                 throw new Exception("캔버스 패널을 찾지 못했슴당.");
-
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         private void InitializeManipulators()
         {
-            _manipulators.Add(ManipulateTopLeft);
-            _manipulators.Add(ManipulateTop);
-            _manipulators.Add(ManipulateTopRight);
-            _manipulators.Add(ManipulateLeft);
-            _manipulators.Add(ManipulateCenter);                  // 인덱스로 접근하기 위함
-            _manipulators.Add(ManipulateRight);
-            _manipulators.Add(ManipulateBottomLeft);
-            _manipulators.Add(ManipulateBottom);
-            _manipulators.Add(ManipulateBottomRight);
+            manipulators_.Add(ManipulateTopLeft);
+            manipulators_.Add(ManipulateTop);
+            manipulators_.Add(ManipulateTopRight);
+            manipulators_.Add(ManipulateLeft);
+            manipulators_.Add(ManipulateCenter);  // 인덱스로 접근하기 위함
+            manipulators_.Add(ManipulateRight);
+            manipulators_.Add(ManipulateBottomLeft);
+            manipulators_.Add(ManipulateBottom);
+            manipulators_.Add(ManipulateBottomRight);
         }
-
-        
-
 
         // ======================================================================
         //             터널링 이벤트
         // ======================================================================
 
-        protected override void OnMouseDown(MouseButtonEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        protected override void OnMouseDown(MouseButtonEventArgs _e)
         {
-            base.OnMouseDown(e);
-            IntPoint pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
-            MouseButton btn = e.ChangedButton;
+            base.OnMouseDown(_e);
+            IntPoint pos = _e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            MouseButton btn = _e.ChangedButton;
 
             OpenContextMenu(pos, btn);
             OnMouseDownEventMode(pos);
@@ -183,42 +171,37 @@ namespace SGToolsUI.CustomControl
             MoveBegin(pos);
         }
 
-        
-
-
-        protected override void OnPreviewMouseMove(MouseEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        protected override void OnPreviewMouseMove(MouseEventArgs _e)
         {
-            base.OnPreviewMouseMove(e);
+            base.OnPreviewMouseMove(_e);
 
-            IntPoint pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            IntPoint pos = _e.GetPosition(this).Zoom(ViewModel.ZoomState);
 
             OnMouseMoveEventMode(pos);
-            OnMouseMoveManipulation(e);
+            OnMouseMoveManipulation(_e);
             MoveMove(pos);
         }
 
-   
-
-
-        protected override void OnPreviewMouseUp(MouseButtonEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        protected override void OnPreviewMouseUp(MouseButtonEventArgs _e)
         {
-            base.OnPreviewMouseUp(e);
+            base.OnPreviewMouseUp(_e);
 
-            IntPoint pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
-            MouseButton btn = e.ChangedButton;
+            IntPoint pos = _e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            MouseButton btn = _e.ChangedButton;
 
             OnMouseUpEventMode(pos, btn);
             OnMouseUpManipulation();
             MoveEnd(pos);
         }
 
-
         // ======================================================================
         //             엘리먼트 선택/드래깅
         // ======================================================================
 
-
-        private void MoveBegin(IntPoint pos)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void MoveBegin(IntPoint _pos)
         {
             bool alt = ViewModel.KeyState.IsAltPressed;
             bool ctrl = ViewModel.KeyState.IsCtrlPressed;
@@ -233,87 +216,86 @@ namespace SGToolsUI.CustomControl
                 return;
 
             // 컨텍스트 메뉴 열렸다가 캔버스를 누르고 닫을때 바닥찍으면 클릭으로 인식해버림, 한번 흘려주자.
-            if (_contextMenu.IsOpen)
+            if (contextMenu_.IsOpen)
                 return;
 
             // 이벤트 모드일때도 선택/드래그 금지
             if (ViewModel.IsEventMode)
                 return;
 
-            _isShiftMove = ViewModel.KeyState.IsShiftPressed;
-            _dragMoveStartPosition = pos;
+            isShiftMove_ = ViewModel.KeyState.IsShiftPressed;
+            dragMoveStartPosition_ = _pos;
 
             ObservableCollection<SGUIElement> pickedElements = ViewModel.GroupMaster.PickedElements;
             IEnumerable<SGUIElement> pickedSelectedElements = pickedElements.Where(element => element.Selected);
 
-
-            // 마우스를 클릭한 지점에 선택된 원소가 있는 경우 마우스를 따라 움직일 수 있도록 한다.
-            // if (!alt && !ctrl && pickedElements.Count > 0 && pickedSelectedElements.LastOrDefault(element => element.ContainPoint(pos)) != null)
-            if (!alt && !ctrl && pickedElements.Count > 0 && pickedSelectedElements.LastOrDefault(element => element.ContainPoint(pos)) != null)
+            if (!alt && !ctrl && pickedElements.Count > 0 && pickedSelectedElements.LastOrDefault(element => element.ContainPoint(_pos)) != null)
             {
                 ViewModel.View.CanvasShapesControl.IsDraggable = false;
                 ViewModel.View.TitlePanel.Draggable = false;
 
                 // 각 엘리먼트의 시작위치를 기록해놓는다.
-                _movingElements = ViewModel.GroupMaster.PickedSelectedElements.Select(element => new MovingElement(element, element.VisualPosition)).ToList();
-                _dragState = DragState.Wait;
+                movingElements_ = ViewModel.GroupMaster.PickedSelectedElements.Select(element => new MovingElement(element, element.VisualPosition)).ToList();
+                dragState_ = DragState.Wait;
             }
-            
         }
 
-        public void MoveMove(IntPoint pos)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void MoveMove(IntPoint _pos)
         {
-            if (_dragState == DragState.None)
+            if (dragState_ == DragState.None)
                 return;
 
-            if (_movingElements == null)
+            if (movingElements_ == null)
                 return;
 
             // 드래그 시작 후 마우스가 움직인 벡터만큼 다른 엘리먼트들도 벡터만큼 움직여준다.
-            IntVector move = IntPoint.Subtract(_dragMoveStartPosition, pos);
+            IntVector move = IntPoint.Subtract(dragMoveStartPosition_, _pos);
 
-            if (_dragState == DragState.Wait)
+            if (dragState_ == DragState.Wait)
             {
                 if (move.Length <= Constant.DragActivateDistance)
                     return;
 
-                _dragState = DragState.Dragging;
+                dragState_ = DragState.Dragging;
                 return;
             }
 
-            // dragState == Dragging
-            if (_isShiftMove && _shiftKeyMoving == ShiftKeyMoving.None)
+            // dragState_ == Dragging
+            if (isShiftMove_ && shiftKeyMoving_ == ShiftKeyMoving.None)
             {
                 if (Math.Abs(move.X) > Math.Abs(move.Y))
-                    _shiftKeyMoving = ShiftKeyMoving.Horizontal;
+                    shiftKeyMoving_ = ShiftKeyMoving.Horizontal;
                 else
-                    _shiftKeyMoving = ShiftKeyMoving.Vertical;
-                _isShiftMove = false;
+                    shiftKeyMoving_ = ShiftKeyMoving.Vertical;
+                isShiftMove_ = false;
             }
 
-            if (_shiftKeyMoving == ShiftKeyMoving.Vertical)
+            if (shiftKeyMoving_ == ShiftKeyMoving.Vertical)
                 move.X = 0;
-            else if (_shiftKeyMoving == ShiftKeyMoving.Horizontal)
+            else if (shiftKeyMoving_ == ShiftKeyMoving.Horizontal)
                 move.Y = 0;
 
-            _movingElements.ForEach(m => m.Element.VisualPosition = IntPoint.Subtract(m.StartPosition, move));
+            movingElements_.ForEach(m => m.Element.VisualPosition = IntPoint.Subtract(m.StartPosition, move));
         }
 
-        public void MoveEnd(IntPoint p)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void MoveEnd(IntPoint _pos)
         {
-            _isShiftMove = false;
-            _shiftKeyMoving = ShiftKeyMoving.None; 
+            isShiftMove_ = false;
+            shiftKeyMoving_ = ShiftKeyMoving.None;
             ViewModel.View.CanvasShapesControl.IsDraggable = true;
             ViewModel.View.TitlePanel.Draggable = true;
-            _movingElements = null;
+            movingElements_ = null;
 
             // 드래그 중이었다면 아래의 선택기능은 수행하지 않는다.
-            if (_dragState == DragState.Dragging) {
-                _dragState = DragState.None;
-                return; 
+            if (dragState_ == DragState.Dragging)
+            {
+                dragState_ = DragState.None;
+                return;
             }
 
-            _dragState = DragState.None;
+            dragState_ = DragState.None;
             bool alt = ViewModel.KeyState.IsAltPressed;
             bool ctrl = ViewModel.KeyState.IsCtrlPressed;
             bool space = ViewModel.KeyState.IsPressed(SGKey.Space);
@@ -327,24 +309,20 @@ namespace SGToolsUI.CustomControl
                 return;
 
             // 컨텍스트 메뉴 열렸다가 캔버스를 누르고 닫을때 바닥찍으면 클릭으로 인식해버림, 한번 흘려주자.
-            if (_contextMenu.IsOpen)
+            if (contextMenu_.IsOpen)
                 return;
 
             // 이벤트 모드일때도 선택/드래그 금지
             if (ViewModel.IsEventMode)
                 return;
-
-            
 
             ObservableCollection<SGUIElement> pickedElements = ViewModel.GroupMaster.PickedElements;
 
             // 알트키를 눌린 경우 겹친 위치의 원소들을 순차적으로 선택할 수 있도록한다.
             if (alt)
             {
-                // 픽된 원소들중 마우스를 클릭한 지점에 겹쳐져있는 모든 엘리먼트를 가져온다.
-                // 이때 깊은 자식부터 가져와야하므로 뒤짚어줘야함 (역방향 반복자를 구현했기때문에 효율 굳)
                 IEnumerable<SGUIElement> candidates = pickedElements.Reversed()
-                    .Where(element => element.CanvasSelectable && element.ContainPoint(_dragMoveStartPosition));
+                    .Where(element => element.CanvasSelectable && element.ContainPoint(dragMoveStartPosition_));
 
                 IEnumerator<SGUIElement> enumerator = candidates.GetEnumerator();
 
@@ -354,7 +332,6 @@ namespace SGToolsUI.CustomControl
                 bool find = false;
                 SGUIElement findElement = null;
 
-                // 알트키를 누른 경우 이전에 선택한 엘리먼트 다음 원소를 가져온다.
                 while (true)
                 {
                     bool success = enumerator.MoveNext();
@@ -366,13 +343,12 @@ namespace SGToolsUI.CustomControl
                     {
                         findElement = success ?
                             enumerator.Current :
-                            candidates.First(); // 마지막원소를 찾은 경우, 처음 원소를 가져온다.
+                            candidates.First();
 
                         break;
                     }
 
-
-                    if (enumerator.Current == _prevSelectElement)
+                    if (enumerator.Current == prevSelectElement_)
                         find = true;
                 }
 
@@ -380,24 +356,21 @@ namespace SGToolsUI.CustomControl
                 if (find == false)
                     findElement = candidates.First();
 
-                if (findElement == _prevSelectElement)
+                if (findElement == prevSelectElement_)
                     findElement.Selected = false;
                 else
                 {
-                    _prevSelectElement = findElement;
+                    prevSelectElement_ = findElement;
                     ViewModel.Commander.SelectUIElement.Execute(findElement);
                 }
-
-
-
             }
             else
             {
-                _prevSelectElement = pickedElements.Reversed()
-                    .FirstOrDefault(element => element.CanvasSelectable && element.ContainPoint(_dragMoveStartPosition));
+                prevSelectElement_ = pickedElements.Reversed()
+                    .FirstOrDefault(element => element.CanvasSelectable && element.ContainPoint(dragMoveStartPosition_));
 
-                if (_prevSelectElement != null)
-                    ViewModel.Commander.SelectUIElement.Execute(_prevSelectElement);
+                if (prevSelectElement_ != null)
+                    ViewModel.Commander.SelectUIElement.Execute(prevSelectElement_);
             }
         }
 
@@ -405,107 +378,91 @@ namespace SGToolsUI.CustomControl
         //             이벤트 모드
         // ======================================================================
 
-        private bool TryGetPickedGroupEventMode(out SGUIGroup pickedGroup)
+        //////////////////////////////////////////////////////////////////////////////////
+        private bool TryGetPickedGroupEventMode(out SGUIGroup _pickedGroup)
         {
-            pickedGroup = null;
+            _pickedGroup = null;
 
             if (ViewModel.IsEventMode == false)
                 return false;
 
-            pickedGroup = ViewModel.GroupMaster.PickedGroup;
-            if (pickedGroup == null)
+            _pickedGroup = ViewModel.GroupMaster.PickedGroup;
+            if (_pickedGroup == null)
                 return false;
 
             return true;
         }
 
-        private void OnMouseDownEventMode(IntPoint pos)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void OnMouseDownEventMode(IntPoint _pos)
         {
             if (!TryGetPickedGroupEventMode(out SGUIGroup pickedGroup))
                 return;
 
-            pickedGroup.OnMouseDown(pos);
+            pickedGroup.OnMouseDown(_pos);
         }
 
-        private void OnMouseMoveEventMode(IntPoint pos)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void OnMouseMoveEventMode(IntPoint _pos)
         {
             if (!TryGetPickedGroupEventMode(out SGUIGroup pickedGroup))
                 return;
 
-            pickedGroup.OnMouseMove(pos);
+            pickedGroup.OnMouseMove(_pos);
         }
 
-        private void OnMouseUpEventMode(IntPoint pos, MouseButton btn)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void OnMouseUpEventMode(IntPoint _pos, MouseButton _btn)
         {
             if (!TryGetPickedGroupEventMode(out SGUIGroup pickedGroup))
                 return;
 
-            pickedGroup.OnMouseUp(pos);
+            pickedGroup.OnMouseUp(_pos);
         }
-
 
         // ======================================================================
         //             컨텍스트 메뉴
         // ======================================================================
-        private void OpenContextMenu(IntPoint pos, MouseButton btn)
+
+        //////////////////////////////////////////////////////////////////////////////////
+        private void OpenContextMenu(IntPoint _pos, MouseButton _btn)
         {
-            if (btn != MouseButton.Right)
+            if (_btn != MouseButton.Right)
                 return;
 
             if (ViewModel.IsEventMode)
                 return;
 
             ObservableCollection<SGUIElement> pickedElements = ViewModel.GroupMaster.PickedElements;
-            SGUIElement lastSelectedElement = pickedElements.LastOrDefault(element => element.Selected && element.ContainPoint(pos));
+            SGUIElement lastSelectedElement = pickedElements.LastOrDefault(element => element.Selected && element.ContainPoint(_pos));
 
             if (lastSelectedElement == null)
                 return;
 
-            _contextMenu.Items.Remove(_restoreSizeMenuItem);
+            contextMenu_.Items.Remove(restoreSizeMenuItem_);
 
             if (lastSelectedElement is ISizeRestorable)
             {
-                _contextMenu.Items.Add(_restoreSizeMenuItem);
-                _restoreSizeMenuItem.CommandParameter = lastSelectedElement;
+                contextMenu_.Items.Add(restoreSizeMenuItem_);
+                restoreSizeMenuItem_.CommandParameter = lastSelectedElement;
             }
 
-            _attributeMenuItem.CommandParameter = lastSelectedElement;
-            _contextMenu.IsOpen = true;
-
-
-
+            attributeMenuItem_.CommandParameter = lastSelectedElement;
+            contextMenu_.IsOpen = true;
         }
-
-
 
         // ======================================================================
         //             엘리먼트 조작
         // ======================================================================
 
-
-        /*
-         * 주작은 어떻게 할 것인가?
-         *
-         * 1. 선택된 엘리먼트의 가장자리를 지나갈때 조작가능 커서 모양으로 바뀌어야한다.
-         * 2. "그랩"이 가능하다는걸 표시하기 위해 가상의 사각형이 8개 필요하다. => (Corner)모서리 4개, (Edge)변 4개
-         *    이 사각형에 커서가 포함되면 커서 모양을 알맞게 변경한다.
-         *    좌우 변: Cursors.SizeWE →             
-         *    상하 변: Cursors.SizeNS ↓
-         *    우상좌하 모서리: Cursors.SizeNESW ↘
-         *    좌상우하 모서리: Cursors.SizeNWSE ↙
-         * 3. 모서리, 변에 있는 가상의 사각형에 커서가 포함된 상태에서 해당 위치에서 마우스를 누른 경우
-         *    ManipulationMode에 진입하도록 한다.
-         *    이때는 선택된 엘리먼트라도 드래깅, 셀렉션을 하지 못하도록 막는다.
-         *    마우스를 때면 다시 가능토록 한다.
-         */
-
-        Positioning CheckManipulatable(IntPoint mousePos, out SGUIElement manipulationTarget)
+        //////////////////////////////////////////////////////////////////////////////////
+        private Positioning CheckManipulatable(IntPoint _mousePos, out SGUIElement _manipulationTarget)
         {
-            manipulationTarget = null;
-            const double thickHalf = 2.0;
-            const double thick = 4.0;           // 그랩 손잡이 두께
+            _manipulationTarget = null;
+            const double THICK_HALF = 2.0;
+            const double THICK = 4.0;  // 그랩 손잡이 두께
 
-            foreach (var element in ViewModel.GroupMaster.PickedElements.Reversed())    // 앞에 있는 녀석부터 검사
+            foreach (var element in ViewModel.GroupMaster.PickedElements.Reversed())
             {
                 if (!element.Selected) continue;
                 if (!element.Manipulatable) continue;
@@ -514,48 +471,40 @@ namespace SGToolsUI.CustomControl
                 double y = element.VisualPosition.Y;
                 double width = element.VisualSize.Width;
                 double height = element.VisualSize.Height;
-                manipulationTarget = element;
+                _manipulationTarget = element;
 
-                // ↑ 방향의 변 가상 사각형
-                if (RectEx.FromContain(x + thickHalf, y - thickHalf, width - thick, thick, mousePos))
+                if (RectEx.FromContain(x + THICK_HALF, y - THICK_HALF, width - THICK, THICK, _mousePos))
                     return Positioning.Top;
 
-                // ↓ 방향의 변 가상 사각형
-                if (RectEx.FromContain(x + thickHalf, y + height - thickHalf, width - thick, thick, mousePos))
+                if (RectEx.FromContain(x + THICK_HALF, y + height - THICK_HALF, width - THICK, THICK, _mousePos))
                     return Positioning.Bottom;
 
-                // → 방향의 변 가상 사각형
-                if (RectEx.FromContain(x + width - thickHalf, y + thickHalf, thick, height - thick, mousePos))
+                if (RectEx.FromContain(x + width - THICK_HALF, y + THICK_HALF, THICK, height - THICK, _mousePos))
                     return Positioning.Right;
 
-                // ← 방향의 변 가상 사각형
-                if (RectEx.FromContain(x - thickHalf, y + thickHalf, thick, height - thick, mousePos))
+                if (RectEx.FromContain(x - THICK_HALF, y + THICK_HALF, THICK, height - THICK, _mousePos))
                     return Positioning.Left;
 
-                // ↖ 방향의 모서리 가상 사각형
-                if (RectEx.FromContain(x - thickHalf, y - thickHalf, thick, thick, mousePos))
+                if (RectEx.FromContain(x - THICK_HALF, y - THICK_HALF, THICK, THICK, _mousePos))
                     return Positioning.TopLeft;
 
-                // ↘ 방향의 모서리 가상 사각형
-                if (RectEx.FromContain(x + width - thickHalf, y + height - thickHalf, thick, thick, mousePos))
+                if (RectEx.FromContain(x + width - THICK_HALF, y + height - THICK_HALF, THICK, THICK, _mousePos))
                     return Positioning.BottomRight;
 
-                // ↗ 방향의 모서리 가상 사각형
-                if (RectEx.FromContain(x + width - thickHalf, y - thickHalf, thick, thick, mousePos))
+                if (RectEx.FromContain(x + width - THICK_HALF, y - THICK_HALF, THICK, THICK, _mousePos))
                     return Positioning.TopRight;
 
-                // ↙ 방향의 모서리 가상 사각형
-                if (RectEx.FromContain(x - thickHalf, y + height - thickHalf, thick, thick, mousePos))
+                if (RectEx.FromContain(x - THICK_HALF, y + height - THICK_HALF, THICK, THICK, _mousePos))
                     return Positioning.BottomLeft;
             }
-
 
             return Positioning.Center;
         }
 
-        Cursor GetSizeCursor(Positioning positioning)
+        //////////////////////////////////////////////////////////////////////////////////
+        private Cursor GetSizeCursor(Positioning _positioning)
         {
-            switch (positioning)
+            switch (_positioning)
             {
                 case Positioning.Center:
                     return Cursors.Arrow;
@@ -576,22 +525,22 @@ namespace SGToolsUI.CustomControl
             return null;
         }
 
-
-        private void OnMouseDownManipulation(IntPoint pos)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void OnMouseDownManipulation(IntPoint _pos)
         {
-            _manipulationMode = CheckManipulatable(pos, out SGUIElement manipulationTarget);
+            manipulationMode_ = CheckManipulatable(_pos, out SGUIElement manipulationTarget);
 
-            if (_manipulationMode == Positioning.Center)
+            if (manipulationMode_ == Positioning.Center)
                 return;
 
-            _manipulationStartPosition = pos;
-            _manipulationTarget = manipulationTarget;
-            _manipulationStartTargetSize = manipulationTarget.VisualSize;
-            _manipulationStartTargetPosition = manipulationTarget.VisualPosition;
+            manipulationStartPosition_ = _pos;
+            manipulationTarget_ = manipulationTarget;
+            manipulationStartTargetSize_ = manipulationTarget.VisualSize;
+            manipulationStartTargetPosition_ = manipulationTarget.VisualPosition;
         }
 
-
-        public void OnMouseMoveManipulation(MouseEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void OnMouseMoveManipulation(MouseEventArgs _e)
         {
             if (ViewModel.DragState.State != DragState.None)
                 return;
@@ -599,214 +548,195 @@ namespace SGToolsUI.CustomControl
             if (ViewModel.View.CanvasShapesControl.IsHideSelection)
                 return;
 
-            Manipulate(e);
-            ManipulationCheck(e);
+            Manipulate(_e);
+            ManipulationCheck(_e);
         }
 
-        private void Manipulate(MouseEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void Manipulate(MouseEventArgs _e)
         {
-            if (!IsManipulationMode || _manipulationTarget == null)
+            if (!IsManipulationMode || manipulationTarget_ == null)
                 return;
 
-            IntPoint pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
-            Vector move = IntPoint.Subtract(_manipulationStartPosition, pos);
+            IntPoint pos = _e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            Vector move = IntPoint.Subtract(manipulationStartPosition_, pos);
 
-            if (!_manipulators[(int)_manipulationMode](pos, move, out IntPoint manipulatedPosition, out IntSize manipulatedSize))
+            if (!manipulators_[(int)manipulationMode_](pos, move, out IntPoint manipulatedPosition, out IntSize manipulatedSize))
                 return;
 
-            _manipulationTarget.VisualPosition = manipulatedPosition;
-            _manipulationTarget.VisualSize = manipulatedSize;
+            manipulationTarget_.VisualPosition = manipulatedPosition;
+            manipulationTarget_.VisualSize = manipulatedSize;
         }
 
-        private void ManipulationCheck(MouseEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void ManipulationCheck(MouseEventArgs _e)
         {
-            IntPoint pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            IntPoint pos = _e.GetPosition(this).Zoom(ViewModel.ZoomState);
 
             if (IsManipulationMode)
                 return;
 
             Positioning positioning = CheckManipulatable(pos, out SGUIElement _);
 
-            if (positioning != _prevManipulationMode)
+            if (positioning != prevManipulationMode_)
             {
-                _prevManipulationMode = positioning;
+                prevManipulationMode_ = positioning;
                 Mouse.OverrideCursor = GetSizeCursor(positioning);
             }
         }
 
-        private bool ManipulateLeft(IntPoint pos, IntVector move, out IntPoint manipulatedIntPoint, out IntSize manipulatedSize)
+        //////////////////////////////////////////////////////////////////////////////////
+        private bool ManipulateLeft(IntPoint _pos, IntVector _move, out IntPoint _manipulatedIntPoint, out IntSize _manipulatedSize)
         {
-            move.Y = 0; // 좌우 이동은 Y축 델타를 0으로만든다.
-            double rightEdgeAxis = _manipulationStartTargetPosition.X + _manipulationStartTargetSize.Width;
+            _move.Y = 0;
+            double rightEdgeAxis = manipulationStartTargetPosition_.X + manipulationStartTargetSize_.Width;
 
-            manipulatedIntPoint = _manipulationStartTargetPosition;
-            manipulatedSize = _manipulationStartTargetSize;
+            _manipulatedIntPoint = manipulationStartTargetPosition_;
+            _manipulatedSize = manipulationStartTargetSize_;
 
-            if (manipulatedIntPoint.X <= rightEdgeAxis)
-                manipulatedIntPoint.X = _manipulationStartTargetPosition.X - move.X;
+            if (_manipulatedIntPoint.X <= rightEdgeAxis)
+                _manipulatedIntPoint.X = manipulationStartTargetPosition_.X - _move.X;
 
-            // 좌에서 우로갈때 너비가 음수가 되지 않도록 해야한다.
-            if (_manipulationStartTargetSize.Width + move.X < 5)
+            if (manipulationStartTargetSize_.Width + _move.X < 5)
                 return false;
 
-            manipulatedSize.Width = _manipulationStartTargetSize.Width + move.X;
+            _manipulatedSize.Width = manipulationStartTargetSize_.Width + _move.X;
             return true;
         }
 
-        private bool ManipulateRight(IntPoint pos, IntVector move, out IntPoint manipulatedIntPoint, out IntSize manipulatedSize)
+        //////////////////////////////////////////////////////////////////////////////////
+        private bool ManipulateRight(IntPoint _pos, IntVector _move, out IntPoint _manipulatedIntPoint, out IntSize _manipulatedSize)
         {
-            move.Y = 0; // 좌우 이동은 Y축 델타를 0으로만든다.
-            manipulatedIntPoint = _manipulationStartTargetPosition;
-            manipulatedSize = _manipulationStartTargetSize;
+            _move.Y = 0;
+            _manipulatedIntPoint = manipulationStartTargetPosition_;
+            _manipulatedSize = manipulationStartTargetSize_;
 
-            // 우에서 좌로갈때 너비가 음수가 되지 않도록 해야한다.
-            if (_manipulationStartTargetSize.Width - move.X < 5)
+            if (manipulationStartTargetSize_.Width - _move.X < 5)
                 return false;
 
-            manipulatedSize.Width = _manipulationStartTargetSize.Width - move.X;
+            _manipulatedSize.Width = manipulationStartTargetSize_.Width - _move.X;
             return true;
         }
 
-        private bool ManipulateTop(IntPoint pos, IntVector move, out IntPoint manipulatedIntPoint, out IntSize manipulatedSize)
+        //////////////////////////////////////////////////////////////////////////////////
+        private bool ManipulateTop(IntPoint _pos, IntVector _move, out IntPoint _manipulatedIntPoint, out IntSize _manipulatedSize)
         {
-            move.X = 0; // 상하 이동은 X축 델타를 0으로만든다.
-            double bottomEdgeAxis = _manipulationStartTargetPosition.Y + _manipulationStartTargetSize.Height;
+            _move.X = 0;
+            double bottomEdgeAxis = manipulationStartTargetPosition_.Y + manipulationStartTargetSize_.Height;
 
-            manipulatedIntPoint = _manipulationStartTargetPosition;
-            manipulatedSize = _manipulationStartTargetSize;
+            _manipulatedIntPoint = manipulationStartTargetPosition_;
+            _manipulatedSize = manipulationStartTargetSize_;
 
-            if (manipulatedIntPoint.Y <= bottomEdgeAxis - 5)
-                manipulatedIntPoint.Y = _manipulationStartTargetPosition.Y - move.Y;
+            if (_manipulatedIntPoint.Y <= bottomEdgeAxis - 5)
+                _manipulatedIntPoint.Y = manipulationStartTargetPosition_.Y - _move.Y;
 
-            // 위에서 아래로갈때 높이가 음수가 되지 않도록 해야한다.
-            if (_manipulationStartTargetSize.Height + move.Y < 5)
+            if (manipulationStartTargetSize_.Height + _move.Y < 5)
                 return false;
 
-            manipulatedSize.Height = _manipulationStartTargetSize.Height + move.Y;
+            _manipulatedSize.Height = manipulationStartTargetSize_.Height + _move.Y;
             return true;
         }
 
-        private bool ManipulateBottom(IntPoint pos, IntVector move, out IntPoint manipulatedIntPoint, out IntSize manipulatedSize)
+        //////////////////////////////////////////////////////////////////////////////////
+        private bool ManipulateBottom(IntPoint _pos, IntVector _move, out IntPoint _manipulatedIntPoint, out IntSize _manipulatedSize)
         {
-            move.X = 0; // 상하 이동은 X축 델타를 0으로만든다.
-            manipulatedIntPoint = _manipulationStartTargetPosition;
-            manipulatedSize = _manipulationStartTargetSize;
+            _move.X = 0;
+            _manipulatedIntPoint = manipulationStartTargetPosition_;
+            _manipulatedSize = manipulationStartTargetSize_;
 
-            // 아래에서 위로갈때 높이가 음수가 되지 않도록 해야한다.
-            if (_manipulationStartTargetSize.Height - move.Y < 5)
+            if (manipulationStartTargetSize_.Height - _move.Y < 5)
                 return false;
 
-            manipulatedSize.Height = _manipulationStartTargetSize.Height - move.Y;
+            _manipulatedSize.Height = manipulationStartTargetSize_.Height - _move.Y;
             return true;
         }
 
-        private bool ManipulateTopLeft(IntPoint pos, IntVector move, out IntPoint manipulatedIntPoint, out IntSize manipulatedSize)
+        //////////////////////////////////////////////////////////////////////////////////
+        private bool ManipulateTopLeft(IntPoint _pos, IntVector _move, out IntPoint _manipulatedIntPoint, out IntSize _manipulatedSize)
         {
-            manipulatedIntPoint = new();
-            manipulatedSize = new();
+            _manipulatedIntPoint = new();
+            _manipulatedSize = new();
 
-            if (!ManipulateTop(pos, move, out IntPoint topIntPoint, out IntSize topSize))
+            if (!ManipulateTop(_pos, _move, out IntPoint topIntPoint, out IntSize topSize))
                 return false;
 
-            if (!ManipulateLeft(pos, move, out IntPoint leftIntPoint, out IntSize leftSize))
+            if (!ManipulateLeft(_pos, _move, out IntPoint leftIntPoint, out IntSize leftSize))
                 return false;
 
-            manipulatedIntPoint = new IntPoint(leftIntPoint.X, topIntPoint.Y);
-            manipulatedSize = new Size(leftSize.Width, topSize.Height);
+            _manipulatedIntPoint = new IntPoint(leftIntPoint.X, topIntPoint.Y);
+            _manipulatedSize = new Size(leftSize.Width, topSize.Height);
             return true;
         }
 
-        private bool ManipulateTopRight(IntPoint pos, IntVector move, out IntPoint manipulatedIntPoint, out IntSize manipulatedSize)
+        //////////////////////////////////////////////////////////////////////////////////
+        private bool ManipulateTopRight(IntPoint _pos, IntVector _move, out IntPoint _manipulatedIntPoint, out IntSize _manipulatedSize)
         {
-            manipulatedIntPoint = new();
-            manipulatedSize = new();
+            _manipulatedIntPoint = new();
+            _manipulatedSize = new();
 
-            if (!ManipulateTop(pos, move, out IntPoint topIntPoint, out IntSize topSize))
+            if (!ManipulateTop(_pos, _move, out IntPoint topIntPoint, out IntSize topSize))
                 return false;
 
-            if (!ManipulateRight(pos, move, out IntPoint rightIntPoint, out IntSize rightSize))
+            if (!ManipulateRight(_pos, _move, out IntPoint rightIntPoint, out IntSize rightSize))
                 return false;
 
-            manipulatedIntPoint = new IntPoint(rightIntPoint.X, topIntPoint.Y);
-            manipulatedSize = new Size(rightSize.Width, topSize.Height);
+            _manipulatedIntPoint = new IntPoint(rightIntPoint.X, topIntPoint.Y);
+            _manipulatedSize = new Size(rightSize.Width, topSize.Height);
             return true;
         }
 
-        private bool ManipulateBottomLeft(IntPoint pos, IntVector move, out IntPoint manipulatedIntPoint, out IntSize manipulatedSize)
+        //////////////////////////////////////////////////////////////////////////////////
+        private bool ManipulateBottomLeft(IntPoint _pos, IntVector _move, out IntPoint _manipulatedIntPoint, out IntSize _manipulatedSize)
         {
-            manipulatedIntPoint = new();
-            manipulatedSize = new();
+            _manipulatedIntPoint = new();
+            _manipulatedSize = new();
 
-            if (!ManipulateBottom(pos, move, out IntPoint bottomIntPoint, out IntSize bottomSize))
+            if (!ManipulateBottom(_pos, _move, out IntPoint bottomIntPoint, out IntSize bottomSize))
                 return false;
 
-            if (!ManipulateLeft(pos, move, out IntPoint leftIntPoint, out IntSize leftSize))
+            if (!ManipulateLeft(_pos, _move, out IntPoint leftIntPoint, out IntSize leftSize))
                 return false;
 
-            manipulatedIntPoint = new IntPoint(leftIntPoint.X, bottomIntPoint.Y);
-            manipulatedSize = new Size(leftSize.Width, bottomSize.Height);
+            _manipulatedIntPoint = new IntPoint(leftIntPoint.X, bottomIntPoint.Y);
+            _manipulatedSize = new Size(leftSize.Width, bottomSize.Height);
             return true;
         }
 
-        private bool ManipulateBottomRight(IntPoint pos, IntVector move, out IntPoint manipulatedIntPoint, out IntSize manipulatedSize)
+        //////////////////////////////////////////////////////////////////////////////////
+        private bool ManipulateBottomRight(IntPoint _pos, IntVector _move, out IntPoint _manipulatedIntPoint, out IntSize _manipulatedSize)
         {
-            manipulatedIntPoint = new();
-            manipulatedSize = new();
+            _manipulatedIntPoint = new();
+            _manipulatedSize = new();
 
-            if (!ManipulateBottom(pos, move, out IntPoint bottomIntPoint, out IntSize bottomSize))
+            if (!ManipulateBottom(_pos, _move, out IntPoint bottomIntPoint, out IntSize bottomSize))
                 return false;
 
-            if (!ManipulateRight(pos, move, out IntPoint rightIntPoint, out IntSize rightSize))
+            if (!ManipulateRight(_pos, _move, out IntPoint rightIntPoint, out IntSize rightSize))
                 return false;
 
-            manipulatedIntPoint = new IntPoint(rightIntPoint.X, bottomIntPoint.Y);
-            manipulatedSize = new Size(rightSize.Width, bottomSize.Height);
+            _manipulatedIntPoint = new IntPoint(rightIntPoint.X, bottomIntPoint.Y);
+            _manipulatedSize = new Size(rightSize.Width, bottomSize.Height);
             return true;
         }
 
-        private bool ManipulateCenter(IntPoint pos, IntVector move, out IntPoint manipulatedposition, out IntSize manipulatedsize)
+        //////////////////////////////////////////////////////////////////////////////////
+        private bool ManipulateCenter(IntPoint _pos, IntVector _move, out IntPoint _manipulatedPosition, out IntSize _manipulatedSize)
         {
             throw new Exception("매니퓰레이트 불가능한 모드입니다.");
         }
 
-
+        //////////////////////////////////////////////////////////////////////////////////
         public void OnMouseUpManipulation()
         {
             Mouse.OverrideCursor = Cursors.Arrow;
-            _manipulationMode = Positioning.Center;
-            _manipulationTarget = null;
+            manipulationMode_ = Positioning.Center;
+            manipulationTarget_ = null;
         }
 
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void DragEnd(IntPoint _p, object _data)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        private struct MovingElement
-        {
-            public SGUIElement Element { get; }
-            public IntPoint StartPosition { get; }
-
-            public MovingElement(SGUIElement element, IntPoint startPosition)
-            {
-                Element = element;
-                StartPosition = startPosition;
-            }
-        }
-
-        private class RestoreSizeCommand : ICommand
-        {
-            public event EventHandler? CanExecuteChanged;
-            public bool CanExecute(object? parameter) => true;
-
-            public void Execute(object? parameter)
-                => (parameter as ISizeRestorable).RestoreSize();
-        }
-
-        public void DragEnd(IntPoint p, object data)
-        {
-            SgaSprite sprite = data as SgaSprite;
+            SgaSprite sprite = _data as SgaSprite;
 
             if (sprite == null)
                 return;
@@ -831,9 +761,39 @@ namespace SGToolsUI.CustomControl
             elementView.ShowDialog();
         }
 
-        public bool ContainPoint(IntPoint p)
+        //////////////////////////////////////////////////////////////////////////////////
+        public bool ContainPoint(IntPoint _p)
+            => VisualEx.ContainPoint(this, _p);
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        //////////////////////////////////////////////////////////////////////////////////
+        protected virtual void OnPropertyChanged([CallerMemberName] string? _propertyName = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(_propertyName));
+
+        private struct MovingElement
         {
-            return VisualEx.ContainPoint(this, p);
+            public SGUIElement Element { get; }
+            public IntPoint StartPosition { get; }
+
+            //////////////////////////////////////////////////////////////////////////////////
+            public MovingElement(SGUIElement _element, IntPoint _startPosition)
+            {
+                Element = _element;
+                StartPosition = _startPosition;
+            }
+        }
+
+        private class RestoreSizeCommand : ICommand
+        {
+            public event EventHandler? CanExecuteChanged;
+
+            //////////////////////////////////////////////////////////////////////////////////
+            public bool CanExecute(object? _parameter) => true;
+
+            //////////////////////////////////////////////////////////////////////////////////
+            public void Execute(object? _parameter)
+                => (_parameter as ISizeRestorable).RestoreSize();
         }
     }
 }

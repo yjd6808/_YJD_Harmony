@@ -1,29 +1,14 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/27/2023 2:51:19 AM
  *
  */
 
-using SGToolsCommon.Extension;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using static System.Net.Mime.MediaTypeNames;
-using System.Xml.Linq;
-using System.Collections.ObjectModel;
+
+using SGToolsCommon.Extension;
 
 namespace SGToolsCommon.Sga
 {
@@ -36,91 +21,102 @@ namespace SGToolsCommon.Sga
             LoadVersion2,
         };
 
+        private List<SgaSpriteAbstract> spriteList_;
+        private int waitForLoading_;
 
-        private List<SgaSpriteAbstract> _spriteList;
-        private int _waitForLoading;
+        public List<SgaSpriteAbstract> SpriteList => spriteList_;
 
-        public List<SgaSpriteAbstract> SpriteList => _spriteList;
-
+        //////////////////////////////////////////////////////////////////////////////////
         // Xaml 바인딩용
         public SgaImage()
         {
-            _spriteList = new();
-            _indexLoaded = true;
-            _dataLoaded = true;
+            spriteList_ = new();
+            indexLoaded_ = true;
+            dataLoaded_ = true;
         }
 
-        public SgaImage(int spriteCount, SgaPackage parent, SgaElementHeader header, int version, int indexOffset, int indexLength) 
-            : base(SgaElementType.Image, parent, header, version, indexOffset, indexLength)
+        //////////////////////////////////////////////////////////////////////////////////
+        public SgaImage(int _spriteCount, SgaPackage _parent, SgaElementHeader _header, int _version, int _indexOffset, int _indexLength)
+            : base(SgaElementType.Image, _parent, _header, _version, _indexOffset, _indexLength)
         {
-            // @https://stackoverflow.com/questions/3363940/fill-listint-with-default-values
-            // C# 리스트 디폴트로 초기화 방법
-            
-            _waitForLoading = spriteCount;
-            _indexLoaded = false;
-            _dataLoaded = false;
+            waitForLoading_ = _spriteCount;
+            indexLoaded_ = false;
+            dataLoaded_ = false;
         }
 
-        public bool IsValidSpriteIndex(int index) => index >= 0 && index < _spriteList.Count;
-        public SgaSpriteAbstract GetSprite(int index)
+        //////////////////////////////////////////////////////////////////////////////////
+        public bool IsValidSpriteIndex(int _index) => _index >= 0 && _index < spriteList_.Count;
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public SgaSpriteAbstract GetSprite(int _index)
         {
             if (!IndexLoaded)
                 LoadIndexOnly();
 
-            if (!IsValidSpriteIndex(index))
-                throw new Exception($"{index}번 인덱스 스프라이트를 {Header.Name}에서 찾지 못했습니다.");
+            if (!IsValidSpriteIndex(_index))
+                throw new Exception($"{_index}번 인덱스 스프라이트를 {Header.Name}에서 찾지 못했습니다.");
 
-            return _spriteList[index];
+            return spriteList_[_index];
         }
 
-        public override void Load(bool indexOnly)
+        //////////////////////////////////////////////////////////////////////////////////
+        public override void Load(bool _indexOnly)
         {
-            if (_spriteList != null)
+            if (spriteList_ != null)
                 Unload();
 
-            _spriteList = new List<SgaSpriteAbstract>(new SgaSpriteAbstract[_waitForLoading]);
+            spriteList_ = new List<SgaSpriteAbstract>(new SgaSpriteAbstract[waitForLoading_]);
 
-            VersionLoader[Version](this, indexOnly);
-            _indexLoaded = true;
+            VersionLoader[Version](this, _indexOnly);
+            indexLoaded_ = true;
 
-            if (indexOnly)
+            if (_indexOnly)
                 return;
 
-            _dataLoaded = true;
+            dataLoaded_ = true;
             NotifyUpdateList();
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override void Unload()
         {
-            if (_spriteList == null)
+            if (spriteList_ == null)
                 return;
 
-            for (int i = 0; i < _spriteList.Count; ++i)
-                _spriteList[i]?.Unload();
+            for (int i = 0; i < spriteList_.Count; ++i)
+                spriteList_[i]?.Unload();
 
-            // _spriteList = null;
-            _dataLoaded = false;
+            dataLoaded_ = false;
             NotifyUpdateList();
         }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override string ToString()
+            => Header.NameWithoutExt;
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public void NotifyUpdateList()
+            => OnPropertyChanged(nameof(SpriteList));
 
 
         // ===============================================================================
         // 버전별 로딩 분리
         // ===============================================================================
-        public static void LoadVersion1(SgaImage image, bool indexOnly)
-        {
-            Stream stream = image._parent.ReadStream;
-            stream.Seek(image.IndexOffset, SeekOrigin.Begin);
-            int spriteDataOffset = image.IndexOffset + image.IndexLength;
 
-            for (int i = 0; i < image._waitForLoading; ++i)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void LoadVersion1(SgaImage _image, bool _indexOnly)
+        {
+            Stream stream = _image.parent_.ReadStream;
+            stream.Seek(_image.IndexOffset, SeekOrigin.Begin);
+
+            for (int i = 0; i < _image.waitForLoading_; ++i)
             {
                 SgaColorFormat format = (SgaColorFormat)stream.ReadInt();
 
                 if (format == SgaColorFormat.Link)
                 {
                     int targetFrameIndex = stream.ReadInt();
-                    image._spriteList[i] = new SgaLinkSprite(image, targetFrameIndex, i);
+                    _image.spriteList_[i] = new SgaLinkSprite(_image, targetFrameIndex, i);
                     continue;
                 }
 
@@ -140,37 +136,34 @@ namespace SGToolsCommon.Sga
                 if (compressMode == SgaCompressMode.None)
                     dataLength = width * height * (format == SgaColorFormat.Argb8888 ? 4 : 2);
 
-                
-                image._spriteList[i] = new SgaSprite(rect, format, compressMode, dataOffset, dataLength, image, i);
+                _image.spriteList_[i] = new SgaSprite(rect, format, compressMode, dataOffset, dataLength, _image, i);
 
-                if (indexOnly)
+                if (_indexOnly)
                 {
                     stream.Seek(dataOffset + dataLength, SeekOrigin.Begin);
                     continue;
                 }
 
-
-                image._spriteList[i].Load();
+                _image.spriteList_[i].Load();
             }
         }
 
-        public static void LoadVersion2(SgaImage image, bool indexOnly)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void LoadVersion2(SgaImage _image, bool _indexOnly)
         {
-            Stream stream = image._parent.ReadStream;
-            stream.Seek(image.IndexOffset, SeekOrigin.Begin);
-            int spriteDataOffset = image.IndexOffset + image.IndexLength;
+            Stream stream = _image.parent_.ReadStream;
+            stream.Seek(_image.IndexOffset, SeekOrigin.Begin);
 
+            List<Tuple<SgaColorFormat, SgaSpriteRect, SgaCompressMode, int>> tempList = new(_image.waitForLoading_);
 
-            List<Tuple<SgaColorFormat, SgaSpriteRect, SgaCompressMode, int>> tempList = new(image._waitForLoading);
-
-            for (int i = 0; i < image._waitForLoading; ++i)
+            for (int i = 0; i < _image.waitForLoading_; ++i)
             {
                 SgaColorFormat format = (SgaColorFormat)stream.ReadInt();
 
                 if (format == SgaColorFormat.Link)
                 {
                     int targetFrameIndex = stream.ReadInt();
-                    image._spriteList[i] = new SgaLinkSprite(image, targetFrameIndex, i);
+                    _image.spriteList_[i] = new SgaLinkSprite(_image, targetFrameIndex, i);
                     continue;
                 }
 
@@ -202,24 +195,16 @@ namespace SGToolsCommon.Sga
                 int dataOffset = (int)stream.Position;
                 int dataLength = temp.Item4;
 
-                image._spriteList[i] = new SgaSprite(temp.Item2, temp.Item1, temp.Item3, dataOffset, dataLength, image, i);
+                _image.spriteList_[i] = new SgaSprite(temp.Item2, temp.Item1, temp.Item3, dataOffset, dataLength, _image, i);
 
-                if (indexOnly)
+                if (_indexOnly)
                 {
                     stream.Seek(dataOffset + dataLength, SeekOrigin.Begin);
                     continue;
                 }
 
-                image._spriteList[i].Load();
+                _image.spriteList_[i].Load();
             }
-            
         }
-
-        public override string ToString()
-            => Header.NameWithoutExt;
-
-
-        public void NotifyUpdateList()
-            => OnPropertyChanged(nameof(SpriteList));
     }
 }

@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using SGToolsCommon.Converter;
 using SGToolsCommon.Primitive;
-using SGToolsUI.Converter;
-using SGToolsUI.Model;
 
 namespace SGToolsUI
 {
@@ -26,8 +14,8 @@ namespace SGToolsUI
         public const double CanvasAnchorSize = 16;
 
         public const double PropertyGridHeight = 400;               // 실제프로퍼티 그리드 크기
-        public const double PropertyGridLowerInspectorHide = -30;     // 하단 패널 높이 (숨기기 위한 수치)
-        public const double PropertyGridUpperInspectorHide = -20;     // 상단 패널 높이 (숨기기 위한 수치)
+        public const double PropertyGridLowerInspectorHide = -30;   // 하단 패널 높이 (숨기기 위한 수치)
+        public const double PropertyGridUpperInspectorHide = -20;   // 상단 패널 높이 (숨기기 위한 수치)
 
         public const double ResolutionRatio = 480.0f / 640.0f;
         public const string SettingFileName = "setting.json";
@@ -41,9 +29,8 @@ namespace SGToolsUI
         public const double LeftPaneWidth = 300;
         public const double DragActivateDistance = 5.0f;
 
-        public const int GroupCodeInterval = 1000;                  // 그룹당 코드 부여단위
-        public const int CodeAssignerCapacity = 1000;               // 최대 그룹 수
-
+        public const int GroupCodeInterval = 1000;      // 그룹당 코드 부여단위
+        public const int CodeAssignerCapacity = 1000;   // 최대 그룹 수
 
         // 디자이너 윈도우와 실제 운영체제가 그리는 윈도우간의 너비, 높이 차이를 보정하기위한 수치
         public const double VisualHeightDifferenceBetweenDesignerAndReal = 35;
@@ -68,7 +55,7 @@ namespace SGToolsUI
         public const int CacheAlignSize = 64;
         public const bool UseDebugData = false;
 
-        public static readonly IntSize DefaultVisualSize = new (30, 30);
+        public static readonly IntSize DefaultVisualSize = new(30, 30);
         public static readonly IntSize DefaultBoxVisualSize = new(200, 30);
 
         public const int CanvasElementWithKeyboardDeltaX = 1;

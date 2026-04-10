@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/28/2023 7:46:26 AM
  *
@@ -6,37 +6,28 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Markup;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
+
 using SGToolsCommon.Sga;
 
 namespace SGToolsCommon.Converter
 {
     public class SgaFileNameConverter : MarkupExtension, IValueConverter
     {
-        public static Func<string, string, string>[] Converter = new []
+        public static Func<string, string, string>[] Converter = new[]
         {
             new Func<string, string, string>(InterfaceConverter)
         };
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        //////////////////////////////////////////////////////////////////////////////////
+        public object Convert(object _value, Type _targetType, object _parameter, CultureInfo _culture)
         {
-            string fileName = ((string)value).Replace("_", "");
+            string fileName = ((string)_value).Replace("_", "");
             string fileExt = Path.GetExtension(fileName);
-            int packageType = (int)parameter;
+            int packageType = (int)_parameter;
 
             if (packageType < 0 || packageType >= Converter.Length)
                 throw new Exception($"{SgaPackageType.Name[packageType]}에 해당하는 컨버터가 없습니다.");
@@ -44,26 +35,29 @@ namespace SGToolsCommon.Converter
             return Converter[packageType](fileName, fileExt);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        //////////////////////////////////////////////////////////////////////////////////
+        public object ConvertBack(object _value, Type _targetType, object _parameter, CultureInfo _culture)
         {
             throw new Exception("SgaFileNameConverter ConvertBack 함수 미구현");
         }
 
-        public override object ProvideValue(IServiceProvider serviceProvider)
+        //////////////////////////////////////////////////////////////////////////////////
+        public override object ProvideValue(IServiceProvider _serviceProvider)
         {
             return this;
         }
 
-        private static string InterfaceConverter(string fileName, string ext)
+        //////////////////////////////////////////////////////////////////////////////////
+        private static string InterfaceConverter(string _fileName, string _ext)
         {
-            string replaced = fileName;
+            string replaced = _fileName;
 
-            replaced = fileName.Replace("sprite", "");
-            if (replaced.Length <= ext.Length)
-                return fileName;
+            replaced = _fileName.Replace("sprite", "");
+            if (replaced.Length <= _ext.Length)
+                return _fileName;
 
             string replaced2 = replaced.Replace("interface", "");
-            if (replaced2.Length <= ext.Length)
+            if (replaced2.Length <= _ext.Length)
                 return replaced;
 
             return replaced2;

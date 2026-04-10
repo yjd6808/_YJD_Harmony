@@ -1,103 +1,93 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/1/2023 12:39:38 AM
  *
  */
 
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
+
 using SGToolsCommon.Primitive;
 
 namespace SGToolsCommon.Extension
 {
     public static partial class PointEx
     {
-        public static readonly Point Zero = new (0, 0);
+        public static readonly Point Zero = new(0, 0);
 
-        public static Point ToPoint(this Vector vector)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static Point ToPoint(this Vector _vector)
         {
-            return new global::System.Windows.Point(vector.X, vector.Y);
+            return new Point(_vector.X, _vector.Y);
         }
 
-        public static Vector ToVector(this Point point)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static Vector ToVector(this Point _point)
         {
-            return new Vector(point.X, point.Y);
+            return new Vector(_point.X, _point.Y);
         }
 
-        public static string ToFullString(this Vector vector)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static string ToFullString(this Vector _vector)
         {
-            return $"{vector.X:F0} {vector.Y:F0}";
+            return $"{_vector.X:F0} {_vector.Y:F0}";
         }
 
-
-        public static string ToFullString(this Point point)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static string ToFullString(this Point _point)
         {
-            return $"{(int)point.X} {(int)point.Y}";
+            return $"{(int)_point.X} {(int)_point.Y}";
         }
 
-        public static double Distance(this Point point, Point other)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static double Distance(this Point _point, Point _other)
         {
-            return Point.Subtract(point, other).Length;
+            return Point.Subtract(_point, _other).Length;
         }
 
-        public static Point ParseFullString(string s)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static Point ParseFullString(string _s)
         {
             int[] sizeArr = new int[2];
-            StringEx.ParseIntNumberN(s, sizeArr);
+            StringEx.ParseIntNumberN(_s, sizeArr);
             return new Point(sizeArr[0], sizeArr[1]);
         }
 
-
-        public static IntPoint ToIntPoint(this IntVector vector)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static IntPoint ToIntPoint(this IntVector _vector)
         {
-            return new IntPoint(vector.X, vector.Y);
+            return new IntPoint(_vector.X, _vector.Y);
         }
 
-        public static IntVector ToIntVector(this IntPoint point)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static IntVector ToIntVector(this IntPoint _point)
         {
-            return new IntVector(point.X, point.Y);
+            return new IntVector(_point.X, _point.Y);
         }
 
-        public static string ToFullString(this IntVector vector)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static string ToFullString(this IntVector _vector)
         {
-            return $"{vector.X} {vector.Y}";
+            return $"{_vector.X} {_vector.Y}";
         }
 
-
-        public static string ToFullString(this IntPoint point)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static string ToFullString(this IntPoint _point)
         {
-            return $"{point.X} {point.Y}";
+            return $"{_point.X} {_point.Y}";
         }
 
-        public static double Distance(this IntPoint point, IntPoint other)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static double Distance(this IntPoint _point, IntPoint _other)
         {
-            return point.Distance(other);
+            return _point.Distance(_other);
         }
 
-        public static IntPoint ParseFullStringIntPoint(string s)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static IntPoint ParseFullStringIntPoint(string _s)
         {
             int[] sizeArr = new int[2];
-            StringEx.ParseIntNumberN(s, sizeArr);
+            StringEx.ParseIntNumberN(_s, sizeArr);
             return new IntPoint(sizeArr[0], sizeArr[1]);
         }
-
-
-
-
-
     }
-
-
 }

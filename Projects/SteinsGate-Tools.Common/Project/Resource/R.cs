@@ -1,13 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/6/2023 11:20:08 AM
  *
  */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Transactions;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -101,11 +99,9 @@ namespace SGToolsCommon.Resource
         public const string IconWinMaximizeKey = IconPath + "win_maximize.ico";
         public const string IconWinMinimizeKey = IconPath + "win_minimize.ico";
 
-        
-
         public static readonly string FontDFKey = "gasinamuM";
         public static readonly string FontN2GKey = "NEXON Lv2 Gothic";
-        public static readonly string FontN2GBKey ="NEXON Lv2 Gothic Bold";
+        public static readonly string FontN2GBKey = "NEXON Lv2 Gothic Bold";
         public static readonly string FontN2GMKey = "NEXON Lv2 Gothic Medium";
 
         private static readonly BitmapImage[] IconCommonMap = new BitmapImage[(int)IconCommonType.Max];
@@ -113,40 +109,54 @@ namespace SGToolsCommon.Resource
 
         public static readonly Lazy<Cursor> DragAndDropCursor = new(() => ReadCursor(CursorPath + "drag_and_drop.ani"));
 
-        private static Cursor ReadCursor(string cursorPackPath)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static FontFamily GetFontFamily(FontType _type)
         {
-            StreamResourceInfo sri = Application.GetResourceStream(new Uri(cursorPackPath)) ?? throw new Exception($"{cursorPackPath} 리소스 로딩 실패");
+            int index = (int)_type;
+            if (FontCommonMap[index] == null)
+                FontCommonMap[index] = new FontFamily(new Uri(FontPath), GetFontFamilyKey(_type));
+
+            return FontCommonMap[index];
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public static BitmapImage GetIconCommon(IconCommonType _type)
+        {
+            int index = (int)_type;
+            if (IconCommonMap[index] == null)
+                IconCommonMap[index] = new BitmapImage(new Uri(GetIconCommonKey(_type)));
+
+            return IconCommonMap[index];
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        private static Cursor ReadCursor(string _cursorPackPath)
+        {
+            StreamResourceInfo sri = Application.GetResourceStream(new Uri(_cursorPackPath)) ?? throw new Exception($"{_cursorPackPath} 리소스 로딩 실패");
             byte[] buffer = new byte[sri.Stream.Length];
             sri.Stream.Read(buffer, 0, buffer.Length);
             MemoryStream ms = new MemoryStream(buffer);
             return new Cursor(ms);
         }
 
-        private static string GetFontFamilyKey(FontType type)
+        //////////////////////////////////////////////////////////////////////////////////
+        private static string GetFontFamilyKey(FontType _type)
         {
-            switch (type)
+            switch (_type)
             {
                 case FontType.DF:       return FontDFKey;
                 case FontType.N2G:      return FontN2GKey;
                 case FontType.N2GB:     return FontN2GBKey;
                 case FontType.N2GM:     return FontN2GMKey;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                    throw new ArgumentOutOfRangeException(nameof(_type), _type, null);
             }
         }
 
-        public static FontFamily GetFontFamily(FontType type)
+        //////////////////////////////////////////////////////////////////////////////////
+        private static string GetIconCommonKey(IconCommonType _type)
         {
-            int index = (int)type;
-            if (FontCommonMap[index] == null)
-                FontCommonMap[index] = new FontFamily(new Uri(FontPath), GetFontFamilyKey(type));
-
-            return FontCommonMap[index];
-        }
-
-        private static string GetIconCommonKey(IconCommonType type)
-        {
-            switch (type)
+            switch (_type)
             {
                 case IconCommonType.Checked:        return IconCommonCheckedKey;
                 case IconCommonType.Delete:         return IconCommonDeleteKey;
@@ -173,18 +183,7 @@ namespace SGToolsCommon.Resource
                 case IconCommonType.Unclip:         return IconCommonUnclipKey;
                 case IconCommonType.Link:           return IconCommonLinkKey;
                 default:  throw new ArgumentException("몽미");
-
-                    
             }
-        }
-
-        public static BitmapImage GetIconCommon(IconCommonType type)
-        {
-            int index = (int)type;
-            if (IconCommonMap[index] == null)
-                IconCommonMap[index] = new BitmapImage(new Uri(GetIconCommonKey(type)));
-
-            return IconCommonMap[index];
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/14/2023 1:58:46 PM
  *
@@ -6,7 +6,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Media;
@@ -15,8 +14,6 @@ using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Resource;
-using SGToolsCommon.Sga;
-using SGToolsUI.Model;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model.Main
@@ -33,38 +30,49 @@ namespace SGToolsUI.Model.Main
         public const int OrderTextHAlign = 7;
         public const int OrderTextVAlign = 8;
 
+        public static int Seq;
+
+        private IntSize visualSize_;
+        private FontType font_;
+        private int fontSize_;
+        private Color fontColor_;
+        private string text_;
+        private bool textWrap_;
+        private VAlignment textVAlign_;
+        private HAlignment textHAlign_;
+
+        //////////////////////////////////////////////////////////////////////////////////
         public SGUILabel()
         {
-            _visualSize = Constant.DefaultVisualSize;
-            _fontSize = 12;
-            _font = FontType.DF;
-            _fontColor = Brushes.Black.Color;
+            visualSize_ = Constant.DefaultVisualSize;
+            fontSize_ = 12;
+            font_ = FontType.DF;
+            fontColor_ = Brushes.Black.Color;
         }
-
 
         [ReadOnly(false)]
         [Category(Constant.LabelCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
         public override IntSize VisualSize
         {
-            get => _visualSize;
+            get => visualSize_;
             set
             {
-                _visualSize = value;
+                visualSize_ = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualRect));
             }
         }
 
-
         [Browsable(false)]
-        public FontFamily FontFamily => R.GetFontFamily(_font);
+        public FontFamily FontFamily => R.GetFontFamily(font_);
+
         [Category(Constant.LabelCategoryName), DisplayName("폰트"), PropertyOrder(OrderFont)]
         public FontType Font
         {
-            get => _font;
+            get => font_;
             set
             {
-                _font = value;
+                font_ = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(FontFamily));
             }
@@ -73,10 +81,10 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.LabelCategoryName), DisplayName("폰트 크기"), PropertyOrder(OrderFontSize)]
         public int FontSize
         {
-            get => _fontSize;
+            get => fontSize_;
             set
             {
-                _fontSize = value;
+                fontSize_ = value;
                 OnPropertyChanged();
             }
         }
@@ -84,10 +92,10 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.LabelCategoryName), DisplayName("폰트 색상"), PropertyOrder(OrderFontColor)]
         public Color FontColor
         {
-            get => _fontColor;
+            get => fontColor_;
             set
             {
-                _fontColor = value;
+                fontColor_ = value;
                 OnPropertyChanged();
             }
         }
@@ -95,10 +103,10 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.LabelCategoryName), DisplayName("텍스트"), PropertyOrder(OrderText)]
         public string Text
         {
-            get => _text;
+            get => text_;
             set
             {
-                _text = value;
+                text_ = value;
                 OnPropertyChanged();
             }
         }
@@ -106,28 +114,25 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.LabelCategoryName), DisplayName("텍스트 랩핑"), PropertyOrder(OrderTextWrap)]
         public bool TextWrap
         {
-            get => _textWrap;
+            get => textWrap_;
             set
             {
-                _textWrap = value;
+                textWrap_ = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(TextWrapEnum));
             }
         }
 
-
         [Browsable(false)]
-        public TextWrapping TextWrapEnum => _textWrap ? TextWrapping.Wrap : TextWrapping.NoWrap;
-
-
+        public TextWrapping TextWrapEnum => textWrap_ ? TextWrapping.Wrap : TextWrapping.NoWrap;
 
         [Category(Constant.LabelCategoryName), DisplayName("텍스트 수직정렬"), PropertyOrder(OrderTextVAlign)]
         public VAlignment TextVAlign
         {
-            get => _textVAlign;
+            get => textVAlign_;
             set
             {
-                _textVAlign = value;
+                textVAlign_ = value;
                 OnPropertyChanged();
             }
         }
@@ -135,81 +140,70 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.LabelCategoryName), DisplayName("텍스트 수평정렬"), PropertyOrder(OrderTextHAlign)]
         public HAlignment TextHAlign
         {
-            get => _textHAlign;
+            get => textHAlign_;
             set
             {
-                _textHAlign = value;
+                textHAlign_ = value;
                 OnPropertyChanged();
             }
         }
 
-
-
         public override SGUIElementType UIElementType => SGUIElementType.Label;
         [Browsable(false)] public override bool Manipulatable => true;
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override object Clone()
         {
             SGUILabel label = new SGUILabel();
             label.CopyFrom(this);
-            label._visualSize = _visualSize;
-            label._font = _font;
-            label._fontSize = _fontSize;
-            label._fontColor = _fontColor;
-            label._text = _text;
-            label._textWrap = _textWrap;
-            label._textVAlign = _textVAlign;
-            label._textHAlign = _textHAlign;
+            label.visualSize_ = visualSize_;
+            label.font_ = font_;
+            label.fontSize_ = fontSize_;
+            label.fontColor_ = fontColor_;
+            label.text_ = text_;
+            label.textWrap_ = textWrap_;
+            label.textVAlign_ = textVAlign_;
+            label.textHAlign_ = textHAlign_;
             return label;
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override JObject ToJObject()
         {
             JObject root = base.ToJObject();
             // 인덱스를 뛰어쓰기로 구분해서 돌려줌
-            root[JsonVisualSizeKey] = _visualSize.ToFullString();
-            root[JsonFontKey] = _font + ".ttf";
-            root[JsonFontSizeKey] = _fontSize;
-            root[JsonFontColorKey] = _fontColor.ToFullString4B();
-            root[JsonTextKey] = _text.Unescape();
-            root[JsonTextWrapKey] = _textWrap;
-            root[JsonTextVAlignKey] = (int)_textVAlign;
-            root[JsonTextHAlignKey] = (int)_textHAlign;
+            root[JsonVisualSizeKey] = visualSize_.ToFullString();
+            root[JsonFontKey] = font_ + ".ttf";
+            root[JsonFontSizeKey] = fontSize_;
+            root[JsonFontColorKey] = fontColor_.ToFullString4B();
+            root[JsonTextKey] = text_.Unescape();
+            root[JsonTextWrapKey] = textWrap_;
+            root[JsonTextVAlignKey] = (int)textVAlign_;
+            root[JsonTextHAlignKey] = (int)textHAlign_;
 
             return root;
         }
 
-        public override void ParseJObject(JObject root)
+        //////////////////////////////////////////////////////////////////////////////////
+        public override void ParseJObject(JObject _root)
         {
-            base.ParseJObject(root);
+            base.ParseJObject(_root);
 
-            string sizeString = (string)root[JsonVisualSizeKey];
-            _visualSize = SizeEx.ParseFullString(sizeString);
-            string fontFileName = (string)root[JsonFontKey];
-            _font = (FontType)Enum.Parse(typeof(FontType), Path.GetFileNameWithoutExtension(fontFileName));
-            _fontSize = (int)root[JsonFontSizeKey];
+            string sizeString = (string)_root[JsonVisualSizeKey];
+            visualSize_ = SizeEx.ParseFullString(sizeString);
+            string fontFileName = (string)_root[JsonFontKey];
+            font_ = (FontType)Enum.Parse(typeof(FontType), Path.GetFileNameWithoutExtension(fontFileName));
+            fontSize_ = (int)_root[JsonFontSizeKey];
 
-            string fontColorString = (string)root[JsonFontColorKey];
-            _fontColor = ColorEx.ParseFullString4B(fontColorString);
-            _text = (string)root[JsonTextKey];
-            _textWrap = (bool)root[JsonTextWrapKey];
-            _textVAlign = (VAlignment)(int)root[JsonTextVAlignKey];
-            _textHAlign = (HAlignment)(int)root[JsonTextHAlignKey];
+            string fontColorString = (string)_root[JsonFontColorKey];
+            fontColor_ = ColorEx.ParseFullString4B(fontColorString);
+            text_ = (string)_root[JsonTextKey];
+            textWrap_ = (bool)_root[JsonTextWrapKey];
+            textVAlign_ = (VAlignment)(int)_root[JsonTextVAlignKey];
+            textHAlign_ = (HAlignment)(int)_root[JsonTextHAlignKey];
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override void CreateInit() => VisualName = $"라벨_{Seq++}";
-        public static int Seq;
-
-        private IntSize _visualSize;
-        private FontType _font;
-        private int _fontSize;
-        private Color _fontColor;
-        private string _text;
-        private bool _textWrap;
-        private VAlignment _textVAlign;
-        private HAlignment _textHAlign;
-
-
     }
 }
-

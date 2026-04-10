@@ -1,69 +1,60 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/9/2023 2:40:42 PM
  *
  */
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Packaging;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using MoreLinq.Extensions;
 using SGToolsCommon.CustomControl;
 using SGToolsCommon.CustomView;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Resource;
 using SGToolsCommon.Sga;
-using SGToolsUI.Model;
 using SGToolsUI.ViewModel;
-using Xceed.Wpf.Toolkit.Primitives;
+
 using Path = System.IO.Path;
 
 namespace SGToolsUI.View
 {
-  
-
     public partial class AlbumView : Window
     {
         public AlbumViewModel ViewModel { get; }
 
-        public AlbumView(MainViewModel viewModel)
+        //////////////////////////////////////////////////////////////////////////////////
+        public AlbumView(MainViewModel _viewModel)
         {
-            ViewModel = new AlbumViewModel(this, viewModel);
+            ViewModel = new AlbumViewModel(this, _viewModel);
             InitializeComponent();
 
             ViewModel.MainViewModel.PackManager.NotifyUpdateList();
         }
-        private void AlbumView_OnLoaded(object sender, RoutedEventArgs e)
+
+        //////////////////////////////////////////////////////////////////////////////////
+        private void AlbumView_OnLoaded(object _sender, RoutedEventArgs _e)
         {
             SizeToContent = SizeToContent.Manual;
         }
 
-        private void PackageListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void PackageListBox_OnSelectionChanged(object _sender, SelectionChangedEventArgs _e)
         {
-            SgaPackage previous = e.RemovedItems.Count > 0 ? e.RemovedItems[0] as SgaPackage : null as SgaPackage;
+            SgaPackage previous = _e.RemovedItems.Count > 0 ? _e.RemovedItems[0] as SgaPackage : null as SgaPackage;
             SgaPackage cur = PackageListBox.SelectedItem as SgaPackage;
-            
+
             if (previous != null) previous.UnloadAll();
             if (cur == null) return;
             ViewModel.SelectedPackage = cur;
         }
 
-        private void ElementListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void ElementListBox_OnSelectionChanged(object _sender, SelectionChangedEventArgs _e)
         {
             SgaElementHeader header = ElementListBox.SelectedItem as SgaElementHeader;
             if (header == null) return;
@@ -81,7 +72,8 @@ namespace SGToolsUI.View
             ViewModel.SelectedImage = cur;
         }
 
-        private async void AlbumListBox_OnPreviewKeyDown(object sender, KeyEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private async void AlbumListBox_OnPreviewKeyDown(object _sender, KeyEventArgs _e)
         {
             int selectedCount = AlbumListBox.SelectedItems.Count;
             if (selectedCount == 0)
@@ -118,8 +110,8 @@ namespace SGToolsUI.View
             }
         }
 
-
-        private void AlbumListBox_OnPreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void AlbumListBox_OnPreviewMouseDoubleClick(object _sender, MouseButtonEventArgs _e)
         {
             int selectedCount = AlbumListBox.SelectedItems.Count;
             if (selectedCount == 0)
@@ -140,7 +132,8 @@ namespace SGToolsUI.View
             ViewModel.MainViewModel.View.Topmost = false;
         }
 
-        private void AlbumView_OnClosing(object? sender, CancelEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void AlbumView_OnClosing(object? _sender, CancelEventArgs _e)
         {
             if (!ViewModel.MainViewModel.Terminated)
                 Debug.Assert(false);

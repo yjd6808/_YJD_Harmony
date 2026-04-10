@@ -1,26 +1,12 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/27/2023 2:53:01 AM
  *
  */
 
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Security;
-using System.Reflection.PortableExecutable;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 using SGToolsCommon.Extension;
 
 namespace SGToolsCommon.Sga
@@ -33,93 +19,90 @@ namespace SGToolsCommon.Sga
         public const int SgaImgPathLen = 40;
         public static readonly Encoding Encoding = Encoding.UTF8;
 
-
-
-        public static SgaPackage Load(string path, bool indexOnly, bool headerOnly, int index)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static SgaPackage Load(string _path, bool _indexOnly, bool _headerOnly, int _index)
         {
-            FileStream readStream = File.OpenRead(path);
+            FileStream readStream = File.OpenRead(_path);
 
             if (readStream.ReadString() != SgaFlag)
                 return null;
 
             int elementCount = readStream.ReadInt();
-            SgaPackage package = new SgaPackage(readStream, path, elementCount, index);
+            SgaPackage package = new SgaPackage(readStream, _path, elementCount, _index);
 
             if (elementCount == 0)
                 return package;
 
-
             package.LoadIndex();
-            
-            if (headerOnly)
+
+            if (_headerOnly)
                 return package;
 
-            package.Load(indexOnly);
+            package.Load(_indexOnly);
             return package;
         }
 
-
-
-        public static string ReadElementPath(Stream readStream)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static string ReadElementPath(Stream _readStream)
         {
-            var data = new byte[SgaImgPathLen];
-            var i = 0;
+            byte[] data = new byte[SgaImgPathLen];
+            int i = 0;
             while (i < SgaImgPathLen)
             {
-                data[i] = (byte)(readStream.ReadByte());
+                data[i] = (byte)(_readStream.ReadByte());
 
                 if (data[i] == 0)
                     break;
 
                 i++;
             }
-            readStream.Seek(SgaImgPathLen - 1 - i);
+            _readStream.Seek(SgaImgPathLen - 1 - i);
             return Encoding.GetString(data, 0, i);
         }
 
-        public static SgaElement ReadElement(SgaPackage package, Stream stream, SgaElementHeader header, int nextOffset, bool indexOnly)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static SgaElement ReadElement(SgaPackage _package, Stream _stream, SgaElementHeader _header, int _nextOffset, bool _indexOnly)
         {
-            stream.Seek(header.Offset, SeekOrigin.Begin);
+            _stream.Seek(_header.Offset, SeekOrigin.Begin);
 
             SgaElement element;
-            string elementFlag = stream.ReadString();
+            string elementFlag = _stream.ReadString();
 
             if (elementFlag == ImgFlag)
             {
-                int indexLength = (int)stream.ReadLong();
-                int version = stream.ReadInt();
-                int spriteCount = stream.ReadInt();
-                int indexOffset = (int)stream.Position;
+                int indexLength = (int)_stream.ReadLong();
+                int version = _stream.ReadInt();
+                int spriteCount = _stream.ReadInt();
+                int indexOffset = (int)_stream.Position;
 
-                element = new SgaImage(spriteCount, package, header, version, indexOffset, indexLength);
-                element.Load(indexOnly);
+                element = new SgaImage(spriteCount, _package, _header, version, indexOffset, indexLength);
+                element.Load(_indexOnly);
                 return element;
             }
 
             if (elementFlag == SpriteFlag)
             {
-                int indexLength = stream.ReadInt(); stream.Seek(2, SeekOrigin.Current);
-                int version = stream.ReadInt();
-                int spriteCount = stream.ReadInt();
-                int indexOffset = (int)stream.Position;
+                int indexLength = _stream.ReadInt(); _stream.Seek(2, SeekOrigin.Current);
+                int version = _stream.ReadInt();
+                int spriteCount = _stream.ReadInt();
+                int indexOffset = (int)_stream.Position;
 
-                element = new SgaImage(spriteCount, package, header, version, indexOffset, indexLength);
-                element.Load(indexOnly);
+                element = new SgaImage(spriteCount, _package, _header, version, indexOffset, indexLength);
+                element.Load(_indexOnly);
                 return element;
             }
 
-
-            if (header.Name.EndsWith(".wav") ||
-                header.Name.EndsWith(".ogg"))
+            if (_header.Name.EndsWith(".wav") ||
+                _header.Name.EndsWith(".ogg"))
             {
-                stream.Seek(header.Offset);
+                _stream.Seek(_header.Offset);
 
                 int version = 0;
-                int indexLength = header.NextOffset - (int)stream.Position;
-                int indexOffset = (int)stream.Position;
+                int indexLength = _header.NextOffset - (int)_stream.Position;
+                int indexOffset = (int)_stream.Position;
 
-                element = new SgaSound(package, header, version, indexOffset, indexLength);
-                element.Load(indexOnly);
+                element = new SgaSound(_package, _header, version, indexOffset, indexLength);
+                element.Load(_indexOnly);
                 return element;
             }
 

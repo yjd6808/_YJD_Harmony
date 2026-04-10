@@ -17,7 +17,7 @@ thread_local _u32 Thread::tls_uiThreadId = 0;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 Thread::Thread(TRunnable&& _fn, void* _pParam, const char* _pName, bool _autoJoin)
-	: Thread(_pName, _autoJoin)
+: Thread(_pName, _autoJoin)
 {
     Start(Move(_fn), _pParam);
 }
@@ -187,9 +187,9 @@ bool Thread::Joinable()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Thread::Abort()
+void Thread::Abort() // detach랑 같은 효과
 {
-    WinApi::CloseHandle(m_hHandle);
+    WinApi::CloseHandle(m_hHandle); // detach
     m_hHandle = nullptr;
     m_eState = eAborted;
 }

@@ -52,6 +52,9 @@
     <Filter Include="PCH">
       <UniqueIdentifier>{8f9bda7c-acf3-445b-91f0-b0790f9a3fea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_Extern">
+      <UniqueIdentifier>{75f35ed7-f2ef-42a7-8c59-daf30312cade}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\jc\Random.cpp" />
@@ -254,6 +257,12 @@
     </ClCompile>
     <ClCompile Include="..\Sources\jc\PCH\Core.cpp">
       <Filter>PCH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc\_Extern\Extern_Console.cpp">
+      <Filter>_Extern</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc\_Extern\Extern_Random.cpp">
+      <Filter>_Extern</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -696,6 +705,12 @@
     <ClInclude Include="..\Sources\jc\Random.h" />
     <ClInclude Include="..\Sources\jc\PCH\Core.h">
       <Filter>PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\_Extern\Extern_Random.h">
+      <Filter>_Extern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\_Extern\Extern_Console.h">
+      <Filter>_Extern</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -7,6 +7,7 @@
  * 사실 Windows.h라는 글자자체가 헤더파일에 있는게 좀 보기 그렇다.
  * 기능별 설명은 마이크로소프트 홈페이지꺼 복사해서 붙여넣음
  * 매번 웹사이트로가서 설명읽기 귀찮다.
+ * -> 헛소리 그만하고 걍 헤더 포함시키자.. 2026/04/08
  */
 
 
@@ -16,6 +17,8 @@
 #include "jc/Define.h"
 #include "jc/TypeTraits.h"
 
+#define WIN32_LEAN_AND_MEAN	
+#include <Windows.h>
 
 NS_JC_BEGIN
 
@@ -59,10 +62,10 @@ struct WinApi {
 
     static _whandle InvalidHandleValue;
 
-    static bool            JC_CDECL SetConsoleCursorPosition( _whandle _stdoutHandle,  int _x,  int _y);
-	static bool            JC_CDECL GetConsoleCursorPosition( _whandle _stdoutHandle, OUT int& _x, OUT int& _y);
-	static bool            JC_CDECL SetConsoleTextAttribute( _whandle _stdoutHandle,  _s16 _attribute);
-	static bool            JC_CDECL SetConsoleOutputCodePage( _s32 _codePage);
+    static bool				JC_CDECL SetConsoleCursorPosition( _whandle _stdoutHandle,  int _x,  int _y);
+	static bool				JC_CDECL GetConsoleCursorPosition( _whandle _stdoutHandle, OUT int& _x, OUT int& _y);
+	static bool				JC_CDECL SetConsoleTextAttribute( _whandle _stdoutHandle,  _s16 _attribute);
+	static bool				JC_CDECL SetConsoleOutputCodePage( _s32 _codePage);
 	static _s32             JC_CDECL GetConsoleOutputCodePage();
 
 
@@ -70,8 +73,8 @@ struct WinApi {
 	 * \brief Retrieves a handle to the specified standard device
 	 * \return The standard output device. Initially, this is the active console screen buffer,
 	 */
-	static _whandle       JC_CDECL GetStdoutHandle();
-	static _whandle       JC_CDECL GetStdinHandle();
+	static _whandle			JC_CDECL GetStdoutHandle();
+	static _whandle			JC_CDECL GetStdinHandle();
 
 
 
@@ -83,7 +86,7 @@ struct WinApi {
 	 * \return If the function succeeds, the return value is a handle to the event object. If the named event object existed before the function call, the function returns a handle to the existing object and GetLastError returns ERROR_ALREADY_EXISTS.
 	 *         If the function fails, the return value is NULL. To get extended error information, call GetLastError.
 	 */
-	static _whandle       JC_CDECL CreateEventA(bool _initialState,  bool _manualReset, IN_OPT const char* _pName = nullptr);
+	static _whandle			JC_CDECL CreateEventA(bool _initialState,  bool _manualReset, IN_OPT const char* _pName = nullptr);
 
 	/** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitformultipleobjectsex
 	 * \brief Waits until one or all of the specified objects are in the signaled state, an I/O completion routine or asynchronous procedure call (APC) is queued to the thread, or the time-out interval elapses.
@@ -94,9 +97,9 @@ struct WinApi {
 	 * \param _alertable If this parameter is TRUE and the thread is in the waiting state, the function returns when the system queues an I/O completion routine or APC, and the thread runs the routine or function. Otherwise, the function does not return and the completion routine or APC function is not executed.
 	 * \return If the function succeeds, the return value indicates the event that caused the function to return. It can be one of the following values. (Note that WAIT_OBJECT_0 is defined as 0 and WAIT_ABANDONED_0 is defined as 0x00000080L.)
 	 */
-	static _u32l          JC_CDECL WaitForMultipleObjectsEx(_u32 _eventCount, _whandle* _pHandles, bool _waitAll, _u32 _timeout = JC_INFINITE, bool _alertable = false);
-	static _u32l          JC_CDECL WaitForSingleObject(_whandle _handle, _u32 _timeout = JC_INFINITE);
-	static _u32l          JC_CDECL GetLastError();
+	static _u32l			JC_CDECL WaitForMultipleObjectsEx(_u32 _eventCount, _whandle* _pHandles, bool _waitAll, _u32 _timeout = JC_INFINITE, bool _alertable = false);
+	static _u32l			JC_CDECL WaitForSingleObject(_whandle _handle, _u32 _timeout = JC_INFINITE);
+	static _u32l			JC_CDECL GetLastError();
 
 
 	/** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-setevent#return-value
@@ -104,21 +107,21 @@ struct WinApi {
 	 * \param _handle  A handle to the event object. The CreateEvent or OpenEvent function returns this handle.
 	 * \return If the function succeeds, the return value is nonzero.
 	 */
-	static bool            JC_CDECL SetEvent(_whandle _handle);
+	static bool				JC_CDECL SetEvent(_whandle _handle);
 
 	/** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-resetevent
 	 * \brief Sets the specified event object to the nonsignaled state.
 	 * \param _handle A handle to the event object. The CreateEvent or OpenEvent function returns this handle.
 	 * \return If the function succeeds, the return value is nonzero.
 	 */
-	static bool            JC_CDECL ResetEvent(_whandle _handle);
+	static bool				JC_CDECL ResetEvent(_whandle _handle);
 
 	/** https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle
 	 * \brief Closes an open object handle.
 	 * \param _handle A valid handle to an open object.
 	 * \return If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call GetLastError.
 	 */
-	static bool            JC_CDECL CloseHandle( _whandle _handle);
+	static bool				JC_CDECL CloseHandle( _whandle _handle);
 
 
 	/** https://learn.microsoft.com/ko-kr/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadpriority
@@ -134,7 +137,7 @@ struct WinApi {
 	 * THREAD_PRIORITY_NORMAL           0
 	 * THREAD_PRIORITY_TIME_CRITICAL    15
 	 */
-	static int             JC_CDECL GetThreadPriority(_whandle _threadHandle);
+	static int				JC_CDECL GetThreadPriority(_whandle _threadHandle);
 
 	/** https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadpriority
 	 * \brief Sets the priority value for the specified thread. This value, together with the priority class of the thread's process, determines the thread's base priority level.
@@ -142,23 +145,30 @@ struct WinApi {
 	 * \param _priority The priority value for the thread.
 	 * \return If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call GetLastError.
 	 */
-	static bool            JC_CDECL SetThreadPriority( _whandle _threadHandle,  _s32 _priority);
+	static bool				JC_CDECL SetThreadPriority( _whandle _threadHandle,  _s32 _priority);
 
 	/** https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadid
 	 * \brief Retrieves the thread identifier of the calling thread.
 	 * \remarks Until the thread terminates, the thread identifier uniquely identifies the thread throughout the system.
 	 * \return The return value is the thread identifier of the calling thread.
 	 */
-	static _u32          JC_CDECL GetCurrentThreadId();
-
+	static _u32				JC_CDECL GetCurrentThreadId();
 
 	/**
 	 * \brief https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamea
 	 * Retrieves the fully qualified path for the file that contains the specified module. The module must have been loaded by the current process.
 	 * \return the return value is the length of the string that is copied to the buffer
 	 */
-	static _u32          JC_CDECL GetModuleFilePath(IN_OPT _wmodule _module, OUT char* _pFilenameBuffer,  int _filenameBufferCapacity);
-    
+	static _u32				JC_CDECL GetModuleFilePath(IN_OPT _wmodule _module, OUT char* _pFilenameBuffer,  int _filenameBufferCapacity);
+
+	static String			JC_CDECL GetMemoryBasicInformationString(const MEMORY_BASIC_INFORMATION& _memInfo, int _index = 0);
+	static void				JC_CDECL PrintMemoryBasicInformation(const MEMORY_BASIC_INFORMATION& _memInfo, int _index = 0);
+
+	static String			JC_CDECL MemoryStateToString(DWORD _state);
+	static String			JC_CDECL ProtectToString(DWORD _protect);
+	static String			JC_CDECL MemoryTypeToString(DWORD _type);
+
+
 }; // struct WinApi
 
 

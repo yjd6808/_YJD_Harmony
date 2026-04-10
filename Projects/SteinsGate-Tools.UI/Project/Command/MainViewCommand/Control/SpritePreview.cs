@@ -1,24 +1,12 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/1/2023 2:26:04 AM
  *
  */
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Sga;
 using SGToolsUI.View;
@@ -28,17 +16,19 @@ namespace SGToolsUI.Command.MainViewCommand.Control
 {
     public class SpritePreview : MainCommandAbstract
     {
-        private SpriteView _spriteView;
+        private SpriteView spriteView_;
 
-        public SpritePreview(MainViewModel viewModel)
-            : base(viewModel, "SpriteListBoxItem위에 마우스를 올린 경우 이벤트를 처리합니다.")
+        //////////////////////////////////////////////////////////////////////////////////
+        public SpritePreview(MainViewModel _viewModel)
+            : base(_viewModel, "SpriteListBoxItem위에 마우스를 올린 경우 이벤트를 처리합니다.")
         {
-            _spriteView = new SpriteView();
+            spriteView_ = new SpriteView();
         }
 
-        public override void Execute(object? parameter)
+        //////////////////////////////////////////////////////////////////////////////////
+        public override void Execute(object? _parameter)
         {
-            var eventArgs = parameter as MouseEventArgs;
+            var eventArgs = _parameter as MouseEventArgs;
 
             if (eventArgs == null)
                 return;
@@ -55,20 +45,21 @@ namespace SGToolsUI.Command.MainViewCommand.Control
                 if (sprite == null)
                     throw new Exception("SgaSpriteAbstract 타입이 아닙니다.");
 
-                _spriteView.ViewModel.PreviewTarget = sprite;
-                _spriteView.Show();
-                _spriteView.AdjustSize();
-                _spriteView.AdjustPosition(sender.GetOffsetInMonitor());
+                spriteView_.ViewModel.PreviewTarget = sprite;
+                spriteView_.Show();
+                spriteView_.AdjustSize();
+                spriteView_.AdjustPosition(sender.GetOffsetInMonitor());
             }
             else if (eventArgs.RoutedEvent == Mouse.MouseLeaveEvent)
             {
-                _spriteView.Visibility = Visibility.Collapsed;
+                spriteView_.Visibility = Visibility.Collapsed;
             }
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override void Dispose()
         {
-            _spriteView.Close();
+            spriteView_.Close();
         }
     }
 }

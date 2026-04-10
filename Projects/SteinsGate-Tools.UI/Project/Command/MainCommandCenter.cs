@@ -1,24 +1,9 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/28/2023 12:22:45 AM
  *
  */
 
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SGToolsCommon.Command;
 using SGToolsUI.Command.MainViewCommand;
 using SGToolsUI.Command.MainViewCommand.Async;
@@ -60,7 +45,6 @@ namespace SGToolsUI.Command
         public CommandAbstract CanvasZoomReset { get; }
         public CommandAbstract PositionUIElement { get; }
 
-
         public CommandAbstract OpenDirectory { get; }
         public CommandAbstract ShowShortcut { get; }
 
@@ -75,19 +59,17 @@ namespace SGToolsUI.Command
         public CommandAbstract FileGameDataSaveAsync { get; }
         public CommandAbstract FileGameHeaderExportAsync { get; }
 
-
         // =================================================
         // 컨트롤 커맨드 목록 (개발자가 직접 호출할 일없는..)
         // =================================================
         public CommandAbstract MouseMoveOnWindow { get; }
         public CommandAbstract SpritePreview { get; }
-        public CommandAbstract CanvasZoomWheel{ get; }
-        
+        public CommandAbstract CanvasZoomWheel { get; }
 
-
-        public MainCommandCenter(MainViewModel viewModel)
+        //////////////////////////////////////////////////////////////////////////////////
+        public MainCommandCenter(MainViewModel _viewModel)
         {
-            ViewModel = viewModel;
+            ViewModel = _viewModel;
 
             Add(OpenSetting = new OpenSettingView(ViewModel));
             Add(OpenLogView = new OpenLogView(ViewModel));
@@ -107,7 +89,6 @@ namespace SGToolsUI.Command
             Add(UnpickUIElement = new UnpickUIElement(ViewModel));
             Add(ClipboardOperateUIElement = new ClipboardOperateUIElement(ViewModel) { UseParameter = true });
             Add(PositionUIElement = new PositionUIElement(ViewModel) { UseParameter = true });
-            
 
             Add(CanvasZoomUp = new CanvasZoomUp(ViewModel));
             Add(CanvasZoomDown = new CanvasZoomDown(ViewModel));
@@ -117,15 +98,14 @@ namespace SGToolsUI.Command
             Add(ToggleCanvasAnchor = new ToggleCanvasAnchor(ViewModel));
             Add(OpenDirectory = new OpenDirectory(ViewModel) { UseParameter = true });
             Add(ShowShortcut = new ShowShortcut(ViewModel));
-            Add(SelectPropertyGridElement = new SelectPropertyGridElement(ViewModel) { /*UseParameter = true */});
+            Add(SelectPropertyGridElement = new SelectPropertyGridElement(ViewModel));
             // ============================================================
-            Add(FileUIToolDataLoadAsync = new FileUIToolDataLoadAsync(ViewModel) { UseParameter = true } );
-            Add(FileUIToolDataSaveAsync = new FileUIToolDataSaveAsync(ViewModel) { UseParameter = true } );
-            Add(FileUIToolDataBackupAsync = new FileUIToolDataBackupAsync(ViewModel) /*{ UseParameter = true }*/); // 커맨드파라미터를 바인딩해서 초기 null이 들어옴
-            Add(FileGameDataSaveAsync = new FileGameDataSaveAsync(ViewModel) { UseParameter = true } );
-            Add(FileGameHeaderExportAsync = new FileGameHeaderExportAsync(ViewModel) );
+            Add(FileUIToolDataLoadAsync = new FileUIToolDataLoadAsync(ViewModel) { UseParameter = true });
+            Add(FileUIToolDataSaveAsync = new FileUIToolDataSaveAsync(ViewModel) { UseParameter = true });
+            Add(FileUIToolDataBackupAsync = new FileUIToolDataBackupAsync(ViewModel)); // 커맨드파라미터를 바인딩해서 초기 null이 들어옴
+            Add(FileGameDataSaveAsync = new FileGameDataSaveAsync(ViewModel) { UseParameter = true });
+            Add(FileGameHeaderExportAsync = new FileGameHeaderExportAsync(ViewModel));
 
-            
             // ============================================================
             Add(MouseMoveOnWindow = new MouseMoveOnWindow(ViewModel) { UseParameter = true });
             Add(SpritePreview = new SpritePreview(ViewModel) { UseParameter = true });

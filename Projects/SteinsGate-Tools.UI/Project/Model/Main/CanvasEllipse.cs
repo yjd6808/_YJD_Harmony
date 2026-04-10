@@ -1,113 +1,103 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/8/2023 10:23:06 AM
  *
  */
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 
 namespace SGToolsUI.Model.Main
 {
     public class CanvasEllipse : CanvasShape
     {
+        private Rect visualRect_;
+        private int thickness_;
+        private Brush strokeBrush_;
+        private Brush fillBrush_;
 
-        public CanvasEllipse(Rect rect, int thickness, Brush stroke, Brush fill)
+        //////////////////////////////////////////////////////////////////////////////////
+        public CanvasEllipse(Rect _rect, int _thickness, Brush _stroke, Brush _fill)
         {
-            _visualRect = rect;
-            _thickness = thickness;
-            _strokeBrush = stroke;
-            _fillBrush = fill;
+            visualRect_ = _rect;
+            thickness_ = _thickness;
+            strokeBrush_ = _stroke;
+            fillBrush_ = _fill;
         }
 
-
+        //////////////////////////////////////////////////////////////////////////////////
         public Rect VisualRect
         {
-            get => _visualRect;
+            get => visualRect_;
             set
             {
-                _visualRect = value;
+                visualRect_ = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualSize));
                 OnPropertyChanged(nameof(VisualPosition));
             }
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public IntPoint VisualPosition
         {
-            get => _visualRect.Location;
+            get => visualRect_.Location;
             set
             {
-                _visualRect.Location = value;
+                visualRect_.Location = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualRect));
             }
         }
 
-
+        //////////////////////////////////////////////////////////////////////////////////
         public Size VisualSize
         {
-            get => _visualRect.Size;
+            get => visualRect_.Size;
             set
             {
-                _visualRect.Size = value;
+                visualRect_.Size = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualRect));
             }
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public Brush StrokeBrush
         {
-            get => _strokeBrush;
+            get => strokeBrush_;
             set
             {
-                _strokeBrush = value;
+                strokeBrush_ = value;
                 OnPropertyChanged();
             }
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public Brush FillBrush
         {
-            get => _fillBrush;
+            get => fillBrush_;
             set
             {
-                _strokeBrush = value;
+                strokeBrush_ = value;
                 OnPropertyChanged();
             }
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public int Thickness
         {
-            get => _thickness;
+            get => thickness_;
             set
             {
-                _thickness = value;
+                thickness_ = value;
                 OnPropertyChanged();
             }
         }
 
         public override ShapeElementType ShapeElementType => ShapeElementType.Ellipse;
         public override bool IsEllipse => true;
-
-
-        private Rect _visualRect;
-        private int _thickness;
-        private Brush _strokeBrush;
-        private Brush _fillBrush;
     }
 }

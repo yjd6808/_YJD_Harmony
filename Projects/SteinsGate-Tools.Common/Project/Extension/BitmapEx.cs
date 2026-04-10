@@ -1,26 +1,22 @@
-﻿/*
+/*
  * 복붙
  * 생성일: 2/27/2023 6:41:47 AM
  */
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using PixelFormat = System.Drawing.Imaging.PixelFormat;
-using System.Windows.Media.Media3D;
-using System.Windows;
+
 using Vanara.PInvoke;
 
-using Point = System.Windows.Point;
-using Size = System.Windows.Size;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 using DPoint = System.Drawing.Point;
 using DSize = System.Drawing.Size;
 
@@ -28,62 +24,68 @@ namespace SGToolsCommon.Extension
 {
     public static class BitmapEx
     {
-        public static Bitmap FromArray(byte[] data, int width, int height)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static Bitmap FromArray(byte[] _data, int _width, int _height)
         {
-            var bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-            var bmpData = bmp.LockBits(new Rectangle(DPoint.Empty, new DSize(width, height)), ImageLockMode.WriteOnly,
+            Bitmap bmp = new Bitmap(_width, _height, PixelFormat.Format32bppArgb);
+            BitmapData bmpData = bmp.LockBits(new Rectangle(DPoint.Empty, new DSize(_width, _height)), ImageLockMode.WriteOnly,
                 PixelFormat.Format32bppArgb);
-            Marshal.Copy(data, 0, bmpData.Scan0, data.Length);
+            Marshal.Copy(_data, 0, bmpData.Scan0, _data.Length);
             bmp.UnlockBits(bmpData);
             return bmp;
         }
 
-        public static ImageSource ToSource(this Bitmap bitmap)
-            => BitmapSource.Create(bitmap.Width, bitmap.Height, 0, 0, PixelFormats.Bgra32, null, bitmap.ToArray(), 4 * bitmap.Width);
-        
-        public static byte[] ToArray(this Bitmap bmp)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static ImageSource ToSource(this Bitmap _bitmap)
+            => BitmapSource.Create(_bitmap.Width, _bitmap.Height, 0, 0, PixelFormats.Bgra32, null, _bitmap.ToArray(), 4 * _bitmap.Width);
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public static byte[] ToArray(this Bitmap _bmp)
         {
-            ToArray(bmp, out var data);
+            ToArray(_bmp, out byte[] data);
             return data;
         }
 
-        public static void ToArray(this Bitmap bmp, out byte[] data)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void ToArray(this Bitmap _bmp, out byte[] _data)
         {
-            data = new byte[bmp.Width * bmp.Height * 4];
-            var bmpData = bmp.LockBits(new Rectangle(DPoint.Empty, bmp.Size), ImageLockMode.ReadOnly,
+            _data = new byte[_bmp.Width * _bmp.Height * 4];
+            BitmapData bmpData = _bmp.LockBits(new Rectangle(DPoint.Empty, _bmp.Size), ImageLockMode.ReadOnly,
                 PixelFormat.Format32bppArgb);
-            Marshal.Copy(bmpData.Scan0, data, 0, data.Length);
-            bmp.UnlockBits(bmpData);
+            Marshal.Copy(bmpData.Scan0, _data, 0, _data.Length);
+            _bmp.UnlockBits(bmpData);
         }
 
-
+        //////////////////////////////////////////////////////////////////////////////////
         // 코코스에서는 Rgb이므로 바이트 순서 유념해야한다.
-        public static void Bgra32LinearDodgePixel(Span<byte> pixelData)
+        public static void Bgra32LinearDodgePixel(Span<byte> _pixelData)
         {
-            var max = Math.Max(pixelData[0], Math.Max(pixelData[1], pixelData[2]));
-            var sub = (byte)(0xff - max);
-            pixelData[3] = Math.Min(pixelData[3], max);
-            pixelData[2] += sub;
-            pixelData[1] += sub;
-            pixelData[0] += sub;
+            byte max = Math.Max(_pixelData[0], Math.Max(_pixelData[1], _pixelData[2]));
+            byte sub = (byte)(0xff - max);
+            _pixelData[3] = Math.Min(_pixelData[3], max);
+            _pixelData[2] += sub;
+            _pixelData[1] += sub;
+            _pixelData[0] += sub;
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         // 비동기버전은 지원안해서 만들어씀
-        public static Task SaveAsync(this Bitmap bitmap, string path, ImageFormat format = null)
+        public static Task SaveAsync(this Bitmap _bitmap, string _path, ImageFormat _format = null)
         {
             return Task.Run(() =>
             {
-                using (FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
-                    bitmap.Save(fileStream, format == null ? ImageFormat.Png : format);
+                using (FileStream fileStream = new FileStream(_path, FileMode.Create, FileAccess.Write))
+                    _bitmap.Save(fileStream, _format == null ? ImageFormat.Png : _format);
             });
         }
 
-        public static void SaveToClipboard(this Bitmap bitmap)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void SaveToClipboard(this Bitmap _bitmap)
         {
-            IntPtr handle = bitmap.GetHbitmap();
+            IntPtr handle = _bitmap.GetHbitmap();
             try
             {
-                var source = Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                BitmapSource source = Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                 Clipboard.SetImage(source);
             }
             finally

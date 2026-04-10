@@ -1,23 +1,10 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/9/2023 9:08:25 PM
  *
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SGToolsCommon.Primitive
 {
@@ -48,7 +35,6 @@ namespace SGToolsCommon.Primitive
         BottomRight
     }
 
-
     public static class Alignment
     {
         public static readonly ValueTuple<VAlignment, HAlignment>[] PositioningToAlignMap = new[]
@@ -63,6 +49,5 @@ namespace SGToolsCommon.Primitive
             new ValueTuple<VAlignment, HAlignment>(VAlignment.Bottom, HAlignment.Center),
             new ValueTuple<VAlignment, HAlignment>(VAlignment.Bottom, HAlignment.Right)
         };
-
     }
 }

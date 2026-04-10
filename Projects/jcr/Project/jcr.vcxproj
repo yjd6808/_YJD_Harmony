@@ -21,9 +21,20 @@
   <ItemGroup>
     <ClCompile Include="..\Sources\jcr\Core.cpp" />
     <ClCompile Include="..\Sources\jcr\main.cpp" />
+    <ClCompile Include="..\Sources\jcr\01_AsmStudy1.cpp" />
+    <ClCompile Include="..\Sources\jcr\02_HeapStudy1.cpp" />
+    <ClCompile Include="..\Sources\jcr\03_RSPGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jcr\Core.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="..\Sources\jcr\01_AsmStudy2.asm">
+      <FileType>Document</FileType>
+    </MASM>
+    <MASM Include="..\Sources\jcr\03_RSPGame2.asm">
+      <FileType>Document</FileType>
+    </MASM>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -62,6 +73,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -120,6 +132,10 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>jc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <StackReserveSize>1400000</StackReserveSize>
+      <StackCommitSize>1400000</StackCommitSize>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <AssemblyDebug>true</AssemblyDebug>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -136,6 +152,10 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>jc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <StackReserveSize>1400000</StackReserveSize>
+      <StackCommitSize>1400000</StackCommitSize>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <AssemblyDebug>true</AssemblyDebug>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -149,10 +169,11 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/utf-8</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
-      <DebugInformationFormat>None</DebugInformationFormat>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -160,6 +181,10 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>jc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <StackReserveSize>140000</StackReserveSize>
+      <StackCommitSize>140000</StackCommitSize>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <AssemblyDebug>true</AssemblyDebug>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -173,10 +198,11 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/utf-8</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
-      <DebugInformationFormat>None</DebugInformationFormat>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -184,9 +210,14 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>jc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <StackReserveSize>140000</StackReserveSize>
+      <StackCommitSize>140000</StackCommitSize>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <AssemblyDebug>true</AssemblyDebug>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
   </ImportGroup>
 </Project>

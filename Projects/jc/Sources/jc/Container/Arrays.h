@@ -450,6 +450,16 @@ struct Arrays final
 		}
 	}
 
+	template <typename T, typename TVal,
+		jc::DefaultEnableIf_t<jc::And_v<jc::IsIntegerType_v<TVal>, jc::IsIntegerType_v<T>>> = nullptr>
+	static void FillAutoIncrement(T* _pArr, int _size, TVal _startValue, int _interval = 1)
+	{
+		for (int i = 0; i < _size; ++i, _startValue += _interval)
+		{
+			_pArr[i] = _startValue;
+		}
+	}
+
 	template <typename T, _u32 Size>
 	static void Copy(T (&_destination)[Size], const T (&_source)[Size])
 	{

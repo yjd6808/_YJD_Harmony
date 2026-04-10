@@ -1,42 +1,28 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/28/2023 8:46:00 AM
  *
  */
 
-using SGToolsUI.Model;
-using SGToolsUI.View;
-using SGToolsUI.ViewModel;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SGToolsCommon.Sga;
+using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.Command.MainViewCommand
 {
     public class SelectSgaPackage : MainCommandAbstract
     {
-
-        public SelectSgaPackage(MainViewModel viewModel)
-            : base(viewModel, "SGA 패키지를 선택합니다.")
+        //////////////////////////////////////////////////////////////////////////////////
+        public SelectSgaPackage(MainViewModel _viewModel)
+            : base(_viewModel, "SGA 패키지를 선택합니다.")
         {
         }
 
-        public override void Execute(object? parameter)
+        //////////////////////////////////////////////////////////////////////////////////
+        public override void Execute(object? _parameter)
         {
-            SgaPackage? selectedPackage = parameter as SgaPackage;
+            SgaPackage? selectedPackage = _parameter as SgaPackage;
             if (selectedPackage == null)
                 throw new Exception("선택한 리스트박스 아이템은 Sga 패키지 타입이 아닙니다.");
 
@@ -49,8 +35,6 @@ namespace SGToolsUI.Command.MainViewCommand
             ViewModel.AlbumView.ViewModel.SelectedImage = new SgaImage();
 
             ViewModel.ResourceSelectionStatus = $"{selectedPackage.FileNameWithoutExt}";
-
-            
 
             Debug.WriteLine($"${selectedPackage} 패키지 선택");
         }

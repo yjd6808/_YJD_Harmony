@@ -1,22 +1,15 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/14/2023 1:58:46 PM
  *
  */
 
-using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
-using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
-using SGToolsCommon.Resource;
-using SGToolsCommon.Sga;
-using SGToolsUI.Model;
 using Xceed.Wpf.Toolkit;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
@@ -46,27 +39,39 @@ namespace SGToolsUI.Model.Main
         public const int OrderMaxLength = 8;
         public const int OrderInputMode = 9;
 
+        public static int Seq;
+
+        private IntSize visualSize_;
+        private HAlignment textHAlign_;
+        private int fontSize_;
+        private Color fontColor_;
+        private string placeholderText_;
+        private Color placeholderFontColor_;
+        private int placeholderFontSize_;
+        private int maxLength_;
+        private InputMode inputMode_;
+
+        //////////////////////////////////////////////////////////////////////////////////
         public SGUIEditBox()
         {
-            _visualSize = Constant.DefaultBoxVisualSize;
-            _textHAlign = HAlignment.Right;
-            _fontSize = 16;
-            _fontColor = Color.FromArgb(255, 0, 0, 0);
-            _placeholderText = "텍스트를 입력해주세요.";
-            _placeholderFontColor = Color.FromArgb(255, 128, 128, 128);
-            _placeholderFontSize = 16;
-            _maxLength = 20;
-            _inputMode = InputMode.Any;
+            visualSize_ = Constant.DefaultBoxVisualSize;
+            textHAlign_ = HAlignment.Right;
+            fontSize_ = 16;
+            fontColor_ = Color.FromArgb(255, 0, 0, 0);
+            placeholderText_ = "텍스트를 입력해주세요.";
+            placeholderFontColor_ = Color.FromArgb(255, 128, 128, 128);
+            placeholderFontSize_ = 16;
+            maxLength_ = 20;
+            inputMode_ = InputMode.Any;
         }
-
 
         [Category(Constant.EditBoxCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
         public override IntSize VisualSize
         {
-            get => _visualSize;
+            get => visualSize_;
             set
             {
-                _visualSize = value;
+                visualSize_ = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualRect));
             }
@@ -75,10 +80,10 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.EditBoxCategoryName), DisplayName("텍스트 수평정렬"), PropertyOrder(OrderTextHAlign)]
         public HAlignment TextHAlign
         {
-            get => _textHAlign;
+            get => textHAlign_;
             set
             {
-                _textHAlign = value;
+                textHAlign_ = value;
                 OnPropertyChanged();
             }
         }
@@ -86,10 +91,10 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.EditBoxCategoryName), DisplayName("폰트 크기"), PropertyOrder(OrderFontSize)]
         public int FontSize
         {
-            get => _fontSize;
+            get => fontSize_;
             set
             {
-                _fontSize = value;
+                fontSize_ = value;
                 OnPropertyChanged();
             }
         }
@@ -97,22 +102,21 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.EditBoxCategoryName), DisplayName("폰트 색상"), PropertyOrder(OrderFontColor)]
         public Color FontColor
         {
-            get => _fontColor;
+            get => fontColor_;
             set
             {
-                _fontColor = value;
+                fontColor_ = value;
                 OnPropertyChanged();
             }
         }
 
-
         [Category(Constant.EditBoxCategoryName), DisplayName("홀더"), PropertyOrder(OrderPlaceholderText)]
         public string PlaceholderText
         {
-            get => _placeholderText;
+            get => placeholderText_;
             set
             {
-                _placeholderText = value;
+                placeholderText_ = value;
                 OnPropertyChanged();
             }
         }
@@ -120,10 +124,10 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.EditBoxCategoryName), DisplayName("홀더 색상"), PropertyOrder(OrderPlaceholderFontColor)]
         public Color PlaceholderFontColor
         {
-            get => _placeholderFontColor;
+            get => placeholderFontColor_;
             set
             {
-                _placeholderFontColor = value;
+                placeholderFontColor_ = value;
                 OnPropertyChanged();
             }
         }
@@ -131,10 +135,10 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.EditBoxCategoryName), DisplayName("홀더 크기"), PropertyOrder(OrderPlaceholderFontSize)]
         public int PlaceholderFontSize
         {
-            get => _placeholderFontSize;
+            get => placeholderFontSize_;
             set
             {
-                _placeholderFontSize = value;
+                placeholderFontSize_ = value;
                 OnPropertyChanged();
             }
         }
@@ -142,10 +146,10 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.EditBoxCategoryName), DisplayName("입력 길이(최대)"), PropertyOrder(OrderMaxLength)]
         public int MaxLength
         {
-            get => _maxLength;
+            get => maxLength_;
             set
             {
-                _maxLength = value;
+                maxLength_ = value;
                 OnPropertyChanged();
             }
         }
@@ -153,15 +157,13 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.EditBoxCategoryName), DisplayName("입력 모드"), PropertyOrder(OrderInputMode)]
         public InputMode InputMode
         {
-            get => _inputMode;
+            get => inputMode_;
             set
             {
-                _inputMode = value;
+                inputMode_ = value;
                 OnPropertyChanged();
             }
         }
-
-
 
         public override SGUIElementType UIElementType => SGUIElementType.EditBox;
         [Browsable(false)] public override bool Manipulatable => true;
@@ -169,69 +171,70 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)]
         public WatermarkTextBox TextBox { get; set; }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override object Clone()
         {
             SGUIEditBox editbox = new SGUIEditBox();
             editbox.CopyFrom(this);
-            editbox._visualSize = _visualSize;
-            editbox._textHAlign = _textHAlign;
-            editbox._fontSize = _fontSize;
-            editbox._fontColor = _fontColor;
-            editbox._placeholderText = _placeholderText;
-            editbox._placeholderFontColor = _placeholderFontColor;
-            editbox._placeholderFontSize = _placeholderFontSize;
-            editbox._inputMode = _inputMode;
-            editbox._maxLength = _maxLength;
+            editbox.visualSize_ = visualSize_;
+            editbox.textHAlign_ = textHAlign_;
+            editbox.fontSize_ = fontSize_;
+            editbox.fontColor_ = fontColor_;
+            editbox.placeholderText_ = placeholderText_;
+            editbox.placeholderFontColor_ = placeholderFontColor_;
+            editbox.placeholderFontSize_ = placeholderFontSize_;
+            editbox.inputMode_ = inputMode_;
+            editbox.maxLength_ = maxLength_;
             return editbox;
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override JObject ToJObject()
         {
             JObject root = base.ToJObject();
             // 인덱스를 뛰어쓰기로 구분해서 돌려줌
-            root[JsonVisualSizeKey] = _visualSize.ToFullString();
-            root[JsonTextHAlignKey] = (int)_textHAlign;
-            root[JsonFontSizeKey] = _fontSize;
-            root[JsonFontColorKey] = _fontColor.ToFullString4B();
-            root[JsonPlaceholderTextKey] = _placeholderText;
-            root[JsonPlaceholderFontColorKey] = _placeholderFontColor.ToFullString4B();
-            root[JsonPlaceholderFontSizeKey] = _placeholderFontSize;
-            root[JsonMaxLengthKey] = _maxLength;
-            root[JsonInputModeKey] = (int)_inputMode;
+            root[JsonVisualSizeKey] = visualSize_.ToFullString();
+            root[JsonTextHAlignKey] = (int)textHAlign_;
+            root[JsonFontSizeKey] = fontSize_;
+            root[JsonFontColorKey] = fontColor_.ToFullString4B();
+            root[JsonPlaceholderTextKey] = placeholderText_;
+            root[JsonPlaceholderFontColorKey] = placeholderFontColor_.ToFullString4B();
+            root[JsonPlaceholderFontSizeKey] = placeholderFontSize_;
+            root[JsonMaxLengthKey] = maxLength_;
+            root[JsonInputModeKey] = (int)inputMode_;
             return root;
         }
 
-
-        public override void ParseJObject(JObject root)
+        //////////////////////////////////////////////////////////////////////////////////
+        public override void ParseJObject(JObject _root)
         {
-            base.ParseJObject(root);
+            base.ParseJObject(_root);
 
-            string sizeString = (string)root[JsonVisualSizeKey];
-            _visualSize = SizeEx.ParseFullString(sizeString);
-            _textHAlign = (HAlignment)(int)root[JsonTextHAlignKey];
+            string sizeString = (string)_root[JsonVisualSizeKey];
+            visualSize_ = SizeEx.ParseFullString(sizeString);
+            textHAlign_ = (HAlignment)(int)_root[JsonTextHAlignKey];
 
-            string fontFileName = (string)root[JsonFontKey];
-            _fontSize = (int)root[JsonFontSizeKey];
+            fontSize_ = (int)_root[JsonFontSizeKey];
 
-            string fontColorString = (string)root[JsonFontColorKey];
-            _fontColor = ColorEx.ParseFullString4B(fontColorString);
-            _placeholderText = (string)root[JsonPlaceholderTextKey];
+            string fontColorString = (string)_root[JsonFontColorKey];
+            fontColor_ = ColorEx.ParseFullString4B(fontColorString);
+            placeholderText_ = (string)_root[JsonPlaceholderTextKey];
 
-            string placeholderFontColorString = (string)root[JsonPlaceholderFontColorKey];
-            _placeholderFontColor = ColorEx.ParseFullString4B(placeholderFontColorString);
-            _placeholderFontSize = (int)root[JsonPlaceholderFontSizeKey];
-            _maxLength = (int)root[JsonMaxLengthKey];
-            _inputMode = (InputMode)(int)root[JsonInputModeKey];
+            string placeholderFontColorString = (string)_root[JsonPlaceholderFontColorKey];
+            placeholderFontColor_ = ColorEx.ParseFullString4B(placeholderFontColorString);
+            placeholderFontSize_ = (int)_root[JsonPlaceholderFontSizeKey];
+            maxLength_ = (int)_root[JsonMaxLengthKey];
+            inputMode_ = (InputMode)(int)_root[JsonInputModeKey];
         }
 
-
-        public override bool OnMouseDown(IntPoint p)
+        //////////////////////////////////////////////////////////////////////////////////
+        public override bool OnMouseDown(IntPoint _p)
         {
             if (State == StateDisabled ||
                 State == StatePressed)
                 return true;
 
-            bool contained = ContainPoint(p);
+            bool contained = ContainPoint(_p);
             if (!contained)
                 return true;
 
@@ -246,18 +249,7 @@ namespace SGToolsUI.Model.Main
             return false;
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override void CreateInit() => VisualName = $"에딧박스_{Seq++}";
-        public static int Seq;
-
-        private IntSize _visualSize;
-        private HAlignment _textHAlign;
-        private int _fontSize;
-        private Color _fontColor;
-        private string _placeholderText;
-        private Color _placeholderFontColor;
-        private int _placeholderFontSize;
-        private int _maxLength;
-        private InputMode _inputMode;
     }
 }
-

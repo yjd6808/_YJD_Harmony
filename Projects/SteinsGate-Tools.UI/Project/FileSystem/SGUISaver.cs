@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/9/2023 11:59:25 AM
  *
@@ -12,26 +12,20 @@
  */
 
 using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Formats.Asn1;
-using System.Linq;
-using System.Text;
-using System.Threading;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using MoreLinq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon;
-using SGToolsUI.ViewModel;
-using System.Xml.Linq;
-using SGToolsCommon.Resource;
-using SGToolsUI.View;
-using IoFile = System.IO.File;
-using System.Windows.Interop;
 using SGToolsCommon.Extension;
+using SGToolsCommon.Resource;
 using SGToolsUI.Model.Main;
+using SGToolsUI.View;
+using SGToolsUI.ViewModel;
+using IoFile = System.IO.File;
 
 namespace SGToolsUI.FileSystem
 {
@@ -44,10 +38,14 @@ namespace SGToolsUI.FileSystem
 
     public class SGUISaver : SGUIFileSystem
     {
-        public SGUISaver(MainViewModel viewModel)
-            => _viewModel = viewModel;
+        private MainViewModel viewModel_;
 
-        public async Task<Exception> SaveAsync(string uiToolDataPath, string gameDataPath = null, bool minify = false)
+        //////////////////////////////////////////////////////////////////////////////////
+        public SGUISaver(MainViewModel _viewModel)
+            => viewModel_ = _viewModel;
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public async Task<Exception> SaveAsync(string _uiToolDataPath, string _gameDataPath = null, bool _minify = false)
         {
             // 저장은 다른쓰레드에서 수행토록 한다.
             Exception? e = await Task.Run(async () =>
@@ -57,12 +55,12 @@ namespace SGToolsUI.FileSystem
                 JArray groupsRoot = new JArray();
                 JObject groupMasterRoot;
 
-                SGUIGroupMaster groupMaster = _viewModel.GroupMaster;
+                SGUIGroupMaster groupMaster = viewModel_.GroupMaster;
 
                 try
                 {
-                    string uiToolDataDir = uiToolDataPath != null ? Path.GetDirectoryName(uiToolDataPath) : string.Empty;
-                    string gameDataDir = gameDataPath != null ? Path.GetDirectoryName(gameDataPath) : string.Empty;
+                    string uiToolDataDir = _uiToolDataPath != null ? Path.GetDirectoryName(_uiToolDataPath) : string.Empty;
+                    string gameDataDir = _gameDataPath != null ? Path.GetDirectoryName(_gameDataPath) : string.Empty;
 
                     if (uiToolDataDir != string.Empty && !Directory.Exists(uiToolDataDir))
                         throw new Exception($"[{uiToolDataDir}] 경로가 존재하지 않습니다. [1]");
@@ -74,21 +72,18 @@ namespace SGToolsUI.FileSystem
                     groupMaster.ForEachElement(element => elementsRoot.Add(element.ToJObject()));
                     groupMaster.ForEachGroup(group => groupsRoot.Add(group.ToJObject()));
 
-                    
                     root[JsonDateKey] = DateTime.Now.ToString();
                     root[JsonElementKey] = elementsRoot;
                     root[JsonGroupKey] = groupsRoot;
                     root[JsonGroupMasterKey] = groupMasterRoot = groupMaster.ToJObject();
 
-                    JobEvent result;
-
-                    if (uiToolDataPath != null)
+                    if (_uiToolDataPath != null)
                     {
                         root[JsonModeKey] = SaveMode.UIToolData.ToString();
-                        SaveJObject(uiToolDataPath, root, minify);
+                        SaveJObject(_uiToolDataPath, root, _minify);
                     }
 
-                    if (gameDataPath != null)
+                    if (_gameDataPath != null)
                     {
                         // 비주얼 네임 전부 제거
                         root[JsonModeKey] = SaveMode.GameData.ToString();
@@ -106,23 +101,24 @@ namespace SGToolsUI.FileSystem
                         groupMasterRoot.Remove(SGUIElement.JsonVisualNameKey);
                         groupMasterRoot.Remove(SGUIElement.JsonDefineNameKey);
 
-                        SaveJObject(gameDataPath, root, minify);
+                        SaveJObject(_gameDataPath, root, _minify);
                     }
 
                     return null;
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    return e;
+                    return ex;
                 }
             });
 
             return e;
         }
 
-        private void SaveJObject(string path, JObject root, bool minify)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void SaveJObject(string _path, JObject _root, bool _minify)
         {
-            if (minify)
+            if (_minify)
             {
                 JsonSerializerSettings settings = new JsonSerializerSettings
                 {
@@ -130,13 +126,13 @@ namespace SGToolsUI.FileSystem
                     Formatting = Formatting.None // 공백 무시 옵션
                 };
 
-                IoFile.WriteAllText(path, JsonConvert.SerializeObject(root, settings));
+                IoFile.WriteAllText(_path, JsonConvert.SerializeObject(_root, settings));
             }
             else
             {
                 // 스페이스바가 아닌 탭으로 파일 저장
                 // https://stackoverflow.com/questions/25788686/how-do-i-save-a-json-file-with-four-spaces-indentation-using-json-net
-                using (FileStream fs = IoFile.Open(path, FileMode.Create))
+                using (FileStream fs = IoFile.Open(_path, FileMode.Create))
                 {
                     using (StreamWriter sw = new StreamWriter(fs))
                     {
@@ -145,20 +141,21 @@ namespace SGToolsUI.FileSystem
                             jw.Formatting = Formatting.Indented;
                             jw.Indentation = 1;
                             jw.IndentChar = '\t';
-                            root.WriteTo(jw);
+                            _root.WriteTo(jw);
                         }
                     }
                 }
             }
         }
 
-        public async Task BackupAsync(string tag)
+        //////////////////////////////////////////////////////////////////////////////////
+        public async Task BackupAsync(string _tag)
         {
             if (!Directory.Exists(Constant.BackupDirectoryRoot))
                 Directory.CreateDirectory(Constant.BackupDirectoryRoot);
 
             DateTime now = DateTime.Now;
-            string fileName = now.ToString(Constant.BackupFileFmt) + $"_{tag}.json";
+            string fileName = now.ToString(Constant.BackupFileFmt) + $"_{_tag}.json";
             string saveDir = Path.Join(
                 Environment.CurrentDirectory,
                 Constant.BackupDirectoryRoot,
@@ -170,63 +167,60 @@ namespace SGToolsUI.FileSystem
 
             Exception e = await SaveAsync(savePath, null, false);
             if (e == null)
-                _viewModel.LogBox.AddDispatchedLog($"{tag} 백업완료", (LogType.Path, (object)savePath), IconCommonType.Backup, Brushes.RoyalBlue);
+                viewModel_.LogBox.AddDispatchedLog($"{_tag} 백업완료", (LogType.Path, (object)savePath), IconCommonType.Backup, Brushes.RoyalBlue);
             else
-                _viewModel.LogBox.AddDispatchedLog(e);
+                viewModel_.LogBox.AddDispatchedLog(e);
         }
 
-        public async Task<Exception> SaveAutoAsync(SaveMode mode, bool minify)
+        //////////////////////////////////////////////////////////////////////////////////
+        public async Task<Exception> SaveAutoAsync(SaveMode _mode, bool _minify)
         {
             string uiToolDataPath = Path.Combine(Environment.CurrentDirectory, Constant.UIToolDataFileName);
-            string gameDataPath = Path.Combine(_viewModel.Setting.OutputJsonPath, Constant.GameDataFileName);
+            string gameDataPath = Path.Combine(viewModel_.Setting.OutputJsonPath, Constant.GameDataFileName);
 
             Exception e;
             string msg;
-            List<string> paths = new (2);
-            switch (mode)
+            List<string> paths = new(2);
+            switch (_mode)
             {
                 case SaveMode.UIToolData:
-                    e = await SaveAsync(uiToolDataPath, null, minify);
+                    e = await SaveAsync(uiToolDataPath, null, _minify);
                     msg = "UI툴 데이터";
                     paths.Add(uiToolDataPath);
                     break;
                 case SaveMode.GameData:
-                    e = await SaveAsync(null, gameDataPath, minify);
+                    e = await SaveAsync(null, gameDataPath, _minify);
                     msg = "게임 데이터";
                     paths.Add(gameDataPath);
                     break;
                 case SaveMode.Full:
-                    e = await SaveAsync(uiToolDataPath, gameDataPath, minify);
+                    e = await SaveAsync(uiToolDataPath, gameDataPath, _minify);
                     msg = "UI툴, 게임데이터";
                     paths.Add(uiToolDataPath);
                     paths.Add(gameDataPath);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+                    throw new ArgumentOutOfRangeException(nameof(_mode), _mode, null);
             }
 
             if (e == null)
-                _viewModel.LogBox.AddLog($"{msg} 저장완료", (LogType.MultiPath, (object)paths), IconCommonType.Backup, Brushes.RoyalBlue);
+                viewModel_.LogBox.AddLog($"{msg} 저장완료", (LogType.MultiPath, (object)paths), IconCommonType.Backup, Brushes.RoyalBlue);
             else
-                _viewModel.LogBox.AddLog(e);
+                viewModel_.LogBox.AddLog(e);
 
             return e;
         }
 
-        public Task<Exception> SaveUIToolDataAsync(string path, bool minify)
+        //////////////////////////////////////////////////////////////////////////////////
+        public Task<Exception> SaveUIToolDataAsync(string _path, bool _minify)
         {
-            return SaveAsync(path, null, minify);
+            return SaveAsync(_path, null, _minify);
         }
 
-        public Task<Exception> SaveGameDataAsync(string path, bool minify)
+        //////////////////////////////////////////////////////////////////////////////////
+        public Task<Exception> SaveGameDataAsync(string _path, bool _minify)
         {
-            return SaveAsync(null, path, minify);
+            return SaveAsync(null, _path, _minify);
         }
-
-
-
-        private MainViewModel _viewModel;
-
-
     }
 }

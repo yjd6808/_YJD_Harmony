@@ -51,22 +51,22 @@ public:
         void* Param;
     };
 
-    Thread(const char* name = nullptr, bool autoJoin = false) : m_hHandle(nullptr), m_Name(name), m_uiThreadId(0), m_eState(eUninitialized), m_RunningSignal(1, 0), m_bAutoJoin(autoJoin) {}
-    Thread(TRunnable&& fn, void* param = nullptr, const char* name = nullptr, bool autoJoin = false); 
-    Thread(const Thread& other) = delete;
-    Thread(Thread&& other) noexcept;
+    Thread(const char* _name = nullptr, bool _autoJoin = false) : m_hHandle(nullptr), m_Name(_name), m_uiThreadId(0), m_eState(eUninitialized), m_RunningSignal(1, 0), m_bAutoJoin(_autoJoin) {}
+    Thread(TRunnable&& _fn, void* _param = nullptr, const char* _name = nullptr, bool _autoJoin = false); 
+    Thread(const Thread& _other) = delete;
+    Thread(Thread&& _other) noexcept;
     virtual ~Thread() noexcept;
 
-    Thread& operator=(const Thread& other) = delete;
+    Thread& operator=(const Thread& _other) = delete;
     Thread& operator=(Thread&&) noexcept;               // 초기화 안된 경우만 이동복사 허용
     
 public:
-    int Start(TRunnable&& fn, void* param = nullptr);
-    void AutoJoin(bool enabled) { m_bAutoJoin = enabled; }
-    JoinResult Join(int timeoutMiliSeconds = JC_INFINITE);
+    int Start(TRunnable&& _fn, void* _param = nullptr);
+    void AutoJoin(bool _enabled) { m_bAutoJoin = _enabled; }
+    JoinResult Join(int _timeoutMiliSeconds = JC_INFINITE);
     bool Joinable();
     void Abort();
-    bool SetPriority(int priority);
+    bool SetPriority(int _priority);
     int GetPriority();
     int GetState() { return m_eState; }
     _u32 GetId();

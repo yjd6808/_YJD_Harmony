@@ -1,27 +1,13 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/18/2023 7:26:18 PM
  *
  */
 
-using SGToolsCommon.Extension;
-using SGToolsUI.CustomControl;
-using SGToolsUI.Model.Main;
-using SGToolsUI.ModelSelector.Main;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using SGToolsCommon.Extension;
 using SGToolsUI.Model.Backup;
 
 namespace SGToolsUI.ModelSelector.Backup
@@ -30,6 +16,7 @@ namespace SGToolsUI.ModelSelector.Backup
     {
         public static readonly BackuprTreeViewItemSelector Selector = new();
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             TreeView treeView = container.FindParent<TreeView>();

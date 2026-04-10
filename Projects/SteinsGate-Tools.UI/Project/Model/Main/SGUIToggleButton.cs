@@ -1,31 +1,17 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/8/2023 6:31:58 PM
  *
  */
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Automation;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using MoreLinq;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
-using SGToolsUI.FileSystem;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model.Main
@@ -47,16 +33,19 @@ namespace SGToolsUI.Model.Main
 
         public const int OrderLinearDodge = 10;
 
-        
+        public static int Seq = 0;
 
+        private SGUISpriteInfo[][] sprites_;
+        private bool linearDodge_;
+        private int toggleState_;
 
+        //////////////////////////////////////////////////////////////////////////////////
         public SGUIToggleButton()
         {
-            _sprites = new SGUISpriteInfo[2][];
-            _sprites[0] = new SGUISpriteInfo[StateCount];
-            _sprites[1] = new SGUISpriteInfo[StateCount];
+            sprites_ = new SGUISpriteInfo[2][];
+            sprites_[0] = new SGUISpriteInfo[StateCount];
+            sprites_[1] = new SGUISpriteInfo[StateCount];
         }
-
 
         [Browsable(false)] // 캔버스상에 보일 상태
         public SGUISpriteInfo VisualSprite
@@ -65,16 +54,16 @@ namespace SGToolsUI.Model.Main
             {
                 if (ViewModel.IsEventMode)
                     for (int i = 0; i < StateCount; ++i)
-                        if (i == _state)
-                            return _sprites[_toggleState][i];
+                        if (i == state_)
+                            return sprites_[toggleState_][i];
 
                 // 현재 상태를 우선해서 보여준다.
                 for (int i = 0; i < StateCount; ++i)
-                    if (i == _state && !_sprites[_toggleState][i].IsNull)
-                        return _sprites[_toggleState][i];
+                    if (i == state_ && !sprites_[toggleState_][i].IsNull)
+                        return sprites_[toggleState_][i];
 
                 // 현재 상태에 맞는 스프라이트가 세팅되어있지 않으면 Order순서대로 확인해서 스프라이트 세팅된 놈으로
-                return _sprites[_toggleState].FirstOrDefault(sprite => !sprite.IsNull);
+                return sprites_[toggleState_].FirstOrDefault(sprite => !sprite.IsNull);
             }
         }
 
@@ -85,8 +74,8 @@ namespace SGToolsUI.Model.Main
             get
             {
                 for (int i = 0; i < StateCount; ++i)
-                    if (!_sprites[_toggleState][i].IsNull)
-                        return _sprites[_toggleState][i].Rect.Size;
+                    if (!sprites_[toggleState_][i].IsNull)
+                        return sprites_[toggleState_][i].Rect.Size;
 
                 return Constant.DefaultVisualSize;
             }
@@ -99,12 +88,13 @@ namespace SGToolsUI.Model.Main
             {
                 SGUISpriteInfo visualSprite = VisualSprite;
                 // 팩 언로딩되었다가 다시 로딩된 경우 텍스쳐의 선형 닷지가 초기화되어있기때문에, 소스 가져올때 재적용해줘야함
-                if (_linearDodge && !visualSprite.IsNull)
-                    visualSprite.LinearDodge = _linearDodge;
+                if (linearDodge_ && !visualSprite.IsNull)
+                    visualSprite.LinearDodge = linearDodge_;
                 return visualSprite.Source;
             }
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         private void NotifySpriteChanged()
         {
             OnPropertyChanged(nameof(VisualSize));
@@ -116,25 +106,24 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.ToggleButtonCategoryName), DisplayName("기본:일반"), PropertyOrder(OrderNormal)]
         public SGUISpriteInfo Normal
         {
-            get => _sprites[0][StateNormal];
+            get => sprites_[0][StateNormal];
             set
             {
-                _sprites[0][StateNormal] = value;
-                _sprites[0][StateNormal].LinearDodge = _linearDodge;
+                sprites_[0][StateNormal] = value;
+                sprites_[0][StateNormal].LinearDodge = linearDodge_;
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
         }
 
-
         [Category(Constant.ToggleButtonCategoryName), DisplayName("기본:마우스위"), PropertyOrder(OrderOver)]
         public SGUISpriteInfo Over
         {
-            get => _sprites[0][StateOver];
+            get => sprites_[0][StateOver];
             set
             {
-                _sprites[0][StateOver] = value;
-                _sprites[0][StateOver].LinearDodge = _linearDodge;
+                sprites_[0][StateOver] = value;
+                sprites_[0][StateOver].LinearDodge = linearDodge_;
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
@@ -143,11 +132,11 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.ToggleButtonCategoryName), DisplayName("기본:누름"), PropertyOrder(OrderPressed)]
         public SGUISpriteInfo Pressed
         {
-            get => _sprites[0][StatePressed];
+            get => sprites_[0][StatePressed];
             set
             {
-                _sprites[0][StatePressed] = value;
-                _sprites[0][StatePressed].LinearDodge = _linearDodge;
+                sprites_[0][StatePressed] = value;
+                sprites_[0][StatePressed].LinearDodge = linearDodge_;
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
@@ -156,40 +145,37 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.ToggleButtonCategoryName), DisplayName("기본:비활성화"), PropertyOrder(OrderDisabled)]
         public SGUISpriteInfo Disabled
         {
-            get => _sprites[0][StateDisabled];
+            get => sprites_[0][StateDisabled];
             set
             {
-                _sprites[0][StateDisabled] = value;
-                _sprites[0][StateDisabled].LinearDodge = _linearDodge;
+                sprites_[0][StateDisabled] = value;
+                sprites_[0][StateDisabled].LinearDodge = linearDodge_;
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
         }
-
-
 
         [Category(Constant.ToggleButtonCategoryName), DisplayName("토글:일반"), PropertyOrder(OrderToggledNormal)]
         public SGUISpriteInfo ToggleNormal
         {
-            get => _sprites[1][StateNormal];
+            get => sprites_[1][StateNormal];
             set
             {
-                _sprites[1][StateNormal] = value;
-                _sprites[1][StateNormal].LinearDodge = _linearDodge;
+                sprites_[1][StateNormal] = value;
+                sprites_[1][StateNormal].LinearDodge = linearDodge_;
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
         }
 
-
         [Category(Constant.ToggleButtonCategoryName), DisplayName("토글:마우스위"), PropertyOrder(OrderToggledOver)]
         public SGUISpriteInfo ToggleOver
         {
-            get => _sprites[1][StateOver];
+            get => sprites_[1][StateOver];
             set
             {
-                _sprites[1][StateOver] = value;
-                _sprites[1][StateOver].LinearDodge = _linearDodge;
+                sprites_[1][StateOver] = value;
+                sprites_[1][StateOver].LinearDodge = linearDodge_;
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
@@ -198,11 +184,11 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.ToggleButtonCategoryName), DisplayName("토글:누름"), PropertyOrder(OrderToggledPressed)]
         public SGUISpriteInfo TogglePressed
         {
-            get => _sprites[1][StatePressed];
+            get => sprites_[1][StatePressed];
             set
             {
-                _sprites[1][StatePressed] = value;
-                _sprites[1][StatePressed].LinearDodge = _linearDodge;
+                sprites_[1][StatePressed] = value;
+                sprites_[1][StatePressed].LinearDodge = linearDodge_;
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
@@ -211,11 +197,11 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.ToggleButtonCategoryName), DisplayName("토글:비활성화"), PropertyOrder(OrderToggledDisabled)]
         public SGUISpriteInfo ToggleDisabled
         {
-            get => _sprites[1][StateDisabled];
+            get => sprites_[1][StateDisabled];
             set
             {
-                _sprites[1][StateDisabled] = value;
-                _sprites[1][StateDisabled].LinearDodge = _linearDodge;
+                sprites_[1][StateDisabled] = value;
+                sprites_[1][StateDisabled].LinearDodge = linearDodge_;
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
@@ -224,45 +210,42 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.ToggleButtonCategoryName), DisplayName("상태"), PropertyOrder(OrderToggleState)]
         public bool ToggleState
         {
-            get => _toggleState == 1;
+            get => toggleState_ == 1;
             set
             {
-                _toggleState = value ? 1 : 0;
+                toggleState_ = value ? 1 : 0;
                 NotifySpriteChanged();
             }
         }
 
-        
         [Category(Constant.ToggleButtonCategoryName), DisplayName("선형 닷지"), PropertyOrder(OrderLinearDodge)]
         public bool LinearDodge
         {
-            get => _linearDodge;
+            get => linearDodge_;
             set
             {
-                _sprites[0].ForEach(info => info.LinearDodge = value);
-                _sprites[1].ForEach(info => info.LinearDodge = value);
-                _linearDodge = value;
+                sprites_[0].ForEach(info => info.LinearDodge = value);
+                sprites_[1].ForEach(info => info.LinearDodge = value);
+                linearDodge_ = value;
                 OnPropertyChanged(nameof(VisualSpriteSource));
             }
         }
 
-
         [Browsable(false)]
         public override int State
         {
-            get => _state;
+            get => state_;
             set
             {
-                _state = value;
+                state_ = value;
                 NotifySpriteChanged();
             }
         }
 
-
         public override SGUIElementType UIElementType => SGUIElementType.ToggleButton;
         [Browsable(false)] public override bool Manipulatable => false;
 
-
+        //////////////////////////////////////////////////////////////////////////////////
         public override object Clone()
         {
             SGUIToggleButton button = new SGUIToggleButton();
@@ -270,11 +253,12 @@ namespace SGToolsUI.Model.Main
 
             for (int k = 0; k < 2; ++k)
                 for (int i = 0; i < StateCount; ++i)
-                    button._sprites[k][i] = _sprites[k][i];
+                    button.sprites_[k][i] = sprites_[k][i];
 
             return button;
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override JObject ToJObject()
         {
             JObject root = base.ToJObject();
@@ -282,28 +266,29 @@ namespace SGToolsUI.Model.Main
             string sga;
             string img;
 
-            if (!SGUISpriteInfoExt.TryGetSgaImgFileName(in _sprites[0], out sga, out img))
-                SGUISpriteInfoExt.TryGetSgaImgFileName(in _sprites[1], out sga, out img);
+            if (!SGUISpriteInfoExt.TryGetSgaImgFileName(in sprites_[0], out sga, out img))
+                SGUISpriteInfoExt.TryGetSgaImgFileName(in sprites_[1], out sga, out img);
 
             root[JsonSgaKey] = sga;
             root[JsonImgKey] = img;
-            root[JsonSpriteKey] = _sprites[0].ToFullString();
-            root[JsonToggleSpriteKey] = _sprites[1].ToFullString();
-            root[JsonLinearDodgeKey] = _linearDodge;
+            root[JsonSpriteKey] = sprites_[0].ToFullString();
+            root[JsonToggleSpriteKey] = sprites_[1].ToFullString();
+            root[JsonLinearDodgeKey] = linearDodge_;
             return root;
         }
 
-        public override void ParseJObject(JObject root)
+        //////////////////////////////////////////////////////////////////////////////////
+        public override void ParseJObject(JObject _root)
         {
-            base.ParseJObject(root);
+            base.ParseJObject(_root);
 
-            root.TryGetValueDefault(JsonLinearDodgeKey, out _linearDodge, false);
-            string sgaName = (string)root[JsonSgaKey];
+            _root.TryGetValueDefault(JsonLinearDodgeKey, out linearDodge_, false);
+            string sgaName = (string)_root[JsonSgaKey];
 
             if (sgaName == string.Empty)
                 return;
 
-            string imgName = (string)root[JsonImgKey];
+            string imgName = (string)_root[JsonImgKey];
 
             SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
             SgaPackage sga = img.Parent;
@@ -311,21 +296,21 @@ namespace SGToolsUI.Model.Main
             int[] sprites = new int[StateCount];
             int[] toggledSprites = new int[StateCount];
 
-            StringEx.ParseIntNumberN((string)root[JsonSpriteKey], sprites);
-            StringEx.ParseIntNumberN((string)root[JsonToggleSpriteKey], toggledSprites);
+            StringEx.ParseIntNumberN((string)_root[JsonSpriteKey], sprites);
+            StringEx.ParseIntNumberN((string)_root[JsonToggleSpriteKey], toggledSprites);
 
-            SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in _sprites[0], _linearDodge);
-            SGUISpriteInfoExt.ParseInfo(sga, img, in toggledSprites, in _sprites[1], _linearDodge);
+            SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in sprites_[0], linearDodge_);
+            SGUISpriteInfoExt.ParseInfo(sga, img, in toggledSprites, in sprites_[1], linearDodge_);
         }
 
-
-        public override bool OnMouseMove(IntPoint p)
+        //////////////////////////////////////////////////////////////////////////////////
+        public override bool OnMouseMove(IntPoint _p)
         {
             if (State == StateDisabled ||
                 State == StatePressed)
                 return true;
 
-            bool contained = ContainPoint(p);
+            bool contained = ContainPoint(_p);
 
             if (!contained)
             {
@@ -337,13 +322,14 @@ namespace SGToolsUI.Model.Main
             return false;
         }
 
-        public override bool OnMouseDown(IntPoint p)
+        //////////////////////////////////////////////////////////////////////////////////
+        public override bool OnMouseDown(IntPoint _p)
         {
             if (State == StateDisabled ||
                 State == StatePressed)
                 return true;
 
-            bool contained = ContainPoint(p);
+            bool contained = ContainPoint(_p);
             if (!contained)
                 return true;
 
@@ -351,12 +337,13 @@ namespace SGToolsUI.Model.Main
             return false;
         }
 
-        public override bool OnMouseUp(IntPoint p)
+        //////////////////////////////////////////////////////////////////////////////////
+        public override bool OnMouseUp(IntPoint _p)
         {
             if (State != StatePressed)
                 return true;
 
-            bool contained = ContainPoint(p);
+            bool contained = ContainPoint(_p);
             State = StateNormal;
 
             if (!contained)
@@ -367,10 +354,7 @@ namespace SGToolsUI.Model.Main
             return false;
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override void CreateInit() => VisualName = $"토글버튼_{Seq++}";
-        public static int Seq = 0;
-        private SGUISpriteInfo[][] _sprites;
-        private bool _linearDodge;
-        private int _toggleState;
     }
 }

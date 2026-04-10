@@ -1,23 +1,9 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/13/2023 12:27:16 AM
  *
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SGToolsCommon;
 using SGToolsCommon.Sga;
 using SGToolsUI.View;
@@ -26,37 +12,37 @@ namespace SGToolsUI.ViewModel
 {
     public class AlbumViewModel : Bindable
     {
-        public AlbumViewModel(AlbumView view, MainViewModel mainViewModel)
+        private SgaPackage selectedPackage_;
+        private SgaImage selectedImage_;
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public AlbumViewModel(AlbumView _view, MainViewModel _mainViewModel)
         {
-            View = view;
-            MainViewModel = mainViewModel;
+            View = _view;
+            MainViewModel = _mainViewModel;
         }
 
         public SgaPackage SelectedPackage
         {
-            get => _selectedPackage;
+            get => selectedPackage_;
             set
             {
-                _selectedPackage = value;
+                selectedPackage_ = value;
                 OnPropertyChanged();
             }
         }
 
         public SgaImage SelectedImage
         {
-            get => _selectedImage;
+            get => selectedImage_;
             set
             {
-                _selectedImage = value;
+                selectedImage_ = value;
                 OnPropertyChanged();
             }
         }
 
         public AlbumView View { get; }
-        public MainViewModel  MainViewModel { get; }
-
-
-        private SgaPackage _selectedPackage;
-        private SgaImage _selectedImage;
+        public MainViewModel MainViewModel { get; }
     }
 }

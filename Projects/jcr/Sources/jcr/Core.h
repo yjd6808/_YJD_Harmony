@@ -62,6 +62,9 @@
 #include "jc/Threading/ThreadLocal.h"
 #include "jc/Threading/Scheduler.h"
 
+#include "jc/_Extern/Extern_Console.h"
+#include "jc/_Extern/Extern_Random.h"
+
 #include <vector>
 #include <map>
 #include <set>
@@ -72,6 +75,14 @@
 
 USING_NS_JC;
 USING_NS_STD;
+
+// ============================================================
+// Test Functions
+// ============================================================
+
+int call_01_AsmStudy(int _argc, char** _argv);
+int call_02_HeapStudy(int _argc, char** _argv);
+int call_03_RSPGame(int _argc, char** _argv);
 
 
 

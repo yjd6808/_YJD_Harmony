@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/9/2023 2:40:42 PM
  *
@@ -6,23 +6,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using MoreLinq.Extensions;
 using SGToolsCommon.CustomControl;
 using SGToolsCommon.Extension;
-using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.View
 {
@@ -36,18 +24,20 @@ namespace SGToolsUI.View
     {
         public LogListBox LogBox { get; }
 
-        public LogView(LogListBox box)
+        //////////////////////////////////////////////////////////////////////////////////
+        public LogView(LogListBox _box)
         {
             InitializeComponent();
-            LogBox = box;
+            LogBox = _box;
             LogBox.LogClick += LogBox_OnLogClick;
-            MainPanel.Children.Add(box);
-            DockPanel.SetDock(box, Dock.Top);
+            MainPanel.Children.Add(_box);
+            DockPanel.SetDock(_box, Dock.Top);
         }
 
-        private void LogBox_OnLogClick(object sender, RoutedEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void LogBox_OnLogClick(object _sender, RoutedEventArgs _e)
         {
-            object data = ((LogClickEventArgs)e).LogData.Data;
+            object data = ((LogClickEventArgs)_e).LogData.Data;
 
             if (data == null)
                 return;
@@ -67,7 +57,6 @@ namespace SGToolsUI.View
                     default:
                         throw new Exception("로그 타입이 이상합니다.");
                 }
-
             }
             catch (Exception exception)
             {
@@ -75,11 +64,13 @@ namespace SGToolsUI.View
             }
         }
 
-        private void LogView_OnActivated(object? sender, EventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void LogView_OnActivated(object? _sender, EventArgs _e)
         {
         }
 
-        private void CleanLogBoxButton_OnClick(object sender, RoutedEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void CleanLogBoxButton_OnClick(object _sender, RoutedEventArgs _e)
         {
             LogBox.Clear();
         }

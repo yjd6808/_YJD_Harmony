@@ -1,24 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 작성일: 2/26/2023 4:31:10 AM
  *
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Printing;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SGToolsCommon.Command
 {
@@ -28,24 +15,27 @@ namespace SGToolsCommon.Command
         public string Description { get; }
         public bool UseParameter { get; set; }
 
-
-        public CommandAbstract(string description)
+        //////////////////////////////////////////////////////////////////////////////////
+        public CommandAbstract(string _description)
         {
-            Description = description;
+            Description = _description;
         }
 
-        public bool CanExecute(object? parameter)
+        //////////////////////////////////////////////////////////////////////////////////
+        public bool CanExecute(object? _parameter)
         {
-            if (UseParameter && parameter == null)
+            if (UseParameter && _parameter == null)
                 throw new ArgumentNullException($"{Name} 커맨드의 파라미터는 널일 수 없습니다.");
 
             return true;
         }
-        public abstract void Execute(object? parameter);
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public abstract void Execute(object? _parameter);
+
         public event EventHandler? CanExecuteChanged;
 
+        //////////////////////////////////////////////////////////////////////////////////
         public virtual void Dispose() { }
     }
-
-   
 }

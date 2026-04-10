@@ -1,40 +1,24 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/10/2023 6:26:46 PM
  *
  */
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using SGToolsCommon.Extension;
 using SGToolsCommon.Resource;
 using SGToolsUI.ViewModel;
-using Path = System.IO.Path;
 
 namespace SGToolsUI.Command.MainViewCommand
 {
     public class ShowShortcut : MainCommandAbstract
     {
-        public ShowShortcut(MainViewModel viewModel) 
-            : base(viewModel, "사용가능한 단축키 정보를 보여준다.")
+        //////////////////////////////////////////////////////////////////////////////////
+        public ShowShortcut(MainViewModel _viewModel)
+            : base(_viewModel, "사용가능한 단축키 정보를 보여준다.")
         {
         }
 
-        public override void Execute(object? parameter)
+        //////////////////////////////////////////////////////////////////////////////////
+        public override void Execute(object? _parameter)
         {
             ViewModel.LogBox.AddLog("[글로벌 단축키 목록]");
             ViewModel.LogBox.AddLog("Ctrl + S: 저장");

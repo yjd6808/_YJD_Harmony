@@ -122,7 +122,8 @@ void Scheduler::SchedulingRoutine() {
 	DateTime dtWaitUntil = 0;
 	_u64 uiExecutableTaskLimitTime = 0;
 	
-	auto fnWait = [&]()->bool {
+	auto fnWait = [&]()->bool
+	{
 		bExit = false;
 		bHaveWaitTasks = waitTasksMap_.Size();
 		bHaveExecutableTasks = HaveExecutableTaskRaw(&uiExecutableTaskLimitTime);
@@ -133,8 +134,6 @@ void Scheduler::SchedulingRoutine() {
 		} else if (state_ == State::JoinWaitOnlyRunningTask) {
 			bExit = true;
 		}
-
-		
 
 		if (!bWaitUntil) {
 			// Wait 상태인 경우 작업 유무를 확인하여 WaitUntil로 재전환 될 수 있도록 한다.
@@ -150,17 +149,19 @@ void Scheduler::SchedulingRoutine() {
 
 	for (;;) {
 		const bool bHasInitTasks = waitTasksMap_.TryGetFirstValue(pvPendingTasks);
-		if (bHasInitTasks) {
+		if (bHasInitTasks) 
+		{
 			dtWaitUntil = pvPendingTasks->At(0)->At();
-			condVar_.WaitUntil(guard, dtWaitUntil, Move(fnWait));
-		} else {
+			condVar_.WaitUntil(guard, dtWaitUntil, fnWait);
+		}
+		else 
+		{
 			dtWaitUntil.Tick = 0;
-			condVar_.Wait(guard, Move(fnWait));
+			condVar_.Wait(guard, fnWait);
 		}
 
-		if (bExit) {
+		if (bExit)
 			break;
-		}
 
 		ExecuteTasks(vScheduledTasks, bHaveExecutableTasks ? &uiExecutableTaskLimitTime : nullptr);
 		uiExecutableTaskLimitTime = 0;

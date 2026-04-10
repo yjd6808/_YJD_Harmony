@@ -3,10 +3,9 @@
  */
 
 #include "jc/Utils/Console.h"
+#include "jc/Threading/Thread.h"
 
 #include "Windows.h"
-
-#include "jc/Threading/Thread.h"
 
 NS_JC_BEGIN
 	const char*      Console::VTForeColor[ConsoleColor::Max]{
@@ -116,16 +115,13 @@ bool Console::SetSize(int _width, int _height)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Console::SetColor(ConsoleColor _color)
+void Console::RestoreColor()
 {
-    TLockGuard guard(ms_ConsoleLock);
-    jc_assert_msg(ms_hStdout != WinApi::InvalidHandleValue, "출력 핸들이 이상합니다.");
-    ms_iDefaultColor = _color;
-    ::SetConsoleTextAttribute(ms_hStdout, static_cast<_s16>(_color));
+	SetColor(LightGray);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Console::GetColor(ConsoleColor _color)
+void Console::SetColor(ConsoleColor _color)
 {
     TLockGuard guard(ms_ConsoleLock);
     jc_assert_msg(ms_hStdout != WinApi::InvalidHandleValue, "출력 핸들이 이상합니다.");

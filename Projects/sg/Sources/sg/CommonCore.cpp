@@ -26,8 +26,6 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-SG_DLL jc::Random __globalRandomInstance;
-
 NS_SG_BEGIN
 CharCommonInfo* CharCommon;
 jnet::CommandNameDictionary CommandNameDictionary;

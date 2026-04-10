@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/14/2023 1:58:46 PM
  *
@@ -12,8 +12,6 @@ using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
-using SGToolsUI.Model.Main;
-using Vanara.PInvoke;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model.Main
@@ -26,21 +24,28 @@ namespace SGToolsUI.Model.Main
         public const int OrderLinearDodge = 3;
         public const int OrderScale9 = 4;
 
+        public static int Seq;
+
+        private SGUISpriteInfo sprite_;
+        private bool linearDodge_;
+        private bool scale9_;
+        private IntSize visualSize_;
+
+        //////////////////////////////////////////////////////////////////////////////////
         public SGUISprite()
         {
-            _sprite = new SGUISpriteInfo();
-            _visualSize = Constant.DefaultVisualSize;
+            sprite_ = new SGUISpriteInfo();
+            visualSize_ = Constant.DefaultVisualSize;
         }
-
 
         [ReadOnly(false)]
         [Category(Constant.SpriteCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
         public override IntSize VisualSize
         {
-            get => _visualSize;
+            get => visualSize_;
             set
             {
-                _visualSize = value;
+                visualSize_ = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(ScaleX));
                 OnPropertyChanged(nameof(ScaleY));
@@ -53,8 +58,8 @@ namespace SGToolsUI.Model.Main
         {
             get
             {
-                if (_sprite.IsNull) return 1.0;
-                return (double)_visualSize.Width / _sprite.Sprite.Width;
+                if (sprite_.IsNull) return 1.0;
+                return (double)visualSize_.Width / sprite_.Sprite.Width;
             }
         }
 
@@ -63,12 +68,12 @@ namespace SGToolsUI.Model.Main
         {
             get
             {
-                if (_sprite.IsNull) return 1.0;
-                return (double)_visualSize.Height / _sprite.Sprite.Height;
+                if (sprite_.IsNull) return 1.0;
+                return (double)visualSize_.Height / sprite_.Sprite.Height;
             }
         }
 
-
+        //////////////////////////////////////////////////////////////////////////////////
         private void NotifySpriteChanged()
         {
             OnPropertyChanged(nameof(VisualSize));
@@ -82,28 +87,27 @@ namespace SGToolsUI.Model.Main
             get
             {
                 // 팩 언로딩되었다가 다시 로딩된 경우 텍스쳐의 선형 닷지가 초기화되어있기때문에, 소스 가져올때 재적용해줘야함
-                if (_linearDodge && !_sprite.IsNull)
-                    _sprite.LinearDodge = _linearDodge;
+                if (linearDodge_ && !sprite_.IsNull)
+                    sprite_.LinearDodge = linearDodge_;
 
-                return _sprite.Source;
+                return sprite_.Source;
             }
         }
-
 
         [Category(Constant.SpriteCategoryName), DisplayName("스프라이트"), PropertyOrder(OrderSprite)]
         public SGUISpriteInfo Sprite
         {
-            get => _sprite;
+            get => sprite_;
             set
             {
-                _sprite = value;
+                sprite_ = value;
 
-                if (!_sprite.IsNull)
-                    _visualSize = _sprite.Sprite.Rect.Size;
+                if (!sprite_.IsNull)
+                    visualSize_ = sprite_.Sprite.Rect.Size;
                 else
-                    _visualSize = Constant.DefaultVisualSize;
+                    visualSize_ = Constant.DefaultVisualSize;
 
-                _sprite.LinearDodge = _linearDodge;
+                sprite_.LinearDodge = linearDodge_;
 
                 OnPropertyChanged();
                 NotifySpriteChanged();
@@ -113,11 +117,11 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.SpriteCategoryName), DisplayName("선형 닷지"), PropertyOrder(OrderLinearDodge)]
         public bool LinearDodge
         {
-            get => _linearDodge;
+            get => linearDodge_;
             set
             {
-                _sprite.LinearDodge = value;
-                _linearDodge = value;
+                sprite_.LinearDodge = value;
+                linearDodge_ = value;
                 OnPropertyChanged(nameof(SpriteSource));
             }
         }
@@ -125,63 +129,66 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.SpriteCategoryName), DisplayName("Scale9"), PropertyOrder(OrderScale9)]
         public bool Scale9
         {
-            get => _scale9;
-            set => _scale9 = value;
+            get => scale9_;
+            set => scale9_ = value;
         }
 
         public override SGUIElementType UIElementType => SGUIElementType.Sprite;
         [Browsable(false)] public override bool Manipulatable => true;
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override object Clone()
         {
             SGUISprite sprite = new SGUISprite();
             sprite.CopyFrom(this);
-            sprite._visualSize = _visualSize;
-            sprite._sprite = _sprite;
-            sprite._linearDodge = _linearDodge;
-            sprite._scale9 = _scale9;
+            sprite.visualSize_ = visualSize_;
+            sprite.sprite_ = sprite_;
+            sprite.linearDodge_ = linearDodge_;
+            sprite.scale9_ = scale9_;
             return sprite;
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override JObject ToJObject()
         {
             JObject root = base.ToJObject();
             // 인덱스를 뛰어쓰기로 구분해서 돌려줌
-            SGUISpriteInfoExt.TryGetSgaImgFileName(_sprite, out string sga, out string img);
+            SGUISpriteInfoExt.TryGetSgaImgFileName(sprite_, out string sga, out string img);
 
             root[JsonSgaKey] = sga;
             root[JsonImgKey] = img;
-            root[JsonSpriteKey] = _sprite.SpriteIndex;
-            root[JsonVisualSizeKey] = _visualSize.ToFullString();
+            root[JsonSpriteKey] = sprite_.SpriteIndex;
+            root[JsonVisualSizeKey] = visualSize_.ToFullString();
 
-            if (_linearDodge)
-                root[JsonLinearDodgeKey] = _linearDodge;
-            if (_scale9)
-                root[JsonScale9] = _scale9;
+            if (linearDodge_)
+                root[JsonLinearDodgeKey] = linearDodge_;
+            if (scale9_)
+                root[JsonScale9] = scale9_;
 
             return root;
         }
 
-        public override void ParseJObject(JObject root)
+        //////////////////////////////////////////////////////////////////////////////////
+        public override void ParseJObject(JObject _root)
         {
-            base.ParseJObject(root);
+            base.ParseJObject(_root);
 
-            root.TryGetValueDefault(JsonLinearDodgeKey, out _linearDodge, false);
-            root.TryGetValueDefault(JsonScale9, out _scale9, false);
+            _root.TryGetValueDefault(JsonLinearDodgeKey, out linearDodge_, false);
+            _root.TryGetValueDefault(JsonScale9, out scale9_, false);
 
-            string sgaName = (string)root[JsonSgaKey];
+            string sgaName = (string)_root[JsonSgaKey];
 
             if (sgaName == string.Empty)
                 return;
 
-            string imgName = (string)root[JsonImgKey];
-            string sizeString = (string)root[JsonVisualSizeKey];
+            string imgName = (string)_root[JsonImgKey];
+            string sizeString = (string)_root[JsonVisualSizeKey];
 
-            _visualSize = SizeEx.ParseFullString(sizeString);
+            visualSize_ = SizeEx.ParseFullString(sizeString);
 
             SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
             SgaPackage sga = img.Parent;
-            int spriteIndex = (int)root[JsonSpriteKey];
+            int spriteIndex = (int)_root[JsonSpriteKey];
 
             if (spriteIndex == Constant.InvalidValue)
                 return;
@@ -189,27 +196,23 @@ namespace SGToolsUI.Model.Main
             SgaSprite sprite = img.GetSprite(spriteIndex) as SgaSprite;
             if (sprite == null)
                 throw new Exception($"{sgaName} -> {imgName} -> {spriteIndex}가 SgaSprite 타입이 아닙니다.");
-            _sprite = new SGUISpriteInfo(sga, img, sprite);
-            _sprite.LinearDodge = _linearDodge;
+            sprite_ = new SGUISpriteInfo(sga, img, sprite);
+            sprite_.LinearDodge = linearDodge_;
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override void CreateInit() => VisualName = $"스프라이트_{Seq++}";
-        public static int Seq;
-        private SGUISpriteInfo _sprite;
-        private bool _linearDodge;
-        private bool _scale9;
-        private IntSize _visualSize;
-        
 
+        //////////////////////////////////////////////////////////////////////////////////
         public void RestoreSize()
         {
-            if (_sprite.IsNull)
+            if (sprite_.IsNull)
             {
                 VisualSize = Constant.DefaultVisualSize;
                 return;
             }
 
-            VisualSize = _sprite.Rect.Size;
+            VisualSize = sprite_.Rect.Size;
         }
     }
 }

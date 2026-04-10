@@ -1,25 +1,12 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/27/2023 8:35:17 AM
  *
  */
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon.Primitive;
 
@@ -39,12 +26,12 @@ namespace SGToolsUI.Model.Setting
         public const string LogViewPositionWhenProgramLaunchedYKey = "LogViewPositionWhenProgramLaunchedY";
         public const string ZoomLevelKey = "ZoomLevel";
 
-
         [DisplayName("Sga 패키지 리소스 경로")]
         public string SgaDirectory { get; set; } = "";
 
         [DisplayName("헤더파일 출력경로")]
         public string OutputDefineHeaderFilePath { get; set; } = "";
+
         [DisplayName("헤더파일 명")]
         public string OutputDefineHeaderFileName { get; set; } = "Define_UI.h";
 
@@ -59,10 +46,11 @@ namespace SGToolsUI.Model.Setting
 
         [DisplayName("로그뷰 기본 위치")]
         public IntPoint LogViewPositionWhenProgramLaunched { get; set; }
+
         [DisplayName("초기 배율(%)")]
         public int ZoomLevel { get; set; } = 100;
 
-
+        //////////////////////////////////////////////////////////////////////////////////
         public object Clone()
         {
             return new Setting()
@@ -77,6 +65,7 @@ namespace SGToolsUI.Model.Setting
             };
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public bool Load()
         {
             if (!IoFile.Exists(Constant.SettingFileName))
@@ -119,6 +108,7 @@ namespace SGToolsUI.Model.Setting
             return true;
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public void Save()
         {
             JObject root = new JObject();

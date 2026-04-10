@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/27/2023 6:19:40 AM
  *
@@ -6,47 +6,37 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Threading;
 
 namespace SGToolsCommon.Sga
 {
     public class SgaManager : Bindable
     {
-        private SgaManager() {}
-        public static SgaManager Instance = new ();
+        private List<SgaPackage> packages_;
 
-        public List<SgaPackage> Packages => _packages;
-
+        public static SgaManager Instance = new();
+        public List<SgaPackage> Packages => packages_;
         public Dictionary<string, SgaPackage> PackageMap { get; } = new();
         public string SgaDirectory { get; set; } = string.Empty;
         public Dispatcher Dispatcher { get; set; }
-        private List<SgaPackage> _packages;
 
-        public void LoadSga(int type)
+        //////////////////////////////////////////////////////////////////////////////////
+        private SgaManager() {}
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public void LoadSga(int _type)
         {
-            if (_packages != null)
+            if (packages_ != null)
                 UnloadAll();
 
-            _packages = new List<SgaPackage>();
+            packages_ = new List<SgaPackage>();
 
-            if (type < 0 || type >= SgaPackageType.Max)
+            if (_type < 0 || _type >= SgaPackageType.Max)
                 throw new Exception("올바르지 않은 sga 패키지 타입입니다.");
-            
-            string dir = Path.Combine(SgaDirectory, SgaPackageType.Name[type]);
+
+            string dir = Path.Combine(SgaDirectory, SgaPackageType.Name[_type]);
 
             if (!Directory.Exists(dir))
                 throw new Exception("SGA 패키지 디렉토리가 존재하지 않습니다.");
@@ -56,43 +46,40 @@ namespace SGToolsCommon.Sga
             for (int i = 0; i < sgaFileList.Length; ++i)
             {
                 SgaPackage loadedPackage = SgaLoader.Load(sgaFileList[i], false, true, i);
-                _packages.Add(loadedPackage);
+                packages_.Add(loadedPackage);
                 PackageMap.Add(loadedPackage.FileName, loadedPackage);
             }
             NotifyUpdateList();
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public void UnloadAll()
         {
-            if (_packages == null)
+            if (packages_ == null)
                 return;
 
-            foreach (var sgaPackage in _packages)
+            foreach (SgaPackage sgaPackage in packages_)
                 sgaPackage.UnloadAll();
-            _packages = null;
+            packages_ = null;
             NotifyUpdateList();
         }
 
-        public SgaPackage GetPackage(int index)
+        //////////////////////////////////////////////////////////////////////////////////
+        public SgaPackage GetPackage(int _index)
         {
-            if (!IsValidPackageIndex(index))
+            if (!IsValidPackageIndex(_index))
                 throw new Exception("올바르지 않은 패키지 인덱스입니다.");
 
-            return Packages[index];
+            return Packages[_index];
         }
 
-        public SgaImage GetImg(string packageName, string imgName)
+        //////////////////////////////////////////////////////////////////////////////////
+        public SgaImage GetImg(string _packageName, string _imgName)
         {
-            //if (!packageName.EndsWith(".sga"))
-            //    packageName += ".sga";
-
-            //if (!imgName.EndsWith(".img"))
-            //    imgName += ".img";
-
-            if (!IsValidPackageName(packageName))
+            if (!IsValidPackageName(_packageName))
                 throw new Exception("올바르지 않은 패키지 이름입니다.");
 
-            SgaImage? img = PackageMap[packageName].GetElement(imgName) as SgaImage;
+            SgaImage? img = PackageMap[_packageName].GetElement(_imgName) as SgaImage;
 
             if (img == null)
                 throw new Exception("해당 SgaElement는 SgaImage타입이 아닙니다.");
@@ -100,13 +87,15 @@ namespace SGToolsCommon.Sga
             return img;
         }
 
-        public SgaSpriteAbstract GetSprite(string packageName, string imgName, int spriteIndex)
-            => GetImg(packageName, imgName).GetSprite(spriteIndex);
+        //////////////////////////////////////////////////////////////////////////////////
+        public SgaSpriteAbstract GetSprite(string _packageName, string _imgName, int _spriteIndex)
+            => GetImg(_packageName, _imgName).GetSprite(_spriteIndex);
 
-        public SgaSprite GetSpriteLink(string packageName, string imgName, int spriteIndex)
+        //////////////////////////////////////////////////////////////////////////////////
+        public SgaSprite GetSpriteLink(string _packageName, string _imgName, int _spriteIndex)
         {
-            SgaImage img = GetImg(packageName, imgName);
-            SgaSpriteAbstract sprite = img.GetSprite(spriteIndex);
+            SgaImage img = GetImg(_packageName, _imgName);
+            SgaSpriteAbstract sprite = img.GetSprite(_spriteIndex);
 
             if (sprite.IsLink)
             {
@@ -121,16 +110,19 @@ namespace SGToolsCommon.Sga
             return sprite as SgaSprite;
         }
 
-
+        //////////////////////////////////////////////////////////////////////////////////
         // 링크는 타겟 프레임 찾아서 비트맵 가져옴
-        public BitmapSource GetBitmapSourceLink(string packageName, string imgName, int spriteIndex)
-            => GetSpriteLink(packageName, imgName, spriteIndex).Source;
+        public BitmapSource GetBitmapSourceLink(string _packageName, string _imgName, int _spriteIndex)
+            => GetSpriteLink(_packageName, _imgName, _spriteIndex).Source;
 
-        bool IsValidPackageIndex(int index) => index >= 0 && index < Packages.Count;
-        bool IsValidPackageName(string packageName) => PackageMap.ContainsKey(packageName);
-
+        //////////////////////////////////////////////////////////////////////////////////
         public void NotifyUpdateList()
             => OnPropertyChanged(nameof(Packages));
 
+        //////////////////////////////////////////////////////////////////////////////////
+        private bool IsValidPackageIndex(int _index) => _index >= 0 && _index < Packages.Count;
+
+        //////////////////////////////////////////////////////////////////////////////////
+        private bool IsValidPackageName(string _packageName) => PackageMap.ContainsKey(_packageName);
     }
 }

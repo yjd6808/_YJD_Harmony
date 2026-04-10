@@ -10,8 +10,7 @@
 
 #include "sg/Namespace.h"
 
-extern SG_DLL jc::Random __globalRandomInstance;
-#define g_cRandom __globalRandomInstance
+#define g_cRandom jc::globalRandomInstance
 
 NS_JNET_BEGIN
 class CommandNameDictionary;

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
+using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Navigation;
 using System.Windows.Threading;
 
 namespace SGToolsUI
@@ -20,35 +15,38 @@ namespace SGToolsUI
         {
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         // https://stackoverflow.com/questions/793100/globally-catch-exceptions-in-a-wpf-application
         // 아직 쓸것 같진 않은데.. 일단 달아놓음
-        protected override void OnStartup(StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs _e)
         {
-            base.OnStartup(e);
-
+            base.OnStartup(_e);
             SetupExceptionHandling();
         }
+
+        //////////////////////////////////////////////////////////////////////////////////
         private void SetupExceptionHandling()
         {
-            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
-                LogUnhandledException((Exception)e.ExceptionObject, "AppDomain.CurrentDomain.UnhandledException");
+            AppDomain.CurrentDomain.UnhandledException += (_s, _e) =>
+                LogUnhandledException((Exception)_e.ExceptionObject, "AppDomain.CurrentDomain.UnhandledException");
 
-            DispatcherUnhandledException += (s, e) =>
+            DispatcherUnhandledException += (_s, _e) =>
             {
-                LogUnhandledException(e.Exception, "Application.Current.DispatcherUnhandledException");
-                e.Handled = true;
+                LogUnhandledException(_e.Exception, "Application.Current.DispatcherUnhandledException");
+                _e.Handled = true;
             };
 
-            TaskScheduler.UnobservedTaskException += (s, e) =>
+            TaskScheduler.UnobservedTaskException += (_s, _e) =>
             {
-                LogUnhandledException(e.Exception, "TaskScheduler.UnobservedTaskException");
-                e.SetObserved();
+                LogUnhandledException(_e.Exception, "TaskScheduler.UnobservedTaskException");
+                _e.SetObserved();
             };
         }
 
-        private void LogUnhandledException(Exception exception, string source)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void LogUnhandledException(Exception _exception, string _source)
         {
-            string message = $"Unhandled exception ({source})";
+            string message = $"Unhandled exception ({_source})";
             Debug.Assert(false);
 
             try
@@ -56,15 +54,14 @@ namespace SGToolsUI
                 System.Reflection.AssemblyName assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName();
                 message = string.Format("Unhandled exception in {0} v{1}", assemblyName.Name, assemblyName.Version);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // _logger.Error(ex, "Exception in LogUnhandledException");
             }
             finally
             {
-                // _logger.Error(exception, message);
+                // _logger.Error(_exception, message);
             }
         }
-
     }
 }

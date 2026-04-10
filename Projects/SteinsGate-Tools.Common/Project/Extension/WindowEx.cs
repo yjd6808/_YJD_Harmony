@@ -1,4 +1,4 @@
-﻿// 작성자 : 윤정도
+// 작성자 : 윤정도
 // 1~2년전에 만든 윈도우 관련 처리 이어서 확장
 
 using System;
@@ -6,16 +6,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
+
 using Vanara.PInvoke;
+
 using static Vanara.PInvoke.User32;
 
 namespace SGToolsCommon.Extension
 {
-
     public static class WindowEx
     {
         /*
@@ -38,28 +37,31 @@ namespace SGToolsCommon.Extension
          * 위와 같은 필드들을 사용하여 깜박이기의 옵션을 설정할 수 있습니다.깜박이기가 완료된 후, FlashWindowEx 함수는 TRUE를 반환합니다.
          */
 
-        public static void Flash(IntPtr handle)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void Flash(IntPtr _handle)
         {
             FLASHWINFO fInfo = new FLASHWINFO();
             fInfo.cbSize = Convert.ToUInt32(Marshal.SizeOf(fInfo));
             fInfo.dwFlags = FLASHW.FLASHW_TRAY | FLASHW.FLASHW_TIMERNOFG;
-            fInfo.dwTimeout = 3000; 
-            fInfo.hwnd = handle;
+            fInfo.dwTimeout = 3000;
+            fInfo.hwnd = _handle;
             fInfo.uCount = 0;
             FlashWindowEx(fInfo);
         }
 
-        public static IntPtr Handle(this Window window)
-            => new WindowInteropHelper(window).Handle;
+        //////////////////////////////////////////////////////////////////////////////////
+        public static IntPtr Handle(this Window _window)
+            => new WindowInteropHelper(_window).Handle;
 
+        //////////////////////////////////////////////////////////////////////////////////
         // 해당 윈도우가 포그라운드 윈도우인지 체크
         // https://stackoverflow.com/questions/7162834/determine-if-current-application-is-activated-has-focus
         public static bool IsMainWindowForeground()
             => Application.Current?.MainWindow?.Handle() == GetForegroundWindow();
 
+        //////////////////////////////////////////////////////////////////////////////////
         public static bool IsApplicationForeground()
         {
-
             HWND activatedHandle = GetForegroundWindow();
             if (activatedHandle == IntPtr.Zero)
                 return false;       // No window is currently activated
@@ -69,24 +71,27 @@ namespace SGToolsCommon.Extension
             return activeProcId == procId;
         }
 
-        public static void MoveTo(this Window window, Point point, bool allowOver = true)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void MoveTo(this Window _window, Point _point, bool _allowOver = true)
         {
-            window.Left = point.X;
-            window.Top = point.Y;
+            _window.Left = _point.X;
+            _window.Top = _point.Y;
         }
 
-        public static Point GetCenterPosition(this Window window)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static Point GetCenterPosition(this Window _window)
         {
-            return new global::System.Windows.Point(
-                window.Left + window.Width / 2,
-                window.Top + +window.Height / 2);
+            return new Point(
+                _window.Left + _window.Width / 2,
+                _window.Top + _window.Height / 2);
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         // window 기준으로 가장 가까운 디스플레이 바운드를 반환한다.
-        public static Rect ClosestDisplayRect(this Window window)
+        public static Rect ClosestDisplayRect(this Window _window)
         {
             List<Rect> rectList = DisplayEx.GetDisplayRectList();
-            Point windowCenterPosition = WindowEx.GetCenterPosition(window);
+            Point windowCenterPosition = WindowEx.GetCenterPosition(_window);
 
             // 현재 윈도우가 포함된 디스플레이 가져오기
             Rect closestDisplayRect = rectList.Where(x => x.Contains(windowCenterPosition)).FirstOrDefault();
@@ -102,89 +107,92 @@ namespace SGToolsCommon.Extension
             return closestDisplayRect;
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         // window를 현재 window에서 가장 가까운 디스플레이의 중앙에 위치하도록 한다.
-        public static void MoveToClosestDisplayCenter(this Window window)
+        public static void MoveToClosestDisplayCenter(this Window _window)
         {
-            Size closestDisplayRect = ClosestDisplayRect(window).Size;
+            Size closestDisplayRect = ClosestDisplayRect(_window).Size;
 
             float width = (float)closestDisplayRect.Width;
             float height = (float)closestDisplayRect.Height;
 
-            window.Left = width / 2 - (double.IsNaN(window.Width) ? 0 : window.Width / 2);
-            window.Top = height / 2 - (double.IsNaN(window.Height) ? 0 : window.Height / 2);
+            _window.Left = width / 2 - (double.IsNaN(_window.Width) ? 0 : _window.Width / 2);
+            _window.Top = height / 2 - (double.IsNaN(_window.Height) ? 0 : _window.Height / 2);
         }
 
-
+        //////////////////////////////////////////////////////////////////////////////////
         // window를 현재 baseWindow의 중앙에 위치하도록 한다.
-        public static void MoveToCenterFrom(this Window window, Window baseWindow)
+        public static void MoveToCenterFrom(this Window _window, Window _baseWindow)
         {
-            Point baseCenter = GetCenterPosition(baseWindow);
+            Point baseCenter = GetCenterPosition(_baseWindow);
 
-            window.Left = baseCenter.X - window.Width / 2;
-            window.Top = baseCenter.Y - window.Height / 2;
+            _window.Left = baseCenter.X - _window.Width / 2;
+            _window.Top = baseCenter.Y - _window.Height / 2;
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         // baseWindow 윈도우 기준으로 가장 가까운 디스플레이를 찾고
         // adjustWindow 윈도우를 가장 가까운 디스플레이를 벗어나지 않는 선에서 위치를 세팅한다.
-        public static void AdjustPosition(Window baseWindow, Window adjustWindow, int padding)
+        public static void AdjustPosition(Window _baseWindow, Window _adjustWindow, int _padding)
         {
             // 현재 윈도우가 포함된 디스플레이 가져오기
-            Rect closestDisplayRect = ClosestDisplayRect(baseWindow);
+            Rect closestDisplayRect = ClosestDisplayRect(_baseWindow);
 
-            double bottom = adjustWindow.Top + adjustWindow.Height;
-            double right = adjustWindow.Left + adjustWindow.Width;
+            double bottom = _adjustWindow.Top + _adjustWindow.Height;
+            double right = _adjustWindow.Left + _adjustWindow.Width;
 
-            if (adjustWindow.Top <= closestDisplayRect.Top)
-                adjustWindow.Top = closestDisplayRect.Top + padding;
+            if (_adjustWindow.Top <= closestDisplayRect.Top)
+                _adjustWindow.Top = closestDisplayRect.Top + _padding;
             if (bottom >= closestDisplayRect.Bottom)
-                adjustWindow.Top = closestDisplayRect.Bottom - (padding + adjustWindow.Height);
-            if (adjustWindow.Left <= closestDisplayRect.Left)
-                adjustWindow.Left = closestDisplayRect.Left + padding;
+                _adjustWindow.Top = closestDisplayRect.Bottom - (_padding + _adjustWindow.Height);
+            if (_adjustWindow.Left <= closestDisplayRect.Left)
+                _adjustWindow.Left = closestDisplayRect.Left + _padding;
             if (right >= closestDisplayRect.Right)
-                adjustWindow.Left = closestDisplayRect.Right - (padding + adjustWindow.Width);
+                _adjustWindow.Left = closestDisplayRect.Right - (_padding + _adjustWindow.Width);
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         // 윈도우 크기가 디스플레이를 벗어나게 큰 경우 기존 윈도우 크기의 비율을 유지하며 크기를 줄여준다.
         // 이때 디스플레이는 window를 기준으로 가장 가까운 디스플레이의 너비와 높이를 기준으로 한다.
         // Adjust 된 경우 true 안된 경우 false
         // 하.. 높이가 디스플레이 높이보다 큰 경우 그냥 고정되어버리네 크게 쓸모 없을 듯;
-        public static bool AdjustSizeOnScreen(Window window, int padding)
+        public static bool AdjustSizeOnScreen(Window _window, int _padding)
         {
-            if (double.IsNaN(window.Width) || double.IsNaN(window.Height))
+            if (double.IsNaN(_window.Width) || double.IsNaN(_window.Height))
                 throw new Exception("윈도우의 너비와 높이가 결정되어야만 사용가능합니다.");
 
-            Rect closestDisplayRect = ClosestDisplayRect(window);
+            Rect closestDisplayRect = ClosestDisplayRect(_window);
 
-            double paddedDisplayWidth = closestDisplayRect.Width + padding;
-            double paddedDisplayHeight = closestDisplayRect.Height + padding;
+            double paddedDisplayWidth = closestDisplayRect.Width + _padding;
+            double paddedDisplayHeight = closestDisplayRect.Height + _padding;
 
-            if (window.Width > paddedDisplayWidth && window.Height > paddedDisplayHeight)
+            if (_window.Width > paddedDisplayWidth && _window.Height > paddedDisplayHeight)
             {
                 // 윈도우 너비, 높이가 디스플레이 너비, 높이를 모두 초과하는 경우
                 // 보통 디스플레이가 세로길이가 더 짧으니 짧은쪽기준으로 맞춰주자.
 
                 // 먼저 기존 너비와 높이 비율을 구한다.
-                double windowSizeRatio = window.Width / window.Height;
+                double windowSizeRatio = _window.Width / _window.Height;
 
-                window.Height = paddedDisplayHeight;
-                window.Width = window.Height * windowSizeRatio;
+                _window.Height = paddedDisplayHeight;
+                _window.Width = _window.Height * windowSizeRatio;
 
-                window.Top = padding;
-                window.Left = padding;
+                _window.Top = _padding;
+                _window.Left = _padding;
                 return true;
             }
-            else if (window.Width > paddedDisplayWidth)
+            else if (_window.Width > paddedDisplayWidth)
             {
-                window.Height = window.Height * paddedDisplayWidth / window.Width;
-                window.Width = paddedDisplayWidth;
-                window.Left = padding;
+                _window.Height = _window.Height * paddedDisplayWidth / _window.Width;
+                _window.Width = paddedDisplayWidth;
+                _window.Left = _padding;
                 return true;
             }
-            else if (window.Height > paddedDisplayHeight)
+            else if (_window.Height > paddedDisplayHeight)
             {
-                window.Width = window.Width * paddedDisplayHeight / window.Height;
-                window.Height = paddedDisplayHeight;
-                window.Top = padding;
+                _window.Width = _window.Width * paddedDisplayHeight / _window.Height;
+                _window.Height = paddedDisplayHeight;
+                _window.Top = _padding;
                 return true;
             }
             else
@@ -194,29 +202,31 @@ namespace SGToolsCommon.Extension
         }
     }
 
-
     public class DisplayDistanceComparer : IComparer<Rect>
     {
-        private Point _position;
+        private Point position_;
 
-        public DisplayDistanceComparer(Point p)
+        //////////////////////////////////////////////////////////////////////////////////
+        public DisplayDistanceComparer(Point _p)
         {
-            _position = p;
+            position_ = _p;
         }
 
-        private double Distance(Rect rect)
+        //////////////////////////////////////////////////////////////////////////////////
+        public int Compare(Rect _x, Rect _y)
         {
-            Point displayCenterLocation = new global::System.Windows.Point(rect.Location.X + rect.Width / 2, rect.Location.Y + rect.Height / 2);
+            return Distance(_x).CompareTo(Distance(_y));
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        private double Distance(Rect _rect)
+        {
+            Point displayCenterLocation = new Point(_rect.Location.X + _rect.Width / 2, _rect.Location.Y + _rect.Height / 2);
 
             return Math.Sqrt(
-                Math.Pow(_position.X - displayCenterLocation.X, 2) +
-                Math.Pow(_position.Y - displayCenterLocation.Y, 2)
+                Math.Pow(position_.X - displayCenterLocation.X, 2) +
+                Math.Pow(position_.Y - displayCenterLocation.Y, 2)
             );
-        }
-
-        public int Compare(Rect x, Rect y)
-        {
-            return Distance(x).CompareTo(Distance(y));
         }
     }
 }

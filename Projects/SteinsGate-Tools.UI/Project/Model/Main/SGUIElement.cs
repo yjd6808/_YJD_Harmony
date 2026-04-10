@@ -8,24 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Net.WebSockets;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Xml.Linq;
 using MoreLinq;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon;
@@ -137,13 +122,13 @@ namespace SGToolsUI.Model.Main
         [Description("UI엘리먼트가 트리뷰에서 나타내는 이름입니다.")]
         public string VisualName
         {
-            get => _visualName;
+            get => visualName_;
             set
             {
-                if (_visualName == value)
+                if (visualName_ == value)
                     return;
 
-                _visualName = value;
+                visualName_ = value;
                 OnPropertyChanged();
             }
         }
@@ -152,10 +137,10 @@ namespace SGToolsUI.Model.Main
         [Description("게임에서 실제로 사용될 디파인 이름")]
         public string DefineName
         {
-            get => _defineName;
+            get => defineName_;
             set
             {
-                _defineName = value;
+                defineName_ = value;
                 OnPropertyChanged();
             }
         }
@@ -168,10 +153,10 @@ namespace SGToolsUI.Model.Main
         [Description("UI엘리먼트의 캔버스 좌상단 위치를 의미")]
         public IntPoint VisualPosition
         {
-            get => new((int)_visualPosition.X, (int)_visualPosition.Y);
+            get => new((int)visualPosition_.X, (int)visualPosition_.Y);
             set
             {
-                _visualPosition = value;
+                visualPosition_ = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualRect));
                 OnPropertyChanged(nameof(RelativePosition));
@@ -209,13 +194,13 @@ namespace SGToolsUI.Model.Main
         [Description("UI 그룹내 자식의 세로 정렬 기준입니다.")]
         public VAlignment VerticalAlignment
         {
-            get => _verticalAlignment;
+            get => verticalAlignment_;
             set
             {
-                if (_verticalAlignment == value)
+                if (verticalAlignment_ == value)
                     return;
 
-                _verticalAlignment = value;
+                verticalAlignment_ = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(RelativePosition));
                 OnPropertyChanged(nameof(VisualPositionAnchorAbsolute));
@@ -227,13 +212,13 @@ namespace SGToolsUI.Model.Main
         [Description("UI 그룹내 자식의 가로 정렬 기준입니다.")]
         public HAlignment HorizontalAlignment
         {
-            get => _horizontalAlignment;
+            get => horizontalAlignment_;
             set
             {
-                if (_horizontalAlignment == value)
+                if (horizontalAlignment_ == value)
                     return;
 
-                _horizontalAlignment = value;
+                horizontalAlignment_ = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(RelativePosition));
                 OnPropertyChanged(nameof(VisualPositionAnchorAbsolute));
@@ -286,15 +271,15 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)]
         [Description("엘리먼트 Rect의 중앙위치")]
         public IntPoint VisualPositionCenter => new(
-            _visualPosition.X + VisualSize.Width / 2,
-            _visualPosition.Y + VisualSize.Height / 2
+            visualPosition_.X + VisualSize.Width / 2,
+            visualPosition_.Y + VisualSize.Height / 2
         );
 
         [Browsable(false)]
         [Description("엘리먼트 Rect의 우하단위치")]
         public IntPoint VisualPositionRightBottom => new(
-            _visualPosition.X + VisualSize.Width,
-            _visualPosition.Y + VisualSize.Height
+            visualPosition_.X + VisualSize.Width,
+            visualPosition_.Y + VisualSize.Height
         );
 
 
@@ -315,19 +300,19 @@ namespace SGToolsUI.Model.Main
          */
 
 
-        [Browsable(false)] public virtual double VisibleOpacity => _visible ? 1.0 : 0;
+        [Browsable(false)] public virtual double VisibleOpacity => visible_ ? 1.0 : 0;
 
         [Category(Constant.ElementCategoryName), DisplayName("보이기"), PropertyOrder(OrderIsVisible)]
         [Description("현재 엘리먼트를 캔버스상에서 표시될지를 결정")]
         public virtual bool IsVisible
         {
-            get => _visible;
+            get => visible_;
             set
             {
-                if (_visible == value)
+                if (visible_ == value)
                     return;
 
-                _visible = value;
+                visible_ = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisibleOpacity));
             }
@@ -337,15 +322,15 @@ namespace SGToolsUI.Model.Main
         [Description("캔버스상에서 클릭가능하도록 할지")]
         public bool CanvasSelectable
         {
-            get => _canvasSelectable;
+            get => canvasSelectable_;
             set
             {
-                if (_canvasSelectable == value)
+                if (canvasSelectable_ == value)
                     return;
 
-                _canvasSelectable = value;
+                canvasSelectable_ = value;
 
-                if (Selected && !_canvasSelectable)
+                if (Selected && !canvasSelectable_)
                     Selected = false;
 
                 OnPropertyChanged();
@@ -367,7 +352,7 @@ namespace SGToolsUI.Model.Main
 
         [Browsable(false)]
         [Description("이 엘리먼트가 이미 삭제되었는지 여부")]
-        public bool Deleted => _deleted;
+        public bool Deleted => deleted_;
 
         [Browsable(false)]
         public virtual bool IsGroup => false;
@@ -398,24 +383,24 @@ namespace SGToolsUI.Model.Main
         [Description("엘리먼트가 트리뷰/캔버스 상에서 선택되었는지 ")]
         public bool Selected
         {
-            get => _selected;
+            get => selected_;
             set
             {
-                if (_selected == value)
+                if (selected_ == value)
                     return;
 
                 // Debug.WriteLine($"{VisualName} 셀렉 {value}");
-                _selected = value;
+                selected_ = value;
                 SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
                 ObservableCollection<SGUIElement> selectedElements = groupMaster.SelectedElements;
 
 
 
-                if (_selected)
+                if (selected_)
                 {
                     selectedElements.Add(this);
 
-                    if (_picked)
+                    if (picked_)
                         ViewModel.View.CanvasShapesControl.ArrangeSelection(this);
 
                     if (selectedElements.Count == 1)
@@ -447,7 +432,7 @@ namespace SGToolsUI.Model.Main
                     if (!selectedElements.Remove(this))
                         throw new Exception("선택목록에 엘리먼트가 없습니다.");
 
-                    if (_picked)
+                    if (picked_)
                         ViewModel.View.CanvasShapesControl.ReleaseSelection(this);
 
                     if (selectedElements.Count == 0)
@@ -480,10 +465,11 @@ namespace SGToolsUI.Model.Main
         }
 
 
-        public void SetPick(bool pick, bool notify = true)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void SetPick(bool _pick, bool _notify = true)
         {
-            _picked = pick;
-            if (notify)
+            picked_ = _pick;
+            if (_notify)
                 OnPropertyChanged(nameof(Picked));
         }
 
@@ -491,15 +477,15 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)]
         public bool Picked
         {
-            get => _picked;
+            get => picked_;
             set
             {
-                if (_picked == value)
+                if (picked_ == value)
                     return;
 
                 // Debug.WriteLine($"{VisualName} 픽");
                 SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
-                _picked = value;
+                picked_ = value;
 
                 if (value == false)
                 {
@@ -517,7 +503,7 @@ namespace SGToolsUI.Model.Main
 
                 OnPropertyChanged();
 
-                if (!_picked)
+                if (!picked_)
                     return;
 
                 if (IsGroup)
@@ -773,53 +759,56 @@ namespace SGToolsUI.Model.Main
             }
         }
 
-        [Browsable(false)] public bool ItemLoaded => _treeViewItem != null;
+        [Browsable(false)] public bool ItemLoaded => treeViewItem_ != null;
 
         [Browsable(false)]
         public TreeViewItem Item
         {
             get
             {
-                if (_treeViewItem == null)
+                if (treeViewItem_ == null)
                     throw new Exception($"{VisualName}의 트리뷰아이템이 null입니다.");
 
-                return _treeViewItem;
+                return treeViewItem_;
             }
         }
 
         [Browsable(false)]
         public virtual int State
         {
-            get => _state;
-            set => _state = value;
+            get => state_;
+            set => state_ = value;
         }
 
         // ==============================================================================
 
-        public void OnTreeViewItemLoaded(TreeViewItem item)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void OnTreeViewItemLoaded(TreeViewItem _item)
         {
-            _treeViewItem = item;
+            treeViewItem_ = _item;
             OnPropertyChanged(nameof(Item));
         }
 
 
-        public void CopyFrom(SGUIElement element)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void CopyFrom(SGUIElement _element)
         {
-            ViewModel = element.ViewModel;
+            ViewModel = _element.ViewModel;
 
-            _horizontalAlignment = element._horizontalAlignment;
-            _verticalAlignment = element._verticalAlignment;
-            _canvasSelectable = element._canvasSelectable;
-            _visualName = element._visualName;
-            _visualPosition = element._visualPosition;
-            _defineName = element._defineName;
+            horizontalAlignment_ = _element.horizontalAlignment_;
+            verticalAlignment_ = _element.verticalAlignment_;
+            canvasSelectable_ = _element.canvasSelectable_;
+            visualName_ = _element.visualName_;
+            visualPosition_ = _element.visualPosition_;
+            defineName_ = _element.defineName_;
         }
 
         public abstract void CreateInit();
 
-        public static SGUIElement Create(SGUIElementType type)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static SGUIElement Create(SGUIElementType _type)
         {
-            switch (type)
+            switch (_type)
             {
                 case SGUIElementType.Group: return new SGUIGroup();
                 case SGUIElementType.Button: return new SGUIButton();
@@ -831,7 +820,7 @@ namespace SGToolsUI.Model.Main
                 case SGUIElementType.ScrollBar: return new SGUIScrollBar();
                 case SGUIElementType.ProgressBar: return new SGUIProgressBar();
                 case SGUIElementType.Static: return new SGUIStatic();
-                default: throw new Exception($"이런.. {type} 생성은 아직 구현되지 않았습니다.");
+                default: throw new Exception($"이런.. {_type} 생성은 아직 구현되지 않았습니다.");
             }
         }
 
@@ -839,13 +828,13 @@ namespace SGToolsUI.Model.Main
         // DeleteUIElement 설명 참고
         public void DeleteSelf()
         {
-            if (_deleted)
+            if (deleted_)
                 return;
 
             if (!Parent.Children.Remove(this))
                 throw new Exception($"{VisualName}은 {Parent.VisualName}의 자식이 아닙니다.");
 
-            _deleted = true;
+            deleted_ = true;
             SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
 
             if (IsGroup)
@@ -859,7 +848,7 @@ namespace SGToolsUI.Model.Main
                     else
                         groupMaster.RemoveElement(element);
 
-                    element._deleted = true;
+                    element.deleted_ = true;
                 });
             }
             else
@@ -870,19 +859,21 @@ namespace SGToolsUI.Model.Main
             OnPropertyChanged(nameof(Deleted));
         }
 
-        public static int CompareOrder(SGUIElement lhsElement, SGUIElement rhsElement)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static int CompareOrder(SGUIElement _lhsElement, SGUIElement _rhsElement)
         {
-            int comp = Comparer<int>.Default.Compare(lhsElement.Depth, rhsElement.Depth);
+            int comp = Comparer<int>.Default.Compare(_lhsElement.Depth, _rhsElement.Depth);
             if (comp == 0)
-                return Comparer<int>.Default.Compare(lhsElement.Code, rhsElement.Code);
+                return Comparer<int>.Default.Compare(_lhsElement.Code, _rhsElement.Code);
             return comp;
         }
 
         // 트리뷰 모든 원소부터 위에서부터 한칸씩 계층구조 신경쓰지않고 확인했을 때 누가 위에있고 아래에잇는지 검사
-        public int CompareHeight(SGUIElement lhsElement, SGUIElement rhsElement)
+        //////////////////////////////////////////////////////////////////////////////////
+        public int CompareHeight(SGUIElement _lhsElement, SGUIElement _rhsElement)
         {
-            List<SGUIGroup> lhsTrack = lhsElement.ParentTrack.Reverse().ToList();
-            List<SGUIGroup> rhsTrack = rhsElement.ParentTrack.Reverse().ToList();
+            List<SGUIGroup> lhsTrack = _lhsElement.ParentTrack.Reverse().ToList();
+            List<SGUIGroup> rhsTrack = _rhsElement.ParentTrack.Reverse().ToList();
 
             if (lhsTrack.Count == 0 || rhsTrack.Count == 0)
                 throw new Exception("마스터 그룹은 인자로 전달하지 말아주세여 비교대상이 될 수 없습니다.");
@@ -931,13 +922,13 @@ namespace SGToolsUI.Model.Main
 
             if (lhsTrack.Count < rhsTrack.Count)    // 위에서 아래로 비교시
             {
-                lhsCurIndex = lhsTrack.Last().Children.IndexOf(lhsElement);
+                lhsCurIndex = lhsTrack.Last().Children.IndexOf(_lhsElement);
                 rhsCurIndex = rhsTrack[depth - 1].Children.IndexOf(rhsTrack[depth]);
             }
             else if (lhsTrack.Count > rhsTrack.Count)   // 아래에서 위로 비교시
             {
                 lhsCurIndex = lhsTrack[depth - 1].Children.IndexOf(lhsTrack[depth]);
-                rhsCurIndex = rhsTrack.Last().Children.IndexOf(rhsElement);
+                rhsCurIndex = rhsTrack.Last().Children.IndexOf(_rhsElement);
 
                 /*
                  * A
@@ -959,23 +950,23 @@ namespace SGToolsUI.Model.Main
             else // 동일한 계층에서 선택시
             {
                 // 여기 들어온 경우 둘 모두 부모가 같음
-                lhsCurIndex = parent.Children.IndexOf(lhsElement);
-                rhsCurIndex = parent.Children.IndexOf(rhsElement);
+                lhsCurIndex = parent.Children.IndexOf(_lhsElement);
+                rhsCurIndex = parent.Children.IndexOf(_rhsElement);
             }
 
             return Comparer<int>.Default.Compare(lhsCurIndex, rhsCurIndex);
         }
 
 
-        public IntPoint ConvertRelativePositionToVisualPosition(SGUIGroup group, IntPoint relativePosition)
+        //////////////////////////////////////////////////////////////////////////////////
+        public IntPoint ConvertRelativePositionToVisualPosition(SGUIGroup _group, IntPoint _relativePosition)
         {
-            IntPoint visualPos = new ();
-            IntRect groupRect = group == null
+            IntPoint visualPos = new();
+            IntRect groupRect = _group == null
                 ? new Rect(0, 0, Constant.ResolutionWidth, Constant.ResolutionHeight)
-                : group.VisualRect;
+                : _group.VisualRect;
 
-
-            switch (_horizontalAlignment)
+            switch (horizontalAlignment_)
             {
                 case HAlignment.Left:
                     visualPos.X = groupRect.X;
@@ -992,7 +983,7 @@ namespace SGToolsUI.Model.Main
                     break;
             }
 
-            switch (_verticalAlignment)
+            switch (verticalAlignment_)
             {
                 case VAlignment.Top:
                     visualPos.Y = groupRect.Y;
@@ -1009,39 +1000,39 @@ namespace SGToolsUI.Model.Main
                     break;
             }
 
-            visualPos.X += relativePosition.X;
-            visualPos.Y -= relativePosition.Y;
+            visualPos.X += _relativePosition.X;
+            visualPos.Y -= _relativePosition.Y;
             return visualPos;
         }
 
-        public IntPoint ConvertVisualPositionToRelativePosition(SGUIGroup group)
+        //////////////////////////////////////////////////////////////////////////////////
+        public IntPoint ConvertVisualPositionToRelativePosition(SGUIGroup _group)
         {
             IntPoint alignedPos = new();
 
-
-            switch (_horizontalAlignment)
+            switch (horizontalAlignment_)
             {
                 case HAlignment.Left:
-                    alignedPos.X = VisualPosition.X - group.VisualPosition.X;
+                    alignedPos.X = VisualPosition.X - _group.VisualPosition.X;
                     break;
                 case HAlignment.Center:
-                    alignedPos.X = VisualPositionCenter.X - group.VisualPositionCenter.X;
+                    alignedPos.X = VisualPositionCenter.X - _group.VisualPositionCenter.X;
                     break;
                 case HAlignment.Right:
-                    alignedPos.X = VisualPositionRightBottom.X - group.VisualPositionRightBottom.X;
+                    alignedPos.X = VisualPositionRightBottom.X - _group.VisualPositionRightBottom.X;
                     break;
             }
 
-            switch (_verticalAlignment)
+            switch (verticalAlignment_)
             {
                 case VAlignment.Top:
-                    alignedPos.Y = group.VisualPosition.Y - VisualPosition.Y;
+                    alignedPos.Y = _group.VisualPosition.Y - VisualPosition.Y;
                     break;
                 case VAlignment.Center:
-                    alignedPos.Y = group.VisualPositionCenter.Y - VisualPositionCenter.Y;
+                    alignedPos.Y = _group.VisualPositionCenter.Y - VisualPositionCenter.Y;
                     break;
                 case VAlignment.Bottom:
-                    alignedPos.Y = group.VisualPositionRightBottom.Y - VisualPositionRightBottom.Y;
+                    alignedPos.Y = _group.VisualPositionRightBottom.Y - VisualPositionRightBottom.Y;
                     break;
             }
 
@@ -1049,11 +1040,12 @@ namespace SGToolsUI.Model.Main
         }
 
 
-        public void SetPosition(VAlignment vAlign, HAlignment hAlign, IntPoint IntPoint)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void SetPosition(VAlignment _vAlign, HAlignment _hAlign, IntPoint _point)
         {
             IntPoint groupPosition = Parent.VisualPosition;
-            IntPoint zeroPosition = new ();
-            switch (vAlign)
+            IntPoint zeroPosition = new();
+            switch (_vAlign)
             {
                 case VAlignment.Center:
                     zeroPosition.Y = groupPosition.Y + Parent.VisualSize.Height / 2 - VisualSize.Height / 2;
@@ -1063,7 +1055,7 @@ namespace SGToolsUI.Model.Main
                     break;
             }
 
-            switch (hAlign)
+            switch (_hAlign)
             {
                 case HAlignment.Center:
                     zeroPosition.X = groupPosition.X + Parent.VisualSize.Width / 2 - VisualSize.Width / 2;
@@ -1073,22 +1065,23 @@ namespace SGToolsUI.Model.Main
                     break;
             }
 
-            zeroPosition.X += IntPoint.X;
-            zeroPosition.Y += IntPoint.Y;
+            zeroPosition.X += _point.X;
+            zeroPosition.Y += _point.Y;
             VisualPosition = zeroPosition;
         }
 
-
         // 9방향위치에 딱 붙여서 배치하는 용도
-        public void SetPositionZero(VAlignment vAlign, HAlignment hAlign)
-            => SetPosition(vAlign, hAlign, IntPoint.Zero);
+        //////////////////////////////////////////////////////////////////////////////////
+        public void SetPositionZero(VAlignment _vAlign, HAlignment _hAlign)
+            => SetPosition(_vAlign, _hAlign, IntPoint.Zero);
 
-        public bool ContainPoint(IntPoint p)
+        //////////////////////////////////////////////////////////////////////////////////
+        public bool ContainPoint(IntPoint _p)
         {
-            if (!_visible)
+            if (!visible_)
                 return false;
 
-            return VisualRect.Contains(p);
+            return VisualRect.Contains(_p);
         }
 
         public abstract object Clone();
@@ -1096,6 +1089,7 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)]
         public override CanvasElementType CanvasElementType => CanvasElementType.UIElement;
 
+        //////////////////////////////////////////////////////////////////////////////////
         public T Cast<T>() where T : SGUIElement
         {
             T casted = this as T;
@@ -1106,49 +1100,52 @@ namespace SGToolsUI.Model.Main
             return casted;
         }
 
-        public int Compare(SGUIElement lhs, SGUIElement rhs)
+        //////////////////////////////////////////////////////////////////////////////////
+        public int Compare(SGUIElement _lhs, SGUIElement _rhs)
         {
-            return lhs.Code.CompareTo(rhs.Code);
+            return _lhs.Code.CompareTo(_rhs.Code);
         }
 
-
+        //////////////////////////////////////////////////////////////////////////////////
         public virtual JObject ToJObject()
         {
             JObject root = new JObject();
             root[JsonCodeKey] = Code;
             root[JsonElementTypeKey] = (int)UIElementType;
-            root[JsonDefineNameKey] = _defineName;
+            root[JsonDefineNameKey] = defineName_;
 
             // 비주얼 이름은 게임데이터에서 필요없음
-            root[JsonVisualNameKey] = _visualName;
+            root[JsonVisualNameKey] = visualName_;
 
             // 필요없는 자식도 있음
-            root[JsonVAlignKey] = (int)_verticalAlignment;
-            root[JsonHAlignKey] = (int)_horizontalAlignment;
+            root[JsonVAlignKey] = (int)verticalAlignment_;
+            root[JsonHAlignKey] = (int)horizontalAlignment_;
             return root;
         }
 
-        public virtual void ParseJObject(JObject root)
+        //////////////////////////////////////////////////////////////////////////////////
+        public virtual void ParseJObject(JObject _root)
         {
             // 코드필요없음
             // 엘리먼트타입 고정이므로 필요없음
-            _visualName = (string)root[JsonVisualNameKey];
-            _defineName = (string)root[JsonDefineNameKey];
-            _verticalAlignment = (VAlignment)(int)root[JsonVAlignKey];
-            _horizontalAlignment = (HAlignment)(int)root[JsonHAlignKey];
+            visualName_ = (string)_root[JsonVisualNameKey];
+            defineName_ = (string)_root[JsonDefineNameKey];
+            verticalAlignment_ = (VAlignment)(int)_root[JsonVAlignKey];
+            horizontalAlignment_ = (HAlignment)(int)_root[JsonHAlignKey];
         }
 
         [Browsable(false)]
         public object Tag { get; set; } // 아무런 데이터나 기록할 수 있도록하는 프로퍼티
 
         // 기본적으로 엘리먼트의 이벤트는 "전파"되도록한다.
-        public virtual bool OnMouseMove(IntPoint p)
+        //////////////////////////////////////////////////////////////////////////////////
+        public virtual bool OnMouseMove(IntPoint _p)
         {
             if (State == StateDisabled ||
                 State == StatePressed)
                 return true;
 
-            bool contained = ContainPoint(p);
+            bool contained = ContainPoint(_p);
 
             if (!contained)
             {
@@ -1160,13 +1157,14 @@ namespace SGToolsUI.Model.Main
             return true;
         }
 
-        public virtual bool OnMouseDown(IntPoint p)
+        //////////////////////////////////////////////////////////////////////////////////
+        public virtual bool OnMouseDown(IntPoint _p)
         {
             if (State == StateDisabled ||
                 State == StatePressed)
                 return true;
 
-            bool contained = ContainPoint(p);
+            bool contained = ContainPoint(_p);
             if (!contained)
                 return true;
 
@@ -1174,12 +1172,13 @@ namespace SGToolsUI.Model.Main
             return true;
         }
 
-        public virtual bool OnMouseUp(IntPoint p)
+        //////////////////////////////////////////////////////////////////////////////////
+        public virtual bool OnMouseUp(IntPoint _p)
         {
             if (State != StatePressed)
                 return true;
 
-            bool contained = ContainPoint(p);
+            bool contained = ContainPoint(_p);
             State = StateNormal;
 
             if (!contained)
@@ -1189,21 +1188,22 @@ namespace SGToolsUI.Model.Main
         }
 
 
-        public override string ToString() => _visualName;
+        //////////////////////////////////////////////////////////////////////////////////
+        public override string ToString() => visualName_;
 
 
-        protected string _visualName = string.Empty;
-        protected IntPoint _visualPosition;
-        protected bool _selected = false;
-        protected bool _visible = true;
-        protected bool _deleted = false;
-        protected int _state = StateNormal;
-        protected bool _picked = false;
-        protected bool _canvasSelectable = true;
-        protected HAlignment _horizontalAlignment = HAlignment.Left;
-        protected VAlignment _verticalAlignment = VAlignment.Bottom;
-        protected TreeViewItem _treeViewItem;
-        protected string _defineName = string.Empty;
+        protected string visualName_ = string.Empty;
+        protected IntPoint visualPosition_;
+        protected bool selected_ = false;
+        protected bool visible_ = true;
+        protected bool deleted_ = false;
+        protected int state_ = StateNormal;
+        protected bool picked_ = false;
+        protected bool canvasSelectable_ = true;
+        protected HAlignment horizontalAlignment_ = HAlignment.Left;
+        protected VAlignment verticalAlignment_ = VAlignment.Bottom;
+        protected TreeViewItem treeViewItem_;
+        protected string defineName_ = string.Empty;
 
 
 

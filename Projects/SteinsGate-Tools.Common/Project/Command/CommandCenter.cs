@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 작성일: 2/26/2023 4:48:27 AM
  *
@@ -7,56 +7,48 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SGToolsCommon.Command
 {
     public abstract class CommandCenter
     {
-        private bool _finalized;
-        private Dictionary<string, CommandAbstract> _commandMap = new();
+        private bool finalized_;
+        private Dictionary<string, CommandAbstract> commandMap_ = new();
 
-        public void Add(CommandAbstract command)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void Add(CommandAbstract _command)
         {
-            if (_commandMap.ContainsKey(command.Name))
+            if (commandMap_.ContainsKey(_command.Name))
             {
-                MessageBox.Show($"{command.Name} 커맨드가 이미 존재합니다.");
+                MessageBox.Show($"{_command.Name} 커맨드가 이미 존재합니다.");
                 return;
             }
 
-            _commandMap.Add(command.Name, command);
+            commandMap_.Add(_command.Name, _command);
         }
 
-        public void Execute(string commandName, object? param = null)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void Execute(string _commandName, object? _param = null)
         {
-            if (_finalized)
+            if (finalized_)
                 throw new Exception("이미 파이날라이즈드 된 커맨드 센터입니다.");
 
-            if (!_commandMap.ContainsKey(commandName))
+            if (!commandMap_.ContainsKey(_commandName))
             {
-                MessageBox.Show($"{commandName} 커맨드를 실행할 수 없습니다.");
+                MessageBox.Show($"{_commandName} 커맨드를 실행할 수 없습니다.");
                 return;
             }
 
-            _commandMap[commandName].Execute(param);
+            commandMap_[_commandName].Execute(_param);
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public void Finalize()
         {
-            foreach (CommandAbstract command in _commandMap.Values)
+            foreach (CommandAbstract command in commandMap_.Values)
                 command.Dispose();
-            _finalized = true;
+            finalized_ = true;
         }
     }
 }

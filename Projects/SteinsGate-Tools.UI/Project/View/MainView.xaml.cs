@@ -1,57 +1,38 @@
-﻿using System;
-using System.Collections;
+/*
+ * 작성자: 윤정도
+ *
+ */
+
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Reflection.Metadata;
-using System.Runtime.CompilerServices;
-using System.Security.Policy;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Resources;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using MoreLinq;
-using SGToolsCommon;
 using SGToolsCommon.CustomControl;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Model;
 using SGToolsCommon.Primitive;
-using SGToolsCommon.Resource;
 using SGToolsCommon.Sga;
-using SGToolsCommon.ThirdParty;
 using SGToolsUI.Command.MainViewCommand;
-using SGToolsUI.CustomControl;
 using SGToolsUI.FileSystem;
 using SGToolsUI.Model.Main;
 using SGToolsUI.ViewModel;
-using Xceed.Wpf.AvalonDock.Controls;
-using Xceed.Wpf.AvalonDock.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid;
+
 using Path = System.IO.Path;
 
 namespace SGToolsUI.View
 {
     public partial class MainView : Window
     {
-
-        
         public MainViewModel ViewModel { get; }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public MainView()
         {
             ViewModel = new MainViewModel();
@@ -61,21 +42,17 @@ namespace SGToolsUI.View
             InitializeComponent();
         }
 
-        private void MainView_OnLoaded(object sender, RoutedEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void MainView_OnLoaded(object _sender, RoutedEventArgs _e)
         {
             ViewModel.Loaded();
             InitializeZoomStateBinding();       // 컴포넌트가 모두 초기화된 후에 윈도우 사이즈가 최종결정되기 때문에.. Xaml에서 작성하지 않고 C# 코드로 작성하도록 한다.
             InitializeDragTargets();
         }
 
-
-        private void MainView_OnClosing(object? sender, CancelEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void MainView_OnClosing(object? _sender, CancelEventArgs _e)
         {
-            //Task t1 = ViewModel.Saver.SaveAutoAsync(SaveMode.UIToolData, false);
-            //Task t2 = ViewModel.Exporter.ExportAsync();
-
-            //await t1;
-            //await t2;
             ViewModel.Terminated = true;
             ViewModel.LogView.Close();
             ViewModel.AlbumView.Close();
@@ -86,6 +63,7 @@ namespace SGToolsUI.View
             ViewModel.Commander.Finalize();
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         private void InitializeZoomStateBinding()
         {
             // 수동 너비, 높이 조절을 위해 메뉴얼로 전환
@@ -110,10 +88,9 @@ namespace SGToolsUI.View
             windowZoomStateHeightBinding.Mode = BindingMode.OneWay;
             View.SetBinding(Window.MinHeightProperty, windowZoomStateHeightBinding);
             View.SetBinding(Window.MaxHeightProperty, windowZoomStateHeightBinding);
-
-            
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         private void InitializeDragTargets()
         {
             ViewModel.DragState.EndTargets.Add(UIElementPropertyGrid);
@@ -121,7 +98,8 @@ namespace SGToolsUI.View
             ViewModel.DragState.EndTargets.Add(UIElementTreeView);
         }
 
-        private async void MainView_OnKeyDown(SGKey key)
+        //////////////////////////////////////////////////////////////////////////////////
+        private async void MainView_OnKeyDown(SGKey _key)
         {
             KeyState state = ViewModel.KeyState;
 
@@ -193,12 +171,11 @@ namespace SGToolsUI.View
                 }
             }
 
-            ViewModel.FocusedKeyboardInputReceiver?.OnKeyDown(key);
+            ViewModel.FocusedKeyboardInputReceiver?.OnKeyDown(_key);
         }
 
-
-
-        private void MainView_OnKeyUp(SGKey key)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void MainView_OnKeyUp(SGKey _key)
         {
             KeyState state = ViewModel.KeyState;
             if (!state.IsShiftPressed && !state.IsCtrlPressed)
@@ -207,46 +184,50 @@ namespace SGToolsUI.View
                 ViewModel.UIElementSelectMode = SelectMode.New;
             }
 
-            CanvasShapesControl.OnKeyUp(key);
-            // UIElementTreeView.OnKeyUp(key);
+            CanvasShapesControl.OnKeyUp(_key);
         }
 
-        public void MainView_OnPreviewMouseMove(object sender, MouseEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void MainView_OnPreviewMouseMove(object _sender, MouseEventArgs _e)
         {
-            IntPoint pos = e.GetPosition(this);
+            IntPoint pos = _e.GetPosition(this);
 
             if (!CanvasShapesControl.ContainPoint(pos))
-                CanvasShapesControl.DragMove(e);
+                CanvasShapesControl.DragMove(_e);
 
             if (!UIElementsControl.ContainPoint(pos))
-                UIElementsControl.OnMouseMoveManipulation(e);
+                UIElementsControl.OnMouseMoveManipulation(_e);
 
             ViewModel.DragState.OnDragMove(pos);
         }
 
-        public void MainView_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void MainView_OnPreviewMouseUp(object _sender, MouseButtonEventArgs _e)
         {
-            CanvasShapesControl.DragEnd(e);
+            CanvasShapesControl.DragEnd(_e);
             UIElementsControl.OnMouseUpManipulation();
-            ViewModel.DragState.OnDragEnd(e.GetPosition(this));
+            ViewModel.DragState.OnDragEnd(_e.GetPosition(this));
         }
 
-        public void MainView_OnMouseLeave(object sender, MouseEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void MainView_OnMouseLeave(object _sender, MouseEventArgs _e)
         {
-            CanvasShapesControl.DragEnd(e);
+            CanvasShapesControl.DragEnd(_e);
         }
 
-        private void SgaResourceSearchTextBox_OnKeyDown(object sender, KeyEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void SgaResourceSearchTextBox_OnKeyDown(object _sender, KeyEventArgs _e)
         {
-            if (e.Key != Key.Enter)
+            if (_e.Key != Key.Enter)
                 return;
 
             ViewModel.Commander.SearchSgaResource.Execute(SgaResourceSearchTextBox.Text);
         }
 
-        private async void BackUpTextBox_OnKeyDown(object sender, KeyEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private async void BackUpTextBox_OnKeyDown(object _sender, KeyEventArgs _e)
         {
-            if (e.Key != Key.Enter)
+            if (_e.Key != Key.Enter)
                 return;
 
             string backuptag = BackUpTextBox.Text.Trim();
@@ -256,14 +237,14 @@ namespace SGToolsUI.View
             await ViewModel.Saver.BackupAsync(backuptag);
             BackUpTextBox.Text = string.Empty;
             BackUpTextBox.FocusClear();
-
         }
 
-        private async void MainView_Drop(object sender, DragEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private async void MainView_Drop(object _sender, DragEventArgs _e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (_e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                List<string> files = ((string[])e.Data.GetData(DataFormats.FileDrop)).ToList();
+                List<string> files = ((string[])_e.Data.GetData(DataFormats.FileDrop)).ToList();
 
                 // 이미지 파일이 아닌녀석들 제거
                 if (files.Count > 1)
@@ -284,9 +265,10 @@ namespace SGToolsUI.View
             }
         }
 
-        private void MainView_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void MainView_OnPreviewMouseDown(object _sender, MouseButtonEventArgs _e)
         {
-            IntPoint p = e.GetPosition(this);
+            IntPoint p = _e.GetPosition(this);
 
             ViewModel.FocusedKeyboardInputReceiver = ViewModel.KeyboardInputReceivers.FirstOrDefault(receiver => ((FrameworkElement)receiver).ContainPoint(p));
         }

@@ -111,8 +111,8 @@ public:
     static bool Init();
     static bool SetSize(int _width, int _height);
 
+	static void RestoreColor();
     static void SetColor(ConsoleColor _color);
-    static void GetColor(ConsoleColor _color);
     static ConsoleColor GetColor();
     static ConsoleColor ConvertColorString(const String& _colorString);
 
@@ -141,15 +141,23 @@ public:
     template <typename... TArgs>
     static int Write(const char* _pFormat, TArgs&&... _args)
     {
-		char buf[TempBufferLen];
-		int written = sprintf_s(buf, TempBufferLen, _pFormat, Forward<TArgs>(_args)...);
-		if (written <= 0)
+		if constexpr (sizeof...(_args) == 0)
 		{
-			return written;
+			TLockGuard guard(ms_ConsoleLock);
+			return printf("%s", _pFormat);
 		}
+		else
+		{
+			char buf[TempBufferLen];
+			int written = sprintf_s(buf, TempBufferLen, _pFormat, Forward<TArgs>(_args)...);
+			if (written <= 0)
+			{
+				return written;
+			}
 
-		TLockGuard guard(ms_ConsoleLock);
-		return printf_s("%s", buf);
+			TLockGuard guard(ms_ConsoleLock);
+			return printf_s("%s", buf);
+		}
     }
 
     template <_u32 FormatBufferLen, typename... TArgs>

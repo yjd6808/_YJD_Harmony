@@ -1,23 +1,12 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/6/2023 11:27:53 AM
  *
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SGToolsUI.Model.Main;
 
 namespace SGToolsUI.Resource
@@ -25,7 +14,6 @@ namespace SGToolsUI.Resource
     public class R
     {
         public const string IconPath = "pack://application:,,,/SGToolsUI;component/Resource/Icon/";
-
 
         public static readonly string UIGroupKey = SGUIElementType.Group.ToString();
         public static readonly string UIButtonKey = SGUIElementType.Button.ToString();
@@ -60,7 +48,6 @@ namespace SGToolsUI.Resource
         public const string UIColoredScrollBarIconKey = IconPath + "ui_colored_scrollbar.ico";
         public const string UIColoredStaticIconKey = IconPath + "ui_colored_static.ico";
 
-
         public static readonly ImageSource UIGroupIconImageSource = new BitmapImage(new Uri(UIGroupIconKey));
         public static readonly ImageSource UIButtonIconImageSource = new BitmapImage(new Uri(UIButtonIconKey));
         public static readonly ImageSource UICheckBoxIconImageSource = new BitmapImage(new Uri(UICheckBoxIconKey));
@@ -82,7 +69,5 @@ namespace SGToolsUI.Resource
         public static readonly ImageSource UIColoredProgressBarIconImageSource = new BitmapImage(new Uri(UIColoredProgressBarIconKey));
         public static readonly ImageSource UIColoredScrollBarIconImageSource = new BitmapImage(new Uri(UIColoredScrollBarIconKey));
         public static readonly ImageSource UIColoredStaticIconImageSource = new BitmapImage(new Uri(UIColoredStaticIconKey));
-
-
     }
 }

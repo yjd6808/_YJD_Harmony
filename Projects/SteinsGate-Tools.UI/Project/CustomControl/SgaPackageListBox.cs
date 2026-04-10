@@ -1,30 +1,15 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/6/2023 10:33:30 AM
  *
  */
 
-
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using SGToolsCommon.CustomControl;
 using SGToolsCommon.Extension;
-using SGToolsCommon.Sga;
-using SGToolsUI.Model;
 using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.CustomControl
@@ -34,16 +19,19 @@ namespace SGToolsUI.CustomControl
         public MainViewModel ViewModel { get; private set; }
         public ScrollBar ScrollBar { get; private set; }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public SgaPackageListBox()
         {
             Loaded += OnLoaded;
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void OnLoaded(object _sender, RoutedEventArgs _e)
         {
             InitializeViewModel();
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         private void InitializeViewModel()
         {
             ViewModel = DataContext as MainViewModel;

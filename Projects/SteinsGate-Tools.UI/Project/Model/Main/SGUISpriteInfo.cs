@@ -1,38 +1,28 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/1/2023 11:25:36 AM
  *
  */
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Security.Policy;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SGToolsCommon;
 using SGToolsCommon.Sga;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model.Main
 {
-
-
     [ExpandableObject]
     public struct SGUISpriteInfo
     {
         public static readonly SGUISpriteInfo Empty = new();
+
+        //////////////////////////////////////////////////////////////////////////////////
         public SGUISpriteInfo()
         {
             Sga = null;
@@ -40,24 +30,25 @@ namespace SGToolsUI.Model.Main
             Sprite = null;
         }
 
-        public SGUISpriteInfo(SgaSprite sprite)
+        //////////////////////////////////////////////////////////////////////////////////
+        public SGUISpriteInfo(SgaSprite _sprite)
         {
-            Debug.Assert(sprite != null);
+            Debug.Assert(_sprite != null);
 
-            Sga = sprite.Parent.Parent;
-            Img = sprite.Parent;
-            Sprite = sprite;
+            Sga = _sprite.Parent.Parent;
+            Img = _sprite.Parent;
+            Sprite = _sprite;
         }
 
-        public SGUISpriteInfo(SgaPackage sga, SgaImage img, SgaSprite sprite)
+        //////////////////////////////////////////////////////////////////////////////////
+        public SGUISpriteInfo(SgaPackage _sga, SgaImage _img, SgaSprite _sprite)
         {
-            Debug.Assert(sprite != null);
+            Debug.Assert(_sprite != null);
 
-            Sga = sga;
-            Img = img;
-            Sprite = sprite;
+            Sga = _sga;
+            Img = _img;
+            Sprite = _sprite;
         }
-
 
         public SgaPackage Sga { get; }
         public SgaImage Img { get; }
@@ -136,7 +127,6 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)]
         public int SpriteIndex => Sprite != null ? Sprite.FrameIndex : Constant.InvalidValue;
 
-
         [Browsable(false)]
         public bool IsNull => Sprite == null;
         [Browsable(false)]
@@ -144,6 +134,7 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)]
         public string ImgName => Img.Header.Name;
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override string ToString()
         {
             if (IsNull)
@@ -154,7 +145,6 @@ namespace SGToolsUI.Model.Main
 
         [Browsable(false)]
         public string Question
-
         {
             get
             {
@@ -168,20 +158,20 @@ namespace SGToolsUI.Model.Main
         }
     }
 
-
     public static class SGUISpriteInfoExt
     {
-        public static string ToFullString(this SGUISpriteInfo[] arr)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static string ToFullString(this SGUISpriteInfo[] _arr)
         {
             StringBuilder sb = new StringBuilder(64);
 
-            for (int i = 0; i < arr.Length; ++i)
+            for (int i = 0; i < _arr.Length; ++i)
             {
-                if (i == arr.Length - 1)
-                    sb.Append(arr[i].SpriteIndex);
+                if (i == _arr.Length - 1)
+                    sb.Append(_arr[i].SpriteIndex);
                 else
                 {
-                    sb.Append(arr[i].SpriteIndex);
+                    sb.Append(_arr[i].SpriteIndex);
                     sb.Append(' ');
                 }
             }
@@ -189,54 +179,56 @@ namespace SGToolsUI.Model.Main
             return sb.ToString();
         }
 
-        public static void ParseInfo(SgaPackage sga, SgaImage img, in int[] sourceSprites, in SGUISpriteInfo[] targetSprites, bool linearDodge = false)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void ParseInfo(SgaPackage _sga, SgaImage _img, in int[] _sourceSprites, in SGUISpriteInfo[] _targetSprites, bool _linearDodge = false)
         {
             // 무조건 두개 길이 같아야함.
-            Debug.Assert(sourceSprites.Length == targetSprites.Length);
+            Debug.Assert(_sourceSprites.Length == _targetSprites.Length);
 
-            for (int i = 0; i < sourceSprites.Length; ++i)
+            for (int i = 0; i < _sourceSprites.Length; ++i)
             {
-                if (sourceSprites[i] != Constant.InvalidValue)
+                if (_sourceSprites[i] != Constant.InvalidValue)
                 {
-                    SgaSprite sprite = img.GetSprite(sourceSprites[i]) as SgaSprite;
-                    if (sprite == null) throw new Exception($"{sga.FileNameWithoutExt} -> {img.Header.NameWithoutExt} -> {sourceSprites[i]}가 SgaSprite 타입이 아닙니다.");
-                    targetSprites[i] = new SGUISpriteInfo(sga, img, sprite);
-                    targetSprites[i].LinearDodge = linearDodge;
+                    SgaSprite sprite = _img.GetSprite(_sourceSprites[i]) as SgaSprite;
+                    if (sprite == null) throw new Exception($"{_sga.FileNameWithoutExt} -> {_img.Header.NameWithoutExt} -> {_sourceSprites[i]}가 SgaSprite 타입이 아닙니다.");
+                    _targetSprites[i] = new SGUISpriteInfo(_sga, _img, sprite);
+                    _targetSprites[i].LinearDodge = _linearDodge;
                 }
             }
         }
 
-        public static bool TryGetSgaImgFileName(in SGUISpriteInfo[] sprites, out string sga, out string img)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static bool TryGetSgaImgFileName(in SGUISpriteInfo[] _sprites, out string _sga, out string _img)
         {
-            sga = string.Empty;
-            img = string.Empty;
+            _sga = string.Empty;
+            _img = string.Empty;
 
-            SGUISpriteInfo info = sprites.FirstOrDefault(s => !s.IsNull);
+            SGUISpriteInfo info = _sprites.FirstOrDefault(s => !s.IsNull);
 
             if (!info.IsNull)
             {
-                sga = info.SgaName;
-                img = info.ImgName;
+                _sga = info.SgaName;
+                _img = info.ImgName;
                 return true;
             }
 
             return false;
         }
 
-        public static bool TryGetSgaImgFileName(in SGUISpriteInfo sprite, out string sga, out string img)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static bool TryGetSgaImgFileName(in SGUISpriteInfo _sprite, out string _sga, out string _img)
         {
-            sga = string.Empty;
-            img = string.Empty;
+            _sga = string.Empty;
+            _img = string.Empty;
 
-            if (!sprite.IsNull)
+            if (!_sprite.IsNull)
             {
-                sga = sprite.SgaName;
-                img = sprite.ImgName;
+                _sga = _sprite.SgaName;
+                _img = _sprite.ImgName;
                 return true;
             }
 
             return false;
         }
-
     }
 }

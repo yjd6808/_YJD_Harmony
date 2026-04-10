@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/10/2023 8:57:59 AM
  *
@@ -9,51 +9,40 @@
  *
  */
 
-using SGToolsUI.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Diagnostics.Metrics;
-using SGToolsCommon.Resource;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
-using Newtonsoft.Json.Linq;
-using System.Collections;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Windows.Media.Media3D;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using Newtonsoft.Json.Linq;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
+using SGToolsCommon.Resource;
 using SGToolsUI.Model.Backup;
-using SGToolsUI.View;
 using SGToolsUI.Model.Main;
+using SGToolsUI.View;
+using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.FileSystem
 {
     public class SGUILoader : SGUIFileSystem
     {
-        public SGUILoader(MainViewModel viewModel)
-            => _viewModel = viewModel;
+        public MainViewModel viewModel_;
 
-        
+        //////////////////////////////////////////////////////////////////////////////////
+        public SGUILoader(MainViewModel _viewModel)
+            => viewModel_ = _viewModel;
 
-        public bool Load(string path, SGUIGroupMaster master)
+        //////////////////////////////////////////////////////////////////////////////////
+        public bool Load(string _path, SGUIGroupMaster _master)
         {
             try
             {
-                string fileName = Path.GetFileName(path);
-                JObject root = JObject.Parse(System.IO.File.ReadAllText(path));
+                string fileName = Path.GetFileName(_path);
+                JObject root = JObject.Parse(System.IO.File.ReadAllText(_path));
 
                 SaveMode mode = (SaveMode)Enum.Parse(typeof(SaveMode), (string)root[JsonModeKey]);
 
@@ -67,7 +56,6 @@ namespace SGToolsUI.FileSystem
                 List<(SGUIGroup, JArray)> groupList = new(groups.Count);   // 그룹 뼈대 로딩때 임시로 저장하는 리스트
                 Dictionary<int, SGUIElement> elementDict = new();           // 그룹, 엘리먼트 저장용 임시 맵, 그룹 로딩시 자식 코드로 빠르게 엘리먼트 추가하기 위한 용도
 
-
                 // Step1. 모든 그룹 제외 엘리먼트정보들 로딩
                 for (int i = 0; i < elements.Count; ++i)
                 {
@@ -75,7 +63,7 @@ namespace SGToolsUI.FileSystem
                     int code = (int)elementRoot[SGUIElement.JsonCodeKey];
                     SGUIElementType type = (SGUIElementType)((int)elementRoot[SGUIElement.JsonElementTypeKey]);
                     SGUIElement element = SGUIElement.Create(type);
-                    element.ViewModel = _viewModel;
+                    element.ViewModel = viewModel_;
                     element.ParseJObject(elementRoot);
                     elementDict.Add(code, element);
                 }
@@ -88,7 +76,7 @@ namespace SGToolsUI.FileSystem
                     JArray childrenRoot = groupRoot[SGUIElement.JsonChildrenKey] as JArray;
 
                     SGUIGroup group = new SGUIGroup(childrenRoot.Count);
-                    group.ViewModel = _viewModel;
+                    group.ViewModel = viewModel_;
                     group.ParseJObject(groupRoot);
                     elementDict.Add(code, group);
                     groupList.Add((group, childrenRoot));
@@ -110,64 +98,64 @@ namespace SGToolsUI.FileSystem
                 }
 
                 // Step4. 마스터 그룹 로딩, 그룹 마스터와 부모, 자식 등록진행
-                ObservableCollection<SGUIElement> parsed = new ();
+                ObservableCollection<SGUIElement> parsed = new();
                 JArray masterGroups = groupMaster[SGUIElement.JsonChildrenKey] as JArray;
-                master.ParseJObject(groupMaster);
+                _master.ParseJObject(groupMaster);
 
                 for (int i = 0; i < masterGroups.Count; ++i)
                 {
                     int[] newChildInfo = new int[3];
                     SGUIGroup masterGroup = ParseChildInfo(masterGroups[i], newChildInfo).Cast<SGUIGroup>();
-                    masterGroup.Parent = master;
+                    masterGroup.Parent = _master;
                     masterGroup.Tag = newChildInfo;
-                    master.Children.Add(masterGroup);
+                    _master.Children.Add(masterGroup);
                 }
 
                 // 모든 자식 순회하면서 기타 설정까지 한번에 수행, 이때부턴 그룹의 코드가 다시 재구성된다. 태그에 저장된 childInfo[0](코드)는 이후로 쓸모없어짐
                 // Step5. 부모 관계가 모두 확립되었으므로 상위 계층부터 하위 계층까지 순회하며 RelativePosition VisualPosition으로 반영
-                master.ForEachRecursive(element =>
+                _master.ForEachRecursive(element =>
                 {
                     int[] childInfo = (int[])element.Tag;
                     element.RelativePosition = new IntPoint(childInfo[1], childInfo[2]);
 
                     if (!element.IsGroup)
                     {
-                        master.AddElement(element);
+                        _master.AddElement(element);
                         return;
                     }
 
                     SGUIGroup newGroup = element.Cast<SGUIGroup>();
-                    master.AddGroup(newGroup);
+                    _master.AddGroup(newGroup);
                     newGroup.SetDepth(newGroup.Parent.Depth + 1);
                     element.Tag = null; // GC를 위해 참조 없애놔야함
                 });
 
-
-                SGUIElement ParseChildInfo(JToken? token, int[] arr)
+                SGUIElement ParseChildInfo(JToken? _token, int[] _arr)
                 {
-                    string childInfoStr = ((string)token);
-                    StringEx.ParseIntNumberN(childInfoStr, arr);
-                    SGUIElement newChild = elementDict[arr[0]];
+                    string childInfoStr = ((string)_token);
+                    StringEx.ParseIntNumberN(childInfoStr, _arr);
+                    SGUIElement newChild = elementDict[_arr[0]];
                     return newChild;
                 }
 
-                master.UpdateZOrder();
-                _viewModel.LogBox.AddDispatchedLog($"UI툴 데이터 로딩완료 {fileName}", (LogType.Path, path), IconCommonType.Checked, Brushes.Green);
+                _master.UpdateZOrder();
+                viewModel_.LogBox.AddDispatchedLog($"UI툴 데이터 로딩완료 {fileName}", (LogType.Path, _path), IconCommonType.Checked, Brushes.Green);
                 return true;
             }
             catch (Exception exception)
             {
-                _viewModel.LogBox.AddDispatchedLog(exception);
+                viewModel_.LogBox.AddDispatchedLog(exception);
                 return false;
             }
         }
 
-        public bool Load(string path, BackupTreeViewItemGroup master)
+        //////////////////////////////////////////////////////////////////////////////////
+        public bool Load(string _path, BackupTreeViewItemGroup _master)
         {
             try
             {
-                string fileName = Path.GetFileName(path);
-                JObject root = JObject.Parse(System.IO.File.ReadAllText(path));
+                string fileName = Path.GetFileName(_path);
+                JObject root = JObject.Parse(System.IO.File.ReadAllText(_path));
 
                 SaveMode mode = (SaveMode)Enum.Parse(typeof(SaveMode), (string)root[JsonModeKey]);
 
@@ -179,8 +167,7 @@ namespace SGToolsUI.FileSystem
                 JObject? groupMaster = root[JsonGroupMasterKey] as JObject;
 
                 List<(BackupTreeViewItemGroup, JArray)> groupList = new(groups.Count);   // 그룹 뼈대 로딩때 임시로 저장하는 리스트
-                Dictionary<int, BackupTreeViewItem> elementDict = new();           // 그룹, 엘리먼트 저장용 임시 맵, 그룹 로딩시 자식 코드로 빠르게 엘리먼트 추가하기 위한 용도
-
+                Dictionary<int, BackupTreeViewItem> elementDict = new();                  // 그룹, 엘리먼트 저장용 임시 맵, 그룹 로딩시 자식 코드로 빠르게 엘리먼트 추가하기 위한 용도
 
                 // Step1. 모든 그룹 제외 엘리먼트정보들 로딩
                 for (int i = 0; i < elements.Count; ++i)
@@ -224,46 +211,43 @@ namespace SGToolsUI.FileSystem
                 }
 
                 // Step4. 마스터 그룹 로딩, 그룹 마스터와 부모, 자식 등록진행
-                ObservableCollection<SGUIElement> parsed = new ();
+                ObservableCollection<SGUIElement> parsed = new();
                 JArray masterGroups = groupMaster[SGUIElement.JsonChildrenKey] as JArray;
 
                 for (int i = 0; i < masterGroups.Count; ++i)
                 {
                     int[] newChildInfo = new int[3];
                     BackupTreeViewItemGroup masterGroup = ParseChildInfo(masterGroups[i], newChildInfo) as BackupTreeViewItemGroup;
-                    master.Children.Add(masterGroup);
+                    _master.Children.Add(masterGroup);
                 }
 
-                BackupTreeViewItem ParseChildInfo(JToken? token, int[] arr)
+                BackupTreeViewItem ParseChildInfo(JToken? _token, int[] _arr)
                 {
-                    string childInfoStr = ((string)token);
-                    StringEx.ParseIntNumberN(childInfoStr, arr);
-                    BackupTreeViewItem newChild = elementDict[arr[0]];
+                    string childInfoStr = ((string)_token);
+                    StringEx.ParseIntNumberN(childInfoStr, _arr);
+                    BackupTreeViewItem newChild = elementDict[_arr[0]];
                     return newChild;
                 }
-
 
                 return true;
             }
             catch (Exception exception)
             {
-                _viewModel.LogBox.AddDispatchedLog(exception);
+                viewModel_.LogBox.AddDispatchedLog(exception);
                 return false;
             }
         }
 
-        public async Task<SGUIGroupMaster> LoadAsync(string path)
+        //////////////////////////////////////////////////////////////////////////////////
+        public async Task<SGUIGroupMaster> LoadAsync(string _path)
         {
-            SGUIGroupMaster master = SGUIGroupMaster.Create(_viewModel);
-            bool result = await Task.Run(() => Load(path, master));
+            SGUIGroupMaster master = SGUIGroupMaster.Create(viewModel_);
+            bool result = await Task.Run(() => Load(_path, master));
 
             if (result)
                 return master;
 
-            return SGUIGroupMaster.Create(_viewModel);
+            return SGUIGroupMaster.Create(viewModel_);
         }
-
-
-        public MainViewModel _viewModel;
     }
 }

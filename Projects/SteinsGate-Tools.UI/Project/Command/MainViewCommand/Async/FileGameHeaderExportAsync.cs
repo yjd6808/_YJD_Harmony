@@ -1,40 +1,30 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/10/2023 11:55:35 AM
  *
  */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using Microsoft.Win32;
-using SGToolsCommon.Resource;
 using SGToolsUI.FileSystem;
-using SGToolsUI.View;
 using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.Command.MainViewCommand.Async
 {
     public class FileGameHeaderExportAsync : MainCommandAbstractAsync
     {
-        public FileGameHeaderExportAsync(MainViewModel viewModel)
-            : base(viewModel, "UI툴 데이터의 디파인을 추출하여 저장합니다.")
+        //////////////////////////////////////////////////////////////////////////////////
+        public FileGameHeaderExportAsync(MainViewModel _viewModel)
+            : base(_viewModel, "UI툴 데이터의 디파인을 추출하여 저장합니다.")
         {
         }
 
-        public override async Task ExecuteAsync(object? parameter)
+        //////////////////////////////////////////////////////////////////////////////////
+        public override async Task ExecuteAsync(object? _parameter)
         {
-            if (parameter is not string param)
+            if (_parameter is not string param)
                 throw new Exception("게임 헤더 Export 파라미터가 이상합니다. ExportType 이놈 타입으로 전달해주세요.");
 
             ExportType saveType = (ExportType)Enum.Parse(typeof(ExportType), param);
@@ -53,9 +43,7 @@ namespace SGToolsUI.Command.MainViewCommand.Async
                 saveFileDialog.FileName = Path.GetFileNameWithoutExtension(Constant.UIToolDataFileName);
 
                 if (saveFileDialog.ShowDialog() == true)
-                {
                     await ViewModel.Exporter.ExportAsync(saveFileDialog.FileName);
-                }
             }
             else
             {

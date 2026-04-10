@@ -1,34 +1,18 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/17/2023 1:13:24 PM
  *
  */
 
+using System;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Media.Imaging;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
-using SGToolsCommon.Sga;
-using SGToolsUI.Model.Main;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SGToolsCommon.Primitive;
-using Vanara.PInvoke;
+using SGToolsCommon.Sga;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
-using static Vanara.PInvoke.Kernel32;
 
 namespace SGToolsUI.Model.Main
 {
@@ -48,29 +32,33 @@ namespace SGToolsUI.Model.Main
         public const int OrderPercent = 3;
         public const int OrderDirection = 4;
 
+        public static int Seq = 0;
 
+        private double percent_;
+        private SGUISpriteInfo sprite_;
+        private IntSize visualSize_;
+        private ProgressIncreaseDirection direction_;
+
+        //////////////////////////////////////////////////////////////////////////////////
         public SGUIProgressBar()
         {
-            _direction = ProgressIncreaseDirection.LeftRight;
-            _percent = 70.0;
-            _visualSize = Constant.DefaultVisualSize;
+            direction_ = ProgressIncreaseDirection.LeftRight;
+            percent_ = 70.0;
+            visualSize_ = Constant.DefaultVisualSize;
         }
-
-
 
         [Category(Constant.ProgressBarCategoryName), DisplayName("퍼센트"), PropertyOrder(OrderPercent)]
         public double Percent
         {
-            get => _percent;
+            get => percent_;
             set
             {
                 if (value < 0)
                     value = 0;
-
                 else if (value > 100.0)
                     value = 100;
 
-                _percent = value;
+                percent_ = value;
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(PercentWidth));
@@ -81,10 +69,10 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.ProgressBarCategoryName), DisplayName("방향"), PropertyOrder(OrderDirection)]
         public ProgressIncreaseDirection Direction
         {
-            get => _direction;
+            get => direction_;
             set
             {
-                _direction = value;
+                direction_ = value;
 
                 OnPropertyChanged(nameof(CanvasRight));
                 OnPropertyChanged(nameof(CanvasLeft));
@@ -105,73 +93,74 @@ namespace SGToolsUI.Model.Main
             get
             {
                 // 수평방향시에 보일 너비 비율
-                if (_direction == ProgressIncreaseDirection.LeftRight ||
-                    _direction == ProgressIncreaseDirection.RightLeft)
+                if (direction_ == ProgressIncreaseDirection.LeftRight ||
+                    direction_ == ProgressIncreaseDirection.RightLeft)
                 {
-                    double width = _visualSize.Width * (_percent / 100.0);
+                    double width = visualSize_.Width * (percent_ / 100.0);
                     return width;
                 }
 
-                return _visualSize.Width;
+                return visualSize_.Width;
             }
         }
 
+        // 수직방향시에 보일 너비 비율
         [Browsable(false)]
         public double PercentHeight
-        // 수직방향시에 보일 너비 비율
         {
             get
             {
-                if (_direction == ProgressIncreaseDirection.TopBottom ||
-                    _direction == ProgressIncreaseDirection.BottomTop)
+                if (direction_ == ProgressIncreaseDirection.TopBottom ||
+                    direction_ == ProgressIncreaseDirection.BottomTop)
                 {
-                    double height = _visualSize.Height * (_percent / 100.0);
+                    double height = visualSize_.Height * (percent_ / 100.0);
                     return height;
                 }
-                return _visualSize.Height;
+
+                return visualSize_.Height;
             }
         }
 
         [Browsable(false)]
-        public HorizontalAlignment PercentHAlignment
+        public System.Windows.HorizontalAlignment PercentHAlignment
         {
             get
             {
-                if (_direction == ProgressIncreaseDirection.LeftRight)
+                if (direction_ == ProgressIncreaseDirection.LeftRight)
                     return System.Windows.HorizontalAlignment.Left;
-                if (_direction == ProgressIncreaseDirection.RightLeft)
+                if (direction_ == ProgressIncreaseDirection.RightLeft)
                     return System.Windows.HorizontalAlignment.Right;
                 return System.Windows.HorizontalAlignment.Left;
             }
         }
+
         [Browsable(false)]
-        public VerticalAlignment PercentVAlignment
+        public System.Windows.VerticalAlignment PercentVAlignment
         {
             get
             {
-                if (_direction == ProgressIncreaseDirection.TopBottom)
+                if (direction_ == ProgressIncreaseDirection.TopBottom)
                     return System.Windows.VerticalAlignment.Top;
-                if (_direction == ProgressIncreaseDirection.BottomTop)
+                if (direction_ == ProgressIncreaseDirection.BottomTop)
                     return System.Windows.VerticalAlignment.Bottom;
                 return System.Windows.VerticalAlignment.Top;
             }
         }
 
         // 디폴트 값이 NaN이라 하나를 0으로 세팅하면 나머지는 NaN으로 바꿔줘야함
-        [Browsable(false)] public double CanvasLeft => _direction == ProgressIncreaseDirection.LeftRight ? 0.0 : double.NaN;
-        [Browsable(false)] public double CanvasRight => _direction == ProgressIncreaseDirection.RightLeft ? 0.0 : double.NaN;
-        [Browsable(false)] public double CanvasTop => _direction == ProgressIncreaseDirection.TopBottom ? 0.0 : double.NaN;
-        [Browsable(false)] public double CanvasBottom => _direction == ProgressIncreaseDirection.BottomTop ? 0.0 : double.NaN;
-
+        [Browsable(false)] public double CanvasLeft => direction_ == ProgressIncreaseDirection.LeftRight ? 0.0 : double.NaN;
+        [Browsable(false)] public double CanvasRight => direction_ == ProgressIncreaseDirection.RightLeft ? 0.0 : double.NaN;
+        [Browsable(false)] public double CanvasTop => direction_ == ProgressIncreaseDirection.TopBottom ? 0.0 : double.NaN;
+        [Browsable(false)] public double CanvasBottom => direction_ == ProgressIncreaseDirection.BottomTop ? 0.0 : double.NaN;
 
         [ReadOnly(false)]
         [Category(Constant.ProgressBarCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
         public override IntSize VisualSize
         {
-            get => _visualSize;
+            get => visualSize_;
             set
             {
-                _visualSize = value;
+                visualSize_ = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(ScaleX));
                 OnPropertyChanged(nameof(ScaleY));
@@ -186,8 +175,8 @@ namespace SGToolsUI.Model.Main
         {
             get
             {
-                if (_sprite.IsNull) return 1.0;
-                return (double)_visualSize.Width / _sprite.Sprite.Width;
+                if (sprite_.IsNull) return 1.0;
+                return (double)visualSize_.Width / sprite_.Sprite.Width;
             }
         }
 
@@ -196,13 +185,10 @@ namespace SGToolsUI.Model.Main
         {
             get
             {
-                if (_sprite.IsNull) return 1.0;
-                return (double)_visualSize.Height / _sprite.Sprite.Height;
+                if (sprite_.IsNull) return 1.0;
+                return (double)visualSize_.Height / sprite_.Sprite.Height;
             }
         }
-
-
-
 
         [Browsable(false)]
         public BitmapSource SpriteSource => Sprite.Source;
@@ -210,15 +196,15 @@ namespace SGToolsUI.Model.Main
         [Category(Constant.ProgressBarCategoryName), DisplayName("스프라이트"), PropertyOrder(OrderSprite)]
         public SGUISpriteInfo Sprite
         {
-            get => _sprite;
+            get => sprite_;
             set
             {
-                _sprite = value;
+                sprite_ = value;
 
-                if (!_sprite.IsNull)
-                    _visualSize = _sprite.Sprite.Rect.Size;
+                if (!sprite_.IsNull)
+                    visualSize_ = sprite_.Sprite.Rect.Size;
                 else
-                    _visualSize = Constant.DefaultVisualSize;
+                    visualSize_ = Constant.DefaultVisualSize;
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(PercentWidth));
@@ -229,53 +215,57 @@ namespace SGToolsUI.Model.Main
             }
         }
 
-
         public override SGUIElementType UIElementType => SGUIElementType.ProgressBar;
-        public override bool Manipulatable => true;
-        public static int Seq = 0;
+        [Browsable(false)] public override bool Manipulatable => true;
+
+        //////////////////////////////////////////////////////////////////////////////////
         public override void CreateInit() => VisualName = $"프로그래스바_{Seq++}";
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override object Clone()
         {
             SGUIProgressBar progressBar = new SGUIProgressBar();
             progressBar.CopyFrom(this);
-            progressBar._sprite = _sprite;
-            progressBar._visualSize = _visualSize;
-            progressBar._percent = _percent;
-            progressBar._direction = _direction;
+            progressBar.sprite_ = sprite_;
+            progressBar.visualSize_ = visualSize_;
+            progressBar.percent_ = percent_;
+            progressBar.direction_ = direction_;
             return progressBar;
         }
+
+        //////////////////////////////////////////////////////////////////////////////////
         public override JObject ToJObject()
         {
             JObject root = base.ToJObject();
             // 인덱스를 뛰어쓰기로 구분해서 돌려줌
-            SGUISpriteInfoExt.TryGetSgaImgFileName(_sprite, out string sga, out string img);
+            SGUISpriteInfoExt.TryGetSgaImgFileName(sprite_, out string sga, out string img);
 
             root[JsonSgaKey] = sga;
             root[JsonImgKey] = img;
-            root[JsonSpriteKey] = _sprite.SpriteIndex;
-            root[JsonVisualSizeKey] = _visualSize.ToFullString();
-            root[JsonDirectionKey] = (int)_direction;
+            root[JsonSpriteKey] = sprite_.SpriteIndex;
+            root[JsonVisualSizeKey] = visualSize_.ToFullString();
+            root[JsonDirectionKey] = (int)direction_;
             return root;
         }
 
-        public override void ParseJObject(JObject root)
+        //////////////////////////////////////////////////////////////////////////////////
+        public override void ParseJObject(JObject _root)
         {
-            base.ParseJObject(root);
+            base.ParseJObject(_root);
 
-            string sgaName = (string)root[JsonSgaKey];
+            string sgaName = (string)_root[JsonSgaKey];
 
             if (sgaName == string.Empty)
                 return;
 
-            string imgName = (string)root[JsonImgKey];
-            string sizeString = (string)root[JsonVisualSizeKey];
+            string imgName = (string)_root[JsonImgKey];
+            string sizeString = (string)_root[JsonVisualSizeKey];
 
-            _visualSize = SizeEx.ParseFullString(sizeString);
+            visualSize_ = SizeEx.ParseFullString(sizeString);
 
             SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
             SgaPackage sga = img.Parent;
-            int spriteIndex = (int)root[JsonSpriteKey];
+            int spriteIndex = (int)_root[JsonSpriteKey];
 
             if (spriteIndex == Constant.InvalidValue)
                 return;
@@ -283,15 +273,9 @@ namespace SGToolsUI.Model.Main
             SgaSprite sprite = img.GetSprite(spriteIndex) as SgaSprite;
             if (sprite == null)
                 throw new Exception($"{sgaName} -> {imgName} -> {spriteIndex}가 SgaSprite 타입이 아닙니다.");
-            _sprite = new SGUISpriteInfo(sga, img, sprite);
-            _percent = 70.0;
-            _direction = (ProgressIncreaseDirection)(int)root[JsonDirectionKey];
+            sprite_ = new SGUISpriteInfo(sga, img, sprite);
+            percent_ = 70.0;
+            direction_ = (ProgressIncreaseDirection)(int)_root[JsonDirectionKey];
         }
-
-
-        private double _percent;
-        private SGUISpriteInfo _sprite;
-        private IntSize _visualSize;
-        private ProgressIncreaseDirection _direction;
     }
 }

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/27/2023 3:10:00 AM
  *
@@ -6,83 +6,68 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.IO.Packaging;
-using System.Linq;
-using System.Net.Security;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
+
 using SGToolsCommon.Extension;
 
 namespace SGToolsCommon.Sga
 {
     public class SgaPackage : Bindable
     {
-        private Stream _readStream;
-        private string _path;
-        private Dictionary<int, SgaElement> _elementMap;
-        private int _elementCount;
-        private int _packageIndex;
-        private bool _indexLoaded;
-        
+        private Stream readStream_;
+        private string path_;
+        private Dictionary<int, SgaElement> elementMap_;
+        private int elementCount_;
+        private int packageIndex_;
+        private bool indexLoaded_;
 
         // Lazy Loading 용
-        private List<SgaElementHeader> _elementHeaderList;
-        private Dictionary<string, int> _elementNameToIndexMap;
+        private List<SgaElementHeader> elementHeaderList_;
+        private Dictionary<string, int> elementNameToIndexMap_;
 
-        public Stream ReadStream => _readStream;
-        public string Path => _path;
-        public int ElementCount => _elementCount;
-        public bool Loaded => _elementMap.Count > 0;
-        public bool IndexLoaded => _indexLoaded;
-        public string FileName => System.IO.Path.GetFileName(_path);
-        public string FileNameWithoutExt => System.IO.Path.GetFileNameWithoutExtension(_path);
-        public List<SgaElementHeader> ElementHeaderList => _elementHeaderList;
-        public int PackageIndex => _packageIndex;
-        // public ListBoxItem Item { get; set; }
+        public Stream ReadStream => readStream_;
+        public string Path => path_;
+        public int ElementCount => elementCount_;
+        public bool Loaded => elementMap_.Count > 0;
+        public bool IndexLoaded => indexLoaded_;
+        public string FileName => System.IO.Path.GetFileName(path_);
+        public string FileNameWithoutExt => System.IO.Path.GetFileNameWithoutExtension(path_);
+        public List<SgaElementHeader> ElementHeaderList => elementHeaderList_;
+        public int PackageIndex => packageIndex_;
 
+        //////////////////////////////////////////////////////////////////////////////////
         // Xaml 바인딩용
         public SgaPackage()
         {
-            _elementHeaderList = new();
+            elementHeaderList_ = new();
         }
 
-        public SgaPackage(Stream readStream, string path, int elementCount, int packageIndex)
+        //////////////////////////////////////////////////////////////////////////////////
+        public SgaPackage(Stream _readStream, string _path, int _elementCount, int _packageIndex)
         {
-            _elementMap = new();
-            _elementHeaderList = new();
-            _elementNameToIndexMap = new();
+            elementMap_ = new();
+            elementHeaderList_ = new();
+            elementNameToIndexMap_ = new();
 
-            _elementCount = elementCount;
-            _readStream = readStream;
-            _path = path;
-            _indexLoaded = false;
-            _packageIndex = packageIndex;
+            elementCount_ = _elementCount;
+            readStream_ = _readStream;
+            path_ = _path;
+            indexLoaded_ = false;
+            packageIndex_ = _packageIndex;
         }
 
-
-
+        //////////////////////////////////////////////////////////////////////////////////
         public void LoadIndex()
         {
-            _elementHeaderList.Clear();
+            elementHeaderList_.Clear();
 
-            for (int i = 0; i < _elementCount; ++i)
+            for (int i = 0; i < elementCount_; ++i)
             {
-                int offset = _readStream.ReadInt();
-                int length = _readStream.ReadInt();
-                string name = SgaLoader.ReadElementPath(_readStream);
+                int offset = readStream_.ReadInt();
+                int length = readStream_.ReadInt();
+                string name = SgaLoader.ReadElementPath(readStream_);
 
-                _elementHeaderList.Add(new SgaElementHeader()
+                elementHeaderList_.Add(new SgaElementHeader()
                 {
                     Offset = offset,
                     NextOffset = 0,
@@ -93,88 +78,102 @@ namespace SGToolsCommon.Sga
                 });
             }
 
-            for (int i = 0; i < _elementCount; ++i)
+            for (int i = 0; i < elementCount_; ++i)
             {
-                SgaElementHeader header = _elementHeaderList[i];
+                SgaElementHeader header = elementHeaderList_[i];
 
                 header.NextOffset =
-                    i < _elementCount - 1 ? _elementHeaderList[i + 1].Offset : (int)_readStream.Length;
+                    i < elementCount_ - 1 ? elementHeaderList_[i + 1].Offset : (int)readStream_.Length;
 
-                _elementNameToIndexMap.Add(header.Name, header.IndexInPackage);
+                elementNameToIndexMap_.Add(header.Name, header.IndexInPackage);
             }
 
-            _indexLoaded = true;
+            indexLoaded_ = true;
             OnPropertyChanged(nameof(ElementHeaderList));
         }
 
-
+        //////////////////////////////////////////////////////////////////////////////////
         public void UnloadAll()
         {
-            foreach (var element in _elementMap.Values)
+            foreach (SgaElement element in elementMap_.Values)
                 element.Unload();
             OnPropertyChanged(nameof(ElementHeaderList));
         }
 
-        public SgaElement GetElement(int index) => _elementMap[index];
+        //////////////////////////////////////////////////////////////////////////////////
+        public SgaElement GetElement(int _index) => elementMap_[_index];
 
-        public SgaElement GetElement(string elementName)
+        //////////////////////////////////////////////////////////////////////////////////
+        public SgaElement GetElement(string _elementName)
         {
             if (!Loaded)
                 Load(true);
 
-            return _elementMap[GetElementIndex(elementName)];
-        } 
-
-        public int GetElementIndex(string elementName)
-        {
-            if (!_elementNameToIndexMap.ContainsKey(elementName))
-                throw new Exception($"{elementName}을 패키지${FileName}에서 찾지 못했습니다.");
-
-            return _elementNameToIndexMap[elementName];
+            return elementMap_[GetElementIndex(_elementName)];
         }
-        public bool HasElementIndex(string elementName) => _elementNameToIndexMap.ContainsKey(elementName);
-        public bool IsElementLoaded(int index) => _elementMap.ContainsKey(index);
-        public bool HasElement(int index) => index >= 0 && index < _elementHeaderList.Count;
 
-        public void Load(bool indexOnly)
+        //////////////////////////////////////////////////////////////////////////////////
+        public int GetElementIndex(string _elementName)
         {
-            if (!_indexLoaded)
+            if (!elementNameToIndexMap_.ContainsKey(_elementName))
+                throw new Exception($"{_elementName}을 패키지${FileName}에서 찾지 못했습니다.");
+
+            return elementNameToIndexMap_[_elementName];
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public bool HasElementIndex(string _elementName) => elementNameToIndexMap_.ContainsKey(_elementName);
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public bool IsElementLoaded(int _index) => elementMap_.ContainsKey(_index);
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public bool HasElement(int _index) => _index >= 0 && _index < elementHeaderList_.Count;
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public void Load(bool _indexOnly)
+        {
+            if (!indexLoaded_)
                 LoadIndex();
 
-            for (int i = 0; i < _elementCount; ++i)
+            for (int i = 0; i < elementCount_; ++i)
             {
-                SgaElementHeader header = _elementHeaderList[i];
-                SgaElement element = SgaLoader.ReadElement(this, _readStream, header, header.NextOffset, indexOnly);
-                _elementMap.Add(header.IndexInPackage, element);
+                SgaElementHeader header = elementHeaderList_[i];
+                SgaElement element = SgaLoader.ReadElement(this, readStream_, header, header.NextOffset, _indexOnly);
+                elementMap_.Add(header.IndexInPackage, element);
             }
         }
 
-        public void LoadElementIfNotLoaded(int index, bool indexOnly)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void LoadElementIfNotLoaded(int _index, bool _indexOnly)
         {
-            if (!IsElementLoaded(index))
-                LoadElement(index, indexOnly);
+            if (!IsElementLoaded(_index))
+                LoadElement(_index, _indexOnly);
         }
 
-        public void LoadElement(int index, bool indexOnly)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void LoadElement(int _index, bool _indexOnly)
         {
-            if (!_indexLoaded)
+            if (!indexLoaded_)
                 LoadIndex();
 
-            if (index < 0 || index >= _elementHeaderList.Count)
-                throw new IndexOutOfRangeException($"{FileName} 패키지에서 {index} 엘리멘트헤더 정보를 가져오지못했습니다. 이상합니다.");
+            if (_index < 0 || _index >= elementHeaderList_.Count)
+                throw new IndexOutOfRangeException($"{FileName} 패키지에서 {_index} 엘리멘트헤더 정보를 가져오지못했습니다. 이상합니다.");
 
-            SgaElementHeader header = _elementHeaderList[index];
+            SgaElementHeader header = elementHeaderList_[_index];
 
-            if (_elementMap.ContainsKey(index))
-                throw new Exception($"{FileName} 패키지 키:{index}{header.Name} 엘리멘트가 이미 로딩되어 있습니다. 중복 로딩을 시도하셨습니다.");
+            if (elementMap_.ContainsKey(_index))
+                throw new Exception($"{FileName} 패키지 키:{_index}{header.Name} 엘리멘트가 이미 로딩되어 있습니다. 중복 로딩을 시도하셨습니다.");
 
-            SgaElement element = SgaLoader.ReadElement(this, _readStream, header, header.NextOffset, indexOnly);
-            _elementMap.Add(header.IndexInPackage, element);
+            SgaElement element = SgaLoader.ReadElement(this, readStream_, header, header.NextOffset, _indexOnly);
+            elementMap_.Add(header.IndexInPackage, element);
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public void NotifyUpdateList()
             => OnPropertyChanged(nameof(ElementHeaderList));
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override string ToString()
             => FileNameWithoutExt;
     }

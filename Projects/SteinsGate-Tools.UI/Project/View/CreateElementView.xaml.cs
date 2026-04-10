@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+/*
+ * 작성자: 윤정도
+ *
+ */
+
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
 using SGToolsUI.Model.Main;
-using Vanara.PInvoke;
 
 namespace SGToolsUI.View
 {
@@ -29,25 +22,28 @@ namespace SGToolsUI.View
         public SGUISpriteInfo DroppedSpriteInfo { get; }
         public IntPoint DroppedPositionOnCanvas { get; }
 
-        public CreateElementView(SGUIGroup group, SgaSprite sprite, IntPoint droppedPosOnCanvas)
+        //////////////////////////////////////////////////////////////////////////////////
+        public CreateElementView(SGUIGroup _group, SgaSprite _sprite, IntPoint _droppedPosOnCanvas)
         {
-            SelectedGroup = group;
-            DroppedSprite = sprite;
-            DroppedSpriteInfo = new SGUISpriteInfo(sprite);
-            DroppedPositionOnCanvas = droppedPosOnCanvas;
+            SelectedGroup = _group;
+            DroppedSprite = _sprite;
+            DroppedSpriteInfo = new SGUISpriteInfo(_sprite);
+            DroppedPositionOnCanvas = _droppedPosOnCanvas;
 
             InitializeComponent();
         }
 
-        private void CreateElementView_OnLoaded(object sender, RoutedEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void CreateElementView_OnLoaded(object _sender, RoutedEventArgs _e)
         {
             this.MoveToClosestDisplayCenter();
             this.SizeToContent = SizeToContent.Manual;
         }
 
-        private async void CreateElement_OnClick(object sender, RoutedEventArgs e)
+        //////////////////////////////////////////////////////////////////////////////////
+        private async void CreateElement_OnClick(object _sender, RoutedEventArgs _e)
         {
-            Button btn = sender as Button;
+            Button btn = _sender as Button;
             if (btn is null) return;
 
             SGUIElementType type = (SGUIElementType)btn.Tag;
@@ -75,27 +71,27 @@ namespace SGToolsUI.View
                     break;
             }
 
-
             SelectedGroup.AddChild(newElement);
             DialogResult = true;
             Close();
             await SelectedGroup.ViewModel.Saver.BackupAsync($"{type} 드랍 생성");
         }
 
-        private void ApplyButton(SGUIButton button)
+        //////////////////////////////////////////////////////////////////////////////////
+        private void ApplyButton(SGUIButton _button)
         {
             SgaImage img = DroppedSprite.Parent;
-            
-            button.Normal = DroppedSpriteInfo;
+
+            _button.Normal = DroppedSpriteInfo;
 
             if (img.IsValidSpriteIndex(DroppedSprite.FrameIndex + 1))
-                button.Over = new SGUISpriteInfo(img.GetSprite(DroppedSprite.FrameIndex + 1) as SgaSprite);
+                _button.Over = new SGUISpriteInfo(img.GetSprite(DroppedSprite.FrameIndex + 1) as SgaSprite);
 
             if (img.IsValidSpriteIndex(DroppedSprite.FrameIndex + 2))
-                button.Pressed = new SGUISpriteInfo(img.GetSprite(DroppedSprite.FrameIndex + 2) as SgaSprite);
+                _button.Pressed = new SGUISpriteInfo(img.GetSprite(DroppedSprite.FrameIndex + 2) as SgaSprite);
 
             if (img.IsValidSpriteIndex(DroppedSprite.FrameIndex + 3))
-                button.Disabled = new SGUISpriteInfo(img.GetSprite(DroppedSprite.FrameIndex + 3) as SgaSprite);
+                _button.Disabled = new SGUISpriteInfo(img.GetSprite(DroppedSprite.FrameIndex + 3) as SgaSprite);
         }
     }
 }

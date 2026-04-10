@@ -1,34 +1,19 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/6/2023 2:05:52 PM
  *
  */
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using SGToolsCommon;
+
 using SGToolsCommon.Extension;
+
 using Point = System.Windows.Point;
 
 namespace SGToolsCommon.Model
 {
-
-   
-
-
     public enum DragState
     {
         None,
@@ -38,89 +23,92 @@ namespace SGToolsCommon.Model
 
     public class DataDragState : Bindable
     {
-        public DataDragState()
-        {
-        }
+        private Point startPosition_;
+        private DragState state_ = DragState.None;
+        private UIElement beginTarget_;
 
         public object Data { get; set; }
+        public List<IDataDragReceiver> EndTargets { get; } = new();
 
         public Point DragStartPosition
         {
-            get => _startPosition;
+            get => startPosition_;
             set
             {
-                _startPosition = value;
+                startPosition_ = value;
                 OnPropertyChanged();
             }
         }
 
         public DragState State
         {
-            get => _state;
+            get => state_;
             set
             {
-                _state = value;
+                state_ = value;
                 OnPropertyChanged();
             }
         }
 
-        public List<IDataDragReceiver> EndTargets { get; } = new();
-
-        public void OnDragBegin(UIElement beginTarget, Point p, object data)
+        //////////////////////////////////////////////////////////////////////////////////
+        public DataDragState()
         {
-            _beginTarget = beginTarget;
-            DragStartPosition = p;
-            State = DragState.Wait;
-            Data = data;
         }
 
-        public void OnDragMove(Point p)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void OnDragBegin(UIElement _beginTarget, Point _p, object _data)
         {
-            if (_state == DragState.Wait)
+            beginTarget_ = _beginTarget;
+            DragStartPosition = _p;
+            State = DragState.Wait;
+            Data = _data;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public void OnDragMove(Point _p)
+        {
+            if (state_ == DragState.Wait)
             {
-                double distance = p.Distance(_startPosition);
+                double distance = _p.Distance(startPosition_);
                 if (distance < Constant.DragActivateDistance)
                     return;
 
-                _state = DragState.Dragging;
+                state_ = DragState.Dragging;
                 Mouse.OverrideCursor = SGToolsCommon.Resource.R.DragAndDropCursor.Value;
             }
         }
 
-        public void OnDragEnd(Point p)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void OnDragEnd(Point _p)
         {
             if (State == DragState.Dragging)
-                RaiseDragEndEvents(p);
+                RaiseDragEndEvents(_p);
 
             Clear();
         }
 
-        private bool RaiseDragEndEvents(Point p)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void Clear()
+        {
+            beginTarget_ = null;
+            Mouse.OverrideCursor = Cursors.Arrow;
+            State = DragState.None;
+            Data = null;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        private bool RaiseDragEndEvents(Point _p)
         {
             for (int i = 0; i < EndTargets.Count; ++i)
             {
-                if (EndTargets[i].ContainPoint(p))
+                if (EndTargets[i].ContainPoint(_p))
                 {
-                    EndTargets[i].DragEnd(p, Data);
+                    EndTargets[i].DragEnd(_p, Data);
                     return true;
                 }
             }
 
             return false;
         }
-
-        private Point _startPosition;
-        private DragState _state = DragState.None;
-        private UIElement _beginTarget;
-
-        public void Clear()
-        {
-            _beginTarget = null;
-            Mouse.OverrideCursor = Cursors.Arrow;
-            State = DragState.None;
-            Data = null;
-        }
     }
-
-
 }

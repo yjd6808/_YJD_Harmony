@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/18/2023 7:19:55 PM
  *
@@ -7,20 +7,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SGToolsUI.Model.Main;
-using Vanara.PInvoke;
 
 namespace SGToolsUI.Model.Backup
 {
@@ -34,16 +21,16 @@ namespace SGToolsUI.Model.Backup
     {
         public List<BackupTreeViewItem> Children { get; set; } = new();
 
-        public void ForEachRecursive(Action<BackupTreeViewItem> action)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void ForEachRecursive(Action<BackupTreeViewItem> _action)
         {
             Children.ForEach(child =>
             {
-                action(child);
+                _action(child);
 
                 if (child is BackupTreeViewItemGroup)
-                    (child as BackupTreeViewItemGroup).ForEachRecursive(action);
+                    (child as BackupTreeViewItemGroup).ForEachRecursive(_action);
             });
         }
     }
-    
 }

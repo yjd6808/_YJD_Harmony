@@ -1,25 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/10/2023 6:26:46 PM
  *
  */
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SGToolsCommon.Extension;
 using SGToolsUI.ViewModel;
 using Path = System.IO.Path;
@@ -35,14 +21,16 @@ namespace SGToolsUI.Command.MainViewCommand
 
     public class OpenDirectory : MainCommandAbstract
     {
-        public OpenDirectory(MainViewModel viewModel) 
-            : base(viewModel, "폴더를 연다.")
+        //////////////////////////////////////////////////////////////////////////////////
+        public OpenDirectory(MainViewModel _viewModel)
+            : base(_viewModel, "폴더를 연다.")
         {
         }
 
-        public override void Execute(object? parameter)
+        //////////////////////////////////////////////////////////////////////////////////
+        public override void Execute(object? _parameter)
         {
-            if (parameter is not string param)
+            if (_parameter is not string param)
                 throw new Exception("파라미터가 문자열 타입이 아닙니다.");
 
             ToolDirectory toolDirectory = (ToolDirectory)Enum.Parse(typeof(ToolDirectory), param);

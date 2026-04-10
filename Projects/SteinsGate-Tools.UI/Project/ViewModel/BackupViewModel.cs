@@ -1,62 +1,49 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/18/2023 4:58:29 PM
  *
  */
 
-using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.Xaml.Behaviors.Core;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
 using SGToolsUI.Model.Backup;
-using SGToolsUI.View;
-using Vanara.PInvoke;
+
 using Path = System.IO.Path;
 
 namespace SGToolsUI.ViewModel
 {
-    
-
     public class BackupViewModel : Bindable
     {
-        public BackupViewModel(MainViewModel mainViewModel)
+        private BackupFolder selectedFolder_;
+        private BackupFile selectedFile_;
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public BackupViewModel(MainViewModel _mainViewModel)
         {
-            _selectedFolder = new BackupFolder(string.Empty, this);
-            _selectedFile = new BackupFile(string.Empty, this);
-            MainViewModel = mainViewModel;
+            selectedFolder_ = new BackupFolder(string.Empty, this);
+            selectedFile_ = new BackupFile(string.Empty, this);
+            MainViewModel = _mainViewModel;
         }
 
         public BackupFolder SelectedFolder
         {
-            get => _selectedFolder;
+            get => selectedFolder_;
             set
             {
-                _selectedFolder = value;
+                selectedFolder_ = value;
                 OnPropertyChanged();
             }
         }
 
         public BackupFile SelectedFile
         {
-            get => _selectedFile;
+            get => selectedFile_;
             set
             {
-                _selectedFile = value;
+                selectedFile_ = value;
                 OnPropertyChanged();
             }
         }
@@ -72,13 +59,6 @@ namespace SGToolsUI.ViewModel
             }
         }
 
-
         public MainViewModel MainViewModel { get; }
-
-        private BackupFolder _selectedFolder;
-        private BackupFile _selectedFile;
-
     }
 }
-
-

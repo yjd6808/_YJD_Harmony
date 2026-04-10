@@ -1,39 +1,30 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/8/2023 10:47:18 AM
  *
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SGToolsUI.Model.Main
 {
     public class CanvasAnchor : CanvasEllipse
     {
-        public CanvasAnchor(Rect rect, int thickness, Brush stroke, Brush fill) : base(rect, thickness, stroke, fill)
+        private SGUIGroup target_;
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public CanvasAnchor(Rect _rect, int _thickness, Brush _stroke, Brush _fill) : base(_rect, _thickness, _stroke, _fill)
         {
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public SGUIGroup Target
         {
-            get => _target;
-
+            get => target_;
             set
             {
-                _target = value;
+                target_ = value;
                 // Target.NotifyProperty(SGUIGroup.VisualPositionAnchorAbsoluteKey);
                 OnPropertyChanged();
             }
@@ -41,7 +32,5 @@ namespace SGToolsUI.Model.Main
 
         public override ShapeElementType ShapeElementType => ShapeElementType.Anchor;
         public override bool IsAnchor => true;
-
-        private SGUIGroup _target;
     }
 }

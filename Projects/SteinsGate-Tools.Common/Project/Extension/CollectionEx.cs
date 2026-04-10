@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/6/2023 4:44:35 PM
  *
@@ -8,150 +8,151 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SGToolsCommon.Extension
 {
     public static class CollectionEx
     {
-        public static IEnumerable<T> Reversed<T>(this ObservableCollection<T> collection) where T : class
+        //////////////////////////////////////////////////////////////////////////////////
+        public static IEnumerable<T> Reversed<T>(this ObservableCollection<T> _collection) where T : class
         {
-            for (int i = collection.Count - 1; i >= 0; --i)
-                yield return collection[i];
-        }
-        public static void IndexingForEach<T>(this IList<T> collection, Action<int, T> action) where T : class
-        {
-            for (int i = 0; i < collection.Count; ++i)
-                action(i, collection[i]);
+            for (int i = _collection.Count - 1; i >= 0; --i)
+                yield return _collection[i];
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void IndexingForEach<T>(this IList<T> _collection, Action<int, T> _action) where T : class
+        {
+            for (int i = 0; i < _collection.Count; ++i)
+                _action(i, _collection[i]);
+        }
 
+        //////////////////////////////////////////////////////////////////////////////////
         // 반대로 인덱스와 함께 순회
-        public static void ReversedIndexingForEach<T>(this IList<T> collection, Action<int, T> action) where T : class
+        public static void ReversedIndexingForEach<T>(this IList<T> _collection, Action<int, T> _action) where T : class
         {
-            for (int i = collection.Count - 1; i >= 0; --i)
-                action(i, collection[i]);
+            for (int i = _collection.Count - 1; i >= 0; --i)
+                _action(i, _collection[i]);
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         // 반대로 조건이 true일때까지만 순회
         // return true가 break이고
         // return false가 continue라고 생각하면된다.
-        public static void ReversedConditionForEach<T>(this IList<T> collection, Predicate<T> predicate) where T : class
+        public static void ReversedConditionForEach<T>(this IList<T> _collection, Predicate<T> _predicate) where T : class
         {
-            for (int i = collection.Count - 1; i >= 0; --i)
-                if (!predicate(collection[i]))
+            for (int i = _collection.Count - 1; i >= 0; --i)
+                if (!_predicate(_collection[i]))
                     return;
         }
 
-
+        //////////////////////////////////////////////////////////////////////////////////
         // 반대로 인덱스와 함께 조건이 true일때까지만 순회
-     
-        public static void ReversedIndexingConditionForEach<T>(this IList<T> collection, Func<int, T, bool> predicate) where T : class
+        public static void ReversedIndexingConditionForEach<T>(this IList<T> _collection, Func<int, T, bool> _predicate) where T : class
         {
-            for (int i = collection.Count - 1; i >= 0; --i)
-                if (!predicate(i, collection[i]))
+            for (int i = _collection.Count - 1; i >= 0; --i)
+                if (!_predicate(i, _collection[i]))
                     return;
         }
-        
 
+        //////////////////////////////////////////////////////////////////////////////////
         public static ObservableCollection<T> InsertRangeNew<T>(
-            this ObservableCollection<T> collection, int index, IList<T> elements) 
+            this ObservableCollection<T> _collection, int _index, IList<T> _elements)
             where T : class
         {
-            ObservableCollection<T> newCollection = new(new List<T>(collection.Count + elements.Count + 16));
+            ObservableCollection<T> newCollection = new(new List<T>(_collection.Count + _elements.Count + 16));
 
-            if (index > collection.Count)
-                index = collection.Count;
+            if (_index > _collection.Count)
+                _index = _collection.Count;
 
-            for (int i = 0; i < index; ++i)
-                newCollection.Add(collection[i]);
+            for (int i = 0; i < _index; ++i)
+                newCollection.Add(_collection[i]);
 
-            for (int i = 0; i < elements.Count; ++i)
-                newCollection.Add(elements[i]);
+            for (int i = 0; i < _elements.Count; ++i)
+                newCollection.Add(_elements[i]);
 
-            for (int i = index; i < collection.Count; ++i)
-                newCollection.Add(collection[i]);
+            for (int i = _index; i < _collection.Count; ++i)
+                newCollection.Add(_collection[i]);
 
             return newCollection;
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public static ObservableCollection<T> AddAfterRangeNew<T>(
-            this ObservableCollection<T> collection, int index, IList<T> elements) 
+            this ObservableCollection<T> _collection, int _index, IList<T> _elements)
             where T : class
-            => InsertRangeNew(collection, index + 1, elements);
+            => InsertRangeNew(_collection, _index + 1, _elements);
 
+        //////////////////////////////////////////////////////////////////////////////////
         public static void AddRange<T>(
-            this ObservableCollection<T> collection, IList<T> elements)
+            this ObservableCollection<T> _collection, IList<T> _elements)
             where T : class
         {
-            foreach (var element in elements)
-                collection.Add(element);
+            foreach (T element in _elements)
+                _collection.Add(element);
         }
 
-        public static void ForEach<T>(this IEnumerable<T> collection, Action<int, T> action) where T : class
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void ForEach<T>(this IEnumerable<T> _collection, Action<int, T> _action) where T : class
         {
             int i = 0;
-            foreach (T item in collection)
-                action(i++, item);
+            foreach (T item in _collection)
+                _action(i++, item);
         }
 
-        public static bool Exist(this ItemCollection collection, object item)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static bool Exist(this ItemCollection _collection, object _item)
         {
-            foreach (var o in collection)
-                if (o == item)
+            foreach (object o in _collection)
+                if (o == _item)
                     return true;
 
             return false;
         }
 
-        public static IEnumerable<object> Where(this ItemCollection collection, Predicate<object> predicate)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static IEnumerable<object> Where(this ItemCollection _collection, Predicate<object> _predicate)
         {
-            foreach (var o in collection)
-                if (predicate(o))
+            foreach (object o in _collection)
+                if (_predicate(o))
                     yield return o;
         }
 
-        public static IEnumerable<T> Where<T>(this ItemCollection collection, Predicate<T> predicate) where T : class
+        //////////////////////////////////////////////////////////////////////////////////
+        public static IEnumerable<T> Where<T>(this ItemCollection _collection, Predicate<T> _predicate) where T : class
         {
-            foreach (var o in collection)
+            foreach (object o in _collection)
             {
                 T t = o as T;
                 if (t == null) throw new NullReferenceException($"{typeof(T).Name}으로 변환되지 않는 타입입니다.");
-                if (predicate(t))
+                if (_predicate(t))
                     yield return t;
             }
         }
 
-        public static void ForEach(this ItemCollection collection, Action<object> action)
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void ForEach(this ItemCollection _collection, Action<object> _action)
         {
-            foreach (var o in collection)
-                action(o);
+            foreach (object o in _collection)
+                _action(o);
         }
 
-        public static void ForEach<T>(this ItemCollection collection, Action<T> action) where T : class
+        //////////////////////////////////////////////////////////////////////////////////
+        public static void ForEach<T>(this ItemCollection _collection, Action<T> _action) where T : class
         {
-            foreach (var o in collection)
+            foreach (object o in _collection)
             {
                 T t = o as T;
                 if (t == null) throw new NullReferenceException($"{typeof(T).Name}으로 변환되지 않는 타입입니다.");
-                action(t);
+                _action(t);
             }
         }
 
-        public static IEnumerable<T> Cast<T>(this IList list) where T : class
+        //////////////////////////////////////////////////////////////////////////////////
+        public static IEnumerable<T> Cast<T>(this IList _list) where T : class
         {
-            foreach (var o in list)
+            foreach (object o in _list)
             {
                 T t = o as T;
                 if (t == null) throw new InvalidCastException("캐스팅 실패");

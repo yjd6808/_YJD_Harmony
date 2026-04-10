@@ -1,108 +1,95 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/3/2023 5:37:54 AM
  *
  */
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Tuple = System.Tuple;
 
 namespace SGToolsUI.Model.Main
 {
     public class LinePosition
     {
-        public LinePosition(int pos)
-        {
-            Position = pos;
-        }
         public int Position { get; set; }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public LinePosition(int _pos)
+        {
+            Position = _pos;
+        }
     }
 
     public class CanvasGrid : CanvasShape
     {
-        public CanvasGrid(int interval, int thickness, Brush foreground)
+        private Brush foreground_;
+        public int thickness_;
+        private int interval_;
+        private List<LinePosition> lines_;
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public CanvasGrid(int _interval, int _thickness, Brush _foreground)
         {
-            Interval = interval;
-            _thickness = thickness;
-            _foreground = foreground;
+            Interval = _interval;
+            thickness_ = _thickness;
+            foreground_ = _foreground;
         }
 
-
-
+        //////////////////////////////////////////////////////////////////////////////////
         [DisplayName("Interval")]
         [Description("그리드를 구성하는 선들의 간격")]
         public int Interval
         {
-            get => _interval;
+            get => interval_;
             set
             {
-                if (_interval == value)
+                if (interval_ == value)
                     return;
 
-                _interval = value;
+                interval_ = value;
 
-                int lineCount = (int)Constant.ResolutionWidth / _interval + 1;
+                int lineCount = (int)Constant.ResolutionWidth / interval_ + 1;
                 var lines = new List<LinePosition>(lineCount);
 
                 for (int i = 0; i < lineCount; ++i)
-                    lines.Add(new LinePosition(i * _interval));
+                    lines.Add(new LinePosition(i * interval_));
 
-                _lines = lines;
+                lines_ = lines;
                 OnPropertyChanged(nameof(Lines));
                 OnPropertyChanged();
             }
         }
 
-
+        //////////////////////////////////////////////////////////////////////////////////
         [DisplayName("Thickness")]
         [Description("그리드를 구성하는 선들의 두께")]
         public int Thickness
         {
-            get => _thickness;
+            get => thickness_;
             set
             {
-                _thickness = value;
-
+                thickness_ = value;
                 OnPropertyChanged();
             }
         }
 
-
+        //////////////////////////////////////////////////////////////////////////////////
         [DisplayName("Thickness")]
         [Description("그리드를 구성하는 선들의 색상")]
         public Brush Foreground
         {
-            get => _foreground;
+            get => foreground_;
             set
             {
-                _foreground = value;
+                foreground_ = value;
                 OnPropertyChanged();
             }
         }
 
         [Browsable(false)]
-        public List<LinePosition> Lines => _lines;
+        public List<LinePosition> Lines => lines_;
         public override bool IsGrid => true;
-
         public override ShapeElementType ShapeElementType => ShapeElementType.Grid;
-
-        private Brush _foreground;
-        public int _thickness;
-        private int _interval;
-        private List<LinePosition> _lines;
     }
 }

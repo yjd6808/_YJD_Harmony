@@ -1,27 +1,15 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/27/2023 2:53:22 AM
  *
  */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Printing.IndexedProperties;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 using SGToolsCommon.Extension;
 using SGToolsCommon.ThirdParty;
 
@@ -37,42 +25,41 @@ namespace SGToolsCommon.Sga
             0xFF, 0xFF, 0xFF, 0xFF
         };
 
-        private SgaSpriteRect _spriteRect;
-        private byte[] _data;
-        private int _dataOffset;
-        private int _dataLength;
-        private bool _linearDodge;
-        private SgaCompressMode _compressMode;
+        private SgaSpriteRect spriteRect_;
+        private byte[] data_;
+        private int dataOffset_;
+        private int dataLength_;
+        private bool linearDodge_;
+        private SgaCompressMode compressMode_;
 
-
-        public SgaCompressMode CompressMode => _compressMode;
-        public override SgaSpriteRect SpriteRect => _spriteRect;
-        public override Rect Rect => new (_spriteRect.X, _spriteRect.Y, _spriteRect.Width, _spriteRect.Height);
-        public override Size Size => new(_spriteRect.Width, _spriteRect.Height);
-        public override Size FrameSize => new(_spriteRect.FrameWidth, _spriteRect.FrameHeight);
-        public int DataOffset => _dataOffset;
-        public int DataLength => _dataLength;
-        public override bool Loaded => _data != null;
-        public override bool IsDummy => _spriteRect.Width * _spriteRect.Height <= 8;
-        public override int Width => _spriteRect.Width;
-        public override int Height => _spriteRect.Height;
-        public override int X => _spriteRect.X;
-        public override int Y => _spriteRect.Y;
-        public override int FrameWidth => _spriteRect.Width;
-        public override int FrameHeight => _spriteRect.Height;
+        public SgaCompressMode CompressMode => compressMode_;
+        public override SgaSpriteRect SpriteRect => spriteRect_;
+        public override Rect Rect => new(spriteRect_.X, spriteRect_.Y, spriteRect_.Width, spriteRect_.Height);
+        public override Size Size => new(spriteRect_.Width, spriteRect_.Height);
+        public override Size FrameSize => new(spriteRect_.FrameWidth, spriteRect_.FrameHeight);
+        public int DataOffset => dataOffset_;
+        public int DataLength => dataLength_;
+        public override bool Loaded => data_ != null;
+        public override bool IsDummy => spriteRect_.Width * spriteRect_.Height <= 8;
+        public override int Width => spriteRect_.Width;
+        public override int Height => spriteRect_.Height;
+        public override int X => spriteRect_.X;
+        public override int Y => spriteRect_.Y;
+        public override int FrameWidth => spriteRect_.Width;
+        public override int FrameHeight => spriteRect_.Height;
         public override int TargetFrameIndex => FrameIndex;
 
         public bool IsLinearDodged
         {
-            get => _linearDodge;
+            get => linearDodge_;
             set
             {
-                if (_linearDodge == value)
+                if (linearDodge_ == value)
                     return;
 
                 if (!value)
                 {
-                    _linearDodge = false;
+                    linearDodge_ = false;
                     Unload();
                     Load();
                 }
@@ -83,7 +70,6 @@ namespace SGToolsCommon.Sga
             }
         }
 
-        
         public override BitmapSource Source
         {
             get
@@ -91,11 +77,11 @@ namespace SGToolsCommon.Sga
                 if (!Loaded)
                     Load();
 
-                if (_linearDodge)
+                if (linearDodge_)
                     ApplyLinearDodge();
 
                 // 얕은 복사 좋아
-                var source = BitmapSource.Create(Width, Height, 0, 0, PixelFormats.Bgra32, null, _data, 4 * Width);
+                BitmapSource source = BitmapSource.Create(Width, Height, 0, 0, PixelFormats.Bgra32, null, data_, 4 * Width);
                 return source;
             }
         }
@@ -108,16 +94,17 @@ namespace SGToolsCommon.Sga
                     Load();
 
                 // 너무나도 깊은 복사 조심
-                return BitmapEx.FromArray(_data, Width, Height);
+                return BitmapEx.FromArray(data_, Width, Height);
             }
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         // Xaml 초기화 전용
         public SgaSprite() : base(SgaSpriteType.Sprite, SgaColorFormat.Argb8888, null, 0)
         {
-            _data = DummyTexture;
-            _dataLength = _data.Length;
-            _spriteRect = new SgaSpriteRect()
+            data_ = DummyTexture;
+            dataLength_ = data_.Length;
+            spriteRect_ = new SgaSpriteRect()
             {
                 FrameHeight = 2,
                 FrameWidth = 2,
@@ -128,75 +115,76 @@ namespace SGToolsCommon.Sga
             };
         }
 
-
-        public SgaSprite(SgaSpriteRect spriteRect, SgaColorFormat colorFormat, SgaCompressMode compressedMode, int dataOffset, int dataLength,  SgaImage parent, int frameIndex) : base(SgaSpriteType.Sprite, colorFormat, parent, frameIndex)
+        //////////////////////////////////////////////////////////////////////////////////
+        public SgaSprite(SgaSpriteRect _spriteRect, SgaColorFormat _colorFormat, SgaCompressMode _compressedMode, int _dataOffset, int _dataLength, SgaImage _parent, int _frameIndex)
+            : base(SgaSpriteType.Sprite, _colorFormat, _parent, _frameIndex)
         {
-            _spriteRect = spriteRect;
-            _compressMode = compressedMode;
-            _dataLength = dataLength;
-            _dataOffset = dataOffset;
-            _data = null;
+            spriteRect_ = _spriteRect;
+            compressMode_ = _compressedMode;
+            dataLength_ = _dataLength;
+            dataOffset_ = _dataOffset;
+            data_ = null;
         }
 
-        
-
+        //////////////////////////////////////////////////////////////////////////////////
         public override void Load()
         {
-            if (_data != null && !_linearDodge)
+            if (data_ != null && !linearDodge_)
                 return;
 
             Stream stream = Parent.Parent.ReadStream;
-            _data = new byte[_dataLength];
-            stream.Seek(_dataOffset, SeekOrigin.Begin);
-            stream.Read(_data, 0, _dataLength);
+            data_ = new byte[dataLength_];
+            stream.Seek(dataOffset_, SeekOrigin.Begin);
+            stream.Read(data_, 0, dataLength_);
 
             Decompress();
 
-            if (_linearDodge)
+            if (linearDodge_)
                 ApplyLinearDodge(true);
         }
 
-        public void ApplyLinearDodge(bool force = false)
+        //////////////////////////////////////////////////////////////////////////////////
+        public void ApplyLinearDodge(bool _force = false)
         {
-            if (!force && _linearDodge)
+            if (!_force && linearDodge_)
                 return;
 
             if (!Loaded)
                 Load();
 
-            for (int i = 0; i < _data.Length; i += 4)
-                BitmapEx.Bgra32LinearDodgePixel(_data.AsSpan(i, 4));
+            for (int i = 0; i < data_.Length; i += 4)
+                BitmapEx.Bgra32LinearDodgePixel(data_.AsSpan(i, 4));
 
-            _linearDodge = true;
+            linearDodge_ = true;
         }
 
-
+        //////////////////////////////////////////////////////////////////////////////////
         public override void Unload()
         {
-            _data = null;
+            data_ = null;
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         private void Decompress()
         {
-            int iDecompressedSize = Width * Height * (ColorFormat == SgaColorFormat.Argb8888 ? 4 : 2);
+            int decompressedSize = Width * Height * (ColorFormat == SgaColorFormat.Argb8888 ? 4 : 2);
 
             byte[] decompressed = null;
-            byte[] readData = _data;
+            byte[] readData = data_;
 
             if (CompressMode == SgaCompressMode.Zlib)
             {
-                decompressed = Zlib.Decompress(_data, iDecompressedSize);
+                decompressed = Zlib.Decompress(data_, decompressedSize);
                 readData = decompressed;
             }
 
             if (ColorFormat == SgaColorFormat.Argb8888)
             {
-                _data = decompressed == null ? readData : decompressed;
+                data_ = decompressed == null ? readData : decompressed;
                 return;
             }
-                
 
-            int bit32Size = iDecompressedSize * 2;
+            int bit32Size = decompressedSize * 2;
             byte[] bit32Data = new byte[bit32Size];
             byte[] readBytes = new byte[2];
 
@@ -235,11 +223,11 @@ namespace SGToolsCommon.Sga
                 bit32Data[i + 2] = r;
                 bit32Data[i + 3] = a;
             }
-            _data = bit32Data;
+            data_ = bit32Data;
         }
 
+        //////////////////////////////////////////////////////////////////////////////////
         public override string ToString()
             => $"{FrameIndex}" + (IsLink ? $"링크({TargetFrameIndex})" : "");
     }
 }
- 

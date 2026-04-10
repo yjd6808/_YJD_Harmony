@@ -1,25 +1,11 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 3/2/2023 3:53:53 AM
  *
  */
 
-using SGToolsCommon;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using SGToolsCommon;
 using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.Model.Main
@@ -29,7 +15,6 @@ namespace SGToolsUI.Model.Main
         ShapeElement,
         UIElement
     }
-
 
     public abstract class CanvasElement : Bindable
     {
@@ -42,7 +27,8 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)]
         public MainViewModel ViewModel { get; set; }
 
-        public void SetViewModel(MainViewModel model) => _viewModel = model;
-        private MainViewModel _viewModel;
+        //////////////////////////////////////////////////////////////////////////////////
+        public void SetViewModel(MainViewModel _model) => viewModel_ = _model;
+        private MainViewModel viewModel_;
     }
 }

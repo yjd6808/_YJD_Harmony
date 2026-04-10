@@ -84,6 +84,9 @@ bool IDatabase::Initialize(const DatabaseInfo& _info)
 
 	if (threadCount > 0)
 	{
+		// iocp는 왠만하면 안쓰는걸로 하자.
+		// 내부 쓰레드 풀을 내가 제어할 수가없음
+
 		iocp_ = dbg_new jnet::IOCP(threadCount);
 		iocp_->SetName(info_.name_);
 		iocp_->SetBatchSize(info_.iocpBatchSize_);

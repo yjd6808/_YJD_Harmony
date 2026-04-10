@@ -1,158 +1,22 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/27/2023 11:52:42 AM
  *
  */
 
-
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using SGToolsCommon.CustomControl;
+
 using SGToolsCommon.Extension;
 
 namespace SGToolsCommon.CustomControl
 {
     public partial class TitleBar : UserControl
     {
-        public bool Draggable
-        {
-            get => (bool)GetValue(DraggableProperty);
-            set => SetValue(DraggableProperty, value);
-        }
-
-        public string Title
-        {
-            get => (string)GetValue(TitleProperty);
-            set => SetValue(TitleProperty, value);
-        }
-
-
-        // true로 설정시 코드로 반드시 마지막에 Close 수동 
-        public bool RealClose
-        {
-            get => (bool)GetValue(RealCloseProperty);
-            set => SetValue(RealCloseProperty, value);
-        }
-
-        public bool EscTermination
-        {
-            get => (bool)GetValue(EscTerminationProperty);
-            set => SetValue(EscTerminationProperty, value);
-        }
-
-        public object TitleContent
-        {
-            get => (object)GetValue(TitleContentProperty);
-            set => SetValue(TitleContentProperty, value);
-        }
-
-        public DataTemplate TitleContentTemplate
-        {
-            get => (DataTemplate)GetValue(TitleContentTemplateProperty);
-            set => SetValue(TitleContentTemplateProperty, value);
-        }
-
-        public Thickness TitleContentMargin
-        {
-            get => (Thickness)GetValue(TitleContentMarginProperty);
-            set => SetValue(TitleContentMarginProperty, value);
-        }
-
-
-        private Window _window;
-
-        public TitleBar()
-        {
-            InitializeComponent();
-            Loaded += (sender, args) =>
-            {
-                _window = this.FindParent<Window>();
-
-                if (DesignerProperties.GetIsInDesignMode(this))
-                    return;
-
-                if (_window == null)
-                    throw new Exception("무조건 윈도우 내부에 포함되어야합니다.");
-
-                _window.MouseDown += WindowOnMouseDown;
-                _window.PreviewKeyDown += OnPreviewKeyDown;
-            };
-        }
-
-        private void OnPreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (EscTermination && e.Key == Key.Escape)
-                Close();
-        }
-
-        private void WindowOnMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left && e.ButtonState == MouseButtonState.Pressed)
-            {
-                if (!Draggable)
-                    return;
-
-                bool allowTransparency = _window.AllowsTransparency;
-
-                if (allowTransparency)
-                    _window.Opacity = 0.3;
-
-                _window.DragMove();
-
-                if (allowTransparency)
-                    _window.Opacity = 1.0;
-            }
-        }
-
-        private void PinOnClick(object sender, RoutedEventArgs e)
-        {
-            if (_window.Topmost)
-                _window.Topmost = false;
-            else
-                _window.Topmost = true;
-        }
-
-        private void CloseOnClick(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
-        public void Close()
-        {
-            if (RealClose)
-                _window.Close();
-            else
-                _window.Visibility = Visibility.Collapsed;
-        }
-
-        private void MaximizeOnClick(object sender, RoutedEventArgs e)
-        {
-            if (_window.WindowState == WindowState.Maximized)
-                _window.WindowState = WindowState.Normal;
-            else
-                _window.WindowState = WindowState.Maximized;
-        }
-
-        private void MinimizeOnClick(object sender, RoutedEventArgs e)
-        {
-            _window.WindowState = WindowState.Minimized;
-        }
-
-       
+        private Window window_;
 
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
             nameof(Title),
@@ -195,5 +59,133 @@ namespace SGToolsCommon.CustomControl
             typeof(Thickness),
             typeof(TitleBar),
             new PropertyMetadata(new Thickness()));
+
+        public bool Draggable
+        {
+            get => (bool)GetValue(DraggableProperty);
+            set => SetValue(DraggableProperty, value);
+        }
+
+        public string Title
+        {
+            get => (string)GetValue(TitleProperty);
+            set => SetValue(TitleProperty, value);
+        }
+
+        // true로 설정시 코드로 반드시 마지막에 Close 수동
+        public bool RealClose
+        {
+            get => (bool)GetValue(RealCloseProperty);
+            set => SetValue(RealCloseProperty, value);
+        }
+
+        public bool EscTermination
+        {
+            get => (bool)GetValue(EscTerminationProperty);
+            set => SetValue(EscTerminationProperty, value);
+        }
+
+        public object TitleContent
+        {
+            get => (object)GetValue(TitleContentProperty);
+            set => SetValue(TitleContentProperty, value);
+        }
+
+        public DataTemplate TitleContentTemplate
+        {
+            get => (DataTemplate)GetValue(TitleContentTemplateProperty);
+            set => SetValue(TitleContentTemplateProperty, value);
+        }
+
+        public Thickness TitleContentMargin
+        {
+            get => (Thickness)GetValue(TitleContentMarginProperty);
+            set => SetValue(TitleContentMarginProperty, value);
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public TitleBar()
+        {
+            InitializeComponent();
+            Loaded += (sender, args) =>
+            {
+                window_ = this.FindParent<Window>();
+
+                if (DesignerProperties.GetIsInDesignMode(this))
+                    return;
+
+                if (window_ == null)
+                    throw new Exception("무조건 윈도우 내부에 포함되어야합니다.");
+
+                window_.MouseDown += WindowOnMouseDown;
+                window_.PreviewKeyDown += OnPreviewKeyDown;
+            };
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public void Close()
+        {
+            if (RealClose)
+                window_.Close();
+            else
+                window_.Visibility = Visibility.Collapsed;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        private void OnPreviewKeyDown(object _sender, KeyEventArgs _e)
+        {
+            if (EscTermination && _e.Key == Key.Escape)
+                Close();
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        private void WindowOnMouseDown(object _sender, MouseButtonEventArgs _e)
+        {
+            if (_e.ChangedButton == MouseButton.Left && _e.ButtonState == MouseButtonState.Pressed)
+            {
+                if (!Draggable)
+                    return;
+
+                bool allowTransparency = window_.AllowsTransparency;
+
+                if (allowTransparency)
+                    window_.Opacity = 0.3;
+
+                window_.DragMove();
+
+                if (allowTransparency)
+                    window_.Opacity = 1.0;
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        private void PinOnClick(object _sender, RoutedEventArgs _e)
+        {
+            if (window_.Topmost)
+                window_.Topmost = false;
+            else
+                window_.Topmost = true;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        private void CloseOnClick(object _sender, RoutedEventArgs _e)
+        {
+            Close();
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        private void MaximizeOnClick(object _sender, RoutedEventArgs _e)
+        {
+            if (window_.WindowState == WindowState.Maximized)
+                window_.WindowState = WindowState.Normal;
+            else
+                window_.WindowState = WindowState.Maximized;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        private void MinimizeOnClick(object _sender, RoutedEventArgs _e)
+        {
+            window_.WindowState = WindowState.Minimized;
+        }
     }
 }
