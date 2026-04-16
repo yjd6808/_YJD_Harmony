@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 3/1/2023 2:38:01 PM
  * 이 그룹의 자식은 트리뷰의 아이템소스
@@ -11,7 +11,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
-using MoreLinq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsUI.ViewModel;
@@ -73,7 +72,7 @@ namespace SGToolsUI.Model.Main
                 codeAssigner_.Enqueue(Constant.GroupCodeInterval * (i + 1), i);
         }
 
-        public SGUIElement PickedElement => pickedElements_.Count > 0 ? pickedElements_[0] : null;
+        public SGUIElement PickedElement => pickedElements_.Count > 0 ? pickedElements_[0] : null!;
         public bool HasSelectedElement => selectedElements_.Count > 0;
         public bool HasPickedElement => pickedElements_.Count > 0;
         public bool HasPickedGroup => PickedElement != null && PickedElement.IsGroup;
@@ -90,9 +89,9 @@ namespace SGToolsUI.Model.Main
                 IEnumerable<SGUIElement> selectedGroups = selectedElements_.Where(element => element.IsGroup);
 
                 if (!selectedGroups.Any())
-                    return null;
+                    return null!;
 
-                return selectedGroups.OrderBy(element => element.Depth).First() as SGUIGroup;  // 오름차순 정렬 후 처음 그중에서 처음 그룹을 가져옴
+                return (selectedGroups.OrderBy(element => element.Depth).First() as SGUIGroup)!;  // 오름차순 정렬 후 처음 그중에서 처음 그룹을 가져옴
             }
         }
 
@@ -101,7 +100,7 @@ namespace SGToolsUI.Model.Main
             get
             {
                 if (selectedElements_.Count == 0)
-                    return null;
+                    return null!;
 
                 return selectedElements_[selectedElements_.Count - 1];
             }
@@ -112,9 +111,9 @@ namespace SGToolsUI.Model.Main
         public ObservableCollection<SGUIElement> SelectedElements => selectedElements_;
         public ObservableCollection<SGUIElement> PickedElements => pickedElements_;
 
-        public SGUIGroup PickedGroup => HasPickedElement ? pickedElements_[0].Cast<SGUIGroup>() : null;
+        public SGUIGroup PickedGroup => HasPickedElement ? pickedElements_[0].Cast<SGUIGroup>() : null!;
         public IEnumerable<SGUIElement> PickedSelectedElements => pickedElements_.Where(element => element.Selected);
-        public SGUIElement PickedSelectedElement => pickedElements_.LastOrDefault(element => element.Selected);
+        public SGUIElement PickedSelectedElement => pickedElements_.LastOrDefault(element => element.Selected)!;
         public bool HasPickedSelectedElement => pickedElements_.FirstOrDefault(element => element.Selected) != null;
         public int GroupCount { get { lock (groups_) { return groups_.Count; } } }
         public int ElementCount { get { lock (elements_) { return elements_.Count; } } }
@@ -255,7 +254,7 @@ namespace SGToolsUI.Model.Main
         //////////////////////////////////////////////////////////////////////////////////
         private static void SelectedElementsOnCollectionChanged(object? _sender, NotifyCollectionChangedEventArgs _e)
         {
-            ObservableElementsCollection collection = _sender as ObservableElementsCollection;
+            ObservableElementsCollection? collection = _sender as ObservableElementsCollection;
 
             if (collection == null)
                 throw new Exception("말도안됩니다.");

@@ -14,14 +14,14 @@ namespace SGToolsCommon.Sga
 {
     public class SgaImage : SgaElement
     {
-        private static Action<SgaImage, bool>[] VersionLoader = new Action<SgaImage, bool>[]
+        private static Action<SgaImage, bool>?[] VersionLoader = new Action<SgaImage, bool>?[]
         {
             null,
             LoadVersion1,
             LoadVersion2,
         };
 
-        private List<SgaSpriteAbstract> spriteList_;
+        private List<SgaSpriteAbstract> spriteList_ = null!;
         private int waitForLoading_;
 
         public List<SgaSpriteAbstract> SpriteList => spriteList_;
@@ -67,7 +67,7 @@ namespace SGToolsCommon.Sga
 
             spriteList_ = new List<SgaSpriteAbstract>(new SgaSpriteAbstract[waitForLoading_]);
 
-            VersionLoader[Version](this, _indexOnly);
+            VersionLoader[Version]!(this, _indexOnly);
             indexLoaded_ = true;
 
             if (_indexOnly)

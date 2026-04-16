@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 챗 GPT
  * 생성일: 3/1/2023 2:13:19 PM
  *
@@ -8,7 +8,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using SGToolsCommon.Extension;
-using SGToolsUI.CustomControl;
+using SGToolsUI.Customize.Control;
 using SGToolsUI.Model.Main;
 
 namespace SGToolsUI.ModelSelector.Main
@@ -32,12 +32,12 @@ namespace SGToolsUI.ModelSelector.Main
         //////////////////////////////////////////////////////////////////////////////////
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            UIElementTreeView treeView = container.FindParent<UIElementTreeView>();
+            UIElementTreeView? treeView = container.FindParent<UIElementTreeView>();
 
             switch (item)
             {
-                case SGUIGroup __group__: return (DataTemplate)Application.Current.FindResource("GroupTreeViewTemplate");
-                case SGUIElement __else__: return (DataTemplate)Application.Current.FindResource("ElementTreeViewTemplate");
+                case SGUIGroup uiGroup: return (DataTemplate)Application.Current.FindResource("GroupTreeViewTemplate");
+                case SGUIElement uiElement: return (DataTemplate)Application.Current.FindResource("ElementTreeViewTemplate");
             }
 
             throw new Exception("SGUIElementSelector에서 반환가능한 DataTemplate을 찾지 못했습니다.");

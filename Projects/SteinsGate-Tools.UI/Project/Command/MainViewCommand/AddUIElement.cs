@@ -25,7 +25,7 @@ namespace SGToolsUI.Command.MainViewCommand
         //////////////////////////////////////////////////////////////////////////////////
         public override void Execute(object? _parameter)
         {
-            SGUIGroup selectedGroup = null;
+            SGUIGroup? selectedGroup = null;
 
             switch (_parameter)
             {
@@ -39,7 +39,7 @@ namespace SGToolsUI.Command.MainViewCommand
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        private void AddSingleElement(SGUIElement _element, SGUIGroup _selectedGroup)
+        private void AddSingleElement(SGUIElement _element, SGUIGroup? _selectedGroup)
         {
             if (_selectedGroup == null && _element is not SGUIGroup)
             {
@@ -54,7 +54,7 @@ namespace SGToolsUI.Command.MainViewCommand
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        private void AddMultiElements(IEnumerable<SGUIElement> _elementList, SGUIGroup _selectedGroup)
+        private void AddMultiElements(IEnumerable<SGUIElement> _elementList, SGUIGroup? _selectedGroup)
         {
             if (_selectedGroup == null && _elementList.Any(element => element.UIElementType != SGUIElementType.Group))
             {

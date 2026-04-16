@@ -6,8 +6,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/SGToolsCommon;Component/CustomStyle/All.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/SGToolsCommon;Component/Converter/All.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/SGToolsCommon;Component/Customize/Style/All.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/SGToolsCommon;Component/Customize/Converter/All.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

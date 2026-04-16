@@ -1,0 +1,90 @@
+﻿<UserControl x:Class="SGToolsCommon.Customize.Control.ExpandableGroupBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SGToolsCommon.Customize.Control"
+             xmlns:conv="clr-namespace:SGToolsCommon.Customize.Converter"
+             mc:Ignorable="d" 
+             x:Name="ControlMain"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{Binding H0, ElementName=ControlMain}"/>
+            <RowDefinition Height="{Binding H1, ElementName=ControlMain}"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsExpanded, ElementName=ControlMain}" Value="True">
+                            <Setter Property="Background" Value="{Binding TitleExpandStateBackground, ElementName=ControlMain}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsExpanded, ElementName=ControlMain}" Value="False">
+                            <Setter Property="Background" Value="{Binding TitleFoldStateBackground, ElementName=ControlMain}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding TW0, ElementName=ControlMain}"/>
+                <ColumnDefinition Width="{Binding TW1, ElementName=ControlMain}"/>
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="TitleButton"
+                    Foreground="{Binding TitleForground, ElementName=ControlMain}"
+                    Height="{Binding ActualHeight, ElementName=TitleContentButton}"
+                    Background="{Binding TitleBackground, ElementName=ControlMain}"
+                    Padding="0"
+                    BorderThickness="{Binding TitleBorderThickness, ElementName=ControlMain}"
+                    Cursor="Hand"
+                    Click="TitleButton_Click">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Content">
+                            <Setter.Value>
+                                <Grid>
+                                    <Image Stretch="Uniform">
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsExpanded, ElementName=ControlMain}" Value="True">
+                                                        <Setter Property="Source" Value="{Binding TitleFoldStateImageSource, ElementName=ControlMain}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsExpanded, ElementName=ControlMain}" Value="False">
+                                                        <Setter Property="Source" Value="{Binding TitleExpandStateImageSource, ElementName=ControlMain}"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                </Grid>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <Button Click="TitleButton_Click"
+                    x:Name="TitleContentButton"
+                    Foreground="{Binding TitleForground, ElementName=ControlMain}"
+                    Background="{Binding TitleBackground, ElementName=ControlMain}"
+                    Padding="0"
+                    Grid.Column="1"
+                    BorderThickness="{Binding TitleBorderThickness, ElementName=ControlMain}"
+                    VerticalContentAlignment="{Binding TitleContentVerticalAlignment, ElementName=ControlMain}"
+                    HorizontalContentAlignment="{Binding TitleContentHorizontalAlignment, ElementName=ControlMain}"
+                    Cursor="Hand"
+                    Margin="0">
+                <ContentPresenter Content="{Binding TitleContent, ElementName=ControlMain}"
+                                  Margin="{Binding TitleContentMargin, ElementName=ControlMain}" />
+            </Button>
+        </Grid>
+
+        <ContentControl Visibility="{Binding IsExpanded, ElementName=ControlMain, Converter={StaticResource BoolVisibilityConverter}}"
+                        Content="{Binding Content, ElementName=ControlMain}"
+                        Padding="0"
+                        VerticalContentAlignment="Stretch"
+                        Grid.Row="1"/>
+    </Grid>
+</UserControl>

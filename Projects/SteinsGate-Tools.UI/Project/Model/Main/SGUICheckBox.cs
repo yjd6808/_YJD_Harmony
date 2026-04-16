@@ -220,15 +220,15 @@ namespace SGToolsUI.Model.Main
 
             if (!sprites_[normal].IsNull)
             {
-                _sga = sprites_[normal].Sga.FileName;
-                _img = sprites_[normal].Img.Header.Name;
+                _sga = sprites_[normal].Sga!.FileName;
+                _img = sprites_[normal].Img!.Header.Name;
                 return;
             }
 
             if (!sprites_[disabled].IsNull)
             {
-                _sga = sprites_[disabled].Sga.FileName;
-                _img = sprites_[disabled].Img.Header.Name;
+                _sga = sprites_[disabled].Sga!.FileName;
+                _img = sprites_[disabled].Img!.Header.Name;
             }
         }
 
@@ -250,14 +250,14 @@ namespace SGToolsUI.Model.Main
 
             _root.TryGetValueDefault(JsonCheck, out checked_, false);
 
-            string bgSga = (string)_root[JsonBackgroundSga];
-            string bgImg = (string)_root[JsonBackgroundImg];
+            string bgSga = (string)_root[JsonBackgroundSga]!;
+            string bgImg = (string)_root[JsonBackgroundImg]!;
 
-            string crossSga = (string)_root[JsonCrossSga];
-            string crossImg = (string)_root[JsonCrossImg];
+            string crossSga = (string)_root[JsonCrossSga]!;
+            string crossImg = (string)_root[JsonCrossImg]!;
 
             int[] sprites = new int[4];
-            StringEx.ParseIntNumberN((string)_root[JsonSpriteKey], sprites);
+            StringEx.ParseIntNumberN((string)_root[JsonSpriteKey]!, sprites);
 
             if (bgSga != string.Empty)
             {
@@ -269,14 +269,14 @@ namespace SGToolsUI.Model.Main
 
                 if (backgroundFrameindex != Constant.InvalidValue)
                 {
-                    SgaSprite sprite = img.GetSprite(backgroundFrameindex) as SgaSprite;
-                    sprites_[IndexBackground] = new SGUISpriteInfo(sga, img, sprite);
+                    SgaSprite? sprite = img.GetSprite(backgroundFrameindex) as SgaSprite;
+                    sprites_[IndexBackground] = new SGUISpriteInfo(sga, img, sprite!);
                 }
 
                 if (backgroundDisabledFrameindex != Constant.InvalidValue)
                 {
-                    SgaSprite sprite = img.GetSprite(backgroundDisabledFrameindex) as SgaSprite;
-                    sprites_[IndexBackgroundDisabled] = new SGUISpriteInfo(sga, img, sprite);
+                    SgaSprite? sprite = img.GetSprite(backgroundDisabledFrameindex) as SgaSprite;
+                    sprites_[IndexBackgroundDisabled] = new SGUISpriteInfo(sga, img, sprite!);
                 }
             }
 
@@ -290,14 +290,14 @@ namespace SGToolsUI.Model.Main
 
                 if (crossFrameindex != Constant.InvalidValue)
                 {
-                    SgaSprite sprite = img.GetSprite(crossFrameindex) as SgaSprite;
-                    sprites_[IndexCross] = new SGUISpriteInfo(sga, img, sprite);
+                    SgaSprite? sprite = img.GetSprite(crossFrameindex) as SgaSprite;
+                    sprites_[IndexCross] = new SGUISpriteInfo(sga, img, sprite!);
                 }
 
                 if (crossDisabledFrameindex != Constant.InvalidValue)
                 {
-                    SgaSprite sprite = img.GetSprite(crossDisabledFrameindex) as SgaSprite;
-                    sprites_[IndexCrossDisabled] = new SGUISpriteInfo(sga, img, sprite);
+                    SgaSprite? sprite = img.GetSprite(crossDisabledFrameindex) as SgaSprite;
+                    sprites_[IndexCrossDisabled] = new SGUISpriteInfo(sga, img, sprite!);
                 }
             }
         }

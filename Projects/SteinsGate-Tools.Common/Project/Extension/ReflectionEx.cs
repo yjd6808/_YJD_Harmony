@@ -34,7 +34,7 @@ namespace SGToolsCommon.Extension
             List<PropertyInfo> list = GetAllProperties(_type, _flags)
                 .Where(p =>
                 {
-                    BrowsableAttribute attr = p.GetCustomAttributes<BrowsableAttribute>().FirstOrDefault();
+                    BrowsableAttribute? attr = p.GetCustomAttributes<BrowsableAttribute>().FirstOrDefault();
                     if (attr == null) return true;
                     return attr.Browsable;
                 }).ToList();

@@ -11,7 +11,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using MoreLinq;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
@@ -587,7 +586,7 @@ namespace SGToolsUI.Model.Main
             get
             {
                 if (IsFirst)
-                    return Parent == ViewModel.GroupMaster ? null : Parent;
+                    return Parent == ViewModel.GroupMaster ? null! : Parent;
 
                 /*
                  * 왜 인덱스 아웃오브레인지 검사를 수행하지 않는가?
@@ -630,7 +629,7 @@ namespace SGToolsUI.Model.Main
             {
                 // 그룹마스터의 부모인경우, 그룹마스터는 부모가 절대없음
                 if (Parent == null)
-                    return null;
+                    return null!;
 
                 int index = Index;
 
@@ -671,7 +670,7 @@ namespace SGToolsUI.Model.Main
             get
             {
                 if (Parent == null)
-                    return null;
+                    return null!;
 
                 int index = Index;
                 if (Parent.Children.Count > index + 1)
@@ -698,7 +697,7 @@ namespace SGToolsUI.Model.Main
 
 
         [Browsable(false)]
-        public SGUIGroup Parent { get; set; }
+        public SGUIGroup Parent { get; set; } = null!;
 
         [Browsable(false)]
         public SGUIGroup TopParent
@@ -709,7 +708,7 @@ namespace SGToolsUI.Model.Main
 
                 // 자기 자신이 탑패런트인경우
                 if (IsGroup && Parent == master)
-                    return null;
+                    return null!;
 
                 SGUIGroup parent = Parent;
                 int infCheck = 0;
@@ -1092,7 +1091,7 @@ namespace SGToolsUI.Model.Main
         //////////////////////////////////////////////////////////////////////////////////
         public T Cast<T>() where T : SGUIElement
         {
-            T casted = this as T;
+            T? casted = this as T;
 
             if (casted == null)
                 throw new Exception($"{VisualName}은 {typeof(T).Name}타입이 아닙니다.");
@@ -1101,9 +1100,9 @@ namespace SGToolsUI.Model.Main
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public int Compare(SGUIElement _lhs, SGUIElement _rhs)
+        public int Compare(SGUIElement? _lhs, SGUIElement? _rhs)
         {
-            return _lhs.Code.CompareTo(_rhs.Code);
+            return _lhs!.Code.CompareTo(_rhs!.Code);
         }
 
         //////////////////////////////////////////////////////////////////////////////////
@@ -1128,14 +1127,14 @@ namespace SGToolsUI.Model.Main
         {
             // 코드필요없음
             // 엘리먼트타입 고정이므로 필요없음
-            visualName_ = (string)_root[JsonVisualNameKey];
-            defineName_ = (string)_root[JsonDefineNameKey];
-            verticalAlignment_ = (VAlignment)(int)_root[JsonVAlignKey];
-            horizontalAlignment_ = (HAlignment)(int)_root[JsonHAlignKey];
+            visualName_ = (string)_root[JsonVisualNameKey]!;
+            defineName_ = (string)_root[JsonDefineNameKey]!;
+            verticalAlignment_ = (VAlignment)(int)_root[JsonVAlignKey]!;
+            horizontalAlignment_ = (HAlignment)(int)_root[JsonHAlignKey]!;
         }
 
         [Browsable(false)]
-        public object Tag { get; set; } // 아무런 데이터나 기록할 수 있도록하는 프로퍼티
+        public object? Tag { get; set; } // 아무런 데이터나 기록할 수 있도록하는 프로퍼티
 
         // 기본적으로 엘리먼트의 이벤트는 "전파"되도록한다.
         //////////////////////////////////////////////////////////////////////////////////
@@ -1202,7 +1201,7 @@ namespace SGToolsUI.Model.Main
         protected bool canvasSelectable_ = true;
         protected HAlignment horizontalAlignment_ = HAlignment.Left;
         protected VAlignment verticalAlignment_ = VAlignment.Bottom;
-        protected TreeViewItem treeViewItem_;
+        protected TreeViewItem? treeViewItem_;
         protected string defineName_ = string.Empty;
 
 

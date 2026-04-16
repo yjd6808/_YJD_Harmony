@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 3/1/2023 2:42:59 AM
  *
@@ -14,9 +14,9 @@ namespace SGToolsUI.ViewModel
 {
     public class SpriteViewModel : Bindable
     {
-        private SgaSpriteAbstract previewTarget_;
-        private SgaSprite realTarget_;
-        private BitmapSource bitmapSource_;
+        private SgaSpriteAbstract previewTarget_ = null!;
+        private SgaSprite realTarget_ = null!;
+        private BitmapSource bitmapSource_ = null!;
 
         //////////////////////////////////////////////////////////////////////////////////
         public SpriteViewModel()
@@ -24,7 +24,7 @@ namespace SGToolsUI.ViewModel
             PreviewTarget = new SgaSprite();
         }
 
-        public SpriteView View { get; set; }       // Xaml에서 주입
+        public SpriteView View { get; set; } = null!;       // Xaml에서 주입
 
         public SgaSpriteAbstract PreviewTarget
         {
@@ -35,7 +35,7 @@ namespace SGToolsUI.ViewModel
 
                 if (previewTarget_.IsLink)
                 {
-                    SgaSprite link = previewTarget_.Parent.SpriteList[previewTarget_.TargetFrameIndex] as SgaSprite;
+                    SgaSprite? link = previewTarget_.Parent!.SpriteList[previewTarget_.TargetFrameIndex] as SgaSprite;
 
                     if (link == null)
                         throw new Exception("링크 스프라이트가 가리키는 스프라이트가 SgaSprite이 아닙니다.");
@@ -44,7 +44,7 @@ namespace SGToolsUI.ViewModel
                 }
                 else
                 {
-                    SgaSprite preview = previewTarget_ as SgaSprite;
+                    SgaSprite? preview = previewTarget_ as SgaSprite;
 
                     if (preview == null)
                         throw new Exception("링크 스프라이트가 아닌데 SgaSprite 타입이 아닙니다.");

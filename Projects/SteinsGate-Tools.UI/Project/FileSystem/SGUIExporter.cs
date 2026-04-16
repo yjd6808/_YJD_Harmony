@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 3/10/2023 8:57:49 AM
  *
@@ -72,7 +72,7 @@ namespace SGToolsUI.FileSystem
 
             try
             {
-                string dir = Path.GetDirectoryName(_path);
+                string? dir = Path.GetDirectoryName(_path);
                 if (!Directory.Exists(dir))
                     throw new Exception("해당 경로를 저장할 수 없습니다.");
 
@@ -137,7 +137,7 @@ namespace SGToolsUI.FileSystem
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public async Task<bool> ExportAsync(string _path = null)
+        public async Task<bool> ExportAsync(string? _path = null)
         {
             if (_path == null)
                 _path = Path.Combine(viewModel_.Setting.OutputDefineHeaderFilePath, viewModel_.Setting.OutputDefineHeaderFileName);

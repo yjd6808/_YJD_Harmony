@@ -24,9 +24,9 @@ namespace SGToolsUI.Model.Main
     public class CanvasGrid : CanvasShape
     {
         private Brush foreground_;
-        public int thickness_;
+        private int thickness_;
         private int interval_;
-        private List<LinePosition> lines_;
+        private List<LinePosition> lines_ = new();
 
         //////////////////////////////////////////////////////////////////////////////////
         public CanvasGrid(int _interval, int _thickness, Brush _foreground)

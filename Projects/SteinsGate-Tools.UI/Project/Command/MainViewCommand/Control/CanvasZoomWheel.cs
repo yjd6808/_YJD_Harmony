@@ -23,7 +23,7 @@ namespace SGToolsUI.Command.MainViewCommand.Control
             if (!ViewModel.KeyState.IsCtrlPressed)
                 return;
 
-            MouseWheelEventArgs wheelEventArgs = _parameter as MouseWheelEventArgs;
+            MouseWheelEventArgs? wheelEventArgs = _parameter as MouseWheelEventArgs;
 
             if (wheelEventArgs == null)
                 return;

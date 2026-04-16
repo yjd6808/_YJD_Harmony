@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/28/2023 1:41:46 AM
  *
@@ -25,7 +25,7 @@ namespace SGToolsUI.Command.MainViewCommand
             settingView.ShowDialog();
 
             if (settingView.Result)
-                ViewModel.Setting = settingView.ViewModel.Model.Clone() as Setting;
+                ViewModel.Setting = (Setting)settingView.ViewModel.Model.Clone();
         }
     }
 }

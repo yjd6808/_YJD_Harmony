@@ -25,7 +25,7 @@ namespace SGToolsCommon
         /// <summary>
         /// Local member of the source uri
         /// </summary>
-        private Uri sourceUri_;
+        private Uri sourceUri_ = null!;
 
         /// <summary>
         /// Gets or sets the uniform resource identifier (URI) to load resources from.

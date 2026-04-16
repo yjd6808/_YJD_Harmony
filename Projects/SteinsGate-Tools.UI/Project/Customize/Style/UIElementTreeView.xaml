@@ -1,0 +1,131 @@
+﻿<ResourceDictionary x:Class="SGToolsUI.Customize.Style.UIElementTreeViewStyle"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    mc:Ignorable="d"
+                    xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+                    xmlns:acb="clr-namespace:AttachedCommandBehavior;assembly=AttachedCommandBehavior"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+                    xmlns:c="http://schemas.xceed.com/wpf/xaml/toolkit"
+                    xmlns:local="clr-namespace:SGToolsUI"
+                    xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
+                    xmlns:mo_main="clr-namespace:SGToolsUI.Model.Main"
+                    xmlns:ui_ctrl="clr-namespace:SGToolsUI.Customize.Control"
+                    xmlns:ui_res="clr-namespace:SGToolsUI.Resource"
+                    xmlns:ui_selector="clr-namespace:SGToolsUI.ModelSelector"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    
+                    xmlns:cv="clr-namespace:SGToolsCommon.Customize.Converter;assembly=SGToolsCommon"
+                    xmlns:sga="clr-namespace:SGToolsCommon.Sga;assembly=SGToolsCommon"
+                    xmlns:common_ctrl="clr-namespace:SGToolsCommon.Customize.Control;assembly=SGToolsCommon"
+                    xmlns:common_style="clr-namespace:SGToolsCommon.Customize.Style;assembly=SGToolsCommon">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="MenuItemGroup.xaml" />
+        <ResourceDictionary Source="MenuItemButton.xaml" />
+        <ResourceDictionary Source="MenuItemLabel.xaml" />
+        <ResourceDictionary Source="MenuItemSprite.xaml" />
+        <ResourceDictionary Source="MenuItemEditBox.xaml" />
+        <ResourceDictionary Source="MenuItemCheckBox.xaml" />
+        <ResourceDictionary Source="MenuItemToggleButton.xaml" />
+        <ResourceDictionary Source="MenuItemProgressBar.xaml" />
+        <ResourceDictionary Source="MenuItemScrollBar.xaml" />
+        <ResourceDictionary Source="MenuItemStatic.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    <Style x:Key="UIElementTreeView" TargetType="TreeView" >
+        <d:Style.DataContext>
+            <x:Type Type="vm:MainViewModel" />
+        </d:Style.DataContext>
+
+        <Setter Property="ItemContainerStyle">
+
+            <Setter.Value>
+                <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource WinformTreeViewItem}">
+                    <d:Style.DataContext>
+                        <x:Type Type="mo_main:SGUIElement" />
+                    </d:Style.DataContext>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Selected}" Value="True">
+                            <Setter Property="Background" Value="CornflowerBlue" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Selected}" Value="False">
+                            <Setter Property="Background" Value="Transparent" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                    <EventSetter Event="Loaded" Handler="OnTreeViewItemLoaded"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding GroupMaster.HasSelectedElement}" Value="True" />
+                    <Condition Binding="{Binding GroupMaster.SelectedElement.IsGroup}" Value="True" />
+                </MultiDataTrigger.Conditions>
+                <Setter Property="ContextMenu">
+                    <Setter.Value>
+                        <ContextMenu>
+                            <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" />
+                            <Separator />
+                            <MenuItem Style="{StaticResource MenuItemGroup}" Header="그룹 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIGroupKey}" />
+                            <MenuItem Style="{StaticResource MenuItemButton}" Header="버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIButtonKey}" />
+                            <MenuItem Style="{StaticResource MenuItemLabel}" Header="라벨 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UILabelKey}" />
+                            <MenuItem Style="{StaticResource MenuItemSprite}" Header="스프라이트 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UISpriteKey}" />
+                            <MenuItem Style="{StaticResource MenuItemEditBox}" Header="에딧박스 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIEditBoxKey}" />
+                            <MenuItem Style="{StaticResource MenuItemCheckBox}" Header="체크박스 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UICheckBoxKey}" />
+                            <MenuItem Style="{StaticResource MenuItemToggleButton}" Header="토글 버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIToggleButtonKey}" />
+                            <MenuItem Style="{StaticResource MenuItemProgressBar}" Header="프로그래스바 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIProgressBarKey}" />
+                            <MenuItem Style="{StaticResource MenuItemScrollBar}" Header="스크롤바 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIScrollBarKey}" />
+                            <MenuItem Style="{StaticResource MenuItemStatic}" Header="스태틱 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIStaticKey}" />
+                        </ContextMenu>
+                    </Setter.Value>
+                </Setter>
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding GroupMaster.HasSelectedElement}" Value="True" />
+                    <Condition Binding="{Binding GroupMaster.SelectedElement.IsGroup}" Value="False" />
+                </MultiDataTrigger.Conditions>
+                <Setter Property="ContextMenu">
+                    <Setter.Value>
+                        <ContextMenu>
+                            <MenuItem Style="{StaticResource MenuItemSelect}" Header="픽" Command="{Binding Commander.PickUIElement}"/>
+                            <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" />
+                        </ContextMenu>
+                    </Setter.Value>
+                </Setter>
+            </MultiDataTrigger>
+            <DataTrigger Binding="{Binding GroupMaster.HasSelectedElement}" Value="False">
+                <Setter Property="ContextMenu">
+                    <Setter.Value>
+                        <ContextMenu>
+                            <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" IsEnabled="False" />
+                            <Separator />
+                            <MenuItem Style="{StaticResource MenuItemGroup}" Header="그룹 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Group" IsEnabled="True" />
+                            <MenuItem Style="{StaticResource MenuItemButton}" Header="버튼 추가" IsEnabled="False"/>
+                            <MenuItem Style="{StaticResource MenuItemLabel}" Header="라벨 추가" IsEnabled="False"/>
+                            <MenuItem Style="{StaticResource MenuItemSprite}" Header="스프라이트 추가" IsEnabled="False" />
+                            <MenuItem Style="{StaticResource MenuItemEditBox}" Header="에딧박스 추가" IsEnabled="False"/>
+                            <MenuItem Style="{StaticResource MenuItemCheckBox}" Header="체크박스 추가" IsEnabled="False"/>
+                            <MenuItem Style="{StaticResource MenuItemToggleButton}" Header="토글 버튼 추가" IsEnabled="False"/>
+                            <MenuItem Style="{StaticResource MenuItemCheckBox}" Header="프로그래스바 추가" IsEnabled="False" />
+                            <MenuItem Style="{StaticResource MenuItemToggleButton}" Header="스크롤바 추가" IsEnabled="False" />
+                            <MenuItem Style="{StaticResource MenuItemToggleButton}" Header="스태틱 추가" IsEnabled="False" />
+                        </ContextMenu>
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding GroupMaster.IsMultiSelected}" Value="True">
+                <Setter Property="ContextMenu">
+                    <Setter.Value>
+                        <ContextMenu>
+                            <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" IsEnabled="True" />
+                        </ContextMenu>
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+
+</ResourceDictionary>

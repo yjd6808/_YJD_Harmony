@@ -169,7 +169,7 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)] public override bool Manipulatable => true;
 
         [Browsable(false)]
-        public WatermarkTextBox TextBox { get; set; }
+        public WatermarkTextBox? TextBox { get; set; }
 
         //////////////////////////////////////////////////////////////////////////////////
         public override object Clone()
@@ -210,21 +210,21 @@ namespace SGToolsUI.Model.Main
         {
             base.ParseJObject(_root);
 
-            string sizeString = (string)_root[JsonVisualSizeKey];
+            string sizeString = (string)_root[JsonVisualSizeKey]!;
             visualSize_ = SizeEx.ParseFullString(sizeString);
-            textHAlign_ = (HAlignment)(int)_root[JsonTextHAlignKey];
+            textHAlign_ = (HAlignment)(int)_root[JsonTextHAlignKey]!;
 
-            fontSize_ = (int)_root[JsonFontSizeKey];
+            fontSize_ = (int)_root[JsonFontSizeKey]!;
 
-            string fontColorString = (string)_root[JsonFontColorKey];
+            string fontColorString = (string)_root[JsonFontColorKey]!;
             fontColor_ = ColorEx.ParseFullString4B(fontColorString);
-            placeholderText_ = (string)_root[JsonPlaceholderTextKey];
+            placeholderText_ = (string)_root[JsonPlaceholderTextKey]!;
 
-            string placeholderFontColorString = (string)_root[JsonPlaceholderFontColorKey];
+            string placeholderFontColorString = (string)_root[JsonPlaceholderFontColorKey]!;
             placeholderFontColor_ = ColorEx.ParseFullString4B(placeholderFontColorString);
-            placeholderFontSize_ = (int)_root[JsonPlaceholderFontSizeKey];
-            maxLength_ = (int)_root[JsonMaxLengthKey];
-            inputMode_ = (InputMode)(int)_root[JsonInputModeKey];
+            placeholderFontSize_ = (int)_root[JsonPlaceholderFontSizeKey]!;
+            maxLength_ = (int)_root[JsonMaxLengthKey]!;
+            inputMode_ = (InputMode)(int)_root[JsonInputModeKey]!;
         }
 
         //////////////////////////////////////////////////////////////////////////////////

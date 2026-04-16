@@ -25,7 +25,7 @@ namespace SGToolsCommon.Sga
             FileStream readStream = File.OpenRead(_path);
 
             if (readStream.ReadString() != SgaFlag)
-                return null;
+                return null!;
 
             int elementCount = readStream.ReadInt();
             SgaPackage package = new SgaPackage(readStream, _path, elementCount, _index);
@@ -106,7 +106,7 @@ namespace SGToolsCommon.Sga
                 return element;
             }
 
-            return null;
+            return null!;
         }
     }
 }

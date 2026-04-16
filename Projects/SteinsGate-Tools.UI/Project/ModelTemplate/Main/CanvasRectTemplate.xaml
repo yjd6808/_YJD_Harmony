@@ -4,7 +4,7 @@
                     xmlns:local="clr-namespace:SGToolsUI"
                     xmlns:mo_main="clr-namespace:SGToolsUI.Model.Main"
                     xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
-                    xmlns:common_conv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon">
+                    xmlns:common_conv="clr-namespace:SGToolsCommon.Customize.Converter;assembly=SGToolsCommon">
     <DataTemplate x:Key="CanvasRectTemplate" DataType="{x:Type mo_main:CanvasRect}">
         <Rectangle StrokeThickness="{Binding Thickness}"
                    Stroke="{Binding Foreground}"

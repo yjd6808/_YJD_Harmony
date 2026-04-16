@@ -1,4 +1,4 @@
-<!--
+﻿<!--
     작성자: 윤정도
     생성일: 2/27/2023
     
@@ -34,15 +34,15 @@
         xmlns:local="clr-namespace:SGToolsUI"
         xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
         xmlns:res="clr-namespace:SGToolsUI.Resource"
-        xmlns:ctrl="clr-namespace:SGToolsUI.CustomControl"
+        xmlns:ctrl="clr-namespace:SGToolsUI.Customize.Control"
 
         xmlns:mo_main="clr-namespace:SGToolsUI.Model.Main"
         xmlns:mo_main_selector="clr-namespace:SGToolsUI.ModelSelector.Main"
 
         xmlns:sga="clr-namespace:SGToolsCommon.Sga;assembly=SGToolsCommon"
         xmlns:common_local="clr-namespace:SGToolsCommon;assembly=SGToolsCommon"
-        xmlns:common_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
-        xmlns:common_style="clr-namespace:SGToolsCommon.CustomStyle;assembly=SGToolsCommon"
+        xmlns:common_ctrl="clr-namespace:SGToolsCommon.Customize.Control;assembly=SGToolsCommon"
+        xmlns:common_style="clr-namespace:SGToolsCommon.Customize.Style;assembly=SGToolsCommon"
         xmlns:common_res="clr-namespace:SGToolsCommon.Resource;assembly=SGToolsCommon"
         xmlns:common_prim="clr-namespace:SGToolsCommon.Primitive;assembly=SGToolsCommon"
         xmlns:file="clr-namespace:SGToolsUI.FileSystem"

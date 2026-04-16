@@ -76,16 +76,16 @@ namespace SGToolsUI.Model.Setting
             JToken? token = null;
 
             if (root.TryGetValue(SgaDirectoryKey, out token))
-                SgaDirectory = (string)token;
+                SgaDirectory = (string)token!;
 
             if (root.TryGetValue(OutputDefineHeaderFilePathKey, out token))
-                OutputDefineHeaderFilePath = (string)token;
+                OutputDefineHeaderFilePath = (string)token!;
 
             if (root.TryGetValue(OutputDefineHeaderFileNameKey, out token))
-                OutputDefineHeaderFileName = (string)token;
+                OutputDefineHeaderFileName = (string)token!;
 
             if (root.TryGetValue(OutputJsonPathKey, out token))
-                OutputJsonPath = (string)token;
+                OutputJsonPath = (string)token!;
 
             if (root.TryGetValue(AutoExpandWhenSelectedKey, out token))
                 AutoExpandWhenSelected = (bool)token;

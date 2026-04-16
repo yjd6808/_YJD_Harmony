@@ -106,8 +106,8 @@ namespace SGToolsUI.Command.MainViewCommand
 
             for (int i = 0; i < clipboard_.Count; ++i)
             {
-                SGUIElement element = clipboard_[i].Clone() as SGUIElement;
-                cloned.Children.Add(element);
+                SGUIElement? element = clipboard_[i].Clone() as SGUIElement;
+                cloned.Children.Add(element!);
             }
 
             if (groupMaster.HasSelectedElement)

@@ -29,16 +29,16 @@ namespace SGToolsCommon
     public class JobEvent
     {
         private Action Job { get; }
-        private Action<Exception> ErrorHandler { get; }
+        private Action<Exception>? ErrorHandler { get; }
         private bool failed_;
 
         public SemaphoreSlim Notifier { get; }
-        public Exception Exception { get; private set; }
+        public Exception? Exception { get; private set; }
         public bool IsFailed => failed_;
         public bool IsSuccess => !failed_;
 
         //////////////////////////////////////////////////////////////////////////////////
-        public JobEvent(Action _job, SemaphoreSlim _notifier, Action<Exception> _errorHandler)
+        public JobEvent(Action _job, SemaphoreSlim _notifier, Action<Exception>? _errorHandler)
         {
             Job = _job;
             ErrorHandler = _errorHandler;
@@ -94,7 +94,7 @@ namespace SGToolsCommon
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public Task<JobEvent> Enqueue(Action _job, Action<Exception> _errorHandler = null)
+        public Task<JobEvent> Enqueue(Action _job, Action<Exception>? _errorHandler = null)
         {
             SemaphoreSlim notifier;
 
@@ -141,7 +141,7 @@ namespace SGToolsCommon
         //////////////////////////////////////////////////////////////////////////////////
         private void ProcessJob()
         {
-            if (jobQueue_.TryDequeue(out JobEvent job))
+            if (jobQueue_.TryDequeue(out JobEvent? job))
                 job.Do();
         }
     }

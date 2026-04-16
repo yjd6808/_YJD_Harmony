@@ -25,7 +25,7 @@ namespace SGToolsUI.Command.MainViewCommand
         //////////////////////////////////////////////////////////////////////////////////
         public override async Task ExecuteAsync(object? _parameter)
         {
-            SGUIElementType createElementType = (SGUIElementType)Enum.Parse(typeof(SGUIElementType), _parameter.ToString());
+            SGUIElementType createElementType = (SGUIElementType)Enum.Parse(typeof(SGUIElementType), _parameter!.ToString()!);
             SGUIGroup group = ViewModel.GroupMaster.SelectedGroup;
 
             if (group == null)

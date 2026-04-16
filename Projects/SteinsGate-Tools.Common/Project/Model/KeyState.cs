@@ -80,8 +80,8 @@ namespace SGToolsCommon.Model
         private Stopwatch stopWatch_ = new();
         private AutoResetEvent finishHandle_;
 
-        public event KeyDownHandler KeyDown;
-        public event KeyDownHandler KeyUp;
+        public event KeyDownHandler? KeyDown;
+        public event KeyDownHandler? KeyUp;
 
         public bool IsShiftPressed => IsPressed(SGKey.LeftShift);
         public bool IsAltPressed => IsPressed(SGKey.LeftAlt);

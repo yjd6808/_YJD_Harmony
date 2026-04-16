@@ -25,9 +25,9 @@ namespace SGToolsCommon.Model
     {
         private Point startPosition_;
         private DragState state_ = DragState.None;
-        private UIElement beginTarget_;
+        private UIElement? beginTarget_;
 
-        public object Data { get; set; }
+        public object? Data { get; set; }
         public List<IDataDragReceiver> EndTargets { get; } = new();
 
         public Point DragStartPosition
@@ -103,7 +103,7 @@ namespace SGToolsCommon.Model
             {
                 if (EndTargets[i].ContainPoint(_p))
                 {
-                    EndTargets[i].DragEnd(_p, Data);
+                    EndTargets[i].DragEnd(_p, Data!);
                     return true;
                 }
             }

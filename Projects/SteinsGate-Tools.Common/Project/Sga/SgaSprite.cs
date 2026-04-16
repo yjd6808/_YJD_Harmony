@@ -26,7 +26,7 @@ namespace SGToolsCommon.Sga
         };
 
         private SgaSpriteRect spriteRect_;
-        private byte[] data_;
+        private byte[]? data_;
         private int dataOffset_;
         private int dataLength_;
         private bool linearDodge_;
@@ -81,7 +81,7 @@ namespace SGToolsCommon.Sga
                     ApplyLinearDodge();
 
                 // 얕은 복사 좋아
-                BitmapSource source = BitmapSource.Create(Width, Height, 0, 0, PixelFormats.Bgra32, null, data_, 4 * Width);
+                BitmapSource source = BitmapSource.Create(Width, Height, 0, 0, PixelFormats.Bgra32, null, data_!, 4 * Width);
                 return source;
             }
         }
@@ -94,7 +94,7 @@ namespace SGToolsCommon.Sga
                     Load();
 
                 // 너무나도 깊은 복사 조심
-                return BitmapEx.FromArray(data_, Width, Height);
+                return BitmapEx.FromArray(data_!, Width, Height);
             }
         }
 
@@ -132,7 +132,7 @@ namespace SGToolsCommon.Sga
             if (data_ != null && !linearDodge_)
                 return;
 
-            Stream stream = Parent.Parent.ReadStream;
+            Stream stream = Parent!.Parent.ReadStream;
             data_ = new byte[dataLength_];
             stream.Seek(dataOffset_, SeekOrigin.Begin);
             stream.Read(data_, 0, dataLength_);
@@ -152,8 +152,8 @@ namespace SGToolsCommon.Sga
             if (!Loaded)
                 Load();
 
-            for (int i = 0; i < data_.Length; i += 4)
-                BitmapEx.Bgra32LinearDodgePixel(data_.AsSpan(i, 4));
+            for (int i = 0; i < data_!.Length; i += 4)
+                BitmapEx.Bgra32LinearDodgePixel(data_!.AsSpan(i, 4));
 
             linearDodge_ = true;
         }
@@ -169,12 +169,12 @@ namespace SGToolsCommon.Sga
         {
             int decompressedSize = Width * Height * (ColorFormat == SgaColorFormat.Argb8888 ? 4 : 2);
 
-            byte[] decompressed = null;
-            byte[] readData = data_;
+            byte[]? decompressed = null;
+            byte[] readData = data_!;
 
             if (CompressMode == SgaCompressMode.Zlib)
             {
-                decompressed = Zlib.Decompress(data_, decompressedSize);
+                decompressed = Zlib.Decompress(data_!, decompressedSize);
                 readData = decompressed;
             }
 

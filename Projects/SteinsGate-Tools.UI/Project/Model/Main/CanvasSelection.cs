@@ -10,7 +10,7 @@ namespace SGToolsUI.Model.Main
 {
     public class CanvasSelection : CanvasShape
     {
-        private SGUIElement element_;
+        private SGUIElement? element_;
 
         //////////////////////////////////////////////////////////////////////////////////
         public CanvasSelection(ItemsControl _selectionControl)
@@ -20,7 +20,7 @@ namespace SGToolsUI.Model.Main
         public ItemsControl Selection { get; }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public SGUIElement Element
+        public SGUIElement? Element
         {
             get => element_;
             set

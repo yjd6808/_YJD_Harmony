@@ -35,7 +35,7 @@ namespace SGToolsUI.Model.Main
         {
             Debug.Assert(_sprite != null);
 
-            Sga = _sprite.Parent.Parent;
+            Sga = _sprite.Parent!.Parent;
             Img = _sprite.Parent;
             Sprite = _sprite;
         }
@@ -50,9 +50,9 @@ namespace SGToolsUI.Model.Main
             Sprite = _sprite;
         }
 
-        public SgaPackage Sga { get; }
-        public SgaImage Img { get; }
-        public SgaSprite Sprite { get; }
+        public SgaPackage? Sga { get; }
+        public SgaImage? Img { get; }
+        public SgaSprite? Sprite { get; }
 
         [ReadOnly(true), DisplayName("선형 닷지")]
         public bool LinearDodge
@@ -122,7 +122,7 @@ namespace SGToolsUI.Model.Main
         }
 
         [Browsable(false)]
-        public BitmapSource Source => Sprite != null ? Sprite.Source : null;
+        public BitmapSource Source => Sprite != null ? Sprite.Source : null!;
 
         [Browsable(false)]
         public int SpriteIndex => Sprite != null ? Sprite.FrameIndex : Constant.InvalidValue;
@@ -130,9 +130,9 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)]
         public bool IsNull => Sprite == null;
         [Browsable(false)]
-        public string SgaName => Sga.FileName;
+        public string SgaName => Sga!.FileName;
         [Browsable(false)]
-        public string ImgName => Img.Header.Name;
+        public string ImgName => Img!.Header.Name;
 
         //////////////////////////////////////////////////////////////////////////////////
         public override string ToString()
@@ -140,7 +140,7 @@ namespace SGToolsUI.Model.Main
             if (IsNull)
                 return "비어있음";
 
-            return $"{Img}-{Sprite.FrameIndex}";
+            return $"{Img}-{Sprite!.FrameIndex}";
         }
 
         [Browsable(false)]
@@ -189,7 +189,7 @@ namespace SGToolsUI.Model.Main
             {
                 if (_sourceSprites[i] != Constant.InvalidValue)
                 {
-                    SgaSprite sprite = _img.GetSprite(_sourceSprites[i]) as SgaSprite;
+                    SgaSprite? sprite = _img.GetSprite(_sourceSprites[i]) as SgaSprite;
                     if (sprite == null) throw new Exception($"{_sga.FileNameWithoutExt} -> {_img.Header.NameWithoutExt} -> {_sourceSprites[i]}가 SgaSprite 타입이 아닙니다.");
                     _targetSprites[i] = new SGUISpriteInfo(_sga, _img, sprite);
                     _targetSprites[i].LinearDodge = _linearDodge;

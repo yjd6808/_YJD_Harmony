@@ -44,11 +44,13 @@ namespace SGToolsCommon.Command
         }
 
         //////////////////////////////////////////////////////////////////////////////////
+#pragma warning disable CS0465
         public void Finalize()
         {
             foreach (CommandAbstract command in commandMap_.Values)
                 command.Dispose();
             finalized_ = true;
         }
+#pragma warning restore CS0465
     }
 }

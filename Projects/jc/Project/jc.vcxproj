@@ -734,6 +734,9 @@
     <Natvis Include="..\Sources\jc\Natvis\Tuple.natvis" />
     <Natvis Include="..\Sources\jc\Natvis\Vector.natvis" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Sources\jc\_Extern\Extern.asm" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

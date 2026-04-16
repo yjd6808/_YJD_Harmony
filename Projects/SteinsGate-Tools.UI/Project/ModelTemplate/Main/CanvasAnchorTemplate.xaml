@@ -3,7 +3,7 @@
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:local="clr-namespace:SGToolsUI"
                     xmlns:mo_main="clr-namespace:SGToolsUI.Model.Main"
-                    xmlns:common_conv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon"
+                    xmlns:common_conv="clr-namespace:SGToolsCommon.Customize.Converter;assembly=SGToolsCommon"
                     xmlns:vm="clr-namespace:SGToolsUI.ViewModel">
     <DataTemplate x:Key="CanvasAnchorTemplate"
                   DataType="{x:Type mo_main:CanvasAnchor}">

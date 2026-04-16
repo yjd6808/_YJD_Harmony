@@ -21,10 +21,10 @@ namespace SGToolsCommon.Command
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public virtual async Task ExecuteAsync(object? _parameter)
+        public virtual Task ExecuteAsync(object? _parameter)
         {
             // 상속받아서 구현
-            throw new NotImplementedException("구현이 안되었어요");
+            return Task.FromException(new NotImplementedException("구현이 안되었어요"));
         }
 
         //////////////////////////////////////////////////////////////////////////////////

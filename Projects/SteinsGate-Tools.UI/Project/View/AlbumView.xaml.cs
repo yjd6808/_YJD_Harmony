@@ -12,8 +12,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using SGToolsCommon.CustomControl;
-using SGToolsCommon.CustomView;
+using SGToolsCommon.Customize.Control;
+using SGToolsCommon.Customize.View;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Resource;
 using SGToolsCommon.Sga;
@@ -45,8 +45,8 @@ namespace SGToolsUI.View
         //////////////////////////////////////////////////////////////////////////////////
         private void PackageListBox_OnSelectionChanged(object _sender, SelectionChangedEventArgs _e)
         {
-            SgaPackage previous = _e.RemovedItems.Count > 0 ? _e.RemovedItems[0] as SgaPackage : null as SgaPackage;
-            SgaPackage cur = PackageListBox.SelectedItem as SgaPackage;
+            SgaPackage? previous = _e.RemovedItems.Count > 0 ? _e.RemovedItems[0] as SgaPackage : null;
+            SgaPackage? cur = PackageListBox.SelectedItem as SgaPackage;
 
             if (previous != null) previous.UnloadAll();
             if (cur == null) return;
@@ -56,7 +56,7 @@ namespace SGToolsUI.View
         //////////////////////////////////////////////////////////////////////////////////
         private void ElementListBox_OnSelectionChanged(object _sender, SelectionChangedEventArgs _e)
         {
-            SgaElementHeader header = ElementListBox.SelectedItem as SgaElementHeader;
+            SgaElementHeader? header = ElementListBox.SelectedItem as SgaElementHeader;
             if (header == null) return;
             SgaPackage package = ViewModel.SelectedPackage;
             if (package == null) return;
@@ -67,7 +67,7 @@ namespace SGToolsUI.View
             }
 
             ViewModel.SelectedPackage.LoadElementIfNotLoaded(header.IndexInPackage, false);
-            SgaImage cur = ViewModel.SelectedPackage.GetElement(header.IndexInPackage) as SgaImage;
+            SgaImage? cur = ViewModel.SelectedPackage.GetElement(header.IndexInPackage) as SgaImage;
             if (cur == null) return;
             ViewModel.SelectedImage = cur;
         }
@@ -89,7 +89,7 @@ namespace SGToolsUI.View
                     progressView.Show();
                     progressView.MoveToClosestDisplayCenter();
                     int count = 0;
-                    string dirPath = Path.Combine(Constant.ImageSaveDirName, (AlbumListBox.SelectedItems[0] as SgaSpriteAbstract).DataDir);
+                    string dirPath = Path.Combine(Constant.ImageSaveDirName, (AlbumListBox.SelectedItems[0] as SgaSpriteAbstract)!.DataDir);
                     DirectoryEx.CreateDirectoryIfNotExist(dirPath);
                     foreach (SgaSpriteAbstract selectedItem in AlbumListBox.SelectedItems)
                     {
@@ -104,7 +104,7 @@ namespace SGToolsUI.View
                 }
                 else if (Keyboard.IsKeyDown(Key.C))
                 {
-                    (AlbumListBox.SelectedItems[0] as SgaSpriteAbstract).Bitmap.SaveToClipboard();
+                    (AlbumListBox.SelectedItems[0] as SgaSpriteAbstract)!.Bitmap.SaveToClipboard();
                     logBox.AddLog($"이미지를 클립보드에 저장하였습니다.");
                 }
             }
@@ -117,8 +117,8 @@ namespace SGToolsUI.View
             if (selectedCount == 0)
                 return;
             SgaSpriteAbstract sprite = AlbumListBox.SelectedItems[0] as SgaSpriteAbstract ?? throw new Exception("선택된 리스트박스 아이템을 SgaSprite로 캐스팅하는데 실패했습니다.");
-            SgaPackage sga = sprite.Parent.Parent;
-            SgaElementHeader header = sprite.Parent.Header;
+            SgaPackage sga = sprite.Parent!.Parent;
+            SgaElementHeader header = sprite.Parent!.Header;
 
             ViewModel.MainViewModel.Commander.SelectSgaPackage.Execute(sga);
             ViewModel.MainViewModel.Commander.SelectSgaElement.Execute(header);

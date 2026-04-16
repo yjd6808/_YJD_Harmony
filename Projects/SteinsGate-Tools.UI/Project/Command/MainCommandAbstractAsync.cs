@@ -15,7 +15,7 @@ namespace SGToolsUI.Command
         public MainViewModel ViewModel { get; }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public MainCommandAbstractAsync(MainViewModel _viewModel, string _description, Action<Exception> _errorHandler = null)
+        public MainCommandAbstractAsync(MainViewModel _viewModel, string _description, Action<Exception>? _errorHandler = null)
                 : base(_description, _errorHandler == null ? _viewModel.LogErrorHandler : _errorHandler)
         {
             ViewModel = _viewModel;

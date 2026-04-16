@@ -29,7 +29,7 @@ namespace SGToolsUI.Model.Backup
                 _action(child);
 
                 if (child is BackupTreeViewItemGroup)
-                    (child as BackupTreeViewItemGroup).ForEachRecursive(_action);
+                    (child as BackupTreeViewItemGroup)!.ForEachRecursive(_action);
             });
         }
     }

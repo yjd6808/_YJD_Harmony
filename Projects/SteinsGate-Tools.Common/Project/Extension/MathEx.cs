@@ -13,13 +13,13 @@ namespace SGToolsCommon.Extension
         //////////////////////////////////////////////////////////////////////////////////
         public static T Min<T>(params T[] _vals)
         {
-            return _vals.Min();
+            return _vals.Min()!;
         }
 
         //////////////////////////////////////////////////////////////////////////////////
         public static T Max<T>(params T[] _vals)
         {
-            return _vals.Max();
+            return _vals.Max()!;
         }
     }
 }

@@ -70,7 +70,7 @@ namespace SGToolsCommon.Extension
 
         //////////////////////////////////////////////////////////////////////////////////
         // 비동기버전은 지원안해서 만들어씀
-        public static Task SaveAsync(this Bitmap _bitmap, string _path, ImageFormat _format = null)
+        public static Task SaveAsync(this Bitmap _bitmap, string _path, ImageFormat? _format = null)
         {
             return Task.Run(() =>
             {

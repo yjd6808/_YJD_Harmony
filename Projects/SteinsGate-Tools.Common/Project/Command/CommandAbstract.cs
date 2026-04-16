@@ -33,7 +33,9 @@ namespace SGToolsCommon.Command
         //////////////////////////////////////////////////////////////////////////////////
         public abstract void Execute(object? _parameter);
 
+#pragma warning disable CS0067
         public event EventHandler? CanExecuteChanged;
+#pragma warning restore CS0067
 
         //////////////////////////////////////////////////////////////////////////////////
         public virtual void Dispose() { }

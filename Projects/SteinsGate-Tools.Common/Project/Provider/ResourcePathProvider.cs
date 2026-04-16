@@ -14,7 +14,7 @@ namespace SGToolsCommon.Provider
     {
         // private const string PackUrl = "pack://application:,,,/Resource";
         private const string PackUrl = "/SGToolsCommon;component/Resource/";
-        public string FileName { get; set; }
+        public string FileName { get; set; } = null!;
 
         //////////////////////////////////////////////////////////////////////////////////
         public override object ProvideValue(IServiceProvider _serviceProvider)

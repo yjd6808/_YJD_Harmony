@@ -14,13 +14,13 @@ namespace SGToolsCommon.Sga
 {
     public class SgaManager : Bindable
     {
-        private List<SgaPackage> packages_;
+        private List<SgaPackage>? packages_;
 
         public static SgaManager Instance = new();
-        public List<SgaPackage> Packages => packages_;
+        public List<SgaPackage>? Packages => packages_;
         public Dictionary<string, SgaPackage> PackageMap { get; } = new();
         public string SgaDirectory { get; set; } = string.Empty;
-        public Dispatcher Dispatcher { get; set; }
+        public Dispatcher Dispatcher { get; set; } = null!;
 
         //////////////////////////////////////////////////////////////////////////////////
         private SgaManager() {}
@@ -70,7 +70,7 @@ namespace SGToolsCommon.Sga
             if (!IsValidPackageIndex(_index))
                 throw new Exception("올바르지 않은 패키지 인덱스입니다.");
 
-            return Packages[_index];
+            return Packages![_index];
         }
 
         //////////////////////////////////////////////////////////////////////////////////
@@ -92,7 +92,7 @@ namespace SGToolsCommon.Sga
             => GetImg(_packageName, _imgName).GetSprite(_spriteIndex);
 
         //////////////////////////////////////////////////////////////////////////////////
-        public SgaSprite GetSpriteLink(string _packageName, string _imgName, int _spriteIndex)
+        public SgaSprite? GetSpriteLink(string _packageName, string _imgName, int _spriteIndex)
         {
             SgaImage img = GetImg(_packageName, _imgName);
             SgaSpriteAbstract sprite = img.GetSprite(_spriteIndex);
@@ -113,14 +113,14 @@ namespace SGToolsCommon.Sga
         //////////////////////////////////////////////////////////////////////////////////
         // 링크는 타겟 프레임 찾아서 비트맵 가져옴
         public BitmapSource GetBitmapSourceLink(string _packageName, string _imgName, int _spriteIndex)
-            => GetSpriteLink(_packageName, _imgName, _spriteIndex).Source;
+            => GetSpriteLink(_packageName, _imgName, _spriteIndex)!.Source;
 
         //////////////////////////////////////////////////////////////////////////////////
         public void NotifyUpdateList()
             => OnPropertyChanged(nameof(Packages));
 
         //////////////////////////////////////////////////////////////////////////////////
-        private bool IsValidPackageIndex(int _index) => _index >= 0 && _index < Packages.Count;
+        private bool IsValidPackageIndex(int _index) => _index >= 0 && _index < (Packages?.Count ?? 0);
 
         //////////////////////////////////////////////////////////////////////////////////
         private bool IsValidPackageName(string _packageName) => PackageMap.ContainsKey(_packageName);

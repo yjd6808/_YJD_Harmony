@@ -14,16 +14,16 @@ namespace SGToolsCommon.Sga
 {
     public class SgaPackage : Bindable
     {
-        private Stream readStream_;
-        private string path_;
-        private Dictionary<int, SgaElement> elementMap_;
+        private Stream readStream_ = null!;
+        private string path_ = null!;
+        private Dictionary<int, SgaElement> elementMap_ = null!;
         private int elementCount_;
         private int packageIndex_;
         private bool indexLoaded_;
 
         // Lazy Loading 용
-        private List<SgaElementHeader> elementHeaderList_;
-        private Dictionary<string, int> elementNameToIndexMap_;
+        private List<SgaElementHeader> elementHeaderList_ = null!;
+        private Dictionary<string, int> elementNameToIndexMap_ = null!;
 
         public Stream ReadStream => readStream_;
         public string Path => path_;

@@ -18,7 +18,7 @@ namespace SGToolsUI.ModelTemplate.Main
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        private bool TryCast(object _sender, out Image _img, out SGUISprite _sprite)
+        private bool TryCast(object _sender, out Image? _img, out SGUISprite? _sprite)
         {
             _img = _sender as Image;
             _sprite = null;
@@ -32,7 +32,7 @@ namespace SGToolsUI.ModelTemplate.Main
         //////////////////////////////////////////////////////////////////////////////////
         private void SpriteImage_OnLoaded(object _sender, RoutedEventArgs _e)
         {
-            if (!TryCast(_sender, out Image img, out SGUISprite sprite))
+            if (!TryCast(_sender, out Image? img, out SGUISprite? sprite))
                 return;
         }
     }

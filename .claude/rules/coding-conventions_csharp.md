@@ -187,8 +187,40 @@ private List<SgaElementHeader> elementHeaderList_;
 
 **Nullable Reference Types:**
 ```csharp
+// 이벤트 / 콜백
 public event PropertyChangedEventHandler? PropertyChanged;
 private Action<Exception>? errorHandler_;
+
+// null이 될 수 있는 모든 참조 타입 필드 / 프로퍼티에 ? 명시
+private ScrollViewer? scrollViewer_;
+public Brush? Foreground { get; set; } = null;
+public FontFamily? FontFamily { get; set; } = null;
+public Action? Click { get; set; } = null;
+public ContextMenu? LogContextMenu { get; set; }
+
+// null이 될 수 있는 반환 타입
+public RTBLogItem? Find(Func<RTBLogItem, bool> _predicate) => ...;
+private ScrollViewer? GetScrollViewer() => ...;
+private RTBLogItemElement? HitTestElement(...) => ...;
+
+// null이 될 수 있는 파라미터
+public void WriteLine(string _text, RTBTextOption? _option = null) { }
+public void MergeFrom(RTBTextOption? _override) { }
+public void Select(RTBLogItem? _item) { }
+public string GetPlainText(RTBLogItem? _item) => _item?.PlainText ?? string.Empty;
+```
+
+**Nullable 적용 기준:**
+- 참조 타입 필드/프로퍼티의 기본값이 `null`이면 반드시 `?` 명시
+- 메서드 반환 타입이 `null`을 반환할 수 있으면 반드시 `?` 명시 (예: `FirstOrDefault`, `VisualTreeHelper 탐색` 등)
+- 파라미터가 `null` 허용인 경우 `?` 명시 (특히 `= null` 기본값 파라미터)
+- null이 **절대 될 수 없는** 참조 타입은 `?` 생략 (예: 생성자에서 반드시 초기화되는 필드)
+- null 단언 연산자(`!`)는 `null`이 아님이 **논리적으로 보장**될 때만 사용
+
+```csharp
+// null 단언: HasClick 검사 후 Click이 null이 아님이 보장됨
+if (hit.Option.HasClick && !hit.Option.IsLink)
+    hit.Option.Click!();
 ```
 
 **ref / out 파라미터:**

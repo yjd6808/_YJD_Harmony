@@ -61,7 +61,7 @@ namespace SGToolsCommon
         //////////////////////////////////////////////////////////////////////////////////
         private static void OnNotifyPropertyChanged(DependencyObject _d, DependencyPropertyChangedEventArgs _e)
         {
-            UIElement element = _d as UIElement;
+            UIElement? element = _d as UIElement;
             if (element != null && _e.NewValue != null)
             {
                 if ((bool)_e.NewValue)
@@ -92,7 +92,7 @@ namespace SGToolsCommon
         //////////////////////////////////////////////////////////////////////////////////
         private static void element_MouseDown(object _sender, MouseButtonEventArgs _e)
         {
-            UIElement element = _sender as UIElement;
+            UIElement? element = _sender as UIElement;
             if (element != null)
                 SetIsMouseDown(element, true);
         }
@@ -100,7 +100,7 @@ namespace SGToolsCommon
         //////////////////////////////////////////////////////////////////////////////////
         private static void element_MouseLeftButtonDown(object _sender, MouseButtonEventArgs _e)
         {
-            UIElement element = _sender as UIElement;
+            UIElement? element = _sender as UIElement;
             if (element != null)
                 SetIsMouseLeftButtonDown(element, true);
         }
@@ -108,7 +108,7 @@ namespace SGToolsCommon
         //////////////////////////////////////////////////////////////////////////////////
         private static void element_MouseLeave(object _sender, MouseEventArgs _e)
         {
-            UIElement element = _sender as UIElement;
+            UIElement? element = _sender as UIElement;
             if (element != null)
             {
                 SetIsMouseDown(element, false);
@@ -119,7 +119,7 @@ namespace SGToolsCommon
         //////////////////////////////////////////////////////////////////////////////////
         private static void element_MouseUp(object _sender, MouseButtonEventArgs _e)
         {
-            UIElement element = _sender as UIElement;
+            UIElement? element = _sender as UIElement;
             if (element != null)
             {
                 SetIsMouseDown(element, false);

@@ -11,7 +11,7 @@ namespace SGToolsUI.Model.Main
 {
     public class CanvasAnchor : CanvasEllipse
     {
-        private SGUIGroup target_;
+        private SGUIGroup? target_;
 
         //////////////////////////////////////////////////////////////////////////////////
         public CanvasAnchor(Rect _rect, int _thickness, Brush _stroke, Brush _fill) : base(_rect, _thickness, _stroke, _fill)
@@ -19,7 +19,7 @@ namespace SGToolsUI.Model.Main
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public SGUIGroup Target
+        public SGUIGroup? Target
         {
             get => target_;
             set

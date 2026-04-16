@@ -12,7 +12,7 @@ namespace SGToolsCommon.Sga
     {
         protected bool dataLoaded_;
         protected bool indexLoaded_;
-        protected SgaPackage parent_;
+        protected SgaPackage parent_ = null!;
 
         public SgaPackage Parent => parent_;
         public SgaElementType Type { get; }

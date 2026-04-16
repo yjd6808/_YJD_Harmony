@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using SGToolsCommon;
-using SGToolsCommon.CustomControl;
-using SGToolsCommon.CustomView;
+using SGToolsCommon.Customize.Control;
+using SGToolsCommon.Customize.View;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Model;
 using SGToolsCommon.Primitive;
@@ -40,9 +40,9 @@ namespace SGToolsUI.ViewModel
         private bool isEventMode_ = false;
         private SgaPackage selectedPackage_ = new();
         private SgaImage selectedImage_ = new();
-        private IKeyboardInputReceiver selectedKeyboardInputReceiver_;
+        private IKeyboardInputReceiver? selectedKeyboardInputReceiver_;
         private SgaSpriteAbstract selectedSprite_ = new SgaSprite();
-        private SGUIGroupMaster groupMaster_;
+        private SGUIGroupMaster groupMaster_ = null!;
 
         //////////////////////////////////////////////////////////////////////////////////
         public MainViewModel()
@@ -100,6 +100,7 @@ namespace SGToolsUI.ViewModel
                 return;
             }
 
+            #pragma warning disable CS0162
             #region DebugElements
 
             this.GroupMaster = SGUIGroupMaster.Create(this);
@@ -216,9 +217,10 @@ namespace SGToolsUI.ViewModel
             DebugManualUpdate(this.GroupMaster);
 
             #endregion
+            #pragma warning restore CS0162
         }
 
-        public MainView View { get; set; }
+        public MainView View { get; set; } = null!;
         public Setting Setting { get; set; }
         public MainCommandCenter Commander { get; }
         public SgaManager PackManager { get; }

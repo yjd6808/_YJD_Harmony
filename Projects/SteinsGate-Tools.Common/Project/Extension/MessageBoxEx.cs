@@ -12,7 +12,7 @@ namespace SGToolsCommon.Extension
     public static class MessageBoxEx
     {
         //////////////////////////////////////////////////////////////////////////////////
-        public static MessageBoxResult ShowTopMost(string _message, string _caption = null, MessageBoxButton _button = MessageBoxButton.OK, MessageBoxImage _icon = MessageBoxImage.None)
+        public static MessageBoxResult ShowTopMost(string _message, string? _caption = null, MessageBoxButton _button = MessageBoxButton.OK, MessageBoxImage _icon = MessageBoxImage.None)
         {
             Window parentWindow = Application.Current.MainWindow;
 
@@ -32,11 +32,28 @@ namespace SGToolsCommon.Extension
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public static void ShowTopMostMessageBox(this Window _owner, string _message, string _caption = null, MessageBoxButton _button = MessageBoxButton.OK, MessageBoxImage _icon = MessageBoxImage.None)
+        public static void ShowTopMostMessageBox(this Window _owner, string _message, string? _caption = null, MessageBoxButton _button = MessageBoxButton.OK, MessageBoxImage _icon = MessageBoxImage.None)
         {
             _owner.Topmost = true;
             MessageBox.Show(_owner, _message, _caption, _button, _icon);
             _owner.Topmost = false;
         }
+
+        public static void ShowError(string _message, string _caption = "오류")
+        {
+            MessageBox.Show(_message, _caption, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public static void ShowInfo(string _message, string _caption = "정보")
+        {
+            MessageBox.Show(_message, _caption, MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        public static bool ShowYesNo(string _message, string _caption = "질문")
+        {
+            MessageBoxResult result = MessageBox.Show(_message, _caption, MessageBoxButton.YesNo, MessageBoxImage.Question);
+            return result == MessageBoxResult.Yes;
+        }
     }
 }
+

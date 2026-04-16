@@ -1,0 +1,6 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <!-- WPF DefaultStyleKey 탐색용 stub. 실제 내용은 Customize/Style/Generic.xaml 에 있음. -->
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/SGToolsCommon;component/Customize/Style/Generic.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

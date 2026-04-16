@@ -1,0 +1,18 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cus_ctrl="clr-namespace:SGToolsCommon.Customize.Control">
+
+    <Style x:Key="RTBLogViewer" TargetType="{x:Type cus_ctrl:RTBLogViewer}">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="#FFAAAAAA"/>
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="SelectionBrush" Value="#440078D7"/>
+        <Setter Property="ContextMenu" Value="{x:Null}"/>
+    </Style>
+
+</ResourceDictionary>

@@ -24,7 +24,7 @@ namespace SGToolsUI.Command.MainViewCommand.Control
         //////////////////////////////////////////////////////////////////////////////////
         public override void Execute(object? _parameter)
         {
-            MouseEventArgs mouseEventArgs = _parameter as MouseEventArgs;
+            MouseEventArgs? mouseEventArgs = _parameter as MouseEventArgs;
 
             if (mouseEventArgs == null)
                 return;

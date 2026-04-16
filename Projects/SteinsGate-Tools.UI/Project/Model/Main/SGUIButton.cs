@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 3/1/2023 11:23:45 AM
  *
@@ -7,7 +7,6 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Media.Imaging;
-using MoreLinq;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
@@ -203,18 +202,18 @@ namespace SGToolsUI.Model.Main
             base.ParseJObject(_root);
 
             _root.TryGetValueDefault(JsonLinearDodgeKey, out linearDodge_, false);
-            _root.TryGetValueDefault(JsonSgaKey, out string sgaName, string.Empty);
+            _root.TryGetValueDefault(JsonSgaKey, out string? sgaName, string.Empty);
 
-            if (sgaName.Length == 0)
+            if (sgaName == null || sgaName.Length == 0)
                 return;
 
-            string imgName = (string)_root[JsonImgKey];
+            string imgName = (string)_root[JsonImgKey]!;
 
             SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
             SgaPackage sga = img.Parent;
 
             int[] sprites = new int[StateCount];
-            StringEx.ParseIntNumberN((string)_root[JsonSpriteKey], sprites);
+            StringEx.ParseIntNumberN((string)_root[JsonSpriteKey]!, sprites);
             SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in sprites_, linearDodge_);
         }
 

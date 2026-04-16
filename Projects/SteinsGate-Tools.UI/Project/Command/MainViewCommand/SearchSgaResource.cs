@@ -37,7 +37,7 @@ namespace SGToolsUI.Command.MainViewCommand
             SgaManager manager = ViewModel.PackManager;
 
             ListBox packageListBox = ViewModel.View.PackageListBox;
-            List<SgaPackage> packageList = manager.Packages;
+            List<SgaPackage> packageList = manager.Packages!;
 
             // 엘리먼트 우선검색
             for (int i = 0; i < packageList.Count; ++i)
@@ -50,17 +50,17 @@ namespace SGToolsUI.Command.MainViewCommand
                     {
                         saveDict_.Add(header, header);
                         package.LoadElementIfNotLoaded(header.IndexInPackage, true);
-                        SgaImage image = package.GetElement(header.IndexInPackage) as SgaImage;
+                        SgaImage? image = package.GetElement(header.IndexInPackage) as SgaImage;
 
-                        ViewModel.Commander.SelectSgaPackage.Execute(image.Parent);
+                        ViewModel.Commander.SelectSgaPackage.Execute(image!.Parent);
                         ViewModel.Commander.SelectSgaElement.Execute(header);
 
-                        packageListBox.ScrollIntoView(image.Parent);
+                        packageListBox.ScrollIntoView(image!.Parent);
                         ViewModel.View.ElementListBox.ScrollIntoView(header);
 
                         if (ViewModel.AlbumView.IsVisible)
                         {
-                            ViewModel.AlbumView.PackageListBox.ScrollIntoView(image.Parent);
+                            ViewModel.AlbumView.PackageListBox.ScrollIntoView(image!.Parent);
                             ViewModel.AlbumView.ElementListBox.ScrollIntoView(header);
                         }
                         return;

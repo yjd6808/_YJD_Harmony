@@ -176,7 +176,7 @@ namespace SGToolsUI.Model.Main
             get
             {
                 if (sprite_.IsNull) return 1.0;
-                return (double)visualSize_.Width / sprite_.Sprite.Width;
+                return (double)visualSize_.Width / sprite_.Sprite!.Width;
             }
         }
 
@@ -186,7 +186,7 @@ namespace SGToolsUI.Model.Main
             get
             {
                 if (sprite_.IsNull) return 1.0;
-                return (double)visualSize_.Height / sprite_.Sprite.Height;
+                return (double)visualSize_.Height / sprite_.Sprite!.Height;
             }
         }
 
@@ -202,7 +202,7 @@ namespace SGToolsUI.Model.Main
                 sprite_ = value;
 
                 if (!sprite_.IsNull)
-                    visualSize_ = sprite_.Sprite.Rect.Size;
+                    visualSize_ = sprite_.Sprite!.Rect.Size;
                 else
                     visualSize_ = Constant.DefaultVisualSize;
 
@@ -253,29 +253,29 @@ namespace SGToolsUI.Model.Main
         {
             base.ParseJObject(_root);
 
-            string sgaName = (string)_root[JsonSgaKey];
+            string sgaName = (string)_root[JsonSgaKey]!;
 
             if (sgaName == string.Empty)
                 return;
 
-            string imgName = (string)_root[JsonImgKey];
-            string sizeString = (string)_root[JsonVisualSizeKey];
+            string imgName = (string)_root[JsonImgKey]!;
+            string sizeString = (string)_root[JsonVisualSizeKey]!;
 
             visualSize_ = SizeEx.ParseFullString(sizeString);
 
             SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
             SgaPackage sga = img.Parent;
-            int spriteIndex = (int)_root[JsonSpriteKey];
+            int spriteIndex = (int)_root[JsonSpriteKey]!;
 
             if (spriteIndex == Constant.InvalidValue)
                 return;
 
-            SgaSprite sprite = img.GetSprite(spriteIndex) as SgaSprite;
+            SgaSprite? sprite = img.GetSprite(spriteIndex) as SgaSprite;
             if (sprite == null)
                 throw new Exception($"{sgaName} -> {imgName} -> {spriteIndex}가 SgaSprite 타입이 아닙니다.");
             sprite_ = new SGUISpriteInfo(sga, img, sprite);
             percent_ = 70.0;
-            direction_ = (ProgressIncreaseDirection)(int)_root[JsonDirectionKey];
+            direction_ = (ProgressIncreaseDirection)(int)_root[JsonDirectionKey]!;
         }
     }
 }

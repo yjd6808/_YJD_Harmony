@@ -36,7 +36,7 @@ namespace SGToolsUI.Model.Main
         private FontType font_;
         private int fontSize_;
         private Color fontColor_;
-        private string text_;
+        private string text_ = string.Empty;
         private bool textWrap_;
         private VAlignment textVAlign_;
         private HAlignment textHAlign_;
@@ -189,18 +189,18 @@ namespace SGToolsUI.Model.Main
         {
             base.ParseJObject(_root);
 
-            string sizeString = (string)_root[JsonVisualSizeKey];
+            string sizeString = (string)_root[JsonVisualSizeKey]!;
             visualSize_ = SizeEx.ParseFullString(sizeString);
-            string fontFileName = (string)_root[JsonFontKey];
+            string fontFileName = (string)_root[JsonFontKey]!;
             font_ = (FontType)Enum.Parse(typeof(FontType), Path.GetFileNameWithoutExtension(fontFileName));
-            fontSize_ = (int)_root[JsonFontSizeKey];
+            fontSize_ = (int)_root[JsonFontSizeKey]!;
 
-            string fontColorString = (string)_root[JsonFontColorKey];
+            string fontColorString = (string)_root[JsonFontColorKey]!;
             fontColor_ = ColorEx.ParseFullString4B(fontColorString);
-            text_ = (string)_root[JsonTextKey];
-            textWrap_ = (bool)_root[JsonTextWrapKey];
-            textVAlign_ = (VAlignment)(int)_root[JsonTextVAlignKey];
-            textHAlign_ = (HAlignment)(int)_root[JsonTextHAlignKey];
+            text_ = (string)_root[JsonTextKey]!;
+            textWrap_ = (bool)_root[JsonTextWrapKey]!;
+            textVAlign_ = (VAlignment)(int)_root[JsonTextVAlignKey]!;
+            textHAlign_ = (HAlignment)(int)_root[JsonTextHAlignKey]!;
         }
 
         //////////////////////////////////////////////////////////////////////////////////

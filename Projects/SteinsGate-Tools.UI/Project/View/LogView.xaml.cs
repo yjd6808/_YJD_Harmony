@@ -8,8 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using MoreLinq.Extensions;
-using SGToolsCommon.CustomControl;
+using SGToolsCommon.Customize.Control;
 using SGToolsCommon.Extension;
 
 namespace SGToolsUI.View
@@ -37,7 +36,7 @@ namespace SGToolsUI.View
         //////////////////////////////////////////////////////////////////////////////////
         private void LogBox_OnLogClick(object _sender, RoutedEventArgs _e)
         {
-            object data = ((LogClickEventArgs)_e).LogData.Data;
+            object? data = ((LogClickEventArgs)_e).LogData!.Data;
 
             if (data == null)
                 return;

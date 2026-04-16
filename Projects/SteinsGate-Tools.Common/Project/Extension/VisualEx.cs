@@ -4,9 +4,12 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -35,16 +38,28 @@ namespace SGToolsCommon.Extension
 
         //////////////////////////////////////////////////////////////////////////////////
         // 복붙
-        public static T FindParent<T>(this DependencyObject _child) where T : DependencyObject
+        public static T? FindParent<T>(this DependencyObject _child) where T : DependencyObject
         {
             DependencyObject parentObject = VisualTreeHelper.GetParent(_child);
             if (parentObject == null) return null;
 
-            T parent = parentObject as T;
+            T? parent = parentObject as T;
             if (parent != null)
                 return parent;
             else
                 return FindParent<T>(parentObject);
+        }
+
+        public static T? FindParentFrameworkElement<T>(this FrameworkElement _child) where T : FrameworkElement
+        {
+            var fe = _child.Parent as FrameworkElement;
+            if (fe == null)
+                return null;
+
+            if (fe is T parent)
+                return parent;
+
+            return FindParentFrameworkElement<T>(fe);
         }
 
         //////////////////////////////////////////////////////////////////////////////////
@@ -60,7 +75,7 @@ namespace SGToolsCommon.Extension
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public static T FindChild<T>(this DependencyObject _depObj)
+        public static T? FindChild<T>(this DependencyObject _depObj)
             where T : DependencyObject
         {
             if (_depObj == null) return null;
@@ -69,10 +84,39 @@ namespace SGToolsCommon.Extension
             {
                 DependencyObject child = VisualTreeHelper.GetChild(_depObj, i);
 
-                T result = (child as T) ?? FindChild<T>(child);
+                T? result = (child as T) ?? FindChild<T>(child);
                 if (result != null) return result;
             }
             return null;
+        }
+
+        public static T? FindChild<T>(this FrameworkElement _frameworkObject, string _childName) where T : FrameworkElement
+        {
+            int childrenCount = VisualTreeHelper.GetChildrenCount(_frameworkObject);
+            for (int i = 0; i < childrenCount; i++)
+            {
+                var child = VisualTreeHelper.GetChild(_frameworkObject, i) as FrameworkElement;
+                if (child == null) continue;
+                if (child is T result)
+                {
+                    if (result.Name == _childName)
+                        return result;
+                }
+                return FindChild<T>(child, _childName);
+            }
+            return null;
+        }
+
+        public static IEnumerable<T> FindChildren<T>(this DependencyObject _depObj) where T : DependencyObject
+        {
+            if (_depObj == null) yield return (T)Enumerable.Empty<T>();
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(_depObj); i++)
+            {
+                DependencyObject ithChild = VisualTreeHelper.GetChild(_depObj, i);
+                if (ithChild == null) continue;
+                if (ithChild is T t) yield return t;
+                foreach (T childOfChild in FindChildren<T>(ithChild)) yield return childOfChild;
+            }
         }
 
         //////////////////////////////////////////////////////////////////////////////////
@@ -106,7 +150,7 @@ namespace SGToolsCommon.Extension
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public static HitResultEx<TItem, TDataContext> HitTest<T, TItem, TDataContext>(this T _visual, Point _posOnVisual)
+        public static HitResultEx<TItem, TDataContext>? HitTest<T, TItem, TDataContext>(this T _visual, Point _posOnVisual)
             where T : Visual
             where TItem : Control
             where TDataContext : class
@@ -116,7 +160,7 @@ namespace SGToolsCommon.Extension
             if (hit.VisualHit == null)
                 return null;
 
-            TItem hitItem = hit.VisualHit.FindParent<TItem>();
+            TItem? hitItem = hit.VisualHit.FindParent<TItem>();
 
             if (hitItem == null)
                 return null;
@@ -124,12 +168,12 @@ namespace SGToolsCommon.Extension
             if (hitItem.DataContext is not TDataContext)
                 throw new Exception($"선택한 {typeof(T).Namespace} 아이템의 데이터컨텍스트가 설정되어있지 않습니다.");
 
-            TDataContext hitDataContext = hitItem.DataContext as TDataContext;
-            return new HitResultEx<TItem, TDataContext>(hitItem, hitDataContext);
+            TDataContext? hitDataContext = hitItem.DataContext as TDataContext;
+            return new HitResultEx<TItem, TDataContext>(hitItem, hitDataContext!);
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public static HitResult<TItem> HitTest<T, TItem>(this T _visual, Point _posOnVisual)
+        public static HitResult<TItem>? HitTest<T, TItem>(this T _visual, Point _posOnVisual)
             where T : Visual
             where TItem : Control
         {
@@ -138,7 +182,7 @@ namespace SGToolsCommon.Extension
             if (hit.VisualHit == null)
                 return null;
 
-            TItem hitItem = hit.VisualHit.FindParent<TItem>();
+            TItem? hitItem = hit.VisualHit.FindParent<TItem>();
 
             if (hitItem == null)
                 return null;
@@ -168,6 +212,39 @@ namespace SGToolsCommon.Extension
             FocusManager.SetFocusedElement(FocusManager.GetFocusScope(_element), null);
             // Kill keyboard focus
             Keyboard.ClearFocus();
+        }
+
+        // UIElement로부터 스크롤뷰어 얻기
+        // @참고: https://stackoverflow.com/questions/41132649/get-datagrids-scrollviewer
+        public static ScrollViewer? GetScrollViewerCommon(this UIElement _element)
+        {
+            if (_element == null)
+                return null;
+
+            ScrollViewer? retour = null;
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(_element) && retour == null; i++)
+            {
+                if (VisualTreeHelper.GetChild(_element, i) is ScrollViewer)
+                {
+                    retour = (ScrollViewer)(VisualTreeHelper.GetChild(_element, i));
+                }
+                else
+                {
+                    UIElement? uiElement = VisualTreeHelper.GetChild(_element, i) as UIElement;
+                    if (uiElement == null)
+                        continue;
+
+                    retour = GetScrollViewerCommon(uiElement);
+                }
+            }
+            return retour;
+        }
+
+        // 스크롤뷰어로부터 스크롤바 얻기
+        // @참고: https://stackoverflow.com/questions/7164439/wpf-how-to-extract-scrollbar-from-scrollviewer-programmatically
+        public static ScrollBar? GetScrollBar(this ScrollViewer _element)
+        {
+            return _element.Template.FindName("PART_VerticalScrollBar", _element) as ScrollBar;
         }
     }
 }

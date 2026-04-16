@@ -16,7 +16,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Media;
-using MoreLinq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon;
@@ -45,10 +44,10 @@ namespace SGToolsUI.FileSystem
             => viewModel_ = _viewModel;
 
         //////////////////////////////////////////////////////////////////////////////////
-        public async Task<Exception> SaveAsync(string _uiToolDataPath, string _gameDataPath = null, bool _minify = false)
+        public async Task<Exception?> SaveAsync(string? _uiToolDataPath, string? _gameDataPath = null, bool _minify = false)
         {
             // 저장은 다른쓰레드에서 수행토록 한다.
-            Exception? e = await Task.Run(async () =>
+            Exception? e = await Task.Run(() =>
             {
                 JObject root = new JObject();
                 JArray elementsRoot = new JArray();
@@ -59,8 +58,8 @@ namespace SGToolsUI.FileSystem
 
                 try
                 {
-                    string uiToolDataDir = _uiToolDataPath != null ? Path.GetDirectoryName(_uiToolDataPath) : string.Empty;
-                    string gameDataDir = _gameDataPath != null ? Path.GetDirectoryName(_gameDataPath) : string.Empty;
+                    string? uiToolDataDir = _uiToolDataPath != null ? Path.GetDirectoryName(_uiToolDataPath) : string.Empty;
+                    string? gameDataDir = _gameDataPath != null ? Path.GetDirectoryName(_gameDataPath) : string.Empty;
 
                     if (uiToolDataDir != string.Empty && !Directory.Exists(uiToolDataDir))
                         throw new Exception($"[{uiToolDataDir}] 경로가 존재하지 않습니다. [1]");
@@ -165,7 +164,7 @@ namespace SGToolsUI.FileSystem
             DirectoryEx.CreateDirectoryIfNotExist(saveDir);
             string savePath = Path.Join(saveDir, fileName);
 
-            Exception e = await SaveAsync(savePath, null, false);
+            Exception? e = await SaveAsync(savePath, null, false);
             if (e == null)
                 viewModel_.LogBox.AddDispatchedLog($"{_tag} 백업완료", (LogType.Path, (object)savePath), IconCommonType.Backup, Brushes.RoyalBlue);
             else
@@ -173,12 +172,12 @@ namespace SGToolsUI.FileSystem
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public async Task<Exception> SaveAutoAsync(SaveMode _mode, bool _minify)
+        public async Task<Exception?> SaveAutoAsync(SaveMode _mode, bool _minify)
         {
             string uiToolDataPath = Path.Combine(Environment.CurrentDirectory, Constant.UIToolDataFileName);
             string gameDataPath = Path.Combine(viewModel_.Setting.OutputJsonPath, Constant.GameDataFileName);
 
-            Exception e;
+            Exception? e;
             string msg;
             List<string> paths = new(2);
             switch (_mode)
@@ -212,13 +211,13 @@ namespace SGToolsUI.FileSystem
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public Task<Exception> SaveUIToolDataAsync(string _path, bool _minify)
+        public Task<Exception?> SaveUIToolDataAsync(string _path, bool _minify)
         {
             return SaveAsync(_path, null, _minify);
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public Task<Exception> SaveGameDataAsync(string _path, bool _minify)
+        public Task<Exception?> SaveGameDataAsync(string _path, bool _minify)
         {
             return SaveAsync(null, _path, _minify);
         }

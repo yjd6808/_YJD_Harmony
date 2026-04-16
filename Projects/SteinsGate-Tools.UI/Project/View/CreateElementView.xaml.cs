@@ -43,7 +43,7 @@ namespace SGToolsUI.View
         //////////////////////////////////////////////////////////////////////////////////
         private async void CreateElement_OnClick(object _sender, RoutedEventArgs _e)
         {
-            Button btn = _sender as Button;
+            Button? btn = _sender as Button;
             if (btn is null) return;
 
             SGUIElementType type = (SGUIElementType)btn.Tag;
@@ -80,18 +80,18 @@ namespace SGToolsUI.View
         //////////////////////////////////////////////////////////////////////////////////
         private void ApplyButton(SGUIButton _button)
         {
-            SgaImage img = DroppedSprite.Parent;
+            SgaImage img = DroppedSprite.Parent!;
 
             _button.Normal = DroppedSpriteInfo;
 
             if (img.IsValidSpriteIndex(DroppedSprite.FrameIndex + 1))
-                _button.Over = new SGUISpriteInfo(img.GetSprite(DroppedSprite.FrameIndex + 1) as SgaSprite);
+                _button.Over = new SGUISpriteInfo((img.GetSprite(DroppedSprite.FrameIndex + 1) as SgaSprite)!);
 
             if (img.IsValidSpriteIndex(DroppedSprite.FrameIndex + 2))
-                _button.Pressed = new SGUISpriteInfo(img.GetSprite(DroppedSprite.FrameIndex + 2) as SgaSprite);
+                _button.Pressed = new SGUISpriteInfo((img.GetSprite(DroppedSprite.FrameIndex + 2) as SgaSprite)!);
 
             if (img.IsValidSpriteIndex(DroppedSprite.FrameIndex + 3))
-                _button.Disabled = new SGUISpriteInfo(img.GetSprite(DroppedSprite.FrameIndex + 3) as SgaSprite);
+                _button.Disabled = new SGUISpriteInfo((img.GetSprite(DroppedSprite.FrameIndex + 3) as SgaSprite)!);
         }
     }
 }

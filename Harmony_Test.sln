@@ -80,7 +80,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sgts", "Projects\sgts\Proje
 		{59C54A2A-4525-46F7-9F25-CCCA6D58151F} = {59C54A2A-4525-46F7-9F25-CCCA6D58151F}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sgtc", "Projects\sgtc\Projects\sgtc.vcxproj", "{F0278B0E-1014-4730-B622-67B9073F8C60}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sgtc", "Projects\sgtc\Project\sgtc.vcxproj", "{F0278B0E-1014-4730-B622-67B9073F8C60}"
 	ProjectSection(ProjectDependencies) = postProject
 		{59C54A2A-4525-46F7-9F25-CCCA6D58151F} = {59C54A2A-4525-46F7-9F25-CCCA6D58151F}
 	EndProjectSection

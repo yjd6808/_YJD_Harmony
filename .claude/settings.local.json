@@ -12,7 +12,10 @@
       "Bash(shuf)",
       "Read(//d/백업/던파 구클/설정 파일들/src/**)",
       "Bash(python:*)",
-      "Bash(cmd.exe /c \"cd /d D:\\\\Programming\\\\MyProjects\\\\_DevCpp\\\\UltimateHarmony && msbuild Projects/jcr/Project/jcr.vcxproj /p:Configuration=Debug /p:Platform=x64 /v:minimal 2>&1\")"
+      "Bash(cmd.exe /c \"cd /d D:\\\\Programming\\\\MyProjects\\\\_DevCpp\\\\UltimateHarmony && msbuild Projects/jcr/Project/jcr.vcxproj /p:Configuration=Debug /p:Platform=x64 /v:minimal 2>&1\")",
+      "Read(//c/Users/jdyun/AppData/Roaming/Claude/**)",
+      "Read(//c/Users/jdyun/.claude/**)",
+      "Read(//c/Users/jdyun/**)"
     ],
     "deny": [],
     "ask": [

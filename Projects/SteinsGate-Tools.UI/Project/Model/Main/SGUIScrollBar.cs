@@ -541,20 +541,20 @@ namespace SGToolsUI.Model.Main
         {
             base.ParseJObject(_root);
 
-            string sgaName = (string)_root[JsonSgaKey];
+            string sgaName = (string)_root[JsonSgaKey]!;
 
             if (sgaName == string.Empty)
                 return;
 
-            string imgName = (string)_root[JsonImgKey];
-            string trackSizeString = (string)_root[JsonTrackSizeKey];
+            string imgName = (string)_root[JsonImgKey]!;
+            string trackSizeString = (string)_root[JsonTrackSizeKey]!;
 
             IntSize trackSize = SizeEx.ParseFullString(trackSizeString);
 
             SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
             SgaPackage sga = img.Parent;
             int[] sprites = new int[TextureCount];
-            StringEx.ParseIntNumberN((string)_root[JsonSpriteKey], sprites);
+            StringEx.ParseIntNumberN((string)_root[JsonSpriteKey]!, sprites);
             SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in sprites_);
 
             int height = 0;

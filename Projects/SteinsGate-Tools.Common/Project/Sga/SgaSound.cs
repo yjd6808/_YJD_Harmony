@@ -10,9 +10,9 @@ namespace SGToolsCommon.Sga
 {
     public class SgaSound : SgaElement
     {
-        private byte[] data_;
+        private byte[]? data_;
 
-        public byte[] Data => data_;
+        public byte[]? Data => data_;
 
         //////////////////////////////////////////////////////////////////////////////////
         public SgaSound(SgaPackage _parent, SgaElementHeader _header, int _version, int _indexOffset, int _indexLength)

@@ -12,7 +12,7 @@ namespace SGToolsCommon.Sga
         public int NextOffset { get; set; }
         public int IndexInPackage { get; set; }
         public int Length { get; set; }
-        public string Name { get; set; }
-        public string NameWithoutExt { get; set; }
+        public string Name { get; set; } = null!;
+        public string NameWithoutExt { get; set; } = null!;
     }
 }

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 3/1/2023 9:16:47 AM
  *
@@ -10,7 +10,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using MoreLinq;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
@@ -116,7 +115,7 @@ namespace SGToolsUI.Model.Main
             get
             {
                 if (ChildCount == 0)
-                    return null;
+                    return null!;
 
                 SGUIElement lastChild = Children[ChildCount - 1];
 
@@ -170,7 +169,7 @@ namespace SGToolsUI.Model.Main
 
             for (int i = 0; i < children_.Count; ++i)
             {
-                SGUIElement cloned = children_[i].Clone() as SGUIElement;
+                SGUIElement? cloned = children_[i].Clone() as SGUIElement;
                 if (cloned == null)
                     throw new Exception("클론한 갹체가 null입니다.");
                 group.children_.Add(cloned);
@@ -338,7 +337,7 @@ namespace SGToolsUI.Model.Main
         public override void ParseJObject(JObject _root)
         {
             base.ParseJObject(_root);
-            visualSize_ = SizeEx.ParseFullString((string)_root[JsonVisualSizeKey]);
+            visualSize_ = SizeEx.ParseFullString((string)_root[JsonVisualSizeKey]!);
         }
 
         // 기본적으로 엘리먼트의 이벤트는 "전파"되도록한다.

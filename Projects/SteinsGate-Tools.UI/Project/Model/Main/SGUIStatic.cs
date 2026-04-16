@@ -67,7 +67,7 @@ namespace SGToolsUI.Model.Main
         {
             base.ParseJObject(_root);
 
-            string sizeString = (string)_root[JsonVisualSizeKey];
+            string sizeString = (string)_root[JsonVisualSizeKey]!;
             visualSize_ = SizeEx.ParseFullString(sizeString);
         }
 

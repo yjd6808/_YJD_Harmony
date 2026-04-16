@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 3/8/2023 6:31:58 PM
  *
@@ -7,7 +7,6 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Media.Imaging;
-using MoreLinq;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
@@ -283,12 +282,12 @@ namespace SGToolsUI.Model.Main
             base.ParseJObject(_root);
 
             _root.TryGetValueDefault(JsonLinearDodgeKey, out linearDodge_, false);
-            string sgaName = (string)_root[JsonSgaKey];
+            string sgaName = (string)_root[JsonSgaKey]!;
 
             if (sgaName == string.Empty)
                 return;
 
-            string imgName = (string)_root[JsonImgKey];
+            string imgName = (string)_root[JsonImgKey]!;
 
             SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
             SgaPackage sga = img.Parent;
@@ -296,8 +295,8 @@ namespace SGToolsUI.Model.Main
             int[] sprites = new int[StateCount];
             int[] toggledSprites = new int[StateCount];
 
-            StringEx.ParseIntNumberN((string)_root[JsonSpriteKey], sprites);
-            StringEx.ParseIntNumberN((string)_root[JsonToggleSpriteKey], toggledSprites);
+            StringEx.ParseIntNumberN((string)_root[JsonSpriteKey]!, sprites);
+            StringEx.ParseIntNumberN((string)_root[JsonToggleSpriteKey]!, toggledSprites);
 
             SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in sprites_[0], linearDodge_);
             SGUISpriteInfoExt.ParseInfo(sga, img, in toggledSprites, in sprites_[1], linearDodge_);

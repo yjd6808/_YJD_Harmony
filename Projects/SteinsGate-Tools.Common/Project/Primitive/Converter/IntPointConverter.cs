@@ -13,7 +13,7 @@ namespace SGToolsCommon.Primitive.Converter
     public class IntPointConverter : TypeConverter
     {
         //////////////////////////////////////////////////////////////////////////////////
-        public override bool CanConvertFrom(ITypeDescriptorContext _context, Type _sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext? _context, Type _sourceType)
         {
             if (_sourceType == typeof(string))
                 return true;
@@ -22,7 +22,7 @@ namespace SGToolsCommon.Primitive.Converter
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public override object ConvertFrom(ITypeDescriptorContext _context, CultureInfo _culture, object _value)
+        public override object? ConvertFrom(ITypeDescriptorContext? _context, CultureInfo? _culture, object _value)
         {
             if (_value is string str)
             {
@@ -46,7 +46,7 @@ namespace SGToolsCommon.Primitive.Converter
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public override object ConvertTo(ITypeDescriptorContext _context, CultureInfo _culture, object _value, Type _destinationType)
+        public override object? ConvertTo(ITypeDescriptorContext? _context, CultureInfo? _culture, object? _value, Type _destinationType)
         {
             if (_destinationType == typeof(string) && _value is IntPoint point)
                 return $"{point.X}, {point.Y}";

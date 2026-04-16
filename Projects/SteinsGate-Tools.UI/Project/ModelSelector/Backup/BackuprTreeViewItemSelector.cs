@@ -19,12 +19,12 @@ namespace SGToolsUI.ModelSelector.Backup
         //////////////////////////////////////////////////////////////////////////////////
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            TreeView treeView = container.FindParent<TreeView>();
+            TreeView? treeView = container.FindParent<TreeView>();
 
             switch (item)
             {
-                case BackupTreeViewItemGroup __group__: return (DataTemplate)Application.Current.FindResource("BackupTreeViewItemGroupTemplate");
-                case BackupTreeViewItem __else__: return (DataTemplate)Application.Current.FindResource("BackupTreeViewItemTemplate");
+                case BackupTreeViewItemGroup group: return (DataTemplate)Application.Current.FindResource("BackupTreeViewItemGroupTemplate");
+                case BackupTreeViewItem backupItem: return (DataTemplate)Application.Current.FindResource("BackupTreeViewItemTemplate");
             }
 
             throw new Exception("BackuprTreeViewItemSelector 반환가능한 DataTemplate을 찾지 못했습니다.");

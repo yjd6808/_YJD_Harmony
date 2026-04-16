@@ -17,10 +17,12 @@ Intermediate/
 Projects/*/Output/
 Projects/*/Intermediate/
 ThirdParty/Build/
+build/
 
 Projects/*/Project/obj/
 임시*
 
 # 나혼자 개발하는데 그냥 올린다.
-# ..local/
+# .local/
+# .admin/
 # .claude/settings.local.json 

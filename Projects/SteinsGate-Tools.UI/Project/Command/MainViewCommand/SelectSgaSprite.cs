@@ -40,21 +40,21 @@ namespace SGToolsUI.Command.MainViewCommand
 
             ViewModel.SelectedSprite = _sprite;
             ViewModel.ResourceSelectionStatus =
-                $"{_sprite.Parent.Parent.FileNameWithoutExt} ➯ " +
-                $"{_sprite.Parent.Header.NameWithoutExt} ➯ " +
+                $"{_sprite.Parent!.Parent!.FileNameWithoutExt} ➯ " +
+                $"{_sprite.Parent!.Header.NameWithoutExt} ➯ " +
                 $"{_sprite.FrameIndex} {linkText}";
         }
 
         //////////////////////////////////////////////////////////////////////////////////
         private void SelectByEventArgs(MouseEventArgs _eventArgs)
         {
-            FrameworkElement sender = _eventArgs.Source as FrameworkElement;
+            FrameworkElement? sender = _eventArgs.Source as FrameworkElement;
 
             if (sender == null)
                 throw new Exception("프레임워크 엘리먼트가 아닙니다.");
 
-            SgaSpriteAbstract sprite = sender.DataContext as SgaSpriteAbstract;
-            SelectBySprite(sprite);
+            SgaSpriteAbstract? sprite = sender.DataContext as SgaSpriteAbstract;
+            SelectBySprite(sprite!);
         }
     }
 }

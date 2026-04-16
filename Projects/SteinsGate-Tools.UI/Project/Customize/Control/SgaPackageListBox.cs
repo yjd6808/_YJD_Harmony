@@ -1,0 +1,49 @@
+﻿/*
+ * 작성자: 윤정도
+ * 생성일: 3/6/2023 10:33:30 AM
+ *
+ */
+
+using System;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using SGToolsCommon.Extension;
+using SGToolsUI.ViewModel;
+
+namespace SGToolsUI.Customize.Control
+{
+    public class SgaPackageListBox : ListBox
+    {
+        public MainViewModel? ViewModel { get; private set; }
+        public ScrollBar? ScrollBar { get; private set; }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public SgaPackageListBox()
+        {
+            Loaded += OnLoaded;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        private void OnLoaded(object _sender, RoutedEventArgs _e)
+        {
+            InitializeViewModel();
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        private void InitializeViewModel()
+        {
+            ViewModel = DataContext as MainViewModel;
+
+            // 디자이너에서는 무조건 예외가 터지기땜에 막아줘야함.
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
+
+            if (ViewModel == null)
+                throw new Exception("UIElementTreeView에서 뷰모델 초기화 실패");
+
+            ScrollBar = this.FindChild<ScrollBar>();
+        }
+    }
+}

@@ -1,11 +1,10 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 3/18/2023 5:27:01 PM
  *
  */
 
 using System.Diagnostics;
-
 using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.Model.Backup

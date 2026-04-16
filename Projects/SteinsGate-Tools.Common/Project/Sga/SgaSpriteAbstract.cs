@@ -18,10 +18,10 @@ namespace SGToolsCommon.Sga
     {
         public SgaSpriteType SpriteType { get; }
         public SgaColorFormat ColorFormat { get; }
-        public SgaImage Parent { get; }
+        public SgaImage? Parent { get; }
         public int FrameIndex { get; }
         public bool IsLink => SpriteType == SgaSpriteType.LinkSprite;
-        public ListBoxItem Item { get; set; }
+        public ListBoxItem? Item { get; set; }
 
         public abstract SgaSpriteRect SpriteRect { get; }
         public abstract Rect Rect { get; }
@@ -50,22 +50,22 @@ namespace SGToolsCommon.Sga
             }
         }
 
-        public string DataDir => $"{Parent.Parent.FileName}\\{Parent.Header.Name}";
+        public string DataDir => $"{Parent!.Parent.FileName}\\{Parent!.Header.Name}";
         public string DataPath
         {
             get
             {
                 if (IsLink)
-                    return $"{Parent.Parent.FileName}\\{Parent.Header.Name}\\{FrameIndex}-링크{TargetFrameIndex}";
+                    return $"{Parent!.Parent.FileName}\\{Parent!.Header.Name}\\{FrameIndex}-링크{TargetFrameIndex}";
 
-                return $"{Parent.Parent.FileName}\\{Parent.Header.Name}\\{FrameIndex}";
+                return $"{Parent!.Parent.FileName}\\{Parent!.Header.Name}\\{FrameIndex}";
             }
         }
 
         public string SizeString => $"{Width}x{Height}";
 
         //////////////////////////////////////////////////////////////////////////////////
-        public SgaSpriteAbstract(SgaSpriteType _spriteType, SgaColorFormat _colorFormat, SgaImage _parent, int _frameIndex)
+        public SgaSpriteAbstract(SgaSpriteType _spriteType, SgaColorFormat _colorFormat, SgaImage? _parent, int _frameIndex)
         {
             SpriteType = _spriteType;
             ColorFormat = _colorFormat;

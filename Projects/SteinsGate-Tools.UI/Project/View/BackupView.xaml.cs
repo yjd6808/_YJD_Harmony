@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  *
  */
@@ -33,7 +33,7 @@ namespace SGToolsUI.View
             if (BackupFolderListBox.SelectedItems.Count == 0)
                 return;
 
-            ViewModel.SelectedFolder = BackupFolderListBox.SelectedItems[0] as BackupFolder;
+            ViewModel.SelectedFolder = (BackupFolderListBox.SelectedItems[0] as BackupFolder)!;
         }
 
         //////////////////////////////////////////////////////////////////////////////////
@@ -42,7 +42,7 @@ namespace SGToolsUI.View
             if (BackupFileListBox.SelectedItems.Count == 0)
                 return;
 
-            ViewModel.SelectedFile = BackupFileListBox.SelectedItems[0] as BackupFile;
+            ViewModel.SelectedFile = (BackupFileListBox.SelectedItems[0] as BackupFile)!;
         }
 
         //////////////////////////////////////////////////////////////////////////////////
@@ -51,7 +51,7 @@ namespace SGToolsUI.View
             if (BackupFileListBox.SelectedItems.Count == 0)
                 return;
 
-            BackupFile file = BackupFileListBox.SelectedItems[0] as BackupFile;
+            BackupFile? file = BackupFileListBox.SelectedItems[0] as BackupFile;
             if (file == null)
                 return;
 

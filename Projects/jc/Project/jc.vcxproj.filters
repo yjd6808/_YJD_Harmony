@@ -769,4 +769,9 @@
       <Filter>Natvis</Filter>
     </Natvis>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Sources\jc\_Extern\Extern.asm">
+      <Filter>_Extern</Filter>
+    </None>
+  </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 3/13/2023 12:27:16 AM
  *
@@ -12,8 +12,8 @@ namespace SGToolsUI.ViewModel
 {
     public class AlbumViewModel : Bindable
     {
-        private SgaPackage selectedPackage_;
-        private SgaImage selectedImage_;
+        private SgaPackage selectedPackage_ = null!;
+        private SgaImage selectedImage_ = null!;
 
         //////////////////////////////////////////////////////////////////////////////////
         public AlbumViewModel(AlbumView _view, MainViewModel _mainViewModel)

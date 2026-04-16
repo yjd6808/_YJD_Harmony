@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteinsGate-Tools.Common", "Projects\SteinsGate-Tools.Common\Project\SteinsGate-Tools.Common.csproj", "{660B1B6C-126B-4F66-990E-2C0C738ABB17}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteinsGate-Tools.UI", "Projects\SteinsGate-Tools.UI\Project\SteinsGate-Tools.UI.csproj", "{CAB28390-FB50-4E46-8907-CF3C29DECA8C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{660B1B6C-126B-4F66-990E-2C0C738ABB17} = {660B1B6C-126B-4F66-990E-2C0C738ABB17}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteinsGate-Tools.Research", "Projects\SteinsGate-Tools.Research\Project\SteinsGate-Tools.Research.csproj", "{C9B670EF-6003-4513-B40D-1AF66F6F73A1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{660B1B6C-126B-4F66-990E-2C0C738ABB17}.Debug|x64.ActiveCfg = Debug|x64
+		{660B1B6C-126B-4F66-990E-2C0C738ABB17}.Debug|x64.Build.0 = Debug|x64
+		{660B1B6C-126B-4F66-990E-2C0C738ABB17}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{660B1B6C-126B-4F66-990E-2C0C738ABB17}.Debug|x86.Build.0 = Debug|Any CPU
+		{660B1B6C-126B-4F66-990E-2C0C738ABB17}.Release|x64.ActiveCfg = Release|x64
+		{660B1B6C-126B-4F66-990E-2C0C738ABB17}.Release|x64.Build.0 = Release|x64
+		{660B1B6C-126B-4F66-990E-2C0C738ABB17}.Release|x86.ActiveCfg = Release|Any CPU
+		{660B1B6C-126B-4F66-990E-2C0C738ABB17}.Release|x86.Build.0 = Release|Any CPU
+		{CAB28390-FB50-4E46-8907-CF3C29DECA8C}.Debug|x64.ActiveCfg = Debug|x64
+		{CAB28390-FB50-4E46-8907-CF3C29DECA8C}.Debug|x64.Build.0 = Debug|x64
+		{CAB28390-FB50-4E46-8907-CF3C29DECA8C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CAB28390-FB50-4E46-8907-CF3C29DECA8C}.Debug|x86.Build.0 = Debug|Any CPU
+		{CAB28390-FB50-4E46-8907-CF3C29DECA8C}.Release|x64.ActiveCfg = Release|x64
+		{CAB28390-FB50-4E46-8907-CF3C29DECA8C}.Release|x64.Build.0 = Release|x64
+		{CAB28390-FB50-4E46-8907-CF3C29DECA8C}.Release|x86.ActiveCfg = Release|Any CPU
+		{CAB28390-FB50-4E46-8907-CF3C29DECA8C}.Release|x86.Build.0 = Release|Any CPU
+		{C9B670EF-6003-4513-B40D-1AF66F6F73A1}.Debug|x64.ActiveCfg = Debug|x64
+		{C9B670EF-6003-4513-B40D-1AF66F6F73A1}.Debug|x64.Build.0 = Debug|x64
+		{C9B670EF-6003-4513-B40D-1AF66F6F73A1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C9B670EF-6003-4513-B40D-1AF66F6F73A1}.Debug|x86.Build.0 = Debug|Any CPU
+		{C9B670EF-6003-4513-B40D-1AF66F6F73A1}.Release|x64.ActiveCfg = Release|x64
+		{C9B670EF-6003-4513-B40D-1AF66F6F73A1}.Release|x64.Build.0 = Release|x64
+		{C9B670EF-6003-4513-B40D-1AF66F6F73A1}.Release|x86.ActiveCfg = Release|Any CPU
+		{C9B670EF-6003-4513-B40D-1AF66F6F73A1}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8C994231-C2E1-4E94-8705-982F33CCBE70}
+	EndGlobalSection
+EndGlobal

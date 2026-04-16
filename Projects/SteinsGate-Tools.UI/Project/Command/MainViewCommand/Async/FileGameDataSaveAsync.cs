@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 3/10/2023 11:19:30 AM
  *
@@ -47,7 +47,7 @@ namespace SGToolsUI.Command.MainViewCommand.Async
 
                 if (saveFileDialog.ShowDialog() == true)
                 {
-                    Exception e = await ViewModel.Saver.SaveGameDataAsync(saveFileDialog.FileName, false);
+                    Exception? e = await ViewModel.Saver.SaveGameDataAsync(saveFileDialog.FileName, false);
                     if (e != null) throw e;
                     ViewModel.LogBox.AddLog($"게임데이터 저장완료", (LogType.Path, (object)saveFileDialog.FileName), IconCommonType.Backup, Brushes.RoyalBlue);
                 }

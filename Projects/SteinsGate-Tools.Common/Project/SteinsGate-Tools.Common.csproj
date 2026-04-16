@@ -10,6 +10,7 @@
     <RunPostBuildEvent>Always</RunPostBuildEvent>
     <AssemblyName>SGToolsCommon</AssemblyName>
     <Platforms>AnyCPU;x64</Platforms>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -45,7 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="CustomStyle\ReadonlyAnimatedTextBox.xaml">
+    <Page Update="Customize\Style\ReadonlyAnimatedTextBox.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

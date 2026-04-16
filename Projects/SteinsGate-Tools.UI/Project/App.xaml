@@ -2,17 +2,17 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:SGToolsUI"
-             xmlns:style="clr-namespace:SGToolsCommon.CustomStyle;assembly=SGToolsCommon"
+             xmlns:style="clr-namespace:SGToolsCommon.Customize.Style;assembly=SGToolsCommon"
              StartupUri="View/MainView.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/SGToolsCommon;Component/CustomStyle/All.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/SGToolsCommon;Component/Converter/All.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/SGToolsCommon;Component/Customize/Style/All.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/SGToolsCommon;Component/Customize/Converter/All.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/SGToolsCommon;Component/Resource/R.xaml" />
 
-                <ResourceDictionary Source="pack://application:,,,/SGToolsUI;Component/CustomStyle/All.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/SGToolsUI;Component/Converter/All.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/SGToolsUI;Component/Customize/Style/All.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/SGToolsUI;Component/Customize/Converter/All.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/SGToolsUI;Component/ModelTemplate/All.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

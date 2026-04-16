@@ -3,34 +3,50 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         xmlns:local="clr-namespace:SGToolsResearch"
-        xmlns:common_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
-        xmlns:common_style="clr-namespace:SGToolsCommon.CustomStyle;assembly=SGToolsCommon"
-        xmlns:common_res="clr-namespace:SGToolsCommon.Resource;assembly=SGToolsCommon"
-        xmlns:cv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon"
-        xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
-        xmlns:c="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        AllowsTransparency="True"
-        Title="MainWindow"
-        WindowStyle="None"
-        Width="400"
-        Height="400"
+        Title="Research"
+        WindowStyle="SingleBorderWindow"
+        Width="220"
+        Height="300"
+        ResizeMode="NoResize"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Window.InputBindings>
+        <KeyBinding Key="Escape" Command="{x:Static SystemCommands.CloseWindowCommand}"/>
+    </Window.InputBindings>
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static SystemCommands.CloseWindowCommand}" Executed="OnCloseWindow"/>
+    </Window.CommandBindings>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="400"></RowDefinition>
-            <RowDefinition Height="200"></RowDefinition>
-        </Grid.RowDefinitions>
-        
-        <Grid>
-
-        </Grid>
-
-        <Grid Grid.Row="1" Margin="0, 0, 0, 200">
-            
-        </Grid>
+        <!-- Research 버튼 메뉴 -->
+        <Border Background="#1E1E1E">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel x:Name="menuPanel_" Margin="12,12,12,12">
+                    <TextBlock Text="Research Menu"
+                               Foreground="#AAAAAA"
+                               FontSize="11"
+                               FontWeight="Bold"
+                               Margin="4,4,4,12"/>
+                    <Button Content="01. RTBLogViewer"
+                            Click="OnBtnRTBLogViewer_Click"
+                            Margin="0,2,0,2"
+                            Padding="8,6"
+                            HorizontalContentAlignment="Left"/>
+                    <Button Content="99. Any"
+                            Click="OnBtnAny_Click"
+                            Margin="0,2,0,2"
+                            Padding="8,6"
+                            HorizontalContentAlignment="Left"/>
+                    <Separator Margin="0,8,0,8" Background="#444"/>
+                    <Button Content="종료"
+                            Click="OnBtnExit_Click"
+                            Margin="0,2,0,2"
+                            Padding="8,6"
+                            HorizontalContentAlignment="Center"
+                            Foreground="#FF6B6B"
+                            FontWeight="Bold"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
     </Grid>
-    
 </Window>

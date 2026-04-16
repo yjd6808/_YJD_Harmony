@@ -19,7 +19,7 @@ namespace SGToolsUI.ModelTemplate.Main
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        private bool TryCast(object _sender, out WatermarkTextBox _tb, out SGUIEditBox _editBox)
+        private bool TryCast(object _sender, out WatermarkTextBox? _tb, out SGUIEditBox? _editBox)
         {
             _tb = _sender as WatermarkTextBox;
             _editBox = null;
@@ -33,10 +33,10 @@ namespace SGToolsUI.ModelTemplate.Main
         //////////////////////////////////////////////////////////////////////////////////
         private void TextBox_OnLoaded(object _sender, RoutedEventArgs _e)
         {
-            if (!TryCast(_sender, out WatermarkTextBox tb, out SGUIEditBox editBox))
+            if (!TryCast(_sender, out WatermarkTextBox? tb, out SGUIEditBox? editBox))
                 return;
 
-            editBox.TextBox = tb;
+            editBox!.TextBox = tb;
         }
     }
 }
