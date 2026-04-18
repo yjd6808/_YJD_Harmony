@@ -264,6 +264,24 @@
     <ClCompile Include="..\Sources\jc\_Extern\Extern_Random.cpp">
       <Filter>_Extern</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc\_Extern\Extern_Ascii.cpp">
+      <Filter>_Extern</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc\_Extern\Extern_Math.cpp">
+      <Filter>_Extern</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc\_Extern\Extern_Memory.cpp">
+      <Filter>_Extern</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc\_Extern\Extern_Env.cpp">
+      <Filter>_Extern</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc\_Extern\Extern_Time.cpp">
+      <Filter>_Extern</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc\_Extern\Extern_StringUtil.cpp">
+      <Filter>_Extern</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jc\Type.h" />
@@ -710,6 +728,24 @@
       <Filter>_Extern</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\_Extern\Extern_Console.h">
+      <Filter>_Extern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\_Extern\Extern_Memory.h">
+      <Filter>_Extern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\_Extern\Extern_Ascii.h">
+      <Filter>_Extern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\_Extern\Extern_Math.h">
+      <Filter>_Extern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\_Extern\Extern_Env.h">
+      <Filter>_Extern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\_Extern\Extern_Time.h">
+      <Filter>_Extern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\_Extern\Extern_StringUtil.h">
       <Filter>_Extern</Filter>
     </ClInclude>
   </ItemGroup>

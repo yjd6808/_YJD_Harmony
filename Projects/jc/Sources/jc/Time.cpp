@@ -762,15 +762,17 @@ inline Time DateTime::ToTime() const {
 }
 
 
-// 포맷에 따라 시간 문자열을 얻도록 한다.
+// 포맷에 따라 시간 문자열을 버퍼에 기록한다.
 // @형식 레퍼런스 : https://www.c-sharpcorner.com/blogs/date-and-time-format-in-c-sharp-programming1
 // C# 기준 포맷 형식을 따릅니다.
 // O(n)
-// 개선 가능성 : template<char[Size]>를 추가해서 리터럴 문자열에 대해서 길이 계산을 할 수 있다.
-String DateTime::Format(const char* _fmt) const {
-	const int iFmtLen = StringUtil::Length(_fmt);
-	String szRet(iFmtLen * 2);
+int DateTime::FormatBuffered(const char* _fmt, char* _pBuff, int _capacity) const {
+	if (_pBuff == nullptr || _capacity <= 0)
+		return 0;
 
+	const int iFmtLen = StringUtil::Length(_fmt);
+
+	int pos = 0;
 	int iContinuousCount = 0;
 	char cContinuousToken = '\0';
 
@@ -778,14 +780,11 @@ String DateTime::Format(const char* _fmt) const {
 
 	for (int i = 0; i < iFmtLen; i++) {
 		if (FormatTokenMap_v.Exist(_fmt[i])) {
-
 			if (cContinuousToken != _fmt[i]) {
-				// 이전 토큰하고 다른 경우 = 처음 발견한 경우
-				ReflectFormat(currentDateAndTime, szRet, cContinuousToken, iContinuousCount);
+				ReflectFormatBuffered(currentDateAndTime, _pBuff, _capacity, pos, cContinuousToken, iContinuousCount);
 				cContinuousToken = _fmt[i];
 				iContinuousCount = 1;
 			} else {
-				// 이전 토큰하고 일치하고 있는 경우
 				iContinuousCount++;
 			}
 		} else {
@@ -793,17 +792,32 @@ String DateTime::Format(const char* _fmt) const {
 				throw InvalidArgumentException("토큰 문자외의 알파벳 문자가 포맷문자열에 포함되어 있습니다.");
 			}
 
-			// 토큰이 아닌 다른 문자를 발견한 경우
-			ReflectFormat(currentDateAndTime, szRet, cContinuousToken, iContinuousCount);
+			ReflectFormatBuffered(currentDateAndTime, _pBuff, _capacity, pos, cContinuousToken, iContinuousCount);
 			cContinuousToken = '\0';
-			szRet += _fmt[i];
 			iContinuousCount = 0;
+
+			if (pos < _capacity - 1)
+				_pBuff[pos++] = _fmt[i];
 		}
 	}
 
-	ReflectFormat(currentDateAndTime, szRet, cContinuousToken, iContinuousCount);
+	ReflectFormatBuffered(currentDateAndTime, _pBuff, _capacity, pos, cContinuousToken, iContinuousCount);
 
-	return szRet;
+	if (pos < _capacity)
+		_pBuff[pos] = '\0';
+
+	return pos;
+}
+
+// 포맷에 따라 시간 문자열을 얻도록 한다.
+// @형식 레퍼런스 : https://www.c-sharpcorner.com/blogs/date-and-time-format-in-c-sharp-programming1
+// C# 기준 포맷 형식을 따릅니다.
+// O(n)
+// 개선 가능성 : template<char[Size]>를 추가해서 리터럴 문자열에 대해서 길이 계산을 할 수 있다.
+String DateTime::Format(const char* _fmt) const {
+	char buf[256];
+	FormatBuffered(_fmt, buf, sizeof(buf));
+	return String(buf);
 }
 
 bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const char* _dateString, int _dateStringLen) {
@@ -1689,6 +1703,148 @@ void DateTime::ReflectFormat(const DateAndTime& _time, String& _ret, const char 
 		else if (_count == 6)
 			_ret += StringUtil::Format("%06d", miliMicro / 1);
 		break;
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void DateTime::ReflectFormatBuffered(const DateAndTime& _time, char* _pBuff, const int _capacity, int& _pos, const char _token, const int _count) const {
+	if (_token == '\0' || _count == 0)
+		return;
+
+	const auto valuePtr = FormatTokenMap_v.Find(_token);
+	if (valuePtr == nullptr)
+		throw InvalidArgumentException("올바르지 않은 포맷 토큰입니다.");
+
+	auto [item1, item2, item3] = *valuePtr;
+
+	const DateFormat_t format = static_cast<DateFormat_t>(static_cast<int>(item2) + _count - 1);
+	const int iMaxCount = item3;
+
+	if (_count > iMaxCount)
+		throw OutOfRangeException("토큰 갯수가 이상합니다. 확인하고 다시 입해주세요.");
+
+	auto append = [&](const char* _fmt, auto... _args) {
+		const int remaining = _capacity - _pos;
+		if (remaining <= 1)
+			return;
+		const int written = snprintf(_pBuff + _pos, remaining, _fmt, _args...);
+		if (written > 0)
+			_pos += (written < remaining - 1) ? written : remaining - 1;
+	};
+
+	switch (format) {
+	case DateFormat::d:
+		append("%d", _time.Day);
+		break;
+	case DateFormat::dd:
+		append("%02d", _time.Day);
+		break;
+	case DateFormat::ddd:
+		append("%s", GetAbbreviationWeekendName(GetDayOfWeek()));
+		break;
+	case DateFormat::dddd:
+		append("%s", GetFullWeekendName(GetDayOfWeek()));
+		break;
+	case DateFormat::h:
+		append("%d", _time.Hour < 13 ? _time.Hour : _time.Hour - 12);
+		break;
+	case DateFormat::hh:
+		append("%02d", _time.Hour < 13 ? _time.Hour : _time.Hour - 12);
+		break;
+	case DateFormat::H:
+		append("%d", _time.Hour);
+		break;
+	case DateFormat::HH:
+		append("%02d", _time.Hour);
+		break;
+	case DateFormat::m:
+		append("%d", _time.Minute);
+		break;
+	case DateFormat::mm:
+		append("%02d", _time.Minute);
+		break;
+	case DateFormat::M:
+		append("%d", _time.Month);
+		break;
+	case DateFormat::MM:
+		append("%02d", _time.Month);
+		break;
+	case DateFormat::MMM:
+		append("%s", GetAbbreviationMonthName(static_cast<MonthOfYear>(_time.Month - 1)));
+		break;
+	case DateFormat::MMMM:
+		append("%s", GetFullMonthName(static_cast<MonthOfYear>(_time.Month - 1)));
+		break;
+	case DateFormat::s:
+		append("%d", _time.Second);
+		break;
+	case DateFormat::ss:
+		append("%02d", _time.Second);
+		break;
+	case DateFormat::t:
+		append("%s", _time.Hour / 12 > 0
+			? GetAbbreviationAMPMName(AMPM::PM)
+			: GetAbbreviationAMPMName(AMPM::AM));
+		break;
+	case DateFormat::tt:
+		append("%s", _time.Hour / 12 > 0 ? GetFullAMPMName(AMPM::PM) : GetFullAMPMName(AMPM::AM));
+		break;
+	case DateFormat::y:
+		append("%d", _time.Year % 100);
+		break;
+	case DateFormat::yy:
+		append("%02d", _time.Year % 100);
+		break;
+	case DateFormat::yyy:
+		append("%d", _time.Year % 10000);
+		break;
+	case DateFormat::yyyy:
+		append("%04d", _time.Year % 10000);
+		break;
+	case DateFormat::K:
+	case DateFormat::zzz: {
+		const _s32 timezonBias = TimeZoneBiasMinute();
+		append("%s%02d:%02d",
+			timezonBias < 0 ? "+" : "",
+			(timezonBias * -1) / 60,
+			(timezonBias * -1) % 60);
+		break;
+	}
+	case DateFormat::z: {
+		const _s32 timezonBias = TimeZoneBiasMinute();
+		append("%s%d",
+			timezonBias < 0 ? "+" : "",
+			(timezonBias * -1) / 60);
+		break;
+	}
+	case DateFormat::zz: {
+		const _s32 timezonBias = TimeZoneBiasMinute();
+		append("%s%02d",
+			timezonBias < 0 ? "+" : "",
+			(timezonBias * -1) / 60);
+		break;
+	}
+	case DateFormat::f:
+		append("%d", _time.MiliSecond / 100);
+		break;
+	case DateFormat::ff:
+		append("%02d", _time.MiliSecond / 10);
+		break;
+	case DateFormat::fff:
+		append("%03d", _time.MiliSecond / 1);
+		break;
+	case DateFormat::ffff:
+	case DateFormat::fffff:
+	case DateFormat::ffffff: {
+		const int miliMicro = _time.MiliSecond * MaxMiliSecond_v + _time.MicroSecond;
+		if (_count == 4)
+			append("%04d", miliMicro / 100);
+		else if (_count == 5)
+			append("%05d", miliMicro / 10);
+		else if (_count == 6)
+			append("%06d", miliMicro / 1);
+		break;
+	}
 	}
 }
 

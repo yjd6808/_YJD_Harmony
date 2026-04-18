@@ -1,0 +1,31 @@
+/*
+ * 작성자: 윤정도
+ * 생성일: 5/10/2023 3:20:39 AM
+ * =====================
+ *
+ */
+
+
+#include "GameCoreHeader.h"
+#include "Net/Connection/C_CHAT.h"
+
+#include "sgcl/Net/Send/S_CHAT.h"
+
+USING_NS_JC;
+USING_NS_CC;
+USING_NS_JNET;
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void C_CHAT::OnConnected(Session* _pSession)
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void C_CHAT::OnConnectFailed(Session* _pSession, _u32 _errorCode)
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void C_CHAT::OnDisconnected(Session* _pSession)
+{
+}

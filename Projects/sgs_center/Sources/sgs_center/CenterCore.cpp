@@ -7,7 +7,7 @@
 
 #include "CenterCore.h"
 
-#include "sg/_Util/DescLoaderMgr.h"
+#include "sg/Util/DescLoaderMgr.h"
 
 #include "R_MESSAGE.h"
 #include "R_PING.h"
@@ -15,8 +15,8 @@
 #include "sgs/CmdHost_MESSAGE.h"
 #include "sgs/CmdHost_PING.h"
 #include "sgs/CmdHost_SETUP.h"
-#include "sgs/_Net/NetGroup_InterServ.h"
-#include "sgs/_Net/NetGroup_Main.h"
+#include "sgs/Net/NetGroup_InterServ.h"
+#include "sgs/Net/NetGroup_Main.h"
 
 USING_NS_JC;
 USING_NS_JNET;

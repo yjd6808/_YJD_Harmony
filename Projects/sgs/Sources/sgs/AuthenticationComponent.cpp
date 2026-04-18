@@ -9,7 +9,7 @@
 #include "AuthenticationComponent.h"
 
 // #include <sgs/UnauthenticatedSessionManager.h>
-#include "sgs/_Net/NetSession.h"
+#include "sgs/Net/NetSession.h"
 
 USING_NS_SG;
 

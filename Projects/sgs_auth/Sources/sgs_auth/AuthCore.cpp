@@ -10,8 +10,8 @@
 #include "jdb/MySQL/MysqlDatabase.h"
 
 #include "sgs/CmdRelay_AUTHENTICATION.h"
-#include "sgs/_Net/NetCore.h"
-#include "sgs/_Net/NetGroup_InterServ.h"
+#include "sgs/Net/NetCore.h"
+#include "sgs/Net/NetGroup_InterServ.h"
 #include "sgs_auth/R_AUTHENTICATION.h"
 #include "sgs_auth/AuthenticationManager.h"
 

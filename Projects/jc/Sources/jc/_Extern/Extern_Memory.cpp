@@ -1,0 +1,82 @@
+/*
+ * 작성자 : 윤정도
+ * 목적 : MASM 어셈블리 코드에서 Memory API를 호출하기 위한 extern "C" 래퍼 구현
+ * created by AI.
+ */
+
+#include "Extern_Memory.h"
+#include "jc/Memory.h"
+
+USING_NS_JC;
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void* Memory_Allocate(_u32 _size)
+{
+	return Memory::Allocate<void*>(_size);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void Memory_Deallocate(void* _ptr)
+{
+	Memory::Deallocate(_ptr);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void Memory_Copy(void* _dst, _s32 _dstCapacityByte, const void* _src, _s32 _srcCopyByte)
+{
+	Memory::Copy(_dst, _dstCapacityByte, _src, _srcCopyByte);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void Memory_CopyUnsafe(void* _dst, const void* _src, _s32 _srcCopyByte)
+{
+	Memory::CopyUnsafe(_dst, _src, _srcCopyByte);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void Memory_CopyReverse(void* _dst, _s32 _dstCapacityByte, const void* _src, _s32 _srcCopyByte)
+{
+	Memory::CopyReverse(_dst, _dstCapacityByte, _src, _srcCopyByte);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void Memory_CopyUnsafeReverse(void* _dst, const void* _src, _s32 _srcCopyByte)
+{
+	Memory::CopyUnsafeReverse(_dst, _src, _srcCopyByte);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void Memory_Set(void* _src, _s32 _srcCapacity, _u8 _value)
+{
+	Memory::Set(_src, _srcCapacity, _value);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void Memory_SetU16(_u16* _src, _s32 _srcCapacity, _u16 _value)
+{
+	Memory::Set<_u16>(_src, _srcCapacity, _value);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void Memory_SetU32(_u32* _src, _s32 _srcCapacity, _u32 _value)
+{
+	Memory::Set<_u32>(_src, _srcCapacity, _value);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void Memory_SetU64(_u64* _src, _s32 _srcCapacity, _u64 _value)
+{
+	Memory::Set<_u64>(_src, _srcCapacity, _value);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void Memory_SetFloat(_f32* _src, _s32 _srcCapacity, _f32 _value)
+{
+	Memory::Set<_f32>(_src, _srcCapacity, _value);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void Memory_SetDouble(_f64* _src, _s32 _srcCapacity, _f64 _value)
+{
+	Memory::Set<_f64>(_src, _srcCapacity, _value);
+}

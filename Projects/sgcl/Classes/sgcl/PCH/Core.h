@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/6/2023 1:02:27 AM
  * =====================
@@ -14,10 +14,10 @@
 #include "sg/PCH/Core.h"
 #include "sge/PCH/Core.h"
 
-#include "sgcl/_Core/Color.h"
+#include "sgcl/Core/Color.h"
 
 #include "sgcl/Namespace.h"
-#include "sgcl/Const.h"
+#include "sgcl/Const/Const.h"
 #include "sgcl/GameCore.h"
 
  // 코코스

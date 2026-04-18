@@ -12,7 +12,7 @@
 #include "sg/Cmd_LOBBY.h"
 
 #include "sgs/AuthenticationComponent.h"
-#include "sgs/_Net/NetGroup_InterServ.h"
+#include "sgs/Net/NetGroup_InterServ.h"
 
 #include "sgs_lobby/Q_LOBBY.h"
 #include "sgs_lobby/S_AUTHENTICATION_IS.h"

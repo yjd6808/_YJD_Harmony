@@ -9,18 +9,18 @@
 #include "GameCoreHeader.h"
 #include "WorldScene.h"
 
-#include <sg/_API/sgapiBase.h>
+#include <sg/API/sgapiBase.h>
 
 #include <sge/GridLayer.h>
 
-#include <sgcl/_Scene/Scene_Login.h>
-#include <sgcl/_Scene/Scene_Game.h>
-#include <sgcl/_Scene/Scene_ChannelSelect.h>
+#include <sgcl/Scene/Scene_Login.h>
+#include <sgcl/Scene/Scene_Game.h>
+#include <sgcl/Scene/Scene_ChannelSelect.h>
 #include <sgcl/UILayer.h>
 
 #include <sgcl/ActorManager.h>
 #include <sgcl/HostPlayer.h>
-#include <sg/_Util/DescLoaderMgr.h>
+#include <sg/Util/DescLoaderMgr.h>
 #include <sgcl/ImagePackManager.h>
 #include <sgcl/ActorListenerManager.h>
 #include <sgcl/Global.h>

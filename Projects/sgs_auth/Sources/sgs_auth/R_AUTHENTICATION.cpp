@@ -18,7 +18,7 @@
 #include "sgs_auth/S_AUTHENTICATION_IS.h"
 
 #include "AuthenticationManager.h"
-#include "sgs/_Net/NetGroup_InterServ.h"
+#include "sgs/Net/NetGroup_InterServ.h"
 
 USING_NS_JC;
 USING_NS_JNET;

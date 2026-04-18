@@ -1,0 +1,55 @@
+﻿/*
+ * 작성자: 윤정도
+ * 생성일: 8/25/2023 6:19:51 PM
+ * =====================
+ *
+ */
+
+
+#include "GameCoreHeader.h"
+#include "Net/Component/AuthenticationComponent.h"
+
+//////////////////////////////////////////////////////////////////////////////////////////
+AuthenticationComponent::AuthenticationComponent()
+{
+	Initialize();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+AuthenticationComponent::~AuthenticationComponent()
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationComponent::Initialize()
+{
+	accountData_.Clear();
+
+	state_ = AuthenticationState::Initialized;
+	serial_ = InvalidValue_v;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationComponent::SetAccountIdPass(const char* _pId, const char* _pPass)
+{
+	accountData_.id_.SetString(_pId);
+	accountData_.pass_.SetString(_pPass);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationComponent::SetLastServer(GameServerType_t _lastServer)
+{
+	accountData_.lastServer_ = _lastServer;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationComponent::SetState(AuthenticationState_t _state)
+{
+	state_ = _state;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void AuthenticationComponent::SetSerial(AuthenticationSerial_t _serial)
+{
+	serial_ = _serial;
+}

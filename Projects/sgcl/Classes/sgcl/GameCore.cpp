@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/18/2023 4:24:01 AM
  * =====================
@@ -7,38 +7,38 @@
 
 #include "GameCore.h"
 
-#include "sg/_Util/DescLoaderMgr.h"
-#include "sg/_Core/VirtualMachine.h"
-#include "sg/_Core/AppConfig.h"
+#include "sg/Util/DescLoaderMgr.h"
+#include "sg/Core/VirtualMachine.h"
+#include "sg/Core/AppConfig.h"
 
-#include "sgcl/_API/sgapiClient.h"
-#include "sgcl/_Net/NetCore.h"
-#include "sgcl/Contents.h"
+#include "sgcl/API/sgapiClient.h"
+#include "sgcl/Net/NetCore.h"
+#include "sgcl/Game/Contents/Contents.h"
 
-#include "sgcl/ImagePackManager.h"
-#include "sgcl/FontManager.h"
+#include "sgcl/Game/Texture/ImagePackManager.h"
+#include "sgcl/Game/Contents/FontManager.h"
 
-#include "sg/_Util/_DescMgr/DescMgr_Action.h"
-#include "sg/_Util/_DescMgr/DescMgr_AI.h"
-#include "sg/_Util/_DescMgr/DescMgr_AttackData.h"
-#include "sg/_Util/_DescMgr/DescMgr_Channel.h"
-#include "sg/_Util/_DescMgr/DescMgr_CharAnimation.h"
-#include "sg/_Util/_DescMgr/DescMgr_CharCommon.h"
-#include "sg/_Util/_DescMgr/DescMgr_ClientText.h"
-#include "sg/_Util/_DescMgr/DescMgr_FrameEvent.h"
-#include "sg/_Util/_DescMgr/DescMgr_Item.h"
-#include "sg/_Util/_DescMgr/DescMgr_ItemOpt.h"
-#include "sg/_Util/_DescMgr/DescMgr_Map.h"
-#include "sg/_Util/_DescMgr/DescMgr_MapPhysics.h"
-#include "sg/_Util/_DescMgr/DescMgr_ServerInfo.h"
+#include "sg/Util/DescMgr/DescMgr_Action.h"
+#include "sg/Util/DescMgr/DescMgr_AI.h"
+#include "sg/Util/DescMgr/DescMgr_AttackData.h"
+#include "sg/Util/DescMgr/DescMgr_Channel.h"
+#include "sg/Util/DescMgr/DescMgr_CharAnimation.h"
+#include "sg/Util/DescMgr/DescMgr_CharCommon.h"
+#include "sg/Util/DescMgr/DescMgr_ClientText.h"
+#include "sg/Util/DescMgr/DescMgr_FrameEvent.h"
+#include "sg/Util/DescMgr/DescMgr_Item.h"
+#include "sg/Util/DescMgr/DescMgr_ItemOpt.h"
+#include "sg/Util/DescMgr/DescMgr_Map.h"
+#include "sg/Util/DescMgr/DescMgr_MapPhysics.h"
+#include "sg/Util/DescMgr/DescMgr_ServerInfo.h"
 
-#include "sgcl/_Util/_DescMgr/DescMgr_Char.h"
-#include "sgcl/_Util/_DescMgr/DescMgr_Effect.h"
-#include "sgcl/_Util/_DescMgr/DescMgr_Tile.h"
-#include "sgcl/_Util/_DescMgr/DescMgr_UI.h"
-#include "sgcl/_Util/_DescMgr/DescMgr_MapObject.h"
-#include "sgcl/_Util/_DescMgr/DescMgr_Monster.h"
-#include "sgcl/_Util/_DescMgr/DescMgr_Projectile.h"
+#include "sgcl/Util/DescMgr/DescMgr_Char.h"
+#include "sgcl/Util/DescMgr/DescMgr_Effect.h"
+#include "sgcl/Util/DescMgr/DescMgr_Tile.h"
+#include "sgcl/Util/DescMgr/DescMgr_UI.h"
+#include "sgcl/Util/DescMgr/DescMgr_MapObject.h"
+#include "sgcl/Util/DescMgr/DescMgr_Monster.h"
+#include "sgcl/Util/DescMgr/DescMgr_Projectile.h"
 
 // ===========================================================
 //     슈타인즈 게이트 모든 세계션이 만나는 곳

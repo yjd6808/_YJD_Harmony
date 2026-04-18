@@ -8,4 +8,4 @@
 
 #pragma once
 
-#include "sgcl/Contents.h"
+#include "sgcl/Game/Contents/Contents.h"

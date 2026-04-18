@@ -10,10 +10,10 @@
 #include "sgs/CmdHost.h"
 #include "sgs/CmdRelay.h"
 
-#include "sg/_Util/DescLoaderMgr.h"
-#include "sg/_Util/_DescMgr/DescMgr_ServerInfo.h"
+#include "sg/Util/DescLoaderMgr.h"
+#include "sg/Util/DescMgr/DescMgr_ServerInfo.h"
 
-#include "sgs/_Net/NetCore.h"
+#include "sgs/Net/NetCore.h"
 
 USING_NS_JC;
 USING_NS_JNET;

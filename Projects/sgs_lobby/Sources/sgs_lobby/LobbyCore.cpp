@@ -13,8 +13,8 @@
 #include "R_LOBBY.h"
 #include "sg/Cmd_LOBBY.h"
 #include "sgs/CmdRelay_AUTHENTICATION.h"
-#include "sgs/_Net/NetGroup_InterServ.h"
-#include "sgs/_Net/NetGroup_Main.h"
+#include "sgs/Net/NetGroup_InterServ.h"
+#include "sgs/Net/NetGroup_Main.h"
 
 USING_NS_JC;
 USING_NS_JNET;

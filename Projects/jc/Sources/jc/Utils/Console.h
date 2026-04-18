@@ -69,14 +69,14 @@ NS_JC_BEGIN
 struct ConsoleKeyInfo
 {
     ConsoleKeyInfo()
-	    : Key(ConsoleKey::None)
-		, KeyChar(NULL)
-		, Success(false) {}
+    : Key(ConsoleKey::None)
+	, KeyChar(NULL)
+	, Success(false) {}
 
     ConsoleKeyInfo(ConsoleKey _key, char _keyChar)
-	    : Key(_key)
-		, KeyChar(_keyChar)
-		, Success(true) {}
+    : Key(_key)
+	, KeyChar(_keyChar)
+	, Success(true) {}
 
     ConsoleKey Key;
     char KeyChar;
@@ -169,6 +169,7 @@ public:
 
     static String ReadLine();
     static String ReadLine(const char* _pMsg);
+	static int ReadLineBuffered(char* _pBuff, int _capacity) { return ReadLineBuffered(nullptr, _pBuff, _capacity); }
     static int ReadLineBuffered(const char* _pMsg, char* _pBuff, int _capacity);
 
     static ConsoleKeyInfo ReadKey()

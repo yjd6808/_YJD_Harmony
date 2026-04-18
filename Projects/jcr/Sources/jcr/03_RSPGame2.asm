@@ -8,8 +8,7 @@ include ../../jc/Sources/jc/_Extern/Extern.asm
 .data
     fmt_d   BYTE    "%d", 0
     fmt_s   BYTE    "%s", 0
-    fmt_nl  BYTE    "%d", 10, 0
-
+    fmt_nl  BYTE    "%d\n", 0
 
 .code
 
@@ -17,11 +16,11 @@ include ../../jc/Sources/jc/_Extern/Extern.asm
 RSPGame_main proc
     mov     rcx,        0
     mov     rdx,        100
-    call    RandomGenerateInt
+    call    Random_GenerateInt
 
     lea     rcx,        fmt_d
     mov     rdx,        rax
-    call    ConsoleWriteLineWithArgs
+    call    Console_WriteLineWithArgs
 
     ret
 RSPGame_main endp

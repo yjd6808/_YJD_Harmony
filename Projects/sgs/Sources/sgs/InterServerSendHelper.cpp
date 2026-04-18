@@ -7,7 +7,7 @@
 
 #include "InterServerSendHelper.h"
 
-#include "sgs/_Net/NetCore.h"
+#include "sgs/Net/NetCore.h"
 
 USING_NS_JNET;
 

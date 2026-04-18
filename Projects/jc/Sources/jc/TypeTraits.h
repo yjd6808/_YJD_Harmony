@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 직접 구현가능한 기능들은 최대한 구현하도록 하자.
  * 만들어봐야 익숙해지니까...!
  */
@@ -750,7 +750,8 @@ template <bool Test, typename T = void>
 using EnableIf_t = typename detail::EnableIf<Test, T>::Type;
 
 template <bool Test>
-using DefaultEnableIf_t = typename detail::DefaultEnableIf<Test>::Type;
+using DefaultEnableIf_t = std::enable_if_t<Test, void*>; // typename detail::DefaultEnableIf<Test>::Type; (std는 SFINAE 인텔리센스 오류를 자체적으로 잡아줌. 내껀 그게 안되서 오류가 없음에도 있다고 뜨는 문제가 있어서.. 그냥 std::로 바꿈. SFINAE 학습은 되었으니 그냥 넘어간다.)
+
 
 template <bool Test, typename T1, typename T2>
 using Conditional_t = typename detail::Conditional<Test, T1, T2>::Type;

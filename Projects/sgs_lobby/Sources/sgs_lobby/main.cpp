@@ -3,9 +3,9 @@
 
 #include "sg/LogSpecifier.h"
 
-#include "sgs/_API/sgapiServerBase.h"
-#include "sgs/_Net/NetCore.h"
-#include "sgs/_Net/NetGroup_InterServ.h"
+#include "sgs/API/sgapiServerBase.h"
+#include "sgs/Net/NetCore.h"
+#include "sgs/Net/NetGroup_InterServ.h"
 
 #include "sgs_lobby/LobbyCore.h"
 

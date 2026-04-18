@@ -1,19 +1,19 @@
-#include "SteinsGateApp.h"
+﻿#include "SteinsGateApp.h"
 #include "GameCoreHeader.h"
 
 #include "jc/Logger/ConsoleLogger.h"
 
-#include "sg/_Struct/SteinsGate_Client.h"
+#include "sg/Struct/SteinsGate_Client.h"
 
 #include "sg/LogSpecifier.h"
-#include "sg/_Core/AudioPlayer.h"
-#include "sg/_Sga/SgaElementInitializer.h"
-#include "sg/_Core/AppConfig.h"
+#include "sg/Core/AudioPlayer.h"
+#include "sg/Sga/SgaElementInitializer.h"
+#include "sg/Core/AppConfig.h"
 
-#include "sgcl/Win32Helper.h"
-#include "sgcl/_Scene/Scene_World.h"
+#include "sgcl/Util/Win32Helper.h"
+#include "sgcl/Scene/Scene_World.h"
 
-#include "_API/sgapiClient.h"
+#include "API/sgapiClient.h"
 
 #define APP_NAME "SteinsGate-Client"
 

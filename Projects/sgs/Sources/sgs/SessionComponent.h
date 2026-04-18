@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/26/2023 9:44:58 PM
  * =====================
@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "sgs/_Net/NetSession.h"
+#include "sgs/Net/NetSession.h"
 #include "sgs/IComponent.h"
 #include "sgs/ISessionEventHandler.h"
 

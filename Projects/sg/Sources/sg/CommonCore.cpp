@@ -12,16 +12,16 @@
 #include "jc/Threading/ThreadPool.h"
 #include "jc/Threading/Scheduler.h"
 
-#include "sg/_Core/CLIThread.h"
-#include "sg/_Core/CLIListener.h"
+#include "sg/Core/CLIThread.h"
+#include "sg/Core/CLIListener.h"
 
-#include "sg/_Struct/SteinsGate_Char.h"
-#include "sg/_Struct/SteinsGate_Server.h"
+#include "sg/Struct/SteinsGate_Char.h"
+#include "sg/Struct/SteinsGate_Server.h"
 
-#include "sg/_Util/DescLoaderMgr.h"
-#include "sg/_Core/AppConfig.h"
+#include "sg/Util/DescLoaderMgr.h"
+#include "sg/Core/AppConfig.h"
 
-#include "sg/_Core/VirtualMachine.h"
+#include "sg/Core/VirtualMachine.h"
 
 USING_NS_JC;
 USING_NS_JNET;

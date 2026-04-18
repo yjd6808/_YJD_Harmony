@@ -9,9 +9,9 @@
 #include "R_SETUP_COMMON.h"
 
 #include "sgs/CmdHost.h"
-#include "sgs/_Net/NetCore.h"
+#include "sgs/Net/NetCore.h"
 #include "sgs/S_SETUP_IS_COMMON.h"
-#include "sgs/_Net/NetGroup_Main.h"
+#include "sgs/Net/NetGroup_Main.h"
 
 USING_NS_JC;
 USING_NS_JNET;

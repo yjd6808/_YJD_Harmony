@@ -1,4 +1,4 @@
-
+ï»¿
 #define HEAP_STANDARD		0
 #define HEAP_LAL			1
 #define HEAP_LFH			2
@@ -14,7 +14,7 @@ auto PrintHeaps(HANDLE* _heaps, int _heapCount, bool _showEntry, const char* _ph
 	vector<PROCESS_HEAP_ENTRY> entries;
 	vector<HeapStartEntry> heapEntries;
 
-	for (DWORD h = 0; h < _heapCount; ++h)
+	for (DWORD h = 0; h < (DWORD)_heapCount; ++h)
 	{
 		_ptr heapBase = (_ptr)_heaps[h];
 
@@ -125,23 +125,23 @@ int call_02_HeapStudy(int _argc, char** _argv)
 	ULONG enableLFH = 2;
 	HeapSetInformation(hLFHHeap, HeapCompatibilityInformation, &enableLFH, sizeof(enableLFH));
 
-	// °°Àº ¹æ½ÄÀ¸·Î ÇÒ´ç
+	// ê°™ì€ ë°©ì‹ìœ¼ë¡œ í• ë‹¹
 	for (int i = 0; i < STD_CNT; ++i)
 	{
 		lfhBlocks[i] = (char*)HeapAlloc(hLFHHeap, 0, i % 2 == 0 ? 0x100 + i : 0xff);
 	}
 
-	// Èü »óÅÂ Ãâ·Â (ÇÒ´ç Á÷ÈÄ)
+	// íž™ ìƒíƒœ ì¶œë ¥ (í• ë‹¹ ì§í›„)
 	PrintHeaps(&hLFHHeap, 1, false, "LFH_BEFORE", "heap_lfh_before.txt");
 
-	// ÀÏºÎ ºí·Ï ÇØÁ¦ ÈÄ ÀÛÀº ºí·Ï ÀçÇÒ´ç
+	// ì¼ë¶€ ë¸”ë¡ í•´ì œ í›„ ìž‘ì€ ë¸”ë¡ ìž¬í• ë‹¹
 	for (int i = 0; i < STD_CNT; i += 2)
 	{
 		HeapFree(hLFHHeap, 0, lfhBlocks[i]);
 		lfhBlocks[i] = (char*)HeapAlloc(hLFHHeap, 0, 0x30);
 	}
 
-	// Èü »óÅÂ Ãâ·Â (ÇØÁ¦/ÀçÇÒ´ç ÈÄ)
+	// íž™ ìƒíƒœ ì¶œë ¥ (í•´ì œ/ìž¬í• ë‹¹ í›„)
 	PrintHeaps(&hLFHHeap, 1, false, "LFH_AFTER", "heap_lfh_after.txt");
 
 	HeapDestroy(hLFHHeap);

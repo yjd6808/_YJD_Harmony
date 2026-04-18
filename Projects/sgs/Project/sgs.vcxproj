@@ -123,14 +123,14 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs\_API\sgapiServerBase.h" />
-    <ClInclude Include="..\Sources\sgs\_Net\GameDB.h" />
-    <ClInclude Include="..\Sources\sgs\_Net\NetClientListener_InterServ.h" />
-    <ClInclude Include="..\Sources\sgs\_Net\NetCore.h" />
-    <ClInclude Include="..\Sources\sgs\_Net\NetGroup_InterServ.h" />
-    <ClInclude Include="..\Sources\sgs\_Net\NetGroup_Main.h" />
-    <ClInclude Include="..\Sources\sgs\_Net\NetServer.h" />
-    <ClInclude Include="..\Sources\sgs\_Net\NetSession.h" />
+    <ClInclude Include="..\Sources\sgs\API\sgapiServerBase.h" />
+    <ClInclude Include="..\Sources\sgs\Net\GameDB.h" />
+    <ClInclude Include="..\Sources\sgs\Net\NetClientListener_InterServ.h" />
+    <ClInclude Include="..\Sources\sgs\Net\NetCore.h" />
+    <ClInclude Include="..\Sources\sgs\Net\NetGroup_InterServ.h" />
+    <ClInclude Include="..\Sources\sgs\Net\NetGroup_Main.h" />
+    <ClInclude Include="..\Sources\sgs\Net\NetServer.h" />
+    <ClInclude Include="..\Sources\sgs\Net\NetSession.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\sgs\AuthenticationComponent.cpp">
@@ -193,14 +193,14 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs\_API\sgapiServerBase.cpp" />
-    <ClCompile Include="..\Sources\sgs\_Net\GameDB.cpp" />
-    <ClCompile Include="..\Sources\sgs\_Net\NetClientListener_InterServ.cpp" />
-    <ClCompile Include="..\Sources\sgs\_Net\NetCore.cpp" />
-    <ClCompile Include="..\Sources\sgs\_Net\NetGroup_InterServ.cpp" />
-    <ClCompile Include="..\Sources\sgs\_Net\NetGroup_Main.cpp" />
-    <ClCompile Include="..\Sources\sgs\_Net\NetServer.cpp" />
-    <ClCompile Include="..\Sources\sgs\_Net\NetSession.cpp" />
+    <ClCompile Include="..\Sources\sgs\API\sgapiServerBase.cpp" />
+    <ClCompile Include="..\Sources\sgs\Net\GameDB.cpp" />
+    <ClCompile Include="..\Sources\sgs\Net\NetClientListener_InterServ.cpp" />
+    <ClCompile Include="..\Sources\sgs\Net\NetCore.cpp" />
+    <ClCompile Include="..\Sources\sgs\Net\NetGroup_InterServ.cpp" />
+    <ClCompile Include="..\Sources\sgs\Net\NetGroup_Main.cpp" />
+    <ClCompile Include="..\Sources\sgs\Net\NetServer.cpp" />
+    <ClCompile Include="..\Sources\sgs\Net\NetSession.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

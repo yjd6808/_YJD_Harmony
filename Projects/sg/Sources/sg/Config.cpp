@@ -11,8 +11,8 @@
 
 #include <jc/Logger/ConsoleLogger.h>
 
-#include <sg/_Struct/SteinsGate_Client.h>
-#include <sg/_API/sgapi_Util.h>
+#include <sg/Struct/SteinsGate_Client.h>
+#include <sg/API/sgapi_Util.h>
 
 #define SG_RUNTIME_CONFIG_FILENAME "runtime_config.json"
 

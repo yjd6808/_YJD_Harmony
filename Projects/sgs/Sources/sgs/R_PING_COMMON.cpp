@@ -8,7 +8,7 @@
 
 #include "R_PING_COMMON.h"
 
-#include "sgs/_Net/NetCore.h"
+#include "sgs/Net/NetCore.h"
 
 #include "sgs/CmdHost_PING.h"
 

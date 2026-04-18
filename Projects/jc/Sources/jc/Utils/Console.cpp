@@ -173,7 +173,10 @@ String Console::ReadLine()
 //////////////////////////////////////////////////////////////////////////////////////////
 String Console::ReadLine(const char* _pMsg)
 {
-    Write("%s", _pMsg);
+	if (_pMsg)
+	{
+		Write("%s", _pMsg);
+	}
     return ReadLine();
 }
 
@@ -183,7 +186,10 @@ int Console::ReadLineBuffered(const char* _pMsg, char* _pBuff, int _capacity)
     int index = 0;
     char keyChar;
 
-    Write("%s", _pMsg);
+	if (_pMsg) 
+	{
+		Write("%s", _pMsg);
+	}
 
     while (std::cin.get(keyChar) && index < _capacity && keyChar != '\n')
         _pBuff[index++] = keyChar;

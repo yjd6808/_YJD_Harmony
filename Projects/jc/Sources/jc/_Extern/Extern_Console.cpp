@@ -9,55 +9,55 @@
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ConsoleInit()
+_s32 Console_Init()
 {
 	return Console::Init() ? 1 : 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ConsoleSetSize(int _width, int _height)
+_s32 Console_SetSize(_s32 _width, _s32 _height)
 {
 	return Console::SetSize(_width, _height) ? 1 : 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConsoleRestoreColor()
+void Console_RestoreColor()
 {
 	Console::RestoreColor();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConsoleSetColor(int _color)
+void Console_SetColor(_s32 _color)
 {
 	Console::SetColor(static_cast<ConsoleColor>(_color));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ConsoleGetColor()
+_s32 Console_GetColor()
 {
 	return Console::GetColor();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ConsoleWrite(const char* _pFmt)
+_s32 Console_Write(const _s8* _pFmt)
 {
 	return Console::Write(_pFmt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ConsoleWriteLine(const char* _pFmt)
+_s32 Console_WriteLine(const _s8* _pFmt)
 {
 	return Console::WriteLine(_pFmt);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ConsoleWriteWithArgs(const char* _pFmt, ...)
+_s32 Console_WriteWithArgs(const _s8* _pFmt, ...)
 {
 	va_list args;
 	va_start(args, _pFmt);
 
-	char buf[1024];
-	int written = vsprintf_s(buf, sizeof(buf), _pFmt, args);
+	_s8 buf[1024];
+	_s32 written = vsprintf_s(buf, sizeof(buf), _pFmt, args);
 	va_end(args);
 
 	if (written <= 0)
@@ -67,13 +67,13 @@ int ConsoleWriteWithArgs(const char* _pFmt, ...)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ConsoleWriteLineWithArgs(const char* _pFmt, ...)
+_s32 Console_WriteLineWithArgs(const _s8* _pFmt, ...)
 {
 	va_list args;
 	va_start(args, _pFmt);
 
-	char buf[1024];
-	int written = vsprintf_s(buf, sizeof(buf), _pFmt, args);
+	_s8 buf[1024];
+	_s32 written = vsprintf_s(buf, sizeof(buf), _pFmt, args);
 	va_end(args);
 
 	if (written <= 0)
@@ -83,7 +83,7 @@ int ConsoleWriteLineWithArgs(const char* _pFmt, ...)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ConsoleReadLineBuffered(const char* _pMsg, char* _pBuffer, int _capacity)
+_s32 Console_ReadLineBuffered(const _s8* _pMsg, _s8* _pBuffer, _s32 _capacity)
 {
 	if (_pBuffer == nullptr || _capacity <= 0)
 		return -1;
@@ -92,19 +92,19 @@ int ConsoleReadLineBuffered(const char* _pMsg, char* _pBuffer, int _capacity)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConsoleClear(void)
+void Console_Clear(void)
 {
 	Console::Clear();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConsoleSetCursorPosition(int _x, int _y)
+void Console_SetCursorPosition(_s32 _x, _s32 _y)
 {
 	Console::SetCursorPosition(_x, _y);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConsoleGetCursorPosition(int* _pX, int* _pY)
+void Console_GetCursorPosition(_s32* _pX, _s32* _pY)
 {
 	if (_pX == nullptr || _pY == nullptr)
 		return;
@@ -115,19 +115,19 @@ void ConsoleGetCursorPosition(int* _pX, int* _pY)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ConsoleSetOutputCodePage(int _codePage)
+_s32 Console_SetOutputCodePage(_s32 _codePage)
 {
 	return Console::SetOutputCodePage(_codePage) ? 1 : 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ConsoleGetOutputCodePage(void)
+_s32 Console_GetOutputCodePage(void)
 {
 	return Console::GetOutputCodePage();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int ConsoleSetEnableVTMode(int _enabled)
+_s32 Console_SetEnableVTMode(_s32 _enabled)
 {
 	return Console::SetEnableVTMode(_enabled != 0) ? 1 : 0;
 }

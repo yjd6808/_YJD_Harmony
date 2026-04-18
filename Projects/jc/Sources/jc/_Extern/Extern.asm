@@ -8,29 +8,188 @@ OPTION CASEMAP: NONE
 ; ========================================================================
 ; Random 관련 extern 함수 선언
 ; ========================================================================
-extern RandomInit : proc
-extern RandomGenerateInt : proc
-extern RandomGenerateDouble : proc
-extern RandomGenerateAlphabat : proc
-extern RandomChance : proc
-extern RandomWriteAlphabatTextBuffered : proc
+extern Random_Init                      : proc  ; void Random_Init()
+extern Random_GenerateInt               : proc  ; _s32 Random_GenerateInt(_s32 _inclusiveBegin, _s32 _inclusiveEnd)
+extern Random_GenerateDouble            : proc  ; _f64 Random_GenerateDouble(_f64 _inclusiveBegin, _f64 _inclusiveEnd)
+extern Random_GenerateAlphabat          : proc  ; _s8 Random_GenerateAlphabat()
+extern Random_Chance                    : proc  ; _s32 Random_Chance(_f64 _percentProbability)
+extern Random_WriteAlphabatTextBuffered : proc  ; void Random_WriteAlphabatTextBuffered(_s32 _length, _s8* _pBuff, _s32 _capacity)
 
 ; ========================================================================
 ; Console 관련 extern 함수 선언
 ; ========================================================================
-extern ConsoleInit : proc
-extern ConsoleSetSize : proc
-extern ConsoleRestoreColor : proc
-extern ConsoleSetColor : proc
-extern ConsoleGetColor : proc
-extern ConsoleWrite : proc
-extern ConsoleWriteLine : proc
-extern ConsoleWriteWithArgs : proc
-extern ConsoleWriteLineWithArgs : proc
-extern ConsoleReadLineBuffered : proc
-extern ConsoleClear : proc
-extern ConsoleSetCursorPosition : proc
-extern ConsoleGetCursorPosition : proc
-extern ConsoleSetOutputCodePage : proc
-extern ConsoleGetOutputCodePage : proc
-extern ConsoleSetEnableVTMode : proc
+extern Console_Init                     : proc  ; _s32 Console_Init()
+extern Console_SetSize                  : proc  ; _s32 Console_SetSize(_s32 _width, _s32 _height)
+extern Console_RestoreColor             : proc  ; void Console_RestoreColor()
+extern Console_SetColor                 : proc  ; void Console_SetColor(_s32 _color)
+extern Console_GetColor                 : proc  ; _s32 Console_GetColor()
+extern Console_Write                    : proc  ; _s32 Console_Write(const _s8* _pFmt)
+extern Console_WriteLine                : proc  ; _s32 Console_WriteLine(const _s8* _pFmt)
+extern Console_WriteWithArgs            : proc  ; _s32 Console_WriteWithArgs(const _s8* _pFmt, ...)
+extern Console_WriteLineWithArgs        : proc  ; _s32 Console_WriteLineWithArgs(const _s8* _pFmt, ...)
+extern Console_ReadLineBuffered         : proc  ; _s32 Console_ReadLineBuffered(const _s8* _pMsg, _s8* _pBuffer, _s32 _capacity)
+extern Console_Clear                    : proc  ; void Console_Clear(void)
+extern Console_SetCursorPosition        : proc  ; void Console_SetCursorPosition(_s32 _x, _s32 _y)
+extern Console_GetCursorPosition        : proc  ; void Console_GetCursorPosition(_s32* _pX, _s32* _pY)
+extern Console_SetOutputCodePage        : proc  ; _s32 Console_SetOutputCodePage(_s32 _codePage)
+extern Console_GetOutputCodePage        : proc  ; _s32 Console_GetOutputCodePage(void)
+extern Console_SetEnableVTMode          : proc  ; _s32 Console_SetEnableVTMode(_s32 _enabled)
+
+; ========================================================================
+; Memory 관련 extern 함수 선언
+; ========================================================================
+extern Memory_Allocate                  : proc  ; void* Memory_Allocate(_u32 _size)
+extern Memory_Deallocate                : proc  ; void Memory_Deallocate(void* _ptr)
+extern Memory_Copy                      : proc  ; void Memory_Copy(void* _dst, _s32 _dstCapacityByte, const void* _src, _s32 _srcCopyByte)
+extern Memory_CopyUnsafe                : proc  ; void Memory_CopyUnsafe(void* _dst, const void* _src, _s32 _srcCopyByte)
+extern Memory_CopyReverse               : proc  ; void Memory_CopyReverse(void* _dst, _s32 _dstCapacityByte, const void* _src, _s32 _srcCopyByte)
+extern Memory_CopyUnsafeReverse         : proc  ; void Memory_CopyUnsafeReverse(void* _dst, const void* _src, _s32 _srcCopyByte)
+extern Memory_Set                       : proc  ; void Memory_Set(void* _src, _s32 _srcCapacity, _u8 _value)
+extern Memory_SetU16                    : proc  ; void Memory_SetU16(_u16* _src, _s32 _srcCapacity, _u16 _value)
+extern Memory_SetU32                    : proc  ; void Memory_SetU32(_u32* _src, _s32 _srcCapacity, _u32 _value)
+extern Memory_SetU64                    : proc  ; void Memory_SetU64(_u64* _src, _s32 _srcCapacity, _u64 _value)
+extern Memory_SetFloat                  : proc  ; void Memory_SetFloat(_f32* _src, _s32 _srcCapacity, _f32 _value)
+extern Memory_SetDouble                 : proc  ; void Memory_SetDouble(_f64* _src, _s32 _srcCapacity, _f64 _value)
+
+; ========================================================================
+; Math 관련 extern 함수 선언
+; ========================================================================
+extern Math_PowS32                      : proc  ; _s32 Math_PowS32(_s32 _base, _s32 _exponent)
+extern Math_PowU32                      : proc  ; _u32 Math_PowU32(_u32 _base, _s32 _exponent)
+extern Math_PowS64                      : proc  ; _s64 Math_PowS64(_s64 _base, _s32 _exponent)
+extern Math_PowU64                      : proc  ; _u64 Math_PowU64(_u64 _base, _s32 _exponent)
+extern Math_PowFloat                    : proc  ; _f32 Math_PowFloat(_f32 _base, _s32 _exponent)
+extern Math_PowDouble                   : proc  ; _f64 Math_PowDouble(_f64 _base, _s32 _exponent)
+extern Math_MaxS32                      : proc  ; _s32 Math_MaxS32(_s32 _lhs, _s32 _rhs)
+extern Math_MaxU32                      : proc  ; _u32 Math_MaxU32(_u32 _lhs, _u32 _rhs)
+extern Math_MaxS64                      : proc  ; _s64 Math_MaxS64(_s64 _lhs, _s64 _rhs)
+extern Math_MaxU64                      : proc  ; _u64 Math_MaxU64(_u64 _lhs, _u64 _rhs)
+extern Math_MaxFloat                    : proc  ; _f32 Math_MaxFloat(_f32 _lhs, _f32 _rhs)
+extern Math_MaxDouble                   : proc  ; _f64 Math_MaxDouble(_f64 _lhs, _f64 _rhs)
+extern Math_Max3S32                     : proc  ; _s32 Math_Max3S32(_s32 _a, _s32 _b, _s32 _c)
+extern Math_Max3U32                     : proc  ; _u32 Math_Max3U32(_u32 _a, _u32 _b, _u32 _c)
+extern Math_Max3S64                     : proc  ; _s64 Math_Max3S64(_s64 _a, _s64 _b, _s64 _c)
+extern Math_Max3U64                     : proc  ; _u64 Math_Max3U64(_u64 _a, _u64 _b, _u64 _c)
+extern Math_Max3Float                   : proc  ; _f32 Math_Max3Float(_f32 _a, _f32 _b, _f32 _c)
+extern Math_Max3Double                  : proc  ; _f64 Math_Max3Double(_f64 _a, _f64 _b, _f64 _c)
+extern Math_Max4S32                     : proc  ; _s32 Math_Max4S32(_s32 _a, _s32 _b, _s32 _c, _s32 _d)
+extern Math_Max4U32                     : proc  ; _u32 Math_Max4U32(_u32 _a, _u32 _b, _u32 _c, _u32 _d)
+extern Math_Max4S64                     : proc  ; _s64 Math_Max4S64(_s64 _a, _s64 _b, _s64 _c, _s64 _d)
+extern Math_Max4U64                     : proc  ; _u64 Math_Max4U64(_u64 _a, _u64 _b, _u64 _c, _u64 _d)
+extern Math_Max4Float                   : proc  ; _f32 Math_Max4Float(_f32 _a, _f32 _b, _f32 _c, _f32 _d)
+extern Math_Max4Double                  : proc  ; _f64 Math_Max4Double(_f64 _a, _f64 _b, _f64 _c, _f64 _d)
+extern Math_MinS32                      : proc  ; _s32 Math_MinS32(_s32 _lhs, _s32 _rhs)
+extern Math_MinU32                      : proc  ; _u32 Math_MinU32(_u32 _lhs, _u32 _rhs)
+extern Math_MinS64                      : proc  ; _s64 Math_MinS64(_s64 _lhs, _s64 _rhs)
+extern Math_MinU64                      : proc  ; _u64 Math_MinU64(_u64 _lhs, _u64 _rhs)
+extern Math_MinFloat                    : proc  ; _f32 Math_MinFloat(_f32 _lhs, _f32 _rhs)
+extern Math_MinDouble                   : proc  ; _f64 Math_MinDouble(_f64 _lhs, _f64 _rhs)
+extern Math_Min3S32                     : proc  ; _s32 Math_Min3S32(_s32 _a, _s32 _b, _s32 _c)
+extern Math_Min3U32                     : proc  ; _u32 Math_Min3U32(_u32 _a, _u32 _b, _u32 _c)
+extern Math_Min3S64                     : proc  ; _s64 Math_Min3S64(_s64 _a, _s64 _b, _s64 _c)
+extern Math_Min3U64                     : proc  ; _u64 Math_Min3U64(_u64 _a, _u64 _b, _u64 _c)
+extern Math_Min3Float                   : proc  ; _f32 Math_Min3Float(_f32 _a, _f32 _b, _f32 _c)
+extern Math_Min3Double                  : proc  ; _f64 Math_Min3Double(_f64 _a, _f64 _b, _f64 _c)
+extern Math_Min4S32                     : proc  ; _s32 Math_Min4S32(_s32 _a, _s32 _b, _s32 _c, _s32 _d)
+extern Math_Min4U32                     : proc  ; _u32 Math_Min4U32(_u32 _a, _u32 _b, _u32 _c, _u32 _d)
+extern Math_Min4S64                     : proc  ; _s64 Math_Min4S64(_s64 _a, _s64 _b, _s64 _c, _s64 _d)
+extern Math_Min4U64                     : proc  ; _u64 Math_Min4U64(_u64 _a, _u64 _b, _u64 _c, _u64 _d)
+extern Math_Min4Float                   : proc  ; _f32 Math_Min4Float(_f32 _a, _f32 _b, _f32 _c, _f32 _d)
+extern Math_Min4Double                  : proc  ; _f64 Math_Min4Double(_f64 _a, _f64 _b, _f64 _c, _f64 _d)
+extern Math_ClampS32                    : proc  ; _s32 Math_ClampS32(_s32 _value, _s32 _min, _s32 _max)
+extern Math_ClampU32                    : proc  ; _u32 Math_ClampU32(_u32 _value, _u32 _min, _u32 _max)
+extern Math_ClampS64                    : proc  ; _s64 Math_ClampS64(_s64 _value, _s64 _min, _s64 _max)
+extern Math_ClampU64                    : proc  ; _u64 Math_ClampU64(_u64 _value, _u64 _min, _u64 _max)
+extern Math_ClampFloat                  : proc  ; _f32 Math_ClampFloat(_f32 _value, _f32 _min, _f32 _max)
+extern Math_ClampDouble                 : proc  ; _f64 Math_ClampDouble(_f64 _value, _f64 _min, _f64 _max)
+
+; ========================================================================
+; Time 관련 extern 함수 선언
+; ========================================================================
+extern Time_Now                         : proc  ; _s64 Time_Now()
+extern Time_Make                        : proc  ; _s64 Time_Make(_s32 _year, _s32 _month, _s32 _day, _s32 _hour, _s32 _minute, _s32 _second, _s32 _miliSecond, _s32 _microSecond)
+extern Time_FormatBuffered              : proc  ; int Time_FormatBuffered(_s64 _tick, const char* _fmt, char* _pBuff, int _capacity)
+extern Time_Diff                        : proc  ; _s64 Time_Diff(_s64 _lhsTick, _s64 _rhsTick)
+extern Time_GetYear                     : proc  ; int Time_GetYear(_s64 _tick)
+extern Time_GetMonth                    : proc  ; int Time_GetMonth(_s64 _tick)
+extern Time_GetDay                      : proc  ; int Time_GetDay(_s64 _tick)
+extern Time_GetHour                     : proc  ; int Time_GetHour(_s64 _tick)
+extern Time_GetMinute                   : proc  ; int Time_GetMinute(_s64 _tick)
+extern Time_GetSecond                   : proc  ; int Time_GetSecond(_s64 _tick)
+extern Time_GetMiliSecond               : proc  ; int Time_GetMiliSecond(_s64 _tick)
+extern Time_GetMicroSecond              : proc  ; int Time_GetMicroSecond(_s64 _tick)
+extern Time_AddYear                     : proc  ; _s64 Time_AddYear(_s64 _tick, _s32 _value)
+extern Time_AddMonth                    : proc  ; _s64 Time_AddMonth(_s64 _tick, _s32 _value)
+extern Time_AddDay                      : proc  ; _s64 Time_AddDay(_s64 _tick, _s32 _value)
+extern Time_AddHour                     : proc  ; _s64 Time_AddHour(_s64 _tick, _s64 _value)
+extern Time_AddMinute                   : proc  ; _s64 Time_AddMinute(_s64 _tick, _s64 _value)
+extern Time_AddSecond                   : proc  ; _s64 Time_AddSecond(_s64 _tick, _s64 _value)
+extern Time_AddMiliSecond               : proc  ; _s64 Time_AddMiliSecond(_s64 _tick, _s64 _value)
+extern Time_AddMicroSecond              : proc  ; _s64 Time_AddMicroSecond(_s64 _tick, _s64 _value)
+extern Time_SubtractYear                : proc  ; _s64 Time_SubtractYear(_s64 _tick, _s32 _value)
+extern Time_SubtractMonth               : proc  ; _s64 Time_SubtractMonth(_s64 _tick, _s32 _value)
+extern Time_SubtractDay                 : proc  ; _s64 Time_SubtractDay(_s64 _tick, _s32 _value)
+extern Time_SubtractHour                : proc  ; _s64 Time_SubtractHour(_s64 _tick, _s64 _value)
+extern Time_SubtractMinute              : proc  ; _s64 Time_SubtractMinute(_s64 _tick, _s64 _value)
+extern Time_SubtractSecond              : proc  ; _s64 Time_SubtractSecond(_s64 _tick, _s64 _value)
+extern Time_SubtractMiliSecond          : proc  ; _s64 Time_SubtractMiliSecond(_s64 _tick, _s64 _value)
+extern Time_SubtractMicroSecond         : proc  ; _s64 Time_SubtractMicroSecond(_s64 _tick, _s64 _value)
+
+; ========================================================================
+; Env 관련 extern 함수 선언
+; ========================================================================
+extern Env_TimeGetTime                  : proc  ; _u32 Env_TimeGetTime()
+extern Env_AppTime                      : proc  ; _s64 Env_AppTime()
+extern Env_AppTimeTgt                   : proc  ; _u32 Env_AppTimeTgt()
+extern Env_SystemTime                   : proc  ; _s64 Env_SystemTime()
+extern Env_SystemTimeTgt                : proc  ; _s64 Env_SystemTimeTgt()
+
+; ========================================================================
+; Ascii 관련 extern 함수 선언
+; ========================================================================
+extern Ascii_IsAlphabat                 : proc  ; _s32 Ascii_IsAlphabat(_s8 _ch)
+extern Ascii_IsLowerCaseAlphabat        : proc  ; _s32 Ascii_IsLowerCaseAlphabat(_s8 _ch)
+extern Ascii_IsUpperCaseAlphabat        : proc  ; _s32 Ascii_IsUpperCaseAlphabat(_s8 _ch)
+extern Ascii_IsNumeric                  : proc  ; _s32 Ascii_IsNumeric(_s8 _ch)
+extern Ascii_IsSpace                    : proc  ; _s32 Ascii_IsSpace(_s8 _ch)
+extern Ascii_ToLower                    : proc  ; _s8 Ascii_ToLower(_s8 _ch)
+extern Ascii_ToUpper                    : proc  ; _s8 Ascii_ToUpper(_s8 _ch)
+
+; ========================================================================
+; StringUtil 관련 extern 함수 선언
+; ========================================================================
+extern StringUtil_ToStringBuffered_U32      : proc  ; _s32 StringUtil_ToStringBuffered_U32(_s8* _pBuff, _s32 _capacity, _u32 _value)
+extern StringUtil_ToStringBuffered_S32      : proc  ; _s32 StringUtil_ToStringBuffered_S32(_s8* _pBuff, _s32 _capacity, _s32 _value)
+extern StringUtil_ToStringBuffered_U64      : proc  ; _s32 StringUtil_ToStringBuffered_U64(_s8* _pBuff, _s32 _capacity, _u64 _value)
+extern StringUtil_ToStringBuffered_S64      : proc  ; _s32 StringUtil_ToStringBuffered_S64(_s8* _pBuff, _s32 _capacity, _s64 _value)
+extern StringUtil_ToStringBuffered_Float    : proc  ; _s32 StringUtil_ToStringBuffered_Float(_s8* _pBuff, _s32 _capacity, _f32 _value)
+extern StringUtil_ToStringBuffered_Double   : proc  ; _s32 StringUtil_ToStringBuffered_Double(_s8* _pBuff, _s32 _capacity, _f64 _value)
+extern StringUtil_ToNumber_S32              : proc  ; _s32 StringUtil_ToNumber_S32(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero)
+extern StringUtil_ToNumber_U32              : proc  ; _u32 StringUtil_ToNumber_U32(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero)
+extern StringUtil_ToNumber_S64              : proc  ; _s64 StringUtil_ToNumber_S64(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero)
+extern StringUtil_ToNumber_U64              : proc  ; _u64 StringUtil_ToNumber_U64(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero)
+extern StringUtil_ToNumber_Float            : proc  ; _f32 StringUtil_ToNumber_Float(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero)
+extern StringUtil_ToNumber_Double           : proc  ; _f64 StringUtil_ToNumber_Double(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero)
+extern StringUtil_TryToNumber_S32           : proc  ; _s32 StringUtil_TryToNumber_S32(_s32* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero)
+extern StringUtil_TryToNumber_U32           : proc  ; _s32 StringUtil_TryToNumber_U32(_u32* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero)
+extern StringUtil_TryToNumber_S64           : proc  ; _s32 StringUtil_TryToNumber_S64(_s64* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero)
+extern StringUtil_TryToNumber_U64           : proc  ; _s32 StringUtil_TryToNumber_U64(_u64* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero)
+extern StringUtil_TryToNumber_Float         : proc  ; _s32 StringUtil_TryToNumber_Float(_f32* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero)
+extern StringUtil_TryToNumber_Double        : proc  ; _s32 StringUtil_TryToNumber_Double(_f64* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero)
+extern StringUtil_Length                    : proc  ; _s32 StringUtil_Length(const _s8* _pStr)
+extern StringUtil_LengthWithNull            : proc  ; _s32 StringUtil_LengthWithNull(const _s8* _pStr)
+extern StringUtil_IsNullOrEmpty             : proc  ; _s32 StringUtil_IsNullOrEmpty(const _s8* _pStr)
+extern StringUtil_Copy                      : proc  ; _s32 StringUtil_Copy(_s8* _pBuffer, _s32 _bufferSize, const _s8* _pCopy)
+extern StringUtil_CopyUnsafe                : proc  ; _s32 StringUtil_CopyUnsafe(_s8* _pBuffer, const _s8* _pCopy)
+extern StringUtil_IsEqual                   : proc  ; _s32 StringUtil_IsEqual(const _s8* _pSrc, const _s8* _pDst, _s32 _bCompareCase)
+extern StringUtil_IsEqualLen                : proc  ; _s32 StringUtil_IsEqualLen(const _s8* _pSrc, _s32 _srcLen, const _s8* _pDst, _s32 _dstLen, _s32 _bCompareCase)
+extern StringUtil_Find                      : proc  ; _s32 StringUtil_Find(const _s8* _pSource, _s32 _sourceLen, _s32 _startIdx, _s32 _endIdx, const _s8* _pStr, _s32 _caseSensitive)
+extern StringUtil_FindLen                   : proc  ; _s32 StringUtil_FindLen(const _s8* _pSource, _s32 _sourceLen, _s32 _startIdx, _s32 _endIdx, const _s8* _pStr, _s32 _strLen, _s32 _caseSensitive)
+extern StringUtil_FindFrom                  : proc  ; _s32 StringUtil_FindFrom(const _s8* _pSource, _s32 _sourceLen, _s32 _startIdx, const _s8* _pStr, _s32 _caseSensitive)
+extern StringUtil_FindAll                   : proc  ; _s32 StringUtil_FindAll(_s32* _pPositionArray, const _s8* _pSource, const _s8* _pStr, _s32 _caseSensitive)
+extern StringUtil_FindAllLen                : proc  ; _s32 StringUtil_FindAllLen(_s32* _pPositionArray, const _s8* _pSource, _s32 _sourceLen, const _s8* _pStr, _s32 _caseSensitive)
+extern StringUtil_FindAllRange              : proc  ; _s32 StringUtil_FindAllRange(_s32* _pPositionArray, const _s8* _pSource, _s32 _sourceLen, _s32 _startIdx, _s32 _endIdx, const _s8* _pStr, _s32 _caseSensitive)
+extern StringUtil_FindChar                  : proc  ; _s32 StringUtil_FindChar(const _s8* _pSource, _s8 _ch)
+extern StringUtil_FindCharReverse           : proc  ; _s32 StringUtil_FindCharReverse(const _s8* _pSource, _s8 _ch)
+extern StringUtil_FindCharReverseLen        : proc  ; _s32 StringUtil_FindCharReverseLen(const _s8* _pSource, _s32 _len, _s8 _ch)
+extern StringUtil_FindCharUncontained       : proc  ; _s32 StringUtil_FindCharUncontained(const _s8* _pSource, _s8 _ch)

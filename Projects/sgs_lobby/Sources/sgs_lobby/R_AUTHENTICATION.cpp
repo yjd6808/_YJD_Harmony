@@ -12,7 +12,7 @@
 #include "sgs/AuthenticationComponent.h"
 #include "sgs/CmdRelay_AUTHENTICATION.h"
 #include "sgs/S_MESSAGE_COMMON.h"
-#include "sgs/_Net/NetGroup_Main.h"
+#include "sgs/Net/NetGroup_Main.h"
 
 #include "sgs_lobby/UnauthenticatedSessionManager.h"
 #include "sgs_lobby/S_LOBBY.h"

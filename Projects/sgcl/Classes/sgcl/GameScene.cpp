@@ -6,7 +6,7 @@
  */
 
 #include "GameCoreHeader.h"
-#include "_Scene/Scene_Game.h"
+#include "Scene/Scene_Game.h"
 
 #include <sge/GridLayer.h>
 

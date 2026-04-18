@@ -9,37 +9,37 @@
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void RandomInit()
+void Random_Init()
 {
 	globalRandomInstance.Initialize();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int RandomGenerateInt(int _inclusiveBegin, int _inclusiveEnd)
+_s32 Random_GenerateInt(_s32 _inclusiveBegin, _s32 _inclusiveEnd)
 {
 	return globalRandomInstance.GenerateInt(_inclusiveBegin, _inclusiveEnd);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-double RandomGenerateDouble(double _inclusiveBegin, double _inclusiveEnd)
+_f64 Random_GenerateDouble(_f64 _inclusiveBegin, _f64 _inclusiveEnd)
 {
 	return globalRandomInstance.GenerateDouble(_inclusiveBegin, _inclusiveEnd);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-char RandomGenerateAlphabat()
+_s8 Random_GenerateAlphabat()
 {
 	return globalRandomInstance.GenerateAlphabat();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int RandomChance(double _percentProbability)
+_s32 Random_Chance(_f64 _percentProbability)
 {
 	return globalRandomInstance.Chance(_percentProbability) ? 1 : 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void RandomWriteAlphabatTextBuffered(int _length, char* _pBuff, int _capacity)
+void Random_WriteAlphabatTextBuffered(_s32 _length, _s8* _pBuff, _s32 _capacity)
 {
 	if (_pBuff == nullptr || _capacity <= 0)
 		return;

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 6/16/2023 4:52:19 AM
  * =====================
@@ -10,7 +10,7 @@
 
 #include "jc/Define.h"
 #include "jnet/Packet/Command.h"
-#include "sg/Const.h"
+#include "sg/Const/Const.h"
 
 
 struct InterServerCmdType : jnet::CmdType

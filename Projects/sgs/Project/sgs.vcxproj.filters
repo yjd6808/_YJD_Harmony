@@ -3,34 +3,34 @@
   <ItemGroup>
     <ClInclude Include="..\Sources\sgs\ServerCore.h" />
     <ClInclude Include="..\Sources\sgs\S_SETUP_IS_COMMON.h">
-      <Filter>_Net\Send</Filter>
+      <Filter>Net\Send</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\R_SETUP_COMMON.h">
-      <Filter>_Net\Recv</Filter>
+      <Filter>Net\Recv</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\CmdHost.h">
-      <Filter>_Net\Cmd</Filter>
+      <Filter>Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\InterServerSendHelper.h">
-      <Filter>_Net</Filter>
+      <Filter>Net</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\InterServerCmdDefine.h">
-      <Filter>_Net\Cmd</Filter>
+      <Filter>Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\InterServerRecvHelper.h">
-      <Filter>_Net</Filter>
+      <Filter>Net</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\CmdRelay.h">
-      <Filter>_Net\Cmd</Filter>
+      <Filter>Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\IComponent.h">
-      <Filter>_Util</Filter>
+      <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\IUpdatable.h">
-      <Filter>_Util</Filter>
+      <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\UpdatableCollection.h">
-      <Filter>_Util</Filter>
+      <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\ServerEnum.h">
       <Filter>Enum</Filter>
@@ -45,7 +45,7 @@
       <Filter>Const</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\ComponentCollection.h">
-      <Filter>_Util</Filter>
+      <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\ServerConst_COMPONENT.h">
       <Filter>Const</Filter>
@@ -54,76 +54,76 @@
       <Filter>Component</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\CmdHost_PING.h">
-      <Filter>_Net\Cmd</Filter>
+      <Filter>Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\CmdHost_SETUP.h">
-      <Filter>_Net\Cmd</Filter>
+      <Filter>Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\CmdHost_MESSAGE.h">
-      <Filter>_Net\Cmd</Filter>
+      <Filter>Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\CmdRelay_AUTHENTICATION.h">
-      <Filter>_Net\Cmd</Filter>
+      <Filter>Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\SessionComponent.h">
-      <Filter>_Util</Filter>
+      <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\ISessionEventHandler.h">
-      <Filter>_Util</Filter>
+      <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\CmdRelay_TEST.h">
-      <Filter>_Net\Cmd</Filter>
+      <Filter>Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\R_PING_COMMON.h">
-      <Filter>_Net\Recv</Filter>
+      <Filter>Net\Recv</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\R_MESSAGE_COMMON.h">
-      <Filter>_Net\Recv</Filter>
+      <Filter>Net\Recv</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\R_TEST_COMMON.h">
-      <Filter>_Net\Recv</Filter>
+      <Filter>Net\Recv</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\S_TEST_IS_COMMON.h">
-      <Filter>_Net\Send</Filter>
+      <Filter>Net\Send</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\S_MESSAGE_IS_COMMON.h">
-      <Filter>_Net\Send</Filter>
+      <Filter>Net\Send</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\S_PING_IS_COMMON.h">
-      <Filter>_Net\Send</Filter>
+      <Filter>Net\Send</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\S_MESSAGE_COMMON.h">
-      <Filter>_Net\Send</Filter>
+      <Filter>Net\Send</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\QueryDefine_AUTH.h">
       <Filter>Query</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\ListenerHelperCommon.h">
-      <Filter>_Net</Filter>
+      <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs\_Net\NetCore.h">
-      <Filter>_Net</Filter>
+    <ClInclude Include="..\Sources\sgs\Net\NetCore.h">
+      <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs\_Net\NetGroup_InterServ.h">
-      <Filter>_Net</Filter>
+    <ClInclude Include="..\Sources\sgs\Net\NetGroup_InterServ.h">
+      <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs\_Net\NetGroup_Main.h">
-      <Filter>_Net</Filter>
+    <ClInclude Include="..\Sources\sgs\Net\NetGroup_Main.h">
+      <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs\_Net\NetServer.h">
-      <Filter>_Net</Filter>
+    <ClInclude Include="..\Sources\sgs\Net\NetServer.h">
+      <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs\_Net\NetSession.h">
-      <Filter>_Net</Filter>
+    <ClInclude Include="..\Sources\sgs\Net\NetSession.h">
+      <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs\_Net\NetClientListener_InterServ.h">
-      <Filter>_Net</Filter>
+    <ClInclude Include="..\Sources\sgs\Net\NetClientListener_InterServ.h">
+      <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs\_API\sgapiServerBase.h">
-      <Filter>_API</Filter>
+    <ClInclude Include="..\Sources\sgs\API\sgapiServerBase.h">
+      <Filter>API</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgs\_Net\GameDB.h">
-      <Filter>_Net\Database</Filter>
+    <ClInclude Include="..\Sources\sgs\Net\GameDB.h">
+      <Filter>Net\Database</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgs\PCH\Core.h">
       <Filter>PCH</Filter>
@@ -132,79 +132,79 @@
   <ItemGroup>
     <ClCompile Include="..\Sources\sgs\ServerCore.cpp" />
     <ClCompile Include="..\Sources\sgs\S_SETUP_IS_COMMON.cpp">
-      <Filter>_Net\Send</Filter>
+      <Filter>Net\Send</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\R_SETUP_COMMON.cpp">
-      <Filter>_Net\Recv</Filter>
+      <Filter>Net\Recv</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\InterServerSendHelper.cpp">
-      <Filter>_Net</Filter>
+      <Filter>Net</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\InterServerRecvHelper.cpp">
-      <Filter>_Net</Filter>
+      <Filter>Net</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\UpdatableCollection.cpp">
-      <Filter>_Util</Filter>
+      <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\ServerEnum.cpp">
       <Filter>Enum</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\ComponentCollection.cpp">
-      <Filter>_Util</Filter>
+      <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\AuthenticationComponent.cpp">
       <Filter>Component</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\SessionComponent.cpp">
-      <Filter>_Util</Filter>
+      <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\R_PING_COMMON.cpp">
-      <Filter>_Net\Recv</Filter>
+      <Filter>Net\Recv</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\R_MESSAGE_COMMON.cpp">
-      <Filter>_Net\Recv</Filter>
+      <Filter>Net\Recv</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\R_TEST_COMMON.cpp">
-      <Filter>_Net\Recv</Filter>
+      <Filter>Net\Recv</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\S_TEST_IS_COMMON.cpp">
-      <Filter>_Net\Send</Filter>
+      <Filter>Net\Send</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\S_MESSAGE_IS_COMMON.cpp">
-      <Filter>_Net\Send</Filter>
+      <Filter>Net\Send</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\S_PING_IS_COMMON.cpp">
-      <Filter>_Net\Send</Filter>
+      <Filter>Net\Send</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\S_MESSAGE_COMMON.cpp">
-      <Filter>_Net\Send</Filter>
+      <Filter>Net\Send</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\ListenerHelperCommon.cpp">
-      <Filter>_Net</Filter>
+      <Filter>Net</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs\_Net\NetGroup_InterServ.cpp">
-      <Filter>_Net</Filter>
+    <ClCompile Include="..\Sources\sgs\Net\NetGroup_InterServ.cpp">
+      <Filter>Net</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs\_Net\NetGroup_Main.cpp">
-      <Filter>_Net</Filter>
+    <ClCompile Include="..\Sources\sgs\Net\NetGroup_Main.cpp">
+      <Filter>Net</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs\_Net\NetServer.cpp">
-      <Filter>_Net</Filter>
+    <ClCompile Include="..\Sources\sgs\Net\NetServer.cpp">
+      <Filter>Net</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs\_Net\NetSession.cpp">
-      <Filter>_Net</Filter>
+    <ClCompile Include="..\Sources\sgs\Net\NetSession.cpp">
+      <Filter>Net</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs\_Net\NetClientListener_InterServ.cpp">
-      <Filter>_Net</Filter>
+    <ClCompile Include="..\Sources\sgs\Net\NetClientListener_InterServ.cpp">
+      <Filter>Net</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs\_Net\NetCore.cpp">
-      <Filter>_Net</Filter>
+    <ClCompile Include="..\Sources\sgs\Net\NetCore.cpp">
+      <Filter>Net</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs\_API\sgapiServerBase.cpp">
-      <Filter>_API</Filter>
+    <ClCompile Include="..\Sources\sgs\API\sgapiServerBase.cpp">
+      <Filter>API</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgs\_Net\GameDB.cpp">
-      <Filter>_Net\Database</Filter>
+    <ClCompile Include="..\Sources\sgs\Net\GameDB.cpp">
+      <Filter>Net\Database</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgs\PCH\Core.cpp">
       <Filter>PCH</Filter>
@@ -223,25 +223,25 @@
     <Filter Include="Query">
       <UniqueIdentifier>{b67e8325-f0df-4416-9a2c-c3994194080e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_API">
+    <Filter Include="API">
       <UniqueIdentifier>{04ebca6b-9614-4c52-a715-3c297500acb3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_Net">
+    <Filter Include="Net">
       <UniqueIdentifier>{49b73bd5-7afb-4461-b558-0644e505ebff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_Net\Recv">
+    <Filter Include="Net\Recv">
       <UniqueIdentifier>{7d6217ad-83c2-431a-b2c7-71c666320a1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_Net\Send">
+    <Filter Include="Net\Send">
       <UniqueIdentifier>{6b1f231b-af01-479d-8ae0-4738e1d223af}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_Net\Cmd">
+    <Filter Include="Net\Cmd">
       <UniqueIdentifier>{26966038-820f-486e-9eab-255c8f6394ec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_Util">
+    <Filter Include="Util">
       <UniqueIdentifier>{e6d8fe09-415a-4176-8d54-77235b91080c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_Net\Database">
+    <Filter Include="Net\Database">
       <UniqueIdentifier>{f261f596-57e0-41e0-b8aa-ed3239e9ca96}</UniqueIdentifier>
     </Filter>
     <Filter Include="PCH">

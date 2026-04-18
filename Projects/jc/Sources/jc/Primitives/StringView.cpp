@@ -728,7 +728,7 @@ Vector<StringView, CDefaultAllocator> StringView::Split(char _delimiter, bool _i
 
 	_s32 offset = 0;
 
-	for (_u32 i = 0; i <= len_; i++)
+	for (_s32 i = 0; i <= (_s32)len_; i++)
 	{
 		if (i == len_ || pBuf_[i] == _delimiter)
 		{

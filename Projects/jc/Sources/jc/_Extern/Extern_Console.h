@@ -6,6 +6,7 @@
 #pragma once
 
 #ifdef __cplusplus
+#include "jc/Type.h"
 extern "C" {
 #endif
 
@@ -13,7 +14,7 @@ extern "C" {
  * Console 초기화
  * @return true if successful, false otherwise
  */
-int ConsoleInit();
+_s32 Console_Init();
 
 /*
  * Console 콘솔 크기 설정
@@ -21,31 +22,30 @@ int ConsoleInit();
  * @param _height : 콘솔 높이
  * @return true if successful, false otherwise
  */
-int ConsoleSetSize(int _width, int _height);
+_s32 Console_SetSize(_s32 _width, _s32 _height);
 
 /*
  * 콘솔 색상 복원
  */
-void ConsoleRestoreColor();
+void Console_RestoreColor();
 
 /*
  * 콘솔 색상 설정
  * @param _color : 색상 (ConsoleColor 열거형 값)
  */
-void ConsoleSetColor(int _color);
+void Console_SetColor(_s32 _color);
 
 /*
  * 현재 콘솔 색상 가져오기
  * @return 현재 색상
  */
-int ConsoleGetColor();
+_s32 Console_GetColor();
 
+_s32 Console_Write(const _s8* _pFmt);
+_s32 Console_WriteLine(const _s8* _pFmt);
 
-int ConsoleWrite(const char* _pFmt);
-int ConsoleWriteLine(const char* _pFmt);
-
-int ConsoleWriteWithArgs(const char* _pFmt, ...);
-int ConsoleWriteLineWithArgs(const char* _pFmt, ...);
+_s32 Console_WriteWithArgs(const _s8* _pFmt, ...);
+_s32 Console_WriteLineWithArgs(const _s8* _pFmt, ...);
 
 /*
  * 콘솔 라인 입력
@@ -54,46 +54,46 @@ int ConsoleWriteLineWithArgs(const char* _pFmt, ...);
  * @param _capacity : 버퍼 크기
  * @return 입력된 문자 개수
  */
-int ConsoleReadLineBuffered(const char* _pMsg, char* _pBuffer, int _capacity);
+_s32 Console_ReadLineBuffered(const _s8* _pMsg, _s8* _pBuffer, _s32 _capacity);
 
 /*
  * 콘솔 클리어
  */
-void ConsoleClear();
+void Console_Clear();
 
 /*
  * 커서 위치 설정
  * @param _x : X 좌표
  * @param _y : Y 좌표
  */
-void ConsoleSetCursorPosition(int _x, int _y);
+void Console_SetCursorPosition(_s32 _x, _s32 _y);
 
 /*
  * 현재 커서 위치 가져오기
  * @param _pX : X 좌표를 저장할 포인터
  * @param _pY : Y 좌표를 저장할 포인터
  */
-void ConsoleGetCursorPosition(int* _pX, int* _pY);
+void Console_GetCursorPosition(_s32* _pX, _s32* _pY);
 
 /*
  * 출력 코드 페이지 설정
  * @param _codePage : 코드 페이지 (예: 65001 for UTF-8)
  * @return true if successful, false otherwise
  */
-int ConsoleSetOutputCodePage(int _codePage);
+_s32 Console_SetOutputCodePage(_s32 _codePage);
 
 /*
  * 현재 출력 코드 페이지 가져오기
  * @return 현재 코드 페이지
  */
-int ConsoleGetOutputCodePage();
+_s32 Console_GetOutputCodePage();
 
 /*
  * 가상 터미널 모드 활성화/비활성화
  * @param _enabled : true to enable, false to disable
  * @return true if successful, false otherwise
  */
-int ConsoleSetEnableVTMode(int _enabled);
+_s32 Console_SetEnableVTMode(_s32 _enabled);
 
 #ifdef __cplusplus
 }

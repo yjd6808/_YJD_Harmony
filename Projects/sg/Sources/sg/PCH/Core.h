@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/9/2023 12:04:30 AM
  * =====================
@@ -86,13 +86,13 @@
 #include "sgcc/PCH/Core.h"
 
 #include "sg/Namespace.h"
-#include "sg/Const.h"
+#include "sg/Const/Const.h"
 #include "sg/DLLExport.h"
 #include "sg/Logo.h"
 #include "sg/CommonCore.h"
-#include "sg/_Util/JsonUtil.h"
+#include "sg/Util/JsonUtil.h"
 
-#include "sg/_Core/VirtualMachine.h"
+#include "sg/Core/VirtualMachine.h"
 
 #define SG_CACHELINE_SIZE        64
 #define SG_FLT_EPSILON           0.0001f

@@ -1,0 +1,86 @@
+﻿/*
+ * 작성자: 윤정도
+ * 생성일: 3/22/2023 12:50:32 AM
+ * =====================
+ *
+ */
+
+
+#pragma once
+
+#include "sgcl/Game/UI/UIGroup.h"
+#include "sgcl/Game/UI/UIButton.h"
+#include "sgcl/Game/UI/UISprite.h"
+#include "sgcl/Game/UI/UILabel.h"
+#include "sgcl/Game/UI/UICheckBox.h"
+#include "sgcl/Game/UI/UIEditBox.h"
+#include "sgcl/Game/UI/UIToggleButton.h"
+#include "sgcl/Game/UI/UIProgressBar.h"
+#include "sgcl/Game/UI/UIScrollBar.h"
+#include "sgcl/Game/UI/UIStatic.h"
+
+struct DragState;
+
+class UIRootGroup : public UIGroup
+{
+public:
+	UIRootGroup(UIGroupInfo* _pGroupInfo);
+
+	bool IsRootGroup() override
+	{
+		return true;
+	}
+
+	bool init() final;
+
+	// 로딩전, 자식 컨트롤들 init만 전부 이뤄진상태
+	// 처음 한번만 호출 하도록 함
+	virtual void OnInit() = 0;
+
+	// 로딩후, 자식 컨트롤들 텍스쳐, 스프라이트 모두 로딩되었을 때
+	// 텍스쳐 재로딩시 다시 호출 됨
+	virtual void OnLoaded();
+	virtual void OnUnloaded();
+
+	// UILayer에 부착/해제시
+	virtual void OnAdded();
+	virtual void OnRemoved();
+
+	// 마스터 그룹 자식들중에서 발생하는 이벤트들
+	virtual void OnMouseEnterTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseMoveTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseDownTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseLeaveTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseScrollTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent);
+
+	virtual void OnDragEnter(UIElement* _pElement, const DragState& _dragState);
+	virtual void OnDragMove(UIElement* _pElement, const DragState& _dragState);
+	virtual void OnDragEnd(UIElement* _pElement);
+
+	virtual void OnCheckedStateChanged(UICheckBox* _pCheckBox, bool _checked);
+	virtual void OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _state);
+
+	virtual void OnScrollBarUpButtonPressed(UIScrollBar* _pScrollBar, int _rowPos);
+	virtual void OnScrollBarDownButtonPressed(UIScrollBar* _pScrollBar, int _rowPos);
+	virtual void OnScrollBarThumbButtonPressed(UIScrollBar* _pScrollBar, int _rowPos);
+	virtual void OnScrollBarPositionChanged(UIScrollBar* _pScrollBar, int _prevRowPos, int _curRosPos);
+
+	virtual void OnEditBoxEditingDidBegin(UIEditBox* _pEditBox);
+	virtual void OnEditBoxTextChanged(UIEditBox* _pEditBox, const std::string& _str);
+	virtual void OnEditBoxReturn(UIEditBox* _pEditBox);
+	virtual void OnEditBoxEditingDidEndWithAction(UIEditBox* _pEditBox, cc_ui::EditBoxDelegate::EditBoxEndAction _endAction);
+
+	// 마스터 그룹에서 마우스 이벤트 발생시
+	virtual void OnMouseEnter(cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseMove(cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseDown(cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseUp(cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseLeave(cc::EventMouse* _pMouseEvent);
+	virtual void OnMouseScroll(cc::EventMouse* _pMouseEvent);
+
+	jc::String ToString() override
+	{
+		return jc::StringUtil::Format("마스터그룹(%d)", pBaseInfo_->code_);
+	}
+};

@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	간단한 시간을 다룰 수 있는 기능을 추가합니다.
 	스톱워치 기능
@@ -608,6 +608,7 @@ public: // public non-static
 	bool operator<=(const DateAndTime& _other) const;
 	bool operator==(const DateAndTime& _other) const;
 
+	int FormatBuffered(const char* _fmt, char* _pBuff, int _capacity) const;
 	String Format(const char* _fmt) const;
 	String FormatMysqlTime() const { return Format("yyyy-MM-dd HH:mm:ss.ffffff"); }
 
@@ -618,6 +619,7 @@ private: // private static
 private: // private non-static
 	int GetDatePart(const DatePart _part) const { return GetDatePart(Tick, _part); }
 	void ReflectFormat(const DateAndTime& _time, String& _ret, char _token, int _count) const;
+	void ReflectFormatBuffered(const DateAndTime& _time, char* _pBuff, int _capacity, int& _pos, char _token, int _count) const;
 	static void CheckOverFlow(_u64 _tick);
 public: // public static
 	static DateTime Now(TimeStandard _timeStandard = TimeStandard::Local);

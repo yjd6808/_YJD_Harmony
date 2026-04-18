@@ -1,0 +1,33 @@
+﻿/*
+ * 작성자: 윤정도
+ * 생성일: 1/29/2023 8:01:39 AM
+ * =====================
+ *
+ */
+
+#pragma once
+
+#include "sgcl/Game/AI/Activity/Hit/HitActivity.h"
+
+class HitActivity_Goblin : public HitActivity
+{
+public:
+	HitActivity_Goblin(Actor* _pActor);
+
+	void SelectHitAnimation();
+	void CheckPosition();
+
+	void OnActivityBegin() override;
+
+	void UpdateGroundHitState(float _dt);
+	void UpdateDownState(float _dt);
+	void UpdateAirHitState(float _dt);
+	void OnUpdate(float _dt) override;
+
+private:
+	bool hitSmall_;
+	bool onTheGround_; // 초기 Hit 판정시 공중이었는지 아니면 바닥이었는지 (false시 공중)
+	bool downTimeCheckBegin_;
+	float elapsedDownTime_;
+	float downRecoverTime_;
+};

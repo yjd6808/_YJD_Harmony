@@ -268,8 +268,14 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc\_Extern\Extern_Ascii.cpp" />
     <ClCompile Include="..\Sources\jc\_Extern\Extern_Console.cpp" />
+    <ClCompile Include="..\Sources\jc\_Extern\Extern_Env.cpp" />
+    <ClCompile Include="..\Sources\jc\_Extern\Extern_Math.cpp" />
+    <ClCompile Include="..\Sources\jc\_Extern\Extern_Memory.cpp" />
     <ClCompile Include="..\Sources\jc\_Extern\Extern_Random.cpp" />
+    <ClCompile Include="..\Sources\jc\_Extern\Extern_StringUtil.cpp" />
+    <ClCompile Include="..\Sources\jc\_Extern\Extern_Time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jc\Aligner.h" />
@@ -711,8 +717,14 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\jc\_Extern\Extern_Ascii.h" />
     <ClInclude Include="..\Sources\jc\_Extern\Extern_Console.h" />
+    <ClInclude Include="..\Sources\jc\_Extern\Extern_Env.h" />
+    <ClInclude Include="..\Sources\jc\_Extern\Extern_Math.h" />
+    <ClInclude Include="..\Sources\jc\_Extern\Extern_Memory.h" />
     <ClInclude Include="..\Sources\jc\_Extern\Extern_Random.h" />
+    <ClInclude Include="..\Sources\jc\_Extern\Extern_StringUtil.h" />
+    <ClInclude Include="..\Sources\jc\_Extern\Extern_Time.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\jc\Natvis\ArrayQueue.natvis" />
