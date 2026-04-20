@@ -42,10 +42,10 @@ void Console_SetColor(_s32 _color);
 _s32 Console_GetColor();
 
 _s32 Console_Write(const _s8* _pFmt);
-_s32 Console_WriteLine(const _s8* _pFmt);
+_s32 Console_WriteFmt(const _s8* _pFmt, ...);
 
-_s32 Console_WriteWithArgs(const _s8* _pFmt, ...);
-_s32 Console_WriteLineWithArgs(const _s8* _pFmt, ...);
+_s32 Console_WriteLine(const _s8* _pFmt);
+_s32 Console_WriteLineFmt(const _s8* _pFmt, ...);
 
 /*
  * 콘솔 라인 입력

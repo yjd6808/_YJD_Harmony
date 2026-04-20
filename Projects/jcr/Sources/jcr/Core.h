@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "jc/PCH/Core.h"
 
@@ -56,6 +56,7 @@
 #include "jc/Wrapper/CRuntime.h"
 
 #include "jc/Utils/Console.h"
+#include "jc/Utils/ConsoleMenuItem.h"
 
 #include "jc/Threading/Thread.h"
 #include "jc/Threading/ThreadPool.h"
@@ -83,6 +84,8 @@ USING_NS_STD;
 int call_01_AsmStudy(int _argc, char** _argv);
 int call_02_HeapStudy(int _argc, char** _argv);
 int call_03_RSPGame(int _argc, char** _argv);
+int call_04_CoStack(int _argc, char** _argv);
+int call_05_PageGuard(int _argc, char** _argv);
 
 
 

@@ -282,6 +282,9 @@
     <ClCompile Include="..\Sources\jc\_Extern\Extern_StringUtil.cpp">
       <Filter>_Extern</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc\Utils\ConsoleMenuItem.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jc\Type.h" />
@@ -747,6 +750,9 @@
     </ClInclude>
     <ClInclude Include="..\Sources\jc\_Extern\Extern_StringUtil.h">
       <Filter>_Extern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\Utils\ConsoleMenuItem.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

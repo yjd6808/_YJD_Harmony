@@ -51,7 +51,7 @@ _s32 Console_WriteLine(const _s8* _pFmt)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 Console_WriteWithArgs(const _s8* _pFmt, ...)
+_s32 Console_WriteFmt(const _s8* _pFmt, ...)
 {
 	va_list args;
 	va_start(args, _pFmt);
@@ -67,7 +67,7 @@ _s32 Console_WriteWithArgs(const _s8* _pFmt, ...)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 Console_WriteLineWithArgs(const _s8* _pFmt, ...)
+_s32 Console_WriteLineFmt(const _s8* _pFmt, ...)
 {
 	va_list args;
 	va_start(args, _pFmt);

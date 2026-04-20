@@ -12,106 +12,55 @@ extern "C" {
 #endif
 
 /*
- * 숫자를 문자열 버퍼에 기록 (unsigned 32-bit)
+ * 숫자를 문자열 버퍼에 기록
  * @param _pBuff     : 출력 버퍼
  * @param _capacity  : 버퍼 크기
  * @param _value     : 변환할 값
  * @return 기록된 문자 개수 (null 제외), 실패 시 음수
  */
 _s32 StringUtil_ToStringBuffered_U32(_s8* _pBuff, _s32 _capacity, _u32 _value);
-
-/*
- * 숫자를 문자열 버퍼에 기록 (signed 32-bit)
- */
 _s32 StringUtil_ToStringBuffered_S32(_s8* _pBuff, _s32 _capacity, _s32 _value);
-
-/*
- * 숫자를 문자열 버퍼에 기록 (unsigned 64-bit)
- */
 _s32 StringUtil_ToStringBuffered_U64(_s8* _pBuff, _s32 _capacity, _u64 _value);
-
-/*
- * 숫자를 문자열 버퍼에 기록 (signed 64-bit)
- */
 _s32 StringUtil_ToStringBuffered_S64(_s8* _pBuff, _s32 _capacity, _s64 _value);
-
-/*
- * 숫자를 문자열 버퍼에 기록 (float)
- */
 _s32 StringUtil_ToStringBuffered_Float(_s8* _pBuff, _s32 _capacity, _f32 _value);
-
-/*
- * 숫자를 문자열 버퍼에 기록 (double)
- */
 _s32 StringUtil_ToStringBuffered_Double(_s8* _pBuff, _s32 _capacity, _f64 _value);
 
 /*
- * 문자열을 숫자로 변환 (signed 32-bit)
- * @param _pStr              : 변환할 문자열
- * @param _ppEndptr          : 변환 종료 위치 포인터 (불필요 시 NULL 전달)
- * @param _ignoreLeadingZero : 1 = 선행 0 무시, 0 = 그대로 처리
+ * 문자열을 숫자로 변환
+ * @param _pStr : 변환할 문자열
  * @return 변환된 값
  */
-_s32 StringUtil_ToNumber_S32(const _s8* _pStr, _s8** _ppEndptr = NULL, _s32 _ignoreLeadingZero = 1);
+_s32 StringUtil_ToNumber_S32(const _s8* _pStr);
+_s32 StringUtil_ToNumber_S32_Ext(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero);
+_u32 StringUtil_ToNumber_U32(const _s8* _pStr);
+_u32 StringUtil_ToNumber_U32_Ext(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero);
+_s64 StringUtil_ToNumber_S64(const _s8* _pStr);
+_s64 StringUtil_ToNumber_S64_Ext(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero);
+_u64 StringUtil_ToNumber_U64(const _s8* _pStr);
+_u64 StringUtil_ToNumber_U64_Ext(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero);
+_f32 StringUtil_ToNumber_Float(const _s8* _pStr);
+_f32 StringUtil_ToNumber_Float_Ext(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero);
+_f64 StringUtil_ToNumber_Double(const _s8* _pStr);
+_f64 StringUtil_ToNumber_Double_Ext(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero);
 
 /*
- * 문자열을 숫자로 변환 (unsigned 32-bit)
- */
-_u32 StringUtil_ToNumber_U32(const _s8* _pStr, _s8** _ppEndptr = NULL, _s32 _ignoreLeadingZero = 1);
-
-/*
- * 문자열을 숫자로 변환 (signed 64-bit)
- */
-_s64 StringUtil_ToNumber_S64(const _s8* _pStr, _s8** _ppEndptr = NULL, _s32 _ignoreLeadingZero = 1);
-
-/*
- * 문자열을 숫자로 변환 (unsigned 64-bit)
- */
-_u64 StringUtil_ToNumber_U64(const _s8* _pStr, _s8** _ppEndptr = NULL, _s32 _ignoreLeadingZero = 1);
-
-/*
- * 문자열을 숫자로 변환 (float)
- */
-_f32 StringUtil_ToNumber_Float(const _s8* _pStr, _s8** _ppEndptr = NULL, _s32 _ignoreLeadingZero = 1);
-
-/*
- * 문자열을 숫자로 변환 (double)
- */
-_f64 StringUtil_ToNumber_Double(const _s8* _pStr, _s8** _ppEndptr = NULL, _s32 _ignoreLeadingZero = 1);
-
-/*
- * 문자열을 숫자로 안전하게 변환 (signed 32-bit)
- * @param _pVal              : 변환 결과를 저장할 포인터
- * @param _pStr              : 변환할 문자열
- * @param _ignoreLeadingZero : 1 = 선행 0 무시, 0 = 그대로 처리
+ * 문자열을 숫자로 안전하게 변환
+ * @param _pVal : 변환 결과를 저장할 포인터
+ * @param _pStr : 변환할 문자열
  * @return 1 if successful, 0 otherwise
  */
-_s32 StringUtil_TryToNumber_S32(_s32* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero = 1);
-
-/*
- * 문자열을 숫자로 안전하게 변환 (unsigned 32-bit)
- */
-_s32 StringUtil_TryToNumber_U32(_u32* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero = 1);
-
-/*
- * 문자열을 숫자로 안전하게 변환 (signed 64-bit)
- */
-_s32 StringUtil_TryToNumber_S64(_s64* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero = 1);
-
-/*
- * 문자열을 숫자로 안전하게 변환 (unsigned 64-bit)
- */
-_s32 StringUtil_TryToNumber_U64(_u64* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero = 1);
-
-/*
- * 문자열을 숫자로 안전하게 변환 (float)
- */
-_s32 StringUtil_TryToNumber_Float(_f32* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero = 1);
-
-/*
- * 문자열을 숫자로 안전하게 변환 (double)
- */
-_s32 StringUtil_TryToNumber_Double(_f64* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero = 1);
+_s32 StringUtil_TryToNumber_S32(_s32* _pVal, const _s8* _pStr);
+_s32 StringUtil_TryToNumber_S32_Ext(_s32* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero);
+_s32 StringUtil_TryToNumber_U32(_u32* _pVal, const _s8* _pStr);
+_s32 StringUtil_TryToNumber_U32_Ext(_u32* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero);
+_s32 StringUtil_TryToNumber_S64(_s64* _pVal, const _s8* _pStr);
+_s32 StringUtil_TryToNumber_S64_Ext(_s64* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero);
+_s32 StringUtil_TryToNumber_U64(_u64* _pVal, const _s8* _pStr);
+_s32 StringUtil_TryToNumber_U64_Ext(_u64* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero);
+_s32 StringUtil_TryToNumber_Float(_f32* _pVal, const _s8* _pStr);
+_s32 StringUtil_TryToNumber_Float_Ext(_f32* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero);
+_s32 StringUtil_TryToNumber_Double(_f64* _pVal, const _s8* _pStr);
+_s32 StringUtil_TryToNumber_Double_Ext(_f64* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero);
 
 /*
  * 문자열 길이 반환 (null 제외)
@@ -222,6 +171,24 @@ _s32 StringUtil_FindCharReverseLen(const _s8* _pSource, _s32 _len, _s8 _ch);
  * @return 발견된 인덱스
  */
 _s32 StringUtil_FindCharUncontained(const _s8* _pSource, _s8 _ch);
+
+/*
+ * 두 문자열 비교
+ * @param _pStr1 : 비교 문자열 1
+ * @param _pStr2 : 비교 문자열 2
+ * @return 1 if _pStr1 > _pStr2, -1 if _pStr1 < _pStr2, 0 if equal
+ */
+_s32 StringUtil_Compare(const _s8* _pStr1, const _s8* _pStr2);
+
+/*
+ * 두 문자열 비교 (길이 명시)
+ * @param _pStr1    : 비교 문자열 1
+ * @param _str1Len  : 문자열 1의 길이
+ * @param _pStr2    : 비교 문자열 2
+ * @param _str2Len  : 문자열 2의 길이
+ * @return 1 if _pStr1 > _pStr2, -1 if _pStr1 < _pStr2, 0 if equal
+ */
+_s32 StringUtil_CompareLen(const _s8* _pStr1, _s32 _str1Len, const _s8* _pStr2, _s32 _str2Len);
 
 #ifdef __cplusplus
 }

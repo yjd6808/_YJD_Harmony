@@ -17,7 +17,7 @@ void Random_Init()
 //////////////////////////////////////////////////////////////////////////////////////////
 _s32 Random_GenerateInt(_s32 _inclusiveBegin, _s32 _inclusiveEnd)
 {
-	return globalRandomInstance.GenerateInt(_inclusiveBegin, _inclusiveEnd);
+	return globalRandomInstance.GenerateInt(_inclusiveBegin, _inclusiveEnd + 1);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

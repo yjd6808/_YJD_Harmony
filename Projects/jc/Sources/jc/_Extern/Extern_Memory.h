@@ -17,6 +17,7 @@ extern "C" {
  * @return 할당된 메모리 포인터 (실패 시 NULL)
  */
 void* Memory_Allocate(_u32 _size);
+void* Memory_AllocateWithZero(_u32 _size);
 
 /*
  * 메모리 해제

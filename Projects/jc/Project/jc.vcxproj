@@ -259,6 +259,7 @@
     <ClCompile Include="..\Sources\jc\Threading\ThreadPool.cpp" />
     <ClCompile Include="..\Sources\jc\Time.cpp" />
     <ClCompile Include="..\Sources\jc\Utils\Console.cpp" />
+    <ClCompile Include="..\Sources\jc\Utils\ConsoleMenuItem.cpp" />
     <ClCompile Include="..\Sources\jc\Utils\ProgressNotifier.cpp">
       <SubType>
       </SubType>
@@ -688,6 +689,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\jc\Utils\ConsoleMenuItem.h" />
     <ClInclude Include="..\Sources\jc\Utils\ConsoleColor.h" />
     <ClInclude Include="..\Sources\jc\Utils\Concatenation.h">
       <SubType>

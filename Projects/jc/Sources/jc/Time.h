@@ -711,6 +711,9 @@ struct StopWatch<StopWatchMode::HighResolution>
 	_u64 StartCounter{};
 };
 
+using StopWatchHR = StopWatch<StopWatchMode::HighResolution>;
+using StopWatchSys = StopWatch<StopWatchMode::System>;
+
 JC_ENUM_CLASS_BIT_OPERATION_OVERLOADING(TimeCounterAttribute)
 enum class TimeCounterAttribute
 {

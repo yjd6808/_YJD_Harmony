@@ -292,6 +292,9 @@ public:
 	static bool IsEqual(const char* _pSrc, int _srcLen, const char* _pDst, int _dstLen, bool _bCompareCase = true);
 	static bool IsNullOrEmpty(const char* _pStr);
 
+	static int Compare(const char* _pStr, const char* _pStr2);
+	static int Compare(const char* _pSrc, int _srcLen, const char* _pDst, int _dstLen);
+
 	constexpr static int Length(const char* _pStr) {
 		if (_pStr == nullptr) {
 			return -1;

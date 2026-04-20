@@ -3,6 +3,7 @@
  */
 
 #include "jc/Utils/Console.h"
+#include "jc/Utils/ConsoleMenuItem.h"
 #include "jc/Threading/Thread.h"
 
 #include "Windows.h"
@@ -328,6 +329,20 @@ bool Console::SetEnableVTMode(bool _enabled)
 int Console::GetOutputCodePage()
 {
     return WinApi::GetConsoleOutputCodePage();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void Console::PrintMenu(ConsoleMenuItem* _pItem, ConsoleMenuItemOption* _pOption)
+{
+    if (_pItem == nullptr)
+        return;
+
+    // raw pointer 를 SharedPtr 로 감싸거나(복사), 기본 옵션 사용
+    ConsoleMenuItemOptionPtr pOpt;
+    if (_pOption != nullptr)
+        pOpt = MakeShared<ConsoleMenuItemOption>(*_pOption);
+
+    _pItem->Show(jc::Move(pOpt));
 }
 
 NS_END

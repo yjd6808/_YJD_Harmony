@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -65,6 +65,10 @@
 #define VT_BACK_COLOR_WHITE         "107"
 
 NS_JC_BEGIN
+
+// ConsoleMenuItem / ConsoleMenuItemOption 전방 선언 (Console::PrintMenu 에서 사용)
+class ConsoleMenuItem;
+struct ConsoleMenuItemOption;
 
 struct ConsoleKeyInfo
 {
@@ -210,11 +214,18 @@ public:
     }
 
     template <typename... TArgs>
-    static int WriteLine(const char* _pFormat, TArgs&&... _args)
+    static int WriteLine(const char* _pFormat = nullptr, TArgs&&... _args)
     {
         if constexpr (sizeof...(_args) == 0)
         {
-            printf("%s\n", _pFormat);
+			if (_pFormat == nullptr || _pFormat[0] == '\0')
+			{
+				putchar('\n');
+			}
+			else
+			{
+				printf("%s\n", _pFormat);
+			}
             return 0;
         }
         else
@@ -228,7 +239,7 @@ public:
     static int WriteLine(char(&_format)[FormatBufferLen], TArgs&&... _args)
     {
         TLockGuard guard(ms_ConsoleLock);
-        return Math::Min(printf_s("\n"), printf_s(_format, Forward<TArgs>(_args)...));
+        return Math::Min(putchar('\n'), printf_s(_format, Forward<TArgs>(_args)...));
     }
 
     static void Clear();
@@ -240,6 +251,10 @@ public:
 	// 출력 스트림에 문자를 입력해서 콘솔을 제어할 수 있도록 버철 터미널 옵션을 켜주자.
     static bool SetEnableVTMode(bool _enabled);
     static int GetOutputCodePage();
+
+    // ConsoleMenuItem 트리를 이용한 인터랙티브 메뉴 루프 실행
+    // _pOption 이 nullptr 이면 기본 옵션 사용
+    static void PrintMenu(ConsoleMenuItem* _pItem, ConsoleMenuItemOption* _pOption = nullptr);
 };
 
 NS_END

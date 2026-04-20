@@ -5,11 +5,14 @@
     <ClCompile Include="..\Sources\jcr\main.cpp" />
     <ClCompile Include="..\Sources\jcr\01_AsmStudy1.cpp" />
     <ClCompile Include="..\Sources\jcr\02_HeapStudy1.cpp" />
+    <ClCompile Include="..\Sources\jcr\03_RSPGame.cpp" />
+    <ClCompile Include="..\Sources\jcr\04_CoStack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jcr\Core.h" />
   </ItemGroup>
   <ItemGroup>
     <MASM Include="..\Sources\jcr\01_AsmStudy2.asm" />
+    <MASM Include="..\Sources\jcr\03_RSPGame2.asm" />
   </ItemGroup>
 </Project>

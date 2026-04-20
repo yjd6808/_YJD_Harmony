@@ -150,13 +150,13 @@ int StringUtil::FindAll(OUT int* _pPositionArray, const char* _pSource, const ch
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int StringUtil::FindAll(int* _pPositionArray, const char* _pSource, int _sourceLen, const char* _pStr, bool _caseSensitive /*= true*/)
+int StringUtil::FindAll(OUT int* _pPositionArray, const char* _pSource, int _sourceLen, const char* _pStr, bool _caseSensitive /*= true*/)
 {
 	return FindAll(_pPositionArray, _pSource, _sourceLen, 0, _sourceLen - 1, _pStr, _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int StringUtil::FindAll(int* _pPositionArray, const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr, bool _caseSensitive /*= true*/)
+int StringUtil::FindAll(OUT int* _pPositionArray, const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr, bool _caseSensitive /*= true*/)
 {
 	if (_endIdx < _startIdx)
 	{
@@ -375,6 +375,37 @@ bool StringUtil::IsNullOrEmpty(const char* _pStr)
 	if (_pStr[0] == '\0')
 		return true;
 	return false;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+int StringUtil::Compare(const char* _pStr1, const char* _pStr2)
+{
+	return Compare(_pStr1, Length(_pStr1), _pStr2, Length(_pStr2));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+int StringUtil::Compare(const char* _pStr1, int _str1Len, const char* _pStr2, int _str2Len)
+{
+	const char* pSrc = _pStr1;
+	const char* pDst = _pStr2;
+
+	while (*pSrc != NULL && *pDst != NULL)
+	{
+		if (*pSrc > *pDst)
+			return 1;
+		if (*pSrc < *pDst)
+			return -1;
+
+		pSrc++;
+		pDst++;
+	}
+
+	if (_str1Len > _str2Len)
+		return 1;
+	if (_str1Len < _str2Len)
+		return -1;
+
+	return 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

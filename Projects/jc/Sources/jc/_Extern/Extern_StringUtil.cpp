@@ -46,73 +46,145 @@ _s32 StringUtil_ToStringBuffered_Double(_s8* _pBuff, _s32 _capacity, _f64 _value
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringUtil_ToNumber_S32(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero)
+_s32 StringUtil_ToNumber_S32(const _s8* _pStr)
+{
+    return StringUtil::ToNumber<_s32>(_pStr);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s32 StringUtil_ToNumber_S32_Ext(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero)
 {
     return StringUtil::ToNumber<_s32>(_pStr, reinterpret_cast<char**>(_ppEndptr), _ignoreLeadingZero != 0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_u32 StringUtil_ToNumber_U32(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero)
+_u32 StringUtil_ToNumber_U32(const _s8* _pStr)
+{
+    return StringUtil::ToNumber<_u32>(_pStr);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u32 StringUtil_ToNumber_U32_Ext(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero)
 {
     return StringUtil::ToNumber<_u32>(_pStr, reinterpret_cast<char**>(_ppEndptr), _ignoreLeadingZero != 0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s64 StringUtil_ToNumber_S64(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero)
+_s64 StringUtil_ToNumber_S64(const _s8* _pStr)
+{
+    return StringUtil::ToNumber<_s64>(_pStr);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s64 StringUtil_ToNumber_S64_Ext(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero)
 {
     return StringUtil::ToNumber<_s64>(_pStr, reinterpret_cast<char**>(_ppEndptr), _ignoreLeadingZero != 0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_u64 StringUtil_ToNumber_U64(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero)
+_u64 StringUtil_ToNumber_U64(const _s8* _pStr)
+{
+    return StringUtil::ToNumber<_u64>(_pStr);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u64 StringUtil_ToNumber_U64_Ext(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero)
 {
     return StringUtil::ToNumber<_u64>(_pStr, reinterpret_cast<char**>(_ppEndptr), _ignoreLeadingZero != 0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_f32 StringUtil_ToNumber_Float(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero)
+_f32 StringUtil_ToNumber_Float(const _s8* _pStr)
+{
+    return StringUtil::ToNumber<_f32>(_pStr);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_f32 StringUtil_ToNumber_Float_Ext(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero)
 {
     return StringUtil::ToNumber<_f32>(_pStr, reinterpret_cast<char**>(_ppEndptr), _ignoreLeadingZero != 0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_f64 StringUtil_ToNumber_Double(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero)
+_f64 StringUtil_ToNumber_Double(const _s8* _pStr)
+{
+    return StringUtil::ToNumber<_f64>(_pStr);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_f64 StringUtil_ToNumber_Double_Ext(const _s8* _pStr, _s8** _ppEndptr, _s32 _ignoreLeadingZero)
 {
     return StringUtil::ToNumber<_f64>(_pStr, reinterpret_cast<char**>(_ppEndptr), _ignoreLeadingZero != 0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringUtil_TryToNumber_S32(_s32* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero)
+_s32 StringUtil_TryToNumber_S32(_s32* _pVal, const _s8* _pStr)
+{
+    return StringUtil::TryToNumber<_s32>(*_pVal, _pStr) ? 1 : 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s32 StringUtil_TryToNumber_S32_Ext(_s32* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero)
 {
     return StringUtil::TryToNumber<_s32>(*_pVal, _pStr, _ignoreLeadingZero != 0) ? 1 : 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringUtil_TryToNumber_U32(_u32* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero)
+_s32 StringUtil_TryToNumber_U32(_u32* _pVal, const _s8* _pStr)
+{
+    return StringUtil::TryToNumber<_u32>(*_pVal, _pStr) ? 1 : 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s32 StringUtil_TryToNumber_U32_Ext(_u32* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero)
 {
     return StringUtil::TryToNumber<_u32>(*_pVal, _pStr, _ignoreLeadingZero != 0) ? 1 : 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringUtil_TryToNumber_S64(_s64* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero)
+_s32 StringUtil_TryToNumber_S64(_s64* _pVal, const _s8* _pStr)
+{
+    return StringUtil::TryToNumber<_s64>(*_pVal, _pStr) ? 1 : 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s32 StringUtil_TryToNumber_S64_Ext(_s64* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero)
 {
     return StringUtil::TryToNumber<_s64>(*_pVal, _pStr, _ignoreLeadingZero != 0) ? 1 : 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringUtil_TryToNumber_U64(_u64* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero)
+_s32 StringUtil_TryToNumber_U64(_u64* _pVal, const _s8* _pStr)
+{
+    return StringUtil::TryToNumber<_u64>(*_pVal, _pStr) ? 1 : 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s32 StringUtil_TryToNumber_U64_Ext(_u64* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero)
 {
     return StringUtil::TryToNumber<_u64>(*_pVal, _pStr, _ignoreLeadingZero != 0) ? 1 : 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringUtil_TryToNumber_Float(_f32* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero)
+_s32 StringUtil_TryToNumber_Float(_f32* _pVal, const _s8* _pStr)
+{
+    return StringUtil::TryToNumber<_f32>(*_pVal, _pStr) ? 1 : 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s32 StringUtil_TryToNumber_Float_Ext(_f32* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero)
 {
     return StringUtil::TryToNumber<_f32>(*_pVal, _pStr, _ignoreLeadingZero != 0) ? 1 : 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringUtil_TryToNumber_Double(_f64* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero)
+_s32 StringUtil_TryToNumber_Double(_f64* _pVal, const _s8* _pStr)
+{
+    return StringUtil::TryToNumber<_f64>(*_pVal, _pStr) ? 1 : 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s32 StringUtil_TryToNumber_Double_Ext(_f64* _pVal, const _s8* _pStr, _s32 _ignoreLeadingZero)
 {
     return StringUtil::TryToNumber<_f64>(*_pVal, _pStr, _ignoreLeadingZero != 0) ? 1 : 0;
 }
@@ -217,4 +289,16 @@ _s32 StringUtil_FindCharReverseLen(const _s8* _pSource, _s32 _len, _s8 _ch)
 _s32 StringUtil_FindCharUncontained(const _s8* _pSource, _s8 _ch)
 {
     return StringUtil::FindCharUncontained(_pSource, _ch);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s32 StringUtil_Compare(const _s8* _pStr1, const _s8* _pStr2)
+{
+    return StringUtil::Compare(_pStr1, _pStr2);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s32 StringUtil_CompareLen(const _s8* _pStr1, _s32 _str1Len, const _s8* _pStr2, _s32 _str2Len)
+{
+    return StringUtil::Compare(_pStr1, _str1Len, _pStr2, _str2Len);
 }

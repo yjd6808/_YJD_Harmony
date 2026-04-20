@@ -469,6 +469,52 @@ _f32 Math_ClampFloat(_f32 _value, _f32 _min, _f32 _max);
  */
 _f64 Math_ClampDouble(_f64 _value, _f64 _min, _f64 _max);
 
+// ========================================================================
+// Abs
+// ========================================================================
+
+/*
+ * 절댓값 반환 (S32)
+ * @param _value : 입력 값
+ * @return 절댓값
+ */
+_s32 Math_AbsS32(_s32 _value);
+
+/*
+ * 절댓값 반환 (U32)
+ * @param _value : 입력 값
+ * @return 절댓값
+ */
+_u32 Math_AbsU32(_u32 _value);
+
+/*
+ * 절댓값 반환 (S64)
+ * @param _value : 입력 값
+ * @return 절댓값
+ */
+_s64 Math_AbsS64(_s64 _value);
+
+/*
+ * 절댓값 반환 (U64)
+ * @param _value : 입력 값
+ * @return 절댓값
+ */
+_u64 Math_AbsU64(_u64 _value);
+
+/*
+ * 절댓값 반환 (float)
+ * @param _value : 입력 값
+ * @return 절댓값
+ */
+_f32 Math_AbsFloat(_f32 _value);
+
+/*
+ * 절댓값 반환 (double)
+ * @param _value : 입력 값
+ * @return 절댓값
+ */
+_f64 Math_AbsDouble(_f64 _value);
+
 #ifdef __cplusplus
 }
 #endif
