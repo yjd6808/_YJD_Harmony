@@ -240,7 +240,6 @@ void Test_CoStack()
 	Console::ReadKeyWhile("Press spacebar to continue...", ConsoleKey::Spacebar);
 
 	g_cCoMgr.Clear();
-	jc::SingletonPointer<CoMgr>::Free();
 	RemoveVectoredExceptionHandler(pVeh);
 }
 
@@ -777,6 +776,7 @@ static int RecursiveSum(int n)
 static void fn_CO14(CoContext*)
 {
 	// 약 80단계 재귀, 약 40KB 스택 소비 → VEH 여러 번 발동 예상
+	auto pCtx = CoCurrentCtx();
 	g_CO14_result = RecursiveSum(80);
 	Console::WriteLine(ConsoleColor::Cyan,
 		"    [CO14] 재귀 완료: result=%d", g_CO14_result);
@@ -884,7 +884,6 @@ void Test_CoYeild()
 	Console::ReadKeyWhile("Press spacebar to continue...", ConsoleKey::Spacebar);
 
 	g_cCoMgr.Clear();
-	jc::SingletonPointer<CoMgr>::Free();
 	RemoveVectoredExceptionHandler(pVeh);
 }
 

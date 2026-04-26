@@ -3,7 +3,10 @@ include ../../jc/Sources/jc/_Extern/Extern.asm
 
 extern CoAllocCtx       : proc
 extern CoFreeCtx        : proc
-extern CoFindCtxByAddr  : proc
+extern CoCurrentCtx     : proc
+extern CoValidateAddr   : proc
+extern CoOnBeforeLaunch : proc
+extern CoOnAfterLaunch  : proc
 
 ; ============================================================
 ;  CoStackTier enum
@@ -146,9 +149,9 @@ CoRoutine endp
 CoFnEndTrampoline proc
 
     ; 진입 시 RSP = pStackBase_ - 32 (코루틴 스택, 16-byte 정렬)
-    mov     rcx,    rsp                 ; arg: 코루틴 스택 내 주소
-    sub     rsp,    32                  ; shadow space (16-byte 정렬 유지)
-    call    CoFindCtxByAddr
+    ; CoCurrentCtx() — 인자 없음, shadow space만 필요
+    sub     rsp,    32
+    call    CoCurrentCtx
     add     rsp,    32
 
     ; rax = CoContext* (null이면 프로그래밍 오류 - unreachable)
@@ -255,7 +258,18 @@ CoRun proc
     ;   - fn() 정상 종료 시 CoFnEndTrampoline으로 복귀
     ;   - 마지막으로 재개한 스케줄러(CoRun/CoResume)의 YIELD로 올바르게 점프
     ;   - 스택 레이아웃은 call과 동일 (push r11 + jmp = 호출 효과)
-    mov     rsp,        r10
+    mov     rsp,        r10             ; 코루틴 스택으로 전환 (RSP = pStackBase_, 0 mod 16)
+
+    ; CoOnBeforeLaunch(CoContext*) — fn() 실행 직전
+    ;   push rax  → RSP = pStackBase_-8  (8 mod 16)
+    ;   sub  rsp, 40 (shadow 32 + align 8) → RSP = pStackBase_-48 (0 mod 16) ✓
+    push    rax
+    mov     rcx,        rax
+    sub     rsp,        40
+    call    CoOnBeforeLaunch
+    add     rsp,        40
+    pop     rax                         ; rax = CoContext* 복원, RSP = pStackBase_ (0 mod 16)
+
     sub     rsp,        32                  ; shadow space for fn()
     mov     r10,        [rax + OFFSET_COCTX_FN]
     lea     r11,        CoFnEndTrampoline
@@ -267,6 +281,16 @@ YIELD:
     ; 스케줄러 스택 활성화 상태
     ; (CoYield 또는 CoFnEndTrampoline이 스케줄러 스택 전환 후 점프)
     ; 스케줄러 스택 top: push rax로 저장해놓은 CoContext 포인터
+    ; RSP = 8 mod 16, [RSP] = CoContext*
+
+    ; CoOnAfterLaunch(CoContext*) — 스케줄러 복귀 직후
+    ;   mov rcx [rsp] (peek, pop 없이)
+    ;   sub rsp, 40 (shadow 32 + align 8) → RSP = 8-40 = 0 mod 16 ✓
+    mov     rcx,        [rsp]
+    sub     rsp,        40
+    call    CoOnAfterLaunch
+    add     rsp,        40              ; RSP = 8 mod 16 복원
+
     pop     rcx
     mov     ebx,        [rcx + OFFSET_COCTX_STATE]
     cmp     ebx,        csYield
@@ -290,10 +314,19 @@ CoYield proc
     mov     rbp,    rsp
     sub     rsp,    8 + 32  ; align 8(push를 2번 했으므로.. 3번하면 16, 4번하면 24), shadow space for 32 byte
 
-    mov     rcx,    rsp
-    call    CoFindCtxByAddr
+    ; 현재 실행 중인 코루틴 컨텍스트 취득 (O(1) thread_local)
+    call    CoCurrentCtx            ; 인자 없음, shadow space 기할당
     cmp     rax,    0
-    jz	    FIN
+    jz      FIN
+    mov     rbx,    rax             ; rbx = CoContext* 임시 보관
+
+    ; RSP(=rbp)가 해당 컨텍스트의 스택 범위 내인지 검증
+    mov     rcx,    rbx             ; arg1: CoContext*
+    mov     rdx,    rbp             ; arg2: 코루틴 스택 내 주소
+    call    CoValidateAddr          ; rax = bool
+    cmp     rax,    0
+    jz      FIN
+    mov     rax,    rbx             ; rax = CoContext* 복원
 
     ; 컨텍스트 스위치 수행
 
@@ -499,13 +532,32 @@ CoResume proc
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RIP],      rbx
 
     ; 커스텀 스택으로 전환 후 코루틴 재개
-    mov     rsp,        r10
+    mov     rsp,        r10             ; 코루틴 스택으로 전환 (RSP = 코루틴 저장 RSP, 0 mod 16)
+
+    ; CoOnBeforeLaunch(CoContext*) — 코루틴 재개 직전
+    ;   push rax  → RSP-8  (8 mod 16)
+    ;   sub  rsp, 40 (shadow 32 + align 8) → RSP-48 (0 mod 16) ✓
+    push    rax
+    mov     rcx,        rax
+    sub     rsp,        40
+    call    CoOnBeforeLaunch
+    add     rsp,        40
+    pop     rax                         ; rax = CoContext* 복원, RSP 원위치
+
     jmp     r11
     
 YIELD:
     ; 스케줄러 스택 활성화 상태
     ; (CoYield 또는 CoFnEndTrampoline이 스케줄러 스택 전환 후 점프)
     ; 스케줄러 스택 top: push rcx로 저장해놓은 CoContext 포인터
+    ; RSP = 8 mod 16, [RSP] = CoContext*
+
+    ; CoOnAfterLaunch(CoContext*) — 스케줄러 복귀 직후
+    mov     rcx,        [rsp]
+    sub     rsp,        40
+    call    CoOnAfterLaunch
+    add     rsp,        40              ; RSP = 8 mod 16 복원
+
     pop     rcx
     mov     ebx,        [rcx + OFFSET_COCTX_STATE]
     cmp     ebx,        csYield

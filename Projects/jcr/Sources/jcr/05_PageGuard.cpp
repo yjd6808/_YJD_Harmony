@@ -58,8 +58,8 @@ int call_05_PageGuard(int _argc, char** _argv)
 
 	Console::WriteLine(ConsoleColor::White,
 		"Total committed walked: %llu bytes, Guard pages found: %llu",
-		(unsigned long long)total,
-		(unsigned long long)guardPageInfos.size());
+		total,
+		guardPageInfos.size());
 
 	// 루프 탈출 시점의 비커밋 페이지 출력 (하이라이트)
 	if (VirtualQuery(pCurrent, &mbi, sizeof(mbi)))

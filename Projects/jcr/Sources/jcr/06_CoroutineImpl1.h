@@ -140,11 +140,12 @@ struct CoContext
 	CoStack		stack_;
 	CoState		state_;
 	FnCoroutine	fn_ = nullptr;
+	CoContext*	callerCtx_ = nullptr;	// CoOnBeforeLaunch 진입 시 이전 currentCtx_ 보관
 };
 
 #pragma pack(pop)
 
-class CoMgr : public jc::SingletonPointer<CoMgr>
+class CoMgr
 {
 public:
 	// ── Context 레벨 ──────────────────────────────────────────────────────────
@@ -168,6 +169,10 @@ public:
 	void		DumpStack(CoStack* _pStack, const char* _pTitle = nullptr);
 	void		Clear();
 
+	// ── 현재 실행 중인 코루틴 컨텍스트 (O(1) 접근) ───────────────────────────
+	CoContext*	GetCurrentCtx() const { return currentCtx_; }
+	CoContext*	currentCtx_ = nullptr;	// CoOnBeforeLaunch/AfterLaunch에서 직접 설정
+
 	// 테스트 전용: 내부 파라미터를 외부에서 설정한다.
 	void		Configure(_u32 _pageInitCount, _u32 _pageGuardCount, _u32 _pageGrowCount);
 
@@ -185,14 +190,18 @@ private:
 	jc::TreeMap<char*, CoContext*> using_;	// key: CoStack::pStackBase_
 };
 
-#define g_cCoMgr JC_DECL_SINGLETON_BODY(CoMgr)
+extern thread_local CoMgr g_cCoMgr;
 
 
 extern "C"
 {
 	CoContext*	CPP_CALL CoAllocCtx(FnCoroutine _fn, CoStackTier _stackTier, _u32 _stackSize);
 	void		CPP_CALL CoFreeCtx(CoContext* _ctx);
-	CoContext*  CPP_CALL CoFindCtxByAddr(char* _pAddr);
+	CoContext*  CPP_CALL CoCurrentCtx();
+	bool		CPP_CALL CoValidateAddr(CoContext* _pCtx, char* _pAddr);
+
+	void		CPP_CALL CoOnBeforeLaunch(CoContext* _pCtx);
+	void		CPP_CALL CoOnAfterLaunch(CoContext* _pCtx);
 
 	CoContext*  ASM_CALL CoRun(FnCoroutine _fn, CoStackTier _stackTier = cstMid, _u32 _stackSize = 0);
 	void		ASM_CALL CoYield();
