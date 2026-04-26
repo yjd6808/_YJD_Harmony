@@ -241,6 +241,24 @@ class TreeTable<Pack<TKey, TKeyComparator, TAllocator>, ETreeTableImplementation
         }
     }
 
+    bool TryPop(const TKey& _key, OUT TKey* _pOut)
+    {
+        TTreeNode* pNode = FindNode(_key);
+
+        if(pNode == nullptr)
+        {
+            return false;
+        }
+
+        if(_pOut != nullptr)
+        {
+            *_pOut = pNode->data_;
+        }
+
+        RemoveByNode(pNode);
+        return true;
+    }
+
     bool TryGetFirst(OUT TKey& _data) const
     {
         if(pRoot_ == nullptr)
@@ -1202,15 +1220,7 @@ class TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, ETreeTableImplem
         TTreeNode* pNode = LowerBoundNode(pRoot_, key);
         if(pNode == nullptr)
             return nullptr;
-        return &pNode->data_.Value;
-    }
-
-    TKeyValuePair* UpperBoundPair(const TKey& key) const
-    {
-        TTreeNode* pNode = UpperBoundNode(pRoot_, key);
-        if(pNode == nullptr)
-            return nullptr;
-        return &pNode->data_;
+        return &pNode->data_.value_;
     }
 
     TValue* UpperBoundValue(const TKey& key) const
@@ -1218,7 +1228,7 @@ class TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, ETreeTableImplem
         TTreeNode* pNode = UpperBoundNode(pRoot_, key);
         if(pNode == nullptr)
             return nullptr;
-        return &pNode->data_.Value;
+        return &pNode->data_.value_;
     }
 
     TKey* UpperBoundKey(const TKey& key) const
@@ -1259,6 +1269,24 @@ class TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, ETreeTableImplem
         }
 
         InorderTraverseForEach<TraverseValueType::Value>(pRoot_, [](TValue v) { delete v; });
+    }
+
+    bool TryPop(const TKey& key, OUT TValue* _pOut)
+    {
+        TTreeNode* pNode = FindNode(key);
+
+        if(pNode == nullptr)
+        {
+            return false;
+        }
+
+        if(_pOut != nullptr)
+        {
+            *_pOut = pNode->data_.value_;
+        }
+
+        RemoveByNode(pNode);
+        return true;
     }
 
     bool TryGetFirst(OUT TKeyValuePair& pair) const
@@ -2041,7 +2069,7 @@ class TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, ETreeTableImplem
         else if constexpr(ValueType == TraverseValueType::Key)
             _consumer(_pNode->data_.key_);
         else if constexpr(ValueType == TraverseValueType::Value)
-            _consumer(_pNode->data_.Value);
+            _consumer(_pNode->data_.value_);
         else
             jc_assert(false);
         InorderTraverseForEach<ValueType>(_pNode->pLeft_, Forward<Consumer>(_consumer));

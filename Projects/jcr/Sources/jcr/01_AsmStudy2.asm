@@ -3,7 +3,9 @@
 ; ==============================
 ; 참고: https://learn.microsoft.com/en-us/cpp/build/x64-calling-convention?view=msvc-170 : [x64 calling convention]
 ; 참고: https://www.felixcloutier.com/x86/ : [x86/x64 instruction set]
+include ../../jc/Sources/jc/_Extern/Extern.asm
 OPTION CASEMAP: NONE
+
 
 .data
 szHelloWorld			db			"Hello World!", 0
@@ -506,5 +508,86 @@ _E:
 
 memcpy_u8 endp
 
+TestStruct1 struct 
+    a_ BYTE ?
+    b_ DWORD ?
+    c_ QWORD ?
+TestStruct1 ends
+
+OFFSET_TS1_A     EQU TestStruct1.a_
+OFFSET_TS1_B     EQU TestStruct1.b_
+OFFSET_TS1_C     EQU TestStruct1.c_
+
+TestStruct2 struct 1
+OFFSET_TS3_B    EQU TestStruct3.b_
+    a_ BYTE ?
+    b_ DWORD ?
+    c_ QWORD ?
+TestStruct2 ends
+
+OFFSET_TS2_A    EQU TestStruct2.a_
+OFFSET_TS2_B    EQU TestStruct2.b_
+OFFSET_TS2_C    EQU TestStruct2.c_
+
+TestStruct3 struct 8
+    a_ BYTE ?
+    b_ DWORD ?
+    c_ QWORD ?
+TestStruct3 ends
+
+OFFSET_TS3_A    EQU TestStruct3.a_
+OFFSET_TS3_C    EQU TestStruct3.c_
+
+.data
+    spt_test db "asm TestStruct%d: a=%d b=%d c=%d / %s, %s", 0
+
+    ; asm에서 많은 인자를 전달하는 테스트를 위해 그냥 추가함
+    spt_test_arg1   db  "hello1", 0
+    spt_test_arg2   db  "hello2", 0
+.code
+struct_packing_test proc
+    push    rbp
+    mov     rbp,    rsp
+    sub	    rsp,    32 + 24 ; callee가 caller를 위해 예약함. shadow space 32 byte, 추가 인자 3개 24 byte
+
+    lea	    rcx,    [spt_test]
+    mov     rdx,    1
+    mov     r8d,    OFFSET_TS1_A
+    mov     r9d,    OFFSET_TS1_B
+    mov     qword ptr[rsp + 32], OFFSET_TS1_C
+    lea     rax,    [spt_test_arg1]
+    mov     qword ptr[rsp + 40], rax
+    lea     rax,    [spt_test_arg2]
+    mov     qword ptr[rsp + 48], rax
+    call    Console_WriteLineFmt
+
+    lea	    rcx,    [spt_test]
+    mov     rdx,    2
+    mov     r8d,    OFFSET_TS2_A
+    mov     r9d,    OFFSET_TS2_B
+    mov     qword ptr[rsp + 32], OFFSET_TS2_C
+    lea     rax,    [spt_test_arg1]
+    mov     qword ptr[rsp + 40], rax
+    lea     rax,    [spt_test_arg2]
+    mov     qword ptr[rsp + 48], rax
+    call    Console_WriteLineFmt
+    
+    lea	    rcx,    [spt_test]
+    mov     rdx,    3
+    mov     r8d,    OFFSET_TS3_A
+    mov     r9d,    OFFSET_TS3_B
+    mov     qword ptr[rsp + 32], OFFSET_TS3_C
+    lea     rax,    [spt_test_arg1]
+    mov     qword ptr[rsp + 40], rax
+    lea     rax,    [spt_test_arg2]
+    mov     qword ptr[rsp + 48], rax
+    call    Console_WriteLineFmt
+
+    mov     rsp,	rbp
+    pop     rbp
+    ret
+
+
+struct_packing_test endp
 
 end

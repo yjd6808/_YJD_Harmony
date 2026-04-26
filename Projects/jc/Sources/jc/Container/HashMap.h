@@ -144,6 +144,17 @@ public:
 		return hashTable_.Remove(_key);
 	}
 
+	template <typename = DefaultEnableIf_t<IsStringType_v<TKey>>>
+	bool TryPop(const char* _pKey, TValue* _pOut)
+	{
+		return hashTable_.TryPop(_pKey, _pOut);
+	}
+
+	bool TryPop(const TKey& _key, TValue* _pOut)
+	{
+		return hashTable_.TryPop(_key, _pOut);
+	}
+
 	void Clear() noexcept override
 	{
 		hashTable_.Clear();

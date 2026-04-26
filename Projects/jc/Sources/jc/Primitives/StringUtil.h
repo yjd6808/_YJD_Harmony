@@ -35,6 +35,13 @@ public:
 	// 컴파일 타임용
 	template <typename T, typename U>
 	static constexpr int CTCompare(T&& _src, U&& _dst) {
+		if (_src == nullptr && _dst == nullptr)
+			return 0;
+		if (_src == nullptr)
+			return -1;
+		if (_dst == nullptr)
+			return 1;
+
 		const int ISRC_LEN = CTLength(_src);
 		const int IDST_LEN = CTLength(_dst);
 
@@ -157,6 +164,10 @@ public:
 
 	static constexpr int CTLength(const char* _pStr)
 	{
+		if (_pStr == nullptr)
+		{
+			return 0;
+		}
 		int iLength = 0;
 		while (*_pStr != '\0')
 		{
@@ -353,6 +364,10 @@ private:
 	template <typename T>
 	static constexpr T CTToNumber(const char* _pStr)
 	{
+		if (_pStr == nullptr)
+		{
+			return 0;
+		}
 		T result = 0;
 		int sign = 1;
 		const char* p = _pStr;

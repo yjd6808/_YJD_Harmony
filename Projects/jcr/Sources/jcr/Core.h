@@ -86,6 +86,7 @@ int call_02_HeapStudy(int _argc, char** _argv);
 int call_03_RSPGame(int _argc, char** _argv);
 int call_04_CoStack(int _argc, char** _argv);
 int call_05_PageGuard(int _argc, char** _argv);
+int call_06_Coroutine(int _argc, char** _argv);
 
 
 

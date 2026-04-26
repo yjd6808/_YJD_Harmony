@@ -229,6 +229,40 @@ TEST(HashMapTest, ZeroCapacityTest) {
 }
 
 
+TEST(HashMapTest, TryPop) {
+	LeakCheck;
+	HashMap<int, int> map;
+
+	map.Insert(1, 10);
+	map.Insert(2, 20);
+	map.Insert(3, 30);
+	EXPECT_EQ(map.Size(), 3);
+
+	// 존재하는 키로 TryPop - 성공해야함
+	int value = 0;
+	EXPECT_TRUE(map.TryPop(1, &value));
+	EXPECT_EQ(value, 10);
+	EXPECT_EQ(map.Size(), 2);
+	EXPECT_FALSE(map.Exist(1));
+
+	// 이미 삭제된 키로 TryPop - 실패해야함
+	EXPECT_FALSE(map.TryPop(1, &value));
+
+	// 존재하지 않는 키로 TryPop - 실패해야함
+	EXPECT_FALSE(map.TryPop(99, &value));
+
+	// _pOut이 nullptr인 경우에도 정상 삭제
+	EXPECT_TRUE(map.TryPop(2, nullptr));
+	EXPECT_EQ(map.Size(), 1);
+	EXPECT_FALSE(map.Exist(2));
+
+	// 남은 마지막 원소 pop
+	EXPECT_TRUE(map.TryPop(3, &value));
+	EXPECT_EQ(value, 30);
+	EXPECT_TRUE(map.IsEmpty());
+}
+
+
 #endif // TEST_HashMapTest == ON
 
 

@@ -91,6 +91,11 @@ public:
 		TListCollection::PopBack();
 	}
 
+	virtual bool Pop(T* _pOut)
+	{
+		return TListCollection::PopBack(_pOut);
+	}
+
 	virtual T& Top() const
 	{
 		return TListCollection::Back();

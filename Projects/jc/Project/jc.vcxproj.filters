@@ -251,7 +251,6 @@
     <ClCompile Include="..\Sources\jc\Primitives\Span.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc\Pool\PooledMemoryChunk.cpp" />
     <ClCompile Include="..\Sources\jc\Primitives\StringView.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>
@@ -284,6 +283,9 @@
     </ClCompile>
     <ClCompile Include="..\Sources\jc\Utils\ConsoleMenuItem.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc\Pool\PooledMemoryChunk.cpp">
+      <Filter>Pool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

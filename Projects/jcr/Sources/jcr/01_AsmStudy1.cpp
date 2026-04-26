@@ -38,6 +38,7 @@ extern "C"
 	_s64 strcmp_ascii(const char* a, const char* b);
 	void to_upper_ascii(char* s);
 	void* memcpy_u8(void* dst, const void* src, _u64 n);
+	void struct_packing_test();
 }
 
 static _s64 sign64(_s64 v) {
@@ -413,6 +414,49 @@ void test_memcpy_u8() {
 	ok_ret ? ++g_pass : ++g_fail;
 }
 
+void test_packing() {
+	std::puts("--- struct packing test ---");
+
+	struct_packing_test();
+
+	struct Packed1
+	{
+		char a_;
+		int b_;
+		long long c_;
+	} p1;
+
+#pragma pack(push, 1)
+	struct Packed2
+	{
+		char a_;
+		int b_;
+		long long c_;
+	} p2;
+#pragma pack(pop)
+
+#pragma pack(push, 8)
+	struct Packed3
+	{
+		char a_;
+		int b_;
+		long long c_;
+	} p3;
+#pragma pack(pop)
+
+	Console::WriteLine("TestStruct%d: a=%d b=%d c=%d", 
+		1, (int)offsetof(Packed1, a_), (int)offsetof(Packed1, b_), (int)offsetof(Packed1, c_));
+	Console::WriteLine("TestStruct%d: a=%d b=%d c=%d",
+		2, (int)offsetof(Packed2, a_),(int)offsetof(Packed2, b_), (int)offsetof(Packed2, c_));
+	Console::WriteLine("TestStruct%d: a=%d b=%d c=%d",
+		3, (int)offsetof(Packed3, a_), (int)offsetof(Packed3, b_), (int)offsetof(Packed3, c_));
+
+
+
+
+
+}
+
 // ============================================================
 // Main Test Function
 // ============================================================
@@ -434,6 +478,7 @@ int call_01_AsmStudy(int _argc, char** _argv)
 	test_strcmp_ascii();
 	test_to_upper_ascii();
 	test_memcpy_u8();
+	test_packing();
 
 	return 0;
 }

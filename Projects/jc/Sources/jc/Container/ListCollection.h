@@ -502,6 +502,28 @@ protected:
 		--size_;
 	}
 
+	virtual bool PopFront(T* _pOut)
+	{
+		if (size_ == 0)
+			return false;
+
+		new (_pOut) T(Move(pHead_->value_));
+
+		TListNode* pDel = pHead_;
+		pHead_ = pHead_->pNext_;
+		if (pHead_ == nullptr)
+		{
+			pTail_ = nullptr;
+		}
+		else
+		{
+			pHead_->pPrevious_ = nullptr;
+		}
+		pDel->DeleteSelf();
+		--size_;
+		return true;
+	}
+
 	virtual void PopBack()
 	{
 		jc_assert_msg(size_ != 0, "데이터가 없습니다.");
@@ -518,6 +540,28 @@ protected:
 		}
 		pDel->DeleteSelf();
 		--size_;
+	}
+
+	virtual bool PopBack(T* _pOut)
+	{
+		if (size_ == 0)
+			return false;
+
+		new (_pOut) T(Move(pTail_->value_));
+
+		TListNode* pDel = pTail_;
+		pTail_ = pTail_->pPrevious_;
+		if (pTail_ == nullptr)
+		{
+			pHead_ = nullptr;
+		}
+		else
+		{
+			pTail_->pNext_ = nullptr;
+		}
+		pDel->DeleteSelf();
+		--size_;
+		return true;
 	}
 
 	virtual T& Front() const

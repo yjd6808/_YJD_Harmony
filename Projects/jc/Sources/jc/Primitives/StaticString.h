@@ -41,11 +41,11 @@ struct StaticString
 	}
 
 	constexpr bool operator==(const String& _str) const {
-		return StringUtil::CTCompare(Source, _str.Source()) == 0;
+		return StringUtil::CTCompare(Source, _str.SafeSource()) == 0;
 	}
 
 	constexpr bool operator!=(const String& _str) const {
-		return StringUtil::CTCompare(Source, _str.Source()) != 0;
+		return StringUtil::CTCompare(Source, _str.SafeSource()) != 0;
 	}
 
 	template <_u32 ParamSize>

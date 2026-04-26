@@ -199,6 +199,146 @@ TEST(TreeMapTest, MemoryPool) {
 		q.Insert(StringUtil::Format("ss%d", i), StringUtil::Format("ss%d", i));
 }
 
+TEST(TreeMapTest, TryPop) {
+	LeakCheck;
+	TreeMap<int, int> map;
+
+	map.Insert(1, 10);
+	map.Insert(2, 20);
+	map.Insert(3, 30);
+	EXPECT_EQ(map.Size(), 3);
+
+	// 존재하는 키로 TryPop - 성공해야함
+	int value = 0;
+	EXPECT_TRUE(map.TryPop(1, &value));
+	EXPECT_EQ(value, 10);
+	EXPECT_EQ(map.Size(), 2);
+	EXPECT_FALSE(map.Exist(1));
+
+	// 이미 삭제된 키로 TryPop - 실패해야함
+	EXPECT_FALSE(map.TryPop(1, &value));
+
+	// 존재하지 않는 키로 TryPop - 실패해야함
+	EXPECT_FALSE(map.TryPop(99, &value));
+
+	// _pOut이 nullptr인 경우에도 정상 삭제
+	EXPECT_TRUE(map.TryPop(2, nullptr));
+	EXPECT_EQ(map.Size(), 1);
+	EXPECT_FALSE(map.Exist(2));
+
+	// 남은 마지막 원소 pop
+	EXPECT_TRUE(map.TryPop(3, &value));
+	EXPECT_EQ(value, 30);
+	EXPECT_TRUE(map.IsEmpty());
+}
+
+TEST(TreeMapTest, BoundTest) {
+	LeakCheck;
+
+	// 홀수 키만 삽입: 1→10, 3→30, 5→50, 7→70, 9→90
+	TreeMap<int, int> map;
+	map.Insert(1, 10);
+	map.Insert(3, 30);
+	map.Insert(5, 50);
+	map.Insert(7, 70);
+	map.Insert(9, 90);
+
+	// ─────────────────────────────────────────
+	// LowerBoundValue : key 이상(>=)인 첫 번째 value 포인터
+	// ─────────────────────────────────────────
+
+	// 존재하는 키 → 해당 value
+	EXPECT_NE(map.LowerBoundValue(1), nullptr);
+	EXPECT_EQ(*map.LowerBoundValue(1), 10);
+
+	EXPECT_NE(map.LowerBoundValue(5), nullptr);
+	EXPECT_EQ(*map.LowerBoundValue(5), 50);
+
+	EXPECT_NE(map.LowerBoundValue(9), nullptr);
+	EXPECT_EQ(*map.LowerBoundValue(9), 90);
+
+	// 존재하지 않는 키, 범위 내 → 다음 큰 키의 value
+	EXPECT_NE(map.LowerBoundValue(2), nullptr);
+	EXPECT_EQ(*map.LowerBoundValue(2), 30);	// 2 없음 → 3의 value
+
+	EXPECT_NE(map.LowerBoundValue(6), nullptr);
+	EXPECT_EQ(*map.LowerBoundValue(6), 70);	// 6 없음 → 7의 value
+
+	// 최소 키보다 작은 키 → 최솟값의 value
+	EXPECT_NE(map.LowerBoundValue(0), nullptr);
+	EXPECT_EQ(*map.LowerBoundValue(0), 10);
+
+	// 최대 키보다 큰 키 → nullptr
+	EXPECT_EQ(map.LowerBoundValue(10), nullptr);
+
+	// ─────────────────────────────────────────
+	// UpperBoundValue : key 초과(>)인 첫 번째 value 포인터
+	// ─────────────────────────────────────────
+
+	// 존재하는 키 → 다음 키의 value
+	EXPECT_NE(map.UpperBoundValue(1), nullptr);
+	EXPECT_EQ(*map.UpperBoundValue(1), 30);	// 1 초과 → 3의 value
+
+	EXPECT_NE(map.UpperBoundValue(5), nullptr);
+	EXPECT_EQ(*map.UpperBoundValue(5), 70);	// 5 초과 → 7의 value
+
+	// 존재하지 않는 키, 범위 내 → 다음 큰 키의 value
+	EXPECT_NE(map.UpperBoundValue(2), nullptr);
+	EXPECT_EQ(*map.UpperBoundValue(2), 30);	// 2 없음, 2 초과 → 3의 value
+
+	// 최소 키보다 작은 키 → 최솟값의 value
+	EXPECT_NE(map.UpperBoundValue(0), nullptr);
+	EXPECT_EQ(*map.UpperBoundValue(0), 10);
+
+	// 최대 키 이상 → nullptr
+	EXPECT_EQ(map.UpperBoundValue(9),  nullptr);
+	EXPECT_EQ(map.UpperBoundValue(10), nullptr);
+
+	// ─────────────────────────────────────────
+	// LowerBoundPair : key 이상(>=)인 첫 번째 {key, value} 포인터
+	// ─────────────────────────────────────────
+
+	// 존재하는 키 → 해당 pair
+	auto* pPair = map.LowerBoundPair(3);
+	EXPECT_NE(pPair, nullptr);
+	EXPECT_EQ(pPair->key_,   3);
+	EXPECT_EQ(pPair->value_, 30);
+
+	// 존재하지 않는 키 → 다음 큰 키의 pair
+	pPair = map.LowerBoundPair(4);
+	EXPECT_NE(pPair, nullptr);
+	EXPECT_EQ(pPair->key_,   5);
+	EXPECT_EQ(pPair->value_, 50);
+
+	// 최대 키 초과 → nullptr
+	EXPECT_EQ(map.LowerBoundPair(10), nullptr);
+
+	// ─────────────────────────────────────────
+	// UpperBoundKey : key 초과(>)인 첫 번째 key 포인터
+	// ─────────────────────────────────────────
+
+	// 존재하는 키 → 다음 키
+	EXPECT_NE(map.UpperBoundKey(5), nullptr);
+	EXPECT_EQ(*map.UpperBoundKey(5), 7);
+
+	// 존재하지 않는 키 → 다음 큰 키
+	EXPECT_NE(map.UpperBoundKey(6), nullptr);
+	EXPECT_EQ(*map.UpperBoundKey(6), 7);
+
+	// 최대 키 이상 → nullptr
+	EXPECT_EQ(map.UpperBoundKey(9),  nullptr);
+	EXPECT_EQ(map.UpperBoundKey(10), nullptr);
+
+	// ─────────────────────────────────────────
+	// 빈 맵에서 모두 nullptr
+	// ─────────────────────────────────────────
+	TreeMap<int, int> empty;
+	EXPECT_EQ(empty.LowerBoundValue(1),  nullptr);
+	EXPECT_EQ(empty.UpperBoundValue(1),  nullptr);
+	EXPECT_EQ(empty.LowerBoundPair(1),   nullptr);
+	EXPECT_EQ(empty.UpperBoundKey(1),    nullptr);
+}
+
 #endif // TEST_TreeMapTest == ON
 
 

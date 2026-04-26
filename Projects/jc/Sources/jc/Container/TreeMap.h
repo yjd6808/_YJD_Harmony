@@ -237,6 +237,11 @@ public:
 		return treeTable_.TryGetFirstKey(_key);
 	}
 
+	bool TryPop(const TKey& _key, TValue* _pOut)
+	{
+		return treeTable_.TryPop(_key, _pOut);
+	}
+
 	TEnumerator Begin() const override { return MakeShared<TTreeMapIterator, TAllocator>(this->GetOwner(), treeTable_.FindSmallestNode(treeTable_.pRoot_)); }
 	TEnumerator End() const override { return MakeShared<TTreeMapIterator, TAllocator>(this->GetOwner(), treeTable_.FindBiggestNode(treeTable_.pRoot_)); }
 	TreeMapKeyCollection Keys() { return TreeMapKeyCollection(this); }

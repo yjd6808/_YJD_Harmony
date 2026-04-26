@@ -19,8 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Sources\jcr\04_CoStack.cpp" />
+    <ClCompile Include="..\Sources\jcr\04_CoStack1.cpp" />
     <ClCompile Include="..\Sources\jcr\05_PageGuard.cpp" />
+    <ClCompile Include="..\Sources\jcr\06_Coroutine.cpp" />
+    <ClCompile Include="..\Sources\jcr\06_CoroutineImpl1.cpp" />
     <ClCompile Include="..\Sources\jcr\Core.cpp" />
     <ClCompile Include="..\Sources\jcr\main.cpp" />
     <ClCompile Include="..\Sources\jcr\01_AsmStudy1.cpp" />
@@ -29,12 +31,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jcr\Core.h" />
+    <ClInclude Include="..\Sources\jcr\06_CoroutineImpl1.h" />
   </ItemGroup>
   <ItemGroup>
     <MASM Include="..\Sources\jcr\01_AsmStudy2.asm">
       <FileType>Document</FileType>
     </MASM>
     <MASM Include="..\Sources\jcr\03_RSPGame2.asm">
+      <FileType>Document</FileType>
+    </MASM>
+    <MASM Include="..\Sources\jcr\04_CoStack2.asm">
+      <FileType>Document</FileType>
+    </MASM>
+    <MASM Include="..\Sources\jcr\06_CoroutineImpl2.asm">
       <FileType>Document</FileType>
     </MASM>
   </ItemGroup>

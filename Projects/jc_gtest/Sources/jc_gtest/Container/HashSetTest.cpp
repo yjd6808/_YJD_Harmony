@@ -211,6 +211,39 @@ TEST(HashSetTest, Pointer) {
 	testSet1.ForEachDelete();
 }
 
+TEST(HashSetTest, TryPop) {
+	LeakCheck;
+	HashSet<int> testSet;
+
+	testSet.Insert(1);
+	testSet.Insert(2);
+	testSet.Insert(3);
+	EXPECT_EQ(testSet.Size(), 3);
+
+	// 존재하는 키로 TryPop - 성공해야함
+	int key = 0;
+	EXPECT_TRUE(testSet.TryPop(1, &key));
+	EXPECT_EQ(key, 1);
+	EXPECT_EQ(testSet.Size(), 2);
+	EXPECT_FALSE(testSet.Exist(1));
+
+	// 이미 삭제된 키로 TryPop - 실패해야함
+	EXPECT_FALSE(testSet.TryPop(1, &key));
+
+	// 존재하지 않는 키로 TryPop - 실패해야함
+	EXPECT_FALSE(testSet.TryPop(99, &key));
+
+	// _pOut이 nullptr인 경우에도 정상 삭제
+	EXPECT_TRUE(testSet.TryPop(2, nullptr));
+	EXPECT_EQ(testSet.Size(), 1);
+	EXPECT_FALSE(testSet.Exist(2));
+
+	// 남은 마지막 원소 pop
+	EXPECT_TRUE(testSet.TryPop(3, &key));
+	EXPECT_EQ(key, 3);
+	EXPECT_TRUE(testSet.IsEmpty());
+}
+
 #endif // TEST_HashSetTest == ON
 
 

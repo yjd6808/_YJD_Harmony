@@ -1,13 +1,12 @@
-// created by AI.
 #include "Core.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 관리되는 스택 구조체
 struct ManagedStack
 {
-	char*  base;
-	size_t reserveSize;
-	size_t pageSize;
+	char*  base_;
+	size_t reserveSize_;
+	size_t pageSize_;
 };
 
 // 관리되는 스택 목록
@@ -29,9 +28,9 @@ void RegisterStack(void* _pBase, size_t _reserveSize, size_t _pageSize)
 		return;
 	}
 
-	gManagedStacks[gStackCount].base        = (char*)_pBase;
-	gManagedStacks[gStackCount].reserveSize = _reserveSize;
-	gManagedStacks[gStackCount].pageSize    = _pageSize;
+	gManagedStacks[gStackCount].base_        = (char*)_pBase;
+	gManagedStacks[gStackCount].reserveSize_ = _reserveSize;
+	gManagedStacks[gStackCount].pageSize_    = _pageSize;
 	gStackCount++;
 }
 
@@ -41,7 +40,7 @@ void UnregisterStack(void* _pBase)
 {
 	for (int i = 0; i < gStackCount; ++i)
 	{
-		if (gManagedStacks[i].base == _pBase)
+		if (gManagedStacks[i].base_ == _pBase)
 		{
 			gManagedStacks[i] = gManagedStacks[gStackCount - 1];
 			gStackCount--;
@@ -57,8 +56,8 @@ ManagedStack* FindStack(void* _pAddr)
 	char* pPtr = (char*)_pAddr;
 	for (int i = 0; i < gStackCount; ++i)
 	{
-		if (pPtr >= gManagedStacks[i].base &&
-		    pPtr <  gManagedStacks[i].base + gManagedStacks[i].reserveSize)
+		if (pPtr >= gManagedStacks[i].base_ &&
+		    pPtr <  gManagedStacks[i].base_ + gManagedStacks[i].reserveSize_)
 			return &gManagedStacks[i];
 	}
 	return nullptr;
@@ -66,7 +65,7 @@ ManagedStack* FindStack(void* _pAddr)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Vectored Exception Handler - 가드 페이지 위반 시 스택 자동 확장
-LONG CALLBACK VectoredHandler(EXCEPTION_POINTERS* _pEp)
+LONG CALLBACK CoStack_VectoredHandler(EXCEPTION_POINTERS* _pEp)
 {
 	if (_pEp->ExceptionRecord->ExceptionCode != STATUS_GUARD_PAGE_VIOLATION)
 		return EXCEPTION_CONTINUE_SEARCH;
@@ -82,25 +81,28 @@ LONG CALLBACK VectoredHandler(EXCEPTION_POINTERS* _pEp)
 	if (gVehCountMode)
 		++gVehCallCount;
 
-	size_t pageSize = pStack->pageSize;
+	size_t pageSize = pStack->pageSize_;
 
 	// fault 난 페이지의 시작 주소 (페이지 정렬)
 	char* pPage = (char*)((uintptr_t)pFaultAddr & ~(pageSize - 1));
 
-	// 1. 해당 페이지를 일반 COMMIT으로 변경 (GUARD 효과 명시적 해제)
+	// 1. 해당 페이지를 일반 COMMIT으로 변경 (GUARD 해제)
 	DWORD old;
 	VirtualProtect(pPage, pageSize, PAGE_READWRITE, &old);
 
-	// 2. 다음 페이지 확장
-	char* pNext = pPage + pageSize;
-	if (pNext >= pStack->base && pNext < pStack->base + pStack->reserveSize)
+	// 🔥 스택은 아래로 성장해야 함
+	char* pBase = pStack->base_;
+	char* pNext = pPage - pageSize;
+
+	// reserve 범위 체크 (아래쪽 경계만 보면 됨)
+	if (pNext >= pBase)
 	{
 		// 다음 페이지 COMMIT
 		VirtualAlloc(pNext, pageSize, MEM_COMMIT, PAGE_READWRITE);
 
-		// 그 다음 페이지를 새 GUARD로 설정 (COMMIT 먼저 수행)
-		char* pNext2 = pNext + pageSize;
-		if (pNext2 < pStack->base + pStack->reserveSize)
+		// 그 아래를 새로운 GUARD로 설정
+		char* pNext2 = pNext - pageSize;
+		if (pNext2 >= pBase)
 		{
 			VirtualAlloc(pNext2, pageSize, MEM_COMMIT, PAGE_READWRITE);
 			VirtualProtect(pNext2, pageSize, PAGE_READWRITE | PAGE_GUARD, &old);
@@ -119,7 +121,7 @@ size_t GetPageSize()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void* StackAlloc(size_t _reserveSize, size_t _pageSize)
+char* StackAlloc(size_t _reserveSize, size_t _pageSize)
 {
 	char* pBase = (char*)VirtualAlloc(nullptr, _reserveSize, MEM_RESERVE, PAGE_READWRITE);
 	if (pBase == nullptr)
@@ -129,8 +131,14 @@ void* StackAlloc(size_t _reserveSize, size_t _pageSize)
 		return nullptr;
 	}
 
-	// page0: COMMIT + RW,  page1: COMMIT + GUARD
-	char* pValloc = (char*)VirtualAlloc(pBase, _pageSize * 2, MEM_COMMIT, PAGE_READWRITE);
+	// 🔥 스택 top (높은 주소)
+	char* pTop = pBase + _reserveSize;
+
+	// 🔥 아래 방향으로 배치
+	char* pGuard = pTop - (_pageSize * 2);   // 먼저 접근될 guard
+
+	// 4 페이지 commit
+	char* pValloc = (char*)VirtualAlloc(pGuard, _pageSize * 2, MEM_COMMIT, PAGE_READWRITE);
 	if (pValloc == nullptr)
 	{
 		DWORD error = GetLastError();
@@ -139,8 +147,9 @@ void* StackAlloc(size_t _reserveSize, size_t _pageSize)
 		return nullptr;
 	}
 
+	// 첫 페이지를 GUARD로 설정
 	DWORD old = 0;
-	BOOL protResult = VirtualProtect(pBase + _pageSize, _pageSize, PAGE_READWRITE | PAGE_GUARD, &old);
+	BOOL protResult = VirtualProtect(pGuard, _pageSize * 1, PAGE_READWRITE | PAGE_GUARD, &old);
 	if (!protResult)
 	{
 		DWORD error = GetLastError();
@@ -156,10 +165,19 @@ void* StackAlloc(size_t _reserveSize, size_t _pageSize)
 void StackInit(void* _pBase, size_t _reserveSize, size_t _pageSize)
 {
 	// 전체 decommit 후 초기 상태로 재구성
-	VirtualFree(_pBase, _reserveSize, MEM_DECOMMIT);
+	VirtualFree(_pBase, 0, MEM_DECOMMIT);
 
-	// page0: COMMIT + RW,  page1: COMMIT + GUARD
-	char* pValloc = (char*)VirtualAlloc(_pBase, _pageSize * 2, MEM_COMMIT, PAGE_READWRITE);
+	char* pBase = (char*)_pBase;
+
+	// 🔥 스택 top (높은 주소)
+	char* pTop = pBase + _reserveSize;
+
+	// 🔥 아래 방향 배치
+	char* pGuard = pTop - (_pageSize * 2);
+	char* pCommit = pTop - (_pageSize * 1);
+
+	// 두 페이지 commit
+	char* pValloc = (char*)VirtualAlloc(pGuard, _pageSize * 2, MEM_COMMIT, PAGE_READWRITE);
 	if (pValloc == nullptr)
 	{
 		DWORD error = GetLastError();
@@ -167,8 +185,9 @@ void StackInit(void* _pBase, size_t _reserveSize, size_t _pageSize)
 		return;
 	}
 
+	// guard 설정
 	DWORD old = 0;
-	BOOL protResult = VirtualProtect((char*)_pBase + _pageSize, _pageSize, PAGE_READWRITE | PAGE_GUARD, &old);
+	BOOL protResult = VirtualProtect(pGuard, _pageSize, PAGE_READWRITE | PAGE_GUARD, &old);
 	if (!protResult)
 	{
 		DWORD error = GetLastError();
@@ -189,16 +208,19 @@ void DumpPages(void* _pBase, size_t _reserveSize, size_t _pageSize, const char* 
 	Console::WriteLine(ConsoleColor::Green, "\n==== %s ====", _pTitle);
 
 	size_t pageCount = _reserveSize / _pageSize;
+	char* pBase = (char*)_pBase;
+	char* pTop = pBase + _reserveSize;
 
 	for (size_t i = 0; i < pageCount; ++i)
 	{
-		char* pAddr = (char*)_pBase + i * _pageSize;
+		// 🔥 높은 주소 → 낮은 주소로 내려가면서 출력
+		char* pAddr = pTop - (i + 1) * _pageSize;
 
 		MEMORY_BASIC_INFORMATION mbi;
 		VirtualQuery(pAddr, &mbi, sizeof(mbi));
 
 		const char* pStateStr = "";
-		if      (mbi.State == MEM_COMMIT)  pStateStr = "COMMIT";
+		if (mbi.State == MEM_COMMIT)  pStateStr = "COMMIT";
 		else if (mbi.State == MEM_RESERVE) pStateStr = "RESERVE";
 		else if (mbi.State == MEM_FREE)    pStateStr = "FREE";
 
@@ -232,13 +254,13 @@ void DumpPages(void* _pBase, size_t _reserveSize, size_t _pageSize, const char* 
 //////////////////////////////////////////////////////////////////////////////////////////
 static void Test_StackExpansion(int _argc, char** _argv)
 {
-	constexpr size_t RESERVE_SIZE = 64 * 1024;
+	constexpr size_t RESERVE_SIZE = 16 * 4096;
 	size_t pageSize = GetPageSize();
 
 	Console::WriteLine(ConsoleColor::White, "Page Size: %llu bytes", pageSize);
 
 	// VEH 핸들러 등록 (1 = 최우선 호출)
-	void* pVeh = AddVectoredExceptionHandler(1, VectoredHandler);
+	void* pVeh = AddVectoredExceptionHandler(1, CoStack_VectoredHandler);
 
 	// 1. StackAlloc
 	void* pStack = StackAlloc(RESERVE_SIZE, pageSize);
@@ -246,18 +268,21 @@ static void Test_StackExpansion(int _argc, char** _argv)
 	DumpPages(pStack, RESERVE_SIZE, pageSize, "After StackAlloc");
 	Console::ReadKeyWhile("Press spacebar to continue...", ConsoleKey::Spacebar);
 
-	// 2. TouchStack - VEH 핸들러가 GUARD 페이지 위반을 잡아 자동 확장
-	((char*)pStack)[pageSize + 100] = 0;
+	// 🔥 공통: stack top
+	char* pTop = (char*)pStack + RESERVE_SIZE;
+
+	// 2. TouchStack (아래 방향으로 접근 → GUARD 트리거)
+	*(pTop - pageSize - 100) = 0;
 	DumpPages(pStack, RESERVE_SIZE, pageSize, "After TouchStack");
 	Console::ReadKeyWhile("Press spacebar to continue...", ConsoleKey::Spacebar);
 
-	// 3. StackInit - 스택 초기 상태로 재설정
+	// 3. StackInit
 	StackInit(pStack, RESERVE_SIZE, pageSize);
 	DumpPages(pStack, RESERVE_SIZE, pageSize, "After StackInit");
 	Console::ReadKeyWhile("Press spacebar to continue...", ConsoleKey::Spacebar);
 
-	// 4. TouchStack - 재설정 후 다시 자동 확장 확인
-	((char*)pStack)[pageSize + 100] = 0;
+	// 4. TouchStack 다시 (동일하게 아래 방향)
+	*(pTop - pageSize - 100) = 0;
 	DumpPages(pStack, RESERVE_SIZE, pageSize, "After TouchStack");
 	Console::ReadKeyWhile("Press spacebar to continue...", ConsoleKey::Spacebar);
 
@@ -291,7 +316,7 @@ static void Test_StackExpansionPerf(int _argc, char** _argv)
 	Console::WriteLine(ConsoleColor::White, "");
 
 	// VEH 핸들러 등록
-	void* pVeh = AddVectoredExceptionHandler(1, VectoredHandler);
+	void* pVeh = AddVectoredExceptionHandler(1, CoStack_VectoredHandler);
 
 	// 스택 할당 및 등록
 	void* pStack = StackAlloc(RESERVE_SIZE, pageSize);
@@ -324,14 +349,16 @@ static void Test_StackExpansionPerf(int _argc, char** _argv)
 	gVehCountMode = true;
 	gVehCallCount = 0;
 
+	char* pTop = (char*)pStack + RESERVE_SIZE;
+
 	StopWatchHR swB;
 	swB.Start();
 	for (int i = 0; i < TRIAL_COUNT; ++i)
 	{
 		StackInit(pStack, RESERVE_SIZE, pageSize);
 
-		// GUARD 페이지(page1) 을 명시적으로 터치 → VEH 1회 호출
-		volatile char* pGuard = (volatile char*)pStack + pageSize + 100;
+		// 🔥 GUARD 페이지를 아래 방향으로 터치
+		volatile char* pGuard = (volatile char*)(pTop - pageSize - 100);
 		*pGuard = 0;
 	}
 	TimeSpan tsB = swB.Stop();
@@ -370,16 +397,54 @@ static void Test_StackExpansionPerf(int _argc, char** _argv)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+// 3. 커스텀 스택 테스트 (코루틴의 근간)
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// ASM 함수 선언
+extern "C"
+{
+	using FN_COROUTINE = void(*)();
+	void co_stack_test(FN_COROUTINE, void*);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// 코루틴 스택 프로빙 테스트용 함수
+static void co_func2(int _depth)
+{
+	if (_depth >= 3)
+		return;
+	char stk[4096 * 3];
+	stk[0xff] = 0xff;
+	Console::WriteLine("co_func2: stk[0xff] = 0x%x", stk[0xff]);
+	co_func2(_depth + 1);
+}
+
+static void co_func1()
+{
+	int a = 30;
+	co_func2(1);
+
+	Console::WriteLine("co_func1: a = %d", a);
+}
+
+static void Test_CoStack(int _argc, char** _argv)
+{
+	size_t pageSize = GetPageSize();
+	size_t reserveSize = pageSize * 16; // 충분히 큰 스택 예약
+	void* pVeh = AddVectoredExceptionHandler(1, CoStack_VectoredHandler);
+	char* pStack = StackAlloc(reserveSize, pageSize);
+	RegisterStack(pStack, reserveSize, pageSize);
+
+	co_stack_test(co_func1, pStack + reserveSize);
+
+	UnregisterStack(pStack);
+	StackFree(pStack);
+	RemoveVectoredExceptionHandler(pVeh);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 int call_04_CoStack(int _argc, char** _argv)
 {
-	auto pOption = jc::MakeShared<ConsoleMenuItemOption>();
-	pOption->inputTitle_               = "선택> ";
-	pOption->inputLeftBrace_           = "[";
-	pOption->inputRightBrace_          = "]";
-	pOption->inputRightPadding_        = " ";
-	pOption->inputFormatPadding_       = 1;
-	pOption->pressAnyKeyAfterCallback_ = false;
-
 	auto pMenu = jc::MakeShared<ConsoleMenuItem>();
 	pMenu->AddHeader(
 		"========================================\n"
@@ -391,9 +456,12 @@ int call_04_CoStack(int _argc, char** _argv)
 	pMenu->Add("2", "스택확장 성능 (VEH 1000회 호출 비용)",
 		CONSOLE_MENU_ACTION(Test_StackExpansionPerf(_argc, _argv))
 	);
+	pMenu->Add("3", "커스텀 스택 테스트 (코루틴의 근간)",
+		CONSOLE_MENU_ACTION(Test_CoStack(_argc, _argv))
+	);
 	pMenu->AddBack("0", "뒤로가기");
 
-	ConsoleMenuItem::Show(pMenu, pOption);
+	ConsoleMenuItem::Show(pMenu);
 
 	return 0;
 }

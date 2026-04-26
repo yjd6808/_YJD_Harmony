@@ -222,6 +222,109 @@ TEST(TreeSetTest, Pointer) {
 	testSet1.ForEachDelete();
 }
 
+TEST(TreeSetTest, TryPop) {
+	LeakCheck;
+	TreeSet<int> testSet;
+
+	testSet.Insert(1);
+	testSet.Insert(2);
+	testSet.Insert(3);
+	EXPECT_EQ(testSet.Size(), 3);
+
+	// 존재하는 키로 TryPop - 성공해야함
+	int key = 0;
+	EXPECT_TRUE(testSet.TryPop(1, &key));
+	EXPECT_EQ(key, 1);
+	EXPECT_EQ(testSet.Size(), 2);
+	EXPECT_FALSE(testSet.Exist(1));
+
+	// 이미 삭제된 키로 TryPop - 실패해야함
+	EXPECT_FALSE(testSet.TryPop(1, &key));
+
+	// 존재하지 않는 키로 TryPop - 실패해야함
+	EXPECT_FALSE(testSet.TryPop(99, &key));
+
+	// _pOut이 nullptr인 경우에도 정상 삭제
+	EXPECT_TRUE(testSet.TryPop(2, nullptr));
+	EXPECT_EQ(testSet.Size(), 1);
+	EXPECT_FALSE(testSet.Exist(2));
+
+	// 남은 마지막 원소 pop
+	EXPECT_TRUE(testSet.TryPop(3, &key));
+	EXPECT_EQ(key, 3);
+	EXPECT_TRUE(testSet.IsEmpty());
+}
+
+TEST(TreeSetTest, BoundTest) {
+	LeakCheck;
+
+	// 홀수 키만 삽입: 1, 3, 5, 7, 9
+	TreeSet<int> testSet;
+	testSet.Insert(1);
+	testSet.Insert(3);
+	testSet.Insert(5);
+	testSet.Insert(7);
+	testSet.Insert(9);
+
+	// ─────────────────────────────────────────
+	// LowerBound : key 이상(>=)인 첫 번째 key 포인터
+	// ─────────────────────────────────────────
+
+	// 존재하는 키 → 해당 키
+	EXPECT_NE(testSet.LowerBound(1), nullptr);
+	EXPECT_EQ(*testSet.LowerBound(1), 1);
+
+	EXPECT_NE(testSet.LowerBound(5), nullptr);
+	EXPECT_EQ(*testSet.LowerBound(5), 5);
+
+	EXPECT_NE(testSet.LowerBound(9), nullptr);
+	EXPECT_EQ(*testSet.LowerBound(9), 9);
+
+	// 존재하지 않는 키, 범위 내 → 다음 큰 키
+	EXPECT_NE(testSet.LowerBound(2), nullptr);
+	EXPECT_EQ(*testSet.LowerBound(2), 3);	// 2 없음 → 3
+
+	EXPECT_NE(testSet.LowerBound(6), nullptr);
+	EXPECT_EQ(*testSet.LowerBound(6), 7);	// 6 없음 → 7
+
+	// 최소 키보다 작은 키 → 최솟값
+	EXPECT_NE(testSet.LowerBound(0), nullptr);
+	EXPECT_EQ(*testSet.LowerBound(0), 1);
+
+	// 최대 키보다 큰 키 → nullptr
+	EXPECT_EQ(testSet.LowerBound(10), nullptr);
+
+	// ─────────────────────────────────────────
+	// UpperBound : key 초과(>)인 첫 번째 key 포인터
+	// ─────────────────────────────────────────
+
+	// 존재하는 키 → 다음 키
+	EXPECT_NE(testSet.UpperBound(1), nullptr);
+	EXPECT_EQ(*testSet.UpperBound(1), 3);	// 1 초과 → 3
+
+	EXPECT_NE(testSet.UpperBound(5), nullptr);
+	EXPECT_EQ(*testSet.UpperBound(5), 7);	// 5 초과 → 7
+
+	// 존재하지 않는 키, 범위 내 → 다음 큰 키
+	EXPECT_NE(testSet.UpperBound(2), nullptr);
+	EXPECT_EQ(*testSet.UpperBound(2), 3);	// 2 없음, 2 초과 → 3
+
+	// 최소 키보다 작은 키 → 최솟값
+	EXPECT_NE(testSet.UpperBound(0), nullptr);
+	EXPECT_EQ(*testSet.UpperBound(0), 1);
+
+	// 최대 키 이상 → nullptr
+	EXPECT_EQ(testSet.UpperBound(9),  nullptr);
+	EXPECT_EQ(testSet.UpperBound(10), nullptr);
+
+	// ─────────────────────────────────────────
+	// 빈 셋에서 모두 nullptr
+	// ─────────────────────────────────────────
+	TreeSet<int> empty;
+	EXPECT_EQ(empty.LowerBound(1), nullptr);
+	EXPECT_EQ(empty.UpperBound(1), nullptr);
+}
+
 #endif // TEST_TreeSetTest == ON
 
 

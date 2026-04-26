@@ -282,6 +282,40 @@ struct Bucket<TKey, TAllocator>
         return true;
     }
 
+    template <typename Ky>
+    bool TryPop(const Ky& _key, OUT TKey* _pOut)
+    {
+        int findPos = -1;
+        for(int i = 0; i < size_; i++)
+        {
+            if(Comparator<TKey>()(pDynamicArray_[i].data_, _key) == 0)
+            {
+                findPos = i;
+                break;
+            }
+        }
+
+        if(findPos == -1)
+        {
+            return false;
+        }
+
+        if (_pOut != nullptr)
+        {
+            new (_pOut) TKey(Move(pDynamicArray_[findPos].data_));
+        }
+
+        Memory::PlacementDelete(pDynamicArray_[findPos]);
+
+        for(int i = findPos; i < size_ - 1; i++)
+        {
+            pDynamicArray_[i] = Move(pDynamicArray_[i + 1]);
+        }
+
+        --size_;
+        return true;
+    }
+
     bool IsFull()
     {
         return size_ == capacity_;
@@ -460,6 +494,40 @@ struct Bucket<TKey, TValue, TAllocator>
         {
             return false;
         }
+
+        for(int i = findPos; i < size_ - 1; i++)
+        {
+            pDynamicArray_[i] = Move(pDynamicArray_[i + 1]);
+        }
+
+        --size_;
+        return true;
+    }
+
+    template <typename Ky>
+    bool TryPop(const Ky& _key, OUT TValue* _pOut)
+    {
+        int findPos = -1;
+        for(int i = 0; i < size_; i++)
+        {
+            if(Comparator<TKey>()(pDynamicArray_[i].data_.key_, _key) == 0)
+            {
+                findPos = i;
+                break;
+            }
+        }
+
+        if(findPos == -1)
+        {
+            return false;
+        }
+
+        if (_pOut != nullptr)
+        {
+            new (_pOut) TValue(Move(pDynamicArray_[findPos].data_.value_));
+        }
+
+        Memory::PlacementDelete(pDynamicArray_[findPos]);
 
         for(int i = findPos; i < size_ - 1; i++)
         {

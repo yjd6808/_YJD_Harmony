@@ -120,9 +120,18 @@ public:
         TListCollection::PopBack();
     }
 
+    bool PopBack(T* _pOut)
+    {
+        return TListCollection::PopBack(_pOut);
+    }
     void PopFront() override
     {
         TListCollection::PopFront();
+    }
+
+    bool PopFront(T* _pOut)
+    {
+        return TListCollection::PopFront(_pOut);
     }
 
     bool Exist(const T& _data) const

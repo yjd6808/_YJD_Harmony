@@ -67,6 +67,10 @@ public:
 		TListCollection::PopFront();
 	}
 
+	virtual bool Dequeue(T* _pOut) {
+		return TListCollection::PopFront(_pOut);
+	}
+
 	T& Front() const override {
 		return TListCollection::Front();
 	}

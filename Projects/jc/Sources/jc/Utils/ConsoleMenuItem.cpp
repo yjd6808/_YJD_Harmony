@@ -224,7 +224,7 @@ void ConsoleMenuItem::Show(ConsoleMenuItemOptionPtr _pOption)
 }
 
 /*static*/
-void ConsoleMenuItem::Show(ConsoleMenuItemPtr _pItem, ConsoleMenuItemOptionPtr _pOption)
+void ConsoleMenuItem::Show(ConsoleMenuItemPtr _pItem, ConsoleMenuItemOptionPtr _pOption /*= nullptr*/)
 {
 	if (_pItem.Exist())
 		_pItem->Show(jc::Move(_pOption));

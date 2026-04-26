@@ -62,7 +62,7 @@ struct ConsoleMenuItemOption
 
 	// 입력 프롬프트 타이틀 (userInputTitle_ = true 일 때 사용)
 	// ex) inputTitle_ = "수행할 함수를 선택"  ->  "수행할 함수를 선택> "
-	jc::String inputTitle_ = jc::String("입력");
+	jc::String inputTitle_ = jc::String("입력> ");
 
 	// false: 대소문자 구분 없이 매칭 (기본값)
 	// true : 대소문자 정확히 일치해야 매칭
@@ -71,8 +71,8 @@ struct ConsoleMenuItemOption
 	// true 이면 Add("help") 가 "HELP" 로 표시됨
 	bool inputForceCase_ = false;
 
-	jc::String inputLeftBrace_;
-	jc::String inputRightBrace_;
+	jc::String inputLeftBrace_ = "[";
+	jc::String inputRightBrace_ = "]";
 
 	// inputFormatPadding_ 이 2 라면
 	//   Add("1")  ->  [ 1]

@@ -66,6 +66,9 @@ int main(int _argc, char** _argv)
 	pRoot->Add("5", "PageGuard - 페이지 가드 터치",
 		CONSOLE_MENU_ACTION(call_05_PageGuard(_argc, _argv))
 	);
+	pRoot->Add("6", "Coroutine - 코루틴 연구",
+		CONSOLE_MENU_ACTION(call_06_Coroutine(_argc, _argv))
+	);
 	pRoot->AddBack("0", "종료");
 
 	// ====================================================

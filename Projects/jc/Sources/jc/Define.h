@@ -37,7 +37,9 @@
 	 * 1.cpp ~ 4.cpp 통틀어서 1개를 만들게됨
 	 */
 
-
+	#define CPP_CALL
+	#define ASM_CALL
+	
     #define JC_STDCALL        __stdcall
     #define JC_CDECL          __cdecl
     #define JC_FORCEINLINE    __forceinline

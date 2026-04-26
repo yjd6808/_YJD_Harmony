@@ -161,6 +161,11 @@ class TreeSet : public SetCollection<TKey, TAllocator>
         return table_.TryGetLast(_key);
     }
 
+    bool TryPop(const TKey& _key, TKey* _pOut)
+    {
+        return table_.TryPop(_key, _pOut);
+    }
+
     TEnumerator Begin() const override
     {
         return MakeShared<TTreeSetIterator, TAllocator>(this->GetOwner(), table_.FindSmallestNode(table_.pRoot_));

@@ -96,6 +96,17 @@ public:
 		return table_.Remove(_key);
 	}
 
+	template <typename = DefaultEnableIf_t<IsStringType_v<TKey>>>
+	bool TryPop(const char* _key, TKey* _pOut)
+	{
+		return table_.TryPop(_key, _pOut);
+	}
+
+	bool TryPop(const TKey& _key, TKey* _pOut)
+	{
+		return table_.TryPop(_key, _pOut);
+	}
+
 	void Clear() noexcept override
 	{
 		table_.Clear();

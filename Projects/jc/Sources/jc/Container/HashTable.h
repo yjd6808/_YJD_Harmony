@@ -193,6 +193,30 @@ public:
 		return true;
 	}
 
+	template <typename Ky>
+	bool TryPop(const Ky& _key, OUT TKey* _pOut)
+	{
+		if (pTable_ == nullptr)
+		{
+			return false;
+		}
+
+		TBucket& bucket = pTable_[HashBucket(_key)];
+
+		if (!bucket.TryPop(_key, _pOut))
+		{
+			return false;
+		}
+
+		if (bucket.IsEmpty())
+		{
+			DisjointBucket(&bucket);
+		}
+
+		--size_;
+		return true;
+	}
+
 	TKey* Any() const 
 	{
 		if (size_ == 0)
@@ -795,6 +819,30 @@ public:
 		}
 
 		// 버킷이 비었으면 연결을 끊어준다.
+		if (bucket.IsEmpty())
+		{
+			DisjointBucket(&bucket);
+		}
+
+		--size_;
+		return true;
+	}
+
+	template <typename Ky>
+	bool TryPop(const Ky& _key, OUT TValue* _pOut)
+	{
+		if (pTable_ == nullptr)
+		{
+			return false;
+		}
+
+		TBucket& bucket = pTable_[HashBucket(_key)];
+
+		if (!bucket.TryPop(_key, _pOut))
+		{
+			return false;
+		}
+
 		if (bucket.IsEmpty())
 		{
 			DisjointBucket(&bucket);
