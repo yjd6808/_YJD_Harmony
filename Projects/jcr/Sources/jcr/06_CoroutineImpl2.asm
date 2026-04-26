@@ -48,12 +48,33 @@ OFFSET_COSTACK_STACKTIER   EQU CoStack.stackTier_
 
 ; ============================================================
 CoRegs struct 8
-    rip_    QWORD   ?
-    rsp_    QWORD   ?
-    rbp_    QWORD   ?
+    rip_    QWORD   ?           ; offset   0
+    rsp_    QWORD   ?           ; offset   8
+    rbp_    QWORD   ?           ; offset  16
 
-    gs8_    QWORD   ?
-    gs16_   QWORD   ?
+    gs8_    QWORD   ?           ; offset  24  TEB StackBase:  0x8
+    gs16_   QWORD   ?           ; offset  32  TEB StackLimit: 0x10
+
+    ; Windows x64 callee-saved 정수 레지스터
+    rsi_    QWORD   ?           ; offset  40
+    rdi_    QWORD   ?           ; offset  48
+    r12_    QWORD   ?           ; offset  56
+    r13_    QWORD   ?           ; offset  64
+    r14_    QWORD   ?           ; offset  72
+    r15_    QWORD   ?           ; offset  80
+
+    ; Windows x64 callee-saved XMM 레지스터 (16 bytes each, 8-byte aligned)
+    xmm6_   BYTE    16 dup(?)   ; offset  88
+    xmm7_   BYTE    16 dup(?)   ; offset 104
+    xmm8_   BYTE    16 dup(?)   ; offset 120
+    xmm9_   BYTE    16 dup(?)   ; offset 136
+    xmm10_  BYTE    16 dup(?)   ; offset 152
+    xmm11_  BYTE    16 dup(?)   ; offset 168
+    xmm12_  BYTE    16 dup(?)   ; offset 184
+    xmm13_  BYTE    16 dup(?)   ; offset 200
+    xmm14_  BYTE    16 dup(?)   ; offset 216
+    xmm15_  BYTE    16 dup(?)   ; offset 232
+    ; sizeof(CoRegs) = 248
 
 CoRegs ends
 
@@ -62,6 +83,22 @@ OFFSET_COREGS_RSP   EQU CoRegs.rsp_
 OFFSET_COREGS_RBP   EQU CoRegs.rbp_
 OFFSET_COREGS_GS8   EQU CoRegs.gs8_
 OFFSET_COREGS_GS16  EQU CoRegs.gs16_
+OFFSET_COREGS_RSI   EQU CoRegs.rsi_
+OFFSET_COREGS_RDI   EQU CoRegs.rdi_
+OFFSET_COREGS_R12   EQU CoRegs.r12_
+OFFSET_COREGS_R13   EQU CoRegs.r13_
+OFFSET_COREGS_R14   EQU CoRegs.r14_
+OFFSET_COREGS_R15   EQU CoRegs.r15_
+OFFSET_COREGS_XMM6  EQU CoRegs.xmm6_
+OFFSET_COREGS_XMM7  EQU CoRegs.xmm7_
+OFFSET_COREGS_XMM8  EQU CoRegs.xmm8_
+OFFSET_COREGS_XMM9  EQU CoRegs.xmm9_
+OFFSET_COREGS_XMM10 EQU CoRegs.xmm10_
+OFFSET_COREGS_XMM11 EQU CoRegs.xmm11_
+OFFSET_COREGS_XMM12 EQU CoRegs.xmm12_
+OFFSET_COREGS_XMM13 EQU CoRegs.xmm13_
+OFFSET_COREGS_XMM14 EQU CoRegs.xmm14_
+OFFSET_COREGS_XMM15 EQU CoRegs.xmm15_
 
 ; ============================================================
 CoContext struct 8
@@ -82,6 +119,84 @@ OFFSET_COCTX_STATE    EQU CoContext.state_
 OFFSET_COCTX_FN       EQU CoContext.fn_
 
 code
+
+CoRoutine proc
+
+CoRoutine endp
+
+; ============================================================
+; CoFnEndTrampoline
+;   fn()이 정상 종료(ret)할 때 진입하는 트램폴린
+;   CoRun이 call 대신 push-trampoline + jmp 패턴을 사용하므로
+;   fn()의 ret이 여기로 도달함 (코루틴 스택 활성화 상태)
+;
+; 역할:
+;   1. CoFindCtxByAddr로 현재 CoContext 탐색
+;   2. 스케줄러의 GS / RSI~R15 / XMM6~15 복원
+;   3. state = csEnd 설정
+;   4. 스케줄러 스택으로 전환 + 스케줄러의 RBP 복원
+;   5. 스케줄러의 YIELD 레이블로 점프
+;      → YIELD: pop rcx(CoContext*), csEnd 감지, CoFreeCtx 호출, 0 반환
+;
+; 진입 시 스택 레이아웃 (pStackBase_ 기준):
+;   [pStackBase_ - 32] ← RSP (16-byte 정렬)
+;   [pStackBase_ - 40]   = CoFnEndTrampoline 주소 (fn ret이 이미 pop 완료)
+;   shadow space: [pStackBase_-32 .. pStackBase_-9]
+; ============================================================
+CoFnEndTrampoline proc
+
+    ; 진입 시 RSP = pStackBase_ - 32 (코루틴 스택, 16-byte 정렬)
+    mov     rcx,    rsp                 ; arg: 코루틴 스택 내 주소
+    sub     rsp,    32                  ; shadow space (16-byte 정렬 유지)
+    call    CoFindCtxByAddr
+    add     rsp,    32
+
+    ; rax = CoContext* (null이면 프로그래밍 오류 - unreachable)
+    cmp     rax,    0
+    jnz     CTX_OK
+    int     3                           ; 코루틴 스택에서 컨텍스트를 찾지 못함
+CTX_OK:
+
+    ; 스케줄러의 GS (TEB StackBase / StackLimit) 복원
+    mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS8]
+    mov     gs:[8],  r10
+    mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS16]
+    mov     gs:[16], r10
+
+    ; 스케줄러의 callee-saved 정수 레지스터 복원
+    mov     rsi,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RSI]
+    mov     rdi,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RDI]
+    mov     r12,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R12]
+    mov     r13,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R13]
+    mov     r14,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R14]
+    mov     r15,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R15]
+
+    ; 스케줄러의 callee-saved XMM 레지스터 복원 (movdqu: alignment 미보장)
+    movdqu  xmm6,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM6]
+    movdqu  xmm7,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM7]
+    movdqu  xmm8,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM8]
+    movdqu  xmm9,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM9]
+    movdqu  xmm10,  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM10]
+    movdqu  xmm11,  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM11]
+    movdqu  xmm12,  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM12]
+    movdqu  xmm13,  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM13]
+    movdqu  xmm14,  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14]
+    movdqu  xmm15,  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15]
+
+    ; state = csEnd
+    mov     dword ptr[rax + OFFSET_COCTX_STATE], csEnd
+
+    ; 스케줄러 스택으로 전환 후 YIELD 레이블로 점프
+    ; regs_.rsp_ = 스케줄러 스택 (CoContext* push 직후, top = CoContext*)
+    ; regs_.rip_ = 스케줄러의 YIELD 레이블 (CoRun 또는 CoResume)
+    mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RSP]
+    mov     r11,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RIP]
+    mov     rbp,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RBP]
+    mov     rsp,    r10
+    jmp     r11
+
+CoFnEndTrampoline endp
+
 ; ============================================================
 CoRun proc
     push    rbp
@@ -94,9 +209,9 @@ CoRun proc
     cmp     rax,    0
     je      FIN
 
-    push	rax                     ; CoContext 포인터 백업
+    push	rax                     ; CoContext 포인터 백업 (스케줄러 스택)
 
-    lea     rbx,    YIELD           ; 내부에서 CoYield로 복귀할 때 사용할 주소 저장해놓음
+    lea     rbx,    YIELD           ; CoYield / 트램폴린에서 복귀할 때 사용할 주소
     mov     r10,    gs:[8]          ; 기존 StackBase 저장
     mov     r11,    gs:[16]         ; 기존 StackLimit 저장
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS8],     r10
@@ -104,6 +219,27 @@ CoRun proc
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RSP],     rsp
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RIP],     rbx
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RBP],     rbp
+
+    ; 스케줄러의 callee-saved 정수 레지스터를 regs_에 저장
+    ; (코루틴 최초 실행 전 초기화: CoYield xchg 시 올바른 스케줄러 값 복원을 위해)
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RSI],     rsi
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RDI],     rdi
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R12],     r12
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R13],     r13
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R14],     r14
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R15],     r15
+
+    ; 스케줄러의 callee-saved XMM 레지스터를 regs_에 저장 (movdqu: alignment 미보장)
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM6],    xmm6
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM7],    xmm7
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM8],    xmm8
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM9],    xmm9
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM10],   xmm10
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM11],   xmm11
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM12],   xmm12
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM13],   xmm13
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14],   xmm14
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15],   xmm15
 
     mov     dword ptr[rax + OFFSET_COCTX_STATE],   csRun
 
@@ -114,22 +250,29 @@ CoRun proc
     mov     gs:[8],     r10         ; StackBase  = 커스텀 스택 Base
     mov     gs:[16],    r11         ; StackLimit = 커스텀 스택 Limit (초기 커밋)
 
-    ; 커스텀 스택으로 전환 후 호출
+    ; 커스텀 스택으로 전환 후 fn() 호출
+    ; call 대신 push-trampoline + jmp 패턴:
+    ;   - fn() 정상 종료 시 CoFnEndTrampoline으로 복귀
+    ;   - 마지막으로 재개한 스케줄러(CoRun/CoResume)의 YIELD로 올바르게 점프
+    ;   - 스택 레이아웃은 call과 동일 (push r11 + jmp = 호출 효과)
     mov     rsp,        r10
-    sub     rsp,        32              ; shadow space for 32 byte
-    mov     rcx,        rax
-    mov     rbx,        [rax + OFFSET_COCTX_FN]
-    call    rbx
+    sub     rsp,        32                  ; shadow space for fn()
+    mov     r10,        [rax + OFFSET_COCTX_FN]
+    lea     r11,        CoFnEndTrampoline
+    push    r11                             ; "return address" = trampoline
+    mov     rcx,        rax                 ; arg: CoContext* (rax는 push r11에 의해 불변)
+    jmp     r10                             ; fn(CoContext*)
 
 YIELD:
-    ; 스택에 저장해놨던 CoContext 포인터 획득 (rcx)
+    ; 스케줄러 스택 활성화 상태
+    ; (CoYield 또는 CoFnEndTrampoline이 스케줄러 스택 전환 후 점프)
+    ; 스케줄러 스택 top: push rax로 저장해놓은 CoContext 포인터
     pop     rcx
     mov     ebx,        [rcx + OFFSET_COCTX_STATE]
     cmp     ebx,        csYield
     jz      FIN
 
-    ; 내부에서 그냥 함수를 쭉 실행해버림. Yield 수행 자체를 안해버린 경우
-    ; 이미 rcx에 CoContext 포인터가 있으므로 인자 설정되어있음
+    ; csEnd: fn()이 정상 종료됨 → 컨텍스트 해제 후 nullptr 반환
     call    CoFreeCtx
     mov     rcx,        0
 FIN:
@@ -153,9 +296,8 @@ CoYield proc
     jz	    FIN
 
     ; 컨텍스트 스위치 수행
-    ; 수행전 기존 컨텍스트 정보 백업
 
-    ; StackBase, StackLimit 복원
+    ; StackBase, StackLimit xchg
     mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS8]
     xchg    r10,    gs:[8]
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS8],  r10
@@ -176,6 +318,74 @@ CoYield proc
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RSP],    r10
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RBP],    r11
 
+    ; callee-saved 정수 레지스터 xchg
+    ; 패턴: r10 = regs_[reg], regs_[reg] = reg, reg = r10
+    mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RSI]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RSI],    rsi
+    mov     rsi,    r10
+
+    mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RDI]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RDI],    rdi
+    mov     rdi,    r10
+
+    mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R12]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R12],    r12
+    mov     r12,    r10
+
+    mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R13]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R13],    r13
+    mov     r13,    r10
+
+    mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R14]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R14],    r14
+    mov     r14,    r10
+
+    mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R15]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R15],    r15
+    mov     r15,    r10
+
+    ; callee-saved XMM 레지스터 xchg (xmm0은 volatile 임시 레지스터로 사용)
+    ; 패턴: xmm0 = regs_[xmmN], regs_[xmmN] = xmmN (movdqu), xmmN = xmm0 (movaps reg←reg)
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM6]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM6],    xmm6
+    movaps  xmm6,   xmm0
+
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM7]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM7],    xmm7
+    movaps  xmm7,   xmm0
+
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM8]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM8],    xmm8
+    movaps  xmm8,   xmm0
+
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM9]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM9],    xmm9
+    movaps  xmm9,   xmm0
+
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM10]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM10],   xmm10
+    movaps  xmm10,  xmm0
+
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM11]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM11],   xmm11
+    movaps  xmm11,  xmm0
+
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM12]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM12],   xmm12
+    movaps  xmm12,  xmm0
+
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM13]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM13],   xmm13
+    movaps  xmm13,  xmm0
+
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14],   xmm14
+    movaps  xmm14,  xmm0
+
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15],   xmm15
+    movaps  xmm15,  xmm0
+
     mov     dword ptr[rax + OFFSET_COCTX_STATE],              csYield
     jmp     rbx
 
@@ -195,7 +405,7 @@ CoResume proc
     cmp     rcx,    0
     jz      FIN
 
-    push    rcx                     ; CoContext 포인터 백업
+    push    rcx                     ; CoContext 포인터 백업 (스케줄러 스택)
     mov     rax,    rcx
 
     ; StackBase 복원 및 백업
@@ -203,38 +413,105 @@ CoResume proc
     xchg    rbx,        [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS8]
     mov	    gs:[8],     rbx
 
-    ; StackBase 복원 및 백업
+    ; StackLimit 복원 및 백업
     mov     rbx,        gs:[16]       
     xchg    rbx,        [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS16]
     mov     gs:[16],    rbx
 
-    ; rbp 복구
+    ; rbp xchg
     mov     rbx,        [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RBP]
     xchg    rbx,        rbp
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RBP],     rbx
 
-    ; rbp & rip 복구
+    ; callee-saved 정수 레지스터 xchg (r10을 임시 레지스터로 사용)
+    mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RSI]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RSI],    rsi
+    mov     rsi,    r10
+
+    mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RDI]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RDI],    rdi
+    mov     rdi,    r10
+
+    mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R12]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R12],    r12
+    mov     r12,    r10
+
+    mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R13]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R13],    r13
+    mov     r13,    r10
+
+    mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R14]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R14],    r14
+    mov     r14,    r10
+
+    mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R15]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R15],    r15
+    mov     r15,    r10
+
+    ; callee-saved XMM 레지스터 xchg (xmm0은 volatile 임시 레지스터로 사용)
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM6]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM6],    xmm6
+    movaps  xmm6,   xmm0
+
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM7]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM7],    xmm7
+    movaps  xmm7,   xmm0
+
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM8]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM8],    xmm8
+    movaps  xmm8,   xmm0
+
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM9]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM9],    xmm9
+    movaps  xmm9,   xmm0
+
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM10]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM10],   xmm10
+    movaps  xmm10,  xmm0
+
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM11]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM11],   xmm11
+    movaps  xmm11,  xmm0
+
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM12]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM12],   xmm12
+    movaps  xmm12,  xmm0
+
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM13]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM13],   xmm13
+    movaps  xmm13,  xmm0
+
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14],   xmm14
+    movaps  xmm14,  xmm0
+
+    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15]
+    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15],   xmm15
+    movaps  xmm15,  xmm0
+
+    ; rsp & rip 복구 (코루틴의 저장된 값)
     mov     r10,        [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RSP]
     mov     r11,        [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RIP]
 
     mov     dword ptr[rax + OFFSET_COCTX_STATE],   csRun
-    lea     rbx,        YIELD           ; 내부에서 CoYield로 복귀할 때 사용할 주소 저장해놓음
+    lea     rbx,        YIELD           ; CoYield / 트램폴린에서 복귀할 때 사용할 주소
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RSP],      rsp
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RIP],      rbx
 
-    ; 커스텀 스택으로 전환 후 호출
+    ; 커스텀 스택으로 전환 후 코루틴 재개
     mov     rsp,        r10
     jmp     r11
     
 YIELD:
-    ; 스택에 저장해놨던 CoContext 포인터 획득 (rcx)
+    ; 스케줄러 스택 활성화 상태
+    ; (CoYield 또는 CoFnEndTrampoline이 스케줄러 스택 전환 후 점프)
+    ; 스케줄러 스택 top: push rcx로 저장해놓은 CoContext 포인터
     pop     rcx
     mov     ebx,        [rcx + OFFSET_COCTX_STATE]
     cmp     ebx,        csYield
     jz      FIN
 
-    ; 내부에서 그냥 함수를 쭉 실행해버림. Yield 수행 자체를 안해버린 경우
-    ; 이미 rcx에 CoContext 포인터가 있으므로 인자 설정되어있음
+    ; csEnd: fn()이 정상 종료됨 → 컨텍스트 해제 후 nullptr 반환
     call    CoFreeCtx
     mov     rcx,        0
 FIN:
@@ -247,4 +524,3 @@ CoResume endp
 
 
 end
-

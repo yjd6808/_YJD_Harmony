@@ -27,25 +27,41 @@ void CoMgr::InitStack(CoStack* _pStack)
 	_pStack->pStackBase_ = _pStack->pStackEnd_ + _pStack->size_;
 
 	//  pStackBase_  ──────────────── (높은 주소, 초기 RSP)
-	//               | init pages  |  ← pageInitCount_ 개 commit
+	//               | init pages  |  ← pageInitCount_ 개 commit  (reserve 범위 내로 클램프)
 	//  pStackLimit_ ────────────────
-	//               | guard pages |  ← pageGuardCount_ 개 commit + PAGE_GUARD
-	//               ────────────────
+	//               | guard pages |  ← pageGuardCount_ 개 commit + PAGE_GUARD (클램프)
+	//  pGuardLimit_ ────────────────
 	//               |  (reserve)  |
 	//  pStackEnd_   ──────────────── (낮은 주소)
 
+	// init commit 영역: pStackEnd_ 미만으로 내려가지 않도록 클램프
 	char* pCommitAddr = _pStack->pStackBase_ - (pageInitCount_ * CO_PAGE_SIZE);
-	if (VirtualAlloc(pCommitAddr, pageInitCount_ * CO_PAGE_SIZE, MEM_COMMIT, PAGE_READWRITE) == nullptr)
+	if (pCommitAddr < _pStack->pStackEnd_)
+		pCommitAddr = _pStack->pStackEnd_;
+
+	_u32 actualInitCount = (_u32)((_pStack->pStackBase_ - pCommitAddr) / CO_PAGE_SIZE);
+	if (actualInitCount > 0)
 	{
-		_LogError_("VirtualAlloc (init commit) failed. Error: %lu", GetLastError());
-		return;
+		if (VirtualAlloc(pCommitAddr, actualInitCount * CO_PAGE_SIZE, MEM_COMMIT, PAGE_READWRITE) == nullptr)
+		{
+			_LogError_("VirtualAlloc (init commit) failed. Error: %lu", GetLastError());
+			return;
+		}
 	}
 
+	// guard 영역: pStackEnd_ 미만으로 내려가지 않도록 클램프
 	char* pGuardAddr = pCommitAddr - (pageGuardCount_ * CO_PAGE_SIZE);
-	if (VirtualAlloc(pGuardAddr, pageGuardCount_ * CO_PAGE_SIZE, MEM_COMMIT, PAGE_READWRITE | PAGE_GUARD) == nullptr)
+	if (pGuardAddr < _pStack->pStackEnd_)
+		pGuardAddr = _pStack->pStackEnd_;
+
+	_u32 actualGuardCount = (_u32)((pCommitAddr - pGuardAddr) / CO_PAGE_SIZE);
+	if (actualGuardCount > 0)
 	{
-		_LogError_("VirtualAlloc (guard commit) failed. Error: %lu", GetLastError());
-		return;
+		if (VirtualAlloc(pGuardAddr, actualGuardCount * CO_PAGE_SIZE, MEM_COMMIT, PAGE_READWRITE | PAGE_GUARD) == nullptr)
+		{
+			_LogError_("VirtualAlloc (guard commit) failed. Error: %lu", GetLastError());
+			return;
+		}
 	}
 
 	_pStack->pStackLimit_ = pCommitAddr;
@@ -317,8 +333,11 @@ bool CoMgr::TryFindStackByAddr(char* _pAddr, OUT CoStack** _pOut)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// ExpandStack
+// ※ 주의: 여기서는 스택확장이 발생한다.
+// 확장 전에 Console::WriteLine 등, chkstk를 다시 호출하여 VEH가 재귀적으로 호출되는 케이스가 발생할 수 있으므로.
+// 로그를 남기고 싶다면 확장이 다 된 이후에 하도록 할 것.
 // VEH에서 호출: 가드 페이지 터치 시 스택 확장 처리
+//
 // 처리 흐름:
 //   [Before]                              [After]
 //   pStackLimit_                           pStackLimit_ (old)
@@ -391,6 +410,10 @@ bool CoMgr::ExpandStack(CoStack* _pStack, char* _pFaultAddr)
 		}
 	}
 	_pStack->pGuardLimit_ = pNewGuardStart;
+
+	//_LogInfo_("Stack expanded: newLimit=0x%p  newGuardLimit=0x%p  growthSize=%u KB (%u pages)",
+	//	_pStack->pStackLimit_, _pStack->pGuardLimit_,
+	//	(uint32_t)(pFaultEnd - pFaultStart) / 1024, (uint32_t)(pFaultEnd - pFaultStart) / CO_PAGE_SIZE);
 	return true;
 }
 

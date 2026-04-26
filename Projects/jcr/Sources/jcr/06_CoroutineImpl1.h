@@ -96,13 +96,34 @@ struct CoStack
 
 struct CoRegs
 {
-	_u64 rip_ = 0;
-	_u64 rsp_ = 0;
-	_u64 rbp_ = 0;
+	_u64 rip_  = 0;		// offset  0
+	_u64 rsp_  = 0;		// offset  8
+	_u64 rbp_  = 0;		// offset 16
 
 	// 스위칭전 TEB의 gs:[8]과 gs:[16]에 저장된 StackBase와 StackLimit을 보관하는 용도
-	_u64 gs8_ = 0;		// TEB StackBase: 0x8
-	_u64 gs16_	= 0;	// TEB StackLimit: 0x8
+	_u64 gs8_  = 0;		// offset 24  TEB StackBase:  0x8
+	_u64 gs16_ = 0;		// offset 32  TEB StackLimit: 0x10
+
+	// Windows x64 callee-saved 정수 레지스터
+	_u64 rsi_  = 0;		// offset 40
+	_u64 rdi_  = 0;		// offset 48
+	_u64 r12_  = 0;		// offset 56
+	_u64 r13_  = 0;		// offset 64
+	_u64 r14_  = 0;		// offset 72
+	_u64 r15_  = 0;		// offset 80
+
+	// Windows x64 callee-saved XMM 레지스터 (16 bytes each, 8-byte aligned)
+	_u8 xmm6_[16]  = {};	// offset  88
+	_u8 xmm7_[16]  = {};	// offset 104
+	_u8 xmm8_[16]  = {};	// offset 120
+	_u8 xmm9_[16]  = {};	// offset 136
+	_u8 xmm10_[16] = {};	// offset 152
+	_u8 xmm11_[16] = {};	// offset 168
+	_u8 xmm12_[16] = {};	// offset 184
+	_u8 xmm13_[16] = {};	// offset 200
+	_u8 xmm14_[16] = {};	// offset 216
+	_u8 xmm15_[16] = {};	// offset 232
+	// sizeof(CoRegs) = 248
 };
 
 struct CoTEB
@@ -175,7 +196,7 @@ extern "C"
 
 	CoContext*  ASM_CALL CoRun(FnCoroutine _fn, CoStackTier _stackTier = cstMid, _u32 _stackSize = 0);
 	void		ASM_CALL CoYield();
-	void		ASM_CALL CoResume(CoContext* _pCtx);
+	CoContext*	ASM_CALL CoResume(CoContext* _pCtx);
 }
 
 LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp);
