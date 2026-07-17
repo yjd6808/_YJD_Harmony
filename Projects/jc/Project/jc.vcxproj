@@ -25,6 +25,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\jc\Container\CMessage.cpp" />
+    <ClCompile Include="..\Sources\jc\Threading\Coroutine.cpp" />
     <ClCompile Include="..\Sources\jc\Container\MemoryStream.cpp" />
     <ClCompile Include="..\Sources\jc\Container\Property.cpp" />
     <ClCompile Include="..\Sources\jc\Container\PropertyBase.cpp" />
@@ -292,6 +293,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\Container\CMessage.h" />
+    <ClInclude Include="..\Sources\jc\Threading\Coroutine.h" />
     <ClInclude Include="..\Sources\jc\Container\CollectionStream.h" />
     <ClInclude Include="..\Sources\jc\Container\CollectionStreamIterator.h">
       <SubType>
@@ -749,6 +751,11 @@
     <Natvis Include="..\Sources\jc\Natvis\Vector.natvis" />
   </ItemGroup>
   <ItemGroup>
+    <MASM Include="..\Sources\jc\Threading\CoroutineImpl.asm">
+      <FileType>Document</FileType>
+    </MASM>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="..\Sources\jc\_Extern\Extern.asm" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -788,6 +795,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -949,5 +957,6 @@
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
   </ImportGroup>
 </Project>

@@ -30,6 +30,8 @@ struct check_point
 
 int main(int _argc, char** _argv) 
 {
+	new char;
+	VirtualAlloc(nullptr, 0x1000, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 	InitializeJCore(0, nullptr);
 	InitializeDefaultLogger();
 

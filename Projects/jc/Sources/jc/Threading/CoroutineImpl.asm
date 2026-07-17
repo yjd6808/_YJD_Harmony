@@ -1,5 +1,13 @@
+; ========================================================================
+; 작성자 : 윤정도
+; 코루틴 어셈블리 구현
+; - CoRun, CoYield, CoResume 프로시저
+; - CoFnEndTrampoline 트램폴린
+; - Windows x64 callee-saved 레지스터 전부 저장/복원
+; ========================================================================
+
 option casemap: NONE
-include ../../jc/Sources/jc/_Extern/Extern.asm
+include ..\Sources\jc\_Extern\Extern.asm
 
 extern CoAllocCtx       : proc
 extern CoFreeCtx        : proc
@@ -38,13 +46,10 @@ CoStack struct 8
 CoStack ends
 
 OFFSET_COSTACK_SIZE        EQU CoStack.size_
-
 OFFSET_COSTACK_STACKBASE   EQU CoStack.pStackBase_
 OFFSET_COSTACK_BASEEND     EQU CoStack.pStackBase_     ; EndAddr는 StackEnd와 동일하게 사용
-
 OFFSET_COSTACK_STACKEND    EQU CoStack.pStackEnd_
 OFFSET_COSTACK_BASEADDR    EQU CoStack.pStackEnd_
-
 OFFSET_COSTACK_STACKLIMIT  EQU CoStack.pStackLimit_
 OFFSET_COSTACK_GUARDLIMIT  EQU CoStack.pGuardLimit_
 OFFSET_COSTACK_STACKTIER   EQU CoStack.stackTier_
@@ -112,6 +117,7 @@ CoContext struct 8
     state_      DWORD   ?
     _pad0_      DWORD   ?
     fn_         QWORD   ?
+    callerCtx_  QWORD   ?
 CoContext ends
 
 OFFSET_COCTX_ID       EQU CoContext.id_
@@ -120,21 +126,18 @@ OFFSET_COCTX_REGS     EQU CoContext.regs_
 OFFSET_COCTX_STACK    EQU CoContext.stack_
 OFFSET_COCTX_STATE    EQU CoContext.state_
 OFFSET_COCTX_FN       EQU CoContext.fn_
+OFFSET_COCTX_CALLER   EQU CoContext.callerCtx_
 
 code
-
-CoRoutine proc
-
-CoRoutine endp
 
 ; ============================================================
 ; CoFnEndTrampoline
 ;   fn()이 정상 종료(ret)할 때 진입하는 트램폴린
 ;   CoRun이 call 대신 push-trampoline + jmp 패턴을 사용하므로
-;   fn()의 ret이 여기로 도달함 (코루틴 스택 활성화 상태)
+;   fn()의 ret이 여기로 도착함 (코루틴 스택 활성화 상태)
 ;
 ; 역할:
-;   1. CoFindCtxByAddr로 현재 CoContext 탐색
+;   1. CoCurrentCtx로 현재 CoContext 탐색
 ;   2. 컨텍스트의 GS / RSI~R15 / XMM6~15 복원
 ;   3. state = csEnd 설정
 ;   4. 컨텍스트 스택으로 전환 + 컨텍스트의 RBP 복원
@@ -447,7 +450,7 @@ CoResume proc
     mov	    gs:[8],     rbx
 
     ; StackLimit 복원 및 백업
-    mov     rbx,        gs:[16]       
+    mov     rbx,        gs:[16]
     xchg    rbx,        [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS16]
     mov     gs:[16],    rbx
 
@@ -545,7 +548,7 @@ CoResume proc
     pop     rax                         ; rax = CoContext* 복원, RSP 원위치
 
     jmp     r11
-    
+
 YIELD:
     ; 컨텍스트 스택 활성화 상태
     ; (CoYield 또는 CoFnEndTrampoline이 컨텍스트 스택 전환 후 점프)

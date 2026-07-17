@@ -1,4 +1,16 @@
-﻿#pragma once
+/*
+ * 작성자 : 윤정도
+ * 코루틴 구현 헤더
+ * - 비대칭 스택 기반 (asymmetric stackful coroutine)
+ * - Windows x64 전용 (MASM)
+ * - 각 코루틴에 전용 스택 할당, 가드 페이지로 오버플로우 감지 + 자동 확장
+ * - 컨텍스트 스위치: Windows x64 callee-saved 레지스터 전부 저장/복원
+ */
+
+#pragma once
+
+#include "jc/Container/LinkedList.h"
+#include "jc/Container/TreeMap.h"
 
 #define CO_PAGE_SIZE			4096
 
@@ -127,6 +139,7 @@ struct CoRegs
 };
 
 using FnCoroutine = void(*)(CoContext*);
+
 struct CoContext
 {
 	_u32		id_ = 0;
@@ -206,4 +219,3 @@ extern "C"
 }
 
 LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp);
-

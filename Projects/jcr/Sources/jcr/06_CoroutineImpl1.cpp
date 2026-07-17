@@ -10,16 +10,6 @@ _u32 g_cCoLastError = 0;
 thread_local CoMgr g_cCoMgr;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// Configure (테스트 전용)
-//////////////////////////////////////////////////////////////////////////////////////////
-void CoMgr::Configure(_u32 _pageInitCount, _u32 _pageGuardCount, _u32 _pageGrowCount)
-{
-	pageInitCount_  = _pageInitCount;
-	pageGuardCount_ = _pageGuardCount;
-	pageGrowCount_  = _pageGrowCount;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
 // [Private] InitStack
 //   CoStack의 pStackEnd_, size_, stackTier_ 가 설정된 상태에서 호출.
 //   스택 상단 pageInitCount_ 페이지 commit + pageGuardCount_ 페이지 PAGE_GUARD commit.
@@ -28,18 +18,22 @@ void CoMgr::InitStack(CoStack* _pStack)
 {
 	_pStack->pStackBase_ = _pStack->pStackEnd_ + _pStack->size_;
 
-	//  pStackBase_  ──────────────── (높은 주소, 초기 RSP)
-	//               | init pages  |  ← pageInitCount_ 개 commit  (reserve 범위 내로 클램프)
-	//  pStackLimit_ ────────────────
-	//               | guard pages |  ← pageGuardCount_ 개 commit + PAGE_GUARD (클램프)
-	//  pGuardLimit_ ────────────────
-	//               |  (reserve)  |
-	//  pStackEnd_   ──────────────── (낮은 주소)
+	//  pStackBase_       ──────────────── (높은 주소, 초기 RSP)
+	//                    | init pages  |  ← pageInitCount_ 개 commit
+	//  pStackLimit_      ────────────────
+	//                    | guard pages |  ← pageGuardCount_ 개 commit + PAGE_GUARD
+	//  pGuardLimit_      ────────────────
+	//                    |  (reserve)  |
+	//  pStackEnd_        ──────────────── (낮은 주소)
 
-	// init commit 영역: pStackEnd_ 미만으로 내려가지 않도록 클램프
+	// 오버플로우 가드 페이지: pStackEnd_ ~ pStackEnd_+PAGE (영구 PAGE_GUARD, 절대 해제 금지)
+	// 이 페이지가 터치되면 CoVEH에서 STACK_OVERFLOW 예외로 변환한다.
+	char* pOverflowGuardTop = _pStack->pStackEnd_ + CO_PAGE_SIZE;
 	char* pCommitAddr = _pStack->pStackBase_ - (pageInitCount_ * CO_PAGE_SIZE);
-	if (pCommitAddr < _pStack->pStackEnd_)
-		pCommitAddr = _pStack->pStackEnd_;
+	
+	// init commit 영역: pOverflowGuardTop 미만으로 내려가지 않도록 클램프
+	if (pCommitAddr < pOverflowGuardTop)
+		pCommitAddr = pOverflowGuardTop;
 
 	_u32 actualInitCount = (_u32)((_pStack->pStackBase_ - pCommitAddr) / CO_PAGE_SIZE);
 	if (actualInitCount > 0)
@@ -51,7 +45,7 @@ void CoMgr::InitStack(CoStack* _pStack)
 		}
 	}
 
-	// guard 영역: pStackEnd_ 미만으로 내려가지 않도록 클램프
+	// guard 영역: pOverflowGuardTop 미만으로 내려가지 않도록 클램프
 	char* pGuardAddr = pCommitAddr - (pageGuardCount_ * CO_PAGE_SIZE);
 	if (pGuardAddr < _pStack->pStackEnd_)
 		pGuardAddr = _pStack->pStackEnd_;
@@ -92,12 +86,19 @@ bool CoMgr::AllocStack(OUT CoStack* _pStack, CoStackTier _stackTier, _u32 _stack
 
 	// 티어 → 크기 결정
 	_u32 stackSize = _stackSize;
-	switch (_stackTier)
+	CoStackTier stackTier = _stackTier;
+	switch (stackTier)
 	{
 	case cstLow:    stackSize = CO_STACK_SIZE_LOW;  break;
 	case cstMid:    stackSize = CO_STACK_SIZE_MID;  break;
 	case cstHigh:   stackSize = CO_STACK_SIZE_HIGH; break;
-	default: break;  // cstCustom: _stackSize 그대로 사용
+	default:
+		{
+			if (_stackSize < CO_STACK_SIZE_LOW)        stackTier = cstLow;
+			else if (_stackSize < CO_STACK_SIZE_MID)   stackTier = cstMid;
+			else if (_stackSize < CO_STACK_SIZE_HIGH)  stackTier = cstHigh;
+		}
+		break;
 	}
 
 	char* pBase = (char*)VirtualAlloc(nullptr, stackSize, MEM_RESERVE, PAGE_NOACCESS);
@@ -109,7 +110,7 @@ bool CoMgr::AllocStack(OUT CoStack* _pStack, CoStackTier _stackTier, _u32 _stack
 
 	_pStack->pStackEnd_  = pBase;
 	_pStack->size_       = stackSize;
-	_pStack->stackTier_  = _stackTier;
+	_pStack->stackTier_  = stackTier;
 	InitStack(_pStack);
 	return true;
 }
@@ -366,6 +367,13 @@ bool CoMgr::ExpandStack(CoStack* _pStack, char* _pFaultAddr)
 		return false;
 	}
 
+	// 오버플로우 가드 페이지 상단 (pStackEnd_ ~ pStackEnd_+PAGE 는 절대 건드리지 않음)
+	char* pOverflowGuardTop = _pStack->pStackEnd_ + CO_PAGE_SIZE;
+
+	// 오버플로우 가드 페이지 터치 감지 → 스택 오버플로우 (CoVEH에서 STACK_OVERFLOW로 변환)
+	if (_pFaultAddr < pOverflowGuardTop)
+		return false;
+
 	// 여기서 Start는 낮은 주소를 나타냄
 	// End는 높은 주소의 끝부분을 나타냄
 	//
@@ -389,8 +397,9 @@ bool CoMgr::ExpandStack(CoStack* _pStack, char* _pFaultAddr)
 	{
 		pGrowthStart = pGrowthStart - pageGrowCount_ * CO_PAGE_SIZE;
 
-		if (pGrowthStart <= _pStack->pStackEnd_)
-			pGrowthStart = _pStack->pStackEnd_;
+		// 오버플로우 가드 페이지 위로 클램프 (pStackEnd_ 가 아닌 pOverflowGuardTop)
+		if (pGrowthStart < pOverflowGuardTop)
+			pGrowthStart = pOverflowGuardTop;
 
 		commitPageCount += (_u32)((pGrowthEnd - pGrowthStart) / CO_PAGE_SIZE);
 	}
@@ -402,7 +411,8 @@ bool CoMgr::ExpandStack(CoStack* _pStack, char* _pFaultAddr)
 	char* pNewGuardEnd     = pGrowthStart;
 	char* pNewGuardStart   = pGrowthStart - pageGuardCount_ * CO_PAGE_SIZE;
 
-	if (pNewGuardStart <= _pStack->pStackEnd_)
+	// 오버플로우 가드 페이지까지만 페이지 가드로 설정
+	if (pNewGuardStart < _pStack->pStackEnd_)
 		pNewGuardStart = _pStack->pStackEnd_;
 
 	_u32 newGuardPageCount = (_u32)((pNewGuardEnd - pNewGuardStart) / CO_PAGE_SIZE);
@@ -515,6 +525,11 @@ void CoMgr::DumpStack(CoStack* _pStack, const char* _pTitle /*= nullptr*/)
 // Vectored Exception Handler
 //   코루틴 스택 가드 페이지 터치 예외처리
 //
+// [오버플로우 가드 페이지]
+//   pStackEnd_ ~ pStackEnd_+PAGE 는 영구 PAGE_GUARD 페이지.
+//   이 페이지가 터치되면 ExpandStack이 false 반환 → STACK_OVERFLOW 예외로 변환.
+//   EXCEPTION_NONCONTINUABLE 플래그를 세워 실행 재개가 불가능함을 명시.
+//
 // [재귀 진입 처리]
 //   s_inCoVEH bool로 재귀 여부 판단.
 //   재귀 진입 시 currentCtx_ 범위 체크만 수행하고 CONTINUE_EXECUTION 반환.
@@ -539,6 +554,13 @@ LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp)
 			&& pFaultAddr >= pCtx->stack_.pStackEnd_
 			&& pFaultAddr <  pCtx->stack_.pStackBase_)
 		{
+			// 오버플로우 가드 페이지 재귀 터치 → STACK_OVERFLOW
+			if (pFaultAddr < pCtx->stack_.pStackEnd_ + CO_PAGE_SIZE)
+			{
+				_pEp->ExceptionRecord->ExceptionCode  = STATUS_STACK_OVERFLOW;
+				_pEp->ExceptionRecord->ExceptionFlags |= EXCEPTION_NONCONTINUABLE;
+				return EXCEPTION_CONTINUE_SEARCH;
+			}
 			// OS가 이미 PAGE_GUARD 해제 → 실행 재개만 하면 됨
 			// 가드존 재설치는 최상위 CoVEH 호출의 ExpandStack에서 처리
 			return EXCEPTION_CONTINUE_EXECUTION;
@@ -555,11 +577,21 @@ LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp)
 	if (pFaultAddr < pCtx->stack_.pStackEnd_ || pFaultAddr >= pCtx->stack_.pStackBase_)
 		return EXCEPTION_CONTINUE_SEARCH;
 
+	// 오버플로우 가드 페이지 터치 → STACK_OVERFLOW 예외로 변환
+	// ExpandStack이 false를 반환하므로 아래에서 일괄 처리됨
 	s_inCoVEH = true;
 	LONG result = EXCEPTION_CONTINUE_SEARCH;
 
 	if (g_cCoMgr.ExpandStack(&pCtx->stack_, pFaultAddr))
+	{
 		result = EXCEPTION_CONTINUE_EXECUTION;
+	}
+	else if (pFaultAddr < pCtx->stack_.pStackEnd_ + CO_PAGE_SIZE)
+	{
+		// 오버플로우 가드 페이지 터치: STATUS_STACK_OVERFLOW 로 변환
+		_pEp->ExceptionRecord->ExceptionCode  = STATUS_STACK_OVERFLOW;
+		_pEp->ExceptionRecord->ExceptionFlags |= EXCEPTION_NONCONTINUABLE;
+	}
 
 	s_inCoVEH = false;
 	return result;

@@ -28,6 +28,10 @@ param (
     [switch]$Clean
 )
 
+# UTF-8 고정 (한글 출력 깨짐 방지)
+# UTF-8 고정 (외부 명령어 파이프 시 한글 깨짐 방지)
+$OutputEncoding = [System.Text.Encoding]::UTF8
+
 # ---------------------------------------------------------------------
 # 유틸리티 함수
 # ---------------------------------------------------------------------
@@ -76,7 +80,7 @@ $msbuild = & where.exe msbuild 2>&1 | Select-Object -First 1
 if (-not $msbuild -or $LASTEXITCODE -ne 0) {
     # vswhere로 재탐색
     $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-    if (Test-Path $vswhere) {
+    if ($vswhere -and (Test-Path $vswhere)) {
         $vsPath = & $vswhere -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe 2>&1 | Select-Object -First 1
         if ($vsPath -and (Test-Path $vsPath)) {
             $msbuild = $vsPath

@@ -248,6 +248,9 @@
     <ClCompile Include="..\Sources\jc\Container\CMessage.cpp">
       <Filter>Container</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc\Threading\Coroutine.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
     <ClCompile Include="..\Sources\jc\Primitives\Span.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>
@@ -710,6 +713,9 @@
     <ClInclude Include="..\Sources\jc\Container\CMessage.h">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\jc\Threading\Coroutine.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
     <ClInclude Include="..\Sources\jc\Primitives\Span.h">
       <Filter>Primitives</Filter>
     </ClInclude>
@@ -812,6 +818,11 @@
     <Natvis Include="..\Sources\jc\Natvis\CMessage.natvis">
       <Filter>Natvis</Filter>
     </Natvis>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="..\Sources\jc\Threading\CoroutineImpl.asm">
+      <Filter>Threading</Filter>
+    </MASM>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Sources\jc\_Extern\Extern.asm">

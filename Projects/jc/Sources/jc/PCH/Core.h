@@ -44,4 +44,6 @@
 
 #include "jc/Pool/ObjectPool.h"
 
+#include "jc/Threading/Coroutine.h"
+
 #pragma warning(pop)
