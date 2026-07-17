@@ -176,4 +176,11 @@
 	'$(MSBuildProjectName)' == 'sgts'
 			" />
 
+	<Import Project="$(MSBuildThisFileDirectory)Props/sgtools.props" 
+			Condition="
+	'$(MSBuildProjectName)' == 'SteinsGate-Tools.Common'	OR
+	'$(MSBuildProjectName)' == 'SteinsGate-Tools.Research'	OR
+	'$(MSBuildProjectName)' == 'SteinsGate-Tools.UI'
+			" />
+
 </Project>

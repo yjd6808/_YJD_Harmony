@@ -1,0 +1,6 @@
+<Project>
+	<PropertyGroup>
+		<BaseIntermediateOutputPath>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)..\Projects\$(MSBuildProjectName)\Intermediate\'))\</BaseIntermediateOutputPath>
+		<BaseOutputPath>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)..\Projects\$(MSBuildProjectName)\Output\'))\</BaseOutputPath>
+	</PropertyGroup>
+</Project>

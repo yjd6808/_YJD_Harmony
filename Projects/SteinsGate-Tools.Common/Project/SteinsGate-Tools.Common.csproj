@@ -1,12 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <RootNamespace>SGToolsCommon</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <BaseIntermediateOutputPath>..\Intermediate\</BaseIntermediateOutputPath>
-    <BaseOutputPath>..\Output\</BaseOutputPath>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
     <AssemblyName>SGToolsCommon</AssemblyName>
     <Platforms>AnyCPU;x64</Platforms>

@@ -438,7 +438,7 @@ namespace SGToolsCommon.Base
         // ── WriteOffset 계열 (특정 오프셋에 직접 덮어쓰기) ─────────────
 
         public void WriteOffsetBool(bool _data, int _offset)   => OverwriteInternal(BitConverter.GetBytes(_data), _offset);
-        public void WriteOffsetByte(byte _data, int _offset)   => OverwriteInternal(BitConverter.GetBytes(_data), _offset);
+        public void WriteOffsetByte(byte _data, int _offset)   => OverwriteInternal(BitConverter.GetBytes((short)_data), _offset);
         public void WriteOffsetS16(short _data, int _offset)   => OverwriteInternal(BitConverter.GetBytes(_data), _offset);
         public void WriteOffsetU16(ushort _data, int _offset)  => OverwriteInternal(BitConverter.GetBytes(_data), _offset);
         public void WriteOffsetChar(char _data, int _offset)   => OverwriteInternal(BitConverter.GetBytes(_data), _offset);

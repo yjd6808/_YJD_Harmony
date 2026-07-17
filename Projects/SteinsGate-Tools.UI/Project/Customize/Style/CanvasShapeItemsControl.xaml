@@ -9,9 +9,8 @@
                     xmlns:c="http://schemas.xceed.com/wpf/xaml/toolkit"
                     xmlns:local="clr-namespace:SGToolsUI"
                     xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
-                    xmlns:model="clr-namespace:SGToolsUI.Model"
+                    xmlns:model="clr-namespace:SGToolsUI.Model.Main"
                     xmlns:ui_ctrl="clr-namespace:SGToolsUI.Customize.Control"
-                    xmlns:ui_selector="clr-namespace:SGToolsUI.ModelSelector"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     
                     xmlns:cv="clr-namespace:SGToolsCommon.Customize.Converter;assembly=SGToolsCommon"
