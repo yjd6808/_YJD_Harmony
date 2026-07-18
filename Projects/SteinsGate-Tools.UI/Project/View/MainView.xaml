@@ -64,282 +64,286 @@
         
         Style="{StaticResource OneLineWindow}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
-    <DockPanel Name="MainDockPanel"
+	<DockPanel Name="MainDockPanel"
                DataContext="{Binding Path=ViewModel}">
-        <i:Interaction.Triggers>
-            <i:EventTrigger EventName="MouseMove">
-                <i:InvokeCommandAction Command="{Binding Commander.MouseMoveOnWindow}"
+		<i:Interaction.Triggers>
+			<i:EventTrigger EventName="MouseMove">
+				<i:InvokeCommandAction Command="{Binding Commander.MouseMoveOnWindow}"
                                        PassEventArgsToCommand="True" />
-            </i:EventTrigger>
-            <i:EventTrigger EventName="MouseWheel">
-                <i:InvokeCommandAction Command="{Binding Commander.CanvasZoomWheel}"
+			</i:EventTrigger>
+			<i:EventTrigger EventName="MouseWheel">
+				<i:InvokeCommandAction Command="{Binding Commander.CanvasZoomWheel}"
                                        PassEventArgsToCommand="True" />
-            </i:EventTrigger>
-        </i:Interaction.Triggers>
+			</i:EventTrigger>
+		</i:Interaction.Triggers>
 
-        <!-- ###############################################################################
+		<!-- ###############################################################################
         
                                                 타이틀바
         
             ############################################################################### -->
 
-        <!---->
-        <common_ctrl:TitleBar Name="TitlePanel"
+		<!---->
+		<common_ctrl:TitleBar Name="TitlePanel"
                               FontSize="16"
                               Title="{x:Static local:Constant.Title}"
                               DockPanel.Dock="Top"
                               TitleContentMargin="0, 0, 5, 0"
                               TitleContent="{Binding DataContext.LogBox.LastLog, RelativeSource={RelativeSource AncestorType=DockPanel}}"
                               TitleContentTemplate="{StaticResource TitleLogDataTemplate}">
-        </common_ctrl:TitleBar>
-        <Separator DockPanel.Dock="Top"/>
+		</common_ctrl:TitleBar>
+		<Separator DockPanel.Dock="Top"/>
 
 
-        <!-- ###############################################################################
+		<!-- ###############################################################################
         
                                               상태 표시줄
         
             ############################################################################### -->
-        <Grid DockPanel.Dock="Bottom" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{Binding Source={x:Static local:Constant.LeftPaneWidth}}"/>
-                <ColumnDefinition Width="1"></ColumnDefinition>
-                <ColumnDefinition Width="{Binding ZoomState.BaseCanvasStatusBarWidth, Mode=OneWay}"/>
-                <ColumnDefinition Width="1"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <TextBox Grid.Column="0" Text="{Binding MouseOnMonitor, Converter={StaticResource VectorStringConverter}}" Style="{StaticResource ReadonlyTextBox}"/>
-                <TextBox Grid.Column="1" Text="{Binding MouseOnWindow, Converter={StaticResource VectorStringConverter}}" Style="{StaticResource ReadonlyTextBox}"/>
-                <TextBox Grid.Column="2" Text="{Binding MouseOnCanvas, Converter={StaticResource VectorStringConverter}}" Style="{StaticResource ReadonlyTextBox}"/>
-            </Grid>
-            <Border Grid.Column="1"  Style="{StaticResource BorderSeparatorVertical}"/>
-            <Grid Grid.Column="2" >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50"/>
-                    <ColumnDefinition Width="16"/>
-                    <ColumnDefinition Width="16" />
-                    <ColumnDefinition Width="16" />
-                    <ColumnDefinition Width="80" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <TextBox Grid.Column="0"  Text="{Binding ZoomState.ZoomLevelXString, Mode=OneWay}"  Margin="5, 0, 0, 0" Style="{StaticResource ReadonlyTextBox}"/>
-                <Button Name="ZoomLevelDownButton" Grid.Column="1" Command="{Binding Commander.CanvasZoomUp}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonDownKey}}" />
-                <Button Name="ZoomLevelUpButton" Grid.Column="2" Command="{Binding Commander.CanvasZoomDown}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonUpKey}}" />
-                <Button Name="ZoomLevelResetButton" Grid.Column="3" Command="{Binding Commander.CanvasZoomReset}" IsEnabled="{Binding ZoomState.IsNotDefaultZoomLevel}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonResetKey}}"/>
-                <TextBox Grid.Column="4" Text="{Binding IsEventMode, Mode=OneWay, Converter={StaticResource EventModeToStringConverter}}" Style="{StaticResource ReadonlyTextBox}"/>
-                <TextBox Grid.Column="5"  Text="{Binding CanvasSelectionStatus, Mode=OneWay}" Style="{StaticResource ReadonlyTextBox}"/>
-            </Grid>
-            <Border     Grid.Column="3"  Style="{StaticResource BorderSeparatorVertical}" />
-            <TextBox    Grid.Column="4"  Text="{Binding ResourceSelectionStatus}" Margin="5, 0, 0, 0" Style="{StaticResource ReadonlyTextBox}"/>
-        </Grid>
+		<Grid DockPanel.Dock="Bottom" >
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="{Binding Source={x:Static local:Constant.LeftPaneWidth}}"/>
+				<ColumnDefinition Width="1"></ColumnDefinition>
+				<ColumnDefinition Width="{Binding ZoomState.BaseCanvasStatusBarWidth, Mode=OneWay}"/>
+				<ColumnDefinition Width="1"></ColumnDefinition>
+				<ColumnDefinition Width="*"></ColumnDefinition>
+			</Grid.ColumnDefinitions>
+			<Grid Grid.Column="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"></ColumnDefinition>
+					<ColumnDefinition Width="*"></ColumnDefinition>
+					<ColumnDefinition Width="*"></ColumnDefinition>
+				</Grid.ColumnDefinitions>
+				<TextBox Grid.Column="0" Text="{Binding MouseOnMonitor, Converter={StaticResource VectorStringConverter}}" Style="{StaticResource ReadonlyTextBox}"/>
+				<TextBox Grid.Column="1" Text="{Binding MouseOnWindow, Converter={StaticResource VectorStringConverter}}" Style="{StaticResource ReadonlyTextBox}"/>
+				<TextBox Grid.Column="2" Text="{Binding MouseOnCanvas, Converter={StaticResource VectorStringConverter}}" Style="{StaticResource ReadonlyTextBox}"/>
+			</Grid>
+			<Border Grid.Column="1"  Style="{StaticResource BorderSeparatorVertical}"/>
+			<Grid Grid.Column="2" >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="50"/>
+					<ColumnDefinition Width="16"/>
+					<ColumnDefinition Width="16" />
+					<ColumnDefinition Width="16" />
+					<ColumnDefinition Width="80" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<TextBox Grid.Column="0"  Text="{Binding ZoomState.ZoomLevelXString, Mode=OneWay}"  Margin="5, 0, 0, 0" Style="{StaticResource ReadonlyTextBox}"/>
+				<Button Name="ZoomLevelDownButton" Grid.Column="1" Command="{Binding Commander.CanvasZoomUp}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonDownKey}}" />
+				<Button Name="ZoomLevelUpButton" Grid.Column="2" Command="{Binding Commander.CanvasZoomDown}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonUpKey}}" />
+				<Button Name="ZoomLevelResetButton" Grid.Column="3" Command="{Binding Commander.CanvasZoomReset}" IsEnabled="{Binding ZoomState.IsNotDefaultZoomLevel}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonResetKey}}"/>
+				<TextBox Grid.Column="4" Text="{Binding IsEventMode, Mode=OneWay, Converter={StaticResource EventModeToStringConverter}}" Style="{StaticResource ReadonlyTextBox}"/>
+				<TextBox Grid.Column="5"  Text="{Binding CanvasSelectionStatus, Mode=OneWay}" Style="{StaticResource ReadonlyTextBox}"/>
+			</Grid>
+			<Border     Grid.Column="3"  Style="{StaticResource BorderSeparatorVertical}" />
+			<TextBox    Grid.Column="4"  Text="{Binding ResourceSelectionStatus}" Margin="5, 0, 0, 0" Style="{StaticResource ReadonlyTextBox}"/>
+		</Grid>
 
 
-        <Separator DockPanel.Dock="Bottom" />
+		<Separator DockPanel.Dock="Bottom" />
 
 
-        <!-- ###############################################################################
+		<!-- ###############################################################################
         
                                               상단 메뉴
         
             ############################################################################### -->
 
-        <Grid DockPanel.Dock="Top">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
+		<Grid DockPanel.Dock="Top">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"></ColumnDefinition>
+				<ColumnDefinition Width="*"></ColumnDefinition>
+			</Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0">
-                <Menu  Background="Transparent">
-                    <MenuItem Header="파일" Background="Transparent">
-                        <MenuItem Header="툴 데이터 로드" Command="{Binding Commander.FileUIToolDataLoadAsync}" CommandParameter="{x:Static file:SGUIFileSystem.LoadKey}" />
-                        <MenuItem Header="툴 데이터 경로지정 로드" Command="{Binding Commander.FileUIToolDataLoadAsync}" CommandParameter="{x:Static file:SGUIFileSystem.LoadAsKey}" />
-                        <MenuItem Header="툴 데이터 저장" Command="{Binding Commander.FileUIToolDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveKey}" />
-                        <MenuItem Header="툴 데이터 경로지정 저장" Command="{Binding Commander.FileUIToolDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveAsKey}" />
-                        <Separator />
-                        <MenuItem Header="게임 데이터 저장" Command="{Binding Commander.FileGameDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveKey}" />
-                        <MenuItem Header="게임 데이터 경로지정 저장" Command="{Binding Commander.FileGameDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveAsKey}" />
-                        <Separator />
-                        <MenuItem Header="헤더 파일 추출" Command="{Binding Commander.FileGameHeaderExportAsync}" CommandParameter="{x:Static file:SGUIFileSystem.ExportKey}" />
-                        <MenuItem Header="헤더 파일 경로지정 추출" Command="{Binding Commander.FileGameHeaderExportAsync}" CommandParameter="{x:Static file:SGUIFileSystem.ExportAsKey}" />
-                        <Separator />
-                        <MenuItem Header="실행 폴더 열기" Command="{Binding Commander.OpenDirectory}" CommandParameter="Exe" />
-                        <MenuItem Header="백업 폴더 열기" Command="{Binding Commander.OpenDirectory}" CommandParameter="Backup" />
-                    </MenuItem>
-                    <MenuItem Style="{StaticResource MenuItemSeparator}" />
-                    <MenuItem Header="보기">
-                        <MenuItem Header="로그 뷰" Command="{Binding Commander.OpenLogView}" />
-                        <MenuItem Header="앨범 뷰" Command="{Binding Commander.OpenAlbumView}" />
-                        <MenuItem Header="백업 뷰" Command="{Binding Commander.OpenBackupView}" />
-                    </MenuItem>
-                    <MenuItem Style="{StaticResource MenuItemSeparator}" />
-                    <MenuItem Header="도구">
-                        <MenuItem Header="설정" Command="{Binding Commander.OpenSetting}" />
-                    </MenuItem>
-                    <MenuItem Style="{StaticResource MenuItemSeparator}" />
-                    <MenuItem Header="도움말">
-                        <MenuItem Header="단축키 보기" Command="{Binding Commander.ShowShortcut}" />
-                    </MenuItem>
-                    <MenuItem Style="{StaticResource MenuItemSeparator}" />
-                </Menu>
-            </Grid>
+			<Grid Grid.Column="0">
+				<Menu  Background="Transparent">
+					<MenuItem Header="파일" Background="Transparent">
+						<MenuItem Header="툴 데이터 로드" Command="{Binding Commander.FileUIToolDataLoadAsync}" CommandParameter="{x:Static file:SGUIFileSystem.LoadKey}" />
+						<MenuItem Header="툴 데이터 경로지정 로드" Command="{Binding Commander.FileUIToolDataLoadAsync}" CommandParameter="{x:Static file:SGUIFileSystem.LoadAsKey}" />
+						<MenuItem Header="툴 데이터 저장" Command="{Binding Commander.FileUIToolDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveKey}" />
+						<MenuItem Header="툴 데이터 경로지정 저장" Command="{Binding Commander.FileUIToolDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveAsKey}" />
+						<Separator />
+						<MenuItem Header="게임 데이터 저장" Command="{Binding Commander.FileGameDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveKey}" />
+						<MenuItem Header="게임 데이터 경로지정 저장" Command="{Binding Commander.FileGameDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveAsKey}" />
+						<Separator />
+						<MenuItem Header="헤더 파일 추출" Command="{Binding Commander.FileGameHeaderExportAsync}" CommandParameter="{x:Static file:SGUIFileSystem.ExportKey}" />
+						<MenuItem Header="헤더 파일 경로지정 추출" Command="{Binding Commander.FileGameHeaderExportAsync}" CommandParameter="{x:Static file:SGUIFileSystem.ExportAsKey}" />
+						<Separator />
+						<MenuItem Header="실행 폴더 열기" Command="{Binding Commander.OpenDirectory}" CommandParameter="Exe" />
+						<MenuItem Header="백업 폴더 열기" Command="{Binding Commander.OpenDirectory}" CommandParameter="Backup" />
+					</MenuItem>
+					<MenuItem Style="{StaticResource MenuItemSeparator}" />
+					<MenuItem Header="보기">
+						<MenuItem Header="로그 뷰" Command="{Binding Commander.OpenLogView}" />
+						<MenuItem Header="앨범 뷰" Command="{Binding Commander.OpenAlbumView}" />
+						<MenuItem Header="백업 뷰" Command="{Binding Commander.OpenBackupView}" />
+					</MenuItem>
+					<MenuItem Style="{StaticResource MenuItemSeparator}" />
+					<MenuItem Header="도구">
+						<MenuItem Header="설정" Command="{Binding Commander.OpenSetting}" />
+					</MenuItem>
+					<MenuItem Style="{StaticResource MenuItemSeparator}" />
+					<MenuItem Header="도움말">
+						<MenuItem Header="단축키 보기" Command="{Binding Commander.ShowShortcut}" />
+					</MenuItem>
+					<MenuItem Style="{StaticResource MenuItemSeparator}" />
+				</Menu>
+			</Grid>
 
-            <DockPanel Margin="5, 0, 0, 0" Grid.Column="1" LastChildFill="False" MaxHeight="18">
-                <TextBox DockPanel.Dock="Left" Name="BackUpTextBox" Width="80" FontSize="12" Text="" HorizontalAlignment="Right" KeyDown="BackUpTextBox_OnKeyDown" />
-                <Button DockPanel.Dock="Left" Content=" 백업 " Height="18" FontSize="12" Command="{Binding Commander.FileUIToolDataBackupAsync}" CommandParameter="{Binding Text, ElementName=BackUpTextBox, Mode=OneWay}" />
-            </DockPanel>
-        </Grid>
-      
-        <Separator DockPanel.Dock="Top"/>
+			<DockPanel Margin="5, 0, 0, 0" Grid.Column="1" LastChildFill="False" MaxHeight="18">
+				<TextBox DockPanel.Dock="Left" Name="BackUpTextBox" Width="80" FontSize="12" Text="" HorizontalAlignment="Right" KeyDown="BackUpTextBox_OnKeyDown" />
+				<Button DockPanel.Dock="Left" Content=" 백업 " Height="18" FontSize="12" Command="{Binding Commander.FileUIToolDataBackupAsync}" CommandParameter="{Binding Text, ElementName=BackUpTextBox, Mode=OneWay}" />
+			</DockPanel>
+		</Grid>
 
- 
+		<Separator DockPanel.Dock="Top"/>
 
-        <!-- ###############################################################################
+
+
+		<!-- ###############################################################################
         
                                               트리뷰
         
             ############################################################################### -->
 
-        <Grid DockPanel.Dock="Left">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="1" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+		<Grid DockPanel.Dock="Left">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="13*"/>
+				<ColumnDefinition Width="47*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="1" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
 
-            <ScrollViewer Grid.Column="0" Name="UIElementTreeViewScrollViewer" Height="Auto" Width="{Binding Source={x:Static local:Constant.LeftPaneWidth}}" VerticalScrollBarVisibility="Auto">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0">
-                         <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30"/>
-                                <ColumnDefinition Width="30" />
-                                <ColumnDefinition Width="30" />
-                                <ColumnDefinition Width="30" />
-                                <ColumnDefinition Width="30" />
-                                <ColumnDefinition Width="30" />
-                                <ColumnDefinition Width="30" />
-                                <ColumnDefinition Width="30" />
-                                <ColumnDefinition Width="30" />
-                                <ColumnDefinition Width="30" />
-                            </Grid.ColumnDefinitions>
-                             
-                             <Grid.RowDefinitions>
-                                 <RowDefinition Height="Auto"></RowDefinition>
-                                 <RowDefinition Height="Auto"></RowDefinition>
-                            </Grid.RowDefinitions>
+			<ScrollViewer Grid.Column="0" Name="UIElementTreeViewScrollViewer" Height="Auto" Width="{Binding Source={x:Static local:Constant.LeftPaneWidth}}" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="2">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*" />
+					</Grid.RowDefinitions>
+					<StackPanel Grid.Row="0">
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="30"/>
+								<ColumnDefinition Width="30" />
+								<ColumnDefinition Width="30" />
+								<ColumnDefinition Width="30" />
+								<ColumnDefinition Width="30" />
+								<ColumnDefinition Width="30" />
+								<ColumnDefinition Width="30" />
+								<ColumnDefinition Width="30" />
+								<ColumnDefinition Width="30" />
+								<ColumnDefinition Width="30" />
+							</Grid.ColumnDefinitions>
 
-                            <Button Grid.Row="0" Grid.Column="0" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Group}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredGroupIconImageSource}"/>
-                            <Button Grid.Row="0" Grid.Column="1" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Button}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredButtonIconImageSource}"/>
-                            <Button Grid.Row="0" Grid.Column="2" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Label}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredLabelIconImageSource}"/>
-                            <Button Grid.Row="0" Grid.Column="3" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Sprite}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredSpriteIconImageSource}"/>
-                            <Button Grid.Row="0" Grid.Column="4" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.EditBox}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredEditBoxIconImageSource}"/>
-                            <Button Grid.Row="0" Grid.Column="5" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.CheckBox}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredCheckBoxIconImageSource}"/>
-                            <Button Grid.Row="0" Grid.Column="6" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.ToggleButton}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredToggleButtonIconImageSource}"/>
-                            <Button Grid.Row="0" Grid.Column="7" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.ProgressBar}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredProgressBarIconImageSource}"/>
-                            <Button Grid.Row="0" Grid.Column="8" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.ScrollBar}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredScrollBarIconImageSource}"/>
-                            <Button Grid.Row="0" Grid.Column="9" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Static}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredStaticIconImageSource}"/>
-                            <Button Grid.Row="1" Grid.Column="0" Command="{Binding Commander.DeleteUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonDeleteKey}}"/>
-                            <Button Grid.Row="1" Grid.Column="1" Command="{Binding Commander.UnpickUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonUnlockKey}}" />
-                        </Grid>
-                        <Separator />
-                    </StackPanel>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto"></RowDefinition>
+								<RowDefinition Height="Auto"></RowDefinition>
+							</Grid.RowDefinitions>
 
-                    <ctrl:UIElementTreeView Grid.Row="1"
+							<Button Grid.Row="0" Grid.Column="0" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Group}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredGroupIconImageSource}"/>
+							<Button Grid.Row="0" Grid.Column="1" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Button}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredButtonIconImageSource}"/>
+							<Button Grid.Row="0" Grid.Column="2" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Label}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredLabelIconImageSource}"/>
+							<Button Grid.Row="0" Grid.Column="3" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Sprite}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredSpriteIconImageSource}"/>
+							<Button Grid.Row="0" Grid.Column="4" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.EditBox}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredEditBoxIconImageSource}"/>
+							<Button Grid.Row="0" Grid.Column="5" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.CheckBox}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredCheckBoxIconImageSource}"/>
+							<Button Grid.Row="0" Grid.Column="6" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.ToggleButton}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredToggleButtonIconImageSource}"/>
+							<Button Grid.Row="0" Grid.Column="7" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.ProgressBar}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredProgressBarIconImageSource}"/>
+							<Button Grid.Row="0" Grid.Column="8" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.ScrollBar}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredScrollBarIconImageSource}"/>
+							<Button Grid.Row="0" Grid.Column="9" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Static}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredStaticIconImageSource}"/>
+							<Button Grid.Row="1" Grid.Column="0" Command="{Binding Commander.DeleteUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonDeleteKey}}"/>
+							<Button Grid.Row="1" Grid.Column="1" Command="{Binding Commander.UnpickUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonUnlockKey}}" />
+						</Grid>
+						<Separator />
+					</StackPanel>
+
+					<ctrl:UIElementTreeView Grid.Row="1"
                                                x:Name="UIElementTreeView"
                                                Background="Transparent"
                                                BorderThickness="0"
                                                ItemTemplateSelector="{x:Static mo_main_selector:UIElementTreeViewSelector.Selector}"
                                                ItemsSource="{Binding GroupMaster.Children}"
                                                Style="{StaticResource UIElementTreeView}">
-                    </ctrl:UIElementTreeView>
-                </Grid>
-            </ScrollViewer>
-            <Border Grid.Row="1" Style="{StaticResource BorderSeparatorHorizontal}"/>
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+					</ctrl:UIElementTreeView>
+				</Grid>
+			</ScrollViewer>
+			<Border Style="{StaticResource BorderSeparatorHorizontal}" Grid.ColumnSpan="2" Margin="0,635,0,0" Grid.RowSpan="2"/>
+			<Grid Grid.Row="1" Grid.ColumnSpan="2" Margin="0,1,0,0" Grid.RowSpan="2">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0" Orientation="Horizontal">
-                    <TextBox x:Name="SelectedVisualNameTextBox" Opacity="1" Text="{Binding GroupMaster.SelectedElement.VisualName, Mode=OneWay}" Style="{StaticResource ReadonlyTextBox}"/>
-                    <Image Margin="4, 0, 0, 0" Width="16" Source="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonCheckedKey}}">
-                        <Image.Style>
-                            <Style TargetType="Image">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding GroupMaster.SelectedElement.Picked}" Value="True">
-                                        <Setter Property="Opacity" Value="{Binding Path=Opacity, ElementName=SelectedVisualNameTextBox, Mode=OneWay}" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding GroupMaster.SelectedElement.Picked}" Value="False">
-                                        <Setter Property="Opacity" Value="0" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding GroupMaster.HasPickedElement}" Value="False">
-                                        <Setter Property="Opacity" Value="0" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding GroupMaster.HasSelectedElement}" Value="False">
-                                        <Setter Property="Opacity" Value="0" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
-                </StackPanel>
-                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <TextBox Text="클립보드: " Opacity="{Binding Path=Opacity, ElementName=ClipboardDataCountTextBox, Mode=OneWay}" Style="{StaticResource ReadonlyTextBox}"/>
-                    <TextBox Text="{Binding Commander.ClipboardOperateUIElement.ClipboardDataCount, Mode=OneWay}" Name="ClipboardDataCountTextBox">
-                        <TextBox.Style>
-                            <Style BasedOn="{StaticResource ReadonlyTextBox}" TargetType="TextBox">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Commander.ClipboardOperateUIElement.HasClipboardData, Mode=OneWay}" Value="True">
-                                        <Setter Property="Opacity" Value="1" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Commander.ClipboardOperateUIElement.HasClipboardData, Mode=OneWay}" Value="False">
-                                        <Setter Property="Opacity" Value="0"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Style>
-                    </TextBox>
-                    <TextBox Text="개" Opacity="{Binding Path=Opacity, ElementName=ClipboardDataCountTextBox, Mode=OneWay}" Style="{StaticResource ReadonlyTextBox}"/>
-                </StackPanel>
-                        
-            </Grid>
-        </Grid>
+				<StackPanel Grid.Column="0" Orientation="Horizontal">
+					<TextBox x:Name="SelectedVisualNameTextBox" Opacity="1" Text="{Binding GroupMaster.SelectedElement.VisualName, Mode=OneWay}" Style="{StaticResource ReadonlyTextBox}"/>
+					<Image Margin="4, 0, 0, 0" Width="16" Source="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonCheckedKey}}">
+						<Image.Style>
+							<Style TargetType="Image">
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding GroupMaster.SelectedElement.Picked}" Value="True">
+										<Setter Property="Opacity" Value="{Binding Path=Opacity, ElementName=SelectedVisualNameTextBox, Mode=OneWay}" />
+									</DataTrigger>
+									<DataTrigger Binding="{Binding GroupMaster.SelectedElement.Picked}" Value="False">
+										<Setter Property="Opacity" Value="0" />
+									</DataTrigger>
+									<DataTrigger Binding="{Binding GroupMaster.HasPickedElement}" Value="False">
+										<Setter Property="Opacity" Value="0" />
+									</DataTrigger>
+									<DataTrigger Binding="{Binding GroupMaster.HasSelectedElement}" Value="False">
+										<Setter Property="Opacity" Value="0" />
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</Image.Style>
+					</Image>
+				</StackPanel>
+				<StackPanel Grid.Column="1" Orientation="Horizontal">
+					<TextBox Text="클립보드: " Opacity="{Binding Path=Opacity, ElementName=ClipboardDataCountTextBox, Mode=OneWay}" Style="{StaticResource ReadonlyTextBox}"/>
+					<TextBox Text="{Binding Commander.ClipboardOperateUIElement.ClipboardDataCount, Mode=OneWay}" Name="ClipboardDataCountTextBox">
+						<TextBox.Style>
+							<Style BasedOn="{StaticResource ReadonlyTextBox}" TargetType="TextBox">
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding Commander.ClipboardOperateUIElement.HasClipboardData, Mode=OneWay}" Value="True">
+										<Setter Property="Opacity" Value="1" />
+									</DataTrigger>
+									<DataTrigger Binding="{Binding Commander.ClipboardOperateUIElement.HasClipboardData, Mode=OneWay}" Value="False">
+										<Setter Property="Opacity" Value="0"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</TextBox.Style>
+					</TextBox>
+					<TextBox Text="개" Opacity="{Binding Path=Opacity, ElementName=ClipboardDataCountTextBox, Mode=OneWay}" Style="{StaticResource ReadonlyTextBox}"/>
+				</StackPanel>
 
-        
-        <Border Style="{StaticResource BorderSeparatorVertical}" DockPanel.Dock="Left"/>
+			</Grid>
+		</Grid>
 
-        
 
-        <StackPanel DockPanel.Dock="Left" Name="CanvasPanel">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="30"/>
-                    <ColumnDefinition Width="30" />
-                    <ColumnDefinition Width="30" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="30" />
-                </Grid.ColumnDefinitions>
+		<Border Style="{StaticResource BorderSeparatorVertical}" DockPanel.Dock="Left"/>
 
-                <Button Name="ToggleCanvasGridButton" Grid.Column="0" Command="{Binding Commander.ToggleCanvasGrid}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonGridKey}}"/>
-                <Button Name="ToggleCanvasViewportButton" Grid.Column="1" Command="{Binding Commander.ToggleCanvasViewport}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonRectKey}}"/>
-                <Button Name="ToggleCanvasAnchorButton" Grid.Column="2" Command="{Binding Commander.ToggleCanvasAnchor}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonAnchorKey}}"/>
-            </Grid>
-            <Grid>
-                <Grid.Resources>
 
-                    <!-- https://stackoverflow.com/questions/7284805/how-to-sort-observablecollection 
+
+		<StackPanel DockPanel.Dock="Left" Name="CanvasPanel">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="30"/>
+					<ColumnDefinition Width="30" />
+					<ColumnDefinition Width="30" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="30" />
+				</Grid.ColumnDefinitions>
+
+				<Button Name="ToggleCanvasGridButton" Grid.Column="0" Command="{Binding Commander.ToggleCanvasGrid}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonGridKey}}"/>
+				<Button Name="ToggleCanvasViewportButton" Grid.Column="1" Command="{Binding Commander.ToggleCanvasViewport}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonRectKey}}"/>
+				<Button Name="ToggleCanvasAnchorButton" Grid.Column="2" Command="{Binding Commander.ToggleCanvasAnchor}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonAnchorKey}}"/>
+			</Grid>
+			<Grid>
+				<Grid.Resources>
+
+					<!-- https://stackoverflow.com/questions/7284805/how-to-sort-observablecollection 
                          Depth순으로 오름차순 정렬 후 Depth가 동일하면 Code순으로 오름차순 정렬한다. 
                          캔버스상에 보일 순서를 트리뷰상에 엘리먼트가 배치된 순서와 통일시켜주기 위함이다.
                             => 음.. Depth가 깊으면 우선순위를 높일경우(캔버스상 앞에)
@@ -363,111 +367,111 @@
                          여러개 삽입시에는 여러개 모두 삽입 후 업데이트를 하므로
                          O(n)의 성능이라 나쁘지 않을 것으로 보인다.
                     -->
-                    <CollectionViewSource x:Key="UIElementsControlCollectionViewSource"
+					<CollectionViewSource x:Key="UIElementsControlCollectionViewSource"
                                           Source="{Binding GroupMaster.PickedElements}">
-                        <CollectionViewSource.SortDescriptions>
-                            <!--<scm:SortDescription PropertyName="Depth" />-->
-                            <!--<scm:SortDescription PropertyName="Code" Direction="Ascending" />-->
-                            <scm:SortDescription PropertyName="ZOrder" Direction="Ascending" />
-                        </CollectionViewSource.SortDescriptions>
-                    </CollectionViewSource>
-                </Grid.Resources>
+						<CollectionViewSource.SortDescriptions>
+							<!--<scm:SortDescription PropertyName="Depth" />-->
+							<!--<scm:SortDescription PropertyName="Code" Direction="Ascending" />-->
+							<scm:SortDescription PropertyName="ZOrder" Direction="Ascending" />
+						</CollectionViewSource.SortDescriptions>
+					</CollectionViewSource>
+				</Grid.Resources>
 
-                <!-- ###############################################################################
+				<!-- ###############################################################################
         
                                               엘리먼트 캔버스
         
                 ############################################################################### -->
-                <ctrl:UIElementItemsControl x:Name="UIElementsControl"
+				<ctrl:UIElementItemsControl x:Name="UIElementsControl"
                                                ItemsSource="{Binding Source={StaticResource UIElementsControlCollectionViewSource}}"
                                                ItemTemplateSelector="{x:Static mo_main_selector:UIElementCanvasSelector.Selector}"
                                                Style="{StaticResource UIElementItemsControl}">
-                </ctrl:UIElementItemsControl>
+				</ctrl:UIElementItemsControl>
 
 
-                <!-- ###############################################################################
+				<!-- ###############################################################################
         
                                               쉐이프 캔버스
         
                 ############################################################################### -->
 
 
-                <ctrl:CanvasShapeItemsControl x:Name="CanvasShapesControl"
+				<ctrl:CanvasShapeItemsControl x:Name="CanvasShapesControl"
                                            ItemsSource="{Binding CanvasShapes, RelativeSource={RelativeSource Self}}"
                                            ItemTemplateSelector="{x:Static mo_main_selector:CanvasShapeSelector.Selector}"
                                            Style="{StaticResource CanvasShapeItemsControl}">
-                </ctrl:CanvasShapeItemsControl>
-            </Grid>
+				</ctrl:CanvasShapeItemsControl>
+			</Grid>
 
-            <Grid >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+			<Grid >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
 
-                <Grid Grid.Column="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="20"/>
-                        <ColumnDefinition Width="20" />
-                        <ColumnDefinition Width="20" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="20" /> 
-                        <RowDefinition Height="20" />
-                    </Grid.RowDefinitions>
-                    <Button Grid.Column="0" Grid.Row="0" Width="20" Height="20" Name="PositionTopLeftButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.TopLeft}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowTopLeftKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
-                    <Button Grid.Column="1" Grid.Row="0" Width="20" Height="20" Name="PositionTopButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Top}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowTopKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
-                    <Button Grid.Column="2" Grid.Row="0" Width="20" Height="20" Name="PositionTopRightButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.TopRight}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowTopRightKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
-                    <Button Grid.Column="0" Grid.Row="1" Width="20" Height="20" Name="PositionLeftButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Left}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowLeftKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
-                    <Button Grid.Column="1" Grid.Row="1" Width="20" Height="20" Name="PositionCenterButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Center}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonPositionKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
-                    <Button Grid.Column="2" Grid.Row="1" Width="20" Height="20" Name="PositionRightButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Right}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowRightKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
-                    <Button Grid.Column="0" Grid.Row="2" Width="20" Height="20" Name="PositionBottomLeftButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.BottomLeft}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowBottomLeftKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
-                    <Button Grid.Column="1" Grid.Row="2" Width="20" Height="20" Name="PositionBottomButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Bottom}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowBottomKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
-                    <Button Grid.Column="2" Grid.Row="2" Width="20" Height="20" Name="PositionBottomRightButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.BottomRight}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowBottomRightKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
-                </Grid>
+				<Grid Grid.Column="0">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="20"/>
+						<ColumnDefinition Width="20" />
+						<ColumnDefinition Width="20" />
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="20" />
+						<RowDefinition Height="20" />
+						<RowDefinition Height="20" />
+					</Grid.RowDefinitions>
+					<Button Grid.Column="0" Grid.Row="0" Width="20" Height="20" Name="PositionTopLeftButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.TopLeft}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowTopLeftKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+					<Button Grid.Column="1" Grid.Row="0" Width="20" Height="20" Name="PositionTopButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Top}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowTopKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+					<Button Grid.Column="2" Grid.Row="0" Width="20" Height="20" Name="PositionTopRightButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.TopRight}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowTopRightKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+					<Button Grid.Column="0" Grid.Row="1" Width="20" Height="20" Name="PositionLeftButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Left}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowLeftKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+					<Button Grid.Column="1" Grid.Row="1" Width="20" Height="20" Name="PositionCenterButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Center}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonPositionKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+					<Button Grid.Column="2" Grid.Row="1" Width="20" Height="20" Name="PositionRightButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Right}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowRightKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+					<Button Grid.Column="0" Grid.Row="2" Width="20" Height="20" Name="PositionBottomLeftButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.BottomLeft}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowBottomLeftKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+					<Button Grid.Column="1" Grid.Row="2" Width="20" Height="20" Name="PositionBottomButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Bottom}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowBottomKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+					<Button Grid.Column="2" Grid.Row="2" Width="20" Height="20" Name="PositionBottomRightButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.BottomRight}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowBottomRightKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+				</Grid>
 
-                <Grid Grid.Column="1" Height="60" Name="Temp">
-
-                    
-                </Grid>
-                <Grid Grid.Column="2" Width="10" Height="{Binding Height, ElementName=Temp, Converter={StaticResource AddConverter}, ConverterParameter={x:Static local:Constant.VisualHeightDifferenceBetweenDesignerAndReal}}" Background="Transparent" />
-               
-
-                <!-- 운영체제의 뷰와 디자이너 뷰간의 차이를 없애기위한 높이지정용도 컨트롤 -->
-                
-            </Grid>
-            
-        </StackPanel>
+				<Grid Grid.Column="1" Height="60" Name="Temp">
 
 
+				</Grid>
+				<Grid Grid.Column="2" Width="10" Height="{Binding Height, ElementName=Temp, Converter={StaticResource AddConverter}, ConverterParameter={x:Static local:Constant.VisualHeightDifferenceBetweenDesignerAndReal}}" Background="Transparent" />
 
-        <!-- ###############################################################################
+
+				<!-- 운영체제의 뷰와 디자이너 뷰간의 차이를 없애기위한 높이지정용도 컨트롤 -->
+
+			</Grid>
+
+		</StackPanel>
+
+
+
+		<!-- ###############################################################################
         
                                         우측 패널
         
         ############################################################################### -->
-        <Grid DockPanel.Dock="Left">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="200"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-            </Grid.RowDefinitions>
+		<Grid DockPanel.Dock="Left">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"></RowDefinition>
+				<RowDefinition Height="200"></RowDefinition>
+				<RowDefinition Height="Auto"></RowDefinition>
+			</Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="30"></ColumnDefinition>
-                    <ColumnDefinition Width="30"></ColumnDefinition>
-                    <ColumnDefinition Width="30"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="250"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Command="{Binding Commander.ReloadSgaPackage}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonRefreshKey}}"/>
-                <Button Grid.Column="1" Command="{Binding Commander.OpenAlbumView}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonAlbumKey}}"/>
+			<Grid Grid.Row="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="30"></ColumnDefinition>
+					<ColumnDefinition Width="30"></ColumnDefinition>
+					<ColumnDefinition Width="30"></ColumnDefinition>
+					<ColumnDefinition Width="*"></ColumnDefinition>
+					<ColumnDefinition Width="250"></ColumnDefinition>
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="0" Command="{Binding Commander.ReloadSgaPackage}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonRefreshKey}}"/>
+				<Button Grid.Column="1" Command="{Binding Commander.OpenAlbumView}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonAlbumKey}}"/>
 
-                <c:WatermarkTextBox Watermark="검색할 내용 입력" Grid.Column="4" Name="SgaResourceSearchTextBox" TextWrapping="NoWrap" AcceptsReturn="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" KeyDown="SgaResourceSearchTextBox_OnKeyDown">
-                    <!--
+				<c:WatermarkTextBox Watermark="검색할 내용 입력" Grid.Column="4" Name="SgaResourceSearchTextBox" TextWrapping="NoWrap" AcceptsReturn="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" KeyDown="SgaResourceSearchTextBox_OnKeyDown">
+					<!--
                     포커싱 해제될때 삭제전 문자열로 한번 검색이 이뤄지네..
                     이거 해결할려면 커맨드 파라미터로 TextChangedEventArgs넘긴다음 변환된 문자열확인해서 처리해야하는데. 
                     코드가 직관적이지 않아질거고, 커맨드 범용성이 사라져버린다.
@@ -480,20 +484,20 @@
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
-                    </c:WatermarkTextBox.Style>-->ㅣ
+                    </c:WatermarkTextBox.Style>--> ㅣ
 
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="TextChanged">
-                            <i:InvokeCommandAction Command="{Binding Commander.SearchSgaResource}" 
+					<i:Interaction.Triggers>
+						<i:EventTrigger EventName="TextChanged">
+							<i:InvokeCommandAction Command="{Binding Commander.SearchSgaResource}" 
                                                    CommandParameter="{Binding Path=Text, ElementName=SgaResourceSearchTextBox}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </c:WatermarkTextBox>
-            </Grid>
-            
-            <StackPanel Grid.Row="1"
+						</i:EventTrigger>
+					</i:Interaction.Triggers>
+				</c:WatermarkTextBox>
+			</Grid>
+
+			<StackPanel Grid.Row="1"
                         Orientation="Horizontal">
-                <ctrl:SgaPackageListBox 
+				<ctrl:SgaPackageListBox 
                         MinWidth="100"
                          MaxWidth="100"
                          x:Name="PackageListBox"
@@ -502,9 +506,9 @@
                          Style="{StaticResource SgaPackageListBox}"
                          ItemsSource="{Binding PackManager.Packages, Mode=OneWay}"
                          SelectedItem="{Binding SelectedPackage, Mode=OneWay}">
-                </ctrl:SgaPackageListBox>
+				</ctrl:SgaPackageListBox>
 
-                <ctrl:SgaElementListBox MinWidth="150"
+				<ctrl:SgaElementListBox MinWidth="150"
                          MaxWidth="150" 
                          x:Name="ElementListBox"
                          ScrollViewer.VerticalScrollBarVisibility="Hidden"
@@ -512,50 +516,50 @@
                          SelectedItem="{Binding SelectedImage.Header, Mode=OneWay}"
                          ItemContainerStyle="{StaticResource SgaElementListBoxItemContainerStyle}"
                          ItemsSource="{Binding SelectedPackage.ElementHeaderList, Mode=OneWay}">
-                </ctrl:SgaElementListBox>
+				</ctrl:SgaElementListBox>
 
-                <ctrl:SgaSpriteListBox MinWidth="100"
+				<ctrl:SgaSpriteListBox MinWidth="100"
                          MaxWidth="100"
                          x:Name="SpriteListBox"
                          ScrollViewer.VerticalScrollBarVisibility="Hidden" 
                          Style="{StaticResource SgaSpriteListBox}"
                          SelectedItem="{Binding SelectedSprite, Mode=OneWay}"
                          ItemsSource="{Binding SelectedImage.SpriteList, Mode=OneWay}">
-                </ctrl:SgaSpriteListBox>
-            </StackPanel>
+				</ctrl:SgaSpriteListBox>
+			</StackPanel>
 
-            <Canvas Grid.Row="2" 
+			<Canvas Grid.Row="2" 
                     Name="PropertyGridCanvas"
                     ClipToBounds="True"
                     IsHitTestVisible="True"
                     Height="{Binding ZoomState.BasePropertyGridHeight}">
-                
-                <!-- 캔버스 자체가 내부 요소를 Grid 처럼 꽉채우지 않는다. 
+
+				<!-- 캔버스 자체가 내부 요소를 Grid 처럼 꽉채우지 않는다. 
                      따라서 캔버스내부에 그리드를 두고 그리드의 크기를 캔버스크기로 맞춰주면
                      캔버스내에서 Control들을 꽉채울 수 있게된다.
                      https://stackoverflow.com/questions/14781300/xaml-how-to-get-canvass-child-to-fill-the-entire-canvas
                 
                      Auto로 해놓으니까 수직 스크롤바가 안생김.. 이녀석도 줌레벨에 따라 변경해주도록 함
                  -->
-                <Grid Width="{Binding ElementName=PropertyGridCanvas, Path=ActualWidth}"
+				<Grid Width="{Binding ElementName=PropertyGridCanvas, Path=ActualWidth}"
                       Height="{Binding ElementName=PropertyGridCanvas, Path=ActualHeight}">
-                    <ctrl:UIElementPropertyGrid x:Name="UIElementPropertyGrid" 
+					<ctrl:UIElementPropertyGrid x:Name="UIElementPropertyGrid" 
                                                    FontSize="12" 
                                                    Width="Auto"
                                                    AutoGenerateProperties="True"
                                                    Style="{StaticResource UIElementPropertyGrid}"
                                                    ShowAdvancedOptions="False">
 
-                        <!--스타일 파일로 빼니까 어드벤스드 옵션 메뉴 이벤트가 안먹힘.. 이렇게 직접적으로 할당해주는건 동작함. 버그인듯? 아님 내가 뭐 잘못했나-->
-                        <!--<ui_ctrl:UIElementPropertyGrid.AdvancedOptionsMenu>
+						<!--스타일 파일로 빼니까 어드벤스드 옵션 메뉴 이벤트가 안먹힘.. 이렇게 직접적으로 할당해주는건 동작함. 버그인듯? 아님 내가 뭐 잘못했나-->
+						<!--<ui_ctrl:UIElementPropertyGrid.AdvancedOptionsMenu>
                         </ui_ctrl:UIElementPropertyGrid.AdvancedOptionsMenu>-->
-                    </ctrl:UIElementPropertyGrid>
-                </Grid>
-            </Canvas>
-        </Grid>
+					</ctrl:UIElementPropertyGrid>
+				</Grid>
+			</Canvas>
+		</Grid>
 
-        
-    </DockPanel>
+
+	</DockPanel>
 </Window>
 
 
