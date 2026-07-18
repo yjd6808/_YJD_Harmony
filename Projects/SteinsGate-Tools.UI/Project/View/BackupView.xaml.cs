@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using SGToolsCommon.Extension;
+using SGToolsUI.FileSystem;
 using SGToolsUI.Model.Backup;
 using SGToolsUI.ViewModel;
 
@@ -59,8 +60,10 @@ namespace SGToolsUI.View
                 return;
 
             TitleBar.Close();
-            await ViewModel.MainViewModel.Saver.BackupAsync("백업뷰 로딩");
-            ViewModel.MainViewModel.GroupMaster = await ViewModel.MainViewModel.Loader.LoadAsync(file.Path);
+            var saver = new SGUISaver(ViewModel.MainViewModel);
+            await saver.BackupAsync("백업뷰 로딩");
+            var loader = new SGUILoader(ViewModel.MainViewModel);
+            ViewModel.MainViewModel.RootGroup = await loader.LoadAsync(file.Path);
         }
 
         //////////////////////////////////////////////////////////////////////////////////

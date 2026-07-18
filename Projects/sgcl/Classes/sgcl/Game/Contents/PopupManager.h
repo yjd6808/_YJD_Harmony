@@ -93,6 +93,8 @@ private:
 	float width_;
 	float padding_;
 
+	UIGroupInfo* pPopupInfo_;
+
 	jc::Vector<UI_Popup*> opendList_;
 	jc::ArrayQueue<UI_Popup*> popupPool_;
 };

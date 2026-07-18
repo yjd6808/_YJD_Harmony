@@ -9,6 +9,7 @@
 #pragma once
 
 #include "sg/Util/DescBase.h"
+#include "jc/Container/DataMap.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 JC_SENUM_BEGIN(HAlignment)
@@ -63,22 +64,25 @@ JC_SENUM_END(ProgressIncreaseDirection)
 
 
  //////////////////////////////////////////////////////////////////////////////////////////
-struct UIElementInfo : SDescBase
+struct UIElementInfo
 {
+	UIElementInfo()
+	{
+		jc::Arrays::Fill(name_, 0);
+	}
+
+	virtual ~UIElementInfo() = default;
+
 	UIElementType_t type_;
 	HAlignment_t hAlignment_;
 	VAlignment_t vAlignment_;
+	char name_[128];
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
 struct UIGroupElemInfo
 {
-	UIGroupElemInfo()
-	{
-		code_ = InvalidValue_v;
-	}
-
-	int code_;
+	char name_[128]{};
 	cc::vec2 pos_;
 };
 
@@ -91,13 +95,17 @@ struct UIGroupInfo : UIElementInfo
 	} // 용량이 0일수는 없으므로.
 	UIGroupInfo(const UIGroupInfo& _other) { this->operator=(_other); }
 	UIGroupInfo(UIGroupInfo&& _other) noexcept { this->operator=(jc::Move(_other)); }
-	~UIGroupInfo() override = default;
+	~UIGroupInfo() override
+	{
+		JC_DELETE_SAFE(pDataMap_);
+	}
 
 	UIGroupInfo& operator=(const UIGroupInfo& _other);
 	UIGroupInfo& operator=(UIGroupInfo&& _other) noexcept;
 
 	cc::size size_;
 	jc::Vector<UIGroupElemInfo> infoList_;
+	jc::CDataMap<>* pDataMap_{};
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////

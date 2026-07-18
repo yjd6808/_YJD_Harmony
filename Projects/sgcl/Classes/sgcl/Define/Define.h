@@ -16,4 +16,3 @@
 #include "sgcl/Define/Define_Event.h"
 #include "sgcl/Define/Define_Popup.h"
 #include "sgcl/Define/Define_Projectile.h"
-#include "sgcl/Define/Define_UI.h"

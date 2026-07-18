@@ -48,7 +48,7 @@ public:
 	cc::Label* source() const { return pLabel_; }
 	UILabelInfo* getInfo() const { return pInfo_; }
 	UIElementType_t GetElementType() override { return UIElementType::Label; }
-	jc::String ToString() override { return jc::StringUtil::Format("라벨(%d)", pInfo_->code_); }
+	jc::String ToString() override { return jc::StringUtil::Format("라벨(%s)", pInfo_->name_); }
 
 private:
 	float initialFontSize_;

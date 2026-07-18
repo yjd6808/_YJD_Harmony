@@ -56,14 +56,14 @@ namespace SGToolsUI.Command.MainViewCommand
             if (_element.Picked && _element.Selected)
             {
                 // ViewModel.View.UIElementPropertyGrid.SelectedObject = element;
-                // ViewModel.GroupMaster.NotifyProperty("PickedSelectedElement");
+                // ViewModel.RootGroup.NotifyProperty("PickedSelectedElement");
             }
         }
 
         //////////////////////////////////////////////////////////////////////////////////
         private void SelectSingleElementNew(SGUIElement _element)
         {
-            ViewModel.GroupMaster.DeselectAll();
+            ViewModel.RootGroup.DeselectAll();
 
             if (_element.Selected)
             {
@@ -109,14 +109,14 @@ namespace SGToolsUI.Command.MainViewCommand
         //////////////////////////////////////////////////////////////////////////////////
         private void SelectMultiElementNew(IEnumerable<SGUIElement> _elementList)
         {
-            ViewModel.GroupMaster.DeselectAll();
+            ViewModel.RootGroup.DeselectAll();
             _elementList.ForEach(newElement => newElement.Selected = true);
         }
 
         //////////////////////////////////////////////////////////////////////////////////
         private void SelectMultiElementKeepExcept(IEnumerable<SGUIElement> _elementList)
         {
-            IEnumerable<SGUIElement> alreadySelectedElements = ViewModel.GroupMaster.SelectedElements.Intersect(_elementList);
+            IEnumerable<SGUIElement> alreadySelectedElements = ViewModel.RootGroup.SelectedElements.Intersect(_elementList);
 
             // 이미 존재하는 대상은 선택해제
             if (alreadySelectedElements.Any())

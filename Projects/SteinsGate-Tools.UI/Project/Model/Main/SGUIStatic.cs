@@ -5,8 +5,7 @@
  */
 
 using System.ComponentModel;
-using Newtonsoft.Json.Linq;
-using SGToolsCommon.Extension;
+using System.Xml.Linq;
 using SGToolsCommon.Primitive;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
@@ -46,29 +45,33 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)] public override bool Manipulatable => true;
 
         //////////////////////////////////////////////////////////////////////////////////
+        public override string GetElementTagName() => "Static";
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override XElement ToXElement()
+        {
+            XElement root = base.ToXElement();
+            root.SetAttributeValue("width", visualSize_.Width);
+            root.SetAttributeValue("height", visualSize_.Height);
+            return root;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override void ParseXElement(XElement _root)
+        {
+            base.ParseXElement(_root);
+
+            visualSize_.Width = (int)_root.Attribute("width")!;
+            visualSize_.Height = (int)_root.Attribute("height")!;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
         public override object Clone()
         {
             SGUIStatic sprite = new SGUIStatic();
             sprite.CopyFrom(this);
             sprite.visualSize_ = visualSize_;
             return sprite;
-        }
-
-        //////////////////////////////////////////////////////////////////////////////////
-        public override JObject ToJObject()
-        {
-            JObject root = base.ToJObject();
-            root[JsonVisualSizeKey] = visualSize_.ToFullString();
-            return root;
-        }
-
-        //////////////////////////////////////////////////////////////////////////////////
-        public override void ParseJObject(JObject _root)
-        {
-            base.ParseJObject(_root);
-
-            string sizeString = (string)_root[JsonVisualSizeKey]!;
-            visualSize_ = SizeEx.ParseFullString(sizeString);
         }
 
         //////////////////////////////////////////////////////////////////////////////////

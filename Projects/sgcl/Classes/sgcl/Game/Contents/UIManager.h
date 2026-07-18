@@ -10,16 +10,16 @@
  *	   Group        Button          Group
  *	  ....                      ┌────┴─────┐
  *						  Button     Label
- *
- *
- *	             
  */
 
 
 #pragma once
 
+#include <string>
+#include <unordered_map>
 #include "sgcl/Game/Texture/ImagePack.h"
-#include "sgcl/Game/UI/UIRootGroupManager.h"
+#include "jc/Container/DataMap.h"
+#include "sg/Struct/SteinsGate_UI.h"
 
 struct DragState
 {
@@ -43,10 +43,14 @@ class UI_Login;
 class UI_Popup;
 class UI_Test;
 class UI_ChannelSelect;
+class UIRootGroup;
+class UIGroupInfo;
+class UILayer;
+
+using UIFactoryFunc = UIRootGroup* (*)(UIGroupInfo* _pInfo);
 
 class PopupManager;
 
-//////////////////////////////////////////////////////////////////////////////////////////
 class UIManager final : public jc::SingletonPointer<UIManager>
 {
 private:
@@ -56,8 +60,6 @@ private:
 
 public:
 	void Init();
-	void InitPublic();
-	void RegisterRootGroup(UIRootGroup* _pGroup);
 	void RegisterUITexture(SgaResourceIndex _index);
 	void UnloadAll();
 	void OnUpdate(float _dt);
@@ -71,65 +73,20 @@ public:
 	bool IsDragging() { return dragState_.isDragging_; }
 	const DragState& GetDragState() const { return dragState_; }
 
-	UIRootGroup* GetRootGroup(int _groupCode);
-	UIElement* GetElement(int _elementCode);
-	UIGroup* GetGroup(int _groupCode) { return GetElementTemplated<UIGroup>(_groupCode); }
-	UIButton* GetButton(int _buttonCode) { return GetElementTemplated<UIButton>(_buttonCode); }
-	UISprite* GetSprite(int _spriteCode) { return GetElementTemplated<UISprite>(_spriteCode); }
-	UILabel* GetLabel(int _labelCode) { return GetElementTemplated<UILabel>(_labelCode); }
-	UICheckBox* GetCheckBox(int _checkBoxCode) { return GetElementTemplated<UICheckBox>(_checkBoxCode); }
-	UIEditBox* GetEditBox(int _editBoxCode) { return GetElementTemplated<UIEditBox>(_editBoxCode); }
-	UIToggleButton* GetToggleButton(int _toggleButtonCode) { return GetElementTemplated<UIToggleButton>(_toggleButtonCode); }
-	UIProgressBar* GetProgressBar(int _progressBarCode) { return GetElementTemplated<UIProgressBar>(_progressBarCode); }
-	UIScrollBar* GetScrollBar(int _scrollBarCode) { return GetElementTemplated<UIScrollBar>(_scrollBarCode); }
-	UIStatic* GetStatic(int _staticCode) { return GetElementTemplated<UIStatic>(_staticCode); }
+	void RegisterUIFactory(const char* _name, UIFactoryFunc _factory);
+	UIRootGroup* Show(const char* _name, const jc::CDataMap<>& _param = jc::CDataMap<>());
+	void SetUILayer(UILayer* _pLayer) { pUILayer_ = _pLayer; }
 
 	FrameTexture* CreateUITexture(int _sga, int _img, int _frame, bool _linearDodge = false);
 	FrameTexture* CreateUITextureRetained(int _sga, int _img, int _frame, bool _linearDodge = false);
 
-	UI_Inventory&		GetUI_Inventory() const { return *pInventory_; }
-	UI_Login&			GetUI_Login() const { return *pLogin_; }
-	UI_Test&			GetUI_Test() const { return *pTest_; }
-	UI_ChannelSelect&	GetUI_ChannelSelect() const { return *pChannelSelect_; }
-
 private:
-	template <typename TElement>
-	TElement* GetElementTemplated(int _code)
-	{
-		constexpr UIElementType_t targetType = TElement::Type();
-
-		if (!uiElementMap_.Exist(_code))
-		{
-			_LogWarn_("%s(%d)를 찾지 못했습니다.", UIElementType::Name[targetType], _code);
-			return nullptr;
-		}
-
-		UIElement* pElement = uiElementMap_[_code];
-		const UIElementType_t type = pElement->GetElementType();
-
-		if (type != targetType)
-		{
-			_LogWarn_("%d가 %s타입이 아니고, %s입니다.", _code, UIElementType::Name[targetType], UIElementType::Name[type]);
-			return nullptr;
-		}
-
-		return (TElement*)pElement;
-	}
-	
-	// 매니저들
 	PopupManager&		popup_;
 
-	// 루트 그룹들
-	UI_Inventory*		pInventory_;
-	UI_Login*			pLogin_;
-	UI_Test*			pTest_;
-	UI_ChannelSelect*	pChannelSelect_;
-
 	DragState dragState_;
-	UIRootGroupManager* pRootGroupMgr_;
-	jc::HashMap<_u32, SgaResourceIndex> loadedUITexture_; // 어떤 이미지 팩 로딩했는지 기록용
-	jc::HashMap<int, UIElement*> uiElementMap_;
-	jc::HashMap<int, UIRootGroup*> masterUIGroups_;
+	UILayer* pUILayer_ = nullptr;
+	std::unordered_map<std::string, UIFactoryFunc> uiFactoryMap_;
+	jc::HashMap<_u32, SgaResourceIndex> loadedUITexture_;
 	jc::HashMap<UIElement*, jc::Event<UIElement*, float>> uiElementsUpdateEvent_;
 };
 

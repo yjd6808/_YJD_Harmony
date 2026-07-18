@@ -6,6 +6,7 @@
 
 using System;
 using System.Threading.Tasks;
+using SGToolsUI.FileSystem;
 using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.Command.MainViewCommand.Async
@@ -27,7 +28,8 @@ namespace SGToolsUI.Command.MainViewCommand.Async
             if (_parameter is not string param)
                 throw new Exception("파라미터가 string 타입이 아닙니다.");
 
-            await ViewModel.Saver.BackupAsync(param);
+            var saver = new SGUISaver(ViewModel);
+            await saver.BackupAsync(param);
         }
     }
 }

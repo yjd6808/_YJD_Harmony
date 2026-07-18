@@ -6,9 +6,9 @@
 
 using System;
 using System.ComponentModel;
+using System.Xml.Linq;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
@@ -219,7 +219,52 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)] public override bool Manipulatable => true;
 
         //////////////////////////////////////////////////////////////////////////////////
-        public override void CreateInit() => VisualName = $"프로그래스바_{Seq++}";
+        public override string GetElementTagName() => "ProgressBar";
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override XElement ToXElement()
+        {
+            XElement root = base.ToXElement();
+            SGUISpriteInfoExt.TryGetSgaImgFileName(sprite_, out string sga, out string img);
+
+            root.SetAttributeValue("sga", sga);
+            root.SetAttributeValue("img", img);
+            root.SetAttributeValue("sprite", sprite_.SpriteIndex);
+            root.SetAttributeValue("width", visualSize_.Width);
+            root.SetAttributeValue("height", visualSize_.Height);
+            root.SetAttributeValue("direction", (int)direction_);
+            return root;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override void ParseXElement(XElement _root)
+        {
+            base.ParseXElement(_root);
+
+            string sgaName = (string)_root.Attribute("sga") ?? string.Empty;
+
+            if (sgaName == string.Empty)
+                return;
+
+            string imgName = (string)_root.Attribute("img")!;
+
+            visualSize_.Width = (int)_root.Attribute("width")!;
+            visualSize_.Height = (int)_root.Attribute("height")!;
+
+            SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
+            SgaPackage sga = img.Parent;
+            int spriteIndex = (int)_root.Attribute("sprite")!;
+
+            if (spriteIndex == Constant.InvalidValue)
+                return;
+
+            SgaSprite? sprite = img.GetSprite(spriteIndex) as SgaSprite;
+            if (sprite == null)
+                throw new Exception($"{sgaName} -> {imgName} -> {spriteIndex}가 SgaSprite 타입이 아닙니다.");
+            sprite_ = new SGUISpriteInfo(sga, img, sprite);
+            percent_ = 70.0;
+            direction_ = (ProgressIncreaseDirection)(int)_root.Attribute("direction")!;
+        }
 
         //////////////////////////////////////////////////////////////////////////////////
         public override object Clone()
@@ -234,48 +279,6 @@ namespace SGToolsUI.Model.Main
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public override JObject ToJObject()
-        {
-            JObject root = base.ToJObject();
-            // 인덱스를 뛰어쓰기로 구분해서 돌려줌
-            SGUISpriteInfoExt.TryGetSgaImgFileName(sprite_, out string sga, out string img);
-
-            root[JsonSgaKey] = sga;
-            root[JsonImgKey] = img;
-            root[JsonSpriteKey] = sprite_.SpriteIndex;
-            root[JsonVisualSizeKey] = visualSize_.ToFullString();
-            root[JsonDirectionKey] = (int)direction_;
-            return root;
-        }
-
-        //////////////////////////////////////////////////////////////////////////////////
-        public override void ParseJObject(JObject _root)
-        {
-            base.ParseJObject(_root);
-
-            string sgaName = (string)_root[JsonSgaKey]!;
-
-            if (sgaName == string.Empty)
-                return;
-
-            string imgName = (string)_root[JsonImgKey]!;
-            string sizeString = (string)_root[JsonVisualSizeKey]!;
-
-            visualSize_ = SizeEx.ParseFullString(sizeString);
-
-            SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
-            SgaPackage sga = img.Parent;
-            int spriteIndex = (int)_root[JsonSpriteKey]!;
-
-            if (spriteIndex == Constant.InvalidValue)
-                return;
-
-            SgaSprite? sprite = img.GetSprite(spriteIndex) as SgaSprite;
-            if (sprite == null)
-                throw new Exception($"{sgaName} -> {imgName} -> {spriteIndex}가 SgaSprite 타입이 아닙니다.");
-            sprite_ = new SGUISpriteInfo(sga, img, sprite);
-            percent_ = 70.0;
-            direction_ = (ProgressIncreaseDirection)(int)_root[JsonDirectionKey]!;
-        }
+        public override void CreateInit() => VisualName = $"프로그래스바_{Seq++}";
     }
 }

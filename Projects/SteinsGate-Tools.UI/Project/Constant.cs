@@ -19,8 +19,7 @@ namespace SGToolsUI
 
         public const double ResolutionRatio = 480.0f / 640.0f;
         public const string SettingFileName = "setting.json";
-        public const string UIToolDataFileName = "data.json";
-        public const string GameDataFileName = "ui.json";
+        public const string UIToolDataFileName = "data.xml";
         public const string BackupDirectoryRoot = "backup";
         public const string BackupDirectoryFmt = "yyyy-MM-dd";
         public const string BackupFileFmt = "HH.mm.ss";
@@ -29,8 +28,8 @@ namespace SGToolsUI
         public const double LeftPaneWidth = 300;
         public const double DragActivateDistance = 5.0f;
 
-        public const int GroupCodeInterval = 1000;      // 그룹당 코드 부여단위
-        public const int CodeAssignerCapacity = 1000;   // 최대 그룹 수
+        public const string UILayoutExtension = ".xml";
+        public const string UIMetaExtension = ".uimeta";
 
         // 디자이너 윈도우와 실제 운영체제가 그리는 윈도우간의 너비, 높이 차이를 보정하기위한 수치
         public const double VisualHeightDifferenceBetweenDesignerAndReal = 35;

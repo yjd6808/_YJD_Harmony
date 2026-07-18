@@ -95,7 +95,7 @@ public:
 
 	virtual jc::String ToString() = 0;
 
-	int GetCode() const { return pBaseInfo_->code_; }
+	const char* GetName() const { return pBaseInfo_->name_; }
 	UIRootGroup* GetRootGroup() const { return pRootGroup_; }
 
 	cc::vec2 CalculateZeroPosition(const cc::rect& _rc) const;

@@ -13,81 +13,90 @@
 
 #include "sgcl/Game/UI/UIGroup.h"
 #include "sgcl/Game/UI/UIRootGroup.h"
+#include "sgcl/Game/UI/UIXmlLoader.h"
 
-#include "sgcl/Define/Define_UI.h"
 #include "sgcl/Game/Contents/PopupManager.h"
-
-#include "sgcl/Game/UI_Implementation/UI_Inventory.h"
-#include "sgcl/Game/UI_Implementation/UI_Login.h"
-#include "sgcl/Game/UI_Implementation/UI_Popup.h"
-#include "sgcl/Game/UI_Implementation/UI_Test.h"
-#include "sgcl/Game/UI_Implementation/UI_ChannelSelect.h"
+#include "sgcl/SteinsGateApp.h"
+#include "sgcl/Layer/Layer_UI.h"
 #include "sgcl/Game/Texture/ImagePackManager.h"
 
 
 USING_NS_CC;
 USING_NS_JC;
 
-//////////////////////////////////////////////////////////////////////////////////////////
 UIManager::UIManager()
-: pRootGroupMgr_(nullptr)
-, loadedUITexture_(1024) // 창을 64개까지 만들일이 있을려나 ㅋㅋ
-, uiElementMap_(512)
-, masterUIGroups_(64)
+: loadedUITexture_(1024)
 , popup_(*PopupManager::Get())
-//////////////////////////////////////////////////////////////////////////////////////////
 {
-	pInventory_ = nullptr;
-	pLogin_ = nullptr;
-	pTest_ = nullptr;
-	pChannelSelect_ = nullptr;
-
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 UIManager::~UIManager()
 {
-	CC_SAFE_RELEASE(pRootGroupMgr_);
-
-	// 마스터 UI 그룹만 제거해주면 된다.
-	// 어차피 내부 자식들은 모두 마스터 UI 그룹에 addChild 되어 있기 때문에
-	// 이녀석만 제거하면 도미노 마냥 다 제거댐
-	masterUIGroups_.ForEachValue([](UIGroup* _group)
-	{
-		CC_SAFE_RELEASE(_group);
-	});
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-// : 루트 유아이 그룹 등록
+void UIManager::RegisterUIFactory(const char* _name, UIFactoryFunc _factory)
+{
+	uiFactoryMap_[std::string(_name)] = _factory;
+}
+
+UIRootGroup* UIManager::Show(const char* _name, const CDataMap<>& _param)
+{
+	if (!pUILayer_)
+	{
+		_LogError_("UILayer가 설정되지 않았습니다. SetUILayer()를 먼저 호출하세요.");
+		return nullptr;
+	}
+
+	// Build path: e.g. "Login.xml"
+	jc::String filePath = g_cAppConfig.resDataPath_;
+	filePath += "/UI/";
+	filePath += _name;
+	filePath += ".xml";
+
+	UIGroupInfo* pGroupInfo = UIXmlLoader::LoadFromFile(filePath.Source());
+	if (!pGroupInfo)
+	{
+		_LogError_("%s UI XML 파일을 로드하는데 실패했습니다.", filePath.Source());
+		return nullptr;
+	}
+
+	UIRootGroup* pRootGroup = nullptr;
+	auto it = uiFactoryMap_.find(std::string(_name));
+	if (it != uiFactoryMap_.end())
+	{
+		pRootGroup = it->second(pGroupInfo);
+	}
+	else
+	{
+		pRootGroup = dbg_new UIRootGroup(pGroupInfo);
+	}
+
+	pRootGroup->autorelease();
+	pRootGroup->init();
+	pRootGroup->InitFromXml();
+	pRootGroup->SetRelativePosition(0, 0);
+
+// Merge data map if present
+	CDataMap<> dataMap = _param;
+	if (pGroupInfo->pDataMap_)
+	{
+		dataMap.AddData(*pGroupInfo->pDataMap_, false);
+	}
+
+	pRootGroup->OnInit(dataMap);
+	pRootGroup->Load();
+	pUILayer_->AddUIGroup(pRootGroup);
+	pRootGroup->OnAdded();
+
+	return pRootGroup;
+}
+
 void UIManager::Init()
 {
-	pRootGroupMgr_ = UIRootGroupManager::CreateRetain();
-	pRootGroupMgr_->ForEach([this](UIRootGroup* _pRootGroup) { RegisterRootGroup(_pRootGroup); });
-	pRootGroupMgr_->ForEach([this](UIRootGroup* _pRootGroup) { _pRootGroup->OnInit(); });
-
-	InitPublic();
+	// Factory registrations happen via REGISTER_UI macros (static initialization)
+	// No more UIRootGroupManager or global root group creation
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-void UIManager::RegisterRootGroup(UIRootGroup* _pGroup)
-{
-	_pGroup->retain(); // 그룹마스터에서 생성/관리하기때문에 리테인했고 UIManager에서도 마스터를 참조하므로, 리테인해줘야함. 빼먹고있었넹
-	uiElementMap_.Insert(_pGroup->GetCode(), _pGroup);
-	masterUIGroups_.Insert(_pGroup->GetCode(), _pGroup);
-
-	_pGroup->ForEachRecursive([this](UIElement* _pUIElement)
-	{
-		const int elementCode = _pUIElement->GetCode();
-		const bool inserted = uiElementMap_.Insert(elementCode, _pUIElement);
-		if (!inserted)
-		{
-			_LogWarn_("이미 UI 엘리먼트(%d)가 그룹내 포함되어 있습니다.", elementCode);
-		}
-	});
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
 void UIManager::RegisterUITexture(SgaResourceIndex _index)
 {
 	if (_index.un_.frameIndex_ == InvalidValue_v)
@@ -103,33 +112,24 @@ void UIManager::RegisterUITexture(SgaResourceIndex _index)
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UIManager::UnloadAll()
 {
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 
-	// 이미지 텍스쳐 모두 릴리즈
-	masterUIGroups_.ForEachValue([](UIGroup* _group)
-	{
-		_group->Unload();
-	});
-
-	// 관련 캐쉬, 팩 모두 언로드
 	loadedUITexture_.ForEachValue([pPackManager](SgaResourceIndex& _resourceIndex)
 	{
 		pPackManager->ReleaseFrameTexture(_resourceIndex);
 		pPackManager->UnloadPackData(_resourceIndex.un_.sgaIndex_);
 	});
+
 	loadedUITexture_.Clear();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UIManager::OnUpdate(float _dt)
 {
 	CallUiElementsUpdateCallback(_dt);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UIManager::CallUiElementsUpdateCallback(float _dt)
 {
 	uiElementsUpdateEvent_.ForEach([&_dt](Pair<UIElement*, jc::Event<UIElement*, float>>& _elementEventPair)
@@ -138,13 +138,11 @@ void UIManager::CallUiElementsUpdateCallback(float _dt)
 	});
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UIManager::Draginit(const DragState& _state)
 {
 	dragState_ = _state;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UIManager::DragEnter(const cc::EventMouse* _pMouseEvent)
 {
 	UIElement* pDragElement = dragState_.pTargetElement_;
@@ -157,7 +155,6 @@ void UIManager::DragEnter(const cc::EventMouse* _pMouseEvent)
 	dragState_.isDragging_ = true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UIManager::DragMove(const cc::EventMouse* _pMouseEvent)
 {
 	UIElement* pDragElement = dragState_.pTargetElement_;
@@ -169,7 +166,6 @@ void UIManager::DragMove(const cc::EventMouse* _pMouseEvent)
 	dragState_.dragDelta_ = dragDelta;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UIManager::DragEnd()
 {
 	dragState_.pHostElement_ = nullptr;
@@ -178,30 +174,6 @@ void UIManager::DragEnd()
 	dragState_.dragDelta_ = {};
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-UIRootGroup* UIManager::GetRootGroup(int _groupCode)
-{
-	if (!masterUIGroups_.Exist(_groupCode))
-	{
-		_LogWarn_("%d 마스터 UI 그룹이 존재하지 않습니다.", _groupCode);
-		return nullptr;
-	}
-
-	return masterUIGroups_[_groupCode];
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-UIElement* UIManager::GetElement(int _elementCode)
-{
-	if (!uiElementMap_.Exist(_elementCode))
-	{
-		return nullptr;
-	}
-
-	return uiElementMap_[_elementCode];
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
 FrameTexture* UIManager::CreateUITexture(int _sga, int _img, int _frame, bool _linearDodge /* = false  */)
 {
 	ImagePack* pPack = g_cImagePackMgr.GetPackUnsafe(_sga);
@@ -218,19 +190,9 @@ FrameTexture* UIManager::CreateUITexture(int _sga, int _img, int _frame, bool _l
 	return pTexture;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 FrameTexture* UIManager::CreateUITextureRetained(int _sga, int _img, int _frame, bool _linearDodge)
 {
 	FrameTexture* pTexture = CreateUITexture(_sga, _img, _frame, _linearDodge);
 	pTexture->retain();
 	return pTexture;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void UIManager::InitPublic()
-{
-	pLogin_ = (UI_Login*)GetRootGroup(GROUP_UI_LOGIN);
-	pInventory_ = (UI_Inventory*)GetRootGroup(GROUP_UI_INVENTORY);
-	pTest_ = (UI_Test*)GetRootGroup(GROUP_UI_TEST);
-	pChannelSelect_ = (UI_ChannelSelect*)GetRootGroup(GROUP_UI_CHANNEL);
 }

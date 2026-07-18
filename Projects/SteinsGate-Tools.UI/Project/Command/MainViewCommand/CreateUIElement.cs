@@ -7,6 +7,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows;
+using SGToolsUI.FileSystem;
 using SGToolsUI.Model.Main;
 using SGToolsUI.ViewModel;
 
@@ -26,7 +27,7 @@ namespace SGToolsUI.Command.MainViewCommand
         public override async Task ExecuteAsync(object? _parameter)
         {
             SGUIElementType createElementType = (SGUIElementType)Enum.Parse(typeof(SGUIElementType), _parameter!.ToString()!);
-            SGUIGroup group = ViewModel.GroupMaster.SelectedGroup;
+            SGUIGroup group = ViewModel.RootGroup.SelectedGroup;
 
             if (group == null)
             {
@@ -35,10 +36,10 @@ namespace SGToolsUI.Command.MainViewCommand
             }
 
             // 마스터 그룹엔 그룹만 추가가능
-            bool isGroupMaster = group == ViewModel.GroupMaster;
-            if (isGroupMaster && createElementType != SGUIElementType.Group)
+            bool isRootGroup = group == ViewModel.RootGroup;
+            if (isRootGroup && createElementType != SGUIElementType.Group)
             {
-                MessageBox.Show($"마스터 그룹에는 그룹만 추가 가능합니다.");
+                MessageBox.Show($"루트 그룹에는 그룹만 추가 가능합니다.");
                 return;
             }
 
@@ -49,9 +50,10 @@ namespace SGToolsUI.Command.MainViewCommand
             newElement.CreateInit();
             newElement.ViewModel = ViewModel;
             group.AddChild(newElement);
-            await ViewModel.Saver.BackupAsync($"{createElementType} 생성");
-            // 그룹마스터는 트리뷰에서 관리를 안하므로..
-            if (!isGroupMaster)
+            var saver = new SGUISaver(ViewModel);
+            await saver.BackupAsync($"{createElementType} 생성");
+            // 루트그룹은 트리뷰에서 관리를 안하므로..
+            if (!isRootGroup)
                 group.Item.IsExpanded = true;
         }
     }

@@ -34,7 +34,7 @@ public:
 
 	cc::ProgressTimer* Source() const { return pProgressBar_; }
 	UIElementType_t GetElementType() override { return UIElementType::ProgressBar; }
-	jc::String ToString() override { return jc::StringUtil::Format("프로그래스바(%d)", pProgressBarInfo_->code_); }
+	jc::String ToString() override { return jc::StringUtil::Format("프로그래스바(%s)", pProgressBarInfo_->name_); }
 
 private:
 	UIProgressBarInfo* pProgressBarInfo_;

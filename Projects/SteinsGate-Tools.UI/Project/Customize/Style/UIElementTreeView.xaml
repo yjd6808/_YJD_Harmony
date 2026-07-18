@@ -58,8 +58,8 @@
         <Style.Triggers>
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
-                    <Condition Binding="{Binding GroupMaster.HasSelectedElement}" Value="True" />
-                    <Condition Binding="{Binding GroupMaster.SelectedElement.IsGroup}" Value="True" />
+                    <Condition Binding="{Binding RootGroup.HasSelectedElement}" Value="True" />
+                    <Condition Binding="{Binding RootGroup.SelectedElement.IsGroup}" Value="True" />
                 </MultiDataTrigger.Conditions>
                 <Setter Property="ContextMenu">
                     <Setter.Value>
@@ -82,8 +82,8 @@
             </MultiDataTrigger>
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
-                    <Condition Binding="{Binding GroupMaster.HasSelectedElement}" Value="True" />
-                    <Condition Binding="{Binding GroupMaster.SelectedElement.IsGroup}" Value="False" />
+                    <Condition Binding="{Binding RootGroup.HasSelectedElement}" Value="True" />
+                    <Condition Binding="{Binding RootGroup.SelectedElement.IsGroup}" Value="False" />
                 </MultiDataTrigger.Conditions>
                 <Setter Property="ContextMenu">
                     <Setter.Value>
@@ -94,7 +94,7 @@
                     </Setter.Value>
                 </Setter>
             </MultiDataTrigger>
-            <DataTrigger Binding="{Binding GroupMaster.HasSelectedElement}" Value="False">
+            <DataTrigger Binding="{Binding RootGroup.HasSelectedElement}" Value="False">
                 <Setter Property="ContextMenu">
                     <Setter.Value>
                         <ContextMenu>
@@ -114,7 +114,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding GroupMaster.IsMultiSelected}" Value="True">
+            <DataTrigger Binding="{Binding RootGroup.IsMultiSelected}" Value="True">
                 <Setter Property="ContextMenu">
                     <Setter.Value>
                         <ContextMenu>

@@ -131,7 +131,7 @@ namespace SGToolsUI.Customize.Control
 
                 isHideStatic_ = value;
 
-                ViewModel.GroupMaster.PickedElements.ForEach(element =>
+                ViewModel.RootGroup.PickedElements.ForEach(element =>
                 {
                     if (element is SGUIStatic staticElement)
                         staticElement.IsVisible = !value;
@@ -140,7 +140,7 @@ namespace SGToolsUI.Customize.Control
         }
 
         // 헬퍼 프로퍼티.
-        public ObservableCollection<SGUIElement> PickedElements => ViewModel.GroupMaster.PickedElements;
+        public ObservableCollection<SGUIElement> PickedElements => ViewModel.RootGroup.PickedElements;
 
         public MainViewModel ViewModel { get; private set; } = null!;
         public CanvasRect Viewport => viewPort_;
@@ -212,7 +212,7 @@ namespace SGToolsUI.Customize.Control
             if (DesignerProperties.GetIsInDesignMode(this))
                 return;
 
-            anchor_.Target = ViewModel.GroupMaster;
+            anchor_.Target = ViewModel.RootGroup;
         }
 
         //////////////////////////////////////////////////////////////////////////////////
@@ -269,42 +269,42 @@ namespace SGToolsUI.Customize.Control
                     IsHideStatic = !IsHideStatic;
                 else if (ViewModel.KeyState.IsPressed(SGKey.X))
                 {
-                    ViewModel.GroupMaster.DeselectAll();
+                    ViewModel.RootGroup.DeselectAll();
                     ViewModel.IsEventMode = !ViewModel.IsEventMode;
 
                     if (ViewModel.IsEventMode == false)
-                        ViewModel.GroupMaster.PickedElementsDisabled = false;
+                        ViewModel.RootGroup.PickedElementsDisabled = false;
                 }
                 else if (ViewModel.KeyState.IsPressed(SGKey.C) && ViewModel.IsEventMode)
                 {
-                    ViewModel.GroupMaster.PickedElementsDisabled = !ViewModel.GroupMaster.PickedElementsDisabled;
+                    ViewModel.RootGroup.PickedElementsDisabled = !ViewModel.RootGroup.PickedElementsDisabled;
                 }
                 else if (_key == SGKey.Delete)
                 {
-                    if (ViewModel.GroupMaster.HasSelectedElement && MessageBoxEx.ShowTopMost("정말로 삭제하시겠습니까?", "질문임", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    if (ViewModel.RootGroup.HasSelectedElement && MessageBoxEx.ShowTopMost("정말로 삭제하시겠습니까?", "질문임", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                         ViewModel.Commander.DeleteUIElement.Execute(null);
                 }
                 else if (_key == SGKey.Left)
                 {
-                    ViewModel.GroupMaster
+                    ViewModel.RootGroup
                         .PickedSelectedElements
                         .ForEach(ps => ps.VisualPosition = IntPoint.Add(ps.VisualPosition, new IntPoint(Constant.CanvasElementWithKeyboardDeltaX * -1, 0)));
                 }
                 else if (_key == SGKey.Right)
                 {
-                    ViewModel.GroupMaster
+                    ViewModel.RootGroup
                         .PickedSelectedElements
                         .ForEach(ps => ps.VisualPosition = IntPoint.Add(ps.VisualPosition, new IntPoint(Constant.CanvasElementWithKeyboardDeltaX, 0)));
                 }
                 else if (_key == SGKey.Up)
                 {
-                    ViewModel.GroupMaster
+                    ViewModel.RootGroup
                         .PickedSelectedElements
                         .ForEach(ps => ps.VisualPosition = IntPoint.Add(ps.VisualPosition, new IntPoint(0, Constant.CanvasElementWithKeyboardDeltaY * -1)));
                 }
                 else if (_key == SGKey.Down)
                 {
-                    ViewModel.GroupMaster
+                    ViewModel.RootGroup
                         .PickedSelectedElements
                         .ForEach(ps => ps.VisualPosition = IntPoint.Add(ps.VisualPosition, new IntPoint(0, Constant.CanvasElementWithKeyboardDeltaY)));
                 }
@@ -472,7 +472,7 @@ namespace SGToolsUI.Customize.Control
                 return;
 
             if (_group == null)
-                anchor_.Target = ViewModel.GroupMaster;
+                anchor_.Target = ViewModel.RootGroup;
             else
                 anchor_.Target = _group;
         }

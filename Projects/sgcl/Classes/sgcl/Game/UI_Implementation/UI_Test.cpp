@@ -1,22 +1,13 @@
-﻿/*
- * 작성자: 윤정도
- * 생성일: 4/27/2023 10:51:41 PM
- * =====================
- *
- */
-
-#include "GameCoreHeader.h"
+﻿#include "GameCoreHeader.h"
 #include "Game/UI_Implementation/UI_Test.h"
 
 #include "sgcl/Scene/Scene_World.h"
-#include "sgcl/Define/Define_UI.h"
 #include "sgcl/Game/Contents/UIManager.h"
 #include "sgcl/Game/Contents/FontManager.h"
 
 USING_NS_CC;
 USING_NS_JC;
 
-//////////////////////////////////////////////////////////////////////////////////////////
 UI_Test::UI_Test(UIGroupInfo* _pGroupInfo)
 : UIRootGroup(_pGroupInfo)
 , pGroup01_(nullptr)
@@ -31,57 +22,20 @@ UI_Test::UI_Test(UIGroupInfo* _pGroupInfo)
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-void UI_Test::OnInit()
+void UI_Test::OnInit(const CDataMap<>& _param)
 {
+	UNUSED(_param);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_Test::OnLoaded()
 {
-	// #define UI_TEST_TOGGLEBUTTON_T1	
-	// #define UI_TEST_SPRITE_T2	
-	// #define UI_TEST_CHECKBOX_T3	
-	// #define UI_TEST_SCROLLBAR_T4	
-	// #define UI_TEST_EDITBOX_T5	
-	// #define UI_TEST_LABEL_T6	
-	// #define UI_TEST_LABEL_FONT_TEST	
-	// #define UI_TEST_LABEL_POPUP_TEST	
-	// #define UI_TEST_LABEL_DRAG_TEST	
-	// #define UI_TEST_LABEL_SCALE_TEST	
-	// #define UI_TEST_LABEL_LINE_BREAK	
-	// #define UI_TEST_GROUP_O1	
-	// #define UI_TEST_O1_PROGRESSBAR_T1	
-	// #define UI_TEST_O1_PROGRESSBAR_T2	
-	// #define UI_TEST_O1_PROGRESSBAR_T3	
-	// #define UI_TEST_O1_PROGRESSBAR_T4	
-	// #define UI_TEST_GROUP_O2	
-	// #define UI_TEST_O2_TOGGLEBUTTON_T1	
-	// #define UI_TEST_O2_PROGRESSBAR_TOPBOTTOM	
-	// #define UI_TEST_O2_SCROLLBAR_T3	
-	// #define UI_TEST_O2_STATIC_T4	
-	// #define UI_TEST_O2_CHECKBOX_T5	
-	// #define UI_TEST_O2_LABEL_T6	
-	// #define UI_TEST_O2_BUTTON_T7	
-	// #define UI_TEST_O2_EDITBOX_T8	
-	// #define UI_TEST_O2_GROUP_O21	
-	// #define UI_TEST_O2_O21_TOGGLEBUTTON_T1	
-	// #define UI_TEST_O2_O21_PROGRESSBAR_TOPBOTTOM	
-	// #define UI_TEST_O2_O21_SCROLLBAR_T3	
-	// #define UI_TEST_O2_O21_STATIC_T4	
-	// #define UI_TEST_O2_O21_CHECKBOX_T5	
-	// #define UI_TEST_O2_O21_LABEL_T6	
-	// #define UI_TEST_O2_O21_BUTTON_T7	
-	// #define UI_TEST_O2_O21_EDITBOX_T8	
-
-	pGroup01_ = g_cUIMgr.GetGroup(UI_TEST_GROUP_O1);
-	pGroup02_ = g_cUIMgr.GetGroup(UI_TEST_GROUP_O2);
+	pGroup01_ = FindElementByName<UIGroup>("groupO1");
+	pGroup02_ = FindElementByName<UIGroup>("groupO2");
 
 	groupO1DefaultSize_ = pGroup01_->getContentSize();
 	groupO2DefaultSize_ = pGroup02_->getContentSize();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_Test::OnUpdate(float _dt)
 {
 	if (scaleState_ == eIncrease)
@@ -106,23 +60,22 @@ void UI_Test::OnUpdate(float _dt)
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_Test::OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _state)
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_Test::OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent)
 {
 	CC_UNUSED_PARAM(_pMouseEvent);
+	const char* name = _pElement->GetName();
 
-	if (_pElement->GetCode() == UI_TEST_LABEL_POPUP_TEST)
+	if (strcmp(name, "labelPopupTest") == 0)
 	{
 		sg::Contents.PopupManager->ShowOk(
 			"안녕하세요\n안녕하세요2\n안녕하세요3\n안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요"
 		);
 	}
-	else if (_pElement->GetCode() == UI_TEST_LABEL_SCALE_TEST)
+	else if (strcmp(name, "labelScaleTest") == 0)
 	{
 		if (scaleState_ == eDecrease)
 		{
@@ -135,7 +88,7 @@ void UI_Test::OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent
 			scaleState_ = eDecrease;
 		}
 	}
-	else if (_pElement->GetCode() == UI_TEST_LABEL_FONT_TEST)
+	else if (strcmp(name, "labelFontTest") == 0)
 	{
 		testFont_ = !testFont_;
 
@@ -147,14 +100,6 @@ void UI_Test::OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent
 
 		if (!testFont_)
 			return;
-
-		// 1: DF.ttf
-		// 2: DM.ttf
-		// 3: DMB.ttf
-		// 4: DML.ttf
-		// 5: N2G.ttf
-		// 6: N2GB.ttf
-		// 7: N2GM.ttf
 
 		float height = 0.0f;
 		const jc::String& fontName = g_cFontMgr.GetFontName(fontCode_);
@@ -196,16 +141,14 @@ void UI_Test::OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent
 			fontCode_ = 1;
 		}
 	}
-	else if (_pElement->GetCode() == UI_TEST_LABEL_DRAG_TEST)
+	else if (strcmp(name, "labelDragTest") == 0)
 	{
 		ForEachRecursiveContainedSelf([](UIElement* _pInnerElement)
 		{
 			_pInnerElement->SetDraggable(!_pInnerElement->IsDraggable());
 		});
-
-		g_cUIMgr.GetToggleButton(UI_TEST_TOGGLEBUTTON_T1)->SetDragLinkElement(this);
 	}
-	else if (_pElement->GetCode() == UI_TEST_LABEL_RESET_POSITION)
+	else if (strcmp(name, "labelResetPosition") == 0)
 	{
 		ResetChildrenPosition();
 	}

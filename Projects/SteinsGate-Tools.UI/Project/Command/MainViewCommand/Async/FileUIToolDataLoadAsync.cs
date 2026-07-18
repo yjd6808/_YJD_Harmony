@@ -32,19 +32,23 @@ namespace SGToolsUI.Command.MainViewCommand.Async
             if (saveType == LoadType.Load)
             {
                 string loadPath = Path.Combine(Environment.CurrentDirectory, Constant.UIToolDataFileName);
-                ViewModel.GroupMaster = await ViewModel.Loader.LoadAsync(loadPath);
+                var loader = new SGUILoader(ViewModel);
+                ViewModel.RootGroup = await loader.LoadAsync(loadPath);
             }
             else if (saveType == LoadType.LoadAs)
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
                 openFileDialog.Title = "툴데이터 열기";
-                openFileDialog.Filter = "JSON 파일 (*.json)|*.json";
+                openFileDialog.Filter = "XML 파일 (*.xml)|*.xml";
                 openFileDialog.InitialDirectory = Environment.CurrentDirectory;
-                openFileDialog.DefaultExt = Path.GetExtension(Constant.UIToolDataFileName);
-                openFileDialog.FileName = Path.GetFileNameWithoutExtension(Constant.UIToolDataFileName);
+                openFileDialog.DefaultExt = ".xml";
+                openFileDialog.FileName = "data";
 
                 if (openFileDialog.ShowDialog() == true)
-                    ViewModel.GroupMaster = await ViewModel.Loader.LoadAsync(openFileDialog.FileName);
+                {
+                    var loader = new SGUILoader(ViewModel);
+                    ViewModel.RootGroup = await loader.LoadAsync(openFileDialog.FileName);
+                }
             }
         }
     }

@@ -48,7 +48,7 @@ namespace SGToolsUI.Command.MainViewCommand
             }
 
             if (_selectedGroup == null)
-                _selectedGroup = ViewModel.GroupMaster;
+                _selectedGroup = ViewModel.RootGroup;
 
             _selectedGroup.Children.Add(_element);
         }
@@ -63,7 +63,7 @@ namespace SGToolsUI.Command.MainViewCommand
             }
 
             if (_selectedGroup == null)
-                _selectedGroup = ViewModel.GroupMaster;
+                _selectedGroup = ViewModel.RootGroup;
 
             foreach (var element in _elementList)
                 _selectedGroup.Children.Add(element);

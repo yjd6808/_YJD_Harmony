@@ -6,9 +6,9 @@
 
 using System;
 using System.ComponentModel;
+using System.Xml.Linq;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
@@ -180,32 +180,24 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)] public override bool Manipulatable => false;
 
         //////////////////////////////////////////////////////////////////////////////////
-        public override object Clone()
-        {
-            SGUICheckBox checkBox = new SGUICheckBox();
-            checkBox.CopyFrom(this);
-            checkBox.checked_ = checked_;
-            Array.Copy(sprites_, checkBox.sprites_, sprites_.Length);
-            return checkBox;
-        }
+        public override string GetElementTagName() => "CheckBox";
 
         //////////////////////////////////////////////////////////////////////////////////
-        public override JObject ToJObject()
+        public override XElement ToXElement()
         {
-            JObject root = base.ToJObject();
+            XElement root = base.ToXElement();
 
-            // 인덱스를 뛰어쓰기로 구분해서 돌려줌
             GetSgaImgFileName(true, out string bgSga, out string bgImg);
             GetSgaImgFileName(false, out string crossSga, out string crossImg);
 
             if (checked_)
-                root[JsonCheck] = true;
+                root.SetAttributeValue("check", true);
 
-            root[JsonBackgroundSga] = bgSga;
-            root[JsonBackgroundImg] = bgImg;
-            root[JsonCrossSga] = crossSga;
-            root[JsonCrossImg] = crossImg;
-            root[JsonSpriteKey] = $"{sprites_[0].SpriteIndex} {sprites_[1].SpriteIndex} {sprites_[2].SpriteIndex} {sprites_[3].SpriteIndex}";
+            root.SetAttributeValue("bg_sga", bgSga);
+            root.SetAttributeValue("bg_img", bgImg);
+            root.SetAttributeValue("cross_sga", crossSga);
+            root.SetAttributeValue("cross_img", crossImg);
+            root.SetAttributeValue("sprite", $"{sprites_[0].SpriteIndex} {sprites_[1].SpriteIndex} {sprites_[2].SpriteIndex} {sprites_[3].SpriteIndex}");
             return root;
         }
 
@@ -244,20 +236,24 @@ namespace SGToolsUI.Model.Main
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public override void ParseJObject(JObject _root)
+        public override void ParseXElement(XElement _root)
         {
-            base.ParseJObject(_root);
+            base.ParseXElement(_root);
 
-            _root.TryGetValueDefault(JsonCheck, out checked_, false);
+            XAttribute checkAttr = _root.Attribute("check");
+            if (checkAttr != null)
+                checked_ = (bool)checkAttr;
 
-            string bgSga = (string)_root[JsonBackgroundSga]!;
-            string bgImg = (string)_root[JsonBackgroundImg]!;
+            string bgSga = (string)_root.Attribute("bg_sga") ?? string.Empty;
+            string bgImg = (string)_root.Attribute("bg_img") ?? string.Empty;
 
-            string crossSga = (string)_root[JsonCrossSga]!;
-            string crossImg = (string)_root[JsonCrossImg]!;
+            string crossSga = (string)_root.Attribute("cross_sga") ?? string.Empty;
+            string crossImg = (string)_root.Attribute("cross_img") ?? string.Empty;
 
             int[] sprites = new int[4];
-            StringEx.ParseIntNumberN((string)_root[JsonSpriteKey]!, sprites);
+            string spriteStr = (string)_root.Attribute("sprite") ?? string.Empty;
+            if (spriteStr.Length > 0)
+                StringEx.ParseIntNumberN(spriteStr, sprites);
 
             if (bgSga != string.Empty)
             {
@@ -300,6 +296,16 @@ namespace SGToolsUI.Model.Main
                     sprites_[IndexCrossDisabled] = new SGUISpriteInfo(sga, img, sprite!);
                 }
             }
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override object Clone()
+        {
+            SGUICheckBox checkBox = new SGUICheckBox();
+            checkBox.CopyFrom(this);
+            checkBox.checked_ = checked_;
+            Array.Copy(sprites_, checkBox.sprites_, sprites_.Length);
+            return checkBox;
         }
 
         //////////////////////////////////////////////////////////////////////////////////

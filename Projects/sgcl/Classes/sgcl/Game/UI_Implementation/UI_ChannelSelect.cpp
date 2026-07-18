@@ -1,16 +1,8 @@
-﻿/*
- * 작성자: 윤정도
- * 생성일: 8/19/2023 1:07:34 PM
- * =====================
- */
-
-
-#include "Game/UI_Implementation/UI_ChannelSelect.h"
+﻿#include "Game/UI_Implementation/UI_ChannelSelect.h"
 
 #include "sg/Util/DescLoaderMgr.h"
 #include "sg/Struct/SteinsGate_Channel.h"
 
-#include "sgcl/Define/Define_UI.h"
 #include "sgcl/Define/Define_Popup.h"
 #include "sgcl/Net/Send/S_LOBBY.h"
 #include "sgcl/Game/Contents/Contents.h"
@@ -30,7 +22,6 @@ USING_NS_JC;
 #define SG_SERVER_BUTTON_SELECTION_SPRITE_MAX_OPACITY	1.0f
 #define SG_BACKGROUND_GEAR_SPEED						2
 
-//////////////////////////////////////////////////////////////////////////////////////////
 UI_ChannelSelect::UI_ChannelSelect(UIGroupInfo* _pGroupInfo)
 : UIRootGroup(_pGroupInfo)
 , pSpriteBackgroundGear_(nullptr)
@@ -52,7 +43,6 @@ UI_ChannelSelect::UI_ChannelSelect(UIGroupInfo* _pGroupInfo)
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 UI_ChannelSelect::~UI_ChannelSelect()
 {
 	for (int i = 0; i < SG_UI_CHANNELSELECT_MAX_CHANNEL_COUNT; ++i)
@@ -66,10 +56,6 @@ UI_ChannelSelect::~UI_ChannelSelect()
 	}
 }
 
-
-// ========================================================
-// 내부 구조체: ServerButton 관련
-// ========================================================
 UI_ChannelSelect::ServerButton::ServerButton(GameServerType_t _type)
 : type_(_type)
 , pGroup_(nullptr)
@@ -81,26 +67,15 @@ UI_ChannelSelect::ServerButton::ServerButton(GameServerType_t _type)
 , pSpriteDisabledText_(nullptr)
 , state_(sDisabled)
 {
-	InitSprites(_type);
 	SetState(sNormal);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::ServerButton::InitSprites(GameServerType_t _type)
 {
-	pGroup_ = g_cUIMgr.GetGroup(UI_CHANNEL_SERVER_BUTTON_LIST_GROUP_LUKE + 1000 * _type);
-	pSpriteServerCharacter_ = g_cUIMgr.GetSprite(UI_CHANNEL_SERVER_CHARACTER_LIST_SPRITE_LUKE + _type);
-	pSpriteServerCharacter_->setVisible(false);
-	pSpriteSelectedBackground_ = pGroup_->GetAtTemplated<UISprite>(0);
-	pSpriteSelectedBackground_->setOpacity(SG_SERVER_BUTTON_SELECTION_SPRITE_MIN_OPACITY);
-	pSpriteSelectedText_ = pGroup_->GetAtTemplated<UISprite>(1);
-	pSpriteSelectedBorder_ = pGroup_->GetAtTemplated<UISprite>(2);
-	pSpriteNormalText_ = pGroup_->GetAtTemplated<UISprite>(3);
-	pSpriteNormalBorder_ = pGroup_->GetAtTemplated<UISprite>(4);
-	pSpriteDisabledText_ = pGroup_->GetAtTemplated<UISprite>(5);
+	// In new architecture, sprites are found by name within the parent
+	// _type is kept for compatibility; group/sprite references are set externally
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::ServerButton::SetState(State _state)
 {
 	switch (_state)
@@ -114,7 +89,6 @@ void UI_ChannelSelect::ServerButton::SetState(State _state)
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::ServerButton::Select()
 {
 	state_ = sSelected;
@@ -128,7 +102,6 @@ void UI_ChannelSelect::ServerButton::Select()
 	pSpriteServerCharacter_->setVisible(true);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::ServerButton::Normal()
 {
 	state_ = sNormal;
@@ -142,7 +115,6 @@ void UI_ChannelSelect::ServerButton::Normal()
 	pSpriteServerCharacter_->setVisible(false);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::ServerButton::Disabled()
 {
 	state_ = sDisabled;
@@ -156,7 +128,6 @@ void UI_ChannelSelect::ServerButton::Disabled()
 	pSpriteServerCharacter_->setVisible(false);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 bool UI_ChannelSelect::ServerButton::ContainsPoint(const cc::vec2& _pos)
 {
 	if (!pSpriteNormalText_->isVisible())
@@ -166,10 +137,6 @@ bool UI_ChannelSelect::ServerButton::ContainsPoint(const cc::vec2& _pos)
 	return box.containsPoint(_pos);
 }
 
-
-// ========================================================
-// 내부 구조체: ChannelButton 관련
-// ========================================================
 UI_ChannelSelect::ChannelButton::ChannelButton(int _index)
 : index_(_index)
 , pToggleBtnEnteranceBackground_{}
@@ -180,32 +147,14 @@ UI_ChannelSelect::ChannelButton::ChannelButton(int _index)
 , state_(sInvisible)
 , pInfo_()
 {
-	InitSprites();
 	SetInvisible();
 	OnMouseLeave();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::ChannelButton::InitSprites()
 {
-	// 6 = SLOT_1_TYPE_0 ~ SLOT_2_TYPE_0 사이의 엘리먼트 갯수가 6개이므로
-	pToggleBtnEnteranceBackground_[0] = g_cUIMgr.GetToggleButton(
-		UI_CHANNEL_CHANNEL_LIST_TOGGLEBUTTON_SLOT_1_TYPE_0 + 6 * index_);
-	pToggleBtnEnteranceBackground_[0]->SetInternalDetailEventEnabled(false);
-	pToggleBtnEnteranceBackground_[1] = g_cUIMgr.GetToggleButton(
-		UI_CHANNEL_CHANNEL_LIST_TOGGLEBUTTON_SLOT_1_TYPE_1 + 6 * index_);
-	pToggleBtnEnteranceBackground_[1]->SetInternalDetailEventEnabled(false);
-	pToggleBtnEnteranceBackground_[2] = g_cUIMgr.GetToggleButton(
-		UI_CHANNEL_CHANNEL_LIST_TOGGLEBUTTON_SLOT_1_TYPE_2 + 6 * index_);
-	pToggleBtnEnteranceBackground_[2]->SetInternalDetailEventEnabled(false);
-
-	pSpriteMouseOverBorder_ = g_cUIMgr.GetSprite(UI_CHANNEL_CHANNEL_LIST_SPRITE_SLOT_1_OVER + 6 * index_);
-	pLabelName_ = g_cUIMgr.GetLabel(UI_CHANNEL_CHANNEL_LIST_LABEL_SLOT_1_NAME + 6 * index_);
-	pLabelDensity_ = g_cUIMgr.GetLabel(UI_CHANNEL_CHANNEL_LIST_LABEL_SLOT_1_DENSITY + 6 * index_);
-	pLabelDensity_->source()->enableOutline(Color4B::BLACK, 3);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::ChannelButton::SetState(State _state)
 {
 	switch (_state)
@@ -219,7 +168,6 @@ void UI_ChannelSelect::ChannelButton::SetState(State _state)
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::ChannelButton::SetNormal()
 {
 	const EnteranceType_t entranceType = pInfo_ ? pInfo_->enteranceType_ : EnteranceType::Normal;
@@ -295,7 +243,7 @@ void UI_ChannelSelect::ChannelButton::InitMonsterSprites(UI_ChannelSelect* _pRoo
 		_LogWarn_("ChannelButton::initMonsterSprites");
 	}
 
-	UIGroup* pParent = g_cUIMgr.GetGroup(UI_CHANNEL_GROUP_CHANNEL_LIST);
+	UIGroup* pParent = _pRootGroup->FindElementByName<UIGroup>("groupChannelList");
 
 	int iSelectedSprite = pInfo_ ? pInfo_->selectedSpriteIndex_ : InvalidValue_v;
 	int iNormalSprite = pInfo_ ? pInfo_->normalSpriteIndex_ : InvalidValue_v;
@@ -334,18 +282,16 @@ void UI_ChannelSelect::ChannelButton::InitMonsterSprites(UI_ChannelSelect* _pRoo
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::ChannelButton::SetChannelInfo(const LobbyChannelInfo& _channelInfo, char _sequence)
 {
 	pInfo_ = g_cDescMgr.GetChannelInfo(_channelInfo.type_);
-	const jc::String& szFmtName = pLabelName_->getInfo()->text_; // szFmtName = "ch%02d.%s %c"
+	const jc::String& szFmtName = pLabelName_->getInfo()->text_;
 	pLabelName_->setText(StringUtils::format(szFmtName.Source(), _channelInfo.number_, pInfo_->name_.Source(), _sequence));
 
 	pLabelDensity_->setText(ChannelDensity::Name[_channelInfo.desity_]);
 	pLabelDensity_->setColor(ChannelDensity::Color[_channelInfo.desity_]);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 bool UI_ChannelSelect::ChannelButton::ContainsPoint(const cc::vec2& _pos)
 {
 	for (int i = 0; i < EnteranceType::Max; ++i)
@@ -359,9 +305,10 @@ bool UI_ChannelSelect::ChannelButton::ContainsPoint(const cc::vec2& _pos)
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-void UI_ChannelSelect::OnInit()
+void UI_ChannelSelect::OnInit(const CDataMap<>& _param)
 {
+	UNUSED(_param);
+
 	monsterSpriteSgaIndex_ = g_cImagePackMgr.GetPackIndexDefault(SG_MONSTER_SPRITE_SGA);
 	monsterSpriteImgIndex_ = g_cImagePackMgr.GetImgIndexUnsafe(
 		monsterSpriteSgaIndex_, SG_MONSTER_SPRITE_IMG);
@@ -376,27 +323,72 @@ void UI_ChannelSelect::OnInit()
 		_LogWarn_("채널 몬스터 ImngIndex 정보를 얻는데 실패했습니다.");
 	}
 
-	pSpriteBackgroundGear_ = g_cUIMgr.GetSprite(UI_CHANNEL_SPRITE_BACKGROUND_GEAR);
-	pBtnStart_ = g_cUIMgr.GetButton(UI_CHANNEL_BUTTON_START);
-	pBtnTerminate_ = g_cUIMgr.GetButton(UI_CHANNEL_BUTTON_TERMINATE);
-
-	pBtnRefresh_ = g_cUIMgr.GetButton(UI_CHANNEL_CHANNEL_LIST_BUTTON_REFRESH);
-	pToggleTeen_ = g_cUIMgr.GetToggleButton(UI_CHANNEL_CHANNEL_LIST_TOGGLEBUTTON_TEEN);
-	pToggleBtnAdult_ = g_cUIMgr.GetToggleButton(UI_CHANNEL_CHANNEL_LIST_TOGGLEBUTTON_ADULT);
-	pLabelPage_ = g_cUIMgr.GetLabel(UI_CHANNEL_CHANNEL_LIST_LABEL_PAGE);
+	pSpriteBackgroundGear_ = FindElementByName<UISprite>("spriteBackgroundGear");
+	pBtnStart_ = FindElementByName<UIButton>("btnStart");
+	pBtnTerminate_ = FindElementByName<UIButton>("btnTerminate");
+	pBtnRefresh_ = FindElementByName<UIButton>("btnRefresh");
+	pToggleTeen_ = FindElementByName<UIToggleButton>("toggleTeen");
+	pToggleBtnAdult_ = FindElementByName<UIToggleButton>("toggleAdult");
+	pLabelPage_ = FindElementByName<UILabel>("labelPage");
 
 	for (int i = 0; i < GameServerType::Max; ++i)
 	{
 		pServerButtons_[i] = dbg_new ServerButton{ (GameServerType_t)i };
+
+		ServerButton* pBtn = pServerButtons_[i];
+		jc::String groupName = jc::StringUtil::Format("groupServer_%d", i);
+		jc::String charName = jc::StringUtil::Format("spriteServerCharacter_%d", i);
+
+		pBtn->pGroup_ = FindElementByName<UIGroup>(groupName.Source());
+		pBtn->pSpriteServerCharacter_ = FindElementByName<UISprite>(charName.Source());
+		if (pBtn->pSpriteServerCharacter_)
+			pBtn->pSpriteServerCharacter_->setVisible(false);
+
+		if (pBtn->pGroup_)
+		{
+			pBtn->pSpriteSelectedBackground_ = pBtn->pGroup_->GetAtTemplated<UISprite>(0);
+			if (pBtn->pSpriteSelectedBackground_)
+				pBtn->pSpriteSelectedBackground_->setOpacity(SG_SERVER_BUTTON_SELECTION_SPRITE_MIN_OPACITY);
+			pBtn->pSpriteSelectedText_ = pBtn->pGroup_->GetAtTemplated<UISprite>(1);
+			pBtn->pSpriteSelectedBorder_ = pBtn->pGroup_->GetAtTemplated<UISprite>(2);
+			pBtn->pSpriteNormalText_ = pBtn->pGroup_->GetAtTemplated<UISprite>(3);
+			pBtn->pSpriteNormalBorder_ = pBtn->pGroup_->GetAtTemplated<UISprite>(4);
+			pBtn->pSpriteDisabledText_ = pBtn->pGroup_->GetAtTemplated<UISprite>(5);
+		}
 	}
+
+	UIGroup* pChannelListGroup = FindElementByName<UIGroup>("groupChannelList");
 
 	for (int i = 0; i < SG_UI_CHANNELSELECT_MAX_CHANNEL_COUNT; ++i)
 	{
 		pChannelButtons_[i] = dbg_new ChannelButton(i);
+		ChannelButton* pBtn = pChannelButtons_[i];
+
+		jc::String toggle0 = jc::StringUtil::Format("toggleSlot%dType0", i);
+		jc::String toggle1 = jc::StringUtil::Format("toggleSlot%dType1", i);
+		jc::String toggle2 = jc::StringUtil::Format("toggleSlot%dType2", i);
+		jc::String overBorder = jc::StringUtil::Format("spriteSlot%dOver", i);
+		jc::String labelName = jc::StringUtil::Format("labelSlot%dName", i);
+		jc::String labelDensity = jc::StringUtil::Format("labelSlot%dDensity", i);
+
+		pBtn->pToggleBtnEnteranceBackground_[0] = FindElementByName<UIToggleButton>(toggle0.Source());
+		if (pBtn->pToggleBtnEnteranceBackground_[0])
+			pBtn->pToggleBtnEnteranceBackground_[0]->SetInternalDetailEventEnabled(false);
+		pBtn->pToggleBtnEnteranceBackground_[1] = FindElementByName<UIToggleButton>(toggle1.Source());
+		if (pBtn->pToggleBtnEnteranceBackground_[1])
+			pBtn->pToggleBtnEnteranceBackground_[1]->SetInternalDetailEventEnabled(false);
+		pBtn->pToggleBtnEnteranceBackground_[2] = FindElementByName<UIToggleButton>(toggle2.Source());
+		if (pBtn->pToggleBtnEnteranceBackground_[2])
+			pBtn->pToggleBtnEnteranceBackground_[2]->SetInternalDetailEventEnabled(false);
+
+		pBtn->pSpriteMouseOverBorder_ = FindElementByName<UISprite>(overBorder.Source());
+		pBtn->pLabelName_ = FindElementByName<UILabel>(labelName.Source());
+		pBtn->pLabelDensity_ = FindElementByName<UILabel>(labelDensity.Source());
+		if (pBtn->pLabelDensity_)
+			pBtn->pLabelDensity_->source()->enableOutline(Color4B::BLACK, 3);
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::OnLoaded()
 {
 	SelectChannelTab(ChannelTab::Teen);
@@ -435,7 +427,6 @@ void UI_ChannelSelect::OnLoaded()
 	pChannelButtons_[3]->SetState(ChannelButton::sNormal);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::OnUnloaded()
 {
 	for (int i = 0; i < SG_UI_CHANNELSELECT_MAX_CHANNEL_COUNT; ++i)
@@ -446,14 +437,12 @@ void UI_ChannelSelect::OnUnloaded()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::OnUpdate(float _dt)
 {
 	UpdateServerSelectionSpriteOpacity(_dt);
 	UpdateBackgroundGearRotation(_dt);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::OnMouseDown(cc::EventMouse* _pMouseEvent)
 {
 	const cc::vec2 cursorPos = _pMouseEvent->getCursorPos();
@@ -479,7 +468,6 @@ void UI_ChannelSelect::OnMouseDown(cc::EventMouse* _pMouseEvent)
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::OnMouseMove(cc::EventMouse* _pMouseEvent)
 {
 	const cc::vec2 cursorPos = _pMouseEvent->getCursorPos();
@@ -502,25 +490,22 @@ void UI_ChannelSelect::OnMouseMove(cc::EventMouse* _pMouseEvent)
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _state)
 {
 	UNUSED(_state);
 
-	switch (_pToggleBtn->GetCode())
+	const char* name = _pToggleBtn->GetName();
+
+	if (strcmp(name, "toggleTeen") == 0)
 	{
-	case UI_CHANNEL_CHANNEL_LIST_TOGGLEBUTTON_TEEN:
 		SelectChannelTab(ChannelTab::Teen);
-		break;
-	case UI_CHANNEL_CHANNEL_LIST_TOGGLEBUTTON_ADULT:
+	}
+	else if (strcmp(name, "toggleAdult") == 0)
+	{
 		SelectChannelTab(ChannelTab::Adult);
-		break;
-	default:
-		break;
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::UpdateServerSelectionSpriteOpacity(float _dt)
 {
 	if (selectedServer_ == GameServerType::Max)
@@ -547,14 +532,12 @@ void UI_ChannelSelect::UpdateServerSelectionSpriteOpacity(float _dt)
 	pServerButtons_[selectedServer_]->pSpriteSelectedBackground_->setOpacityF(serverButtonSelectionOpacity_);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::UpdateBackgroundGearRotation(float _dt)
 {
 	cc::Sprite* pGearSprite = pSpriteBackgroundGear_->Source();
 	pGearSprite->setRotation(pGearSprite->getRotation() + _dt * SG_BACKGROUND_GEAR_SPEED);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::SelectServer(GameServerType_t _serverType)
 {
 	if (selectedServer_ == _serverType)
@@ -574,7 +557,6 @@ void UI_ChannelSelect::SelectServer(GameServerType_t _serverType)
 	S_LOBBY::SEND_CLO_LoadChannelInfo(_serverType);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::SelectChannel(int _channelIndex)
 {
 	if (selectedChannelIndex_ == _channelIndex)
@@ -594,7 +576,6 @@ void UI_ChannelSelect::SelectChannel(int _channelIndex)
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::SelectChannelTab(ChannelTab _tab)
 {
 	channelTab_ = _tab;
@@ -611,7 +592,6 @@ void UI_ChannelSelect::SelectChannelTab(ChannelTab _tab)
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void UI_ChannelSelect::EnterChannel(GameServerType_t _serverType, int _channelIndex)
 {
 	UNUSED(_serverType);

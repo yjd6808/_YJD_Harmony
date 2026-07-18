@@ -1,14 +1,7 @@
-﻿/*
- * 작성자: 윤정도
- * 생성일: 2/15/2023 8:07:08 PM
- * =====================
- *
- */
-
-
-#pragma once
+﻿#pragma once
 
 #include "sgcl/Game/UI/UIRootGroup.h"
+#include "sgcl/Game/UI/UIRegister.h"
 
 class UI_Login : public UIRootGroup
 {
@@ -22,7 +15,7 @@ public:
 	};
 
 protected:
-	void OnInit() override;
+	void OnInit(const jc::CDataMap<>& _param) override;
 	void OnLoaded() override;
 	void OnUpdate(float _dt) override;
 	void OnMouseDownTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent) override;
@@ -51,3 +44,5 @@ private:
 
 	Tab tab_;
 };
+
+REGISTER_UI(Login, UI_Login)

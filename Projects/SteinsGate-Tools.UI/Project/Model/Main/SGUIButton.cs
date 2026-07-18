@@ -6,8 +6,8 @@
 
 using System.ComponentModel;
 using System.Linq;
+using System.Xml.Linq;
 using System.Windows.Media.Imaging;
-using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
@@ -172,6 +172,48 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)] public override bool Manipulatable => false;
 
         //////////////////////////////////////////////////////////////////////////////////
+        public override string GetElementTagName() => "Button";
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override XElement ToXElement()
+        {
+            XElement root = base.ToXElement();
+            SGUISpriteInfoExt.TryGetSgaImgFileName(in sprites_, out string sga, out string img);
+            root.SetAttributeValue("sga", sga);
+            root.SetAttributeValue("img", img);
+            root.SetAttributeValue("sprite", sprites_.ToFullString());
+            if (linearDodge_)
+                root.SetAttributeValue("linear_dodge", true);
+            return root;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override void ParseXElement(XElement _root)
+        {
+            base.ParseXElement(_root);
+
+            XAttribute linearDodgeAttr = _root.Attribute("linear_dodge");
+            if (linearDodgeAttr != null)
+                linearDodge_ = (bool)linearDodgeAttr;
+
+            string sgaName = (string)_root.Attribute("sga") ?? string.Empty;
+
+            if (sgaName.Length == 0)
+                return;
+
+            string imgName = (string)_root.Attribute("img")!;
+
+            SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
+            SgaPackage sga = img.Parent;
+
+            int[] sprites = new int[StateCount];
+            string spriteStr = (string)_root.Attribute("sprite") ?? string.Empty;
+            if (spriteStr.Length > 0)
+                StringEx.ParseIntNumberN(spriteStr, sprites);
+            SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in sprites_, linearDodge_);
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
         public override object Clone()
         {
             SGUIButton button = new SGUIButton();
@@ -181,40 +223,6 @@ namespace SGToolsUI.Model.Main
                 button.sprites_[i] = sprites_[i];
 
             return button;
-        }
-
-        //////////////////////////////////////////////////////////////////////////////////
-        public override JObject ToJObject()
-        {
-            JObject root = base.ToJObject();
-            // 인덱스를 뛰어쓰기로 구분해서 돌려줌
-            SGUISpriteInfoExt.TryGetSgaImgFileName(in sprites_, out string sga, out string img);
-            root[JsonSgaKey] = sga;
-            root[JsonImgKey] = img;
-            root[JsonSpriteKey] = sprites_.ToFullString();
-            root[JsonLinearDodgeKey] = linearDodge_;
-            return root;
-        }
-
-        //////////////////////////////////////////////////////////////////////////////////
-        public override void ParseJObject(JObject _root)
-        {
-            base.ParseJObject(_root);
-
-            _root.TryGetValueDefault(JsonLinearDodgeKey, out linearDodge_, false);
-            _root.TryGetValueDefault(JsonSgaKey, out string? sgaName, string.Empty);
-
-            if (sgaName == null || sgaName.Length == 0)
-                return;
-
-            string imgName = (string)_root[JsonImgKey]!;
-
-            SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
-            SgaPackage sga = img.Parent;
-
-            int[] sprites = new int[StateCount];
-            StringEx.ParseIntNumberN((string)_root[JsonSpriteKey]!, sprites);
-            SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in sprites_, linearDodge_);
         }
 
         // 기본적으로 엘리먼트의 이벤트는 "전파"되도록한다.

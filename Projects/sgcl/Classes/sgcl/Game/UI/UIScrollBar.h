@@ -64,7 +64,7 @@ public:
 
 	UIScrollBarInfo* GetInfo() const { return pInfo_; }
 	UIElementType_t GetElementType() override { return UIElementType::ScrollBar; }
-	jc::String ToString() override { return jc::StringUtil::Format("스크롤바(%d)", pInfo_->code_); }
+	jc::String ToString() override { return jc::StringUtil::Format("스크롤바(%s)", pInfo_->name_); }
 
 protected:
 	void OnMouseLeaveInternalDetail(cc::EventMouse* _pMouseEvent) override;

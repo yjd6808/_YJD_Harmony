@@ -7,7 +7,6 @@
 
 #include "Layer_UI.h"
 
-#include "sg/Util/DescLoaderMgr.h"
 #include "sgcl/Game/UI/UIStatic.h"
 #include "sgcl/Game/Contents/UIManager.h"
 #include "sgcl/Game/UI/UIRootGroup.h"
@@ -233,9 +232,11 @@ UIRootGroup* UILayer::FindGroup(int _groupCode)
 	{
 		UIRootGroup* pUiGroup = static_cast<UIRootGroup*>(_children.at(i));
 
-		if (pUiGroup->GetCode() == _groupCode)
+		if (pUiGroup && pUiGroup->GetName() && strcmp(pUiGroup->GetName(), "") != 0)
 		{
-			return pUiGroup;
+			// Find by tag stored with the group (legacy support)
+			if (pUiGroup->getTag() == _groupCode)
+				return pUiGroup;
 		}
 	}
 
@@ -253,23 +254,10 @@ void UILayer::ForEach(const jc::Action<UIRootGroup*>& _actionFn)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void UILayer::AddUIGroup(int _groupCode, int _zOrder)
+// AddUIGroup(int) is deprecated in the new architecture; use UIManager::Show() instead.
+void UILayer::AddUIGroup(int /*_groupCode*/, int _zOrder)
 {
-	UIRootGroup* pGroup = g_cUIMgr.GetRootGroup(_groupCode);
-
-	if (pGroup == nullptr)
-	{
-		_LogWarn_("%d 마스터 UI그룹을 찾지 못했습니다. %s파일을 확인해주세요.", ConfigFileType::FileName[ConfigFileType::UI]);
-		return;
-	}
-
-	if (!pGroup->Loaded())
-	{
-		pGroup->Load();
-	}
-
-	addChild(pGroup, _zOrder, pGroup->GetCode());
-	pGroup->OnAdded();
+	_LogWarn_("AddUIGroup(int) is deprecated. Use UIManager::Show() instead.");
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -320,7 +308,7 @@ void UILayer::RemoveUIGroup(UIRootGroup* _pGroup)
 
 	if (pChild == nullptr)
 	{
-		_LogWarn_("%d 그룹을 제거하는데 실패했습니다.", _pGroup->GetCode());
+		_LogWarn_("%s 그룹을 제거하는데 실패했습니다.", _pGroup->GetName());
 		return;
 	}
 

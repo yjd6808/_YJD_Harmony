@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using Newtonsoft.Json.Linq;
+using System.Xml.Linq;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
@@ -28,7 +28,6 @@ namespace SGToolsUI.Model.Main
 
         private ObservableCollection<SGUIElement> children_;
         private IntSize visualSize_;
-        private int code_;
         private int depth_; // 계층 구조상 깊이. 추가한 이유: 깊이 계산시 연산 낭비가 심함. 특히 모든 원소 깊이를 계산하는 경우
 
         //////////////////////////////////////////////////////////////////////////////////
@@ -133,18 +132,14 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)] public override bool IsGroup => true;
         public override SGUIElementType UIElementType => SGUIElementType.Group;
 
-        [Browsable(false)] public override int Code => code_;
         [Browsable(false)] public bool HasOnlyGroup => Where(element => !element.IsGroup).Any() == false;
         [Browsable(false)] public bool HasOnlyGroupRecursive => WhereRecursive(element => !element.IsGroup).Any() == false;
         [Browsable(false)] public override bool Manipulatable => true;
 
         //////////////////////////////////////////////////////////////////////////////////
-        public void SetCode(int _code) => code_ = _code;
-
-        //////////////////////////////////////////////////////////////////////////////////
         public void SetDepth(int _depth)
         {
-            Debug.Assert(depth_ < SGUIExporter.DepthStrings.Length, "뎁쓰가 너무 깊습니다.");
+            Debug.Assert(depth_ < 100, "뎁쓰가 너무 깊습니다.");
             depth_ = _depth;
         }
 
@@ -160,6 +155,129 @@ namespace SGToolsUI.Model.Main
             VisualName = $"그룹_{NameSeq++}";
         }
 
+        private Dictionary<string, string>? dataMap_;
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public Dictionary<string, string> DataMap
+        {
+            get
+            {
+                if (dataMap_ == null)
+                    dataMap_ = new Dictionary<string, string>();
+                return dataMap_;
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override string GetElementTagName() => "Group";
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override XElement ToXElement()
+        {
+            XElement root = base.ToXElement();
+            if (visualSize_.Width > 0 || visualSize_.Height > 0)
+            {
+                root.SetAttributeValue("width", visualSize_.Width);
+                root.SetAttributeValue("height", visualSize_.Height);
+            }
+            foreach (var child in Children)
+                root.Add(child.ToXElement());
+            if (dataMap_ != null && dataMap_.Count > 0)
+                root.Add(DataMapToXElement(dataMap_));
+            return root;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override void ParseXElement(XElement _root)
+        {
+            base.ParseXElement(_root);
+            XAttribute widthAttr = _root.Attribute("width");
+            if (widthAttr != null)
+                visualSize_.Width = (int)widthAttr;
+            XAttribute heightAttr = _root.Attribute("height");
+            if (heightAttr != null)
+                visualSize_.Height = (int)heightAttr;
+            foreach (var childElement in _root.Elements())
+            {
+                if (childElement.Name.LocalName == "data")
+                {
+                    ParseDataMap(childElement);
+                    continue;
+                }
+                SGUIElement child = Create(childElement);
+                child.Parent = this;
+                child.ViewModel = ViewModel;
+                child.ParseXElement(childElement);
+                Children.Add(child);
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public void AddChild(SGUIElement _newChild, PropertyReflect _updateProperty = PropertyReflect.Update)
+        {
+            Children.Add(_newChild);
+            _newChild.Parent = this;
+
+            bool isPicked = Picked;
+            if (isPicked)
+            {
+                _newChild.SetPick(true);
+                ViewModel.RootGroup.PickedElements.Add(_newChild);
+            }
+
+            if (_newChild.IsGroup)
+            {
+                SGUIGroup newGroup = _newChild.Cast<SGUIGroup>();
+                newGroup.SetDepth(Depth + 1);
+            }
+
+            if (_updateProperty == PropertyReflect.Update)
+            {
+                if (isPicked)
+                {
+                    ViewModel.RootGroup.OnPropertyChanged(SGUIRootGroup.PickedElementKey);
+                    ViewModel.RootGroup.OnPropertyChanged(SGUIRootGroup.HasPickedElementKey);
+                }
+
+                OnPropertyChanged(nameof(ChildCount));
+                OnPropertyChanged(nameof(ChildCountRecursive));
+            }
+        }
+
+        // 0, 1, 2, 3
+        // InsertChildren(children, 2)
+        // 0, 1, Children, 2, 3
+        // InsertChildren(children, 3)
+        // 0, 1, 2, Children, 3
+        // InsertChildren(children, 4)
+        // 0, 1, 2, 3, Children
+        //////////////////////////////////////////////////////////////////////////////////
+        public void InsertChildren(SGUIGroup _newChildren, int _index)
+        {
+            SGUIRootGroup rootGroup = ViewModel.RootGroup;
+
+            _newChildren.ForEach(newChild => newChild.Parent = this);
+            _newChildren.ForEachRecursive(newChild =>
+            {
+                if (newChild.IsGroup)
+                {
+                    SGUIGroup newGroup = newChild.Cast<SGUIGroup>();
+                    newGroup.SetDepth(newGroup.Parent.Depth + 1);
+                }
+            });
+
+            children_ = children_.InsertRangeNew(_index, _newChildren.Children);
+
+            bool isPicked = Picked;
+            if (isPicked)
+            {
+                _newChildren.ForEach(element => element.SetPick(true));
+                rootGroup.PickedElements.AddRange(_newChildren.Children);
+            }
+
+            OnPropertyChanged(nameof(Children));
+        }
+
         //////////////////////////////////////////////////////////////////////////////////
         public override object Clone()
         {
@@ -171,7 +289,7 @@ namespace SGToolsUI.Model.Main
             {
                 SGUIElement? cloned = children_[i].Clone() as SGUIElement;
                 if (cloned == null)
-                    throw new Exception("클론한 갹체가 null입니다.");
+                    throw new Exception("클론한 객체가 null입니다.");
                 group.children_.Add(cloned);
                 cloned.Parent = group;
             }
@@ -220,124 +338,47 @@ namespace SGToolsUI.Model.Main
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public void AddChild(SGUIElement _newChild, PropertyReflect _updateProperty = PropertyReflect.Update)
+        public static SGUIElement Create(XElement _element)
         {
-            Children.Add(_newChild);
-            _newChild.Parent = this;
-            ViewModel.GroupMaster.UpdateZOrder();
-
-            SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
-
-            bool isPicked = Picked;  // 현재 그룹이 픽된 경우 자식도 픽상태
-            if (isPicked)
+            string tagName = _element.Name.LocalName;
+            SGUIElementType type = tagName switch
             {
-                _newChild.SetPick(true);
-                groupMaster.PickedElements.Add(_newChild);
-            }
-
-            if (_newChild.IsGroup)
-            {
-                SGUIGroup newGroup = _newChild.Cast<SGUIGroup>();
-
-                groupMaster.AddGroup(newGroup);
-                newGroup.SetDepth(Depth + 1);
-            }
-            else
-            {
-                groupMaster.AddElement(_newChild);
-            }
-
-            if (_updateProperty == PropertyReflect.Update)
-            {
-                if (isPicked)
-                {
-                    groupMaster.OnPropertyChanged(SGUIGroupMaster.PickedElementKey);
-                    groupMaster.OnPropertyChanged(SGUIGroupMaster.HasPickedElementKey);
-                }
-
-                OnPropertyChanged(nameof(ChildCount));
-                OnPropertyChanged(nameof(ChildCountRecursive));
-            }
-        }
-
-        // 0, 1, 2, 3
-        // InsertChildren(children, 2)
-        // 0, 1, Children, 2, 3
-        // InsertChildren(children, 3)
-        // 0, 1, 2, Children, 3
-        // InsertChildren(children, 4)
-        // 0, 1, 2, 3, Children
-        //////////////////////////////////////////////////////////////////////////////////
-        public void InsertChildren(SGUIGroup _newChildren, int _index)
-        {
-            SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
-
-            // 부모 업데이트를 먼저 수행해줘야한다.
-            // 아래의 groupMaster.PickedElements.AddRange를 수행하면서 CollectionViewSource에서 Code를 기준으로 오름차순 정렬을 하는데
-            // 부모가 업데이트 되지 않은 상태에서는 Code가 -1로 고정되어버리기 떄문이다.
-
-            // 새로 추가된 자식들중 바로 다음 계층(깊이)의 자식들만 부모를 업데이트해줌 된다.
-            // 하지만 다음, 다음 계층의 경우 깊이와, 그룹이 존재하는 경우 업데이트 해줘야하므로
-            _newChildren.ForEach(newChild => newChild.Parent = this);
-            _newChildren.ForEachRecursive(newChild =>
-            {
-                if (!newChild.IsGroup)
-                {
-                    groupMaster.AddElement(newChild);
-                    return;
-                }
-
-                SGUIGroup newGroup = newChild.Cast<SGUIGroup>();
-                groupMaster.AddGroup(newGroup);
-                newGroup.SetDepth(newGroup.Parent.Depth + 1);
-            });
-
-            // 중간에 넣는 작업은 데이터를 계속 밀기땜에 그냥 새로 만들어서 교체해주자.
-            // PickedElements.AddRange이전에 수행을 무조건 해줘야한다.
-            // CollectionViewSource의 SortDescriptor로 Code를 설정해놨는데 Code는 Index프로퍼티를 사용하고
-            // Index 프로퍼티는 _children에 새로 추가된 children이 포함되어야지 올바르게 동작하기 떄문이다.
-            children_ = children_.InsertRangeNew(_index, _newChildren.Children);
-            ViewModel.GroupMaster.UpdateZOrder();
-
-            // 현재 그룹이 픽된 경우 추가되는 자식들도 픽해줘야함.
-            bool isPicked = Picked;
-            if (isPicked)
-            {
-                _newChildren.ForEach(element => element.SetPick(true));
-
-                // https://stackoverflow.com/questions/7284805/how-to-sort-observablecollection
-                // PickedElements와 트리뷰의 엘리먼트들간에 정렬순서가 일치해야한다.
-                // 이때 Depth순으로 오름차순된 상태에서 Depth가 동일하다면 코드순으로 정렬되어야한다.
-                // 여기서 이렇게 막 추가해주더라도 내가 MainView에서 CollectionViewSource로 정렬순서를 정해줬기때문에
-                // 내부적으로 알아서 정렬을 수행하게 된다.
-                groupMaster.PickedElements.AddRange(_newChildren.Children);
-            }
-
-            OnPropertyChanged(nameof(Children));
+                "Group" => SGUIElementType.Group,
+                "Button" => SGUIElementType.Button,
+                "Label" => SGUIElementType.Label,
+                "Sprite" => SGUIElementType.Sprite,
+                "EditBox" => SGUIElementType.EditBox,
+                "CheckBox" => SGUIElementType.CheckBox,
+                "ToggleButton" => SGUIElementType.ToggleButton,
+                "ScrollBar" => SGUIElementType.ScrollBar,
+                "ProgressBar" => SGUIElementType.ProgressBar,
+                "Static" => SGUIElementType.Static,
+                _ => throw new Exception($"알 수 없는 XML 태그: {tagName}")
+            };
+            return SGUIElement.Create(type);
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public override JObject ToJObject()
+        private static XElement DataMapToXElement(Dictionary<string, string> dataMap)
         {
-            JObject root = base.ToJObject();
-            root[JsonVisualSizeKey] = visualSize_.ToFullString();
-            JArray children = new JArray();
-
-            for (int i = 0; i < children_.Count; ++i)
+            XElement dataElement = new XElement("data");
+            foreach (var kvp in dataMap)
             {
-                SGUIElement e = children_[i];
-                children.Add($"{e.Code} {e.RelativePosition.ToFullString()}");
+                XElement entry = new XElement(kvp.Key);
+                entry.SetValue(kvp.Value);
+                dataElement.Add(entry);
             }
-
-            root[JsonChildrenKey] = children;
-            return root;
+            return dataElement;
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public override void ParseJObject(JObject _root)
+        private void ParseDataMap(XElement dataElement)
         {
-            base.ParseJObject(_root);
-            visualSize_ = SizeEx.ParseFullString((string)_root[JsonVisualSizeKey]!);
+            dataMap_ = new Dictionary<string, string>();
+            foreach (var child in dataElement.Elements())
+            {
+                dataMap_[child.Name.LocalName] = child.Value;
+            }
         }
 
         // 기본적으로 엘리먼트의 이벤트는 "전파"되도록한다.

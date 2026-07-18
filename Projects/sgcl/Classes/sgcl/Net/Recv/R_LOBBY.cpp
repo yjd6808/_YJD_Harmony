@@ -29,5 +29,4 @@ void R_LOBBY::RECV_LOC_JoinLobbyAck(UNUSED Session* _pSession, ICommand* _pComma
 	sg::Contents.PopupManager->ShowNone(
 		SG_LOCAL_RAW("LOBBY_LOADING_CHANNEL_INFO"), false, Const::Timeout::LoadingChannel);
 	g_cWorld.ReserveScene(SceneType::ChannelSelect);
-	g_cUIMgr.GetUI_ChannelSelect().SelectServer(pCmd->DefaultSelectedServer);
 }

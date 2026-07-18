@@ -17,9 +17,7 @@ namespace SGToolsUI.Model.Setting
     public class Setting : ICloneable
     {
         public const string SgaDirectoryKey = "SgaDirectory";
-        public const string OutputDefineHeaderFilePathKey = "OutputDefineHeaderFilePath";
-        public const string OutputDefineHeaderFileNameKey = "OutputDefineHeaderFileName";
-        public const string OutputJsonPathKey = "OutputJsonPath";
+        public const string OutputXmlLayoutBasePathKey = "OutputXmlLayoutBasePath";
         public const string AutoExpandWhenSelectedKey = "AutoExpandWhenSelected";
         public const string ShowLogViewWhenProgramLaunchedKey = "ShowLogViewWhenProgramLaunched";
         public const string LogViewPositionWhenProgramLaunchedXKey = "LogViewPositionWhenProgramLaunchedX";
@@ -29,14 +27,8 @@ namespace SGToolsUI.Model.Setting
         [DisplayName("Sga 패키지 리소스 경로")]
         public string SgaDirectory { get; set; } = "";
 
-        [DisplayName("헤더파일 출력경로")]
-        public string OutputDefineHeaderFilePath { get; set; } = "";
-
-        [DisplayName("헤더파일 명")]
-        public string OutputDefineHeaderFileName { get; set; } = "Define_UI.h";
-
-        [DisplayName("ui.json 출력 경로")]
-        public string OutputJsonPath { get; set; } = "";
+        [DisplayName("XML 레이아웃 출력 경로")]
+        public string OutputXmlLayoutBasePath { get; set; } = "";
 
         [DisplayName("아이템 선택시 트리뷰 자동확장 여부")]
         public bool AutoExpandWhenSelected { get; set; } = true;
@@ -56,8 +48,7 @@ namespace SGToolsUI.Model.Setting
             return new Setting()
             {
                 SgaDirectory = SgaDirectory,
-                OutputDefineHeaderFilePath = OutputDefineHeaderFilePath,
-                OutputJsonPath = OutputJsonPath,
+                OutputXmlLayoutBasePath = OutputXmlLayoutBasePath,
                 AutoExpandWhenSelected = AutoExpandWhenSelected,
                 ShowLogViewWhenProgramLaunched = ShowLogViewWhenProgramLaunched,
                 LogViewPositionWhenProgramLaunched = LogViewPositionWhenProgramLaunched,
@@ -78,14 +69,8 @@ namespace SGToolsUI.Model.Setting
             if (root.TryGetValue(SgaDirectoryKey, out token))
                 SgaDirectory = (string)token!;
 
-            if (root.TryGetValue(OutputDefineHeaderFilePathKey, out token))
-                OutputDefineHeaderFilePath = (string)token!;
-
-            if (root.TryGetValue(OutputDefineHeaderFileNameKey, out token))
-                OutputDefineHeaderFileName = (string)token!;
-
-            if (root.TryGetValue(OutputJsonPathKey, out token))
-                OutputJsonPath = (string)token!;
+            if (root.TryGetValue(OutputXmlLayoutBasePathKey, out token))
+                OutputXmlLayoutBasePath = (string)token!;
 
             if (root.TryGetValue(AutoExpandWhenSelectedKey, out token))
                 AutoExpandWhenSelected = (bool)token;
@@ -113,9 +98,7 @@ namespace SGToolsUI.Model.Setting
         {
             JObject root = new JObject();
             root[SgaDirectoryKey] = SgaDirectory;
-            root[OutputDefineHeaderFilePathKey] = OutputDefineHeaderFilePath;
-            root[OutputDefineHeaderFileNameKey] = OutputDefineHeaderFileName;
-            root[OutputJsonPathKey] = OutputJsonPath;
+            root[OutputXmlLayoutBasePathKey] = OutputXmlLayoutBasePath;
             root[AutoExpandWhenSelectedKey] = AutoExpandWhenSelected;
             root[ShowLogViewWhenProgramLaunchedKey] = ShowLogViewWhenProgramLaunched;
             root[LogViewPositionWhenProgramLaunchedXKey] = LogViewPositionWhenProgramLaunched.X;

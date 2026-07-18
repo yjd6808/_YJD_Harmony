@@ -226,7 +226,7 @@ namespace SGToolsUI.Customize.Control
             isShiftMove_ = ViewModel.KeyState.IsShiftPressed;
             dragMoveStartPosition_ = _pos;
 
-            ObservableCollection<SGUIElement> pickedElements = ViewModel.GroupMaster.PickedElements;
+            ObservableCollection<SGUIElement> pickedElements = ViewModel.RootGroup.PickedElements;
             IEnumerable<SGUIElement> pickedSelectedElements = pickedElements.Where(element => element.Selected);
 
             if (!alt && !ctrl && pickedElements.Count > 0 && pickedSelectedElements.LastOrDefault(element => element.ContainPoint(_pos)) != null)
@@ -235,7 +235,7 @@ namespace SGToolsUI.Customize.Control
                 ViewModel.View.TitlePanel.Draggable = false;
 
                 // 각 엘리먼트의 시작위치를 기록해놓는다.
-                movingElements_ = ViewModel.GroupMaster.PickedSelectedElements.Select(element => new MovingElement(element, element.VisualPosition)).ToList();
+                movingElements_ = ViewModel.RootGroup.PickedSelectedElements.Select(element => new MovingElement(element, element.VisualPosition)).ToList();
                 dragState_ = DragState.Wait;
             }
         }
@@ -316,7 +316,7 @@ namespace SGToolsUI.Customize.Control
             if (ViewModel.IsEventMode)
                 return;
 
-            ObservableCollection<SGUIElement> pickedElements = ViewModel.GroupMaster.PickedElements;
+            ObservableCollection<SGUIElement> pickedElements = ViewModel.RootGroup.PickedElements;
 
             // 알트키를 눌린 경우 겹친 위치의 원소들을 순차적으로 선택할 수 있도록한다.
             if (alt)
@@ -386,7 +386,7 @@ namespace SGToolsUI.Customize.Control
             if (ViewModel.IsEventMode == false)
                 return false;
 
-            _pickedGroup = ViewModel.GroupMaster.PickedGroup;
+            _pickedGroup = ViewModel.RootGroup.PickedGroup;
             if (_pickedGroup == null)
                 return false;
 
@@ -433,7 +433,7 @@ namespace SGToolsUI.Customize.Control
             if (ViewModel.IsEventMode)
                 return;
 
-            ObservableCollection<SGUIElement> pickedElements = ViewModel.GroupMaster.PickedElements;
+            ObservableCollection<SGUIElement> pickedElements = ViewModel.RootGroup.PickedElements;
             SGUIElement? lastSelectedElement = pickedElements.LastOrDefault(element => element.Selected && element.ContainPoint(_pos));
 
             if (lastSelectedElement == null)
@@ -462,7 +462,7 @@ namespace SGToolsUI.Customize.Control
             const double THICK_HALF = 2.0;
             const double THICK = 4.0;  // 그랩 손잡이 두께
 
-            foreach (var element in ViewModel.GroupMaster.PickedElements.Reversed())
+            foreach (var element in ViewModel.RootGroup.PickedElements.Reversed())
             {
                 if (!element.Selected) continue;
                 if (!element.Manipulatable) continue;
@@ -742,7 +742,7 @@ namespace SGToolsUI.Customize.Control
                 return;
 
             IntPoint pos = Mouse.GetPosition(this).Zoom(ViewModel.ZoomState);
-            ObservableCollection<SGUIElement> pickedElements = ViewModel.GroupMaster.PickedElements;
+            ObservableCollection<SGUIElement> pickedElements = ViewModel.RootGroup.PickedElements;
             if (pickedElements.Count == 0)
             {
                 MessageBoxEx.ShowTopMost("우선 그룹 또는 엘리먼트를 픽해주세요.");

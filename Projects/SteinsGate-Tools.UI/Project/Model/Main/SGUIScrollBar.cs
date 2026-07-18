@@ -10,9 +10,9 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Xml.Linq;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
@@ -515,46 +515,41 @@ namespace SGToolsUI.Model.Main
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public override object Clone()
-        {
-            SGUIScrollBar scrollbar = new SGUIScrollBar();
-            scrollbar.CopyFrom(this);
-            scrollbar.visualSize_ = VisualSize;
-            Array.Copy(sprites_, scrollbar.sprites_, sprites_.Length);
-            return scrollbar;
-        }
+        public override string GetElementTagName() => "ScrollBar";
 
         //////////////////////////////////////////////////////////////////////////////////
-        public override JObject ToJObject()
+        public override XElement ToXElement()
         {
-            JObject root = base.ToJObject();
+            XElement root = base.ToXElement();
             SGUISpriteInfoExt.TryGetSgaImgFileName(in sprites_, out string sga, out string img);
-            root[JsonSgaKey] = sga;
-            root[JsonImgKey] = img;
-            root[JsonSpriteKey] = sprites_.ToFullString();
-            root[JsonTrackSizeKey] = TrackSize.ToFullString();
+            root.SetAttributeValue("sga", sga);
+            root.SetAttributeValue("img", img);
+            root.SetAttributeValue("sprite", sprites_.ToFullString());
+            root.SetAttributeValue("track_size", TrackSize.ToFullString());
             return root;
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public override void ParseJObject(JObject _root)
+        public override void ParseXElement(XElement _root)
         {
-            base.ParseJObject(_root);
+            base.ParseXElement(_root);
 
-            string sgaName = (string)_root[JsonSgaKey]!;
+            string sgaName = (string)_root.Attribute("sga") ?? string.Empty;
 
             if (sgaName == string.Empty)
                 return;
 
-            string imgName = (string)_root[JsonImgKey]!;
-            string trackSizeString = (string)_root[JsonTrackSizeKey]!;
+            string imgName = (string)_root.Attribute("img")!;
+            string trackSizeString = (string)_root.Attribute("track_size")!;
 
             IntSize trackSize = SizeEx.ParseFullString(trackSizeString);
 
             SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
             SgaPackage sga = img.Parent;
             int[] sprites = new int[TextureCount];
-            StringEx.ParseIntNumberN((string)_root[JsonSpriteKey]!, sprites);
+            string spriteStr = (string)_root.Attribute("sprite") ?? string.Empty;
+            if (spriteStr.Length > 0)
+                StringEx.ParseIntNumberN(spriteStr, sprites);
             SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in sprites_);
 
             int height = 0;
@@ -569,6 +564,16 @@ namespace SGToolsUI.Model.Main
 
             visualSize_.Width = trackSize.Width;
             visualSize_.Height = Math.Max(height, MaxHeight);
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override object Clone()
+        {
+            SGUIScrollBar scrollbar = new SGUIScrollBar();
+            scrollbar.CopyFrom(this);
+            scrollbar.visualSize_ = VisualSize;
+            Array.Copy(sprites_, scrollbar.sprites_, sprites_.Length);
+            return scrollbar;
         }
     }
 }

@@ -26,7 +26,7 @@ public:
 	std::string GetText();
 	const char* GetTextRaw();
 	cc_ui::EditBox* Source() const { return pEditBox_; }
-	jc::String ToString() override { return jc::StringUtil::Format("에딧박스(%d)", pInfo_->code_); }
+	jc::String ToString() override { return jc::StringUtil::Format("에딧박스(%s)", pInfo_->name_); }
 
 	void SetInitialUISize(cc::size _size) override;
 	void SetMaxLength(int _maxLength);

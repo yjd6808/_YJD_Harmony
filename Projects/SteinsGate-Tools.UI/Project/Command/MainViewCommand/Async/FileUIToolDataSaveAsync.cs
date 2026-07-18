@@ -34,21 +34,23 @@ namespace SGToolsUI.Command.MainViewCommand.Async
 
             if (saveType == SaveType.Save)
             {
-                await ViewModel.Saver.SaveAutoAsync(SaveMode.UIToolData, false);
+                string savePath = Path.Combine(Environment.CurrentDirectory, Constant.UIToolDataFileName);
+                var saver = new SGUISaver(ViewModel);
+                await saver.SaveAsync(savePath, ViewModel.RootGroup);
             }
             else if (saveType == SaveType.SaveAs)
             {
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Title = "UI툴데이터 저장";
-                saveFileDialog.Filter = "JSON 파일 (*.json)|*.json";
+                saveFileDialog.Filter = "XML 파일 (*.xml)|*.xml";
                 saveFileDialog.InitialDirectory = Environment.CurrentDirectory;
-                saveFileDialog.DefaultExt = Path.GetExtension(Constant.UIToolDataFileName);
-                saveFileDialog.FileName = Path.GetFileNameWithoutExtension(Constant.UIToolDataFileName);
+                saveFileDialog.DefaultExt = ".xml";
+                saveFileDialog.FileName = "data";
 
                 if (saveFileDialog.ShowDialog() == true)
                 {
-                    Exception? e = await ViewModel.Saver.SaveUIToolDataAsync(saveFileDialog.FileName, false);
-                    if (e != null) throw e;
+                    var saver = new SGUISaver(ViewModel);
+                    await saver.SaveAsync(saveFileDialog.FileName, ViewModel.RootGroup);
                     ViewModel.LogBox.AddLog($"UI툴 데이터 저장완료", (LogType.Path, (object)saveFileDialog.FileName), IconCommonType.Backup, Brushes.RoyalBlue);
                 }
             }

@@ -6,9 +6,9 @@
 
 using System;
 using System.ComponentModel;
+using System.Xml.Linq;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
@@ -137,58 +137,53 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)] public override bool Manipulatable => true;
 
         //////////////////////////////////////////////////////////////////////////////////
-        public override object Clone()
-        {
-            SGUISprite sprite = new SGUISprite();
-            sprite.CopyFrom(this);
-            sprite.visualSize_ = visualSize_;
-            sprite.sprite_ = sprite_;
-            sprite.linearDodge_ = linearDodge_;
-            sprite.scale9_ = scale9_;
-            return sprite;
-        }
+        public override string GetElementTagName() => "Sprite";
 
         //////////////////////////////////////////////////////////////////////////////////
-        public override JObject ToJObject()
+        public override XElement ToXElement()
         {
-            JObject root = base.ToJObject();
-            // 인덱스를 뛰어쓰기로 구분해서 돌려줌
+            XElement root = base.ToXElement();
             SGUISpriteInfoExt.TryGetSgaImgFileName(sprite_, out string sga, out string img);
 
-            root[JsonSgaKey] = sga;
-            root[JsonImgKey] = img;
-            root[JsonSpriteKey] = sprite_.SpriteIndex;
-            root[JsonVisualSizeKey] = visualSize_.ToFullString();
+            root.SetAttributeValue("sga", sga);
+            root.SetAttributeValue("img", img);
+            root.SetAttributeValue("sprite", sprite_.SpriteIndex);
+            root.SetAttributeValue("width", visualSize_.Width);
+            root.SetAttributeValue("height", visualSize_.Height);
 
             if (linearDodge_)
-                root[JsonLinearDodgeKey] = linearDodge_;
+                root.SetAttributeValue("linear_dodge", true);
             if (scale9_)
-                root[JsonScale9] = scale9_;
+                root.SetAttributeValue("scale9", true);
 
             return root;
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public override void ParseJObject(JObject _root)
+        public override void ParseXElement(XElement _root)
         {
-            base.ParseJObject(_root);
+            base.ParseXElement(_root);
 
-            _root.TryGetValueDefault(JsonLinearDodgeKey, out linearDodge_, false);
-            _root.TryGetValueDefault(JsonScale9, out scale9_, false);
+            XAttribute linearDodgeAttr = _root.Attribute("linear_dodge");
+            if (linearDodgeAttr != null)
+                linearDodge_ = (bool)linearDodgeAttr;
+            XAttribute scale9Attr = _root.Attribute("scale9");
+            if (scale9Attr != null)
+                scale9_ = (bool)scale9Attr;
 
-            string sgaName = (string)_root[JsonSgaKey]!;
+            string sgaName = (string)_root.Attribute("sga") ?? string.Empty;
 
             if (sgaName == string.Empty)
                 return;
 
-            string imgName = (string)_root[JsonImgKey]!;
-            string sizeString = (string)_root[JsonVisualSizeKey]!;
+            string imgName = (string)_root.Attribute("img")!;
 
-            visualSize_ = SizeEx.ParseFullString(sizeString);
+            visualSize_.Width = (int)_root.Attribute("width")!;
+            visualSize_.Height = (int)_root.Attribute("height")!;
 
             SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
             SgaPackage sga = img.Parent;
-            int spriteIndex = (int)_root[JsonSpriteKey]!;
+            int spriteIndex = (int)_root.Attribute("sprite")!;
 
             if (spriteIndex == Constant.InvalidValue)
                 return;
@@ -198,6 +193,18 @@ namespace SGToolsUI.Model.Main
                 throw new Exception($"{sgaName} -> {imgName} -> {spriteIndex}가 SgaSprite 타입이 아닙니다.");
             sprite_ = new SGUISpriteInfo(sga, img, sprite);
             sprite_.LinearDodge = linearDodge_;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override object Clone()
+        {
+            SGUISprite sprite = new SGUISprite();
+            sprite.CopyFrom(this);
+            sprite.visualSize_ = visualSize_;
+            sprite.sprite_ = sprite_;
+            sprite.linearDodge_ = linearDodge_;
+            sprite.scale9_ = scale9_;
+            return sprite;
         }
 
         //////////////////////////////////////////////////////////////////////////////////

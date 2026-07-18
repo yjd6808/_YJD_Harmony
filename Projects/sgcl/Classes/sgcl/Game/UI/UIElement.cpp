@@ -9,7 +9,6 @@
 
 #include "sgcl/SteinsGateApp.h"
 #include "sgcl/Game/UI/UIRootGroup.h"
-#include "sgcl/Define/Define_UI.h"
 #include "sgcl/Game/Contents/UIManager.h"
 
 USING_NS_CC;

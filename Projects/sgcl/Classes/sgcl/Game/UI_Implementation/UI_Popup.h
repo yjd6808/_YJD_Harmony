@@ -1,16 +1,9 @@
-﻿/*
- * 작성자: 윤정도
- * 생성일: 4/26/2023 12:09:52 AM
- * =====================
- * 팝업은 마스터그룹이지만 그룹마스터가 관리하지 않고 팝업매니저가 관리토록한다.
- */
-
-
-#pragma once
+﻿#pragma once
 
 #include "sgcl/Game/UI/UIRootGroup.h"
+#include "sgcl/Game/UI/UIRegister.h"
 
-#define SG_POPUP_NO_TIMEOUT	-1	// 타임아웃 시간 음수로 지정시, 타임아웃 기능 사용안하도록 함
+#define SG_POPUP_NO_TIMEOUT	-1
 
 using PopupCallback = jc::Action<>;
 
@@ -26,7 +19,6 @@ public:
 		eOk
 	};
 
-	// 팝업이 여러 속성을 가질 수도 있지 않을까 해서 일단 둠
 	enum Attribute
 	{
 		eCloseWithEsc = 0b00000001,
@@ -34,7 +26,7 @@ public:
 	};
 
 protected:
-	void OnInit() override;
+	void OnInit(const jc::CDataMap<>& _param) override;
 	void OnLoaded() override;
 
 	void OnAdded() override;
@@ -62,21 +54,13 @@ public:
 	void SetOkCallback(const PopupCallback& _fnOk);
 	void SetCloseWithEsc(bool _closeWithEsc);
 	void SetTimeoutCallback(const PopupCallback& _fnTimeout);
-	void SetTimeout(float _timeout); // 음수 시간넣으면 타임아웃 미적용
+	void SetTimeout(float _timeout);
 	void SetClosed(bool _closed) { closed_ = _closed; }
 	bool IsClosed() const { return closed_; }
 	void Close();
 	void Adjust();
 
 private:
-	// #define UI_POPUP_GROUP_HOLDER
-	// #define UI_POPUP_HOLDER_SPRITE_BACKGROUND
-	// #define UI_POPUP_HOLDER_LABEL_TEXT
-	// #define UI_POPUP_HOLDER_GROUP_BTN_HOLDER
-	// #define UI_POPUP_HOLDER_BTN_HOLDER_BUTTON_YES
-	// #define UI_POPUP_HOLDER_BTN_HOLDER_BUTTON_NO
-	// #define UI_POPUP_HOLDER_BTN_HOLDER_BUTTON_OK
-
 	UIGroup* pGroupHolder_;
 	UISprite* pSpriteBackground_;
 	UIGroup* pGroupButtonHolder_;
@@ -85,11 +69,9 @@ private:
 	UIButton* pBtnOk_;
 	UILabel* pLabelText_;
 
-	// =========================================
-
 	Type type_;
 	jc::BitFlag<Attribute> attributeFlag_;
-	jc::TimeCounterF openedTime_; // 열려있던 시간
+	jc::TimeCounterF openedTime_;
 	float timeout_;
 	bool closed_;
 
@@ -98,3 +80,5 @@ private:
 	PopupCallback okCallback_;
 	PopupCallback timeoutCallback_;
 };
+
+REGISTER_UI(Popup, UI_Popup)

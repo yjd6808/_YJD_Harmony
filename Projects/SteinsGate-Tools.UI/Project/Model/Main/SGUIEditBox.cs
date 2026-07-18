@@ -6,8 +6,8 @@
 
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Xml.Linq;
 using System.Windows.Media;
-using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using Xceed.Wpf.Toolkit;
@@ -172,6 +172,48 @@ namespace SGToolsUI.Model.Main
         public WatermarkTextBox? TextBox { get; set; }
 
         //////////////////////////////////////////////////////////////////////////////////
+        public override string GetElementTagName() => "EditBox";
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override XElement ToXElement()
+        {
+            XElement root = base.ToXElement();
+            root.SetAttributeValue("width", visualSize_.Width);
+            root.SetAttributeValue("height", visualSize_.Height);
+            root.SetAttributeValue("text_halign", (int)textHAlign_);
+            root.SetAttributeValue("font_size", fontSize_);
+            root.SetAttributeValue("font_color", fontColor_.ToFullString4B());
+            root.SetAttributeValue("p_text", placeholderText_);
+            root.SetAttributeValue("p_font_color", placeholderFontColor_.ToFullString4B());
+            root.SetAttributeValue("p_font_size", placeholderFontSize_);
+            root.SetAttributeValue("max_length", maxLength_);
+            root.SetAttributeValue("input_mode", (int)inputMode_);
+            return root;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override void ParseXElement(XElement _root)
+        {
+            base.ParseXElement(_root);
+
+            visualSize_.Width = (int)_root.Attribute("width")!;
+            visualSize_.Height = (int)_root.Attribute("height")!;
+            textHAlign_ = (HAlignment)(int)_root.Attribute("text_halign")!;
+
+            fontSize_ = (int)_root.Attribute("font_size")!;
+
+            string fontColorString = (string)_root.Attribute("font_color")!;
+            fontColor_ = ColorEx.ParseFullString4B(fontColorString);
+            placeholderText_ = (string)_root.Attribute("p_text") ?? string.Empty;
+
+            string placeholderFontColorString = (string)_root.Attribute("p_font_color")!;
+            placeholderFontColor_ = ColorEx.ParseFullString4B(placeholderFontColorString);
+            placeholderFontSize_ = (int)_root.Attribute("p_font_size")!;
+            maxLength_ = (int)_root.Attribute("max_length")!;
+            inputMode_ = (InputMode)(int)_root.Attribute("input_mode")!;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
         public override object Clone()
         {
             SGUIEditBox editbox = new SGUIEditBox();
@@ -186,45 +228,6 @@ namespace SGToolsUI.Model.Main
             editbox.inputMode_ = inputMode_;
             editbox.maxLength_ = maxLength_;
             return editbox;
-        }
-
-        //////////////////////////////////////////////////////////////////////////////////
-        public override JObject ToJObject()
-        {
-            JObject root = base.ToJObject();
-            // 인덱스를 뛰어쓰기로 구분해서 돌려줌
-            root[JsonVisualSizeKey] = visualSize_.ToFullString();
-            root[JsonTextHAlignKey] = (int)textHAlign_;
-            root[JsonFontSizeKey] = fontSize_;
-            root[JsonFontColorKey] = fontColor_.ToFullString4B();
-            root[JsonPlaceholderTextKey] = placeholderText_;
-            root[JsonPlaceholderFontColorKey] = placeholderFontColor_.ToFullString4B();
-            root[JsonPlaceholderFontSizeKey] = placeholderFontSize_;
-            root[JsonMaxLengthKey] = maxLength_;
-            root[JsonInputModeKey] = (int)inputMode_;
-            return root;
-        }
-
-        //////////////////////////////////////////////////////////////////////////////////
-        public override void ParseJObject(JObject _root)
-        {
-            base.ParseJObject(_root);
-
-            string sizeString = (string)_root[JsonVisualSizeKey]!;
-            visualSize_ = SizeEx.ParseFullString(sizeString);
-            textHAlign_ = (HAlignment)(int)_root[JsonTextHAlignKey]!;
-
-            fontSize_ = (int)_root[JsonFontSizeKey]!;
-
-            string fontColorString = (string)_root[JsonFontColorKey]!;
-            fontColor_ = ColorEx.ParseFullString4B(fontColorString);
-            placeholderText_ = (string)_root[JsonPlaceholderTextKey]!;
-
-            string placeholderFontColorString = (string)_root[JsonPlaceholderFontColorKey]!;
-            placeholderFontColor_ = ColorEx.ParseFullString4B(placeholderFontColorString);
-            placeholderFontSize_ = (int)_root[JsonPlaceholderFontSizeKey]!;
-            maxLength_ = (int)_root[JsonMaxLengthKey]!;
-            inputMode_ = (InputMode)(int)_root[JsonInputModeKey]!;
         }
 
         //////////////////////////////////////////////////////////////////////////////////

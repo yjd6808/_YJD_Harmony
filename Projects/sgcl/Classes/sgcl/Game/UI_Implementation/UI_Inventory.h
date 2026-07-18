@@ -1,14 +1,7 @@
-﻿/*
- * 작성자: 윤정도
- * 생성일: 2/15/2023 8:07:08 PM
- * =====================
- *
- */
-
-
-#pragma once
+﻿#pragma once
 
 #include "sgcl/Game/UI/UIRootGroup.h"
+#include "sgcl/Game/UI/UIRegister.h"
 
 #define MAX_INVEN_SLOT_COUNT		32
 #define INVEN_ITEM_COUNT_PER_ROW	8
@@ -19,7 +12,7 @@ class UI_Inventory : public UIRootGroup
 public:
 	UI_Inventory(UIGroupInfo* _pGroupInfo);
 
-	void OnInit() override;
+	void OnInit(const jc::CDataMap<>& _param) override;
 	void OnLoaded() override;
 	void OnAdded() override;
 	void OnUpdate(float _dt) override;
@@ -38,3 +31,5 @@ private:
 
 	InvenItemType_t curTab_;
 };
+
+REGISTER_UI(Inventory, UI_Inventory)

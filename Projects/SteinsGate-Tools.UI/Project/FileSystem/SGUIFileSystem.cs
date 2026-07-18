@@ -1,44 +1,34 @@
-/*
- * 작성자: 윤정도
- * 생성일: 3/10/2023 4:23:52 PM
- *
- */
-
 namespace SGToolsUI.FileSystem
 {
-    public enum ExportType
-    {
-        Export,     // 정해진 경로에 파일 추출(UIDefine 경로)
-        ExportAs    // 다이얼로그로 선택한 경로에 추출
-    }
-
     public enum LoadType
     {
-        Load,       // 정해진 경로의 파일 로딩
-        LoadAs      // 다이얼로그로 선택한 파일로딩
+        Load,
+        LoadAs
     }
 
     public enum SaveType
     {
-        Save,       // 정해진 경로의 파일 로딩(예를들어서 실행파일 경로의 data.json, 게임 데이터 저장 경로)
-        SaveAs      // 다이얼로그로 선택한 경로에 저장
+        Save,
+        SaveAs
+    }
+
+    public enum ExportType
+    {
+        Export,
+        ExportAs
     }
 
     public class SGUIFileSystem
     {
+        public const string XmlExtension = ".xml";
+        public const string UIMetaExtension = ".uimeta";
+        public const string BackupDirectoryRoot = "backup";
+
         public const string LoadKey = "Load";
         public const string LoadAsKey = "LoadAs";
-
         public const string SaveKey = "Save";
         public const string SaveAsKey = "SaveAs";
-
         public const string ExportKey = "Export";
         public const string ExportAsKey = "ExportAs";
-
-        public const string JsonModeKey = "mode";
-        public const string JsonDateKey = "date";
-        public const string JsonGroupKey = "groups";
-        public const string JsonGroupMasterKey = "group_master";
-        public const string JsonElementKey = "elements";
     }
 }

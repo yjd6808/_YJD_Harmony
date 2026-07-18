@@ -1,361 +1,372 @@
-﻿/*
- * 작성자: 윤정도
- * 생성일: 2/15/2023 1:30:20 AM
- * =====================
- *
- */
-
 #include "DescMgr_UI.h"
-
-#include "sgcl/Util/JsonUtilEx.h"
-#include "sg/Util/DescLoaderMgr.h"
 
 #include "sgcl/Game/Texture/ImagePackManager.h"
 #include "sgcl/Game/Contents/FontManager.h"
 #include "sgcl/Game/UI/UICheckBox.h"
+#include "tinyxml2.h"
 
 USING_NS_JC;
 USING_NS_JS;
 
-//////////////////////////////////////////////////////////////////////////////////////////
+static int XmlIntAttr(tinyxml2::XMLElement* _elem, const char* _name, int _default)
+{
+    const char* val = _elem->Attribute(_name);
+    if (!val) return _default;
+    return atoi(val);
+}
+static float XmlFloatAttr(tinyxml2::XMLElement* _elem, const char* _name, float _default)
+{
+    const char* val = _elem->Attribute(_name);
+    if (!val) return _default;
+    return (float)atof(val);
+}
+static bool XmlBoolAttr(tinyxml2::XMLElement* _elem, const char* _name, bool _default)
+{
+    const char* val = _elem->Attribute(_name);
+    if (!val) return _default;
+    return strcmp(val, "true") == 0 || strcmp(val, "1") == 0;
+}
+
 UIInfoLoader::UIInfoLoader()
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 bool UIInfoLoader::Load()
 {
-	Json::Value root;
-
-	if (!LoadJson(root))
+	tinyxml2::XMLDocument doc;
+	if (doc.LoadFile(GetConfigFileName()) != tinyxml2::XML_SUCCESS)
 		return false;
 
-	try
-	{
-		// ========================================================================
-		//  UI 엘리먼트 로딩
-		// ========================================================================
-		Json::Value& elementListRoot = root[JSON_ELEMENTS_KEY];
-
-		for (ArrayIndex i = 0; i < elementListRoot.size(); ++i)
-		{
-			Json::Value& elementRoot = elementListRoot[i];
-
-			UIElementInfo* pElementInfo = nullptr;
-			int elementType = elementRoot[JSON_ELEMENT_TYPE_KEY].asInt();
-
-			switch (elementType)
-			{
-			case UIElementType::Button: pElementInfo = ReadElementButton(elementRoot);
-				break;
-			case UIElementType::Label: pElementInfo = ReadElementLabel(elementRoot);
-				break;
-			case UIElementType::Sprite: pElementInfo = ReadElementSprite(elementRoot);
-				break;
-			case UIElementType::EditBox: pElementInfo = ReadElementEditBox(elementRoot);
-				break;
-			case UIElementType::CheckBox: pElementInfo = ReadElementCheckBox(elementRoot);
-				break;
-			case UIElementType::ToggleButton: pElementInfo = ReadElementToggleButton(elementRoot);
-				break;
-			case UIElementType::ScrollBar: pElementInfo = ReadElementScrollBar(elementRoot);
-				break;
-			case UIElementType::ProgressBar: pElementInfo = ReadElementProgressBar(elementRoot);
-				break;
-			case UIElementType::Static: pElementInfo = ReadElementStatic(elementRoot);
-				break;
-			default:
-				break;
-			}
-
-			jc_assert_msg(pElementInfo != nullptr, "UI 엘리먼트 로딩에 실패했습니다.");
-			AddData(pElementInfo);
-		}
-
-		// ========================================================================
-		//  UI 그룹 로딩
-		// ========================================================================
-		Json::Value& groupListRoot = root[JSON_GROUPS_KEY];
-
-		for (ArrayIndex i = 0; i < groupListRoot.size(); ++i)
-		{
-			Json::Value& groupRoot = groupListRoot[i];
-			Json::Value& groupElementInfoListRoot = groupRoot[JSON_CHILDREN_KEY];
-
-			// 키값이 "groups" = []으로 들어가버린경우
-			_LogWarnIf_(groupElementInfoListRoot.empty(), "그룹에 자식이 없습니다.");
-
-			UIGroupInfo* pGroupInfo = dbg_new UIGroupInfo(groupElementInfoListRoot.size());
-
-			ReadElementCommon(groupRoot, pGroupInfo);
-			ReadElementGroup(groupRoot, pGroupInfo);
-			AddData(pGroupInfo);
-		}
-
-		// ========================================================================
-		//  UI 그룹마스터 로딩
-		// ========================================================================
-		Json::Value& groupMasterRoot = root[JSON_GROUP_MASTER_KEY];
-		Json::Value& groupMasterElementInfoListRoot = groupMasterRoot[JSON_CHILDREN_KEY];
-
-		UIGroupInfo* pGroupMasterInfo = dbg_new UIGroupInfo(groupMasterElementInfoListRoot.size());
-
-		ReadElementCommon(groupMasterRoot, pGroupMasterInfo);
-		ReadElementGroup(groupMasterRoot, pGroupMasterInfo);
-		AddData(pGroupMasterInfo);
-	}
-	catch (std::exception& ex)
-	{
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), ex.what());
+	tinyxml2::XMLElement* rootElem = doc.RootElement();
+	if (!rootElem || strcmp(rootElem->Name(), XML_ROOT_TAG) != 0)
 		return false;
+
+	tinyxml2::XMLElement* pChild = rootElem->FirstChildElement();
+	while (pChild)
+	{
+		UIElementInfo* pElementInfo = nullptr;
+		int elementType = XmlIntAttr(pChild, "type", -1);
+
+		switch (elementType)
+		{
+		case UIElementType::Button: pElementInfo = ReadElementButton(pChild); break;
+		case UIElementType::Label: pElementInfo = ReadElementLabel(pChild); break;
+		case UIElementType::Sprite: pElementInfo = ReadElementSprite(pChild); break;
+		case UIElementType::EditBox: pElementInfo = ReadElementEditBox(pChild); break;
+		case UIElementType::CheckBox: pElementInfo = ReadElementCheckBox(pChild); break;
+		case UIElementType::ToggleButton: pElementInfo = ReadElementToggleButton(pChild); break;
+		case UIElementType::ScrollBar: pElementInfo = ReadElementScrollBar(pChild); break;
+		case UIElementType::ProgressBar: pElementInfo = ReadElementProgressBar(pChild); break;
+		case UIElementType::Static: pElementInfo = ReadElementStatic(pChild); break;
+		default: break;
+		}
+
+		if (pElementInfo)
+		{
+			JC_DELETE_SAFE(pElementInfo);
+		}
+		pChild = pChild->NextSiblingElement();
 	}
 
 	Loaded();
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-void UIInfoLoader::ReadElementCommon(Json::Value& _elementRoot, UIElementInfo* _pElementInfo)
+void UIInfoLoader::ReadElementCommon(tinyxml2::XMLElement* _elementRoot, UIElementInfo* _pElementInfo)
 {
-	_pElementInfo->code_ = _elementRoot[JSON_CODE_KEY].asInt();
-	_pElementInfo->hAlignment_ = (HAlignment_t)_elementRoot[JSON_H_ALIGN_KEY].asInt();
-	_pElementInfo->vAlignment_ = (VAlignment_t)_elementRoot[JSON_V_ALIGN_KEY].asInt();
+	const char* name = _elementRoot->Attribute("name");
+	if (name)
+	{
+		strcpy_s(_pElementInfo->name_, name);
+	}
+	_pElementInfo->hAlignment_ = (HAlignment_t)XmlIntAttr(_elementRoot, "halign", 0);
+	_pElementInfo->vAlignment_ = (VAlignment_t)XmlIntAttr(_elementRoot, "valign", 0);
+	_pElementInfo->type_ = (UIElementType_t)XmlIntAttr(_elementRoot, "type", 0);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-void UIInfoLoader::ReadElementGroup(Json::Value& _groupRoot, UIGroupInfo* _pGroupInfo)
+void UIInfoLoader::ReadElementGroup(tinyxml2::XMLElement* _groupRoot, UIGroupInfo* _pGroupInfo)
 {
-	JsonUtilEx::ParseFloatNumber2(_groupRoot[JSON_VISUAL_SIZE_KEY], _pGroupInfo->size_.width, _pGroupInfo->size_.height);
-	_pGroupInfo->type_ = UIElementType::Group;
+	_pGroupInfo->size_.width = XmlFloatAttr(_groupRoot, "width", 0);
+	_pGroupInfo->size_.height = XmlFloatAttr(_groupRoot, "height", 0);
 
-	Json::Value& groupElementInfoListRoot = _groupRoot[JSON_CHILDREN_KEY];
-
-	for (ArrayIndex i = 0; i < groupElementInfoListRoot.size(); ++i)
+	tinyxml2::XMLElement* pChild = _groupRoot->FirstChildElement();
+	while (pChild)
 	{
-		Json::Value& groupElementInfoRoot = groupElementInfoListRoot[i];
-		UIGroupElemInfo groupElementInfo;
-		int groupElementInfoData[3];
-
-		JsonUtilEx::ParseIntNumberN(groupElementInfoRoot, groupElementInfoData, 3);
-
-		groupElementInfo.code_ = groupElementInfoData[0];
-		groupElementInfo.pos_.x = (float)groupElementInfoData[1];
-		groupElementInfo.pos_.y = (float)groupElementInfoData[2];
-
-		_pGroupInfo->infoList_.PushBack(groupElementInfo);
+		UIGroupElemInfo elemInfo;
+		const char* childName = pChild->Attribute("name");
+		if (childName)
+		{
+			strcpy_s(elemInfo.name_, childName);
+		}
+		elemInfo.pos_.x = XmlFloatAttr(pChild, "x", 0);
+		elemInfo.pos_.y = XmlFloatAttr(pChild, "y", 0);
+		_pGroupInfo->infoList_.PushBack(elemInfo);
+		pChild = pChild->NextSiblingElement();
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-UIElementInfo* UIInfoLoader::ReadElementButton(Json::Value& _buttonRoot)
+UIElementInfo* UIInfoLoader::ReadElementButton(tinyxml2::XMLElement* _buttonRoot)
 {
 	UIButtonInfo* pInfo = dbg_new UIButtonInfo();
-
 	ReadElementCommon(_buttonRoot, pInfo);
 
 	ImagePackManager* pPackManager = ImagePackManager::Get();
-	const jc::String& sgaName = JsonUtilEx::GetString(_buttonRoot[JSON_SGA_KEY]);
-	const jc::String& imageName = JsonUtilEx::GetString(_buttonRoot[JSON_IMG_KEY]);
 
-	ImagePack* pPack = pPackManager->GetPack(sgaName);
+	const char* sgaName = _buttonRoot->Attribute("sga");
+	const char* imageName = _buttonRoot->Attribute("img");
 
-	pInfo->sga_ = pPack->GetPackIndex();
-	pInfo->img_ = pPack->GetImgIndex(imageName);
+	if (sgaName && imageName)
+	{
+		ImagePack* pPack = pPackManager->GetPack(sgaName);
+		pInfo->sga_ = pPack->GetPackIndex();
+		pInfo->img_ = pPack->GetImgIndex(imageName);
+	}
 
-	pInfo->type_ = UIElementType::Button;
-	pInfo->linearDodge_ = _buttonRoot[JSON_LINEAR_DODGE_KEY].asBool();
-	JsonUtilEx::ParseIntNumberN(_buttonRoot[JSON_SPRITE_KEY], pInfo->sprites_, 4);
+	pInfo->linearDodge_ = XmlBoolAttr(_buttonRoot, "linear_dodge", false);
+
+	const char* sprite = _buttonRoot->Attribute("sprite");
+	if (sprite)
+	{
+		sscanf(sprite, "%d,%d,%d,%d", &pInfo->sprites_[0], &pInfo->sprites_[1], &pInfo->sprites_[2], &pInfo->sprites_[3]);
+	}
 
 	return pInfo;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-UIElementInfo* UIInfoLoader::ReadElementLabel(Json::Value& _labelRoot)
+UIElementInfo* UIInfoLoader::ReadElementLabel(tinyxml2::XMLElement* _labelRoot)
 {
 	UILabelInfo* pInfo = dbg_new UILabelInfo();
 	ReadElementCommon(_labelRoot, pInfo);
 
-	const jc::String fontName = JsonUtilEx::GetString(_labelRoot[JSON_FONT_KEY]);
+	const char* fontName = _labelRoot->Attribute("font");
+	if (fontName)
+	{
+		pInfo->fontCode_ = FontManager::Get()->GetFontCode(fontName);
+	}
+	pInfo->fontSize_ = XmlIntAttr(_labelRoot, "font_size", 16);
 
-	pInfo->type_ = UIElementType::Label;
-	pInfo->fontCode_ = FontManager::Get()->GetFontCode(fontName);
-	pInfo->fontSize_ = _labelRoot[JSON_FONT_SIZE_KEY].asInt();
-	pInfo->textWrap_ = _labelRoot[JSON_TEXT_WRAP_KEY].asBool();
-	JsonUtilEx::ParseColor4B(_labelRoot[JSON_FONT_COLOR_KEY], pInfo->fontColor_);
-	JsonUtilEx::ParseSize(_labelRoot[JSON_VISUAL_SIZE_KEY], pInfo->size_);
-	pInfo->textHAlignment_ = (HAlignment_t)_labelRoot[JSON_TEXT_H_ALIGN_KEY].asInt();
-	pInfo->textVAlignment_ = (VAlignment_t)_labelRoot[JSON_TEXT_V_ALIGN_KEY].asInt();
-	pInfo->text_ = JsonUtilEx::GetString(_labelRoot[JSON_TEXT_KEY]);
+	const char* colorStr = _labelRoot->Attribute("font_color");
+	if (colorStr)
+	{
+		int r, g, b, a;
+		sscanf(colorStr, "%d,%d,%d,%d", &r, &g, &b, &a);
+		pInfo->fontColor_ = { (GLubyte)r, (GLubyte)g, (GLubyte)b, (GLubyte)a };
+	}
+
+	pInfo->textWrap_ = XmlBoolAttr(_labelRoot, "text_wrap", true);
+	pInfo->textHAlignment_ = (HAlignment_t)XmlIntAttr(_labelRoot, "text_halign", 0);
+	pInfo->textVAlignment_ = (VAlignment_t)XmlIntAttr(_labelRoot, "text_valign", 0);
+
+	const char* text = _labelRoot->Attribute("text");
+	if (text) pInfo->text_ = text;
+
+	pInfo->size_.width = XmlFloatAttr(_labelRoot, "width", 0);
+	pInfo->size_.height = XmlFloatAttr(_labelRoot, "height", 0);
 
 	return pInfo;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-UIElementInfo* UIInfoLoader::ReadElementSprite(Json::Value& _spriteRoot)
+UIElementInfo* UIInfoLoader::ReadElementSprite(tinyxml2::XMLElement* _spriteRoot)
 {
 	UISpriteInfo* pInfo = dbg_new UISpriteInfo();
 	ReadElementCommon(_spriteRoot, pInfo);
 
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 
-	const jc::String& sgaName = JsonUtilEx::GetString(_spriteRoot[JSON_SGA_KEY]);
-	const jc::String& imageName = JsonUtilEx::GetString(_spriteRoot[JSON_IMG_KEY]);
+	const char* sgaName = _spriteRoot->Attribute("sga");
+	const char* imageName = _spriteRoot->Attribute("img");
 
-	ImagePack* pPack = pPackManager->GetPack(sgaName);
+	if (sgaName && imageName)
+	{
+		ImagePack* pPack = pPackManager->GetPack(sgaName);
+		pInfo->sga_ = pPack->GetPackIndex();
+		pInfo->img_ = pPack->GetImgIndex(imageName);
+	}
 
-	pInfo->type_ = UIElementType::Sprite;
-	pInfo->sga_ = pPack->GetPackIndex();
-	pInfo->img_ = pPack->GetImgIndex(imageName);
-	pInfo->sprite_ = _spriteRoot[JSON_SPRITE_KEY].asInt();
-	pInfo->linearDodge_ = _spriteRoot.get(JSON_LINEAR_DODGE_KEY, false).asBool();
-	pInfo->scale9_ = _spriteRoot.get(JSON_SCALE9, false).asBool();
-	JsonUtilEx::ParseSize(_spriteRoot[JSON_VISUAL_SIZE_KEY], pInfo->size_);
+	pInfo->sprite_ = XmlIntAttr(_spriteRoot, "sprite", InvalidValue_v);
+	pInfo->linearDodge_ = XmlBoolAttr(_spriteRoot, "linear_dodge", false);
+	pInfo->scale9_ = XmlBoolAttr(_spriteRoot, "scale9", false);
+	pInfo->size_.width = XmlFloatAttr(_spriteRoot, "width", 0);
+	pInfo->size_.height = XmlFloatAttr(_spriteRoot, "height", 0);
 
 	return pInfo;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-UIElementInfo* UIInfoLoader::ReadElementEditBox(Json::Value& _editBoxRoot)
+UIElementInfo* UIInfoLoader::ReadElementEditBox(tinyxml2::XMLElement* _editBoxRoot)
 {
 	UIEditBoxInfo* pInfo = dbg_new UIEditBoxInfo();
-
 	ReadElementCommon(_editBoxRoot, pInfo);
 
-	ImagePackManager* pPackManager = ImagePackManager::Get();
-	(void)pPackManager;
+	pInfo->Size.width = XmlFloatAttr(_editBoxRoot, "width", 0);
+	pInfo->Size.height = XmlFloatAttr(_editBoxRoot, "height", 0);
+	pInfo->FontSize = XmlIntAttr(_editBoxRoot, "font_size", 16);
+	pInfo->TextHAlignment = (HAlignment_t)XmlIntAttr(_editBoxRoot, "text_halign", 0);
 
-	pInfo->type_ = UIElementType::EditBox;
-	JsonUtilEx::ParseSize(_editBoxRoot[JSON_VISUAL_SIZE_KEY], pInfo->Size);
-	pInfo->FontSize = _editBoxRoot[JSON_FONT_SIZE_KEY].asInt();
-	pInfo->TextHAlignment = (HAlignment_t)_editBoxRoot[JSON_TEXT_H_ALIGN_KEY].asInt();
-	JsonUtilEx::ParseColor4B(_editBoxRoot[JSON_FONT_COLOR_KEY], pInfo->FontColor);
+	const char* fontColor = _editBoxRoot->Attribute("font_color");
+	if (fontColor)
+	{
+		int r, g, b, a;
+		sscanf(fontColor, "%d,%d,%d,%d", &r, &g, &b, &a);
+		pInfo->FontColor = { (GLubyte)r, (GLubyte)g, (GLubyte)b, (GLubyte)a };
+	}
 
-	pInfo->PlaceholderText = JsonUtilEx::GetString(_editBoxRoot[JSON_PLACEHOLDER_TEXT_KEY]);
-	JsonUtilEx::ParseColor4B(_editBoxRoot[JSON_PLACEHOLDER_FONT_COLOR_KEY], pInfo->PlaceHolderFontColor);
-	pInfo->PlaceholderFontSize = _editBoxRoot[JSON_PLACEHOLDER_FONT_SIZE_KEY].asInt();
-	pInfo->MaxLength = _editBoxRoot[JSON_MAX_LENGTH_KEY].asInt();
-	pInfo->InputMode = (EditBoxInputMode)_editBoxRoot[JSON_INPUT_MODE_KEY].asInt();
+	const char* pText = _editBoxRoot->Attribute("p_text");
+	if (pText) pInfo->PlaceholderText = pText;
+
+	const char* pFontColor = _editBoxRoot->Attribute("p_font_color");
+	if (pFontColor)
+	{
+		int r, g, b, a;
+		sscanf(pFontColor, "%d,%d,%d,%d", &r, &g, &b, &a);
+		pInfo->PlaceHolderFontColor = { (GLubyte)r, (GLubyte)g, (GLubyte)b, (GLubyte)a };
+	}
+
+	pInfo->PlaceholderFontSize = XmlIntAttr(_editBoxRoot, "p_font_size", 16);
+	pInfo->MaxLength = XmlIntAttr(_editBoxRoot, "max_length", 50);
+	pInfo->InputMode = (EditBoxInputMode)XmlIntAttr(_editBoxRoot, "input_mode", 0);
 
 	return pInfo;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-UIElementInfo* UIInfoLoader::ReadElementCheckBox(Json::Value& _checkBoxRoot)
+UIElementInfo* UIInfoLoader::ReadElementCheckBox(tinyxml2::XMLElement* _checkBoxRoot)
 {
 	UICheckBoxInfo* pInfo = dbg_new UICheckBoxInfo();
-
 	ReadElementCommon(_checkBoxRoot, pInfo);
 
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 
-	const jc::String backgroundSgaName = JsonUtilEx::GetString(_checkBoxRoot[JSON_BACKGROUND_SGA]);
-	const jc::String backgroundImageName = JsonUtilEx::GetString(_checkBoxRoot[JSON_BACKGROUND_IMG]);
+	const char* bgSga = _checkBoxRoot->Attribute("bg_sga");
+	const char* bgImg = _checkBoxRoot->Attribute("bg_img");
+	const char* crossSga = _checkBoxRoot->Attribute("cross_sga");
+	const char* crossImg = _checkBoxRoot->Attribute("cross_img");
 
-	const jc::String crossSgaName = JsonUtilEx::GetString(_checkBoxRoot[JSON_CROSS_SGA]);
-	const jc::String crossImageName = JsonUtilEx::GetString(_checkBoxRoot[JSON_CROSS_IMG]);
-
-	ImagePack* pBackgroundPack = pPackManager->GetPackUnsafe(backgroundSgaName); // 백그라운드는 sga이름이 빈 문자열 일 수 있음
-	ImagePack* pCrossPack = pPackManager->GetPack(crossSgaName);
-
-	pInfo->type_ = UIElementType::CheckBox;
-	pInfo->Check = _checkBoxRoot.get(JSON_CHECK, false).asBool();
-
-	if (pBackgroundPack != nullptr)
+	if (bgSga && bgImg)
 	{
-		pInfo->BackgroundSga = pBackgroundPack->GetPackIndex();
-		pInfo->BackgroundImg = pBackgroundPack->GetImgIndex(backgroundImageName);
+		ImagePack* pBgPack = pPackManager->GetPackUnsafe(bgSga);
+		if (pBgPack)
+		{
+			pInfo->BackgroundSga = pBgPack->GetPackIndex();
+			pInfo->BackgroundImg = pBgPack->GetImgIndex(bgImg);
+		}
 	}
 
-	pInfo->CrossSga = pCrossPack->GetPackIndex();
-	pInfo->CrossImg = pCrossPack->GetImgIndex(crossImageName);
-	JsonUtilEx::ParseIntNumberN(_checkBoxRoot[JSON_SPRITE_KEY], pInfo->Sprites, 4);
+	if (crossSga && crossImg)
+	{
+		ImagePack* pCrossPack = pPackManager->GetPack(crossSga);
+		pInfo->CrossSga = pCrossPack->GetPackIndex();
+		pInfo->CrossImg = pCrossPack->GetImgIndex(crossImg);
+	}
 
-	jc_assert_msg(pInfo->Sprites[UICheckBox::INDEX_CROSS] != InvalidValue_v, "체크박스인데 크로스 이미지가 설정되어있지 않습니다.");
+	pInfo->Check = XmlBoolAttr(_checkBoxRoot, "check", false);
 
+	const char* sprite = _checkBoxRoot->Attribute("sprite");
+	if (sprite)
+	{
+		sscanf(sprite, "%d,%d,%d,%d", &pInfo->Sprites[0], &pInfo->Sprites[1], &pInfo->Sprites[2], &pInfo->Sprites[3]);
+	}
+
+	jc_assert_msg(pInfo->Sprites[UICheckBox::INDEX_CROSS] != InvalidValue_v, "Checkbox missing cross image sprite.");
 	return pInfo;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-UIElementInfo* UIInfoLoader::ReadElementToggleButton(Json::Value& _toggleButtonRoot)
+UIElementInfo* UIInfoLoader::ReadElementToggleButton(tinyxml2::XMLElement* _toggleButtonRoot)
 {
 	UIToggleButtonInfo* pInfo = dbg_new UIToggleButtonInfo();
-
 	ReadElementCommon(_toggleButtonRoot, pInfo);
 
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 
-	const jc::String sgaName = JsonUtilEx::GetString(_toggleButtonRoot[JSON_SGA_KEY]);
-	const jc::String imageName = JsonUtilEx::GetString(_toggleButtonRoot[JSON_IMG_KEY]);
+	const char* sgaName = _toggleButtonRoot->Attribute("sga");
+	const char* imageName = _toggleButtonRoot->Attribute("img");
 
-	ImagePack* pPack = pPackManager->GetPack(sgaName);
+	if (sgaName && imageName)
+	{
+		ImagePack* pPack = pPackManager->GetPack(sgaName);
+		pInfo->Sga = pPack->GetPackIndex();
+		pInfo->Img = pPack->GetImgIndex(imageName);
+	}
 
-	pInfo->type_ = UIElementType::ToggleButton;
-	pInfo->LinearDodge = _toggleButtonRoot[JSON_LINEAR_DODGE_KEY].asBool();
-	pInfo->Sga = pPack->GetPackIndex();
-	pInfo->Img = pPack->GetImgIndex(imageName);
+	pInfo->LinearDodge = XmlBoolAttr(_toggleButtonRoot, "linear_dodge", false);
 
-	JsonUtilEx::ParseIntNumberN(_toggleButtonRoot[JSON_SPRITE_KEY], pInfo->Sprites[0], 4);
-	JsonUtilEx::ParseIntNumberN(_toggleButtonRoot[JSON_TOGGLE_SPRITE_KEY], pInfo->Sprites[1], 4);
+	const char* sprite = _toggleButtonRoot->Attribute("sprite");
+	if (sprite)
+	{
+		sscanf(sprite, "%d,%d,%d,%d", &pInfo->Sprites[0][0], &pInfo->Sprites[0][1], &pInfo->Sprites[0][2], &pInfo->Sprites[0][3]);
+	}
+
+	const char* sprite2 = _toggleButtonRoot->Attribute("sprite2");
+	if (sprite2)
+	{
+		sscanf(sprite2, "%d,%d,%d,%d", &pInfo->Sprites[1][0], &pInfo->Sprites[1][1], &pInfo->Sprites[1][2], &pInfo->Sprites[1][3]);
+	}
 
 	return pInfo;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-UIElementInfo* UIInfoLoader::ReadElementScrollBar(Json::Value& _scrollBarRoot)
+UIElementInfo* UIInfoLoader::ReadElementScrollBar(tinyxml2::XMLElement* _scrollBarRoot)
 {
 	UIScrollBarInfo* pInfo = dbg_new UIScrollBarInfo();
-
 	ReadElementCommon(_scrollBarRoot, pInfo);
 
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 
-	const jc::String sgaName = JsonUtilEx::GetString(_scrollBarRoot[JSON_SGA_KEY]);
-	const jc::String imageName = JsonUtilEx::GetString(_scrollBarRoot[JSON_IMG_KEY]);
+	const char* sgaName = _scrollBarRoot->Attribute("sga");
+	const char* imageName = _scrollBarRoot->Attribute("img");
 
-	ImagePack* pPack = pPackManager->GetPack(sgaName);
+	if (sgaName && imageName)
+	{
+		ImagePack* pPack = pPackManager->GetPack(sgaName);
+		pInfo->Sga = pPack->GetPackIndex();
+		pInfo->Img = pPack->GetImgIndex(imageName);
+	}
 
-	pInfo->type_ = UIElementType::ScrollBar;
-	pInfo->Sga = pPack->GetPackIndex();
-	pInfo->Img = pPack->GetImgIndex(imageName);
-	JsonUtilEx::ParseSize(_scrollBarRoot[JSON_TRACK_SIZE_KEY], pInfo->TrackSize);
-	JsonUtilEx::ParseIntNumberN(_scrollBarRoot[JSON_SPRITE_KEY], pInfo->Sprites, 7);
+	pInfo->TrackSize.width = XmlFloatAttr(_scrollBarRoot, "track_width", 0);
+	pInfo->TrackSize.height = XmlFloatAttr(_scrollBarRoot, "track_height", 0);
+
+	const char* sprite = _scrollBarRoot->Attribute("sprite");
+	if (sprite)
+	{
+		sscanf(sprite, "%d,%d,%d,%d,%d,%d,%d",
+			&pInfo->Sprites[0], &pInfo->Sprites[1], &pInfo->Sprites[2],
+			&pInfo->Sprites[3], &pInfo->Sprites[4], &pInfo->Sprites[5],
+			&pInfo->Sprites[6]);
+	}
 
 	return pInfo;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-UIElementInfo* UIInfoLoader::ReadElementProgressBar(Json::Value& _progressBarRoot)
+UIElementInfo* UIInfoLoader::ReadElementProgressBar(tinyxml2::XMLElement* _progressBarRoot)
 {
 	UIProgressBarInfo* pInfo = dbg_new UIProgressBarInfo();
-
 	ReadElementCommon(_progressBarRoot, pInfo);
 
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 
-	const jc::String sgaName = JsonUtilEx::GetString(_progressBarRoot[JSON_SGA_KEY]);
-	const jc::String imageName = JsonUtilEx::GetString(_progressBarRoot[JSON_IMG_KEY]);
+	const char* sgaName = _progressBarRoot->Attribute("sga");
+	const char* imageName = _progressBarRoot->Attribute("img");
 
-	ImagePack* pPack = pPackManager->GetPack(sgaName);
+	if (sgaName && imageName)
+	{
+		ImagePack* pPack = pPackManager->GetPack(sgaName);
+		pInfo->Sga = pPack->GetPackIndex();
+		pInfo->Img = pPack->GetImgIndex(imageName);
+	}
 
-	pInfo->type_ = UIElementType::ProgressBar;
-	pInfo->Sga = pPack->GetPackIndex();
-	pInfo->Img = pPack->GetImgIndex(imageName);
-	pInfo->Sprite = _progressBarRoot[JSON_SPRITE_KEY].asInt();
-	JsonUtilEx::ParseSize(_progressBarRoot[JSON_VISUAL_SIZE_KEY], pInfo->Size);
-	pInfo->ProgressIncreaseDirection = (ProgressIncreaseDirection_t)_progressBarRoot[JSON_DIRECTION_KEY].asInt();
+	pInfo->Sprite = XmlIntAttr(_progressBarRoot, "sprite", InvalidValue_v);
+	pInfo->Size.width = XmlFloatAttr(_progressBarRoot, "width", 0);
+	pInfo->Size.height = XmlFloatAttr(_progressBarRoot, "height", 0);
+	pInfo->ProgressIncreaseDirection = (ProgressIncreaseDirection_t)XmlIntAttr(_progressBarRoot, "direction", 0);
 
 	return pInfo;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-UIElementInfo* UIInfoLoader::ReadElementStatic(Json::Value& _staticRoot)
+UIElementInfo* UIInfoLoader::ReadElementStatic(tinyxml2::XMLElement* _staticRoot)
 {
 	UIStaticInfo* pInfo = dbg_new UIStaticInfo();
-
 	ReadElementCommon(_staticRoot, pInfo);
 
-	pInfo->type_ = UIElementType::Static;
-	JsonUtilEx::ParseSize(_staticRoot[JSON_VISUAL_SIZE_KEY], pInfo->Size);
+	pInfo->Size.width = XmlFloatAttr(_staticRoot, "width", 0);
+	pInfo->Size.height = XmlFloatAttr(_staticRoot, "height", 0);
 
 	return pInfo;
 }

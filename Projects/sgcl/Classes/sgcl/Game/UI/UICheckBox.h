@@ -39,7 +39,7 @@ public:
 	bool IsChecked() const;
 
 	UIElementType_t GetElementType() override { return UIElementType::CheckBox; }
-	jc::String ToString() override { return jc::StringUtil::Format("체크박스(%d)", pInfo_->code_); }
+	jc::String ToString() override { return jc::StringUtil::Format("체크박스(%s)", pInfo_->name_); }
 
 protected:
 	bool OnMouseUpContainedInternalDetail(cc::EventMouse* _pMouseEvent) override;

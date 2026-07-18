@@ -26,7 +26,7 @@ namespace SGToolsUI.Command.MainViewCommand
                 throw new Exception("포지셔닝 타입이 아닙니다.");
 
             ValueTuple<VAlignment, HAlignment> value = Alignment.PositioningToAlignMap[(int)positioning];
-            ViewModel.GroupMaster.SelectedElements.ForEach(
+            ViewModel.RootGroup.SelectedElements.ForEach(
                 element =>
                 {
                     if (element.Picked)

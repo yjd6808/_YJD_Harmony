@@ -69,5 +69,8 @@ namespace SGToolsUI.Resource
         public static readonly ImageSource UIColoredProgressBarIconImageSource = new BitmapImage(new Uri(UIColoredProgressBarIconKey));
         public static readonly ImageSource UIColoredScrollBarIconImageSource = new BitmapImage(new Uri(UIColoredScrollBarIconKey));
         public static readonly ImageSource UIColoredStaticIconImageSource = new BitmapImage(new Uri(UIColoredStaticIconKey));
+
+        public static string FolderIconKey => "FolderIcon";
+        public static string FolderOpenIconKey => "FolderOpenIcon";
     }
 }

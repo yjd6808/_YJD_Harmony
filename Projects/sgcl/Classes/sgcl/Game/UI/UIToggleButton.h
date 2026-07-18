@@ -46,7 +46,7 @@ public:
 	void RestoreState(State _state) override;
 
 	UIElementType_t GetElementType() override { return UIElementType::ToggleButton; }
-	jc::String ToString() override { return jc::StringUtil::Format("토글버튼(%d)", pInfo_->code_); }
+	jc::String ToString() override { return jc::StringUtil::Format("토글버튼(%s)", pInfo_->name_); }
 
 protected:
 	void OnMouseEnterInternalDetail(cc::EventMouse* _pMouseEvent) override;

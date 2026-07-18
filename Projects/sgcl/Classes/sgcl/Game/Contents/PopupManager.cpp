@@ -8,10 +8,9 @@
 #include "GameCoreHeader.h"
 #include "Game/Contents/PopupManager.h"
 
-#include "sg/Util/DescLoaderMgr.h"
-
 #include "sgcl/Scene/Scene_World.h"
-#include "sgcl/Define/Define_UI.h"
+#include "sgcl/Game/UI/UIXmlLoader.h"
+#include "sgcl/Game/Contents/UIManager.h"
 
 USING_NS_CC;
 USING_NS_CCUI;
@@ -34,15 +33,18 @@ PopupManager::~PopupManager()
 //////////////////////////////////////////////////////////////////////////////////////////
 UI_Popup* PopupManager::CreatePopup()
 {
-	UIElementInfo* pInfo = g_cDescMgr.GetUIElementInfo(GROUP_UI_POPUP);
-	jc_assert_msg(pInfo->type_ == UIElementType::Group, "그룹 엘리먼트 타입이 아닙니다.");
+	if (!pPopupInfo_)
+	{
+		pPopupInfo_ = UIXmlLoader::LoadFromFile("Popup.xml");
+		jc_assert_msg(pPopupInfo_, "팝업 UI XML 파일 로드에 실패했습니다.");
+	}
 
-	UIRootGroup* pPopupGroup = dbg_new UI_Popup(static_cast<UIGroupInfo*>(pInfo));
+	UIRootGroup* pPopupGroup = dbg_new UI_Popup(pPopupInfo_);
 	pPopupGroup->autorelease();
 	pPopupGroup->setTag(InvalidValue_v);
 	pPopupGroup->init();
-	pPopupGroup->InitChildren();
-	pPopupGroup->OnInit();
+	pPopupGroup->InitFromXml();
+	pPopupGroup->OnInit(CDataMap<>());
 	pPopupGroup->SetRelativePosition(0, 0, HAlignment::Center, VAlignment::Center);
 	pPopupGroup->Load();
 

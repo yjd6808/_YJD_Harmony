@@ -34,7 +34,7 @@ public:
 
 	UIStaticInfo* GetInfo() const { return pInfo_; }
 	UIElementType_t GetElementType() override { return UIElementType::Static; }
-	jc::String ToString() override { return jc::StringUtil::Format("스태틱(%d)", pInfo_->code_); }
+	jc::String ToString() override { return jc::StringUtil::Format("스태틱(%s)", pInfo_->name_); }
 
 private:
 	bool visible_;

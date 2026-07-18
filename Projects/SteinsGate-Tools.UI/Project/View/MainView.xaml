@@ -163,12 +163,6 @@
 						<MenuItem Header="툴 데이터 저장" Command="{Binding Commander.FileUIToolDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveKey}" />
 						<MenuItem Header="툴 데이터 경로지정 저장" Command="{Binding Commander.FileUIToolDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveAsKey}" />
 						<Separator />
-						<MenuItem Header="게임 데이터 저장" Command="{Binding Commander.FileGameDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveKey}" />
-						<MenuItem Header="게임 데이터 경로지정 저장" Command="{Binding Commander.FileGameDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveAsKey}" />
-						<Separator />
-						<MenuItem Header="헤더 파일 추출" Command="{Binding Commander.FileGameHeaderExportAsync}" CommandParameter="{x:Static file:SGUIFileSystem.ExportKey}" />
-						<MenuItem Header="헤더 파일 경로지정 추출" Command="{Binding Commander.FileGameHeaderExportAsync}" CommandParameter="{x:Static file:SGUIFileSystem.ExportAsKey}" />
-						<Separator />
 						<MenuItem Header="실행 폴더 열기" Command="{Binding Commander.OpenDirectory}" CommandParameter="Exe" />
 						<MenuItem Header="백업 폴더 열기" Command="{Binding Commander.OpenDirectory}" CommandParameter="Backup" />
 					</MenuItem>
@@ -264,7 +258,7 @@
                                                Background="Transparent"
                                                BorderThickness="0"
                                                ItemTemplateSelector="{x:Static mo_main_selector:UIElementTreeViewSelector.Selector}"
-                                               ItemsSource="{Binding GroupMaster.Children}"
+                                               ItemsSource="{Binding RootGroup.Children}"
                                                Style="{StaticResource UIElementTreeView}">
 					</ctrl:UIElementTreeView>
 				</Grid>
@@ -277,21 +271,21 @@
 				</Grid.ColumnDefinitions>
 
 				<StackPanel Grid.Column="0" Orientation="Horizontal">
-					<TextBox x:Name="SelectedVisualNameTextBox" Opacity="1" Text="{Binding GroupMaster.SelectedElement.VisualName, Mode=OneWay}" Style="{StaticResource ReadonlyTextBox}"/>
+					<TextBox x:Name="SelectedVisualNameTextBox" Opacity="1" Text="{Binding RootGroup.SelectedElement.VisualName, Mode=OneWay}" Style="{StaticResource ReadonlyTextBox}"/>
 					<Image Margin="4, 0, 0, 0" Width="16" Source="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonCheckedKey}}">
 						<Image.Style>
 							<Style TargetType="Image">
 								<Style.Triggers>
-									<DataTrigger Binding="{Binding GroupMaster.SelectedElement.Picked}" Value="True">
+									<DataTrigger Binding="{Binding RootGroup.SelectedElement.Picked}" Value="True">
 										<Setter Property="Opacity" Value="{Binding Path=Opacity, ElementName=SelectedVisualNameTextBox, Mode=OneWay}" />
 									</DataTrigger>
-									<DataTrigger Binding="{Binding GroupMaster.SelectedElement.Picked}" Value="False">
+									<DataTrigger Binding="{Binding RootGroup.SelectedElement.Picked}" Value="False">
 										<Setter Property="Opacity" Value="0" />
 									</DataTrigger>
-									<DataTrigger Binding="{Binding GroupMaster.HasPickedElement}" Value="False">
+									<DataTrigger Binding="{Binding RootGroup.HasPickedElement}" Value="False">
 										<Setter Property="Opacity" Value="0" />
 									</DataTrigger>
-									<DataTrigger Binding="{Binding GroupMaster.HasSelectedElement}" Value="False">
+									<DataTrigger Binding="{Binding RootGroup.HasSelectedElement}" Value="False">
 										<Setter Property="Opacity" Value="0" />
 									</DataTrigger>
 								</Style.Triggers>
@@ -368,7 +362,7 @@
                          O(n)의 성능이라 나쁘지 않을 것으로 보인다.
                     -->
 					<CollectionViewSource x:Key="UIElementsControlCollectionViewSource"
-                                          Source="{Binding GroupMaster.PickedElements}">
+                                          Source="{Binding RootGroup.PickedElements}">
 						<CollectionViewSource.SortDescriptions>
 							<!--<scm:SortDescription PropertyName="Depth" />-->
 							<!--<scm:SortDescription PropertyName="Code" Direction="Ascending" />-->
@@ -421,15 +415,15 @@
 						<RowDefinition Height="20" />
 						<RowDefinition Height="20" />
 					</Grid.RowDefinitions>
-					<Button Grid.Column="0" Grid.Row="0" Width="20" Height="20" Name="PositionTopLeftButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.TopLeft}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowTopLeftKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
-					<Button Grid.Column="1" Grid.Row="0" Width="20" Height="20" Name="PositionTopButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Top}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowTopKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
-					<Button Grid.Column="2" Grid.Row="0" Width="20" Height="20" Name="PositionTopRightButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.TopRight}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowTopRightKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
-					<Button Grid.Column="0" Grid.Row="1" Width="20" Height="20" Name="PositionLeftButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Left}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowLeftKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
-					<Button Grid.Column="1" Grid.Row="1" Width="20" Height="20" Name="PositionCenterButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Center}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonPositionKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
-					<Button Grid.Column="2" Grid.Row="1" Width="20" Height="20" Name="PositionRightButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Right}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowRightKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
-					<Button Grid.Column="0" Grid.Row="2" Width="20" Height="20" Name="PositionBottomLeftButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.BottomLeft}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowBottomLeftKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
-					<Button Grid.Column="1" Grid.Row="2" Width="20" Height="20" Name="PositionBottomButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Bottom}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowBottomKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
-					<Button Grid.Column="2" Grid.Row="2" Width="20" Height="20" Name="PositionBottomRightButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.BottomRight}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowBottomRightKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+					<Button Grid.Column="0" Grid.Row="0" Width="20" Height="20" Name="PositionTopLeftButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.TopLeft}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowTopLeftKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding RootGroup.HasPickedSelectedElement}" />
+					<Button Grid.Column="1" Grid.Row="0" Width="20" Height="20" Name="PositionTopButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Top}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowTopKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding RootGroup.HasPickedSelectedElement}" />
+					<Button Grid.Column="2" Grid.Row="0" Width="20" Height="20" Name="PositionTopRightButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.TopRight}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowTopRightKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding RootGroup.HasPickedSelectedElement}" />
+					<Button Grid.Column="0" Grid.Row="1" Width="20" Height="20" Name="PositionLeftButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Left}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowLeftKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding RootGroup.HasPickedSelectedElement}" />
+					<Button Grid.Column="1" Grid.Row="1" Width="20" Height="20" Name="PositionCenterButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Center}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonPositionKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding RootGroup.HasPickedSelectedElement}" />
+					<Button Grid.Column="2" Grid.Row="1" Width="20" Height="20" Name="PositionRightButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Right}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowRightKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding RootGroup.HasPickedSelectedElement}" />
+					<Button Grid.Column="0" Grid.Row="2" Width="20" Height="20" Name="PositionBottomLeftButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.BottomLeft}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowBottomLeftKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding RootGroup.HasPickedSelectedElement}" />
+					<Button Grid.Column="1" Grid.Row="2" Width="20" Height="20" Name="PositionBottomButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Bottom}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowBottomKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding RootGroup.HasPickedSelectedElement}" />
+					<Button Grid.Column="2" Grid.Row="2" Width="20" Height="20" Name="PositionBottomRightButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.BottomRight}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowBottomRightKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding RootGroup.HasPickedSelectedElement}" />
 				</Grid>
 
 				<Grid Grid.Column="1" Height="60" Name="Temp">

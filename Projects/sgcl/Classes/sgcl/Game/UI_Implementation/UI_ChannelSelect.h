@@ -1,15 +1,8 @@
-﻿/*
- * 작성자: 윤정도
- * 생성일: 8/19/2023 1:20:08 PM
- * =====================
- *
- */
-
-
-#pragma once
+﻿#pragma once
 
 #include "sg/Struct/SteinsGate_ChannelBase.h"
 #include "sgcl/Game/UI/UIRootGroup.h"
+#include "sgcl/Game/UI/UIRegister.h"
 
 #define SG_UI_CHANNELSELECT_MAX_CHANNEL_COUNT	10
 
@@ -94,7 +87,7 @@ public:
 	};
 
 protected:
-	void OnInit() override;
+	void OnInit(const jc::CDataMap<>& _param) override;
 	void OnLoaded() override;
 	void OnUnloaded() override;
 	void OnUpdate(float _dt) override;
@@ -110,9 +103,6 @@ protected:
 	void UpdateBackgroundGearRotation(float _dt);
 
 public:
-	// void initServerList();
-	// void initChannelList();
-
 	void SelectServer(GameServerType_t _serverType);
 	void SelectChannel(int _channelIndex);
 	void SelectChannelTab(ChannelTab _tab);
@@ -131,8 +121,6 @@ private:
 	ServerButton* pServerButtons_[GameServerType::Max];
 	ChannelButton* pChannelButtons_[SG_UI_CHANNELSELECT_MAX_CHANNEL_COUNT];
 
-	// =========================================
-
 	int monsterSpriteSgaIndex_;
 	int monsterSpriteImgIndex_;
 
@@ -143,3 +131,5 @@ private:
 	int selectedChannelIndex_;
 	ChannelTab channelTab_;
 };
+
+REGISTER_UI(ChannelSelect, UI_ChannelSelect)

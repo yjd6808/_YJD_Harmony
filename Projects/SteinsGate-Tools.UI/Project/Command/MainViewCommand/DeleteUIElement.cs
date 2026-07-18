@@ -7,6 +7,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using MoreLinq;
+using SGToolsUI.FileSystem;
 using SGToolsUI.Model.Main;
 using SGToolsUI.ViewModel;
 
@@ -23,14 +24,15 @@ namespace SGToolsUI.Command.MainViewCommand
         //////////////////////////////////////////////////////////////////////////////////
         public override async Task ExecuteAsync(object? _parameter)
         {
-            var groupMaster = ViewModel.GroupMaster;
+            var rootGroup = ViewModel.RootGroup;
 
-            if (!groupMaster.HasSelectedElement)
+            if (!rootGroup.HasSelectedElement)
                 return;
 
-            var lookup = groupMaster.SelectedElements.ToLookup(element => element.IsGroup);
+            var lookup = rootGroup.SelectedElements.ToLookup(element => element.IsGroup);
 
-            await ViewModel.Saver.BackupAsync("삭제");
+            var saver = new SGUISaver(ViewModel);
+            await saver.BackupAsync("삭제");
 
             lookup[true].OrderBy(element => element.Depth).Cast<SGUIGroup>().ToList().ForEach(deletedGroupElement =>
             {

@@ -1,12 +1,7 @@
-﻿/*
- * 작성자: 윤정도
- * 생성일: 2/15/2023 4:30:42 PM
- * =====================
- *
- */
+﻿#pragma once
 
-#pragma once
-
+#include <unordered_map>
+#include <string>
 #include "sgcl/Game/UI/UIElement.h"
 
 class UIManager;
@@ -67,6 +62,26 @@ public:
 
 	void AddChild(UIElement* _pChild);
 
+	// XML-based initialization
+	void InitFromXml();
+
+	// Name-based element lookup
+	UIElement* FindElementByName(const char* _name);
+
+	template<typename T>
+	T* FindElementByName(const char* _name)
+	{
+		UIElement* pElement = FindElementByName(_name);
+		if (!pElement)
+			return nullptr;
+		if (pElement->GetElementType() != T::Type())
+		{
+			_LogWarn_("%s 엘리먼트를 %s 타입으로 찾았지만 타입이 다릅니다.", _name, UIElementType::Name[T::Type()]);
+			return nullptr;
+		}
+		return static_cast<T*>(pElement);
+	}
+
 	// 이하 자식들 오버라이딩을 금하기 위해 파이널로 처리
 	bool OnMouseDownInternal(cc::EventMouse* _pMouseEvent) final;
 	bool OnMouseMoveInternal(cc::EventMouse* _pMouseEvent) final;
@@ -81,10 +96,9 @@ public:
 	virtual bool OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) { return true; }
 
 	UIElementType_t GetElementType() override { return UIElementType::Group; }
-	jc::String ToString() override { return jc::StringUtil::Format("그룹(%d)", groupInfo_->code_); }
+	jc::String ToString() override { return jc::StringUtil::Format("그룹(%s)", groupInfo_->name_); }
 	bool IsGroup() const override { return true; }
 
-	// UI 매니저에 등록되지 않은 그룹내 엘리먼트들을 검색할 떄 사용하는 용도의 함수들
 	UIElement* GetAt(int _index);
 
 	template <typename TElem>
@@ -92,31 +106,19 @@ public:
 	{
 		if (_index >= _children.size())
 		{
-			_LogWarn_("%d 그룹에서 %d번째 인덱스 원소를 찾지 못했습니다.", pBaseInfo_->code_, _index);
+			_LogWarn_("%s 그룹에서 %d번째 인덱스 원소를 찾지 못했습니다.", pBaseInfo_->name_, _index);
 			return nullptr;
 		}
 
 		UIElement* pElement = static_cast<UIElement*>(_children.at(_index));
 		if (pElement->GetElementType() != TElem::Type())
 		{
-			_LogWarn_("%d 그룹에서 %d번째 인덱스 원소가 캐스팅할려는 타입과 다릅니다.", pBaseInfo_->code_, _index);
+			_LogWarn_("%s 그룹에서 %d번째 인덱스 원소가 캐스팅할려는 타입과 다릅니다.", pBaseInfo_->name_, _index);
 			return nullptr;
 		}
 
 		return static_cast<TElem*>(pElement);
 	}
-
-	UIElement* FindElement(int _code);
-	UIGroup* FindGroup(int _groupCode);
-	UIButton* FindButton(int _buttonCode);
-	UISprite* FindSprite(int _spriteCode);
-	UILabel* FindLabel(int _labelCode);
-	UICheckBox* FindCheckBox(int _checkBoxCode);
-	UIEditBox* FindEditBox(int _editBoxCode);
-	UIToggleButton* FindToggleButton(int _toggleButtonCode);
-	UIProgressBar* FindProgressBar(int _progressBarCode);
-	UIScrollBar* FindScrollBar(int _scrollBarCode);
-	UIStatic* FindStatic(int _staticCode);
 
 	void AddUIElement(UIGroupElemInfo* _pGroupElemInfo);
 
@@ -157,32 +159,9 @@ public:
 	void SetInfoGroup(UIGroupInfo* _pInfo, bool _infoOwner);
 
 protected:
-	static UIElement* FindElementRecursiveInternal(UIGroup* _pParent, int _code);
-
-	template <typename TElement>
-	static TElement* FindElementTemplated(UIGroup* _pParent, int _code)
-	{
-		UIElement* pElement = FindElementRecursiveInternal(_pParent, _code);
-
-		if (pElement == nullptr)
-		{
-			_LogWarn_("%d를 찾지 못했습니다.", _code);
-			return nullptr;
-		}
-
-		const UIElementType_t targetType = TElement::Type();
-		const UIElementType_t currentType = pElement->GetElementType();
-
-		if (currentType != targetType)
-		{
-			_LogWarn_("%d가 %s타입이 아니고, %s입니다.", _code, UIElementType::Name[currentType],
-			          UIElementType::Name[targetType]);
-			return nullptr;
-		}
-
-		return static_cast<TElement*>(pElement);
-	}
+	static UIElement* FindElementRecursiveInternal(UIGroup* _pParent, const char* _name);
 
 protected:
 	UIGroupInfo* groupInfo_;
+	std::unordered_map<std::string, UIElement*> nameMap_;
 };

@@ -245,9 +245,6 @@
     <ClCompile Include="..\Classes\sgcl\Game\UI\UICheckBox.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Game\UI\UIRootGroupManager.cpp">
-      <Filter>Game\UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Game\UI\UIToggleButton.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
@@ -264,6 +261,9 @@
       <Filter>Game\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Game\UI\UIRootGroup.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\UIXmlLoader.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Util\WndMessage.cpp">
@@ -654,12 +654,6 @@
     <ClInclude Include="..\Classes\sgcl\Game\UI\UICheckBox.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Define\Define_UI.h">
-      <Filter>Define</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Game\UI\UIRootGroupManager.h">
-      <Filter>Game\UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Game\UI\UIToggleButton.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
@@ -669,6 +663,9 @@
     <ClInclude Include="..\Classes\sgcl\Game\UI\UIStatic.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\UIRegister.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Game\UI_Implementation\UI_Inventory.h">
       <Filter>Game\UI_Implementation</Filter>
     </ClInclude>
@@ -676,6 +673,9 @@
       <Filter>Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Game\UI\UIRootGroup.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\UIXmlLoader.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Util\WndMessage.h">

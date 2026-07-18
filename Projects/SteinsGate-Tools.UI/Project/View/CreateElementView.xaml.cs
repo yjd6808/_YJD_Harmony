@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
+using SGToolsUI.FileSystem;
 using SGToolsUI.Model.Main;
 
 namespace SGToolsUI.View
@@ -74,7 +75,8 @@ namespace SGToolsUI.View
             SelectedGroup.AddChild(newElement);
             DialogResult = true;
             Close();
-            await SelectedGroup.ViewModel.Saver.BackupAsync($"{type} 드랍 생성");
+            var saver = new SGUISaver(SelectedGroup.ViewModel);
+            await saver.BackupAsync($"{type} 드랍 생성");
         }
 
         //////////////////////////////////////////////////////////////////////////////////

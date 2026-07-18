@@ -6,8 +6,8 @@
 
 using System.ComponentModel;
 using System.Linq;
+using System.Xml.Linq;
 using System.Windows.Media.Imaging;
-using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
@@ -245,6 +245,62 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)] public override bool Manipulatable => false;
 
         //////////////////////////////////////////////////////////////////////////////////
+        public override string GetElementTagName() => "ToggleButton";
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override XElement ToXElement()
+        {
+            XElement root = base.ToXElement();
+            string sga;
+            string img;
+
+            if (!SGUISpriteInfoExt.TryGetSgaImgFileName(in sprites_[0], out sga, out img))
+                SGUISpriteInfoExt.TryGetSgaImgFileName(in sprites_[1], out sga, out img);
+
+            root.SetAttributeValue("sga", sga);
+            root.SetAttributeValue("img", img);
+            root.SetAttributeValue("sprite", sprites_[0].ToFullString());
+            root.SetAttributeValue("sprite2", sprites_[1].ToFullString());
+            if (linearDodge_)
+                root.SetAttributeValue("linear_dodge", true);
+            return root;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override void ParseXElement(XElement _root)
+        {
+            base.ParseXElement(_root);
+
+            XAttribute linearDodgeAttr = _root.Attribute("linear_dodge");
+            if (linearDodgeAttr != null)
+                linearDodge_ = (bool)linearDodgeAttr;
+
+            string sgaName = (string)_root.Attribute("sga") ?? string.Empty;
+
+            if (sgaName == string.Empty)
+                return;
+
+            string imgName = (string)_root.Attribute("img")!;
+
+            SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
+            SgaPackage sga = img.Parent;
+
+            int[] sprites = new int[StateCount];
+            int[] toggledSprites = new int[StateCount];
+
+            string spriteStr = (string)_root.Attribute("sprite") ?? string.Empty;
+            if (spriteStr.Length > 0)
+                StringEx.ParseIntNumberN(spriteStr, sprites);
+
+            string toggledSpriteStr = (string)_root.Attribute("sprite2") ?? string.Empty;
+            if (toggledSpriteStr.Length > 0)
+                StringEx.ParseIntNumberN(toggledSpriteStr, toggledSprites);
+
+            SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in sprites_[0], linearDodge_);
+            SGUISpriteInfoExt.ParseInfo(sga, img, in toggledSprites, in sprites_[1], linearDodge_);
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
         public override object Clone()
         {
             SGUIToggleButton button = new SGUIToggleButton();
@@ -255,51 +311,6 @@ namespace SGToolsUI.Model.Main
                     button.sprites_[k][i] = sprites_[k][i];
 
             return button;
-        }
-
-        //////////////////////////////////////////////////////////////////////////////////
-        public override JObject ToJObject()
-        {
-            JObject root = base.ToJObject();
-            // 인덱스를 뛰어쓰기로 구분해서 돌려줌
-            string sga;
-            string img;
-
-            if (!SGUISpriteInfoExt.TryGetSgaImgFileName(in sprites_[0], out sga, out img))
-                SGUISpriteInfoExt.TryGetSgaImgFileName(in sprites_[1], out sga, out img);
-
-            root[JsonSgaKey] = sga;
-            root[JsonImgKey] = img;
-            root[JsonSpriteKey] = sprites_[0].ToFullString();
-            root[JsonToggleSpriteKey] = sprites_[1].ToFullString();
-            root[JsonLinearDodgeKey] = linearDodge_;
-            return root;
-        }
-
-        //////////////////////////////////////////////////////////////////////////////////
-        public override void ParseJObject(JObject _root)
-        {
-            base.ParseJObject(_root);
-
-            _root.TryGetValueDefault(JsonLinearDodgeKey, out linearDodge_, false);
-            string sgaName = (string)_root[JsonSgaKey]!;
-
-            if (sgaName == string.Empty)
-                return;
-
-            string imgName = (string)_root[JsonImgKey]!;
-
-            SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
-            SgaPackage sga = img.Parent;
-
-            int[] sprites = new int[StateCount];
-            int[] toggledSprites = new int[StateCount];
-
-            StringEx.ParseIntNumberN((string)_root[JsonSpriteKey]!, sprites);
-            StringEx.ParseIntNumberN((string)_root[JsonToggleSpriteKey]!, toggledSprites);
-
-            SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in sprites_[0], linearDodge_);
-            SGUISpriteInfoExt.ParseInfo(sga, img, in toggledSprites, in sprites_[1], linearDodge_);
         }
 
         //////////////////////////////////////////////////////////////////////////////////

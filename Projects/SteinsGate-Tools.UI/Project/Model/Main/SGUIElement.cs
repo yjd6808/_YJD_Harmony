@@ -11,7 +11,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Newtonsoft.Json.Linq;
+using System.Xml.Linq;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
@@ -26,21 +26,18 @@ namespace SGToolsUI.Model.Main
     public abstract class SGUIElement : CanvasElement, ICloneable, IComparer<SGUIElement>
     {
         public const string VisualNameKey = nameof(VisualName);
-        public const string DefineNameKey = nameof(DefineName);
         public const string VisualSizeKey = nameof(VisualSize);
 
         public const int OrderUIElementType = 1;
-        public const int OrderCodeString = 2;
-        public const int OrderVisualName = 3;
-        public const int OrderDefineName = 4;
-        public const int OrderVisualPosition = 5;
-        public const int OrderRelativePosition = 6;    // 엘리먼트들
-        public const int OrderVisualSize = 6;
-        public const int OrderVAlignment = 7;
-        public const int OrderHAlignment = 8;
-        public const int OrderIsVisible = 9;
-        public const int OrderCanvasSelectable = 10;
-        public const int OrderDepth = 11;
+        public const int OrderVisualName = 2;
+        public const int OrderVisualPosition = 3;
+        public const int OrderRelativePosition = 4;
+        public const int OrderVisualSize = 5;
+        public const int OrderVAlignment = 6;
+        public const int OrderHAlignment = 7;
+        public const int OrderIsVisible = 8;
+        public const int OrderCanvasSelectable = 9;
+        public const int OrderDepth = 10;
 
         // 엘리먼트 스테이츠
         public const int StateCount = 4;
@@ -49,73 +46,11 @@ namespace SGToolsUI.Model.Main
         public const int StatePressed = 2;
         public const int StateDisabled = 3;
 
-        // 엘리먼트
-        public const string JsonCodeKey = "code";
-        public const string JsonElementTypeKey = "type";
-        public const string JsonVisualNameKey = "name";
-        public const string JsonDefineNameKey = "dname";
-        public const string JsonVisualSizeKey = "size";
-        public const string JsonVAlignKey = "valign";
-        public const string JsonHAlignKey = "halign";
-        public const string JsonLinearDodgeKey = "linear_dodge";
-
-        // 그룹
-        public const string JsonChildrenKey = "children";
-
-        // 버튼
-        public const string JsonSgaKey = "sga";
-        public const string JsonImgKey = "img";
-        public const string JsonSpriteKey = "sprite";
-
-        // 스프라이트
-        public const string JsonScale9 = "scale9";
-
-        // 라벨
-        public const string JsonFontKey = "font";
-        public const string JsonFontSizeKey = "font_size";
-        public const string JsonFontColorKey = "font_color";
-        public const string JsonTextKey = "text";
-        public const string JsonTextWrapKey = "text_wrap";
-        public const string JsonTextVAlignKey = "text_valign";
-        public const string JsonTextHAlignKey = "text_halign";
-
-        // 에딧 박스
-        public const string JsonPlaceholderTextKey = "p_text";
-        public const string JsonPlaceholderFontColorKey = "p_font_color";
-        public const string JsonPlaceholderFontSizeKey = "p_font_size";
-        public const string JsonMaxLengthKey = "max_length";
-        public const string JsonInputModeKey = "input_mode";
-
-        // 체크 박스
-        public const string JsonCheck = "check";
-        public const string JsonBackgroundSga = "bg_sga";
-        public const string JsonBackgroundImg = "bg_img";
-        public const string JsonCrossSga = "cross_sga";
-        public const string JsonCrossImg = "cross_img";
-        
-
-        // 토글 버튼
-        public const string JsonToggleSpriteKey = "sprite2";
-
-        // 프로그래스바
-        public const string JsonDirectionKey = "direction";
-
-        // 스크롤바
-        public const string JsonTrackSizeKey = "track_size";
-
-
-
-
-
-
         public const string PickedKey = nameof(Picked);
 
         [Category(Constant.ElementCategoryName), DisplayName("타입"), PropertyOrder(OrderUIElementType)]
         [Description("UI 타입을 의미")]
         public abstract SGUIElementType UIElementType { get; }
-
-        [Category(Constant.ElementCategoryName), DisplayName("코드"), PropertyOrder(OrderCodeString)]
-        public string CodeString => Code.ToString("#,##0");
 
         [Category(Constant.ElementCategoryName), DisplayName("이름"), PropertyOrder(OrderVisualName)]
         [Description("UI엘리먼트가 트리뷰에서 나타내는 이름입니다.")]
@@ -128,18 +63,6 @@ namespace SGToolsUI.Model.Main
                     return;
 
                 visualName_ = value;
-                OnPropertyChanged();
-            }
-        }
-
-        [Category(Constant.ElementCategoryName), DisplayName("디파인 명"), PropertyOrder(OrderDefineName)]
-        [Description("게임에서 실제로 사용될 디파인 이름")]
-        public string DefineName
-        {
-            get => defineName_;
-            set
-            {
-                defineName_ = value;
                 OnPropertyChanged();
             }
         }
@@ -176,13 +99,13 @@ namespace SGToolsUI.Model.Main
         {
             get
             {
-                if (Parent == null) throw new Exception("마스터 그룹은 호출 금지");
+                if (Parent == null) throw new Exception("루트 그룹은 호출 금지");
                 return ConvertVisualPositionToRelativePosition(Parent);
             }
             set
             {
                 // 정렬 좌표를 받는다.
-                if (Parent == null) throw new Exception("마스터 그룹은 호출 금지");
+                if (Parent == null) throw new Exception("루트 그룹은 호출 금지");
                 VisualPosition = ConvertRelativePositionToVisualPosition(Parent, value);
                 OnPropertyChanged();
             }
@@ -357,14 +280,7 @@ namespace SGToolsUI.Model.Main
         public virtual bool IsGroup => false;
 
         [Browsable(false)]
-        public virtual int Code => Parent == null ? -1 : Parent.Code + Index + 1;
-
-        [Browsable(false)] 
         public int ZOrder { get; set; }
-
-
-        [Browsable(false)]
-        public int GroupCode => Code / Constant.GroupCodeInterval * Constant.GroupCodeInterval;
 
         [Browsable(false)]
         public abstract bool Manipulatable { get; }
@@ -390,7 +306,7 @@ namespace SGToolsUI.Model.Main
 
                 // Debug.WriteLine($"{VisualName} 셀렉 {value}");
                 selected_ = value;
-                SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
+                SGUIRootGroup groupMaster = ViewModel.RootGroup;
                 ObservableCollection<SGUIElement> selectedElements = groupMaster.SelectedElements;
 
 
@@ -404,11 +320,11 @@ namespace SGToolsUI.Model.Main
 
                     if (selectedElements.Count == 1)
                     {
-                        groupMaster.OnPropertyChanged(SGUIGroupMaster.HasSelectedElementKey);
-                        groupMaster.OnPropertyChanged(SGUIGroupMaster.HasPickedSelectedElementKey);
+                        groupMaster.OnPropertyChanged(SGUIRootGroup.HasSelectedElementKey);
+                        groupMaster.OnPropertyChanged(SGUIRootGroup.HasPickedSelectedElementKey);
                     }
                     else if (selectedElements.Count == 2)
-                        groupMaster.OnPropertyChanged(SGUIGroupMaster.IsMultiSelectedKey);
+                        groupMaster.OnPropertyChanged(SGUIRootGroup.IsMultiSelectedKey);
 
 
                     // 선택된 원소가 접힌 상태인경우 확장시킬지
@@ -436,15 +352,15 @@ namespace SGToolsUI.Model.Main
 
                     if (selectedElements.Count == 0)
                     {
-                        groupMaster.OnPropertyChanged(SGUIGroupMaster.HasSelectedElementKey);
-                        groupMaster.OnPropertyChanged(SGUIGroupMaster.HasPickedSelectedElementKey);
+                        groupMaster.OnPropertyChanged(SGUIRootGroup.HasSelectedElementKey);
+                        groupMaster.OnPropertyChanged(SGUIRootGroup.HasPickedSelectedElementKey);
                     }
                     else if (selectedElements.Count == 1)
-                        groupMaster.OnPropertyChanged(SGUIGroupMaster.IsMultiSelectedKey);
+                        groupMaster.OnPropertyChanged(SGUIRootGroup.IsMultiSelectedKey);
                 }
 
 
-                groupMaster.OnPropertyChanged(SGUIGroupMaster.SelectedElementKey);
+                groupMaster.OnPropertyChanged(SGUIRootGroup.SelectedElementKey);
                 OnPropertyChanged();
             }
         }
@@ -454,10 +370,10 @@ namespace SGToolsUI.Model.Main
         {
             get
             {
-                var groupMaster = ViewModel.GroupMaster;
+                var groupMaster = ViewModel.RootGroup;
 
                 if (this == groupMaster)
-                    throw new Exception("그룹 마스터는 이 함수 호출 금지");
+                    throw new Exception("루트 그룹은 이 함수 호출 금지");
 
                 return groupMaster.SelectedElement == this;
             }
@@ -483,7 +399,7 @@ namespace SGToolsUI.Model.Main
                     return;
 
                 // Debug.WriteLine($"{VisualName} 픽");
-                SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
+                SGUIRootGroup groupMaster = ViewModel.RootGroup;
                 picked_ = value;
 
                 if (value == false)
@@ -530,14 +446,14 @@ namespace SGToolsUI.Model.Main
                     ViewModel.View.CanvasShapesControl.AdjustAnchor(Parent);
                 }
 
-                groupMaster.OnPropertyChanged(SGUIGroupMaster.PickedElementKey);
-                groupMaster.OnPropertyChanged(SGUIGroupMaster.HasPickedElementKey);
-                groupMaster.OnPropertyChanged(SGUIGroupMaster.HasPickedSelectedElementKey);
+                groupMaster.OnPropertyChanged(SGUIRootGroup.PickedElementKey);
+                groupMaster.OnPropertyChanged(SGUIRootGroup.HasPickedElementKey);
+                groupMaster.OnPropertyChanged(SGUIRootGroup.HasPickedSelectedElementKey);
             }
         }
 
         [Browsable(false)]
-        public bool FirstPicked => ViewModel.GroupMaster.PickedElement == this;
+        public bool FirstPicked => ViewModel.RootGroup.PickedElement == this;
 
 
         [Browsable(false)]
@@ -545,7 +461,7 @@ namespace SGToolsUI.Model.Main
         {
             get
             {
-                SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
+                SGUIRootGroup groupMaster = ViewModel.RootGroup;
 
                 if (groupMaster.PickedElements.Count <= 0)
                     return false;
@@ -555,8 +471,6 @@ namespace SGToolsUI.Model.Main
         }
 
 
-        [Browsable(false)]
-        public bool IsMaster => this == ViewModel.GroupMaster;
         [Browsable(false)]
         public bool IsFirst => Index == 0;
         [Browsable(false)]
@@ -586,7 +500,7 @@ namespace SGToolsUI.Model.Main
             get
             {
                 if (IsFirst)
-                    return Parent == ViewModel.GroupMaster ? null! : Parent;
+                    return Parent == ViewModel.RootGroup ? null! : Parent;
 
                 /*
                  * 왜 인덱스 아웃오브레인지 검사를 수행하지 않는가?
@@ -704,7 +618,7 @@ namespace SGToolsUI.Model.Main
         {
             get
             {
-                SGUIGroupMaster master = ViewModel.GroupMaster;
+                SGUIRootGroup master = ViewModel.RootGroup;
 
                 // 자기 자신이 탑패런트인경우
                 if (IsGroup && Parent == master)
@@ -732,7 +646,7 @@ namespace SGToolsUI.Model.Main
         {
             get
             {
-                SGUIGroupMaster master = ViewModel.GroupMaster;
+                SGUIRootGroup master = ViewModel.RootGroup;
                 SGUIGroup parent = Parent;
 
                 // 그룹마스터가 호출하면 이상황이 발생할 수 있다.
@@ -799,7 +713,6 @@ namespace SGToolsUI.Model.Main
             canvasSelectable_ = _element.canvasSelectable_;
             visualName_ = _element.visualName_;
             visualPosition_ = _element.visualPosition_;
-            defineName_ = _element.defineName_;
         }
 
         public abstract void CreateInit();
@@ -834,25 +747,13 @@ namespace SGToolsUI.Model.Main
                 throw new Exception($"{VisualName}은 {Parent.VisualName}의 자식이 아닙니다.");
 
             deleted_ = true;
-            SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
 
             if (IsGroup)
             {
-                var delGroup = Cast<SGUIGroup>();
-                groupMaster.RemoveGroup(delGroup);
-                delGroup.ForEachRecursive(element =>
+                Cast<SGUIGroup>().ForEachRecursive(element =>
                 {
-                    if (element.IsGroup)
-                        groupMaster.RemoveGroup(element.Cast<SGUIGroup>());
-                    else
-                        groupMaster.RemoveElement(element);
-
                     element.deleted_ = true;
                 });
-            }
-            else
-            {
-                groupMaster.RemoveElement(this);
             }
 
             OnPropertyChanged(nameof(Deleted));
@@ -863,7 +764,7 @@ namespace SGToolsUI.Model.Main
         {
             int comp = Comparer<int>.Default.Compare(_lhsElement.Depth, _rhsElement.Depth);
             if (comp == 0)
-                return Comparer<int>.Default.Compare(_lhsElement.Code, _rhsElement.Code);
+                return Comparer<int>.Default.Compare(_lhsElement.ZOrder, _rhsElement.ZOrder);
             return comp;
         }
 
@@ -883,7 +784,7 @@ namespace SGToolsUI.Model.Main
             int lhsCurIndex;
             int rhsCurIndex;
 
-            SGUIGroup parent = ViewModel.GroupMaster;
+            SGUIGroup parent = ViewModel.RootGroup;
 
             // 맨위는 무조건 마스터 그룹이기 때문에 1번째 인덱스부터 검사
             for (int i = 1; i < maxCount; ++i)
@@ -1102,35 +1003,32 @@ namespace SGToolsUI.Model.Main
         //////////////////////////////////////////////////////////////////////////////////
         public int Compare(SGUIElement? _lhs, SGUIElement? _rhs)
         {
-            return _lhs!.Code.CompareTo(_rhs!.Code);
+            return _lhs!.ZOrder.CompareTo(_rhs!.ZOrder);
         }
 
+        public abstract string GetElementTagName();
+
         //////////////////////////////////////////////////////////////////////////////////
-        public virtual JObject ToJObject()
+        public virtual XElement ToXElement()
         {
-            JObject root = new JObject();
-            root[JsonCodeKey] = Code;
-            root[JsonElementTypeKey] = (int)UIElementType;
-            root[JsonDefineNameKey] = defineName_;
-
-            // 비주얼 이름은 게임데이터에서 필요없음
-            root[JsonVisualNameKey] = visualName_;
-
-            // 필요없는 자식도 있음
-            root[JsonVAlignKey] = (int)verticalAlignment_;
-            root[JsonHAlignKey] = (int)horizontalAlignment_;
+            XElement root = new XElement(GetElementTagName());
+            root.SetAttributeValue("name", visualName_);
+            root.SetAttributeValue("valign", (int)verticalAlignment_);
+            root.SetAttributeValue("halign", (int)horizontalAlignment_);
+            if (!visible_)
+                root.SetAttributeValue("visible", false);
             return root;
         }
 
         //////////////////////////////////////////////////////////////////////////////////
-        public virtual void ParseJObject(JObject _root)
+        public virtual void ParseXElement(XElement _root)
         {
-            // 코드필요없음
-            // 엘리먼트타입 고정이므로 필요없음
-            visualName_ = (string)_root[JsonVisualNameKey]!;
-            defineName_ = (string)_root[JsonDefineNameKey]!;
-            verticalAlignment_ = (VAlignment)(int)_root[JsonVAlignKey]!;
-            horizontalAlignment_ = (HAlignment)(int)_root[JsonHAlignKey]!;
+            visualName_ = (string)_root.Attribute("name")!;
+            verticalAlignment_ = (VAlignment)(int)_root.Attribute("valign")!;
+            horizontalAlignment_ = (HAlignment)(int)_root.Attribute("halign")!;
+            XAttribute visibleAttr = _root.Attribute("visible");
+            if (visibleAttr != null)
+                visible_ = (bool)visibleAttr;
         }
 
         [Browsable(false)]
@@ -1202,7 +1100,6 @@ namespace SGToolsUI.Model.Main
         protected HAlignment horizontalAlignment_ = HAlignment.Left;
         protected VAlignment verticalAlignment_ = VAlignment.Bottom;
         protected TreeViewItem? treeViewItem_;
-        protected string defineName_ = string.Empty;
 
 
 

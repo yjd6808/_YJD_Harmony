@@ -133,6 +133,7 @@ void WorldScene::InitLayers()
 {
 	pUILayer_ = UILayer::Create();
 	addChild(pUILayer_, 1000);
+	g_cUIMgr.SetUILayer(pUILayer_);
 
 	pGridLayer_ = GridLayer::create(100, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
 	pGridLayer_->setAnchorPoint(Vec2::ZERO);
@@ -383,6 +384,8 @@ void WorldScene::onExit()
 	// 자식노드 모두 정리 (onExit에서 제거하는줄 알았는데 아니네; 그냥 재귀 onExit 호출함.. 하..)
 	// 씬 정리되기전에 모든 레퍼런스 카운트가 0가 되어야함.
 	removeAllChildren();
+
+	g_cUIMgr.SetUILayer(nullptr);
 
 	FinalizeClientCore();
 	FinalizeCommonCore();

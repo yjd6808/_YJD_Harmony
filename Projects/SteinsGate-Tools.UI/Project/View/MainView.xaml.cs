@@ -121,7 +121,9 @@ namespace SGToolsUI.View
 
                 if (state.IsPressed(SGKey.S))
                 {
-                    await ViewModel.Saver.SaveAutoAsync(SaveMode.Full, false);
+                    string savePath = System.IO.Path.Combine(Environment.CurrentDirectory, Constant.UIToolDataFileName);
+                    var saver = new SGUISaver(ViewModel);
+                    await saver.SaveAsync(savePath, ViewModel.RootGroup);
 
                     DoubleAnimation animation = new DoubleAnimation();
                     animation.From = 0;
@@ -144,14 +146,14 @@ namespace SGToolsUI.View
             {
                 if (state.IsPressed(SGKey.Escape))
                 {
-                    ViewModel.GroupMaster.DeselectAll();
-                    ViewModel.GroupMaster.Depick();
+                    ViewModel.RootGroup.DeselectAll();
+                    ViewModel.RootGroup.Depick();
                     ViewModel.Commander.ClipboardOperateUIElement.Clear();
                 }
 
-                else if (state.IsPressed(SGKey.F2) && ViewModel.GroupMaster.SelectedElement != null)
+                else if (state.IsPressed(SGKey.F2) && ViewModel.RootGroup.SelectedElement != null)
                 {
-                    UIElementPropertyGrid.SelectWithPropertyFocus(ViewModel.GroupMaster.SelectedElement, SGUIElement.VisualNameKey);
+                    UIElementPropertyGrid.SelectWithPropertyFocus(ViewModel.RootGroup.SelectedElement, SGUIElement.VisualNameKey);
                 }
 
                 else if (state.IsPressed(SGKey.F6) && MessageBoxEx.ShowTopMost("다시 로딩하시겠습니까?", "질문", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
@@ -234,7 +236,8 @@ namespace SGToolsUI.View
             if (backuptag.Length == 0)
                 return;
 
-            await ViewModel.Saver.BackupAsync(backuptag);
+            var saver = new SGUISaver(ViewModel);
+            await saver.BackupAsync(backuptag);
             BackUpTextBox.Text = string.Empty;
             BackUpTextBox.FocusClear();
         }
@@ -249,19 +252,20 @@ namespace SGToolsUI.View
                 // 이미지 파일이 아닌녀석들 제거
                 if (files.Count > 1)
                 {
-                    MessageBoxEx.ShowTopMost("하나의 .json 파일만 드래그 앤 드롭 해주세요.");
+                    MessageBoxEx.ShowTopMost("하나의 .xml 파일만 드래그 앤 드롭 해주세요.");
                     return;
                 }
 
                 string file = files[0];
 
-                if (Path.GetExtension(file) != ".json")
+                if (Path.GetExtension(file) != ".xml")
                 {
-                    MessageBoxEx.ShowTopMost(".json 형식의 파일이 아닙니다.");
+                    MessageBoxEx.ShowTopMost(".xml 형식의 파일이 아닙니다.");
                     return;
                 }
 
-                ViewModel.GroupMaster = await ViewModel.Loader.LoadAsync(file);
+                var loader = new SGUILoader(ViewModel);
+                ViewModel.RootGroup = await loader.LoadAsync(file);
             }
         }
 

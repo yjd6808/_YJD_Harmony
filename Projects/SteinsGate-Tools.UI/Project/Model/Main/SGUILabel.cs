@@ -7,10 +7,10 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Xml.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Resource;
@@ -152,6 +152,47 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)] public override bool Manipulatable => true;
 
         //////////////////////////////////////////////////////////////////////////////////
+        public override string GetElementTagName() => "Label";
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override XElement ToXElement()
+        {
+            XElement root = base.ToXElement();
+            root.SetAttributeValue("width", visualSize_.Width);
+            root.SetAttributeValue("height", visualSize_.Height);
+            root.SetAttributeValue("font", font_ + ".ttf");
+            root.SetAttributeValue("font_size", fontSize_);
+            root.SetAttributeValue("font_color", fontColor_.ToFullString4B());
+            root.SetAttributeValue("text", text_.Unescape());
+            if (textWrap_)
+                root.SetAttributeValue("text_wrap", true);
+            root.SetAttributeValue("text_valign", (int)textVAlign_);
+            root.SetAttributeValue("text_halign", (int)textHAlign_);
+            return root;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public override void ParseXElement(XElement _root)
+        {
+            base.ParseXElement(_root);
+
+            visualSize_.Width = (int)_root.Attribute("width")!;
+            visualSize_.Height = (int)_root.Attribute("height")!;
+            string fontFileName = (string)_root.Attribute("font")!;
+            font_ = (FontType)Enum.Parse(typeof(FontType), Path.GetFileNameWithoutExtension(fontFileName));
+            fontSize_ = (int)_root.Attribute("font_size")!;
+
+            string fontColorString = (string)_root.Attribute("font_color")!;
+            fontColor_ = ColorEx.ParseFullString4B(fontColorString);
+            text_ = (string)_root.Attribute("text") ?? string.Empty;
+            XAttribute textWrapAttr = _root.Attribute("text_wrap");
+            if (textWrapAttr != null)
+                textWrap_ = (bool)textWrapAttr;
+            textVAlign_ = (VAlignment)(int)_root.Attribute("text_valign")!;
+            textHAlign_ = (HAlignment)(int)_root.Attribute("text_halign")!;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
         public override object Clone()
         {
             SGUILabel label = new SGUILabel();
@@ -165,42 +206,6 @@ namespace SGToolsUI.Model.Main
             label.textVAlign_ = textVAlign_;
             label.textHAlign_ = textHAlign_;
             return label;
-        }
-
-        //////////////////////////////////////////////////////////////////////////////////
-        public override JObject ToJObject()
-        {
-            JObject root = base.ToJObject();
-            // 인덱스를 뛰어쓰기로 구분해서 돌려줌
-            root[JsonVisualSizeKey] = visualSize_.ToFullString();
-            root[JsonFontKey] = font_ + ".ttf";
-            root[JsonFontSizeKey] = fontSize_;
-            root[JsonFontColorKey] = fontColor_.ToFullString4B();
-            root[JsonTextKey] = text_.Unescape();
-            root[JsonTextWrapKey] = textWrap_;
-            root[JsonTextVAlignKey] = (int)textVAlign_;
-            root[JsonTextHAlignKey] = (int)textHAlign_;
-
-            return root;
-        }
-
-        //////////////////////////////////////////////////////////////////////////////////
-        public override void ParseJObject(JObject _root)
-        {
-            base.ParseJObject(_root);
-
-            string sizeString = (string)_root[JsonVisualSizeKey]!;
-            visualSize_ = SizeEx.ParseFullString(sizeString);
-            string fontFileName = (string)_root[JsonFontKey]!;
-            font_ = (FontType)Enum.Parse(typeof(FontType), Path.GetFileNameWithoutExtension(fontFileName));
-            fontSize_ = (int)_root[JsonFontSizeKey]!;
-
-            string fontColorString = (string)_root[JsonFontColorKey]!;
-            fontColor_ = ColorEx.ParseFullString4B(fontColorString);
-            text_ = (string)_root[JsonTextKey]!;
-            textWrap_ = (bool)_root[JsonTextWrapKey]!;
-            textVAlign_ = (VAlignment)(int)_root[JsonTextVAlignKey]!;
-            textHAlign_ = (HAlignment)(int)_root[JsonTextHAlignKey]!;
         }
 
         //////////////////////////////////////////////////////////////////////////////////

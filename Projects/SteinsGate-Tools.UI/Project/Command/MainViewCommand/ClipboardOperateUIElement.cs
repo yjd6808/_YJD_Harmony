@@ -13,6 +13,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using SGToolsCommon.Extension;
+using SGToolsUI.FileSystem;
 using SGToolsUI.Model.Main;
 using SGToolsUI.ViewModel;
 
@@ -44,7 +45,7 @@ namespace SGToolsUI.Command.MainViewCommand
             if (_parameter is not ClipboardOperate operate)
                 return;
 
-            ObservableCollection<SGUIElement> selectedElements = ViewModel.GroupMaster.SelectedElements;
+            ObservableCollection<SGUIElement> selectedElements = ViewModel.RootGroup.SelectedElements;
             int selectedElementCount = selectedElements.Count;
 
             switch (operate)
@@ -101,7 +102,7 @@ namespace SGToolsUI.Command.MainViewCommand
                 return;
             }
 
-            SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
+            SGUIRootGroup rootGroup = ViewModel.RootGroup;
             SGUIGroup cloned = new SGUIGroup(clipboard_.Count);
 
             for (int i = 0; i < clipboard_.Count; ++i)
@@ -110,7 +111,7 @@ namespace SGToolsUI.Command.MainViewCommand
                 cloned.Children.Add(element!);
             }
 
-            if (groupMaster.HasSelectedElement)
+            if (rootGroup.HasSelectedElement)
             {
                 SGUIElement standardElement = _selectedElements[_selectedElements.Count - 1];
 
@@ -132,14 +133,14 @@ namespace SGToolsUI.Command.MainViewCommand
             }
             else
             {
-                await InsertChildren(groupMaster, cloned, groupMaster.SelectedElements.Count);
+                await InsertChildren(rootGroup, cloned, rootGroup.SelectedElements.Count);
             }
         }
 
         //////////////////////////////////////////////////////////////////////////////////
         private async Task InsertChildren(SGUIGroup _group, SGUIGroup _cloned, int _index)
         {
-            if (_group.IsMaster && !_cloned.HasOnlyGroup)
+            if (_group is SGUIRootGroup && !_cloned.HasOnlyGroup)
             {
                 MessageBox.Show("그룹마스터에는 그룹만 붙일 수 있습니다.");
                 return;
@@ -148,9 +149,10 @@ namespace SGToolsUI.Command.MainViewCommand
             _group.InsertChildren(_cloned, _index);
 
             // 새로 추가된 원소들 선택함
-            ViewModel.GroupMaster.DeselectAll();
+            ViewModel.RootGroup.DeselectAll();
             _cloned.ForEachRecursive(element => element.Selected = true);
-            await ViewModel.Saver.BackupAsync("붙여넣기");
+            var saver = new SGUISaver(ViewModel);
+            await saver.BackupAsync("붙여넣기");
         }
 
         //////////////////////////////////////////////////////////////////////////////////

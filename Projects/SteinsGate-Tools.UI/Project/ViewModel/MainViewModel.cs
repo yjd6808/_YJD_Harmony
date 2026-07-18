@@ -42,7 +42,7 @@ namespace SGToolsUI.ViewModel
         private SgaImage selectedImage_ = new();
         private IKeyboardInputReceiver? selectedKeyboardInputReceiver_;
         private SgaSpriteAbstract selectedSprite_ = new SgaSprite();
-        private SGUIGroupMaster groupMaster_ = null!;
+        private SGUIRootGroup rootGroup_ = null!;
 
         //////////////////////////////////////////////////////////////////////////////////
         public MainViewModel()
@@ -53,14 +53,11 @@ namespace SGToolsUI.ViewModel
             LogBox = new LogListBox() { MaxItemCount = 1500 };
             LogBox.Width = 400;
             LogBox.Height = 600;
-            GroupMaster = SGUIGroupMaster.Create(this);
+            RootGroup = SGUIRootGroup.Create(this);
             LogErrorHandler = new Action<Exception>((ex) => LogBox.AddLog(ex));
             LogView = new LogView(LogBox);
             AlbumView = new AlbumView(this);
             BackupView = new BackupView(this);
-            Loader = new SGUILoader(this);
-            Saver = new SGUISaver(this);
-            Exporter = new SGUIExporter(this);
             Commander = new MainCommandCenter(this);
             Commander.Execute(nameof(ReloadSgaPackage));
             DragState = new DataDragState();
@@ -96,128 +93,9 @@ namespace SGToolsUI.ViewModel
 
             if (!Constant.UseDebugData)
             {
-                Commander.Execute(nameof(FileUIToolDataLoadAsync), SGUIFileSystem.LoadKey); // 그룹마스터 로딩
+                Commander.Execute(nameof(FileUIToolDataLoadAsync), SGUIFileSystem.LoadKey);
                 return;
             }
-
-            #pragma warning disable CS0162
-            #region DebugElements
-
-            this.GroupMaster = SGUIGroupMaster.Create(this);
-            this.GroupMaster.Children.Add(new SGUIGroup()
-            {
-                VisualName = "그룹 1",
-                Children = new ObservableCollection<SGUIElement>()
-                {
-                    new SGUIButton() { VisualName = "버튼 1-1"},
-                    new SGUIButton() { VisualName = "버튼 1-2"},
-                    new SGUIButton() { VisualName = "버튼 1-3"},
-                    new SGUIButton() { VisualName = "버튼 1-4"},
-                    new SGUIGroup()
-                    {
-                        VisualName = "그룹 1-5",
-                        Children = new ObservableCollection<SGUIElement>()
-                        {
-                            new SGUIButton() { VisualName = "버튼 1-5-1"},
-                            new SGUIButton() { VisualName = "버튼 1-5-2"},
-                            new SGUIButton() { VisualName = "버튼 1-5-3"},
-                            new SGUIButton() { VisualName = "버튼 1-5-4"},
-                            new SGUIGroup()
-                            {
-                                VisualName = "그룹 1-5-5"
-                            }
-                        }
-                    },
-                    new SGUIGroup()
-                    {
-                        VisualName = "그룹 1-6",
-                        Children = new ObservableCollection<SGUIElement>()
-                        {
-                            new SGUIButton() { VisualName = "버튼 1-6-1"},
-                            new SGUIButton() { VisualName = "버튼 1-6-2"},
-                            new SGUIButton() { VisualName = "버튼 1-6-3"},
-                            new SGUIButton() { VisualName = "버튼 1-6-4"},
-                            new SGUIGroup()
-                            {
-                                VisualName = "그룹 1-6-5"
-                            }
-                        }
-                    }
-                }
-            });
-            this.GroupMaster.Children.Add(new SGUIGroup()
-            {
-                VisualName = "그룹 2",
-                Children = new ObservableCollection<SGUIElement>()
-                {
-                    new SGUIButton() { VisualName = "버튼 2-1"},
-                    new SGUIButton() { VisualName = "버튼 2-2"},
-                    new SGUIButton() { VisualName = "버튼 2-3"},
-                    new SGUIButton() { VisualName = "버튼 2-4"},
-                    new SGUIGroup()
-                    {
-                        VisualName = "그룹 2-5",
-                        Children = new ObservableCollection<SGUIElement>()
-                        {
-                            new SGUIButton() { VisualName = "버튼 2-5-1"},
-                            new SGUIButton() { VisualName = "버튼 2-5-2"},
-                            new SGUIButton() { VisualName = "버튼 2-5-3"},
-                            new SGUIButton() { VisualName = "버튼 2-5-4"},
-                            new SGUIGroup()
-                            {
-                                VisualName = "그룹 2-5-5"
-                            }
-                        }
-                    },
-                    new SGUIGroup()
-                    {
-                        VisualName = "그룹 2-6",
-                        Children = new ObservableCollection<SGUIElement>()
-                        {
-                            new SGUIButton() { VisualName = "버튼 2-6-1"},
-                            new SGUIButton() { VisualName = "버튼 2-6-2"},
-                            new SGUIButton() { VisualName = "버튼 2-6-3"},
-                            new SGUIButton() { VisualName = "버튼 2-6-4"},
-                            new SGUIGroup()
-                            {
-                                VisualName = "그룹 2-6-5"
-                            }
-                        }
-                    }
-                }
-            });
-
-            this.GroupMaster.Children.Add(new SGUIGroup() { VisualName = "그룹 3" });
-            this.GroupMaster.Children.Add(new SGUIGroup() { VisualName = "그룹 4" });
-
-            void DebugManualUpdate(SGUIGroup _group)
-            {
-                _group.VisualSize = new Size(Constant.ResolutionWidth, Constant.ResolutionHeight);
-                _group.ViewModel = this;
-
-                if (!_group.IsMaster)
-                {
-                    this.GroupMaster.AddGroup(_group);
-                    _group.SetDepth(_group.Parent.Depth + 1);
-                }
-
-                _group.Children.ForEach((_, x) =>
-                {
-                    x.Parent = _group;
-                    x.ViewModel = this;
-
-                    if (x.IsGroup)
-                        DebugManualUpdate(x.Cast<SGUIGroup>());
-                    else
-                        this.GroupMaster.AddElement(x);
-                });
-            }
-
-            // 임시데이터 기본 데이터 주입
-            DebugManualUpdate(this.GroupMaster);
-
-            #endregion
-            #pragma warning restore CS0162
         }
 
         public MainView View { get; set; } = null!;
@@ -325,18 +203,22 @@ namespace SGToolsUI.ViewModel
             }
         }
 
-        public SGUIGroupMaster GroupMaster
+        public SGUIRootGroup RootGroup
         {
-            get => groupMaster_;
+            get => rootGroup_;
             set
             {
-                if (groupMaster_ != null)
-                    groupMaster_.Clear();
+                if (rootGroup_ != null)
+                    rootGroup_.Clear();
 
-                groupMaster_ = value;
+                rootGroup_ = value;
                 OnPropertyChanged();
             }
         }
+
+        public SGUIMetaManager? MetaManager { get; set; }
+        public SGUIRootGroup? CurrentRootGroup { get; set; }
+        public ObservableCollection<ProjectFolderItem> FolderTreeItems { get; set; } = new();
 
         public SelectMode UIElementSelectMode
         {
@@ -381,9 +263,6 @@ namespace SGToolsUI.ViewModel
         public ProgressView ProgressView { get; } = new();
         public AlbumView AlbumView { get; }
         public BackupView BackupView { get; }
-        public SGUILoader Loader { get; }
-        public SGUISaver Saver { get; }
-        public SGUIExporter Exporter { get; }
         public List<IKeyboardInputReceiver> KeyboardInputReceivers = new();
         public readonly Action<Exception> LogErrorHandler;
     }

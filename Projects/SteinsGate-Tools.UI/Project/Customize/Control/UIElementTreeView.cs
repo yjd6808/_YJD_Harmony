@@ -60,8 +60,8 @@ namespace SGToolsUI.Customize.Control
         public void OnKeyDown(SGKey _key)
         {
             var commandCenter = ViewModel.Commander;
-            var groupMaster = ViewModel.GroupMaster;
-            SGUIElement element = groupMaster.SelectedElement;
+            var rootGroup = ViewModel.RootGroup;
+            SGUIElement element = rootGroup.SelectedElement;
 
             if (element == null)
                 return;
@@ -92,7 +92,7 @@ namespace SGToolsUI.Customize.Control
                 }
                 case SGKey.Delete:
                 {
-                    if (ViewModel.GroupMaster.HasSelectedElement && MessageBoxEx.ShowTopMost("정말로 삭제하시겠습니까?", "질문임", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    if (ViewModel.RootGroup.HasSelectedElement && MessageBoxEx.ShowTopMost("정말로 삭제하시겠습니까?", "질문임", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                         ViewModel.Commander.DeleteUIElement.Execute(null);
                     break;
                 }
@@ -138,13 +138,13 @@ namespace SGToolsUI.Customize.Control
 
             if (_e.ClickCount == 1)
             {
-                SGUIElement? prevSelected = ViewModel.GroupMaster.SelectedElement;
+                SGUIElement? prevSelected = ViewModel.RootGroup.SelectedElement;
 
                 if (ViewModel.UIElementSelectMode == SelectMode.Keep && prevSelected != null &&
                     prevSelected != selected)
                 {
                     List<SGUIElement> betweenElements =
-                        ViewModel.GroupMaster.GetElementsBetween(prevSelected, selected, true);
+                        ViewModel.RootGroup.GetElementsBetween(prevSelected, selected, true);
                     ViewModel.Commander.SelectUIElement.Execute(betweenElements);
                     return;
                 }

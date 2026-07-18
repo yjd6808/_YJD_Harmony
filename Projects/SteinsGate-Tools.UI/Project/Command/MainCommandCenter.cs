@@ -56,8 +56,6 @@ namespace SGToolsUI.Command
         public CommandAbstract FileUIToolDataLoadAsync { get; }
         public CommandAbstract FileUIToolDataSaveAsync { get; }
         public CommandAbstract FileUIToolDataBackupAsync { get; }
-        public CommandAbstract FileGameDataSaveAsync { get; }
-        public CommandAbstract FileGameHeaderExportAsync { get; }
 
         // =================================================
         // 컨트롤 커맨드 목록 (개발자가 직접 호출할 일없는..)
@@ -103,8 +101,6 @@ namespace SGToolsUI.Command
             Add(FileUIToolDataLoadAsync = new FileUIToolDataLoadAsync(ViewModel) { UseParameter = true });
             Add(FileUIToolDataSaveAsync = new FileUIToolDataSaveAsync(ViewModel) { UseParameter = true });
             Add(FileUIToolDataBackupAsync = new FileUIToolDataBackupAsync(ViewModel)); // 커맨드파라미터를 바인딩해서 초기 null이 들어옴
-            Add(FileGameDataSaveAsync = new FileGameDataSaveAsync(ViewModel) { UseParameter = true });
-            Add(FileGameHeaderExportAsync = new FileGameHeaderExportAsync(ViewModel));
 
             // ============================================================
             Add(MouseMoveOnWindow = new MouseMoveOnWindow(ViewModel) { UseParameter = true });

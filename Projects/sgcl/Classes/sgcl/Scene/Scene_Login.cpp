@@ -10,13 +10,11 @@
 #include "Scene_Login.h"
 
 #include "sgcl/Scene/Scene_World.h"
-#include "sgcl/Layer/Layer_UI.h"
-#include "sgcl/Define/Define_UI.h"
+#include "sgcl/Game/Contents/UIManager.h"
 
 USING_NS_CC;
 USING_NS_JC;
 
-//////////////////////////////////////////////////////////////////////////////////////////
 SGLoginScene* SGLoginScene::Create()
 {
 	SGLoginScene* pScene = dbg_new SGLoginScene();
@@ -30,13 +28,11 @@ SGLoginScene* SGLoginScene::Create()
 	return nullptr;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 SGLoginScene::SGLoginScene()
 : SceneBase()
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 bool SGLoginScene::init()
 {
 	if (!SceneBase::init())
@@ -44,16 +40,14 @@ bool SGLoginScene::init()
 		return false;
 	}
 
-	pUILayer_->AddUIGroup(GROUP_UI_LOGIN);
+	g_cUIMgr.Show("Login");
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void SGLoginScene::update(float _dt)
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void SGLoginScene::OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 	if (_keyCode == EventKeyboard::KeyCode::KEY_F8)
@@ -66,7 +60,6 @@ void SGLoginScene::OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void SGLoginScene::OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 }

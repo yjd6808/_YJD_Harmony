@@ -33,7 +33,7 @@ public:
 	void SetEnabled(bool _enabled) override;
 	void RestoreState(State _state) override;
 	UIElementType_t GetElementType() override { return UIElementType::Button; }
-	jc::String ToString() override { return jc::StringUtil::Format("버튼(%d)", buttonInfo_->code_); }
+	jc::String ToString() override { return jc::StringUtil::Format("버튼(%s)", buttonInfo_->name_); }
 
 protected:
 	void OnMouseEnterInternalDetail(cc::EventMouse* _pMouseEvent) override;

@@ -1,13 +1,7 @@
-﻿/*
- * 작성자: 윤정도
- * 생성일: 4/27/2023 10:50:56 PM
- * =====================
- *
- */
-
-#pragma once
+﻿#pragma once
 
 #include "sgcl/Game/UI/UIRootGroup.h"
+#include "sgcl/Game/UI/UIRegister.h"
 
 class UI_Test : public UIRootGroup
 {
@@ -21,7 +15,7 @@ public:
 	UI_Test(UIGroupInfo* _pGroupInfo);
 
 protected:
-	void OnInit() override;
+	void OnInit(const jc::CDataMap<>& _param) override;
 	void OnLoaded() override;
 	void OnUpdate(float _dt) override;
 	void OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _state) override;
@@ -41,3 +35,5 @@ private:
 	float scale_;
 	ScaleState scaleState_;
 };
+
+REGISTER_UI(Test, UI_Test)

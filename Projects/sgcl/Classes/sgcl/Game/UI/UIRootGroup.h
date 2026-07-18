@@ -1,12 +1,4 @@
-﻿/*
- * 작성자: 윤정도
- * 생성일: 3/22/2023 12:50:32 AM
- * =====================
- *
- */
-
-
-#pragma once
+﻿#pragma once
 
 #include "sgcl/Game/UI/UIGroup.h"
 #include "sgcl/Game/UI/UIButton.h"
@@ -18,6 +10,7 @@
 #include "sgcl/Game/UI/UIProgressBar.h"
 #include "sgcl/Game/UI/UIScrollBar.h"
 #include "sgcl/Game/UI/UIStatic.h"
+#include "jc/Container/DataMap.h"
 
 struct DragState;
 
@@ -35,7 +28,8 @@ public:
 
 	// 로딩전, 자식 컨트롤들 init만 전부 이뤄진상태
 	// 처음 한번만 호출 하도록 함
-	virtual void OnInit() = 0;
+	virtual void OnInit() { OnInit(jc::CDataMap<>()); }
+	virtual void OnInit(const jc::CDataMap<>& _param);
 
 	// 로딩후, 자식 컨트롤들 텍스쳐, 스프라이트 모두 로딩되었을 때
 	// 텍스쳐 재로딩시 다시 호출 됨
@@ -79,8 +73,11 @@ public:
 	virtual void OnMouseLeave(cc::EventMouse* _pMouseEvent);
 	virtual void OnMouseScroll(cc::EventMouse* _pMouseEvent);
 
+	template<typename T>
+	T* FindElementByName(const char* _name) { return UIGroup::FindElementByName<T>(_name); }
+
 	jc::String ToString() override
 	{
-		return jc::StringUtil::Format("마스터그룹(%d)", pBaseInfo_->code_);
+		return jc::StringUtil::Format("마스터그룹(%s)", pBaseInfo_->name_);
 	}
 };

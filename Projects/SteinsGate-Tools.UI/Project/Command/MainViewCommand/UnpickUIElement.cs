@@ -20,14 +20,14 @@ namespace SGToolsUI.Command.MainViewCommand
         //////////////////////////////////////////////////////////////////////////////////
         public override void Execute(object? _parameter)
         {
-            var groupMaster = ViewModel.GroupMaster;
+            var rootGroup = ViewModel.RootGroup;
 
-            if (!groupMaster.HasPickedElement)
+            if (!rootGroup.HasPickedElement)
                 return;
 
-            groupMaster.DeselectAll();
-            groupMaster.Depick();
-            Debug.Assert(groupMaster.PickedElements.Count == 0, "아직 픽된 엘리먼트가 남아있습니다.");
+            rootGroup.DeselectAll();
+            rootGroup.Depick();
+            Debug.Assert(rootGroup.PickedElements.Count == 0, "아직 픽된 엘리먼트가 남아있습니다.");
             ViewModel.View.CanvasShapesControl.AdjustAnchor();
             ViewModel.View.UIElementPropertyGrid.SelectedObject = null;
         }

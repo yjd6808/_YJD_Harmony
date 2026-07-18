@@ -8,13 +8,12 @@
 #include "Scene/Scene_ChannelSelect.h"
 
 #include "sgcl/Scene/Scene_World.h"
-#include "sgcl/Define/Define_UI.h"
+#include "sgcl/Game/Contents/UIManager.h"
 #include "sgcl/Net/Send/S_LOBBY.h"
 
 USING_NS_CC;
 USING_NS_JC;
 
-//////////////////////////////////////////////////////////////////////////////////////////
 SGChannelSelectScene* SGChannelSelectScene::create()
 {
 	SGChannelSelectScene* pScene = dbg_new SGChannelSelectScene();
@@ -29,12 +28,10 @@ SGChannelSelectScene* SGChannelSelectScene::create()
 	return nullptr;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 SGChannelSelectScene::SGChannelSelectScene()
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 bool SGChannelSelectScene::init()
 {
 	if (!SceneBase::init())
@@ -42,22 +39,19 @@ bool SGChannelSelectScene::init()
 		return false;
 	}
 
-	pUILayer_->AddUIGroup(GROUP_UI_CHANNEL);
+	g_cUIMgr.Show("ChannelSelect");
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void SGChannelSelectScene::onEnterTransitionDidFinish()
 {
 	SceneBase::onEnterTransitionDidFinish();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void SGChannelSelectScene::update(float _dt)
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void SGChannelSelectScene::OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 	if (_keyCode == EventKeyboard::KeyCode::KEY_F8)
@@ -70,7 +64,6 @@ void SGChannelSelectScene::OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc:
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
 void SGChannelSelectScene::OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
 {
 }

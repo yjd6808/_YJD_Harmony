@@ -36,7 +36,7 @@ public:
 	UISpriteInfo* GetInfo() const { return pInfo_; }
 	cc::Sprite* Source() const { return pSprite_; }
 	UIElementType_t GetElementType() override { return UIElementType::Sprite; }
-	jc::String ToString() override { return jc::StringUtil::Format("스프라이트(%d)", pInfo_->code_); }
+	jc::String ToString() override { return jc::StringUtil::Format("스프라이트(%s)", pInfo_->name_); }
 
 private:
 	UISpriteInfo* pInfo_;
