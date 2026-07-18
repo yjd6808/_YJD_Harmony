@@ -6,6 +6,7 @@
 		<RootNamespace>SGToolsUI</RootNamespace>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
+		<UseWindowsForms>true</UseWindowsForms>
 		<AssemblyName>SGToolsUI</AssemblyName>
 		<RunPostBuildEvent>Always</RunPostBuildEvent>
 		<ApplicationIcon>Resource\Icon\logo.ico</ApplicationIcon>

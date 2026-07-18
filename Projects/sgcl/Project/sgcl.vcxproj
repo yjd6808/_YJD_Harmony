@@ -716,7 +716,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Game\UI\UIRegister.h" />
     <ClInclude Include="..\Classes\sgcl\Util\SGVec2Ex.h">
       <SubType>
       </SubType>

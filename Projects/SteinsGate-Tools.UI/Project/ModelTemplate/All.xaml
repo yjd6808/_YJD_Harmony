@@ -25,6 +25,9 @@
         <ResourceDictionary Source="Main/UIStaticCanvasTemplate.xaml" />
         
 
+        <!-- 워크스페이스 트리뷰 -->
+        <ResourceDictionary Source="Main/WorkspaceTreeTemplate.xaml" />
+
         <!-- UI 엘리먼트 트리뷰-->
         <ResourceDictionary Source="Main/UIElementTreeViewTemplate.xaml" />
         <ResourceDictionary Source="Main/UIGroupTreeViewTemplate.xaml" />

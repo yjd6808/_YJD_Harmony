@@ -1,40 +1,70 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using SGToolsUI.Model.Main;
 
 namespace SGToolsUI.FileSystem
 {
-    public class ProjectFolderItem
-    {
-        public string Name { get; set; } = "";
-        public bool IsFolder { get; set; }
-        public SGUIMetaInfo? MetaInfo { get; set; }
-        public SGUIRootGroup? RootGroup { get; set; }
-        public List<ProjectFolderItem> Children { get; set; } = new();
-    }
-
     public class SGUIProjectManager
     {
-        public SGUIMetaManager MetaManager { get; }
-        public List<ProjectFolderItem> FolderTree { get; private set; } = new();
+        public string BaseDirectory { get; }
 
         public SGUIProjectManager(string _baseDirectory)
         {
-            MetaManager = new SGUIMetaManager(_baseDirectory);
+            BaseDirectory = _baseDirectory;
         }
 
-        public void ScanDirectory()
+        public WorkspaceTreeItem ScanDirectory()
         {
-            FolderTree.Clear();
-            var metas = MetaManager.ScanAllMeta();
-            foreach (var meta in metas)
+            var root = new WorkspaceTreeItem
             {
-                var item = new ProjectFolderItem
+                Name = Path.GetFileName(BaseDirectory),
+                IsDirectory = true,
+                IsExpanded = true
+            };
+
+            ScanRecursive(BaseDirectory, root);
+            return root;
+        }
+
+        private void ScanRecursive(string _dirPath, WorkspaceTreeItem _parent)
+        {
+            var dirInfo = new DirectoryInfo(_dirPath);
+
+            foreach (var subDir in dirInfo.GetDirectories())
+            {
+                var dirItem = new WorkspaceTreeItem
                 {
-                    Name = meta.Name,
-                    IsFolder = false,
-                    MetaInfo = meta
+                    Name = subDir.Name,
+                    IsDirectory = true,
+                    IsExpanded = false
                 };
-                FolderTree.Add(item);
+                _parent.Children.Add(dirItem);
+                ScanRecursive(subDir.FullName, dirItem);
+            }
+
+            foreach (var metaFile in dirInfo.GetFiles("*.uimeta"))
+            {
+                SGUIMetaInfo metaInfo;
+                try
+                {
+                    metaInfo = SGUIMetaManager.LoadMeta(metaFile.FullName);
+                }
+                catch
+                {
+                    continue;
+                }
+
+                string xmlFullPath = Path.GetFullPath(Path.Combine(metaFile.DirectoryName!, metaInfo.XmlPath));
+
+                var metaItem = new WorkspaceTreeItem
+                {
+                    Name = metaInfo.Name,
+                    IsDirectory = false,
+                    MetaFilePath = metaFile.FullName,
+                    XmlFilePath = xmlFullPath
+                };
+                _parent.Children.Add(metaItem);
             }
         }
     }

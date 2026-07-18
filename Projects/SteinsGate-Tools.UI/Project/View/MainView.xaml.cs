@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -156,9 +157,9 @@ namespace SGToolsUI.View
                     UIElementPropertyGrid.SelectWithPropertyFocus(ViewModel.RootGroup.SelectedElement, SGUIElement.VisualNameKey);
                 }
 
-                else if (state.IsPressed(SGKey.F6) && MessageBoxEx.ShowTopMost("다시 로딩하시겠습니까?", "질문", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                else if (state.IsPressed(SGKey.F6) && ViewModel.CurrentXmlFilePath != null && MessageBoxEx.ShowTopMost("다시 로딩하시겠습니까?", "질문", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    ViewModel.Commander.FileUIToolDataLoadAsync.Execute(SGUIFileSystem.LoadKey);
+                    _ = ReloadCurrentXmlAsync();
                 }
 
                 else if (state.IsPressed(SGKey.F7))
@@ -266,6 +267,21 @@ namespace SGToolsUI.View
 
                 var loader = new SGUILoader(ViewModel);
                 ViewModel.RootGroup = await loader.LoadAsync(file);
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        private async Task ReloadCurrentXmlAsync()
+        {
+            try
+            {
+                var loader = new SGUILoader(ViewModel);
+                SGUIRootGroup loaded = await loader.LoadAsync(ViewModel.CurrentXmlFilePath!);
+                ViewModel.RootGroup = loaded;
+            }
+            catch (Exception ex)
+            {
+                ViewModel.LogBox.AddLog($"다시 로딩 실패", ex.Message);
             }
         }
 

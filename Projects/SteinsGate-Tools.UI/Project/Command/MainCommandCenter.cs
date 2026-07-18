@@ -1,9 +1,3 @@
-/*
- * 작성자: 윤정도
- * 생성일: 2/28/2023 12:22:45 AM
- *
- */
-
 using SGToolsCommon.Command;
 using SGToolsUI.Command.MainViewCommand;
 using SGToolsUI.Command.MainViewCommand.Async;
@@ -53,7 +47,7 @@ namespace SGToolsUI.Command
         // =================================================
         // 비동기 커맨드 목록
         // =================================================
-        public CommandAbstract FileUIToolDataLoadAsync { get; }
+        public CommandAbstract OpenWorkspace { get; }
         public CommandAbstract FileUIToolDataSaveAsync { get; }
         public CommandAbstract FileUIToolDataBackupAsync { get; }
 
@@ -98,9 +92,9 @@ namespace SGToolsUI.Command
             Add(ShowShortcut = new ShowShortcut(ViewModel));
             Add(SelectPropertyGridElement = new SelectPropertyGridElement(ViewModel));
             // ============================================================
-            Add(FileUIToolDataLoadAsync = new FileUIToolDataLoadAsync(ViewModel) { UseParameter = true });
+            Add(OpenWorkspace = new OpenWorkspace(ViewModel) { UseParameter = true });
             Add(FileUIToolDataSaveAsync = new FileUIToolDataSaveAsync(ViewModel) { UseParameter = true });
-            Add(FileUIToolDataBackupAsync = new FileUIToolDataBackupAsync(ViewModel)); // 커맨드파라미터를 바인딩해서 초기 null이 들어옴
+            Add(FileUIToolDataBackupAsync = new FileUIToolDataBackupAsync(ViewModel));
 
             // ============================================================
             Add(MouseMoveOnWindow = new MouseMoveOnWindow(ViewModel) { UseParameter = true });

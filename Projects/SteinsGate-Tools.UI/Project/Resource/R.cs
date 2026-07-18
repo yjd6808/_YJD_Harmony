@@ -70,7 +70,7 @@ namespace SGToolsUI.Resource
         public static readonly ImageSource UIColoredScrollBarIconImageSource = new BitmapImage(new Uri(UIColoredScrollBarIconKey));
         public static readonly ImageSource UIColoredStaticIconImageSource = new BitmapImage(new Uri(UIColoredStaticIconKey));
 
-        public static string FolderIconKey => "FolderIcon";
-        public static string FolderOpenIconKey => "FolderOpenIcon";
+        public const string FolderIconKey = IconPath + "ui_folder.ico";
+        public const string FolderOpenIconKey = IconPath + "ui_folder_open.ico";
     }
 }

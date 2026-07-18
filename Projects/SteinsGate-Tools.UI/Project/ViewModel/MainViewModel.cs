@@ -1,9 +1,3 @@
-/*
- * 작성자: 윤정도
- * 생성일: 2/27/2023 8:33:20 AM
- *
- */
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -43,6 +37,8 @@ namespace SGToolsUI.ViewModel
         private IKeyboardInputReceiver? selectedKeyboardInputReceiver_;
         private SgaSpriteAbstract selectedSprite_ = new SgaSprite();
         private SGUIRootGroup rootGroup_ = null!;
+        private WorkspaceTreeItem? workspaceRoot_;
+        private string? currentXmlFilePath_;
 
         //////////////////////////////////////////////////////////////////////////////////
         public MainViewModel()
@@ -61,6 +57,7 @@ namespace SGToolsUI.ViewModel
             Commander = new MainCommandCenter(this);
             Commander.Execute(nameof(ReloadSgaPackage));
             DragState = new DataDragState();
+            RecentDirectories = new ObservableCollection<string>();
         }
 
         //////////////////////////////////////////////////////////////////////////////////
@@ -75,8 +72,6 @@ namespace SGToolsUI.ViewModel
             ZoomState.ZoomLevelY += zoomLevelDelta * Constant.ResolutionRatio;
             ZoomState.ZoomLevelX += zoomLevelDelta;
 
-            // ZoomLevel 업데이트를 한다고해서 윈도우의 Width, Height 업데이트가 즉시 이뤄지지 않는다.
-            // 이번 업데이트가 지나간 후 가운데로 옮겨주기 위해서 BeginInvoke로 처리하였다.
             View.Dispatcher.BeginInvoke(async () =>
             {
                 await Task.Delay(10);
@@ -90,11 +85,57 @@ namespace SGToolsUI.ViewModel
 
             if (Setting.ShowLogViewWhenProgramLaunched && Setting.LogViewPositionWhenProgramLaunched != IntPoint.Zero)
                 LogView.MoveTo(Setting.LogViewPositionWhenProgramLaunched);
+        }
 
-            if (!Constant.UseDebugData)
-            {
-                Commander.Execute(nameof(FileUIToolDataLoadAsync), SGUIFileSystem.LoadKey);
+        //////////////////////////////////////////////////////////////////////////////////
+        public async Task LoadRootGroupAsync(WorkspaceTreeItem _item)
+        {
+            if (_item.IsDirectory || _item.XmlFilePath == null)
                 return;
+
+            if (_item.IsLoaded && _item.RootGroup != null)
+            {
+                RootGroup = _item.RootGroup;
+                currentXmlFilePath_ = _item.XmlFilePath;
+                return;
+            }
+
+            try
+            {
+                var loader = new SGUILoader(this);
+                SGUIRootGroup loaded = await loader.LoadAsync(_item.XmlFilePath);
+                loaded.ViewModel = this;
+
+                _item.RootGroup = loaded;
+                _item.IsLoaded = true;
+                _item.RootGroup.VisualName = _item.Name;
+
+                RootGroup = loaded;
+                currentXmlFilePath_ = _item.XmlFilePath;
+
+                LogBox.AddLog($"UI 로드 완료: {_item.XmlFilePath}");
+            }
+            catch (Exception ex)
+            {
+                LogBox.AddLog($"UI 로드 실패: {_item.XmlFilePath}", ex.Message);
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public void SaveCurrentRootGroup()
+        {
+            if (currentXmlFilePath_ == null || RootGroup == null)
+                return;
+
+            try
+            {
+                var saver = new SGUISaver(this);
+                saver.SaveAsync(currentXmlFilePath_, RootGroup).Wait();
+                LogBox.AddLog($"UI 저장 완료: {currentXmlFilePath_}");
+            }
+            catch (Exception ex)
+            {
+                LogBox.AddLog($"UI 저장 실패", ex.Message);
             }
         }
 
@@ -216,9 +257,27 @@ namespace SGToolsUI.ViewModel
             }
         }
 
-        public SGUIMetaManager? MetaManager { get; set; }
-        public SGUIRootGroup? CurrentRootGroup { get; set; }
-        public ObservableCollection<ProjectFolderItem> FolderTreeItems { get; set; } = new();
+        public WorkspaceTreeItem? WorkspaceRoot
+        {
+            get => workspaceRoot_;
+            set
+            {
+                workspaceRoot_ = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string? CurrentXmlFilePath
+        {
+            get => currentXmlFilePath_;
+            set
+            {
+                currentXmlFilePath_ = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<string> RecentDirectories { get; }
 
         public SelectMode UIElementSelectMode
         {
@@ -230,7 +289,7 @@ namespace SGToolsUI.ViewModel
             }
         }
 
-        public bool IsEventMode //  클릭 등 이벤트 처리를 간접적으로 수행하기 위한 용도/ UIElementItemsControl.cs, OnMouseDownEventMode()
+        public bool IsEventMode
         {
             get => isEventMode_;
             set

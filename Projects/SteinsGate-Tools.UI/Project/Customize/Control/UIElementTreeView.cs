@@ -1,10 +1,4 @@
-﻿/*
- * 작성자: 윤정도
- * 생성일: 3/5/2023 2:22:45 AM
- *
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
@@ -42,7 +36,6 @@ namespace SGToolsUI.Customize.Control
         {
             ViewModel = (DataContext as MainViewModel)!;
 
-            // 디자이너에서는 무조건 예외가 터지기땜에 막아줘야함.
             if (DesignerProperties.GetIsInDesignMode(this))
                 return;
 
@@ -128,33 +121,46 @@ namespace SGToolsUI.Customize.Control
             IntPoint pos = _e.GetPosition(this);
             var hit = this.HitTest<UIElementTreeView, TreeViewItem, SGUIElement>(pos);
 
-            if (hit == null)
-                return;
-
-            SGUIElement? selected = hit.DataContext;
-
-            if (selected == null)
-                return;
-
-            if (_e.ClickCount == 1)
+            if (hit != null)
             {
-                SGUIElement? prevSelected = ViewModel.RootGroup.SelectedElement;
+                SGUIElement? selected = hit.DataContext;
 
-                if (ViewModel.UIElementSelectMode == SelectMode.Keep && prevSelected != null &&
-                    prevSelected != selected)
-                {
-                    List<SGUIElement> betweenElements =
-                        ViewModel.RootGroup.GetElementsBetween(prevSelected, selected, true);
-                    ViewModel.Commander.SelectUIElement.Execute(betweenElements);
+                if (selected == null)
                     return;
+
+                if (_e.ClickCount == 1)
+                {
+                    SGUIElement? prevSelected = ViewModel.RootGroup.SelectedElement;
+
+                    if (ViewModel.UIElementSelectMode == SelectMode.Keep && prevSelected != null &&
+                        prevSelected != selected)
+                    {
+                        List<SGUIElement> betweenElements =
+                            ViewModel.RootGroup.GetElementsBetween(prevSelected, selected, true);
+                        ViewModel.Commander.SelectUIElement.Execute(betweenElements);
+                        return;
+                    }
+
+                    ViewModel.Commander.SelectUIElement.Execute(selected);
+                }
+                else if (_e.ClickCount > 1)
+                {
+                    _e.Handled = true;
+                    ViewModel.Commander.PickUIElement.Execute(selected);
                 }
 
-                ViewModel.Commander.SelectUIElement.Execute(selected);
+                return;
             }
-            else if (_e.ClickCount > 1)
+
+            var workspaceHit = this.HitTest<UIElementTreeView, TreeViewItem, WorkspaceTreeItem>(pos);
+            if (workspaceHit != null)
             {
+                WorkspaceTreeItem? wsItem = workspaceHit.DataContext;
+                if (wsItem == null || wsItem.IsDirectory)
+                    return;
+
                 _e.Handled = true;
-                ViewModel.Commander.PickUIElement.Execute(selected);
+                ViewModel.LoadRootGroupAsync(wsItem);
             }
         }
 

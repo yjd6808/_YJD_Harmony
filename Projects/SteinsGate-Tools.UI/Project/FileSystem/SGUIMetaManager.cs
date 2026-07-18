@@ -21,7 +21,7 @@ namespace SGToolsUI.FileSystem
             BaseDirectory = _baseDirectory;
         }
 
-        public SGUIMetaInfo LoadMeta(string _metaFilePath)
+        public static SGUIMetaInfo LoadMeta(string _metaFilePath)
         {
             string json = File.ReadAllText(_metaFilePath);
             return JsonConvert.DeserializeObject<SGUIMetaInfo>(json)!;
