@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Group name="ui_login" valign="1" halign="1" width="640" height="480">
+  <Sprite name="age_18" x="-11" y="-10" valign="0" halign="2" sga="sprite.sga" img="nowloading.img" sprite="6" width="204" height="89" />
+  <Sprite name="logo" x="-89" y="220" valign="2" halign="2" sga="sprite.sga" img="nowloading.img" sprite="0" width="165" height="112" />
+  <Sprite name="ganzi" x="0" y="0" valign="2" halign="0" sga="sprite_interface_assault.sga" img="character_cut.img" sprite="22" width="336" height="480" />
+  <Label name="source" x="481" y="5" valign="2" halign="0" width="152" height="17" font="DF.ttf" font_size="12" font_color="240 248 255 255" text="리소스 출처: 던전앤파이터" text_wrap="False" text_valign="0" text_halign="0" />
+  <Label name="developer" x="-7" y="25" valign="2" halign="2" width="152" height="16" font="DF.ttf" font_size="12" font_color="240 248 255 255" text="만든사람: 윤정도" text_wrap="False" text_valign="0" text_halign="0" />
+  <Group name="login_box" x="-35" y="54" valign="2" halign="2" width="283" height="141">
+    <Sprite name="background" x="16" y="9" valign="2" halign="0" sga="sprite.sga" img="login.img" sprite="0" width="250" height="97" />
+    <ToggleButton name="hangame_login" x="26" y="101" valign="2" halign="0" sga="sprite.sga" img="login.img" sprite="12 12 12 14" sprite2="13 13 13 14" />
+    <ToggleButton name="dnf_login" x="142" y="101" valign="2" halign="0" sga="sprite.sga" img="login.img" sprite="15 15 15 16" sprite2="17 17 17 16" />
+    <Button name="start" x="84" y="20" valign="2" halign="0" sga="sprite.sga" img="login.img" sprite="6 7 8 18" />
+    <Button name="terminate" x="145" y="20" valign="2" halign="0" sga="sprite.sga" img="login.img" sprite="9 10 11 19" />
+    <EditBox name="id" x="56" y="73" valign="2" halign="0" width="141" height="16" text_halign="0" font_size="12" font_color="245 255 250 255" p_text="텍스트를 입력해주세요." p_font_color="128 128 128 255" p_font_size="12" max_length="20" input_mode="1" />
+    <EditBox name="pw" x="56" y="51" valign="2" halign="0" width="141" height="16" text_halign="0" font_size="12" font_color="245 255 250 255" p_text="텍스트를 입력해주세요." p_font_color="128 128 128 255" p_font_size="12" max_length="20" input_mode="1" />
+    <CheckBox name="id_save" x="203" y="80" valign="2" halign="0" check="true" bg_sga="" bg_img="" cross_sga="sprite.sga" cross_img="login.img" sprite="-1 -1 1 -1" />
+    <Static name="id_save" x="219" y="76" valign="2" halign="0" width="36" height="15" />
+  </Group>
+</Group>

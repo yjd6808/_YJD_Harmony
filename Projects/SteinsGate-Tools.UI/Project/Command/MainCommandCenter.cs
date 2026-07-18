@@ -50,6 +50,7 @@ namespace SGToolsUI.Command
         public CommandAbstract OpenWorkspace { get; }
         public CommandAbstract FileUIToolDataSaveAsync { get; }
         public CommandAbstract FileUIToolDataBackupAsync { get; }
+        public CommandAbstract ConvertLegacyJson { get; }
 
         // =================================================
         // 컨트롤 커맨드 목록 (개발자가 직접 호출할 일없는..)
@@ -92,9 +93,10 @@ namespace SGToolsUI.Command
             Add(ShowShortcut = new ShowShortcut(ViewModel));
             Add(SelectPropertyGridElement = new SelectPropertyGridElement(ViewModel));
             // ============================================================
-            Add(OpenWorkspace = new OpenWorkspace(ViewModel) { UseParameter = true });
+            Add(OpenWorkspace = new OpenWorkspace(ViewModel) { UseParameter = false });
             Add(FileUIToolDataSaveAsync = new FileUIToolDataSaveAsync(ViewModel) { UseParameter = true });
             Add(FileUIToolDataBackupAsync = new FileUIToolDataBackupAsync(ViewModel));
+            Add(ConvertLegacyJson = new ConvertLegacyJson(ViewModel));
 
             // ============================================================
             Add(MouseMoveOnWindow = new MouseMoveOnWindow(ViewModel) { UseParameter = true });

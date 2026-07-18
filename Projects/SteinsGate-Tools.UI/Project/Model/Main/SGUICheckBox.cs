@@ -83,7 +83,7 @@ namespace SGToolsUI.Model.Main
                 if (!visualCrossIsNull)
                     return VisualCrossSprite.Rect.Size;
 
-                return Constant.DefaultVisualSize;
+                return visualSize_;
             }
         }
 
@@ -238,8 +238,6 @@ namespace SGToolsUI.Model.Main
         //////////////////////////////////////////////////////////////////////////////////
         public override void ParseXElement(XElement _root)
         {
-            base.ParseXElement(_root);
-
             XAttribute checkAttr = _root.Attribute("check");
             if (checkAttr != null)
                 checked_ = (bool)checkAttr;
@@ -296,7 +294,9 @@ namespace SGToolsUI.Model.Main
                     sprites_[IndexCrossDisabled] = new SGUISpriteInfo(sga, img, sprite!);
                 }
             }
-        }
+
+			base.ParseXElement(_root);
+		}
 
         //////////////////////////////////////////////////////////////////////////////////
         public override object Clone()

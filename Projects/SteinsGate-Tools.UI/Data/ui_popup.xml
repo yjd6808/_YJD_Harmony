@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Group name="ui_popup" valign="1" halign="1" width="640" height="480">
+  <Group name="holder" x="0" y="0" valign="1" halign="1" width="180" height="180">
+    <Sprite name="background" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="selectdungeon_.img" sprite="17" width="108" height="25" scale9="true" />
+    <Label name="text" x="14" y="-15" valign="0" halign="0" width="155" height="17" font="N2G.ttf" font_size="12" font_color="240 248 255 255" text="팝업 텍스트" text_wrap="True" text_valign="0" text_halign="0" />
+    <Group name="btn_holder" x="0" y="5" valign="2" halign="1" width="131" height="30">
+      <Button name="yes" x="-35" y="3" valign="2" halign="1" sga="sprite_interface.sga" img="commonbtn01.img" sprite="23 24 25 23" />
+      <Button name="no" x="35" y="3" valign="2" halign="1" sga="sprite_interface.sga" img="commonbtn01.img" sprite="29 30 31 29" />
+      <Button name="ok" x="-39" y="-3" valign="0" halign="2" sga="sprite_interface.sga" img="commonbtn01.img" sprite="0 1 2 3" />
+    </Group>
+  </Group>
+</Group>

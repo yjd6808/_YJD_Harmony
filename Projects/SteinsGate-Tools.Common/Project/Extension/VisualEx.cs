@@ -166,7 +166,7 @@ namespace SGToolsCommon.Extension
                 return null;
 
             if (hitItem.DataContext is not TDataContext)
-                throw new Exception($"선택한 {typeof(T).Namespace} 아이템의 데이터컨텍스트가 설정되어있지 않습니다.");
+                return null;
 
             TDataContext? hitDataContext = hitItem.DataContext as TDataContext;
             return new HitResultEx<TItem, TDataContext>(hitItem, hitDataContext!);

@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Group name="ui_inventory" valign="2" halign="0" width="640" height="480">
+  <Sprite name="background" x="341" y="7" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="0" width="291" height="410" />
+  <ScrollBar name="스크롤바" x="616" y="115" valign="2" halign="0" sga="sprite_interface_chatting.sga" img="chatting2.img" sprite="2 3 4 5 8 9 6" track_size="11 97" />
+  <Group name="inven_slots" x="353" y="109" valign="2" halign="0" width="268" height="138">
+    <Sprite name="slot10" x="6" y="102" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot11" x="38" y="102" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot12" x="70" y="102" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot13" x="102" y="102" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot14" x="134" y="102" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot15" x="166" y="102" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot16" x="198" y="102" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot17" x="230" y="102" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot20" x="6" y="69" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot21" x="38" y="69" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot22" x="70" y="69" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot23" x="102" y="69" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot24" x="134" y="69" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot25" x="166" y="69" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot26" x="198" y="69" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot27" x="230" y="69" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot30" x="6" y="37" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot31" x="38" y="37" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot32" x="70" y="37" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot33" x="102" y="37" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot34" x="134" y="37" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot35" x="166" y="37" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot36" x="198" y="37" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot37" x="230" y="37" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot40" x="6" y="5" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot41" x="38" y="5" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot42" x="70" y="5" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot43" x="102" y="5" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot44" x="134" y="5" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot45" x="166" y="5" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot46" x="198" y="5" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+    <Sprite name="slot47" x="230" y="5" valign="2" halign="0" sga="sprite_interface.sga" img="iteminventorywindow.img" sprite="6" width="30" height="30" />
+  </Group>
+  <Group name="equip_slots" x="350" y="301" valign="2" halign="0" width="273" height="76">
+    <Static name="shoulder" x="8" y="39" valign="2" halign="0" width="30" height="30" />
+    <Static name="top" x="40" y="39" valign="2" halign="0" width="30" height="30" />
+    <Static name="bottom" x="72" y="39" valign="2" halign="0" width="30" height="30" />
+    <Static name="shoes" x="8" y="7" valign="2" halign="0" width="30" height="30" />
+    <Static name="belt" x="40" y="7" valign="2" halign="0" width="30" height="30" />
+    <Static name="ring" x="233" y="39" valign="2" halign="0" width="30" height="30" />
+    <Static name="neck" x="201" y="39" valign="2" halign="0" width="30" height="30" />
+    <Static name="bracelt" x="169" y="39" valign="2" halign="0" width="30" height="30" />
+    <Static name="weapon" x="201" y="7" valign="2" halign="0" width="30" height="30" />
+    <Static name="title" x="233" y="7" valign="2" halign="0" width="30" height="30" />
+  </Group>
+</Group>

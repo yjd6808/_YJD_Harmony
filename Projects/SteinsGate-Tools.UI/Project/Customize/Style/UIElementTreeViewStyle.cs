@@ -22,6 +22,12 @@ namespace SGToolsUI.Customize.Style
             if (item == null)
                 throw new Exception("이럴 수 없어요 어떻게 트리뷰 아이템 아닐 수 있죠?");
 
+            if (item.DataContext is WorkspaceTreeItem wsItem)
+            {
+                wsItem.Item = item;
+                return;
+            }
+
             SGUIElement? element = item.DataContext as SGUIElement;
             if (element == null)
                 throw new Exception("로드된 트리뷰 아이템에 데이터 컨텍스트가 설정되어있지 않습니다.");

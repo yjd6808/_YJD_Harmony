@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Group name="ui_chat" valign="0" halign="0" width="350" height="163">
+  <Group name="tab" x="0" y="0" valign="0" halign="0" width="350" height="31">
+    <ToggleButton name="expand" x="0" y="3" valign="2" halign="0" sga="sprite_interface_chatting.sga" img="chatting.img" sprite="10 11 11 10" sprite2="12 13 13 12" />
+    <ToggleButton name="normal" x="19" y="3" valign="2" halign="0" sga="sprite_interface_chatting.sga" img="chatting.img" sprite="20 21 22 23" sprite2="18 19 19 23" />
+    <ToggleButton name="party" x="62" y="3" valign="2" halign="0" sga="sprite_interface_chatting.sga" img="chatting.img" sprite="26 27 28 29" sprite2="24 25 25 29" />
+  </Group>
+  <Group name="chatbox_small" x="0" y="0" valign="2" halign="0" width="350" height="138">
+    <Sprite name="background" x="0" y="0" valign="2" halign="0" sga="sprite_interface_chatting.sga" img="chatting.img" sprite="0" width="346" height="138" />
+    <ScrollBar name="스크롤바" x="5" y="7" valign="2" halign="0" sga="sprite_interface_chatting.sga" img="chatting2.img" sprite="2 3 4 5 8 9 6" track_size="11 98" />
+  </Group>
+</Group>

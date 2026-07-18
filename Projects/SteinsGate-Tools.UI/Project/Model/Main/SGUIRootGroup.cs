@@ -104,6 +104,16 @@ namespace SGToolsUI.Model.Main
             }
         }
 
+        public string? XmlFilePath { get; set; }
+
+        private bool isWorkspaceTarget_;
+
+        public bool IsWorkspaceTarget
+        {
+            get => isWorkspaceTarget_;
+            set { isWorkspaceTarget_ = value; OnPropertyChanged(); }
+        }
+
         // ============================================================
         //            기능
         // ============================================================
@@ -255,6 +265,7 @@ namespace SGToolsUI.Model.Main
         //////////////////////////////////////////////////////////////////////////////////
         public void Clear()
         {
+            IsWorkspaceTarget = false;
             DeselectAll();
             Depick();
             Children.Clear();

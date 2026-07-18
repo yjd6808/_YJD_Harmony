@@ -18,25 +18,9 @@ namespace SGToolsUI.Model.Main
 
         public static int Seq;
 
-        private IntSize visualSize_;
-
         //////////////////////////////////////////////////////////////////////////////////
         public SGUIStatic()
         {
-            visualSize_ = Constant.DefaultVisualSize;
-        }
-
-        [ReadOnly(false)]
-        [Category(Constant.StaticCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
-        public override IntSize VisualSize
-        {
-            get => visualSize_;
-            set
-            {
-                visualSize_ = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(VisualRect));
-            }
         }
 
         [Browsable(false)] public override double VisibleOpacity => visible_ ? 0.5 : 0;
@@ -60,9 +44,6 @@ namespace SGToolsUI.Model.Main
         public override void ParseXElement(XElement _root)
         {
             base.ParseXElement(_root);
-
-            visualSize_.Width = (int)_root.Attribute("width")!;
-            visualSize_.Height = (int)_root.Attribute("height")!;
         }
 
         //////////////////////////////////////////////////////////////////////////////////

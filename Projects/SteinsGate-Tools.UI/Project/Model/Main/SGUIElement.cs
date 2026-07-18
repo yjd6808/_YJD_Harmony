@@ -210,8 +210,13 @@ namespace SGToolsUI.Model.Main
         [Description("UI엘리먼트의 크기를 의미")]
         public virtual IntSize VisualSize
         {
-            get => Constant.DefaultVisualSize;
-            set { }
+            get => visualSize_;
+            set
+			{
+				visualSize_ = value;
+				OnPropertyChanged();
+				OnPropertyChanged(nameof(VisualRect));
+			}
         }
 
         /*
@@ -663,6 +668,8 @@ namespace SGToolsUI.Model.Main
 
 
                     parent = parent.Parent;
+                    if (parent == null)
+                        yield break;
                     yield return parent;
                     infCheck++;
 
@@ -1013,6 +1020,17 @@ namespace SGToolsUI.Model.Main
         {
             XElement root = new XElement(GetElementTagName());
             root.SetAttributeValue("name", visualName_);
+            if (Parent != null)
+            {
+                IntPoint relPos = RelativePosition;
+                root.SetAttributeValue("x", relPos.X);
+                root.SetAttributeValue("y", relPos.Y);
+            }
+            else
+            {
+                root.SetAttributeValue("x", (int)visualPosition_.X);
+                root.SetAttributeValue("y", (int)visualPosition_.Y);
+            }
             root.SetAttributeValue("valign", (int)verticalAlignment_);
             root.SetAttributeValue("halign", (int)horizontalAlignment_);
             if (!visible_)
@@ -1023,9 +1041,20 @@ namespace SGToolsUI.Model.Main
         //////////////////////////////////////////////////////////////////////////////////
         public virtual void ParseXElement(XElement _root)
         {
+			XAttribute widthAttr = _root.Attribute("width");
+            if (widthAttr != null)
+                visualSize_.Width = (int)widthAttr;
+            XAttribute heightAttr = _root.Attribute("height");
+            if (heightAttr != null)
+                visualSize_.Height = (int)heightAttr;
             visualName_ = (string)_root.Attribute("name")!;
             verticalAlignment_ = (VAlignment)(int)_root.Attribute("valign")!;
             horizontalAlignment_ = (HAlignment)(int)_root.Attribute("halign")!;
+            // valign, halign, width, height must be set before RelativePosition
+            XAttribute xAttr = _root.Attribute("x");
+            XAttribute yAttr = _root.Attribute("y");
+            if (xAttr != null && yAttr != null)
+                RelativePosition = new IntPoint((int)xAttr, (int)yAttr);
             XAttribute visibleAttr = _root.Attribute("visible");
             if (visibleAttr != null)
                 visible_ = (bool)visibleAttr;
@@ -1091,6 +1120,7 @@ namespace SGToolsUI.Model.Main
 
         protected string visualName_ = string.Empty;
         protected IntPoint visualPosition_;
+        protected IntSize visualSize_ = Constant.DefaultVisualSize;
         protected bool selected_ = false;
         protected bool visible_ = true;
         protected bool deleted_ = false;

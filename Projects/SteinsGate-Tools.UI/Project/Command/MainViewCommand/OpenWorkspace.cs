@@ -42,13 +42,15 @@ namespace SGToolsUI.Command.MainViewCommand
 
             ViewModel.LogBox.AddLog($"워크스페이스 열기: {dirPath}");
 
-            var projectManager = new SGUIProjectManager(dirPath);
+            var projectManager = new SGUIProjectManager(dirPath, ViewModel);
             WorkspaceTreeItem rootItem = await Task.Run(() => projectManager.ScanDirectory());
 
             ViewModel.WorkspaceRoot = rootItem;
+            ViewModel.CurrentWorkspacePath = dirPath;
 
-            if (!ViewModel.RecentDirectories.Contains(dirPath))
-                ViewModel.RecentDirectories.Insert(0, dirPath);
+            if (ViewModel.RecentDirectories.Contains(dirPath))
+                ViewModel.RecentDirectories.Remove(dirPath);
+            ViewModel.RecentDirectories.Insert(0, dirPath);
         }
     }
 }

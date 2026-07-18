@@ -29,13 +29,10 @@ namespace SGToolsUI.Model.Main
         private SGUISpriteInfo sprite_;
         private bool linearDodge_;
         private bool scale9_;
-        private IntSize visualSize_;
-
         //////////////////////////////////////////////////////////////////////////////////
         public SGUISprite()
         {
             sprite_ = new SGUISpriteInfo();
-            visualSize_ = Constant.DefaultVisualSize;
         }
 
         [ReadOnly(false)]
@@ -162,37 +159,40 @@ namespace SGToolsUI.Model.Main
         //////////////////////////////////////////////////////////////////////////////////
         public override void ParseXElement(XElement _root)
         {
-            base.ParseXElement(_root);
+			try
+			{
+				XAttribute linearDodgeAttr = _root.Attribute("linear_dodge");
+				if (linearDodgeAttr != null)
+					linearDodge_ = (bool)linearDodgeAttr;
+				XAttribute scale9Attr = _root.Attribute("scale9");
+				if (scale9Attr != null)
+					scale9_ = (bool)scale9Attr;
 
-            XAttribute linearDodgeAttr = _root.Attribute("linear_dodge");
-            if (linearDodgeAttr != null)
-                linearDodge_ = (bool)linearDodgeAttr;
-            XAttribute scale9Attr = _root.Attribute("scale9");
-            if (scale9Attr != null)
-                scale9_ = (bool)scale9Attr;
+				string sgaName = (string)_root.Attribute("sga") ?? string.Empty;
 
-            string sgaName = (string)_root.Attribute("sga") ?? string.Empty;
+				if (sgaName == string.Empty)
+					return;
 
-            if (sgaName == string.Empty)
-                return;
+				string imgName = (string)_root.Attribute("img")!;
 
-            string imgName = (string)_root.Attribute("img")!;
+				SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
+				SgaPackage sga = img.Parent;
+				int spriteIndex = (int)_root.Attribute("sprite")!;
 
-            visualSize_.Width = (int)_root.Attribute("width")!;
-            visualSize_.Height = (int)_root.Attribute("height")!;
+				if (spriteIndex == Constant.InvalidValue)
+					return;
 
-            SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
-            SgaPackage sga = img.Parent;
-            int spriteIndex = (int)_root.Attribute("sprite")!;
-
-            if (spriteIndex == Constant.InvalidValue)
-                return;
-
-            SgaSprite? sprite = img.GetSprite(spriteIndex) as SgaSprite;
-            if (sprite == null)
-                throw new Exception($"{sgaName} -> {imgName} -> {spriteIndex}가 SgaSprite 타입이 아닙니다.");
-            sprite_ = new SGUISpriteInfo(sga, img, sprite);
-            sprite_.LinearDodge = linearDodge_;
+				SgaSprite? sprite = img.GetSprite(spriteIndex) as SgaSprite;
+				if (sprite == null)
+					throw new Exception($"{sgaName} -> {imgName} -> {spriteIndex}가 SgaSprite 타입이 아닙니다.");
+				sprite_ = new SGUISpriteInfo(sga, img, sprite);
+				sprite_.LinearDodge = linearDodge_;
+			}
+			finally
+			{
+				base.ParseXElement(_root);
+			}
+			
         }
 
         //////////////////////////////////////////////////////////////////////////////////

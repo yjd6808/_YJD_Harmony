@@ -28,10 +28,7 @@
             <Setter.Value>
                 <DataTemplate DataType="{x:Type sga:SgaPackage}">
 
-                    <TextBlock Text="{
-                        Binding FileNameWithoutExt, 
-                        Converter={StaticResource SgaFileNameConverter}, 
-                        ConverterParameter={x:Static sga:SgaPackageType.Interface}}">
+					<TextBlock Text="{Binding FileNameWithoutExt}"/>
                         
                         <!-- 리스트박스 아이템 클릭으로 커맨드를 실행하기 위함 
                              더블클릭은 잘되는데 일반 클릭은 삑날때가 있네;;
@@ -41,7 +38,7 @@
                                           Command="{Binding DataContext.Commander.SelectSgaPackage, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" 
                                           CommandParameter="{Binding}" />
                         </TextBlock.InputBindings>-->
-                    </TextBlock>
+                    
                 </DataTemplate>
             </Setter.Value>
         </Setter>

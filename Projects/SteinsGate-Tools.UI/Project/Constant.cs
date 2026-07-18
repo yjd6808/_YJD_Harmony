@@ -19,6 +19,7 @@ namespace SGToolsUI
 
         public const double ResolutionRatio = 480.0f / 640.0f;
         public const string SettingFileName = "setting.json";
+        public const string RecentWorkspaceFileName = "recent_workspaces.json";
         public const string UIToolDataFileName = "data.xml";
         public const string BackupDirectoryRoot = "backup";
         public const string BackupDirectoryFmt = "yyyy-MM-dd";

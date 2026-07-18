@@ -36,7 +36,6 @@ namespace SGToolsUI.Model.Main
 
         private double percent_;
         private SGUISpriteInfo sprite_;
-        private IntSize visualSize_;
         private ProgressIncreaseDirection direction_;
 
         //////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +43,6 @@ namespace SGToolsUI.Model.Main
         {
             direction_ = ProgressIncreaseDirection.LeftRight;
             percent_ = 70.0;
-            visualSize_ = Constant.DefaultVisualSize;
         }
 
         [Category(Constant.ProgressBarCategoryName), DisplayName("퍼센트"), PropertyOrder(OrderPercent)]
@@ -239,24 +237,25 @@ namespace SGToolsUI.Model.Main
         //////////////////////////////////////////////////////////////////////////////////
         public override void ParseXElement(XElement _root)
         {
-            base.ParseXElement(_root);
-
             string sgaName = (string)_root.Attribute("sga") ?? string.Empty;
 
             if (sgaName == string.Empty)
+            {
+                base.ParseXElement(_root);
                 return;
+            }
 
             string imgName = (string)_root.Attribute("img")!;
-
-            visualSize_.Width = (int)_root.Attribute("width")!;
-            visualSize_.Height = (int)_root.Attribute("height")!;
 
             SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
             SgaPackage sga = img.Parent;
             int spriteIndex = (int)_root.Attribute("sprite")!;
 
             if (spriteIndex == Constant.InvalidValue)
+            {
+                base.ParseXElement(_root);
                 return;
+            }
 
             SgaSprite? sprite = img.GetSprite(spriteIndex) as SgaSprite;
             if (sprite == null)
@@ -264,6 +263,8 @@ namespace SGToolsUI.Model.Main
             sprite_ = new SGUISpriteInfo(sga, img, sprite);
             percent_ = 70.0;
             direction_ = (ProgressIncreaseDirection)(int)_root.Attribute("direction")!;
+
+            base.ParseXElement(_root);
         }
 
         //////////////////////////////////////////////////////////////////////////////////

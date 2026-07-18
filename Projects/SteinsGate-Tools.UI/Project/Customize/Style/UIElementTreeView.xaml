@@ -50,6 +50,9 @@
                         <DataTrigger Binding="{Binding Selected}" Value="False">
                             <Setter Property="Background" Value="Transparent" />
                         </DataTrigger>
+                        <DataTrigger Binding="{Binding IsWorkspaceTarget}" Value="True">
+                            <Setter Property="Background" Value="CornflowerBlue" />
+                        </DataTrigger>
                     </Style.Triggers>
                     <EventSetter Event="Loaded" Handler="OnTreeViewItemLoaded"/>
                 </Style>

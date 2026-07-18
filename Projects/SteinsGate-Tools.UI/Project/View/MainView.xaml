@@ -159,8 +159,19 @@
 				<Menu  Background="Transparent">
 					<MenuItem Header="파일" Background="Transparent">
 						<MenuItem Header="워크스페이스 열기" Command="{Binding Commander.OpenWorkspace}" />
+						<MenuItem Header="최근 워크스페이스" IsEnabled="{Binding HasRecentDirectories}" ItemsSource="{Binding RecentDirectories}">
+							<MenuItem.ItemContainerStyle>
+								<Style TargetType="MenuItem">
+									<Setter Property="Header" Value="{Binding}" />
+									<Setter Property="Command" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Menu}}, Path=DataContext.Commander.OpenWorkspace}" />
+									<Setter Property="CommandParameter" Value="{Binding}" />
+								</Style>
+							</MenuItem.ItemContainerStyle>
+						</MenuItem>
 						<MenuItem Header="저장" Command="{Binding Commander.FileUIToolDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveKey}" />
 						<MenuItem Header="다른 이름으로 저장" Command="{Binding Commander.FileUIToolDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveAsKey}" />
+						<Separator />
+						<MenuItem Header="레거시 JSON 변환" Command="{Binding Commander.ConvertLegacyJson}" />
 						<Separator />
 						<MenuItem Header="실행 폴더 열기" Command="{Binding Commander.OpenDirectory}" CommandParameter="Exe" />
 						<MenuItem Header="백업 폴더 열기" Command="{Binding Commander.OpenDirectory}" CommandParameter="Backup" />

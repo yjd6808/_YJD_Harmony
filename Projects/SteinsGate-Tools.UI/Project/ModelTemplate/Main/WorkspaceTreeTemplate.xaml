@@ -1,26 +1,18 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:mo_main="clr-namespace:SGToolsUI.Model.Main"
+                    xmlns:mo_main_selector="clr-namespace:SGToolsUI.ModelSelector.Main"
                     xmlns:res="clr-namespace:SGToolsUI.Resource"
                     xmlns:common_res="clr-namespace:SGToolsCommon.Resource;assembly=SGToolsCommon"
                     xmlns:common_style="clr-namespace:SGToolsCommon.Customize.Style;assembly=SGToolsCommon">
 
     <HierarchicalDataTemplate x:Key="DirectoryTreeTemplate"
                               DataType="{x:Type mo_main:WorkspaceTreeItem}"
-                              ItemsSource="{Binding Children}">
+                              ItemsSource="{Binding Children}"
+                              ItemTemplateSelector="{x:Static mo_main_selector:UIElementTreeViewSelector.Selector}">
         <StackPanel Orientation="Horizontal">
             <Image Width="16" Height="16" Margin="0, 0, 4, 0"
                    Source="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static res:R.FolderIconKey}}" />
-            <TextBlock Text="{Binding Name}" />
-        </StackPanel>
-    </HierarchicalDataTemplate>
-
-    <HierarchicalDataTemplate x:Key="MetaItemTreeTemplate"
-                              DataType="{x:Type mo_main:WorkspaceTreeItem}"
-                              ItemsSource="{Binding RootGroup.Children}">
-        <StackPanel Orientation="Horizontal">
-            <Image Width="16" Height="16" Margin="0, 0, 4, 0"
-                   Source="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonSelectKey}}" />
             <TextBlock Text="{Binding Name}" />
         </StackPanel>
     </HierarchicalDataTemplate>

@@ -17,6 +17,8 @@ using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
+using System.Linq.Expressions;
+using Microsoft.VisualBasic;
 
 namespace SGToolsUI.Model.Main
 {
@@ -51,7 +53,6 @@ namespace SGToolsUI.Model.Main
         private int upState_;
         private int thumbState_;
         private int downState_;
-        private IntSize visualSize_;
         private bool widthInitialized_;
         private bool heightInitialized_;
 
@@ -59,7 +60,6 @@ namespace SGToolsUI.Model.Main
         public SGUIScrollBar()
         {
             sprites_ = new SGUISpriteInfo[TextureCount];
-            visualSize_ = Constant.DefaultVisualSize;
         }
 
         public override SGUIElementType UIElementType => SGUIElementType.ScrollBar;
@@ -532,12 +532,13 @@ namespace SGToolsUI.Model.Main
         //////////////////////////////////////////////////////////////////////////////////
         public override void ParseXElement(XElement _root)
         {
-            base.ParseXElement(_root);
-
             string sgaName = (string)_root.Attribute("sga") ?? string.Empty;
 
             if (sgaName == string.Empty)
+            {
+                base.ParseXElement(_root);
                 return;
+            }
 
             string imgName = (string)_root.Attribute("img")!;
             string trackSizeString = (string)_root.Attribute("track_size")!;
@@ -564,6 +565,8 @@ namespace SGToolsUI.Model.Main
 
             visualSize_.Width = trackSize.Width;
             visualSize_.Height = Math.Max(height, MaxHeight);
+
+            base.ParseXElement(_root);
         }
 
         //////////////////////////////////////////////////////////////////////////////////

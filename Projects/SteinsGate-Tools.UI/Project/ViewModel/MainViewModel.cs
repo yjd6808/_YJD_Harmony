@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using Newtonsoft.Json.Linq;
 using SGToolsCommon;
 using SGToolsCommon.Customize.Control;
 using SGToolsCommon.Customize.View;
@@ -39,6 +41,7 @@ namespace SGToolsUI.ViewModel
         private SGUIRootGroup rootGroup_ = null!;
         private WorkspaceTreeItem? workspaceRoot_;
         private string? currentXmlFilePath_;
+        private string? currentWorkspacePath_;
 
         //////////////////////////////////////////////////////////////////////////////////
         public MainViewModel()
@@ -58,6 +61,8 @@ namespace SGToolsUI.ViewModel
             Commander.Execute(nameof(ReloadSgaPackage));
             DragState = new DataDragState();
             RecentDirectories = new ObservableCollection<string>();
+            RecentDirectories.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasRecentDirectories));
+            LoadRecentWorkspaces();
         }
 
         //////////////////////////////////////////////////////////////////////////////////
@@ -85,40 +90,6 @@ namespace SGToolsUI.ViewModel
 
             if (Setting.ShowLogViewWhenProgramLaunched && Setting.LogViewPositionWhenProgramLaunched != IntPoint.Zero)
                 LogView.MoveTo(Setting.LogViewPositionWhenProgramLaunched);
-        }
-
-        //////////////////////////////////////////////////////////////////////////////////
-        public async Task LoadRootGroupAsync(WorkspaceTreeItem _item)
-        {
-            if (_item.IsDirectory || _item.XmlFilePath == null)
-                return;
-
-            if (_item.IsLoaded && _item.RootGroup != null)
-            {
-                RootGroup = _item.RootGroup;
-                currentXmlFilePath_ = _item.XmlFilePath;
-                return;
-            }
-
-            try
-            {
-                var loader = new SGUILoader(this);
-                SGUIRootGroup loaded = await loader.LoadAsync(_item.XmlFilePath);
-                loaded.ViewModel = this;
-
-                _item.RootGroup = loaded;
-                _item.IsLoaded = true;
-                _item.RootGroup.VisualName = _item.Name;
-
-                RootGroup = loaded;
-                currentXmlFilePath_ = _item.XmlFilePath;
-
-                LogBox.AddLog($"UI 로드 완료: {_item.XmlFilePath}");
-            }
-            catch (Exception ex)
-            {
-                LogBox.AddLog($"UI 로드 실패: {_item.XmlFilePath}", ex.Message);
-            }
         }
 
         //////////////////////////////////////////////////////////////////////////////////
@@ -277,7 +248,18 @@ namespace SGToolsUI.ViewModel
             }
         }
 
+        public string? CurrentWorkspacePath
+        {
+            get => currentWorkspacePath_;
+            set
+            {
+                currentWorkspacePath_ = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ObservableCollection<string> RecentDirectories { get; }
+        public bool HasRecentDirectories => RecentDirectories.Count > 0;
 
         public SelectMode UIElementSelectMode
         {
@@ -324,5 +306,38 @@ namespace SGToolsUI.ViewModel
         public BackupView BackupView { get; }
         public List<IKeyboardInputReceiver> KeyboardInputReceivers = new();
         public readonly Action<Exception> LogErrorHandler;
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public void LoadRecentWorkspaces()
+        {
+            if (!File.Exists(Constant.RecentWorkspaceFileName))
+                return;
+
+            try
+            {
+                string content = File.ReadAllText(Constant.RecentWorkspaceFileName);
+                JArray arr = JArray.Parse(content);
+                foreach (JToken token in arr)
+                {
+                    string? path = (string?)token;
+                    if (!string.IsNullOrEmpty(path))
+                        RecentDirectories.Add(path);
+                }
+            }
+            catch { }
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        public void SaveRecentWorkspaces()
+        {
+            if (CurrentWorkspacePath != null && !RecentDirectories.Contains(CurrentWorkspacePath))
+                RecentDirectories.Insert(0, CurrentWorkspacePath);
+
+            var arr = new JArray();
+            foreach (string path in RecentDirectories)
+                arr.Add(path);
+
+            File.WriteAllText(Constant.RecentWorkspaceFileName, arr.ToString());
+        }
     }
 }

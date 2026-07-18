@@ -16,7 +16,7 @@ namespace SGToolsUI.ModelSelector.Main
             switch (item)
             {
                 case WorkspaceTreeItem wti:
-                    return (DataTemplate)Application.Current.FindResource(wti.IsDirectory ? "DirectoryTreeTemplate" : "MetaItemTreeTemplate");
+                    return (DataTemplate)Application.Current.FindResource("DirectoryTreeTemplate");
                 case SGUIGroup uiGroup:
                     return (DataTemplate)Application.Current.FindResource("GroupTreeViewTemplate");
                 case SGUIElement uiElement:

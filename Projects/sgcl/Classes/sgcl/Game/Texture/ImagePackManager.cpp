@@ -64,7 +64,7 @@ void ImagePackManager::LoadAllPackages()
 
 	const jc::String& resDataPath = g_cAppConfig.resDataImagePath_;
 	jc::Thread loaderThread[THREAD_COUNT];
-	jc::Vector<jc::String> paths = Directory::Files(resDataPath, false);
+	jc::Vector<jc::String> paths = Directory::Files(resDataPath, true);
 	jc::Vector<jc::String> sgaPaths;
 
 	for (int i = 0; i < paths.Size(); ++i)

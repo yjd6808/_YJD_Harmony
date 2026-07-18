@@ -29,8 +29,8 @@ namespace SGToolsCommon.Customize.Converter
             string fileExt = Path.GetExtension(fileName);
             int packageType = (int)_parameter;
 
-            if (packageType < 0 || packageType >= Converter.Length)
-                throw new Exception($"{SgaPackageType.Name[packageType]}에 해당하는 컨버터가 없습니다.");
+            //if (packageType < 0 || packageType >= Converter.Length)
+            //    throw new Exception($"{SgaPackageType.Name[packageType]}에 해당하는 컨버터가 없습니다.");
 
             return Converter[packageType](fileName, fileExt);
         }

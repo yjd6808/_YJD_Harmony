@@ -55,14 +55,47 @@ namespace SGToolsUI.Customize.Control
             var commandCenter = ViewModel.Commander;
             var rootGroup = ViewModel.RootGroup;
             SGUIElement element = rootGroup.SelectedElement;
+            WorkspaceTreeItem? wsItem = FindSelectedWorkspaceItem();
 
-            if (element == null)
+            if (element == null && wsItem == null)
+            {
+                if (rootGroup.XmlFilePath != null)
+                {
+                    switch (_key)
+                    {
+                        case SGKey.Delete:
+                        case SGKey.X:
+                        case SGKey.C:
+                        case SGKey.V:
+                            return;
+                    }
+                }
                 return;
+            }
 
-            SGUIGroup parent = element.Parent;
-            SGUIGroup? group = null;
-            if (element is SGUIGroup)
-                group = (SGUIGroup)element;
+            if (wsItem != null)
+            {
+                switch (_key)
+                {
+                    case SGKey.Up:
+                    case SGKey.Down:
+                        NavigateWorkspaceItem(wsItem, _key == SGKey.Up);
+                        return;
+                    case SGKey.Enter:
+                    case SGKey.Space:
+                        if (wsItem.IsDirectory)
+                            wsItem.IsExpanded = !wsItem.IsExpanded;
+                        return;
+                    case SGKey.Delete:
+                    case SGKey.X:
+                    case SGKey.C:
+                    case SGKey.V:
+                        return;
+                }
+                return;
+            }
+
+            SGUIGroup? group = element as SGUIGroup;
 
             switch (_key)
             {
@@ -116,11 +149,72 @@ namespace SGToolsUI.Customize.Control
         }
 
         //////////////////////////////////////////////////////////////////////////////////
+        private void DeselectAllWorkspaceItems()
+        {
+            if (ViewModel.WorkspaceRoot == null)
+                return;
+
+            ForEachWorkspaceItem(ViewModel.WorkspaceRoot, item => item.Selected = false);
+        }
+
+        private void ForEachWorkspaceItem(WorkspaceTreeItem _parent, Action<WorkspaceTreeItem> _action)
+        {
+            _action(_parent);
+            foreach (var child in _parent.Children)
+            {
+                if (child is WorkspaceTreeItem wsItem)
+                    ForEachWorkspaceItem(wsItem, _action);
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        private WorkspaceTreeItem? FindSelectedWorkspaceItem()
+        {
+            if (ViewModel.WorkspaceRoot == null)
+                return null;
+
+            WorkspaceTreeItem? result = null;
+            ForEachWorkspaceItem(ViewModel.WorkspaceRoot, item =>
+            {
+                if (item.Selected)
+                    result = item;
+            });
+            return result;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        private void NavigateWorkspaceItem(WorkspaceTreeItem _current, bool _up)
+        {
+            var flatList = new List<WorkspaceTreeItem>();
+            FlattenWorkspaceTree(ViewModel.WorkspaceRoot!, flatList);
+
+            int index = flatList.IndexOf(_current);
+            if (index < 0) return;
+
+            int target = _up ? index - 1 : index + 1;
+            if (target < 0 || target >= flatList.Count)
+                return;
+
+            WorkspaceTreeItem targetItem = flatList[target];
+            DeselectAllWorkspaceItems();
+            targetItem.Selected = true;
+        }
+
+        private void FlattenWorkspaceTree(WorkspaceTreeItem _parent, List<WorkspaceTreeItem> _list)
+        {
+            _list.Add(_parent);
+            foreach (var child in _parent.Children)
+            {
+                if (child is WorkspaceTreeItem wsItem)
+                    FlattenWorkspaceTree(wsItem, _list);
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
         private void OnPreviewMouseLeftButtonDown(object _sender, MouseButtonEventArgs _e)
         {
             IntPoint pos = _e.GetPosition(this);
             var hit = this.HitTest<UIElementTreeView, TreeViewItem, SGUIElement>(pos);
-
             if (hit != null)
             {
                 SGUIElement? selected = hit.DataContext;
@@ -148,19 +242,6 @@ namespace SGToolsUI.Customize.Control
                     _e.Handled = true;
                     ViewModel.Commander.PickUIElement.Execute(selected);
                 }
-
-                return;
-            }
-
-            var workspaceHit = this.HitTest<UIElementTreeView, TreeViewItem, WorkspaceTreeItem>(pos);
-            if (workspaceHit != null)
-            {
-                WorkspaceTreeItem? wsItem = workspaceHit.DataContext;
-                if (wsItem == null || wsItem.IsDirectory)
-                    return;
-
-                _e.Handled = true;
-                ViewModel.LoadRootGroupAsync(wsItem);
             }
         }
 

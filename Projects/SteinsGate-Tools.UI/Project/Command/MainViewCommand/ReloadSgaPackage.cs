@@ -29,7 +29,7 @@ namespace SGToolsUI.Command.MainViewCommand
                 ViewModel.SelectedImage = new SgaImage();
 
                 ViewModel.PackManager.SgaDirectory = ViewModel.Setting.SgaDirectory;
-                ViewModel.PackManager.LoadSga(SgaPackageType.Interface);
+                ViewModel.PackManager.LoadDir("");
                 ViewModel.ResourceSelectionStatus = string.Empty;
             }
             catch (Exception e)

@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Group name="ui_chat_input" valign="2" halign="1" width="576" height="100">
+  <Sprite name="backgroud" x="0" y="0" valign="2" halign="1" sga="sprite_interface_chatting.sga" img="chatting.img" sprite="54" width="520" height="22" />
+  <Sprite name="type_normal" x="-243" y="3" valign="2" halign="1" sga="sprite_interface_chatting.sga" img="chatting.img" sprite="55" width="28" height="16" />
+  <Sprite name="type_party" x="-243" y="3" valign="2" halign="1" sga="sprite_interface_chatting.sga" img="chatting.img" sprite="57" width="28" height="16" />
+  <Sprite name="type_guild" x="-243" y="3" valign="2" halign="1" sga="sprite_interface_chatting.sga" img="chatting.img" sprite="59" width="28" height="16" />
+  <EditBox name="input" x="13" y="2" valign="2" halign="1" width="483" height="15" text_halign="0" font_size="12" font_color="169 169 169 255" p_text="텍스트를 입력해주세요." p_font_color="128 128 128 255" p_font_size="12" max_length="200" input_mode="6" />
+</Group>

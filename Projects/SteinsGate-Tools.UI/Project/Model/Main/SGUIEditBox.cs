@@ -41,7 +41,6 @@ namespace SGToolsUI.Model.Main
 
         public static int Seq;
 
-        private IntSize visualSize_;
         private HAlignment textHAlign_;
         private int fontSize_;
         private Color fontColor_;
@@ -63,18 +62,6 @@ namespace SGToolsUI.Model.Main
             placeholderFontSize_ = 16;
             maxLength_ = 20;
             inputMode_ = InputMode.Any;
-        }
-
-        [Category(Constant.EditBoxCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
-        public override IntSize VisualSize
-        {
-            get => visualSize_;
-            set
-            {
-                visualSize_ = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(VisualRect));
-            }
         }
 
         [Category(Constant.EditBoxCategoryName), DisplayName("텍스트 수평정렬"), PropertyOrder(OrderTextHAlign)]
@@ -196,8 +183,6 @@ namespace SGToolsUI.Model.Main
         {
             base.ParseXElement(_root);
 
-            visualSize_.Width = (int)_root.Attribute("width")!;
-            visualSize_.Height = (int)_root.Attribute("height")!;
             textHAlign_ = (HAlignment)(int)_root.Attribute("text_halign")!;
 
             fontSize_ = (int)_root.Attribute("font_size")!;

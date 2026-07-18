@@ -17,13 +17,15 @@ namespace SGToolsUI.FileSystem
 
         public async Task<SGUIRootGroup> LoadAsync(string _filePath)
         {
-            return await Task.Run(() =>
-            {
-                XElement root = XElement.Load(_filePath);
-                SGUIRootGroup rootGroup = ParseRootGroup(root);
-                rootGroup.ViewModel = ViewModel;
-                return rootGroup;
-            });
+            return await Task.Run(() => Load(_filePath));
+        }
+
+        public SGUIRootGroup Load(string _filePath)
+        {
+            XElement root = XElement.Load(_filePath);
+            SGUIRootGroup rootGroup = ParseRootGroup(root);
+            rootGroup.ViewModel = ViewModel;
+            return rootGroup;
         }
 
         private SGUIRootGroup ParseRootGroup(XElement _root)
@@ -37,41 +39,25 @@ namespace SGToolsUI.FileSystem
                 if (childElement.Name.LocalName == "data")
                     continue;
 
-                SGUIElement? child = ParseElement(childElement);
+                SGUIElement? child = ParseElement(childElement, rootGroup);
                 if (child != null)
-                {
-                    child.ViewModel = ViewModel;
                     rootGroup.Children.Add(child);
-                }
             }
 
-            return rootGroup;
+			rootGroup.UpdateZOrder();
+			return rootGroup;
         }
 
-        private SGUIElement? ParseElement(XElement _element)
+        private SGUIElement? ParseElement(XElement _element, SGUIGroup _parent)
         {
             string tagName = _element.Name.LocalName;
             SGUIElementType type = TagNameToElementType(tagName);
             SGUIElement? element = SGUIElement.Create(type);
             if (element != null)
             {
-                element.ParseXElement(_element);
                 element.ViewModel = ViewModel;
-
-                if (element is SGUIGroup group)
-                {
-                    foreach (var childElem in _element.Elements())
-                    {
-                        if (childElem.Name.LocalName == "data")
-                            continue;
-                        SGUIElement? child = ParseElement(childElem);
-                        if (child != null)
-                        {
-                            child.ViewModel = ViewModel;
-                            group.Children.Add(child);
-                        }
-                    }
-                }
+                element.Parent = _parent;
+                element.ParseXElement(_element);
             }
             return element;
         }

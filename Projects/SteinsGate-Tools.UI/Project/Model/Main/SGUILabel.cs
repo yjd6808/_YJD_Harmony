@@ -32,7 +32,6 @@ namespace SGToolsUI.Model.Main
 
         public static int Seq;
 
-        private IntSize visualSize_;
         private FontType font_;
         private int fontSize_;
         private Color fontColor_;
@@ -44,23 +43,9 @@ namespace SGToolsUI.Model.Main
         //////////////////////////////////////////////////////////////////////////////////
         public SGUILabel()
         {
-            visualSize_ = Constant.DefaultVisualSize;
             fontSize_ = 12;
             font_ = FontType.DF;
             fontColor_ = Brushes.Black.Color;
-        }
-
-        [ReadOnly(false)]
-        [Category(Constant.LabelCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
-        public override IntSize VisualSize
-        {
-            get => visualSize_;
-            set
-            {
-                visualSize_ = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(VisualRect));
-            }
         }
 
         [Browsable(false)]
@@ -176,8 +161,6 @@ namespace SGToolsUI.Model.Main
         {
             base.ParseXElement(_root);
 
-            visualSize_.Width = (int)_root.Attribute("width")!;
-            visualSize_.Height = (int)_root.Attribute("height")!;
             string fontFileName = (string)_root.Attribute("font")!;
             font_ = (FontType)Enum.Parse(typeof(FontType), Path.GetFileNameWithoutExtension(fontFileName));
             fontSize_ = (int)_root.Attribute("font_size")!;

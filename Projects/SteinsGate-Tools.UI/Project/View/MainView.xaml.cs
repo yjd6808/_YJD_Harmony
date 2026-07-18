@@ -62,6 +62,7 @@ namespace SGToolsUI.View
             ViewModel.JobQueue.Dispose();
             ViewModel.KeyState.Dispose();
             ViewModel.Commander.Finalize();
+            ViewModel.SaveRecentWorkspaces();
         }
 
         //////////////////////////////////////////////////////////////////////////////////

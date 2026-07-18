@@ -27,7 +27,6 @@ namespace SGToolsUI.Model.Main
         public const int OrderChildCountRecursive = 2;
 
         private ObservableCollection<SGUIElement> children_;
-        private IntSize visualSize_;
         private int depth_; // 계층 구조상 깊이. 추가한 이유: 깊이 계산시 연산 낭비가 심함. 특히 모든 원소 깊이를 계산하는 경우
 
         //////////////////////////////////////////////////////////////////////////////////
@@ -72,19 +71,6 @@ namespace SGToolsUI.Model.Main
                 int count = 0;
                 ForEachRecursive((_) => count++);
                 return count;
-            }
-        }
-
-        [ReadOnly(false)]
-        [Category(Constant.ElementCategoryName), DisplayName("크기"), PropertyOrder(OrderVisualSize)]
-        public override IntSize VisualSize
-        {
-            get => visualSize_;
-            set
-            {
-                visualSize_ = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(VisualRect));
             }
         }
 
@@ -191,12 +177,6 @@ namespace SGToolsUI.Model.Main
         public override void ParseXElement(XElement _root)
         {
             base.ParseXElement(_root);
-            XAttribute widthAttr = _root.Attribute("width");
-            if (widthAttr != null)
-                visualSize_.Width = (int)widthAttr;
-            XAttribute heightAttr = _root.Attribute("height");
-            if (heightAttr != null)
-                visualSize_.Height = (int)heightAttr;
             foreach (var childElement in _root.Elements())
             {
                 if (childElement.Name.LocalName == "data")

@@ -63,7 +63,7 @@ namespace SGToolsUI.Model.Main
                     if (!sprites_[i].IsNull)
                         return sprites_[i].Rect.Size;
 
-                return Constant.DefaultVisualSize;
+                return visualSize_;
             }
         }
 
@@ -190,16 +190,17 @@ namespace SGToolsUI.Model.Main
         //////////////////////////////////////////////////////////////////////////////////
         public override void ParseXElement(XElement _root)
         {
-            base.ParseXElement(_root);
-
             XAttribute linearDodgeAttr = _root.Attribute("linear_dodge");
             if (linearDodgeAttr != null)
                 linearDodge_ = (bool)linearDodgeAttr;
 
             string sgaName = (string)_root.Attribute("sga") ?? string.Empty;
 
-            if (sgaName.Length == 0)
-                return;
+			if (sgaName.Length == 0)
+			{
+				base.ParseXElement(_root);
+				return;
+			}
 
             string imgName = (string)_root.Attribute("img")!;
 
@@ -211,7 +212,9 @@ namespace SGToolsUI.Model.Main
             if (spriteStr.Length > 0)
                 StringEx.ParseIntNumberN(spriteStr, sprites);
             SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in sprites_, linearDodge_);
-        }
+
+			base.ParseXElement(_root);
+		}
 
         //////////////////////////////////////////////////////////////////////////////////
         public override object Clone()

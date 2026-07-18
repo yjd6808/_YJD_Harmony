@@ -26,22 +26,19 @@ namespace SGToolsCommon.Sga
         private SgaManager() {}
 
         //////////////////////////////////////////////////////////////////////////////////
-        public void LoadSga(int _type)
+        public void LoadDir(string _relativeDir)
         {
             if (packages_ != null)
                 UnloadAll();
 
             packages_ = new List<SgaPackage>();
 
-            if (_type < 0 || _type >= SgaPackageType.Max)
-                throw new Exception("올바르지 않은 sga 패키지 타입입니다.");
-
-            string dir = Path.Combine(SgaDirectory, SgaPackageType.Name[_type]);
+            string dir = Path.Combine(SgaDirectory, _relativeDir);
 
             if (!Directory.Exists(dir))
-                throw new Exception("SGA 패키지 디렉토리가 존재하지 않습니다.");
+                throw new Exception($"{dir} 디렉토리가 존재하지 않습니다.");
 
-            string[] sgaFileList = Directory.GetFiles(dir, "*.sga", SearchOption.TopDirectoryOnly);
+            string[] sgaFileList = Directory.GetFiles(dir, "*.sga", SearchOption.AllDirectories);
 
             for (int i = 0; i < sgaFileList.Length; ++i)
             {

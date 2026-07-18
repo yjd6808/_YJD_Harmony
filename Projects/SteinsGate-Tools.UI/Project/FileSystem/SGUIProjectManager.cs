@@ -2,16 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using SGToolsUI.Model.Main;
+using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.FileSystem
 {
     public class SGUIProjectManager
     {
         public string BaseDirectory { get; }
+        private MainViewModel ViewModel { get; }
 
-        public SGUIProjectManager(string _baseDirectory)
+        public SGUIProjectManager(string _baseDirectory, MainViewModel _viewModel)
         {
             BaseDirectory = _baseDirectory;
+            ViewModel = _viewModel;
         }
 
         public WorkspaceTreeItem ScanDirectory()
@@ -57,14 +60,14 @@ namespace SGToolsUI.FileSystem
 
                 string xmlFullPath = Path.GetFullPath(Path.Combine(metaFile.DirectoryName!, metaInfo.XmlPath));
 
-                var metaItem = new WorkspaceTreeItem
+                try
                 {
-                    Name = metaInfo.Name,
-                    IsDirectory = false,
-                    MetaFilePath = metaFile.FullName,
-                    XmlFilePath = xmlFullPath
-                };
-                _parent.Children.Add(metaItem);
+                    var loader = new SGUILoader(ViewModel);
+                    SGUIRootGroup rootGroup = loader.Load(xmlFullPath);
+                    rootGroup.XmlFilePath = xmlFullPath;
+                    _parent.Children.Add(rootGroup);
+                }
+                catch { }
             }
         }
     }

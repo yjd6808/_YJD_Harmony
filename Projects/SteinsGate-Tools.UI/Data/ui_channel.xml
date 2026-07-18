@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Group name="ui_channel" valign="2" halign="0" width="640" height="480">
+  <Sprite name="background" x="0" y="0" valign="2" halign="0" sga="sprite_interface.sga" img="createcharacter.img" sprite="0" width="640" height="480" />
+  <Sprite name="background_gear" x="148" y="125" valign="2" halign="0" sga="sprite_interface.sga" img="createcharacter.img" sprite="1" width="342" height="342" linear_dodge="true" />
+  <Sprite name="server_select" x="0" y="-15" valign="0" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="10" width="155" height="31" />
+  <Sprite name="background_start" x="50" y="3" valign="2" halign="1" sga="sprite_interface.sga" img="selectcharacter.img" sprite="12" width="106" height="54" />
+  <Button name="start" x="50" y="13" valign="2" halign="1" sga="sprite_interface.sga" img="selectcharacter.img" sprite="9 10 11 9" />
+  <Button name="terminate" x="512" y="18" valign="2" halign="0" sga="sprite_interface.sga" img="selectcharacter.img" sprite="17 18 19 17" />
+  <Group name="server_character_list" x="0" y="0" valign="0" halign="0" width="640" height="480">
+    <Sprite name="luke" x="0" y="0" valign="0" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="79" width="252" height="471" />
+    <Sprite name="hilder" x="0" y="0" valign="0" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="50" width="256" height="480" />
+    <Sprite name="siroco" x="0" y="0" valign="0" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="38" width="256" height="480" />
+    <Sprite name="prey" x="0" y="0" valign="0" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="39" width="256" height="480" />
+    <Sprite name="kasias" x="0" y="0" valign="0" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="72" width="237" height="480" linear_dodge="true" />
+    <Sprite name="diregie" x="0" y="0" valign="0" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="37" width="256" height="480" />
+    <Sprite name="cain" x="0" y="0" valign="0" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="36" width="252" height="480" />
+    <Sprite name="seria" x="0" y="0" valign="0" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="85" width="275" height="469" />
+  </Group>
+  <Group name="server_button_list" x="0" y="0" valign="0" halign="0" width="158" height="480">
+    <Group name="luke" x="0" y="-64" valign="0" halign="0" width="158" height="42">
+      <Sprite name="selected_background" x="10" y="4" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="41" width="183" height="117" linear_dodge="true" />
+      <Sprite name="selected" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="74" width="118" height="24" />
+      <Sprite name="selected_border" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="75" width="158" height="42" linear_dodge="true" />
+      <Sprite name="normal" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="76" width="50" height="37" />
+      <Sprite name="normal_border" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="77" width="158" height="42" linear_dodge="true" />
+      <Sprite name="disabled" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="78" width="32" height="16" />
+    </Group>
+    <Group name="hilder" x="0" y="-106" valign="0" halign="0" width="158" height="42">
+      <Sprite name="selected_background" x="10" y="4" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="41" width="183" height="117" linear_dodge="true" />
+      <Sprite name="selected" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="45" width="127" height="25" />
+      <Sprite name="selected_border" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="46" width="158" height="42" linear_dodge="true" />
+      <Sprite name="normal" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="47" width="51" height="38" />
+      <Sprite name="normal_border" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="48" width="158" height="42" linear_dodge="true" />
+      <Sprite name="disabled" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="49" width="32" height="17" />
+    </Group>
+    <Group name="siroco" x="0" y="-148" valign="0" halign="0" width="158" height="42">
+      <Sprite name="selected_background" x="10" y="4" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="41" width="183" height="117" />
+      <Sprite name="selected" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="21" width="127" height="24" />
+      <Sprite name="selected_border" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="22" width="158" height="42" linear_dodge="true" />
+      <Sprite name="normal" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="23" width="67" height="37" />
+      <Sprite name="normal_border" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="24" width="158" height="42" linear_dodge="true" />
+      <Sprite name="disabled" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="25" width="48" height="17" />
+    </Group>
+    <Group name="prey" x="0" y="-190" valign="0" halign="0" width="158" height="42">
+      <Sprite name="selected_background" x="10" y="4" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="41" width="183" height="117" />
+      <Sprite name="selected" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="26" width="127" height="24" />
+      <Sprite name="selected_border" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="27" width="158" height="42" linear_dodge="true" />
+      <Sprite name="normal" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="28" width="67" height="38" />
+      <Sprite name="normal_border" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="29" width="158" height="42" linear_dodge="true" />
+      <Sprite name="disabled" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="30" width="48" height="17" />
+    </Group>
+    <Group name="kasias" x="0" y="-232" valign="0" halign="0" width="158" height="42">
+      <Sprite name="selected_background" x="10" y="4" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="41" width="183" height="117" />
+      <Sprite name="selected" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="67" width="151" height="24" />
+      <Sprite name="selected_border" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="68" width="158" height="42" linear_dodge="true" />
+      <Sprite name="normal" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="69" width="84" height="37" />
+      <Sprite name="normal_border" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="70" width="158" height="42" linear_dodge="true" />
+      <Sprite name="disabled" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="71" width="65" height="17" />
+    </Group>
+    <Group name="diregie" x="0" y="-274" valign="0" halign="0" width="158" height="42">
+      <Sprite name="selected_background" x="10" y="4" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="41" width="183" height="117" />
+      <Sprite name="selected" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="16" width="151" height="24" />
+      <Sprite name="selected_border" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="17" width="158" height="42" linear_dodge="true" />
+      <Sprite name="normal" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="18" width="85" height="38" />
+      <Sprite name="normal_border" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="19" width="158" height="42" linear_dodge="true" />
+      <Sprite name="disabled" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="20" width="65" height="17" />
+    </Group>
+    <Group name="cain" x="0" y="-316" valign="0" halign="0" width="158" height="42">
+      <Sprite name="selected_background" x="10" y="4" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="41" width="183" height="117" />
+      <Sprite name="selected" x="0" y="-1" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="11" width="118" height="24" />
+      <Sprite name="selected_border" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="12" width="158" height="42" linear_dodge="true" />
+      <Sprite name="normal" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="13" width="52" height="38" />
+      <Sprite name="normal_border" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="14" width="158" height="42" linear_dodge="true" />
+      <Sprite name="disabled" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="15" width="32" height="17" />
+    </Group>
+    <Group name="seria" x="0" y="-358" valign="0" halign="0" width="158" height="42">
+      <Sprite name="selected_background" x="10" y="4" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="41" width="183" height="117" />
+      <Sprite name="selected" x="0" y="-3" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="80" width="133" height="31" />
+      <Sprite name="selected_border" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="81" width="158" height="42" linear_dodge="true" />
+      <Sprite name="normal" x="0" y="0" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="82" width="81" height="40" />
+      <Sprite name="normal_border" x="0" y="-1" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="83" width="158" height="42" linear_dodge="true" />
+      <Sprite name="disabled" x="0" y="-2" valign="1" halign="1" sga="sprite_interface.sga" img="channel_base.img" sprite="84" width="64" height="26" />
+    </Group>
+  </Group>
+  <Group name="channel_list" x="-53" y="-46" valign="0" halign="2" width="433" height="383">
+    <Sprite name="배경" x="10" y="8" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="0" width="415" height="337" />
+    <Button name="refresh" x="-20" y="20" valign="2" halign="2" sga="sprite_interface.sga" img="channel_base.img" sprite="42 42 44 42" />
+    <ToggleButton name="teen" x="10" y="344" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="1 1 2 3" sprite2="2 2 2 1" />
+    <ToggleButton name="adult" x="89" y="344" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="4 4 5 6" sprite2="5 5 5 6" />
+    <ToggleButton name="slot_1_type_0" x="20" y="290" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="52 52 52 52" sprite2="53 53 53 53" />
+    <ToggleButton name="slot_1_type_1" x="20" y="290" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="54 54 54 54" sprite2="55 55 55 55" />
+    <ToggleButton name="slot_1_type_2" x="20" y="290" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="56 56 56 56" sprite2="57 57 57 57" />
+    <Sprite name="slot_1_selection" x="19" y="289" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="58" width="194" height="40" linear_dodge="true" />
+    <Label name="slot_1_name" x="56" y="298" valign="2" halign="0" width="109" height="21" font="N2G.ttf" font_size="10" font_color="255 228 225 255" text="ch%02d.%s %X" text_wrap="True" text_valign="1" text_halign="0" />
+    <Label name="slot_1_density" x="168" y="298" valign="2" halign="0" width="37" height="21" font="DF.ttf" font_size="16" font_color="255 228 225 255" text="쾌적" text_wrap="True" text_valign="1" text_halign="0" />
+    <ToggleButton name="slot_2_type_0" x="218" y="290" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="52 52 52 52" sprite2="53 53 53 53" />
+    <ToggleButton name="slot_2_type_1" x="218" y="290" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="54 54 54 54" sprite2="55 55 55 55" />
+    <ToggleButton name="slot_2_type_2" x="218" y="290" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="56 56 56 56" sprite2="57 57 57 57" />
+    <Sprite name="slot_2_selection" x="217" y="289" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="58" width="194" height="40" />
+    <Label name="slot_2_name" x="254" y="298" valign="2" halign="0" width="109" height="21" font="N2G.ttf" font_size="10" font_color="255 228 225 255" text="ch%02d.%s %X" text_wrap="True" text_valign="1" text_halign="0" />
+    <Label name="slot_2_density" x="366" y="298" valign="2" halign="0" width="37" height="21" font="DF.ttf" font_size="16" font_color="255 228 225 255" text="쾌적" text_wrap="True" text_valign="1" text_halign="0" />
+    <ToggleButton name="slot_3_type_0" x="20" y="242" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="52 52 52 52" sprite2="53 53 53 53" />
+    <ToggleButton name="slot_3_type_1" x="20" y="242" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="54 54 54 54" sprite2="55 55 55 55" />
+    <ToggleButton name="slot_3_type_2" x="20" y="242" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="56 56 56 56" sprite2="57 57 57 57" />
+    <Sprite name="slot_3_selection" x="19" y="241" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="58" width="194" height="40" />
+    <Label name="slot_3_name" x="56" y="250" valign="2" halign="0" width="109" height="21" font="N2G.ttf" font_size="10" font_color="255 228 225 255" text="ch%02d.%s %X" text_wrap="True" text_valign="1" text_halign="0" />
+    <Label name="slot_3_density" x="168" y="250" valign="2" halign="0" width="37" height="21" font="DF.ttf" font_size="16" font_color="255 228 225 255" text="쾌적" text_wrap="True" text_valign="1" text_halign="0" />
+    <ToggleButton name="slot_4_type_0" x="218" y="242" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="52 52 52 52" sprite2="53 53 53 53" />
+    <ToggleButton name="slot_4_type_1" x="218" y="242" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="54 54 54 54" sprite2="55 55 55 55" />
+    <ToggleButton name="slot_4_type_2" x="218" y="242" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="56 56 56 56" sprite2="57 57 57 57" />
+    <Sprite name="slot_4_selection" x="217" y="241" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="58" width="194" height="40" />
+    <Label name="slot_4_name" x="254" y="250" valign="2" halign="0" width="109" height="21" font="N2G.ttf" font_size="10" font_color="255 228 225 255" text="ch%02d.%s %X" text_wrap="True" text_valign="1" text_halign="0" />
+    <Label name="slot_4_density" x="366" y="250" valign="2" halign="0" width="37" height="21" font="DF.ttf" font_size="16" font_color="255 228 225 255" text="쾌적" text_wrap="True" text_valign="1" text_halign="0" />
+    <ToggleButton name="slot_5_type_0" x="20" y="194" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="52 52 52 52" sprite2="53 53 53 53" />
+    <ToggleButton name="slot_5_type_1" x="20" y="194" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="54 54 54 54" sprite2="55 55 55 55" />
+    <ToggleButton name="slot_5_type_2" x="20" y="194" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="56 56 56 56" sprite2="57 57 57 57" />
+    <Sprite name="slot_5_selection" x="19" y="193" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="58" width="194" height="40" />
+    <Label name="slot_5_name" x="56" y="202" valign="2" halign="0" width="109" height="21" font="N2G.ttf" font_size="10" font_color="255 228 225 255" text="ch%02d.%s %X" text_wrap="True" text_valign="1" text_halign="0" />
+    <Label name="slot_5_density" x="168" y="202" valign="2" halign="0" width="37" height="21" font="DF.ttf" font_size="16" font_color="255 228 225 255" text="쾌적" text_wrap="True" text_valign="1" text_halign="0" />
+    <ToggleButton name="slot_6_type_0" x="218" y="194" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="52 52 52 52" sprite2="53 53 53 53" />
+    <ToggleButton name="slot_6_type_1" x="218" y="194" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="54 54 54 54" sprite2="55 55 55 55" />
+    <ToggleButton name="slot_6_type_2" x="218" y="194" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="56 56 56 56" sprite2="57 57 57 57" />
+    <Sprite name="slot_6_selection" x="217" y="193" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="58" width="194" height="40" />
+    <Label name="slot_6_name" x="254" y="202" valign="2" halign="0" width="109" height="21" font="N2G.ttf" font_size="10" font_color="255 228 225 255" text="ch%02d.%s %X" text_wrap="True" text_valign="1" text_halign="0" />
+    <Label name="slot_6_density" x="366" y="202" valign="2" halign="0" width="37" height="21" font="DF.ttf" font_size="16" font_color="255 228 225 255" text="쾌적" text_wrap="True" text_valign="1" text_halign="0" />
+    <ToggleButton name="slot_7_type_0" x="20" y="146" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="52 52 52 52" sprite2="53 53 53 53" />
+    <ToggleButton name="slot_7_type_1" x="20" y="146" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="54 54 54 54" sprite2="55 55 55 55" />
+    <ToggleButton name="slot_7_type_2" x="20" y="146" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="56 56 56 56" sprite2="57 57 57 57" />
+    <Sprite name="slot_7_selection" x="19" y="145" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="58" width="194" height="40" />
+    <Label name="slot_7_name" x="56" y="154" valign="2" halign="0" width="109" height="21" font="N2G.ttf" font_size="10" font_color="255 228 225 255" text="ch%02d.%s %X" text_wrap="True" text_valign="1" text_halign="0" />
+    <Label name="slot_7_density" x="168" y="154" valign="2" halign="0" width="37" height="21" font="DF.ttf" font_size="16" font_color="255 228 225 255" text="쾌적" text_wrap="True" text_valign="1" text_halign="0" />
+    <ToggleButton name="slot_8_type_0" x="218" y="146" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="52 52 52 52" sprite2="53 53 53 53" />
+    <ToggleButton name="slot_8_type_1" x="218" y="146" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="54 54 54 54" sprite2="55 55 55 55" />
+    <ToggleButton name="slot_8_type_2" x="218" y="146" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="56 56 56 56" sprite2="57 57 57 57" />
+    <Sprite name="slot_8_selection" x="217" y="145" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="58" width="194" height="40" />
+    <Label name="slot_8_name" x="254" y="154" valign="2" halign="0" width="109" height="21" font="N2G.ttf" font_size="10" font_color="255 228 225 255" text="ch%02d.%s %X" text_wrap="True" text_valign="1" text_halign="0" />
+    <Label name="slot_8_density" x="366" y="154" valign="2" halign="0" width="37" height="21" font="DF.ttf" font_size="16" font_color="255 228 225 255" text="쾌적" text_wrap="True" text_valign="1" text_halign="0" />
+    <ToggleButton name="slot_9_type_0" x="20" y="98" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="52 52 52 52" sprite2="53 53 53 53" />
+    <ToggleButton name="slot_9_type_1" x="20" y="98" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="54 54 54 54" sprite2="55 55 55 55" />
+    <ToggleButton name="slot_9_type_2" x="20" y="98" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="56 56 56 56" sprite2="57 57 57 57" />
+    <Sprite name="slot_9_selection" x="19" y="97" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="58" width="194" height="40" />
+    <Label name="slot_9_name" x="56" y="106" valign="2" halign="0" width="109" height="21" font="N2G.ttf" font_size="10" font_color="255 228 225 255" text="ch%02d.%s %X" text_wrap="True" text_valign="1" text_halign="0" />
+    <Label name="slot_9_density" x="168" y="106" valign="2" halign="0" width="37" height="21" font="DF.ttf" font_size="16" font_color="255 228 225 255" text="쾌적" text_wrap="True" text_valign="1" text_halign="0" />
+    <ToggleButton name="slot_10_type_0" x="218" y="98" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="52 52 52 52" sprite2="53 53 53 53" />
+    <ToggleButton name="slot_10_type_1" x="218" y="98" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="54 54 54 54" sprite2="55 55 55 55" />
+    <ToggleButton name="slot_10_type_2" x="218" y="98" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="56 56 56 56" sprite2="57 57 57 57" />
+    <Sprite name="slot_10_selection" x="217" y="97" valign="2" halign="0" sga="sprite_interface.sga" img="channel_base.img" sprite="58" width="194" height="40" />
+    <Label name="slot_10_name" x="254" y="106" valign="2" halign="0" width="109" height="21" font="N2G.ttf" font_size="10" font_color="255 228 225 255" text="ch%02d.%s %X" text_wrap="True" text_valign="1" text_halign="0" />
+    <Label name="slot_10_density" x="366" y="106" valign="2" halign="0" width="37" height="21" font="DF.ttf" font_size="16" font_color="255 228 225 255" text="쾌적" text_wrap="True" text_valign="1" text_halign="0" />
+    <Label name="page" x="196" y="22" valign="2" halign="0" width="41" height="17" font="N2G.ttf" font_size="10" font_color="240 248 255 255" text="99 / .99" text_wrap="False" text_valign="1" text_halign="1" />
+  </Group>
+</Group>

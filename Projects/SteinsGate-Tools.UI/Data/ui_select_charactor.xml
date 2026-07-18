@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Group name="ui_select_charactor" valign="1" halign="1" width="640" height="480">
+  <ToggleButton name="t1" x="298" y="6" valign="2" halign="0" sga="sprite.sga" img="login.img" sprite="6 7 8 18" sprite2="9 10 11 19" />
+  <Sprite name="t2" x="517" y="5" valign="2" halign="0" sga="sprite.sga" img="login.img" sprite="0" width="117" height="86" />
+  <CheckBox name="t3" x="203" y="11" valign="2" halign="0" bg_sga="sprite_interface.sga" bg_img="avatar_converting.img" cross_sga="sprite.sga" cross_img="login.img" sprite="13 -1 1 -1" />
+  <ScrollBar name="t4" x="272" y="9" valign="2" halign="0" sga="sprite_interface_chatting.sga" img="chatting2.img" sprite="2 3 4 5 8 9 6" track_size="20 97" />
+  <EditBox name="t5" x="8" y="6" valign="2" halign="0" width="141" height="16" text_halign="0" font_size="12" font_color="255 255 0 255" p_text="텍스트를 입력해주세요." p_font_color="128 128 128 255" p_font_size="16" max_length="20" input_mode="0" />
+  <Label name="t6" x="383" y="5" valign="2" halign="0" width="131" height="30" font="DF.ttf" font_size="12" font_color="240 255 255 255" text="안세요1 안녕하세요1 안녕하세요123" text_wrap="True" text_valign="2" text_halign="1" />
+  <Label name="font_test" x="8" y="51" valign="2" halign="0" width="103" height="18" font="DF.ttf" font_size="12" font_color="255 127 80 255" text="폰트 테스트" text_wrap="True" text_valign="0" text_halign="0" />
+  <Label name="popup_test" x="7" y="73" valign="2" halign="0" width="103" height="18" font="DF.ttf" font_size="12" font_color="0 128 128 255" text="팝업 테스트" text_wrap="True" text_valign="0" text_halign="0" />
+  <Label name="drag_test" x="6" y="96" valign="2" halign="0" width="103" height="18" font="DF.ttf" font_size="12" font_color="100 149 237 255" text="드래그 테스트" text_wrap="True" text_valign="0" text_halign="0" />
+  <Label name="reset_position" x="103" y="96" valign="2" halign="0" width="103" height="18" font="DF.ttf" font_size="12" font_color="100 149 237 255" text="위치 복구" text_wrap="True" text_valign="0" text_halign="0" />
+  <Label name="scale_test" x="7" y="31" valign="2" halign="0" width="128" height="18" font="DF.ttf" font_size="12" font_color="100 149 237 255" text="스케일링 테스트" text_wrap="True" text_valign="0" text_halign="0" />
+  <Label name="line_break" x="519" y="94" valign="2" halign="0" width="114" height="32" font="DF.ttf" font_size="12" font_color="100 149 237 255" text="라인&#xA;브레이크" text_wrap="True" text_valign="0" text_halign="0" />
+  <Group name="o1" x="300" y="41" valign="2" halign="0" width="213" height="89">
+    <ProgressBar name="t1" x="7" y="22" valign="2" halign="0" sga="sprite_interface.sga" img="base.img" sprite="1" width="28" height="56" direction="2" />
+    <ProgressBar name="t2" x="43" y="17" valign="2" halign="0" sga="sprite_interface.sga" img="base.img" sprite="2" width="24" height="61" direction="3" />
+    <ProgressBar name="t3" x="78" y="56" valign="2" halign="0" sga="sprite_interface.sga" img="base.img" sprite="238" width="110" height="20" direction="0" />
+    <ProgressBar name="t4" x="83" y="22" valign="2" halign="0" sga="sprite_interface.sga" img="base.img" sprite="238" width="115" height="21" direction="1" />
+  </Group>
+  <Group name="o2" x="3" y="153" valign="2" halign="0" width="323" height="249">
+    <ToggleButton name="t1" x="221" y="47" valign="2" halign="0" sga="sprite.sga" img="login.img" sprite="6 7 8 18" sprite2="9 10 11 19" />
+    <ProgressBar name="topbottom" x="-59" y="104" valign="2" halign="2" sga="sprite_interface.sga" img="base.img" sprite="1" width="34" height="45" direction="2" />
+    <ScrollBar name="t3" x="199" y="27" valign="2" halign="0" sga="sprite_interface_chatting.sga" img="chatting2.img" sprite="2 3 4 5 8 9 6" track_size="12 97" />
+    <Static name="t4" x="-125" y="-195" valign="0" halign="2" width="30" height="30" />
+    <CheckBox name="t5" x="224" y="-12" valign="2" halign="0" bg_sga="sprite_interface.sga" bg_img="avatar_converting.img" cross_sga="sprite.sga" cross_img="login.img" sprite="13 -1 1 -1" />
+    <Label name="t6" x="289" y="131" valign="2" halign="0" width="49" height="17" font="DF.ttf" font_size="12" font_color="255 228 196 255" text="안녕" text_wrap="False" text_valign="0" text_halign="0" />
+    <Button name="t7" x="24" y="24" valign="2" halign="2" sga="sprite.sga" img="login.img" sprite="6 7 8 18" />
+    <EditBox name="t8" x="24" y="10" valign="2" halign="0" width="119" height="16" text_halign="0" font_size="12" font_color="255 255 0 255" p_text="텍스트를 입력해주세요." p_font_color="128 128 128 255" p_font_size="16" max_length="20" input_mode="0" />
+    <Group name="o21" x="11" y="99" valign="2" halign="0" width="179" height="139">
+      <ToggleButton name="t1" x="54" y="26" valign="2" halign="0" sga="sprite.sga" img="login.img" sprite="6 7 8 18" sprite2="9 10 11 19" />
+      <ProgressBar name="topbottom" x="-82" y="83" valign="2" halign="2" sga="sprite_interface.sga" img="base.img" sprite="1" width="34" height="45" direction="2" />
+      <ScrollBar name="t3" x="32" y="6" valign="2" halign="0" sga="sprite_interface_chatting.sga" img="chatting2.img" sprite="2 3 4 5 8 9 6" track_size="12 97" />
+      <Static name="t4" x="-148" y="-106" valign="0" halign="2" width="30" height="30" />
+      <CheckBox name="t5" x="57" y="-33" valign="2" halign="0" bg_sga="sprite_interface.sga" bg_img="avatar_converting.img" cross_sga="sprite.sga" cross_img="login.img" sprite="13 -1 1 -1" />
+      <Label name="t6" x="122" y="110" valign="2" halign="0" width="49" height="17" font="DF.ttf" font_size="12" font_color="255 228 196 255" text="안녕" text_wrap="False" text_valign="0" text_halign="0" />
+      <Button name="t7" x="-8" y="2" valign="2" halign="2" sga="sprite.sga" img="login.img" sprite="6 7 8 18" />
+      <EditBox name="t8" x="57" y="60" valign="2" halign="0" width="119" height="16" text_halign="0" font_size="12" font_color="255 255 0 255" p_text="텍스트를 입력해주세요." p_font_color="128 128 128 255" p_font_size="16" max_length="20" input_mode="0" />
+    </Group>
+  </Group>
+</Group>
