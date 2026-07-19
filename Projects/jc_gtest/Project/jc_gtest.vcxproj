@@ -22,6 +22,7 @@
     <ClCompile Include="..\Sources\jc_gtest\ComparatorTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Container\ArrayQueueTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Container\ArrayStackTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\Container\StaticVectorTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Container\ArraysTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Container\CMessageTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Container\DataMapTest.cpp" />
@@ -69,6 +70,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\HasherTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\Logger\FileLoggerTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\MathTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\MemoryTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\PCH\Core.cpp">

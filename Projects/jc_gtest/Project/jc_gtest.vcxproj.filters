@@ -11,11 +11,17 @@
     <ClCompile Include="..\Sources\jc_gtest\ComparatorTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\TimeTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\ExceptionTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\Logger\FileLoggerTest.cpp">
+      <Filter>Logger</Filter>
+    </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\MemoryTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Container\ArrayStackTest.cpp">
       <Filter>Container</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Container\ArrayQueueTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\StaticVectorTest.cpp">
       <Filter>Container</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Container\VectorTest.cpp">
@@ -185,6 +191,9 @@
     </Filter>
     <Filter Include="PCH">
       <UniqueIdentifier>{80a5ce19-c26c-4777-a2cc-d2ef50485e33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logger">
+      <UniqueIdentifier>{a12b3c4d-5e6f-7890-abcd-ef1234567890}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

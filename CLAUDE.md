@@ -36,6 +36,11 @@ cd Scripts
 4. SQL coding convention: .claude/rules/coding-conventions_sql.md
 5. asset files/deploy binary directory: D:\Programming\MyProjects\_DevCpp\UltimateHarmony_Dev
 
+## Tools
+
+1. **GitDiffer.bat** (`Scripts\GitDiffer.bat`)
+   - Git staged/unstaged file diff viewer
+
 ## Guidelines
 
 Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.

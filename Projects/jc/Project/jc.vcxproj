@@ -189,6 +189,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\jc\Logger\ConsoleLogger.cpp" />
+    <ClCompile Include="..\Sources\jc\Logger\FileLogger.cpp" />
     <ClCompile Include="..\Sources\jc\Logger\LoggerAbstract.cpp" />
     <ClCompile Include="..\Sources\jc\Logger\LoggerDefine.cpp" />
     <ClCompile Include="..\Sources\jc\Memory.cpp" />
@@ -499,6 +500,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\jc\Container\StaticVector.h" />
     <ClInclude Include="..\Sources\jc\Container\Vector.h">
       <SubType>
       </SubType>
@@ -516,6 +518,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\Logger\ConsoleLogger.h" />
+    <ClInclude Include="..\Sources\jc\Logger\FileLogger.h" />
     <ClInclude Include="..\Sources\jc\Logger\LoggerAbstract.h" />
     <ClInclude Include="..\Sources\jc\Logger\LoggerDefine.h" />
     <ClInclude Include="..\Sources\jc\Macro.h">

@@ -64,6 +64,8 @@ USING_NS_STD;
 	#define	TEST_TreeMapTest				ON
 	#define TEST_TreeSetTest				ON
 	#define	TEST_StaticStringTest			ON
+    #define	TEST_StaticVectorTest			ON
+	#define TEST_FileLoggerTest				ON
 #endif
 
 #if TestEnabled == ON
@@ -83,6 +85,7 @@ USING_NS_STD;
         #define	TEST_ListQueueTest					ON
         #define	TEST_ListStackTest					ON
         #define	TEST_VectorTest					    ON
+        #define	TEST_StaticVectorTest			    ON
         
         #if ContainerImplTestEnabled == ON
 
@@ -162,6 +165,7 @@ USING_NS_STD;
         #define TEST_RandomTest					ON
         #define TEST_TimeTest					OFF
         #define TEST_TypeTraitsTest				ON
+        #define TEST_FileLoggerTest				ON
 
     #endif
 

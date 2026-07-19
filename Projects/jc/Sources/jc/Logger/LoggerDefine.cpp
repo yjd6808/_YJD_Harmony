@@ -9,6 +9,7 @@
 #include "jc/Primitives/StringUtil.h"
 #include "jc/Logger/LoggerDefine.h"
 #include "jc/Logger/ConsoleLogger.h"
+#include "jc/Logger/FileLogger.h"
 
 USING_NS_JC;
 
@@ -26,6 +27,20 @@ void InitializeDefaultLogger(const char* _pSpecifier)
 	pConsoleLogger->ShowDateTime(true);
 	pConsoleLogger->ShowLevel(true);
 	Logger_v = pConsoleLogger;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void InitializeFileLogger(const char* _pFilePath)
+{
+	jc_assert_msg(Logger_v == nullptr, "이미 로거가 초기화되어 있습니다.");
+
+	FileLogger* pFileLogger = dbg_new FileLogger(_pFilePath);
+	pFileLogger->SetEnableLock(true);
+	pFileLogger->SetAutoFlush(true);
+	pFileLogger->SetHeaderFormat("[ level | datetime ] ");
+	pFileLogger->ShowDateTime(true);
+	pFileLogger->ShowLevel(true);
+	Logger_v = pFileLogger;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

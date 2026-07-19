@@ -16,7 +16,8 @@ NS_JC_BEGIN
 
 enum class LoggerType
 {
-	Console
+	Console,
+	File
 };
 
 class LoggerOption;
