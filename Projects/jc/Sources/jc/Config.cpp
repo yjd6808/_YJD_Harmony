@@ -30,8 +30,7 @@ void InitializeJCore(int _argc, char** _argv)
 	bRet = Console::SetOutputCodePage(UTF8);
 	jc_assert_msg(bRet, "콘솔 출력 스트림 UTF8 코드페이지 변경 실패");
 
-	bRet = Console::SetEnableVTMode(true);
-	jc_assert_msg(bRet, "콘솔 버철 터미널 모드 변경 실패");
+	Console::SetEnableVTMode(true);
 
 	// 종료시 메모리릭 덤프 출력
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
