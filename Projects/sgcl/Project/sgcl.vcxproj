@@ -321,6 +321,23 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIRuntimeTheme.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIStyleOverride.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIStyleResolver.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIThemeMapper.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIThemeManager.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIThemeBinding.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UITextureEntry.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UITextureBakeService.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIPixelBuffer.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIMaskBuffer.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIGaussianBlur.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIShapeRasterizer.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIGradientRasterizer.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\Baker\UITextureBaker.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIControlBakeRecipes.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UITextureCache.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\Serialization\UITextureBinaryWriter.cpp" />
     <ClCompile Include="..\Classes\sgcl\Util\SGVec2Ex.cpp">
       <SubType>
       </SubType>
@@ -716,6 +733,25 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeTypes.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIRuntimeTheme.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIStyleOverride.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIStyleResolver.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeMapper.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeManager.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeBinding.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UITextureEntry.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UITextureBakeService.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIPixelBuffer.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIColorMath.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIMaskBuffer.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIGaussianBlur.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIShapeRasterizer.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIGradientRasterizer.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Baker\UITextureBaker.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIControlBakeRecipes.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UITextureCache.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Serialization\UITextureBinaryWriter.h" />
     <ClInclude Include="..\Classes\sgcl\Util\SGVec2Ex.h">
       <SubType>
       </SubType>

@@ -1,0 +1,140 @@
+#include "GameCoreHeader.h"
+#include "sgcl/Game/UI/Theme/UITextureCache.h"
+
+UITextureCache::UITextureCache()
+{
+}
+
+UITextureCache::~UITextureCache()
+{
+    Clear();
+}
+
+UITextureEntry* UITextureCache::Find(const UITextureCacheKey& _key)
+{
+    for (int i = 0; i < entries_.Size(); ++i)
+    {
+        CacheEntry& e = entries_[i];
+
+        bool match = e.key.bakerVersion == _key.bakerVersion
+            && e.key.mapperVersion == _key.mapperVersion
+            && e.key.recipeVersion == _key.recipeVersion
+            && e.key.dpiScaleQ8 == _key.dpiScaleQ8
+            && e.key.pixelFormat == _key.pixelFormat
+            && e.key.resolvedStyleHash == _key.resolvedStyleHash
+            && e.key.recipeHash == _key.recipeHash
+            && e.key.stateHash == _key.stateHash;
+
+        if (match)
+        {
+            e.lastAccessFrame = ++frameCounter_;
+            return e.entry;
+        }
+    }
+
+    return nullptr;
+}
+
+void UITextureCache::Insert(const UITextureCacheKey& _key, UITextureEntry* _entry)
+{
+    CacheEntry e;
+    e.key = _key;
+    e.entry = _entry;
+    e.lastAccessFrame = ++frameCounter_;
+
+    size_t entryBytes = _entry->texture
+        ? _entry->texture->getContentSizeInPixels().width * _entry->texture->getContentSizeInPixels().height * 4
+        : 0;
+
+    currentMemoryBytes_ += entryBytes;
+    entries_.PushBack(e);
+
+    EvictIfNeeded();
+}
+
+void UITextureCache::Remove(const UITextureCacheKey& _key)
+{
+    for (int i = entries_.Size() - 1; i >= 0; --i)
+    {
+        CacheEntry& e = entries_[i];
+
+        bool match = e.key.bakerVersion == _key.bakerVersion
+            && e.key.mapperVersion == _key.mapperVersion
+            && e.key.recipeVersion == _key.recipeVersion
+            && e.key.dpiScaleQ8 == _key.dpiScaleQ8
+            && e.key.pixelFormat == _key.pixelFormat
+            && e.key.resolvedStyleHash == _key.resolvedStyleHash
+            && e.key.recipeHash == _key.recipeHash
+            && e.key.stateHash == _key.stateHash;
+
+        if (match)
+        {
+            size_t entryBytes = e.entry && e.entry->texture
+                ? e.entry->texture->getContentSizeInPixels().width * e.entry->texture->getContentSizeInPixels().height * 4
+                : 0;
+
+            currentMemoryBytes_ -= entryBytes;
+            JC_DELETE_SAFE(e.entry);
+            entries_.RemoveAt(i);
+            return;
+        }
+    }
+}
+
+void UITextureCache::Clear()
+{
+    for (int i = 0; i < entries_.Size(); ++i)
+        JC_DELETE_SAFE(entries_[i].entry);
+    entries_.Clear();
+    currentMemoryBytes_ = 0;
+}
+
+void UITextureCache::EvictIfNeeded()
+{
+    while (currentMemoryBytes_ > maxMemoryBytes_ && entries_.Size() > 1)
+    {
+        int lruIndex = 0;
+        uint64_t oldestFrame = entries_[0].lastAccessFrame;
+
+        for (int i = 1; i < entries_.Size(); ++i)
+        {
+            if (entries_[i].lastAccessFrame < oldestFrame)
+            {
+                oldestFrame = entries_[i].lastAccessFrame;
+                lruIndex = i;
+            }
+        }
+
+        CacheEntry& victim = entries_[lruIndex];
+        size_t victimBytes = victim.entry && victim.entry->texture
+            ? victim.entry->texture->getContentSizeInPixels().width * victim.entry->texture->getContentSizeInPixels().height * 4
+            : 0;
+
+        currentMemoryBytes_ -= victimBytes;
+        JC_DELETE_SAFE(victim.entry);
+        entries_.RemoveAt(lruIndex);
+    }
+}
+
+void UITextureDeferredRelease::ReleaseAfterFrames(cc::Ref* _obj, int _frames)
+{
+    if (!_obj) return;
+
+    DeferredEntry e;
+    e.obj = _obj;
+    e.remainingFrames = _frames;
+    queue_.PushBack(e);
+}
+
+void UITextureDeferredRelease::Update()
+{
+    for (int i = queue_.Size() - 1; i >= 0; --i)
+    {
+        --queue_[i].remainingFrames;
+        if (queue_[i].remainingFrames <= 0)
+        {
+            CC_SAFE_RELEASE(queue_[i].obj);
+            queue_.RemoveAt(i);
+        }
+    }
+}

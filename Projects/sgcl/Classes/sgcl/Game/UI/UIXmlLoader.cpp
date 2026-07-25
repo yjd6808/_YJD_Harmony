@@ -7,10 +7,27 @@ USING_NS_JC;
 
 static int ParseSpriteIndices(const char* _str, int* _out, int _count)
 {
-	if (!_str) return 0;
-	return sscanf(_str, "%d,%d,%d,%d,%d,%d,%d",
-		&_out[0], &_out[1], &_out[2], &_out[3],
-		&_out[4], &_out[5], &_out[6]);
+	if (!_str || !_out || _count <= 0)
+		return 0;
+
+	int count = 0;
+	const char* cursor = _str;
+
+	while (*cursor && count < _count)
+	{
+		char* end = nullptr;
+		const long value = std::strtol(cursor, &end, 10);
+		if (cursor == end)
+			break;
+
+		_out[count++] = static_cast<int>(value);
+		cursor = end;
+
+		while (*cursor == ',' || *cursor == ' ' || *cursor == '\t')
+			++cursor;
+	}
+
+	return count;
 }
 
 static void ParseColor(const char* _str, cc::Color4B& _color)
@@ -50,6 +67,17 @@ static void ReadCommon(tinyxml2::XMLElement* _elem, UIElementInfo* _info)
 	_info->hAlignment_ = (HAlignment_t)XmlIntAttr(_elem, "halign", 0);
 	_info->vAlignment_ = (VAlignment_t)XmlIntAttr(_elem, "valign", 0);
 	_info->type_ = (UIElementType_t)XmlIntAttr(_elem, "type", 0);
+
+	const char* renderModeStr = _elem->Attribute("render_mode");
+	if (renderModeStr)
+	{
+		if (strcmp(renderModeStr, "theme") == 0)
+			_info->renderMode_ = eRenderModeTheme;
+		else if (strcmp(renderModeStr, "legacy") == 0)
+			_info->renderMode_ = eRenderModeLegacy;
+		else
+			_info->renderMode_ = eRenderModeAuto;
+	}
 }
 
 UIGroupInfo* UIXmlLoader::LoadFromFile(const char* _filePath)

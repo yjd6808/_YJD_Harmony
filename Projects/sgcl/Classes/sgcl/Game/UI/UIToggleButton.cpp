@@ -1,19 +1,13 @@
-﻿/*
- * 작성자: 윤정도
- * 생성일: 3/21/2023 1:18:28 PM
- * =====================
- *
- */
-
-
-#include "GameCoreHeader.h"
+﻿#include "GameCoreHeader.h"
 #include "Game/UI/UIToggleButton.h"
 
 #include "sgcl/Game/UI/UIRootGroup.h"
 #include "sgcl/Game/Contents/UIManager.h"
 #include "sgcl/Game/Texture/ImagePackManager.h"
+#include "sgcl/Game/UI/Theme/UIThemeManager.h"
 
 USING_NS_CC;
+USING_NS_CCUI;
 USING_NS_JC;
 
 UIToggleButton::UIToggleButton(UIRootGroup* _pRoot, UIGroup* _pParent)
@@ -41,7 +35,6 @@ UIToggleButton::~UIToggleButton()
 	CC_SAFE_RELEASE(pTextures_[STATE_ONE][eOver]);
 	CC_SAFE_RELEASE(pTextures_[STATE_ONE][ePressed]);
 	CC_SAFE_RELEASE(pTextures_[STATE_ONE][eDisabled]);
-
 	CC_SAFE_RELEASE(pTextures_[STATE_TWO][eNormal]);
 	CC_SAFE_RELEASE(pTextures_[STATE_TWO][eOver]);
 	CC_SAFE_RELEASE(pTextures_[STATE_TWO][ePressed]);
@@ -51,6 +44,12 @@ UIToggleButton::~UIToggleButton()
 void UIToggleButton::SetToggleState(ToggleState _state)
 {
 	toggleState_ = _state;
+
+	if (UseThemeRendering())
+	{
+		return;
+	}
+
 	SetVisibleState(state_);
 }
 
@@ -73,9 +72,14 @@ UIToggleButton* UIToggleButton::Create(UIRootGroup* _pRoot, UIGroup* _pParent, U
 
 void UIToggleButton::SetVisibleState(State _state)
 {
-	// 로딩안됬으면 모두 nullptr이므로 널포익 발생함
 	if (!isLoaded_)
 		return;
+
+	if (UseThemeRendering())
+	{
+		state_ = _state;
+		return;
+	}
 
 	for (int i = 0; i < 2; i++)
 		for (int j = 0; j < eMax; ++j)
@@ -88,15 +92,11 @@ void UIToggleButton::SetEnabled(bool _enabled)
 {
 	if (_enabled)
 	{
-		// 활성화 요청을 했지만 이미 활성화 상태인 경우는 무시
 		if (state_ != eDisabled)
 			return;
-
-		// 이전 상태가 비활성화 상태 인경우 현재 상태가 Pressed인지, Moved인지 체크해서 업데이트
 		UpdateState();
 		return;
 	}
-
 	state_ = eDisabled;
 	SetVisibleState(eDisabled);
 }
@@ -111,18 +111,17 @@ void UIToggleButton::SetUISize(const cc::size& _contentSize)
 	if (!isLoaded_)
 		return;
 
+	if (UseThemeRendering())
+		return;
+
 	for (int i = 0; i < 2; i++)
 	{
 		for (int j = 0; j < eMax; ++j)
 		{
 			FrameTexture* pTexture = pTextures_[i][j];
 			Sprite* pSprite = pSprites_[i][j];
-
 			if (pTexture == nullptr || pSprite == nullptr)
-			{
 				continue;
-			}
-
 			pSprite->setScaleX(uiSize_.width / pTexture->GetWidthF());
 			pSprite->setScaleY(uiSize_.height / pTexture->GetHeightF());
 		}
@@ -136,12 +135,8 @@ void UIToggleButton::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 		LogWarnInvalidInfo(_pInfo->type_);
 		return;
 	}
-
 	if (isInfoOwner_)
-	{
 		JC_DELETE_SAFE(pInfo_);
-	}
-
 	pBaseInfo_ = _pInfo;
 	pInfo_ = static_cast<UIToggleButtonInfo*>(_pInfo);
 	isInfoOwner_ = _infoOwner;
@@ -157,16 +152,13 @@ void UIToggleButton::RestoreState(State _state)
 	if (state_ == eDisabled)
 		return;
 
-	if (state_ == _state)
-		SetVisibleState(eNormal);
+	SetVisibleState(_state);
 }
 
 bool UIToggleButton::init()
 {
 	if (!UIElement::init())
-	{
 		return false;
-	}
 
 	const ImagePack* pPack = g_cImagePackMgr.GetPackUnsafe(pInfo_->Sga);
 	SetInitialUISize(DEFAULT_SIZE30);
@@ -177,7 +169,6 @@ bool UIToggleButton::init()
 	}
 
 	const SgaSpriteAbstractPtr spSprite = pPack->GetSpriteUnsafe(pInfo_->Img, pInfo_->Sprites[STATE_ONE][eNormal]);
-
 	if (spSprite == nullptr)
 	{
 		_LogWarn_("토글버튼 노말 스프라이트를 찾지 못했습니다.");
@@ -194,6 +185,25 @@ void UIToggleButton::Load()
 	if (isLoaded_)
 		return;
 
+	if (pBaseInfo_ && pBaseInfo_->renderMode_ != eRenderModeAuto)
+		renderMode_ = (UIRenderMode)pBaseInfo_->renderMode_;
+
+	if (UseThemeRendering())
+		LoadTheme();
+	else
+		LoadLegacy();
+
+	isLoaded_ = true;
+	SetVisibleState(eNormal);
+}
+
+void UIToggleButton::LoadTheme()
+{
+	BuildThemeVisuals();
+}
+
+void UIToggleButton::LoadLegacy()
+{
 	for (int i = 0; i < 2; i++)
 	{
 		for (int j = 0; j < eMax; ++j)
@@ -214,10 +224,40 @@ void UIToggleButton::Load()
 			this->addChild(pSprite);
 		}
 	}
+}
 
+void UIToggleButton::BuildThemeVisuals()
+{
+	UIThemeManager* pThemeMgr = UIThemeManager::Get();
 
-	isLoaded_ = true;
-	SetVisibleState(eNormal);
+	auto* pTrack = Scale9Sprite::create();
+	pTrack->setContentSize(uiSize_);
+	pTrack->setAnchorPoint(Vec2::ZERO);
+	this->addChild(pTrack);
+
+	UIAssetKey trackKey;
+	trackKey.semantic = UIAssetSemantic::ToggleTrack;
+	themeBinding_.BindScale9(pTrack, trackKey, UIComponentSlot::Track);
+
+	float knobSize = jc::Math::Min(uiSize_.width, uiSize_.height) * 0.8f;
+	auto* pKnob = Sprite::create();
+	pKnob->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	pKnob->setPosition(knobSize * 0.5f, uiSize_.height * 0.5f);
+	this->addChild(pKnob);
+
+	UIAssetKey knobKey;
+	knobKey.semantic = UIAssetSemantic::ToggleKnob;
+	themeBinding_.BindFixed(pKnob, knobKey, UIComponentSlot::Knob);
+
+	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
+	if (pSet)
+		themeBinding_.Refresh(*pSet);
+}
+
+void UIToggleButton::DestroyThemeVisuals()
+{
+	themeBinding_.Clear();
+	removeAllChildren();
 }
 
 void UIToggleButton::Unload()
@@ -225,14 +265,21 @@ void UIToggleButton::Unload()
 	if (isLoaded_ == false)
 		return;
 
-	removeAllChildren(); // autorelease 되기땜
+	removeAllChildren();
 
-	for (int i = 0; i < 2; i++)
+	if (UseThemeRendering())
 	{
-		for (int j = 0; j < eMax; ++j)
+		themeBinding_.Clear();
+	}
+	else
+	{
+		for (int i = 0; i < 2; i++)
 		{
-			pSprites_[i][j] = nullptr;
-			CC_SAFE_RELEASE_NULL(pTextures_[i][j]);
+			for (int j = 0; j < eMax; ++j)
+			{
+				pSprites_[i][j] = nullptr;
+				CC_SAFE_RELEASE_NULL(pTextures_[i][j]);
+			}
 		}
 	}
 

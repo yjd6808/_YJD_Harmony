@@ -11,8 +11,10 @@
 #include "sgcl/Game/UI/UIRootGroup.h"
 #include "sgcl/Game/Contents/UIManager.h"
 #include "sgcl/Game/Texture/ImagePackManager.h"
+#include "sgcl/Game/UI/Theme/UIThemeManager.h"
 
 USING_NS_CC;
+USING_NS_CCUI;
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -160,10 +162,7 @@ void UIButton::RestoreState(State _state)
 		return;
 	}
 
-	if (state_ == _state)
-	{
-		SetVisibleState(eNormal);
-	}
+	SetVisibleState(_state);
 }
 
 void UIButton::OnMouseEnterInternalDetail(cc::EventMouse* _pMouseEvent)
@@ -234,6 +233,24 @@ void UIButton::Load()
 		return;
 	}
 
+	if (pBaseInfo_ && pBaseInfo_->renderMode_ != eRenderModeAuto)
+		renderMode_ = (UIRenderMode)pBaseInfo_->renderMode_;
+
+	if (UseThemeRendering())
+	{
+		LoadTheme();
+	}
+	else
+	{
+		LoadLegacy();
+	}
+
+	SetVisibleState(eNormal);
+	isLoaded_ = true;
+}
+
+void UIButton::LoadLegacy()
+{
 	for (int i = 0; i < eMax; ++i)
 	{
 		const int spriteIndex = buttonInfo_->sprites_[i];
@@ -257,10 +274,46 @@ void UIButton::Load()
 
 		this->addChild(pSprite);
 	}
+}
 
-	SetVisibleState(eNormal);
+void UIButton::LoadTheme()
+{
+	BuildThemeVisuals();
+}
 
-	isLoaded_ = true;
+void UIButton::BuildThemeVisuals()
+{
+	UIThemeManager* pThemeMgr = UIThemeManager::Get();
+
+	auto* pTrack = Scale9Sprite::create();
+	pTrack->setContentSize(uiSize_);
+	pTrack->setAnchorPoint(Vec2::ZERO);
+	this->addChild(pTrack);
+
+	UIAssetKey key;
+	key.semantic = UIAssetSemantic::Button;
+	key.styleHash = 0;
+	key.recipeHash = 0;
+
+	themeBinding_.BindScale9(pTrack, key, UIComponentSlot::Background);
+
+	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
+	if (pSet)
+		themeBinding_.Refresh(*pSet);
+}
+
+void UIButton::DestroyThemeVisuals()
+{
+	themeBinding_.Clear();
+	removeAllChildren();
+}
+
+void UIButton::RefreshThemeVisuals()
+{
+	UIThemeManager* pThemeMgr = UIThemeManager::Get();
+	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
+	if (pSet)
+		themeBinding_.Refresh(*pSet);
 }
 
 void UIButton::Unload()
