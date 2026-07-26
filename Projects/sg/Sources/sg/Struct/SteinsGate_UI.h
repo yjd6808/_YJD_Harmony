@@ -64,6 +64,13 @@ JC_SENUM_END(ProgressIncreaseDirection)
 
 
  //////////////////////////////////////////////////////////////////////////////////////////
+enum UIRenderModeConst : uint8_t
+{
+	eRenderModeAuto = 0,
+	eRenderModeLegacy = 1,
+	eRenderModeTheme = 2
+};
+
 struct UIElementInfo
 {
 	UIElementInfo()
@@ -76,6 +83,7 @@ struct UIElementInfo
 	UIElementType_t type_;
 	HAlignment_t hAlignment_;
 	VAlignment_t vAlignment_;
+	uint8_t renderMode_ = eRenderModeAuto;
 	char name_[128];
 };
 
@@ -90,14 +98,16 @@ struct UIGroupElemInfo
 struct UIGroupInfo : UIElementInfo
 {
 	UIGroupInfo(int _elemCount)
-	: infoList_(_elemCount == 0 ? 1 : _elemCount)
 	{
-	} // 용량이 0일수는 없으므로.
+		infoList_.Resize(_elemCount == 0 ? 1 : _elemCount);
+	}
 	UIGroupInfo(const UIGroupInfo& _other) { this->operator=(_other); }
 	UIGroupInfo(UIGroupInfo&& _other) noexcept { this->operator=(jc::Move(_other)); }
 	~UIGroupInfo() override
 	{
 		JC_DELETE_SAFE(pDataMap_);
+		for (int i = 0; i < childInfoList_.Size(); ++i)
+			JC_DELETE_SAFE(childInfoList_[i]);
 	}
 
 	UIGroupInfo& operator=(const UIGroupInfo& _other);
@@ -105,6 +115,7 @@ struct UIGroupInfo : UIElementInfo
 
 	cc::size size_;
 	jc::Vector<UIGroupElemInfo> infoList_;
+	jc::Vector<UIElementInfo*> childInfoList_;
 	jc::CDataMap<>* pDataMap_{};
 };
 

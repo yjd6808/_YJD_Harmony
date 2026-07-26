@@ -22,28 +22,28 @@ void UI_Inventory::OnInit(const CDataMap<>& _param)
 {
 	UNUSED(_param);
 
-	pInvenSlotGroup_ = FindElementByName<UIGroup>("groupInvenSlots");
+	pInvenSlotGroup_ = FindElementByName<UIGroup>("inven_slots");
 
 	for (int i = 0; i < MAX_INVEN_SLOT_COUNT; ++i)
 	{
-		jc::String slotName = jc::StringUtil::Format("spriteSlot%d", i);
+		jc::String slotName = jc::StringUtil::Format("slot%d%d", i / INVEN_ITEM_COUNT_PER_ROW + 1, i % INVEN_ITEM_COUNT_PER_ROW);
 		pInvenSlotSprites_[i] = FindElementByName<UISprite>(slotName.Source());
 		if (pInvenSlotSprites_[i])
 			pInvenSlotSprites_[i]->setVisible(false);
 	}
 
-	pEquipSlotGroup_ = FindElementByName<UIGroup>("groupEquipSlots");
+	pEquipSlotGroup_ = FindElementByName<UIGroup>("equip_slots");
 
+	const char* equipSlotNames[] = { "shoulder", "top", "bottom", "shoes", "belt", "ring", "neck", "bracelt", "weapon", "title" };
 	for (int i = 0; i < ItemType::MaxInvenEquip; ++i)
 	{
-		jc::String staticName = jc::StringUtil::Format("staticEquip%d", i);
-		pEquipSlotStatics_[i] = FindElementByName<UIStatic>(staticName.Source());
+		pEquipSlotStatics_[i] = FindElementByName<UIStatic>(equipSlotNames[i]);
 		if (pEquipSlotStatics_[i])
 			pEquipSlotStatics_[i]->setVisible(false);
 	}
 
-	pBackground_ = FindElementByName<UISprite>("spriteBackground");
-	pScrollBar_ = FindElementByName<UIScrollBar>("scrollbarInventory");
+	pBackground_ = FindElementByName<UISprite>("background");
+	pScrollBar_ = FindElementByName<UIScrollBar>("스크롤바");
 }
 
 void UI_Inventory::OnLoaded()
@@ -72,3 +72,5 @@ bool UI_Inventory::OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event*
 {
 	return true;
 }
+
+REGISTER_UI(ui_inventory, UI_Inventory)

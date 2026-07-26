@@ -81,4 +81,3 @@ private:
 	PopupCallback timeoutCallback_;
 };
 
-REGISTER_UI(Popup, UI_Popup)

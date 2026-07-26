@@ -66,6 +66,24 @@ bool UIGroup::init()
 	return isInitialized_ = true;
 }
 
+static UIElement* CreateUIElementFromInfo(UIRootGroup* _pRoot, UIGroup* _pParent, UIElementInfo* _pInfo)
+{
+	switch (_pInfo->type_)
+	{
+	case UIElementType::Button:       return UIButton::Create(_pRoot, _pParent, static_cast<UIButtonInfo*>(_pInfo), false);
+	case UIElementType::Label:        return UILabel::create(_pRoot, _pParent, static_cast<UILabelInfo*>(_pInfo), false);
+	case UIElementType::Sprite:       return UISprite::Create(_pRoot, _pParent, static_cast<UISpriteInfo*>(_pInfo), false);
+	case UIElementType::EditBox:      return UIEditBox::Create(_pRoot, _pParent, static_cast<UIEditBoxInfo*>(_pInfo), false);
+	case UIElementType::CheckBox:     return UICheckBox::Create(_pRoot, _pParent, static_cast<UICheckBoxInfo*>(_pInfo), false);
+	case UIElementType::ToggleButton: return UIToggleButton::Create(_pRoot, _pParent, static_cast<UIToggleButtonInfo*>(_pInfo), false);
+	case UIElementType::ProgressBar:  return UIProgressBar::Create(_pRoot, _pParent, static_cast<UIProgressBarInfo*>(_pInfo), false);
+	case UIElementType::ScrollBar:    return UIScrollBar::Create(_pRoot, _pParent, static_cast<UIScrollBarInfo*>(_pInfo), false);
+	case UIElementType::Static:       return UIStatic::Create(_pRoot, _pParent, static_cast<UIStaticInfo*>(_pInfo), false);
+	case UIElementType::Group:        return UIGroup::Create(_pRoot, _pParent, static_cast<UIGroupInfo*>(_pInfo), false);
+	default: return nullptr;
+	}
+}
+
 void UIGroup::InitFromXml()
 {
 	if (groupInfo_ == nullptr)
@@ -74,10 +92,23 @@ void UIGroup::InitFromXml()
 		return;
 	}
 
-	for (int i = 0; i < groupInfo_->infoList_.Size(); ++i)
+	for (int i = 0; i < groupInfo_->childInfoList_.Size(); ++i)
 	{
-		UIGroupElemInfo* pElemInfo = &groupInfo_->infoList_[i];
-		AddUIElement(pElemInfo);
+		UIElementInfo* pInfo = groupInfo_->childInfoList_[i];
+		UIElement* pElement = CreateUIElementFromInfo(pRootGroup_, this, pInfo);
+		if (!pElement)
+			continue;
+
+		AddChild(pElement);
+
+		if (pInfo->name_[0] != '\0')
+			nameMap_[std::string(pInfo->name_)] = pElement;
+
+		if (pInfo->type_ == UIElementType::Group)
+		{
+			UIGroup* pChildGroup = static_cast<UIGroup*>(pElement);
+			pChildGroup->InitFromXml();
+		}
 	}
 
 	InitChildrenPosition();

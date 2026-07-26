@@ -69,7 +69,7 @@ bool UISprite::init()
 
 	cc::size initialSize = pInfo_->size_;
 
-	if (int(initialSize.width) == 0 || int(initialSize.width) == 0)
+	if (int(initialSize.width) == 0 || int(initialSize.height) == 0)
 	{
 		initialSize = g_cImagePackMgr.GetTextureSize(
 			pInfo_->sga_, pInfo_->img_, pInfo_->sprite_);

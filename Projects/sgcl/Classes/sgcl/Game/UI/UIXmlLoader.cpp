@@ -5,14 +5,33 @@
 
 USING_NS_JC;
 
+//////////////////////////////////////////////////////////////////////////////////////////
 static int ParseSpriteIndices(const char* _str, int* _out, int _count)
 {
-	if (!_str) return 0;
-	return sscanf(_str, "%d,%d,%d,%d,%d,%d,%d",
-		&_out[0], &_out[1], &_out[2], &_out[3],
-		&_out[4], &_out[5], &_out[6]);
+	if (!_str || !_out || _count <= 0)
+		return 0;
+
+	int count = 0;
+	const char* cursor = _str;
+
+	while (*cursor && count < _count)
+	{
+		char* end = nullptr;
+		const long value = std::strtol(cursor, &end, 10);
+		if (cursor == end)
+			break;
+
+		_out[count++] = static_cast<int>(value);
+		cursor = end;
+
+		while (*cursor == ',' || *cursor == ' ' || *cursor == '\t')
+			++cursor;
+	}
+
+	return count;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 static void ParseColor(const char* _str, cc::Color4B& _color)
 {
 	if (!_str) return;
@@ -21,6 +40,7 @@ static void ParseColor(const char* _str, cc::Color4B& _color)
 	_color = { (GLubyte)r, (GLubyte)g, (GLubyte)b, (GLubyte)a };
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 static int XmlIntAttr(tinyxml2::XMLElement* _elem, const char* _name, int _default)
 {
 	const char* val = _elem->Attribute(_name);
@@ -35,6 +55,7 @@ static float XmlFloatAttr(tinyxml2::XMLElement* _elem, const char* _name, float 
 	return (float)atof(val);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 static bool XmlBoolAttr(tinyxml2::XMLElement* _elem, const char* _name, bool _default)
 {
 	const char* val = _elem->Attribute(_name);
@@ -42,6 +63,7 @@ static bool XmlBoolAttr(tinyxml2::XMLElement* _elem, const char* _name, bool _de
 	return strcmp(val, "true") == 0 || strcmp(val, "1") == 0;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 static void ReadCommon(tinyxml2::XMLElement* _elem, UIElementInfo* _info)
 {
 	const char* name = _elem->Attribute("name");
@@ -49,9 +71,20 @@ static void ReadCommon(tinyxml2::XMLElement* _elem, UIElementInfo* _info)
 		strcpy_s(_info->name_, name);
 	_info->hAlignment_ = (HAlignment_t)XmlIntAttr(_elem, "halign", 0);
 	_info->vAlignment_ = (VAlignment_t)XmlIntAttr(_elem, "valign", 0);
-	_info->type_ = (UIElementType_t)XmlIntAttr(_elem, "type", 0);
+
+	const char* renderModeStr = _elem->Attribute("render_mode");
+	if (renderModeStr)
+	{
+		if (strcmp(renderModeStr, "theme") == 0)
+			_info->renderMode_ = eRenderModeTheme;
+		else if (strcmp(renderModeStr, "legacy") == 0)
+			_info->renderMode_ = eRenderModeLegacy;
+		else
+			_info->renderMode_ = eRenderModeAuto;
+	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 UIGroupInfo* UIXmlLoader::LoadFromFile(const char* _filePath)
 {
 	tinyxml2::XMLDocument doc;
@@ -65,6 +98,7 @@ UIGroupInfo* UIXmlLoader::LoadFromFile(const char* _filePath)
 	return ParseGroup(root);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 UIGroupInfo* UIXmlLoader::LoadFromString(const char* _xmlContent)
 {
 	tinyxml2::XMLDocument doc;
@@ -78,43 +112,78 @@ UIGroupInfo* UIXmlLoader::LoadFromString(const char* _xmlContent)
 	return ParseGroup(root);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+static int ParseTypeFromTagName(const char* _tag)
+{
+	if (strcmp(_tag, "Group") == 0) return UIElementType::Group;
+	if (strcmp(_tag, "Button") == 0) return UIElementType::Button;
+	if (strcmp(_tag, "Label") == 0) return UIElementType::Label;
+	if (strcmp(_tag, "Sprite") == 0) return UIElementType::Sprite;
+	if (strcmp(_tag, "EditBox") == 0) return UIElementType::EditBox;
+	if (strcmp(_tag, "CheckBox") == 0) return UIElementType::CheckBox;
+	if (strcmp(_tag, "ToggleButton") == 0) return UIElementType::ToggleButton;
+	if (strcmp(_tag, "ScrollBar") == 0) return UIElementType::ScrollBar;
+	if (strcmp(_tag, "ProgressBar") == 0) return UIElementType::ProgressBar;
+	if (strcmp(_tag, "Static") == 0) return UIElementType::Static;
+	return -1;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 UIElementInfo* UIXmlLoader::ParseElement(tinyxml2::XMLElement* _xmlElement)
 {
 	if (!_xmlElement) return nullptr;
 
 	const char* typeAttr = _xmlElement->Attribute("type");
-	if (!typeAttr) return nullptr;
+	int type;
+	if (typeAttr)
+	{
+		type = atoi(typeAttr);
+	}
+	else
+	{
+		type = ParseTypeFromTagName(_xmlElement->Value());
+		if (type < 0) return nullptr;
+	}
 
-	int type = atoi(typeAttr);
-
+	UIElementInfo* pResult = nullptr;
 	switch (type)
 	{
-	case UIElementType::Button:      return ParseButton(_xmlElement);
-	case UIElementType::Label:       return ParseLabel(_xmlElement);
-	case UIElementType::Sprite:      return ParseSprite(_xmlElement);
-	case UIElementType::EditBox:     return ParseEditBox(_xmlElement);
-	case UIElementType::CheckBox:    return ParseCheckBox(_xmlElement);
-	case UIElementType::ToggleButton: return ParseToggleButton(_xmlElement);
-	case UIElementType::ProgressBar: return ParseProgressBar(_xmlElement);
-	case UIElementType::ScrollBar:   return ParseScrollBar(_xmlElement);
-	case UIElementType::Static:      return ParseStatic(_xmlElement);
-	case UIElementType::Group:       return ParseGroup(_xmlElement);
-	default: return nullptr;
+	case UIElementType::Button:      pResult = ParseButton(_xmlElement); break;
+	case UIElementType::Label:       pResult = ParseLabel(_xmlElement); break;
+	case UIElementType::Sprite:      pResult = ParseSprite(_xmlElement); break;
+	case UIElementType::EditBox:     pResult = ParseEditBox(_xmlElement); break;
+	case UIElementType::CheckBox:    pResult = ParseCheckBox(_xmlElement); break;
+	case UIElementType::ToggleButton: pResult = ParseToggleButton(_xmlElement); break;
+	case UIElementType::ProgressBar: pResult = ParseProgressBar(_xmlElement); break;
+	case UIElementType::ScrollBar:   pResult = ParseScrollBar(_xmlElement); break;
+	case UIElementType::Static:      pResult = ParseStatic(_xmlElement); break;
+	case UIElementType::Group:       pResult = ParseGroup(_xmlElement); break;
+	default: break;
 	}
+
+	if (pResult)
+		pResult->type_ = (UIElementType_t)type;
+
+	return pResult;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 UIGroupInfo* UIXmlLoader::ParseGroup(tinyxml2::XMLElement* _xmlElement)
 {
 	if (!_xmlElement) return nullptr;
 
 	tinyxml2::XMLElement* pDataElem = _xmlElement->FirstChildElement("data");
-	tinyxml2::XMLElement* pChildrenElem = _xmlElement->FirstChildElement("children");
 
 	int childCount = 0;
-	if (pChildrenElem)
 	{
-		tinyxml2::XMLElement* pChild = pChildrenElem->FirstChildElement();
-		while (pChild) { childCount++; pChild = pChild->NextSiblingElement(); }
+		tinyxml2::XMLElement* pChild = _xmlElement->FirstChildElement();
+		while (pChild)
+		{
+			const char* tag = pChild->Value();
+			if (strcmp(tag, "data") != 0)
+				childCount++;
+			pChild = pChild->NextSiblingElement();
+		}
 	}
 
 	UIGroupInfo* pGroupInfo = dbg_new UIGroupInfo(childCount);
@@ -138,18 +207,29 @@ UIGroupInfo* UIXmlLoader::ParseGroup(tinyxml2::XMLElement* _xmlElement)
 		pGroupInfo->pDataMap_ = pDataMap;
 	}
 
-	if (pChildrenElem)
 	{
 		int index = 0;
-		tinyxml2::XMLElement* pChild = pChildrenElem->FirstChildElement();
+		tinyxml2::XMLElement* pChild = _xmlElement->FirstChildElement();
 		while (pChild && index < childCount)
 		{
+			const char* tag = pChild->Value();
+			if (strcmp(tag, "data") == 0)
+			{
+				pChild = pChild->NextSiblingElement();
+				continue;
+			}
+
 			UIGroupElemInfo& elemInfo = pGroupInfo->infoList_[index];
 			const char* childName = pChild->Attribute("name");
 			if (childName)
 				strcpy_s(elemInfo.name_, childName);
 			elemInfo.pos_.x = XmlFloatAttr(pChild, "x", 0);
 			elemInfo.pos_.y = XmlFloatAttr(pChild, "y", 0);
+
+			UIElementInfo* pElemInfo = ParseElement(pChild);
+			if (pElemInfo)
+				pGroupInfo->childInfoList_.PushBack(pElemInfo);
+
 			index++;
 			pChild = pChild->NextSiblingElement();
 		}
@@ -158,6 +238,7 @@ UIGroupInfo* UIXmlLoader::ParseGroup(tinyxml2::XMLElement* _xmlElement)
 	return pGroupInfo;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 UIElementInfo* UIXmlLoader::ParseButton(tinyxml2::XMLElement* _elem)
 {
 	UIButtonInfo* pInfo = dbg_new UIButtonInfo();
@@ -180,6 +261,7 @@ UIElementInfo* UIXmlLoader::ParseButton(tinyxml2::XMLElement* _elem)
 	return pInfo;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 UIElementInfo* UIXmlLoader::ParseLabel(tinyxml2::XMLElement* _elem)
 {
 	UILabelInfo* pInfo = dbg_new UILabelInfo();
@@ -202,6 +284,7 @@ UIElementInfo* UIXmlLoader::ParseLabel(tinyxml2::XMLElement* _elem)
 	return pInfo;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 UIElementInfo* UIXmlLoader::ParseSprite(tinyxml2::XMLElement* _elem)
 {
 	UISpriteInfo* pInfo = dbg_new UISpriteInfo();
@@ -227,6 +310,7 @@ UIElementInfo* UIXmlLoader::ParseSprite(tinyxml2::XMLElement* _elem)
 	return pInfo;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 UIElementInfo* UIXmlLoader::ParseEditBox(tinyxml2::XMLElement* _elem)
 {
 	UIEditBoxInfo* pInfo = dbg_new UIEditBoxInfo();
@@ -248,6 +332,7 @@ UIElementInfo* UIXmlLoader::ParseEditBox(tinyxml2::XMLElement* _elem)
 	return pInfo;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 UIElementInfo* UIXmlLoader::ParseCheckBox(tinyxml2::XMLElement* _elem)
 {
 	UICheckBoxInfo* pInfo = dbg_new UICheckBoxInfo();
@@ -274,6 +359,7 @@ UIElementInfo* UIXmlLoader::ParseCheckBox(tinyxml2::XMLElement* _elem)
 	return pInfo;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 UIElementInfo* UIXmlLoader::ParseToggleButton(tinyxml2::XMLElement* _elem)
 {
 	UIToggleButtonInfo* pInfo = dbg_new UIToggleButtonInfo();
@@ -294,6 +380,7 @@ UIElementInfo* UIXmlLoader::ParseToggleButton(tinyxml2::XMLElement* _elem)
 	return pInfo;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 UIElementInfo* UIXmlLoader::ParseProgressBar(tinyxml2::XMLElement* _elem)
 {
 	UIProgressBarInfo* pInfo = dbg_new UIProgressBarInfo();
@@ -315,6 +402,7 @@ UIElementInfo* UIXmlLoader::ParseProgressBar(tinyxml2::XMLElement* _elem)
 	return pInfo;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 UIElementInfo* UIXmlLoader::ParseScrollBar(tinyxml2::XMLElement* _elem)
 {
 	UIScrollBarInfo* pInfo = dbg_new UIScrollBarInfo();
@@ -335,6 +423,7 @@ UIElementInfo* UIXmlLoader::ParseScrollBar(tinyxml2::XMLElement* _elem)
 	return pInfo;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 UIElementInfo* UIXmlLoader::ParseStatic(tinyxml2::XMLElement* _elem)
 {
 	UIStaticInfo* pInfo = dbg_new UIStaticInfo();

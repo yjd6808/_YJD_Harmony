@@ -10,6 +10,8 @@
 #include "jc/Logger/LoggerDefine.h"
 #include "jc/Logger/ConsoleLogger.h"
 #include "jc/Logger/FileLogger.h"
+#include "jc/Time.h"
+#include "jc/FileSystem/Directory.h"
 
 USING_NS_JC;
 
@@ -30,22 +32,34 @@ void InitializeDefaultLogger(const char* _pSpecifier)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void InitializeFileLogger(const char* _pFilePath)
+void InitializeFileLogger(const char* _pDirectory)
 {
-	jc_assert_msg(Logger_v == nullptr, "이미 로거가 초기화되어 있습니다.");
+	String szTimestamp = DateTime::Now().Format("yyyy-MM-dd-HHmmss");
+	String szDir = _pDirectory;
+	String szPath = StringUtil::Format("%s/%s.log", _pDirectory, szTimestamp.Source());
 
-	FileLogger* pFileLogger = dbg_new FileLogger(_pFilePath);
+	Directory::Create(szDir);
+
+	FileLogger* pFileLogger = dbg_new FileLogger(szPath);
 	pFileLogger->SetEnableLock(true);
 	pFileLogger->SetAutoFlush(true);
 	pFileLogger->SetHeaderFormat("[ level | datetime ] ");
 	pFileLogger->ShowDateTime(true);
 	pFileLogger->ShowLevel(true);
-	Logger_v = pFileLogger;
+
+	if (Logger_v == nullptr)
+	{
+		Logger_v = pFileLogger;
+	}
+	else
+	{
+		Logger_v->ChainLogger(pFileLogger);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void FinalizeDefaultLogger()
 {
 	JC_DELETE_SAFE(Logger_v);
+	Logger_v = nullptr;
 }
-

@@ -8,6 +8,7 @@
 #include "GameCoreHeader.h"
 #include "Game/Contents/PopupManager.h"
 
+#include "sg/Core/AppConfig.h"
 #include "sgcl/Scene/Scene_World.h"
 #include "sgcl/Game/UI/UIXmlLoader.h"
 #include "sgcl/Game/Contents/UIManager.h"
@@ -35,7 +36,10 @@ UI_Popup* PopupManager::CreatePopup()
 {
 	if (!pPopupInfo_)
 	{
-		pPopupInfo_ = UIXmlLoader::LoadFromFile("Popup.xml");
+		jc::String filePath = jc::Path::Combine(
+			jc::Path::Combine(g_cAppConfig.resDataPath_, "layout"),
+			jc::String("ui_popup.xml"));
+		pPopupInfo_ = UIXmlLoader::LoadFromFile(filePath.Source());
 		jc_assert_msg(pPopupInfo_, "팝업 UI XML 파일 로드에 실패했습니다.");
 	}
 

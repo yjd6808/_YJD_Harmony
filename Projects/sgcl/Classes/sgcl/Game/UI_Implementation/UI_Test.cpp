@@ -153,3 +153,5 @@ void UI_Test::OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent
 		ResetChildrenPosition();
 	}
 }
+
+REGISTER_UI(Test, UI_Test)

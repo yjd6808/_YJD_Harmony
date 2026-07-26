@@ -1,21 +1,14 @@
-﻿/*
- * 작성자: 윤정도
- * 생성일: 3/21/2023 1:18:17 PM
- * =====================
- *
- */
-
-#pragma once
+﻿#pragma once
 
 #include "sgcl/Game/UI/UIElement.h"
-
+#include "sgcl/Game/UI/Theme/UIThemeTypes.h"
+#include "sgcl/Game/UI/Theme/UIThemeBinding.h"
 
 enum class ToggleState
 {
 	eNormal,
 	eToggled
 };
-
 
 class UIToggleButton : public UIElement
 {
@@ -45,6 +38,10 @@ public:
 	void SetToggleState(ToggleState _state);
 	void RestoreState(State _state) override;
 
+	void SetRenderMode(UIRenderMode _mode) { renderMode_ = _mode; }
+	bool UseThemeRendering() const { return renderMode_ == UIRenderMode::Theme; }
+	void RefreshThemeVisuals();
+
 	UIElementType_t GetElementType() override { return UIElementType::ToggleButton; }
 	jc::String ToString() override { return jc::StringUtil::Format("토글버튼(%s)", pInfo_->name_); }
 
@@ -56,9 +53,21 @@ protected:
 	void OnMouseUpInternalDetail(cc::EventMouse* _pMouseEvent) override;
 	bool OnMouseUpContainedInternalDetail(cc::EventMouse* _pMouseEvent) override;
 
+	void LoadTheme();
+	bool LoadLegacy();
+	void BuildThemeVisuals();
+	void DestroyThemeVisuals();
+	void ApplyThemeStateVisuals(State _state);
+
 private:
 	ToggleState toggleState_;
 	UIToggleButtonInfo* pInfo_;
 	FrameTexture* pTextures_[2][eMax];
 	cc::Sprite* pSprites_[2][eMax];
+
+	UIRenderMode renderMode_ = UIRenderMode::Auto;
+	UIThemeTextureBinding themeBinding_;
+	uint64_t appliedTextureRevision_ = 0;
+	cc::Node* themeTrack_ = nullptr;
+	cc::Sprite* themeKnob_ = nullptr;
 };

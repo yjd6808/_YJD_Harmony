@@ -44,6 +44,8 @@ void FileLogger::Flush()
 		m_szBuffer.SetLength(0);
 	}
 
+	CRuntime::FileFlush(m_hFile);
+
 	if (useLock)
 	{
 		m_Lock.Unlock();
@@ -81,19 +83,6 @@ void FileLogger::LogVaList(Level _level, const char* _pFmt, va_list _list)
 	}
 }
 
-void FileLogger::Log(Level _level, const char* _pFmt, ...)
-{
-	if (!m_pOption->EnableLog[_level])
-	{
-		return;
-	}
-
-	va_list args;
-	va_start(args, _pFmt);
-	LogVaList(_level, _pFmt, args);
-	va_end(args);
-}
-
 void FileLogger::LogPlainVaList(const char* _pFmt, va_list _list)
 {
 	if (!m_pOption->EnablePlainLog)
@@ -111,47 +100,6 @@ void FileLogger::LogPlainVaList(const char* _pFmt, va_list _list)
 	String fmtText = StringUtil::Format(_pFmt, _list);
 
 	m_szBuffer += fmtText;
-	m_szBuffer += '\n';
-
-	if (m_bAutoFlush)
-	{
-		Flush();
-	}
-
-	if (useLock)
-	{
-		m_Lock.Unlock();
-	}
-}
-
-void FileLogger::LogPlain(const char* _pFmt, ...)
-{
-	if (!m_pOption->EnablePlainLog)
-	{
-		return;
-	}
-
-	va_list args;
-	va_start(args, _pFmt);
-	LogPlainVaList(_pFmt, args);
-	va_end(args);
-}
-
-void FileLogger::LogPlain(const jc::String& _str)
-{
-	if (!m_pOption->EnablePlainLog)
-	{
-		return;
-	}
-
-	bool useLock = m_bUseLock;
-
-	if (useLock)
-	{
-		m_Lock.Lock();
-	}
-
-	m_szBuffer += _str;
 	m_szBuffer += '\n';
 
 	if (m_bAutoFlush)

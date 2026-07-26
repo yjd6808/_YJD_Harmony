@@ -33,20 +33,26 @@ void UI_Login::OnInit(const CDataMap<>& _param)
 {
 	UNUSED(_param);
 
-	pLabelSource_ = FindElementByName<UILabel>("labelSource");
-	pLabelDeveloper_ = FindElementByName<UILabel>("labelDeveloper");
+	pLabelSource_ = FindElementByName<UILabel>("source");
+	pLabelDeveloper_ = FindElementByName<UILabel>("developer");
 
-	pGroupLoginBox_ = FindElementByName<UIGroup>("groupLoginBox");
-	pSpriteBackground_ = FindElementByName<UISprite>("spriteBackground");
-	pToggleButtonHangameLogin_ = FindElementByName<UIToggleButton>("toggleHangameLogin");
-	pToggleBtnDnfLogin_ = FindElementByName<UIToggleButton>("toggleDnfLogin");
-	pBtnStart_ = FindElementByName<UIButton>("btnStart");
-	pBtnTerminate_ = FindElementByName<UIButton>("btnTerminate");
-	pEditBoxId_ = FindElementByName<UIEditBox>("editId");
-	pEditBoxId_->SetMaxLength(Const::StringLen::AccountId);
-	pEditBoxPassword_ = FindElementByName<UIEditBox>("editPassword");
-	pEditBoxPassword_->SetInputFlag(cc_ui::EditBox::InputFlag::PASSWORD);
-	pEditBoxPassword_->SetMaxLength(Const::StringLen::AccountPass);
+	pGroupLoginBox_ = FindElementByName<UIGroup>("login_box");
+	pSpriteBackground_ = FindElementByName<UISprite>("background");
+	pToggleButtonHangameLogin_ = FindElementByName<UIToggleButton>("hangame_login");
+	pToggleBtnDnfLogin_ = FindElementByName<UIToggleButton>("dnf_login");
+	pBtnStart_ = FindElementByName<UIButton>("start");
+	pBtnTerminate_ = FindElementByName<UIButton>("terminate");
+	pEditBoxId_ = FindElementByName<UIEditBox>("id");
+	if (pEditBoxId_)
+	{
+		pEditBoxId_->SetMaxLength(Const::StringLen::AccountId);
+	}
+	pEditBoxPassword_ = FindElementByName<UIEditBox>("pw");
+	if (pEditBoxPassword_)
+	{
+		pEditBoxPassword_->SetInputFlag(cc_ui::EditBox::InputFlag::PASSWORD);
+		pEditBoxPassword_->SetMaxLength(Const::StringLen::AccountPass);
+	}
 }
 
 void UI_Login::OnLoaded()
@@ -69,11 +75,11 @@ void UI_Login::OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEven
 {
 	const char* name = _pElement->GetName();
 
-	if (strcmp(name, "btnStart") == 0)
+	if (strcmp(name, "start") == 0)
 	{
 		Login();
 	}
-	else if (strcmp(name, "btnTerminate") == 0)
+	else if (strcmp(name, "terminate") == 0)
 	{
 		g_cWorld.Terminate();
 	}
@@ -83,11 +89,11 @@ void UI_Login::OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _st
 {
 	const char* name = _pToggleBtn->GetName();
 
-	if (strcmp(name, "toggleHangameLogin") == 0)
+	if (strcmp(name, "hangame_login") == 0)
 	{
 		SetTab(Tab::eHangame);
 	}
-	else if (strcmp(name, "toggleDnfLogin") == 0)
+	else if (strcmp(name, "dnf_login") == 0)
 	{
 		SetTab(Tab::eDnf);
 	}
@@ -151,3 +157,5 @@ void UI_Login::Login()
 	std::string msg = StringUtils::format(SG_LOCAL_RAW("CONNECT_SERVER"), ServerType::Name[ServerType::Auth]);
 	sg::Contents.PopupManager->ShowNone(msg, DEF_POPUP_CONNECT_AUTH);
 }
+
+REGISTER_UI(ui_login, UI_Login)

@@ -2,6 +2,7 @@
 #include "GameCoreHeader.h"
 
 #include "jc/Logger/ConsoleLogger.h"
+#include "jc/Logger/FileLogger.h"
 
 #include "sg/Struct/SteinsGate_Client.h"
 
@@ -12,6 +13,7 @@
 
 #include "sgcl/Util/Win32Helper.h"
 #include "sgcl/Scene/Scene_World.h"
+#include "sgcl/MCP/MCPCore.h"
 
 #include "API/sgapiClient.h"
 
@@ -132,7 +134,11 @@ bool SteinsGateApp::applicationDidFinishLaunching()
 
 		InitializeNetLogger(LOG_SPECIFIER_CLIENT);
 		InitializeDefaultLogger(LOG_SPECIFIER_CLIENT);
+		InitializeFileLogger("logs/default");
+
+		_LogDebug_("[DBG] Before InitializeCommonCore");
 		InitializeCommonCore();
+		_LogDebug_("[DBG] After InitializeCommonCore");
 
 		CreateOpenGLWindow(); // 윈도우 생성 후 클라이언트 코어 로딩
 		InitializeClientCore();
@@ -142,6 +148,7 @@ bool SteinsGateApp::applicationDidFinishLaunching()
 		CreateWorldScene();
 
 		InitializeWindowProcedure();
+		g_cMCPCore.Initialize();
 	}
 	catch (std::exception& exception)
 	{

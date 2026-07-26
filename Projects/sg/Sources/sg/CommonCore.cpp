@@ -40,19 +40,26 @@ void InitializeCommonCore()
 	g_cAppConfig.ReadEnvArgs();
 	g_cAppConfig.LoadConfFile();
 
+	_LogDebug_("[DBG] Before g_cVM.Init");
 	g_cVM.Init();
+	_LogDebug_("[DBG] After g_cVM.Init");
 
 	// 공통 커맨드 이름 등록
 	// [ AUTHENTICATION ]
 	sg::CommandNameDictionary.Add<CAU_Login>();
+	_LogDebug_("[DBG] After Add CAU_Login");
 	sg::CommandNameDictionary.Add<AUC_LoginAck>();
+	_LogDebug_("[DBG] After Add AUC_LoginAck");
 
 	// [ LOBBY ]
 	sg::CommandNameDictionary.Add<CLO_JoinLobby>();
+	_LogDebug_("[DBG] After Add CLO_JoinLobby");
 	sg::CommandNameDictionary.Add<LOC_JoinLobbyAck>();
+	_LogDebug_("[DBG] After Add LOC_JoinLobbyAck");
 
 	// [ MESSAGE ]
 	sg::CommandNameDictionary.Add<SC_ClientText>();
+	_LogDebug_("[DBG] After Add SC_ClientText");
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

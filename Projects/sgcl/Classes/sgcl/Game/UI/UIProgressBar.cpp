@@ -1,20 +1,14 @@
-﻿/*
- * 작성자: 윤정도
- * 생성일: 3/21/2023 3:16:12 PM
- * =====================
- *
- */
-
-#include "GameCoreHeader.h"
+﻿#include "GameCoreHeader.h"
 #include "Game/UI/UIProgressBar.h"
 
 #include "sgcl/Game/UI/UIRootGroup.h"
 #include "sgcl/Game/Contents/UIManager.h"
+#include "sgcl/Game/UI/Theme/UIThemeManager.h"
 
 USING_NS_CC;
+USING_NS_CCUI;
 USING_NS_JC;
 
-//////////////////////////////////////////////////////////////////////////////////////////
 UIProgressBar::UIProgressBar(UIRootGroup* _pMasterGroup, UIGroup* _pParent)
 : UIElement(_pMasterGroup, _pParent)
 , pProgressBarInfo_(nullptr)
@@ -59,9 +53,7 @@ UIProgressBar* UIProgressBar::Create(UIRootGroup* _pMasterGroup, UIGroup* _pPare
 bool UIProgressBar::init()
 {
 	if (!UIElement::init())
-	{
 		return false;
-	}
 
 	if (pProgressBarInfo_ == nullptr)
 	{
@@ -80,18 +72,40 @@ void UIProgressBar::Load()
 		LogWarnMissingInfo();
 		return;
 	}
-
 	if (isLoaded_)
-	{
 		return;
+
+	if (pBaseInfo_ && pBaseInfo_->renderMode_ != eRenderModeAuto)
+		renderMode_ = (UIRenderMode)pBaseInfo_->renderMode_;
+
+	if (UseThemeRendering())
+		LoadTheme();
+	else if (!LoadLegacy())
+	{
+		_LogWarn_("레거시 스프라이트가 설정되지 않아 공용 UI 텍스처를 사용합니다.");
+		renderMode_ = UIRenderMode::Theme;
+		LoadTheme();
 	}
+
+	isLoaded_ = true;
+}
+
+void UIProgressBar::LoadTheme()
+{
+	BuildThemeVisuals();
+}
+
+bool UIProgressBar::LoadLegacy()
+{
+	if (pProgressBarInfo_->Sprite == InvalidValue_v)
+		return false;
 
 	pTexture_ = g_cUIMgr.CreateUITextureRetained(pProgressBarInfo_->Sga, pProgressBarInfo_->Img, pProgressBarInfo_->Sprite);
 
 	if (pTexture_->IsLink())
 	{
 		CC_SAFE_RELEASE_NULL(pTexture_);
-		return;
+		return false;
 	}
 
 	const Size progressSpriteSize = pTexture_->GetSize();
@@ -128,49 +142,120 @@ void UIProgressBar::Load()
 	}
 
 	this->addChild(pProgressBar_);
-	auto pProgressTo = ProgressTo::create(10.0f, 100);
-	pProgressBar_->runAction(pProgressTo);
-	isLoaded_ = true;
+	return true;
+}
+
+void UIProgressBar::BuildThemeVisuals()
+{
+	UIThemeManager* pThemeMgr = UIThemeManager::Get();
+
+	auto* pTrack = Scale9Sprite::create();
+	pTrack->setContentSize(uiSize_);
+	pTrack->setAnchorPoint(Vec2::ZERO);
+	this->addChild(pTrack);
+
+	UIAssetKey trackKey;
+	trackKey.semantic = UIAssetSemantic::ProgressTrack;
+	themeBinding_.BindScale9(pTrack, trackKey, UIComponentSlot::Track);
+	pTrackSprite_ = pTrack;
+
+	auto* pGauge = Scale9Sprite::create();
+	pGauge->setContentSize(uiSize_);
+	pGauge->setAnchorPoint(Vec2::ZERO);
+	pGauge->setVisible(false);
+	this->addChild(pGauge);
+
+	UIAssetKey gaugeKey;
+	gaugeKey.semantic = UIAssetSemantic::ProgressGauge;
+	themeBinding_.BindScale9(pGauge, gaugeKey, UIComponentSlot::Gauge);
+	pGaugeSprite_ = pGauge;
+
+	auto* pCap = Sprite::create();
+	pCap->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	pCap->setVisible(false);
+	this->addChild(pCap);
+	pGaugeCap_ = pCap;
+
+	UIAssetKey capKey;
+	capKey.semantic = UIAssetSemantic::ProgressCap;
+	themeBinding_.BindFixed(pCap, capKey, UIComponentSlot::Cap);
+
+	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
+	if (pSet)
+		themeBinding_.Refresh(*pSet);
+}
+
+void UIProgressBar::DestroyThemeVisuals()
+{
+	themeBinding_.Clear();
+	removeAllChildren();
+	pTrackSprite_ = nullptr;
+	pGaugeSprite_ = nullptr;
+	pGaugeCap_ = nullptr;
+}
+
+void UIProgressBar::RefreshThemeVisuals()
+{
+	UIThemeManager* pThemeMgr = UIThemeManager::Get();
+	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
+	if (pSet)
+		themeBinding_.Refresh(*pSet);
 }
 
 void UIProgressBar::Unload()
 {
 	if (!isLoaded_)
-	{
 		return;
+
+	removeAllChildren();
+
+	if (UseThemeRendering())
+	{
+		themeBinding_.Clear();
+		pTrackSprite_ = nullptr;
+		pGaugeSprite_ = nullptr;
+		pGaugeCap_ = nullptr;
+	}
+	else
+	{
+		pProgressBar_ = nullptr;
+		CC_SAFE_RELEASE_NULL(pTexture_);
 	}
 
-	removeAllChildren(); // autorelease 되기땜
-
-	pProgressBar_ = nullptr;
-	CC_SAFE_RELEASE_NULL(pTexture_);
 	isLoaded_ = false;
 	isInitialized_ = false;
-
 	init();
 }
 
 void UIProgressBar::SetUISize(const cc::size& _size)
 {
 	if (!isResizable_)
-	{
 		return;
-	}
 
 	uiSize_ = _size;
 
 	if (!isLoaded_)
+		return;
+
+	if (UseThemeRendering())
 	{
+		if (pTrackSprite_)
+			pTrackSprite_->setContentSize(uiSize_);
+		if (pGaugeSprite_)
+			pGaugeSprite_->setContentSize(uiSize_);
+		UpdateGaugeGeometry();
 		return;
 	}
-
-	const float scaleX = getScaleX();
-	const float scaleY = getScaleY();
 
 	if (pProgressBar_ == nullptr)
-	{
 		return;
-	}
+
+	if (pTexture_ == nullptr)
+		return;
+
+	const Size spriteSize = pTexture_->GetSize();
+	const float scaleX = uiSize_.width / spriteSize.width;
+	const float scaleY = uiSize_.height / spriteSize.height;
 
 	pProgressBar_->setScaleX(scaleX);
 	pProgressBar_->setScaleY(scaleY);
@@ -185,9 +270,7 @@ void UIProgressBar::SetInfo(UIElementInfo* _pInfo, bool _infoOwner)
 	}
 
 	if (isInfoOwner_)
-	{
 		JC_DELETE_SAFE(pBaseInfo_);
-	}
 
 	pBaseInfo_ = _pInfo;
 	pProgressBarInfo_ = static_cast<UIProgressBarInfo*>(_pInfo);
@@ -201,10 +284,60 @@ void UIProgressBar::SetInfoProgressBar(UIProgressBarInfo* _pInfo, bool _infoOwne
 
 void UIProgressBar::SetPercent(float _percent) const
 {
-	pProgressBar_->setPercentage(_percent);
+	if (UseThemeRendering())
+	{
+		if (pGaugeSprite_)
+		{
+			float visibleWidth = uiSize_.width * (_percent / 100.0f);
+			if (visibleWidth <= 0.01f)
+			{
+				pGaugeSprite_->setVisible(false);
+				return;
+			}
+			pGaugeSprite_->setVisible(true);
+			pGaugeSprite_->setContentSize({ visibleWidth, uiSize_.height });
+		}
+		return;
+	}
+
+	if (pProgressBar_)
+		pProgressBar_->setPercentage(_percent);
 }
 
 float UIProgressBar::GetPercent() const
 {
-	return pProgressBar_->getPercentage();
+	if (pProgressBar_)
+		return pProgressBar_->getPercentage();
+	return 0.0f;
+}
+
+void UIProgressBar::UpdateGaugeGeometry()
+{
+	float visibleWidth = uiSize_.width * percent_;
+	if (visibleWidth <= 0.01f)
+	{
+		if (pGaugeSprite_) pGaugeSprite_->setVisible(false);
+		if (pGaugeCap_) pGaugeCap_->setVisible(false);
+		return;
+	}
+	if (visibleWidth < gaugeMinSize_.width)
+	{
+		if (pGaugeSprite_) pGaugeSprite_->setVisible(false);
+		if (pGaugeCap_)
+		{
+			pGaugeCap_->setVisible(true);
+			pGaugeCap_->setPosition(visibleWidth * 0.5f, uiSize_.height * 0.5f);
+			pGaugeCap_->setScale(1.0f);
+		}
+		return;
+	}
+	if (pGaugeCap_)
+	{
+		pGaugeCap_->setVisible(false);
+	}
+	if (pGaugeSprite_)
+	{
+		pGaugeSprite_->setVisible(true);
+		pGaugeSprite_->setContentSize({ visibleWidth, uiSize_.height });
+	}
 }

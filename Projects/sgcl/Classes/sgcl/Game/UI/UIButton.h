@@ -9,6 +9,8 @@
 #pragma once
 
 #include "sgcl/Game/UI/UIElement.h"
+#include "sgcl/Game/UI/Theme/UIThemeTypes.h"
+#include "sgcl/Game/UI/Theme/UIThemeBinding.h"
 
 class UIButton : public UIElement
 {
@@ -35,6 +37,10 @@ public:
 	UIElementType_t GetElementType() override { return UIElementType::Button; }
 	jc::String ToString() override { return jc::StringUtil::Format("버튼(%s)", buttonInfo_->name_); }
 
+	void SetRenderMode(UIRenderMode _mode) { renderMode_ = _mode; }
+	bool UseThemeRendering() const { return renderMode_ == UIRenderMode::Theme; }
+	void RefreshThemeVisuals();
+
 protected:
 	void OnMouseEnterInternalDetail(cc::EventMouse* _pMouseEvent) override;
 	void OnMouseLeaveInternalDetail(cc::EventMouse* _pMouseEvent) override;
@@ -42,8 +48,19 @@ protected:
 	bool OnMouseDownInternalDetail(cc::EventMouse* _pMouseEvent) override;
 	void OnMouseUpInternalDetail(cc::EventMouse* _pMouseEvent) override;
 
+	void LoadTheme();
+	bool LoadLegacy();
+	void BuildThemeVisuals();
+	void DestroyThemeVisuals();
+	void ApplyThemeStateVisuals(State _state);
+
 private:
 	UIButtonInfo* buttonInfo_;
 	FrameTexture* texture_[eMax];
 	cc::Sprite* sprite_[eMax];
+
+	UIRenderMode renderMode_ = UIRenderMode::Auto;
+	UIThemeTextureBinding themeBinding_;
+	uint64_t appliedTextureRevision_ = 0;
+	cc::Node* themeRoot_ = nullptr;
 };

@@ -45,4 +45,3 @@ private:
 	Tab tab_;
 };
 
-REGISTER_UI(Login, UI_Login)

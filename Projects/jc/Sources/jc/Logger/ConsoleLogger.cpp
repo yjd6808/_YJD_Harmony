@@ -77,20 +77,6 @@ void ConsoleLogger::LogVaList(Level _level, const char* _pFmt, va_list _list)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConsoleLogger::Log(Level _level, const char* _pFmt, ...)
-{
-	if (!m_pOption->EnableLog[_level])
-	{
-		return;
-	}
-
-	va_list args;
-	va_start(args, _pFmt);
-	LogVaList(_level, _pFmt, args);
-	va_end(args);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
 void ConsoleLogger::LogPlainVaList(const char* _pFmt, va_list _list)
 {
 	if (!m_pOption->EnablePlainLog)
@@ -109,49 +95,6 @@ void ConsoleLogger::LogPlainVaList(const char* _pFmt, va_list _list)
 
 	m_szBuffer += Console::VTForeColor[ConsoleColor::LightGray];
 	m_szBuffer += fmtText;
-
-	if (m_bAutoFlush)
-	{
-		Flush();
-	}
-
-	if (useLock)
-	{
-		m_Lock.Unlock();
-	}
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void ConsoleLogger::LogPlain(const char* _pFmt, ...)
-{
-	if (!m_pOption->EnablePlainLog)
-	{
-		return;
-	}
-
-	va_list args;
-	va_start(args, _pFmt);
-	LogPlainVaList(_pFmt, args);
-	va_end(args);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void ConsoleLogger::LogPlain(const jc::String& _str)
-{
-	if (!m_pOption->EnablePlainLog)
-	{
-		return;
-	}
-
-	bool useLock = m_bUseLock;
-
-	if (useLock)
-	{
-		m_Lock.Lock();
-	}
-
-	m_szBuffer += Console::VTForeColor[ConsoleColor::LightGray];
-	m_szBuffer += _str;
 
 	if (m_bAutoFlush)
 	{

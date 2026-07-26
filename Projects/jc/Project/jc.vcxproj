@@ -266,6 +266,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc\Utils\StackTrace.cpp" />
     <ClCompile Include="..\Sources\jc\Wrapper\CRuntime.cpp" />
     <ClCompile Include="..\Sources\jc\Wrapper\WinApi.cpp">
       <SubType>
@@ -756,6 +757,7 @@
   <ItemGroup>
     <MASM Include="..\Sources\jc\Threading\CoroutineImpl.asm">
       <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Platform)'=='Win32'">true</ExcludedFromBuild>
     </MASM>
   </ItemGroup>
   <ItemGroup>

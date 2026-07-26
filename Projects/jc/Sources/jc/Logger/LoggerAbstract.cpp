@@ -30,6 +30,12 @@ LoggerAbstract::LoggerAbstract(LoggerOption* _pOption)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 LoggerAbstract::~LoggerAbstract()
 {
+	for (int i = 0; i < m_ChainLoggers.Size(); ++i)
+	{
+		JC_DELETE_SAFE(m_ChainLoggers[i]);
+	}
+	m_ChainLoggers.Clear();
+
 	if (m_bOptionOwner && m_pOption)
 	{
 		JC_DELETE_SAFE(m_pOption);
@@ -46,7 +52,20 @@ void LoggerAbstract::Log(Level _level, const char* _pFmt, ...)
 
 	va_list args;
 	va_start(args, _pFmt);
-	Log(_level, _pFmt, args);
+
+	va_list argsCopy;
+	va_copy(argsCopy, args);
+	LogVaList(_level, _pFmt, argsCopy);
+	va_end(argsCopy);
+
+	for (int i = 0; i < m_ChainLoggers.Size(); ++i)
+	{
+		va_list chainArgs;
+		va_copy(chainArgs, args);
+		m_ChainLoggers[i]->LogVaList(_level, _pFmt, chainArgs);
+		va_end(chainArgs);
+	}
+
 	va_end(args);
 }
 
@@ -76,7 +95,20 @@ void LoggerAbstract::LogPlain(const char* _pFmt, ...)
 
 	va_list args;
 	va_start(args, _pFmt);
-	LogPlain(_pFmt, args);
+
+	va_list argsCopy;
+	va_copy(argsCopy, args);
+	LogPlainVaList(_pFmt, argsCopy);
+	va_end(argsCopy);
+
+	for (int i = 0; i < m_ChainLoggers.Size(); ++i)
+	{
+		va_list chainArgs;
+		va_copy(chainArgs, args);
+		m_ChainLoggers[i]->LogPlainVaList(_pFmt, chainArgs);
+		va_end(chainArgs);
+	}
+
 	va_end(args);
 
 	ShowHeader(showHeaderState);
@@ -90,7 +122,23 @@ void LoggerAbstract::LogPlain(const char* _pFmt, ...)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 void LoggerAbstract::LogPlain(const jc::String& _str)
 {
-	LogPlain(_str.Source());
+	LogPlain("%s", _str.Source());
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+void LoggerAbstract::FlushAll()
+{
+	Flush();
+	for (int i = 0; i < m_ChainLoggers.Size(); ++i)
+	{
+		m_ChainLoggers[i]->Flush();
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+void LoggerAbstract::ChainLogger(LoggerAbstract* _pLogger)
+{
+	m_ChainLoggers.PushBack(_pLogger);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

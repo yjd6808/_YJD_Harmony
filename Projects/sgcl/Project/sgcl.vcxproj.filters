@@ -28,6 +28,12 @@
     <Filter Include="Game\UI">
       <UniqueIdentifier>{0d7eb5f0-5cd7-445d-825e-1d7b3e291f6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\UI\Theme">
+      <UniqueIdentifier>{a1b2c3d4-e5f6-7890-abcd-ef1234567890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\UI\Theme\Baker">
+      <UniqueIdentifier>{b2c3d4e5-f6a7-8901-bcde-f12345678901}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Game\Helper">
       <UniqueIdentifier>{62c231f5-2c23-4a23-8337-9397dce6d44c}</UniqueIdentifier>
     </Filter>
@@ -126,6 +132,9 @@
     </Filter>
     <Filter Include="PCH">
       <UniqueIdentifier>{a0af26ea-6a39-4a91-a60d-790cf9d980be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MCP">
+      <UniqueIdentifier>{f5e4d3c2-b1a0-9876-5432-fedcba987654}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -265,6 +274,69 @@
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Game\UI\UIXmlLoader.cpp">
       <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIRuntimeTheme.cpp">
+      <Filter>Game\UI\Theme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIStyleOverride.cpp">
+      <Filter>Game\UI\Theme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIStyleResolver.cpp">
+      <Filter>Game\UI\Theme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIThemeMapper.cpp">
+      <Filter>Game\UI\Theme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIThemeManager.cpp">
+      <Filter>Game\UI\Theme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIThemeBinding.cpp">
+      <Filter>Game\UI\Theme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UITextureEntry.cpp">
+      <Filter>Game\UI\Theme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UITextureBakeService.cpp">
+      <Filter>Game\UI\Theme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIPixelBuffer.cpp">
+      <Filter>Game\UI\Theme\Baker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIMaskBuffer.cpp">
+      <Filter>Game\UI\Theme\Baker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIGaussianBlur.cpp">
+      <Filter>Game\UI\Theme\Baker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIShapeRasterizer.cpp">
+      <Filter>Game\UI\Theme\Baker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIGradientRasterizer.cpp">
+      <Filter>Game\UI\Theme\Baker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\Baker\UITextureBaker.cpp">
+      <Filter>Game\UI\Theme\Baker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIControlBakeRecipes.cpp">
+      <Filter>Game\UI\Theme\Baker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UITextureCache.cpp">
+      <Filter>Game\UI\Theme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIThemePropertyDescriptor.cpp">
+      <Filter>Game\UI\Theme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIThemeEditHistory.cpp">
+      <Filter>Game\UI\Theme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIThemeInspectorRow.cpp">
+      <Filter>Game\UI\Theme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIThemeStudio.cpp">
+      <Filter>Game\UI\Theme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIThemePreviewCatalog.cpp">
+      <Filter>Game\UI\Theme</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Util\WndMessage.cpp">
       <Filter>Util</Filter>
@@ -678,6 +750,75 @@
     <ClInclude Include="..\Classes\sgcl\Game\UI\UIXmlLoader.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeTypes.h">
+      <Filter>Game\UI\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIRuntimeTheme.h">
+      <Filter>Game\UI\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIStyleOverride.h">
+      <Filter>Game\UI\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIStyleResolver.h">
+      <Filter>Game\UI\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeMapper.h">
+      <Filter>Game\UI\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeManager.h">
+      <Filter>Game\UI\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeBinding.h">
+      <Filter>Game\UI\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UITextureEntry.h">
+      <Filter>Game\UI\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UITextureBakeService.h">
+      <Filter>Game\UI\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIPixelBuffer.h">
+      <Filter>Game\UI\Theme\Baker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIColorMath.h">
+      <Filter>Game\UI\Theme\Baker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIMaskBuffer.h">
+      <Filter>Game\UI\Theme\Baker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIGaussianBlur.h">
+      <Filter>Game\UI\Theme\Baker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIShapeRasterizer.h">
+      <Filter>Game\UI\Theme\Baker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIGradientRasterizer.h">
+      <Filter>Game\UI\Theme\Baker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Baker\UITextureBaker.h">
+      <Filter>Game\UI\Theme\Baker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIControlBakeRecipes.h">
+      <Filter>Game\UI\Theme\Baker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UITextureCache.h">
+      <Filter>Game\UI\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemePropertyDescriptor.h">
+      <Filter>Game\UI\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeEditHistory.h">
+      <Filter>Game\UI\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeInspectorRow.h">
+      <Filter>Game\UI\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeStudio.h">
+      <Filter>Game\UI\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemePreviewCatalog.h">
+      <Filter>Game\UI\Theme</Filter>
+    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Util\WndMessage.h">
       <Filter>Util</Filter>
     </ClInclude>
@@ -959,6 +1100,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Net\NetClientGroup.h">
       <Filter>Net</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Classes\sgcl\MCP\MCPCore.cpp">
+      <Filter>MCP</Filter>
+    </ClCompile>
+    <ClInclude Include="..\Classes\sgcl\MCP\MCPCore.h">
+      <Filter>MCP</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

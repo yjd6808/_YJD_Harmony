@@ -106,7 +106,7 @@ void UIElement::RestoreState(State _state)
 	if (state_ == eDisabled)
 		return;
 
-	state_ = eNormal;
+	state_ = _state;
 }
 
 
@@ -488,8 +488,8 @@ cc::vec2 UIElement::GetAbsoluteScale()
 	UIElement* pCur = pParent_;
 	while (pCur != nullptr)
 	{
-		thisScaleX *= pParent_->_scaleX;
-		thisScaleY *= pParent_->_scaleY;
+		thisScaleX *= pCur->_scaleX;
+		thisScaleY *= pCur->_scaleY;
 		pCur = pCur->pParent_;
 	}
 	return { thisScaleX, thisScaleY };

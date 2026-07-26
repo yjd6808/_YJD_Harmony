@@ -11,8 +11,10 @@
 #include "sgcl/Game/UI/UIRootGroup.h"
 #include "sgcl/Game/Contents/UIManager.h"
 #include "sgcl/Game/Texture/ImagePackManager.h"
+#include "sgcl/Game/UI/Theme/UIThemeManager.h"
 
 USING_NS_CC;
+USING_NS_CCUI;
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -58,6 +60,13 @@ UIButton* UIButton::Create(UIRootGroup* _pRoot, UIGroup* _pParent, UIButtonInfo*
 
 void UIButton::SetVisibleState(State _state)
 {
+	if (UseThemeRendering())
+	{
+		state_ = _state;
+		ApplyThemeStateVisuals(_state);
+		return;
+	}
+
 	for (int i = 0; i < eMax; ++i)
 	{
 		Sprite* pSprite = sprite_[i];
@@ -90,6 +99,16 @@ void UIButton::SetUISize(const cc::size& _size)
 
 	if (!isLoaded_)
 	{
+		return;
+	}
+
+	if (UseThemeRendering())
+	{
+		if (themeRoot_)
+		{
+			auto* pTrack = dynamic_cast<cc_ui::Scale9Sprite*>(themeRoot_);
+			if (pTrack) pTrack->setContentSize(uiSize_);
+		}
 		return;
 	}
 
@@ -160,10 +179,7 @@ void UIButton::RestoreState(State _state)
 		return;
 	}
 
-	if (state_ == _state)
-	{
-		SetVisibleState(eNormal);
-	}
+	SetVisibleState(_state);
 }
 
 void UIButton::OnMouseEnterInternalDetail(cc::EventMouse* _pMouseEvent)
@@ -205,25 +221,22 @@ bool UIButton::init()
 		return false;
 	}
 
-	const ImagePack* pPack = g_cImagePackMgr.GetPackUnsafe(buttonInfo_->sga_);
 	SetInitialUISize(DEFAULT_SIZE30);
 
-	if (pPack == nullptr)
+	if (buttonInfo_->sga_ != InvalidValue_v)
 	{
-		_LogWarn_("버튼 Sga패키지를 찾지 못했습니다.");
-		return false;
+		const ImagePack* pPack = g_cImagePackMgr.GetPackUnsafe(buttonInfo_->sga_);
+		if (pPack)
+		{
+			const SgaSpriteAbstractPtr pSprite = pPack->GetSpriteUnsafe(buttonInfo_->img_, buttonInfo_->sprites_[eNormal]);
+			if (pSprite != nullptr)
+			{
+				const SgaSpriteRect spriteRect = pSprite->GetRect();
+				SetInitialUISize({ spriteRect.GetWidthF(), spriteRect.GetHeightF() });
+			}
+		}
 	}
 
-	const SgaSpriteAbstractPtr pSprite = pPack->GetSpriteUnsafe(buttonInfo_->img_, buttonInfo_->sprites_[eNormal]);
-
-	if (pSprite == nullptr)
-	{
-		_LogWarn_("버튼 노말 스프라이트를 찾지 못했습니다.");
-		return false;
-	}
-
-	const SgaSpriteRect spriteRect = pSprite->GetRect();
-	SetInitialUISize({ spriteRect.GetWidthF(), spriteRect.GetHeightF() });
 	return isInitialized_ = true;
 }
 
@@ -233,6 +246,33 @@ void UIButton::Load()
 	{
 		return;
 	}
+
+	if (pBaseInfo_ && pBaseInfo_->renderMode_ != eRenderModeAuto)
+		renderMode_ = (UIRenderMode)pBaseInfo_->renderMode_;
+
+	if (UseThemeRendering())
+	{
+		LoadTheme();
+		ApplyThemeStateVisuals(eNormal);
+	}
+	else
+	{
+		if (!LoadLegacy())
+		{
+			_LogWarn_("레거시 스프라이트가 설정되지 않아 공용 UI 텍스처를 사용합니다.");
+			renderMode_ = UIRenderMode::Theme;
+			LoadTheme();
+			ApplyThemeStateVisuals(eNormal);
+		}
+	}
+
+	SetVisibleState(eNormal);
+	isLoaded_ = true;
+}
+
+bool UIButton::LoadLegacy()
+{
+	bool bAnyLoaded = false;
 
 	for (int i = 0; i < eMax; ++i)
 	{
@@ -256,11 +296,75 @@ void UIButton::Load()
 		sprite_[i] = pSprite;
 
 		this->addChild(pSprite);
+		bAnyLoaded = true;
 	}
 
-	SetVisibleState(eNormal);
+	return bAnyLoaded;
+}
 
-	isLoaded_ = true;
+void UIButton::LoadTheme()
+{
+	BuildThemeVisuals();
+}
+
+void UIButton::BuildThemeVisuals()
+{
+	UIThemeManager* pThemeMgr = UIThemeManager::Get();
+
+	auto* pTrack = Scale9Sprite::create();
+	pTrack->setContentSize(uiSize_);
+	pTrack->setAnchorPoint(Vec2::ZERO);
+	this->addChild(pTrack);
+	themeRoot_ = pTrack;
+
+	UIAssetKey key;
+	key.semantic = UIAssetSemantic::Button;
+	key.styleHash = 0;
+	key.recipeHash = 0;
+
+	themeBinding_.BindScale9(pTrack, key, UIComponentSlot::Background);
+
+	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
+	if (pSet)
+		themeBinding_.Refresh(*pSet);
+}
+
+void UIButton::DestroyThemeVisuals()
+{
+	themeBinding_.Clear();
+	removeAllChildren();
+	themeRoot_ = nullptr;
+}
+
+void UIButton::ApplyThemeStateVisuals(State _state)
+{
+	switch (_state)
+	{
+	case eNormal:
+		setColor(Color3B::WHITE);
+		setOpacity(255);
+		break;
+	case eOver:
+		setColor(Color3B(240, 245, 255));
+		setOpacity(255);
+		break;
+	case ePressed:
+		setColor(Color3B(180, 180, 200));
+		setOpacity(255);
+		break;
+	case eDisabled:
+		setColor(Color3B(128, 128, 128));
+		setOpacity(128);
+		break;
+	}
+}
+
+void UIButton::RefreshThemeVisuals()
+{
+	UIThemeManager* pThemeMgr = UIThemeManager::Get();
+	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
+	if (pSet)
+		themeBinding_.Refresh(*pSet);
 }
 
 void UIButton::Unload()
@@ -270,12 +374,20 @@ void UIButton::Unload()
 		return;
 	}
 
-	removeAllChildren(); // autorelease 되기땜
+	removeAllChildren();
 
-	for (int i = 0; i < eMax; ++i)
+	if (UseThemeRendering())
 	{
-		sprite_[i] = nullptr;
-		CC_SAFE_RELEASE_NULL(texture_[i]);
+		themeBinding_.Clear();
+		themeRoot_ = nullptr;
+	}
+	else
+	{
+		for (int i = 0; i < eMax; ++i)
+		{
+			sprite_[i] = nullptr;
+			CC_SAFE_RELEASE_NULL(texture_[i]);
+		}
 	}
 
 	isLoaded_ = false;

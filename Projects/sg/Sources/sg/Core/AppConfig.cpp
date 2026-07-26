@@ -7,6 +7,8 @@
 
 #include "AppConfig.h"
 
+#include <Windows.h>
+
 #include "jc/Logger/ConsoleLogger.h"
 
 #include "sg/Struct/SteinsGate_Client.h"
@@ -30,6 +32,7 @@ AppConfig::AppConfig()
 {
 	Arrays::Copy(consoleLogColor_, ConsoleLoggerOption::Default.LogColors);
 	Arrays::Copy(consoleNetLogColor_, ConsoleLoggerOption::Default.LogColors);
+	pClientInfo_ = dbg_new ClientInfo();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -68,10 +71,14 @@ void AppConfig::ReadEnvArgs()
 
 	if (jc::String* pAssetPath = argMap.Find("assets"))
 	{
-		jc::String srcDataPath = jc::Path::Combine(*pAssetPath, "src_data");
-		jc::String resDataPath = jc::Path::Combine(*pAssetPath, "res_data");
+		char absPath[MAX_PATH];
+		DWORD len = GetFullPathNameA(pAssetPath->Source(), MAX_PATH, absPath, nullptr);
+		jc::String assetPath = len ? jc::String(absPath) : *pAssetPath;
 
-		assetPath_ = *pAssetPath;
+		jc::String srcDataPath = jc::Path::Combine(assetPath, "src_data");
+		jc::String resDataPath = jc::Path::Combine(assetPath, "res_data");
+
+		assetPath_ = assetPath;
 		srcDataPath_ = srcDataPath;
 		resDataPath_ = resDataPath;
 		resDataFontPath_ = jc::Path::Combine(resDataPath, "font");
@@ -87,6 +94,7 @@ void AppConfig::LoadConfFile()
 {
 	if (!File::Exist(SG_RUNTIME_CONFIG_FILENAME))
 	{
+		_LogWarn_("런타임 설정파일(%s)이 없어 기본 클라이언트 설정을 사용합니다.", SG_RUNTIME_CONFIG_FILENAME);
 		return;
 	}
 
@@ -107,6 +115,11 @@ void AppConfig::LoadConfFile()
 			if (clientRoot.isObject())
 			{
 				ReadClient(clientRoot);
+				_LogInfo_("런타임 설정파일(%s)에서 클라이언트 설정을 불러왔습니다.", SG_RUNTIME_CONFIG_FILENAME);
+			}
+			else
+			{
+				_LogWarn_("런타임 설정파일(%s)에 클라이언트 설정 섹션이 없어 기본 설정을 사용합니다.", SG_RUNTIME_CONFIG_FILENAME);
 			}
 		}
 
