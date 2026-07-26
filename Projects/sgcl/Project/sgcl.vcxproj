@@ -395,6 +395,7 @@
     <ClCompile Include="..\Classes\sgcl\Util\DescMgr\DescMgr_Projectile.cpp" />
     <ClCompile Include="..\Classes\sgcl\Util\DescMgr\DescMgr_Tile.cpp" />
     <ClCompile Include="..\Classes\sgcl\Util\DescMgr\DescMgr_UI.cpp" />
+    <ClCompile Include="..\Classes\sgcl\MCP\MCPCore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\sgcl\Game\Listener\ActorListenerCollection.h" />
@@ -811,6 +812,7 @@
     <ClInclude Include="..\Classes\sgcl\Util\DescMgr\DescMgr_Projectile.h" />
     <ClInclude Include="..\Classes\sgcl\Util\DescMgr\DescMgr_Tile.h" />
     <ClInclude Include="..\Classes\sgcl\Util\DescMgr\DescMgr_UI.h" />
+    <ClInclude Include="..\Classes\sgcl\MCP\MCPCore.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F0278B0E-1014-4730-B622-67B9073F8C60}</ProjectGuid>

@@ -12,6 +12,7 @@
 
 #include "sgcl/Util/Win32Helper.h"
 #include "sgcl/Scene/Scene_World.h"
+#include "sgcl/MCP/MCPCore.h"
 
 #include "API/sgapiClient.h"
 
@@ -142,6 +143,7 @@ bool SteinsGateApp::applicationDidFinishLaunching()
 		CreateWorldScene();
 
 		InitializeWindowProcedure();
+		g_cMCPCore.Initialize();
 	}
 	catch (std::exception& exception)
 	{

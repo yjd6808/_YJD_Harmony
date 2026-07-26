@@ -133,6 +133,9 @@
     <Filter Include="PCH">
       <UniqueIdentifier>{a0af26ea-6a39-4a91-a60d-790cf9d980be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MCP">
+      <UniqueIdentifier>{f5e4d3c2-b1a0-9876-5432-fedcba987654}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\sgcl\Game\Texture\ImagePackManager.cpp">
@@ -1097,6 +1100,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Net\NetClientGroup.h">
       <Filter>Net</Filter>
+    </ClInclude>
+    <ClCompile Include="..\Classes\sgcl\MCP\MCPCore.cpp">
+      <Filter>MCP</Filter>
+    </ClCompile>
+    <ClInclude Include="..\Classes\sgcl\MCP\MCPCore.h">
+      <Filter>MCP</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
