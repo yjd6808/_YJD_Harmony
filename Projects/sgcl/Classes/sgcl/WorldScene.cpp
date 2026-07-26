@@ -28,6 +28,7 @@
 #include <sgcl/FontManager.h>
 #include <sgcl/WndMessage.h>
 #include <sgcl/Win32Helper.h>
+#include <sgcl/MCP/MCPCore.h>
 
 
 USING_NS_CC;
@@ -177,6 +178,7 @@ void WorldScene::UpdateScene(float _dt)
 void WorldScene::UpdateNet(float _dt)
 {
 	sg::Net->PollNetEvents();
+	g_cMCPCore.PollEvents();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -382,6 +384,7 @@ void WorldScene::onExit()
 	// 씬 정리되기전에 모든 레퍼런스 카운트가 0가 되어야함.
 	removeAllChildren();
 
+	g_cMCPCore.Finalize();
 	FinalizeClientCore();
 	FinalizeCommonCore();
 	FinalizeDefaultLogger();

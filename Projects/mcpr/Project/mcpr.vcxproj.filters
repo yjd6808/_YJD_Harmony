@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{c0a7b1d0-5e6f-4a3b-8d9e-1f2a3b4c5d6e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Sources\mcpr\PCH\Core.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\mcpr\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\mcpr\PCH\Core.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
