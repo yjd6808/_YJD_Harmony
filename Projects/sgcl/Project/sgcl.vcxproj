@@ -982,7 +982,12 @@ xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <PreBuildEvent>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      <Command>
+        if not exist "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\libcocos2d.dll" (
+          echo [ERROR] libcocos2d.dll not found.
+          echo [ERROR] Build the Cocos2d-x engine first using Harmony_Full.sln.
+          exit 1
+        )
       </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -1074,6 +1079,11 @@ xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
     </PreLinkEvent>
     <PreBuildEvent>
       <Command>
+        if not exist "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\libcocos2d.dll" (
+          echo [ERROR] libcocos2d.dll not found.
+          echo [ERROR] Build the Cocos2d-x engine first using Harmony_Full.sln.
+          exit 1
+        )
       </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
