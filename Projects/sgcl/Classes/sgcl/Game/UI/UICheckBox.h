@@ -35,6 +35,7 @@ public:
 
 	void SetRenderMode(UIRenderMode _mode) { renderMode_ = _mode; }
 	bool UseThemeRendering() const { return renderMode_ == UIRenderMode::Theme; }
+	void RefreshThemeVisuals();
 
 	UIElementType_t GetElementType() override { return UIElementType::CheckBox; }
 	jc::String ToString() override { return jc::StringUtil::Format("체크박스(%s)", pInfo_->name_); }

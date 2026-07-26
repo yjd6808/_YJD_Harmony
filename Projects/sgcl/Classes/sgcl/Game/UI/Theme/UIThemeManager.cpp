@@ -60,6 +60,15 @@ UIResolvedStyle UIThemeManager::Resolve(
     return resolver_.Resolve(_control, _state, activeTheme_, _local);
 }
 
+UIResolvedStyle UIThemeManager::ResolveWithEditOverrides(
+    UIElementType_t _control,
+    UIVisualState _state) const
+{
+    if (editSession_.active)
+        return resolver_.Resolve(_control, _state, editSession_.draft, editSession_.overrides);
+    return resolver_.Resolve(_control, _state, activeTheme_, {});
+}
+
 void UIThemeManager::RequestBake(UIThemeBakeRequest&& _request)
 {
     bakeService_.EnqueueRequest(jc::Move(_request));
@@ -70,6 +79,7 @@ UIThemeEditSession UIThemeManager::BeginEdit()
     UIThemeEditSession session;
     session.active = true;
     session.draft = activeTheme_;
+    session.overrides = UIStyleOverride{};
     editSession_ = session;
     return editSession_;
 }
@@ -79,6 +89,15 @@ void UIThemeManager::CommitDraft(const UIRuntimeTheme& _draft)
     activeTheme_ = _draft;
     ++revision_.mappedRevision;
     editSession_ = UIThemeEditSession{};
+}
+
+void UIThemeManager::CommitDraft(const UIRuntimeTheme& _draft, const UIStyleOverride& _overrides)
+{
+    activeTheme_ = _draft;
+    editSession_.active = true;
+    editSession_.draft = _draft;
+    editSession_.overrides = _overrides;
+    ++revision_.mappedRevision;
 }
 
 void UIThemeManager::CancelPreview()

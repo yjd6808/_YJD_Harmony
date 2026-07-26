@@ -1,6 +1,6 @@
 #pragma once
 
-#include <json/value.h>
+#include <json.h>
 #include "sgcl/Game/UI/Theme/UIThemeTypes.h"
 #include "sgcl/Game/UI/Theme/UIRuntimeTheme.h"
 

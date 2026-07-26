@@ -18,6 +18,7 @@ struct UIThemeEditSession
 {
     bool active = false;
     UIRuntimeTheme draft;
+    UIStyleOverride overrides;
 };
 
 class UIThemeManager final
@@ -40,10 +41,15 @@ public:
         UIVisualState _state,
         const UIStyleOverride& _local) const;
 
+    UIResolvedStyle ResolveWithEditOverrides(
+        UIElementType_t _control,
+        UIVisualState _state) const;
+
     void RequestBake(UIThemeBakeRequest&& _request);
 
     UIThemeEditSession BeginEdit();
     void CommitDraft(const UIRuntimeTheme& _draft);
+    void CommitDraft(const UIRuntimeTheme& _draft, const UIStyleOverride& _overrides);
     void CancelPreview();
 
     UITextureCache& GetCache() { return bakeService_.GetCache(); }

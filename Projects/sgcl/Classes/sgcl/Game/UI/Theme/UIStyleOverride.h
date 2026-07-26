@@ -139,10 +139,10 @@ struct UIStyleOverride
         mask.Clear();
     }
 
+    static UIColorF* ResolveColorPtr(UIResolvedStyle& _style, UIStyleToken _token);
+    static float* ResolveFloatPtr(UIResolvedStyle& _style, UIStyleToken _token);
+
 private:
     void SetColorValue(UIStyleToken _token, const UIColorF& _value);
     void SetFloatValue(UIStyleToken _token, float _value);
-
-    static UIColorF* ResolveColorPtr(UIResolvedStyle& _style, UIStyleToken _token);
-    static float* ResolveFloatPtr(UIResolvedStyle& _style, UIStyleToken _token);
 };

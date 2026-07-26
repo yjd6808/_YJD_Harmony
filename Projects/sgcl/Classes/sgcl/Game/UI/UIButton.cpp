@@ -60,6 +60,13 @@ UIButton* UIButton::Create(UIRootGroup* _pRoot, UIGroup* _pParent, UIButtonInfo*
 
 void UIButton::SetVisibleState(State _state)
 {
+	if (UseThemeRendering())
+	{
+		state_ = _state;
+		ApplyThemeStateVisuals(_state);
+		return;
+	}
+
 	for (int i = 0; i < eMax; ++i)
 	{
 		Sprite* pSprite = sprite_[i];
@@ -92,6 +99,16 @@ void UIButton::SetUISize(const cc::size& _size)
 
 	if (!isLoaded_)
 	{
+		return;
+	}
+
+	if (UseThemeRendering())
+	{
+		if (themeRoot_)
+		{
+			auto* pTrack = dynamic_cast<cc_ui::Scale9Sprite*>(themeRoot_);
+			if (pTrack) pTrack->setContentSize(uiSize_);
+		}
 		return;
 	}
 
@@ -204,25 +221,22 @@ bool UIButton::init()
 		return false;
 	}
 
-	const ImagePack* pPack = g_cImagePackMgr.GetPackUnsafe(buttonInfo_->sga_);
 	SetInitialUISize(DEFAULT_SIZE30);
 
-	if (pPack == nullptr)
+	if (buttonInfo_->sga_ != InvalidValue_v)
 	{
-		_LogWarn_("버튼 Sga패키지를 찾지 못했습니다.");
-		return false;
+		const ImagePack* pPack = g_cImagePackMgr.GetPackUnsafe(buttonInfo_->sga_);
+		if (pPack)
+		{
+			const SgaSpriteAbstractPtr pSprite = pPack->GetSpriteUnsafe(buttonInfo_->img_, buttonInfo_->sprites_[eNormal]);
+			if (pSprite)
+			{
+				const SgaSpriteRect spriteRect = pSprite->GetRect();
+				SetInitialUISize({ spriteRect.GetWidthF(), spriteRect.GetHeightF() });
+			}
+		}
 	}
 
-	const SgaSpriteAbstractPtr pSprite = pPack->GetSpriteUnsafe(buttonInfo_->img_, buttonInfo_->sprites_[eNormal]);
-
-	if (pSprite == nullptr)
-	{
-		_LogWarn_("버튼 노말 스프라이트를 찾지 못했습니다.");
-		return false;
-	}
-
-	const SgaSpriteRect spriteRect = pSprite->GetRect();
-	SetInitialUISize({ spriteRect.GetWidthF(), spriteRect.GetHeightF() });
 	return isInitialized_ = true;
 }
 
@@ -239,6 +253,7 @@ void UIButton::Load()
 	if (UseThemeRendering())
 	{
 		LoadTheme();
+		ApplyThemeStateVisuals(eNormal);
 	}
 	else
 	{
@@ -289,6 +304,7 @@ void UIButton::BuildThemeVisuals()
 	pTrack->setContentSize(uiSize_);
 	pTrack->setAnchorPoint(Vec2::ZERO);
 	this->addChild(pTrack);
+	themeRoot_ = pTrack;
 
 	UIAssetKey key;
 	key.semantic = UIAssetSemantic::Button;
@@ -306,6 +322,30 @@ void UIButton::DestroyThemeVisuals()
 {
 	themeBinding_.Clear();
 	removeAllChildren();
+	themeRoot_ = nullptr;
+}
+
+void UIButton::ApplyThemeStateVisuals(State _state)
+{
+	switch (_state)
+	{
+	case eNormal:
+		setColor(Color3B::WHITE);
+		setOpacity(255);
+		break;
+	case eOver:
+		setColor(Color3B(240, 245, 255));
+		setOpacity(255);
+		break;
+	case ePressed:
+		setColor(Color3B(180, 180, 200));
+		setOpacity(255);
+		break;
+	case eDisabled:
+		setColor(Color3B(128, 128, 128));
+		setOpacity(128);
+		break;
+	}
 }
 
 void UIButton::RefreshThemeVisuals()
@@ -323,12 +363,20 @@ void UIButton::Unload()
 		return;
 	}
 
-	removeAllChildren(); // autorelease 되기땜
+	removeAllChildren();
 
-	for (int i = 0; i < eMax; ++i)
+	if (UseThemeRendering())
 	{
-		sprite_[i] = nullptr;
-		CC_SAFE_RELEASE_NULL(texture_[i]);
+		themeBinding_.Clear();
+		themeRoot_ = nullptr;
+	}
+	else
+	{
+		for (int i = 0; i < eMax; ++i)
+		{
+			sprite_[i] = nullptr;
+			CC_SAFE_RELEASE_NULL(texture_[i]);
+		}
 	}
 
 	isLoaded_ = false;

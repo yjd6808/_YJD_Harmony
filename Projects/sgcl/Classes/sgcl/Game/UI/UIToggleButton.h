@@ -40,6 +40,7 @@ public:
 
 	void SetRenderMode(UIRenderMode _mode) { renderMode_ = _mode; }
 	bool UseThemeRendering() const { return renderMode_ == UIRenderMode::Theme; }
+	void RefreshThemeVisuals();
 
 	UIElementType_t GetElementType() override { return UIElementType::ToggleButton; }
 	jc::String ToString() override { return jc::StringUtil::Format("토글버튼(%s)", pInfo_->name_); }
@@ -56,6 +57,7 @@ protected:
 	void LoadLegacy();
 	void BuildThemeVisuals();
 	void DestroyThemeVisuals();
+	void ApplyThemeStateVisuals(State _state);
 
 private:
 	ToggleState toggleState_;
@@ -66,4 +68,6 @@ private:
 	UIRenderMode renderMode_ = UIRenderMode::Auto;
 	UIThemeTextureBinding themeBinding_;
 	uint64_t appliedTextureRevision_ = 0;
+	cc::Node* themeTrack_ = nullptr;
+	cc::Sprite* themeKnob_ = nullptr;
 };

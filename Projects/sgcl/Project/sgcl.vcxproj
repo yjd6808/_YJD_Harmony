@@ -337,7 +337,11 @@
     <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\Baker\UITextureBaker.cpp" />
     <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIControlBakeRecipes.cpp" />
     <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UITextureCache.cpp" />
-    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\Serialization\UITextureBinaryWriter.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIThemePropertyDescriptor.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIThemeEditHistory.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIThemeInspectorRow.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIThemeStudio.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIThemePreviewCatalog.cpp" />
     <ClCompile Include="..\Classes\sgcl\Util\SGVec2Ex.cpp">
       <SubType>
       </SubType>
@@ -751,7 +755,11 @@
     <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Baker\UITextureBaker.h" />
     <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Baker\UIControlBakeRecipes.h" />
     <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UITextureCache.h" />
-    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\Serialization\UITextureBinaryWriter.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemePropertyDescriptor.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeEditHistory.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeInspectorRow.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeStudio.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemePreviewCatalog.h" />
     <ClInclude Include="..\Classes\sgcl\Util\SGVec2Ex.h">
       <SubType>
       </SubType>
@@ -907,28 +915,28 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration);$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)..\Classes;$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\tinyxml2\include</IncludePath>
+    <IncludePath>$(ProjectDir)..\Classes;$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\tinyxml2\include;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration);$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)..\Classes;$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\tinyxml2\include</IncludePath>
+    <IncludePath>$(ProjectDir)..\Classes;$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\tinyxml2\include;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration);$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)..\Classes;$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\tinyxml2\include</IncludePath>
+    <IncludePath>$(ProjectDir)..\Classes;$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\tinyxml2\include;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration);$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)..\Classes;$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\tinyxml2\include</IncludePath>
+    <IncludePath>$(ProjectDir)..\Classes;$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\tinyxml2\include;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
     <OutDir>$(SolutionDir)Output\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(EngineRoot);$(EngineRoot)external;$(EngineRoot)external/$(Platform)/include;$(EngineRoot)cocos\audio\include;$(EngineRoot)extensions;..\Classes;$(SolutionDir)Projects\sge\Sources;..;%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(EngineRoot);$(EngineRoot)external;$(EngineRoot)external/$(Platform)/include;$(EngineRoot)cocos\audio\include;$(EngineRoot)extensions;..\Classes;$(SolutionDir)Projects\sge\Sources;..;$(SolutionDir)ThirdParty\JsonCpp195\include;%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SG_CLIENT;SEND_HELPER_NONE_THREAD_LOCAL_INFORMATION;WIN32;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;COCOS2D_DEBUG=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;JSON_USE_EXCEPTION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -966,7 +974,7 @@ xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(EngineRoot);$(EngineRoot)external;$(EngineRoot)external/$(Platform)/include;$(EngineRoot)cocos\audio\include;$(EngineRoot)extensions;..\Classes;$(SolutionDir)Projects\sge\Sources;..;%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(EngineRoot);$(EngineRoot)external;$(EngineRoot)external/$(Platform)/include;$(EngineRoot)cocos\audio\include;$(EngineRoot)extensions;..\Classes;$(SolutionDir)Projects\sge\Sources;..;$(SolutionDir)ThirdParty\JsonCpp195\include;%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SG_CLIENT;WIN32;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;COCOS2D_DEBUG=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -1026,7 +1034,7 @@ xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(EngineRoot);$(EngineRoot)external;$(EngineRoot)external/$(Platform)/include;$(EngineRoot)cocos\audio\include;$(EngineRoot)extensions;..\Classes;$(SolutionDir)Projects\sge\Sources;..;%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(EngineRoot);$(EngineRoot)external;$(EngineRoot)external/$(Platform)/include;$(EngineRoot)cocos\audio\include;$(EngineRoot)extensions;..\Classes;$(SolutionDir)Projects\sge\Sources;..;$(SolutionDir)ThirdParty\JsonCpp195\include;%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SG_CLIENT;SEND_HELPER_NONE_THREAD_LOCAL_INFORMATION;WIN32;NDEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -1070,7 +1078,7 @@ xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(EngineRoot);$(EngineRoot)external;$(EngineRoot)external/$(Platform)/include;$(EngineRoot)cocos\audio\include;$(EngineRoot)extensions;..\Classes;$(SolutionDir)Projects\sge\Sources;..;%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(EngineRoot);$(EngineRoot)external;$(EngineRoot)external/$(Platform)/include;$(EngineRoot)cocos\audio\include;$(EngineRoot)extensions;..\Classes;$(SolutionDir)Projects\sge\Sources;..;$(SolutionDir)ThirdParty\JsonCpp195\include;%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SG_CLIENT;WIN32;NDEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>

@@ -39,6 +39,7 @@ public:
 
 	void SetRenderMode(UIRenderMode _mode) { renderMode_ = _mode; }
 	bool UseThemeRendering() const { return renderMode_ == UIRenderMode::Theme; }
+	void RefreshThemeVisuals();
 
 protected:
 	void OnMouseEnterInternalDetail(cc::EventMouse* _pMouseEvent) override;
@@ -51,7 +52,7 @@ protected:
 	void LoadLegacy();
 	void BuildThemeVisuals();
 	void DestroyThemeVisuals();
-	void RefreshThemeVisuals();
+	void ApplyThemeStateVisuals(State _state);
 
 private:
 	UIButtonInfo* buttonInfo_;
@@ -61,4 +62,5 @@ private:
 	UIRenderMode renderMode_ = UIRenderMode::Auto;
 	UIThemeTextureBinding themeBinding_;
 	uint64_t appliedTextureRevision_ = 0;
+	cc::Node* themeRoot_ = nullptr;
 };

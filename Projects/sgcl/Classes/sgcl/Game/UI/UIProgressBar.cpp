@@ -162,6 +162,16 @@ void UIProgressBar::BuildThemeVisuals()
 	themeBinding_.BindScale9(pGauge, gaugeKey, UIComponentSlot::Gauge);
 	pGaugeSprite_ = pGauge;
 
+	auto* pCap = Sprite::create();
+	pCap->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	pCap->setVisible(false);
+	this->addChild(pCap);
+	pGaugeCap_ = pCap;
+
+	UIAssetKey capKey;
+	capKey.semantic = UIAssetSemantic::ProgressCap;
+	themeBinding_.BindFixed(pCap, capKey, UIComponentSlot::Cap);
+
 	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
 	if (pSet)
 		themeBinding_.Refresh(*pSet);
@@ -174,6 +184,14 @@ void UIProgressBar::DestroyThemeVisuals()
 	pTrackSprite_ = nullptr;
 	pGaugeSprite_ = nullptr;
 	pGaugeCap_ = nullptr;
+}
+
+void UIProgressBar::RefreshThemeVisuals()
+{
+	UIThemeManager* pThemeMgr = UIThemeManager::Get();
+	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
+	if (pSet)
+		themeBinding_.Refresh(*pSet);
 }
 
 void UIProgressBar::Unload()
@@ -215,6 +233,9 @@ void UIProgressBar::SetUISize(const cc::size& _size)
 	{
 		if (pTrackSprite_)
 			pTrackSprite_->setContentSize(uiSize_);
+		if (pGaugeSprite_)
+			pGaugeSprite_->setContentSize(uiSize_);
+		UpdateGaugeGeometry();
 		return;
 	}
 
@@ -297,11 +318,15 @@ void UIProgressBar::UpdateGaugeGeometry()
 		if (pGaugeCap_)
 		{
 			pGaugeCap_->setVisible(true);
-			pGaugeCap_->setContentSize({ visibleWidth, uiSize_.height });
+			pGaugeCap_->setPosition(visibleWidth * 0.5f, uiSize_.height * 0.5f);
+			pGaugeCap_->setScale(1.0f);
 		}
 		return;
 	}
-	if (pGaugeCap_) pGaugeCap_->setVisible(false);
+	if (pGaugeCap_)
+	{
+		pGaugeCap_->setVisible(false);
+	}
 	if (pGaugeSprite_)
 	{
 		pGaugeSprite_->setVisible(true);

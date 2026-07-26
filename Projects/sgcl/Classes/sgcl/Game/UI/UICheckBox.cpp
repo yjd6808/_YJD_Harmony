@@ -52,21 +52,10 @@ UICheckBox* UICheckBox::Create(UIRootGroup* _pRoot, UIGroup* _pParent, UICheckBo
 
 void UICheckBox::SetCheck(bool _checked)
 {
-	if (UseThemeRendering())
-	{
-		checked_ = _checked;
-		if (pSprite_[INDEX_CROSS])
-			pSprite_[INDEX_CROSS]->setVisible(_checked);
-		if (pSprite_[INDEX_CROSS_DISABLED])
-			pSprite_[INDEX_CROSS_DISABLED]->setVisible(_checked);
-	}
-	else
-	{
-		if (pSprite_[INDEX_CROSS])
-			pSprite_[INDEX_CROSS]->setVisible(_checked);
-		if (pSprite_[INDEX_CROSS_DISABLED])
-			pSprite_[INDEX_CROSS_DISABLED]->setVisible(_checked);
-	}
+	if (pSprite_[INDEX_CROSS])
+		pSprite_[INDEX_CROSS]->setVisible(_checked);
+	if (pSprite_[INDEX_CROSS_DISABLED])
+		pSprite_[INDEX_CROSS_DISABLED]->setVisible(_checked);
 
 	const bool prevChecked = checked_;
 	checked_ = _checked;
@@ -76,6 +65,14 @@ void UICheckBox::SetCheck(bool _checked)
 
 void UICheckBox::SetEnabled(bool _enabled)
 {
+	if (UseThemeRendering())
+	{
+		state_ = _enabled ? eNormal : eDisabled;
+		setColor(_enabled ? Color3B::WHITE : Color3B(128, 128, 128));
+		setOpacity(_enabled ? 255 : 128);
+		return;
+	}
+
 	if (_enabled)
 	{
 		UpdateState();
@@ -167,33 +164,39 @@ bool UICheckBox::init()
 		return false;
 	}
 
-	const ImagePack* pBackgroundPack = g_cImagePackMgr.GetPackUnsafe(pInfo_->BackgroundSga);
-	const ImagePack* pCrossPack = g_cImagePackMgr.GetPackUnsafe(pInfo_->CrossSga);
 	SetInitialUISize(DEFAULT_SIZE30);
 	checked_ = pInfo_->Check;
 
-	if (pCrossPack == nullptr)
+	if (pInfo_->CrossSga != InvalidValue_v || pInfo_->BackgroundSga != InvalidValue_v)
 	{
-		_LogWarn_("체크박스 크로스 Sga패키지를 찾지 못했습니다.");
-		return false;
+		const ImagePack* pBackgroundPack = pInfo_->BackgroundSga != InvalidValue_v
+			? g_cImagePackMgr.GetPackUnsafe(pInfo_->BackgroundSga) : nullptr;
+		const ImagePack* pCrossPack = pInfo_->CrossSga != InvalidValue_v
+			? g_cImagePackMgr.GetPackUnsafe(pInfo_->CrossSga) : nullptr;
+
+		SgaSpriteAbstractPtr pBackgroundSprite;
+		SgaSpriteAbstractPtr pBackgroundDisabledSprite;
+		SgaSpriteAbstractPtr pCrossSprite;
+		SgaSpriteAbstractPtr pCrossDisabledSprite;
+
+		if (pBackgroundPack)
+		{
+			pBackgroundSprite = pBackgroundPack->GetSpriteUnsafe(pInfo_->BackgroundImg, pInfo_->Sprites[INDEX_BACKGROUND]);
+			pBackgroundDisabledSprite = pBackgroundPack->GetSpriteUnsafe(pInfo_->BackgroundImg, pInfo_->Sprites[INDEX_BACKGROUND_DISABLED]);
+		}
+		if (pCrossPack)
+		{
+			pCrossSprite = pCrossPack->GetSpriteUnsafe(pInfo_->CrossImg, pInfo_->Sprites[INDEX_CROSS]);
+			pCrossDisabledSprite = pCrossPack->GetSpriteUnsafe(pInfo_->CrossImg, pInfo_->Sprites[INDEX_CROSS_DISABLED]);
+		}
+
+		const float width = SgaSpriteHelper::GetMaxWidthF(pBackgroundSprite, pBackgroundDisabledSprite, pCrossSprite, pCrossDisabledSprite);
+		const float height = SgaSpriteHelper::GetMaxHeightF(pBackgroundSprite, pBackgroundDisabledSprite, pCrossSprite, pCrossDisabledSprite);
+
+		if (width > 0 && height > 0)
+			SetInitialUISize({ width, height });
 	}
 
-	SgaSpriteAbstractPtr pBackgroundSprite;
-	SgaSpriteAbstractPtr pBackgroundDisabledSprite;
-
-	if (pBackgroundPack != nullptr)
-	{
-		pBackgroundSprite = pBackgroundPack->GetSpriteUnsafe(pInfo_->BackgroundImg, pInfo_->Sprites[INDEX_BACKGROUND]);
-		pBackgroundDisabledSprite = pBackgroundPack->GetSpriteUnsafe(pInfo_->BackgroundImg, pInfo_->Sprites[INDEX_BACKGROUND_DISABLED]);
-	}
-
-	SgaSpriteAbstractPtr pCrossSprite = pCrossPack->GetSpriteUnsafe(pInfo_->CrossImg, pInfo_->Sprites[INDEX_CROSS]);
-	SgaSpriteAbstractPtr pCrossDisabledSprite = pCrossPack->GetSpriteUnsafe(pInfo_->CrossImg, pInfo_->Sprites[INDEX_CROSS_DISABLED]);
-
-	const float width = SgaSpriteHelper::GetMaxWidthF(pBackgroundSprite, pBackgroundDisabledSprite, pCrossSprite, pCrossDisabledSprite);
-	const float height = SgaSpriteHelper::GetMaxHeightF(pBackgroundSprite, pBackgroundDisabledSprite, pCrossSprite, pCrossDisabledSprite);
-
-	SetInitialUISize({ width, height });
 	return isInitialized_ = true;
 }
 
@@ -285,6 +288,14 @@ void UICheckBox::DestroyThemeVisuals()
 {
 	themeBinding_.Clear();
 	removeAllChildren();
+}
+
+void UICheckBox::RefreshThemeVisuals()
+{
+	UIThemeManager* pThemeMgr = UIThemeManager::Get();
+	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
+	if (pSet)
+		themeBinding_.Refresh(*pSet);
 }
 
 void UICheckBox::Unload()

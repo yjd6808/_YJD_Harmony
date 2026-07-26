@@ -28,6 +28,7 @@ public:
 
 	void SetRenderMode(UIRenderMode _mode) { renderMode_ = _mode; }
 	bool UseThemeRendering() const { return renderMode_ == UIRenderMode::Theme; }
+	void RefreshThemeVisuals();
 
 	cc::ProgressTimer* Source() const { return pProgressBar_; }
 	UIElementType_t GetElementType() override { return UIElementType::ProgressBar; }

@@ -756,6 +756,7 @@
   <ItemGroup>
     <MASM Include="..\Sources\jc\Threading\CoroutineImpl.asm">
       <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Platform)'=='Win32'">true</ExcludedFromBuild>
     </MASM>
   </ItemGroup>
   <ItemGroup>
