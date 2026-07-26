@@ -36,6 +36,7 @@ class UITextureSet : public cc::Ref
 public:
     uint64_t GetGeneration() const { return generation_; }
     uint64_t GetThemeHash() const { return themeHash_; }
+    int GetEntryCount() const { return (int)entries_.Size(); }
 
     const UITextureEntry* Find(const UIAssetKey& _key) const;
 

@@ -37,8 +37,7 @@ public:
 	UIElementType_t GetElementType() override { return UIElementType::Button; }
 	jc::String ToString() override { return jc::StringUtil::Format("버튼(%s)", buttonInfo_->name_); }
 
-	void SetRenderMode(UIRenderMode _mode) { renderMode_ = _mode; }
-	bool UseThemeRendering() const { return renderMode_ == UIRenderMode::Theme; }
+	UITextureMode GetTextureMode() const { return textureMode_; }
 	void RefreshThemeVisuals();
 
 protected:
@@ -59,7 +58,7 @@ private:
 	FrameTexture* texture_[eMax];
 	cc::Sprite* sprite_[eMax];
 
-	UIRenderMode renderMode_ = UIRenderMode::Auto;
+	UITextureMode textureMode_ = UITextureMode::NONE;
 	UIThemeTextureBinding themeBinding_;
 	uint64_t appliedTextureRevision_ = 0;
 	cc::Node* themeRoot_ = nullptr;

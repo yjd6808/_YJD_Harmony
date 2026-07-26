@@ -45,7 +45,7 @@ void UIToggleButton::SetToggleState(ToggleState _state)
 {
 	toggleState_ = _state;
 
-	if (UseThemeRendering())
+	if (textureMode_ == UITextureMode::THEME)
 	{
 		if (themeKnob_)
 		{
@@ -81,7 +81,7 @@ void UIToggleButton::SetVisibleState(State _state)
 	if (!isLoaded_)
 		return;
 
-	if (UseThemeRendering())
+	if (textureMode_ == UITextureMode::THEME)
 	{
 		state_ = _state;
 		ApplyThemeStateVisuals(_state);
@@ -118,7 +118,7 @@ void UIToggleButton::SetUISize(const cc::size& _contentSize)
 	if (!isLoaded_)
 		return;
 
-	if (UseThemeRendering())
+	if (textureMode_ == UITextureMode::THEME)
 	{
 		if (themeTrack_)
 		{
@@ -199,18 +199,14 @@ void UIToggleButton::Load()
 	if (isLoaded_)
 		return;
 
-	if (pBaseInfo_ && pBaseInfo_->renderMode_ != eRenderModeAuto)
-		renderMode_ = (UIRenderMode)pBaseInfo_->renderMode_;
-
-	if (UseThemeRendering())
+	if (LoadLegacy())
 	{
-		LoadTheme();
-		ApplyThemeStateVisuals(eNormal);
+		textureMode_ = UITextureMode::SGA;
 	}
-	else if (!LoadLegacy())
+	else
 	{
 		_LogWarn_("레거시 스프라이트가 설정되지 않아 공용 UI 텍스처를 사용합니다.");
-		renderMode_ = UIRenderMode::Theme;
+		textureMode_ = UITextureMode::THEME;
 		LoadTheme();
 		ApplyThemeStateVisuals(eNormal);
 	}
@@ -267,8 +263,12 @@ void UIToggleButton::BuildThemeVisuals()
 	this->addChild(pTrack);
 	themeTrack_ = pTrack;
 
+	UIResolvedStyle resolved = pThemeMgr->Resolve(UIElementType::ToggleButton, UIVisualState::Normal, {});
+	uint64_t hash = resolved.ComputeHash();
+
 	UIAssetKey trackKey;
 	trackKey.semantic = UIAssetSemantic::ToggleTrack;
+	trackKey.styleHash = hash;
 	themeBinding_.BindScale9(pTrack, trackKey, UIComponentSlot::Track);
 
 	float knobSize = jc::Math::Min(uiSize_.width, uiSize_.height) * 0.8f;
@@ -280,11 +280,16 @@ void UIToggleButton::BuildThemeVisuals()
 
 	UIAssetKey knobKey;
 	knobKey.semantic = UIAssetSemantic::ToggleKnob;
+	knobKey.styleHash = hash;
 	themeBinding_.BindFixed(pKnob, knobKey, UIComponentSlot::Knob);
+
+	_LogDebug_("[UIToggleButton] BuildThemeVisuals styleHash=%llu", hash);
 
 	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
 	if (pSet)
 		themeBinding_.Refresh(*pSet);
+	else
+		_LogWarn_("[UIToggleButton] GetActiveTextureSet returned null!");
 }
 
 void UIToggleButton::DestroyThemeVisuals()
@@ -333,7 +338,7 @@ void UIToggleButton::Unload()
 
 	removeAllChildren();
 
-	if (UseThemeRendering())
+	if (textureMode_ == UITextureMode::THEME)
 	{
 		themeBinding_.Clear();
 		themeTrack_ = nullptr;

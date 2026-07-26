@@ -33,8 +33,7 @@ public:
 	void SetInfoCheckBox(UICheckBoxInfo* _pInfo, bool _infoOwner);
 	bool IsChecked() const;
 
-	void SetRenderMode(UIRenderMode _mode) { renderMode_ = _mode; }
-	bool UseThemeRendering() const { return renderMode_ == UIRenderMode::Theme; }
+	UITextureMode GetTextureMode() const { return textureMode_; }
 	void RefreshThemeVisuals();
 
 	UIElementType_t GetElementType() override { return UIElementType::CheckBox; }
@@ -54,7 +53,7 @@ private:
 	cc::Sprite* pSprite_[TEXTURE_COUNT];
 	bool checked_;
 
-	UIRenderMode renderMode_ = UIRenderMode::Auto;
+	UITextureMode textureMode_ = UITextureMode::NONE;
 	UIThemeTextureBinding themeBinding_;
 	uint64_t appliedTextureRevision_ = 0;
 };

@@ -72,16 +72,6 @@ static void ReadCommon(tinyxml2::XMLElement* _elem, UIElementInfo* _info)
 	_info->hAlignment_ = (HAlignment_t)XmlIntAttr(_elem, "halign", 0);
 	_info->vAlignment_ = (VAlignment_t)XmlIntAttr(_elem, "valign", 0);
 
-	const char* renderModeStr = _elem->Attribute("render_mode");
-	if (renderModeStr)
-	{
-		if (strcmp(renderModeStr, "theme") == 0)
-			_info->renderMode_ = eRenderModeTheme;
-		else if (strcmp(renderModeStr, "legacy") == 0)
-			_info->renderMode_ = eRenderModeLegacy;
-		else
-			_info->renderMode_ = eRenderModeAuto;
-	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

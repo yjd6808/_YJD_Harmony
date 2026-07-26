@@ -60,7 +60,7 @@ UIButton* UIButton::Create(UIRootGroup* _pRoot, UIGroup* _pParent, UIButtonInfo*
 
 void UIButton::SetVisibleState(State _state)
 {
-	if (UseThemeRendering())
+	if (textureMode_ == UITextureMode::THEME)
 	{
 		state_ = _state;
 		ApplyThemeStateVisuals(_state);
@@ -102,7 +102,7 @@ void UIButton::SetUISize(const cc::size& _size)
 		return;
 	}
 
-	if (UseThemeRendering())
+	if (textureMode_ == UITextureMode::THEME)
 	{
 		if (themeRoot_)
 		{
@@ -247,26 +247,22 @@ void UIButton::Load()
 		return;
 	}
 
-	if (pBaseInfo_ && pBaseInfo_->renderMode_ != eRenderModeAuto)
-		renderMode_ = (UIRenderMode)pBaseInfo_->renderMode_;
-
-	if (UseThemeRendering())
+	if (LoadLegacy())
 	{
-		LoadTheme();
-		ApplyThemeStateVisuals(eNormal);
+		_LogDebug_("[UIButton] LoadLegacy succeeded, using SGA texture mode");
+		textureMode_ = UITextureMode::SGA;
 	}
 	else
 	{
-		if (!LoadLegacy())
-		{
-			_LogWarn_("레거시 스프라이트가 설정되지 않아 공용 UI 텍스처를 사용합니다.");
-			renderMode_ = UIRenderMode::Theme;
-			LoadTheme();
-			ApplyThemeStateVisuals(eNormal);
-		}
+		_LogWarn_("[UIButton] LoadLegacy failed -> falling back to THEME texture mode");
+		textureMode_ = UITextureMode::THEME;
+		LoadTheme();
+		ApplyThemeStateVisuals(eNormal);
 	}
 
 	SetVisibleState(eNormal);
+	_LogDebug_("[UIButton] Load complete textureMode=%d name=%s uiSize=(%.0f,%.0f) loaded=%d themeRoot=%p",
+		(int)textureMode_, GetName(), uiSize_.width, uiSize_.height, isLoaded_, themeRoot_);
 	isLoaded_ = true;
 }
 
@@ -280,7 +276,7 @@ bool UIButton::LoadLegacy()
 
 		if (spriteIndex == InvalidValue_v)
 		{
-			_LogWarn_("설정되지 않은 스프라이트입니다.");
+			_LogWarn_("[UIButton] LoadLegacy sprite[%d]=InvalidValue_v (sga=%d img=%d)", i, buttonInfo_->sga_, buttonInfo_->img_);
 			continue;
 		}
 
@@ -317,16 +313,35 @@ void UIButton::BuildThemeVisuals()
 	this->addChild(pTrack);
 	themeRoot_ = pTrack;
 
+	UIResolvedStyle resolved = pThemeMgr->Resolve(UIElementType::Button, UIVisualState::Normal, {});
+	uint64_t hash = resolved.ComputeHash();
+
 	UIAssetKey key;
 	key.semantic = UIAssetSemantic::Button;
-	key.styleHash = 0;
+	key.styleHash = hash;
 	key.recipeHash = 0;
+
+	_LogDebug_("[UIButton] BuildThemeVisuals semantic=Button styleHash=%llu", hash);
 
 	themeBinding_.BindScale9(pTrack, key, UIComponentSlot::Background);
 
 	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
 	if (pSet)
 		themeBinding_.Refresh(*pSet);
+	else
+		_LogWarn_("[UIButton] GetActiveTextureSet returned null!");
+
+	pTrack->setContentSize(uiSize_);
+
+	_LogDebug_("[UIButton] BuildThemeVisuals final: pos=(%.0f,%.0f) contentSize=(%.0f,%.0f) parent=%p parentPos=(%.0f,%.0f) parentSize=(%.0f,%.0f) scale=(%.2f,%.2f) visible=%d anchor=(%.2f,%.2f)",
+		getPositionX(), getPositionY(),
+		pTrack->getContentSize().width, pTrack->getContentSize().height,
+		getParent(),
+		getParent() ? getParent()->getPositionX() : 0.0f, getParent() ? getParent()->getPositionY() : 0.0f,
+		getParent() ? getParent()->getContentSize().width : 0.0f, getParent() ? getParent()->getContentSize().height : 0.0f,
+		getScaleX(), getScaleY(),
+		isVisible(),
+		getAnchorPoint().x, getAnchorPoint().y);
 }
 
 void UIButton::DestroyThemeVisuals()
@@ -376,7 +391,7 @@ void UIButton::Unload()
 
 	removeAllChildren();
 
-	if (UseThemeRendering())
+	if (textureMode_ == UITextureMode::THEME)
 	{
 		themeBinding_.Clear();
 		themeRoot_ = nullptr;

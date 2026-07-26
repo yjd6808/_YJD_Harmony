@@ -65,7 +65,7 @@ void UICheckBox::SetCheck(bool _checked)
 
 void UICheckBox::SetEnabled(bool _enabled)
 {
-	if (UseThemeRendering())
+	if (textureMode_ == UITextureMode::THEME)
 	{
 		state_ = _enabled ? eNormal : eDisabled;
 		setColor(_enabled ? Color3B::WHITE : Color3B(128, 128, 128));
@@ -114,7 +114,7 @@ void UICheckBox::SetUISize(const cc::size& _size)
 	if (!isLoaded_)
 		return;
 
-	if (UseThemeRendering())
+	if (textureMode_ == UITextureMode::THEME)
 		return;
 
 	const float scaleX = getScaleX();
@@ -210,15 +210,14 @@ void UICheckBox::Load()
 	if (isLoaded_)
 		return;
 
-	if (pBaseInfo_ && pBaseInfo_->renderMode_ != eRenderModeAuto)
-		renderMode_ = (UIRenderMode)pBaseInfo_->renderMode_;
-
-	if (UseThemeRendering())
-		LoadTheme();
-	else if (!LoadLegacy())
+	if (LoadLegacy())
+	{
+		textureMode_ = UITextureMode::SGA;
+	}
+	else
 	{
 		_LogWarn_("레거시 스프라이트가 설정되지 않아 공용 UI 텍스처를 사용합니다.");
-		renderMode_ = UIRenderMode::Theme;
+		textureMode_ = UITextureMode::THEME;
 		LoadTheme();
 	}
 
@@ -271,8 +270,11 @@ void UICheckBox::BuildThemeVisuals()
 	pTrack->setAnchorPoint(Vec2::ZERO);
 	this->addChild(pTrack);
 
+	UIResolvedStyle trackStyle = pThemeMgr->Resolve(UIElementType::CheckBox, UIVisualState::Normal, {});
+
 	UIAssetKey trackKey;
 	trackKey.semantic = UIAssetSemantic::CheckBox;
+	trackKey.styleHash = trackStyle.ComputeHash();
 	themeBinding_.BindScale9(pTrack, trackKey, UIComponentSlot::Shell);
 
 	auto* pMark = Sprite::create();
@@ -283,13 +285,18 @@ void UICheckBox::BuildThemeVisuals()
 
 	UIAssetKey markKey;
 	markKey.semantic = UIAssetSemantic::CheckMark;
+	markKey.styleHash = trackStyle.ComputeHash();
 	themeBinding_.BindFixed(pMark, markKey, UIComponentSlot::Mark);
 
 	pSprite_[INDEX_CROSS] = pMark;
 
+	_LogDebug_("[UICheckBox] BuildThemeVisuals trackStyleHash=%llu markSemantic=CheckMark", trackKey.styleHash);
+
 	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
 	if (pSet)
 		themeBinding_.Refresh(*pSet);
+	else
+		_LogWarn_("[UICheckBox] GetActiveTextureSet returned null!");
 }
 
 void UICheckBox::DestroyThemeVisuals()
@@ -313,7 +320,7 @@ void UICheckBox::Unload()
 
 	removeAllChildren();
 
-	if (UseThemeRendering())
+	if (textureMode_ == UITextureMode::THEME)
 	{
 		themeBinding_.Clear();
 	}

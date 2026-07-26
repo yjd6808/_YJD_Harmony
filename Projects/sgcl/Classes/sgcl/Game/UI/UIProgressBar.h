@@ -26,8 +26,7 @@ public:
 	void SetPercent(float _percent) const;
 	float GetPercent() const;
 
-	void SetRenderMode(UIRenderMode _mode) { renderMode_ = _mode; }
-	bool UseThemeRendering() const { return renderMode_ == UIRenderMode::Theme; }
+	UITextureMode GetTextureMode() const { return textureMode_; }
 	void RefreshThemeVisuals();
 
 	cc::ProgressTimer* Source() const { return pProgressBar_; }
@@ -47,7 +46,7 @@ private:
 	cc::ProgressTimer* pProgressBar_;
 	cc::Sprite* pProgressSprite_;
 
-	UIRenderMode renderMode_ = UIRenderMode::Auto;
+	UITextureMode textureMode_ = UITextureMode::NONE;
 	UIThemeTextureBinding themeBinding_;
 	uint64_t appliedTextureRevision_ = 0;
 

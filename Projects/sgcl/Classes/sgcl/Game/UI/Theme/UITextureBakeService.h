@@ -49,6 +49,8 @@ public:
 
 private:
     void ExecuteBake(const UIThemeBakeRequest& _request);
+
+public:
     UITextureSet* BuildTextureSet(const UIThemeBakeRequest& _request);
 
     struct PendingResult

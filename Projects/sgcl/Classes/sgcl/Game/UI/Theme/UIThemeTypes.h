@@ -73,11 +73,11 @@ enum class UIComponentSlot : uint8_t
     Cap
 };
 
-enum class UIRenderMode : uint8_t
+enum class UITextureMode : uint8_t
 {
-    Auto,
-    Legacy,
-    Theme
+    NONE,
+    SGA,
+    THEME
 };
 
 struct UIColorF

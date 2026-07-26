@@ -24,6 +24,8 @@ bool UIThemeManager::Initialize(const UIThemeInitParams& _params)
         OnBakeCompleted(_set);
     });
 
+    _LogDebug_("[UIThemeManager] Initialize complete");
+
     return true;
 }
 
@@ -72,6 +74,71 @@ UIResolvedStyle UIThemeManager::ResolveWithEditOverrides(
 void UIThemeManager::RequestBake(UIThemeBakeRequest&& _request)
 {
     bakeService_.EnqueueRequest(jc::Move(_request));
+}
+
+void UIThemeManager::BakeDefaultTextureSet()
+{
+    if (activeTextureSet_)
+        return;
+
+    UIThemeBakeRequest request;
+    request.generation = 1;
+    request.theme = activeTheme_;
+    request.dpiScale = 1.0f;
+    request.resolvedScheme = UIColorScheme::Dark;
+    request.preview = false;
+    request.persistCache = true;
+
+    UIAssetSemantic semantics[] = {
+        UIAssetSemantic::Button,
+        UIAssetSemantic::CheckBox,
+        UIAssetSemantic::ToggleTrack,
+        UIAssetSemantic::ToggleKnob,
+        UIAssetSemantic::ProgressTrack,
+        UIAssetSemantic::ProgressGauge
+    };
+
+    for (auto semantic : semantics)
+    {
+        UIElementType_t elemType = UIElementType::Button;
+        switch (semantic)
+        {
+        case UIAssetSemantic::Button:        elemType = UIElementType::Button; break;
+        case UIAssetSemantic::CheckBox:      elemType = UIElementType::CheckBox; break;
+        case UIAssetSemantic::ToggleTrack:
+        case UIAssetSemantic::ToggleKnob:    elemType = UIElementType::ToggleButton; break;
+        case UIAssetSemantic::ProgressTrack:
+        case UIAssetSemantic::ProgressGauge: elemType = UIElementType::ProgressBar; break;
+        default: break;
+        }
+
+        UIResolvedStyle resolvedStyle = resolver_.Resolve(
+            elemType, UIVisualState::Normal, activeTheme_, {});
+
+        UIResolvedVariantRequest variant;
+        variant.asset.semantic = semantic;
+        variant.asset.styleHash = resolvedStyle.ComputeHash();
+        variant.asset.recipeHash = 0;
+        variant.state = UIVisualState::Normal;
+        variant.style = resolvedStyle;
+        variant.styleHash = resolvedStyle.ComputeHash();
+        request.variants.PushBack(variant);
+    }
+
+    _LogDebug_("[BakeDefaultTextureSet] variants=%d, firstStyleHash=%llu", request.variants.Size(), request.variants.Size() > 0 ? request.variants[0].styleHash : 0);
+
+    UITextureSet* set = bakeService_.BuildTextureSet(request);
+    if (set)
+    {
+        CC_SAFE_RELEASE(activeTextureSet_);
+        activeTextureSet_ = set;
+        ++revision_.textureRevision;
+        _LogDebug_("[BakeDefaultTextureSet] textureSet=%p entries=%d generation=%llu", set, set->GetEntryCount(), set->GetGeneration());
+    }
+    else
+    {
+        _LogWarn_("[BakeDefaultTextureSet] BuildTextureSet returned null!");
+    }
 }
 
 UIThemeEditSession UIThemeManager::BeginEdit()

@@ -14,6 +14,7 @@
 #include "sgcl/Util/Win32Helper.h"
 #include "sgcl/Scene/Scene_World.h"
 #include "sgcl/MCP/MCPCore.h"
+#include "sgcl/Game/UI/Theme/UIThemeManager.h"
 
 #include "API/sgapiClient.h"
 
@@ -143,6 +144,13 @@ bool SteinsGateApp::applicationDidFinishLaunching()
 		CreateOpenGLWindow(); // 윈도우 생성 후 클라이언트 코어 로딩
 		InitializeClientCore();
 		InitializeClientLogo(true, 5);
+
+		{
+			UIThemeInitParams themeParams;
+			themeParams.cacheRoot = "";
+			UIThemeManager::Get()->Initialize(themeParams);
+			UIThemeManager::Get()->BakeDefaultTextureSet();
+		}
 
 		sg::Contents.Initialize();
 		CreateWorldScene();

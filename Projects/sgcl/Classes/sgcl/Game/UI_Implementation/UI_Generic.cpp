@@ -19,6 +19,9 @@ void UI_Generic::OnInit(const CDataMap<>& _param)
 	pLabelTitle_ = FindElementByName<UILabel>("title");
 	pLabelContent_ = FindElementByName<UILabel>("content");
 	pBtnClose_ = FindElementByName<UIButton>("close");
+
+	_LogDebug_("[UI_Generic] OnInit title=%p content=%p close=%p",
+		pLabelTitle_, pLabelContent_, pBtnClose_);
 }
 
 void UI_Generic::OnLoaded()

@@ -12,7 +12,7 @@ void UIPixelBuffer::Resize(int _w, int _h)
     height = _h;
     stride = _w * 4;
     pixels.Resize(stride * _h);
-    jc::Memory::Set(&pixels[0], 0, pixels.Size());
+	jc::Memory::Set(&pixels[0], pixels.Size(), 0);
 }
 
 void UIPixelBuffer::Clear(const UIColorF& _color)

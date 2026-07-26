@@ -143,6 +143,8 @@ UIRect UITextureBaker::CalculateMaterialBounds(
     bool _shadowEnabled)
 {
     float padding = _shadowEnabled ? _style.geometryShadow * 2.0f + _style.geometryDepth + 2.0f : 0.0f;
+    float maxPadding = std::min((float)_workW, (float)_workH) * 0.24f;
+    padding = std::min(padding, maxPadding);
     return { padding, padding, (float)_workW - padding * 2, (float)_workH - padding * 2 };
 }
 
@@ -177,10 +179,13 @@ UIPixelBuffer UITextureBaker::DownsampleLanczos(
                     if (ix < 0 || ix >= _src.width || iy < 0 || iy >= _src.height)
                         continue;
 
-                    float wx = (sx2 == 0) ? 1.0f : (sinf((float)M_PI * sx2) / ((float)M_PI * sx2))
-                        * (sinf((float)M_PI * sx2 / sx) / ((float)M_PI * sx2 / sx));
-                    float wy = (sy2 == 0) ? 1.0f : (sinf((float)M_PI * sy2) / ((float)M_PI * sy2))
-                        * (sinf((float)M_PI * sy2 / sy) / ((float)M_PI * sy2 / sy));
+                    float dx = (ix + 0.5f) - cx;
+                    float dy = (iy + 0.5f) - cy;
+                    float adx = fabsf(dx), ady = fabsf(dy);
+                    float wx = (adx < 0.0001f) ? 1.0f : (sinf((float)M_PI * dx) / ((float)M_PI * dx))
+                        * (sinf((float)M_PI * dx / sx) / ((float)M_PI * dx / sx));
+                    float wy = (ady < 0.0001f) ? 1.0f : (sinf((float)M_PI * dy) / ((float)M_PI * dy))
+                        * (sinf((float)M_PI * dy / sy) / ((float)M_PI * dy / sy));
                     float w = wx * wy;
 
                     UIColorF c = _src.Load(ix, iy);

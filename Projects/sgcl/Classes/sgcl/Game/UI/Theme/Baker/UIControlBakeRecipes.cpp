@@ -7,8 +7,8 @@ UIAssetRecipe UIControlBakeRecipes::ButtonRecipe(int _width, int _height)
     r.semantic = UIAssetSemantic::Button;
     r.width = _width;
     r.height = _height;
-    r.sliceInsets = { 10, 10, 10, 10 };
-    r.minimumSize = cc::Size(20, 20);
+    r.sliceInsets = { 14, 14, 14, 14 };
+    r.minimumSize = cc::Size(28, 28);
     return r;
 }
 

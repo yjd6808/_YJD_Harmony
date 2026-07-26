@@ -15,7 +15,7 @@ namespace UIGradientRasterizer
         bool _reverse)
     {
         int minY = (int)floorf(_rect.y);
-        int maxY = (int)ceilf(_rect.Bottom());
+        int maxY = (int)ceilf(_rect.Top());
 
         for (int y = minY; y <= maxY; ++y)
         {

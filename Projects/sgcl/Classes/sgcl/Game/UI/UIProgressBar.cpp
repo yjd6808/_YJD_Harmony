@@ -75,15 +75,14 @@ void UIProgressBar::Load()
 	if (isLoaded_)
 		return;
 
-	if (pBaseInfo_ && pBaseInfo_->renderMode_ != eRenderModeAuto)
-		renderMode_ = (UIRenderMode)pBaseInfo_->renderMode_;
-
-	if (UseThemeRendering())
-		LoadTheme();
-	else if (!LoadLegacy())
+	if (LoadLegacy())
+	{
+		textureMode_ = UITextureMode::SGA;
+	}
+	else
 	{
 		_LogWarn_("레거시 스프라이트가 설정되지 않아 공용 UI 텍스처를 사용합니다.");
-		renderMode_ = UIRenderMode::Theme;
+		textureMode_ = UITextureMode::THEME;
 		LoadTheme();
 	}
 
@@ -149,6 +148,9 @@ void UIProgressBar::BuildThemeVisuals()
 {
 	UIThemeManager* pThemeMgr = UIThemeManager::Get();
 
+	UIResolvedStyle resolved = pThemeMgr->Resolve(UIElementType::ProgressBar, UIVisualState::Normal, {});
+	uint64_t hash = resolved.ComputeHash();
+
 	auto* pTrack = Scale9Sprite::create();
 	pTrack->setContentSize(uiSize_);
 	pTrack->setAnchorPoint(Vec2::ZERO);
@@ -156,6 +158,7 @@ void UIProgressBar::BuildThemeVisuals()
 
 	UIAssetKey trackKey;
 	trackKey.semantic = UIAssetSemantic::ProgressTrack;
+	trackKey.styleHash = hash;
 	themeBinding_.BindScale9(pTrack, trackKey, UIComponentSlot::Track);
 	pTrackSprite_ = pTrack;
 
@@ -167,6 +170,7 @@ void UIProgressBar::BuildThemeVisuals()
 
 	UIAssetKey gaugeKey;
 	gaugeKey.semantic = UIAssetSemantic::ProgressGauge;
+	gaugeKey.styleHash = hash;
 	themeBinding_.BindScale9(pGauge, gaugeKey, UIComponentSlot::Gauge);
 	pGaugeSprite_ = pGauge;
 
@@ -178,11 +182,16 @@ void UIProgressBar::BuildThemeVisuals()
 
 	UIAssetKey capKey;
 	capKey.semantic = UIAssetSemantic::ProgressCap;
+	capKey.styleHash = hash;
 	themeBinding_.BindFixed(pCap, capKey, UIComponentSlot::Cap);
+
+	_LogDebug_("[UIProgressBar] BuildThemeVisuals styleHash=%llu", hash);
 
 	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
 	if (pSet)
 		themeBinding_.Refresh(*pSet);
+	else
+		_LogWarn_("[UIProgressBar] GetActiveTextureSet returned null!");
 }
 
 void UIProgressBar::DestroyThemeVisuals()
@@ -209,7 +218,7 @@ void UIProgressBar::Unload()
 
 	removeAllChildren();
 
-	if (UseThemeRendering())
+	if (textureMode_ == UITextureMode::THEME)
 	{
 		themeBinding_.Clear();
 		pTrackSprite_ = nullptr;
@@ -237,7 +246,7 @@ void UIProgressBar::SetUISize(const cc::size& _size)
 	if (!isLoaded_)
 		return;
 
-	if (UseThemeRendering())
+	if (textureMode_ == UITextureMode::THEME)
 	{
 		if (pTrackSprite_)
 			pTrackSprite_->setContentSize(uiSize_);
@@ -284,7 +293,7 @@ void UIProgressBar::SetInfoProgressBar(UIProgressBarInfo* _pInfo, bool _infoOwne
 
 void UIProgressBar::SetPercent(float _percent) const
 {
-	if (UseThemeRendering())
+	if (textureMode_ == UITextureMode::THEME)
 	{
 		if (pGaugeSprite_)
 		{

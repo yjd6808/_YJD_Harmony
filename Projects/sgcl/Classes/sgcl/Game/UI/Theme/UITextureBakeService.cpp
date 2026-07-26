@@ -97,7 +97,7 @@ static UIAssetRecipe SelectRecipe(UIAssetSemantic _semantic)
 {
     switch (_semantic)
     {
-    case UIAssetSemantic::Button:        return UIControlBakeRecipes::ButtonRecipe(64, 32);
+    case UIAssetSemantic::Button:        return UIControlBakeRecipes::ButtonRecipe(160, 44);
     case UIAssetSemantic::CheckMark:     return UIControlBakeRecipes::CheckMarkRecipe(18);
     case UIAssetSemantic::RadioDot:      return UIControlBakeRecipes::RadioDotRecipe(14);
     case UIAssetSemantic::CheckBox:      return UIControlBakeRecipes::CheckBoxShellRecipe(32);
@@ -107,7 +107,7 @@ static UIAssetRecipe SelectRecipe(UIAssetSemantic _semantic)
     case UIAssetSemantic::ProgressGauge: return UIControlBakeRecipes::ProgressGaugeRecipe(96, 12);
     case UIAssetSemantic::SliderTrack:   return UIControlBakeRecipes::SliderTrackRecipe(96, 12);
     case UIAssetSemantic::SliderThumb:   return UIControlBakeRecipes::SliderThumbRecipe(24);
-    default: return UIControlBakeRecipes::ButtonRecipe(64, 32);
+    default: return UIControlBakeRecipes::ButtonRecipe(160, 44);
     }
 }
 
@@ -161,6 +161,31 @@ UITextureSet* UITextureBakeService::BuildTextureSet(const UIThemeBakeRequest& _r
 
             set->AddEntry(variant.asset, entry);
             cache_.Insert(cacheKey, entry);
+
+            if (output.buffer.pixels.Size() >= 4)
+            {
+                const uint8_t* p = (const uint8_t*)output.buffer.pixels.Source();
+                _LogDebug_("[Bake] semantic=%d w=%d h=%d pixel0=(%d,%d,%d,%d)",
+                    (int)variant.asset.semantic,
+                    output.buffer.width, output.buffer.height,
+                    p[0], p[1], p[2], p[3]);
+
+                int stride = output.buffer.width * 4;
+                int nonZero = 0;
+                for (int y = 0; y < output.buffer.height; ++y)
+                    for (int x = 0; x < output.buffer.width; ++x)
+                        if (p[y * stride + x * 4 + 3] > 0)
+                            ++nonZero;
+                _LogDebug_("[Bake] semantic=%d nonZeroAlpha=%d / %d",
+                    (int)variant.asset.semantic, nonZero, output.buffer.width * output.buffer.height);
+
+                int cx = output.buffer.width / 2;
+                int cy = output.buffer.height / 2;
+                int ci = cy * stride + cx * 4;
+                _LogDebug_("[Bake] semantic=%d center(%d,%d)=(%d,%d,%d,%d)",
+                    (int)variant.asset.semantic, cx, cy,
+                    p[ci], p[ci+1], p[ci+2], p[ci+3]);
+            }
         }
         else
         {

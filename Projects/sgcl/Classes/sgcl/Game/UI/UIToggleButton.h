@@ -38,8 +38,7 @@ public:
 	void SetToggleState(ToggleState _state);
 	void RestoreState(State _state) override;
 
-	void SetRenderMode(UIRenderMode _mode) { renderMode_ = _mode; }
-	bool UseThemeRendering() const { return renderMode_ == UIRenderMode::Theme; }
+	UITextureMode GetTextureMode() const { return textureMode_; }
 	void RefreshThemeVisuals();
 
 	UIElementType_t GetElementType() override { return UIElementType::ToggleButton; }
@@ -65,7 +64,7 @@ private:
 	FrameTexture* pTextures_[2][eMax];
 	cc::Sprite* pSprites_[2][eMax];
 
-	UIRenderMode renderMode_ = UIRenderMode::Auto;
+	UITextureMode textureMode_ = UITextureMode::NONE;
 	UIThemeTextureBinding themeBinding_;
 	uint64_t appliedTextureRevision_ = 0;
 	cc::Node* themeTrack_ = nullptr;

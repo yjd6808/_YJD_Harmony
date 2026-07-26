@@ -46,6 +46,7 @@ public:
         UIVisualState _state) const;
 
     void RequestBake(UIThemeBakeRequest&& _request);
+    void BakeDefaultTextureSet();
 
     UIThemeEditSession BeginEdit();
     void CommitDraft(const UIRuntimeTheme& _draft);

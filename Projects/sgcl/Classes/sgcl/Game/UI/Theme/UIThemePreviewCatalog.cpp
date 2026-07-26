@@ -31,28 +31,24 @@ void UIThemePreviewCatalog::CreateButtons()
     const float startY = getContentSize().height - CATALOG_PADDING - ROW_SPACING;
 
     pBtnNormal_ = UIButton::Create(nullptr, nullptr);
-    pBtnNormal_->SetRenderMode(UIRenderMode::Theme);
     pBtnNormal_->setContentSize(PREVIEW_BUTTON_SIZE);
     pBtnNormal_->setAnchorPoint({ 0, 1 });
     pBtnNormal_->setPosition(CATALOG_PADDING, startY);
     addChild(pBtnNormal_);
 
     pBtnHover_ = UIButton::Create(nullptr, nullptr);
-    pBtnHover_->SetRenderMode(UIRenderMode::Theme);
     pBtnHover_->setContentSize(PREVIEW_BUTTON_SIZE);
     pBtnHover_->setAnchorPoint({ 0, 1 });
     pBtnHover_->setPosition(CATALOG_PADDING + PREVIEW_BUTTON_SIZE.width + CATALOG_PADDING, startY);
     addChild(pBtnHover_);
 
     pBtnPressed_ = UIButton::Create(nullptr, nullptr);
-    pBtnPressed_->SetRenderMode(UIRenderMode::Theme);
     pBtnPressed_->setContentSize(PREVIEW_BUTTON_SIZE);
     pBtnPressed_->setAnchorPoint({ 0, 1 });
     pBtnPressed_->setPosition(CATALOG_PADDING + (PREVIEW_BUTTON_SIZE.width + CATALOG_PADDING) * 2, startY);
     addChild(pBtnPressed_);
 
     pBtnDisabled_ = UIButton::Create(nullptr, nullptr);
-    pBtnDisabled_->SetRenderMode(UIRenderMode::Theme);
     pBtnDisabled_->setContentSize(PREVIEW_BUTTON_SIZE);
     pBtnDisabled_->setAnchorPoint({ 0, 1 });
     pBtnDisabled_->setPosition(CATALOG_PADDING + (PREVIEW_BUTTON_SIZE.width + CATALOG_PADDING) * 3, startY);
@@ -65,7 +61,6 @@ void UIThemePreviewCatalog::CreateCheckBoxes()
     const float startY = getContentSize().height - CATALOG_PADDING - ROW_SPACING * 2;
 
     pCheckOff_ = UICheckBox::Create(nullptr, nullptr);
-    pCheckOff_->SetRenderMode(UIRenderMode::Theme);
     pCheckOff_->setContentSize(PREVIEW_CHECK_SIZE);
     pCheckOff_->setAnchorPoint({ 0, 1 });
     pCheckOff_->setPosition(CATALOG_PADDING, startY);
@@ -73,7 +68,6 @@ void UIThemePreviewCatalog::CreateCheckBoxes()
     addChild(pCheckOff_);
 
     pCheckOn_ = UICheckBox::Create(nullptr, nullptr);
-    pCheckOn_->SetRenderMode(UIRenderMode::Theme);
     pCheckOn_->setContentSize(PREVIEW_CHECK_SIZE);
     pCheckOn_->setAnchorPoint({ 0, 1 });
     pCheckOn_->setPosition(CATALOG_PADDING + PREVIEW_CHECK_SIZE.width + CATALOG_PADDING, startY);
@@ -81,7 +75,6 @@ void UIThemePreviewCatalog::CreateCheckBoxes()
     addChild(pCheckOn_);
 
     pCheckDisabled_ = UICheckBox::Create(nullptr, nullptr);
-    pCheckDisabled_->SetRenderMode(UIRenderMode::Theme);
     pCheckDisabled_->setContentSize(PREVIEW_CHECK_SIZE);
     pCheckDisabled_->setAnchorPoint({ 0, 1 });
     pCheckDisabled_->setPosition(CATALOG_PADDING + (PREVIEW_CHECK_SIZE.width + CATALOG_PADDING) * 2, startY);
@@ -95,14 +88,12 @@ void UIThemePreviewCatalog::CreateToggles()
     const float startY = getContentSize().height - CATALOG_PADDING - ROW_SPACING * 3;
 
     pToggleOff_ = UIToggleButton::Create(nullptr, nullptr, nullptr, false);
-    pToggleOff_->SetRenderMode(UIRenderMode::Theme);
     pToggleOff_->setContentSize(PREVIEW_TOGGLE_SIZE);
     pToggleOff_->setAnchorPoint({ 0, 1 });
     pToggleOff_->setPosition(CATALOG_PADDING, startY);
     addChild(pToggleOff_);
 
     pToggleOn_ = UIToggleButton::Create(nullptr, nullptr, nullptr, false);
-    pToggleOn_->SetRenderMode(UIRenderMode::Theme);
     pToggleOn_->setContentSize(PREVIEW_TOGGLE_SIZE);
     pToggleOn_->setAnchorPoint({ 0, 1 });
     pToggleOn_->setPosition(CATALOG_PADDING + PREVIEW_TOGGLE_SIZE.width + CATALOG_PADDING, startY);
@@ -110,7 +101,6 @@ void UIThemePreviewCatalog::CreateToggles()
     addChild(pToggleOn_);
 
     pToggleDisabled_ = UIToggleButton::Create(nullptr, nullptr, nullptr, false);
-    pToggleDisabled_->SetRenderMode(UIRenderMode::Theme);
     pToggleDisabled_->setContentSize(PREVIEW_TOGGLE_SIZE);
     pToggleDisabled_->setAnchorPoint({ 0, 1 });
     pToggleDisabled_->setPosition(CATALOG_PADDING + (PREVIEW_TOGGLE_SIZE.width + CATALOG_PADDING) * 2, startY);
@@ -123,7 +113,6 @@ void UIThemePreviewCatalog::CreateProgressBars()
     const float startY = getContentSize().height - CATALOG_PADDING - ROW_SPACING * 4;
 
     pProgressNeutral_ = UIProgressBar::Create(nullptr, nullptr, nullptr, false);
-    pProgressNeutral_->SetRenderMode(UIRenderMode::Theme);
     pProgressNeutral_->setContentSize(PREVIEW_PROGRESS_SIZE);
     pProgressNeutral_->setAnchorPoint({ 0, 1 });
     pProgressNeutral_->setPosition(CATALOG_PADDING, startY);
@@ -131,7 +120,6 @@ void UIThemePreviewCatalog::CreateProgressBars()
     addChild(pProgressNeutral_);
 
     pProgressSuccess_ = UIProgressBar::Create(nullptr, nullptr, nullptr, false);
-    pProgressSuccess_->SetRenderMode(UIRenderMode::Theme);
     pProgressSuccess_->setContentSize(PREVIEW_PROGRESS_SIZE);
     pProgressSuccess_->setAnchorPoint({ 0, 1 });
     pProgressSuccess_->setPosition(CATALOG_PADDING + PREVIEW_PROGRESS_SIZE.width + CATALOG_PADDING, startY);
@@ -139,7 +127,6 @@ void UIThemePreviewCatalog::CreateProgressBars()
     addChild(pProgressSuccess_);
 
     pProgressWarning_ = UIProgressBar::Create(nullptr, nullptr, nullptr, false);
-    pProgressWarning_->SetRenderMode(UIRenderMode::Theme);
     pProgressWarning_->setContentSize(PREVIEW_PROGRESS_SIZE);
     pProgressWarning_->setAnchorPoint({ 0, 1 });
     pProgressWarning_->setPosition(CATALOG_PADDING + (PREVIEW_PROGRESS_SIZE.width + CATALOG_PADDING) * 2, startY);

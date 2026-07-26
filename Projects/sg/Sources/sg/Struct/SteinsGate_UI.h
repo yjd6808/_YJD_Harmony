@@ -63,14 +63,6 @@ JC_SENUM_BEGIN(ProgressIncreaseDirection)
 JC_SENUM_END(ProgressIncreaseDirection)
 
 
- //////////////////////////////////////////////////////////////////////////////////////////
-enum UIRenderModeConst : uint8_t
-{
-	eRenderModeAuto = 0,
-	eRenderModeLegacy = 1,
-	eRenderModeTheme = 2
-};
-
 struct UIElementInfo
 {
 	UIElementInfo()
@@ -83,7 +75,6 @@ struct UIElementInfo
 	UIElementType_t type_;
 	HAlignment_t hAlignment_;
 	VAlignment_t vAlignment_;
-	uint8_t renderMode_ = eRenderModeAuto;
 	char name_[128];
 };
 

@@ -30,12 +30,25 @@ void UIThemeTextureBinding::Refresh(const UITextureSet& _set)
         const UITextureEntry* entry = _set.Find(slot.key);
         if (!entry)
         {
+            _LogWarn_("[UIThemeBinding] Entry not found: semantic=%d styleHash=%llu recipeHash=%llu",
+                (int)slot.key.semantic, slot.key.styleHash, slot.key.recipeHash);
             ApplyMissingTexture(slot);
             continue;
         }
 
         cc::Texture2D* tex = entry->texture;
-        if (!tex) continue;
+        if (!tex)
+        {
+            _LogWarn_("[UIThemeBinding] Entry found but texture is null: semantic=%d", (int)slot.key.semantic);
+            continue;
+        }
+
+        _LogDebug_("[UIThemeBinding] Applying texture semantic=%d tex=%p rect=(%.0f,%.0f,%.0f,%.0f) slice=(%.1f,%.1f,%.1f,%.1f)",
+            (int)slot.key.semantic, tex,
+            entry->atlasRect.origin.x, entry->atlasRect.origin.y,
+            entry->atlasRect.size.width, entry->atlasRect.size.height,
+            entry->sliceInsets.left, entry->sliceInsets.top,
+            entry->sliceInsets.right, entry->sliceInsets.bottom);
 
         if (slot.kind == UIBindingKind::Scale9)
         {
@@ -45,13 +58,25 @@ void UIThemeTextureBinding::Refresh(const UITextureSet& _set)
             auto* frame = cc::SpriteFrame::createWithTexture(
                 tex, entry->atlasRect, entry->rotated, {}, entry->atlasRect.size);
 
-            scale9->initWithSpriteFrame(frame);
-            scale9->setCapInsets({
-                entry->atlasRect.origin.x + entry->sliceInsets.left,
-                entry->atlasRect.origin.y + entry->sliceInsets.bottom,
-                entry->atlasRect.size.width - entry->sliceInsets.left - entry->sliceInsets.right,
-                entry->atlasRect.size.height - entry->sliceInsets.top - entry->sliceInsets.bottom
-            });
+            if (frame)
+            {
+                scale9->setSpriteFrame(frame, {
+                    entry->sliceInsets.left,
+                    entry->sliceInsets.bottom,
+                    entry->atlasRect.size.width - entry->sliceInsets.left - entry->sliceInsets.right,
+                    entry->atlasRect.size.height - entry->sliceInsets.top - entry->sliceInsets.bottom
+                });
+                scale9->setPreferredSize(scale9->getContentSize());
+
+                _LogDebug_("[UIThemeBinding] After setSpriteFrame: contentSize=(%.0f,%.0f) preferredSize=(%.0f,%.0f) isVisible=%d",
+                    scale9->getContentSize().width, scale9->getContentSize().height,
+                    scale9->getPreferredSize().width, scale9->getPreferredSize().height,
+                    scale9->isVisible());
+            }
+            else
+            {
+                _LogWarn_("[UIThemeBinding] SpriteFrame::createWithTexture returned null!");
+            }
         }
         else
         {

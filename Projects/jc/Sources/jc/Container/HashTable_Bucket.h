@@ -205,8 +205,7 @@ struct Bucket<TKey, TAllocator>
             if constexpr(IsStringType_v<TKey>)
                 Memory::PlacementNewArray(pNewDynamicArray, _newCapacity, TBucketNode{jc::String(0), 0}); // 문자열은 동적할당 안된 상태로 생성해주자. String(0)는 동적할당안함
             else
-                jc_assert(false); // String도 아니고 int같은 기본 타입도 아닌 새로운 키타입을 추가하고자 한다면 성능향상을 위해 여기서 직접 수정 ㄱ, 그냥 Memory::PlacementNewArray(pNewDynamicArray,
-                                    // newCapacity)를 수행해도 동작하는데 문제없긴함
+                Memory::PlacementNewArray(pNewDynamicArray, _newCapacity);
         }
 
         for(int i = 0; i < size_; i++)
@@ -424,8 +423,7 @@ struct Bucket<TKey, TValue, TAllocator>
             if constexpr(IsStringType_v<TKey>)
                 Memory::PlacementNewArray(pNewDynamicArray, _newCapacity, TBucketNode{{0, nullptr}, 0}); // 문자열은 동적할당 안된 상태로 생성해주자. String(0)는 동적할당안함
             else
-                jc_assert(false); // String도 아니고 int같은 기본 타입도 아닌 새로운 키타입을 추가하고자 한다면 성능향상을 위해 여기서 직접 수정 ㄱ, 그냥 Memory::PlacementNewArray(pNewDynamicArray,
-                                    // newCapacity)를 수행해도 동작하는데 문제없긴함
+                Memory::PlacementNewArray(pNewDynamicArray, _newCapacity);
         }
 
         for(int i = 0; i < size_; i++)
