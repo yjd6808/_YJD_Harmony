@@ -40,7 +40,8 @@ bool SGLoginScene::init()
 		return false;
 	}
 
-	g_cUIMgr.Show("ui_login");
+	//g_cUIMgr.Show("ui_login");
+	g_cUIMgr.Show("ui_generic");
 	return true;
 }
 

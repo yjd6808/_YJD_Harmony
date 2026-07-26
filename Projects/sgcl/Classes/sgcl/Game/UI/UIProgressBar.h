@@ -36,7 +36,7 @@ public:
 
 protected:
 	void LoadTheme();
-	void LoadLegacy();
+	bool LoadLegacy();
 	void BuildThemeVisuals();
 	void DestroyThemeVisuals();
 	void UpdateGaugeGeometry();

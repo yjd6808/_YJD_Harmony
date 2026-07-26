@@ -215,8 +215,12 @@ void UICheckBox::Load()
 
 	if (UseThemeRendering())
 		LoadTheme();
-	else
-		LoadLegacy();
+	else if (!LoadLegacy())
+	{
+		_LogWarn_("레거시 스프라이트가 설정되지 않아 공용 UI 텍스처를 사용합니다.");
+		renderMode_ = UIRenderMode::Theme;
+		LoadTheme();
+	}
 
 	isLoaded_ = true;
 }
@@ -226,8 +230,10 @@ void UICheckBox::LoadTheme()
 	BuildThemeVisuals();
 }
 
-void UICheckBox::LoadLegacy()
+bool UICheckBox::LoadLegacy()
 {
+	bool bAnyLoaded = false;
+
 	const int sga[TEXTURE_COUNT]{ pInfo_->BackgroundSga, pInfo_->BackgroundSga, pInfo_->CrossSga, pInfo_->CrossSga };
 	const int img[TEXTURE_COUNT]{ pInfo_->BackgroundImg, pInfo_->BackgroundImg, pInfo_->CrossImg, pInfo_->CrossImg };
 
@@ -248,10 +254,12 @@ void UICheckBox::LoadLegacy()
 		pTexture_[i] = pTexture;
 		pSprite_[i] = pSprite;
 		addChild(pSprite);
+		bAnyLoaded = true;
 	}
 
 	SetEnabled(true);
 	SetCheck(checked_);
+	return bAnyLoaded;
 }
 
 void UICheckBox::BuildThemeVisuals()

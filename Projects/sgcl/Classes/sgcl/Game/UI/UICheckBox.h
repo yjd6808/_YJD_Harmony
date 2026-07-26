@@ -44,7 +44,7 @@ protected:
 	bool OnMouseUpContainedInternalDetail(cc::EventMouse* _pMouseEvent) override;
 
 	void LoadTheme();
-	void LoadLegacy();
+	bool LoadLegacy();
 	void BuildThemeVisuals();
 	void DestroyThemeVisuals();
 

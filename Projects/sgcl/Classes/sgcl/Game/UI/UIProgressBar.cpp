@@ -80,8 +80,12 @@ void UIProgressBar::Load()
 
 	if (UseThemeRendering())
 		LoadTheme();
-	else
-		LoadLegacy();
+	else if (!LoadLegacy())
+	{
+		_LogWarn_("레거시 스프라이트가 설정되지 않아 공용 UI 텍스처를 사용합니다.");
+		renderMode_ = UIRenderMode::Theme;
+		LoadTheme();
+	}
 
 	isLoaded_ = true;
 }
@@ -91,14 +95,17 @@ void UIProgressBar::LoadTheme()
 	BuildThemeVisuals();
 }
 
-void UIProgressBar::LoadLegacy()
+bool UIProgressBar::LoadLegacy()
 {
+	if (pProgressBarInfo_->Sprite == InvalidValue_v)
+		return false;
+
 	pTexture_ = g_cUIMgr.CreateUITextureRetained(pProgressBarInfo_->Sga, pProgressBarInfo_->Img, pProgressBarInfo_->Sprite);
 
 	if (pTexture_->IsLink())
 	{
 		CC_SAFE_RELEASE_NULL(pTexture_);
-		return;
+		return false;
 	}
 
 	const Size progressSpriteSize = pTexture_->GetSize();
@@ -135,6 +142,7 @@ void UIProgressBar::LoadLegacy()
 	}
 
 	this->addChild(pProgressBar_);
+	return true;
 }
 
 void UIProgressBar::BuildThemeVisuals()

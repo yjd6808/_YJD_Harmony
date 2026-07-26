@@ -207,9 +207,12 @@ void UIToggleButton::Load()
 		LoadTheme();
 		ApplyThemeStateVisuals(eNormal);
 	}
-	else
+	else if (!LoadLegacy())
 	{
-		LoadLegacy();
+		_LogWarn_("레거시 스프라이트가 설정되지 않아 공용 UI 텍스처를 사용합니다.");
+		renderMode_ = UIRenderMode::Theme;
+		LoadTheme();
+		ApplyThemeStateVisuals(eNormal);
 	}
 
 	isLoaded_ = true;
@@ -221,13 +224,19 @@ void UIToggleButton::LoadTheme()
 	BuildThemeVisuals();
 }
 
-void UIToggleButton::LoadLegacy()
+bool UIToggleButton::LoadLegacy()
 {
+	bool bAnyLoaded = false;
+
 	for (int i = 0; i < 2; i++)
 	{
 		for (int j = 0; j < eMax; ++j)
 		{
 			const int iSprite = pInfo_->Sprites[i][j];
+
+			if (iSprite == InvalidValue_v)
+				continue;
+
 			FrameTexture* pTexture = g_cUIMgr.CreateUITextureRetained(
 				pInfo_->Sga, pInfo_->Img, iSprite, pInfo_->LinearDodge);
 
@@ -241,8 +250,11 @@ void UIToggleButton::LoadLegacy()
 			pSprites_[i][j] = pSprite;
 
 			this->addChild(pSprite);
+			bAnyLoaded = true;
 		}
 	}
+
+	return bAnyLoaded;
 }
 
 void UIToggleButton::BuildThemeVisuals()

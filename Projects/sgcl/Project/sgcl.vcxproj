@@ -364,6 +364,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Game\UI_Implementation\UI_Inventory.cpp" />
+    <ClCompile Include="..\Classes\sgcl\Game\UI_Implementation\UI_Generic.cpp" />
     <ClCompile Include="..\Classes\sgcl\Game\UI_Implementation\UI_Login.cpp">
       <SubType>
       </SubType>
@@ -780,6 +781,7 @@
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Util\WndMessage.h" />
     <ClInclude Include="..\Classes\sgcl\Game\UI_Implementation\UI_Inventory.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI_Implementation\UI_Generic.h" />
     <ClInclude Include="..\Classes\sgcl\Game\UI_Implementation\UI_Login.h">
       <SubType>
       </SubType>

@@ -257,15 +257,23 @@ void UIButton::Load()
 	}
 	else
 	{
-		LoadLegacy();
+		if (!LoadLegacy())
+		{
+			_LogWarn_("레거시 스프라이트가 설정되지 않아 공용 UI 텍스처를 사용합니다.");
+			renderMode_ = UIRenderMode::Theme;
+			LoadTheme();
+			ApplyThemeStateVisuals(eNormal);
+		}
 	}
 
 	SetVisibleState(eNormal);
 	isLoaded_ = true;
 }
 
-void UIButton::LoadLegacy()
+bool UIButton::LoadLegacy()
 {
+	bool bAnyLoaded = false;
+
 	for (int i = 0; i < eMax; ++i)
 	{
 		const int spriteIndex = buttonInfo_->sprites_[i];
@@ -288,7 +296,10 @@ void UIButton::LoadLegacy()
 		sprite_[i] = pSprite;
 
 		this->addChild(pSprite);
+		bAnyLoaded = true;
 	}
+
+	return bAnyLoaded;
 }
 
 void UIButton::LoadTheme()
