@@ -183,7 +183,7 @@ bool UIToggleButton::init()
 		if (pPack)
 		{
 			const SgaSpriteAbstractPtr spSprite = pPack->GetSpriteUnsafe(pInfo_->Img, pInfo_->Sprites[STATE_ONE][eNormal]);
-			if (spSprite)
+			if (spSprite != nullptr)
 			{
 				const SgaSpriteRect spriteRect = spSprite->GetRect();
 				SetInitialUISize({ spriteRect.GetWidthF(), spriteRect.GetHeightF() });

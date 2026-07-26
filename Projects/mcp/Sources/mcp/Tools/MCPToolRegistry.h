@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <mcp/Tools/MCPTool.h>
+#include <mcp/Namespace.h>
 
 NS_MCP_BEGIN
 

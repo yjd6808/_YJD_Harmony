@@ -39,7 +39,7 @@ bool SGChannelSelectScene::init()
 		return false;
 	}
 
-	g_cUIMgr.Show("ChannelSelect");
+	g_cUIMgr.Show("ui_channel");
 	return true;
 }
 

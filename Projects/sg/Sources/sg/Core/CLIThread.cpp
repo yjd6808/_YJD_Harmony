@@ -4,6 +4,7 @@
 
 #include "CLIThread.h"
 
+#include <cstdio>
 #include "csignal"
 
 USING_NS_JC;
@@ -79,6 +80,7 @@ bool CLIThread::PreStop()
 //////////////////////////////////////////////////////////////////////////////////////////
 void CLIThread::WorkerThread()
 {
+	printf("[RAW] Worker entered\n"); fflush(stdout);
 	while (isRunning_)
 	{
 		String inputLine = Console::ReadLine();

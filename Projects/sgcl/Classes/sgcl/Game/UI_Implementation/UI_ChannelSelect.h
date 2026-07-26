@@ -132,4 +132,3 @@ private:
 	ChannelTab channelTab_;
 };
 
-REGISTER_UI(ChannelSelect, UI_ChannelSelect)

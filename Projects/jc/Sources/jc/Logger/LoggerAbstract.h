@@ -11,6 +11,7 @@
 #include "jc/Declspec.h"
 #include "jc/Primitives/String.h"
 #include "jc/Sync/RecursiveLock.h"
+#include "jc/Container/Vector.h"
 
 NS_JC_BEGIN
 
@@ -40,12 +41,15 @@ public:
 	virtual ~LoggerAbstract();
 
 	virtual void Flush() = 0;
+	virtual void FlushAll();
 	virtual void LogVaList(Level _level, const char* _pFmt, va_list _list) = 0;
-	virtual void Log(Level _level, const char* _pFmt, ...);
+	void Log(Level _level, const char* _pFmt, ...);
 	virtual void LogPlainVaList(const char* _pFmt, va_list _list) = 0;
-	virtual void LogPlain(const char* _pFmt, ...);
-	virtual void LogPlain(const String& _str);
+	void LogPlain(const char* _pFmt, ...);
+	void LogPlain(const String& _str);
 	virtual String CreateHeader(Level _level);
+
+	void ChainLogger(LoggerAbstract* _pLogger);
 
 	void Log(Level _level, const String& _str);
 	void LogInfo(const char* _pFmt, ...);
@@ -82,6 +86,7 @@ protected:
 	String m_szDateTimeFormat;
 	String m_szLevelText[eMax];
 	RecursiveLock m_Lock;
+	Vector<LoggerAbstract*> m_ChainLoggers;
 };
 
 class JC_NOVTABLE LoggerOption

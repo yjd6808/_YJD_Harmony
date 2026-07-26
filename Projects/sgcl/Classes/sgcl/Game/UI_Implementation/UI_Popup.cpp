@@ -24,13 +24,13 @@ void UI_Popup::OnInit(const CDataMap<>& _param)
 {
 	UNUSED(_param);
 
-	pGroupHolder_ = FindElementByName<UIGroup>("groupHolder");
-	pSpriteBackground_ = FindElementByName<UISprite>("spriteBackground");
-	pGroupButtonHolder_ = FindElementByName<UIGroup>("groupBtnHolder");
-	pBtnYes_ = FindElementByName<UIButton>("btnYes");
-	pBtnNo_ = FindElementByName<UIButton>("btnNo");
-	pBtnOk_ = FindElementByName<UIButton>("btnOk");
-	pLabelText_ = FindElementByName<UILabel>("labelText");
+	pGroupHolder_ = FindElementByName<UIGroup>("holder");
+	pSpriteBackground_ = FindElementByName<UISprite>("background");
+	pGroupButtonHolder_ = FindElementByName<UIGroup>("btn_holder");
+	pBtnYes_ = FindElementByName<UIButton>("yes");
+	pBtnNo_ = FindElementByName<UIButton>("no");
+	pBtnOk_ = FindElementByName<UIButton>("ok");
+	pLabelText_ = FindElementByName<UILabel>("text");
 
 	pLabelText_->setEnableFontAutoScaling(false);
 	pGroupButtonHolder_->SetResizable(false);
@@ -85,7 +85,7 @@ void UI_Popup::OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEven
 {
 	const char* name = _pElement->GetName();
 
-	if (strcmp(name, "btnYes") == 0)
+	if (strcmp(name, "yes") == 0)
 	{
 		if (yesCallback_)
 		{
@@ -93,7 +93,7 @@ void UI_Popup::OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEven
 		}
 		Close();
 	}
-	else if (strcmp(name, "btnNo") == 0)
+	else if (strcmp(name, "no") == 0)
 	{
 		if (noCallback_)
 		{
@@ -101,7 +101,7 @@ void UI_Popup::OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEven
 		}
 		Close();
 	}
-	else if (strcmp(name, "btnOk") == 0)
+	else if (strcmp(name, "ok") == 0)
 	{
 		if (okCallback_)
 		{
@@ -264,3 +264,5 @@ void UI_Popup::Adjust()
 
 	pGroupButtonHolder_->SetRelativePosition(0, padding, HAlignment::Center, VAlignment::Bottom);
 }
+
+REGISTER_UI(ui_popup, UI_Popup)

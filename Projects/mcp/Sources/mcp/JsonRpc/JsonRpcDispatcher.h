@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <json.h>
+#include <mcp/Namespace.h>
 
 NS_MCP_BEGIN
 

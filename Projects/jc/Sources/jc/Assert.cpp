@@ -7,9 +7,13 @@
 #include "jc/Assert.h"
 #include "jc/Primitives/StringUtil.h"
 #include "jc/FileSystem/Path.h"
+#include "jc/Logger/LoggerDefine.h"
+#include "jc/Utils/StackTrace.h"
 
 NS_JC_BEGIN
 	NS_DETAIL_BEGIN
+
+	/////////////////////////////////////////////////////////////////////////////////
 	void __DebugAssertMsgImpl(const char* _expectStr, const char* _filePath, int _lineNum, const char* _functionName, const char* _fmt, ...) 
 	{
 
@@ -30,6 +34,9 @@ NS_JC_BEGIN
 		printf("│ 파일 : %s\n", szFmtBuf);												    
 		printf("│ 라인 : %d\n", _lineNum);
 		printf("└ 함수 : %s\n", _functionName);
+
+		StackTrace::PrintStack(1);
+
 		if (PreventUnrechableCode) std::abort();
 
 	}

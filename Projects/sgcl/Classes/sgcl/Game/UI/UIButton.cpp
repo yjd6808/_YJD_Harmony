@@ -229,7 +229,7 @@ bool UIButton::init()
 		if (pPack)
 		{
 			const SgaSpriteAbstractPtr pSprite = pPack->GetSpriteUnsafe(buttonInfo_->img_, buttonInfo_->sprites_[eNormal]);
-			if (pSprite)
+			if (pSprite != nullptr)
 			{
 				const SgaSpriteRect spriteRect = pSprite->GetRect();
 				SetInitialUISize({ spriteRect.GetWidthF(), spriteRect.GetHeightF() });

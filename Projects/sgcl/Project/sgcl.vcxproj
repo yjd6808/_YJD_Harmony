@@ -966,7 +966,8 @@ xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
-xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
+xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(TargetDir)$(TargetName).pdb" "$(LocalDebuggerWorkingDirectory)\"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -1003,7 +1004,8 @@ xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
-xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
+xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(TargetDir)$(TargetName).pdb" "$(LocalDebuggerWorkingDirectory)\"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -1069,7 +1071,8 @@ xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
-xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
+xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(TargetDir)$(TargetName).pdb" "$(LocalDebuggerWorkingDirectory)\"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -1112,7 +1115,8 @@ xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
 xcopy /Y /Q /D "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(LocalDebuggerWorkingDirectory)\"
-xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"</Command>
+xcopy /Y /Q /D "$(TargetPath)" "$(LocalDebuggerWorkingDirectory)\"
+xcopy /Y /Q /D "$(TargetDir)$(TargetName).pdb" "$(LocalDebuggerWorkingDirectory)\"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>

@@ -266,6 +266,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc\Utils\StackTrace.cpp" />
     <ClCompile Include="..\Sources\jc\Wrapper\CRuntime.cpp" />
     <ClCompile Include="..\Sources\jc\Wrapper\WinApi.cpp">
       <SubType>

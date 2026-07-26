@@ -36,4 +36,3 @@ private:
 	ScaleState scaleState_;
 };
 
-REGISTER_UI(Test, UI_Test)

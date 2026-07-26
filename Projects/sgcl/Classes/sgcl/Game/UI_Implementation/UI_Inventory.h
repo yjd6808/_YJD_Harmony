@@ -32,4 +32,3 @@ private:
 	InvenItemType_t curTab_;
 };
 
-REGISTER_UI(Inventory, UI_Inventory)

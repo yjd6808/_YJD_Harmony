@@ -5,6 +5,7 @@
 #include <jc/Sync/NormalLock.h>
 #include <jc/Primitives/Atomic.h>
 #include <jnet/IOCP/IOCP.h>
+#include <mcp/Namespace.h>
 #include <mcp/Protocol/MCPCapabilities.h>
 #include <mcp/Tools/MCPToolRegistry.h>
 #include <mcp/JsonRpc/JsonRpcDispatcher.h>

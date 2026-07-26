@@ -140,6 +140,19 @@
 	'$(MSBuildProjectName)' == 'mcpr'
 			" />
 
+	<Import Project="$(MSBuildThisFileDirectory)Props/jnet.props" 
+			Condition="
+	'$(MSBuildProjectName)' == 'sg'							OR
+	'$(MSBuildProjectName)' == 'sge'						OR
+	'$(MSBuildProjectName)' == 'sgcl'						OR
+	'$(MSBuildProjectName)' == 'sgs'						OR
+	'$(MSBuildProjectName)' == 'sgs_auth'					OR
+	'$(MSBuildProjectName)' == 'sgs_center'					OR
+	'$(MSBuildProjectName)' == 'sgs_game'					OR
+	'$(MSBuildProjectName)' == 'sgs_lobby'					OR
+	'$(MSBuildProjectName)' == 'sgs_query'
+			" />
+
 	<Import Project="$(MSBuildThisFileDirectory)Props/sgcc_cocos.props" 
 			Condition="
 	'$(MSBuildProjectName)' == 'libcocos2d'					OR

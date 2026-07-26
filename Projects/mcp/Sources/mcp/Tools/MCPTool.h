@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <string>
+#include <mcp/Namespace.h>
 
 NS_MCP_BEGIN
 

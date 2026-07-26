@@ -44,10 +44,7 @@ public:
 
 	void Flush() override;
 	void LogVaList(Level _level, const char* _pFmt, va_list _list) override;
-	void Log(Level _level, const char* _pFmt, ...) override;
 	void LogPlainVaList(const char* _pFmt, va_list _list) override;
-	void LogPlain(const char* _pFmt, ...) override;
-	void LogPlain(const String& _str) override;
 	String CreateHeader(Level _level) override;
 
 	LoggerType GetType() const override

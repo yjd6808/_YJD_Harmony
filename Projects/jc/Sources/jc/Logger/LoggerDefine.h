@@ -27,5 +27,5 @@ extern jc::LoggerAbstract* Logger_v;
 #define _LogNormalIf_(cond, fmt, ...)  do { if (Logger_v && (cond)) Logger_v->Log(jc::LoggerAbstract::eNormal, fmt, __VA_ARGS__); } while (0)
 
 void InitializeDefaultLogger(const char* _pSpecifier = "");
-void InitializeFileLogger(const char* _pFilePath);
+void InitializeFileLogger(const char* _pDirectory);
 void FinalizeDefaultLogger();

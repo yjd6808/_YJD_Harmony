@@ -162,6 +162,11 @@ ConsoleColor Console::ConvertColorString(const String& _colorString)
 //////////////////////////////////////////////////////////////////////////////////////////
 String Console::ReadLine()
 {
+    if (!std::cin.good())
+    {
+        std::cin.clear();
+    }
+
     String line;
     char keyChar;
 

@@ -243,7 +243,7 @@ void UI_ChannelSelect::ChannelButton::InitMonsterSprites(UI_ChannelSelect* _pRoo
 		_LogWarn_("ChannelButton::initMonsterSprites");
 	}
 
-	UIGroup* pParent = _pRootGroup->FindElementByName<UIGroup>("groupChannelList");
+	UIGroup* pParent = _pRootGroup->FindElementByName<UIGroup>("channel_list");
 
 	int iSelectedSprite = pInfo_ ? pInfo_->selectedSpriteIndex_ : InvalidValue_v;
 	int iNormalSprite = pInfo_ ? pInfo_->normalSpriteIndex_ : InvalidValue_v;
@@ -323,24 +323,23 @@ void UI_ChannelSelect::OnInit(const CDataMap<>& _param)
 		_LogWarn_("채널 몬스터 ImngIndex 정보를 얻는데 실패했습니다.");
 	}
 
-	pSpriteBackgroundGear_ = FindElementByName<UISprite>("spriteBackgroundGear");
-	pBtnStart_ = FindElementByName<UIButton>("btnStart");
-	pBtnTerminate_ = FindElementByName<UIButton>("btnTerminate");
-	pBtnRefresh_ = FindElementByName<UIButton>("btnRefresh");
-	pToggleTeen_ = FindElementByName<UIToggleButton>("toggleTeen");
-	pToggleBtnAdult_ = FindElementByName<UIToggleButton>("toggleAdult");
-	pLabelPage_ = FindElementByName<UILabel>("labelPage");
+	pSpriteBackgroundGear_ = FindElementByName<UISprite>("background_gear");
+	pBtnStart_ = FindElementByName<UIButton>("start");
+	pBtnTerminate_ = FindElementByName<UIButton>("terminate");
+	pBtnRefresh_ = FindElementByName<UIButton>("refresh");
+	pToggleTeen_ = FindElementByName<UIToggleButton>("teen");
+	pToggleBtnAdult_ = FindElementByName<UIToggleButton>("adult");
+	pLabelPage_ = FindElementByName<UILabel>("page");
 
+	const char* serverNames[] = { "luke", "hilder", "siroco", "prey", "kasias", "diregie", "cain", "seria" };
 	for (int i = 0; i < GameServerType::Max; ++i)
 	{
 		pServerButtons_[i] = dbg_new ServerButton{ (GameServerType_t)i };
 
 		ServerButton* pBtn = pServerButtons_[i];
-		jc::String groupName = jc::StringUtil::Format("groupServer_%d", i);
-		jc::String charName = jc::StringUtil::Format("spriteServerCharacter_%d", i);
 
-		pBtn->pGroup_ = FindElementByName<UIGroup>(groupName.Source());
-		pBtn->pSpriteServerCharacter_ = FindElementByName<UISprite>(charName.Source());
+		pBtn->pGroup_ = FindElementByName<UIGroup>(serverNames[i]);
+		pBtn->pSpriteServerCharacter_ = FindElementByName<UISprite>(serverNames[i]);
 		if (pBtn->pSpriteServerCharacter_)
 			pBtn->pSpriteServerCharacter_->setVisible(false);
 
@@ -357,19 +356,19 @@ void UI_ChannelSelect::OnInit(const CDataMap<>& _param)
 		}
 	}
 
-	UIGroup* pChannelListGroup = FindElementByName<UIGroup>("groupChannelList");
+	UIGroup* pChannelListGroup = FindElementByName<UIGroup>("channel_list");
 
 	for (int i = 0; i < SG_UI_CHANNELSELECT_MAX_CHANNEL_COUNT; ++i)
 	{
 		pChannelButtons_[i] = dbg_new ChannelButton(i);
 		ChannelButton* pBtn = pChannelButtons_[i];
 
-		jc::String toggle0 = jc::StringUtil::Format("toggleSlot%dType0", i);
-		jc::String toggle1 = jc::StringUtil::Format("toggleSlot%dType1", i);
-		jc::String toggle2 = jc::StringUtil::Format("toggleSlot%dType2", i);
-		jc::String overBorder = jc::StringUtil::Format("spriteSlot%dOver", i);
-		jc::String labelName = jc::StringUtil::Format("labelSlot%dName", i);
-		jc::String labelDensity = jc::StringUtil::Format("labelSlot%dDensity", i);
+		jc::String toggle0 = jc::StringUtil::Format("slot_%d_type_0", i + 1);
+		jc::String toggle1 = jc::StringUtil::Format("slot_%d_type_1", i + 1);
+		jc::String toggle2 = jc::StringUtil::Format("slot_%d_type_2", i + 1);
+		jc::String overBorder = jc::StringUtil::Format("slot_%d_selection", i + 1);
+		jc::String labelName = jc::StringUtil::Format("slot_%d_name", i + 1);
+		jc::String labelDensity = jc::StringUtil::Format("slot_%d_density", i + 1);
 
 		pBtn->pToggleBtnEnteranceBackground_[0] = FindElementByName<UIToggleButton>(toggle0.Source());
 		if (pBtn->pToggleBtnEnteranceBackground_[0])
@@ -496,11 +495,11 @@ void UI_ChannelSelect::OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleS
 
 	const char* name = _pToggleBtn->GetName();
 
-	if (strcmp(name, "toggleTeen") == 0)
+	if (strcmp(name, "teen") == 0)
 	{
 		SelectChannelTab(ChannelTab::Teen);
 	}
-	else if (strcmp(name, "toggleAdult") == 0)
+	else if (strcmp(name, "adult") == 0)
 	{
 		SelectChannelTab(ChannelTab::Adult);
 	}
@@ -597,3 +596,5 @@ void UI_ChannelSelect::EnterChannel(GameServerType_t _serverType, int _channelIn
 	UNUSED(_serverType);
 	UNUSED(_channelIndex);
 }
+
+REGISTER_UI(ui_channel, UI_ChannelSelect)

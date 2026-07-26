@@ -14,6 +14,7 @@ UIGroupInfo& UIGroupInfo::operator=(const UIGroupInfo& _other)
 {
 	size_ = _other.size_;
 	infoList_ = _other.infoList_;
+	childInfoList_ = _other.childInfoList_;
 	return *this;
 }
 
@@ -21,6 +22,7 @@ UIGroupInfo& UIGroupInfo::operator=(UIGroupInfo&& _other) noexcept
 {
 	size_ = _other.size_;
 	infoList_ = Move(_other.infoList_);
+	childInfoList_ = Move(_other.childInfoList_);
 	return *this;
 }
 

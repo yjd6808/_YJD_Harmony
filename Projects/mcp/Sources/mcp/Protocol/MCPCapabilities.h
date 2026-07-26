@@ -1,5 +1,7 @@
 #pragma once
 
+#include <mcp/Namespace.h>
+
 NS_MCP_BEGIN
 
 struct MCPCapabilities

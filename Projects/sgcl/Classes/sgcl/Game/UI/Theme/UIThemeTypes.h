@@ -44,7 +44,8 @@ enum class UIAssetSemantic : uint8_t
     ScrollBarTrack,
     ScrollBarThumb,
     EditBox,
-    FocusRing
+    FocusRing,
+    ProgressCap
 };
 
 enum class UIScalingMode : uint8_t
@@ -68,7 +69,8 @@ enum class UIComponentSlot : uint8_t
     Thumb,
     FocusRing,
     Icon,
-    Label
+    Label,
+    Cap
 };
 
 enum class UIRenderMode : uint8_t
