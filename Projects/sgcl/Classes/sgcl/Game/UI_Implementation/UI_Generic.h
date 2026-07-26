@@ -15,7 +15,10 @@ protected:
 	void OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent) override;
 
 private:
-	UILabel* pLabelTitle_;
-	UILabel* pLabelContent_;
-	UIButton* pBtnClose_;
+    UILabel* pLabelTitle_;
+    UILabel* pLabelContent_;
+    UIButton* pBtnClose_;
+    UICheckBox* pChkOpt1_;
+    UICheckBox* pChkOpt2_;
+    UIEditBox* pEditInput_;
 };
