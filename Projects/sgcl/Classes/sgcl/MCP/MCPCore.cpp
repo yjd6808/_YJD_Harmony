@@ -1,4 +1,4 @@
-#include "GameCoreHeader.h"
+#include "../GameCoreHeader.h"
 #include "MCPCore.h"
 
 #include <sg/Core/AppConfig.h>

@@ -1,12 +1,13 @@
 #pragma once
 
+#include <mcp/Namespace.h>
 #include <mcp/Protocol/MCPServer.h>
 
 class MCPCore : public jc::SingletonPointer<MCPCore>
 {
     friend class TSingleton;
     MCPCore();
-    ~MCPCore() override;
+    ~MCPCore();
 
 public:
     bool Initialize();
