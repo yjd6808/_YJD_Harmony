@@ -91,11 +91,19 @@ void UIThemeManager::BakeDefaultTextureSet()
 
     UIAssetSemantic semantics[] = {
         UIAssetSemantic::Button,
+        UIAssetSemantic::Frame,
         UIAssetSemantic::CheckBox,
+        UIAssetSemantic::CheckMark,
+        UIAssetSemantic::Radio,
+        UIAssetSemantic::RadioDot,
         UIAssetSemantic::ToggleTrack,
         UIAssetSemantic::ToggleKnob,
         UIAssetSemantic::ProgressTrack,
-        UIAssetSemantic::ProgressGauge
+        UIAssetSemantic::ProgressGauge,
+        UIAssetSemantic::SliderTrack,
+        UIAssetSemantic::SliderFill,
+        UIAssetSemantic::SliderThumb,
+        UIAssetSemantic::ScrollBarTrack
     };
 
     for (auto semantic : semantics)
@@ -104,11 +112,19 @@ void UIThemeManager::BakeDefaultTextureSet()
         switch (semantic)
         {
         case UIAssetSemantic::Button:        elemType = UIElementType::Button; break;
-        case UIAssetSemantic::CheckBox:      elemType = UIElementType::CheckBox; break;
+        case UIAssetSemantic::Frame:         elemType = UIElementType::Group; break;
+        case UIAssetSemantic::CheckBox:
+        case UIAssetSemantic::CheckMark:     elemType = UIElementType::CheckBox; break;
+        case UIAssetSemantic::Radio:
+        case UIAssetSemantic::RadioDot:      elemType = UIElementType::CheckBox; break;
         case UIAssetSemantic::ToggleTrack:
         case UIAssetSemantic::ToggleKnob:    elemType = UIElementType::ToggleButton; break;
         case UIAssetSemantic::ProgressTrack:
         case UIAssetSemantic::ProgressGauge: elemType = UIElementType::ProgressBar; break;
+        case UIAssetSemantic::SliderTrack:
+        case UIAssetSemantic::SliderFill:
+        case UIAssetSemantic::SliderThumb:   elemType = UIElementType::Button; break;
+        case UIAssetSemantic::ScrollBarTrack: elemType = UIElementType::ScrollBar; break;
         default: break;
         }
 
@@ -118,7 +134,7 @@ void UIThemeManager::BakeDefaultTextureSet()
         UIResolvedVariantRequest variant;
         variant.asset.semantic = semantic;
         variant.asset.styleHash = resolvedStyle.ComputeHash();
-        variant.asset.recipeHash = 0;
+        variant.asset.recipeHash = (uint64_t)semantic;
         variant.state = UIVisualState::Normal;
         variant.style = resolvedStyle;
         variant.styleHash = resolvedStyle.ComputeHash();

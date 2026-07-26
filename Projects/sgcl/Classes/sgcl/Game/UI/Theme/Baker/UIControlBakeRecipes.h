@@ -17,5 +17,7 @@ public:
     static UIAssetRecipe ProgressTrackRecipe(int _width, int _height);
     static UIAssetRecipe ProgressGaugeRecipe(int _width, int _height);
     static UIAssetRecipe SliderTrackRecipe(int _width, int _height);
+    static UIAssetRecipe SliderFillRecipe(int _width, int _height);
     static UIAssetRecipe SliderThumbRecipe(int _size);
+    static UIAssetRecipe ScrollBarTrackRecipe(int _width, int _height);
 };

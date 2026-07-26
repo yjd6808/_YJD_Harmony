@@ -126,3 +126,25 @@ UIAssetRecipe UIControlBakeRecipes::SliderThumbRecipe(int _size)
     r.minimumSize = cc::Size(16, 16);
     return r;
 }
+
+UIAssetRecipe UIControlBakeRecipes::SliderFillRecipe(int _width, int _height)
+{
+    UIAssetRecipe r;
+    r.semantic = UIAssetSemantic::SliderFill;
+    r.width = _width;
+    r.height = _height;
+    r.sliceInsets = { 6, 6, 6, 6 };
+    r.minimumSize = cc::Size(12, 12);
+    return r;
+}
+
+UIAssetRecipe UIControlBakeRecipes::ScrollBarTrackRecipe(int _width, int _height)
+{
+    UIAssetRecipe r;
+    r.semantic = UIAssetSemantic::ScrollBarTrack;
+    r.width = _width;
+    r.height = _height;
+    r.sliceInsets = { 4, 4, 4, 4 };
+    r.minimumSize = cc::Size(8, 8);
+    return r;
+}

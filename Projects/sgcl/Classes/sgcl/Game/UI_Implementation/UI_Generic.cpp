@@ -39,7 +39,15 @@ void UI_Generic::OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEv
 	if (strcmp(name, "close") == 0)
 	{
 		removeFromParent();
+		return;
 	}
+
+	if (strcmp(name, "btn_normal") == 0)      { _LogDebug_("[UI_Generic] btn_normal clicked"); }
+	else if (strcmp(name, "btn_confirm") == 0) { _LogDebug_("[UI_Generic] btn_confirm clicked"); }
+	else if (strcmp(name, "btn_cancel") == 0)  { _LogDebug_("[UI_Generic] btn_cancel clicked"); }
+	else if (strcmp(name, "btn_apply") == 0)   { _LogDebug_("[UI_Generic] btn_apply clicked"); }
+	else if (strcmp(name, "btn_delete") == 0)  { _LogDebug_("[UI_Generic] btn_delete clicked"); }
+	else if (strcmp(name, "btn_more") == 0)    { _LogDebug_("[UI_Generic] btn_more clicked"); }
 }
 
 REGISTER_UI(ui_generic, UI_Generic)

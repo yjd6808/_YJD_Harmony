@@ -418,21 +418,9 @@ struct Bucket<TKey, TValue, TAllocator>
         // 키가 String 같은 타입인 경우 그냥 대입 해버리면 Key의 생성자로 초기화가 수행이 안되어있기때문에 오류가 발생한다.
         // String의 경우 m_pBuffer가 nullptr로 초기화가 되지 않음
         // 기본 생성자를 호출해서 초기화를 해놔야한다.
-        if constexpr(IsPointerType_v<TValue> && !IsFundamentalType_v<TKey> && !IsPointerType_v<TKey>)
-        {
-            if constexpr(IsStringType_v<TKey>)
-                Memory::PlacementNewArray(pNewDynamicArray, _newCapacity, TBucketNode{{0, nullptr}, 0}); // 문자열은 동적할당 안된 상태로 생성해주자. String(0)는 동적할당안함
-            else
-                Memory::PlacementNewArray(pNewDynamicArray, _newCapacity);
-        }
-
         for(int i = 0; i < size_; i++)
         {
-            if constexpr(IsPointerType_v<TValue>)
-                pNewDynamicArray[i] = Move(pDynamicArray_[i]); // 2023/02/23 Move 필수.. Value가 포인터라지만 Key가 String 같은 타입일 수가 있다. 만약 Move를 안하고 Copy를 한다면 DynamicArray의
-                                                               // 메모리를 해제하기전에 수동으로 소멸자 호출을 해줘야함.
-            else
-                Memory::PlacementNew(pNewDynamicArray[i], Move(pDynamicArray_[i]));
+            Memory::PlacementNew(pNewDynamicArray[i], Move(pDynamicArray_[i]));
         }
 
         TAllocator::DeallocateDynamic(pDynamicArray_, sizeof(TBucketNode) * capacity_);

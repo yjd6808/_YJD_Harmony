@@ -105,8 +105,12 @@ static UIAssetRecipe SelectRecipe(UIAssetSemantic _semantic)
     case UIAssetSemantic::ToggleKnob:    return UIControlBakeRecipes::ToggleKnobRecipe(24);
     case UIAssetSemantic::ProgressTrack: return UIControlBakeRecipes::ProgressTrackRecipe(96, 20);
     case UIAssetSemantic::ProgressGauge: return UIControlBakeRecipes::ProgressGaugeRecipe(96, 12);
+    case UIAssetSemantic::Frame:         return UIControlBakeRecipes::FrameRecipe(80, 80);
+    case UIAssetSemantic::Radio:         return UIControlBakeRecipes::RadioShellRecipe(32);
     case UIAssetSemantic::SliderTrack:   return UIControlBakeRecipes::SliderTrackRecipe(96, 12);
+    case UIAssetSemantic::SliderFill:    return UIControlBakeRecipes::SliderFillRecipe(96, 12);
     case UIAssetSemantic::SliderThumb:   return UIControlBakeRecipes::SliderThumbRecipe(24);
+    case UIAssetSemantic::ScrollBarTrack: return UIControlBakeRecipes::ScrollBarTrackRecipe(16, 120);
     default: return UIControlBakeRecipes::ButtonRecipe(160, 44);
     }
 }
