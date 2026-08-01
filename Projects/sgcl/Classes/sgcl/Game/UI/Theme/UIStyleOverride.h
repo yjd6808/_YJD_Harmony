@@ -19,6 +19,9 @@ struct UIResolvedStyle
 
     UIColorF glossTint;
     float glossAlpha = 0.0f;
+    float glossCenterX = 0.5f;
+    float glossHeightRatio = 0.55f;
+    float glossBlurRadius = 3.0f;
 
     float geometryRadius = 8.0f;
     float geometryBorderWidth = 1.0f;

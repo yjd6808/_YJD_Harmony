@@ -47,13 +47,13 @@ namespace UIGradientRasterizer
         const UIResolvedStyle& _style,
         const UIMaskBuffer& _shapeMask)
     {
-        float centerX = _rect.x + _rect.w * _style.glossTint.r;
+        float centerX = _rect.x + _rect.w * _style.glossCenterX;
         if (centerX < _rect.x) centerX = _rect.x + _rect.w * 0.5f;
 
         float centerY = _rect.y + _rect.h * 0.02f;
         float radiusX = jc::Math::Max(1.0f, _rect.w * 0.64f);
         float radiusY = jc::Math::Max(1.0f, _rect.h * 1.50f);
-        float maxY = _rect.y + _rect.h * UIColorMath::Clamp01(_style.glossTint.g > 0 ? _style.glossTint.g : 0.55f);
+        float maxY = _rect.y + _rect.h * UIColorMath::Clamp01(_style.glossHeightRatio);
 
         UIMaskBuffer glossMask(_out.width, _out.height);
 
@@ -73,12 +73,12 @@ namespace UIGradientRasterizer
             }
         }
 
-        UIGaussianBlur::Blur(glossMask, _style.glossTint.b > 0 ? _style.glossTint.b * 10.0f : 3.0f);
+        UIGaussianBlur::Blur(glossMask, jc::Math::Max(0.0f, _style.glossBlurRadius));
 
         for (int y = 0; y < _out.height; ++y)
             for (int x = 0; x < _out.width; ++x)
                 if (glossMask(x, y) > 0.01f)
-                    _out.BlendOver(x, y, UIColorF(1, 1, 1, glossMask(x, y) * _shapeMask(x, y)));
+                    _out.BlendOver(x, y, _style.glossTint.WithAlpha(glossMask(x, y) * _shapeMask(x, y)));
     }
 
     void RenderShadow(

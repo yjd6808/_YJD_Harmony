@@ -207,10 +207,33 @@ void UIProgressBar::DestroyThemeVisuals()
 
 void UIProgressBar::RefreshThemeVisuals()
 {
+	if (textureMode_ != UITextureMode::THEME || !pTrackSprite_)
+		return;
+
 	UIThemeManager* pThemeMgr = UIThemeManager::Get();
+	UIResolvedStyle resolved = pThemeMgr->Resolve(UIElementType::ProgressBar, UIVisualState::Normal, {});
+	uint64_t hash = resolved.ComputeHash();
+
+	themeBinding_.Clear();
+	themeBinding_.BindScale9(pTrackSprite_, UIAssetKey::For(UIAssetSemantic::ProgressTrack, hash), UIComponentSlot::Track);
+	themeBinding_.BindScale9(pGaugeSprite_, UIAssetKey::For(UIAssetSemantic::ProgressGauge, hash), UIComponentSlot::Gauge);
+	themeBinding_.BindFixed(pGaugeCap_, UIAssetKey::For(UIAssetSemantic::ProgressCap, hash), UIComponentSlot::Cap);
+
 	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
 	if (pSet)
+	{
 		themeBinding_.Refresh(*pSet);
+
+		const UITextureEntry* pTrackEntry = pSet->Find(UIAssetKey::For(UIAssetSemantic::ProgressTrack, hash));
+		gaugeInset_ = pTrackEntry ? pTrackEntry->contentPadding + resolved.geometryBorderWidth : 0.0f;
+		if (gaugeInset_ < 0.0f)
+			gaugeInset_ = 0.0f;
+	}
+
+	pTrackSprite_->setContentSize(uiSize_);
+	pGaugeSprite_->setContentSize(uiSize_);
+	SetPercent(percent_);
+	_LogDebug_("[UIProgressBar] RefreshThemeVisuals name=%s styleHash=%llu gaugeInset=%.2f", GetName(), hash, gaugeInset_);
 }
 
 void UIProgressBar::Unload()

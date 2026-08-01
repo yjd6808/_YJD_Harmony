@@ -48,6 +48,13 @@ public:
     void RequestBake(UIThemeBakeRequest&& _request);
     void BakeDefaultTextureSet();
 
+    bool ApplyTheme(const char* _jsonPath, UIColorScheme _scheme);
+    UIColorScheme GetActiveScheme() const { return activeScheme_; }
+    const char* GetActiveThemeName() const { return activeThemeName_.Source(); }
+    const char* GetActiveThemeJsonPath() const { return activeThemeJsonPath_.Source(); }
+
+    void SetOnThemeRefreshed(jc::Action<> _callback) { onThemeRefreshed_ = _callback; }
+
     UIThemeEditSession BeginEdit();
     void CommitDraft(const UIRuntimeTheme& _draft);
     void CommitDraft(const UIRuntimeTheme& _draft, const UIStyleOverride& _overrides);
@@ -64,6 +71,7 @@ private:
 
     void OnBakeCompleted(UITextureSet* _set);
     void SwapTextureSet();
+    void BuildThemeVariants(UIThemeBakeRequest& _request) const;
 
     UIThemeRevision revision_;
     UIRuntimeTheme activeTheme_;
@@ -71,6 +79,11 @@ private:
     UIThemeMapper mapper_;
     UIThemeEditSession editSession_;
     UIThemeInitParams params_;
+
+    UIColorScheme activeScheme_ = UIColorScheme::Dark;
+    jc::String activeThemeName_;
+    jc::String activeThemeJsonPath_;
+    jc::Action<> onThemeRefreshed_;
 
     UITextureBakeService bakeService_;
     UITextureSet* activeTextureSet_ = nullptr;

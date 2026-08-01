@@ -315,10 +315,23 @@ void UICheckBox::DestroyThemeVisuals()
 
 void UICheckBox::RefreshThemeVisuals()
 {
+	if (textureMode_ != UITextureMode::THEME || !pTrackShell_)
+		return;
+
 	UIThemeManager* pThemeMgr = UIThemeManager::Get();
+	UIResolvedStyle style = pThemeMgr->Resolve(UIElementType::CheckBox, UIVisualState::Normal, {});
+	uint64_t hash = style.ComputeHash();
+
+	themeBinding_.Clear();
+	themeBinding_.BindScale9(pTrackShell_, UIAssetKey::For(UIAssetSemantic::CheckBox, hash), UIComponentSlot::Shell);
+	themeBinding_.BindFixed(pSprite_[INDEX_CROSS], UIAssetKey::For(UIAssetSemantic::CheckMark, hash), UIComponentSlot::Mark);
+
 	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
 	if (pSet)
 		themeBinding_.Refresh(*pSet);
+
+	pTrackShell_->setContentSize(uiSize_);
+	_LogDebug_("[UICheckBox] RefreshThemeVisuals name=%s styleHash=%llu", GetName(), hash);
 }
 
 void UICheckBox::Unload()

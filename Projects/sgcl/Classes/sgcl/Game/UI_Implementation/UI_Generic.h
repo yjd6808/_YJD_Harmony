@@ -28,4 +28,16 @@ private:
 	UIProgressBar* pPbar4_;
 	UIProgressBar* pPbar5_;
 	UIProgressBar* pPbar6_;
+
+	UIButton* pBtnThemeDark_;
+	UIButton* pBtnThemeLight_;
+	UIButton* pBtnThemeSilver_;
+	UILabel* pLabelThemeStatus_;
+
+	const char* pLastThemeId_ = "modern-dark-gold";
+
+	void ApplyThemeFile(const char* _jsonName, UIColorScheme _scheme);
+	void UpdateThemeStatusLabel();
+	void BuildThemeTestButtons();
+	UIButton* CreateTestButton(const char* _name, const char* _label, float _x, float _y, float _w, float _h);
 };

@@ -71,6 +71,12 @@ void UIStyleResolver::ApplySparseOverride(
         _out.glossTint = _local.values.glossTint;
     if (_local.Has(UIStyleToken::GlossNormalAlpha))
         _out.glossAlpha = _local.values.glossAlpha;
+    if (_local.Has(UIStyleToken::GlossCenterX))
+        _out.glossCenterX = _local.values.glossCenterX;
+    if (_local.Has(UIStyleToken::GlossHeightRatio))
+        _out.glossHeightRatio = _local.values.glossHeightRatio;
+    if (_local.Has(UIStyleToken::GlossBlur))
+        _out.glossBlurRadius = _local.values.glossBlurRadius;
     if (_local.Has(UIStyleToken::GeometryRadius))
         _out.geometryRadius = _local.values.geometryRadius;
     if (_local.Has(UIStyleToken::GeometryBorderWidth))
@@ -157,6 +163,9 @@ void UIStyleResolver::ApplyGlossToken(
     UIVisualState _state)
 {
     _out.glossTint = _gloss.tint;
+    _out.glossCenterX = _gloss.centerX;
+    _out.glossHeightRatio = _gloss.heightRatio;
+    _out.glossBlurRadius = _gloss.blurRadius;
 
     switch (_state)
     {

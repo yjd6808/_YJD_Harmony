@@ -15,7 +15,7 @@ shift
 goto :parse
 :parsed
 
-set "BUILD_PS1=%~dp0..\..\Scripts\Build.ps1"
+set "BUILD_PS1=%~dp0..\Scripts\Build.ps1"
 if not exist "ThirdParty\Cocos2d-x\Output\%PLATFORM%\%CONFIG%\libcocos2d.dll" (
     echo [ERROR] libcocos2d.dll not found ^(%PLATFORM%/%CONFIG%^)
     echo         Build the Cocos2d-x engine first: Scripts\Build-Cocos.bat

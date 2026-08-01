@@ -76,19 +76,53 @@ void UIThemeManager::RequestBake(UIThemeBakeRequest&& _request)
     bakeService_.EnqueueRequest(jc::Move(_request));
 }
 
-void UIThemeManager::BakeDefaultTextureSet()
+bool UIThemeManager::ApplyTheme(const char* _jsonPath, UIColorScheme _scheme)
 {
-    if (activeTextureSet_)
-        return;
+    if (!_jsonPath || !_jsonPath[0])
+        return false;
+
+    std::string jsonContent = cc::FileUtils::getInstance()->getStringFromFile(_jsonPath);
+    if (jsonContent.empty())
+    {
+        _LogError_("[UIThemeManager] ApplyTheme 파일을 읽지 못했습니다: %s", _jsonPath);
+        return false;
+    }
+
+    Json::Value root;
+    Json::Reader reader;
+    if (!reader.parse(jsonContent, root))
+    {
+        _LogError_("[UIThemeManager] ApplyTheme JSON 파싱 실패: %s (%s)", _jsonPath, reader.getFormattedErrorMessages().c_str());
+        return false;
+    }
+
+    UIRuntimeTheme theme = UIThemeMapper::Map(root, _scheme);
+
+    activeTheme_ = theme;
+    activeScheme_ = _scheme;
+    activeThemeName_ = theme.meta.displayName.IsEmpty() ? jc::String("unnamed") : theme.meta.displayName;
+    activeThemeJsonPath_ = jc::String(_jsonPath);
+    ++revision_.mappedRevision;
 
     UIThemeBakeRequest request;
-    request.generation = 1;
+    request.generation = revision_.sourceRevision + 1;
     request.theme = activeTheme_;
     request.dpiScale = 1.0f;
-    request.resolvedScheme = UIColorScheme::Dark;
+    request.resolvedScheme = _scheme;
     request.preview = false;
     request.persistCache = true;
+    BuildThemeVariants(request);
 
+    bakeService_.EnqueueRequest(jc::Move(request));
+
+    _LogDebug_("[UIThemeManager] ApplyTheme 전환 요청: theme=%s scheme=%d json=%s revision=(%llu,%llu,%llu)",
+        activeThemeName_.Source(), (int)_scheme, _jsonPath,
+        revision_.sourceRevision, revision_.mappedRevision, revision_.textureRevision);
+    return true;
+}
+
+void UIThemeManager::BuildThemeVariants(UIThemeBakeRequest& _request) const
+{
     UIAssetSemantic semantics[] = {
         UIAssetSemantic::Button,
         UIAssetSemantic::Frame,
@@ -135,7 +169,7 @@ void UIThemeManager::BakeDefaultTextureSet()
         }
 
         UIResolvedStyle resolvedStyle = resolver_.Resolve(
-            elemType, UIVisualState::Normal, activeTheme_, {});
+            elemType, UIVisualState::Normal, _request.theme, {});
 
         UIResolvedVariantRequest variant;
         variant.asset.semantic = semantic;
@@ -144,8 +178,23 @@ void UIThemeManager::BakeDefaultTextureSet()
         variant.state = UIVisualState::Normal;
         variant.style = resolvedStyle;
         variant.styleHash = resolvedStyle.ComputeHash();
-        request.variants.PushBack(variant);
+        _request.variants.PushBack(variant);
     }
+}
+
+void UIThemeManager::BakeDefaultTextureSet()
+{
+    if (activeTextureSet_)
+        return;
+
+    UIThemeBakeRequest request;
+    request.generation = 1;
+    request.theme = activeTheme_;
+    request.dpiScale = 1.0f;
+    request.resolvedScheme = UIColorScheme::Dark;
+    request.preview = false;
+    request.persistCache = true;
+    BuildThemeVariants(request);
 
     _LogDebug_("[BakeDefaultTextureSet] variants=%d, firstStyleHash=%llu", request.variants.Size(), request.variants.Size() > 0 ? request.variants[0].styleHash : 0);
 
@@ -213,4 +262,9 @@ void UIThemeManager::SwapTextureSet()
     pendingTextureSet_ = nullptr;
 
     ++revision_.textureRevision;
+    _LogDebug_("[UIThemeManager] SwapTextureSet textureRevision=%llu (theme=%s scheme=%d)",
+        revision_.textureRevision, activeThemeName_.Source(), (int)activeScheme_);
+
+    if (onThemeRefreshed_)
+        onThemeRefreshed_();
 }

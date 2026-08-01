@@ -329,10 +329,24 @@ void UIToggleButton::ApplyThemeStateVisuals(State _state)
 
 void UIToggleButton::RefreshThemeVisuals()
 {
+	if (textureMode_ != UITextureMode::THEME || !themeTrack_)
+		return;
+
 	UIThemeManager* pThemeMgr = UIThemeManager::Get();
+	UIResolvedStyle resolved = pThemeMgr->Resolve(UIElementType::ToggleButton, UIVisualState::Normal, {});
+	uint64_t hash = resolved.ComputeHash();
+
+	themeBinding_.Clear();
+	themeBinding_.BindScale9(static_cast<Scale9Sprite*>(themeTrack_), UIAssetKey::For(UIAssetSemantic::ToggleTrack, hash), UIComponentSlot::Track);
+	themeBinding_.BindFixed(themeKnob_, UIAssetKey::For(UIAssetSemantic::ToggleKnob, hash), UIComponentSlot::Knob);
+
 	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
 	if (pSet)
 		themeBinding_.Refresh(*pSet);
+
+	themeTrack_->setContentSize(uiSize_);
+	RepositionKnob();
+	_LogDebug_("[UIToggleButton] RefreshThemeVisuals name=%s styleHash=%llu", GetName(), hash);
 }
 
 void UIToggleButton::Unload()

@@ -61,6 +61,7 @@ public:
 	virtual void Load();
 	virtual void Unload();
 	virtual void Reload();
+	virtual void RefreshThemeVisuals() {}
 	virtual bool OnMouseMoveInternal(cc::EventMouse* _mouseEvent);
 	virtual bool OnMouseDownInternal(cc::EventMouse* _mouseEvent);
 	virtual bool OnMouseUpInternal(cc::EventMouse* _mouseEvent);

@@ -36,6 +36,9 @@ uint64_t UIResolvedStyle::ComputeHash() const
     h = hashColor(h, metalMuted);
     h = hashColor(h, glossTint);
     h = hashFloat(h, glossAlpha);
+    h = hashFloat(h, glossCenterX);
+    h = hashFloat(h, glossHeightRatio);
+    h = hashFloat(h, glossBlurRadius);
     h = hashFloat(h, geometryRadius);
     h = hashFloat(h, geometryBorderWidth);
     h = hashFloat(h, geometryInnerRim);
@@ -76,6 +79,9 @@ float* UIStyleOverride::ResolveFloatPtr(UIResolvedStyle& _style, UIStyleToken _t
     switch (_token)
     {
     case UIStyleToken::GlossNormalAlpha:        return &_style.glossAlpha;
+    case UIStyleToken::GlossCenterX:            return &_style.glossCenterX;
+    case UIStyleToken::GlossHeightRatio:        return &_style.glossHeightRatio;
+    case UIStyleToken::GlossBlur:               return &_style.glossBlurRadius;
     case UIStyleToken::GeometryRadius:           return &_style.geometryRadius;
     case UIStyleToken::GeometryBorderWidth:      return &_style.geometryBorderWidth;
     case UIStyleToken::GeometryInnerRim:         return &_style.geometryInnerRim;
