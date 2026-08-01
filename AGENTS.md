@@ -26,13 +26,46 @@
 4. 소스, 헤더, 텍스트 파일들은 모두 UTF8 인코딩으로 저장
 
 ## Build
-- `Build.ps1` 스크립트를 사용하여 빌드한다.
-- **반드시 `Scripts` 디렉토리로 이동(`cd Scripts`) 후에 실행할 것.**
+- **`Scripts\BuildProject\{프로젝트명}.bat` 으로 빌드한다.** (프로젝트별 빌드 배치 — 더블클릭 또는 cmd에서 실행)
+- 인자: `[-C Debug|Release]` 구성, `[-P x64|x86]` 플랫폼 (기본: Debug / x64)
+- ⚠️ **빌드는 x64로만 할 것** (`-P x64`). x86도 빌드 가능은 하지만 배포/실행은 x64 기준이므로 x86으로 빌드하지 않는다.
 ```
-cd Scripts
-.\Build.ps1 -ProjectName <프로젝트명> [-Configuration|-C Debug|Release] [-Platform|-P x64|x86] [-Rebuild] [-Clean]
+Scripts\BuildProject\sgcl.bat -C Release -P x64
 ```
-- `-Rebuild` 와 `-Clean` 은 동시에 사용할 수 없다.
+- 내부적으로 `Scripts\Build.ps1 -ProjectName ... -Configuration ... -Platform ...`을 호출한다.
+- cocos2d 엔진이 필요한 프로젝트는 먼저 해당 구성의 엔진 DLL(`ThirdParty\Cocos2d-x\Output\%PLATFORM%\%CONFIG%\libcocos2d.dll`)이 빌드되어 있어야 한다 (없으면 `Scripts\Build-Cocos.bat`).
+
+## How to Run Projects
+
+**경로 정의** (바탕화면 `sgcl_빌드_실행_가이드.md`와 동일):
+
+| 키 | 정의 | 찾는 방법 |
+|---|---|---|
+| `SolutionDir` | `Harmony_Full.sln`이 위치한 디렉토리 | 워크트리 루트에서 `Harmony_Full.sln` 검색 |
+| `$(SolutionDir)..\UltimateHarmony_Dev\` | 배포/실행 공용 폴더 (`DeployRoot`) | SolutionDir의 부모 디렉토리 안의 `UltimateHarmony_Dev` |
+
+| 프로젝트 | 실행 방법 |
+|---|---|
+| sgcl | `$(SolutionDir)..\UltimateHarmony_Dev\release\sgcl`에서 실행 — 인자는 **단일 따옴표 문자열**: `"assets=$(SolutionDir)..\UltimateHarmony_Dev\assets mode=1 auth_ep=127.0.0.1:10110"` |
+| sgs_auth · sgs_center · sgs_game · sgs_lobby · sgs_query | `$(SolutionDir)..\UltimateHarmony_Dev\release\{프로젝트명}`에서 실행 — 인자: `"assets=$(SolutionDir)..\UltimateHarmony_Dev\assets mode=1"` |
+
+- **실행 인자 규칙** (sgcl 기준):
+  - 인자는 반드시 **하나의 따옴표 문자열**로 전달 (`AppConfig::ReadEnvArgs`가 argv[1]만 파싱 — 분리 전달 시 exit code 1)
+  - `assets` 누락 시 크래시(0xC0000005), `auth_ep=127.0.0.1:10110`은 sgs_auth 서버가 해당 주소에서 실행 중이어야 함
+  - VS 디버거(F5)는 커밋된 `.user` 파일의 `$(SolutionDir)` 매크로로 동일하게 동작
+  - 산출물: `$(SolutionDir)Output\x64\Debug\` (구성별 분리)
+
+## Debugging
+
+### 시작 시점 디버깅 (크래시/초기화 실패)
+
+**프로그램 실행 → 15초 대기 → 프로그램 종료 → 남은 로그 확인.**
+
+- **스크립트**: `Scripts\start_up_debugging.ps1 [-ProjectName <프로젝트명>] [-Args <인자 문자열>]` (기본 `-ProjectName sgcl`)
+  - 흐름: exe 실행 → 15초 대기 → 프로세스 종료 → 이번 실행 로그(tail 60) 출력
+  - 새 로그가 생성되지 않으면 실행 실패 가능성 (assets 경로 / DLL 누락 확인)
+  - 실행 위치: `$(SolutionDir)..\UltimateHarmony_Dev\release\{ProjectName}\{ProjectName}.exe`
+  - 경로 검증: 배포 폴더 / 실행 폴더 / exe / assets 존재 여부를 실행 전에 확인
 
 ## References
 1. Project Architecture: .opencode/docs/project_architecture.md
