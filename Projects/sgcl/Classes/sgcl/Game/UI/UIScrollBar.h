@@ -9,6 +9,8 @@
 #pragma once
 
 #include "sgcl/Game/UI/UIElement.h"
+#include "sgcl/Game/UI/Theme/UIThemeTypes.h"
+#include "sgcl/Game/UI/Theme/UIThemeBinding.h"
 
 class UIScrollBar : public UIElement
 {
@@ -34,7 +36,6 @@ public:
 	~UIScrollBar() override;
 
 	bool init() override;
-	void CreateSprites();
 
 	void UpdateTrackAndButtonPosition();
 	void Load() override;
@@ -66,6 +67,9 @@ public:
 	UIElementType_t GetElementType() override { return UIElementType::ScrollBar; }
 	jc::String ToString() override { return jc::StringUtil::Format("스크롤바(%s)", pInfo_->name_); }
 
+	UITextureMode GetTextureMode() const { return textureMode_; }
+	void RefreshThemeVisuals();
+
 protected:
 	void OnMouseLeaveInternalDetail(cc::EventMouse* _pMouseEvent) override;
 	bool OnMouseMoveInternalDetail(cc::EventMouse* _pMouseEvent) override;
@@ -77,6 +81,10 @@ protected:
 	void OnLinkElementMouseScroll(cc::EventMouse* _pMouseEvent);
 
 	void SetInitialUISize(cc::size _size) override;
+
+	void LoadTheme();
+	bool LoadLegacy();
+	void BuildThemeVisuals();
 
 private:
 	int rowCount_;
@@ -98,4 +106,7 @@ private:
 	UIScrollBarInfo* pInfo_;
 	FrameTexture* pTextures_[TEXTURE_COUNT];
 	cc::Sprite* pSprites_[TEXTURE_COUNT];
+
+	UITextureMode textureMode_ = UITextureMode::NONE;
+	UIThemeTextureBinding themeBinding_;
 };

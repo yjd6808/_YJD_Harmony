@@ -8,6 +8,8 @@
 #pragma once
 
 #include "sgcl/Game/UI/UIElement.h"
+#include "sgcl/Game/UI/Theme/UIThemeTypes.h"
+#include "sgcl/Game/UI/Theme/UIThemeBinding.h"
 
 class UIEditBox : public UIElement
 {
@@ -22,6 +24,8 @@ public:
 	static constexpr UIElementType_t Type() { return UIElementType::EditBox; }
 
 	bool init() override;
+	void Load() override;
+	void Unload() override;
 	UIElementType_t GetElementType() override { return UIElementType::EditBox; }
 	std::string GetText();
 	const char* GetTextRaw();
@@ -42,8 +46,13 @@ public:
 	void SetInputFlag(cc_ui::EditBox::InputFlag _inputFlag);
 	void SetInputMode(cc_ui::EditBox::InputMode _inputMode);
 	// ANY 모드에서는 VK_RETURN이 안먹히므로 오류라고 생각하지 말것
+
+	UITextureMode GetTextureMode() const { return textureMode_; }
+	void RefreshThemeVisuals();
 protected:
 	bool OnMouseUpContainedInternalDetail(cc::EventMouse* /*_pMouseEvent*/) override;
+
+	void BuildThemeVisuals();
 
 private:
 	struct Listener : cocos2d::ui::EditBoxDelegate
@@ -105,4 +114,8 @@ private:
 	cc_ui::EditBoxImplWin* pEditBoxImpl_{};
 	cc_ui::EditBox* pEditBox_;
 	Listener* pListener_;
+
+	UITextureMode textureMode_ = UITextureMode::NONE;
+	UIThemeTextureBinding themeBinding_;
+	cc_ui::Scale9Sprite* themeRoot_ = nullptr;
 };

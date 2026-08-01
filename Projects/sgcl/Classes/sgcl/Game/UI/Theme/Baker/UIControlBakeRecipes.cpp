@@ -157,3 +157,25 @@ UIAssetRecipe UIControlBakeRecipes::ScrollBarTrackRecipe(int _width, int _height
     r.minimumSize = cc::Size(8, 8);
     return r;
 }
+
+UIAssetRecipe UIControlBakeRecipes::ScrollBarThumbRecipe(int _size)
+{
+    UIAssetRecipe r;
+    r.semantic = UIAssetSemantic::ScrollBarThumb;
+    r.width = _size;
+    r.height = _size;
+    r.sliceInsets = { 8, 8, 8, 8 };
+    r.minimumSize = cc::Size(16, 16);
+    return r;
+}
+
+UIAssetRecipe UIControlBakeRecipes::EditBoxRecipe(int _width, int _height)
+{
+    UIAssetRecipe r;
+    r.semantic = UIAssetSemantic::EditBox;
+    r.width = _width;
+    r.height = _height;
+    r.sliceInsets = { 10, 10, 10, 10 };
+    r.minimumSize = cc::Size(20, 20);
+    return r;
+}

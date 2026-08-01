@@ -9,6 +9,7 @@
 #include "GameCoreHeader.h"
 
 #include "sgcl/Game/UI/UIRootGroup.h"
+#include "sgcl/Game/UI/Theme/UIThemeManager.h"
 
 USING_NS_CC;
 USING_NS_CCUI;
@@ -118,6 +119,79 @@ bool UIEditBox::init()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+void UIEditBox::Load()
+{
+	if (isLoaded_)
+		return;
+
+	textureMode_ = UITextureMode::THEME;
+	BuildThemeVisuals();
+	isLoaded_ = true;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void UIEditBox::Unload()
+{
+	themeBinding_.Clear();
+	themeRoot_ = nullptr;
+	UIElement::Unload();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void UIEditBox::BuildThemeVisuals()
+{
+	UIThemeManager* pThemeMgr = UIThemeManager::Get();
+
+	UIResolvedStyle resolved = pThemeMgr->Resolve(UIElementType::EditBox, UIVisualState::Normal, {});
+	uint64_t hash = resolved.ComputeHash();
+
+	if (themeRoot_)
+	{
+		this->removeChild(themeRoot_);
+		themeRoot_ = nullptr;
+	}
+
+	auto* pBackground = Scale9Sprite::create();
+	pBackground->setAnchorPoint(Vec2::ZERO);
+	pBackground->setContentSize(uiSize_);
+	pBackground->setLocalZOrder(-1); // 에딧박스 뒤에 배치
+	this->addChild(pBackground);
+	themeRoot_ = pBackground;
+
+	UIAssetKey key = UIAssetKey::For(UIAssetSemantic::EditBox, hash);
+	themeBinding_.BindScale9(pBackground, key, UIComponentSlot::Background);
+
+	_LogDebug_("[UIEditBox] BuildThemeVisuals styleHash=%llu name=%s size=(%.0f,%.0f)",
+		hash, GetName(), uiSize_.width, uiSize_.height);
+
+	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
+	if (pSet)
+		themeBinding_.Refresh(*pSet);
+	else
+		_LogWarn_("[UIEditBox] GetActiveTextureSet returned null!");
+
+	// setSpriteFrame가 contentSize를 리셋하므로 복구한다.
+	pBackground->setContentSize(uiSize_);
+
+	_LogDebug_("[UIEditBox] BuildThemeVisuals final: name=%s background=(%.0f,%.0f) localZOrder=%d",
+		GetName(), pBackground->getContentSize().width, pBackground->getContentSize().height,
+		pBackground->getLocalZOrder());
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void UIEditBox::RefreshThemeVisuals()
+{
+	UIThemeManager* pThemeMgr = UIThemeManager::Get();
+	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
+	if (pSet)
+		themeBinding_.Refresh(*pSet);
+
+	// setSpriteFrame가 contentSize를 리셋하므로 복구한다.
+	if (themeRoot_)
+		themeRoot_->setContentSize(uiSize_);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 void UIEditBox::SetInitialUISize(cc::size _size)
 {
 	UIElement::SetInitialUISize(_size);
@@ -179,6 +253,10 @@ void UIEditBox::SetUISize(const cc::size& _size)
 	// 에딧박스의 컨텐트 사이즈를 변경하더라도 라벨의 폰트 크기가 변경되지도 않는다.
 	// EditBoxImplCommon::setContentSize 참조
 	pEditBox_->setContentSize(_size);
+
+	if (themeRoot_)
+		themeRoot_->setContentSize(_size);
+
 	pLabelPlaceHolder_->setDimensions(_size.width, _size.height);
 
 	if (isFontAutoScaling_)
