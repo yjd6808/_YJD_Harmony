@@ -65,4 +65,5 @@ struct UIBakeOutput
     UIPixelBuffer buffer;
     UISliceInsets sliceInsets;
     cc::Size minimumSize;
+    float contentPadding = 0.0f;
 };

@@ -100,6 +100,7 @@ void UIThemeManager::BakeDefaultTextureSet()
         UIAssetSemantic::ToggleKnob,
         UIAssetSemantic::ProgressTrack,
         UIAssetSemantic::ProgressGauge,
+        UIAssetSemantic::ProgressCap,
         UIAssetSemantic::SliderTrack,
         UIAssetSemantic::SliderFill,
         UIAssetSemantic::SliderThumb,
@@ -120,7 +121,8 @@ void UIThemeManager::BakeDefaultTextureSet()
         case UIAssetSemantic::ToggleTrack:
         case UIAssetSemantic::ToggleKnob:    elemType = UIElementType::ToggleButton; break;
         case UIAssetSemantic::ProgressTrack:
-        case UIAssetSemantic::ProgressGauge: elemType = UIElementType::ProgressBar; break;
+        case UIAssetSemantic::ProgressGauge:
+        case UIAssetSemantic::ProgressCap:  elemType = UIElementType::ProgressBar; break;
         case UIAssetSemantic::SliderTrack:
         case UIAssetSemantic::SliderFill:
         case UIAssetSemantic::SliderThumb:   elemType = UIElementType::Button; break;

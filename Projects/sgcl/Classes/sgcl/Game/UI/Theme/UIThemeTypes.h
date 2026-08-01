@@ -154,6 +154,15 @@ struct UIAssetKey
     {
         return (uint64_t)semantic ^ (styleHash * 0x9E3779B9) ^ (recipeHash * 0xC6A4A793);
     }
+
+    static UIAssetKey For(UIAssetSemantic _semantic, uint64_t _styleHash)
+    {
+        UIAssetKey k;
+        k.semantic = _semantic;
+        k.styleHash = _styleHash;
+        k.recipeHash = (uint64_t)_semantic;
+        return k;
+    }
 };
 
 struct UIThemeRevision

@@ -100,8 +100,17 @@ UIAssetRecipe UIControlBakeRecipes::ProgressGaugeRecipe(int _width, int _height)
     r.semantic = UIAssetSemantic::ProgressGauge;
     r.width = _width;
     r.height = _height;
-    r.sliceInsets = { 6, 6, 6, 6 };
+    r.sliceInsets = { 6, 0, 6, 0 };
     r.minimumSize = cc::Size(12, 12);
+    return r;
+}
+
+UIAssetRecipe UIControlBakeRecipes::ProgressCapRecipe(int _size)
+{
+    UIAssetRecipe r;
+    r.semantic = UIAssetSemantic::ProgressCap;
+    r.width = _size;
+    r.height = _size;
     return r;
 }
 

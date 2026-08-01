@@ -98,13 +98,14 @@ static UIAssetRecipe SelectRecipe(UIAssetSemantic _semantic)
     switch (_semantic)
     {
     case UIAssetSemantic::Button:        return UIControlBakeRecipes::ButtonRecipe(160, 44);
-    case UIAssetSemantic::CheckMark:     return UIControlBakeRecipes::CheckMarkRecipe(18);
+    case UIAssetSemantic::CheckMark:     return UIControlBakeRecipes::CheckMarkRecipe(12);
     case UIAssetSemantic::RadioDot:      return UIControlBakeRecipes::RadioDotRecipe(14);
     case UIAssetSemantic::CheckBox:      return UIControlBakeRecipes::CheckBoxShellRecipe(32);
     case UIAssetSemantic::ToggleTrack:   return UIControlBakeRecipes::ToggleTrackRecipe(54, 28);
     case UIAssetSemantic::ToggleKnob:    return UIControlBakeRecipes::ToggleKnobRecipe(24);
     case UIAssetSemantic::ProgressTrack: return UIControlBakeRecipes::ProgressTrackRecipe(96, 20);
     case UIAssetSemantic::ProgressGauge: return UIControlBakeRecipes::ProgressGaugeRecipe(96, 12);
+    case UIAssetSemantic::ProgressCap:   return UIControlBakeRecipes::ProgressCapRecipe(14);
     case UIAssetSemantic::Frame:         return UIControlBakeRecipes::FrameRecipe(80, 80);
     case UIAssetSemantic::Radio:         return UIControlBakeRecipes::RadioShellRecipe(32);
     case UIAssetSemantic::SliderTrack:   return UIControlBakeRecipes::SliderTrackRecipe(96, 12);
@@ -160,6 +161,7 @@ UITextureSet* UITextureBakeService::BuildTextureSet(const UIThemeBakeRequest& _r
             entry->atlasRect = { 0, 0, (float)output.buffer.width, (float)output.buffer.height };
             entry->sliceInsets = output.sliceInsets;
             entry->minimumSize = output.minimumSize;
+            entry->contentPadding = output.contentPadding;
             entry->contentRect = { 0, 0, (float)output.buffer.width, (float)output.buffer.height };
             entry->premultipliedAlpha = true;
 

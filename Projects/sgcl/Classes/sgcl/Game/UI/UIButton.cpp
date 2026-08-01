@@ -316,10 +316,7 @@ void UIButton::BuildThemeVisuals()
 	UIResolvedStyle resolved = pThemeMgr->Resolve(UIElementType::Button, UIVisualState::Normal, {});
 	uint64_t hash = resolved.ComputeHash();
 
-	UIAssetKey key;
-	key.semantic = UIAssetSemantic::Button;
-	key.styleHash = hash;
-	key.recipeHash = 0;
+	UIAssetKey key = UIAssetKey::For(UIAssetSemantic::Button, hash);
 
 	_LogDebug_("[UIButton] BuildThemeVisuals semantic=Button styleHash=%llu", hash);
 

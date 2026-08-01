@@ -15,10 +15,17 @@ protected:
 	void OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent) override;
 
 private:
-    UILabel* pLabelTitle_;
-    UILabel* pLabelContent_;
-    UIButton* pBtnClose_;
-    UICheckBox* pChkOpt1_;
-    UICheckBox* pChkOpt2_;
-    UIEditBox* pEditInput_;
+	UILabel* pLabelTitle_;
+	UIButton* pBtnClose_;
+	UICheckBox* pChkA_;
+	UICheckBox* pChkB_;
+	UICheckBox* pChkC_;
+	UICheckBox* pChkD_;
+	UIToggleButton* pToggleOpt_;
+	UIProgressBar* pPbar1_;
+	UIProgressBar* pPbar2_;
+	UIProgressBar* pPbar3_;
+	UIProgressBar* pPbar4_;
+	UIProgressBar* pPbar5_;
+	UIProgressBar* pPbar6_;
 };

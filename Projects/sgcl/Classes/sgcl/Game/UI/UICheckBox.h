@@ -56,4 +56,5 @@ private:
 	UITextureMode textureMode_ = UITextureMode::NONE;
 	UIThemeTextureBinding themeBinding_;
 	uint64_t appliedTextureRevision_ = 0;
+	cc_ui::Scale9Sprite* pTrackShell_ = nullptr;
 };

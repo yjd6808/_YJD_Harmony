@@ -25,6 +25,16 @@ static void RenderMaterial(
     UIGradientRasterizer::RenderInnerRim(_work, _bounds, _style);
 }
 
+static void RenderGaugeFill(
+    UIPixelBuffer& _work,
+    const UIRect& _bounds,
+    const UIResolvedStyle& _style)
+{
+    UIGradientRasterizer::RenderSurface(
+        _work, _bounds, _style.geometryRadius,
+        _style.metalBright, _style.metalHighlight);
+}
+
 static void RenderCheckMark(
     UIPixelBuffer& _work,
     const UIResolvedStyle& _style)
@@ -94,6 +104,9 @@ UIBakeOutput UITextureBaker::Bake(
     UIRect materialBounds = CalculateMaterialBounds(
         workW, workH, scaled, true);
 
+    UIRect gaugeBounds = CalculateMaterialBounds(
+        workW, workH, scaled, false);
+
     switch (_recipe.semantic)
     {
     case UIAssetSemantic::Button:
@@ -119,7 +132,7 @@ UIBakeOutput UITextureBaker::Bake(
 
     case UIAssetSemantic::ProgressGauge:
     case UIAssetSemantic::SliderFill:
-        RenderMaterial(work, materialBounds, scaled);
+        RenderGaugeFill(work, gaugeBounds, scaled);
         break;
 
     default:
@@ -134,6 +147,7 @@ UIBakeOutput UITextureBaker::Bake(
     result.buffer = jc::Move(output);
     result.sliceInsets = _recipe.sliceInsets;
     result.minimumSize = _recipe.minimumSize;
+    result.contentPadding = materialBounds.x / (float)ss;
     return result;
 }
 

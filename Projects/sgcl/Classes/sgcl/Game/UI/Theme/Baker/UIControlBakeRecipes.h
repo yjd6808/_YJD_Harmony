@@ -16,6 +16,7 @@ public:
     static UIAssetRecipe ToggleKnobRecipe(int _size);
     static UIAssetRecipe ProgressTrackRecipe(int _width, int _height);
     static UIAssetRecipe ProgressGaugeRecipe(int _width, int _height);
+    static UIAssetRecipe ProgressCapRecipe(int _size);
     static UIAssetRecipe SliderTrackRecipe(int _width, int _height);
     static UIAssetRecipe SliderFillRecipe(int _width, int _height);
     static UIAssetRecipe SliderThumbRecipe(int _size);

@@ -156,9 +156,7 @@ void UIProgressBar::BuildThemeVisuals()
 	pTrack->setAnchorPoint(Vec2::ZERO);
 	this->addChild(pTrack);
 
-	UIAssetKey trackKey;
-	trackKey.semantic = UIAssetSemantic::ProgressTrack;
-	trackKey.styleHash = hash;
+	UIAssetKey trackKey = UIAssetKey::For(UIAssetSemantic::ProgressTrack, hash);
 	themeBinding_.BindScale9(pTrack, trackKey, UIComponentSlot::Track);
 	pTrackSprite_ = pTrack;
 
@@ -168,9 +166,7 @@ void UIProgressBar::BuildThemeVisuals()
 	pGauge->setVisible(false);
 	this->addChild(pGauge);
 
-	UIAssetKey gaugeKey;
-	gaugeKey.semantic = UIAssetSemantic::ProgressGauge;
-	gaugeKey.styleHash = hash;
+	UIAssetKey gaugeKey = UIAssetKey::For(UIAssetSemantic::ProgressGauge, hash);
 	themeBinding_.BindScale9(pGauge, gaugeKey, UIComponentSlot::Gauge);
 	pGaugeSprite_ = pGauge;
 
@@ -180,9 +176,7 @@ void UIProgressBar::BuildThemeVisuals()
 	this->addChild(pCap);
 	pGaugeCap_ = pCap;
 
-	UIAssetKey capKey;
-	capKey.semantic = UIAssetSemantic::ProgressCap;
-	capKey.styleHash = hash;
+	UIAssetKey capKey = UIAssetKey::For(UIAssetSemantic::ProgressCap, hash);
 	themeBinding_.BindFixed(pCap, capKey, UIComponentSlot::Cap);
 
 	_LogDebug_("[UIProgressBar] BuildThemeVisuals styleHash=%llu", hash);
@@ -192,6 +186,14 @@ void UIProgressBar::BuildThemeVisuals()
 		themeBinding_.Refresh(*pSet);
 	else
 		_LogWarn_("[UIProgressBar] GetActiveTextureSet returned null!");
+
+	pTrack->setContentSize(uiSize_);
+	pGauge->setContentSize(uiSize_);
+
+	const UITextureEntry* pTrackEntry = pSet ? pSet->Find(trackKey) : nullptr;
+	gaugeInset_ = pTrackEntry ? pTrackEntry->contentPadding + resolved.geometryBorderWidth : 0.0f;
+	if (gaugeInset_ < 0.0f)
+		gaugeInset_ = 0.0f;
 }
 
 void UIProgressBar::DestroyThemeVisuals()
@@ -297,14 +299,18 @@ void UIProgressBar::SetPercent(float _percent) const
 	{
 		if (pGaugeSprite_)
 		{
-			float visibleWidth = uiSize_.width * (_percent / 100.0f);
-			if (visibleWidth <= 0.01f)
+			const float bodyW = uiSize_.width - gaugeInset_ * 2.0f;
+			const float bodyH = uiSize_.height - gaugeInset_ * 2.0f;
+			const float visibleWidth = bodyW * (_percent / 100.0f);
+			percent_ = _percent;
+			if (bodyW <= 0.0f || bodyH <= 0.0f || visibleWidth <= 0.01f)
 			{
 				pGaugeSprite_->setVisible(false);
 				return;
 			}
+			pGaugeSprite_->setPosition(gaugeInset_, gaugeInset_);
 			pGaugeSprite_->setVisible(true);
-			pGaugeSprite_->setContentSize({ visibleWidth, uiSize_.height });
+			pGaugeSprite_->setContentSize({ visibleWidth, bodyH });
 		}
 		return;
 	}
@@ -322,8 +328,10 @@ float UIProgressBar::GetPercent() const
 
 void UIProgressBar::UpdateGaugeGeometry()
 {
-	float visibleWidth = uiSize_.width * percent_;
-	if (visibleWidth <= 0.01f)
+	const float bodyW = uiSize_.width - gaugeInset_ * 2.0f;
+	const float bodyH = uiSize_.height - gaugeInset_ * 2.0f;
+	const float visibleWidth = bodyW * percent_;
+	if (bodyW <= 0.0f || bodyH <= 0.0f || visibleWidth <= 0.01f)
 	{
 		if (pGaugeSprite_) pGaugeSprite_->setVisible(false);
 		if (pGaugeCap_) pGaugeCap_->setVisible(false);
@@ -335,7 +343,7 @@ void UIProgressBar::UpdateGaugeGeometry()
 		if (pGaugeCap_)
 		{
 			pGaugeCap_->setVisible(true);
-			pGaugeCap_->setPosition(visibleWidth * 0.5f, uiSize_.height * 0.5f);
+			pGaugeCap_->setPosition(visibleWidth * 0.5f + gaugeInset_, uiSize_.height * 0.5f);
 			pGaugeCap_->setScale(1.0f);
 		}
 		return;
@@ -346,7 +354,8 @@ void UIProgressBar::UpdateGaugeGeometry()
 	}
 	if (pGaugeSprite_)
 	{
+		pGaugeSprite_->setPosition(gaugeInset_, gaugeInset_);
 		pGaugeSprite_->setVisible(true);
-		pGaugeSprite_->setContentSize({ visibleWidth, uiSize_.height });
+		pGaugeSprite_->setContentSize({ visibleWidth, bodyH });
 	}
 }

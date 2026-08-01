@@ -44,8 +44,8 @@ UIRuntimeTheme UIRuntimeTheme::EngineDefaults()
     theme.geometry.radius = 4.0f;
     theme.geometry.borderWidth = 1.1f;
     theme.geometry.innerRim = 0.75f;
-    theme.geometry.depth = 1.35f;
-    theme.geometry.shadow = 3.5f;
+    theme.geometry.depth = 0.4f;
+    theme.geometry.shadow = 1.0f;
 
     theme.state.hoverLift = 2.0f;
     theme.state.checkedGoldMix = 0.15f;

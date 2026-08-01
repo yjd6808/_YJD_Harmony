@@ -115,7 +115,15 @@ void UICheckBox::SetUISize(const cc::size& _size)
 		return;
 
 	if (textureMode_ == UITextureMode::THEME)
+	{
+		if (pTrackShell_)
+		{
+			pTrackShell_->setContentSize(uiSize_);
+			if (pSprite_[INDEX_CROSS])
+				pSprite_[INDEX_CROSS]->setPosition(uiSize_ / 2);
+		}
 		return;
+	}
 
 	const float scaleX = getScaleX();
 	const float scaleY = getScaleY();
@@ -269,12 +277,11 @@ void UICheckBox::BuildThemeVisuals()
 	pTrack->setContentSize(uiSize_);
 	pTrack->setAnchorPoint(Vec2::ZERO);
 	this->addChild(pTrack);
+	pTrackShell_ = pTrack;
 
 	UIResolvedStyle trackStyle = pThemeMgr->Resolve(UIElementType::CheckBox, UIVisualState::Normal, {});
 
-	UIAssetKey trackKey;
-	trackKey.semantic = UIAssetSemantic::CheckBox;
-	trackKey.styleHash = trackStyle.ComputeHash();
+	UIAssetKey trackKey = UIAssetKey::For(UIAssetSemantic::CheckBox, trackStyle.ComputeHash());
 	themeBinding_.BindScale9(pTrack, trackKey, UIComponentSlot::Shell);
 
 	auto* pMark = Sprite::create();
@@ -283,9 +290,7 @@ void UICheckBox::BuildThemeVisuals()
 	pMark->setVisible(checked_);
 	this->addChild(pMark);
 
-	UIAssetKey markKey;
-	markKey.semantic = UIAssetSemantic::CheckMark;
-	markKey.styleHash = trackStyle.ComputeHash();
+	UIAssetKey markKey = UIAssetKey::For(UIAssetSemantic::CheckMark, trackStyle.ComputeHash());
 	themeBinding_.BindFixed(pMark, markKey, UIComponentSlot::Mark);
 
 	pSprite_[INDEX_CROSS] = pMark;
@@ -297,12 +302,15 @@ void UICheckBox::BuildThemeVisuals()
 		themeBinding_.Refresh(*pSet);
 	else
 		_LogWarn_("[UICheckBox] GetActiveTextureSet returned null!");
+
+	pTrack->setContentSize(uiSize_);
 }
 
 void UICheckBox::DestroyThemeVisuals()
 {
 	themeBinding_.Clear();
 	removeAllChildren();
+	pTrackShell_ = nullptr;
 }
 
 void UICheckBox::RefreshThemeVisuals()
@@ -323,6 +331,7 @@ void UICheckBox::Unload()
 	if (textureMode_ == UITextureMode::THEME)
 	{
 		themeBinding_.Clear();
+		pTrackShell_ = nullptr;
 	}
 	else
 	{

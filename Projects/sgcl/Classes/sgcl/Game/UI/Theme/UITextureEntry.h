@@ -11,6 +11,7 @@ public:
     UISliceInsets sliceInsets;
     cc::Size minimumSize;
     cc::Rect contentRect;
+    float contentPadding = 0.0f;
     bool rotated = false;
     bool premultipliedAlpha = true;
 

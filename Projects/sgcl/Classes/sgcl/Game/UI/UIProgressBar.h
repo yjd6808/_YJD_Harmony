@@ -55,5 +55,6 @@ private:
 	cc_ui::Scale9Sprite* pTrackSprite_ = nullptr;
 	cc_ui::Scale9Sprite* pGaugeSprite_ = nullptr;
 	cc::Sprite* pGaugeCap_ = nullptr;
-	float percent_ = 0.0f;
+	mutable float percent_ = 0.0f;
+	float gaugeInset_ = 0.0f;
 };

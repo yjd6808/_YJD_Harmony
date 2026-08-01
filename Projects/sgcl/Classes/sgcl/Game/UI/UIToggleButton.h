@@ -57,6 +57,7 @@ protected:
 	void BuildThemeVisuals();
 	void DestroyThemeVisuals();
 	void ApplyThemeStateVisuals(State _state);
+	void RepositionKnob();
 
 private:
 	ToggleState toggleState_;

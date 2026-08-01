@@ -47,16 +47,21 @@ void UIToggleButton::SetToggleState(ToggleState _state)
 
 	if (textureMode_ == UITextureMode::THEME)
 	{
-		if (themeKnob_)
-		{
-			const float knobSize = jc::Math::Min(uiSize_.width, uiSize_.height) * 0.8f;
-			const float xPos = (_state == ToggleState::eToggled) ? (uiSize_.width - knobSize * 0.5f) : (knobSize * 0.5f);
-			themeKnob_->setPositionX(xPos);
-		}
+		RepositionKnob();
 		return;
 	}
 
 	SetVisibleState(state_);
+}
+
+void UIToggleButton::RepositionKnob()
+{
+	if (themeKnob_ == nullptr)
+		return;
+
+	const float knobSize = jc::Math::Min(uiSize_.width, uiSize_.height) * 0.8f;
+	const float xPos = (toggleState_ == ToggleState::eToggled) ? (uiSize_.width - knobSize * 0.5f) : (knobSize * 0.5f);
+	themeKnob_->setPosition(xPos, uiSize_.height * 0.5f);
 }
 
 UIToggleButton* UIToggleButton::Create(UIRootGroup* _pRoot, UIGroup* _pParent)
@@ -126,6 +131,7 @@ void UIToggleButton::SetUISize(const cc::size& _contentSize)
 			if (pTrack9)
 				pTrack9->setContentSize(uiSize_);
 		}
+		RepositionKnob();
 		return;
 	}
 
@@ -266,9 +272,7 @@ void UIToggleButton::BuildThemeVisuals()
 	UIResolvedStyle resolved = pThemeMgr->Resolve(UIElementType::ToggleButton, UIVisualState::Normal, {});
 	uint64_t hash = resolved.ComputeHash();
 
-	UIAssetKey trackKey;
-	trackKey.semantic = UIAssetSemantic::ToggleTrack;
-	trackKey.styleHash = hash;
+	UIAssetKey trackKey = UIAssetKey::For(UIAssetSemantic::ToggleTrack, hash);
 	themeBinding_.BindScale9(pTrack, trackKey, UIComponentSlot::Track);
 
 	float knobSize = jc::Math::Min(uiSize_.width, uiSize_.height) * 0.8f;
@@ -278,9 +282,7 @@ void UIToggleButton::BuildThemeVisuals()
 	this->addChild(pKnob);
 	themeKnob_ = pKnob;
 
-	UIAssetKey knobKey;
-	knobKey.semantic = UIAssetSemantic::ToggleKnob;
-	knobKey.styleHash = hash;
+	UIAssetKey knobKey = UIAssetKey::For(UIAssetSemantic::ToggleKnob, hash);
 	themeBinding_.BindFixed(pKnob, knobKey, UIComponentSlot::Knob);
 
 	_LogDebug_("[UIToggleButton] BuildThemeVisuals styleHash=%llu", hash);
@@ -290,6 +292,8 @@ void UIToggleButton::BuildThemeVisuals()
 		themeBinding_.Refresh(*pSet);
 	else
 		_LogWarn_("[UIToggleButton] GetActiveTextureSet returned null!");
+
+	pTrack->setContentSize(uiSize_);
 }
 
 void UIToggleButton::DestroyThemeVisuals()
@@ -389,6 +393,8 @@ bool UIToggleButton::OnMouseUpContainedInternalDetail(cc::EventMouse* _pMouseEve
 {
 	toggleState_ = toggleState_ == ToggleState::eNormal ? ToggleState::eToggled : ToggleState::eNormal;
 	pRootGroup_->OnToggleStateChanged(this, toggleState_);
+	if (textureMode_ == UITextureMode::THEME)
+		RepositionKnob();
 	SetVisibleState(State::eNormal);
 	return false;
 }

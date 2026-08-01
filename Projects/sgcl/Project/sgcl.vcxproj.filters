@@ -588,6 +588,9 @@
     <ClCompile Include="..\Classes\sgcl\Net\NetClientGroup.cpp">
       <Filter>Net</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI_Implementation\UI_Generic.cpp">
+      <Filter>Game\UI_Implementation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\sgcl\Game\Texture\ImagePackManager.h">
@@ -1106,6 +1109,10 @@
     </ClCompile>
     <ClInclude Include="..\Classes\sgcl\MCP\MCPCore.h">
       <Filter>MCP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\Contents\Global.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI_Implementation\UI_Generic.h">
+      <Filter>Game\UI_Implementation</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

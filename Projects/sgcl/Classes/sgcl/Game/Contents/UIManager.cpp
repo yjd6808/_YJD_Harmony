@@ -95,7 +95,6 @@ UIRootGroup* UIManager::Show(const char* _name, const CDataMap<>& _param)
 	pRootGroup->InitFromXml();
 	pRootGroup->SetRelativePosition(0, 0);
 
-// Merge data map if present
 	CDataMap<> dataMap = _param;
 	if (pGroupInfo->pDataMap_)
 	{
