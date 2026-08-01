@@ -21,4 +21,6 @@ public:
     static UIAssetRecipe SliderFillRecipe(int _width, int _height);
     static UIAssetRecipe SliderThumbRecipe(int _size);
     static UIAssetRecipe ScrollBarTrackRecipe(int _width, int _height);
+    static UIAssetRecipe ScrollBarThumbRecipe(int _size);
+    static UIAssetRecipe EditBoxRecipe(int _width, int _height);
 };

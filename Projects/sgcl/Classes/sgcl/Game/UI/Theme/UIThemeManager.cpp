@@ -104,7 +104,9 @@ void UIThemeManager::BakeDefaultTextureSet()
         UIAssetSemantic::SliderTrack,
         UIAssetSemantic::SliderFill,
         UIAssetSemantic::SliderThumb,
-        UIAssetSemantic::ScrollBarTrack
+        UIAssetSemantic::ScrollBarTrack,
+        UIAssetSemantic::ScrollBarThumb,
+        UIAssetSemantic::EditBox
     };
 
     for (auto semantic : semantics)
@@ -127,6 +129,8 @@ void UIThemeManager::BakeDefaultTextureSet()
         case UIAssetSemantic::SliderFill:
         case UIAssetSemantic::SliderThumb:   elemType = UIElementType::Button; break;
         case UIAssetSemantic::ScrollBarTrack: elemType = UIElementType::ScrollBar; break;
+        case UIAssetSemantic::ScrollBarThumb: elemType = UIElementType::ScrollBar; break;
+        case UIAssetSemantic::EditBox:        elemType = UIElementType::EditBox; break;
         default: break;
         }
 

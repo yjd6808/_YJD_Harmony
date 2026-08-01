@@ -112,6 +112,8 @@ static UIAssetRecipe SelectRecipe(UIAssetSemantic _semantic)
     case UIAssetSemantic::SliderFill:    return UIControlBakeRecipes::SliderFillRecipe(96, 12);
     case UIAssetSemantic::SliderThumb:   return UIControlBakeRecipes::SliderThumbRecipe(24);
     case UIAssetSemantic::ScrollBarTrack: return UIControlBakeRecipes::ScrollBarTrackRecipe(16, 120);
+    case UIAssetSemantic::ScrollBarThumb: return UIControlBakeRecipes::ScrollBarThumbRecipe(24);
+    case UIAssetSemantic::EditBox:        return UIControlBakeRecipes::EditBoxRecipe(160, 44);
     default: return UIControlBakeRecipes::ButtonRecipe(160, 44);
     }
 }

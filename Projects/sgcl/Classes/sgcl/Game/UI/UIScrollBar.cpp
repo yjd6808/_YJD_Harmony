@@ -14,8 +14,10 @@
 #include "sgcl/Define/Define_Event.h"
 #include "sgcl/Game/Contents/UIManager.h"
 #include "sgcl/Game/Texture/ImagePackManager.h"
+#include "sgcl/Game/UI/Theme/UIThemeManager.h"
 
 USING_NS_CC;
+USING_NS_CCUI;
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -207,8 +209,8 @@ bool UIScrollBar::init()
 
 	if (pPack == nullptr)
 	{
-		_LogWarn_("스크롤바 Sga패키지를 찾지 못했습니다.");
-		return false;
+		_LogWarn_("스크롤바 Sga패키지를 찾지 못했습니다. (THEME 모드로 폴백됩니다.) name=%s", GetName());
+		return isInitialized_ = true;
 	}
 
 	if (pInfo_->TrackSize.height < MIN_THUMB_HEIGHT)
@@ -253,18 +255,118 @@ void UIScrollBar::Load()
 		return;
 	}
 
-	CreateSprites();
+	if (LoadLegacy())
+	{
+		_LogDebug_("[UIScrollBar] LoadLegacy succeeded, using SGA texture mode (name=%s)", GetName());
+		textureMode_ = UITextureMode::SGA;
+	}
+	else
+	{
+		_LogWarn_("[UIScrollBar] LoadLegacy failed -> falling back to THEME texture mode (name=%s)", GetName());
+		textureMode_ = UITextureMode::THEME;
+		LoadTheme();
+	}
+
 	UpdateThumbSize();
-
-	// =============================================================
-	//                        포지셔닝
-	// 1. 영구적으로 변하지 않는 컨트롤의 위치를 결정한다.
-	// 2. 손잡이의 경우 위치가 로카운트, 로포스에 따라 변한다.
-	// 이때 모든 컨트롤의 X좌표는 0으로 고정되므로 Y좌표만 신경써주면 된다.
-	// =============================================================
-
 	UpdateTrackAndButtonPosition();
 	UpdateThumbPosition();
+
+	_LogDebug_("[UIScrollBar] Load complete textureMode=%d name=%s uiSize=(%.0f,%.0f) trackHeight=%.0f upBtn=%.0f downBtn=%.0f pos=%d endPos=%d thumbH=%.0f",
+		(int)textureMode_, GetName(), uiSize_.width, uiSize_.height,
+		trackHeight_, upButtonHeight_, downButtonHeight_, pos_, endPos_, thumbHeight_);
+
+	SetVisibleStateNormal();
+	isLoaded_ = true;
+}
+
+bool UIScrollBar::LoadLegacy()
+{
+	if (pInfo_->Sga == InvalidValue_v)
+	{
+		_LogWarn_("[UIScrollBar] LoadLegacy Sga=InvalidValue_v");
+		return false;
+	}
+
+	const ImagePack* pPack = g_cImagePackMgr.GetPackUnsafe(pInfo_->Sga);
+	if (pPack == nullptr)
+	{
+		_LogWarn_("[UIScrollBar] LoadLegacy pack not found (sga=%d)", pInfo_->Sga);
+		return false;
+	}
+
+	bool bAllLoaded = true;
+
+	for (int i = 0; i < TEXTURE_COUNT; ++i)
+	{
+		const int spriteIndex = pInfo_->Sprites[i];
+
+		if (spriteIndex == InvalidValue_v)
+		{
+			_LogWarn_("[UIScrollBar] LoadLegacy sprite[%d]=InvalidValue_v (sga=%d img=%d)", i, pInfo_->Sga, pInfo_->Img);
+			bAllLoaded = false;
+			continue;
+		}
+
+		FrameTexture* pTexture = g_cUIMgr.CreateUITextureRetained(
+			pInfo_->Sga, pInfo_->Img, spriteIndex);
+
+		if (pTexture == nullptr || pTexture->IsLink())
+		{
+			_LogWarn_("[UIScrollBar] LoadLegacy sprite[%d] texture load failed (link)", i);
+			CC_SAFE_RELEASE_NULL(pTexture);
+			bAllLoaded = false;
+			continue;
+		}
+
+		Sprite* pSprite;
+
+		// 나인 렉트의 중앙 렉트 크기는 setCapInsets로 설정할 수 있다.
+		if (i == INDEX_THUMB_NORMAL || i == INDEX_THUMB_PRESSED)
+		{
+			SpriteFrame* pFrame = SpriteFrame::createWithTexture(pTexture->GetTexture(), pTexture->GetRect());
+			cc_ui::Scale9Sprite* pScale9 = cc_ui::Scale9Sprite::createWithSpriteFrame(pFrame);
+			pSprite = pScale9;
+
+			// 높이는 일단 암거나 지정, 어차피 이후 updateThumbSize() 함수에서 업데이트를 하기 때문..
+			pSprite->setContentSize({ uiSize_.width, DEFAULT_SIZE45.height });
+		}
+		else
+		{
+			const cc::size spriteSize = pTexture->GetSize();
+			const float widthScaleX = uiSize_.width / spriteSize.width;
+
+			pSprite = Sprite::createWithTexture(pTexture->GetTexture());
+			pSprite->setScaleX(widthScaleX);
+		}
+
+		pSprite->setAnchorPoint(Vec2::ZERO);
+
+		pTextures_[i] = pTexture;
+		pSprites_[i] = pSprite;
+	}
+
+	if (!bAllLoaded)
+	{
+		_LogWarn_("[UIScrollBar] LoadLegacy incomplete sprite set (all 7 sprites required)");
+		return false;
+	}
+
+	// 높이의 경우 트랙과 손잡이만 contentSize.height에 영향을 받으므로 스케일을 변경해줘야한다.
+	// 손잡이의 경우 Scale9 스프이고 updateThumbSize()에서 수행하므로 트랙만 스케일 적용
+	pSprites_[INDEX_TRACK]->setScaleY(trackHeight_ / pTextures_[INDEX_TRACK]->GetHeightF());
+
+	pSprites_[INDEX_UP_NORMAL]->setScaleY(upButtonHeight_ / pTextures_[INDEX_UP_NORMAL]->GetHeightF());
+	pSprites_[INDEX_UP_PRESSED]->setScaleY(upButtonHeight_ / pTextures_[INDEX_UP_PRESSED]->GetHeightF());
+	pSprites_[INDEX_DOWN_NORMAL]->setScaleY(downButtonHeight_ / pTextures_[INDEX_DOWN_NORMAL]->GetHeightF());
+	pSprites_[INDEX_DOWN_PRESSED]->setScaleY(downButtonHeight_ / pTextures_[INDEX_DOWN_PRESSED]->GetHeightF());
+
+	this->addChild(pSprites_[INDEX_UP_NORMAL]);
+	this->addChild(pSprites_[INDEX_UP_PRESSED]);
+	this->addChild(pSprites_[INDEX_DOWN_NORMAL]);
+	this->addChild(pSprites_[INDEX_DOWN_PRESSED]);
+	this->addChild(pSprites_[INDEX_TRACK]);
+	this->addChild(pSprites_[INDEX_THUMB_NORMAL]);
+	this->addChild(pSprites_[INDEX_THUMB_PRESSED]);
 
 	// =============================================================
 	//                       디폴트 컬러링
@@ -305,59 +407,136 @@ void UIScrollBar::Load()
 		pSprites_[INDEX_THUMB_PRESSED]->setColor(ColorList::Alabaster_v);
 	}
 
-	SetVisibleStateNormal();
-	isLoaded_ = true;
+	return true;
 }
 
-void UIScrollBar::CreateSprites()
+void UIScrollBar::LoadTheme()
 {
+	BuildThemeVisuals();
+}
+
+void UIScrollBar::BuildThemeVisuals()
+{
+	UIThemeManager* pThemeMgr = UIThemeManager::Get();
+
+	UIResolvedStyle resolved = pThemeMgr->Resolve(UIElementType::ScrollBar, UIVisualState::Normal, {});
+	uint64_t hash = resolved.ComputeHash();
+
+	UIAssetKey trackKey = UIAssetKey::For(UIAssetSemantic::ScrollBarTrack, hash);
+	UIAssetKey thumbKey = UIAssetKey::For(UIAssetSemantic::ScrollBarThumb, hash);
+	UIAssetKey buttonKey = UIAssetKey::For(UIAssetSemantic::Button, hash);
+
+	// 트랙
+	auto* pTrack = Scale9Sprite::create();
+	pTrack->setAnchorPoint(Vec2::ZERO);
+	pTrack->setContentSize({ uiSize_.width, trackHeight_ });
+	this->addChild(pTrack);
+	pSprites_[INDEX_TRACK] = pTrack;
+	themeBinding_.BindScale9(pTrack, trackKey, UIComponentSlot::Track);
+
+	// 손잡이 (normal/pressed 동일 텍스처, pressed는 색으로 구분)
+	auto* pThumbNormal = Scale9Sprite::create();
+	pThumbNormal->setAnchorPoint(Vec2::ZERO);
+	pThumbNormal->setContentSize({ uiSize_.width, DEFAULT_SIZE45.height });
+	this->addChild(pThumbNormal);
+	pSprites_[INDEX_THUMB_NORMAL] = pThumbNormal;
+	themeBinding_.BindScale9(pThumbNormal, thumbKey, UIComponentSlot::Thumb);
+
+	auto* pThumbPressed = Scale9Sprite::create();
+	pThumbPressed->setAnchorPoint(Vec2::ZERO);
+	pThumbPressed->setContentSize({ uiSize_.width, DEFAULT_SIZE45.height });
+	pThumbPressed->setColor(Color3B(180, 180, 200));
+	this->addChild(pThumbPressed);
+	pSprites_[INDEX_THUMB_PRESSED] = pThumbPressed;
+	themeBinding_.BindScale9(pThumbPressed, thumbKey, UIComponentSlot::Thumb);
+
+	// 업/다운 버튼 (Button 시맨틱 재사용, pressed는 색으로 구분)
+	auto* pUpNormal = Scale9Sprite::create();
+	pUpNormal->setAnchorPoint(Vec2::ZERO);
+	pUpNormal->setContentSize({ uiSize_.width, upButtonHeight_ });
+	this->addChild(pUpNormal);
+	pSprites_[INDEX_UP_NORMAL] = pUpNormal;
+	themeBinding_.BindScale9(pUpNormal, buttonKey, UIComponentSlot::Background);
+
+	auto* pUpPressed = Scale9Sprite::create();
+	pUpPressed->setAnchorPoint(Vec2::ZERO);
+	pUpPressed->setContentSize({ uiSize_.width, upButtonHeight_ });
+	pUpPressed->setColor(Color3B(180, 180, 200));
+	this->addChild(pUpPressed);
+	pSprites_[INDEX_UP_PRESSED] = pUpPressed;
+	themeBinding_.BindScale9(pUpPressed, buttonKey, UIComponentSlot::Background);
+
+	auto* pDownNormal = Scale9Sprite::create();
+	pDownNormal->setAnchorPoint(Vec2::ZERO);
+	pDownNormal->setContentSize({ uiSize_.width, downButtonHeight_ });
+	this->addChild(pDownNormal);
+	pSprites_[INDEX_DOWN_NORMAL] = pDownNormal;
+	themeBinding_.BindScale9(pDownNormal, buttonKey, UIComponentSlot::Background);
+
+	auto* pDownPressed = Scale9Sprite::create();
+	pDownPressed->setAnchorPoint(Vec2::ZERO);
+	pDownPressed->setContentSize({ uiSize_.width, downButtonHeight_ });
+	pDownPressed->setColor(Color3B(180, 180, 200));
+	this->addChild(pDownPressed);
+	pSprites_[INDEX_DOWN_PRESSED] = pDownPressed;
+	themeBinding_.BindScale9(pDownPressed, buttonKey, UIComponentSlot::Background);
+
+	_LogDebug_("[UIScrollBar] BuildThemeVisuals styleHash=%llu name=%s", hash, GetName());
+
+	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
+	if (pSet)
+		themeBinding_.Refresh(*pSet);
+	else
+		_LogWarn_("[UIScrollBar] GetActiveTextureSet returned null!");
+
+	// setSpriteFrame가 contentSize를 리셋하므로 복구한다.
+	pTrack->setContentSize({ uiSize_.width, trackHeight_ });
+	pThumbNormal->setContentSize({ uiSize_.width, DEFAULT_SIZE45.height });
+	pThumbPressed->setContentSize({ uiSize_.width, DEFAULT_SIZE45.height });
+	pUpNormal->setContentSize({ uiSize_.width, upButtonHeight_ });
+	pUpPressed->setContentSize({ uiSize_.width, upButtonHeight_ });
+	pDownNormal->setContentSize({ uiSize_.width, downButtonHeight_ });
+	pDownPressed->setContentSize({ uiSize_.width, downButtonHeight_ });
+
+	_LogDebug_("[UIScrollBar] BuildThemeVisuals final: name=%s uiSize=(%.0f,%.0f) track=(%.0f,%.0f) thumb=(%.0f,%.0f) upBtn=(%.0f,%.0f) downBtn=(%.0f,%.0f)",
+		GetName(), uiSize_.width, uiSize_.height,
+		pTrack->getContentSize().width, pTrack->getContentSize().height,
+		pThumbNormal->getContentSize().width, pThumbNormal->getContentSize().height,
+		pUpNormal->getContentSize().width, pUpNormal->getContentSize().height,
+		pDownNormal->getContentSize().width, pDownNormal->getContentSize().height);
+}
+
+void UIScrollBar::RefreshThemeVisuals()
+{
+	UIThemeManager* pThemeMgr = UIThemeManager::Get();
+	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
+	if (pSet)
+		themeBinding_.Refresh(*pSet);
+
+	// setSpriteFrame가 contentSize를 리셋하므로 복구한다.
 	for (int i = 0; i < TEXTURE_COUNT; ++i)
 	{
-		FrameTexture* pTexture = g_cUIMgr.CreateUITextureRetained(
-			pInfo_->Sga, pInfo_->Img, pInfo_->Sprites[i]);
-		Sprite* pSprite;
+		cc::Sprite* pSprite = pSprites_[i];
+		if (pSprite == nullptr)
+			continue;
 
-		// 나인 렉트의 중앙 렉트 크기는 setCapInsets로 설정할 수 있다.
 		if (i == INDEX_THUMB_NORMAL || i == INDEX_THUMB_PRESSED)
 		{
-			SpriteFrame* pFrame = SpriteFrame::createWithTexture(pTexture->GetTexture(), pTexture->GetRect());
-			cc_ui::Scale9Sprite* pScale9 = cc_ui::Scale9Sprite::createWithSpriteFrame(pFrame);
-			pSprite = pScale9;
-
-			// 높이는 일단 암거나 지정, 어차피 이후 updateThumbSize() 함수에서 업데이트를 하기 때문..
-			pSprite->setContentSize({ uiSize_.width, DEFAULT_SIZE45.height });
+			pSprite->setContentSize({ uiSize_.width, thumbHeight_ });
+		}
+		else if (i == INDEX_TRACK)
+		{
+			pSprite->setContentSize({ uiSize_.width, trackHeight_ });
+		}
+		else if (i == INDEX_UP_NORMAL || i == INDEX_UP_PRESSED)
+		{
+			pSprite->setContentSize({ uiSize_.width, upButtonHeight_ });
 		}
 		else
 		{
-			const cc::size spriteSize = pTexture->GetSize();
-			const float widthScaleX = uiSize_.width / spriteSize.width;
-
-			pSprite = Sprite::createWithTexture(pTexture->GetTexture());
-			pSprite->setScaleX(widthScaleX);
+			pSprite->setContentSize({ uiSize_.width, downButtonHeight_ });
 		}
-
-		pSprite->setAnchorPoint(Vec2::ZERO);
-
-		pTextures_[i] = pTexture;
-		pSprites_[i] = pSprite;
 	}
-
-	// 높이의 경우 트랙과 손잡이만 contentSize.height에 영향을 받으므로 스케일을 변경해줘야한다.
-	// 손잡이의 경우 Scale9 스프이고 updateThumbSize()에서 수행하므로 트랙만 스케일 적용
-	pSprites_[INDEX_TRACK]->setScaleY(trackHeight_ / pTextures_[INDEX_TRACK]->GetHeightF());
-
-	pSprites_[INDEX_UP_NORMAL]->setScaleY(upButtonHeight_ / pTextures_[INDEX_UP_NORMAL]->GetHeightF());
-	pSprites_[INDEX_UP_PRESSED]->setScaleY(upButtonHeight_ / pTextures_[INDEX_UP_PRESSED]->GetHeightF());
-	pSprites_[INDEX_DOWN_NORMAL]->setScaleY(downButtonHeight_ / pTextures_[INDEX_DOWN_NORMAL]->GetHeightF());
-	pSprites_[INDEX_DOWN_PRESSED]->setScaleY(downButtonHeight_ / pTextures_[INDEX_DOWN_PRESSED]->GetHeightF());
-
-	this->addChild(pSprites_[INDEX_UP_NORMAL]);
-	this->addChild(pSprites_[INDEX_UP_PRESSED]);
-	this->addChild(pSprites_[INDEX_DOWN_NORMAL]);
-	this->addChild(pSprites_[INDEX_DOWN_PRESSED]);
-	this->addChild(pSprites_[INDEX_TRACK]);
-	this->addChild(pSprites_[INDEX_THUMB_NORMAL]);
-	this->addChild(pSprites_[INDEX_THUMB_PRESSED]);
 }
 
 void UIScrollBar::UpdateTrackAndButtonPosition()
@@ -382,6 +561,9 @@ void UIScrollBar::UpdateThumbSize()
 	thumbHeight_ = thumbHeight;
 	pSprites_[INDEX_THUMB_NORMAL]->setContentSize({ uiSize_.width, thumbHeight });
 	pSprites_[INDEX_THUMB_PRESSED]->setContentSize({ uiSize_.width, thumbHeight });
+
+	_LogDebug_("[UIScrollBar] UpdateThumbSize name=%s thumbHeight=%.0f trackHeight=%.0f rowCount=%d rowPerPage=%d",
+		GetName(), thumbHeight_, trackHeight_, rowCount_, rowCountPerPage_);
 }
 
 void UIScrollBar::UpdateThumbPosition()
@@ -400,6 +582,11 @@ void UIScrollBar::UpdateThumbPosition()
 		downButtonHeight_ + splitedTrackHeight_ * static_cast<float>(endPos_ - pos_));
 	pSprites_[INDEX_THUMB_PRESSED]->setPositionY(
 		downButtonHeight_ + splitedTrackHeight_ * static_cast<float>(endPos_ - pos_));
+
+	_LogDebug_("[UIScrollBar] UpdateThumbPosition name=%s pos=%d endPos=%d thumbY=%.0f splitedTrackHeight=%.0f downBtnBottomY=%.0f",
+		GetName(), pos_, endPos_,
+		pSprites_[INDEX_THUMB_NORMAL]->getPositionY(),
+		splitedTrackHeight_, downButtonHeight_);
 }
 
 void UIScrollBar::Unload()
@@ -417,6 +604,7 @@ void UIScrollBar::Unload()
 		CC_SAFE_RELEASE_NULL(pTextures_[i]);
 	}
 
+	themeBinding_.Clear();
 	isLoaded_ = false;
 }
 
@@ -492,6 +680,37 @@ void UIScrollBar::SetUISize(const cc::size& _contentSize)
 
 	if (!isLoaded_)
 	{
+		return;
+	}
+
+	if (textureMode_ == UITextureMode::THEME)
+	{
+		for (int i = 0; i < TEXTURE_COUNT; ++i)
+		{
+			cc::Sprite* pSprite = pSprites_[i];
+			if (pSprite == nullptr)
+			{
+				continue;
+			}
+
+			// Scale9 스프이므로 updateThumbSize()에서 업데이트함
+			if (i == INDEX_THUMB_NORMAL || i == INDEX_THUMB_PRESSED)
+			{
+				continue;
+			}
+
+			const float height = (i == INDEX_TRACK) ? trackHeight_
+				: (i == INDEX_UP_NORMAL || i == INDEX_UP_PRESSED) ? upButtonHeight_
+				: downButtonHeight_;
+			pSprite->setContentSize({ uiSize_.width, height });
+		}
+
+		UpdateTrackAndButtonPosition();
+		UpdateThumbSize();
+		UpdateThumbPosition();
+
+		_LogDebug_("[UIScrollBar] SetUISize (THEME) name=%s size=(%.0f,%.0f) trackHeight=%.0f",
+			GetName(), uiSize_.width, uiSize_.height, trackHeight_);
 		return;
 	}
 

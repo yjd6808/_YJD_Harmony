@@ -10,6 +10,8 @@
 
 
 #include "sgcl/Game/UI/UIElement.h"
+#include "sgcl/Game/UI/Theme/UIThemeTypes.h"
+#include "sgcl/Game/UI/Theme/UIThemeBinding.h"
 
 class UIStatic : public UIElement
 {
@@ -36,9 +38,17 @@ public:
 	UIElementType_t GetElementType() override { return UIElementType::Static; }
 	jc::String ToString() override { return jc::StringUtil::Format("스태틱(%s)", pInfo_->name_); }
 
+	UITextureMode GetTextureMode() const { return textureMode_; }
+	void RefreshThemeVisuals();
+
+protected:
+	void BuildThemeVisuals();
+
 private:
 	bool visible_;
 	UIStaticInfo* pInfo_;
-	FrameTexture* pDebugTexture_;
 	cc::Sprite* pDebugSprite_;
+	cc_ui::Scale9Sprite* themeRoot_ = nullptr;
+	UITextureMode textureMode_ = UITextureMode::NONE;
+	UIThemeTextureBinding themeBinding_;
 };
