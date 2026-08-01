@@ -167,6 +167,7 @@ UITextureSet* UITextureBakeService::BuildTextureSet(const UIThemeBakeRequest& _r
 
             set->AddEntry(variant.asset, entry);
             cache_.Insert(cacheKey, entry);
+            CC_SAFE_RELEASE(entry);
 
             if (output.buffer.pixels.Size() >= 4)
             {

@@ -361,6 +361,19 @@ void UIGroup::ForEachRecursive(const jc::Action<UIElement*>& _action) const
 	}
 }
 
+void UIGroup::RefreshThemeVisualsRecursive()
+{
+	ForEachRecursiveContainedSelf([](UIElement* _pElement)
+	{
+		// 그룹 요소는 RefreshThemeVisuals()가 다시 Recursive를 호출하므로 스킵
+		// (자식 요소들은 ForEachRecursive가 하위 트리를 순회하면서 처리)
+		if (!_pElement->IsGroup())
+		{
+			_pElement->RefreshThemeVisuals();
+		}
+	});
+}
+
 void UIGroup::ForEachRecursiveContainedSelf(const jc::Action<UIElement*>& _action) const
 {
 	_action(const_cast<UIGroup*>(this));

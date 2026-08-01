@@ -27,7 +27,7 @@ public:
 	float GetPercent() const;
 
 	UITextureMode GetTextureMode() const { return textureMode_; }
-	void RefreshThemeVisuals();
+	void RefreshThemeVisuals() override;
 
 	cc::ProgressTimer* Source() const { return pProgressBar_; }
 	UIElementType_t GetElementType() override { return UIElementType::ProgressBar; }

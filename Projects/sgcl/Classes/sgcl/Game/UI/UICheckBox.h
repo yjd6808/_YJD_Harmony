@@ -34,7 +34,7 @@ public:
 	bool IsChecked() const;
 
 	UITextureMode GetTextureMode() const { return textureMode_; }
-	void RefreshThemeVisuals();
+	void RefreshThemeVisuals() override;
 
 	UIElementType_t GetElementType() override { return UIElementType::CheckBox; }
 	jc::String ToString() override { return jc::StringUtil::Format("체크박스(%s)", pInfo_->name_); }

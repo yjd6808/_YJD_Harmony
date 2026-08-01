@@ -59,6 +59,8 @@ public:
 
 	void Load() override;
 	void Unload() override;
+	void RefreshThemeVisuals() override { RefreshThemeVisualsRecursive(); }
+	void RefreshThemeVisualsRecursive();
 
 	void AddChild(UIElement* _pChild);
 

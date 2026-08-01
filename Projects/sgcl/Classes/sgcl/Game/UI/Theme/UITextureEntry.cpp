@@ -10,7 +10,7 @@ UITextureSet::UITextureSet(uint64_t _generation, uint64_t _themeHash)
 UITextureSet::~UITextureSet()
 {
     entries_.ForEachValue([](UITextureEntry* _entry) {
-        JC_DELETE_SAFE(_entry);
+        CC_SAFE_RELEASE(_entry);
     });
     entries_.Clear();
 
@@ -27,6 +27,7 @@ const UITextureEntry* UITextureSet::Find(const UIAssetKey& _key) const
 
 void UITextureSet::AddEntry(const UIAssetKey& _key, UITextureEntry* _entry)
 {
+    CC_SAFE_RETAIN(_entry);
     entries_.Insert(_key, _entry);
 }
 

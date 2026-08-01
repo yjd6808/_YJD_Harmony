@@ -38,7 +38,7 @@ public:
 	jc::String ToString() override { return jc::StringUtil::Format("버튼(%s)", buttonInfo_->name_); }
 
 	UITextureMode GetTextureMode() const { return textureMode_; }
-	void RefreshThemeVisuals();
+	void RefreshThemeVisuals() override;
 
 protected:
 	void OnMouseEnterInternalDetail(cc::EventMouse* _pMouseEvent) override;

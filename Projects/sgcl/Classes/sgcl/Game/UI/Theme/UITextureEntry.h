@@ -2,7 +2,7 @@
 
 #include "sgcl/Game/UI/Theme/UIThemeTypes.h"
 
-class UITextureEntry
+class UITextureEntry : public cc::Ref
 {
 public:
     UIAssetKey key;
@@ -19,7 +19,7 @@ public:
     UITextureEntry(const UITextureEntry&) = delete;
     UITextureEntry& operator=(const UITextureEntry&) = delete;
 
-    ~UITextureEntry()
+    ~UITextureEntry() override
     {
         CC_SAFE_RELEASE(texture);
     }

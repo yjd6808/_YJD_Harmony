@@ -373,10 +373,22 @@ void UIButton::ApplyThemeStateVisuals(State _state)
 
 void UIButton::RefreshThemeVisuals()
 {
+	if (textureMode_ != UITextureMode::THEME || !themeRoot_)
+		return;
+
 	UIThemeManager* pThemeMgr = UIThemeManager::Get();
+	UIResolvedStyle resolved = pThemeMgr->Resolve(UIElementType::Button, UIVisualState::Normal, {});
+	uint64_t hash = resolved.ComputeHash();
+
+	themeBinding_.Clear();
+	themeBinding_.BindScale9(static_cast<Scale9Sprite*>(themeRoot_), UIAssetKey::For(UIAssetSemantic::Button, hash), UIComponentSlot::Background);
+
 	const UITextureSet* pSet = pThemeMgr->GetActiveTextureSet();
 	if (pSet)
 		themeBinding_.Refresh(*pSet);
+
+	themeRoot_->setContentSize(uiSize_);
+	_LogDebug_("[UIButton] RefreshThemeVisuals name=%s styleHash=%llu", GetName(), hash);
 }
 
 void UIButton::Unload()

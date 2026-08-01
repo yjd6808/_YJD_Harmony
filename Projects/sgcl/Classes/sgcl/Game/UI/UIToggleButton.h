@@ -39,7 +39,7 @@ public:
 	void RestoreState(State _state) override;
 
 	UITextureMode GetTextureMode() const { return textureMode_; }
-	void RefreshThemeVisuals();
+	void RefreshThemeVisuals() override;
 
 	UIElementType_t GetElementType() override { return UIElementType::ToggleButton; }
 	jc::String ToString() override { return jc::StringUtil::Format("토글버튼(%s)", pInfo_->name_); }

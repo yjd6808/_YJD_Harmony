@@ -37,6 +37,8 @@ UITextureEntry* UITextureCache::Find(const UITextureCacheKey& _key)
 
 void UITextureCache::Insert(const UITextureCacheKey& _key, UITextureEntry* _entry)
 {
+    CC_SAFE_RETAIN(_entry);
+
     CacheEntry e;
     e.key = _key;
     e.entry = _entry;
@@ -74,7 +76,7 @@ void UITextureCache::Remove(const UITextureCacheKey& _key)
                 : 0;
 
             currentMemoryBytes_ -= entryBytes;
-            JC_DELETE_SAFE(e.entry);
+            CC_SAFE_RELEASE(e.entry);
             entries_.RemoveAt(i);
             return;
         }
@@ -84,7 +86,7 @@ void UITextureCache::Remove(const UITextureCacheKey& _key)
 void UITextureCache::Clear()
 {
     for (int i = 0; i < entries_.Size(); ++i)
-        JC_DELETE_SAFE(entries_[i].entry);
+        CC_SAFE_RELEASE(entries_[i].entry);
     entries_.Clear();
     currentMemoryBytes_ = 0;
 }
@@ -111,7 +113,7 @@ void UITextureCache::EvictIfNeeded()
             : 0;
 
         currentMemoryBytes_ -= victimBytes;
-        JC_DELETE_SAFE(victim.entry);
+        CC_SAFE_RELEASE(victim.entry);
         entries_.RemoveAt(lruIndex);
     }
 }

@@ -10,6 +10,7 @@
 #include "sgcl/Game/UI/UIStatic.h"
 #include "sgcl/Game/Contents/UIManager.h"
 #include "sgcl/Game/UI/UIRootGroup.h"
+#include "sgcl/Game/UI/Theme/UIThemeManager.h"
 #include "sgcl/SteinsGateApp.h"
 #include "sgcl/Core/AppConfig_Props.h"
 
@@ -48,6 +49,16 @@ bool UILayer::init()
 	}
 
 	_contentSize = g_cApp.GetDesignResolutionSize();
+
+	UIThemeManager::Get()->SetOnThemeRefreshed([this]()
+	{
+		for (int i = static_cast<int>(_children.size()) - 1; i >= 0; --i)
+		{
+			UIRootGroup* pUiGroup = static_cast<UIRootGroup*>(_children.at(i));
+			pUiGroup->RefreshThemeVisualsRecursive();
+		}
+	});
+
 	return true;
 }
 
@@ -195,6 +206,7 @@ void UILayer::update(float _delta)
 	}
 
 	g_cUIMgr.OnUpdate(_delta);
+	UIThemeManager::Get()->Update(_delta);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
