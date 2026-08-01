@@ -7,6 +7,7 @@
 
 #include "Q_LOGIN.h"
 
+#include "jdb/MySQL/MysqlDatabase.h"
 #include "sgs/QueryDefine_AUTH.h"
 
 USING_NS_JC;

@@ -9,7 +9,6 @@ USING_NS_CC;
 USING_NS_JC;
 USING_NS_JC_DETAIL;
 USING_NS_JNET;
-USING_NS_JNET_DETAIL;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 App::App(int _argc, char** _argv)

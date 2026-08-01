@@ -1,4 +1,4 @@
-# 해당 프로젝트 cpp 파일들의 #include "Core.h"와 #include "$(ProjectName)/Core.h" 문자열을 제거한다.
+﻿# 해당 프로젝트 cpp 파일들의 #include "Core.h"와 #include "$(ProjectName)/Core.h" 문자열을 제거한다.
 # ---------------------------------------------------------------------
 # $ProjectNames = @('sgs_auth')
 

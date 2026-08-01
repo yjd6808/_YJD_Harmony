@@ -118,7 +118,7 @@
       <AdditionalOptions>/utf-8</AdditionalOptions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
       <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Projects\jnetr_common\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Projects\jnet\Sources;$(SolutionDir)Projects\jnetr_common\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,7 +136,7 @@
       <AdditionalOptions>/utf-8</AdditionalOptions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
       <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Projects\jnetr_common\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Projects\jnet\Sources;$(SolutionDir)Projects\jnetr_common\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -157,7 +157,7 @@
       <DebugInformationFormat>None</DebugInformationFormat>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
       <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Projects\jnetr_common\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Projects\jnet\Sources;$(SolutionDir)Projects\jnetr_common\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -180,7 +180,7 @@
       <DebugInformationFormat>None</DebugInformationFormat>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
       <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Projects\jnetr_common\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Projects\jnet\Sources;$(SolutionDir)Projects\jnetr_common\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

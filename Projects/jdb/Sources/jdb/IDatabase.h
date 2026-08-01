@@ -32,6 +32,10 @@ using IQueryTaskPtr = jc::SharedPtr<IQueryTask>;
 class IConnection;
 class ConnectionPool;
 struct QueryCompletedCallbackFunctor;
+class JDB_DLL IDatabase;
+
+// QueryDefine.h 매크로(QRY_SELECT_STATEMENT_BEGIN 등)가 참조하는 데이터베이스 타입
+using Database = IDatabase;
 
 class JDB_DLL IDatabase // 무조건 shared 포인터로 관리되어야 하는 인터페이스
 {
@@ -58,6 +62,18 @@ public:
 	IQueryPtr			Query(int _id, const BoundStmt& _stmt) const;
 	IQueryTaskPtr		QueryAsync(const BoundStmt& _stmt) const;
 	IQueryTaskPtr		QueryAsync(int _id, const BoundStmt& _stmt) const;
+
+	// QueryDefine.h의 SelectStatement/Statement 템플릿이 Script(const char*)와 인자를 그대로 전달하는 구형 호출을 지원
+	// (PreparedStatement 값 바인딩이 없는 최소 호환용)
+	template <typename... Args>
+	IQueryPtr			Query(const char* _stmt, Args&&... _args) const
+	{
+		BoundStmt stmt;
+		stmt.text_ = _stmt;
+		stmt.info_.text_ = _stmt;
+		stmt.info_.argCount_ = static_cast<int>(sizeof...(Args));
+		return Query(stmt);
+	}
 
 protected:
 	virtual IQueryPtr	CreateQuery(IConnection* _pConn, const BoundStmt& _stmt) const = 0;

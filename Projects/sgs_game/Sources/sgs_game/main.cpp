@@ -3,6 +3,7 @@
 #include <jc/Random.h>
 
 #include <sg/LogSpecifier.h>
+#include <sgs/ServerCore.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -11,20 +12,17 @@ int parse_args(int _argc, char* _pArgv[]);
 
 int main(int _argc, char* _pArgv[])
 {
-    new char;
-
-    //////////////////////////////////////////////////////////////////////////////////////
-    // 메인 리소스 초기화
-    //////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////
+	// 메인 리소스 초기화
+	//////////////////////////////////////////////////////////////////////////////////////
 	
-	Env::InitArgs(_argc, _pArgv[]);
+	Env::InitArgs(_argc, _pArgv);
 	int gameServerType = parse_args(_argc, _pArgv);
 	const String logSpecifier = StringUtil::Format(LOG_SPECIFIER_GAME, GameServerType::Name[gameServerType]);
 
-	Random::Initialize();
     Winsock::Initialize(2, 2);
     Console::SetSize(800, 400);
-    InitializeJCore(_argc, _argv);
+    InitializeJCore(_argc, _pArgv);
     InitializeNetLogger(logSpecifier.Source());
     InitializeDefaultLogger(logSpecifier.Source());
     InitializeCommonCore();

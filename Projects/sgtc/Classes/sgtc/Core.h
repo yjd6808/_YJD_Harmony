@@ -3,8 +3,8 @@
 #include <cocos2d.h>
 #include <cocos/ui/CocosGUI.h>
 
-#include <jnet/Core.h>
+#include "jnet/PCH/Core.h"
 
-#include <sgcc/Core.h>
+#include "sgcc/PCH/Core.h"
 
 #define USING_NS_CCUI		using namespace cocos2d::ui

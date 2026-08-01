@@ -150,7 +150,15 @@
 	'$(MSBuildProjectName)' == 'sgs_center'					OR
 	'$(MSBuildProjectName)' == 'sgs_game'					OR
 	'$(MSBuildProjectName)' == 'sgs_lobby'					OR
-	'$(MSBuildProjectName)' == 'sgs_query'
+	'$(MSBuildProjectName)' == 'sgs_query'					OR
+	'$(MSBuildProjectName)' == 'jdbr'						OR
+	'$(MSBuildProjectName)' == 'jnet_gbench'				OR
+	'$(MSBuildProjectName)' == 'jnet_gtest'				OR
+	'$(MSBuildProjectName)' == 'jnetr_tcpclient'			OR
+	'$(MSBuildProjectName)' == 'jnetr_tcpserver'			OR
+	'$(MSBuildProjectName)' == 'jnetr_udpclient_a'			OR
+	'$(MSBuildProjectName)' == 'jnetr_udpclient_b'			OR
+	'$(MSBuildProjectName)' == 'sgtc'
 			" />
 
 	<Import Project="$(MSBuildThisFileDirectory)Props/sgcc_cocos.props" 

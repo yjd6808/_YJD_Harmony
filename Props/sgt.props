@@ -7,7 +7,7 @@
     </ClCompile>
 
     <Link>
-      <AdditionalDependencies>sgt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
 

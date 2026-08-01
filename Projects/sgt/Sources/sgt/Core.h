@@ -8,5 +8,5 @@
 
 #pragma once
 
-#include <jnet/Core.h>
-#include <sgcc/Core.h>
+#include "jnet/PCH/Core.h"
+#include "sgcc/PCH/Core.h"

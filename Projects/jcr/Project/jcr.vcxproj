@@ -23,8 +23,6 @@
     <ClCompile Include="..\Sources\jcr\05_PageGuard.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine_CoBasic.cpp" />
-    <ClCompile Include="..\Sources\jcr\06_Coroutine_CoStack.cpp" />
-    <ClCompile Include="..\Sources\jcr\06_CoroutineImpl1.cpp" />
     <ClCompile Include="..\Sources\jcr\Core.cpp" />
     <ClCompile Include="..\Sources\jcr\main.cpp" />
     <ClCompile Include="..\Sources\jcr\01_AsmStudy1.cpp" />
@@ -33,7 +31,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jcr\Core.h" />
-    <ClInclude Include="..\Sources\jcr\06_CoroutineImpl1.h" />
   </ItemGroup>
   <ItemGroup>
     <MASM Include="..\Sources\jcr\01_AsmStudy2.asm">
@@ -43,9 +40,6 @@
       <FileType>Document</FileType>
     </MASM>
     <MASM Include="..\Sources\jcr\04_CoStack2.asm">
-      <FileType>Document</FileType>
-    </MASM>
-    <MASM Include="..\Sources\jcr\06_CoroutineImpl2.asm">
       <FileType>Document</FileType>
     </MASM>
   </ItemGroup>
@@ -133,6 +127,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
+      <ProgramDataBaseFileName>$(IntDir)jcr.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;DebugMode;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -153,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
+      <ProgramDataBaseFileName>$(IntDir)jcr.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;DebugMode;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -173,6 +169,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
+      <ProgramDataBaseFileName>$(IntDir)jcr.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -202,6 +199,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
+      <ProgramDataBaseFileName>$(IntDir)jcr.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
