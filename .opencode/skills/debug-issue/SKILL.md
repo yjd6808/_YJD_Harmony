@@ -1,6 +1,6 @@
 ---
-name: Debug Issue
-description: Systematically debug issues using graph-powered code navigation
+name: debug-issue
+description: Systematically debug issues using graph-powered code navigation. Use when investigating a bug, crash, or unexpected behavior and you need to trace call chains and impact through the code-review-graph MCP tools.
 ---
 
 ## Debug Issue

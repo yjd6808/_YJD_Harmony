@@ -6,5 +6,19 @@
       "command": ["uvx", "code-review-graph", "serve", "--repo", "D:/Programming/MyProjects/_DevCpp/UltimateHarmony"],
       "enabled": true
     }
+  },
+  "permission": {
+    "bash": {
+      "git push *": "ask",
+      "git diff *": "allow",
+      "git log *": "allow",
+      "dotnet build*": "allow",
+      "python*": "allow"
+    },
+    "websearch": "allow",
+    "external_directory": {
+      "D:/백업/던파 구클/설정 파일들/src/**": "allow",
+      "C:/Users/jdyun/**": "allow"
+    }
   }
 }

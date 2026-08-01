@@ -1,6 +1,6 @@
 ---
-name: Explore Codebase
-description: Navigate and understand codebase structure using the knowledge graph
+name: explore-codebase
+description: Navigate and understand codebase structure using the knowledge graph. Use when you need to map out modules, find functions/classes, or understand execution flows via the code-review-graph MCP tools.
 ---
 
 ## Explore Codebase

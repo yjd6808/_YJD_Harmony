@@ -11,6 +11,9 @@ out/
 *.Settings
 *.sga
 
+# 디버거 설정이 포함된 .user 파일만 추적 (SolutionDir 매크로 사용 — 이식 가능)
+!Projects/*/Project/*.vcxproj.user
+
 packages/
 Output/
 Intermediate/

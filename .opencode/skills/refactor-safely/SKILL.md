@@ -1,6 +1,6 @@
 ---
-name: Refactor Safely
-description: Plan and execute safe refactoring using dependency analysis
+name: refactor-safely
+description: Plan and execute safe refactoring using dependency analysis. Use when renaming, removing dead code, or restructuring code and you need the code-review-graph MCP tools to preview impact before applying.
 ---
 
 ## Refactor Safely

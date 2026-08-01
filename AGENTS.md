@@ -1,3 +1,8 @@
+# Harmony 프로젝트 지침
+
+> 이 파일은 기존 `CLAUDE.md`의 내용을 opencode용(`AGENTS.md`)으로 이관한 문서입니다.
+> 참고 문서는 `.claude/` → `.opencode/` 경로로 이동했습니다.
+
 ## Workflow
 
 **[필수 준수 — 아래 단계를 건너뛰는 것은 절대 금지]**
@@ -30,11 +35,10 @@ cd Scripts
 - `-Rebuild` 와 `-Clean` 은 동시에 사용할 수 없다.
 
 ## References
-1. Project Architecture: .claude/docs/project_architecture.md
-2. C++ coding convention: .claude/rules/coding-conventions_cpp.md
-3. C# coding convention: .claude/rules/coding-conventions_csharp.md
-4. SQL coding convention: .claude/rules/coding-conventions_sql.md
-5. asset files/deploy binary directory: D:\Programming\MyProjects\_DevCpp\UltimateHarmony_Dev
+1. Project Architecture: .opencode/docs/project_architecture.md
+2. C++ coding convention: .opencode/rules/coding-conventions_cpp.md
+3. C# coding convention: .opencode/rules/coding-conventions_csharp.md
+4. SQL coding convention: .opencode/rules/coding-conventions_sql.md
 
 ## Tools
 

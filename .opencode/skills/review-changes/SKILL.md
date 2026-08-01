@@ -1,6 +1,6 @@
 ---
-name: Review Changes
-description: Perform a structured code review using change detection and impact
+name: review-changes
+description: Perform a structured code review using change detection and impact analysis. Use when reviewing recent changes and you need the code-review-graph MCP tools to find affected flows, test coverage, and blast radius.
 ---
 
 ## Review Changes
