@@ -2,7 +2,7 @@
  * 작성자: 윤정도
  * 생성일: 4/26/2023 12:26:05 AM
  * =====================
- *
+ * sgui 기반으로 재구현. 공개 API는 기존과 동일하다.
  */
 
 #pragma once
@@ -88,12 +88,11 @@ public:
 protected:
 	UI_Popup* Pop();
 	UI_Popup* CreatePopup();
+	void Present(UI_Popup* _pPopup);
 
 private:
 	float width_;
 	float padding_;
-
-	UIGroupInfo* pPopupInfo_;
 
 	jc::Vector<UI_Popup*> opendList_;
 	jc::ArrayQueue<UI_Popup*> popupPool_;

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/5/2023 10:27:51 AM
  * =====================
@@ -10,7 +10,7 @@
 #include "Scene_Login.h"
 
 #include "sgcl/Scene/Scene_World.h"
-#include "sgcl/Game/Contents/UIManager.h"
+#include "sgcl/Game/UI/Host/UIManager.h"
 
 USING_NS_CC;
 USING_NS_JC;
@@ -41,7 +41,8 @@ bool SGLoginScene::init()
 	}
 
 	//g_cUIMgr.Show("ui_login");
-	g_cUIMgr.Show("ui_generic");
+	g_cUIMgr.Show("ui_theme_test");	// TEMP: 테마/스킴 전환 테스트용
+	//g_cUIMgr.Show("ui_channel");
 	return true;
 }
 

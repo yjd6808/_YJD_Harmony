@@ -7,8 +7,9 @@ UIAssetRecipe UIControlBakeRecipes::ButtonRecipe(int _width, int _height)
     r.semantic = UIAssetSemantic::Button;
     r.width = _width;
     r.height = _height;
-    r.sliceInsets = { 14, 14, 14, 14 };
-    r.minimumSize = cc::Size(28, 28);
+    // 인셋 8px(min 16px): 20x20 소형 버튼도 Scale9 + 테두리가 적용되도록 최소 크기를 낮춘다.
+    r.sliceInsets = { 8, 8, 8, 8 };
+    r.minimumSize = cc::Size(16, 16);
     return r;
 }
 
@@ -177,5 +178,23 @@ UIAssetRecipe UIControlBakeRecipes::EditBoxRecipe(int _width, int _height)
     r.height = _height;
     r.sliceInsets = { 10, 10, 10, 10 };
     r.minimumSize = cc::Size(20, 20);
+    return r;
+}
+
+UIAssetRecipe UIControlBakeRecipes::WindowIconRecipe(UIAssetSemantic _semantic, int _size)
+{
+    UIAssetRecipe r;
+    r.semantic = _semantic;
+    r.width = _size;
+    r.height = _size;
+
+    switch (_semantic)
+    {
+    case UIAssetSemantic::WindowIconMinimize: r.svgPath = "window-minimize.svg"; break;
+    case UIAssetSemantic::WindowIconMaximize: r.svgPath = "window-maximize.svg"; break;
+    case UIAssetSemantic::WindowIconClose:    r.svgPath = "window-close.svg"; break;
+    default: break;
+    }
+
     return r;
 }

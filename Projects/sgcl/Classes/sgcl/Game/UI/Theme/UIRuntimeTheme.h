@@ -63,6 +63,10 @@ struct UIGeometryTokens
     float shadow = 4.0f;
     float shadowAlpha = 0.48f;
 
+    // 테두리 금속 그라데이션(highlight→border→shadow 대각선) on/off.
+    // true면 ResolveMetalColor 그라데이션, false면 단색 metalBorder.
+    bool borderGradient = false;
+
     void Scale(float _factor)
     {
         radius *= _factor;
@@ -80,6 +84,20 @@ struct UIStateTokens
     float disabledContrast = 0.5f;
 };
 
+struct UIWindowTokens
+{
+    UIColorF windowBackground;
+    UIColorF titleBarBackground;
+    UIColorF titleBarForeground;
+    UIColorF borderColor;
+    float borderWidth = 1.0f;
+
+    void Scale(float _factor)
+    {
+        borderWidth *= _factor;
+    }
+};
+
 struct UIRuntimeTheme
 {
     UIMetaTokens meta;
@@ -89,6 +107,7 @@ struct UIRuntimeTheme
     UISemanticTokens semantic;
     UIGeometryTokens geometry;
     UIStateTokens state;
+    UIWindowTokens window;
 
     static UIRuntimeTheme EngineDefaults();
 };

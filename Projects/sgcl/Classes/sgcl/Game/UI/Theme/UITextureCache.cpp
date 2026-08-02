@@ -1,4 +1,4 @@
-#include "GameCoreHeader.h"
+﻿#include "GameCoreHeader.h"
 #include "sgcl/Game/UI/Theme/UITextureCache.h"
 
 UITextureCache::UITextureCache()
@@ -12,9 +12,9 @@ UITextureCache::~UITextureCache()
 
 UITextureEntry* UITextureCache::Find(const UITextureCacheKey& _key)
 {
-    for (int i = 0; i < entries_.Size(); ++i)
+    for (int idx = 0; idx < entries_.Size(); ++idx)
     {
-        CacheEntry& e = entries_[i];
+        CacheEntry& e = entries_[idx];
 
         bool match = e.key.bakerVersion == _key.bakerVersion
             && e.key.mapperVersion == _key.mapperVersion
@@ -56,9 +56,9 @@ void UITextureCache::Insert(const UITextureCacheKey& _key, UITextureEntry* _entr
 
 void UITextureCache::Remove(const UITextureCacheKey& _key)
 {
-    for (int i = entries_.Size() - 1; i >= 0; --i)
+    for (int idx = entries_.Size() - 1; idx >= 0; --idx)
     {
-        CacheEntry& e = entries_[i];
+        CacheEntry& e = entries_[idx];
 
         bool match = e.key.bakerVersion == _key.bakerVersion
             && e.key.mapperVersion == _key.mapperVersion
@@ -77,7 +77,7 @@ void UITextureCache::Remove(const UITextureCacheKey& _key)
 
             currentMemoryBytes_ -= entryBytes;
             CC_SAFE_RELEASE(e.entry);
-            entries_.RemoveAt(i);
+            entries_.RemoveAt(idx);
             return;
         }
     }
@@ -85,8 +85,10 @@ void UITextureCache::Remove(const UITextureCacheKey& _key)
 
 void UITextureCache::Clear()
 {
-    for (int i = 0; i < entries_.Size(); ++i)
-        CC_SAFE_RELEASE(entries_[i].entry);
+    for (int idx = 0; idx < entries_.Size(); ++idx)
+    {
+        CC_SAFE_RELEASE(entries_[idx].entry);
+    }
     entries_.Clear();
     currentMemoryBytes_ = 0;
 }
@@ -98,12 +100,12 @@ void UITextureCache::EvictIfNeeded()
         int lruIndex = 0;
         uint64_t oldestFrame = entries_[0].lastAccessFrame;
 
-        for (int i = 1; i < entries_.Size(); ++i)
+        for (int idx = 1; idx < entries_.Size(); ++idx)
         {
-            if (entries_[i].lastAccessFrame < oldestFrame)
+            if (entries_[idx].lastAccessFrame < oldestFrame)
             {
-                oldestFrame = entries_[i].lastAccessFrame;
-                lruIndex = i;
+                oldestFrame = entries_[idx].lastAccessFrame;
+                lruIndex = idx;
             }
         }
 
@@ -130,13 +132,13 @@ void UITextureDeferredRelease::ReleaseAfterFrames(cc::Ref* _obj, int _frames)
 
 void UITextureDeferredRelease::Update()
 {
-    for (int i = queue_.Size() - 1; i >= 0; --i)
+    for (int idx = queue_.Size() - 1; idx >= 0; --idx)
     {
-        --queue_[i].remainingFrames;
-        if (queue_[i].remainingFrames <= 0)
+        --queue_[idx].remainingFrames;
+        if (queue_[idx].remainingFrames <= 0)
         {
-            CC_SAFE_RELEASE(queue_[i].obj);
-            queue_.RemoveAt(i);
+            CC_SAFE_RELEASE(queue_[idx].obj);
+            queue_.RemoveAt(idx);
         }
     }
 }

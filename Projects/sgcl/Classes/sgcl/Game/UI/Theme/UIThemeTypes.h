@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "jc/container/HashMap.h"
 
@@ -45,7 +45,10 @@ enum class UIAssetSemantic : uint8_t
     ScrollBarThumb,
     EditBox,
     FocusRing,
-    ProgressCap
+    ProgressCap,
+    WindowIconMinimize,
+    WindowIconMaximize,
+    WindowIconClose
 };
 
 enum class UIScalingMode : uint8_t
@@ -71,13 +74,6 @@ enum class UIComponentSlot : uint8_t
     Icon,
     Label,
     Cap
-};
-
-enum class UITextureMode : uint8_t
-{
-    NONE,
-    SGA,
-    THEME
 };
 
 struct UIColorF
@@ -128,12 +124,14 @@ struct UISliceInsets
 struct UIAssetKey
 {
     UIAssetSemantic semantic;
+    UIVisualState state = UIVisualState::Normal;
     uint64_t styleHash;
     uint64_t recipeHash;
 
     bool operator==(const UIAssetKey& _other) const
     {
         return semantic == _other.semantic
+            && state == _other.state
             && styleHash == _other.styleHash
             && recipeHash == _other.recipeHash;
     }
@@ -141,6 +139,7 @@ struct UIAssetKey
     bool operator<(const UIAssetKey& _other) const
     {
         if (semantic != _other.semantic) return semantic < _other.semantic;
+        if (state != _other.state) return state < _other.state;
         if (styleHash != _other.styleHash) return styleHash < _other.styleHash;
         return recipeHash < _other.recipeHash;
     }
@@ -152,13 +151,14 @@ struct UIAssetKey
 
     uint64_t Hash() const
     {
-        return (uint64_t)semantic ^ (styleHash * 0x9E3779B9) ^ (recipeHash * 0xC6A4A793);
+        return (uint64_t)semantic ^ ((uint64_t)state * 0x9E3779B9) ^ (styleHash * 0xC6A4A793) ^ (recipeHash * 0x517CC1B7);
     }
 
-    static UIAssetKey For(UIAssetSemantic _semantic, uint64_t _styleHash)
+    static UIAssetKey For(UIAssetSemantic _semantic, uint64_t _styleHash, UIVisualState _state = UIVisualState::Normal)
     {
         UIAssetKey k;
         k.semantic = _semantic;
+        k.state = _state;
         k.styleHash = _styleHash;
         k.recipeHash = (uint64_t)_semantic;
         return k;

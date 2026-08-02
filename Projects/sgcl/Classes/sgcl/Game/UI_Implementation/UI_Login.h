@@ -1,47 +1,40 @@
-﻿#pragma once
+﻿/*
+ * 작성자: 윤정도
+ * =====================
+ * 로그인 화면 (sgui 기반 재구현)
+ */
 
-#include "sgcl/Game/UI/UIRootGroup.h"
-#include "sgcl/Game/UI/UIRegister.h"
+#pragma once
 
-class UI_Login : public UIRootGroup
+#include "sgcl/Game/UI/Sgui.h"
+
+class UI_Login : public sgui::Window
 {
 public:
-	UI_Login(UIGroupInfo* _pGroupInfo);
-
 	enum class Tab
 	{
 		eHangame,
 		eDnf
 	};
 
-protected:
-	void OnInit(const jc::CDataMap<>& _param) override;
-	void OnLoaded() override;
-	void OnUpdate(float _dt) override;
-	void OnMouseDownTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent) override;
-	void OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent) override;
-	void OnToggleStateChanged(UIToggleButton* _pToggleBtn, ToggleState _state) override;
-	bool OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) override;
-	bool OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent) override;
-	void OnEditBoxEditingDidEndWithAction(UIEditBox* _pEditBox, cc_ui::EditBoxDelegate::EditBoxEndAction _endAction) override;
+	virtual void OnInit(const jc::CDataMap<>& _param) override;
+	virtual void OnLoaded() override;
+	virtual bool OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode) override;
 
-public:
 	void SetTab(Tab _tab);
 	void Login();
 
 private:
-	UILabel* pLabelSource_;
-	UILabel* pLabelDeveloper_;
+	sgui::TextBlock* pLabelSource_ = nullptr;
+	sgui::TextBlock* pLabelDeveloper_ = nullptr;
 
-	UIGroup* pGroupLoginBox_;
-	UISprite* pSpriteBackground_;
-	UIToggleButton* pToggleButtonHangameLogin_;
-	UIToggleButton* pToggleBtnDnfLogin_;
-	UIButton* pBtnStart_;
-	UIButton* pBtnTerminate_;
-	UIEditBox* pEditBoxId_;
-	UIEditBox* pEditBoxPassword_;
+	sgui::Border* pLoginBox_ = nullptr;
+	sgui::ToggleButton* pToggleHangameLogin_ = nullptr;
+	sgui::ToggleButton* pToggleDnfLogin_ = nullptr;
+	sgui::Button* pBtnStart_ = nullptr;
+	sgui::Button* pBtnTerminate_ = nullptr;
+	sgui::TextBox* pEditId_ = nullptr;
+	sgui::TextBox* pEditPassword_ = nullptr;
 
-	Tab tab_;
+	Tab tab_ = Tab::eDnf;
 };
-

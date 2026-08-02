@@ -1,43 +1,41 @@
+﻿/*
+ * 작성자: 윤정도
+ * =====================
+ * 컨트롤/테마 테스트 화면 (sgui 기반 재구현)
+ */
+
 #pragma once
 
-#include "sgcl/Game/UI/UIRootGroup.h"
-#include "sgcl/Game/UI/UIRegister.h"
+#include "sgcl/Game/UI/Sgui.h"
+#include "sgcl/Game/UI/Theme/UIThemeTypes.h"
 
-class UI_Generic : public UIRootGroup
+class UI_Generic : public sgui::Window
 {
 public:
-	UI_Generic(UIGroupInfo* _pGroupInfo);
-
-protected:
-	void OnInit(const jc::CDataMap<>& _param) override;
-	void OnLoaded() override;
-	void OnUpdate(float _dt) override;
-	void OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent) override;
+	virtual void OnInit(const jc::CDataMap<>& _param) override;
+	virtual void OnLoaded() override;
 
 private:
-	UILabel* pLabelTitle_;
-	UIButton* pBtnClose_;
-	UICheckBox* pChkA_;
-	UICheckBox* pChkB_;
-	UICheckBox* pChkC_;
-	UICheckBox* pChkD_;
-	UIToggleButton* pToggleOpt_;
-	UIProgressBar* pPbar1_;
-	UIProgressBar* pPbar2_;
-	UIProgressBar* pPbar3_;
-	UIProgressBar* pPbar4_;
-	UIProgressBar* pPbar5_;
-	UIProgressBar* pPbar6_;
-
-	UIButton* pBtnThemeDark_;
-	UIButton* pBtnThemeLight_;
-	UIButton* pBtnThemeSilver_;
-	UILabel* pLabelThemeStatus_;
+	sgui::TextBlock* pLabelTitle_ = nullptr;
+	sgui::Button* pBtnClose_ = nullptr;
+	sgui::CheckBox* pChkA_ = nullptr;
+	sgui::CheckBox* pChkB_ = nullptr;
+	sgui::CheckBox* pChkC_ = nullptr;
+	sgui::CheckBox* pChkD_ = nullptr;
+	sgui::ToggleButton* pToggleOpt_ = nullptr;
+	sgui::ProgressBar* pPbar1_ = nullptr;
+	sgui::ProgressBar* pPbar2_ = nullptr;
+	sgui::ProgressBar* pPbar3_ = nullptr;
+	sgui::ProgressBar* pPbar4_ = nullptr;
+	sgui::ProgressBar* pPbar5_ = nullptr;
+	sgui::ProgressBar* pPbar6_ = nullptr;
+	sgui::Slider* pSlider_ = nullptr;
+	sgui::TextBlock* pLabelThemeStatus_ = nullptr;
 
 	const char* pLastThemeId_ = "modern-dark-gold";
 
 	void ApplyThemeFile(const char* _jsonName, UIColorScheme _scheme);
 	void UpdateThemeStatusLabel();
-	void BuildThemeTestButtons();
-	UIButton* CreateTestButton(const char* _name, const char* _label, float _x, float _y, float _w, float _h);
+	sgui::Panel* BuildControlShowcase();
+	sgui::Panel* BuildThemeTestButtons();
 };

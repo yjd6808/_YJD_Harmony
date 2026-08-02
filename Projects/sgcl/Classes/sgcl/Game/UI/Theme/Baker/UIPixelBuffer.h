@@ -2,6 +2,7 @@
 
 #include "sg/Util/DescBase.h"
 #include "sgcl/Game/UI/Theme/UIThemeTypes.h"
+#include "jc/Primitives/String.h"
 
 struct UIPixelBuffer
 {
@@ -58,6 +59,7 @@ struct UIAssetRecipe
     int height = 0;
     UISliceInsets sliceInsets;
     cc::Size minimumSize;
+    jc::String svgPath;	// 아이콘: 베이크할 SVG 파일명 (비어 있으면 도형 레시피)
 };
 
 struct UIBakeOutput

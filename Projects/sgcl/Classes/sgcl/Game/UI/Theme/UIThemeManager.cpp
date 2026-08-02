@@ -1,5 +1,7 @@
 #include "GameCoreHeader.h"
 #include "sgcl/Game/UI/Theme/UIThemeManager.h"
+#include "sg/Core/AppConfig.h"
+#include "jc/FileSystem/Path.h"
 
 static UIThemeManager* g_pThemeManager = nullptr;
 
@@ -19,6 +21,9 @@ bool UIThemeManager::Initialize(const UIThemeInitParams& _params)
     revision_.sourceRevision = 1;
     revision_.mappedRevision = 1;
     revision_.textureRevision = 1;
+
+    // SVG 아이콘 소스 디렉토리 (resDataPath/gfx/mdi)
+    bakeService_.SetIconDirectory(jc::Path::Combine(g_cAppConfig.resDataPath_, "gfx/mdi").Source());
 
     bakeService_.SetOnBakeCompleted([this](UITextureSet* _set) {
         OnBakeCompleted(_set);
@@ -140,7 +145,18 @@ void UIThemeManager::BuildThemeVariants(UIThemeBakeRequest& _request) const
         UIAssetSemantic::SliderThumb,
         UIAssetSemantic::ScrollBarTrack,
         UIAssetSemantic::ScrollBarThumb,
-        UIAssetSemantic::EditBox
+        UIAssetSemantic::EditBox,
+        UIAssetSemantic::WindowIconMinimize,
+        UIAssetSemantic::WindowIconMaximize,
+        UIAssetSemantic::WindowIconClose
+    };
+
+    // 상태별 variant 베이크 (스타일 해시가 상태별로 달라 텍스처 키가 자동 분리된다)
+    static const UIVisualState kStates[] = {
+        UIVisualState::Normal,
+        UIVisualState::Hover,
+        UIVisualState::Pressed,
+        UIVisualState::Disabled
     };
 
     for (auto semantic : semantics)
@@ -165,20 +181,26 @@ void UIThemeManager::BuildThemeVariants(UIThemeBakeRequest& _request) const
         case UIAssetSemantic::ScrollBarTrack: elemType = UIElementType::ScrollBar; break;
         case UIAssetSemantic::ScrollBarThumb: elemType = UIElementType::ScrollBar; break;
         case UIAssetSemantic::EditBox:        elemType = UIElementType::EditBox; break;
+        case UIAssetSemantic::WindowIconMinimize:
+        case UIAssetSemantic::WindowIconMaximize:
+        case UIAssetSemantic::WindowIconClose: elemType = UIElementType::Button; break;
         default: break;
         }
 
-        UIResolvedStyle resolvedStyle = resolver_.Resolve(
-            elemType, UIVisualState::Normal, _request.theme, {});
+        for (UIVisualState state : kStates)
+        {
+            UIResolvedStyle resolvedStyle = resolver_.Resolve(elemType, state, _request.theme, {});
 
-        UIResolvedVariantRequest variant;
-        variant.asset.semantic = semantic;
-        variant.asset.styleHash = resolvedStyle.ComputeHash();
-        variant.asset.recipeHash = (uint64_t)semantic;
-        variant.state = UIVisualState::Normal;
-        variant.style = resolvedStyle;
-        variant.styleHash = resolvedStyle.ComputeHash();
-        _request.variants.PushBack(variant);
+            UIResolvedVariantRequest variant;
+            variant.asset.semantic = semantic;
+            variant.asset.state = state;
+            variant.asset.styleHash = resolvedStyle.ComputeHash();
+            variant.asset.recipeHash = (uint64_t)semantic;
+            variant.state = state;
+            variant.style = resolvedStyle;
+            variant.styleHash = resolvedStyle.ComputeHash();
+            _request.variants.PushBack(variant);
+        }
     }
 }
 
@@ -256,7 +278,9 @@ void UIThemeManager::SwapTextureSet()
         return;
 
     if (activeTextureSet_)
+    {
         deferredRelease_.ReleaseAfterFrames(activeTextureSet_, 2);
+    }
 
     activeTextureSet_ = pendingTextureSet_;
     pendingTextureSet_ = nullptr;
@@ -266,5 +290,7 @@ void UIThemeManager::SwapTextureSet()
         revision_.textureRevision, activeThemeName_.Source(), (int)activeScheme_);
 
     if (onThemeRefreshed_)
+    {
         onThemeRefreshed_();
+    }
 }

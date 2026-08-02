@@ -1,7 +1,8 @@
-#include "GameCoreHeader.h"
+﻿#include "GameCoreHeader.h"
 #include "sgcl/Game/UI/Theme/UITextureBakeService.h"
 #include "sgcl/Game/UI/Theme/Baker/UIControlBakeRecipes.h"
 #include "sgcl/Game/UI/Theme/Serialization/UITextureBinaryWriter.h"
+#include "jc/FileSystem/Path.h"
 
 UITextureBakeService::UITextureBakeService()
 {
@@ -9,8 +10,10 @@ UITextureBakeService::UITextureBakeService()
 
 UITextureBakeService::~UITextureBakeService()
 {
-    for (int i = 0; i < completedResults_.Size(); ++i)
-        CC_SAFE_RELEASE(completedResults_[i].textureSet);
+    for (int idx = 0; idx < completedResults_.Size(); ++idx)
+    {
+        CC_SAFE_RELEASE(completedResults_[idx].textureSet);
+    }
     completedResults_.Clear();
     pendingRequests_.Clear();
 }
@@ -18,7 +21,9 @@ UITextureBakeService::~UITextureBakeService()
 void UITextureBakeService::EnqueueRequest(UIThemeBakeRequest&& _request)
 {
     if (_request.generation > latestGeneration_)
+    {
         latestGeneration_ = _request.generation;
+    }
 
     if (_request.generation > 0)
     {
@@ -32,10 +37,12 @@ void UITextureBakeService::EnqueueRequest(UIThemeBakeRequest&& _request)
 
 void UITextureBakeService::CancelPending(uint64_t _generation)
 {
-    for (int i = pendingRequests_.Size() - 1; i >= 0; --i)
+    for (int idx = pendingRequests_.Size() - 1; idx >= 0; --idx)
     {
-        if (pendingRequests_[i].generation < _generation)
-            pendingRequests_.RemoveAt(i);
+        if (pendingRequests_[idx].generation < _generation)
+        {
+            pendingRequests_.RemoveAt(idx);
+        }
     }
 
     if (pendingRequests_.IsEmpty())
@@ -67,11 +74,13 @@ void UITextureBakeService::ProcessCompleted()
     if (completedResults_.IsEmpty())
         return;
 
-    for (int i = 0; i < completedResults_.Size(); ++i)
+    for (int idx = 0; idx < completedResults_.Size(); ++idx)
     {
-        PendingResult& result = completedResults_[i];
+        PendingResult& result = completedResults_[idx];
         if (onBakeCompleted_)
+        {
             onBakeCompleted_(result.textureSet);
+        }
 
         CC_SAFE_RELEASE(result.textureSet);
     }
@@ -114,6 +123,9 @@ static UIAssetRecipe SelectRecipe(UIAssetSemantic _semantic)
     case UIAssetSemantic::ScrollBarTrack: return UIControlBakeRecipes::ScrollBarTrackRecipe(16, 120);
     case UIAssetSemantic::ScrollBarThumb: return UIControlBakeRecipes::ScrollBarThumbRecipe(24);
     case UIAssetSemantic::EditBox:        return UIControlBakeRecipes::EditBoxRecipe(160, 44);
+    case UIAssetSemantic::WindowIconMinimize:
+    case UIAssetSemantic::WindowIconMaximize:
+    case UIAssetSemantic::WindowIconClose:    return UIControlBakeRecipes::WindowIconRecipe(_semantic, 24);
     default: return UIControlBakeRecipes::ButtonRecipe(160, 44);
     }
 }
@@ -132,6 +144,12 @@ UITextureSet* UITextureBakeService::BuildTextureSet(const UIThemeBakeRequest& _r
     {
         const UIResolvedVariantRequest& variant = _request.variants[vi];
         UIAssetRecipe recipe = SelectRecipe(variant.asset.semantic);
+
+        // 아이콘 레시피는 디렉토리와 조합해 절대 경로를 만든다.
+        if (!recipe.svgPath.IsEmpty() && !iconDirectory_.IsEmpty())
+        {
+            recipe.svgPath = jc::Path::Combine(iconDirectory_.Source(), recipe.svgPath.Source());
+        }
 
         UITextureCacheKey cacheKey;
         cacheKey.resolvedStyleHash = variant.styleHash;
@@ -182,9 +200,15 @@ UITextureSet* UITextureBakeService::BuildTextureSet(const UIThemeBakeRequest& _r
                 int stride = output.buffer.width * 4;
                 int nonZero = 0;
                 for (int y = 0; y < output.buffer.height; ++y)
+                {
                     for (int x = 0; x < output.buffer.width; ++x)
+                    {
                         if (p[y * stride + x * 4 + 3] > 0)
+                        {
                             ++nonZero;
+                        }
+                    }
+                }
                 _LogDebug_("[Bake] semantic=%d nonZeroAlpha=%d / %d",
                     (int)variant.asset.semantic, nonZero, output.buffer.width * output.buffer.height);
 

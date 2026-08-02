@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/5/2023 9:51:36 AM
  * =====================
@@ -10,7 +10,7 @@
 
 
 #include "sgcl/Scene/Scene_Base.h"
-#include "sgcl/Layer/Layer_UI.h"
+#include "sgcl/Game/UI/Sgui.h"
 
 class MimicCamera;
 class MapLayer;
@@ -57,14 +57,14 @@ public:
 
 	static SceneBase* CreateScene(SceneType_t _sceneType);
 
-	UILayer&		GetUILayer() const;
+	sgui::UIHost&	GetUIHost() const;
 	MapLayer*		GetMap();
 	MimicCamera*	GetCamera();
 
 private:
 	SceneBase*	pRunningScene_;
 	SceneType_t reservedScene_;
-	UILayer*	pUILayer_ = nullptr;
+	sgui::UIHost*	pUIHost_ = nullptr;
 	GridLayer*	pGridLayer_ = nullptr;
 };
 

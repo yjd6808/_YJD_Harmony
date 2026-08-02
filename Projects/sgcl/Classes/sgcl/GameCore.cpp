@@ -35,7 +35,6 @@
 #include "sgcl/Util/DescMgr/DescMgr_Char.h"
 #include "sgcl/Util/DescMgr/DescMgr_Effect.h"
 #include "sgcl/Util/DescMgr/DescMgr_Tile.h"
-#include "sgcl/Util/DescMgr/DescMgr_UI.h"
 #include "sgcl/Util/DescMgr/DescMgr_MapObject.h"
 #include "sgcl/Util/DescMgr/DescMgr_Monster.h"
 #include "sgcl/Util/DescMgr/DescMgr_Projectile.h"
@@ -65,7 +64,6 @@ void InitializeClientCore()
 	g_cDescMgr.AddLoader(dbg_new ProjectileInfoLoader(ActorType::Monster));
 	g_cDescMgr.AddLoader(dbg_new AttackDataInfoLoader(ActorType::Monster));
 	g_cDescMgr.AddLoader(dbg_new TileInfoLoader());
-	g_cDescMgr.AddLoader(dbg_new UIInfoLoader());
 	g_cDescMgr.AddLoader(dbg_new ActionInfoLoader());
 	g_cDescMgr.AddLoader(dbg_new AIInfoLoader());
 	g_cDescMgr.AddLoader(dbg_new AttackDataInfoLoader(ActorType::Character));

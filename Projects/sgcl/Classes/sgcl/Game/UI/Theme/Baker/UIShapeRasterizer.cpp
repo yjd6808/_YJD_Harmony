@@ -106,7 +106,9 @@ namespace UIShapeRasterizer
                 float coverage = UIColorMath::CoverageFromDistance(d);
 
                 if (coverage > 0.01f)
+                {
                     _out.BlendOver(x, y, _color.WithAlpha(_color.a * coverage));
+                }
             }
         }
     }

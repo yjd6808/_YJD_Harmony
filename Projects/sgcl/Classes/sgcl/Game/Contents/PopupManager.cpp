@@ -2,19 +2,15 @@
  * 작성자: 윤정도
  * 생성일: 4/26/2023 12:33:39 AM
  * =====================
- *
+ * sgui 기반으로 재구현. XML 레이아웃 로드 없이 코드로 팝업을 구성한다.
  */
 
 #include "GameCoreHeader.h"
 #include "Game/Contents/PopupManager.h"
 
-#include "sg/Core/AppConfig.h"
-#include "sgcl/Scene/Scene_World.h"
-#include "sgcl/Game/UI/UIXmlLoader.h"
-#include "sgcl/Game/Contents/UIManager.h"
+#include "sgcl/Game/UI/Host/UIManager.h"
 
 USING_NS_CC;
-USING_NS_CCUI;
 USING_NS_JC;
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -34,25 +30,9 @@ PopupManager::~PopupManager()
 //////////////////////////////////////////////////////////////////////////////////////////
 UI_Popup* PopupManager::CreatePopup()
 {
-	if (!pPopupInfo_)
-	{
-		jc::String filePath = jc::Path::Combine(
-			jc::Path::Combine(g_cAppConfig.resDataPath_, "layout"),
-			jc::String("ui_popup.xml"));
-		pPopupInfo_ = UIXmlLoader::LoadFromFile(filePath.Source());
-		jc_assert_msg(pPopupInfo_, "팝업 UI XML 파일 로드에 실패했습니다.");
-	}
-
-	UIRootGroup* pPopupGroup = dbg_new UI_Popup(pPopupInfo_);
-	pPopupGroup->autorelease();
-	pPopupGroup->setTag(InvalidValue_v);
-	pPopupGroup->init();
-	pPopupGroup->InitFromXml();
-	pPopupGroup->OnInit(CDataMap<>());
-	pPopupGroup->SetRelativePosition(0, 0, HAlignment::Center, VAlignment::Center);
-	pPopupGroup->Load();
-
-	return static_cast<UI_Popup*>(pPopupGroup);
+	UI_Popup* pPopup = UI_Popup::Create();
+	pPopup->setTag(InvalidValue_v);
+	return pPopup;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -89,6 +69,19 @@ UI_Popup* PopupManager::Pop()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+void PopupManager::Present(UI_Popup* _pPopup)
+{
+	sgui::UIHost* pHost = g_cUIMgr.GetHost();
+	jc_assert_msg(pHost != nullptr, "UI 호스트가 없는 상태에서 팝업을 열 수 없습니다.");
+
+	_pPopup->Adjust();
+	pHost->AddWindow(_pPopup, 1000);	// 팝업은 항상 최상위
+	_pPopup->OnLoaded();
+	_pPopup->OnAdded();
+	opendList_.PushBack(_pPopup);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 UI_Popup* PopupManager::ShowYesNo(
 	const std::string& _text,
 	const PopupCallback& _yes /* = nullptr */,
@@ -110,9 +103,7 @@ UI_Popup* PopupManager::ShowYesNo(
 	pPopup->SetTimeoutCallback(_timeoutFn);
 	pPopup->SetTextHAlign(_halign);
 	pPopup->SetTextVAlign(_valign);
-	pPopup->Adjust();
-	g_cWorld.GetUILayer().AddUIGroup(pPopup);
-	opendList_.PushBack(pPopup);
+	Present(pPopup);
 	return pPopup;
 }
 
@@ -146,9 +137,7 @@ UI_Popup* PopupManager::ShowYesNo(
 	pPopup->SetTimeoutCallback(_timeoutFn);
 	pPopup->SetTextHAlign(_halign);
 	pPopup->SetTextVAlign(_valign);
-	pPopup->Adjust();
-	g_cWorld.GetUILayer().AddUIGroup(pPopup);
-	opendList_.PushBack(pPopup);
+	Present(pPopup);
 	return pPopup;
 }
 
@@ -172,9 +161,7 @@ UI_Popup* PopupManager::ShowOk(
 	pPopup->SetTimeoutCallback(_timeoutFn);
 	pPopup->SetTextHAlign(_halign);
 	pPopup->SetTextVAlign(_valign);
-	pPopup->Adjust();
-	g_cWorld.GetUILayer().AddUIGroup(pPopup);
-	opendList_.PushBack(pPopup);
+	Present(pPopup);
 	return pPopup;
 }
 
@@ -206,9 +193,7 @@ UI_Popup* PopupManager::ShowOk(
 	pPopup->SetTimeoutCallback(_timeoutFn);
 	pPopup->SetTextHAlign(_halign);
 	pPopup->SetTextVAlign(_valign);
-	pPopup->Adjust();
-	g_cWorld.GetUILayer().AddUIGroup(pPopup);
-	opendList_.PushBack(pPopup);
+	Present(pPopup);
 	return pPopup;
 }
 
@@ -230,9 +215,7 @@ UI_Popup* PopupManager::ShowNone(
 	pPopup->SetTimeoutCallback(_timeoutFn);
 	pPopup->SetTextHAlign(_halign);
 	pPopup->SetTextVAlign(_valign);
-	pPopup->Adjust();
-	g_cWorld.GetUILayer().AddUIGroup(pPopup);
-	opendList_.PushBack(pPopup);
+	Present(pPopup);
 	return pPopup;
 }
 
@@ -262,9 +245,7 @@ UI_Popup* PopupManager::ShowNone(
 	pPopup->SetTimeoutCallback(_timeoutFn);
 	pPopup->SetTextHAlign(_halign);
 	pPopup->SetTextVAlign(_valign);
-	pPopup->Adjust();
-	g_cWorld.GetUILayer().AddUIGroup(pPopup);
-	opendList_.PushBack(pPopup);
+	Present(pPopup);
 	return pPopup;
 }
 
@@ -277,7 +258,12 @@ bool PopupManager::Close(UI_Popup* _pPopup)
 	}
 
 	_pPopup->SetClosed(true);
-	g_cWorld.GetUILayer().RemoveUIGroup(_pPopup);
+
+	if (sgui::UIHost* pHost = g_cUIMgr.GetHost())
+	{
+		pHost->RemoveWindow(_pPopup);
+	}
+
 	popupPool_.Enqueue(_pPopup);
 	return opendList_.Remove(_pPopup);
 }
@@ -333,7 +319,11 @@ void PopupManager::ReleaseAll()
 	// 열린 팝업창 모두 제거
 	for (int i = 0; i < opendList_.Size(); ++i)
 	{
-		g_cWorld.GetUILayer().RemoveUIGroup(opendList_[i]);
+		if (sgui::UIHost* pHost = g_cUIMgr.GetHost())
+		{
+			pHost->RemoveWindow(opendList_[i]);
+		}
+
 		opendList_[i]->release();
 	}
 

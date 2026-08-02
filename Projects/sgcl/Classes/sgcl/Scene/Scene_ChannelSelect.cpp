@@ -8,7 +8,7 @@
 #include "Scene/Scene_ChannelSelect.h"
 
 #include "sgcl/Scene/Scene_World.h"
-#include "sgcl/Game/Contents/UIManager.h"
+#include "sgcl/Game/UI/Host/UIManager.h"
 #include "sgcl/Net/Send/S_LOBBY.h"
 
 USING_NS_CC;

@@ -45,6 +45,10 @@ public:
         onBakeCompleted_ = _callback;
     }
 
+    // SVG 아이콘 소스 디렉토리 (예: resDataPath/gfx/mdi)
+    void SetIconDirectory(const char* _dir) { iconDirectory_ = _dir; }
+    const jc::String& GetIconDirectory() const { return iconDirectory_; }
+
     UITextureCache& GetCache() { return cache_; }
 
 private:
@@ -60,6 +64,7 @@ public:
     };
 
     UITextureCache cache_;
+    jc::String iconDirectory_;
     jc::Vector<UIThemeBakeRequest> pendingRequests_;
     jc::Vector<PendingResult> completedResults_;
     uint64_t latestGeneration_ = 0;

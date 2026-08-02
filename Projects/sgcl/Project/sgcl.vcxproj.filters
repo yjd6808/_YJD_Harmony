@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Util">
@@ -28,8 +28,20 @@
     <Filter Include="Game\UI">
       <UniqueIdentifier>{0d7eb5f0-5cd7-445d-825e-1d7b3e291f6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\UI\Host">
+      <UniqueIdentifier>{a2b3c4d5-e6f7-8901-abcd-ef1234567891}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\UI\Xml">
+      <UniqueIdentifier>{b3c4d5e6-f7a8-9012-bcde-f12345678902}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Game\UI\Theme">
       <UniqueIdentifier>{a1b2c3d4-e5f6-7890-abcd-ef1234567890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty">
+      <UniqueIdentifier>{c4d5e6f7-a8b9-0123-cdef-12345678903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\tinyxml2">
+      <UniqueIdentifier>{d5e6f7a8-b9c0-1234-def0-12345678904}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game\UI\Theme\Baker">
       <UniqueIdentifier>{b2c3d4e5-f6a7-8901-bcde-f12345678901}</UniqueIdentifier>
@@ -272,8 +284,20 @@
     <ClCompile Include="..\Classes\sgcl\Game\UI\UIRootGroup.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Game\UI\UIXmlLoader.cpp">
-      <Filter>Game\UI</Filter>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Xml\UIResolve.cpp">
+      <Filter>Game\UI\Xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Xml\UIValue.cpp">
+      <Filter>Game\UI\Xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Xml\UIXmlLoader.cpp">
+      <Filter>Game\UI\Xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI\Host\UIManager.cpp">
+      <Filter>Game\UI\Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\tinyxml2\Project\tinyxml2.cpp">
+      <Filter>ThirdParty\tinyxml2</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Game\UI\Theme\UIRuntimeTheme.cpp">
       <Filter>Game\UI\Theme</Filter>
@@ -477,9 +501,6 @@
     <ClCompile Include="..\Classes\sgcl\Game\Contents\ActorListenerManager.cpp">
       <Filter>Game\Contents</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Game\Contents\UIManager.cpp">
-      <Filter>Game\Contents</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Game\Camera\MimicCamera.cpp">
       <Filter>Game\Camera</Filter>
     </ClCompile>
@@ -588,7 +609,13 @@
     <ClCompile Include="..\Classes\sgcl\Net\NetClientGroup.cpp">
       <Filter>Net</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Game\UI_Implementation\UI_Generic.cpp">
+    <ClCompile Include="..\Classes\sgcl\Game\UI_Implementation\UI_ThemeTest.cpp">
+      <Filter>Game\UI_Implementation</Filter>
+    </ClCompile>
+<ClCompile Include="..\Classes\sgcl\Game\UI_Implementation\UI_Generic.cpp">
+      <Filter>Game\UI_Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\sgcl\Game\UI_Implementation\UI_TitleDemo.cpp">
       <Filter>Game\UI_Implementation</Filter>
     </ClCompile>
   </ItemGroup>
@@ -750,8 +777,17 @@
     <ClInclude Include="..\Classes\sgcl\Game\UI\UIRootGroup.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Game\UI\UIXmlLoader.h">
-      <Filter>Game\UI</Filter>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Xml\UIResolve.h">
+      <Filter>Game\UI\Xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Xml\UIValue.h">
+      <Filter>Game\UI\Xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Xml\UIXmlLoader.h">
+      <Filter>Game\UI\Xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Host\UIManager.h">
+      <Filter>Game\UI\Host</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeTypes.h">
       <Filter>Game\UI\Theme</Filter>
@@ -974,9 +1010,6 @@
     <ClInclude Include="..\Classes\sgcl\Game\Contents\ActorListenerManager.h">
       <Filter>Game\Contents</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Game\Contents\UIManager.h">
-      <Filter>Game\Contents</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Game\Camera\MimicCamera.h">
       <Filter>Game\Camera</Filter>
     </ClInclude>
@@ -1111,7 +1144,13 @@
       <Filter>MCP</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Game\Contents\Global.h" />
-    <ClInclude Include="..\Classes\sgcl\Game\UI_Implementation\UI_Generic.h">
+    <ClInclude Include="..\Classes\sgcl\Game\UI_Implementation\UI_ThemeTest.h">
+      <Filter>Game\UI_Implementation</Filter>
+    </ClInclude>
+<ClInclude Include="..\Classes\sgcl\Game\UI_Implementation\UI_Generic.h">
+      <Filter>Game\UI_Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI_Implementation\UI_TitleDemo.h">
       <Filter>Game\UI_Implementation</Filter>
     </ClInclude>
   </ItemGroup>

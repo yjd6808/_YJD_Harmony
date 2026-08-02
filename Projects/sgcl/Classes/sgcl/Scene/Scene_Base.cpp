@@ -19,7 +19,7 @@
 #include "Scene/Scene_Base.h"
 
 #include "sgcl/Scene/Scene_World.h"
-#include "sgcl/Layer/Layer_UI.h"
+#include "sgcl/Game/UI/Host/UIHost.h"
 #include "sgcl/Game/Texture/ImagePackManager.h"
 
 USING_NS_CC;
@@ -44,7 +44,7 @@ bool SceneBase::init()
 		return false;
 
 	pWorldScene_ = WorldScene::Get();
-	pUILayer_ = &pWorldScene_->GetUILayer();
+	pUIHost_ = &pWorldScene_->GetUIHost();
 
 	removeChild(_defaultCamera);
 
@@ -69,7 +69,7 @@ void SceneBase::onExit()
 {
 	_LogDebug_("%s 씬을 종료", SceneType::NAME[GetType()]);
 	Scene::onExit();
-	pUILayer_->ClearUnload();
+	pUIHost_->ClearUnload();
 	g_cImagePackMgr.ReleaseAllFrameTexture();
 }
 

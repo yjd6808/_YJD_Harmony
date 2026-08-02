@@ -1,4 +1,4 @@
-#include "GameCoreHeader.h"
+﻿#include "GameCoreHeader.h"
 #include "sgcl/Game/UI/Theme/UIThemeBinding.h"
 
 void UIThemeTextureBinding::BindScale9(cc_ui::Scale9Sprite* _target, const UIAssetKey& _key, UIComponentSlot _slot)
@@ -24,10 +24,18 @@ void UIThemeTextureBinding::Clear()
 
 void UIThemeTextureBinding::Refresh(const UITextureSet& _set)
 {
-    for (int i = 0; i < slots_.Size(); ++i)
+    for (int idx = 0; idx < slots_.Size(); ++idx)
     {
-        auto& slot = slots_[i];
+        auto& slot = slots_[idx];
         const UITextureEntry* entry = _set.Find(slot.key);
+        if (!entry && (slot.key.state == UIVisualState::Checked || slot.key.state == UIVisualState::Selected))
+        {
+            // 베이크는 Normal/Hover/Pressed/Disabled만 하므로
+            // Checked/Selected 상태는 Normal 자산으로 폴백한다.
+            UIAssetKey fallbackKey = slot.key;
+            fallbackKey.state = UIVisualState::Normal;
+            entry = _set.Find(fallbackKey);
+        }
         if (!entry)
         {
             _LogWarn_("[UIThemeBinding] Entry not found: semantic=%d styleHash=%llu recipeHash=%llu",
