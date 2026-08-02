@@ -28,6 +28,8 @@ public:
 	void SetHitTestEnabled(bool _enabled) { hitTestEnabled_ = _enabled; }
 
 	virtual void RefreshThemeVisuals() override;
+	virtual void RefreshForegroundVisuals() override;
+	virtual void UpdateVisualState() override;
 
 protected:
 	virtual cc::size MeasureOverride(const cc::size& _constraint) override;

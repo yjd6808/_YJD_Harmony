@@ -26,6 +26,9 @@ public:
 
 	virtual void Focus() override;
 
+	virtual void RefreshThemeVisuals() override;
+	virtual void RefreshForegroundVisuals() override;
+
 	// cc_ui::EditBoxDelegate
 	virtual void editBoxTextChanged(cc_ui::EditBox* _pEditBox, const std::string& _text) override;
 	virtual void editBoxReturn(cc_ui::EditBox* _pEditBox) override;
@@ -35,6 +38,7 @@ protected:
 
 	virtual cc::size MeasureOverride(const cc::size& _constraint) override;
 	virtual void OnRenderSizeChanged(const cc::size& _size) override;
+	virtual void OnInheritedPropertyChanged() override;
 
 	void BuildEditBox();
 

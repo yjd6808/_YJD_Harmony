@@ -53,9 +53,18 @@ void BrushVisual::SetVisualState(UIVisualState _state)
 
 	state_ = _state;
 
-	if (pNode_ && brush_ && brush_->GetType() == BrushType::Theme)
+	if (pNode_ == nullptr || brush_ == nullptr)
+	{
+		return;
+	}
+
+	if (brush_->GetType() == BrushType::Theme)
 	{
 		ApplyThemeBinding();
+	}
+	else if (brush_->GetType() == BrushType::ThemeColor)
+	{
+		ApplyThemeColorTint();
 	}
 }
 
@@ -67,9 +76,18 @@ void BrushVisual::Resize(const cc::size& _size)
 
 void BrushVisual::RefreshTheme()
 {
-	if (pNode_ && brush_ && brush_->GetType() == BrushType::Theme)
+	if (pNode_ == nullptr || brush_ == nullptr)
+	{
+		return;
+	}
+
+	if (brush_->GetType() == BrushType::Theme)
 	{
 		ApplyThemeBinding();
+	}
+	else if (brush_->GetType() == BrushType::ThemeColor)
+	{
+		ApplyThemeColorTint();
 	}
 }
 
@@ -104,6 +122,14 @@ void BrushVisual::Rebuild()
 			ToColor4B(pBrush->start_), ToColor4B(pBrush->end_),
 			pBrush->vertical_ ? cc::vec2(0.0f, -1.0f) : cc::vec2(1.0f, 0.0f));
 		pLayer->setContentSize(size_);
+		pNode_ = pLayer;
+		break;
+	}
+	case BrushType::ThemeColor:
+	{
+		// 현재 테마의 컨트롤/상태별 단색 플레이트
+		const UIColorF color = ResolveBrushColor(brush_.get(), state_);
+		auto* pLayer = LayerColor::create(ToColor4B(color), size_.width, size_.height);
 		pNode_ = pLayer;
 		break;
 	}
@@ -269,6 +295,180 @@ void BrushVisual::SyncNodeKind()
 		flatFallback_ = wantsFlat;
 		Rebuild();
 	}
+}
+
+void BrushVisual::ApplyThemeColorTint()
+{
+	auto* pLayer = dynamic_cast<LayerColor*>(pNode_);
+
+	if (pLayer == nullptr)
+	{
+		return;
+	}
+
+	const UIColorF color = ResolveBrushColor(brush_.get(), state_);
+	const Color4B color4b = ToColor4B(color);
+	pLayer->setColor(Color3B(color4b.r, color4b.g, color4b.b));
+	pLayer->setOpacity(color4b.a);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// 브러시 → 단색 해석
+//////////////////////////////////////////////////////////////////////////////////////////
+UIColorF ResolveBrushColor(const Brush* _pBrush, UIVisualState _state)
+{
+	if (_pBrush == nullptr)
+	{
+		return UIColorF{ 1.0f, 1.0f, 1.0f, 1.0f };
+	}
+
+	switch (_pBrush->GetType())
+	{
+	case BrushType::SolidColor:
+		return static_cast<const SolidColorBrush*>(_pBrush)->color_;
+	case BrushType::LinearGradient:
+		return static_cast<const LinearGradientBrush*>(_pBrush)->start_;
+	case BrushType::ThemeColor:
+	{
+		const auto* pBrush = static_cast<const ThemeColorBrush*>(_pBrush);
+		const UIThemeColorState state = pBrush->followsState_ ? ToThemeColorState(_state) : pBrush->fixedState_;
+		return UIThemeManager::Get()->GetColors().Get(pBrush->control_, state, pBrush->role_);
+	}
+	case BrushType::Theme:
+	{
+		// 베이크 텍스처 브러시는 대표색으로 Resolve된 표면 상단색을 사용한다.
+		const auto* pBrush = static_cast<const ThemeBrush*>(_pBrush);
+		UIResolvedStyle resolved = UIThemeManager::Get()->Resolve(pBrush->controlType_, _state, {});
+		return resolved.surfaceTop;
+	}
+	default:
+		return UIColorF{ 1.0f, 1.0f, 1.0f, 1.0f };
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// BorderEdgeVisual
+//////////////////////////////////////////////////////////////////////////////////////////
+BorderEdgeVisual::~BorderEdgeVisual()
+{
+	Detach();
+}
+
+void BorderEdgeVisual::Attach(cc::Node* _pHost, int _zOrder /* = -50 */)
+{
+	pHost_ = _pHost;
+	zOrder_ = _zOrder;
+	Sync();
+}
+
+void BorderEdgeVisual::Detach()
+{
+	for (int idx = 0; idx < 4; ++idx)
+	{
+		if (pEdges_[idx])
+		{
+			pEdges_[idx]->removeFromParent();
+			pEdges_[idx] = nullptr;
+		}
+	}
+
+	pHost_ = nullptr;
+}
+
+void BorderEdgeVisual::SetBrush(const BrushPtr& _brush)
+{
+	brush_ = _brush;
+	Sync();
+}
+
+void BorderEdgeVisual::SetThickness(const Thickness& _thickness)
+{
+	thickness_ = _thickness;
+	Sync();
+}
+
+void BorderEdgeVisual::SetVisualState(UIVisualState _state)
+{
+	if (state_ == _state)
+	{
+		return;
+	}
+
+	state_ = _state;
+	Sync();
+}
+
+void BorderEdgeVisual::Resize(const cc::size& _size)
+{
+	size_ = _size;
+	Sync();
+}
+
+void BorderEdgeVisual::RefreshTheme()
+{
+	Sync();
+}
+
+void BorderEdgeVisual::Sync()
+{
+	if (pHost_ == nullptr)
+	{
+		return;
+	}
+
+	const bool hasBorder = brush_ != nullptr
+		&& (thickness_.left_ > 0.0f || thickness_.top_ > 0.0f || thickness_.right_ > 0.0f || thickness_.bottom_ > 0.0f)
+		&& size_.width > 0.0f && size_.height > 0.0f;
+
+	if (!hasBorder)
+	{
+		for (int idx = 0; idx < 4; ++idx)
+		{
+			if (pEdges_[idx])
+			{
+				pEdges_[idx]->setVisible(false);
+			}
+		}
+		return;
+	}
+
+	const UIColorF color = ResolveBrushColor(brush_.get(), state_);
+	const Color4B color4b = ToColor4B(color);
+
+	const float width = size_.width;
+	const float height = size_.height;
+	const float thickness[4] = { thickness_.left_, thickness_.top_, thickness_.right_, thickness_.bottom_ };
+
+	// 상/하단 변은 좌/우 변과 겹치지 않도록 내부 폭만 차지한다.
+	const float innerWidth = std::max(0.0f, width - thickness_.left_ - thickness_.right_);
+
+	for (int idx = 0; idx < 4; ++idx)
+	{
+		if (thickness[idx] <= 0.0f)
+		{
+			if (pEdges_[idx])
+			{
+				pEdges_[idx]->setVisible(false);
+			}
+			continue;
+		}
+
+		if (pEdges_[idx] == nullptr)
+		{
+			pEdges_[idx] = LayerColor::create(Color4B::WHITE, 1.0f, 1.0f);
+			pHost_->addChild(pEdges_[idx], zOrder_);
+		}
+
+		pEdges_[idx]->setColor(Color3B(color4b.r, color4b.g, color4b.b));
+		pEdges_[idx]->setOpacity(color4b.a);
+		pEdges_[idx]->setVisible(true);
+	}
+
+	// left, top, right, bottom (코코스 y-up 좌표)
+	if (pEdges_[0] && thickness[0] > 0.0f) { pEdges_[0]->setContentSize(cc::size(thickness[0], height)); pEdges_[0]->setPosition(0.0f, 0.0f); }
+	if (pEdges_[1] && thickness[1] > 0.0f) { pEdges_[1]->setContentSize(cc::size(innerWidth, thickness[1])); pEdges_[1]->setPosition(thickness_.left_, height - thickness[1]); }
+	if (pEdges_[2] && thickness[2] > 0.0f) { pEdges_[2]->setContentSize(cc::size(thickness[2], height)); pEdges_[2]->setPosition(width - thickness[2], 0.0f); }
+	if (pEdges_[3] && thickness[3] > 0.0f) { pEdges_[3]->setContentSize(cc::size(innerWidth, thickness[3])); pEdges_[3]->setPosition(thickness_.left_, 0.0f); }
 }
 
 } // namespace sgui

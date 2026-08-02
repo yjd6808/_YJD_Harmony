@@ -5,6 +5,7 @@
 
 #include "GameCoreHeader.h"
 #include "sgcl/Game/UI/Controls/Button.h"
+#include "sgcl/Game/UI/Theme/UIThemeManager.h"
 
 namespace sgui
 {
@@ -70,7 +71,10 @@ Button* Button::Create(const char* _text /* = nullptr */)
 {
 	Button* pButton = dbg_new Button;
 	pButton->autorelease();
-	pButton->SetBackground(ThemeBrush::Create(UIAssetSemantic::Button, UIElementType::Button));
+	pButton->SetThemeControl(UIThemeControl::Button);
+	pButton->SetBackground(ThemeColorBrush::Create(UIThemeControl::Button, UIThemeColorRole::Background));
+	pButton->SetBorderBrush(ThemeColorBrush::Create(UIThemeControl::Button, UIThemeColorRole::Border));
+	pButton->SetBorderThickness(Thickness(UIThemeManager::Get()->GetColors().GetBorderThickness(UIThemeControl::Button)));
 	pButton->SetPadding(Thickness(12.0f, 6.0f));
 
 	if (_text)

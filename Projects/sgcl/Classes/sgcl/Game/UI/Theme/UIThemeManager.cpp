@@ -18,6 +18,7 @@ bool UIThemeManager::Initialize(const UIThemeInitParams& _params)
 {
     params_ = _params;
     activeTheme_ = UIRuntimeTheme::EngineDefaults();
+    colorTable_.BuildDefaults(activeTheme_);
     revision_.sourceRevision = 1;
     revision_.mappedRevision = 1;
     revision_.textureRevision = 1;
@@ -104,6 +105,11 @@ bool UIThemeManager::ApplyTheme(const char* _jsonPath, UIColorScheme _scheme)
     UIRuntimeTheme theme = UIThemeMapper::Map(root, _scheme);
 
     activeTheme_ = theme;
+
+    // 컨트롤/상태별 단색 테이블 재구축: 토큰 기반 기본값 → JSON "controls" 섹션 오버라이드
+    colorTable_.BuildDefaults(activeTheme_);
+    colorTable_.LoadJson(root);
+
     activeScheme_ = _scheme;
     activeThemeName_ = theme.meta.displayName.IsEmpty() ? jc::String("unnamed") : theme.meta.displayName;
     activeThemeJsonPath_ = jc::String(_jsonPath);
@@ -247,6 +253,7 @@ UIThemeEditSession UIThemeManager::BeginEdit()
 void UIThemeManager::CommitDraft(const UIRuntimeTheme& _draft)
 {
     activeTheme_ = _draft;
+    colorTable_.BuildDefaults(activeTheme_);
     ++revision_.mappedRevision;
     editSession_ = UIThemeEditSession{};
 }
@@ -254,6 +261,7 @@ void UIThemeManager::CommitDraft(const UIRuntimeTheme& _draft)
 void UIThemeManager::CommitDraft(const UIRuntimeTheme& _draft, const UIStyleOverride& _overrides)
 {
     activeTheme_ = _draft;
+    colorTable_.BuildDefaults(activeTheme_);
     editSession_.active = true;
     editSession_.draft = _draft;
     editSession_.overrides = _overrides;

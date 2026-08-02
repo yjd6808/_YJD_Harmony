@@ -13,6 +13,7 @@ ProgressBar* ProgressBar::Create()
 {
 	ProgressBar* pProgressBar = dbg_new ProgressBar;
 	pProgressBar->autorelease();
+	pProgressBar->SetThemeControl(UIThemeControl::ProgressBar);
 
 	pProgressBar->SetBackground(ThemeBrush::Create(UIAssetSemantic::ProgressTrack, UIElementType::ProgressBar, UIComponentSlot::Track));
 

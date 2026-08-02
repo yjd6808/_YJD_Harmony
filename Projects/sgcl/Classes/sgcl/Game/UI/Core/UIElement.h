@@ -63,13 +63,38 @@ public:
 	void SetVerticalAlignment(VerticalAlignment _align) { vAlignment_ = _align; InvalidateLayout(); }
 	VerticalAlignment GetVerticalAlignment() const { return vAlignment_; }
 
-	void SetWidth(float _width) { width_ = _width; InvalidateLayout(); }
+	void SetWidth(float _width)
+	{
+		if (width_ == _width)
+		{
+			return;
+		}
+		width_ = _width;
+		InvalidateLayout();
+	}
 	float GetWidth() const { return width_; }
 
-	void SetHeight(float _height) { height_ = _height; InvalidateLayout(); }
+	void SetHeight(float _height)
+	{
+		if (height_ == _height)
+		{
+			return;
+		}
+		height_ = _height;
+		InvalidateLayout();
+	}
 	float GetHeight() const { return height_; }
 
-	void SetSize(float _width, float _height) { width_ = _width; height_ = _height; InvalidateLayout(); }
+	void SetSize(float _width, float _height)
+	{
+		if (width_ == _width && height_ == _height)
+		{
+			return;
+		}
+		width_ = _width;
+		height_ = _height;
+		InvalidateLayout();
+	}
 
 	void SetMinWidth(float _v) { minWidth_ = _v; InvalidateLayout(); }
 	void SetMaxWidth(float _v) { maxWidth_ = _v; InvalidateLayout(); }
@@ -113,8 +138,11 @@ public:
 	bool IsContentHost() const { return isContentHost_; }
 
 	// ==================== 상속 속성 (Foreground / Font) ====================
-	void SetForeground(const UIColorF& _color) { hasForeground_ = true; foreground_ = _color; OnInheritedPropertyChanged(); }
-	void ClearForeground() { hasForeground_ = false; OnInheritedPropertyChanged(); }
+	// WPF처럼 Foreground는 Brush로 저장한다. (UIColorF 오버로드는 SolidColorBrush로 래핑)
+	void SetForeground(const UIColorF& _color) { SetForeground(SolidColorBrush::Create(_color)); }
+	void SetForeground(const BrushPtr& _brush) { hasForeground_ = _brush != nullptr; foregroundBrush_ = _brush; OnInheritedPropertyChanged(); }
+	void ClearForeground() { hasForeground_ = false; foregroundBrush_ = nullptr; OnInheritedPropertyChanged(); }
+	const BrushPtr& GetForegroundBrush() const { return foregroundBrush_; }
 	UIColorF GetEffectiveForeground() const;
 
 	void SetFontCode(int _fontCode) { fontCode_ = _fontCode; OnInheritedPropertyChanged(); }
@@ -161,6 +189,10 @@ public:
 	virtual void UpdateVisualState() {}
 	virtual void RefreshThemeVisuals();
 
+	// 전경색(Foreground) 관련 비주얼만 갱신한다. (레이아웃 무효화 없음)
+	// Control::UpdateVisualState()가 상태 변화 시 자식 텍스트 색을 다시 동기화할 때 사용.
+	virtual void RefreshForegroundVisuals();
+
 	virtual jc::String ToString();
 
 protected:
@@ -168,6 +200,9 @@ protected:
 	virtual void ArrangeOverride(const cc::size& _finalSize) { UNUSED(_finalSize); }
 	virtual void OnRenderSizeChanged(const cc::size& _size) { UNUSED(_size); }
 	virtual void OnInheritedPropertyChanged();
+
+	// 자신의 유효 전경색을 제공하면 true를 반환한다. (Control은 테마 색상 테이블로 폴백)
+	virtual bool TryGetForegroundColor(UIColorF& _outColor) const;
 
 	void CommitToCocos();
 	void DeliverEvent(UIEvent* _pEvent);
@@ -213,7 +248,7 @@ protected:
 	bool isContentHost_ = false;
 
 	bool hasForeground_ = false;
-	UIColorF foreground_ { 1.0f, 1.0f, 1.0f, 1.0f };
+	BrushPtr foregroundBrush_;
 	int fontCode_ = -1;			// -1: 부모로부터 상속
 	float fontSize_ = -1.0f;	// 음수: 부모로부터 상속
 

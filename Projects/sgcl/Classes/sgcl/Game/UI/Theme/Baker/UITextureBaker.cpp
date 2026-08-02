@@ -12,6 +12,42 @@
 #include "nanosvg.h"
 #include "nanosvgrast.h"
 
+static const char* SemanticName(UIAssetSemantic _semantic)
+{
+    switch (_semantic)
+    {
+    case UIAssetSemantic::Button: return "Button";
+    case UIAssetSemantic::Frame: return "Frame";
+    case UIAssetSemantic::CheckBox: return "CheckBox";
+    case UIAssetSemantic::Radio: return "Radio";
+    case UIAssetSemantic::ToggleTrack: return "ToggleTrack";
+    case UIAssetSemantic::ToggleKnob: return "ToggleKnob";
+    case UIAssetSemantic::CheckMark: return "CheckMark";
+    case UIAssetSemantic::RadioDot: return "RadioDot";
+    case UIAssetSemantic::ProgressTrack: return "ProgressTrack";
+    case UIAssetSemantic::ProgressGauge: return "ProgressGauge";
+    case UIAssetSemantic::SliderTrack: return "SliderTrack";
+    case UIAssetSemantic::SliderFill: return "SliderFill";
+    case UIAssetSemantic::SliderThumb: return "SliderThumb";
+    case UIAssetSemantic::ScrollBarTrack: return "ScrollBarTrack";
+    case UIAssetSemantic::ScrollBarThumb: return "ScrollBarThumb";
+    case UIAssetSemantic::EditBox: return "EditBox";
+    case UIAssetSemantic::FocusRing: return "FocusRing";
+    case UIAssetSemantic::ProgressCap: return "ProgressCap";
+    case UIAssetSemantic::WindowIconMinimize: return "WindowIconMinimize";
+    case UIAssetSemantic::WindowIconMaximize: return "WindowIconMaximize";
+    case UIAssetSemantic::WindowIconClose: return "WindowIconClose";
+    default: return "Unknown";
+    }
+}
+
+// 아이콘 SVG가 없을 때 동적으로 생성되는 느낌표 폴백 (현재 테마색으로 틴트됨)
+static const char* kFallbackExclamationSvg =
+    "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 22 22\">"
+    "<path d=\"M11 2.2c-.95 0-1.7.75-1.7 1.7v9.8c0 .95.75 1.7 1.7 1.7s1.7-.75 1.7-1.7V3.9c0-.95-.75-1.7-1.7-1.7z\" fill=\"currentColor\"/>"
+    "<circle cx=\"11\" cy=\"18.6\" r=\"1.9\" fill=\"currentColor\"/>"
+    "</svg>";
+
 static void RenderMaterial(
     UIPixelBuffer& _work,
     const UIRect& _bounds,
@@ -109,18 +145,23 @@ static bool RenderSvgIcon(
 
     _LogDebug_("[UITextureBaker] SVG icon render start: %s (%dx%d)", _recipe.svgPath.Source(), _recipe.width, _recipe.height);
 
+    jc::String content;
     if (!jc::File::Exist(_recipe.svgPath.Source()))
     {
-        _LogError_("[UITextureBaker] SVG 파일이 존재하지 않습니다: %s", _recipe.svgPath.Source());
-        return false;
+        _LogWarn_("[UITextureBaker] SVG 아이콘 파일 없음(semantic=%s) - 느낌표 폴백 사용: %s",
+            SemanticName(_recipe.semantic), _recipe.svgPath.Source());
+        content = kFallbackExclamationSvg;
     }
-
-    const jc::String content = jc::File::ReadAllText(_recipe.svgPath.Source());
-    _LogDebug_("[UITextureBaker] SVG read: %s (%d bytes)", _recipe.svgPath.Source(), content.Length());
-    if (content.IsEmpty())
+    else
     {
-        _LogError_("[UITextureBaker] SVG 파일을 읽지 못했습니다: %s", _recipe.svgPath.Source());
-        return false;
+        content = jc::File::ReadAllText(_recipe.svgPath.Source());
+        _LogDebug_("[UITextureBaker] SVG read: %s (%d bytes)", _recipe.svgPath.Source(), content.Length());
+        if (content.IsEmpty())
+        {
+            _LogWarn_("[UITextureBaker] SVG 파일을 읽지 못했습니다(semantic=%s) - 느낌표 폴백 사용: %s",
+                SemanticName(_recipe.semantic), _recipe.svgPath.Source());
+            content = kFallbackExclamationSvg;
+        }
     }
 
     NSVGimage* pImage = nsvgParse(content.Source(), "px", 96.0f);
@@ -199,7 +240,8 @@ UIBakeOutput UITextureBaker::Bake(
     {
         if (!RenderSvgIcon(work, _recipe, scaled, _options))
         {
-            _LogWarn_("[UITextureBaker] SVG 아이콘 렌더링 실패, 도형 폴백: %s", _recipe.svgPath.Source());
+            _LogWarn_("[UITextureBaker] SVG 아이콘 렌더링 실패(semantic=%s), 도형 폴백: %s",
+                SemanticName(_recipe.semantic), _recipe.svgPath.Source());
             RenderMaterial(work, CalculateMaterialBounds(workW, workH, scaled, true), scaled);
         }
 

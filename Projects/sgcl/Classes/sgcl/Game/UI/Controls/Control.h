@@ -24,6 +24,20 @@ public:
 	void SetBackground(const BrushPtr& _brush);
 	const BrushPtr& GetBackground() const { return backgroundVisual_.GetBrush(); }
 
+	// ==================== BorderBrush / BorderThickness (WPF Control 동일 기능) ====================
+	// 테두리는 렌더 오버레이로 그려지며 레이아웃 크기에는 영향을 주지 않는다.
+	void SetBorderBrush(const BrushPtr& _brush);
+	void SetBorderBrush(const UIColorF& _color) { SetBorderBrush(SolidColorBrush::Create(_color)); }
+	const BrushPtr& GetBorderBrush() const { return borderVisual_.GetBrush(); }
+
+	void SetBorderThickness(const Thickness& _thickness);
+	const Thickness& GetBorderThickness() const { return borderVisual_.GetThickness(); }
+
+	// 테마 색상 테이블(UIThemeColorTable) 조회 시 사용할 컨트롤 종류.
+	// 명시적 Foreground가 없으면 (themeControl_, 현재 상태, Foreground) 색상이 글자색으로 쓰인다.
+	void SetThemeControl(UIThemeControl _control) { themeControl_ = _control; UpdateVisualState(); }
+	UIThemeControl GetThemeControl() const { return themeControl_; }
+
 	void SetFocusable(bool _focusable) { focusable_ = _focusable; }
 	bool IsFocusable() const { return focusable_; }
 
@@ -39,8 +53,13 @@ protected:
 
 	virtual void OnRenderSizeChanged(const cc::size& _size) override;
 
+	// 명시적 Foreground 브러시가 없으면 테마 색상 테이블의 상태별 Foreground로 폴백한다.
+	virtual bool TryGetForegroundColor(UIColorF& _outColor) const override;
+
 	Thickness padding_;
 	BrushVisual backgroundVisual_;
+	BorderEdgeVisual borderVisual_;
+	UIThemeControl themeControl_ = UIThemeControl::Button;
 	bool focusable_ = false;
 	bool isPressed_ = false;
 };

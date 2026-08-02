@@ -8,6 +8,7 @@
 #include "sgcl/Game/UI/Core/ElementRegistry.h"
 #include "sgcl/Game/UI/Core/InputDispatcher.h"
 #include "sgcl/Game/UI/Controls/Window.h"
+#include "sgcl/Game/UI/Theme/UIThemeManager.h"
 
 #include <algorithm>
 
@@ -145,18 +146,33 @@ bool UIElement::IsEffectivelyEnabled() const
 UIColorF UIElement::GetEffectiveForeground() const
 {
 	const UIElement* pCur = this;
+	UIColorF color;
 
 	while (pCur)
 	{
-		if (pCur->hasForeground_)
+		if (pCur->TryGetForegroundColor(color))
 		{
-			return pCur->foreground_;
+			return color;
 		}
 
 		pCur = pCur->pParentElement_;
 	}
 
-	return UIColorF{ 1.0f, 1.0f, 1.0f, 1.0f };
+	// 루트까지 지정된 전경색이 없으면 현재 테마의 기본 텍스트 색상을 사용한다. (비활성이면 disabled 글자색)
+	return UIThemeManager::Get()->GetColors().Get(UIThemeControl::TextBlock,
+		IsEffectivelyEnabled() ? UIThemeColorState::Normal : UIThemeColorState::Disabled, UIThemeColorRole::Foreground);
+}
+
+bool UIElement::TryGetForegroundColor(UIColorF& _outColor) const
+{
+	if (!hasForeground_)
+	{
+		return false;
+	}
+
+	// 비활성 상태면 상태 연동 브러시(ThemeColorBrush)가 disabled 색상으로 해석되도록 한다.
+	_outColor = ResolveBrushColor(foregroundBrush_, IsEffectivelyEnabled() ? UIVisualState::Normal : UIVisualState::Disabled);
+	return true;
 }
 
 int UIElement::GetEffectiveFontCode() const
@@ -571,6 +587,34 @@ void UIElement::RefreshThemeVisuals()
 void UIElement::OnInheritedPropertyChanged()
 {
 	InvalidateLayout();
+
+	// 상속 속성은 논리 트리 아래로 전파된다. (예: 부모 Foreground 변경 → 자식 TextBlock 색 갱신)
+	const int childCount = GetChildElementCount();
+
+	for (int idx = 0; idx < childCount; ++idx)
+	{
+		UIElement* pChild = GetChildElementAt(idx);
+
+		if (pChild)
+		{
+			pChild->OnInheritedPropertyChanged();
+		}
+	}
+}
+
+void UIElement::RefreshForegroundVisuals()
+{
+	const int childCount = GetChildElementCount();
+
+	for (int idx = 0; idx < childCount; ++idx)
+	{
+		UIElement* pChild = GetChildElementAt(idx);
+
+		if (pChild)
+		{
+			pChild->RefreshForegroundVisuals();
+		}
+	}
 }
 
 jc::String UIElement::ToString()

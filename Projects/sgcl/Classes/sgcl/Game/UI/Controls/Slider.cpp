@@ -14,6 +14,7 @@ Slider* Slider::Create()
 {
 	Slider* pSlider = dbg_new Slider;
 	pSlider->autorelease();
+	pSlider->SetThemeControl(UIThemeControl::Slider);
 
 	// 슬라이더 전용 UIElementType이 없으므로 스크롤바 스타일로 Resolve한다.
 	pSlider->SetBackground(ThemeBrush::Create(UIAssetSemantic::SliderTrack, UIElementType::ScrollBar, UIComponentSlot::Track));

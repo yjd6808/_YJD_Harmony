@@ -16,6 +16,7 @@ Border* Border::Create()
 	Border* pBorder = dbg_new Border;
 	pBorder->autorelease();
 	pBorder->backgroundVisual_.Attach(pBorder, -100);
+	pBorder->borderVisual_.Attach(pBorder, -50);
 	return pBorder;
 }
 
@@ -49,22 +50,23 @@ void Border::SetBackground(const BrushPtr& _brush)
 	backgroundVisual_.Resize(renderSize_);
 }
 
-void Border::SetBorderBrush(const UIColorF& _color)
+void Border::SetBorderBrush(const BrushPtr& _brush)
 {
-	borderColor_ = _color;
-	SyncBorderEdges();
+	borderVisual_.SetBrush(_brush);
+	borderVisual_.Resize(renderSize_);
 }
 
 void Border::SetBorderThickness(const Thickness& _thickness)
 {
 	borderThickness_ = _thickness;
-	SyncBorderEdges();
+	borderVisual_.SetThickness(_thickness);
 	InvalidateLayout();
 }
 
 void Border::RefreshThemeVisuals()
 {
 	backgroundVisual_.RefreshTheme();
+	borderVisual_.RefreshTheme();
 	UIElement::RefreshThemeVisuals();
 }
 
@@ -103,44 +105,7 @@ void Border::ArrangeOverride(const cc::size& _finalSize)
 void Border::OnRenderSizeChanged(const cc::size& _size)
 {
 	backgroundVisual_.Resize(_size);
-	SyncBorderEdges();
-}
-
-void Border::SyncBorderEdges()
-{
-	const Color4B color = ToColor4B(borderColor_);
-	const float width = renderSize_.width;
-	const float height = renderSize_.height;
-
-	const float thickness[4] = { borderThickness_.left_, borderThickness_.top_, borderThickness_.right_, borderThickness_.bottom_ };
-
-	for (int idx = 0; idx < 4; ++idx)
-	{
-		if (thickness[idx] <= 0.0f)
-		{
-			if (pEdges_[idx])
-			{
-				pEdges_[idx]->setVisible(false);
-			}
-			continue;
-		}
-
-		if (pEdges_[idx] == nullptr)
-		{
-			pEdges_[idx] = LayerColor::create(color, 1.0f, 1.0f);
-			addChild(pEdges_[idx], -50);
-		}
-
-		pEdges_[idx]->setColor(Color3B(color.r, color.g, color.b));
-		pEdges_[idx]->setOpacity(color.a);
-		pEdges_[idx]->setVisible(true);
-	}
-
-	// left, top, right, bottom (코코스 y-up 좌표로 배치)
-	if (pEdges_[0]) { pEdges_[0]->setContentSize(cc::size(thickness[0], height)); pEdges_[0]->setPosition(0.0f, 0.0f); }
-	if (pEdges_[1]) { pEdges_[1]->setContentSize(cc::size(width, thickness[1])); pEdges_[1]->setPosition(0.0f, height - thickness[1]); }
-	if (pEdges_[2]) { pEdges_[2]->setContentSize(cc::size(thickness[2], height)); pEdges_[2]->setPosition(width - thickness[2], 0.0f); }
-	if (pEdges_[3]) { pEdges_[3]->setContentSize(cc::size(width, thickness[3])); pEdges_[3]->setPosition(0.0f, 0.0f); }
+	borderVisual_.Resize(_size);
 }
 
 } // namespace sgui

@@ -37,6 +37,7 @@ public:
 private:
 	void Rebuild();
 	void ApplyThemeBinding();
+	void ApplyThemeColorTint();
 	bool ComputeFlatFallback() const;
 	void SyncNodeKind();
 
@@ -56,6 +57,41 @@ private:
 	float sliceMinHeight_ = 0.0f;
 
 	UIThemeTextureBinding binding_;
+};
+
+// WPF의 BorderBrush/BorderThickness를 렌더링하는 4변 테두리 비주얼.
+// Border 컨트롤과 일반 Control이 공용으로 사용한다.
+class BorderEdgeVisual
+{
+public:
+	~BorderEdgeVisual();
+
+	void Attach(cc::Node* _pHost, int _zOrder = -50);
+	void Detach();
+
+	void SetBrush(const BrushPtr& _brush);
+	const BrushPtr& GetBrush() const { return brush_; }
+
+	void SetThickness(const Thickness& _thickness);
+	const Thickness& GetThickness() const { return thickness_; }
+
+	void SetVisualState(UIVisualState _state);
+	UIVisualState GetVisualState() const { return state_; }
+
+	void Resize(const cc::size& _size);
+	void RefreshTheme();
+
+private:
+	void Sync();
+
+	cc::Node* pHost_ = nullptr;
+	cc::LayerColor* pEdges_[4] = {};	// left, top, right, bottom
+	int zOrder_ = -50;
+
+	BrushPtr brush_;
+	Thickness thickness_;
+	UIVisualState state_ = UIVisualState::Normal;
+	cc::size size_;
 };
 
 } // namespace sgui

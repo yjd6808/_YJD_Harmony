@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * =====================
  */
@@ -9,7 +9,6 @@
 #include "sgcl/Game/UI/Core/InputDispatcher.h"
 #include "sgcl/Game/UI/Theme/UIThemeManager.h"
 
-#include <algorithm>
 #include <vector>
 
 USING_NS_CC;

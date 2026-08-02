@@ -5,6 +5,7 @@
 
 #include "GameCoreHeader.h"
 #include "sgcl/Game/UI/Controls/TextBox.h"
+#include "sgcl/Game/UI/Theme/UIThemeManager.h"
 #include "sgcl/Game/Contents/FontManager.h"
 
 USING_NS_CC;
@@ -18,7 +19,10 @@ TextBox* TextBox::Create()
 	TextBox* pTextBox = dbg_new TextBox;
 	pTextBox->autorelease();
 	pTextBox->focusable_ = true;
-	pTextBox->SetBackground(ThemeBrush::Create(UIAssetSemantic::EditBox, UIElementType::EditBox));
+	pTextBox->SetThemeControl(UIThemeControl::TextBox);
+	pTextBox->SetBackground(ThemeColorBrush::Create(UIThemeControl::TextBox, UIThemeColorRole::Background));
+	pTextBox->SetBorderBrush(ThemeColorBrush::Create(UIThemeControl::TextBox, UIThemeColorRole::Border));
+	pTextBox->SetBorderThickness(Thickness(UIThemeManager::Get()->GetColors().GetBorderThickness(UIThemeControl::TextBox)));
 	pTextBox->BuildEditBox();
 	return pTextBox;
 }
@@ -68,6 +72,33 @@ void TextBox::Focus()
 	{
 		pEditBox_->touchDownAction(pEditBox_, Widget::TouchEventType::ENDED);
 	}
+}
+
+void TextBox::RefreshThemeVisuals()
+{
+	Control::RefreshThemeVisuals();
+	RefreshForegroundVisuals();
+}
+
+void TextBox::RefreshForegroundVisuals()
+{
+	if (pEditBox_)
+	{
+		pEditBox_->setFontColor(ToColor4B(GetEffectiveForeground()));
+	}
+
+	Control::RefreshForegroundVisuals();
+}
+
+void TextBox::OnInheritedPropertyChanged()
+{
+	// 부모의 Foreground 변경이 EditBox 글자색에도 반영되도록 한다.
+	if (pEditBox_)
+	{
+		pEditBox_->setFontColor(ToColor4B(GetEffectiveForeground()));
+	}
+
+	Control::OnInheritedPropertyChanged();
 }
 
 void TextBox::editBoxTextChanged(EditBox* _pEditBox, const std::string& _text)

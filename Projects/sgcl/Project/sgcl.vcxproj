@@ -661,6 +661,8 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeTypes.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeColor.h" />
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeColorTable.h" />
     <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIRuntimeTheme.h" />
     <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIStyleOverride.h" />
     <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIStyleResolver.h" />

@@ -11,6 +11,7 @@
 
 #include "sgcl/Game/UI/Core/UITypes.h"
 #include "sgcl/Game/UI/Theme/UIThemeTypes.h"
+#include "sgcl/Game/UI/Theme/UIThemeColor.h"
 
 #include <memory>
 
@@ -21,7 +22,8 @@ enum class BrushType : uint8_t
 {
 	SolidColor,
 	LinearGradient,
-	Theme
+	Theme,
+	ThemeColor
 };
 
 class Brush
@@ -82,6 +84,41 @@ public:
 	UIComponentSlot slot_;
 	bool fixedSize_;	// true면 Scale9 대신 원본 크기 스프라이트로 바인딩 (노브/마크/도트 등)
 };
+
+// 테마 색상 테이블(UIThemeColorTable)을 참조하는 단색 브러시. (WPF DynamicResource 컨셉)
+// followsState_가 true면 BrushVisual의 VisualState에 따라 상태별 색상을 자동 전환하고,
+// false면 fixedState_의 색상을 고정 사용한다.
+class ThemeColorBrush : public Brush
+{
+public:
+	ThemeColorBrush(UIThemeControl _control, UIThemeColorRole _role, bool _followsState, UIThemeColorState _fixedState)
+	: control_(_control), role_(_role), followsState_(_followsState), fixedState_(_fixedState) {}
+
+	virtual BrushType GetType() const override { return BrushType::ThemeColor; }
+
+	// 상태 연동 브러시 (예: 버튼 배경 - Normal/Hover/Pressed 색상 자동 전환)
+	static BrushPtr Create(UIThemeControl _control, UIThemeColorRole _role)
+	{
+		return std::make_shared<ThemeColorBrush>(_control, _role, true, UIThemeColorState::Normal);
+	}
+
+	// 고정 상태 브러시 (예: UIThemeColor::ButtonHoverBackground)
+	static BrushPtr Create(UIThemeColor _color)
+	{
+		const UIThemeColorParts parts = DecomposeUIThemeColor(_color);
+		return std::make_shared<ThemeColorBrush>(parts.control, parts.role, false, parts.state);
+	}
+
+	UIThemeControl control_;
+	UIThemeColorRole role_;
+	bool followsState_;
+	UIThemeColorState fixedState_;
+};
+
+// 브러시를 현재 테마 기준 단색으로 해석한다. (구현: BrushVisual.cpp)
+// SolidColor=색상 그대로, LinearGradient=시작색, ThemeColor=테마 색상 테이블, Theme=Resolve된 표면 상단색
+UIColorF ResolveBrushColor(const Brush* _pBrush, UIVisualState _state);
+inline UIColorF ResolveBrushColor(const BrushPtr& _brush, UIVisualState _state) { return ResolveBrushColor(_brush.get(), _state); }
 
 inline cc::Color4B ToColor4B(const UIColorF& _color)
 {

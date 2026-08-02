@@ -58,6 +58,18 @@ void TextBlock::RefreshThemeVisuals()
 	UIElement::RefreshThemeVisuals();
 }
 
+void TextBlock::RefreshForegroundVisuals()
+{
+	SyncLabelStyle();
+	UIElement::RefreshForegroundVisuals();
+}
+
+// SetIsEnabled() 재귀 전파 시 활성/비활성 글자색을 다시 동기화한다.
+void TextBlock::UpdateVisualState()
+{
+	SyncLabelStyle();
+}
+
 void TextBlock::RebuildLabel()
 {
 	if (pLabel_)

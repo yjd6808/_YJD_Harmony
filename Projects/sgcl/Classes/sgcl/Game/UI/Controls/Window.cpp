@@ -428,6 +428,11 @@ Button* Window::BuildCaptionButton(UIAssetSemantic _semantic, const char* _name,
 			pIcon->Resize(cc::size(20.0f, 20.0f));
 			iconVisuals_.PushBack(pIcon);
 		}
+		else
+		{
+			_LogWarn_("[Window] 캡션 버튼 아이콘 파일 없음(window=%s, button=%s): %s",
+				getName().c_str(), _name, svgPath.Source());
+		}
 	}
 
 	return pBtn;

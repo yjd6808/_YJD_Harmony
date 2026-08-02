@@ -5,6 +5,7 @@
 #include "sgcl/Game/UI/Theme/UIStyleOverride.h"
 #include "sgcl/Game/UI/Theme/UIStyleResolver.h"
 #include "sgcl/Game/UI/Theme/UIThemeMapper.h"
+#include "sgcl/Game/UI/Theme/UIThemeColorTable.h"
 #include "sgcl/Game/UI/Theme/UITextureEntry.h"
 #include "sgcl/Game/UI/Theme/UITextureBakeService.h"
 #include "sgcl/Game/UI/Theme/UITextureCache.h"
@@ -45,6 +46,12 @@ public:
         UIElementType_t _control,
         UIVisualState _state) const;
 
+    // 컨트롤/상태별 테마 색상 조회 (WPF 스타일 단색 시스템)
+    // 예) UIThemeManager::Get()->GetColor(UIThemeColor::ButtonHoverBackground)
+    const UIThemeColorTable& GetColors() const { return colorTable_; }
+    UIColorF GetColor(UIThemeColor _color) const { return colorTable_.Get(_color); }
+    UIColorF GetColor(UIThemeControl _control, UIVisualState _state, UIThemeColorRole _role) const { return colorTable_.Get(_control, _state, _role); }
+
     void RequestBake(UIThemeBakeRequest&& _request);
     void BakeDefaultTextureSet();
 
@@ -75,6 +82,7 @@ private:
 
     UIThemeRevision revision_;
     UIRuntimeTheme activeTheme_;
+    UIThemeColorTable colorTable_;
     UIStyleResolver resolver_;
     UIThemeMapper mapper_;
     UIThemeEditSession editSession_;

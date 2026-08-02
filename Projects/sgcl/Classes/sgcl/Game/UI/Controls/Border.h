@@ -21,8 +21,14 @@ public:
 	UIElement* GetChild() const { return pChild_; }
 
 	void SetBackground(const BrushPtr& _brush);
-	void SetBorderBrush(const UIColorF& _color);
+
+	// WPF처럼 BorderBrush는 Brush로 저장한다. (UIColorF 오버로드는 SolidColorBrush로 래핑)
+	void SetBorderBrush(const BrushPtr& _brush);
+	void SetBorderBrush(const UIColorF& _color) { SetBorderBrush(SolidColorBrush::Create(_color)); }
+	const BrushPtr& GetBorderBrush() const { return borderVisual_.GetBrush(); }
+
 	void SetBorderThickness(const Thickness& _thickness);
+	const Thickness& GetBorderThickness() const { return borderThickness_; }
 	void SetPadding(const Thickness& _padding) { padding_ = _padding; InvalidateLayout(); }
 
 	virtual int GetChildElementCount() const override { return pChild_ ? 1 : 0; }
@@ -37,15 +43,12 @@ protected:
 	virtual void ArrangeOverride(const cc::size& _finalSize) override;
 	virtual void OnRenderSizeChanged(const cc::size& _size) override;
 
-	void SyncBorderEdges();
-
 	UIElement* pChild_ = nullptr;
 	Thickness padding_;
 	Thickness borderThickness_;
-	UIColorF borderColor_ { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	BrushVisual backgroundVisual_;
-	cc::LayerColor* pEdges_[4] = { nullptr, nullptr, nullptr, nullptr };	// left, top, right, bottom
+	BorderEdgeVisual borderVisual_;
 };
 
 } // namespace sgui

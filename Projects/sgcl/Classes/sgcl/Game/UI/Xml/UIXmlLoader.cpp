@@ -429,7 +429,44 @@ void ApplyGridDefinitionCollection(Grid* _pGrid, tinyxml2::XMLElement* _pXml)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 배경 브러시 (색상 → SolidColorBrush)
+// 테마 색상 참조 브러시
+// "theme:button.background"       → 상태 연동 (Normal/Hover/Pressed 자동 전환)
+// "theme:button.hover.background" → 고정 상태 색상
+//////////////////////////////////////////////////////////////////////////////////////////
+bool TryParseThemeColorBrush(const std::string& _text, BrushPtr& _outBrush)
+{
+	if (_text.rfind("theme:", 0) != 0)
+	{
+		return false;
+	}
+
+	const std::vector<std::string> tokens = SplitTokens(_text.substr(6), ".");
+
+	UIThemeControl control;
+	UIThemeColorState state;
+	UIThemeColorRole role;
+
+	// "control.role" → 상태 연동 브러시
+	if (tokens.size() == 2 && TryParseUIThemeControl(tokens[0].c_str(), control) && TryParseUIThemeColorRole(tokens[1].c_str(), role))
+	{
+		_outBrush = ThemeColorBrush::Create(control, role);
+		return true;
+	}
+
+	// "control.state.role" → 고정 상태 브러시
+	if (tokens.size() == 3 && TryParseUIThemeControl(tokens[0].c_str(), control) && TryParseUIThemeColorState(tokens[1].c_str(), state) && TryParseUIThemeColorRole(tokens[2].c_str(), role))
+	{
+		_outBrush = ThemeColorBrush::Create(MakeUIThemeColor(control, state, role));
+		return true;
+	}
+
+	_LogWarn_("[UIXmlLoader] 테마 색상 참조 해석 실패: %s", _text.c_str());
+	_outBrush = nullptr;
+	return true;	// "theme:" 접두사는 소비하되 브러시는 설정하지 않는다.
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// 배경 브러시 (색상 → SolidColorBrush, theme: 참조 → ThemeColorBrush)
 //////////////////////////////////////////////////////////////////////////////////////////
 BrushPtr CreateBackgroundBrush(const UIValue& _value)
 {
@@ -439,6 +476,13 @@ BrushPtr CreateBackgroundBrush(const UIValue& _value)
 	}
 
 	const std::string text = _value.ToString();
+
+	BrushPtr pThemeBrush;
+	if (TryParseThemeColorBrush(text, pThemeBrush))
+	{
+		return pThemeBrush;
+	}
+
 	return SolidColorBrush::Create(ParseColor(text));
 }
 
@@ -485,7 +529,14 @@ void ApplyAttribute(UIElement* _pElement, const char* _name, const UIValue& _val
 	if (strcmp(_name, "Visible") == 0) { _pElement->SetVisibility(ParseBool(_value) ? Visibility::Visible : Visibility::Collapsed); return; }
 	if (strcmp(_name, "IsEnabled") == 0) { _pElement->SetIsEnabled(ParseBool(_value, true)); return; }
 	if (strcmp(_name, "IsHitTestVisible") == 0) { _pElement->SetIsHitTestVisible(ParseBool(_value, true)); return; }
-	if (strcmp(_name, "Foreground") == 0) { _pElement->SetForeground(ParseColor(_value.ToString())); return; }
+	if (strcmp(_name, "Foreground") == 0)
+	{
+		const std::string text = _value.ToString();
+		BrushPtr pThemeBrush;
+		if (TryParseThemeColorBrush(text, pThemeBrush)) { _pElement->SetForeground(pThemeBrush); return; }
+		_pElement->SetForeground(ParseColor(text));
+		return;
+	}
 	if (strcmp(_name, "FontSize") == 0) { _pElement->SetFontSize(ParseFloat(_value)); return; }
 	if (strcmp(_name, "FontCode") == 0) { _pElement->SetFontCode(ParseInt(_value, -1)); return; }
 	if (strcmp(_name, "Opacity") == 0) { _pElement->setOpacity((GLubyte)(jc::Math::Clamp(ParseFloat(_value, 1.0f), 0.0f, 1.0f) * 255.0f)); return; }
@@ -635,13 +686,24 @@ void ApplyAttribute(UIElement* _pElement, const char* _name, const UIValue& _val
 
 	if (strcmp(_name, "BorderBrush") == 0)
 	{
-		if (Border* pBorder = dynamic_cast<Border*>(_pElement)) { pBorder->SetBorderBrush(ParseColor(_value.ToString())); return; }
+		const std::string text = _value.ToString();
+
+		BrushPtr pBrush;
+		if (!TryParseThemeColorBrush(text, pBrush))
+		{
+			pBrush = SolidColorBrush::Create(ParseColor(text));
+		}
+
+		if (Border* pBorder = dynamic_cast<Border*>(_pElement)) { pBorder->SetBorderBrush(pBrush); return; }
+		if (Control* pControl = dynamic_cast<Control*>(_pElement)) { pControl->SetBorderBrush(pBrush); return; }
 		return;
 	}
 
 	if (strcmp(_name, "BorderThickness") == 0)
 	{
-		if (Border* pBorder = dynamic_cast<Border*>(_pElement)) { pBorder->SetBorderThickness(ParseThickness(_value.ToString())); return; }
+		const Thickness thickness = ParseThickness(_value.ToString());
+		if (Border* pBorder = dynamic_cast<Border*>(_pElement)) { pBorder->SetBorderThickness(thickness); return; }
+		if (Control* pControl = dynamic_cast<Control*>(_pElement)) { pControl->SetBorderThickness(thickness); return; }
 		return;
 	}
 

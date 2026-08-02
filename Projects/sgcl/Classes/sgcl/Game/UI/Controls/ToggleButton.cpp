@@ -5,6 +5,7 @@
 
 #include "GameCoreHeader.h"
 #include "sgcl/Game/UI/Controls/ToggleButton.h"
+#include "sgcl/Game/UI/Theme/UIThemeManager.h"
 #include "sgcl/Game/UI/Controls/Window.h"
 
 namespace sgui
@@ -16,7 +17,10 @@ ToggleButton* ToggleButton::Create(const char* _text /* = nullptr */)
 {
 	ToggleButton* pToggle = dbg_new ToggleButton;
 	pToggle->autorelease();
-	pToggle->SetBackground(ThemeBrush::Create(UIAssetSemantic::Button, UIElementType::ToggleButton));
+	pToggle->SetThemeControl(UIThemeControl::ToggleButton);
+	pToggle->SetBackground(ThemeColorBrush::Create(UIThemeControl::ToggleButton, UIThemeColorRole::Background));
+	pToggle->SetBorderBrush(ThemeColorBrush::Create(UIThemeControl::ToggleButton, UIThemeColorRole::Border));
+	pToggle->SetBorderThickness(Thickness(UIThemeManager::Get()->GetColors().GetBorderThickness(UIThemeControl::ToggleButton)));
 	pToggle->SetPadding(Thickness(12.0f, 6.0f));
 
 	if (_text)
@@ -116,6 +120,7 @@ CheckBox* CheckBox::Create(const char* _text /* = nullptr */)
 	CheckBox* pCheckBox = dbg_new CheckBox;
 	pCheckBox->autorelease();
 	pCheckBox->SetContentAlignment(HorizontalAlignment::Left, VerticalAlignment::Center);
+	pCheckBox->SetThemeControl(UIThemeControl::CheckBox);
 
 	pCheckBox->boxVisual_.Attach(pCheckBox, -90);
 	pCheckBox->boxVisual_.SetBrush(ThemeBrush::Create(UIAssetSemantic::CheckBox, UIElementType::CheckBox));
@@ -209,6 +214,7 @@ RadioButton* RadioButton::Create(const char* _text /* = nullptr */, const char* 
 	pRadio->autorelease();
 	pRadio->groupName_ = _groupName ? _groupName : "";
 	pRadio->SetContentAlignment(HorizontalAlignment::Left, VerticalAlignment::Center);
+	pRadio->SetThemeControl(UIThemeControl::Radio);
 
 	pRadio->radioVisual_.Attach(pRadio, -90);
 	pRadio->radioVisual_.SetBrush(ThemeBrush::Create(UIAssetSemantic::Radio, UIElementType::CheckBox));

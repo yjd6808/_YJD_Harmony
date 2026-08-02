@@ -1,6 +1,7 @@
 #include "GameCoreHeader.h"
 #include "sgcl/Game/UI/Theme/UIThemeMapper.h"
 #include "sgcl/Game/UI/Theme/UIStyleResolver.h"
+#include "sgcl/Game/UI/Theme/UIThemeColorTable.h"
 
 UIColorF UIThemeMapper::Mix(const UIColorF& _a, const UIColorF& _b, int _percent)
 {
@@ -210,4 +211,249 @@ UIColorScheme UIThemeMapper::ResolveScheme(UIColorScheme _requested)
         return _requested;
 
     return UIColorScheme::Dark;
+}
+
+// ============================================================================
+// UIThemeColorTable 구현 (선언: UIThemeColorTable.h)
+// - 신규 cpp 추가 없이 빌드되도록 UIThemeMapper.cpp에 배치한다.
+// ============================================================================
+
+UIThemeColorTable::UIThemeColorTable()
+{
+    BuildDefaults(UIRuntimeTheme::EngineDefaults());
+}
+
+void UIThemeColorTable::BuildDefaults(const UIRuntimeTheme& _theme)
+{
+    const UISurfaceTokens& surface = _theme.surface;
+    const UIMetalTokens& metal = _theme.metal;
+    const UISemanticTokens& semantic = _theme.semantic;
+    const UIWindowTokens& window = _theme.window;
+
+    // 상태별 공통 파생 규칙
+    UIColorF background[kUIThemeColorStateCount_v];
+    background[(int)UIThemeColorState::Normal] = surface.normalTop;
+    background[(int)UIThemeColorState::Hover] = surface.hoverTop;
+    background[(int)UIThemeColorState::Pressed] = surface.pressedTop;
+    background[(int)UIThemeColorState::Disabled] = surface.disabledTop;
+    background[(int)UIThemeColorState::Focused] = surface.normalTop;
+    background[(int)UIThemeColorState::Checked] = surface.pressedTop;
+
+    UIColorF foreground[kUIThemeColorStateCount_v];
+    for (int state = 0; state < kUIThemeColorStateCount_v; ++state)
+        foreground[state] = semantic.text;
+    foreground[(int)UIThemeColorState::Disabled] = semantic.disabledText;
+
+    UIColorF border[kUIThemeColorStateCount_v];
+    border[(int)UIThemeColorState::Normal] = metal.border;
+    border[(int)UIThemeColorState::Hover] = metal.hover;
+    border[(int)UIThemeColorState::Pressed] = metal.shadow;
+    border[(int)UIThemeColorState::Disabled] = metal.muted;
+    border[(int)UIThemeColorState::Focused] = semantic.focus;
+    border[(int)UIThemeColorState::Checked] = metal.highlight;
+
+    for (int control = 0; control < kUIThemeControlCount_v; ++control)
+    {
+        for (int state = 0; state < kUIThemeColorStateCount_v; ++state)
+        {
+            Set((UIThemeControl)control, (UIThemeColorState)state, UIThemeColorRole::Background, background[state]);
+            Set((UIThemeControl)control, (UIThemeColorState)state, UIThemeColorRole::Foreground, foreground[state]);
+            Set((UIThemeControl)control, (UIThemeColorState)state, UIThemeColorRole::Border, border[state]);
+        }
+        borderThickness_[control] = _theme.geometry.borderWidth;
+    }
+
+    // 컨트롤별 특수 규칙
+    // 트랙류(입력/게이지 배경)는 inset 표면을 사용한다.
+    const UIThemeControl insetControls[] = {
+        UIThemeControl::TextBox, UIThemeControl::ProgressBar,
+        UIThemeControl::Slider, UIThemeControl::ScrollBar
+    };
+    for (UIThemeControl control : insetControls)
+    {
+        Set(control, UIThemeColorState::Normal, UIThemeColorRole::Background, surface.insetTop);
+        Set(control, UIThemeColorState::Hover, UIThemeColorRole::Background, surface.insetTop);
+        Set(control, UIThemeColorState::Pressed, UIThemeColorRole::Background, surface.insetBottom);
+        Set(control, UIThemeColorState::Focused, UIThemeColorRole::Background, surface.insetTop);
+        Set(control, UIThemeColorState::Checked, UIThemeColorRole::Background, surface.insetTop);
+    }
+
+    // ProgressBar/Slider/ScrollBar 의 Foreground 는 게이지/썸 색상으로 사용된다.
+    const UIThemeControl gaugeControls[] = {
+        UIThemeControl::ProgressBar, UIThemeControl::Slider, UIThemeControl::ScrollBar
+    };
+    for (UIThemeControl control : gaugeControls)
+    {
+        Set(control, UIThemeColorState::Normal, UIThemeColorRole::Foreground, metal.border);
+        Set(control, UIThemeColorState::Hover, UIThemeColorRole::Foreground, metal.hover);
+        Set(control, UIThemeColorState::Pressed, UIThemeColorRole::Foreground, metal.bright);
+        Set(control, UIThemeColorState::Disabled, UIThemeColorRole::Foreground, metal.muted);
+        Set(control, UIThemeColorState::Focused, UIThemeColorRole::Foreground, metal.hover);
+        Set(control, UIThemeColorState::Checked, UIThemeColorRole::Foreground, metal.highlight);
+    }
+
+    // Window 는 window 토큰을 그대로 사용한다.
+    for (int state = 0; state < kUIThemeColorStateCount_v; ++state)
+    {
+        Set(UIThemeControl::Window, (UIThemeColorState)state, UIThemeColorRole::Background, window.windowBackground);
+        Set(UIThemeControl::Window, (UIThemeColorState)state, UIThemeColorRole::Foreground, window.titleBarForeground);
+        Set(UIThemeControl::Window, (UIThemeColorState)state, UIThemeColorRole::Border, window.borderColor);
+    }
+    borderThickness_[(int)UIThemeControl::Window] = window.borderWidth;
+
+    // TextBlock 은 글자색만 의미가 있다. (배경/테두리는 투명)
+    for (int state = 0; state < kUIThemeColorStateCount_v; ++state)
+    {
+        Set(UIThemeControl::TextBlock, (UIThemeColorState)state, UIThemeColorRole::Background, UIColorF{ 0.0f, 0.0f, 0.0f, 0.0f });
+        Set(UIThemeControl::TextBlock, (UIThemeColorState)state, UIThemeColorRole::Border, UIColorF{ 0.0f, 0.0f, 0.0f, 0.0f });
+    }
+    borderThickness_[(int)UIThemeControl::TextBlock] = 0.0f;
+}
+
+void UIThemeColorTable::LoadJson(const Json::Value& _root)
+{
+    if (!_root.isObject() || !_root.isMember("controls"))
+        return;
+
+    const Json::Value& controls = _root["controls"];
+    if (!controls.isObject())
+        return;
+
+    for (int control = 0; control < kUIThemeControlCount_v; ++control)
+    {
+        const char* controlKey = UIThemeControlKey((UIThemeControl)control);
+        if (!controls.isMember(controlKey))
+            continue;
+
+        const Json::Value& node = controls[controlKey];
+        if (node.isObject())
+            LoadControlJson((UIThemeControl)control, node);
+    }
+}
+
+void UIThemeColorTable::LoadControlJson(UIThemeControl _control, const Json::Value& _node)
+{
+    if (_node.isMember("borderThickness") && _node["borderThickness"].isNumeric())
+        borderThickness_[(int)_control] = _node["borderThickness"].asFloat();
+
+    for (int state = 0; state < kUIThemeColorStateCount_v; ++state)
+    {
+        const char* stateKey = UIThemeColorStateKey((UIThemeColorState)state);
+
+        // 형식 1: 중첩 오브젝트 "hover": { "background": "#..." }
+        if (_node.isMember(stateKey) && _node[stateKey].isObject())
+            LoadStateJson(_control, (UIThemeColorState)state, _node[stateKey]);
+
+        // 형식 2: 평탄 키 "hover-background": "#..."
+        for (int role = 0; role < kUIThemeColorRoleCount_v; ++role)
+        {
+            char flatKey[64];
+            snprintf(flatKey, sizeof(flatKey), "%s-%s", stateKey, UIThemeColorRoleKey((UIThemeColorRole)role));
+
+            UIColorF color;
+            if (_node.isMember(flatKey) && TryReadColor(_node[flatKey], color))
+                Set(_control, (UIThemeColorState)state, (UIThemeColorRole)role, color);
+        }
+    }
+}
+
+void UIThemeColorTable::LoadStateJson(UIThemeControl _control, UIThemeColorState _state, const Json::Value& _node)
+{
+    for (int role = 0; role < kUIThemeColorRoleCount_v; ++role)
+    {
+        const char* roleKey = UIThemeColorRoleKey((UIThemeColorRole)role);
+
+        UIColorF color;
+        if (_node.isMember(roleKey) && TryReadColor(_node[roleKey], color))
+            Set(_control, _state, (UIThemeColorRole)role, color);
+    }
+}
+
+bool UIThemeColorTable::TryReadColor(const Json::Value& _node, UIColorF& _out)
+{
+    if (!_node.isString())
+        return false;
+
+    const std::string text = _node.asString();
+    if (text.empty() || text[0] != '#')
+        return false;
+
+    const size_t hexLength = text.size() - 1;
+    unsigned int rgb = 0;
+    unsigned int alpha = 0xFF;
+
+    if (hexLength == 6)
+    {
+        if (sscanf(text.c_str() + 1, "%06x", &rgb) != 1)
+            return false;
+    }
+    else if (hexLength == 8)
+    {
+        unsigned int rgba = 0;
+        if (sscanf(text.c_str() + 1, "%08x", &rgba) != 1)
+            return false;
+        rgb = (rgba >> 8) & 0xFFFFFF;
+        alpha = rgba & 0xFF;
+    }
+    else
+    {
+        return false;
+    }
+
+    _out = UIColorF::FromRGBA(
+        (rgb >> 16) & 0xFF,
+        (rgb >> 8) & 0xFF,
+        rgb & 0xFF,
+        alpha);
+    return true;
+}
+
+const UIColorF& UIThemeColorTable::Get(UIThemeColor _color) const
+{
+    const int index = (int)_color;
+    if (index < 0 || index >= kUIThemeColorCount_v)
+    {
+        static const UIColorF fallback_s{ 1.0f, 1.0f, 1.0f, 1.0f };
+        return fallback_s;
+    }
+    return colors_[index];
+}
+
+const UIColorF& UIThemeColorTable::Get(UIThemeControl _control, UIThemeColorState _state, UIThemeColorRole _role) const
+{
+    return Get(MakeUIThemeColor(_control, _state, _role));
+}
+
+const UIColorF& UIThemeColorTable::Get(UIThemeControl _control, UIVisualState _state, UIThemeColorRole _role) const
+{
+    return Get(MakeUIThemeColor(_control, ToThemeColorState(_state), _role));
+}
+
+void UIThemeColorTable::Set(UIThemeColor _color, const UIColorF& _value)
+{
+    const int index = (int)_color;
+    if (index < 0 || index >= kUIThemeColorCount_v)
+        return;
+    colors_[index] = _value;
+}
+
+void UIThemeColorTable::Set(UIThemeControl _control, UIThemeColorState _state, UIThemeColorRole _role, const UIColorF& _value)
+{
+    Set(MakeUIThemeColor(_control, _state, _role), _value);
+}
+
+float UIThemeColorTable::GetBorderThickness(UIThemeControl _control) const
+{
+    const int index = (int)_control;
+    if (index < 0 || index >= kUIThemeControlCount_v)
+        return 0.0f;
+    return borderThickness_[index];
+}
+
+void UIThemeColorTable::SetBorderThickness(UIThemeControl _control, float _thickness)
+{
+    const int index = (int)_control;
+    if (index < 0 || index >= kUIThemeControlCount_v)
+        return;
+    borderThickness_[index] = _thickness;
 }

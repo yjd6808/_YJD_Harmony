@@ -17,6 +17,7 @@ ScrollBar* ScrollBar::Create()
 {
 	ScrollBar* pScrollBar = dbg_new ScrollBar;
 	pScrollBar->autorelease();
+	pScrollBar->SetThemeControl(UIThemeControl::ScrollBar);
 	pScrollBar->SetBackground(ThemeBrush::Create(UIAssetSemantic::ScrollBarTrack, UIElementType::ScrollBar, UIComponentSlot::Track));
 	pScrollBar->BuildParts();
 	return pScrollBar;

@@ -233,23 +233,8 @@
     <ClCompile Include="..\Classes\sgcl\Game\Actor\Effect.cpp">
       <Filter>Game\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Game\UI\UIGroup.cpp">
-      <Filter>Game\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Game\UI\UIButton.cpp">
-      <Filter>Game\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Game\UI\UIElement.cpp">
-      <Filter>Game\UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Game\UI_Implementation\UI_Login.cpp">
       <Filter>Game\UI_Implementation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Game\UI\UILabel.cpp">
-      <Filter>Game\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Game\UI\UISprite.cpp">
-      <Filter>Game\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Game\Actor\Player.cpp">
       <Filter>Game\Actor</Filter>
@@ -260,29 +245,8 @@
     <ClCompile Include="..\Classes\sgcl\Game\Action\PlayerPool.cpp">
       <Filter>Game\Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Game\UI\UIEditBox.cpp">
-      <Filter>Game\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Game\UI\UICheckBox.cpp">
-      <Filter>Game\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Game\UI\UIToggleButton.cpp">
-      <Filter>Game\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Game\UI\UIProgressBar.cpp">
-      <Filter>Game\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Game\UI\UIStatic.cpp">
-      <Filter>Game\UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Game\UI_Implementation\UI_Inventory.cpp">
       <Filter>Game\UI_Implementation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Game\UI\UIScrollBar.cpp">
-      <Filter>Game\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Game\UI\UIRootGroup.cpp">
-      <Filter>Game\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Game\UI\Xml\UIResolve.cpp">
       <Filter>Game\UI\Xml</Filter>
@@ -540,9 +504,6 @@
     <ClCompile Include="..\Classes\sgcl\API\sgapiClient.cpp">
       <Filter>API</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Util\DescMgr\DescMgr_UI.cpp">
-      <Filter>Util\DescMgr</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Util\DescMgr\DescMgr_Char.cpp">
       <Filter>Util\DescMgr</Filter>
     </ClCompile>
@@ -580,9 +541,6 @@
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Layer\Layer_Map.cpp">
-      <Filter>Layer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\sgcl\Layer\Layer_UI.cpp">
       <Filter>Layer</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\sgcl\Layer\Layer_Grid.cpp">
@@ -723,23 +681,8 @@
     <ClInclude Include="..\Classes\sgcl\Define\Define_Effect.h">
       <Filter>Define</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Game\UI\UIElement.h">
-      <Filter>Game\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Game\UI\UIButton.h">
-      <Filter>Game\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Game\UI\UIGroup.h">
-      <Filter>Game\UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Game\UI_Implementation\UI_Login.h">
       <Filter>Game\UI_Implementation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Game\UI\UILabel.h">
-      <Filter>Game\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Game\UI\UISprite.h">
-      <Filter>Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Game\Actor\Player.h">
       <Filter>Game\Actor</Filter>
@@ -750,32 +693,8 @@
     <ClInclude Include="..\Classes\sgcl\Game\Action\PlayerController.h">
       <Filter>Game\Action</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Game\UI\UIEditBox.h">
-      <Filter>Game\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Game\UI\UICheckBox.h">
-      <Filter>Game\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Game\UI\UIToggleButton.h">
-      <Filter>Game\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Game\UI\UIProgressBar.h">
-      <Filter>Game\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Game\UI\UIStatic.h">
-      <Filter>Game\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Game\UI\UIRegister.h">
-      <Filter>Game\UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Game\UI_Implementation\UI_Inventory.h">
       <Filter>Game\UI_Implementation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Game\UI\UIScrollBar.h">
-      <Filter>Game\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Game\UI\UIRootGroup.h">
-      <Filter>Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Game\UI\Xml\UIResolve.h">
       <Filter>Game\UI\Xml</Filter>
@@ -790,6 +709,12 @@
       <Filter>Game\UI\Host</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeTypes.h">
+      <Filter>Game\UI\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeColor.h">
+      <Filter>Game\UI\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIThemeColorTable.h">
       <Filter>Game\UI\Theme</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Game\UI\Theme\UIRuntimeTheme.h">
@@ -1065,9 +990,6 @@
     <ClInclude Include="..\Classes\sgcl\API\sgapiClient.h">
       <Filter>API</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Util\DescMgr\DescMgr_UI.h">
-      <Filter>Util\DescMgr</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Util\DescMgr\DescMgr_Char.h">
       <Filter>Util\DescMgr</Filter>
     </ClInclude>
@@ -1110,9 +1032,6 @@
     <ClInclude Include="..\Classes\sgcl\Layer\Layer_Map.h">
       <Filter>Layer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Layer\Layer_UI.h">
-      <Filter>Layer</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\sgcl\Layer\Layer_Grid.h">
       <Filter>Layer</Filter>
     </ClInclude>
@@ -1143,7 +1062,6 @@
     <ClInclude Include="..\Classes\sgcl\MCP\MCPCore.h">
       <Filter>MCP</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\sgcl\Game\Contents\Global.h" />
     <ClInclude Include="..\Classes\sgcl\Game\UI_Implementation\UI_ThemeTest.h">
       <Filter>Game\UI_Implementation</Filter>
     </ClInclude>
