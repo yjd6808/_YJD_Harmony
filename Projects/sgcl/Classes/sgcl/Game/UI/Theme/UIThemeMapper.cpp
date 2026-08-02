@@ -31,7 +31,9 @@ const Json::Value* UIThemeMapper::FindNode(const Json::Value& _root, const char*
     {
         int len = 0;
         while (*p && *p != '.' && len < (int)sizeof(key) - 1)
+        {
             key[len++] = *p++;
+        }
         key[len] = 0;
 
         if (!pNode->isObject() || !pNode->isMember(key))
@@ -39,7 +41,9 @@ const Json::Value* UIThemeMapper::FindNode(const Json::Value& _root, const char*
         pNode = &(*pNode)[key];
 
         if (*p == '.')
+        {
             ++p;
+        }
     }
 
     return pNode;
@@ -68,6 +72,18 @@ float UIThemeMapper::ReadFloat(const Json::Value& _root, const char* _path, floa
     if (!pNode || !pNode->isNumeric())
         return _fallback;
     return pNode->asFloat();
+}
+
+bool UIThemeMapper::ReadBool(const Json::Value& _root, const char* _path, bool _fallback)
+{
+    const Json::Value* pNode = FindNode(_root, _path);
+    if (!pNode)
+        return _fallback;
+    if (pNode->isBool())
+        return pNode->asBool();
+    if (pNode->isNumeric())
+        return pNode->asInt() != 0;
+    return _fallback;
 }
 
 jc::String UIThemeMapper::ReadString(const Json::Value& _root, const char* _path, const char* _fallback)
@@ -133,15 +149,25 @@ UIRuntimeTheme UIThemeMapper::Map(const Json::Value& _source, UIColorScheme _sch
     out.geometry.depth       = ReadFloat(_source, "geometry.depth",       out.geometry.depth);
     out.geometry.shadow      = ReadFloat(_source, "geometry.shadow",      out.geometry.shadow);
     out.geometry.shadowAlpha = ReadFloat(_source, "geometry.shadowAlpha", out.geometry.shadowAlpha);
+    out.geometry.borderGradient = ReadBool(_source, "geometry.borderGradient", out.geometry.borderGradient);
 
     // ----- state -----
     out.state.hoverLift        = ReadFloat(_source, "state.hoverLift",        out.state.hoverLift);
     out.state.checkedGoldMix   = ReadFloat(_source, "state.checkedGoldMix",   out.state.checkedGoldMix);
     out.state.disabledContrast = ReadFloat(_source, "state.disabledContrast", out.state.disabledContrast);
 
+    // ----- window -----
+    out.window.windowBackground  = ReadColor(_source, "window.windowBackground",  out.window.windowBackground);
+    out.window.titleBarBackground= ReadColor(_source, "window.titleBarBackground",out.window.titleBarBackground);
+    out.window.titleBarForeground= ReadColor(_source, "window.titleBarForeground",out.window.titleBarForeground);
+    out.window.borderColor       = ReadColor(_source, "window.borderColor",       out.window.borderColor);
+    out.window.borderWidth       = ReadFloat(_source, "window.borderWidth",       out.window.borderWidth);
+
     UIColorScheme resolved = ResolveScheme(_scheme);
     if (resolved == UIColorScheme::Light && explicitScheme != "light")
+    {
         ApplyLightScheme(out);
+    }
 
     return out;
 }
@@ -171,6 +197,11 @@ void UIThemeMapper::ApplyLightScheme(UIRuntimeTheme& _theme)
 
     _theme.semantic.text         = UIColorF::FromRGBA(40, 42, 46);
     _theme.semantic.disabledText = UIColorF::FromRGBA(130, 132, 136);
+
+    _theme.window.windowBackground   = Mix(_theme.window.windowBackground,   white, 84);
+    _theme.window.titleBarBackground = Mix(_theme.window.titleBarBackground, white, 80);
+    _theme.window.titleBarForeground = UIColorF::FromRGBA(40, 42, 46);
+    _theme.window.borderColor        = Mix(_theme.window.borderColor,        white, 40);
 }
 
 UIColorScheme UIThemeMapper::ResolveScheme(UIColorScheme _requested)

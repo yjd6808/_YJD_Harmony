@@ -1,4 +1,4 @@
-#include "GameCoreHeader.h"
+﻿#include "GameCoreHeader.h"
 #include "sgcl/Game/UI/Theme/UIThemePropertyDescriptor.h"
 
 UIThemePropertyDescriptor UIThemePropertyTable::descriptors_[] = {
@@ -53,10 +53,10 @@ int UIThemePropertyTable::sectionCount_ = sizeof(sections_) / sizeof(sections_[0
 
 const UIThemePropertyDescriptor* UIThemePropertyTable::GetDescriptor(UIStyleToken _token)
 {
-    for (int i = 0; i < descriptorCount_; ++i)
+    for (int idx = 0; idx < descriptorCount_; ++idx)
     {
-        if (descriptors_[i].token == _token)
-            return &descriptors_[i];
+        if (descriptors_[idx].token == _token)
+            return &descriptors_[idx];
     }
     return nullptr;
 }

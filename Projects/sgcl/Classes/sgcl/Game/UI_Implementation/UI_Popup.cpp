@@ -1,268 +1,202 @@
-﻿#include "GameCoreHeader.h"
+﻿/*
+ * 작성자: 윤정도
+ * =====================
+ */
+
+#include "GameCoreHeader.h"
 #include "Game/UI_Implementation/UI_Popup.h"
+#include "Game/Contents/PopupManager.h"
 
 USING_NS_CC;
-USING_NS_CCUI;
 USING_NS_JC;
 
-UI_Popup::UI_Popup(UIGroupInfo* _pGroupInfo)
-: UIRootGroup(_pGroupInfo)
-, pGroupHolder_(nullptr)
-, pSpriteBackground_(nullptr)
-, pGroupButtonHolder_(nullptr)
-, pBtnYes_(nullptr)
-, pBtnNo_(nullptr)
-, pBtnOk_(nullptr)
-, pLabelText_(nullptr)
-, type_(Type::eNone)
-, timeout_(-1.0f)
-, closed_(true)
+using namespace sgui;
+
+UI_Popup* UI_Popup::Create()
 {
+	UI_Popup* pPopup = dbg_new UI_Popup;
+	pPopup->autorelease();
+	pPopup->OnInit(CDataMap<>());
+	return pPopup;
 }
 
 void UI_Popup::OnInit(const CDataMap<>& _param)
 {
 	UNUSED(_param);
 
-	pGroupHolder_ = FindElementByName<UIGroup>("holder");
-	pSpriteBackground_ = FindElementByName<UISprite>("background");
-	pGroupButtonHolder_ = FindElementByName<UIGroup>("btn_holder");
-	pBtnYes_ = FindElementByName<UIButton>("yes");
-	pBtnNo_ = FindElementByName<UIButton>("no");
-	pBtnOk_ = FindElementByName<UIButton>("ok");
-	pLabelText_ = FindElementByName<UILabel>("text");
+	SetModal(true);
+	SetDragMoveEnabled(true);
 
-	pLabelText_->setEnableFontAutoScaling(false);
-	pGroupButtonHolder_->SetResizable(false);
-	pSpriteBackground_->SetDraggable(true);
-	pSpriteBackground_->SetDragLinkElement(pGroupHolder_);
-}
+	// 본문 + 버튼 영역
+	StackPanel* pRootStack = StackPanel::Create(Orientation::Vertical);
+	pRootStack->SetSpacing(16.0f);
 
-void UI_Popup::OnLoaded()
-{
-	const Size backgroundSize = pSpriteBackground_->GetUISize();
-	const float borderThickness = 3.0f;
+	pTextBlock_ = TextBlock::Create();
+	pTextBlock_->setName("text");
+	pTextBlock_->SetTextWrapping(TextWrapping::Wrap);
+	pRootStack->AddChild(pTextBlock_);
 
-	pSpriteBackground_->SetCapInsets(
+	pButtonPanel_ = StackPanel::Create(Orientation::Horizontal);
+	pButtonPanel_->SetSpacing(8.0f);
+	pButtonPanel_->SetHorizontalAlignment(HorizontalAlignment::Center);
+
+	pBtnYes_ = Button::Create("확인");
+	pBtnYes_->setName("yes");
+	pBtnYes_->SetClickCallback([this](ButtonBase*)
+	{
+		const PopupCallback callback = yesCallback_;
+		ClosePopup();
+
+		if (callback)
 		{
-			borderThickness, borderThickness, backgroundSize.width - borderThickness * 2,
-			backgroundSize.height - borderThickness * 2
+			callback();
 		}
-	);
-	SetType(type_);
-}
+	});
+	pButtonPanel_->AddChild(pBtnYes_);
 
-void UI_Popup::OnAdded()
-{
-	openedTime_.Elapsed.Second = 0;
-}
+	pBtnNo_ = Button::Create("취소");
+	pBtnNo_->setName("no");
+	pBtnNo_->SetClickCallback([this](ButtonBase*)
+	{
+		const PopupCallback callback = noCallback_;
+		ClosePopup();
 
-void UI_Popup::OnRemoved()
-{
-	Close();
+		if (callback)
+		{
+			callback();
+		}
+	});
+	pButtonPanel_->AddChild(pBtnNo_);
+
+	pBtnOk_ = Button::Create("확인");
+	pBtnOk_->setName("ok");
+	pBtnOk_->SetClickCallback([this](ButtonBase*)
+	{
+		const PopupCallback callback = okCallback_;
+		ClosePopup();
+
+		if (callback)
+		{
+			callback();
+		}
+	});
+	pButtonPanel_->AddChild(pBtnOk_);
+
+	pRootStack->AddChild(pButtonPanel_);
+
+	pHolder_ = Border::Create();
+	pHolder_->setName("holder");
+	pHolder_->SetBackground(SolidColorBrush::Create(0.08f, 0.08f, 0.1f, 0.92f));
+	pHolder_->SetBorderBrush(UIColorF{ 0.4f, 0.4f, 0.45f, 1.0f });
+	pHolder_->SetBorderThickness(Thickness(1.0f));
+	pHolder_->SetPadding(Thickness(20.0f));
+	pHolder_->SetHorizontalAlignment(HorizontalAlignment::Center);
+	pHolder_->SetVerticalAlignment(VerticalAlignment::Center);
+	pHolder_->SetChild(pRootStack);
+	AddChild(pHolder_);
+
+	SetType(Type::eNone);
 }
 
 void UI_Popup::OnUpdate(float _dt)
 {
-	if (!attributeFlag_.Check(eTimeout))
+	if (timeout_ <= 0.0f)
 	{
 		return;
 	}
 
-	openedTime_.Elapsed.Second += _dt;
+	elapsed_ += _dt;
 
-	if (openedTime_.ElapsedSeconds(timeout_))
+	if (elapsed_ >= timeout_)
 	{
-		if (timeoutCallback_)
+		const PopupCallback callback = timeoutCallback_;
+		ClosePopup();
+
+		if (callback)
 		{
-			timeoutCallback_();
+			callback();
 		}
-		Close();
 	}
 }
 
-void UI_Popup::OnMouseUpTarget(UIElement* _pElement, cc::EventMouse* _pMouseEvent)
+bool UI_Popup::OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode)
 {
-	const char* name = _pElement->GetName();
+	if (_keyCode == EventKeyboard::KeyCode::KEY_ESCAPE && IsCloseWithEscape())
+	{
+		ClosePopup();
+		return true;
+	}
 
-	if (strcmp(name, "yes") == 0)
-	{
-		if (yesCallback_)
-		{
-			yesCallback_();
-		}
-		Close();
-	}
-	else if (strcmp(name, "no") == 0)
-	{
-		if (noCallback_)
-		{
-			noCallback_();
-		}
-		Close();
-	}
-	else if (strcmp(name, "ok") == 0)
-	{
-		if (okCallback_)
-		{
-			okCallback_();
-		}
-		Close();
-	}
-}
-
-bool UI_Popup::OnMouseMoveInternalDetail(cc::EventMouse* _pMouseEvent)
-{
 	return false;
-}
-
-bool UI_Popup::OnMouseDownInternalDetail(cc::EventMouse* _pMouseEvent)
-{
-	return false;
-}
-
-bool UI_Popup::OnMouseScrollInternalDetail(cc::EventMouse* _pMouseEvent)
-{
-	return false;
-}
-
-bool UI_Popup::OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
-{
-	if (attributeFlag_.Check(eCloseWithEsc) && _keyCode == EventKeyboard::KeyCode::KEY_ESCAPE)
-	{
-		Close();
-		return false;
-	}
-
-	return true;
-}
-
-bool UI_Popup::OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _pEvent)
-{
-	return true;
 }
 
 void UI_Popup::SetType(Type _type)
 {
 	type_ = _type;
 
-	if (_type == Type::eOk)
+	pBtnYes_->SetVisibility(type_ == Type::eYesNo ? Visibility::Visible : Visibility::Collapsed);
+	pBtnNo_->SetVisibility(type_ == Type::eYesNo ? Visibility::Visible : Visibility::Collapsed);
+	pBtnOk_->SetVisibility(type_ == Type::eOk ? Visibility::Visible : Visibility::Collapsed);
+	pButtonPanel_->SetVisibility(type_ == Type::eNone ? Visibility::Collapsed : Visibility::Visible);
+}
+
+void UI_Popup::SetTextHAlign(HAlignment_t _hAlign)
+{
+	if (_hAlign == HAlignment::Center)
 	{
-		pBtnNo_->setVisible(false);
-		pBtnNo_->SetEnabled(false);
-		pBtnYes_->setVisible(false);
-		pBtnYes_->SetEnabled(false);
-		pBtnOk_->setVisible(true);
-		pBtnOk_->SetEnabled(true);
+		pTextBlock_->SetTextAlignment(sgui::TextAlignment::Center);
 	}
-	else if (_type == Type::eYesNo)
+	else if (_hAlign == HAlignment::Right)
 	{
-		pBtnNo_->setVisible(true);
-		pBtnNo_->SetEnabled(true);
-		pBtnYes_->setVisible(true);
-		pBtnYes_->SetEnabled(true);
-		pBtnOk_->setVisible(false);
-		pBtnOk_->SetEnabled(false);
+		pTextBlock_->SetTextAlignment(sgui::TextAlignment::Right);
 	}
-	else if (_type == Type::eNone)
+	else
 	{
-		pBtnNo_->setVisible(false);
-		pBtnNo_->SetEnabled(false);
-		pBtnYes_->setVisible(false);
-		pBtnYes_->SetEnabled(false);
-		pBtnOk_->setVisible(false);
-		pBtnOk_->SetEnabled(false);
+		pTextBlock_->SetTextAlignment(sgui::TextAlignment::Left);
+	}
+}
+
+void UI_Popup::SetTextVAlign(VAlignment_t _vAlign)
+{
+	if (_vAlign == VAlignment::Center)
+	{
+		pTextBlock_->SetVerticalAlignment(sgui::VerticalAlignment::Center);
+	}
+	else if (_vAlign == VAlignment::Bottom)
+	{
+		pTextBlock_->SetVerticalAlignment(sgui::VerticalAlignment::Bottom);
+	}
+	else
+	{
+		pTextBlock_->SetVerticalAlignment(sgui::VerticalAlignment::Top);
 	}
 }
 
 void UI_Popup::SetText(const std::string& _text)
 {
-	pLabelText_->setText(_text);
-}
-
-void UI_Popup::SetYesCallback(const PopupCallback& _fnYes)
-{
-	yesCallback_ = _fnYes;
-}
-
-void UI_Popup::SetNoCallback(const PopupCallback& _fnNo)
-{
-	noCallback_ = _fnNo;
-}
-
-void UI_Popup::SetOkCallback(const PopupCallback& _fnOk)
-{
-	okCallback_ = _fnOk;
-}
-
-void UI_Popup::SetCloseWithEsc(bool _closeWithEsc)
-{
-	if (_closeWithEsc)
-	{
-		attributeFlag_.Add(eCloseWithEsc);
-	}
-	else
-	{
-		attributeFlag_.Unset(eCloseWithEsc);
-	}
-}
-
-void UI_Popup::SetTimeoutCallback(const PopupCallback& _fnTimeout)
-{
-	timeoutCallback_ = _fnTimeout;
+	pTextBlock_->SetText(_text.c_str());
 }
 
 void UI_Popup::SetTimeout(float _timeout)
 {
-	if (_timeout >= 0.0f)
-	{
-		timeout_ = _timeout;
-		attributeFlag_.Add(eTimeout);
-	}
-	else
-	{
-		attributeFlag_.Unset(eTimeout);
-	}
+	timeout_ = _timeout;
+	elapsed_ = 0.0f;
 }
 
-void UI_Popup::Close()
+void UI_Popup::ClosePopup()
 {
-	sg::Contents.PopupManager->Close(this);
+	PopupManager::Get()->Close(this);
 }
 
 void UI_Popup::Adjust()
 {
-	const float padding = sg::Contents.PopupManager->GetPadding();
-	const Size& buttonArea = pGroupButtonHolder_->GetUISize();
-	const float popupAreaWidth = Math::Max(sg::Contents.PopupManager->GetWidth(), buttonArea.width + padding * 2);
-	const float popupTextAreaWidth = popupAreaWidth - padding * 2;
+	const float width = PopupManager::Get()->GetWidth();
+	const float padding = PopupManager::Get()->GetPadding();
 
-	pLabelText_->source()->setDimensions(popupTextAreaWidth, 0);
-
-	const int lineCount = pLabelText_->getLineCount();
-	const float fontSize = pLabelText_->getInitialFontSize();
-	const float popupAreaHeight = padding * 3 + lineCount * fontSize + buttonArea.height;
-
-	Size textArea = {
-		popupTextAreaWidth,
-		lineCount * fontSize
-	};
-
-	if (type_ == Type::eNone)
-	{
-		textArea.height += buttonArea.height + padding;
-	}
-
-	pGroupHolder_->SetUISize({ popupAreaWidth, popupAreaHeight });
-	pGroupHolder_->SetRelativePosition(0, 0);
-
-	pSpriteBackground_->SetUISize({ popupAreaWidth, popupAreaHeight });
-	pSpriteBackground_->SetRelativePosition(0, 0);
-
-	pLabelText_->SetUISize(textArea);
-	pLabelText_->SetRelativePosition(padding, -padding, HAlignment::Left, VAlignment::Top);
-
-	pGroupButtonHolder_->SetRelativePosition(0, padding, HAlignment::Center, VAlignment::Bottom);
+	pTextBlock_->SetWidth(width - padding * 2.0f);
+	pHolder_->SetPadding(Thickness(padding * 2.0f));
+	CenterOnHost();
+	MarkLayoutDirty();
 }
 
-REGISTER_UI(ui_popup, UI_Popup)
+// 팝업은 PopupManager가 직접 생성하므로 REGISTER_WINDOW를 사용하지 않는다.

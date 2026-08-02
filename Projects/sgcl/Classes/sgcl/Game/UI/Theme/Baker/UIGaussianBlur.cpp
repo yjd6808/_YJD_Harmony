@@ -1,4 +1,4 @@
-#include "GameCoreHeader.h"
+﻿#include "GameCoreHeader.h"
 #include "sgcl/Game/UI/Theme/Baker/UIGaussianBlur.h"
 #include <cmath>
 
@@ -7,7 +7,10 @@ namespace UIGaussianBlur
     static void BuildKernel(float _radius, jc::Vector<float>& _kernel, int& _size)
     {
         int r = (int)ceilf(_radius);
-        if (r < 1) r = 1;
+        if (r < 1)
+        {
+            r = 1;
+        }
         _size = r * 2 + 1;
         _kernel.Resize(_size);
 
@@ -15,15 +18,17 @@ namespace UIGaussianBlur
         float sigma = jc::Math::Max(_radius, 0.5f);
         float sigma2 = sigma * sigma;
 
-        for (int i = 0; i < _size; ++i)
+        for (int idx = 0; idx < _size; ++idx)
         {
-            float x = (float)(i - r);
-            _kernel[i] = expf(-(x * x) / (2.0f * sigma2));
-            sum += _kernel[i];
+            float x = (float)(idx - r);
+            _kernel[idx] = expf(-(x * x) / (2.0f * sigma2));
+            sum += _kernel[idx];
         }
 
-        for (int i = 0; i < _size; ++i)
-            _kernel[i] /= sum;
+        for (int idx = 0; idx < _size; ++idx)
+        {
+            _kernel[idx] /= sum;
+        }
     }
 
     void BlurSeparable(UIMaskBuffer& _buffer, float _radius)

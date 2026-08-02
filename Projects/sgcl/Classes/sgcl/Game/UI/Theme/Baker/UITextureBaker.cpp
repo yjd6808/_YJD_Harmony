@@ -5,6 +5,12 @@
 #include "sgcl/Game/UI/Theme/Baker/UIShapeRasterizer.h"
 #include "sgcl/Game/UI/Theme/Baker/UIGradientRasterizer.h"
 #include "sgcl/Game/UI/Theme/Baker/UIColorMath.h"
+#include "jc/FileSystem/File.h"
+
+#define NANOSVG_IMPLEMENTATION
+#define NANOSVGRAST_IMPLEMENTATION
+#include "nanosvg.h"
+#include "nanosvgrast.h"
 
 static void RenderMaterial(
     UIPixelBuffer& _work,
@@ -63,9 +69,15 @@ static void RenderRadioDot(
     UIShapeRasterizer::RasterizeCircleMask(dot, cx, cy, r);
 
     for (int y = 0; y < _work.height; ++y)
+    {
         for (int x = 0; x < _work.width; ++x)
+        {
             if (dot(x, y) > 0.01f)
+            {
                 _work.BlendOver(x, y, _style.semanticText.WithAlpha(dot(x, y)));
+            }
+        }
+    }
 }
 
 static void RenderFrameOnly(
@@ -80,6 +92,87 @@ static void RenderFrameOnly(
 
     UIGradientRasterizer::RenderBorder(_work, _bounds, _style);
     UIGradientRasterizer::RenderInnerRim(_work, _bounds, _style);
+}
+
+// SVG 아이콘 렌더링: 파일 로드 -> 파싱 -> 고해상도 래스터라이즈 -> 틴트(테마 semanticText) -> 다운샘플
+static bool RenderSvgIcon(
+    UIPixelBuffer& _work,
+    const UIAssetRecipe& _recipe,
+    const UIResolvedStyle& _style,
+    const UIBakeOptions& _options)
+{
+    if (_recipe.svgPath.IsEmpty())
+    {
+        _LogError_("[UITextureBaker] SVG 아이콘 경로가 비어 있습니다.");
+        return false;
+    }
+
+    _LogDebug_("[UITextureBaker] SVG icon render start: %s (%dx%d)", _recipe.svgPath.Source(), _recipe.width, _recipe.height);
+
+    if (!jc::File::Exist(_recipe.svgPath.Source()))
+    {
+        _LogError_("[UITextureBaker] SVG 파일이 존재하지 않습니다: %s", _recipe.svgPath.Source());
+        return false;
+    }
+
+    const jc::String content = jc::File::ReadAllText(_recipe.svgPath.Source());
+    _LogDebug_("[UITextureBaker] SVG read: %s (%d bytes)", _recipe.svgPath.Source(), content.Length());
+    if (content.IsEmpty())
+    {
+        _LogError_("[UITextureBaker] SVG 파일을 읽지 못했습니다: %s", _recipe.svgPath.Source());
+        return false;
+    }
+
+    NSVGimage* pImage = nsvgParse(content.Source(), "px", 96.0f);
+    _LogDebug_("[UITextureBaker] SVG parsed: %p size=%.1fx%.1f", (void*)pImage, pImage ? pImage->width : 0.0f, pImage ? pImage->height : 0.0f);
+    if (pImage == nullptr)
+    {
+        _LogError_("[UITextureBaker] SVG 파싱 실패: %s", _recipe.svgPath.Source());
+        return false;
+    }
+
+    const int ss = _options.supersample;
+    const int workW = _work.width;
+    const int workH = _work.height;
+
+    // SVG 원본 크기에 맞춰 작업 버퍼로 확대 래스터라이즈 (다운샘플 전 고해상도)
+    const float scale = (pImage->width > 0.0f && pImage->height > 0.0f)
+        ? jc::Math::Max((float)workW / pImage->width, (float)workH / pImage->height)
+        : 1.0f;
+
+    jc::Vector<unsigned char> rgba;
+    rgba.Resize(workW * workH * 4, 0);
+
+    NSVGrasterizer* pRast = nsvgCreateRasterizer();
+    if (pRast == nullptr)
+    {
+        nsvgDelete(pImage);
+        return false;
+    }
+
+    nsvgRasterize(pRast, pImage, 0.0f, 0.0f, scale, rgba.Source(), workW, workH, workW * 4);
+    _LogDebug_("[UITextureBaker] SVG rasterized: %dx%d scale=%.2f", workW, workH, scale);
+
+    const UIColorF tint = _style.semanticText;
+
+    for (int y = 0; y < workH; ++y)
+    {
+        for (int x = 0; x < workW; ++x)
+        {
+            const int idx = (y * workW + x) * 4;
+            const float alpha = rgba[idx + 3] / 255.0f;
+            if (alpha <= 0.0f)
+            {
+                continue;
+            }
+
+            _work.Store(x, y, { tint.r, tint.g, tint.b, alpha });
+        }
+    }
+
+    nsvgDeleteRasterizer(pRast);
+    nsvgDelete(pImage);
+    return true;
 }
 
 UIBakeOutput UITextureBaker::Bake(
@@ -100,6 +193,25 @@ UIBakeOutput UITextureBaker::Bake(
 
     UIPixelBuffer work(workW, workH);
     work.Clear({ 0, 0, 0, 0 });
+
+    // SVG 아이콘 레시피: 도형 레시피 대신 SVG 파싱/래스터라이즈로 렌더링한다.
+    if (!_recipe.svgPath.IsEmpty())
+    {
+        if (!RenderSvgIcon(work, _recipe, scaled, _options))
+        {
+            _LogWarn_("[UITextureBaker] SVG 아이콘 렌더링 실패, 도형 폴백: %s", _recipe.svgPath.Source());
+            RenderMaterial(work, CalculateMaterialBounds(workW, workH, scaled, true), scaled);
+        }
+
+        UIPixelBuffer output = DownsampleLanczos(work, _recipe.width, _recipe.height);
+        ValidateAlphaEdges(output);
+
+        UIBakeOutput result;
+        result.buffer = jc::Move(output);
+        result.sliceInsets = _recipe.sliceInsets;
+        result.minimumSize = _recipe.minimumSize;
+        return result;
+    }
 
     UIRect materialBounds = CalculateMaterialBounds(
         workW, workH, scaled, true);

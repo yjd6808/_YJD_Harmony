@@ -23,7 +23,7 @@ static constexpr const char* NAME[Max] = {
 JC_SENUM_MIDDLE_END(SceneType)
 
 class WorldScene;
-class UILayer;
+namespace sgui { class UIHost; }
 
 class SceneBase : public cc::Scene
 {
@@ -50,5 +50,5 @@ public:
 
 protected:
 	WorldScene* pWorldScene_ = nullptr;
-	UILayer* pUILayer_ = nullptr;
+	sgui::UIHost* pUIHost_ = nullptr;
 };

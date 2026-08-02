@@ -45,7 +45,7 @@ public:
     void SetAtlases(const jc::Vector<cc::Texture2D*>& _atlases);
 
     UITextureSet(uint64_t _generation, uint64_t _themeHash);
-    ~UITextureSet() override;
+    virtual ~UITextureSet() override;
 
 private:
     uint64_t generation_;

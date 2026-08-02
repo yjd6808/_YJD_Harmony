@@ -167,8 +167,14 @@ void UIThemeStudio::Hide()
 
 void UIThemeStudio::Toggle()
 {
-    if (isVisible_) Hide();
-    else Show();
+    if (isVisible_)
+    {
+        Hide();
+    }
+    else
+    {
+        Show();
+    }
 }
 
 void UIThemeStudio::BeginEditIfNeeded()
@@ -208,7 +214,10 @@ void UIThemeStudio::RefreshAll()
             case UIPropertyEditorType::Color:
                 {
                     UIColorF* pColor = UIStyleOverride::ResolveColorPtr(baseStyle, pDesc->token);
-                    if (pColor) pRow->SetColorValue(*pColor);
+                    if (pColor)
+                    {
+                        pRow->SetColorValue(*pColor);
+                    }
                 }
                 break;
 
@@ -217,7 +226,10 @@ void UIThemeStudio::RefreshAll()
             case UIPropertyEditorType::Toggle:
                 {
                     float* pFloat = UIStyleOverride::ResolveFloatPtr(baseStyle, pDesc->token);
-                    if (pFloat) pRow->SetFloatValue(*pFloat);
+                    if (pFloat)
+                    {
+                        pRow->SetFloatValue(*pFloat);
+                    }
                 }
                 break;
             }
@@ -227,7 +239,10 @@ void UIThemeStudio::RefreshAll()
     }
 
     UpdateCacheStats();
-    if (pCatalog_) pCatalog_->RefreshAll();
+    if (pCatalog_)
+    {
+        pCatalog_->RefreshAll();
+    }
 }
 
 void UIThemeStudio::OnSliderChanged(UIStyleToken _token, float _value)
@@ -278,7 +293,10 @@ void UIThemeStudio::OnApply()
 void UIThemeStudio::OnCancel()
 {
     UIThemeManager* pThemeMgr = UIThemeManager::Get();
-    if (pThemeMgr) pThemeMgr->CancelPreview();
+    if (pThemeMgr)
+    {
+        pThemeMgr->CancelPreview();
+    }
 
     isEditing_ = false;
     userOverrides_.ClearAll();
@@ -338,7 +356,9 @@ void UIThemeStudio::RequestPreview()
 void UIThemeStudio::UpdateBuildStatus(const char* _status)
 {
     if (pBuildStatusLabel_)
+    {
         pBuildStatusLabel_->setString(_status);
+    }
 }
 
 void UIThemeStudio::UpdateCacheStats()
@@ -351,10 +371,16 @@ void UIThemeStudio::UpdateCacheStats()
     size_t memBytes = pThemeMgr->GetCache().GetCurrentMemoryBytes();
     char buf[64];
     if (memBytes > 1024 * 1024)
+    {
         snprintf(buf, sizeof(buf), "Cache: %.1f MB", memBytes / (1024.0f * 1024.0f));
+    }
     else if (memBytes > 1024)
+    {
         snprintf(buf, sizeof(buf), "Cache: %.1f KB", memBytes / 1024.0f);
+    }
     else
+    {
         snprintf(buf, sizeof(buf), "Cache: %zu B", memBytes);
+    }
     pCacheStatsLabel_->setString(buf);
 }

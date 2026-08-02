@@ -21,7 +21,10 @@ namespace UIGradientRasterizer
         {
             float t = (y + 0.5f - _rect.y) / jc::Math::Max(1.0f, _rect.h);
             t = UIColorMath::SmoothStep01(t);
-            if (_reverse) t = 1.0f - t;
+            if (_reverse)
+            {
+                t = 1.0f - t;
+            }
 
             UIColorF rowColor = UIColorMath::Lerp(_top, _bottom, t);
 
@@ -48,7 +51,10 @@ namespace UIGradientRasterizer
         const UIMaskBuffer& _shapeMask)
     {
         float centerX = _rect.x + _rect.w * _style.glossCenterX;
-        if (centerX < _rect.x) centerX = _rect.x + _rect.w * 0.5f;
+        if (centerX < _rect.x)
+        {
+            centerX = _rect.x + _rect.w * 0.5f;
+        }
 
         float centerY = _rect.y + _rect.h * 0.02f;
         float radiusX = jc::Math::Max(1.0f, _rect.w * 0.64f);
@@ -76,9 +82,15 @@ namespace UIGradientRasterizer
         UIGaussianBlur::Blur(glossMask, jc::Math::Max(0.0f, _style.glossBlurRadius));
 
         for (int y = 0; y < _out.height; ++y)
+        {
             for (int x = 0; x < _out.width; ++x)
+            {
                 if (glossMask(x, y) > 0.01f)
+                {
                     _out.BlendOver(x, y, _style.glossTint.WithAlpha(glossMask(x, y) * _shapeMask(x, y)));
+                }
+            }
+        }
     }
 
     void RenderShadow(
@@ -99,7 +111,9 @@ namespace UIGradientRasterizer
             {
                 float alpha = shadow(x, y) * 0.48f;
                 if (alpha > 0.01f)
+                {
                     _out.BlendOver(x, y, UIColorF(0, 0, 0, alpha));
+                }
             }
         }
     }
@@ -139,10 +153,19 @@ namespace UIGradientRasterizer
 
                 if (borderMask <= 0.01f) continue;
 
-                float q = ((x - _rect.x) + (y - _rect.y))
-                    / jc::Math::Max(1.0f, _rect.w + _rect.h);
-                UIColorF color = ResolveMetalColor(q, _style);
-                _out.BlendOver(x, y, color.WithAlpha(borderMask * 0.92f));
+                if (_style.borderGradient)
+                {
+                    // 테두리 금속 그라데이션(highlight→border→shadow) — 테마별 on/off
+                    float q = ((x - _rect.x) + (y - _rect.y))
+                        / jc::Math::Max(1.0f, _rect.w + _rect.h);
+                    UIColorF color = ResolveMetalColor(q, _style);
+                    _out.BlendOver(x, y, color.WithAlpha(borderMask * 0.92f));
+                }
+                else
+                {
+                    // 그라데이션 없이 단일 금속색
+                    _out.BlendOver(x, y, _style.metalBorder.WithAlpha(borderMask * 0.92f));
+                }
             }
         }
     }

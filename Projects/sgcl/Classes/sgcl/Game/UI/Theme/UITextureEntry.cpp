@@ -1,4 +1,4 @@
-#include "GameCoreHeader.h"
+﻿#include "GameCoreHeader.h"
 #include "sgcl/Game/UI/Theme/UITextureEntry.h"
 
 UITextureSet::UITextureSet(uint64_t _generation, uint64_t _themeHash)
@@ -14,8 +14,10 @@ UITextureSet::~UITextureSet()
     });
     entries_.Clear();
 
-    for (int i = 0; i < atlases_.Size(); ++i)
-        CC_SAFE_RELEASE(atlases_[i]);
+    for (int idx = 0; idx < atlases_.Size(); ++idx)
+    {
+        CC_SAFE_RELEASE(atlases_[idx]);
+    }
     atlases_.Clear();
 }
 
@@ -33,11 +35,15 @@ void UITextureSet::AddEntry(const UIAssetKey& _key, UITextureEntry* _entry)
 
 void UITextureSet::SetAtlases(const jc::Vector<cc::Texture2D*>& _atlases)
 {
-    for (int i = 0; i < atlases_.Size(); ++i)
-        CC_SAFE_RELEASE(atlases_[i]);
+    for (int idx = 0; idx < atlases_.Size(); ++idx)
+    {
+        CC_SAFE_RELEASE(atlases_[idx]);
+    }
     atlases_.Clear();
 
     atlases_ = _atlases;
-    for (int i = 0; i < atlases_.Size(); ++i)
-        CC_SAFE_RETAIN(atlases_[i]);
+    for (int idx = 0; idx < atlases_.Size(); ++idx)
+    {
+        CC_SAFE_RETAIN(atlases_[idx]);
+    }
 }

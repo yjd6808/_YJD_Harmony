@@ -44,6 +44,7 @@ uint64_t UIResolvedStyle::ComputeHash() const
     h = hashFloat(h, geometryInnerRim);
     h = hashFloat(h, geometryDepth);
     h = hashFloat(h, geometryShadow);
+    h = hashFloat(h, borderGradient ? 1.0f : 0.0f);
     h = hashColor(h, semanticText);
     h = hashColor(h, semanticDanger);
     h = hashColor(h, semanticSuccess);
@@ -94,11 +95,17 @@ float* UIStyleOverride::ResolveFloatPtr(UIResolvedStyle& _style, UIStyleToken _t
 void UIStyleOverride::SetColorValue(UIStyleToken _token, const UIColorF& _value)
 {
     UIColorF* ptr = ResolveColorPtr(values, _token);
-    if (ptr) *ptr = _value;
+    if (ptr)
+    {
+        *ptr = _value;
+    }
 }
 
 void UIStyleOverride::SetFloatValue(UIStyleToken _token, float _value)
 {
     float* ptr = ResolveFloatPtr(values, _token);
-    if (ptr) *ptr = _value;
+    if (ptr)
+    {
+        *ptr = _value;
+    }
 }

@@ -8,7 +8,7 @@
 #include "GameCoreHeader.h"
 #include "Game/Contents/Contents.h"
 
-#include "Game/Contents/UIManager.h"
+#include "sgcl/Game/UI/Host/UIManager.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void Contents::Initialize()

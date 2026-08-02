@@ -12,6 +12,7 @@ public:
 
     static UIColorF ReadColor(const Json::Value& _root, const char* _path, const UIColorF& _fallback);
     static float ReadFloat(const Json::Value& _root, const char* _path, float _fallback);
+    static bool ReadBool(const Json::Value& _root, const char* _path, bool _fallback);
     static jc::String ReadString(const Json::Value& _root, const char* _path, const char* _fallback);
 
     static UIRuntimeTheme Map(const Json::Value& _source, UIColorScheme _scheme);

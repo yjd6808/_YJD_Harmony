@@ -12,7 +12,6 @@
 #include "sg/Cmd_LOBBY.h"
 
 #include "sgcl/Scene/Scene_World.h"
-#include "sgcl/Game/Contents/UIManager.h"
 
 #include "sgcl/Define/Define_Popup.h"
 #include "sgcl/Game/UI_Implementation/UI_ChannelSelect.h"

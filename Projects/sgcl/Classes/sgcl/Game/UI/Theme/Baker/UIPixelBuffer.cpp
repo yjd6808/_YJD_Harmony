@@ -18,15 +18,25 @@ void UIPixelBuffer::Resize(int _w, int _h)
 void UIPixelBuffer::Clear(const UIColorF& _color)
 {
     for (int y = 0; y < height; ++y)
+    {
         for (int x = 0; x < width; ++x)
+        {
             Store(x, y, _color);
+        }
+    }
 }
 
 uint8_t UIPixelBuffer::FloatToByte(float _v)
 {
     int i = (int)(_v * 255.0f + 0.5f);
-    if (i < 0) i = 0;
-    if (i > 255) i = 255;
+    if (i < 0)
+    {
+        i = 0;
+    }
+    if (i > 255)
+    {
+        i = 255;
+    }
     return (uint8_t)i;
 }
 

@@ -23,4 +23,5 @@ public:
     static UIAssetRecipe ScrollBarTrackRecipe(int _width, int _height);
     static UIAssetRecipe ScrollBarThumbRecipe(int _size);
     static UIAssetRecipe EditBoxRecipe(int _width, int _height);
+    static UIAssetRecipe WindowIconRecipe(UIAssetSemantic _semantic, int _size);
 };

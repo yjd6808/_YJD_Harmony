@@ -8,10 +8,12 @@ UIRuntimeTheme UIRuntimeTheme::EngineDefaults()
     theme.meta.id = "engine-default";
     theme.meta.displayName = "Engine Default";
 
+    // 그라데이션 테마: 상/하 표면 다른색으로 입체감 (과거 modern-dark-gold 룩). hover/pressed는 인지 가능한 델타.
     theme.surface.normalTop = UIColorF::FromRGBA(45, 48, 53);
     theme.surface.normalBottom = UIColorF::FromRGBA(17, 19, 24);
     theme.surface.hoverTop = UIColorF::FromRGBA(58, 61, 68);
     theme.surface.hoverBottom = UIColorF::FromRGBA(25, 28, 33);
+    // pressed는 윈도우 배경(26,28,33)보다 확실히 어둡게 유지해야 클릭 피드백이 보인다.
     theme.surface.pressedTop = UIColorF::FromRGBA(16, 18, 23);
     theme.surface.pressedBottom = UIColorF::FromRGBA(38, 42, 48);
     theme.surface.disabledTop = UIColorF::FromRGBA(58, 60, 64);
@@ -46,10 +48,18 @@ UIRuntimeTheme UIRuntimeTheme::EngineDefaults()
     theme.geometry.innerRim = 0.75f;
     theme.geometry.depth = 0.4f;
     theme.geometry.shadow = 1.0f;
+    theme.geometry.borderGradient = false;
 
     theme.state.hoverLift = 2.0f;
     theme.state.checkedGoldMix = 0.15f;
     theme.state.disabledContrast = 0.5f;
+
+    // 윈도우 크롬 (타이틀바/창 배경 + 테두리) — 테마 토큰으로 theme에서 제어한다.
+    theme.window.windowBackground = UIColorF::FromRGBA(26, 28, 33);
+    theme.window.titleBarBackground = UIColorF::FromRGBA(31, 33, 38);
+    theme.window.titleBarForeground = UIColorF::FromRGBA(235, 237, 242);
+    theme.window.borderColor = UIColorF::FromRGBA(88, 91, 99);
+    theme.window.borderWidth = 1.0f;
 
     return theme;
 }

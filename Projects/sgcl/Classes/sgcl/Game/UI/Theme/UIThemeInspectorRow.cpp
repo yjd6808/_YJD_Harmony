@@ -71,7 +71,9 @@ void UIThemeInspectorRow::SetOverridden(bool _overridden)
 void UIThemeInspectorRow::SetEnabled(bool _enabled)
 {
     if (pLabel_)
+    {
         pLabel_->setOpacity(_enabled ? 255 : 100);
+    }
 }
 
 void UIThemeInspectorRow::SetHighlightColor(const UIColorF& _color)

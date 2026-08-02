@@ -17,7 +17,7 @@
 #include "sgcl/Scene/Scene_Login.h"
 #include "sgcl/Scene/Scene_Game.h"
 #include "sgcl/Scene/Scene_ChannelSelect.h"
-#include "sgcl/Layer/Layer_UI.h"
+
 #include "sgcl/Net/NetCore.h"
 #include "sgcl/Game/Contents/Contents.h"
 #include "sgcl/SteinsGateApp.h"
@@ -26,7 +26,8 @@
 #include "sgcl/Game/Contents/HostPlayer.h"
 #include "sgcl/Game/Texture/ImagePackManager.h"
 #include "sgcl/Game/Contents/ActorListenerManager.h"
-#include "sgcl/Game/Contents/UIManager.h"
+#include "sgcl/Game/UI/Host/UIManager.h"
+#include "sgcl/Game/UI/Core/InputDispatcher.h"
 #include "sgcl/Game/Contents/FontManager.h"
 #include "sgcl/Util/WndMessage.h"
 #include "sgcl/Util/Win32Helper.h"
@@ -131,9 +132,10 @@ void WorldScene::InitEventListeners()
 //////////////////////////////////////////////////////////////////////////////////////////
 void WorldScene::InitLayers()
 {
-	pUILayer_ = UILayer::Create();
-	addChild(pUILayer_, 1000);
-	g_cUIMgr.SetUILayer(pUILayer_);
+	pUIHost_ = sgui::UIHost::Create();
+	addChild(pUIHost_, 1000);
+	g_cUIMgr.SetHost(pUIHost_);
+	sgui::InputDispatcher::Get()->SetHost(pUIHost_);
 
 	pGridLayer_ = GridLayer::create(100, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
 	pGridLayer_->setAnchorPoint(Vec2::ZERO);
@@ -164,10 +166,7 @@ void WorldScene::UpdateScene(float _dt)
 		pRunningScene_->update(_dt);
 	}
 
-	if (pUILayer_)
-	{
-		pUILayer_->update(_dt);
-	}
+	// UI 호스트는 scheduleUpdate로 자체 갱신된다.
 
 	// 초기 세팅 안된 상태거나, 다른 상태로 전환이 예약된 경우
 	if (pRunningScene_ == nullptr || pRunningScene_->GetType() != reservedScene_)
@@ -223,9 +222,9 @@ void WorldScene::OnWndCursorLeave(cc::EventCustom* _pCustom)
 	EventMouse* pEventMouse = dbg_new EventMouse(EventMouse::MouseEventType::MOUSE_MOVE);
 	pEventMouse->setCursorPosition(leavePos.x, leavePos.y);
 
-	if (pUILayer_)
+	if (pUIHost_)
 	{
-		pUILayer_->OnMouseMove(pEventMouse);
+		pUIHost_->OnMouseMove(pEventMouse);
 	}
 
 	CC_SAFE_DELETE(pEventMouse);
@@ -291,9 +290,9 @@ void WorldScene::OnKeyPressed(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _p
 		pRunningScene_->OnKeyPressed(_keyCode, _pEvent);
 	}
 
-	if (pUILayer_)
+	if (pUIHost_)
 	{
-		pUILayer_->onKeyPressed(_keyCode, _pEvent);
+		pUIHost_->OnKeyPressed(_keyCode);
 	}
 }
 
@@ -305,9 +304,9 @@ void WorldScene::OnKeyReleased(cc::EventKeyboard::KeyCode _keyCode, cc::Event* _
 		pRunningScene_->OnKeyReleased(_keyCode, _pEvent);
 	}
 
-	if (pUILayer_)
+	if (pUIHost_)
 	{
-		pUILayer_->onKeyReleased(_keyCode, _pEvent);
+		pUIHost_->OnKeyReleased(_keyCode);
 	}
 }
 
@@ -319,9 +318,9 @@ void WorldScene::OnMouseMove(cc::EventMouse* _pMouseEvent) const
 		pRunningScene_->OnMouseMove(_pMouseEvent);
 	}
 
-	if (pUILayer_)
+	if (pUIHost_)
 	{
-		pUILayer_->OnMouseMove(_pMouseEvent);
+		pUIHost_->OnMouseMove(_pMouseEvent);
 	}
 }
 
@@ -333,9 +332,9 @@ void WorldScene::OnMouseDown(cc::EventMouse* _pMouseEvent) const
 		pRunningScene_->OnMouseDown(_pMouseEvent);
 	}
 
-	if (pUILayer_)
+	if (pUIHost_)
 	{
-		pUILayer_->OnMouseDown(_pMouseEvent);
+		pUIHost_->OnMouseDown(_pMouseEvent);
 	}
 }
 
@@ -347,12 +346,10 @@ void WorldScene::OnMouseUp(cc::EventMouse* _pMouseEvent) const
 		pRunningScene_->OnMouseUp(_pMouseEvent);
 	}
 
-	if (pUILayer_)
+	if (pUIHost_)
 	{
-		pUILayer_->OnMouseUp(_pMouseEvent);
+		pUIHost_->OnMouseUp(_pMouseEvent);
 	}
-
-	g_cUIMgr.DragEnd();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -363,9 +360,9 @@ void WorldScene::OnMouseScroll(cc::EventMouse* _pMouseEvent) const
 		pRunningScene_->OnMouseScroll(_pMouseEvent);
 	}
 
-	if (pUILayer_)
+	if (pUIHost_)
 	{
-		pUILayer_->OnMouseScroll(_pMouseEvent);
+		pUIHost_->OnMouseScroll(_pMouseEvent);
 	}
 }
 
@@ -377,7 +374,7 @@ void WorldScene::onExit()
 	// ======================================================
 
 	// 삭제전 마지막 발악, 모든 UI 리소스 정리
-	pUILayer_->ClearUnload();
+	pUIHost_->ClearUnload();
 	// 강종시 하위 씬들의 onExit을 수동호출해주자.
 	Scene::onExit();
 
@@ -385,7 +382,9 @@ void WorldScene::onExit()
 	// 씬 정리되기전에 모든 레퍼런스 카운트가 0가 되어야함.
 	removeAllChildren();
 
-	g_cUIMgr.SetUILayer(nullptr);
+	g_cUIMgr.SetHost(nullptr);
+	sgui::InputDispatcher::Get()->Clear();
+	sgui::InputDispatcher::Get()->SetHost(nullptr);
 
 	FinalizeClientCore();
 	FinalizeCommonCore();
@@ -413,7 +412,7 @@ void WorldScene::ChangeScene(SceneType_t _sceneType)
 	}
 
 	// 씬전환 시 UI 리소스 모두 해제
-	pUILayer_->ClearUnload();
+	pUIHost_->ClearUnload();
 	pRunningScene_ = CreateScene(_sceneType);
 	addChild(pRunningScene_);
 	_LogDebug_("-- 씬전환 완료");
@@ -463,8 +462,8 @@ SceneBase* WorldScene::CreateScene(SceneType_t _sceneType)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-UILayer& WorldScene::GetUILayer() const
+sgui::UIHost& WorldScene::GetUIHost() const
 {
-	jc_assert_msg(pUILayer_, "UI 레이어는 무조건 게임내내 생성되어있어야 합니다.");
-	return *pUILayer_;
+	jc_assert_msg(pUIHost_, "UI 호스트는 무조건 게임내내 생성되어있어야 합니다.");
+	return *pUIHost_;
 }

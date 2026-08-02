@@ -32,6 +32,7 @@ UIResolvedStyle UIStyleResolver::ApplyStateModifiers(
     out.geometryInnerRim = _theme.geometry.innerRim;
     out.geometryDepth = _theme.geometry.depth;
     out.geometryShadow = _theme.geometry.shadow;
+    out.borderGradient = _theme.geometry.borderGradient;
 
     return out;
 }
@@ -55,6 +56,7 @@ void UIStyleResolver::ApplyGlobalTheme(
     _out.geometryInnerRim = _theme.geometry.innerRim;
     _out.geometryDepth = _theme.geometry.depth;
     _out.geometryShadow = _theme.geometry.shadow;
+    _out.borderGradient = _theme.geometry.borderGradient;
 }
 
 void UIStyleResolver::ApplySparseOverride(
@@ -62,53 +64,97 @@ void UIStyleResolver::ApplySparseOverride(
     const UIStyleOverride& _local)
 {
     if (_local.Has(UIStyleToken::SurfaceNormalTop))
+    {
         _out.surfaceTop = _local.values.surfaceTop;
+    }
     if (_local.Has(UIStyleToken::SurfaceNormalBottom))
+    {
         _out.surfaceBottom = _local.values.surfaceBottom;
+    }
     if (_local.Has(UIStyleToken::MetalBorder))
+    {
         _out.metalBorder = _local.values.metalBorder;
+    }
     if (_local.Has(UIStyleToken::GlossTint))
+    {
         _out.glossTint = _local.values.glossTint;
+    }
     if (_local.Has(UIStyleToken::GlossNormalAlpha))
+    {
         _out.glossAlpha = _local.values.glossAlpha;
+    }
     if (_local.Has(UIStyleToken::GlossCenterX))
+    {
         _out.glossCenterX = _local.values.glossCenterX;
+    }
     if (_local.Has(UIStyleToken::GlossHeightRatio))
+    {
         _out.glossHeightRatio = _local.values.glossHeightRatio;
+    }
     if (_local.Has(UIStyleToken::GlossBlur))
+    {
         _out.glossBlurRadius = _local.values.glossBlurRadius;
+    }
     if (_local.Has(UIStyleToken::GeometryRadius))
+    {
         _out.geometryRadius = _local.values.geometryRadius;
+    }
     if (_local.Has(UIStyleToken::GeometryBorderWidth))
+    {
         _out.geometryBorderWidth = _local.values.geometryBorderWidth;
+    }
     if (_local.Has(UIStyleToken::GeometryInnerRim))
+    {
         _out.geometryInnerRim = _local.values.geometryInnerRim;
+    }
     if (_local.Has(UIStyleToken::GeometryDepth))
+    {
         _out.geometryDepth = _local.values.geometryDepth;
+    }
     if (_local.Has(UIStyleToken::GeometryShadow))
+    {
         _out.geometryShadow = _local.values.geometryShadow;
+    }
     if (_local.Has(UIStyleToken::SemanticText))
+    {
         _out.semanticText = _local.values.semanticText;
+    }
     if (_local.Has(UIStyleToken::SemanticDanger))
+    {
         _out.semanticDanger = _local.values.semanticDanger;
+    }
     if (_local.Has(UIStyleToken::SemanticSuccess))
+    {
         _out.semanticSuccess = _local.values.semanticSuccess;
+    }
     if (_local.Has(UIStyleToken::SemanticWarning))
+    {
         _out.semanticWarning = _local.values.semanticWarning;
+    }
 }
 
 void UIStyleResolver::ValidateAndClamp(UIResolvedStyle& _out)
 {
     if (_out.geometryRadius < 0.0f)
+    {
         _out.geometryRadius = 0.0f;
+    }
     if (_out.geometryBorderWidth < 0.0f)
+    {
         _out.geometryBorderWidth = 0.0f;
+    }
     if (_out.geometryShadow < 0.0f)
+    {
         _out.geometryShadow = 0.0f;
+    }
     if (_out.glossAlpha < 0.0f)
+    {
         _out.glossAlpha = 0.0f;
+    }
     if (_out.glossAlpha > 1.0f)
+    {
         _out.glossAlpha = 1.0f;
+    }
 }
 
 void UIStyleResolver::ApplySurfaceToken(

@@ -28,6 +28,7 @@ struct UIResolvedStyle
     float geometryInnerRim = 0.0f;
     float geometryDepth = 1.0f;
     float geometryShadow = 4.0f;
+    bool borderGradient = false;
 
     UIColorF semanticText;
     UIColorF semanticDanger;
@@ -93,14 +94,26 @@ struct UIStyleOverrideMask
 
     void Set(size_t _bit)
     {
-        if (_bit < 64) lo |= (1ULL << _bit);
-        else hi |= (1ULL << (_bit - 64));
+        if (_bit < 64)
+        {
+            lo |= (1ULL << _bit);
+        }
+        else
+        {
+            hi |= (1ULL << (_bit - 64));
+        }
     }
 
     void Reset(size_t _bit)
     {
-        if (_bit < 64) lo &= ~(1ULL << _bit);
-        else hi &= ~(1ULL << (_bit - 64));
+        if (_bit < 64)
+        {
+            lo &= ~(1ULL << _bit);
+        }
+        else
+        {
+            hi &= ~(1ULL << (_bit - 64));
+        }
     }
 
     void Clear()
