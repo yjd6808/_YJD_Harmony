@@ -11,8 +11,8 @@
 #include <tinyxml2.h>
 
 #include <algorithm>
+#include <cmath>
 #include <cstdlib>
-#include <cstring>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -50,7 +50,7 @@ UIValue UIValue::MakeFloat(double _value)
 	return value;
 }
 
-UIValue UIValue::MakeString(const std::string& _value)
+UIValue UIValue::MakeString(const jc::String& _value)
 {
 	UIValue value;
 	value.type_ = UIValueType::String;
@@ -80,10 +80,7 @@ bool UIValue::ToBool() const
 	case UIValueType::Int: return intValue_ != 0;
 	case UIValueType::Float: return floatValue_ != 0.0;
 	case UIValueType::String:
-	{
-		const char* p = stringValue_.c_str();
-		return strcmp(p, "true") == 0 || strcmp(p, "1") == 0 || strcmp(p, "True") == 0;
-	}
+		return stringValue_ == "true" || stringValue_ == "1" || stringValue_ == "True";
 	case UIValueType::Array: return !arrayValue_.empty();
 	case UIValueType::Map: return !mapValue_.empty();
 	default: return false;
@@ -97,7 +94,7 @@ int64_t UIValue::ToInt() const
 	case UIValueType::Int: return intValue_;
 	case UIValueType::Float: return (int64_t)floatValue_;
 	case UIValueType::Bool: return boolValue_ ? 1 : 0;
-	case UIValueType::String: return (int64_t)std::strtoll(stringValue_.c_str(), nullptr, 0);
+	case UIValueType::String: return (int64_t)std::strtoll(stringValue_.Source(), nullptr, 0);
 	default: return 0;
 	}
 }
@@ -109,31 +106,31 @@ double UIValue::ToFloat() const
 	case UIValueType::Float: return floatValue_;
 	case UIValueType::Int: return (double)intValue_;
 	case UIValueType::Bool: return boolValue_ ? 1.0 : 0.0;
-	case UIValueType::String: return std::strtod(stringValue_.c_str(), nullptr);
+	case UIValueType::String: return std::strtod(stringValue_.Source(), nullptr);
 	default: return 0.0;
 	}
 }
 
-std::string UIValue::ToString() const
+jc::String UIValue::ToString() const
 {
 	switch (type_)
 	{
 	case UIValueType::Bool: return boolValue_ ? "true" : "false";
-	case UIValueType::Int: return jc::StringUtil::Format("%lld", (long long)intValue_).Source();
+	case UIValueType::Int: return jc::StringUtil::Format("%lld", (long long)intValue_);
 	case UIValueType::Float:
 	{
 		// 정수 값이면 소수점을 생략해 표기한다.
 		const double integral = std::floor(floatValue_);
 		if (floatValue_ == integral)
 		{
-			return jc::StringUtil::Format("%lld", (long long)floatValue_).Source();
+			return jc::StringUtil::Format("%lld", (long long)floatValue_);
 		}
-		return jc::StringUtil::Format("%g", floatValue_).Source();
+		return jc::StringUtil::Format("%g", floatValue_);
 	}
 	case UIValueType::String: return stringValue_;
 	case UIValueType::Array:
 	{
-		std::string out = "[";
+		jc::String out = "[";
 		for (size_t i = 0; i < arrayValue_.size(); ++i)
 		{
 			if (i > 0)
@@ -147,7 +144,7 @@ std::string UIValue::ToString() const
 	}
 	case UIValueType::Map:
 	{
-		std::string out = "{";
+		jc::String out = "{";
 		for (size_t i = 0; i < mapValue_.size(); ++i)
 		{
 			if (i > 0)
@@ -173,9 +170,9 @@ const UIValue* UIValue::GetArrayItem(int _index) const
 	return &arrayValue_[_index];
 }
 
-const UIValue* UIValue::GetMapValue(const char* _key) const
+const UIValue* UIValue::GetMapValue(const jc::String& _key) const
 {
-	if (type_ != UIValueType::Map || _key == nullptr)
+	if (type_ != UIValueType::Map)
 	{
 		return nullptr;
 	}
@@ -200,7 +197,7 @@ const UIValue* UIValue::GetItem(const UIValue& _index) const
 
 	if (type_ == UIValueType::Map)
 	{
-		return GetMapValue(_index.ToString().c_str());
+		return GetMapValue(_index.ToString());
 	}
 
 	return nullptr;
@@ -232,7 +229,7 @@ void UIValue::EnsureArraySize(int _size)
 	arrayValue_.resize(_size);
 }
 
-void UIValue::SetMapValue(const std::string& _key, const UIValue& _value)
+void UIValue::SetMapValue(const jc::String& _key, const UIValue& _value)
 {
 	for (auto& pair : mapValue_)
 	{
@@ -250,9 +247,9 @@ void UIValue::SetMapValue(const std::string& _key, const UIValue& _value)
 // UIDataList
 //////////////////////////////////////////////////////////////////////////////////////////
 
-const UIValue* UIDataList::Find(const char* _key) const
+const UIValue* UIDataList::Find(const jc::String& _key) const
 {
-	if (_key == nullptr)
+	if (_key.IsEmpty())
 	{
 		return nullptr;
 	}
@@ -268,9 +265,9 @@ const UIValue* UIDataList::Find(const char* _key) const
 	return nullptr;
 }
 
-UIValue* UIDataList::FindMutable(const char* _key)
+UIValue* UIDataList::FindMutable(const jc::String& _key)
 {
-	if (_key == nullptr)
+	if (_key.IsEmpty())
 	{
 		return nullptr;
 	}
@@ -286,7 +283,7 @@ UIValue* UIDataList::FindMutable(const char* _key)
 	return nullptr;
 }
 
-void UIDataList::Set(const std::string& _key, const UIValue& _value)
+void UIDataList::Set(const jc::String& _key, const UIValue& _value)
 {
 	for (auto& pair : values_)
 	{
@@ -308,27 +305,28 @@ namespace
 {
 
 //////////////////////////////////////////////////////////////////////////////////////////
-static bool IsIntegerString(const char* _text)
+static bool IsIntegerString(const jc::String& _text)
 {
-	if (_text == nullptr || _text[0] == '\0')
+	if (_text.IsEmpty())
 	{
 		return false;
 	}
 
-	const char* p = _text;
-	if (*p == '+' || *p == '-')
+	int index = 0;
+	if (_text[0] == '+' || _text[0] == '-')
 	{
-		++p;
+		++index;
 	}
 
-	if (*p == '\0')
+	if (index >= _text.Length())
 	{
 		return false;
 	}
 
-	for (; *p; ++p)
+	for (; index < _text.Length(); ++index)
 	{
-		if (*p < '0' || *p > '9')
+		const char c = _text[index];
+		if (c < '0' || c > '9')
 		{
 			return false;
 		}
@@ -338,17 +336,16 @@ static bool IsIntegerString(const char* _text)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-static int64_t ParseIntLiteral(const std::string& _text)
+static int64_t ParseIntLiteral(const jc::String& _text)
 {
-	const std::string trimmed = _text;
-	const char* p = trimmed.c_str();
+	const char* p = _text.Source();
 
-	if (trimmed.size() >= 2 && trimmed[0] == '0' && (trimmed[1] == 'b' || trimmed[1] == 'B'))
+	if (_text.Length() >= 2 && _text[0] == '0' && (_text[1] == 'b' || _text[1] == 'B'))
 	{
 		int64_t result = 0;
-		for (size_t i = 2; i < trimmed.size(); ++i)
+		for (int i = 2; i < _text.Length(); ++i)
 		{
-			const char c = trimmed[i];
+			const char c = _text[i];
 			if (c != '0' && c != '1')
 			{
 				break;
@@ -358,7 +355,7 @@ static int64_t ParseIntLiteral(const std::string& _text)
 		return result;
 	}
 
-	if (trimmed.size() >= 2 && trimmed[0] == '0' && (trimmed[1] == 'x' || trimmed[1] == 'X'))
+	if (_text.Length() >= 2 && _text[0] == '0' && (_text[1] == 'x' || _text[1] == 'X'))
 	{
 		return (int64_t)std::strtoll(p + 2, nullptr, 16);
 	}
@@ -367,15 +364,15 @@ static int64_t ParseIntLiteral(const std::string& _text)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-static bool ParseBool(const std::string& _text)
+static bool ParseBool(const jc::String& _text)
 {
 	return _text == "true" || _text == "True" || _text == "1";
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-static UIValue ParseScalar(const std::string& _text, const char* _type)
+static UIValue ParseScalar(const jc::String& _text, const char* _type)
 {
-	std::string type = _type ? _type : "String";
+	jc::String type = _type ? _type : "String";
 
 	if (type == "Bool" || type == "Boolean")
 	{
@@ -388,16 +385,16 @@ static UIValue ParseScalar(const std::string& _text, const char* _type)
 	}
 
 	// 정수 계열: _u8 ~ _u64, _s8 ~ _s64, Int, Integer, UInt ...
-	if (type.rfind("_u", 0) == 0 || type.rfind("_s", 0) == 0
+	if (type.Find("_u") == 0 || type.Find("_s") == 0
 		|| type == "Int" || type == "Integer" || type == "UInt" || type == "SInt")
 	{
 		return UIValue::MakeInt(ParseIntLiteral(_text));
 	}
 
 	// 실수 계열: _f32, _f64, Float, Double ...
-	if (type.rfind("_f", 0) == 0 || type == "Float" || type == "Double")
+	if (type.Find("_f") == 0 || type == "Float" || type == "Double")
 	{
-		return UIValue::MakeFloat(std::strtod(_text.c_str(), nullptr));
+		return UIValue::MakeFloat(std::strtod(_text.Source(), nullptr));
 	}
 
 	// 인식 불가 타입이면 문자열로 보관한다.
@@ -407,7 +404,8 @@ static UIValue ParseScalar(const std::string& _text, const char* _type)
 //////////////////////////////////////////////////////////////////////////////////////////
 static bool IsContainerType(const char* _type)
 {
-	return _type != nullptr && (strcmp(_type, "Map") == 0 || strcmp(_type, "Array") == 0);
+	jc::String type = _type ? _type : "";
+	return type == "Map" || type == "Array";
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -419,7 +417,7 @@ static UIValue ParseData(tinyxml2::XMLElement* _dataElement)
 	if (pDataList != nullptr)
 	{
 		const char* typeAttr = _dataElement->Attribute("Type");
-		const bool asArray = typeAttr != nullptr && strcmp(typeAttr, "Array") == 0;
+		const bool asArray = typeAttr != nullptr && jc::String(typeAttr) == "Array";
 
 		UIValue container = asArray ? UIValue::MakeArray() : UIValue::MakeMap();
 		int implicitIndex = 0;
@@ -433,7 +431,7 @@ static UIValue ParseData(tinyxml2::XMLElement* _dataElement)
 			if (asArray)
 			{
 				int index = implicitIndex;
-				if (key != nullptr && IsIntegerString(key))
+				if (key != nullptr && IsIntegerString(jc::String(key)))
 				{
 					index = atoi(key);
 				}

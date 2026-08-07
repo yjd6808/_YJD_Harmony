@@ -9,7 +9,7 @@
 
 #include "sgcl/Game/UI/Core/UITypes.h"
 
-#include <string>
+#include "jc/Primitives/String.h"
 
 namespace sgui
 {
@@ -110,7 +110,7 @@ struct UIEventKeyboard : UIEvent
 
 struct UIEventText : UIEvent
 {
-	std::string text_;
+	jc::String text_;
 };
 
 struct UIEventFocus : UIEvent

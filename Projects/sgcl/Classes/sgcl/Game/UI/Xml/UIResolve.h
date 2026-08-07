@@ -30,15 +30,15 @@ struct UIResolveContext
 };
 
 // 속성 값 전체를 해석한다. 표현식이 성립하면 타입 보존 결과, 아니면 문자열 보간 결과.
-UIValue ResolveAttribute(const std::string& _raw, const UIResolveContext& _ctx);
+UIValue ResolveAttribute(const jc::String& _raw, const UIResolveContext& _ctx);
 
 // 중괄호 내부 표현식 평가 (실패 시 Null).
-UIValue ResolveExpression(const std::string& _expr, const UIResolveContext& _ctx);
+UIValue ResolveExpression(const jc::String& _expr, const UIResolveContext& _ctx);
 
 // 요소 프로퍼티 읽기 (Width/Height/Margin.Left/Text/IsChecked/Percent/Value/...).
-bool ResolveElementProperty(UIElement* _pElement, const char* _property, UIValue& _out);
+bool ResolveElementProperty(UIElement* _pElement, const jc::String& _property, UIValue& _out);
 
 // 중괄호 토큰만 문자열 치환 (표현식이 아닌 텍스트 보간용).
-std::string ResolveInterpolate(const std::string& _raw, const UIResolveContext& _ctx);
+jc::String ResolveInterpolate(const jc::String& _raw, const UIResolveContext& _ctx);
 
 } // namespace sgui

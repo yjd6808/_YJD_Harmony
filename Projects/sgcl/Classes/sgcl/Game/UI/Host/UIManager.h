@@ -12,10 +12,10 @@
 #include "sgcl/Game/UI/Host/UIHost.h"
 
 #include "jc/Container/DataMap.h"
+#include "jc/Primitives/String.h"
 
 #include <functional>
 #include <map>
-#include <string>
 
 namespace sgui
 {
@@ -59,7 +59,7 @@ private:
 	Window* ShowWindow(Window* _pWindow, const jc::CDataMap<>& _dataMap, int _zOrder);
 
 	UIHost* pHost_ = nullptr;
-	std::map<std::string, WindowFactory> factories_;
+	std::map<jc::String, WindowFactory> factories_;
 };
 
 } // namespace sgui

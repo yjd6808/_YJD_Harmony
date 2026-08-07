@@ -53,11 +53,11 @@ struct PVal
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
-static size_t FindMatchingBrace(const std::string& _expr, size_t _open)
+static int FindMatchingBrace(const jc::String& _expr, int _open)
 {
 	int depth = 0;
 
-	for (size_t i = _open; i < _expr.size(); ++i)
+	for (int i = _open; i < _expr.Length(); ++i)
 	{
 		if (_expr[i] == '{')
 		{
@@ -73,11 +73,11 @@ static size_t FindMatchingBrace(const std::string& _expr, size_t _open)
 		}
 	}
 
-	return std::string::npos;
+	return -1;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-static UIElement* FindChildByName(UIElement* _pParent, const std::string& _name)
+static UIElement* FindChildByName(UIElement* _pParent, const jc::String& _name)
 {
 	if (_pParent == nullptr)
 	{
@@ -88,7 +88,7 @@ static UIElement* FindChildByName(UIElement* _pParent, const std::string& _name)
 	for (int idx = 0; idx < count; ++idx)
 	{
 		UIElement* pChild = _pParent->GetChildElementAt(idx);
-		if (pChild && pChild->getName() == _name)
+		if (pChild && pChild->getName() == _name.Source())
 		{
 			return pChild;
 		}
@@ -138,7 +138,7 @@ static UIElement* GetSibling(UIElement* _pElement, int _delta)
 class ExprParser
 {
 public:
-	ExprParser(const std::string& _expr, const UIResolveContext& _ctx)
+	ExprParser(const jc::String& _expr, const UIResolveContext& _ctx)
 	: expr_(_expr)
 	, ctx_(&_ctx)
 	{
@@ -150,7 +150,7 @@ public:
 		SkipWs();
 
 		// 전체 입력이 소비되지 않았으면 실패 처리
-		if (pos_ != expr_.size())
+		if (pos_ != expr_.Length())
 		{
 			Fail();
 			return UIValue::MakeNull();
@@ -162,22 +162,22 @@ public:
 	bool Failed() const { return failed_; }
 
 private:
-	const std::string& expr_;
+	const jc::String& expr_;
 	const UIResolveContext* ctx_;
-	size_t pos_ = 0;
+	int pos_ = 0;
 	bool failed_ = false;
 
 	void Fail() { failed_ = true; }
 
 	void SkipWs()
 	{
-		while (pos_ < expr_.size() && (expr_[pos_] == ' ' || expr_[pos_] == '\t'))
+		while (pos_ < expr_.Length() && (expr_[pos_] == ' ' || expr_[pos_] == '\t'))
 		{
 			++pos_;
 		}
 	}
 
-	bool Peek(char _c) const { return pos_ < expr_.size() && expr_[pos_] == _c; }
+	bool Peek(char _c) const { return pos_ < expr_.Length() && expr_[pos_] == _c; }
 
 	bool Consume(char _c)
 	{
@@ -191,8 +191,13 @@ private:
 
 	bool TryConsumeWord(const char* _word)
 	{
-		const size_t len = std::strlen(_word);
-		if (expr_.compare(pos_, len, _word) == 0)
+		if (pos_ >= expr_.Length())
+		{
+			return false;
+		}
+
+		const int len = (int)jc::StringUtil::Length(_word);
+		if (expr_.Find(pos_, _word) == pos_)
 		{
 			pos_ += len;
 			return true;
@@ -200,12 +205,12 @@ private:
 		return false;
 	}
 
-	std::string ReadIdent()
+	jc::String ReadIdent()
 	{
 		SkipWs();
-		const size_t start = pos_;
+		const int start = pos_;
 
-		while (pos_ < expr_.size())
+		while (pos_ < expr_.Length())
 		{
 			const char c = expr_[pos_];
 			if (std::isalpha((unsigned char)c) || c == '_'
@@ -219,7 +224,7 @@ private:
 			}
 		}
 
-		return expr_.substr(start, pos_ - start);
+		return expr_.SubStr(start, pos_ - start);
 	}
 
 	// ==================== 문법 규칙 ====================
@@ -471,7 +476,7 @@ private:
 	{
 		SkipWs();
 
-		if (pos_ >= expr_.size())
+		if (pos_ >= expr_.Length())
 		{
 			Fail();
 			return UIValue::MakeNull();
@@ -495,14 +500,14 @@ private:
 
 		if (c == '{')
 		{
-			const size_t close = FindMatchingBrace(expr_, pos_);
-			if (close == std::string::npos)
+			const int close = FindMatchingBrace(expr_, pos_);
+			if (close < 0)
 			{
 				Fail();
 				return UIValue::MakeNull();
 			}
 
-			const std::string inner = expr_.substr(pos_ + 1, close - pos_ - 1);
+			const jc::String inner = expr_.SubStr(pos_ + 1, close - pos_ - 1);
 			pos_ = close + 1;
 
 			// 중괄호 Ref: 내부를 재귀 평가한다. (중첩 접근 {@Items[{@Index}]} 처리)
@@ -511,19 +516,19 @@ private:
 
 		if (c == '`')
 		{
-			const size_t end = expr_.find('`', pos_ + 1);
-			if (end == std::string::npos)
+			const int end = expr_.Find(pos_ + 1, "`");
+			if (end < 0)
 			{
 				Fail();
 				return UIValue::MakeNull();
 			}
 
-			const std::string text = expr_.substr(pos_ + 1, end - pos_ - 1);
+			const jc::String text = expr_.SubStr(pos_ + 1, end - pos_ - 1);
 			pos_ = end + 1;
 			return UIValue::MakeString(text);
 		}
 
-		if (std::isdigit((unsigned char)c) || (c == '.' && pos_ + 1 < expr_.size() && std::isdigit((unsigned char)expr_[pos_ + 1])))
+		if (std::isdigit((unsigned char)c) || (c == '.' && pos_ + 1 < expr_.Length() && std::isdigit((unsigned char)expr_[pos_ + 1])))
 		{
 			return ParseNumber();
 		}
@@ -552,28 +557,29 @@ private:
 
 	UIValue ParseNumber()
 	{
-		const size_t start = pos_;
+		const int start = pos_;
 
-		while (pos_ < expr_.size() && (std::isdigit((unsigned char)expr_[pos_]) || expr_[pos_] == '.'))
+		while (pos_ < expr_.Length() && (std::isdigit((unsigned char)expr_[pos_]) || expr_[pos_] == '.'))
 		{
 			++pos_;
 		}
 
 		// 지수 표기
-		if (pos_ < expr_.size() && (expr_[pos_] == 'e' || expr_[pos_] == 'E'))
+		if (pos_ < expr_.Length() && (expr_[pos_] == 'e' || expr_[pos_] == 'E'))
 		{
 			++pos_;
-			if (pos_ < expr_.size() && (expr_[pos_] == '+' || expr_[pos_] == '-'))
+			if (pos_ < expr_.Length() && (expr_[pos_] == '+' || expr_[pos_] == '-'))
 			{
 				++pos_;
 			}
-			while (pos_ < expr_.size() && std::isdigit((unsigned char)expr_[pos_]))
+			while (pos_ < expr_.Length() && std::isdigit((unsigned char)expr_[pos_]))
 			{
 				++pos_;
 			}
 		}
 
-		return UIValue::MakeFloat(std::strtod(expr_.substr(start, pos_ - start).c_str(), nullptr));
+		const jc::String number = expr_.SubStr(start, pos_ - start);
+		return UIValue::MakeFloat(std::strtod(number.Source(), nullptr));
 	}
 
 	// ==================== 경로 참조 ====================
@@ -582,7 +588,7 @@ private:
 	{
 		SkipWs();
 
-		if (pos_ >= expr_.size())
+		if (pos_ >= expr_.Length())
 		{
 			Fail();
 			return PVal::MakeValue(UIValue::MakeNull());
@@ -593,9 +599,9 @@ private:
 		if (c == '@')
 		{
 			++pos_;
-			const std::string key = ReadIdent();
+			const jc::String key = ReadIdent();
 
-			if (key.empty())
+			if (key.IsEmpty())
 			{
 				Fail();
 				return PVal::MakeValue(UIValue::MakeNull());
@@ -606,7 +612,7 @@ private:
 				return PVal::MakeValue(UIValue::MakeNull());
 			}
 
-			const UIValue* pValue = ctx_->pData->Find(key.c_str());
+			const UIValue* pValue = ctx_->pData->Find(key);
 			return PVal::MakeValue(pValue ? *pValue : UIValue::MakeNull());
 		}
 
@@ -619,16 +625,16 @@ private:
 		if (c == '#')
 		{
 			++pos_;
-			const std::string name = ReadIdent();
+			const jc::String name = ReadIdent();
 
-			if (name.empty())
+			if (name.IsEmpty())
 			{
 				Fail();
 				return PVal::MakeValue(UIValue::MakeNull());
 			}
 
 			// #이름: name 기반 요소 조회 (미발견 시 실패 → 문자열 보간 폴백 유도)
-			UIElement* pElement = ctx_->pRoot ? ctx_->pRoot->FindElementByName(name.c_str()) : nullptr;
+			UIElement* pElement = ctx_->pRoot ? ctx_->pRoot->FindElementByName(name.Source()) : nullptr;
 			if (pElement == nullptr)
 			{
 				Fail();
@@ -638,7 +644,7 @@ private:
 			return PVal::MakeElement(pElement);
 		}
 
-		const std::string ident = ReadIdent();
+		const jc::String ident = ReadIdent();
 
 		if (ident == "true")
 		{
@@ -662,7 +668,7 @@ private:
 
 	PVal ParseSpecialBase()
 	{
-		const std::string special = ReadIdent();
+		const jc::String special = ReadIdent();
 
 		if (special == "parent")
 		{
@@ -726,7 +732,7 @@ private:
 	// 체인 내부의 $ 특수 참조 ($parent.$parent 등). _pFrom 기준으로 이동한다.
 	PVal ParseSpecialRelative(UIElement* _pFrom)
 	{
-		const std::string special = ReadIdent();
+		const jc::String special = ReadIdent();
 
 		if (special == "parent")
 		{
@@ -795,7 +801,7 @@ private:
 		{
 			SkipWs();
 
-			if (pos_ >= expr_.size())
+			if (pos_ >= expr_.Length())
 			{
 				break;
 			}
@@ -822,7 +828,7 @@ private:
 		++pos_;	// '.'
 		SkipWs();
 
-		if (pos_ >= expr_.size())
+		if (pos_ >= expr_.Length())
 		{
 			Fail();
 			return _current;
@@ -841,9 +847,9 @@ private:
 			return ParseSpecialRelative(_current.element);
 		}
 
-		const std::string ident = ReadIdent();
+		const jc::String ident = ReadIdent();
 
-		if (ident.empty())
+		if (ident.IsEmpty())
 		{
 			Fail();
 			return _current;
@@ -859,7 +865,7 @@ private:
 
 			// 2) 요소 프로퍼티
 			UIValue property;
-			if (ResolveElementProperty(_current.element, ident.c_str(), property))
+			if (ResolveElementProperty(_current.element, ident, property))
 			{
 				return PVal::MakeValue(property);
 			}
@@ -871,7 +877,7 @@ private:
 		// 값(Map)의 점 접근
 		if (_current.value.IsMap())
 		{
-			const UIValue* pValue = _current.value.GetMapValue(ident.c_str());
+			const UIValue* pValue = _current.value.GetMapValue(ident);
 			return PVal::MakeValue(pValue ? *pValue : UIValue::MakeNull());
 		}
 
@@ -913,7 +919,7 @@ private:
 		return _current;
 	}
 
-	UIValue ParseFunction(const std::string& _name)
+	UIValue ParseFunction(const jc::String& _name)
 	{
 		++pos_;	// '('
 		SkipWs();
@@ -965,14 +971,14 @@ private:
 //////////////////////////////////////////////////////////////////////////////////////////
 // 요소 프로퍼티 읽기
 //////////////////////////////////////////////////////////////////////////////////////////
-bool ResolveElementProperty(UIElement* _pElement, const char* _property, UIValue& _out)
+bool ResolveElementProperty(UIElement* _pElement, const jc::String& _property, UIValue& _out)
 {
-	if (_pElement == nullptr || _property == nullptr)
+	if (_pElement == nullptr || _property.IsEmpty())
 	{
 		return false;
 	}
 
-	const std::string prop(_property);
+	const jc::String prop = _property;
 
 	if (prop == "Name")
 	{
@@ -1120,30 +1126,30 @@ bool ResolveElementProperty(UIElement* _pElement, const char* _property, UIValue
 //////////////////////////////////////////////////////////////////////////////////////////
 // 공개 API
 //////////////////////////////////////////////////////////////////////////////////////////
-UIValue ResolveExpression(const std::string& _expr, const UIResolveContext& _ctx)
+UIValue ResolveExpression(const jc::String& _expr, const UIResolveContext& _ctx)
 {
 	ExprParser parser(_expr, _ctx);
 	const UIValue result = parser.Parse();
 	return parser.Failed() ? UIValue::MakeNull() : result;
 }
 
-std::string ResolveInterpolate(const std::string& _raw, const UIResolveContext& _ctx)
+jc::String ResolveInterpolate(const jc::String& _raw, const UIResolveContext& _ctx)
 {
-	std::string out;
-	size_t i = 0;
+	jc::String out;
+	int i = 0;
 
-	while (i < _raw.size())
+	while (i < _raw.Length())
 	{
 		if (_raw[i] == '{')
 		{
-			const size_t close = FindMatchingBrace(_raw, i);
-			if (close == std::string::npos)
+			const int close = FindMatchingBrace(_raw, i);
+			if (close < 0)
 			{
-				out += _raw.substr(i);
+				out += _raw.SubStr(i, _raw.Length() - i);
 				break;
 			}
 
-			const std::string inner = _raw.substr(i + 1, close - i - 1);
+			const jc::String inner = _raw.SubStr(i + 1, close - i - 1);
 			const UIValue value = ResolveExpression(inner, _ctx);
 			out += value.ToString();
 			i = close + 1;
@@ -1158,28 +1164,28 @@ std::string ResolveInterpolate(const std::string& _raw, const UIResolveContext& 
 	return out;
 }
 
-UIValue ResolveAttribute(const std::string& _raw, const UIResolveContext& _ctx)
+UIValue ResolveAttribute(const jc::String& _raw, const UIResolveContext& _ctx)
 {
-	if (_raw.empty())
+	if (_raw.IsEmpty())
 	{
 		return UIValue::MakeString("");
 	}
 
 	// 중괄호/백틱이 없으면 그대로 문자열 리터럴
-	const bool hasBrace = _raw.find('{') != std::string::npos;
-	const bool hasTick = _raw.find('`') != std::string::npos;
+	const bool hasBrace = _raw.Find("{") != -1;
+	const bool hasTick = _raw.Find("`") != -1;
 
 	if (!hasBrace && !hasTick)
 	{
 		return UIValue::MakeString(_raw);
 	}
 
-	const size_t length = _raw.size();
+	const int length = _raw.Length();
 
 	// 전체가 단일 ` ` 로 감싸진 경우: 문자열 리터럴
 	if (length >= 2 && _raw[0] == '`' && _raw[length - 1] == '`')
 	{
-		return UIValue::MakeString(_raw.substr(1, length - 2));
+		return UIValue::MakeString(_raw.SubStr(1, length - 2));
 	}
 
 	// 전체가 단일 { } 로 감싸진 경우에만 내부 전체를 표현식으로 평가한다.
@@ -1187,7 +1193,7 @@ UIValue ResolveAttribute(const std::string& _raw, const UIResolveContext& _ctx)
 	if (length >= 2 && _raw[0] == '{' && _raw[length - 1] == '}'
 		&& FindMatchingBrace(_raw, 0) == length - 1)
 	{
-		const std::string inner = _raw.substr(1, length - 2);
+		const jc::String inner = _raw.SubStr(1, length - 2);
 		const UIValue result = ResolveExpression(inner, _ctx);
 
 		if (!result.IsNull())
@@ -1201,3 +1207,5 @@ UIValue ResolveAttribute(const std::string& _raw, const UIResolveContext& _ctx)
 }
 
 } // namespace sgui
+
+

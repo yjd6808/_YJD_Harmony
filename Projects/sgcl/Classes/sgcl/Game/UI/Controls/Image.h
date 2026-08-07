@@ -8,6 +8,7 @@
 #pragma once
 
 #include "sgcl/Game/UI/Core/UIElement.h"
+#include "jc/Primitives/String.h"
 
 namespace sgui
 {
@@ -19,7 +20,7 @@ public:
 	virtual ~Image() override;
 
 	void SetSource(const char* _sourcePath);
-	const std::string& GetSource() const { return sourcePath_; }
+	const jc::String& GetSource() const { return sourcePath_; }
 
 	void SetStretch(Stretch _stretch) { stretch_ = _stretch; InvalidateLayout(); }
 	Stretch GetStretch() const { return stretch_; }
@@ -32,7 +33,7 @@ protected:
 
 	void RebuildSprite();
 
-	std::string sourcePath_;
+	jc::String sourcePath_;
 	Stretch stretch_ = Stretch::Fill;
 
 	cc_ui::Scale9Sprite* pSprite_ = nullptr;

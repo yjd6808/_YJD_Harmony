@@ -8,6 +8,7 @@
 #pragma once
 
 #include "sgcl/Game/UI/Core/UIElement.h"
+#include "jc/Primitives/String.h"
 
 namespace sgui
 {
@@ -18,7 +19,7 @@ public:
 	static TextBlock* Create(const char* _text = "");
 
 	void SetText(const char* _text);
-	const std::string& GetText() const { return text_; }
+	const jc::String& GetText() const { return text_; }
 
 	void SetTextAlignment(TextAlignment _alignment);
 	void SetTextWrapping(TextWrapping _wrapping);
@@ -39,7 +40,7 @@ protected:
 	void RebuildLabel();
 	void SyncLabelStyle();
 
-	std::string text_;
+	jc::String text_;
 	TextAlignment textAlignment_ = TextAlignment::Left;
 	TextWrapping textWrapping_ = TextWrapping::NoWrap;
 	bool hitTestEnabled_ = false;

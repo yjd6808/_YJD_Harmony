@@ -14,6 +14,8 @@
 #include "sgcl/API/sgapiClient.h"
 #include "sgcl/Net/NetCore.h"
 #include "sgcl/Game/Contents/Contents.h"
+#include "sgcl/MCP/MCPCore.h"
+#include "sgcl/Game/UI/Theme/UIThemeManager.h"
 
 #include "sgcl/Game/Texture/ImagePackManager.h"
 #include "sgcl/Game/Contents/FontManager.h"
@@ -91,4 +93,6 @@ void FinalizeClientCore()
 	
 	sg::Contents.Finalize();
 	SpriteFrameTexture::FreeDefault();
+	UIThemeManager::Free();
+	MCPCore::Free();
 }

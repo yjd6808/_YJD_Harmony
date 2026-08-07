@@ -39,6 +39,7 @@ class UITextureDeferredRelease
 public:
     void ReleaseAfterFrames(cc::Ref* _obj, int _frames);
     void Update();
+    void Flush();
 
 private:
     struct DeferredEntry

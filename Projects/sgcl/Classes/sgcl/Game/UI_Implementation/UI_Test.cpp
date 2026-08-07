@@ -53,7 +53,7 @@ void UI_Test::OnInit(const CDataMap<>& _param)
 		{
 			if (TextBlock* pText = FindElementByName<TextBlock>(_name))
 			{
-				_LogDebug_("[UI_Test] expr %s = [%s]", _name, pText->GetText().c_str());
+				_LogDebug_("[UI_Test] expr %s = [%s]", _name, pText->GetText().Source());
 			}
 		};
 

@@ -41,7 +41,17 @@ void UIThemeManager::Shutdown()
     CC_SAFE_RELEASE(activeTextureSet_);
     CC_SAFE_RELEASE(pendingTextureSet_);
     bakeService_.CancelPending(0);
-    deferredRelease_.Update();
+    deferredRelease_.Flush();
+}
+
+void UIThemeManager::Free()
+{
+    if (g_pThemeManager)
+    {
+        g_pThemeManager->Shutdown();
+        JC_DELETE_SAFE(g_pThemeManager);
+        g_pThemeManager = nullptr;
+    }
 }
 
 void UIThemeManager::Update(float _dt)

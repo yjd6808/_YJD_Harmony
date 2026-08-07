@@ -8,6 +8,7 @@
 #pragma once
 
 #include "sgcl/Game/UI/Controls/Button.h"
+#include "jc/Primitives/String.h"
 
 namespace sgui
 {
@@ -66,7 +67,7 @@ public:
 	static RadioButton* Create(const char* _text = nullptr, const char* _groupName = "");
 
 	void SetGroupName(const char* _groupName) { groupName_ = _groupName ? _groupName : ""; }
-	const std::string& GetGroupName() const { return groupName_; }
+	const jc::String& GetGroupName() const { return groupName_; }
 
 	virtual void RefreshThemeVisuals() override;
 
@@ -82,7 +83,7 @@ protected:
 	static constexpr float RadioSize_v = 18.0f;
 	static constexpr float RadioGap_v = 6.0f;
 
-	std::string groupName_;
+	jc::String groupName_;
 
 	BrushVisual radioVisual_;
 	BrushVisual dotVisual_;

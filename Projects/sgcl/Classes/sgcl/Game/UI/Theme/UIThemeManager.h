@@ -26,6 +26,7 @@ class UIThemeManager final
 {
 public:
     static UIThemeManager* Get();
+    static void Free();
 
     bool Initialize(const UIThemeInitParams& _params);
     void Shutdown();

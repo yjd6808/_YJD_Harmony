@@ -23,7 +23,7 @@ TextBlock* TextBlock::Create(const char* _text /* = "" */)
 
 void TextBlock::SetText(const char* _text)
 {
-	const std::string newText = _text ? _text : "";
+	const jc::String newText = _text ? _text : "";
 
 	if (text_ == newText)
 	{
@@ -34,7 +34,7 @@ void TextBlock::SetText(const char* _text)
 
 	if (pLabel_)
 	{
-		pLabel_->setString(text_);
+		pLabel_->setString(text_.Source());
 	}
 
 	InvalidateLayout();
@@ -82,12 +82,12 @@ void TextBlock::RebuildLabel()
 	const float fontSize = GetEffectiveFontSize();
 	const jc::String fontPath = g_cFontMgr.GetFontPath(fontCode);
 
-	pLabel_ = Label::createWithTTF(text_, fontPath.Source(), fontSize);
+	pLabel_ = Label::createWithTTF(text_.Source(), fontPath.Source(), fontSize);
 
 	if (pLabel_ == nullptr)
 	{
 		_LogWarn_("[TextBlock] TTF 폰트 생성 실패(fontCode: %d). 시스템 폰트로 대체합니다.", fontCode);
-		pLabel_ = Label::createWithSystemFont(text_, "Arial", fontSize);
+		pLabel_ = Label::createWithSystemFont(text_.Source(), "Arial", fontSize);
 	}
 
 	builtFontCode_ = fontCode;

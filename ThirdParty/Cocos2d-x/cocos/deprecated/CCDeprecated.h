@@ -1071,19 +1071,19 @@ CC_DEPRECATED_ATTRIBUTE void CC_DLL ccDrawColor4F( GLfloat r, GLfloat g, GLfloat
 CC_DEPRECATED_ATTRIBUTE void CC_DLL ccPointSize( GLfloat pointSize );
 
 
-CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccGLInvalidateStateCache() { GL::invalidateStateCache(); }
-CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccGLUseProgram(GLuint program) { GL::useProgram(program); }
-CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccGLDeleteProgram(GLuint program){ GL::deleteProgram(program); }
-CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccGLBlendFunc(GLenum sfactor, GLenum dfactor) { GL::blendFunc(sfactor, dfactor); }
-CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccGLBlendResetToCache() { GL::blendResetToCache(); }
-CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccSetProjectionMatrixDirty() { GL::setProjectionMatrixDirty(); }
-CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccGLEnableVertexAttribs(unsigned int flags) { GL::enableVertexAttribs(flags); }
-CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccGLBindTexture2D(GLuint textureId) { GL::bindTexture2D(textureId); }
-CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccGLBindTexture2DN(GLuint textureUnit, GLuint textureId) { GL::bindTexture2DN(textureUnit, textureId); }
-CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccGLDeleteTexture(GLuint textureId) { GL::deleteTexture(textureId); }
-CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccGLDeleteTextureN(GLuint textureUnit, GLuint textureId) { GL::deleteTexture(textureId); }
-CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccGLBindVAO(GLuint vaoId) { GL::bindVAO(vaoId); }
-CC_DEPRECATED_ATTRIBUTE inline void CC_DLL ccGLEnable( int flags ) { /* ignore */ };
+CC_DEPRECATED_ATTRIBUTE inline void ccGLInvalidateStateCache() { GL::invalidateStateCache(); }
+CC_DEPRECATED_ATTRIBUTE inline void ccGLUseProgram(GLuint program) { GL::useProgram(program); }
+CC_DEPRECATED_ATTRIBUTE inline void ccGLDeleteProgram(GLuint program){ GL::deleteProgram(program); }
+CC_DEPRECATED_ATTRIBUTE inline void ccGLBlendFunc(GLenum sfactor, GLenum dfactor) { GL::blendFunc(sfactor, dfactor); }
+CC_DEPRECATED_ATTRIBUTE inline void ccGLBlendResetToCache() { GL::blendResetToCache(); }
+CC_DEPRECATED_ATTRIBUTE inline void ccSetProjectionMatrixDirty() { GL::setProjectionMatrixDirty(); }
+CC_DEPRECATED_ATTRIBUTE inline void ccGLEnableVertexAttribs(unsigned int flags) { GL::enableVertexAttribs(flags); }
+CC_DEPRECATED_ATTRIBUTE inline void ccGLBindTexture2D(GLuint textureId) { GL::bindTexture2D(textureId); }
+CC_DEPRECATED_ATTRIBUTE inline void ccGLBindTexture2DN(GLuint textureUnit, GLuint textureId) { GL::bindTexture2DN(textureUnit, textureId); }
+CC_DEPRECATED_ATTRIBUTE inline void ccGLDeleteTexture(GLuint textureId) { GL::deleteTexture(textureId); }
+CC_DEPRECATED_ATTRIBUTE inline void ccGLDeleteTextureN(GLuint textureUnit, GLuint textureId) { GL::deleteTexture(textureId); }
+CC_DEPRECATED_ATTRIBUTE inline void ccGLBindVAO(GLuint vaoId) { GL::bindVAO(vaoId); }
+CC_DEPRECATED_ATTRIBUTE inline void ccGLEnable( int flags ) { /* ignore */ };
 CC_DEPRECATED_ATTRIBUTE typedef int ccGLServerState;
 
 CC_DEPRECATED_ATTRIBUTE typedef Data CCData;

@@ -32,6 +32,7 @@ void Contents::Finalize()
 	JC_DELETE_SINGLETON_SAFE(PopupManager);
 
 	g_cUIMgr.Free();
+	jc::SingletonPointer<sgui::UIManager>::Free();
 
 	JC_DELETE_SINGLETON_SAFE(Player);	// TODO: 수정 필요함. 코코스 오브젝트라서 여기서 해제하면 원래 안됨. removeAllChildren 전에 해제되어야한다. 총쏘고 나서 사라진 후 다시 쏠 때 강종해보면 오류 발생하는것알 수 있음. 코코스에서 객체를 삭제를 지멋대로 해버림
 	JC_DELETE_SINGLETON_SAFE(Inven);

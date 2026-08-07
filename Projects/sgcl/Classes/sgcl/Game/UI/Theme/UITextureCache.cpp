@@ -142,3 +142,12 @@ void UITextureDeferredRelease::Update()
         }
     }
 }
+
+void UITextureDeferredRelease::Flush()
+{
+    for (int idx = queue_.Size() - 1; idx >= 0; --idx)
+    {
+        CC_SAFE_RELEASE(queue_[idx].obj);
+        queue_.RemoveAt(idx);
+    }
+}

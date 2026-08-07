@@ -12,9 +12,10 @@
 #pragma once
 
 #include <cstdint>
-#include <string>
 #include <utility>
 #include <vector>
+
+#include "jc/Primitives/String.h"
 
 namespace tinyxml2
 {
@@ -44,7 +45,7 @@ public:
 	static UIValue MakeBool(bool _value);
 	static UIValue MakeInt(int64_t _value);
 	static UIValue MakeFloat(double _value);
-	static UIValue MakeString(const std::string& _value);
+	static UIValue MakeString(const jc::String& _value);
 	static UIValue MakeArray();
 	static UIValue MakeMap();
 
@@ -63,16 +64,16 @@ public:
 	bool ToBool() const;
 	int64_t ToInt() const;
 	double ToFloat() const;
-	std::string ToString() const;
+	jc::String ToString() const;
 
 	// ==================== Array 접근 ====================
 	const UIValue* GetArrayItem(int _index) const;
 	int GetArraySize() const { return (int)arrayValue_.size(); }
 
 	// ==================== Map 접근 (순서 보존) ====================
-	const UIValue* GetMapValue(const char* _key) const;
+	const UIValue* GetMapValue(const jc::String& _key) const;
 	int GetMapSize() const { return (int)mapValue_.size(); }
-	const std::string& GetMapKeyAt(int _index) const { return mapValue_[_index].first; }
+	const jc::String& GetMapKeyAt(int _index) const { return mapValue_[_index].first; }
 
 	// 점 체인/인덱스 조회의 최종 단계 (Array는 정수, Map은 문자열 키)
 	const UIValue* GetItem(const UIValue& _index) const;
@@ -81,30 +82,30 @@ public:
 	void AddArrayItem(const UIValue& _value);
 	void SetArrayItem(int _index, const UIValue& _value);
 	void EnsureArraySize(int _size);
-	void SetMapValue(const std::string& _key, const UIValue& _value);
+	void SetMapValue(const jc::String& _key, const UIValue& _value);
 
 private:
 	UIValueType type_ = UIValueType::Null;
 	bool boolValue_ = false;
 	int64_t intValue_ = 0;
 	double floatValue_ = 0.0;
-	std::string stringValue_;
+	jc::String stringValue_;
 	std::vector<UIValue> arrayValue_;
-	std::vector<std::pair<std::string, UIValue>> mapValue_;
+	std::vector<std::pair<jc::String, UIValue>> mapValue_;
 };
 
 // Window 데이터 (DataList). 순서 보존 리스트로 구성된다.
 class UIDataList
 {
 public:
-	const UIValue* Find(const char* _key) const;
-	UIValue* FindMutable(const char* _key);
-	void Set(const std::string& _key, const UIValue& _value);
+	const UIValue* Find(const jc::String& _key) const;
+	UIValue* FindMutable(const jc::String& _key);
+	void Set(const jc::String& _key, const UIValue& _value);
 	int GetSize() const { return (int)values_.size(); }
-	const std::string& GetKeyAt(int _index) const { return values_[_index].first; }
+	const jc::String& GetKeyAt(int _index) const { return values_[_index].first; }
 	const UIValue* GetValueAt(int _index) const { return &values_[_index].second; }
 
-	std::vector<std::pair<std::string, UIValue>> values_;
+	std::vector<std::pair<jc::String, UIValue>> values_;
 };
 
 // <DataList> 요소를 파싱한다. (Key/Type/Value 속성, 0b/0x 리터럴, 멀티라인 <Value>, 중첩 Data)

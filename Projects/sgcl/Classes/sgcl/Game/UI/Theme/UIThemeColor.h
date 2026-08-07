@@ -10,8 +10,8 @@
 #pragma once
 
 #include "sgcl/Game/UI/Theme/UIThemeTypes.h"
+#include "jc/Primitives/String.h"
 
-#include <cstring>
 #include <cstdint>
 
 // ==================== X-매크로 목록 ====================
@@ -183,28 +183,28 @@ inline const char* UIThemeColorRoleKey(UIThemeColorRole _role)
     }
 }
 
-inline bool TryParseUIThemeControl(const char* _text, UIThemeControl& _out)
+inline bool TryParseUIThemeControl(const jc::String& _text, UIThemeControl& _out)
 {
-    if (_text == nullptr) return false;
-#define SGUI_PARSE_ENTRY(Name, key) if (strcmp(_text, key) == 0) { _out = UIThemeControl::Name; return true; }
+    if (_text.IsEmpty()) return false;
+#define SGUI_PARSE_ENTRY(Name, key) if (_text == (key)) { _out = UIThemeControl::Name; return true; }
     SGUI_THEME_CONTROL_LIST(SGUI_PARSE_ENTRY)
 #undef SGUI_PARSE_ENTRY
     return false;
 }
 
-inline bool TryParseUIThemeColorState(const char* _text, UIThemeColorState& _out)
+inline bool TryParseUIThemeColorState(const jc::String& _text, UIThemeColorState& _out)
 {
-    if (_text == nullptr) return false;
-#define SGUI_PARSE_ENTRY(Name, key) if (strcmp(_text, key) == 0) { _out = UIThemeColorState::Name; return true; }
+    if (_text.IsEmpty()) return false;
+#define SGUI_PARSE_ENTRY(Name, key) if (_text == (key)) { _out = UIThemeColorState::Name; return true; }
     SGUI_THEME_COLOR_STATE_LIST(SGUI_PARSE_ENTRY)
 #undef SGUI_PARSE_ENTRY
     return false;
 }
 
-inline bool TryParseUIThemeColorRole(const char* _text, UIThemeColorRole& _out)
+inline bool TryParseUIThemeColorRole(const jc::String& _text, UIThemeColorRole& _out)
 {
-    if (_text == nullptr) return false;
-#define SGUI_PARSE_ENTRY(Name, key) if (strcmp(_text, key) == 0) { _out = UIThemeColorRole::Name; return true; }
+    if (_text.IsEmpty()) return false;
+#define SGUI_PARSE_ENTRY(Name, key) if (_text == (key)) { _out = UIThemeColorRole::Name; return true; }
     SGUI_THEME_COLOR_ROLE_LIST(SGUI_PARSE_ENTRY)
 #undef SGUI_PARSE_ENTRY
     return false;

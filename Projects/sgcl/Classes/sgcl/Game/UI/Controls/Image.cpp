@@ -61,17 +61,17 @@ void Image::RebuildSprite()
 
 	pTexture_ = nullptr;
 
-	if (sourcePath_.empty())
+	if (sourcePath_.IsEmpty())
 	{
 		return;
 	}
 
 	// resData 기준 상대 경로 변환 (절대 경로는 그대로 사용)
-	const bool isAbsolute = sourcePath_.find(':') != std::string::npos
-		|| (!sourcePath_.empty() && (sourcePath_[0] == '/' || sourcePath_[0] == '\\'));
+	const bool isAbsolute = sourcePath_.Find(":") != -1
+		|| (!sourcePath_.IsEmpty() && (sourcePath_[0] == '/' || sourcePath_[0] == '\\'));
 	const jc::String resolved = isAbsolute
-		? jc::String(sourcePath_.c_str())
-		: jc::Path::Combine(g_cAppConfig.resDataPath_, sourcePath_.c_str());
+		? sourcePath_
+		: jc::Path::Combine(g_cAppConfig.resDataPath_, sourcePath_);
 
 	if (!jc::File::Exist(resolved.Source()))
 	{

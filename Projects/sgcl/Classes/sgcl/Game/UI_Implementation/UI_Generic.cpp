@@ -139,7 +139,7 @@ void UI_Generic::OnInit(const CDataMap<>& _param)
 		}
 		if (pLabelTitle_)
 		{
-			_LogDebug_("[UI_Generic] expr title_text=%s", pLabelTitle_->GetText().c_str());
+			_LogDebug_("[UI_Generic] expr title_text=%s", pLabelTitle_->GetText().Source());
 		}
 		return;
 	}

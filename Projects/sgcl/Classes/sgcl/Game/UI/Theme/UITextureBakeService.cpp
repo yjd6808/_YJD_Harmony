@@ -173,7 +173,6 @@ UITextureSet* UITextureBakeService::BuildTextureSet(const UIThemeBakeRequest& _r
             cc::Size(output.buffer.width, output.buffer.height)))
         {
             tex->autorelease();
-            tex->retain();
 
             auto* entry = dbg_new UITextureEntry();
             entry->key = variant.asset;
