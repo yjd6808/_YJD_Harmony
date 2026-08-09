@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="00_공통">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_선형대수">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-000000000002}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_윈도우와_메시지루프">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-000000000003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03_디바이스와_스왑체인">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-000000000004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04_렌더링_파이프라인">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-000000000005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05_HLSL">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-000000000006}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06_정점_인덱스_버퍼">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-000000000007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07_월드변환">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-000000000008}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08_카메라좌표계">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-000000000009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="09_3D큐브">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-00000000000a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10_라이팅">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-00000000000b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11_PNG텍스처">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-00000000000c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="12_SVG텍스처">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-00000000000d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="13_입력처리">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-00000000000e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="14_씬그래프">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-00000000000f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="15_샘플러와_필터링">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-000000000010}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="16_블렌드_스테이트">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-000000000011}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="17_래스터라이저_스테이트">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-000000000012}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="18_셰이딩_모델">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-000000000013}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="19_렌더_타깃">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-000000000014}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="20_포스트_프로세싱">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-000000000015}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="21_그림자_매핑">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-000000000016}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="22_스프라이트_애니메이션">
+      <UniqueIdentifier>{a1000001-0000-4000-8000-000000000017}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Sources\sgfr\PCH\Core.cpp">
+      <Filter>00_공통</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\Main.cpp">
+      <Filter>00_공통</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\TutorialRegistry.cpp">
+      <Filter>00_공통</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\01_LinearAlgebra\01_LinearAlgebra_Main.cpp">
+      <Filter>01_선형대수</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\01_LinearAlgebra\01_LinearAlgebra_Function.cpp">
+      <Filter>01_선형대수</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\02_WindowAndMessageLoop\02_WindowAndMessageLoop_Main.cpp">
+      <Filter>02_윈도우와_메시지루프</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\02_WindowAndMessageLoop\02_WindowAndMessageLoop_Function.cpp">
+      <Filter>02_윈도우와_메시지루프</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\03_DeviceAndSwapChain\03_DeviceAndSwapChain_Main.cpp">
+      <Filter>03_디바이스와_스왑체인</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\03_DeviceAndSwapChain\03_DeviceAndSwapChain_Function.cpp">
+      <Filter>03_디바이스와_스왑체인</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\04_RenderingPipeline\04_RenderingPipeline_Main.cpp">
+      <Filter>04_렌더링_파이프라인</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\04_RenderingPipeline\04_RenderingPipeline_Function.cpp">
+      <Filter>04_렌더링_파이프라인</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\05_HLSL\05_HLSL_Main.cpp">
+      <Filter>05_HLSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\05_HLSL\05_HLSL_Function.cpp">
+      <Filter>05_HLSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\06_VertexIndexBuffer\06_VertexIndexBuffer_Main.cpp">
+      <Filter>06_정점_인덱스_버퍼</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\06_VertexIndexBuffer\06_VertexIndexBuffer_Function.cpp">
+      <Filter>06_정점_인덱스_버퍼</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\07_WorldTransform\07_WorldTransform_Main.cpp">
+      <Filter>07_월드변환</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\07_WorldTransform\07_WorldTransform_Function.cpp">
+      <Filter>07_월드변환</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\08_Camera\08_Camera_Main.cpp">
+      <Filter>08_카메라좌표계</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\08_Camera\08_Camera_Function.cpp">
+      <Filter>08_카메라좌표계</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\09_Cube3D\09_Cube3D_Main.cpp">
+      <Filter>09_3D큐브</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\09_Cube3D\09_Cube3D_Function.cpp">
+      <Filter>09_3D큐브</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\10_Lighting\10_Lighting_Main.cpp">
+      <Filter>10_라이팅</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\10_Lighting\10_Lighting_Function.cpp">
+      <Filter>10_라이팅</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\11_PngTextureDraw\11_PngTextureDraw_Main.cpp">
+      <Filter>11_PNG텍스처</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\11_PngTextureDraw\11_PngTextureDraw_Function.cpp">
+      <Filter>11_PNG텍스처</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\12_SvgTextureDraw\12_SvgTextureDraw_Main.cpp">
+      <Filter>12_SVG텍스처</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\12_SvgTextureDraw\12_SvgTextureDraw_Function.cpp">
+      <Filter>12_SVG텍스처</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\13_Input\13_Input_Main.cpp">
+      <Filter>13_입력처리</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\13_Input\13_Input_Function.cpp">
+      <Filter>13_입력처리</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\14_SceneGraph\14_SceneGraph_Main.cpp">
+      <Filter>14_씬그래프</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\14_SceneGraph\14_SceneGraph_Function.cpp">
+      <Filter>14_씬그래프</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\15_SamplerFiltering\15_SamplerFiltering_Main.cpp">
+      <Filter>15_샘플러와_필터링</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\15_SamplerFiltering\15_SamplerFiltering_Function.cpp">
+      <Filter>15_샘플러와_필터링</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\16_BlendState\16_BlendState_Main.cpp">
+      <Filter>16_블렌드_스테이트</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\16_BlendState\16_BlendState_Function.cpp">
+      <Filter>16_블렌드_스테이트</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\17_RasterizerState\17_RasterizerState_Main.cpp">
+      <Filter>17_래스터라이저_스테이트</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\17_RasterizerState\17_RasterizerState_Function.cpp">
+      <Filter>17_래스터라이저_스테이트</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\18_ShadingModel\18_ShadingModel_Main.cpp">
+      <Filter>18_셰이딩_모델</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\18_ShadingModel\18_ShadingModel_Function.cpp">
+      <Filter>18_셰이딩_모델</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\19_RenderTarget\19_RenderTarget_Main.cpp">
+      <Filter>19_렌더_타깃</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\19_RenderTarget\19_RenderTarget_Function.cpp">
+      <Filter>19_렌더_타깃</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\20_PostProcess\20_PostProcess_Main.cpp">
+      <Filter>20_포스트_프로세싱</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\20_PostProcess\20_PostProcess_Function.cpp">
+      <Filter>20_포스트_프로세싱</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\21_ShadowMapping\21_ShadowMapping_Main.cpp">
+      <Filter>21_그림자_매핑</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\21_ShadowMapping\21_ShadowMapping_Function.cpp">
+      <Filter>21_그림자_매핑</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\22_SpriteAnimation\22_SpriteAnimation_Main.cpp">
+      <Filter>22_스프라이트_애니메이션</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\22_SpriteAnimation\22_SpriteAnimation_Function.cpp">
+      <Filter>22_스프라이트_애니메이션</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\sgfr\PCH\Core.h">
+      <Filter>00_공통</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\TutorialRegistry.h">
+      <Filter>00_공통</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\01_LinearAlgebra\01_LinearAlgebra_Main.h">
+      <Filter>01_선형대수</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\01_LinearAlgebra\01_LinearAlgebra_Function.h">
+      <Filter>01_선형대수</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\02_WindowAndMessageLoop\02_WindowAndMessageLoop_Main.h">
+      <Filter>02_윈도우와_메시지루프</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\02_WindowAndMessageLoop\02_WindowAndMessageLoop_Function.h">
+      <Filter>02_윈도우와_메시지루프</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\03_DeviceAndSwapChain\03_DeviceAndSwapChain_Main.h">
+      <Filter>03_디바이스와_스왑체인</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\03_DeviceAndSwapChain\03_DeviceAndSwapChain_Function.h">
+      <Filter>03_디바이스와_스왑체인</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\04_RenderingPipeline\04_RenderingPipeline_Main.h">
+      <Filter>04_렌더링_파이프라인</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\04_RenderingPipeline\04_RenderingPipeline_Function.h">
+      <Filter>04_렌더링_파이프라인</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\05_HLSL\05_HLSL_Main.h">
+      <Filter>05_HLSL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\05_HLSL\05_HLSL_Function.h">
+      <Filter>05_HLSL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\06_VertexIndexBuffer\06_VertexIndexBuffer_Main.h">
+      <Filter>06_정점_인덱스_버퍼</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\06_VertexIndexBuffer\06_VertexIndexBuffer_Function.h">
+      <Filter>06_정점_인덱스_버퍼</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\07_WorldTransform\07_WorldTransform_Main.h">
+      <Filter>07_월드변환</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\07_WorldTransform\07_WorldTransform_Function.h">
+      <Filter>07_월드변환</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\08_Camera\08_Camera_Main.h">
+      <Filter>08_카메라좌표계</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\08_Camera\08_Camera_Function.h">
+      <Filter>08_카메라좌표계</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\09_Cube3D\09_Cube3D_Main.h">
+      <Filter>09_3D큐브</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\09_Cube3D\09_Cube3D_Function.h">
+      <Filter>09_3D큐브</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\10_Lighting\10_Lighting_Main.h">
+      <Filter>10_라이팅</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\10_Lighting\10_Lighting_Function.h">
+      <Filter>10_라이팅</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\11_PngTextureDraw\11_PngTextureDraw_Main.h">
+      <Filter>11_PNG텍스처</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\11_PngTextureDraw\11_PngTextureDraw_Function.h">
+      <Filter>11_PNG텍스처</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\12_SvgTextureDraw\12_SvgTextureDraw_Main.h">
+      <Filter>12_SVG텍스처</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\12_SvgTextureDraw\12_SvgTextureDraw_Function.h">
+      <Filter>12_SVG텍스처</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\13_Input\13_Input_Main.h">
+      <Filter>13_입력처리</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\13_Input\13_Input_Function.h">
+      <Filter>13_입력처리</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\14_SceneGraph\14_SceneGraph_Main.h">
+      <Filter>14_씬그래프</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\14_SceneGraph\14_SceneGraph_Function.h">
+      <Filter>14_씬그래프</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\15_SamplerFiltering\15_SamplerFiltering_Main.h">
+      <Filter>15_샘플러와_필터링</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\15_SamplerFiltering\15_SamplerFiltering_Function.h">
+      <Filter>15_샘플러와_필터링</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\16_BlendState\16_BlendState_Main.h">
+      <Filter>16_블렌드_스테이트</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\16_BlendState\16_BlendState_Function.h">
+      <Filter>16_블렌드_스테이트</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\17_RasterizerState\17_RasterizerState_Main.h">
+      <Filter>17_래스터라이저_스테이트</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\17_RasterizerState\17_RasterizerState_Function.h">
+      <Filter>17_래스터라이저_스테이트</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\18_ShadingModel\18_ShadingModel_Main.h">
+      <Filter>18_셰이딩_모델</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\18_ShadingModel\18_ShadingModel_Function.h">
+      <Filter>18_셰이딩_모델</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\19_RenderTarget\19_RenderTarget_Main.h">
+      <Filter>19_렌더_타깃</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\19_RenderTarget\19_RenderTarget_Function.h">
+      <Filter>19_렌더_타깃</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\20_PostProcess\20_PostProcess_Main.h">
+      <Filter>20_포스트_프로세싱</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\20_PostProcess\20_PostProcess_Function.h">
+      <Filter>20_포스트_프로세싱</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\21_ShadowMapping\21_ShadowMapping_Main.h">
+      <Filter>21_그림자_매핑</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\21_ShadowMapping\21_ShadowMapping_Function.h">
+      <Filter>21_그림자_매핑</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\22_SpriteAnimation\22_SpriteAnimation_Main.h">
+      <Filter>22_스프라이트_애니메이션</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\22_SpriteAnimation\22_SpriteAnimation_Function.h">
+      <Filter>22_스프라이트_애니메이션</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
