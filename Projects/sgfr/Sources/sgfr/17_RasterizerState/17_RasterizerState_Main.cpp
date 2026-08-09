@@ -40,7 +40,7 @@ namespace
 	// HLSL의 CbTransform(b0)과 메모리 배치가 일치해야 한다. (64바이트 = 16의 배수)
 	struct CbTransform
 	{
-		Mat4 wvp_;	// 월드 x 뷰 x 투영
+		mat4 wvp_;	// 월드 x 뷰 x 투영
 	};
 
 	// 창 제목에 표시할 컸링 이름표 (CullMode enum 순서와 일치)
@@ -103,8 +103,8 @@ void RasterizerState_Main()
 	}
 
 	// 4. 카메라: 큐브 두 개가 모두 보이도록 약간 뒤로 물러서 내려다본다.
-	const Mat4 view = Mat4::LookAtLH(Vec3(0.0f, 1.5f, -4.5f), Vec3::Zero(), Vec3::Up());
-	const Mat4 proj = Mat4::PerspectiveFovLH(jc_math_pi_div4, window.AspectRatio(), 0.1f, 100.0f);
+	const mat4 view = mat4::LookAtLH(vec3(0.0f, 1.5f, -4.5f), vec3::Zero(), vec3::Up());
+	const mat4 proj = mat4::PerspectiveFovLH(jc_math_pi_div4, window.AspectRatio(), 0.1f, 100.0f);
 
 	// 5. 현재 래스터라이저 상태 (키 입력으로 바꾼다. 오른쪽 After 큐브에만 적용된다)
 	bool bWireframe = false;
@@ -147,10 +147,10 @@ void RasterizerState_Main()
 		timer.Tick();
 		elapsed += timer.DeltaTime();
 
-		device.BeginFrame(Color(0.08f, 0.08f, 0.12f, 1.0f));
+		device.BeginFrame(color(0.08f, 0.08f, 0.12f, 1.0f));
 
 		// 두 큐브의 공통 회전: 모든 면이 골고루 보이도록 두 축 회전
-		const Mat4 rotation = Mat4::RotationY(elapsed * 0.8f) * Mat4::RotationX(elapsed * 0.4f);
+		const mat4 rotation = mat4::RotationY(elapsed * 0.8f) * mat4::RotationX(elapsed * 0.4f);
 
 		vb.Bind(&device);
 		ib.Bind(&device);
@@ -164,7 +164,7 @@ void RasterizerState_Main()
 			device.SetCullMode(_cull);
 
 			CbTransform cb;
-			cb.wvp_ = rotation * Mat4::Translation(_offsetX, 0.0f, 0.0f) * view * proj;	// 회전 후 이동
+			cb.wvp_ = rotation * mat4::Translation(_offsetX, 0.0f, 0.0f) * view * proj;	// 회전 후 이동
 			cbTransform.UpdateAndBind(&device, cb, 0);
 			device.Context()->DrawIndexed(36, 0, 0);
 		};

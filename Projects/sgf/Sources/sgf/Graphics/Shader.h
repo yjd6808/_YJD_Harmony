@@ -60,9 +60,9 @@ private:
 		SgfComPtr<ID3DBlob>& _outBlob);
 
 private:
-	SgfComPtr<ID3D11VertexShader> m_pVertexShader;	// 정점 셰이더
-	SgfComPtr<ID3D11PixelShader> m_pPixelShader;	// 픽셀 셰이더
-	SgfComPtr<ID3D11InputLayout> m_pInputLayout;	// 정점 구조 설명서
+	SgfComPtr<ID3D11VertexShader> pVertexShader_;	// 정점 셰이더
+	SgfComPtr<ID3D11PixelShader> pPixelShader_;	// 픽셀 셰이더
+	SgfComPtr<ID3D11InputLayout> pInputLayout_;	// 정점 구조 설명서
 };
 
 NS_SGF_END

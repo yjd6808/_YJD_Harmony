@@ -20,8 +20,8 @@ void FillSpriteSheetPixels(_u8* _pOutRgba);
 // @param _halfSize : NDC 반 크기
 // @param _uvOffset : 시트에서 이 프레임이 시작하는 UV (왕위 기준)
 // @param _uvScale  : 프레임 하나가 차지하는 UV 비율 (4x4 시트라면 0.25)
-void FillSpriteQuad(sgf::VertexPTC* _pOutVertices4, const jc::Vec2& _center, const jc::Vec2& _halfSize,
-	const jc::Vec2& _uvOffset, const jc::Vec2& _uvScale);
+void FillSpriteQuad(sgf::VertexPTC* _pOutVertices4, const jc::vec2& _center, const jc::vec2& _halfSize,
+	const jc::vec2& _uvOffset, const jc::vec2& _uvScale);
 
 // 진행도 t(0~1)에 이진(Easing) 함수를 적용해 보간 공식용 진행도로 변환한다.
 // @param _t    : 0~1 선형 진행도

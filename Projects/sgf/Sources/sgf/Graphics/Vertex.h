@@ -21,8 +21,8 @@ using namespace jc;
 // 위치 + 색상 정점 (단순 도형, 선 그리기용)
 struct VertexPC
 {
-	Vec3 position_;		// 로컬 좌표계 위치
-	Color color_;		// 정점 색상 (삼각형 내부는 자동 보간됨)
+	vec3 position_;		// 로컬 좌표계 위치
+	color color_;		// 정점 색상 (삼각형 내부는 자동 보간됨)
 
 	// 이 구조체의 메모리 배치를 GPU에게 알려주는 설명서
 	// { 시맨틱이름, 시맨틱번호, 형식, 입력슬롯, 바이트오프셋, 입력분류, 인스턴스간격 }
@@ -43,11 +43,11 @@ struct VertexPC
 //  (0,0)=이미지 왼위, (1,1)=이미지 오른아래.
 struct VertexPTC
 {
-	Vec3 position_;		// 로컬 좌표계 위치
-	Vec2 uv_;			// 텍스처 좌표
-	Color color_;		// 색상 틴트 (흰색이면 원본 그대로)
+	vec3 position_;		// 로컬 좌표계 위치
+	vec2 uv_;			// 텍스처 좌표
+	color color_;		// 색상 틴트 (흰색이면 원본 그대로)
 
-	// 메모리 배치 설명서: Vec3(12바이트) -> Vec2(8바이트) -> Color(16바이트)
+	// 메모리 배치 설명서: vec3(12바이트) -> vec2(8바이트) -> color(16바이트)
 	static const D3D11_INPUT_ELEMENT_DESC* LayoutDescs(UINT* _pOutCount)
 	{
 		static const D3D11_INPUT_ELEMENT_DESC descs[] = {
@@ -66,11 +66,11 @@ struct VertexPTC
 //  빛을 정면으로 받으면 밝고, 비스듬히 받으면 어둡다. (람버트 조명)
 struct VertexPNT
 {
-	Vec3 position_;		// 로컬 좌표계 위치
-	Vec3 normal_;		// 법선 벡터
-	Vec2 uv_;			// 텍스처 좌표
+	vec3 position_;		// 로컬 좌표계 위치
+	vec3 normal_;		// 법선 벡터
+	vec2 uv_;			// 텍스처 좌표
 
-	// 메모리 배치 설명서: Vec3(12) -> Vec3(12) -> Vec2(8)
+	// 메모리 배치 설명서: vec3(12) -> vec3(12) -> vec2(8)
 	static const D3D11_INPUT_ELEMENT_DESC* LayoutDescs(UINT* _pOutCount)
 	{
 		static const D3D11_INPUT_ELEMENT_DESC descs[] = {

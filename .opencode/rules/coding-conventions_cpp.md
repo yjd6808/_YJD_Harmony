@@ -152,6 +152,9 @@ USING_NS_STD_CHRONO  // using namespace std::chrono
 ### enum 규칙
 
 - 일반 enum은 `enum class`를 사용한다. (멤버는 PascalCase, `ContainerType::Vector`)
+- **enum 멤버 네이밍**:
+  - `enum class` 멤버: PascalCase (`BlendState::Opaque`)
+  - 일반 `enum` 멤버: `bl` 접두사 + PascalCase (`BlendState`이면 `blOpaque`)
 - enum class + 비트플래그 연산은 `JC_ENUM_CLASS_BIT_OPERATION_OVERLOADING(enum_name)` 매크로로 연산자 오버로딩을 생성한다.
 - 타입명이 겹치는 것을 피하기 위해 `JC_SENUM_*` 매크로로 enum을 struct 안에 감싸 쓰기도 한다.
   - 결과 타입 별칭은 항상 `enum명##_t`로 정의됨 (`JC_SENUM_MIDDLE/END` 매크로) → 사용처는 `PropertyType_t`처럼 `_t` 접미.

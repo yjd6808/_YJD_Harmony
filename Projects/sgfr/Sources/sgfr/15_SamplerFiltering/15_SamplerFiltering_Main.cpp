@@ -155,7 +155,7 @@ void SamplerFiltering_Main()
 
 		input.NextFrame();
 
-		device.BeginFrame(Color(0.08f, 0.08f, 0.1f, 1.0f));
+		device.BeginFrame(color(0.08f, 0.08f, 0.1f, 1.0f));
 
 		// [Before] s0 슬롯: 기준 샘플러 (Point + Wrap 고정)
 		device.SetSampler(GraphicDevice::SamplerFilter::Point, GraphicDevice::SamplerAddress::Wrap, 0);

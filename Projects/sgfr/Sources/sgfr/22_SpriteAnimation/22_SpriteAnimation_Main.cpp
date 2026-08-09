@@ -88,7 +88,7 @@ void SpriteAnimation_Main()
 	//    한 버퍼를 프레임당 두 번(지단/아랫줄) Update->Draw 해도 되는 이유:
 	//    WRITE_DISCARD는 이전 내용을 보호하며 새 공간을 주므로 그리기 순서가 꿬이지 않는다!
 	VertexPTC quadVertices[4];
-	FillSpriteQuad(quadVertices, Vec2(0.0f, 0.0f), Vec2(0.25f, 0.25f), Vec2(0.0f, 0.0f), Vec2(0.25f, 0.25f));
+	FillSpriteQuad(quadVertices, vec2(0.0f, 0.0f), vec2(0.25f, 0.25f), vec2(0.0f, 0.0f), vec2(0.25f, 0.25f));
 
 	_u32 quadIndices[6] = { 0, 1, 2, 2, 1, 3 };
 
@@ -181,8 +181,8 @@ void SpriteAnimation_Main()
 		const int frame = (int)(elapsed * animFps) % 16;
 		const int col = frame % 4;
 		const int row = frame / 4;
-		const Vec2 uvOffset = Vec2(col * 0.25f, row * 0.25f);
-		const Vec2 uvScale = Vec2(0.25f, 0.25f);
+		const vec2 uvOffset = vec2(col * 0.25f, row * 0.25f);
+		const vec2 uvScale = vec2(0.25f, 0.25f);
 
 		// (2) 2초 주기 핑퇰: 0~1초는 왼->오른, 1~2초는 오른->왼 (왕복 이동)
 		const _f32 cycle = fmodf(elapsed, 2.0f);
@@ -197,9 +197,9 @@ void SpriteAnimation_Main()
 		const _f32 posXAfter = Lerp(-0.6f, 0.6f, easedAfter);
 
 		// 종횡비 보정: NDC는 화면 비율과 무관하므로 x를 나누어 정사각형으로 보이게 한다
-		const Vec2 halfSize = Vec2(0.25f / window.AspectRatio(), 0.25f);
+		const vec2 halfSize = vec2(0.25f / window.AspectRatio(), 0.25f);
 
-		device.BeginFrame(Color(0.1f, 0.1f, 0.14f, 1.0f));
+		device.BeginFrame(color(0.1f, 0.1f, 0.14f, 1.0f));
 		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		sheetTexture.Bind(&device, 0);
@@ -207,13 +207,13 @@ void SpriteAnimation_Main()
 		quadIb.Bind(&device);
 
 		// --- [Before] 지단 (y=+0.4): 항상 선형 이동 = 기준선 ---
-		FillSpriteQuad(quadVertices, Vec2(posXBefore, +0.4f), halfSize, uvOffset, uvScale);
+		FillSpriteQuad(quadVertices, vec2(posXBefore, +0.4f), halfSize, uvOffset, uvScale);
 		quadVb.Update(&device, quadVertices, 4);
 		quadVb.Bind(&device);
 		device.Context()->DrawIndexed(6, 0, 0);
 
 		// --- [After] 아랫줄 (y=-0.4): 선택한 이징 적용 ---
-		FillSpriteQuad(quadVertices, Vec2(posXAfter, -0.4f), halfSize, uvOffset, uvScale);
+		FillSpriteQuad(quadVertices, vec2(posXAfter, -0.4f), halfSize, uvOffset, uvScale);
 		quadVb.Update(&device, quadVertices, 4);
 		quadVb.Bind(&device);
 		device.Context()->DrawIndexed(6, 0, 0);

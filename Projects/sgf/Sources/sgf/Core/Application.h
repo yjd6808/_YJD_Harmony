@@ -88,19 +88,19 @@ public:
 	Window* CreateSubWindow(const wchar_t* _szTitle, _s32 _width, _s32 _height);
 
 	// === 서브시스템 접근자 (아래 g_c 매크로가 사용한다) ===
-	Window& GetWindow() { return m_Window; }
-	GraphicDevice& GetDevice() { return m_Device; }
-	InputManager& GetInput() { return m_Input; }
-	Renderer2D& GetRenderer() { return m_Renderer; }
-	Renderer3D& GetRenderer3D() { return m_Renderer3D; }
-	FrameTimer& GetTimer() { return m_Timer; }
+	Window& GetWindow() { return window_; }
+	GraphicDevice& GetDevice() { return device_; }
+	InputManager& GetInput() { return input_; }
+	Renderer2D& GetRenderer() { return renderer_; }
+	Renderer3D& GetRenderer3D() { return renderer3D_; }
+	FrameTimer& GetTimer() { return timer_; }
 
 	// 배경 색상 설정 (매 프레임 화면을 지울 때 쓰는 색. 모든 창에 공통 적용)
-	void SetClearColor(const Color& _color) { m_ClearColor = _color; }
-	const Color& GetClearColor() const { return m_ClearColor; }
+	void SetClearColor(const color& _color) { clearColor_ = _color; }
+	const color& GetClearColor() const { return clearColor_; }
 
 	// 수직동기화 설정 (true면 모니터 주사율에 맞춰 대기. 티어링 방지)
-	void SetVsync(bool _bVsync) { m_bVsync = _bVsync; }
+	void SetVsync(bool _bVsync) { bVsync_ = _bVsync; }
 
 protected:
 	// === Cocos2d-x AppDelegate 스타일 생명주기 훅 ===
@@ -129,18 +129,18 @@ private:
 	void DestroyClosedSubWindows();
 
 private:
-	static constexpr _s32 kActivationListenerId_v = 1;	// Window::onActivated 구독 ID
+	static constexpr _s32 ACTIVATION_LISTENER_ID = 1;	// Window::onActivated 구독 ID
 
-	Window m_Window;					// 메인 윈도우 (닫히면 앱 종료)
-	jc::Vector<Window*> m_SubWindows;	// 서브 윈도우들 (v2.1, 소유)
-	GraphicDevice m_Device;				// DX11 디바이스 파사드 (앱 전체 1개)
-	InputManager m_Input;				// 키보드/마우스 입력 (메인 윈도우 전용)
-	Renderer2D m_Renderer;				// 2D 배치 렌더러 (전역 1개)
-	Renderer3D m_Renderer3D;			// 3D 배치 렌더러 (전역 1개, v2.1)
-	FrameTimer m_Timer;					// jc::TimeSpan 기반 시간 측정
-	Color m_ClearColor;					// 배경 색상
-	bool m_bVsync;						// 수직동기화 여부
-	bool m_bInitialized;				// 중복 초기화/종료 방지
+	Window window_;					// 메인 윈도우 (닫히면 앱 종료)
+	jc::Vector<Window*> subWindows_;	// 서브 윈도우들 (v2.1, 소유)
+	GraphicDevice device_;				// DX11 디바이스 파사드 (앱 전체 1개)
+	InputManager input_;				// 키보드/마우스 입력 (메인 윈도우 전용)
+	Renderer2D renderer_;				// 2D 배치 렌더러 (전역 1개)
+	Renderer3D renderer3D_;			// 3D 배치 렌더러 (전역 1개, v2.1)
+	FrameTimer timer_;					// jc::TimeSpan 기반 시간 측정
+	color clearColor_;					// 배경 색상
+	bool bVsync_;						// 수직동기화 여부
+	bool bInitialized_;				// 중복 초기화/종료 방지
 };
 
 // 현재 실행 중인 Application 인스턴스 (Initialize에서 설정된다)

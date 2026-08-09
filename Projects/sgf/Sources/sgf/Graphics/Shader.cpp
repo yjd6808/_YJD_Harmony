@@ -13,16 +13,19 @@
 
 NS_SGF_BEGIN
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 생성자
 Shader::Shader()
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 소멸자 (ComPtr이 자동 Release)
 Shader::~Shader()
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // HLSL 문자열 -> 바이트코드 컴파일 헬퍼
 // @param _szTarget : 컴파일 대상 프로파일. "vs_5_0"=DX11 버텍스, "ps_5_0"=DX11 픽셀
 bool Shader::CompileHlsl(
@@ -64,6 +67,7 @@ bool Shader::CompileHlsl(
 	return true;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // HLSL 소스를 컴파일해서 VS/PS/입력레이아웃 생성
 bool Shader::CompileFromString(
 	GraphicDevice* _pDevice,
@@ -77,9 +81,9 @@ bool Shader::CompileFromString(
 
 	// 재컴파일(핫 리로드) 대비: 기존 셰이더/레이아웃을 먼저 정리한다.
 	// (GetAddressOf로 덮어쓰면 기존 객체가 누수된다)
-	m_pVertexShader.Reset();
-	m_pPixelShader.Reset();
-	m_pInputLayout.Reset();
+	pVertexShader_.Reset();
+	pPixelShader_.Reset();
+	pInputLayout_.Reset();
 
 	// 1. 버텍스 셰이더 컴파일 + 생성
 	SgfComPtr<ID3DBlob> pVsBlob;
@@ -89,7 +93,7 @@ bool Shader::CompileFromString(
 	}
 	HRESULT hr = pDevice->CreateVertexShader(
 		pVsBlob->GetBufferPointer(), pVsBlob->GetBufferSize(),
-		nullptr, m_pVertexShader.GetAddressOf());
+		nullptr, pVertexShader_.GetAddressOf());
 	if (FAILED(hr)) { return false; }
 
 	// 2. 픽셀 셰이더 컴파일 + 생성
@@ -100,7 +104,7 @@ bool Shader::CompileFromString(
 	}
 	hr = pDevice->CreatePixelShader(
 		pPsBlob->GetBufferPointer(), pPsBlob->GetBufferSize(),
-		nullptr, m_pPixelShader.GetAddressOf());
+		nullptr, pPixelShader_.GetAddressOf());
 	if (FAILED(hr)) { return false; }
 
 	// 3. 입력 레이아웃 생성
@@ -109,17 +113,18 @@ bool Shader::CompileFromString(
 	hr = pDevice->CreateInputLayout(
 		_pLayoutDescs, _layoutCount,
 		pVsBlob->GetBufferPointer(), pVsBlob->GetBufferSize(),
-		m_pInputLayout.GetAddressOf());
+		pInputLayout_.GetAddressOf());
 	return SUCCEEDED(hr);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 셰이더와 입력레이아웃을 파이프라인에 장착
 void Shader::Bind(GraphicDevice* _pDevice)
 {
 	ID3D11DeviceContext* pContext = _pDevice->Context();
-	pContext->IASetInputLayout(m_pInputLayout.Get());			// IA 단계: 정점 해석 방법
-	pContext->VSSetShader(m_pVertexShader.Get(), nullptr, 0);	// VS 단계
-	pContext->PSSetShader(m_pPixelShader.Get(), nullptr, 0);	// PS 단계
+	pContext->IASetInputLayout(pInputLayout_.Get());			// IA 단계: 정점 해석 방법
+	pContext->VSSetShader(pVertexShader_.Get(), nullptr, 0);	// VS 단계
+	pContext->PSSetShader(pPixelShader_.Get(), nullptr, 0);	// PS 단계
 }
 
 NS_SGF_END

@@ -78,11 +78,11 @@ public:
 	bool IsMouseReleased(MouseButton _button) const;
 
 	// 마우스 커서 위치 (클라이언트 영역 기준 픽셀 좌표, 좌상단 원점)
-	int MouseX() const { return m_MouseX; }
-	int MouseY() const { return m_MouseY; }
+	int MouseX() const { return mouseX_; }
+	int MouseY() const { return mouseY_; }
 
 	// 이번 프레임의 휠 이동량 (+위로 / -아래로 / 0이면 안 굴림)
-	int WheelDelta() const { return m_WheelDelta; }
+	int WheelDelta() const { return wheelDelta_; }
 
 	// === 이벤트 API ===
 	// 사용 예: Input()->onKeyPressed.Register(1, [](int vk) { ... });
@@ -95,15 +95,15 @@ public:
 	MouseWheelEvent onMouseWheel;		// 휠이 굴러간 순간
 
 private:
-	static const int KeyCount_v = 256;				// 가상 키코드 범위 (0~255)
+	static const int KEY_COUNT = 256;				// 가상 키코드 범위 (0~255)
 
-	bool m_bKeyDown[KeyCount_v];					// 현재 프레임 키 상태
-	bool m_bPrevKeyDown[KeyCount_v];				// 이전 프레임 키 상태
-	bool m_bMouseDown[int(MouseButton::Max)];		// 현재 프레임 버튼 상태
-	bool m_bPrevMouseDown[int(MouseButton::Max)];	// 이전 프레임 버튼 상태
-	int m_MouseX;									// 커서 X (클라이언트 좌표)
-	int m_MouseY;									// 커서 Y (클라이언트 좌표)
-	int m_WheelDelta;								// 이번 프레임 휠 이동량
+	bool bKeyDown_[KEY_COUNT];					// 현재 프레임 키 상태
+	bool bPrevKeyDown_[KEY_COUNT];				// 이전 프레임 키 상태
+	bool bMouseDown_[int(MouseButton::Max)];		// 현재 프레임 버튼 상태
+	bool bPrevMouseDown_[int(MouseButton::Max)];	// 이전 프레임 버튼 상태
+	int mouseX_;									// 커서 X (클라이언트 좌표)
+	int mouseY_;									// 커서 Y (클라이언트 좌표)
+	int wheelDelta_;								// 이번 프레임 휠 이동량
 };
 
 NS_SGF_END

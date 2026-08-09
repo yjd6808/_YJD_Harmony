@@ -9,4 +9,4 @@
 
 // 시간(초)을 받아 무지개처럼 부드럽게 순환하는 색상을 만든다.
 // 사인파(sin)를 이용해 R/G/B를 서로 다른 위상으로 출렁이게 한다.
-jc::Color RainbowColor(_f32 _timeSec);
+jc::color RainbowColor(_f32 _timeSec);

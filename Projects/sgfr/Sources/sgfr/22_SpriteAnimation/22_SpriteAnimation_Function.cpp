@@ -110,20 +110,20 @@ void FillSpriteSheetPixels(_u8* _pOutRgba)
 }
 
 // 스프라이트 사각형 정점 4개를 채운다. (동적 버퍼용, 매 프레임 갱신)
-void FillSpriteQuad(VertexPTC* _pOutVertices4, const Vec2& _center, const Vec2& _halfSize,
-	const Vec2& _uvOffset, const Vec2& _uvScale)
+void FillSpriteQuad(VertexPTC* _pOutVertices4, const vec2& _center, const vec2& _halfSize,
+	const vec2& _uvOffset, const vec2& _uvScale)
 {
-	const Color white = Color::White();
+	const color white = color::White();
 
 	// UV는 시트에서 이 프레임 영역만 잘라 쓴다: offset ~ offset + scale
-	_pOutVertices4[0] = { Vec3(_center.x - _halfSize.x, _center.y + _halfSize.y, 0.0f),
-		Vec2(_uvOffset.x, _uvOffset.y), white };
-	_pOutVertices4[1] = { Vec3(_center.x + _halfSize.x, _center.y + _halfSize.y, 0.0f),
-		Vec2(_uvOffset.x + _uvScale.x, _uvOffset.y), white };
-	_pOutVertices4[2] = { Vec3(_center.x - _halfSize.x, _center.y - _halfSize.y, 0.0f),
-		Vec2(_uvOffset.x, _uvOffset.y + _uvScale.y), white };
-	_pOutVertices4[3] = { Vec3(_center.x + _halfSize.x, _center.y - _halfSize.y, 0.0f),
-		Vec2(_uvOffset.x + _uvScale.x, _uvOffset.y + _uvScale.y), white };
+	_pOutVertices4[0] = { vec3(_center.x - _halfSize.x, _center.y + _halfSize.y, 0.0f),
+		vec2(_uvOffset.x, _uvOffset.y), white };
+	_pOutVertices4[1] = { vec3(_center.x + _halfSize.x, _center.y + _halfSize.y, 0.0f),
+		vec2(_uvOffset.x + _uvScale.x, _uvOffset.y), white };
+	_pOutVertices4[2] = { vec3(_center.x - _halfSize.x, _center.y - _halfSize.y, 0.0f),
+		vec2(_uvOffset.x, _uvOffset.y + _uvScale.y), white };
+	_pOutVertices4[3] = { vec3(_center.x + _halfSize.x, _center.y - _halfSize.y, 0.0f),
+		vec2(_uvOffset.x + _uvScale.x, _uvOffset.y + _uvScale.y), white };
 }
 
 // 진행도 t(0~1)에 이징(Easing) 함수를 적용해 보간 공식용 진행도로 변환한다.

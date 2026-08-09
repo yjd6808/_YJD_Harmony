@@ -47,25 +47,25 @@ public:
 	void SetOrthographic2D(_f32 _width, _f32 _height);
 
 	// 2D 카메라 이동 (카메라가 비추는 중심이 이 월드 위치로 온다)
-	void SetPosition2D(const Vec2& _position);
-	const Vec2& Position2D() const { return m_Position2D; }
+	void SetPosition2D(const vec2& _position);
+	const vec2& Position2D() const { return position2D_; }
 
 	// 2D 카메라를 현재 위치에서 _delta만큼 상대 이동한다.
-	void Move2D(const Vec2& _delta);
+	void Move2D(const vec2& _delta);
 
 	// 2D 줌 (1보다 크면 확대, 작으면 축소)
 	void SetZoom(_f32 _zoom);
-	_f32 Zoom() const { return m_Zoom; }
+	_f32 Zoom() const { return zoom_; }
 
 	// 현재 줌에 배율을 곱한다. (휠 한 칸에 ZoomBy(1.1f) 식으로 사용)
 	void ZoomBy(_f32 _scale);
 
 	// 마우스 커서 등 "화면 픽셀 좌표(왼쪽 위 원점, Y아래+)"를 월드 좌표로 변환한다.
 	// 클릭한 곳에 물체를 놓는 기능을 만들 때 필수.
-	Vec2 ScreenToWorld2D(_f32 _screenX, _f32 _screenY) const;
+	vec2 ScreenToWorld2D(_f32 _screenX, _f32 _screenY) const;
 
 	// 월드 좌표를 화면 픽셀 좌표로 변환한다. (머리 위 이름표 UI 등에 사용)
-	Vec2 WorldToScreen2D(const Vec2& _world) const;
+	vec2 WorldToScreen2D(const vec2& _world) const;
 
 	// 표준 2D 카메라 조작을 한 번에 처리한다. 매 프레임 OnUpdate에서 호출만 하면 된다.
 	//  - 방향키: 카메라 이동 (줌이 클수록 화면상 속도가 일정하도록 보정)
@@ -85,9 +85,9 @@ public:
 	void SetPerspectiveDegrees(_f32 _fovYDegrees, _f32 _aspect, _f32 _nearZ, _f32 _farZ);
 
 	// 3D 카메라 위치/바라보는 지점 설정
-	void SetLookAt(const Vec3& _eye, const Vec3& _target, const Vec3& _up = Vec3(0.0f, 1.0f, 0.0f));
-	const Vec3& Eye() const { return m_Eye; }
-	const Vec3& Target() const { return m_Target; }
+	void SetLookAt(const vec3& _eye, const vec3& _target, const vec3& _up = vec3(0.0f, 1.0f, 0.0f));
+	const vec3& Eye() const { return eye_; }
+	const vec3& Target() const { return target_; }
 
 	// 바라보는 지점(Target)을 중심으로 카메라를 공전시킨다. (에디터의 Alt+드래그 회전)
 	// @param _yawDelta   : 좌우 회전량 (라디안, +면 오른쪽으로)
@@ -112,11 +112,11 @@ public:
 
 	// ==================== 행렬 얻기 ====================
 
-	const Mat4& View() const { return m_View; }
-	const Mat4& Projection() const { return m_Projection; }
+	const mat4& View() const { return view_; }
+	const mat4& Projection() const { return projection_; }
 
 	// 뷰 x 투영 합성 행렬 (셰이더에 올리는 값)
-	Mat4 ViewProjection() const { return m_View * m_Projection; }
+	mat4 ViewProjection() const { return view_ * projection_; }
 
 private:
 	// 2D 설정값으로 뷰/투영 행렬을 다시 계산한다.
@@ -126,20 +126,20 @@ private:
 	void Rebuild3D();
 
 private:
-	Mat4 m_View;			// 뷰 행렬
-	Mat4 m_Projection;		// 투영 행렬
+	mat4 view_;			// 뷰 행렬
+	mat4 projection_;		// 투영 행렬
 
 	// 2D 상태
-	bool m_b2D;				// 2D 모드인가?
-	_f32 m_Width2D;			// 2D 가상 화면 가로
-	_f32 m_Height2D;		// 2D 가상 화면 세로
-	Vec2 m_Position2D;		// 2D 카메라 중심 위치
-	_f32 m_Zoom;			// 2D 줌 배율
+	bool b2D_;				// 2D 모드인가?
+	_f32 width2D_;			// 2D 가상 화면 가로
+	_f32 height2D_;		// 2D 가상 화면 세로
+	vec2 position2D_;		// 2D 카메라 중심 위치
+	_f32 zoom_;			// 2D 줌 배율
 
 	// 3D 상태
-	Vec3 m_Eye;				// 카메라 위치
-	Vec3 m_Target;			// 바라보는 지점
-	Vec3 m_Up;				// 위 방향
+	vec3 eye_;				// 카메라 위치
+	vec3 target_;			// 바라보는 지점
+	vec3 up_;				// 위 방향
 };
 
 NS_SGF_END

@@ -46,7 +46,7 @@ public:
 
 	// 배치 시작. 뷰프로젝션 행렬을 저장하고 파생의 OnBegin()으로 배치를 초기화한다.
 	// @param _viewProjection : 카메라의 View x Projection 행렬
-	void Begin(const Mat4& _viewProjection);
+	void Begin(const mat4& _viewProjection);
 
 	// 배치 종료. 모아둔 정점을 모두 그린다.
 	void End();
@@ -76,11 +76,11 @@ protected:
 	void ApplyFrameStates();
 
 protected:
-	GraphicDevice* m_pDevice;			// 그래픽 디바이스 (소유하지 않음)
-	Shader m_Shader;					// 파생이 제공한 셰이더
-	ConstantBuffer<Mat4> m_CbFrame;		// 뷰프로젝션 행렬용 상수 버퍼
-	Mat4 m_ViewProjection;				// Begin에서 받은 행렬
-	bool m_bBegun;						// Begin~End 사이인가?
+	GraphicDevice* pDevice_;			// 그래픽 디바이스 (소유하지 않음)
+	Shader shader_;					// 파생이 제공한 셰이더
+	ConstantBuffer<mat4> cbFrame_;		// 뷰프로젝션 행렬용 상수 버퍼
+	mat4 viewProjection_;				// Begin에서 받은 행렬
+	bool bBegun_;						// Begin~End 사이인가?
 };
 
 NS_SGF_END

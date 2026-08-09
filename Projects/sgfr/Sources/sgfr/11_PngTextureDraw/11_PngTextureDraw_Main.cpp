@@ -78,10 +78,10 @@ void PngTextureDraw_Main()
 	const _f32 halfW = 0.5f;
 	const _f32 halfH = 0.5f * aspect;	// 화면 비율 보정으로 정사각형 유지
 	const VertexPTC vertices[] = {
-		{ Vec3(-halfW, +halfH, 0.0f), Vec2(0.0f, 0.0f), Color::White() },	// 왼쪽위
-		{ Vec3(+halfW, +halfH, 0.0f), Vec2(1.0f, 0.0f), Color::White() },	// 오른쪽위
-		{ Vec3(-halfW, -halfH, 0.0f), Vec2(0.0f, 1.0f), Color::White() },	// 왼쪽아래
-		{ Vec3(+halfW, -halfH, 0.0f), Vec2(1.0f, 1.0f), Color::White() },	// 오른쪽아래
+		{ vec3(-halfW, +halfH, 0.0f), vec2(0.0f, 0.0f), color::White() },	// 왼쪽위
+		{ vec3(+halfW, +halfH, 0.0f), vec2(1.0f, 0.0f), color::White() },	// 오른쪽위
+		{ vec3(-halfW, -halfH, 0.0f), vec2(0.0f, 1.0f), color::White() },	// 왼쪽아래
+		{ vec3(+halfW, -halfH, 0.0f), vec2(1.0f, 1.0f), color::White() },	// 오른쪽아래
 	};
 	const _u32 indices[] = { 0, 1, 2, 2, 1, 3 };
 
@@ -122,7 +122,7 @@ void PngTextureDraw_Main()
 		}
 		input.NextFrame();
 
-		device.BeginFrame(Color(0.1f, 0.1f, 0.15f, 1.0f));
+		device.BeginFrame(color(0.1f, 0.1f, 0.15f, 1.0f));
 
 		// 텍스처를 t0 슬롯에 묶는다. (셰이더의 register(t0)과 연결)
 		texture.Bind(&device, 0);

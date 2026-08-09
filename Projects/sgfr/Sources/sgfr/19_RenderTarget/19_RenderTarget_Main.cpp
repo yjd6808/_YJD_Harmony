@@ -32,7 +32,7 @@ namespace
 	// HLSL의 CbTransform(b0)과 일치 (64바이트)
 	struct CbTransform
 	{
-		Mat4 wvp_;
+		mat4 wvp_;
 	};
 }
 
@@ -89,7 +89,7 @@ void RenderTarget_Main()
 	// 4. 미니맵 출력용 사각형: 오른쪽 위 구석, 화면 비율(800:600) 보정으로 정사각형 유지
 	VertexPTC quadVertices[4];
 	_u32 quadIndices[6] = { 0, 1, 2, 2, 1, 3 };
-	FillScreenQuad(quadVertices, Vec2(0.62f, 0.55f), Vec2(0.25f, 0.25f * window.AspectRatio()));
+	FillScreenQuad(quadVertices, vec2(0.62f, 0.55f), vec2(0.25f, 0.25f * window.AspectRatio()));
 
 	VertexBuffer quadVb;
 	IndexBuffer quadIb;
@@ -122,12 +122,12 @@ void RenderTarget_Main()
 	}
 
 	// 6. 카메라 2개: 장면은 경사 시점, 미니맵은 바로 위에서 내려다본다.
-	const Mat4 sceneView = Mat4::LookAtLH(Vec3(0.0f, 1.5f, -4.0f), Vec3::Zero(), Vec3::Up());
-	const Mat4 sceneProj = Mat4::PerspectiveFovLH(jc_math_pi_div4, window.AspectRatio(), 0.1f, 100.0f);
+	const mat4 sceneView = mat4::LookAtLH(vec3(0.0f, 1.5f, -4.0f), vec3::Zero(), vec3::Up());
+	const mat4 sceneProj = mat4::PerspectiveFovLH(jc_math_pi_div4, window.AspectRatio(), 0.1f, 100.0f);
 
 	// 바로 위에서 볼 때는 Up 벡터로 +Y를 쓸 수 없으므로 +Z를 사용한다.
-	const Mat4 topView = Mat4::LookAtLH(Vec3(0.0f, 5.0f, 0.0f), Vec3::Zero(), Vec3::Forward());
-	const Mat4 topProj = Mat4::PerspectiveFovLH(jc_math_pi_div4, 1.0f, 0.1f, 100.0f);	// 렌더 타깃은 정사각형(256x256)
+	const mat4 topView = mat4::LookAtLH(vec3(0.0f, 5.0f, 0.0f), vec3::Zero(), vec3::Forward());
+	const mat4 topProj = mat4::PerspectiveFovLH(jc_math_pi_div4, 1.0f, 0.1f, 100.0f);	// 렌더 타깃은 정사각형(256x256)
 
 	FrameTimer timer;
 	timer.Reset();
@@ -146,13 +146,13 @@ void RenderTarget_Main()
 		timer.Tick();
 		elapsed += timer.DeltaTime();
 
-		const Mat4 world = Mat4::RotationY(elapsed * 0.8f) * Mat4::RotationX(elapsed * 0.3f);
+		const mat4 world = mat4::RotationY(elapsed * 0.8f) * mat4::RotationX(elapsed * 0.3f);
 
 		// ---- 패스 1: 렌더 타깃에 미니맵 시점으로 그리기 ----
-		device.BeginFrame(Color(0.08f, 0.08f, 0.12f, 1.0f));	// 백버퍼도 미리 클리어
+		device.BeginFrame(color(0.08f, 0.08f, 0.12f, 1.0f));	// 백버퍼도 미리 클리어
 
 		device.SetRenderTarget(&miniMapTarget);					// 이제 그리기는 텍스처로!
-		miniMapTarget.Clear(&device, Color(0.1f, 0.25f, 0.15f, 1.0f));	// 초록 배경 = 미니맵 티가 나게
+		miniMapTarget.Clear(&device, color(0.1f, 0.25f, 0.15f, 1.0f));	// 초록 배경 = 미니맵 티가 나게
 
 		CbTransform cb;
 		cb.wvp_ = world * topView * topProj;

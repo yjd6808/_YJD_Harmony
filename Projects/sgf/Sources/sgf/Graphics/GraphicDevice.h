@@ -74,13 +74,13 @@ public:
 	// [v2.1] 지정 윈도우의 표면을 그리기 대상으로 묶고 지운다.
 	// @param _pWindow    : 그릴 대상 창 (CreateSurface가 되어 있어야 함)
 	// @param _clearColor : 화면을 채울 배경색
-	void BeginFrame(Window* _pWindow, const Color& _clearColor);
+	void BeginFrame(Window* _pWindow, const color& _clearColor);
 
 	// [v2.1] 지정 윈도우의 백버퍼를 화면에 표시한다.
 	void EndFrame(Window* _pWindow, bool _bVsync = true);
 
 	// [하위 호환] 내장 표면(단일 창 경로)을 지우고 그릴 준비를 한다.
-	void BeginFrame(const Color& _clearColor);
+	void BeginFrame(const color& _clearColor);
 
 	// [하위 호환] 내장 표면의 백버퍼를 화면에 표시한다.
 	void EndFrame(bool _bVsync = true);
@@ -114,19 +114,19 @@ public:
 	// @param _ppOutSwapChain : 생성된 스왕체인 (소유권은 호출자에게)
 	bool CreateSwapChainForWindow(HWND _hWnd, _s32 _width, _s32 _height, IDXGISwapChain** _ppOutSwapChain);
 
-	ID3D11Device* Device() const { return m_pDevice.Get(); }
-	ID3D11DeviceContext* Context() const { return m_pContext.Get(); }
+	ID3D11Device* Device() const { return pDevice_.Get(); }
+	ID3D11DeviceContext* Context() const { return pContext_.Get(); }
 
 	// 현재 그리기 대상 표면의 크기 (BeginFrame에서 갱신된다)
-	_s32 Width() const { return m_Width; }
-	_s32 Height() const { return m_Height; }
+	_s32 Width() const { return width_; }
+	_s32 Height() const { return height_; }
 
 	// === v2: 부품 직접 접근 (고급 제어/멀티스레드 연구용) ===
 	// [주의] 이 둘은 "구버전 단일 창 경로"의 내장 표면이다.
 	// v2.1 멀티 윈도우 경로에서는 Window::GetSwapChain()을 사용하라.
-	SwapChain& GetSwapChain() { return m_SwapChain; }
-	DepthStencilSurface& GetDepthSurface() { return m_DepthSurface; }
-	RenderStates& States() { return m_States; }
+	SwapChain& GetSwapChain() { return swapChain_; }
+	DepthStencilSurface& GetDepthSurface() { return depthSurface_; }
+	RenderStates& States() { return states_; }
 
 private:
 	// 디바이스만 생성한다. (v2.1 공통 경로)
@@ -147,18 +147,18 @@ private:
 	void ApplyRasterizerState();
 
 private:
-	SgfComPtr<ID3D11Device> m_pDevice;			// 리소스 생성 담당 ("공장")
-	SgfComPtr<ID3D11DeviceContext> m_pContext;	// 그리기 명령 담당 ("작업반장")
+	SgfComPtr<ID3D11Device> pDevice_;			// 리소스 생성 담당 ("공장")
+	SgfComPtr<ID3D11DeviceContext> pContext_;	// 그리기 명령 담당 ("작업반장")
 
-	SwapChain m_SwapChain;				// [구버전 경로 전용] 내장 백버퍼 표면
-	DepthStencilSurface m_DepthSurface;	// [구버전 경로 전용] 내장 깊이 버퍼
-	RenderStates m_States;				// 상태 객체 캐시
+	SwapChain swapChain_;				// [구버전 경로 전용] 내장 백버퍼 표면
+	DepthStencilSurface depthSurface_;	// [구버전 경로 전용] 내장 깊이 버퍼
+	RenderStates states_;				// 상태 객체 캐시
 
-	Window* m_pBoundWindow;	// 현재 BeginFrame(Window*)로 묶인 창 (구버전 경로면 nullptr)
-	bool m_bWireframe;		// 현재 와이어프레임 여부
-	CullMode m_CullMode;	// 현재 컸링 모드
-	_s32 m_Width;			// 현재 그리기 대상 가로
-	_s32 m_Height;			// 현재 그리기 대상 세로
+	Window* pBoundWindow_;	// 현재 BeginFrame(Window*)로 묶인 창 (구버전 경로면 nullptr)
+	bool bWireframe_;		// 현재 와이어프레임 여부
+	CullMode cullMode_;	// 현재 컸링 모드
+	_s32 width_;			// 현재 그리기 대상 가로
+	_s32 height_;			// 현재 그리기 대상 세로
 };
 
 NS_SGF_END

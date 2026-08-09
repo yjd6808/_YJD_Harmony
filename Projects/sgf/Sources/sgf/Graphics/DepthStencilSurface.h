@@ -32,10 +32,10 @@ public:
 	// 깊이를 1.0(가장 멀리), 스텐실을 0으로 초기화한다. 매 프레임 시작 시 호출.
 	void Clear(ID3D11DeviceContext* _pContext);
 
-	ID3D11DepthStencilView* DSV() const { return m_pDepthStencilView.Get(); }
+	ID3D11DepthStencilView* DSV() const { return pDepthStencilView_.Get(); }
 
 private:
-	SgfComPtr<ID3D11DepthStencilView> m_pDepthStencilView;	// 깊이 버퍼를 그리기 대상으로 보는 뷰
+	SgfComPtr<ID3D11DepthStencilView> pDepthStencilView_;	// 깊이 버퍼를 그리기 대상으로 보는 뷰
 };
 
 NS_SGF_END

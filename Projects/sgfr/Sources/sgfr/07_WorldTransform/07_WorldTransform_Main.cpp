@@ -29,10 +29,10 @@ using namespace jc;
 
 namespace
 {
-	// 셰이더 CbTransform과 메모리 배치 일치 (Mat4 = 64바이트, 16의 배수 OK)
+	// 셰이더 CbTransform과 메모리 배치 일치 (mat4 = 64바이트, 16의 배수 OK)
 	struct CbTransform
 	{
-		Mat4 worldViewProj_;	// 월드 x 투영 결합 행렬
+		mat4 worldViewProj_;	// 월드 x 투영 결합 행렬
 	};
 }
 
@@ -64,18 +64,18 @@ void WorldTransform_Main()
 	//    한 변 길이 1짜리 정사각형. (중심이 원점)
 	//    색은 흰색으로 두고... 싶지만 VertexPC에는 틴트 기능이 없으므로
 	//    천체별로 정점 버퍼를 3개 만든다. (단순함 우선!)
-	auto MakeQuad = [](const Color& _color, VertexPC* _pOut)
+	auto MakeQuad = [](const color& _color, VertexPC* _pOut)
 	{
-		_pOut[0] = { Vec3(-0.5f, +0.5f, 0.0f), _color };	// 왼쪽위
-		_pOut[1] = { Vec3(+0.5f, +0.5f, 0.0f), _color };	// 오른쪽위
-		_pOut[2] = { Vec3(-0.5f, -0.5f, 0.0f), _color };	// 왼쪽아래
-		_pOut[3] = { Vec3(+0.5f, -0.5f, 0.0f), _color };	// 오른쪽아래
+		_pOut[0] = { vec3(-0.5f, +0.5f, 0.0f), _color };	// 왼쪽위
+		_pOut[1] = { vec3(+0.5f, +0.5f, 0.0f), _color };	// 오른쪽위
+		_pOut[2] = { vec3(-0.5f, -0.5f, 0.0f), _color };	// 왼쪽아래
+		_pOut[3] = { vec3(+0.5f, -0.5f, 0.0f), _color };	// 오른쪽아래
 	};
 
 	VertexPC sunVertices[4], earthVertices[4], moonVertices[4];
-	MakeQuad(Color(1.0f, 0.8f, 0.1f, 1.0f), sunVertices);		// 태양 (노랑)
-	MakeQuad(Color(0.2f, 0.4f, 1.0f, 1.0f), earthVertices);	// 지구 (파랑)
-	MakeQuad(Color(0.7f, 0.7f, 0.7f, 1.0f), moonVertices);		// 달   (회색)
+	MakeQuad(color(1.0f, 0.8f, 0.1f, 1.0f), sunVertices);		// 태양 (노랑)
+	MakeQuad(color(0.2f, 0.4f, 1.0f, 1.0f), earthVertices);	// 지구 (파랑)
+	MakeQuad(color(0.7f, 0.7f, 0.7f, 1.0f), moonVertices);		// 달   (회색)
 
 	const _u32 indices[] = { 0, 1, 2, 2, 1, 3 };
 
@@ -111,14 +111,14 @@ void WorldTransform_Main()
 	//    NDC는 가로세로 모두 -1~1이라 800x600 화면에서는 가로로 늘어난다.
 	//    가로를 화면 비율만큼 넓게(-1.33~+1.33) 잡으면 정사각형이 정사각형으로 보인다.
 	const _f32 aspect = window.AspectRatio();
-	const Mat4 proj = Mat4::OrthographicOffCenterLH(-aspect, +aspect, -1.0f, +1.0f, 0.0f, 1.0f);
+	const mat4 proj = mat4::OrthographicOffCenterLH(-aspect, +aspect, -1.0f, +1.0f, 0.0f, 1.0f);
 
 	FrameTimer timer;
 	timer.Reset();
 	_f32 elapsed = 0.0f;
 
 	// 그리기 함수: 월드 행렬만 바꿔가며 같은 사각형을 그린다.
-	auto DrawQuad = [&](VertexBuffer& _vb, const Mat4& _world)
+	auto DrawQuad = [&](VertexBuffer& _vb, const mat4& _world)
 	{
 		CbTransform cb = {};
 		cb.worldViewProj_ = _world * proj;	// 월드 다음 투영 (왼쪽이 먼저 적용)
@@ -144,25 +144,25 @@ void WorldTransform_Main()
 		timer.Tick();
 		elapsed += timer.DeltaTime();
 
-		device.BeginFrame(Color(0.02f, 0.02f, 0.05f, 1.0f));
+		device.BeginFrame(color(0.02f, 0.02f, 0.05f, 1.0f));
 
 		// === 태양: 제자리에서 천천히 자전 ===
 		//     SRT2D(크기, 회전각, 이동) 헬퍼로 한번에 로컬 행렬을 만든다.
-		const Mat4 sunWorld = Mat4::SRT2D(Vec2(0.5f, 0.5f), elapsed * 0.5f, Vec2(0.0f, 0.0f));
+		const mat4 sunWorld = mat4::SRT2D(vec2(0.5f, 0.5f), elapsed * 0.5f, vec2(0.0f, 0.0f));
 		DrawQuad(vbSun, sunWorld);
 
 		// === 지구: 태양으로부터 0.7 떨어져서 공전 ===
 		//     공전 = "먼저 밖으로 이동(T)한 뒤 원점 기준 회전(R)"
 		//     행 벡터 규약에서는 T가 왼쪽, R이 오른쪽에 온다.
-		const Mat4 earthOrbit = Mat4::Translation(0.7f, 0.0f, 0.0f) * Mat4::RotationZ(elapsed * 1.0f);
-		const Mat4 earthWorld = Mat4::Scale(0.2f, 0.2f, 1.0f) * Mat4::RotationZ(elapsed * 3.0f) * earthOrbit;
+		const mat4 earthOrbit = mat4::Translation(0.7f, 0.0f, 0.0f) * mat4::RotationZ(elapsed * 1.0f);
+		const mat4 earthWorld = mat4::Scale(0.2f, 0.2f, 1.0f) * mat4::RotationZ(elapsed * 3.0f) * earthOrbit;
 		DrawQuad(vbEarth, earthWorld);
 
 		// === 달: 지구로부터 0.2 떨어져서 공전 ===
 		//     핵심! 달의 부모는 지구다. 달 로컬 행렬 뒤에 지구의 공전 행렬을 통째로 곱한다.
 		//     (지구의 자전/크기는 달에게 물려주지 않기 위해 earthOrbit만 사용)
-		const Mat4 moonOrbit = Mat4::Translation(0.2f, 0.0f, 0.0f) * Mat4::RotationZ(elapsed * 4.0f);
-		const Mat4 moonWorld = Mat4::Scale(0.08f, 0.08f, 1.0f) * moonOrbit * earthOrbit;
+		const mat4 moonOrbit = mat4::Translation(0.2f, 0.0f, 0.0f) * mat4::RotationZ(elapsed * 4.0f);
+		const mat4 moonWorld = mat4::Scale(0.08f, 0.08f, 1.0f) * moonOrbit * earthOrbit;
 		DrawQuad(vbMoon, moonWorld);
 
 		device.EndFrame(true);

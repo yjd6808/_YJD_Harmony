@@ -40,10 +40,10 @@ class Renderer2D : public BatchRenderer
 {
 public:
 	Renderer2D();
-	~Renderer2D() override;
+	virtual ~Renderer2D() override;
 
 	// 흰색 텍스처 해제 (공통 리소스는 BatchRenderer::Finalize가 처리)
-	void Finalize() override;
+	virtual void Finalize() override;
 
 	// === 그리기 API (좌표는 월드 좌표계) ===
 
@@ -52,7 +52,7 @@ public:
 	// @param _size   : 가로/세로 크기
 	// @param _color  : 색상
 	// @param _radian : Z축 회전각 (반시계 +)
-	void DrawRect(const Vec2& _center, const Vec2& _size, const Color& _color, _f32 _radian = 0.0f);
+	void DrawRect(const vec2& _center, const vec2& _size, const color& _color, _f32 _radian = 0.0f);
 
 	// 텍스처 스프라이트 (중심 기준)
 	// @param _pTexture : 그릴 텍스처
@@ -62,28 +62,28 @@ public:
 	// @param _radian   : Z축 회전각
 	// @param _uvMin    : 텍스처 영역 좌상단 UV (기본 전체)
 	// @param _uvMax    : 텍스처 영역 우하단 UV
-	void DrawSprite(Texture* _pTexture, const Vec2& _center, const Vec2& _size,
-		const Color& _tint = Color(1.0f, 1.0f, 1.0f, 1.0f), _f32 _radian = 0.0f,
-		const Vec2& _uvMin = Vec2(0.0f, 0.0f), const Vec2& _uvMax = Vec2(1.0f, 1.0f));
+	void DrawSprite(Texture* _pTexture, const vec2& _center, const vec2& _size,
+		const color& _tint = color(1.0f, 1.0f, 1.0f, 1.0f), _f32 _radian = 0.0f,
+		const vec2& _uvMin = vec2(0.0f, 0.0f), const vec2& _uvMax = vec2(1.0f, 1.0f));
 
 	// 선분 (두께 있는 사각형으로 그린다)
 	// @param _from/_to : 양 끝점
 	// @param _thickness: 선 두께 (픽셀)
-	void DrawLine(const Vec2& _from, const Vec2& _to, const Color& _color, _f32 _thickness = 1.0f);
+	void DrawLine(const vec2& _from, const vec2& _to, const color& _color, _f32 _thickness = 1.0f);
 
 	// 원 (삼각형 부채꼴로 근사)
 	// @param _segments : 분할 수. 클수록 매끄럽지만 정점이 늘어난다.
-	void DrawCircle(const Vec2& _center, _f32 _radius, const Color& _color, int _segments = 32);
+	void DrawCircle(const vec2& _center, _f32 _radius, const color& _color, int _segments = 32);
 
 	// 모아둔 배치를 즉시 GPU로 보낸다. (보통 End가 알아서 호출)
-	void Flush() override;
+	virtual void Flush() override;
 
 protected:
 	// === BatchRenderer 훅 구현 ===
-	const char* ShaderSource() const override;
-	const D3D11_INPUT_ELEMENT_DESC* VertexLayout(UINT* _outCount) const override;
-	bool CreateBatchResources(GraphicDevice* _pDevice) override;
-	void OnBegin() override;
+	virtual const char* ShaderSource() const override;
+	virtual const D3D11_INPUT_ELEMENT_DESC* VertexLayout(UINT* _outCount) const override;
+	virtual bool CreateBatchResources(GraphicDevice* _pDevice) override;
+	virtual void OnBegin() override;
 
 private:
 	// 사각형 4정점을 배치에 추가하는 공통 헬퍼
@@ -91,16 +91,16 @@ private:
 	void PushQuad(Texture* _pTexture, const VertexPTC (&_vertices)[4]);
 
 private:
-	static const int MaxQuads_v = 2048;					// 배치 한 번에 담을 최대 사각형 수
-	static const int MaxVertices_v = MaxQuads_v * 4;	// 최대 정점 수
-	static const int MaxIndices_v = MaxQuads_v * 6;		// 최대 인덱스 수
+	static const int MAX_QUADS = 2048;					// 배치 한 번에 담을 최대 사각형 수
+	static const int MAX_VERTICES = MAX_QUADS * 4;	// 최대 정점 수
+	static const int MAX_INDICES = MAX_QUADS * 6;		// 최대 인덱스 수
 
-	VertexBuffer m_VertexBuffer;			// DYNAMIC 정점 버퍼
-	IndexBuffer m_IndexBuffer;				// 사각형용 고정 인덱스 버퍼
-	Texture* m_pWhiteTexture;				// 1x1 흰색 텍스처 (단색 도형용)
+	VertexBuffer vertexBuffer_;			// DYNAMIC 정점 버퍼
+	IndexBuffer indexBuffer_;				// 사각형용 고정 인덱스 버퍼
+	Texture* pWhiteTexture_;				// 1x1 흰색 텍스처 (단색 도형용)
 
-	jc::Vector<VertexPTC> m_Vertices;		// CPU 쪽 정점 배치
-	Texture* m_pCurrentTexture;				// 현재 배치가 사용 중인 텍스처
+	jc::Vector<VertexPTC> vertices_;		// CPU 쪽 정점 배치
+	Texture* pCurrentTexture_;				// 현재 배치가 사용 중인 텍스처
 };
 
 NS_SGF_END

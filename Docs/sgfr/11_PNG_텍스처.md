@@ -29,7 +29,7 @@
 - 사각형 네 꼭짓점에 (0,0), (1,0), (0,1), (1,1)을 주면 이미지 전체가 붙음
 - RS가 픽셀마다 UV를 보간(04번!)해주므로, PS는 그 UV로 이미지를 읽기만 하면 됨
 
-그래서 정점 타입이 `VertexPTC`(Position + Texcoord + Color)가 됩니다.
+그래서 정점 타입이 `VertexPTC`(Position + Texcoord + color)가 됩니다.
 
 ---
 

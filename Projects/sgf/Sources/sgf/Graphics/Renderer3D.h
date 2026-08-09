@@ -18,8 +18,8 @@
  *
  * [사용 법]
  *  renderer3d.Begin(camera.ViewProjection());
- *  renderer3d.DrawGrid(10, 1.0f, Color::Gray());
- *  renderer3d.DrawCube(Vec3(0, 0.5f, 0), Vec3(1, 1, 1), Color::Red());
+ *  renderer3d.DrawGrid(10, 1.0f, color::Gray());
+ *  renderer3d.DrawCube(vec3(0, 0.5f, 0), vec3(1, 1, 1), color::Red());
  *  renderer3d.End();  // 여기서 모아둔 걸 한 번에 그린다
  *
  * [구조]
@@ -43,49 +43,49 @@ class Renderer3D : public BatchRenderer
 {
 public:
 	// 한 번의 Flush로 그릴 수 있는 최대 삼각형/선 개수
-	static constexpr _s32 MaxTriangles_v = 4096;
-	static constexpr _s32 MaxLines_v = 4096;
+	static constexpr _s32 MAX_TRIANGLES = 4096;
+	static constexpr _s32 MAX_LINES = 4096;
 
 public:
 	Renderer3D();
-	~Renderer3D() override;
+	virtual ~Renderer3D() override;
 
 	// 배치 종료 시 정리 (공통 리소스는 BatchRenderer::Finalize가 처리)
-	void Finalize() override;
+	virtual void Finalize() override;
 
 	// 모아둔 걸 즉시 그린다. (버퍼가 가득 찼을 때도 자동 호출)
-	void Flush() override;
+	virtual void Flush() override;
 
 	// === 삼각형 배치 ===
 
 	// 삼각형 하나를 배치에 추가한다. (정점은 시계 반대 방향 = 앞면)
-	void DrawTriangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, const Color& _color);
+	void DrawTriangle(const vec3& _p0, const vec3& _p1, const vec3& _p2, const color& _color);
 
 	// 단색 상자를 배치에 추가한다.
 	// 면마다 밝기를 살짝 다르게 해서(CPU측 간이 음영) 입체감이 느껴지게 한다.
 	// @param _center : 상자 중심 (월드 좌표)
 	// @param _size   : 가로/세로/깊이 길이
-	void DrawCube(const Vec3& _center, const Vec3& _size, const Color& _color);
+	void DrawCube(const vec3& _center, const vec3& _size, const color& _color);
 
 	// === 선 배치 ===
 
 	// 3D 선분 하나를 배치에 추가한다.
-	void DrawLine3D(const Vec3& _from, const Vec3& _to, const Color& _color);
+	void DrawLine3D(const vec3& _from, const vec3& _to, const color& _color);
 
 	// XZ 평면 격자를 그린다. (바닥 기준선)
 	// @param _halfCount : 중심에서 한쪽으로 몇 칸 (전체 = 2*_halfCount)
 	// @param _spacing   : 한 칸 간격
-	void DrawGrid(_s32 _halfCount, _f32 _spacing, const Color& _color);
+	void DrawGrid(_s32 _halfCount, _f32 _spacing, const color& _color);
 
 	// 원점에 X(빨강)/Y(초록)/Z(파랑) 축을 그린다.
 	void DrawAxis(_f32 _length);
 
 protected:
 	// === BatchRenderer 훅 구현 ===
-	const char* ShaderSource() const override;
-	const D3D11_INPUT_ELEMENT_DESC* VertexLayout(UINT* _outCount) const override;
-	bool CreateBatchResources(GraphicDevice* _pDevice) override;
-	void OnBegin() override;
+	virtual const char* ShaderSource() const override;
+	virtual const D3D11_INPUT_ELEMENT_DESC* VertexLayout(UINT* _outCount) const override;
+	virtual bool CreateBatchResources(GraphicDevice* _pDevice) override;
+	virtual void OnBegin() override;
 
 private:
 	// 하나의 동적 버퍼를 GPU로 복사해 한 번의 DrawCall로 그린다.
@@ -94,11 +94,11 @@ private:
 		D3D11_PRIMITIVE_TOPOLOGY _topology);
 
 private:
-	VertexBuffer m_TriangleVb;					// 삼각형용 동적 정점 버퍼
-	VertexBuffer m_LineVb;						// 선용 동적 정점 버퍼
+	VertexBuffer triangleVb_;					// 삼각형용 동적 정점 버퍼
+	VertexBuffer lineVb_;						// 선용 동적 정점 버퍼
 
-	jc::Vector<VertexPC> m_TriangleVertices;	// CPU측에 모아둔 삼각형 정점들
-	jc::Vector<VertexPC> m_LineVertices;		// CPU측에 모아둔 선 정점들
+	jc::Vector<VertexPC> triangleVertices_;	// CPU측에 모아둔 삼각형 정점들
+	jc::Vector<VertexPC> lineVertices_;		// CPU측에 모아둔 선 정점들
 };
 
 NS_SGF_END

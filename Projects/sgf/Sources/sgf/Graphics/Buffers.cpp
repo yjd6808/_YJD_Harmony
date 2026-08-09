@@ -17,25 +17,28 @@ NS_SGF_BEGIN
 // VertexBuffer
 // ==================================================
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 생성자
 VertexBuffer::VertexBuffer()
-	: m_Stride(0)
-	, m_Count(0)
-	, m_bDynamic(false)
+	: stride_(0)
+	, count_(0)
+	, bDynamic_(false)
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 소멸자 (ComPtr이 자동 Release)
 VertexBuffer::~VertexBuffer()
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 정점 버퍼 생성
 bool VertexBuffer::Create(GraphicDevice* _pDevice, const void* _pData, UINT _stride, UINT _count, bool _bDynamic)
 {
-	m_Stride = _stride;
-	m_Count = _count;
-	m_bDynamic = _bDynamic;
+	stride_ = _stride;
+	count_ = _count;
+	bDynamic_ = _bDynamic;
 
 	// 버퍼 설정: 크기/용도/CPU 접근 권한을 기술한다.
 	D3D11_BUFFER_DESC bd = {};
@@ -51,35 +54,37 @@ bool VertexBuffer::Create(GraphicDevice* _pDevice, const void* _pData, UINT _str
 	return SUCCEEDED(_pDevice->Device()->CreateBuffer(
 		&bd,
 		(_pData != nullptr) ? &sd : nullptr,	// 데이터 없이 빈 버퍼만 만들 수도 있다
-		m_pBuffer.GetAddressOf()));
+		pBuffer_.GetAddressOf()));
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // DYNAMIC 정점 버퍼 갱신
 bool VertexBuffer::Update(GraphicDevice* _pDevice, const void* _pData, UINT _count)
 {
 	// DEFAULT 버퍼는 Map이 불가능하므로 방어한다.
-	if (!m_bDynamic || _count > m_Count)
+	if (!bDynamic_ || _count > count_)
 	{
 		return false;
 	}
 
 	D3D11_MAPPED_SUBRESOURCE mapped = {};
-	HRESULT hr = _pDevice->Context()->Map(m_pBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+	HRESULT hr = _pDevice->Context()->Map(pBuffer_.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
 	if (FAILED(hr))
 	{
 		return false;
 	}
-	memcpy(mapped.pData, _pData, size_t(m_Stride) * _count);
-	_pDevice->Context()->Unmap(m_pBuffer.Get(), 0);
+	memcpy(mapped.pData, _pData, size_t(stride_) * _count);
+	_pDevice->Context()->Unmap(pBuffer_.Get(), 0);
 	return true;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // IA 단계 슬롯 0에 장착
 void VertexBuffer::Bind(GraphicDevice* _pDevice)
 {
-	UINT stride = m_Stride;		// 정점 하나씩 건너뛸 바이트 수
+	UINT stride = stride_;		// 정점 하나씩 건너뛸 바이트 수
 	UINT offset = 0;			// 버퍼 시작 오프셋
-	ID3D11Buffer* pBuffers[] = { m_pBuffer.Get() };
+	ID3D11Buffer* pBuffers[] = { pBuffer_.Get() };
 	_pDevice->Context()->IASetVertexBuffers(0, 1, pBuffers, &stride, &offset);
 }
 
@@ -87,23 +92,26 @@ void VertexBuffer::Bind(GraphicDevice* _pDevice)
 // IndexBuffer
 // ==================================================
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 생성자
 IndexBuffer::IndexBuffer()
-	: m_Count(0)
-	, m_bDynamic(false)
+	: count_(0)
+	, bDynamic_(false)
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 소멸자
 IndexBuffer::~IndexBuffer()
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 인덱스 버퍼 생성
 bool IndexBuffer::Create(GraphicDevice* _pDevice, const _u32* _pIndices, UINT _count, bool _bDynamic)
 {
-	m_Count = _count;
-	m_bDynamic = _bDynamic;
+	count_ = _count;
+	bDynamic_ = _bDynamic;
 
 	D3D11_BUFFER_DESC bd = {};
 	bd.ByteWidth = sizeof(_u32) * _count;
@@ -117,32 +125,34 @@ bool IndexBuffer::Create(GraphicDevice* _pDevice, const _u32* _pIndices, UINT _c
 	return SUCCEEDED(_pDevice->Device()->CreateBuffer(
 		&bd,
 		(_pIndices != nullptr) ? &sd : nullptr,
-		m_pBuffer.GetAddressOf()));
+		pBuffer_.GetAddressOf()));
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // DYNAMIC 인덱스 버퍼 갱신
 bool IndexBuffer::Update(GraphicDevice* _pDevice, const _u32* _pIndices, UINT _count)
 {
-	if (!m_bDynamic || _count > m_Count)
+	if (!bDynamic_ || _count > count_)
 	{
 		return false;
 	}
 
 	D3D11_MAPPED_SUBRESOURCE mapped = {};
-	HRESULT hr = _pDevice->Context()->Map(m_pBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+	HRESULT hr = _pDevice->Context()->Map(pBuffer_.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
 	if (FAILED(hr))
 	{
 		return false;
 	}
 	memcpy(mapped.pData, _pIndices, sizeof(_u32) * _count);
-	_pDevice->Context()->Unmap(m_pBuffer.Get(), 0);
+	_pDevice->Context()->Unmap(pBuffer_.Get(), 0);
 	return true;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // IA 단계에 장착 (32비트 인덱스 형식 고정)
 void IndexBuffer::Bind(GraphicDevice* _pDevice)
 {
-	_pDevice->Context()->IASetIndexBuffer(m_pBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+	_pDevice->Context()->IASetIndexBuffer(pBuffer_.Get(), DXGI_FORMAT_R32_UINT, 0);
 }
 
 NS_SGF_END

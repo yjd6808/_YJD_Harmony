@@ -30,7 +30,7 @@ namespace
 	// 셰이더 CbTransform과 메모리 배치 일치 (64바이트)
 	struct CbTransform
 	{
-		Mat4 worldViewProj_;	// 월드 x 뷰 x 투영 결합 행렬
+		mat4 worldViewProj_;	// 월드 x 뷰 x 투영 결합 행렬
 	};
 }
 
@@ -60,10 +60,10 @@ void Camera_Main()
 
 	// 2. 타일 하나짜리 사각형 버퍼 (월드 행렬로 위치를 바꿔가며 여러 번 그린다)
 	const VertexPC vertices[] = {
-		{ Vec3(-0.5f, +0.5f, 0.0f), Color(1.0f, 1.0f, 1.0f, 1.0f) },
-		{ Vec3(+0.5f, +0.5f, 0.0f), Color(0.8f, 0.8f, 0.8f, 1.0f) },
-		{ Vec3(-0.5f, -0.5f, 0.0f), Color(0.6f, 0.6f, 0.6f, 1.0f) },
-		{ Vec3(+0.5f, -0.5f, 0.0f), Color(0.4f, 0.4f, 0.4f, 1.0f) },
+		{ vec3(-0.5f, +0.5f, 0.0f), color(1.0f, 1.0f, 1.0f, 1.0f) },
+		{ vec3(+0.5f, +0.5f, 0.0f), color(0.8f, 0.8f, 0.8f, 1.0f) },
+		{ vec3(-0.5f, -0.5f, 0.0f), color(0.6f, 0.6f, 0.6f, 1.0f) },
+		{ vec3(+0.5f, -0.5f, 0.0f), color(0.4f, 0.4f, 0.4f, 1.0f) },
 	};
 	const _u32 indices[] = { 0, 1, 2, 2, 1, 3 };
 
@@ -94,11 +94,11 @@ void Camera_Main()
 	}
 
 	// 4. 카메라 상태 변수
-	Vec2 cameraPos = Vec2(0.0f, 0.0f);	// 카메라가 바라보는 월드 위치
+	vec2 cameraPos = vec2(0.0f, 0.0f);	// 카메라가 바라보는 월드 위치
 	_f32 zoom = 1.0f;					// 1보다 크면 확대, 작으면 축소
 
 	const _f32 aspect = window.AspectRatio();
-	const Mat4 proj = Mat4::OrthographicOffCenterLH(-aspect, +aspect, -1.0f, +1.0f, 0.0f, 1.0f);
+	const mat4 proj = mat4::OrthographicOffCenterLH(-aspect, +aspect, -1.0f, +1.0f, 0.0f, 1.0f);
 
 	FrameTimer timer;
 	timer.Reset();
@@ -135,7 +135,7 @@ void Camera_Main()
 		// R: 카메라 리셋
 		if (input.IsKeyPressed('R'))
 		{
-			cameraPos = Vec2(0.0f, 0.0f);
+			cameraPos = vec2(0.0f, 0.0f);
 			zoom = 1.0f;
 		}
 
@@ -144,9 +144,9 @@ void Camera_Main()
 		// === 뷰 행렬 생성: 카메라 이동의 역변환! ===
 		//     카메라가 (2, 1)에 있다면 세상을 (-2, -1)만큼 움직이면 된다.
 		//     줌은 그 다음에 곱해서 화면 중앙 기준으로 확대/축소한다.
-		const Mat4 view = Mat4::Translation(-cameraPos.x, -cameraPos.y, 0.0f) * Mat4::Scale(zoom, zoom, 1.0f);
+		const mat4 view = mat4::Translation(-cameraPos.x, -cameraPos.y, 0.0f) * mat4::Scale(zoom, zoom, 1.0f);
 
-		device.BeginFrame(Color(0.05f, 0.08f, 0.05f, 1.0f));
+		device.BeginFrame(color(0.05f, 0.08f, 0.05f, 1.0f));
 
 		// === 5x5 타일을 그려서 "세상"을 만든다 ===
 		for (int y = -2; y <= 2; ++y)
@@ -154,7 +154,7 @@ void Camera_Main()
 			for (int x = -2; x <= 2; ++x)
 			{
 				// 타일 간격 0.6, 크기 0.5 (사이에 틈이 보이도록)
-				const Mat4 world = Mat4::Scale(0.5f, 0.5f, 1.0f) * Mat4::Translation(x * 0.6f, y * 0.6f, 0.0f);
+				const mat4 world = mat4::Scale(0.5f, 0.5f, 1.0f) * mat4::Translation(x * 0.6f, y * 0.6f, 0.0f);
 
 				CbTransform cb = {};
 				cb.worldViewProj_ = world * view * proj;	// 월드 -> 뷰 -> 투영 순서!

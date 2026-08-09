@@ -36,8 +36,8 @@
 struct FrameRenderData
 {
     jc::Vector<RenderCommand> commands;
-    Mat4 viewProjection;   // 그 프레임의 카메라 스냅샷
-    Color clearColor;
+    mat4 viewProjection;   // 그 프레임의 카메라 스냅샷
+    color clearColor;
 };
 
 FrameRenderData frames_[2];   // 0번/1번 공책

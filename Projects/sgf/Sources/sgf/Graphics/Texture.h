@@ -52,14 +52,14 @@ public:
 	// @param _slot : 셰이더의 register(t0), register(t1)... 번호
 	void Bind(GraphicDevice* _pDevice, UINT _slot = 0);
 
-	int Width() const { return m_Width; }
-	int Height() const { return m_Height; }
-	bool IsValid() const { return m_pShaderResourceView != nullptr; }
+	int Width() const { return width_; }
+	int Height() const { return height_; }
+	bool IsValid() const { return pShaderResourceView_ != nullptr; }
 
 private:
-	SgfComPtr<ID3D11ShaderResourceView> m_pShaderResourceView;	// 셰이더가 읽는 뷰
-	int m_Width;	// 가로 픽셀 수
-	int m_Height;	// 세로 픽셀 수
+	SgfComPtr<ID3D11ShaderResourceView> pShaderResourceView_;	// 셰이더가 읽는 뷰
+	int width_;	// 가로 픽셀 수
+	int height_;	// 세로 픽셀 수
 };
 
 NS_SGF_END

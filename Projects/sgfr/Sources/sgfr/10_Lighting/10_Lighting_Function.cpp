@@ -93,15 +93,15 @@ void FillCubeWithNormals(VertexPNT* _pOutVertices24, _u32* _pOutIndices36)
 	// 면 하나를 채우는 보조 람다: 중심 방향(법선)과 가로/세로 축을 받아 4정점 생성
 	int v = 0;
 	int i = 0;
-	auto AddFace = [&](const Vec3& _normal, const Vec3& _right, const Vec3& _up)
+	auto AddFace = [&](const vec3& _normal, const vec3& _right, const vec3& _up)
 	{
-		const Vec3 center = _normal * 0.5f;	// 면의 중심은 법선 방향으로 0.5 떨어져 있다
+		const vec3 center = _normal * 0.5f;	// 면의 중심은 법선 방향으로 0.5 떨어져 있다
 
 		// 사각형 4정점 (면 바깥에서 볼 때 왼위 -> 오른위 -> 왼아래 -> 오른아래)
-		_pOutVertices24[v + 0] = { center + (_up - _right) * 0.5f, _normal, Vec2(0.0f, 0.0f) };
-		_pOutVertices24[v + 1] = { center + (_up + _right) * 0.5f, _normal, Vec2(1.0f, 0.0f) };
-		_pOutVertices24[v + 2] = { center - (_up + _right) * 0.5f, _normal, Vec2(0.0f, 1.0f) };
-		_pOutVertices24[v + 3] = { center - (_up - _right) * 0.5f, _normal, Vec2(1.0f, 1.0f) };
+		_pOutVertices24[v + 0] = { center + (_up - _right) * 0.5f, _normal, vec2(0.0f, 0.0f) };
+		_pOutVertices24[v + 1] = { center + (_up + _right) * 0.5f, _normal, vec2(1.0f, 0.0f) };
+		_pOutVertices24[v + 2] = { center - (_up + _right) * 0.5f, _normal, vec2(0.0f, 1.0f) };
+		_pOutVertices24[v + 3] = { center - (_up - _right) * 0.5f, _normal, vec2(1.0f, 1.0f) };
 
 		// 삼각형 2개 (바깥에서 볼 때 시계 방향)
 		_pOutIndices36[i + 0] = v + 0; _pOutIndices36[i + 1] = v + 1; _pOutIndices36[i + 2] = v + 2;
@@ -113,10 +113,10 @@ void FillCubeWithNormals(VertexPNT* _pOutVertices24, _u32* _pOutIndices36)
 
 	// 6개 면: 법선과 그 면의 오른쪽/위 축을 지정한다.
 	// (바깥에서 봤을 때 시계 방향이 되도록 축 방향을 골랐다)
-	AddFace(Vec3(0.0f, 0.0f, -1.0f), Vec3(+1.0f, 0.0f, 0.0f), Vec3(0.0f, +1.0f, 0.0f));	// 앞면   (z-)
-	AddFace(Vec3(0.0f, 0.0f, +1.0f), Vec3(-1.0f, 0.0f, 0.0f), Vec3(0.0f, +1.0f, 0.0f));	// 뒷면   (z+)
-	AddFace(Vec3(0.0f, +1.0f, 0.0f), Vec3(+1.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, +1.0f));	// 윗면   (y+)
-	AddFace(Vec3(0.0f, -1.0f, 0.0f), Vec3(+1.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f));	// 아랫면 (y-)
-	AddFace(Vec3(-1.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec3(0.0f, +1.0f, 0.0f));	// 왼면   (x-)
-	AddFace(Vec3(+1.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, +1.0f), Vec3(0.0f, +1.0f, 0.0f));	// 오른면 (x+)
+	AddFace(vec3(0.0f, 0.0f, -1.0f), vec3(+1.0f, 0.0f, 0.0f), vec3(0.0f, +1.0f, 0.0f));	// 앞면   (z-)
+	AddFace(vec3(0.0f, 0.0f, +1.0f), vec3(-1.0f, 0.0f, 0.0f), vec3(0.0f, +1.0f, 0.0f));	// 뒷면   (z+)
+	AddFace(vec3(0.0f, +1.0f, 0.0f), vec3(+1.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, +1.0f));	// 윗면   (y+)
+	AddFace(vec3(0.0f, -1.0f, 0.0f), vec3(+1.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, -1.0f));	// 아랫면 (y-)
+	AddFace(vec3(-1.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, -1.0f), vec3(0.0f, +1.0f, 0.0f));	// 왼면   (x-)
+	AddFace(vec3(+1.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, +1.0f), vec3(0.0f, +1.0f, 0.0f));	// 오른면 (x+)
 }

@@ -137,13 +137,13 @@ void SvgTextureDraw_Main()
 		const _f32 aspect = window.AspectRatio();
 
 		// 매 프레임 정점을 새로 계산해 동적 버퍼를 갱신한다. (05번에서 배운 동적 버퍼 활용)
-		vertices[0] = { Vec3(-half, +half * aspect, 0.0f), Vec2(0.0f, 0.0f), Color::White() };
-		vertices[1] = { Vec3(+half, +half * aspect, 0.0f), Vec2(1.0f, 0.0f), Color::White() };
-		vertices[2] = { Vec3(-half, -half * aspect, 0.0f), Vec2(0.0f, 1.0f), Color::White() };
-		vertices[3] = { Vec3(+half, -half * aspect, 0.0f), Vec2(1.0f, 1.0f), Color::White() };
+		vertices[0] = { vec3(-half, +half * aspect, 0.0f), vec2(0.0f, 0.0f), color::White() };
+		vertices[1] = { vec3(+half, +half * aspect, 0.0f), vec2(1.0f, 0.0f), color::White() };
+		vertices[2] = { vec3(-half, -half * aspect, 0.0f), vec2(0.0f, 1.0f), color::White() };
+		vertices[3] = { vec3(+half, -half * aspect, 0.0f), vec2(1.0f, 1.0f), color::White() };
 		vb.Update(&device, vertices, 4);
 
-		device.BeginFrame(Color(0.12f, 0.12f, 0.16f, 1.0f));
+		device.BeginFrame(color(0.12f, 0.12f, 0.16f, 1.0f));
 
 		texture.Bind(&device, 0);
 		vb.Bind(&device);

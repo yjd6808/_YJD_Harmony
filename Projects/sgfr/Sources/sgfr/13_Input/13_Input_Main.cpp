@@ -113,17 +113,17 @@ void Input_Main()
 
 		// === 폴링 방식 ===
 		// 매 프레임 마우스 위치와 버튼 상태를 직접 읽는다.
-		const Vec2 center = PixelToNdc(input.MouseX(), input.MouseY(), window.Width(), window.Height());
+		const vec2 center = PixelToNdc(input.MouseX(), input.MouseY(), window.Width(), window.Height());
 
 		// 버튼 상태에 따른 색상 (누르고 있는 동안 계속 유지 = 폴링의 특징)
-		Color color = Color(0.9f, 0.9f, 0.9f, 1.0f);					// 기본: 흰색
+		color tintColor = color(0.9f, 0.9f, 0.9f, 1.0f);			// 기본: 흰색
 		if (input.IsMouseDown(MouseButton::Left))
 		{
-			color = Color(0.95f, 0.3f, 0.3f, 1.0f);					// 왼클릭: 빨강
+			tintColor = color(0.95f, 0.3f, 0.3f, 1.0f);				// 왼클릭: 빨강
 		}
 		else if (input.IsMouseDown(MouseButton::Right))
 		{
-			color = Color(0.3f, 0.5f, 0.95f, 1.0f);					// 오른클릭: 파랑
+			tintColor = color(0.3f, 0.5f, 0.95f, 1.0f);				// 오른클릭: 파랑
 		}
 
 		input.NextFrame();	// 이번 프레임 입력 확정 (Pressed/Released 계산용)
@@ -131,13 +131,13 @@ void Input_Main()
 		// 마우스 중심의 사각형 정점 4개 계산
 		// (화면 비율 보정: x 반폭에 비해 y 반폭에 aspect를 곱해 정사각형 유지)
 		const _f32 aspect = window.AspectRatio();
-		vertices[0] = { Vec3(center.x - halfSize, center.y + halfSize * aspect, 0.0f), color };
-		vertices[1] = { Vec3(center.x + halfSize, center.y + halfSize * aspect, 0.0f), color };
-		vertices[2] = { Vec3(center.x - halfSize, center.y - halfSize * aspect, 0.0f), color };
-		vertices[3] = { Vec3(center.x + halfSize, center.y - halfSize * aspect, 0.0f), color };
+		vertices[0] = { vec3(center.x - halfSize, center.y + halfSize * aspect, 0.0f), tintColor };
+		vertices[1] = { vec3(center.x + halfSize, center.y + halfSize * aspect, 0.0f), tintColor };
+		vertices[2] = { vec3(center.x - halfSize, center.y - halfSize * aspect, 0.0f), tintColor };
+		vertices[3] = { vec3(center.x + halfSize, center.y - halfSize * aspect, 0.0f), tintColor };
 		vb.Update(&device, vertices, 4);
 
-		device.BeginFrame(Color(0.08f, 0.08f, 0.12f, 1.0f));
+		device.BeginFrame(color(0.08f, 0.08f, 0.12f, 1.0f));
 
 		vb.Bind(&device);
 		ib.Bind(&device);

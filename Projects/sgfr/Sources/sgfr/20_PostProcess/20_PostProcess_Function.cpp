@@ -135,12 +135,12 @@ void PrintPostProcessExplanation()
 // 화면 전체를 덮는 NDC 사각형 정점 4개를 채운다. (UV 0~1, 흰색)
 void FillFullscreenQuad(VertexPTC* _pOutVertices4)
 {
-	const Color white = Color::White();
+	const color white = color::White();
 
 	// NDC 왼위(-1,+1) -> 오른아래(+1,-1)까지 꽉 채운다.
 	// UV는 왼위가 (0,0): 화면 y는 위가 +, 텍스처 v는 아래가 + 임에 주의!
-	_pOutVertices4[0] = { Vec3(-1.0f, +1.0f, 0.0f), Vec2(0.0f, 0.0f), white };
-	_pOutVertices4[1] = { Vec3(+1.0f, +1.0f, 0.0f), Vec2(1.0f, 0.0f), white };
-	_pOutVertices4[2] = { Vec3(-1.0f, -1.0f, 0.0f), Vec2(0.0f, 1.0f), white };
-	_pOutVertices4[3] = { Vec3(+1.0f, -1.0f, 0.0f), Vec2(1.0f, 1.0f), white };
+	_pOutVertices4[0] = { vec3(-1.0f, +1.0f, 0.0f), vec2(0.0f, 0.0f), white };
+	_pOutVertices4[1] = { vec3(+1.0f, +1.0f, 0.0f), vec2(1.0f, 0.0f), white };
+	_pOutVertices4[2] = { vec3(-1.0f, -1.0f, 0.0f), vec2(0.0f, 1.0f), white };
+	_pOutVertices4[3] = { vec3(+1.0f, -1.0f, 0.0f), vec2(1.0f, 1.0f), white };
 }

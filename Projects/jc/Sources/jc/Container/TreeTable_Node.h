@@ -29,7 +29,7 @@ class TreeNode
 public:
 	using TTreeNode = TreeNode<TKey>;
 
-	enum Color
+	enum color
 	{
 		eBlack,
 		eRed

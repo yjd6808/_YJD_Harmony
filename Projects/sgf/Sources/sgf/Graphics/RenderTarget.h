@@ -54,33 +54,33 @@ public:
 
 	// 타깃을 지운다. (색은 _clearColor로, 깊이는 1.0=가장 멀리로)
 	// 이 타깃에 그리기 시작하기 전에 호출할 것.
-	void Clear(GraphicDevice* _pDevice, const Color& _clearColor);
+	void Clear(GraphicDevice* _pDevice, const color& _clearColor);
 
 	// 다 그린 결과를 일반 텍스처처럼 셰이더 입력으로 바인딩한다.
 	// @param _slot : PS의 t레지스터 슬롯 번호
 	void BindAsTexture(GraphicDevice* _pDevice, UINT _slot = 0);
 
-	bool IsDepthOnly() const { return m_bDepthOnly; }
-	int Width() const { return m_Width; }
-	int Height() const { return m_Height; }
+	bool IsDepthOnly() const { return bDepthOnly_; }
+	int Width() const { return width_; }
+	int Height() const { return height_; }
 
 	// GraphicDevice::SetRenderTarget에서 사용하는 내부 접근자
-	ID3D11RenderTargetView* RTV() const { return m_pRTV.Get(); }		// 깊이 전용이면 nullptr
-	ID3D11DepthStencilView* DSV() const { return m_pDSV.Get(); }
+	ID3D11RenderTargetView* RTV() const { return pRTV_.Get(); }		// 깊이 전용이면 nullptr
+	ID3D11DepthStencilView* DSV() const { return pDSV_.Get(); }
 	ID3D11ShaderResourceView* SRV() const;								// 모드에 맞는 SRV 반환
 
 private:
-	SgfComPtr<ID3D11Texture2D> m_pColorTexture;			// 색 기록용 텍스처
-	SgfComPtr<ID3D11RenderTargetView> m_pRTV;			// 색 텍스처를 "그리기 대상"으로 보는 뷰
-	SgfComPtr<ID3D11ShaderResourceView> m_pColorSRV;	// 색 텍스처를 "셰이더 입력"으로 보는 뷰
+	SgfComPtr<ID3D11Texture2D> pColorTexture_;			// 색 기록용 텍스처
+	SgfComPtr<ID3D11RenderTargetView> pRTV_;			// 색 텍스처를 "그리기 대상"으로 보는 뷰
+	SgfComPtr<ID3D11ShaderResourceView> pColorSRV_;	// 색 텍스처를 "셰이더 입력"으로 보는 뷰
 
-	SgfComPtr<ID3D11Texture2D> m_pDepthTexture;			// 깊이 기록용 텍스처
-	SgfComPtr<ID3D11DepthStencilView> m_pDSV;			// 깊이 텍스처를 "깊이 버퍼"로 보는 뷰
-	SgfComPtr<ID3D11ShaderResourceView> m_pDepthSRV;	// 깊이 텍스처를 "셰이더 입력"으로 보는 뷰 (그림자 맵)
+	SgfComPtr<ID3D11Texture2D> pDepthTexture_;			// 깊이 기록용 텍스처
+	SgfComPtr<ID3D11DepthStencilView> pDSV_;			// 깊이 텍스처를 "깊이 버퍼"로 보는 뷰
+	SgfComPtr<ID3D11ShaderResourceView> pDepthSRV_;	// 깊이 텍스처를 "셰이더 입력"으로 보는 뷰 (그림자 맵)
 
-	bool m_bDepthOnly;	// 깊이 전용 모드 여부
-	int m_Width;		// 가로 크기
-	int m_Height;		// 세로 크기
+	bool bDepthOnly_;	// 깊이 전용 모드 여부
+	int width_;		// 가로 크기
+	int height_;		// 세로 크기
 };
 
 NS_SGF_END

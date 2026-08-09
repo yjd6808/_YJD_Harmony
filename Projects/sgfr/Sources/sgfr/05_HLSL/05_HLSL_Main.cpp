@@ -63,9 +63,9 @@ void HLSL_Main()
 
 	// 2. 삼각형 정점 (04번과 동일한 NDC 좌표 직접 지정)
 	const VertexPC vertices[] = {
-		{ Vec3( 0.0f,  +0.5f, 0.0f), Color(1.0f, 0.0f, 0.0f, 1.0f) },	// 위   (빨강)
-		{ Vec3(+0.5f, -0.5f, 0.0f), Color(0.0f, 0.0f, 1.0f, 1.0f) },	// 오른아래 (파랑)
-		{ Vec3(-0.5f, -0.5f, 0.0f), Color(0.0f, 1.0f, 0.0f, 1.0f) },	// 왼아래   (초록)
+		{ vec3( 0.0f,  +0.5f, 0.0f), color(1.0f, 0.0f, 0.0f, 1.0f) },	// 위   (빨강)
+		{ vec3(+0.5f, -0.5f, 0.0f), color(0.0f, 0.0f, 1.0f, 1.0f) },	// 오른아래 (파랑)
+		{ vec3(-0.5f, -0.5f, 0.0f), color(0.0f, 1.0f, 0.0f, 1.0f) },	// 왼아래   (초록)
 	};
 
 	VertexBuffer vb;
@@ -108,7 +108,7 @@ void HLSL_Main()
 		timer.Tick();
 		elapsed += timer.DeltaTime();
 
-		device.BeginFrame(Color(0.1f, 0.1f, 0.12f, 1.0f));
+		device.BeginFrame(color(0.1f, 0.1f, 0.12f, 1.0f));
 
 		// 매 프레임 시간을 GPU로 보낸다. 이것이 상수 버퍼의 역할!
 		CbTime cb = {};

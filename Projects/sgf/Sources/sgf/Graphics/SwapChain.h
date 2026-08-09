@@ -40,15 +40,15 @@ public:
 	// 백버퍼 전체 크기의 뷰포트(그리기 영역)를 설정한다.
 	void ApplyFullViewport(ID3D11DeviceContext* _pContext) const;
 
-	ID3D11RenderTargetView* RTV() const { return m_pRenderTargetView.Get(); }
-	_s32 Width() const { return m_Width; }
-	_s32 Height() const { return m_Height; }
+	ID3D11RenderTargetView* RTV() const { return pRenderTargetView_.Get(); }
+	_s32 Width() const { return width_; }
+	_s32 Height() const { return height_; }
 
 private:
-	SgfComPtr<IDXGISwapChain> m_pSwapChain;					// 버퍼 교체 담당
-	SgfComPtr<ID3D11RenderTargetView> m_pRenderTargetView;	// 백버퍼를 그리기 대상으로 보는 뷰
-	_s32 m_Width;		// 백버퍼 가로
-	_s32 m_Height;		// 백버퍼 세로
+	SgfComPtr<IDXGISwapChain> pSwapChain_;					// 버퍼 교체 담당
+	SgfComPtr<ID3D11RenderTargetView> pRenderTargetView_;	// 백버퍼를 그리기 대상으로 보는 뷰
+	_s32 width_;		// 백버퍼 가로
+	_s32 height_;		// 백버퍼 세로
 };
 
 NS_SGF_END

@@ -102,7 +102,7 @@ UltimateHarmony/
     │   ├── Project/sgf.vcxproj
     │   └── Sources/sgf/
     │       ├── PCH/               ← 미리 컴파일된 헤더 (Core.h)
-    │       ├── Math/              ← Vec2/Vec3/Vec4/Mat4/Color (SgfMath.h)
+    │       ├── Math/              ← vec2/vec3/vec4/mat4/color (SgfMath.h)
     │       ├── Core/              ← Window, FrameTimer, Application
     │       ├── Input/             ← InputManager (키보드/마우스/이벤트)
     │       ├── Graphics/          ← GraphicDevice, Shader, Buffers, Texture,
@@ -158,7 +158,7 @@ UltimateHarmony/
 
 ```
 [내 C++ 코드]
-    │  정점 데이터(Vertex), 행렬(Mat4), 텍스처(Texture)
+    │  정점 데이터(Vertex), 행렬(mat4), 텍스처(Texture)
     ▼
 [GraphicDevice]  ←── GPU와의 전화기 (Device/Context/SwapChain)
     │

@@ -15,4 +15,4 @@ void PrintInputModelExplanation();
 
 // 픽셀 좌표(왼쪽위 기준)를 NDC 좌표(-1~+1, y 위쪽 +)로 변환한다.
 // 마우스 좌표를 화면에 그리려면 반드시 필요한 변환이다!
-jc::Vec2 PixelToNdc(int _pixelX, int _pixelY, int _screenWidth, int _screenHeight);
+jc::vec2 PixelToNdc(int _pixelX, int _pixelY, int _screenWidth, int _screenHeight);

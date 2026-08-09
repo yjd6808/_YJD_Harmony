@@ -183,15 +183,15 @@ void FillShadowCube(VertexPNT* _pOutVertices24, _u32* _pOutIndices36)
 	int indexBase = 0;
 
 	// 한 면(사각형)을 추가하는 보조 람다: 중심 방향 법선과 두 접선 벡터로 4점을 만든다.
-	auto AddFace = [&](const Vec3& _normal, const Vec3& _up, const Vec3& _right)
+	auto AddFace = [&](const vec3& _normal, const vec3& _up, const vec3& _right)
 	{
-		const Vec3 center = _normal * 0.5f;
+		const vec3 center = _normal * 0.5f;
 
 		// 왼위 -> 오른위 -> 왼아래 -> 오른아래 (밖에서 볼 때 시계 방향)
-		_pOutVertices24[vertexBase + 0] = { center + (_up * 0.5f) - (_right * 0.5f), _normal, Vec2(0.0f, 0.0f) };
-		_pOutVertices24[vertexBase + 1] = { center + (_up * 0.5f) + (_right * 0.5f), _normal, Vec2(1.0f, 0.0f) };
-		_pOutVertices24[vertexBase + 2] = { center - (_up * 0.5f) - (_right * 0.5f), _normal, Vec2(0.0f, 1.0f) };
-		_pOutVertices24[vertexBase + 3] = { center - (_up * 0.5f) + (_right * 0.5f), _normal, Vec2(1.0f, 1.0f) };
+		_pOutVertices24[vertexBase + 0] = { center + (_up * 0.5f) - (_right * 0.5f), _normal, vec2(0.0f, 0.0f) };
+		_pOutVertices24[vertexBase + 1] = { center + (_up * 0.5f) + (_right * 0.5f), _normal, vec2(1.0f, 0.0f) };
+		_pOutVertices24[vertexBase + 2] = { center - (_up * 0.5f) - (_right * 0.5f), _normal, vec2(0.0f, 1.0f) };
+		_pOutVertices24[vertexBase + 3] = { center - (_up * 0.5f) + (_right * 0.5f), _normal, vec2(1.0f, 1.0f) };
 
 		_pOutIndices36[indexBase + 0] = vertexBase + 0;
 		_pOutIndices36[indexBase + 1] = vertexBase + 1;
@@ -204,24 +204,24 @@ void FillShadowCube(VertexPNT* _pOutVertices24, _u32* _pOutIndices36)
 		indexBase += 6;
 	};
 
-	AddFace(Vec3(0.0f, 0.0f, -1.0f), Vec3(0.0f, 1.0f, 0.0f), Vec3(1.0f, 0.0f, 0.0f));		// 앞면   (-Z)
-	AddFace(Vec3(0.0f, 0.0f, +1.0f), Vec3(0.0f, 1.0f, 0.0f), Vec3(-1.0f, 0.0f, 0.0f));	// 뒷면   (+Z)
-	AddFace(Vec3(-1.0f, 0.0f, 0.0f), Vec3(0.0f, 1.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f));	// 왼면   (-X)
-	AddFace(Vec3(+1.0f, 0.0f, 0.0f), Vec3(0.0f, 1.0f, 0.0f), Vec3(0.0f, 0.0f, +1.0f));	// 오른면 (+X)
-	AddFace(Vec3(0.0f, +1.0f, 0.0f), Vec3(0.0f, 0.0f, +1.0f), Vec3(1.0f, 0.0f, 0.0f));	// 윗면   (+Y)
-	AddFace(Vec3(0.0f, -1.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec3(1.0f, 0.0f, 0.0f));	// 아랫면 (-Y)
+	AddFace(vec3(0.0f, 0.0f, -1.0f), vec3(0.0f, 1.0f, 0.0f), vec3(1.0f, 0.0f, 0.0f));		// 앞면   (-Z)
+	AddFace(vec3(0.0f, 0.0f, +1.0f), vec3(0.0f, 1.0f, 0.0f), vec3(-1.0f, 0.0f, 0.0f));	// 뒷면   (+Z)
+	AddFace(vec3(-1.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f), vec3(0.0f, 0.0f, -1.0f));	// 왼면   (-X)
+	AddFace(vec3(+1.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f), vec3(0.0f, 0.0f, +1.0f));	// 오른면 (+X)
+	AddFace(vec3(0.0f, +1.0f, 0.0f), vec3(0.0f, 0.0f, +1.0f), vec3(1.0f, 0.0f, 0.0f));	// 윗면   (+Y)
+	AddFace(vec3(0.0f, -1.0f, 0.0f), vec3(0.0f, 0.0f, -1.0f), vec3(1.0f, 0.0f, 0.0f));	// 아랫면 (-Y)
 }
 
 // 위를 바라보는 바닥 평면(사각형) 정점 4개와 인덱스 6개를 채운다.
 void FillGroundPlane(VertexPNT* _pOutVertices4, _u32* _pOutIndices6, _f32 _halfSize)
 {
-	const Vec3 up = Vec3::Up();
+	const vec3 up = vec3::Up();
 
 	// 위에서 내려다볼 때 시계 방향이 되도록: 멀리-왼 → 멀리-오른 → 가까이-왼 → 가까이-오른
-	_pOutVertices4[0] = { Vec3(-_halfSize, 0.0f, +_halfSize), up, Vec2(0.0f, 0.0f) };
-	_pOutVertices4[1] = { Vec3(+_halfSize, 0.0f, +_halfSize), up, Vec2(1.0f, 0.0f) };
-	_pOutVertices4[2] = { Vec3(-_halfSize, 0.0f, -_halfSize), up, Vec2(0.0f, 1.0f) };
-	_pOutVertices4[3] = { Vec3(+_halfSize, 0.0f, -_halfSize), up, Vec2(1.0f, 1.0f) };
+	_pOutVertices4[0] = { vec3(-_halfSize, 0.0f, +_halfSize), up, vec2(0.0f, 0.0f) };
+	_pOutVertices4[1] = { vec3(+_halfSize, 0.0f, +_halfSize), up, vec2(1.0f, 0.0f) };
+	_pOutVertices4[2] = { vec3(-_halfSize, 0.0f, -_halfSize), up, vec2(0.0f, 1.0f) };
+	_pOutVertices4[3] = { vec3(+_halfSize, 0.0f, -_halfSize), up, vec2(1.0f, 1.0f) };
 
 	_pOutIndices6[0] = 0; _pOutIndices6[1] = 1; _pOutIndices6[2] = 2;
 	_pOutIndices6[3] = 2; _pOutIndices6[4] = 1; _pOutIndices6[5] = 3;

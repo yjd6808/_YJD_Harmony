@@ -40,8 +40,8 @@ private:
 	~SoundEngine();
 
 public:
-	static constexpr _s32 kInvalidAudioId_v = -1;	// 재생 실패 시 반환되는 번호
-	static constexpr _s32 kMaxVoices_v = 32;		// 동시 재생 가능한 소리 수
+	static constexpr _s32 INVALID_AUDIO_ID = -1;	// 재생 실패 시 반환되는 번호
+	static constexpr _s32 MAX_VOICES = 32;		// 동시 재생 가능한 소리 수
 
 public:
 	// 사운드 엔진을 켬다. 실패해도 게임은 계속 돌 수 있게 설계했다. (소리만 안 남)
@@ -57,7 +57,7 @@ public:
 	// @param _path   : WAV 파일 경로 (처음 재생 시 자동으로 캐시에 올라간다)
 	// @param _bLoop  : true면 무한 반복
 	// @param _volume : 0.0(무음) ~ 1.0(원음) ~ 2.0(증폭)
-	// @return 재생 제어용 audioId. 실패하면 kInvalidAudioId_v.
+	// @return 재생 제어용 audioId. 실패하면 INVALID_AUDIO_ID.
 	_s32 Play2d(const jc::String& _path, bool _bLoop = false, _f32 _volume = 1.0f);
 
 	// 사인파 톤을 즉석에서 만들어 재생한다. (파일 없이 효과음을 낼 때 - 튜토리얼용)
@@ -89,7 +89,7 @@ private:
 	// 메모리에 올라온 WAV 한 개 (포맷 정보 + PCM 샘플 바이트들)
 	struct WavData
 	{
-		WAVEFORMATEX format;		// 샘플레이트/채널/비트수 등 파형 설명서
+		WAVEFORMATEX format_;		// 샘플레이트/채널/비트수 등 파형 설명서
 		jc::Vector<_u8> samples;	// 실제 소리 데이터 (PCM)
 	};
 
@@ -97,9 +97,9 @@ private:
 	struct VoiceSlot
 	{
 		IXAudio2SourceVoice* pVoice = nullptr;	// 재생기 (nullptr면 빈 슬롯)
-		_s32 audioId = kInvalidAudioId_v;		// 외부에 돌려준 제어 번호
-		bool bPaused = false;					// 일시정지 상태인가
-		bool bLoop = false;						// 반복 재생인가
+		_s32 audioId_ = INVALID_AUDIO_ID;		// 외부에 돌려준 제어 번호
+		bool bPaused_ = false;					// 일시정지 상태인가
+		bool bLoop_ = false;					// 반복 재생인가
 		WavData* pOwnedTone = nullptr;			// PlayTone이 즉석에서 만든 데이터 (슬롯이 소유, 회수 시 delete)
 	};
 
@@ -127,7 +127,7 @@ private:
 	bool bComInitialized_;					// 이 인스턴스가 COM을 초기화했는가 (Finalize에서 해제 대상)
 	_s32 nextAudioId_;						// 다음에 발급할 audioId
 
-	VoiceSlot voices_[kMaxVoices_v];				// 재생기 슬롯들
+	VoiceSlot voices_[MAX_VOICES];				// 재생기 슬롯들
 	jc::HashMap<jc::String, WavData*> cache_;		// 경로 -> WAV 데이터 캐시
 	jc::Vector<jc::String> cacheKeys_;				// 캐시된 경로 목록 (UncacheAll 순회용)
 };

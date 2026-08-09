@@ -16,9 +16,9 @@ NS_SGF_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 // 생성자: 기본값 설정 (진한 회색 배경, 수직동기화 켜짐)
 Application::Application()
-	: m_ClearColor(0.1f, 0.1f, 0.1f, 1.0f)
-	, m_bVsync(true)
-	, m_bInitialized(false)
+	: clearColor_(0.1f, 0.1f, 0.1f, 1.0f)
+	, bVsync_(true)
+	, bInitialized_(false)
 {
 }
 
@@ -39,7 +39,7 @@ Application::~Application()
 //  즉, 뒤의 단계는 앞 단계의 결과물에 의존한다.
 bool Application::Initialize(const wchar_t* _szTitle, _s32 _width, _s32 _height)
 {
-	if (m_bInitialized)
+	if (bInitialized_)
 	{
 		return true;
 	}
@@ -48,16 +48,16 @@ bool Application::Initialize(const wchar_t* _szTitle, _s32 _width, _s32 _height)
 	__sSgfApplication = this;
 
 	// 1. 메인 윈도우 생성 + 입력 관리자 연결
-	if (!m_Window.Create(_szTitle, _width, _height))
+	if (!window_.Create(_szTitle, _width, _height))
 	{
 		OutputDebugStringA("[sgf] 윈도우 생성 실패\n");
 		__sSgfApplication = nullptr;
 		return false;
 	}
-	m_Window.ConnectInput(&m_Input);
+	window_.ConnectInput(&input_);
 
 	// 2. DX11 디바이스 초기화 (v2.1: 창과 분리된 "디바이스만" 만든다)
-	if (!m_Device.Initialize())
+	if (!device_.Initialize())
 	{
 		OutputDebugStringA("[sgf] 그래픽 디바이스 초기화 실패\n");
 		__sSgfApplication = nullptr;
@@ -65,7 +65,7 @@ bool Application::Initialize(const wchar_t* _szTitle, _s32 _width, _s32 _height)
 	}
 
 	// 3. 메인 윈도우에 그리기 표면(스왑체인 + 깊이버퍼)을 붙인다. (v2.1)
-	if (!m_Window.CreateSurface(&m_Device))
+	if (!window_.CreateSurface(&device_))
 	{
 		OutputDebugStringA("[sgf] 메인 윈도우 표면 생성 실패\n");
 		__sSgfApplication = nullptr;
@@ -73,7 +73,7 @@ bool Application::Initialize(const wchar_t* _szTitle, _s32 _width, _s32 _height)
 	}
 
 	// 4. 2D 렌더러 초기화 (셰이더 컴파일, 배치 버퍼 생성)
-	if (!m_Renderer.Initialize(&m_Device))
+	if (!renderer_.Initialize(&device_))
 	{
 		OutputDebugStringA("[sgf] 2D 렌더러 초기화 실패\n");
 		__sSgfApplication = nullptr;
@@ -81,7 +81,7 @@ bool Application::Initialize(const wchar_t* _szTitle, _s32 _width, _s32 _height)
 	}
 
 	// 5. 3D 렌더러 초기화 (v2.1: 2D와 동급인 전역 배치 렌더러)
-	if (!m_Renderer3D.Initialize(&m_Device))
+	if (!renderer3D_.Initialize(&device_))
 	{
 		OutputDebugStringA("[sgf] 3D 렌더러 초기화 실패\n");
 		__sSgfApplication = nullptr;
@@ -96,7 +96,7 @@ bool Application::Initialize(const wchar_t* _szTitle, _s32 _width, _s32 _height)
 
 	// 7. 창 활성/비활성 이벤트 구독
 	//    (Cocos2d-x의 applicationDidEnterBackground/WillEnterForeground 대응)
-	m_Window.onActivated.Register(kActivationListenerId_v, [this](bool _bActive)
+	window_.onActivated.Register(ACTIVATION_LISTENER_ID, [this](bool _bActive)
 	{
 		if (_bActive)
 		{
@@ -109,8 +109,8 @@ bool Application::Initialize(const wchar_t* _szTitle, _s32 _width, _s32 _height)
 	});
 
 	// 8. 타이머 시작 (이 순간부터 dt 측정)
-	m_Timer.Reset();
-	m_bInitialized = true;
+	timer_.Reset();
+	bInitialized_ = true;
 
 	// 9. 파생 앱 훅: 보통 여기서 첫 씬을 시작한다. (cocos의 AppDelegate와 동일)
 	if (!ApplicationDidFinishLaunching())
@@ -129,7 +129,7 @@ bool Application::Initialize(const wchar_t* _szTitle, _s32 _width, _s32 _height)
 // 반환된 창에 g_cDirector.RunScene(pScene, pWindow)로 씬을 올리면 된다.
 Window* Application::CreateSubWindow(const wchar_t* _szTitle, _s32 _width, _s32 _height)
 {
-	jc_assert_msg(m_bInitialized, "Initialize 이후에만 서브 윈도우를 만들 수 있습니다");
+	jc_assert_msg(bInitialized_, "Initialize 이후에만 서브 윈도우를 만들 수 있습니다");
 
 	Window* pWindow = new Window();
 	if (!pWindow->Create(_szTitle, _width, _height))
@@ -142,7 +142,7 @@ Window* Application::CreateSubWindow(const wchar_t* _szTitle, _s32 _width, _s32 
 	// 서브 창이 닫혀도 프로그램 전체가 종료되면 안 된다. (WM_DESTROY에서 PostQuitMessage 금지)
 	pWindow->SetQuitOnClose(false);
 
-	if (!pWindow->CreateSurface(&m_Device))
+	if (!pWindow->CreateSurface(&device_))
 	{
 		OutputDebugStringA("[sgf] 서브 윈도우 표면 생성 실패\n");
 		pWindow->Destroy();
@@ -150,7 +150,7 @@ Window* Application::CreateSubWindow(const wchar_t* _szTitle, _s32 _width, _s32 
 		return nullptr;
 	}
 
-	m_SubWindows.PushBack(pWindow);
+	subWindows_.PushBack(pWindow);
 	return pWindow;
 }
 
@@ -162,7 +162,7 @@ Window* Application::CreateSubWindow(const wchar_t* _szTitle, _s32 _width, _s32 
 //  -> 입력 프레임 넘김 -> 사운드 정리
 void Application::Run()
 {
-	if (!m_bInitialized)
+	if (!bInitialized_)
 	{
 		return;
 	}
@@ -172,14 +172,14 @@ void Application::Run()
 		// 1. 윈도우 메시지 처리. WM_QUIT이면 루프 종료.
 		//    (PeekMessage가 스레드의 모든 창 메시지를 함께 처리하므로
 		//     서브 윈도우는 따로 펌프할 필요가 없다)
-		if (!m_Window.PumpMessage())
+		if (!window_.PumpMessage())
 		{
 			break;
 		}
 
 		// 2. 직전 프레임으로부터 경과 시간 측정 (v2: jc::TimeSpan)
-		m_Timer.Tick();
-		const jc::TimeSpan& dt = m_Timer.Delta();
+		timer_.Tick();
+		const jc::TimeSpan& dt = timer_.Delta();
 
 		// 3. 로직 갱신: 모든 윈도우의 씬 교체/갱신 -> 앱 훅
 		g_cDirector.Update(dt);
@@ -189,27 +189,27 @@ void Application::Run()
 		DestroyClosedSubWindows();
 
 		// 5. 메인 윈도우 그리기: 화면 지우기 -> 씬 그리기 -> 앱 훅 -> 화면 표시
-		m_Device.BeginFrame(&m_Window, m_ClearColor);
-		g_cDirector.Render(&m_Window);
+		device_.BeginFrame(&window_, clearColor_);
+		g_cDirector.Render(&window_);
 		OnRender();
-		m_Device.EndFrame(&m_Window, m_bVsync);
+		device_.EndFrame(&window_, bVsync_);
 
 		// 6. 서브 윈도우들 그리기 (v2.1)
-		for (int i = 0; i < m_SubWindows.Size(); ++i)
+		for (int i = 0; i < subWindows_.Size(); ++i)
 		{
-			Window* pSub = m_SubWindows[i];
+			Window* pSub = subWindows_[i];
 			if (pSub->IsClosed() || !pSub->HasSurface())
 			{
 				continue;
 			}
-			m_Device.BeginFrame(pSub, m_ClearColor);
+			device_.BeginFrame(pSub, clearColor_);
 			g_cDirector.Render(pSub);
-			m_Device.EndFrame(pSub, m_bVsync);
+			device_.EndFrame(pSub, bVsync_);
 		}
 
 		// 7. 입력 상태를 다음 프레임으로 넘긴다.
 		//    (IsKeyPressed 같은 "막 눌림" 판정이 이 호출에 의존한다)
-		m_Input.NextFrame();
+		input_.NextFrame();
 
 		// 8. 사운드 엔진 정리 (재생이 끝난 소리의 재생기 회수)
 		g_cSound.Update();
@@ -221,9 +221,9 @@ void Application::Run()
 // 사용자가 X 버튼으로 닫은 창의 씬/표면/메모리를 회수한다.
 void Application::DestroyClosedSubWindows()
 {
-	for (int i = m_SubWindows.Size() - 1; i >= 0; --i)
+	for (int i = subWindows_.Size() - 1; i >= 0; --i)
 	{
-		Window* pSub = m_SubWindows[i];
+		Window* pSub = subWindows_[i];
 		if (!pSub->IsClosed())
 		{
 			continue;
@@ -238,11 +238,11 @@ void Application::DestroyClosedSubWindows()
 		JC_DELETE_SAFE(pSub);
 
 		// 3) 목록에서 제거 (뒤에서부터 밀어 넣기)
-		for (int k = i; k < m_SubWindows.Size() - 1; ++k)
+		for (int k = i; k < subWindows_.Size() - 1; ++k)
 		{
-			m_SubWindows[k] = m_SubWindows[k + 1];
+			subWindows_[k] = subWindows_[k + 1];
 		}
-		m_SubWindows.Resize(m_SubWindows.Size() - 1);
+		subWindows_.Resize(subWindows_.Size() - 1);
 	}
 }
 
@@ -250,31 +250,31 @@ void Application::DestroyClosedSubWindows()
 // 엔진 종료: 초기화의 역순으로 정리한다.
 void Application::Finalize()
 {
-	if (!m_bInitialized)
+	if (!bInitialized_)
 	{
 		return;
 	}
-	m_bInitialized = false;
+	bInitialized_ = false;
 
 	ApplicationDidExit();			// 파생 앱 정리 훅
 	g_cDirector.Cleanup();			// 모든 윈도우의 씬 정리 (텍스처 등 리소스 반납)
 
 	// 서브 윈도우 정리 (v2.1)
-	for (int i = 0; i < m_SubWindows.Size(); ++i)
+	for (int i = 0; i < subWindows_.Size(); ++i)
 	{
-		Window* pSub = m_SubWindows[i];
+		Window* pSub = subWindows_[i];
 		pSub->DestroySurface();
 		pSub->Destroy();
 		JC_DELETE_SAFE(pSub);
 	}
-	m_SubWindows.Clear();
+	subWindows_.Clear();
 
 	g_cSound.Finalize();			// 사운드 엔진 정리 (XAudio2 해제)
-	m_Renderer3D.Finalize();		// 3D 렌더러 리소스 해제 (v2.1)
-	m_Renderer.Finalize();			// 2D 렌더러 리소스 해제
-	m_Window.DestroySurface();		// 메인 창 표면 해제 (디바이스보다 먼저)
-	m_Device.Finalize();			// DX11 디바이스 해제
-	m_Window.Destroy();				// 메인 윈도우 파괴
+	renderer3D_.Finalize();		// 3D 렌더러 리소스 해제 (v2.1)
+	renderer_.Finalize();			// 2D 렌더러 리소스 해제
+	window_.DestroySurface();		// 메인 창 표면 해제 (디바이스보다 먼저)
+	device_.Finalize();			// DX11 디바이스 해제
+	window_.Destroy();				// 메인 윈도우 파괴
 
 	__sSgfApplication = nullptr;	// 전역 포인터 해제
 }

@@ -58,9 +58,9 @@ void RenderingPipeline_Main()
 	//    주의! 시계 방향(CW) 순서로 적어야 한다.
 	//    DX11 기본 설정은 반시계 방향 삼각형을 "뒷면"으로 보고 그리지 않는다. (백페이스 컸링)
 	const VertexPC vertices[] = {
-		{ Vec3(0.0f,  +0.5f, 0.0f), Color(1.0f, 0.0f, 0.0f, 1.0f) },	// 위   (빨강)
-		{ Vec3(+0.5f, -0.5f, 0.0f), Color(0.0f, 0.0f, 1.0f, 1.0f) },	// 오른쪽아래 (파랑)
-		{ Vec3(-0.5f, -0.5f, 0.0f), Color(0.0f, 1.0f, 0.0f, 1.0f) },	// 왼쪽아래  (초록)
+		{ vec3(0.0f,  +0.5f, 0.0f), color(1.0f, 0.0f, 0.0f, 1.0f) },	// 위   (빨강)
+		{ vec3(+0.5f, -0.5f, 0.0f), color(0.0f, 0.0f, 1.0f, 1.0f) },	// 오른쪽아래 (파랑)
+		{ vec3(-0.5f, -0.5f, 0.0f), color(0.0f, 1.0f, 0.0f, 1.0f) },	// 왼쪽아래  (초록)
 	};
 
 	// 3. 정점 버퍼 생성: 정점 데이터를 GPU 메모리로 복사한다.
@@ -100,7 +100,7 @@ void RenderingPipeline_Main()
 		}
 		input.NextFrame();
 
-		device.BeginFrame(Color::CornflowerBlue());
+		device.BeginFrame(color::CornflowerBlue());
 
 		// === 그리기 순서: "무엇을(VB), 어떻게(Shader), 어떤 모양으로(Topology) 그릴지" 설정 후 Draw ===
 

@@ -29,19 +29,19 @@ using namespace jc;
 
 namespace
 {
-	// 셰이더 CbTransform(b0)과 메모리 배치 일치 (Mat4 x 2 = 128바이트)
+	// 셰이더 CbTransform(b0)과 메모리 배치 일치 (mat4 x 2 = 128바이트)
 	struct CbTransform
 	{
-		Mat4 world_;			// 월드 행렬 (법선 변환용)
-		Mat4 worldViewProj_;	// 월드 x 뷰 x 투영 결합 행렬
+		mat4 world_;			// 월드 행렬 (법선 변환용)
+		mat4 worldViewProj_;	// 월드 x 뷰 x 투영 결합 행렬
 	};
 
 	// 셰이더 CbLight(b1)와 메모리 배치 일치 (16 + 16 = 32바이트)
 	struct CbLight
 	{
-		Vec3 lightDir_;			// 빛이 나아가는 방향 (정규화 필수!)
+		vec3 lightDir_;			// 빛이 나아가는 방향 (정규화 필수!)
 		_f32 ambient_;			// 주변광 세기 (0~1)
-		Color baseColor_;		// 물체 기본 색상
+		color baseColor_;		// 물체 기본 색상
 	};
 }
 
@@ -103,8 +103,8 @@ void Lighting_Main()
 	}
 
 	// 4. 뷰/투영 행렬 (09번과 동일)
-	const Mat4 view = Mat4::LookAtLH(Vec3(0.0f, 1.2f, -2.5f), Vec3::Zero(), Vec3::Up());
-	const Mat4 proj = Mat4::PerspectiveFovLH(jc_math_deg2rad(60.0f), window.AspectRatio(), 0.1f, 100.0f);
+	const mat4 view = mat4::LookAtLH(vec3(0.0f, 1.2f, -2.5f), vec3::Zero(), vec3::Up());
+	const mat4 proj = mat4::PerspectiveFovLH(jc_math_deg2rad(60.0f), window.AspectRatio(), 0.1f, 100.0f);
 
 	FrameTimer timer;
 	timer.Reset();
@@ -131,10 +131,10 @@ void Lighting_Main()
 
 		input.NextFrame();
 
-		device.BeginFrame(Color(0.05f, 0.05f, 0.1f, 1.0f));
+		device.BeginFrame(color(0.05f, 0.05f, 0.1f, 1.0f));
 
 		// 큐브 회전 (빛은 고정, 물체만 회전 -> 면의 밝기가 계속 변한다)
-		const Mat4 world = Mat4::RotationY(elapsed * 0.8f) * Mat4::RotationX(elapsed * 0.3f);
+		const mat4 world = mat4::RotationY(elapsed * 0.8f) * mat4::RotationX(elapsed * 0.3f);
 
 		CbTransform cbT = {};
 		cbT.world_ = world;
@@ -142,9 +142,9 @@ void Lighting_Main()
 		cbTransform.UpdateAndBind(&device, cbT, 0);	// register(b0)
 
 		CbLight cbL = {};
-		cbL.lightDir_ = Vec3(-0.5f, -0.7f, 0.5f).Normalized();	// 오른쪽 위 뒤 -> 왼쪽 아래 앞
+		cbL.lightDir_ = vec3(-0.5f, -0.7f, 0.5f).Normalized();	// 오른쪽 위 뒤 -> 왼쪽 아래 앞
 		cbL.ambient_ = ambient;
-		cbL.baseColor_ = Color(0.9f, 0.6f, 0.2f, 1.0f);			// 주황색 큐브
+		cbL.baseColor_ = color(0.9f, 0.6f, 0.2f, 1.0f);			// 주황색 큐브
 		cbLight.UpdateAndBind(&device, cbL, 1);		// register(b1)
 
 		vb.Bind(&device);

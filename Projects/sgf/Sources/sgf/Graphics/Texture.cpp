@@ -31,18 +31,21 @@
 
 NS_SGF_BEGIN
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 생성자
 Texture::Texture()
-	: m_Width(0)
-	, m_Height(0)
+	: width_(0)
+	, height_(0)
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 소멸자 (ComPtr이 자동 Release)
 Texture::~Texture()
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // WIC으로 이미지 파일을 읽어 텍스처 생성
 bool Texture::LoadFromFile(GraphicDevice* _pDevice, const wchar_t* _szFilePath)
 {
@@ -112,6 +115,7 @@ bool Texture::LoadFromFile(GraphicDevice* _pDevice, const wchar_t* _szFilePath)
 	return bResult;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // nanosvg로 SVG 파일을 래스터화해서 텍스처 생성
 bool Texture::LoadFromSvgFile(GraphicDevice* _pDevice, const char* _szFilePath, _f32 _scale)
 {
@@ -159,11 +163,12 @@ bool Texture::LoadFromSvgFile(GraphicDevice* _pDevice, const char* _szFilePath, 
 #endif
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 메모리의 RGBA 픽셀 배열로 텍스처 생성
 bool Texture::CreateFromMemory(GraphicDevice* _pDevice, const _u8* _pPixels, int _width, int _height)
 {
 	// 재사용(재초기화) 대비: 기존 텍스처 뷰를 먼저 정리한다. (GetAddressOf 덮어쓰기 누수 방지)
-	m_pShaderResourceView.Reset();
+	pShaderResourceView_.Reset();
 
 	// 텍스처 설정
 	D3D11_TEXTURE2D_DESC td = {};
@@ -190,21 +195,22 @@ bool Texture::CreateFromMemory(GraphicDevice* _pDevice, const _u8* _pPixels, int
 
 	// 셰이더가 이 텍스처를 읽을 수 있게 해주는 뷰(SRV) 생성
 	hr = _pDevice->Device()->CreateShaderResourceView(
-		pTexture.Get(), nullptr, m_pShaderResourceView.GetAddressOf());
+		pTexture.Get(), nullptr, pShaderResourceView_.GetAddressOf());
 	if (FAILED(hr))
 	{
 		return false;
 	}
 
-	m_Width = _width;
-	m_Height = _height;
+	width_ = _width;
+	height_ = _height;
 	return true;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // PS 단계 지정 슬롯에 텍스처 장착
 void Texture::Bind(GraphicDevice* _pDevice, UINT _slot)
 {
-	ID3D11ShaderResourceView* pViews[] = { m_pShaderResourceView.Get() };
+	ID3D11ShaderResourceView* pViews[] = { pShaderResourceView_.Get() };
 	_pDevice->Context()->PSSetShaderResources(_slot, 1, pViews);
 }
 

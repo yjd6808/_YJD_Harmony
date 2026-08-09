@@ -125,10 +125,10 @@ void SoundEngine::Update()
 		return;
 	}
 
-	for (_s32 i = 0; i < kMaxVoices_v; ++i)
+	for (_s32 i = 0; i < MAX_VOICES; ++i)
 	{
 		VoiceSlot& slot = voices_[i];
-		if (slot.pVoice == nullptr || slot.bPaused)
+		if (slot.pVoice == nullptr || slot.bPaused_)
 		{
 			continue;	// 빈 슬롯/일시정지 중은 건너맄 (일시정지는 끝난 게 아니다)
 		}
@@ -146,7 +146,7 @@ void SoundEngine::Update()
 // 빈 슬롯 찾기. 꽉 차있으면 nullptr. (호출 전 Update로 회수를 마친 상태라고 가정)
 SoundEngine::VoiceSlot* SoundEngine::findFreeSlot()
 {
-	for (_s32 i = 0; i < kMaxVoices_v; ++i)
+	for (_s32 i = 0; i < MAX_VOICES; ++i)
 	{
 		if (voices_[i].pVoice == nullptr)
 		{
@@ -160,13 +160,13 @@ SoundEngine::VoiceSlot* SoundEngine::findFreeSlot()
 // audioId로 재생 중인 슬롯을 찾는다. 이미 끝나 회수된 소리면 nullptr.
 SoundEngine::VoiceSlot* SoundEngine::findSlot(_s32 _audioId)
 {
-	if (_audioId == kInvalidAudioId_v)
+	if (_audioId == INVALID_AUDIO_ID)
 	{
 		return nullptr;
 	}
-	for (_s32 i = 0; i < kMaxVoices_v; ++i)
+	for (_s32 i = 0; i < MAX_VOICES; ++i)
 	{
-		if (voices_[i].pVoice != nullptr && voices_[i].audioId == _audioId)
+		if (voices_[i].pVoice != nullptr && voices_[i].audioId_ == _audioId)
 		{
 			return &voices_[i];
 		}
@@ -190,9 +190,9 @@ void SoundEngine::releaseSlot(VoiceSlot& _slot)
 		delete _slot.pOwnedTone;	// PlayTone 전용 데이터 (캐시와 무관)
 		_slot.pOwnedTone = nullptr;
 	}
-	_slot.audioId = kInvalidAudioId_v;
-	_slot.bPaused = false;
-	_slot.bLoop = false;
+	_slot.audioId_ = INVALID_AUDIO_ID;
+	_slot.bPaused_ = false;
+	_slot.bLoop_ = false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -238,7 +238,7 @@ SoundEngine::WavData* SoundEngine::loadWav(const jc::String& _path)
 	}
 
 	WavData* pWav = new WavData();
-	memset(&pWav->format, 0, sizeof(WAVEFORMATEX));
+	memset(&pWav->format_, 0, sizeof(WAVEFORMATEX));
 	bool bHasFmt = false;
 	bool bHasData = false;
 
@@ -261,8 +261,8 @@ SoundEngine::WavData* SoundEngine::loadWav(const jc::String& _path)
 		{
 			// 파형 설명서: 샘플레이트/채널 수/비트 수 등. WAVEFORMATEX보다 짧을 수 있어 크기를 맞춰 복사.
 			const _u32 copySize = (chunkSize < (_u32)sizeof(WAVEFORMATEX)) ? chunkSize : (_u32)sizeof(WAVEFORMATEX);
-			memcpy(&pWav->format, pData + body, copySize);
-			pWav->format.cbSize = 0;
+			memcpy(&pWav->format_, pData + body, copySize);
+			pWav->format_.cbSize = 0;
 			bHasFmt = true;
 		}
 		else if (memcmp(chunkId, "data", 4) == 0)
@@ -285,7 +285,7 @@ SoundEngine::WavData* SoundEngine::loadWav(const jc::String& _path)
 	}
 
 	// 6. 필수 청크 검사 + 비압축 PCM만 지원 (압축 포맷은 튜토리얼 범위 밖)
-	if (!bHasFmt || !bHasData || pWav->format.wFormatTag != WAVE_FORMAT_PCM)
+	if (!bHasFmt || !bHasData || pWav->format_.wFormatTag != WAVE_FORMAT_PCM)
 	{
 		jc::Console::WriteLine("[sgf] SoundEngine: unsupported WAV format (PCM only)");
 		delete pWav;
@@ -362,27 +362,27 @@ _s32 SoundEngine::Play2d(const jc::String& _path, bool _bLoop, _f32 _volume)
 {
 	if (!bInitialized_)
 	{
-		return kInvalidAudioId_v;
+		return INVALID_AUDIO_ID;
 	}
 
 	WavData* pWav = loadWav(_path);
 	if (pWav == nullptr)
 	{
-		return kInvalidAudioId_v;
+		return INVALID_AUDIO_ID;
 	}
 
 	Update();	// 끝난 슬롯을 먼저 회수해 자리를 확보한다.
 	VoiceSlot* pSlot = findFreeSlot();
 	if (pSlot == nullptr)
 	{
-		return kInvalidAudioId_v;	// 32개 동시 재생 초과
+		return INVALID_AUDIO_ID;	// 32개 동시 재생 초과
 	}
 
 	// 이 WAV의 포맷에 맞는 재생기(SourceVoice)를 만든다.
-	if (FAILED(pXAudio_->CreateSourceVoice(&pSlot->pVoice, &pWav->format)))
+	if (FAILED(pXAudio_->CreateSourceVoice(&pSlot->pVoice, &pWav->format_)))
 	{
 		pSlot->pVoice = nullptr;
-		return kInvalidAudioId_v;
+		return INVALID_AUDIO_ID;
 	}
 
 	// 재생할 데이터를 제출한다. (복사가 아니라 포인터 참조 - 그래서 캐시가 살아있어야 한다)
@@ -396,17 +396,17 @@ _s32 SoundEngine::Play2d(const jc::String& _path, bool _bLoop, _f32 _volume)
 	{
 		pSlot->pVoice->DestroyVoice();
 		pSlot->pVoice = nullptr;
-		return kInvalidAudioId_v;
+		return INVALID_AUDIO_ID;
 	}
 
 	pSlot->pVoice->SetVolume(_volume);
 	pSlot->pVoice->Start(0);
 
-	pSlot->audioId = nextAudioId_++;
-	pSlot->bPaused = false;
-	pSlot->bLoop = _bLoop;
+	pSlot->audioId_ = nextAudioId_++;
+	pSlot->bPaused_ = false;
+	pSlot->bLoop_ = _bLoop;
 	pSlot->pOwnedTone = nullptr;
-	return pSlot->audioId;
+	return pSlot->audioId_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -417,35 +417,35 @@ _s32 SoundEngine::PlayTone(_s32 _frequency, _s32 _milliseconds, _f32 _volume)
 {
 	if (!bInitialized_ || _frequency <= 0 || _milliseconds <= 0)
 	{
-		return kInvalidAudioId_v;
+		return INVALID_AUDIO_ID;
 	}
 
 	Update();
 	VoiceSlot* pSlot = findFreeSlot();
 	if (pSlot == nullptr)
 	{
-		return kInvalidAudioId_v;
+		return INVALID_AUDIO_ID;
 	}
 
-	constexpr _s32 kSampleRate_v = 44100;	// 1초당 샘플 수
-	const _s32 sampleCount = kSampleRate_v * _milliseconds / 1000;
+	constexpr _s32 SAMPLE_RATE = 44100;	// 1초당 샘플 수
+	const _s32 sampleCount = SAMPLE_RATE * _milliseconds / 1000;
 
 	// 톤 전용 WavData를 만든다. (캐시와 무관, 슬롯이 소유하고 끝나면 삭제)
 	WavData* pTone = new WavData();
-	memset(&pTone->format, 0, sizeof(WAVEFORMATEX));
-	pTone->format.wFormatTag = WAVE_FORMAT_PCM;
-	pTone->format.nChannels = 1;							// 모노
-	pTone->format.nSamplesPerSec = kSampleRate_v;
-	pTone->format.wBitsPerSample = 16;						// 샘플 하나 = 16비트 정수
-	pTone->format.nBlockAlign = 2;							// 채널 수 * 바이트 수
-	pTone->format.nAvgBytesPerSec = kSampleRate_v * 2;
+	memset(&pTone->format_, 0, sizeof(WAVEFORMATEX));
+	pTone->format_.wFormatTag = WAVE_FORMAT_PCM;
+	pTone->format_.nChannels = 1;							// 모노
+	pTone->format_.nSamplesPerSec = SAMPLE_RATE;
+	pTone->format_.wBitsPerSample = 16;						// 샘플 하나 = 16비트 정수
+	pTone->format_.nBlockAlign = 2;							// 채널 수 * 바이트 수
+	pTone->format_.nAvgBytesPerSec = SAMPLE_RATE * 2;
 
 	pTone->samples.Resize(sampleCount * 2);	// 16비트 = 샘플당 2바이트
 	_s16* pSamples = (_s16*)pTone->samples.Source();
 
 	// 5ms 페이드 인/아웃: 파형이 갑자기 시작/종료되면 뚝 하는 잡음(클릭 노이즈)이 난다.
 	// 아주 짧은 톤(페이드 2개가 겹칠 정도)은 페이드 기간을 절반으로 줄여 겹침(음수 배율)을 막는다.
-	_f32 fadeSamples = (_f32)(kSampleRate_v * 5) / 1000.0f;
+	_f32 fadeSamples = (_f32)(SAMPLE_RATE * 5) / 1000.0f;
 	if (fadeSamples * 2.0f > (_f32)sampleCount)
 	{
 		fadeSamples = (_f32)sampleCount * 0.5f;
@@ -453,7 +453,7 @@ _s32 SoundEngine::PlayTone(_s32 _frequency, _s32 _milliseconds, _f32 _volume)
 
 	for (_s32 i = 0; i < sampleCount; ++i)
 	{
-		const _f32 t = (_f32)i / (_f32)kSampleRate_v;
+		const _f32 t = (_f32)i / (_f32)SAMPLE_RATE;
 		_f32 amplitude = sinf(jc_math_pi2 * (_f32)_frequency * t);
 
 		if (i < (_s32)fadeSamples)
@@ -468,11 +468,11 @@ _s32 SoundEngine::PlayTone(_s32 _frequency, _s32 _milliseconds, _f32 _volume)
 		pSamples[i] = (_s16)(amplitude * 32000.0f);	// 16비트 범위(+-32767)로 확대
 	}
 
-	if (FAILED(pXAudio_->CreateSourceVoice(&pSlot->pVoice, &pTone->format)))
+	if (FAILED(pXAudio_->CreateSourceVoice(&pSlot->pVoice, &pTone->format_)))
 	{
 		pSlot->pVoice = nullptr;
 		delete pTone;
-		return kInvalidAudioId_v;
+		return INVALID_AUDIO_ID;
 	}
 
 	XAUDIO2_BUFFER buffer = {};
@@ -485,17 +485,17 @@ _s32 SoundEngine::PlayTone(_s32 _frequency, _s32 _milliseconds, _f32 _volume)
 		pSlot->pVoice->DestroyVoice();
 		pSlot->pVoice = nullptr;
 		delete pTone;
-		return kInvalidAudioId_v;
+		return INVALID_AUDIO_ID;
 	}
 
 	pSlot->pVoice->SetVolume(_volume);
 	pSlot->pVoice->Start(0);
 
-	pSlot->audioId = nextAudioId_++;
-	pSlot->bPaused = false;
-	pSlot->bLoop = false;
+	pSlot->audioId_ = nextAudioId_++;
+	pSlot->bPaused_ = false;
+	pSlot->bLoop_ = false;
 	pSlot->pOwnedTone = pTone;	// 슬롯이 소유 -> releaseSlot에서 delete
-	return pSlot->audioId;
+	return pSlot->audioId_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -509,9 +509,10 @@ void SoundEngine::Stop(_s32 _audioId)
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void SoundEngine::StopAll()
 {
-	for (_s32 i = 0; i < kMaxVoices_v; ++i)
+	for (_s32 i = 0; i < MAX_VOICES; ++i)
 	{
 		if (voices_[i].pVoice != nullptr)
 		{
@@ -520,50 +521,55 @@ void SoundEngine::StopAll()
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void SoundEngine::Pause(_s32 _audioId)
 {
 	VoiceSlot* pSlot = findSlot(_audioId);
-	if (pSlot != nullptr && !pSlot->bPaused)
+	if (pSlot != nullptr && !pSlot->bPaused_)
 	{
 		pSlot->pVoice->Stop(0);	// Stop(0)은 파괴가 아니라 \"멈춤\" (버퍼는 그대로 남는다)
-		pSlot->bPaused = true;
+		pSlot->bPaused_ = true;
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void SoundEngine::PauseAll()
 {
-	for (_s32 i = 0; i < kMaxVoices_v; ++i)
+	for (_s32 i = 0; i < MAX_VOICES; ++i)
 	{
-		if (voices_[i].pVoice != nullptr && !voices_[i].bPaused)
+		if (voices_[i].pVoice != nullptr && !voices_[i].bPaused_)
 		{
 			voices_[i].pVoice->Stop(0);
-			voices_[i].bPaused = true;
+			voices_[i].bPaused_ = true;
 		}
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void SoundEngine::Resume(_s32 _audioId)
 {
 	VoiceSlot* pSlot = findSlot(_audioId);
-	if (pSlot != nullptr && pSlot->bPaused)
+	if (pSlot != nullptr && pSlot->bPaused_)
 	{
 		pSlot->pVoice->Start(0);	// 멈췄던 지점부터 이어서 재생
-		pSlot->bPaused = false;
+		pSlot->bPaused_ = false;
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void SoundEngine::ResumeAll()
 {
-	for (_s32 i = 0; i < kMaxVoices_v; ++i)
+	for (_s32 i = 0; i < MAX_VOICES; ++i)
 	{
-		if (voices_[i].pVoice != nullptr && voices_[i].bPaused)
+		if (voices_[i].pVoice != nullptr && voices_[i].bPaused_)
 		{
 			voices_[i].pVoice->Start(0);
-			voices_[i].bPaused = false;
+			voices_[i].bPaused_ = false;
 		}
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 void SoundEngine::SetVolume(_s32 _audioId, _f32 _volume)
 {
 	VoiceSlot* pSlot = findSlot(_audioId);
@@ -573,10 +579,11 @@ void SoundEngine::SetVolume(_s32 _audioId, _f32 _volume)
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 bool SoundEngine::IsPlaying(_s32 _audioId)
 {
 	VoiceSlot* pSlot = findSlot(_audioId);
-	return pSlot != nullptr && !pSlot->bPaused;
+	return pSlot != nullptr && !pSlot->bPaused_;
 }
 
 NS_SGF_END

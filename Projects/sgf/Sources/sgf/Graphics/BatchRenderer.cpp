@@ -15,9 +15,9 @@ using namespace jc;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 BatchRenderer::BatchRenderer()
-	: m_pDevice(nullptr)
-	, m_ViewProjection(Mat4::Identity())
-	, m_bBegun(false)
+	: pDevice_(nullptr)
+	, viewProjection_(mat4::Identity())
+	, bBegun_(false)
 {
 }
 
@@ -31,18 +31,18 @@ BatchRenderer::~BatchRenderer()
 // 공통 초기화: 셰이더 컴파일 + 상수 버퍼 생성 + 파생 전용 리소스 생성
 bool BatchRenderer::Initialize(GraphicDevice* _pDevice)
 {
-	m_pDevice = _pDevice;
+	pDevice_ = _pDevice;
 
 	// 1. 파생이 내려준 셰이더 소스/정점 레이아웃으로 컴파일
 	UINT layoutCount = 0;
 	const D3D11_INPUT_ELEMENT_DESC* pLayoutDescs = VertexLayout(&layoutCount);
-	if (!m_Shader.CompileFromString(_pDevice, ShaderSource(), pLayoutDescs, layoutCount))
+	if (!shader_.CompileFromString(_pDevice, ShaderSource(), pLayoutDescs, layoutCount))
 	{
 		return false;
 	}
 
 	// 2. 뷰프로젝션 행렬용 상수 버퍼
-	if (!m_CbFrame.Create(_pDevice))
+	if (!cbFrame_.Create(_pDevice))
 	{
 		return false;
 	}
@@ -55,16 +55,16 @@ bool BatchRenderer::Initialize(GraphicDevice* _pDevice)
 void BatchRenderer::Finalize()
 {
 	// 셰이더/상수 버퍼는 각자의 소멸자(ComPtr)가 GPU 리소스를 알아서 해제한다.
-	m_bBegun = false;
+	bBegun_ = false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 배치 시작: 행렬 저장 + 파생의 OnBegin()으로 배치 초기화
-void BatchRenderer::Begin(const Mat4& _viewProjection)
+void BatchRenderer::Begin(const mat4& _viewProjection)
 {
-	jc_assert(!m_bBegun);
-	m_bBegun = true;
-	m_ViewProjection = _viewProjection;
+	jc_assert(!bBegun_);
+	bBegun_ = true;
+	viewProjection_ = _viewProjection;
 	OnBegin();
 }
 
@@ -72,17 +72,17 @@ void BatchRenderer::Begin(const Mat4& _viewProjection)
 // 배치 종료: 남은 배치를 모두 그린다.
 void BatchRenderer::End()
 {
-	jc_assert(m_bBegun);
+	jc_assert(bBegun_);
 	Flush();
-	m_bBegun = false;
+	bBegun_ = false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 공통 파이프라인 구성: 셰이더 바인딩 + 뷰프로젝션 상수 버퍼 갱신/바인딩
 void BatchRenderer::ApplyFrameStates()
 {
-	m_Shader.Bind(m_pDevice);
-	m_CbFrame.UpdateAndBind(m_pDevice, m_ViewProjection, 0);
+	shader_.Bind(pDevice_);
+	cbFrame_.UpdateAndBind(pDevice_, viewProjection_, 0);
 }
 
 NS_SGF_END

@@ -57,10 +57,10 @@ void VertexIndexBuffer_Main()
 	// 2. 정점 4개 (꼭짓점만!)
 	//    주석의 그림과 같은 번호 순서다.
 	const VertexPC vertices[] = {
-		{ Vec3(-0.5f, +0.5f, 0.0f), Color(1.0f, 0.0f, 0.0f, 1.0f) },	// 0: 왼쪽위   (빨강)
-		{ Vec3(+0.5f, +0.5f, 0.0f), Color(0.0f, 1.0f, 0.0f, 1.0f) },	// 1: 오른쪽위 (초록)
-		{ Vec3(-0.5f, -0.5f, 0.0f), Color(0.0f, 0.0f, 1.0f, 1.0f) },	// 2: 왼쪽아래 (파랑)
-		{ Vec3(+0.5f, -0.5f, 0.0f), Color(1.0f, 1.0f, 0.0f, 1.0f) },	// 3: 오른쪽아래 (노랑)
+		{ vec3(-0.5f, +0.5f, 0.0f), color(1.0f, 0.0f, 0.0f, 1.0f) },	// 0: 왼쪽위   (빨강)
+		{ vec3(+0.5f, +0.5f, 0.0f), color(0.0f, 1.0f, 0.0f, 1.0f) },	// 1: 오른쪽위 (초록)
+		{ vec3(-0.5f, -0.5f, 0.0f), color(0.0f, 0.0f, 1.0f, 1.0f) },	// 2: 왼쪽아래 (파랑)
+		{ vec3(+0.5f, -0.5f, 0.0f), color(1.0f, 1.0f, 0.0f, 1.0f) },	// 3: 오른쪽아래 (노랑)
 	};
 
 	// 3. 인덱스 6개 = 삼각형 2개
@@ -105,7 +105,7 @@ void VertexIndexBuffer_Main()
 		}
 		input.NextFrame();
 
-		device.BeginFrame(Color::CornflowerBlue());
+		device.BeginFrame(color::CornflowerBlue());
 
 		vb.Bind(&device);
 		ib.Bind(&device);		// 인덱스 버퍼도 IA 단계에 묶는다.

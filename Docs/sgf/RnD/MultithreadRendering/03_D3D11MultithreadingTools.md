@@ -73,9 +73,9 @@ struct RenderCommand
     enum class Type { Sprite, Rect, Line, Circle };
     Type type;
     Texture* pTexture;   // 수명 관리 주의 (05 문서 참고)
-    Vec2 center;
-    Vec2 size;
-    Color color;
+    vec2 center;
+    vec2 size;
+    color color;
     _f32 radian;
 };
 ```

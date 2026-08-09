@@ -23,4 +23,4 @@ void FillSoftCirclePixels(_u8* _pOutPixels, int _size);
 // NDC 좌표기준 사각형 정점 4개를 채운다. (UV 0~1, 지정 색 채색)
 // @param _center   : 사각형 중심 (NDC, -1~+1)
 // @param _halfSize : 사각형 반지름 (NDC 단위)
-void FillQuadVertices(sgf::VertexPTC* _pOutVertices4, const jc::Vec2& _center, _f32 _halfSize, const jc::Color& _color);
+void FillQuadVertices(sgf::VertexPTC* _pOutVertices4, const jc::vec2& _center, _f32 _halfSize, const jc::color& _color);

@@ -147,12 +147,12 @@ void BlendState_Main()
 		elapsed += timer.DeltaTime();
 
 		// 배경은 중간 밝기 회색: 가산(밝아짐)과 곱셈(어두워짐)을 모두 관찰하기 좋다.
-		device.BeginFrame(Color(0.45f, 0.45f, 0.45f, 1.0f));
+		device.BeginFrame(color(0.45f, 0.45f, 0.45f, 1.0f));
 
-		const Color circleColors[3] = {
-			Color(1.0f, 0.25f, 0.25f, 1.0f),	// 빨강
-			Color(0.25f, 1.0f, 0.25f, 1.0f),	// 초록
-			Color(0.3f, 0.4f, 1.0f, 1.0f),		// 파랑
+		const color circleColors[3] = {
+			color(1.0f, 0.25f, 0.25f, 1.0f),	// 빨강
+			color(0.25f, 1.0f, 0.25f, 1.0f),	// 초록
+			color(0.3f, 0.4f, 1.0f, 1.0f),		// 파랑
 		};
 
 		texture.Bind(&device, 0);
@@ -161,14 +161,14 @@ void BlendState_Main()
 
 		// 한 묶음(원 3개)을 지정한 중심/블렌드 모드로 그리는 보조 람다.
 		// 블렌드 스테이트는 드로우 단위로만 바꿀 수 있으므로 묶음마다 SetBlendMode를 호출한다.
-		auto DrawCircleGroup = [&](const Vec2& _groupCenter, GraphicDevice::BlendMode _mode)
+		auto DrawCircleGroup = [&](const vec2& _groupCenter, GraphicDevice::BlendMode _mode)
 		{
 			device.SetBlendMode(_mode);
 			for (int c = 0; c < 3; ++c)
 			{
 				// 각 원의 중심: 반지름 0.15짜리 궤도를 도는 위치 (서로 120도 차이)
 				const _f32 angle = elapsed * 0.8f + jc_math_pi2 * c / 3.0f;
-				const Vec2 center(_groupCenter.x + cosf(angle) * 0.15f, _groupCenter.y + sinf(angle) * 0.15f);
+				const vec2 center(_groupCenter.x + cosf(angle) * 0.15f, _groupCenter.y + sinf(angle) * 0.15f);
 
 				FillQuadVertices(vertices, center, 0.28f, circleColors[c]);
 				vb.Update(&device, vertices, 4);	// 동적 버퍼 갱신
@@ -180,20 +180,20 @@ void BlendState_Main()
 		};
 
 		// [Before] 왼쪽 묶음: 블렌딩 미적용(Opaque). 알파가 무시돼 사각형 그대로 보인다!
-		DrawCircleGroup(Vec2(-0.5f, 0.0f), GraphicDevice::BlendMode::Opaque);
+		DrawCircleGroup(vec2(-0.5f, 0.0f), GraphicDevice::BlendMode::Opaque);
 
 		// [After] 오른쪽 묶음: 현재 선택한 모드 적용. 겹침 영역의 색 합성을 관찰!
-		DrawCircleGroup(Vec2(+0.5f, 0.0f), blendMode);
+		DrawCircleGroup(vec2(+0.5f, 0.0f), blendMode);
 
 		// 경계선: 화면 중앙에 가늘고 흰 세로 띄(divider)를 그린다.
 		// UV를 원 텍스처의 중심(0.5, 0.5) 한 점으로 고정하면 불투명 흰색 픽셀만 샘플링된다.
 		device.SetBlendMode(GraphicDevice::BlendMode::Opaque);
-		const Vec2 uvCenter(0.5f, 0.5f);
-		const Color lineColor(0.95f, 0.95f, 0.95f, 1.0f);
-		vertices[0] = { Vec3(-0.004f, +1.0f, 0.0f), uvCenter, lineColor };
-		vertices[1] = { Vec3(+0.004f, +1.0f, 0.0f), uvCenter, lineColor };
-		vertices[2] = { Vec3(-0.004f, -1.0f, 0.0f), uvCenter, lineColor };
-		vertices[3] = { Vec3(+0.004f, -1.0f, 0.0f), uvCenter, lineColor };
+		const vec2 uvCenter(0.5f, 0.5f);
+		const color lineColor(0.95f, 0.95f, 0.95f, 1.0f);
+		vertices[0] = { vec3(-0.004f, +1.0f, 0.0f), uvCenter, lineColor };
+		vertices[1] = { vec3(+0.004f, +1.0f, 0.0f), uvCenter, lineColor };
+		vertices[2] = { vec3(-0.004f, -1.0f, 0.0f), uvCenter, lineColor };
+		vertices[3] = { vec3(+0.004f, -1.0f, 0.0f), uvCenter, lineColor };
 		vb.Update(&device, vertices, 4);
 		vb.Bind(&device);
 		ib.Bind(&device);

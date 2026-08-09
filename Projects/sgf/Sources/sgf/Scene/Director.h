@@ -95,7 +95,7 @@ private:
 	SceneSlot& GetOrCreateSlot(Window* _pWindow);
 
 private:
-	jc::Vector<SceneSlot> m_Slots;	// 윈도우별 씬 슬롯들
+	jc::Vector<SceneSlot> slots_;	// 윈도우별 씬 슬롯들
 };
 
 NS_SGF_END

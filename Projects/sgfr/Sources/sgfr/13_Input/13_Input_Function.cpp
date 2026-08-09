@@ -63,7 +63,7 @@ void PrintInputModelExplanation()
 //  마우스: (0,0)이 왼쪽 위, y가 아래로 갈수록 커진다. (픽셀 단위)
 //  NDC   : (0,0)이 화면 중앙, y가 위로 갈수록 커진다. (-1 ~ +1)
 //  서로 원점과 y축 방향이 다르므로 공식으로 맞춰줘야 한다.
-Vec2 PixelToNdc(int _pixelX, int _pixelY, int _screenWidth, int _screenHeight)
+vec2 PixelToNdc(int _pixelX, int _pixelY, int _screenWidth, int _screenHeight)
 {
 	// x: 0~width 를 0~2로 늘리고 1을 빼면 -1~+1
 	const _f32 ndcX = (_pixelX / (_f32)_screenWidth) * 2.0f - 1.0f;
@@ -71,5 +71,5 @@ Vec2 PixelToNdc(int _pixelX, int _pixelY, int _screenWidth, int _screenHeight)
 	// y: 방향이 반대라서 부호를 뒤집는다
 	const _f32 ndcY = 1.0f - (_pixelY / (_f32)_screenHeight) * 2.0f;
 
-	return Vec2(ndcX, ndcY);
+	return vec2(ndcX, ndcY);
 }

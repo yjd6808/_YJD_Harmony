@@ -63,7 +63,7 @@ public:
 
 	// 입력 메시지를 전달받을 InputManager를 연결한다.
 	// 연결하면 WndProc에서 키/마우스 메시지를 InputManager에게 넘겨준다.
-	void ConnectInput(InputManager* _pInput) { m_pInput = _pInput; }
+	void ConnectInput(InputManager* _pInput) { pInput_ = _pInput; }
 
 	// === v2.1: 윈도우별 그리기 표면 (스왕체인 + 깊이버퍼) ===
 
@@ -75,25 +75,25 @@ public:
 	void DestroySurface();
 
 	// 그리기 표면을 가지고 있는가? (CreateSurface 성공 여부)
-	bool HasSurface() const { return m_bHasSurface; }
+	bool HasSurface() const { return bHasSurface_; }
 
-	SwapChain& GetSwapChain() { return m_SwapChain; }
-	DepthStencilSurface& GetDepthSurface() { return m_DepthSurface; }
+	SwapChain& GetSwapChain() { return swapChain_; }
+	DepthStencilSurface& GetDepthSurface() { return depthSurface_; }
 
 	// 이 창이 닫힐 때 앱 전체를 종료(WM_QUIT)시킬지 여부.
 	// 메인 윈도우는 true(기본값), 서브 윈도우는 false로 두어야
 	// 서브 창 하나 닫았다고 앱 전체가 꺼지지 않는다.
-	void SetQuitOnClose(bool _bQuit) { m_bQuitOnClose = _bQuit; }
+	void SetQuitOnClose(bool _bQuit) { bQuitOnClose_ = _bQuit; }
 
-	HWND Handle() const { return m_hWnd; }
-	_s32 Width() const { return m_Width; }
-	_s32 Height() const { return m_Height; }
+	HWND Handle() const { return hWnd_; }
+	_s32 Width() const { return width_; }
+	_s32 Height() const { return height_; }
 
 	// 가로/세로 비율 (투영 행렬 계산에 필요)
-	_f32 AspectRatio() const { return m_Height > 0 ? _f32(m_Width) / _f32(m_Height) : 1.0f; }
+	_f32 AspectRatio() const { return height_ > 0 ? _f32(width_) / _f32(height_) : 1.0f; }
 
 	// 창이 닫혔는지 여부
-	bool IsClosed() const { return m_bClosed; }
+	bool IsClosed() const { return bClosed_; }
 
 	// 창 활성/비활성 이벤트 (true=활성화, false=비활성화)
 	// Application이 구독해서 cocos 스타일 background/foreground 훅을 부른다.
@@ -110,15 +110,15 @@ private:
 	LRESULT WndProc(HWND _hWnd, UINT _msg, WPARAM _wParam, LPARAM _lParam);
 
 private:
-	HWND m_hWnd;						// 윈도우 핸들 (OS가 발급한 창의 식별자)
-	_s32 m_Width;						// 클라이언트 영역 가로
-	_s32 m_Height;						// 클라이언트 영역 세로
-	bool m_bClosed;						// 창이 닫혔는지 여부
-	bool m_bQuitOnClose;				// 닫힐 때 WM_QUIT을 보낼지 (메인 윈도우만 true)
-	bool m_bHasSurface;					// 그리기 표면 보유 여부
-	InputManager* m_pInput;				// 입력 메시지를 전달할 대상 (소유하지 않음)
-	SwapChain m_SwapChain;				// 이 창 전용 백버퍼 교체 장치
-	DepthStencilSurface m_DepthSurface;	// 이 창 전용 깊이/스텐실 버퍼
+	HWND hWnd_;						// 윈도우 핸들 (OS가 발급한 창의 식별자)
+	_s32 width_;						// 클라이언트 영역 가로
+	_s32 height_;						// 클라이언트 영역 세로
+	bool bClosed_;						// 창이 닫혔는지 여부
+	bool bQuitOnClose_;				// 닫힐 때 WM_QUIT을 보낼지 (메인 윈도우만 true)
+	bool bHasSurface_;					// 그리기 표면 보유 여부
+	InputManager* pInput_;				// 입력 메시지를 전달할 대상 (소유하지 않음)
+	SwapChain swapChain_;				// 이 창 전용 백버퍼 교체 장치
+	DepthStencilSurface depthSurface_;	// 이 창 전용 깊이/스텐실 버퍼
 };
 
 NS_SGF_END

@@ -17,13 +17,13 @@ goto :parse
 :parsed
 
 set "BUILD_PS1=%BAT_DIR%..\..\Scripts\Build.ps1"
-call :build SteinsGate-Tools.Common
+call :build jc
 if errorlevel 1 exit /b 1
-call :build SteinsGate-Tools.Research
+call :build sgf
 if errorlevel 1 exit /b 1
 
 for %%f in ("%BAT_DIR%sgs-*.log") do set "LASTLOG=%%f"
-echo [OK] SteinsGate-Tools.Research build completed. [%CONFIG%/%PLATFORM%]
+echo [OK] sgf build completed. [%CONFIG%/%PLATFORM%]
 if defined LASTLOG echo [OK] Log file: !LASTLOG!
 exit /b 0
 

@@ -32,7 +32,7 @@ namespace
 	// 셰이더 CbTransform과 메모리 배치 일치 (64바이트)
 	struct CbTransform
 	{
-		Mat4 worldViewProj_;	// 월드 x 뷰 x 투영 결합 행렬
+		mat4 worldViewProj_;	// 월드 x 뷰 x 투영 결합 행렬
 	};
 }
 
@@ -69,14 +69,14 @@ void Cube3D_Main()
 	//      |/         |/
 	//      2 -------- 3
 	const VertexPC vertices[] = {
-		{ Vec3(-0.5f, +0.5f, -0.5f), Color(1.0f, 0.0f, 0.0f, 1.0f) },	// 0: 앞-왼위
-		{ Vec3(+0.5f, +0.5f, -0.5f), Color(0.0f, 1.0f, 0.0f, 1.0f) },	// 1: 앞-오른위
-		{ Vec3(-0.5f, -0.5f, -0.5f), Color(0.0f, 0.0f, 1.0f, 1.0f) },	// 2: 앞-왼아래
-		{ Vec3(+0.5f, -0.5f, -0.5f), Color(1.0f, 1.0f, 0.0f, 1.0f) },	// 3: 앞-오른아래
-		{ Vec3(-0.5f, +0.5f, +0.5f), Color(1.0f, 0.0f, 1.0f, 1.0f) },	// 4: 뒤-왼위
-		{ Vec3(+0.5f, +0.5f, +0.5f), Color(0.0f, 1.0f, 1.0f, 1.0f) },	// 5: 뒤-오른위
-		{ Vec3(-0.5f, -0.5f, +0.5f), Color(1.0f, 1.0f, 1.0f, 1.0f) },	// 6: 뒤-왼아래
-		{ Vec3(+0.5f, -0.5f, +0.5f), Color(0.3f, 0.3f, 0.3f, 1.0f) },	// 7: 뒤-오른아래
+		{ vec3(-0.5f, +0.5f, -0.5f), color(1.0f, 0.0f, 0.0f, 1.0f) },	// 0: 앞-왼위
+		{ vec3(+0.5f, +0.5f, -0.5f), color(0.0f, 1.0f, 0.0f, 1.0f) },	// 1: 앞-오른위
+		{ vec3(-0.5f, -0.5f, -0.5f), color(0.0f, 0.0f, 1.0f, 1.0f) },	// 2: 앞-왼아래
+		{ vec3(+0.5f, -0.5f, -0.5f), color(1.0f, 1.0f, 0.0f, 1.0f) },	// 3: 앞-오른아래
+		{ vec3(-0.5f, +0.5f, +0.5f), color(1.0f, 0.0f, 1.0f, 1.0f) },	// 4: 뒤-왼위
+		{ vec3(+0.5f, +0.5f, +0.5f), color(0.0f, 1.0f, 1.0f, 1.0f) },	// 5: 뒤-오른위
+		{ vec3(-0.5f, -0.5f, +0.5f), color(1.0f, 1.0f, 1.0f, 1.0f) },	// 6: 뒤-왼아래
+		{ vec3(+0.5f, -0.5f, +0.5f), color(0.3f, 0.3f, 0.3f, 1.0f) },	// 7: 뒤-오른아래
 	};
 
 	// 3. 인덱스 36개 (6면 x 삼각형 2개 x 3)
@@ -119,11 +119,11 @@ void Cube3D_Main()
 	// 5. 뷰/투영 행렬 준비
 	//    LookAtLH(카메라 위치, 바라보는 지점, 위 방향)
 	//    카메라를 뒤쪽(z = -2.5)에 두고 원점을 바라본다. (LH: +z가 화면 안쪽)
-	const Mat4 view = Mat4::LookAtLH(Vec3(0.0f, 1.2f, -2.5f), Vec3::Zero(), Vec3::Up());
+	const mat4 view = mat4::LookAtLH(vec3(0.0f, 1.2f, -2.5f), vec3::Zero(), vec3::Up());
 
 	//    PerspectiveFovLH(수직 시야각, 화면비율, 근평면, 원평면)
 	//    시야각 60도: 사람 눈과 비슷한 자연스러운 화각
-	const Mat4 proj = Mat4::PerspectiveFovLH(jc_math_deg2rad(60.0f), window.AspectRatio(), 0.1f, 100.0f);
+	const mat4 proj = mat4::PerspectiveFovLH(jc_math_deg2rad(60.0f), window.AspectRatio(), 0.1f, 100.0f);
 
 	FrameTimer timer;
 	timer.Reset();
@@ -153,10 +153,10 @@ void Cube3D_Main()
 		timer.Tick();
 		elapsed += timer.DeltaTime();
 
-		device.BeginFrame(Color(0.05f, 0.05f, 0.1f, 1.0f));
+		device.BeginFrame(color(0.05f, 0.05f, 0.1f, 1.0f));
 
 		// 큐브를 두 축으로 천천히 회전 (회전 행렬 두 개를 결합)
-		const Mat4 world = Mat4::RotationY(elapsed * 0.8f) * Mat4::RotationX(elapsed * 0.5f);
+		const mat4 world = mat4::RotationY(elapsed * 0.8f) * mat4::RotationX(elapsed * 0.5f);
 
 		CbTransform cb = {};
 		cb.worldViewProj_ = world * view * proj;	// 월드 -> 뷰 -> 투영

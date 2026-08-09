@@ -138,13 +138,13 @@ void FillCheckerPixels(_u8* _pOutPixels, int _width, int _height, int _cellSize)
 // UV가 0~_uvScale 범위인 사각형 정점 4개와 인덱스 6개를 채운다.
 void FillUvQuad(VertexPTC* _pOutVertices4, _u32* _pOutIndices6, _f32 _uvScale)
 {
-	const Color white = Color::White();
+	const color white = color::White();
 
 	// NDC 좌표로 화면 대부분을 덮는 사각형 (왼위 -> 오른위 -> 왼아래 -> 오른아래)
-	_pOutVertices4[0] = { Vec3(-0.85f, +0.85f, 0.0f), Vec2(0.0f,     0.0f),     white };
-	_pOutVertices4[1] = { Vec3(+0.85f, +0.85f, 0.0f), Vec2(_uvScale, 0.0f),     white };
-	_pOutVertices4[2] = { Vec3(-0.85f, -0.85f, 0.0f), Vec2(0.0f,     _uvScale), white };
-	_pOutVertices4[3] = { Vec3(+0.85f, -0.85f, 0.0f), Vec2(_uvScale, _uvScale), white };
+	_pOutVertices4[0] = { vec3(-0.85f, +0.85f, 0.0f), vec2(0.0f,     0.0f),     white };
+	_pOutVertices4[1] = { vec3(+0.85f, +0.85f, 0.0f), vec2(_uvScale, 0.0f),     white };
+	_pOutVertices4[2] = { vec3(-0.85f, -0.85f, 0.0f), vec2(0.0f,     _uvScale), white };
+	_pOutVertices4[3] = { vec3(+0.85f, -0.85f, 0.0f), vec2(_uvScale, _uvScale), white };
 
 	// 삼각형 2개 (시계 방향)
 	_pOutIndices6[0] = 0; _pOutIndices6[1] = 1; _pOutIndices6[2] = 2;

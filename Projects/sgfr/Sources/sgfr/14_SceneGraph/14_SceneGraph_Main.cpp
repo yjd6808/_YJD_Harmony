@@ -42,9 +42,9 @@ namespace
 		// 씬이 무대에 오를 때 1회: 텍스처 준비 + 카메라 설정
 		void OnEnter() override
 		{
-			if (!CreateCircleTexture(&g_cDevice, &m_SunTexture, 128, Color(1.0f, 0.85f, 0.2f, 1.0f)) ||
-				!CreateCircleTexture(&g_cDevice, &m_EarthTexture, 64, Color(0.3f, 0.55f, 1.0f, 1.0f)) ||
-				!CreateCircleTexture(&g_cDevice, &m_MoonTexture, 32, Color(0.8f, 0.8f, 0.8f, 1.0f)))
+			if (!CreateCircleTexture(&g_cDevice, &m_SunTexture, 128, color(1.0f, 0.85f, 0.2f, 1.0f)) ||
+				!CreateCircleTexture(&g_cDevice, &m_EarthTexture, 64, color(0.3f, 0.55f, 1.0f, 1.0f)) ||
+				!CreateCircleTexture(&g_cDevice, &m_MoonTexture, 32, color(0.8f, 0.8f, 0.8f, 1.0f)))
 			{
 				printf("원형 텍스처 생성 실패!\n");
 				return;
@@ -87,7 +87,7 @@ namespace
 		// 매 프레임 그리기: 궤도선 -> 태양 -> 지구 -> 달 순서로 직접 그린다.
 		void OnRender() override
 		{
-			const Vec2 sunPos(kViewWidth_v * 0.5f, kViewHeight_v * 0.5f);
+			const vec2 sunPos(kViewWidth_v * 0.5f, kViewHeight_v * 0.5f);
 
 			// 지구/달의 공전 각도 (각속도 x 누적 시간)
 			const _f32 earthAngle = m_Elapsed * 0.6f;
@@ -95,21 +95,21 @@ namespace
 			const _f32 earthOrbit = 180.0f;
 			const _f32 moonOrbit = 55.0f;
 
-			const Vec2 earthPos(
+			const vec2 earthPos(
 				sunPos.x + cosf(earthAngle) * earthOrbit,
 				sunPos.y + sinf(earthAngle) * earthOrbit);
-			const Vec2 moonPos(
+			const vec2 moonPos(
 				earthPos.x + cosf(moonAngle) * moonOrbit,
 				earthPos.y + sinf(moonAngle) * moonOrbit);
 
 			// 궤도선: 짧은 선분 48개로 원을 그린다.
-			DrawOrbit(sunPos, earthOrbit, Color(0.3f, 0.3f, 0.4f, 1.0f));
-			DrawOrbit(earthPos, moonOrbit, Color(0.3f, 0.3f, 0.4f, 1.0f));
+			DrawOrbit(sunPos, earthOrbit, color(0.3f, 0.3f, 0.4f, 1.0f));
+			DrawOrbit(earthPos, moonOrbit, color(0.3f, 0.3f, 0.4f, 1.0f));
 
 			// 천체 그리기 (그리는 순서대로 위에 줤인다)
-			g_cRenderer2D.DrawSprite(&m_SunTexture, sunPos, Vec2(120.0f, 120.0f));
-			g_cRenderer2D.DrawSprite(&m_EarthTexture, earthPos, Vec2(56.0f, 56.0f));
-			g_cRenderer2D.DrawSprite(&m_MoonTexture, moonPos, Vec2(26.0f, 26.0f));
+			g_cRenderer2D.DrawSprite(&m_SunTexture, sunPos, vec2(120.0f, 120.0f));
+			g_cRenderer2D.DrawSprite(&m_EarthTexture, earthPos, vec2(56.0f, 56.0f));
+			g_cRenderer2D.DrawSprite(&m_MoonTexture, moonPos, vec2(26.0f, 26.0f));
 		}
 
 		// 씬이 무대에서 내려갈 때 1회: 리소스 정리는 Texture 소멸자가 처리한다.
@@ -119,7 +119,7 @@ namespace
 
 	private:
 		// 중심과 반지름으로 궤도 원을 그린다. (48개 선분 근사)
-		void DrawOrbit(const Vec2& _center, _f32 _radius, const Color& _color)
+		void DrawOrbit(const vec2& _center, _f32 _radius, const color& _color)
 		{
 			constexpr _s32 kSegments_v = 48;
 			for (_s32 i = 0; i < kSegments_v; ++i)
@@ -127,8 +127,8 @@ namespace
 				const _f32 a0 = jc_math_pi2 * i / kSegments_v;
 				const _f32 a1 = jc_math_pi2 * (i + 1) / kSegments_v;
 				g_cRenderer2D.DrawLine(
-					Vec2(_center.x + cosf(a0) * _radius, _center.y + sinf(a0) * _radius),
-					Vec2(_center.x + cosf(a1) * _radius, _center.y + sinf(a1) * _radius),
+					vec2(_center.x + cosf(a0) * _radius, _center.y + sinf(a0) * _radius),
+					vec2(_center.x + cosf(a1) * _radius, _center.y + sinf(a1) * _radius),
 					_color);
 			}
 		}
@@ -160,8 +160,8 @@ namespace
 			for (_s32 i = 0; i < kBallCount_v; ++i)
 			{
 				const _f32 t = static_cast<_f32>(i) / kBallCount_v;
-				const Color color(0.4f + 0.6f * t, 0.9f - 0.6f * t, 0.5f + 0.4f * sinf(t * jc_math_pi2), 1.0f);
-				if (!CreateCircleTexture(&g_cDevice, &m_Textures[i], 64, color))
+				const color ballColor(0.4f + 0.6f * t, 0.9f - 0.6f * t, 0.5f + 0.4f * sinf(t * jc_math_pi2), 1.0f);
+				if (!CreateCircleTexture(&g_cDevice, &m_Textures[i], 64, ballColor))
 				{
 					printf("공 텍스처 생성 실패!\n");
 					return;
@@ -238,17 +238,17 @@ namespace
 		void OnRender() override
 		{
 			// 화면 테두리 (공이 튀는 범위를 눈으로 확인)
-			const Color borderColor(0.5f, 0.5f, 0.6f, 1.0f);
-			g_cRenderer2D.DrawLine(Vec2(0.0f, 0.0f), Vec2(kViewWidth_v, 0.0f), borderColor, 3.0f);
-			g_cRenderer2D.DrawLine(Vec2(kViewWidth_v, 0.0f), Vec2(kViewWidth_v, kViewHeight_v), borderColor, 3.0f);
-			g_cRenderer2D.DrawLine(Vec2(kViewWidth_v, kViewHeight_v), Vec2(0.0f, kViewHeight_v), borderColor, 3.0f);
-			g_cRenderer2D.DrawLine(Vec2(0.0f, kViewHeight_v), Vec2(0.0f, 0.0f), borderColor, 3.0f);
+			const color borderColor(0.5f, 0.5f, 0.6f, 1.0f);
+			g_cRenderer2D.DrawLine(vec2(0.0f, 0.0f), vec2(kViewWidth_v, 0.0f), borderColor, 3.0f);
+			g_cRenderer2D.DrawLine(vec2(kViewWidth_v, 0.0f), vec2(kViewWidth_v, kViewHeight_v), borderColor, 3.0f);
+			g_cRenderer2D.DrawLine(vec2(kViewWidth_v, kViewHeight_v), vec2(0.0f, kViewHeight_v), borderColor, 3.0f);
+			g_cRenderer2D.DrawLine(vec2(0.0f, kViewHeight_v), vec2(0.0f, 0.0f), borderColor, 3.0f);
 
 			for (_s32 i = 0; i < kBallCount_v; ++i)
 			{
-				const Vec2 pos(m_PositionsX[i], m_PositionsY[i]);
+				const vec2 pos(m_PositionsX[i], m_PositionsY[i]);
 				const _f32 diameter = m_Radii[i] * 2.0f;
-				g_cRenderer2D.DrawSprite(&m_Textures[i], pos, Vec2(diameter, diameter));
+				g_cRenderer2D.DrawSprite(&m_Textures[i], pos, vec2(diameter, diameter));
 			}
 		}
 
@@ -301,7 +301,7 @@ void SceneGraph_Main()
 		return;
 	}
 
-	app.SetClearColor(Color(0.04f, 0.04f, 0.09f, 1.0f));
+	app.SetClearColor(color(0.04f, 0.04f, 0.09f, 1.0f));
 	app.Run();
 	app.Finalize();
 }

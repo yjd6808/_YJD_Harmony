@@ -51,13 +51,13 @@ public:
 	// IA 단계 슬롯 0에 이 정점 버퍼를 장착한다.
 	void Bind(GraphicDevice* _pDevice);
 
-	UINT Count() const { return m_Count; }
+	UINT Count() const { return count_; }
 
 private:
-	SgfComPtr<ID3D11Buffer> m_pBuffer;	// GPU 버퍼 객체
-	UINT m_Stride;						// 정점 1개 바이트 크기
-	UINT m_Count;						// 정점 개수
-	bool m_bDynamic;					// CPU 갱신 가능 여부
+	SgfComPtr<ID3D11Buffer> pBuffer_;	// GPU 버퍼 객체
+	UINT stride_;						// 정점 1개 바이트 크기
+	UINT count_;						// 정점 개수
+	bool bDynamic_;					// CPU 갱신 가능 여부
 };
 
 // 인덱스 버퍼 래퍼 (32비트 인덱스 고정)
@@ -78,12 +78,12 @@ public:
 	// IA 단계에 인덱스 버퍼를 장착한다.
 	void Bind(GraphicDevice* _pDevice);
 
-	UINT Count() const { return m_Count; }
+	UINT Count() const { return count_; }
 
 private:
-	SgfComPtr<ID3D11Buffer> m_pBuffer;	// GPU 버퍼 객체
-	UINT m_Count;						// 인덱스 개수
-	bool m_bDynamic;					// CPU 갱신 가능 여부
+	SgfComPtr<ID3D11Buffer> pBuffer_;	// GPU 버퍼 객체
+	UINT count_;						// 인덱스 개수
+	bool bDynamic_;					// CPU 갱신 가능 여부
 };
 
 // 상수 버퍼 래퍼 (템플릿으로 구조체 타입을 고정)
@@ -95,7 +95,7 @@ template <typename T>
 class ConstantBuffer
 {
 public:
-	ConstantBuffer() : m_pBuffer(nullptr) {}
+	ConstantBuffer() : pBuffer_(nullptr) {}
 	~ConstantBuffer() {}
 
 	// 상수 버퍼 생성. 항상 DYNAMIC으로 만든다. (매 프레임 갱신하는 용도이므로)
@@ -104,14 +104,14 @@ public:
 		static_assert(sizeof(T) % 16 == 0, "상수 버퍼 구조체는 16바이트 배수여야 합니다.");
 
 		// 재생성 대비: 기존 버퍼를 먼저 정리한다. (GetAddressOf 덮어쓰기 누수 방지)
-		m_pBuffer.Reset();
+		pBuffer_.Reset();
 
 		D3D11_BUFFER_DESC bd = {};
 		bd.ByteWidth = sizeof(T);
 		bd.Usage = D3D11_USAGE_DYNAMIC;					// CPU 갱신 가능
 		bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;		// 상수 버퍼 용도
 		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;		// CPU 쓰기 허용
-		return SUCCEEDED(_pDevice->Device()->CreateBuffer(&bd, nullptr, m_pBuffer.GetAddressOf()));
+		return SUCCEEDED(_pDevice->Device()->CreateBuffer(&bd, nullptr, pBuffer_.GetAddressOf()));
 	}
 
 	// 상수 버퍼 내용을 갱신하고 VS/PS 양쪽 슬롯에 장착한다.
@@ -124,20 +124,20 @@ public:
 		// Map: GPU 메모리를 CPU 주소공간에 임시로 연결한다.
 		// Map 실패 시 내용은 그대로 두고 바인딩만 수행한다. (최신 데이터 유실이 최선)
 		D3D11_MAPPED_SUBRESOURCE mapped = {};
-		if (SUCCEEDED(pContext->Map(m_pBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped)))
+		if (SUCCEEDED(pContext->Map(pBuffer_.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped)))
 		{
 			memcpy(mapped.pData, &_data, sizeof(T));
-			pContext->Unmap(m_pBuffer.Get(), 0);
+			pContext->Unmap(pBuffer_.Get(), 0);
 		}
 
 		// VS와 PS 모두에 장착한다. (어느 쪽에서든 쓸 수 있게)
-		ID3D11Buffer* pBuffers[] = { m_pBuffer.Get() };
+		ID3D11Buffer* pBuffers[] = { pBuffer_.Get() };
 		pContext->VSSetConstantBuffers(_slot, 1, pBuffers);
 		pContext->PSSetConstantBuffers(_slot, 1, pBuffers);
 	}
 
 private:
-	SgfComPtr<ID3D11Buffer> m_pBuffer;	// GPU 버퍼 객체
+	SgfComPtr<ID3D11Buffer> pBuffer_;	// GPU 버퍼 객체
 };
 
 NS_SGF_END

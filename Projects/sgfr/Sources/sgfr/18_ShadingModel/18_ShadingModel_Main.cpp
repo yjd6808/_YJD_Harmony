@@ -33,19 +33,19 @@ namespace
 	// HLSL의 CbTransform(b0)과 일치 (128바이트)
 	struct CbTransform
 	{
-		Mat4 world_;
-		Mat4 wvp_;
+		mat4 world_;
+		mat4 wvp_;
 	};
 
 	// HLSL의 CbShading(b1)과 일치 (48바이트 = 16의 배수)
 	// float3 + float 1개가 정확히 16바이트 한 칸을 채운다.
 	struct CbShading
 	{
-		Vec3 lightDir_;		// 빛이 나아가는 방향
+		vec3 lightDir_;		// 빛이 나아가는 방향
 		_s32 mode_;			// 0=램버트, 1=퐁, 2=블린-퐁
-		Vec3 cameraPos_;	// 월드 공간 카메라 위치
+		vec3 cameraPos_;	// 월드 공간 카메라 위치
 		_f32 specPower_;	// 하이라이트 날카로움
-		Color baseColor_;	// 물체 기본색
+		color baseColor_;	// 물체 기본색
 	};
 
 	// 창 제목에 표시할 모드 이름표 (gMode 값 순서와 일치)
@@ -110,9 +110,9 @@ void ShadingModel_Main()
 	}
 
 	// 4. 카메라: 정반사광 계산에 카메라 위치가 직접 쓰이므로 변수로 보관한다.
-	const Vec3 cameraPos(0.0f, 0.8f, -3.0f);
-	const Mat4 view = Mat4::LookAtLH(cameraPos, Vec3::Zero(), Vec3::Up());
-	const Mat4 proj = Mat4::PerspectiveFovLH(jc_math_pi_div4, window.AspectRatio(), 0.1f, 100.0f);
+	const vec3 cameraPos(0.0f, 0.8f, -3.0f);
+	const mat4 view = mat4::LookAtLH(cameraPos, vec3::Zero(), vec3::Up());
+	const mat4 proj = mat4::PerspectiveFovLH(jc_math_pi_div4, window.AspectRatio(), 0.1f, 100.0f);
 
 	// 5. 셰이딩 상태 (키 입력으로 바꾼다)
 	_s32 mode = 2;				// 시작은 블린-퐁 (현대 표준)
@@ -155,12 +155,12 @@ void ShadingModel_Main()
 		timer.Tick();
 		elapsed += timer.DeltaTime();
 
-		device.BeginFrame(Color(0.08f, 0.08f, 0.12f, 1.0f));
+		device.BeginFrame(color(0.08f, 0.08f, 0.12f, 1.0f));
 
 		// 구는 천천히 자전, 빛은 구 주위를 돈다 -> 명암 경계가 움직이는 게 보인다.
-		const Mat4 world = Mat4::RotationY(elapsed * 0.3f);
+		const mat4 world = mat4::RotationY(elapsed * 0.3f);
 		const _f32 lightAngle = elapsed * 0.7f;
-		const Vec3 lightDir = Vec3(cosf(lightAngle), -0.6f, sinf(lightAngle)).Normalized();
+		const vec3 lightDir = vec3(cosf(lightAngle), -0.6f, sinf(lightAngle)).Normalized();
 
 		CbTransform cbT;
 		cbT.world_ = world;
@@ -172,7 +172,7 @@ void ShadingModel_Main()
 		cbS.mode_ = mode;
 		cbS.cameraPos_ = cameraPos;
 		cbS.specPower_ = specPower;
-		cbS.baseColor_ = Color(0.9f, 0.45f, 0.2f, 1.0f);	// 주황색 도자기 느낌
+		cbS.baseColor_ = color(0.9f, 0.45f, 0.2f, 1.0f);	// 주황색 도자기 느낌
 		cbShading.UpdateAndBind(&device, cbS, 1);
 
 		vb.Bind(&device);

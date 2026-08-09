@@ -135,7 +135,7 @@ inline _f32 Clamp(_f32 _value, _f32 _min, _f32 _max)
 }
 
 // =====================================================================================
-// Vec2 : 2차원 벡터
+// vec2 : 2차원 벡터
 // =====================================================================================
 // 2D 게임에서 위치, 크기, 속도, 방향을 표현하는 가장 기본적인 타입.
 //
@@ -144,33 +144,33 @@ inline _f32 Clamp(_f32 _value, _f32 _min, _f32 _max)
 //  - "위치"로 쓰면 원점에서 얼마나 떨어져 있는지,
 //    "방향"으로 쓰면 어느 쪽을 바라보는지를 나타낸다.
 // =====================================================================================
-struct Vec2
+struct vec2
 {
 	_f32 x, y;
 
 	// 기본 생성자: (0, 0)으로 초기화
-	constexpr Vec2() : x(0.0f), y(0.0f) {}
+	constexpr vec2() : x(0.0f), y(0.0f) {}
 
 	// 성분을 직접 지정하는 생성자
-	constexpr Vec2(_f32 _x, _f32 _y) : x(_x), y(_y) {}
+	constexpr vec2(_f32 _x, _f32 _y) : x(_x), y(_y) {}
 
 	// ---------------------------------------------------------------------------------
 	// 사칙연산 연산자
 	// 벡터끼리의 덧셈/뺄셈은 각 성분끼리 계산한다. (평행이동 개념)
 	// 스칼라(숫자 하나) 곱셈은 벡터의 길이를 늘리거나 줄인다.
 	// ---------------------------------------------------------------------------------
-	constexpr Vec2 operator+(const Vec2& _other) const { return Vec2(x + _other.x, y + _other.y); }
-	constexpr Vec2 operator-(const Vec2& _other) const { return Vec2(x - _other.x, y - _other.y); }
-	constexpr Vec2 operator*(_f32 _scalar) const { return Vec2(x * _scalar, y * _scalar); }
-	constexpr Vec2 operator/(_f32 _scalar) const { return Vec2(x / _scalar, y / _scalar); }
-	constexpr Vec2 operator-() const { return Vec2(-x, -y); }
+	constexpr vec2 operator+(const vec2& _other) const { return vec2(x + _other.x, y + _other.y); }
+	constexpr vec2 operator-(const vec2& _other) const { return vec2(x - _other.x, y - _other.y); }
+	constexpr vec2 operator*(_f32 _scalar) const { return vec2(x * _scalar, y * _scalar); }
+	constexpr vec2 operator/(_f32 _scalar) const { return vec2(x / _scalar, y / _scalar); }
+	constexpr vec2 operator-() const { return vec2(-x, -y); }
 
-	Vec2& operator+=(const Vec2& _other) { x += _other.x; y += _other.y; return *this; }
-	Vec2& operator-=(const Vec2& _other) { x -= _other.x; y -= _other.y; return *this; }
-	Vec2& operator*=(_f32 _scalar) { x *= _scalar; y *= _scalar; return *this; }
+	vec2& operator+=(const vec2& _other) { x += _other.x; y += _other.y; return *this; }
+	vec2& operator-=(const vec2& _other) { x -= _other.x; y -= _other.y; return *this; }
+	vec2& operator*=(_f32 _scalar) { x *= _scalar; y *= _scalar; return *this; }
 
-	bool operator==(const Vec2& _other) const { return FloatEqual(x, _other.x) && FloatEqual(y, _other.y); }
-	bool operator!=(const Vec2& _other) const { return !(*this == _other); }
+	bool operator==(const vec2& _other) const { return FloatEqual(x, _other.x) && FloatEqual(y, _other.y); }
+	bool operator!=(const vec2& _other) const { return !(*this == _other); }
 
 	// 벡터의 길이(크기)를 구한다.
 	// 피타고라스 정리: 빗변의 길이 = sqrt(x² + y²)
@@ -184,14 +184,14 @@ struct Vec2
 	// 정규화: 방향을 그대로 두고 길이를 1로 만든 벡터를 반환한다.
 	// "방향만" 필요할 때 사용한다. (예: 이동 방향 * 속도)
 	// 길이가 0이면 0으로 나누기가 되므로 영벡터를 반환한다.
-	Vec2 Normalized() const
+	vec2 Normalized() const
 	{
 		const _f32 len = Length();
 		if (len <= Epsilon_v)
 		{
-			return Vec2(0.0f, 0.0f);
+			return vec2(0.0f, 0.0f);
 		}
-		return Vec2(x / len, y / len);
+		return vec2(x / len, y / len);
 	}
 
 	// 내적(Dot Product): a·b = a.x*b.x + a.y*b.y = |a||b|cosθ
@@ -199,58 +199,58 @@ struct Vec2
 	//  - 결과가 양수면 두 벡터가 같은 방향(90도 미만),
 	//  - 0이면 수직하다. (90도), 음수면 반대 방향(90도 초과)이다.
 	//  - "적이 내 앞에 있다 아니면 뒤에 있다" 같은 판정에 쓰인다.
-	_f32 Dot(const Vec2& _other) const { return x * _other.x + y * _other.y; }
+	_f32 Dot(const vec2& _other) const { return x * _other.x + y * _other.y; }
 
 	// 2D 외적(Cross Product의 z성분): a×b = a.x*b.y - a.y*b.x
 	// [기하학적 의미]
 	//  - 양수면 b가 a의 반시계 방향(왼쪽), 음수면 시계 방향(오른쪽)에 있다.
 	//  절대값은 두 벡터가 만드는 평행사변형의 넓이다.
-	_f32 Cross(const Vec2& _other) const { return x * _other.y - y * _other.x; }
+	_f32 Cross(const vec2& _other) const { return x * _other.y - y * _other.x; }
 
 	// 두 점 사이의 거리
-	_f32 Distance(const Vec2& _other) const { return (*this - _other).Length(); }
+	_f32 Distance(const vec2& _other) const { return (*this - _other).Length(); }
 
 	// 영벡터 상수
-	static constexpr Vec2 Zero() { return Vec2(0.0f, 0.0f); }
-	static constexpr Vec2 One() { return Vec2(1.0f, 1.0f); }
+	static constexpr vec2 Zero() { return vec2(0.0f, 0.0f); }
+	static constexpr vec2 One() { return vec2(1.0f, 1.0f); }
 };
 
 // 스칼라 * 벡터 순서도 허용 (2.0f * v 형태)
-inline constexpr Vec2 operator*(_f32 _scalar, const Vec2& _v) { return _v * _scalar; }
+inline constexpr vec2 operator*(_f32 _scalar, const vec2& _v) { return _v * _scalar; }
 
 // =====================================================================================
-// Vec3 : 3차원 벡터
+// vec3 : 3차원 벡터
 // =====================================================================================
 // 3D 위치/방향/법선(Normal)/색상(RGB) 등을 표현한다.
 // =====================================================================================
-struct Vec3
+struct vec3
 {
 	_f32 x, y, z;
 
 	// 기본 생성자: (1,0, 0, 0)으로 초기화 / 원본: (0,0,0) 유지
-	constexpr Vec3() : x(0.0f), y(0.0f), z(0.0f) {}
+	constexpr vec3() : x(0.0f), y(0.0f), z(0.0f) {}
 
 	// 성분을 직접 지정하는 생성자
-	constexpr Vec3(_f32 _x, _f32 _y, _f32 _z) : x(_x), y(_y), z(_z) {}
+	constexpr vec3(_f32 _x, _f32 _y, _f32 _z) : x(_x), y(_y), z(_z) {}
 
 	// 2D 벡터를 3D로 확장하는 생성자 (z는 별도 지정)
-	constexpr Vec3(const Vec2& _xy, _f32 _z) : x(_xy.x), y(_xy.y), z(_z) {}
+	constexpr vec3(const vec2& _xy, _f32 _z) : x(_xy.x), y(_xy.y), z(_z) {}
 
-	constexpr Vec3 operator+(const Vec3& _other) const { return Vec3(x + _other.x, y + _other.y, z + _other.z); }
-	constexpr Vec3 operator-(const Vec3& _other) const { return Vec3(x - _other.x, y - _other.y, z - _other.z); }
-	constexpr Vec3 operator*(_f32 _scalar) const { return Vec3(x * _scalar, y * _scalar, z * _scalar); }
-	constexpr Vec3 operator/(_f32 _scalar) const { return Vec3(x / _scalar, y / _scalar, z / _scalar); }
-	constexpr Vec3 operator-() const { return Vec3(-x, -y, -z); }
+	constexpr vec3 operator+(const vec3& _other) const { return vec3(x + _other.x, y + _other.y, z + _other.z); }
+	constexpr vec3 operator-(const vec3& _other) const { return vec3(x - _other.x, y - _other.y, z - _other.z); }
+	constexpr vec3 operator*(_f32 _scalar) const { return vec3(x * _scalar, y * _scalar, z * _scalar); }
+	constexpr vec3 operator/(_f32 _scalar) const { return vec3(x / _scalar, y / _scalar, z / _scalar); }
+	constexpr vec3 operator-() const { return vec3(-x, -y, -z); }
 
-	Vec3& operator+=(const Vec3& _other) { x += _other.x; y += _other.y; z += _other.z; return *this; }
-	Vec3& operator-=(const Vec3& _other) { x -= _other.x; y -= _other.y; z -= _other.z; return *this; }
-	Vec3& operator*=(_f32 _scalar) { x *= _scalar; y *= _scalar; z *= _scalar; return *this; }
+	vec3& operator+=(const vec3& _other) { x += _other.x; y += _other.y; z += _other.z; return *this; }
+	vec3& operator-=(const vec3& _other) { x -= _other.x; y -= _other.y; z -= _other.z; return *this; }
+	vec3& operator*=(_f32 _scalar) { x *= _scalar; y *= _scalar; z *= _scalar; return *this; }
 
-	bool operator==(const Vec3& _other) const
+	bool operator==(const vec3& _other) const
 	{
 		return FloatEqual(x, _other.x) && FloatEqual(y, _other.y) && FloatEqual(z, _other.z);
 	}
-	bool operator!=(const Vec3& _other) const { return !(*this == _other); }
+	bool operator!=(const vec3& _other) const { return !(*this == _other); }
 
 	// 벡터의 길이: sqrt(x² + y² + z²)
 	_f32 Length() const { return std::sqrt(x * x + y * y + z * z); }
@@ -259,28 +259,28 @@ struct Vec3
 	_f32 LengthSquared() const { return x * x + y * y + z * z; }
 
 	// 정규화: 길이를 1로 만든 벡터 반환. 방향 계산/조명 법선 등에 필수.
-	Vec3 Normalized() const
+	vec3 Normalized() const
 	{
 		const _f32 len = Length();
 		if (len <= Epsilon_v)
 		{
-			return Vec3(0.0f, 0.0f, 0.0f);
+			return vec3(0.0f, 0.0f, 0.0f);
 		}
-		return Vec3(x / len, y / len, z / len);
+		return vec3(x / len, y / len, z / len);
 	}
 
 	// 내적: a·b = |a||b|cosθ
 	// 조명 계산의 핵심! 법선·빛방향 = 표면이 빛을 얼마나 정면으로 받는지(밝기)를 준다.
-	_f32 Dot(const Vec3& _other) const { return x * _other.x + y * _other.y + z * _other.z; }
+	_f32 Dot(const vec3& _other) const { return x * _other.x + y * _other.y + z * _other.z; }
 
 	// 외적(Cross Product): 두 벡터에 모두 수직인 벡터를 반환한다.
 	// [용도]
 	//  - 삼각형의 두 변으로 표면 법선(Normal) 구하기
 	//  - 카메라의 Right/Up/Forward 직교 기저 만들기 (LookAt 행렬)
 	// [순서 주의] a×b와 b×a는 방향이 반대다. DX는 왼손 좌표계이므로 왼손 규칙을 따른다.
-	Vec3 Cross(const Vec3& _other) const
+	vec3 Cross(const vec3& _other) const
 	{
-		return Vec3(
+		return vec3(
 			y * _other.z - z * _other.y,
 			z * _other.x - x * _other.z,
 			x * _other.y - y * _other.x
@@ -288,19 +288,19 @@ struct Vec3
 	}
 
 	// 두 점 사이의 거리
-	_f32 Distance(const Vec3& _other) const { return (*this - _other).Length(); }
+	_f32 Distance(const vec3& _other) const { return (*this - _other).Length(); }
 
-	static constexpr Vec3 Zero() { return Vec3(0.0f, 0.0f, 0.0f); }
-	static constexpr Vec3 One() { return Vec3(1.0f, 1.0f, 1.0f); }
-	static constexpr Vec3 Up() { return Vec3(0.0f, 1.0f, 0.0f); }		// +Y가 위 (DX 관례)
-	static constexpr Vec3 Right() { return Vec3(1.0f, 0.0f, 0.0f); }	// +X가 오른쪽
-	static constexpr Vec3 Forward() { return Vec3(0.0f, 0.0f, 1.0f); }	// +Z가 앞 (왼손 좌표계)
+	static constexpr vec3 Zero() { return vec3(0.0f, 0.0f, 0.0f); }
+	static constexpr vec3 One() { return vec3(1.0f, 1.0f, 1.0f); }
+	static constexpr vec3 Up() { return vec3(0.0f, 1.0f, 0.0f); }		// +Y가 위 (DX 관례)
+	static constexpr vec3 Right() { return vec3(1.0f, 0.0f, 0.0f); }	// +X가 오른쪽
+	static constexpr vec3 Forward() { return vec3(0.0f, 0.0f, 1.0f); }	// +Z가 앞 (왼손 좌표계)
 };
 
-inline constexpr Vec3 operator*(_f32 _scalar, const Vec3& _v) { return _v * _scalar; }
+inline constexpr vec3 operator*(_f32 _scalar, const vec3& _v) { return _v * _scalar; }
 
 // =====================================================================================
-// Vec4 : 4차원 벡터
+// vec4 : 4차원 벡터
 // =====================================================================================
 // [왜 3D 게임에서 4차원이 필요한가? - 동차 좌표(Homogeneous Coordinates)]
 //  - 3x3 행렬로는 회전/크기는 표현해도 "이동"을 표현할 수 없다.
@@ -310,79 +310,79 @@ inline constexpr Vec3 operator*(_f32 _scalar, const Vec3& _v) { return _v * _sca
 //  - w=0 이면 "방향(vector)" -> 이동의 영향은 없음 (평행 이동해도 방향 유지)
 //  - 원근 투영 후 w로 나누는 "원근 나눗셈"에도 쓰인다. (멀수록 작게 보임)
 // =====================================================================================
-struct Vec4
+struct vec4
 {
 	_f32 x, y, z, w;
 
 	// 기본 생성자: (0, 0, 0, 0)
-	constexpr Vec4() : x(0.0f), y(0.0f), z(0.0f), w(0.0f) {}
+	constexpr vec4() : x(0.0f), y(0.0f), z(0.0f), w(0.0f) {}
 
 	// 성분 지정 생성자
-	constexpr Vec4(_f32 _x, _f32 _y, _f32 _z, _f32 _w) : x(_x), y(_y), z(_z), w(_w) {}
+	constexpr vec4(_f32 _x, _f32 _y, _f32 _z, _f32 _w) : x(_x), y(_y), z(_z), w(_w) {}
 
-	// Vec3 + w 생성자 (위치면 w=1, 방향이면 w=0을 넣는다)
-	constexpr Vec4(const Vec3& _xyz, _f32 _w) : x(_xyz.x), y(_xyz.y), z(_xyz.z), w(_w) {}
+	// vec3 + w 생성자 (위치면 w=1, 방향이면 w=0을 넣는다)
+	constexpr vec4(const vec3& _xyz, _f32 _w) : x(_xyz.x), y(_xyz.y), z(_xyz.z), w(_w) {}
 
-	constexpr Vec4 operator+(const Vec4& _other) const { return Vec4(x + _other.x, y + _other.y, z + _other.z, w + _other.w); }
-	constexpr Vec4 operator-(const Vec4& _other) const { return Vec4(x - _other.x, y - _other.y, z - _other.z, w - _other.w); }
-	constexpr Vec4 operator*(_f32 _scalar) const { return Vec4(x * _scalar, y * _scalar, z * _scalar, w * _scalar); }
+	constexpr vec4 operator+(const vec4& _other) const { return vec4(x + _other.x, y + _other.y, z + _other.z, w + _other.w); }
+	constexpr vec4 operator-(const vec4& _other) const { return vec4(x - _other.x, y - _other.y, z - _other.z, w - _other.w); }
+	constexpr vec4 operator*(_f32 _scalar) const { return vec4(x * _scalar, y * _scalar, z * _scalar, w * _scalar); }
 
 	// 내적
-	_f32 Dot(const Vec4& _other) const { return x * _other.x + y * _other.y + z * _other.z + w * _other.w; }
+	_f32 Dot(const vec4& _other) const { return x * _other.x + y * _other.y + z * _other.z + w * _other.w; }
 
 	// xyz 성분만 추출
-	Vec3 XYZ() const { return Vec3(x, y, z); }
+	vec3 XYZ() const { return vec3(x, y, z); }
 };
 
 // =====================================================================================
-// Color : RGBA 색상 (각 성분 0.0 ~ 1.0)
+// color : RGBA 색상 (각 성분 0.0 ~ 1.0)
 // =====================================================================================
 // [왜 0~255가 아니라 0.0~1.0인가?]
 //  - GPU/셰이더는 색상을 부동소수점 0~1로 다룬다. 곱셈(조명 계산)이 자연스럽기 때문.
 //  - 0~255 정수는 최종적으로 모니터에 출력될 때의 포맷일 뿐이다.
 // =====================================================================================
-struct Color
+struct color
 {
 	_f32 r, g, b, a;
 
 	// 기본 생성자: 불투명 흰색
-	constexpr Color() : r(1.0f), g(1.0f), b(1.0f), a(1.0f) {}
+	constexpr color() : r(1.0f), g(1.0f), b(1.0f), a(1.0f) {}
 
 	// 성분 지정 생성자
-	constexpr Color(_f32 _r, _f32 _g, _f32 _b, _f32 _a = 1.0f) : r(_r), g(_g), b(_b), a(_a) {}
+	constexpr color(_f32 _r, _f32 _g, _f32 _b, _f32 _a = 1.0f) : r(_r), g(_g), b(_b), a(_a) {}
 
 	// 0~255 정수 값으로부터 생성하는 헬퍼
-	// 예: Color::FromBytes(255, 128, 0) -> 주황색
-	static Color FromBytes(_u8 _r, _u8 _g, _u8 _b, _u8 _a = 255)
+	// 예: color::FromBytes(255, 128, 0) -> 주황색
+	static color FromBytes(_u8 _r, _u8 _g, _u8 _b, _u8 _a = 255)
 	{
-		return Color(_r / 255.0f, _g / 255.0f, _b / 255.0f, _a / 255.0f);
+		return color(_r / 255.0f, _g / 255.0f, _b / 255.0f, _a / 255.0f);
 	}
 
 	// 색상끼리 곱하기 (조명 계산, 틴트 효과에 사용)
-	constexpr Color operator*(const Color& _other) const
+	constexpr color operator*(const color& _other) const
 	{
-		return Color(r * _other.r, g * _other.g, b * _other.b, a * _other.a);
+		return color(r * _other.r, g * _other.g, b * _other.b, a * _other.a);
 	}
 
-	constexpr Color operator*(_f32 _scalar) const
+	constexpr color operator*(_f32 _scalar) const
 	{
-		return Color(r * _scalar, g * _scalar, b * _scalar, a * _scalar);
+		return color(r * _scalar, g * _scalar, b * _scalar, a * _scalar);
 	}
 
 	// 자주 쓰는 색상 프리셋
-	static constexpr Color White() { return Color(1.0f, 1.0f, 1.0f, 1.0f); }
-	static constexpr Color Black() { return Color(0.0f, 0.0f, 0.0f, 1.0f); }
-	static constexpr Color Red() { return Color(1.0f, 0.0f, 0.0f, 1.0f); }
-	static constexpr Color Green() { return Color(0.0f, 1.0f, 0.0f, 1.0f); }
-	static constexpr Color Blue() { return Color(0.0f, 0.0f, 1.0f, 1.0f); }
-	static constexpr Color Yellow() { return Color(1.0f, 1.0f, 0.0f, 1.0f); }
-	static constexpr Color Cyan() { return Color(0.0f, 1.0f, 1.0f, 1.0f); }
-	static constexpr Color Magenta() { return Color(1.0f, 0.0f, 1.0f, 1.0f); }
-	static constexpr Color CornflowerBlue() { return Color(0.39f, 0.58f, 0.93f, 1.0f); }	// XNA 전통의 하늘색
+	static constexpr color White() { return color(1.0f, 1.0f, 1.0f, 1.0f); }
+	static constexpr color Black() { return color(0.0f, 0.0f, 0.0f, 1.0f); }
+	static constexpr color Red() { return color(1.0f, 0.0f, 0.0f, 1.0f); }
+	static constexpr color Green() { return color(0.0f, 1.0f, 0.0f, 1.0f); }
+	static constexpr color Blue() { return color(0.0f, 0.0f, 1.0f, 1.0f); }
+	static constexpr color Yellow() { return color(1.0f, 1.0f, 0.0f, 1.0f); }
+	static constexpr color Cyan() { return color(0.0f, 1.0f, 1.0f, 1.0f); }
+	static constexpr color Magenta() { return color(1.0f, 0.0f, 1.0f, 1.0f); }
+	static constexpr color CornflowerBlue() { return color(0.39f, 0.58f, 0.93f, 1.0f); }	// XNA 전통의 하늘색
 };
 
 // =====================================================================================
-// Mat4 : 4x4 행렬
+// mat4 : 4x4 행렬
 // =====================================================================================
 // [행렬이란?]
 //  - 숫자를 4x4 격자로 배열한 것. "좌표 내 변환기"라고 생각하면 된다.
@@ -394,12 +394,12 @@ struct Color
 //  - 이동 성분은 4번째 행 m[3][0..2]에 위치한다.
 //  - HLSL 상수 버퍼에 row_major로 선언하면 전치 없이 그대로 올려도 된다.
 // =====================================================================================
-struct Mat4
+struct mat4
 {
 	_f32 m[4][4];
 
 	// 기본 생성자: 단위 행렬(Identity)로 초기화
-	Mat4()
+	mat4()
 	{
 		SetIdentity();
 	}
@@ -427,9 +427,9 @@ struct Mat4
 	// 행벡터 규약에서는 v * (A * B) = (v * A) * B 이므로
 	// "A 변환을 먼저 적용하고 B 변환을 나중에 적용"이 A * B로 표현된다.
 	// 예: World = Scale * Rotation * Translation
-	Mat4 operator*(const Mat4& _other) const
+	mat4 operator*(const mat4& _other) const
 	{
-		Mat4 result;
+		mat4 result;
 		for (int i = 0; i < 4; ++i)
 		{
 			for (int j = 0; j < 4; ++j)
@@ -445,27 +445,27 @@ struct Mat4
 	}
 
 	// 점(Point) 변환: w=1로 취급하여 이동까지 적용된다.
-	Vec3 TransformPoint(const Vec3& _point) const
+	vec3 TransformPoint(const vec3& _point) const
 	{
 		const _f32 x = _point.x * m[0][0] + _point.y * m[1][0] + _point.z * m[2][0] + m[3][0];
 		const _f32 y = _point.x * m[0][1] + _point.y * m[1][1] + _point.z * m[2][1] + m[3][1];
 		const _f32 z = _point.x * m[0][2] + _point.y * m[1][2] + _point.z * m[2][2] + m[3][2];
-		return Vec3(x, y, z);
+		return vec3(x, y, z);
 	}
 
 	// 방향(Vector) 변환: 이동을 무시하고 회전/크기만 적용된다.
-	Vec3 TransformVector(const Vec3& _vector) const
+	vec3 TransformVector(const vec3& _vector) const
 	{
 		const _f32 x = _vector.x * m[0][0] + _vector.y * m[1][0] + _vector.z * m[2][0];
 		const _f32 y = _vector.x * m[0][1] + _vector.y * m[1][1] + _vector.z * m[2][1];
 		const _f32 z = _vector.x * m[0][2] + _vector.y * m[1][2] + _vector.z * m[2][2];
-		return Vec3(x, y, z);
+		return vec3(x, y, z);
 	}
 
-	// Vec4 완전 변환 (w 포함. 투영 행렬 결과 확인용)
-	Vec4 Transform(const Vec4& _v) const
+	// vec4 완전 변환 (w 포함. 투영 행렬 결과 확인용)
+	vec4 Transform(const vec4& _v) const
 	{
-		return Vec4(
+		return vec4(
 			_v.x * m[0][0] + _v.y * m[1][0] + _v.z * m[2][0] + _v.w * m[3][0],
 			_v.x * m[0][1] + _v.y * m[1][1] + _v.z * m[2][1] + _v.w * m[3][1],
 			_v.x * m[0][2] + _v.y * m[1][2] + _v.z * m[2][2] + _v.w * m[3][2],
@@ -475,9 +475,9 @@ struct Mat4
 
 	// 전치 행렬: 행과 열을 바꿔치기
 	// (열벡터 규약 라이브러리와 데이터를 주고받을 때 필요)
-	Mat4 Transposed() const
+	mat4 Transposed() const
 	{
-		Mat4 result;
+		mat4 result;
 		for (int i = 0; i < 4; ++i)
 		{
 			for (int j = 0; j < 4; ++j)
@@ -495,15 +495,15 @@ struct Mat4
 	// | 0  1  0  0 |
 	// | 0  0  1  0 |
 	// | tx ty tz 1 |   <- 행벡터 규약에서는 이동이 마지막 "행"에 위치
-	static Mat4 Translation(_f32 _x, _f32 _y, _f32 _z)
+	static mat4 Translation(_f32 _x, _f32 _y, _f32 _z)
 	{
-		Mat4 result;			// 단위 행렬로 시작
+		mat4 result;			// 단위 행렬로 시작
 		result.m[3][0] = _x;
 		result.m[3][1] = _y;
 		result.m[3][2] = _z;
 		return result;
 	}
-	static Mat4 Translation(const Vec3& _pos)
+	static mat4 Translation(const vec3& _pos)
 	{
 		return Translation(_pos.x, _pos.y, _pos.z);
 	}
@@ -515,15 +515,15 @@ struct Mat4
 	// | 0  sy 0  0 |
 	// | 0  0  sz 0 |
 	// | 0  0  0  1 |
-	static Mat4 Scale(_f32 _x, _f32 _y, _f32 _z)
+	static mat4 Scale(_f32 _x, _f32 _y, _f32 _z)
 	{
-		Mat4 result;
+		mat4 result;
 		result.m[0][0] = _x;
 		result.m[1][1] = _y;
 		result.m[2][2] = _z;
 		return result;
 	}
-	static Mat4 Scale(_f32 _uniform)
+	static mat4 Scale(_f32 _uniform)
 	{
 		return Scale(_uniform, _uniform, _uniform);
 	}
@@ -531,9 +531,9 @@ struct Mat4
 	// ---------------------------------------------------------------------------------
 	// 회전 행렬 (Rotation) - 각 축 기준, 라디안 단위
 	// ---------------------------------------------------------------------------------
-	static Mat4 RotationZ(_f32 _radian)
+	static mat4 RotationZ(_f32 _radian)
 	{
-		Mat4 result;
+		mat4 result;
 		const _f32 c = std::cos(_radian);
 		const _f32 s = std::sin(_radian);
 		result.m[0][0] = c;  result.m[0][1] = s;
@@ -541,9 +541,9 @@ struct Mat4
 		return result;
 	}
 
-	static Mat4 RotationX(_f32 _radian)
+	static mat4 RotationX(_f32 _radian)
 	{
-		Mat4 result;
+		mat4 result;
 		const _f32 c = std::cos(_radian);
 		const _f32 s = std::sin(_radian);
 		result.m[1][1] = c;  result.m[1][2] = s;
@@ -551,9 +551,9 @@ struct Mat4
 		return result;
 	}
 
-	static Mat4 RotationY(_f32 _radian)
+	static mat4 RotationY(_f32 _radian)
 	{
-		Mat4 result;
+		mat4 result;
 		const _f32 c = std::cos(_radian);
 		const _f32 s = std::sin(_radian);
 		result.m[0][0] = c;  result.m[0][2] = -s;
@@ -564,7 +564,7 @@ struct Mat4
 	// ---------------------------------------------------------------------------------
 	// SRT 합성 헬퍼: Scale -> Rotation(Z) -> Translation 순서로 합성된 월드 행렬
 	// ---------------------------------------------------------------------------------
-	static Mat4 SRT2D(const Vec2& _scale, _f32 _rotationRad, const Vec2& _position)
+	static mat4 SRT2D(const vec2& _scale, _f32 _rotationRad, const vec2& _position)
 	{
 		return Scale(_scale.x, _scale.y, 1.0f) * RotationZ(_rotationRad) * Translation(_position.x, _position.y, 0.0f);
 	}
@@ -572,13 +572,13 @@ struct Mat4
 	// ---------------------------------------------------------------------------------
 	// 뷰 행렬 (View Matrix) - 왼손 좌표계 LookAt
 	// ---------------------------------------------------------------------------------
-	static Mat4 LookAtLH(const Vec3& _eye, const Vec3& _target, const Vec3& _up)
+	static mat4 LookAtLH(const vec3& _eye, const vec3& _target, const vec3& _up)
 	{
-		const Vec3 zAxis = (_target - _eye).Normalized();		// 카메라가 바라보는 방향
-		const Vec3 xAxis = _up.Cross(zAxis).Normalized();		// 카메라의 오른쪽 방향
-		const Vec3 yAxis = zAxis.Cross(xAxis);					// 카메라의 위 방향
+		const vec3 zAxis = (_target - _eye).Normalized();		// 카메라가 바라보는 방향
+		const vec3 xAxis = _up.Cross(zAxis).Normalized();		// 카메라의 오른쪽 방향
+		const vec3 yAxis = zAxis.Cross(xAxis);					// 카메라의 위 방향
 
-		Mat4 result;
+		mat4 result;
 		result.m[0][0] = xAxis.x; result.m[0][1] = yAxis.x; result.m[0][2] = zAxis.x;
 		result.m[1][0] = xAxis.y; result.m[1][1] = yAxis.y; result.m[1][2] = zAxis.y;
 		result.m[2][0] = xAxis.z; result.m[2][1] = yAxis.z; result.m[2][2] = zAxis.z;
@@ -591,7 +591,7 @@ struct Mat4
 	// ---------------------------------------------------------------------------------
 	// 원근 투영 행렬 (Perspective Projection) - 왼손 좌표계
 	// ---------------------------------------------------------------------------------
-	static Mat4 PerspectiveFovLH(_f32 _fovY, _f32 _aspect, _f32 _nearZ, _f32 _farZ)
+	static mat4 PerspectiveFovLH(_f32 _fovY, _f32 _aspect, _f32 _nearZ, _f32 _farZ)
 	{
 		if (_nearZ <= 0.0f || _farZ <= _nearZ || _aspect <= 0.0f ||
 			_fovY <= 0.0f || _fovY >= jc_math_pi)
@@ -599,7 +599,7 @@ struct Mat4
 			return Identity();
 		}
 
-		Mat4 result;
+		mat4 result;
 		const _f32 yScale = 1.0f / std::tan(_fovY * 0.5f);
 		const _f32 xScale = yScale / _aspect;
 		const _f32 zRange = _farZ / (_farZ - _nearZ);
@@ -614,14 +614,14 @@ struct Mat4
 	// ---------------------------------------------------------------------------------
 	// 직교 투영 행렬 (Perspective Projection) - 왼손 좌표계
 	// ---------------------------------------------------------------------------------
-	static Mat4 OrthographicOffCenterLH(_f32 _left, _f32 _right, _f32 _bottom, _f32 _top, _f32 _nearZ, _f32 _farZ)
+	static mat4 OrthographicOffCenterLH(_f32 _left, _f32 _right, _f32 _bottom, _f32 _top, _f32 _nearZ, _f32 _farZ)
 	{
 		if (_right <= _left || _top <= _bottom || _farZ <= _nearZ)
 		{
 			return Identity();
 		}
 
-		Mat4 result;
+		mat4 result;
 		result.m[0][0] = 2.0f / (_right - _left);
 		result.m[1][1] = 2.0f / (_top - _bottom);
 		result.m[2][2] = 1.0f / (_farZ - _nearZ);
@@ -632,15 +632,15 @@ struct Mat4
 	}
 
 	// 화면 중앙이 원점이고 y가 위쪽인 2D 카메라용 직교 투영 (폭/높이 지정)
-	static Mat4 Orthographic2D(_f32 _width, _f32 _height)
+	static mat4 Orthographic2D(_f32 _width, _f32 _height)
 	{
 		return OrthographicOffCenterLH(-_width * 0.5f, _width * 0.5f, -_height * 0.5f, _height * 0.5f, 0.0f, 1.0f);
 	}
 
 	// 단위 행렬 반환
-	static Mat4 Identity()
+	static mat4 Identity()
 	{
-		return Mat4();
+		return mat4();
 	}
 };
 

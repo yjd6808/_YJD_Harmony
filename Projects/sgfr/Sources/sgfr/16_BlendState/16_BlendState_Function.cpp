@@ -109,11 +109,11 @@ void FillSoftCirclePixels(_u8* _pOutPixels, int _size)
 }
 
 // NDC 좌표기준 사각형 정점 4개를 채운다. (UV 0~1, 지정 색 채색)
-void FillQuadVertices(VertexPTC* _pOutVertices4, const Vec2& _center, _f32 _halfSize, const Color& _color)
+void FillQuadVertices(VertexPTC* _pOutVertices4, const vec2& _center, _f32 _halfSize, const color& _color)
 {
 	// 왼위 -> 오른위 -> 왼아래 -> 오른아래 (인덱스 0,1,2 / 2,1,3과 짝)
-	_pOutVertices4[0] = { Vec3(_center.x - _halfSize, _center.y + _halfSize, 0.0f), Vec2(0.0f, 0.0f), _color };
-	_pOutVertices4[1] = { Vec3(_center.x + _halfSize, _center.y + _halfSize, 0.0f), Vec2(1.0f, 0.0f), _color };
-	_pOutVertices4[2] = { Vec3(_center.x - _halfSize, _center.y - _halfSize, 0.0f), Vec2(0.0f, 1.0f), _color };
-	_pOutVertices4[3] = { Vec3(_center.x + _halfSize, _center.y - _halfSize, 0.0f), Vec2(1.0f, 1.0f), _color };
+	_pOutVertices4[0] = { vec3(_center.x - _halfSize, _center.y + _halfSize, 0.0f), vec2(0.0f, 0.0f), _color };
+	_pOutVertices4[1] = { vec3(_center.x + _halfSize, _center.y + _halfSize, 0.0f), vec2(1.0f, 0.0f), _color };
+	_pOutVertices4[2] = { vec3(_center.x - _halfSize, _center.y - _halfSize, 0.0f), vec2(0.0f, 1.0f), _color };
+	_pOutVertices4[3] = { vec3(_center.x + _halfSize, _center.y - _halfSize, 0.0f), vec2(1.0f, 1.0f), _color };
 }

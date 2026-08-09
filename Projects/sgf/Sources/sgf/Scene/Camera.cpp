@@ -16,16 +16,16 @@ using namespace jc;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 Camera::Camera()
-	: m_View(Mat4::Identity())
-	, m_Projection(Mat4::Identity())
-	, m_b2D(true)
-	, m_Width2D(0.0f)
-	, m_Height2D(0.0f)
-	, m_Position2D(0.0f, 0.0f)
-	, m_Zoom(1.0f)
-	, m_Eye(0.0f, 0.0f, -5.0f)
-	, m_Target(0.0f, 0.0f, 0.0f)
-	, m_Up(0.0f, 1.0f, 0.0f)
+	: view_(mat4::Identity())
+	, projection_(mat4::Identity())
+	, b2D_(true)
+	, width2D_(0.0f)
+	, height2D_(0.0f)
+	, position2D_(0.0f, 0.0f)
+	, zoom_(1.0f)
+	, eye_(0.0f, 0.0f, -5.0f)
+	, target_(0.0f, 0.0f, 0.0f)
+	, up_(0.0f, 1.0f, 0.0f)
 {
 }
 
@@ -40,43 +40,43 @@ Camera::~Camera()
 // 2D 직교 카메라 설정. 기본 상태는 화면 왼쪽 아래 (0,0) ~ 오른쪽 위 (w,h).
 void Camera::SetOrthographic2D(_f32 _width, _f32 _height)
 {
-	m_b2D = true;
-	m_Width2D = _width;
-	m_Height2D = _height;
+	b2D_ = true;
+	width2D_ = _width;
+	height2D_ = _height;
 
 	// 카메라 중심을 화면 한가운데에 맞추면 월드 (0,0)이 정확히 화면 왼쪽 아래가 된다.
-	m_Position2D = Vec2(_width * 0.5f, _height * 0.5f);
-	m_Zoom = 1.0f;
+	position2D_ = vec2(_width * 0.5f, _height * 0.5f);
+	zoom_ = 1.0f;
 	Rebuild2D();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 2D 카메라 이동 (카메라 중심이 이 위치로 온다). 2D 모드에서만 유효하다. (3D 모드 no-op)
-void Camera::SetPosition2D(const Vec2& _position)
+void Camera::SetPosition2D(const vec2& _position)
 {
-	if (!m_b2D)
+	if (!b2D_)
 	{
 		return;
 	}
-	if (m_Position2D.x != _position.x || m_Position2D.y != _position.y)
+	if (position2D_.x != _position.x || position2D_.y != _position.y)
 	{
-		m_Position2D = _position;
+		position2D_ = _position;
 		Rebuild2D();
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 현재 위치 기준 상대 이동
-void Camera::Move2D(const Vec2& _delta)
+void Camera::Move2D(const vec2& _delta)
 {
-	SetPosition2D(m_Position2D + _delta);
+	SetPosition2D(position2D_ + _delta);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 2D 줌 설정 (0 이하 방지). 2D 모드에서만 유효하다. (3D 모드 no-op)
 void Camera::SetZoom(_f32 _zoom)
 {
-	if (!m_b2D)
+	if (!b2D_)
 	{
 		return;
 	}
@@ -84,9 +84,9 @@ void Camera::SetZoom(_f32 _zoom)
 	{
 		_zoom = 0.0001f;
 	}
-	if (m_Zoom != _zoom)
+	if (zoom_ != _zoom)
 	{
-		m_Zoom = _zoom;
+		zoom_ = _zoom;
 		Rebuild2D();
 	}
 }
@@ -95,37 +95,37 @@ void Camera::SetZoom(_f32 _zoom)
 // 현재 줌에 배율 곱하기
 void Camera::ZoomBy(_f32 _scale)
 {
-	SetZoom(m_Zoom * _scale);
+	SetZoom(zoom_ * _scale);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 화면 픽셀 좌표(왼쪽 위 원점, Y아래+) -> 월드 좌표
 // [원리] 그리기는 "월드 -> (카메라 중심 빼기) -> (줌 곱하기) -> 화면" 순서다.
 // 그 과정을 정확히 거꾸로 되짚으면 마우스 아래의 월드 좌표가 나온다.
-Vec2 Camera::ScreenToWorld2D(_f32 _screenX, _f32 _screenY) const
+vec2 Camera::ScreenToWorld2D(_f32 _screenX, _f32 _screenY) const
 {
-	const _f32 halfW = m_Width2D * 0.5f;
-	const _f32 halfH = m_Height2D * 0.5f;
+	const _f32 halfW = width2D_ * 0.5f;
+	const _f32 halfH = height2D_ * 0.5f;
 
 	// 1. 픽셀 좌표를 "화면 중심 기준, Y위쪽+" 좌표로 바꾼다.
 	const _f32 camX = _screenX - halfW;
-	const _f32 camY = (m_Height2D - _screenY) - halfH;
+	const _f32 camY = (height2D_ - _screenY) - halfH;
 
 	// 2. 줌을 되돌리고 카메라 중심을 더하면 월드 좌표다.
-	return Vec2(m_Position2D.x + camX / m_Zoom, m_Position2D.y + camY / m_Zoom);
+	return vec2(position2D_.x + camX / zoom_, position2D_.y + camY / zoom_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 월드 좌표 -> 화면 픽셀 좌표 (ScreenToWorld2D의 역변환)
-Vec2 Camera::WorldToScreen2D(const Vec2& _world) const
+vec2 Camera::WorldToScreen2D(const vec2& _world) const
 {
-	const _f32 halfW = m_Width2D * 0.5f;
-	const _f32 halfH = m_Height2D * 0.5f;
+	const _f32 halfW = width2D_ * 0.5f;
+	const _f32 halfH = height2D_ * 0.5f;
 
-	const _f32 camX = (_world.x - m_Position2D.x) * m_Zoom;
-	const _f32 camY = (_world.y - m_Position2D.y) * m_Zoom;
+	const _f32 camX = (_world.x - position2D_.x) * zoom_;
+	const _f32 camY = (_world.y - position2D_.y) * zoom_;
 
-	return Vec2(camX + halfW, m_Height2D - (camY + halfH));
+	return vec2(camX + halfW, height2D_ - (camY + halfH));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -135,9 +135,9 @@ void Camera::DriveDefault2D(InputManager& _input, const jc::TimeSpan& _dt)
 	const _f32 dt = static_cast<_f32>(_dt.GetTotalSeconds());
 
 	// 줌인 상태에서도 "화면상 속도"가 일정하도록 줌으로 나눠 보정한다.
-	const _f32 speed = 300.0f / m_Zoom;
+	const _f32 speed = 300.0f / zoom_;
 
-	Vec2 move(0.0f, 0.0f);
+	vec2 move(0.0f, 0.0f);
 	if (_input.IsKeyDown(VK_LEFT)) { move.x -= 1.0f; }
 	if (_input.IsKeyDown(VK_RIGHT)) { move.x += 1.0f; }
 	if (_input.IsKeyDown(VK_DOWN)) { move.y -= 1.0f; }
@@ -162,13 +162,13 @@ void Camera::Rebuild2D()
 {
 	// 뷰: "카메라가 움직인다 = 세상이 반대로 움직인다"
 	// 월드에서 카메라 중심을 뺀 뒤 줌 배율을 곱한다.
-	m_View = Mat4::Translation(-m_Position2D.x, -m_Position2D.y, 0.0f)
-		* Mat4::Scale(m_Zoom, m_Zoom, 1.0f);
+	view_ = mat4::Translation(-position2D_.x, -position2D_.y, 0.0f)
+		* mat4::Scale(zoom_, zoom_, 1.0f);
 
 	// 투영: 화면 중심 기준 -half ~ +half 범위를 NDC(-1~+1)로 매핑
-	const _f32 halfW = m_Width2D * 0.5f;
-	const _f32 halfH = m_Height2D * 0.5f;
-	m_Projection = Mat4::OrthographicOffCenterLH(-halfW, +halfW, -halfH, +halfH, 0.0f, 1.0f);
+	const _f32 halfW = width2D_ * 0.5f;
+	const _f32 halfH = height2D_ * 0.5f;
+	projection_ = mat4::OrthographicOffCenterLH(-halfW, +halfW, -halfH, +halfH, 0.0f, 1.0f);
 }
 
 NS_SGF_END
@@ -184,8 +184,8 @@ using namespace jc;
 // 3D 원근 투영 설정 (라디안)
 void Camera::SetPerspective(_f32 _fovY, _f32 _aspect, _f32 _nearZ, _f32 _farZ)
 {
-	m_b2D = false;
-	m_Projection = Mat4::PerspectiveFovLH(_fovY, _aspect, _nearZ, _farZ);
+	b2D_ = false;
+	projection_ = mat4::PerspectiveFovLH(_fovY, _aspect, _nearZ, _farZ);
 	Rebuild3D();
 }
 
@@ -198,12 +198,12 @@ void Camera::SetPerspectiveDegrees(_f32 _fovYDegrees, _f32 _aspect, _f32 _nearZ,
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 카메라 위치/바라보는 지점 설정
-void Camera::SetLookAt(const Vec3& _eye, const Vec3& _target, const Vec3& _up)
+void Camera::SetLookAt(const vec3& _eye, const vec3& _target, const vec3& _up)
 {
-	m_b2D = false;
-	m_Eye = _eye;
-	m_Target = _target;
-	m_Up = _up;
+	b2D_ = false;
+	eye_ = _eye;
+	target_ = _target;
+	up_ = _up;
 	Rebuild3D();
 }
 
@@ -213,7 +213,7 @@ void Camera::SetLookAt(const Vec3& _eye, const Vec3& _target, const Vec3& _up)
 //  각도만 더한 뒤 다시 직교 좌표로 되돌린다.
 void Camera::Orbit(_f32 _yawDelta, _f32 _pitchDelta)
 {
-	Vec3 offset = m_Eye - m_Target;
+	vec3 offset = eye_ - target_;
 	const _f32 radius = offset.Length();
 	if (radius < 0.0001f)
 	{
@@ -228,14 +228,14 @@ void Camera::Orbit(_f32 _yawDelta, _f32 _pitchDelta)
 	pitch += _pitchDelta;
 
 	// 수직(진지/천정)을 정확히 넘어가면 카메라가 뒤집힌다. 살짝 못 미치게 제한.
-	const _f32 kPitchLimit_v = jc_math_pi_half - 0.01f;
-	pitch = Clamp(pitch, -kPitchLimit_v, +kPitchLimit_v);
+	const _f32 PITCH_LIMIT = jc_math_pi_half - 0.01f;
+	pitch = Clamp(pitch, -PITCH_LIMIT, +PITCH_LIMIT);
 
 	// 구면 좌표 -> 직교 좌표 복원
 	const _f32 cosPitch = cosf(pitch);
-	offset = Vec3(radius * cosPitch * sinf(yaw), radius * sinf(pitch), radius * cosPitch * cosf(yaw));
+	offset = vec3(radius * cosPitch * sinf(yaw), radius * sinf(pitch), radius * cosPitch * cosf(yaw));
 
-	m_Eye = m_Target + offset;
+	eye_ = target_ + offset;
 	Rebuild3D();
 }
 
@@ -243,7 +243,7 @@ void Camera::Orbit(_f32 _yawDelta, _f32 _pitchDelta)
 // 목표점을 향해 접근(+)/후퇴(-)
 void Camera::Dolly(_f32 _distance)
 {
-	Vec3 forward = m_Target - m_Eye;
+	vec3 forward = target_ - eye_;
 	const _f32 dist = forward.Length();
 	if (dist < 0.0001f)
 	{
@@ -258,7 +258,7 @@ void Camera::Dolly(_f32 _distance)
 		moveAmount = (dist - minDistance > 0.0f) ? (dist - minDistance) : 0.0f;
 	}
 
-	m_Eye = m_Eye + forward.Normalized() * moveAmount;
+	eye_ = eye_ + forward.Normalized() * moveAmount;
 	Rebuild3D();
 }
 
@@ -266,13 +266,13 @@ void Camera::Dolly(_f32 _distance)
 // 카메라 기준 오른쪽/위쪽으로 시점+목표점 함께 평행 이동 (팬)
 void Camera::Pan(_f32 _rightDelta, _f32 _upDelta)
 {
-	const Vec3 forward = (m_Target - m_Eye).Normalized();
-	const Vec3 right = m_Up.Cross(forward).Normalized();	// LH: Up x Forward = Right
-	const Vec3 up = forward.Cross(right);					// 카메라 기준 실제 위쪽
+	const vec3 forward = (target_ - eye_).Normalized();
+	const vec3 right = up_.Cross(forward).Normalized();	// LH: Up x Forward = Right
+	const vec3 up = forward.Cross(right);					// 카메라 기준 실제 위쪽
 
-	const Vec3 delta = right * _rightDelta + up * _upDelta;
-	m_Eye = m_Eye + delta;
-	m_Target = m_Target + delta;
+	const vec3 delta = right * _rightDelta + up * _upDelta;
+	eye_ = eye_ + delta;
+	target_ = target_ + delta;
 	Rebuild3D();
 }
 
@@ -280,9 +280,9 @@ void Camera::Pan(_f32 _rightDelta, _f32 _upDelta)
 // 바라보는 방향으로 전진/후진 (시점+목표점 함께)
 void Camera::MoveForward(_f32 _distance)
 {
-	const Vec3 forward = (m_Target - m_Eye).Normalized();
-	m_Eye = m_Eye + forward * _distance;
-	m_Target = m_Target + forward * _distance;
+	const vec3 forward = (target_ - eye_).Normalized();
+	eye_ = eye_ + forward * _distance;
+	target_ = target_ + forward * _distance;
 	Rebuild3D();
 }
 
@@ -290,10 +290,10 @@ void Camera::MoveForward(_f32 _distance)
 // 카메라 오른쪽 방향으로 이동
 void Camera::MoveRight(_f32 _distance)
 {
-	const Vec3 forward = (m_Target - m_Eye).Normalized();
-	const Vec3 right = m_Up.Cross(forward).Normalized();
-	m_Eye = m_Eye + right * _distance;
-	m_Target = m_Target + right * _distance;
+	const vec3 forward = (target_ - eye_).Normalized();
+	const vec3 right = up_.Cross(forward).Normalized();
+	eye_ = eye_ + right * _distance;
+	target_ = target_ + right * _distance;
 	Rebuild3D();
 }
 
@@ -301,9 +301,9 @@ void Camera::MoveRight(_f32 _distance)
 // 월드 위쪽 방향으로 이동
 void Camera::MoveUp(_f32 _distance)
 {
-	const Vec3 up = m_Up.Normalized();
-	m_Eye = m_Eye + up * _distance;
-	m_Target = m_Target + up * _distance;
+	const vec3 up = up_.Normalized();
+	eye_ = eye_ + up * _distance;
+	target_ = target_ + up * _distance;
 	Rebuild3D();
 }
 
@@ -341,7 +341,7 @@ void Camera::DriveDefault3D(InputManager& _input, const jc::TimeSpan& _dt)
 // 3D 뷰 행렬 재계산
 void Camera::Rebuild3D()
 {
-	m_View = Mat4::LookAtLH(m_Eye, m_Target, m_Up);
+	view_ = mat4::LookAtLH(eye_, target_, up_);
 }
 
 NS_SGF_END

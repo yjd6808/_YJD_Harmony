@@ -1,7 +1,8 @@
 @echo off
 setlocal EnableDelayedExpansion
 chcp 65001 >nul
-cd /d "%~dp0..\.."
+set "BAT_DIR=%~dp0"
+cd /d "%BAT_DIR%..\.."
 
 set "CONFIG=Debug"
 set "PLATFORM=x64"
@@ -15,7 +16,7 @@ shift
 goto :parse
 :parsed
 
-set "BUILD_PS1=%~dp0..\..\Scripts\Build.ps1"
+set "BUILD_PS1=%BAT_DIR%..\..\Scripts\Build.ps1"
 call :build jnet
 if errorlevel 1 exit /b 1
 call :build jc
@@ -23,7 +24,7 @@ if errorlevel 1 exit /b 1
 call :build jnetr_common
 if errorlevel 1 exit /b 1
 
-for %%f in ("%~dp0sgs-*.log") do set "LASTLOG=%%f"
+for %%f in ("%BAT_DIR%sgs-*.log") do set "LASTLOG=%%f"
 echo [OK] jnetr_common build completed. [%CONFIG%/%PLATFORM%]
 if defined LASTLOG echo [OK] Log file: !LASTLOG!
 exit /b 0
@@ -38,7 +39,7 @@ if errorlevel 1 (
     set "EC=!ERRORLEVEL!"
     echo.
     echo [FAILED] %~1 build failed ^(ExitCode=!EC!^)
-    for %%f in ("%~dp0sgs-*.log") do set "LASTLOG=%%f"
+    for %%f in ("%BAT_DIR%sgs-*.log") do set "LASTLOG=%%f"
     if defined LASTLOG echo          Log file: !LASTLOG!
     exit /b 1
 )

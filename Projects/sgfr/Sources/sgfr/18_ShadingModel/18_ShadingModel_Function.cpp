@@ -146,9 +146,9 @@ void GenerateSphere(jc::Vector<VertexPNT>& _outVertices, jc::Vector<_u32>& _outI
 
 			// 구면 좌표 -> 직교 좌표. 반지름 1짜리 단위 방향이 곧 법선이 된다!
 			VertexPNT vertex;
-			vertex.normal_ = Vec3(sinPhi * cosf(theta), cosPhi, sinPhi * sinf(theta));
+			vertex.normal_ = vec3(sinPhi * cosf(theta), cosPhi, sinPhi * sinf(theta));
 			vertex.position_ = vertex.normal_ * _radius;
-			vertex.uv_ = Vec2((_f32)seg / (_f32)_segments, (_f32)ring / (_f32)_rings);
+			vertex.uv_ = vec2((_f32)seg / (_f32)_segments, (_f32)ring / (_f32)_rings);
 			_outVertices.PushBack(vertex);
 		}
 	}

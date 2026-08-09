@@ -42,23 +42,23 @@ namespace
 	// HLSL의 CbDepth(b0)와 일치 (64바이트)
 	struct CbDepth
 	{
-		Mat4 lightWvp_;
+		mat4 lightWvp_;
 	};
 
 	// HLSL의 CbScene(b0)과 일치 (192바이트)
 	struct CbScene
 	{
-		Mat4 world_;
-		Mat4 wvp_;
-		Mat4 lightViewProj_;
+		mat4 world_;
+		mat4 wvp_;
+		mat4 lightViewProj_;
 	};
 
 	// HLSL의 CbLight(b1)와 일치 (48바이트 = 16의 배수)
 	struct CbLight
 	{
-		Vec3 lightDir_;		// 빛이 나아가는 방향
+		vec3 lightDir_;		// 빛이 나아가는 방향
 		_f32 shadowBias_;	// 그림자 여드름 방지 보정값
-		Color baseColor_;	// 물체 기본색
+		color baseColor_;	// 물체 기본색
 		_f32 splitPixelX_;	// Before/After 경계 픽셀 x (왼쪽=그림자 없음, 오른쪽=그림자 적용)
 		_f32 padding_[3];	// 16바이트 정렬용 여백
 	};
@@ -145,8 +145,8 @@ void ShadowMapping_Main()
 	}
 
 	// 5. 카메라(관찰자 시점)
-	const Mat4 view = Mat4::LookAtLH(Vec3(0.0f, 3.0f, -6.0f), Vec3(0.0f, 0.5f, 0.0f), Vec3::Up());
-	const Mat4 proj = Mat4::PerspectiveFovLH(jc_math_pi_div4, window.AspectRatio(), 0.1f, 100.0f);
+	const mat4 view = mat4::LookAtLH(vec3(0.0f, 3.0f, -6.0f), vec3(0.0f, 0.5f, 0.0f), vec3::Up());
+	const mat4 proj = mat4::PerspectiveFovLH(jc_math_pi_div4, window.AspectRatio(), 0.1f, 100.0f);
 
 	// 6. 빛 상태: 방위각(azimuth)으로 태양 방향을 돌린다.
 	_f32 lightAzimuth = 0.8f;
@@ -193,21 +193,21 @@ void ShadowMapping_Main()
 
 		// 빛 방향과 빛 시점 행렬 계산
 		// 방향광(태양)은 무한히 멀리 있다고 가정 -> 평행광선 -> 직교 투영 사용!
-		const Vec3 lightDir = Vec3(cosf(lightAzimuth), -1.2f, sinf(lightAzimuth)).Normalized();
-		const Vec3 lightPos = lightDir * -8.0f;	// 빛을 거슬러 올라간 가상 위치
-		const Mat4 lightView = Mat4::LookAtLH(lightPos, Vec3::Zero(), Vec3::Up());
-		const Mat4 lightProj = Mat4::OrthographicOffCenterLH(-4.0f, 4.0f, -4.0f, 4.0f, 0.1f, 20.0f);
-		const Mat4 lightViewProj = lightView * lightProj;
+		const vec3 lightDir = vec3(cosf(lightAzimuth), -1.2f, sinf(lightAzimuth)).Normalized();
+		const vec3 lightPos = lightDir * -8.0f;	// 빛을 거슬러 올라간 가상 위치
+		const mat4 lightView = mat4::LookAtLH(lightPos, vec3::Zero(), vec3::Up());
+		const mat4 lightProj = mat4::OrthographicOffCenterLH(-4.0f, 4.0f, -4.0f, 4.0f, 0.1f, 20.0f);
+		const mat4 lightViewProj = lightView * lightProj;
 
 		// 오브젝트 월드 행렬 (큐브는 회전 후 바닥 위로 띄움)
-		const Mat4 planeWorld = Mat4::Identity();
-		const Mat4 cubeWorld = Mat4::RotationY(elapsed * 0.5f) * Mat4::Translation(0.0f, 0.75f, 0.0f);
+		const mat4 planeWorld = mat4::Identity();
+		const mat4 cubeWorld = mat4::RotationY(elapsed * 0.5f) * mat4::Translation(0.0f, 0.75f, 0.0f);
 
-		device.BeginFrame(Color(0.0f, 0.0f, 0.0f, 1.0f));
+		device.BeginFrame(color(0.0f, 0.0f, 0.0f, 1.0f));
 
 		// ---- 패스 1: 빛 시점에서 깊이만 그림자 맵에 기록 ----
 		device.SetRenderTarget(&shadowMap);
-		shadowMap.Clear(&device, Color::Black());	// 깊이 전용이므로 깊이만 1.0으로 초기화된다
+		shadowMap.Clear(&device, color::Black());	// 깊이 전용이므로 깊이만 1.0으로 초기화된다
 
 		depthShader.Bind(&device);
 		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -250,7 +250,7 @@ void ShadowMapping_Main()
 		cbS.world_ = planeWorld;
 		cbS.wvp_ = planeWorld * view * proj;
 		cbScene.UpdateAndBind(&device, cbS, 0);
-		cbL.baseColor_ = Color(0.75f, 0.75f, 0.78f, 1.0f);
+		cbL.baseColor_ = color(0.75f, 0.75f, 0.78f, 1.0f);
 		cbLight.UpdateAndBind(&device, cbL, 1);
 		planeVb.Bind(&device);
 		planeIb.Bind(&device);
@@ -260,7 +260,7 @@ void ShadowMapping_Main()
 		cbS.world_ = cubeWorld;
 		cbS.wvp_ = cubeWorld * view * proj;
 		cbScene.UpdateAndBind(&device, cbS, 0);
-		cbL.baseColor_ = Color(0.9f, 0.5f, 0.2f, 1.0f);
+		cbL.baseColor_ = color(0.9f, 0.5f, 0.2f, 1.0f);
 		cbLight.UpdateAndBind(&device, cbL, 1);
 		cubeVb.Bind(&device);
 		cubeIb.Bind(&device);

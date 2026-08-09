@@ -8,10 +8,10 @@
 #pragma once
 
 // Vec2를 "이름: (x, y)" 형태로 콘솔에 출력한다.
-void PrintVec2(const char* _szName, const jc::Vec2& _v);
+void PrintVec2(const char* _szName, const jc::vec2& _v);
 
 // Vec3를 "이름: (x, y, z)" 형태로 콘솔에 출력한다.
-void PrintVec3(const char* _szName, const jc::Vec3& _v);
+void PrintVec3(const char* _szName, const jc::vec3& _v);
 
 // Mat4를 4x4 격자 형태로 콘솔에 출력한다.
-void PrintMat4(const char* _szName, const jc::Mat4& _m);
+void PrintMat4(const char* _szName, const jc::mat4& _m);

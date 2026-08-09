@@ -15,10 +15,12 @@ NS_SGF_BEGIN
 
 using namespace jc;
 
+//////////////////////////////////////////////////////////////////////////////////////////
 Director::Director()
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 Director::~Director()
 {
 }
@@ -40,11 +42,11 @@ Window* Director::ResolveWindow(Window* _pWindow) const
 // 해당 윈도우의 슬롯을 찾는다. (없으면 nullptr)
 Director::SceneSlot* Director::FindSlot(Window* _pWindow)
 {
-	for (int i = 0; i < m_Slots.Size(); ++i)
+	for (int i = 0; i < slots_.Size(); ++i)
 	{
-		if (m_Slots[i].pWindow_ == _pWindow)
+		if (slots_[i].pWindow_ == _pWindow)
 		{
-			return &m_Slots[i];
+			return &slots_[i];
 		}
 	}
 	return nullptr;
@@ -62,14 +64,14 @@ Director::SceneSlot& Director::GetOrCreateSlot(Window* _pWindow)
 	}
 
 	// 2) 빈 슬롯(pWindow_ == nullptr)이 있으면 재활용
-	for (int i = 0; i < m_Slots.Size(); ++i)
+	for (int i = 0; i < slots_.Size(); ++i)
 	{
-		if (m_Slots[i].pWindow_ == nullptr)
+		if (slots_[i].pWindow_ == nullptr)
 		{
-			m_Slots[i].pWindow_ = _pWindow;
-			m_Slots[i].pCurrent_ = nullptr;
-			m_Slots[i].pNext_ = nullptr;
-			return m_Slots[i];
+			slots_[i].pWindow_ = _pWindow;
+			slots_[i].pCurrent_ = nullptr;
+			slots_[i].pNext_ = nullptr;
+			return slots_[i];
 		}
 	}
 
@@ -78,8 +80,8 @@ Director::SceneSlot& Director::GetOrCreateSlot(Window* _pWindow)
 	slot.pWindow_ = _pWindow;
 	slot.pCurrent_ = nullptr;
 	slot.pNext_ = nullptr;
-	m_Slots.PushBack(slot);
-	return m_Slots[m_Slots.Size() - 1];
+	slots_.PushBack(slot);
+	return slots_[slots_.Size() - 1];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -159,41 +161,41 @@ Scene* Director::CurrentScene(Window* _pWindow)
 void Director::Update(const jc::TimeSpan& _dt)
 {
 	// 1. 예약된 씬 교체 처리 (프레임 경계이므로 안전하다)
-	//    씬 콜백(OnExit/OnEnter/OnUpdate)이 m_Slots를 변경할 수 있으므로(재진입)
+	//    씬 콜백(OnExit/OnEnter/OnUpdate)이 slots_를 변경할 수 있으므로(재진입)
 	//    참조를 오래 붙잡지 않고 매 접근마다 인덱스로 다시 조회한다.
-	for (int i = 0; i < m_Slots.Size(); ++i)
+	for (int i = 0; i < slots_.Size(); ++i)
 	{
-		if (m_Slots[i].pWindow_ == nullptr || m_Slots[i].pNext_ == nullptr)
+		if (slots_[i].pWindow_ == nullptr || slots_[i].pNext_ == nullptr)
 		{
 			continue;
 		}
 
 		// 이전 씬을 내리고 (OnExit 중 씬 교체 가능 → 이후 슬롯 재조회)
-		if (m_Slots[i].pCurrent_ != nullptr)
+		if (slots_[i].pCurrent_ != nullptr)
 		{
-			m_Slots[i].pCurrent_->OnExit();
-			JC_DELETE_SAFE(m_Slots[i].pCurrent_);
+			slots_[i].pCurrent_->OnExit();
+			JC_DELETE_SAFE(slots_[i].pCurrent_);
 		}
 
 		// OnExit 도중 예약이 바뀌었을 수 있으니 현재 예약 상태를 다시 읽는다.
-		if (m_Slots[i].pNext_ == nullptr)
+		if (slots_[i].pNext_ == nullptr)
 		{
 			continue;	// (이론적) 교체가 취소된 경우
 		}
 
 		// 새 씬을 올린다.
-		m_Slots[i].pCurrent_ = m_Slots[i].pNext_;
-		m_Slots[i].pNext_ = nullptr;
-		m_Slots[i].pCurrent_->SetWindow(m_Slots[i].pWindow_);
-		m_Slots[i].pCurrent_->OnEnter();
+		slots_[i].pCurrent_ = slots_[i].pNext_;
+		slots_[i].pNext_ = nullptr;
+		slots_[i].pCurrent_->SetWindow(slots_[i].pWindow_);
+		slots_[i].pCurrent_->OnEnter();
 	}
 
 	// 2. 모든 윈도우의 현재 씬 갱신
-	for (int i = 0; i < m_Slots.Size(); ++i)
+	for (int i = 0; i < slots_.Size(); ++i)
 	{
-		if (m_Slots[i].pWindow_ != nullptr && m_Slots[i].pCurrent_ != nullptr)
+		if (slots_[i].pWindow_ != nullptr && slots_[i].pCurrent_ != nullptr)
 		{
-			m_Slots[i].pCurrent_->OnUpdate(_dt);
+			slots_[i].pCurrent_->OnUpdate(_dt);
 		}
 	}
 }
@@ -212,7 +214,7 @@ void Director::Render(Window* _pWindow)
 	}
 
 	Scene* pScene = pSlot->pCurrent_;
-	const Mat4 viewProjection = pScene->GetCamera().ViewProjection();
+	const mat4 viewProjection = pScene->GetCamera().ViewProjection();
 
 	g_cRenderer3D.Begin(viewProjection);
 	g_cRenderer2D.Begin(viewProjection);
@@ -253,9 +255,9 @@ void Director::DetachWindow(Window* _pWindow)
 // 모든 씬 정리 (앱 종료 시 Application::Finalize가 호출)
 void Director::Cleanup()
 {
-	for (int i = 0; i < m_Slots.Size(); ++i)
+	for (int i = 0; i < slots_.Size(); ++i)
 	{
-		SceneSlot& slot = m_Slots[i];
+		SceneSlot& slot = slots_[i];
 
 		if (slot.pNext_ != nullptr)
 		{
@@ -268,7 +270,7 @@ void Director::Cleanup()
 		}
 		slot.pWindow_ = nullptr;
 	}
-	m_Slots.Clear();
+	slots_.Clear();
 }
 
 NS_SGF_END

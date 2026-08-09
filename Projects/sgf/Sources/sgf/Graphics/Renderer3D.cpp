@@ -54,8 +54,8 @@ float4 PSMain(PsInput input) : SV_TARGET
 
 //////////////////////////////////////////////////////////////////////////////////////////
 Renderer3D::Renderer3D()
-	: m_TriangleVertices(MaxTriangles_v * 3)
-	, m_LineVertices(MaxLines_v * 2)
+	: triangleVertices_(MAX_TRIANGLES * 3)
+	, lineVertices_(MAX_LINES * 2)
 {
 }
 
@@ -84,11 +84,11 @@ const D3D11_INPUT_ELEMENT_DESC* Renderer3D::VertexLayout(UINT* _outCount) const
 // 삼각형/선용 동적(DYNAMIC) 정점 버퍼를 만든다. (매 프레임 CPU 배치를 복사해 넣는다)
 bool Renderer3D::CreateBatchResources(GraphicDevice* _pDevice)
 {
-	if (!m_TriangleVb.Create(_pDevice, nullptr, sizeof(VertexPC), MaxTriangles_v * 3, true))
+	if (!triangleVb_.Create(_pDevice, nullptr, sizeof(VertexPC), MAX_TRIANGLES * 3, true))
 	{
 		return false;
 	}
-	if (!m_LineVb.Create(_pDevice, nullptr, sizeof(VertexPC), MaxLines_v * 2, true))
+	if (!lineVb_.Create(_pDevice, nullptr, sizeof(VertexPC), MAX_LINES * 2, true))
 	{
 		return false;
 	}
@@ -101,7 +101,7 @@ void Renderer3D::Finalize()
 {
 	// 셰이더/버퍼는 각자의 소멸자(ComPtr)가 GPU 리소스를 알아서 해제한다.
 	// (Renderer2D::Finalize와 같은 방식)
-	m_pDevice = nullptr;
+	pDevice_ = nullptr;
 	BatchRenderer::Finalize();
 }
 
@@ -111,15 +111,15 @@ void Renderer3D::Finalize()
 // Renderer2D와 Begin~End 구간이 겹쳐도 서로 상태를 덮어쓰지 않기 위함이다.
 void Renderer3D::OnBegin()
 {
-	m_TriangleVertices.Clear();
-	m_LineVertices.Clear();
+	triangleVertices_.Clear();
+	lineVertices_.Clear();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void Renderer3D::Flush()
 {
-	FlushBatch(m_TriangleVb, m_TriangleVertices, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	FlushBatch(m_LineVb, m_LineVertices, D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	FlushBatch(triangleVb_, triangleVertices_, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	FlushBatch(lineVb_, lineVertices_, D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -135,15 +135,15 @@ void Renderer3D::FlushBatch(VertexBuffer& _vertexBuffer, jc::Vector<VertexPC>& _
 
 	// 3D는 앞뒤 가림이 있어야 하므로 깊이 테스트를 켜고,
 	// 단색 면/선은 불투명이므로 블렌딩은 끈다.
-	m_pDevice->SetDepthTest(true);
-	m_pDevice->SetAlphaBlending(false);
+	pDevice_->SetDepthTest(true);
+	pDevice_->SetAlphaBlending(false);
 
-	_vertexBuffer.Update(m_pDevice, _vertices.Source(), UINT(vertexCount));
+	_vertexBuffer.Update(pDevice_, _vertices.Source(), UINT(vertexCount));
 
 	ApplyFrameStates();
-	_vertexBuffer.Bind(m_pDevice);
-	m_pDevice->Context()->IASetPrimitiveTopology(_topology);
-	m_pDevice->Context()->Draw(UINT(vertexCount), 0);
+	_vertexBuffer.Bind(pDevice_);
+	pDevice_->Context()->IASetPrimitiveTopology(_topology);
+	pDevice_->Context()->Draw(UINT(vertexCount), 0);
 
 	_vertices.Clear();
 }
@@ -153,9 +153,9 @@ void Renderer3D::FlushBatch(VertexBuffer& _vertexBuffer, jc::Vector<VertexPC>& _
 // 정점 순서는 바깥에서 볼 때 (왼위, 오른위, 왼아래, 오른아래).
 // 19장 큐브와 동일한 시계 방향 감기(winding)를 사용한다. (D3D 기본 = 앞면)
 static void sAddQuad(jc::Vector<VertexPC>& _vertices,
-	const Vec3& _topLeft, const Vec3& _topRight,
-	const Vec3& _bottomLeft, const Vec3& _bottomRight,
-	const Color& _color)
+	const vec3& _topLeft, const vec3& _topRight,
+	const vec3& _bottomLeft, const vec3& _bottomRight,
+	const color& _color)
 {
 	// 삼각형 1: 왼위 -> 오른위 -> 왼아래
 	_vertices.PushBack({ _topLeft, _color });
@@ -169,32 +169,32 @@ static void sAddQuad(jc::Vector<VertexPC>& _vertices,
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 삼각형 하나 배치. (바깥에서 볼 때 시계 방향 순서가 앞면이다)
-void Renderer3D::DrawTriangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, const Color& _color)
+void Renderer3D::DrawTriangle(const vec3& _p0, const vec3& _p1, const vec3& _p2, const color& _color)
 {
-	jc_assert(m_bBegun);
+	jc_assert(bBegun_);
 
-	if (m_TriangleVertices.Size() + 3 > MaxTriangles_v * 3)
+	if (triangleVertices_.Size() + 3 > MAX_TRIANGLES * 3)
 	{
-		FlushBatch(m_TriangleVb, m_TriangleVertices, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);	// 버퍼가 가득 찼으면 지금까지 모은 걸 먼저 그린다
+		FlushBatch(triangleVb_, triangleVertices_, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);	// 버퍼가 가득 찼으면 지금까지 모은 걸 먼저 그린다
 	}
 
-	m_TriangleVertices.PushBack({ _p0, _color });
-	m_TriangleVertices.PushBack({ _p1, _color });
-	m_TriangleVertices.PushBack({ _p2, _color });
+	triangleVertices_.PushBack({ _p0, _color });
+	triangleVertices_.PushBack({ _p1, _color });
+	triangleVertices_.PushBack({ _p2, _color });
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 단색 상자 배치.
 // [CPU측 간이 음영] 조명 셔이더 없이도 입체감이 느껴지도록
 // 면마다 밝기 계수를 달리 적용한다. (윗면이 가장 밝고 아랫면이 가장 어둡다)
-void Renderer3D::DrawCube(const Vec3& _center, const Vec3& _size, const Color& _color)
+void Renderer3D::DrawCube(const vec3& _center, const vec3& _size, const color& _color)
 {
-	jc_assert(m_bBegun);
+	jc_assert(bBegun_);
 
 	// 큐브 한 개 = 6면 x 삼각형 2개 x 정점 3개 = 36 정점
-	if (m_TriangleVertices.Size() + 36 > MaxTriangles_v * 3)
+	if (triangleVertices_.Size() + 36 > MAX_TRIANGLES * 3)
 	{
-		FlushBatch(m_TriangleVb, m_TriangleVertices, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		FlushBatch(triangleVb_, triangleVertices_, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
 
 	const _f32 hx = _size.x * 0.5f;
@@ -207,61 +207,61 @@ void Renderer3D::DrawCube(const Vec3& _center, const Vec3& _size, const Color& _
 	// 면별 밝기 계수로 색을 미리 계산해둔다.
 	auto shade = [&_color](_f32 _k)
 	{
-		return Color(_color.r * _k, _color.g * _k, _color.b * _k, _color.a);
+		return color(_color.r * _k, _color.g * _k, _color.b * _k, _color.a);
 	};
 
 	// 각 면의 네 귀퍼는 "바깥에서 볼 때" (왼위, 오른위, 왼아래, 오른아래) 순서.
 	// (19장 큐브 인덱스와 동일한 감기)
 
 	// 앞면 (-Z)
-	sAddQuad(m_TriangleVertices,
-		Vec3(cx - hx, cy + hy, cz - hz), Vec3(cx + hx, cy + hy, cz - hz),
-		Vec3(cx - hx, cy - hy, cz - hz), Vec3(cx + hx, cy - hy, cz - hz), shade(0.80f));
+	sAddQuad(triangleVertices_,
+		vec3(cx - hx, cy + hy, cz - hz), vec3(cx + hx, cy + hy, cz - hz),
+		vec3(cx - hx, cy - hy, cz - hz), vec3(cx + hx, cy - hy, cz - hz), shade(0.80f));
 
 	// 넫면 (+Z)
-	sAddQuad(m_TriangleVertices,
-		Vec3(cx + hx, cy + hy, cz + hz), Vec3(cx - hx, cy + hy, cz + hz),
-		Vec3(cx + hx, cy - hy, cz + hz), Vec3(cx - hx, cy - hy, cz + hz), shade(0.65f));
+	sAddQuad(triangleVertices_,
+		vec3(cx + hx, cy + hy, cz + hz), vec3(cx - hx, cy + hy, cz + hz),
+		vec3(cx + hx, cy - hy, cz + hz), vec3(cx - hx, cy - hy, cz + hz), shade(0.65f));
 
 	// 왼면 (-X)
-	sAddQuad(m_TriangleVertices,
-		Vec3(cx - hx, cy + hy, cz + hz), Vec3(cx - hx, cy + hy, cz - hz),
-		Vec3(cx - hx, cy - hy, cz + hz), Vec3(cx - hx, cy - hy, cz - hz), shade(0.55f));
+	sAddQuad(triangleVertices_,
+		vec3(cx - hx, cy + hy, cz + hz), vec3(cx - hx, cy + hy, cz - hz),
+		vec3(cx - hx, cy - hy, cz + hz), vec3(cx - hx, cy - hy, cz - hz), shade(0.55f));
 
 	// 오른면 (+X)
-	sAddQuad(m_TriangleVertices,
-		Vec3(cx + hx, cy + hy, cz - hz), Vec3(cx + hx, cy + hy, cz + hz),
-		Vec3(cx + hx, cy - hy, cz - hz), Vec3(cx + hx, cy - hy, cz + hz), shade(0.90f));
+	sAddQuad(triangleVertices_,
+		vec3(cx + hx, cy + hy, cz - hz), vec3(cx + hx, cy + hy, cz + hz),
+		vec3(cx + hx, cy - hy, cz - hz), vec3(cx + hx, cy - hy, cz + hz), shade(0.90f));
 
 	// 윗면 (+Y) - 가장 밝다 (하늘에서 빛이 내리쪼는 느낌)
-	sAddQuad(m_TriangleVertices,
-		Vec3(cx - hx, cy + hy, cz + hz), Vec3(cx + hx, cy + hy, cz + hz),
-		Vec3(cx - hx, cy + hy, cz - hz), Vec3(cx + hx, cy + hy, cz - hz), shade(1.00f));
+	sAddQuad(triangleVertices_,
+		vec3(cx - hx, cy + hy, cz + hz), vec3(cx + hx, cy + hy, cz + hz),
+		vec3(cx - hx, cy + hy, cz - hz), vec3(cx + hx, cy + hy, cz - hz), shade(1.00f));
 
 	// 아랫면 (-Y) - 가장 어둡다
-	sAddQuad(m_TriangleVertices,
-		Vec3(cx - hx, cy - hy, cz - hz), Vec3(cx + hx, cy - hy, cz - hz),
-		Vec3(cx - hx, cy - hy, cz + hz), Vec3(cx + hx, cy - hy, cz + hz), shade(0.45f));
+	sAddQuad(triangleVertices_,
+		vec3(cx - hx, cy - hy, cz - hz), vec3(cx + hx, cy - hy, cz - hz),
+		vec3(cx - hx, cy - hy, cz + hz), vec3(cx + hx, cy - hy, cz + hz), shade(0.45f));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 3D 선분 하나 배치.
-void Renderer3D::DrawLine3D(const Vec3& _from, const Vec3& _to, const Color& _color)
+void Renderer3D::DrawLine3D(const vec3& _from, const vec3& _to, const color& _color)
 {
-	jc_assert(m_bBegun);
+	jc_assert(bBegun_);
 
-	if (m_LineVertices.Size() + 2 > MaxLines_v * 2)
+	if (lineVertices_.Size() + 2 > MAX_LINES * 2)
 	{
-		FlushBatch(m_LineVb, m_LineVertices, D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+		FlushBatch(lineVb_, lineVertices_, D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 	}
 
-	m_LineVertices.PushBack({ _from, _color });
-	m_LineVertices.PushBack({ _to, _color });
+	lineVertices_.PushBack({ _from, _color });
+	lineVertices_.PushBack({ _to, _color });
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // XZ 평면 격자 (바닥 기준선)
-void Renderer3D::DrawGrid(_s32 _halfCount, _f32 _spacing, const Color& _color)
+void Renderer3D::DrawGrid(_s32 _halfCount, _f32 _spacing, const color& _color)
 {
 	const _f32 extent = _halfCount * _spacing;
 
@@ -269,8 +269,8 @@ void Renderer3D::DrawGrid(_s32 _halfCount, _f32 _spacing, const Color& _color)
 	{
 		const _f32 offset = i * _spacing;
 		// Z 방향 세로선 + X 방향 가로선
-		DrawLine3D(Vec3(offset, 0.0f, -extent), Vec3(offset, 0.0f, +extent), _color);
-		DrawLine3D(Vec3(-extent, 0.0f, offset), Vec3(+extent, 0.0f, offset), _color);
+		DrawLine3D(vec3(offset, 0.0f, -extent), vec3(offset, 0.0f, +extent), _color);
+		DrawLine3D(vec3(-extent, 0.0f, offset), vec3(+extent, 0.0f, offset), _color);
 	}
 }
 
@@ -278,9 +278,9 @@ void Renderer3D::DrawGrid(_s32 _halfCount, _f32 _spacing, const Color& _color)
 // 원점 좌표축: X=빨강, Y=초록, Z=파랑
 void Renderer3D::DrawAxis(_f32 _length)
 {
-	DrawLine3D(Vec3(0.0f, 0.0f, 0.0f), Vec3(_length, 0.0f, 0.0f), Color(1.0f, 0.2f, 0.2f, 1.0f));
-	DrawLine3D(Vec3(0.0f, 0.0f, 0.0f), Vec3(0.0f, _length, 0.0f), Color(0.2f, 1.0f, 0.2f, 1.0f));
-	DrawLine3D(Vec3(0.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, _length), Color(0.2f, 0.4f, 1.0f, 1.0f));
+	DrawLine3D(vec3(0.0f, 0.0f, 0.0f), vec3(_length, 0.0f, 0.0f), color(1.0f, 0.2f, 0.2f, 1.0f));
+	DrawLine3D(vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, _length, 0.0f), color(0.2f, 1.0f, 0.2f, 1.0f));
+	DrawLine3D(vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, _length), color(0.2f, 0.4f, 1.0f, 1.0f));
 }
 
 NS_SGF_END

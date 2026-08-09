@@ -33,8 +33,8 @@ void LinearAlgebra_Main()
 	// =================================================================
 	printf("\n--- 1. 벡터 기초 ---\n");
 
-	const Vec2 a(3.0f, 4.0f);
-	const Vec2 b(1.0f, 0.0f);
+	const vec2 a(3.0f, 4.0f);
+	const vec2 b(1.0f, 0.0f);
 
 	PrintVec2("a", a);
 	PrintVec2("b", b);
@@ -60,9 +60,9 @@ void LinearAlgebra_Main()
 	// =================================================================
 	printf("\n--- 2. 내적 ---\n");
 
-	const Vec2 right(1.0f, 0.0f);
-	const Vec2 up(0.0f, 1.0f);
-	const Vec2 diag = Vec2(1.0f, 1.0f).Normalized();
+	const vec2 right(1.0f, 0.0f);
+	const vec2 up(0.0f, 1.0f);
+	const vec2 diag = vec2(1.0f, 1.0f).Normalized();
 
 	printf("right.Dot(right)      = %.3f (같은 방향: +1)\n", right.Dot(right));
 	printf("right.Dot(up)         = %.3f (수직: 0)\n", right.Dot(up));
@@ -78,8 +78,8 @@ void LinearAlgebra_Main()
 	// =================================================================
 	printf("\n--- 3. 외적 ---\n");
 
-	const Vec3 xAxis = Vec3::Right();
-	const Vec3 yAxis = Vec3::Up();
+	const vec3 xAxis = vec3::Right();
+	const vec3 yAxis = vec3::Up();
 	PrintVec3("X cross Y", xAxis.Cross(yAxis));		// (0, 0, 1) = Z축
 
 	printf("right cross up (2D)   = %.3f (양수: up은 right의 반시계 방향)\n", right.Cross(up));
@@ -89,14 +89,14 @@ void LinearAlgebra_Main()
 	// =================================================================
 	printf("\n--- 4. 행렬 기초 ---\n");
 
-	PrintMat4("Identity (무변환)", Mat4::Identity());
-	PrintMat4("Translation(10, 20, 0)", Mat4::Translation(10.0f, 20.0f, 0.0f));
-	PrintMat4("Scale(2, 3, 1)", Mat4::Scale(2.0f, 3.0f, 1.0f));
-	PrintMat4("RotationZ(90도)", Mat4::RotationZ(jc_math_deg2rad(90.0f)));
+	PrintMat4("Identity (무변환)", mat4::Identity());
+	PrintMat4("Translation(10, 20, 0)", mat4::Translation(10.0f, 20.0f, 0.0f));
+	PrintMat4("Scale(2, 3, 1)", mat4::Scale(2.0f, 3.0f, 1.0f));
+	PrintMat4("RotationZ(90도)", mat4::RotationZ(jc_math_deg2rad(90.0f)));
 
 	// 점 변환 확인: (1, 0, 0)을 Z축 90도 회전하면 (0, 1, 0)이 되어야 한다.
-	const Vec3 p(1.0f, 0.0f, 0.0f);
-	PrintVec3("(1,0,0)을 Z축 90도 회전", Mat4::RotationZ(jc_math_deg2rad(90.0f)).TransformPoint(p));
+	const vec3 p(1.0f, 0.0f, 0.0f);
+	PrintVec3("(1,0,0)을 Z축 90도 회전", mat4::RotationZ(jc_math_deg2rad(90.0f)).TransformPoint(p));
 
 	// =================================================================
 	// 5. 변환 합성과 순서의 중요성
@@ -107,8 +107,8 @@ void LinearAlgebra_Main()
 	// =================================================================
 	printf("\n--- 5. 변환 순서 ---\n");
 
-	const Mat4 r = Mat4::RotationZ(jc_math_deg2rad(90.0f));
-	const Mat4 t = Mat4::Translation(10.0f, 0.0f, 0.0f);
+	const mat4 r = mat4::RotationZ(jc_math_deg2rad(90.0f));
+	const mat4 t = mat4::Translation(10.0f, 0.0f, 0.0f);
 
 	// 행벡터 규약: 왼쪽에 있는 행렬이 먼저 적용된다.
 	PrintVec3("회전 -> 이동 (R*T)", (r * t).TransformPoint(p));	// (10, 1, 0) 부근
@@ -116,7 +116,7 @@ void LinearAlgebra_Main()
 
 	// SRT2D는 Scale * RotationZ * Translation을 한번에 만들어주는 헬퍼다.
 	// 씬 그래프의 모든 Node가 이 함수로 로컬 변환을 만든다.
-	PrintMat4("SRT2D(배쀨1, 90도, (10,0))", Mat4::SRT2D(Vec2::One(), jc_math_deg2rad(90.0f), Vec2(10.0f, 0.0f)));
+	PrintMat4("SRT2D(배쀨1, 90도, (10,0))", mat4::SRT2D(vec2::One(), jc_math_deg2rad(90.0f), vec2(10.0f, 0.0f)));
 
 	printf("\n[정리]\n");
 	printf(" - 벡터 = 크기 + 방향, 내적 = 방향 유사도, 외적 = 수직 벡터\n");

@@ -19,29 +19,32 @@ NS_SGF_BEGIN
 
 using namespace jc;
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 생성자: 멤버 초기화
 RenderTarget::RenderTarget()
-	: m_bDepthOnly(false)
-	, m_Width(0)
-	, m_Height(0)
+	: bDepthOnly_(false)
+	, width_(0)
+	, height_(0)
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 소멸자: 리소스 자동 해제
 RenderTarget::~RenderTarget()
 {
 	Destroy();
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 색 + 깊이를 모두 가진 일반 렌더 타깃 생성 (미니맵/후처리용)
 bool RenderTarget::Create(GraphicDevice* _pDevice, int _width, int _height)
 {
 	jc_assert(_pDevice != nullptr && _width > 0 && _height > 0);
 
 	Destroy();
-	m_Width = _width;
-	m_Height = _height;
-	m_bDepthOnly = false;
+	width_ = _width;
+	height_ = _height;
+	bDepthOnly_ = false;
 
 	ID3D11Device* pDevice = _pDevice->Device();
 
@@ -58,21 +61,21 @@ bool RenderTarget::Create(GraphicDevice* _pDevice, int _width, int _height)
 	colorDesc.Usage = D3D11_USAGE_DEFAULT;
 	colorDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 
-	HRESULT hr = pDevice->CreateTexture2D(&colorDesc, nullptr, m_pColorTexture.GetAddressOf());
+	HRESULT hr = pDevice->CreateTexture2D(&colorDesc, nullptr, pColorTexture_.GetAddressOf());
 	if (FAILED(hr))
 	{
 		return false;
 	}
 
 	// 2. RTV: 이 텍스처에 "그릴 수 있게" 하는 뷰
-	hr = pDevice->CreateRenderTargetView(m_pColorTexture.Get(), nullptr, m_pRTV.GetAddressOf());
+	hr = pDevice->CreateRenderTargetView(pColorTexture_.Get(), nullptr, pRTV_.GetAddressOf());
 	if (FAILED(hr))
 	{
 		return false;
 	}
 
 	// 3. SRV: 이 텍스처를 "셰이더에서 읽을 수 있게" 하는 뷰
-	hr = pDevice->CreateShaderResourceView(m_pColorTexture.Get(), nullptr, m_pColorSRV.GetAddressOf());
+	hr = pDevice->CreateShaderResourceView(pColorTexture_.Get(), nullptr, pColorSRV_.GetAddressOf());
 	if (FAILED(hr))
 	{
 		return false;
@@ -83,13 +86,13 @@ bool RenderTarget::Create(GraphicDevice* _pDevice, int _width, int _height)
 	depthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 
-	hr = pDevice->CreateTexture2D(&depthDesc, nullptr, m_pDepthTexture.GetAddressOf());
+	hr = pDevice->CreateTexture2D(&depthDesc, nullptr, pDepthTexture_.GetAddressOf());
 	if (FAILED(hr))
 	{
 		return false;
 	}
 
-	hr = pDevice->CreateDepthStencilView(m_pDepthTexture.Get(), nullptr, m_pDSV.GetAddressOf());
+	hr = pDevice->CreateDepthStencilView(pDepthTexture_.Get(), nullptr, pDSV_.GetAddressOf());
 	if (FAILED(hr))
 	{
 		return false;
@@ -98,15 +101,16 @@ bool RenderTarget::Create(GraphicDevice* _pDevice, int _width, int _height)
 	return true;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 깊이 전용 렌더 타깃 생성 (그림자 맵용)
 bool RenderTarget::CreateDepthOnly(GraphicDevice* _pDevice, int _width, int _height)
 {
 	jc_assert(_pDevice != nullptr && _width > 0 && _height > 0);
 
 	Destroy();
-	m_Width = _width;
-	m_Height = _height;
-	m_bDepthOnly = true;
+	width_ = _width;
+	height_ = _height;
+	bDepthOnly_ = true;
 
 	ID3D11Device* pDevice = _pDevice->Device();
 
@@ -123,7 +127,7 @@ bool RenderTarget::CreateDepthOnly(GraphicDevice* _pDevice, int _width, int _hei
 	depthDesc.Usage = D3D11_USAGE_DEFAULT;
 	depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 
-	HRESULT hr = pDevice->CreateTexture2D(&depthDesc, nullptr, m_pDepthTexture.GetAddressOf());
+	HRESULT hr = pDevice->CreateTexture2D(&depthDesc, nullptr, pDepthTexture_.GetAddressOf());
 	if (FAILED(hr))
 	{
 		return false;
@@ -134,7 +138,7 @@ bool RenderTarget::CreateDepthOnly(GraphicDevice* _pDevice, int _width, int _hei
 	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
 	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 
-	hr = pDevice->CreateDepthStencilView(m_pDepthTexture.Get(), &dsvDesc, m_pDSV.GetAddressOf());
+	hr = pDevice->CreateDepthStencilView(pDepthTexture_.Get(), &dsvDesc, pDSV_.GetAddressOf());
 	if (FAILED(hr))
 	{
 		return false;
@@ -146,7 +150,7 @@ bool RenderTarget::CreateDepthOnly(GraphicDevice* _pDevice, int _width, int _hei
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
 
-	hr = pDevice->CreateShaderResourceView(m_pDepthTexture.Get(), &srvDesc, m_pDepthSRV.GetAddressOf());
+	hr = pDevice->CreateShaderResourceView(pDepthTexture_.Get(), &srvDesc, pDepthSRV_.GetAddressOf());
 	if (FAILED(hr))
 	{
 		return false;
@@ -155,43 +159,46 @@ bool RenderTarget::CreateDepthOnly(GraphicDevice* _pDevice, int _width, int _hei
 	return true;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 모든 리소스 해제
 void RenderTarget::Destroy()
 {
-	m_pColorSRV.Reset();
-	m_pRTV.Reset();
-	m_pColorTexture.Reset();
-	m_pDepthSRV.Reset();
-	m_pDSV.Reset();
-	m_pDepthTexture.Reset();
-	m_Width = 0;
-	m_Height = 0;
-	m_bDepthOnly = false;
+	pColorSRV_.Reset();
+	pRTV_.Reset();
+	pColorTexture_.Reset();
+	pDepthSRV_.Reset();
+	pDSV_.Reset();
+	pDepthTexture_.Reset();
+	width_ = 0;
+	height_ = 0;
+	bDepthOnly_ = false;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 타깃 지우기
-void RenderTarget::Clear(GraphicDevice* _pDevice, const Color& _clearColor)
+void RenderTarget::Clear(GraphicDevice* _pDevice, const color& _clearColor)
 {
 	ID3D11DeviceContext* pContext = _pDevice->Context();
 
 	// 색 타깃이 있으면 배경색으로 지운다.
-	if (m_pRTV != nullptr)
+	if (pRTV_ != nullptr)
 	{
 		const float clearColor[4] = { _clearColor.r, _clearColor.g, _clearColor.b, _clearColor.a };
-		pContext->ClearRenderTargetView(m_pRTV.Get(), clearColor);
+		pContext->ClearRenderTargetView(pRTV_.Get(), clearColor);
 	}
 
 	// 깊이는 1.0(가장 멀리)으로 지운다. 새로 그리는 픽셀이 항상 이길 수 있게.
 	// (깊이 전용 D32_FLOAT 포맷에는 스텐실이 없으므로 깊이만 지운다)
-	if (m_pDSV != nullptr)
+	if (pDSV_ != nullptr)
 	{
-		const UINT clearFlags = m_bDepthOnly
+		const UINT clearFlags = bDepthOnly_
 			? D3D11_CLEAR_DEPTH
 			: (D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
-		pContext->ClearDepthStencilView(m_pDSV.Get(), clearFlags, 1.0f, 0);
+		pContext->ClearDepthStencilView(pDSV_.Get(), clearFlags, 1.0f, 0);
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 다 그린 결과를 일반 텍스처처럼 셰이더 입력으로 바인딩
 void RenderTarget::BindAsTexture(GraphicDevice* _pDevice, UINT _slot)
 {
@@ -199,10 +206,11 @@ void RenderTarget::BindAsTexture(GraphicDevice* _pDevice, UINT _slot)
 	_pDevice->Context()->PSSetShaderResources(_slot, 1, pSrvs);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 모드에 맞는 SRV 반환 (깊이 전용이면 깊이 SRV, 아니면 색 SRV)
 ID3D11ShaderResourceView* RenderTarget::SRV() const
 {
-	return m_bDepthOnly ? m_pDepthSRV.Get() : m_pColorSRV.Get();
+	return bDepthOnly_ ? pDepthSRV_.Get() : pColorSRV_.Get();
 }
 
 NS_SGF_END

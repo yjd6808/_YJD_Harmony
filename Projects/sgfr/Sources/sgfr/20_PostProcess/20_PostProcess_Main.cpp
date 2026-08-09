@@ -39,7 +39,7 @@ namespace
 	// HLSL의 CbTransform(b0)과 일치 (64바이트)
 	struct CbTransform
 	{
-		Mat4 wvp_;
+		mat4 wvp_;
 	};
 
 	// HLSL의 CbPost(b0)와 일치 (16바이트)
@@ -135,8 +135,8 @@ void PostProcess_Main()
 	}
 
 	// 5. 카메라
-	const Mat4 view = Mat4::LookAtLH(Vec3(0.0f, 1.5f, -4.0f), Vec3::Zero(), Vec3::Up());
-	const Mat4 proj = Mat4::PerspectiveFovLH(jc_math_pi_div4, window.AspectRatio(), 0.1f, 100.0f);
+	const mat4 view = mat4::LookAtLH(vec3(0.0f, 1.5f, -4.0f), vec3::Zero(), vec3::Up());
+	const mat4 proj = mat4::PerspectiveFovLH(jc_math_pi_div4, window.AspectRatio(), 0.1f, 100.0f);
 
 	// 6. 현재 효과 모드 + Before/After 경계 위치
 	_s32 effectMode = 1;
@@ -189,12 +189,12 @@ void PostProcess_Main()
 		input.NextFrame();
 
 		// ---- 패스 1: 장면을 렌더 타깃에 그린다 ----
-		device.BeginFrame(Color(0.0f, 0.0f, 0.0f, 1.0f));
+		device.BeginFrame(color(0.0f, 0.0f, 0.0f, 1.0f));
 
 		device.SetRenderTarget(&sceneTarget);
-		sceneTarget.Clear(&device, Color(0.12f, 0.1f, 0.2f, 1.0f));
+		sceneTarget.Clear(&device, color(0.12f, 0.1f, 0.2f, 1.0f));
 
-		const Mat4 world = Mat4::RotationY(elapsed * 0.8f) * Mat4::RotationX(elapsed * 0.3f);
+		const mat4 world = mat4::RotationY(elapsed * 0.8f) * mat4::RotationX(elapsed * 0.3f);
 		CbTransform cbT;
 		cbT.wvp_ = world * view * proj;
 		cbTransform.UpdateAndBind(&device, cbT, 0);

@@ -24,7 +24,7 @@
  *      void OnEnter() override
  *      {
  *          // 소속 윈도우 크기에 맞춰 카메라 설정 (v2.1)
- *          m_Camera.SetOrthographic2D(_f32(GetWindow()->Width()), _f32(GetWindow()->Height()));
+ *          camera_.SetOrthographic2D(_f32(GetWindow()->Width()), _f32(GetWindow()->Height()));
  *      }
  *      void OnUpdate(const jc::TimeSpan& _dt) override { ... }
  *      void OnRender() override
@@ -49,7 +49,7 @@ class Window;
 class Scene
 {
 public:
-	Scene() : m_pWindow(nullptr) {}
+	Scene() : pWindow_(nullptr) {}
 	virtual ~Scene() {}
 
 	// === 생명주기 훅 (파생 클래스가 재정의) ===
@@ -71,23 +71,23 @@ public:
 	virtual void OnRender() {}
 
 	// 이 씬의 카메라 (Director가 렌더링 시 ViewProjection을 가져다 쓴다)
-	Camera& GetCamera() { return m_Camera; }
+	Camera& GetCamera() { return camera_; }
 
 	// [v2.1] 이 씬이 그려지는 윈도우.
 	// Director가 RunScene/ReplaceScene 시점에 설정해준다.
 	// OnEnter 이후부터 유효하다. (그 전에는 nullptr)
-	Window* GetWindow() const { return m_pWindow; }
+	Window* GetWindow() const { return pWindow_; }
 
 protected:
-	Camera m_Camera;	// 씬 전용 카메라
+	Camera camera_;	// 씬 전용 카메라
 
 private:
 	// Director만 소속 윈도우를 바꿀 수 있다.
 	friend class Director;
-	void SetWindow(Window* _pWindow) { m_pWindow = _pWindow; }
+	void SetWindow(Window* _pWindow) { pWindow_ = _pWindow; }
 
 private:
-	Window* m_pWindow;	// 이 씬이 그려지는 창 (빌림, 소유 아님)
+	Window* pWindow_;	// 이 씬이 그려지는 창 (빌림, 소유 아님)
 };
 
 NS_SGF_END

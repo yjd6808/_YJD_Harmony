@@ -38,7 +38,7 @@ void PrintSceneGraphExplanation()
 
 // 단색 원 텍스처를 CPU로 직접 만든다. (경계 부드러움 포함)
 // 행성/공 스프라이트용 텍스처를 외부 파일 없이 준비하기 위한 함수다.
-bool CreateCircleTexture(GraphicDevice* _pDevice, Texture* _pOutTexture, int _size, const Color& _color)
+bool CreateCircleTexture(GraphicDevice* _pDevice, Texture* _pOutTexture, int _size, const color& _color)
 {
 	const _f32 center = _size * 0.5f;
 	const _f32 radius = _size * 0.5f - 2.0f;	// 가장자리 2픽셀 여유
