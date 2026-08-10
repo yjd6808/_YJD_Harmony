@@ -54,6 +54,7 @@
 #include "jc/Type.h"
 #include "jc/Assert.h"
 #include "jc/Event.h"
+#include "jc/Config.h"
 #include "jc/Container/Vector.h"
 #include "jc/Container/HashMap.h"
 #include "jc/Pattern/Singleton.h"
