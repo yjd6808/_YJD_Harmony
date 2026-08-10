@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/4/2026 10:40:00 PM
  * 수정일: 8/9/2026 1:00:00 AM (v2: 파사드로 재구성)
@@ -19,7 +19,7 @@ using namespace jc;
 GraphicDevice::GraphicDevice()
 	: pBoundWindow_(nullptr)
 	, bWireframe_(false)
-	, cullMode_(CullMode::Back)
+	, cullMode_(CullMode::cmBack)
 	, width_(0)
 	, height_(0)
 {
@@ -46,9 +46,12 @@ bool GraphicDevice::Initialize()
 	// 2. 상태 객체 캐시 준비
 	if (!states_.Initialize(pDevice_.Get())) { return false; }
 
-	// 3. 기본 상태 적용 (샘플러 슬롯0, 솔리드+백컸링)
+	// 2-1. [v3] 그리기 명령 창구 준비
+	if (!context_.Initialize(this)) { return false; }
+
+	// 3. 기본 상태 적용 (샘플러 슬롯0, 솔리드+백컬링)
 	ID3D11SamplerState* pSamplers[] = {
-		states_.GetSamplerState(SamplerFilter::Linear, SamplerAddress::Clamp)
+		states_.GetSamplerState(SamplerFilter::fmLinear, SamplerAddress::amClamp)
 	};
 	pContext_->PSSetSamplers(0, 1, pSamplers);
 	ApplyRasterizerState();
@@ -70,11 +73,14 @@ bool GraphicDevice::Initialize(HWND _hWnd, _s32 _width, _s32 _height)
 	// 3. 상태 객체 캐시 준비 (자주 쓰는 상태는 미리 생성)
 	if (!states_.Initialize(pDevice_.Get())) { return false; }
 
+	// 3-1. [v3] 그리기 명령 창구 준비
+	if (!context_.Initialize(this)) { return false; }
+
 	// 4. 뷰포트 + 기본 상태 적용 (샘플러 슬롯0, 솔리드+백컬링)
 	swapChain_.ApplyFullViewport(pContext_.Get());
 
 	ID3D11SamplerState* pSamplers[] = {
-		states_.GetSamplerState(SamplerFilter::Linear, SamplerAddress::Clamp)
+		states_.GetSamplerState(SamplerFilter::fmLinear, SamplerAddress::amClamp)
 	};
 	pContext_->PSSetSamplers(0, 1, pSamplers);
 	ApplyRasterizerState();
@@ -92,6 +98,7 @@ void GraphicDevice::Finalize()
 	}
 
 	pBoundWindow_ = nullptr;
+	context_.Finalize();
 	states_.Finalize();
 	depthSurface_.Finalize();
 	swapChain_.Finalize();
@@ -314,7 +321,7 @@ void GraphicDevice::EndFrame(bool _bVsync)
 // 알파 블렌딩 켜기/끄기 (SetBlendMode의 간편 버전)
 void GraphicDevice::SetAlphaBlending(bool _bEnable)
 {
-	SetBlendMode(_bEnable ? BlendMode::Alpha : BlendMode::Opaque);
+	SetBlendMode(_bEnable ? BlendMode::bmAlpha : BlendMode::bmNone);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

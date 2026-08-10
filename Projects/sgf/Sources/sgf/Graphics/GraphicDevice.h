@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/4/2026 10:38:00 PM
  * 수정일: 8/9/2026 9:30:00 AM (v2.1: 멀티 윈도우 - 표면은 Window 소유, 디바이스는 앱에 1개)
@@ -35,6 +35,7 @@
 #include "sgf/Graphics/RenderStates.h"
 #include "sgf/Graphics/SwapChain.h"
 #include "sgf/Graphics/DepthStencilSurface.h"
+#include "sgf/Graphics/GraphicContext.h"
 
 NS_SGF_BEGIN
 
@@ -46,7 +47,7 @@ class Window;
 class GraphicDevice
 {
 public:
-	// 하위 호환: 기존 GraphicDevice::BlendMode::Alpha 같은 표기를 그대로 쓸 수 있게
+	// 하위 호환: 기존 GraphicDevice::BlendMode::bmAlpha 같은 표기를 그대로 쓸 수 있게
 	// 네임스페이스로 옮겨진 열거형(RenderStates.h)에 별칭을 붙인다.
 	using BlendMode = ::sgf::BlendMode;
 	using SamplerFilter = ::sgf::SamplerFilter;
@@ -97,13 +98,13 @@ public:
 	// 샘플러(필터 + 주소 모드)를 지정 슬롯에 설정한다.
 	void SetSampler(SamplerFilter _filter, SamplerAddress _address, UINT _slot = 0);
 
-	// 와이어프레임(면 대신 선만 그리기) 켜기/끄기. 현재 컸링 모드는 유지된다.
+	// 와이어프레임(면 대신 선만 그리기) 켜기/끄기. 현재 컬링 모드는 유지된다.
 	void SetWireframe(bool _bEnable);
 
-	// 컸링 모드를 설정한다. 현재 와이어프레임 여부는 유지된다.
+	// 컬링 모드를 설정한다. 현재 와이어프레임 여부는 유지된다.
 	void SetCullMode(CullMode _mode);
 
-	// 그리기 대상을 교체한다. (19~21번 튜토리얼: 렌더 타깃/후처리/그림자 맵)
+	// 그리기 대상을 교체한다. (25~27번 튜토리얼: 렌더 타깃/후처리/그림자 맵)
 	// @param _pTarget : 바꿀 대상. nullptr이면 "현재 창의 백버퍼"로 복귀한다.
 	// (v2.1: BeginFrame(Window*)로 그리던 중이면 그 창의 표면으로,
 	//  구버전 경로면 내장 표면으로 복귀한다)
@@ -128,6 +129,9 @@ public:
 	DepthStencilSurface& GetDepthSurface() { return depthSurface_; }
 	RenderStates& States() { return states_; }
 
+	// [v3] 그리기 명령 창구. 바인딩 캐시(스테이트 캐시)를 내장한다.
+	GraphicContext& GetContext() { return context_; }
+
 private:
 	// 디바이스만 생성한다. (v2.1 공통 경로)
 	bool CreateDeviceOnly();
@@ -143,7 +147,7 @@ private:
 	// (구버전 경로: BeginFrame(color)와 SetRenderTarget(nullptr)의 공통 헬퍼)
 	void BindBackBufferSurface();
 
-	// 현재 와이어프레임/컸링 설정에 맞는 래스터라이저 상태를 적용한다.
+	// 현재 와이어프레임/컬링 설정에 맞는 래스터라이저 상태를 적용한다.
 	void ApplyRasterizerState();
 
 private:
@@ -153,10 +157,11 @@ private:
 	SwapChain swapChain_;				// [구버전 경로 전용] 내장 백버퍼 표면
 	DepthStencilSurface depthSurface_;	// [구버전 경로 전용] 내장 깊이 버퍼
 	RenderStates states_;				// 상태 객체 캐시
+	GraphicContext context_;			// [v3] 그리기 명령 창구 (바인딩 캐시 포함)
 
 	Window* pBoundWindow_;	// 현재 BeginFrame(Window*)로 묶인 창 (구버전 경로면 nullptr)
 	bool bWireframe_;		// 현재 와이어프레임 여부
-	CullMode cullMode_;	// 현재 컸링 모드
+	CullMode cullMode_;	// 현재 컬링 모드
 	_s32 width_;			// 현재 그리기 대상 가로
 	_s32 height_;			// 현재 그리기 대상 세로
 };

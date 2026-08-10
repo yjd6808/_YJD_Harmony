@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 8:14:00 AM
  * =====================
@@ -22,12 +22,17 @@
 
 #include "jc/Math.h"
 
+#include "sgf/Graphics/IResource.h"
+
 NS_SGF_BEGIN
 
 class GraphicDevice;
 
-class Texture
+// [v3] IResource를 상속받아 ResourceMgr에 등록/검색할 수 있다.
+class Texture : public ResourceBase
 {
+	SGF_RESOURCE_TYPE(rtTexture)
+
 public:
 	Texture();
 	~Texture();
@@ -55,6 +60,9 @@ public:
 	int Width() const { return width_; }
 	int Height() const { return height_; }
 	bool IsValid() const { return pShaderResourceView_ != nullptr; }
+
+	// [v3] GraphicContext 바인딩 캐시용 원본 핸들
+	ID3D11ShaderResourceView* Srv() const { return pShaderResourceView_.Get(); }
 
 private:
 	SgfComPtr<ID3D11ShaderResourceView> pShaderResourceView_;	// 셰이더가 읽는 뷰

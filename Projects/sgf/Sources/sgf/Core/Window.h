@@ -80,11 +80,6 @@ public:
 	SwapChain& GetSwapChain() { return swapChain_; }
 	DepthStencilSurface& GetDepthSurface() { return depthSurface_; }
 
-	// 이 창이 닫힐 때 앱 전체를 종료(WM_QUIT)시킬지 여부.
-	// 메인 윈도우는 true(기본값), 서브 윈도우는 false로 두어야
-	// 서브 창 하나 닫았다고 앱 전체가 꺼지지 않는다.
-	void SetQuitOnClose(bool _bQuit) { bQuitOnClose_ = _bQuit; }
-
 	HWND Handle() const { return hWnd_; }
 	_s32 Width() const { return width_; }
 	_s32 Height() const { return height_; }
@@ -114,7 +109,6 @@ private:
 	_s32 width_;						// 클라이언트 영역 가로
 	_s32 height_;						// 클라이언트 영역 세로
 	bool bClosed_;						// 창이 닫혔는지 여부
-	bool bQuitOnClose_;				// 닫힐 때 WM_QUIT을 보낼지 (메인 윈도우만 true)
 	bool bHasSurface_;					// 그리기 표면 보유 여부
 	InputManager* pInput_;				// 입력 메시지를 전달할 대상 (소유하지 않음)
 	SwapChain swapChain_;				// 이 창 전용 백버퍼 교체 장치

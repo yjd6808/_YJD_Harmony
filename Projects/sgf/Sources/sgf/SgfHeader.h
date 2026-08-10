@@ -1,7 +1,8 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/4/2026 10:30:00 PM
  * 수정일: 8/9/2026 1:00:00 AM (v2: Node/Sprite 제거, SoundEngine/분리된 D3D 부품 추가)
+ * 수정일: 8/9/2026 6:20:00 PM (v3: GraphicContext/파이프라인 상태 객체/Mesh/Material/SceneRenderer/ResourceMgr 추가)
  * =====================
  * sgf 엔진 통합 헤더
  *
@@ -42,6 +43,18 @@
 #include "sgf/Graphics/RenderTarget.h"
 #include "sgf/Graphics/Renderer2D.h"
 #include "sgf/Graphics/Renderer3D.h"
+
+// === Graphics (v3: 파이프라인 객체 + 리소스 계층) ===
+#include "sgf/Graphics/GraphicsEnums.h"
+#include "sgf/Graphics/IResource.h"
+#include "sgf/Graphics/PipelineState.h"
+#include "sgf/Graphics/GraphicContext.h"
+#include "sgf/Graphics/ShaderProgram.h"
+#include "sgf/Graphics/DefaultShaders.h"
+#include "sgf/Graphics/Mesh.h"
+#include "sgf/Graphics/Material.h"
+#include "sgf/Graphics/SceneRenderer.h"
+#include "sgf/Graphics/ResourceMgr.h"
 
 // === Audio ===
 #include "sgf/Audio/SoundEngine.h"

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 8:10:00 AM
  * =====================
@@ -52,6 +52,10 @@ public:
 	void Bind(GraphicDevice* _pDevice);
 
 	UINT Count() const { return count_; }
+	UINT Stride() const { return stride_; }
+
+	// [v3] GraphicContext 바인딩 캐시용 원본 핸들
+	ID3D11Buffer* Raw() const { return pBuffer_.Get(); }
 
 private:
 	SgfComPtr<ID3D11Buffer> pBuffer_;	// GPU 버퍼 객체
@@ -79,6 +83,9 @@ public:
 	void Bind(GraphicDevice* _pDevice);
 
 	UINT Count() const { return count_; }
+
+	// [v3] GraphicContext 바인딩 캐시용 원본 핸들
+	ID3D11Buffer* Raw() const { return pBuffer_.Get(); }
 
 private:
 	SgfComPtr<ID3D11Buffer> pBuffer_;	// GPU 버퍼 객체
@@ -135,6 +142,22 @@ public:
 		pContext->VSSetConstantBuffers(_slot, 1, pBuffers);
 		pContext->PSSetConstantBuffers(_slot, 1, pBuffers);
 	}
+
+	// [v3] 내용만 갱신한다. 바인딩은 GraphicContext::SetConstantBuffer로 별도 수행.
+	void Update(GraphicDevice* _pDevice, const T& _data)
+	{
+		ID3D11DeviceContext* pContext = _pDevice->Context();
+
+		D3D11_MAPPED_SUBRESOURCE mapped = {};
+		if (SUCCEEDED(pContext->Map(pBuffer_.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped)))
+		{
+			memcpy(mapped.pData, &_data, sizeof(T));
+			pContext->Unmap(pBuffer_.Get(), 0);
+		}
+	}
+
+	// [v3] GraphicContext::SetConstantBuffer에 넘길 원본 핸들
+	ID3D11Buffer* Raw() const { return pBuffer_.Get(); }
 
 private:
 	SgfComPtr<ID3D11Buffer> pBuffer_;	// GPU 버퍼 객체

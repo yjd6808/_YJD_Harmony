@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 1:30:00 PM
  * =====================
@@ -8,7 +8,7 @@
  *  지금까지는 항상 백버퍼(화면)에 그렸다. 렌더 타깃을 만들면 우리가 만든
  *  텍스처를 그리기 대상으로 쓸 수 있고, 다 그린 뒤에는 그 텍스처를
  *  일반 텍스처처럼 다시 샘플링할 수 있다.
- *  미니맵/거울(19번), 후처리(20번), 그림자 맵(21번)이 전부 이 기법 위에 있다.
+ *  미니맵/거울(25번), 후처리(26번), 그림자 맵(27번)이 전부 이 기법 위에 있다.
  *
  * [핵심 아이디어: 같은 텍스처, 두 개의 뷰]
  *  - RTV(RenderTargetView)   : "여기에 그려라"   (출력용 해석)
@@ -25,6 +25,7 @@
 #pragma once
 
 #include "jc/Math.h"
+#include "sgf/Graphics/IResource.h"
 
 NS_SGF_BEGIN
 
@@ -32,8 +33,10 @@ using namespace jc;
 
 class GraphicDevice;
 
-class RenderTarget
+class RenderTarget : public ResourceBase
 {
+	SGF_RESOURCE_TYPE(rtRenderTarget)
+
 public:
 	RenderTarget();
 	~RenderTarget();

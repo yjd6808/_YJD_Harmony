@@ -1,6 +1,7 @@
 /*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 1:00:00 AM
+ * 수정일: 8/9/2026 5:20:00 PM (v3: GraphicsEnums 통합, U/V 분리 샘플러, FrontFace/ReadOnly 지원)
  * =====================
  * 렌더 상태 저장소 구현부
  */
@@ -24,13 +25,13 @@ bool RenderStates::Initialize(ID3D11Device* _pDevice)
 {
 	pDevice_ = _pDevice;
 
-	// 지연 생성 경로를 그대로 타서 미리 만들어둔다. (첫 프레임 끈상 방지)
-	if (GetBlendState(BlendMode::Opaque) == nullptr) { return false; }
-	if (GetBlendState(BlendMode::Alpha) == nullptr) { return false; }
-	if (GetDepthState(true) == nullptr) { return false; }
-	if (GetDepthState(false) == nullptr) { return false; }
-	if (GetRasterizerState(false, CullMode::Back) == nullptr) { return false; }
-	if (GetSamplerState(SamplerFilter::Linear, SamplerAddress::Clamp) == nullptr) { return false; }
+	// 지연 생성 경로를 그대로 타서 미리 만들어둔다. (첫 프레임 끊김 방지)
+	if (GetBlendState(BlendMode::bmNone) == nullptr) { return false; }
+	if (GetBlendState(BlendMode::bmAlpha) == nullptr) { return false; }
+	if (GetDepthState(DepthMode::dmReadWrite) == nullptr) { return false; }
+	if (GetDepthState(DepthMode::dmDisabled) == nullptr) { return false; }
+	if (GetRasterizerState(CullMode::cmBack) == nullptr) { return false; }
+	if (GetSamplerState(FilterMode::fmLinear, AddressMode::amClamp) == nullptr) { return false; }
 	return true;
 }
 
@@ -41,20 +42,28 @@ void RenderStates::Finalize()
 	{
 		pBlendStates_[i].Reset();
 	}
-	pDepthStates_[0].Reset();
-	pDepthStates_[1].Reset();
-	for (int fill = 0; fill < 2; ++fill)
+	for (int i = 0; i < static_cast<int>(DepthMode::Max); ++i)
+	{
+		pDepthStates_[i].Reset();
+	}
+	for (int fill = 0; fill < static_cast<int>(FillMode::Max); ++fill)
 	{
 		for (int cull = 0; cull < static_cast<int>(CullMode::Max); ++cull)
 		{
-			pRasterizerStates_[fill][cull].Reset();
+			for (int face = 0; face < static_cast<int>(FrontFace::Max); ++face)
+			{
+				pRasterizerStates_[fill][cull][face].Reset();
+			}
 		}
 	}
-	for (int filter = 0; filter < static_cast<int>(SamplerFilter::Max); ++filter)
+	for (int filter = 0; filter < static_cast<int>(FilterMode::Max); ++filter)
 	{
-		for (int address = 0; address < static_cast<int>(SamplerAddress::Max); ++address)
+		for (int u = 0; u < static_cast<int>(AddressMode::Max); ++u)
 		{
-			pSamplerStates_[filter][address].Reset();
+			for (int v = 0; v < static_cast<int>(AddressMode::Max); ++v)
+			{
+				pSamplerStates_[filter][u][v].Reset();
+			}
 		}
 	}
 	pDevice_ = nullptr;
@@ -85,25 +94,25 @@ ID3D11BlendState* RenderStates::GetBlendState(BlendMode _mode)
 
 	switch (_mode)
 	{
-	case BlendMode::Opaque:
+	case BlendMode::bmNone:
 		// 섞지 않고 덮어쓴다.
 		rt.BlendEnable = FALSE;
 		rt.SrcBlend = D3D11_BLEND_ONE;
 		rt.DestBlend = D3D11_BLEND_ZERO;
 		break;
-	case BlendMode::Alpha:
+	case BlendMode::bmAlpha:
 		// 최종 = 새색*알파 + 기존색*(1-알파)
 		rt.BlendEnable = TRUE;
 		rt.SrcBlend = D3D11_BLEND_SRC_ALPHA;
 		rt.DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
 		break;
-	case BlendMode::Additive:
+	case BlendMode::bmAdd:
 		// 최종 = 새색*알파 + 기존색  (쌓일수록 밝아진다 - 빛 효과)
 		rt.BlendEnable = TRUE;
 		rt.SrcBlend = D3D11_BLEND_SRC_ALPHA;
 		rt.DestBlend = D3D11_BLEND_ONE;
 		break;
-	case BlendMode::Multiply:
+	case BlendMode::bmMultiply:
 		// 최종 = 새색 * 기존색  (쌓일수록 어두워진다 - 그림자/어둠)
 		rt.BlendEnable = TRUE;
 		rt.SrcBlend = D3D11_BLEND_ZERO;
@@ -121,10 +130,14 @@ ID3D11BlendState* RenderStates::GetBlendState(BlendMode _mode)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 깊이 상태: 깊이 테스트(가림 처리) ON/OFF
-ID3D11DepthStencilState* RenderStates::GetDepthState(bool _bEnable)
+// 깊이 상태: 깊이 테스트(가림 처리) 모드
+ID3D11DepthStencilState* RenderStates::GetDepthState(DepthMode _mode)
 {
-	const int index = _bEnable ? 1 : 0;
+	const int index = static_cast<int>(_mode);
+	if (index < 0 || index >= static_cast<int>(DepthMode::Max))
+	{
+		return nullptr;
+	}
 	if (pDepthStates_[index])
 	{
 		return pDepthStates_[index].Get();
@@ -132,9 +145,26 @@ ID3D11DepthStencilState* RenderStates::GetDepthState(bool _bEnable)
 
 	D3D11_DEPTH_STENCIL_DESC desc;
 	memset(&desc, 0, sizeof(desc));
-	desc.DepthEnable = _bEnable ? TRUE : FALSE;
-	desc.DepthWriteMask = _bEnable ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
 	desc.DepthFunc = D3D11_COMPARISON_LESS;		// 더 가까우면(값이 작으면) 통과
+
+	switch (_mode)
+	{
+	case DepthMode::dmDisabled:
+		desc.DepthEnable = FALSE;
+		desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+		break;
+	case DepthMode::dmReadWrite:
+		desc.DepthEnable = TRUE;
+		desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		break;
+	case DepthMode::dmReadOnly:
+		// 테스트는 하되 기록은 안 한다. (반투명 3D 물체가 서로를 가리지 않게)
+		desc.DepthEnable = TRUE;
+		desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+		break;
+	default:
+		return nullptr;
+	}
 
 	if (FAILED(pDevice_->CreateDepthStencilState(&desc, pDepthStates_[index].GetAddressOf())))
 	{
@@ -144,72 +174,97 @@ ID3D11DepthStencilState* RenderStates::GetDepthState(bool _bEnable)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 래스터라이저 상태: 면 채우기 방식(솔리드/와이어) + 컸링 방향
-ID3D11RasterizerState* RenderStates::GetRasterizerState(bool _bWireframe, CullMode _cull)
+// [하위 호환] true=일반 3D, false=2D 적층
+ID3D11DepthStencilState* RenderStates::GetDepthState(bool _bEnable)
 {
-	const int fillIndex = _bWireframe ? 1 : 0;
-	const int cullIndex = static_cast<int>(_cull);
-	if (cullIndex < 0 || cullIndex >= static_cast<int>(CullMode::Max))
-	{
-		return nullptr;
-	}
-	if (pRasterizerStates_[fillIndex][cullIndex])
-	{
-		return pRasterizerStates_[fillIndex][cullIndex].Get();
-	}
-
-	static const D3D11_CULL_MODE s_CullModes[] = { D3D11_CULL_NONE, D3D11_CULL_BACK, D3D11_CULL_FRONT };
-
-	D3D11_RASTERIZER_DESC desc;
-	memset(&desc, 0, sizeof(desc));
-	desc.FillMode = _bWireframe ? D3D11_FILL_WIREFRAME : D3D11_FILL_SOLID;
-	desc.CullMode = s_CullModes[cullIndex];
-	desc.FrontCounterClockwise = FALSE;		// 시계방향이 앞면 (DX 기본 규약)
-	desc.DepthClipEnable = TRUE;
-
-	if (FAILED(pDevice_->CreateRasterizerState(&desc, pRasterizerStates_[fillIndex][cullIndex].GetAddressOf())))
-	{
-		return nullptr;
-	}
-	return pRasterizerStates_[fillIndex][cullIndex].Get();
+	return GetDepthState(_bEnable ? DepthMode::dmReadWrite : DepthMode::dmDisabled);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 샘플러 상태: 텍스처를 읽는 방법 (필터 + UV 범위 밖 처리)
-ID3D11SamplerState* RenderStates::GetSamplerState(SamplerFilter _filter, SamplerAddress _address)
+// 래스터라이저 상태: 채우기 + 컬링 + 앞면 판정 조합
+ID3D11RasterizerState* RenderStates::GetRasterizerState(CullMode _cull, FillMode _fill, FrontFace _frontFace)
 {
-	const int filterIndex = static_cast<int>(_filter);
-	const int addressIndex = static_cast<int>(_address);
-	if (filterIndex < 0 || filterIndex >= static_cast<int>(SamplerFilter::Max)
-		|| addressIndex < 0 || addressIndex >= static_cast<int>(SamplerAddress::Max))
+	const int fillIndex = static_cast<int>(_fill);
+	const int cullIndex = static_cast<int>(_cull);
+	const int faceIndex = static_cast<int>(_frontFace);
+	if (fillIndex < 0 || fillIndex >= static_cast<int>(FillMode::Max)
+		|| cullIndex < 0 || cullIndex >= static_cast<int>(CullMode::Max)
+		|| faceIndex < 0 || faceIndex >= static_cast<int>(FrontFace::Max))
 	{
 		return nullptr;
 	}
-	if (pSamplerStates_[filterIndex][addressIndex])
+	if (pRasterizerStates_[fillIndex][cullIndex][faceIndex])
 	{
-		return pSamplerStates_[filterIndex][addressIndex].Get();
+		return pRasterizerStates_[fillIndex][cullIndex][faceIndex].Get();
 	}
 
-	static const D3D11_TEXTURE_ADDRESS_MODE s_AddressModes[] = {
-		D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_TEXTURE_ADDRESS_MIRROR
-	};
+	D3D11_RASTERIZER_DESC desc;
+	memset(&desc, 0, sizeof(desc));
+	desc.FillMode = ToD3D11(_fill);
+	desc.CullMode = ToD3D11(_cull);
+	desc.FrontCounterClockwise = (_frontFace == FrontFace::ffCounterClockwise) ? TRUE : FALSE;
+	desc.DepthClipEnable = TRUE;
+
+	if (FAILED(pDevice_->CreateRasterizerState(&desc, pRasterizerStates_[fillIndex][cullIndex][faceIndex].GetAddressOf())))
+	{
+		return nullptr;
+	}
+	return pRasterizerStates_[fillIndex][cullIndex][faceIndex].Get();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// [하위 호환] 와이어프레임 여부 + 컬링
+ID3D11RasterizerState* RenderStates::GetRasterizerState(bool _bWireframe, CullMode _cull)
+{
+	return GetRasterizerState(_cull, _bWireframe ? FillMode::fmWireframe : FillMode::fmSolid);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// 샘플러 상태: 텍스처를 읽는 방법 (필터 + UV 범위 밖 처리. U/V 분리 지원)
+ID3D11SamplerState* RenderStates::GetSamplerState(FilterMode _filter, AddressMode _addressU, AddressMode _addressV)
+{
+	const int filterIndex = static_cast<int>(_filter);
+	const int uIndex = static_cast<int>(_addressU);
+	const int vIndex = static_cast<int>(_addressV);
+	if (filterIndex < 0 || filterIndex >= static_cast<int>(FilterMode::Max)
+		|| uIndex < 0 || uIndex >= static_cast<int>(AddressMode::Max)
+		|| vIndex < 0 || vIndex >= static_cast<int>(AddressMode::Max))
+	{
+		return nullptr;
+	}
+	if (pSamplerStates_[filterIndex][uIndex][vIndex])
+	{
+		return pSamplerStates_[filterIndex][uIndex][vIndex].Get();
+	}
 
 	D3D11_SAMPLER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
-	desc.Filter = (_filter == SamplerFilter::Point)
-		? D3D11_FILTER_MIN_MAG_MIP_POINT : D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	desc.AddressU = s_AddressModes[addressIndex];
-	desc.AddressV = s_AddressModes[addressIndex];
-	desc.AddressW = s_AddressModes[addressIndex];
+	desc.Filter = ToD3D11(_filter);
+	desc.AddressU = ToD3D11(_addressU);
+	desc.AddressV = ToD3D11(_addressV);
+	desc.AddressW = ToD3D11(_addressV);
+	desc.MaxAnisotropy = (_filter == FilterMode::fmAnisotropic) ? 16 : 1;
 	desc.ComparisonFunc = D3D11_COMPARISON_NEVER;
 	desc.MinLOD = 0.0f;
 	desc.MaxLOD = D3D11_FLOAT32_MAX;
+	// amBorder용 테두리 색: 불투명 검정 (그림자 맵 범위 밖 = 그림자 없음 처리 등)
+	desc.BorderColor[0] = 0.0f;
+	desc.BorderColor[1] = 0.0f;
+	desc.BorderColor[2] = 0.0f;
+	desc.BorderColor[3] = 1.0f;
 
-	if (FAILED(pDevice_->CreateSamplerState(&desc, pSamplerStates_[filterIndex][addressIndex].GetAddressOf())))
+	if (FAILED(pDevice_->CreateSamplerState(&desc, pSamplerStates_[filterIndex][uIndex][vIndex].GetAddressOf())))
 	{
 		return nullptr;
 	}
-	return pSamplerStates_[filterIndex][addressIndex].Get();
+	return pSamplerStates_[filterIndex][uIndex][vIndex].Get();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// [하위 호환] U/V 동일 주소 모드
+ID3D11SamplerState* RenderStates::GetSamplerState(FilterMode _filter, AddressMode _address)
+{
+	return GetSamplerState(_filter, _address, _address);
 }
 
 NS_SGF_END

@@ -22,7 +22,6 @@ Window::Window()
 	, width_(0)
 	, height_(0)
 	, bClosed_(false)
-	, bQuitOnClose_(true)		// 기본은 메인 윈도우 취급 (닫히면 앱 종료)
 	, bHasSurface_(false)
 	, pInput_(nullptr)
 {
@@ -102,7 +101,7 @@ bool Window::Create(const wchar_t* _title, _s32 _width, _s32 _height)
 // 밀린 메시지를 모두 처리한다.
 // PeekMessage는 메시지가 없으면 즉시 false를 반환하므로(비블로킹)
 // 메시지가 없는 동안에는 게임 로직/렌더링을 수행할 수 있다.
-// @return WM_QUIT을 받았으면 false (앱 종료)
+// @return 창이 닫혔거나 WM_QUIT을 받았으면 false (루프를 나가라는 의미)
 bool Window::PumpMessage()
 {
 	MSG msg = {};
@@ -115,6 +114,13 @@ bool Window::PumpMessage()
 		}
 		TranslateMessage(&msg);		// 가상 키 메시지를 문자 메시지(WM_CHAR)로 변환
 		DispatchMessage(&msg);		// WndProc으로 메시지 전달
+
+		// 이 창이 파괴되었다면 즉시 종료. (이전 튜토리얼이 남긴 WM_QUIT과
+		// 무관하게 "이 인스턴스의 창"이 닫힌 경우에만 루프를 끝낸다)
+		if (bClosed_)
+		{
+			return false;
+		}
 	}
 	return true;
 }
@@ -241,14 +247,10 @@ LRESULT Window::WndProc(HWND _hWnd, UINT _msg, WPARAM _wParam, LPARAM _lParam)
 	switch (_msg)
 	{
 	case WM_DESTROY:
-		// 창이 파괴되었다. 메인 윈도우(bQuitOnClose_=true)라면
-		// 메시지 루프를 끝내라는 WM_QUIT을 큐에 넣는다.
-		// 서브 윈도우는 자신만 닫히고 앱은 계속 돌아간다. (v2.1 멀티 윈도우)
+		// 창이 파괴되었다. bClosed_만 표시하고 루프 종료는 PumpMessage가
+		// 직접 감지한다. (PostQuitMessage를 쓰면 WM_QUIT이 스레드 메시지 큐에
+		// 남아 다음 튜토리얼 실행 시 메시지 루프가 즉시 종료되는 문제가 있다)
 		bClosed_ = true;
-		if (bQuitOnClose_)
-		{
-			PostQuitMessage(0);
-		}
 		return 0;
 
 	case WM_ACTIVATEAPP:
@@ -260,7 +262,9 @@ LRESULT Window::WndProc(HWND _hWnd, UINT _msg, WPARAM _wParam, LPARAM _lParam)
 
 	case WM_KEYDOWN:
 		// ESC 키로 창을 닫을 수 있게 한다. (튜토리얼 편의 기능)
-		if (_wParam == VK_ESCAPE)
+		// InputManager가 연결되어 있으면 IsKeyPressed(VK_ESCAPE)로 종료를
+		// 처리하므로 여기서 자동으로 닫지 않는다. (이중 처리로 인한 즉시 종료 방지)
+		if (_wParam == VK_ESCAPE && pInput_ == nullptr)
 		{
 			DestroyWindow(_hWnd);
 		}

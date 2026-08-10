@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -40,6 +40,13 @@
     <ClCompile Include="..\Sources\sgf\Graphics\DepthStencilSurface.cpp" />
     <ClCompile Include="..\Sources\sgf\Graphics\RenderStates.cpp" />
     <ClCompile Include="..\Sources\sgf\Graphics\RenderTarget.cpp" />
+    <ClCompile Include="..\Sources\sgf\Graphics\PipelineState.cpp" />
+    <ClCompile Include="..\Sources\sgf\Graphics\GraphicContext.cpp" />
+    <ClCompile Include="..\Sources\sgf\Graphics\ShaderProgram.cpp" />
+    <ClCompile Include="..\Sources\sgf\Graphics\Mesh.cpp" />
+    <ClCompile Include="..\Sources\sgf\Graphics\Material.cpp" />
+    <ClCompile Include="..\Sources\sgf\Graphics\SceneRenderer.cpp" />
+    <ClCompile Include="..\Sources\sgf\Graphics\ResourceMgr.cpp" />
     <ClCompile Include="..\Sources\sgf\Audio\SoundEngine.cpp" />
     <ClCompile Include="..\Sources\sgf\Scene\Camera.cpp" />
     <ClCompile Include="..\Sources\sgf\Scene\Director.cpp" />
@@ -64,6 +71,16 @@
     <ClInclude Include="..\Sources\sgf\Graphics\DepthStencilSurface.h" />
     <ClInclude Include="..\Sources\sgf\Graphics\RenderStates.h" />
     <ClInclude Include="..\Sources\sgf\Graphics\RenderTarget.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\GraphicsEnums.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\IResource.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\PipelineState.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\GraphicContext.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\ShaderProgram.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\DefaultShaders.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\Mesh.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\Material.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\SceneRenderer.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\ResourceMgr.h" />
     <ClInclude Include="..\Sources\sgf\Audio\SoundEngine.h" />
     <ClInclude Include="..\Sources\sgf\Scene\Camera.h" />
     <ClInclude Include="..\Sources\sgf\Scene\Scene.h" />

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 8:44:00 AM
  * 수정일: 8/9/2026 9:30:00 AM (v2.1: 멀티 윈도우 + Renderer3D + 창 표면 분리)
@@ -8,6 +8,7 @@
 
 #include "Core.h"
 #include "sgf/Core/Application.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgf/Scene/Director.h"
 #include "sgf/Audio/SoundEngine.h"
 
@@ -60,6 +61,14 @@ bool Application::Initialize(const wchar_t* _szTitle, _s32 _width, _s32 _height)
 	if (!device_.Initialize())
 	{
 		OutputDebugStringA("[sgf] 그래픽 디바이스 초기화 실패\n");
+		__sSgfApplication = nullptr;
+		return false;
+	}
+
+	// 2.5. 리소스 매니저 초기화 (v3: 디폴트 셰이더/머티리얼/흰색 텍스처 준비)
+	if (!g_cResourceMgr.Initialize(&device_))
+	{
+		OutputDebugStringA("[sgf] 리소스 매니저 초기화 실패\n");
 		__sSgfApplication = nullptr;
 		return false;
 	}
@@ -139,9 +148,9 @@ Window* Application::CreateSubWindow(const wchar_t* _szTitle, _s32 _width, _s32 
 		return nullptr;
 	}
 
-	// 서브 창이 닫혀도 프로그램 전체가 종료되면 안 된다. (WM_DESTROY에서 PostQuitMessage 금지)
-	pWindow->SetQuitOnClose(false);
-
+	// 서브 창이 닫혀도 프로그램 전체가 종료되지 않는다.
+	// (창 파괴는 PumpMessage가 창 인스턴스별 bClosed_로 감지하므로
+	//  서브 윈도우의 파괴가 메인 루프 종료로 이어지지 않는다)
 	if (!pWindow->CreateSurface(&device_))
 	{
 		OutputDebugStringA("[sgf] 서브 윈도우 표면 생성 실패\n");
@@ -184,6 +193,14 @@ void Application::Run()
 		// 3. 로직 갱신: 모든 윈도우의 씬 교체/갱신 -> 앱 훅
 		g_cDirector.Update(dt);
 		OnUpdate(dt);
+
+		// 3.5. OnUpdate(ESC 종료 등)에서 메인 윈도우가 닫혔으면 즉시 루프 종료.
+		//      이 체크가 없으면 파괴된 창(HasSurface=false)으로 BeginFrame을
+		//      시도해 assert가 발생한다.
+		if (window_.IsClosed())
+		{
+			break;
+		}
 
 		// 4. 사용자가 닫은 서브 윈도우 정리 (그리기 전에!)
 		DestroyClosedSubWindows();
@@ -272,6 +289,7 @@ void Application::Finalize()
 	g_cSound.Finalize();			// 사운드 엔진 정리 (XAudio2 해제)
 	renderer3D_.Finalize();		// 3D 렌더러 리소스 해제 (v2.1)
 	renderer_.Finalize();			// 2D 렌더러 리소스 해제
+	g_cResourceMgr.Finalize();		// 리소스 매니저 정리 (v3: 디폴트 리소스 포함 소멸)
 	window_.DestroySurface();		// 메인 창 표면 해제 (디바이스보다 먼저)
 	device_.Finalize();			// DX11 디바이스 해제
 	window_.Destroy();				// 메인 윈도우 파괴
