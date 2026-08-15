@@ -94,7 +94,7 @@ int main(int _argc, char** _argv)
 	jc::InitializeJCore(_argc, _argv);
 
 	// 즉시 실행 (메뉴로 실행되도록 하고 싶으면 0으로 바꿔서 빌드할 것)
-	if (1) 
+	if (0) 
 	{
 		sgfr::PracticeAt(sgfr::PracticeCount() - 1);
 		jc::FinalizeJCore();

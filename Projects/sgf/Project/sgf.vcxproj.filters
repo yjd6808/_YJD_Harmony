@@ -66,6 +66,16 @@
     <ClInclude Include="..\Sources\sgf\Scene\Director.h">
       <Filter>Scene</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\sgf\Graphics\GraphicsEnums.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\IResource.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\PipelineState.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\GraphicContext.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\ShaderProgram.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\DefaultShaders.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\Mesh.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\Material.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\SceneRenderer.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\ResourceMgr.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="PCH">
@@ -73,9 +83,6 @@
     </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{E0000002-0000-4000-8000-000000000002}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math">
-      <UniqueIdentifier>{E0000003-0000-4000-8000-000000000003}</UniqueIdentifier>
     </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{E0000004-0000-4000-8000-000000000004}</UniqueIdentifier>
@@ -148,5 +155,12 @@
     <ClCompile Include="..\Sources\sgf\Scene\Director.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\sgf\Graphics\PipelineState.cpp" />
+    <ClCompile Include="..\Sources\sgf\Graphics\GraphicContext.cpp" />
+    <ClCompile Include="..\Sources\sgf\Graphics\ShaderProgram.cpp" />
+    <ClCompile Include="..\Sources\sgf\Graphics\Mesh.cpp" />
+    <ClCompile Include="..\Sources\sgf\Graphics\Material.cpp" />
+    <ClCompile Include="..\Sources\sgf\Graphics\SceneRenderer.cpp" />
+    <ClCompile Include="..\Sources\sgf\Graphics\ResourceMgr.cpp" />
   </ItemGroup>
 </Project>

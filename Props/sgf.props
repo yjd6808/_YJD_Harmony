@@ -3,11 +3,12 @@
 
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Projects\sgf\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\nanosvg;$(SolutionDir)ThirdParty\tinyxml2\include;$(SolutionDir)Projects\sgf\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
 
     <Link>
-      <AdditionalDependencies>sgf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sgf.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\tinyxml2\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 

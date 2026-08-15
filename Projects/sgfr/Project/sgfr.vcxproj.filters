@@ -213,9 +213,6 @@
     <ClCompile Include="..\Sources\sgfr\Tutorial\05_RenderingPipeline\05_RenderingPipeline_Function.cpp">
       <Filter>01. Tutorial\05_렌더링_파이프라인</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgfr\Main.cpp">
-      <Filter>00_공통</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\sgfr\PCH\Core.cpp">
       <Filter>00_공통</Filter>
     </ClCompile>
@@ -285,6 +282,7 @@
     <ClCompile Include="..\Sources\sgfr\TutorialRegistry.cpp">
       <Filter>01. Tutorial</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\sgfr\Tutorial\21_ResourceManager\21_ResourceManager_Main.h">
