@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/4/2026 10:36:00 PM
  * 수정일: 8/9/2026 1:00:00 AM (v2: jc::TimeSpan 기반으로 개선)
@@ -89,8 +89,8 @@ void FrameTimer::Tick()
 	total_ = jc::TimeSpan(totalMicro_);
 
 	// 하위 호환용 float 캐시 (기존 튜토리얼이 사용)
-	deltaTime_ = static_cast<_f32>(static_cast<double>(deltaMicro) / 1000000.0);
-	totalTime_ = static_cast<_f32>(static_cast<double>(totalMicro_) / 1000000.0);
+	deltaTime_ = static_cast<_f32>(static_cast<_f64>(deltaMicro) / 1000000.0);
+	totalTime_ = static_cast<_f32>(static_cast<_f64>(totalMicro_) / 1000000.0);
 
 	// FPS 집계: 1초 동안 그린 프레임 수를 센다.
 	fpsTimer_ += deltaTime_;

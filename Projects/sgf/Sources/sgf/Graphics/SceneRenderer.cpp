@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 6:00:00 PM
  * =====================
@@ -75,7 +75,7 @@ void SceneRenderer::BeginScene(const FrameConstants& _frame)
 //////////////////////////////////////////////////////////////////////////////////////////
 void SceneRenderer::Draw(const RenderObject& _object)
 {
-	if (!_object.bVisible_)
+	if (!_object.visible_)
 	{
 		return;
 	}

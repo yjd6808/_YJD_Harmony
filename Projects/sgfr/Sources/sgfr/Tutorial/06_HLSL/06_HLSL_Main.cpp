@@ -46,7 +46,7 @@ void HLSL_Main()
 	Window window;
 	if (!window.Create(L"06. HLSL 셰이더 - 상수 버퍼 애니메이션 (ESC로 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -56,7 +56,7 @@ void HLSL_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -71,7 +71,7 @@ void HLSL_Main()
 	VertexBuffer vb;
 	if (!vb.Create(&device, vertices, sizeof(VertexPC), 3))
 	{
-		printf("정점 버퍼 생성 실패!\n");
+		jc::Console::WriteLine("정점 버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -86,7 +86,7 @@ void HLSL_Main()
 	if (!shader.CompileFromString(&device, AnimatedShaderSource(), pLayoutDescs, layoutCount) ||
 		!cbTime.Create(&device))
 		{
-		printf("셰이더/상수 버퍼 생성 실패!\n");
+		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;

@@ -8,6 +8,8 @@
 #include "Core.h"
 #include "sgfr/Tutorial/05_RenderingPipeline/05_RenderingPipeline_Function.h"
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // 이번 튜토리얼에서 사용할 HLSL 셰이더 소스를 반환한다.
 //
 // [셰이더란?]
@@ -56,12 +58,14 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 )";
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // NDC 좌표계 설명을 콘솔에 출력한다. (학습용)
 void PrintNdcExplanation()
 {
-	printf("\n[NDC (Normalized Device Coordinates) 좌표계]\n");
-	printf(" - 화면 크기와 상관없이 항상 가로/세로 -1 ~ +1인 좌표계\n");
-	printf(" - 중앙이 (0, 0), 오른쪽위가 (+1, +1), 왼쪽아래가 (-1, -1)\n");
-	printf(" - GPU는 최종적으로 이 좌표를 뷰포트를 통해 픽셀 좌표로 바꾼다\n");
-	printf(" - 지금은 정점을 NDC에 직접 적었지만, 나중엔 행렬로 변환하게 된다\n\n");
+	jc::Console::WriteLine("\n[NDC (Normalized Device Coordinates) 좌표계]");
+	jc::Console::WriteLine(" - 화면 크기와 상관없이 항상 가로/세로 -1 ~ +1인 좌표계");
+	jc::Console::WriteLine(" - 중앙이 (0, 0), 오른쪽위가 (+1, +1), 왼쪽아래가 (-1, -1)");
+	jc::Console::WriteLine(" - GPU는 최종적으로 이 좌표를 뷰포트를 통해 픽셀 좌표로 바꾼다");
+	jc::Console::WriteLine(" - 지금은 정점을 NDC에 직접 적었지만, 나중엔 행렬로 변환하게 된다\n");
 }

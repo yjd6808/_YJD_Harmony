@@ -18,8 +18,8 @@ NS_SGF_BEGIN
 // 생성자: 기본값 설정 (진한 회색 배경, 수직동기화 켜짐)
 Application::Application()
 	: clearColor_(0.1f, 0.1f, 0.1f, 1.0f)
-	, bVsync_(true)
-	, bInitialized_(false)
+	, vsync_(true)
+	, initialized_(false)
 {
 }
 
@@ -40,7 +40,7 @@ Application::~Application()
 //  즉, 뒤의 단계는 앞 단계의 결과물에 의존한다.
 bool Application::Initialize(const wchar_t* _szTitle, _s32 _width, _s32 _height)
 {
-	if (bInitialized_)
+	if (initialized_)
 	{
 		return true;
 	}
@@ -105,9 +105,9 @@ bool Application::Initialize(const wchar_t* _szTitle, _s32 _width, _s32 _height)
 
 	// 7. 창 활성/비활성 이벤트 구독
 	//    (Cocos2d-x의 applicationDidEnterBackground/WillEnterForeground 대응)
-	window_.onActivated.Register(ACTIVATION_LISTENER_ID, [this](bool _bActive)
+	window_.onActivated.Register(ACTIVATION_LISTENER_ID, [this](bool _active)
 	{
-		if (_bActive)
+		if (_active)
 		{
 			ApplicationWillEnterForeground();
 		}
@@ -119,7 +119,7 @@ bool Application::Initialize(const wchar_t* _szTitle, _s32 _width, _s32 _height)
 
 	// 8. 타이머 시작 (이 순간부터 dt 측정)
 	timer_.Reset();
-	bInitialized_ = true;
+	initialized_ = true;
 
 	// 9. 파생 앱 훅: 보통 여기서 첫 씬을 시작한다. (cocos의 AppDelegate와 동일)
 	if (!ApplicationDidFinishLaunching())
@@ -138,7 +138,7 @@ bool Application::Initialize(const wchar_t* _szTitle, _s32 _width, _s32 _height)
 // 반환된 창에 g_cDirector.RunScene(pScene, pWindow)로 씬을 올리면 된다.
 Window* Application::CreateSubWindow(const wchar_t* _szTitle, _s32 _width, _s32 _height)
 {
-	jc_assert_msg(bInitialized_, "Initialize 이후에만 서브 윈도우를 만들 수 있습니다");
+	jc_assert_msg(initialized_, "Initialize 이후에만 서브 윈도우를 만들 수 있습니다");
 
 	Window* pWindow = new Window();
 	if (!pWindow->Create(_szTitle, _width, _height))
@@ -149,7 +149,7 @@ Window* Application::CreateSubWindow(const wchar_t* _szTitle, _s32 _width, _s32 
 	}
 
 	// 서브 창이 닫혀도 프로그램 전체가 종료되지 않는다.
-	// (창 파괴는 PumpMessage가 창 인스턴스별 bClosed_로 감지하므로
+	// (창 파괴는 PumpMessage가 창 인스턴스별 closed_로 감지하므로
 	//  서브 윈도우의 파괴가 메인 루프 종료로 이어지지 않는다)
 	if (!pWindow->CreateSurface(&device_))
 	{
@@ -171,7 +171,7 @@ Window* Application::CreateSubWindow(const wchar_t* _szTitle, _s32 _width, _s32 
 //  -> 입력 프레임 넘김 -> 사운드 정리
 void Application::Run()
 {
-	if (!bInitialized_)
+	if (!initialized_)
 	{
 		return;
 	}
@@ -209,10 +209,10 @@ void Application::Run()
 		device_.BeginFrame(&window_, clearColor_);
 		g_cDirector.Render(&window_);
 		OnRender();
-		device_.EndFrame(&window_, bVsync_);
+		device_.EndFrame(&window_, vsync_);
 
 		// 6. 서브 윈도우들 그리기 (v2.1)
-		for (int i = 0; i < subWindows_.Size(); ++i)
+		for (_s32 i = 0; i < subWindows_.Size(); ++i)
 		{
 			Window* pSub = subWindows_[i];
 			if (pSub->IsClosed() || !pSub->HasSurface())
@@ -221,7 +221,7 @@ void Application::Run()
 			}
 			device_.BeginFrame(pSub, clearColor_);
 			g_cDirector.Render(pSub);
-			device_.EndFrame(pSub, bVsync_);
+			device_.EndFrame(pSub, vsync_);
 		}
 
 		// 7. 입력 상태를 다음 프레임으로 넘긴다.
@@ -238,7 +238,7 @@ void Application::Run()
 // 사용자가 X 버튼으로 닫은 창의 씬/표면/메모리를 회수한다.
 void Application::DestroyClosedSubWindows()
 {
-	for (int i = subWindows_.Size() - 1; i >= 0; --i)
+	for (_s32 i = subWindows_.Size() - 1; i >= 0; --i)
 	{
 		Window* pSub = subWindows_[i];
 		if (!pSub->IsClosed())
@@ -255,7 +255,7 @@ void Application::DestroyClosedSubWindows()
 		JC_DELETE_SAFE(pSub);
 
 		// 3) 목록에서 제거 (뒤에서부터 밀어 넣기)
-		for (int k = i; k < subWindows_.Size() - 1; ++k)
+		for (_s32 k = i; k < subWindows_.Size() - 1; ++k)
 		{
 			subWindows_[k] = subWindows_[k + 1];
 		}
@@ -267,17 +267,17 @@ void Application::DestroyClosedSubWindows()
 // 엔진 종료: 초기화의 역순으로 정리한다.
 void Application::Finalize()
 {
-	if (!bInitialized_)
+	if (!initialized_)
 	{
 		return;
 	}
-	bInitialized_ = false;
+	initialized_ = false;
 
 	ApplicationDidExit();			// 파생 앱 정리 훅
 	g_cDirector.Cleanup();			// 모든 윈도우의 씬 정리 (텍스처 등 리소스 반납)
 
 	// 서브 윈도우 정리 (v2.1)
-	for (int i = 0; i < subWindows_.Size(); ++i)
+	for (_s32 i = 0; i < subWindows_.Size(); ++i)
 	{
 		Window* pSub = subWindows_[i];
 		pSub->DestroySurface();

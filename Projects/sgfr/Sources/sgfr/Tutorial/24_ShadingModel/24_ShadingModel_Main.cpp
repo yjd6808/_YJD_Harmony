@@ -61,7 +61,7 @@ void ShadingModel_Main()
 	Window window;
 	if (!window.Create(L"24. 셰이딩 모델 (1/2/3 모드, ↑↓ 날카로움, ESC 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -71,7 +71,7 @@ void ShadingModel_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -86,7 +86,7 @@ void ShadingModel_Main()
 	if (!vb.Create(&device, vertices.Source(), sizeof(VertexPNT), static_cast<UINT>(vertices.Size())) ||
 		!ib.Create(&device, indices.Source(), static_cast<UINT>(indices.Size())))
 		{
-		printf("버퍼 생성 실패!\n");
+		jc::Console::WriteLine("버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -103,7 +103,7 @@ void ShadingModel_Main()
 		!cbTransform.Create(&device) ||
 		!cbShading.Create(&device))
 		{
-		printf("셰이더/상수 버퍼 생성 실패!\n");
+		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;

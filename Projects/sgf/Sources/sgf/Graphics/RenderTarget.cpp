@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 1:32:00 PM
  * =====================
@@ -22,7 +22,7 @@ using namespace jc;
 //////////////////////////////////////////////////////////////////////////////////////////
 // 생성자: 멤버 초기화
 RenderTarget::RenderTarget()
-	: bDepthOnly_(false)
+	: depthOnly_(false)
 	, width_(0)
 	, height_(0)
 {
@@ -37,14 +37,14 @@ RenderTarget::~RenderTarget()
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 색 + 깊이를 모두 가진 일반 렌더 타깃 생성 (미니맵/후처리용)
-bool RenderTarget::Create(GraphicDevice* _pDevice, int _width, int _height)
+bool RenderTarget::Create(GraphicDevice* _pDevice, _s32 _width, _s32 _height)
 {
 	jc_assert(_pDevice != nullptr && _width > 0 && _height > 0);
 
 	Destroy();
 	width_ = _width;
 	height_ = _height;
-	bDepthOnly_ = false;
+	depthOnly_ = false;
 
 	ID3D11Device* pDevice = _pDevice->Device();
 
@@ -103,14 +103,14 @@ bool RenderTarget::Create(GraphicDevice* _pDevice, int _width, int _height)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 깊이 전용 렌더 타깃 생성 (그림자 맵용)
-bool RenderTarget::CreateDepthOnly(GraphicDevice* _pDevice, int _width, int _height)
+bool RenderTarget::CreateDepthOnly(GraphicDevice* _pDevice, _s32 _width, _s32 _height)
 {
 	jc_assert(_pDevice != nullptr && _width > 0 && _height > 0);
 
 	Destroy();
 	width_ = _width;
 	height_ = _height;
-	bDepthOnly_ = true;
+	depthOnly_ = true;
 
 	ID3D11Device* pDevice = _pDevice->Device();
 
@@ -171,7 +171,7 @@ void RenderTarget::Destroy()
 	pDepthTexture_.Reset();
 	width_ = 0;
 	height_ = 0;
-	bDepthOnly_ = false;
+	depthOnly_ = false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -183,7 +183,7 @@ void RenderTarget::Clear(GraphicDevice* _pDevice, const color& _clearColor)
 	// 색 타깃이 있으면 배경색으로 지운다.
 	if (pRTV_ != nullptr)
 	{
-		const float clearColor[4] = { _clearColor.r, _clearColor.g, _clearColor.b, _clearColor.a };
+		const _f32 clearColor[4] = { _clearColor.r, _clearColor.g, _clearColor.b, _clearColor.a };
 		pContext->ClearRenderTargetView(pRTV_.Get(), clearColor);
 	}
 
@@ -191,7 +191,7 @@ void RenderTarget::Clear(GraphicDevice* _pDevice, const color& _clearColor)
 	// (깊이 전용 D32_FLOAT 포맷에는 스텐실이 없으므로 깊이만 지운다)
 	if (pDSV_ != nullptr)
 	{
-		const UINT clearFlags = bDepthOnly_
+		const UINT clearFlags = depthOnly_
 			? D3D11_CLEAR_DEPTH
 			: (D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
 		pContext->ClearDepthStencilView(pDSV_.Get(), clearFlags, 1.0f, 0);
@@ -210,7 +210,7 @@ void RenderTarget::BindAsTexture(GraphicDevice* _pDevice, UINT _slot)
 // 모드에 맞는 SRV 반환 (깊이 전용이면 깊이 SRV, 아니면 색 SRV)
 ID3D11ShaderResourceView* RenderTarget::SRV() const
 {
-	return bDepthOnly_ ? pDepthSRV_.Get() : pColorSRV_.Get();
+	return depthOnly_ ? pDepthSRV_.Get() : pColorSRV_.Get();
 }
 
 NS_SGF_END

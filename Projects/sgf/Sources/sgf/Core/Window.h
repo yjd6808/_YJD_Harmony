@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/4/2026 10:35:00 PM
  * 수정일: 8/9/2026 9:30:00 AM (v2.1: 멀티 윈도우 지원 - 윈도우가 자신의 그리기 표면을 소유)
@@ -75,7 +75,7 @@ public:
 	void DestroySurface();
 
 	// 그리기 표면을 가지고 있는가? (CreateSurface 성공 여부)
-	bool HasSurface() const { return bHasSurface_; }
+	bool HasSurface() const { return hasSurface_; }
 
 	SwapChain& GetSwapChain() { return swapChain_; }
 	DepthStencilSurface& GetDepthSurface() { return depthSurface_; }
@@ -88,7 +88,7 @@ public:
 	_f32 AspectRatio() const { return height_ > 0 ? _f32(width_) / _f32(height_) : 1.0f; }
 
 	// 창이 닫혔는지 여부
-	bool IsClosed() const { return bClosed_; }
+	bool IsClosed() const { return closed_; }
 
 	// 창 활성/비활성 이벤트 (true=활성화, false=비활성화)
 	// Application이 구독해서 cocos 스타일 background/foreground 훅을 부른다.
@@ -108,8 +108,8 @@ private:
 	HWND hWnd_;						// 윈도우 핸들 (OS가 발급한 창의 식별자)
 	_s32 width_;						// 클라이언트 영역 가로
 	_s32 height_;						// 클라이언트 영역 세로
-	bool bClosed_;						// 창이 닫혔는지 여부
-	bool bHasSurface_;					// 그리기 표면 보유 여부
+	bool closed_;						// 창이 닫혔는지 여부
+	bool hasSurface_;					// 그리기 표면 보유 여부
 	InputManager* pInput_;				// 입력 메시지를 전달할 대상 (소유하지 않음)
 	SwapChain swapChain_;				// 이 창 전용 백버퍼 교체 장치
 	DepthStencilSurface depthSurface_;	// 이 창 전용 깊이/스텐실 버퍼

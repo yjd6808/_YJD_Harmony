@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 6:10:00 PM
  * =====================
@@ -111,7 +111,7 @@ public:
 
 	// === 진단 ===
 
-	int GetCount() const { return resources_.Size(); }
+	_s32 GetCount() const { return resources_.Size(); }
 
 	// 보관 중인 리소스 목록을 디버그 출력으로 내보낸다. (누수 진단용)
 	void PrintStatus();

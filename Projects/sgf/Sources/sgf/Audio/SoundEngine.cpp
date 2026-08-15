@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 1:00:00 AM
  * =====================
@@ -21,8 +21,8 @@ NS_SGF_BEGIN
 SoundEngine::SoundEngine()
 	: pXAudio_(nullptr)
 	, pMasterVoice_(nullptr)
-	, bInitialized_(false)
-	, bComInitialized_(false)
+	, initialized_(false)
+	, comInitialized_(false)
 	, nextAudioId_(0)
 {
 }
@@ -38,7 +38,7 @@ SoundEngine::~SoundEngine()
 // [생성 순서] COM 초기화 -> 엔진(IXAudio2) -> 마스터보이스(스피커 출구)
 bool SoundEngine::Initialize()
 {
-	if (bInitialized_)
+	if (initialized_)
 	{
 		return true;
 	}
@@ -49,7 +49,7 @@ bool SoundEngine::Initialize()
 	const HRESULT hrCom = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	if (hrCom == S_OK)
 	{
-		bComInitialized_ = true;	// 이번 호출이 초기화했으므로 Finalize에서 정리한다.
+		comInitialized_ = true;	// 이번 호출이 초기화했으므로 Finalize에서 정리한다.
 	}
 	else if (FAILED(hrCom) && hrCom != RPC_E_CHANGED_MODE)
 	{
@@ -72,7 +72,7 @@ bool SoundEngine::Initialize()
 		return false;
 	}
 
-	bInitialized_ = true;
+	initialized_ = true;
 	return true;
 }
 
@@ -80,10 +80,10 @@ bool SoundEngine::Initialize()
 // 이번 인스턴스가 초기화한 COM만 정리한다. (S_FALSE로 넘어온 경우 책임 없음)
 void SoundEngine::ShutdownCom()
 {
-	if (bComInitialized_)
+	if (comInitialized_)
 	{
 		CoUninitialize();
-		bComInitialized_ = false;
+		comInitialized_ = false;
 	}
 }
 
@@ -92,11 +92,11 @@ void SoundEngine::ShutdownCom()
 // (생성의 역순. SourceVoice가 살아있는 채로 엔진을 부수면 크래시한다)
 void SoundEngine::Finalize()
 {
-	if (!bInitialized_)
+	if (!initialized_)
 	{
 		return;
 	}
-	bInitialized_ = false;
+	initialized_ = false;
 
 	StopAll();
 	UncacheAll();
@@ -120,7 +120,7 @@ void SoundEngine::Finalize()
 // 방치하면 32개 슬롯이 전부 \"다 끝난 소리\"로 가득 차서 새 소리를 못 틀게 된다.
 void SoundEngine::Update()
 {
-	if (!bInitialized_)
+	if (!initialized_)
 	{
 		return;
 	}
@@ -128,7 +128,7 @@ void SoundEngine::Update()
 	for (_s32 i = 0; i < MAX_VOICES; ++i)
 	{
 		VoiceSlot& slot = voices_[i];
-		if (slot.pVoice == nullptr || slot.bPaused_)
+		if (slot.pVoice == nullptr || slot.paused_)
 		{
 			continue;	// 빈 슬롯/일시정지 중은 건너맄 (일시정지는 끝난 게 아니다)
 		}
@@ -191,8 +191,8 @@ void SoundEngine::releaseSlot(VoiceSlot& _slot)
 		_slot.pOwnedTone = nullptr;
 	}
 	_slot.audioId_ = INVALID_AUDIO_ID;
-	_slot.bPaused_ = false;
-	_slot.bLoop_ = false;
+	_slot.paused_ = false;
+	_slot.loop_ = false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -239,8 +239,8 @@ SoundEngine::WavData* SoundEngine::loadWav(const jc::String& _path)
 
 	WavData* pWav = new WavData();
 	memset(&pWav->format_, 0, sizeof(WAVEFORMATEX));
-	bool bHasFmt = false;
-	bool bHasData = false;
+	bool hasFmt = false;
+	bool hasData = false;
 
 	// 5. 청크들을 순회하며 fmt / data를 찾는다.
 	_s64 offset = 12;
@@ -263,7 +263,7 @@ SoundEngine::WavData* SoundEngine::loadWav(const jc::String& _path)
 			const _u32 copySize = (chunkSize < (_u32)sizeof(WAVEFORMATEX)) ? chunkSize : (_u32)sizeof(WAVEFORMATEX);
 			memcpy(&pWav->format_, pData + body, copySize);
 			pWav->format_.cbSize = 0;
-			bHasFmt = true;
+			hasFmt = true;
 		}
 		else if (memcmp(chunkId, "data", 4) == 0)
 		{
@@ -278,14 +278,14 @@ SoundEngine::WavData* SoundEngine::loadWav(const jc::String& _path)
 			}
 			pWav->samples.Resize((_s32)sampleSize);
 			memcpy(pWav->samples.Source(), pData + body, chunkSize);
-			bHasData = true;
+			hasData = true;
 		}
 
 		offset = body + chunkSize + (chunkSize & 1);	// 홀수 크기 청크는 1바이트 패딩
 	}
 
 	// 6. 필수 청크 검사 + 비압축 PCM만 지원 (압축 포맷은 튜토리얼 범위 밖)
-	if (!bHasFmt || !bHasData || pWav->format_.wFormatTag != WAVE_FORMAT_PCM)
+	if (!hasFmt || !hasData || pWav->format_.wFormatTag != WAVE_FORMAT_PCM)
 	{
 		jc::Console::WriteLine("[sgf] SoundEngine: unsupported WAV format (PCM only)");
 		delete pWav;
@@ -302,7 +302,7 @@ SoundEngine::WavData* SoundEngine::loadWav(const jc::String& _path)
 // WAV를 미리 메모리에 올려둔다. 첫 재생 순간의 디스크 읽기 덩퀌임 방지.
 bool SoundEngine::Preload(const jc::String& _path)
 {
-	if (!bInitialized_)
+	if (!initialized_)
 	{
 		return false;
 	}
@@ -358,9 +358,9 @@ void SoundEngine::UncacheAll()
 //////////////////////////////////////////////////////////////////////////////////////////
 // WAV 파일 재생. Cocos2d-x의 AudioEngine::play2d 대응.
 // [흐름] WAV 로딩(캐시) -> 빈 슬롯 확보 -> 재생기 생성 -> 버퍼 제출 -> 재생 시작
-_s32 SoundEngine::Play2d(const jc::String& _path, bool _bLoop, _f32 _volume)
+_s32 SoundEngine::Play2d(const jc::String& _path, bool _loop, _f32 _volume)
 {
-	if (!bInitialized_)
+	if (!initialized_)
 	{
 		return INVALID_AUDIO_ID;
 	}
@@ -390,7 +390,7 @@ _s32 SoundEngine::Play2d(const jc::String& _path, bool _bLoop, _f32 _volume)
 	buffer.AudioBytes = (UINT32)pWav->samples.Size();
 	buffer.pAudioData = pWav->samples.Source();
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
-	buffer.LoopCount = _bLoop ? XAUDIO2_LOOP_INFINITE : 0;
+	buffer.LoopCount = _loop ? XAUDIO2_LOOP_INFINITE : 0;
 
 	if (FAILED(pSlot->pVoice->SubmitSourceBuffer(&buffer)))
 	{
@@ -403,8 +403,8 @@ _s32 SoundEngine::Play2d(const jc::String& _path, bool _bLoop, _f32 _volume)
 	pSlot->pVoice->Start(0);
 
 	pSlot->audioId_ = nextAudioId_++;
-	pSlot->bPaused_ = false;
-	pSlot->bLoop_ = _bLoop;
+	pSlot->paused_ = false;
+	pSlot->loop_ = _loop;
 	pSlot->pOwnedTone = nullptr;
 	return pSlot->audioId_;
 }
@@ -415,7 +415,7 @@ _s32 SoundEngine::Play2d(const jc::String& _path, bool _bLoop, _f32 _volume)
 // 44100Hz = 1초를 44100칸으로 쪼개 기록한다는 뜻 (CD 음질).
 _s32 SoundEngine::PlayTone(_s32 _frequency, _s32 _milliseconds, _f32 _volume)
 {
-	if (!bInitialized_ || _frequency <= 0 || _milliseconds <= 0)
+	if (!initialized_ || _frequency <= 0 || _milliseconds <= 0)
 	{
 		return INVALID_AUDIO_ID;
 	}
@@ -492,8 +492,8 @@ _s32 SoundEngine::PlayTone(_s32 _frequency, _s32 _milliseconds, _f32 _volume)
 	pSlot->pVoice->Start(0);
 
 	pSlot->audioId_ = nextAudioId_++;
-	pSlot->bPaused_ = false;
-	pSlot->bLoop_ = false;
+	pSlot->paused_ = false;
+	pSlot->loop_ = false;
 	pSlot->pOwnedTone = pTone;	// 슬롯이 소유 -> releaseSlot에서 delete
 	return pSlot->audioId_;
 }
@@ -525,10 +525,10 @@ void SoundEngine::StopAll()
 void SoundEngine::Pause(_s32 _audioId)
 {
 	VoiceSlot* pSlot = findSlot(_audioId);
-	if (pSlot != nullptr && !pSlot->bPaused_)
+	if (pSlot != nullptr && !pSlot->paused_)
 	{
 		pSlot->pVoice->Stop(0);	// Stop(0)은 파괴가 아니라 \"멈춤\" (버퍼는 그대로 남는다)
-		pSlot->bPaused_ = true;
+		pSlot->paused_ = true;
 	}
 }
 
@@ -537,10 +537,10 @@ void SoundEngine::PauseAll()
 {
 	for (_s32 i = 0; i < MAX_VOICES; ++i)
 	{
-		if (voices_[i].pVoice != nullptr && !voices_[i].bPaused_)
+		if (voices_[i].pVoice != nullptr && !voices_[i].paused_)
 		{
 			voices_[i].pVoice->Stop(0);
-			voices_[i].bPaused_ = true;
+			voices_[i].paused_ = true;
 		}
 	}
 }
@@ -549,10 +549,10 @@ void SoundEngine::PauseAll()
 void SoundEngine::Resume(_s32 _audioId)
 {
 	VoiceSlot* pSlot = findSlot(_audioId);
-	if (pSlot != nullptr && pSlot->bPaused_)
+	if (pSlot != nullptr && pSlot->paused_)
 	{
 		pSlot->pVoice->Start(0);	// 멈췄던 지점부터 이어서 재생
-		pSlot->bPaused_ = false;
+		pSlot->paused_ = false;
 	}
 }
 
@@ -561,10 +561,10 @@ void SoundEngine::ResumeAll()
 {
 	for (_s32 i = 0; i < MAX_VOICES; ++i)
 	{
-		if (voices_[i].pVoice != nullptr && voices_[i].bPaused_)
+		if (voices_[i].pVoice != nullptr && voices_[i].paused_)
 		{
 			voices_[i].pVoice->Start(0);
-			voices_[i].bPaused_ = false;
+			voices_[i].paused_ = false;
 		}
 	}
 }
@@ -583,7 +583,7 @@ void SoundEngine::SetVolume(_s32 _audioId, _f32 _volume)
 bool SoundEngine::IsPlaying(_s32 _audioId)
 {
 	VoiceSlot* pSlot = findSlot(_audioId);
-	return pSlot != nullptr && !pSlot->bPaused_;
+	return pSlot != nullptr && !pSlot->paused_;
 }
 
 NS_SGF_END

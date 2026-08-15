@@ -21,14 +21,14 @@ using TutorialFn = void(*)();
 // 튜토리얼 한 개의 정보
 struct TutorialEntry
 {
-	const char* Name_;		// 콘솔 목차에 표시될 이름
-	TutorialFn Fn_;			// 실행할 함수
+	const char* name_;			// 콘솔 목차에 표시될 이름
+	TutorialFn fn_;				// 실행할 함수
 };
 
 // 등록된 튜토리얼 개수를 반환한다.
-int TutorialCount();
+_s32 TutorialCount();
 
 // _index(0부터 시작)번째 튜토리얼 정보를 반환한다.
-const TutorialEntry& TutorialAt(int _index);
+const TutorialEntry& TutorialAt(_s32 _index);
 
 }

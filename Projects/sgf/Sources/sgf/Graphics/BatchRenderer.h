@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 10:30:00 AM
  * =====================
@@ -80,7 +80,7 @@ protected:
 	Shader shader_;					// 파생이 제공한 셰이더
 	ConstantBuffer<mat4> cbFrame_;		// 뷰프로젝션 행렬용 상수 버퍼
 	mat4 viewProjection_;				// Begin에서 받은 행렬
-	bool bBegun_;						// Begin~End 사이인가?
+	bool begun_;						// Begin~End 사이인가?
 };
 
 NS_SGF_END

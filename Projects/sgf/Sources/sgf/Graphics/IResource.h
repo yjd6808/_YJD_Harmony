@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 5:50:00 PM
  * =====================
@@ -40,7 +40,7 @@ enum class ResourceType
 };
 
 // 리소스 종류 이름 테이블 (디버깅/로그용. 인덱스 = enum 값)
-constexpr const char* RESOURCE_TYPE_NAMES[static_cast<int>(ResourceType::Max)] =
+constexpr const char* RESOURCE_TYPE_NAMES[static_cast<_s32>(ResourceType::Max)] =
 {
 	"Unknown",
 	"Texture",

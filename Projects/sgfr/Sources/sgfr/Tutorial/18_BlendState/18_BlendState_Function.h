@@ -18,7 +18,7 @@ void PrintBlendExplanation();
 // 중심에서 가장자리로 갈수록 알파가 부드럽게 0으로 줄어드는
 // 흰색 원 텍스처의 RGBA 픽셀 배열을 채운다. (색은 정점 채색으로 입힌다)
 // @param _pOutPixels : 크기가 _size * _size * 4 이상인 출력 버퍼
-void FillSoftCirclePixels(_u8* _pOutPixels, int _size);
+void FillSoftCirclePixels(_u8* _pOutPixels, _s32 _size);
 
 // NDC 좌표기준 사각형 정점 4개를 채운다. (UV 0~1, 지정 색 채색)
 // @param _center   : 사각형 중심 (NDC, -1~+1)

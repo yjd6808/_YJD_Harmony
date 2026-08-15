@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 1:00:00 AM
  * =====================
@@ -55,10 +55,10 @@ public:
 
 	// WAV 파일을 재생한다. (Cocos2d-x의 AudioEngine::play2d와 같은 역할)
 	// @param _path   : WAV 파일 경로 (처음 재생 시 자동으로 캐시에 올라간다)
-	// @param _bLoop  : true면 무한 반복
+	// @param _loop  : true면 무한 반복
 	// @param _volume : 0.0(무음) ~ 1.0(원음) ~ 2.0(증폭)
 	// @return 재생 제어용 audioId. 실패하면 INVALID_AUDIO_ID.
-	_s32 Play2d(const jc::String& _path, bool _bLoop = false, _f32 _volume = 1.0f);
+	_s32 Play2d(const jc::String& _path, bool _loop = false, _f32 _volume = 1.0f);
 
 	// 사인파 톤을 즉석에서 만들어 재생한다. (파일 없이 효과음을 낼 때 - 튜토리얼용)
 	// @param _frequency    : 주파수(Hz). 440 = "라"음. 높을수록 높은 음.
@@ -98,8 +98,8 @@ private:
 	{
 		IXAudio2SourceVoice* pVoice = nullptr;	// 재생기 (nullptr면 빈 슬롯)
 		_s32 audioId_ = INVALID_AUDIO_ID;		// 외부에 돌려준 제어 번호
-		bool bPaused_ = false;					// 일시정지 상태인가
-		bool bLoop_ = false;					// 반복 재생인가
+		bool paused_ = false;					// 일시정지 상태인가
+		bool loop_ = false;					// 반복 재생인가
 		WavData* pOwnedTone = nullptr;			// PlayTone이 즉석에서 만든 데이터 (슬롯이 소유, 회수 시 delete)
 	};
 
@@ -123,8 +123,8 @@ private:
 private:
 	IXAudio2* pXAudio_;						// XAudio2 엔진 본체
 	IXAudio2MasteringVoice* pMasterVoice_;	// 최종 출력 관문
-	bool bInitialized_;						// 초기화 성공 여부
-	bool bComInitialized_;					// 이 인스턴스가 COM을 초기화했는가 (Finalize에서 해제 대상)
+	bool initialized_;						// 초기화 성공 여부
+	bool comInitialized_;					// 이 인스턴스가 COM을 초기화했는가 (Finalize에서 해제 대상)
 	_s32 nextAudioId_;						// 다음에 발급할 audioId
 
 	VoiceSlot voices_[MAX_VOICES];				// 재생기 슬롯들

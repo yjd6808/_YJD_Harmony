@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 8:42:00 AM
  * 수정일: 8/9/2026 10:05:00 AM (v2.1: 윈도우별 씬 슬롯)
@@ -42,7 +42,7 @@ Window* Director::ResolveWindow(Window* _pWindow) const
 // 해당 윈도우의 슬롯을 찾는다. (없으면 nullptr)
 Director::SceneSlot* Director::FindSlot(Window* _pWindow)
 {
-	for (int i = 0; i < slots_.Size(); ++i)
+	for (_s32 i = 0; i < slots_.Size(); ++i)
 	{
 		if (slots_[i].pWindow_ == _pWindow)
 		{
@@ -64,7 +64,7 @@ Director::SceneSlot& Director::GetOrCreateSlot(Window* _pWindow)
 	}
 
 	// 2) 빈 슬롯(pWindow_ == nullptr)이 있으면 재활용
-	for (int i = 0; i < slots_.Size(); ++i)
+	for (_s32 i = 0; i < slots_.Size(); ++i)
 	{
 		if (slots_[i].pWindow_ == nullptr)
 		{
@@ -163,7 +163,7 @@ void Director::Update(const jc::TimeSpan& _dt)
 	// 1. 예약된 씬 교체 처리 (프레임 경계이므로 안전하다)
 	//    씬 콜백(OnExit/OnEnter/OnUpdate)이 slots_를 변경할 수 있으므로(재진입)
 	//    참조를 오래 붙잡지 않고 매 접근마다 인덱스로 다시 조회한다.
-	for (int i = 0; i < slots_.Size(); ++i)
+	for (_s32 i = 0; i < slots_.Size(); ++i)
 	{
 		if (slots_[i].pWindow_ == nullptr || slots_[i].pNext_ == nullptr)
 		{
@@ -191,7 +191,7 @@ void Director::Update(const jc::TimeSpan& _dt)
 	}
 
 	// 2. 모든 윈도우의 현재 씬 갱신
-	for (int i = 0; i < slots_.Size(); ++i)
+	for (_s32 i = 0; i < slots_.Size(); ++i)
 	{
 		if (slots_[i].pWindow_ != nullptr && slots_[i].pCurrent_ != nullptr)
 		{
@@ -255,7 +255,7 @@ void Director::DetachWindow(Window* _pWindow)
 // 모든 씬 정리 (앱 종료 시 Application::Finalize가 호출)
 void Director::Cleanup()
 {
-	for (int i = 0; i < slots_.Size(); ++i)
+	for (_s32 i = 0; i < slots_.Size(); ++i)
 	{
 		SceneSlot& slot = slots_[i];
 

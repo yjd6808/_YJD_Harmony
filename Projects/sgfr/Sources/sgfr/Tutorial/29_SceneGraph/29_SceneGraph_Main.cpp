@@ -26,12 +26,49 @@ using namespace jc;
 
 namespace
 {
+	//////////////////////////////////////////////////////////////////////////////////////////
+
+	// [DEBUG-DIAG] 원인 분석용 임시 로그 (수정 후 제거 예정)
+	FILE* OpenDiagLog()
+	{
+		FILE* f = nullptr;
+		fopen_s(&f, "C:\\Users\\jdyun\\AppData\\Local\\Temp\\opencode\\sgfr29_diag.log", "a");
+		return f;
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////
+
+	void LogDiag(const char* _szFormat, ...)
+	{
+		FILE* f = OpenDiagLog();
+		if (f == nullptr) { return; }
+		va_list args;
+		va_start(args, _szFormat);
+		vfprintf(f, _szFormat, args);
+		va_end(args);
+		fprintf(f, "\n");
+		fflush(f);
+		fclose(f);
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////
+
+	void LogDiagMat(const char* _szName, const mat4& _m)
+	{
+		LogDiag("%s = [%f %f %f %f | %f %f %f %f | %f %f %f %f | %f %f %f %f]",
+			_szName,
+			_m.m[0][0], _m.m[0][1], _m.m[0][2], _m.m[0][3],
+			_m.m[1][0], _m.m[1][1], _m.m[1][2], _m.m[1][3],
+			_m.m[2][0], _m.m[2][1], _m.m[2][2], _m.m[2][3],
+			_m.m[3][0], _m.m[3][1], _m.m[3][2], _m.m[3][3]);
+	}
+
 	// 씬 공장 함수 선언: 두 씬이 서로를 교체하므로 앞서 선언만 해둔다.
 	Scene* CreateSolarSystemScene();
 	Scene* CreateBouncingBallScene();
 
-	constexpr _f32 kViewWidth_v = 800.0f;	// 가상 화면 가로
-	constexpr _f32 kViewHeight_v = 600.0f;	// 가상 화면 세로
+	constexpr _f32 VIEW_WIDTH = 800.0f;	// 가상 화면 가로
+	constexpr _f32 VIEW_HEIGHT = 600.0f;	// 가상 화면 세로
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// [씬 1] 태양계 - 공전 궤도를 도는 태양/지구/달
@@ -42,16 +79,24 @@ namespace
 		// 씬이 무대에 오를 때 1회: 텍스처 준비 + 카메라 설정
 		void OnEnter() override
 		{
-			if (!CreateCircleTexture(&g_cDevice, &m_SunTexture, 128, color(1.0f, 0.85f, 0.2f, 1.0f)) ||
-				!CreateCircleTexture(&g_cDevice, &m_EarthTexture, 64, color(0.3f, 0.55f, 1.0f, 1.0f)) ||
-				!CreateCircleTexture(&g_cDevice, &m_MoonTexture, 32, color(0.8f, 0.8f, 0.8f, 1.0f)))
+			LogDiag("[OnEnter] SolarSystemScene 시작 (캠 800x600 설정 전)");
+			if (!CreateCircleTexture(&g_cDevice, &sunTexture_, 128, color(1.0f, 0.85f, 0.2f, 1.0f)) ||
+				!CreateCircleTexture(&g_cDevice, &earthTexture_, 64, color(0.3f, 0.55f, 1.0f, 1.0f)) ||
+				!CreateCircleTexture(&g_cDevice, &moonTexture_, 32, color(0.8f, 0.8f, 0.8f, 1.0f)))
 			{
-				printf("원형 텍스처 생성 실패!\n");
+				jc::Console::WriteLine("원형 텍스처 생성 실패!");
+				LogDiag("[OnEnter] 원형 텍스처 생성 실패!");
 				return;
 			}
+			LogDiag("[OnEnter] 텍스처 생성 성공 - Sun valid=%d Earth valid=%d Moon valid=%d",
+				(_s32)sunTexture_.IsValid(), (_s32)earthTexture_.IsValid(), (_s32)moonTexture_.IsValid());
 
-			GetCamera().SetOrthographic2D(kViewWidth_v, kViewHeight_v);
-			m_Elapsed = 0.0f;
+			GetCamera().SetOrthographic2D(VIEW_WIDTH, VIEW_HEIGHT);
+			elapsed_ = 0.0f;
+			LogDiagMat("[OnEnter] view", GetCamera().View());
+			LogDiagMat("[OnEnter] proj", GetCamera().Projection());
+			LogDiagMat("[OnEnter] vp", GetCamera().ViewProjection());
+			LogDiag("[OnEnter] window=%p title-설정 전 hwnd", (void*)GetWindow());
 
 			// [v2.1] 씬은 자신이 그려지는 창을 안다. (Director가 연결해준다)
 			GetWindow()->SetTitle(L"29. 태양계 씬 - SPACE: 씬 교체 / M: 서브 윈도우 (ESC로 종료)");
@@ -60,7 +105,7 @@ namespace
 		// 매 프레임: 경과 시간 누적 + 입력 처리 (v2: jc::TimeSpan)
 		void OnUpdate(const jc::TimeSpan& _dt) override
 		{
-			m_Elapsed += static_cast<_f32>(_dt.GetTotalSeconds());
+			elapsed_ += static_cast<_f32>(_dt.GetTotalSeconds());
 
 			// 방향키 이동 + 휠 줌: 카메라 표준 조작 한 줄 (v2 편의 API)
 			GetCamera().DriveDefault2D(g_cInput, _dt);
@@ -87,11 +132,18 @@ namespace
 		// 매 프레임 그리기: 궤도선 -> 태양 -> 지구 -> 달 순서로 직접 그린다.
 		void OnRender() override
 		{
-			const vec2 sunPos(kViewWidth_v * 0.5f, kViewHeight_v * 0.5f);
+			if (diagFrames_ < 30)
+			{
+				LogDiag("[OnRender] frame=%d elapsed=%f sunValid=%d", diagFrames_, elapsed_, (_s32)sunTexture_.IsValid());
+				LogDiagMat("[OnRender] vp", GetCamera().ViewProjection());
+				++diagFrames_;
+			}
+
+			const vec2 sunPos(VIEW_WIDTH * 0.5f, VIEW_HEIGHT * 0.5f);
 
 			// 지구/달의 공전 각도 (각속도 x 누적 시간)
-			const _f32 earthAngle = m_Elapsed * 0.6f;
-			const _f32 moonAngle = m_Elapsed * 2.4f;
+			const _f32 earthAngle = elapsed_ * 0.6f;
+			const _f32 moonAngle = elapsed_ * 2.4f;
 			const _f32 earthOrbit = 180.0f;
 			const _f32 moonOrbit = 55.0f;
 
@@ -107,9 +159,9 @@ namespace
 			DrawOrbit(earthPos, moonOrbit, color(0.3f, 0.3f, 0.4f, 1.0f));
 
 			// 천체 그리기 (그리는 순서대로 위에 줤인다)
-			g_cRenderer2D.DrawSprite(&m_SunTexture, sunPos, vec2(120.0f, 120.0f));
-			g_cRenderer2D.DrawSprite(&m_EarthTexture, earthPos, vec2(56.0f, 56.0f));
-			g_cRenderer2D.DrawSprite(&m_MoonTexture, moonPos, vec2(26.0f, 26.0f));
+			g_cRenderer2D.DrawSprite(&sunTexture_, sunPos, vec2(120.0f, 120.0f));
+			g_cRenderer2D.DrawSprite(&earthTexture_, earthPos, vec2(56.0f, 56.0f));
+			g_cRenderer2D.DrawSprite(&moonTexture_, moonPos, vec2(26.0f, 26.0f));
 		}
 
 		// 씬이 무대에서 내려갈 때 1회: 리소스 정리는 Texture 소멸자가 처리한다.
@@ -121,11 +173,11 @@ namespace
 		// 중심과 반지름으로 궤도 원을 그린다. (48개 선분 근사)
 		void DrawOrbit(const vec2& _center, _f32 _radius, const color& _color)
 		{
-			constexpr _s32 kSegments_v = 48;
-			for (_s32 i = 0; i < kSegments_v; ++i)
+			constexpr _s32 SEGMENTS = 48;
+			for (_s32 i = 0; i < SEGMENTS; ++i)
 			{
-				const _f32 a0 = jc_math_pi2 * i / kSegments_v;
-				const _f32 a1 = jc_math_pi2 * (i + 1) / kSegments_v;
+				const _f32 a0 = jc_math_pi2 * i / SEGMENTS;
+				const _f32 a1 = jc_math_pi2 * (i + 1) / SEGMENTS;
 				g_cRenderer2D.DrawLine(
 					vec2(_center.x + cosf(a0) * _radius, _center.y + sinf(a0) * _radius),
 					vec2(_center.x + cosf(a1) * _radius, _center.y + sinf(a1) * _radius),
@@ -134,10 +186,11 @@ namespace
 		}
 
 	private:
-		Texture m_SunTexture;		// 태양 텍스처
-		Texture m_EarthTexture;		// 지구 텍스처
-		Texture m_MoonTexture;		// 달 텍스처
-		_f32 m_Elapsed = 0.0f;		// 누적 시간 (공전 각도 계산용)
+		Texture sunTexture_;		// 태양 텍스처
+		Texture earthTexture_;		// 지구 텍스처
+		Texture moonTexture_;		// 달 텍스처
+		_f32 elapsed_ = 0.0f;		// 누적 시간 (공전 각도 계산용)
+		_s32 diagFrames_ = 0;		// [DEBUG-DIAG]
 	};
 
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -146,33 +199,33 @@ namespace
 	class BouncingBallScene : public Scene
 	{
 	public:
-		static constexpr _s32 kBallCount_v = 8;	// 공 개수
+		static constexpr _s32 BALL_COUNT = 8;	// 공 개수
 
 		// 씬 진입: 공 텍스처 + 초기 위치/속도 배치
 		void OnEnter() override
 		{
-			GetCamera().SetOrthographic2D(kViewWidth_v, kViewHeight_v);
+			GetCamera().SetOrthographic2D(VIEW_WIDTH, VIEW_HEIGHT);
 
 			// [v2.1] 이 씬이 서브 윈도우에 올라가면 그 창의 제목이 바뀝다.
 			GetWindow()->SetTitle(L"29. 통통 튀는 공 씬 - SPACE: 씬 교체 (ESC로 종료)");
 
 			// 공마다 색상을 달리해 텍스처를 만든다.
-			for (_s32 i = 0; i < kBallCount_v; ++i)
+			for (_s32 i = 0; i < BALL_COUNT; ++i)
 			{
-				const _f32 t = static_cast<_f32>(i) / kBallCount_v;
+				const _f32 t = static_cast<_f32>(i) / BALL_COUNT;
 				const color ballColor(0.4f + 0.6f * t, 0.9f - 0.6f * t, 0.5f + 0.4f * sinf(t * jc_math_pi2), 1.0f);
-				if (!CreateCircleTexture(&g_cDevice, &m_Textures[i], 64, ballColor))
+				if (!CreateCircleTexture(&g_cDevice, &textures_[i], 64, ballColor))
 				{
-					printf("공 텍스처 생성 실패!\n");
+				jc::Console::WriteLine("공 텍스처 생성 실패!");
 					return;
 				}
 
 				// 위치는 가로로 늘어놓고, 속도는 공마다 조금씩 다르게 준다.
-				m_PositionsX[i] = 100.0f + 75.0f * i;
-				m_PositionsY[i] = 150.0f + 40.0f * (i % 4);
-				m_VelocitiesX[i] = 120.0f + 30.0f * i;
-				m_VelocitiesY[i] = 160.0f + 25.0f * ((i * 3) % 5);
-				m_Radii[i] = 14.0f + 3.0f * (i % 4);
+				positionsX_[i] = 100.0f + 75.0f * i;
+				positionsY_[i] = 150.0f + 40.0f * (i % 4);
+				velocitiesX_[i] = 120.0f + 30.0f * i;
+				velocitiesY_[i] = 160.0f + 25.0f * ((i * 3) % 5);
+				radii_[i] = 14.0f + 3.0f * (i % 4);
 			}
 		}
 
@@ -181,38 +234,38 @@ namespace
 		{
 			const _f32 dt = static_cast<_f32>(_dt.GetTotalSeconds());
 
-			for (_s32 i = 0; i < kBallCount_v; ++i)
+			for (_s32 i = 0; i < BALL_COUNT; ++i)
 			{
-				m_PositionsX[i] += m_VelocitiesX[i] * dt;
-				m_PositionsY[i] += m_VelocitiesY[i] * dt;
+				positionsX_[i] += velocitiesX_[i] * dt;
+				positionsY_[i] += velocitiesY_[i] * dt;
 
 				bool bBounced = false;
 
 				// 좌우 벽 충돌: 위치를 벽 안으로 되돌리고 속도 부호를 뒤집는다.
-				if (m_PositionsX[i] < m_Radii[i])
+				if (positionsX_[i] < radii_[i])
 				{
-					m_PositionsX[i] = m_Radii[i];
-					m_VelocitiesX[i] = -m_VelocitiesX[i];
+					positionsX_[i] = radii_[i];
+					velocitiesX_[i] = -velocitiesX_[i];
 					bBounced = true;
 				}
-				else if (m_PositionsX[i] > kViewWidth_v - m_Radii[i])
+				else if (positionsX_[i] > VIEW_WIDTH - radii_[i])
 				{
-					m_PositionsX[i] = kViewWidth_v - m_Radii[i];
-					m_VelocitiesX[i] = -m_VelocitiesX[i];
+					positionsX_[i] = VIEW_WIDTH - radii_[i];
+					velocitiesX_[i] = -velocitiesX_[i];
 					bBounced = true;
 				}
 
 				// 상하 벽 충돌
-				if (m_PositionsY[i] < m_Radii[i])
+				if (positionsY_[i] < radii_[i])
 				{
-					m_PositionsY[i] = m_Radii[i];
-					m_VelocitiesY[i] = -m_VelocitiesY[i];
+					positionsY_[i] = radii_[i];
+					velocitiesY_[i] = -velocitiesY_[i];
 					bBounced = true;
 				}
-				else if (m_PositionsY[i] > kViewHeight_v - m_Radii[i])
+				else if (positionsY_[i] > VIEW_HEIGHT - radii_[i])
 				{
-					m_PositionsY[i] = kViewHeight_v - m_Radii[i];
-					m_VelocitiesY[i] = -m_VelocitiesY[i];
+					positionsY_[i] = VIEW_HEIGHT - radii_[i];
+					velocitiesY_[i] = -velocitiesY_[i];
 					bBounced = true;
 				}
 
@@ -239,26 +292,26 @@ namespace
 		{
 			// 화면 테두리 (공이 튀는 범위를 눈으로 확인)
 			const color borderColor(0.5f, 0.5f, 0.6f, 1.0f);
-			g_cRenderer2D.DrawLine(vec2(0.0f, 0.0f), vec2(kViewWidth_v, 0.0f), borderColor, 3.0f);
-			g_cRenderer2D.DrawLine(vec2(kViewWidth_v, 0.0f), vec2(kViewWidth_v, kViewHeight_v), borderColor, 3.0f);
-			g_cRenderer2D.DrawLine(vec2(kViewWidth_v, kViewHeight_v), vec2(0.0f, kViewHeight_v), borderColor, 3.0f);
-			g_cRenderer2D.DrawLine(vec2(0.0f, kViewHeight_v), vec2(0.0f, 0.0f), borderColor, 3.0f);
+			g_cRenderer2D.DrawLine(vec2(0.0f, 0.0f), vec2(VIEW_WIDTH, 0.0f), borderColor, 3.0f);
+			g_cRenderer2D.DrawLine(vec2(VIEW_WIDTH, 0.0f), vec2(VIEW_WIDTH, VIEW_HEIGHT), borderColor, 3.0f);
+			g_cRenderer2D.DrawLine(vec2(VIEW_WIDTH, VIEW_HEIGHT), vec2(0.0f, VIEW_HEIGHT), borderColor, 3.0f);
+			g_cRenderer2D.DrawLine(vec2(0.0f, VIEW_HEIGHT), vec2(0.0f, 0.0f), borderColor, 3.0f);
 
-			for (_s32 i = 0; i < kBallCount_v; ++i)
+			for (_s32 i = 0; i < BALL_COUNT; ++i)
 			{
-				const vec2 pos(m_PositionsX[i], m_PositionsY[i]);
-				const _f32 diameter = m_Radii[i] * 2.0f;
-				g_cRenderer2D.DrawSprite(&m_Textures[i], pos, vec2(diameter, diameter));
+				const vec2 pos(positionsX_[i], positionsY_[i]);
+				const _f32 diameter = radii_[i] * 2.0f;
+				g_cRenderer2D.DrawSprite(&textures_[i], pos, vec2(diameter, diameter));
 			}
 		}
 
 	private:
-		Texture m_Textures[kBallCount_v];		// 공 텍스처
-		_f32 m_PositionsX[kBallCount_v] = {};	// 공 X 위치
-		_f32 m_PositionsY[kBallCount_v] = {};	// 공 Y 위치
-		_f32 m_VelocitiesX[kBallCount_v] = {};	// 공 X 속도
-		_f32 m_VelocitiesY[kBallCount_v] = {};	// 공 Y 속도
-		_f32 m_Radii[kBallCount_v] = {};		// 공 반지름
+		Texture textures_[BALL_COUNT];		// 공 텍스처
+		_f32 positionsX_[BALL_COUNT] = {};	// 공 X 위치
+		_f32 positionsY_[BALL_COUNT] = {};	// 공 Y 위치
+		_f32 velocitiesX_[BALL_COUNT] = {};	// 공 X 속도
+		_f32 velocitiesY_[BALL_COUNT] = {};	// 공 Y 속도
+		_f32 radii_[BALL_COUNT] = {};		// 공 반지름
 	};
 
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -268,6 +321,8 @@ namespace
 	{
 		return new SolarSystemScene();
 	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////
 
 	Scene* CreateBouncingBallScene()
 	{

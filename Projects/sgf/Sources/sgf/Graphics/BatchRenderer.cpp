@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 10:30:00 AM
  * =====================
@@ -17,7 +17,7 @@ using namespace jc;
 BatchRenderer::BatchRenderer()
 	: pDevice_(nullptr)
 	, viewProjection_(mat4::Identity())
-	, bBegun_(false)
+	, begun_(false)
 {
 }
 
@@ -55,15 +55,15 @@ bool BatchRenderer::Initialize(GraphicDevice* _pDevice)
 void BatchRenderer::Finalize()
 {
 	// 셰이더/상수 버퍼는 각자의 소멸자(ComPtr)가 GPU 리소스를 알아서 해제한다.
-	bBegun_ = false;
+	begun_ = false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 배치 시작: 행렬 저장 + 파생의 OnBegin()으로 배치 초기화
 void BatchRenderer::Begin(const mat4& _viewProjection)
 {
-	jc_assert(!bBegun_);
-	bBegun_ = true;
+	jc_assert(!begun_);
+	begun_ = true;
 	viewProjection_ = _viewProjection;
 	OnBegin();
 }
@@ -72,9 +72,9 @@ void BatchRenderer::Begin(const mat4& _viewProjection)
 // 배치 종료: 남은 배치를 모두 그린다.
 void BatchRenderer::End()
 {
-	jc_assert(bBegun_);
+	jc_assert(begun_);
 	Flush();
-	bBegun_ = false;
+	begun_ = false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

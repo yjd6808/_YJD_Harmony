@@ -18,7 +18,7 @@ using namespace jc;
 //////////////////////////////////////////////////////////////////////////////////////////
 GraphicDevice::GraphicDevice()
 	: pBoundWindow_(nullptr)
-	, bWireframe_(false)
+	, wireframe_(false)
 	, cullMode_(CullMode::cmBack)
 	, width_(0)
 	, height_(0)
@@ -281,10 +281,10 @@ void GraphicDevice::BeginFrame(Window* _pWindow, const color& _clearColor)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // [v2.1] 지정 윈도우의 백버퍼를 화면에 표시한다.
-void GraphicDevice::EndFrame(Window* _pWindow, bool _bVsync)
+void GraphicDevice::EndFrame(Window* _pWindow, bool _vsync)
 {
 	jc_assert(_pWindow != nullptr && _pWindow->HasSurface());
-	_pWindow->GetSwapChain().Present(_bVsync);
+	_pWindow->GetSwapChain().Present(_vsync);
 
 	// 이 창의 프레임이 끝났으므로 바인딩 기록을 해제한다.
 	if (pBoundWindow_ == _pWindow)
@@ -312,23 +312,23 @@ void GraphicDevice::BeginFrame(const color& _clearColor)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 프레임 끝: 백버퍼를 화면에 표시한다.
-void GraphicDevice::EndFrame(bool _bVsync)
+void GraphicDevice::EndFrame(bool _vsync)
 {
-	swapChain_.Present(_bVsync);
+	swapChain_.Present(_vsync);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 알파 블렌딩 켜기/끄기 (SetBlendMode의 간편 버전)
-void GraphicDevice::SetAlphaBlending(bool _bEnable)
+void GraphicDevice::SetAlphaBlending(bool _enable)
 {
-	SetBlendMode(_bEnable ? BlendMode::bmAlpha : BlendMode::bmNone);
+	SetBlendMode(_enable ? BlendMode::bmAlpha : BlendMode::bmNone);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 깊이 테스트 켜기/끄기
-void GraphicDevice::SetDepthTest(bool _bEnable)
+void GraphicDevice::SetDepthTest(bool _enable)
 {
-	pContext_->OMSetDepthStencilState(states_.GetDepthState(_bEnable), 0);
+	pContext_->OMSetDepthStencilState(states_.GetDepthState(_enable), 0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -348,11 +348,11 @@ void GraphicDevice::SetSampler(SamplerFilter _filter, SamplerAddress _address, U
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 와이어프레임 켜기/끄기
-void GraphicDevice::SetWireframe(bool _bEnable)
+void GraphicDevice::SetWireframe(bool _enable)
 {
-	if (bWireframe_ != _bEnable)
+	if (wireframe_ != _enable)
 	{
-		bWireframe_ = _bEnable;
+		wireframe_ = _enable;
 		ApplyRasterizerState();
 	}
 }
@@ -372,7 +372,7 @@ void GraphicDevice::SetCullMode(CullMode _mode)
 // 현재 와이어프레임/컬링 설정을 합쳤을 때의 래스터라이저 상태를 적용한다.
 void GraphicDevice::ApplyRasterizerState()
 {
-	pContext_->RSSetState(states_.GetRasterizerState(bWireframe_, cullMode_));
+	pContext_->RSSetState(states_.GetRasterizerState(wireframe_, cullMode_));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -425,8 +425,8 @@ void GraphicDevice::SetRenderTarget(RenderTarget* _pTarget)
 	D3D11_VIEWPORT viewport = {};
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
-	viewport.Width = static_cast<float>(_pTarget->Width());
-	viewport.Height = static_cast<float>(_pTarget->Height());
+	viewport.Width = static_cast<_f32>(_pTarget->Width());
+	viewport.Height = static_cast<_f32>(_pTarget->Height());
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 	pContext_->RSSetViewports(1, &viewport);

@@ -81,14 +81,16 @@ static const TutorialEntry s_Tutorials[] =
 	{ "파이프라인 여행 (수도 코드 §1~§20 캡스톤)",  PipelineJourney_Main },
 };
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 등록된 튜토리얼 개수를 반환한다.
-int TutorialCount()
+_s32 TutorialCount()
 {
-	return (int)(sizeof(s_Tutorials) / sizeof(s_Tutorials[0]));
+	return (_s32)(sizeof(s_Tutorials) / sizeof(s_Tutorials[0]));
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // _index(0부터 시작)번째 튜토리얼 정보를 반환한다.
-const TutorialEntry& TutorialAt(int _index)
+const TutorialEntry& TutorialAt(_s32 _index)
 {
 	jc_assert(_index >= 0 && _index < TutorialCount());
 	return s_Tutorials[_index];

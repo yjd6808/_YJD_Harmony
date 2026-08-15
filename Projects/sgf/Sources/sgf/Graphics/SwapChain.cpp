@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 1:00:00 AM
  * =====================
@@ -65,12 +65,12 @@ void SwapChain::Finalize()
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 백버퍼를 화면에 표시 (더블 버퍼링의 "교체" 단계)
-void SwapChain::Present(bool _bVsync)
+void SwapChain::Present(bool _vsync)
 {
 	if (pSwapChain_)
 	{
 		// 첫 인자(SyncInterval): 1이면 수직동기화 대기, 0이면 즉시 표시
-		pSwapChain_->Present(_bVsync ? 1 : 0, 0);
+		pSwapChain_->Present(_vsync ? 1 : 0, 0);
 	}
 }
 

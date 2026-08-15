@@ -11,6 +11,8 @@
 using namespace sgf;
 using namespace jc;
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // 좌(Before)/우(After) 분할 비교로 텍스처 사각형을 그리는 HLSL 셰이더 소스를 반환한다.
 //
 // [샘플링(Sampling)이란?]
@@ -80,33 +82,37 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 )";
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // 샘플러/필터링의 원리를 콘솔에 출력한다. (학습용)
 void PrintSamplerExplanation()
 {
-	printf("\n[샘플링(Sampling)이란?]\n");
-	printf(" 화면 픽셀 하나를 칠할 때 텍스처의 어느 색을 꺼내 올지 정하는 규칙입니다.\n");
-	printf(" 작은 텍스처를 크게 늘리면(확대) 화면 픽셀 여러 개가 텍셀 하나를 나눠 씁니다.\n\n");
-	printf("[Before/After 비교 뷰]\n");
-	printf(" 노란 세로선 왼쪽  = 기준 상태 (Point + Wrap 고정)\n");
-	printf(" 노란 세로선 오른쪽 = 현재 선택한 필터/주소 모드\n");
-	printf(" 키를 눌러 오른쪽만 바꿔가며 왼쪽과 직접 비교해보세요!\n\n");
-	printf("[필터 (1/2 키로 전환)]\n");
-	printf(" 1. Point  : 가장 가까운 텍셀 하나를 그대로 사용 -> 네모가 각진 도트 느낌\n");
-	printf(" 2. Linear : 주변 텍셀 4개를 거리비례로 섞음   -> 부드럽지만 흐릿해짐\n\n");
-	printf("[주소 모드 (3/4/5 키로 전환)] - UV가 0~1 범위를 벗어났을 때\n");
-	printf(" 3. Wrap   : 처음부터 반복 (바닥 타일링에 필수)\n");
-	printf(" 4. Clamp  : 가장자리 색을 잡아당겨 늘임 (빨간 테두리가 줄줄 늘어난다!)\n");
-	printf(" 5. Mirror : 거울처럼 뒤집으며 반복\n\n");
-	printf(" 이 화면의 사각형은 UV를 0~3으로 주므로 주소 모드 차이가 바로 보입니다.\n");
-	printf(" 텍스처는 고작 32x32 픽셀! 확대해 보면 필터 차이도 바로 보입니다.\n\n");
+	jc::Console::WriteLine("\n[샘플링(Sampling)이란?]");
+	jc::Console::WriteLine(" 화면 픽셀 하나를 칠할 때 텍스처의 어느 색을 꺼내 올지 정하는 규칙입니다.");
+	jc::Console::WriteLine(" 작은 텍스처를 크게 늘리면(확대) 화면 픽셀 여러 개가 텍셀 하나를 나눠 씁니다.\n");
+	jc::Console::WriteLine("[Before/After 비교 뷰]");
+	jc::Console::WriteLine(" 노란 세로선 왼쪽  = 기준 상태 (Point + Wrap 고정)");
+	jc::Console::WriteLine(" 노란 세로선 오른쪽 = 현재 선택한 필터/주소 모드");
+	jc::Console::WriteLine(" 키를 눌러 오른쪽만 바꿔가며 왼쪽과 직접 비교해보세요!\n");
+	jc::Console::WriteLine("[필터 (1/2 키로 전환)]");
+	jc::Console::WriteLine(" 1. Point  : 가장 가까운 텍셀 하나를 그대로 사용 -> 네모가 각진 도트 느낌");
+	jc::Console::WriteLine(" 2. Linear : 주변 텍셀 4개를 거리비례로 섞음   -> 부드럽지만 흐릿해짐\n");
+	jc::Console::WriteLine("[주소 모드 (3/4/5 키로 전환)] - UV가 0~1 범위를 벗어났을 때");
+	jc::Console::WriteLine(" 3. Wrap   : 처음부터 반복 (바닥 타일링에 필수)");
+	jc::Console::WriteLine(" 4. Clamp  : 가장자리 색을 잡아당겨 늘임 (빨간 테두리가 줄줄 늘어난다!)");
+	jc::Console::WriteLine(" 5. Mirror : 거울처럼 뒤집으며 반복\n");
+	jc::Console::WriteLine(" 이 화면의 사각형은 UV를 0~3으로 주므로 주소 모드 차이가 바로 보입니다.");
+	jc::Console::WriteLine(" 텍스처는 고작 32x32 픽셀! 확대해 보면 필터 차이도 바로 보입니다.\n");
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // 체커보드 패턴의 RGBA 픽셀 배열을 채운다.
-void FillCheckerPixels(_u8* _pOutPixels, int _width, int _height, int _cellSize)
+void FillCheckerPixels(_u8* _pOutPixels, _s32 _width, _s32 _height, _s32 _cellSize)
 {
-	for (int y = 0; y < _height; ++y)
+	for (_s32 y = 0; y < _height; ++y)
 	{
-		for (int x = 0; x < _width; ++x)
+		for (_s32 x = 0; x < _width; ++x)
 		{
 			_u8 r, g, b;
 
@@ -134,6 +140,8 @@ void FillCheckerPixels(_u8* _pOutPixels, int _width, int _height, int _cellSize)
 		}
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
 
 // UV가 0~_uvScale 범위인 사각형 정점 4개와 인덱스 6개를 채운다.
 void FillUvQuad(VertexPTC* _pOutVertices4, _u32* _pOutIndices6, _f32 _uvScale)

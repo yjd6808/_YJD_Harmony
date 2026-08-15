@@ -45,7 +45,7 @@ void Cube3D_Main()
 	Window window;
 	if (!window.Create(L"13. 3D 큐브 - 스페이스바로 깊이 테스트 토글 (ESC로 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -55,7 +55,7 @@ void Cube3D_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -95,7 +95,7 @@ void Cube3D_Main()
 	if (!vb.Create(&device, vertices, sizeof(VertexPC), 8) ||
 		!ib.Create(&device, indices, 36))
 		{
-		printf("버퍼 생성 실패!\n");
+		jc::Console::WriteLine("버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -110,7 +110,7 @@ void Cube3D_Main()
 	if (!shader.CompileFromString(&device, CubeShaderSource(), pLayoutDescs, layoutCount) ||
 		!cbTransform.Create(&device))
 		{
-		printf("셰이더/상수 버퍼 생성 실패!\n");
+		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -130,7 +130,7 @@ void Cube3D_Main()
 	_f32 elapsed = 0.0f;
 	bool bDepthTest = true;
 
-	printf("스페이스바로 깊이 테스트를 켜고 꺼보세요. 꺼지면 뒷면이 앞을 덮는 오류가 보입니다!\n");
+	jc::Console::WriteLine("스페이스바로 깊이 테스트를 켜고 꺼보세요. 꺼지면 뒷면이 앞을 덮는 오류가 보입니다!");
 
 	// 6. 렌더 루프
 	while (window.PumpMessage())
@@ -145,7 +145,7 @@ void Cube3D_Main()
 		{
 			bDepthTest = !bDepthTest;
 			device.SetDepthTest(bDepthTest);
-			printf("깊이 테스트: %s\n", bDepthTest ? "ON (정상)" : "OFF (뒷면이 덮일 수 있음)");
+			jc::Console::Write("깊이 테스트: %s\n", bDepthTest ? "ON (정상)" : "OFF (뒷면이 덮일 수 있음)");
 		}
 
 		input.NextFrame();

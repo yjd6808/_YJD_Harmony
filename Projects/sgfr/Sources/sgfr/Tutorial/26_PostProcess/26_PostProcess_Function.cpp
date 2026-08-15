@@ -11,6 +11,8 @@
 using namespace sgf;
 using namespace jc;
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // 화면 전체 텍스처에 후보정 효과를 입혀 출력하는 HLSL 셰이더 소스를 반환한다.
 //
 // [포스트 프로세싱(Post Processing)이란?]
@@ -112,25 +114,29 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 )";
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // 포스트 프로세싱의 개념과 각 효과의 수식을 콘솔에 출력한다. (학습용)
 void PrintPostProcessExplanation()
 {
-	printf("\n[포스트 프로세싱이란?]\n");
-	printf(" 1단계: 장면을 화면이 아닌 '렌더 타깃 텍스처'에 그린다 (25번에서 배움!)\n");
-	printf(" 2단계: 화면 전체 사각형을 그리면서 그 텍스처를 픽셀단위로 가공한다\n");
-	printf(" = 게임 화면에 '사진 필터'를 입히는 것과 같다!\n\n");
-	printf("[Before/After 비교 슬라이더]\n");
-	printf(" 노란 세로선 왼쪽  = 원본(Before), 오른쪽 = 효과 적용(After)\n");
-	printf(" 왼쪽/오른쪽 방향키로 경계를 직접 좀여가며 비교해보세요!\n\n");
-	printf("[효과 목록 (0~5 키로 전환)]\n");
-	printf(" 0. 원본       : 효과 없음 (경계 양쪽이 완전히 같아진다)\n");
-	printf(" 1. 그레이     : 밝기만 남긴다. gray = 0.299R + 0.587G + 0.114B\n");
-	printf(" 2. 세피아     : 그레이에 갈색 입히기. 옛날 사진 느낌\n");
-	printf(" 3. 색 반전    : 1 - RGB\n");
-	printf(" 4. 비네트     : 중심에서 멀수록 어둡게. 시선 집중 효과\n");
-	printf(" 5. 물결       : UV를 사인파로 흔들기. 취함/지지직 이펙트\n\n");
-	printf(" 핵심: 장면이 아무리 복잡해도 후보정 비용은 화면 픽셀 수에만 비례한다!\n\n");
+	jc::Console::WriteLine("\n[포스트 프로세싱이란?]");
+	jc::Console::WriteLine(" 1단계: 장면을 화면이 아닌 '렌더 타깃 텍스처'에 그린다 (25번에서 배움!)");
+	jc::Console::WriteLine(" 2단계: 화면 전체 사각형을 그리면서 그 텍스처를 픽셀단위로 가공한다");
+	jc::Console::WriteLine(" = 게임 화면에 '사진 필터'를 입히는 것과 같다!\n");
+	jc::Console::WriteLine("[Before/After 비교 슬라이더]");
+	jc::Console::WriteLine(" 노란 세로선 왼쪽  = 원본(Before), 오른쪽 = 효과 적용(After)");
+	jc::Console::WriteLine(" 왼쪽/오른쪽 방향키로 경계를 직접 좀여가며 비교해보세요!\n");
+	jc::Console::WriteLine("[효과 목록 (0~5 키로 전환)]");
+	jc::Console::WriteLine(" 0. 원본       : 효과 없음 (경계 양쪽이 완전히 같아진다)");
+	jc::Console::WriteLine(" 1. 그레이     : 밝기만 남긴다. gray = 0.299R + 0.587G + 0.114B");
+	jc::Console::WriteLine(" 2. 세피아     : 그레이에 갈색 입히기. 옛날 사진 느낌");
+	jc::Console::WriteLine(" 3. 색 반전    : 1 - RGB");
+	jc::Console::WriteLine(" 4. 비네트     : 중심에서 멀수록 어둡게. 시선 집중 효과");
+	jc::Console::WriteLine(" 5. 물결       : UV를 사인파로 흔들기. 취함/지지직 이펙트\n");
+	jc::Console::WriteLine(" 핵심: 장면이 아무리 복잡해도 후보정 비용은 화면 픽셀 수에만 비례한다!\n");
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
 
 // 화면 전체를 덮는 NDC 사각형 정점 4개를 채운다. (UV 0~1, 흰색)
 void FillFullscreenQuad(VertexPTC* _pOutVertices4)

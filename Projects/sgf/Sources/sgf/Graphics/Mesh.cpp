@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 5:40:00 PM
  * =====================
@@ -18,7 +18,7 @@ using namespace jc;
 //////////////////////////////////////////////////////////////////////////////////////////
 Mesh::Mesh()
 	: topology_(PrimitiveTopology::ptTriangleList)
-	, bIndexed_(false)
+	, indexed_(false)
 {
 }
 
@@ -44,8 +44,8 @@ bool Mesh::Initialize(
 		return false;
 	}
 
-	bIndexed_ = (_pIndices != nullptr && _indexCount > 0);
-	if (bIndexed_)
+	indexed_ = (_pIndices != nullptr && _indexCount > 0);
+	if (indexed_)
 	{
 		if (!indexBuffer_.Create(_pDevice, _pIndices, _indexCount))
 		{
@@ -154,7 +154,7 @@ bool Mesh::InitializeAsCube(GraphicDevice* _pDevice, VertexShader* _pVs)
 void Mesh::Finalize()
 {
 	inputLayout_.Finalize();
-	bIndexed_ = false;
+	indexed_ = false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -162,7 +162,7 @@ void Mesh::Bind(GraphicContext& _context)
 {
 	_context.SetInputLayout(&inputLayout_);
 	_context.SetVertexBuffer(&vertexBuffer_);
-	if (bIndexed_)
+	if (indexed_)
 	{
 		_context.SetIndexBuffer(&indexBuffer_);
 	}
@@ -172,7 +172,7 @@ void Mesh::Bind(GraphicContext& _context)
 //////////////////////////////////////////////////////////////////////////////////////////
 void Mesh::Draw(GraphicContext& _context)
 {
-	if (bIndexed_)
+	if (indexed_)
 	{
 		_context.DrawIndexed(indexBuffer_.Count());
 	}

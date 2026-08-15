@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/4/2026 10:36:00 PM
  * =====================
@@ -21,8 +21,8 @@ Window::Window()
 	: hWnd_(nullptr)
 	, width_(0)
 	, height_(0)
-	, bClosed_(false)
-	, bHasSurface_(false)
+	, closed_(false)
+	, hasSurface_(false)
 	, pInput_(nullptr)
 {
 }
@@ -89,7 +89,7 @@ bool Window::Create(const wchar_t* _title, _s32 _width, _s32 _height)
 
 	width_ = _width;
 	height_ = _height;
-	bClosed_ = false;
+	closed_ = false;
 
 	// 4. 창 표시
 	ShowWindow(hWnd_, SW_SHOW);
@@ -109,7 +109,7 @@ bool Window::PumpMessage()
 	{
 		if (msg.message == WM_QUIT)
 		{
-			bClosed_ = true;
+			closed_ = true;
 			return false;
 		}
 		TranslateMessage(&msg);		// 가상 키 메시지를 문자 메시지(WM_CHAR)로 변환
@@ -117,7 +117,7 @@ bool Window::PumpMessage()
 
 		// 이 창이 파괴되었다면 즉시 종료. (이전 튜토리얼이 남긴 WM_QUIT과
 		// 무관하게 "이 인스턴스의 창"이 닫힌 경우에만 루프를 끝낸다)
-		if (bClosed_)
+		if (closed_)
 		{
 			return false;
 		}
@@ -139,7 +139,7 @@ void Window::Destroy()
 	}
 
 	// 직접 파괴하는 경로(서브 윈도우 정리 등)에서도 닫힘 상태를 일관성 있게 유지한다.
-	bClosed_ = true;
+	closed_ = true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -153,7 +153,7 @@ bool Window::CreateSurface(GraphicDevice* _pDevice)
 	{
 		return false;
 	}
-	if (bHasSurface_)
+	if (hasSurface_)
 	{
 		return true;	// 이미 생성됨 (중복 호출 무시)
 	}
@@ -178,7 +178,7 @@ bool Window::CreateSurface(GraphicDevice* _pDevice)
 		return false;
 	}
 
-	bHasSurface_ = true;
+	hasSurface_ = true;
 	return true;
 }
 
@@ -186,13 +186,13 @@ bool Window::CreateSurface(GraphicDevice* _pDevice)
 // 그리기 표면을 해제한다.
 void Window::DestroySurface()
 {
-	if (!bHasSurface_)
+	if (!hasSurface_)
 	{
 		return;
 	}
 	depthSurface_.Finalize();
 	swapChain_.Finalize();
-	bHasSurface_ = false;
+	hasSurface_ = false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -247,10 +247,10 @@ LRESULT Window::WndProc(HWND _hWnd, UINT _msg, WPARAM _wParam, LPARAM _lParam)
 	switch (_msg)
 	{
 	case WM_DESTROY:
-		// 창이 파괴되었다. bClosed_만 표시하고 루프 종료는 PumpMessage가
+		// 창이 파괴되었다. closed_만 표시하고 루프 종료는 PumpMessage가
 		// 직접 감지한다. (PostQuitMessage를 쓰면 WM_QUIT이 스레드 메시지 큐에
 		// 남아 다음 튜토리얼 실행 시 메시지 루프가 즉시 종료되는 문제가 있다)
-		bClosed_ = true;
+		closed_ = true;
 		return 0;
 
 	case WM_ACTIVATEAPP:

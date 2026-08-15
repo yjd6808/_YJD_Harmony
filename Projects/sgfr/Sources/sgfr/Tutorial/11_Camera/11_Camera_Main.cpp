@@ -43,7 +43,7 @@ void Camera_Main()
 	Window window;
 	if (!window.Create(L"11. 카메라 - WASD 이동 / 휠 줌 / R 리셋 (ESC로 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -53,7 +53,7 @@ void Camera_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -72,7 +72,7 @@ void Camera_Main()
 	if (!vb.Create(&device, vertices, sizeof(VertexPC), 4) ||
 		!ib.Create(&device, indices, 6))
 		{
-		printf("버퍼 생성 실패!\n");
+		jc::Console::WriteLine("버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -87,7 +87,7 @@ void Camera_Main()
 	if (!shader.CompileFromString(&device, CameraShaderSource(), pLayoutDescs, layoutCount) ||
 		!cbTransform.Create(&device))
 		{
-		printf("셰이더/상수 버퍼 생성 실패!\n");
+		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -103,7 +103,7 @@ void Camera_Main()
 	FrameTimer timer;
 	timer.Reset();
 
-	printf("WASD로 이동, 마우스 휠로 줌, R로 리셋하세요.\n");
+	jc::Console::WriteLine("WASD로 이동, 마우스 휠로 줌, R로 리셋하세요.");
 
 	// 5. 렌더 루프
 	while (window.PumpMessage())
@@ -125,7 +125,7 @@ void Camera_Main()
 
 		// 마우스 휠: 한 칸(틱 ±1)당 10%씩 배율 증감
 		// (WheelDelta는 이미 120으로 나눈 "틱 단위"를 반환하므로 추가 나눗셈 금지)
-		const int wheel = input.WheelDelta();
+		const _s32 wheel = input.WheelDelta();
 		if (wheel != 0)
 		{
 			zoom *= 1.0f + _f32(wheel) * 0.1f;
@@ -149,9 +149,9 @@ void Camera_Main()
 		device.BeginFrame(color(0.05f, 0.08f, 0.05f, 1.0f));
 
 		// === 5x5 타일을 그려서 "세상"을 만든다 ===
-		for (int y = -2; y <= 2; ++y)
+		for (_s32 y = -2; y <= 2; ++y)
 		{
-			for (int x = -2; x <= 2; ++x)
+			for (_s32 x = -2; x <= 2; ++x)
 			{
 				// 타일 간격 0.6, 크기 0.5 (사이에 틈이 보이도록)
 				const mat4 world = mat4::Scale(0.5f, 0.5f, 1.0f) * mat4::Translation(x * 0.6f, y * 0.6f, 0.0f);

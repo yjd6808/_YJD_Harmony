@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 8:30:00 AM
  * 수정일: 8/9/2026 1:00:00 AM (v2: 편의 API 추가)
@@ -18,7 +18,7 @@ using namespace jc;
 Camera::Camera()
 	: view_(mat4::Identity())
 	, projection_(mat4::Identity())
-	, b2D_(true)
+	, is2D_(true)
 	, width2D_(0.0f)
 	, height2D_(0.0f)
 	, position2D_(0.0f, 0.0f)
@@ -40,7 +40,7 @@ Camera::~Camera()
 // 2D 직교 카메라 설정. 기본 상태는 화면 왼쪽 아래 (0,0) ~ 오른쪽 위 (w,h).
 void Camera::SetOrthographic2D(_f32 _width, _f32 _height)
 {
-	b2D_ = true;
+	is2D_ = true;
 	width2D_ = _width;
 	height2D_ = _height;
 
@@ -54,7 +54,7 @@ void Camera::SetOrthographic2D(_f32 _width, _f32 _height)
 // 2D 카메라 이동 (카메라 중심이 이 위치로 온다). 2D 모드에서만 유효하다. (3D 모드 no-op)
 void Camera::SetPosition2D(const vec2& _position)
 {
-	if (!b2D_)
+	if (!is2D_)
 	{
 		return;
 	}
@@ -76,7 +76,7 @@ void Camera::Move2D(const vec2& _delta)
 // 2D 줌 설정 (0 이하 방지). 2D 모드에서만 유효하다. (3D 모드 no-op)
 void Camera::SetZoom(_f32 _zoom)
 {
-	if (!b2D_)
+	if (!is2D_)
 	{
 		return;
 	}
@@ -149,7 +149,7 @@ void Camera::DriveDefault2D(InputManager& _input, const jc::TimeSpan& _dt)
 	}
 
 	// 마우스 휠: 한 칸당 1.1배 줌 인/아웃 (WheelDelta는 이미 틱 단위, ±1 = 한 칸)
-	const int wheel = _input.WheelDelta();
+	const _s32 wheel = _input.WheelDelta();
 	if (wheel != 0)
 	{
 		ZoomBy(powf(1.1f, static_cast<_f32>(wheel)));
@@ -184,7 +184,7 @@ using namespace jc;
 // 3D 원근 투영 설정 (라디안)
 void Camera::SetPerspective(_f32 _fovY, _f32 _aspect, _f32 _nearZ, _f32 _farZ)
 {
-	b2D_ = false;
+	is2D_ = false;
 	projection_ = mat4::PerspectiveFovLH(_fovY, _aspect, _nearZ, _farZ);
 	Rebuild3D();
 }
@@ -200,7 +200,7 @@ void Camera::SetPerspectiveDegrees(_f32 _fovYDegrees, _f32 _aspect, _f32 _nearZ,
 // 카메라 위치/바라보는 지점 설정
 void Camera::SetLookAt(const vec3& _eye, const vec3& _target, const vec3& _up)
 {
-	b2D_ = false;
+	is2D_ = false;
 	eye_ = _eye;
 	target_ = _target;
 	up_ = _up;
@@ -330,7 +330,7 @@ void Camera::DriveDefault3D(InputManager& _input, const jc::TimeSpan& _dt)
 	if (_input.IsKeyDown('E')) { Pan(0.0f, +moveSpeed * dt); }
 
 	// 마우스 휠: 한 칸당 0.5유닛 접근/후퇴 (WheelDelta는 이미 틱 단위, ±1 = 한 칸)
-	const int wheel = _input.WheelDelta();
+	const _s32 wheel = _input.WheelDelta();
 	if (wheel != 0)
 	{
 		Dolly(static_cast<_f32>(wheel) * 0.5f);

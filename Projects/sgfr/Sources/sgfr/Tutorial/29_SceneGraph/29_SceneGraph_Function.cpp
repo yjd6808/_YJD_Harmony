@@ -12,6 +12,8 @@
 using namespace sgf;
 using namespace jc;
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // 씬/디렉터/사운드 구조와 Cocos2d-x와의 차이를 콘솔에 출력한다. (학습용)
 void PrintSceneGraphExplanation()
 {
@@ -36,9 +38,11 @@ void PrintSceneGraphExplanation()
 	jc::Console::WriteLine("");
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // 단색 원 텍스처를 CPU로 직접 만든다. (경계 부드러움 포함)
 // 행성/공 스프라이트용 텍스처를 외부 파일 없이 준비하기 위한 함수다.
-bool CreateCircleTexture(GraphicDevice* _pDevice, Texture* _pOutTexture, int _size, const color& _color)
+bool CreateCircleTexture(GraphicDevice* _pDevice, Texture* _pOutTexture, _s32 _size, const color& _color)
 {
 	const _f32 center = _size * 0.5f;
 	const _f32 radius = _size * 0.5f - 2.0f;	// 가장자리 2픽셀 여유
@@ -46,9 +50,9 @@ bool CreateCircleTexture(GraphicDevice* _pDevice, Texture* _pOutTexture, int _si
 	jc::Vector<_u8> pixels;
 	pixels.Resize(_size * _size * 4);
 
-	for (int y = 0; y < _size; ++y)
+	for (_s32 y = 0; y < _size; ++y)
 	{
-		for (int x = 0; x < _size; ++x)
+		for (_s32 x = 0; x < _size; ++x)
 		{
 			// 원 중심으로부터의 거리로 안/밖 판정
 			const _f32 dx = (x + 0.5f) - center;
@@ -58,7 +62,7 @@ bool CreateCircleTexture(GraphicDevice* _pDevice, Texture* _pOutTexture, int _si
 			// 경계 1.5픽셀 구간을 부드럽게 처리 (안티에일리어싱)
 			const _f32 alpha = Clamp((radius - dist) / 1.5f, 0.0f, 1.0f);
 
-			const int idx = (y * _size + x) * 4;
+			const _s32 idx = (y * _size + x) * 4;
 			pixels[idx + 0] = (_u8)(_color.r * 255.0f * alpha);
 			pixels[idx + 1] = (_u8)(_color.g * 255.0f * alpha);
 			pixels[idx + 2] = (_u8)(_color.b * 255.0f * alpha);

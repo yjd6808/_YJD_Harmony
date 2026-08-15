@@ -16,4 +16,4 @@ void PrintSceneGraphExplanation();
 // @param _pOutTexture : 결과 텍스처
 // @param _size        : 텍스처 한 변 픽셀 수
 // @param _color       : 원 색상
-bool CreateCircleTexture(sgf::GraphicDevice* _pDevice, sgf::Texture* _pOutTexture, int _size, const jc::color& _color);
+bool CreateCircleTexture(sgf::GraphicDevice* _pDevice, sgf::Texture* _pOutTexture, _s32 _size, const jc::color& _color);

@@ -8,6 +8,7 @@
 #include "Core.h"
 #include "sgfr/Tutorial/10_WorldTransform/10_WorldTransform_Function.h"
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 상수 버퍼로 변환 행렬을 받는 HLSL 셰이더 소스를 반환한다.
 //
 // [row_major가 붙는 이유]
@@ -56,14 +57,15 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 )";
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 행렬 결합과 계층 구조의 원리를 콘솔에 출력한다. (학습용)
 void PrintHierarchyExplanation()
 {
-	printf("\n[계층 변환의 핵심]\n");
-	printf(" 태양 월드 = 태양 로컬(자전 x 이동)\n");
-	printf(" 지구 월드 = 지구 로컬 x 태양 공전 행렬\n");
-	printf(" 달   월드 = 달 로컬 x 지구 공전 행렬 x 태양 공전 행렬\n");
-	printf(" => 부모가 움직이면 자식은 자동으로 따라 움직인다!\n");
-	printf(" (행 벡터 규약이므로 왼쪽에 있는 행렬이 먼저 적용된다)\n");
-	printf(" 이것이 바로 씬 그래프(Scene Graph)의 원리다. Cocos2d-x의 addChild도 똑같다!\n\n");
+	jc::Console::WriteLine("\n[계층 변환의 핵심]");
+	jc::Console::WriteLine(" 태양 월드 = 태양 로컬(자전 x 이동)");
+	jc::Console::WriteLine(" 지구 월드 = 지구 로컬 x 태양 공전 행렬");
+	jc::Console::WriteLine(" 달   월드 = 달 로컬 x 지구 공전 행렬 x 태양 공전 행렬");
+	jc::Console::WriteLine(" => 부모가 움직이면 자식은 자동으로 따라 움직인다!");
+	jc::Console::WriteLine(" (행 벡터 규약이므로 왼쪽에 있는 행렬이 먼저 적용된다)");
+	jc::Console::WriteLine(" 이것이 바로 씬 그래프(Scene Graph)의 원리다. Cocos2d-x의 addChild도 똑같다!\n");
 }

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 8:22:00 AM
  * =====================
@@ -19,10 +19,10 @@ InputManager::InputManager()
 	, mouseY_(0)
 	, wheelDelta_(0)
 {
-	memset(bKeyDown_, 0, sizeof(bKeyDown_));
-	memset(bPrevKeyDown_, 0, sizeof(bPrevKeyDown_));
-	memset(bMouseDown_, 0, sizeof(bMouseDown_));
-	memset(bPrevMouseDown_, 0, sizeof(bPrevMouseDown_));
+	memset(keyDown_, 0, sizeof(keyDown_));
+	memset(prevKeyDown_, 0, sizeof(prevKeyDown_));
+	memset(mouseDown_, 0, sizeof(mouseDown_));
+	memset(prevMouseDown_, 0, sizeof(prevMouseDown_));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -46,15 +46,15 @@ bool InputManager::HandleMessage(UINT _msg, WPARAM _wParam, LPARAM _lParam)
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:		// ALT 조합 키도 동일하게 처리
 	{
-		const int vkCode = int(_wParam);
-		if (vkCode >= 0 && vkCode < KEY_COUNT)
+		const _s32 virtualKeyCode = _s32(_wParam);
+		if (virtualKeyCode >= 0 && virtualKeyCode < KEY_COUNT)
 		{
 			// 30번 비트 == 0 일 때만 "처음 눌린 것"
-			const bool bFirstPress = (_lParam & (1 << 30)) == 0;
-			bKeyDown_[vkCode] = true;
-			if (bFirstPress)
+			const bool firstPress = (_lParam & (1 << 30)) == 0;
+			keyDown_[virtualKeyCode] = true;
+			if (firstPress)
 			{
-				onKeyPressed.Invoke(vkCode);
+				onKeyPressed.Invoke(virtualKeyCode);
 			}
 		}
 		return true;
@@ -62,11 +62,11 @@ bool InputManager::HandleMessage(UINT _msg, WPARAM _wParam, LPARAM _lParam)
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
 	{
-		const int vkCode = int(_wParam);
-		if (vkCode >= 0 && vkCode < KEY_COUNT)
+		const _s32 virtualKeyCode = _s32(_wParam);
+		if (virtualKeyCode >= 0 && virtualKeyCode < KEY_COUNT)
 		{
-			bKeyDown_[vkCode] = false;
-			onKeyReleased.Invoke(vkCode);
+			keyDown_[virtualKeyCode] = false;
+			onKeyReleased.Invoke(virtualKeyCode);
 		}
 		return true;
 	}
@@ -75,27 +75,27 @@ bool InputManager::HandleMessage(UINT _msg, WPARAM _wParam, LPARAM _lParam)
 	// GET_X_LPARAM/GET_Y_LPARAM은 windowsx.h의 매크로로,
 	// _lParam에 묶인 16비트씩의 x/y를 부호 있게 꺼낸다.
 	case WM_LBUTTONDOWN:
-		bMouseDown_[int(MouseButton::Left)] = true;
+		mouseDown_[_s32(MouseButton::Left)] = true;
 		onMousePressed.Invoke(MouseButton::Left, GET_X_LPARAM(_lParam), GET_Y_LPARAM(_lParam));
 		return true;
 	case WM_LBUTTONUP:
-		bMouseDown_[int(MouseButton::Left)] = false;
+		mouseDown_[_s32(MouseButton::Left)] = false;
 		onMouseReleased.Invoke(MouseButton::Left, GET_X_LPARAM(_lParam), GET_Y_LPARAM(_lParam));
 		return true;
 	case WM_RBUTTONDOWN:
-		bMouseDown_[int(MouseButton::Right)] = true;
+		mouseDown_[_s32(MouseButton::Right)] = true;
 		onMousePressed.Invoke(MouseButton::Right, GET_X_LPARAM(_lParam), GET_Y_LPARAM(_lParam));
 		return true;
 	case WM_RBUTTONUP:
-		bMouseDown_[int(MouseButton::Right)] = false;
+		mouseDown_[_s32(MouseButton::Right)] = false;
 		onMouseReleased.Invoke(MouseButton::Right, GET_X_LPARAM(_lParam), GET_Y_LPARAM(_lParam));
 		return true;
 	case WM_MBUTTONDOWN:
-		bMouseDown_[int(MouseButton::Middle)] = true;
+		mouseDown_[_s32(MouseButton::Middle)] = true;
 		onMousePressed.Invoke(MouseButton::Middle, GET_X_LPARAM(_lParam), GET_Y_LPARAM(_lParam));
 		return true;
 	case WM_MBUTTONUP:
-		bMouseDown_[int(MouseButton::Middle)] = false;
+		mouseDown_[_s32(MouseButton::Middle)] = false;
 		onMouseReleased.Invoke(MouseButton::Middle, GET_X_LPARAM(_lParam), GET_Y_LPARAM(_lParam));
 		return true;
 
@@ -121,57 +121,57 @@ bool InputManager::HandleMessage(UINT _msg, WPARAM _wParam, LPARAM _lParam)
 // 매 프레임 끝에 호출: 현재 상태를 이전 프레임 상태로 복사
 void InputManager::NextFrame()
 {
-	memcpy(bPrevKeyDown_, bKeyDown_, sizeof(bKeyDown_));
-	memcpy(bPrevMouseDown_, bMouseDown_, sizeof(bMouseDown_));
+	memcpy(prevKeyDown_, keyDown_, sizeof(keyDown_));
+	memcpy(prevMouseDown_, mouseDown_, sizeof(mouseDown_));
 	wheelDelta_ = 0;	// 휠은 "이번 프레임 이동량"이므로 매 프레임 리셋
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 지금 키가 눌려있는가?
-bool InputManager::IsKeyDown(int _vkCode) const
+bool InputManager::IsKeyDown(_s32 _virtualKeyCode) const
 {
-	if (_vkCode < 0 || _vkCode >= KEY_COUNT) { return false; }
-	return bKeyDown_[_vkCode];
+	if (_virtualKeyCode < 0 || _virtualKeyCode >= KEY_COUNT) { return false; }
+	return keyDown_[_virtualKeyCode];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 이번 프레임에 막 눌렸는가? (현재는 눌림 + 이전엔 안 눌림)
-bool InputManager::IsKeyPressed(int _vkCode) const
+bool InputManager::IsKeyPressed(_s32 _virtualKeyCode) const
 {
-	if (_vkCode < 0 || _vkCode >= KEY_COUNT) { return false; }
-	return bKeyDown_[_vkCode] && !bPrevKeyDown_[_vkCode];
+	if (_virtualKeyCode < 0 || _virtualKeyCode >= KEY_COUNT) { return false; }
+	return keyDown_[_virtualKeyCode] && !prevKeyDown_[_virtualKeyCode];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 이번 프레임에 막 떼졌는가? (현재는 안 눌림 + 이전엔 눌림)
-bool InputManager::IsKeyReleased(int _vkCode) const
+bool InputManager::IsKeyReleased(_s32 _virtualKeyCode) const
 {
-	if (_vkCode < 0 || _vkCode >= KEY_COUNT) { return false; }
-	return !bKeyDown_[_vkCode] && bPrevKeyDown_[_vkCode];
+	if (_virtualKeyCode < 0 || _virtualKeyCode >= KEY_COUNT) { return false; }
+	return !keyDown_[_virtualKeyCode] && prevKeyDown_[_virtualKeyCode];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 지금 버튼이 눌려있는가?
 bool InputManager::IsMouseDown(MouseButton _button) const
 {
-	if (int(_button) < 0 || int(_button) >= int(MouseButton::Max)) { return false; }
-	return bMouseDown_[int(_button)];
+	if (_s32(_button) < 0 || _s32(_button) >= _s32(MouseButton::Max)) { return false; }
+	return mouseDown_[_s32(_button)];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 이번 프레임에 막 클릭되었는가?
 bool InputManager::IsMousePressed(MouseButton _button) const
 {
-	if (int(_button) < 0 || int(_button) >= int(MouseButton::Max)) { return false; }
-	return bMouseDown_[int(_button)] && !bPrevMouseDown_[int(_button)];
+	if (_s32(_button) < 0 || _s32(_button) >= _s32(MouseButton::Max)) { return false; }
+	return mouseDown_[_s32(_button)] && !prevMouseDown_[_s32(_button)];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 이번 프레임에 막 떼졌는가?
 bool InputManager::IsMouseReleased(MouseButton _button) const
 {
-	if (int(_button) < 0 || int(_button) >= int(MouseButton::Max)) { return false; }
-	return !bMouseDown_[int(_button)] && bPrevMouseDown_[int(_button)];
+	if (_s32(_button) < 0 || _s32(_button) >= _s32(MouseButton::Max)) { return false; }
+	return !mouseDown_[_s32(_button)] && prevMouseDown_[_s32(_button)];
 }
 
 NS_SGF_END

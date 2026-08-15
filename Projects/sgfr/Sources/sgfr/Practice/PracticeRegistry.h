@@ -18,9 +18,9 @@ namespace sgfr
 {
 
 // 등록된 연습 튜토리얼 개수를 반환한다.
-int PracticeCount();
+_s32 PracticeCount();
 
 // _index(0부터 시작)번째 연습 튜토리얼 정보를 반환한다.
-const TutorialEntry& PracticeAt(int _index);
+const TutorialEntry& PracticeAt(_s32 _index);
 
 }

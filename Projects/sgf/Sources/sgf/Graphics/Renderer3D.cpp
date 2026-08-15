@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 9:40:00 AM
  * =====================
@@ -171,7 +171,7 @@ static void sAddQuad(jc::Vector<VertexPC>& _vertices,
 // 삼각형 하나 배치. (바깥에서 볼 때 시계 방향 순서가 앞면이다)
 void Renderer3D::DrawTriangle(const vec3& _p0, const vec3& _p1, const vec3& _p2, const color& _color)
 {
-	jc_assert(bBegun_);
+	jc_assert(begun_);
 
 	if (triangleVertices_.Size() + 3 > MAX_TRIANGLES * 3)
 	{
@@ -189,7 +189,7 @@ void Renderer3D::DrawTriangle(const vec3& _p0, const vec3& _p1, const vec3& _p2,
 // 면마다 밝기 계수를 달리 적용한다. (윗면이 가장 밝고 아랫면이 가장 어둡다)
 void Renderer3D::DrawCube(const vec3& _center, const vec3& _size, const color& _color)
 {
-	jc_assert(bBegun_);
+	jc_assert(begun_);
 
 	// 큐브 한 개 = 6면 x 삼각형 2개 x 정점 3개 = 36 정점
 	if (triangleVertices_.Size() + 36 > MAX_TRIANGLES * 3)
@@ -248,7 +248,7 @@ void Renderer3D::DrawCube(const vec3& _center, const vec3& _size, const color& _
 // 3D 선분 하나 배치.
 void Renderer3D::DrawLine3D(const vec3& _from, const vec3& _to, const color& _color)
 {
-	jc_assert(bBegun_);
+	jc_assert(begun_);
 
 	if (lineVertices_.Size() + 2 > MAX_LINES * 2)
 	{

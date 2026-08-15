@@ -39,7 +39,7 @@ void VertexIndexBuffer_Main()
 	Window window;
 	if (!window.Create(L"07. 정점/인덱스 버퍼 - 사각형 (ESC로 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -49,7 +49,7 @@ void VertexIndexBuffer_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -75,7 +75,7 @@ void VertexIndexBuffer_Main()
 	if (!vb.Create(&device, vertices, sizeof(VertexPC), 4) ||
 		!ib.Create(&device, indices, 6))
 		{
-		printf("버퍼 생성 실패!\n");
+		jc::Console::WriteLine("버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -88,13 +88,13 @@ void VertexIndexBuffer_Main()
 	Shader shader;
 	if (!shader.CompileFromString(&device, PassThroughShaderSource(), pLayoutDescs, layoutCount))
 	{
-		printf("셰이더 컴파일 실패!\n");
+		jc::Console::WriteLine("셰이더 컴파일 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
-	printf("꼭짓점 4개 + 인덱스 6개로 사각형을 그렸습니다.\n");
+	jc::Console::WriteLine("꼭짓점 4개 + 인덱스 6개로 사각형을 그렸습니다.");
 
 	// 5. 렌더 루프
 	while (window.PumpMessage())

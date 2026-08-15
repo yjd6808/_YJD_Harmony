@@ -11,6 +11,8 @@
 using namespace sgf;
 using namespace jc;
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // [패스 1] 빛 시점에서 깊이만 기록하는 HLSL 셰이더 소스를 반환한다.
 //
 // [왜 깊이만 기록하나?]
@@ -51,6 +53,8 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 }
 )";
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
 
 // [패스 2] 그림자 맵을 비교해 그늘진 곳을 어둡게 그리는 HLSL 셰이더 소스를 반환한다.
 //
@@ -155,32 +159,36 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 )";
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // 그림자 매핑의 2패스 원리와 그림자 여드름(acne)/바이어스를 콘솔에 출력한다. (학습용)
 void PrintShadowExplanation()
 {
-	printf("\n[그림자 매핑(Shadow Mapping)의 핵심 아이디어]\n");
-	printf(" \"빛의 입장에서 보이지 않는 곳이 그림자다!\"\n\n");
-	printf("[Before/After 비교 뷰]\n");
-	printf(" 노란 세로선 왼쪽  = 그림자 없음(Before): 라이팅만 있는 세상\n");
-	printf(" 노란 세로선 오른쪽 = 그림자 적용(After): 큐브의 그림자가 바닥에 드리워진다\n");
-	printf(" 그림자 하나가 공간감을 얼마나 바꾸는지 눈으로 비교해보자!\n\n");
-	printf("[2패스 구조]\n");
-	printf(" 패스 1: 카메라를 빛의 위치에 놓고 장면의 '깊이만' 텍스처에 기록 (그림자 맵)\n");
-	printf(" 패스 2: 보통처럼 그리되, 각 픽셀을 빛 시점으로 재투영해서 비교:\n");
-	printf("   '내 깊이 > 그림자 맵의 깊이' 이면 내 앞에 뭔가 있다 = 그늘진 곳!\n\n");
-	printf("[그림자 여드름(Shadow Acne)과 바이어스]\n");
-	printf(" 그림자 맵 해상도의 한계로 자기 자신이 자기를 가린다고 오판하면 줄무늬가 생긴다.\n");
-	printf(" 깊이 비교에 작은 여유(바이어스)를 두면 해결! (단, 크면 그림자가 물체에서 분리된다)\n\n");
-	printf("[조작법]\n");
-	printf(" 왼쪽/오른쪽 방향키: 태양(빛) 방향 회전 -> 오른쪽 화면의 그림자가 따라 움직인다!\n");
-	printf(" 위/아래 방향키: 바이어스 조절 -> 오른쪽에서만 줄무늬 현상을 관찰할 수 있다\n\n");
+	jc::Console::WriteLine("\n[그림자 매핑(Shadow Mapping)의 핵심 아이디어]");
+	jc::Console::WriteLine(" \"빛의 입장에서 보이지 않는 곳이 그림자다!\"\n");
+	jc::Console::WriteLine("[Before/After 비교 뷰]");
+	jc::Console::WriteLine(" 노란 세로선 왼쪽  = 그림자 없음(Before): 라이팅만 있는 세상");
+	jc::Console::WriteLine(" 노란 세로선 오른쪽 = 그림자 적용(After): 큐브의 그림자가 바닥에 드리워진다");
+	jc::Console::WriteLine(" 그림자 하나가 공간감을 얼마나 바꾸는지 눈으로 비교해보자!\n");
+	jc::Console::WriteLine("[2패스 구조]");
+	jc::Console::WriteLine(" 패스 1: 카메라를 빛의 위치에 놓고 장면의 '깊이만' 텍스처에 기록 (그림자 맵)");
+	jc::Console::WriteLine(" 패스 2: 보통처럼 그리되, 각 픽셀을 빛 시점으로 재투영해서 비교:");
+	jc::Console::WriteLine("   '내 깊이 > 그림자 맵의 깊이' 이면 내 앞에 뭔가 있다 = 그늘진 곳!\n");
+	jc::Console::WriteLine("[그림자 여드름(Shadow Acne)과 바이어스]");
+	jc::Console::WriteLine(" 그림자 맵 해상도의 한계로 자기 자신이 자기를 가린다고 오판하면 줄무늬가 생긴다.");
+	jc::Console::WriteLine(" 깊이 비교에 작은 여유(바이어스)를 두면 해결! (단, 크면 그림자가 물체에서 분리된다)\n");
+	jc::Console::WriteLine("[조작법]");
+	jc::Console::WriteLine(" 왼쪽/오른쪽 방향키: 태양(빛) 방향 회전 -> 오른쪽 화면의 그림자가 따라 움직인다!");
+	jc::Console::WriteLine(" 위/아래 방향키: 바이어스 조절 -> 오른쪽에서만 줄무늬 현상을 관찰할 수 있다\n");
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
 
 // 면별 법선을 가진 정육면체 정점 24개와 인덱스 36개를 채운다. (14번과 동일 패턴)
 void FillShadowCube(VertexPNT* _pOutVertices24, _u32* _pOutIndices36)
 {
-	int vertexBase = 0;
-	int indexBase = 0;
+	_s32 vertexBase = 0;
+	_s32 indexBase = 0;
 
 	// 한 면(사각형)을 추가하는 보조 람다: 중심 방향 법선과 두 접선 벡터로 4점을 만든다.
 	auto AddFace = [&](const vec3& _normal, const vec3& _up, const vec3& _right)
@@ -211,6 +219,8 @@ void FillShadowCube(VertexPNT* _pOutVertices24, _u32* _pOutIndices36)
 	AddFace(vec3(0.0f, +1.0f, 0.0f), vec3(0.0f, 0.0f, +1.0f), vec3(1.0f, 0.0f, 0.0f));	// 윗면   (+Y)
 	AddFace(vec3(0.0f, -1.0f, 0.0f), vec3(0.0f, 0.0f, -1.0f), vec3(1.0f, 0.0f, 0.0f));	// 아랫면 (-Y)
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
 
 // 위를 바라보는 바닥 평면(사각형) 정점 4개와 인덱스 6개를 채운다.
 void FillGroundPlane(VertexPNT* _pOutVertices4, _u32* _pOutIndices6, _f32 _halfSize)

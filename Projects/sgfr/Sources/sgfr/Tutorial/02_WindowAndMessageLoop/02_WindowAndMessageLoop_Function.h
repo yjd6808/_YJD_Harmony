@@ -9,4 +9,4 @@
 
 // 가상 키코드(VK_*)를 사람이 읽기 쉬운 이름으로 바꿔 반환한다.
 // 예) VK_ESCAPE -> "ESC", 0x41 -> "A"
-const char* VkCodeToName(int _vkCode);
+const char* VkCodeToName(_s32 _vkCode);

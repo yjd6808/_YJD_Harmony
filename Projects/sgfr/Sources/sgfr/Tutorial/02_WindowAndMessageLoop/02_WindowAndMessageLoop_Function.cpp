@@ -12,7 +12,7 @@
 // [가상 키코드란?]
 //  키보드 종류와 상관없이 OS가 약속한 키 번호다.
 //  숫자/알파벳 키는 ASCII 코드와 값이 같다. ('A' == 0x41 == VK_A)
-const char* VkCodeToName(int _vkCode)
+const char* VkCodeToName(_s32 _vkCode)
 {
 	switch (_vkCode)
 	{
@@ -30,10 +30,10 @@ const char* VkCodeToName(int _vkCode)
 	}
 
 	// 알파벳/숫자는 문자 그대로 보여준다. (정적 버퍼 사용: 단순 로그용)
-	static char s_szName[2] = { 0, 0 };
+	static _s8 s_szName[2] = { 0, 0 };
 	if ((_vkCode >= '0' && _vkCode <= '9') || (_vkCode >= 'A' && _vkCode <= 'Z'))
 	{
-		s_szName[0] = (char)_vkCode;
+		s_szName[0] = (_s8)_vkCode;
 		return s_szName;
 	}
 	return "(기타)";

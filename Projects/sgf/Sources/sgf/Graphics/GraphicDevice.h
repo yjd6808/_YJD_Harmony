@@ -78,19 +78,19 @@ public:
 	void BeginFrame(Window* _pWindow, const color& _clearColor);
 
 	// [v2.1] 지정 윈도우의 백버퍼를 화면에 표시한다.
-	void EndFrame(Window* _pWindow, bool _bVsync = true);
+	void EndFrame(Window* _pWindow, bool _vsync = true);
 
 	// [하위 호환] 내장 표면(단일 창 경로)을 지우고 그릴 준비를 한다.
 	void BeginFrame(const color& _clearColor);
 
 	// [하위 호환] 내장 표면의 백버퍼를 화면에 표시한다.
-	void EndFrame(bool _bVsync = true);
+	void EndFrame(bool _vsync = true);
 
 	// 알파 블렌딩(반투명 합성) 켜기/끄기
-	void SetAlphaBlending(bool _bEnable);
+	void SetAlphaBlending(bool _enable);
 
 	// 깊이 테스트 켜기/끄기 (3D는 켜고, 2D는 보통 끄고 그리는 순서로 적층)
-	void SetDepthTest(bool _bEnable);
+	void SetDepthTest(bool _enable);
 
 	// 블렌드 모드를 설정한다. SetAlphaBlending보다 세분화된 버전.
 	void SetBlendMode(BlendMode _mode);
@@ -99,7 +99,7 @@ public:
 	void SetSampler(SamplerFilter _filter, SamplerAddress _address, UINT _slot = 0);
 
 	// 와이어프레임(면 대신 선만 그리기) 켜기/끄기. 현재 컬링 모드는 유지된다.
-	void SetWireframe(bool _bEnable);
+	void SetWireframe(bool _enable);
 
 	// 컬링 모드를 설정한다. 현재 와이어프레임 여부는 유지된다.
 	void SetCullMode(CullMode _mode);
@@ -160,7 +160,7 @@ private:
 	GraphicContext context_;			// [v3] 그리기 명령 창구 (바인딩 캐시 포함)
 
 	Window* pBoundWindow_;	// 현재 BeginFrame(Window*)로 묶인 창 (구버전 경로면 nullptr)
-	bool bWireframe_;		// 현재 와이어프레임 여부
+	bool wireframe_;		// 현재 와이어프레임 여부
 	CullMode cullMode_;	// 현재 컬링 모드
 	_s32 width_;			// 현재 그리기 대상 가로
 	_s32 height_;			// 현재 그리기 대상 세로

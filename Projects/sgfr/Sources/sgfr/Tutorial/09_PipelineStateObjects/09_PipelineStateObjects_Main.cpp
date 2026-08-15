@@ -57,6 +57,7 @@ float4 PSMain(VsOut _in) : SV_Target
 }
 )";
 
+	//////////////////////////////////////////////////////////////////////////////////////////
 	// 사각형 하나를 메시로 만든다. (중심 _center, 반 변 _halfSize, 색 _color)
 	bool BuildQuadMesh(
 		sgf::GraphicDevice* _pDevice,
@@ -83,6 +84,7 @@ float4 PSMain(VsOut _in) : SV_Target
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 파이프라인 상태 객체 튜토리얼을 실행한다. (상태 객체를 손으로 교체해보기)
 void PipelineStateObjects_Main()
 {
@@ -90,7 +92,7 @@ void PipelineStateObjects_Main()
 	Window window;
 	if (!window.Create(L"09. 파이프라인 상태 객체 (1/2 채우기, 3/4 블렌드, ESC 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -100,7 +102,7 @@ void PipelineStateObjects_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -113,7 +115,7 @@ void PipelineStateObjects_Main()
 	if (!vs.InitializeFromSource(&device, PASSTHROUGH_SHADER_SOURCE) ||
 		!ps.InitializeFromSource(&device, PASSTHROUGH_SHADER_SOURCE))
 	{
-		printf("셰이더 컴파일 실패!\n");
+		jc::Console::WriteLine("셰이더 컴파일 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -125,7 +127,7 @@ void PipelineStateObjects_Main()
 	if (!BuildQuadMesh(&device, &vs, &backQuad, vec2(-0.15f, 0.0f), 0.5f, color(0.2f, 0.6f, 1.0f, 1.0f)) ||
 		!BuildQuadMesh(&device, &vs, &frontQuad, vec2(0.15f, 0.0f), 0.5f, color(1.0f, 0.4f, 0.2f, 0.5f)))
 	{
-		printf("메시 생성 실패!\n");
+		jc::Console::WriteLine("메시 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -145,13 +147,13 @@ void PipelineStateObjects_Main()
 		!blendAlpha.Initialize(&device, BlendMode::bmAlpha) ||
 		!depthDisabled.Initialize(&device, DepthMode::dmDisabled))
 	{
-		printf("상태 객체 생성 실패!\n");
+		jc::Console::WriteLine("상태 객체 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
-	printf("1/2로 채우기, 3/4로 블렌드를 바꿔보세요!\n");
+	jc::Console::WriteLine("1/2로 채우기, 3/4로 블렌드를 바꿔보세요!");
 
 	// 5. 렌더 루프
 	RasterizerState* pCurrentRs = &rsSolid;

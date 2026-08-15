@@ -42,10 +42,10 @@ namespace
 		jc::Console::WriteLine(" sgf 튜토리얼 목차");
 		jc::Console::WriteLine("==========================================");
 
-		const int count = sgfr::TutorialCount();
-		for (int i = 0; i < count; ++i)
+		const _s32 count = sgfr::TutorialCount();
+		for (_s32 i = 0; i < count; ++i)
 		{
-			jc::Console::WriteLine("  %2d. %s", i + 1, sgfr::TutorialAt(i).Name_);
+			jc::Console::WriteLine("  %2d. %s", i + 1, sgfr::TutorialAt(i).name_);
 		}
 
 		jc::Console::WriteLine("   0. 메인 메뉴로");
@@ -61,10 +61,10 @@ namespace
 		jc::Console::WriteLine(" sgf 튜토리얼 - Practice (연습)");
 		jc::Console::WriteLine("==========================================");
 
-		const int count = sgfr::PracticeCount();
-		for (int i = 0; i < count; ++i)
+		const _s32 count = sgfr::PracticeCount();
+		for (_s32 i = 0; i < count; ++i)
 		{
-			jc::Console::WriteLine("  %2d. %s", i + 1, sgfr::PracticeAt(i).Name_);
+			jc::Console::WriteLine("  %2d. %s", i + 1, sgfr::PracticeAt(i).name_);
 		}
 
 		jc::Console::WriteLine("   0. 메인 메뉴로");
@@ -73,12 +73,12 @@ namespace
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// 번호 입력 (잘못된 입력이면 -1 반환)
-	int ReadSelection()
+	_s32 ReadSelection()
 	{
-		char szLine[64];
+		_s8 szLine[64];
 		jc::Console::ReadLineBuffered("번호 입력: ", szLine, sizeof(szLine));
 
-		int selection = -1;
+		_s32 selection = -1;
 		if (sscanf_s(szLine, "%d", &selection) != 1)
 		{
 			return -1;
@@ -88,7 +88,7 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int main(int _argc, char** _argv)
+_s32 main(_s32 _argc, _s8** _argv)
 {
 	// 한글 출력이 깨지지 않도록 콘솔 코드페이지를 UTF-8로 설정한다.
 	jc::InitializeJCore(_argc, _argv);
@@ -105,7 +105,7 @@ int main(int _argc, char** _argv)
 	{
 		PrintMainMenu();
 
-		const int mainSelection = ReadSelection();
+		const _s32 mainSelection = ReadSelection();
 		if (mainSelection == 0)
 		{
 			jc::Console::WriteLine("종료합니다.");
@@ -119,7 +119,7 @@ int main(int _argc, char** _argv)
 		}
 
 		// Practice 메뉴 (2번)
-		const int practice = (mainSelection == 2) ? 1 : 0;
+		const _s32 practice = (mainSelection == 2) ? 1 : 0;
 
 		for (;;)
 		{
@@ -132,13 +132,13 @@ int main(int _argc, char** _argv)
 				PrintTutorialMenu();
 			}
 
-			const int selection = ReadSelection();
+			const _s32 selection = ReadSelection();
 			if (selection == 0)
 			{
 				break;
 			}
 
-			const int count = practice ? sgfr::PracticeCount() : sgfr::TutorialCount();
+			const _s32 count = practice ? sgfr::PracticeCount() : sgfr::TutorialCount();
 			if (selection < 1 || selection > count)
 			{
 				jc::Console::WriteLine("잘못된 번호입니다. 다시 입력해주세요.");
@@ -147,9 +147,9 @@ int main(int _argc, char** _argv)
 
 			const sgfr::TutorialEntry& entry = practice ? sgfr::PracticeAt(selection - 1) : sgfr::TutorialAt(selection - 1);
 			jc::Console::WriteLine("");
-			jc::Console::WriteLine("=== [%d] %s 시작 ===", selection, entry.Name_);
-			entry.Fn_();
-			jc::Console::WriteLine("=== [%d] %s 종료 ===", selection, entry.Name_);
+			jc::Console::WriteLine("=== [%d] %s 시작 ===", selection, entry.name_);
+			entry.fn_();
+			jc::Console::WriteLine("=== [%d] %s 종료 ===", selection, entry.name_);
 		}
 	}
 

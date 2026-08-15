@@ -95,7 +95,7 @@ void ShaderStagesAndConstants_Main()
 	Window window;
 	if (!window.Create(L"12. 셰이더 스테이지와 상수버퍼 (ESC 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -105,7 +105,7 @@ void ShaderStagesAndConstants_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -118,7 +118,7 @@ void ShaderStagesAndConstants_Main()
 	if (!vs.InitializeFromSource(&device, STAGE_DEMO_SHADER_SOURCE) ||
 		!ps.InitializeFromSource(&device, STAGE_DEMO_SHADER_SOURCE))
 	{
-		printf("셰이더 컴파일 실패!\n");
+		jc::Console::WriteLine("셰이더 컴파일 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -139,7 +139,7 @@ void ShaderStagesAndConstants_Main()
 	Mesh quad;
 	if (!quad.Initialize(&device, vertices, sizeof(VertexPTC), 4, pLayoutDescs, layoutCount, &vs, indices, 6))
 	{
-		printf("메시 생성 실패!\n");
+		jc::Console::WriteLine("메시 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -150,13 +150,13 @@ void ShaderStagesAndConstants_Main()
 	ConstantBuffer<CbObject> objectCb;
 	if (!frameCb.Create(&device) || !objectCb.Create(&device))
 	{
-		printf("상수버퍼 생성 실패!\n");
+		jc::Console::WriteLine("상수버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
-	printf("b0(프레임)/b1(오브젝트) 슬롯 규약을 눈으로 확인하세요!\n");
+	jc::Console::WriteLine("b0(프레임)/b1(오브젝트) 슬롯 규약을 눈으로 확인하세요!");
 
 	// 4. 렌더 루프
 	FrameTimer timer;

@@ -56,7 +56,7 @@ void RasterizerState_Main()
 	Window window;
 	if (!window.Create(L"19. 래스터라이저 스테이트 (W 와이어, 1/2/3 컬링, ESC 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -66,7 +66,7 @@ void RasterizerState_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -81,7 +81,7 @@ void RasterizerState_Main()
 	if (!vb.Create(&device, vertices, sizeof(VertexPC), 8) ||
 		!ib.Create(&device, indices, 36))
 		{
-		printf("버퍼 생성 실패!\n");
+		jc::Console::WriteLine("버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -96,7 +96,7 @@ void RasterizerState_Main()
 	if (!shader.CompileFromString(&device, ColorTransformShaderSource(), pLayoutDescs, layoutCount) ||
 		!cbTransform.Create(&device))
 		{
-		printf("셰이더/상수 버퍼 생성 실패!\n");
+		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -115,7 +115,7 @@ void RasterizerState_Main()
 		wchar_t szTitle[256];
 		swprintf_s(szTitle, L"19. 래스터라이저 - 왼쪽: Solid+Back(기준) | 오른쪽: %s / %s (W, 1/2/3, ESC)",
 			bWireframe ? L"Wireframe(선)" : L"Solid(면)",
-			s_szCullNames[static_cast<int>(cullMode)]);
+			s_szCullNames[static_cast<_s32>(cullMode)]);
 		window.SetTitle(szTitle);
 	};
 	UpdateTitle();

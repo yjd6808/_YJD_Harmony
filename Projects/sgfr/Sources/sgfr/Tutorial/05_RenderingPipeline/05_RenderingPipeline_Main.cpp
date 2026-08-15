@@ -39,7 +39,7 @@ void RenderingPipeline_Main()
 	Window window;
 	if (!window.Create(L"05. 렌더링 파이프라인 - 첫 삼각형 (ESC로 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -49,7 +49,7 @@ void RenderingPipeline_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -68,7 +68,7 @@ void RenderingPipeline_Main()
 	VertexBuffer vb;
 	if (!vb.Create(&device, vertices, sizeof(VertexPC), 3))
 	{
-		printf("정점 버퍼 생성 실패!\n");
+		jc::Console::WriteLine("정점 버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -83,13 +83,13 @@ void RenderingPipeline_Main()
 	Shader shader;
 	if (!shader.CompileFromString(&device, TriangleShaderSource(), pLayoutDescs, layoutCount))
 	{
-		printf("셰이더 컴파일 실패!\n");
+		jc::Console::WriteLine("셰이더 컴파일 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
-	printf("삼각형이 보이면 성공! 세 꼭짓점 색이 부드럽게 섞이는 이유는 래스터라이저의 보간 때문이다.\n");
+	jc::Console::WriteLine("삼각형이 보이면 성공! 세 꼭짓점 색이 부드럽게 섞이는 이유는 래스터라이저의 보간 때문이다.");
 
 	// 5. 렌더 루프
 	while (window.PumpMessage())

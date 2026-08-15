@@ -54,7 +54,7 @@ void Lighting_Main()
 	Window window;
 	if (!window.Create(L"14. 라이팅 - 람버트 확산광 (↑↓ 주변광, ESC 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -64,7 +64,7 @@ void Lighting_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -79,7 +79,7 @@ void Lighting_Main()
 	if (!vb.Create(&device, vertices, sizeof(VertexPNT), 24) ||
 		!ib.Create(&device, indices, 36))
 		{
-		printf("버퍼 생성 실패!\n");
+		jc::Console::WriteLine("버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -96,7 +96,7 @@ void Lighting_Main()
 		!cbTransform.Create(&device) ||
 		!cbLight.Create(&device))
 		{
-		printf("셰이더/상수 버퍼 생성 실패!\n");
+		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -111,7 +111,7 @@ void Lighting_Main()
 	_f32 elapsed = 0.0f;
 	_f32 ambient = 0.15f;	// 주변광 기본값
 
-	printf("빛은 오른쪽 위 뒤에서 대각선으로 내리쪼입니다. ↑↓로 주변광을 조절해보세요.\n");
+	jc::Console::WriteLine("빛은 오른쪽 위 뒤에서 대각선으로 내리쪼입니다. ↑↓로 주변광을 조절해보세요.");
 
 	// 5. 렌더 루프
 	while (window.PumpMessage())

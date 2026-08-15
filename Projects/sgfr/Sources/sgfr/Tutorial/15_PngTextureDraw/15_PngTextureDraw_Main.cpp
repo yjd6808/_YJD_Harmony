@@ -36,7 +36,7 @@ void PngTextureDraw_Main()
 	Window window;
 	if (!window.Create(L"15. PNG 텍스처 그리기 (ESC로 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -46,7 +46,7 @@ void PngTextureDraw_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -57,16 +57,16 @@ void PngTextureDraw_Main()
 	Texture texture;
 	if (texture.LoadFromFile(&device, L"Resources\\sample.png"))
 	{
-		printf("Resources\\sample.png 로드 성공! (%d x %d)\n", texture.Width(), texture.Height());
+		jc::Console::Write("Resources\\sample.png 로드 성공! (%d x %d)\n", texture.Width(), texture.Height());
 	}
 	else if (CreateCheckerboardTexture(&device, &texture))
 	{
-		printf("sample.png가 없어 체커보드 텍스처로 대체합니다. (%d x %d)\n", texture.Width(), texture.Height());
-		printf("(실행 팏더에 Resources\\sample.png를 넣으면 진짜 PNG를 볼 수 있습니다)\n");
+		jc::Console::Write("sample.png가 없어 체커보드 텍스처로 대체합니다. (%d x %d)\n", texture.Width(), texture.Height());
+		jc::Console::WriteLine("(실행 팏더에 Resources\\sample.png를 넣으면 진짜 PNG를 볼 수 있습니다)");
 	}
 	else
 	{
-		printf("텍스처 생성 실패!\n");
+		jc::Console::WriteLine("텍스처 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -90,7 +90,7 @@ void PngTextureDraw_Main()
 	if (!vb.Create(&device, vertices, sizeof(VertexPTC), 4) ||
 		!ib.Create(&device, indices, 6))
 		{
-		printf("버퍼 생성 실패!\n");
+		jc::Console::WriteLine("버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -103,7 +103,7 @@ void PngTextureDraw_Main()
 	Shader shader;
 	if (!shader.CompileFromString(&device, TextureShaderSource(), pLayoutDescs, layoutCount))
 	{
-		printf("셰이더 컴파일 실패!\n");
+		jc::Console::WriteLine("셰이더 컴파일 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;

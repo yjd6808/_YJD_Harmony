@@ -51,7 +51,7 @@ void BlendState_Main()
 	Window window;
 	if (!window.Create(L"18. 블렌드 스테이트 (1~4 모드, ESC 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -61,7 +61,7 @@ void BlendState_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -73,7 +73,7 @@ void BlendState_Main()
 	Texture texture;
 	if (!texture.CreateFromMemory(&device, s_Pixels, 128, 128))
 	{
-		printf("텍스처 생성 실패!\n");
+		jc::Console::WriteLine("텍스처 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -88,7 +88,7 @@ void BlendState_Main()
 	if (!vb.Create(&device, vertices, sizeof(VertexPTC), 4, true) ||	// bDynamic = true!
 		!ib.Create(&device, indices, 6))
 		{
-		printf("버퍼 생성 실패!\n");
+		jc::Console::WriteLine("버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -101,7 +101,7 @@ void BlendState_Main()
 	Shader shader;
 	if (!shader.CompileFromString(&device, BlendQuadShaderSource(), pLayoutDescs, layoutCount))
 	{
-		printf("셰이더 컴파일 실패!\n");
+		jc::Console::WriteLine("셰이더 컴파일 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -114,7 +114,7 @@ void BlendState_Main()
 	{
 		wchar_t szTitle[256];
 		swprintf_s(szTitle, L"18. 블렌드 - 왼쪽: Opaque(기준) | 오른쪽: %s (1~4, ESC)",
-			s_szBlendNames[static_cast<int>(blendMode)]);
+			s_szBlendNames[static_cast<_s32>(blendMode)]);
 		window.SetTitle(szTitle);
 	};
 	UpdateTitle();
@@ -164,7 +164,7 @@ void BlendState_Main()
 		auto DrawCircleGroup = [&](const vec2& _groupCenter, GraphicDevice::BlendMode _mode)
 		{
 			device.SetBlendMode(_mode);
-			for (int c = 0; c < 3; ++c)
+			for (_s32 c = 0; c < 3; ++c)
 			{
 				// 각 원의 중심: 반지름 0.15짜리 궤도를 도는 위치 (서로 120도 차이)
 				const _f32 angle = elapsed * 0.8f + jc_math_pi2 * c / 3.0f;

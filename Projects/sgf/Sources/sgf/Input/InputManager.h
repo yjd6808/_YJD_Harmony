@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 8:20:00 AM
  * =====================
@@ -36,13 +36,13 @@ class InputManager
 {
 public:
 	// 키 이벤트 콜백 타입 (인자: 가상 키코드)
-	using KeyEvent = jc::Event<int>;
+	using KeyEvent = jc::Event<_s32>;
 	// 마우스 버튼 이벤트 콜백 타입 (인자: 버튼, x, y)
-	using MouseButtonEvent = jc::Event<MouseButton, int, int>;
+	using MouseButtonEvent = jc::Event<MouseButton, _s32, _s32>;
 	// 마우스 이동 이벤트 콜백 타입 (인자: x, y)
-	using MouseMoveEvent = jc::Event<int, int>;
+	using MouseMoveEvent = jc::Event<_s32, _s32>;
 	// 마우스 휠 이벤트 콜백 타입 (인자: 휠 랍크, +위로/-아래로)
-	using MouseWheelEvent = jc::Event<int>;
+	using MouseWheelEvent = jc::Event<_s32>;
 
 public:
 	InputManager();
@@ -58,13 +58,13 @@ public:
 	// === 폴링 API (키보드) ===
 
 	// 지금 키가 눌려있는가? (누르고 있는 내내 true)
-	bool IsKeyDown(int _vkCode) const;
+	bool IsKeyDown(_s32 _vkCode) const;
 
 	// 이번 프레임에 막 눌렸는가? (누른 순간 한 프레임만 true)
-	bool IsKeyPressed(int _vkCode) const;
+	bool IsKeyPressed(_s32 _vkCode) const;
 
 	// 이번 프레임에 막 떼졌는가? (떼는 순간 한 프레임만 true)
-	bool IsKeyReleased(int _vkCode) const;
+	bool IsKeyReleased(_s32 _vkCode) const;
 
 	// === 폴링 API (마우스) ===
 
@@ -78,11 +78,11 @@ public:
 	bool IsMouseReleased(MouseButton _button) const;
 
 	// 마우스 커서 위치 (클라이언트 영역 기준 픽셀 좌표, 좌상단 원점)
-	int MouseX() const { return mouseX_; }
-	int MouseY() const { return mouseY_; }
+	_s32 MouseX() const { return mouseX_; }
+	_s32 MouseY() const { return mouseY_; }
 
 	// 이번 프레임의 휠 이동량 (+위로 / -아래로 / 0이면 안 굴림)
-	int WheelDelta() const { return wheelDelta_; }
+	_s32 WheelDelta() const { return wheelDelta_; }
 
 	// === 이벤트 API ===
 	// 사용 예: Input()->onKeyPressed.Register(1, [](int vk) { ... });
@@ -95,15 +95,15 @@ public:
 	MouseWheelEvent onMouseWheel;		// 휠이 굴러간 순간
 
 private:
-	static const int KEY_COUNT = 256;				// 가상 키코드 범위 (0~255)
+	static const _s32 KEY_COUNT = 256;				// 가상 키코드 범위 (0~255)
 
-	bool bKeyDown_[KEY_COUNT];					// 현재 프레임 키 상태
-	bool bPrevKeyDown_[KEY_COUNT];				// 이전 프레임 키 상태
-	bool bMouseDown_[int(MouseButton::Max)];		// 현재 프레임 버튼 상태
-	bool bPrevMouseDown_[int(MouseButton::Max)];	// 이전 프레임 버튼 상태
-	int mouseX_;									// 커서 X (클라이언트 좌표)
-	int mouseY_;									// 커서 Y (클라이언트 좌표)
-	int wheelDelta_;								// 이번 프레임 휠 이동량
+	bool keyDown_[KEY_COUNT];					// 현재 프레임 키 상태
+	bool prevKeyDown_[KEY_COUNT];				// 이전 프레임 키 상태
+	bool mouseDown_[_s32(MouseButton::Max)];		// 현재 프레임 버튼 상태
+	bool prevMouseDown_[_s32(MouseButton::Max)];	// 이전 프레임 버튼 상태
+	_s32 mouseX_;									// 커서 X (클라이언트 좌표)
+	_s32 mouseY_;									// 커서 Y (클라이언트 좌표)
+	_s32 wheelDelta_;								// 이번 프레임 휠 이동량
 };
 
 NS_SGF_END

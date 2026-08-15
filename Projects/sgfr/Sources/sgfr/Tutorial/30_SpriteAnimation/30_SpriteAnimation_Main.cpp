@@ -53,7 +53,7 @@ void SpriteAnimation_Main()
 	Window window;
 	if (!window.Create(L"30. 스프라이트 - 위: 선형(기준) | 아래: 선택 이징 (1~3, ↑↓ FPS, ESC)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -63,13 +63,13 @@ void SpriteAnimation_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
 
 	// 2. 스프라이트 시트 텍스처: 256x256, 4x4 = 16프레임을 코드로 생성
-	const int sheetSize = 256;
+	const _s32 sheetSize = 256;
 	_u8* pPixels = new _u8[sheetSize * sheetSize * 4];
 	FillSpriteSheetPixels(pPixels);
 
@@ -78,7 +78,7 @@ void SpriteAnimation_Main()
 	JC_DELETE_SAFE(pPixels);	// GPU로 복사되었으므로 CPU 메모리는 바로 해제
 	if (!bTextureOk)
 	{
-		printf("스프라이트 시트 텍스처 생성 실패!\n");
+		jc::Console::WriteLine("스프라이트 시트 텍스처 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -97,7 +97,7 @@ void SpriteAnimation_Main()
 	if (!quadVb.Create(&device, quadVertices, sizeof(VertexPTC), 4, true) ||
 		!quadIb.Create(&device, quadIndices, 6))
 		{
-		printf("버퍼 생성 실패!\n");
+		jc::Console::WriteLine("버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -110,7 +110,7 @@ void SpriteAnimation_Main()
 	Shader spriteShader;
 	if (!spriteShader.CompileFromString(&device, TextureShaderSource(), pLayout, layoutCount))
 	{
-		printf("셰이더 생성 실패!\n");
+		jc::Console::WriteLine("셰이더 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -150,7 +150,7 @@ void SpriteAnimation_Main()
 		elapsed += timer.DeltaTime();
 
 		bool bChanged = false;
-		for (int k = 0; k < 3; ++k)
+		for (_s32 k = 0; k < 3; ++k)
 		{
 			if (input.IsKeyPressed('1' + k))
 			{
@@ -178,9 +178,9 @@ void SpriteAnimation_Main()
 		// --- 공통 애니메이션 계산 (두 줄이 완전히 같은 프레임/진행도를 공유) ---
 
 		// (1) 경과 시간 -> 프레임 번호. 4x4 시트이므로 16으로 나눈 나머지로 순환
-		const int frame = (int)(elapsed * animFps) % 16;
-		const int col = frame % 4;
-		const int row = frame / 4;
+		const _s32 frame = (_s32)(elapsed * animFps) % 16;
+		const _s32 col = frame % 4;
+		const _s32 row = frame / 4;
 		const vec2 uvOffset = vec2(col * 0.25f, row * 0.25f);
 		const vec2 uvScale = vec2(0.25f, 0.25f);
 

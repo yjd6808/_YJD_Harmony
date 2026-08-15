@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 5:20:00 PM
  * =====================
@@ -172,7 +172,7 @@ void GraphicContext::SetConstantBuffer(ShaderStage _stage, _u32 _slot, ID3D11Buf
 {
 	jc_assert_msg(_slot < MAX_CBUFFER_SLOTS, "상수버퍼 슬롯 범위를 벗어났습니다.");
 
-	const int stageIndex = static_cast<int>(_stage);
+	const _s32 stageIndex = static_cast<_s32>(_stage);
 	if (_pBuffer == pCachedCbuffers_[stageIndex][_slot])
 	{
 		skippedCallCount_ += 1;
@@ -199,7 +199,7 @@ void GraphicContext::SetTexture(ShaderStage _stage, _u32 _slot, Texture* _pTextu
 	jc_assert_msg(_slot < MAX_TEXTURE_SLOTS, "텍스처 슬롯 범위를 벗어났습니다.");
 
 	ID3D11ShaderResourceView* pSrv = (_pTexture != nullptr) ? _pTexture->Srv() : nullptr;
-	const int stageIndex = static_cast<int>(_stage);
+	const _s32 stageIndex = static_cast<_s32>(_stage);
 	if (pSrv == pCachedSrvs_[stageIndex][_slot])
 	{
 		skippedCallCount_ += 1;
@@ -226,7 +226,7 @@ void GraphicContext::SetSampler(ShaderStage _stage, _u32 _slot, SamplerState* _p
 	jc_assert_msg(_slot < MAX_TEXTURE_SLOTS, "샘플러 슬롯 범위를 벗어났습니다.");
 
 	ID3D11SamplerState* pRaw = (_pSampler != nullptr) ? _pSampler->Raw() : nullptr;
-	const int stageIndex = static_cast<int>(_stage);
+	const _s32 stageIndex = static_cast<_s32>(_stage);
 	if (pRaw == pCachedSamplers_[stageIndex][_slot])
 	{
 		skippedCallCount_ += 1;

@@ -51,14 +51,14 @@ public:
 	// 메모리의 RGBA 픽셀 배열로 직접 텍스처를 만든다.
 	// (절차적 생성 텍스처, 단색 텍스처 등에 사용)
 	// @param _pPixels : RGBA 순서 8비트씩, 한 줄에 _width*4 바이트
-	bool CreateFromMemory(GraphicDevice* _pDevice, const _u8* _pPixels, int _width, int _height);
+	bool CreateFromMemory(GraphicDevice* _pDevice, const _u8* _pPixels, _s32 _width, _s32 _height);
 
 	// PS 단계 지정 슬롯에 이 텍스처를 장착한다.
 	// @param _slot : 셰이더의 register(t0), register(t1)... 번호
 	void Bind(GraphicDevice* _pDevice, UINT _slot = 0);
 
-	int Width() const { return width_; }
-	int Height() const { return height_; }
+	_s32 Width() const { return width_; }
+	_s32 Height() const { return height_; }
 	bool IsValid() const { return pShaderResourceView_ != nullptr; }
 
 	// [v3] GraphicContext 바인딩 캐시용 원본 핸들
@@ -66,8 +66,8 @@ public:
 
 private:
 	SgfComPtr<ID3D11ShaderResourceView> pShaderResourceView_;	// 셰이더가 읽는 뷰
-	int width_;	// 가로 픽셀 수
-	int height_;	// 세로 픽셀 수
+	_s32 width_;	// 가로 픽셀 수
+	_s32 height_;	// 세로 픽셀 수
 };
 
 NS_SGF_END

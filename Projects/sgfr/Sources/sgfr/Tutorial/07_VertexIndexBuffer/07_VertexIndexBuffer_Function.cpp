@@ -8,6 +8,8 @@
 #include "Core.h"
 #include "sgfr/Tutorial/07_VertexIndexBuffer/07_VertexIndexBuffer_Function.h"
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // 정점을 그대로 통과시키는 가장 단순한 HLSL 셰이더 소스를 반환한다. (05번과 동일 구조)
 const char* PassThroughShaderSource()
 {
@@ -41,14 +43,16 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 )";
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // 인덱스 버퍼가 왜 필요한지 메모리 절약 계산을 콘솔에 출력한다. (학습용)
 void PrintIndexBufferBenefit()
 {
-	printf("\n[인덱스 버퍼가 필요한 이유]\n");
-	printf(" 사각형 = 삼각형 2개 = 정점 6개가 필요하지만, 실제 꼭짓점은 4개뿐이다.\n");
-	printf(" 인덱스 없이: 정점 6개 x %d바이트 = %d바이트\n", (int)sizeof(sgf::VertexPC), (int)(6 * sizeof(sgf::VertexPC)));
-	printf(" 인덱스 있음: 정점 4개 x %d바이트 + 인덱스 6개 x 4바이트 = %d바이트\n",
-		(int)sizeof(sgf::VertexPC), (int)(4 * sizeof(sgf::VertexPC) + 6 * 4));
-	printf(" 사각형 하나는 차이가 작지만, 정점 수천 개짜리 모델은 절약이 어마어마해진다!\n");
-	printf(" (게다가 정점 셰이더 계산 결과도 재활용되므로 속도도 빨라진다)\n\n");
+	jc::Console::WriteLine("\n[인덱스 버퍼가 필요한 이유]");
+	jc::Console::WriteLine(" 사각형 = 삼각형 2개 = 정점 6개가 필요하지만, 실제 꼭짓점은 4개뿐이다.");
+	jc::Console::Write(" 인덱스 없이: 정점 6개 x %d바이트 = %d바이트\n", (_s32)sizeof(sgf::VertexPC), (_s32)(6 * sizeof(sgf::VertexPC)));
+	jc::Console::Write(" 인덱스 있음: 정점 4개 x %d바이트 + 인덱스 6개 x 4바이트 = %d바이트\n",
+		(_s32)sizeof(sgf::VertexPC), (_s32)(4 * sizeof(sgf::VertexPC) + 6 * 4));
+	jc::Console::WriteLine(" 사각형 하나는 차이가 작지만, 정점 수천 개짜리 모델은 절약이 어마어마해진다!");
+	jc::Console::WriteLine(" (게다가 정점 셰이더 계산 결과도 재활용되므로 속도도 빨라진다)\n");
 }

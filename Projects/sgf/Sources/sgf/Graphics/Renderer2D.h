@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 8:24:00 AM
  * =====================
@@ -73,7 +73,7 @@ public:
 
 	// 원 (삼각형 부채꼴로 근사)
 	// @param _segments : 분할 수. 클수록 매끄럽지만 정점이 늘어난다.
-	void DrawCircle(const vec2& _center, _f32 _radius, const color& _color, int _segments = 32);
+	void DrawCircle(const vec2& _center, _f32 _radius, const color& _color, _s32 _segments = 32);
 
 	// 모아둔 배치를 즉시 GPU로 보낸다. (보통 End가 알아서 호출)
 	virtual void Flush() override;
@@ -91,9 +91,9 @@ private:
 	void PushQuad(Texture* _pTexture, const VertexPTC (&_vertices)[4]);
 
 private:
-	static const int MAX_QUADS = 2048;					// 배치 한 번에 담을 최대 사각형 수
-	static const int MAX_VERTICES = MAX_QUADS * 4;	// 최대 정점 수
-	static const int MAX_INDICES = MAX_QUADS * 6;		// 최대 인덱스 수
+	static const _s32 MAX_QUADS = 2048;					// 배치 한 번에 담을 최대 사각형 수
+	static const _s32 MAX_VERTICES = MAX_QUADS * 4;	// 최대 정점 수
+	static const _s32 MAX_INDICES = MAX_QUADS * 6;		// 최대 인덱스 수
 
 	VertexBuffer vertexBuffer_;			// DYNAMIC 정점 버퍼
 	IndexBuffer indexBuffer_;				// 사각형용 고정 인덱스 버퍼

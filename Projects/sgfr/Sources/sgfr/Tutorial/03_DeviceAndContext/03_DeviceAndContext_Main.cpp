@@ -30,22 +30,22 @@ using namespace jc;
 // 디바이스/컨텍스트 분리 튜토리얼을 실행한다. (윈도우 없이 디바이스만 만들어 실험)
 void DeviceAndContext_Main()
 {
-	printf("=== 03. 디바이스와 컨텍스트 ===\n\n");
-	printf("[역할 분리]\n");
-	printf("  ID3D11Device        = 공장   : 버퍼/텍스처/셰이더 같은 리소스를 '만든다'\n");
-	printf("  ID3D11DeviceContext = 조립라인: 만들어진 리소스를 파이프라인에 '묶고 그린다'\n\n");
-	printf("[sgf v3 대응]\n");
-	printf("  GraphicDevice  -> 생성/수명 담당 (Initialize/Finalize, CreateXXX)\n");
-	printf("  GraphicContext -> 바인딩/그리기 담당 (SetXXX, Draw/DrawIndexed)\n\n");
+	jc::Console::WriteLine("=== 03. 디바이스와 컨텍스트 ===\n");
+	jc::Console::WriteLine("[역할 분리]");
+	jc::Console::WriteLine("  ID3D11Device        = 공장   : 버퍼/텍스처/셰이더 같은 리소스를 '만든다'");
+	jc::Console::WriteLine("  ID3D11DeviceContext = 조립라인: 만들어진 리소스를 파이프라인에 '묶고 그린다'\n");
+	jc::Console::WriteLine("[sgf v3 대응]");
+	jc::Console::WriteLine("  GraphicDevice  -> 생성/수명 담당 (Initialize/Finalize, CreateXXX)");
+	jc::Console::WriteLine("  GraphicContext -> 바인딩/그리기 담당 (SetXXX, Draw/DrawIndexed)\n");
 
 	// 1. 창 없이 디바이스만 초기화한다. (v2.1부터 창과 디바이스가 분리되어 가능)
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		return;
 	}
-	printf("1) 디바이스 초기화 성공 (창 없이 디바이스만 생성됨)\n\n");
+	jc::Console::WriteLine("1) 디바이스 초기화 성공 (창 없이 디바이스만 생성됨)\n");
 
 	// 2. 컨텍스트는 디바이스가 소유한다. 참조로 빌려 쓴다.
 	GraphicContext& context = device.GetContext();
@@ -56,16 +56,16 @@ void DeviceAndContext_Main()
 	context.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);	// (2) 직전과 같음 -> 생략!
 	context.SetPrimitiveTopology(PrimitiveTopology::ptLineList);		// (3) 달라짐 -> 실제 호출
 
-	printf("2) 토폴로지를 [삼각형, 삼각형, 선] 순서로 3번 설정했다.\n");
-	printf("   실제 D3D 호출 수   : %llu (예상: 2)\n", context.GetApiCallCount());
-	printf("   캐시로 생략된 호출 : %llu (예상: 1)\n\n", context.GetSkippedCallCount());
+	jc::Console::WriteLine("2) 토폴로지를 [삼각형, 삼각형, 선] 순서로 3번 설정했다.");
+	jc::Console::Write("   실제 D3D 호출 수   : %llu (예상: 2)\n", context.GetApiCallCount());
+	jc::Console::Write("   캐시로 생략된 호출 : %llu (예상: 1)\n\n", context.GetSkippedCallCount());
 
-	printf("[정리]\n");
-	printf("  같은 상태를 다시 설정하면 GraphicContext가 알아서 걸러낸다.\n");
-	printf("  단, 외부에서 원시 컨텍스트를 직접 만졌다면 InvalidateCache()로 캐시를 비워야 한다.\n");
-	printf("  (BeginFrame처럼 엔진 내부에서 상태를 바꾸는 지점이 대표적)\n\n");
+	jc::Console::WriteLine("[정리]");
+	jc::Console::WriteLine("  같은 상태를 다시 설정하면 GraphicContext가 알아서 걸러낸다.");
+	jc::Console::WriteLine("  단, 외부에서 원시 컨텍스트를 직접 만졌다면 InvalidateCache()로 캐시를 비워야 한다.");
+	jc::Console::WriteLine("  (BeginFrame처럼 엔진 내부에서 상태를 바꾸는 지점이 대표적)\n");
 
 	// 4. 정리
 	device.Finalize();
-	printf("디바이스 정리 완료. (함수가 반환되면 런처가 목차로 돌아간다)\n");
+	jc::Console::WriteLine("디바이스 정리 완료. (함수가 반환되면 런처가 목차로 돌아간다)");
 }

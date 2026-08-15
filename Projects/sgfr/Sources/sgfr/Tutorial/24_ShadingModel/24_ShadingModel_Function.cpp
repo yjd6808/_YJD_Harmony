@@ -13,6 +13,8 @@
 using namespace sgf;
 using namespace jc;
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // 램버트/퐁/블린-퐁을 모두 지원하는 HLSL 셰이더 소스를 반환한다.
 //
 // [셰이딩(Shading)이란?]
@@ -103,43 +105,47 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 )";
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // 세 셰이딩 모델의 수식과 차이를 콘솔에 출력한다. (학습용)
 void PrintShadingExplanation()
 {
-	printf("\n[셰이딩(Shading)이란?]\n");
-	printf(" \"빛이 표면에서 어떻게 반사되는가\"를 수식으로 흉내 내는 것.\n\n");
-	printf("[세 가지 성분]\n");
-	printf(" 1. 주변광(Ambient)   : 사방에서 은은히 도달하는 기본 밝기 (상수 0.15)\n");
-	printf(" 2. 확산광(Diffuse)   : max(0, N\xc2\xb7(-L)) - 빛을 마주볼수록 밝다 (램버트 법칙)\n");
-	printf(" 3. 정반사광(Specular): 거울 반사 하이라이트 - 카메라 위치가 필요하다!\n\n");
-	printf("[모델별 정반사 계산]\n");
-	printf(" 1. 램버트   : 정반사 없음. 무광택 표면 (분필, 천)\n");
-	printf(" 2. 퐁       : pow(max(0, R\xc2\xb7V), n), R = reflect(L, N)\n");
-	printf(" 3. 블린-퐁  : pow(max(0, N\xc2\xb7H), n), H = normalize(-L + V)\n");
-	printf("    -> reflect 계산이 빠지고 결과도 자연스러워 현대 엔진의 표준!\n\n");
-	printf("[조작법]\n");
-	printf(" 1/2/3: 셰이딩 모델 전환\n");
-	printf(" 위/아래 방향키: 하이라이트 날카로움(SpecPower) 2~256 증감\n");
-	printf("  -> 값이 클수록 작고 선명한 하이라이트 = 매끈한 표면 느낌\n\n");
+	jc::Console::WriteLine("\n[셰이딩(Shading)이란?]");
+	jc::Console::WriteLine(" \"빛이 표면에서 어떻게 반사되는가\"를 수식으로 흉내 내는 것.\n");
+	jc::Console::WriteLine("[세 가지 성분]");
+	jc::Console::WriteLine(" 1. 주변광(Ambient)   : 사방에서 은은히 도달하는 기본 밝기 (상수 0.15)");
+	jc::Console::WriteLine(" 2. 확산광(Diffuse)   : max(0, N\xc2\xb7(-L)) - 빛을 마주볼수록 밝다 (램버트 법칙)");
+	jc::Console::WriteLine(" 3. 정반사광(Specular): 거울 반사 하이라이트 - 카메라 위치가 필요하다!\n");
+	jc::Console::WriteLine("[모델별 정반사 계산]");
+	jc::Console::WriteLine(" 1. 램버트   : 정반사 없음. 무광택 표면 (분필, 천)");
+	jc::Console::WriteLine(" 2. 퐁       : pow(max(0, R\xc2\xb7V), n), R = reflect(L, N)");
+	jc::Console::WriteLine(" 3. 블린-퐁  : pow(max(0, N\xc2\xb7H), n), H = normalize(-L + V)");
+	jc::Console::WriteLine("    -> reflect 계산이 빠지고 결과도 자연스러워 현대 엔진의 표준!\n");
+	jc::Console::WriteLine("[조작법]");
+	jc::Console::WriteLine(" 1/2/3: 셰이딩 모델 전환");
+	jc::Console::WriteLine(" 위/아래 방향키: 하이라이트 날카로움(SpecPower) 2~256 증감");
+	jc::Console::WriteLine("  -> 값이 클수록 작고 선명한 하이라이트 = 매끈한 표면 느낌\n");
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
 
 // UV 구(Sphere) 지오메트리를 생성해 정점/인덱스 배열을 채운다.
 void GenerateSphere(jc::Vector<VertexPNT>& _outVertices, jc::Vector<_u32>& _outIndices,
-	_f32 _radius, int _rings, int _segments)
+	_f32 _radius, _s32 _rings, _s32 _segments)
 {
 	_outVertices.Clear();
 	_outIndices.Clear();
 
 	// 정점 생성: 위에서 아래로(위도), 한 바퀴(경도) 돌며 격자를 만든다.
 	// 경도는 _segments + 1열: 마지막 열은 첫 열과 위치가 같지만 UV가 다르다. (이음자리 복제)
-	for (int ring = 0; ring <= _rings; ++ring)
+	for (_s32 ring = 0; ring <= _rings; ++ring)
 	{
 		// 위도각: 0(북극) ~ 파이(남극)
 		const _f32 phi = jc_math_pi * (_f32)ring / (_f32)_rings;
 		const _f32 sinPhi = sinf(phi);
 		const _f32 cosPhi = cosf(phi);
 
-		for (int seg = 0; seg <= _segments; ++seg)
+		for (_s32 seg = 0; seg <= _segments; ++seg)
 		{
 			// 경도각: 0 ~ 2파이
 			const _f32 theta = jc_math_pi2 * (_f32)seg / (_f32)_segments;
@@ -154,10 +160,10 @@ void GenerateSphere(jc::Vector<VertexPNT>& _outVertices, jc::Vector<_u32>& _outI
 	}
 
 	// 인덱스 생성: 격자 한 칸을 삼각형 2개로 분할 (밖에서 볼 때 시계 방향)
-	const int columns = _segments + 1;
-	for (int ring = 0; ring < _rings; ++ring)
+	const _s32 columns = _segments + 1;
+	for (_s32 ring = 0; ring < _rings; ++ring)
 	{
-		for (int seg = 0; seg < _segments; ++seg)
+		for (_s32 seg = 0; seg < _segments; ++seg)
 		{
 			const _u32 i0 = (_u32)(ring * columns + seg);			// 왼위
 			const _u32 i1 = i0 + 1;									// 오른위

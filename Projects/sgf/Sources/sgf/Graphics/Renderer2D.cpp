@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 8:26:00 AM
  * =====================
@@ -112,7 +112,7 @@ bool Renderer2D::CreateBatchResources(GraphicDevice* _pDevice)
 	// 사각형 1개 = 정점 4개(0,1,2,3) = 삼각형 2개(0-1-2, 0-2-3)
 	{
 		jc::Vector<_u32> indices(MAX_INDICES, 0u);
-		for (int i = 0; i < MAX_QUADS; ++i)
+		for (_s32 i = 0; i < MAX_QUADS; ++i)
 		{
 			const _u32 base = _u32(i) * 4;
 			indices[i * 6 + 0] = base + 0;
@@ -164,7 +164,7 @@ void Renderer2D::OnBegin()
 // 사각형 4정점을 배치에 추가
 void Renderer2D::PushQuad(Texture* _pTexture, const VertexPTC (&_vertices)[4])
 {
-	jc_assert(bBegun_);
+	jc_assert(begun_);
 
 	// 텍스처가 바뀌면 지금까지 모은 배치를 먼저 그린다.
 	// (한 드로우 콜은 텍스처 1장만 쓸 수 있으므로)
@@ -179,7 +179,7 @@ void Renderer2D::PushQuad(Texture* _pTexture, const VertexPTC (&_vertices)[4])
 	}
 
 	pCurrentTexture_ = _pTexture;
-	for (int i = 0; i < 4; ++i)
+	for (_s32 i = 0; i < 4; ++i)
 	{
 		vertices_.PushBack(_vertices[i]);
 	}
@@ -228,7 +228,7 @@ void Renderer2D::DrawSprite(Texture* _pTexture, const vec2& _center, const vec2&
 	};
 
 	VertexPTC vertices[4];
-	for (int i = 0; i < 4; ++i)
+	for (_s32 i = 0; i < 4; ++i)
 	{
 		// 회전 후 평행이동 = 월드 위치
 		const _f32 x = locals[i].x * c - locals[i].y * s + _center.x;
@@ -263,14 +263,14 @@ void Renderer2D::DrawLine(const vec2& _from, const vec2& _to, const color& _colo
 // 원: 중심에서 부채꼴로 폼치는 삼각형들로 근사한다.
 // 사각형 배치를 재사용하기 위해 삼각형을 "높이 0인 사각형"처럼 넣는 대신
 // 정점 4개 중 2개를 같은 위치로 만들어 삼각형을 표현한다.
-void Renderer2D::DrawCircle(const vec2& _center, _f32 _radius, const color& _color, int _segments)
+void Renderer2D::DrawCircle(const vec2& _center, _f32 _radius, const color& _color, _s32 _segments)
 {
 	if (_segments < 3)
 	{
 		_segments = 3;
 	}
 
-	for (int i = 0; i < _segments; ++i)
+	for (_s32 i = 0; i < _segments; ++i)
 	{
 		const _f32 a0 = (jc_math_pi2) * _f32(i) / _f32(_segments);
 		const _f32 a1 = (jc_math_pi2) * _f32(i + 1) / _f32(_segments);
@@ -281,11 +281,11 @@ void Renderer2D::DrawCircle(const vec2& _center, _f32 _radius, const color& _col
 		// 삼각형(중심, p0, p1)을 정점 4개짜리 쿨로 표현 (마지막 정점 중복)
 		VertexPTC vertices[4];
 		const vec2 positions[4] = { _center, p0, p1, p1 };
-		for (int v = 0; v < 4; ++v)
+		for (_s32 corner = 0; corner < 4; ++corner)
 		{
-			vertices[v].position_ = vec3(positions[v].x, positions[v].y, 0.0f);
-			vertices[v].uv_ = vec2(0.0f, 0.0f);
-			vertices[v].color_ = _color;
+			vertices[corner].position_ = vec3(positions[corner].x, positions[corner].y, 0.0f);
+			vertices[corner].uv_ = vec2(0.0f, 0.0f);
+			vertices[corner].color_ = _color;
 		}
 		PushQuad(pWhiteTexture_, vertices);
 	}
@@ -322,6 +322,20 @@ void Renderer2D::Flush()
 
 	// 3. 드로우 콜: 정점 4개당 인덱스 6개 비율로 그린다.
 	const UINT indexCount = UINT(vertexCount / 4) * 6;
+
+	// [DEBUG-DIAG] 드로우 콜 발생 확인용 임시 로그 (수정 후 제거 예정)
+	{
+		FILE* pFile = nullptr;
+		fopen_s(&pFile, "C:\\Users\\jdyun\\AppData\\Local\\Temp\\opencode\\sgfr29_diag.log", "a");
+		if (pFile != nullptr)
+		{
+			fprintf(pFile, "[Renderer2D::Flush] vertexCount=%d indexCount=%u\n", vertexCount, indexCount);
+			fflush(pFile);
+			fclose(pFile);
+		}
+	}
+
+	pDevice_->Context()->DrawIndexed(indexCount, 0, 0);
 	pDevice_->Context()->DrawIndexed(indexCount, 0, 0);
 
 	// 4. 배치 비우기

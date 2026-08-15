@@ -37,7 +37,7 @@ void DeviceAndSwapChain_Main()
 	Window window;
 	if (!window.Create(L"04. 디바이스와 스왑체인 (ESC로 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -54,12 +54,12 @@ void DeviceAndSwapChain_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
 
-	printf("디바이스 초기화 성공! 배경색이 부드럽게 변합니다. (ESC로 종료)\n");
+	jc::Console::WriteLine("디바이스 초기화 성공! 배경색이 부드럽게 변합니다. (ESC로 종료)");
 
 	// 3. 시간 측정용 타이머
 	FrameTimer timer;

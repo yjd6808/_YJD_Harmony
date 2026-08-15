@@ -20,14 +20,16 @@ static const TutorialEntry s_Practices[] =
 	{ "렌더링 파이프라인 (Practice) - 첫 조합 연습", Practice_RenderingPipeline_Main },
 };
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 등록된 연습 튜토리얼 개수를 반환한다.
-int PracticeCount()
+_s32 PracticeCount()
 {
-	return (int)(sizeof(s_Practices) / sizeof(s_Practices[0]));
+	return (_s32)(sizeof(s_Practices) / sizeof(s_Practices[0]));
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // _index(0부터 시작)번째 연습 튜토리얼 정보를 반환한다.
-const TutorialEntry& PracticeAt(int _index)
+const TutorialEntry& PracticeAt(_s32 _index)
 {
 	jc_assert(_index >= 0 && _index < PracticeCount());
 	return s_Practices[_index];

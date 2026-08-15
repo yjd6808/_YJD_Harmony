@@ -8,6 +8,7 @@
 #include "Core.h"
 #include "sgfr/Tutorial/11_Camera/11_Camera_Function.h"
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 변환 행렬 상수 버퍼를 사용하는 HLSL 셰이더 소스를 반환한다. (10번과 동일 구조)
 const char* CameraShaderSource()
 {
@@ -44,13 +45,14 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 )";
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 카메라(뷰 행렬)의 원리를 콘솔에 출력한다. (학습용)
 void PrintCameraExplanation()
 {
-	printf("\n[카메라의 비밀]\n");
-	printf(" 카메라는 실제로 움직이지 않는다! 세상이 반대로 움직일 뿐이다.\n");
-	printf(" 카메라가 오른쪽으로 3칸 이동 = 모든 물체가 왼쪽으로 3칸 이동\n");
-	printf(" 그래서 뷰 행렬 = 카메라 이동의 '역변환' 행렬이다.\n");
-	printf("   뷰 = Translation(-카메라위치) x Scale(줌배율)\n");
-	printf(" 최종 변환: 로컬 -> [월드] -> 월드좌표 -> [뷰] -> 카메라기준 -> [투영] -> NDC\n\n");
+	jc::Console::WriteLine("\n[카메라의 비밀]");
+	jc::Console::WriteLine(" 카메라는 실제로 움직이지 않는다! 세상이 반대로 움직일 뿐이다.");
+	jc::Console::WriteLine(" 카메라가 오른쪽으로 3칸 이동 = 모든 물체가 왼쪽으로 3칸 이동");
+	jc::Console::WriteLine(" 그래서 뷰 행렬 = 카메라 이동의 '역변환' 행렬이다.");
+	jc::Console::WriteLine("   뷰 = Translation(-카메라위치) x Scale(줌배율)");
+	jc::Console::WriteLine(" 최종 변환: 로컬 -> [월드] -> 월드좌표 -> [뷰] -> 카메라기준 -> [투영] -> NDC\n");
 }

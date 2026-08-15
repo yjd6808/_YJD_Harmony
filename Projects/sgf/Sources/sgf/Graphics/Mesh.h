@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 5:40:00 PM
  * =====================
@@ -77,7 +77,7 @@ private:
 	IndexBuffer indexBuffer_;		// 인덱스 버퍼 (소유. 비인덱스면 비어있음)
 	InputLayout inputLayout_;		// 입력 레이아웃 (소유)
 	PrimitiveTopology topology_;	// 정점 해석 방법
-	bool bIndexed_;					// 인덱스 메시 여부
+	bool indexed_;					// 인덱스 메시 여부
 };
 
 NS_SGF_END

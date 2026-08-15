@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 1:00:00 AM
  * 수정일: 8/9/2026 5:20:00 PM (v3: 열거형을 GraphicsEnums.h로 통합, 접두어 표기)
@@ -48,7 +48,7 @@ public:
 	ID3D11DepthStencilState* GetDepthState(DepthMode _mode);
 
 	// [하위 호환] true=dmReadWrite, false=dmDisabled
-	ID3D11DepthStencilState* GetDepthState(bool _bEnable);
+	ID3D11DepthStencilState* GetDepthState(bool _enable);
 
 	// 래스터라이저 상태 (v3: 컬링 + 채우기 + 앞면 판정 조합)
 	ID3D11RasterizerState* GetRasterizerState(
@@ -57,7 +57,7 @@ public:
 		FrontFace _frontFace = FrontFace::ffClockwise);
 
 	// [하위 호환] 와이어프레임 여부 + 컬링
-	ID3D11RasterizerState* GetRasterizerState(bool _bWireframe, CullMode _cull);
+	ID3D11RasterizerState* GetRasterizerState(bool _wireframe, CullMode _cull);
 
 	// 샘플러 상태 (v3: U/V 주소 모드 분리 + Anisotropic/Border 지원)
 	ID3D11SamplerState* GetSamplerState(FilterMode _filter, AddressMode _addressU, AddressMode _addressV);
@@ -69,10 +69,10 @@ private:
 	ID3D11Device* pDevice_;		// 생성용 디바이스 (소유하지 않음)
 
 	// 캐시 저장소들. 인덱스 = enum 값.
-	SgfComPtr<ID3D11BlendState> pBlendStates_[static_cast<int>(BlendMode::Max)];
-	SgfComPtr<ID3D11DepthStencilState> pDepthStates_[static_cast<int>(DepthMode::Max)];
-	SgfComPtr<ID3D11RasterizerState> pRasterizerStates_[static_cast<int>(FillMode::Max)][static_cast<int>(CullMode::Max)][static_cast<int>(FrontFace::Max)];
-	SgfComPtr<ID3D11SamplerState> pSamplerStates_[static_cast<int>(FilterMode::Max)][static_cast<int>(AddressMode::Max)][static_cast<int>(AddressMode::Max)];
+	SgfComPtr<ID3D11BlendState> pBlendStates_[static_cast<_s32>(BlendMode::Max)];
+	SgfComPtr<ID3D11DepthStencilState> pDepthStates_[static_cast<_s32>(DepthMode::Max)];
+	SgfComPtr<ID3D11RasterizerState> pRasterizerStates_[static_cast<_s32>(FillMode::Max)][static_cast<_s32>(CullMode::Max)][static_cast<_s32>(FrontFace::Max)];
+	SgfComPtr<ID3D11SamplerState> pSamplerStates_[static_cast<_s32>(FilterMode::Max)][static_cast<_s32>(AddressMode::Max)][static_cast<_s32>(AddressMode::Max)];
 };
 
 NS_SGF_END

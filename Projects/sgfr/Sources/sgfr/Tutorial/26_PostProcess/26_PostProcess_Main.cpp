@@ -64,7 +64,7 @@ void PostProcess_Main()
 	Window window;
 	if (!window.Create(L"26. 포스트 프로세싱 (0~5 효과, ←→ 경계, ESC 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -74,7 +74,7 @@ void PostProcess_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -83,7 +83,7 @@ void PostProcess_Main()
 	RenderTarget sceneTarget;
 	if (!sceneTarget.Create(&device, window.Width(), window.Height()))
 	{
-		printf("렌더 타깃 생성 실패!\n");
+		jc::Console::WriteLine("렌더 타깃 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -107,7 +107,7 @@ void PostProcess_Main()
 		!quadVb.Create(&device, quadVertices, sizeof(VertexPTC), 4) ||
 		!quadIb.Create(&device, quadIndices, 6))
 		{
-		printf("버퍼 생성 실패!\n");
+		jc::Console::WriteLine("버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -128,7 +128,7 @@ void PostProcess_Main()
 		!cbTransform.Create(&device) ||
 		!cbPost.Create(&device))
 		{
-		printf("셰이더/상수 버퍼 생성 실패!\n");
+		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -146,7 +146,7 @@ void PostProcess_Main()
 	{
 		wchar_t szTitle[256];
 		swprintf_s(szTitle, L"26. 포스트 프로세싱 - 왼쪽: 원본 | 오른쪽: %s (경계 %d%%) (0~5, ←→, ESC)",
-			s_szEffectNames[effectMode], (int)(split * 100.0f));
+			s_szEffectNames[effectMode], (_s32)(split * 100.0f));
 		window.SetTitle(szTitle);
 	};
 	UpdateTitle();
@@ -168,7 +168,7 @@ void PostProcess_Main()
 		elapsed += dt;
 
 		bool bChanged = false;
-		for (int k = 0; k <= 5; ++k)
+		for (_s32 k = 0; k <= 5; ++k)
 		{
 			// '0'~'5' 숫자 키: 문자 코드와 가상 키 코드가 같다.
 			if (input.IsKeyPressed('0' + k))

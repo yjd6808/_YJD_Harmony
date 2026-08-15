@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 5:50:00 PM
  * =====================
@@ -71,7 +71,7 @@ public:
 	const SamplerState& GetSampler() const { return sampler_; }
 
 	// === 머티리얼 상수 ===
-	void SetBaseColor(const color& _color) { constants_.baseColor_ = _color; bConstantsDirty_ = true; }
+	void SetBaseColor(const color& _color) { constants_.baseColor_ = _color; constantsDirty_ = true; }
 	const color& GetBaseColor() const { return constants_.baseColor_; }
 
 	// 이 머티리얼의 모든 상태를 파이프라인에 장착한다.
@@ -93,7 +93,7 @@ private:
 
 	MaterialConstants constants_;		// b2 상수 내용
 	ConstantBuffer<MaterialConstants> constantBuffer_;	// b2 상수버퍼
-	bool bConstantsDirty_;				// 상수 갱신 필요 여부
+	bool constantsDirty_;				// 상수 갱신 필요 여부
 };
 
 NS_SGF_END

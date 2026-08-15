@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 5:50:00 PM
  * =====================
@@ -21,7 +21,7 @@ Material::Material()
 	: pDevice_(nullptr)
 	, vertexShaderKey_(INVALID_RESOURCE_KEY)
 	, pixelShaderKey_(INVALID_RESOURCE_KEY)
-	, bConstantsDirty_(true)
+	, constantsDirty_(true)
 {
 	for (_u32 i = 0; i < GraphicContext::MAX_TEXTURE_SLOTS; ++i)
 	{
@@ -47,7 +47,7 @@ bool Material::Initialize(GraphicDevice* _pDevice)
 	if (!sampler_.Initialize(_pDevice)) { return false; }
 
 	if (!constantBuffer_.Create(_pDevice)) { return false; }
-	bConstantsDirty_ = true;
+	constantsDirty_ = true;
 	return true;
 }
 
@@ -134,10 +134,10 @@ bool Material::Bind(GraphicContext& _context)
 	}
 
 	// 4. 머티리얼 상수 (변경되었을 때만 업로드)
-	if (bConstantsDirty_)
+	if (constantsDirty_)
 	{
 		constantBuffer_.Update(pDevice_, constants_);
-		bConstantsDirty_ = false;
+		constantsDirty_ = false;
 	}
 	_context.SetConstantBuffer(ShaderStage::ssPixel, 2, constantBuffer_.Raw());
 	return true;

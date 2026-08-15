@@ -73,7 +73,7 @@ void ShadowMapping_Main()
 	Window window;
 	if (!window.Create(L"27. 그림자 매핑 - 왼쪽: 그림자 없음 | 오른쪽: 그림자 적용 (←→ 빛, ↑↓ 바이어스, ESC)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -83,7 +83,7 @@ void ShadowMapping_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -93,7 +93,7 @@ void ShadowMapping_Main()
 	RenderTarget shadowMap;
 	if (!shadowMap.CreateDepthOnly(&device, 1024, 1024))
 	{
-		printf("그림자 맵 생성 실패!\n");
+		jc::Console::WriteLine("그림자 맵 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -117,7 +117,7 @@ void ShadowMapping_Main()
 		!cubeVb.Create(&device, cubeVertices, sizeof(VertexPNT), 24) ||
 		!cubeIb.Create(&device, cubeIndices, 36))
 		{
-		printf("버퍼 생성 실패!\n");
+		jc::Console::WriteLine("버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -138,7 +138,7 @@ void ShadowMapping_Main()
 		!cbScene.Create(&device) ||
 		!cbLight.Create(&device))
 		{
-		printf("셰이더/상수 버퍼 생성 실패!\n");
+		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -181,12 +181,12 @@ void ShadowMapping_Main()
 		if (input.IsKeyPressed(VK_UP))
 		{
 			shadowBias = Clamp(shadowBias + 0.001f, 0.0f, 0.01f);
-			printf("그림자 바이어스: %.4f\n", shadowBias);
+			jc::Console::Write("그림자 바이어스: %.4f\n", shadowBias);
 		}
 		if (input.IsKeyPressed(VK_DOWN))
 		{
 			shadowBias = Clamp(shadowBias - 0.001f, 0.0f, 0.01f);
-			printf("그림자 바이어스: %.4f (0이면 오른쪽에서 여드름 관찰 가능!)\n", shadowBias);
+			jc::Console::Write("그림자 바이어스: %.4f (0이면 오른쪽에서 여드름 관찰 가능!)\n", shadowBias);
 		}
 
 		input.NextFrame();

@@ -34,7 +34,7 @@ void Input_Main()
 	Window window;
 	if (!window.Create(L"28. 입력 처리 - 마우스/키보드/휠 (ESC로 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -44,7 +44,7 @@ void Input_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -55,24 +55,24 @@ void Input_Main()
 
 	// 휠 이벤트: 굴리는 순간마다 크기를 바꾼다.
 	// (onMouseWheel의 delta는 이미 120으로 나눈 "틱 단위"이므로 또 나누면 안 된다)
-	input.onMouseWheel.Register(1, [&halfSize](int _delta)
+	input.onMouseWheel.Register(1, [&halfSize](_s32 _delta)
 	{
 		halfSize = Clamp(halfSize + _f32(_delta) * 0.02f, 0.02f, 0.4f);
-		printf("[이벤트] 휠 delta=%d -> 반폭 %.2f\n", _delta, halfSize);
+		jc::Console::Write("[이벤트] 휠 delta=%d -> 반폭 %.2f\n", _delta, halfSize);
 	});
 
 	// 키 이벤트: 눌리는 순간 1번만 발생한다. (꾹 눌러도 1번!)
-	input.onKeyPressed.Register(1, [](int _vkCode)
+	input.onKeyPressed.Register(1, [](_s32 _vkCode)
 	{
-		printf("[이벤트] 키 눌림: VK 코드 0x%02X\n", _vkCode);
+		jc::Console::Write("[이벤트] 키 눌림: VK 코드 0x%02X\n", _vkCode);
 	});
 
 	// 마우스 버튼 이벤트: 어느 버튼이 어디서 눌렸는지 알려준다.
-	input.onMousePressed.Register(1, [](MouseButton _button, int _x, int _y)
+	input.onMousePressed.Register(1, [](MouseButton _button, _s32 _x, _s32 _y)
 	{
 		const char* szName = (_button == MouseButton::Left) ? "왼쪽"
 			: (_button == MouseButton::Right) ? "오른쪽" : "가운데";
-		printf("[이벤트] 마우스 %s 버튼 눌림 @ (%d, %d)\n", szName, _x, _y);
+		jc::Console::Write("[이벤트] 마우스 %s 버튼 눌림 @ (%d, %d)\n", szName, _x, _y);
 	});
 
 	// 3. 동적 정점 버퍼 (매 프레임 위치/크기/색이 바뀌므로 bDynamic = true)
@@ -84,7 +84,7 @@ void Input_Main()
 	if (!vb.Create(&device, vertices, sizeof(VertexPC), 4, true) ||
 		!ib.Create(&device, indices, 6))
 		{
-		printf("버퍼 생성 실패!\n");
+		jc::Console::WriteLine("버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -97,7 +97,7 @@ void Input_Main()
 	Shader shader;
 	if (!shader.CompileFromString(&device, InputDemoShaderSource(), pLayoutDescs, layoutCount))
 	{
-		printf("셰이더 컴파일 실패!\n");
+		jc::Console::WriteLine("셰이더 컴파일 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;

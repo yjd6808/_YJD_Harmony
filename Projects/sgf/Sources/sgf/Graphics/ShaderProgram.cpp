@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 5:30:00 PM
  * =====================
@@ -67,7 +67,7 @@ namespace
 		}
 
 		// 널 종단 포함 버퍼를 직접 만든다.
-		char* pBuffer = dbg_new char[size + 1];
+		_s8* pBuffer = dbg_new _s8[size + 1];
 		const size_t readSize = fread(pBuffer, 1, static_cast<size_t>(size), pFile);
 		fclose(pFile);
 		pBuffer[readSize] = '\0';

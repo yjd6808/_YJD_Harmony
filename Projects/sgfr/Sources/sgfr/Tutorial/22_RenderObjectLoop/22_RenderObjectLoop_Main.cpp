@@ -27,7 +27,7 @@ using namespace jc;
 
 namespace
 {
-	constexpr int ORBIT_CUBE_COUNT = 4;	// 주변을 도는 작은 큐브 개수
+	constexpr _s32 ORBIT_CUBE_COUNT = 4;	// 주변을 도는 작은 큐브 개수
 }
 
 // 렌더 오브젝트 루프 튜토리얼을 실행한다. (BeginScene → Draw 반복 패턴)
@@ -37,7 +37,7 @@ void RenderObjectLoop_Main()
 	Window window;
 	if (!window.Create(L"22. 렌더 오브젝트 루프 (1 가운데 큐브 토글, ESC 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -47,14 +47,14 @@ void RenderObjectLoop_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
 
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		printf("리소스 매니저 초기화 실패!\n");
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -64,7 +64,7 @@ void RenderObjectLoop_Main()
 	SceneRenderer renderer;
 	if (!renderer.Initialize(&device))
 	{
-		printf("씨 렌더러 초기화 실패!\n");
+		jc::Console::WriteLine("씨 렌더러 초기화 실패!");
 		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -75,7 +75,7 @@ void RenderObjectLoop_Main()
 	Mesh* pCube = dbg_new Mesh();
 	if (!pCube->InitializeAsCube(&device, g_cResourceMgr.GetDefaultVertexShader3D()))
 	{
-		printf("큐브 메시 생성 실패!\n");
+		jc::Console::WriteLine("큐브 메시 생성 실패!");
 		delete pCube;
 		renderer.Finalize();
 		g_cResourceMgr.Finalize();
@@ -89,14 +89,14 @@ void RenderObjectLoop_Main()
 	// 4. 그릴 목록 구성: 가운데 큰 큐브 1개 + 주변 굤도 큐브 4개
 	//    월드 행렬은 매 프레임 갱신하므로 여기서는 키/머티리얼만 채운다.
 	RenderObject objects[1 + ORBIT_CUBE_COUNT];
-	for (int i = 0; i < 1 + ORBIT_CUBE_COUNT; ++i)
+	for (_s32 i = 0; i < 1 + ORBIT_CUBE_COUNT; ++i)
 	{
 		objects[i].meshKey_ = cubeMeshKey;
 		objects[i].materialKey_ = g_cResourceMgr.GetDefaultMaterial3DKey();
-		objects[i].bVisible_ = true;
+		objects[i].visible_ = true;
 	}
 
-	printf("RenderObject %d개를 BeginScene → Draw 루프로 그립니다!\n", 1 + ORBIT_CUBE_COUNT);
+	jc::Console::Write("RenderObject %d개를 BeginScene → Draw 루프로 그립니다!\n", 1 + ORBIT_CUBE_COUNT);
 
 	// 5. 카메라는 고정, 객체만 회전시킨다.
 	FrameConstants frame;
@@ -116,7 +116,7 @@ void RenderObjectLoop_Main()
 		}
 		if (input.IsKeyPressed('1'))
 		{
-			objects[0].bVisible_ = !objects[0].bVisible_;	// 보이기/숨기기는 플래그 하나로
+			objects[0].visible_ = !objects[0].visible_;	// 보이기/숨기기는 플래그 하나로
 		}
 		input.NextFrame();
 
@@ -126,7 +126,7 @@ void RenderObjectLoop_Main()
 		// 6. 월드 행렬 갱신 (행벡터 규약: 왼쪽이 먼저 적용 → 회전 후 이동)
 		objects[0].world_ = mat4::RotationY(elapsed);	// 가운데 큰 큐브: 제자리 회전
 
-		for (int i = 0; i < ORBIT_CUBE_COUNT; ++i)
+		for (_s32 i = 0; i < ORBIT_CUBE_COUNT; ++i)
 		{
 			const _f32 angle = elapsed * 1.5f + jc_math_pi * 2.0f * (_f32)i / (_f32)ORBIT_CUBE_COUNT;
 			objects[1 + i].world_ =
@@ -141,7 +141,7 @@ void RenderObjectLoop_Main()
 		device.GetContext().InvalidateCache();	// BeginFrame이 원시 상태를 건드렸으므로 캐시를 비운다
 
 		renderer.BeginScene(frame);
-		for (int i = 0; i < 1 + ORBIT_CUBE_COUNT; ++i)
+	for (_s32 i = 0; i < 1 + ORBIT_CUBE_COUNT; ++i)
 		{
 			renderer.Draw(objects[i]);
 		}

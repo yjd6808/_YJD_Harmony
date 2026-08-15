@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 6:10:00 PM
  * =====================
@@ -149,7 +149,7 @@ void ResourceMgr::RemoveAll()
 	keys.Reserve(resources_.Size());
 	resources_.ForEachKey([&keys](const _u64& _key) { keys.PushBack(_key); });
 
-	for (int i = 0; i < keys.Size(); ++i)
+	for (_s32 i = 0; i < keys.Size(); ++i)
 	{
 		const _u64 key = keys.At(i);
 		if (defaultKeys_.Exist(key))
@@ -272,7 +272,7 @@ Material* ResourceMgr::GetDefaultMaterial3D()
 //////////////////////////////////////////////////////////////////////////////////////////
 void ResourceMgr::PrintStatus()
 {
-	char buffer[512];
+	_s8 buffer[512];
 	sprintf_s(buffer, "[ResourceMgr] 보관 중: %d개, 발급 중인 키: %zu개\n",
 		resources_.Size(), keyProvider_.GetAcquiredCount());
 	OutputDebugStringA(buffer);
@@ -282,7 +282,7 @@ void ResourceMgr::PrintStatus()
 		const IResource* pResource = _pair.value_;
 		sprintf_s(buffer, "  key=%llu type=%s name=%s\n",
 			_pair.key_,
-			RESOURCE_TYPE_NAMES[static_cast<int>(pResource->GetResourceType())],
+			RESOURCE_TYPE_NAMES[static_cast<_s32>(pResource->GetResourceType())],
 			pResource->GetDebugName());
 		OutputDebugStringA(buffer);
 	});
@@ -380,17 +380,17 @@ void ResourceMgr::RemovePathEntry(_u64 _key)
 {
 	// 역방향 인덱스가 없으므로 선형 탐색으로 경로를 찾는다. (경로 리소스 수는 적음)
 	String foundPath;
-	bool bFound = false;
-	pathIndex_.ForEach([&foundPath, &bFound, _key](const Pair<String, _u64>& _pair)
+	bool found = false;
+	pathIndex_.ForEach([&foundPath, &found, _key](const Pair<String, _u64>& _pair)
 	{
-		if (!bFound && _pair.value_ == _key)
+		if (!found && _pair.value_ == _key)
 		{
 			foundPath = _pair.key_;
-			bFound = true;
+			found = true;
 		}
 	});
 
-	if (bFound)
+	if (found)
 	{
 		pathIndex_.Remove(foundPath);
 	}

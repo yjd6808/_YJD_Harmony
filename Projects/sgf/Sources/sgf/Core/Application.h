@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 8:42:00 AM
  * 수정일: 8/9/2026 10:10:00 AM (v2.1: 멀티 윈도우 + Renderer3D 전역 1개)
@@ -100,7 +100,7 @@ public:
 	const color& GetClearColor() const { return clearColor_; }
 
 	// 수직동기화 설정 (true면 모니터 주사율에 맞춰 대기. 티어링 방지)
-	void SetVsync(bool _bVsync) { bVsync_ = _bVsync; }
+	void SetVsync(bool _vsync) { vsync_ = _vsync; }
 
 protected:
 	// === Cocos2d-x AppDelegate 스타일 생명주기 훅 ===
@@ -139,8 +139,8 @@ private:
 	Renderer3D renderer3D_;			// 3D 배치 렌더러 (전역 1개, v2.1)
 	FrameTimer timer_;					// jc::TimeSpan 기반 시간 측정
 	color clearColor_;					// 배경 색상
-	bool bVsync_;						// 수직동기화 여부
-	bool bInitialized_;				// 중복 초기화/종료 방지
+	bool vsync_;						// 수직동기화 여부
+	bool initialized_;				// 중복 초기화/종료 방지
 };
 
 // 현재 실행 중인 Application 인스턴스 (Initialize에서 설정된다)

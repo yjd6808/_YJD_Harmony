@@ -27,11 +27,13 @@ using namespace jc;
 
 namespace
 {
+	//////////////////////////////////////////////////////////////////////////////////////////
+
 	// 2x2 단색 텍스처를 만든다. (데모용 더미 리소스)
 	Texture* CreateSolidTexture(GraphicDevice* _pDevice, _u8 _r, _u8 _g, _u8 _b)
 	{
 		_u8 pixels[2 * 2 * 4];
-		for (int i = 0; i < 4; ++i)
+		for (_s32 i = 0; i < 4; ++i)
 		{
 			pixels[i * 4 + 0] = _r;
 			pixels[i * 4 + 1] = _g;
@@ -49,6 +51,8 @@ namespace
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // 리소스 매니저 튜토리얼을 실행한다. (콘솔 출력만으로 키 생명주기 관찰)
 void ResourceManager_Main()
 {
@@ -56,7 +60,7 @@ void ResourceManager_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		return;
 	}
 
@@ -64,25 +68,25 @@ void ResourceManager_Main()
 	//    (2D/3D 버텍스/픽셀 셰이더 4종 + 1x1 흰색 텍스처 + 2D/3D 디폴트 머티리얼)
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		printf("리소스 매니저 초기화 실패!\n");
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
 		device.Finalize();
 		return;
 	}
 
-	printf("--- 1. 디폴트 리소스 ---\n");
-	printf("초기화 직후 등록 개수: %llu (디폴트 7종)\n", g_cResourceMgr.GetCount());
-	printf("디폴트 텍스처 키: %llu\n", g_cResourceMgr.GetDefaultTextureKey());
-	printf("디폴트 2D 머티리얼 키: %llu\n", g_cResourceMgr.GetDefaultMaterial2DKey());
+	jc::Console::WriteLine("--- 1. 디폴트 리소스 ---");
+	jc::Console::Write("초기화 직후 등록 개수: %llu (디폴트 7종)\n", g_cResourceMgr.GetCount());
+	jc::Console::Write("디폴트 텍스처 키: %llu\n", g_cResourceMgr.GetDefaultTextureKey());
+	jc::Console::Write("디폴트 2D 머티리얼 키: %llu\n", g_cResourceMgr.GetDefaultMaterial2DKey());
 	g_cResourceMgr.PrintStatus();
 
 	// 3. 리소스 등록: Add에 넘기는 순간 소유권이 매니저로 넘어간다.
-	printf("\n--- 2. 등록/검색/제거 ---\n");
+	jc::Console::WriteLine("\n--- 2. 등록/검색/제거 ---");
 
 	Texture* pRed = CreateSolidTexture(&device, 255, 0, 0);
 	Texture* pGreen = CreateSolidTexture(&device, 0, 255, 0);
 	if (pRed == nullptr || pGreen == nullptr)
 	{
-		printf("텍스처 생성 실패!\n");
+		jc::Console::WriteLine("텍스처 생성 실패!");
 		delete pRed;
 		delete pGreen;
 		g_cResourceMgr.Finalize();
@@ -94,24 +98,24 @@ void ResourceManager_Main()
 
 	const _u64 redKey = g_cResourceMgr.Add(pRed);
 	const _u64 greenKey = g_cResourceMgr.Add(pGreen, "memory://green");	// 경로 별칭 부여
-	printf("빨간 텍스처 키: %llu, 초록 텍스처 키: %llu\n", redKey, greenKey);
+	jc::Console::Write("빨간 텍스처 키: %llu, 초록 텍스처 키: %llu\n", redKey, greenKey);
 
 	// 타입 안전 검색: 키로 찾되, 타입이 다르면 nullptr를 돌려준다.
 	Texture* pFound = g_cResourceMgr.Find<Texture>(redKey);
 	Material* pWrongType = g_cResourceMgr.Find<Material>(redKey);
-	printf("Find<Texture>(빨간 키) = %s\n", (pFound == pRed) ? "성공 (같은 포인터)" : "실패");
-	printf("Find<Material>(빨간 키) = %s (타입 불일치 보호)\n", (pWrongType == nullptr) ? "nullptr" : "???");
+	jc::Console::Write("Find<Texture>(빨간 키) = %s\n", (pFound == pRed) ? "성공 (같은 포인터)" : "실패");
+	jc::Console::Write("Find<Material>(빨간 키) = %s (타입 불일치 보호)\n", (pWrongType == nullptr) ? "nullptr" : "???");
 
 	// 경로로 키 역조회
 	const _u64 foundByPath = g_cResourceMgr.FindKeyByPath("memory://green");
-	printf("FindKeyByPath(\"memory://green\") = %llu (기대값 %llu)\n", foundByPath, greenKey);
+	jc::Console::Write("FindKeyByPath(\"memory://green\") = %llu (기대값 %llu)\n", foundByPath, greenKey);
 
 	// 같은 경로로 또 등록하면 중복으로 거부된다. (INVALID_RESOURCE_KEY 반환, 소유권은 호출자에게 그대로)
 	Texture* pDuplicated = CreateSolidTexture(&device, 0, 0, 255);
 	if (pDuplicated != nullptr)
 	{
 		const _u64 duplicatedKey = g_cResourceMgr.Add(pDuplicated, "memory://green");
-		printf("중복 경로 Add = %llu (0 = INVALID_RESOURCE_KEY, 거부됨)\n", duplicatedKey);
+		jc::Console::Write("중복 경로 Add = %llu (0 = INVALID_RESOURCE_KEY, 거부됨)\n", duplicatedKey);
 		if (duplicatedKey == INVALID_RESOURCE_KEY)
 		{
 			delete pDuplicated;	// 거부됐으므로 소유권은 여전히 우리에게 있다
@@ -119,8 +123,8 @@ void ResourceManager_Main()
 	}
 
 	// 4. 키 재사용 관찰: Remove된 키는 freeList로 돌아가 다음 Add에서 재사용된다(LIFO).
-	printf("\n--- 3. 키 재사용 (AutoIncrementLinkedList) ---\n");
-	printf("빨간 텍스처 제거 (키 %llu 반납)\n", redKey);
+	jc::Console::WriteLine("\n--- 3. 키 재사용 (AutoIncrementLinkedList) ---");
+	jc::Console::Write("빨간 텍스처 제거 (키 %llu 반납)\n", redKey);
 	g_cResourceMgr.Remove(redKey);	// 이 순간 pRed는 소멸된다! (소유자 = 수명 결정자)
 
 	Texture* pYellow = CreateSolidTexture(&device, 255, 255, 0);
@@ -128,14 +132,14 @@ void ResourceManager_Main()
 	{
 		pYellow->SetDebugName("YellowTexture");
 		const _u64 yellowKey = g_cResourceMgr.Add(pYellow);
-		printf("새 텍스처 키: %llu (반납한 키 %llu가 재사용되면 성공!)\n", yellowKey, redKey);
+		jc::Console::Write("새 텍스처 키: %llu (반납한 키 %llu가 재사용되면 성공!)\n", yellowKey, redKey);
 	}
 
-	printf("\n--- 4. 최종 상태 ---\n");
+	jc::Console::WriteLine("\n--- 4. 최종 상태 ---");
 	g_cResourceMgr.PrintStatus();
 
 	// 5. 정리: Finalize 한 번이면 남은 모든 리소스(디폴트 포함)가 일괄 소멸된다.
 	g_cResourceMgr.Finalize();
 	device.Finalize();
-	printf("\n정리 완료. (남은 리소스는 Finalize가 모두 소멸시켰다)\n");
+	jc::Console::WriteLine("\n정리 완료. (남은 리소스는 Finalize가 모두 소멸시켰다)");
 }

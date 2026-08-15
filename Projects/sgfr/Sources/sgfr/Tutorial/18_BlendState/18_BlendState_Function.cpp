@@ -11,6 +11,8 @@
 using namespace sgf;
 using namespace jc;
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // 부드러운 원 텍스처를 그리는 HLSL 셰이더 소스를 반환한다.
 //
 // [블렌딩(Blending)이란?]
@@ -60,31 +62,35 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 )";
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // 블렌딩 공식과 네 가지 모드의 원리를 콘솔에 출력한다. (학습용)
 void PrintBlendExplanation()
 {
-	printf("\n[블렌딩 공식]\n");
-	printf(" 최종색 = 새색 x SrcBlend  (+)  기존색 x DestBlend\n");
-	printf(" SrcBlend/DestBlend 계수만 바꿔 끼우면 아래 모든 효과가 나온다!\n\n");
-	printf("[네 가지 모드 (1~4 키로 전환)]\n");
-	printf(" 1. Opaque   : 섞지 않고 덮어쓴다          (알파 무시! 사각형이 통째로 보인다)\n");
-	printf(" 2. Alpha    : 새색x알파 + 기존색x(1-알파) (일반적인 반투명, UI/스프라이트)\n");
-	printf(" 3. Additive : 새색x알파 + 기존색          (밝아지기만 한다! 빛/폭발/이펙트)\n");
-	printf(" 4. Multiply : 새색 x 기존색               (어두워지기만 한다! 그림자/스테인드글라스)\n\n");
-	printf(" 세 원이 겹치는 부분을 관찰하세요:\n");
-	printf(" - Additive는 빨+초+파 = 흰색으로 밝아진다 (빛의 삼원색!)\n");
-	printf(" - Multiply는 겹칠수록 검게 어두워진다 (물감의 삼원색처럼)\n\n");
+	jc::Console::WriteLine("\n[블렌딩 공식]");
+	jc::Console::WriteLine(" 최종색 = 새색 x SrcBlend  (+)  기존색 x DestBlend");
+	jc::Console::WriteLine(" SrcBlend/DestBlend 계수만 바꿔 끼우면 아래 모든 효과가 나온다!\n");
+	jc::Console::WriteLine("[네 가지 모드 (1~4 키로 전환)]");
+	jc::Console::WriteLine(" 1. Opaque   : 섞지 않고 덮어쓴다          (알파 무시! 사각형이 통째로 보인다)");
+	jc::Console::WriteLine(" 2. Alpha    : 새색x알파 + 기존색x(1-알파) (일반적인 반투명, UI/스프라이트)");
+	jc::Console::WriteLine(" 3. Additive : 새색x알파 + 기존색          (밝아지기만 한다! 빛/폭발/이펙트)");
+	jc::Console::WriteLine(" 4. Multiply : 새색 x 기존색               (어두워지기만 한다! 그림자/스테인드글라스)\n");
+	jc::Console::WriteLine(" 세 원이 겹치는 부분을 관찰하세요:");
+	jc::Console::WriteLine(" - Additive는 빨+초+파 = 흰색으로 밝아진다 (빛의 삼원색!)");
+	jc::Console::WriteLine(" - Multiply는 겹칠수록 검게 어두워진다 (물감의 삼원색처럼)\n");
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // 중심에서 가장자리로 갈수록 알파가 부드럽게 0으로 줄어드는 흰색 원 텍스처를 채운다.
-void FillSoftCirclePixels(_u8* _pOutPixels, int _size)
+void FillSoftCirclePixels(_u8* _pOutPixels, _s32 _size)
 {
 	const _f32 center = (_size - 1) * 0.5f;	// 중심 픽셀 좌표
 	const _f32 maxDist = center;			// 중심에서 가장자리까지 거리
 
-	for (int y = 0; y < _size; ++y)
+	for (_s32 y = 0; y < _size; ++y)
 	{
-		for (int x = 0; x < _size; ++x)
+		for (_s32 x = 0; x < _size; ++x)
 		{
 			// 중심에서의 거리를 0~1로 정규화
 			const _f32 dx = x - center;
@@ -107,6 +113,8 @@ void FillSoftCirclePixels(_u8* _pOutPixels, int _size)
 		}
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
 
 // NDC 좌표기준 사각형 정점 4개를 채운다. (UV 0~1, 지정 색 채색)
 void FillQuadVertices(VertexPTC* _pOutVertices4, const vec2& _center, _f32 _halfSize, const color& _color)

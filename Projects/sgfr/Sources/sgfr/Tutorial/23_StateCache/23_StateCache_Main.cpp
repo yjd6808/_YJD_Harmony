@@ -27,7 +27,7 @@ using namespace jc;
 
 namespace
 {
-	constexpr int CUBE_GRID_SIZE = 10;	// 10x10 = 100개 큐브
+	constexpr _s32 CUBE_GRID_SIZE = 10;	// 10x10 = 100개 큐브
 }
 
 // 스테이트 캐시 튜토리얼을 실행한다. (100개 큐브로 중복 바인딩 절감 관찰)
@@ -37,7 +37,7 @@ void StateCache_Main()
 	Window window;
 	if (!window.Create(L"23. 스테이트 캐시 (1 캐시 무력화 토글, ESC 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -47,14 +47,14 @@ void StateCache_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
 
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		printf("리소스 매니저 초기화 실패!\n");
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -63,7 +63,7 @@ void StateCache_Main()
 	SceneRenderer renderer;
 	if (!renderer.Initialize(&device))
 	{
-		printf("씨 렌더러 초기화 실패!\n");
+		jc::Console::WriteLine("씨 렌더러 초기화 실패!");
 		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -74,7 +74,7 @@ void StateCache_Main()
 	Mesh* pCube = dbg_new Mesh();
 	if (!pCube->InitializeAsCube(&device, g_cResourceMgr.GetDefaultVertexShader3D()))
 	{
-		printf("큐브 메시 생성 실패!\n");
+		jc::Console::WriteLine("큐브 메시 생성 실패!");
 		delete pCube;
 		renderer.Finalize();
 		g_cResourceMgr.Finalize();
@@ -89,8 +89,8 @@ void StateCache_Main()
 	object.meshKey_ = cubeMeshKey;
 	object.materialKey_ = g_cResourceMgr.GetDefaultMaterial3DKey();
 
-	printf("같은 메시/머티리얼 %d개를 그립니다. 창 제목의 수치를 보세요!\n", CUBE_GRID_SIZE * CUBE_GRID_SIZE);
-	printf("1번 키로 캐시를 무력화하면 v2처럼 매번 전부 바인딩합니다.\n");
+	jc::Console::Write("같은 메시/머티리얼 %d개를 그립니다. 창 제목의 수치를 보세요!\n", CUBE_GRID_SIZE * CUBE_GRID_SIZE);
+	jc::Console::WriteLine("1번 키로 캐시를 무력화하면 v2처럼 매번 전부 바인딩합니다.");
 
 	// 3. 카메라: 그리드 전체가 보이도록 위에서 내려다본다.
 	FrameConstants frame;
@@ -125,9 +125,9 @@ void StateCache_Main()
 
 		renderer.BeginScene(frame);
 
-		for (int z = 0; z < CUBE_GRID_SIZE; ++z)
+		for (_s32 z = 0; z < CUBE_GRID_SIZE; ++z)
 		{
-			for (int x = 0; x < CUBE_GRID_SIZE; ++x)
+			for (_s32 x = 0; x < CUBE_GRID_SIZE; ++x)
 			{
 				if (bCacheDisabled)
 				{

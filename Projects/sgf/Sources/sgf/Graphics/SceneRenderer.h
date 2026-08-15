@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 6:00:00 PM
  * =====================
@@ -49,7 +49,7 @@ struct RenderObject
 	_u64 meshKey_ = INVALID_RESOURCE_KEY;		// ResourceMgr의 메시 키
 	_u64 materialKey_ = INVALID_RESOURCE_KEY;	// ResourceMgr의 머티리얼 키
 	mat4 world_;								// 월드 행렬 (기본: 단위행렬)
-	bool bVisible_ = true;						// false면 Draw에서 건너뀜
+	bool visible_ = true;						// false면 Draw에서 건너뀜
 };
 
 class SceneRenderer

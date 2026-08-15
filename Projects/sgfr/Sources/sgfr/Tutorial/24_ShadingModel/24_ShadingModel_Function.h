@@ -22,4 +22,4 @@ void PrintShadingExplanation();
 // @param _rings       : 세로 분할 수 (위도 방향)
 // @param _segments    : 가로 분할 수 (경도 방향)
 void GenerateSphere(jc::Vector<sgf::VertexPNT>& _outVertices, jc::Vector<_u32>& _outIndices,
-	_f32 _radius, int _rings, int _segments);
+	_f32 _radius, _s32 _rings, _s32 _segments);

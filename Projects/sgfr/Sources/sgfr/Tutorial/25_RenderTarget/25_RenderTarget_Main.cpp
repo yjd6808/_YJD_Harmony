@@ -45,7 +45,7 @@ void RenderTarget_Main()
 	Window window;
 	if (!window.Create(L"25. 렌더 타깃 (오른쪽 위 = 미니맵, ESC 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -55,7 +55,7 @@ void RenderTarget_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -64,7 +64,7 @@ void RenderTarget_Main()
 	RenderTarget miniMapTarget;
 	if (!miniMapTarget.Create(&device, 256, 256))
 	{
-		printf("렌더 타깃 생성 실패!\n");
+		jc::Console::WriteLine("렌더 타깃 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -80,7 +80,7 @@ void RenderTarget_Main()
 	if (!cubeVb.Create(&device, cubeVertices, sizeof(VertexPC), 8) ||
 		!cubeIb.Create(&device, cubeIndices, 36))
 		{
-		printf("큐브 버퍼 생성 실패!\n");
+		jc::Console::WriteLine("큐브 버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -96,7 +96,7 @@ void RenderTarget_Main()
 	if (!quadVb.Create(&device, quadVertices, sizeof(VertexPTC), 4) ||
 		!quadIb.Create(&device, quadIndices, 6))
 		{
-		printf("미니맵 버퍼 생성 실패!\n");
+		jc::Console::WriteLine("미니맵 버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -115,7 +115,7 @@ void RenderTarget_Main()
 		!quadShader.CompileFromString(&device, TextureShaderSource(), pQuadLayout, quadLayoutCount) ||
 		!cbTransform.Create(&device))
 		{
-		printf("셰이더/상수 버퍼 생성 실패!\n");
+		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;

@@ -26,12 +26,13 @@ using namespace jc;
 
 namespace
 {
+	//////////////////////////////////////////////////////////////////////////////////////////
 	// 체커보드 텍스처 픽셀을 채운다. (바닥용)
-	void FillChecker(_u8* _pOutPixels, int _width, int _height)
+	void FillChecker(_u8* _pOutPixels, _s32 _width, _s32 _height)
 	{
-		for (int y = 0; y < _height; ++y)
+		for (_s32 y = 0; y < _height; ++y)
 		{
-			for (int x = 0; x < _width; ++x)
+			for (_s32 x = 0; x < _width; ++x)
 			{
 				const bool bLight = (((x / 8) + (y / 8)) % 2) == 0;
 				_u8* pPixel = _pOutPixels + (y * _width + x) * 4;
@@ -44,6 +45,7 @@ namespace
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 파이프라인 여행 튜토리얼을 실행한다. (수도 코드 전 항목을 v3 API로 재현)
 void PipelineJourney_Main()
 {
@@ -51,7 +53,7 @@ void PipelineJourney_Main()
 	Window window;
 	if (!window.Create(L"31. 파이프라인 여행 (ESC 종료)", 1280, 720))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -64,7 +66,7 @@ void PipelineJourney_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -73,7 +75,7 @@ void PipelineJourney_Main()
 	// 리소스 매니저: 디폴트 셰이더/머티리얼이 여기서 준비된다. ([§8~§9]의 완성형)
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		printf("리소스 매니저 초기화 실패!\n");
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -83,7 +85,7 @@ void PipelineJourney_Main()
 	SceneRenderer renderer;
 	if (!renderer.Initialize(&device))
 	{
-		printf("씨 렌더러 초기화 실패!\n");
+		jc::Console::WriteLine("씨 렌더러 초기화 실패!");
 		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -97,7 +99,7 @@ void PipelineJourney_Main()
 	Texture* pChecker = dbg_new Texture();
 	if (!pChecker->CreateFromMemory(&device, pixels, 64, 64))
 	{
-		printf("텍스처 생성 실패!\n");
+		jc::Console::WriteLine("텍스처 생성 실패!");
 		delete pChecker;
 		renderer.Finalize();
 		g_cResourceMgr.Finalize();
@@ -113,7 +115,7 @@ void PipelineJourney_Main()
 	Material* pFloorMaterial = dbg_new Material();
 	if (!pFloorMaterial->Initialize(&device))
 	{
-		printf("머티리얼 초기화 실패!\n");
+		jc::Console::WriteLine("머티리얼 초기화 실패!");
 		delete pFloorMaterial;
 		renderer.Finalize();
 		g_cResourceMgr.Finalize();
@@ -136,7 +138,7 @@ void PipelineJourney_Main()
 	if (!pCubeMesh->InitializeAsCube(&device, g_cResourceMgr.GetDefaultVertexShader3D()) ||
 		!pQuadMesh->InitializeAsQuad2D(&device, g_cResourceMgr.GetDefaultVertexShader2D()))
 	{
-		printf("메시 생성 실패!\n");
+		jc::Console::WriteLine("메시 생성 실패!");
 		delete pCubeMesh;
 		delete pQuadMesh;
 		renderer.Finalize();
@@ -168,7 +170,7 @@ void PipelineJourney_Main()
 	// [§14] 뷰포트는 device.Initialize가 전체 화면으로 잡아둔다.
 	//  (반읐만 쓰고 싶다면 context.SetViewport(Viewport(...))로 언제든 바꿀 수 있다)
 
-	printf("수도 코드 §1~§20이 이 파일 하나에 전부 들어있습니다. 주석의 [§N]을 따라가세요!\n");
+	jc::Console::WriteLine("수도 코드 §1~§20이 이 파일 하나에 전부 들어있습니다. 주석의 [§N]을 따라가세요!");
 
 	// [§20] 메인 루프: while (window.isRunning())
 	FrameTimer timer;

@@ -58,7 +58,7 @@ void SamplerFiltering_Main()
 	Window window;
 	if (!window.Create(L"17. 샘플러와 필터링 (1/2 필터, 3/4/5 주소, ESC 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -68,7 +68,7 @@ void SamplerFiltering_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -81,7 +81,7 @@ void SamplerFiltering_Main()
 	Texture texture;
 	if (!texture.CreateFromMemory(&device, pixels, 32, 32))
 	{
-		printf("텍스처 생성 실패!\n");
+		jc::Console::WriteLine("텍스처 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -97,7 +97,7 @@ void SamplerFiltering_Main()
 	if (!vb.Create(&device, vertices, sizeof(VertexPTC), 4) ||
 		!ib.Create(&device, indices, 6))
 		{
-		printf("버퍼 생성 실패!\n");
+		jc::Console::WriteLine("버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -112,7 +112,7 @@ void SamplerFiltering_Main()
 	if (!shader.CompileFromString(&device, TextureQuadShaderSource(), pLayoutDescs, layoutCount) ||
 		!cbSplit.Create(&device))
 		{
-		printf("셰이더/상수 버퍼 생성 실패!\n");
+		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -127,8 +127,8 @@ void SamplerFiltering_Main()
 	{
 		wchar_t szTitle[256];
 		swprintf_s(szTitle, L"17. 샘플러 - 왼쪽: Point+Wrap(기준) | 오른쪽: %s + %s (1/2, 3/4/5, ESC)",
-			s_szFilterNames[static_cast<int>(filter)],
-			s_szAddressNames[static_cast<int>(address)]);
+			s_szFilterNames[static_cast<_s32>(filter)],
+			s_szAddressNames[static_cast<_s32>(address)]);
 		window.SetTitle(szTitle);
 	};
 	UpdateTitle();

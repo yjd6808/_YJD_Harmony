@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 1:00:00 AM
  * 수정일: 8/9/2026 5:20:00 PM (v3: GraphicsEnums 통합, U/V 분리 샘플러, FrontFace/ReadOnly 지원)
@@ -38,29 +38,29 @@ bool RenderStates::Initialize(ID3D11Device* _pDevice)
 //////////////////////////////////////////////////////////////////////////////////////////
 void RenderStates::Finalize()
 {
-	for (int i = 0; i < static_cast<int>(BlendMode::Max); ++i)
+	for (_s32 i = 0; i < static_cast<_s32>(BlendMode::Max); ++i)
 	{
 		pBlendStates_[i].Reset();
 	}
-	for (int i = 0; i < static_cast<int>(DepthMode::Max); ++i)
+	for (_s32 i = 0; i < static_cast<_s32>(DepthMode::Max); ++i)
 	{
 		pDepthStates_[i].Reset();
 	}
-	for (int fill = 0; fill < static_cast<int>(FillMode::Max); ++fill)
+	for (_s32 fill = 0; fill < static_cast<_s32>(FillMode::Max); ++fill)
 	{
-		for (int cull = 0; cull < static_cast<int>(CullMode::Max); ++cull)
+		for (_s32 cull = 0; cull < static_cast<_s32>(CullMode::Max); ++cull)
 		{
-			for (int face = 0; face < static_cast<int>(FrontFace::Max); ++face)
+			for (_s32 face = 0; face < static_cast<_s32>(FrontFace::Max); ++face)
 			{
 				pRasterizerStates_[fill][cull][face].Reset();
 			}
 		}
 	}
-	for (int filter = 0; filter < static_cast<int>(FilterMode::Max); ++filter)
+	for (_s32 filter = 0; filter < static_cast<_s32>(FilterMode::Max); ++filter)
 	{
-		for (int u = 0; u < static_cast<int>(AddressMode::Max); ++u)
+		for (_s32 u = 0; u < static_cast<_s32>(AddressMode::Max); ++u)
 		{
-			for (int v = 0; v < static_cast<int>(AddressMode::Max); ++v)
+			for (_s32 v = 0; v < static_cast<_s32>(AddressMode::Max); ++v)
 			{
 				pSamplerStates_[filter][u][v].Reset();
 			}
@@ -73,8 +73,8 @@ void RenderStates::Finalize()
 // 블렌드 상태: "새로 그리는 색과 이미 그려진 색을 어떻게 섞을지"의 공식 설정
 ID3D11BlendState* RenderStates::GetBlendState(BlendMode _mode)
 {
-	const int index = static_cast<int>(_mode);
-	if (index < 0 || index >= static_cast<int>(BlendMode::Max))
+	const _s32 index = static_cast<_s32>(_mode);
+	if (index < 0 || index >= static_cast<_s32>(BlendMode::Max))
 	{
 		return nullptr;
 	}
@@ -133,8 +133,8 @@ ID3D11BlendState* RenderStates::GetBlendState(BlendMode _mode)
 // 깊이 상태: 깊이 테스트(가림 처리) 모드
 ID3D11DepthStencilState* RenderStates::GetDepthState(DepthMode _mode)
 {
-	const int index = static_cast<int>(_mode);
-	if (index < 0 || index >= static_cast<int>(DepthMode::Max))
+	const _s32 index = static_cast<_s32>(_mode);
+	if (index < 0 || index >= static_cast<_s32>(DepthMode::Max))
 	{
 		return nullptr;
 	}
@@ -175,21 +175,21 @@ ID3D11DepthStencilState* RenderStates::GetDepthState(DepthMode _mode)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // [하위 호환] true=일반 3D, false=2D 적층
-ID3D11DepthStencilState* RenderStates::GetDepthState(bool _bEnable)
+ID3D11DepthStencilState* RenderStates::GetDepthState(bool _enable)
 {
-	return GetDepthState(_bEnable ? DepthMode::dmReadWrite : DepthMode::dmDisabled);
+	return GetDepthState(_enable ? DepthMode::dmReadWrite : DepthMode::dmDisabled);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 래스터라이저 상태: 채우기 + 컬링 + 앞면 판정 조합
 ID3D11RasterizerState* RenderStates::GetRasterizerState(CullMode _cull, FillMode _fill, FrontFace _frontFace)
 {
-	const int fillIndex = static_cast<int>(_fill);
-	const int cullIndex = static_cast<int>(_cull);
-	const int faceIndex = static_cast<int>(_frontFace);
-	if (fillIndex < 0 || fillIndex >= static_cast<int>(FillMode::Max)
-		|| cullIndex < 0 || cullIndex >= static_cast<int>(CullMode::Max)
-		|| faceIndex < 0 || faceIndex >= static_cast<int>(FrontFace::Max))
+	const _s32 fillIndex = static_cast<_s32>(_fill);
+	const _s32 cullIndex = static_cast<_s32>(_cull);
+	const _s32 faceIndex = static_cast<_s32>(_frontFace);
+	if (fillIndex < 0 || fillIndex >= static_cast<_s32>(FillMode::Max)
+		|| cullIndex < 0 || cullIndex >= static_cast<_s32>(CullMode::Max)
+		|| faceIndex < 0 || faceIndex >= static_cast<_s32>(FrontFace::Max))
 	{
 		return nullptr;
 	}
@@ -214,27 +214,27 @@ ID3D11RasterizerState* RenderStates::GetRasterizerState(CullMode _cull, FillMode
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // [하위 호환] 와이어프레임 여부 + 컬링
-ID3D11RasterizerState* RenderStates::GetRasterizerState(bool _bWireframe, CullMode _cull)
+ID3D11RasterizerState* RenderStates::GetRasterizerState(bool _wireframe, CullMode _cull)
 {
-	return GetRasterizerState(_cull, _bWireframe ? FillMode::fmWireframe : FillMode::fmSolid);
+	return GetRasterizerState(_cull, _wireframe ? FillMode::fmWireframe : FillMode::fmSolid);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 샘플러 상태: 텍스처를 읽는 방법 (필터 + UV 범위 밖 처리. U/V 분리 지원)
 ID3D11SamplerState* RenderStates::GetSamplerState(FilterMode _filter, AddressMode _addressU, AddressMode _addressV)
 {
-	const int filterIndex = static_cast<int>(_filter);
-	const int uIndex = static_cast<int>(_addressU);
-	const int vIndex = static_cast<int>(_addressV);
-	if (filterIndex < 0 || filterIndex >= static_cast<int>(FilterMode::Max)
-		|| uIndex < 0 || uIndex >= static_cast<int>(AddressMode::Max)
-		|| vIndex < 0 || vIndex >= static_cast<int>(AddressMode::Max))
+	const _s32 filterIndex = static_cast<_s32>(_filter);
+	const _s32 addressUIndex = static_cast<_s32>(_addressU);
+	const _s32 addressVIndex = static_cast<_s32>(_addressV);
+	if (filterIndex < 0 || filterIndex >= static_cast<_s32>(FilterMode::Max)
+		|| addressUIndex < 0 || addressUIndex >= static_cast<_s32>(AddressMode::Max)
+		|| addressVIndex < 0 || addressVIndex >= static_cast<_s32>(AddressMode::Max))
 	{
 		return nullptr;
 	}
-	if (pSamplerStates_[filterIndex][uIndex][vIndex])
+	if (pSamplerStates_[filterIndex][addressUIndex][addressVIndex])
 	{
-		return pSamplerStates_[filterIndex][uIndex][vIndex].Get();
+		return pSamplerStates_[filterIndex][addressUIndex][addressVIndex].Get();
 	}
 
 	D3D11_SAMPLER_DESC desc;
@@ -253,11 +253,11 @@ ID3D11SamplerState* RenderStates::GetSamplerState(FilterMode _filter, AddressMod
 	desc.BorderColor[2] = 0.0f;
 	desc.BorderColor[3] = 1.0f;
 
-	if (FAILED(pDevice_->CreateSamplerState(&desc, pSamplerStates_[filterIndex][uIndex][vIndex].GetAddressOf())))
+	if (FAILED(pDevice_->CreateSamplerState(&desc, pSamplerStates_[filterIndex][addressUIndex][addressVIndex].GetAddressOf())))
 	{
 		return nullptr;
 	}
-	return pSamplerStates_[filterIndex][uIndex][vIndex].Get();
+	return pSamplerStates_[filterIndex][addressUIndex][addressVIndex].Get();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 5:10:00 PM
  * =====================
@@ -107,9 +107,9 @@ private:
 	ID3D11RasterizerState* pCachedRasterizer_;
 	ID3D11BlendState* pCachedBlend_;
 	ID3D11DepthStencilState* pCachedDepth_;
-	ID3D11ShaderResourceView* pCachedSrvs_[static_cast<int>(ShaderStage::Max)][MAX_TEXTURE_SLOTS];
-	ID3D11SamplerState* pCachedSamplers_[static_cast<int>(ShaderStage::Max)][MAX_TEXTURE_SLOTS];
-	ID3D11Buffer* pCachedCbuffers_[static_cast<int>(ShaderStage::Max)][MAX_CBUFFER_SLOTS];
+	ID3D11ShaderResourceView* pCachedSrvs_[static_cast<_s32>(ShaderStage::Max)][MAX_TEXTURE_SLOTS];
+	ID3D11SamplerState* pCachedSamplers_[static_cast<_s32>(ShaderStage::Max)][MAX_TEXTURE_SLOTS];
+	ID3D11Buffer* pCachedCbuffers_[static_cast<_s32>(ShaderStage::Max)][MAX_CBUFFER_SLOTS];
 	PrimitiveTopology cachedTopology_;
 
 	// === 진단 카운터 ===

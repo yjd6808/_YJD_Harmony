@@ -11,6 +11,7 @@
 using namespace sgf;
 using namespace jc;
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 람버트 확산광 계산이 들어간 HLSL 셰이더 소스를 반환한다.
 //
 // [람버트 법칙 (Lambert's Cosine Law)]
@@ -75,24 +76,26 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 )";
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 람버트 법칙의 원리를 콘솔에 출력한다. (학습용)
 void PrintLambertExplanation()
 {
-	printf("\n[람버트 확산광 (Lambert Diffuse)]\n");
-	printf(" 밝기 = max(0, dot(법선, -빛방향))\n");
-	printf(" - 법선(Normal): 면이 바라보는 방향의 단위 벡터\n");
-	printf(" - 빛을 정면으로 받으면 1 (가장 밝음), 수직이면 0 (안 받음)\n");
-	printf(" - 내적 하나로 계산되는 가장 기초적이면서 핵심적인 조명 모델\n");
-	printf(" - 주변광(Ambient): 완전한 암흑을 막기 위한 최소 밝기 (간접광 흉내)\n\n");
+	jc::Console::WriteLine("\n[람버트 확산광 (Lambert Diffuse)]");
+	jc::Console::WriteLine(" 밝기 = max(0, dot(법선, -빛방향))");
+	jc::Console::WriteLine(" - 법선(Normal): 면이 바라보는 방향의 단위 벡터");
+	jc::Console::WriteLine(" - 빛을 정면으로 받으면 1 (가장 밝음), 수직이면 0 (안 받음)");
+	jc::Console::WriteLine(" - 내적 하나로 계산되는 가장 기초적이면서 핵심적인 조명 모델");
+	jc::Console::WriteLine(" - 주변광(Ambient): 완전한 암흑을 막기 위한 최소 밝기 (간접광 흉내)\n");
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 법선이 포함된 정육면체 정점 24개와 인덱스 36개를 채워준다.
 // 꼭짓점은 8개지만 면마다 법선이 다르므로 면별로 정점을 분리해야 한다. (4개 x 6면 = 24개)
 void FillCubeWithNormals(VertexPNT* _pOutVertices24, _u32* _pOutIndices36)
 {
 	// 면 하나를 채우는 보조 람다: 중심 방향(법선)과 가로/세로 축을 받아 4정점 생성
-	int v = 0;
-	int i = 0;
+	_s32 v = 0;
+	_s32 i = 0;
 	auto AddFace = [&](const vec3& _normal, const vec3& _right, const vec3& _up)
 	{
 		const vec3 center = _normal * 0.5f;	// 면의 중심은 법선 방향으로 0.5 떨어져 있다

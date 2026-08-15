@@ -46,11 +46,11 @@ public:
 	// @param _width   : 텍스처 가로 크기 (백버퍼와 달라도 된다)
 	// @param _height  : 텍스처 세로 크기
 	// @return 성공 여부
-	bool Create(GraphicDevice* _pDevice, int _width, int _height);
+	bool Create(GraphicDevice* _pDevice, _s32 _width, _s32 _height);
 
 	// 깊이 전용 렌더 타깃을 만든다. (그림자 맵용 - 색 기록 없음)
 	// 해상도가 클수록 그림자 경계가 깨끗해진다. (보통 1024/2048 정사각형)
-	bool CreateDepthOnly(GraphicDevice* _pDevice, int _width, int _height);
+	bool CreateDepthOnly(GraphicDevice* _pDevice, _s32 _width, _s32 _height);
 
 	// 모든 리소스를 해제한다.
 	void Destroy();
@@ -63,9 +63,9 @@ public:
 	// @param _slot : PS의 t레지스터 슬롯 번호
 	void BindAsTexture(GraphicDevice* _pDevice, UINT _slot = 0);
 
-	bool IsDepthOnly() const { return bDepthOnly_; }
-	int Width() const { return width_; }
-	int Height() const { return height_; }
+	bool IsDepthOnly() const { return depthOnly_; }
+	_s32 Width() const { return width_; }
+	_s32 Height() const { return height_; }
 
 	// GraphicDevice::SetRenderTarget에서 사용하는 내부 접근자
 	ID3D11RenderTargetView* RTV() const { return pRTV_.Get(); }		// 깊이 전용이면 nullptr
@@ -81,9 +81,9 @@ private:
 	SgfComPtr<ID3D11DepthStencilView> pDSV_;			// 깊이 텍스처를 "깊이 버퍼"로 보는 뷰
 	SgfComPtr<ID3D11ShaderResourceView> pDepthSRV_;	// 깊이 텍스처를 "셰이더 입력"으로 보는 뷰 (그림자 맵)
 
-	bool bDepthOnly_;	// 깊이 전용 모드 여부
-	int width_;		// 가로 크기
-	int height_;		// 세로 크기
+	bool depthOnly_;	// 깊이 전용 모드 여부
+	_s32 width_;		// 가로 크기
+	_s32 height_;		// 세로 크기
 };
 
 NS_SGF_END

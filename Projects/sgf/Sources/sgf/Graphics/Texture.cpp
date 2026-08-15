@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 8:16:00 AM
  * =====================
@@ -53,9 +53,9 @@ bool Texture::LoadFromFile(GraphicDevice* _pDevice, const wchar_t* _szFilePath)
 	// RPC_E_CHANGED_MODE인 경우만 짜짝이 다른 것이므로 CoUninitialize를 생략해야 하지만
 	// 튜토리얼 수준에서는 일관되게 COINIT_MULTITHREADED를 사용하므로 고려하지 않는다.
 	const HRESULT hrCoInit = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-	const bool bNeedUninit = SUCCEEDED(hrCoInit);
+	const bool needUninit = SUCCEEDED(hrCoInit);
 
-	bool bResult = false;
+	bool result = false;
 
 	// do-while(false) 패턴: 중간 실패 시 break로 빠져나가 마지막 정리 코드를 공유한다.
 	do
@@ -96,7 +96,7 @@ bool Texture::LoadFromFile(GraphicDevice* _pDevice, const wchar_t* _szFilePath)
 		hr = pConverter->GetSize(&width, &height);
 		if (FAILED(hr) || width == 0 || height == 0) { break; }
 
-		jc::Vector<_u8> pixels(int(width) * int(height) * 4, _u8(0));
+		jc::Vector<_u8> pixels(_s32(width) * _s32(height) * 4, _u8(0));
 		hr = pConverter->CopyPixels(
 			nullptr,					// 전체 영역
 			width * 4,					// 한 줄의 바이트 수 (stride)
@@ -105,14 +105,14 @@ bool Texture::LoadFromFile(GraphicDevice* _pDevice, const wchar_t* _szFilePath)
 		if (FAILED(hr)) { break; }
 
 		// 6. GPU 텍스처 생성
-		bResult = CreateFromMemory(_pDevice, pixels.Source(), int(width), int(height));
+		result = CreateFromMemory(_pDevice, pixels.Source(), _s32(width), _s32(height));
 	} while (false);
 
-	if (bNeedUninit)
+	if (needUninit)
 	{
 		CoUninitialize();
 	}
-	return bResult;
+	return result;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -129,11 +129,11 @@ bool Texture::LoadFromSvgFile(GraphicDevice* _pDevice, const char* _szFilePath, 
 	}
 
 	// 2. 출력 픽셀 크기 계산 (최소 1px 보장)
-	const int width = (int(pImage->width * _scale) > 0) ? int(pImage->width * _scale) : 1;
-	const int height = (int(pImage->height * _scale) > 0) ? int(pImage->height * _scale) : 1;
+	const _s32 width = (_s32(pImage->width * _scale) > 0) ? _s32(pImage->width * _scale) : 1;
+	const _s32 height = (_s32(pImage->height * _scale) > 0) ? _s32(pImage->height * _scale) : 1;
 
 	// 3. 래스터라이저 생성 후 픽셀화
-	bool bResult = false;
+	bool result = false;
 	NSVGrasterizer* pRasterizer = nsvgCreateRasterizer();
 	if (pRasterizer != nullptr)
 	{
@@ -148,12 +148,12 @@ bool Texture::LoadFromSvgFile(GraphicDevice* _pDevice, const char* _szFilePath, 
 			width * 4);			// stride
 
 		// 4. GPU 텍스처 생성
-		bResult = CreateFromMemory(_pDevice, pixels.Source(), width, height);
+		result = CreateFromMemory(_pDevice, pixels.Source(), width, height);
 		nsvgDeleteRasterizer(pRasterizer);
 	}
 
 	nsvgDelete(pImage);
-	return bResult;
+	return result;
 #else
 	// nanosvg 미설치: _Extern/nanosvg/README.md 참고 (사용하지 않는 인자 경고 제거)
 	(void)_pDevice;
@@ -165,7 +165,7 @@ bool Texture::LoadFromSvgFile(GraphicDevice* _pDevice, const char* _szFilePath, 
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 메모리의 RGBA 픽셀 배열로 텍스처 생성
-bool Texture::CreateFromMemory(GraphicDevice* _pDevice, const _u8* _pPixels, int _width, int _height)
+bool Texture::CreateFromMemory(GraphicDevice* _pDevice, const _u8* _pPixels, _s32 _width, _s32 _height)
 {
 	// 재사용(재초기화) 대비: 기존 텍스처 뷰를 먼저 정리한다. (GetAddressOf 덮어쓰기 누수 방지)
 	pShaderResourceView_.Reset();

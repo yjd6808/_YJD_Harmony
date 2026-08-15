@@ -68,7 +68,7 @@ void MeshAndTopology_Main()
 	Window window;
 	if (!window.Create(L"08. 메시와 토폴로지 (1/2/3 전환, ESC 종료)", 800, 600))
 	{
-		printf("윈도우 생성 실패!\n");
+		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
 	}
 
@@ -78,7 +78,7 @@ void MeshAndTopology_Main()
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
-		printf("그래픽 디바이스 초기화 실패!\n");
+		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
@@ -91,7 +91,7 @@ void MeshAndTopology_Main()
 	if (!vs.InitializeFromSource(&device, PASSTHROUGH_SHADER_SOURCE) ||
 		!ps.InitializeFromSource(&device, PASSTHROUGH_SHADER_SOURCE))
 	{
-		printf("셰이더 컴파일 실패!\n");
+		jc::Console::WriteLine("셰이더 컴파일 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -99,7 +99,7 @@ void MeshAndTopology_Main()
 
 	// 3. 정점 6개 준비: 육각형 꾸미의 무지개 정점 (NDC 좌표, 인덱스 없음)
 	VertexPTC vertices[6];
-	for (int i = 0; i < 6; ++i)
+	for (_s32 i = 0; i < 6; ++i)
 	{
 		const _f32 angle = jc_math_pi * 2.0f * (_f32)i / 6.0f + jc_math_pi * 0.5f;
 		vertices[i].position_ = vec3(cosf(angle) * 0.7f, sinf(angle) * 0.7f, 0.0f);
@@ -118,17 +118,17 @@ void MeshAndTopology_Main()
 	Mesh mesh;
 	if (!mesh.Initialize(&device, vertices, sizeof(VertexPTC), 6, pLayoutDescs, layoutCount, &vs))
 	{
-		printf("메시 생성 실패!\n");
+		jc::Console::WriteLine("메시 생성 실패!");
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
-	printf("같은 정점 6개를 1/2/3 키로 다르게 해석해보세요!\n");
+	jc::Console::WriteLine("같은 정점 6개를 1/2/3 키로 다르게 해석해보세요!");
 
 	// 5. 렌더 루프
 	PrimitiveTopology topology = PrimitiveTopology::ptTriangleList;
-	int topologyIndex = 0;
+	_s32 topologyIndex = 0;
 
 	while (window.PumpMessage())
 	{

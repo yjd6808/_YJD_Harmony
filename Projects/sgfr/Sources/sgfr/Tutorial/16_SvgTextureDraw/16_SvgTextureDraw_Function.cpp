@@ -11,21 +11,23 @@
 using namespace sgf;
 using namespace jc;
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 벡터 그래픽 vs 래스터 그래픽 차이를 콘솔에 출력한다. (학습용)
 void PrintVectorVsRasterExplanation()
 {
-	printf("\n[래스터 그래픽 (PNG/JPG)]\n");
-	printf(" 픽셀 격자에 색을 저장. 확대하면 계단 현상(픽셀 깨짐)이 생긴다.\n");
-	printf("\n[벡터 그래픽 (SVG)]\n");
-	printf(" '중심 (100,100)에 반지름 80짜리 빨간 원' 처럼 도형 명령어를 저장.\n");
-	printf(" 아무리 확대해도 다시 계산해서 그리므로 항상 깨끗하다!\n");
-	printf("\n[GPU는 벡터를 모른다?]\n");
-	printf(" GPU 텍스처는 결국 픽셀 격자다. 그래서 SVG를 쓰려면\n");
-	printf(" '래스터화(Rasterize)' 과정이 필요하다: SVG -> [nanosvg 파싱] ->\n");
-	printf(" [nanosvgrast 래스터화] -> RGBA 픽셀 -> GPU 텍스처.\n");
-	printf(" 원하는 크기로 래스터화할 수 있는 것이 SVG의 최대 장점! (scale 인자)\n\n");
+	jc::Console::WriteLine("\n[래스터 그래픽 (PNG/JPG)]");
+	jc::Console::WriteLine(" 픽셀 격자에 색을 저장. 확대하면 계단 현상(픽셀 깨짐)이 생긴다.");
+	jc::Console::WriteLine("\n[벡터 그래픽 (SVG)]");
+	jc::Console::WriteLine(" '중심 (100,100)에 반지름 80짜리 빨간 원' 처럼 도형 명령어를 저장.");
+	jc::Console::WriteLine(" 아무리 확대해도 다시 계산해서 그리므로 항상 깨끗하다!");
+	jc::Console::WriteLine("\n[GPU는 벡터를 모른다?]");
+	jc::Console::WriteLine(" GPU 텍스처는 결국 픽셀 격자다. 그래서 SVG를 쓰려면");
+	jc::Console::WriteLine(" '래스터화(Rasterize)' 과정이 필요하다: SVG -> [nanosvg 파싱] ->");
+	jc::Console::WriteLine(" [nanosvgrast 래스터화] -> RGBA 픽셀 -> GPU 텍스처.");
+	jc::Console::WriteLine(" 원하는 크기로 래스터화할 수 있는 것이 SVG의 최대 장점! (scale 인자)\n");
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // 예제 SVG 파일(sample.svg, 실행 팩더 기준)이 없으면 생성해준다.
 // 반환값: 파일이 존재하거나 생성에 성공하면 true
 bool EnsureSampleSvgFile(const char* _szFilePath)
@@ -57,20 +59,21 @@ bool EnsureSampleSvgFile(const char* _szFilePath)
 	return true;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 // nanosvg가 없을 때 대체용으로 그라데이션 원 텍스처를 직접 만든다.
 // (SVG 래스터화 결과와 비슷한 부드러운 원을 CPU로 직접 그린다)
 bool CreateFallbackCircleTexture(GraphicDevice* _pDevice, Texture* _pOutTexture)
 {
-	const int size = 256;
+	const _s32 size = 256;
 	const _f32 center = size * 0.5f;
 	const _f32 radius = size * 0.35f;
 
 	jc::Vector<_u8> pixels;
 	pixels.Resize(size * size * 4);
 
-	for (int y = 0; y < size; ++y)
+	for (_s32 y = 0; y < size; ++y)
 	{
-		for (int x = 0; x < size; ++x)
+		for (_s32 x = 0; x < size; ++x)
 		{
 			// 픽셀 중심에서 원 중심까지의 거리
 			const _f32 dx = (x + 0.5f) - center;
@@ -81,7 +84,7 @@ bool CreateFallbackCircleTexture(GraphicDevice* _pDevice, Texture* _pOutTexture)
 			// 이것이 바로 '안티에일리어싱'의 기본 아이디어다!
 			_f32 alpha = Clamp((radius - dist) / 2.0f, 0.0f, 1.0f);
 
-			const int idx = (y * size + x) * 4;
+			const _s32 idx = (y * size + x) * 4;
 			pixels[idx + 0] = (_u8)(255.0f * alpha);	// R (노란 원)
 			pixels[idx + 1] = (_u8)(209.0f * alpha);	// G
 			pixels[idx + 2] = (_u8)(102.0f * alpha);	// B
