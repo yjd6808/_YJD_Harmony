@@ -5,17 +5,11 @@
 #pragma once
 
 #include "jc/Comparator.h"
-#include "jc/Container/CollectionType.h"
-#include "jc/Container/ContainerType.h"
 #include "jc/Container/CollectionStreamIterator.h"
+#include "jc/Container/Vector.h"
+#include "jc/Container/LinkedList.h"
 
 NS_JC_BEGIN
-
-template <typename, typename> class CollectionExtension;
-template <typename, typename> class Vector;
-template <typename, typename> class LinkedList;
-template <typename, typename> class Collection;
-template <typename, typename> class CollectionStreamIterator;
 
 template <typename T>
 struct StreamNode
@@ -41,20 +35,16 @@ public:
 =====================================================================================*/
 
 template <typename T, typename TAllocator>
-class CollectionStream : public Collection<T, TAllocator>
+class CollectionStream
 {
 	using TStreamNode                 = StreamNode<T>;
-	using TEnumerator                 = Enumerator<T, TAllocator>;
-	using TCollection                 = Collection<T, TAllocator>;
 	using TCollectionStream           = CollectionStream<T, TAllocator>;
 	using TCollectionStreamIterator   = CollectionStreamIterator<T, TAllocator>;
 
-private:
-	// [1] : CollectionStream은 CollectionExtension 에서만 직접생성 가능하도록 한다.
+public:
+	template <typename TCollection>
 	CollectionStream(TCollection* _pCollection)
-		: TCollection()
 	{
-		pCollection_ = _pCollection;
 		int size = _pCollection->Size();
 		this->size_ = size;
 
@@ -72,18 +62,18 @@ private:
 		ConnectNode(pHead_, &pArray_[0]);
 		ConnectNode(&pArray_[size - 1], pTail_);
 
-		TEnumerator enumerator = _pCollection->Begin();
+		auto enumerator = _pCollection->Begin();
 		for (int index = 0; index < size - 1; ++index)
 		{
 			// 실질적인 참조 데이터의 포인터를 담아준다.
-			pArray_[index].pValue_ = AddressOf(enumerator->Next());
+			pArray_[index].pValue_ = AddressOf(enumerator.Next());
 
 			// 초기에는 바로 다음 인덱스에 위치하는 노드가 다음 원소이므로 연결해준다.
 			ConnectNode(&pArray_[index], &pArray_[index + 1]);
 		}
 
 		// 마지막 원소의 참조 정보를 저장한다.
-		pArray_[size - 1].pValue_ = AddressOf(enumerator->Next());
+		pArray_[size - 1].pValue_ = AddressOf(enumerator.Next());
 	}
 
 public:
@@ -91,11 +81,9 @@ public:
 	CollectionStream(const TCollectionStream& _collectionStream) = delete;
 
 	CollectionStream(TCollectionStream&& _collectionStream) noexcept
-		: TCollection()
 	{
 		pArray_ = _collectionStream.pArray_;
 		this->size_ = _collectionStream.size_;
-		pCollection_ = _collectionStream.pCollection_;
 
 		_collectionStream.pArray_ = nullptr;
 		_collectionStream.size_ = 0;
@@ -110,34 +98,24 @@ public:
 		ConnectNode(_collectionStream.pTail_->pPrevious_, pTail_);
 	}
 
-	virtual ~CollectionStream() noexcept
+	~CollectionStream() noexcept
 	{
 		if (pArray_)
 			TAllocator::template DeallocateDynamic(pArray_, allocatedSize_);
 	}
 
 	// TODO: 더미노드 없앨 시 수정
-	TEnumerator Begin() const override
+	TCollectionStreamIterator Begin() const
 	{
-		return MakeShared<TCollectionStreamIterator, TAllocator>(this->GetOwner(), pHead_->pNext_);
+		return TCollectionStreamIterator(pHead_->pNext_, pHead_, pTail_);
 	}
 
-	TEnumerator End() const override
+	TCollectionStreamIterator End() const
 	{
-		return MakeShared<TCollectionStreamIterator, TAllocator>(this->GetOwner(), pTail_->pPrevious_);
+		return TCollectionStreamIterator(pTail_->pPrevious_, pHead_, pTail_);
 	}
 
 public:
-	ContainerType GetContainerType() override
-	{
-		return ContainerType::ReferenceStream;
-	}
-
-	CollectionType GetCollectionType() override
-	{
-		return CollectionType::Stream;
-	}
-
 	template <typename Consumer>
 	TCollectionStream& ForEach(Consumer _consumer)
 	{
@@ -224,12 +202,12 @@ public:
 		return list;
 	}
 
-	int Size() const override
+	int Size() const
 	{
 		return size_;
 	}
 
-	bool IsEmpty() const override
+	bool IsEmpty() const
 	{
 		return size_ == 0;
 	}
@@ -356,7 +334,6 @@ protected:
 	}
 
 protected:
-	TCollection* pCollection_ = nullptr;
 	TStreamNode* pArray_ = nullptr;
 	TStreamNode* pHead_ = &headNode_;
 	TStreamNode* pTail_ = &tailNode_;
@@ -370,7 +347,6 @@ private:
 	TStreamNode tailNode_{};
 	TStreamNode tempNode_{};
 
-	friend class CollectionExtension<T, TAllocator>;
 	friend class CollectionStreamIterator<T, TAllocator>;
 };
 

@@ -4,60 +4,41 @@
 
 #pragma once
 
-#include "jc/Container/MapCollectionIterator.h"
+#include "jc/Container/HashTable.h"
 
 NS_JC_BEGIN
 
-// 전방 선언
-class CVoidOwner;
-template <typename> struct Hasher;
-template <typename> struct BucketNode;
-
-template <typename...> struct Bucket;
-template <typename, typename, typename> class HashMap;
-template <typename, typename> struct Pair;
-
 template <typename TKey, typename TValue, typename TAllocator>
-class HashMapIterator : public MapCollectionIterator<TKey, TValue, TAllocator>
+class HashMapIterator
 {
-	using TBucket				 = Bucket<TKey, TValue, TAllocator>;
-	using TKeyValuePair			 = Pair<TKey, TValue>;
-	using TBucketNode			 = BucketNode<TKeyValuePair>;
-	using THashMap				 = HashMap<TKey, TValue, TAllocator>;
-	using TMapCollectionIterator = MapCollectionIterator<TKey, TValue, TAllocator>;
+	using TBucket		 = Bucket<TKey, TValue, TAllocator>;
+	using TKeyValuePair	 = Pair<TKey, TValue>;
+	using TBucketNode	 = BucketNode<TKeyValuePair>;
+
 public:
-	HashMapIterator(CVoidOwner& _owner, TBucket* _pCurrentBucket, int _currentBucketIndex)
-		: TMapCollectionIterator(_owner)
+	HashMapIterator(TBucket* _pCurrentBucket, int _currentBucketIndex)
+		: pCurrentBucket_(_pCurrentBucket)
+		, currentBucketIndex_(_currentBucketIndex)
 	{
-		pCurrentBucket_ = _pCurrentBucket;
-		currentBucketIndex_ = _currentBucketIndex;
 	}
 
-	~HashMapIterator() noexcept override = default;
-public:
-	bool HasNext() const override
+	bool HasNext() const
 	{
-		if (!this->IsValid())
-			return false;
-
 		if (pCurrentBucket_ != nullptr && currentBucketIndex_ < pCurrentBucket_->size_)
 			return true;
 
 		return false;
 	}
 
-	bool HasPrevious() const override
+	bool HasPrevious() const
 	{
-		if (!this->IsValid())
-			return false;
-
 		if (pCurrentBucket_ != nullptr && currentBucketIndex_ >= 0)
 			return true;
 
 		return false;
 	}
 
-	TKeyValuePair& Next() override
+	TKeyValuePair& Next()
 	{
 		// 반복자가 꼬리까지 도달했는데 데이터를 가져올려고 시도하는 경우
 		TBucketNode& val = pCurrentBucket_->GetAt(currentBucketIndex_++);
@@ -77,7 +58,7 @@ public:
 		return val.data_;
 	}
 
-	TKeyValuePair& Previous() override
+	TKeyValuePair& Previous()
 	{
 		// 반복자가 꼬리까지 도달했는데 데이터를 가져올려고 시도하는 경우
 		TBucketNode& val = pCurrentBucket_->GetAt(currentBucketIndex_--);
@@ -97,32 +78,25 @@ public:
 		return val.data_;
 	}
 
-	TKeyValuePair& Current() override
+	TKeyValuePair& Current()
 	{
 		TBucketNode& val = pCurrentBucket_->GetAt(currentBucketIndex_);
 		return val.data_;
 	}
 
-	bool IsEnd() const override
+	bool IsEnd() const
 	{
 		return HasNext() == false;
 	}
 
-	bool IsBegin() const override
+	bool IsBegin() const
 	{
 		return HasPrevious() == false;
 	}
 
-protected:
-	THashMap* CastHashMap() const
-	{
-		this->ThrowIfIteratorIsNotValid();
-		return this->watcher_.template Get<THashMap*>();
-	}
-protected:
+private:
 	int currentBucketIndex_;
 	TBucket* pCurrentBucket_;
-	friend class THashMap;
 };
 
 NS_END

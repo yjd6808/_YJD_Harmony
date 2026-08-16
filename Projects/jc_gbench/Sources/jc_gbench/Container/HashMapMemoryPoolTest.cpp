@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/26/2023 5:29:57 AM
  * =====================
@@ -113,8 +113,8 @@ static void BM_HashMapIteratorVisit(State& state) {
 		}
 #else
 		auto it = hashMap.Begin();
-		while (it->HasNext()) {
-			k = hashMap[it->Next().Key];
+		while (it.HasNext()) {
+			k = hashMap[it.Next().Key];
 			state.PauseTiming();
 			v.push_back(k);
 			state.ResumeTiming();
@@ -159,8 +159,8 @@ static void BM_HashMapIteratorCreation(State& state) {
 #else
 		for (int i = 0; i < iterationCount; ++i) {
 			auto it = hashMap.Begin();
-			while (it->HasNext()) {
-				k = hashMap[it->Next().Key];
+			while (it.HasNext()) {
+				k = hashMap[it.Next().Key];
 				state.PauseTiming();
 				v.push_back(k);
 				state.ResumeTiming();

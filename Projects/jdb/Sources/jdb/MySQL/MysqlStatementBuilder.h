@@ -12,6 +12,7 @@
 #pragma once
 
 #include "jc/Time.h"
+#include "jc/Primitives/Atomic.h"
 
 #include "MysqlConnection.h"
 

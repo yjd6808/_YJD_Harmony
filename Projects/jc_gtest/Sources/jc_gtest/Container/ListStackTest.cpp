@@ -1,4 +1,4 @@
-/*
+﻿/*
 	작성자 : 윤정도
 	배열기반 스택 테스트
 */
@@ -66,13 +66,13 @@ TEST(ListStackTest, TotalTest) {
 		auto stackFit = stack.Begin();
 		auto stackRit = stack.End();
 
-		while (stackFit->HasNext()) {
-			EXPECT_TRUE(stackFit->Next() == (*fit));
+		while (stackFit.HasNext()) {
+			EXPECT_TRUE(stackFit.Next() == (*fit));
 			++fit;
 		}
 
-		while (stackFit->HasNext()) {
-			EXPECT_TRUE(stackFit->Previous() == (*fit));
+		while (stackFit.HasNext()) {
+			EXPECT_TRUE(stackFit.Previous() == (*fit));
 			++rit;
 		}
 
@@ -167,9 +167,9 @@ TEST(ListStackTest, OperatorTest) {
 	EXPECT_TRUE(d.Size() == 2);
 
 	auto it = d.Begin();
-	EXPECT_TRUE(it->Next().a == 1);
-	EXPECT_TRUE(it->Next().a == 3);
-	EXPECT_TRUE(it->HasNext() == false);
+	EXPECT_TRUE(it.Next().a == 1);
+	EXPECT_TRUE(it.Next().a == 3);
+	EXPECT_TRUE(it.HasNext() == false);
 }
 
 

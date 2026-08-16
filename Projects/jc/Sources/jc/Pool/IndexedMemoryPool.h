@@ -206,7 +206,7 @@ public:
 	{
 		jc_assert_msg(initialized_ == false, "이미 풀이 초기화 되어 있습니다.");
 
-		const_cast<HashMap<int, int>&>(_allocationMap).Extension().ForEach([this](Pair<int, int>& _count)
+		const_cast<HashMap<int, int>&>(_allocationMap).ForEach([this](Pair<int, int>& _count)
 		{
 			const int blockSize = _count.key_;
 			const int blockCount = _count.value_;

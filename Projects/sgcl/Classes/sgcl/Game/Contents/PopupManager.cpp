@@ -271,7 +271,7 @@ bool PopupManager::Close(UI_Popup* _pPopup)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool PopupManager::CloseByTag(int _tag)
 {
-	UI_Popup** pFind = opendList_.Extension().FindIf(
+	UI_Popup** pFind = opendList_.FindIf(
 		[_tag](UI_Popup* _pPopup) { return _pPopup->getTag() == _tag; });
 
 	if (pFind == nullptr)

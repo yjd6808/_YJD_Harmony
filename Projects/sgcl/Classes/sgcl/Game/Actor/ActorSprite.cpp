@@ -305,7 +305,7 @@ void ActorSprite::UpdateSpriteData(ActorSpriteData* _pSpriteData)
 	jc::Vector<ActorPartSpriteData> newParts; // 신규 목록중 추가되어야하는 파츠들
 
 	// Step 1. 기존 목록중 교체되어야하는 파츠들을 찾는다.
-	parts_.Extension().Filter([&partsDataVector](PartData& _candidatePart)
+	parts_.ForEach([&partsDataVector, &removeParts](PartData& _candidatePart)
 	{
 		ActorPartSpriteData targetPartData = _candidatePart.pPart_->GetPartData();
 
@@ -321,14 +321,14 @@ void ActorSprite::UpdateSpriteData(ActorSpriteData* _pSpriteData)
 			}
 		}
 
-		return needToRemove;
-	}).ForEach([&removeParts](PartData& _removePartData)
-	{
-		removeParts.PushBack(_removePartData);
+		if (needToRemove)
+		{
+			removeParts.PushBack(_candidatePart);
+		}
 	});
 
 	// Step 2. 신규 목록중 추가되어야하는 파츠들을 찾는다.
-	partsDataVector.Extension().Filter([this](ActorPartSpriteData& _candidatePart)
+	partsDataVector.ForEach([this, &newParts](ActorPartSpriteData& _candidatePart)
 	{
 		bool needToAdd = true;
 
@@ -345,10 +345,10 @@ void ActorSprite::UpdateSpriteData(ActorSpriteData* _pSpriteData)
 			}
 		}
 
-		return needToAdd;
-	}).ForEach([&newParts](ActorPartSpriteData& _partData)
-	{
-		newParts.PushBack(_partData);
+		if (needToAdd)
+		{
+			newParts.PushBack(_candidatePart);
+		}
 	});
 
 	// Step 3. 제거된 기존 파츠 목록과 메모리에서 제거한다.

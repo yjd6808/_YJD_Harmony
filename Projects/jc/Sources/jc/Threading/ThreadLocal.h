@@ -120,8 +120,8 @@ public:
 		}
 
 		auto iterator = m_ValueMaps->Begin();
-		while (iterator->HasNext()) {
-			auto valueMapWeakPtr = iterator->Next();
+		while (iterator.HasNext()) {
+			auto valueMapWeakPtr = iterator.Next();
 			if (valueMapWeakPtr.Exist()) {
 				valueMapWeakPtr->Remove(m_uiObjectId);
 			} else {

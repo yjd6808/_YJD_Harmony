@@ -44,7 +44,7 @@ USING_NS_STD;
 
 //출력 여부
 #define Print						OFF
-#define TestEnabled                 OFF		// 전체 테스트 수행 여부
+#define TestEnabled                 ON		// 전체 테스트 수행 여부
 
 #define BaseTestEnabled             ON      // jc 테스트 수행 여부
 #define ContainerTestEnabled        ON      // jc::Container 테스트 수행 여부

@@ -5,7 +5,6 @@
 #pragma once
 
 #include "jc/Container/ListCollection.h"
-#include "jc/Container/ListStackIterator.h"
 
 NS_JC_BEGIN
 
@@ -15,11 +14,9 @@ class ListStack;
 template <typename T, typename TAllocator>
 class ListStack : public ListCollection<T, TAllocator>
 {
-	using TEnumerator             = Enumerator<T, TAllocator>;
-	using TCollection             = Collection<T, TAllocator>;
-	using TListCollection         = ListCollection<T, TAllocator>;
-	using TListStack              = ListStack<T, TAllocator>;
-	using TListStackIterator      = ListStackIterator<T, TAllocator>;
+	using TListCollection			= ListCollection<T, TAllocator>;
+	using TListCollectionIterator	= ListCollectionIterator<T, TAllocator, false>;
+	using TListStack				= ListStack<T, TAllocator>;
 
 public:
 	ListStack()
@@ -42,7 +39,7 @@ public:
 	{
 	}
 
-	~ListStack() noexcept override
+	~ListStack() noexcept
 	{
 	}
 
@@ -65,17 +62,18 @@ public:
 		return *this;
 	}
 
-	virtual void Push(const T& _data)
+	void Push(const T& _data)
 	{
 		TListCollection::PushBack(_data);
 	}
 
-	virtual void Push(T&& _data)
+	void Push(T&& _data)
 	{
 		TListCollection::PushBack(Move(_data));
 	}
 
-	virtual void PushAll(const TCollection& _collection)
+	template <typename TCollection>
+	void PushAll(const TCollection& _collection)
 	{
 		TListCollection::PushBackAll(_collection);
 	}
@@ -86,38 +84,30 @@ public:
 		TListCollection::EmplaceBack(Forward<Args>(_args)...);
 	}
 
-	virtual void Pop()
+	void Pop()
 	{
 		TListCollection::PopBack();
 	}
 
-	virtual bool Pop(T* _pOut)
+	bool Pop(T* _pOut)
 	{
 		return TListCollection::PopBack(_pOut);
 	}
 
-	virtual T& Top() const
+	T& Top() const
 	{
 		return TListCollection::Back();
 	}
 
-	TEnumerator Begin() const override
+	TListCollectionIterator Begin() const
 	{
-		return MakeShared<TListStackIterator, TAllocator>(this->GetOwner(), this->pHead_);
+		return TListCollectionIterator(const_cast<TListCollection*>(static_cast<const TListCollection*>(this)), this->pHead_);
 	}
 
-	TEnumerator End() const override
+	TListCollectionIterator End() const
 	{
-		return MakeShared<TListStackIterator, TAllocator>(this->GetOwner(), this->pTail_);
+		return TListCollectionIterator(const_cast<TListCollection*>(static_cast<const TListCollection*>(this)), this->pTail_);
 	}
-
-	ContainerType GetContainerType() override
-	{
-		return ContainerType::ListStack;
-	}
-
-protected:
-	friend class TListStackIterator;
 };
 
 NS_END

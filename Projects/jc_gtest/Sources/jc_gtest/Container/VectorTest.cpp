@@ -1,4 +1,4 @@
-/*
+﻿/*
 	작성자 : 윤정도
 */
 
@@ -172,10 +172,8 @@ TEST(VectorTest, Enumerator) {
 	// 데이터가 없는 경우
 	{
 		Vector<int> v;
-		EXPECT_TRUE(v.Begin()->IsValid());
-		EXPECT_TRUE(v.End()->IsValid());
-		EXPECT_TRUE(v.Begin()->HasNext() == false);
-		EXPECT_TRUE(v.End()->HasNext() == false);
+		EXPECT_TRUE(v.Begin().HasNext() == false);
+		EXPECT_TRUE(v.End().HasNext() == false);
 	}
 
 	// 데이터가 한개만 있는 경우
@@ -186,16 +184,14 @@ TEST(VectorTest, Enumerator) {
 		auto begin = v.Begin();
 		auto end = v.End();
 
-		EXPECT_TRUE(begin->IsValid());
-		EXPECT_TRUE(begin->HasNext());
-		EXPECT_TRUE(end->IsValid());
-		EXPECT_TRUE(end->HasPrevious());
+		EXPECT_TRUE(begin.HasNext());
+		EXPECT_TRUE(end.HasPrevious());
 		
-		EXPECT_TRUE(begin->Next());
-		EXPECT_TRUE(begin->HasNext() == false);
+		EXPECT_TRUE(begin.Next());
+		EXPECT_TRUE(begin.HasNext() == false);
 
-		EXPECT_TRUE(end->Previous());
-		EXPECT_TRUE(end->HasPrevious() == false);
+		EXPECT_TRUE(end.Previous());
+		EXPECT_TRUE(end.HasPrevious() == false);
 	}
 
 	// 데이터 5개
@@ -210,17 +206,15 @@ TEST(VectorTest, Enumerator) {
 		auto begin = v.Begin();
 		auto end = v.Begin();
 
-		EXPECT_TRUE(begin->IsValid());
-		EXPECT_TRUE(begin->HasNext());
-		EXPECT_TRUE(end->IsValid());
-		EXPECT_TRUE(end->HasNext());
+		EXPECT_TRUE(begin.HasNext());
+		EXPECT_TRUE(end.HasNext());
 
-		for (int i = 1; begin->HasNext(); i++) {
-			EXPECT_TRUE(begin->Next() == i);
+		for (int i = 1; begin.HasNext(); i++) {
+			EXPECT_TRUE(begin.Next() == i);
 		}
 
-		for (int i = 5; begin->HasPrevious(); i--) {
-			EXPECT_TRUE(begin->Previous() == i);
+		for (int i = 5; begin.HasPrevious(); i--) {
+			EXPECT_TRUE(begin.Previous() == i);
 		}
 	}
 }
@@ -428,6 +422,24 @@ TEST(VectorTest, Pop) {
 	v.PopFront(2);
 	EXPECT_TRUE(v[0] == 3);
 	EXPECT_TRUE(v.Size() == 1);
+}
+
+TEST(VectorTest, ConstIteration) {
+	LeakCheck;
+
+	const Vector<int> v{ 1, 2, 3, 4, 5 };
+
+	int index = 0;
+	for (const int& value : v) {
+		EXPECT_TRUE(value == ++index);
+	}
+	EXPECT_TRUE(index == 5);
+
+	// const 컨테이너의 값 이터레이터 순회
+	auto it = v.Begin();
+	while (it.HasNext()) {
+		EXPECT_TRUE(it.Next() >= 1);
+	}
 }
 
 #endif // TEST_VectorTest == ON

@@ -66,7 +66,7 @@ bool ConnectionPool::Init(const uint32_t _initConn)
 void ConnectionPool::TerminateAllConnections()
 {
 	NormalLockGuard guard(mutex_);
-	connectionList_.Extension().ForEach([this](IConnection* _pConnection)
+	connectionList_.ForEach([this](IConnection* _pConnection)
 	{
 		TerminateConnection(_pConnection);
 	});

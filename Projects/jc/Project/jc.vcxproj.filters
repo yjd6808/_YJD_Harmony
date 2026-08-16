@@ -306,28 +306,16 @@
     <ClInclude Include="..\Sources\jc\Ascii.h" />
     <ClInclude Include="..\Sources\jc\Exception.h" />
     <ClInclude Include="..\Sources\jc\Deletor.h" />
-    <ClInclude Include="..\Sources\jc\Container\Collection.h">
+        <ClInclude Include="..\Sources\jc\Container\ArrayCollection.h">
       <Filter>Container</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\ArrayCollection.h">
-      <Filter>Container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\Iterable.h">
-      <Filter>Container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\Iterator.h">
-      <Filter>Container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\ArrayCollectionIterator.h">
+            <ClInclude Include="..\Sources\jc\Container\ArrayCollectionIterator.h">
       <Filter>Container</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\Container\ArrayStack.h">
       <Filter>Container</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\ArrayStackIterator.h">
-      <Filter>Container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\ArrayQueue.h">
+        <ClInclude Include="..\Sources\jc\Container\ArrayQueue.h">
       <Filter>Container</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\Container\ArrayQueueIterator.h">
@@ -336,10 +324,7 @@
     <ClInclude Include="..\Sources\jc\Container\Vector.h">
       <Filter>Container</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\VectorIterator.h">
-      <Filter>Container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\ListCollection.h">
+        <ClInclude Include="..\Sources\jc\Container\ListCollection.h">
       <Filter>Container</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\Container\ListCollectionIterator.h">
@@ -351,40 +336,22 @@
     <ClInclude Include="..\Sources\jc\Container\ListQueue.h">
       <Filter>Container</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\ListQueueIterator.h">
+        <ClInclude Include="..\Sources\jc\Container\LinkedList.h">
       <Filter>Container</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\LinkedList.h">
+        <ClInclude Include="..\Sources\jc\Container\ListStack.h">
       <Filter>Container</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\LinkedListIterator.h">
-      <Filter>Container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\ListStack.h">
-      <Filter>Container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\ListStackIterator.h">
-      <Filter>Container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\MapCollection.h">
-      <Filter>Container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\Pair.h">
+            <ClInclude Include="..\Sources\jc\Container\Pair.h">
       <Filter>Container</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\Container\HashMap.h">
       <Filter>Container</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\MapCollectionIterator.h">
+        <ClInclude Include="..\Sources\jc\Container\HashMapIterator.h">
       <Filter>Container</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\HashMapIterator.h">
-      <Filter>Container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\CollectionExtension.h">
-      <Filter>Container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\Functional.h" />
+        <ClInclude Include="..\Sources\jc\Functional.h" />
     <ClInclude Include="..\Sources\jc\Container\CollectionStream.h">
       <Filter>Container</Filter>
     </ClInclude>
@@ -481,13 +448,7 @@
     <ClInclude Include="..\Sources\jc\Sync\AutoResetEvent.h">
       <Filter>Sync</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\CollectionType.h">
-      <Filter>Container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\ContainerType.h">
-      <Filter>Container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\Pool\IndexedMemoryPool.h">
+            <ClInclude Include="..\Sources\jc\Pool\IndexedMemoryPool.h">
       <Filter>Pool</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\Pool\MemoryPoolAllocationAlgorithm.h">
@@ -627,13 +588,7 @@
     <ClInclude Include="..\Sources\jc\Container\TreeTable_Node.h">
       <Filter>Container</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\SetCollection.h">
-      <Filter>Container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\SetCollectionIterator.h">
-      <Filter>Container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\TreeSet.h">
+            <ClInclude Include="..\Sources\jc\Container\TreeSet.h">
       <Filter>Container</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\Container\TreeSetIterator.h">
@@ -648,7 +603,10 @@
     <ClInclude Include="..\Sources\jc\Primitives\BitFlag.h">
       <Filter>Primitives</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\Utils\ProgressNotifier.h">
+    <ClInclude Include="..\Sources\jc\Utils\StackTrace.h">
+<Filter>Utils</Filter>
+</ClInclude>
+<ClInclude Include="..\Sources\jc\Utils\ProgressNotifier.h">
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\Utils\IProgressListener.h">

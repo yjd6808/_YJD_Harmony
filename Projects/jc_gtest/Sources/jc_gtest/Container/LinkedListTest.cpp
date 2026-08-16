@@ -1,4 +1,4 @@
-/*
+﻿/*
 	작성자 : 윤정도
 */
 
@@ -44,10 +44,8 @@ TEST(LinkedListTest, Enumerator) {
 	// 데이터가 없는 경우
 	{
 		LinkedList<int> v;
-		EXPECT_TRUE(v.Begin()->IsValid());
-		EXPECT_TRUE(v.End()->IsValid());
-		EXPECT_TRUE(v.Begin()->HasNext() == false);
-		EXPECT_TRUE(v.End()->HasNext() == false);
+		EXPECT_TRUE(v.Begin().HasNext() == false);
+		EXPECT_TRUE(v.End().HasNext() == false);
 	}
 
 	// 데이터가 한개만 있는 경우
@@ -58,16 +56,14 @@ TEST(LinkedListTest, Enumerator) {
 		auto begin = v.Begin();
 		auto end = v.End();
 
-		EXPECT_TRUE(begin->IsValid());
-		EXPECT_TRUE(begin->HasNext());
-		EXPECT_TRUE(end->IsValid());
-		EXPECT_TRUE(end->HasPrevious());
+		EXPECT_TRUE(begin.HasNext());
+		EXPECT_TRUE(end.HasPrevious());
 		
-		EXPECT_TRUE(begin->Next());
-		EXPECT_TRUE(begin->HasNext() == false);
+		EXPECT_TRUE(begin.Next());
+		EXPECT_TRUE(begin.HasNext() == false);
 
-		// EXPECT_TRUE(end->Previous()); 한번 끝으로 이동하면 이제 더이상 복구불가능
-		// EXPECT_TRUE(end->HasPrevious() == false);
+		// EXPECT_TRUE(end.Previous()); 한번 끝으로 이동하면 이제 더이상 복구불가능
+		// EXPECT_TRUE(end.HasPrevious() == false);
 	}
 
 	// 데이터 5개
@@ -82,17 +78,15 @@ TEST(LinkedListTest, Enumerator) {
 		auto begin = v.Begin();
 		auto end = v.Begin();
 
-		EXPECT_TRUE(begin->IsValid());
-		EXPECT_TRUE(begin->HasNext());
-		EXPECT_TRUE(end->IsValid());
-		EXPECT_TRUE(end->HasNext());
+		EXPECT_TRUE(begin.HasNext());
+		EXPECT_TRUE(end.HasNext());
 
-		for (int i = 1; begin->HasNext(); i++) {
-			EXPECT_TRUE(begin->Next() == i);
+		for (int i = 1; begin.HasNext(); i++) {
+			EXPECT_TRUE(begin.Next() == i);
 		}
 
-		for (int i = 5; begin->HasPrevious(); i--) {
-			EXPECT_TRUE(begin->Previous() == i);
+		for (int i = 5; begin.HasPrevious(); i--) {
+			EXPECT_TRUE(begin.Previous() == i);
 		}
 	}
 }
@@ -169,9 +163,9 @@ TEST(LinkedListTest, InnerDestructorTest) {
 	for (int i = 0; i < 1024; i++) {
 		if (i && i % 4 == 0) {
 			if ((toggle = !toggle))
-				aq.Remove(*aq.Extension().First());
+				aq.Remove(*aq.First());
 			else
-				aq.Remove(*aq.Extension().Last());
+				aq.Remove(*aq.Last());
 		} else {
 			aq.PushBack("fsefesfesfesf");
 		}

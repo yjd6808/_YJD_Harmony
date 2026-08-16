@@ -631,7 +631,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////////////////////
 	void AddData(const TDataMap& _data, bool _overrideExist)
 	{
-		_data.map_.ForEach([this, _overrideExist](typename TMapContainer::TKeyValuePair& _pair)
+		_data.map_.ForEach([this, _overrideExist](auto& _pair)
 		{
 			DataVariant* pExistingVariant = map_.Find(_pair.key_);
 

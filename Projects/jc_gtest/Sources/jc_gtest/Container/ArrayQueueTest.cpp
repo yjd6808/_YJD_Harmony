@@ -1,4 +1,4 @@
-/*
+﻿/*
 	작성자 : 윤정도
 	배열기반 스택 테스트
 */
@@ -49,15 +49,15 @@ TEST(ArrayQueueTest, FullCaseTest) {
 
 	auto it = q.Begin();
 	int i = 0;
-	while (it->HasNext()) {
-		it->Next();
+	while (it.HasNext()) {
+		it.Next();
 		i++;
 	}
 
 	it = q.End();
 
-	while (it->HasPrevious()) {
-		it->Previous();
+	while (it.HasPrevious()) {
+		it.Previous();
 		i--;
 	}
 
@@ -112,21 +112,21 @@ TEST(ArrayQueueTest, TotalTest) {
 			
 			//PrintFormat("셔플/큐 데이터 수 : %d/%d\n", suffleCount, queueSize1);
 			//빼고 남아있는 것들을 넣어줌
-			Enumerator<int> it = queue.Begin();
-			Enumerator<int> rit = queue.End();
+			auto it = queue.Begin();
+			auto rit = queue.End();
 
 			if (queueSize1 == 0) {
 				int a = 40;
 			}
 
 			// 반복자 정방향
-			while (it->HasNext()) {
-				v.push_back(it->Next());
+			while (it.HasNext()) {
+				v.push_back(it.Next());
 			}
 
 			// 반복자 역방향
-			while (rit->HasPrevious()) {
-				rv.push_back(rit->Previous());
+			while (rit.HasPrevious()) {
+				rv.push_back(rit.Previous());
 			}
 			
 			int enqueueSize = random.GenerateInt(1, 50);
@@ -147,15 +147,15 @@ TEST(ArrayQueueTest, TotalTest) {
 
 			it = queue.Begin();
 			int k = 0;
-			while (it->HasNext()) {
-				EXPECT_TRUE(v[k++] == it->Next());
+			while (it.HasNext()) {
+				EXPECT_TRUE(v[k++] == it.Next());
 			}
 
 			auto rvIt = rv.begin();
 			rit = queue.End();
 			k = 0;
-			while (rit->HasPrevious()) {
-				int value = rit->Previous();
+			while (rit.HasPrevious()) {
+				int value = rit.Previous();
 				int vv = *rvIt;
 				EXPECT_TRUE(vv == value);
 				++rvIt;
@@ -171,16 +171,16 @@ TEST(ArrayQueueTest, TotalTest) {
 		auto backward_listit = backward_list.begin();
 		auto myqueueit = queue.Begin();
 
-		while (myqueueit->HasNext()) {
+		while (myqueueit.HasNext()) {
 			int lval = *forward_listit;
-			EXPECT_TRUE(myqueueit->Next() == lval);
+			EXPECT_TRUE(myqueueit.Next() == lval);
 			++forward_listit;
 		}
 
 		myqueueit = queue.End();
-		while (myqueueit->HasPrevious()) {
+		while (myqueueit.HasPrevious()) {
 			int lval = *backward_listit;
-			EXPECT_TRUE(myqueueit->Previous() == lval);
+			EXPECT_TRUE(myqueueit.Previous() == lval);
 			++backward_listit;
 		}
 	}

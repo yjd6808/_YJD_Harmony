@@ -4,7 +4,14 @@
 
 #pragma once
 
-#include "jc/Container/Collection.h"
+#include <initializer_list>
+
+#include "jc/Assert.h"
+#include "jc/Memory.h"
+#include "jc/Namespace.h"
+#include "jc/TypeCast.h"
+#include "jc/Allocator/DefaultAllocator.h"
+
 #include "jc/Container/ListCollectionIterator.h"
 #include "jc/Container/ListNode.h"
 
@@ -17,13 +24,11 @@ NS_JC_BEGIN
 =====================================================================================*/
 
 template <typename T, typename TAllocator>
-class ListCollection : public Collection<T, TAllocator>
+class ListCollection
 {
-	using TEnumerator              = Enumerator<T, TAllocator>;
-	using TListNode                = ListNode<T, TAllocator>;
-	using TCollection              = Collection<T, TAllocator>;
-	using TListCollection          = ListCollection<T, TAllocator>;
-	using TListCollectionIterator  = ListCollectionIterator<T, TAllocator>;
+	using TListNode				= ListNode<T, TAllocator>;
+	using TListCollection		= ListCollection<T, TAllocator>;
+	using TListCollectionIterator	= ListCollectionIterator<T, TAllocator, false>;
 
 public:
 	ListCollection()
@@ -69,10 +74,10 @@ public:
 		CopyFrom(_ilist);
 	}
 
-	~ListCollection() noexcept override = 0;
+	~ListCollection() noexcept;
 
 public:
-	virtual void Clear()
+	void Clear()
 	{
 		/*
 		 
@@ -130,8 +135,95 @@ public:
 		}
 	}
 
-	bool IsEmpty() const override { return size_ == 0; }
-	int Size() const override { return size_; }
+	bool IsEmpty() const { return size_ == 0; }
+	int Size() const { return size_; }
+
+	TListCollectionIterator Begin() const
+	{
+		return TListCollectionIterator(const_cast<TListCollection*>(this), pHead_);
+	}
+
+	TListCollectionIterator End() const
+	{
+		return TListCollectionIterator(const_cast<TListCollection*>(this), pTail_);
+	}
+
+	template <typename IndexConsumer>
+	void ForEachWithIndex(IndexConsumer&& _consumer)
+	{
+		auto it = Begin();
+		int index = 0;
+		while (it.HasNext())
+		{
+			_consumer(it.Next(), index);
+			++index;
+		}
+	}
+
+	template <typename TPredicate>
+	bool ExistIf(TPredicate&& _predicate) const
+	{
+		auto it = Begin();
+		while (it.HasNext())
+		{
+			if (_predicate(it.Next()))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	T* First()
+	{
+		if (size_ == 0)
+		{
+			return nullptr;
+		}
+
+		return AddressOf(Begin().Next());
+	}
+
+	T* Last()
+	{
+		if (size_ == 0)
+		{
+			return nullptr;
+		}
+
+		return AddressOf(End().Previous());
+	}
+
+	T* IndexOf(int _at)
+	{
+		int index = 0;
+
+		auto it = Begin();
+		while (it.HasNext())
+		{
+			T& currentValue = it.Next();
+			if (index++ == _at)
+			{
+				return AddressOf(currentValue);
+			}
+		}
+		return nullptr;
+	}
+
+	template <typename TPredicate>
+	T* FindIf(TPredicate&& _predicate)
+	{
+		auto it = Begin();
+		while (it.HasNext())
+		{
+			T& value = it.Next();
+			if (_predicate(value))
+			{
+				return AddressOf(value);
+			}
+		}
+		return nullptr;
+	}
 
 protected:
 	template <typename U = T, typename UAllocator>
@@ -179,12 +271,10 @@ protected:
 		size_ = _otherCollection.size_;
 	}
 
-	virtual void CopyFrom(TListCollection&& _otherCollection)
+	void CopyFrom(TListCollection&& _otherCollection)
 	{
 		// this->ThrowIfAssignSelf(other);
 		Clear();
-
-		this->owner_ = Move(_otherCollection.owner_);
 
 		// 만약 비어있을 경우 other의 더미 헤드와 더미 테일을 참조하게 되는데
 		// 동적할당된 녀석이 아니기 때문에 나중에 오류를 일으키게 된다.
@@ -242,7 +332,7 @@ protected:
 		size_ = static_cast<int>(_ilist.size());
 	}
 
-	virtual bool Valid() const
+	bool Valid() const
 	{
 		return true;
 	}
@@ -279,26 +369,28 @@ protected:
 		}
 	}
 
-	virtual void PushBack(const T& _data)
+public:
+	void PushBack(const T& _data)
 	{
 		TListNode* pNewNode = CreateNewNode(_data);
 		PushBackNewNode(pNewNode);
 		++size_;
 	}
 
-	virtual void PushBack(T&& _data)
+	void PushBack(T&& _data)
 	{
 		TListNode* pNewNode = CreateNewNode(Move(_data));
 		PushBackNewNode(pNewNode);
 		++size_;
 	}
 
-	virtual void PushBackAll(const TCollection& _collection)
+	template <typename TCollection>
+	void PushBackAll(const TCollection& _collection)
 	{
-		TEnumerator it = _collection.Begin();
-		while (it->HasNext())
+		auto it = _collection.Begin();
+		while (it.HasNext())
 		{
-			TListNode* pNewNode = CreateNewNode(it->Next());
+			TListNode* pNewNode = CreateNewNode(it.Next());
 			PushBackNewNode(pNewNode);
 		}
 		size_ += _collection.Size();
@@ -331,9 +423,9 @@ protected:
 		return true;
 	}
 
-	virtual bool Remove(TListCollectionIterator& _iter)
+	bool Remove(TListCollectionIterator& _iter)
 	{
-		if (_iter.pHead_ != pHead_)
+		if (_iter.pCollection_ != this)
 		{
 			throw InvalidOperationException("해당 이터레이터가 소속된 컨테이너를 제대로 지정해주세요.");
 		}
@@ -351,6 +443,7 @@ protected:
 		return true;
 	}
 
+protected:
 	void RemoveNode(TListNode* _pDelNode)
 	{
 		if (_pDelNode == pHead_)
@@ -414,7 +507,8 @@ protected:
 		pTail_ = _pNewNode;
 	}
 
-	virtual void PushFront(const T& _data)
+public:
+	void PushFront(const T& _data)
 	{
 		TListNode* pNewNode = CreateNewNode(_data);
 		jc_assert(pNewNode->pPrevious_ == nullptr);
@@ -422,7 +516,7 @@ protected:
 		++size_;
 	}
 
-	virtual void PushFront(T&& _data)
+	void PushFront(T&& _data)
 	{
 		TListNode* pNewNode = CreateNewNode(Move(_data));
 		jc_assert(pNewNode->pPrevious_ == nullptr);
@@ -430,19 +524,21 @@ protected:
 		++size_;
 	}
 
-	virtual void PushFrontAll(const TCollection& _collection)
+	template <typename TCollection>
+	void PushFrontAll(const TCollection& _collection)
 	{
-		TEnumerator it = _collection.Begin();
-		while (it->HasNext())
+		auto it = _collection.Begin();
+		while (it.HasNext())
 		{
-			TListNode* pNewNode = CreateNewNode(it->Next());
+			TListNode* pNewNode = CreateNewNode(it.Next());
 			PushFrontNewNode(pNewNode);
 		}
 		size_ += _collection.Size();
 	}
 
+protected:
 	/// <summary>
-	/// node 바로 이후에 newNode를 삽입한다.
+	/// head에 node를 삽입한다.
 	/// </summary>
 	void PushFrontNewNode(TListNode* _pNewNode)
 	{
@@ -468,6 +564,7 @@ protected:
 		jc_assert(pHead_->pPrevious_ == nullptr);
 	}
 
+public:
 	template <typename... Args>
 	void EmplaceBack(Args&&... _args)
 	{
@@ -484,7 +581,7 @@ protected:
 		++size_;
 	}
 
-	virtual void PopFront()
+	void PopFront()
 	{
 		jc_assert_msg(size_ != 0, "데이터가 없습니다.");
 
@@ -502,7 +599,7 @@ protected:
 		--size_;
 	}
 
-	virtual bool PopFront(T* _pOut)
+	bool PopFront(T* _pOut)
 	{
 		if (size_ == 0)
 			return false;
@@ -524,7 +621,7 @@ protected:
 		return true;
 	}
 
-	virtual void PopBack()
+	void PopBack()
 	{
 		jc_assert_msg(size_ != 0, "데이터가 없습니다.");
 
@@ -542,7 +639,7 @@ protected:
 		--size_;
 	}
 
-	virtual bool PopBack(T* _pOut)
+	bool PopBack(T* _pOut)
 	{
 		if (size_ == 0)
 			return false;
@@ -564,18 +661,19 @@ protected:
 		return true;
 	}
 
-	virtual T& Front() const
+	T& Front() const
 	{
 		jc_assert_msg(size_ != 0, "데이터가 없습니다.");
 		return pHead_->value_;
 	}
 
-	virtual T& Back() const
+	T& Back() const
 	{
 		jc_assert_msg(size_ != 0, "데이터가 없습니다.");
 		return pTail_->value_;
 	}
 
+protected:
 	TListNode* CreateNewNode(const T& _data)
 	{
 		if constexpr (!IsCopyConstructible_v<T>)
@@ -665,14 +763,12 @@ protected:
 		return nullptr;
 	}
 
-	CollectionType GetCollectionType() override { return CollectionType::List; }
-
 protected:
 	TListNode* pHead_;
 	TListNode* pTail_;
 	int size_;
 
-	friend class TListCollectionIterator;
+	template <typename, typename, bool> friend class ListCollectionIterator;
 };
 
 

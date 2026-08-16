@@ -4,52 +4,35 @@
 
 #pragma once
 
-#include "jc/Container/MapCollectionIterator.h"
+#include "jc/Container/TreeTable.h"
 
 NS_JC_BEGIN
 
-// 전방 선언
-enum class ETreeTableImplementation;
-class CVoidOwner;
-template <typename> class TreeNode;
-template <typename, typename> struct Pair;
-template <typename, typename, typename, typename, ETreeTableImplementation> class TreeMap;
-
 template <typename TKey, typename TValue, typename TKeyComparator, typename TAllocator, ETreeTableImplementation Implementation>
-class TreeMapIterator : public MapCollectionIterator<TKey, TValue, TAllocator>
+class TreeMapIterator
 {
 	using TKeyValuePair			 = Pair<TKey, TValue>;
 	using TTreeNode				 = TreeNode<TKeyValuePair>;
 	using TTreeMap				 = TreeMap<TKey, TValue, TKeyComparator, TAllocator, Implementation>;
 	using TTreeTable			 = TreeTable<ParameterPack_t<TKey, TValue, TKeyComparator, TAllocator>, Implementation>;
-	using TTreeMapIterator		 = TreeMapIterator<TKey, TValue, TKeyComparator, TAllocator, Implementation>;
-	using TMapCollectionIterator = MapCollectionIterator<TKey, TValue, TAllocator>;
+
 public:
-	TreeMapIterator(CVoidOwner& _owner, TTreeNode* _pIteratorNode)
-		: TMapCollectionIterator(_owner)
+	TreeMapIterator(TTreeNode* _pIteratorNode)
+		: pIteratorNode_(_pIteratorNode)
 	{
-		pIteratorNode_ = _pIteratorNode;
 	}
 
-	~TreeMapIterator() noexcept override = default;
-public:
-	bool HasNext() const override
+	bool HasNext() const
 	{
-		if (!this->IsValid())
-			return false;
-
 		return pIteratorNode_ != nullptr;
 	}
 
-	bool HasPrevious() const override
+	bool HasPrevious() const
 	{
-		if (!this->IsValid())
-			return false;
-
 		return pIteratorNode_ != nullptr;
 	}
 
-	TKeyValuePair& Next() override
+	TKeyValuePair& Next()
 	{
 		if (pIteratorNode_ == nullptr)
 			throw InvalidOperationException("데이터가 없습니다.");
@@ -59,7 +42,7 @@ public:
 		return pair;
 	}
 
-	TKeyValuePair& Previous() override
+	TKeyValuePair& Previous()
 	{
 		if (pIteratorNode_ == nullptr)
 			throw InvalidOperationException("데이터가 없습니다.");
@@ -69,7 +52,7 @@ public:
 		return pair;
 	}
 
-	TKeyValuePair& Current() override
+	TKeyValuePair& Current()
 	{
 		if (pIteratorNode_ == nullptr)
 			throw InvalidOperationException("데이터가 없습니다.");
@@ -78,15 +61,16 @@ public:
 	}
 
 	// TODO: 올바르게 수정
-	bool IsEnd() const override
+	bool IsEnd() const
 	{
 		return HasNext() == false;
 	}
 
-	bool IsBegin() const override
+	bool IsBegin() const
 	{
 		return HasPrevious() == false;
 	}
+
 protected:
 	TTreeNode* pIteratorNode_;
 

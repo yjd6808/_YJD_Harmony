@@ -7,22 +7,18 @@
 
 #pragma once
 
-#include "jc/Container/SetCollection.h"
 #include "jc/Container/TreeSetIterator.h"
 #include "jc/Container/TreeTable.h"
 
 NS_JC_BEGIN
 
 template <typename TKey, typename TKeyComparator = Comparator<TKey>, typename TAllocator = CDefaultAllocator, ETreeTableImplementation Implementation = ETreeTableImplementation::RedBlackTree>
-class TreeSet : public SetCollection<TKey, TAllocator>
+class TreeSet
 {
   public:
     using TKyComparator = TKeyComparator;
     using TTreeNode = TreeNode<TKey>;
     using TTreeTable = TreeTable<ParameterPack_t<TKey, TKeyComparator, TAllocator>, Implementation>;
-
-    using TIterator = Iterator<TKey, TAllocator>;
-    using TEnumerator = SharedPtr<TIterator>;
     using TTreeSet = TreeSet<TKey, TKeyComparator, TAllocator, Implementation>;
     using TTreeSetIterator = TreeSetIterator<TKey, TKeyComparator, TAllocator, Implementation>;
 
@@ -45,7 +41,7 @@ class TreeSet : public SetCollection<TKey, TAllocator>
         operator=(_ilist);
     }
 
-    ~TreeSet() noexcept override
+    ~TreeSet() noexcept
     {
         TTreeSet::Clear();
     }
@@ -58,7 +54,6 @@ class TreeSet : public SetCollection<TKey, TAllocator>
 
     TTreeSet& operator=(TTreeSet&& _other) noexcept
     {
-        this->owner_ = Move(_other.owner_);
         table_.operator=(Move(_other.table_));
         return *this;
     }
@@ -69,43 +64,41 @@ class TreeSet : public SetCollection<TKey, TAllocator>
         return *this;
     }
 
-    bool Insert(const TKey& _key) override
+    bool Insert(const TKey& _key)
     {
         return table_.Insert(_key);
     }
 
-    bool Insert(TKey&& _key) override
+    bool Insert(TKey&& _key)
     {
         return table_.Insert(Move(_key));
     }
 
-    bool Exist(const TKey& _key) const override
+    bool Exist(const TKey& _key) const
     {
         return table_.Exist(_key);
     }
 
     // 실제 삭제되는 노드가 달라질 수 있어서 이터레이터를 올바로 재설정해줘야한다.
-    bool RemoveByIterator(TEnumerator& _iterator)
+    bool RemoveByIterator(TTreeSetIterator& _iterator)
     {
-        if(!_iterator->IsValid())
+        if(_iterator.pIteratorNode_ == nullptr)
         {
             return false;
         }
 
-        // https://stackoverflow.com/questions/610245/where-and-why-do-i-have-to-put-the-template-and-typename-_keywords
-        TTreeSetIterator* pIt = _iterator.template Get<TTreeSetIterator*>();
-        TKey temp = pIt->m_pIteratorNode->data_;
-        table_.RemoveByNode(pIt->m_pIteratorNode);
-        pIt->m_pIteratorNode = table_.pRoot_ == nullptr ? nullptr : table_.UpperBoundNode(table_.pRoot_, temp);
+        TKey temp = _iterator.pIteratorNode_->data_;
+        table_.RemoveByNode(_iterator.pIteratorNode_);
+        _iterator.pIteratorNode_ = table_.pRoot_ == nullptr ? nullptr : table_.UpperBoundNode(table_.pRoot_, temp);
         return true;
     }
 
-    bool Remove(const TKey& _key) override
+    bool Remove(const TKey& _key)
     {
         return table_.Remove(_key);
     }
 
-    void Clear() noexcept override
+    void Clear() noexcept
     {
         table_.Clear();
     }
@@ -120,10 +113,10 @@ class TreeSet : public SetCollection<TKey, TAllocator>
         return table_.LowerBound(_key);
     }
 
-    SharedPtr<TIterator> LowerBoundIterator(const TKey& _key) const
+    TTreeSetIterator LowerBoundIterator(const TKey& _key) const
     {
-        TTreeNode* pNode = LowerBoundNode(table_.pRoot_, _key);
-        return MakeShared<TTreeSetIterator, TAllocator>(this->GetOwner(), pNode);
+        TTreeNode* pNode = TTreeTable::LowerBoundNode(table_.pRoot_, _key);
+        return TTreeSetIterator(pNode);
     }
 
     TKey* UpperBound(const TKey& _key) const
@@ -131,14 +124,14 @@ class TreeSet : public SetCollection<TKey, TAllocator>
         return table_.UpperBound(_key);
     }
 
-    SharedPtr<TIterator> UpperBoundIterator(const TKey& _key) const
+    TTreeSetIterator UpperBoundIterator(const TKey& _key) const
     {
         TTreeNode* pNode = table_.UpperBoundNode(table_.pRoot_, _key);
-        return MakeShared<TTreeSetIterator, TAllocator>(this->GetOwner(), pNode);
+        return TTreeSetIterator(pNode);
     }
 
     // ==========================================
-    // 동적할당 안하고 트리맵 순회할 수 있도록 기능 구현
+    // 동적할당 안하고 트리셋 순회할 수 있도록 기능 구현
     // ==========================================
     template <typename Consumer>
     void ForEach(Consumer&& consumer)
@@ -166,24 +159,20 @@ class TreeSet : public SetCollection<TKey, TAllocator>
         return table_.TryPop(_key, _pOut);
     }
 
-    TEnumerator Begin() const override
+    TTreeSetIterator Begin() const
     {
-        return MakeShared<TTreeSetIterator, TAllocator>(this->GetOwner(), table_.FindSmallestNode(table_.pRoot_));
+        return TTreeSetIterator(table_.FindSmallestNode(table_.pRoot_));
     }
-    TEnumerator End() const override
+    TTreeSetIterator End() const
     {
-        return MakeShared<TTreeSetIterator, TAllocator>(this->GetOwner(), table_.FindBiggestNode(table_.pRoot_));
-    }
-    ContainerType GetContainerType() override
-    {
-        return ContainerType::TreeSet;
+        return TTreeSetIterator(table_.FindBiggestNode(table_.pRoot_));
     }
 
-    bool IsEmpty() const override
+    bool IsEmpty() const
     {
         return table_.IsEmpty();
     }
-    int Size() const override
+    int Size() const
     {
         return table_.Size();
     }

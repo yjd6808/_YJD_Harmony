@@ -147,9 +147,9 @@ void CLIListener::ShowAllFunctions()
 	auto it = cliTable_.Begin();
 
 	jc::String text{ 1024 };
-	while (it->HasNext())
+	while (it.HasNext())
 	{
-		jc::Pair<jc::String, TCLI_CallbackList>& list = it->Next();
+		jc::Pair<jc::String, TCLI_CallbackList>& list = it.Next();
 		text += " - ";
 		text += list.key_ + "\n";
 	}

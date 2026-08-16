@@ -22,7 +22,7 @@ SGImagePack::SGImagePack(const NpkPackagePtr& _pNpkPackage)
 
 SGImagePack::~SGImagePack()
 {
-	m_ImageMap.Values().Extension().ForEach([](SGImagePack* p) { DeleteSafe(p); });
+	m_ImageMap.ForEachValue([](SGImagePack* p) { DeleteSafe(p); });
 }
 
 void SGImagePack::Initialize()

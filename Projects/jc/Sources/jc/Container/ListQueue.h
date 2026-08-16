@@ -5,7 +5,6 @@
 #pragma once
 
 #include "jc/Container/ListCollection.h"
-#include "jc/Container/ListQueueIterator.h"
 
 NS_JC_BEGIN
 
@@ -15,11 +14,9 @@ class ListQueue;
 template <typename T, typename TAllocator>
 class ListQueue	: public ListCollection<T, TAllocator>
 {
-	using TEnumerator			= Enumerator<T, TAllocator>;
-	using TCollection			= Collection<T, TAllocator>;
-	using TListCollection		= ListCollection<T, TAllocator>;
-	using TListQueue			= ListQueue<T, TAllocator>;
-	using TListQueueIterator	= ListQueueIterator<T, TAllocator>;
+	using TListCollection			= ListCollection<T, TAllocator>;
+	using TListCollectionIterator	= ListCollectionIterator<T, TAllocator, false>;
+	using TListQueue				= ListQueue<T, TAllocator>;
 public:
 	ListQueue() : TListCollection() {}
 
@@ -29,7 +26,7 @@ public:
 
 	ListQueue(std::initializer_list<T> _ilist) : TListCollection(_ilist) {}
 
-	~ListQueue() noexcept override {}
+	~ListQueue() noexcept {}
 public:
 	TListQueue& operator=(const TListQueue& _other) {
 		this->CopyFrom(_other);
@@ -46,15 +43,16 @@ public:
 		return *this;
 	}
 
-	virtual void Enqueue(const T& _data) {
+	void Enqueue(const T& _data) {
 		TListCollection::PushBack(_data);
 	}
 
-	virtual void Enqueue(T&& _data) {
+	void Enqueue(T&& _data) {
 		TListCollection::PushBack(Move(_data));
 	}
 
-	virtual void EnqueueAll(const TCollection& _collection) {
+	template <typename TCollection>
+	void EnqueueAll(const TCollection& _collection) {
 		TListCollection::PushBackAll(_collection);
 	}
 
@@ -63,29 +61,25 @@ public:
 		TListCollection::EmplaceBack(Forward<Args>(_args)...);
 	}
 
-	virtual void Dequeue() {
+	void Dequeue() {
 		TListCollection::PopFront();
 	}
 
-	virtual bool Dequeue(T* _pOut) {
+	bool Dequeue(T* _pOut) {
 		return TListCollection::PopFront(_pOut);
 	}
 
-	T& Front() const override {
+	T& Front() const {
 		return TListCollection::Front();
 	}
 
-	TEnumerator Begin() const override {
-		return MakeShared<TListQueueIterator, TAllocator>(this->GetOwner(), this->pHead_);
+	TListCollectionIterator Begin() const {
+		return TListCollectionIterator(const_cast<TListCollection*>(static_cast<const TListCollection*>(this)), this->pHead_);
 	}
 
-	TEnumerator End() const override {
-		return MakeShared<TListQueueIterator, TAllocator>(this->GetOwner(), this->pTail_);
+	TListCollectionIterator End() const {
+		return TListCollectionIterator(const_cast<TListCollection*>(static_cast<const TListCollection*>(this)), this->pTail_);
 	}
-
-	ContainerType GetContainerType() override { return ContainerType::ListQueue; }
-protected:
-	friend class TListQueueIterator;
 };
 
 NS_END

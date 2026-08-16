@@ -6,6 +6,7 @@
 #pragma once
 
 #include "jc/Type.h"
+#include "jc/TypeCast.h"
 #include "jc/TypeTraits.h"
 #include "jc/Exception.h"
 #include "jc/Debug/New.h"

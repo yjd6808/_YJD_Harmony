@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "jc/Container/Collection.h"
 #include "jc/Container/HashTable.h"
 #include "jc/Container/Property.h"
 #include "jc/Container/PropertiesIterator.h"
@@ -17,11 +16,9 @@
 NS_JC_BEGIN
 
 template <typename TKey = int, typename TAllocator = CDefaultAllocator>
-class Properties : Collection<Pair<TKey, PropertyBase*>, TAllocator>
+class Properties
 {
 	using THashTable = HashTable<TKey, PropertyBase*, TAllocator>;
-	using TPair = Pair<TKey, PropertyBase*>;
-	using TIterator = Iterator<TPair, TAllocator>;
 	using TPropertiesIterator = CPropertiesIterator<TKey, TAllocator>;
 	using TNameMap = HashTable<TKey, const char*, TAllocator>;
 
@@ -31,7 +28,7 @@ public:
 	{
 	}
 
-	~Properties() override
+	~Properties()
 	{
 		properties_.ForEachValueDelete();
 	}
@@ -192,7 +189,7 @@ public:
 	template <typename Ky>
 	void Remove(Ky&& _propertyKey)
 	{
-		return properties_.Remove(Forward<Ky>(_propertyKey));
+		properties_.Remove(Forward<Ky>(_propertyKey));
 	}
 
 	// 모든 원소 제거
@@ -222,38 +219,26 @@ public:
 		return **ppProperty;
 	}
 
-	bool IsEmpty() const override
+	bool IsEmpty() const
 	{
 		return properties_.Size() == 0;
 	}
 
-	int Size() const override
+	int Size() const
 	{
 		return properties_.Size();
 	}
 
-	ContainerType GetContainerType() override
+	TPropertiesIterator Begin() const
 	{
-		return ContainerType::Properties;
-	}
-
-	CollectionType GetCollectionType() override
-	{
-		return CollectionType::Properties;
-	}
-
-	SharedPtr<TIterator> Begin() const override
-	{
-		return MakeShared<TPropertiesIterator, TAllocator>(
-			this->GetOwner(),
+		return TPropertiesIterator(
 			properties_.pHeadBucket_,
 			0);
 	}
 
-	SharedPtr<TIterator> End() const override
+	TPropertiesIterator End() const
 	{
-		return MakeShared<TPropertiesIterator, TAllocator>(
-			this->GetOwner(),
+		return TPropertiesIterator(
 			properties_.pTailBucket_,
 			properties_.pTailBucket_ ? properties_.pTailBucket_->size_ - 1 : -1);
 	}

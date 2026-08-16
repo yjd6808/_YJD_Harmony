@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 2/4/2023 12:06:58 PM
  * =====================
@@ -67,8 +67,8 @@ static void BM_HashMapIteration(State& state) {
 	volatile int a = 0;
 	for (auto _ : state) {
 		auto it = h.Begin();
-		while (it->HasNext()) {
-			a = it->Next().Value;
+		while (it.HasNext()) {
+			a = it.Next().Value;
 		}
 	}
 }

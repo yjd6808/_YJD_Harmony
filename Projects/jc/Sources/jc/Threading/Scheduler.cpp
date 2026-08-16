@@ -224,9 +224,9 @@ int Scheduler::PopTasks(OUT Vector<SchedulerTask*>& _executableTasks, const _u64
 	// 현재 시각을 기준으로 시간이 만료된 작업들을 가져온다.
 	auto iterator = waitTasksMap_.Begin();
 
-	while (iterator->HasNext())
+	while (iterator.HasNext())
 	{
-		auto& currentValue = iterator->Current();
+		auto& currentValue = iterator.Current();
 
 		const _u64& expiredTaskKey = currentValue.key_;
 		const TaskList* pExpiredTaskList = currentValue.value_;
@@ -290,9 +290,9 @@ bool Scheduler::HaveExecutableTaskRaw(IN_OUT _u64* _pExecutableTaskLimitTime)
 void Scheduler::ClearWaitingTaskListRaw()
 {
 	auto iterator = waitTasksMap_.Begin();
-	while (iterator->HasNext())
+	while (iterator.HasNext())
 	{
-		TaskList* pList = iterator->Current().value_;
+		TaskList* pList = iterator.Current().value_;
 		pList->ForEachDelete();
 		delete pList;
 		waitTasksMap_.RemoveByIterator(iterator);

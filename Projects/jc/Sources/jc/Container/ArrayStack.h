@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "jc/Container/ArrayStackIterator.h"
 #include "jc/Container/ArrayCollection.h"
 
 NS_JC_BEGIN
@@ -16,10 +15,9 @@ NS_JC_BEGIN
 template <typename T, typename TAllocator = CDefaultAllocator>
 class ArrayStack final : public ArrayCollection<T, TAllocator>
 {
-	using TEnumerator			= Enumerator<T, TAllocator>;
 	using TArrayCollection		= ArrayCollection<T, TAllocator>;
+	using TArrayCollectionIterator	= ArrayCollectionIterator<T, TAllocator, false>;
 	using TArrayStack			= ArrayStack<T, TAllocator>;
-	using TArrayStackIterator	= ArrayStackIterator<T, TAllocator>;
 
 public:
 	ArrayStack(int _capacity = TArrayCollection::DEFAULT_CAPACITY)
@@ -52,7 +50,7 @@ public:
 	{
 	}
 
-	~ArrayStack() noexcept override
+	~ArrayStack() noexcept
 	{
 		this->Clear(true);
 	}
@@ -118,23 +116,15 @@ public:
 		this->EmplaceAt(this->size_++, Forward<Args>(_args)...);
 	}
 
-	TEnumerator Begin() const override
+	TArrayCollectionIterator Begin() const
 	{
-		return MakeShared<TArrayStackIterator, TAllocator>(this->GetOwner(), 0);
+		return TArrayCollectionIterator(const_cast<TArrayCollection*>(static_cast<const TArrayCollection*>(this)), 0);
 	}
 
-	TEnumerator End() const override
+	TArrayCollectionIterator End() const
 	{
-		return MakeShared<TArrayStackIterator, TAllocator>(this->GetOwner(), this->Size());
+		return TArrayCollectionIterator(const_cast<TArrayCollection*>(static_cast<const TArrayCollection*>(this)), this->Size());
 	}
-
-	ContainerType GetContainerType() override
-	{
-		return ContainerType::ArrayStack;
-	}
-
-protected:
-	friend class ArrayStackIteratorAlias;
 };
 
 NS_END

@@ -55,7 +55,7 @@ public:
 
 	void Run(void* _pParam = nullptr)
 	{
-		workers_.Extension().ForEach([_pParam](Worker* _pWorker)
+		workers_.ForEach([_pParam](Worker* _pWorker)
 		{
 			_pWorker->Run(_pParam);
 		});

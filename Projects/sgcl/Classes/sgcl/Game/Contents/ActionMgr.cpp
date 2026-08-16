@@ -41,9 +41,7 @@ void ActionMgr::Init(int _charType)
 		jc_assert_msg(false, "해당 타입의 캐릭터는 존재하지 않습니다.");
 	}
 
-	actionMap_.Values()
-	          .Extension()
-	          .ForEach([this](SGAction* _pAction)
+	actionMap_.ForEachValue([this](SGAction* _pAction)
 	          {
 		          if (_pAction->GetCommand().Count() > 0)
 		          {

@@ -7,36 +7,21 @@
 #pragma once
 
 
-#include "jc/Container/MapCollection.h"
 #include "jc/Container/TreeTable.h"
 #include "jc/Container/TreeMapIterator.h"
 
 NS_JC_BEGIN
 
 template <typename TKey, typename TValue, typename TKeyComparator = Comparator<TKey>, typename TAllocator = CDefaultAllocator, ETreeTableImplementation Implementation = ETreeTableImplementation::RedBlackTree>
-class TreeMap : public MapCollection<TKey, TValue, TAllocator>
+class TreeMap
 {
 public:
 	using TKeyValuePair				= Pair<TKey, TValue>;
 	using TKyComparator				= TKeyComparator;
 	using TTreeNode					= TreeNode<TKeyValuePair>;
-	using TMapCollection			= MapCollection<TKey, TValue, TAllocator>;
 	using TTreeTable				= TreeTable<ParameterPack_t<TKey, TValue, TKeyComparator, TAllocator>, Implementation>;
-	
-	using TIterator					= Iterator<TKeyValuePair, TAllocator>;
-	using TEnumerator				= SharedPtr<TIterator>;
 	using TTreeMap					= TreeMap<TKey, TValue, TKeyComparator, TAllocator, Implementation>;
 	using TTreeMapIterator			= TreeMapIterator<TKey, TValue, TKeyComparator, TAllocator, Implementation>;
-	using TKeyCollection			= typename TMapCollection::KeyCollection;
-	using TValueCollection			= typename TMapCollection::ValueCollection;
-	using TKeyCollectionIterator	= typename TMapCollection::KeyCollectionIterator;
-	using TValueCollectionIterator	= typename TMapCollection::ValueCollectionIterator;
-public:
-	// 내부 구조체 전방 선언 (inner struct forward declaration)
-	struct TreeMapKeyCollection;
-	struct TreeMapKeyCollectionIterator;
-	struct TreeMapValueCollection;
-	struct TreeMapValueCollectionIterator;
 public:
 	TreeMap() {}
 
@@ -55,7 +40,7 @@ public:
 		operator=(_ilist);
 	}
 
-	~TreeMap() noexcept override
+	~TreeMap() noexcept
 	{
 		TTreeMap::Clear();
 	}
@@ -68,7 +53,6 @@ public:
 
 	TTreeMap& operator=(TTreeMap&& _other) noexcept
 	{
-		this->owner_ = Move(_other.owner_);
 		treeTable_.operator=(Move(_other.treeTable_));
 		return *this;
 	}
@@ -91,55 +75,53 @@ public:
 		return treeTable_.Insert(Forward<Ky>(_key), Forward<Vy>(_value));
 	}
 
-	bool Insert(const TKeyValuePair& _pair) override
+	bool Insert(const TKeyValuePair& _pair)
 	{
 		return treeTable_.Insert(_pair);
 	}
 
-	bool Insert(TKeyValuePair&& _pair) override
+	bool Insert(TKeyValuePair&& _pair)
 	{
 		return treeTable_.Insert(Move(_pair));
 	}
 
-	bool Exist(const TKey& _key) const override
+	bool Exist(const TKey& _key) const
 	{
 		return treeTable_.Exist(_key);
 	}
 
-	virtual TValue* Find(const TKey& _key) const
+	TValue* Find(const TKey& _key) const
 	{
 		return treeTable_.Find(_key);
 	}
 
-	TValue& Get(const TKey& _key) const override
+	TValue& Get(const TKey& _key) const
 	{
 		return treeTable_.Get(_key);
 	}
 
 	// 실제 삭제되는 노드가 달라질 수 있어서 이터레이터를 올바로 재설정해줘야한다.
-	bool RemoveByIterator(TEnumerator& _iterator)
+	bool RemoveByIterator(TTreeMapIterator& _iterator)
 	{
-		if (!_iterator->IsValid())
+		if (_iterator.pIteratorNode_ == nullptr)
 		{
 			return false;
 		}
 
-		// https://stackoverflow.com/questions/610245/where-and-why-do-i-have-to-put-the-template-and-typename-keywords
-		TTreeMapIterator* pIterator = _iterator.template Get<TTreeMapIterator*>();
-		TKey temp = pIterator->pIteratorNode_->data_.key_;
-		treeTable_.RemoveByNode(pIterator->pIteratorNode_);
-		pIterator->pIteratorNode_= treeTable_.pRoot_ == nullptr ? nullptr : treeTable_.UpperBoundNode(treeTable_.pRoot_, temp);
+		TKey temp = _iterator.pIteratorNode_->data_.key_;
+		treeTable_.RemoveByNode(_iterator.pIteratorNode_);
+		_iterator.pIteratorNode_ = treeTable_.pRoot_ == nullptr ? nullptr : treeTable_.UpperBoundNode(treeTable_.pRoot_, temp);
 		return true;
 	}
 
 
-	bool Remove(const TKey& _key) override
+	bool Remove(const TKey& _key)
 	{
 		return treeTable_.Remove(_key);
 	}
 
 
-	void Clear() noexcept override
+	void Clear() noexcept
 	{
 		treeTable_.Clear();
 	}
@@ -159,10 +141,10 @@ public:
 		return treeTable_.LowerBoundValue(_key);
 	}
 
-	SharedPtr<TIterator> LowerBoundIterator(const TKey& _key) const
+	TTreeMapIterator LowerBoundIterator(const TKey& _key) const
 	{
-		TTreeNode* pNode = LowerBoundNode(treeTable_.pRoot_, _key);
-		return MakeShared<TTreeMapIterator, TAllocator>(this->GetOwner(), pNode);
+		TTreeNode* pNode = TTreeTable::LowerBoundNode(treeTable_.pRoot_, _key);
+		return TTreeMapIterator(pNode);
 	}
 
 	TKeyValuePair* UpperBoundPair(const TKey& _key) const
@@ -180,10 +162,10 @@ public:
 		return treeTable_.UpperBoundKey(_key);
 	}
 
-	SharedPtr<TIterator> UpperBoundIterator(const TKey& _key) const
+	TTreeMapIterator UpperBoundIterator(const TKey& _key) const
 	{
 		TTreeNode* pNode = treeTable_.UpperBoundNode(treeTable_.pRoot_, _key);
-		return MakeShared<TTreeMapIterator, TAllocator>(this->GetOwner(), pNode);
+		return TTreeMapIterator(pNode);
 	}
 
 	// ==========================================
@@ -242,109 +224,269 @@ public:
 		return treeTable_.TryPop(_key, _pOut);
 	}
 
-	TEnumerator Begin() const override { return MakeShared<TTreeMapIterator, TAllocator>(this->GetOwner(), treeTable_.FindSmallestNode(treeTable_.pRoot_)); }
-	TEnumerator End() const override { return MakeShared<TTreeMapIterator, TAllocator>(this->GetOwner(), treeTable_.FindBiggestNode(treeTable_.pRoot_)); }
-	TreeMapKeyCollection Keys() { return TreeMapKeyCollection(this); }
-	TreeMapValueCollection Values() { return TreeMapValueCollection(this); }
-	ContainerType GetContainerType() override { return ContainerType::TreeMap; }
+	TTreeMapIterator Begin() const { return TTreeMapIterator(treeTable_.FindSmallestNode(treeTable_.pRoot_)); }
+	TTreeMapIterator End() const { return TTreeMapIterator(treeTable_.FindBiggestNode(treeTable_.pRoot_)); }
 
-	bool IsEmpty() const override { return treeTable_.IsEmpty(); }
-	int Size() const override { return treeTable_.Size(); }
+	auto Keys() const
+	{
+		return TreeMapKeyCollection(const_cast<TTreeMap*>(this));
+	}
+
+	auto Values() const
+	{
+		return TreeMapValueCollection(const_cast<TTreeMap*>(this));
+	}
+
+	bool IsEmpty() const { return treeTable_.IsEmpty(); }
+	int Size() const { return treeTable_.Size(); }
 
 	TTreeTable treeTable_;
 public:
-	struct TreeMapKeyCollection : public TKeyCollection
+	struct TreeMapKeyCollection
 	{
-		using TEnumerator		= SharedPtr<Iterator<TKey, TAllocator>>;
-		using TCollection		= Collection<TKey, TAllocator>;
+		using TKeyValuePair		= Pair<TKey, TValue>;
+		using TTreeNode			= TreeNode<TKeyValuePair>;
+
+		struct Iterator
+		{
+			using TTreeMapIterator = TreeMapIterator<TKey, TValue, TKeyComparator, TAllocator, Implementation>;
+
+			Iterator(TTreeNode* _pIteratorNode)
+				: treeMapIterator_(_pIteratorNode)
+			{
+			}
+
+			bool HasNext() const
+			{
+				return treeMapIterator_.HasNext();
+			}
+
+			bool HasPrevious() const
+			{
+				return treeMapIterator_.HasPrevious();
+			}
+
+			TKey& Next()
+			{
+				return treeMapIterator_.Next().key_;
+			}
+
+			TKey& Previous()
+			{
+				return treeMapIterator_.Previous().key_;
+			}
+
+			TKey& Current()
+			{
+				return treeMapIterator_.Current().key_;
+			}
+
+			bool IsEnd() const
+			{
+				return treeMapIterator_.IsEnd();
+			}
+
+			bool IsBegin() const
+			{
+				return treeMapIterator_.IsBegin();
+			}
+
+		private:
+			TTreeMapIterator treeMapIterator_;
+		};
 
 		TreeMapKeyCollection(TTreeMap* _pTreeMap)
-			: TKeyCollection(_pTreeMap)
+			: pTreeMap_(_pTreeMap)
 		{
-			pTreeMap_ = _pTreeMap;
 		}
 
 		TreeMapKeyCollection& operator=(const TreeMapKeyCollection& _other)
 		{
-			this->pTreeMap_ = _other.pTreeMap_;
-			this->m_pMap = _other.pTreeMap_;
+			pTreeMap_ = _other.pTreeMap_;
 			return *this;
 		}
 
-		virtual ~TreeMapKeyCollection() noexcept override = default;
-
-		int Size() const override
+		int Size() const
 		{
-			return TKeyCollection::Size();
+			return pTreeMap_->Size();
 		}
 
-		bool IsEmpty() const override
+		bool IsEmpty() const
 		{
-			return TKeyCollection::IsEmpty();
+			return pTreeMap_->IsEmpty();
 		}
 
-		TEnumerator Begin() const override { return MakeShared<TreeMapKeyCollectionIterator, TAllocator>(pTreeMap_->GetOwner(), TTreeTable::FindSmallestNode(pTreeMap_->treeTable_.pRoot_)); }
-		TEnumerator End() const override { return MakeShared<TreeMapKeyCollectionIterator, TAllocator>(pTreeMap_->GetOwner(), TTreeTable::FindBiggestNode(pTreeMap_->treeTable_.pRoot_)); }
+		auto Begin() const
+		{
+			return Iterator(TTreeTable::FindSmallestNode(pTreeMap_->treeTable_.pRoot_));
+		}
 
-		ContainerType GetContainerType() override { return ContainerType::TreeMapKeyCollection; }
+		auto End() const
+		{
+			return Iterator(TTreeTable::FindBiggestNode(pTreeMap_->treeTable_.pRoot_));
+		}
+
+		bool Exist(const TKey& _value) const
+		{
+			auto it = Begin();
+			while (it.HasNext())
+			{
+				if (it.Next() == _value)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		TKey* First()
+		{
+			auto it = Begin();
+			if (!it.HasNext())
+			{
+				return nullptr;
+			}
+
+			return AddressOf(it.Next());
+		}
+
+		TKey* Last()
+		{
+			auto it = End();
+			if (!it.HasPrevious())
+			{
+				return nullptr;
+			}
+
+			return AddressOf(it.Previous());
+		}
 
 		TTreeMap* pTreeMap_;
 	};
 
-	struct TreeMapKeyCollectionIterator final : public TKeyCollectionIterator
+	struct TreeMapValueCollection
 	{
-		TreeMapKeyCollectionIterator(CVoidOwner& _owner, TTreeNode* _pIteratorNode)
-			: TKeyCollectionIterator(_owner, &treeMapIterator_)
-			, treeMapIterator_(_owner, _pIteratorNode)
-		{}
-		virtual ~TreeMapKeyCollectionIterator() noexcept override = default;
-		TTreeMapIterator treeMapIterator_;
-	};
+		using TKeyValuePair		= Pair<TKey, TValue>;
+		using TTreeNode			= TreeNode<TKeyValuePair>;
 
-	struct TreeMapValueCollection final : public TValueCollection
-	{
-		using TEnumerator		= SharedPtr<Iterator<TValue, TAllocator>>;
-		using TCollection		= Collection<TValue, TAllocator>;
+		struct Iterator
+		{
+			using TTreeMapIterator = TreeMapIterator<TKey, TValue, TKeyComparator, TAllocator, Implementation>;
+
+			Iterator(TTreeNode* _pIteratorNode)
+				: treeMapIterator_(_pIteratorNode)
+			{
+			}
+
+			bool HasNext() const
+			{
+				return treeMapIterator_.HasNext();
+			}
+
+			bool HasPrevious() const
+			{
+				return treeMapIterator_.HasPrevious();
+			}
+
+			TValue& Next()
+			{
+				return treeMapIterator_.Next().value_;
+			}
+
+			TValue& Previous()
+			{
+				return treeMapIterator_.Previous().value_;
+			}
+
+			TValue& Current()
+			{
+				return treeMapIterator_.Current().value_;
+			}
+
+			bool IsEnd() const
+			{
+				return treeMapIterator_.IsEnd();
+			}
+
+			bool IsBegin() const
+			{
+				return treeMapIterator_.IsBegin();
+			}
+
+		private:
+			TTreeMapIterator treeMapIterator_;
+		};
 
 		TreeMapValueCollection(TTreeMap* _pTreeMap)
-			: TMapCollection::ValueCollection(_pTreeMap)
+			: pTreeMap_(_pTreeMap)
 		{
-			pTreeMap_ = _pTreeMap;
 		}
-
-		virtual ~TreeMapValueCollection() noexcept override = default;
 
 		TreeMapValueCollection& operator=(const TreeMapValueCollection& _other)
 		{
-			this->pTreeMap_ = _other.pTreeMap_;
-			this->m_pMap = _other.pTreeMap_;
+			pTreeMap_ = _other.pTreeMap_;
 			return *this;
 		}
 
+		int Size() const
+		{
+			return pTreeMap_->Size();
+		}
 
-		TEnumerator Begin() const override { return MakeShared<TreeMapValueCollectionIterator, TAllocator>(pTreeMap_->GetOwner(), TTreeTable::FindSmallestNode(pTreeMap_->treeTable_.pRoot_)); }
-		TEnumerator End() const override { return MakeShared<TreeMapValueCollectionIterator, TAllocator>(pTreeMap_->GetOwner(), TTreeTable::FindBiggestNode(pTreeMap_->treeTable_.pRoot_)); }
-		ContainerType GetContainerType() override { return ContainerType::TreeMapValueCollection; }
+		bool IsEmpty() const
+		{
+			return pTreeMap_->IsEmpty();
+		}
+
+		auto Begin() const
+		{
+			return Iterator(TTreeTable::FindSmallestNode(pTreeMap_->treeTable_.pRoot_));
+		}
+
+		auto End() const
+		{
+			return Iterator(TTreeTable::FindBiggestNode(pTreeMap_->treeTable_.pRoot_));
+		}
+
+		bool Exist(const TValue& _value) const
+		{
+			auto it = Begin();
+			while (it.HasNext())
+			{
+				if (it.Next() == _value)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		TValue* First()
+		{
+			auto it = Begin();
+			if (!it.HasNext())
+			{
+				return nullptr;
+			}
+
+			return AddressOf(it.Next());
+		}
+
+		TValue* Last()
+		{
+			auto it = End();
+			if (!it.HasPrevious())
+			{
+				return nullptr;
+			}
+
+			return AddressOf(it.Previous());
+		}
+
 		TTreeMap* pTreeMap_;
 	};
 
-	struct TreeMapValueCollectionIterator final : public TValueCollectionIterator
-	{
-		TreeMapValueCollectionIterator(CVoidOwner& _owner, TTreeNode* _pIteratorNode)
-			: TValueCollectionIterator(_owner, &treeMapIterator_)
-			, treeMapIterator_(_owner, _pIteratorNode)
-		{}
-		virtual ~TreeMapValueCollectionIterator() noexcept override = default;
-		TTreeMapIterator treeMapIterator_;
-	};
-
-
 	friend class TTreeMapIterator;
-	friend struct TreeMapKeyCollection;
-	friend struct TreeMapKeyCollectionIterator;
-	friend struct TreeMapValueCollection;
-	friend struct TreeMapValueCollectionIterator;
 }; // class CTreeMap<TKey, TValue>
 
 NS_END
-

@@ -110,7 +110,15 @@ void CommandSynchronizer::FilterUnusedCommandQueue()
 	{
 		return iocpThreadIdList.Exist(pair.key_);
 	};
-	iocpThreadAccessCommandQueueList_ = iocpThreadAccessCommandQueueList_.Extension().Filter(fnContained).ToVector();
+	jc::Vector<IOCPThreadId$CommandQueuePair> filteredList;
+	iocpThreadAccessCommandQueueList_.ForEach([&fnContained, &filteredList](const IOCPThreadId$CommandQueuePair& pair)
+	{
+		if (fnContained(pair))
+		{
+			filteredList.PushBack(pair);
+		}
+	});
+	iocpThreadAccessCommandQueueList_ = Move(filteredList);
 	packetQueueCount_ = iocpThreadAccessCommandQueueList_.Size();
 }
 

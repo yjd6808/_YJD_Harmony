@@ -6,7 +6,6 @@
 #pragma once
 
 #include "jc/Exception.h"
-#include "jc/Container/Collection.h"
 
 #include "random"
 
@@ -68,8 +67,8 @@ struct JC_DLL Random
 		return *_ilist.begin();
 	}
 
-	template <typename T, typename TAllocator>
-	T& Pick(const Collection<T, TAllocator>& _collection)
+	template <typename TCollection>
+	auto& Pick(const TCollection& _collection)
 	{
 		if (_collection.Size() == 0)
 		{
@@ -83,13 +82,13 @@ struct JC_DLL Random
 		{
 			if (index == selectedIndex)
 			{
-				return it->Current();
+				return it.Current();
 			}
 
-			it->Next();
+			it.Next();
 		}
 
-		return it->Current();
+		return it.Current();
 	}
 
 	char GenerateAlphabat();
@@ -107,18 +106,6 @@ protected:
 	std::random_device device_;
 	std::random_device::result_type seed_;
 };
-
-NS_DETAIL_BEGIN
-template <typename T>
-struct RandomPicker
-{
-};
-
-template <template <typename> typename TCollection, typename T>
-struct RandomPicker<TCollection<T>>
-{
-};
-NS_END
 
 inline Random globalRandomInstance;
 NS_END

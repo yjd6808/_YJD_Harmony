@@ -1,60 +1,49 @@
 ﻿/*
 	작성자 : 윤정도
+	리스트 계열 컨테이너의 값 이터레이터 (힙 할당 없음, 비가상)
+	Const = true  : const 컬렉션 순회 + const T& 반환
+	Const = false : 비 const 컬렉션 순회 + T& 반환
 */
 
 #pragma once
 
-#include "jc/Container/Iterator.h"
+#include "jc/Namespace.h"
+#include "jc/TypeTraits.h"
+#include "jc/Exception.h"
+
+#include "jc/Container/ListNode.h"
 
 NS_JC_BEGIN
 
 // 전방 선언
-class CVoidOwner;
 template <typename, typename> class ListCollection;
-template <typename, typename> class ListNode;
 
-template <typename T, typename TAllocator>
-class JC_NOVTABLE ListCollectionIterator : public Iterator<T, TAllocator>
+template <typename T, typename TAllocator, bool Const>
+class ListCollectionIterator
 {
-	using TIterator = Iterator<T, TAllocator>;
-	using TListNode = ListNode<T, TAllocator>;
-	using TListCollection = ListCollection<T, TAllocator>;
+	using TListCollection		= ListCollection<T, TAllocator>;
+	using TListNode				= ListNode<T, TAllocator>;
+	using TListPtr				= Conditional_t<Const, const TListCollection*, TListCollection*>;
+	using TValue				= Conditional_t<Const, const T, T>;
 
 public:
-	ListCollectionIterator(CVoidOwner& _owner, TListNode* _pCurrent)
-		: TIterator(_owner)
+	ListCollectionIterator(TListPtr _pList, TListNode* _pCurrent)
+		: pCollection_(_pList)
 		, pCurrent_(_pCurrent)
 	{
-		TListCollection* pList = _owner.Get<TListCollection*>();
-		pHead_ = pList->pHead_;
-		pTail_ = pList->pTail_;
 	}
 
-	~ListCollectionIterator() noexcept override = 0;
-
-public:
-	bool HasNext() const override
+	bool HasNext() const
 	{
-		if (!this->IsValid())
-		{
-			return false;
-		}
-
-		// 헤드까지 도달했는데 Previous를 해버리는 경우가 있을 수 있으므로
 		return pCurrent_ != nullptr;
 	}
 
-	bool HasPrevious() const override
+	bool HasPrevious() const
 	{
-		if (!this->IsValid())
-		{
-			return false;
-		}
-
 		return pCurrent_ != nullptr;
 	}
 
-	T& Next() override
+	TValue& Next()
 	{
 		// 반복자가 꼬리까지 도달했는데 데이터를 가져올려고 시도하는 경우
 		if (pCurrent_ == nullptr)
@@ -62,58 +51,54 @@ public:
 			throw InvalidOperationException("데이터가 없습니다.");
 		}
 
-		T& value = pCurrent_->value_;
+		TValue& value = pCurrent_->value_;
 		pCurrent_ = pCurrent_->pNext_;
 		return value;
 	}
 
-	T& Previous() override
+	TValue& Previous()
 	{
 		if (pCurrent_ == nullptr)
 		{
 			throw InvalidOperationException("데이터가 없습니다.");
 		}
 
-		T& value = pCurrent_->value_;
+		TValue& value = pCurrent_->value_;
 		pCurrent_ = pCurrent_->pPrevious_;
 		return value;
 	}
 
-	T& Current() override
+	TValue& Current() const
 	{
 		return pCurrent_->value_;
 	}
 
-	bool IsEnd() const override
+	bool IsEnd() const
 	{
 		return pCurrent_ == nullptr;
 	}
 
-	bool IsBegin() const override
+	bool IsBegin() const
 	{
-		return pCurrent_ == pHead_;
+		return pCurrent_ == pCollection_->pHead_;
+	}
+
+	friend bool operator==(const ListCollectionIterator& _lhs, const ListCollectionIterator& _rhs)
+	{
+		return _lhs.pCollection_ == _rhs.pCollection_ && _lhs.pCurrent_ == _rhs.pCurrent_;
+	}
+
+	friend bool operator!=(const ListCollectionIterator& _lhs, const ListCollectionIterator& _rhs)
+	{
+		return !(_lhs == _rhs);
 	}
 
 protected:
-	TListCollection* CastListCollection() const
-	{
-		this->ThrowIfIteratorIsNotValid();
-		return this->watcher_.Get<TListCollection>();
-	}
-
-protected:
+	TListPtr pCollection_;
 	TListNode* pCurrent_;
-	TListNode* pHead_;
-	TListNode* pTail_;
 
 	friend class TListCollection;
 };
-
-
-template <typename T, typename TAllocator>
-ListCollectionIterator<T, TAllocator>::~ListCollectionIterator() noexcept
-{
-}
 
 
 NS_END

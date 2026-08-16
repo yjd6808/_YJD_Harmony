@@ -13,8 +13,6 @@
 
 
 NS_JC_BEGIN
-template <typename, typename>
-class Collection;
 
 class WaitHandle
 {
@@ -49,9 +47,9 @@ public:
 
 		auto it = _handles.Begin();
 		int idx = 0;
-		while (it->HasNext())
+		while (it.HasNext())
 		{
-			waitHandles[idx++] = it->Next().handle_;
+			waitHandles[idx++] = it.Next().handle_;
 		}
 		const _u32l ret = WinApi::WaitForMultipleObjectsEx(_handles.Size(), waitHandles, true);
 
@@ -61,23 +59,31 @@ public:
 		return ret == WAIT_OBJECT_0;
 	}
 
-	template <typename TAllocator>
-	static WaitHandle* WaitAny(Collection<WaitHandle, TAllocator>& _handles)
+	template <typename TCollection>
+	static WaitHandle* WaitAny(const TCollection& _handles)
 	{
 		jc_assert(_handles.Size() <= MAXIMUM_WAIT_OBJECTS && _handles.Size() > 0);
 		_whandle waitHandles[MAXIMUM_WAIT_OBJECTS];
 
 		auto iterator = _handles.Begin();
 		int index = 0;
-		while (iterator->HasNext())
+		while (iterator.HasNext())
 		{
-			waitHandles[index++] = iterator->Next().handle_;
+			waitHandles[index++] = iterator.Next().handle_;
 		}
 
 		_u32 waitResult = WinApi::WaitForMultipleObjectsEx(_handles.Size(), waitHandles, false);
 
 		if (waitResult >= WAIT_OBJECT_0 && waitResult <= WAIT_OBJECT_0 + _handles.Size() - 1)
-			return _handles.Extension().IndexOf(static_cast<int>(waitResult - WAIT_OBJECT_0));
+		{
+			auto it = _handles.Begin();
+			const int target = static_cast<int>(waitResult - WAIT_OBJECT_0);
+			for (int i = 0; i < target; ++i)
+			{
+				it.Next();
+			}
+			return &it.Current();
+		}
 
 		return nullptr;
 	}

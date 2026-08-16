@@ -7,54 +7,38 @@
 
 #pragma once
 
-#include "jc/Container/Iterator.h"
-
 NS_JC_BEGIN
 
-// 전방 선언
-class CVoidOwner;
 template <typename, typename> class CollectionStream;
 template <typename> struct StreamNode;
 
 template <typename T, typename TAllocator>
-class CollectionStreamIterator : public Iterator<T, TAllocator>
+class CollectionStreamIterator
 {
 public:
-	using TIterator = Iterator<T, TAllocator>;
     using TStreamNode = StreamNode<T>;
 	using TCollectionStream = CollectionStream<T, TAllocator>;
 
 public:
-	CollectionStreamIterator(CVoidOwner& _owner, TStreamNode* _current)
-	: TIterator(_owner)
+	CollectionStreamIterator(TStreamNode* _current, TStreamNode* _pHead, TStreamNode* _pTail)
+	: pCurrent_(_current)
+	, pHead_(_pHead)
+	, pTail_(_pTail)
 	{
-		pCurrent_ = _current;
-
-		TCollectionStream* pList = _owner.Get<TCollectionStream*>();
-		pHead_ = pList->pHead_;
-		pTail_ = pList->pTail_;
 	}
 
-	~CollectionStreamIterator() noexcept override = default;
-
 public:
-	bool HasNext() const override
+	bool HasNext() const
 	{
-		if (!this->IsValid())
-			return false;
-
 		return pCurrent_ != pTail_;
 	}
 
-	bool HasPrevious() const override
+	bool HasPrevious() const
 	{
-		if (!this->IsValid())
-			return false;
-
 		return pCurrent_ != pHead_;
 	}
 
-	T& Next() override
+	T& Next()
 	{
 		if (pCurrent_ == nullptr)
 			throw InvalidOperationException("데이터가 없습니다.");
@@ -64,7 +48,7 @@ public:
 		return value;
 	}
 
-	T& Previous() override
+	T& Previous()
 	{
 		if (pCurrent_ == nullptr)
 			throw InvalidOperationException("데이터가 없습니다.");
@@ -74,17 +58,17 @@ public:
 		return value;
 	}
 
-	T& Current() override
+	T& Current()
 	{
 		return *pCurrent_->pValue_;
 	}
 
-	bool IsEnd() const override
+	bool IsEnd() const
 	{
 		return pCurrent_ == pTail_;
 	}
 
-	bool IsBegin() const override
+	bool IsBegin() const
 	{
 		return pCurrent_ == pHead_;
 	}
@@ -93,8 +77,6 @@ protected:
 	TStreamNode* pCurrent_;
 	TStreamNode* pHead_;
 	TStreamNode* pTail_;
-
-	friend class TCollectionStream;
 };
 
 NS_END

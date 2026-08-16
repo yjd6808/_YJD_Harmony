@@ -25,6 +25,7 @@
 #include "jc/Pattern/NonCopyableh.h"
 #include "jc/Sync/NormalLock.h"
 #include "jc/Debug/New.h"
+#include "jc/Primitives/SmartPtr.h"
 
 NS_JC_BEGIN
 

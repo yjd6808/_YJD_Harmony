@@ -1,4 +1,4 @@
-/*
+﻿/*
 	작성자 : 윤정도
 	배열기반 스택 테스트
 */
@@ -64,13 +64,13 @@ TEST(ArrayStackTest, TotalTest) {
 		auto stackFit = stack.Begin();
 		auto stackRit = stack.End();
 
-		while (stackFit->HasNext()) {
-			EXPECT_TRUE(stackFit->Next() == (*fit));
+		while (stackFit.HasNext()) {
+			EXPECT_TRUE(stackFit.Next() == (*fit));
 			++fit;
 		}
 
-		while (stackFit->HasNext()) {
-			EXPECT_TRUE(stackFit->Previous() == (*fit));
+		while (stackFit.HasNext()) {
+			EXPECT_TRUE(stackFit.Previous() == (*fit));
 			++rit;
 		}
 

@@ -5,11 +5,14 @@
 
 #pragma once
 
+#include <initializer_list>
+
+#include "jc/Assert.h"
 #include "jc/Memory.h"
 #include "jc/Comparator.h"
+#include "jc/Allocator/DefaultAllocator.h"
 
 #include "jc/Container/Arrays.h"
-#include "jc/Container/Collection.h"
 #include "jc/Container/ArrayCollectionIterator.h"
 
 
@@ -17,15 +20,14 @@ NS_JC_BEGIN
 
 /*=====================================================================================
 							다이나믹 배열
-				배열 스택, 배열 큐, 배열 리스트의 공통 인터페이스 정의
+				배열 스택, 배열 큐, 배열 리스트의 공통 구현 베이스
 =====================================================================================*/
 
 template <typename T, typename TAllocator>
-class ArrayCollection : public Collection<T, TAllocator>
+class ArrayCollection
 {
-	using TCollection			= Collection<T, TAllocator>;
-	using TArrayCollection		= ArrayCollection<T, TAllocator>;
-	using TArrayCollectionIterator	= ArrayCollectionIterator<T, TAllocator>;
+	using TArrayCollection			= ArrayCollection<T, TAllocator>;
+	using TArrayCollectionIterator	= ArrayCollectionIterator<T, TAllocator, false>;
 
 public:
 	// [1]
@@ -106,7 +108,7 @@ public:
 		}
 	}
 
-	~ArrayCollection() noexcept override = 0;
+	~ArrayCollection() noexcept;
 
 	int Capacity() const
 	{
@@ -115,11 +117,8 @@ public:
 
 	/// <summary>
 	/// 내부 원소 모두 제거
-	///
-	/// [오버라이딩]
-	///  - CArrayQueue
 	/// </summary>
-	virtual void Clear(bool _removeHeap = false)
+	void Clear(bool _removeHeap = false)
 	{
 		if (size_ > 0)
 		{
@@ -133,16 +132,12 @@ public:
 		}
 	}
 
-	virtual bool Valid() const
+	bool Valid() const
 	{
 		return pArray_ != nullptr;
 	}
 
-	/// <summary>
-	/// [오버라이딩]
-	///  - CArrayQueue : 한칸이 덜 찬 상태를 꽉찬 상태로 처리해야하기 때문에 오버라이딩 해야함
-	/// </summary>
-	virtual bool IsFull() const
+	bool IsFull() const
 	{
 		return size_ == capacity_;
 	}
@@ -152,17 +147,24 @@ public:
 		return pArray_;
 	}
 
-	bool IsEmpty() const override { return size_ == 0; }
-	int Size() const override { return size_; }
+	bool IsEmpty() const { return size_ == 0; }
+	int Size() const { return size_; }
+
+	TArrayCollectionIterator Begin() const
+	{
+		return TArrayCollectionIterator(const_cast<TArrayCollection*>(this), pArray_);
+	}
+
+	TArrayCollectionIterator End() const
+	{
+		return TArrayCollectionIterator(const_cast<TArrayCollection*>(this), pArray_ + size_);
+	}
 
 protected:
 	/// <summary>
 	/// 다른 배열 컨테이너로부터 복사를 받는다.
-	///
-	/// [오버라이딩]
-	///  - CArrayQueue
 	/// </summary>
-	virtual void CopyFrom(const TArrayCollection& _other)
+	void CopyFrom(const TArrayCollection& _other)
 	{
 		jc_assert_msg(this != &_other, "자기 자신에게 대입할 수 없습니다.");
 
@@ -186,13 +188,12 @@ protected:
 		CopyElements(pArray_, capacity, _other.pArray_, _other.size_);
 	}
 
-	virtual void CopyFrom(TArrayCollection&& _other)
+	void CopyFrom(TArrayCollection&& _other)
 	{
 		// this->ThrowIfAssignSelf(other);
 
 		Clear(true);
 
-		this->owner_ = Move(_other.owner_);
 		this->pArray_ = _other.pArray_;
 		size_ = _other.size_;
 		this->capacity_ = _other.capacity_;
@@ -297,7 +298,7 @@ protected:
 	/// <summary>
 	/// 이니셜라이저 리스트로부터의 복사
 	/// </summary>
-	virtual void CopyFrom(std::initializer_list<T> _other)
+	void CopyFrom(std::initializer_list<T> _other)
 	{
 		Clear();
 		ExpandIfNeeded(static_cast<int>(_other.size()));
@@ -348,7 +349,7 @@ protected:
 	}
 
 	// 현재 용량이 전달받은 사이즈를 충분히 커버 가능한지
-	virtual bool ExpandIfNeeded(int _size)
+	bool ExpandIfNeeded(int _size)
 	{
 		if (_size == 0)
 		{
@@ -367,12 +368,9 @@ protected:
 
 	/// <summary>
 	/// 현재 용량보다 더 큰 용량으로 확장
-	///
-	/// [오버라이딩]
-	/// - CArrayQueue
 	/// </summary>
 	/// <param name="_newCapacity">기존 용량보다 더 큰 값</param>
-	virtual void Expand(int _newCapacity)
+	void Expand(int _newCapacity)
 	{
 		if (capacity_ >= _newCapacity)
 		{
@@ -393,7 +391,7 @@ protected:
 		capacity_ = _newCapacity;
 	}
 
-	virtual void Shrink(int _newCapacity)
+	void Shrink(int _newCapacity)
 	{
 		if (_newCapacity < 0)
 		{
@@ -437,7 +435,7 @@ protected:
 	}
 
 	// 기존 size보다 ratio 비율만큼 더 크게 용량 맞춤, 디폴트는 size와 완전동일하게
-	virtual void ShrinkToFit(float _ratio = 1.0f)
+	void ShrinkToFit(float _ratio = 1.0f)
 	{
 		const int newCapacity = static_cast<int>(size_ * _ratio);
 		Shrink(newCapacity);
@@ -446,10 +444,8 @@ protected:
 	/// <summary>
 	/// 사이즈 내부에 존재하는 유효한 인덱스 범위인지
 	/// 즉, 데이터가 할당된 위치인지
-	/// [오버라이딩]
-	///  - CArrayQueue
 	/// </summary>
-	virtual bool IsValidIndex(const int _index) const
+	bool IsValidIndex(const int _index) const
 	{
 		return _index >= 0 && _index < size_;
 	}
@@ -457,22 +453,22 @@ protected:
 	/// <summary>
 	/// 할당된 배열 내부에 존재하는 인덱스 값인지
 	/// </summary>
-	virtual bool IsValidIndexCapacity(const int _index) const
+	bool IsValidIndexCapacity(const int _index) const
 	{
 		return _index >= 0 && _index < Capacity();
 	}
 
-	virtual bool IsValidRange(const int _startIndex, const int _endIndex) const
+	bool IsValidRange(const int _startIndex, const int _endIndex) const
 	{
 		return _startIndex <= _endIndex && _startIndex >= 0 && _endIndex < Size();
 	}
 
-	virtual bool IsValidRangeCapacity(const int _startIndex, const int _endIndex) const
+	bool IsValidRangeCapacity(const int _startIndex, const int _endIndex) const
 	{
 		return _startIndex <= _endIndex && _startIndex >= 0 && _endIndex < Capacity();
 	}
 
-	virtual void ExpandAuto()
+	void ExpandAuto()
 	{
 		if (capacity_ == 0)
 		{
@@ -483,10 +479,9 @@ protected:
 	}
 
 	/// <summary>
-	/// [오버라이딩]
-	///  - CArrayQueue
+	/// [startIndex, endIndex] 범위의 원소들을 소멸시킨다.
 	/// </summary>
-	virtual void DestroyAtRange(const int _startIndex, const int _endIndex)
+	void DestroyAtRange(const int _startIndex, const int _endIndex)
 	{
 		jc_assert_msg(IsValidRange(_startIndex, _endIndex),
 			"올바르지 않은 인덱스 범위(%d ~ %d) 입니다. (%d, 컨테이너 크기: %d)", _startIndex, _endIndex, size_);
@@ -682,11 +677,6 @@ protected:
 		return expectedCapacity;
 	}
 
-	CollectionType GetCollectionType() override
-	{
-		return CollectionType::Array;
-	}
-
 protected:
 	static constexpr int EXPANDING_FACTOR = 4;   // 꽉차면 4배씩 확장
 	static constexpr int DEFAULT_CAPACITY  = 32; // 초기 배열 크기
@@ -696,7 +686,7 @@ protected:
 	int size_;
 	T* pArray_;
 
-	friend class TArrayCollectionIterator;
+	template <typename, typename, bool> friend class ArrayCollectionIterator;
 };
 
 template <typename T, typename TAllocator>

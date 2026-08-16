@@ -1,4 +1,4 @@
-/*
+﻿/*
 	작성자 : 윤정도
 	HashMap 클래스를 테스트합니다.
 */
@@ -59,31 +59,31 @@ TEST(HashMapTest, EnumeratorTest) {
 	}
 
 	// 정방향 반복자 테스트
-	const auto mapIter = map.Begin();
-	for (int i = 0; mapIter->HasNext(); i++) {
-		Pair<int, int>& pair = mapIter->Next();
+	auto mapIter = map.Begin();
+	for (int i = 0; mapIter.HasNext(); i++) {
+		Pair<int, int>& pair = mapIter.Next();
 		EXPECT_TRUE(map.Exist(pair.key_));
-		EXPECT_TRUE(map.Values().Extension().Exist(i + 1));	
+		EXPECT_TRUE(map.Values().Exist(i + 1));	
 	}
 
-	const auto mapKeyIter = map.Keys().Begin();
-	for (int i = 0; mapKeyIter->HasNext(); i++) {
-		int key = mapKeyIter->Next();
+	auto mapKeyIter = map.Keys().Begin();
+	for (int i = 0; mapKeyIter.HasNext(); i++) {
+		int key = mapKeyIter.Next();
 		EXPECT_TRUE(map.Exist(key));
 	}
 
-	const auto mapValueIter = map.Values().Begin();
-	for (int i = 0;  mapValueIter->HasNext(); i++) {
-		int value = mapValueIter->Next();
-		EXPECT_TRUE(map.Values().Extension().Exist(value));
+	auto mapValueIter = map.Values().Begin();
+	for (int i = 0;  mapValueIter.HasNext(); i++) {
+		int value = mapValueIter.Next();
+		EXPECT_TRUE(map.Values().Exist(value));
 	}
 
 	// 반대방향 반복자 테스트
-	const auto mapRIter = map.End();
-	for (int i = 9; mapRIter->HasPrevious(); i--) {
-		Pair<int, int>& pair = mapRIter->Previous();
+	auto mapRIter = map.End();
+	for (int i = 9; mapRIter.HasPrevious(); i--) {
+		Pair<int, int>& pair = mapRIter.Previous();
 		EXPECT_TRUE(map.Exist(pair.key_));
-		EXPECT_TRUE(map.Values().Extension().Exist(pair.value_));
+		EXPECT_TRUE(map.Values().Exist(pair.value_));
 	}
 }
 
@@ -181,9 +181,9 @@ TEST(HashMapTest, InnerDestructorTest) {
 	for (int i = 0; i < 1024; i++) {
 		if (i && i % 4 == 0) {
 			if ((toggle = !toggle))
-				aq.Remove(*aq.Keys().Extension().First());
+				aq.Remove(*aq.Keys().First());
 			else
-				aq.Remove(*aq.Keys().Extension().Last());
+				aq.Remove(*aq.Keys().Last());
 		} else {
 			aq.Insert(i, "fsefesfesfesf");
 		}
@@ -262,6 +262,43 @@ TEST(HashMapTest, TryPop) {
 	EXPECT_TRUE(map.IsEmpty());
 }
 
+
+TEST(HashMapTest, ConstIteration) {
+	LeakCheck;
+
+	const HashMap<int, int> map{
+		{ 1, 10 },
+		{ 2, 20 },
+		{ 3, 30 },
+		{ 4, 40 },
+	};
+
+	// const 컨테이너의 값 이터레이터 순회
+	int count = 0;
+	auto it = map.Begin();
+	while (it.HasNext()) {
+		Pair<int, int>& pair = it.Next();
+		EXPECT_TRUE(map.Exist(pair.key_));
+		++count;
+	}
+	EXPECT_TRUE(count == 4);
+
+	// const 컨테이너의 Keys()/Values() 순회
+	auto keyIt = map.Keys().Begin();
+	while (keyIt.HasNext()) {
+		EXPECT_TRUE(map.Exist(keyIt.Next()));
+	}
+
+	auto valueIt = map.Values().Begin();
+	int valueSum = 0;
+	while (valueIt.HasNext()) {
+		valueSum += valueIt.Next();
+	}
+	EXPECT_TRUE(valueSum == 100);
+
+	EXPECT_TRUE(map.Values().Exist(30));
+	EXPECT_TRUE(map.Keys().Exist(2));
+}
 
 #endif // TEST_HashMapTest == ON
 

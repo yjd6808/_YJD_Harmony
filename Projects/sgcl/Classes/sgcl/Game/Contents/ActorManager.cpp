@@ -60,9 +60,9 @@ static int ReleasePool(jc::HashMap<int, jc::LinkedList<TActor*>>& _pool)
 	{
 		jc::LinkedList<TActor*>& li = _pool[_code];
 		auto it = li.Begin();
-		while (it->HasNext())
+		while (it.HasNext())
 		{
-			TActor* pActor = it->Next();
+			TActor* pActor = it.Next();
 			++releaseCount;
 			CC_SAFE_RELEASE(pActor);
 		}

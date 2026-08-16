@@ -8,7 +8,6 @@
 
 #include "jc/Wrapper/WinApi.h"
 #include "jc/Sync/WaitHandle.h"
-#include "jc/Container/Collection.h"
 
 NS_JC_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////

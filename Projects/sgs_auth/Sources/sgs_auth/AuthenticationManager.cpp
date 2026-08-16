@@ -62,9 +62,9 @@ void AuthenticationManager::OnScheduled(SchedulerTask* _pTask)
 		JC_LOCK_GUARD(lock_);
 		auto it = timeDataMap_.Begin();
 
-		while (it->HasNext())
+		while (it.HasNext())
 		{
-			DateTimeDataMap::TKeyValuePair& current = it->Current();
+			DateTimeDataMap::TKeyValuePair& current = it.Current();
 
 			if (current.key_ <= now)
 			{
@@ -75,7 +75,7 @@ void AuthenticationManager::OnScheduled(SchedulerTask* _pTask)
 				break;
 			}
 
-			it->Next();
+			it.Next();
 		}
 
 		for (int i = 0; i < expiredList.Size(); ++i)

@@ -1,22 +1,19 @@
-﻿
-/*
+﻿/*
  *	작성자 : 윤정도
  */
 
 #pragma once
 
 #include "jc/Container/HashTable.h"
-#include "jc/Container/SetCollection.h"
 #include "jc/Container/HashSetIterator.h"
 
 NS_JC_BEGIN
 
 template <typename TKey, typename TAllocator = CDefaultAllocator>
-class HashSet : public SetCollection<TKey, TAllocator>
+class HashSet
 {
 public:
 	using THashTable		= HashTable<TKey, TAllocator>;
-	using TIterator			= Iterator<TKey, TAllocator>;
 	using THashSet			= HashSet<TKey, TAllocator>;
 	using THashSetIterator	= HashSetIterator<TKey, TAllocator>;
 
@@ -43,7 +40,7 @@ public:
 		operator=(_ilist);
 	}
 
-	~HashSet() noexcept override = default;
+	~HashSet() noexcept = default;
 
 public:
 	THashSet& operator=(const THashSet& _other)
@@ -64,12 +61,12 @@ public:
 		return *this;
 	}
 
-	bool Insert(const TKey& _key) override
+	bool Insert(const TKey& _key)
 	{
 		return table_.Insert(_key);
 	}
 
-	bool Insert(TKey&& _key) override
+	bool Insert(TKey&& _key)
 	{
 		return table_.Insert(Move(_key));
 	}
@@ -80,7 +77,7 @@ public:
 		return table_.Exist(_key);
 	}
 
-	bool Exist(const TKey& _key) const override
+	bool Exist(const TKey& _key) const
 	{
 		return table_.Exist(_key);
 	}
@@ -91,7 +88,7 @@ public:
 		return table_.Remove(_key);
 	}
 
-	bool Remove(const TKey& _key) override
+	bool Remove(const TKey& _key)
 	{
 		return table_.Remove(_key);
 	}
@@ -107,15 +104,14 @@ public:
 		return table_.TryPop(_key, _pOut);
 	}
 
-	void Clear() noexcept override
+	void Clear() noexcept
 	{
 		table_.Clear();
 	}
 
 	typename THashTable::TBucket* Bucket(int _index) const
 	{
-		(void)_index;
-		return table_.Bucket();
+		return table_.Bucket(_index);
 	}
 
 	int BucketCount()
@@ -123,12 +119,12 @@ public:
 		return table_.BucketCount();
 	}
 
-	int Size() const override
+	int Size() const
 	{
 		return table_.Size();
 	}
 
-	bool IsEmpty() const override
+	bool IsEmpty() const
 	{
 		return table_.Size() == 0;
 	}
@@ -154,27 +150,17 @@ public:
 		table_.ForEachDelete();
 	}
 
-	SharedPtr<TIterator> Begin() const override
+	THashSetIterator Begin() const
 	{
-		return MakeShared<THashSetIterator, TAllocator>(
-			this->GetOwner(),
-			table_.pHeadBucket_,
-			0
-		);
+		return THashSetIterator(table_.pHeadBucket_, 0);
 	}
 
-	SharedPtr<TIterator> End() const override
+	THashSetIterator End() const
 	{
-		return MakeShared<THashSetIterator, TAllocator>(
-			this->GetOwner(),
+		return THashSetIterator(
 			table_.pTailBucket_,
 			table_.pTailBucket_ ? table_.pTailBucket_->size_ - 1 : -1
 		);
-	}
-
-	ContainerType GetContainerType() override
-	{
-		return ContainerType::HashSet;
 	}
 
 protected:

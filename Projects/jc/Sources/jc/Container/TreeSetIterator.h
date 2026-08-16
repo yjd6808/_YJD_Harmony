@@ -4,52 +4,34 @@
 
 #pragma once
 
-
 #include "jc/Container/TreeTable.h"
-#include "jc/Container/SetCollectionIterator.h"
 
 NS_JC_BEGIN
 
-// 전방 선언
-enum class ETreeTableImplementation;
-class CVoidOwner;
-template <typename> class TreeNode;
-template <typename, typename, typename, ETreeTableImplementation> class TreeSet;
-
 template <typename TKey, typename TKeyComparator, typename TAllocator, ETreeTableImplementation Implementation>
-class TreeSetIterator : public SetCollectionIterator<TKey, TAllocator>
+class TreeSetIterator
 {
 	using TTreeNode			 = TreeNode<TKey>;
 	using TTreeSet			 = TreeSet<TKey, TKeyComparator, TAllocator, Implementation>;
 	using TTreeTable		 = TreeTable<ParameterPack_t<TKey, TKeyComparator, TAllocator>, Implementation>;
-	using TTreeSetIterator	 = TreeSetIterator<TKey, TKeyComparator, TAllocator, Implementation>;
-	using TSetCollectionIterator = SetCollectionIterator<TKey, TAllocator>;
+
 public:
-	TreeSetIterator(CVoidOwner& _owner, TTreeNode* _pIteratorNode)
-	: TSetCollectionIterator(_owner)
+	TreeSetIterator(TTreeNode* _pIteratorNode)
+		: pIteratorNode_(_pIteratorNode)
 	{
-		pIteratorNode_ = _pIteratorNode;
 	}
 
-	~TreeSetIterator() noexcept override = default;
-public:
-	bool HasNext() const override
+	bool HasNext() const
 	{
-		if (!this->IsValid())
-			return false;
-
 		return pIteratorNode_ != nullptr;
 	}
 
-	bool HasPrevious() const override
+	bool HasPrevious() const
 	{
-		if (!this->IsValid())
-			return false;
-
 		return pIteratorNode_ != nullptr;
 	}
 
-	TKey& Next() override
+	TKey& Next()
 	{
 		if (pIteratorNode_ == nullptr)
 			throw InvalidOperationException("데이터가 없습니다.");
@@ -59,7 +41,7 @@ public:
 		return key;
 	}
 
-	TKey& Previous() override
+	TKey& Previous()
 	{
 		if (pIteratorNode_ == nullptr)
 			throw InvalidOperationException("데이터가 없습니다.");
@@ -69,7 +51,7 @@ public:
 		return key;
 	}
 
-	TKey& Current() override
+	TKey& Current()
 	{
 		if (pIteratorNode_ == nullptr)
 			throw InvalidOperationException("데이터가 없습니다.");
@@ -78,15 +60,16 @@ public:
 	}
 
 	// TODO: 올바르게 수정
-	bool IsEnd() const override
+	bool IsEnd() const
 	{
 		return HasNext() == false;
 	}
 
-	bool IsBegin() const override
+	bool IsBegin() const
 	{
 		return HasPrevious() == false;
 	}
+
 protected:
 	TTreeNode* pIteratorNode_;
 

@@ -1,4 +1,4 @@
-/*
+﻿/*
 	작성자 : 윤정도
 	HashSet 클래스를 테스트합니다.
 */
@@ -57,19 +57,19 @@ TEST(HashSetTest, EnumeratorTest) {
 	}
 
 	// 정방향 반복자 테스트
-	const auto mapIter = testSet.Begin();
-	for (int i = 0; mapIter->HasNext(); i++) {
-		int& key = mapIter->Next();
+	auto mapIter = testSet.Begin();
+	for (int i = 0; mapIter.HasNext(); i++) {
+		int& key = mapIter.Next();
 		EXPECT_TRUE(testSet.Exist(key));
-		EXPECT_TRUE(testSet.Extension().Exist(i));	
+		EXPECT_TRUE(testSet.Exist(i));	
 	}
 
 	// 반대방향 반복자 테스트
-	const auto mapRIter = testSet.End();
-	for (int i = 9; mapRIter->HasPrevious(); i--) {
-		int& key = mapRIter->Previous();
+	auto mapRIter = testSet.End();
+	for (int i = 9; mapRIter.HasPrevious(); i--) {
+		int& key = mapRIter.Previous();
 		EXPECT_TRUE(testSet.Exist(key));
-		EXPECT_TRUE(testSet.Extension().Exist(key));
+		EXPECT_TRUE(testSet.Exist(key));
 	}
 }
 

@@ -1,98 +1,88 @@
 ﻿/*
 	작성자 : 윤정도
+	배열 계열 컨테이너의 값 이터레이터 (힙 할당 없음, 비가상)
+	Const = true  : const 컬렉션 순회 + const T& 반환
+	Const = false : 비 const 컬렉션 순회 + T& 반환
 */
 
 #pragma once
 
-#include "jc/Container/Iterator.h"
+#include "jc/Namespace.h"
+#include "jc/TypeTraits.h"
 
 NS_JC_BEGIN
 
 // 전방 선언
-class CVoidOwner;
 template <typename, typename> class ArrayCollection;
 
-template <typename T, typename TAllocator>
-class JC_NOVTABLE ArrayCollectionIterator : public Iterator<T, TAllocator>
+template <typename T, typename TAllocator, bool Const>
+class ArrayCollectionIterator
 {
-	using TIterator			= Iterator<T, TAllocator>;
-	using TArrayCollection	= ArrayCollection<T, TAllocator>;
+	using TArrayCollection		= ArrayCollection<T, TAllocator>;
+	using TCollectionPtr		= Conditional_t<Const, const TArrayCollection*, TArrayCollection*>;
+	using TValue				= Conditional_t<Const, const T, T>;
 
 public:
-	ArrayCollectionIterator(CVoidOwner& _owner, int _pos)
-		: TIterator(_owner)
+	ArrayCollectionIterator(TCollectionPtr _pCollection, int _pos)
+		: pCollection_(_pCollection)
 		, pos_(_pos)
 	{
 	}
 
-	~ArrayCollectionIterator() noexcept override = 0;
-
-public:
-	bool HasNext() const override
+	bool HasNext() const
 	{
-		if (!this->IsValid())
-		{
-			return false;
-		}
-
 		return IsValidIndex(pos_);
 	}
 
-	bool HasPrevious() const override
+	bool HasPrevious() const
 	{
-		if (!this->IsValid())
-		{
-			return false;
-		}
-
 		return IsValidIndex(pos_ - 1);
 	}
 
-	T& Next() override
+	TValue& Next()
 	{
-		return CastArrayCollection()->pArray_[pos_++];
+		return pCollection_->pArray_[pos_++];
 	}
 
-	T& Previous() override
+	TValue& Previous()
 	{
-		return CastArrayCollection()->pArray_[--pos_];
+		return pCollection_->pArray_[--pos_];
 	}
 
-	T& Current() override
+	TValue& Current() const
 	{
-		return CastArrayCollection()->pArray_[pos_];
+		return pCollection_->pArray_[pos_];
 	}
 
-	bool IsEnd() const override
+	bool IsEnd() const
 	{
 		return HasNext() == false;
 	}
 
-	bool IsBegin() const override
+	bool IsBegin() const
 	{
 		return HasPrevious() == false;
 	}
 
-protected:
-	virtual bool IsValidIndex(int _idx) const
+	friend bool operator==(const ArrayCollectionIterator& _lhs, const ArrayCollectionIterator& _rhs)
 	{
-		return _idx >= 0 && _idx < CastArrayCollection()->Size();
+		return _lhs.pCollection_ == _rhs.pCollection_ && _lhs.pos_ == _rhs.pos_;
 	}
 
-	TArrayCollection* CastArrayCollection() const
+	friend bool operator!=(const ArrayCollectionIterator& _lhs, const ArrayCollectionIterator& _rhs)
 	{
-		this->ThrowIfIteratorIsNotValid();
-		return this->watcher_.Get<TArrayCollection*>();
+		return !(_lhs == _rhs);
 	}
 
 protected:
+	bool IsValidIndex(int _idx) const
+	{
+		return _idx >= 0 && _idx < pCollection_->Size();
+	}
+
+protected:
+	TCollectionPtr pCollection_;
 	int pos_;
 };
-
-template <typename T, typename TAllocator>
-ArrayCollectionIterator<T, TAllocator>::~ArrayCollectionIterator() noexcept
-{
-	// UNUSED
-}
 
 NS_END

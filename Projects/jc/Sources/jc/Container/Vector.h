@@ -5,7 +5,6 @@
 #pragma once
 
 #include "jc/Container/ArrayCollection.h"
-#include "jc/Container/VectorIterator.h"
 
 NS_JC_BEGIN
 
@@ -18,11 +17,9 @@ class Vector : public ArrayCollection<T, TAllocator>
 {
     // static_assert(IsValidAllocator_v<T, TAllocator>, "... wrong allocator syntax !!");
 
-    using TEnumerator = Enumerator<T, TAllocator>;
-    using TCollection = Collection<T, TAllocator>;
     using TArrayCollection = ArrayCollection<T, TAllocator>;
+    using TArrayCollectionIterator = ArrayCollectionIterator<T, TAllocator, false>;
     using TVector = Vector<T, TAllocator>;
-    using TVectorIterator = VectorIterator<T, TAllocator>;
 
   public:
     Vector(int _capacity = TArrayCollection::DEFAULT_CAPACITY) : TArrayCollection(_capacity)
@@ -49,7 +46,7 @@ class Vector : public ArrayCollection<T, TAllocator>
     {
     }
 
-    ~Vector() noexcept override
+    ~Vector() noexcept
     {
         this->Clear(true);
     }
@@ -158,12 +155,12 @@ class Vector : public ArrayCollection<T, TAllocator>
         TArrayCollection::Expand(_capacity);
     }
 
-    void Shrink(int _capacity) override
+    void Shrink(int _capacity)
     {
         return TArrayCollection::Shrink(_capacity);
     }
 
-    void ShrinkToFit(float _ratio = 1.0f) override
+    void ShrinkToFit(float _ratio = 1.0f)
     {
         return TArrayCollection::ShrinkToFit(_ratio);
     }
@@ -171,6 +168,7 @@ class Vector : public ArrayCollection<T, TAllocator>
     /// <summary>>a
     /// 여러개의 데이터를 뒤에 추가하고자할 때
     /// </summary>
+    template <typename TCollection>
     void PushBackAll(const TCollection& _collection)
     {
         int expandSize = this->CalculateExpandCapacity(this->size_ + _collection.Size());
@@ -180,10 +178,10 @@ class Vector : public ArrayCollection<T, TAllocator>
             this->Expand(expandSize);
         }
 
-        TEnumerator it = _collection.Begin();
-        while(it->HasNext())
+        auto it = _collection.Begin();
+        while(it.HasNext())
         {
-            this->SetAt(this->size_++, it->Next());
+            this->SetAt(this->size_++, it.Next());
         }
     }
 
@@ -231,6 +229,7 @@ class Vector : public ArrayCollection<T, TAllocator>
     /// <summary>
     /// 특정 위치에 데이터를 많이 삽입하고자 할 때
     /// </summary>
+    template <typename TCollection>
     void InsertAll(int _idx, const TCollection& _collection)
     {
         if(_idx == this->size_)
@@ -251,10 +250,10 @@ class Vector : public ArrayCollection<T, TAllocator>
 
         this->MoveBlock(_idx, _idx + collectionSize, moveBlockSize);
 
-        TEnumerator it = _collection.Begin();
-        while(it->HasNext())
+        auto it = _collection.Begin();
+        while(it.HasNext())
         {
-            this->SetAtUnsafe(_idx++, it->Next());
+            this->SetAtUnsafe(_idx++, it.Next());
         }
 
         this->size_ += collectionSize;
@@ -487,14 +486,14 @@ class Vector : public ArrayCollection<T, TAllocator>
         return this->GetAt(_idx);
     }
 
-    TEnumerator Begin() const override
+    TArrayCollectionIterator Begin() const
     {
-        return MakeShared<TVectorIterator, TAllocator>(this->GetOwner(), 0);
+        return TArrayCollectionIterator(const_cast<TArrayCollection*>(static_cast<const TArrayCollection*>(this)), 0);
     }
 
-    TEnumerator End() const override
+    TArrayCollectionIterator End() const
     {
-        return MakeShared<TVectorIterator, TAllocator>(this->GetOwner(), this->Size());
+        return TArrayCollectionIterator(const_cast<TArrayCollection*>(static_cast<const TArrayCollection*>(this)), this->Size());
     }
 
     template <typename Consumer>
@@ -504,6 +503,58 @@ class Vector : public ArrayCollection<T, TAllocator>
         {
             _consumer(this->pArray_[i]);
         }
+    }
+
+    template <typename IndexConsumer>
+    void ForEachWithIndex(IndexConsumer&& _consumer)
+    {
+        for(int i = 0; i < this->size_; ++i)
+        {
+            _consumer(this->pArray_[i], i);
+        }
+    }
+
+    template <typename TPredicate>
+    bool ExistIf(TPredicate&& _predicate) const
+    {
+        for(int i = 0; i < this->size_; ++i)
+        {
+            if(_predicate(this->pArray_[i]))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    T* First()
+    {
+        if(this->size_ == 0)
+        {
+            return nullptr;
+        }
+
+        return &this->pArray_[0];
+    }
+
+    T* Last()
+    {
+        if(this->size_ == 0)
+        {
+            return nullptr;
+        }
+
+        return &this->pArray_[this->size_ - 1];
+    }
+
+    T* IndexOf(int _at)
+    {
+        if(_at >= this->size_)
+        {
+            return nullptr;
+        }
+
+        return &this->pArray_[_at];
     }
 
     void ForEachDelete()
@@ -533,11 +584,6 @@ class Vector : public ArrayCollection<T, TAllocator>
         return nullptr;
     }
 
-    ContainerType GetContainerType() override
-    {
-        return ContainerType::Vector;
-    }
-
 	struct SIterator
 	{
 		using iterator_category = std::forward_iterator_tag;
@@ -546,16 +592,16 @@ class Vector : public ArrayCollection<T, TAllocator>
 		using pointer = T*;
 		using reference = T&;
 
-		SIterator(const TEnumerator& enumerator) : m_it(enumerator) {}
+		SIterator(const TArrayCollectionIterator& iterator) : m_it(iterator) {}
 
-		reference operator*() const { return *m_it->Current(); }
-		pointer operator->() { return &m_it->Current(); }
-		SIterator& operator++() { m_it->Next(); return *this; }
+		reference operator*() const { return m_it.Current(); }
+		pointer operator->() { return &m_it.Current(); }
+		SIterator& operator++() { m_it.Next(); return *this; }
 		SIterator operator++(int) { SIterator tmp = *this; ++(*this); return tmp; }
 		friend bool operator== (const SIterator& a, const SIterator& b) { return a.m_it == b.m_it; }
-		friend bool operator!= (const SIterator& a, const SIterator& b) { return a.m_it == b.m_it; }
+		friend bool operator!= (const SIterator& a, const SIterator& b) { return a.m_it != b.m_it; }
 	private:
-		TEnumerator m_it;
+		TArrayCollectionIterator m_it;
 	};
 
     SIterator begin()
@@ -566,9 +612,14 @@ class Vector : public ArrayCollection<T, TAllocator>
     {
         return SIterator(End());
     }
-
-  protected:
-    friend class TVectorIterator;
+    SIterator begin() const
+    {
+        return SIterator(Begin());
+    }
+    SIterator end() const
+    {
+        return SIterator(End());
+    }
 };
 
 NS_END

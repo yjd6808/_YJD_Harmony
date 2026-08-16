@@ -58,19 +58,19 @@ TEST(TreeSetTest, EnumeratorTest) {
 	}
 
 	// 정방향 반복자 테스트
-	const auto mapIter = testSet.Begin();
-	for (int i = 0; mapIter->HasNext(); i++) {
-		int& key = mapIter->Next();
+	auto mapIter = testSet.Begin();
+	for (int i = 0; mapIter.HasNext(); i++) {
+		int& key = mapIter.Next();
 		EXPECT_TRUE(testSet.Exist(key));
-		EXPECT_TRUE(testSet.Extension().Exist(i));
+		EXPECT_TRUE(testSet.Exist(i));
 	}
 
 	// 반대방향 반복자 테스트
-	const auto mapRIter = testSet.End();
-	for (int i = 9; mapRIter->HasPrevious(); i--) {
-		int& key = mapRIter->Previous();
+	auto mapRIter = testSet.End();
+	for (int i = 9; mapRIter.HasPrevious(); i--) {
+		int& key = mapRIter.Previous();
 		EXPECT_TRUE(testSet.Exist(key));
-		EXPECT_TRUE(testSet.Extension().Exist(key));
+		EXPECT_TRUE(testSet.Exist(key));
 	}
 }
 
@@ -197,12 +197,12 @@ TEST(TreeSetTest, Sort) {
 		}
 	}
 
-	TreeSet<int>::TEnumerator it = testSet.Begin();
+	auto it = testSet.Begin();
 	for (int i = 0; i < 100; ++i) {
-		int v = it->Current();
+		int v = it.Current();
 
-		if (it->HasNext())
-			it->Next();
+		if (it.HasNext())
+			it.Next();
 		EXPECT_TRUE(v == i);
 	}
 
