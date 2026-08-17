@@ -5,20 +5,20 @@
  * 24. 셰이딩 모델 (Shading Model)
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. 셰이딩 = 빛의 반사를 근사하는 수식 (주변광/확산광/정반사광)
- *  2. 램버트 / 퐁 / 블린-퐁의 차이와 계산 방법
- *  3. 정반사광에는 카메라 위치(시선)가 필요하다는 사실
- *  4. UV 구 지오메트리를 직접 만들어 그리는 법 (jc::Vector 활용)
+ * 1. 셰이딩 = 빛의 반사를 근사하는 수식 (주변광/확산광/정반사광)
+ * 2. 램버트 / 퐁 / 블린-퐁의 차이와 계산 방법
+ * 3. 정반사광에는 카메라 위치(시선)가 필요하다는 사실
+ * 4. UV 구 지오메트리를 직접 만들어 그리는 법 (jc::Vector 활용)
  *
  * [관찰 포인트]
- *  - 1번(램버트)은 반짝임이 없다. 2/3번은 하이라이트가 생긴다!
- *  - 퐁과 블린-퐁은 비슷하지만 하이라이트 모양이 미묘하게 다르다
- *  - 방향키로 SpecPower를 바꿔가며 하이라이트 크기 변화를 보자
+ * - 1번(램버트)은 반짝임이 없다. 2/3번은 하이라이트가 생긴다!
+ * - 퐁과 블린-퐁은 비슷하지만 하이라이트 모양이 미묘하게 다르다
+ * - 방향키로 SpecPower를 바꿔가며 하이라이트 크기 변화를 보자
  *
  * [조작법]
- *  - 1: 램버트 / 2: 퐁 / 3: 블린-퐁
- *  - 위/아래 방향키: 하이라이트 날카로움 조절 (2~256)
- *  - ESC: 종료
+ * - 1: 램버트 / 2: 퐁 / 3: 블린-퐁
+ * - 위/아래 방향키: 하이라이트 날카로움 조절 (2~256)
+ * - ESC: 종료
  */
 
 #include "Core.h"
@@ -45,7 +45,7 @@ namespace
 		_s32 mode_;			// 0=램버트, 1=퐁, 2=블린-퐁
 		vec3 cameraPos_;	// 월드 공간 카메라 위치
 		_f32 specPower_;	// 하이라이트 날카로움
-		color baseColor_;	// 물체 기본색
+		vec4 baseColor_;	// 물체 기본색
 	};
 
 	// 창 제목에 표시할 모드 이름표 (gMode 값 순서와 일치)
@@ -155,7 +155,7 @@ void ShadingModel_Main()
 		timer.Tick();
 		elapsed += timer.DeltaTime();
 
-		device.BeginFrame(color(0.08f, 0.08f, 0.12f, 1.0f));
+		device.BeginFrame(color(0x14, 0x14, 0x1F, 0xFF));
 
 		// 구는 천천히 자전, 빛은 구 주위를 돈다 -> 명암 경계가 움직이는 게 보인다.
 		const mat4 world = mat4::RotationY(elapsed * 0.3f);
@@ -172,7 +172,7 @@ void ShadingModel_Main()
 		cbS.mode_ = mode;
 		cbS.cameraPos_ = cameraPos;
 		cbS.specPower_ = specPower;
-		cbS.baseColor_ = color(0.9f, 0.45f, 0.2f, 1.0f);	// 주황색 도자기 느낌
+		cbS.baseColor_ = vec4(0.9f, 0.45f, 0.2f, 1.0f);	// 주황색 도자기 느낌
 		cbShading.UpdateAndBind(&device, cbS, 1);
 
 		vb.Bind(&device);

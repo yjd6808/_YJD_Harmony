@@ -1,7 +1,7 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 8:42:00 AM
- * 수정일: 8/9/2026 10:05:00 AM (v2.1: 윈도우별 씬 슬롯)
+ * 수정일: 8/9/2026 10:05:00 AM (윈도우별 씬 슬롯)
  * =====================
  * 디렉터 구현부
  */
@@ -86,6 +86,9 @@ Director::SceneSlot& Director::GetOrCreateSlot(Window* _pWindow)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 지정 윈도우에 첫 씬을 시작한다.
+// ★ 왜 필요한가: 게임의 "첫 무대"를 여는 일. ApplicationDidFinishLaunching에서 호출한다.
+// - 하는 일: 슬롯(윈도우별 씬 자리) 확보 → 씬에 창/디바이스 주입 → 씬의 OnEnter 1회 호출.
+// - 이미 씬이 돌고 있으면 ReplaceScene과 동일하게 교체로 처리한다.
 void Director::RunScene(Scene* _pScene, Window* _pWindow)
 {
 	if (_pScene == nullptr)
@@ -105,12 +108,17 @@ void Director::RunScene(Scene* _pScene, Window* _pWindow)
 
 	// 첫 씬은 즉시 시작한다. (아직 아무것도 그리고 있지 않으므로 안전)
 	slot.pCurrent_ = _pScene;
-	_pScene->SetWindow(pWindow);	// 씬에게 소속 윈도우를 알려준다 (v2.1)
+	_pScene->SetWindow(pWindow);	// 씬에게 소속 윈도우를 알려준다
+	_pScene->SetDevice(&g_cDevice);	// 그래픽 디바이스 주입 (GetGraphicDevice)
 	_pScene->OnEnter();
+	_LogInfo_("[sgf] Director::RunScene — 씬 시작 (window=%p)", (void*)pWindow);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 다음 프레임 경계에서 해당 윈도우의 씬을 교체한다.
+// ★ 왜 필요한가: 게임의 "무대 전환"(예: 타이틀 → 게임 플레이)을 안전하게 처리하는 일.
+// - 즉시 교체하지 않고 "다음 프레임 경계"에 미룬다: 그리는 도중에 씬이 사라지면 크래시할 수 있기 때문.
+// - (용어) pNext_: 교체 대기 중인 씬. 프레임 경계에서 현재 씬과 맞바꾼다 (안전한 두 단계 교체).
 void Director::ReplaceScene(Scene* _pScene, Window* _pWindow)
 {
 	if (_pScene == nullptr)
@@ -138,12 +146,15 @@ void Director::ReplaceScene(Scene* _pScene, Window* _pWindow)
 	{
 		slot.pCurrent_ = _pScene;
 		_pScene->SetWindow(pWindow);
+		_pScene->SetDevice(&g_cDevice);
 		_pScene->OnEnter();
+		_LogInfo_("[sgf] Director::ReplaceScene — 즉시 시작 (window=%p)", (void*)pWindow);
 		return;
 	}
 
 	// 프레임 도중 교체는 위험하므로 다음 Update 시작 시점에 교체한다.
 	slot.pNext_ = _pScene;
+	_LogInfo_("[sgf] Director::ReplaceScene — 교체 예약 (window=%p)", (void*)pWindow);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -155,14 +166,23 @@ Scene* Director::CurrentScene(Window* _pWindow)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+// 현재 실행 중인 씬을 반환한다. (없으면 nullptr)
+// Scene::AddChild가 running 씬 검증에 사용. 메인 윈도우 슬롯 기준.
+Scene* Director::GetRunningScene()
+{
+	SceneSlot* pSlot = FindSlot(ResolveWindow(nullptr));
+	return (pSlot != nullptr) ? pSlot->pCurrent_ : nullptr;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 // 매 프레임 갱신 (Application이 호출)
 // 1) 프레임 경계에서 예약된 씬 교체를 먼저 처리하고
 // 2) 모든 윈도우의 현재 씬을 갱신한다.
 void Director::Update(const jc::TimeSpan& _dt)
 {
 	// 1. 예약된 씬 교체 처리 (프레임 경계이므로 안전하다)
-	//    씬 콜백(OnExit/OnEnter/OnUpdate)이 slots_를 변경할 수 있으므로(재진입)
-	//    참조를 오래 붙잡지 않고 매 접근마다 인덱스로 다시 조회한다.
+	// 씬 콜백(OnExit/OnEnter/OnUpdate)이 slots_를 변경할 수 있으므로(재진입)
+	// 참조를 오래 붙잡지 않고 매 접근마다 인덱스로 다시 조회한다.
 	for (_s32 i = 0; i < slots_.Size(); ++i)
 	{
 		if (slots_[i].pWindow_ == nullptr || slots_[i].pNext_ == nullptr)
@@ -187,7 +207,9 @@ void Director::Update(const jc::TimeSpan& _dt)
 		slots_[i].pCurrent_ = slots_[i].pNext_;
 		slots_[i].pNext_ = nullptr;
 		slots_[i].pCurrent_->SetWindow(slots_[i].pWindow_);
+		slots_[i].pCurrent_->SetDevice(&g_cDevice);	// 디바이스 주입
 		slots_[i].pCurrent_->OnEnter();
+		_LogInfo_("[sgf] Director::Update — 예약 씬 교체 완료 (window=%p)", (void*)slots_[i].pWindow_);
 	}
 
 	// 2. 모든 윈도우의 현재 씬 갱신
@@ -202,9 +224,8 @@ void Director::Update(const jc::TimeSpan& _dt)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 지정 윈도우의 씬을 그린다. (Application이 창마다 BeginFrame/EndFrame 사이에 호출)
-// [v2.1] 씬 카메라의 행렬로 3D/2D 배치를 모두 열어두고 OnRender를 부른다.
-//  씬은 g_cRenderer2D / g_cRenderer3D로 자유롭게 섞어 그리면 된다.
-//  End 순서는 3D -> 2D. (3D가 먼저 그려져 바닥이 되고, 2D가 UI처럼 그 위에 얹힌다)
+// 씬의 RenderScene()을 호출한다.
+// 파생(Scene2D/Scene3D)이 카메라 구성 → 배치 오픈 → RenderNode 트래버설 → Flush를 직접 책임진다.
 void Director::Render(Window* _pWindow)
 {
 	SceneSlot* pSlot = FindSlot(ResolveWindow(_pWindow));
@@ -213,16 +234,7 @@ void Director::Render(Window* _pWindow)
 		return;
 	}
 
-	Scene* pScene = pSlot->pCurrent_;
-	const mat4 viewProjection = pScene->GetCamera().ViewProjection();
-
-	g_cRenderer3D.Begin(viewProjection);
-	g_cRenderer2D.Begin(viewProjection);
-
-	pScene->OnRender();
-
-	g_cRenderer3D.End();	// 3D 먼저 (깊이 테스트 켜고 그림)
-	g_cRenderer2D.End();	// 2D 나중 (깊이 끄고 그 위에 그림)
+	pSlot->pCurrent_->RenderScene();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

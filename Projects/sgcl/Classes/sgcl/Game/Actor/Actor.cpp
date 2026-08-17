@@ -525,7 +525,7 @@ bool Actor::IsCollide(Actor* _pOther, SpriteDirection_t& _otherHitDirection, cc:
 	cc::rect myThick = GetThicknessBoxRect();
 	cc::rect otherBox = _pOther->GetThicknessBoxRect();
 
-	if (!rect::IntersectY(myThick, otherBox))
+	if (!cc::rect::IntersectY(myThick, otherBox))
 	{
 		return false;
 	}
@@ -533,7 +533,7 @@ bool Actor::IsCollide(Actor* _pOther, SpriteDirection_t& _otherHitDirection, cc:
 	cc::rect myHit = GetHitBox();
 	cc::rect targetHit = _pOther->GetHitBox();
 
-	if (rect::Intersect(myHit, targetHit, _hitRect))
+	if (cc::rect::Intersect(myHit, targetHit, _hitRect))
 	{
 		_otherHitDirection = targetHit.getMidX() > myHit.getMidX() ? SpriteDirection::Left : SpriteDirection::Right;
 		return true;
@@ -546,14 +546,14 @@ bool Actor::IsCollide(const ActorRect& _otherRect, SpriteDirection_t& _otherHitD
 {
 	cc::rect myThick = GetThicknessBoxRect();
 
-	if (!rect::IntersectY(myThick, _otherRect.thicknessRect_))
+	if (!cc::rect::IntersectY(myThick, _otherRect.thicknessRect_))
 	{
 		return false;
 	}
 
 	cc::rect myHit = GetHitBox();
 
-	if (rect::Intersect(myHit, _otherRect.bodyRect_, _hitRect))
+	if (cc::rect::Intersect(myHit, _otherRect.bodyRect_, _hitRect))
 	{
 		_otherHitDirection = _otherRect.bodyRect_.getMidX() > myHit.getMidX()
 			                     ? SpriteDirection::Left
@@ -568,7 +568,7 @@ bool Actor::IsCollide(const ActorRect& _otherRect)
 {
 	cc::rect myThick = GetThicknessBoxRect();
 
-	if (!rect::IntersectY(myThick, _otherRect.thicknessRect_))
+	if (!cc::rect::IntersectY(myThick, _otherRect.thicknessRect_))
 	{
 		return false;
 	}

@@ -5,8 +5,8 @@
  * sgfr 프리컴파일 헤더 (base.props의 ForcedIncludeFiles로 모든 cpp에 자동 포함)
  *
  * [프리컴파일 헤더(PCH)란?]
- *  자주 바뀌지 않는 무거운 헤더(Windows.h, STL, jc, sgf)를 한 번만 컴파일해두고
- *  모든 cpp가 재사용하는 기법. 빌드 속도가 크게 빨라진다.
+ * 자주 바뀌지 않는 무거운 헤더(Windows.h, STL, jc, sgf)를 한 번만 컴파일해두고
+ * 모든 cpp가 재사용하는 기법. 빌드 속도가 크게 빨라진다.
  */
 
 #pragma once

@@ -25,7 +25,7 @@ namespace sgf
 │       ├── Camera2D        (ctCamera2D   = 2, 직교 투영)
 │       └── Camera3D        (ctCamera3D   = 3, 원근 투영)
 │
-├── GameObject  (컴포넌트 슬롯 배열 + 자식 트리 + 메시)
+├── GameObject  (컴포넌트 하이브리드 보관 + 자식 트리 + 메시)
 │
 ├── Director : jc::SingletonStatic<Director>   (씬 관리자, g_cDirector)
 │
@@ -42,8 +42,9 @@ Scene ──소유──▶ defaultCamera_ (GameObject) ──컴포넌트──
   │                  ▲ selectedCamera_ (기본 = defaultCamera_)
   └──소유──▶ gameObjects_ (GameObject 목록)
                 └──소유──▶ children_ (자식 GameObject 트리)
-                              각 GameObject ──소유──▶ components_[ctMax] (Component*)
-                                                         Transform(0) / Material(1) / Camera(2,3) / 커스텀(100+)
+                              각 GameObject ──소유──▶ 컴포넌트 보관 (하이브리드)
+                                                         Transform(기본 멤버) / Material(기본 멤버)
+                                                         + Vector<Component*> (Camera, 커스텀 등)
                               Mesh ──빌림──▶ ResourceMgr (소유)
 ```
 
@@ -56,15 +57,15 @@ Scene ──소유──▶ defaultCamera_ (GameObject) ──컴포넌트──
 ```cpp
 enum class ComponentType : _u32
 {
-    ctTransform = 0,     // 엔진: 위치/회전/크기
-    ctMaterial  = 1,     // 엔진: 그리는 방법
+    ctTransform = 0,     // 엔진: 위치/회전/크기 (GameObject 기본 멤버)
+    ctMaterial  = 1,     // 엔진: 그리는 방법 (GameObject 기본 멤버)
     ctCamera2D  = 2,     // 엔진: 직교 카메라
     ctCamera3D  = 3,     // 엔진: 원근 카메라
     // 4~99: 엔진 예약 (Light, AudioSource 등)
     ctCustomBase = 100,  // 사용자 정의 컴포넌트 시작
-    ctMax        = 256,
 };
 
+// 타입 식별자 (GetComponent의 Vector 선형 스캔 비교용 + GetTypeIndex() 구현용)
 #define SGF_COMPONENT_TYPE(typeIndex)                                  \
     static constexpr _u32 TypeIndex() { return (_u32)typeIndex; }      \
     virtual _u32 GetTypeIndex() const override { return (_u32)typeIndex; }
@@ -250,18 +251,31 @@ public:
     explicit GameObject(const char* _szName = "");
     virtual ~GameObject();   // 컴포넌트 전부 + 자식 전부 정리
 
-    // === 컴포넌트 (O(1) 슬롯 접근) ===
+    // === 컴포넌트 (하이브리드: 기본 컴포넌트 = 멤버 O(1), 나머지 = Vector 선형 스캔) ===
     template <typename T>
-    T* GetComponent() { return static_cast<T*>(components_[T::TypeIndex()]); }
+    T* GetComponent()
+    {
+        // 1) 기본 컴포넌트 (모든 GameObject가 항상 보유) — 멤버 즉시 반환 (Unity의 transform fast-path)
+        if constexpr (std::is_same_v<T, Transform>) return pTransform_;
+        if constexpr (std::is_same_v<T, Material>)  return pMaterial_;
+
+        // 2) 그 외 컴포넌트 (Camera, 커스텀) — Vector 선형 스캔 (n은 보통 5~10 이하)
+        for (Component* pComponent : components_)
+        {
+            if (pComponent->GetTypeIndex() == T::TypeIndex())
+                return static_cast<T*>(pComponent);
+        }
+        return nullptr;
+    }
 
     template <typename T>
-    T* AddComponent();               // 슬롯 비어있으면 생성+부착, 있으면 기존 반환
+    T* AddComponent();               // 새로 생성해 벡터에 부착 (같은 타입 다중 부착 가능)
 
     template <typename T>
-    void RemoveComponent();          // Transform 제거는 assert
+    void RemoveComponent();          // Transform/Material은 기본 보유라 제거 불가 (assert)
 
-    Transform* GetTransform() const;              // = GetComponent<Transform>()
-    Material*  GetMaterial() const;               // = GetComponent<Material>()
+    Transform* GetTransform() const { return pTransform_; }   // O(1) 멤버 접근
+    Material*  GetMaterial()  const { return pMaterial_; }    // O(1) 멤버 접근
     Camera*    GetCameraComponent() const;        // Camera2D → Camera3D 순으로 탐색
 
     // === ChildElement (자식 GameObject 트리) ===
@@ -273,7 +287,7 @@ public:
 
     // === 메시 / 렌더 ===
     void SetMesh(Mesh* _pMesh);      Mesh* GetMesh() const;   // 빌림 (ResourceMgr 소유)
-    void SetVisible(bool _bVisible); bool IsVisible() const;
+    void SetVisible(bool _visible);  bool IsVisible() const;
 
     // === 이름 ===
     void SetName(const jc::String& _name);  const jc::String& GetName() const;
@@ -288,12 +302,13 @@ private:
 
 private:
     jc::String name_;
-    Component* components_[ComponentType::ctMax] = {};   // 인덱스 = 타입 인덱스
-    Transform* pTransform_ = nullptr;                    // GetTransform() 캐시
+    Transform* pTransform_ = nullptr;            // 기본 멤버 (모든 GameObject가 보유, 생성 시 new)
+    Material*  pMaterial_  = nullptr;            // 기본 멤버 (모든 GameObject가 보유, 생성 시 new)
+    jc::Vector<Component*> components_;          // 그 외 컴포넌트 (Camera, 커스텀 — 소유)
     GameObject* pParent_ = nullptr;
-    jc::Vector<GameObject*> children_;                   // 소유
+    jc::Vector<GameObject*> children_;           // 소유
     Scene* pScene_ = nullptr;
-    Mesh* pMesh_ = nullptr;                              // 빌림
+    Mesh* pMesh_ = nullptr;                      // 빌림
     bool visible_ = true;
     bool initialized_ = false;
 };
@@ -658,7 +673,7 @@ pPlayer->GetTransform()->Translate(vec3(3.0f, 0.0f, 0.0f));  // 부모 이동 �
 | `Scene/Camera2D.cpp` | 신규 | 구현 |
 | `Scene/Camera3D.h` | 신규 | 기존 3D 기능 이관 + `CreateDefault()` |
 | `Scene/Camera3D.cpp` | 신규 | 구현 |
-| `Scene/GameObject.h` | 신규 | 컴포넌트 슬롯/자식/메시 |
+| `Scene/GameObject.h` | 신규 | 컴포넌트 하이브리드 보관(멤버+Vector)/자식/메시 |
 | `Scene/GameObject.cpp` | 신규 | 구현 |
 | `Scene/Scene.h` | 수정 | defaultCamera_/selectedCamera_/RenderScene/카메라 운용 API |
 | `Scene/Scene.cpp` | 신규 | GameObject 관리 + Update/RenderGameObjects |
@@ -681,4 +696,4 @@ pPlayer->GetTransform()->Translate(vec3(3.0f, 0.0f, 0.0f));  // 부모 이동 �
 
 ## 8. 범위 밖
 
-- 쿼터니언 회전 / Camera cbuffer b3 실제 사용 / Light·AudioSource 등 추가 디폴트 컴포넌트 / 다중 부착·GetComponents / 직렬화·프리팹 / 멀티 카메라 분할화면(enabled_ 예약만)
+- 쿼터니언 회전 / Camera cbuffer b3 실제 사용 / Light·AudioSource 등 추가 디폴트 컴포넌트 / GetComponents(동일 타입 전체 반환)·직렬화·프리팹 / 멀티 카메라 분할화면(enabled_ 예약만)

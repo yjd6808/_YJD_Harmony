@@ -5,18 +5,18 @@
  * 23. 스테이트 캐시 (State Cache)
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. 같은 값을 다시 바인딩하는 API 호출은 GraphicContext가 알아서 건너뛴다
- *  2. GetApiCallCount / GetSkippedCallCount로 절감 효과를 직접 수치로 본다
- *  3. 실전 렌더러에 스테이트 캐시가 필수인 이유 (GPU 파이프라인 설명서의 결론!)
+ * 1. 같은 값을 다시 바인딩하는 API 호출은 GraphicContext가 알아서 건너뛴다
+ * 2. GetApiCallCount / GetSkippedCallCount로 절감 효과를 직접 수치로 본다
+ * 3. 실전 렌더러에 스테이트 캐시가 필수인 이유 (GPU 파이프라인 설명서의 결론!)
  *
  * [Before/After 비교]
- *  - Before(v2): 그리기 함수마다 모든 상태를 무조건 다시 바인딩 (중복 호출 그대로 전달)
- *  - After (v3): 컨텍스트가 마지막 값을 기억해 같은 값이면 D3D 호출을 생략
+ * - Before: 그리기 함수마다 모든 상태를 무조건 다시 바인딩 (중복 호출 그대로 전달)
+ * - After: 컨텍스트가 마지막 값을 기억해 같은 값이면 D3D 호출을 생략
  *
  * [조작법]
- *  - 1: 캐시 무력화 토글 (매 Draw 앞 InvalidateCache 호출 = v2 방식 흉내내기)
- *  - 창 제목에서 프레임당 API 호출/생략 횟수를 확인하세요
- *  - ESC: 종료
+ * - 1: 캐시 무력화 토글 (매 Draw 앞 InvalidateCache 호출 = 방식 흉내내기)
+ * - 창 제목에서 프레임당 API 호출/생략 횟수를 확인하세요
+ * - ESC: 종료
  */
 
 #include "Core.h"
@@ -60,7 +60,8 @@ void StateCache_Main()
 		return;
 	}
 
-	SceneRenderer renderer;
+	// SceneRenderer → Renderer3D 통합 (배치 + 메시 파이프라인)
+	Renderer3D renderer;
 	if (!renderer.Initialize(&device))
 	{
 		jc::Console::WriteLine("씨 렌더러 초기화 실패!");
@@ -119,7 +120,7 @@ void StateCache_Main()
 		timer.Tick();
 		elapsed += timer.DeltaTime();
 
-		device.BeginFrame(color(0.06f, 0.06f, 0.1f, 1.0f));
+		device.BeginFrame(color(0x0F, 0x0F, 0x1A, 0xFF));
 		context.InvalidateCache();	// BeginFrame이 원시 상태를 건드렸으므로 캐시를 비운다
 		context.ResetStats();		// 이번 프레임 통계만 재다
 
@@ -131,7 +132,7 @@ void StateCache_Main()
 			{
 				if (bCacheDisabled)
 				{
-					context.InvalidateCache();	// v2 흉내내기: 매번 "처음 그리는 척" 하기
+					context.InvalidateCache();	// 흉내내기: 매번 "처음 그리는 척" 하기
 				}
 
 				RenderObject& drawn = object;
@@ -142,6 +143,7 @@ void StateCache_Main()
 				renderer.Draw(drawn);
 			}
 		}
+		renderer.EndScene();
 
 		// 4. 통계를 창 제목으로 출력 (API 호출 수 vs 캐시가 생략한 수)
 		wchar_t szTitle[256];
@@ -159,4 +161,5 @@ void StateCache_Main()
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
+	_LogInfo_("[23] StateCache 종료 — API 호출 %llu, 생략 %llu", context.GetApiCallCount(), context.GetSkippedCallCount());
 }

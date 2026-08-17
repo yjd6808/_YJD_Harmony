@@ -5,17 +5,17 @@
  * 31. 파이프라인 여행 (Pipeline Journey) - 캅스톤
  *
  * [이 튜토리얼의 목표]
- *  지금까지 배운 모든 개념을 하나의 프로그램으로 연결한다.
- *  각 단계 주석의 [§N]은 설계 기준이 된 수도 코드 문서의 항목 번호다.
- *  (§1 윈도우 ~ §20 메인 루프까지 전 과정을 v3 API로 재현한다)
+ * 지금까지 배운 모든 개념을 하나의 프로그램으로 연결한다.
+ * 각 단계 주석의 [§N]은 설계 기준이 된 수도 코드 문서의 항목 번호다.
+ * (§1 윈도우 ~ §20 메인 루프까지 전 과정을 API로 재현한다)
  *
  * [흙름 요약]
- *  §1 윈도우 → §2~3 디바이스/컨텍스트 → §4~6 스왑체인/깊이버퍼(엔진 내부)
- *  → §7~10 상태/셰이더/머티리얼 → §11 메시 → §12 렌더 오브젝트
- *  → §13 프레임 상수 → §14 뷰포트 → §15~19 프레임 시작/바인딩/드로우 → §20 메인 루프
+ * §1 윈도우 → §2~3 디바이스/컨텍스트 → §4~6 스왑체인/깊이버퍼(엔진 내부)
+ * → §7~10 상태/셰이더/머티리얼 → §11 메시 → §12 렌더 오브젝트
+ * → §13 프레임 상수 → §14 뷰포트 → §15~19 프레임 시작/바인딩/드로우 → §20 메인 루프
  *
  * [조작법]
- *  - ESC: 종료 (큐브와 체커 바닥이 함께 도는 장면)
+ * - ESC: 종료 (큐브와 체커 바닥이 함께 도는 장면)
  */
 
 #include "Core.h"
@@ -46,9 +46,10 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 파이프라인 여행 튜토리얼을 실행한다. (수도 코드 전 항목을 v3 API로 재현)
+// 파이프라인 여행 튜토리얼을 실행한다. (수도 코드 전 항목을 API로 재현)
 void PipelineJourney_Main()
 {
+	_LogInfo_("[31] PipelineJourney 시작");
 	// [§1] 윈도우 초기화: window.init(1280, 720)
 	Window window;
 	if (!window.Create(L"31. 파이프라인 여행 (ESC 종료)", 1280, 720))
@@ -61,8 +62,8 @@ void PipelineJourney_Main()
 	window.ConnectInput(&input);
 
 	// [§2~§6] 디바이스 + 컨텍스트 + 스왑체인 + 백버퍼 RTV + 깊이버퍼 DSV
-	//  - 수도 코드에서는 다섯 단계였지만, v3에서는 device.Initialize(hwnd, w, h) 한 번이다.
-	//  - 분리된 GraphicsContext는 device.GetContext()로 얻는다. (생성과 바인딩의 분리!)
+	// - 수도 코드에서는 다섯 단계였지만, device.Initialize(hwnd, w, h) 한 번이다.
+	// - 분리된 GraphicsContext는 device.GetContext()로 얻는다. (생성과 바인딩의 분리!)
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{
@@ -81,8 +82,8 @@ void PipelineJourney_Main()
 		return;
 	}
 
-	// [§13] 프레임 상수버퍼 + [§16~§19] 바인딩/드로우 도우미 = SceneRenderer
-	SceneRenderer renderer;
+	// [§13] 프레임 상수버퍼 + [§16~§19] 바인딩/드로우 도우미 = Renderer3D (SceneRenderer 통합)
+	Renderer3D renderer;
 	if (!renderer.Initialize(&device))
 	{
 		jc::Console::WriteLine("씨 렌더러 초기화 실패!");
@@ -111,7 +112,7 @@ void PipelineJourney_Main()
 	const _u64 checkerKey = g_cResourceMgr.Add(pChecker, "memory://journey_checker");
 
 	// [§9] 머티리얼 구성: 셰이더 + 상태 4종 + 텍스처 슬롯 (값 하나로 묶인다)
-	//  - 바닥용: 디폴트 3D 셰이더 + 체커 텍스처
+	// - 바닥용: 디폴트 3D 셰이더 + 체커 텍스처
 	Material* pFloorMaterial = dbg_new Material();
 	if (!pFloorMaterial->Initialize(&device))
 	{
@@ -168,12 +169,13 @@ void PipelineJourney_Main()
 	frame.cameraPosition_ = vec4(0.0f, 2.0f, -4.0f, 1.0f);
 
 	// [§14] 뷰포트는 device.Initialize가 전체 화면으로 잡아둔다.
-	//  (반읐만 쓰고 싶다면 context.SetViewport(Viewport(...))로 언제든 바꿀 수 있다)
+	// (반읐만 쓰고 싶다면 context.SetViewport(Viewport(...))로 언제든 바꿀 수 있다)
 
 	jc::Console::WriteLine("수도 코드 §1~§20이 이 파일 하나에 전부 들어있습니다. 주석의 [§N]을 따라가세요!");
 
 	// [§20] 메인 루프: while (window.isRunning())
 	FrameTimer timer;
+	_s32 frameCount = 0;	// 검증 로그용 프레임 카운터
 	timer.Reset();
 	_f32 elapsed = 0.0f;
 
@@ -187,13 +189,14 @@ void PipelineJourney_Main()
 
 		timer.Tick();
 		elapsed += timer.DeltaTime();
+		++frameCount;
 
 		// 월드 행렬 갱신 (행벡터 규약: 회전 후 이동)
 		cube.world_ = mat4::RotationY(elapsed) * mat4::Translation(0.0f, 0.5f, 0.0f);
 		floor.world_ = mat4::Scale(6.0f) * mat4::RotationX(jc_math_deg2rad(90.0f)) * mat4::Translation(0.0f, -0.5f, 0.0f);
 
 		// [§15] BeginFrame: 백버퍼/깊이버퍼 클리어 + 뷰포트/렌더타겟 장착
-		device.BeginFrame(color(0.08f, 0.08f, 0.12f, 1.0f));
+		device.BeginFrame(color(0x14, 0x14, 0x1F, 0xFF));
 		context.InvalidateCache();	// BeginFrame이 원시 상태를 건드렸으므로 캐시를 비운다
 
 		// [§16] UpdateFrameConstant: 프레임당 한 번 b0 갱신
@@ -202,6 +205,7 @@ void PipelineJourney_Main()
 		// [§17~§19] BindMaterial + BindMesh + UpdateObjectConstant + Draw 가 한 줄씩
 		renderer.Draw(floor);
 		renderer.Draw(cube);
+		renderer.EndScene();
 
 		// Present: 그린 결과를 화면으로 (GPU 파이프라인 여행의 종착역!)
 		device.EndFrame(true);
@@ -212,4 +216,5 @@ void PipelineJourney_Main()
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
+	_LogInfo_("[31] PipelineJourney 종료 — 렌더 프레임 %d회", frameCount);
 }

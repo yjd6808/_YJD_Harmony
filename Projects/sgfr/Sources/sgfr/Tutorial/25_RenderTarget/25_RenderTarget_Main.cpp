@@ -5,18 +5,18 @@
  * 25. 렌더 타깃 (Render Target)
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. 백버퍼가 아닌 "내가 만든 텍스처"에 장면을 그리는 법
- *  2. 그려진 결과를 다시 텍스처로 샘플링해서 화면에 붙이는 법
- *  3. 한 프레임에 여러 번의 "패스(Pass)"로 나누어 그리는 구조
- *  4. 미니맵/백미러/포스트 프로세싱/그림자의 공통 토대 익히기
+ * 1. 백버퍼가 아닌 "내가 만든 텍스처"에 장면을 그리는 법
+ * 2. 그려진 결과를 다시 텍스처로 샘플링해서 화면에 붙이는 법
+ * 3. 한 프레임에 여러 번의 "패스(Pass)"로 나누어 그리는 구조
+ * 4. 미니맵/백미러/포스트 프로세싱/그림자의 공통 토대 익히기
  *
  * [관찰 포인트]
- *  - 가운데 큐브: 일반 카메라 시점 (백버퍼에 직접)
- *  - 오른쪽 위 사각형: 같은 큐브를 하늘에서 내려다본 미니맵 (렌더 타깃)
- *  - 둘은 같은 지오메트리지만 카메라만 다르다!
+ * - 가운데 큐브: 일반 카메라 시점 (백버퍼에 직접)
+ * - 오른쪽 위 사각형: 같은 큐브를 하늘에서 내려다본 미니맵 (렌더 타깃)
+ * - 둘은 같은 지오메트리지만 카메라만 다르다!
  *
  * [조작법]
- *  - ESC: 종료
+ * - ESC: 종료
  */
 
 #include "Core.h"
@@ -149,10 +149,10 @@ void RenderTarget_Main()
 		const mat4 world = mat4::RotationY(elapsed * 0.8f) * mat4::RotationX(elapsed * 0.3f);
 
 		// ---- 패스 1: 렌더 타깃에 미니맵 시점으로 그리기 ----
-		device.BeginFrame(color(0.08f, 0.08f, 0.12f, 1.0f));	// 백버퍼도 미리 클리어
+		device.BeginFrame(color(0x14, 0x14, 0x1F, 0xFF));	// 백버퍼도 미리 클리어
 
 		device.SetRenderTarget(&miniMapTarget);					// 이제 그리기는 텍스처로!
-		miniMapTarget.Clear(&device, color(0.1f, 0.25f, 0.15f, 1.0f));	// 초록 배경 = 미니맵 티가 나게
+		miniMapTarget.Clear(&device, color(0x1A, 0x40, 0x26, 0xFF));	// 초록 배경 = 미니맵 티가 나게
 
 		CbTransform cb;
 		cb.wvp_ = world * topView * topProj;

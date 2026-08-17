@@ -5,20 +5,20 @@
  * 03. 디바이스와 컨텍스트 (Device & Context)
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. ID3D11Device(공장)와 ID3D11DeviceContext(조립 라인)의 역할 분리
- *  2. sgf의 GraphicDevice(생성 담당)와 GraphicContext(바인딩/그리기 담당) 구조
- *  3. 상태 캐시: 같은 상태를 두 번 설정하면 실제 D3D 호출이 생략되는 원리
+ * 1. ID3D11Device(공장)와 ID3D11DeviceContext(조립 라인)의 역할 분리
+ * 2. sgf의 GraphicDevice(생성 담당)와 GraphicContext(바인딩/그리기 담당) 구조
+ * 3. 상태 캐시: 같은 상태를 두 번 설정하면 실제 D3D 호출이 생략되는 원리
  *
  * [Before/After 비교]
- *  - Before(v2): device.Context()로 원시 ID3D11DeviceContext를 직접 노출.
- *                호출하는 쪽이 중복 바인딩을 신경 쓰지 않으면 매 프레임 낭비가 쌓인다.
- *  - After (v3): GraphicContext가 모든 바인딩을 감싸고, 직전 상태와 같으면
- *                D3D 호출 자체를 건너뛴다. (통계로 직접 확인!)
+ * - Before: device.Context()로 원시 ID3D11DeviceContext를 직접 노출.
+ * 호출하는 쪽이 중복 바인딩을 신경 쓰지 않으면 매 프레임 낭비가 쌓인다.
+ * - After: GraphicContext가 모든 바인딩을 감싸고, 직전 상태와 같으면
+ * D3D 호출 자체를 건너뛴다. (통계로 직접 확인!)
  *
  * [왜 중요한가?]
- *  D3D11의 상태 바인딩(Set 계열)은 값싸 보이지만 드로우가 수천 번이 되면
- *  런타임 검증/드라이버 오버헤드가 누적된다. 실전 렌더러는 반드시
- *  "직전 상태와 같으면 생략"하는 상태 캐시를 둔다. (23번 튜토리얼에서 심화)
+ * D3D11의 상태 바인딩(Set 계열)은 값싸 보이지만 드로우가 수천 번이 되면
+ * 런타임 검증/드라이버 오버헤드가 누적된다. 실전 렌더러는 반드시
+ * "직전 상태와 같으면 생략"하는 상태 캐시를 둔다. (23번 튜토리얼에서 심화)
  */
 
 #include "Core.h"
@@ -38,7 +38,7 @@ void DeviceAndContext_Main()
 	jc::Console::WriteLine("  GraphicDevice  -> 생성/수명 담당 (Initialize/Finalize, CreateXXX)");
 	jc::Console::WriteLine("  GraphicContext -> 바인딩/그리기 담당 (SetXXX, Draw/DrawIndexed)\n");
 
-	// 1. 창 없이 디바이스만 초기화한다. (v2.1부터 창과 디바이스가 분리되어 가능)
+	// 1. 창 없이 디바이스만 초기화한다. [창과 디바이스가 분리되어 가능)
 	GraphicDevice device;
 	if (!device.Initialize())
 	{

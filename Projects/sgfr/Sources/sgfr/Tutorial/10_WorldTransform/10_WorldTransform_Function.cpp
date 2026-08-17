@@ -12,13 +12,13 @@
 // 상수 버퍼로 변환 행렬을 받는 HLSL 셰이더 소스를 반환한다.
 //
 // [row_major가 붙는 이유]
-//  jc::Mat4는 행 우선(row-major) 방식으로 메모리에 저장된다.
-//  HLSL의 기본값은 열 우선(column-major)이므로, 그대로 보내면 행렬이 뒤집힌다.
-//  row_major 키워드를 붙이면 전치(Transpose) 없이 그대로 쓸 수 있다.
+// jc::Mat4는 행 우선(row-major) 방식으로 메모리에 저장된다.
+// HLSL의 기본값은 열 우선(column-major)이므로, 그대로 보내면 행렬이 뒤집힌다.
+// row_major 키워드를 붙이면 전치(Transpose) 없이 그대로 쓸 수 있다.
 //
 // [mul(v, M) 순서]
-//  sgf는 행 벡터(row-vector) 규약을 쓴다. 즉 v' = v * M.
-//  그래서 HLSL에서도 mul(벡터, 행렬) 순서로 곱한다.
+// sgf는 행 벡터(row-vector) 규약을 쓴다. 즉 v' = v * M.
+// 그래서 HLSL에서도 mul(벡터, 행렬) 순서로 곱한다.
 const char* TransformShaderSource()
 {
 	return R"(

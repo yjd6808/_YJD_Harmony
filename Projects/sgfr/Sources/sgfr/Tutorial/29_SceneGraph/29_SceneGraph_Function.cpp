@@ -1,7 +1,7 @@
 /*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 11:20:00 AM
- * 수정일: 8/9/2026 1:00:00 AM (v2: jc::Console 사용, 씬 & 사운드 설명으로 갱신)
+ * 수정일: 8/9/2026 1:00:00 AM (jc::Console 사용, 씬 & 사운드 설명으로 갱신)
  * =====================
  * 29. 씬 & 사운드 - 보조 함수 구현부
  */
@@ -63,9 +63,9 @@ bool CreateCircleTexture(GraphicDevice* _pDevice, Texture* _pOutTexture, _s32 _s
 			const _f32 alpha = Clamp((radius - dist) / 1.5f, 0.0f, 1.0f);
 
 			const _s32 idx = (y * _size + x) * 4;
-			pixels[idx + 0] = (_u8)(_color.r * 255.0f * alpha);
-			pixels[idx + 1] = (_u8)(_color.g * 255.0f * alpha);
-			pixels[idx + 2] = (_u8)(_color.b * 255.0f * alpha);
+			pixels[idx + 0] = (_u8)(_color.Rf() * 255.0f * alpha);
+			pixels[idx + 1] = (_u8)(_color.Gf() * 255.0f * alpha);
+			pixels[idx + 2] = (_u8)(_color.Bf() * 255.0f * alpha);
 			pixels[idx + 3] = (_u8)(255.0f * alpha);
 		}
 	}

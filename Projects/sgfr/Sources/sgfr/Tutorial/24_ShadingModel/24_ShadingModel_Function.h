@@ -16,10 +16,10 @@ void PrintShadingExplanation();
 
 // UV 구(Sphere) 지오메트리를 생성해 정점/인덱스 배열을 채운다.
 // 위도(rings) x 경도(segments)로 지구본처럼 자르며, UV 이음자리용으로 경도 마지막 열을 복제한다.
-// @param _outVertices : 출력 정점 배열 (위치/법선/UV)
-// @param _outIndices  : 출력 인덱스 배열 (삼각형 목록)
-// @param _radius      : 구 반지름
-// @param _rings       : 세로 분할 수 (위도 방향)
-// @param _segments    : 가로 분할 수 (경도 방향)
+// @param _outVertices: 출력 정점 배열 (위치/법선/UV)
+// @param _outIndices: 출력 인덱스 배열 (삼각형 목록)
+// @param _radius: 구 반지름
+// @param _rings: 세로 분할 수 (위도 방향)
+// @param _segments: 가로 분할 수 (경도 방향)
 void GenerateSphere(jc::Vector<sgf::VertexPNT>& _outVertices, jc::Vector<_u32>& _outIndices,
 	_f32 _radius, _s32 _rings, _s32 _segments);

@@ -5,27 +5,27 @@
  * 17. 샘플러와 필터링 (Sampler & Filtering)
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. 샘플링: 화면 픽셀 하나에 텍스처의 어떤 색을 가져올지 정하는 규칙
- *  2. 필터: Point(최근접) vs Linear(선형 보간)의 화질 차이
- *  3. 주소 모드: UV가 0~1을 벗어났을 때 Wrap/Clamp/Mirror의 차이
- *  4. 엔진의 GraphicDevice::SetSampler로 상태를 실시간 교체하는 법
+ * 1. 샘플링: 화면 픽셀 하나에 텍스처의 어떤 색을 가져올지 정하는 규칙
+ * 2. 필터: Point(최근접) vs Linear(선형 보간)의 화질 차이
+ * 3. 주소 모드: UV가 0~1을 벗어났을 때 Wrap/Clamp/Mirror의 차이
+ * 4. 엔진의 GraphicDevice::SetSampler로 상태를 실시간 교체하는 법
  *
  * [Before/After 비교 뷰]
- *  화면이 노란 세로 경계선으로 좌/우로 나뉜다.
- *  - 왼쪽  (Before): 기준 상태 = Point + Wrap 고정
- *  - 오른쪽(After) : 현재 선택한 필터/주소 모드 적용
- *  같은 텍스처, 같은 UV인데 샘플러 규칙만 달라서 생기는 차이를 한 화면에서 비교한다!
- *  (셰이더가 픽셀의 화면 x좌표를 보고 s0/s1 샘플러 중 하나를 골라 쓴다)
+ * 화면이 노란 세로 경계선으로 좌/우로 나뉜다.
+ * - 왼쪽 (Before): 기준 상태 = Point + Wrap 고정
+ * - 오른쪽(After): 현재 선택한 필터/주소 모드 적용
+ * 같은 텍스처, 같은 UV인데 샘플러 규칙만 달라서 생기는 차이를 한 화면에서 비교한다!
+ * (셰이더가 픽셀의 화면 x좌표를 보고 s0/s1 샘플러 중 하나를 골라 쓴다)
  *
  * [왜 중요한가?]
- *  게임의 모든 텍스처는 결국 샘플링을 거쳐 화면에 나온다.
- *  도트 그래픽 게임은 Point가 정답이고, 실사풍 게임은 Linear가 기본이다.
- *  바닥 타일링은 Wrap 없이는 불가능하다. 용도에 맞는 선택이 필요하다!
+ * 게임의 모든 텍스처는 결국 샘플링을 거쳐 화면에 나온다.
+ * 도트 그래픽 게임은 Point가 정답이고, 실사풍 게임은 Linear가 기본이다.
+ * 바닥 타일링은 Wrap 없이는 불가능하다. 용도에 맞는 선택이 필요하다!
  *
  * [조작법]
- *  - 1/2: 필터 (Point/Linear) - 오른쪽(After) 화면에만 적용
- *  - 3/4/5: 주소 모드 (Wrap/Clamp/Mirror) - 오른쪽(After) 화면에만 적용
- *  - ESC: 종료
+ * - 1/2: 필터 (Point/Linear) - 오른쪽(After) 화면에만 적용
+ * - 3/4/5: 주소 모드 (Wrap/Clamp/Mirror) - 오른쪽(After) 화면에만 적용
+ * - ESC: 종료
  */
 
 #include "Core.h"
@@ -74,7 +74,7 @@ void SamplerFiltering_Main()
 	}
 
 	// 2. 고작 32x32짜리 체커 텍스처를 만든다.
-	//    (일부러 작게! 크게 확대해야 필터 차이가 눈에 보인다)
+	// (일부러 작게! 크게 확대해야 필터 차이가 눈에 보인다)
 	_u8 pixels[32 * 32 * 4];
 	FillCheckerPixels(pixels, 32, 32, 4);
 
@@ -155,7 +155,7 @@ void SamplerFiltering_Main()
 
 		input.NextFrame();
 
-		device.BeginFrame(color(0.08f, 0.08f, 0.1f, 1.0f));
+		device.BeginFrame(color(0x14, 0x14, 0x1A, 0xFF));
 
 		// [Before] s0 슬롯: 기준 샘플러 (Point + Wrap 고정)
 		device.SetSampler(GraphicDevice::SamplerFilter::fmPoint, GraphicDevice::SamplerAddress::amWrap, 0);

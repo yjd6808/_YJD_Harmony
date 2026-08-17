@@ -1,18 +1,18 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 3:30:00 PM
  * =====================
- * 독립 파이프라인 상태 객체 4종 (v3)
+ * 독립 파이프라인 상태 객체 4종
  *
  * [상태 객체(State Object)란?]
- *  DX11은 "반투명 설정", "깊이 테스트 설정" 같은 설정값 묶음을 미리 만들어두고
- *  그리기 전에 꺼내 끼우는 방식이다. 이 파일의 클래스들은 상태 객체 하나를
- *  "직접 소유"하는 래퍼다. (09번 튜토리얼: 상태 객체를 직접 만들어 보기)
+ * DX11은 "반투명 설정", "깊이 테스트 설정" 같은 설정값 묶음을 미리 만들어두고
+ * 그리기 전에 꺼내 끼우는 방식이다. 이 파일의 클래스들은 상태 객체 하나를
+ * "직접 소유"하는 래퍼다. (09번 튜토리얼: 상태 객체를 직접 만들어 보기)
  *
  * [RenderStates(플라이웨이트)와의 관계]
- *  같은 설정 조합은 앱 전체에서 1개만 있으면 충분하다. 그래서 엔진 내부
- *  (Material 등)는 RenderStates 캐시에서 "빌려" 쓰고(비소유 핸들),
- *  이 래퍼들은 학습/실험용으로 상태를 직접 만들어 볼 때 사용한다.
+ * 같은 설정 조합은 앱 전체에서 1개만 있으면 충분하다. 그래서 엔진 내부
+ * (Material 등)는 RenderStates 캐시에서 "빌려" 쓰고(비소유 핸들),
+ * 이 래퍼들은 학습/실험용으로 상태를 직접 만들어 볼 때 사용한다.
  */
 
 #pragma once
@@ -28,10 +28,10 @@ class RasterizerState
 {
 public:
 	// 상태 객체를 생성한다.
-	// @param _pDevice   : 그래픽 디바이스
-	// @param _cull      : 컴링 모드 (기본 cmBack)
-	// @param _fill      : 채우기 모드 (기본 fmSolid)
-	// @param _frontFace : 앞면 판정 기준 (기본 ffClockwise)
+	// @param _pDevice: 그래픽 디바이스
+	// @param _cull: 컴링 모드 (기본 cmBack)
+	// @param _fill: 채우기 모드 (기본 fmSolid)
+	// @param _frontFace: 앞면 판정 기준 (기본 ffClockwise)
 	bool Initialize(
 		GraphicDevice* _pDevice,
 		CullMode _cull = CullMode::cmBack,

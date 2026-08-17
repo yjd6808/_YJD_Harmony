@@ -17,8 +17,8 @@ void PrintSamplerExplanation();
 // 체커보드 패턴의 RGBA 픽셀 배열을 채운다.
 // 가장자리 1픽셀은 빨간색 테두리로 채워서 주소 모드(Wrap/Clamp/Mirror)의
 // 차이가 한눈에 보이도록 한다.
-// @param _pOutPixels : 크기가 _width * _height * 4 이상인 출력 버퍼
-// @param _cellSize   : 체커 한 칸의 픽셀 크기
+// @param _pOutPixels: 크기가 _width * _height * 4 이상인 출력 버퍼
+// @param _cellSize: 체커 한 칸의 픽셀 크기
 void FillCheckerPixels(_u8* _pOutPixels, _s32 _width, _s32 _height, _s32 _cellSize);
 
 // UV가 0~_uvScale 범위인 사각형 정점 4개와 인덱스 6개를 채운다.

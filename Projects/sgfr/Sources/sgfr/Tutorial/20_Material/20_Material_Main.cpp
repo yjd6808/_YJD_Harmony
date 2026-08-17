@@ -5,18 +5,18 @@
  * 20. 머티리얼 (Material)
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. Material = 셰이더(VS/PS) + 상태 4종 + 텍스처 슬롯 + 머티리얼 상수(b2)의 묶음
- *  2. material.Bind(context) 한 줄이면 파이프라인이 '그릴 준비 완료' 상태가 된다
- *  3. 디폴트 리소스: ResourceMgr가 준비해둔 디폴트 2D 셰이더를 그대로 쓴다
+ * 1. Material = 셰이더(VS/PS) + 상태 4종 + 텍스처 슬롯 + 머티리얼 상수(b2)의 묶음
+ * 2. material.Bind(context) 한 줄이면 파이프라인이 '그릴 준비 완료' 상태가 된다
+ * 3. 디폴트 리소스: ResourceMgr가 준비해둔 디폴트 2D 셰이더를 그대로 쓴다
  *
  * [Before/After 비교]
- *  - Before(v2): 그리기 직전마다 셰이더/블렌드/샘플러/텍스처를 일일이 바인딩
- *  - After (v3): "어떻게 그릴지"를 Material 값 하나에 담아두고 Bind 한 번으로 재사용
+ * - Before: 그리기 직전마다 셰이더/블렌드/샘플러/텍스처를 일일이 바인딩
+ * - After: "어떻게 그릴지"를 Material 값 하나에 담아두고 Bind 한 번으로 재사용
  *
  * [조작법]
- *  - 1/2: 블렌드 (불투명/알파)   - 3/4: 필터 (Point/Linear)
- *  - 5: 틴트 색 순환 (머티리얼 상수 b2 갱신)
- *  - ESC: 종료
+ * - 1/2: 블렌드 (불투명/알파) - 3/4: 필터 (Point/Linear)
+ * - 5: 틴트 색 순환 (머티리얼 상수 b2 갱신)
+ * - ESC: 종료
  */
 
 #include "Core.h"
@@ -49,10 +49,10 @@ namespace
 	// 틴트 색 후보 (5번 키로 순환)
 	const color s_tintColors[] =
 	{
-		color(1.0f, 1.0f, 1.0f, 1.0f),
-		color(1.0f, 0.5f, 0.5f, 1.0f),
-		color(0.5f, 1.0f, 0.5f, 0.8f),
-		color(0.5f, 0.7f, 1.0f, 0.5f),
+		color(0xFF, 0xFF, 0xFF, 0xFF),
+		color(0xFF, 0x80, 0x80, 0xFF),
+		color(0x80, 0xFF, 0x80, 0xCC),
+		color(0x80, 0xB3, 0xFF, 0x80),
 	};
 }
 
@@ -138,7 +138,7 @@ void Material_Main()
 	}
 
 	// 5. 디폴트 2D 셰이더의 b0/b1 규약에 맞춰 상수버퍼 준비
-	//    (22번부터는 SceneRenderer가 이 작업까지 대신해준다)
+	// (22번부터는 SceneRenderer가 이 작업까지 대신해준다)
 	ConstantBuffer<FrameConstants> frameCb;
 	ConstantBuffer<ObjectConstants> objectCb;
 	if (!frameCb.Create(&device) || !objectCb.Create(&device))
@@ -172,7 +172,7 @@ void Material_Main()
 		}
 		input.NextFrame();
 
-		device.BeginFrame(color(0.06f, 0.06f, 0.1f, 1.0f));
+		device.BeginFrame(color(0x0F, 0x0F, 0x1A, 0xFF));
 		context.InvalidateCache();	// BeginFrame이 원시 상태를 건드렸으므로 캐시를 비운다
 
 		// b0(뷰/투영): NDC를 그대로 쓰려고 단위행렬, b1(월드): 1.2배 확대

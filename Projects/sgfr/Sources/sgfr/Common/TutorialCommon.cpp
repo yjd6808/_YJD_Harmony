@@ -98,22 +98,22 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 void FillColorCube(VertexPC* _pOutVertices8, _u32* _pOutIndices36)
 {
 	// 앞면(z=-0.5) 4개 -> 뒷면(z=+0.5) 4개
-	_pOutVertices8[0] = { vec3(-0.5f, +0.5f, -0.5f), color(1.0f, 0.3f, 0.3f, 1.0f) };	// 앞-왼위
-	_pOutVertices8[1] = { vec3(+0.5f, +0.5f, -0.5f), color(1.0f, 1.0f, 0.3f, 1.0f) };	// 앞-오른위
-	_pOutVertices8[2] = { vec3(-0.5f, -0.5f, -0.5f), color(0.3f, 1.0f, 0.3f, 1.0f) };	// 앞-왼아래
-	_pOutVertices8[3] = { vec3(+0.5f, -0.5f, -0.5f), color(0.3f, 1.0f, 1.0f, 1.0f) };	// 앞-오른아래
-	_pOutVertices8[4] = { vec3(-0.5f, +0.5f, +0.5f), color(0.3f, 0.3f, 1.0f, 1.0f) };	// 뒤-왼위
-	_pOutVertices8[5] = { vec3(+0.5f, +0.5f, +0.5f), color(1.0f, 0.3f, 1.0f, 1.0f) };	// 뒤-오른위
-	_pOutVertices8[6] = { vec3(-0.5f, -0.5f, +0.5f), color(1.0f, 1.0f, 1.0f, 1.0f) };	// 뒤-왼아래
-	_pOutVertices8[7] = { vec3(+0.5f, -0.5f, +0.5f), color(0.4f, 0.4f, 0.4f, 1.0f) };	// 뒤-오른아래
+	_pOutVertices8[0] = { vec3(-0.5f, +0.5f, -0.5f), color(0xFF, 0x4D, 0x4D, 0xFF) };	// 앞-왼위
+	_pOutVertices8[1] = { vec3(+0.5f, +0.5f, -0.5f), color(0xFF, 0xFF, 0x4D, 0xFF) };	// 앞-오른위
+	_pOutVertices8[2] = { vec3(-0.5f, -0.5f, -0.5f), color(0x4D, 0xFF, 0x4D, 0xFF) };	// 앞-왼아래
+	_pOutVertices8[3] = { vec3(+0.5f, -0.5f, -0.5f), color(0x4D, 0xFF, 0xFF, 0xFF) };	// 앞-오른아래
+	_pOutVertices8[4] = { vec3(-0.5f, +0.5f, +0.5f), color(0x4D, 0x4D, 0xFF, 0xFF) };	// 뒤-왼위
+	_pOutVertices8[5] = { vec3(+0.5f, +0.5f, +0.5f), color(0xFF, 0x4D, 0xFF, 0xFF) };	// 뒤-오른위
+	_pOutVertices8[6] = { vec3(-0.5f, -0.5f, +0.5f), color(0xFF, 0xFF, 0xFF, 0xFF) };	// 뒤-왼아래
+	_pOutVertices8[7] = { vec3(+0.5f, -0.5f, +0.5f), color(0x66, 0x66, 0x66, 0xFF) };	// 뒤-오른아래
 
 	// 각 면마다 삼각형 2개, 바깥에서 볼 때 시계 방향
 	const _u32 indices[36] = {
-		0, 1, 2,  2, 1, 3,	// 앞면   (-Z)
-		5, 4, 7,  7, 4, 6,	// 뒷면   (+Z)
-		4, 0, 6,  6, 0, 2,	// 왼면   (-X)
+		0, 1, 2,  2, 1, 3,	// 앞면 (-Z)
+		5, 4, 7,  7, 4, 6,	// 뒷면 (+Z)
+		4, 0, 6,  6, 0, 2,	// 왼면 (-X)
 		1, 5, 3,  3, 5, 7,	// 오른면 (+X)
-		4, 5, 0,  0, 5, 1,	// 윗면   (+Y)
+		4, 5, 0,  0, 5, 1,	// 윗면 (+Y)
 		2, 3, 6,  6, 3, 7,	// 아랫면 (-Y)
 	};
 	for (_s32 i = 0; i < 36; ++i)

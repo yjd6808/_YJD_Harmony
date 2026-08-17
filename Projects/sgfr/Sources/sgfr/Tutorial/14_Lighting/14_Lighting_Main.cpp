@@ -5,19 +5,19 @@
  * 14. 라이팅 (Lighting) - 람버트 확산광 + 주변광
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. 법선(Normal)이 무엇이고 왜 필요한가
- *  2. 람버트 법칙: 밝기 = max(0, dot(N, -L))
- *  3. 상수 버퍼 여러 개(b0, b1)를 슬롯별로 쓰는 법
- *  4. 왜 큐브 정점이 8개가 아니라 24개가 되는가 (면마다 법선이 다르다!)
+ * 1. 법선(Normal)이 무엇이고 왜 필요한가
+ * 2. 람버트 법칙: 밝기 = max(0, dot(N, -L))
+ * 3. 상수 버퍼 여러 개(b0, b1)를 슬롯별로 쓰는 법
+ * 4. 왜 큐브 정점이 8개가 아니라 24개가 되는가 (면마다 법선이 다르다!)
  *
  * [왜 정점 24개?]
- *  13번에서는 꼭짓점 8개로 충분했다. 색은 꼭짓점마다 하나면 되니까.
- *  하지만 법선은 '면'의 속성이다. 한 꼭짓점은 3개 면에 속하므로
- *  면마다 다른 법선을 주려면 정점을 면별로 분리해야 한다. (4개 x 6면 = 24개)
+ * 13번에서는 꼭짓점 8개로 충분했다. 색은 꼭짓점마다 하나면 되니까.
+ * 하지만 법선은 '면'의 속성이다. 한 꼭짓점은 3개 면에 속하므로
+ * 면마다 다른 법선을 주려면 정점을 면별로 분리해야 한다. (4개 x 6면 = 24개)
  *
  * [조작법]
- *  - 회전하는 큐브에 빛이 비친다. 밝은 면/어두운 면이 구분되는 것을 관찰!
- *  - ↑↓ 화살표: 주변광 세기 조절 / ESC: 종료
+ * - 회전하는 큐브에 빛이 비친다. 밝은 면/어두운 면이 구분되는 것을 관찰!
+ * - ↑↓ 화살표: 주변광 세기 조절 / ESC: 종료
  */
 
 #include "Core.h"
@@ -41,7 +41,7 @@ namespace
 	{
 		vec3 lightDir_;			// 빛이 나아가는 방향 (정규화 필수!)
 		_f32 ambient_;			// 주변광 세기 (0~1)
-		color baseColor_;		// 물체 기본 색상
+		vec4 baseColor_;		// 물체 기본 색상
 	};
 }
 
@@ -131,7 +131,7 @@ void Lighting_Main()
 
 		input.NextFrame();
 
-		device.BeginFrame(color(0.05f, 0.05f, 0.1f, 1.0f));
+		device.BeginFrame(color(0x0D, 0x0D, 0x1A, 0xFF));
 
 		// 큐브 회전 (빛은 고정, 물체만 회전 -> 면의 밝기가 계속 변한다)
 		const mat4 world = mat4::RotationY(elapsed * 0.8f) * mat4::RotationX(elapsed * 0.3f);
@@ -144,7 +144,7 @@ void Lighting_Main()
 		CbLight cbL = {};
 		cbL.lightDir_ = vec3(-0.5f, -0.7f, 0.5f).Normalized();	// 오른쪽 위 뒤 -> 왼쪽 아래 앞
 		cbL.ambient_ = ambient;
-		cbL.baseColor_ = color(0.9f, 0.6f, 0.2f, 1.0f);			// 주황색 큐브
+		cbL.baseColor_ = vec4(0.9f, 0.6f, 0.2f, 1.0f);			// 주황색 큐브
 		cbLight.UpdateAndBind(&device, cbL, 1);		// register(b1)
 
 		vb.Bind(&device);

@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	간단한 수학 학수
 */
@@ -219,6 +219,77 @@ struct vec2
 inline constexpr vec2 operator*(_f32 _scalar, const vec2& _v) { return _v * _scalar; }
 
 // =====================================================================================
+// size : 2D 크기 (가로/세로). vec2는 "점/방향", size는 "크기" — 의미 분리.
+// =====================================================================================
+// (2026-08-16 추가: sgf v2 게임 오브젝트 시스템에서 "가로×세로"를 명시적으로 표현)
+// =====================================================================================
+struct size
+{
+	_f32 width_, height_;
+
+	constexpr size() : width_(0.0f), height_(0.0f) {}
+	constexpr size(_f32 _width, _f32 _height) : width_(_width), height_(_height) {}
+	constexpr size(const vec2& _v) : width_(_v.x), height_(_v.y) {}   // 변환 허용 (명시적 아님)
+
+	constexpr size operator+(const size& _other) const { return size(width_ + _other.width_, height_ + _other.height_); }
+	constexpr size operator-(const size& _other) const { return size(width_ - _other.width_, height_ - _other.height_); }
+	constexpr size operator*(_f32 _scalar) const { return size(width_ * _scalar, height_ * _scalar); }
+	constexpr size operator/(_f32 _scalar) const { return size(width_ / _scalar, height_ / _scalar); }
+	size& operator+=(const size& _other) { width_ += _other.width_; height_ += _other.height_; return *this; }
+	size& operator-=(const size& _other) { width_ -= _other.width_; height_ -= _other.height_; return *this; }
+	size& operator*=(_f32 _scalar) { width_ *= _scalar; height_ *= _scalar; return *this; }
+
+	bool operator==(const size& _other) const
+	{ return FloatEqual(width_, _other.width_) && FloatEqual(height_, _other.height_); }
+	bool operator!=(const size& _other) const { return !(*this == _other); }
+
+	_f32 Area() const { return width_ * height_; }        // 넓이
+	bool IsZero() const { return FloatEqual(width_, 0.0f) && FloatEqual(height_, 0.0f); }
+	bool IsPositive() const { return width_ > 0.0f && height_ > 0.0f; }
+
+	vec2 ToVec2() const { return vec2(width_, height_); } // (size → vec2)
+	static size FromVec2(const vec2& _v) { return size(_v.x, _v.y); }
+
+	static constexpr size Zero() { return size(0.0f, 0.0f); }
+	static constexpr size One()  { return size(1.0f, 1.0f); }
+};
+
+// 스칼라 * size 순서도 허용 (2.0f * s 형태)
+inline constexpr size operator*(_f32 _scalar, const size& _s) { return _s * _scalar; }
+
+// =====================================================================================
+// rect : 2D 영역 (원점 + 크기). Cocos2d-x의 Rect(origin, size)와 동일 개념.
+// =====================================================================================
+// (2026-08-16 추가: sgf v2 Fill/렌더 API의 영역 표현. 직교 2D는 Y 위+ 좌표계)
+// =====================================================================================
+struct rect
+{
+	vec2 pos_;   // 왼쪽 아래 (직교 2D: Y 위+)
+	size size_;
+
+	constexpr rect() : pos_(0.0f, 0.0f), size_(0.0f, 0.0f) {}
+	constexpr rect(_f32 _x, _f32 _y, _f32 _w, _f32 _h) : pos_(_x, _y), size_(_w, _h) {}
+	constexpr rect(const vec2& _pos, const size& _sz) : pos_(_pos), size_(_sz) {}
+
+	_f32 Left()   const { return pos_.x; }             // 최소 x
+	_f32 Bottom() const { return pos_.y; }             // 최소 y (직교 2D)
+	_f32 Right()  const { return pos_.x + size_.width_; }
+	_f32 Top()    const { return pos_.y + size_.height_; }
+
+	bool Contains(const vec2& _p) const                // 점 포함 판정 (픽/히트용)
+	{ return _p.x >= Left() && _p.x <= Right() && _p.y >= Bottom() && _p.y <= Top(); }
+
+	bool Overlaps(const rect& _other) const
+	{ return Left() < _other.Right() && Right() > _other.Left()
+	      && Bottom() < _other.Top() && Top() > _other.Bottom(); }
+
+	rect Expanded(_f32 _margin) const                  // 외곽 확장 (픽 패딩 등)
+	{ return rect(pos_ - vec2(_margin, _margin), size_ + size(_margin * 2.0f, _margin * 2.0f)); }
+
+	static constexpr rect Zero() { return rect(0.0f, 0.0f, 0.0f, 0.0f); }
+};
+
+// =====================================================================================
 // vec3 : 3차원 벡터
 // =====================================================================================
 // 3D 위치/방향/법선(Normal)/색상(RGB) 등을 표현한다.
@@ -335,50 +406,419 @@ struct vec4
 };
 
 // =====================================================================================
-// color : RGBA 색상 (각 성분 0.0 ~ 1.0)
+// color : RGBA 색상 (각 성분 0 ~ 255)
 // =====================================================================================
-// [왜 0~255가 아니라 0.0~1.0인가?]
-//  - GPU/셰이더는 색상을 부동소수점 0~1로 다룬다. 곱셈(조명 계산)이 자연스럽기 때문.
-//  - 0~255 정수는 최종적으로 모니터에 출력될 때의 포맷일 뿐이다.
+// [왜 0~255인가?]
+//  - 저장/상수로는 8비트 정수(0~255)가 표준이다. (cocos2d Color3B 등)
+//  - GPU/셰이더는 색상을 부동소수점 0~1로 다루므로, 경계에서 Rf()/ToVec4()/ToFloat4()로 변환한다.
+//  - 0.0f~1.0f float가 필요한 곳은 color::FromFloat(...)로 만든다. (런타임 변환)
 // =====================================================================================
 struct color
 {
-	_f32 r, g, b, a;
+	_u8 r, g, b, a;
 
 	// 기본 생성자: 불투명 흰색
-	constexpr color() : r(1.0f), g(1.0f), b(1.0f), a(1.0f) {}
+	constexpr color() : r(255), g(255), b(255), a(255) {}
 
-	// 성분 지정 생성자
-	constexpr color(_f32 _r, _f32 _g, _f32 _b, _f32 _a = 1.0f) : r(_r), g(_g), b(_b), a(_a) {}
+	// 성분 지정 생성자 (0~255)
+	constexpr color(_u8 _r, _u8 _g, _u8 _b, _u8 _a = 255) : r(_r), g(_g), b(_b), a(_a) {}
 
-	// 0~255 정수 값으로부터 생성하는 헬퍼
-	// 예: color::FromBytes(255, 128, 0) -> 주황색
-	static color FromBytes(_u8 _r, _u8 _g, _u8 _b, _u8 _a = 255)
+	// 정수/헥스 리터럴용 생성자. (예: color(0x64, 0x95, 0xED)) 0~255 범위로 잘라낸다.
+	constexpr color(int _r, int _g, int _b, int _a = 255)
+		: r((_u8)(_r < 0 ? 0 : _r > 255 ? 255 : _r))
+		, g((_u8)(_g < 0 ? 0 : _g > 255 ? 255 : _g))
+		, b((_u8)(_b < 0 ? 0 : _b > 255 ? 255 : _b))
+		, a((_u8)(_a < 0 ? 0 : _a > 255 ? 255 : _a)) {}
+
+	// 0.0f~1.0f float로부터 런타임 변환. (반올림 + 클램프)
+	// 예: color::FromFloat(1.0f, 0.5f, 0.0f) -> 주황색
+	static color FromFloat(_f32 _r, _f32 _g, _f32 _b, _f32 _a = 1.0f)
 	{
-		return color(_r / 255.0f, _g / 255.0f, _b / 255.0f, _a / 255.0f);
+		return color(
+			(_u8)(Clamp(_r, 0.0f, 1.0f) * 255.0f + 0.5f),
+			(_u8)(Clamp(_g, 0.0f, 1.0f) * 255.0f + 0.5f),
+			(_u8)(Clamp(_b, 0.0f, 1.0f) * 255.0f + 0.5f),
+			(_u8)(Clamp(_a, 0.0f, 1.0f) * 255.0f + 0.5f));
 	}
 
-	// 색상끼리 곱하기 (조명 계산, 틴트 효과에 사용)
+	// GPU/셰이더용 float 0~1 변환
+	_f32 Rf() const { return r / 255.0f; }
+	_f32 Gf() const { return g / 255.0f; }
+	_f32 Bf() const { return b / 255.0f; }
+	_f32 Af() const { return a / 255.0f; }
+
+	// 상수버퍼(float4)에 그대로 올릴 값. (vec4 = 16바이트)
+	vec4 ToVec4() const { return vec4(Rf(), Gf(), Bf(), Af()); }
+
+	// ClearRenderTargetView 등의 _f32[4] 배열로 내보낸다.
+	void ToFloat4(_f32 (&_out)[4]) const
+	{
+		_out[0] = Rf();
+		_out[1] = Gf();
+		_out[2] = Bf();
+		_out[3] = Af();
+	}
+
+	// 색상끼리 곱하기 (조명 계산, 틴트 효과) — 8비트 정규화 곱
 	constexpr color operator*(const color& _other) const
 	{
-		return color(r * _other.r, g * _other.g, b * _other.b, a * _other.a);
+		return color((_u8)(r * _other.r / 255), (_u8)(g * _other.g / 255), (_u8)(b * _other.b / 255), (_u8)(a * _other.a / 255));
 	}
 
-	constexpr color operator*(_f32 _scalar) const
+	// 밝기 배율 (예: 큐브 면별 음영) — float 0~1 곱
+	color operator*(_f32 _scalar) const
 	{
-		return color(r * _scalar, g * _scalar, b * _scalar, a * _scalar);
+		return FromFloat(Rf() * _scalar, Gf() * _scalar, Bf() * _scalar, Af());
 	}
 
-	// 자주 쓰는 색상 프리셋
-	static constexpr color White() { return color(1.0f, 1.0f, 1.0f, 1.0f); }
-	static constexpr color Black() { return color(0.0f, 0.0f, 0.0f, 1.0f); }
-	static constexpr color Red() { return color(1.0f, 0.0f, 0.0f, 1.0f); }
-	static constexpr color Green() { return color(0.0f, 1.0f, 0.0f, 1.0f); }
-	static constexpr color Blue() { return color(0.0f, 0.0f, 1.0f, 1.0f); }
-	static constexpr color Yellow() { return color(1.0f, 1.0f, 0.0f, 1.0f); }
-	static constexpr color Cyan() { return color(0.0f, 1.0f, 1.0f, 1.0f); }
-	static constexpr color Magenta() { return color(1.0f, 0.0f, 1.0f, 1.0f); }
-	static constexpr color CornflowerBlue() { return color(0.39f, 0.58f, 0.93f, 1.0f); }	// XNA 전통의 하늘색
+	// ================================================================
+	// 색상 상수 (값은 color.inl에서 정의)
+	//  - 프리셋 9종 + Wikipedia List of colors (A~F) 335색
+	// ================================================================
+	static const color WHITE;
+	static const color BLACK;
+	static const color RED;
+	static const color GREEN;
+	static const color BLUE;
+	static const color YELLOW;
+	static const color CYAN;
+	static const color MAGENTA;
+	static const color CORNFLOWER_BLUE;
+	static const color ABSOLUTE_ZERO;
+	static const color ACIDGREEN;
+	static const color AERO;
+	static const color AEROBLUE;
+	static const color AFRICANVIOLET;
+	static const color AIRSUPERIORITYBLUE;
+	static const color ALABASTER;
+	static const color ALICEBLUE;
+	static const color ALIZARIN;
+	static const color ALLOYORANGE;
+	static const color ALMOND;
+	static const color AMARANTH;
+	static const color AMARANTH_MAMP_P;
+	static const color AMARANTHPINK;
+	static const color AMARANTHPURPLE;
+	static const color AMARANTHRED;
+	static const color AMAZON;
+	static const color AMBER;
+	static const color AMBER_SAEECE;
+	static const color AMETHYST;
+	static const color ANDROIDGREEN;
+	static const color ANTIQUEBRASS;
+	static const color ANTIQUEBRONZE;
+	static const color ANTIQUEFUCHSIA;
+	static const color ANTIQUERUBY;
+	static const color ANTIQUEWHITE;
+	static const color AO_ENGLISH;
+	static const color APPLEGREEN;
+	static const color APRICOT;
+	static const color AQUA;
+	static const color AQUAMARINE;
+	static const color ARCTICLIME;
+	static const color ARMYGREEN;
+	static const color ARTICHOKE;
+	static const color ARYLIDEYELLOW;
+	static const color ASHGRAY;
+	static const color ASPARAGUS;
+	static const color ASTRONAUT;
+	static const color ATOMICTANGERINE;
+	static const color AUBURN;
+	static const color AUREOLIN;
+	static const color AVOCADO;
+	static const color AZURE;
+	static const color AZURE_XWEBCOLOR;
+	static const color BABYBLUE;
+	static const color BABYBLUEEYES;
+	static const color BABYPINK;
+	static const color BABYPOWDER;
+	static const color BAKER_MILLERPINK;
+	static const color BANANA_MANIA;
+	static const color BARBIE_PINK;
+	static const color BARNRED;
+	static const color BATTLESHIPGREY;
+	static const color BDAZZLEDBLUE;
+	static const color BEAUBLUE;
+	static const color BEAVER;
+	static const color BEIGE;
+	static const color BIGDIPORUBY;
+	static const color BISQUE;
+	static const color BISTRE;
+	static const color BISTREBROWN;
+	static const color BITTERLEMON;
+	static const color BITTERLIME;
+	static const color BITTERSWEET;
+	static const color BITTERSWEETSHIMMER;
+	static const color BLACK_SHADOWS;
+	static const color BLACKBEAN;
+	static const color BLACKCHOCOLATE;
+	static const color BLACKCOFFEE;
+	static const color BLACKCORAL;
+	static const color BLACKOLIVE;
+	static const color BLANCHEDALMOND;
+	static const color BLASTOFFBRONZE;
+	static const color BLEUDE_FRANCE;
+	static const color BLIZZARDBLUE;
+	static const color BLOND;
+	static const color BLOODRED;
+	static const color BLUE_CRAYOLA;
+	static const color BLUE_MUNSELL;
+	static const color BLUE_NCS;
+	static const color BLUE_PANTONE;
+	static const color BLUE_RYB;
+	static const color BLUEBELL;
+	static const color BLUEGRAY;
+	static const color BLUEGREEN;
+	static const color BLUEGREENCOLORWHEEL;
+	static const color BLUEJEANS;
+	static const color BLUEPIGMENT;
+	static const color BLUESAPPHIRE;
+	static const color BLUETIFUL;
+	static const color BLUEVIOLET;
+	static const color BLUEVIOLET_CRAYOLA;
+	static const color BLUEVIOLETCOLORWHEEL;
+	static const color BLUEYONDER;
+	static const color BLUSH;
+	static const color BOLE;
+	static const color BONE;
+	static const color BOTTLEGREEN;
+	static const color BRANDY;
+	static const color BRICKRED;
+	static const color BRIGHTGREEN;
+	static const color BRIGHTLILAC;
+	static const color BRIGHTMAROON;
+	static const color BRIGHTNAVYBLUE;
+	static const color BRIGHTYELLOW_CRAYOLA;
+	static const color BRILLIANTROSE;
+	static const color BRINKPINK;
+	static const color BRITISHRACINGGREEN;
+	static const color BRONZE;
+	static const color BROWN;
+	static const color BROWNSUGAR;
+	static const color BRUNSWICKGREEN;
+	static const color BUDGREEN;
+	static const color BUFF;
+	static const color BURGUNDY;
+	static const color BURLYWOOD;
+	static const color BURNISHEDBROWN;
+	static const color BURNTORANGE;
+	static const color BURNTSIENNA;
+	static const color BURNTUMBER;
+	static const color BYZANTINE;
+	static const color BYZANTIUM;
+	static const color CADET;
+	static const color CADETBLUE;
+	static const color CADETBLUE_CRAYOLA;
+	static const color CADETGREY;
+	static const color CADMIUMGREEN;
+	static const color CADMIUMORANGE;
+	static const color CADMIUMRED;
+	static const color CADMIUMYELLOW;
+	static const color CAFAULAIT;
+	static const color CAFNOIR;
+	static const color CAMBRIDGEBLUE;
+	static const color CAMEL;
+	static const color CAMEOPINK;
+	static const color CANARY;
+	static const color CANARYYELLOW;
+	static const color CANDYAPPLERED;
+	static const color CANDYPINK;
+	static const color CAPRI;
+	static const color CAPUTMORTUUM;
+	static const color CARDINAL;
+	static const color CARIBBEANGREEN;
+	static const color CARMINE;
+	static const color CARMINE_MAMP_P;
+	static const color CARNATIONPINK;
+	static const color CARNELIAN;
+	static const color CAROLINABLUE;
+	static const color CARROTORANGE;
+	static const color CASTLETONGREEN;
+	static const color CATAWBA;
+	static const color CEDAR_CHEST;
+	static const color CELADON;
+	static const color CELADONBLUE;
+	static const color CELADONGREEN;
+	static const color CELESTE;
+	static const color CELTICBLUE;
+	static const color CERISE;
+	static const color CERULEAN;
+	static const color CERULEAN_CRAYOLA;
+	static const color CERULEANBLUE;
+	static const color CERULEANFROST;
+	static const color CGBLUE;
+	static const color CGRED;
+	static const color CHAMPAGNE;
+	static const color CHAMPAGNEPINK;
+	static const color CHARCOAL;
+	static const color CHARLESTONGREEN;
+	static const color CHARMPINK;
+	static const color CHARTREUSETRADITIONAL;
+	static const color CHARTREUSEWEB;
+	static const color CHERRYBLOSSOMPINK;
+	static const color CHESTNUT;
+	static const color CHILIRED;
+	static const color CHINAPINK;
+	static const color CHINAROSE;
+	static const color CHINESERED;
+	static const color CHINESEVIOLET;
+	static const color CHINESEYELLOW;
+	static const color CHOCOLATE_COSMOS;
+	static const color CHOCOLATETRADITIONAL;
+	static const color CHOCOLATEWEB;
+	static const color CHROMEYELLOW;
+	static const color CINEREOUS;
+	static const color CINNABAR;
+	static const color CINNAMON_SATIN;
+	static const color CITRINE;
+	static const color CITRON;
+	static const color CLARET;
+	static const color COBALTBLUE;
+	static const color COCOABROWN;
+	static const color COFFEE;
+	static const color COLUMBIA_BLUE;
+	static const color CONGOPINK;
+	static const color COOLGREY;
+	static const color COPPER;
+	static const color COPPER_CRAYOLA;
+	static const color COPPERPENNY;
+	static const color COPPERRED;
+	static const color COPPERROSE;
+	static const color COQUELICOT;
+	static const color CORAL;
+	static const color CORALPINK;
+	static const color CORDOVAN;
+	static const color CORN;
+	static const color CORNELLRED;
+	static const color CORNSILK;
+	static const color COSMICCOBALT;
+	static const color COSMICLATTE;
+	static const color COTTONCANDY;
+	static const color COYOTEBROWN;
+	static const color CREAM;
+	static const color CRIMSON;
+	static const color CRIMSON_UA;
+	static const color CRYSTAL;
+	static const color CULTURED;
+	static const color CYANPROCESS;
+	static const color CYBERGRAPE;
+	static const color CYBERYELLOW;
+	static const color CYCLAMEN;
+	static const color DARKBLUEGRAY;
+	static const color DARKBROWN;
+	static const color DARKBYZANTIUM;
+	static const color DARKCORNFLOWERBLUE;
+	static const color DARKCYAN;
+	static const color DARKELECTRICBLUE;
+	static const color DARKGOLDENROD;
+	static const color DARKGREEN;
+	static const color DARKGREEN_X;
+	static const color DARKJUNGLEGREEN;
+	static const color DARKKHAKI;
+	static const color DARKLAVA;
+	static const color DARKLIVER;
+	static const color DARKLIVERHORSES;
+	static const color DARKMAGENTA;
+	static const color DARKMOSSGREEN;
+	static const color DARKOLIVEGREEN;
+	static const color DARKORANGE;
+	static const color DARKORCHID;
+	static const color DARKPASTELGREEN;
+	static const color DARKPURPLE;
+	static const color DARKRED;
+	static const color DARKSALMON;
+	static const color DARKSEAGREEN;
+	static const color DARKSIENNA;
+	static const color DARKSKYBLUE;
+	static const color DARKSLATEBLUE;
+	static const color DARKSLATEGRAY;
+	static const color DARKSPRINGGREEN;
+	static const color DARKTURQUOISE;
+	static const color DARKVIOLET;
+	static const color DARTMOUTHGREEN;
+	static const color DAVYSGREY;
+	static const color DEEP_SPACE_SPARKLE;
+	static const color DEEPCERISE;
+	static const color DEEPCHAMPAGNE;
+	static const color DEEPCHESTNUT;
+	static const color DEEPJUNGLEGREEN;
+	static const color DEEPPINK;
+	static const color DEEPSAFFRON;
+	static const color DEEPSKYBLUE;
+	static const color DEEPTAUPE;
+	static const color DENIM;
+	static const color DENIMBLUE;
+	static const color DESERT;
+	static const color DESERTSAND;
+	static const color DIMGRAY;
+	static const color DODGERBLUE;
+	static const color DOGWOODROSE;
+	static const color DRAB;
+	static const color DUKEBLUE;
+	static const color DUTCHWHITE;
+	static const color EARTHYELLOW;
+	static const color EBONY;
+	static const color ECRU;
+	static const color EERIEBLACK;
+	static const color EGGPLANT;
+	static const color EGGSHELL;
+	static const color EGYPTIANBLUE;
+	static const color EIGENGRAU;
+	static const color ELECTRICBLUE;
+	static const color ELECTRICGREEN;
+	static const color ELECTRICINDIGO;
+	static const color ELECTRICLIME;
+	static const color ELECTRICPURPLE;
+	static const color ELECTRICVIOLET;
+	static const color EMERALD;
+	static const color EMINENCE;
+	static const color ENGLISHGREEN;
+	static const color ENGLISHLAVENDER;
+	static const color ENGLISHRED;
+	static const color ENGLISHVERMILLION;
+	static const color ENGLISHVIOLET;
+	static const color ERIN;
+	static const color ETONBLUE;
+	static const color FALLOW;
+	static const color FALURED;
+	static const color FANDANGO;
+	static const color FANDANGOPINK;
+	static const color FASHIONFUCHSIA;
+	static const color FAWN;
+	static const color FELDGRAU;
+	static const color FERNGREEN;
+	static const color FIELDDRAB;
+	static const color FIERYROSE;
+	static const color FIREBRICK;
+	static const color FIREENGINERED;
+	static const color FIREOPAL;
+	static const color FLAME;
+	static const color FLAX;
+	static const color FLIRT;
+	static const color FLORALWHITE;
+	static const color FLUORESCENTBLUE;
+	static const color FORESTGREEN_CRAYOLA;
+	static const color FORESTGREENTRADITIONAL;
+	static const color FORESTGREENWEB;
+	static const color FRENCHBEIGE;
+	static const color FRENCHBISTRE;
+	static const color FRENCHBLUE;
+	static const color FRENCHFUCHSIA;
+	static const color FRENCHLILAC;
+	static const color FRENCHLIME;
+	static const color FRENCHMAUVE;
+	static const color FRENCHPINK;
+	static const color FRENCHRASPBERRY;
+	static const color FRENCHROSE;
+	static const color FRENCHSKYBLUE;
+	static const color FRENCHVIOLET;
+	static const color FROSTBITE;
+	static const color FUCHSIA;
+	static const color FUCHSIA_CRAYOLA;
+	static const color FUCHSIAPURPLE;
+	static const color FUCHSIAROSE;
+	static const color FULVOUS;
+	static const color FUZZY_WUZZY;
 };
 
 // =====================================================================================

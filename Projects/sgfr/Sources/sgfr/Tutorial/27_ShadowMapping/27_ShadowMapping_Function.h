@@ -20,5 +20,5 @@ void PrintShadowExplanation();
 void FillShadowCube(sgf::VertexPNT* _pOutVertices24, _u32* _pOutIndices36);
 
 // 위를 바라보는 바닥 평면(사각형) 정점 4개와 인덱스 6개를 채운다.
-// @param _halfSize : 평면 반 변 길이 (월드 단위)
+// @param _halfSize: 평면 반 변 길이 (월드 단위)
 void FillGroundPlane(sgf::VertexPNT* _pOutVertices4, _u32* _pOutIndices6, _f32 _halfSize);

@@ -5,29 +5,29 @@
  * 30. 스프라이트 애니메이션 (Sprite Animation)
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. 스프라이트 시트: 한 텍스처에 여러 프레임을 바둑판처럼 배치
- *  2. UV 오프셋/스케일로 원하는 프레임만 오려내기
- *  3. 경과 시간 -> 프레임 번호 변환 (FPS 개념)
- *  4. 이징(Easing): 같은 이동도 속도 곡선에 따라 완전히 다른 느낌이 된다
- *  5. 동적 정점 버퍼로 매 프레임 정점을 갱신하는 법
+ * 1. 스프라이트 시트: 한 텍스처에 여러 프레임을 바둑판처럼 배치
+ * 2. UV 오프셋/스케일로 원하는 프레임만 오려내기
+ * 3. 경과 시간 -> 프레임 번호 변환 (FPS 개념)
+ * 4. 이징(Easing): 같은 이동도 속도 곡선에 따라 완전히 다른 느낌이 된다
+ * 5. 동적 정점 버퍼로 매 프레임 정점을 갱신하는 법
  *
  * [Before/After 비교 뷰]
- *  같은 캐릭터가 두 줄로 동시에 왜다걔다 한다. (같은 프레임, 같은 이동 구간)
- *  - 지단  (Before): 항상 '선형' 이동 = 기준이 되는 등속 움직임
- *  - 아랫줄(After) : 선택한 이징 적용 = 속도 곡선이 바뀌 움직임
- *  두 캐릭터가 벌어졌다 따라잡는 모습을 보면 이징이 속도를 어떻게
- *  재분배하는지 한눈에 비교된다! (1번 선택 시 두 줄이 완전히 같이 간다)
+ * 같은 캐릭터가 두 줄로 동시에 왜다걔다 한다. (같은 프레임, 같은 이동 구간)
+ * - 지단 (Before): 항상 '선형' 이동 = 기준이 되는 등속 움직임
+ * - 아랫줄(After): 선택한 이징 적용 = 속도 곡선이 바뀌 움직임
+ * 두 캐릭터가 벌어졌다 따라잡는 모습을 보면 이징이 속도를 어떻게
+ * 재분배하는지 한눈에 비교된다! (1번 선택 시 두 줄이 완전히 같이 간다)
  *
  * [관찰 포인트]
- *  - '부드럽게'는 양끝에서 느리고 중간에서 빠르다 (앞뒤로 벌어졌다 좁혀진다)
- *  - '바운스'는 도착 지점에서 공처럼 통통 튀는 느낌이 난다
- *  - FPS를 낮추면 걸음 동작이 뚝뚝 끊기지만 이동 속도는 그대로다
- *    (프레임 애니메이션과 위치 이동은 독립적인 시간 축!)
+ * - '부드럽게'는 양끝에서 느리고 중간에서 빠르다 (앞뒤로 벌어졌다 좁혀진다)
+ * - '바운스'는 도착 지점에서 공처럼 통통 튀는 느낌이 난다
+ * - FPS를 낮추면 걸음 동작이 뚝뚝 끊기지만 이동 속도는 그대로다
+ * (프레임 애니메이션과 위치 이동은 독립적인 시간 축!)
  *
  * [조작법]
- *  - 1: 선형 / 2: 부드럽게(EaseInOut) / 3: 바운스 (아랫줄에만 적용)
- *  - 위/아래 방향키: 애니메이션 FPS 증감 (4 ~ 60)
- *  - ESC: 종료
+ * - 1: 선형 / 2: 부드럽게(EaseInOut) / 3: 바운스 (아랫줄에만 적용)
+ * - 위/아래 방향키: 애니메이션 FPS 증감 (4 ~ 60)
+ * - ESC: 종료
  */
 
 #include "Core.h"
@@ -85,8 +85,8 @@ void SpriteAnimation_Main()
 	}
 
 	// 3. 동적 정점 버퍼: 매 프레임 위치/UV가 바뀌므로 CPU에서 갱신한다.
-	//    한 버퍼를 프레임당 두 번(지단/아랫줄) Update->Draw 해도 되는 이유:
-	//    WRITE_DISCARD는 이전 내용을 보호하며 새 공간을 주므로 그리기 순서가 꿬이지 않는다!
+	// 한 버퍼를 프레임당 두 번(지단/아랫줄) Update->Draw 해도 되는 이유:
+	// WRITE_DISCARD는 이전 내용을 보호하며 새 공간을 주므로 그리기 순서가 꿬이지 않는다!
 	VertexPTC quadVertices[4];
 	FillSpriteQuad(quadVertices, vec2(0.0f, 0.0f), vec2(0.25f, 0.25f), vec2(0.0f, 0.0f), vec2(0.25f, 0.25f));
 
@@ -190,7 +190,7 @@ void SpriteAnimation_Main()
 
 		// (3) 이동 진행도(0~1)에 이징 적용. 지단은 항상 선형(=그대로), 아랫줄만 선택 모드!
 		const _f32 easedBefore = ApplyEasing(pingPong, 0);			// Before: 선형 기준
-		const _f32 easedAfter = ApplyEasing(pingPong, easingMode);	// After : 선택 이징
+		const _f32 easedAfter = ApplyEasing(pingPong, easingMode);	// After: 선택 이징
 
 		// (4) 진행도 -> 화면 x좌표 (NDC -0.6 ~ +0.6)
 		const _f32 posXBefore = Lerp(-0.6f, 0.6f, easedBefore);
@@ -199,7 +199,7 @@ void SpriteAnimation_Main()
 		// 종횡비 보정: NDC는 화면 비율과 무관하므로 x를 나누어 정사각형으로 보이게 한다
 		const vec2 halfSize = vec2(0.25f / window.AspectRatio(), 0.25f);
 
-		device.BeginFrame(color(0.1f, 0.1f, 0.14f, 1.0f));
+		device.BeginFrame(color(0x1A, 0x1A, 0x24, 0xFF));
 		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		sheetTexture.Bind(&device, 0);

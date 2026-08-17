@@ -1,7 +1,7 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 1:00:00 AM
- * 수정일: 8/9/2026 5:20:00 PM (v3: GraphicsEnums 통합, U/V 분리 샘플러, FrontFace/ReadOnly 지원)
+ * 수정일: 8/9/2026 5:20:00 PM (GraphicsEnums 통합, U/V 분리 샘플러, FrontFace/ReadOnly 지원)
  * =====================
  * 렌더 상태 저장소 구현부
  */
@@ -107,13 +107,13 @@ ID3D11BlendState* RenderStates::GetBlendState(BlendMode _mode)
 		rt.DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
 		break;
 	case BlendMode::bmAdd:
-		// 최종 = 새색*알파 + 기존색  (쌓일수록 밝아진다 - 빛 효과)
+		// 최종 = 새색*알파 + 기존색 (쌓일수록 밝아진다 - 빛 효과)
 		rt.BlendEnable = TRUE;
 		rt.SrcBlend = D3D11_BLEND_SRC_ALPHA;
 		rt.DestBlend = D3D11_BLEND_ONE;
 		break;
 	case BlendMode::bmMultiply:
-		// 최종 = 새색 * 기존색  (쌓일수록 어두워진다 - 그림자/어둠)
+		// 최종 = 새색 * 기존색 (쌓일수록 어두워진다 - 그림자/어둠)
 		rt.BlendEnable = TRUE;
 		rt.SrcBlend = D3D11_BLEND_ZERO;
 		rt.DestBlend = D3D11_BLEND_SRC_COLOR;

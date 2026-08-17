@@ -5,18 +5,18 @@
  * 15. PNG 텍스처 그리기 (PNG Texture) - WIC 디코딩과 UV 좌표계
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. PNG 파일이 화면에 나오기까지의 과정
- *     PNG 파일 -> [WIC 디코더] -> RGBA 픽셀 배열 -> [GPU 텍스처] -> [샘플링] -> 화면
- *  2. UV 좌표계 (0~1)와 텍스처 샘플링
- *  3. 알파 블렌딩 (반투명 처리)
+ * 1. PNG 파일이 화면에 나오기까지의 과정
+ * PNG 파일 -> [WIC 디코더] -> RGBA 픽셀 배열 -> [GPU 텍스처] -> [샘플링] -> 화면
+ * 2. UV 좌표계 (0~1)와 텍스처 샘플링
+ * 3. 알파 블렌딩 (반투명 처리)
  *
  * [WIC란?]
- *  Windows Imaging Component. PNG/JPG/BMP 등을 디코딩해주는 Windows 내장 라이브러리.
- *  별도 외부 라이브러리 없이 PNG를 읽을 수 있다. (sgf::Texture::LoadFromFile이 내부에서 사용)
+ * Windows Imaging Component. PNG/JPG/BMP 등을 디코딩해주는 Windows 내장 라이브러리.
+ * 별도 외부 라이브러리 없이 PNG를 읽을 수 있다. (sgf::Texture::LoadFromFile이 내부에서 사용)
  *
  * [조작법]
- *  - 실행 팏더의 Resources\sample.png를 먼저 찾고, 없으면 체커보드 텍스처를 생성해 그린다.
- *  - ESC로 종료.
+ * - 실행 팏더의 Resources\sample.png를 먼저 찾고, 없으면 체커보드 텍스처를 생성해 그린다.
+ * - ESC로 종료.
  */
 
 #include "Core.h"
@@ -52,8 +52,8 @@ void PngTextureDraw_Main()
 	}
 
 	// 2. 텍스처 준비
-	//    (1순위) 실행 팏더의 Resources\sample.png를 WIC로 디코딩
-	//    (2순위) 파일이 없으면 직접 만든 체커보드 픽셀로 텍스처 생성
+	// (1순위) 실행 팏더의 Resources\sample.png를 WIC로 디코딩
+	// (2순위) 파일이 없으면 직접 만든 체커보드 픽셀로 텍스처 생성
 	Texture texture;
 	if (texture.LoadFromFile(&device, L"Resources\\sample.png"))
 	{
@@ -73,15 +73,15 @@ void PngTextureDraw_Main()
 	}
 
 	// 3. UV가 포함된 정점 (VertexPTC: 위치 + UV + 틴트 색상)
-	//    UV (0,0)이 왼쪽 위! (NDC의 y축과 반대 방향이니 항상 주의)
+	// UV (0,0)이 왼쪽 위! (NDC의 y축과 반대 방향이니 항상 주의)
 	const _f32 aspect = window.AspectRatio();
 	const _f32 halfW = 0.5f;
 	const _f32 halfH = 0.5f * aspect;	// 화면 비율 보정으로 정사각형 유지
 	const VertexPTC vertices[] = {
-		{ vec3(-halfW, +halfH, 0.0f), vec2(0.0f, 0.0f), color::White() },	// 왼쪽위
-		{ vec3(+halfW, +halfH, 0.0f), vec2(1.0f, 0.0f), color::White() },	// 오른쪽위
-		{ vec3(-halfW, -halfH, 0.0f), vec2(0.0f, 1.0f), color::White() },	// 왼쪽아래
-		{ vec3(+halfW, -halfH, 0.0f), vec2(1.0f, 1.0f), color::White() },	// 오른쪽아래
+		{ vec3(-halfW, +halfH, 0.0f), vec2(0.0f, 0.0f), color::WHITE },	// 왼쪽위
+		{ vec3(+halfW, +halfH, 0.0f), vec2(1.0f, 0.0f), color::WHITE },	// 오른쪽위
+		{ vec3(-halfW, -halfH, 0.0f), vec2(0.0f, 1.0f), color::WHITE },	// 왼쪽아래
+		{ vec3(+halfW, -halfH, 0.0f), vec2(1.0f, 1.0f), color::WHITE },	// 오른쪽아래
 	};
 	const _u32 indices[] = { 0, 1, 2, 2, 1, 3 };
 
@@ -110,7 +110,7 @@ void PngTextureDraw_Main()
 	}
 
 	// 5. 알파 블렌딩 켜기: PNG의 투명/반투명 영역이 올바로 섞이도록 한다.
-	//    공식: 최종색 = 새색 x 알파 + 배경색 x (1 - 알파)
+	// 공식: 최종색 = 새색 x 알파 + 배경색 x (1 - 알파)
 	device.SetAlphaBlending(true);
 
 	// 6. 렌더 루프
@@ -122,7 +122,7 @@ void PngTextureDraw_Main()
 		}
 		input.NextFrame();
 
-		device.BeginFrame(color(0.1f, 0.1f, 0.15f, 1.0f));
+		device.BeginFrame(color(0x1A, 0x1A, 0x26, 0xFF));
 
 		// 텍스처를 t0 슬롯에 묶는다. (셰이더의 register(t0)과 연결)
 		texture.Bind(&device, 0);

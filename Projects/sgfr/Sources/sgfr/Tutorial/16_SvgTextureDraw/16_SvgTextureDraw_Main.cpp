@@ -5,21 +5,21 @@
  * 16. SVG 텍스처 그리기 (SVG Texture) - nanosvg 래스터화
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. 벡터 그래픽(SVG)과 래스터 그래픽(PNG)의 차이
- *  2. 래스터화(Rasterize): 도형 명령어 -> 픽셀 배열 변환
- *  3. scale 인자로 원하는 해상도로 깨끗하게 키우는 법
+ * 1. 벡터 그래픽(SVG)과 래스터 그래픽(PNG)의 차이
+ * 2. 래스터화(Rasterize): 도형 명령어 -> 픽셀 배열 변환
+ * 3. scale 인자로 원하는 해상도로 깨끗하게 키우는 법
  *
  * [준비물: nanosvg]
- *  sgf::Texture::LoadFromSvgFile은 단일 헤더 라이브러리 nanosvg를 사용한다.
- *  Projects/sgf/Sources/sgf/_Extern/nanosvg/README.md의 안내대로
- *  nanosvg.h / nanosvgrast.h 2개 파일을 받아 넣으면 활성화된다.
- *  없으면(SGF_HAS_NANOSVG 미정의) LoadFromSvgFile이 false를 반환하므로
- *  이 튜토리얼은 CPU로 직접 그린 대체 텍스처로 동작한다.
+ * sgf::Texture::LoadFromSvgFile은 단일 헤더 라이브러리 nanosvg를 사용한다.
+ * Projects/sgf/Sources/sgf/_Extern/nanosvg/README.md의 안내대로
+ * nanosvg.h / nanosvgrast.h 2개 파일을 받아 넣으면 활성화된다.
+ * 없으면(SGF_HAS_NANOSVG 미정의) LoadFromSvgFile이 false를 반환하므로
+ * 이 튜토리얼은 CPU로 직접 그린 대체 텍스처로 동작한다.
  *
  * [조작법]
- *  - 화면에 SVG(또는 대체) 텍스처가 크기를 바꿔가며 그려진다.
- *  - 확대되어도 깨끗한 이유: 충분히 큰 해상도로 래스터화했기 때문.
- *  - ESC로 종료.
+ * - 화면에 SVG(또는 대체) 텍스처가 크기를 바꿔가며 그려진다.
+ * - 확대되어도 깨끗한 이유: 충분히 큰 해상도로 래스터화했기 때문.
+ * - ESC로 종료.
  */
 
 #include "Core.h"
@@ -55,8 +55,8 @@ void SvgTextureDraw_Main()
 	}
 
 	// 2. SVG 텍스처 준비
-	//    (1순위) 예제 SVG 파일을 만들고 nanosvg로 래스터화 (scale 2.0 = 512x512)
-	//    (2순위) nanosvg 미설치 시 CPU로 직접 그린 대체 텍스처
+	// (1순위) 예제 SVG 파일을 만들고 nanosvg로 래스터화 (scale 2.0 = 512x512)
+	// (2순위) nanosvg 미설치 시 CPU로 직접 그린 대체 텍스처
 	const char* szSvgPath = "sample.svg";	// 실행 팏더 기준 상대 경로
 	Texture texture;
 	bool bLoaded = false;
@@ -137,13 +137,13 @@ void SvgTextureDraw_Main()
 		const _f32 aspect = window.AspectRatio();
 
 		// 매 프레임 정점을 새로 계산해 동적 버퍼를 갱신한다. (06번에서 배운 동적 버퍼 활용)
-		vertices[0] = { vec3(-half, +half * aspect, 0.0f), vec2(0.0f, 0.0f), color::White() };
-		vertices[1] = { vec3(+half, +half * aspect, 0.0f), vec2(1.0f, 0.0f), color::White() };
-		vertices[2] = { vec3(-half, -half * aspect, 0.0f), vec2(0.0f, 1.0f), color::White() };
-		vertices[3] = { vec3(+half, -half * aspect, 0.0f), vec2(1.0f, 1.0f), color::White() };
+		vertices[0] = { vec3(-half, +half * aspect, 0.0f), vec2(0.0f, 0.0f), color::WHITE };
+		vertices[1] = { vec3(+half, +half * aspect, 0.0f), vec2(1.0f, 0.0f), color::WHITE };
+		vertices[2] = { vec3(-half, -half * aspect, 0.0f), vec2(0.0f, 1.0f), color::WHITE };
+		vertices[3] = { vec3(+half, -half * aspect, 0.0f), vec2(1.0f, 1.0f), color::WHITE };
 		vb.Update(&device, vertices, 4);
 
-		device.BeginFrame(color(0.12f, 0.12f, 0.16f, 1.0f));
+		device.BeginFrame(color(0x1F, 0x1F, 0x29, 0xFF));
 
 		texture.Bind(&device, 0);
 		vb.Bind(&device);

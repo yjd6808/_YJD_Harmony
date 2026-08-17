@@ -5,19 +5,19 @@
  * 09. 파이프라인 상태 객체 (Pipeline State Objects)
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. 래스터라이저/블렌드/깊이/샘플러 = 파이프라인의 4대 상태 객체
- *  2. v3에서는 각 상태를 독립 객체로 만들어 들고 다닐 수 있다 (수도 코드 §7 대응)
- *  3. 같은 설정 조합은 디바이스 캐시를 공유한다 (플라이웨이트 패턴)
+ * 1. 래스터라이저/블렌드/깊이/샘플러 = 파이프라인의 4대 상태 객체
+ * 2. 각 상태를 독립 객체로 만들어 들고 다닐 수 있다 (수도 코드 §7 대응)
+ * 3. 같은 설정 조합은 디바이스 캐시를 공유한다 (플라이웨이트 패턴)
  *
  * [Before/After 비교]
- *  - Before(v2): device.SetWireframe(true) 같은 개별 스위치 함수 호출
- *  - After (v3): RasterizerState 객체를 만들어 context.SetRasterizerState(&rs)로 교체
- *                상태 조합이 '값'이 되므로 Material(20번)에 통째로 담을 수 있다!
+ * - Before: device.SetWireframe(true) 같은 개별 스위치 함수 호출
+ * - After: RasterizerState 객체를 만들어 context.SetRasterizerState(&rs)로 교체
+ * 상태 조합이 '값'이 되므로 Material(20번)에 통째로 담을 수 있다!
  *
  * [조작법]
- *  - 1/2: 채우기 (솔리드+뒷면컬링 / 와이어프레임+컬링없음)
- *  - 3/4: 블렌드 (불투명 / 알파 반투명)
- *  - ESC: 종료
+ * - 1/2: 채우기 (솔리드+뒷면컬링 / 와이어프레임+컬링없음)
+ * - 3/4: 블렌드 (불투명 / 알파 반투명)
+ * - ESC: 종료
  */
 
 #include "Core.h"
@@ -124,8 +124,8 @@ void PipelineStateObjects_Main()
 	// 3. 메시 2개: 바닥 사각형(불투명) + 위에 겹치는 반투명 사각형
 	Mesh backQuad;
 	Mesh frontQuad;
-	if (!BuildQuadMesh(&device, &vs, &backQuad, vec2(-0.15f, 0.0f), 0.5f, color(0.2f, 0.6f, 1.0f, 1.0f)) ||
-		!BuildQuadMesh(&device, &vs, &frontQuad, vec2(0.15f, 0.0f), 0.5f, color(1.0f, 0.4f, 0.2f, 0.5f)))
+	if (!BuildQuadMesh(&device, &vs, &backQuad, vec2(-0.15f, 0.0f), 0.5f, color(0x33, 0x99, 0xFF, 0xFF)) ||
+		!BuildQuadMesh(&device, &vs, &frontQuad, vec2(0.15f, 0.0f), 0.5f, color(0xFF, 0x66, 0x33, 0x80)))
 	{
 		jc::Console::WriteLine("메시 생성 실패!");
 		device.Finalize();
@@ -134,8 +134,8 @@ void PipelineStateObjects_Main()
 	}
 
 	// 4. 상태 객체 준비: 같은 종류라도 설정 조합마다 따로 만들어 둔다.
-	//    (수도 코드 §7의 rasterizerState.init / blendState.init에 해당)
-	//    내부적으로는 디바이스 캐시를 공유하므로 몇 개를 만들어도 가벼워요.
+	// (수도 코드 §7의 rasterizerState.init / blendState.init에 해당)
+	// 내부적으로는 디바이스 캐시를 공유하므로 몇 개를 만들어도 가벼워요.
 	RasterizerState rsSolid;
 	RasterizerState rsWireframe;
 	BlendState blendOpaque;
@@ -171,7 +171,7 @@ void PipelineStateObjects_Main()
 		if (input.IsKeyPressed('4')) { pCurrentBlend = &blendAlpha; }
 		input.NextFrame();
 
-		device.BeginFrame(color(0.06f, 0.06f, 0.1f, 1.0f));
+		device.BeginFrame(color(0x0F, 0x0F, 0x1A, 0xFF));
 		context.InvalidateCache();	// BeginFrame이 원시 상태를 건드렸으므로 캐시를 비운다
 
 		// 상태 객체 교체: 포인터 하나 바꾸는 것이 전부다!

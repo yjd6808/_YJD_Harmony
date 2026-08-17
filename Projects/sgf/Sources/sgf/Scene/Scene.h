@@ -1,93 +1,109 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 8:34:00 AM
- * 수정일: 8/9/2026 10:00:00 AM (v2.1: OnRender 인자 제거 + 소속 윈도우 참조)
+ * 수정일: 8/16/2026 (추상화 + root_ 트리 + 카메라 GameObject 파생 + 예약 창구)
  * =====================
- * 씬(Scene)
+ * 씬(Scene) — 추상 베이스
  *
  * [씬이란?]
- *  게임의 "화면 한 장". 타이틀 화면, 인게임 화면, 결과 화면 등.
- *  Cocos2d-x의 cocos2d::Scene과 같은 역할이다.
- *  Director가 윈도우별로 씬을 들고 있으며, 매 프레임 OnUpdate/OnRender를 불러준다.
+ * 게임의 "화면 한 장". 타이틀 화면, 인게임 화면, 결과 화면 등.
+ * Cocos2d-x의 cocos2d::Scene과 같은 역할이다.
+ * Director가 윈도우별로 씬을 들고 있으며, 매 프레임 Update/RenderScene을 불러준다.
  *
- * [v2.1에서 바뀜 점]
- *  1. OnRender()에서 Renderer2D* 인자가 사라졌다.
- *     렌더러는 전역 매크로(g_cRenderer2D / g_cRenderer3D)로 언제든 접근한다.
- *     -> 씬 코드가 특정 렌더러 인자에 종속되지 않고, 2D/3D를 자유롭게 섞어 그린다.
- *  2. 씬은 자신이 그려지는 윈도우를 안다. (GetWindow)
- *     -> 화면 크기 기반 카메라 설정 등이 가능해진다.
- *     (Director가 씬을 윈도우 슬롯에 올릴 때 자동으로 설정해준다)
+ * [바뀐 점]
+ * 1. **추상 클래스** — 직접 생성 금지. Scene2D/Scene3D 파생만 생성한다. (12장 결정)
+ * 2. **root_ 트리** — GameObject 파생(Camera/Node/Layer 등)을 AddChild로 트리 구성.
+ * 트리 순회 순서 = 드로우 순서 (zOrder 오름차순, 부모 먼저).
+ * 3. **카메라 = GameObject 파생** — defaultCamera_/selectedCamera_ 포인터로 보유.
+ * SelectCamera(GameObject*)로 전환. (기존 값 멤버 camera_ 제거)
+ * 4. **예약 창구 (가상)** — Scene2D(2D)/Scene3D(3D)가 구현. 게임 코드는 씬에만 접근.
+ * RenderStatic(id) / RenderDynamic(region, fill, ...) / DrawMesh(mesh, mat, world)
+ * 5. **OnRender() 무인자** — 트래버설 후 최상위 수동 그리기. (유지)
+ * 6. **Scene도 DataMap 보유** — GameObject와 동일하게 이름 키 → 값.
  *
- * [사용법]
- *  class MyScene : public sgf::Scene
- *  {
- *      void OnEnter() override
- *      {
- *          // 소속 윈도우 크기에 맞춰 카메라 설정 (v2.1)
- *          camera_.SetOrthographic2D(_f32(GetWindow()->Width()), _f32(GetWindow()->Height()));
- *      }
- *      void OnUpdate(const jc::TimeSpan& _dt) override { ... }
- *      void OnRender() override
- *      {
- *          g_cRenderer2D.DrawRect(...);      // 2D 배치
- *          g_cRenderer3D.DrawCube(...);      // 3D 배치 (같은 프레임에 섞어도 된다)
- *      }
- *      void OnExit() override { ... }
- *  };
- *  g_cDirector.RunScene(new MyScene());
+ * [생성 계약]
+ * - 생성자: root_.SetScene(this) + 파생이 CreateDefaultCamera()로 기본 카메라 생성.
+ * - Director::RunScene 순서: running 등록 → 씬 OnEnter → (프레임마다 Update/RenderScene).
+ * OnEnter 안에서 AddChild가 running 검증을 통과하려면 등록이 OnEnter보다 먼저다.
  */
 
 #pragma once
 
+#include "jc/Math.h"
+#include "jc/Time.h"
+#include "jc/Container/DataMap.h"
+#include "sgf/Scene/GameObject.h"
 #include "sgf/Scene/Camera.h"
+#include "sgf/Graphics/Fill.h"
 
 NS_SGF_BEGIN
 
+using namespace jc;
+
 class Director;
 class Window;
+class GraphicDevice;
+class Mesh;
+class Material;
 
 class Scene
 {
 public:
-	Scene() : pWindow_(nullptr) {}
-	virtual ~Scene() {}
+	virtual ~Scene();						// root_ 서브트리 + defaultCamera_ 정리
 
-	// === 생명주기 훅 (파생 클래스가 재정의) ===
+	// === 카메라 운용 (— 카메라 = GameObject 파생) ===
+	Camera* GetDefaultCamera() const { return defaultCamera_; }	// 씬이 자동 생성한 기본 카메라
+	Camera* GetSelectedCamera() const { return selectedCamera_; }	// 현재 화면을 비추는 카메라
+	Camera* GetCamera() const { return selectedCamera_; }			// = selectedCamera_의 Camera*
+	void    SelectCamera(GameObject* _pCameraObj);					// 전환 (카메라인 GameObject만)
+	void    SelectDefaultCamera();									// = SelectCamera(defaultCamera_)
 
-	// 씬이 화면에 등장할 때 1회 호출. 리소스 로딩을 여기서 한다.
-	// (이 시점부터 GetWindow()가 유효하다)
+	// === 트리 (— root_ 노드에 위임) ===
+	void AddChild(GameObject* _pChild, _u64 _zOrder);	// 루트 직속 자식 (레이어 추가)
+	void RemoveChild(GameObject* _pChild);
+	GameObject* FindGameObjectByName(const char* _pName);	// root_ 서브트리 재귀
+	int  GetGameObjectCount() const;					// root_ 서브트리 노드 수 (재귀)
+
+	// === 데이터 보관 (— Scene도 DataMap 보유) ===
+	jc::CDataMap<>& GetDataMap() { return dataMap_; }
+
+	// === 예약 창구 (— Scene2D/3D가 구현, 타입 불일치 시 no-op) ===
+	virtual void RenderStatic(_u64 _staticId) {}			// 선언 시 고정 — id만 예약 (3D 씬 = no-op)
+	virtual void RenderDynamic(const rect& _region, const Fill& _fill,
+		const color& _color1 = color::WHITE, const color& _color2 = color::WHITE,
+		_u32 _option = 0, RenderLayer _layer = RenderLayer::Default) {}	// (3D 씬 = no-op)
+	virtual void DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world) {}	// 3D 창구 (2D 씬 = no-op)
+
+	// === 생명주기 (— 씬도 수명주기 훅 보유) ===
 	virtual void OnEnter() {}
-
-	// 씬이 화면에서 내려갈 때 1회 호출. 리소스 정리를 여기서 한다.
 	virtual void OnExit() {}
-
-	// 매 프레임 로직 갱신. _dt는 직전 프레임으로부터 경과한 시간이다.
-	// (jc::TimeSpan이므로 _dt.GetTotalSeconds()로 초 단위 실수를 얻는다)
 	virtual void OnUpdate(const jc::TimeSpan& _dt) { (void)_dt; }
-
-	// 매 프레임 그리기.
-	// [v2.1] 인자가 없다! g_cRenderer2D / g_cRenderer3D 매크로로 그린다.
-	// Director가 씬 카메라 행렬로 두 배치의 Begin/End를 감싸서 불러준다.
-	virtual void OnRender() {}
-
-	// 이 씬의 카메라 (Director가 렌더링 시 ViewProjection을 가져다 쓴다)
-	Camera& GetCamera() { return camera_; }
-
-	// [v2.1] 이 씬이 그려지는 윈도우.
-	// Director가 RunScene/ReplaceScene 시점에 설정해준다.
-	// OnEnter 이후부터 유효하다. (그 전에는 nullptr)
+	virtual void OnRender() {}				// 수동 그리기 — 트래버설 후 최상위
 	Window* GetWindow() const { return pWindow_; }
 
+	// === 렌더 진입점 ===
+	virtual void RenderScene() = 0;			// 파생이 RenderNode + OnRender + Flush 구성
+
+	// === 엔진 내부 (GameObject::AddChild가 자식 초기화에 사용) ===
+	GraphicDevice* GetGraphicDevice() const { return pDevice_; }	// 소유하지 않음
+
 protected:
-	Camera camera_;	// 씬 전용 카메라
+	Scene();								// 직접 생성 금지 — root_.SetScene(this) + 카메라 초기화
+	void CreateDefaultCamera(Camera* _pCamera);	// 파생 생성자에서 호출 (Camera2D/3D — 내부에서 dbg_new 소유)
+	void RenderNode(GameObject& _node);			// 트리 순회 (파생 RenderScene이 호출)
+	GameObject root_;							// 트리 루트 노드 (이름 "Root") — 파생이 RenderNode(root_) 호출
 
 private:
-	// Director만 소속 윈도우를 바꿀 수 있다.
-	friend class Director;
-	void SetWindow(Window* _pWindow) { pWindow_ = _pWindow; }
+	friend class Director;  friend class GameObject;
+	void SetWindow(Window* _pWindow);			// Director만 소속 윈도우를 바꿀 수 있다
+	void SetDevice(GraphicDevice* _pDevice);	// Director가 씬 시작 시 디바이스 주입
 
 private:
-	Window* pWindow_;	// 이 씬이 그려지는 창 (빌림, 소유 아님)
+	Camera* defaultCamera_ = nullptr;			// 소유 (Camera2D/3D — GameObject 파생)
+	Camera* selectedCamera_ = nullptr;			// 기본 = defaultCamera_
+	jc::CDataMap<> dataMap_;					// 범용 데이터 보관 (이름 키)
+	Window* pWindow_ = nullptr;
+	GraphicDevice* pDevice_ = nullptr;			// 소유하지 않음 (Director가 주입)
 };
 
 NS_SGF_END

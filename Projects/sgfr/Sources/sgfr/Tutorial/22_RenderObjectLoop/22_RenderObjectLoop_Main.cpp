@@ -5,18 +5,18 @@
  * 22. 렌더 오브젝트 루프 (RenderObject Loop)
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. RenderObject = 메시 키 + 머티리얼 키 + 월드 행렬, 그리기의 최소 단위
- *  2. SceneRenderer::BeginScene(프레임 상수) 후 Draw(오브젝트)를 반복하는 표준 루프
- *  3. b0(프레임)/b1(오브젝트) 갱신을 SceneRenderer가 전담한다 (12번의 자동화판)
+ * 1. RenderObject = 메시 키 + 머티리얼 키 + 월드 행렬, 그리기의 최소 단위
+ * 2. SceneRenderer::BeginScene(프레임 상수) 후 Draw(오브젝트)를 반복하는 표준 루프
+ * 3. b0(프레임)/b1(오브젝트) 갱신을 SceneRenderer가 전담한다 (12번의 자동화판)
  *
  * [Before/After 비교]
- *  - Before(v2): 객체마다 셰이더/버퍼/텍스처 바인딩 코드를 직접 나열
- *  - After (v3): "무엇을(메시) 어떻게(머티리얼) 어디에(월드)"만 채운 구조체 배열을
- *                돌면서 renderer.Draw(object) 한 줄씩 (수도 코드 §16~19 대응)
+ * - Before: 객체마다 셰이더/버퍼/텍스처 바인딩 코드를 직접 나열
+ * - After: "무엇을(메시) 어떻게(머티리얼) 어디에(월드)"만 채운 구조체 배열을
+ * 돌면서 renderer.Draw(object) 한 줄씩 (수도 코드 §16~19 대응)
  *
  * [조작법]
- *  - 1: 가운데 큰 큐브 보이기/숨기기 (bVisible_ 토글)
- *  - ESC: 종료
+ * - 1: 가운데 큰 큐브 보이기/숨기기 (bVisible_ 토글)
+ * - ESC: 종료
  */
 
 #include "Core.h"
@@ -33,6 +33,7 @@ namespace
 // 렌더 오브젝트 루프 튜토리얼을 실행한다. (BeginScene → Draw 반복 패턴)
 void RenderObjectLoop_Main()
 {
+	_LogInfo_("[22] RenderObjectLoop 시작");
 	// 1. 윈도우 + 디바이스 + 리소스 매니저 준비
 	Window window;
 	if (!window.Create(L"22. 렌더 오브젝트 루프 (1 가운데 큐브 토글, ESC 종료)", 800, 600))
@@ -60,8 +61,8 @@ void RenderObjectLoop_Main()
 		return;
 	}
 
-	// 2. 씨 렌더러 준비 (b0/b1 상수버퍼를 내부에서 관리)
-	SceneRenderer renderer;
+	// 2. 씬 렌더러 준비 (b0/b1 상수버퍼를 내부에서 관리) — SceneRenderer → Renderer3D 통합
+	Renderer3D renderer;
 	if (!renderer.Initialize(&device))
 	{
 		jc::Console::WriteLine("씨 렌더러 초기화 실패!");
@@ -85,9 +86,10 @@ void RenderObjectLoop_Main()
 	}
 	pCube->SetDebugName("UnitCube");
 	const _u64 cubeMeshKey = g_cResourceMgr.Add(pCube);
+	_LogInfo_("[22] 리소스 준비 완료 — 메시 키=%llu", (unsigned long long)cubeMeshKey);
 
 	// 4. 그릴 목록 구성: 가운데 큰 큐브 1개 + 주변 굤도 큐브 4개
-	//    월드 행렬은 매 프레임 갱신하므로 여기서는 키/머티리얼만 채운다.
+	// 월드 행렬은 매 프레임 갱신하므로 여기서는 키/머티리얼만 채운다.
 	RenderObject objects[1 + ORBIT_CUBE_COUNT];
 	for (_s32 i = 0; i < 1 + ORBIT_CUBE_COUNT; ++i)
 	{
@@ -107,6 +109,7 @@ void RenderObjectLoop_Main()
 	FrameTimer timer;
 	timer.Reset();
 	_f32 elapsed = 0.0f;
+	_s32 frameCount = 0;	// 검증 로그용 프레임 카운터
 
 	while (window.PumpMessage())
 	{
@@ -137,7 +140,7 @@ void RenderObjectLoop_Main()
 		}
 
 		// 7. 표준 렌더 루프: BeginFrame → BeginScene(b0 한 번) → Draw들(b1씩) → EndFrame
-		device.BeginFrame(color(0.06f, 0.06f, 0.1f, 1.0f));
+		device.BeginFrame(color(0x0F, 0x0F, 0x1A, 0xFF));
 		device.GetContext().InvalidateCache();	// BeginFrame이 원시 상태를 건드렸으므로 캐시를 비운다
 
 		renderer.BeginScene(frame);
@@ -145,8 +148,14 @@ void RenderObjectLoop_Main()
 		{
 			renderer.Draw(objects[i]);
 		}
+		renderer.EndScene();
 
 		device.EndFrame(true);
+		++frameCount;
+		if (frameCount == 1 || frameCount == 60 || frameCount == 300)
+		{
+			_LogDebug_("[22] 렌더 프레임 %d회 — Draw %d건", frameCount, 1 + ORBIT_CUBE_COUNT);
+		}
 	}
 
 	// 8. 정리: 큐브 메시는 매니저 소유라 Finalize가 함께 소멸시킨다.
@@ -154,4 +163,5 @@ void RenderObjectLoop_Main()
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
+	_LogInfo_("[22] RenderObjectLoop 종료 — 렌더 프레임 %d회", frameCount);
 }

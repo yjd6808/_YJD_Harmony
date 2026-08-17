@@ -116,7 +116,7 @@ void FillSpriteSheetPixels(_u8* _pOutRgba)
 void FillSpriteQuad(VertexPTC* _pOutVertices4, const vec2& _center, const vec2& _halfSize,
 	const vec2& _uvOffset, const vec2& _uvScale)
 {
-	const color white = color::White();
+	const color white = color::WHITE;
 
 	// UV는 시트에서 이 프레임 영역만 잘라 쓴다: offset ~ offset + scale
 	_pOutVertices4[0] = { vec3(_center.x - _halfSize.x, _center.y + _halfSize.y, 0.0f),

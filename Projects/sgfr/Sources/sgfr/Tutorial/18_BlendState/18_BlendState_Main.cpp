@@ -5,28 +5,28 @@
  * 18. 블렌드 스테이트 (Blend State)
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. 블렌딩 공식: 최종색 = 새색 x SrcBlend (+) 기존색 x DestBlend
- *  2. 불투명/알파/가산/곱셈 네 가지 모드의 차이와 용도
- *  3. 왜 반투명 물체는 그리는 순서가 중요한가
- *  4. 동적(Dynamic) 정점 버퍼로 매 프레임 정점을 갱신하는 법
+ * 1. 블렌딩 공식: 최종색 = 새색 x SrcBlend (+) 기존색 x DestBlend
+ * 2. 불투명/알파/가산/곱셈 네 가지 모드의 차이와 용도
+ * 3. 왜 반투명 물체는 그리는 순서가 중요한가
+ * 4. 동적(Dynamic) 정점 버퍼로 매 프레임 정점을 갱신하는 법
  *
  * [Before/After 비교 뷰]
- *  흰 세로선을 경계로 같은 장면이 두 번 그려진다.
- *  - 왼쪽  (Before): Opaque 고정 = 블렌딩 미적용 (알파 무시! 사각형이 통째로 보인다)
- *  - 오른쪽(After) : 현재 선택한 블렌드 모드 적용
- *  블렌드는 픽셀마다 고를 수 없는 출력 병합(OM) 단계 상태이므로,
- *  "왼쪽 묶음은 Opaque로 드로우 -> 오른쪽 묶음은 선택 모드로 드로우"처럼
- *  드로우 호출 사이에 상태를 바꿔 끼워 비교한다. (상태 교체 비용은 싸다!)
+ * 흰 세로선을 경계로 같은 장면이 두 번 그려진다.
+ * - 왼쪽 (Before): Opaque 고정 = 블렌딩 미적용 (알파 무시! 사각형이 통째로 보인다)
+ * - 오른쪽(After): 현재 선택한 블렌드 모드 적용
+ * 블렌드는 픽셀마다 고를 수 없는 출력 병합(OM) 단계 상태이므로,
+ * "왼쪽 묶음은 Opaque로 드로우 -> 오른쪽 묶음은 선택 모드로 드로우"처럼
+ * 드로우 호출 사이에 상태를 바꿔 끼워 비교한다. (상태 교체 비용은 싸다!)
  *
  * [관찰 포인트]
- *  양쪽 모두 세 개의 색 원(빨강/초록/파랑)이 똑같이 빙글빙글 돈다.
- *  모드를 바꿔가며 왼쪽(미적용)과 격짜가 어떻게 다른지 비교해보자!
- *  - Additive: 겹칠수록 하얖게 (빛의 삼원색)
- *  - Multiply: 겹칠수록 검게   (물감의 삼원색처럼)
+ * 양쪽 모두 세 개의 색 원(빨강/초록/파랑)이 똑같이 빙글빙글 돈다.
+ * 모드를 바꿔가며 왼쪽(미적용)과 격짜가 어떻게 다른지 비교해보자!
+ * - Additive: 겹칠수록 하얖게 (빛의 삼원색)
+ * - Multiply: 겹칠수록 검게 (물감의 삼원색처럼)
  *
  * [조작법]
- *  - 1: 불투명 / 2: 알파 / 3: 가산 / 4: 곱셈 (오른쪽에만 적용)
- *  - ESC: 종료
+ * - 1: 불투명 / 2: 알파 / 3: 가산 / 4: 곱셈 (오른쪽에만 적용)
+ * - ESC: 종료
  */
 
 #include "Core.h"
@@ -147,12 +147,12 @@ void BlendState_Main()
 		elapsed += timer.DeltaTime();
 
 		// 배경은 중간 밝기 회색: 가산(밝아짐)과 곱셈(어두워짐)을 모두 관찰하기 좋다.
-		device.BeginFrame(color(0.45f, 0.45f, 0.45f, 1.0f));
+		device.BeginFrame(color(0x73, 0x73, 0x73, 0xFF));
 
 		const color circleColors[3] = {
-			color(1.0f, 0.25f, 0.25f, 1.0f),	// 빨강
-			color(0.25f, 1.0f, 0.25f, 1.0f),	// 초록
-			color(0.3f, 0.4f, 1.0f, 1.0f),		// 파랑
+			color(0xFF, 0x40, 0x40, 0xFF),	// 빨강
+			color(0x40, 0xFF, 0x40, 0xFF),	// 초록
+			color(0x4D, 0x66, 0xFF, 0xFF),		// 파랑
 		};
 
 		texture.Bind(&device, 0);
@@ -189,7 +189,7 @@ void BlendState_Main()
 		// UV를 원 텍스처의 중심(0.5, 0.5) 한 점으로 고정하면 불투명 흰색 픽셀만 샘플링된다.
 		device.SetBlendMode(GraphicDevice::BlendMode::bmNone);
 		const vec2 uvCenter(0.5f, 0.5f);
-		const color lineColor(0.95f, 0.95f, 0.95f, 1.0f);
+		const color lineColor(0xF2, 0xF2, 0xF2);
 		vertices[0] = { vec3(-0.004f, +1.0f, 0.0f), uvCenter, lineColor };
 		vertices[1] = { vec3(+0.004f, +1.0f, 0.0f), uvCenter, lineColor };
 		vertices[2] = { vec3(-0.004f, -1.0f, 0.0f), uvCenter, lineColor };

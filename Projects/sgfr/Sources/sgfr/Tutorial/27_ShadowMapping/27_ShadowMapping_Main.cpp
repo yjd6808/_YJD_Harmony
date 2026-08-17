@@ -5,29 +5,29 @@
  * 27. 그림자 매핑 (Shadow Mapping)
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. 그림자 매핑의 핵심: "빛의 입장에서 안 보이는 곳이 그림자"
- *  2. 깊이 전용 렌더 타깃(그림자 맵)을 만드는 법
- *  3. 2패스 렌더링: 빛 시점 깊이 기록 -> 카메라 시점 그림자 판정
- *  4. 그림자 여드름(acne)과 바이어스의 관계
- *  5. 방향광(태양)은 직교 투영을 쓰는 이유
+ * 1. 그림자 매핑의 핵심: "빛의 입장에서 안 보이는 곳이 그림자"
+ * 2. 깊이 전용 렌더 타깃(그림자 맵)을 만드는 법
+ * 3. 2패스 렌더링: 빛 시점 깊이 기록 -> 카메라 시점 그림자 판정
+ * 4. 그림자 여드름(acne)과 바이어스의 관계
+ * 5. 방향광(태양)은 직교 투영을 쓰는 이유
  *
  * [Before/After 비교 뷰]
- *  화면이 노란 세로선으로 좌/우로 나뉜다. (같은 장면, 같은 라이팅)
- *  - 왼쪽  (Before): 그림자 판정 없음 = 라이팅만 있는 세상
- *  - 오른쪽(After) : 그림자 매핑 적용 = 큐브 그림자가 바닥에 드리워진다
- *  그림자 하나가 "물체가 떠 있다/바닥에 붙어 있다" 같은 공간감을
- *  얼마나 만드는지 한 화면에서 직접 비교할 수 있다!
+ * 화면이 노란 세로선으로 좌/우로 나뉜다. (같은 장면, 같은 라이팅)
+ * - 왼쪽 (Before): 그림자 판정 없음 = 라이팅만 있는 세상
+ * - 오른쪽(After): 그림자 매핑 적용 = 큐브 그림자가 바닥에 드리워진다
+ * 그림자 하나가 "물체가 떠 있다/바닥에 붙어 있다" 같은 공간감을
+ * 얼마나 만드는지 한 화면에서 직접 비교할 수 있다!
  *
  * [관찰 포인트]
- *  - 왼쪽은 큐브가 공중에 떠 있는지 바닥에 있는지 구분이 안 된다
- *  - 오른쪽은 그림자 덕분에 큐브의 높이가 바로 느껴진다
- *  - 빛 방향을 돌리면 오른쪽 그림자만 반대편으로 이동한다
- *  - 바이어스를 0으로 내리면 오른쪽 표면에만 줄무늬(여드름)이 생긴다!
+ * - 왼쪽은 큐브가 공중에 떠 있는지 바닥에 있는지 구분이 안 된다
+ * - 오른쪽은 그림자 덕분에 큐브의 높이가 바로 느껴진다
+ * - 빛 방향을 돌리면 오른쪽 그림자만 반대편으로 이동한다
+ * - 바이어스를 0으로 내리면 오른쪽 표면에만 줄무늬(여드름)이 생긴다!
  *
  * [조작법]
- *  - 왼쪽/오른쪽 방향키: 빛 방향 회전
- *  - 위/아래 방향키: 그림자 바이어스 증감 (0 ~ 0.01)
- *  - ESC: 종료
+ * - 왼쪽/오른쪽 방향키: 빛 방향 회전
+ * - 위/아래 방향키: 그림자 바이어스 증감 (0 ~ 0.01)
+ * - ESC: 종료
  */
 
 #include "Core.h"
@@ -58,7 +58,7 @@ namespace
 	{
 		vec3 lightDir_;		// 빛이 나아가는 방향
 		_f32 shadowBias_;	// 그림자 여드름 방지 보정값
-		color baseColor_;	// 물체 기본색
+		vec4 baseColor_;	// 물체 기본색
 		_f32 splitPixelX_;	// Before/After 경계 픽셀 x (왼쪽=그림자 없음, 오른쪽=그림자 적용)
 		_f32 padding_[3];	// 16바이트 정렬용 여백
 	};
@@ -89,7 +89,7 @@ void ShadowMapping_Main()
 	}
 
 	// 2. 그림자 맵: 색 없이 깊이만 담는 1024x1024 렌더 타깃
-	//    해상도가 클수록 그림자 경계가 선명해진다. (대신 메모리 증가)
+	// 해상도가 클수록 그림자 경계가 선명해진다. (대신 메모리 증가)
 	RenderTarget shadowMap;
 	if (!shadowMap.CreateDepthOnly(&device, 1024, 1024))
 	{
@@ -203,11 +203,11 @@ void ShadowMapping_Main()
 		const mat4 planeWorld = mat4::Identity();
 		const mat4 cubeWorld = mat4::RotationY(elapsed * 0.5f) * mat4::Translation(0.0f, 0.75f, 0.0f);
 
-		device.BeginFrame(color(0.0f, 0.0f, 0.0f, 1.0f));
+		device.BeginFrame(color(0x00, 0x00, 0x00, 0xFF));
 
 		// ---- 패스 1: 빛 시점에서 깊이만 그림자 맵에 기록 ----
 		device.SetRenderTarget(&shadowMap);
-		shadowMap.Clear(&device, color::Black());	// 깊이 전용이므로 깊이만 1.0으로 초기화된다
+		shadowMap.Clear(&device, color::BLACK);	// 깊이 전용이므로 깊이만 1.0으로 초기화된다
 
 		depthShader.Bind(&device);
 		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -250,7 +250,7 @@ void ShadowMapping_Main()
 		cbS.world_ = planeWorld;
 		cbS.wvp_ = planeWorld * view * proj;
 		cbScene.UpdateAndBind(&device, cbS, 0);
-		cbL.baseColor_ = color(0.75f, 0.75f, 0.78f, 1.0f);
+		cbL.baseColor_ = vec4(0.75f, 0.75f, 0.78f, 1.0f);
 		cbLight.UpdateAndBind(&device, cbL, 1);
 		planeVb.Bind(&device);
 		planeIb.Bind(&device);
@@ -260,7 +260,7 @@ void ShadowMapping_Main()
 		cbS.world_ = cubeWorld;
 		cbS.wvp_ = cubeWorld * view * proj;
 		cbScene.UpdateAndBind(&device, cbS, 0);
-		cbL.baseColor_ = color(0.9f, 0.5f, 0.2f, 1.0f);
+		cbL.baseColor_ = vec4(0.9f, 0.5f, 0.2f, 1.0f);
 		cbLight.UpdateAndBind(&device, cbL, 1);
 		cubeVb.Bind(&device);
 		cubeIb.Bind(&device);

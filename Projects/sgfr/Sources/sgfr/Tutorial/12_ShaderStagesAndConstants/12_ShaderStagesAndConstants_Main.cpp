@@ -5,17 +5,17 @@
  * 12. 셰이더 스테이지와 상수버퍼 (Shader Stages & Constant Buffers)
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. 상수버퍼는 '스테이지(VS/PS)별로 따로' 바인딩된다는 사실
- *  2. 슬롯 규약: b0 = 프레임 공통, b1 = 오브젝트별 (v3 엔진 전체가 이 규약을 따른다)
- *  3. 16바이트 정렬: C++ 구조체와 HLSL cbuffer의 메모리 배치 맞추기
+ * 1. 상수버퍼는 '스테이지(VS/PS)별로 따로' 바인딩된다는 사실
+ * 2. 슬롯 규약: b0 = 프레임 공통, b1 = 오브젝트별 (엔진 전체가 이 규약을 따른다)
+ * 3. 16바이트 정렬: C++ 구조체와 HLSL cbuffer의 메모리 배치 맞추기
  *
  * [Before/After 비교]
- *  - Before(v2): 상수버퍼 슬롯을 튜토리얼마다 임의로 사용 (b0 하나에 전부 구겨넣기)
- *  - After (v3): b0(프레임)/b1(오브젝트) 역할 분리 → 갱신 주기가 다른 데이터를 분리해
- *                프레임당 Update 횟수를 최소화한다. (SceneRenderer가 이 규약의 완성형)
+ * - Before: 상수버퍼 슬롯을 튜토리얼마다 임의로 사용 (b0 하나에 전부 구겨넣기)
+ * - After: b0(프레임)/b1(오브젝트) 역할 분리 → 갱신 주기가 다른 데이터를 분리해
+ * 프레임당 Update 횟수를 최소화한다. (SceneRenderer가 이 규약의 완성형)
  *
  * [조작법]
- *  - ESC: 종료 (사각형 두 개가 서로 다른 주기로 춤춘다)
+ * - ESC: 종료 (사각형 두 개가 서로 다른 주기로 춤춘다)
  */
 
 #include "Core.h"
@@ -39,7 +39,7 @@ namespace
 		vec2 offset_;			// NDC 이동량 (VS용)
 		_f32 wobble_;			// 춤 진폭 배율 (VS용)
 		_f32 padding_;			// 16바이트 정렬용 여백
-		color tint_;			// 곱해질 색 (PS용)
+		vec4 tint_;			// 곱해질 색 (PS용)
 	};
 
 	// b0은 VS만, b1은 VS와 PS 모두 읽는 셰이더
@@ -126,10 +126,10 @@ void ShaderStagesAndConstants_Main()
 
 	const VertexPTC vertices[4] =
 	{
-		{ vec3(-0.25f,  0.25f, 0.0f), vec2(0.0f, 0.0f), color(1.0f, 1.0f, 1.0f, 1.0f) },
-		{ vec3( 0.25f,  0.25f, 0.0f), vec2(1.0f, 0.0f), color(1.0f, 1.0f, 1.0f, 1.0f) },
-		{ vec3( 0.25f, -0.25f, 0.0f), vec2(1.0f, 1.0f), color(0.6f, 0.6f, 0.6f, 1.0f) },
-		{ vec3(-0.25f, -0.25f, 0.0f), vec2(0.0f, 1.0f), color(0.6f, 0.6f, 0.6f, 1.0f) },
+		{ vec3(-0.25f,  0.25f, 0.0f), vec2(0.0f, 0.0f), color(0xFF, 0xFF, 0xFF, 0xFF) },
+		{ vec3( 0.25f,  0.25f, 0.0f), vec2(1.0f, 0.0f), color(0xFF, 0xFF, 0xFF, 0xFF) },
+		{ vec3( 0.25f, -0.25f, 0.0f), vec2(1.0f, 1.0f), color(0x99, 0x99, 0x99, 0xFF) },
+		{ vec3(-0.25f, -0.25f, 0.0f), vec2(0.0f, 1.0f), color(0x99, 0x99, 0x99, 0xFF) },
 	};
 	const _u32 indices[6] = { 0, 1, 2, 0, 2, 3 };
 
@@ -174,7 +174,7 @@ void ShaderStagesAndConstants_Main()
 		timer.Tick();
 		elapsed += timer.DeltaTime();
 
-		device.BeginFrame(color(0.06f, 0.06f, 0.1f, 1.0f));
+		device.BeginFrame(color(0x0F, 0x0F, 0x1A, 0xFF));
 		context.InvalidateCache();	// BeginFrame이 원시 상태를 건드렸으므로 캐시를 비운다
 
 		context.SetVertexShader(&vs);
@@ -189,11 +189,11 @@ void ShaderStagesAndConstants_Main()
 		quad.Bind(context);
 
 		// (2) b1: 오브젝트마다 갱신. VS(이동)와 PS(색) '두 스테이지 모두'에 바인딩해야 한다!
-		//     한 쪽에만 바인딩하면 다른 쪽 스테이지는 이전 값(또는 0)을 읽는다. 직접 지워보면 안다!
+		// 한 쪽에만 바인딩하면 다른 쪽 스테이지는 이전 값(또는 0)을 읽는다. 직접 지워보면 안다!
 		CbObject left = {};
 		left.offset_ = vec2(-0.4f, 0.0f);
 		left.wobble_ = 0.08f;
-		left.tint_ = color(0.3f, 0.8f, 1.0f, 1.0f);
+		left.tint_ = vec4(0.3f, 0.8f, 1.0f, 1.0f);
 		objectCb.Update(&device, left);
 		context.SetConstantBuffer(ShaderStage::ssVertex, 1, objectCb.Raw());
 		context.SetConstantBuffer(ShaderStage::ssPixel, 1, objectCb.Raw());
@@ -202,7 +202,7 @@ void ShaderStagesAndConstants_Main()
 		CbObject right = {};
 		right.offset_ = vec2(0.4f, 0.0f);
 		right.wobble_ = 0.2f;
-		right.tint_ = color(1.0f, 0.6f, 0.2f, 1.0f);
+		right.tint_ = vec4(1.0f, 0.6f, 0.2f, 1.0f);
 		objectCb.Update(&device, right);
 		context.SetConstantBuffer(ShaderStage::ssVertex, 1, objectCb.Raw());
 		context.SetConstantBuffer(ShaderStage::ssPixel, 1, objectCb.Raw());

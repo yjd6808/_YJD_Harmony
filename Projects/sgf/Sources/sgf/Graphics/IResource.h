@@ -1,16 +1,16 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 5:50:00 PM
  * =====================
  * 리소스 공통 인터페이스 (IResource) + 공통 구현 (ResourceBase)
  *
  * [리소스란?]
- *  텍스처/머티리얼/메시/셰이더처럼 "만드는 비용이 비싸고, 여러 곳에서
- *  공유해 쓰는" GPU 관련 객체. ResourceMgr에 등록해 키(_u64)로 찾아 쓴다.
+ * 텍스처/머티리얼/메시/셰이더처럼 "만드는 비용이 비싸고, 여러 곳에서
+ * 공유해 쓰는" GPU 관련 객체. ResourceMgr에 등록해 키(_u64)로 찾아 쓴다.
  *
  * [설계 원칙: 소유자 = 수명 결정자]
- *  ResourceMgr에 Add된 리소스는 ResourceMgr가 소유하고 Remove/Finalize에서
- *  delete한다. Add하지 않은 리소스는 만든 쪽이 직접 책임진다.
+ * ResourceMgr에 Add된 리소스는 ResourceMgr가 소유하고 Remove/Finalize에서
+ * delete한다. Add하지 않은 리소스는 만든 쪽이 직접 책임진다.
  */
 
 #pragma once
@@ -53,11 +53,11 @@ constexpr const char* RESOURCE_TYPE_NAMES[static_cast<_s32>(ResourceType::Max)] 
 	"SpriteAnimationClip",
 };
 
-// 유효하지 않은 리소스 키 (jc::IProvider의 INVALID_KEY와 같은 값)
+// 유효하지 않은 리소스 키 (jc::IIdProvider의 INVALID_KEY와 같은 값)
 constexpr _u64 INVALID_RESOURCE_KEY = 0;
 
 // 파생 클래스에서 리소스 종류를 선언하는 도우미 매크로
-// class Texture : public ResourceBase { SGF_RESOURCE_TYPE(rtTexture) ... };
+// class Texture: public ResourceBase { SGF_RESOURCE_TYPE(rtTexture) ... };
 #define SGF_RESOURCE_TYPE(typeName) \
 public: \
 	static constexpr ::sgf::ResourceType RESOURCE_TYPE = ::sgf::ResourceType::typeName; \

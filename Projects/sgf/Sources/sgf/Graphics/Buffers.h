@@ -1,22 +1,22 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 8:10:00 AM
  * =====================
  * GPU 버퍼 래퍼 (정점/인덱스/상수 버퍼)
  *
  * [GPU 버퍼란?]
- *  GPU가 직접 읽을 수 있는 메모리 덩어리.
- *  CPU 메모리(일반 배열)에 있는 데이터는 GPU가 읽을 수 없으므로
- *  반드시 버퍼를 만들어서 복사해 넣어야 한다.
+ * GPU가 직접 읽을 수 있는 메모리 덩어리.
+ * CPU 메모리(일반 배열)에 있는 데이터는 GPU가 읽을 수 없으므로
+ * 반드시 버퍼를 만들어서 복사해 넣어야 한다.
  *
- *  - 정점 버퍼(Vertex Buffer)   : 정점 배열을 담는다.
- *  - 인덱스 버퍼(Index Buffer)  : 정점 번호 배열을 담는다. 정점 재사용으로 메모리 절약.
- *    (사각형 = 정점 4개 + 인덱스 6개(삼각형 2개). 인덱스 없이면 정점 6개 필요)
- *  - 상수 버퍼(Constant Buffer) : 셰이더의 전역변수(변환 행렬 등)를 담는다.
+ * - 정점 버퍼(Vertex Buffer): 정점 배열을 담는다.
+ * - 인덱스 버퍼(Index Buffer): 정점 번호 배열을 담는다. 정점 재사용으로 메모리 절약.
+ * (사각형 = 정점 4개 + 인덱스 6개(삼각형 2개). 인덱스 없이면 정점 6개 필요)
+ * - 상수 버퍼(Constant Buffer): 셰이더의 전역변수(변환 행렬 등)를 담는다.
  *
  * [Usage 종류]
- *  - DEFAULT  : GPU 전용. 만들 때 데이터를 넣고 이후 변경 안 함. 가장 빠름.
- *  - DYNAMIC  : CPU가 매 프레임 갱신 가능. Map/Unmap으로 쓴다. (상수버퍼, 배치용)
+ * - DEFAULT: GPU 전용. 만들 때 데이터를 넣고 이후 변경 안 함. 가장 빠름.
+ * - DYNAMIC: CPU가 매 프레임 갱신 가능. Map/Unmap으로 쓴다. (상수버퍼, 배치용)
  */
 
 #pragma once
@@ -34,18 +34,18 @@ public:
 	~VertexBuffer();
 
 	// 정점 버퍼를 생성한다.
-	// @param _pDevice    : 그래픽 디바이스
-	// @param _pData      : 초기 정점 데이터 (DYNAMIC이면 nullptr 가능)
-	// @param _stride     : 정점 하나의 바이트 크기 (sizeof(VertexPC) 등)
-	// @param _count      : 정점 개수
-	// @param _dynamic   : true면 매 프레임 CPU에서 갱신 가능한 버퍼로 생성
+	// @param _pDevice: 그래픽 디바이스
+	// @param _pData: 초기 정점 데이터 (DYNAMIC이면 nullptr 가능)
+	// @param _stride: 정점 하나의 바이트 크기 (sizeof(VertexPC) 등)
+	// @param _count: 정점 개수
+	// @param _dynamic: true면 매 프레임 CPU에서 갱신 가능한 버퍼로 생성
 	// @return 성공 여부
 	bool Create(GraphicDevice* _pDevice, const void* _pData, UINT _stride, UINT _count, bool _dynamic = false);
 
 	// DYNAMIC 버퍼의 내용을 새 데이터로 교체한다.
 	// Map(DISCARD)은 "이전 내용은 버릴 테니 새 메모리 주세요"라는 의미로,
 	// GPU가 이전 내용을 읽는 중이어도 멈추지 않고 진행된다. (빠름)
-	// @param _count : 복사할 정점 개수 (Create 때의 count 이하여야 함)
+	// @param _count: 복사할 정점 개수 (Create 때의 count 이하여야 함)
 	bool Update(GraphicDevice* _pDevice, const void* _pData, UINT _count);
 
 	// IA 단계 슬롯 0에 이 정점 버퍼를 장착한다.
@@ -54,7 +54,7 @@ public:
 	UINT Count() const { return count_; }
 	UINT Stride() const { return stride_; }
 
-	// [v3] GraphicContext 바인딩 캐시용 원본 핸들
+	// GraphicContext 바인딩 캐시용 원본 핸들
 	ID3D11Buffer* Raw() const { return pBuffer_.Get(); }
 
 private:
@@ -72,8 +72,8 @@ public:
 	~IndexBuffer();
 
 	// 인덱스 버퍼를 생성한다.
-	// @param _pIndices : 인덱스 배열 (정점 번호들)
-	// @param _count    : 인덱스 개수 (삼각형 수 x 3)
+	// @param _pIndices: 인덱스 배열 (정점 번호들)
+	// @param _count: 인덱스 개수 (삼각형 수 x 3)
 	bool Create(GraphicDevice* _pDevice, const _u32* _pIndices, UINT _count, bool _dynamic = false);
 
 	// DYNAMIC 인덱스 버퍼 갱신
@@ -84,7 +84,7 @@ public:
 
 	UINT Count() const { return count_; }
 
-	// [v3] GraphicContext 바인딩 캐시용 원본 핸들
+	// GraphicContext 바인딩 캐시용 원본 핸들
 	ID3D11Buffer* Raw() const { return pBuffer_.Get(); }
 
 private:
@@ -95,9 +95,9 @@ private:
 
 // 상수 버퍼 래퍼 (템플릿으로 구조체 타입을 고정)
 // [사용 규칙]
-//  1. 구조체 크기는 16바이트 배수여야 한다. (HLSL cbuffer 규칙)
-//  2. 행렬은 우리 엔진이 행우선(row-major)이므로 HLSL 쪽도
-//     row_major float4x4로 선언해서 전치(transpose) 없이 그대로 복사한다.
+// 1. 구조체 크기는 16바이트 배수여야 한다. (HLSL cbuffer 규칙)
+// 2. 행렬은 우리 엔진이 행우선(row-major)이므로 HLSL 쪽도
+// row_major float4x4로 선언해서 전치(transpose) 없이 그대로 복사한다.
 template <typename T>
 class ConstantBuffer
 {
@@ -122,8 +122,8 @@ public:
 	}
 
 	// 상수 버퍼 내용을 갱신하고 VS/PS 양쪽 슬롯에 장착한다.
-	// @param _data : 셰이더에 넘길 값 (구조체 통째로 복사)
-	// @param _slot : 셰이더의 register(b0), register(b1)... 번호
+	// @param _data: 셰이더에 넘길 값 (구조체 통째로 복사)
+	// @param _slot: 셰이더의 register(b0), register(b1)... 번호
 	void UpdateAndBind(GraphicDevice* _pDevice, const T& _data, UINT _slot = 0)
 	{
 		ID3D11DeviceContext* pContext = _pDevice->Context();
@@ -143,7 +143,7 @@ public:
 		pContext->PSSetConstantBuffers(_slot, 1, pBuffers);
 	}
 
-	// [v3] 내용만 갱신한다. 바인딩은 GraphicContext::SetConstantBuffer로 별도 수행.
+	// 내용만 갱신한다. 바인딩은 GraphicContext::SetConstantBuffer로 별도 수행.
 	void Update(GraphicDevice* _pDevice, const T& _data)
 	{
 		ID3D11DeviceContext* pContext = _pDevice->Context();
@@ -156,7 +156,7 @@ public:
 		}
 	}
 
-	// [v3] GraphicContext::SetConstantBuffer에 넘길 원본 핸들
+	// GraphicContext::SetConstantBuffer에 넘길 원본 핸들
 	ID3D11Buffer* Raw() const { return pBuffer_.Get(); }
 
 private:

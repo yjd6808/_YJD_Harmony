@@ -1,25 +1,25 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 1:30:00 PM
  * =====================
  * 렌더 타깃 - "화면 대신 텍스처에 그리기"
  *
  * [렌더 타깃이란?]
- *  지금까지는 항상 백버퍼(화면)에 그렸다. 렌더 타깃을 만들면 우리가 만든
- *  텍스처를 그리기 대상으로 쓸 수 있고, 다 그린 뒤에는 그 텍스처를
- *  일반 텍스처처럼 다시 샘플링할 수 있다.
- *  미니맵/거울(25번), 후처리(26번), 그림자 맵(27번)이 전부 이 기법 위에 있다.
+ * 지금까지는 항상 백버퍼(화면)에 그렸다. 렌더 타깃을 만들면 우리가 만든
+ * 텍스처를 그리기 대상으로 쓸 수 있고, 다 그린 뒤에는 그 텍스처를
+ * 일반 텍스처처럼 다시 샘플링할 수 있다.
+ * 미니맵/거울(25번), 후처리(26번), 그림자 맵(27번)이 전부 이 기법 위에 있다.
  *
  * [핵심 아이디어: 같은 텍스처, 두 개의 뷰]
- *  - RTV(RenderTargetView)   : "여기에 그려라"   (출력용 해석)
- *  - SRV(ShaderResourceView) : "여기서 읽어라"   (입력용 해석)
- *  단, 동시에 둘 다는 불가능! 그리는 동안에는 읽을 수 없다.
- *  GraphicDevice::SetRenderTarget이 바인딩 해제를 자동으로 처리해준다.
+ * - RTV(RenderTargetView): "여기에 그려라" (출력용 해석)
+ * - SRV(ShaderResourceView): "여기서 읽어라" (입력용 해석)
+ * 단, 동시에 둘 다는 불가능! 그리는 동안에는 읽을 수 없다.
+ * GraphicDevice::SetRenderTarget이 바인딩 해제를 자동으로 처리해준다.
  *
  * [깊이 전용 모드 (그림자 맵)]
- *  그림자 맵은 "빛의 시점에서 본 깊이"만 필요하므로 색 텍스처가 없다.
- *  깊이 텍스처를 TYPELESS 포맷으로 만들고
- *  DSV로는 D32_FLOAT(깊이 기록), SRV로는 R32_FLOAT(깊이 읽기)로 해석한다.
+ * 그림자 맵은 "빛의 시점에서 본 깊이"만 필요하므로 색 텍스처가 없다.
+ * 깊이 텍스처를 TYPELESS 포맷으로 만들고
+ * DSV로는 D32_FLOAT(깊이 기록), SRV로는 R32_FLOAT(깊이 읽기)로 해석한다.
  */
 
 #pragma once
@@ -42,9 +42,9 @@ public:
 	~RenderTarget();
 
 	// 색 + 깊이를 모두 가진 일반 렌더 타깃을 만든다. (미니맵/후처리용)
-	// @param _pDevice : 그래픽 디바이스
-	// @param _width   : 텍스처 가로 크기 (백버퍼와 달라도 된다)
-	// @param _height  : 텍스처 세로 크기
+	// @param _pDevice: 그래픽 디바이스
+	// @param _width: 텍스처 가로 크기 (백버퍼와 달라도 된다)
+	// @param _height: 텍스처 세로 크기
 	// @return 성공 여부
 	bool Create(GraphicDevice* _pDevice, _s32 _width, _s32 _height);
 
@@ -60,7 +60,7 @@ public:
 	void Clear(GraphicDevice* _pDevice, const color& _clearColor);
 
 	// 다 그린 결과를 일반 텍스처처럼 셰이더 입력으로 바인딩한다.
-	// @param _slot : PS의 t레지스터 슬롯 번호
+	// @param _slot: PS의 t레지스터 슬롯 번호
 	void BindAsTexture(GraphicDevice* _pDevice, UINT _slot = 0);
 
 	bool IsDepthOnly() const { return depthOnly_; }

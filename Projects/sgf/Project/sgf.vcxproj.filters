@@ -68,14 +68,43 @@
     </ClInclude>
     <ClInclude Include="..\Sources\sgf\Graphics\GraphicsEnums.h" />
     <ClInclude Include="..\Sources\sgf\Graphics\IResource.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\PrimitiveMeshType.h" />
     <ClInclude Include="..\Sources\sgf\Graphics\PipelineState.h" />
     <ClInclude Include="..\Sources\sgf\Graphics\GraphicContext.h" />
     <ClInclude Include="..\Sources\sgf\Graphics\ShaderProgram.h" />
     <ClInclude Include="..\Sources\sgf\Graphics\DefaultShaders.h" />
     <ClInclude Include="..\Sources\sgf\Graphics\Mesh.h" />
     <ClInclude Include="..\Sources\sgf\Graphics\Material.h" />
-    <ClInclude Include="..\Sources\sgf\Graphics\SceneRenderer.h" />
     <ClInclude Include="..\Sources\sgf\Graphics\ResourceMgr.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\Fill.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\PrimitiveBuilder.h" />
+    <ClInclude Include="..\Sources\sgf\Scene\Camera2D.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgf\Scene\Camera3D.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgf\Scene\Component.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgf\Scene\GameObject.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgf\Scene\Layer.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgf\Scene\Scene2D.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgf\Scene\Scene3D.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgf\Scene\Shape2D.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgf\Scene\Transform.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="PCH">
@@ -149,10 +178,31 @@
     <ClCompile Include="..\Sources\sgf\Audio\SoundEngine.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgf\Scene\Camera.cpp">
+    <ClCompile Include="..\Sources\sgf\Scene\Camera2D.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgf\Scene\Camera3D.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgf\Scene\Director.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgf\Scene\GameObject.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgf\Scene\Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgf\Scene\Scene2D.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgf\Scene\Scene3D.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgf\Scene\Shape2D.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgf\Scene\Transform.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgf\Graphics\PipelineState.cpp" />
@@ -160,7 +210,8 @@
     <ClCompile Include="..\Sources\sgf\Graphics\ShaderProgram.cpp" />
     <ClCompile Include="..\Sources\sgf\Graphics\Mesh.cpp" />
     <ClCompile Include="..\Sources\sgf\Graphics\Material.cpp" />
-    <ClCompile Include="..\Sources\sgf\Graphics\SceneRenderer.cpp" />
     <ClCompile Include="..\Sources\sgf\Graphics\ResourceMgr.cpp" />
+    <ClCompile Include="..\Sources\sgf\Graphics\Fill.cpp" />
+    <ClCompile Include="..\Sources\sgf\Graphics\PrimitiveBuilder.cpp" />
   </ItemGroup>
 </Project>

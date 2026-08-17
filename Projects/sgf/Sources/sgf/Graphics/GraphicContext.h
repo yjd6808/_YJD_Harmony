@@ -1,19 +1,19 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 5:10:00 PM
  * =====================
- * 그래픽 컨텍스트 (v3: 디바이스와 그리기 명령 분리)
+ * 그래픽 컨텍스트 (디바이스와 그리기 명령 분리)
  *
  * [왜 Device와 Context를 분리하나?]
- *  - GraphicDevice  : 리소스 생성 담당 ("공장")
- *  - GraphicContext : 그리기 명령 담당 ("작업반장")
- *  D3D11도 ID3D11Device / ID3D11DeviceContext로 나뉘어 있다.
- *  역할이 다르므로 클래스도 나눈다. (멀티스레드 렌더링 확장 대비)
+ * - GraphicDevice: 리소스 생성 담당 ("공장")
+ * - GraphicContext: 그리기 명령 담당 ("작업반장")
+ * D3D11도 ID3D11Device / ID3D11DeviceContext로 나뉘어 있다.
+ * 역할이 다르므로 클래스도 나눈다. (멀티스레드 렌더링 확장 대비)
  *
  * [바인딩 캐시 = 스테이트 캐시]
- *  같은 객체를 연속으로 다시 묶으면 D3D 호출을 생략한다.
- *  GetApiCallCount / GetSkippedCallCount로 절감 효과를 직접 확인할 수 있다.
- *  (튜토리얼 23장: 스테이트 캐시 Before/After)
+ * 같은 객체를 연속으로 다시 묶으면 D3D 호출을 생략한다.
+ * GetApiCallCount / GetSkippedCallCount로 절감 효과를 직접 확인할 수 있다.
+ * (튜토리얼 23장: 스테이트 캐시 Before/After)
  */
 
 #pragma once
@@ -33,7 +33,7 @@ class InputLayout;
 class VertexBuffer;
 class IndexBuffer;
 
-// 뷰포트: 백버퍼의 어느 영역에 NDC를 펌칠지 (값 타입. v3 §3.3)
+// 뷰포트: 백버퍼의 어느 영역에 NDC를 펌칠지 (값 타입. §3.3)
 struct Viewport
 {
 	_f32 x_ = 0.0f;

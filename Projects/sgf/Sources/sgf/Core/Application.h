@@ -1,48 +1,48 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 8:42:00 AM
- * 수정일: 8/9/2026 10:10:00 AM (v2.1: 멀티 윈도우 + Renderer3D 전역 1개)
+ * 수정일: 8/9/2026 10:10:00 AM (멀티 윈도우 + Renderer3D 전역 1개)
  * =====================
  * 애플리케이션 (엔진 총괄)
  *
  * [역할]
- *  윈도우/그래픽 디바이스/입력/렌더러/타이머/사운드를 한데 묶어
- *  "게임 루프"를 돌려주는 엔진의 입구 클래스.
- *  Cocos2d-x의 Application(AppDelegate)과 같은 위치다.
+ * 윈도우/그래픽 디바이스/입력/렌더러/타이머/사운드를 한데 묶어
+ * "게임 루프"를 돌려주는 엔진의 입구 클래스.
+ * Cocos2d-x의 Application(AppDelegate)과 같은 위치다.
  *
- * [v2.1에서 바뀜 점]
- *  1. 렌더러가 2개가 됐다: Renderer2D + Renderer3D.
- *     둘 다 "전역으로 단 1개"를 Application이 소유한다.
- *     [왜 씬별/창별이 아니라 전역 1개인가?]
- *      - 렌더러의 알맹이(셰이더/정점버퍼)는 "디바이스" 소속이다.
- *        디바이스는 앱 전체에 1개뿐이므로 씬/창마다 복제하면 순수 낭비다.
- *      - DX11 즉시 컨텍스트는 1개라 어차피 동시에 하나만 그린다.
- *      - 배치 버퍼도 그리고 비우면 재사용되므로 공유가 가능하다.
- *      대신 "어디에 그릴지(창)"와 "어떤 카메라로 볼지(씬)"는
- *      BeginFrame(Window*)와 Renderer::Begin(행렬)이 매 프레임 정해준다.
- *  2. 윈도우를 여러 개 가질 수 있다. (CreateSubWindow)
- *     메인 윈도우가 닫히면 앱 종료, 서브 윈도우는 그 창만 닫힌다.
- *     서브 윈도우에 씬을 올리려면 g_cDirector.RunScene(pScene, pSubWindow).
+ * [바뀜 점]
+ * 1. 렌더러가 2개가 됐다: Renderer2D + Renderer3D.
+ * 둘 다 "전역으로 단 1개"를 Application이 소유한다.
+ * [왜 씬별/창별이 아니라 전역 1개인가?]
+ * - 렌더러의 알맹이(셰이더/정점버퍼)는 "디바이스" 소속이다.
+ * 디바이스는 앱 전체에 1개뿐이므로 씬/창마다 복제하면 순수 낭비다.
+ * - DX11 즉시 컨텍스트는 1개라 어차피 동시에 하나만 그린다.
+ * - 배치 버퍼도 그리고 비우면 재사용되므로 공유가 가능하다.
+ * 대신 "어디에 그릴지(창)"와 "어떤 카메라로 볼지(씬)"는
+ * BeginFrame(Window*)와 Renderer::Begin(행렬)이 매 프레임 정해준다.
+ * 2. 윈도우를 여러 개 가질 수 있다. (CreateSubWindow)
+ * 메인 윈도우가 닫히면 앱 종료, 서브 윈도우는 그 창만 닫힌다.
+ * 서브 윈도우에 씬을 올리려면 g_cDirector.RunScene(pScene, pSubWindow).
  *
  * [게임 루프란?]
- *  게임은 아래 단계를 1초에 수십 번(보통 60번) 반복하는 프로그램이다.
- *  1. 입력 처리 (윈도우 메시지 펌프)
- *  2. 갱신   (씬/앱 로직, jc::TimeSpan dt만큼 진행)
- *  3. 그리기 (창마다: 화면 지우기 -> 씬 그리기 -> 화면 표시)
- *  4. 사운드 엔진 정리 (끝난 소리 회수)
+ * 게임은 아래 단계를 1초에 수십 번(보통 60번) 반복하는 프로그램이다.
+ * 1. 입력 처리 (윈도우 메시지 펌프)
+ * 2. 갱신 (씬/앱 로직, jc::TimeSpan dt만큼 진행)
+ * 3. 그리기 (창마다: 화면 지우기 -> 씬 그리기 -> 화면 표시)
+ * 4. 사운드 엔진 정리 (끝난 소리 회수)
  *
  * [사용법 - 최소 코드]
- *  class MyApp : public sgf::Application
- *  {
- *      bool ApplicationDidFinishLaunching() override
- *      {
- *          g_cDirector.RunScene(new MyScene());
- *          return true;
- *      }
- *  };
- *  MyApp app;
- *  if (app.Initialize(L"제목", 1280, 720)) { app.Run(); }
- *  app.Finalize();
+ * class MyApp: public sgf::Application
+ * {
+ * bool ApplicationDidFinishLaunching() override
+ * {
+ * g_cDirector.RunScene(new MyScene());
+ * return true;
+ * }
+ * };
+ * MyApp app;
+ * if (app.Initialize(L"제목", 1280, 720)) { app.Run(); }
+ * app.Finalize();
  */
 
 #pragma once
@@ -68,9 +68,9 @@ public:
 
 	// 엔진 초기화: 윈도우 -> DX11 디바이스 -> 창 표면 -> 렌더러 -> 사운드 순서로
 	// 준비한 뒤 ApplicationDidFinishLaunching 훅을 부른다.
-	// @param _szTitle : 메인 윈도우 제목
-	// @param _width   : 클라이언트 영역 가로 크기
-	// @param _height  : 클라이언트 영역 세로 크기
+	// @param _szTitle: 메인 윈도우 제목
+	// @param _width: 클라이언트 영역 가로 크기
+	// @param _height: 클라이언트 영역 세로 크기
 	// @return 성공 여부. 실패 시 디버그 출력 창에 원인이 출력된다.
 	bool Initialize(const wchar_t* _szTitle, _s32 _width, _s32 _height);
 
@@ -80,7 +80,7 @@ public:
 	// 엔진 종료: 씬/서브 윈도우/사운드/렌더러/디바이스 순서로 정리한다.
 	void Finalize();
 
-	// [v2.1] 서브 윈도우 생성.
+	// 서브 윈도우 생성.
 	// 만들어진 창은 Application이 소유하며, 창이 닫히거나 앱이 끝날 때 자동 정리된다.
 	// 서브 윈도우는 닫혀도 앱이 종료되지 않는다. (메인 윈도우만 앱 종료를 유발)
 	// 키보드/마우스 입력은 메인 윈도우에만 연결된다.
@@ -132,11 +132,11 @@ private:
 	static constexpr _s32 ACTIVATION_LISTENER_ID = 1;	// Window::onActivated 구독 ID
 
 	Window window_;					// 메인 윈도우 (닫히면 앱 종료)
-	jc::Vector<Window*> subWindows_;	// 서브 윈도우들 (v2.1, 소유)
+	jc::Vector<Window*> subWindows_;	// 서브 윈도우들 [소유)
 	GraphicDevice device_;				// DX11 디바이스 파사드 (앱 전체 1개)
 	InputManager input_;				// 키보드/마우스 입력 (메인 윈도우 전용)
 	Renderer2D renderer_;				// 2D 배치 렌더러 (전역 1개)
-	Renderer3D renderer3D_;			// 3D 배치 렌더러 (전역 1개, v2.1)
+	Renderer3D renderer3D_;			// 3D 배치 렌더러 (전역 1개,)
 	FrameTimer timer_;					// jc::TimeSpan 기반 시간 측정
 	color clearColor_;					// 배경 색상
 	bool vsync_;						// 수직동기화 여부

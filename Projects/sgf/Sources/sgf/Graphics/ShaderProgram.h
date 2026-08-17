@@ -1,17 +1,17 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 5:30:00 PM
  * =====================
- * v3 셰이더 계층: VertexShader / PixelShader / InputLayout
+ * 셰이더 계층: VertexShader / PixelShader / InputLayout
  *
- * [v2 Shader와의 차이]
- *  v2 Shader는 VS+PS+입력레이아웃을 한 덩어리로 묶었다. (간단하지만 재사용 불가)
- *  v3는 셀 개를 분리해서 "같은 VS + 다른 PS" 같은 조합이 가능하다.
- *  셰이더는 IResource를 상속받아 ResourceMgr에 등록/공유된다.
+ * [Shader와의 차이]
+ * Shader는 VS+PS+입력레이아웃을 한 덩어리로 묶었다. (간단하지만 재사용 불가)
+ * 셀 개를 분리해서 "같은 VS + 다른 PS" 같은 조합이 가능하다.
+ * 셰이더는 IResource를 상속받아 ResourceMgr에 등록/공유된다.
  *
  * [왜 VS가 바이트코드를 들고 있나?]
- *  입력 레이아웃을 만들려면 "이 VS의 입력 서명과 맞는지" 검증이 필요해서
- *  D3D11이 VS 바이트코드를 요구한다. 그래서 VertexShader가 blob을 보관한다.
+ * 입력 레이아웃을 만들려면 "이 VS의 입력 서명과 맞는지" 검증이 필요해서
+ * D3D11이 VS 바이트코드를 요구한다. 그래서 VertexShader가 blob을 보관한다.
  */
 
 #pragma once
@@ -35,8 +35,8 @@ public:
 	~VertexShader();
 
 	// HLSL 소스 문자열을 컴파일해서 VS를 만든다.
-	// @param _szSource : HLSL 소스 코드 문자열
-	// @param _szEntry  : 진입 함수 이름 (기본 "VSMain")
+	// @param _szSource: HLSL 소스 코드 문자열
+	// @param _szEntry: 진입 함수 이름 (기본 "VSMain")
 	// @return 성공 여부 (실패 시 오류가 디버그 출력창에 출력됨)
 	bool InitializeFromSource(GraphicDevice* _pDevice, const char* _szSource, const char* _szEntry = "VSMain");
 
@@ -87,9 +87,9 @@ public:
 	~InputLayout();
 
 	// 정점 구조 설명 배열 + VS 바이트코드로 레이아웃을 만든다.
-	// @param _pDescs : 정점 구조 설명 배열 (VertexPC::LayoutDescs() 등)
-	// @param _count  : 설명 배열 개수
-	// @param _pVs    : 서명 검증에 쓸 버텍스 셰이더 (컴파일 완료 상태여야 함)
+	// @param _pDescs: 정점 구조 설명 배열 (VertexPC::LayoutDescs() 등)
+	// @param _count: 설명 배열 개수
+	// @param _pVs: 서명 검증에 쓸 버텍스 셰이더 (컴파일 완료 상태여야 함)
 	bool Initialize(GraphicDevice* _pDevice, const D3D11_INPUT_ELEMENT_DESC* _pDescs, UINT _count, VertexShader* _pVs);
 
 	void Finalize();

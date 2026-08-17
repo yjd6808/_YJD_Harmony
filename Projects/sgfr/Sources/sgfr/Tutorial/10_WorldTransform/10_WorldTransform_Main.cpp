@@ -5,19 +5,19 @@
  * 10. 월드 변환 (World Transform) - 태양/지구/달 계층 구조
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. 로컬 좌표계 -> 월드 좌표계 변환 (월드 행렬)
- *  2. SRT 순서: 크기(S) -> 회전(R) -> 이동(T) 순서로 곱하는 이유
- *  3. 행렬 곱셈으로 부모-자식 계층 구조 만들기 (태양-지구-달)
+ * 1. 로컬 좌표계 -> 월드 좌표계 변환 (월드 행렬)
+ * 2. SRT 순서: 크기(S) -> 회전(R) -> 이동(T) 순서로 곱하는 이유
+ * 3. 행렬 곱셈으로 부모-자식 계층 구조 만들기 (태양-지구-달)
  *
  * [SRT 순서가 중요한 이유]
- *  행 벡터 규약(v' = v * M)에서는 왼쪽 행렬이 먼저 적용된다.
- *  S * R * T : 크기 바꾸고 -> 제자리에서 회전하고 -> 이동 (원하는 결과!)
- *  T * R * S : 먼저 이동해버리면 회전이 원점 기준 공전이 되어버린다.
- *  (01번 선형대수 튜토리얼에서 숫자로 확인했던 내용을 눈으로 보는 회!)
+ * 행 벡터 규약(v' = v * M)에서는 왼쪽 행렬이 먼저 적용된다.
+ * S * R * T: 크기 바꾸고 -> 제자리에서 회전하고 -> 이동 (원하는 결과!)
+ * T * R * S: 먼저 이동해버리면 회전이 원점 기준 공전이 되어버린다.
+ * (01번 선형대수 튜토리얼에서 숫자로 확인했던 내용을 눈으로 보는 회!)
  *
  * [조작법]
- *  - 가운데 태양(노랑), 그 주위를 도는 지구(파랑), 지구 주위를 도는 달(회색).
- *  - ESC로 종료.
+ * - 가운데 태양(노랑), 그 주위를 도는 지구(파랑), 지구 주위를 도는 달(회색).
+ * - ESC로 종료.
  */
 
 #include "Core.h"
@@ -61,9 +61,9 @@ void WorldTransform_Main()
 	}
 
 	// 2. 큰 사각형 하나를 만들고, 행렬로 크기/위치를 바꿔가며 재활용한다.
-	//    한 변 길이 1짜리 정사각형. (중심이 원점)
-	//    색은 흰색으로 두고... 싶지만 VertexPC에는 틴트 기능이 없으므로
-	//    천체별로 정점 버퍼를 3개 만든다. (단순함 우선!)
+	// 한 변 길이 1짜리 정사각형. (중심이 원점)
+	// 색은 흰색으로 두고... 싶지만 VertexPC에는 틴트 기능이 없으므로
+	// 천체별로 정점 버퍼를 3개 만든다. (단순함 우선!)
 	auto MakeQuad = [](const color& _color, VertexPC* _pOut)
 	{
 		_pOut[0] = { vec3(-0.5f, +0.5f, 0.0f), _color };	// 왼쪽위
@@ -73,9 +73,9 @@ void WorldTransform_Main()
 	};
 
 	VertexPC sunVertices[4], earthVertices[4], moonVertices[4];
-	MakeQuad(color(1.0f, 0.8f, 0.1f, 1.0f), sunVertices);		// 태양 (노랑)
-	MakeQuad(color(0.2f, 0.4f, 1.0f, 1.0f), earthVertices);	// 지구 (파랑)
-	MakeQuad(color(0.7f, 0.7f, 0.7f, 1.0f), moonVertices);		// 달   (회색)
+	MakeQuad(color(0xFF, 0xCC, 0x1A, 0xFF), sunVertices);		// 태양 (노랑)
+	MakeQuad(color(0x33, 0x66, 0xFF, 0xFF), earthVertices);	// 지구 (파랑)
+	MakeQuad(color(0xB3, 0xB3, 0xB3, 0xFF), moonVertices);		// 달 (회색)
 
 	const _u32 indices[] = { 0, 1, 2, 2, 1, 3 };
 
@@ -108,8 +108,8 @@ void WorldTransform_Main()
 	}
 
 	// 4. 투영 행렬: 화면 비율 보정용 직교 투영
-	//    NDC는 가로세로 모두 -1~1이라 800x600 화면에서는 가로로 늘어난다.
-	//    가로를 화면 비율만큼 넓게(-1.33~+1.33) 잡으면 정사각형이 정사각형으로 보인다.
+	// NDC는 가로세로 모두 -1~1이라 800x600 화면에서는 가로로 늘어난다.
+	// 가로를 화면 비율만큼 넓게(-1.33~+1.33) 잡으면 정사각형이 정사각형으로 보인다.
 	const _f32 aspect = window.AspectRatio();
 	const mat4 proj = mat4::OrthographicOffCenterLH(-aspect, +aspect, -1.0f, +1.0f, 0.0f, 1.0f);
 
@@ -144,23 +144,23 @@ void WorldTransform_Main()
 		timer.Tick();
 		elapsed += timer.DeltaTime();
 
-		device.BeginFrame(color(0.02f, 0.02f, 0.05f, 1.0f));
+		device.BeginFrame(color(0x05, 0x05, 0x0D, 0xFF));
 
 		// === 태양: 제자리에서 천천히 자전 ===
-		//     SRT2D(크기, 회전각, 이동) 헬퍼로 한번에 로컬 행렬을 만든다.
+		// SRT2D(크기, 회전각, 이동) 헬퍼로 한번에 로컬 행렬을 만든다.
 		const mat4 sunWorld = mat4::SRT2D(vec2(0.5f, 0.5f), elapsed * 0.5f, vec2(0.0f, 0.0f));
 		DrawQuad(vbSun, sunWorld);
 
 		// === 지구: 태양으로부터 0.7 떨어져서 공전 ===
-		//     공전 = "먼저 밖으로 이동(T)한 뒤 원점 기준 회전(R)"
-		//     행 벡터 규약에서는 T가 왼쪽, R이 오른쪽에 온다.
+		// 공전 = "먼저 밖으로 이동(T)한 뒤 원점 기준 회전(R)"
+		// 행 벡터 규약에서는 T가 왼쪽, R이 오른쪽에 온다.
 		const mat4 earthOrbit = mat4::Translation(0.7f, 0.0f, 0.0f) * mat4::RotationZ(elapsed * 1.0f);
 		const mat4 earthWorld = mat4::Scale(0.2f, 0.2f, 1.0f) * mat4::RotationZ(elapsed * 3.0f) * earthOrbit;
 		DrawQuad(vbEarth, earthWorld);
 
 		// === 달: 지구로부터 0.2 떨어져서 공전 ===
-		//     핵심! 달의 부모는 지구다. 달 로컬 행렬 뒤에 지구의 공전 행렬을 통째로 곱한다.
-		//     (지구의 자전/크기는 달에게 물려주지 않기 위해 earthOrbit만 사용)
+		// 핵심! 달의 부모는 지구다. 달 로컬 행렬 뒤에 지구의 공전 행렬을 통째로 곱한다.
+		// (지구의 자전/크기는 달에게 물려주지 않기 위해 earthOrbit만 사용)
 		const mat4 moonOrbit = mat4::Translation(0.2f, 0.0f, 0.0f) * mat4::RotationZ(elapsed * 4.0f);
 		const mat4 moonWorld = mat4::Scale(0.08f, 0.08f, 1.0f) * moonOrbit * earthOrbit;
 		DrawQuad(vbMoon, moonWorld);

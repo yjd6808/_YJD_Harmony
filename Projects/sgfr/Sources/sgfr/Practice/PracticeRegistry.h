@@ -5,9 +5,9 @@
  * 연습(Practice) 튜토리얼 목록 관리자
  *
  * [설계 의도]
- *  - Tutorial과 달리 연습은 자유롭게 늘어나므로 별도 레지스트리로 분리했다.
- *  - 등록 방식은 TutorialRegistry와 동일하다. (이름 + 실행 함수 포인터)
- *  - 새 연습을 추가하려면 PracticeRegistry.cpp의 배열에 한 줄만 추가하면 된다.
+ * - Tutorial과 달리 연습은 자유롭게 늘어나므로 별도 레지스트리로 분리했다.
+ * - 등록 방식은 TutorialRegistry와 동일하다. (이름 + 실행 함수 포인터)
+ * - 새 연습을 추가하려면 PracticeRegistry.cpp의 배열에 한 줄만 추가하면 된다.
  */
 
 #pragma once

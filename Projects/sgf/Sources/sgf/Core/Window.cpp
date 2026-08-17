@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/4/2026 10:36:00 PM
  * =====================
@@ -37,10 +37,10 @@ Window::~Window()
 //////////////////////////////////////////////////////////////////////////////////////////
 // 윈도우를 생성한다.
 // [진행 순서]
-//  1. 윈도우 클래스 등록 (처음 한 번만)
-//  2. 클라이언트 영역 크기 -> 실제 창 크기 보정 (AdjustWindowRect)
-//  3. CreateWindowEx로 창 생성
-//  4. ShowWindow로 화면에 표시
+// 1. 윈도우 클래스 등록 (처음 한 번만)
+// 2. 클라이언트 영역 크기 -> 실제 창 크기 보정 (AdjustWindowRect)
+// 3. CreateWindowEx로 창 생성
+// 4. ShowWindow로 화면에 표시
 bool Window::Create(const wchar_t* _title, _s32 _width, _s32 _height)
 {
 	const HINSTANCE instance = GetModuleHandle(nullptr);
@@ -94,6 +94,7 @@ bool Window::Create(const wchar_t* _title, _s32 _width, _s32 _height)
 	// 4. 창 표시
 	ShowWindow(hWnd_, SW_SHOW);
 	UpdateWindow(hWnd_);
+	_LogInfo_("[sgf] Window::Create OK — %dx%d (hwnd=0x%p)", _width, _height, (void*)hWnd_);
 	return true;
 }
 
@@ -145,8 +146,8 @@ void Window::Destroy()
 //////////////////////////////////////////////////////////////////////////////////////////
 // 이 윈도우 전용 그리기 표면(스왕체인 + 깊이버퍼)을 생성한다.
 // [왜 윈도우가 표면을 소유하는가?]
-//  백버퍼는 "이 창에 보여질 그림"이므로 수명과 크기가 창에 종속된다.
-//  창이 생기면 표면도 생기고, 창이 닫히면 표면도 사라지는 게 자연스럽다.
+// 백버퍼는 "이 창에 보여질 그림"이므로 수명과 크기가 창에 종속된다.
+// 창이 생기면 표면도 생기고, 창이 닫히면 표면도 사라지는 게 자연스럽다.
 bool Window::CreateSurface(GraphicDevice* _pDevice)
 {
 	if (hWnd_ == nullptr || _pDevice == nullptr)

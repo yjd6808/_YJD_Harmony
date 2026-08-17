@@ -10,6 +10,7 @@
 #include "sgf/Graphics/GraphicDevice.h"
 #include "sgf/Graphics/Texture.h"
 #include "sgf/Graphics/Material.h"
+#include "sgf/Graphics/Mesh.h"
 #include "sgf/Graphics/ShaderProgram.h"
 #include "sgf/Graphics/DefaultShaders.h"
 #include "jc/Container/Vector.h"
@@ -19,6 +20,49 @@
 NS_SGF_BEGIN
 
 using namespace jc;
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// 프리미티브 메시 생성 헬퍼 — 팩토리 호출 + ResourceMgr 등록 + 키 저장. (파일 내부)
+namespace
+{
+	bool CreatePrimitiveMesh2D(GraphicDevice* _pDevice, VertexShader* _pVs, ResourceMgr& _mgr,
+		PrimitiveMesh2DType _type, _u64& _outKey)
+	{
+		Mesh* pMesh = dbg_new Mesh;
+		bool ok = false;
+		switch (_type)
+		{
+		case PrimitiveMesh2DType::Rect:		ok = pMesh->InitializeAsRect2D(_pDevice, _pVs); break;
+		case PrimitiveMesh2DType::Circle:	ok = pMesh->InitializeAsCircle2D(_pDevice, _pVs); break;
+		case PrimitiveMesh2DType::Triangle:	ok = pMesh->InitializeAsTriangle2D(_pDevice, _pVs); break;
+		case PrimitiveMesh2DType::Line:		ok = pMesh->InitializeAsLine2D(_pDevice, _pVs); break;
+		default: ok = false; break;
+		}
+		if (!ok) { delete pMesh; return false; }
+		_outKey = _mgr.Add(pMesh);
+		return true;
+	}
+
+	bool CreatePrimitiveMesh3D(GraphicDevice* _pDevice, VertexShader* _pVs, ResourceMgr& _mgr,
+		PrimitiveMesh3DType _type, _u64& _outKey)
+	{
+		Mesh* pMesh = dbg_new Mesh;
+		bool ok = false;
+		switch (_type)
+		{
+		case PrimitiveMesh3DType::Cube:		ok = pMesh->InitializeAsCube(_pDevice, _pVs); break;
+		case PrimitiveMesh3DType::Sphere:	ok = pMesh->InitializeAsSphere(_pDevice, _pVs); break;
+		case PrimitiveMesh3DType::Capsule:	ok = pMesh->InitializeAsCapsule(_pDevice, _pVs); break;
+		case PrimitiveMesh3DType::Cylinder:	ok = pMesh->InitializeAsCylinder(_pDevice, _pVs); break;
+		case PrimitiveMesh3DType::Plane:	ok = pMesh->InitializeAsPlane(_pDevice, _pVs); break;
+		case PrimitiveMesh3DType::Quad:		ok = pMesh->InitializeAsQuad3D(_pDevice, _pVs); break;
+		default: ok = false; break;
+		}
+		if (!ok) { delete pMesh; return false; }
+		_outKey = _mgr.Add(pMesh);
+		return true;
+	}
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ResourceMgr& ResourceMgr::GetInstance()
@@ -38,6 +82,10 @@ ResourceMgr::ResourceMgr()
 	, defaultMaterial2DKey_(INVALID_RESOURCE_KEY)
 	, defaultMaterial3DKey_(INVALID_RESOURCE_KEY)
 {
+	for (_s32 i = 0; i < PRIMITIVE_MESH2D_COUNT; ++i)
+	{
+		primitiveMesh2DKeys_[i] = INVALID_RESOURCE_KEY;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -89,6 +137,10 @@ void ResourceMgr::Finalize()
 	defaultPs3DKey_ = INVALID_RESOURCE_KEY;
 	defaultMaterial2DKey_ = INVALID_RESOURCE_KEY;
 	defaultMaterial3DKey_ = INVALID_RESOURCE_KEY;
+	for (_s32 i = 0; i < PRIMITIVE_MESH2D_COUNT; ++i)
+	{
+		primitiveMesh2DKeys_[i] = INVALID_RESOURCE_KEY;
+	}
 	pDevice_ = nullptr;
 }
 
@@ -270,6 +322,50 @@ Material* ResourceMgr::GetDefaultMaterial3D()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+Mesh* ResourceMgr::FindPrimitiveMesh2D(PrimitiveMesh2DType _type)
+{
+	const _s32 index = static_cast<_s32>(_type);
+	if (index < 0 || index >= PRIMITIVE_MESH2D_COUNT)
+	{
+		return nullptr;
+	}
+	return Find<Mesh>(primitiveMesh2DKeys_[index]);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+Mesh* ResourceMgr::FindPrimitiveMesh3D(PrimitiveMesh3DType _type)
+{
+	const _s32 index = PRIMITIVE_MESH3D_OFFSET + static_cast<_s32>(_type);
+	if (index < PRIMITIVE_MESH3D_OFFSET || index >= PRIMITIVE_MESH2D_COUNT)
+	{
+		return nullptr;
+	}
+	return Find<Mesh>(primitiveMesh2DKeys_[index]);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u64 ResourceMgr::GetPrimitiveMesh2DKey(PrimitiveMesh2DType _type) const
+{
+	const _s32 index = static_cast<_s32>(_type);
+	if (index < 0 || index >= PRIMITIVE_MESH2D_COUNT)
+	{
+		return INVALID_RESOURCE_KEY;
+	}
+	return primitiveMesh2DKeys_[index];
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u64 ResourceMgr::GetPrimitiveMesh3DKey(PrimitiveMesh3DType _type) const
+{
+	const _s32 index = PRIMITIVE_MESH3D_OFFSET + static_cast<_s32>(_type);
+	if (index < PRIMITIVE_MESH3D_OFFSET || index >= PRIMITIVE_MESH2D_COUNT)
+	{
+		return INVALID_RESOURCE_KEY;
+	}
+	return primitiveMesh2DKeys_[index];
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 void ResourceMgr::PrintStatus()
 {
 	_s8 buffer[512];
@@ -364,7 +460,25 @@ bool ResourceMgr::CreateDefaults()
 	pMat3D->SetDebugName("DefaultMaterial3D");
 	defaultMaterial3DKey_ = Add(pMat3D);
 
-	// 4. 디폴트 키 보호 등록 (FR-30)
+	// 4. 프리미티브 메시 (2D: 순수 2D 4종 — vfPTC2D 배칭용 / 3D 공용 6종 — vfPNT3D)
+	// 통합 키 테이블: 2D(0~3) + 3D(4~9). 3D 메시는 FindPrimitiveMesh2D로도 가져올 수 있다.
+	for (_s32 t = 0; t < PRIMITIVE_MESH3D_OFFSET; ++t)
+	{
+		if (!CreatePrimitiveMesh2D(pDevice_, pVs2D, *this, static_cast<PrimitiveMesh2DType>(t), primitiveMesh2DKeys_[t]))
+		{
+			return false;
+		}
+	}
+	for (_s32 t = 0; t < (_s32)PrimitiveMesh3DType::Max; ++t)
+	{
+		if (!CreatePrimitiveMesh3D(pDevice_, pVs3D, *this, static_cast<PrimitiveMesh3DType>(t),
+			primitiveMesh2DKeys_[PRIMITIVE_MESH3D_OFFSET + t]))
+		{
+			return false;
+		}
+	}
+
+	// 5. 디폴트 키 보호 등록 (FR-30)
 	defaultKeys_.Insert(defaultVs2DKey_);
 	defaultKeys_.Insert(defaultPs2DKey_);
 	defaultKeys_.Insert(defaultVs3DKey_);
@@ -372,6 +486,10 @@ bool ResourceMgr::CreateDefaults()
 	defaultKeys_.Insert(defaultTextureKey_);
 	defaultKeys_.Insert(defaultMaterial2DKey_);
 	defaultKeys_.Insert(defaultMaterial3DKey_);
+	for (_s32 i = 0; i < PRIMITIVE_MESH2D_COUNT; ++i)
+	{
+		defaultKeys_.Insert(primitiveMesh2DKeys_[i]);
+	}
 	return true;
 }
 

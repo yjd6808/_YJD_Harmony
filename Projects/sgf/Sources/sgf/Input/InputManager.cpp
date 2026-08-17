@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 8:22:00 AM
  * =====================
@@ -34,10 +34,10 @@ InputManager::~InputManager()
 //////////////////////////////////////////////////////////////////////////////////////////
 // 윈도우 메시지 -> 입력 상태/이벤트 반영
 // [메시지 해설]
-//  WM_KEYDOWN   : 키가 눌림. 즐, 누르고 있으면 자동반복(repeat)으로 계속 온다.
-//                 _lParam의 30번 비트가 1이면 반복 입력이므로 첫 입력만 이벤트로 보낸다.
-//  WM_MOUSEMOVE : 커서 이동. _lParam에 클라이언트 좌표가 담겨 있다.
-//  WM_MOUSEWHEEL: _wParam 상위 16비트에 휠 이동량(보통 ±120)이 담겨 있다.
+// WM_KEYDOWN: 키가 눌림. 즐, 누르고 있으면 자동반복(repeat)으로 계속 온다.
+// _lParam의 30번 비트가 1이면 반복 입력이므로 첫 입력만 이벤트로 보낸다.
+// WM_MOUSEMOVE: 커서 이동. _lParam에 클라이언트 좌표가 담겨 있다.
+// WM_MOUSEWHEEL: _wParam 상위 16비트에 휠 이동량(보통 ±120)이 담겨 있다.
 bool InputManager::HandleMessage(UINT _msg, WPARAM _wParam, LPARAM _lParam)
 {
 	switch (_msg)

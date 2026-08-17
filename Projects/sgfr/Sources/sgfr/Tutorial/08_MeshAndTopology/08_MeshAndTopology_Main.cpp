@@ -5,19 +5,19 @@
  * 08. 메시와 토폴로지 (Mesh & Topology)
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. Mesh: 정점버퍼 + (인덱스버퍼) + 입력레이아웃 + 토폴로지를 한 덩어리로 묶는 단위
- *  2. 토폴로지: 같은 정점 6개도 '해석 방법'에 따라 삼각형/선/점으로 달라진다
- *  3. Mesh::Bind 한 번이면 IA 단계 세팅이 끝난다 (v3 핵심 편의)
+ * 1. Mesh: 정점버퍼 + (인덱스버퍼) + 입력레이아웃 + 토폴로지를 한 덩어리로 묶는 단위
+ * 2. 토폴로지: 같은 정점 6개도 '해석 방법'에 따라 삼각형/선/점으로 달라진다
+ * 3. Mesh::Bind 한 번이면 IA 단계 세팅이 끝난다 (핵심 편의)
  *
  * [Before/After 비교]
- *  - Before(v2): VertexBuffer/InputLayout/토폴로지를 튜토리얼마다 따로따로 바인딩
- *  - After (v3): Mesh 하나로 묶어 mesh.Bind(context) 한 줄이면 끝
+ * - Before: VertexBuffer/InputLayout/토폴로지를 튜토리얼마다 따로따로 바인딩
+ * - After: Mesh 하나로 묶어 mesh.Bind(context) 한 줄이면 끝
  *
  * [조작법]
- *  - 1: 삼각형 리스트 (6정점 = 삼각형 2개)
- *  - 2: 선 스트립     (6정점 = 이어진 선 5개)
- *  - 3: 점 리스트     (6정점 = 점 6개)
- *  - ESC: 종료
+ * - 1: 삼각형 리스트 (6정점 = 삼각형 2개)
+ * - 2: 선 스트립 (6정점 = 이어진 선 5개)
+ * - 3: 점 리스트 (6정점 = 점 6개)
+ * - ESC: 종료
  */
 
 #include "Core.h"
@@ -85,7 +85,7 @@ void MeshAndTopology_Main()
 
 	GraphicContext& context = device.GetContext();
 
-	// 2. 셰이더 준비 (v3: VertexShader/PixelShader가 별도 클래스다)
+	// 2. 셰이더 준비 (VertexShader/PixelShader가 별도 클래스다)
 	VertexShader vs;
 	PixelShader ps;
 	if (!vs.InitializeFromSource(&device, PASSTHROUGH_SHADER_SOURCE) ||
@@ -104,7 +104,7 @@ void MeshAndTopology_Main()
 		const _f32 angle = jc_math_pi * 2.0f * (_f32)i / 6.0f + jc_math_pi * 0.5f;
 		vertices[i].position_ = vec3(cosf(angle) * 0.7f, sinf(angle) * 0.7f, 0.0f);
 		vertices[i].uv_ = vec2(0.0f, 0.0f);
-		vertices[i].color_ = color(
+		vertices[i].color_ = color::FromFloat(
 			0.5f + 0.5f * cosf(angle),
 			0.5f + 0.5f * sinf(angle),
 			1.0f - 0.5f * cosf(angle),
@@ -143,7 +143,7 @@ void MeshAndTopology_Main()
 
 		window.SetTitle(s_szTopologyNames[topologyIndex]);
 
-		device.BeginFrame(color(0.06f, 0.06f, 0.1f, 1.0f));
+		device.BeginFrame(color(0x0F, 0x0F, 0x1A, 0xFF));
 		context.InvalidateCache();	// BeginFrame이 원시 상태를 건드렸으므로 캐시를 비운다
 
 		// 셰이더는 이 튜토리얼이 직접 바인딩 (20번부터는 Material이 대신해준다)

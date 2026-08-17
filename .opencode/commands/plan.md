@@ -5,6 +5,7 @@ description: 작업 시작 전 plan 파일 생성
 오늘 날짜(YYYY-MM-DD)와 "$ARGUMENTS"를 조합하여 `.admin/plans/{날짜}-$ARGUMENTS.md` 파일을 생성하라.
 
 파일에는 다음 내용을 포함할 것:
+
 - 작업 배경 및 목적
 - 분석한 기존 코드 현황
 - 구체적인 수정/구현 계획 (단계별)

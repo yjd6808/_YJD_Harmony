@@ -16,20 +16,20 @@ using namespace jc;
 // 좌(Before)/우(After) 분할 비교로 텍스처 사각형을 그리는 HLSL 셰이더 소스를 반환한다.
 //
 // [샘플링(Sampling)이란?]
-//  셰이더가 "텍스처의 UV 위치에서 색을 꺼내 오는 행위".
-//  화면 픽셀과 텍스처 픽셀(텍셀)은 1:1로 맞지 않기 때문에
-//  "어떻게 꺼내 올지" 규칙이 필요하다. 그 규칙 묶음이 샘플러다.
+// 셰이더가 "텍스처의 UV 위치에서 색을 꺼내 오는 행위".
+// 화면 픽셀과 텍스처 픽셀(텍셀)은 1:1로 맞지 않기 때문에
+// "어떻게 꺼내 올지" 규칙이 필요하다. 그 규칙 묶음이 샘플러다.
 //
 // [Before/After 분할의 원리]
-//  같은 텍스처를 s0(기준 샘플러)과 s1(선택 샘플러) 두 규칙으로 읽을 수 있게 준비하고,
-//  픽셀 셰이더가 자기 화면 x좌표(SV_POSITION)를 경계값과 비교해 어느 쪽을 쓸지 고른다.
-//  덕분에 한 번의 드로우로 좌우가 다른 규칙으로 그려진다!
+// 같은 텍스처를 s0(기준 샘플러)과 s1(선택 샘플러) 두 규칙으로 읽을 수 있게 준비하고,
+// 픽셀 셰이더가 자기 화면 x좌표(SV_POSITION)를 경계값과 비교해 어느 쪽을 쓸지 고른다.
+// 덕분에 한 번의 드로우로 좌우가 다른 규칙으로 그려진다!
 const char* TextureQuadShaderSource()
 {
 	return R"(
 Texture2D gTexture : register(t0);			// 읽을 텍스처 (t = texture 레지스터)
 SamplerState gSamplerBefore : register(s0);	// [Before] 기준 규칙: Point + Wrap 고정
-SamplerState gSamplerAfter  : register(s1);	// [After]  현재 선택한 규칙
+SamplerState gSamplerAfter  : register(s1);	// [After] 현재 선택한 규칙
 
 cbuffer CbSplit : register(b0)
 {
@@ -146,7 +146,7 @@ void FillCheckerPixels(_u8* _pOutPixels, _s32 _width, _s32 _height, _s32 _cellSi
 // UV가 0~_uvScale 범위인 사각형 정점 4개와 인덱스 6개를 채운다.
 void FillUvQuad(VertexPTC* _pOutVertices4, _u32* _pOutIndices6, _f32 _uvScale)
 {
-	const color white = color::White();
+	const color white = color::WHITE;
 
 	// NDC 좌표로 화면 대부분을 덮는 사각형 (왼위 -> 오른위 -> 왼아래 -> 오른아래)
 	_pOutVertices4[0] = { vec3(-0.85f, +0.85f, 0.0f), vec2(0.0f,     0.0f),     white };

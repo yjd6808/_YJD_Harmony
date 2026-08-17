@@ -1,14 +1,14 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 1:32:00 PM
  * =====================
  * 렌더 타깃 구현부
  *
  * [만드는 순서 요약]
- *  1. 텍스처 생성 (BindFlags에 "그리기 대상 + 셰이더 입력" 두 용도를 함께 지정)
- *  2. 그 텍스처를 보는 RTV 생성 (그리기용 해석)
- *  3. 그 텍스처를 보는 SRV 생성 (읽기용 해석)
- *  4. 깊이 버퍼도 같은 크기로 별도 생성
+ * 1. 텍스처 생성 (BindFlags에 "그리기 대상 + 셰이더 입력" 두 용도를 함께 지정)
+ * 2. 그 텍스처를 보는 RTV 생성 (그리기용 해석)
+ * 3. 그 텍스처를 보는 SRV 생성 (읽기용 해석)
+ * 4. 깊이 버퍼도 같은 크기로 별도 생성
  */
 
 #include "Core.h"
@@ -49,8 +49,8 @@ bool RenderTarget::Create(GraphicDevice* _pDevice, _s32 _width, _s32 _height)
 	ID3D11Device* pDevice = _pDevice->Device();
 
 	// 1. 색 텍스처: 백버퍼와 같은 RGBA8 포맷.
-	//    BIND_RENDER_TARGET(그리기 대상) + BIND_SHADER_RESOURCE(셰이더 입력)
-	//    두 용도를 함께 지정하는 것이 핵심!
+	// BIND_RENDER_TARGET(그리기 대상) + BIND_SHADER_RESOURCE(셰이더 입력)
+	// 두 용도를 함께 지정하는 것이 핵심!
 	D3D11_TEXTURE2D_DESC colorDesc = {};
 	colorDesc.Width = _width;
 	colorDesc.Height = _height;
@@ -115,8 +115,8 @@ bool RenderTarget::CreateDepthOnly(GraphicDevice* _pDevice, _s32 _width, _s32 _h
 	ID3D11Device* pDevice = _pDevice->Device();
 
 	// 1. 깊이 텍스처를 TYPELESS(해석 미정) 포맷으로 만든다.
-	//    같은 32비트 데이터를 DSV는 "깊이"로, SRV는 "실수"로
-	//    서로 다르게 해석하기 위해서다.
+	// 같은 32비트 데이터를 DSV는 "깊이"로, SRV는 "실수"로
+	// 서로 다르게 해석하기 위해서다.
 	D3D11_TEXTURE2D_DESC depthDesc = {};
 	depthDesc.Width = _width;
 	depthDesc.Height = _height;
@@ -183,7 +183,7 @@ void RenderTarget::Clear(GraphicDevice* _pDevice, const color& _clearColor)
 	// 색 타깃이 있으면 배경색으로 지운다.
 	if (pRTV_ != nullptr)
 	{
-		const _f32 clearColor[4] = { _clearColor.r, _clearColor.g, _clearColor.b, _clearColor.a };
+		const _f32 clearColor[4] = { _clearColor.Rf(), _clearColor.Gf(), _clearColor.Bf(), _clearColor.Af() };
 		pContext->ClearRenderTargetView(pRTV_.Get(), clearColor);
 	}
 

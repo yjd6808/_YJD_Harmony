@@ -16,13 +16,13 @@ using namespace jc;
 // 화면 전체 텍스처에 후보정 효과를 입혀 출력하는 HLSL 셰이더 소스를 반환한다.
 //
 // [포스트 프로세싱(Post Processing)이란?]
-//  장면을 먼저 렌더 타깃(텍스처)에 다 그린 다음,
-//  그 텍스처를 "사진 보정"하듯 픽셀 단위로 가공해서 화면에 출력하는 기법.
-//  장면이 아무리 복잡해도 후보정 비용은 "화면 픽셀 수"에만 비례한다!
+// 장면을 먼저 렌더 타깃(텍스처)에 다 그린 다음,
+// 그 텍스처를 "사진 보정"하듯 픽셀 단위로 가공해서 화면에 출력하는 기법.
+// 장면이 아무리 복잡해도 후보정 비용은 "화면 픽셀 수"에만 비례한다!
 //
 // [Before/After 분할 슬라이더]
-//  gSplit(0~1) 왼쪽은 원본 그대로, 오른쪽은 효과를 적용해 출력한다.
-//  경계를 좀이며 같은 장면의 보정 전/후를 한 화면에서 직접 비교할 수 있다.
+// gSplit(0~1) 왼쪽은 원본 그대로, 오른쪽은 효과를 적용해 출력한다.
+// 경계를 좀이며 같은 장면의 보정 전/후를 한 화면에서 직접 비교할 수 있다.
 const char* PostProcessShaderSource()
 {
 	return R"(
@@ -141,7 +141,7 @@ void PrintPostProcessExplanation()
 // 화면 전체를 덮는 NDC 사각형 정점 4개를 채운다. (UV 0~1, 흰색)
 void FillFullscreenQuad(VertexPTC* _pOutVertices4)
 {
-	const color white = color::White();
+	const color white = color::WHITE;
 
 	// NDC 왼위(-1,+1) -> 오른아래(+1,-1)까지 꽉 채운다.
 	// UV는 왼위가 (0,0): 화면 y는 위가 +, 텍스처 v는 아래가 + 임에 주의!

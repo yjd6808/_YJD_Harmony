@@ -1,12 +1,12 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 5:20:00 PM
  * =====================
  * 그래픽 컨텍스트 구현부
  *
  * [캐시 규칙]
- *  모든 Set 함수는 "마지막으로 묶은 D3D 객체"와 비교해 같으면 생략한다.
- *  생략 여부는 skippedCallCount_로 집계되어 튜토리얼 23장에서 직접 확인할 수 있다.
+ * 모든 Set 함수는 "마지막으로 묶은 D3D 객체"와 비교해 같으면 생략한다.
+ * 생략 여부는 skippedCallCount_로 집계되어 튜토리얼 23장에서 직접 확인할 수 있다.
  */
 
 #include "Core.h"
@@ -168,6 +168,10 @@ void GraphicContext::SetPixelShader(PixelShader* _pShader)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+// ★ 상수버퍼 바인딩 — 셰이더가 읽을 데이터 보관함을 특정 스테이지/슬롯에 장착한다.
+// - (용어) 슬롯: 셰이더 쪽의 "선반 번호". b0/b1/b2 규약으로 쓰면 규칙이 통일된다.
+// - (용어) 스테이지: VS(정점 처리)와 PS(픽셀 처리)는 서로 다른 선반. VS에 장착해도 PS는 못 본다.
+// - 직전과 같은 버퍼면 D3D 호출을 생략한다(캐시) — 중복 호출은 GPU 명령만 쌓이고 이득이 없다.
 void GraphicContext::SetConstantBuffer(ShaderStage _stage, _u32 _slot, ID3D11Buffer* _pBuffer)
 {
 	jc_assert_msg(_slot < MAX_CBUFFER_SLOTS, "상수버퍼 슬롯 범위를 벗어났습니다.");
@@ -309,6 +313,8 @@ void GraphicContext::SetDepthStencilState(DepthStencilState* _pState)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+// ★ 드로우콜 — "지금 바인딩된 상태로 정점 N개를 그려라"는 GPU 명령의 발사 버튼.
+// - 여기까지가 렌더링 파이프라인(IA→VS→RS→PS→OM)의 진입점이다. 이후는 전부 GPU가 처리한다.
 void GraphicContext::Draw(_u32 _vertexCount, _u32 _startVertex)
 {
 	apiCallCount_ += 1;

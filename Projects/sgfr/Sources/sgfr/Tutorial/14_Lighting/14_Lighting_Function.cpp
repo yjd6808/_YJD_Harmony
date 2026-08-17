@@ -15,9 +15,9 @@ using namespace jc;
 // 람버트 확산광 계산이 들어간 HLSL 셰이더 소스를 반환한다.
 //
 // [람버트 법칙 (Lambert's Cosine Law)]
-//  표면이 받는 빛의 양 = 법선과 빛 방향이 이루는 각도의 코사인.
-//  코사인은 내적(dot)으로 구한다! (01번 선형대수에서 배운 내적의 실전 활용)
-//  빛을 정면으로 받는 면은 밝고(cos 0도 = 1), 비스듬히 받는 면은 어둡다(cos 90도 = 0).
+// 표면이 받는 빛의 양 = 법선과 빛 방향이 이루는 각도의 코사인.
+// 코사인은 내적(dot)으로 구한다! (01번 선형대수에서 배운 내적의 실전 활용)
+// 빛을 정면으로 받는 면은 밝고(cos 0도 = 1), 비스듬히 받는 면은 어둡다(cos 90도 = 0).
 const char* LambertShaderSource()
 {
 	return R"(
@@ -54,7 +54,7 @@ VSOutput VSMain(VSInput _input)
 
 	// 법선은 '방향'이므로 w = 0으로 변환한다. (이동 성분 무시)
 	// 주의: 비균등 스케일이 있으면 역전치 행렬이 필요하지만,
-	//       이 튜토리얼은 균등 스케일만 쓰므로 월드 행렬을 그대로 써도 된다.
+	// 이 튜토리얼은 균등 스케일만 쓰므로 월드 행렬을 그대로 써도 된다.
 	output.worldNormal = normalize(mul(float4(_input.normal, 0.0f), gWorld).xyz);
 	return output;
 }
@@ -116,10 +116,10 @@ void FillCubeWithNormals(VertexPNT* _pOutVertices24, _u32* _pOutIndices36)
 
 	// 6개 면: 법선과 그 면의 오른쪽/위 축을 지정한다.
 	// (바깥에서 봤을 때 시계 방향이 되도록 축 방향을 골랐다)
-	AddFace(vec3(0.0f, 0.0f, -1.0f), vec3(+1.0f, 0.0f, 0.0f), vec3(0.0f, +1.0f, 0.0f));	// 앞면   (z-)
-	AddFace(vec3(0.0f, 0.0f, +1.0f), vec3(-1.0f, 0.0f, 0.0f), vec3(0.0f, +1.0f, 0.0f));	// 뒷면   (z+)
-	AddFace(vec3(0.0f, +1.0f, 0.0f), vec3(+1.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, +1.0f));	// 윗면   (y+)
+	AddFace(vec3(0.0f, 0.0f, -1.0f), vec3(+1.0f, 0.0f, 0.0f), vec3(0.0f, +1.0f, 0.0f));	// 앞면 (z-)
+	AddFace(vec3(0.0f, 0.0f, +1.0f), vec3(-1.0f, 0.0f, 0.0f), vec3(0.0f, +1.0f, 0.0f));	// 뒷면 (z+)
+	AddFace(vec3(0.0f, +1.0f, 0.0f), vec3(+1.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, +1.0f));	// 윗면 (y+)
 	AddFace(vec3(0.0f, -1.0f, 0.0f), vec3(+1.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, -1.0f));	// 아랫면 (y-)
-	AddFace(vec3(-1.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, -1.0f), vec3(0.0f, +1.0f, 0.0f));	// 왼면   (x-)
+	AddFace(vec3(-1.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, -1.0f), vec3(0.0f, +1.0f, 0.0f));	// 왼면 (x-)
 	AddFace(vec3(+1.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, +1.0f), vec3(0.0f, +1.0f, 0.0f));	// 오른면 (x+)
 }

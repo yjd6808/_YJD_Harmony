@@ -16,8 +16,8 @@ using namespace jc;
 // [패스 1] 빛 시점에서 깊이만 기록하는 HLSL 셰이더 소스를 반환한다.
 //
 // [왜 깊이만 기록하나?]
-//  그림자 판정에 필요한 건 "빛이 각 방향으로 얼마나 멀리까지 닿는가" 뿐이다.
-//  색은 필요 없으므로 렌더 타깃(RTV) 없이 깊이 버퍼(DSV)만 묶어 그린다.
+// 그림자 판정에 필요한 건 "빛이 각 방향으로 얼마나 멀리까지 닿는가" 뿐이다.
+// 색은 필요 없으므로 렌더 타깃(RTV) 없이 깊이 버퍼(DSV)만 묶어 그린다.
 const char* ShadowDepthShaderSource()
 {
 	return R"(
@@ -59,9 +59,9 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 // [패스 2] 그림자 맵을 비교해 그늘진 곳을 어둡게 그리는 HLSL 셰이더 소스를 반환한다.
 //
 // [Before/After 분할]
-//  픽셀의 화면 x좌표(SV_POSITION)가 gSplitPixelX보다 왼쪽이면
-//  그림자 판정을 건너뛰어 "그림자 없는 세상(Before)"을 보여준다.
-//  오른쪽은 그림자 판정을 수행(After). 같은 장면에서 그림자의 유무만 비교된다!
+// 픽셀의 화면 x좌표(SV_POSITION)가 gSplitPixelX보다 왼쪽이면
+// 그림자 판정을 건너뛰어 "그림자 없는 세상(Before)"을 보여준다.
+// 오른쪽은 그림자 판정을 수행(After). 같은 장면에서 그림자의 유무만 비교된다!
 const char* ShadowSceneShaderSource()
 {
 	return R"(
@@ -212,11 +212,11 @@ void FillShadowCube(VertexPNT* _pOutVertices24, _u32* _pOutIndices36)
 		indexBase += 6;
 	};
 
-	AddFace(vec3(0.0f, 0.0f, -1.0f), vec3(0.0f, 1.0f, 0.0f), vec3(1.0f, 0.0f, 0.0f));		// 앞면   (-Z)
-	AddFace(vec3(0.0f, 0.0f, +1.0f), vec3(0.0f, 1.0f, 0.0f), vec3(-1.0f, 0.0f, 0.0f));	// 뒷면   (+Z)
-	AddFace(vec3(-1.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f), vec3(0.0f, 0.0f, -1.0f));	// 왼면   (-X)
+	AddFace(vec3(0.0f, 0.0f, -1.0f), vec3(0.0f, 1.0f, 0.0f), vec3(1.0f, 0.0f, 0.0f));		// 앞면 (-Z)
+	AddFace(vec3(0.0f, 0.0f, +1.0f), vec3(0.0f, 1.0f, 0.0f), vec3(-1.0f, 0.0f, 0.0f));	// 뒷면 (+Z)
+	AddFace(vec3(-1.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f), vec3(0.0f, 0.0f, -1.0f));	// 왼면 (-X)
 	AddFace(vec3(+1.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f), vec3(0.0f, 0.0f, +1.0f));	// 오른면 (+X)
-	AddFace(vec3(0.0f, +1.0f, 0.0f), vec3(0.0f, 0.0f, +1.0f), vec3(1.0f, 0.0f, 0.0f));	// 윗면   (+Y)
+	AddFace(vec3(0.0f, +1.0f, 0.0f), vec3(0.0f, 0.0f, +1.0f), vec3(1.0f, 0.0f, 0.0f));	// 윗면 (+Y)
 	AddFace(vec3(0.0f, -1.0f, 0.0f), vec3(0.0f, 0.0f, -1.0f), vec3(1.0f, 0.0f, 0.0f));	// 아랫면 (-Y)
 }
 

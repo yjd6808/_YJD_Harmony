@@ -5,23 +5,23 @@
  * 04. 디바이스와 스왑체인 (Device & SwapChain)
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. ID3D11Device        : GPU 리소스(버퍼/텍스처/셰이더)를 만드는 "공장"
- *  2. ID3D11DeviceContext : 만든 리소스로 그리기 명령을 내리는 "작업반장"
- *  3. IDXGISwapChain      : 백버퍼/프론트버퍼를 교체(Present)하는 "화면 전달자"
- *  4. 더블 버퍼링        : 왜 화면이 깜박이지 않고 부드럽게 보이는가
+ * 1. ID3D11Device: GPU 리소스(버퍼/텍스처/셰이더)를 만드는 "공장"
+ * 2. ID3D11DeviceContext: 만든 리소스로 그리기 명령을 내리는 "작업반장"
+ * 3. IDXGISwapChain: 백버퍼/프론트버퍼를 교체(Present)하는 "화면 전달자"
+ * 4. 더블 버퍼링: 왜 화면이 깜박이지 않고 부드럽게 보이는가
  *
  * [더블 버퍼링이란?]
- *  화면에 보이는 그림(프론트버퍼)과 지금 그리는 중인 그림(백버퍼)을 분리하고,
- *  다 그리면 둘을 한번에 교체한다. 그리는 과정이 단계별로 노출되지 않아
- *  깜박임/찢어짐(tearing)이 사라진다. 이 교체를 해주는 게 EndFrame()의 Present다.
+ * 화면에 보이는 그림(프론트버퍼)과 지금 그리는 중인 그림(백버퍼)을 분리하고,
+ * 다 그리면 둘을 한번에 교체한다. 그리는 과정이 단계별로 노출되지 않아
+ * 깜박임/찢어짐(tearing)이 사라진다. 이 교체를 해주는 게 EndFrame()의 Present다.
  *
  * [화면 지우기(Clear)는 왜 필요한가?]
- *  지난 프레임에 그린 그림이 백버퍼에 그대로 남아있기 때문에,
- *  매 프레임 시작 시 단색으로 밀어버리고 새로 그린다. (칠판 지우기)
+ * 지난 프레임에 그린 그림이 백버퍼에 그대로 남아있기 때문에,
+ * 매 프레임 시작 시 단색으로 밀어버리고 새로 그린다. (칠판 지우기)
  *
  * [조작법]
- *  - 그냥 바라보면 된다. 배경색이 무지개처럼 변한다.
- *  - ESC 또는 창 닫기로 종료한다.
+ * - 그냥 바라보면 된다. 배경색이 무지개처럼 변한다.
+ * - ESC 또는 창 닫기로 종료한다.
  */
 
 #include "Core.h"
@@ -45,12 +45,12 @@ void DeviceAndSwapChain_Main()
 	window.ConnectInput(&input);
 
 	// 2. 그래픽 디바이스 초기화
-	//    GraphicDevice::Initialize 내부에서 일어나는 일:
-	//    (1) D3D11CreateDeviceAndSwapChain : Device + Context + SwapChain 한번에 생성
-	//    (2) 백버퍼에 대한 RenderTargetView 생성 ("여기에 그려라"는 표시)
-	//    (3) 깊이 버퍼와 DepthStencilView 생성 (3D에서 앞뒤 판정용)
-	//    (4) 블렌드/깊이/래스터라이저/샘플러 상태 객체 생성
-	//    (5) 뷰포트 설정 (NDC -> 화면 픽셀 좌표 매핑 영역)
+	// GraphicDevice::Initialize 내부에서 일어나는 일:
+	// (1) D3D11CreateDeviceAndSwapChain: Device + Context + SwapChain 한번에 생성
+	// (2) 백버퍼에 대한 RenderTargetView 생성 ("여기에 그려라"는 표시)
+	// (3) 깊이 버퍼와 DepthStencilView 생성 (3D에서 앞뒤 판정용)
+	// (4) 블렌드/깊이/래스터라이저/샘플러 상태 객체 생성
+	// (5) 뷰포트 설정 (NDC -> 화면 픽셀 좌표 매핑 영역)
 	GraphicDevice device;
 	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
 	{

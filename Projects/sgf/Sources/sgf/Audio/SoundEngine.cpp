@@ -1,14 +1,14 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 1:00:00 AM
  * =====================
  * 사운드 엔진 구현부 (XAudio2)
  *
  * [전체 흐름]
- *  Initialize : XAudio2 엔진 + 마스터보이스 생성
- *  Play2d     : WAV 로딩(캐시) -> 빈 슬롯에 SourceVoice 생성 -> 버퍼 제출 -> 재생
- *  Update     : 매 프레임 끝난 재생기 회수 (Application이 호출)
- *  Finalize   : 모두 정지 후 역순 해제
+ * Initialize: XAudio2 엔진 + 마스터보이스 생성
+ * Play2d: WAV 로딩(캐시) -> 빈 슬롯에 SourceVoice 생성 -> 버퍼 제출 -> 재생
+ * Update: 매 프레임 끝난 재생기 회수 (Application이 호출)
+ * Finalize: 모두 정지 후 역순 해제
  */
 
 #include "Core.h"
@@ -198,8 +198,8 @@ void SoundEngine::releaseSlot(VoiceSlot& _slot)
 //////////////////////////////////////////////////////////////////////////////////////////
 // WAV 파일을 읽어 캐시에서 찾거나 새로 올린다.
 // [WAV 파일 구조 = RIFF 컸테이너]
-//  파일 맨 앞에 RIFF/WAVE 표시가 있고, 그 뒤로 (청크 ID 4바이트 + 크기 4바이트 + 본문)이
-//  반복된다. 우리에게 필요한 것은 fmt 청크(파형 설명서)와 data 청크(실제 소리)뿐이다.
+// 파일 맨 앞에 RIFF/WAVE 표시가 있고, 그 뒤로 (청크 ID 4바이트 + 크기 4바이트 + 본문)이
+// 반복된다. 우리에게 필요한 것은 fmt 청크(파형 설명서)와 data 청크(실제 소리)뿐이다.
 // [파일 IO는 jc 라이브러리 사용 - std:: 금지 규칙]
 SoundEngine::WavData* SoundEngine::loadWav(const jc::String& _path)
 {

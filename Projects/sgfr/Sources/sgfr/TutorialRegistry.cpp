@@ -1,7 +1,7 @@
 /*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 9:00:00 AM
- * 수정일: 8/9/2026 6:30:00 PM - v3 개편: 튜토리얼 재배치 + 신규 9종 추가 (총 31개)
+ * 수정일: 8/9/2026 6:30:00 PM - 개편: 튜토리얼 재배치 + 신규 9종 추가 (총 31개)
  * =====================
  * 튜토리얼 목록 정의
  * 이 파일의 배열 순서가 곧 콘솔 목차 번호다. (1번부터 순서대로 학습 권장)
@@ -41,6 +41,7 @@
 #include "sgfr/Tutorial/29_SceneGraph/29_SceneGraph_Main.h"
 #include "sgfr/Tutorial/30_SpriteAnimation/30_SpriteAnimation_Main.h"
 #include "sgfr/Tutorial/31_PipelineJourney/31_PipelineJourney_Main.h"
+#include "sgfr/Tutorial/32_PrimitiveMesh/32_PrimitiveMesh_Main.h"
 
 // 튜토리얼 목록 (번호 순서 = 학습 순서)
 namespace sgfr
@@ -79,6 +80,7 @@ static const TutorialEntry s_Tutorials[] =
 	{ "씬 & 사운드 (Application/Director/SoundEngine)", SceneGraph_Main },
 	{ "스프라이트 애니메이션 (시트/트위닝)",        SpriteAnimation_Main },
 	{ "파이프라인 여행 (수도 코드 §1~§20 캡스톤)",  PipelineJourney_Main },
+	{ "프리미티브 메시 (리소스 매니저 2D/3D)",      PrimitiveMesh_Main },
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////

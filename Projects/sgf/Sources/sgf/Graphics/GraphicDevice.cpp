@@ -1,7 +1,7 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/4/2026 10:40:00 PM
- * 수정일: 8/9/2026 1:00:00 AM (v2: 파사드로 재구성)
+ * 수정일: 8/9/2026 1:00:00 AM (파사드로 재구성)
  * =====================
  * D3D11 그래픽 디바이스 (파사드) 구현부
  */
@@ -34,9 +34,9 @@ GraphicDevice::~GraphicDevice()
 //////////////////////////////////////////////////////////////////////////////////////////
 // D3D11 초기화 전체 진행
 // [순서가 중요하다]
-//  1. 디바이스+스왑체인 -> 2. 깊이버퍼 -> 3. 상태 캐시 -> 4. 뷰포트/기본상태.
-//  앞 단계 산출물이 뒤 단계 입력이 된다.
-// [v2.1] 디바이스/컨텍스트와 상태 캐시만 초기화한다. (표면 없음)
+// 1. 디바이스+스왑체인 -> 2. 깊이버퍼 -> 3. 상태 캐시 -> 4. 뷰포트/기본상태.
+// 앞 단계 산출물이 뒤 단계 입력이 된다.
+// 디바이스/컨텍스트와 상태 캐시만 초기화한다. (표면 없음)
 // 멀티 윈도우 경로: 이후 각 Window::CreateSurface가 자기 표면을 만든다.
 bool GraphicDevice::Initialize()
 {
@@ -46,7 +46,7 @@ bool GraphicDevice::Initialize()
 	// 2. 상태 객체 캐시 준비
 	if (!states_.Initialize(pDevice_.Get())) { return false; }
 
-	// 2-1. [v3] 그리기 명령 창구 준비
+	// 2-1. 그리기 명령 창구 준비
 	if (!context_.Initialize(this)) { return false; }
 
 	// 3. 기본 상태 적용 (샘플러 슬롯0, 솔리드+백컬링)
@@ -55,6 +55,7 @@ bool GraphicDevice::Initialize()
 	};
 	pContext_->PSSetSamplers(0, 1, pSamplers);
 	ApplyRasterizerState();
+	_LogInfo_("[sgf] GraphicDevice::Initialize OK — 디바이스/컨텍스트/상태 준비");
 	return true;
 }
 
@@ -73,7 +74,7 @@ bool GraphicDevice::Initialize(HWND _hWnd, _s32 _width, _s32 _height)
 	// 3. 상태 객체 캐시 준비 (자주 쓰는 상태는 미리 생성)
 	if (!states_.Initialize(pDevice_.Get())) { return false; }
 
-	// 3-1. [v3] 그리기 명령 창구 준비
+	// 3-1. 그리기 명령 창구 준비
 	if (!context_.Initialize(this)) { return false; }
 
 	// 4. 뷰포트 + 기본 상태 적용 (샘플러 슬롯0, 솔리드+백컬링)
@@ -84,6 +85,7 @@ bool GraphicDevice::Initialize(HWND _hWnd, _s32 _width, _s32 _height)
 	};
 	pContext_->PSSetSamplers(0, 1, pSamplers);
 	ApplyRasterizerState();
+	_LogInfo_("[sgf] GraphicDevice::Initialize OK — 디바이스/스왑체인/상태 준비");
 	return true;
 }
 
@@ -162,12 +164,12 @@ bool GraphicDevice::CreateDeviceAndSwapChain(HWND _hWnd)
 	if (FAILED(hr)) { return false; }
 
 	// 스왑체인 소유권 이관. (SwapChain::Initialize가 Attach 방식이므로
-	//  여기서 따로 Release하지 않는다. 이제 해제 책임은 SwapChain에 있다)
+	// 여기서 따로 Release하지 않는다. 이제 해제 책임은 SwapChain에 있다)
 	return swapChain_.Initialize(pRawSwapChain, pDevice_.Get(), width_, height_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// [v2.1] 디바이스만 생성한다. (스왕체인 없음 - 표면은 각 Window가 만든다)
+// 디바이스만 생성한다. (스왕체인 없음 - 표면은 각 Window가 만든다)
 bool GraphicDevice::CreateDeviceOnly()
 {
 	UINT createFlags = 0;
@@ -200,11 +202,11 @@ bool GraphicDevice::CreateDeviceOnly()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// [v2.1] 지정 창용 스왕체인을 만들어준다. (Window::CreateSurface가 호출)
+// 지정 창용 스왕체인을 만들어준다. (Window::CreateSurface가 호출)
 // [DXGI 팩토리 역추적이란?]
-//  스왕체인은 "디바이스를 만든 팩토리"로 만들어야 궁합이 맞는다.
-//  ID3D11Device -> IDXGIDevice -> IDXGIAdapter -> IDXGIFactory 순으로
-//  부모를 타고 올라가면 그 팩토리를 얻을 수 있다.
+// 스왕체인은 "디바이스를 만든 팩토리"로 만들어야 궁합이 맞는다.
+// ID3D11Device -> IDXGIDevice -> IDXGIAdapter -> IDXGIFactory 순으로
+// 부모를 타고 올라가면 그 팩토리를 얻을 수 있다.
 bool GraphicDevice::CreateSwapChainForWindow(HWND _hWnd, _s32 _width, _s32 _height, IDXGISwapChain** _ppOutSwapChain)
 {
 	if (pDevice_ == nullptr || _ppOutSwapChain == nullptr)
@@ -257,7 +259,10 @@ using namespace jc;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 프레임 시작: 그리기 대상을 백버퍼로 묶고 화면을 지운다.
-// [v2.1] 지정 윈도우의 표면을 그리기 대상으로 묶고 지운다.
+// 지정 윈도우의 표면을 그리기 대상으로 묶고 지운다.
+// ★ 왜 필요한가: "그릴 종이(백버퍼)를 펴고, 이전 프레임의 그림을 지우는" 일을 매 프레임 가장 먼저 한다.
+// - 백버퍼(BackBuffer): 화면에 보이기 전에 그림을 그리는 숨은 도화지. 여기에 그려야 화면이 깜빡이지 않는다.
+// - 중간에 렌더 타깃(화면 밖 도화지)으로 바꿨다가도, 매 프레임 여기로 복귀해 화면 그리기를 시작한다.
 void GraphicDevice::BeginFrame(Window* _pWindow, const color& _clearColor)
 {
 	jc_assert(_pWindow != nullptr && _pWindow->HasSurface());
@@ -274,13 +279,15 @@ void GraphicDevice::BeginFrame(Window* _pWindow, const color& _clearColor)
 	BindWindowSurface(_pWindow);
 
 	// 배경색으로 지우고 깊이를 1.0(가장 멀리)으로 초기화한다.
-	const _f32 clearColor[4] = { _clearColor.r, _clearColor.g, _clearColor.b, _clearColor.a };
+	const _f32 clearColor[4] = { _clearColor.Rf(), _clearColor.Gf(), _clearColor.Bf(), _clearColor.Af() };
 	pContext_->ClearRenderTargetView(swapChain.RTV(), clearColor);
 	depthSurface.Clear(pContext_.Get());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// [v2.1] 지정 윈도우의 백버퍼를 화면에 표시한다.
+// 지정 윈도우의 백버퍼를 화면에 표시한다.
+// ★ 왜 필요한가: 숨은 도화지(백버퍼)를 화면으로 올리는 "무대 교대(Present)" — 여기서야 화면에 보인다.
+// - _vsync(수직 동기화) = true면 화면 갱신 주기(보통 60Hz)에 맞춰 대기한다. 화면 찢김(테어링)을 막아준다.
 void GraphicDevice::EndFrame(Window* _pWindow, bool _vsync)
 {
 	jc_assert(_pWindow != nullptr && _pWindow->HasSurface());
@@ -302,7 +309,7 @@ void GraphicDevice::BeginFrame(const color& _clearColor)
 	BindBackBufferSurface();
 
 	// 이전 프레임의 그림을 배경색으로 지운다.
-	const _f32 clearColor[4] = { _clearColor.r, _clearColor.g, _clearColor.b, _clearColor.a };
+	const _f32 clearColor[4] = { _clearColor.Rf(), _clearColor.Gf(), _clearColor.Bf(), _clearColor.Af() };
 	pContext_->ClearRenderTargetView(swapChain_.RTV(), clearColor);
 
 	// 깊이 버퍼는 "가장 멀다(1.0)"로 초기화한다.
@@ -406,7 +413,7 @@ void GraphicDevice::SetRenderTarget(RenderTarget* _pTarget)
 
 	if (_pTarget == nullptr)
 	{
-		// v2.1: BeginFrame(Window*)로 그리던 중이면 "그 창의 표면"으로 복귀한다.
+		// BeginFrame(Window*)로 그리던 중이면 "그 창의 표면"으로 복귀한다.
 		if (pBoundWindow_ != nullptr)
 		{
 			BindWindowSurface(pBoundWindow_);

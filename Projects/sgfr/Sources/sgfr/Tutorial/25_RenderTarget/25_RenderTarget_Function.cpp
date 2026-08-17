@@ -34,7 +34,7 @@ void PrintRenderTargetExplanation()
 // NDC 좌표기준 텍스처 출력용 사각형 정점 4개를 채운다. (UV 0~1, 흰색)
 void FillScreenQuad(VertexPTC* _pOutVertices4, const vec2& _center, const vec2& _halfSize)
 {
-	const color white = color::White();
+	const color white = color::WHITE;
 
 	// 왕위 -> 오른위 -> 왼아래 -> 오른아래 (인덱스 0,1,2 / 2,1,3과 짝)
 	_pOutVertices4[0] = { vec3(_center.x - _halfSize.x, _center.y + _halfSize.y, 0.0f), vec2(0.0f, 0.0f), white };

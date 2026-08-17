@@ -5,17 +5,17 @@
  * 28. 입력 처리 (Input) - 폴링 vs 이벤트, 마우스로 그리기
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. 폴링 방식: IsKeyDown / MouseX / MouseY 로 매 프레임 상태 읽기
- *  2. 이벤트 방식: onMousePressed / onKeyPressed / onMouseWheel 구독하기
- *  3. 픽셀 좌표 -> NDC 좌표 변환 (마우스로 화면에 그리는 핵심!)
- *  4. 동적 정점 버퍼로 매 프레임 다른 도형 그리기
+ * 1. 폴링 방식: IsKeyDown / MouseX / MouseY 로 매 프레임 상태 읽기
+ * 2. 이벤트 방식: onMousePressed / onKeyPressed / onMouseWheel 구독하기
+ * 3. 픽셀 좌표 -> NDC 좌표 변환 (마우스로 화면에 그리는 핵심!)
+ * 4. 동적 정점 버퍼로 매 프레임 다른 도형 그리기
  *
  * [동작]
- *  - 마우스 커서를 따라다니는 사각형이 그려진다. (폴링)
- *  - 왼클릭 유지: 빨강 / 오른클릭 유지: 파랑 (폴링)
- *  - 휠: 사각형 크기 조절 (이벤트)
- *  - 아무 키나 누르면 콘솔에 키 코드 출력 (이벤트)
- *  - ESC로 종료.
+ * - 마우스 커서를 따라다니는 사각형이 그려진다. (폴링)
+ * - 왼클릭 유지: 빨강 / 오른클릭 유지: 파랑 (폴링)
+ * - 휠: 사각형 크기 조절 (이벤트)
+ * - 아무 키나 누르면 콘솔에 키 코드 출력 (이벤트)
+ * - ESC로 종료.
  */
 
 #include "Core.h"
@@ -50,7 +50,7 @@ void Input_Main()
 	}
 
 	// 2. 이벤트 방식 구독 (jc::Event::Register(id, 함수))
-	//    람다 캡처로 바깥 변수를 수정할 수 있다.
+	// 람다 캡처로 바깥 변수를 수정할 수 있다.
 	_f32 halfSize = 0.08f;		// 사각형 반폭 (NDC 단위)
 
 	// 휠 이벤트: 굴리는 순간마다 크기를 바꾼다.
@@ -116,14 +116,14 @@ void Input_Main()
 		const vec2 center = PixelToNdc(input.MouseX(), input.MouseY(), window.Width(), window.Height());
 
 		// 버튼 상태에 따른 색상 (누르고 있는 동안 계속 유지 = 폴링의 특징)
-		color tintColor = color(0.9f, 0.9f, 0.9f, 1.0f);			// 기본: 흰색
+		color tintColor = color(0xE6, 0xE6, 0xE6, 0xFF);			// 기본: 흰색
 		if (input.IsMouseDown(MouseButton::Left))
 		{
-			tintColor = color(0.95f, 0.3f, 0.3f, 1.0f);				// 왼클릭: 빨강
+			tintColor = color(0xF2, 0x4D, 0x4D, 0xFF);				// 왼클릭: 빨강
 		}
 		else if (input.IsMouseDown(MouseButton::Right))
 		{
-			tintColor = color(0.3f, 0.5f, 0.95f, 1.0f);				// 오른클릭: 파랑
+			tintColor = color(0x4D, 0x80, 0xF2, 0xFF);				// 오른클릭: 파랑
 		}
 
 		input.NextFrame();	// 이번 프레임 입력 확정 (Pressed/Released 계산용)
@@ -137,7 +137,7 @@ void Input_Main()
 		vertices[3] = { vec3(center.x + halfSize, center.y - halfSize * aspect, 0.0f), tintColor };
 		vb.Update(&device, vertices, 4);
 
-		device.BeginFrame(color(0.08f, 0.08f, 0.12f, 1.0f));
+		device.BeginFrame(color(0x14, 0x14, 0x1F, 0xFF));
 
 		vb.Bind(&device);
 		ib.Bind(&device);

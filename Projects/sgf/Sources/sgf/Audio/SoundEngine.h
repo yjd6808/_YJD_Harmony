@@ -1,22 +1,22 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 1:00:00 AM
  * =====================
  * 사운드 엔진 (Cocos2d-x AudioEngine 구조 참고, XAudio2 기반)
  *
  * [구조 - Cocos2d-x AudioEngine과의 대응]
- *  cocos2d::AudioEngine::play2d(path, loop, volume) -> g_cSound.Play2d(path, loop, volume)
- *  재생마다 고유 번호(audioId)를 돌려주고, 그 번호로 정지/일시정지/볼륨을 제어한다.
+ * cocos2d::AudioEngine::play2d(path, loop, volume) -> g_cSound.Play2d(path, loop, volume)
+ * 재생마다 고유 번호(audioId)를 돌려주고, 그 번호로 정지/일시정지/볼륨을 제어한다.
  *
  * [XAudio2란?]
- *  Windows의 저수준 오디오 API. 구성은 세 층이다.
- *  1. IXAudio2            : 엔진 본체 (믹서 스레드를 내부에서 돌린다)
- *  2. MasteringVoice      : 최종 출력(스피커)으로 나가는 관문
- *  3. SourceVoice         : 사운드 하나를 재생하는 재생기 (동시에 여러 개 가능)
- *  PCM 데이터(압축 안 된 파형 숫자 배열)를 SourceVoice에 제출(Submit)하면 소리가 난다.
+ * Windows의 저수준 오디오 API. 구성은 세 층이다.
+ * 1. IXAudio2: 엔진 본체 (믹서 스레드를 내부에서 돌린다)
+ * 2. MasteringVoice: 최종 출력(스피커)으로 나가는 관문
+ * 3. SourceVoice: 사운드 하나를 재생하는 재생기 (동시에 여러 개 가능)
+ * PCM 데이터(압축 안 된 파형 숫자 배열)를 SourceVoice에 제출(Submit)하면 소리가 난다.
  *
  * [파일 IO는 jc 라이브러리 사용]
- *  WAV 파일 로딩은 jc::FileStream으로 읽는다. (std:: 사용 금지 규칙)
+ * WAV 파일 로딩은 jc::FileStream으로 읽는다. (std:: 사용 금지 규칙)
  */
 
 #pragma once
@@ -54,16 +54,16 @@ public:
 	void Update();
 
 	// WAV 파일을 재생한다. (Cocos2d-x의 AudioEngine::play2d와 같은 역할)
-	// @param _path   : WAV 파일 경로 (처음 재생 시 자동으로 캐시에 올라간다)
-	// @param _loop  : true면 무한 반복
-	// @param _volume : 0.0(무음) ~ 1.0(원음) ~ 2.0(증폭)
+	// @param _path: WAV 파일 경로 (처음 재생 시 자동으로 캐시에 올라간다)
+	// @param _loop: true면 무한 반복
+	// @param _volume: 0.0(무음) ~ 1.0(원음) ~ 2.0(증폭)
 	// @return 재생 제어용 audioId. 실패하면 INVALID_AUDIO_ID.
 	_s32 Play2d(const jc::String& _path, bool _loop = false, _f32 _volume = 1.0f);
 
 	// 사인파 톤을 즉석에서 만들어 재생한다. (파일 없이 효과음을 낼 때 - 튜토리얼용)
-	// @param _frequency    : 주파수(Hz). 440 = "라"음. 높을수록 높은 음.
-	// @param _milliseconds : 재생 길이 (밀리초)
-	// @param _volume       : 볼륨
+	// @param _frequency: 주파수(Hz). 440 = "라"음. 높을수록 높은 음.
+	// @param _milliseconds: 재생 길이 (밀리초)
+	// @param _volume: 볼륨
 	_s32 PlayTone(_s32 _frequency, _s32 _milliseconds, _f32 _volume = 1.0f);
 
 	// 특정 소리 정지 / 모두 정지

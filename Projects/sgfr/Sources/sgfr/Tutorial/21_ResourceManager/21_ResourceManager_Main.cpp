@@ -5,18 +5,18 @@
  * 21. 리소스 매니저 (ResourceMgr)
  *
  * [이 튜토리얼에서 배우는 것]
- *  1. 모든 공유 리소스(IResource)는 _u64 키로 등록/검색/제거한다
- *  2. 키는 jc의 Provider<AutoIncrementLinkedList<_u64>>가 발급 - 반납된 키는 재사용(LIFO)
- *  3. 경로 별칭(path)으로 같은 파일의 중복 로드를 막는다
- *  4. Initialize에서 디폴트 리소스 7종이 자동 준비되고, Finalize에서 일괄 소멸된다
+ * 1. 모든 공유 리소스(IResource)는 _u64 키로 등록/검색/제거한다
+ * 2. 키는 jc의 Provider<IdProviderReuse<_u64>>가 발급 - 반납된 키는 재사용(LIFO)
+ * 3. 경로 별칭(path)으로 같은 파일의 중복 로드를 막는다
+ * 4. Initialize에서 디폴트 리소스 7종이 자동 준비되고, Finalize에서 일괄 소멸된다
  *
  * [Before/After 비교]
- *  - Before(v2): 텍스처/셰이더를 각 튜토리얼이 지역 변수로 들고 직접 수명 관리
- *  - After (v3): 매니저에 Add하면 소유권이 넘어가고, 이후는 키로만 참조한다
- *                ("소유자 = 수명 결정자" 원칙)
+ * - Before: 텍스처/셰이더를 각 튜토리얼이 지역 변수로 들고 직접 수명 관리
+ * - After: 매니저에 Add하면 소유권이 넘어가고, 이후는 키로만 참조한다
+ * ("소유자 = 수명 결정자" 원칙)
  *
  * [참고] 디폴트 리소스 키는 Remove가 금지되어 있다. (jc_assert 발동)
- *        디폴트는 매니저 Finalize에서만 소멸된다.
+ * 디폴트는 매니저 Finalize에서만 소멸된다.
  */
 
 #include "Core.h"
@@ -65,7 +65,7 @@ void ResourceManager_Main()
 	}
 
 	// 2. 매니저 초기화 - 이 순간 디폴트 리소스 7종이 자동 등록된다.
-	//    (2D/3D 버텍스/픽셀 셰이더 4종 + 1x1 흰색 텍스처 + 2D/3D 디폴트 머티리얼)
+	// (2D/3D 버텍스/픽셀 셰이더 4종 + 1x1 흰색 텍스처 + 2D/3D 디폴트 머티리얼)
 	if (!g_cResourceMgr.Initialize(&device))
 	{
 		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
@@ -123,7 +123,7 @@ void ResourceManager_Main()
 	}
 
 	// 4. 키 재사용 관찰: Remove된 키는 freeList로 돌아가 다음 Add에서 재사용된다(LIFO).
-	jc::Console::WriteLine("\n--- 3. 키 재사용 (AutoIncrementLinkedList) ---");
+	jc::Console::WriteLine("\n--- 3. 키 재사용 (IdProviderReuse) ---");
 	jc::Console::Write("빨간 텍스처 제거 (키 %llu 반납)\n", redKey);
 	g_cResourceMgr.Remove(redKey);	// 이 순간 pRed는 소멸된다! (소유자 = 수명 결정자)
 
