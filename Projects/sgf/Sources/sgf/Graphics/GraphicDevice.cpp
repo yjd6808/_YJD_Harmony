@@ -267,6 +267,10 @@ void GraphicDevice::BeginFrame(Window* _pWindow, const color& _clearColor)
 {
 	jc_assert(_pWindow != nullptr && _pWindow->HasSurface());
 
+	// 이전 프레임 동안 캐시와 실제 상태가 어긋났을 수 있으므로 캐시를 비운다.
+	// (모든 상태 변경이 캐시 경유라도, 튜토리얼 등 외부 코드가 컨텍스트를 직접 건드릴 수 있음)
+	context_.InvalidateCache();
+
 	// 현재 묶인 창을 기억해둔다. (SetRenderTarget(nullptr) 복귀용)
 	pBoundWindow_ = _pWindow;
 	width_ = _pWindow->Width();
@@ -304,6 +308,9 @@ void GraphicDevice::EndFrame(Window* _pWindow, bool _vsync)
 // [하위 호환] 단일 창 경로: 내장 백버퍼로 묶고 지운다.
 void GraphicDevice::BeginFrame(const color& _clearColor)
 {
+	// 이전 프레임 동안 캐시와 실제 상태가 어긋났을 수 있으므로 캐시를 비운다.
+	context_.InvalidateCache();
+
 	// 그리기 대상을 "백버퍼 + 기본 깊이버퍼"로 묶는다.
 	// (중간에 렌더 타깃으로 바꿨다가 돌아오지 않은 경우를 대비해 매 프레임 재설정)
 	BindBackBufferSurface();
@@ -333,24 +340,25 @@ void GraphicDevice::SetAlphaBlending(bool _enable)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 깊이 테스트 켜기/끄기
+// ★ 캐시 규칙: 모든 상태 변경은 GraphicContext(바인딩 캐시)를 경유해야 한다.
+// 직접 OMSet*를 호출하면 캐시와 실제 상태가 어긋나 Material::Bind의 스킵 판정이 틀어진다.
 void GraphicDevice::SetDepthTest(bool _enable)
 {
-	pContext_->OMSetDepthStencilState(states_.GetDepthState(_enable), 0);
+	context_.SetDepthStencilStateRaw(states_.GetDepthState(_enable));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 블렌드 모드 설정 (상태 객체는 RenderStates가 캐싱)
 void GraphicDevice::SetBlendMode(BlendMode _mode)
 {
-	pContext_->OMSetBlendState(states_.GetBlendState(_mode), nullptr, 0xFFFFFFFF);
+	context_.SetBlendStateRaw(states_.GetBlendState(_mode));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 샘플러 설정
 void GraphicDevice::SetSampler(SamplerFilter _filter, SamplerAddress _address, UINT _slot)
 {
-	ID3D11SamplerState* pSamplers[] = { states_.GetSamplerState(_filter, _address) };
-	pContext_->PSSetSamplers(_slot, 1, pSamplers);
+	context_.SetSamplerRaw(ShaderStage::ssPixel, _slot, states_.GetSamplerState(_filter, _address));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -379,7 +387,7 @@ void GraphicDevice::SetCullMode(CullMode _mode)
 // 현재 와이어프레임/컬링 설정을 합쳤을 때의 래스터라이저 상태를 적용한다.
 void GraphicDevice::ApplyRasterizerState()
 {
-	pContext_->RSSetState(states_.GetRasterizerState(wireframe_, cullMode_));
+	context_.SetRasterizerStateRaw(states_.GetRasterizerState(wireframe_, cullMode_));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

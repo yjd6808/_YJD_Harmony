@@ -28,7 +28,7 @@ void PrintVectorVsRasterExplanation()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 예제 SVG 파일(sample.svg, 실행 팩더 기준)이 없으면 생성해준다.
+// 예제 SVG 파일(sample.svg, 실행 폴더 기준)이 없으면 생성해준다.
 // 반환값: 파일이 존재하거나 생성에 성공하면 true
 bool EnsureSampleSvgFile(const char* _szFilePath)
 {

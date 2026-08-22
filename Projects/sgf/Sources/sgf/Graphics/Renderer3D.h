@@ -97,7 +97,8 @@ public:
 	// 모아둔 걸 즉시 그린다. (버퍼가 가득 찼을 때도 자동 호출)
 	virtual void Flush() override;
 
-	// === 프레임/메시 파이프라인 (— 기존 SceneRenderer 기능 흡수) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 프레임/메시 파이프라인 (— 기존 SceneRenderer 기능 흡수)
 	// 프레임 공통 상수를 갱신하고 b0에 장착한다. (프레임당 1회 호출)
 	void BeginScene(const FrameConstants& _frame);
 	// 잔여 배치 플러시 + 배치 종료
@@ -107,8 +108,8 @@ public:
 	// 포인터로 직접 그리기 (ResourceMgr를 거치지 않는 경우용)
 	void Draw(Mesh* _pMesh, Material* _pMaterial, const mat4& _world);
 
-	// === 삼각형 배치 ===
-
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 삼각형 배치
 	// 삼각형 하나를 배치에 추가한다. (정점은 시계 반대 방향 = 앞면)
 	void DrawTriangle(const vec3& _p0, const vec3& _p1, const vec3& _p2, const color& _color);
 
@@ -118,8 +119,8 @@ public:
 	// @param _size: 가로/세로/깊이 길이
 	void DrawCube(const vec3& _center, const vec3& _size, const color& _color);
 
-	// === 선 배치 ===
-
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 선 배치
 	// 3D 선분 하나를 배치에 추가한다.
 	void DrawLine3D(const vec3& _from, const vec3& _to, const color& _color);
 
@@ -132,7 +133,8 @@ public:
 	void DrawAxis(_f32 _length);
 
 protected:
-	// === BatchRenderer 훅 구현 ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// BatchRenderer 훅 구현
 	virtual const char* ShaderSource() const override;
 	virtual const D3D11_INPUT_ELEMENT_DESC* VertexLayout(UINT* _outCount) const override;
 	virtual bool CreateBatchResources(GraphicDevice* _pDevice) override;
@@ -151,7 +153,8 @@ private:
 	jc::Vector<VertexPC> triangleVertices_;	// CPU측에 모아둔 삼각형 정점들
 	jc::Vector<VertexPC> lineVertices_;		// CPU측에 모아둔 선 정점들
 
-	// === 메시 파이프라인 (SceneRenderer에서 이전) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 메시 파이프라인 (SceneRenderer에서 이전)
 	ConstantBuffer<FrameConstants> frameCb_;	// b0 (프레임 공통 — 소유권 이전)
 	ConstantBuffer<ObjectConstants> objectCb_;	// b1 (오브젝트 — 소유권 이전)
 

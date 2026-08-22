@@ -21,6 +21,7 @@ Projects/*/Output/
 Projects/*/Intermediate/
 ThirdParty/Build/
 build/
+logs/
 
 Projects/*/Project/obj/
 임시*

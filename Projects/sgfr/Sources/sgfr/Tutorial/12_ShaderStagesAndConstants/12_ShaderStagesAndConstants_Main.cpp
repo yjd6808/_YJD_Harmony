@@ -12,7 +12,7 @@
  * [Before/After 비교]
  * - Before: 상수버퍼 슬롯을 튜토리얼마다 임의로 사용 (b0 하나에 전부 구겨넣기)
  * - After: b0(프레임)/b1(오브젝트) 역할 분리 → 갱신 주기가 다른 데이터를 분리해
- * 프레임당 Update 횟수를 최소화한다. (SceneRenderer가 이 규약의 완성형)
+ * 프레임당 Update 횟수를 최소화한다. (Renderer3D가 이 규약의 완성형)
  *
  * [조작법]
  * - ESC: 종료 (사각형 두 개가 서로 다른 주기로 춤춘다)
@@ -93,7 +93,7 @@ void ShaderStagesAndConstants_Main()
 {
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create(L"12. 셰이더 스테이지와 상수버퍼 (ESC 종료)", 800, 600))
+	if (!window.Create("12. 셰이더 스테이지와 상수버퍼 (ESC 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;

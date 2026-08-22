@@ -17,9 +17,9 @@ NS_SGF_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 // 생성자: 기본값 설정 (진한 회색 배경, 수직동기화 켜짐)
 Application::Application()
-	: clearColor_(0x1A, 0x1A, 0x1A)
-	, vsync_(true)
-	, initialized_(false)
+: clearColor_(0x1A, 0x1A, 0x1A)
+, vsync_(true)
+, initialized_(false)
 {
 }
 
@@ -38,7 +38,7 @@ Application::~Application()
 // 3. 창 표면 생성: 공장에서 이 창 전용 스왑체인/깊이버퍼를 만들어 창에 붙인다.
 // 4. 렌더러 초기화: 셰이더/버퍼 생성에 디바이스를 쓴다. (2D/3D 각각 전역 1개)
 // 즉, 뒤의 단계는 앞 단계의 결과물에 의존한다.
-bool Application::Initialize(const wchar_t* _szTitle, _s32 _width, _s32 _height)
+bool Application::Initialize(const jc::String& _title, _s32 _width, _s32 _height)
 {
 	if (initialized_)
 	{
@@ -47,10 +47,10 @@ bool Application::Initialize(const wchar_t* _szTitle, _s32 _width, _s32 _height)
 
 	// 0. g_c 매크로가 동작하도록 전역 포인터를 가장 먼저 연결한다.
 	__sSgfApplication = this;
-	_LogInfo_("[sgf] Application::Initialize 시작 (title=%s %dx%d)", jc::StringUtil::ToUtf8(_szTitle, -1).Source(), _width, _height);
+	_LogInfo_("[sgf] Application::Initialize 시작 (title=%s %dx%d)", _title.Source(), _width, _height);
 
 	// 1. 메인 윈도우 생성 + 입력 관리자 연결
-	if (!window_.Create(_szTitle, _width, _height))
+	if (!window_.Create(_title, _width, _height))
 	{
 		OutputDebugStringA("[sgf] 윈도우 생성 실패\n");
 		_LogError_("[sgf] Application::Initialize 실패 — 윈도우 생성");
@@ -156,12 +156,12 @@ bool Application::Initialize(const wchar_t* _szTitle, _s32 _width, _s32 _height)
 // 애플리케이션은 창을 여러 개 가질 수 있다. 각 창은 자기만의
 // 표면(스왑체인 + 깊이버퍼)을 갖고, 디바이스(공장)는 모두가 공유한다.
 // 반환된 창에 g_cDirector.RunScene(pScene, pWindow)로 씬을 올리면 된다.
-Window* Application::CreateSubWindow(const wchar_t* _szTitle, _s32 _width, _s32 _height)
+Window* Application::CreateSubWindow(const jc::String& _title, _s32 _width, _s32 _height)
 {
 	jc_assert_msg(initialized_, "Initialize 이후에만 서브 윈도우를 만들 수 있습니다");
 
 	Window* pWindow = new Window();
-	if (!pWindow->Create(_szTitle, _width, _height))
+	if (!pWindow->Create(_title, _width, _height))
 	{
 		OutputDebugStringA("[sgf] 서브 윈도우 생성 실패\n");
 		JC_DELETE_SAFE(pWindow);
@@ -305,13 +305,13 @@ void Application::Finalize()
 	}
 	subWindows_.Clear();
 
-	g_cSound.Finalize();			// 사운드 엔진 정리 (XAudio2 해제)
+	g_cSound.Finalize();		// 사운드 엔진 정리 (XAudio2 해제)
 	renderer3D_.Finalize();		// 3D 렌더러 리소스 해제
-	renderer_.Finalize();			// 2D 렌더러 리소스 해제
-	g_cResourceMgr.Finalize();		// 리소스 매니저 정리 (디폴트 리소스 포함 소멸)
-	window_.DestroySurface();		// 메인 창 표면 해제 (디바이스보다 먼저)
+	renderer_.Finalize();		// 2D 렌더러 리소스 해제
+	g_cResourceMgr.Finalize();	// 리소스 매니저 정리 (디폴트 리소스 포함 소멸)
+	window_.DestroySurface();	// 메인 창 표면 해제 (디바이스보다 먼저)
 	device_.Finalize();			// DX11 디바이스 해제
-	window_.Destroy();				// 메인 윈도우 파괴
+	window_.Destroy();			// 메인 윈도우 파괴
 
 	__sSgfApplication = nullptr;	// 전역 포인터 해제
 	_LogInfo_("[sgf] Application::Finalize 완료");

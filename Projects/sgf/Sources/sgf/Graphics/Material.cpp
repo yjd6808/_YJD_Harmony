@@ -40,12 +40,8 @@ bool Material::Initialize(GraphicDevice* _pDevice)
 {
 	pDevice_ = _pDevice;
 
-	// 디폴트 상태 조합
-	if (!rasterizer_.Initialize(_pDevice)) { return false; }
-	if (!blend_.Initialize(_pDevice)) { return false; }
-	if (!depth_.Initialize(_pDevice)) { return false; }
-	if (!sampler_.Initialize(_pDevice)) { return false; }
-
+	// 상태 객체는 생성하지 않는다 — 설정 키(디폴트)만 보관하고,
+	// Bind 시점에 RenderStates 풀에서 조회해 공유한다. (B-3)
 	if (!constantBuffer_.Create(_pDevice)) { return false; }
 	constantsDirty_ = true;
 	return true;
@@ -75,28 +71,36 @@ _u64 Material::GetTextureKey(_u32 _slot) const
 bool Material::SetRasterizer(CullMode _cull, FillMode _fill, FrontFace _frontFace)
 {
 	jc_assert_msg(pDevice_ != nullptr, "Initialize 이후에만 상태를 바꿀 수 있습니다.");
-	return rasterizer_.Initialize(pDevice_, _cull, _fill, _frontFace);
+	cullMode_ = _cull;
+	fillMode_ = _fill;
+	frontFace_ = _frontFace;
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 bool Material::SetBlend(BlendMode _mode)
 {
 	jc_assert_msg(pDevice_ != nullptr, "Initialize 이후에만 상태를 바꿀 수 있습니다.");
-	return blend_.Initialize(pDevice_, _mode);
+	blendMode_ = _mode;
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 bool Material::SetDepth(DepthMode _mode)
 {
 	jc_assert_msg(pDevice_ != nullptr, "Initialize 이후에만 상태를 바꿀 수 있습니다.");
-	return depth_.Initialize(pDevice_, _mode);
+	depthMode_ = _mode;
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 bool Material::SetSampler(FilterMode _filter, AddressMode _addressU, AddressMode _addressV)
 {
 	jc_assert_msg(pDevice_ != nullptr, "Initialize 이후에만 상태를 바꿀 수 있습니다.");
-	return sampler_.Initialize(pDevice_, _filter, _addressU, _addressV);
+	filter_ = _filter;
+	addrU_ = _addressU;
+	addrV_ = _addressV;
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -114,11 +118,13 @@ bool Material::Bind(GraphicContext& _context)
 	_context.SetVertexShader(pVs);
 	_context.SetPixelShader(pPs);
 
-	// 2. 파이프라인 상태
-	_context.SetRasterizerState(&rasterizer_);
-	_context.SetBlendState(&blend_);
-	_context.SetDepthStencilState(&depth_);
-	_context.SetSampler(ShaderStage::ssPixel, 0, &sampler_);
+	// 2. 파이프라인 상태 — RenderStates 풀에서 공유 객체를 조회해 Raw 바인딩 (B-3)
+	//    같은 설정의 재질 여러 개가 같은 D3D 포인터를 쓰므로 캐시 히트 → 재바인드 없음
+	RenderStates& states = pDevice_->States();
+	_context.SetBlendStateRaw(states.GetBlendState(blendMode_));
+	_context.SetDepthStencilStateRaw(states.GetDepthState(depthMode_));
+	_context.SetRasterizerStateRaw(states.GetRasterizerState(cullMode_, fillMode_, frontFace_));
+	_context.SetSamplerRaw(ShaderStage::ssPixel, 0, states.GetSamplerState(filter_, addrU_, addrV_));
 
 	// 3. 텍스처 (슬롯 0은 키가 없으면 디폴트 흰색 텍스처로 대체)
 	for (_u32 slot = 0; slot < GraphicContext::MAX_TEXTURE_SLOTS; ++slot)

@@ -28,6 +28,7 @@
 #pragma once
 
 #include "jc/Math.h"
+#include "jc/Primitives/String.h"
 #include "sgf/Graphics/SwapChain.h"
 #include "sgf/Graphics/DepthStencilSurface.h"
 
@@ -43,11 +44,11 @@ public:
 	~Window();
 
 	// 윈도우를 생성한다.
-	// @param _title: 창 제목표시줄에 보일 문자열
+	// @param _title: 창 제목표시줄에 보일 문자열 (UTF-8)
 	// @param _width: 클라이언트 영역(실제 그림이 그려지는 부분)의 가로 크기
 	// @param _height: 클라이언트 영역의 세로 크기
 	// @return 성공 여부
-	bool Create(const wchar_t* _title, _s32 _width, _s32 _height);
+	bool Create(const jc::String& _title, _s32 _width, _s32 _height);
 
 	// 밀린 메시지를 모두 처리한다. 매 프레임 시작 시 호출해야 한다.
 	// (PeekMessage는 "이 스레드의 모든 창" 메시지를 꺼내므로,
@@ -59,14 +60,14 @@ public:
 	void Destroy();
 
 	// 창 제목을 변경한다. (FPS 표시 등에 활용)
-	void SetTitle(const wchar_t* _title);
+	void SetTitle(const jc::String& _title);
 
 	// 입력 메시지를 전달받을 InputManager를 연결한다.
 	// 연결하면 WndProc에서 키/마우스 메시지를 InputManager에게 넘겨준다.
 	void ConnectInput(InputManager* _pInput) { pInput_ = _pInput; }
 
-	// === 윈도우별 그리기 표면 (스왕체인 + 깊이버퍼) ===
-
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 윈도우별 그리기 표면 (스왕체인 + 깊이버퍼)
 	// 이 윈도우 전용 스왕체인/깊이버퍼를 생성한다. (창 생성 후 1회)
 	// GraphicDevice::CreateSwapChainForWindow가 DXGI 팩토리로 스왕체인을 만들어준다.
 	bool CreateSurface(GraphicDevice* _pDevice);
@@ -105,7 +106,7 @@ private:
 	LRESULT WndProc(HWND _hWnd, UINT _msg, WPARAM _wParam, LPARAM _lParam);
 
 private:
-	HWND hWnd_;						// 윈도우 핸들 (OS가 발급한 창의 식별자)
+	HWND hWnd_;							// 윈도우 핸들 (OS가 발급한 창의 식별자)
 	_s32 width_;						// 클라이언트 영역 가로
 	_s32 height_;						// 클라이언트 영역 세로
 	bool closed_;						// 창이 닫혔는지 여부

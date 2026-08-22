@@ -103,6 +103,12 @@
     <Filter Include="01. Tutorial\32_프리미티브_메시">
       <UniqueIdentifier>{d19f3b2e-4c7a-4b2a-9f4d-6c8e2a7b5c11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Tutorial\33_프리미티브_셰이프">
+      <UniqueIdentifier>{e2a4c6d8-5f6a-4e3d-8c7b-9d1e3f5a7b22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Tutorial\34_GraphicsEnum_한눈에_비교">
+      <UniqueIdentifier>{150b47f5-cd8c-4e3f-afa0-bd149f0bbbe5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. Practice">
       <UniqueIdentifier>{915FB8D5-0E16-42EA-858F-3FDEC1BD589E}</UniqueIdentifier>
     </Filter>
@@ -170,6 +176,12 @@
     </ClCompile>
     <ClCompile Include="..\Sources\sgfr\Tutorial\32_PrimitiveMesh\32_PrimitiveMesh_Main.cpp">
       <Filter>01. Tutorial\32_프리미티브_메시</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\Tutorial\33_PrimitiveShape\33_PrimitiveShape_Main.cpp">
+      <Filter>01. Tutorial\33_프리미티브_셰이프</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\Tutorial\34_GraphicsEnum_한눈에_비교\34_GraphicsEnumDiff_Main.cpp">
+      <Filter>01. Tutorial\34_GraphicsEnum_한눈에_비교</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgfr\Tutorial\30_SpriteAnimation\30_SpriteAnimation_Function.cpp">
       <Filter>01. Tutorial\30_스프라이트_애니메이션</Filter>
@@ -350,6 +362,12 @@
     </ClInclude>
     <ClInclude Include="..\Sources\sgfr\Tutorial\32_PrimitiveMesh\32_PrimitiveMesh_Main.h">
       <Filter>01. Tutorial\32_프리미티브_메시</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\Tutorial\33_PrimitiveShape\33_PrimitiveShape_Main.h">
+      <Filter>01. Tutorial\33_프리미티브_셰이프</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\Tutorial\34_GraphicsEnum_한눈에_비교\34_GraphicsEnumDiff_Main.h">
+      <Filter>01. Tutorial\34_GraphicsEnum_한눈에_비교</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgfr\Tutorial\30_SpriteAnimation\30_SpriteAnimation_Function.h">
       <Filter>01. Tutorial\30_스프라이트_애니메이션</Filter>

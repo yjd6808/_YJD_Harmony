@@ -35,7 +35,7 @@ void DeviceAndSwapChain_Main()
 {
 	// 1. 윈도우 생성 (02번 튜토리얼과 동일)
 	Window window;
-	if (!window.Create(L"04. 디바이스와 스왑체인 (ESC로 종료)", 800, 600))
+	if (!window.Create("04. 디바이스와 스왑체인 (ESC로 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;

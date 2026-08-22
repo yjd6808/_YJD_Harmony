@@ -52,7 +52,7 @@ void PipelineJourney_Main()
 	_LogInfo_("[31] PipelineJourney 시작");
 	// [§1] 윈도우 초기화: window.init(1280, 720)
 	Window window;
-	if (!window.Create(L"31. 파이프라인 여행 (ESC 종료)", 1280, 720))
+	if (!window.Create("31. 파이프라인 여행 (ESC 종료)", 1280, 720))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
@@ -82,11 +82,11 @@ void PipelineJourney_Main()
 		return;
 	}
 
-	// [§13] 프레임 상수버퍼 + [§16~§19] 바인딩/드로우 도우미 = Renderer3D (SceneRenderer 통합)
+	// [§13] 프레임 상수버퍼 + [§16~§19] 바인딩/드로우 도우미 = Renderer3D (이전 이름 SceneRenderer 통합)
 	Renderer3D renderer;
 	if (!renderer.Initialize(&device))
 	{
-		jc::Console::WriteLine("씨 렌더러 초기화 실패!");
+		jc::Console::WriteLine("씬 렌더러 초기화 실패!");
 		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();

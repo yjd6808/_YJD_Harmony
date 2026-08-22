@@ -41,11 +41,11 @@ public:
 	// @return 성공 여부 (실패 시 컴파일 오류가 디버그 출력창에 출력됨)
 	bool CompileFromString(
 		GraphicDevice* _pDevice,
-		const char* _szSource,
+		const jc::String& _szSource,
 		const D3D11_INPUT_ELEMENT_DESC* _pLayoutDescs,
 		UINT _layoutCount,
-		const char* _szVsEntry = "VSMain",
-		const char* _szPsEntry = "PSMain");
+		const jc::String& _szVsEntry = "VSMain",
+		const jc::String& _szPsEntry = "PSMain");
 
 	// 이 셰이더를 파이프라인에 장착한다. 그리기 직전에 호출.
 	void Bind(GraphicDevice* _pDevice);
@@ -54,15 +54,15 @@ private:
 	// HLSL 문자열을 바이트코드로 컴파일하는 내부 헬퍼
 	// 실패 시 오류 메시지를 OutputDebugString으로 출력한다.
 	static bool CompileHlsl(
-		const char* _szSource,
-		const char* _szEntry,
-		const char* _szTarget,
+		const jc::String& _szSource,
+		const jc::String& _szEntry,
+		const jc::String& _szTarget,
 		SgfComPtr<ID3DBlob>& _outBlob);
 
 private:
 	SgfComPtr<ID3D11VertexShader> pVertexShader_;	// 정점 셰이더
-	SgfComPtr<ID3D11PixelShader> pPixelShader_;	// 픽셀 셰이더
-	SgfComPtr<ID3D11InputLayout> pInputLayout_;	// 정점 구조 설명서
+	SgfComPtr<ID3D11PixelShader> pPixelShader_;		// 픽셀 셰이더
+	SgfComPtr<ID3D11InputLayout> pInputLayout_;		// 정점 구조 설명서
 };
 
 NS_SGF_END

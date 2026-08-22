@@ -37,7 +37,7 @@ void VertexIndexBuffer_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create(L"07. 정점/인덱스 버퍼 - 사각형 (ESC로 종료)", 800, 600))
+	if (!window.Create("07. 정점/인덱스 버퍼 - 사각형 (ESC로 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;

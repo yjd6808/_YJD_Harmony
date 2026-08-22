@@ -52,7 +52,7 @@ namespace
 	};
 
 	// 창 제목에 표시할 효과 이름표 (gMode 값 순서와 일치)
-	const wchar_t* s_szEffectNames[] = { L"원본", L"그레이", L"세피아", L"색 반전", L"비네트", L"물결" };
+	const char* s_szEffectNames[] = { "원본", "그레이", "세피아", "색 반전", "비네트", "물결" };
 }
 
 // 포스트 프로세싱 튜토리얼을 실행한다. (좌: 원본 / 우: 효과, 이동형 경계 슬라이더)
@@ -62,7 +62,7 @@ void PostProcess_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create(L"26. 포스트 프로세싱 (0~5 효과, ←→ 경계, ESC 종료)", 800, 600))
+	if (!window.Create("26. 포스트 프로세싱 (0~5 효과, ←→ 경계, ESC 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
@@ -144,9 +144,7 @@ void PostProcess_Main()
 
 	auto UpdateTitle = [&]()
 	{
-		wchar_t szTitle[256];
-		swprintf_s(szTitle, L"26. 포스트 프로세싱 - 왼쪽: 원본 | 오른쪽: %s (경계 %d%%) (0~5, ←→, ESC)",
-			s_szEffectNames[effectMode], (_s32)(split * 100.0f));
+		jc::String szTitle = jc::StringUtil::Format("26. 포스트 프로세싱 - 왼쪽: 원본 | 오른쪽: %s (경계 %d%%) (0~5, ←→, ESC)", s_szEffectNames[effectMode], (_s32)(split * 100.0f));
 		window.SetTitle(szTitle);
 	};
 	UpdateTitle();

@@ -58,7 +58,7 @@ namespace
 			elapsed_ = 0.0f;
 
 			// 씬은 자신이 그려지는 창을 안다. (Director가 연결해준다)
-			GetWindow()->SetTitle(L"29. 태양계 씬 - SPACE: 씬 교체 / M: 서브 윈도우 (ESC로 종료)");
+			GetWindow()->SetTitle("29. 태양계 씬 - SPACE: 씬 교체 / M: 서브 윈도우 (ESC로 종료)");
 			_LogInfo_("[29] SolarSystemScene::OnEnter 완료 — 카메라 800x600, 씬 시작");
 		}
 
@@ -81,7 +81,7 @@ namespace
 			// 메인 창과 서브 창이 각자 다른 씬을 동시에 그리는 것을 눈으로 확인하자.
 			if (g_cInput.IsKeyPressed('M'))
 			{
-				Window* pSub = g_cApp.CreateSubWindow(L"서브 윈도우", 480, 360);
+				Window* pSub = g_cApp.CreateSubWindow("서브 윈도우", 480, 360);
 				if (pSub != nullptr)
 				{
 					g_cDirector.RunScene(CreateBouncingBallScene(), pSub);
@@ -161,7 +161,7 @@ namespace
 			GetCamera2D()->SetOrthographic2D(VIEW_WIDTH, VIEW_HEIGHT);
 
 			// 이 씬이 서브 윈도우에 올라가면 그 창의 제목이 바뀝다.
-			GetWindow()->SetTitle(L"29. 통통 튀는 공 씬 - SPACE: 씬 교체 (ESC로 종료)");
+			GetWindow()->SetTitle("29. 통통 튀는 공 씬 - SPACE: 씬 교체 (ESC로 종료)");
 			_LogInfo_("[29] BouncingBallScene::OnEnter 완료 — 공 %d개 준비", BALL_COUNT);
 
 			// 공마다 색상을 달리해 텍스처를 만든다.
@@ -317,7 +317,7 @@ void SceneGraph_Main()
 	PrintSceneGraphExplanation();
 
 	DemoApp app;
-	if (!app.Initialize(L"29. 씬 & 사운드 - SPACE로 씬 교체 (ESC로 종료)", 800, 600))
+	if (!app.Initialize("29. 씬 & 사운드 - SPACE로 씬 교체 (ESC로 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("엔진 초기화에 실패했습니다.");
 		return;

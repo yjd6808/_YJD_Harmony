@@ -41,12 +41,13 @@
  * }
  * };
  * MyApp app;
- * if (app.Initialize(L"제목", 1280, 720)) { app.Run(); }
+ * if (app.Initialize("제목", 1280, 720)) { app.Run(); }
  * app.Finalize();
  */
 
 #pragma once
 
+#include "jc/Primitives/String.h"
 #include "sgf/Core/Window.h"
 #include "sgf/Core/FrameTimer.h"
 #include "sgf/Input/InputManager.h"
@@ -68,11 +69,11 @@ public:
 
 	// 엔진 초기화: 윈도우 -> DX11 디바이스 -> 창 표면 -> 렌더러 -> 사운드 순서로
 	// 준비한 뒤 ApplicationDidFinishLaunching 훅을 부른다.
-	// @param _szTitle: 메인 윈도우 제목
+	// @param _title: 메인 윈도우 제목 (UTF-8)
 	// @param _width: 클라이언트 영역 가로 크기
 	// @param _height: 클라이언트 영역 세로 크기
 	// @return 성공 여부. 실패 시 디버그 출력 창에 원인이 출력된다.
-	bool Initialize(const wchar_t* _szTitle, _s32 _width, _s32 _height);
+	bool Initialize(const jc::String& _title, _s32 _width, _s32 _height);
 
 	// 게임 루프 실행: 메인 윈도우가 닫힐 때까지 돌아온다.
 	void Run();
@@ -85,9 +86,10 @@ public:
 	// 서브 윈도우는 닫혀도 앱이 종료되지 않는다. (메인 윈도우만 앱 종료를 유발)
 	// 키보드/마우스 입력은 메인 윈도우에만 연결된다.
 	// @return 생성된 윈도우. 실패 시 nullptr.
-	Window* CreateSubWindow(const wchar_t* _szTitle, _s32 _width, _s32 _height);
+	Window* CreateSubWindow(const jc::String& _title, _s32 _width, _s32 _height);
 
-	// === 서브시스템 접근자 (아래 g_c 매크로가 사용한다) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 서브시스템 접근자 (아래 g_c 매크로가 사용한다)
 	Window& GetWindow() { return window_; }
 	GraphicDevice& GetDevice() { return device_; }
 	InputManager& GetInput() { return input_; }
@@ -103,8 +105,8 @@ public:
 	void SetVsync(bool _vsync) { vsync_ = _vsync; }
 
 protected:
-	// === Cocos2d-x AppDelegate 스타일 생명주기 훅 ===
-
+	////////////////////////////////////////////////////////////////////////////////////////
+	// Cocos2d-x AppDelegate 스타일 생명주기 훅
 	// 초기화 완료 직후 1회. 보통 여기서 첫 씬을 시작한다.
 	// false를 반환하면 초기화 실패로 처리된다.
 	virtual bool ApplicationDidFinishLaunching() { return true; }
@@ -131,16 +133,16 @@ private:
 private:
 	static constexpr _s32 ACTIVATION_LISTENER_ID = 1;	// Window::onActivated 구독 ID
 
-	Window window_;					// 메인 윈도우 (닫히면 앱 종료)
+	Window window_;						// 메인 윈도우 (닫히면 앱 종료)
 	jc::Vector<Window*> subWindows_;	// 서브 윈도우들 [소유)
 	GraphicDevice device_;				// DX11 디바이스 파사드 (앱 전체 1개)
 	InputManager input_;				// 키보드/마우스 입력 (메인 윈도우 전용)
 	Renderer2D renderer_;				// 2D 배치 렌더러 (전역 1개)
-	Renderer3D renderer3D_;			// 3D 배치 렌더러 (전역 1개,)
+	Renderer3D renderer3D_;				// 3D 배치 렌더러 (전역 1개,)
 	FrameTimer timer_;					// jc::TimeSpan 기반 시간 측정
 	color clearColor_;					// 배경 색상
 	bool vsync_;						// 수직동기화 여부
-	bool initialized_;				// 중복 초기화/종료 방지
+	bool initialized_;					// 중복 초기화/종료 방지
 };
 
 // 현재 실행 중인 Application 인스턴스 (Initialize에서 설정된다)
@@ -149,7 +151,8 @@ inline Application* __sSgfApplication = nullptr;
 
 NS_SGF_END
 
-// === sgcl 스타일 전역 접근 매크로 ===
+////////////////////////////////////////////////////////////////////////////////////////////
+// sgcl 스타일 전역 접근 매크로
 // sgcl과 동일하게 g_c 접두사 + "레퍼런스" 접근 방식을 사용한다.
 // 예) g_cWindow.Width(), g_cInput.IsKeyPressed(VK_SPACE), g_cRenderer3D.DrawCube(...)
 #define g_cApp        (*sgf::__sSgfApplication)

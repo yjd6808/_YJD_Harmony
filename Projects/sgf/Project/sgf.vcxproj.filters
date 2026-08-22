@@ -102,6 +102,9 @@
     <ClInclude Include="..\Sources\sgf\Scene\Shape2D.h">
       <Filter>Scene</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\sgf\Scene\Shape3D.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
     <ClInclude Include="..\Sources\sgf\Scene\Transform.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -200,6 +203,9 @@
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgf\Scene\Shape2D.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgf\Scene\Shape3D.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgf\Scene\Transform.cpp">

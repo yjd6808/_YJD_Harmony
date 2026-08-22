@@ -22,10 +22,10 @@ using namespace jc;
 IdProvider<_u64> GameObject::gidProvider_;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-GameObject::GameObject(const char* _pName)
-	: name_(_pName)
-	, gid_(gidProvider_.Acquire())              // 1, 2, 3, ... 계속 증가 (INVALID_KEY=0은 발급 안 됨)
-	, pTransform_(dbg_new Transform(this))      // 기본 컴포넌트
+GameObject::GameObject(const jc::String& _name)
+	: name_(_name)
+	, gid_(gidProvider_.Acquire())			// 1, 2, 3, ... 계속 증가 (INVALID_KEY=0은 발급 안 됨)
+	, pTransform_(dbg_new Transform(this))	// 기본 컴포넌트
 	, pMaterial_(dbg_new Material())
 {
 }
@@ -139,13 +139,13 @@ void GameObject::SetZOrder(_u64 _zOrder)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-GameObject* GameObject::FindChildByName(const char* _pName)
+GameObject* GameObject::FindChildByName(const jc::String& _name)
 {
-	if (name_ == _pName) return this;
+	if (name_ == _name) return this;
 
 	for (int i = 0; i < children_.Size(); ++i)
 	{
-		GameObject* pFound = children_[i].pObject_->FindChildByName(_pName);
+		GameObject* pFound = children_[i].pObject_->FindChildByName(_name);
 		if (pFound != nullptr) return pFound;
 	}
 	return nullptr;
@@ -158,6 +158,19 @@ void GameObject::SetMesh(Mesh* _pMesh)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+// 메시 스태틱 레벨 전환 — Static: 현재 월드 행렬을 고정 보관 (재호출 = 새 위치로 재고정)
+// Dynamic: 고정 해제 → 매 프레임 현재 월드 행렬 사용.
+// 정점은 어느 쪽이든 GPU(b1)로 변환된다 — 레벨은 "월드 행렬 출처"만 바꾼다.
+void GameObject::SetMeshStaticLevel(StaticLevel _level)
+{
+	staticLevel_ = _level;
+	if (_level == StaticLevel::slStatic)
+	{
+		staticWorld_ = pTransform_->GetWorldMatrix();
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 void GameObject::SetVisible(bool _visible)
 {
 	visible_ = _visible;
@@ -165,9 +178,9 @@ void GameObject::SetVisible(bool _visible)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 메시 자동 드로우 — Mesh+Material만 설정하면 트래버설 중 자동으로 그려진다.
-// (Scene::RenderNode → RenderSelf → pScene_->DrawMesh → Renderer2D::DrawMesh 배칭)
+// (Scene::RenderNode → RenderSelf → pScene_->DrawMesh → Renderer2D::DrawMesh GPU 변환)
 // ★ 왜 편리한가: AddChild + SetMesh만 하면 매 프레임 여기서 자동으로 그려진다. 그리기 코드가 필요 없다.
-// - 월드 행렬은 Transform이 계산해 준다 (부모 변환 포함).
+// - 월드 행렬은 Transform이 계산해 준다 (부모 변환 포함). slStatic이면 고정 행렬을 전달한다.
 // - (용어) 월드 행렬: 오브젝트를 "게임 세계" 어디에 놓을지 알려주는 4x4 변환.
 void GameObject::RenderSelf()
 {
@@ -175,7 +188,11 @@ void GameObject::RenderSelf()
 	{
 		return;
 	}
-	pScene_->DrawMesh(pMesh_, pMaterial_, pTransform_->GetWorldMatrix());
+	// slStatic: 고정 행렬 / 그 외: 현재 월드 행렬 (정점은 불변 — 변환은 GPU가 수행)
+	const mat4& world = (staticLevel_ == StaticLevel::slStatic)
+		? staticWorld_
+		: pTransform_->GetWorldMatrix();
+	pScene_->DrawMesh(pMesh_, pMaterial_, world);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -230,25 +247,6 @@ void GameObject::InsertChildSorted(GameObject* _pChild, _u64 _zOrder)
 			break;
 	}
 	children_.Insert(index, ChildEntry{ _pChild, _zOrder });
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void GameObject::PropagateTransformDirty()
-{
-	// Transform::SetDirty가 호출 — 자식 Transform 전부 worldDirty_ 세움
-	PropagateTransformDirtyRecursive();
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void GameObject::PropagateTransformDirtyRecursive()
-{
-	for (int i = 0; i < children_.Size(); ++i)
-	{
-		GameObject* pChild = children_[i].pObject_;
-		if (pChild->pTransform_ != nullptr)
-			pChild->pTransform_->worldDirty_ = true;
-		pChild->PropagateTransformDirtyRecursive();
-	}
 }
 
 NS_SGF_END

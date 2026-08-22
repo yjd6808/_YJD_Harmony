@@ -36,16 +36,16 @@ public:
 	// 매 프레임 1회 호출. 직전 Tick으로부터의 경과 시간을 계산한다.
 	void Tick();
 
-	// === API: jc::TimeSpan (Scene/Application의 OnUpdate로 전달) ===
-
+	////////////////////////////////////////////////////////////////////////////////////////
+	// API: jc::TimeSpan (Scene/Application의 OnUpdate로 전달)
 	// 직전 프레임과의 시간 간격
 	const jc::TimeSpan& Delta() const { return delta_; }
 
 	// Reset 이후 누적 시간
 	const jc::TimeSpan& Total() const { return total_; }
 
-	// === 하위 호환 API: 초 단위 float (기존 01~22장 튜토리얼이 사용) ===
-
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 하위 호환 API: 초 단위 float (기존 01~22장 튜토리얼이 사용)
 	// 직전 프레임과의 시간 간격(초)
 	_f32 DeltaTime() const { return deltaTime_; }
 
@@ -56,16 +56,16 @@ public:
 	_f32 Fps() const { return fps_; }
 
 private:
-	_s64 frequency_;		// QueryPerformanceFrequency 값 (초당 카운트 수)
-	_s64 lastCount_;		// 직전 Tick 시점의 카운터 값
-	_s64 totalMicro_;		// 누적 시간 (마이크로초)
+	_s64 frequency_;	// QueryPerformanceFrequency 값 (초당 카운트 수)
+	_s64 lastCount_;	// 직전 Tick 시점의 카운터 값
+	_s64 totalMicro_;	// 누적 시간 (마이크로초)
 
 	jc::TimeSpan delta_;	// 직전 프레임과의 시간 간격 (TimeSpan)
 	jc::TimeSpan total_;	// 누적 시간 (TimeSpan)
 
 	_f32 deltaTime_;		// 직전 프레임과의 시간 간격(초) - 하위 호환 캐시
 	_f32 totalTime_;		// 누적 시간(초) - 하위 호환 캐시
-	_f32 fpsTimer_;		// 1초를 재는 누적 타이머
+	_f32 fpsTimer_;			// 1초를 재는 누적 타이머
 	_s32  fpsFrameCount_;	// 1초 동안 그려진 프레임 수
 	_f32 fps_;				// 확정된 FPS 값
 };

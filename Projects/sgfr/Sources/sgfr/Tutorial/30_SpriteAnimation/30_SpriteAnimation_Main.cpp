@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 2:50:00 PM
  * =====================
@@ -41,7 +41,7 @@ using namespace jc;
 namespace
 {
 	// 창 제목에 표시할 이징 이름표 (ApplyEasing의 모드 순서와 일치)
-	const wchar_t* s_szEasingNames[] = { L"선형", L"부드럽게", L"바운스" };
+	const char* s_szEasingNames[] = { "선형", "부드럽게", "바운스" };
 }
 
 // 스프라이트 애니메이션 튜토리얼을 실행한다. (위: 선형 기준 / 아래: 선택 이징 Before/After 비교)
@@ -51,7 +51,7 @@ void SpriteAnimation_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create(L"30. 스프라이트 - 위: 선형(기준) | 아래: 선택 이징 (1~3, ↑↓ FPS, ESC)", 800, 600))
+	if (!window.Create("30. 스프라이트 - 위: 선형(기준) | 아래: 선택 이징 (1~3, ↑↓ FPS, ESC)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
@@ -94,7 +94,7 @@ void SpriteAnimation_Main()
 
 	VertexBuffer quadVb;
 	IndexBuffer quadIb;
-	if (!quadVb.Create(&device, quadVertices, sizeof(VertexPTC), 4, true) ||
+	if (!quadVb.Create(&device, quadVertices, sizeof(VertexPTC), 4, ResourceUsage::ruDynamic) ||
 		!quadIb.Create(&device, quadIndices, 6))
 		{
 		jc::Console::WriteLine("버퍼 생성 실패!");
@@ -122,9 +122,7 @@ void SpriteAnimation_Main()
 
 	auto UpdateTitle = [&]()
 	{
-		wchar_t szTitle[256];
-		swprintf_s(szTitle, L"30. 스프라이트 - 위: 선형(기준) | 아래: %s / FPS %d (1~3, ↑↓, ESC)",
-			s_szEasingNames[easingMode], animFps);
+		jc::String szTitle = jc::StringUtil::Format("30. 스프라이트 - 위: 선형(기준) | 아래: %s / FPS %d (1~3, ↑↓, ESC)", s_szEasingNames[easingMode], animFps);
 		window.SetTitle(szTitle);
 	};
 	UpdateTitle();
@@ -226,3 +224,4 @@ void SpriteAnimation_Main()
 	device.Finalize();
 	window.Destroy();
 }
+

@@ -32,16 +32,17 @@ class Scene3D : public Scene
 public:
 	virtual ~Scene3D();
 
-	Camera3D* GetCamera3D() const;             // = static_cast<Camera3D*>(GetCamera())
+	Camera3D* GetCamera3D() const;				// = static_cast<Camera3D*>(GetCamera())
 
-	// === 3D 즉시 그리기 창구 (— Renderer3D로 전달) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 3D 즉시 그리기 창구 (— Renderer3D로 전달)
 	virtual void DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world) override;
 	virtual void DrawMesh(const RenderObject& _object);
 
 	virtual void RenderScene() override;
 
 protected:
-	Scene3D();   // defaultCamera_ = Camera3D::CreateDefault()
+	Scene3D();	// defaultCamera_ = Camera3D::CreateDefault()
 };
 
 NS_SGF_END

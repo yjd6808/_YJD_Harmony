@@ -84,9 +84,9 @@ void Scene::RemoveChild(GameObject* _pChild)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-GameObject* Scene::FindGameObjectByName(const char* _pName)
+GameObject* Scene::FindGameObjectByName(const jc::String& _name)
 {
-	return root_.FindChildByName(_pName);
+	return root_.FindChildByName(_name);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

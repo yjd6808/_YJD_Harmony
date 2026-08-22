@@ -7,7 +7,7 @@
  * [이 튜토리얼에서 배우는 것]
  * 1. 래스터라이저/블렌드/깊이/샘플러 = 파이프라인의 4대 상태 객체
  * 2. 각 상태를 독립 객체로 만들어 들고 다닐 수 있다 (수도 코드 §7 대응)
- * 3. 같은 설정 조합은 디바이스 캐시를 공유한다 (플라이웨이트 패턴)
+ * 3. 상태 객체는 설정 조합마다 자기만의 D3D 상태 객체를 만들어 갖는다 (독립 '값')
  *
  * [Before/After 비교]
  * - Before: device.SetWireframe(true) 같은 개별 스위치 함수 호출
@@ -90,7 +90,7 @@ void PipelineStateObjects_Main()
 {
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create(L"09. 파이프라인 상태 객체 (1/2 채우기, 3/4 블렌드, ESC 종료)", 800, 600))
+	if (!window.Create("09. 파이프라인 상태 객체 (1/2 채우기, 3/4 블렌드, ESC 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
@@ -135,7 +135,7 @@ void PipelineStateObjects_Main()
 
 	// 4. 상태 객체 준비: 같은 종류라도 설정 조합마다 따로 만들어 둔다.
 	// (수도 코드 §7의 rasterizerState.init / blendState.init에 해당)
-	// 내부적으로는 디바이스 캐시를 공유하므로 몇 개를 만들어도 가벼워요.
+	// 각 객체는 자기만의 D3D 상태 객체를 소유 생성한다. (중복 제거 없음 — 설정 조합이 곧 독립된 값)
 	RasterizerState rsSolid;
 	RasterizerState rsWireframe;
 	BlendState blendOpaque;
@@ -193,7 +193,7 @@ void PipelineStateObjects_Main()
 		device.EndFrame(true);
 	}
 
-	// 6. 정리: 상태 객체는 디바이스 캐시를 빌려 쓰므로 별도 Finalize가 없다.
+	// 6. 정리: 상태 객체도 Finalize()를 제공하지만 스택 소멸 시 자동 정리되므로 여기서는 직접 호출하지 않는다.
 	frontQuad.Finalize();
 	backQuad.Finalize();
 	ps.Finalize();

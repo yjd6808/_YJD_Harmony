@@ -42,7 +42,8 @@ bool InputManager::HandleMessage(UINT _msg, WPARAM _wParam, LPARAM _lParam)
 {
 	switch (_msg)
 	{
-	// === 키보드 ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 키보드
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:		// ALT 조합 키도 동일하게 처리
 	{
@@ -71,7 +72,8 @@ bool InputManager::HandleMessage(UINT _msg, WPARAM _wParam, LPARAM _lParam)
 		return true;
 	}
 
-	// === 마우스 버튼 ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 마우스 버튼
 	// GET_X_LPARAM/GET_Y_LPARAM은 windowsx.h의 매크로로,
 	// _lParam에 묶인 16비트씩의 x/y를 부호 있게 꺼낸다.
 	case WM_LBUTTONDOWN:
@@ -99,7 +101,8 @@ bool InputManager::HandleMessage(UINT _msg, WPARAM _wParam, LPARAM _lParam)
 		onMouseReleased.Invoke(MouseButton::Middle, GET_X_LPARAM(_lParam), GET_Y_LPARAM(_lParam));
 		return true;
 
-	// === 마우스 이동/휠 ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 마우스 이동/휠
 	case WM_MOUSEMOVE:
 		mouseX_ = GET_X_LPARAM(_lParam);
 		mouseY_ = GET_Y_LPARAM(_lParam);

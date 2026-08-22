@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 11:00:00 AM
  * =====================
@@ -37,7 +37,7 @@ void SvgTextureDraw_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create(L"16. SVG 텍스처 그리기 (ESC로 종료)", 800, 600))
+	if (!window.Create("16. SVG 텍스처 그리기 (ESC로 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
@@ -91,7 +91,7 @@ void SvgTextureDraw_Main()
 
 	VertexBuffer vb;
 	IndexBuffer ib;
-	if (!vb.Create(&device, vertices, sizeof(VertexPTC), 4, true) ||
+	if (!vb.Create(&device, vertices, sizeof(VertexPTC), 4, ResourceUsage::ruDynamic) ||
 		!ib.Create(&device, indices, 6))
 		{
 		jc::Console::WriteLine("버퍼 생성 실패!");
@@ -132,7 +132,7 @@ void SvgTextureDraw_Main()
 		timer.Tick();
 		elapsed += timer.DeltaTime();
 
-		// 크기가 0.2 ~ 0.9 사이를 천천히 왛다거리도록 사인파로 계산
+		// 크기가 0.2 ~ 0.9 사이를 천천히 왕복하도록 사인파로 계산
 		const _f32 half = 0.55f + 0.35f * sinf(elapsed * 0.8f);
 		const _f32 aspect = window.AspectRatio();
 
@@ -159,3 +159,4 @@ void SvgTextureDraw_Main()
 	device.Finalize();
 	window.Destroy();
 }
+

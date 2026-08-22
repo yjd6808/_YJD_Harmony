@@ -1,6 +1,6 @@
 # 16. SVG 텍스처 — 벡터 vs 래스터, nanosvg 래스터화와 동적 버퍼
 
-> 관련 코드: `Projects/sgfr/Sources/sgfr/16_SvgTextureDraw/16_SvgTextureDraw_Main.cpp`, `16_SvgTextureDraw_Function.cpp`
+> 관련 코드: `Projects/sgfr/Sources/sgfr/Tutorial/16_SvgTextureDraw/16_SvgTextureDraw_Main.cpp`, `16_SvgTextureDraw_Function.cpp`
 > (엔진: `Projects/sgf/Sources/sgf/Graphics/Texture.h` — LoadFromSvgFile, `Buffers.h` — 동적 VertexBuffer)
 > 실행: sgfr 실행 후 콘솔 메뉴에서 **16번** 선택
 > 선행 학습: 15(PNG 텍스처), 12(상수버퍼), 06(동적 버퍼)
@@ -62,7 +62,7 @@ for (int y = 0; y < height; ++y)
     }
 ```
 
-이 "거리 재기"는 픽셀 단위로 수행되므로 512×512 = 26만 번의 제곱근 연산이 일어납니다. CPU가 이 정도의 루프를 도는 데는 몇 밀리초면 충분하고, 그것이 로딩 시 1회뿐이므로 전체적으로 유리합니다. GPU가 벡터를 직접 그릴 때도(테셀레이션) 비슷한 판정을 하되 **픽셀이 아니라 폴리곤의 모서리** 기준으로 커버리지 판정을 한다는 점을 대비해 보면, "그리기 판정이 어디서 일어나느냐"의 차이가 CPU/GPU 분업의 본질임을 알 수 있습니다.
+이 "거리 재기"는 픽셀 단위로 수행되므로 256×256 = 65,536번의 제곱근 연산이 일어납니다. CPU가 이 정도의 루프를 도는 데는 몇 밀리초면 충분하고, 그것이 로딩 시 1회뿐이므로 전체적으로 유리합니다. GPU가 벡터를 직접 그릴 때도(테셀레이션) 비슷한 판정을 하되 **픽셀이 아니라 폴리곤의 모서리** 기준으로 커버리지 판정을 한다는 점을 대비해 보면, "그리기 판정이 어디서 일어나느냐"의 차이가 CPU/GPU 분업의 본질임을 알 수 있습니다.
 
 ## 4. 초보자 용어 사전
 
@@ -120,7 +120,7 @@ fprintf(pFile,
 ### 2단계: 텍스처 폴백
 
 ```cpp
-if (bLoaded) { printf("%s 래스터화 성공! (%d x %d)\n", szSvgPath, texture.Width(), texture.Height()); }
+if (bLoaded) { jc::Console::Write("%s 래스터화 성공! (%d x %d)\n", szSvgPath, texture.Width(), texture.Height()); }
 else if (CreateFallbackCircleTexture(&device, &texture)) { ... }
 ```
 
@@ -176,13 +176,13 @@ const _f32 half = 0.55f + 0.35f * sinf(elapsed * 0.8f);
 const _f32 aspect = window.AspectRatio();
 
 // 매 프레임 정점을 새로 계산해 동적 버퍼를 갱신한다. (06번에서 배운 동적 버퍼 활용)
-vertices[0] = { vec3(-half, +half * aspect, 0.0f), vec2(0.0f, 0.0f), color::White() };
-vertices[1] = { vec3(+half, +half * aspect, 0.0f), vec2(1.0f, 0.0f), color::White() };
-vertices[2] = { vec3(-half, -half * aspect, 0.0f), vec2(0.0f, 1.0f), color::White() };
-vertices[3] = { vec3(+half, -half * aspect, 0.0f), vec2(1.0f, 1.0f), color::White() };
+vertices[0] = { vec3(-half, +half * aspect, 0.0f), vec2(0.0f, 0.0f), color::WHITE };
+vertices[1] = { vec3(+half, +half * aspect, 0.0f), vec2(1.0f, 0.0f), color::WHITE };
+vertices[2] = { vec3(-half, -half * aspect, 0.0f), vec2(0.0f, 1.0f), color::WHITE };
+vertices[3] = { vec3(+half, -half * aspect, 0.0f), vec2(1.0f, 1.0f), color::WHITE };
 vb.Update(&device, vertices, 4);
 
-device.BeginFrame(color(0.12f, 0.12f, 0.16f, 1.0f));
+device.BeginFrame(color(0x1F, 0x1F, 0x29, 0xFF));
 texture.Bind(&device, 0);
 vb.Bind(&device); ib.Bind(&device); shader.Bind(&device);
 device.Context()->DrawIndexed(6, 0, 0);
@@ -207,7 +207,7 @@ SVG는 GPU와 관계없이 **CPU에서** 처리됩니다. nanosvg가 XML 파서�
 
 ### 6-4. 동적 버퍼의 하드웨어 경로 — Map/DISCARD와 ring buffer
 
-`vb.Update`의 `Map(..., D3D11_MAP_WRITE_DISCARD, ...)`는 CPU가 GPU 버퍼 메모리에 직접 쓰는 **DMA식 접근**입니다. `DISCARD`는 GPU가 지난 프레임의 정점을 아직 쓰고 있어도 드라이버가 **버퍼 내부의 다음 슬롯**을 줘서(더블 버퍼링), CPU는 기다리지 않고 쓰고 GPU는 옛 데이터를 계속 읽습니다. 이 "CPU가 채우고 GPU가 읽는 경마장" 구조는 PCIe/메모리 대역폭을 매 프레임 소모하므로, 동적 버퍼는 "가끔 바뀌는 데이터"에만 쓰고 "매 프레임 전부 바뀌는 배치 데이터"는 상수버퍼·스테이징 기법으로 처리하는 것이 실전 관례입니다. 22장 SceneRenderer가 이 경로를 볼 수 있습니다.
+`vb.Update`의 `Map(..., D3D11_MAP_WRITE_DISCARD, ...)`는 CPU가 GPU 버퍼 메모리에 직접 쓰는 **DMA식 접근**입니다. `DISCARD`는 GPU가 지난 프레임의 정점을 아직 쓰고 있어도 드라이버가 **버퍼 내부의 다음 슬롯**을 줘서(더블 버퍼링), CPU는 기다리지 않고 쓰고 GPU는 옛 데이터를 계속 읽습니다. 이 "CPU가 채우고 GPU가 읽는 경마장" 구조는 PCIe/메모리 대역폭을 매 프레임 소모하므로, 동적 버퍼는 "가끔 바뀌는 데이터"에만 쓰고 "매 프레임 전부 바뀌는 배치 데이터"는 상수버퍼·스테이징 기법으로 처리하는 것이 실전 관례입니다. 22장 Renderer3D가 이 경로를 볼 수 있습니다.
 
 ### 6-5. 텍스처 바인딩과 SRV — 셰이더 리소스 슬롯
 
@@ -221,7 +221,7 @@ SVG는 GPU와 관계없이 **CPU에서** 처리됩니다. nanosvg가 XML 파서�
 
 크기가 변하는 사각형을 그리는 방법은 이 장처럼 **정점을 매 프레임 새로 계산**하는 것 외에도, **고정된 정점을 상수버퍼의 행렬로 확대/축소**하는 방법이 있습니다(10장 방식). 둘은 하드웨어 경로가 다릅니다.
 
-- 정점 갱신: CPU가 4정점 × 32바이트를 매 프레임 Map/DISCARD로 업로드 → IA가 정점을 읽음. 갱신량은 적지만 Map 호출과 버퍼 쓰기가 매 프레임 발생합니다.
+- 정점 갱신: CPU가 4정점 × 24바이트(VertexPTC)를 매 프레임 Map/DISCARD로 업로드 → IA가 정점을 읽음. 갱신량은 적지만 Map 호출과 버퍼 쓰기가 매 프레임 발생합니다.
 - 행렬 확대: 정점은 한 번만 업로드하고, WVP 행렬(상수버퍼 64바이트)만 매 프레임 갱신 → GPU 셰이더가 확대·축소를 처리. 텍스처 UV는 그대로 0~1이므로 텍스처가 늘어나 보입니다.
 
 16장이 정점 갱신을 택한 이유는 UV를 0~1로 유지해 **텍스처 내용도 함께 커지는** 효과를 주기 위함이 아니라, "크기 변화 = 정점 위치 변화"라는 가장 직관적인 경로를 보여 주기 위함입니다. 실전에서는 UV가 깨지지 않게 하려고 행렬 경로를 더 자주 쓰며, 배치 렌더러(22장)는 매 프레임 정점을 한 버퍼에 모아 한 번에 업로드하는 방식으로 두 세계를 절충합니다.

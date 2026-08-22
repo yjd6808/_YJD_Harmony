@@ -55,8 +55,8 @@ public:
 	// 매 프레임 끝에 호출. 현재 상태를 "이전 프레임 상태"로 복사한다.
 	void NextFrame();
 
-	// === 폴링 API (키보드) ===
-
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 폴링 API (키보드)
 	// 지금 키가 눌려있는가? (누르고 있는 내내 true)
 	bool IsKeyDown(_s32 _vkCode) const;
 
@@ -66,8 +66,8 @@ public:
 	// 이번 프레임에 막 떼졌는가? (떼는 순간 한 프레임만 true)
 	bool IsKeyReleased(_s32 _vkCode) const;
 
-	// === 폴링 API (마우스) ===
-
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 폴링 API (마우스)
 	// 지금 버튼이 눌려있는가?
 	bool IsMouseDown(MouseButton _button) const;
 
@@ -84,7 +84,8 @@ public:
 	// 이번 프레임의 휠 이동량 (+위로 / -아래로 / 0이면 안 굴림)
 	_s32 WheelDelta() const { return wheelDelta_; }
 
-	// === 이벤트 API ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 이벤트 API
 	// 사용 예: Input()->onKeyPressed.Register(1, [](int vk) { ... });
 
 	KeyEvent onKeyPressed;				// 키가 눌린 순간
@@ -97,8 +98,8 @@ public:
 private:
 	static const _s32 KEY_COUNT = 256;				// 가상 키코드 범위 (0~255)
 
-	bool keyDown_[KEY_COUNT];					// 현재 프레임 키 상태
-	bool prevKeyDown_[KEY_COUNT];				// 이전 프레임 키 상태
+	bool keyDown_[KEY_COUNT];						// 현재 프레임 키 상태
+	bool prevKeyDown_[KEY_COUNT];					// 이전 프레임 키 상태
 	bool mouseDown_[_s32(MouseButton::Max)];		// 현재 프레임 버튼 상태
 	bool prevMouseDown_[_s32(MouseButton::Max)];	// 이전 프레임 버튼 상태
 	_s32 mouseX_;									// 커서 X (클라이언트 좌표)

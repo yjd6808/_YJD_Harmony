@@ -45,8 +45,8 @@ namespace
 	};
 
 	// 창 제목에 표시할 모드 이름표 (enum 순서와 일치)
-	const wchar_t* s_szFilterNames[] = { L"Point(최근접)", L"Linear(선형보간)" };
-	const wchar_t* s_szAddressNames[] = { L"Wrap(반복)", L"Clamp(고정)", L"Mirror(거울)" };
+	const char* s_szFilterNames[] = { "Point(최근접)", "Linear(선형보간)" };
+	const char* s_szAddressNames[] = { "Wrap(반복)", "Mirror(거울)", "Clamp(고정)" };
 }
 
 // 샘플러와 필터링 튜토리얼을 실행한다. (Point/Linear, Wrap/Clamp/Mirror, 좌우 Before/After 비교)
@@ -56,7 +56,7 @@ void SamplerFiltering_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create(L"17. 샘플러와 필터링 (1/2 필터, 3/4/5 주소, ESC 종료)", 800, 600))
+	if (!window.Create("17. 샘플러와 필터링 (1/2 필터, 3/4/5 주소, ESC 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
@@ -125,9 +125,7 @@ void SamplerFiltering_Main()
 	// 창 제목에 현재 모드를 표시하는 보조 람다
 	auto UpdateTitle = [&]()
 	{
-		wchar_t szTitle[256];
-		swprintf_s(szTitle, L"17. 샘플러 - 왼쪽: Point+Wrap(기준) | 오른쪽: %s + %s (1/2, 3/4/5, ESC)",
-			s_szFilterNames[static_cast<_s32>(filter)],
+		jc::String szTitle = jc::StringUtil::Format("17. 샘플러 - 왼쪽: Point+Wrap(기준) | 오른쪽: %s + %s (1/2, 3/4/5, ESC)", s_szFilterNames[static_cast<_s32>(filter)],
 			s_szAddressNames[static_cast<_s32>(address)]);
 		window.SetTitle(szTitle);
 	};

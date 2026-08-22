@@ -14,7 +14,7 @@
  * - After: 컨텍스트가 마지막 값을 기억해 같은 값이면 D3D 호출을 생략
  *
  * [조작법]
- * - 1: 캐시 무력화 토글 (매 Draw 앞 InvalidateCache 호출 = 방식 흉내내기)
+ * - 1: 캐시 무력화 토글 (매 Draw 앞 InvalidateCache 호출 = v2 방식 흉내내기)
  * - 창 제목에서 프레임당 API 호출/생략 횟수를 확인하세요
  * - ESC: 종료
  */
@@ -33,9 +33,9 @@ namespace
 // 스테이트 캐시 튜토리얼을 실행한다. (100개 큐브로 중복 바인딩 절감 관찰)
 void StateCache_Main()
 {
-	// 1. 윈도우 + 디바이스 + 리소스 매니저 + 씨 렌더러 준비
+	// 1. 윈도우 + 디바이스 + 리소스 매니저 + 씬 렌더러 준비
 	Window window;
-	if (!window.Create(L"23. 스테이트 캐시 (1 캐시 무력화 토글, ESC 종료)", 800, 600))
+	if (!window.Create("23. 스테이트 캐시 (1 캐시 무력화 토글, ESC 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
@@ -60,11 +60,11 @@ void StateCache_Main()
 		return;
 	}
 
-	// SceneRenderer → Renderer3D 통합 (배치 + 메시 파이프라인)
+	// Renderer3D (이전 이름 SceneRenderer 통합) — 배치 + 메시 파이프라인
 	Renderer3D renderer;
 	if (!renderer.Initialize(&device))
 	{
-		jc::Console::WriteLine("씨 렌더러 초기화 실패!");
+		jc::Console::WriteLine("씬 렌더러 초기화 실패!");
 		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -132,7 +132,7 @@ void StateCache_Main()
 			{
 				if (bCacheDisabled)
 				{
-					context.InvalidateCache();	// 흉내내기: 매번 "처음 그리는 척" 하기
+					context.InvalidateCache();	// v2 흉내내기: 매번 "처음 그리는 척" 하기
 				}
 
 				RenderObject& drawn = object;
@@ -146,9 +146,7 @@ void StateCache_Main()
 		renderer.EndScene();
 
 		// 4. 통계를 창 제목으로 출력 (API 호출 수 vs 캐시가 생략한 수)
-		wchar_t szTitle[256];
-		swprintf_s(szTitle, L"23. 스테이트 캐시 [%s] - API 호출: %llu, 생략: %llu (1 토글, ESC 종료)",
-			bCacheDisabled ? L"캐시 꺼짐" : L"캐시 켜짐",
+		jc::String szTitle = jc::StringUtil::Format("23. 스테이트 캐시 [%s] - API 호출: %llu, 생략: %llu (1 토글, ESC 종료)", bCacheDisabled ? "캐시 꺼짐" : "캐시 켜짐",
 			context.GetApiCallCount(),
 			context.GetSkippedCallCount());
 		window.SetTitle(szTitle);

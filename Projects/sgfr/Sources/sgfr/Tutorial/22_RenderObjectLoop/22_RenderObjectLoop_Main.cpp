@@ -5,9 +5,9 @@
  * 22. 렌더 오브젝트 루프 (RenderObject Loop)
  *
  * [이 튜토리얼에서 배우는 것]
- * 1. RenderObject = 메시 키 + 머티리얼 키 + 월드 행렬, 그리기의 최소 단위
- * 2. SceneRenderer::BeginScene(프레임 상수) 후 Draw(오브젝트)를 반복하는 표준 루프
- * 3. b0(프레임)/b1(오브젝트) 갱신을 SceneRenderer가 전담한다 (12번의 자동화판)
+ * 1. RenderObject = 메시 키 + 머티리얼 키 + 월드 행렬 + visible_, 그리기의 최소 단위
+ * 2. Renderer3D::BeginScene(프레임 상수) 후 Draw(오브젝트)를 반복하는 표준 루프
+ * 3. b0(프레임)/b1(오브젝트) 갱신을 Renderer3D가 전담한다 (12번의 자동화판)
  *
  * [Before/After 비교]
  * - Before: 객체마다 셰이더/버퍼/텍스처 바인딩 코드를 직접 나열
@@ -36,7 +36,7 @@ void RenderObjectLoop_Main()
 	_LogInfo_("[22] RenderObjectLoop 시작");
 	// 1. 윈도우 + 디바이스 + 리소스 매니저 준비
 	Window window;
-	if (!window.Create(L"22. 렌더 오브젝트 루프 (1 가운데 큐브 토글, ESC 종료)", 800, 600))
+	if (!window.Create("22. 렌더 오브젝트 루프 (1 가운데 큐브 토글, ESC 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
@@ -61,11 +61,11 @@ void RenderObjectLoop_Main()
 		return;
 	}
 
-	// 2. 씬 렌더러 준비 (b0/b1 상수버퍼를 내부에서 관리) — SceneRenderer → Renderer3D 통합
+	// 2. 씬 렌더러 준비 (b0/b1 상수버퍼를 내부에서 관리) — Renderer3D (이전 이름 SceneRenderer 통합)
 	Renderer3D renderer;
 	if (!renderer.Initialize(&device))
 	{
-		jc::Console::WriteLine("씨 렌더러 초기화 실패!");
+		jc::Console::WriteLine("씬 렌더러 초기화 실패!");
 		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -88,8 +88,8 @@ void RenderObjectLoop_Main()
 	const _u64 cubeMeshKey = g_cResourceMgr.Add(pCube);
 	_LogInfo_("[22] 리소스 준비 완료 — 메시 키=%llu", (unsigned long long)cubeMeshKey);
 
-	// 4. 그릴 목록 구성: 가운데 큰 큐브 1개 + 주변 굤도 큐브 4개
-	// 월드 행렬은 매 프레임 갱신하므로 여기서는 키/머티리얼만 채운다.
+	// 4. 그릴 목록 구성: 가운데 큰 큐브 1개 + 주변 궤도 큐브 4개
+	// 월드 행렬은 매 프레임 갱신하므로 여기서는 키/머티리얼/visible_만 채운다.
 	RenderObject objects[1 + ORBIT_CUBE_COUNT];
 	for (_s32 i = 0; i < 1 + ORBIT_CUBE_COUNT; ++i)
 	{

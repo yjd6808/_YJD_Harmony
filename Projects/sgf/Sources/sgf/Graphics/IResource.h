@@ -101,9 +101,16 @@ public:
 		debugName_ = _name;
 	}
 
+	// 경로로 등록된 리소스의 로드 경로. 경로 없이 Add된 리소스는 빈 문자열. (B-7)
+	const char* GetPath() const { return path_.SafeSource(); }
+
+	// ResourceMgr만 호출한다. (경로와 함께 Add할 때 보관 — 역방향 인덱스 불필요)
+	void SetPath(StringView _path) { path_ = _path; }
+
 protected:
 	_u64 key_;			// ResourceMgr 발급 키
 	String debugName_;	// 디버그 이름
+	String path_;		// 등록 경로 (ResourceMgr::Add(resource, path)로 세팅)
 };
 
 NS_SGF_END

@@ -40,13 +40,13 @@ public:
 	// PNG/JPG/BMP 등 일반 이미지 파일을 WIC으로 읽어 텍스처를 만든다.
 	// @param _szFilePath: 이미지 파일 경로 (유니코드)
 	// @return 성공 여부
-	bool LoadFromFile(GraphicDevice* _pDevice, const wchar_t* _szFilePath);
+	bool LoadFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePath);
 
 	// SVG 파일을 nanosvg로 래스터화해서 텍스처를 만든다.
 	// @param _szFilePath: SVG 파일 경로 (멀티바이트)
 	// @param _scale: 확대 배율 (1.0 = SVG 원본 크기)
 	// @return 성공 여부 (nanosvg 미설치 시 항상 false)
-	bool LoadFromSvgFile(GraphicDevice* _pDevice, const char* _szFilePath, _f32 _scale = 1.0f);
+	bool LoadFromSvgFile(GraphicDevice* _pDevice, const jc::String& _szFilePath, _f32 _scale = 1.0f);
 
 	// 메모리의 RGBA 픽셀 배열로 직접 텍스처를 만든다.
 	// (절차적 생성 텍스처, 단색 텍스처 등에 사용)
@@ -66,8 +66,8 @@ public:
 
 private:
 	SgfComPtr<ID3D11ShaderResourceView> pShaderResourceView_;	// 셰이더가 읽는 뷰
-	_s32 width_;	// 가로 픽셀 수
-	_s32 height_;	// 세로 픽셀 수
+	_s32 width_;												// 가로 픽셀 수
+	_s32 height_;												// 세로 픽셀 수
 };
 
 NS_SGF_END

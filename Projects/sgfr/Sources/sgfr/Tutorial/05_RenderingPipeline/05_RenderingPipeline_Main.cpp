@@ -37,7 +37,7 @@ void RenderingPipeline_Main()
 
 	// 1. 윈도우 + 디바이스 준비 (02, 04번에서 배운 내용)
 	Window window;
-	if (!window.Create(L"05. 렌더링 파이프라인 - 첫 삼각형 (ESC로 종료)", 800, 600))
+	if (!window.Create("05. 렌더링 파이프라인 - 첫 삼각형 (ESC로 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;

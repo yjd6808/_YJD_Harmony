@@ -6,6 +6,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/GraphicsEnums.h"
 #include "sgf/Graphics/DepthStencilSurface.h"
 
 NS_SGF_BEGIN
@@ -24,9 +25,9 @@ bool DepthStencilSurface::Initialize(ID3D11Device* _pDevice, _s32 _width, _s32 _
 	textureDesc.Height = static_cast<UINT>(_height);
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
-	textureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;	// 깊이 24비트 + 스텐실 8비트
+	textureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;	// 깊이 24비트 + 스텐실 8비트 (DXGI_FORMAT_D24_UNORM_S8_UINT)
 	textureDesc.SampleDesc.Count = 1;						// 멀티샘플링 사용 안 함
-	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.Usage = ToD3D11(ResourceUsage::ruDefault);	// GPU 전용 (D3D11_USAGE_DEFAULT)
 	textureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 
 	SgfComPtr<ID3D11Texture2D> pDepthTexture;

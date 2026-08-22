@@ -44,7 +44,7 @@ namespace
 	};
 
 	// 창 제목에 표시할 컬링 이름표 (CullMode enum 순서와 일치)
-	const wchar_t* s_szCullNames[] = { L"None(양면)", L"Back(뒷면 제거)", L"Front(앞면 제거)" };
+	const char* s_szCullNames[] = { "None(양면)", "Back(뒷면 제거)", "Front(앞면 제거)" };
 }
 
 // 래스터라이저 스테이트 튜토리얼을 실행한다. (좌: 기본 상태 / 우: 선택 상태 Before/After 비교)
@@ -54,7 +54,7 @@ void RasterizerState_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create(L"19. 래스터라이저 스테이트 (W 와이어, 1/2/3 컬링, ESC 종료)", 800, 600))
+	if (!window.Create("19. 래스터라이저 스테이트 (W 와이어, 1/2/3 컬링, ESC 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
@@ -112,9 +112,7 @@ void RasterizerState_Main()
 
 	auto UpdateTitle = [&]()
 	{
-		wchar_t szTitle[256];
-		swprintf_s(szTitle, L"19. 래스터라이저 - 왼쪽: Solid+Back(기준) | 오른쪽: %s / %s (W, 1/2/3, ESC)",
-			bWireframe ? L"Wireframe(선)" : L"Solid(면)",
+		jc::String szTitle = jc::StringUtil::Format("19. 래스터라이저 - 왼쪽: Solid+Back(기준) | 오른쪽: %s / %s (W, 1/2/3, ESC)", bWireframe ? "Wireframe(선)" : "Solid(면)",
 			s_szCullNames[static_cast<_s32>(cullMode)]);
 		window.SetTitle(szTitle);
 	};

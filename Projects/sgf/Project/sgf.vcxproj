@@ -56,6 +56,7 @@
     <ClCompile Include="..\Sources\sgf\Scene\Scene2D.cpp" />
     <ClCompile Include="..\Sources\sgf\Scene\Scene3D.cpp" />
     <ClCompile Include="..\Sources\sgf\Scene\Shape2D.cpp" />
+    <ClCompile Include="..\Sources\sgf\Scene\Shape3D.cpp" />
     <ClCompile Include="..\Sources\sgf\Scene\Transform.cpp" />
     <ClCompile Include="..\Sources\sgf\Graphics\PrimitiveBuilder.cpp" />
   </ItemGroup>
@@ -103,6 +104,7 @@
     <ClInclude Include="..\Sources\sgf\Scene\Scene2D.h" />
     <ClInclude Include="..\Sources\sgf\Scene\Scene3D.h" />
     <ClInclude Include="..\Sources\sgf\Scene\Shape2D.h" />
+    <ClInclude Include="..\Sources\sgf\Scene\Shape3D.h" />
     <ClInclude Include="..\Sources\sgf\Scene\Transform.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

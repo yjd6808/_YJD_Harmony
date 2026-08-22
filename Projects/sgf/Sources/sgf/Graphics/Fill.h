@@ -39,9 +39,9 @@ struct FillResult;
 // 렌더 버킷 — 트리 밴드와 무관한 씬 전역 순서 (플러시 순서: Bottom → Default → Top)
 enum class RenderLayer
 {
-	Bottom,   // 씬 전역 최하단 (배경 원경 등)
-	Default,  // 트리 밴드 (zOrder) — 기본값
-	Top       // 씬 전역 최상단 (HP바/툴팁/이펙트/커서)
+	Bottom,		// 씬 전역 최하단 (배경 원경 등)
+	Default,	// 트리 밴드 (zOrder) — 기본값
+	Top			// 씬 전역 최상단 (HP바/툴팁/이펙트/커서)
 };
 
 // 채움 콜백 시그니처 — 이것 하나만 알면 누구나 커스텀 채움을 만들 수 있다.
@@ -52,17 +52,18 @@ using FillCallback = void (*)(const Fill& _fill, const RenderParams& _params, Fi
 class Fill
 {
 public:
-	Fill() = default;                       // 무효 채움 (IsValid() == false)
+	Fill() = default;						// 무효 채움 (IsValid() == false)
 
-	// === 내장 채움 팩토리 (고유 파라미터는 채움이 보관 — 매 호출 변경되는 색은 RenderParams) ===
-	static Fill Solid();                                                // 단색 — 채움색은 RenderParams.color1_
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 내장 채움 팩토리 (고유 파라미터는 채움이 보관 — 매 호출 변경되는 색은 RenderParams)
+	static Fill Solid();												// 단색 — 채움색은 RenderParams.color1_
 	static Fill Texture(sgf::Texture* _pTexture,
-		const rect& _uv = rect(0.0f, 0.0f, 1.0f, 1.0f));              // 텍스처 쿼드
+		const rect& _uv = rect(0.0f, 0.0f, 1.0f, 1.0f));				// 텍스처 쿼드
 	static Fill NinePatch(sgf::Texture* _pTexture,
 		_f32 _sliceLeft, _f32 _sliceTop, _f32 _sliceRight, _f32 _sliceBottom,
-		const rect& _uv = rect(0.0f, 0.0f, 1.0f, 1.0f));              // 9-패치 (텍스처 9분할)
-	static Fill Gauge(_f32 _ratio);                                   // 수평 게이지 (color1=배경, color2=채움)
-	static Fill Custom(FillCallback _pCallback, _u32 _userData = 0); // 외부 정의 — 엔진 무관
+		const rect& _uv = rect(0.0f, 0.0f, 1.0f, 1.0f));				// 9-패치 (텍스처 9분할)
+	static Fill Gauge(_f32 _ratio);										// 수평 게이지 (color1=배경, color2=채움)
+	static Fill Custom(FillCallback _pCallback, _u32 _userData = 0);	// 외부 정의 — 엔진 무관
 	// [엔진 내장 6종(Line/Circle/Polygon/Triangle) 전용] — _pData는 DeclareStatic 호출 동안만 유효
 	// (선언 즉시 동기적으로 BuildFill되므로 스택 데이터 전달이 안전하다)
 	static Fill CustomData(FillCallback _pCallback, const void* _pData);
@@ -91,31 +92,31 @@ private:
 
 private:
 	FillCallback pCallback_ = nullptr;
-	sgf::Texture* pTexture_ = nullptr;        // 텍스처 채움 파라미터
-	rect uv_ = rect(0.0f, 0.0f, 1.0f, 1.0f);   // 텍스처 영역
-	_f32 slice_[4] = { 0.0f, 0.0f, 0.0f, 0.0f };  // 9-패치 슬라이스 (l/t/r/b 픽셀)
-	_f32 ratio_ = 1.0f;                        // 게이지 비율 (0~1)
-	_u32 userData_ = 0;                        // 커스텀 파라미터 (Custom 전용)
-	const void* pData_ = nullptr;              // [엔진 내장 6종] 콜백이 읽는 데이터 (빌림)
+	sgf::Texture* pTexture_ = nullptr;				// 텍스처 채움 파라미터
+	rect uv_ = rect(0.0f, 0.0f, 1.0f, 1.0f);		// 텍스처 영역
+	_f32 slice_[4] = { 0.0f, 0.0f, 0.0f, 0.0f };	// 9-패치 슬라이스 (l/t/r/b 픽셀)
+	_f32 ratio_ = 1.0f;								// 게이지 비율 (0~1)
+	_u32 userData_ = 0;								// 커스텀 파라미터 (Custom 전용)
+	const void* pData_ = nullptr;					// [엔진 내장 6종] 콜백이 읽는 데이터 (빌림)
 };
 
 // 그리기 입력: "어디에, 어떻게, 뭘로" — 값 타입, 복사로 전달
 struct RenderParams
 {
-	rect  region_;             // 목적지 영역 (노드 로컬 좌표)
-	color color1_;             // 주 색상 (단색 채움색, 텍스처 틴트, 게이지 배경)
-	color color2_;             // 보조 색상 (게이지 채움색, 그라디언트 등)
-	_u32  option_ = 0;         // 채움 방식별 옵션 (매 호출 변경 가능 — 예: 9-패치 스트레치 모드)
-	RenderLayer layer_ = RenderLayer::Default;  // 렌더 버킷 — 트리 순서와 무관한 씬 전역 최상단/최하단
-	Fill fill_;                // 채움 (콜백 + 고유 파라미터)
+	rect  region_;								// 목적지 영역 (노드 로컬 좌표)
+	color color1_;								// 주 색상 (단색 채움색, 텍스처 틴트, 게이지 배경)
+	color color2_;								// 보조 색상 (게이지 채움색, 그라디언트 등)
+	_u32  option_ = 0;							// 채움 방식별 옵션 (매 호출 변경 가능 — 예: 9-패치 스트레치 모드)
+	RenderLayer layer_ = RenderLayer::Default;	// 렌더 버킷 — 트리 순서와 무관한 씬 전역 최상단/최하단
+	Fill fill_;									// 채움 (콜백 + 고유 파라미터)
 };
 
 // 채움 출력: 생성된 버텍스/인덱스. 버퍼는 렌더러가 소유·재사용 (매 호출 할당 없음)
 struct FillResult
 {
-	jc::Vector<VertexPTC> vertices_;   // 영역 → 정점들
-	jc::Vector<_u16>      indices_;    // 삼각형 인덱스
-	Texture* pTexture_ = nullptr;      // 결과에 사용된 텍스처
+	jc::Vector<VertexPTC> vertices_;	// 영역 → 정점들
+	jc::Vector<_u16>      indices_;		// 삼각형 인덱스
+	Texture* pTexture_ = nullptr;		// 결과에 사용된 텍스처
 };
 
 NS_SGF_END

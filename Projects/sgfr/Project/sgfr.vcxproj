@@ -81,6 +81,8 @@
     <ClCompile Include="..\Sources\sgfr\Tutorial\30_SpriteAnimation\30_SpriteAnimation_Function.cpp" />
     <ClCompile Include="..\Sources\sgfr\Tutorial\31_PipelineJourney\31_PipelineJourney_Main.cpp" />
     <ClCompile Include="..\Sources\sgfr\Tutorial\32_PrimitiveMesh\32_PrimitiveMesh_Main.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Tutorial\33_PrimitiveShape\33_PrimitiveShape_Main.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Tutorial\34_GraphicsEnum_한눈에_비교\34_GraphicsEnumDiff_Main.cpp" />
     <ClCompile Include="..\Sources\sgfr\Common\TutorialCommon.cpp" />
     <ClCompile Include="..\Sources\sgfr\Practice\01_RenderingPipeline\01_RenderingPipeline_Main.cpp" />
     <ClCompile Include="..\Sources\sgfr\Practice\PracticeRegistry.cpp" />
@@ -142,6 +144,8 @@
     <ClInclude Include="..\Sources\sgfr\Tutorial\30_SpriteAnimation\30_SpriteAnimation_Function.h" />
     <ClInclude Include="..\Sources\sgfr\Tutorial\31_PipelineJourney\31_PipelineJourney_Main.h" />
     <ClInclude Include="..\Sources\sgfr\Tutorial\32_PrimitiveMesh\32_PrimitiveMesh_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Tutorial\33_PrimitiveShape\33_PrimitiveShape_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Tutorial\34_GraphicsEnum_한눈에_비교\34_GraphicsEnumDiff_Main.h" />
     <ClInclude Include="..\Sources\sgfr\Common\TutorialCommon.h" />
     <ClInclude Include="..\Sources\sgfr\Practice\01_RenderingPipeline\01_RenderingPipeline_Main.h" />
     <ClInclude Include="..\Sources\sgfr\Practice\PracticeRegistry.h" />

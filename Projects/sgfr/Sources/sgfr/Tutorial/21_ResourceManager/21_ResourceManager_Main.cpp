@@ -8,7 +8,7 @@
  * 1. 모든 공유 리소스(IResource)는 _u64 키로 등록/검색/제거한다
  * 2. 키는 jc의 Provider<IdProviderReuse<_u64>>가 발급 - 반납된 키는 재사용(LIFO)
  * 3. 경로 별칭(path)으로 같은 파일의 중복 로드를 막는다
- * 4. Initialize에서 디폴트 리소스 7종이 자동 준비되고, Finalize에서 일괄 소멸된다
+ * 4. Initialize에서 디폴트 리소스 17종이 자동 준비되고, Finalize에서 일괄 소멸된다
  *
  * [Before/After 비교]
  * - Before: 텍스처/셰이더를 각 튜토리얼이 지역 변수로 들고 직접 수명 관리
@@ -64,8 +64,9 @@ void ResourceManager_Main()
 		return;
 	}
 
-	// 2. 매니저 초기화 - 이 순간 디폴트 리소스 7종이 자동 등록된다.
-	// (2D/3D 버텍스/픽셀 셰이더 4종 + 1x1 흰색 텍스처 + 2D/3D 디폴트 머티리얼)
+	// 2. 매니저 초기화 - 이 순간 디폴트 리소스 17종이 자동 등록된다.
+	// (2D/3D 버텍스/픽셀 셰이더 4종 + 1x1 흰색 텍스처 1종 + 2D/3D 디폴트 머티리얼 2종
+	//  + 프리미티브 메시 10종: 2D 4종(Rect/Circle/Triangle/Line) + 3D 6종(Cube/Sphere/Capsule/Cylinder/Plane/Quad))
 	if (!g_cResourceMgr.Initialize(&device))
 	{
 		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
@@ -74,7 +75,7 @@ void ResourceManager_Main()
 	}
 
 	jc::Console::WriteLine("--- 1. 디폴트 리소스 ---");
-	jc::Console::Write("초기화 직후 등록 개수: %llu (디폴트 7종)\n", g_cResourceMgr.GetCount());
+	jc::Console::Write("초기화 직후 등록 개수: %llu (디폴트 17종)\n", g_cResourceMgr.GetCount());
 	jc::Console::Write("디폴트 텍스처 키: %llu\n", g_cResourceMgr.GetDefaultTextureKey());
 	jc::Console::Write("디폴트 2D 머티리얼 키: %llu\n", g_cResourceMgr.GetDefaultMaterial2DKey());
 	g_cResourceMgr.PrintStatus();

@@ -13,16 +13,15 @@
 
 NS_SGF_BEGIN
 
-// ==================================================
+////////////////////////////////////////////////////////////////////////////////////////////
 // VertexBuffer
-// ==================================================
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 생성자
 VertexBuffer::VertexBuffer()
 	: stride_(0)
 	, count_(0)
-	, dynamic_(false)
+	, usage_(ResourceUsage::ruDefault)
 {
 }
 
@@ -34,18 +33,18 @@ VertexBuffer::~VertexBuffer()
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 정점 버퍼 생성
-bool VertexBuffer::Create(GraphicDevice* _pDevice, const void* _pData, UINT _stride, UINT _count, bool _dynamic)
+bool VertexBuffer::Create(GraphicDevice* _pDevice, const void* _pData, UINT _stride, UINT _count, ResourceUsage _usage)
 {
 	stride_ = _stride;
 	count_ = _count;
-	dynamic_ = _dynamic;
+	usage_ = _usage;
 
 	// 버퍼 설정: 크기/용도/CPU 접근 권한을 기술한다.
 	D3D11_BUFFER_DESC bd = {};
 	bd.ByteWidth = _stride * _count;									// 전체 바이트 크기
-	bd.Usage = _dynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;	// 갱신 방식
+	bd.Usage = ToD3D11(_usage);											// 갱신 방식 (ResourceUsage → D3D11_USAGE)
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;							// 정점 버퍼 용도
-	bd.CPUAccessFlags = _dynamic ? D3D11_CPU_ACCESS_WRITE : 0;			// CPU 쓰기 권한
+	bd.CPUAccessFlags = (_usage == ResourceUsage::ruDynamic) ? D3D11_CPU_ACCESS_WRITE : 0;	// CPU 쓰기 권한 (ruDynamic만 Map 가능)
 
 	// 초기 데이터가 있으면 생성과 동시에 복사해 넣는다.
 	D3D11_SUBRESOURCE_DATA sd = {};
@@ -61,8 +60,8 @@ bool VertexBuffer::Create(GraphicDevice* _pDevice, const void* _pData, UINT _str
 // DYNAMIC 정점 버퍼 갱신
 bool VertexBuffer::Update(GraphicDevice* _pDevice, const void* _pData, UINT _count)
 {
-	// DEFAULT 버퍼는 Map이 불가능하므로 방어한다.
-	if (!dynamic_ || _count > count_)
+	// ruDynamic이 아니면 Map이 불가능하므로 방어한다.
+	if (usage_ != ResourceUsage::ruDynamic || _count > count_)
 	{
 		return false;
 	}
@@ -88,15 +87,14 @@ void VertexBuffer::Bind(GraphicDevice* _pDevice)
 	_pDevice->Context()->IASetVertexBuffers(0, 1, pBuffers, &stride, &offset);
 }
 
-// ==================================================
+////////////////////////////////////////////////////////////////////////////////////////////
 // IndexBuffer
-// ==================================================
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 생성자
 IndexBuffer::IndexBuffer()
 	: count_(0)
-	, dynamic_(false)
+	, usage_(ResourceUsage::ruDefault)
 {
 }
 
@@ -108,16 +106,16 @@ IndexBuffer::~IndexBuffer()
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 인덱스 버퍼 생성
-bool IndexBuffer::Create(GraphicDevice* _pDevice, const _u32* _pIndices, UINT _count, bool _dynamic)
+bool IndexBuffer::Create(GraphicDevice* _pDevice, const _u32* _pIndices, UINT _count, ResourceUsage _usage)
 {
 	count_ = _count;
-	dynamic_ = _dynamic;
+	usage_ = _usage;
 
 	D3D11_BUFFER_DESC bd = {};
 	bd.ByteWidth = sizeof(_u32) * _count;
-	bd.Usage = _dynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
+	bd.Usage = ToD3D11(_usage);											// 갱신 방식 (ResourceUsage → D3D11_USAGE)
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;								// 인덱스 버퍼 용도
-	bd.CPUAccessFlags = _dynamic ? D3D11_CPU_ACCESS_WRITE : 0;
+	bd.CPUAccessFlags = (_usage == ResourceUsage::ruDynamic) ? D3D11_CPU_ACCESS_WRITE : 0;	// CPU 쓰기 권한 (ruDynamic만 Map 가능)
 
 	D3D11_SUBRESOURCE_DATA sd = {};
 	sd.pSysMem = _pIndices;
@@ -132,7 +130,7 @@ bool IndexBuffer::Create(GraphicDevice* _pDevice, const _u32* _pIndices, UINT _c
 // DYNAMIC 인덱스 버퍼 갱신
 bool IndexBuffer::Update(GraphicDevice* _pDevice, const _u32* _pIndices, UINT _count)
 {
-	if (!dynamic_ || _count > count_)
+	if (usage_ != ResourceUsage::ruDynamic || _count > count_)
 	{
 		return false;
 	}

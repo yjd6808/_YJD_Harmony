@@ -164,10 +164,12 @@ _s32 main(_s32 _argc, _s8** _argv)
 		return 0;
 	}
 
-	// 즉시 실행 (메뉴로 실행되도록 하고 싶으면 0으로 바꿔서 빌드할 것)
-	if (0) 
+	// 즉시 실행: 1로 바꾸면 메뉴 없이 마지막 Practice를 바로 실행한다. (기본 0 = 메뉴 실행)
+	if (0)
 	{
-		sgfr::PracticeAt(sgfr::PracticeCount() - 1);
+		const sgfr::TutorialEntry& entry = sgfr::PracticeAt(sgfr::PracticeCount() - 1);
+		entry.fn_();
+		FinalizeDefaultLogger();
 		jc::FinalizeJCore();
 		return 0;
 	}

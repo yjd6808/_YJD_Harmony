@@ -185,6 +185,10 @@ void Camera3D::DriveDefault3D(InputManager& _input, const jc::TimeSpan& _dt)
 void Camera3D::Rebuild3D()
 {
 	view_ = mat4::LookAtLH(eye_, target_, up_);
+
+	// 뷰/투영이 바뀌었으니 VP 캐시 무효화 (B-6)
+	// (SetPerspective는 projection_을 직접 설정하지만 Rebuild3D를 호출하므로 함께 커버된다)
+	InvalidateViewProjection();
 }
 
 NS_SGF_END

@@ -58,7 +58,7 @@ float4 PSMain(VsOut _in) : SV_Target
 )";
 
 	// 토폴로지별 창 제목 이름표
-	const wchar_t* s_szTopologyNames[] = { L"삼각형 리스트", L"선 스트립", L"점 리스트" };
+	const char* s_szTopologyNames[] = { "삼각형 리스트", "선 스트립", "점 리스트" };
 }
 
 // 메시와 토폴로지 튜토리얼을 실행한다. (같은 정점 6개를 세 가지 방법으로 해석)
@@ -66,7 +66,7 @@ void MeshAndTopology_Main()
 {
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create(L"08. 메시와 토폴로지 (1/2/3 전환, ESC 종료)", 800, 600))
+	if (!window.Create("08. 메시와 토폴로지 (1/2/3 전환, ESC 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;

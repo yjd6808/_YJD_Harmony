@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 1:50:00 PM
  * =====================
@@ -39,7 +39,7 @@ using namespace jc;
 namespace
 {
 	// 창 제목에 표시할 모드 이름표 (BlendMode enum 순서와 일치)
-	const wchar_t* s_szBlendNames[] = { L"Opaque(불투명)", L"Alpha(반투명)", L"Additive(가산)", L"Multiply(곱셈)" };
+	const char* s_szBlendNames[] = { "Opaque(불투명)", "Alpha(반투명)", "Additive(가산)", "Multiply(곱셈)" };
 }
 
 // 블렌드 스테이트 튜토리얼을 실행한다. (좌: Opaque 기준 / 우: 선택 모드 Before/After 비교)
@@ -49,7 +49,7 @@ void BlendState_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create(L"18. 블렌드 스테이트 (1~4 모드, ESC 종료)", 800, 600))
+	if (!window.Create("18. 블렌드 스테이트 (1~4 모드, ESC 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
@@ -85,7 +85,7 @@ void BlendState_Main()
 
 	VertexBuffer vb;
 	IndexBuffer ib;
-	if (!vb.Create(&device, vertices, sizeof(VertexPTC), 4, true) ||	// bDynamic = true!
+	if (!vb.Create(&device, vertices, sizeof(VertexPTC), 4, ResourceUsage::ruDynamic) ||	// bDynamic = true!
 		!ib.Create(&device, indices, 6))
 		{
 		jc::Console::WriteLine("버퍼 생성 실패!");
@@ -112,9 +112,7 @@ void BlendState_Main()
 
 	auto UpdateTitle = [&]()
 	{
-		wchar_t szTitle[256];
-		swprintf_s(szTitle, L"18. 블렌드 - 왼쪽: Opaque(기준) | 오른쪽: %s (1~4, ESC)",
-			s_szBlendNames[static_cast<_s32>(blendMode)]);
+		jc::String szTitle = jc::StringUtil::Format("18. 블렌드 - 왼쪽: Opaque(기준) | 오른쪽: %s (1~4, ESC)", s_szBlendNames[static_cast<_s32>(blendMode)]);
 		window.SetTitle(szTitle);
 	};
 	UpdateTitle();
@@ -207,3 +205,4 @@ void BlendState_Main()
 	device.Finalize();
 	window.Destroy();
 }
+

@@ -13,11 +13,19 @@ NS_SGF_BEGIN
 
 using namespace jc;
 
+// dirty stamp 전역 시계 — Transform::SetDirty가 매 변경마다 증가시킨다. (B-5: lazy 감지용)
+namespace
+{
+	_u64 g_transformStamp = 0;
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////
 Transform::Transform(GameObject* _pOwner)
-	: pOwner_(_pOwner)
-	, pParent_(nullptr)
+	: pParent_(nullptr)
+	, dirtyStamp_(++g_transformStamp)	// 최초 1회는 반드시 계산되도록 변경 stamp를 부여한다.
 {
+	// _pOwner: 소유 게임 오브젝트 — 현재는 파생/조회에서 필요하지 않다. (시그니처는 GameObject 호출 규약 유지)
+	(void)_pOwner;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -31,7 +39,7 @@ void Transform::SetLocalPosition(const vec3& _position)
 	if (localPosition_ == _position) return;
 	localPosition_ = _position;
 	localDirty_ = true;
-	SetDirty();	// 자식 전파
+	SetDirty();	// dirty 표시 (lazy — 자식 전파 없음)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -76,7 +84,19 @@ const mat4& Transform::GetLocalMatrix()
 //////////////////////////////////////////////////////////////////////////////////////////
 const mat4& Transform::GetWorldMatrix()
 {
-	if (worldDirty_)
+	// 부모 체인에서 가장 최근의 변경 stamp를 찾는다. (O(깊이) — 트리 깊이는 얕다)
+	// 부모가 이미 재계산했더라도 stamp는 유지되므로, 자식이 나중에 조회해도 감지할 수 있다. (B-5)
+	_u64 newest = dirtyStamp_;
+	for (const Transform* p = pParent_; p != nullptr; p = p->pParent_)
+	{
+		if (p->dirtyStamp_ > newest)
+		{
+			newest = p->dirtyStamp_;
+		}
+	}
+
+	// 마지막 계산 시각보다 새 변경이 있으면 재계산한다.
+	if (newest > computedStamp_)
 	{
 		const mat4& local = GetLocalMatrix();
 		if (pParent_ != nullptr)
@@ -87,46 +107,39 @@ const mat4& Transform::GetWorldMatrix()
 		{
 			world_ = local;
 		}
-		worldDirty_ = false;
+		computedStamp_ = newest;
 	}
 	return world_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-vec3 Transform::GetWorldPosition() const
+vec3 Transform::GetWorldPosition()
 {
-	// dirty 캐시를 깨지 않기 위해 행렬 복사본으로 추출한다. (일반적: const 메서드에서 재계산 가능)
-	Transform* pThis = const_cast<Transform*>(this);
-	const mat4& world = pThis->GetWorldMatrix();
+	// GetWorldMatrix()가 lazy 캐시를 갱신하므로 non-const 조회다. (A-9)
+	const mat4& world = GetWorldMatrix();
 	return vec3(world.m[3][0], world.m[3][1], world.m[3][2]);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-vec2 Transform::GetWorldPosition2D() const
+vec2 Transform::GetWorldPosition2D()
 {
-	Transform* pThis = const_cast<Transform*>(this);
-	const mat4& world = pThis->GetWorldMatrix();
+	const mat4& world = GetWorldMatrix();
 	return vec2(world.m[3][0], world.m[3][1]);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void Transform::SetDirty()
 {
-	// 자식의 world가 이 노드에 의존하므로, 자식 트리 전체에 worldDirty_를 전파한다.
-	// (실제 자식 목록은 GameObject 트리가 소유 — 이곳에서는 pOwner_를 통해 접근)
-	if (pOwner_ == nullptr) return;
-
-	worldDirty_ = true;
-
-	// GameObject에게 자식 Transform들 dirty 전파를 요청한다.
-	pOwner_->PropagateTransformDirty();
+	// lazy: 자식 전파 없이 자기 stamp만 갱신한다.
+	// 자식/손자는 GetWorldMatrix() 조회 시 부모 체인에서 이 stamp를 발견해 재계산한다. (B-5)
+	dirtyStamp_ = ++g_transformStamp;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void Transform::SetParent(Transform* _pParent)
 {
 	pParent_ = _pParent;
-	worldDirty_ = true;
+	dirtyStamp_ = ++g_transformStamp;	// 부모가 바뀌었으니 stamp 갱신 (lazy — 자식 전파 없음)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

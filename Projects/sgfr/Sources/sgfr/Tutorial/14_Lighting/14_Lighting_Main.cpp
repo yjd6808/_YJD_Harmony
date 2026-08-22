@@ -52,7 +52,7 @@ void Lighting_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create(L"14. 라이팅 - 람버트 확산광 (↑↓ 주변광, ESC 종료)", 800, 600))
+	if (!window.Create("14. 라이팅 - 람버트 확산광 (↑↓ 주변광, ESC 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
@@ -111,7 +111,7 @@ void Lighting_Main()
 	_f32 elapsed = 0.0f;
 	_f32 ambient = 0.15f;	// 주변광 기본값
 
-	jc::Console::WriteLine("빛은 오른쪽 위 뒤에서 대각선으로 내리쪼입니다. ↑↓로 주변광을 조절해보세요.");
+	jc::Console::WriteLine("빛은 오른쪽 위 앞에서 대각선으로 내리쪼입니다. ↑↓로 주변광을 조절해보세요.");
 
 	// 5. 렌더 루프
 	while (window.PumpMessage())
@@ -142,7 +142,7 @@ void Lighting_Main()
 		cbTransform.UpdateAndBind(&device, cbT, 0);	// register(b0)
 
 		CbLight cbL = {};
-		cbL.lightDir_ = vec3(-0.5f, -0.7f, 0.5f).Normalized();	// 오른쪽 위 뒤 -> 왼쪽 아래 앞
+		cbL.lightDir_ = vec3(-0.5f, -0.7f, 0.5f).Normalized();	// 오른쪽 위 앞 -> 왼쪽 아래 뒤 (광원은 오른쪽 위 앞쪽에 위치)
 		cbL.ambient_ = ambient;
 		cbL.baseColor_ = vec4(0.9f, 0.6f, 0.2f, 1.0f);			// 주황색 큐브
 		cbLight.UpdateAndBind(&device, cbL, 1);		// register(b1)

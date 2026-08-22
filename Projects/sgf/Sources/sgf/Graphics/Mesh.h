@@ -9,11 +9,14 @@
  * "무엇을 그릴지"의 형태 데이터. 재질(Material)과 분리되어 있어서
  * 같은 메시를 다른 재질로, 같은 재질을 다른 메시에 쓸 수 있다.
  *
- * [— 2D 프리미티브]
- * Rect/Circle/Triangle/Line 같은 기본 도형 메시를 만들 수 있다. (모두 VertexPTC)
- * 단위 도형(중심 원점)이라 Transform의 scale/rotation으로 크기·회전을 제어한다.
- * 2D 메시(vfPTC2D)는 GPU 버퍼 외에 CPU 미러(정점/인덱스)를 보관해
- * Renderer2D가 월드 변환 후 배칭(드로콜 최소화)에 사용한다.
+*  [— 2D 프리미티브]
+ *  Rect/Circle/Triangle/Line 같은 기본 도형 메시를 만들 수 있다. (모두 VertexPTC)
+ *  단위 도형(중심 원점)이라 Transform의 scale/rotation으로 크기·회전을 제어한다.
+ *  정점은 로컬 공간에서 불변 — 월드 변환은 Renderer2D가 GPU(b1 상수버퍼)로 수행한다.
+ *
+ * [StaticLevel — GameObject 전담 (Mesh는 무관)]
+ *  정적/동적 개념은 Mesh에 없다. GameObject::SetMeshStaticLevel(slStatic)이
+ *  "월드 행렬 고정"을 수행하며, 검사는 GameObject::GetMeshStaticLevel() 하나로 한다.
  *
  * [소유 관계]
  * Mesh는 VB/IB/InputLayout을 직접 소유한다. (하나의 형태 = 하나의 버퍼 묶음)
@@ -36,12 +39,12 @@ class GraphicDevice;
 class GraphicContext;
 struct FillResult;
 
-// 정점 형식 — 2D 메시(VertexPTC) 판별과 CPU 미러 보관 여부를 결정한다.
+// 정점 형식 — 2D 메시(VertexPTC) 판별용. (CPU 미러 개념은 폐기 — GPU 변환 통일)
 enum class VertexFormat
 {
-	vfCustom,	// 범용 (3D 메시 등 — CPU 미러 없음)
-	vfPTC2D,	// 2D 프리미티브/스프라이트 (VertexPTC — CPU 미러 보관)
-	vfPNT3D,	// 3D 메시 (VertexPNT — CPU 미러 없음)
+	vfCustom,	// 범용 (3D 메시 등)
+	vfPTC2D,	// 2D 프리미티브/스프라이트 (VertexPTC — Is2D 판별용)
+	vfPNT3D,	// 3D 메시 (VertexPNT)
 };
 
 class Mesh : public ResourceBase
@@ -76,7 +79,8 @@ public:
 	// 1x1x1 큐브 (VertexPNT. 면별 법선. 중심 원점)
 	bool InitializeAsCube(GraphicDevice* _pDevice, VertexShader* _pVs);
 
-	// === 3D 프리미티브 팩토리 (— VertexPNT, GPU 전용, CPU 미러 없음) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 3D 프리미티브 팩토리 (— VertexPNT, GPU 전용, CPU 미러 없음)
 	// Unity 표준 규격을 따른다. (중심 원점 — scale/rotation으로 제어)
 	bool InitializeAsSphere(GraphicDevice* _pDevice, VertexShader* _pVs, _u32 _slices = 16, _u32 _stacks = 8);	// 반지름 1 구
 	bool InitializeAsCylinder(GraphicDevice* _pDevice, VertexShader* _pVs, _u32 _segments = 16);	// 반지름 1, 높이 2 원기둥
@@ -84,7 +88,8 @@ public:
 	bool InitializeAsPlane(GraphicDevice* _pDevice, VertexShader* _pVs);	// XY 1x1 +Z 향 평면 (8x8 격자)
 	bool InitializeAsQuad3D(GraphicDevice* _pDevice, VertexShader* _pVs);	// XY 1x1 +Z 향 쿼드
 
-	// === 2D 프리미티브 팩토리 (— 모두 단위 도형, 중심 원점, VertexPTC) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 2D 프리미티브 팩토리 (— 모두 단위 도형, 중심 원점, VertexPTC)
 	// Transform scale/rotation으로 크기·회전을 제어한다. (scale = 크기, rotation = 각도)
 	bool InitializeAsRect2D(GraphicDevice* _pDevice, VertexShader* _pVs);	// 1x1 사각형 (= InitializeAsQuad2D)
 	bool InitializeAsCircle2D(GraphicDevice* _pDevice, VertexShader* _pVs, _u32 _segments = 32);	// 반지름 1 원
@@ -104,20 +109,15 @@ public:
 	UINT IndexCount() const { return indexBuffer_.Count(); }
 	PrimitiveTopology Topology() const { return topology_; }
 
-	// === 정점 형식 / CPU 미러 (— Renderer2D 배칭용) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 정점 형식 (— 2D/3D 판별용. Is2D 체크는 Renderer2D::DrawMesh가 수행)
 	VertexFormat GetFormat() const { return format_; }
 	bool Is2D() const { return format_ == VertexFormat::vfPTC2D; }
-	// vfPTC2D 메시의 CPU측 정점/인덱스 (월드 변환 + 배칭에 사용 — jc::Vector::Source는 비-const)
-	const VertexPTC* GetVertices2D() { return cpuVertices_.Source(); }
-	_u32 GetVertexCount2D() const { return (_u32)cpuVertices_.Size(); }
-	const _u16* GetIndices2D() { return cpuIndices_.Source(); }
-	_u32 GetIndexCount2D() const { return (_u32)cpuIndices_.Size(); }
 
 private:
-	// FillResult 기하 → GPU 메시 + CPU 미러 저장 + vfPTC2D 표기
-	bool Build2DPrimitive(GraphicDevice* _pDevice, VertexShader* _pVs, const FillResult& _result, const char* _pName);
+	// FillResult 기하 → GPU 메시 + vfPTC2D 표기 (CPU 미러 없음 — GPU 변환 통일)
+	bool Build2DPrimitive(GraphicDevice* _pDevice, VertexShader* _pVs, FillResult& _result, const jc::String& _pName);
 
-private:
 	VertexBuffer vertexBuffer_;		// 정점 버퍼 (소유)
 	IndexBuffer indexBuffer_;		// 인덱스 버퍼 (소유. 비인덱스면 비어있음)
 	InputLayout inputLayout_;		// 입력 레이아웃 (소유)
@@ -125,8 +125,6 @@ private:
 	bool indexed_;					// 인덱스 메시 여부
 
 	VertexFormat format_ = VertexFormat::vfCustom;	// 정점 형식 (2D/3D 판별)
-	jc::Vector<VertexPTC> cpuVertices_;		// vfPTC2D CPU 미러 정점 (배칭/월드 변환용)
-	jc::Vector<_u16> cpuIndices_;			// vfPTC2D CPU 미러 인덱스 (PushTriangles 호환)
 };
 
 NS_SGF_END

@@ -36,7 +36,7 @@ void FillScreenQuad(VertexPTC* _pOutVertices4, const vec2& _center, const vec2& 
 {
 	const color white = color::WHITE;
 
-	// 왕위 -> 오른위 -> 왼아래 -> 오른아래 (인덱스 0,1,2 / 2,1,3과 짝)
+	// 왼위 -> 오른위 -> 왼아래 -> 오른아래 (인덱스 0,1,2 / 2,1,3과 짝)
 	_pOutVertices4[0] = { vec3(_center.x - _halfSize.x, _center.y + _halfSize.y, 0.0f), vec2(0.0f, 0.0f), white };
 	_pOutVertices4[1] = { vec3(_center.x + _halfSize.x, _center.y + _halfSize.y, 0.0f), vec2(1.0f, 0.0f), white };
 	_pOutVertices4[2] = { vec3(_center.x - _halfSize.x, _center.y - _halfSize.y, 0.0f), vec2(0.0f, 1.0f), white };

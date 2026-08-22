@@ -55,8 +55,8 @@ public:
 	virtual void Flush() = 0;
 
 protected:
-	// === 파생 훅 ===
-
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 파생 훅
 	// 내장 HLSL 셰이더 소스 문자열 반환
 	virtual const char* ShaderSource() const = 0;
 
@@ -76,11 +76,11 @@ protected:
 	void ApplyFrameStates();
 
 protected:
-	GraphicDevice* pDevice_;			// 그래픽 디바이스 (소유하지 않음)
+	GraphicDevice* pDevice_;		// 그래픽 디바이스 (소유하지 않음)
 	Shader shader_;					// 파생이 제공한 셰이더
-	ConstantBuffer<mat4> cbFrame_;		// 뷰프로젝션 행렬용 상수 버퍼
-	mat4 viewProjection_;				// Begin에서 받은 행렬
-	bool begun_;						// Begin~End 사이인가?
+	ConstantBuffer<mat4> cbFrame_;	// 뷰프로젝션 행렬용 상수 버퍼
+	mat4 viewProjection_;			// Begin에서 받은 행렬
+	bool begun_;					// Begin~End 사이인가?
 };
 
 NS_SGF_END

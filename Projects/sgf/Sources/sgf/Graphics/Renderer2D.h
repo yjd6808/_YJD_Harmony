@@ -36,6 +36,8 @@
 #include "sgf/Graphics/Vertex.h"
 #include "sgf/Graphics/BatchRenderer.h"
 #include "sgf/Graphics/Fill.h"
+#include "sgf/Graphics/Renderer3D.h"	// ObjectConstants (b1 오브젝트 상수)
+#include "sgf/Graphics/Material.h"	// MaterialConstants (b2 머티리얼 상수)
 
 NS_SGF_BEGIN
 
@@ -55,21 +57,25 @@ public:
 	// 스태틱 캐시 정리 (공통 리소스는 BatchRenderer::Finalize가 처리)
 	virtual void Finalize() override;
 
-	// === 씬 배치 수명 (— 씬 카메라 기반, Scene2D::RenderScene이 자동 호출) ===
-	void BeginScene(Scene2D* _pScene);        // 씬 카메라 ViewProjection으로 배치 시작
-	void EndScene();                          // 잔여 세그먼트 플러시 + 배치 종료
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 씬 배치 수명 (— 씬 카메라 기반, Scene2D::RenderScene이 자동 호출)
+	void BeginScene(Scene2D* _pScene);	// 씬 카메라 ViewProjection으로 배치 시작
+	void EndScene();					// 잔여 세그먼트 플러시 + 배치 종료
 
-	// === 예약 (— 씬 트래버설 중 호출, GPU 무접촉) ===
-	_u64 DeclareStatic(const RenderParams& _params);     // 선언 = 1회 빌드 → 캐시 → staticId (채움·버킷은 _params.fill_/_params.layer_)
-	void RenderStatic(_u64 _staticId);                   // 선언 시 고정 — id만 예약
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 예약 (— 씬 트래버설 중 호출, GPU 무접촉)
+	_u64 DeclareStatic(const RenderParams& _params);	// 선언 = 1회 빌드 → 캐시 → staticId (채움·버킷은 _params.fill_/_params.layer_)
+	void RenderStatic(_u64 _staticId);					// 선언 시 고정 — id만 예약
 	void RenderDynamic(const RenderParams& _params);
 
-	// === 플러시 (— 드로우 스트림 순회) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 플러시 (— 드로우 스트림 순회)
 	// 버킷 순서 고정: Bottom → Default(트리 밴드) → Top. 버킷 경계에서 Flush() 분리 — 버킷 간 절대 섞이지 않음
-	void FlushStatic();                       // 스태틱 세그먼트 드로우 (캐시 버텍스, 텍스처 배칭)
-	void FlushDynamic();                      // 다이나믹 세그먼트 드로우 (스크래치 버텍스, 텍스처 배칭)
+	void FlushStatic();		// 스태틱 세그먼트 드로우 (캐시 버텍스, 텍스처 배칭)
+	void FlushDynamic();	// 다이나믹 세그먼트 드로우 (스크래치 버텍스, 텍스처 배칭)
 
-	// === 즉시 그리기 (기존 유지 — 씬 밖/디버그, 하위 호환) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 즉시 그리기 (기존 유지 — 씬 밖/디버그, 하위 호환)
 	void DrawRect(const vec2& _center, const vec2& _size, const color& _color, _f32 _radian = 0.0f);
 	void DrawSprite(Texture* _pTexture, const vec2& _center, const vec2& _size,
 		const color& _tint = color::WHITE, _f32 _radian = 0.0f,
@@ -77,21 +83,24 @@ public:
 	void DrawLine(const vec2& _from, const vec2& _to, const color& _color, _f32 _thickness = 1.0f);
 	void DrawCircle(const vec2& _center, _f32 _radius, const color& _color, _s32 _segments = 32);
 
-	// === 메시 그리기 (— Mesh+Material 자동 드로우, 배칭) ===
-	// 2D 프리미티브 메시(vfPTC2D)만 지원. 월드 변환 + 재질 틴트/텍스처 해석 후 배칭에 추가.
-	// 트래버설 중 GameObject::RenderSelf → Scene2D::DrawMesh → 이곳.
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 메시 그리기 (— Mesh+Material 자동 드로우, GPU 변환 즉시 드로우)
+	// 2D 프리미티브 메시(vfPTC2D)만 지원. 로컬 정점을 그대로 그리며 월드 변환은 GPU(b1)가 수행.
+	// 배치 경로와 달리 오브젝트당 1콜. 트래버설 중 GameObject::RenderSelf → Scene2D::DrawMesh → 이곳.
 	void DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world);
 
 	// 모아둔 배치를 즉시 GPU로 보낸다. (보통 End가 알아서 호출)
 	virtual void Flush() override;
 
-	// === 드로콜 카운터 (프레임당 — 배칭 검증용) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 드로콜 카운터 (프레임당 — 배칭 검증용)
 	// Flush()가 실제 GPU 드로우콜(DrawIndexed)을 실행할 때마다 증가, OnBegin에서 리셋된다.
 	// 2D 프리미티브들이 같은 텍스처로 연속되면 한 프레임에 1이 나와야 한다.
 	_u32 GetDrawCallCount() const { return drawCallCount_; }
 
 protected:
-	// === BatchRenderer 훅 구현 ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// BatchRenderer 훅 구현
 	virtual const char* ShaderSource() const override;
 	virtual const D3D11_INPUT_ELEMENT_DESC* VertexLayout(UINT* _outCount) const override;
 	virtual bool CreateBatchResources(GraphicDevice* _pDevice) override;
@@ -106,11 +115,12 @@ private:
 	// 사각형 4정점을 배치에 추가하는 공통 헬퍼 (즉시 그리기용)
 	void PushQuad(Texture* _pTexture, const VertexPTC (&_vertices)[4]);
 
-	// === 스태틱 캐시 ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 스태틱 캐시
 	struct StaticSlot
 	{
-		FillResult geometry_;                // 채움 결과 (프레임 간 재사용 — 변경 없음)
-		RenderLayer layer_;                  // 렌더 버킷 (선언 시 고정)
+		FillResult geometry_;	// 채움 결과 (프레임 간 재사용 — 변경 없음)
+		RenderLayer layer_;		// 렌더 버킷 (선언 시 고정)
 	};
 	StaticSlot* FindStatic(_u64 _staticId);
 	void BuildFill(const Fill& _fill, const RenderParams& _params, FillResult& _out);   // 채움 콜백 호출
@@ -118,35 +128,39 @@ private:
 	// 드로우 스트림 항목 — 포인터가 아닌 "인덱스/키"로 참조해 벡터 재배치에 안전하다.
 	struct DrawItem
 	{
-		bool isStatic_;                      // true: staticCache_ 키, false: dynamicParams_ 인덱스
-		_u64  key_;                          // 스태틱: staticId / 다이나믹: dynamicParams_ 인덱스
-		Texture* pTexture_;                  // 세그먼트 배칭용
-		RenderLayer layer_;                  // 렌더 버킷 (예약 시 저장 — Flush가 3패스로 순회)
+		bool isStatic_;		// true: staticCache_ 키, false: dynamicParams_ 인덱스
+		_u64  key_;			// 스태틱: staticId / 다이나믹: dynamicParams_ 인덱스
+		Texture* pTexture_;	// 세그먼트 배칭용
+		RenderLayer layer_;	// 렌더 버킷 (예약 시 저장 — Flush가 3패스로 순회)
 	};
 
 private:
-	static const _s32 MAX_QUADS = 2048;					// 배치 한 번에 담을 최대 사각형 수
+	static const _s32 MAX_QUADS = 2048;				// 배치 한 번에 담을 최대 사각형 수
 	static const _s32 MAX_VERTICES = MAX_QUADS * 4;	// 최대 정점 수
-	static const _s32 MAX_INDICES = 32768;				// 최대 인덱스 수 (임의 도형 여유분 포함)
+	static const _s32 MAX_INDICES = 32768;			// 최대 인덱스 수 (임의 도형 여유분 포함)
 
-	VertexBuffer vertexBuffer_;			// DYNAMIC 정점 버퍼
-	IndexBuffer indexBuffer_;			// DYNAMIC 인덱스 버퍼 (임의 인덱스 지원)
+	VertexBuffer vertexBuffer_;	// DYNAMIC 정점 버퍼
+	IndexBuffer indexBuffer_;	// DYNAMIC 인덱스 버퍼 (임의 인덱스 지원)
 
-	jc::Vector<VertexPTC> vertices_;		// CPU 쪽 정점 배치
+	jc::Vector<VertexPTC> vertices_;	// CPU 쪽 정점 배치
 	jc::Vector<_u32> indices_;			// CPU 쪽 인덱스 배치
-	jc::Vector<VertexPTC> meshScratch_;		// DrawMesh용 월드 변환 스크래치 (재사용 — 할당 없음)
 	Texture* pCurrentTexture_;			// 현재 배치가 사용 중인 텍스처
 
-	// === 드로우 스트림 + 스태틱 캐시 ===
-	jc::Vector<DrawItem> staticItems_;        // 스태틱 세그먼트 (이번 프레임)
-	jc::Vector<DrawItem> dynamicItems_;       // 다이나믹 세그먼트 (이번 프레임)
-	jc::Vector<RenderParams> dynamicParams_;  // 다이나믹 파라미터 보관 (수명 안정화 — 인덱스 참조)
-	jc::Vector<StaticSlot> staticCache_;      // staticId-1 → 슬롯 (선언 시 확장, 순수 증가)
-	IdProvider<_u64> staticIdProvider_;       // staticId 발급기 (순수 증가)
-	FillResult scratch_;                     // 다이나믹 채움 결과 스크래치 (프레임 내 재사용 — 할당 없음)
+	// 메시 GPU 파이프라인 상수 버퍼 (— Renderer3D와 동일 규약. 배치 경로는 b1=단위행렬/b2=흰색 고정)
+	ConstantBuffer<ObjectConstants> objectCb_;		// b1 — 월드 행렬 (오브젝트당 1회 갱신)
+	ConstantBuffer<MaterialConstants> materialCb_;	// b2 — 머티리얼 기본색/틴트
 
-	Scene2D* pScene_ = nullptr;               // BeginScene에서 기억 (다음 프레임까지)
-	_u32 drawCallCount_ = 0;                  // [프리미티브] 프레임당 실제 GPU 드로우콜 수 (배칭 검증용)
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 드로우 스트림 + 스태틱 캐시
+	jc::Vector<DrawItem> staticItems_;			// 스태틱 세그먼트 (이번 프레임)
+	jc::Vector<DrawItem> dynamicItems_;			// 다이나믹 세그먼트 (이번 프레임)
+	jc::Vector<RenderParams> dynamicParams_;	// 다이나믹 파라미터 보관 (수명 안정화 — 인덱스 참조)
+	jc::Vector<StaticSlot> staticCache_;		// staticId-1 → 슬롯 (선언 시 확장, 순수 증가)
+	IdProvider<_u64> staticIdProvider_;			// staticId 발급기 (순수 증가)
+	FillResult scratch_;						// 다이나믹 채움 결과 스크래치 (프레임 내 재사용 — 할당 없음)
+
+	Scene2D* pScene_ = nullptr;					// BeginScene에서 기억 (다음 프레임까지)
+	_u32 drawCallCount_ = 0;					// [프리미티브] 프레임당 실제 GPU 드로우콜 수 (배칭 검증용)
 };
 
 NS_SGF_END

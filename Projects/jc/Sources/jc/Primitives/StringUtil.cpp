@@ -759,8 +759,7 @@ jc::String StringUtil::ToUtf8(const wchar_t* _pStr, int _length)
 		nullptr,
 		0,
 		nullptr,
-		nullptr
-	);
+		nullptr);
 
 	if (size <= 0)
 	{

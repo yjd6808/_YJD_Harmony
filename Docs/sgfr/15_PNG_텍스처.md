@@ -1,7 +1,7 @@
 # 15. PNG 텍스처 — 파일에서 화면까지, UV 좌표계와 알파 블렌딩
 
-> 관련 코드: `Projects/sgfr/Sources/sgfr/15_PngTextureDraw/15_PngTextureDraw_Main.cpp`, `15_PngTextureDraw_Function.cpp`
-> (엔진: `Projects/sgf/Sources/sgf/Graphics/Texture.h` — WIC 로더, `Common/TutorialCommon.cpp` — TextureShaderSource)
+> 관련 코드: `Projects/sgfr/Sources/sgfr/Tutorial/15_PngTextureDraw/15_PngTextureDraw_Main.cpp`, `15_PngTextureDraw_Function.cpp`
+> (엔진: `Projects/sgf/Sources/sgf/Graphics/Texture.h` — WIC 로더, `Tutorial/Common/TutorialCommon.cpp` — TextureShaderSource)
 > 실행: sgfr 실행 후 콘솔 메뉴에서 **15번** 선택
 > 선행 학습: 07(정점/인덱스), 12(상수버퍼), 14(VertexPNT/UV 맛보기)
 
@@ -86,11 +86,11 @@ WIC(Windows Imaging Component)는 윈도우 내장 이미지 디코더라 별도
 Texture texture;
 if (texture.LoadFromFile(&device, L"Resources\\sample.png"))
 {
-    printf("Resources\\sample.png 로드 성공! (%d x %d)\n", texture.Width(), texture.Height());
+    jc::Console::Write("Resources\\sample.png 로드 성공! (%d x %d)\n", texture.Width(), texture.Height());
 }
 else if (CreateCheckerboardTexture(&device, &texture))
 {
-    printf("sample.png가 없어 체커보드 텍스처로 대체합니다. (%d x %d)\n", ...);
+    jc::Console::Write("sample.png가 없어 체커보드 텍스처로 대체합니다. (%d x %d)\n", texture.Width(), texture.Height());
 }
 ```
 
@@ -117,15 +117,15 @@ const _f32 halfW = 0.5f;
 const _f32 halfH = 0.5f * aspect;   // 화면 비율 보정으로 정사각형 유지
 
 const VertexPTC vertices[] = {
-    { vec3(-halfW, +halfH, 0.0f), vec2(0.0f, 0.0f), color::White() },  // 왼쪽위
-    { vec3(+halfW, +halfH, 0.0f), vec2(1.0f, 0.0f), color::White() },  // 오른쪽위
-    { vec3(-halfW, -halfH, 0.0f), vec2(0.0f, 1.0f), color::White() },  // 왼쪽아래
-    { vec3(+halfW, -halfH, 0.0f), vec2(1.0f, 1.0f), color::White() },  // 오른쪽아래
+    { vec3(-halfW, +halfH, 0.0f), vec2(0.0f, 0.0f), color::WHITE },  // 왼쪽위
+    { vec3(+halfW, +halfH, 0.0f), vec2(1.0f, 0.0f), color::WHITE },  // 오른쪽위
+    { vec3(-halfW, -halfH, 0.0f), vec2(0.0f, 1.0f), color::WHITE },  // 왼쪽아래
+    { vec3(+halfW, -halfH, 0.0f), vec2(1.0f, 1.0f), color::WHITE },  // 오른쪽아래
 };
 const _u32 indices[] = { 0, 1, 2, 2, 1, 3 };
 ```
 
-`VertexPTC`(위치+UV+색)에서 UV가 텍스처의 어느 부분을 붙일지를 결정합니다. 틴트는 `color::White()`라 곱해도 원본 그대로입니다.
+`VertexPTC`(위치+UV+색)에서 UV가 텍스처의 어느 부분을 붙일지를 결정합니다. 틴트는 `color::WHITE`라 곱해도 원본 그대로입니다.
 
 ### 4단계: 텍스처 셰이더 — TutorialCommon에서 재사용
 
@@ -160,7 +160,7 @@ vb.Bind(&device); ib.Bind(&device); shader.Bind(&device);
 device.Context()->DrawIndexed(6, 0, 0);
 ```
 
-`Texture::Bind(&device, 0)`은 내부적으로 SRV(ShaderResourceView)를 PS 스테이지 t0 슬롯에 바인딩합니다. 루프는 매우 단순합니다 — 텍스처 바인딩 → 정점/인덱스/셰이더 바인딩 → DrawIndexed(6) 4줄뿐입니다. 행렬을 전혀 쓰지 않는 이유는 이 장의 정점이 이미 NDC 좌표로 준비되어 있고(10장 이전의 방식), 셰이더도 NDC를 통과시키기만 하기 때문입니다. 텍스처가 화면 가운데 고정되어 그려지는 것을 확인하면, "행렬 없이도 그릴 수 있는" NDC 직결 방식과 "행렬로 배치하는" 이후 방식의 차이를 대비해 볼 수 있습니다.
+`Texture::Bind(&device, 0)`은 내부적으로 SRV(ShaderResourceView)를 PS 스테이지 t0 슬롯에 바인딩합니다. 루프는 매우 단순합니다 — 텍스처 바인딩 → 정점/인덱스/셰이더 바인딩 → DrawIndexed(6) 5줄뿐입니다. 행렬을 전혀 쓰지 않는 이유는 이 장의 정점이 이미 NDC 좌표로 준비되어 있고(10장 이전의 방식), 셰이더도 NDC를 통과시키기만 하기 때문입니다. 텍스처가 화면 가운데 고정되어 그려지는 것을 확인하면, "행렬 없이도 그릴 수 있는" NDC 직결 방식과 "행렬로 배치하는" 이후 방식의 차이를 대비해 볼 수 있습니다.
 
 ### 사용된 sgf API 정리
 
@@ -171,7 +171,7 @@ device.Context()->DrawIndexed(6, 0, 0);
 | `Texture::Width()/Height()` | 픽셀 크기 조회 |
 | `Texture::Bind(&device, slot)` | PS t0 슬롯 장착 |
 | `device.SetAlphaBlending(bool)` | 알파 블렌딩 공식 켜기 |
-| `VertexPTC::LayoutDescs` | 위치(12B)+UV(8B)+색(16B) 레이아웃 |
+| `VertexPTC::LayoutDescs` | 위치(12B)+UV(8B)+색(4B R8G8B8A8_UNORM) = 24B 레이아웃 |
 
 ## 6. GPU와 DX11, 하드웨어 깊이 보기
 
@@ -191,7 +191,7 @@ device.Context()->DrawIndexed(6, 0, 0);
 2. 주변 텍셀들을 읽고 (필터가 Linear면 4개, Point면 1개)
 3. 비율대로 가중 평균해 색을 반환
 
-이 과정은 셰이더 유닛과 병렬로 동작하며, 셰이더는 TMU가 결과를 가져다줄 때까지 다른 명령을 실행할 수 있습니다. UV는 정점 사이에서 **보간**되어 들어오므로, 삼각형이 크면 하나의 픽셀 셔드가 읽는 UV가 서로 달라 TMU 병렬 처리로 자연스럽게 해결됩니다. `color::White()` 틴트 곱셈(색×텍셀)은 별도의 곱셈 유닛에서 1사이클입니다.
+이 과정은 셰이더 유닛과 병렬로 동작하며, 셰이더는 TMU가 결과를 가져다줄 때까지 다른 명령을 실행할 수 있습니다. UV는 정점 사이에서 **보간**되어 들어오므로, 삼각형이 크면 하나의 픽셀 셰이더가 읽는 UV가 서로 달라 TMU 병렬 처리로 자연스럽게 해결됩니다. `color::WHITE` 틴트 곱셈(색×텍셀)은 별도의 곱셈 유닛에서 1사이클입니다.
 
 ### 6-4. 알파 블렌딩 — ROP의 혼합 연산
 

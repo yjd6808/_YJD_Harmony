@@ -63,7 +63,7 @@ void Material_Main()
 {
 	// 1. 윈도우 + 디바이스 + 리소스 매니저 준비
 	Window window;
-	if (!window.Create(L"20. 머티리얼 (1/2 블렌드, 3/4 필터, 5 틴트, ESC 종료)", 800, 600))
+	if (!window.Create("20. 머티리얼 (1/2 블렌드, 3/4 필터, 5 틴트, ESC 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
@@ -138,7 +138,7 @@ void Material_Main()
 	}
 
 	// 5. 디폴트 2D 셰이더의 b0/b1 규약에 맞춰 상수버퍼 준비
-	// (22번부터는 SceneRenderer가 이 작업까지 대신해준다)
+	// (22번부터는 Renderer3D가 이 작업까지 대신해준다)
 	ConstantBuffer<FrameConstants> frameCb;
 	ConstantBuffer<ObjectConstants> objectCb;
 	if (!frameCb.Create(&device) || !objectCb.Create(&device))

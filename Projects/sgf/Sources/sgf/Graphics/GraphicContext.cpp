@@ -252,6 +252,33 @@ void GraphicContext::SetSampler(ShaderStage _stage, _u32 _slot, SamplerState* _p
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+// Raw 오버로드 — 같은 캐시 필드(pCachedSamplers_) 공유
+void GraphicContext::SetSamplerRaw(ShaderStage _stage, _u32 _slot, ID3D11SamplerState* _pRaw)
+{
+	jc_assert_msg(_slot < MAX_TEXTURE_SLOTS, "샘플러 슬롯 범위를 벗어났습니다.");
+
+	const _s32 stageIndex = static_cast<_s32>(_stage);
+	if (_pRaw == pCachedSamplers_[stageIndex][_slot])
+	{
+		skippedCallCount_ += 1;
+		return;
+	}
+
+	pCachedSamplers_[stageIndex][_slot] = _pRaw;
+	apiCallCount_ += 1;
+
+	ID3D11SamplerState* pSamplers[] = { _pRaw };
+	if (_stage == ShaderStage::ssVertex)
+	{
+		pContext_->VSSetSamplers(_slot, 1, pSamplers);
+	}
+	else
+	{
+		pContext_->PSSetSamplers(_slot, 1, pSamplers);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 // 뷰포트는 값이 작아 비교 비용이 더 크므로 캐시 없이 항상 적용한다.
 void GraphicContext::SetViewport(const Viewport& _viewport)
 {
@@ -283,6 +310,22 @@ void GraphicContext::SetRasterizerState(RasterizerState* _pState)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+// Raw 오버로드 — RenderStates 풀에서 나온 원시 포인터를 직접 받는다.
+// 핸들 버전과 같은 캐시 필드(pCachedRasterizer_)를 공유하므로 우회 경로가 사라진다.
+void GraphicContext::SetRasterizerStateRaw(ID3D11RasterizerState* _pRaw)
+{
+	if (_pRaw == pCachedRasterizer_)
+	{
+		skippedCallCount_ += 1;
+		return;
+	}
+
+	pCachedRasterizer_ = _pRaw;
+	apiCallCount_ += 1;
+	pContext_->RSSetState(_pRaw);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::SetBlendState(BlendState* _pState)
 {
 	ID3D11BlendState* pRaw = (_pState != nullptr) ? _pState->Raw() : nullptr;
@@ -298,6 +341,21 @@ void GraphicContext::SetBlendState(BlendState* _pState)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+// Raw 오버로드 — 같은 캐시 필드(pCachedBlend_) 공유
+void GraphicContext::SetBlendStateRaw(ID3D11BlendState* _pRaw)
+{
+	if (_pRaw == pCachedBlend_)
+	{
+		skippedCallCount_ += 1;
+		return;
+	}
+
+	pCachedBlend_ = _pRaw;
+	apiCallCount_ += 1;
+	pContext_->OMSetBlendState(_pRaw, nullptr, 0xFFFFFFFF);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::SetDepthStencilState(DepthStencilState* _pState)
 {
 	ID3D11DepthStencilState* pRaw = (_pState != nullptr) ? _pState->Raw() : nullptr;
@@ -310,6 +368,21 @@ void GraphicContext::SetDepthStencilState(DepthStencilState* _pState)
 	pCachedDepth_ = pRaw;
 	apiCallCount_ += 1;
 	pContext_->OMSetDepthStencilState(pRaw, 0);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// Raw 오버로드 — 같은 캐시 필드(pCachedDepth_) 공유
+void GraphicContext::SetDepthStencilStateRaw(ID3D11DepthStencilState* _pRaw)
+{
+	if (_pRaw == pCachedDepth_)
+	{
+		skippedCallCount_ += 1;
+		return;
+	}
+
+	pCachedDepth_ = _pRaw;
+	apiCallCount_ += 1;
+	pContext_->OMSetDepthStencilState(_pRaw, 0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

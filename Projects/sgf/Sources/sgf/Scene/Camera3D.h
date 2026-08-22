@@ -67,7 +67,8 @@ public:
 	// 카메라가 구성되었는가? (SetPerspective* 호출 여부)
 	bool IsConfigured() const { return configured_; }
 
-	// === Camera 추상 구현 ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// Camera 추상 구현
 	virtual mat4 View() const override { return view_; }
 	virtual mat4 Projection() const override { return projection_; }
 

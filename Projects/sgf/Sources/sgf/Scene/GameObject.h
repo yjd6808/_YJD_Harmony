@@ -30,6 +30,7 @@
 #include "jc/Container/DataMap.h"
 #include "jc/Primitives/String.h"
 #include "jc/Pool/IdProvider.h"
+#include "sgf/Graphics/GraphicsEnums.h"	// StaticLevel
 #include "sgf/Scene/Component.h"
 #include "sgf/Scene/Transform.h"
 
@@ -45,13 +46,15 @@ class GraphicDevice;
 class GameObject
 {
 public:
-	explicit GameObject(const char* _pName = "");
+	explicit GameObject(const jc::String& _name = "");
 	virtual ~GameObject();						// GID 반환 + 컴포넌트 + 자식 전부 정리
 
-	// === 고유 ID (— 생성 시 발급, 소멸 시 반환, 순수 증가) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 고유 ID (— 생성 시 발급, 소멸 시 반환, 순수 증가)
 	_u64 GetGID() const { return gid_; }		// 재사용 없음 (IdProvider) — dangling 감지용
 
-	// === 트리 (핵심) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 트리 (핵심)
 	void AddChild(GameObject* _pChild, _u64 _zOrder);	// 소유권 이전 + zOrder 정렬 삽입
 	void RemoveChild(GameObject* _pChild);				// 분리 (delete 안 함)
 	void RemoveAllChildren();
@@ -60,51 +63,66 @@ public:
 	GameObject* GetChildAt(int _index) const;			// zOrder 오름차순, 동일 z는 삽입순
 	_u64 GetZOrder() const { return zOrder_; }
 	void SetZOrder(_u64 _zOrder);						// 부모 리스트에서 재배치 (동일 z면 그룹 맨 뒤)
-	GameObject* FindChildByName(const char* _pName);	// 서브트리 재귀 탐색
+	GameObject* FindChildByName(const jc::String& _name);	// 서브트리 재귀 탐색
 
-	// === 렌더 훅 (— 무인자, pScene_ 멤버로 씬 예약 창구 호출) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 렌더 훅 (— 무인자, pScene_ 멤버로 씬 예약 창구 호출)
 	// 호출 순서 = 그리기 순서. (Scene::RenderNode가 트래버설하며 호출)
 	virtual void OnRender() {}
 
-	// === 메시 자동 드로우 (— Scene::RenderNode가 트래버설 중 호출) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 메시 자동 드로우 (— Scene::RenderNode가 트래버설 중 호출)
 	// SetMesh()만 하면 기본 Material(흰색)로 그려진다. (단색 도형 = Material baseColor로 채움색 지정)
 	void RenderSelf();
 
-	// === 수명주기 훅 (— 씬 소속 확정/해제 시 1회) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 수명주기 훅 (— 씬 소속 확정/해제 시 1회)
 	virtual void OnEnter() {}		// AddChild 직후 — DeclareStaticXX로 스태틱 bake
 	virtual void OnExit() {}		// RemoveChild 직후 — (필요 시) 스태틱 정리
 
-	// === 갱신 훅 ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 갱신 훅
 	virtual void OnUpdate(const jc::TimeSpan& _dt) {}
 
-	// === 컴포넌트 (그대로 — 하이브리드 보관, 카메라는 컴포넌트 아님) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 컴포넌트 (그대로 — 하이브리드 보관, 카메라는 컴포넌트 아님)
 	template <typename T> T* GetComponent();	// Transform/Material = O(1) 멤버, 그 외 = 선형 스캔
 	template <typename T> T* AddComponent();	// 그 외 컴포넌트 생성+추가 (소유)
 	Transform* GetTransform() const { return pTransform_; }
 	Material*  GetMaterial()  const { return pMaterial_; }
 
-	// === 메시 / 표시 ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 메시 / 표시
 	void SetMesh(Mesh* _pMesh);  Mesh* GetMesh() const { return pMesh_; }	// 빌림 (ResourceMgr 소유)
 	void SetVisible(bool _visible);  bool IsVisible() const { return visible_; }
 
-	// === 이름 ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 메시 스태틱 레벨 (— B 기본 / A는 명시적 호출로 전환)
+	// SetMeshStaticLevel(slStatic) 하나로 동작한다 — "현재 월드 행렬"을 고정 보관한다. (이후 트랜스폼 무시)
+	// 예: Dynamic으로 이동 → 원하는 위치 도달 → SetMeshStaticLevel(slStatic) → 위치 고정
+	// slDynamic으로 전환하면 해제 (다시 움직일 수 있음). 검사는 GetMeshStaticLevel() 반환값 비교로 충분.
+	void SetMeshStaticLevel(StaticLevel _level);
+	StaticLevel GetMeshStaticLevel() const { return staticLevel_; }
+
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 이름
 	void SetName(const jc::String& _name) { name_ = _name; }
 	const jc::String& GetName() const { return name_; }
 
-	// === 데이터 보관 (— 모든 GameObject가 보유) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 데이터 보관 (— 모든 GameObject가 보유)
 	jc::CDataMap<>& GetDataMap() { return dataMap_; }	// String 키 → 다양한 타입 값
 
-	// === 엔진 내부 (Scene/Transform이 호출) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 엔진 내부 (Scene/Transform이 호출)
 	void Initialize(GraphicDevice* _pDevice);	// 기본 Material GPU 초기화, 자식 재귀
 	void Update(const jc::TimeSpan& _dt);		// OnUpdate + 컴포넌트 OnUpdate + 자식 재귀
-	void PropagateTransformDirty();				// Transform::SetDirty가 자식들에게 전파
 
 private:
 	friend class Scene;
 	friend class Transform;
-	void SetScene(Scene* _pScene);					// 소속 씬 (자식 재귀)
+	void SetScene(Scene* _pScene);								// 소속 씬 (자식 재귀)
 	void InsertChildSorted(GameObject* _pChild, _u64 _zOrder);	// 정렬 안정 삽입
-	void PropagateTransformDirtyRecursive();		// 이 노드 아래 자식 Transform 전부 worldDirty
 
 protected:
 	Scene* pScene_ = nullptr;						// 소속 씬 (OnRender()에서 사용, AddChild 시 주입)
@@ -125,6 +143,8 @@ private:
 	_u64 zOrder_ = 0;								// 부모 리스트 기준 (자기 자신의 깊이)
 	bool visible_ = true;
 	bool initialized_ = false;
+	StaticLevel staticLevel_ = StaticLevel::slDynamic;	// 렌더 모드 (기본: B — 다이나믹)
+	mat4 staticWorld_ = mat4::Identity();				// slStatic 시 고정된 월드 행렬
 
 	static IdProvider<_u64> gidProvider_;			// 전역 GID 발급기 (freeList 없음 — 순수 증가)
 };

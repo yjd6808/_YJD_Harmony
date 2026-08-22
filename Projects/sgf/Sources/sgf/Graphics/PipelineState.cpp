@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 3:30:00 PM
  * =====================
@@ -11,10 +11,8 @@
 
 NS_SGF_BEGIN
 
-// === 상태 설명자 채우기 헬퍼 ===
-
-/////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////////////////
+// 상태 설명자 채우기 헬퍼
 void FillRasterizerDesc(D3D11_RASTERIZER_DESC* _pOutDesc, CullMode _cull, FillMode _fill, FrontFace _frontFace)
 {
 	*_pOutDesc = {};
@@ -24,8 +22,7 @@ void FillRasterizerDesc(D3D11_RASTERIZER_DESC* _pOutDesc, CullMode _cull, FillMo
 	_pOutDesc->DepthClipEnable = TRUE;	// 근/원 평면 밖 깊이 잘라내기 (기본 동작)
 }
 
-/////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////////////////
 void FillBlendDesc(D3D11_BLEND_DESC* _pOutDesc, BlendMode _mode)
 {
 	*_pOutDesc = {};
@@ -74,8 +71,7 @@ void FillBlendDesc(D3D11_BLEND_DESC* _pOutDesc, BlendMode _mode)
 	}
 }
 
-/////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////////////////
 void FillDepthStencilDesc(D3D11_DEPTH_STENCIL_DESC* _pOutDesc, DepthMode _mode)
 {
 	*_pOutDesc = {};
@@ -101,8 +97,7 @@ void FillDepthStencilDesc(D3D11_DEPTH_STENCIL_DESC* _pOutDesc, DepthMode _mode)
 	}
 }
 
-/////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////////////////
 void FillSamplerDesc(D3D11_SAMPLER_DESC* _pOutDesc, FilterMode _filter, AddressMode _addressU, AddressMode _addressV)
 {
 	*_pOutDesc = {};
@@ -116,10 +111,8 @@ void FillSamplerDesc(D3D11_SAMPLER_DESC* _pOutDesc, FilterMode _filter, AddressM
 	_pOutDesc->MaxLOD = D3D11_FLOAT32_MAX;
 }
 
-// === RasterizerState ===
-
-/////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////////////////
+// RasterizerState
 bool RasterizerState::Initialize(GraphicDevice* _pDevice, CullMode _cull, FillMode _fill, FrontFace _frontFace)
 {
 	jc_assert_msg(_pDevice != nullptr, "디바이스가 없습니다.");
@@ -141,17 +134,14 @@ bool RasterizerState::Initialize(GraphicDevice* _pDevice, CullMode _cull, FillMo
 	return true;
 }
 
-/////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////////////////
 void RasterizerState::Finalize()
 {
 	pState_.Reset();
 }
 
-// === BlendState ===
-
-/////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////////////////
+// BlendState
 bool BlendState::Initialize(GraphicDevice* _pDevice, BlendMode _mode)
 {
 	jc_assert_msg(_pDevice != nullptr, "디바이스가 없습니다.");
@@ -170,17 +160,14 @@ bool BlendState::Initialize(GraphicDevice* _pDevice, BlendMode _mode)
 	return true;
 }
 
-/////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////////////////
 void BlendState::Finalize()
 {
 	pState_.Reset();
 }
 
-// === DepthStencilState ===
-
-/////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////////////////
+// DepthStencilState
 bool DepthStencilState::Initialize(GraphicDevice* _pDevice, DepthMode _mode)
 {
 	jc_assert_msg(_pDevice != nullptr, "디바이스가 없습니다.");
@@ -199,17 +186,14 @@ bool DepthStencilState::Initialize(GraphicDevice* _pDevice, DepthMode _mode)
 	return true;
 }
 
-/////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////////////////
 void DepthStencilState::Finalize()
 {
 	pState_.Reset();
 }
 
-// === SamplerState ===
-
-/////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////////////////
+// SamplerState
 bool SamplerState::Initialize(GraphicDevice* _pDevice, FilterMode _filter, AddressMode _addressU, AddressMode _addressV)
 {
 	jc_assert_msg(_pDevice != nullptr, "디바이스가 없습니다.");
@@ -228,8 +212,7 @@ bool SamplerState::Initialize(GraphicDevice* _pDevice, FilterMode _filter, Addre
 	return true;
 }
 
-/////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////////////////
 void SamplerState::Finalize()
 {
 	pState_.Reset();

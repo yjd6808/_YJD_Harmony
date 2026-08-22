@@ -34,7 +34,7 @@ void WindowAndMessageLoop_Main()
 	// (2) AdjustWindowRect: 요청한 800x600이 '그림 영역' 크기가 되도록 테두리 포함 크기 계산
 	// (3) CreateWindowEx: 실제 창 생성, 식별자(HWND) 발급
 	Window window;
-	if (!window.Create(L"02. 윈도우와 메시지 루프 (ESC로 종료)", 800, 600))
+	if (!window.Create("02. 윈도우와 메시지 루프 (ESC로 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;

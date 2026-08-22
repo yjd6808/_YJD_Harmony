@@ -71,7 +71,7 @@ void ShadowMapping_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create(L"27. 그림자 매핑 - 왼쪽: 그림자 없음 | 오른쪽: 그림자 적용 (←→ 빛, ↑↓ 바이어스, ESC)", 800, 600))
+	if (!window.Create("27. 그림자 매핑 - 왼쪽: 그림자 없음 | 오른쪽: 그림자 적용 (←→ 빛, ↑↓ 바이어스, ESC)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;

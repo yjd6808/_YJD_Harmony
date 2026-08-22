@@ -1,6 +1,6 @@
 # 06. HLSL — 셰이더 언어와 상수 버퍼로 움직이는 삼각형
 
-> 관련 코드: `Projects/sgfr/Sources/sgfr/06_HLSL/` (`06_HLSL_Main.cpp`, `06_HLSL_Function.cpp`)
+> 관련 코드: `Projects/sgfr/Sources/sgfr/Tutorial/06_HLSL/` (`06_HLSL_Main.cpp`, `06_HLSL_Function.cpp`)
 > 관련 엔진: `Projects/sgf/Sources/sgf/Graphics/Shader.h`, `Buffers.h` (ConstantBuffer)
 > 실행: sgfr 실행 후 콘솔 메뉴에서 **6번** 선택
 > 선행 학습: 05. 렌더링 파이프라인
@@ -50,7 +50,7 @@ GPU 상수 버퍼는 데이터를 16바이트 단위로 묶어 처리합니다. 
 
 `06_HLSL_Main.cpp`의 `HLSL_Main()`과 Function.cpp의 `AnimatedShaderSource()`를 따라갑니다.
 
-### 5-1. C++ 쪽 상수 버퍼 구조체 (코드 31~38행)
+### 5-1. C++ 쪽 상수 버퍼 구조체 (코드 31~37행)
 
 ```cpp
 // 셰이더 CbTime(b0)과 메모리 배치 일치 (16바이트)
@@ -111,8 +111,9 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 ### 5-5. 렌더 루프에서의 상수 버퍼 갱신 (코드 111~121행)
 
 ```cpp
-device.BeginFrame(color(0.1f, 0.1f, 0.12f, 1.0f));
+device.BeginFrame(color(0x1A, 0x1A, 0x1F, 0xFF));	// 어두운 회색 (0.1, 0.1, 0.12)
 
+// 매 프레임 시간을 GPU로 보낸다. 이것이 상수 버퍼의 역할!
 CbTime cb = {};
 cb.time_ = elapsed;
 cbTime.UpdateAndBind(&device, cb, 0);	// register(b0)에 연결
@@ -169,7 +170,7 @@ D3D11의 상수 버퍼는 GPU에서 **상수 레지스터(Constant Register) 파
 
 ### 6-7. 상수 버퍼 슬롯의 한계와 성능 규율
 
-D3D11의 상수 버퍼 슬롯은 스테이지당 **최대 15개(b0~b14)**이며, sgf의 `GraphicContext`는 `MAX_CBUFFER_SLOTS = 8`로 제한합니다. 슬롯이 부족해지지 않도록 실전 렌더러는 "변환 행렬은 b0, 조명 파라미터는 b1, 머티리얼 색은 b2"처럼 **슬롯 할당 규약**을 정합니다 — 12번 튜토리얼의 주제입니다. 또 갱신 비용도 생각해야 합니다. 매 프레임 갱신되는 버퍼와 거의 안 바뀌는 버퍼를 구분해서, 불변 데이터(예: 화면 크기)는 프레임마다 다시 Map하지 않는 것이 규율입니다. 상수 버퍼는 "작지만 자주 바뀌는" 통로라는 특성이 하드웨어 접근 경로와 함께 이 모든 규칙을 만들었습니다.
+D3D11의 상수 버퍼 슬롯은 셰이더 스테이지당 **최대 14개(b0~b13)**이며, sgf의 `GraphicContext`는 `MAX_CBUFFER_SLOTS = 8`로 더 엄격하게 제한합니다. 슬롯이 부족해지지 않도록 실전 렌더러는 "변환 행렬은 b0, 조명 파라미터는 b1, 머티리얼 색은 b2"처럼 **슬롯 할당 규약**을 정합니다 — 12번 튜토리얼의 주제입니다. 또 갱신 비용도 생각해야 합니다. 매 프레임 갱신되는 버퍼와 거의 안 바뀌는 버퍼를 구분해서, 불변 데이터(예: 화면 크기)는 프레임마다 다시 Map하지 않는 것이 규율입니다. 상수 버퍼는 "작지만 자주 바뀌는" 통로라는 특성이 하드웨어 접근 경로와 함께 이 모든 규칙을 만들었습니다.
 
 ## 7. 핵심 규칙 요약
 

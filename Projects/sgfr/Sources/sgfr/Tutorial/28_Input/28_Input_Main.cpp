@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 11:10:00 AM
  * =====================
@@ -32,7 +32,7 @@ void Input_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create(L"28. 입력 처리 - 마우스/키보드/휠 (ESC로 종료)", 800, 600))
+	if (!window.Create("28. 입력 처리 - 마우스/키보드/휠 (ESC로 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
@@ -81,7 +81,7 @@ void Input_Main()
 
 	VertexBuffer vb;
 	IndexBuffer ib;
-	if (!vb.Create(&device, vertices, sizeof(VertexPC), 4, true) ||
+	if (!vb.Create(&device, vertices, sizeof(VertexPC), 4, ResourceUsage::ruDynamic) ||
 		!ib.Create(&device, indices, 6))
 		{
 		jc::Console::WriteLine("버퍼 생성 실패!");
@@ -156,3 +156,4 @@ void Input_Main()
 	device.Finalize();
 	window.Destroy();
 }
+

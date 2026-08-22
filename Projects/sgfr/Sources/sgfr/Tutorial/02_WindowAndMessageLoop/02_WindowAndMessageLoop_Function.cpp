@@ -24,7 +24,7 @@ const char* VkCodeToName(_s32 _vkCode)
 	case VK_UP:      return "UP";
 	case VK_DOWN:    return "DOWN";
 	case VK_SHIFT:   return "SHIFT";
-	case VK_CONTROL: return "CTRL";
+	case VK_CONTROL: return "CTR";
 	default:
 		break;
 	}

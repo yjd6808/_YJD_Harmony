@@ -43,7 +43,7 @@ void Cube3D_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create(L"13. 3D 큐브 - 스페이스바로 깊이 테스트 토글 (ESC로 종료)", 800, 600))
+	if (!window.Create("13. 3D 큐브 - 스페이스바로 깊이 테스트 토글 (ESC로 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;

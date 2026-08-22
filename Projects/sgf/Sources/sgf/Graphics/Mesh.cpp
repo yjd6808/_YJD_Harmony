@@ -122,31 +122,19 @@ bool Mesh::InitializeAsLine2D(GraphicDevice* _pDevice, VertexShader* _pVs)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// [공용] FillResult 기하 → GPU 메시 + CPU 미러(vfPTC2D). 2D 팩토리 전용.
+// [공용] FillResult 기하 → GPU 메시 + vfPTC2D 표기. 2D 팩토리 전용. (CPU 미러 없음)
 bool Mesh::Build2DPrimitive(GraphicDevice* _pDevice, VertexShader* _pVs,
-	const FillResult& _result, const char* _pName)
+	FillResult& _result, const jc::String& _pName)
 {
 	if (_result.vertices_.Size() == 0 || _result.indices_.Size() == 0)
 	{
 		return false;
 	}
 
-	// CPU 미러 저장 (배칭/월드 변환용 — GPU 버퍼와 분리 보관. _u16은 PushTriangles 호환)
-	cpuVertices_.Clear();
-	cpuIndices_.Clear();
-	for (const VertexPTC& vertex : _result.vertices_)
-	{
-		cpuVertices_.PushBack(vertex);
-	}
-	for (_u16 index : _result.indices_)
-	{
-		cpuIndices_.PushBack(index);
-	}
-
-	// GPU 초기화용 _u32 인덱스 배열 (Mesh::Initialize 입력 형식)
+	// GPU 초기화용 _u32 인덱스 배열 (Mesh::Initialize 입력 형식 — 임시로만 사용)
 	jc::Vector<_u32> indices32;
-	indices32.Reserve((_s32)cpuIndices_.Size());
-	for (_u16 index : cpuIndices_)
+	indices32.Reserve((_s32)_result.indices_.Size());
+	for (_u16 index : _result.indices_)
 	{
 		indices32.PushBack((_u32)index);
 	}
@@ -154,7 +142,7 @@ bool Mesh::Build2DPrimitive(GraphicDevice* _pDevice, VertexShader* _pVs,
 	UINT layoutCount = 0;
 	const D3D11_INPUT_ELEMENT_DESC* pDescs = VertexPTC::LayoutDescs(&layoutCount);
 
-	if (!Initialize(_pDevice, cpuVertices_.Source(), sizeof(VertexPTC), cpuVertices_.Size(),
+	if (!Initialize(_pDevice, _result.vertices_.Source(), sizeof(VertexPTC), _result.vertices_.Size(),
 		pDescs, layoutCount, _pVs, indices32.Source(), indices32.Size()))
 	{
 		return false;
@@ -531,13 +519,12 @@ bool Mesh::InitializeAsQuad3D(GraphicDevice* _pDevice, VertexShader* _pVs)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
 void Mesh::Finalize()
 {
 	inputLayout_.Finalize();
 	indexed_ = false;
 	format_ = VertexFormat::vfCustom;
-	cpuVertices_.Clear();
-	cpuIndices_.Clear();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

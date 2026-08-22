@@ -21,7 +21,7 @@
 | 새 프로젝트 | 역할 |
 |---|---|
 | **sgf** | jc를 기반으로 만든 **DX11 2D/3D 게임 엔진** (정적 라이브러리) |
-| **sgfr** | sgf를 이용해 DX11을 1번부터 31번까지 **순서대로 배우는 튜토리얼** (콘솔 실행 파일) |
+| **sgfr** | sgf를 이용해 DX11을 1번부터 33번까지 **순서대로 배우는 튜토리얼** (콘솔 실행 파일) |
 
 ### 왜 만들었나요?
 
@@ -33,7 +33,7 @@ sgcl은 지금 Cocos2d-x 엔진 위에서 돌아갑니다. 이 Cocos2d-x를 **�
 
 ## 2. 학습 순서 (이 순서대로 읽고, 이 순서대로 실행하세요)
 
-sgfr을 실행하면 콘솔에 1~31 목차가 나옵니다. 번호를 입력하면 해당 튜토리얼 윈도우가 떠서 직접 눈으로 보며 실습할 수 있습니다.
+sgfr을 실행하면 메인 메뉴(1. Tutorial / 2. Practice / 0. 종료)가 나옵니다. Tutorial을 선택하면 콘솔에 1~33 목차가 나오고, 번호를 입력하면 해당 튜토리얼 윈도우가 떠서 직접 눈으로 보며 실습할 수 있습니다.
 각 튜토리얼은 이 폴더의 문서와 짝을 이룹니다.
 
 ### 1부: DX11 기초 (01~09) — 점 하나에서 상태 객체까지
@@ -70,13 +70,13 @@ sgfr을 실행하면 콘솔에 1~31 목차가 나옵니다. 번호를 입력하�
 | 18 | 블렌드 스테이트 | `18_블렌드_스테이트.md` | 반투명의 비밀: 알파/가산/곱셈 혼합 |
 | 19 | 래스터라이저 스테이트 | `19_래스터라이저_스테이트.md` | 와이어프레임과 컬링(뒷면 걸러내기) |
 
-### 4부: 엔진의 뼈대 (20~23) — 상용 엔진의 리소스/렌더 구조
+### 4부: 엔진의 뼈대 (20~24) — 상용 엔진의 리소스/렌더 구조
 
 | 번호 | 튜토리얼 | 문서 | 한 줄 요약 |
 |---|---|---|---|
 | 20 | 머티리얼 | `20_머티리얼.md` | 셰이더+상태+텍스처를 하나의 값으로 묶기 |
 | 21 | 리소스 매니저 | `21_리소스_매니저.md` | 키 발급과 소유권, 디폴트 리소스 |
-| 22 | 렌더 오브젝트 루프 | `22_렌더_오브젝트_루프.md` | SceneRenderer: 경리실(b0/b1) 자동화 |
+| 22 | 렌더 오브젝트 루프 | `22_렌더_오브젝트_루프.md` | Renderer3D: 경리실(b0/b1) 자동화 |
 | 23 | 스테이트 캐시 | `23_스테이트_캐시.md` | 중복 바인딩을 숫자로 검증하기 |
 | 24 | 셰이딩 모델 | `24_셰이딩_모델.md` | 람버트/퐁/블린-퐁: 반짝임의 공식 |
 
@@ -88,7 +88,7 @@ sgfr을 실행하면 콘솔에 1~31 목차가 나옵니다. 번호를 입력하�
 | 26 | 포스트 프로세싱 | `26_포스트_프로세싱.md` | 화면 후보정: 그레이/세피아/비네트/물결 |
 | 27 | 그림자 매핑 | `27_그림자_매핑.md` | 그림자는 어떻게 생기나: 섀도우 맵 |
 
-### 6부: 게임 만들기 (28~31) — 엔진으로 게임 구조 완성
+### 6부: 게임 만들기와 편의 계층 (28~33) — 엔진으로 게임 구조 완성
 
 | 번호 | 튜토리얼 | 문서 | 한 줄 요약 |
 |---|---|---|---|
@@ -96,18 +96,18 @@ sgfr을 실행하면 콘솔에 1~31 목차가 나옵니다. 번호를 입력하�
 | 29 | 씬 & 사운드 | `29_씬과_사운드.md` | Application/Director/Scene 생명주기 |
 | 30 | 스프라이트 애니메이션 | `30_스프라이트_애니메이션.md` | 시트 UV와 이징(Easing) |
 | 31 | 파이프라인 여행 | `31_파이프라인_여행.md` | 1~30 전 과정을 한 파일로 종합하는 캡스톤 |
+| 32 | 프리미티브 메시 | `32_프리미티브_메시.md` | 매니저가 기본 제공하는 단위 도형 10종 꺼내 쓰기 |
+| 33 | 프리미티브 셰이프 | `33_프리미티브_셰이프.md` | Shape2D/Shape3D 편의 노드 — 메시 자동 드로우 |
 
-### 부록 (Archive — 참고 자료)
+### 부록 (RnD — 참고 자료)
 
-튜토리얼 번호와 직접 관련 없는 문서는 `Docs/sgfr/Archive/` 폴더로 분리해 두었습니다. 필요할 때만 열어보세요.
+튜토리얼 번호와 직접 관련 없는 엔진 연구 문서는 `Docs/sgf/`에 따로 두었습니다. 필요할 때만 열어보세요.
 
 | 문서 | 내용 |
 |---|---|
-| `Archive/23_sgcl_통합_가이드.md` | Cocos2d-x를 sgf로 교체하는 실무 가이드 |
-| `Archive/25_EngineV2_Architecture.md` | v1(튜토리얼 모음) → v2(엔진화) 구조 변화 |
-| `Archive/26_엔진구조_변경전후_v2.1.md` | v2 → v2.1 구조 강화 (렌더러 분리 등) |
-| `Archive/MultithreadRendering/` | 멀티스레드 렌더링 RnD 시리즈 |
-| `Docs/sgf/RnD/EngineImprovement/` | Unity/Unreal급 엔진을 위한 개선 방향 시리즈 |
+| `sgf/RnD/EngineImprovement/` | Unity/Unreal급 엔진을 위한 개선 방향 시리즈 (01~08, README.txt) |
+| `sgf/RnD/MultithreadRendering/` | 멀티스레드 렌더링 RnD 시리즈 (00~05) |
+| `sgf/07_학습_로드맵.md` | 엔진 학습 순서와 목표 정리 |
 
 **공부 방법 추천:**
 1. 문서를 먼저 읽는다 (개념 이해)
@@ -122,8 +122,8 @@ sgfr을 실행하면 콘솔에 1~31 목차가 나옵니다. 번호를 입력하�
 ```
 UltimateHarmony/
 ├── Docs/
-│   ├── sgfr/                        ← 지금 읽는 학습 문서들 (00~31)
-│   │   └── Archive/                 ← 튜토리얼과 직접 무관한 이전 문서 보관
+│   ├── sgfr/                        ← 지금 읽는 학습 문서들 (00~33)
+│   │   └── Archive/                 ← (삭제됨 — RnD 문서는 Docs/sgf/RnD로 이동)
 │   └── sgf/RnD/                     ← 엔진 개선/연구 문서
 ├── Props/
 │   ├── base.props                   ← 공통 빌드 설정 (강제 포함 Core.h 등)
@@ -139,17 +139,18 @@ UltimateHarmony/
     │       ├── Input/               ← InputManager (키보드/마우스/이벤트)
     │       ├── Graphics/            ← GraphicDevice, Shader, Buffers, Texture,
     │       │                          Vertex, RenderStates, Mesh, Material,
-    │       │                          ResourceMgr, SceneRenderer, Renderer2D/3D
+    │       │                          ResourceMgr, Renderer2D, Renderer3D
     │       ├── Scene/               ← Camera, Scene, Director
     │       └── SgfHeader.h          ← 이거 하나만 include하면 전부 사용 가능
     └── sgfr/                        ← 튜토리얼 (콘솔 앱)
-        ├── Project/sgfr.vcxproj   (+ .filters: 01~31 번호순 필터)
+        ├── Project/sgfr.vcxproj   (+ .filters: 01~33 번호순 필터)
         └── Sources/sgfr/
             ├── PCH/Core.h         ← jc + sgf를 포함하는 PCH
-            ├── Main.cpp           ← 콘솔 메뉴 (1~31 선택)
+            ├── Main.cpp           ← 메인 메뉴 (Tutorial/Practice 선택)
             ├── TutorialRegistry.* ← 튜토리얼 목록 등록부
             ├── Common/TutorialCommon.* ← 공용 셰이더/도형 헬퍼
-            └── 01_LinearAlgebra/ … 31_PipelineJourney/
+            ├── Practice/          ← 연습(응용) 등록부 (PracticeRegistry.*)
+            └── 01_LinearAlgebra/ … 33_PrimitiveShape/
 ```
 
 ---
@@ -166,7 +167,7 @@ UltimateHarmony/
 - 파라미터: `_camelCase`, 출력용은 `_pOut`
 - 구조체 공개 멤버: `name_` (trailing underscore)
 - 매크로: `JC_DELETE_SAFE`, `JC_RELEASE_SAFE` 등
-- 싱글톤 매크로: `g_cResourceMgr`(ResourceMgr::Get()), `g_cDirector`, `g_cApp`, `g_cWindow`, `g_cDevice`, `g_cInput`, `g_cRenderer2D/3D` 등
+- 싱글톤 매크로: `g_cResourceMgr`(ResourceMgr::GetInstance()), `g_cDirector`, `g_cApp`, `g_cWindow`, `g_cDevice`, `g_cInput`, `g_cRenderer2D/3D`, `g_cTimer`, `g_cSound` 등
 
 ### 4-3. Cocos2d-x와의 관계 (sgcl 교체 대비)
 
@@ -207,15 +208,14 @@ UltimateHarmony/
 
 엔진(sgf)은 위 흐름을 사람이 다루기 쉬운 개념(Application, Scene…)으로 포장한 것뿐입니다.
 01~09에서 날것의 DX11을 배우고, 20~24에서 리소스/머티리얼/렌더러라는 엔진 뼈대를 세우고,
-25~31에서 상용 엔진이 반드시 갖추는 심화 기능(렌더 타깃·포스트 프로세싱·그림자·씬·애니메이션)까지 전부 익힙니다.
+25~33에서 상용 엔진이 반드시 갖추는 심화 기능(렌더 타깃·포스트 프로세싱·그림자·씬·애니메이션)과 편의 계층(프리미티브 메시/셰이프)까지 전부 익힙니다.
 
 ---
 
 ## 6. 빌드 방법
 
 1. `Scripts\BuildProject\sgfr.bat` (또는 프로젝트 생성 배치 `BuildProject\sgfr.bat -P x64`)로 빌드합니다.
-2. SVG 튜토리얼(16번)을 온전히 쓰려면 `Projects/sgf/Sources/sgf/_Extern/nanosvg/README.md`의 안내대로
-   nanosvg 헤더 2개를 내려받아 넣습니다. 없어도 빌드는 되며, 16번은 대체(fallback) 텍스처로 동작합니다.
+2. SVG 튜토리얼(16번)을 온전히 쓰려면 `Projects/sgf/Sources/sgf/_Extern/nanosvg/` 폴더에 nanosvg 헤더 2개(nanosvg.h, nanosvgrast.h)를 받아 넣습니다. 없어도 빌드는 되며, 16번은 대체(fallback) 텍스처로 동작합니다.
 3. `Output\x64\Debug\`에 나온 sgfr.exe를 실행하면 콘솔 메뉴가 나옵니다.
 
 ---

@@ -41,7 +41,7 @@ private:
 
 public:
 	static constexpr _s32 INVALID_AUDIO_ID = -1;	// 재생 실패 시 반환되는 번호
-	static constexpr _s32 MAX_VOICES = 32;		// 동시 재생 가능한 소리 수
+	static constexpr _s32 MAX_VOICES = 32;			// 동시 재생 가능한 소리 수
 
 public:
 	// 사운드 엔진을 켬다. 실패해도 게임은 계속 돌 수 있게 설계했다. (소리만 안 남)
@@ -99,7 +99,7 @@ private:
 		IXAudio2SourceVoice* pVoice = nullptr;	// 재생기 (nullptr면 빈 슬롯)
 		_s32 audioId_ = INVALID_AUDIO_ID;		// 외부에 돌려준 제어 번호
 		bool paused_ = false;					// 일시정지 상태인가
-		bool loop_ = false;					// 반복 재생인가
+		bool loop_ = false;						// 반복 재생인가
 		WavData* pOwnedTone = nullptr;			// PlayTone이 즉석에서 만든 데이터 (슬롯이 소유, 회수 시 delete)
 	};
 
@@ -128,8 +128,8 @@ private:
 	_s32 nextAudioId_;						// 다음에 발급할 audioId
 
 	VoiceSlot voices_[MAX_VOICES];				// 재생기 슬롯들
-	jc::HashMap<jc::String, WavData*> cache_;		// 경로 -> WAV 데이터 캐시
-	jc::Vector<jc::String> cacheKeys_;				// 캐시된 경로 목록 (UncacheAll 순회용)
+	jc::HashMap<jc::String, WavData*> cache_;	// 경로 -> WAV 데이터 캐시
+	jc::Vector<jc::String> cacheKeys_;			// 캐시된 경로 목록 (UncacheAll 순회용)
 };
 
 NS_SGF_END

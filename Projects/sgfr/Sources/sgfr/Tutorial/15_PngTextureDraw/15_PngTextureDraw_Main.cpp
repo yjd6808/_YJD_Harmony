@@ -34,7 +34,7 @@ void PngTextureDraw_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create(L"15. PNG 텍스처 그리기 (ESC로 종료)", 800, 600))
+	if (!window.Create("15. PNG 텍스처 그리기 (ESC로 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
@@ -55,7 +55,7 @@ void PngTextureDraw_Main()
 	// (1순위) 실행 팏더의 Resources\sample.png를 WIC로 디코딩
 	// (2순위) 파일이 없으면 직접 만든 체커보드 픽셀로 텍스처 생성
 	Texture texture;
-	if (texture.LoadFromFile(&device, L"Resources\\sample.png"))
+	if (texture.LoadFromFile(&device, "Resources\\sample.png"))
 	{
 		jc::Console::Write("Resources\\sample.png 로드 성공! (%d x %d)\n", texture.Width(), texture.Height());
 	}

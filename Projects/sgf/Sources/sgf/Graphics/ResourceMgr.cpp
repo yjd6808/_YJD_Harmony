@@ -86,6 +86,10 @@ ResourceMgr::ResourceMgr()
 	{
 		primitiveMesh2DKeys_[i] = INVALID_RESOURCE_KEY;
 	}
+	for (_s32 i = 0; i < PRIMITIVE_MESH3D_COUNT; ++i)
+	{
+		primitiveMesh3DKeys_[i] = INVALID_RESOURCE_KEY;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -141,6 +145,10 @@ void ResourceMgr::Finalize()
 	{
 		primitiveMesh2DKeys_[i] = INVALID_RESOURCE_KEY;
 	}
+	for (_s32 i = 0; i < PRIMITIVE_MESH3D_COUNT; ++i)
+	{
+		primitiveMesh3DKeys_[i] = INVALID_RESOURCE_KEY;
+	}
 	pDevice_ = nullptr;
 }
 
@@ -167,6 +175,7 @@ _u64 ResourceMgr::Add(IResource* _pResource, StringView _path)
 	}
 
 	const _u64 key = Add(_pResource);
+	static_cast<ResourceBase*>(_pResource)->SetPath(_path);	// 리소스가 자기 경로를 보관한다 (B-7)
 	pathIndex_.Insert(String(_path.SafeSource()), key);
 	return key;
 }
@@ -232,7 +241,7 @@ _u64 ResourceMgr::FindKeyByPath(StringView _path)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_u64 ResourceMgr::LoadTextureFromFile(const char* _szFilePath)
+_u64 ResourceMgr::LoadTextureFromFile(const jc::String& _szFilePath)
 {
 	jc_assert_msg(pDevice_ != nullptr, "Initialize 이후에만 로드할 수 있습니다.");
 
@@ -242,12 +251,8 @@ _u64 ResourceMgr::LoadTextureFromFile(const char* _szFilePath)
 		return existingKey;
 	}
 
-	// UTF-8 경로 -> 유니코드 경로 (LoadFromFile이 wchar_t를 받기 때문)
-	wchar_t widePath[MAX_PATH * 2] = { 0, };
-	MultiByteToWideChar(CP_UTF8, 0, _szFilePath, -1, widePath, _countof(widePath) - 1);
-
 	Texture* pTexture = dbg_new Texture;
-	if (!pTexture->LoadFromFile(pDevice_, widePath))
+	if (!pTexture->LoadFromFile(pDevice_, _szFilePath))
 	{
 		delete pTexture;
 		return INVALID_RESOURCE_KEY;
@@ -258,7 +263,7 @@ _u64 ResourceMgr::LoadTextureFromFile(const char* _szFilePath)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_u64 ResourceMgr::LoadTextureFromSvgFile(const char* _szFilePath, _f32 _scale)
+_u64 ResourceMgr::LoadTextureFromSvgFile(const jc::String& _szFilePath, _f32 _scale)
 {
 	jc_assert_msg(pDevice_ != nullptr, "Initialize 이후에만 로드할 수 있습니다.");
 
@@ -335,12 +340,12 @@ Mesh* ResourceMgr::FindPrimitiveMesh2D(PrimitiveMesh2DType _type)
 //////////////////////////////////////////////////////////////////////////////////////////
 Mesh* ResourceMgr::FindPrimitiveMesh3D(PrimitiveMesh3DType _type)
 {
-	const _s32 index = PRIMITIVE_MESH3D_OFFSET + static_cast<_s32>(_type);
-	if (index < PRIMITIVE_MESH3D_OFFSET || index >= PRIMITIVE_MESH2D_COUNT)
+	const _s32 index = static_cast<_s32>(_type);
+	if (index < 0 || index >= PRIMITIVE_MESH3D_COUNT)
 	{
 		return nullptr;
 	}
-	return Find<Mesh>(primitiveMesh2DKeys_[index]);
+	return Find<Mesh>(primitiveMesh3DKeys_[index]);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -357,12 +362,12 @@ _u64 ResourceMgr::GetPrimitiveMesh2DKey(PrimitiveMesh2DType _type) const
 //////////////////////////////////////////////////////////////////////////////////////////
 _u64 ResourceMgr::GetPrimitiveMesh3DKey(PrimitiveMesh3DType _type) const
 {
-	const _s32 index = PRIMITIVE_MESH3D_OFFSET + static_cast<_s32>(_type);
-	if (index < PRIMITIVE_MESH3D_OFFSET || index >= PRIMITIVE_MESH2D_COUNT)
+	const _s32 index = static_cast<_s32>(_type);
+	if (index < 0 || index >= PRIMITIVE_MESH3D_COUNT)
 	{
 		return INVALID_RESOURCE_KEY;
 	}
-	return primitiveMesh2DKeys_[index];
+	return primitiveMesh3DKeys_[index];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -461,18 +466,17 @@ bool ResourceMgr::CreateDefaults()
 	defaultMaterial3DKey_ = Add(pMat3D);
 
 	// 4. 프리미티브 메시 (2D: 순수 2D 4종 — vfPTC2D 배칭용 / 3D 공용 6종 — vfPNT3D)
-	// 통합 키 테이블: 2D(0~3) + 3D(4~9). 3D 메시는 FindPrimitiveMesh2D로도 가져올 수 있다.
-	for (_s32 t = 0; t < PRIMITIVE_MESH3D_OFFSET; ++t)
+	// 2D/3D 별도 키 테이블 — 각 enum은 자기 영역만 담당한다.
+	for (_s32 t = 0; t < PRIMITIVE_MESH2D_COUNT; ++t)
 	{
 		if (!CreatePrimitiveMesh2D(pDevice_, pVs2D, *this, static_cast<PrimitiveMesh2DType>(t), primitiveMesh2DKeys_[t]))
 		{
 			return false;
 		}
 	}
-	for (_s32 t = 0; t < (_s32)PrimitiveMesh3DType::Max; ++t)
+	for (_s32 t = 0; t < PRIMITIVE_MESH3D_COUNT; ++t)
 	{
-		if (!CreatePrimitiveMesh3D(pDevice_, pVs3D, *this, static_cast<PrimitiveMesh3DType>(t),
-			primitiveMesh2DKeys_[PRIMITIVE_MESH3D_OFFSET + t]))
+		if (!CreatePrimitiveMesh3D(pDevice_, pVs3D, *this, static_cast<PrimitiveMesh3DType>(t), primitiveMesh3DKeys_[t]))
 		{
 			return false;
 		}
@@ -490,27 +494,27 @@ bool ResourceMgr::CreateDefaults()
 	{
 		defaultKeys_.Insert(primitiveMesh2DKeys_[i]);
 	}
+	for (_s32 i = 0; i < PRIMITIVE_MESH3D_COUNT; ++i)
+	{
+		defaultKeys_.Insert(primitiveMesh3DKeys_[i]);
+	}
 	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void ResourceMgr::RemovePathEntry(_u64 _key)
 {
-	// 역방향 인덱스가 없으므로 선형 탐색으로 경로를 찾는다. (경로 리소스 수는 적음)
-	String foundPath;
-	bool found = false;
-	pathIndex_.ForEach([&foundPath, &found, _key](const Pair<String, _u64>& _pair)
+	// 리소스가 자기 경로를 보관하므로, 역방향 인덱스(선형 탐색) 없이 바로 제거한다. (B-7)
+	IResource* pResource = Find(_key);
+	if (pResource == nullptr)
 	{
-		if (!found && _pair.value_ == _key)
-		{
-			foundPath = _pair.key_;
-			found = true;
-		}
-	});
+		return;
+	}
 
-	if (found)
+	const char* szPath = static_cast<ResourceBase*>(pResource)->GetPath();
+	if (szPath[0] != '\0')
 	{
-		pathIndex_.Remove(foundPath);
+		pathIndex_.Remove(String(szPath));
 	}
 }
 

@@ -7,5 +7,5 @@
 
 #pragma once
 
-// 렌더 오브젝트 루프 튜토리얼을 실행한다. (SceneRenderer로 여러 객체 그리기)
+// 렌더 오브젝트 루프 튜토리얼을 실행한다. (Renderer3D로 여러 객체 그리기)
 void RenderObjectLoop_Main();

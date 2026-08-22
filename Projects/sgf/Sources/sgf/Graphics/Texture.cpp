@@ -47,7 +47,7 @@ Texture::~Texture()
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // WIC으로 이미지 파일을 읽어 텍스처 생성
-bool Texture::LoadFromFile(GraphicDevice* _pDevice, const wchar_t* _szFilePath)
+bool Texture::LoadFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePath)
 {
 	// COM 초기화. 이미 다른 곳에서 초기화했으면 S_FALSE가 오지만 문제없다.
 	// RPC_E_CHANGED_MODE인 경우만 짜짝이 다른 것이므로 CoUninitialize를 생략해야 하지만
@@ -68,9 +68,12 @@ bool Texture::LoadFromFile(GraphicDevice* _pDevice, const wchar_t* _szFilePath)
 		if (FAILED(hr)) { break; }
 
 		// 2. 파일 디코더 생성: 확장자에 맞는 코덱(PNG/JPG...)을 자동 선택한다.
+		// String(UTF-8) → wide 변환
+		wchar_t widePath[MAX_PATH * 2] = { 0, };
+		::MultiByteToWideChar(CP_UTF8, 0, _szFilePath.Source(), _szFilePath.Length(), widePath, _countof(widePath) - 1);
 		SgfComPtr<IWICBitmapDecoder> pDecoder;
 		hr = pFactory->CreateDecoderFromFilename(
-			_szFilePath, nullptr, GENERIC_READ,
+			widePath, nullptr, GENERIC_READ,
 			WICDecodeMetadataCacheOnDemand, pDecoder.GetAddressOf());
 		if (FAILED(hr)) { break; }
 
@@ -117,12 +120,12 @@ bool Texture::LoadFromFile(GraphicDevice* _pDevice, const wchar_t* _szFilePath)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // nanosvg로 SVG 파일을 래스터화해서 텍스처 생성
-bool Texture::LoadFromSvgFile(GraphicDevice* _pDevice, const char* _szFilePath, _f32 _scale)
+bool Texture::LoadFromSvgFile(GraphicDevice* _pDevice, const jc::String& _szFilePath, _f32 _scale)
 {
 #if SGF_HAS_NANOSVG
 	// 1. SVG 파싱: 파일을 읽어 벡터 도형 목록으로 변환한다.
 	// "px" 단위, 96 DPI는 nanosvg 권장 기본값이다.
-	NSVGimage* pImage = nsvgParseFromFile(_szFilePath, "px", 96.0f);
+	NSVGimage* pImage = nsvgParseFromFile(_szFilePath.Source(), "px", 96.0f);
 	if (pImage == nullptr)
 	{
 		return false;
@@ -176,9 +179,9 @@ bool Texture::CreateFromMemory(GraphicDevice* _pDevice, const _u8* _pPixels, _s3
 	td.Height = UINT(_height);
 	td.MipLevels = 1;								// 밉맵 없음 (튜토리얼 단순화)
 	td.ArraySize = 1;
-	td.Format = DXGI_FORMAT_R8G8B8A8_UNORM;			// RGBA 각 8비트
+	td.Format = DXGI_FORMAT_R8G8B8A8_UNORM;			// RGBA 각 8비트 (DXGI_FORMAT_R8G8B8A8_UNORM)
 	td.SampleDesc.Count = 1;
-	td.Usage = D3D11_USAGE_IMMUTABLE;				// 생성 후 변경 불가 (가장 빠름)
+	td.Usage = ToD3D11(ResourceUsage::ruImmutable);	// 생성 후 변경 불가, 가장 빠름 (D3D11_USAGE_IMMUTABLE)
 	td.BindFlags = D3D11_BIND_SHADER_RESOURCE;		// 셰이더 입력 용도
 
 	// 초기 픽셀 데이터

@@ -63,30 +63,44 @@ public:
 	bool Initialize(GraphicDevice* _pDevice);
 	void Finalize();
 
-	// === IA 단계 ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// IA 단계
 	void SetVertexBuffer(VertexBuffer* _pBuffer);
 	void SetIndexBuffer(IndexBuffer* _pBuffer);
 	void SetInputLayout(InputLayout* _pLayout);
 	void SetPrimitiveTopology(PrimitiveTopology _topology);
 
-	// === 셰이더 단계 ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 셰이더 단계
 	void SetVertexShader(VertexShader* _pShader);
 	void SetPixelShader(PixelShader* _pShader);
 	void SetConstantBuffer(ShaderStage _stage, _u32 _slot, ID3D11Buffer* _pBuffer);
 	void SetTexture(ShaderStage _stage, _u32 _slot, Texture* _pTexture);
 	void SetSampler(ShaderStage _stage, _u32 _slot, SamplerState* _pSampler);
 
-	// === RS/OM 단계 ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// RS/OM 단계
 	void SetViewport(const Viewport& _viewport);
 	void SetRasterizerState(RasterizerState* _pState);
 	void SetBlendState(BlendState* _pState);
 	void SetDepthStencilState(DepthStencilState* _pState);
 
-	// === 그리기 ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// RS/OM 단계 — Raw 오버로드 (RenderStates 풀에서 나온 원시 D3D 포인터를 직접 받는다)
+	// 핸들 버전과 동일한 캐시 필드를 공유하므로 두 경로의 상태 변경이 항상 서로 인지된다.
+	// (GraphicDevice::SetDepthTest/SetBlendMode/SetSampler/ApplyRasterizerState가 사용)
+	void SetRasterizerStateRaw(ID3D11RasterizerState* _pRaw);
+	void SetBlendStateRaw(ID3D11BlendState* _pRaw);
+	void SetDepthStencilStateRaw(ID3D11DepthStencilState* _pRaw);
+	void SetSamplerRaw(ShaderStage _stage, _u32 _slot, ID3D11SamplerState* _pRaw);
+
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 그리기
 	void Draw(_u32 _vertexCount, _u32 _startVertex = 0);
 	void DrawIndexed(_u32 _indexCount, _u32 _startIndex = 0, _s32 _baseVertex = 0);
 
-	// === 캐시 관리/진단 ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 캐시 관리/진단
 	// 프레임 시작 시 호출. 외부(BeginFrame 등)에서 상태가 바뀌었을 수 있으므로 캐시를 비운다.
 	void InvalidateCache();
 	_u64 GetApiCallCount() const { return apiCallCount_; }			// 실제 D3D 호출 수
@@ -98,7 +112,8 @@ public:
 private:
 	ID3D11DeviceContext* pContext_;		// 즉시 컨텍스트 (소유하지 않음. 소유자는 GraphicDevice)
 
-	// === 바인딩 캐시 (마지막으로 묶은 객체 기억) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 바인딩 캐시 (마지막으로 묶은 객체 기억)
 	ID3D11Buffer* pCachedVertexBuffer_;
 	ID3D11Buffer* pCachedIndexBuffer_;
 	ID3D11InputLayout* pCachedInputLayout_;
@@ -112,7 +127,8 @@ private:
 	ID3D11Buffer* pCachedCbuffers_[static_cast<_s32>(ShaderStage::Max)][MAX_CBUFFER_SLOTS];
 	PrimitiveTopology cachedTopology_;
 
-	// === 진단 카운터 ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 진단 카운터
 	_u64 apiCallCount_;		// 실제로 내려간 D3D 호출 수
 	_u64 skippedCallCount_;	// 캐시 덕분에 생략된 호출 수
 };

@@ -44,7 +44,7 @@ void HLSL_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create(L"06. HLSL 셰이더 - 상수 버퍼 애니메이션 (ESC로 종료)", 800, 600))
+	if (!window.Create("06. HLSL 셰이더 - 상수 버퍼 애니메이션 (ESC로 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;

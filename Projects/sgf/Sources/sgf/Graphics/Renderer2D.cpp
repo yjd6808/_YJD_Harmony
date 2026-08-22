@@ -22,20 +22,30 @@ NS_SGF_BEGIN
 
 using namespace jc;
 
-// ==================================================
+////////////////////////////////////////////////////////////////////////////////////////////
 // 내장 HLSL 셰이더
-// ==================================================
 // [셰이더 해설]
 // cbuffer: CPU에서 넘겨주는 전역값. row_major로 선언해서
 // C++의 행우선 Mat4를 전치 없이 그대로 받는다.
-// VSMain: 정점마다 실행. 월드 좌표 -> 클립 좌표 변환.
+// VSMain: 정점마다 실행. 로컬 좌표 -> 월드(b1) -> 클립 좌표 변환.
 // mul(v, M)은 행벡터 x 행렬 순서로, 우리 수학 규약과 일치.
-// PSMain: 픽셀마다 실행. 텍스처 색 x 정점 색(틴트).
+// PSMain: 픽셀마다 실행. 텍스처 색 x 정점 색(틴트) x 머티리얼 색(b2).
 // SV_POSITION: "이 값이 클립 좌표다"라고 파이프라인에 알려주는 의미소(Semantic).
+// [상수버퍼 규약] (FR-19) — b0 프레임/뷰프로젝션, b1 오브젝트/월드, b2 머티리얼/기본색
 static const char* s_szSpriteShader = R"(
 cbuffer ConstantBufferFrame : register(b0)
 {
 	row_major float4x4 viewProjection_;	// 뷰 x 프로젝션 행렬
+};
+
+cbuffer ConstantBufferObject : register(b1)
+{
+	row_major float4x4 world_;			// 월드 행렬 (배치 경로: 단위행렬 고정)
+};
+
+cbuffer ConstantBufferMaterial : register(b2)
+{
+	float4 baseColor_;					// 머티리얼 기본색/틴트 (배치 경로: 흰색 고정)
 };
 
 Texture2D texture_ : register(t0);		// 그릴 텍스처
@@ -43,7 +53,7 @@ SamplerState sampler_ : register(s0);	// 텍스처 읽기 규칙
 
 struct VSInput
 {
-	float3 position_ : POSITION;		// 월드 좌표 (CPU에서 미리 변환됨)
+	float3 position_ : POSITION;		// 로컬 좌표 (GPU에서 월드 변환 — 불변)
 	float2 uv_       : TEXCOORD0;	// 텍스처 좌표
 	float4 color_    : COLOR0;		// 틴트 색상
 };
@@ -55,21 +65,22 @@ struct PSInput
 	float4 color_    : COLOR0;
 };
 
-// 정점 셰이더: 월드 좌표에 뷰프로젝션만 곱해 클립 좌표로 변환
+// 정점 셰이더: 로컬 좌표를 월드(b1) 변환 후 뷰프로젝션(b0)으로 클립 좌표 변환
 PSInput VSMain(VSInput input)
 {
 	PSInput output;
-	output.position_ = mul(float4(input.position_, 1.0f), viewProjection_);
+	float4 worldPos = mul(float4(input.position_, 1.0f), world_);
+	output.position_ = mul(worldPos, viewProjection_);
 	output.uv_ = input.uv_;
 	output.color_ = input.color_;
 	return output;
 }
 
-// 픽셀 셰이더: 텍스처 색상에 틴트를 곱한다.
+// 픽셀 셰이더: 텍스처 색상에 틴트와 머티리얼 색을 곱한다.
 // 흰색 1x1 텍스처를 쓰면 결과가 틴트 색 그대로가 되므로 단색 도형도 같은 셰이더로 그린다.
 float4 PSMain(PSInput input) : SV_TARGET
 {
-	return texture_.Sample(sampler_, input.uv_) * input.color_;
+	return texture_.Sample(sampler_, input.uv_) * input.color_ * baseColor_;
 }
 )";
 
@@ -113,19 +124,23 @@ const D3D11_INPUT_ELEMENT_DESC* Renderer2D::VertexLayout(UINT* _outCount) const
 // 정점/인덱스 버퍼를 만든다. (인덱스 버퍼는 DYNAMIC — 임의 인덱스)
 bool Renderer2D::CreateBatchResources(GraphicDevice* _pDevice)
 {
-	// 1. DYNAMIC 정점 버퍼 (매 프레임 CPU가 채워 넣는다)
-	if (!vertexBuffer_.Create(_pDevice, nullptr, sizeof(VertexPTC), MAX_VERTICES, true))
+	// 1. DYNAMIC 정점 버퍼 (매 프레임 CPU가 채워 넣는다 — ResourceUsage::ruDynamic → D3D11_USAGE_DYNAMIC)
+	if (!vertexBuffer_.Create(_pDevice, nullptr, sizeof(VertexPTC), MAX_VERTICES, ResourceUsage::ruDynamic))
 	{
 		return false;
 	}
 
 	// 2. DYNAMIC 인덱스 버퍼 (— 임의 인덱스/도형 지원, 매 Flush마다 CPU 인덱스를 업데이트)
-	if (!indexBuffer_.Create(_pDevice, nullptr, MAX_INDICES, true))
+	if (!indexBuffer_.Create(_pDevice, nullptr, MAX_INDICES, ResourceUsage::ruDynamic))
 	{
 		return false;
 	}
 
-	// 3. (1x1 흰색 텍스처는 ResourceMgr 기본 텍스처(GetDefaultTexture)를 공유한다 — A-2)
+	// 3. 메시 파이프라인 상수 버퍼 (b1 오브젝트 / b2 머티리얼 — Renderer3D와 동일 규약)
+	if (!objectCb_.Create(_pDevice)) { return false; }
+	if (!materialCb_.Create(_pDevice)) { return false; }
+
+	// 4. (1x1 흰색 텍스처는 ResourceMgr 기본 텍스처(GetDefaultTexture)를 공유한다 — A-2)
 	return true;
 }
 
@@ -180,10 +195,10 @@ void Renderer2D::EndScene()
 _u64 Renderer2D::DeclareStatic(const RenderParams& _params)
 {
 	StaticSlot slot;
-	slot.layer_ = _params.layer_;                    // 버킷도 선언 시 고정
-	BuildFill(_params.fill_, _params, slot.geometry_);   // 버텍스/인덱스 생성 (CPU 1회)
+	slot.layer_ = _params.layer_;						// 버킷도 선언 시 고정
+	BuildFill(_params.fill_, _params, slot.geometry_);	// 버텍스/인덱스 생성 (CPU 1회)
 	_u64 id = staticIdProvider_.Acquire();
-	staticCache_.PushBack(jc::Move(slot));               // 인덱스 = id - 1 (선형 검색 없음)
+	staticCache_.PushBack(jc::Move(slot));					// 인덱스 = id - 1 (선형 검색 없음)
 	return id;
 }
 
@@ -425,23 +440,56 @@ void Renderer2D::DrawCircle(const vec2& _center, _f32 _radius, const color& _col
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 메시 그리기 — 2D 프리미티브 메시(vfPTC2D)를 월드 변환 + 재질 틴트/텍스처 해석 후 배칭.
-// Scene2D::DrawMesh → 이곳. 같은 텍스처 연속분은 PushTriangles가 한 DrawCall로 모은다.
+// 메시 그리기 — 2D 프리미티브 메시(vfPTC2D)를 GPU 변환으로 즉시 드로우한다.
+// Renderer3D::Draw와 동일한 4단계 (상태 → Bind → b1 갱신 → Draw) — 정점은 로컬 공간 불변.
+// 배치 경로와 달리 오브젝트당 1콜 (인스턴싱은 추후 — C-3). Scene2D::DrawMesh → 이곳.
+//
+// ★ 이 함수가 실제 렌더링을 수행하는 시점 — 정점이 화면에 그려지는 전체 흐름:
+//
+// [텍스처가 왜 필요한가 — 정점과 텍스처의 관계]
+// - 정점(Vertex)은 "어디에 그릴지"(뼈대)만 알려준다 — 위치/UV/색 정보.
+// - 텍스처는 "무엇을 그릴지"(살/피부 — 픽셀 무늬)를 담은 저장고다.
+//   GPU 흐름: 정점 → 삼각형 → 래스터라이제이션(삼각형 내부를 픽셀로 채움) → 픽셀마다 색 결정(픽셀 셰이더)
+//   여기서 픽셀 색의 원본이 되는 게 텍스처다.
+// - 정점 색만으로는 삼각형 내부가 그라데이션(보간)밖에 못 된다. 복잡한 무늬(벽돌/얼굴/글자)를
+//   정점으로 표현하려면 "픽셀 1개 = 정점 1개" 수준이 되어 데이터가 폭발한다.
+// - 텍스처는 정점 4개 + UV 4개로 수백만 픽셀의 무늬를 표현한다. (정보 압축)
+// - 연결 고리는 UV: 정점이 "텍스처의 어느 지점"을 가리키고, GPU가 삼각형 내부 픽셀마다
+//   UV를 보간해 그 위치의 픽셀 색을 텍스처에서 샘플링해 화면에 칠한다.
+//   (이 엔진의 픽셀 셰이더: texture_.Sample(sampler_, input.uv_) * input.color_ * baseColor_)
+//
+// [단색 도형 = 흰색 1x1 텍스처 트릭]
+// - 단색 도형도 개념적으로는 텍스처가 필요 없다. 하지만 아래의 GetDefaultTexture(1x1 흰색)에
+//   틴트 색을 곱해 단색을 만든다. (흰색 × 빨강 = 빨강 — 셰이더 곱셈 규약이 그대로 성립)
+// - 단색 전용 셰이더를 두지 않는 이유: 셰이더 전환(비싼 파이프라인 작업) 없이 하나의 규약으로
+//   통일하고, 배치 경로에서는 모든 단색 도형이 "같은 텍스처"로 취급되어 서로 한 드로우콜로 묶인다.
+// - GetDefaultTexture()는 매번 "조회"일 뿐 생성/변경이 아니다 — ResourceMgr가 1번 생성해 보관하고
+//   같은 객체의 포인터만 반환한다. 텍스처는 생성 후 내용이 변하지 않는 불변 리소스이고,
+//   매 프레임 같은 텍스처를 Bind해도 GraphicContext의 바인딩 캐시(B-1)가 실제 D3D 호출을 생략한다.
 void Renderer2D::DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world)
 {
 	if (_pMesh == nullptr || !_pMesh->Is2D())
 	{
 		return;
 	}
-
-	const _u32 vertexCount = _pMesh->GetVertexCount2D();
-	const _u32 indexCount = _pMesh->GetIndexCount2D();
-	if (vertexCount == 0 || indexCount == 0)
+	if (_pMesh->VertexCount() == 0)
 	{
 		return;
 	}
 
-	// 텍스처 해석: 재질 0번 슬롯의 텍스처 → 없으면 기본 흰색 텍스처 (단색 도형)
+	GraphicContext& context = pDevice_->GetContext();
+
+	// 깊이/블렌드 상태 재확정 — Flush와 같은 이유. 3D와 섞여도 2D는 깊이 끄고 반투명.
+	pDevice_->SetDepthTest(false);
+	pDevice_->SetAlphaBlending(true);
+
+	// 1. 어떻게 그릴지 — 셰이더 + b0(뷰프로젝션) 장착 (배치 공용 파이프라인)
+	ApplyFrameStates();
+
+	// 2. 무엇을 그릴지 — VB/IB/레이아웃/토폴로지 (로컬 정점 그대로)
+	_pMesh->Bind(context);
+
+	// 3. 텍스처 해석: 재질 0번 슬롯 → 없으면 기본 흰색 텍스처 (단색 도형)
 	Texture* pTexture = g_cResourceMgr.GetDefaultTexture();
 	if (_pMaterial != nullptr)
 	{
@@ -455,24 +503,27 @@ void Renderer2D::DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world
 			}
 		}
 	}
-
-	// 재질 기본색 = 틴트 (단색 도형의 채움색. 텍스처 스프라이트는 기본 흰색)
-	const color tint = (_pMaterial != nullptr) ? _pMaterial->GetBaseColor() : color::WHITE;
-
-	// CPU 미러 정점을 월드 변환 + 틴트 적용 (스크래치 재사용 — 매 호출 할당 없음)
-	meshScratch_.Clear();
-	meshScratch_.Reserve((_s32)vertexCount);
-	const VertexPTC* pVertices = _pMesh->GetVertices2D();
-	for (_u32 i = 0; i < vertexCount; ++i)
+	if (pTexture != nullptr)
 	{
-		VertexPTC out;
-		out.position_ = _world.TransformPoint(pVertices[i].position_);
-		out.uv_ = pVertices[i].uv_;
-		out.color_ = pVertices[i].color_ * tint;
-		meshScratch_.PushBack(out);
+		pTexture->Bind(pDevice_, 0);
 	}
 
-	PushTriangles(pTexture, meshScratch_.Source(), vertexCount, _pMesh->GetIndices2D(), indexCount);
+	// 4. b2 머티리얼 상수 = 재질 기본색 (틴트. 배치 경로는 흰색 고정 — 메시 경로만 갱신)
+	MaterialConstants material;
+	const color tint = (_pMaterial != nullptr) ? _pMaterial->GetBaseColor() : color::WHITE;
+	tint.ToFloat4(material.baseColor_);
+	materialCb_.Update(pDevice_, material);
+	context.SetConstantBuffer(ShaderStage::ssPixel, 2, materialCb_.Raw());
+
+	// 5. b1 오브젝트 상수 = 월드 행렬 (GPU 변환 — StaticLevel은 행렬 고정으로 전달됨)
+	ObjectConstants object;
+	object.world_ = _world;
+	objectCb_.Update(pDevice_, object);
+	context.SetConstantBuffer(ShaderStage::ssVertex, 1, objectCb_.Raw());
+
+	// 6. 드로우 콜 (인덱스 유무에 따라 DrawIndexed/Draw)
+	++drawCallCount_;
+	_pMesh->Draw(context);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -499,8 +550,22 @@ void Renderer2D::Flush()
 	vertexBuffer_.Update(pDevice_, vertices_.Source(), UINT(vertexCount));
 	indexBuffer_.Update(pDevice_, indices_.Source(), UINT(indexCount));
 
+	GraphicContext& context = pDevice_->GetContext();
+
 	// 2. 파이프라인 구성: 셰이더/버퍼/텍스처/상수버퍼/토폴로지
 	ApplyFrameStates();
+
+	// 배치 정점은 이미 월드좌표(CPU 변환 완료)이므로 b1=단위행렬, b2=흰색 고정.
+	// 메시 즉시 드로우가 남긴 b1/b2를 배치 드로우 전에 되돌린다.
+	ObjectConstants object;
+	object.world_ = mat4::Identity();
+	objectCb_.Update(pDevice_, object);
+	context.SetConstantBuffer(ShaderStage::ssVertex, 1, objectCb_.Raw());
+
+	MaterialConstants material;	// 기본값 = 흰색 (1,1,1,1)
+	materialCb_.Update(pDevice_, material);
+	context.SetConstantBuffer(ShaderStage::ssPixel, 2, materialCb_.Raw());
+
 	vertexBuffer_.Bind(pDevice_);
 	indexBuffer_.Bind(pDevice_);
 	if (pCurrentTexture_ != nullptr)

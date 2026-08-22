@@ -38,10 +38,10 @@ public:
 	// @param _szSource: HLSL 소스 코드 문자열
 	// @param _szEntry: 진입 함수 이름 (기본 "VSMain")
 	// @return 성공 여부 (실패 시 오류가 디버그 출력창에 출력됨)
-	bool InitializeFromSource(GraphicDevice* _pDevice, const char* _szSource, const char* _szEntry = "VSMain");
+	bool InitializeFromSource(GraphicDevice* _pDevice, const jc::String& _szSource, const jc::String& _szEntry = "VSMain");
 
 	// HLSL 파일을 읽어서 컴파일한다. (수도코드의 VertexShader.init("x.hlsl", "VSMain") 대응)
-	bool InitializeFromFile(GraphicDevice* _pDevice, const char* _szFilePath, const char* _szEntry = "VSMain");
+	bool InitializeFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePath, const jc::String& _szEntry = "VSMain");
 
 	void Finalize();
 
@@ -65,8 +65,8 @@ public:
 	PixelShader();
 	~PixelShader();
 
-	bool InitializeFromSource(GraphicDevice* _pDevice, const char* _szSource, const char* _szEntry = "PSMain");
-	bool InitializeFromFile(GraphicDevice* _pDevice, const char* _szFilePath, const char* _szEntry = "PSMain");
+	bool InitializeFromSource(GraphicDevice* _pDevice, const jc::String& _szSource, const jc::String& _szEntry = "PSMain");
+	bool InitializeFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePath, const jc::String& _szEntry = "PSMain");
 
 	void Finalize();
 

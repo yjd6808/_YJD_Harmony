@@ -21,13 +21,13 @@
 #include "sgf/Graphics/Vertex.h"
 
 // 색 변환 셰이더 소스 (WVP 변환 + 정점 색 그대로)
-// 사용처: 17(래스터라이저), 19(렌더 타깃), 20(후처리)
+// 사용처: 19(래스터라이저), 25(렌더 타깃), 26(후처리)
 const char* ColorTransformShaderSource();
 
 // 텍스처 샘플 셰이더 소스 (NDC 통과 + UV 샘플 x 틴트 색)
-// 사용처: 11(PNG), 12(SVG), 19(렌더 타깃 퀴드), 22(스프라이트)
+// 사용처: 15(PNG), 16(SVG), 25(렌더 타깃 퀴드), 30(스프라이트)
 const char* TextureShaderSource();
 
 // 면마다 색이 다른 정육면체 정점 8개와 인덱스 36개를 채운다. (반 변 0.5)
-// 사용처: 17(래스터라이저), 19(렌더 타깃), 20(후처리)
+// 사용처: 19(래스터라이저), 25(렌더 타깃), 26(후처리)
 void FillColorCube(sgf::VertexPC* _pOutVertices8, _u32* _pOutIndices36);

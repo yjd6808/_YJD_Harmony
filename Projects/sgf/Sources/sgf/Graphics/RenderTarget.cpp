@@ -56,9 +56,9 @@ bool RenderTarget::Create(GraphicDevice* _pDevice, _s32 _width, _s32 _height)
 	colorDesc.Height = _height;
 	colorDesc.MipLevels = 1;
 	colorDesc.ArraySize = 1;
-	colorDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	colorDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // DXGI_FORMAT_R8G8B8A8_UNORM
 	colorDesc.SampleDesc.Count = 1;
-	colorDesc.Usage = D3D11_USAGE_DEFAULT;
+	colorDesc.Usage = ToD3D11(ResourceUsage::ruDefault); // GPU 전용, UpdateSubresource/Copy로만 갱신 (D3D11_USAGE_DEFAULT)
 	colorDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 
 	HRESULT hr = pDevice->CreateTexture2D(&colorDesc, nullptr, pColorTexture_.GetAddressOf());
@@ -122,9 +122,9 @@ bool RenderTarget::CreateDepthOnly(GraphicDevice* _pDevice, _s32 _width, _s32 _h
 	depthDesc.Height = _height;
 	depthDesc.MipLevels = 1;
 	depthDesc.ArraySize = 1;
-	depthDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+	depthDesc.Format = DXGI_FORMAT_R32_TYPELESS; // DXGI_FORMAT_R32_TYPELESS (DSV/SRV 각각 D32_FLOAT/R32_FLOAT로 해석)
 	depthDesc.SampleDesc.Count = 1;
-	depthDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthDesc.Usage = ToD3D11(ResourceUsage::ruDefault); // GPU 전용 (D3D11_USAGE_DEFAULT)
 	depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 
 	HRESULT hr = pDevice->CreateTexture2D(&depthDesc, nullptr, pDepthTexture_.GetAddressOf());

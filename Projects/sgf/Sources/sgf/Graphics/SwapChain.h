@@ -47,8 +47,8 @@ public:
 private:
 	SgfComPtr<IDXGISwapChain> pSwapChain_;					// 버퍼 교체 담당
 	SgfComPtr<ID3D11RenderTargetView> pRenderTargetView_;	// 백버퍼를 그리기 대상으로 보는 뷰
-	_s32 width_;		// 백버퍼 가로
-	_s32 height_;		// 백버퍼 세로
+	_s32 width_;											// 백버퍼 가로
+	_s32 height_;											// 백버퍼 세로
 };
 
 NS_SGF_END

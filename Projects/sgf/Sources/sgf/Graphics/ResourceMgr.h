@@ -51,8 +51,8 @@ public:
 
 	bool IsInitialized() const { return pDevice_ != nullptr; }
 
-	// === 등록/제거 ===
-
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 등록/제거
 	// 리소스 소유권을 넘겨받고 새 키를 발급한다. (이후 소멸은 ResourceMgr 담당)
 	_u64 Add(IResource* _pResource);
 
@@ -65,8 +65,8 @@ public:
 	// 디폴트를 제외한 모든 리소스를 제거한다. (씬 전환 등)
 	void RemoveAll();
 
-	// === 검색 ===
-
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 검색
 	// 키로 찾는다. 없으면 nullptr.
 	IResource* Find(_u64 _key);
 
@@ -85,16 +85,16 @@ public:
 	// 경로로 등록된 리소스의 키를 찾는다. 없으면 INVALID_RESOURCE_KEY.
 	_u64 FindKeyByPath(StringView _path);
 
-	// === 편의 로드 (경로 중복 로드 방지) ===
-
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 편의 로드 (경로 중복 로드 방지)
 	// PNG 등 이미지 파일을 로드해 등록한다. 이미 로드된 경로면 기존 키를 반환.
-	_u64 LoadTextureFromFile(const char* _szFilePath);
+	_u64 LoadTextureFromFile(const jc::String& _szFilePath);
 
 	// SVG 파일을 로드해 등록한다. 이미 로드된 경로면 기존 키를 반환.
-	_u64 LoadTextureFromSvgFile(const char* _szFilePath, _f32 _scale = 1.0f);
+	_u64 LoadTextureFromSvgFile(const jc::String& _szFilePath, _f32 _scale = 1.0f);
 
-	// === 디폴트 리소스 (D-17/D-18) ===
-
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 디폴트 리소스 (D-17/D-18)
 	Texture* GetDefaultTexture();				// 1x1 흰색 텍스처
 	VertexShader* GetDefaultVertexShader2D();	// VertexPTC용
 	PixelShader* GetDefaultPixelShader2D();
@@ -111,15 +111,16 @@ public:
 	_u64 GetDefaultMaterial2DKey() const { return defaultMaterial2DKey_; }
 	_u64 GetDefaultMaterial3DKey() const { return defaultMaterial3DKey_; }
 
-	// === 프리미티브 메시 (디폴트 리소스 — 2D/3D 통합 키 테이블) ===
-	// 2D enum은 3D 메시(Cube 등)도 가져올 수 있다. (슈퍼셋 — 3D enum으로 2D 메시는 불가)
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 프리미티브 메시 (디폴트 리소스 — 2D/3D 별도 키 테이블)
+	// 2D enum은 2D 메시만, 3D enum은 3D 메시만 가져온다. (엄격 분리 — 컴파일 타임 보장)
 	Mesh* FindPrimitiveMesh2D(PrimitiveMesh2DType _type);
 	Mesh* FindPrimitiveMesh3D(PrimitiveMesh3DType _type);
 	_u64 GetPrimitiveMesh2DKey(PrimitiveMesh2DType _type) const;
 	_u64 GetPrimitiveMesh3DKey(PrimitiveMesh3DType _type) const;
 
-	// === 진단 ===
-
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 진단
 	_s32 GetCount() const { return resources_.Size(); }
 
 	// 보관 중인 리소스 목록을 디버그 출력으로 내보낸다. (누수 진단용)
@@ -148,10 +149,11 @@ private:
 	_u64 defaultMaterial2DKey_;
 	_u64 defaultMaterial3DKey_;
 
-	// 통합 키 테이블 크기 = PrimitiveMesh2DType::Max (10). 3D 메시는 4~9번 인덱스에 보관.
+	// 2D/3D 별도 키 테이블. 크기는 각 enum의 Max와 동일.
 	static constexpr _s32 PRIMITIVE_MESH2D_COUNT = (_s32)PrimitiveMesh2DType::Max;
-	static constexpr _s32 PRIMITIVE_MESH3D_OFFSET = (_s32)PrimitiveMesh2DType::Cube;	// 3D 시작 인덱스 (4)
-	_u64 primitiveMesh2DKeys_[PRIMITIVE_MESH2D_COUNT];	// 2D(0~3) + 3D(4~9) 통합 키 테이블
+	static constexpr _s32 PRIMITIVE_MESH3D_COUNT = (_s32)PrimitiveMesh3DType::Max;
+	_u64 primitiveMesh2DKeys_[PRIMITIVE_MESH2D_COUNT];	// 2D 프리미티브 메시 키 테이블
+	_u64 primitiveMesh3DKeys_[PRIMITIVE_MESH3D_COUNT];	// 3D 프리미티브 메시 키 테이블
 };
 
 NS_SGF_END

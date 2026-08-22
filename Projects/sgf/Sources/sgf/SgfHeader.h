@@ -21,18 +21,22 @@
 
 #pragma once
 
-// === Math ===
+////////////////////////////////////////////////////////////////////////////////////////////
+// Math
 #include "jc/Math.h"
 
-// === Core ===
+////////////////////////////////////////////////////////////////////////////////////////////
+// Core
 #include "sgf/Core/Window.h"
 #include "sgf/Core/FrameTimer.h"
 #include "sgf/Core/Application.h"
 
-// === Input ===
+////////////////////////////////////////////////////////////////////////////////////////////
+// Input
 #include "sgf/Input/InputManager.h"
 
-// === Graphics ===
+////////////////////////////////////////////////////////////////////////////////////////////
+// Graphics
 #include "sgf/Graphics/RenderStates.h"
 #include "sgf/Graphics/SwapChain.h"
 #include "sgf/Graphics/DepthStencilSurface.h"
@@ -45,7 +49,8 @@
 #include "sgf/Graphics/Renderer2D.h"
 #include "sgf/Graphics/Renderer3D.h"
 
-// === Graphics (파이프라인 객체 + 리소스 계층) ===
+////////////////////////////////////////////////////////////////////////////////////////////
+// Graphics (파이프라인 객체 + 리소스 계층)
 #include "sgf/Graphics/GraphicsEnums.h"
 #include "sgf/Graphics/IResource.h"
 #include "sgf/Graphics/PrimitiveMeshType.h"
@@ -57,13 +62,16 @@
 #include "sgf/Graphics/Material.h"
 #include "sgf/Graphics/ResourceMgr.h"
 
-// === Graphics (채움 셰이프 시스템) ===
+////////////////////////////////////////////////////////////////////////////////////////////
+// Graphics (채움 셰이프 시스템)
 #include "sgf/Graphics/Fill.h"
 
-// === Audio ===
+////////////////////////////////////////////////////////////////////////////////////////////
+// Audio
 #include "sgf/Audio/SoundEngine.h"
 
-// === Scene (GameObject/컴포넌트 계층) ===
+////////////////////////////////////////////////////////////////////////////////////////////
+// Scene (GameObject/컴포넌트 계층)
 #include "sgf/Scene/Transform.h"
 #include "sgf/Scene/Component.h"
 #include "sgf/Scene/GameObject.h"
@@ -75,4 +83,5 @@
 #include "sgf/Scene/Scene2D.h"
 #include "sgf/Scene/Scene3D.h"
 #include "sgf/Scene/Shape2D.h"
+#include "sgf/Scene/Shape3D.h"
 #include "sgf/Scene/Director.h"

@@ -15,6 +15,21 @@ NS_SGF_BEGIN
 // 윈도우 클래스 이름 (RegisterClassEx에 등록할 식별자)
 static const wchar_t* s_szWindowClassName = L"SgfWindowClass";
 
+// jc::String(UTF-8) → wide(WCHAR) 변환 헬퍼 (타이틀 전용)
+static std::wstring Utf8ToWide(const jc::String& _utf8)
+{
+	if (_utf8.IsEmpty())
+		return L"";
+	const char* pStr = _utf8.Source();
+	int utf8Len = _utf8.Length();
+	int wlen = ::MultiByteToWideChar(CP_UTF8, 0, pStr, utf8Len, nullptr, 0);
+	if (wlen <= 0)
+		return L"";
+	std::wstring wstr(wlen, L'\0');
+	::MultiByteToWideChar(CP_UTF8, 0, pStr, utf8Len, wstr.data(), wlen);
+	return wstr;
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // 생성자: 멤버를 안전한 기본값으로 초기화한다.
 Window::Window()
@@ -41,8 +56,9 @@ Window::~Window()
 // 2. 클라이언트 영역 크기 -> 실제 창 크기 보정 (AdjustWindowRect)
 // 3. CreateWindowEx로 창 생성
 // 4. ShowWindow로 화면에 표시
-bool Window::Create(const wchar_t* _title, _s32 _width, _s32 _height)
+bool Window::Create(const jc::String& _title, _s32 _width, _s32 _height)
 {
+	std::wstring wideTitle = Utf8ToWide(_title);
 	const HINSTANCE instance = GetModuleHandle(nullptr);
 
 	// 1. 윈도우 클래스 등록
@@ -71,7 +87,7 @@ bool Window::Create(const wchar_t* _title, _s32 _width, _s32 _height)
 	hWnd_ = CreateWindowExW(
 		0,							// 확장 스타일 없음
 		s_szWindowClassName,		// 등록한 클래스 이름
-		_title,						// 창 제목
+		wideTitle.c_str(),			// 창 제목
 		style,						// 창 스타일
 		CW_USEDEFAULT,				// x 위치 (OS에게 맡김)
 		CW_USEDEFAULT,				// y 위치
@@ -198,11 +214,12 @@ void Window::DestroySurface()
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 창 제목을 변경한다.
-void Window::SetTitle(const wchar_t* _title)
+void Window::SetTitle(const jc::String& _title)
 {
 	if (hWnd_ != nullptr)
 	{
-		SetWindowTextW(hWnd_, _title);
+		std::wstring wide = Utf8ToWide(_title);
+		SetWindowTextW(hWnd_, wide.c_str());
 	}
 }
 

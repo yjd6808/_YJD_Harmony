@@ -49,7 +49,7 @@ namespace
 	};
 
 	// 창 제목에 표시할 모드 이름표 (gMode 값 순서와 일치)
-	const wchar_t* s_szModeNames[] = { L"램버트(확산만)", L"퐁(R·V)", L"블린-퐁(N·H)" };
+	const char* s_szModeNames[] = { "램버트(확산만)", "퐁(R·V)", "블린-퐁(N·H)" };
 }
 
 // 셰이딩 모델 튜토리얼을 실행한다. (램버트/퐁/블린-퐁)
@@ -59,7 +59,7 @@ void ShadingModel_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create(L"24. 셰이딩 모델 (1/2/3 모드, ↑↓ 날카로움, ESC 종료)", 800, 600))
+	if (!window.Create("24. 셰이딩 모델 (1/2/3 모드, ↑↓ 날카로움, ESC 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("윈도우 생성 실패!");
 		return;
@@ -120,9 +120,7 @@ void ShadingModel_Main()
 
 	auto UpdateTitle = [&]()
 	{
-		wchar_t szTitle[256];
-		swprintf_s(szTitle, L"24. 셰이딩 모델 - %s / 날카로움 %.0f (1/2/3, ↑↓, ESC)",
-			s_szModeNames[mode], specPower);
+		jc::String szTitle = jc::StringUtil::Format("24. 셰이딩 모델 - %s / 날카로움 %.0f (1/2/3, ↑↓, ESC)", s_szModeNames[mode], specPower);
 		window.SetTitle(szTitle);
 	};
 	UpdateTitle();

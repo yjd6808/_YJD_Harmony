@@ -29,9 +29,9 @@ Shader::~Shader()
 // HLSL 문자열 -> 바이트코드 컴파일 헬퍼
 // @param _szTarget: 컴파일 대상 프로파일. "vs_5_0"=DX11 버텍스, "ps_5_0"=DX11 픽셀
 bool Shader::CompileHlsl(
-	const char* _szSource,
-	const char* _szEntry,
-	const char* _szTarget,
+	const jc::String& _szSource,
+	const jc::String& _szEntry,
+	const jc::String& _szTarget,
 	SgfComPtr<ID3DBlob>& _outBlob)
 {
 	// 디버그 빌드에서는 셰이더에 디버그 정보를 넣고 최적화를 끈다.
@@ -43,13 +43,13 @@ bool Shader::CompileHlsl(
 
 	SgfComPtr<ID3DBlob> pErrorBlob;
 	HRESULT hr = D3DCompile(
-		_szSource,					// 소스 코드
-		strlen(_szSource),			// 소스 길이
+		_szSource.Source(),			// 소스 코드
+		_szSource.Length(),			// 소스 길이
 		nullptr,					// 소스 이름 (오류 메시지용, 생략)
 		nullptr,					// 매크로 정의 없음
 		nullptr,					// include 처리기 없음 (문자열 컴파일이므로)
-		_szEntry,					// 진입 함수 이름
-		_szTarget,					// 프로파일
+		_szEntry.Source(),			// 진입 함수 이름
+		_szTarget.Source(),			// 프로파일
 		compileFlags,
 		0,
 		_outBlob.GetAddressOf(),
@@ -71,11 +71,11 @@ bool Shader::CompileHlsl(
 // HLSL 소스를 컴파일해서 VS/PS/입력레이아웃 생성
 bool Shader::CompileFromString(
 	GraphicDevice* _pDevice,
-	const char* _szSource,
+	const jc::String& _szSource,
 	const D3D11_INPUT_ELEMENT_DESC* _pLayoutDescs,
 	UINT _layoutCount,
-	const char* _szVsEntry,
-	const char* _szPsEntry)
+	const jc::String& _szVsEntry,
+	const jc::String& _szPsEntry)
 {
 	ID3D11Device* pDevice = _pDevice->Device();
 

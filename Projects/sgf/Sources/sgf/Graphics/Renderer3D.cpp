@@ -91,11 +91,11 @@ const D3D11_INPUT_ELEMENT_DESC* Renderer3D::VertexLayout(UINT* _outCount) const
 // 삼각형/선용 동적(DYNAMIC) 정점 버퍼를 만든다. (매 프레임 CPU 배치를 복사해 넣는다)
 bool Renderer3D::CreateBatchResources(GraphicDevice* _pDevice)
 {
-	if (!triangleVb_.Create(_pDevice, nullptr, sizeof(VertexPC), MAX_TRIANGLES * 3, true))
+	if (!triangleVb_.Create(_pDevice, nullptr, sizeof(VertexPC), MAX_TRIANGLES * 3, ResourceUsage::ruDynamic))
 	{
 		return false;
 	}
-	if (!lineVb_.Create(_pDevice, nullptr, sizeof(VertexPC), MAX_LINES * 2, true))
+	if (!lineVb_.Create(_pDevice, nullptr, sizeof(VertexPC), MAX_LINES * 2, ResourceUsage::ruDynamic))
 	{
 		return false;
 	}

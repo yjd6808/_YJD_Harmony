@@ -14,8 +14,8 @@ NS_SGF_BEGIN
 using namespace jc;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Shape2D::Shape2D(const char* _pName)
-	: GameObject(_pName)
+Shape2D::Shape2D(const jc::String& _name)
+	: GameObject(_name)
 {
 }
 

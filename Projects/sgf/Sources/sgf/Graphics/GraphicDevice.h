@@ -122,7 +122,8 @@ public:
 	_s32 Width() const { return width_; }
 	_s32 Height() const { return height_; }
 
-	// === 부품 직접 접근 (고급 제어/멀티스레드 연구용) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 부품 직접 접근 (고급 제어/멀티스레드 연구용)
 	// [주의] 이 둘은 "구버전 단일 창 경로"의 내장 표면이다.
 	// 멀티 윈도우 경로에서는 Window::GetSwapChain()을 사용하라.
 	SwapChain& GetSwapChain() { return swapChain_; }
@@ -156,12 +157,12 @@ private:
 
 	SwapChain swapChain_;				// [구버전 경로 전용] 내장 백버퍼 표면
 	DepthStencilSurface depthSurface_;	// [구버전 경로 전용] 내장 깊이 버퍼
-	RenderStates states_;				// 상태 객체 캐시
-	GraphicContext context_;			// 그리기 명령 창구 (바인딩 캐시 포함)
+	RenderStates states_;		// 상태 객체 캐시
+	GraphicContext context_;	// 그리기 명령 창구 (바인딩 캐시 포함)
 
 	Window* pBoundWindow_;	// 현재 BeginFrame(Window*)로 묶인 창 (구버전 경로면 nullptr)
 	bool wireframe_;		// 현재 와이어프레임 여부
-	CullMode cullMode_;	// 현재 컬링 모드
+	CullMode cullMode_;		// 현재 컬링 모드
 	_s32 width_;			// 현재 그리기 대상 가로
 	_s32 height_;			// 현재 그리기 대상 세로
 };

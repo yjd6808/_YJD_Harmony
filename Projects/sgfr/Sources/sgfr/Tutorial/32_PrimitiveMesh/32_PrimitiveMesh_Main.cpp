@@ -8,11 +8,15 @@
  * 1. g_cResourceMgr.FindPrimitiveMesh2D / FindPrimitiveMesh3D로 디폴트 프리미티브 메시를 꺼낸다.
  * - 2D: Rect / Circle / Triangle / Line
  * - 3D: Cube / Sphere / Capsule / Cylinder / Plane / Quad (Unity 기본 메시 제공)
- * 2. PrimitiveMesh2DType은 3D 메시(Cube 등)를 포함한 슈퍼셋이다.
- * 2D enum으로 3D 메시를 받아올 수 있고, 3D enum으로는 2D 메시를 받아올 수 없다. (컴파일 타임 보장)
+ * 2. 2D/3D 프리미티브 타입은 엄격 분리 — 2D enum은 2D 메시만, 3D enum은 3D 메시만 가져올 수 있다. (컴파일 타임 보장)
  * 3. GameObject에 SetMesh만 하면 렌더 트래버설 중 자동으로 그려진다. (메시 자동 드로우)
- * 4. 2D 프리미티브들은 전부 흰색 텍스처로 배칭된다. → 실제 GPU 드로우콜이 정확히 1번만 발생한다.
- * (창 제목에 프레임당 드로우콜 수를 실시간 표시해 검증한다)
+ * 4. 2D 메시는 GPU 변환(월드 행렬 b1)으로 즉시 드로우된다. → 오브젝트당 1콜 (씬 1 = 4콜)
+ * (창 제목에 프레임당 드로우콜 수를 실시간 표시해 검증한다 — 배칭 경로와의 대조)
+ * 5. StaticLevel — 메시 렌더 모드 (B 기본 / A는 명시적 호출로 전환)
+ * - Dynamic(B, 기본): 매 프레임 현재 월드 행렬 사용 — Transform이 그대로 반영된다. (씬 1의 Rect/Circle/Triangle)
+ * - Static(A): SetMeshStaticLevel(slStatic) 호출 시 "현재 월드 행렬"을 고정 보관한다. (씬 1의 Line)
+ *   이후 Transform을 바꿔도 위치가 고정된다 — 이동 후 전환하면 "그 자리에 못 박힌다".
+ * - 전환은 반드시 명시적 호출로만. Dynamic으로 전환하면 다시 움직일 수 있다. (검사: GetMeshStaticLevel)
  *
  * [조작]
  * SPACE: 2D/3D 씬 전환, ESC: 종료
@@ -30,10 +34,9 @@ namespace
 	constexpr _f32 VIEW_HEIGHT = 600.0f;	// 가상 화면 세로
 
 	// 창 제목에 프레임당 드로우콜 수를 실시간으로 표시한다. (배칭 검증용)
-	void SetTitleDrawCall(Window* _pWindow, const wchar_t* _pFormat, _u32 _drawCalls)
+	void SetTitleDrawCall(Window* _pWindow, const char* _pFormat, _u32 _drawCalls)
 	{
-		wchar_t title[160];
-		swprintf_s(title, _countof(title), _pFormat, _drawCalls);
+		jc::String title = jc::StringUtil::Format(_pFormat, _drawCalls);
 		_pWindow->SetTitle(title);
 	}
 
@@ -43,7 +46,8 @@ namespace
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// [씬 1] 2D 프리미티브 — 리소스 매니저에서 2D 메시 4종을 꺼내 GameObject로 배치한다.
-	// 4개가 모두 같은 흰색 텍스처로 배칭되어 실제 GPU 드로우콜이 1번만 발생한다.
+	// 4개 모두 GPU 변환 즉시 드로우 → 오브젝트당 1콜 (총 4콜).
+	// StaticLevel 시연: Line은 Static(A)으로 행렬 고정, 나머지 3종은 Dynamic(B) — OnUpdate에서 대조한다.
 	class Primitive2DScene : public Scene2D
 	{
 	public:
@@ -61,7 +65,7 @@ namespace
 		void OnEnter() override
 		{
 			GetCamera2D()->SetOrthographic2D(VIEW_WIDTH, VIEW_HEIGHT);
-			GetWindow()->SetTitle(L"32. 2D 프리미티브 - SPACE: 3D 씬 (ESC: 종료)");
+			GetWindow()->SetTitle("32. 2D 프리미티브 - SPACE: 3D 씬 (ESC: 종료)");
 
 			Mesh* pRect = g_cResourceMgr.FindPrimitiveMesh2D(PrimitiveMesh2DType::Rect);
 			Mesh* pCircle = g_cResourceMgr.FindPrimitiveMesh2D(PrimitiveMesh2DType::Circle);
@@ -72,15 +76,36 @@ namespace
 			Create2DObject("Circle", pCircle, vec2(350.0f, 300.0f), vec3(80.0f, 80.0f, 1.0f), 0.0f, color(0xFF, 0xCC, 0x4D));
 			Create2DObject("Triangle", pTriangle, vec2(500.0f, 300.0f), vec3(140.0f, 120.0f, 1.0f), 0.0f, color(0x6B, 0xD0, 0xFF));
 			Create2DObject("Line", pLine, vec2(660.0f, 300.0f), vec3(180.0f, 10.0f, 1.0f), 0.5f, color(0x8A, 0xFF, 0x8A));
-			_LogInfo_("[32] Primitive2DScene::OnEnter — 2D 프리미티브 4종 배치 완료");
+
+			// StaticLevel 시연: Line은 "현재 월드 행렬"을 고정 보관해 Static(A)으로 전환한다.
+			// 이후 OnUpdate에서 Transform을 바꿔도 위치가 고정된다. (나머지 3종은 Dynamic(B))
+			createdObjects_[3]->SetMeshStaticLevel(StaticLevel::slStatic);
+			_LogInfo_("[32] Primitive2DScene::OnEnter — 2D 프리미티브 4종 배치 완료 (Line: Static 행렬 고정)");
 		}
 
-		// 매 프레임: 지난 프레임의 실제 GPU 드로우콜 수를 창 제목에 표시 (배칭이 잘 되면 1)
+		// 매 프레임: B/Dynamic 3종은 트랜스폼이 그대로 반영되고, A/Static 1종(Line)은 고정된다.
 		void OnUpdate(const jc::TimeSpan& _dt) override
 		{
-			(void)_dt;
+			elapsed_ += static_cast<_f32>(_dt.GetTotalSeconds());
+			const _f32 t = elapsed_;
+
+			// Rect — 좌우 왕복 (B: 즉시 반영)
+			createdObjects_[0]->GetTransform()->SetLocalPosition(
+				vec2(200.0f + 120.0f * sinf(t * 2.0f), 300.0f));
+
+			// Circle — 회전 (B)
+			createdObjects_[1]->GetTransform()->SetLocalRotationRad(t * 2.0f);
+
+			// Triangle — 스케일 펄스 (B)
+			createdObjects_[2]->GetTransform()->SetLocalScale(
+				vec3(140.0f + 40.0f * sinf(t * 3.0f), 120.0f + 30.0f * sinf(t * 3.0f), 1.0f));
+
+			// Line — Static(행렬 고정) 상태이므로 아래 트랜스폼 변경은 무시된다. (위치 고정 시연)
+			createdObjects_[3]->GetTransform()->SetLocalPosition(
+				vec2(660.0f + 100.0f * sinf(t * 2.0f), 300.0f));
+
 			SetTitleDrawCall(GetWindow(),
-				L"32. 2D 프리미티브 - DrawCall: %u (SPACE: 3D 씬, ESC: 종료)",
+				"32. 2D 프리미티브 - DrawCall: %u (SPACE: 3D 씬, ESC: 종료)",
 				g_cRenderer2D.GetDrawCallCount());
 
 			if (g_cInput.IsKeyPressed(VK_SPACE))
@@ -105,11 +130,11 @@ namespace
 		}
 
 		jc::Vector<GameObject*> createdObjects_;	// 소멸자에서 정리할 오브젝트 목록
+		_f32 elapsed_ = 0.0f;						// 애니메이션 시간 누적 (초)
 	};
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// [씬 2] 3D 프리미티브 — Unity 기본 메시 6종을 일렬로 배치한다.
-	// Cube 1개는 FindPrimitiveMesh2D(PrimitiveMesh2DType::Cube)로 받아 "2D enum = 슈퍼셋"을 시연한다.
 	class Primitive3DScene : public Scene3D
 	{
 	public:
@@ -127,10 +152,10 @@ namespace
 		{
 			GetCamera3D()->SetPerspectiveDegrees(60.0f, GetWindow()->AspectRatio(), 0.1f, 1000.0f);
 			GetCamera3D()->SetLookAt(vec3(0.0f, 2.5f, -8.0f), vec3::Zero());
-			GetWindow()->SetTitle(L"32. 3D 프리미티브 6종 (SPACE: 2D 씬, ESC: 종료)");
+			GetWindow()->SetTitle("32. 3D 프리미티브 6종 (SPACE: 2D 씬, ESC: 종료)");
 
-			// Cube 1개는 2D enum(슈퍼셋), 나머지 5종은 3D enum으로 꺼낸다.
-			Mesh* pCube = g_cResourceMgr.FindPrimitiveMesh2D(PrimitiveMesh2DType::Cube);
+			// 6종 전부 3D enum으로 꺼낸다. (2D/3D 엄격 분리 — 2D enum에는 3D 타입이 없다)
+			Mesh* pCube = g_cResourceMgr.FindPrimitiveMesh3D(PrimitiveMesh3DType::Cube);
 			Mesh* pSphere = g_cResourceMgr.FindPrimitiveMesh3D(PrimitiveMesh3DType::Sphere);
 			Mesh* pCapsule = g_cResourceMgr.FindPrimitiveMesh3D(PrimitiveMesh3DType::Capsule);
 			Mesh* pCylinder = g_cResourceMgr.FindPrimitiveMesh3D(PrimitiveMesh3DType::Cylinder);
@@ -225,7 +250,7 @@ void PrimitiveMesh_Main()
 	_LogInfo_("[32] 프리미티브 메시 튜토리얼 시작");
 
 	DemoApp app;
-	if (!app.Initialize(L"32. 프리미티브 메시 (SPACE: 씬 전환, ESC: 종료)", 800, 600))
+	if (!app.Initialize("32. 프리미티브 메시 (SPACE: 씬 전환, ESC: 종료)", 800, 600))
 	{
 		jc::Console::WriteLine("엔진 초기화에 실패했습니다.");
 		return;

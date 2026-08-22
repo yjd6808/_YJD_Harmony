@@ -2,6 +2,8 @@
  * 작성자: 윤정도
  * 생성일: 8/5/2026 9:00:00 AM
  * 수정일: 8/9/2026 6:30:00 PM - 개편: 튜토리얼 재배치 + 신규 9종 추가 (총 31개)
+ * 수정일: 8/17/2026 - 33번 프리미티브 셰이프 추가 (총 33개)
+ * 수정일: 8/22/2026 - 34번 GraphicsEnum 한눈에 비교 추가 (총 34개)
  * =====================
  * 튜토리얼 목록 정의
  * 이 파일의 배열 순서가 곧 콘솔 목차 번호다. (1번부터 순서대로 학습 권장)
@@ -42,6 +44,8 @@
 #include "sgfr/Tutorial/30_SpriteAnimation/30_SpriteAnimation_Main.h"
 #include "sgfr/Tutorial/31_PipelineJourney/31_PipelineJourney_Main.h"
 #include "sgfr/Tutorial/32_PrimitiveMesh/32_PrimitiveMesh_Main.h"
+#include "sgfr/Tutorial/33_PrimitiveShape/33_PrimitiveShape_Main.h"
+#include "sgfr/Tutorial/34_GraphicsEnum_한눈에_비교/34_GraphicsEnumDiff_Main.h"
 
 // 튜토리얼 목록 (번호 순서 = 학습 순서)
 namespace sgfr
@@ -70,7 +74,7 @@ static const TutorialEntry s_Tutorials[] =
 	{ "래스터라이저 스테이트 (와이어프레임/컬링)",  RasterizerState_Main },
 	{ "머티리얼 (셰이더+상태+텍스처 묶음)",         Material_Main },
 	{ "리소스 매니저 (키 발급과 수명 관리)",         ResourceManager_Main },
-	{ "렌더 오브젝트 루프 (SceneRenderer)",         RenderObjectLoop_Main },
+	{ "렌더 오브젝트 루프 (b0/b1 자동화)",           RenderObjectLoop_Main },
 	{ "스테이트 캐시 (중복 바인딩 절감)",           StateCache_Main },
 	{ "셰이딩 모델 (람버트/퐁/블린-퐁)",          ShadingModel_Main },
 	{ "렌더 타깃 (미니맵)",                        RenderTarget_Main },
@@ -81,6 +85,8 @@ static const TutorialEntry s_Tutorials[] =
 	{ "스프라이트 애니메이션 (시트/트위닝)",        SpriteAnimation_Main },
 	{ "파이프라인 여행 (수도 코드 §1~§20 캡스톤)",  PipelineJourney_Main },
 	{ "프리미티브 메시 (리소스 매니저 2D/3D)",      PrimitiveMesh_Main },
+	{ "프리미티브 셰이프 (Shape2D/Shape3D)",        PrimitiveShape_Main },
+	{ "GraphicsEnum 한눈에 비교 (Before=디폴트 / After=선택)", GraphicsEnumDiff_Main },
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////

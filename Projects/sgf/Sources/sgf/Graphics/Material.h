@@ -19,7 +19,6 @@
 
 #include "sgf/Graphics/IResource.h"
 #include "sgf/Graphics/GraphicsEnums.h"
-#include "sgf/Graphics/PipelineState.h"
 #include "sgf/Graphics/Buffers.h"
 #include "sgf/Graphics/GraphicContext.h"
 
@@ -49,7 +48,8 @@ public:
 
 	void Finalize();
 
-	// === 셰이더/텍스처 (ResourceMgr 키) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 셰이더/텍스처 (ResourceMgr 키)
 	void SetVertexShaderKey(_u64 _key) { vertexShaderKey_ = _key; }
 	void SetPixelShaderKey(_u64 _key) { pixelShaderKey_ = _key; }
 	_u64 GetVertexShaderKey() const { return vertexShaderKey_; }
@@ -59,18 +59,17 @@ public:
 	void SetTextureKey(_u32 _slot, _u64 _key);
 	_u64 GetTextureKey(_u32 _slot) const;
 
-	// === 파이프라인 상태 ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 파이프라인 상태 (설정 키만 보관 — D3D 상태 객체는 RenderStates 풀에서 공유)
+	// 같은 설정을 가진 재질 여러 개가 풀의 객체 1개를 공유하므로
+	// GraphicContext 포인터 비교 캐시가 히트해 재바인드를 피한다. (B-3)
 	bool SetRasterizer(CullMode _cull, FillMode _fill = FillMode::fmSolid, FrontFace _frontFace = FrontFace::ffClockwise);
 	bool SetBlend(BlendMode _mode);
 	bool SetDepth(DepthMode _mode);
 	bool SetSampler(FilterMode _filter, AddressMode _addressU = AddressMode::amClamp, AddressMode _addressV = AddressMode::amClamp);
 
-	const RasterizerState& GetRasterizer() const { return rasterizer_; }
-	const BlendState& GetBlend() const { return blend_; }
-	const DepthStencilState& GetDepth() const { return depth_; }
-	const SamplerState& GetSampler() const { return sampler_; }
-
-	// === 머티리얼 상수 ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 머티리얼 상수
 	void SetBaseColor(const color& _color) { _color.ToFloat4(constants_.baseColor_); constantsDirty_ = true; }
 	color GetBaseColor() const { return color::FromFloat(constants_.baseColor_[0], constants_.baseColor_[1], constants_.baseColor_[2], constants_.baseColor_[3]); }
 
@@ -80,20 +79,25 @@ public:
 	bool Bind(GraphicContext& _context);
 
 private:
-	GraphicDevice* pDevice_;			// 상태 재설정용 (소유하지 않음)
+	GraphicDevice* pDevice_;			// Bind 시 RenderStates 풀/상수버퍼 조회용 (소유하지 않음)
 
-	_u64 vertexShaderKey_;				// VS 리소스 키
-	_u64 pixelShaderKey_;				// PS 리소스 키
+	_u64 vertexShaderKey_;									// VS 리소스 키
+	_u64 pixelShaderKey_;									// PS 리소스 키
 	_u64 textureKeys_[GraphicContext::MAX_TEXTURE_SLOTS];	// 슬롯별 텍스처 키
 
-	RasterizerState rasterizer_;		// 래스터라이저 상태
-	BlendState blend_;					// 블렌드 상태
-	DepthStencilState depth_;			// 깊이 상태
-	SamplerState sampler_;				// 샘플러 (슬롯 0)
+	// 파이프라인 상태 설정 키 (D3D 상태 객체는 RenderStates 풀이 소유)
+	BlendMode blendMode_ = BlendMode::bmNone;			// 블렌드 공식
+	DepthMode depthMode_ = DepthMode::dmReadWrite;		// 깊이 테스트/기록
+	CullMode cullMode_ = CullMode::cmBack;				// 컬링
+	FillMode fillMode_ = FillMode::fmSolid;				// 채우기
+	FrontFace frontFace_ = FrontFace::ffClockwise;		// 앞면 판정
+	FilterMode filter_ = FilterMode::fmLinear;			// 샘플러 필터
+	AddressMode addrU_ = AddressMode::amClamp;			// 샘플러 주소 U
+	AddressMode addrV_ = AddressMode::amClamp;			// 샘플러 주소 V
 
-	MaterialConstants constants_;		// b2 상수 내용
+	MaterialConstants constants_;						// b2 상수 내용
 	ConstantBuffer<MaterialConstants> constantBuffer_;	// b2 상수버퍼
-	bool constantsDirty_;				// 상수 갱신 필요 여부
+	bool constantsDirty_;								// 상수 갱신 필요 여부
 };
 
 NS_SGF_END

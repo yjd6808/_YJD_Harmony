@@ -22,7 +22,7 @@
  * [사용법 - g_c 전역 접근 (sgcl 스타일)]
  * g_cDirector.RunScene(new MyScene()); // 메인 창 씬 시작
  * g_cDirector.ReplaceScene(new NextScene()); // 메인 창 씬 교체
- * Window* pSub = g_cApp.CreateSubWindow(L"미니맵", 400, 300);
+ * Window* pSub = g_cApp.CreateSubWindow("미니맵", 400, 300);
  * g_cDirector.RunScene(new MiniMapScene(), pSub); // 서브 창 씬 시작
  */
 
@@ -63,8 +63,8 @@ public:
 	// Scene::AddChild가 running 씬 검증에 사용한다. (첫 슬롯 기준)
 	Scene* GetRunningScene();
 
-	// === Application이 매 프레임 부르는 내부 함수 ===
-
+	////////////////////////////////////////////////////////////////////////////////////////
+	// Application이 매 프레임 부르는 내부 함수
 	// 모든 슬롯의 예약된 씬 교체를 처리하고 각 씬을 갱신한다.
 	void Update(const jc::TimeSpan& _dt);
 

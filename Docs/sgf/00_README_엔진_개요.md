@@ -74,6 +74,7 @@ Projects/sgf/Sources/sgf/
 │   ├── Scene2D.*           ← 2D 씬 (스태틱 선언 + 렌더)
 │   ├── Scene3D.*           ← 3D 씬 (DrawMesh 창구)
 │   ├── Shape2D.*           ← 2D 프리미티브 자동 드로우 편의 노드 (스태틱 bake)
+│   ├── Shape3D.*           ← 3D 프리미티브 자동 드로우 편의 노드 (메시+머티리얼 자동 구성)
 │   └── Director.*          ← 씬 디렉터 (g_cDirector, 윈도우별 씬 슬롯)
 └── Audio/
     └── SoundEngine.*       ← XAudio2 사운드 (g_cSound)

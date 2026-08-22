@@ -19,7 +19,7 @@ namespace
 {
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// HLSL 문자열을 바이트코드로 컴파일한다. 실패 시 오류를 디버그 출력창으로 보낸다.
-	bool CompileHlsl(const char* _szSource, const char* _szEntry, const char* _szTarget, SgfComPtr<ID3DBlob>& _outBlob)
+	bool CompileHlsl(const jc::String& _szSource, const jc::String& _szEntry, const jc::String& _szTarget, SgfComPtr<ID3DBlob>& _outBlob)
 	{
 		UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined(_DEBUG)
@@ -28,9 +28,9 @@ namespace
 
 		SgfComPtr<ID3DBlob> pErrorBlob;
 		HRESULT hr = D3DCompile(
-			_szSource, strlen(_szSource),
+			_szSource.Source(), _szSource.Length(),
 			nullptr, nullptr, nullptr,
-			_szEntry, _szTarget,
+			_szEntry.Source(), _szTarget.Source(),
 			flags, 0,
 			_outBlob.GetAddressOf(), pErrorBlob.GetAddressOf());
 
@@ -48,10 +48,10 @@ namespace
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// 파일 전체를 읽어 String으로 반환한다. 실패 시 빈 문자열.
 	// (std:: 금지 규칙에 따라 CRT + jc::String 사용. FR-26)
-	String ReadTextFile(const char* _szFilePath)
+	String ReadTextFile(const jc::String& _szFilePath)
 	{
 		FILE* pFile = nullptr;
-		if (fopen_s(&pFile, _szFilePath, "rb") != 0 || pFile == nullptr)
+		if (fopen_s(&pFile, _szFilePath.Source(), "rb") != 0 || pFile == nullptr)
 		{
 			return String{};
 		}
@@ -90,7 +90,7 @@ VertexShader::~VertexShader()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool VertexShader::InitializeFromSource(GraphicDevice* _pDevice, const char* _szSource, const char* _szEntry)
+bool VertexShader::InitializeFromSource(GraphicDevice* _pDevice, const jc::String& _szSource, const jc::String& _szEntry)
 {
 	Finalize();
 
@@ -109,7 +109,7 @@ bool VertexShader::InitializeFromSource(GraphicDevice* _pDevice, const char* _sz
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool VertexShader::InitializeFromFile(GraphicDevice* _pDevice, const char* _szFilePath, const char* _szEntry)
+bool VertexShader::InitializeFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePath, const jc::String& _szEntry)
 {
 	String source = ReadTextFile(_szFilePath);
 	if (source.Length() == 0)
@@ -117,7 +117,7 @@ bool VertexShader::InitializeFromFile(GraphicDevice* _pDevice, const char* _szFi
 		return false;
 	}
 
-	if (!InitializeFromSource(_pDevice, source.Source(), _szEntry))
+	if (!InitializeFromSource(_pDevice, source, _szEntry))
 	{
 		return false;
 	}
@@ -126,31 +126,32 @@ bool VertexShader::InitializeFromFile(GraphicDevice* _pDevice, const char* _szFi
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 void VertexShader::Finalize()
 {
 	pShader_.Reset();
 	pBytecode_.Reset();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 PixelShader::PixelShader()
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 PixelShader::~PixelShader()
 {
 	Finalize();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-bool PixelShader::InitializeFromSource(GraphicDevice* _pDevice, const char* _szSource, const char* _szEntry)
+////////////////////////////////////////////////////////////////////////////////////////
+bool PixelShader::InitializeFromSource(GraphicDevice* _pDevice, const jc::String& _szSource, const jc::String& _szEntry)
 {
 	Finalize();
 
 	SgfComPtr<ID3DBlob> pBytecode;
-	if (!CompileHlsl(_szSource, _szEntry, "ps_5_0", pBytecode))
+	jc::String psTarget = "ps_5_0";
+	if (!CompileHlsl(_szSource, _szEntry, psTarget, pBytecode))
 	{
 		return false;
 	}
@@ -160,7 +161,7 @@ bool PixelShader::InitializeFromSource(GraphicDevice* _pDevice, const char* _szS
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool PixelShader::InitializeFromFile(GraphicDevice* _pDevice, const char* _szFilePath, const char* _szEntry)
+bool PixelShader::InitializeFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePath, const jc::String& _szEntry)
 {
 	String source = ReadTextFile(_szFilePath);
 	if (source.Length() == 0)
@@ -168,7 +169,7 @@ bool PixelShader::InitializeFromFile(GraphicDevice* _pDevice, const char* _szFil
 		return false;
 	}
 
-	if (!InitializeFromSource(_pDevice, source.Source(), _szEntry))
+	if (!InitializeFromSource(_pDevice, source, _szEntry))
 	{
 		return false;
 	}
@@ -177,7 +178,7 @@ bool PixelShader::InitializeFromFile(GraphicDevice* _pDevice, const char* _szFil
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 void PixelShader::Finalize()
 {
 	pShader_.Reset();

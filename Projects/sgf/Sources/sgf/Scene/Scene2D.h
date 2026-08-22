@@ -36,15 +36,17 @@ class Scene2D : public Scene
 public:
 	virtual ~Scene2D();
 
-	Camera2D* GetCamera2D() const;            // = static_cast<Camera2D*>(GetCamera())
+	Camera2D* GetCamera2D() const;			// = static_cast<Camera2D*>(GetCamera())
 
-	// === 예약 창구 구현 (— Renderer2D로 전달) ===
-	virtual void RenderStatic(_u64 _staticId) override;   // 선언 시 고정 — id만 예약 (버킷은 선언 시 고정)
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 예약 창구 구현 (— Renderer2D로 전달)
+	virtual void RenderStatic(_u64 _staticId) override;	// 선언 시 고정 — id만 예약 (버킷은 선언 시 고정)
 	virtual void RenderDynamic(const rect& _region, const Fill& _fill,
 		const color& _color1, const color& _color2, _u32 _option,
-		RenderLayer _layer = RenderLayer::Default) override;          // _layer: Bottom/Default/Top — 씬 전역 순서
+		RenderLayer _layer = RenderLayer::Default) override;		// _layer: Bottom/Default/Top — 씬 전역 순서
 
-	// === 스태틱 선언 (— OnEnter에서 1회 bake, 반환 staticId) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 스태틱 선언 (— OnEnter에서 1회 bake, 반환 staticId)
 	// 2D 도형은 이 6종이 전부 — 어차피 2D에서는 이것들만 있다. (9-패치/게이지 등은 Fill 범용 선언 사용)
 	// 6종은 기본 레이어(Default) 전용 — 최상단/최하단 bake는 범용 DeclareStatic(Fill, ..., layer) 사용
 	_u64 DeclareStaticImage(Texture* _pTexture, const rect& _region);                          // 텍스처 쿼드
@@ -56,20 +58,22 @@ public:
 	_u64 DeclareStaticPolygon(const vec2* _pPoints, _u32 _count, const color& _color);
 	_u64 DeclareStaticTriangle(const vec2& _p1, const vec2& _p2, const vec2& _p3, const color& _color);
 
-	// === 스태틱 범용 선언 (— 6종 밖의 Fill bake: 게이지, 커스텀 등) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 스태틱 범용 선언 (— 6종 밖의 Fill bake: 게이지, 커스텀 등)
 	// 예: DeclareStatic(Fill::Gauge(0.7f), rect, 배경색, 채움색) — Bake 시점에 FillGauge가 적용됨
 	_u64 DeclareStatic(const Fill& _fill, const rect& _region,
 		const color& _color1 = color::WHITE, const color& _color2 = color::WHITE,
 		_u32 _option = 0, RenderLayer _layer = RenderLayer::Default);
 
-	// === 메시 그리기 (— Mesh+Material 자동 드로우) ===
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 메시 그리기 (— Mesh+Material 자동 드로우)
 	// GameObject::RenderSelf → Scene2D::DrawMesh → Renderer2D::DrawMesh (2D 배칭)
 	virtual void DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world) override;
 
 	virtual void RenderScene() override;
 
 protected:
-	Scene2D();   // defaultCamera_ = Camera2D::CreateDefault()
+	Scene2D();	// defaultCamera_ = Camera2D::CreateDefault()
 };
 
 NS_SGF_END
