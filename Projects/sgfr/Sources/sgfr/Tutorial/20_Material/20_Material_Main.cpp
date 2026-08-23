@@ -36,12 +36,12 @@ namespace
 		{
 			for (_s32 x = 0; x < _width; ++x)
 			{
-				const bool bWhite = (((x / 8) + (y / 8)) % 2) == 0;
-				_u8* pPixel = _pOutPixels + (y * _width + x) * 4;
-				pPixel[0] = bWhite ? 255 : 40;	// R
-				pPixel[1] = bWhite ? 255 : 40;	// G
-				pPixel[2] = bWhite ? 255 : 80;	// B
-				pPixel[3] = 255;				// A
+			const bool bWhite = (((x / 8) + (y / 8)) % 2) == 0;
+			_u8* pPixel = _pOutPixels + (y * _width + x) * 4;
+			pPixel[0] = bWhite ? 255 : 40;	// R
+			pPixel[1] = bWhite ? 255 : 40;	// G
+			pPixel[2] = bWhite ? 255 : 80;	// B
+			pPixel[3] = 255;			// A
 			}
 		}
 	}
@@ -73,11 +73,18 @@ void Material_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	// 튜토리얼 단독 실행이므로 리소스 매니저도 직접 초기화한다.
@@ -90,7 +97,7 @@ void Material_Main()
 		return;
 	}
 
-	GraphicContext& context = device.GetContext();
+	GraphicContext& context = device.Context();
 
 	// 2. 체커 텍스처를 만들어 리소스 매니저에 등록한다. (소유권 이전!)
 	_u8 pixels[64 * 64 * 4];
@@ -180,12 +187,12 @@ void Material_Main()
 		frame.view_ = mat4::Identity();
 		frame.projection_ = mat4::Identity();
 		frame.cameraPosition_ = vec4(0.0f, 0.0f, 0.0f, 1.0f);
-		frameCb.Update(&device, frame);
+		frameCb.Update(device.Context(), frame);
 		context.SetConstantBuffer(ShaderStage::ssVertex, 0, frameCb.Raw());
 
 		ObjectConstants object;
 		object.world_ = mat4::Scale(1.2f);
-		objectCb.Update(&device, object);
+		objectCb.Update(device.Context(), object);
 		context.SetConstantBuffer(ShaderStage::ssVertex, 1, objectCb.Raw());
 
 		// 핵심! 셰이더/상태 4종/텍스처/b2까지 이 한 줄이 전부 바인딩한다.
@@ -195,7 +202,7 @@ void Material_Main()
 			quad.Draw(context);
 		}
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 7. 정리: 등록한 텍스처는 매니저 Finalize가 함께 소멸시킨다.

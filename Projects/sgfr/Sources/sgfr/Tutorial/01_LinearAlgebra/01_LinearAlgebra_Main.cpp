@@ -38,8 +38,8 @@ void LinearAlgebra_Main()
 
 	PrintVec2("a", a);
 	PrintVec2("b", b);
-	PrintVec2("a + b", a + b);				// 성분끼리 더하기 = 화살표 이어붙이기
-	PrintVec2("a - b", a - b);				// b에서 a로 향하는 벡터
+	PrintVec2("a + b", a + b);			// 성분끼리 더하기 = 화살표 이어붙이기
+	PrintVec2("a - b", a - b);			// b에서 a로 향하는 벡터
 	PrintVec2("a * 2", a * 2.0f);			// 길이만 2배 (방향 그대로)
 
 	// 길이: 피타고라스 정리. (3, 4)의 길이는 sqrt(9+16) = 5

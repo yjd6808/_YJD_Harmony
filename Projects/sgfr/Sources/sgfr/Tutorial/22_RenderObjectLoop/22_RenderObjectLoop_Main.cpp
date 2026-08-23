@@ -46,11 +46,18 @@ void RenderObjectLoop_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	if (!g_cResourceMgr.Initialize(&device))
@@ -133,15 +140,15 @@ void RenderObjectLoop_Main()
 		{
 			const _f32 angle = elapsed * 1.5f + jc_math_pi * 2.0f * (_f32)i / (_f32)ORBIT_CUBE_COUNT;
 			objects[1 + i].world_ =
-				mat4::Scale(0.3f) *									// (1) 작게
-				mat4::RotationY(elapsed * 3.0f) *					// (2) 제자리 회전
-				mat4::Translation(2.0f, 0.0f, 0.0f) *				// (3) 반지름만큼 밀고
-				mat4::RotationY(angle);								// (4) 중심 기준 공전
+			mat4::Scale(0.3f) *							// (1) 작게
+			mat4::RotationY(elapsed * 3.0f) *				// (2) 제자리 회전
+			mat4::Translation(2.0f, 0.0f, 0.0f) *			// (3) 반지름만큼 밀고
+			mat4::RotationY(angle);						// (4) 중심 기준 공전
 		}
 
-		// 7. 표준 렌더 루프: BeginFrame → BeginScene(b0 한 번) → Draw들(b1씩) → EndFrame
+		// 7. 표준 렌더 루프: BeginFrame → BeginScene(b0 한 번) → Draw들(b1씩) → Present
 		device.BeginFrame(color(0x0F, 0x0F, 0x1A, 0xFF));
-		device.GetContext().InvalidateCache();	// BeginFrame이 원시 상태를 건드렸으므로 캐시를 비운다
+		device.Context().InvalidateCache();	// BeginFrame이 원시 상태를 건드렸으므로 캐시를 비운다
 
 		renderer.BeginScene(frame);
 	for (_s32 i = 0; i < 1 + ORBIT_CUBE_COUNT; ++i)
@@ -150,7 +157,7 @@ void RenderObjectLoop_Main()
 		}
 		renderer.EndScene();
 
-		device.EndFrame(true);
+		device.Present(true);
 		++frameCount;
 		if (frameCount == 1 || frameCount == 60 || frameCount == 300)
 		{

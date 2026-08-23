@@ -8,6 +8,7 @@
 #include "Core.h"
 #include "sgf/Graphics/GraphicsEnums.h"
 #include "sgf/Graphics/DepthStencilSurface.h"
+#include "sgf/Graphics/GraphicContext.h"
 
 NS_SGF_BEGIN
 
@@ -54,12 +55,11 @@ void DepthStencilSurface::Finalize()
 //////////////////////////////////////////////////////////////////////////////////////////
 // 깊이 1.0(가장 멀리) / 스텐실 0으로 초기화
 // 초기화하지 않으면 지난 프레임의 깊이 값이 남아 새 프레임 픽셀이 전부 탈락한다.
-void DepthStencilSurface::Clear(ID3D11DeviceContext* _pContext)
+void DepthStencilSurface::Clear(GraphicContext& _context)
 {
 	if (pDepthStencilView_)
 	{
-		_pContext->ClearDepthStencilView(pDepthStencilView_.Get(),
-			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		_context.ClearDepthStencil(pDepthStencilView_.Get(), 1.0f, 0);
 	}
 }
 

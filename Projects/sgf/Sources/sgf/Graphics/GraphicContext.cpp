@@ -23,6 +23,11 @@ using namespace jc;
 //////////////////////////////////////////////////////////////////////////////////////////
 GraphicContext::GraphicContext()
 	: pContext_(nullptr)
+	, pDevice_(nullptr)
+	, deferred_(false)
+	, pCachedRtv_(nullptr)
+	, pCachedDsv_(nullptr)
+	, cachedRtvCount_(0)
 {
 	InvalidateCache();
 	apiCallCount_ = 0;
@@ -30,23 +35,80 @@ GraphicContext::GraphicContext()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool GraphicContext::Initialize(GraphicDevice* _pDevice)
+GraphicContext::~GraphicContext()
 {
-	if (_pDevice == nullptr || _pDevice->Context() == nullptr)
+	Finalize();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool GraphicContext::InitializeImmediate(GraphicDevice* _pDevice, ID3D11DeviceContext* _pImmediate)
+{
+	if (_pDevice == nullptr || _pImmediate == nullptr)
 	{
 		return false;
 	}
 
-	pContext_ = _pDevice->Context();
+	pDevice_ = _pDevice;
+	deferred_ = false;
+	pContext_ = _pImmediate; // SgfComPtr AddRef - 디바이스가 내부 참조를 유지하므로 공유 소유
 	InvalidateCache();
 	ResetStats();
 	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+bool GraphicContext::InitializeDeferred(GraphicDevice* _pDevice)
+{
+	if (_pDevice == nullptr || _pDevice->Device() == nullptr)
+	{
+		return false;
+	}
+
+	pDevice_ = _pDevice;
+	deferred_ = true;
+	HRESULT hr = _pDevice->Device()->CreateDeferredContext(0, pContext_.GetAddressOf());
+	if (FAILED(hr))
+	{
+		pDevice_ = nullptr;
+		deferred_ = false;
+		return false;
+	}
+
+	InvalidateCache();
+	ResetStats();
+	return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool GraphicContext::Initialize(GraphicDevice* _pDevice)
+{
+	// 하위 호환 - InitializeImmediate로 위임
+	if (_pDevice == nullptr)
+	{
+		return false;
+	}
+
+	return InitializeImmediate(_pDevice, _pDevice->Context().Raw());
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::Finalize()
 {
-	pContext_ = nullptr;
+	for (_s32 i = 0; i < ownedInputLayouts_.Size(); ++i)
+	{
+		delete ownedInputLayouts_[i];
+	}
+	ownedInputLayouts_.Clear();
+
+	if (pContext_ != nullptr)
+	{
+		// ClearState 후 참조 해제. 즉시 컨텍스트는 Device가 내부 참조를 유지하므로 실제 소멸은 Device 소멸 시.
+		pContext_->ClearState();
+		pContext_.Reset();
+	}
+
+	pDevice_ = nullptr;
+	deferred_ = false;
 	InvalidateCache();
 }
 
@@ -62,6 +124,9 @@ void GraphicContext::InvalidateCache()
 	pCachedRasterizer_ = nullptr;
 	pCachedBlend_ = nullptr;
 	pCachedDepth_ = nullptr;
+	pCachedRtv_ = nullptr;
+	pCachedDsv_ = nullptr;
+	cachedRtvCount_ = 0;
 	memset(pCachedSrvs_, 0, sizeof(pCachedSrvs_));
 	memset(pCachedSamplers_, 0, sizeof(pCachedSamplers_));
 	memset(pCachedCbuffers_, 0, sizeof(pCachedCbuffers_));
@@ -167,11 +232,22 @@ void GraphicContext::SetPixelShader(PixelShader* _pShader)
 	pContext_->PSSetShader(pRaw, nullptr, 0);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
+_u32 GraphicContext::CreateVertexShader(const jc::String& _hlslSource, const jc::String& _entry)
+{
+	if (pDevice_ == nullptr) return INVALID_HANDLE;
+	return pDevice_->CreateVertexShader(_hlslSource, _entry);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+_u32 GraphicContext::CreatePixelShader(const jc::String& _hlslSource, const jc::String& _entry)
+{
+	if (pDevice_ == nullptr) return INVALID_HANDLE;
+	return pDevice_->CreatePixelShader(_hlslSource, _entry);
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // ★ 상수버퍼 바인딩 — 셰이더가 읽을 데이터 보관함을 특정 스테이지/슬롯에 장착한다.
-// - (용어) 슬롯: 셰이더 쪽의 "선반 번호". b0/b1/b2 규약으로 쓰면 규칙이 통일된다.
-// - (용어) 스테이지: VS(정점 처리)와 PS(픽셀 처리)는 서로 다른 선반. VS에 장착해도 PS는 못 본다.
-// - 직전과 같은 버퍼면 D3D 호출을 생략한다(캐시) — 중복 호출은 GPU 명령만 쌓이고 이득이 없다.
 void GraphicContext::SetConstantBuffer(ShaderStage _stage, _u32 _slot, ID3D11Buffer* _pBuffer)
 {
 	jc_assert_msg(_slot < MAX_CBUFFER_SLOTS, "상수버퍼 슬롯 범위를 벗어났습니다.");
@@ -311,7 +387,6 @@ void GraphicContext::SetRasterizerState(RasterizerState* _pState)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Raw 오버로드 — RenderStates 풀에서 나온 원시 포인터를 직접 받는다.
-// 핸들 버전과 같은 캐시 필드(pCachedRasterizer_)를 공유하므로 우회 경로가 사라진다.
 void GraphicContext::SetRasterizerStateRaw(ID3D11RasterizerState* _pRaw)
 {
 	if (_pRaw == pCachedRasterizer_)
@@ -386,10 +461,224 @@ void GraphicContext::SetDepthStencilStateRaw(ID3D11DepthStencilState* _pRaw)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+void GraphicContext::SetRenderTargets(ID3D11RenderTargetView* const* _ppRtvs, _u32 _count, ID3D11DepthStencilView* _pDsv)
+{
+	ID3D11RenderTargetView* pFirstRtv = (_count > 0 && _ppRtvs != nullptr) ? _ppRtvs[0] : nullptr;
+	if (pFirstRtv == pCachedRtv_ && _pDsv == pCachedDsv_ && _count == cachedRtvCount_)
+	{
+		skippedCallCount_ += 1;
+		return;
+	}
+
+	pCachedRtv_ = pFirstRtv;
+	pCachedDsv_ = _pDsv;
+	cachedRtvCount_ = _count;
+	apiCallCount_ += 1;
+	pContext_->OMSetRenderTargets(_count, _ppRtvs, _pDsv);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void GraphicContext::ClearRenderTarget(ID3D11RenderTargetView* _pRtv, const color& _color)
+{
+	if (_pRtv == nullptr)
+	{
+		return;
+	}
+
+	apiCallCount_ += 1;
+	const _f32 clearColor[4] = { _color.Rf(), _color.Gf(), _color.Bf(), _color.Af() };
+	pContext_->ClearRenderTargetView(_pRtv, clearColor);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void GraphicContext::ClearDepthStencil(ID3D11DepthStencilView* _pDsv, _f32 _depth, _u8 _stencil)
+{
+	if (_pDsv == nullptr)
+	{
+		return;
+	}
+
+	apiCallCount_ += 1;
+	pContext_->ClearDepthStencilView(_pDsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, _depth, _stencil);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void GraphicContext::ClearState()
+{
+	apiCallCount_ += 1;
+	pContext_->ClearState();
+	InvalidateCache();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool GraphicContext::UpdateBuffer(ID3D11Buffer* _pBuffer, const void* _pData, _u32 _size)
+{
+	if (_pBuffer == nullptr || _pData == nullptr || _size == 0)
+	{
+		return false;
+	}
+
+	D3D11_MAPPED_SUBRESOURCE mapped = {};
+	HRESULT hr = pContext_->Map(_pBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+	if (FAILED(hr))
+	{
+		return false;
+	}
+
+	memcpy(mapped.pData, _pData, _size);
+	pContext_->Unmap(_pBuffer, 0);
+	apiCallCount_ += 1;
+	return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void GraphicContext::SetRasterizer(CullMode _cull, FillMode _fill, FrontFace _front)
+{
+	if (pDevice_ == nullptr) { return; }
+	SetRasterizerStateRaw(pDevice_->States().GetRasterizerState(_cull, _fill, _front));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void GraphicContext::SetBlend(BlendMode _mode)
+{
+	if (pDevice_ == nullptr) { return; }
+	SetBlendStateRaw(pDevice_->States().GetBlendState(_mode));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void GraphicContext::SetDepth(DepthMode _mode)
+{
+	if (pDevice_ == nullptr) { return; }
+	SetDepthStencilStateRaw(pDevice_->States().GetDepthState(_mode));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void GraphicContext::SetSampler(FilterMode _filter, AddressMode _address, _u32 _slot)
+{
+	if (pDevice_ == nullptr) { return; }
+	SetSamplerRaw(ShaderStage::ssPixel, _slot, pDevice_->States().GetSamplerState(_filter, _address, _address));
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 // ★ 드로우콜 — "지금 바인딩된 상태로 정점 N개를 그려라"는 GPU 명령의 발사 버튼.
-// - 여기까지가 렌더링 파이프라인(IA→VS→RS→PS→OM)의 진입점이다. 이후는 전부 GPU가 처리한다.
+void GraphicContext::SetVertexShader(_u32 _vsHandle)
+{
+	if (pDevice_ == nullptr) return;
+	VertexShader* pVs = pDevice_->ResolveVertexShader(_vsHandle);
+	if (pVs == nullptr) return;
+	SetVertexShader(pVs);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+void GraphicContext::SetPixelShader(_u32 _psHandle)
+{
+	if (pDevice_ == nullptr) return;
+	PixelShader* pPs = pDevice_->ResolvePixelShader(_psHandle);
+	if (pPs == nullptr) return;
+	SetPixelShader(pPs);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+void GraphicContext::SetInputLayout(_u32 _vsHandle, _u32 _vbHandle)
+{
+	if (pDevice_ == nullptr) return;
+	VertexShader* pVs = pDevice_->ResolveVertexShader(_vsHandle);
+	GraphicDevice::VertexBufferSlot* pVbSlot = pDevice_->ResolveVertexBuffer(_vbHandle);
+	jc_assert_msg(pVs != nullptr, "SetInputLayout: 유효하지 않은 VS 핸들");
+	jc_assert_msg(pVbSlot != nullptr && pVbSlot->pBuffer != nullptr, "SetInputLayout: 유효하지 않은 VB 핸들");
+	if (pVs == nullptr || pVbSlot == nullptr || pVbSlot->pBuffer == nullptr) return;
+	VertexLayoutSpan layout = pVbSlot->pBuffer->Layout();
+	InputLayout* pLayout = new InputLayout();
+	if (!pLayout->Initialize(pDevice_, layout, pVs))
+	{
+		jc_assert_msg(false, "SetInputLayout: InputLayout 생성 실패 (VS와 Vertex 레이아웃 불일치)");
+		delete pLayout;
+		return;
+	}
+	SetInputLayout(pLayout);
+	ownedInputLayouts_.PushBack(pLayout);
+}
+
+void GraphicContext::SetInputLayout(_u32 _vsHandle, VertexBuffer* _pVb)
+{
+	if (pDevice_ == nullptr || _pVb == nullptr) return;
+	VertexShader* pVs = pDevice_->ResolveVertexShader(_vsHandle);
+	jc_assert_msg(pVs != nullptr, "SetInputLayout: 유효하지 않은 VS 핸들");
+	if (pVs == nullptr) return;
+	VertexLayoutSpan layout = _pVb->Layout();
+	InputLayout* pLayout = new InputLayout();
+	if (!pLayout->Initialize(pDevice_, layout, pVs))
+	{
+		jc_assert_msg(false, "SetInputLayout: InputLayout 생성 실패 (VS와 Vertex 레이아웃 불일치)");
+		delete pLayout;
+		return;
+	}
+	SetInputLayout(pLayout);
+	ownedInputLayouts_.PushBack(pLayout);
+}
+
+void GraphicContext::SetInputLayout(_u32 _vsHandle, VertexLayoutSpan _layout)
+{
+	if (pDevice_ == nullptr) return;
+	VertexShader* pVs = pDevice_->ResolveVertexShader(_vsHandle);
+	jc_assert_msg(pVs != nullptr, "SetInputLayout: 유효하지 않은 VS 핸들");
+	if (pVs == nullptr) return;
+	InputLayout* pLayout = new InputLayout();
+	if (!pLayout->Initialize(pDevice_, _layout, pVs))
+	{
+		jc_assert_msg(false, "SetInputLayout: InputLayout 생성 실패 (VS와 Vertex 레이아웃 불일치)");
+		delete pLayout;
+		return;
+	}
+	SetInputLayout(pLayout);
+	ownedInputLayouts_.PushBack(pLayout);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+void GraphicContext::SetVertexBuffer(_u32 _handle)
+{
+	if (pDevice_ == nullptr)
+	{
+		return;
+	}
+	GraphicDevice::VertexBufferSlot* pSlot = pDevice_->ResolveVertexBuffer(_handle);
+	if (pSlot == nullptr)
+	{
+		return;
+	}
+	SetVertexBuffer(pSlot->pBuffer);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void GraphicContext::SetIndexBuffer(_u32 _handle)
+{
+	if (pDevice_ == nullptr)
+	{
+		return;
+	}
+	IndexBuffer* pBuffer = pDevice_->ResolveIndexBuffer(_handle);
+	if (pBuffer == nullptr)
+	{
+		return;
+	}
+	SetIndexBuffer(pBuffer);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void GraphicContext::SetTexture(_u32 _slot, _u32 _handle)
+{
+	if (pDevice_ == nullptr)
+	{
+		return;
+	}
+	Texture* pTexture = pDevice_->ResolveTexture(_handle);
+	SetTexture(ShaderStage::ssPixel, _slot, pTexture);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::Draw(_u32 _vertexCount, _u32 _startVertex)
 {
+	jc_assert_msg(pCachedInputLayout_ != nullptr, "InputLayout 미바인딩: Draw 전에 gc.SetInputLayout(vsHandle, vbHandle) 또는 gc.SetInputLayout(pLayout)을 호출하세요.");
 	apiCallCount_ += 1;
 	pContext_->Draw(_vertexCount, _startVertex);
 }
@@ -397,6 +686,7 @@ void GraphicContext::Draw(_u32 _vertexCount, _u32 _startVertex)
 //////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::DrawIndexed(_u32 _indexCount, _u32 _startIndex, _s32 _baseVertex)
 {
+	jc_assert_msg(pCachedInputLayout_ != nullptr, "InputLayout 미바인딩: DrawIndexed 전에 gc.SetInputLayout(vsHandle, vbHandle) 또는 gc.SetInputLayout(pLayout)을 호출하세요.");
 	apiCallCount_ += 1;
 	pContext_->DrawIndexed(_indexCount, _startIndex, _baseVertex);
 }

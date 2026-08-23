@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 11:00:00 AM
  * =====================
@@ -47,11 +47,18 @@ void SvgTextureDraw_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	// 2. SVG 텍스처 준비
@@ -101,11 +108,11 @@ void SvgTextureDraw_Main()
 	}
 
 	// 4. 셰이더는 15번과 완전히 동일 (텍스처 샘플링) -> 재사용!
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pLayoutDescs = VertexPTC::LayoutDescs(&layoutCount);
+	VertexLayoutSpan pLayoutDescs = VertexPTC::Layout();
 
-	Shader shader;
-	if (!shader.CompileFromString(&device, TextureShaderSource(), pLayoutDescs, layoutCount))
+	_u32 vsShader = device.Context().CreateVertexShader(TextureShaderSource());
+	_u32 psShader = device.Context().CreatePixelShader(TextureShaderSource());
+	if (vsShader == INVALID_HANDLE || psShader == INVALID_HANDLE)
 	{
 		jc::Console::WriteLine("셰이더 컴파일 실패!");
 		device.Finalize();
@@ -114,7 +121,7 @@ void SvgTextureDraw_Main()
 	}
 
 	// 5. 알파 블렌딩 (SVG의 투명 배경이 올바로 보이도록)
-	device.SetAlphaBlending(true);
+	device.Context().SetBlend(BlendMode::bmAlpha);
 
 	FrameTimer timer;
 	timer.Reset();
@@ -141,18 +148,22 @@ void SvgTextureDraw_Main()
 		vertices[1] = { vec3(+half, +half * aspect, 0.0f), vec2(1.0f, 0.0f), color::WHITE };
 		vertices[2] = { vec3(-half, -half * aspect, 0.0f), vec2(0.0f, 1.0f), color::WHITE };
 		vertices[3] = { vec3(+half, -half * aspect, 0.0f), vec2(1.0f, 1.0f), color::WHITE };
-		vb.Update(&device, vertices, 4);
+		vb.Update(device.Context(), vertices, 4);
 
 		device.BeginFrame(color(0x1F, 0x1F, 0x29, 0xFF));
 
-		texture.Bind(&device, 0);
-		vb.Bind(&device);
-		ib.Bind(&device);
-		shader.Bind(&device);
-		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		device.Context()->DrawIndexed(6, 0, 0);
+		texture.Bind(device.Context(), 0);
+		vb.Bind(device.Context());
+		ib.Bind(device.Context());
+		device.Context().SetVertexShader(vsShader);
+		device.Context().SetPixelShader(psShader);
+		{
+			device.Context().SetInputLayout(vsShader, pLayoutDescs);
+		}
+		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
+		device.Context().DrawIndexed(6, 0, 0);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 7. 정리

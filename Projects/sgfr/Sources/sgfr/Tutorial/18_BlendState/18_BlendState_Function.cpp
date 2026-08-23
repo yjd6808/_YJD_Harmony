@@ -101,7 +101,7 @@ void FillSoftCirclePixels(_u8* _pOutPixels, _s32 _size)
 			_f32 alpha = 1.0f;
 			if (dist > 0.7f)
 			{
-				alpha = Clamp(1.0f - (dist - 0.7f) / 0.3f, 0.0f, 1.0f);
+			alpha = Clamp(1.0f - (dist - 0.7f) / 0.3f, 0.0f, 1.0f);
 			}
 
 			// 색은 흰색 고정: 실제 색은 정점 색으로 입힌다 (텍스처 재활용!)

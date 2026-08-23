@@ -53,11 +53,18 @@ void Cube3D_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	// 2. 정육면체 정점 8개 (각 꼭짓점마다 다른 색 -> 면 색이 그라데이션으로 보간된다)
@@ -102,12 +109,12 @@ void Cube3D_Main()
 	}
 
 	// 4. 셰이더 + 상수 버퍼
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pLayoutDescs = VertexPC::LayoutDescs(&layoutCount);
+	VertexLayoutSpan pLayoutDescs = VertexPC::Layout();
 
-	Shader shader;
+	_u32 vsShader = device.Context().CreateVertexShader(CubeShaderSource());
+	_u32 psShader = device.Context().CreatePixelShader(CubeShaderSource());
 	ConstantBuffer<CbTransform> cbTransform;
-	if (!shader.CompileFromString(&device, CubeShaderSource(), pLayoutDescs, layoutCount) ||
+	if (vsShader == INVALID_HANDLE || psShader == INVALID_HANDLE ||
 		!cbTransform.Create(&device))
 		{
 		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
@@ -144,7 +151,7 @@ void Cube3D_Main()
 		if (input.IsKeyPressed(VK_SPACE))
 		{
 			bDepthTest = !bDepthTest;
-			device.SetDepthTest(bDepthTest);
+			device.Context().SetDepth(bDepthTest ? DepthMode::dmReadWrite : DepthMode::dmDisabled);
 			jc::Console::Write("깊이 테스트: %s\n", bDepthTest ? "ON (정상)" : "OFF (뒷면이 덮일 수 있음)");
 		}
 
@@ -160,15 +167,19 @@ void Cube3D_Main()
 
 		CbTransform cb = {};
 		cb.worldViewProj_ = world * view * proj;	// 월드 -> 뷰 -> 투영
-		cbTransform.UpdateAndBind(&device, cb, 0);
+		cbTransform.UpdateAndBind(device.Context(), cb, 0);
 
-		vb.Bind(&device);
-		ib.Bind(&device);
-		shader.Bind(&device);
-		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		device.Context()->DrawIndexed(36, 0, 0);
+		vb.Bind(device.Context());
+		ib.Bind(device.Context());
+		device.Context().SetVertexShader(vsShader);
+		device.Context().SetPixelShader(psShader);
+		{
+			device.Context().SetInputLayout(vsShader, pLayoutDescs);
+		}
+		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
+		device.Context().DrawIndexed(36, 0, 0);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 7. 정리

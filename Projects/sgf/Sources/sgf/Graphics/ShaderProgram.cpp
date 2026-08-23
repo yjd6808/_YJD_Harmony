@@ -196,7 +196,7 @@ InputLayout::~InputLayout()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool InputLayout::Initialize(GraphicDevice* _pDevice, const D3D11_INPUT_ELEMENT_DESC* _pDescs, UINT _count, VertexShader* _pVs)
+bool InputLayout::Initialize(GraphicDevice* _pDevice, VertexLayoutSpan _layout, VertexShader* _pVs)
 {
 	jc_assert_msg(_pVs != nullptr && _pVs->Bytecode() != nullptr, "입력 레이아웃은 컴파일된 버텍스 셰이더가 필요합니다.");
 
@@ -204,7 +204,7 @@ bool InputLayout::Initialize(GraphicDevice* _pDevice, const D3D11_INPUT_ELEMENT_
 
 	ID3DBlob* pBytecode = _pVs->Bytecode();
 	return SUCCEEDED(_pDevice->Device()->CreateInputLayout(
-		_pDescs, _count,
+		_layout.Data(), _layout.Size(),
 		pBytecode->GetBufferPointer(), pBytecode->GetBufferSize(),
 		pLayout_.GetAddressOf()));
 }

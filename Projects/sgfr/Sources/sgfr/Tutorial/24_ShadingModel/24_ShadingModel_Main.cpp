@@ -69,11 +69,18 @@ void ShadingModel_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	// 2. UV 구 지오메트리 생성 (32등분이면 충분히 둥글다)
@@ -93,13 +100,13 @@ void ShadingModel_Main()
 	}
 
 	// 3. 셰이더 + 상수 버퍼 2개 (b0: 변환, b1: 셰이딩 설정)
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pLayoutDescs = VertexPNT::LayoutDescs(&layoutCount);
+	VertexLayoutSpan pLayoutDescs = VertexPNT::Layout();
 
-	Shader shader;
+	_u32 vsShader = device.Context().CreateVertexShader(ShadingShaderSource());
+	_u32 psShader = device.Context().CreatePixelShader(ShadingShaderSource());
 	ConstantBuffer<CbTransform> cbTransform;
 	ConstantBuffer<CbShading> cbShading;
-	if (!shader.CompileFromString(&device, ShadingShaderSource(), pLayoutDescs, layoutCount) ||
+	if (vsShader == INVALID_HANDLE || psShader == INVALID_HANDLE ||
 		!cbTransform.Create(&device) ||
 		!cbShading.Create(&device))
 		{
@@ -115,7 +122,7 @@ void ShadingModel_Main()
 	const mat4 proj = mat4::PerspectiveFovLH(jc_math_pi_div4, window.AspectRatio(), 0.1f, 100.0f);
 
 	// 5. 셰이딩 상태 (키 입력으로 바꾼다)
-	_s32 mode = 2;				// 시작은 블린-퐁 (현대 표준)
+	_s32 mode = 2;			// 시작은 블린-퐁 (현대 표준)
 	_f32 specPower = 32.0f;
 
 	auto UpdateTitle = [&]()
@@ -163,7 +170,7 @@ void ShadingModel_Main()
 		CbTransform cbT;
 		cbT.world_ = world;
 		cbT.wvp_ = world * view * proj;
-		cbTransform.UpdateAndBind(&device, cbT, 0);
+		cbTransform.UpdateAndBind(device.Context(), cbT, 0);
 
 		CbShading cbS;
 		cbS.lightDir_ = lightDir;
@@ -171,15 +178,19 @@ void ShadingModel_Main()
 		cbS.cameraPos_ = cameraPos;
 		cbS.specPower_ = specPower;
 		cbS.baseColor_ = vec4(0.9f, 0.45f, 0.2f, 1.0f);	// 주황색 도자기 느낌
-		cbShading.UpdateAndBind(&device, cbS, 1);
+		cbShading.UpdateAndBind(device.Context(), cbS, 1);
 
-		vb.Bind(&device);
-		ib.Bind(&device);
-		shader.Bind(&device);
-		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		device.Context()->DrawIndexed(static_cast<UINT>(indices.Size()), 0, 0);
+		vb.Bind(device.Context());
+		ib.Bind(device.Context());
+		device.Context().SetVertexShader(vsShader);
+		device.Context().SetPixelShader(psShader);
+		{
+			device.Context().SetInputLayout(vsShader, pLayoutDescs);
+		}
+		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
+		device.Context().DrawIndexed(static_cast<UINT>(indices.Size()), 0, 0);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 7. 정리

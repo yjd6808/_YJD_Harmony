@@ -81,9 +81,9 @@ const char* Renderer3D::ShaderSource() const
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // BatchRenderer 훅: VertexPC 레이아웃
-const D3D11_INPUT_ELEMENT_DESC* Renderer3D::VertexLayout(UINT* _outCount) const
+VertexLayoutSpan Renderer3D::VertexLayout() const
 {
-	return VertexPC::LayoutDescs(_outCount);
+	return VertexPC::Layout();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -117,9 +117,9 @@ void Renderer3D::BeginScene(const FrameConstants& _frame)
 {
 	jc_assert_msg(pDevice_ != nullptr, "Initialize 이후에만 사용할 수 있습니다.");
 
-	GraphicContext& context = pDevice_->GetContext();
+	GraphicContext& context = pDevice_->Context();
 
-	frameCb_.Update(pDevice_, _frame);
+	frameCb_.Update(pDevice_->Context(), _frame);
 	context.SetConstantBuffer(ShaderStage::ssVertex, 0, frameCb_.Raw());
 	context.SetConstantBuffer(ShaderStage::ssPixel, 0, frameCb_.Raw());
 
@@ -185,7 +185,7 @@ void Renderer3D::Draw(Mesh* _pMesh, Material* _pMaterial, const mat4& _world)
 	jc_assert_msg(pDevice_ != nullptr, "Initialize 이후에만 사용할 수 있습니다.");
 	jc_assert_msg(_pMesh != nullptr && _pMaterial != nullptr, "메시/머티리얼이 비어있습니다.");
 
-	GraphicContext& context = pDevice_->GetContext();
+	GraphicContext& context = pDevice_->Context();
 
 	// 1. 어떻게 그릴지 (셰이더/상태/텍스처/b2)
 	if (!_pMaterial->Bind(context))
@@ -199,7 +199,7 @@ void Renderer3D::Draw(Mesh* _pMesh, Material* _pMaterial, const mat4& _world)
 	// 3. 어디에 그릴지 (b1 월드 행렬)
 	ObjectConstants object;
 	object.world_ = _world;
-	objectCb_.Update(pDevice_, object);
+	objectCb_.Update(pDevice_->Context(), object);
 	context.SetConstantBuffer(ShaderStage::ssVertex, 1, objectCb_.Raw());
 
 	// 4. 드로우 호출
@@ -228,14 +228,14 @@ void Renderer3D::OnBegin()
 //////////////////////////////////////////////////////////////////////////////////////////
 void Renderer3D::Flush()
 {
-	FlushBatch(triangleVb_, triangleVertices_, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	FlushBatch(lineVb_, lineVertices_, D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	FlushBatch(triangleVb_, triangleVertices_, PrimitiveTopology::ptTriangleList);
+	FlushBatch(lineVb_, lineVertices_, PrimitiveTopology::ptLineList);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 하나의 배치를 GPU로 복사해 한 번의 DrawCall로 그린다.
 void Renderer3D::FlushBatch(VertexBuffer& _vertexBuffer, jc::Vector<VertexPC>& _vertices,
-	D3D11_PRIMITIVE_TOPOLOGY _topology)
+	PrimitiveTopology _topology)
 {
 	const _s32 vertexCount = _vertices.Size();
 	if (vertexCount == 0)
@@ -245,15 +245,15 @@ void Renderer3D::FlushBatch(VertexBuffer& _vertexBuffer, jc::Vector<VertexPC>& _
 
 	// 3D는 앞뒤 가림이 있어야 하므로 깊이 테스트를 켜고,
 	// 단색 면/선은 불투명이므로 블렌딩은 끈다.
-	pDevice_->SetDepthTest(true);
-	pDevice_->SetAlphaBlending(false);
+	pDevice_->Context().SetDepth(DepthMode::dmReadWrite);
+	pDevice_->Context().SetBlend(BlendMode::bmNone);
 
-	_vertexBuffer.Update(pDevice_, _vertices.Source(), UINT(vertexCount));
+	_vertexBuffer.Update(pDevice_->Context(), _vertices.Source(), UINT(vertexCount));
 
 	ApplyFrameStates();
-	_vertexBuffer.Bind(pDevice_);
-	pDevice_->Context()->IASetPrimitiveTopology(_topology);
-	pDevice_->Context()->Draw(UINT(vertexCount), 0);
+	_vertexBuffer.Bind(pDevice_->Context());
+	pDevice_->Context().SetPrimitiveTopology(_topology);
+	pDevice_->Context().Draw(UINT(vertexCount), 0);
 
 	_vertices.Clear();
 }
@@ -285,7 +285,7 @@ void Renderer3D::DrawTriangle(const vec3& _p0, const vec3& _p1, const vec3& _p2,
 
 	if (triangleVertices_.Size() + 3 > MAX_TRIANGLES * 3)
 	{
-		FlushBatch(triangleVb_, triangleVertices_, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);	// 버퍼가 가득 찼으면 지금까지 모은 걸 먼저 그린다
+		FlushBatch(triangleVb_, triangleVertices_, PrimitiveTopology::ptTriangleList);	// 버퍼가 가득 찼으면 지금까지 모은 걸 먼저 그린다
 	}
 
 	triangleVertices_.PushBack({ _p0, _color });
@@ -304,7 +304,7 @@ void Renderer3D::DrawCube(const vec3& _center, const vec3& _size, const color& _
 	// 큐브 한 개 = 6면 x 삼각형 2개 x 정점 3개 = 36 정점
 	if (triangleVertices_.Size() + 36 > MAX_TRIANGLES * 3)
 	{
-		FlushBatch(triangleVb_, triangleVertices_, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		FlushBatch(triangleVb_, triangleVertices_, PrimitiveTopology::ptTriangleList);
 	}
 
 	const _f32 hx = _size.x * 0.5f;
@@ -362,7 +362,7 @@ void Renderer3D::DrawLine3D(const vec3& _from, const vec3& _to, const color& _co
 
 	if (lineVertices_.Size() + 2 > MAX_LINES * 2)
 	{
-		FlushBatch(lineVb_, lineVertices_, D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+		FlushBatch(lineVb_, lineVertices_, PrimitiveTopology::ptLineList);
 	}
 
 	lineVertices_.PushBack({ _from, _color });

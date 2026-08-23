@@ -22,7 +22,7 @@
 #pragma once
 
 #include "jc/Math.h"
-#include "sgf/Graphics/Shader.h"
+#include "sgf/Graphics/Vertex.h"
 #include "sgf/Graphics/Buffers.h"
 
 NS_SGF_BEGIN
@@ -61,7 +61,7 @@ protected:
 	virtual const char* ShaderSource() const = 0;
 
 	// 셰이더에 맞는 정점 레이아웃 반환
-	virtual const D3D11_INPUT_ELEMENT_DESC* VertexLayout(UINT* _outCount) const = 0;
+	virtual VertexLayoutSpan VertexLayout() const = 0;
 
 	// 셰이더/상수 버퍼 생성 후 호출된다. 정점 버퍼, 인덱스 버퍼, 텍스처 등
 	// 파생 전용 리소스를 여기서 만든다.
@@ -76,11 +76,12 @@ protected:
 	void ApplyFrameStates();
 
 protected:
-	GraphicDevice* pDevice_;		// 그래픽 디바이스 (소유하지 않음)
-	Shader shader_;					// 파생이 제공한 셰이더
+	GraphicDevice* pDevice_ = nullptr;	// 그래픽 디바이스 (소유하지 않음)
+	_u32 vsHandle_ = INVALID_HANDLE;	// 버텍스 셰이더 핸들 (분리형)
+	_u32 psHandle_ = INVALID_HANDLE;	// 픽셀 셰이더 핸들 (분리형)
 	ConstantBuffer<mat4> cbFrame_;	// 뷰프로젝션 행렬용 상수 버퍼
 	mat4 viewProjection_;			// Begin에서 받은 행렬
-	bool begun_;					// Begin~End 사이인가?
+	bool begun_ = false;			// Begin~End 사이인가?
 };
 
 NS_SGF_END

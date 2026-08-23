@@ -121,14 +121,14 @@ void FillCheckerPixels(_u8* _pOutPixels, _s32 _width, _s32 _height, _s32 _cellSi
 			const bool bBorder = (x == 0 || y == 0 || x == _width - 1 || y == _height - 1);
 			if (bBorder)
 			{
-				r = 220; g = 60; b = 60;
+			r = 220; g = 60; b = 60;
 			}
 			else
 			{
-				// (칸 가로 번호 + 칸 세로 번호)가 짝수면 밝은 칸, 홀수면 파란 칸
-				const bool bLight = (((x / _cellSize) + (y / _cellSize)) % 2) == 0;
-				if (bLight) { r = 240; g = 240; b = 240; }
-				else        { r = 40;  g = 70;  b = 160; }
+			// (칸 가로 번호 + 칸 세로 번호)가 짝수면 밝은 칸, 홀수면 파란 칸
+			const bool bLight = (((x / _cellSize) + (y / _cellSize)) % 2) == 0;
+			if (bLight) { r = 240; g = 240; b = 240; }
+			else        { r = 40;  g = 70;  b = 160; }
 			}
 
 			// RGBA 8비트씩, 한 줄은 _width * 4바이트

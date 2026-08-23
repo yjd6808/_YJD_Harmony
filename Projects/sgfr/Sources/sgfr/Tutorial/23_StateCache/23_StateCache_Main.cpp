@@ -45,11 +45,18 @@ void StateCache_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	if (!g_cResourceMgr.Initialize(&device))
@@ -99,7 +106,7 @@ void StateCache_Main()
 	frame.projection_ = mat4::PerspectiveFovLH(jc_math_deg2rad(60.0f), window.AspectRatio(), 0.1f, 100.0f);
 	frame.cameraPosition_ = vec4(0.0f, 12.0f, -14.0f, 1.0f);
 
-	GraphicContext& context = device.GetContext();
+	GraphicContext& context = device.Context();
 	FrameTimer timer;
 	timer.Reset();
 	_f32 elapsed = 0.0f;
@@ -130,17 +137,17 @@ void StateCache_Main()
 		{
 			for (_s32 x = 0; x < CUBE_GRID_SIZE; ++x)
 			{
-				if (bCacheDisabled)
-				{
-					context.InvalidateCache();	// v2 흉내내기: 매번 "처음 그리는 척" 하기
-				}
+			if (bCacheDisabled)
+			{
+				context.InvalidateCache();	// v2 흉내내기: 매번 "처음 그리는 척" 하기
+			}
 
-				RenderObject& drawn = object;
-				drawn.world_ =
-					mat4::Scale(0.35f) *
-					mat4::RotationY(elapsed + (_f32)(x + z) * 0.2f) *
-					mat4::Translation((_f32)(x - CUBE_GRID_SIZE / 2) * 1.5f, 0.0f, (_f32)(z - CUBE_GRID_SIZE / 2) * 1.5f);
-				renderer.Draw(drawn);
+			RenderObject& drawn = object;
+			drawn.world_ =
+				mat4::Scale(0.35f) *
+				mat4::RotationY(elapsed + (_f32)(x + z) * 0.2f) *
+				mat4::Translation((_f32)(x - CUBE_GRID_SIZE / 2) * 1.5f, 0.0f, (_f32)(z - CUBE_GRID_SIZE / 2) * 1.5f);
+			renderer.Draw(drawn);
 			}
 		}
 		renderer.EndScene();
@@ -151,7 +158,7 @@ void StateCache_Main()
 			context.GetSkippedCallCount());
 		window.SetTitle(szTitle);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 5. 정리

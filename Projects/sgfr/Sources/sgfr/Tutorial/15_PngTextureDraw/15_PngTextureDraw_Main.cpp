@@ -44,11 +44,18 @@ void PngTextureDraw_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	// 2. 텍스처 준비
@@ -97,11 +104,11 @@ void PngTextureDraw_Main()
 	}
 
 	// 4. 셰이더 컴파일 (텍스처 샘플링 버전)
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pLayoutDescs = VertexPTC::LayoutDescs(&layoutCount);
+	VertexLayoutSpan pLayoutDescs = VertexPTC::Layout();
 
-	Shader shader;
-	if (!shader.CompileFromString(&device, TextureShaderSource(), pLayoutDescs, layoutCount))
+	_u32 vsShader = device.Context().CreateVertexShader(TextureShaderSource());
+	_u32 psShader = device.Context().CreatePixelShader(TextureShaderSource());
+	if (vsShader == INVALID_HANDLE || psShader == INVALID_HANDLE)
 	{
 		jc::Console::WriteLine("셰이더 컴파일 실패!");
 		device.Finalize();
@@ -111,7 +118,7 @@ void PngTextureDraw_Main()
 
 	// 5. 알파 블렌딩 켜기: PNG의 투명/반투명 영역이 올바로 섞이도록 한다.
 	// 공식: 최종색 = 새색 x 알파 + 배경색 x (1 - 알파)
-	device.SetAlphaBlending(true);
+	device.Context().SetBlend(BlendMode::bmAlpha);
 
 	// 6. 렌더 루프
 	while (window.PumpMessage())
@@ -125,15 +132,19 @@ void PngTextureDraw_Main()
 		device.BeginFrame(color(0x1A, 0x1A, 0x26, 0xFF));
 
 		// 텍스처를 t0 슬롯에 묶는다. (셰이더의 register(t0)과 연결)
-		texture.Bind(&device, 0);
+		texture.Bind(device.Context(), 0);
 
-		vb.Bind(&device);
-		ib.Bind(&device);
-		shader.Bind(&device);
-		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		device.Context()->DrawIndexed(6, 0, 0);
+		vb.Bind(device.Context());
+		ib.Bind(device.Context());
+		device.Context().SetVertexShader(vsShader);
+		device.Context().SetPixelShader(psShader);
+		{
+			device.Context().SetInputLayout(vsShader, pLayoutDescs);
+		}
+		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
+		device.Context().DrawIndexed(6, 0, 0);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 7. 정리

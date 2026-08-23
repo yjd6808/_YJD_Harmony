@@ -227,10 +227,10 @@ void Application::Run()
 		DestroyClosedSubWindows();
 
 		// 5. 메인 윈도우 그리기: 화면 지우기 -> 씬 그리기 -> 앱 훅 -> 화면 표시
-		device_.BeginFrame(&window_, clearColor_);
+		device_.BeginFrame(window_.GetSwapChain(), &window_.GetDepthSurface(), clearColor_);
 		g_cDirector.Render(&window_);
 		OnRender();
-		device_.EndFrame(&window_, vsync_);
+		window_.GetSwapChain().Present(vsync_);
 
 		// 6. 서브 윈도우들 그리기
 		for (_s32 i = 0; i < subWindows_.Size(); ++i)
@@ -240,9 +240,9 @@ void Application::Run()
 			{
 				continue;
 			}
-			device_.BeginFrame(pSub, clearColor_);
+			device_.BeginFrame(pSub->GetSwapChain(), &pSub->GetDepthSurface(), clearColor_);
 			g_cDirector.Render(pSub);
-			device_.EndFrame(pSub, vsync_);
+			pSub->GetSwapChain().Present(vsync_);
 		}
 
 		// 7. 입력 상태를 다음 프레임으로 넘긴다.

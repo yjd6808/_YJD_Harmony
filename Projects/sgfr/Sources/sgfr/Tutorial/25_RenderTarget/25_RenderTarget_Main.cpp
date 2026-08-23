@@ -34,6 +34,11 @@ namespace
 	{
 		mat4 wvp_;
 	};
+
+	struct CbPost
+	{
+		_f32 dummy_[4];
+	};
 }
 
 // 렌더 타깃 튜토리얼을 실행한다. (화면 밖 텍스처에 그리기 + 미니맵)
@@ -53,11 +58,18 @@ void RenderTarget_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	// 2. 렌더 타깃: 256x256 텍스처 + 전용 깊이 버퍼가 함께 만들어진다.
@@ -103,17 +115,16 @@ void RenderTarget_Main()
 	}
 
 	// 5. 셰이더 2종 + 상수 버퍼
-	UINT cubeLayoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pCubeLayout = VertexPC::LayoutDescs(&cubeLayoutCount);
-	UINT quadLayoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pQuadLayout = VertexPTC::LayoutDescs(&quadLayoutCount);
+	VertexLayoutSpan pCubeLayout = VertexPC::Layout();
+	VertexLayoutSpan pQuadLayout = VertexPTC::Layout();
 
-	Shader cubeShader;
-	Shader quadShader;
+	_u32 vsCubeShader = device.Context().CreateVertexShader(ColorTransformShaderSource());
+	_u32 psCubeShader = device.Context().CreatePixelShader(ColorTransformShaderSource());
+	_u32 vsQuadShader = device.Context().CreateVertexShader(TextureShaderSource());
+	_u32 psQuadShader = device.Context().CreatePixelShader(TextureShaderSource());
 	ConstantBuffer<CbTransform> cbTransform;
-	if (!cubeShader.CompileFromString(&device, ColorTransformShaderSource(), pCubeLayout, cubeLayoutCount) ||
-		!quadShader.CompileFromString(&device, TextureShaderSource(), pQuadLayout, quadLayoutCount) ||
-		!cbTransform.Create(&device))
+	ConstantBuffer<CbPost> cbPost;
+	if (vsCubeShader == INVALID_HANDLE || psCubeShader == INVALID_HANDLE || vsQuadShader == INVALID_HANDLE || psQuadShader == INVALID_HANDLE || !cbTransform.Create(&device) || !cbPost.Create(&device))
 		{
 		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
 		device.Finalize();
@@ -151,40 +162,52 @@ void RenderTarget_Main()
 		// ---- 패스 1: 렌더 타깃에 미니맵 시점으로 그리기 ----
 		device.BeginFrame(color(0x14, 0x14, 0x1F, 0xFF));	// 백버퍼도 미리 클리어
 
-		device.SetRenderTarget(&miniMapTarget);					// 이제 그리기는 텍스처로!
+		device.SetRenderTarget(&miniMapTarget);				// 이제 그리기는 텍스처로!
 		miniMapTarget.Clear(&device, color(0x1A, 0x40, 0x26, 0xFF));	// 초록 배경 = 미니맵 티가 나게
 
 		CbTransform cb;
 		cb.wvp_ = world * topView * topProj;
-		cbTransform.UpdateAndBind(&device, cb, 0);
+		cbTransform.UpdateAndBind(device.Context(), cb, 0);
 
-		cubeVb.Bind(&device);
-		cubeIb.Bind(&device);
-		cubeShader.Bind(&device);
-		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		device.Context()->DrawIndexed(36, 0, 0);
+		cubeVb.Bind(device.Context());
+		cubeIb.Bind(device.Context());
+		device.Context().SetVertexShader(vsCubeShader);
+		device.Context().SetPixelShader(psCubeShader);
+		{
+			device.Context().SetInputLayout(vsCubeShader, pCubeLayout);
+		}
+		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
+		device.Context().DrawIndexed(36, 0, 0);
 
 		// ---- 패스 2: 백버퍼에 장면 그리기 ----
-		device.SetRenderTarget(nullptr);						// 다시 화면으로 복귀!
+		device.SetRenderTarget(nullptr);					// 다시 화면으로 복귀!
 
 		cb.wvp_ = world * sceneView * sceneProj;
-		cbTransform.UpdateAndBind(&device, cb, 0);
+		cbTransform.UpdateAndBind(device.Context(), cb, 0);
 
-		cubeVb.Bind(&device);
-		cubeIb.Bind(&device);
-		cubeShader.Bind(&device);
-		device.Context()->DrawIndexed(36, 0, 0);
+		cubeVb.Bind(device.Context());
+		cubeIb.Bind(device.Context());
+		device.Context().SetVertexShader(vsCubeShader);
+		device.Context().SetPixelShader(psCubeShader);
+		{
+			device.Context().SetInputLayout(vsCubeShader, pCubeLayout);
+		}
+		device.Context().DrawIndexed(36, 0, 0);
 
 		// ---- 패스 3: 렌더 타깃 결과를 미니맵 사각형에 출력 ----
-		device.SetSampler(GraphicDevice::SamplerFilter::fmLinear, GraphicDevice::SamplerAddress::amClamp, 0);
-		miniMapTarget.BindAsTexture(&device, 0);				// 그려진 결과를 텍스처로 장착
+		device.Context().SetSampler(FilterMode::fmLinear, AddressMode::amClamp, 0);
+		miniMapTarget.BindAsTexture(&device, 0);			// 그려진 결과를 텍스처로 장착
 
-		quadVb.Bind(&device);
-		quadIb.Bind(&device);
-		quadShader.Bind(&device);
-		device.Context()->DrawIndexed(6, 0, 0);
+		quadVb.Bind(device.Context());
+		quadIb.Bind(device.Context());
+		device.Context().SetVertexShader(vsQuadShader);
+		device.Context().SetPixelShader(psQuadShader);
+		{
+			device.Context().SetInputLayout(vsQuadShader, pQuadLayout);
+		}
+		device.Context().DrawIndexed(6, 0, 0);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 8. 정리

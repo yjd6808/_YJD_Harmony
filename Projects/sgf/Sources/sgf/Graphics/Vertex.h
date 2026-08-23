@@ -13,10 +13,14 @@
 #pragma once
 
 #include "jc/Math.h"
+#include "jc/Primitives/Span.h"
 
 NS_SGF_BEGIN
 
 using namespace jc;
+
+// 정점 입력 레이아웃 뷰 — D3D11_INPUT_ELEMENT_DESC 배열의 non-owning 뷰 (static 수명)
+using VertexLayoutSpan = jc::Span<const D3D11_INPUT_ELEMENT_DESC>;
 
 // 위치 + 색상 정점 (단순 도형, 선 그리기용)
 struct VertexPC
@@ -26,14 +30,13 @@ struct VertexPC
 
 	// 이 구조체의 메모리 배치를 GPU에게 알려주는 설명서
 	// { 시맨틱이름, 시맨틱번호, 형식, 입력슬롯, 바이트오프셋, 입력분류, 인스턴스간격 }
-	static const D3D11_INPUT_ELEMENT_DESC* LayoutDescs(UINT* _pOutCount)
+	static VertexLayoutSpan Layout()
 	{
 		static const D3D11_INPUT_ELEMENT_DESC descs[] = {
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "COLOR",    0, DXGI_FORMAT_R8G8B8A8_UNORM,   0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
-		*_pOutCount = _countof(descs);
-		return descs;
+		return VertexLayoutSpan{ descs, _countof(descs) };
 	}
 };
 
@@ -48,15 +51,14 @@ struct VertexPTC
 	color color_;		// 색상 틴트 (흰색이면 원본 그대로)
 
 	// 메모리 배치 설명서: vec3(12바이트) -> vec2(8바이트) -> color(4바이트)
-	static const D3D11_INPUT_ELEMENT_DESC* LayoutDescs(UINT* _pOutCount)
+	static VertexLayoutSpan Layout()
 	{
 		static const D3D11_INPUT_ELEMENT_DESC descs[] = {
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "COLOR",    0, DXGI_FORMAT_R8G8B8A8_UNORM,   0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
-		*_pOutCount = _countof(descs);
-		return descs;
+		return VertexLayoutSpan{ descs, _countof(descs) };
 	}
 };
 
@@ -71,15 +73,14 @@ struct VertexPNT
 	vec2 uv_;			// 텍스처 좌표
 
 	// 메모리 배치 설명서: vec3(12) -> vec3(12) -> vec2(8)
-	static const D3D11_INPUT_ELEMENT_DESC* LayoutDescs(UINT* _pOutCount)
+	static VertexLayoutSpan Layout()
 	{
 		static const D3D11_INPUT_ELEMENT_DESC descs[] = {
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
-		*_pOutCount = _countof(descs);
-		return descs;
+		return VertexLayoutSpan{ descs, _countof(descs) };
 	}
 };
 

@@ -48,7 +48,7 @@ void DeviceAndContext_Main()
 	jc::Console::WriteLine("1) 디바이스 초기화 성공 (창 없이 디바이스만 생성됨)\n");
 
 	// 2. 컨텍스트는 디바이스가 소유한다. 참조로 빌려 쓴다.
-	GraphicContext& context = device.GetContext();
+	GraphicContext& context = device.Context();
 
 	// 3. 상태 캐시 실험: 같은 토폴로지를 연속으로 설정해본다.
 	context.ResetStats();

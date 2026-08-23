@@ -10,7 +10,7 @@
  * 3. 상태 객체는 설정 조합마다 자기만의 D3D 상태 객체를 만들어 갖는다 (독립 '값')
  *
  * [Before/After 비교]
- * - Before: device.SetWireframe(true) 같은 개별 스위치 함수 호출
+ * - Before: device.Context().SetRasterizer(CullMode::cmBack, FillMode::fmWireframe) 같은 개별 스위치 함수 호출
  * - After: RasterizerState 객체를 만들어 context.SetRasterizerState(&rs)로 교체
  * 상태 조합이 '값'이 되므로 Material(20번)에 통째로 담을 수 있다!
  *
@@ -76,11 +76,10 @@ float4 PSMain(VsOut _in) : SV_Target
 		};
 		const _u32 indices[6] = { 0, 1, 2, 0, 2, 3 };	// 시계방향 삼각형 2개
 
-		UINT layoutCount = 0;
-		const D3D11_INPUT_ELEMENT_DESC* pLayoutDescs = sgf::VertexPTC::LayoutDescs(&layoutCount);
+		VertexLayoutSpan layout = sgf::VertexPTC::Layout();
 		return _pOutMesh->Initialize(
 			_pDevice, vertices, sizeof(sgf::VertexPTC), 4,
-			pLayoutDescs, layoutCount, _pVs, indices, 6);
+			layout, _pVs, indices, 6);
 	}
 }
 
@@ -100,14 +99,21 @@ void PipelineStateObjects_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
+	}
 
-	GraphicContext& context = device.GetContext();
+	GraphicContext& context = device.Context();
 
 	// 2. 셰이더 준비
 	VertexShader vs;
@@ -190,7 +196,7 @@ void PipelineStateObjects_Main()
 		frontQuad.Bind(context);
 		frontQuad.Draw(context);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 6. 정리: 상태 객체도 Finalize()를 제공하지만 스택 소멸 시 자동 정리되므로 여기서는 직접 호출하지 않는다.

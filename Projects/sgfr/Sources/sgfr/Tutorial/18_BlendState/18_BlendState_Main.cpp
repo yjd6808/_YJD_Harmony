@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 1:50:00 PM
  * =====================
@@ -59,11 +59,18 @@ void BlendState_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	// 2. 부드러운 흰색 원 텍스처 (색은 정점 색으로 입힌다 -> 텍스처 하나로 재활용)
@@ -95,11 +102,11 @@ void BlendState_Main()
 	}
 
 	// 4. 셰이더
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pLayoutDescs = VertexPTC::LayoutDescs(&layoutCount);
+	VertexLayoutSpan pLayoutDescs = VertexPTC::Layout();
 
-	Shader shader;
-	if (!shader.CompileFromString(&device, BlendQuadShaderSource(), pLayoutDescs, layoutCount))
+	_u32 vsShader = device.Context().CreateVertexShader(BlendQuadShaderSource());
+	_u32 psShader = device.Context().CreatePixelShader(BlendQuadShaderSource());
+	if (vsShader == INVALID_HANDLE || psShader == INVALID_HANDLE)
 	{
 		jc::Console::WriteLine("셰이더 컴파일 실패!");
 		device.Finalize();
@@ -108,7 +115,7 @@ void BlendState_Main()
 	}
 
 	// 5. 현재 블렌드 모드 (키 입력으로 바꾼다. 오른쪽 After 묶음에만 적용된다)
-	GraphicDevice::BlendMode blendMode = GraphicDevice::BlendMode::bmAlpha;
+	BlendMode blendMode = BlendMode::bmAlpha;
 
 	auto UpdateTitle = [&]()
 	{
@@ -130,10 +137,10 @@ void BlendState_Main()
 		}
 
 		bool bChanged = false;
-		if (input.IsKeyPressed('1')) { blendMode = GraphicDevice::BlendMode::bmNone;   bChanged = true; }
-		if (input.IsKeyPressed('2')) { blendMode = GraphicDevice::BlendMode::bmAlpha;    bChanged = true; }
-		if (input.IsKeyPressed('3')) { blendMode = GraphicDevice::BlendMode::bmAdd; bChanged = true; }
-		if (input.IsKeyPressed('4')) { blendMode = GraphicDevice::BlendMode::bmMultiply; bChanged = true; }
+		if (input.IsKeyPressed('1')) { blendMode = BlendMode::bmNone;   bChanged = true; }
+		if (input.IsKeyPressed('2')) { blendMode = BlendMode::bmAlpha;    bChanged = true; }
+		if (input.IsKeyPressed('3')) { blendMode = BlendMode::bmAdd; bChanged = true; }
+		if (input.IsKeyPressed('4')) { blendMode = BlendMode::bmMultiply; bChanged = true; }
 		if (bChanged)
 		{
 			UpdateTitle();
@@ -153,55 +160,59 @@ void BlendState_Main()
 			color(0x4D, 0x66, 0xFF, 0xFF),		// 파랑
 		};
 
-		texture.Bind(&device, 0);
-		shader.Bind(&device);
-		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		texture.Bind(device.Context(), 0);
+		device.Context().SetVertexShader(vsShader);
+		device.Context().SetPixelShader(psShader);
+		{
+			device.Context().SetInputLayout(vsShader, pLayoutDescs);
+		}
+		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
 		// 한 묶음(원 3개)을 지정한 중심/블렌드 모드로 그리는 보조 람다.
 		// 블렌드 스테이트는 드로우 단위로만 바꿀 수 있으므로 묶음마다 SetBlendMode를 호출한다.
-		auto DrawCircleGroup = [&](const vec2& _groupCenter, GraphicDevice::BlendMode _mode)
+		auto DrawCircleGroup = [&](const vec2& _groupCenter, BlendMode _mode)
 		{
-			device.SetBlendMode(_mode);
+			device.Context().SetBlend(_mode);
 			for (_s32 c = 0; c < 3; ++c)
 			{
-				// 각 원의 중심: 반지름 0.15짜리 궤도를 도는 위치 (서로 120도 차이)
-				const _f32 angle = elapsed * 0.8f + jc_math_pi2 * c / 3.0f;
-				const vec2 center(_groupCenter.x + cosf(angle) * 0.15f, _groupCenter.y + sinf(angle) * 0.15f);
+			// 각 원의 중심: 반지름 0.15짜리 궤도를 도는 위치 (서로 120도 차이)
+			const _f32 angle = elapsed * 0.8f + jc_math_pi2 * c / 3.0f;
+			const vec2 center(_groupCenter.x + cosf(angle) * 0.15f, _groupCenter.y + sinf(angle) * 0.15f);
 
-				FillQuadVertices(vertices, center, 0.28f, circleColors[c]);
-				vb.Update(&device, vertices, 4);	// 동적 버퍼 갱신
+			FillQuadVertices(vertices, center, 0.28f, circleColors[c]);
+			vb.Update(device.Context(), vertices, 4);	// 동적 버퍼 갱신
 
-				vb.Bind(&device);
-				ib.Bind(&device);
-				device.Context()->DrawIndexed(6, 0, 0);
+			vb.Bind(device.Context());
+			ib.Bind(device.Context());
+			device.Context().DrawIndexed(6, 0, 0);
 			}
 		};
 
 		// [Before] 왼쪽 묶음: 블렌딩 미적용(Opaque). 알파가 무시돼 사각형 그대로 보인다!
-		DrawCircleGroup(vec2(-0.5f, 0.0f), GraphicDevice::BlendMode::bmNone);
+		DrawCircleGroup(vec2(-0.5f, 0.0f), BlendMode::bmNone);
 
 		// [After] 오른쪽 묶음: 현재 선택한 모드 적용. 겹침 영역의 색 합성을 관찰!
 		DrawCircleGroup(vec2(+0.5f, 0.0f), blendMode);
 
 		// 경계선: 화면 중앙에 가늘고 흰 세로 띄(divider)를 그린다.
 		// UV를 원 텍스처의 중심(0.5, 0.5) 한 점으로 고정하면 불투명 흰색 픽셀만 샘플링된다.
-		device.SetBlendMode(GraphicDevice::BlendMode::bmNone);
+		device.Context().SetBlend(BlendMode::bmNone);
 		const vec2 uvCenter(0.5f, 0.5f);
 		const color lineColor(0xF2, 0xF2, 0xF2);
 		vertices[0] = { vec3(-0.004f, +1.0f, 0.0f), uvCenter, lineColor };
 		vertices[1] = { vec3(+0.004f, +1.0f, 0.0f), uvCenter, lineColor };
 		vertices[2] = { vec3(-0.004f, -1.0f, 0.0f), uvCenter, lineColor };
 		vertices[3] = { vec3(+0.004f, -1.0f, 0.0f), uvCenter, lineColor };
-		vb.Update(&device, vertices, 4);
-		vb.Bind(&device);
-		ib.Bind(&device);
-		device.Context()->DrawIndexed(6, 0, 0);
+		vb.Update(device.Context(), vertices, 4);
+		vb.Bind(device.Context());
+		ib.Bind(device.Context());
+		device.Context().DrawIndexed(6, 0, 0);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 7. 정리 (블렌드 상태를 기본값으로 되돌려 다음 튜토리얼에 영향을 주지 않는다)
-	device.SetBlendMode(GraphicDevice::BlendMode::bmNone);
+	device.Context().SetBlend(BlendMode::bmNone);
 	device.Finalize();
 	window.Destroy();
 }

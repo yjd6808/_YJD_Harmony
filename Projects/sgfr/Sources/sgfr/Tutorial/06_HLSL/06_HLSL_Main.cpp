@@ -54,11 +54,18 @@ void HLSL_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	// 2. 삼각형 정점 (05번과 동일한 NDC 좌표 직접 지정)
@@ -78,12 +85,12 @@ void HLSL_Main()
 	}
 
 	// 3. 셰이더 + 상수 버퍼
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pLayoutDescs = VertexPC::LayoutDescs(&layoutCount);
+	VertexLayoutSpan pLayoutDescs = VertexPC::Layout();
 
-	Shader shader;
+	_u32 vsShader = device.Context().CreateVertexShader(AnimatedShaderSource());
+	_u32 psShader = device.Context().CreatePixelShader(AnimatedShaderSource());
 	ConstantBuffer<CbTime> cbTime;
-	if (!shader.CompileFromString(&device, AnimatedShaderSource(), pLayoutDescs, layoutCount) ||
+	if (vsShader == INVALID_HANDLE || psShader == INVALID_HANDLE ||
 		!cbTime.Create(&device))
 		{
 		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
@@ -113,14 +120,18 @@ void HLSL_Main()
 		// 매 프레임 시간을 GPU로 보낸다. 이것이 상수 버퍼의 역할!
 		CbTime cb = {};
 		cb.time_ = elapsed;
-		cbTime.UpdateAndBind(&device, cb, 0);	// register(b0)에 연결
+		cbTime.UpdateAndBind(device.Context(), cb, 0);	// register(b0)에 연결
 
-		vb.Bind(&device);
-		shader.Bind(&device);
-		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		device.Context()->Draw(3, 0);
+		vb.Bind(device.Context());
+		device.Context().SetVertexShader(vsShader);
+		device.Context().SetPixelShader(psShader);
+		{
+			device.Context().SetInputLayout(vsShader, pLayoutDescs);
+		}
+		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
+		device.Context().Draw(3, 0);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 5. 정리

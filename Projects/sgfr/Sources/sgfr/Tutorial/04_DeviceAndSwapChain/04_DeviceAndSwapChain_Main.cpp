@@ -13,7 +13,7 @@
  * [더블 버퍼링이란?]
  * 화면에 보이는 그림(프론트버퍼)과 지금 그리는 중인 그림(백버퍼)을 분리하고,
  * 다 그리면 둘을 한번에 교체한다. 그리는 과정이 단계별로 노출되지 않아
- * 깜박임/찢어짐(tearing)이 사라진다. 이 교체를 해주는 게 EndFrame()의 Present다.
+ * 깜박임/찢어짐(tearing)이 사라진다. 이 교체를 해주는 게 Present()다.
  *
  * [화면 지우기(Clear)는 왜 필요한가?]
  * 지난 프레임에 그린 그림이 백버퍼에 그대로 남아있기 때문에,
@@ -45,18 +45,25 @@ void DeviceAndSwapChain_Main()
 	window.ConnectInput(&input);
 
 	// 2. 그래픽 디바이스 초기화
-	// GraphicDevice::Initialize 내부에서 일어나는 일:
+	// GraphicDevice Initialize (now Initialize() + CreateSwapChain) 내부에서 일어나는 일:
 	// (1) D3D11CreateDeviceAndSwapChain: Device + Context + SwapChain 한번에 생성
 	// (2) 백버퍼에 대한 RenderTargetView 생성 ("여기에 그려라"는 표시)
 	// (3) 깊이 버퍼와 DepthStencilView 생성 (3D에서 앞뒤 판정용)
 	// (4) 블렌드/깊이/래스터라이저/샘플러 상태 객체 생성
 	// (5) 뷰포트 설정 (NDC -> 화면 픽셀 좌표 매핑 영역)
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	jc::Console::WriteLine("디바이스 초기화 성공! 배경색이 부드럽게 변합니다. (ESC로 종료)");
@@ -85,9 +92,9 @@ void DeviceAndSwapChain_Main()
 
 		// (이번 튜토리얼은 아무것도 그리지 않는다. 화면 지우기 그 자체가 주제!)
 
-		// EndFrame: 백버퍼와 프론트버퍼를 교체한다. (Present)
+		// Present: 백버퍼와 프론트버퍼를 교체한다. (Present)
 		// 인자 true = 수직동기(VSync). 모니터 주사율(보통 60Hz)에 맞춰 대기한다.
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 5. 정리: 생성의 역순으로 해제한다.

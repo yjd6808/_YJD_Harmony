@@ -64,11 +64,18 @@ void RasterizerState_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	// 2. 면마다 색이 다른 큐브 지오메트리 (하나를 두 번 그려 재활용한다)
@@ -88,12 +95,12 @@ void RasterizerState_Main()
 	}
 
 	// 3. 셰이더 + 상수 버퍼
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pLayoutDescs = VertexPC::LayoutDescs(&layoutCount);
+	VertexLayoutSpan pLayoutDescs = VertexPC::Layout();
 
-	Shader shader;
+	_u32 vsShader = device.Context().CreateVertexShader(ColorTransformShaderSource());
+	_u32 psShader = device.Context().CreatePixelShader(ColorTransformShaderSource());
 	ConstantBuffer<CbTransform> cbTransform;
-	if (!shader.CompileFromString(&device, ColorTransformShaderSource(), pLayoutDescs, layoutCount) ||
+	if (vsShader == INVALID_HANDLE || psShader == INVALID_HANDLE ||
 		!cbTransform.Create(&device))
 		{
 		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
@@ -108,7 +115,7 @@ void RasterizerState_Main()
 
 	// 5. 현재 래스터라이저 상태 (키 입력으로 바꾼다. 오른쪽 After 큐브에만 적용된다)
 	bool bWireframe = false;
-	GraphicDevice::CullMode cullMode = GraphicDevice::CullMode::cmBack;
+	CullMode cullMode = CullMode::cmBack;
 
 	auto UpdateTitle = [&]()
 	{
@@ -132,9 +139,9 @@ void RasterizerState_Main()
 
 		bool bChanged = false;
 		if (input.IsKeyPressed('W')) { bWireframe = !bWireframe;                       bChanged = true; }
-		if (input.IsKeyPressed('1')) { cullMode = GraphicDevice::CullMode::cmNone;      bChanged = true; }
-		if (input.IsKeyPressed('2')) { cullMode = GraphicDevice::CullMode::cmBack;      bChanged = true; }
-		if (input.IsKeyPressed('3')) { cullMode = GraphicDevice::CullMode::cmFront;     bChanged = true; }
+		if (input.IsKeyPressed('1')) { cullMode = CullMode::cmNone;      bChanged = true; }
+		if (input.IsKeyPressed('2')) { cullMode = CullMode::cmBack;      bChanged = true; }
+		if (input.IsKeyPressed('3')) { cullMode = CullMode::cmFront;     bChanged = true; }
 		if (bChanged)
 		{
 			UpdateTitle();
@@ -150,35 +157,37 @@ void RasterizerState_Main()
 		// 두 큐브의 공통 회전: 모든 면이 골고루 보이도록 두 축 회전
 		const mat4 rotation = mat4::RotationY(elapsed * 0.8f) * mat4::RotationX(elapsed * 0.4f);
 
-		vb.Bind(&device);
-		ib.Bind(&device);
-		shader.Bind(&device);
-		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		vb.Bind(device.Context());
+		ib.Bind(device.Context());
+		device.Context().SetVertexShader(vsShader);
+		device.Context().SetPixelShader(psShader);
+		{
+			device.Context().SetInputLayout(vsShader, pLayoutDescs);
+		}
+		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
 		// 같은 큐브를 지정한 x 위치/래스터라이저 상태로 그리는 보조 람다
-		auto DrawCube = [&](_f32 _offsetX, bool _bWire, GraphicDevice::CullMode _cull)
+		auto DrawCube = [&](_f32 _offsetX, bool _bWire, CullMode _cull)
 		{
-			device.SetWireframe(_bWire);
-			device.SetCullMode(_cull);
+			device.Context().SetRasterizer(_cull, _bWire ? FillMode::fmWireframe : FillMode::fmSolid);
 
 			CbTransform cb;
 			cb.wvp_ = rotation * mat4::Translation(_offsetX, 0.0f, 0.0f) * view * proj;	// 회전 후 이동
-			cbTransform.UpdateAndBind(&device, cb, 0);
-			device.Context()->DrawIndexed(36, 0, 0);
+			cbTransform.UpdateAndBind(device.Context(), cb, 0);
+			device.Context().DrawIndexed(36, 0, 0);
 		};
 
 		// [Before] 왼쪽 큐브: 기본 상태 고정 (Solid + Back 컬링)
-		DrawCube(-1.1f, false, GraphicDevice::CullMode::cmBack);
+		DrawCube(-1.1f, false, CullMode::cmBack);
 
 		// [After] 오른쪽 큐브: 현재 선택한 상태 적용
 		DrawCube(+1.1f, bWireframe, cullMode);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 7. 정리: 다음 튜토리얼을 위해 기본 상태로 되돌리고 종료
-	device.SetWireframe(false);
-	device.SetCullMode(GraphicDevice::CullMode::cmBack);
+	device.Context().SetRasterizer(CullMode::cmBack, FillMode::fmSolid);
 	device.Finalize();
 	window.Destroy();
 }

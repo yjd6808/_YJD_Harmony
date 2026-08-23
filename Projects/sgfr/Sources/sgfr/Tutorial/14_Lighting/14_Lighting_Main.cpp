@@ -62,11 +62,18 @@ void Lighting_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	// 2. 법선 포함 큐브 생성 (면별 정점 24개 + 인덱스 36개)
@@ -86,13 +93,13 @@ void Lighting_Main()
 	}
 
 	// 3. 셰이더 + 상수 버퍼 2개 (변환용 b0, 조명용 b1)
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pLayoutDescs = VertexPNT::LayoutDescs(&layoutCount);
+	VertexLayoutSpan pLayoutDescs = VertexPNT::Layout();
 
-	Shader shader;
+	_u32 vsShader = device.Context().CreateVertexShader(LambertShaderSource());
+	_u32 psShader = device.Context().CreatePixelShader(LambertShaderSource());
 	ConstantBuffer<CbTransform> cbTransform;
 	ConstantBuffer<CbLight> cbLight;
-	if (!shader.CompileFromString(&device, LambertShaderSource(), pLayoutDescs, layoutCount) ||
+	if (vsShader == INVALID_HANDLE || psShader == INVALID_HANDLE ||
 		!cbTransform.Create(&device) ||
 		!cbLight.Create(&device))
 		{
@@ -139,21 +146,25 @@ void Lighting_Main()
 		CbTransform cbT = {};
 		cbT.world_ = world;
 		cbT.worldViewProj_ = world * view * proj;
-		cbTransform.UpdateAndBind(&device, cbT, 0);	// register(b0)
+		cbTransform.UpdateAndBind(device.Context(), cbT, 0);	// register(b0)
 
 		CbLight cbL = {};
 		cbL.lightDir_ = vec3(-0.5f, -0.7f, 0.5f).Normalized();	// 오른쪽 위 앞 -> 왼쪽 아래 뒤 (광원은 오른쪽 위 앞쪽에 위치)
 		cbL.ambient_ = ambient;
 		cbL.baseColor_ = vec4(0.9f, 0.6f, 0.2f, 1.0f);			// 주황색 큐브
-		cbLight.UpdateAndBind(&device, cbL, 1);		// register(b1)
+		cbLight.UpdateAndBind(device.Context(), cbL, 1);		// register(b1)
 
-		vb.Bind(&device);
-		ib.Bind(&device);
-		shader.Bind(&device);
-		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		device.Context()->DrawIndexed(36, 0, 0);
+		vb.Bind(device.Context());
+		ib.Bind(device.Context());
+		device.Context().SetVertexShader(vsShader);
+		device.Context().SetPixelShader(psShader);
+		{
+			device.Context().SetInputLayout(vsShader, pLayoutDescs);
+		}
+		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
+		device.Context().DrawIndexed(36, 0, 0);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 6. 정리

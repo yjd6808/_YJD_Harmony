@@ -8,7 +8,7 @@
  * 1. 샘플링: 화면 픽셀 하나에 텍스처의 어떤 색을 가져올지 정하는 규칙
  * 2. 필터: Point(최근접) vs Linear(선형 보간)의 화질 차이
  * 3. 주소 모드: UV가 0~1을 벗어났을 때 Wrap/Clamp/Mirror의 차이
- * 4. 엔진의 GraphicDevice::SetSampler로 상태를 실시간 교체하는 법
+ * 4. 엔진의 GraphicContext::SetSampler로 상태를 실시간 교체하는 법
  *
  * [Before/After 비교 뷰]
  * 화면이 노란 세로 경계선으로 좌/우로 나뉜다.
@@ -66,11 +66,18 @@ void SamplerFiltering_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	// 2. 고작 32x32짜리 체커 텍스처를 만든다.
@@ -104,12 +111,12 @@ void SamplerFiltering_Main()
 	}
 
 	// 4. 셰이더 + 경계 상수 버퍼
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pLayoutDescs = VertexPTC::LayoutDescs(&layoutCount);
+	VertexLayoutSpan pLayoutDescs = VertexPTC::Layout();
 
-	Shader shader;
+	_u32 vsShader = device.Context().CreateVertexShader(TextureQuadShaderSource());
+	_u32 psShader = device.Context().CreatePixelShader(TextureQuadShaderSource());
 	ConstantBuffer<CbSplit> cbSplit;
-	if (!shader.CompileFromString(&device, TextureQuadShaderSource(), pLayoutDescs, layoutCount) ||
+	if (vsShader == INVALID_HANDLE || psShader == INVALID_HANDLE ||
 		!cbSplit.Create(&device))
 		{
 		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
@@ -119,8 +126,8 @@ void SamplerFiltering_Main()
 	}
 
 	// 5. 현재 샘플러 상태 (키 입력으로 바꾼다. 오른쪽 After 화면에만 적용된다)
-	GraphicDevice::SamplerFilter filter = GraphicDevice::SamplerFilter::fmPoint;
-	GraphicDevice::SamplerAddress address = GraphicDevice::SamplerAddress::amWrap;
+	FilterMode filter = FilterMode::fmPoint;
+	AddressMode address = AddressMode::amWrap;
 
 	// 창 제목에 현재 모드를 표시하는 보조 람다
 	auto UpdateTitle = [&]()
@@ -141,11 +148,11 @@ void SamplerFiltering_Main()
 
 		// 필터/주소 모드 전환 (문자 키 '1'~'5'는 가상 키 코드와 값이 같다)
 		bool bChanged = false;
-		if (input.IsKeyPressed('1')) { filter = GraphicDevice::SamplerFilter::fmPoint;    bChanged = true; }
-		if (input.IsKeyPressed('2')) { filter = GraphicDevice::SamplerFilter::fmLinear;   bChanged = true; }
-		if (input.IsKeyPressed('3')) { address = GraphicDevice::SamplerAddress::amWrap;   bChanged = true; }
-		if (input.IsKeyPressed('4')) { address = GraphicDevice::SamplerAddress::amClamp;  bChanged = true; }
-		if (input.IsKeyPressed('5')) { address = GraphicDevice::SamplerAddress::amMirror; bChanged = true; }
+		if (input.IsKeyPressed('1')) { filter = FilterMode::fmPoint;    bChanged = true; }
+		if (input.IsKeyPressed('2')) { filter = FilterMode::fmLinear;   bChanged = true; }
+		if (input.IsKeyPressed('3')) { address = AddressMode::amWrap;   bChanged = true; }
+		if (input.IsKeyPressed('4')) { address = AddressMode::amClamp;  bChanged = true; }
+		if (input.IsKeyPressed('5')) { address = AddressMode::amMirror; bChanged = true; }
 		if (bChanged)
 		{
 			UpdateTitle();
@@ -156,25 +163,29 @@ void SamplerFiltering_Main()
 		device.BeginFrame(color(0x14, 0x14, 0x1A, 0xFF));
 
 		// [Before] s0 슬롯: 기준 샘플러 (Point + Wrap 고정)
-		device.SetSampler(GraphicDevice::SamplerFilter::fmPoint, GraphicDevice::SamplerAddress::amWrap, 0);
+		device.Context().SetSampler(FilterMode::fmPoint, AddressMode::amWrap, 0);
 		// [After] s1 슬롯: 현재 선택한 샘플러
 		// (상태 객체는 엔진이 내부에서 캐싱하므로 매 프레임 불러도 부담이 없다)
-		device.SetSampler(filter, address, 1);
+		device.Context().SetSampler(filter, address, 1);
 
 		// 화면 절반 위치를 경계로 전달: 픽셀 셰이더가 좌/우를 구분해 s0/s1을 골라 쓴다.
 		CbSplit cbS;
 		cbS.splitPixelX_ = window.Width() * 0.5f;
 		cbS.padding_[0] = cbS.padding_[1] = cbS.padding_[2] = 0.0f;
-		cbSplit.UpdateAndBind(&device, cbS, 0);
+		cbSplit.UpdateAndBind(device.Context(), cbS, 0);
 
-		texture.Bind(&device, 0);
-		vb.Bind(&device);
-		ib.Bind(&device);
-		shader.Bind(&device);
-		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		device.Context()->DrawIndexed(6, 0, 0);
+		texture.Bind(device.Context(), 0);
+		vb.Bind(device.Context());
+		ib.Bind(device.Context());
+		device.Context().SetVertexShader(vsShader);
+		device.Context().SetPixelShader(psShader);
+		{
+			device.Context().SetInputLayout(vsShader, pLayoutDescs);
+		}
+		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
+		device.Context().DrawIndexed(6, 0, 0);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 7. 정리

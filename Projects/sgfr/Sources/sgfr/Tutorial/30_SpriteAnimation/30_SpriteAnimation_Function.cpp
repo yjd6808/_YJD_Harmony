@@ -68,44 +68,44 @@ void FillSpriteSheetPixels(_u8* _pOutRgba)
 		{
 			for (_s32 x = 0; x < frameSize; ++x)
 			{
-				// 프레임 내부 정규 좌표 (0~1)
-				const _f32 u = ((_f32)x + 0.5f) / (_f32)frameSize;
-				const _f32 v = ((_f32)y + 0.5f) / (_f32)frameSize;
+			// 프레임 내부 정규 좌표 (0~1)
+			const _f32 u = ((_f32)x + 0.5f) / (_f32)frameSize;
+			const _f32 v = ((_f32)y + 0.5f) / (_f32)frameSize;
 
-				// 중심(0.5, 0.5)에서의 거리
-				const _f32 dx = u - 0.5f;
-				const _f32 dy = v - 0.5f;
-				const _f32 dist = sqrtf(dx * dx + dy * dy);
+			// 중심(0.5, 0.5)에서의 거리
+			const _f32 dx = u - 0.5f;
+			const _f32 dy = v - 0.5f;
+			const _f32 dist = sqrtf(dx * dx + dy * dy);
 
-				if (dist > radius)
-				{
-					continue;	// 원 밖 = 투명 그대로
-				}
+			if (dist > radius)
+			{
+				continue;	// 원 밖 = 투명 그대로
+			}
 
-				// 가장자리로 갈수록 부드럽게 어두워지는 음영 (공 느낌)
-				const _f32 shade = 1.0f - (dist / radius) * 0.5f;
+			// 가장자리로 갈수록 부드럽게 어두워지는 음영 (공 느낌)
+			const _f32 shade = 1.0f - (dist / radius) * 0.5f;
 
-				_f32 outR = r * shade;
-				_f32 outG = g * shade;
-				_f32 outB = b * shade;
+			_f32 outR = r * shade;
+			_f32 outG = g * shade;
+			_f32 outB = b * shade;
 
-				// 하이라이트 점 근처는 흰색으로 밝힌다
-				const _f32 hx = u - dotX;
-				const _f32 hy = v - dotY;
-				if (sqrtf(hx * hx + hy * hy) < 0.06f)
-				{
-					outR = outG = outB = 1.0f;
-				}
+			// 하이라이트 점 근처는 흰색으로 밝힌다
+			const _f32 hx = u - dotX;
+			const _f32 hy = v - dotY;
+			if (sqrtf(hx * hx + hy * hy) < 0.06f)
+			{
+				outR = outG = outB = 1.0f;
+			}
 
-				// 시트 전체 기준의 픽셀 위치로 변환해서 기록
-				const _s32 pixelX = frameCol * frameSize + x;
-				const _s32 pixelY = frameRow * frameSize + y;
-				const _s32 offset = (pixelY * sheetSize + pixelX) * 4;
+			// 시트 전체 기준의 픽셀 위치로 변환해서 기록
+			const _s32 pixelX = frameCol * frameSize + x;
+			const _s32 pixelY = frameRow * frameSize + y;
+			const _s32 offset = (pixelY * sheetSize + pixelX) * 4;
 
-				_pOutRgba[offset + 0] = (_u8)(Clamp(outR, 0.0f, 1.0f) * 255.0f);
-				_pOutRgba[offset + 1] = (_u8)(Clamp(outG, 0.0f, 1.0f) * 255.0f);
-				_pOutRgba[offset + 2] = (_u8)(Clamp(outB, 0.0f, 1.0f) * 255.0f);
-				_pOutRgba[offset + 3] = 255;
+			_pOutRgba[offset + 0] = (_u8)(Clamp(outR, 0.0f, 1.0f) * 255.0f);
+			_pOutRgba[offset + 1] = (_u8)(Clamp(outG, 0.0f, 1.0f) * 255.0f);
+			_pOutRgba[offset + 2] = (_u8)(Clamp(outB, 0.0f, 1.0f) * 255.0f);
+			_pOutRgba[offset + 3] = 255;
 			}
 		}
 	}

@@ -51,11 +51,18 @@ void Camera_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	// 2. 타일 하나짜리 사각형 버퍼 (월드 행렬로 위치를 바꿔가며 여러 번 그린다)
@@ -79,12 +86,12 @@ void Camera_Main()
 	}
 
 	// 3. 셰이더 + 상수 버퍼
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pLayoutDescs = VertexPC::LayoutDescs(&layoutCount);
+	VertexLayoutSpan pLayoutDescs = VertexPC::Layout();
 
-	Shader shader;
+	_u32 vsShader = device.Context().CreateVertexShader(CameraShaderSource());
+	_u32 psShader = device.Context().CreatePixelShader(CameraShaderSource());
 	ConstantBuffer<CbTransform> cbTransform;
-	if (!shader.CompileFromString(&device, CameraShaderSource(), pLayoutDescs, layoutCount) ||
+	if (vsShader == INVALID_HANDLE || psShader == INVALID_HANDLE ||
 		!cbTransform.Create(&device))
 		{
 		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
@@ -95,7 +102,7 @@ void Camera_Main()
 
 	// 4. 카메라 상태 변수
 	vec2 cameraPos = vec2(0.0f, 0.0f);	// 카메라가 바라보는 월드 위치
-	_f32 zoom = 1.0f;					// 1보다 크면 확대, 작으면 축소
+	_f32 zoom = 1.0f;				// 1보다 크면 확대, 작으면 축소
 
 	const _f32 aspect = window.AspectRatio();
 	const mat4 proj = mat4::OrthographicOffCenterLH(-aspect, +aspect, -1.0f, +1.0f, 0.0f, 1.0f);
@@ -153,22 +160,26 @@ void Camera_Main()
 		{
 			for (_s32 x = -2; x <= 2; ++x)
 			{
-				// 타일 간격 0.6, 크기 0.5 (사이에 틈이 보이도록)
-				const mat4 world = mat4::Scale(0.5f, 0.5f, 1.0f) * mat4::Translation(x * 0.6f, y * 0.6f, 0.0f);
+			// 타일 간격 0.6, 크기 0.5 (사이에 틈이 보이도록)
+			const mat4 world = mat4::Scale(0.5f, 0.5f, 1.0f) * mat4::Translation(x * 0.6f, y * 0.6f, 0.0f);
 
-				CbTransform cb = {};
-				cb.worldViewProj_ = world * view * proj;	// 월드 -> 뷰 -> 투영 순서!
-				cbTransform.UpdateAndBind(&device, cb, 0);
+			CbTransform cb = {};
+			cb.worldViewProj_ = world * view * proj;	// 월드 -> 뷰 -> 투영 순서!
+			cbTransform.UpdateAndBind(device.Context(), cb, 0);
 
-				vb.Bind(&device);
-				ib.Bind(&device);
-				shader.Bind(&device);
-				device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-				device.Context()->DrawIndexed(6, 0, 0);
+			vb.Bind(device.Context());
+			ib.Bind(device.Context());
+			device.Context().SetVertexShader(vsShader);
+		device.Context().SetPixelShader(psShader);
+		{
+			device.Context().SetInputLayout(vsShader, pLayoutDescs);
+		}
+			device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
+			device.Context().DrawIndexed(6, 0, 0);
 			}
 		}
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 6. 정리

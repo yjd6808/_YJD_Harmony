@@ -59,8 +59,7 @@ public:
 	// @param _pVertices: 정점 배열
 	// @param _stride: 정점 1개 바이트 크기 (sizeof(VertexPNT) 등)
 	// @param _vertexCount: 정점 개수
-	// @param _pLayoutDescs: 정점 구조 설명 배열 (VertexPNT::LayoutDescs() 등)
-	// @param _layoutCount: 설명 배열 개수
+	// @param _layout: 정점 구조 설명 뷰 (VertexPNT::Layout() 등)
 	// @param _pVs: 입력 레이아웃 서명 검증용 버텍스 셰이더
 	// @param _pIndices: 인덱스 배열 (nullptr면 비인덱스 메시)
 	// @param _indexCount: 인덱스 개수
@@ -68,7 +67,7 @@ public:
 	bool Initialize(
 		GraphicDevice* _pDevice,
 		const void* _pVertices, UINT _stride, UINT _vertexCount,
-		const D3D11_INPUT_ELEMENT_DESC* _pLayoutDescs, UINT _layoutCount,
+		VertexLayoutSpan _layout,
 		VertexShader* _pVs,
 		const _u32* _pIndices = nullptr, UINT _indexCount = 0,
 		PrimitiveTopology _topology = PrimitiveTopology::ptTriangleList);

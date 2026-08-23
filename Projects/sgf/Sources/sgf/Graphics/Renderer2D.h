@@ -102,7 +102,7 @@ protected:
 	////////////////////////////////////////////////////////////////////////////////////////
 	// BatchRenderer 훅 구현
 	virtual const char* ShaderSource() const override;
-	virtual const D3D11_INPUT_ELEMENT_DESC* VertexLayout(UINT* _outCount) const override;
+	virtual VertexLayoutSpan VertexLayout() const override;
 	virtual bool CreateBatchResources(GraphicDevice* _pDevice) override;
 	virtual void OnBegin() override;
 

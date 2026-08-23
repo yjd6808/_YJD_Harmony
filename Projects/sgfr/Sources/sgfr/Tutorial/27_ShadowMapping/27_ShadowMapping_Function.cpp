@@ -147,7 +147,7 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 			// 바이어스를 빼서 자기 자신의 깊이와 오차로 생기는 줄무늬(그림자 여드름)를 막는다.
 			if (ndc.z - gShadowBias > storedDepth)
 			{
-				shadow = 0.35f;
+			shadow = 0.35f;
 			}
 		}
 	}

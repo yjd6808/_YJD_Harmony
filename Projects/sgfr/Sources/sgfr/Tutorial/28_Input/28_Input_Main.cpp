@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 11:10:00 AM
  * =====================
@@ -42,11 +42,18 @@ void Input_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	// 2. 이벤트 방식 구독 (jc::Event::Register(id, 함수))
@@ -91,11 +98,11 @@ void Input_Main()
 	}
 
 	// 4. 셰이더 컴파일
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pLayoutDescs = VertexPC::LayoutDescs(&layoutCount);
+	VertexLayoutSpan pLayoutDescs = VertexPC::Layout();
 
-	Shader shader;
-	if (!shader.CompileFromString(&device, InputDemoShaderSource(), pLayoutDescs, layoutCount))
+	_u32 vsShader = device.Context().CreateVertexShader(InputDemoShaderSource());
+	_u32 psShader = device.Context().CreatePixelShader(InputDemoShaderSource());
+	if (vsShader == INVALID_HANDLE || psShader == INVALID_HANDLE)
 	{
 		jc::Console::WriteLine("셰이더 컴파일 실패!");
 		device.Finalize();
@@ -119,11 +126,11 @@ void Input_Main()
 		color tintColor = color(0xE6, 0xE6, 0xE6, 0xFF);			// 기본: 흰색
 		if (input.IsMouseDown(MouseButton::Left))
 		{
-			tintColor = color(0xF2, 0x4D, 0x4D, 0xFF);				// 왼클릭: 빨강
+			tintColor = color(0xF2, 0x4D, 0x4D, 0xFF);			// 왼클릭: 빨강
 		}
 		else if (input.IsMouseDown(MouseButton::Right))
 		{
-			tintColor = color(0x4D, 0x80, 0xF2, 0xFF);				// 오른클릭: 파랑
+			tintColor = color(0x4D, 0x80, 0xF2, 0xFF);			// 오른클릭: 파랑
 		}
 
 		input.NextFrame();	// 이번 프레임 입력 확정 (Pressed/Released 계산용)
@@ -135,17 +142,21 @@ void Input_Main()
 		vertices[1] = { vec3(center.x + halfSize, center.y + halfSize * aspect, 0.0f), tintColor };
 		vertices[2] = { vec3(center.x - halfSize, center.y - halfSize * aspect, 0.0f), tintColor };
 		vertices[3] = { vec3(center.x + halfSize, center.y - halfSize * aspect, 0.0f), tintColor };
-		vb.Update(&device, vertices, 4);
+		vb.Update(device.Context(), vertices, 4);
 
 		device.BeginFrame(color(0x14, 0x14, 0x1F, 0xFF));
 
-		vb.Bind(&device);
-		ib.Bind(&device);
-		shader.Bind(&device);
-		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		device.Context()->DrawIndexed(6, 0, 0);
+		vb.Bind(device.Context());
+		ib.Bind(device.Context());
+		device.Context().SetVertexShader(vsShader);
+		device.Context().SetPixelShader(psShader);
+		{
+			device.Context().SetInputLayout(vsShader, pLayoutDescs);
+		}
+		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
+		device.Context().DrawIndexed(6, 0, 0);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 6. 정리: 등록했던 이벤트는 꼭 해제한다! (달링 참조 방지 습관)

@@ -20,7 +20,7 @@
 #include "sgf/Namespace.h"
 
 NS_SGF_BEGIN
-
+class GraphicContext;
 class DepthStencilSurface
 {
 public:
@@ -29,8 +29,8 @@ public:
 
 	void Finalize();
 
-	// 깊이를 1.0(가장 멀리), 스텐실을 0으로 초기화한다. 매 프레임 시작 시 호출.
-	void Clear(ID3D11DeviceContext* _pContext);
+	// 깊이를 1.0(가장 멀리), 스텐실을 0으로 초기화한다. 매 프레임 시작 시 호출. 캐시를 통과한다.
+	void Clear(GraphicContext& _context);
 
 	ID3D11DepthStencilView* DSV() const { return pDepthStencilView_.Get(); }
 

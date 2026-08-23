@@ -6,7 +6,7 @@
  *
  * [Shader와의 차이]
  * Shader는 VS+PS+입력레이아웃을 한 덩어리로 묶었다. (간단하지만 재사용 불가)
- * 셀 개를 분리해서 "같은 VS + 다른 PS" 같은 조합이 가능하다.
+ * 세 개를 분리해서 "같은 VS + 다른 PS" 같은 조합이 가능하다.
  * 셰이더는 IResource를 상속받아 ResourceMgr에 등록/공유된다.
  *
  * [왜 VS가 바이트코드를 들고 있나?]
@@ -18,6 +18,7 @@
 
 #include "sgf/Graphics/IResource.h"
 #include "sgf/Graphics/GraphicsEnums.h"
+#include "sgf/Graphics/Vertex.h"
 
 NS_SGF_BEGIN
 
@@ -87,10 +88,9 @@ public:
 	~InputLayout();
 
 	// 정점 구조 설명 배열 + VS 바이트코드로 레이아웃을 만든다.
-	// @param _pDescs: 정점 구조 설명 배열 (VertexPC::LayoutDescs() 등)
-	// @param _count: 설명 배열 개수
+	// @param _layout: 정점 구조 설명 뷰 (VertexPC::Layout() 등)
 	// @param _pVs: 서명 검증에 쓸 버텍스 셰이더 (컴파일 완료 상태여야 함)
-	bool Initialize(GraphicDevice* _pDevice, const D3D11_INPUT_ELEMENT_DESC* _pDescs, UINT _count, VertexShader* _pVs);
+	bool Initialize(GraphicDevice* _pDevice, VertexLayoutSpan _layout, VertexShader* _pVs);
 
 	void Finalize();
 

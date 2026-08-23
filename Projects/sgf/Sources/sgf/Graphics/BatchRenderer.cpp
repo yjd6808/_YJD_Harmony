@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 10:30:00 AM
  * =====================
@@ -33,10 +33,10 @@ bool BatchRenderer::Initialize(GraphicDevice* _pDevice)
 {
 	pDevice_ = _pDevice;
 
-	// 1. 파생이 내려준 셰이더 소스/정점 레이아웃으로 컴파일
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pLayoutDescs = VertexLayout(&layoutCount);
-	if (!shader_.CompileFromString(_pDevice, ShaderSource(), pLayoutDescs, layoutCount))
+	// 1. 파생이 내려준 셰이더 소스/정점 레이아웃으로 분리형 VS/PS 생성
+	vsHandle_ = pDevice_->CreateVertexShader(ShaderSource());
+	psHandle_ = pDevice_->CreatePixelShader(ShaderSource());
+	if (vsHandle_ == INVALID_HANDLE || psHandle_ == INVALID_HANDLE)
 	{
 		return false;
 	}
@@ -54,7 +54,8 @@ bool BatchRenderer::Initialize(GraphicDevice* _pDevice)
 //////////////////////////////////////////////////////////////////////////////////////////
 void BatchRenderer::Finalize()
 {
-	// 셰이더/상수 버퍼는 각자의 소멸자(ComPtr)가 GPU 리소스를 알아서 해제한다.
+	vsHandle_ = INVALID_HANDLE;
+	psHandle_ = INVALID_HANDLE;
 	begun_ = false;
 }
 
@@ -81,8 +82,11 @@ void BatchRenderer::End()
 // 공통 파이프라인 구성: 셰이더 바인딩 + 뷰프로젝션 상수 버퍼 갱신/바인딩
 void BatchRenderer::ApplyFrameStates()
 {
-	shader_.Bind(pDevice_);
-	cbFrame_.UpdateAndBind(pDevice_, viewProjection_, 0);
+	GraphicContext& ctx = pDevice_->Context();
+	ctx.SetVertexShader(vsHandle_);
+	ctx.SetPixelShader(psHandle_);
+	ctx.SetInputLayout(vsHandle_, VertexLayout());
+	cbFrame_.UpdateAndBind(ctx, viewProjection_, 0);
 }
 
 NS_SGF_END

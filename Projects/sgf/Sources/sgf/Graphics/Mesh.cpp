@@ -35,14 +35,14 @@ Mesh::~Mesh()
 bool Mesh::Initialize(
 	GraphicDevice* _pDevice,
 	const void* _pVertices, UINT _stride, UINT _vertexCount,
-	const D3D11_INPUT_ELEMENT_DESC* _pLayoutDescs, UINT _layoutCount,
+	VertexLayoutSpan _layout,
 	VertexShader* _pVs,
 	const _u32* _pIndices, UINT _indexCount,
 	PrimitiveTopology _topology)
 {
 	jc_assert_msg(_pVertices != nullptr && _vertexCount > 0, "정점 데이터가 비어있습니다.");
 
-	if (!vertexBuffer_.Create(_pDevice, _pVertices, _stride, _vertexCount))
+	if (!vertexBuffer_.Create(_pDevice, _pVertices, _stride, _vertexCount, _layout))
 	{
 		return false;
 	}
@@ -56,7 +56,7 @@ bool Mesh::Initialize(
 		}
 	}
 
-	if (!inputLayout_.Initialize(_pDevice, _pLayoutDescs, _layoutCount, _pVs))
+	if (!inputLayout_.Initialize(_pDevice, _layout, _pVs))
 	{
 		return false;
 	}
@@ -139,11 +139,8 @@ bool Mesh::Build2DPrimitive(GraphicDevice* _pDevice, VertexShader* _pVs,
 		indices32.PushBack((_u32)index);
 	}
 
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pDescs = VertexPTC::LayoutDescs(&layoutCount);
-
 	if (!Initialize(_pDevice, _result.vertices_.Source(), sizeof(VertexPTC), _result.vertices_.Size(),
-		pDescs, layoutCount, _pVs, indices32.Source(), indices32.Size()))
+		VertexPTC::Layout(), _pVs, indices32.Source(), indices32.Size()))
 	{
 		return false;
 	}
@@ -153,7 +150,7 @@ bool Mesh::Build2DPrimitive(GraphicDevice* _pDevice, VertexShader* _pVs,
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // 1x1x1 큐브. 면마다 법선이 달라서 정점을 공유하지 않는다. (24정점/36인덱스)
 bool Mesh::InitializeAsCube(GraphicDevice* _pDevice, VertexShader* _pVs)
 {
@@ -202,11 +199,8 @@ bool Mesh::InitializeAsCube(GraphicDevice* _pDevice, VertexShader* _pVs)
 		indices[face * 6 + 5] = base + 3;
 	}
 
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pDescs = VertexPNT::LayoutDescs(&layoutCount);
-
 	if (!Initialize(_pDevice, vertices, sizeof(VertexPNT), _countof(vertices),
-		pDescs, layoutCount, _pVs, indices, _countof(indices)))
+		VertexPNT::Layout(), _pVs, indices, _countof(indices)))
 	{
 		return false;
 	}
@@ -215,7 +209,7 @@ bool Mesh::InitializeAsCube(GraphicDevice* _pDevice, VertexShader* _pVs)
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // 반지름 1 구 (VertexPNT). UV 스피어 — slices(경도)/stacks(위도) 그리드, 북극→남극.
 bool Mesh::InitializeAsSphere(GraphicDevice* _pDevice, VertexShader* _pVs, _u32 _slices, _u32 _stacks)
 {
@@ -261,11 +255,8 @@ bool Mesh::InitializeAsSphere(GraphicDevice* _pDevice, VertexShader* _pVs, _u32 
 		}
 	}
 
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pDescs = VertexPNT::LayoutDescs(&layoutCount);
-
 	if (!Initialize(_pDevice, vertices.Source(), sizeof(VertexPNT), vertices.Size(),
-		pDescs, layoutCount, _pVs, indices.Source(), indices.Size()))
+		VertexPNT::Layout(), _pVs, indices.Source(), indices.Size()))
 	{
 		return false;
 	}
@@ -336,11 +327,8 @@ bool Mesh::InitializeAsCylinder(GraphicDevice* _pDevice, VertexShader* _pVs, _u3
 		indices.PushBack((_u32)1); indices.PushBack(v0); indices.PushBack(v1);
 	}
 
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pDescs = VertexPNT::LayoutDescs(&layoutCount);
-
 	if (!Initialize(_pDevice, vertices.Source(), sizeof(VertexPNT), vertices.Size(),
-		pDescs, layoutCount, _pVs, indices.Source(), indices.Size()))
+		VertexPNT::Layout(), _pVs, indices.Source(), indices.Size()))
 	{
 		return false;
 	}
@@ -423,11 +411,8 @@ bool Mesh::InitializeAsCapsule(GraphicDevice* _pDevice, VertexShader* _pVs, _u32
 		}
 	}
 
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pDescs = VertexPNT::LayoutDescs(&layoutCount);
-
 	if (!Initialize(_pDevice, vertices.Source(), sizeof(VertexPNT), vertices.Size(),
-		pDescs, layoutCount, _pVs, indices.Source(), indices.Size()))
+		VertexPNT::Layout(), _pVs, indices.Source(), indices.Size()))
 	{
 		return false;
 	}
@@ -477,11 +462,8 @@ bool Mesh::InitializeAsPlane(GraphicDevice* _pDevice, VertexShader* _pVs)
 		}
 	}
 
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pDescs = VertexPNT::LayoutDescs(&layoutCount);
-
 	if (!Initialize(_pDevice, vertices.Source(), sizeof(VertexPNT), vertices.Size(),
-		pDescs, layoutCount, _pVs, indices.Source(), indices.Size()))
+		VertexPNT::Layout(), _pVs, indices.Source(), indices.Size()))
 	{
 		return false;
 	}
@@ -504,11 +486,8 @@ bool Mesh::InitializeAsQuad3D(GraphicDevice* _pDevice, VertexShader* _pVs)
 
 	const _u32 indices[6] = { 0, 1, 2, 2, 1, 3 };
 
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pDescs = VertexPNT::LayoutDescs(&layoutCount);
-
 	if (!Initialize(_pDevice, vertices, sizeof(VertexPNT), _countof(vertices),
-		pDescs, layoutCount, _pVs, indices, _countof(indices)))
+		VertexPNT::Layout(), _pVs, indices, _countof(indices)))
 	{
 		return false;
 	}

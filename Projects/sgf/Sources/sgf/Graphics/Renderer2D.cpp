@@ -114,9 +114,9 @@ const char* Renderer2D::ShaderSource() const
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // BatchRenderer 훅: VertexPTC 레이아웃
-const D3D11_INPUT_ELEMENT_DESC* Renderer2D::VertexLayout(UINT* _outCount) const
+VertexLayoutSpan Renderer2D::VertexLayout() const
 {
-	return VertexPTC::LayoutDescs(_outCount);
+	return VertexPTC::Layout();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -161,8 +161,8 @@ void Renderer2D::OnBegin()
 	pCurrentTexture_ = nullptr;
 	drawCallCount_ = 0;
 
-	pDevice_->SetDepthTest(false);
-	pDevice_->SetAlphaBlending(true);
+	pDevice_->Context().SetDepth(DepthMode::dmDisabled);
+	pDevice_->Context().SetBlend(BlendMode::bmAlpha);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -477,11 +477,11 @@ void Renderer2D::DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world
 		return;
 	}
 
-	GraphicContext& context = pDevice_->GetContext();
+	GraphicContext& context = pDevice_->Context();
 
 	// 깊이/블렌드 상태 재확정 — Flush와 같은 이유. 3D와 섞여도 2D는 깊이 끄고 반투명.
-	pDevice_->SetDepthTest(false);
-	pDevice_->SetAlphaBlending(true);
+	pDevice_->Context().SetDepth(DepthMode::dmDisabled);
+	pDevice_->Context().SetBlend(BlendMode::bmAlpha);
 
 	// 1. 어떻게 그릴지 — 셰이더 + b0(뷰프로젝션) 장착 (배치 공용 파이프라인)
 	ApplyFrameStates();
@@ -505,20 +505,20 @@ void Renderer2D::DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world
 	}
 	if (pTexture != nullptr)
 	{
-		pTexture->Bind(pDevice_, 0);
+		pTexture->Bind(pDevice_->Context(), 0);
 	}
 
 	// 4. b2 머티리얼 상수 = 재질 기본색 (틴트. 배치 경로는 흰색 고정 — 메시 경로만 갱신)
 	MaterialConstants material;
 	const color tint = (_pMaterial != nullptr) ? _pMaterial->GetBaseColor() : color::WHITE;
 	tint.ToFloat4(material.baseColor_);
-	materialCb_.Update(pDevice_, material);
+	materialCb_.Update(pDevice_->Context(), material);
 	context.SetConstantBuffer(ShaderStage::ssPixel, 2, materialCb_.Raw());
 
 	// 5. b1 오브젝트 상수 = 월드 행렬 (GPU 변환 — StaticLevel은 행렬 고정으로 전달됨)
 	ObjectConstants object;
 	object.world_ = _world;
-	objectCb_.Update(pDevice_, object);
+	objectCb_.Update(pDevice_->Context(), object);
 	context.SetConstantBuffer(ShaderStage::ssVertex, 1, objectCb_.Raw());
 
 	// 6. 드로우 콜 (인덱스 유무에 따라 DrawIndexed/Draw)
@@ -543,14 +543,14 @@ void Renderer2D::Flush()
 	// 깊이/블렌드 상태는 Flush 직전에 확정한다.
 	// 같은 프레임에 Renderer3D(깊이 켜고 그림)와 섞여 쓰여도
 	// 2D는 항상 "깊이 끄고, 반투명 켜고" 그려지도록 보장하기 위함이다.
-	pDevice_->SetDepthTest(false);
-	pDevice_->SetAlphaBlending(true);
+	pDevice_->Context().SetDepth(DepthMode::dmDisabled);
+	pDevice_->Context().SetBlend(BlendMode::bmAlpha);
 
 	// 1. CPU 배치 -> GPU 정점/인덱스 버퍼 복사
-	vertexBuffer_.Update(pDevice_, vertices_.Source(), UINT(vertexCount));
-	indexBuffer_.Update(pDevice_, indices_.Source(), UINT(indexCount));
+	vertexBuffer_.Update(pDevice_->Context(), vertices_.Source(), UINT(vertexCount));
+	indexBuffer_.Update(pDevice_->Context(), indices_.Source(), UINT(indexCount));
 
-	GraphicContext& context = pDevice_->GetContext();
+	GraphicContext& context = pDevice_->Context();
 
 	// 2. 파이프라인 구성: 셰이더/버퍼/텍스처/상수버퍼/토폴로지
 	ApplyFrameStates();
@@ -559,24 +559,24 @@ void Renderer2D::Flush()
 	// 메시 즉시 드로우가 남긴 b1/b2를 배치 드로우 전에 되돌린다.
 	ObjectConstants object;
 	object.world_ = mat4::Identity();
-	objectCb_.Update(pDevice_, object);
+	objectCb_.Update(pDevice_->Context(), object);
 	context.SetConstantBuffer(ShaderStage::ssVertex, 1, objectCb_.Raw());
 
 	MaterialConstants material;	// 기본값 = 흰색 (1,1,1,1)
-	materialCb_.Update(pDevice_, material);
+	materialCb_.Update(pDevice_->Context(), material);
 	context.SetConstantBuffer(ShaderStage::ssPixel, 2, materialCb_.Raw());
 
-	vertexBuffer_.Bind(pDevice_);
-	indexBuffer_.Bind(pDevice_);
+	vertexBuffer_.Bind(pDevice_->Context());
+	indexBuffer_.Bind(pDevice_->Context());
 	if (pCurrentTexture_ != nullptr)
 	{
-		pCurrentTexture_->Bind(pDevice_, 0);
+		pCurrentTexture_->Bind(pDevice_->Context(), 0);
 	}
-	pDevice_->Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pDevice_->Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
 	// 3. 드로우 콜: 인덱스 수만큼 그린다. (임의 도형 지원)
 	++drawCallCount_;
-	pDevice_->Context()->DrawIndexed(UINT(indexCount), 0, 0);
+	pDevice_->Context().DrawIndexed(UINT(indexCount), 0, 0);
 
 	// 4. 배치 비우기
 	vertices_.Clear();

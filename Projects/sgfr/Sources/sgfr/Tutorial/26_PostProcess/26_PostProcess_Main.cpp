@@ -72,11 +72,18 @@ void PostProcess_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	// 2. 화면과 같은 크기의 렌더 타깃: 장면이 먼저 여기에 그려진다.
@@ -114,18 +121,16 @@ void PostProcess_Main()
 	}
 
 	// 4. 셰이더 2종 + 상수 버퍼 2종
-	UINT cubeLayoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pCubeLayout = VertexPC::LayoutDescs(&cubeLayoutCount);
-	UINT quadLayoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pQuadLayout = VertexPTC::LayoutDescs(&quadLayoutCount);
+	VertexLayoutSpan pCubeLayout = VertexPC::Layout();
+	VertexLayoutSpan pQuadLayout = VertexPTC::Layout();
 
-	Shader sceneShader;
-	Shader postShader;
+	_u32 vsSceneShader = device.Context().CreateVertexShader(ColorTransformShaderSource());
+	_u32 psSceneShader = device.Context().CreatePixelShader(ColorTransformShaderSource());
+	_u32 vsPostShader = device.Context().CreateVertexShader(PostProcessShaderSource());
+	_u32 psPostShader = device.Context().CreatePixelShader(PostProcessShaderSource());
 	ConstantBuffer<CbTransform> cbTransform;
 	ConstantBuffer<CbPost> cbPost;
-	if (!sceneShader.CompileFromString(&device, ColorTransformShaderSource(), pCubeLayout, cubeLayoutCount) ||
-		!postShader.CompileFromString(&device, PostProcessShaderSource(), pQuadLayout, quadLayoutCount) ||
-		!cbTransform.Create(&device) ||
+	if (vsSceneShader == INVALID_HANDLE || psSceneShader == INVALID_HANDLE || vsPostShader == INVALID_HANDLE || psPostShader == INVALID_HANDLE || !cbTransform.Create(&device) ||
 		!cbPost.Create(&device))
 		{
 		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
@@ -171,8 +176,8 @@ void PostProcess_Main()
 			// '0'~'5' 숫자 키: 문자 코드와 가상 키 코드가 같다.
 			if (input.IsKeyPressed('0' + k))
 			{
-				effectMode = k;
-				bChanged = true;
+			effectMode = k;
+			bChanged = true;
 			}
 		}
 
@@ -195,13 +200,17 @@ void PostProcess_Main()
 		const mat4 world = mat4::RotationY(elapsed * 0.8f) * mat4::RotationX(elapsed * 0.3f);
 		CbTransform cbT;
 		cbT.wvp_ = world * view * proj;
-		cbTransform.UpdateAndBind(&device, cbT, 0);
+		cbTransform.UpdateAndBind(device.Context(), cbT, 0);
 
-		cubeVb.Bind(&device);
-		cubeIb.Bind(&device);
-		sceneShader.Bind(&device);
-		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		device.Context()->DrawIndexed(36, 0, 0);
+		cubeVb.Bind(device.Context());
+		cubeIb.Bind(device.Context());
+		device.Context().SetVertexShader(vsSceneShader);
+		device.Context().SetPixelShader(psSceneShader);
+		{
+			device.Context().SetInputLayout(vsSceneShader, pCubeLayout);
+		}
+		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
+		device.Context().DrawIndexed(36, 0, 0);
 
 		// ---- 패스 2: 렌더 타깃을 후보정해서 백버퍼에 출력 ----
 		// 셰이더가 gSplit 왼쪽은 원본, 오른쪽은 효과를 적용해 Before/After를 한 화면에 보여준다.
@@ -212,17 +221,21 @@ void PostProcess_Main()
 		cbP.time_ = elapsed;
 		cbP.split_ = split;
 		cbP.padding_ = 0.0f;
-		cbPost.UpdateAndBind(&device, cbP, 0);
+		cbPost.UpdateAndBind(device.Context(), cbP, 0);
 
-		device.SetSampler(GraphicDevice::SamplerFilter::fmLinear, GraphicDevice::SamplerAddress::amClamp, 0);
+		device.Context().SetSampler(FilterMode::fmLinear, AddressMode::amClamp, 0);
 		sceneTarget.BindAsTexture(&device, 0);
 
-		quadVb.Bind(&device);
-		quadIb.Bind(&device);
-		postShader.Bind(&device);
-		device.Context()->DrawIndexed(6, 0, 0);
+		quadVb.Bind(device.Context());
+		quadIb.Bind(device.Context());
+		device.Context().SetVertexShader(vsPostShader);
+		device.Context().SetPixelShader(psPostShader);
+		{
+			device.Context().SetInputLayout(vsPostShader, pQuadLayout);
+		}
+		device.Context().DrawIndexed(6, 0, 0);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 8. 정리

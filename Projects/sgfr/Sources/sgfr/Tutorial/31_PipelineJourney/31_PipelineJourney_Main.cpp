@@ -34,12 +34,12 @@ namespace
 		{
 			for (_s32 x = 0; x < _width; ++x)
 			{
-				const bool bLight = (((x / 8) + (y / 8)) % 2) == 0;
-				_u8* pPixel = _pOutPixels + (y * _width + x) * 4;
-				pPixel[0] = bLight ? 180 : 60;
-				pPixel[1] = bLight ? 180 : 60;
-				pPixel[2] = bLight ? 200 : 90;
-				pPixel[3] = 255;
+			const bool bLight = (((x / 8) + (y / 8)) % 2) == 0;
+			_u8* pPixel = _pOutPixels + (y * _width + x) * 4;
+			pPixel[0] = bLight ? 180 : 60;
+			pPixel[1] = bLight ? 180 : 60;
+			pPixel[2] = bLight ? 200 : 90;
+			pPixel[3] = 255;
 			}
 		}
 	}
@@ -63,15 +63,22 @@ void PipelineJourney_Main()
 
 	// [§2~§6] 디바이스 + 컨텍스트 + 스왑체인 + 백버퍼 RTV + 깊이버퍼 DSV
 	// - 수도 코드에서는 다섯 단계였지만, device.Initialize(hwnd, w, h) 한 번이다.
-	// - 분리된 GraphicsContext는 device.GetContext()로 얻는다. (생성과 바인딩의 분리!)
+	// - 분리된 GraphicsContext는 device.Context()로 얻는다. (생성과 바인딩의 분리!)
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
-	GraphicContext& context = device.GetContext();
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
+	}
+	GraphicContext& context = device.Context();
 
 	// 리소스 매니저: 디폴트 셰이더/머티리얼이 여기서 준비된다. ([§8~§9]의 완성형)
 	if (!g_cResourceMgr.Initialize(&device))
@@ -126,9 +133,9 @@ void PipelineJourney_Main()
 	}
 	pFloorMaterial->SetVertexShaderKey(g_cResourceMgr.GetDefaultVertexShader2DKey());
 	pFloorMaterial->SetPixelShaderKey(g_cResourceMgr.GetDefaultPixelShader2DKey());
-	pFloorMaterial->SetTextureKey(0, checkerKey);				// [§9] texture[8] 슬롯 중 t0
+	pFloorMaterial->SetTextureKey(0, checkerKey);			// [§9] texture[8] 슬롯 중 t0
 	pFloorMaterial->SetRasterizer(CullMode::cmBack);			// [§7] 래스터라이저 상태
-	pFloorMaterial->SetBlend(BlendMode::bmNone);				// [§7] 블렌드 상태
+	pFloorMaterial->SetBlend(BlendMode::bmNone);			// [§7] 블렌드 상태
 	pFloorMaterial->SetDepth(DepthMode::dmReadWrite);			// [§7] 깊이 상태
 	pFloorMaterial->SetSampler(FilterMode::fmLinear);			// [§7] 샘플러 상태
 	const _u64 floorMaterialKey = g_cResourceMgr.Add(pFloorMaterial);
@@ -208,7 +215,7 @@ void PipelineJourney_Main()
 		renderer.EndScene();
 
 		// Present: 그린 결과를 화면으로 (GPU 파이프라인 여행의 종착역!)
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 정리: 등록한 리소스(메시/머티리얼/텍스처)는 매니저 Finalize가 일괄 소멸시킨다.

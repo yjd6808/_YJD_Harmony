@@ -29,7 +29,7 @@ namespace
 	// b0: 프레임에 한 번만 갱신되는 공통 데이터 (16바이트 배수!)
 	struct CbFrame
 	{
-		_f32 time_;				// 누적 시간(초)
+		_f32 time_;			// 누적 시간(초)
 		_f32 padding_[3];		// 16바이트 정렬용 여백
 	};
 
@@ -103,14 +103,21 @@ void ShaderStagesAndConstants_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
 	}
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	device.Finalize();
+	window.Destroy();
+	return;
+	}
 
-	GraphicContext& context = device.GetContext();
+	GraphicContext& context = device.Context();
 
 	// 2. 셰이더 + 메시 준비
 	VertexShader vs;
@@ -133,11 +140,10 @@ void ShaderStagesAndConstants_Main()
 	};
 	const _u32 indices[6] = { 0, 1, 2, 0, 2, 3 };
 
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pLayoutDescs = VertexPTC::LayoutDescs(&layoutCount);
+	VertexLayoutSpan pLayoutDescs = VertexPTC::Layout();
 
 	Mesh quad;
-	if (!quad.Initialize(&device, vertices, sizeof(VertexPTC), 4, pLayoutDescs, layoutCount, &vs, indices, 6))
+	if (!quad.Initialize(&device, vertices, sizeof(VertexPTC), 4, pLayoutDescs, &vs, indices, 6))
 	{
 		jc::Console::WriteLine("메시 생성 실패!");
 		device.Finalize();
@@ -183,7 +189,7 @@ void ShaderStagesAndConstants_Main()
 		// (1) b0: 프레임에 딱 한 번만 갱신 + VS 스테이지에 바인딩
 		CbFrame frame = {};
 		frame.time_ = elapsed;
-		frameCb.Update(&device, frame);
+		frameCb.Update(device.Context(), frame);
 		context.SetConstantBuffer(ShaderStage::ssVertex, 0, frameCb.Raw());
 
 		quad.Bind(context);
@@ -194,7 +200,7 @@ void ShaderStagesAndConstants_Main()
 		left.offset_ = vec2(-0.4f, 0.0f);
 		left.wobble_ = 0.08f;
 		left.tint_ = vec4(0.3f, 0.8f, 1.0f, 1.0f);
-		objectCb.Update(&device, left);
+		objectCb.Update(device.Context(), left);
 		context.SetConstantBuffer(ShaderStage::ssVertex, 1, objectCb.Raw());
 		context.SetConstantBuffer(ShaderStage::ssPixel, 1, objectCb.Raw());
 		quad.Draw(context);
@@ -203,12 +209,12 @@ void ShaderStagesAndConstants_Main()
 		right.offset_ = vec2(0.4f, 0.0f);
 		right.wobble_ = 0.2f;
 		right.tint_ = vec4(1.0f, 0.6f, 0.2f, 1.0f);
-		objectCb.Update(&device, right);
+		objectCb.Update(device.Context(), right);
 		context.SetConstantBuffer(ShaderStage::ssVertex, 1, objectCb.Raw());
 		context.SetConstantBuffer(ShaderStage::ssPixel, 1, objectCb.Raw());
 		quad.Draw(context);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 5. 정리
