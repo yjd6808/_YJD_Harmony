@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 5:50:00 PM
  * =====================
@@ -142,7 +142,7 @@ bool Material::Bind(GraphicContext& _context)
 	// 4. 머티리얼 상수 (변경되었을 때만 업로드)
 	if (constantsDirty_)
 	{
-		constantBuffer_.Update(pDevice_, constants_);
+		constantBuffer_.Update(pDevice_->Context(), constants_);
 		constantsDirty_ = false;
 	}
 	_context.SetConstantBuffer(ShaderStage::ssPixel, 2, constantBuffer_.Raw());

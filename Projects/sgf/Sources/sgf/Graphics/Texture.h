@@ -23,10 +23,12 @@
 #include "jc/Math.h"
 
 #include "sgf/Graphics/IResource.h"
+#include "sgf/Graphics/GraphicsEnums.h"
 
 NS_SGF_BEGIN
 
 class GraphicDevice;
+class GraphicContext;
 
 // IResource를 상속받아 ResourceMgr에 등록/검색할 수 있다.
 class Texture : public ResourceBase
@@ -51,11 +53,12 @@ public:
 	// 메모리의 RGBA 픽셀 배열로 직접 텍스처를 만든다.
 	// (절차적 생성 텍스처, 단색 텍스처 등에 사용)
 	// @param _pPixels: RGBA 순서 8비트씩, 한 줄에 _width*4 바이트
-	bool CreateFromMemory(GraphicDevice* _pDevice, const _u8* _pPixels, _s32 _width, _s32 _height);
+	// @param _format: 픽셀 포맷 (기본 pfRgba8)
+	bool CreateFromMemory(GraphicDevice* _pDevice, const _u8* _pPixels, _s32 _width, _s32 _height, PixelFormat _format = PixelFormat::pfRgba8);
 
 	// PS 단계 지정 슬롯에 이 텍스처를 장착한다.
 	// @param _slot: 셰이더의 register(t0), register(t1)... 번호
-	void Bind(GraphicDevice* _pDevice, UINT _slot = 0);
+	void Bind(GraphicContext& _context, _u32 _slot = 0);
 
 	_s32 Width() const { return width_; }
 	_s32 Height() const { return height_; }

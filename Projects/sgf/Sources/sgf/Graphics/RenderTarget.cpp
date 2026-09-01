@@ -178,7 +178,7 @@ void RenderTarget::Destroy()
 // 타깃 지우기
 void RenderTarget::Clear(GraphicDevice* _pDevice, const color& _clearColor)
 {
-	ID3D11DeviceContext* pContext = _pDevice->Context();
+	ID3D11DeviceContext* pContext = _pDevice->Context().Raw();
 
 	// 색 타깃이 있으면 배경색으로 지운다.
 	if (pRTV_ != nullptr)
@@ -203,7 +203,7 @@ void RenderTarget::Clear(GraphicDevice* _pDevice, const color& _clearColor)
 void RenderTarget::BindAsTexture(GraphicDevice* _pDevice, UINT _slot)
 {
 	ID3D11ShaderResourceView* pSrvs[] = { SRV() };
-	_pDevice->Context()->PSSetShaderResources(_slot, 1, pSrvs);
+	_pDevice->Context().Raw()->PSSetShaderResources(_slot, 1, pSrvs);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

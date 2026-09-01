@@ -41,7 +41,7 @@
 #include "sgf/Graphics/SwapChain.h"
 #include "sgf/Graphics/DepthStencilSurface.h"
 #include "sgf/Graphics/GraphicDevice.h"
-#include "sgf/Graphics/Shader.h"
+#include "sgf/Graphics/VertexDeclaration.h"
 #include "sgf/Graphics/Vertex.h"
 #include "sgf/Graphics/Buffers.h"
 #include "sgf/Graphics/Texture.h"

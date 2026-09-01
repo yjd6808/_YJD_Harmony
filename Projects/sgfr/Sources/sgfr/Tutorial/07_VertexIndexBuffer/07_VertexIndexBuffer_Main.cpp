@@ -24,6 +24,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/07_VertexIndexBuffer/07_VertexIndexBuffer_Main.h"
 #include "sgfr/Tutorial/07_VertexIndexBuffer/07_VertexIndexBuffer_Function.h"
 
@@ -47,11 +48,28 @@ void VertexIndexBuffer_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
+
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	// 2. 정점 4개 (꼭짓점만!)
@@ -72,23 +90,24 @@ void VertexIndexBuffer_Main()
 
 	VertexBuffer vb;
 	IndexBuffer ib;
-	if (!vb.Create(&device, vertices, sizeof(VertexPC), 4) ||
+	if (!vb.Create(&device, vertices, 4, VertexPC::Decl()) ||
 		!ib.Create(&device, indices, 6))
 		{
 		jc::Console::WriteLine("버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
 	// 4. 셰이더 컴파일
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pLayoutDescs = VertexPC::LayoutDescs(&layoutCount);
 
-	Shader shader;
-	if (!shader.CompileFromString(&device, PassThroughShaderSource(), pLayoutDescs, layoutCount))
+	_u64 vsShader = device.Context().CreateVertexShader(PassThroughShaderSource());
+	_u64 psShader = device.Context().CreatePixelShader(PassThroughShaderSource());
+	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY)
 	{
 		jc::Console::WriteLine("셰이더 컴파일 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -107,19 +126,23 @@ void VertexIndexBuffer_Main()
 
 		device.BeginFrame(color::CORNFLOWER_BLUE);
 
-		vb.Bind(&device);
-		ib.Bind(&device);		// 인덱스 버퍼도 IA 단계에 묶는다.
-		shader.Bind(&device);
-		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		vb.Bind(device.Context());
+		ib.Bind(device.Context());		// 인덱스 버퍼도 IA 단계에 묶는다.
+		device.Context().SetVertexShader(vsShader);
+		device.Context().SetPixelShader(psShader);
+		{
+		}
+		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
 		// Draw 대신 DrawIndexed!
 		// "인덱스 6개를 0번부터 사용해 그려라. 정점 번호에 더할 값(BaseVertex)은 0"
-		device.Context()->DrawIndexed(6, 0, 0);
+		device.Context().DrawIndexed(6, 0, 0);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 6. 정리
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

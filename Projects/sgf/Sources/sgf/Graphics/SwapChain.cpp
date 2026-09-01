@@ -7,6 +7,7 @@
 
 #include "Core.h"
 #include "sgf/Graphics/SwapChain.h"
+#include "sgf/Graphics/GraphicContext.h"
 
 NS_SGF_BEGIN
 
@@ -75,17 +76,11 @@ void SwapChain::Present(bool _vsync)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 백버퍼 전체를 그리기 영역으로 설정
-void SwapChain::ApplyFullViewport(ID3D11DeviceContext* _pContext) const
+// 백버퍼 전체를 그리기 영역으로 설정 - GraphicContext 캐시를 통과한다
+void SwapChain::ApplyFullViewport(GraphicContext& _context) const
 {
-	D3D11_VIEWPORT viewport;
-	viewport.TopLeftX = 0.0f;
-	viewport.TopLeftY = 0.0f;
-	viewport.Width = static_cast<_f32>(width_);
-	viewport.Height = static_cast<_f32>(height_);
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
-	_pContext->RSSetViewports(1, &viewport);
+	Viewport viewport(0.0f, 0.0f, static_cast<_f32>(width_), static_cast<_f32>(height_));
+	_context.SetViewport(viewport);
 }
 
 NS_SGF_END

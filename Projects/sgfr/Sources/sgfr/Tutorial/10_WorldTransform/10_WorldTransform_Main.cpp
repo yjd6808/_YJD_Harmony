@@ -21,6 +21,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/10_WorldTransform/10_WorldTransform_Main.h"
 #include "sgfr/Tutorial/10_WorldTransform/10_WorldTransform_Function.h"
 
@@ -53,11 +54,28 @@ void WorldTransform_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
+
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	// 2. 큰 사각형 하나를 만들고, 행렬로 크기/위치를 바꿔가며 재활용한다.
@@ -81,27 +99,28 @@ void WorldTransform_Main()
 
 	VertexBuffer vbSun, vbEarth, vbMoon;
 	IndexBuffer ib;
-	if (!vbSun.Create(&device, sunVertices, sizeof(VertexPC), 4) ||
-		!vbEarth.Create(&device, earthVertices, sizeof(VertexPC), 4) ||
-		!vbMoon.Create(&device, moonVertices, sizeof(VertexPC), 4) ||
+	if (!vbSun.Create(&device, sunVertices, 4, VertexPC::Decl()) ||
+		!vbEarth.Create(&device, earthVertices, 4, VertexPC::Decl()) ||
+		!vbMoon.Create(&device, moonVertices, 4, VertexPC::Decl()) ||
 		!ib.Create(&device, indices, 6))
 		{
 		jc::Console::WriteLine("버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
 	// 3. 셰이더 + 상수 버퍼
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pLayoutDescs = VertexPC::LayoutDescs(&layoutCount);
 
-	Shader shader;
+	_u64 vsShader = device.Context().CreateVertexShader(TransformShaderSource());
+	_u64 psShader = device.Context().CreatePixelShader(TransformShaderSource());
 	ConstantBuffer<CbTransform> cbTransform;
-	if (!shader.CompileFromString(&device, TransformShaderSource(), pLayoutDescs, layoutCount) ||
+	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY ||
 		!cbTransform.Create(&device))
 		{
 		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -122,12 +141,15 @@ void WorldTransform_Main()
 	{
 		CbTransform cb = {};
 		cb.worldViewProj_ = _world * proj;	// 월드 다음 투영 (왼쪽이 먼저 적용)
-		cbTransform.UpdateAndBind(&device, cb, 0);
-		_vb.Bind(&device);
-		ib.Bind(&device);
-		shader.Bind(&device);
-		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		device.Context()->DrawIndexed(6, 0, 0);
+		cbTransform.UpdateAndBind(device.Context(), cb, 0);
+		_vb.Bind(device.Context());
+		ib.Bind(device.Context());
+		device.Context().SetVertexShader(vsShader);
+		device.Context().SetPixelShader(psShader);
+		{
+		}
+		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
+		device.Context().DrawIndexed(6, 0, 0);
 	};
 
 	jc::Console::WriteLine("태양 주위를 지구가, 지구 주위를 달이 돕니다. 모두 행렬 곱셈의 결과입니다!");
@@ -165,10 +187,11 @@ void WorldTransform_Main()
 		const mat4 moonWorld = mat4::Scale(0.08f, 0.08f, 1.0f) * moonOrbit * earthOrbit;
 		DrawQuad(vbMoon, moonWorld);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 6. 정리
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

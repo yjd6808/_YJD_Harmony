@@ -31,6 +31,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/27_ShadowMapping/27_ShadowMapping_Main.h"
 #include "sgfr/Tutorial/27_ShadowMapping/27_ShadowMapping_Function.h"
 
@@ -81,11 +82,28 @@ void ShadowMapping_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
+
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	// 2. 그림자 맵: 색 없이 깊이만 담는 1024x1024 렌더 타깃
@@ -94,6 +112,7 @@ void ShadowMapping_Main()
 	if (!shadowMap.CreateDepthOnly(&device, 1024, 1024))
 	{
 		jc::Console::WriteLine("그림자 맵 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -112,33 +131,31 @@ void ShadowMapping_Main()
 	IndexBuffer planeIb;
 	VertexBuffer cubeVb;
 	IndexBuffer cubeIb;
-	if (!planeVb.Create(&device, planeVertices, sizeof(VertexPNT), 4) ||
+	if (!planeVb.Create(&device, planeVertices, 4, VertexPNT::Decl()) ||
 		!planeIb.Create(&device, planeIndices, 6) ||
-		!cubeVb.Create(&device, cubeVertices, sizeof(VertexPNT), 24) ||
+		!cubeVb.Create(&device, cubeVertices, 24, VertexPNT::Decl()) ||
 		!cubeIb.Create(&device, cubeIndices, 36))
 		{
 		jc::Console::WriteLine("버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
 	// 4. 셰이더 2종(깊이 전용/장면용) + 상수 버퍼 3종
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pLayout = VertexPNT::LayoutDescs(&layoutCount);
 
-	Shader depthShader;
-	Shader sceneShader;
+	_u64 vsDepthShader = device.Context().CreateVertexShader(ShadowDepthShaderSource());
+	_u64 psDepthShader = device.Context().CreatePixelShader(ShadowDepthShaderSource());
+	_u64 vsSceneShader = device.Context().CreateVertexShader(ShadowSceneShaderSource());
+	_u64 psSceneShader = device.Context().CreatePixelShader(ShadowSceneShaderSource());
 	ConstantBuffer<CbDepth> cbDepth;
 	ConstantBuffer<CbScene> cbScene;
 	ConstantBuffer<CbLight> cbLight;
-	if (!depthShader.CompileFromString(&device, ShadowDepthShaderSource(), pLayout, layoutCount) ||
-		!sceneShader.CompileFromString(&device, ShadowSceneShaderSource(), pLayout, layoutCount) ||
-		!cbDepth.Create(&device) ||
-		!cbScene.Create(&device) ||
-		!cbLight.Create(&device))
+	if (vsDepthShader == INVALID_RESOURCE_KEY || psDepthShader == INVALID_RESOURCE_KEY || vsSceneShader == INVALID_RESOURCE_KEY || psSceneShader == INVALID_RESOURCE_KEY || !cbDepth.Create(&device) || !cbScene.Create(&device) || !cbLight.Create(&device))
 		{
 		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -209,33 +226,39 @@ void ShadowMapping_Main()
 		device.SetRenderTarget(&shadowMap);
 		shadowMap.Clear(&device, color::BLACK);	// 깊이 전용이므로 깊이만 1.0으로 초기화된다
 
-		depthShader.Bind(&device);
-		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		device.Context().SetVertexShader(vsDepthShader);
+		device.Context().SetPixelShader(psDepthShader);
+		{
+		}
+		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
 		CbDepth cbD;
 
 		// 바닥도 깊이에 포함 (바닥 근처에 다른 물체가 있다면 서로 그림자를 주고받을 수 있게)
 		cbD.lightWvp_ = planeWorld * lightViewProj;
-		cbDepth.UpdateAndBind(&device, cbD, 0);
-		planeVb.Bind(&device);
-		planeIb.Bind(&device);
-		device.Context()->DrawIndexed(6, 0, 0);
+		cbDepth.UpdateAndBind(device.Context(), cbD, 0);
+		planeVb.Bind(device.Context());
+		planeIb.Bind(device.Context());
+		device.Context().DrawIndexed(6, 0, 0);
 
 		cbD.lightWvp_ = cubeWorld * lightViewProj;
-		cbDepth.UpdateAndBind(&device, cbD, 0);
-		cubeVb.Bind(&device);
-		cubeIb.Bind(&device);
-		device.Context()->DrawIndexed(36, 0, 0);
+		cbDepth.UpdateAndBind(device.Context(), cbD, 0);
+		cubeVb.Bind(device.Context());
+		cubeIb.Bind(device.Context());
+		device.Context().DrawIndexed(36, 0, 0);
 
 		// ---- 패스 2: 카메라 시점으로 그리며 그림자 판정 ----
 		// 셰이더가 화면 왼쪽 절반은 그림자 판정을 건너뛰어 Before/After를 한 화면에 보여준다.
 		device.SetRenderTarget(nullptr);	// 백버퍼 복귀 (그림자 맵 SRV 바인딩 준비)
 
 		// 그림자 맵은 이웃 픽셀과 섞이면 깊이 값이 망가지므로 Point + Clamp 샘플러 사용
-		device.SetSampler(GraphicDevice::SamplerFilter::fmPoint, GraphicDevice::SamplerAddress::amClamp, 0);
+		device.Context().SetSampler(FilterMode::fmPoint, AddressMode::amClamp, 0);
 		shadowMap.BindAsTexture(&device, 0);
 
-		sceneShader.Bind(&device);
+		device.Context().SetVertexShader(vsSceneShader);
+		device.Context().SetPixelShader(psSceneShader);
+		{
+		}
 
 		CbLight cbL;
 		cbL.lightDir_ = lightDir;
@@ -249,28 +272,29 @@ void ShadowMapping_Main()
 		// 바닥 (연한 회색)
 		cbS.world_ = planeWorld;
 		cbS.wvp_ = planeWorld * view * proj;
-		cbScene.UpdateAndBind(&device, cbS, 0);
+		cbScene.UpdateAndBind(device.Context(), cbS, 0);
 		cbL.baseColor_ = vec4(0.75f, 0.75f, 0.78f, 1.0f);
-		cbLight.UpdateAndBind(&device, cbL, 1);
-		planeVb.Bind(&device);
-		planeIb.Bind(&device);
-		device.Context()->DrawIndexed(6, 0, 0);
+		cbLight.UpdateAndBind(device.Context(), cbL, 1);
+		planeVb.Bind(device.Context());
+		planeIb.Bind(device.Context());
+		device.Context().DrawIndexed(6, 0, 0);
 
 		// 큐브 (주황색)
 		cbS.world_ = cubeWorld;
 		cbS.wvp_ = cubeWorld * view * proj;
-		cbScene.UpdateAndBind(&device, cbS, 0);
+		cbScene.UpdateAndBind(device.Context(), cbS, 0);
 		cbL.baseColor_ = vec4(0.9f, 0.5f, 0.2f, 1.0f);
-		cbLight.UpdateAndBind(&device, cbL, 1);
-		cubeVb.Bind(&device);
-		cubeIb.Bind(&device);
-		device.Context()->DrawIndexed(36, 0, 0);
+		cbLight.UpdateAndBind(device.Context(), cbL, 1);
+		cubeVb.Bind(device.Context());
+		cubeIb.Bind(device.Context());
+		device.Context().DrawIndexed(36, 0, 0);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 8. 정리
 	shadowMap.Destroy();
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

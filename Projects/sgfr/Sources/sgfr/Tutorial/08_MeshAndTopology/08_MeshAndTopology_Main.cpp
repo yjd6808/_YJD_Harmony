@@ -21,6 +21,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/08_MeshAndTopology/08_MeshAndTopology_Main.h"
 
 using namespace sgf;
@@ -76,14 +77,31 @@ void MeshAndTopology_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+		window.Destroy();
+		return;
+	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
-	GraphicContext& context = device.GetContext();
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
+	device.Finalize();
+	window.Destroy();
+	return;
+	}
+
+	GraphicContext& context = device.Context();
 
 	// 2. 셰이더 준비 (VertexShader/PixelShader가 별도 클래스다)
 	VertexShader vs;
@@ -92,6 +110,7 @@ void MeshAndTopology_Main()
 		!ps.InitializeFromSource(&device, PASSTHROUGH_SHADER_SOURCE))
 	{
 		jc::Console::WriteLine("셰이더 컴파일 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -112,13 +131,12 @@ void MeshAndTopology_Main()
 	}
 
 	// 4. 메시 생성: 정점버퍼 + 레이아웃 + 토폴로지를 한 덩어리로
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pLayoutDescs = VertexPTC::LayoutDescs(&layoutCount);
 
 	Mesh mesh;
-	if (!mesh.Initialize(&device, vertices, sizeof(VertexPTC), 6, pLayoutDescs, layoutCount, &vs))
+	if (!mesh.Initialize(&device, vertices, 6, VertexPTC::Decl()))
 	{
 		jc::Console::WriteLine("메시 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -156,13 +174,14 @@ void MeshAndTopology_Main()
 		context.SetPrimitiveTopology(topology);
 		mesh.Draw(context);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 6. 정리: 생성의 역순
 	mesh.Finalize();
 	ps.Finalize();
 	vs.Finalize();
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

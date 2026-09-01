@@ -74,8 +74,8 @@
     <ClCompile Include="..\Sources\jc\Random.cpp" />
     <ClCompile Include="..\Sources\jc\Memory.cpp" />
     <ClCompile Include="..\Sources\jc\Time.cpp" />
-    <ClCompile Include="..\Sources\jc\color.cpp" />
-    <ClCompile Include="..\Sources\jc\color.inl" />
+    <ClCompile Include="..\Sources\jc\Color.cpp" />
+    <ClCompile Include="..\Sources\jc\Color.inl" />
     <ClCompile Include="..\Sources\jc\Primitives\String.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>

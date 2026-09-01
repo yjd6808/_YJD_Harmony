@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 2:50:00 PM
  * =====================
@@ -31,6 +31,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/30_SpriteAnimation/30_SpriteAnimation_Main.h"
 #include "sgfr/Tutorial/30_SpriteAnimation/30_SpriteAnimation_Function.h"
 #include "sgfr/Common/TutorialCommon.h"	// 셰이더 공용 사용
@@ -61,11 +62,28 @@ void SpriteAnimation_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
 		window.Destroy();
 		return;
+	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
+
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
+	device.Finalize();
+	window.Destroy();
+	return;
 	}
 
 	// 2. 스프라이트 시트 텍스처: 256x256, 4x4 = 16프레임을 코드로 생성
@@ -79,6 +97,7 @@ void SpriteAnimation_Main()
 	if (!bTextureOk)
 	{
 		jc::Console::WriteLine("스프라이트 시트 텍스처 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -94,23 +113,23 @@ void SpriteAnimation_Main()
 
 	VertexBuffer quadVb;
 	IndexBuffer quadIb;
-	if (!quadVb.Create(&device, quadVertices, sizeof(VertexPTC), 4, ResourceUsage::ruDynamic) ||
+	if (!quadVb.Create(&device, quadVertices, 4, VertexPTC::Decl()) ||
 		!quadIb.Create(&device, quadIndices, 6))
 		{
 		jc::Console::WriteLine("버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
 	// 4. 셰이더
-	UINT layoutCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pLayout = VertexPTC::LayoutDescs(&layoutCount);
-
-	Shader spriteShader;
-	if (!spriteShader.CompileFromString(&device, TextureShaderSource(), pLayout, layoutCount))
+	_u64 vsSprite = device.Context().CreateVertexShader(TextureShaderSource());
+	_u64 psSprite = device.Context().CreatePixelShader(TextureShaderSource());
+	if (vsSprite == INVALID_RESOURCE_KEY || psSprite == INVALID_RESOURCE_KEY)
 	{
 		jc::Console::WriteLine("셰이더 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -132,9 +151,9 @@ void SpriteAnimation_Main()
 	_f32 elapsed = 0.0f;
 
 	// 알파 블렌드: 캐릭터 주변의 투명 픽셀이 배경과 자연스럽게 섞이도록
-	device.SetBlendMode(GraphicDevice::BlendMode::bmAlpha);
+	device.Context().SetBlend(BlendMode::bmAlpha);
 	// 도트 느낌을 살리기 위해 Point 샘플러 (픽셀아트 게임의 핵심 세팅!)
-	device.SetSampler(GraphicDevice::SamplerFilter::fmPoint, GraphicDevice::SamplerAddress::amClamp, 0);
+	device.Context().SetSampler(FilterMode::fmPoint, AddressMode::amClamp, 0);
 
 	// 6. 렌더 루프
 	while (window.PumpMessage())
@@ -152,8 +171,8 @@ void SpriteAnimation_Main()
 		{
 			if (input.IsKeyPressed('1' + k))
 			{
-				easingMode = k;
-				bChanged = true;
+			easingMode = k;
+			bChanged = true;
 			}
 		}
 		if (input.IsKeyPressed(VK_UP))
@@ -198,29 +217,33 @@ void SpriteAnimation_Main()
 		const vec2 halfSize = vec2(0.25f / window.AspectRatio(), 0.25f);
 
 		device.BeginFrame(color(0x1A, 0x1A, 0x24, 0xFF));
-		device.Context()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
-		sheetTexture.Bind(&device, 0);
-		spriteShader.Bind(&device);
-		quadIb.Bind(&device);
+		sheetTexture.Bind(device.Context(), 0);
+		device.Context().SetVertexShader(vsSprite);
+		device.Context().SetPixelShader(psSprite);
+		{
+		}
+		quadIb.Bind(device.Context());
 
 		// --- [Before] 지단 (y=+0.4): 항상 선형 이동 = 기준선 ---
 		FillSpriteQuad(quadVertices, vec2(posXBefore, +0.4f), halfSize, uvOffset, uvScale);
-		quadVb.Update(&device, quadVertices, 4);
-		quadVb.Bind(&device);
-		device.Context()->DrawIndexed(6, 0, 0);
+		quadVb.Update(device.Context(), quadVertices, 4);
+		quadVb.Bind(device.Context());
+		device.Context().DrawIndexed(6, 0, 0);
 
 		// --- [After] 아랫줄 (y=-0.4): 선택한 이징 적용 ---
 		FillSpriteQuad(quadVertices, vec2(posXAfter, -0.4f), halfSize, uvOffset, uvScale);
-		quadVb.Update(&device, quadVertices, 4);
-		quadVb.Bind(&device);
-		device.Context()->DrawIndexed(6, 0, 0);
+		quadVb.Update(device.Context(), quadVertices, 4);
+		quadVb.Bind(device.Context());
+		device.Context().DrawIndexed(6, 0, 0);
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 7. 정리 (다음 튜토리얼을 위해 불투명 블렌드로 복원)
-	device.SetBlendMode(GraphicDevice::BlendMode::bmNone);
+	device.Context().SetBlend(BlendMode::bmNone);
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

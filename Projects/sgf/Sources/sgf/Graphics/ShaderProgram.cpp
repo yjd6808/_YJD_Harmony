@@ -8,8 +8,11 @@
 #include "Core.h"
 #include "sgf/Graphics/ShaderProgram.h"
 #include "sgf/Graphics/GraphicDevice.h"
+#include "sgf/Graphics/VertexDeclaration.h"
+#include "jc/Hasher.h"
 
 #include <cstdio>
+#include <cstring>
 
 NS_SGF_BEGIN
 
@@ -78,18 +81,18 @@ namespace
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 VertexShader::VertexShader()
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 VertexShader::~VertexShader()
 {
 	Finalize();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 bool VertexShader::InitializeFromSource(GraphicDevice* _pDevice, const jc::String& _szSource, const jc::String& _szEntry)
 {
 	Finalize();
@@ -105,10 +108,18 @@ bool VertexShader::InitializeFromSource(GraphicDevice* _pDevice, const jc::Strin
 		pBytecode_.Reset();
 		return false;
 	}
+
+	// 입력 시그니처 추출 — 실패 시 리소스 해제 후 실패 반환
+	if (!_BuildInputSignature())
+	{
+		pShader_.Reset();
+		pBytecode_.Reset();
+		return false;
+	}
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 bool VertexShader::InitializeFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePath, const jc::String& _szEntry)
 {
 	String source = ReadTextFile(_szFilePath);
@@ -131,6 +142,63 @@ void VertexShader::Finalize()
 {
 	pShader_.Reset();
 	pBytecode_.Reset();
+	inputSignature_.Clear();
+	signatureHash_ = 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+bool VertexShader::_BuildInputSignature()
+{
+	inputSignature_.Clear();
+	signatureHash_ = 0;
+
+	if (pBytecode_ == nullptr)
+	{
+		return false;
+	}
+
+	SgfComPtr<ID3D11ShaderReflection> pReflect;
+	HRESULT hr = D3DReflect(pBytecode_->GetBufferPointer(), pBytecode_->GetBufferSize(),
+		IID_PPV_ARGS(pReflect.GetAddressOf()));
+	if (FAILED(hr))
+	{
+		return false;
+	}
+
+	D3D11_SHADER_DESC desc = {};
+	pReflect->GetDesc(&desc);
+
+	jc::HashBuilder<jc::HashAlgorithm::Fnv1a64> builder;
+	for (UINT i = 0; i < desc.InputParameters; ++i)
+	{
+		D3D11_SIGNATURE_PARAMETER_DESC param = {};
+		pReflect->GetInputParameterDesc(i, &param);
+
+		// SV_* 시스템 값은 IA 입력이 아니므로 제외
+		if (param.SystemValueType != D3D_NAME_UNDEFINED)
+		{
+			continue;
+		}
+
+		SignatureElement element = {};
+		strncpy_s(element.semanticName_, param.SemanticName, _TRUNCATE);
+		element.semanticIndex_ = param.SemanticIndex;
+		inputSignature_.PushBack(element);
+
+		// 시맨틱 이름 + 인덱스로 해시 누적 — Hasher<->HashBuilder로 Fnv1a64 통일
+		builder.AppendString(element.semanticName_, strlen(element.semanticName_));
+		builder.AppendIntegral(element.semanticIndex_);
+
+		// 추가 확산 (per-element, 기존 로직 유지)
+		{
+			_u64 h = builder.Digest();
+			h ^= (h >> 33);
+			h *= 0xff51afd7ed558ccdull;
+			builder.Reset(h);
+		}
+	}
+	signatureHash_ = builder.Digest();
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -160,7 +228,7 @@ bool PixelShader::InitializeFromSource(GraphicDevice* _pDevice, const jc::String
 		pBytecode->GetBufferPointer(), pBytecode->GetBufferSize(), nullptr, pShader_.GetAddressOf()));
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 bool PixelShader::InitializeFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePath, const jc::String& _szEntry)
 {
 	String source = ReadTextFile(_szFilePath);
@@ -182,37 +250,6 @@ bool PixelShader::InitializeFromFile(GraphicDevice* _pDevice, const jc::String& 
 void PixelShader::Finalize()
 {
 	pShader_.Reset();
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-InputLayout::InputLayout()
-{
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-InputLayout::~InputLayout()
-{
-	Finalize();
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-bool InputLayout::Initialize(GraphicDevice* _pDevice, const D3D11_INPUT_ELEMENT_DESC* _pDescs, UINT _count, VertexShader* _pVs)
-{
-	jc_assert_msg(_pVs != nullptr && _pVs->Bytecode() != nullptr, "입력 레이아웃은 컴파일된 버텍스 셰이더가 필요합니다.");
-
-	Finalize();
-
-	ID3DBlob* pBytecode = _pVs->Bytecode();
-	return SUCCEEDED(_pDevice->Device()->CreateInputLayout(
-		_pDescs, _count,
-		pBytecode->GetBufferPointer(), pBytecode->GetBufferSize(),
-		pLayout_.GetAddressOf()));
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void InputLayout::Finalize()
-{
-	pLayout_.Reset();
 }
 
 NS_SGF_END

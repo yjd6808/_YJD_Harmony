@@ -19,7 +19,7 @@
 #include "sgf/Namespace.h"
 
 NS_SGF_BEGIN
-
+class GraphicContext;
 class SwapChain
 {
 public:
@@ -34,11 +34,11 @@ public:
 	void Finalize();
 
 	// 백버퍼를 화면에 표시한다.
-	// @param _vsync: true면 모니터 주사율에 맞춰 대기 (화면 윋어짐 방지)
+	// @param _vsync: true면 모니터 주사율에 맞춰 대기 (화면 찢어짐 방지)
 	void Present(bool _vsync);
 
-	// 백버퍼 전체 크기의 뷰포트(그리기 영역)를 설정한다.
-	void ApplyFullViewport(ID3D11DeviceContext* _pContext) const;
+	// 백버퍼 전체 크기의 뷰포트(그리기 영역)를 설정한다. 캐시를 통과한다.
+	void ApplyFullViewport(GraphicContext& _context) const;
 
 	ID3D11RenderTargetView* RTV() const { return pRenderTargetView_.Get(); }
 	_s32 Width() const { return width_; }

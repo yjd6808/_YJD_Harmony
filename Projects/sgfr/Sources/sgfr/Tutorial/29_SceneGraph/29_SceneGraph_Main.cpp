@@ -47,11 +47,11 @@ namespace
 		{
 			_LogInfo_("[29] SolarSystemScene::OnEnter 시작");
 			if (!CreateCircleTexture(&g_cDevice, &sunTexture_, 128, color(0xFF, 0xD9, 0x33, 0xFF)) ||
-				!CreateCircleTexture(&g_cDevice, &earthTexture_, 64, color(0x4D, 0x8C, 0xFF, 0xFF)) ||
-				!CreateCircleTexture(&g_cDevice, &moonTexture_, 32, color(0xCC, 0xCC, 0xCC, 0xFF)))
+			!CreateCircleTexture(&g_cDevice, &earthTexture_, 64, color(0x4D, 0x8C, 0xFF, 0xFF)) ||
+			!CreateCircleTexture(&g_cDevice, &moonTexture_, 32, color(0xCC, 0xCC, 0xCC, 0xFF)))
 			{
-				jc::Console::WriteLine("원형 텍스처 생성 실패!");
-				return;
+			jc::Console::WriteLine("원형 텍스처 생성 실패!");
+			return;
 			}
 
 			GetCamera2D()->SetOrthographic2D(VIEW_WIDTH, VIEW_HEIGHT);
@@ -73,19 +73,19 @@ namespace
 			// SPACE: 효과음과 함께 다음 씬으로 교체
 			if (g_cInput.IsKeyPressed(VK_SPACE))
 			{
-				g_cSound.PlayTone(660, 120, 0.5f);
-				g_cDirector.ReplaceScene(CreateBouncingBallScene());
+			g_cSound.PlayTone(660, 120, 0.5f);
+			g_cDirector.ReplaceScene(CreateBouncingBallScene());
 			}
 
 			// M: 서브 윈도우를 열고 그 창에 "통통 튀는 공" 씬을 띄운다. (멀티 윈도우)
 			// 메인 창과 서브 창이 각자 다른 씬을 동시에 그리는 것을 눈으로 확인하자.
 			if (g_cInput.IsKeyPressed('M'))
 			{
-				Window* pSub = g_cApp.CreateSubWindow("서브 윈도우", 480, 360);
-				if (pSub != nullptr)
-				{
-					g_cDirector.RunScene(CreateBouncingBallScene(), pSub);
-				}
+			Window* pSub = g_cApp.CreateSubWindow("서브 윈도우", 480, 360);
+			if (pSub != nullptr)
+			{
+				g_cDirector.RunScene(CreateBouncingBallScene(), pSub);
+			}
 			}
 		}
 
@@ -101,11 +101,11 @@ namespace
 			const _f32 moonOrbit = 55.0f;
 
 			const vec2 earthPos(
-				sunPos.x + cosf(earthAngle) * earthOrbit,
-				sunPos.y + sinf(earthAngle) * earthOrbit);
+			sunPos.x + cosf(earthAngle) * earthOrbit,
+			sunPos.y + sinf(earthAngle) * earthOrbit);
 			const vec2 moonPos(
-				earthPos.x + cosf(moonAngle) * moonOrbit,
-				earthPos.y + sinf(moonAngle) * moonOrbit);
+			earthPos.x + cosf(moonAngle) * moonOrbit,
+			earthPos.y + sinf(moonAngle) * moonOrbit);
 
 			// 궤도선: 짧은 선분 48개로 원을 그린다.
 			DrawOrbit(sunPos, earthOrbit, color(0x4D, 0x4D, 0x66, 0xFF));
@@ -130,12 +130,12 @@ namespace
 			constexpr _s32 SEGMENTS = 48;
 			for (_s32 i = 0; i < SEGMENTS; ++i)
 			{
-				const _f32 a0 = jc_math_pi2 * i / SEGMENTS;
-				const _f32 a1 = jc_math_pi2 * (i + 1) / SEGMENTS;
-				g_cRenderer2D.DrawLine(
-					vec2(_center.x + cosf(a0) * _radius, _center.y + sinf(a0) * _radius),
-					vec2(_center.x + cosf(a1) * _radius, _center.y + sinf(a1) * _radius),
-					_color);
+			const _f32 a0 = jc_math_pi2 * i / SEGMENTS;
+			const _f32 a1 = jc_math_pi2 * (i + 1) / SEGMENTS;
+			g_cRenderer2D.DrawLine(
+				vec2(_center.x + cosf(a0) * _radius, _center.y + sinf(a0) * _radius),
+				vec2(_center.x + cosf(a1) * _radius, _center.y + sinf(a1) * _radius),
+				_color);
 			}
 		}
 
@@ -167,20 +167,20 @@ namespace
 			// 공마다 색상을 달리해 텍스처를 만든다.
 			for (_s32 i = 0; i < BALL_COUNT; ++i)
 			{
-				const _f32 t = static_cast<_f32>(i) / BALL_COUNT;
-				const color ballColor = color::FromFloat(0.4f + 0.6f * t, 0.9f - 0.6f * t, 0.5f + 0.4f * sinf(t * jc_math_pi2), 1.0f);
-				if (!CreateCircleTexture(&g_cDevice, &textures_[i], 64, ballColor))
-				{
-				jc::Console::WriteLine("공 텍스처 생성 실패!");
-					return;
-				}
+			const _f32 t = static_cast<_f32>(i) / BALL_COUNT;
+			const color ballColor = color::FromFloat(0.4f + 0.6f * t, 0.9f - 0.6f * t, 0.5f + 0.4f * sinf(t * jc_math_pi2), 1.0f);
+			if (!CreateCircleTexture(&g_cDevice, &textures_[i], 64, ballColor))
+			{
+			jc::Console::WriteLine("공 텍스처 생성 실패!");
+				return;
+			}
 
-				// 위치는 가로로 늘어놓고, 속도는 공마다 조금씩 다르게 준다.
-				positionsX_[i] = 100.0f + 75.0f * i;
-				positionsY_[i] = 150.0f + 40.0f * (i % 4);
-				velocitiesX_[i] = 120.0f + 30.0f * i;
-				velocitiesY_[i] = 160.0f + 25.0f * ((i * 3) % 5);
-				radii_[i] = 14.0f + 3.0f * (i % 4);
+			// 위치는 가로로 늘어놓고, 속도는 공마다 조금씩 다르게 준다.
+			positionsX_[i] = 100.0f + 75.0f * i;
+			positionsY_[i] = 150.0f + 40.0f * (i % 4);
+			velocitiesX_[i] = 120.0f + 30.0f * i;
+			velocitiesY_[i] = 160.0f + 25.0f * ((i * 3) % 5);
+			radii_[i] = 14.0f + 3.0f * (i % 4);
 			}
 		}
 
@@ -191,44 +191,44 @@ namespace
 
 			for (_s32 i = 0; i < BALL_COUNT; ++i)
 			{
-				positionsX_[i] += velocitiesX_[i] * dt;
-				positionsY_[i] += velocitiesY_[i] * dt;
+			positionsX_[i] += velocitiesX_[i] * dt;
+			positionsY_[i] += velocitiesY_[i] * dt;
 
-				bool bBounced = false;
+			bool bBounced = false;
 
-				// 좌우 벽 충돌: 위치를 벽 안으로 되돌리고 속도 부호를 뒤집는다.
-				if (positionsX_[i] < radii_[i])
-				{
-					positionsX_[i] = radii_[i];
-					velocitiesX_[i] = -velocitiesX_[i];
-					bBounced = true;
-				}
-				else if (positionsX_[i] > VIEW_WIDTH - radii_[i])
-				{
-					positionsX_[i] = VIEW_WIDTH - radii_[i];
-					velocitiesX_[i] = -velocitiesX_[i];
-					bBounced = true;
-				}
+			// 좌우 벽 충돌: 위치를 벽 안으로 되돌리고 속도 부호를 뒤집는다.
+			if (positionsX_[i] < radii_[i])
+			{
+				positionsX_[i] = radii_[i];
+				velocitiesX_[i] = -velocitiesX_[i];
+				bBounced = true;
+			}
+			else if (positionsX_[i] > VIEW_WIDTH - radii_[i])
+			{
+				positionsX_[i] = VIEW_WIDTH - radii_[i];
+				velocitiesX_[i] = -velocitiesX_[i];
+				bBounced = true;
+			}
 
-				// 상하 벽 충돌
-				if (positionsY_[i] < radii_[i])
-				{
-					positionsY_[i] = radii_[i];
-					velocitiesY_[i] = -velocitiesY_[i];
-					bBounced = true;
-				}
-				else if (positionsY_[i] > VIEW_HEIGHT - radii_[i])
-				{
-					positionsY_[i] = VIEW_HEIGHT - radii_[i];
-					velocitiesY_[i] = -velocitiesY_[i];
-					bBounced = true;
-				}
+			// 상하 벽 충돌
+			if (positionsY_[i] < radii_[i])
+			{
+				positionsY_[i] = radii_[i];
+				velocitiesY_[i] = -velocitiesY_[i];
+				bBounced = true;
+			}
+			else if (positionsY_[i] > VIEW_HEIGHT - radii_[i])
+			{
+				positionsY_[i] = VIEW_HEIGHT - radii_[i];
+				velocitiesY_[i] = -velocitiesY_[i];
+				bBounced = true;
+			}
 
-				// 반사 순간 효과음: 공마다 음을 다르게 해 누가 부딪혔는지 귀로도 구분된다.
-				if (bBounced)
-				{
-					g_cSound.PlayTone(440 + i * 40, 60, 0.35f);
-				}
+			// 반사 순간 효과음: 공마다 음을 다르게 해 누가 부딪혔는지 귀로도 구분된다.
+			if (bBounced)
+			{
+				g_cSound.PlayTone(440 + i * 40, 60, 0.35f);
+			}
 			}
 
 			// 방향키/휠: 카메라 조작 (줌해서 공 하나를 따라가보자)
@@ -237,8 +237,8 @@ namespace
 			// SPACE: 태양계 씬으로 복귀
 			if (g_cInput.IsKeyPressed(VK_SPACE))
 			{
-				g_cSound.PlayTone(520, 120, 0.5f);
-				g_cDirector.ReplaceScene(CreateSolarSystemScene());
+			g_cSound.PlayTone(520, 120, 0.5f);
+			g_cDirector.ReplaceScene(CreateSolarSystemScene());
 			}
 		}
 
@@ -254,9 +254,9 @@ namespace
 
 			for (_s32 i = 0; i < BALL_COUNT; ++i)
 			{
-				const vec2 pos(positionsX_[i], positionsY_[i]);
-				const _f32 diameter = radii_[i] * 2.0f;
-				g_cRenderer2D.DrawSprite(&textures_[i], pos, vec2(diameter, diameter));
+			const vec2 pos(positionsX_[i], positionsY_[i]);
+			const _f32 diameter = radii_[i] * 2.0f;
+			g_cRenderer2D.DrawSprite(&textures_[i], pos, vec2(diameter, diameter));
 			}
 		}
 
@@ -304,7 +304,7 @@ namespace
 		{
 			if (g_cInput.IsKeyPressed(VK_ESCAPE))
 			{
-				g_cWindow.Destroy();
+			g_cWindow.Destroy();
 			}
 		}
 	};

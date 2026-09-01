@@ -136,7 +136,7 @@ protected:
 	////////////////////////////////////////////////////////////////////////////////////////
 	// BatchRenderer 훅 구현
 	virtual const char* ShaderSource() const override;
-	virtual const D3D11_INPUT_ELEMENT_DESC* VertexLayout(UINT* _outCount) const override;
+	virtual const VertexDeclaration* VertexDecl() const override;
 	virtual bool CreateBatchResources(GraphicDevice* _pDevice) override;
 	virtual void OnBegin() override;
 
@@ -144,7 +144,7 @@ private:
 	// 하나의 동적 버퍼를 GPU로 복사해 한 번의 DrawCall로 그린다.
 	// (FlushTriangles/FlushLines의 공통 헬퍼)
 	void FlushBatch(VertexBuffer& _vertexBuffer, jc::Vector<VertexPC>& _vertices,
-		D3D11_PRIMITIVE_TOPOLOGY _topology);
+		PrimitiveTopology _topology);
 
 private:
 	VertexBuffer triangleVb_;					// 삼각형용 동적 정점 버퍼

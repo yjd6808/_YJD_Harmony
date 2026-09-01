@@ -13,6 +13,7 @@
 #pragma once
 
 #include "jc/Math.h"
+#include "sgf/Graphics/VertexDeclaration.h"
 
 NS_SGF_BEGIN
 
@@ -24,16 +25,16 @@ struct VertexPC
 	vec3 position_;		// 로컬 좌표계 위치
 	color color_;		// 정점 색상 (삼각형 내부는 자동 보간됨)
 
-	// 이 구조체의 메모리 배치를 GPU에게 알려주는 설명서
-	// { 시맨틱이름, 시맨틱번호, 형식, 입력슬롯, 바이트오프셋, 입력분류, 인스턴스간격 }
-	static const D3D11_INPUT_ELEMENT_DESC* LayoutDescs(UINT* _pOutCount)
+	// 메모리 배치 선언 — 오프셋은 자동 누적 (하드코딩 제거)
+	static const VertexDeclaration* Decl()
 	{
-		static const D3D11_INPUT_ELEMENT_DESC descs[] = {
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR",    0, DXGI_FORMAT_R8G8B8A8_UNORM,   0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		static const VertexElement ELEMENTS[] =
+		{
+			{ VertexSemantic::vsPosition, 0, VertexElementFormat::vefFloat3 },
+			{ VertexSemantic::vsColor, 0, VertexElementFormat::vefColor32 },
 		};
-		*_pOutCount = _countof(descs);
-		return descs;
+		static const VertexDeclaration* s_pDecl = VertexDeclaration::GetOrCreate(ELEMENTS);
+		return s_pDecl;
 	}
 };
 
@@ -47,16 +48,16 @@ struct VertexPTC
 	vec2 uv_;			// 텍스처 좌표
 	color color_;		// 색상 틴트 (흰색이면 원본 그대로)
 
-	// 메모리 배치 설명서: vec3(12바이트) -> vec2(8바이트) -> color(4바이트)
-	static const D3D11_INPUT_ELEMENT_DESC* LayoutDescs(UINT* _pOutCount)
+	static const VertexDeclaration* Decl()
 	{
-		static const D3D11_INPUT_ELEMENT_DESC descs[] = {
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR",    0, DXGI_FORMAT_R8G8B8A8_UNORM,   0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		static const VertexElement ELEMENTS[] =
+		{
+			{ VertexSemantic::vsPosition, 0, VertexElementFormat::vefFloat3 },
+			{ VertexSemantic::vsTexCoord, 0, VertexElementFormat::vefFloat2 },
+			{ VertexSemantic::vsColor, 0, VertexElementFormat::vefColor32 },
 		};
-		*_pOutCount = _countof(descs);
-		return descs;
+		static const VertexDeclaration* s_pDecl = VertexDeclaration::GetOrCreate(ELEMENTS);
+		return s_pDecl;
 	}
 };
 
@@ -70,16 +71,16 @@ struct VertexPNT
 	vec3 normal_;		// 법선 벡터
 	vec2 uv_;			// 텍스처 좌표
 
-	// 메모리 배치 설명서: vec3(12) -> vec3(12) -> vec2(8)
-	static const D3D11_INPUT_ELEMENT_DESC* LayoutDescs(UINT* _pOutCount)
+	static const VertexDeclaration* Decl()
 	{
-		static const D3D11_INPUT_ELEMENT_DESC descs[] = {
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		static const VertexElement ELEMENTS[] =
+		{
+			{ VertexSemantic::vsPosition, 0, VertexElementFormat::vefFloat3 },
+			{ VertexSemantic::vsNormal, 0, VertexElementFormat::vefFloat3 },
+			{ VertexSemantic::vsTexCoord, 0, VertexElementFormat::vefFloat2 },
 		};
-		*_pOutCount = _countof(descs);
-		return descs;
+		static const VertexDeclaration* s_pDecl = VertexDeclaration::GetOrCreate(ELEMENTS);
+		return s_pDecl;
 	}
 };
 

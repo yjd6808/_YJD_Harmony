@@ -47,23 +47,14 @@ public:
 	// 깊이 상태 (dmDisabled/dmReadWrite/dmReadOnly)
 	ID3D11DepthStencilState* GetDepthState(DepthMode _mode);
 
-	// [하위 호환] true=dmReadWrite, false=dmDisabled
-	ID3D11DepthStencilState* GetDepthState(bool _enable);
-
 	// 래스터라이저 상태 (컬링 + 채우기 + 앞면 판정 조합)
 	ID3D11RasterizerState* GetRasterizerState(
 		CullMode _cull,
 		FillMode _fill = FillMode::fmSolid,
 		FrontFace _frontFace = FrontFace::ffClockwise);
 
-	// [하위 호환] 와이어프레임 여부 + 컬링
-	ID3D11RasterizerState* GetRasterizerState(bool _wireframe, CullMode _cull);
-
 	// 샘플러 상태 (U/V 주소 모드 분리 + Anisotropic/Border 지원)
 	ID3D11SamplerState* GetSamplerState(FilterMode _filter, AddressMode _addressU, AddressMode _addressV);
-
-	// [하위 호환] U/V 동일 주소 모드
-	ID3D11SamplerState* GetSamplerState(FilterMode _filter, AddressMode _address);
 
 private:
 	ID3D11Device* pDevice_;		// 생성용 디바이스 (소유하지 않음)

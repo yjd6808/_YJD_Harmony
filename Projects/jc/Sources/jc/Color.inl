@@ -1,6 +1,6 @@
-// color.inl - color static const definitions (all opaque, a = 255)
+// Color.inl - color static const definitions (all opaque, a = 255)
 // 9 presets + 335 colors migrated from sgcl ColorList (Wikipedia A-F).
-// Included by jc/color.cpp (single TU) - classic static const member definition pattern.
+// Included by jc/Color.cpp (single TU) - classic static const member definition pattern.
 
 // ===== presets =====
 const color color::WHITE(0xFF, 0xFF, 0xFF);

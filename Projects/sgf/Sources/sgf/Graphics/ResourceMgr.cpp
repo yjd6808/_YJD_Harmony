@@ -2,7 +2,7 @@
  * 작성자: 윤정도
  * 생성일: 8/9/2026 6:10:00 PM
  * =====================
- * 리소스 매니저 구현부
+ * 리소스 매니저 구현부 — [type 8][gen 24][index 32]
  */
 
 #include "Core.h"
@@ -22,20 +22,20 @@ NS_SGF_BEGIN
 using namespace jc;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 프리미티브 메시 생성 헬퍼 — 팩토리 호출 + ResourceMgr 등록 + 키 저장. (파일 내부)
 namespace
 {
-	bool CreatePrimitiveMesh2D(GraphicDevice* _pDevice, VertexShader* _pVs, ResourceMgr& _mgr,
+	//////////////////////////////////////////////////////////////////////////////////////
+	bool CreatePrimitiveMesh2D(GraphicDevice* _pDevice, ResourceMgr& _mgr,
 		PrimitiveMesh2DType _type, _u64& _outKey)
 	{
 		Mesh* pMesh = dbg_new Mesh;
 		bool ok = false;
 		switch (_type)
 		{
-		case PrimitiveMesh2DType::Rect:		ok = pMesh->InitializeAsRect2D(_pDevice, _pVs); break;
-		case PrimitiveMesh2DType::Circle:	ok = pMesh->InitializeAsCircle2D(_pDevice, _pVs); break;
-		case PrimitiveMesh2DType::Triangle:	ok = pMesh->InitializeAsTriangle2D(_pDevice, _pVs); break;
-		case PrimitiveMesh2DType::Line:		ok = pMesh->InitializeAsLine2D(_pDevice, _pVs); break;
+		case PrimitiveMesh2DType::Rect:		ok = pMesh->InitializeAsRect2D(_pDevice); break;
+		case PrimitiveMesh2DType::Circle:	ok = pMesh->InitializeAsCircle2D(_pDevice); break;
+		case PrimitiveMesh2DType::Triangle:	ok = pMesh->InitializeAsTriangle2D(_pDevice); break;
+		case PrimitiveMesh2DType::Line:		ok = pMesh->InitializeAsLine2D(_pDevice); break;
 		default: ok = false; break;
 		}
 		if (!ok) { delete pMesh; return false; }
@@ -43,19 +43,20 @@ namespace
 		return true;
 	}
 
-	bool CreatePrimitiveMesh3D(GraphicDevice* _pDevice, VertexShader* _pVs, ResourceMgr& _mgr,
+	//////////////////////////////////////////////////////////////////////////////////////
+	bool CreatePrimitiveMesh3D(GraphicDevice* _pDevice, ResourceMgr& _mgr,
 		PrimitiveMesh3DType _type, _u64& _outKey)
 	{
 		Mesh* pMesh = dbg_new Mesh;
 		bool ok = false;
 		switch (_type)
 		{
-		case PrimitiveMesh3DType::Cube:		ok = pMesh->InitializeAsCube(_pDevice, _pVs); break;
-		case PrimitiveMesh3DType::Sphere:	ok = pMesh->InitializeAsSphere(_pDevice, _pVs); break;
-		case PrimitiveMesh3DType::Capsule:	ok = pMesh->InitializeAsCapsule(_pDevice, _pVs); break;
-		case PrimitiveMesh3DType::Cylinder:	ok = pMesh->InitializeAsCylinder(_pDevice, _pVs); break;
-		case PrimitiveMesh3DType::Plane:	ok = pMesh->InitializeAsPlane(_pDevice, _pVs); break;
-		case PrimitiveMesh3DType::Quad:		ok = pMesh->InitializeAsQuad3D(_pDevice, _pVs); break;
+		case PrimitiveMesh3DType::Cube:		ok = pMesh->InitializeAsCube(_pDevice); break;
+		case PrimitiveMesh3DType::Sphere:	ok = pMesh->InitializeAsSphere(_pDevice); break;
+		case PrimitiveMesh3DType::Capsule:	ok = pMesh->InitializeAsCapsule(_pDevice); break;
+		case PrimitiveMesh3DType::Cylinder:	ok = pMesh->InitializeAsCylinder(_pDevice); break;
+		case PrimitiveMesh3DType::Plane:	ok = pMesh->InitializeAsPlane(_pDevice); break;
+		case PrimitiveMesh3DType::Quad:		ok = pMesh->InitializeAsQuad3D(_pDevice); break;
 		default: ok = false; break;
 		}
 		if (!ok) { delete pMesh; return false; }
@@ -101,10 +102,19 @@ ResourceMgr::~ResourceMgr()
 //////////////////////////////////////////////////////////////////////////////////////////
 bool ResourceMgr::Initialize(GraphicDevice* _pDevice)
 {
-	jc_assert_msg(pDevice_ == nullptr, "ResourceMgr가 이미 초기화되었습니다.");
 	jc_assert_msg(_pDevice != nullptr, "GraphicDevice가 필요합니다.");
 
+	if (pDevice_ != nullptr)
+	{
+		if (pDevice_ == _pDevice)
+		{
+			return true;
+		}
+		Finalize();
+	}
+
 	pDevice_ = _pDevice;
+	pDevice_->SetResourceRegistry(this);
 
 	if (!CreateDefaults())
 	{
@@ -122,17 +132,30 @@ void ResourceMgr::Finalize()
 		return;
 	}
 
+	// 디바이스에서 레지스트리 분리 (Device가 Mgr보다 오래 살 수 있음)
+	pDevice_->SetResourceRegistry(nullptr);
+
 	// 1. 사용자 리소스 제거 (디폴트 제외)
 	RemoveAll();
 
-	// 2. 디폴트 포함 잔여 전부 소멸
-	resources_.ForEachValueDelete();
-	resources_.Clear();
+	// 2. 디폴트 포함 잔여 전부 소멸 — 슬롯 순회
+	for (_s32 t = 0; t < TYPE_COUNT; ++t)
+	{
+		for (_s32 i = 0; i < slots_[t].Size(); ++i)
+		{
+			Slot& slot = slots_[t][i];
+			if (slot.pResource_ != nullptr)
+			{
+				delete slot.pResource_;
+				slot.pResource_ = nullptr;
+			}
+		}
+		slots_[t].Clear();
+		indexProviders_[t].Reset();
+	}
+
 	pathIndex_.Clear();
 	defaultKeys_.Clear();
-
-	// 3. 키 발급기 초기화
-	keyProvider_.Reset();
 
 	defaultTextureKey_ = INVALID_RESOURCE_KEY;
 	defaultVs2DKey_ = INVALID_RESOURCE_KEY;
@@ -153,16 +176,56 @@ void ResourceMgr::Finalize()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_u64 ResourceMgr::Add(IResource* _pResource)
+// IResourceRegistry
+//////////////////////////////////////////////////////////////////////////////////////////
+_u64 ResourceMgr::Register(IResource* _pResource)
 {
 	jc_assert_msg(pDevice_ != nullptr, "Initialize 이후에만 등록할 수 있습니다.");
 	jc_assert_msg(_pResource != nullptr, "등록할 리소스가 비어있습니다.");
 	jc_assert_msg(_pResource->GetKey() == INVALID_RESOURCE_KEY, "이미 등록된 리소스입니다.");
 
-	const _u64 key = keyProvider_.Acquire();
+	const ResourceType type = _pResource->GetResourceType();
+	jc_assert_msg(type != ResourceType::rtUnknown, "알 수 없는 리소스 타입입니다.");
+	const _s32 t = static_cast<_s32>(type);
+	jc_assert_msg(t >= 0 && t < TYPE_COUNT, "타입 범위 초과");
+
+	const _u32 raw = static_cast<_u32>(indexProviders_[t].Acquire());
+	const _u32 index = raw - 1; // 1-base → 0-base
+
+	// 슬롯 배열 확장
+	if (index >= static_cast<_u32>(slots_[t].Size()))
+	{
+		// Acquire는 1씩 증가하므로 index == Size인 경우만 정상
+		jc_assert_msg(index == static_cast<_u32>(slots_[t].Size()), "인덱스 연속성 위반");
+		slots_[t].PushBack(Slot{});
+		// 새로 추가된 슬롯의 gen은 기본 1 유지
+	}
+
+	Slot& slot = slots_[t][index];
+	jc_assert_msg(slot.pResource_ == nullptr, "슬롯이 이미 점유됨 — 발급기 중복");
+
+	slot.pResource_ = _pResource;
+	const _u64 key = MakeResourceKey(type, slot.gen_, index);
 	static_cast<ResourceBase*>(_pResource)->SetKey(key);
-	resources_.Insert(key, _pResource);
 	return key;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+IResource* ResourceMgr::Resolve(_u64 _key)
+{
+	return Find(_key);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool ResourceMgr::Unregister(_u64 _key)
+{
+	return Remove(_key);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_u64 ResourceMgr::Add(IResource* _pResource)
+{
+	return Register(_pResource);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -174,8 +237,8 @@ _u64 ResourceMgr::Add(IResource* _pResource, StringView _path)
 		return INVALID_RESOURCE_KEY;
 	}
 
-	const _u64 key = Add(_pResource);
-	static_cast<ResourceBase*>(_pResource)->SetPath(_path);	// 리소스가 자기 경로를 보관한다 (B-7)
+	const _u64 key = Register(_pResource);
+	static_cast<ResourceBase*>(_pResource)->SetPath(_path);
 	pathIndex_.Insert(String(_path.SafeSource()), key);
 	return key;
 }
@@ -183,32 +246,63 @@ _u64 ResourceMgr::Add(IResource* _pResource, StringView _path)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool ResourceMgr::Remove(_u64 _key)
 {
+	if (_key == INVALID_RESOURCE_KEY) { return false; }
+
 	if (defaultKeys_.Exist(_key))
 	{
 		jc_assert_msg(false, "디폴트 리소스는 제거할 수 없습니다.");
 		return false;
 	}
 
-	IResource** ppResource = resources_.Find(_key);
-	if (ppResource == nullptr)
-	{
-		return false;
-	}
+	const ResourceType type = GetResourceTypeFromKey(_key);
+	const _s32 t = static_cast<_s32>(type);
+	if (t <= 0 || t >= TYPE_COUNT) { return false; }
+
+	const _u32 gen = GetResourceGenFromKey(_key);
+	const _u32 index = GetResourceIndexFromKey(_key);
+	if (gen == 0) { return false; }
+	if (index >= static_cast<_u32>(slots_[t].Size())) { return false; }
+
+	Slot& slot = slots_[t][index];
+	if (slot.pResource_ == nullptr) { return false; }
+	if (slot.gen_ != gen) { return false; } // 낡은 키
+	if (slot.pResource_->GetResourceType() != type) { return false; }
 
 	RemovePathEntry(_key);
-	delete *ppResource;
-	resources_.Remove(_key);
-	keyProvider_.Release(_key);
+	delete slot.pResource_;
+	slot.pResource_ = nullptr;
+
+	// 세대 증가 (0 건너뜀, 0xFFFFFF 이후 1로 순환)
+	if (slot.gen_ >= RESOURCE_KEY_GEN_MAX)
+	{
+		slot.gen_ = 1;
+	}
+	else
+	{
+		slot.gen_ += 1;
+		if (slot.gen_ == 0) { slot.gen_ = 1; }
+	}
+
+	indexProviders_[t].Release(index + 1);
 	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void ResourceMgr::RemoveAll()
 {
-	// 순회 중 컨테이너 변경을 피하려고 키부터 모은다.
 	Vector<_u64> keys;
-	keys.Reserve(resources_.Size());
-	resources_.ForEachKey([&keys](const _u64& _key) { keys.PushBack(_key); });
+	keys.Reserve(GetCount());
+	for (_s32 t = 0; t < TYPE_COUNT; ++t)
+	{
+		for (_s32 i = 0; i < slots_[t].Size(); ++i)
+		{
+			Slot& slot = slots_[t][i];
+			if (slot.pResource_ != nullptr)
+			{
+				keys.PushBack(MakeResourceKey(static_cast<ResourceType>(t), slot.gen_, static_cast<_u32>(i)));
+			}
+		}
+	}
 
 	for (_s32 i = 0; i < keys.Size(); ++i)
 	{
@@ -229,8 +323,19 @@ IResource* ResourceMgr::Find(_u64 _key)
 		return nullptr;
 	}
 
-	IResource** ppResource = resources_.Find(_key);
-	return (ppResource != nullptr) ? *ppResource : nullptr;
+	const ResourceType type = GetResourceTypeFromKey(_key);
+	const _s32 t = static_cast<_s32>(type);
+	if (t <= 0 || t >= TYPE_COUNT) { return nullptr; }
+
+	const _u32 gen = GetResourceGenFromKey(_key);
+	const _u32 index = GetResourceIndexFromKey(_key);
+	if (gen == 0) { return nullptr; }
+	if (index >= static_cast<_u32>(slots_[t].Size())) { return nullptr; }
+
+	Slot& slot = slots_[t][index];
+	if (slot.pResource_ == nullptr) { return nullptr; }
+	if (slot.gen_ != gen) { return nullptr; }
+	return slot.pResource_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -327,13 +432,13 @@ Material* ResourceMgr::GetDefaultMaterial3D()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+// 공통 헬퍼 — 프리미티브 인덱스 검증
+inline bool IsValidPrimitiveIndex(_s32 _index, _s32 _count) { return _index >= 0 && _index < _count; }
+
 Mesh* ResourceMgr::FindPrimitiveMesh2D(PrimitiveMesh2DType _type)
 {
 	const _s32 index = static_cast<_s32>(_type);
-	if (index < 0 || index >= PRIMITIVE_MESH2D_COUNT)
-	{
-		return nullptr;
-	}
+	if (!IsValidPrimitiveIndex(index, PRIMITIVE_MESH2D_COUNT)) { return nullptr; }
 	return Find<Mesh>(primitiveMesh2DKeys_[index]);
 }
 
@@ -341,10 +446,7 @@ Mesh* ResourceMgr::FindPrimitiveMesh2D(PrimitiveMesh2DType _type)
 Mesh* ResourceMgr::FindPrimitiveMesh3D(PrimitiveMesh3DType _type)
 {
 	const _s32 index = static_cast<_s32>(_type);
-	if (index < 0 || index >= PRIMITIVE_MESH3D_COUNT)
-	{
-		return nullptr;
-	}
+	if (!IsValidPrimitiveIndex(index, PRIMITIVE_MESH3D_COUNT)) { return nullptr; }
 	return Find<Mesh>(primitiveMesh3DKeys_[index]);
 }
 
@@ -352,10 +454,7 @@ Mesh* ResourceMgr::FindPrimitiveMesh3D(PrimitiveMesh3DType _type)
 _u64 ResourceMgr::GetPrimitiveMesh2DKey(PrimitiveMesh2DType _type) const
 {
 	const _s32 index = static_cast<_s32>(_type);
-	if (index < 0 || index >= PRIMITIVE_MESH2D_COUNT)
-	{
-		return INVALID_RESOURCE_KEY;
-	}
+	if (!IsValidPrimitiveIndex(index, PRIMITIVE_MESH2D_COUNT)) { return INVALID_RESOURCE_KEY; }
 	return primitiveMesh2DKeys_[index];
 }
 
@@ -363,30 +462,67 @@ _u64 ResourceMgr::GetPrimitiveMesh2DKey(PrimitiveMesh2DType _type) const
 _u64 ResourceMgr::GetPrimitiveMesh3DKey(PrimitiveMesh3DType _type) const
 {
 	const _s32 index = static_cast<_s32>(_type);
-	if (index < 0 || index >= PRIMITIVE_MESH3D_COUNT)
-	{
-		return INVALID_RESOURCE_KEY;
-	}
+	if (!IsValidPrimitiveIndex(index, PRIMITIVE_MESH3D_COUNT)) { return INVALID_RESOURCE_KEY; }
 	return primitiveMesh3DKeys_[index];
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s32 ResourceMgr::GetCount() const
+{
+	_s32 count = 0;
+	for (_s32 t = 0; t < TYPE_COUNT; ++t)
+	{
+		for (_s32 i = 0; i < slots_[t].Size(); ++i)
+		{
+			if (slots_[t][i].pResource_ != nullptr) { ++count; }
+		}
+	}
+	return count;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void ResourceMgr::FormatKey(_u64 _key, _s8* _outBuffer, _sz _bufferSize)
+{
+	if (_key == INVALID_RESOURCE_KEY)
+	{
+		sprintf_s(_outBuffer, _bufferSize, "INVALID");
+		return;
+	}
+	const ResourceType type = GetResourceTypeFromKey(_key);
+	const _u32 gen = GetResourceGenFromKey(_key);
+	const _u32 index = GetResourceIndexFromKey(_key);
+	const char* typeName = (static_cast<_s32>(type) >= 0 && static_cast<_s32>(type) < static_cast<_s32>(ResourceType::Max))
+		? RESOURCE_TYPE_NAMES[static_cast<_s32>(type)] : "Unknown";
+	sprintf_s(_outBuffer, _bufferSize, "%s(gen=%u, idx=%u) 0x%016llX", typeName, gen, index, _key);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void ResourceMgr::PrintStatus()
 {
 	_s8 buffer[512];
-	sprintf_s(buffer, "[ResourceMgr] 보관 중: %d개, 발급 중인 키: %zu개\n",
-		resources_.Size(), keyProvider_.GetAcquiredCount());
+	_s8 keyBuf[128];
+	_s32 total = GetCount();
+	_sz acquired = 0;
+	for (_s32 t = 0; t < TYPE_COUNT; ++t) { acquired += indexProviders_[t].GetAcquiredCount(); }
+	sprintf_s(buffer, "[ResourceMgr] 보관 중: %d개, 발급 중인 슬롯: %zu개\n", total, acquired);
 	OutputDebugStringA(buffer);
 
-	resources_.ForEach([&buffer](const Pair<_u64, IResource*>& _pair)
+	for (_s32 t = 0; t < TYPE_COUNT; ++t)
 	{
-		const IResource* pResource = _pair.value_;
-		sprintf_s(buffer, "  key=%llu type=%s name=%s\n",
-			_pair.key_,
-			RESOURCE_TYPE_NAMES[static_cast<_s32>(pResource->GetResourceType())],
-			pResource->GetDebugName());
-		OutputDebugStringA(buffer);
-	});
+		for (_s32 i = 0; i < slots_[t].Size(); ++i)
+		{
+			const Slot& slot = slots_[t][i];
+			if (slot.pResource_ == nullptr) { continue; }
+			const IResource* pResource = slot.pResource_;
+			const _u64 key = MakeResourceKey(static_cast<ResourceType>(t), slot.gen_, static_cast<_u32>(i));
+			FormatKey(key, keyBuf, sizeof(keyBuf));
+			sprintf_s(buffer, "  key=%s type=%s name=%s\n",
+				keyBuf,
+				RESOURCE_TYPE_NAMES[static_cast<_s32>(pResource->GetResourceType())],
+				pResource->GetDebugName());
+			OutputDebugStringA(buffer);
+		}
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -469,14 +605,14 @@ bool ResourceMgr::CreateDefaults()
 	// 2D/3D 별도 키 테이블 — 각 enum은 자기 영역만 담당한다.
 	for (_s32 t = 0; t < PRIMITIVE_MESH2D_COUNT; ++t)
 	{
-		if (!CreatePrimitiveMesh2D(pDevice_, pVs2D, *this, static_cast<PrimitiveMesh2DType>(t), primitiveMesh2DKeys_[t]))
+		if (!CreatePrimitiveMesh2D(pDevice_, *this, static_cast<PrimitiveMesh2DType>(t), primitiveMesh2DKeys_[t]))
 		{
 			return false;
 		}
 	}
 	for (_s32 t = 0; t < PRIMITIVE_MESH3D_COUNT; ++t)
 	{
-		if (!CreatePrimitiveMesh3D(pDevice_, pVs3D, *this, static_cast<PrimitiveMesh3DType>(t), primitiveMesh3DKeys_[t]))
+		if (!CreatePrimitiveMesh3D(pDevice_, *this, static_cast<PrimitiveMesh3DType>(t), primitiveMesh3DKeys_[t]))
 		{
 			return false;
 		}

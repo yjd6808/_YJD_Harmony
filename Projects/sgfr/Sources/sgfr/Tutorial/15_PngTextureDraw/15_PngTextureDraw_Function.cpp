@@ -6,6 +6,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/15_PngTextureDraw/15_PngTextureDraw_Function.h"
 
 using namespace sgf;
@@ -44,7 +45,7 @@ bool CreateCheckerboardTexture(GraphicDevice* _pDevice, Texture* _pOutTexture)
 			pixels[idx + 0] = bLight ? 235 : 60;	// R
 			pixels[idx + 1] = bLight ? 235 : 120;	// G
 			pixels[idx + 2] = bLight ? 235 : 200;	// B
-			pixels[idx + 3] = 255;					// A (불투명)
+			pixels[idx + 3] = 255;				// A (불투명)
 		}
 	}
 

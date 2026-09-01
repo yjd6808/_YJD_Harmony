@@ -56,8 +56,8 @@ namespace
 			// root_ 트리는 자식을 소유하지 않으므로(분리만) 직접 정리한다.
 			for (GameObject* pObj : createdObjects_)
 			{
-				RemoveChild(pObj);
-				delete pObj;
+			RemoveChild(pObj);
+			delete pObj;
 			}
 		}
 
@@ -91,26 +91,26 @@ namespace
 
 			// Rect — 좌우 왕복 (B: 즉시 반영)
 			createdObjects_[0]->GetTransform()->SetLocalPosition(
-				vec2(200.0f + 120.0f * sinf(t * 2.0f), 300.0f));
+			vec2(200.0f + 120.0f * sinf(t * 2.0f), 300.0f));
 
 			// Circle — 회전 (B)
 			createdObjects_[1]->GetTransform()->SetLocalRotationRad(t * 2.0f);
 
 			// Triangle — 스케일 펄스 (B)
 			createdObjects_[2]->GetTransform()->SetLocalScale(
-				vec3(140.0f + 40.0f * sinf(t * 3.0f), 120.0f + 30.0f * sinf(t * 3.0f), 1.0f));
+			vec3(140.0f + 40.0f * sinf(t * 3.0f), 120.0f + 30.0f * sinf(t * 3.0f), 1.0f));
 
 			// Line — Static(행렬 고정) 상태이므로 아래 트랜스폼 변경은 무시된다. (위치 고정 시연)
 			createdObjects_[3]->GetTransform()->SetLocalPosition(
-				vec2(660.0f + 100.0f * sinf(t * 2.0f), 300.0f));
+			vec2(660.0f + 100.0f * sinf(t * 2.0f), 300.0f));
 
 			SetTitleDrawCall(GetWindow(),
-				"32. 2D 프리미티브 - DrawCall: %u (SPACE: 3D 씬, ESC: 종료)",
-				g_cRenderer2D.GetDrawCallCount());
+			"32. 2D 프리미티브 - DrawCall: %u (SPACE: 3D 씬, ESC: 종료)",
+			g_cRenderer2D.GetDrawCallCount());
 
 			if (g_cInput.IsKeyPressed(VK_SPACE))
 			{
-				g_cDirector.ReplaceScene(CreatePrimitive3DScene());
+			g_cDirector.ReplaceScene(CreatePrimitive3DScene());
 			}
 		}
 
@@ -130,7 +130,7 @@ namespace
 		}
 
 		jc::Vector<GameObject*> createdObjects_;	// 소멸자에서 정리할 오브젝트 목록
-		_f32 elapsed_ = 0.0f;						// 애니메이션 시간 누적 (초)
+		_f32 elapsed_ = 0.0f;					// 애니메이션 시간 누적 (초)
 	};
 
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -142,8 +142,8 @@ namespace
 		{
 			for (GameObject* pObj : createdObjects_)
 			{
-				RemoveChild(pObj);
-				delete pObj;
+			RemoveChild(pObj);
+			delete pObj;
 			}
 		}
 
@@ -177,7 +177,7 @@ namespace
 			(void)_dt;
 			if (g_cInput.IsKeyPressed(VK_SPACE))
 			{
-				g_cDirector.ReplaceScene(CreatePrimitive2DScene());
+			g_cDirector.ReplaceScene(CreatePrimitive2DScene());
 			}
 		}
 
@@ -237,7 +237,7 @@ namespace
 		{
 			if (g_cInput.IsKeyPressed(VK_ESCAPE))
 			{
-				g_cWindow.Destroy();
+			g_cWindow.Destroy();
 			}
 		}
 	};

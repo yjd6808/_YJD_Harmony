@@ -22,6 +22,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/03_DeviceAndContext/03_DeviceAndContext_Main.h"
 
 using namespace sgf;
@@ -48,7 +49,7 @@ void DeviceAndContext_Main()
 	jc::Console::WriteLine("1) 디바이스 초기화 성공 (창 없이 디바이스만 생성됨)\n");
 
 	// 2. 컨텍스트는 디바이스가 소유한다. 참조로 빌려 쓴다.
-	GraphicContext& context = device.GetContext();
+	GraphicContext& context = device.Context();
 
 	// 3. 상태 캐시 실험: 같은 토폴로지를 연속으로 설정해본다.
 	context.ResetStats();
@@ -66,6 +67,7 @@ void DeviceAndContext_Main()
 	jc::Console::WriteLine("  (BeginFrame처럼 엔진 내부에서 상태를 바꾸는 지점이 대표적)\n");
 
 	// 4. 정리
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	jc::Console::WriteLine("디바이스 정리 완료. (함수가 반환되면 런처가 목차로 돌아간다)");
 }

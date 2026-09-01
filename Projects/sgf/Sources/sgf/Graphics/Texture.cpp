@@ -16,10 +16,11 @@
 #include "Core.h"
 #include "sgf/Graphics/Texture.h"
 #include "sgf/Graphics/GraphicDevice.h"
+#include "sgf/Graphics/GraphicContext.h"
 
 // nanosvg는 선택 사항이다. _Extern 폴더에 헤더가 있으면 SVG 기능이 켜진다.
 // (없어도 컴파일은 되며, LoadFromSvgFile이 false를 반환할 뿐이다)
-#if __has_include("sgf/_Extern/nanosvg/nanosvg.h")
+#if __has_include("nanosvg.h")
 	#define SGF_HAS_NANOSVG 1
 	#define NANOSVG_IMPLEMENTATION
 	#define NANOSVGRAST_IMPLEMENTATION
@@ -168,7 +169,7 @@ bool Texture::LoadFromSvgFile(GraphicDevice* _pDevice, const jc::String& _szFile
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 메모리의 RGBA 픽셀 배열로 텍스처 생성
-bool Texture::CreateFromMemory(GraphicDevice* _pDevice, const _u8* _pPixels, _s32 _width, _s32 _height)
+bool Texture::CreateFromMemory(GraphicDevice* _pDevice, const _u8* _pPixels, _s32 _width, _s32 _height, PixelFormat _format)
 {
 	// 재사용(재초기화) 대비: 기존 텍스처 뷰를 먼저 정리한다. (GetAddressOf 덮어쓰기 누수 방지)
 	pShaderResourceView_.Reset();
@@ -179,7 +180,7 @@ bool Texture::CreateFromMemory(GraphicDevice* _pDevice, const _u8* _pPixels, _s3
 	td.Height = UINT(_height);
 	td.MipLevels = 1;								// 밉맵 없음 (튜토리얼 단순화)
 	td.ArraySize = 1;
-	td.Format = DXGI_FORMAT_R8G8B8A8_UNORM;			// RGBA 각 8비트 (DXGI_FORMAT_R8G8B8A8_UNORM)
+	td.Format = ToD3D11(_format);
 	td.SampleDesc.Count = 1;
 	td.Usage = ToD3D11(ResourceUsage::ruImmutable);	// 생성 후 변경 불가, 가장 빠름 (D3D11_USAGE_IMMUTABLE)
 	td.BindFlags = D3D11_BIND_SHADER_RESOURCE;		// 셰이더 입력 용도
@@ -210,11 +211,10 @@ bool Texture::CreateFromMemory(GraphicDevice* _pDevice, const _u8* _pPixels, _s3
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// PS 단계 지정 슬롯에 텍스처 장착
-void Texture::Bind(GraphicDevice* _pDevice, UINT _slot)
+// PS 단계 지정 슬롯에 텍스처 장착 — GraphicContext 캐시를 통과한다
+void Texture::Bind(GraphicContext& _context, _u32 _slot)
 {
-	ID3D11ShaderResourceView* pViews[] = { pShaderResourceView_.Get() };
-	_pDevice->Context()->PSSetShaderResources(_slot, 1, pViews);
+	_context.SetTexture(ShaderStage::ssPixel, _slot, this);
 }
 
 NS_SGF_END

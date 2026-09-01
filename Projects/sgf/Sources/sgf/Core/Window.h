@@ -20,7 +20,7 @@
  *
  * [바뀐 점 - 윈도우가 그리기 표면을 소유]
  * 멀티 윈도우를 지원하려면 "백버퍼(그림이 그려지는 종이)"가 창마다 하나씩 필요하다.
- * 그래서 스왕체인(SwapChain)과 깊이버퍼(DepthStencilSurface)를
+ * 그래서 스왑체인(SwapChain)과 깊이버퍼(DepthStencilSurface)를
  * GraphicDevice가 아닌 각 Window가 소유하도록 바꿨다.
  * (디바이스/컨텍스트는 앱 전체에 1개, 표면은 창마다 1개씩 - 이게 자연스러운 소유 구조다)
  */
@@ -67,9 +67,9 @@ public:
 	void ConnectInput(InputManager* _pInput) { pInput_ = _pInput; }
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	// 윈도우별 그리기 표면 (스왕체인 + 깊이버퍼)
-	// 이 윈도우 전용 스왕체인/깊이버퍼를 생성한다. (창 생성 후 1회)
-	// GraphicDevice::CreateSwapChainForWindow가 DXGI 팩토리로 스왕체인을 만들어준다.
+	// 윈도우별 그리기 표면 (스왑체인 + 깊이버퍼)
+	// 이 윈도우 전용 스왑체인/깊이버퍼를 생성한다. (창 생성 후 1회)
+	// GraphicDevice::CreateSwapChainForWindow가 DXGI 팩토리로 스왑체인을 만들어준다.
 	bool CreateSurface(GraphicDevice* _pDevice);
 
 	// 그리기 표면을 해제한다. (창 파괴 전 호출)

@@ -166,9 +166,9 @@ void GenerateSphere(jc::Vector<VertexPNT>& _outVertices, jc::Vector<_u32>& _outI
 		for (_s32 seg = 0; seg < _segments; ++seg)
 		{
 			const _u32 i0 = (_u32)(ring * columns + seg);			// 왼위
-			const _u32 i1 = i0 + 1;									// 오른위
-			const _u32 i2 = i0 + (_u32)columns;						// 왼아래
-			const _u32 i3 = i2 + 1;									// 오른아래
+			const _u32 i1 = i0 + 1;							// 오른위
+			const _u32 i2 = i0 + (_u32)columns;					// 왼아래
+			const _u32 i3 = i2 + 1;							// 오른아래
 
 			_outIndices.PushBack(i0);
 			_outIndices.PushBack(i1);

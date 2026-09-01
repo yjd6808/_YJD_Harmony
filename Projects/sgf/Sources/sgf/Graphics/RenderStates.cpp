@@ -30,8 +30,8 @@ bool RenderStates::Initialize(ID3D11Device* _pDevice)
 	if (GetBlendState(BlendMode::bmAlpha) == nullptr) { return false; }
 	if (GetDepthState(DepthMode::dmReadWrite) == nullptr) { return false; }
 	if (GetDepthState(DepthMode::dmDisabled) == nullptr) { return false; }
-	if (GetRasterizerState(CullMode::cmBack) == nullptr) { return false; }
-	if (GetSamplerState(FilterMode::fmLinear, AddressMode::amClamp) == nullptr) { return false; }
+	if (GetRasterizerState(CullMode::cmBack, FillMode::fmSolid, FrontFace::ffClockwise) == nullptr) { return false; }
+	if (GetSamplerState(FilterMode::fmLinear, AddressMode::amClamp, AddressMode::amClamp) == nullptr) { return false; }
 	return true;
 }
 
@@ -175,10 +175,6 @@ ID3D11DepthStencilState* RenderStates::GetDepthState(DepthMode _mode)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // [하위 호환] true=일반 3D, false=2D 적층
-ID3D11DepthStencilState* RenderStates::GetDepthState(bool _enable)
-{
-	return GetDepthState(_enable ? DepthMode::dmReadWrite : DepthMode::dmDisabled);
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 래스터라이저 상태: 채우기 + 컬링 + 앞면 판정 조합
@@ -214,10 +210,6 @@ ID3D11RasterizerState* RenderStates::GetRasterizerState(CullMode _cull, FillMode
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // [하위 호환] 와이어프레임 여부 + 컬링
-ID3D11RasterizerState* RenderStates::GetRasterizerState(bool _wireframe, CullMode _cull)
-{
-	return GetRasterizerState(_cull, _wireframe ? FillMode::fmWireframe : FillMode::fmSolid);
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 샘플러 상태: 텍스처를 읽는 방법 (필터 + UV 범위 밖 처리. U/V 분리 지원)
@@ -262,9 +254,5 @@ ID3D11SamplerState* RenderStates::GetSamplerState(FilterMode _filter, AddressMod
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // [하위 호환] U/V 동일 주소 모드
-ID3D11SamplerState* RenderStates::GetSamplerState(FilterMode _filter, AddressMode _address)
-{
-	return GetSamplerState(_filter, _address, _address);
-}
 
 NS_SGF_END

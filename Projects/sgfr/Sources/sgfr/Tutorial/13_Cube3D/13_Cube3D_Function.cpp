@@ -57,5 +57,5 @@ void PrintDepthAndPerspectiveExplanation()
 	jc::Console::WriteLine(" 픽셀마다 '지금까지 그려진 가장 가까운 깊이'를 기억하는 별도 버퍼.");
 	jc::Console::WriteLine(" 새 픽셀이 더 멀다면 버리고, 더 가깝다면 덮어쓴다. => 그리는 순서와 무관하게 앞뒤가 정확해진다!");
 	jc::Console::WriteLine(" 이게 없으면 나중에 그린 뒷면이 앞면을 덮어버리는 참사가 벌어진다.");
-	jc::Console::WriteLine(" sgf에서는 device.SetDepthTest(true)로 켜고 끈다.\n");
+	jc::Console::WriteLine(" sgf에서는 device.Context().SetDepth(DepthMode::dmReadWrite)로 켜고 끈다.\n");
 }

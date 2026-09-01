@@ -146,7 +146,7 @@ bool Window::PumpMessage()
 // 윈도우를 파괴한다.
 void Window::Destroy()
 {
-	// 표면을 먼저 해제해야 한다. (스왕체인이 HWND를 참조하므로)
+	// 표면을 먼저 해제해야 한다. (스왑체인이 HWND를 참조하므로)
 	DestroySurface();
 
 	if (hWnd_ != nullptr)
@@ -160,7 +160,7 @@ void Window::Destroy()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 이 윈도우 전용 그리기 표면(스왕체인 + 깊이버퍼)을 생성한다.
+// 이 윈도우 전용 그리기 표면(스왑체인 + 깊이버퍼)을 생성한다.
 // [왜 윈도우가 표면을 소유하는가?]
 // 백버퍼는 "이 창에 보여질 그림"이므로 수명과 크기가 창에 종속된다.
 // 창이 생기면 표면도 생기고, 창이 닫히면 표면도 사라지는 게 자연스럽다.
@@ -175,9 +175,9 @@ bool Window::CreateSurface(GraphicDevice* _pDevice)
 		return true;	// 이미 생성됨 (중복 호출 무시)
 	}
 
-	// 1. 디바이스의 DXGI 팩토리로 이 창용 스왕체인을 만든다.
+	// 1. 디바이스의 DXGI 팩토리로 이 창용 스왑체인을 만든다.
 	IDXGISwapChain* pRawSwapChain = nullptr;
-	if (!_pDevice->CreateSwapChainForWindow(hWnd_, width_, height_, &pRawSwapChain))
+	if (!_pDevice->CreateSwapChainForWindow(hWnd_, width_, height_, PixelFormat::pfRgba8, &pRawSwapChain))
 	{
 		return false;
 	}

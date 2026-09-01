@@ -34,6 +34,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/34_GraphicsEnum_한눈에_비교/34_GraphicsEnumDiff_Main.h"
 #include "sgfr/Common/TutorialCommon.h"
 
@@ -62,7 +63,7 @@ namespace
 {
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 엔진 디폴트 인덱스 (Before 고정)
-	// - 이 값들은 GraphicDevice::Initialize가 깔아두는 기본 상태와 동일하다.
+	// - 이 값들은 GraphicDevice Initialize (now Initialize() + CreateSwapChain)가 깔아두는 기본 상태와 동일하다.
 
 	const _s32 DEFAULT_INDEX[] =
 	{
@@ -315,21 +316,21 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 		{
 			for (_s32 x = 0; x < _size; ++x)
 			{
-				_f32 dx = x - center;
-				_f32 dy = y - center;
-				_f32 dist = sqrtf(dx * dx + dy * dy) / maxDist;
+			_f32 dx = x - center;
+			_f32 dy = y - center;
+			_f32 dist = sqrtf(dx * dx + dy * dy) / maxDist;
 
-				_f32 alpha = 1.0f;
-				if (dist > 0.7f)
-				{
-					alpha = Clamp(1.0f - (dist - 0.7f) / 0.3f, 0.0f, 1.0f);
-				}
+			_f32 alpha = 1.0f;
+			if (dist > 0.7f)
+			{
+				alpha = Clamp(1.0f - (dist - 0.7f) / 0.3f, 0.0f, 1.0f);
+			}
 
-				_u8* pPixel = _pOutPixels + (y * _size + x) * 4;
-				pPixel[0] = 255;
-				pPixel[1] = 255;
-				pPixel[2] = 255;
-				pPixel[3] = static_cast<_u8>(alpha * 255.0f);
+			_u8* pPixel = _pOutPixels + (y * _size + x) * 4;
+			pPixel[0] = 255;
+			pPixel[1] = 255;
+			pPixel[2] = 255;
+			pPixel[3] = static_cast<_u8>(alpha * 255.0f);
 			}
 		}
 	}
@@ -344,25 +345,25 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 		{
 			for (_s32 x = 0; x < _width; ++x)
 			{
-				bool isBorder = (x == 0 || y == 0 || x == _width - 1 || y == _height - 1);
+			bool isBorder = (x == 0 || y == 0 || x == _width - 1 || y == _height - 1);
 
-				_u8 r, g, b;
-				if (isBorder)
-				{
-					r = 220; g = 60; b = 60;
-				}
-				else
-				{
-					bool isLight = (((x / _cellSize) + (y / _cellSize)) % 2) == 0;
-					if (isLight) { r = 240; g = 240; b = 240; }
-					else         { r = 40;  g = 70;  b = 160; }
-				}
+			_u8 r, g, b;
+			if (isBorder)
+			{
+				r = 220; g = 60; b = 60;
+			}
+			else
+			{
+				bool isLight = (((x / _cellSize) + (y / _cellSize)) % 2) == 0;
+				if (isLight) { r = 240; g = 240; b = 240; }
+				else         { r = 40;  g = 70;  b = 160; }
+			}
 
-				_u8* pPixel = _pOutPixels + (y * _width + x) * 4;
-				pPixel[0] = r;
-				pPixel[1] = g;
-				pPixel[2] = b;
-				pPixel[3] = 255;
+			_u8* pPixel = _pOutPixels + (y * _width + x) * 4;
+			pPixel[0] = r;
+			pPixel[1] = g;
+			pPixel[2] = b;
+			pPixel[3] = 255;
 			}
 		}
 	}
@@ -546,14 +547,31 @@ void GraphicsEnumDiff_Main()
 	window.ConnectInput(&input);
 
 	GraphicDevice device;
-	if (!device.Initialize(window.Handle(), window.Width(), window.Height()))
+	if (!device.Initialize())
 	{
-		Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	Console::WriteLine("그래픽 디바이스 초기화 실패!");
+		window.Destroy();
+		return;
+	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
-	GraphicContext& ctx = device.GetContext();
+	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
+	{
+	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
+	device.Finalize();
+	window.Destroy();
+	return;
+	}
+
+	GraphicContext& ctx = device.Context();
 
 	// 2. 텍스처 2종 생성
 	// - 소프트 원: 블렌드 비교용 (원 밖은 투명)
@@ -579,7 +597,7 @@ void GraphicsEnumDiff_Main()
 	_u32 quadIndices[6] = { 0, 1, 2, 2, 1, 3 };
 	VertexBuffer vbQuad;
 	IndexBuffer ibQuad;
-	vbQuad.Create(&device, quadVertices, sizeof(VertexPTC), 4, ResourceUsage::ruDynamic);
+	vbQuad.Create(&device, quadVertices, 4, VertexPTC::Decl());
 	ibQuad.Create(&device, quadIndices, 6);
 
 	VertexPTC uvQuad[4];
@@ -587,7 +605,7 @@ void GraphicsEnumDiff_Main()
 	FillUvQuad(uvQuad, uvIdx, 3.0f);
 	VertexBuffer vbUv;
 	IndexBuffer ibUv;
-	vbUv.Create(&device, uvQuad, sizeof(VertexPTC), 4);
+	vbUv.Create(&device, uvQuad, 4, VertexPTC::Decl());
 	ibUv.Create(&device, uvIdx, 6);
 
 	VertexPC cubeVerts[8];
@@ -595,7 +613,7 @@ void GraphicsEnumDiff_Main()
 	FillColorCube(cubeVerts, cubeIdx);
 	VertexBuffer vbCube;
 	IndexBuffer ibCube;
-	vbCube.Create(&device, cubeVerts, sizeof(VertexPC), 8);
+	vbCube.Create(&device, cubeVerts, 8, VertexPC::Decl());
 	ibCube.Create(&device, cubeIdx, 36);
 
 	// 토폴로지용: 5개 외곽점 + 중심 1점 = 별 모양
@@ -612,7 +630,7 @@ void GraphicsEnumDiff_Main()
 	const _u32 topoIdxStrip[] = { 0, 1, 5, 2, 3, 4 };         // triangleStrip
 	VertexBuffer vbTopo;
 	IndexBuffer ibTopoTriList, ibTopoStrip, ibTopoLine, ibTopoLineStrip;
-	vbTopo.Create(&device, topoVerts, sizeof(VertexPC), 6);
+	vbTopo.Create(&device, topoVerts, 6, VertexPC::Decl());
 	ibTopoTriList.Create(&device, topoIdxList, 9);
 	ibTopoStrip.Create(&device, topoIdxStrip, 6);
 	_u32 lineIdx[] = { 0, 1, 1, 2, 2, 3, 3, 4, 4, 0 };
@@ -621,15 +639,21 @@ void GraphicsEnumDiff_Main()
 	ibTopoLineStrip.Create(&device, lineStripIdx, 6);
 
 	// 4. 셰이더 + 상수 버퍼
-	UINT layoutPTCCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pPTCLayout = VertexPTC::LayoutDescs(&layoutPTCCount);
-	UINT layoutPCCount = 0;
-	const D3D11_INPUT_ELEMENT_DESC* pPCLayout = VertexPC::LayoutDescs(&layoutPCCount);
 
-	Shader shaderBlend, shaderSplit, shaderColor;
-	shaderBlend.CompileFromString(&device, BlendQuadShaderSource34(), pPTCLayout, layoutPTCCount);
-	shaderSplit.CompileFromString(&device, SamplerSplitShaderSource34(), pPTCLayout, layoutPTCCount);
-	shaderColor.CompileFromString(&device, ColorTransformShaderSource34(), pPCLayout, layoutPCCount);
+	_u64 vsBlend = device.Context().CreateVertexShader(BlendQuadShaderSource34());
+	_u64 psBlend = device.Context().CreatePixelShader(BlendQuadShaderSource34());
+	_u64 vsSplit = device.Context().CreateVertexShader(SamplerSplitShaderSource34());
+	_u64 psSplit = device.Context().CreatePixelShader(SamplerSplitShaderSource34());
+	_u64 vsColor = device.Context().CreateVertexShader(ColorTransformShaderSource34());
+	_u64 psColor = device.Context().CreatePixelShader(ColorTransformShaderSource34());
+	if (vsBlend == INVALID_RESOURCE_KEY || psBlend == INVALID_RESOURCE_KEY || vsSplit == INVALID_RESOURCE_KEY || psSplit == INVALID_RESOURCE_KEY || vsColor == INVALID_RESOURCE_KEY || psColor == INVALID_RESOURCE_KEY)
+	{
+		jc::Console::WriteLine("셰이더 생성 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
 
 	ConstantBuffer<CbTransform> cbTransform;
 	cbTransform.Create(&device);
@@ -685,10 +709,10 @@ void GraphicsEnumDiff_Main()
 		{
 			if (input.IsKeyPressed('1' + i))
 			{
-				category = static_cast<DiffCategory>(i);
-				afterIdx = afterIndices[static_cast<_s32>(category)];
-				isCategoryChanged = true;
-				break;
+			category = static_cast<DiffCategory>(i);
+			afterIdx = afterIndices[static_cast<_s32>(category)];
+			isCategoryChanged = true;
+			break;
 			}
 		}
 
@@ -753,28 +777,31 @@ void GraphicsEnumDiff_Main()
 
 			const color circleColors[3] =
 			{
-				color(0xFF, 0x40, 0x40, 0xFF), // 빨강
-				color(0x40, 0xFF, 0x40, 0xFF), // 초록
-				color(0x4D, 0x66, 0xFF, 0xFF),  // 파랑
+			color(0xFF, 0x40, 0x40, 0xFF), // 빨강
+			color(0x40, 0xFF, 0x40, 0xFF), // 초록
+			color(0x4D, 0x66, 0xFF, 0xFF),  // 파랑
 			};
 
-			texSoft.Bind(&device, 0);
-			shaderBlend.Bind(&device);
+			texSoft.Bind(device.Context(), 0);
+			device.Context().SetVertexShader(vsBlend);
+			device.Context().SetPixelShader(psBlend);
+			{
+		}
 			ctx.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
 			auto DrawCircleGroup = [&](const vec2& _groupCenter, BlendMode _mode)
 			{
-				device.SetBlendMode(_mode);
-				for (_s32 i = 0; i < 3; ++i)
-				{
-					_f32 angle = elapsed * 0.8f + jc_math_pi2 * i / 3.0f;
-					vec2 center(_groupCenter.x + cosf(angle) * 0.15f, _groupCenter.y + sinf(angle) * 0.15f);
-					FillQuadVertices(quadVertices, center, 0.28f, circleColors[i]);
-					vbQuad.Update(&device, quadVertices, 4);
-					vbQuad.Bind(&device);
-					ibQuad.Bind(&device);
-					ctx.DrawIndexed(6, 0, 0);
-				}
+			device.Context().SetBlend(_mode);
+			for (_s32 i = 0; i < 3; ++i)
+			{
+				_f32 angle = elapsed * 0.8f + jc_math_pi2 * i / 3.0f;
+				vec2 center(_groupCenter.x + cosf(angle) * 0.15f, _groupCenter.y + sinf(angle) * 0.15f);
+				FillQuadVertices(quadVertices, center, 0.28f, circleColors[i]);
+				vbQuad.Update(device.Context(), quadVertices, 4);
+				vbQuad.Bind(device.Context());
+				ibQuad.Bind(device.Context());
+				ctx.DrawIndexed(6, 0, 0);
+			}
 			};
 
 			// [Before] 왼쪽: 디폴트 고정
@@ -783,16 +810,16 @@ void GraphicsEnumDiff_Main()
 			DrawCircleGroup(vec2(+0.5f, 0.0f), BLEND_VALUES[afterIdx]);
 
 			// 경계선: 중앙에 흰 세로선 (텍스처 중심 한 점만 샘플링해 불투명 흰색)
-			device.SetBlendMode(BlendMode::bmNone);
+			device.Context().SetBlend(BlendMode::bmNone);
 			const vec2 uvCenter(0.5f, 0.5f);
 			const color lineColor(0xF2, 0xF2, 0xF2);
 			quadVertices[0] = { vec3(-0.004f, +1.0f, 0.0f), uvCenter, lineColor };
 			quadVertices[1] = { vec3(+0.004f, +1.0f, 0.0f), uvCenter, lineColor };
 			quadVertices[2] = { vec3(-0.004f, -1.0f, 0.0f), uvCenter, lineColor };
 			quadVertices[3] = { vec3(+0.004f, -1.0f, 0.0f), uvCenter, lineColor };
-			vbQuad.Update(&device, quadVertices, 4);
-			vbQuad.Bind(&device);
-			ibQuad.Bind(&device);
+			vbQuad.Update(device.Context(), quadVertices, 4);
+			vbQuad.Bind(device.Context());
+			ibQuad.Bind(device.Context());
 			ctx.DrawIndexed(6, 0, 0);
 		}
 		else if (category == DiffCategory::dcFilterMode || category == DiffCategory::dcAddressMode)
@@ -808,31 +835,34 @@ void GraphicsEnumDiff_Main()
 
 			if (category == DiffCategory::dcFilterMode)
 			{
-				filterBefore = FILTER_VALUES[DEFAULT_INDEX[1]]; // fmLinear
-				filterAfter = FILTER_VALUES[afterIdx];
-				addressBefore = AddressMode::amWrap;
-				addressAfter = AddressMode::amWrap;
+			filterBefore = FILTER_VALUES[DEFAULT_INDEX[1]]; // fmLinear
+			filterAfter = FILTER_VALUES[afterIdx];
+			addressBefore = AddressMode::amWrap;
+			addressAfter = AddressMode::amWrap;
 			}
 			else
 			{
-				filterBefore = FilterMode::fmLinear;
-				filterAfter = FilterMode::fmLinear;
-				addressBefore = ADDRESS_VALUES[DEFAULT_INDEX[2]]; // amClamp
-				addressAfter = ADDRESS_VALUES[afterIdx];
+			filterBefore = FilterMode::fmLinear;
+			filterAfter = FilterMode::fmLinear;
+			addressBefore = ADDRESS_VALUES[DEFAULT_INDEX[2]]; // amClamp
+			addressAfter = ADDRESS_VALUES[afterIdx];
 			}
 
-			device.SetSampler(filterBefore, addressBefore, 0);
-			device.SetSampler(filterAfter, addressAfter, 1);
+			device.Context().SetSampler(filterBefore, addressBefore, 0);
+			device.Context().SetSampler(filterAfter, addressAfter, 1);
 
 			CbSplit cb;
 			cb.splitPixelX_ = window.Width() * 0.5f;
 			cb.pad_[0] = cb.pad_[1] = cb.pad_[2] = 0.0f;
-			cbSplit.UpdateAndBind(&device, cb, 0);
+			cbSplit.UpdateAndBind(device.Context(), cb, 0);
 
-			texChecker.Bind(&device, 0);
-			vbUv.Bind(&device);
-			ibUv.Bind(&device);
-			shaderSplit.Bind(&device);
+			texChecker.Bind(device.Context(), 0);
+			vbUv.Bind(device.Context());
+			ibUv.Bind(device.Context());
+			device.Context().SetVertexShader(vsSplit);
+			device.Context().SetPixelShader(psSplit);
+			{
+		}
 			ctx.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 			ctx.DrawIndexed(6, 0, 0);
 		}
@@ -841,30 +871,32 @@ void GraphicsEnumDiff_Main()
 			// Cull/Fill/FrontFace 비교: 같은 큐브를 좌우 두 번 그리기
 			// - 왼쪽은 디폴트 고정, 오른쪽은 선택값. 회전으로 모든 면을 관찰한다.
 
-			vbCube.Bind(&device);
-			ibCube.Bind(&device);
-			shaderColor.Bind(&device);
+			vbCube.Bind(device.Context());
+			ibCube.Bind(device.Context());
+			device.Context().SetVertexShader(vsColor);
+			device.Context().SetPixelShader(psColor);
+			{
+		}
 			ctx.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
 			auto DrawCube = [&](_f32 _offsetX, CullMode _cull, FillMode _fill, FrontFace _front)
 			{
-				// FrontFace가 달라지는 경우는 GraphicDevice의 간단 래퍼로 처리할 수 없어
-				// RenderStates에서 직접 래스터라이저 상태를 꺼내 바인딩한다.
-				if (category == DiffCategory::dcFrontFace)
-				{
-					auto* pRs = device.States().GetRasterizerState(_cull, _fill, _front);
-					ctx.SetRasterizerStateRaw(pRs);
-				}
-				else
-				{
-					device.SetWireframe(_fill == FillMode::fmWireframe);
-					device.SetCullMode(_cull);
-				}
+			// FrontFace가 달라지는 경우는 GraphicDevice의 간단 래퍼로 처리할 수 없어
+			// RenderStates에서 직접 래스터라이저 상태를 꺼내 바인딩한다.
+			if (category == DiffCategory::dcFrontFace)
+			{
+				auto* pRs = device.States().GetRasterizerState(_cull, _fill, _front);
+				ctx.SetRasterizerStateRaw(pRs);
+			}
+			else
+			{
+				device.Context().SetRasterizer(_cull, _fill);
+			}
 
-				CbTransform cb;
-				cb.wvp_ = rot * mat4::Translation(_offsetX, 0.0f, 0.0f) * view * proj;
-				cbTransform.UpdateAndBind(&device, cb, 0);
-				ctx.DrawIndexed(36, 0, 0);
+			CbTransform cb;
+			cb.wvp_ = rot * mat4::Translation(_offsetX, 0.0f, 0.0f) * view * proj;
+			cbTransform.UpdateAndBind(device.Context(), cb, 0);
+			ctx.DrawIndexed(36, 0, 0);
 			};
 
 			CullMode cullBefore = CULL_VALUES[DEFAULT_INDEX[3]];
@@ -886,32 +918,34 @@ void GraphicsEnumDiff_Main()
 			// Depth 비교: 앞뒤 두 큐브의 겹침을 깊이 상태로 제어
 			// - dmDisabled면 그리는 순서대로, dmReadWrite면 Z가 앞선 것이 이긴다.
 
-			vbCube.Bind(&device);
-			ibCube.Bind(&device);
-			shaderColor.Bind(&device);
+			vbCube.Bind(device.Context());
+			ibCube.Bind(device.Context());
+			device.Context().SetVertexShader(vsColor);
+			device.Context().SetPixelShader(psColor);
+			{
+		}
 			ctx.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
-			device.SetWireframe(false);
-			device.SetCullMode(CullMode::cmBack);
+			device.Context().SetRasterizer(CullMode::cmBack, FillMode::fmSolid);
 
 			auto DrawDepthPair = [&](_f32 _offsetX, DepthMode _mode)
 			{
-				auto* pDs = device.States().GetDepthState(_mode);
-				ctx.SetDepthStencilStateRaw(pDs);
+			auto* pDs = device.States().GetDepthState(_mode);
+			ctx.SetDepthStencilStateRaw(pDs);
 
-				// 뒤 큐브 (Z=0.5)
-				{
-					CbTransform cb;
-					cb.wvp_ = mat4::Translation(_offsetX - 0.3f, 0.0f, 0.5f) * view * proj;
-					cbTransform.UpdateAndBind(&device, cb, 0);
-					ctx.DrawIndexed(36, 0, 0);
-				}
-				// 앞 큐브 (Z=0.0)
-				{
-					CbTransform cb;
-					cb.wvp_ = mat4::Translation(_offsetX + 0.3f, 0.0f, 0.0f) * view * proj;
-					cbTransform.UpdateAndBind(&device, cb, 0);
-					ctx.DrawIndexed(36, 0, 0);
-				}
+			// 뒤 큐브 (Z=0.5)
+			{
+				CbTransform cb;
+				cb.wvp_ = mat4::Translation(_offsetX - 0.3f, 0.0f, 0.5f) * view * proj;
+				cbTransform.UpdateAndBind(device.Context(), cb, 0);
+				ctx.DrawIndexed(36, 0, 0);
+			}
+			// 앞 큐브 (Z=0.0)
+			{
+				CbTransform cb;
+				cb.wvp_ = mat4::Translation(_offsetX + 0.3f, 0.0f, 0.0f) * view * proj;
+				cbTransform.UpdateAndBind(device.Context(), cb, 0);
+				ctx.DrawIndexed(36, 0, 0);
+			}
 			};
 
 			DepthMode depthBefore = DEPTH_VALUES[DEFAULT_INDEX[5]];
@@ -927,53 +961,56 @@ void GraphicsEnumDiff_Main()
 			// Topology는 Before/After 분할 없이 중앙에 하나만 표시한다.
 			// - 정점 연결 방식 자체가 화면에 드러나므로 좌우 비교보다 중앙 집중이 더 명확하다.
 
-			shaderColor.Bind(&device);
-			vbTopo.Bind(&device);
+			device.Context().SetVertexShader(vsColor);
+			device.Context().SetPixelShader(psColor);
+			{
+		}
+			vbTopo.Bind(device.Context());
 
 			PrimitiveTopology topoAfter = TOPOLOGY_VALUES[afterIdx];
 			{
-				CbTransform cb;
-				cb.wvp_ = mat4::Translation(0.0f, 0.0f, 0.0f) * view * proj;
-				cbTransform.UpdateAndBind(&device, cb, 0);
-				ctx.SetPrimitiveTopology(topoAfter);
+			CbTransform cb;
+			cb.wvp_ = mat4::Translation(0.0f, 0.0f, 0.0f) * view * proj;
+			cbTransform.UpdateAndBind(device.Context(), cb, 0);
+			ctx.SetPrimitiveTopology(topoAfter);
 
-				if (topoAfter == PrimitiveTopology::ptPointList)
-				{
-					ctx.Draw(5, 0);
-				}
-				else if (topoAfter == PrimitiveTopology::ptLineList)
-				{
-					ibTopoLine.Bind(&device);
-					ctx.DrawIndexed(10, 0, 0);
-				}
-				else if (topoAfter == PrimitiveTopology::ptLineStrip)
-				{
-					ibTopoLineStrip.Bind(&device);
-					ctx.DrawIndexed(6, 0, 0);
-				}
-				else if (topoAfter == PrimitiveTopology::ptTriangleList)
-				{
-					ibTopoTriList.Bind(&device);
-					ctx.DrawIndexed(9, 0, 0);
-				}
-				else // ptTriangleStrip
-				{
-					ibTopoStrip.Bind(&device);
-					ctx.DrawIndexed(6, 0, 0);
-				}
+			if (topoAfter == PrimitiveTopology::ptPointList)
+			{
+				ctx.Draw(5, 0);
+			}
+			else if (topoAfter == PrimitiveTopology::ptLineList)
+			{
+				ibTopoLine.Bind(device.Context());
+				ctx.DrawIndexed(10, 0, 0);
+			}
+			else if (topoAfter == PrimitiveTopology::ptLineStrip)
+			{
+				ibTopoLineStrip.Bind(device.Context());
+				ctx.DrawIndexed(6, 0, 0);
+			}
+			else if (topoAfter == PrimitiveTopology::ptTriangleList)
+			{
+				ibTopoTriList.Bind(device.Context());
+				ctx.DrawIndexed(9, 0, 0);
+			}
+			else // ptTriangleStrip
+			{
+				ibTopoStrip.Bind(device.Context());
+				ctx.DrawIndexed(6, 0, 0);
+			}
 			}
 			ctx.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		}
 
-		device.EndFrame(true);
+		device.Present(true);
 	}
 
 	// 정리: 다음 튜토리얼에 영향을 주지 않도록 기본 상태로 되돌린다.
-	device.SetBlendMode(BlendMode::bmNone);
-	device.SetWireframe(false);
-	device.SetCullMode(CullMode::cmBack);
+	device.Context().SetBlend(BlendMode::bmNone);
+	device.Context().SetRasterizer(CullMode::cmBack, FillMode::fmSolid);
 	ctx.SetDepthStencilStateRaw(device.States().GetDepthState(DepthMode::dmReadWrite));
 	ctx.SetRasterizerStateRaw(device.States().GetRasterizerState(CullMode::cmBack, FillMode::fmSolid, FrontFace::ffClockwise));
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

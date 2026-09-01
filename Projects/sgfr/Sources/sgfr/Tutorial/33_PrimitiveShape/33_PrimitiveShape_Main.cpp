@@ -53,8 +53,8 @@ namespace
 			// root_ 트리는 자식을 소유하지 않으므로(분리만) 직접 정리한다.
 			for (GameObject* pObj : createdObjects_)
 			{
-				RemoveChild(pObj);
-				delete pObj;
+			RemoveChild(pObj);
+			delete pObj;
 			}
 		}
 
@@ -96,12 +96,12 @@ namespace
 		{
 			(void)_dt;
 			SetTitleDrawCall(GetWindow(),
-				"33. Shape2D 4종 - DrawCall: %u (SPACE: 3D 씬, ESC: 종료)",
-				g_cRenderer2D.GetDrawCallCount());
+			"33. Shape2D 4종 - DrawCall: %u (SPACE: 3D 씬, ESC: 종료)",
+			g_cRenderer2D.GetDrawCallCount());
 
 			if (g_cInput.IsKeyPressed(VK_SPACE))
 			{
-				g_cDirector.ReplaceScene(CreateShape3DScene());
+			g_cDirector.ReplaceScene(CreateShape3DScene());
 			}
 		}
 
@@ -119,8 +119,8 @@ namespace
 		{
 			for (GameObject* pObj : createdObjects_)
 			{
-				RemoveChild(pObj);
-				delete pObj;
+			RemoveChild(pObj);
+			delete pObj;
 			}
 		}
 
@@ -148,16 +148,16 @@ namespace
 
 			for (_s32 i = 0; i < createdObjects_.Size(); ++i)
 			{
-				Transform* pTransform = createdObjects_[i]->GetTransform();
-				pTransform->SetLocalRotationEuler(
-					rotateAngle_ * (0.4f + 0.2f * (_f32)i),
-					rotateAngle_ * (0.5f + 0.15f * (_f32)i),
-					0.0f);
+			Transform* pTransform = createdObjects_[i]->GetTransform();
+			pTransform->SetLocalRotationEuler(
+				rotateAngle_ * (0.4f + 0.2f * (_f32)i),
+				rotateAngle_ * (0.5f + 0.15f * (_f32)i),
+				0.0f);
 			}
 
 			if (g_cInput.IsKeyPressed(VK_SPACE))
 			{
-				g_cDirector.ReplaceScene(CreateShape2DScene());
+			g_cDirector.ReplaceScene(CreateShape2DScene());
 			}
 		}
 
@@ -175,7 +175,7 @@ namespace
 		}
 
 		jc::Vector<GameObject*> createdObjects_;	// 소멸자에서 정리할 오브젝트 목록
-		_f32 rotateAngle_ = 0.0f;					// 자전 각도 누적 (도)
+		_f32 rotateAngle_ = 0.0f;				// 자전 각도 누적 (도)
 	};
 
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -209,7 +209,7 @@ namespace
 		{
 			if (g_cInput.IsKeyPressed(VK_ESCAPE))
 			{
-				g_cWindow.Destroy();
+			g_cWindow.Destroy();
 			}
 		}
 	};
