@@ -211,6 +211,7 @@
     </ClCompile>
     <ClCompile Include="..\Sources\jc\Primitives\Span.cpp" />
     <ClCompile Include="..\Sources\jc\Primitives\String.cpp" />
+    <ClCompile Include="..\Sources\jc\Primitives\Uri.cpp" />
     <ClCompile Include="..\Sources\jc\Primitives\StringTokenizer.cpp" />
     <ClCompile Include="..\Sources\jc\Primitives\StringUtil.cpp" />
     <ClCompile Include="..\Sources\jc\Primitives\StringView.cpp" />
@@ -288,6 +289,20 @@
     <ClCompile Include="..\Sources\jc\_Extern\Extern_Random.cpp" />
     <ClCompile Include="..\Sources\jc\_Extern\Extern_StringUtil.cpp" />
     <ClCompile Include="..\Sources\jc\_Extern\Extern_Time.cpp" />
+    <ClCompile Include="..\Sources\jc\Io\IoDaemon.cpp" />
+    <ClCompile Include="..\Sources\jc\Io\PathResolver.cpp" />
+    <ClCompile Include="..\Sources\jc\Io\Engine\FileDest.cpp" />
+    <ClCompile Include="..\Sources\jc\Io\Engine\FileSource.cpp" />
+    <ClCompile Include="..\Sources\jc\Io\Engine\HttpSource.cpp" />
+    <ClCompile Include="..\Sources\jc\Io\Engine\IoJobEngine.cpp" />
+    <ClCompile Include="..\Sources\jc\Io\Engine\MemoryDest.cpp" />
+    <ClCompile Include="..\Sources\jc\Io\Engine\TransferJob.cpp" />
+    <ClCompile Include="..\Sources\jc\Io\Files\FileService.cpp" />
+    <ClCompile Include="..\Sources\jc\Io\Http\HttpHeaders.cpp" />
+    <ClCompile Include="..\Sources\jc\Io\Http\HttpRequest.cpp" />
+    <ClCompile Include="..\Sources\jc\Io\Http\HttpResponse.cpp" />
+    <ClCompile Include="..\Sources\jc\Io\Http\HttpService.cpp" />
+    <ClCompile Include="..\Sources\jc\Io\Http\SyncHttpTransport.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jc\Aligner.h" />
@@ -561,6 +576,7 @@
     <ClInclude Include="..\Sources\jc\Primitives\Span.h" />
     <ClInclude Include="..\Sources\jc\Primitives\StaticString.h" />
     <ClInclude Include="..\Sources\jc\Primitives\String.h" />
+    <ClInclude Include="..\Sources\jc\Primitives\Uri.h" />
     <ClInclude Include="..\Sources\jc\Primitives\StringTokenizer.h" />
     <ClInclude Include="..\Sources\jc\Primitives\StringUtil.h" />
     <ClInclude Include="..\Sources\jc\Hasher.h">
@@ -694,6 +710,27 @@
     <ClInclude Include="..\Sources\jc\_Extern\Extern_Memory.h" />
     <ClInclude Include="..\Sources\jc\_Extern\Extern_Random.h" />
     <ClInclude Include="..\Sources\jc\_Extern\Extern_StringUtil.h" />
+    <ClInclude Include="..\Sources\jc\Io\IIoListener.h" />
+    <ClInclude Include="..\Sources\jc\Io\IoDefine.h" />
+    <ClInclude Include="..\Sources\jc\Io\IoResult.h" />
+    <ClInclude Include="..\Sources\jc\Io\PathResolver.h" />
+    <ClInclude Include="..\Sources\jc\Io\IoDaemon.h" />
+    <ClInclude Include="..\Sources\jc\Io\Engine\IIoSource.h" />
+    <ClInclude Include="..\Sources\jc\Io\Engine\IIoDest.h" />
+    <ClInclude Include="..\Sources\jc\Io\Engine\FileDest.h" />
+    <ClInclude Include="..\Sources\jc\Io\Engine\FileSource.h" />
+    <ClInclude Include="..\Sources\jc\Io\Engine\HttpSource.h" />
+    <ClInclude Include="..\Sources\jc\Io\Engine\IoJobEngine.h" />
+    <ClInclude Include="..\Sources\jc\Io\Engine\MemoryDest.h" />
+    <ClInclude Include="..\Sources\jc\Io\Engine\TransferJob.h" />
+    <ClInclude Include="..\Sources\jc\Io\Files\FileService.h" />
+    <ClInclude Include="..\Sources\jc\Io\Http\HttpService.h" />
+    <ClInclude Include="..\Sources\jc\Io\Http\HttpTypes.h" />
+    <ClInclude Include="..\Sources\jc\Io\Http\HttpHeaders.h" />
+    <ClInclude Include="..\Sources\jc\Io\Http\HttpRequest.h" />
+    <ClInclude Include="..\Sources\jc\Io\Http\HttpResponse.h" />
+    <ClInclude Include="..\Sources\jc\Io\Http\IHttpTransport.h" />
+    <ClInclude Include="..\Sources\jc\Io\Http\SyncHttpTransport.h" />
     <ClInclude Include="..\Sources\jc\_Extern\Extern_Time.h" />
   </ItemGroup>
   <ItemGroup>

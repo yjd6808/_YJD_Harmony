@@ -7,7 +7,7 @@
     </ClCompile>
 
     <Link>
-      <AdditionalDependencies>jc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>jc.lib;winhttp.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
 

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\Sources\jnet\IPAddress.cpp" />
@@ -98,6 +98,13 @@
     </ClCompile>
     <ClCompile Include="..\Sources\jnet\PCH\Core.cpp">
       <Filter>PCH</Filter>
+    </ClCompile>
+    </ClCompile>
+    </ClCompile>
+    </ClCompile>
+    </ClCompile>
+    </ClCompile>
+    </ClCompile>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +245,17 @@
       <Filter>PCH</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jnet\Define.h" />
+    </ClInclude>
+    </ClInclude>
+    </ClInclude>
+    </ClInclude>
+    </ClInclude>
+    </ClInclude>
+    </ClInclude>
+    </ClInclude>
+    </ClInclude>
+    </ClInclude>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Host">
@@ -263,6 +281,8 @@
     </Filter>
     <Filter Include="PCH">
       <UniqueIdentifier>{780bcb8a-0ee0-4c51-a65c-d0f503dd4ffc}</UniqueIdentifier>
+    </Filter>
+      <UniqueIdentifier>{b3c9e4d7-5a2f-4b8c-9f1e-2d3a4b5c6d7e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

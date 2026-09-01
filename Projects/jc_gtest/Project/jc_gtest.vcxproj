@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -79,6 +79,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Io\PathResolverTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\Io\IoEngineTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\Io\FileServiceTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\Io\HttpServiceTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Pool\AccessibleObjectPoolTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Pool\MemoryPoolTest.cpp">
       <SubType>
@@ -92,6 +96,8 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\FileSystem\UriTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\FileSystem\MemoryStreamTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Primitives\ObserverPtrTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Primitives\SmartPtrTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Primitives\StaticStringTest.cpp" />

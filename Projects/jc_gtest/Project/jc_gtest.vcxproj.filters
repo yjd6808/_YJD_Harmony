@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\Sources\jc_gtest\TypeTraitsTest.cpp" />
@@ -160,6 +160,26 @@
     <ClCompile Include="..\Sources\jc_gtest\PCH\Core.cpp">
       <Filter>PCH</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Io\PathResolverTest.cpp">
+      <Filter>Io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Io\IoEngineTest.cpp">
+      <Filter>Io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Io\FileServiceTest.cpp">
+      <Filter>Io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Io\HttpServiceTest.cpp">
+      <Filter>Io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\FileSystem\UriTest.cpp">
+      <Filter>FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\FileSystem\MemoryStreamTest.cpp">
+      <Filter>FileSystem</Filter>
+    </ClCompile>
+    </ClCompile>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Container">
@@ -189,6 +209,11 @@
     <Filter Include="FileSystem">
       <UniqueIdentifier>{750802d8-37fc-4cbb-89bb-cf423f2efea4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Io">
+      <UniqueIdentifier>{aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee}</UniqueIdentifier>
+    </Filter>
+      <UniqueIdentifier>{d4e5f6a7-b8c9-0123-def0-123456789abc}</UniqueIdentifier>
+    </Filter>
     <Filter Include="PCH">
       <UniqueIdentifier>{80a5ce19-c26c-4777-a2cc-d2ef50485e33}</UniqueIdentifier>
     </Filter>
@@ -199,6 +224,10 @@
   <ItemGroup>
     <ClInclude Include="..\Sources\jc_gtest\PCH\Core.h">
       <Filter>PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc_gtest\Io\MockHttpServer.h">
+      <Filter>Io</Filter>
+    </ClInclude>
     </ClInclude>
   </ItemGroup>
 </Project>

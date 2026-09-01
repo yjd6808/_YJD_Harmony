@@ -1,62 +1,61 @@
-﻿//
-// pch.h
-//
+﻿/*
+	작성자 : 윤정도
+	jnet_gtest PCH 파일입니다.
+*/
 
 #pragma once
 
 #include <gtest/gtest.h>
 
-#include "jnet/PCH/Core.h"
-#include "jnet/IPAddress.h"
-#include "jnet/IPEndPoint.h"
-#include "jnet/Socket.h"
-#include "jnet/Winsock.h"
-#include "jc/Container/Vector.h"
+#include <vector>
+#include <string>
+#include <map>
+#include <thread>
+#include <mutex>
+#include <chrono>
+#include <crtdbg.h>
 
+#include <winsock2.h>
+#include <ws2tcpip.h>
 
-using namespace jc;
-using namespace jnet;
+#include "jc/PCH/Core.h"
+#include "jc/Debug/MemoryLeakDetector.h"
+#include "jc/Debug/MemoryPoolLeakDetector.h"
+#include "jc/Threading/Thread.h"
 
-#define ON        1
-#define OFF       0
+#include "jnet/Namespace.h"
+
+namespace jnet {}
+USING_NS_JC;
+USING_NS_JNET;
+USING_NS_STD;
+
+#define ON		1
+#define OFF		0
 
 //출력 여부
-#define Print    OFF
+#define Print						OFF
+#define TestEnabled					ON		// 전체 테스트 수행 여부
 
-#define TEST_IPEndPointTest     ON
-#define TEST_IPAddressTest      ON
-#define TEST_ByteOrderTest      ON
-#define TEST_SocketTest         ON
+#define HttpTestEnabled				ON		// jnet::Http 테스트 수행 여부
 
+// 개별 테스트 수행시 사용
+#if TestEnabled == OFF
+	#define TEST_HttpClientSyncTest				ON
+#endif
 
-// 범위 메모리릭 체크
-// @코드 획득 주소 : https://stackoverflow.com/questions/29174938/googletest-and-memory-leaks
-class AutoMemoryLeakDetector
-{
-public:
-    AutoMemoryLeakDetector()
-    {
-        _CrtMemCheckpoint(&memState_);
-    }
+#if TestEnabled == ON
 
-    ~AutoMemoryLeakDetector()
-    {
-        _CrtMemState stateNow, stateDiff;
-        _CrtMemCheckpoint(&stateNow);
-        const int diffResult = _CrtMemDifference(&stateDiff, &memState_, &stateNow);
+	#if HttpTestEnabled == ON
+		#define TEST_MockHttpServerSelfTest		ON
+		#define TEST_HttpHeadersTest			ON
+		#define TEST_HttpClientSyncTest			ON
+		#define TEST_HttpClientAsyncTest		ON
+		#define TEST_HttpDataSourceBridgeTest	ON
+	#endif
 
-        if (diffResult)
-        {
-            reportFailure(stateDiff.lSizes[1]);
-            _CrtMemDumpStatistics(&stateDiff);
-        }
-    }
-
-private:
-    void reportFailure(unsigned int _unfreedBytes)
-    {
-        FAIL() << "Memory leak of " << _unfreedBytes << " byte(s) detected.";
-    }
-
-    _CrtMemState memState_;
-};
+#endif
+// https://stackoverflow.com/questions/1082192/how-to-generate-random-variable-names-in-c-using-macros
+#define LeakCheckConcat(a, b) LeakCheckConcatInner(a, b)
+#define LeakCheckConcatInner(a, b) a##b {[](_u32 unfreedBytes) { FAIL() << unfreedBytes << " 바이트 메모리 릭\n"; }}
+#define LeakCheck AutoMemoryLeakDetector LeakCheckConcat(LeakCheck, __COUNTER__)

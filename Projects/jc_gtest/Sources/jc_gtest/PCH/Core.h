@@ -50,6 +50,7 @@ USING_NS_STD;
 #define ContainerTestEnabled        ON      // jc::Container 테스트 수행 여부
 #define ContainerImplTestEnabled    OFF     // 컨테이너 개발 테스트 코드를 수행 여부
 #define FileSystemTestEnabled       ON      // jc::FileSystem 테스트 코드 수행 여부
+#define LoaderTestEnabled           ON      // jc::FileSystem::Loader 테스트 수행 여부
 #define PoolTestEnabled             ON      // jc::Pool 테스트 코드 수행 여부
 #define PrimitivesTestEnabled       ON      // jc::Primitives 테스트 수행 여부
 #define RAIITestEnabled             ON      // jc::RAII 테스트 수행 여부
@@ -123,11 +124,20 @@ USING_NS_STD;
         #define TEST_ObserverPtrTest		    ON
         #define TEST_SmartPtrTest			    ON
         #define TEST_StaticStringTest           ON
-        #define TEST_StringTest					ON
+		#define TEST_StringTest					ON
         #define TEST_StringViewTest				ON
         #define TEST_StringUtilTest				ON
-
+		#define TEST_UriTest                    ON
     #endif
+
+	#if ContainerTestEnabled == ON
+		#define TEST_MemoryStreamTest           ON
+	#endif
+
+	#if LoaderTestEnabled == ON
+		#define TEST_FileDataSourceTest         ON
+		#define TEST_FileLoaderTest             ON
+	#endif
 
     #if SyncTestEnabled == ON
 
