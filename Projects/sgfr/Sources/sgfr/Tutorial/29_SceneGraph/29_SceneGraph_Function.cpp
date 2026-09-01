@@ -7,6 +7,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/29_SceneGraph/29_SceneGraph_Function.h"
 
 using namespace sgf;

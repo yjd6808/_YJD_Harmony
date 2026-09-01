@@ -14,57 +14,57 @@
 
 NS_SGF_BEGIN
 
-//////////////////////////////////////////////////////////////////////////////////////////
+namespace
+{
+	inline bool CreateD3DBuffer(GraphicDevice* _pDevice, UINT _byteWidth, D3D11_BIND_FLAG _bindFlag, ResourceUsage _usage, const void* _pData, SgfComPtr<ID3D11Buffer>& _outBuffer)
+	{
+		D3D11_BUFFER_DESC bd = {};
+		bd.ByteWidth = _byteWidth;
+		bd.Usage = ToD3D11(_usage);
+		bd.BindFlags = _bindFlag;
+		bd.CPUAccessFlags = (_usage == ResourceUsage::ruDynamic) ? D3D11_CPU_ACCESS_WRITE : 0;
+
+		D3D11_SUBRESOURCE_DATA sd = {};
+		sd.pSysMem = _pData;
+
+		return SUCCEEDED(_pDevice->Device()->CreateBuffer(&bd, (_pData != nullptr) ? &sd : nullptr, _outBuffer.GetAddressOf()));
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
 // VertexBuffer
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // 생성자
 VertexBuffer::VertexBuffer()
 	: stride_(0)
 	, count_(0)
 	, usage_(ResourceUsage::ruDefault)
-	, layout_()
+	, pDecl_(nullptr)
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // 소멸자 (ComPtr이 자동 Release)
 VertexBuffer::~VertexBuffer()
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // 정점 버퍼 생성
-bool VertexBuffer::Create(GraphicDevice* _pDevice, const void* _pData, UINT _stride, UINT _count, VertexLayoutSpan _layout, ResourceUsage _usage)
+bool VertexBuffer::Create(GraphicDevice* _pDevice, const void* _pData, UINT _count, const VertexDeclaration* _pDecl, ResourceUsage _usage)
 {
-	stride_ = _stride;
+	jc_assert_msg(_pDecl != nullptr, "정점 버퍼에는 VertexDeclaration이 필요합니다.");
+
+	stride_ = _pDecl->Stride(0);
 	count_ = _count;
 	usage_ = _usage;
-	layout_ = _layout;
+	pDecl_ = _pDecl;
 
-	// 버퍼 설정: 크기/용도/CPU 접근 권한을 기술한다.
-	D3D11_BUFFER_DESC bd = {};
-	bd.ByteWidth = _stride * _count;									// 전체 바이트 크기
-	bd.Usage = ToD3D11(_usage);											// 갱신 방식 (ResourceUsage → D3D11_USAGE)
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;							// 정점 버퍼 용도
-	bd.CPUAccessFlags = (_usage == ResourceUsage::ruDynamic) ? D3D11_CPU_ACCESS_WRITE : 0;	// CPU 쓰기 권한 (ruDynamic만 Map 가능)
-
-	// 초기 데이터가 있으면 생성과 동시에 복사해 넣는다.
-	D3D11_SUBRESOURCE_DATA sd = {};
-	sd.pSysMem = _pData;
-
-	return SUCCEEDED(_pDevice->Device()->CreateBuffer(
-		&bd,
-		(_pData != nullptr) ? &sd : nullptr,	// 데이터 없이 빈 버퍼만 만들 수도 있다
-		pBuffer_.GetAddressOf()));
+	return CreateD3DBuffer(_pDevice, stride_ * _count, D3D11_BIND_VERTEX_BUFFER, _usage, _pData, pBuffer_);
 }
 
-bool VertexBuffer::Create(GraphicDevice* _pDevice, const void* _pData, UINT _stride, UINT _count, ResourceUsage _usage)
-{
-	return Create(_pDevice, _pData, _stride, _count, VertexLayoutSpan{}, _usage);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // DYNAMIC 정점 버퍼 갱신 - GraphicContext 캐시를 통과한다
 bool VertexBuffer::Update(GraphicContext& _context, const void* _pData, UINT _count)
 {
@@ -76,17 +76,17 @@ bool VertexBuffer::Update(GraphicContext& _context, const void* _pData, UINT _co
 	return _context.UpdateBuffer(pBuffer_.Get(), _pData, stride_ * _count);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // IA 단계 슬롯 0에 장착 - 캐시를 통과한다
 void VertexBuffer::Bind(GraphicContext& _context)
 {
 	_context.SetVertexBuffer(this);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // IndexBuffer
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // 생성자
 IndexBuffer::IndexBuffer()
 	: count_(0)
@@ -94,35 +94,23 @@ IndexBuffer::IndexBuffer()
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // 소멸자
 IndexBuffer::~IndexBuffer()
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // 인덱스 버퍼 생성
 bool IndexBuffer::Create(GraphicDevice* _pDevice, const _u32* _pIndices, UINT _count, ResourceUsage _usage)
 {
 	count_ = _count;
 	usage_ = _usage;
 
-	D3D11_BUFFER_DESC bd = {};
-	bd.ByteWidth = sizeof(_u32) * _count;
-	bd.Usage = ToD3D11(_usage);											// 갱신 방식 (ResourceUsage → D3D11_USAGE)
-	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;								// 인덱스 버퍼 용도
-	bd.CPUAccessFlags = (_usage == ResourceUsage::ruDynamic) ? D3D11_CPU_ACCESS_WRITE : 0;	// CPU 쓰기 권한 (ruDynamic만 Map 가능)
-
-	D3D11_SUBRESOURCE_DATA sd = {};
-	sd.pSysMem = _pIndices;
-
-	return SUCCEEDED(_pDevice->Device()->CreateBuffer(
-		&bd,
-		(_pIndices != nullptr) ? &sd : nullptr,
-		pBuffer_.GetAddressOf()));
+	return CreateD3DBuffer(_pDevice, sizeof(_u32) * _count, D3D11_BIND_INDEX_BUFFER, _usage, _pIndices, pBuffer_);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // DYNAMIC 인덱스 버퍼 갱신 - GraphicContext 캐시를 통과한다
 bool IndexBuffer::Update(GraphicContext& _context, const _u32* _pIndices, UINT _count)
 {
@@ -134,7 +122,7 @@ bool IndexBuffer::Update(GraphicContext& _context, const _u32* _pIndices, UINT _
 	return _context.UpdateBuffer(pBuffer_.Get(), _pIndices, sizeof(_u32) * _count);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // IA 단계에 장착 (32비트 인덱스 형식 고정) - 캐시를 통과한다
 void IndexBuffer::Bind(GraphicContext& _context)
 {

@@ -20,6 +20,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/25_RenderTarget/25_RenderTarget_Main.h"
 #include "sgfr/Tutorial/25_RenderTarget/25_RenderTarget_Function.h"
 #include "sgfr/Common/TutorialCommon.h"	// 셰이더/큐브 공용 사용
@@ -64,9 +65,19 @@ void RenderTarget_Main()
 		window.Destroy();
 		return;
 	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
+
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
 	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 	return;
@@ -77,6 +88,7 @@ void RenderTarget_Main()
 	if (!miniMapTarget.Create(&device, 256, 256))
 	{
 		jc::Console::WriteLine("렌더 타깃 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -89,10 +101,11 @@ void RenderTarget_Main()
 
 	VertexBuffer cubeVb;
 	IndexBuffer cubeIb;
-	if (!cubeVb.Create(&device, cubeVertices, sizeof(VertexPC), 8) ||
+	if (!cubeVb.Create(&device, cubeVertices, 8, VertexPC::Decl()) ||
 		!cubeIb.Create(&device, cubeIndices, 36))
 		{
 		jc::Console::WriteLine("큐브 버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -105,28 +118,28 @@ void RenderTarget_Main()
 
 	VertexBuffer quadVb;
 	IndexBuffer quadIb;
-	if (!quadVb.Create(&device, quadVertices, sizeof(VertexPTC), 4) ||
+	if (!quadVb.Create(&device, quadVertices, 4, VertexPTC::Decl()) ||
 		!quadIb.Create(&device, quadIndices, 6))
 		{
 		jc::Console::WriteLine("미니맵 버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
 	// 5. 셰이더 2종 + 상수 버퍼
-	VertexLayoutSpan pCubeLayout = VertexPC::Layout();
-	VertexLayoutSpan pQuadLayout = VertexPTC::Layout();
 
-	_u32 vsCubeShader = device.Context().CreateVertexShader(ColorTransformShaderSource());
-	_u32 psCubeShader = device.Context().CreatePixelShader(ColorTransformShaderSource());
-	_u32 vsQuadShader = device.Context().CreateVertexShader(TextureShaderSource());
-	_u32 psQuadShader = device.Context().CreatePixelShader(TextureShaderSource());
+	_u64 vsCubeShader = device.Context().CreateVertexShader(ColorTransformShaderSource());
+	_u64 psCubeShader = device.Context().CreatePixelShader(ColorTransformShaderSource());
+	_u64 vsQuadShader = device.Context().CreateVertexShader(TextureShaderSource());
+	_u64 psQuadShader = device.Context().CreatePixelShader(TextureShaderSource());
 	ConstantBuffer<CbTransform> cbTransform;
 	ConstantBuffer<CbPost> cbPost;
-	if (vsCubeShader == INVALID_HANDLE || psCubeShader == INVALID_HANDLE || vsQuadShader == INVALID_HANDLE || psQuadShader == INVALID_HANDLE || !cbTransform.Create(&device) || !cbPost.Create(&device))
+	if (vsCubeShader == INVALID_RESOURCE_KEY || psCubeShader == INVALID_RESOURCE_KEY || vsQuadShader == INVALID_RESOURCE_KEY || psQuadShader == INVALID_RESOURCE_KEY || !cbTransform.Create(&device) || !cbPost.Create(&device))
 		{
 		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -174,7 +187,6 @@ void RenderTarget_Main()
 		device.Context().SetVertexShader(vsCubeShader);
 		device.Context().SetPixelShader(psCubeShader);
 		{
-			device.Context().SetInputLayout(vsCubeShader, pCubeLayout);
 		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		device.Context().DrawIndexed(36, 0, 0);
@@ -190,7 +202,6 @@ void RenderTarget_Main()
 		device.Context().SetVertexShader(vsCubeShader);
 		device.Context().SetPixelShader(psCubeShader);
 		{
-			device.Context().SetInputLayout(vsCubeShader, pCubeLayout);
 		}
 		device.Context().DrawIndexed(36, 0, 0);
 
@@ -203,7 +214,6 @@ void RenderTarget_Main()
 		device.Context().SetVertexShader(vsQuadShader);
 		device.Context().SetPixelShader(psQuadShader);
 		{
-			device.Context().SetInputLayout(vsQuadShader, pQuadLayout);
 		}
 		device.Context().DrawIndexed(6, 0, 0);
 
@@ -212,6 +222,7 @@ void RenderTarget_Main()
 
 	// 8. 정리
 	miniMapTarget.Destroy();
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

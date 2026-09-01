@@ -30,7 +30,7 @@
     <ClCompile Include="..\Sources\sgf\Core\Application.cpp" />
     <ClCompile Include="..\Sources\sgf\Input\InputManager.cpp" />
     <ClCompile Include="..\Sources\sgf\Graphics\GraphicDevice.cpp" />
-    <ClCompile Include="..\Sources\sgf\Graphics\Shader.cpp" />
+    <ClCompile Include="..\Sources\sgf\Graphics\VertexDeclaration.cpp" />
     <ClCompile Include="..\Sources\sgf\Graphics\Buffers.cpp" />
     <ClCompile Include="..\Sources\sgf\Graphics\Texture.cpp" />
     <ClCompile Include="..\Sources\sgf\Graphics\Renderer2D.cpp" />
@@ -69,7 +69,7 @@
     <ClInclude Include="..\Sources\sgf\Core\Application.h" />
     <ClInclude Include="..\Sources\sgf\Input\InputManager.h" />
     <ClInclude Include="..\Sources\sgf\Graphics\GraphicDevice.h" />
-    <ClInclude Include="..\Sources\sgf\Graphics\Shader.h" />
+    <ClInclude Include="..\Sources\sgf\Graphics\VertexDeclaration.h" />
     <ClInclude Include="..\Sources\sgf\Graphics\Vertex.h" />
     <ClInclude Include="..\Sources\sgf\Graphics\Buffers.h" />
     <ClInclude Include="..\Sources\sgf\Graphics\Texture.h" />

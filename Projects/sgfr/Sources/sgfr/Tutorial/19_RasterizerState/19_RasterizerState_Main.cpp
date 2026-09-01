@@ -28,6 +28,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/19_RasterizerState/19_RasterizerState_Main.h"
 #include "sgfr/Tutorial/19_RasterizerState/19_RasterizerState_Function.h"
 #include "sgfr/Common/TutorialCommon.h"	// 셰이더/큐브 공용 사용
@@ -70,9 +71,19 @@ void RasterizerState_Main()
 		window.Destroy();
 		return;
 	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
+
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
 	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 	return;
@@ -85,25 +96,26 @@ void RasterizerState_Main()
 
 	VertexBuffer vb;
 	IndexBuffer ib;
-	if (!vb.Create(&device, vertices, sizeof(VertexPC), 8) ||
+	if (!vb.Create(&device, vertices, 8, VertexPC::Decl()) ||
 		!ib.Create(&device, indices, 36))
 		{
 		jc::Console::WriteLine("버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
 	// 3. 셰이더 + 상수 버퍼
-	VertexLayoutSpan pLayoutDescs = VertexPC::Layout();
 
-	_u32 vsShader = device.Context().CreateVertexShader(ColorTransformShaderSource());
-	_u32 psShader = device.Context().CreatePixelShader(ColorTransformShaderSource());
+	_u64 vsShader = device.Context().CreateVertexShader(ColorTransformShaderSource());
+	_u64 psShader = device.Context().CreatePixelShader(ColorTransformShaderSource());
 	ConstantBuffer<CbTransform> cbTransform;
-	if (vsShader == INVALID_HANDLE || psShader == INVALID_HANDLE ||
+	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY ||
 		!cbTransform.Create(&device))
 		{
 		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -162,7 +174,6 @@ void RasterizerState_Main()
 		device.Context().SetVertexShader(vsShader);
 		device.Context().SetPixelShader(psShader);
 		{
-			device.Context().SetInputLayout(vsShader, pLayoutDescs);
 		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
@@ -188,6 +199,7 @@ void RasterizerState_Main()
 
 	// 7. 정리: 다음 튜토리얼을 위해 기본 상태로 되돌리고 종료
 	device.Context().SetRasterizer(CullMode::cmBack, FillMode::fmSolid);
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

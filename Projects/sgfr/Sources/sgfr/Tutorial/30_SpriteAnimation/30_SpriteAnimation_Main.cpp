@@ -31,6 +31,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/30_SpriteAnimation/30_SpriteAnimation_Main.h"
 #include "sgfr/Tutorial/30_SpriteAnimation/30_SpriteAnimation_Function.h"
 #include "sgfr/Common/TutorialCommon.h"	// 셰이더 공용 사용
@@ -67,9 +68,19 @@ void SpriteAnimation_Main()
 		window.Destroy();
 		return;
 	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
+
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
 	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 	return;
@@ -86,6 +97,7 @@ void SpriteAnimation_Main()
 	if (!bTextureOk)
 	{
 		jc::Console::WriteLine("스프라이트 시트 텍스처 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -101,21 +113,23 @@ void SpriteAnimation_Main()
 
 	VertexBuffer quadVb;
 	IndexBuffer quadIb;
-	if (!quadVb.Create(&device, quadVertices, sizeof(VertexPTC), 4, ResourceUsage::ruDynamic) ||
+	if (!quadVb.Create(&device, quadVertices, 4, VertexPTC::Decl()) ||
 		!quadIb.Create(&device, quadIndices, 6))
 		{
 		jc::Console::WriteLine("버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
 	// 4. 셰이더
-	_u32 vsSprite = device.Context().CreateVertexShader(TextureShaderSource());
-	_u32 psSprite = device.Context().CreatePixelShader(TextureShaderSource());
-	if (vsSprite == INVALID_HANDLE || psSprite == INVALID_HANDLE)
+	_u64 vsSprite = device.Context().CreateVertexShader(TextureShaderSource());
+	_u64 psSprite = device.Context().CreatePixelShader(TextureShaderSource());
+	if (vsSprite == INVALID_RESOURCE_KEY || psSprite == INVALID_RESOURCE_KEY)
 	{
 		jc::Console::WriteLine("셰이더 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -209,7 +223,6 @@ void SpriteAnimation_Main()
 		device.Context().SetVertexShader(vsSprite);
 		device.Context().SetPixelShader(psSprite);
 		{
-			device.Context().SetInputLayout(vsSprite, VertexPTC::Layout());
 		}
 		quadIb.Bind(device.Context());
 
@@ -230,6 +243,7 @@ void SpriteAnimation_Main()
 
 	// 7. 정리 (다음 튜토리얼을 위해 불투명 블렌드로 복원)
 	device.Context().SetBlend(BlendMode::bmNone);
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

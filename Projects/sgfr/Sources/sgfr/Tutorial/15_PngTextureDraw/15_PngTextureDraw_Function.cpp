@@ -6,6 +6,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/15_PngTextureDraw/15_PngTextureDraw_Function.h"
 
 using namespace sgf;

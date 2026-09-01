@@ -7,6 +7,10 @@
  * [캐시 규칙]
  * 모든 Set 함수는 "마지막으로 묶은 D3D 객체"와 비교해 같으면 생략한다.
  * 생략 여부는 skippedCallCount_로 집계되어 튜토리얼 23장에서 직접 확인할 수 있다.
+ *
+ * [지연 결합]
+ * InputLayout은 선언(VB가 제공) × VS 시그니처 조합으로 Draw 직전에 결정된다.
+ * 어떤 순서로 바인딩해도 무관하며, 캐시는 Device가 소유한다.
  */
 
 #include "Core.h"
@@ -15,10 +19,27 @@
 #include "sgf/Graphics/Buffers.h"
 #include "sgf/Graphics/Texture.h"
 #include "sgf/Graphics/ShaderProgram.h"
+#include "sgf/Graphics/VertexDeclaration.h"
 
 NS_SGF_BEGIN
 
 using namespace jc;
+
+namespace
+{
+	template <typename T>
+	inline bool CheckAndUpdateCache(T& _cached, T _incoming, _u64& _skipped, _u64& _api)
+	{
+		if (_cached == _incoming)
+		{
+			++_skipped;
+			return true;
+		}
+		_cached = _incoming;
+		++_api;
+		return false;
+	}
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////
 GraphicContext::GraphicContext()
@@ -94,12 +115,6 @@ bool GraphicContext::Initialize(GraphicDevice* _pDevice)
 //////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::Finalize()
 {
-	for (_s32 i = 0; i < ownedInputLayouts_.Size(); ++i)
-	{
-		delete ownedInputLayouts_[i];
-	}
-	ownedInputLayouts_.Clear();
-
 	if (pContext_ != nullptr)
 	{
 		// ClearState 후 참조 해제. 즉시 컨텍스트는 Device가 내부 참조를 유지하므로 실제 소멸은 Device 소멸 시.
@@ -109,6 +124,9 @@ void GraphicContext::Finalize()
 
 	pDevice_ = nullptr;
 	deferred_ = false;
+	pCurrentDecl_ = nullptr;
+	pCurrentVs_ = nullptr;
+	inputLayoutDirty_ = false;
 	InvalidateCache();
 }
 
@@ -131,6 +149,7 @@ void GraphicContext::InvalidateCache()
 	memset(pCachedSamplers_, 0, sizeof(pCachedSamplers_));
 	memset(pCachedCbuffers_, 0, sizeof(pCachedCbuffers_));
 	cachedTopology_ = PrimitiveTopology::Max;	// "알 수 없음" 표시
+	inputLayoutDirty_ = true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -141,8 +160,21 @@ void GraphicContext::ResetStats()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+void GraphicContext::SetVertexDeclaration(const VertexDeclaration* _pDecl)
+{
+	if (pCurrentDecl_ == _pDecl) { return; }
+	pCurrentDecl_ = _pDecl;
+	inputLayoutDirty_ = true;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::SetVertexBuffer(VertexBuffer* _pBuffer)
 {
+	if (_pBuffer != nullptr)
+	{
+		SetVertexDeclaration(_pBuffer->Decl());
+	}
+
 	ID3D11Buffer* pRaw = (_pBuffer != nullptr) ? _pBuffer->Raw() : nullptr;
 	if (pRaw == pCachedVertexBuffer_)
 	{
@@ -174,21 +206,6 @@ void GraphicContext::SetIndexBuffer(IndexBuffer* _pBuffer)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GraphicContext::SetInputLayout(InputLayout* _pLayout)
-{
-	ID3D11InputLayout* pRaw = (_pLayout != nullptr) ? _pLayout->Raw() : nullptr;
-	if (pRaw == pCachedInputLayout_)
-	{
-		skippedCallCount_ += 1;
-		return;
-	}
-
-	pCachedInputLayout_ = pRaw;
-	apiCallCount_ += 1;
-	pContext_->IASetInputLayout(pRaw);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::SetPrimitiveTopology(PrimitiveTopology _topology)
 {
 	if (_topology == cachedTopology_)
@@ -208,11 +225,14 @@ void GraphicContext::SetVertexShader(VertexShader* _pShader)
 	ID3D11VertexShader* pRaw = (_pShader != nullptr) ? _pShader->Raw() : nullptr;
 	if (pRaw == pCachedVs_)
 	{
+		pCurrentVs_ = _pShader;
 		skippedCallCount_ += 1;
 		return;
 	}
 
 	pCachedVs_ = pRaw;
+	pCurrentVs_ = _pShader;
+	inputLayoutDirty_ = true;
 	apiCallCount_ += 1;
 	pContext_->VSSetShader(pRaw, nullptr, 0);
 }
@@ -232,17 +252,17 @@ void GraphicContext::SetPixelShader(PixelShader* _pShader)
 	pContext_->PSSetShader(pRaw, nullptr, 0);
 }
 
-////////////////////////////////////////////////////////////////////////////////////////
-_u32 GraphicContext::CreateVertexShader(const jc::String& _hlslSource, const jc::String& _entry)
+//////////////////////////////////////////////////////////////////////////////////////////
+_u64 GraphicContext::CreateVertexShader(const jc::String& _hlslSource, const jc::String& _entry)
 {
-	if (pDevice_ == nullptr) return INVALID_HANDLE;
+	if (pDevice_ == nullptr) return INVALID_RESOURCE_KEY;
 	return pDevice_->CreateVertexShader(_hlslSource, _entry);
 }
 
-////////////////////////////////////////////////////////////////////////////////////////
-_u32 GraphicContext::CreatePixelShader(const jc::String& _hlslSource, const jc::String& _entry)
+//////////////////////////////////////////////////////////////////////////////////////////
+_u64 GraphicContext::CreatePixelShader(const jc::String& _hlslSource, const jc::String& _entry)
 {
-	if (pDevice_ == nullptr) return INVALID_HANDLE;
+	if (pDevice_ == nullptr) return INVALID_RESOURCE_KEY;
 	return pDevice_->CreatePixelShader(_hlslSource, _entry);
 }
 
@@ -374,14 +394,7 @@ void GraphicContext::SetViewport(const Viewport& _viewport)
 void GraphicContext::SetRasterizerState(RasterizerState* _pState)
 {
 	ID3D11RasterizerState* pRaw = (_pState != nullptr) ? _pState->Raw() : nullptr;
-	if (pRaw == pCachedRasterizer_)
-	{
-		skippedCallCount_ += 1;
-		return;
-	}
-
-	pCachedRasterizer_ = pRaw;
-	apiCallCount_ += 1;
+	if (CheckAndUpdateCache(pCachedRasterizer_, pRaw, skippedCallCount_, apiCallCount_)) { return; }
 	pContext_->RSSetState(pRaw);
 }
 
@@ -389,14 +402,7 @@ void GraphicContext::SetRasterizerState(RasterizerState* _pState)
 // Raw 오버로드 — RenderStates 풀에서 나온 원시 포인터를 직접 받는다.
 void GraphicContext::SetRasterizerStateRaw(ID3D11RasterizerState* _pRaw)
 {
-	if (_pRaw == pCachedRasterizer_)
-	{
-		skippedCallCount_ += 1;
-		return;
-	}
-
-	pCachedRasterizer_ = _pRaw;
-	apiCallCount_ += 1;
+	if (CheckAndUpdateCache(pCachedRasterizer_, _pRaw, skippedCallCount_, apiCallCount_)) { return; }
 	pContext_->RSSetState(_pRaw);
 }
 
@@ -404,14 +410,7 @@ void GraphicContext::SetRasterizerStateRaw(ID3D11RasterizerState* _pRaw)
 void GraphicContext::SetBlendState(BlendState* _pState)
 {
 	ID3D11BlendState* pRaw = (_pState != nullptr) ? _pState->Raw() : nullptr;
-	if (pRaw == pCachedBlend_)
-	{
-		skippedCallCount_ += 1;
-		return;
-	}
-
-	pCachedBlend_ = pRaw;
-	apiCallCount_ += 1;
+	if (CheckAndUpdateCache(pCachedBlend_, pRaw, skippedCallCount_, apiCallCount_)) { return; }
 	pContext_->OMSetBlendState(pRaw, nullptr, 0xFFFFFFFF);
 }
 
@@ -419,14 +418,7 @@ void GraphicContext::SetBlendState(BlendState* _pState)
 // Raw 오버로드 — 같은 캐시 필드(pCachedBlend_) 공유
 void GraphicContext::SetBlendStateRaw(ID3D11BlendState* _pRaw)
 {
-	if (_pRaw == pCachedBlend_)
-	{
-		skippedCallCount_ += 1;
-		return;
-	}
-
-	pCachedBlend_ = _pRaw;
-	apiCallCount_ += 1;
+	if (CheckAndUpdateCache(pCachedBlend_, _pRaw, skippedCallCount_, apiCallCount_)) { return; }
 	pContext_->OMSetBlendState(_pRaw, nullptr, 0xFFFFFFFF);
 }
 
@@ -434,14 +426,7 @@ void GraphicContext::SetBlendStateRaw(ID3D11BlendState* _pRaw)
 void GraphicContext::SetDepthStencilState(DepthStencilState* _pState)
 {
 	ID3D11DepthStencilState* pRaw = (_pState != nullptr) ? _pState->Raw() : nullptr;
-	if (pRaw == pCachedDepth_)
-	{
-		skippedCallCount_ += 1;
-		return;
-	}
-
-	pCachedDepth_ = pRaw;
-	apiCallCount_ += 1;
+	if (CheckAndUpdateCache(pCachedDepth_, pRaw, skippedCallCount_, apiCallCount_)) { return; }
 	pContext_->OMSetDepthStencilState(pRaw, 0);
 }
 
@@ -449,14 +434,7 @@ void GraphicContext::SetDepthStencilState(DepthStencilState* _pState)
 // Raw 오버로드 — 같은 캐시 필드(pCachedDepth_) 공유
 void GraphicContext::SetDepthStencilStateRaw(ID3D11DepthStencilState* _pRaw)
 {
-	if (_pRaw == pCachedDepth_)
-	{
-		skippedCallCount_ += 1;
-		return;
-	}
-
-	pCachedDepth_ = _pRaw;
-	apiCallCount_ += 1;
+	if (CheckAndUpdateCache(pCachedDepth_, _pRaw, skippedCallCount_, apiCallCount_)) { return; }
 	pContext_->OMSetDepthStencilState(_pRaw, 0);
 }
 
@@ -508,6 +486,9 @@ void GraphicContext::ClearState()
 	apiCallCount_ += 1;
 	pContext_->ClearState();
 	InvalidateCache();
+	pCurrentDecl_ = nullptr;
+	pCurrentVs_ = nullptr;
+	inputLayoutDirty_ = false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -560,125 +541,88 @@ void GraphicContext::SetSampler(FilterMode _filter, AddressMode _address, _u32 _
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+// draw 직전 호출 — (현재 선언 × 현재 VS)로 InputLayout을 결정해 IA에 반영한다.
+bool GraphicContext::_ResolveInputLayout()
+{
+	if (!inputLayoutDirty_)
+	{
+		return true;
+	}
+	if (pDevice_ == nullptr || pCurrentVs_ == nullptr || pCurrentDecl_ == nullptr)
+	{
+		jc_assert_msg(false, "draw 전에 VS와 VertexDeclaration이 필요합니다. (SetVertexShader / SetVertexBuffer 확인)");
+		return false;
+	}
+
+	ID3D11InputLayout* pRaw = pDevice_->GetOrCreateInputLayout(pCurrentDecl_, pCurrentVs_);
+	if (pRaw == nullptr)
+	{
+		return false;
+	}
+
+	if (pRaw != pCachedInputLayout_)
+	{
+		pCachedInputLayout_ = pRaw;
+		apiCallCount_ += 1;
+		pContext_->IASetInputLayout(pRaw);
+	}
+	else
+	{
+		skippedCallCount_ += 1;
+	}
+	inputLayoutDirty_ = false;
+	return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 // ★ 드로우콜 — "지금 바인딩된 상태로 정점 N개를 그려라"는 GPU 명령의 발사 버튼.
-void GraphicContext::SetVertexShader(_u32 _vsHandle)
+void GraphicContext::SetVertexShader(_u64 _key)
 {
 	if (pDevice_ == nullptr) return;
-	VertexShader* pVs = pDevice_->ResolveVertexShader(_vsHandle);
+	VertexShader* pVs = pDevice_->ResolveVertexShader(_key);
 	if (pVs == nullptr) return;
 	SetVertexShader(pVs);
 }
 
-////////////////////////////////////////////////////////////////////////////////////////
-void GraphicContext::SetPixelShader(_u32 _psHandle)
+//////////////////////////////////////////////////////////////////////////////////////////
+void GraphicContext::SetPixelShader(_u64 _key)
 {
 	if (pDevice_ == nullptr) return;
-	PixelShader* pPs = pDevice_->ResolvePixelShader(_psHandle);
+	PixelShader* pPs = pDevice_->ResolvePixelShader(_key);
 	if (pPs == nullptr) return;
 	SetPixelShader(pPs);
 }
 
-////////////////////////////////////////////////////////////////////////////////////////
-void GraphicContext::SetInputLayout(_u32 _vsHandle, _u32 _vbHandle)
+//////////////////////////////////////////////////////////////////////////////////////////
+void GraphicContext::SetVertexBuffer(_u64 _key)
 {
-	if (pDevice_ == nullptr) return;
-	VertexShader* pVs = pDevice_->ResolveVertexShader(_vsHandle);
-	GraphicDevice::VertexBufferSlot* pVbSlot = pDevice_->ResolveVertexBuffer(_vbHandle);
-	jc_assert_msg(pVs != nullptr, "SetInputLayout: 유효하지 않은 VS 핸들");
-	jc_assert_msg(pVbSlot != nullptr && pVbSlot->pBuffer != nullptr, "SetInputLayout: 유효하지 않은 VB 핸들");
-	if (pVs == nullptr || pVbSlot == nullptr || pVbSlot->pBuffer == nullptr) return;
-	VertexLayoutSpan layout = pVbSlot->pBuffer->Layout();
-	InputLayout* pLayout = new InputLayout();
-	if (!pLayout->Initialize(pDevice_, layout, pVs))
-	{
-		jc_assert_msg(false, "SetInputLayout: InputLayout 생성 실패 (VS와 Vertex 레이아웃 불일치)");
-		delete pLayout;
-		return;
-	}
-	SetInputLayout(pLayout);
-	ownedInputLayouts_.PushBack(pLayout);
-}
-
-void GraphicContext::SetInputLayout(_u32 _vsHandle, VertexBuffer* _pVb)
-{
-	if (pDevice_ == nullptr || _pVb == nullptr) return;
-	VertexShader* pVs = pDevice_->ResolveVertexShader(_vsHandle);
-	jc_assert_msg(pVs != nullptr, "SetInputLayout: 유효하지 않은 VS 핸들");
-	if (pVs == nullptr) return;
-	VertexLayoutSpan layout = _pVb->Layout();
-	InputLayout* pLayout = new InputLayout();
-	if (!pLayout->Initialize(pDevice_, layout, pVs))
-	{
-		jc_assert_msg(false, "SetInputLayout: InputLayout 생성 실패 (VS와 Vertex 레이아웃 불일치)");
-		delete pLayout;
-		return;
-	}
-	SetInputLayout(pLayout);
-	ownedInputLayouts_.PushBack(pLayout);
-}
-
-void GraphicContext::SetInputLayout(_u32 _vsHandle, VertexLayoutSpan _layout)
-{
-	if (pDevice_ == nullptr) return;
-	VertexShader* pVs = pDevice_->ResolveVertexShader(_vsHandle);
-	jc_assert_msg(pVs != nullptr, "SetInputLayout: 유효하지 않은 VS 핸들");
-	if (pVs == nullptr) return;
-	InputLayout* pLayout = new InputLayout();
-	if (!pLayout->Initialize(pDevice_, _layout, pVs))
-	{
-		jc_assert_msg(false, "SetInputLayout: InputLayout 생성 실패 (VS와 Vertex 레이아웃 불일치)");
-		delete pLayout;
-		return;
-	}
-	SetInputLayout(pLayout);
-	ownedInputLayouts_.PushBack(pLayout);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////
-void GraphicContext::SetVertexBuffer(_u32 _handle)
-{
-	if (pDevice_ == nullptr)
-	{
-		return;
-	}
-	GraphicDevice::VertexBufferSlot* pSlot = pDevice_->ResolveVertexBuffer(_handle);
-	if (pSlot == nullptr)
-	{
-		return;
-	}
-	SetVertexBuffer(pSlot->pBuffer);
+	if (pDevice_ == nullptr) { return; }
+	VertexBuffer* pBuf = pDevice_->ResolveVertexBuffer(_key);
+	if (pBuf == nullptr) { return; }
+	SetVertexBuffer(pBuf);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GraphicContext::SetIndexBuffer(_u32 _handle)
+void GraphicContext::SetIndexBuffer(_u64 _key)
 {
-	if (pDevice_ == nullptr)
-	{
-		return;
-	}
-	IndexBuffer* pBuffer = pDevice_->ResolveIndexBuffer(_handle);
-	if (pBuffer == nullptr)
-	{
-		return;
-	}
+	if (pDevice_ == nullptr) { return; }
+	IndexBuffer* pBuffer = pDevice_->ResolveIndexBuffer(_key);
+	if (pBuffer == nullptr) { return; }
 	SetIndexBuffer(pBuffer);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GraphicContext::SetTexture(_u32 _slot, _u32 _handle)
+void GraphicContext::SetTexture(_u32 _slot, _u64 _key)
 {
-	if (pDevice_ == nullptr)
-	{
-		return;
-	}
-	Texture* pTexture = pDevice_->ResolveTexture(_handle);
+	if (pDevice_ == nullptr) { return; }
+	Texture* pTexture = pDevice_->ResolveTexture(_key);
 	SetTexture(ShaderStage::ssPixel, _slot, pTexture);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::Draw(_u32 _vertexCount, _u32 _startVertex)
 {
-	jc_assert_msg(pCachedInputLayout_ != nullptr, "InputLayout 미바인딩: Draw 전에 gc.SetInputLayout(vsHandle, vbHandle) 또는 gc.SetInputLayout(pLayout)을 호출하세요.");
+	if (!_ResolveInputLayout()) { return; }
 	apiCallCount_ += 1;
 	pContext_->Draw(_vertexCount, _startVertex);
 }
@@ -686,7 +630,7 @@ void GraphicContext::Draw(_u32 _vertexCount, _u32 _startVertex)
 //////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::DrawIndexed(_u32 _indexCount, _u32 _startIndex, _s32 _baseVertex)
 {
-	jc_assert_msg(pCachedInputLayout_ != nullptr, "InputLayout 미바인딩: DrawIndexed 전에 gc.SetInputLayout(vsHandle, vbHandle) 또는 gc.SetInputLayout(pLayout)을 호출하세요.");
+	if (!_ResolveInputLayout()) { return; }
 	apiCallCount_ += 1;
 	pContext_->DrawIndexed(_indexCount, _startIndex, _baseVertex);
 }

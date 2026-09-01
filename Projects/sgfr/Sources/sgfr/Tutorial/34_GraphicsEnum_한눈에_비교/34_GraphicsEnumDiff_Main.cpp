@@ -34,6 +34,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/34_GraphicsEnum_한눈에_비교/34_GraphicsEnumDiff_Main.h"
 #include "sgfr/Common/TutorialCommon.h"
 
@@ -552,9 +553,19 @@ void GraphicsEnumDiff_Main()
 		window.Destroy();
 		return;
 	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
+
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
 	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 	return;
@@ -586,7 +597,7 @@ void GraphicsEnumDiff_Main()
 	_u32 quadIndices[6] = { 0, 1, 2, 2, 1, 3 };
 	VertexBuffer vbQuad;
 	IndexBuffer ibQuad;
-	vbQuad.Create(&device, quadVertices, sizeof(VertexPTC), 4, ResourceUsage::ruDynamic);
+	vbQuad.Create(&device, quadVertices, 4, VertexPTC::Decl());
 	ibQuad.Create(&device, quadIndices, 6);
 
 	VertexPTC uvQuad[4];
@@ -594,7 +605,7 @@ void GraphicsEnumDiff_Main()
 	FillUvQuad(uvQuad, uvIdx, 3.0f);
 	VertexBuffer vbUv;
 	IndexBuffer ibUv;
-	vbUv.Create(&device, uvQuad, sizeof(VertexPTC), 4);
+	vbUv.Create(&device, uvQuad, 4, VertexPTC::Decl());
 	ibUv.Create(&device, uvIdx, 6);
 
 	VertexPC cubeVerts[8];
@@ -602,7 +613,7 @@ void GraphicsEnumDiff_Main()
 	FillColorCube(cubeVerts, cubeIdx);
 	VertexBuffer vbCube;
 	IndexBuffer ibCube;
-	vbCube.Create(&device, cubeVerts, sizeof(VertexPC), 8);
+	vbCube.Create(&device, cubeVerts, 8, VertexPC::Decl());
 	ibCube.Create(&device, cubeIdx, 36);
 
 	// 토폴로지용: 5개 외곽점 + 중심 1점 = 별 모양
@@ -619,7 +630,7 @@ void GraphicsEnumDiff_Main()
 	const _u32 topoIdxStrip[] = { 0, 1, 5, 2, 3, 4 };         // triangleStrip
 	VertexBuffer vbTopo;
 	IndexBuffer ibTopoTriList, ibTopoStrip, ibTopoLine, ibTopoLineStrip;
-	vbTopo.Create(&device, topoVerts, sizeof(VertexPC), 6);
+	vbTopo.Create(&device, topoVerts, 6, VertexPC::Decl());
 	ibTopoTriList.Create(&device, topoIdxList, 9);
 	ibTopoStrip.Create(&device, topoIdxStrip, 6);
 	_u32 lineIdx[] = { 0, 1, 1, 2, 2, 3, 3, 4, 4, 0 };
@@ -628,18 +639,17 @@ void GraphicsEnumDiff_Main()
 	ibTopoLineStrip.Create(&device, lineStripIdx, 6);
 
 	// 4. 셰이더 + 상수 버퍼
-	VertexLayoutSpan pPTCLayout = VertexPTC::Layout();
-	VertexLayoutSpan pPCLayout = VertexPC::Layout();
 
-	_u32 vsBlend = device.Context().CreateVertexShader(BlendQuadShaderSource34());
-	_u32 psBlend = device.Context().CreatePixelShader(BlendQuadShaderSource34());
-	_u32 vsSplit = device.Context().CreateVertexShader(SamplerSplitShaderSource34());
-	_u32 psSplit = device.Context().CreatePixelShader(SamplerSplitShaderSource34());
-	_u32 vsColor = device.Context().CreateVertexShader(ColorTransformShaderSource34());
-	_u32 psColor = device.Context().CreatePixelShader(ColorTransformShaderSource34());
-	if (vsBlend == INVALID_HANDLE || psBlend == INVALID_HANDLE || vsSplit == INVALID_HANDLE || psSplit == INVALID_HANDLE || vsColor == INVALID_HANDLE || psColor == INVALID_HANDLE)
+	_u64 vsBlend = device.Context().CreateVertexShader(BlendQuadShaderSource34());
+	_u64 psBlend = device.Context().CreatePixelShader(BlendQuadShaderSource34());
+	_u64 vsSplit = device.Context().CreateVertexShader(SamplerSplitShaderSource34());
+	_u64 psSplit = device.Context().CreatePixelShader(SamplerSplitShaderSource34());
+	_u64 vsColor = device.Context().CreateVertexShader(ColorTransformShaderSource34());
+	_u64 psColor = device.Context().CreatePixelShader(ColorTransformShaderSource34());
+	if (vsBlend == INVALID_RESOURCE_KEY || psBlend == INVALID_RESOURCE_KEY || vsSplit == INVALID_RESOURCE_KEY || psSplit == INVALID_RESOURCE_KEY || vsColor == INVALID_RESOURCE_KEY || psColor == INVALID_RESOURCE_KEY)
 	{
 		jc::Console::WriteLine("셰이더 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -776,7 +786,6 @@ void GraphicsEnumDiff_Main()
 			device.Context().SetVertexShader(vsBlend);
 			device.Context().SetPixelShader(psBlend);
 			{
-			device.Context().SetInputLayout(vsBlend, pPTCLayout);
 		}
 			ctx.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
@@ -853,7 +862,6 @@ void GraphicsEnumDiff_Main()
 			device.Context().SetVertexShader(vsSplit);
 			device.Context().SetPixelShader(psSplit);
 			{
-			device.Context().SetInputLayout(vsSplit, pPTCLayout);
 		}
 			ctx.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 			ctx.DrawIndexed(6, 0, 0);
@@ -868,7 +876,6 @@ void GraphicsEnumDiff_Main()
 			device.Context().SetVertexShader(vsColor);
 			device.Context().SetPixelShader(psColor);
 			{
-			device.Context().SetInputLayout(vsColor, pPCLayout);
 		}
 			ctx.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
@@ -916,7 +923,6 @@ void GraphicsEnumDiff_Main()
 			device.Context().SetVertexShader(vsColor);
 			device.Context().SetPixelShader(psColor);
 			{
-			device.Context().SetInputLayout(vsColor, pPCLayout);
 		}
 			ctx.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 			device.Context().SetRasterizer(CullMode::cmBack, FillMode::fmSolid);
@@ -958,7 +964,6 @@ void GraphicsEnumDiff_Main()
 			device.Context().SetVertexShader(vsColor);
 			device.Context().SetPixelShader(psColor);
 			{
-			device.Context().SetInputLayout(vsColor, pPCLayout);
 		}
 			vbTopo.Bind(device.Context());
 
@@ -1005,6 +1010,7 @@ void GraphicsEnumDiff_Main()
 	device.Context().SetRasterizer(CullMode::cmBack, FillMode::fmSolid);
 	ctx.SetDepthStencilStateRaw(device.States().GetDepthState(DepthMode::dmReadWrite));
 	ctx.SetRasterizerStateRaw(device.States().GetRasterizerState(CullMode::cmBack, FillMode::fmSolid, FrontFace::ffClockwise));
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

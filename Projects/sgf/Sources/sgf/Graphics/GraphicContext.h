@@ -14,6 +14,11 @@
  * 같은 객체를 연속으로 다시 묶으면 D3D 호출을 생략한다.
  * GetApiCallCount / GetSkippedCallCount로 절감 효과를 직접 확인할 수 있다.
  * (튜토리얼 23장: 스테이트 캐시 Before/After)
+ *
+ * [InputLayout 지연 결합]
+ * 정점 선언(Decl)과 VS 시그니처 조합으로 InputLayout을 결정한다.
+ * SetVertexBuffer가 Decl을 자동 전파하고, SetVertexShader가 dirty를 세우면
+ * Draw 직전 _ResolveInputLayout이 Device 캐시에서 레이아웃을 찾아 IA에 바인딩한다.
  */
 
 #pragma once
@@ -22,12 +27,8 @@
 #include "jc/Primitives/Span.h"
 #include "sgf/Graphics/GraphicsEnums.h"
 #include "sgf/Graphics/PipelineState.h"
-#include "sgf/Graphics/Vertex.h"
-
-#ifndef SGF_INVALID_HANDLE_DEFINED
-#define SGF_INVALID_HANDLE_DEFINED
-constexpr _u32 INVALID_HANDLE = 0xFFFFFFFF;
-#endif
+#include "sgf/Graphics/VertexDeclaration.h"
+#include "sgf/Graphics/IResource.h"
 
 NS_SGF_BEGIN
 
@@ -37,9 +38,9 @@ class GraphicDevice;
 class Texture;
 class VertexShader;
 class PixelShader;
-class InputLayout;
 class VertexBuffer;
 class IndexBuffer;
+class VertexDeclaration;
 
 // 뷰포트: 백버퍼의 어느 영역에 NDC로 펼칠지 (값 타입. §3.3)
 struct Viewport
@@ -83,27 +84,24 @@ public:
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// IA 단계
 	void SetVertexBuffer(VertexBuffer* _pBuffer);
-	void SetVertexBuffer(_u32 _handle);
+	void SetVertexBuffer(_u64 _key);
 	void SetIndexBuffer(IndexBuffer* _pBuffer);
-	void SetIndexBuffer(_u32 _handle);
-	void SetInputLayout(InputLayout* _pLayout);
+	void SetIndexBuffer(_u64 _key);
+	void SetVertexDeclaration(const VertexDeclaration* _pDecl);
 	void SetPrimitiveTopology(PrimitiveTopology _topology);
 	void SetTopology(PrimitiveTopology _topology) { SetPrimitiveTopology(_topology); }
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// 셰이더 단계 — 분리형
-	_u32 CreateVertexShader(const jc::String& _hlslSource, const jc::String& _entry = "VSMain");
-	_u32 CreatePixelShader(const jc::String& _hlslSource, const jc::String& _entry = "PSMain");
+	_u64 CreateVertexShader(const jc::String& _hlslSource, const jc::String& _entry = "VSMain");
+	_u64 CreatePixelShader(const jc::String& _hlslSource, const jc::String& _entry = "PSMain");
 	void SetVertexShader(VertexShader* _pShader);
 	void SetPixelShader(PixelShader* _pShader);
-	void SetVertexShader(_u32 _vsHandle);
-	void SetPixelShader(_u32 _psHandle);
-	void SetInputLayout(_u32 _vsHandle, _u32 _vbHandle);
-	void SetInputLayout(_u32 _vsHandle, VertexBuffer* _pVb);
-	void SetInputLayout(_u32 _vsHandle, VertexLayoutSpan _layout);
+	void SetVertexShader(_u64 _key);
+	void SetPixelShader(_u64 _key);
 	void SetConstantBuffer(ShaderStage _stage, _u32 _slot, ID3D11Buffer* _pBuffer);
 	void SetTexture(ShaderStage _stage, _u32 _slot, Texture* _pTexture);
-	void SetTexture(_u32 _slot, _u32 _handle);
+	void SetTexture(_u32 _slot, _u64 _key);
 	void SetSampler(ShaderStage _stage, _u32 _slot, SamplerState* _pSampler);
 
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -147,6 +145,9 @@ public:
 	ID3D11DeviceContext* Raw() const { return pContext_.Get(); }
 
 private:
+	bool _ResolveInputLayout();
+
+private:
 	SgfComPtr<ID3D11DeviceContext> pContext_;	// 즉시/지연 컨텍스트 (SgfComPtr 공유/배타 소유)
 	GraphicDevice* pDevice_ = nullptr;			// 생성에 사용한 디바이스 (소유하지 않음)
 	bool deferred_ = false;					// true면 deferred (배타 소유), false면 immediate (공유 소유)
@@ -171,9 +172,11 @@ private:
 	ID3D11Buffer* pCachedCbuffers_[static_cast<_s32>(ShaderStage::Max)][MAX_CBUFFER_SLOTS];
 	PrimitiveTopology cachedTopology_;
 
-	jc::Vector<InputLayout*> ownedInputLayouts_; // SetInputLayout(handle,handle)이 생성한 InputLayout 소유 (Finalize에서 해제)
-
-	// InputLayout은 반드시 수동으로 지정해야 한다. Draw 전 미바인딩 시 assert.
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// 지연 결합 상태 — draw 직전 (선언 × VS 시그니처)로 InputLayout을 결정한다
+	const VertexDeclaration* pCurrentDecl_ = nullptr;	// 현재 정점 선언 (SetVertexBuffer가 자동 기록)
+	VertexShader* pCurrentVs_ = nullptr;				// 현재 VS (시그니처 소유자)
+	bool inputLayoutDirty_ = false;					// 선언/VS 변경 → true → draw에서 재결합
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// 진단 카운터

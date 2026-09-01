@@ -26,17 +26,23 @@
 2. 파일이 5개 이상 수정이 필요한 경우 수행 전에 반드시 나에게 확인 (단, Projects/SteinsGate-Tools.* 프로젝트는 제외)
 3. 무조건 한국어로 답변
 4. 소스, 헤더, 텍스트 파일들은 모두 UTF8 인코딩으로 저장
+5. 기존 기능 수정 시 아키텍처 변경이 필요하다고 판단될 경우 반드시 나에게 알릴 것 (임의 진행 금지)
+6. 주석에는 아키텍처 결정 내용(예: "A안/B안/C안 중 C안 채택", 비교/선택 근거 등)을 절대 작성하지 말 것 — 코드 자체의 의도/동작만 주석으로 작성
 
 ## Build
 
 - **`Scripts\BuildProject\{프로젝트명}.bat` 으로 빌드한다.** (프로젝트별 빌드 배치 — 더블클릭 또는 cmd에서 실행)
+
 - 인자: `[-C Debug|Release]` 구성, `[-P x64|x86]` 플랫폼 (기본: Debug / x64)
+
 - ⚠️ **빌드는 x64로만 할 것** (`-P x64`). x86도 빌드 가능은 하지만 배포/실행은 x64 기준이므로 x86으로 빌드하지 않는다.
   
   ```
   Scripts\BuildProject\sgcl.bat -C Release -P x64
   ```
+
 - 내부적으로 `Scripts\Build.ps1 -ProjectName ... -Configuration ... -Platform ...`을 호출한다.
+
 - cocos2d 엔진이 필요한 프로젝트는 먼저 해당 구성의 엔진 DLL(`ThirdParty\Cocos2d-x\Output\%PLATFORM%\%CONFIG%\libcocos2d.dll`)이 빌드되어 있어야 한다 (없으면 `Scripts\Build-Cocos.bat`).
 
 ## How to Run Projects

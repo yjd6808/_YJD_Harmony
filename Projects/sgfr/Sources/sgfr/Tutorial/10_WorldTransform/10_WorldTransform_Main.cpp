@@ -21,6 +21,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/10_WorldTransform/10_WorldTransform_Main.h"
 #include "sgfr/Tutorial/10_WorldTransform/10_WorldTransform_Function.h"
 
@@ -59,9 +60,19 @@ void WorldTransform_Main()
 		window.Destroy();
 		return;
 	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
+
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
 	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 	return;
@@ -88,27 +99,28 @@ void WorldTransform_Main()
 
 	VertexBuffer vbSun, vbEarth, vbMoon;
 	IndexBuffer ib;
-	if (!vbSun.Create(&device, sunVertices, sizeof(VertexPC), 4) ||
-		!vbEarth.Create(&device, earthVertices, sizeof(VertexPC), 4) ||
-		!vbMoon.Create(&device, moonVertices, sizeof(VertexPC), 4) ||
+	if (!vbSun.Create(&device, sunVertices, 4, VertexPC::Decl()) ||
+		!vbEarth.Create(&device, earthVertices, 4, VertexPC::Decl()) ||
+		!vbMoon.Create(&device, moonVertices, 4, VertexPC::Decl()) ||
 		!ib.Create(&device, indices, 6))
 		{
 		jc::Console::WriteLine("버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
 	// 3. 셰이더 + 상수 버퍼
-	VertexLayoutSpan pLayoutDescs = VertexPC::Layout();
 
-	_u32 vsShader = device.Context().CreateVertexShader(TransformShaderSource());
-	_u32 psShader = device.Context().CreatePixelShader(TransformShaderSource());
+	_u64 vsShader = device.Context().CreateVertexShader(TransformShaderSource());
+	_u64 psShader = device.Context().CreatePixelShader(TransformShaderSource());
 	ConstantBuffer<CbTransform> cbTransform;
-	if (vsShader == INVALID_HANDLE || psShader == INVALID_HANDLE ||
+	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY ||
 		!cbTransform.Create(&device))
 		{
 		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -135,7 +147,6 @@ void WorldTransform_Main()
 		device.Context().SetVertexShader(vsShader);
 		device.Context().SetPixelShader(psShader);
 		{
-			device.Context().SetInputLayout(vsShader, pLayoutDescs);
 		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		device.Context().DrawIndexed(6, 0, 0);
@@ -180,6 +191,7 @@ void WorldTransform_Main()
 	}
 
 	// 6. 정리
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

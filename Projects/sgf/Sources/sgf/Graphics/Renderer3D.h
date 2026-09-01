@@ -136,7 +136,7 @@ protected:
 	////////////////////////////////////////////////////////////////////////////////////////
 	// BatchRenderer 훅 구현
 	virtual const char* ShaderSource() const override;
-	virtual VertexLayoutSpan VertexLayout() const override;
+	virtual const VertexDeclaration* VertexDecl() const override;
 	virtual bool CreateBatchResources(GraphicDevice* _pDevice) override;
 	virtual void OnBegin() override;
 

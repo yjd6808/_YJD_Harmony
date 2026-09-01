@@ -18,31 +18,30 @@ NS_SGF_BEGIN
 
 using namespace jc;
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 Mesh::Mesh()
 	: topology_(PrimitiveTopology::ptTriangleList)
 	, indexed_(false)
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 Mesh::~Mesh()
 {
 	Finalize();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 bool Mesh::Initialize(
 	GraphicDevice* _pDevice,
-	const void* _pVertices, UINT _stride, UINT _vertexCount,
-	VertexLayoutSpan _layout,
-	VertexShader* _pVs,
+	const void* _pVertices, UINT _vertexCount,
+	const VertexDeclaration* _pDecl,
 	const _u32* _pIndices, UINT _indexCount,
 	PrimitiveTopology _topology)
 {
 	jc_assert_msg(_pVertices != nullptr && _vertexCount > 0, "정점 데이터가 비어있습니다.");
 
-	if (!vertexBuffer_.Create(_pDevice, _pVertices, _stride, _vertexCount, _layout))
+	if (!vertexBuffer_.Create(_pDevice, _pVertices, _vertexCount, _pDecl))
 	{
 		return false;
 	}
@@ -56,26 +55,21 @@ bool Mesh::Initialize(
 		}
 	}
 
-	if (!inputLayout_.Initialize(_pDevice, _layout, _pVs))
-	{
-		return false;
-	}
-
 	topology_ = _topology;
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // XY 평면 1x1 쿼드. (— 2D 프리미티브 팩토리로 위임)
-bool Mesh::InitializeAsQuad2D(GraphicDevice* _pDevice, VertexShader* _pVs)
+bool Mesh::InitializeAsQuad2D(GraphicDevice* _pDevice)
 {
-	return InitializeAsRect2D(_pDevice, _pVs);
+	return InitializeAsRect2D(_pDevice);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // 1x1 사각형. 중심이 원점이라 스케일 = 크기, 이동 = 위치로 바로 쓰인다. (VertexPTC)
 // UV는 기존 InitializeAsQuad2D와 동일(왼위→(0,0)) — 텍스처 방향을 보존한다.
-bool Mesh::InitializeAsRect2D(GraphicDevice* _pDevice, VertexShader* _pVs)
+bool Mesh::InitializeAsRect2D(GraphicDevice* _pDevice)
 {
 	const color white = color::WHITE;
 	FillResult result;
@@ -86,21 +80,21 @@ bool Mesh::InitializeAsRect2D(GraphicDevice* _pDevice, VertexShader* _pVs)
 	result.indices_.PushBack((_u16)0); result.indices_.PushBack((_u16)1); result.indices_.PushBack((_u16)2);
 	result.indices_.PushBack((_u16)0); result.indices_.PushBack((_u16)2); result.indices_.PushBack((_u16)3);
 	result.pTexture_ = nullptr;
-	return Build2DPrimitive(_pDevice, _pVs, result, "Rect2D");
+	return Build2DPrimitive(_pDevice, result, "Rect2D");
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // 단위원 (반지름 1). 중심이 원점 — 스케일로 반지름을 조절한다. (VertexPTC)
-bool Mesh::InitializeAsCircle2D(GraphicDevice* _pDevice, VertexShader* _pVs, _u32 _segments)
+bool Mesh::InitializeAsCircle2D(GraphicDevice* _pDevice, _u32 _segments)
 {
 	FillResult result;
 	PrimitiveBuilder::BuildCircle(vec2::Zero(), 1.0f, color::WHITE, _segments, result);
-	return Build2DPrimitive(_pDevice, _pVs, result, "Circle2D");
+	return Build2DPrimitive(_pDevice, result, "Circle2D");
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // 단위 삼각형. 중심이 원점, 시계 반대 방향(앞면) 감기. (VertexPTC)
-bool Mesh::InitializeAsTriangle2D(GraphicDevice* _pDevice, VertexShader* _pVs)
+bool Mesh::InitializeAsTriangle2D(GraphicDevice* _pDevice)
 {
 	const vec2 pTop(0.0f, 0.5f);			// 위 꼭짓점
 	const vec2 pBottomLeft(-0.5f, -0.5f);	// 왼아래
@@ -108,22 +102,22 @@ bool Mesh::InitializeAsTriangle2D(GraphicDevice* _pDevice, VertexShader* _pVs)
 
 	FillResult result;
 	PrimitiveBuilder::BuildTriangle(pTop, pBottomLeft, pBottomRight, color::WHITE, result);
-	return Build2DPrimitive(_pDevice, _pVs, result, "Triangle2D");
+	return Build2DPrimitive(_pDevice, result, "Triangle2D");
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // 단위 선분 — 가로 길이 1, 두께 1, 중심 원점. (VertexPTC)
 // Transform: scale=(길이, 두께, 1), rotation=각도, position=중점.
-bool Mesh::InitializeAsLine2D(GraphicDevice* _pDevice, VertexShader* _pVs)
+bool Mesh::InitializeAsLine2D(GraphicDevice* _pDevice)
 {
 	FillResult result;
 	PrimitiveBuilder::BuildLine(vec2(-0.5f, 0.0f), vec2(0.5f, 0.0f), 1.0f, color::WHITE, result);
-	return Build2DPrimitive(_pDevice, _pVs, result, "Line2D");
+	return Build2DPrimitive(_pDevice, result, "Line2D");
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // [공용] FillResult 기하 → GPU 메시 + vfPTC2D 표기. 2D 팩토리 전용. (CPU 미러 없음)
-bool Mesh::Build2DPrimitive(GraphicDevice* _pDevice, VertexShader* _pVs,
+bool Mesh::Build2DPrimitive(GraphicDevice* _pDevice,
 	FillResult& _result, const jc::String& _pName)
 {
 	if (_result.vertices_.Size() == 0 || _result.indices_.Size() == 0)
@@ -139,8 +133,8 @@ bool Mesh::Build2DPrimitive(GraphicDevice* _pDevice, VertexShader* _pVs,
 		indices32.PushBack((_u32)index);
 	}
 
-	if (!Initialize(_pDevice, _result.vertices_.Source(), sizeof(VertexPTC), _result.vertices_.Size(),
-		VertexPTC::Layout(), _pVs, indices32.Source(), indices32.Size()))
+	if (!Initialize(_pDevice, _result.vertices_.Source(), _result.vertices_.Size(),
+		VertexPTC::Decl(), indices32.Source(), indices32.Size()))
 	{
 		return false;
 	}
@@ -152,7 +146,7 @@ bool Mesh::Build2DPrimitive(GraphicDevice* _pDevice, VertexShader* _pVs,
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // 1x1x1 큐브. 면마다 법선이 달라서 정점을 공유하지 않는다. (24정점/36인덱스)
-bool Mesh::InitializeAsCube(GraphicDevice* _pDevice, VertexShader* _pVs)
+bool Mesh::InitializeAsCube(GraphicDevice* _pDevice)
 {
 	const VertexPNT vertices[] = {
 		// +Z 앞면
@@ -199,8 +193,8 @@ bool Mesh::InitializeAsCube(GraphicDevice* _pDevice, VertexShader* _pVs)
 		indices[face * 6 + 5] = base + 3;
 	}
 
-	if (!Initialize(_pDevice, vertices, sizeof(VertexPNT), _countof(vertices),
-		VertexPNT::Layout(), _pVs, indices, _countof(indices)))
+	if (!Initialize(_pDevice, vertices, _countof(vertices),
+		VertexPNT::Decl(), indices, _countof(indices)))
 	{
 		return false;
 	}
@@ -211,7 +205,7 @@ bool Mesh::InitializeAsCube(GraphicDevice* _pDevice, VertexShader* _pVs)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // 반지름 1 구 (VertexPNT). UV 스피어 — slices(경도)/stacks(위도) 그리드, 북극→남극.
-bool Mesh::InitializeAsSphere(GraphicDevice* _pDevice, VertexShader* _pVs, _u32 _slices, _u32 _stacks)
+bool Mesh::InitializeAsSphere(GraphicDevice* _pDevice, _u32 _slices, _u32 _stacks)
 {
 	jc_assert_msg(_slices >= 3 && _stacks >= 2, "구는 slices>=3, stacks>=2 필요합니다.");
 
@@ -255,8 +249,8 @@ bool Mesh::InitializeAsSphere(GraphicDevice* _pDevice, VertexShader* _pVs, _u32 
 		}
 	}
 
-	if (!Initialize(_pDevice, vertices.Source(), sizeof(VertexPNT), vertices.Size(),
-		VertexPNT::Layout(), _pVs, indices.Source(), indices.Size()))
+	if (!Initialize(_pDevice, vertices.Source(), vertices.Size(),
+		VertexPNT::Decl(), indices.Source(), indices.Size()))
 	{
 		return false;
 	}
@@ -266,9 +260,9 @@ bool Mesh::InitializeAsSphere(GraphicDevice* _pDevice, VertexShader* _pVs, _u32 
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // 반지름 1, 높이 2 원기둥 (VertexPNT). 옆면 + 상하 원판 (y ±1, 중심 원점).
-bool Mesh::InitializeAsCylinder(GraphicDevice* _pDevice, VertexShader* _pVs, _u32 _segments)
+bool Mesh::InitializeAsCylinder(GraphicDevice* _pDevice, _u32 _segments)
 {
 	jc_assert_msg(_segments >= 3, "원기둥은 segments>=3 필요합니다.");
 
@@ -327,8 +321,8 @@ bool Mesh::InitializeAsCylinder(GraphicDevice* _pDevice, VertexShader* _pVs, _u3
 		indices.PushBack((_u32)1); indices.PushBack(v0); indices.PushBack(v1);
 	}
 
-	if (!Initialize(_pDevice, vertices.Source(), sizeof(VertexPNT), vertices.Size(),
-		VertexPNT::Layout(), _pVs, indices.Source(), indices.Size()))
+	if (!Initialize(_pDevice, vertices.Source(), vertices.Size(),
+		VertexPNT::Decl(), indices.Source(), indices.Size()))
 	{
 		return false;
 	}
@@ -338,9 +332,9 @@ bool Mesh::InitializeAsCylinder(GraphicDevice* _pDevice, VertexShader* _pVs, _u3
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // 반지름 0.5, 전체 높이 2 캡슐 (VertexPNT). 원통부(높이 1) + 상하 반구 (Unity 규격).
-bool Mesh::InitializeAsCapsule(GraphicDevice* _pDevice, VertexShader* _pVs, _u32 _segments)
+bool Mesh::InitializeAsCapsule(GraphicDevice* _pDevice, _u32 _segments)
 {
 	jc_assert_msg(_segments >= 3, "캡슐은 segments>=3 필요합니다.");
 
@@ -411,8 +405,8 @@ bool Mesh::InitializeAsCapsule(GraphicDevice* _pDevice, VertexShader* _pVs, _u32
 		}
 	}
 
-	if (!Initialize(_pDevice, vertices.Source(), sizeof(VertexPNT), vertices.Size(),
-		VertexPNT::Layout(), _pVs, indices.Source(), indices.Size()))
+	if (!Initialize(_pDevice, vertices.Source(), vertices.Size(),
+		VertexPNT::Decl(), indices.Source(), indices.Size()))
 	{
 		return false;
 	}
@@ -422,9 +416,9 @@ bool Mesh::InitializeAsCapsule(GraphicDevice* _pDevice, VertexShader* _pVs, _u32
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // XY 1x1 평면 (VertexPNT). +Z 향, 8x8 격자 (Unity Plane 형태). 중심 원점.
-bool Mesh::InitializeAsPlane(GraphicDevice* _pDevice, VertexShader* _pVs)
+bool Mesh::InitializeAsPlane(GraphicDevice* _pDevice)
 {
 	constexpr _s32 SEGMENTS = 8;
 	const _f32 half = 0.5f;
@@ -462,8 +456,8 @@ bool Mesh::InitializeAsPlane(GraphicDevice* _pDevice, VertexShader* _pVs)
 		}
 	}
 
-	if (!Initialize(_pDevice, vertices.Source(), sizeof(VertexPNT), vertices.Size(),
-		VertexPNT::Layout(), _pVs, indices.Source(), indices.Size()))
+	if (!Initialize(_pDevice, vertices.Source(), vertices.Size(),
+		VertexPNT::Decl(), indices.Source(), indices.Size()))
 	{
 		return false;
 	}
@@ -473,9 +467,9 @@ bool Mesh::InitializeAsPlane(GraphicDevice* _pDevice, VertexShader* _pVs)
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // XY 1x1 쿼드 (VertexPNT). +Z 향, 4정점/2삼각형. 중심 원점.
-bool Mesh::InitializeAsQuad3D(GraphicDevice* _pDevice, VertexShader* _pVs)
+bool Mesh::InitializeAsQuad3D(GraphicDevice* _pDevice)
 {
 	const VertexPNT vertices[4] = {
 		{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f } },
@@ -486,8 +480,8 @@ bool Mesh::InitializeAsQuad3D(GraphicDevice* _pDevice, VertexShader* _pVs)
 
 	const _u32 indices[6] = { 0, 1, 2, 2, 1, 3 };
 
-	if (!Initialize(_pDevice, vertices, sizeof(VertexPNT), _countof(vertices),
-		VertexPNT::Layout(), _pVs, indices, _countof(indices)))
+	if (!Initialize(_pDevice, vertices, _countof(vertices),
+		VertexPNT::Decl(), indices, _countof(indices)))
 	{
 		return false;
 	}
@@ -497,23 +491,18 @@ bool Mesh::InitializeAsQuad3D(GraphicDevice* _pDevice, VertexShader* _pVs)
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 void Mesh::Finalize()
 {
-	inputLayout_.Finalize();
 	indexed_ = false;
 	format_ = VertexFormat::vfCustom;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // ★ IA(입력 조립기) 세팅 — "이 메시를 어떻게 해석할지"를 컨텍스트에 알린다.
-// - 하는 일: 입력 레이아웃(정점 해석법) + 정점 버퍼 + (있으면) 인덱스 버퍼 + 토폴로지(삼각형/선 등).
-// - Bind(세팅)와 Draw(발사)가 분리된 이유: 한 번 세팅해 두면 같은 메시를 여러 번 그릴 수 있다.
 void Mesh::Bind(GraphicContext& _context)
 {
-	_context.SetInputLayout(&inputLayout_);
-	_context.SetVertexBuffer(&vertexBuffer_);
+	_context.SetVertexBuffer(&vertexBuffer_);	// 선언이 여기서 자동 전파된다
 	if (indexed_)
 	{
 		_context.SetIndexBuffer(&indexBuffer_);
@@ -521,9 +510,8 @@ void Mesh::Bind(GraphicContext& _context)
 	_context.SetPrimitiveTopology(topology_);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // ★ 그리기 발사 — 정점 수만큼 GPU 파이프라인을 통과시킨다.
-// - 인덱스 메시는 DrawIndexed(점을 아껴 쓰는 방식), 아니면 Draw(정점 나열 방식).
 void Mesh::Draw(GraphicContext& _context)
 {
 	if (indexed_)

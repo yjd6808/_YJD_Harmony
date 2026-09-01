@@ -19,6 +19,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/12_ShaderStagesAndConstants/12_ShaderStagesAndConstants_Main.h"
 
 using namespace sgf;
@@ -109,9 +110,19 @@ void ShaderStagesAndConstants_Main()
 		window.Destroy();
 		return;
 	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
+
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
 	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 	return;
@@ -126,6 +137,7 @@ void ShaderStagesAndConstants_Main()
 		!ps.InitializeFromSource(&device, STAGE_DEMO_SHADER_SOURCE))
 	{
 		jc::Console::WriteLine("셰이더 컴파일 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -140,12 +152,12 @@ void ShaderStagesAndConstants_Main()
 	};
 	const _u32 indices[6] = { 0, 1, 2, 0, 2, 3 };
 
-	VertexLayoutSpan pLayoutDescs = VertexPTC::Layout();
 
 	Mesh quad;
-	if (!quad.Initialize(&device, vertices, sizeof(VertexPTC), 4, pLayoutDescs, &vs, indices, 6))
+	if (!quad.Initialize(&device, vertices, 4, VertexPTC::Decl()))
 	{
 		jc::Console::WriteLine("메시 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -157,6 +169,7 @@ void ShaderStagesAndConstants_Main()
 	if (!frameCb.Create(&device) || !objectCb.Create(&device))
 	{
 		jc::Console::WriteLine("상수버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -221,6 +234,7 @@ void ShaderStagesAndConstants_Main()
 	quad.Finalize();
 	ps.Finalize();
 	vs.Finalize();
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

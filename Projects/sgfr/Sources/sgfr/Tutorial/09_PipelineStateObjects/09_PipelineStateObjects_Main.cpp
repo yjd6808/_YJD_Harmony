@@ -21,6 +21,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/09_PipelineStateObjects/09_PipelineStateObjects_Main.h"
 
 using namespace sgf;
@@ -59,10 +60,7 @@ float4 PSMain(VsOut _in) : SV_Target
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// 사각형 하나를 메시로 만든다. (중심 _center, 반 변 _halfSize, 색 _color)
-	bool BuildQuadMesh(
-		sgf::GraphicDevice* _pDevice,
-		sgf::VertexShader* _pVs,
-		sgf::Mesh* _pOutMesh,
+	bool BuildQuadMesh(sgf::GraphicDevice* _pDevice, sgf::Mesh* _pOutMesh,
 		const vec2& _center,
 		_f32 _halfSize,
 		const color& _color)
@@ -76,10 +74,7 @@ float4 PSMain(VsOut _in) : SV_Target
 		};
 		const _u32 indices[6] = { 0, 1, 2, 0, 2, 3 };	// 시계방향 삼각형 2개
 
-		VertexLayoutSpan layout = sgf::VertexPTC::Layout();
-		return _pOutMesh->Initialize(
-			_pDevice, vertices, sizeof(sgf::VertexPTC), 4,
-			layout, _pVs, indices, 6);
+		return _pOutMesh->Initialize(_pDevice, vertices, 4, VertexPTC::Decl(), indices, 6);
 	}
 }
 
@@ -105,9 +100,19 @@ void PipelineStateObjects_Main()
 		window.Destroy();
 		return;
 	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
+
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
 	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 	return;
@@ -122,6 +127,7 @@ void PipelineStateObjects_Main()
 		!ps.InitializeFromSource(&device, PASSTHROUGH_SHADER_SOURCE))
 	{
 		jc::Console::WriteLine("셰이더 컴파일 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -130,10 +136,11 @@ void PipelineStateObjects_Main()
 	// 3. 메시 2개: 바닥 사각형(불투명) + 위에 겹치는 반투명 사각형
 	Mesh backQuad;
 	Mesh frontQuad;
-	if (!BuildQuadMesh(&device, &vs, &backQuad, vec2(-0.15f, 0.0f), 0.5f, color(0x33, 0x99, 0xFF, 0xFF)) ||
-		!BuildQuadMesh(&device, &vs, &frontQuad, vec2(0.15f, 0.0f), 0.5f, color(0xFF, 0x66, 0x33, 0x80)))
+	if (!BuildQuadMesh(&device, &backQuad, vec2(-0.15f, 0.0f), 0.5f, color(0x33, 0x99, 0xFF, 0xFF)) ||
+		!BuildQuadMesh(&device, &frontQuad, vec2(0.15f, 0.0f), 0.5f, color(0xFF, 0x66, 0x33, 0x80)))
 	{
 		jc::Console::WriteLine("메시 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -154,6 +161,7 @@ void PipelineStateObjects_Main()
 		!depthDisabled.Initialize(&device, DepthMode::dmDisabled))
 	{
 		jc::Console::WriteLine("상태 객체 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -204,6 +212,7 @@ void PipelineStateObjects_Main()
 	backQuad.Finalize();
 	ps.Finalize();
 	vs.Finalize();
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

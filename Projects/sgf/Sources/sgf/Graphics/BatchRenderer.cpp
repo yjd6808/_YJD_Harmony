@@ -13,7 +13,7 @@ NS_SGF_BEGIN
 
 using namespace jc;
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 BatchRenderer::BatchRenderer()
 	: pDevice_(nullptr)
 	, viewProjection_(mat4::Identity())
@@ -21,45 +21,56 @@ BatchRenderer::BatchRenderer()
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 BatchRenderer::~BatchRenderer()
 {
 	Finalize();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // 공통 초기화: 셰이더 컴파일 + 상수 버퍼 생성 + 파생 전용 리소스 생성
 bool BatchRenderer::Initialize(GraphicDevice* _pDevice)
 {
 	pDevice_ = _pDevice;
 
-	// 1. 파생이 내려준 셰이더 소스/정점 레이아웃으로 분리형 VS/PS 생성
-	vsHandle_ = pDevice_->CreateVertexShader(ShaderSource());
-	psHandle_ = pDevice_->CreatePixelShader(ShaderSource());
-	if (vsHandle_ == INVALID_HANDLE || psHandle_ == INVALID_HANDLE)
+	// 1. 파생이 내려준 셰이더 소스로 분리형 VS/PS 생성
+	if (!vs_.InitializeFromSource(_pDevice, ShaderSource()))
 	{
+		return false;
+	}
+	if (!ps_.InitializeFromSource(_pDevice, ShaderSource()))
+	{
+		vs_.Finalize();
 		return false;
 	}
 
 	// 2. 뷰프로젝션 행렬용 상수 버퍼
 	if (!cbFrame_.Create(_pDevice))
 	{
+		vs_.Finalize();
+		ps_.Finalize();
 		return false;
 	}
 
 	// 3. 파생 전용 리소스 (정점/인덱스 버퍼, 텍스처 등)
-	return CreateBatchResources(_pDevice);
+	if (!CreateBatchResources(_pDevice))
+	{
+		vs_.Finalize();
+		ps_.Finalize();
+		return false;
+	}
+	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 void BatchRenderer::Finalize()
 {
-	vsHandle_ = INVALID_HANDLE;
-	psHandle_ = INVALID_HANDLE;
+	vs_.Finalize();
+	ps_.Finalize();
 	begun_ = false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // 배치 시작: 행렬 저장 + 파생의 OnBegin()으로 배치 초기화
 void BatchRenderer::Begin(const mat4& _viewProjection)
 {
@@ -69,7 +80,7 @@ void BatchRenderer::Begin(const mat4& _viewProjection)
 	OnBegin();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // 배치 종료: 남은 배치를 모두 그린다.
 void BatchRenderer::End()
 {
@@ -78,14 +89,13 @@ void BatchRenderer::End()
 	begun_ = false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // 공통 파이프라인 구성: 셰이더 바인딩 + 뷰프로젝션 상수 버퍼 갱신/바인딩
 void BatchRenderer::ApplyFrameStates()
 {
 	GraphicContext& ctx = pDevice_->Context();
-	ctx.SetVertexShader(vsHandle_);
-	ctx.SetPixelShader(psHandle_);
-	ctx.SetInputLayout(vsHandle_, VertexLayout());
+	ctx.SetVertexShader(&vs_);
+	ctx.SetPixelShader(&ps_);
 	cbFrame_.UpdateAndBind(ctx, viewProjection_, 0);
 }
 

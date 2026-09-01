@@ -160,7 +160,7 @@ Window* Application::CreateSubWindow(const jc::String& _title, _s32 _width, _s32
 {
 	jc_assert_msg(initialized_, "Initialize 이후에만 서브 윈도우를 만들 수 있습니다");
 
-	Window* pWindow = new Window();
+	Window* pWindow = dbg_new Window();
 	if (!pWindow->Create(_title, _width, _height))
 	{
 		OutputDebugStringA("[sgf] 서브 윈도우 생성 실패\n");

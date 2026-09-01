@@ -113,10 +113,10 @@ const char* Renderer2D::ShaderSource() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// BatchRenderer 훅: VertexPTC 레이아웃
-VertexLayoutSpan Renderer2D::VertexLayout() const
+// BatchRenderer 훅: VertexPTC 선언
+const VertexDeclaration* Renderer2D::VertexDecl() const
 {
-	return VertexPTC::Layout();
+	return VertexPTC::Decl();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -125,7 +125,7 @@ VertexLayoutSpan Renderer2D::VertexLayout() const
 bool Renderer2D::CreateBatchResources(GraphicDevice* _pDevice)
 {
 	// 1. DYNAMIC 정점 버퍼 (매 프레임 CPU가 채워 넣는다 — ResourceUsage::ruDynamic → D3D11_USAGE_DYNAMIC)
-	if (!vertexBuffer_.Create(_pDevice, nullptr, sizeof(VertexPTC), MAX_VERTICES, ResourceUsage::ruDynamic))
+	if (!vertexBuffer_.Create(_pDevice, nullptr, MAX_VERTICES, VertexPTC::Decl(), ResourceUsage::ruDynamic))
 	{
 		return false;
 	}

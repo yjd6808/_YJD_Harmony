@@ -22,6 +22,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/24_ShadingModel/24_ShadingModel_Main.h"
 #include "sgfr/Tutorial/24_ShadingModel/24_ShadingModel_Function.h"
 
@@ -75,9 +76,19 @@ void ShadingModel_Main()
 		window.Destroy();
 		return;
 	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
+
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
 	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 	return;
@@ -90,27 +101,28 @@ void ShadingModel_Main()
 
 	VertexBuffer vb;
 	IndexBuffer ib;
-	if (!vb.Create(&device, vertices.Source(), sizeof(VertexPNT), static_cast<UINT>(vertices.Size())) ||
+	if (!vb.Create(&device, vertices.Source(), static_cast<UINT>(vertices.Size()), VertexPNT::Decl()) ||
 		!ib.Create(&device, indices.Source(), static_cast<UINT>(indices.Size())))
 		{
 		jc::Console::WriteLine("버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
 	// 3. 셰이더 + 상수 버퍼 2개 (b0: 변환, b1: 셰이딩 설정)
-	VertexLayoutSpan pLayoutDescs = VertexPNT::Layout();
 
-	_u32 vsShader = device.Context().CreateVertexShader(ShadingShaderSource());
-	_u32 psShader = device.Context().CreatePixelShader(ShadingShaderSource());
+	_u64 vsShader = device.Context().CreateVertexShader(ShadingShaderSource());
+	_u64 psShader = device.Context().CreatePixelShader(ShadingShaderSource());
 	ConstantBuffer<CbTransform> cbTransform;
 	ConstantBuffer<CbShading> cbShading;
-	if (vsShader == INVALID_HANDLE || psShader == INVALID_HANDLE ||
+	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY ||
 		!cbTransform.Create(&device) ||
 		!cbShading.Create(&device))
 		{
 		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -185,7 +197,6 @@ void ShadingModel_Main()
 		device.Context().SetVertexShader(vsShader);
 		device.Context().SetPixelShader(psShader);
 		{
-			device.Context().SetInputLayout(vsShader, pLayoutDescs);
 		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		device.Context().DrawIndexed(static_cast<UINT>(indices.Size()), 0, 0);
@@ -194,6 +205,7 @@ void ShadingModel_Main()
 	}
 
 	// 7. 정리
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

@@ -31,6 +31,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/27_ShadowMapping/27_ShadowMapping_Main.h"
 #include "sgfr/Tutorial/27_ShadowMapping/27_ShadowMapping_Function.h"
 
@@ -87,9 +88,19 @@ void ShadowMapping_Main()
 		window.Destroy();
 		return;
 	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
+
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
 	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 	return;
@@ -101,6 +112,7 @@ void ShadowMapping_Main()
 	if (!shadowMap.CreateDepthOnly(&device, 1024, 1024))
 	{
 		jc::Console::WriteLine("그림자 맵 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -119,30 +131,31 @@ void ShadowMapping_Main()
 	IndexBuffer planeIb;
 	VertexBuffer cubeVb;
 	IndexBuffer cubeIb;
-	if (!planeVb.Create(&device, planeVertices, sizeof(VertexPNT), 4) ||
+	if (!planeVb.Create(&device, planeVertices, 4, VertexPNT::Decl()) ||
 		!planeIb.Create(&device, planeIndices, 6) ||
-		!cubeVb.Create(&device, cubeVertices, sizeof(VertexPNT), 24) ||
+		!cubeVb.Create(&device, cubeVertices, 24, VertexPNT::Decl()) ||
 		!cubeIb.Create(&device, cubeIndices, 36))
 		{
 		jc::Console::WriteLine("버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
 	// 4. 셰이더 2종(깊이 전용/장면용) + 상수 버퍼 3종
-	VertexLayoutSpan pLayout = VertexPNT::Layout();
 
-	_u32 vsDepthShader = device.Context().CreateVertexShader(ShadowDepthShaderSource());
-	_u32 psDepthShader = device.Context().CreatePixelShader(ShadowDepthShaderSource());
-	_u32 vsSceneShader = device.Context().CreateVertexShader(ShadowSceneShaderSource());
-	_u32 psSceneShader = device.Context().CreatePixelShader(ShadowSceneShaderSource());
+	_u64 vsDepthShader = device.Context().CreateVertexShader(ShadowDepthShaderSource());
+	_u64 psDepthShader = device.Context().CreatePixelShader(ShadowDepthShaderSource());
+	_u64 vsSceneShader = device.Context().CreateVertexShader(ShadowSceneShaderSource());
+	_u64 psSceneShader = device.Context().CreatePixelShader(ShadowSceneShaderSource());
 	ConstantBuffer<CbDepth> cbDepth;
 	ConstantBuffer<CbScene> cbScene;
 	ConstantBuffer<CbLight> cbLight;
-	if (vsDepthShader == INVALID_HANDLE || psDepthShader == INVALID_HANDLE || vsSceneShader == INVALID_HANDLE || psSceneShader == INVALID_HANDLE || !cbDepth.Create(&device) || !cbScene.Create(&device) || !cbLight.Create(&device))
+	if (vsDepthShader == INVALID_RESOURCE_KEY || psDepthShader == INVALID_RESOURCE_KEY || vsSceneShader == INVALID_RESOURCE_KEY || psSceneShader == INVALID_RESOURCE_KEY || !cbDepth.Create(&device) || !cbScene.Create(&device) || !cbLight.Create(&device))
 		{
 		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -216,7 +229,6 @@ void ShadowMapping_Main()
 		device.Context().SetVertexShader(vsDepthShader);
 		device.Context().SetPixelShader(psDepthShader);
 		{
-			device.Context().SetInputLayout(vsDepthShader, pLayout);
 		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
@@ -246,7 +258,6 @@ void ShadowMapping_Main()
 		device.Context().SetVertexShader(vsSceneShader);
 		device.Context().SetPixelShader(psSceneShader);
 		{
-			device.Context().SetInputLayout(vsSceneShader, pLayout);
 		}
 
 		CbLight cbL;
@@ -283,6 +294,7 @@ void ShadowMapping_Main()
 
 	// 8. 정리
 	shadowMap.Destroy();
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

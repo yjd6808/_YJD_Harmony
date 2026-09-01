@@ -81,7 +81,7 @@ void RenderObjectLoop_Main()
 
 	// 3. 큐브 메시를 만들어 리소스 매니저에 등록 (이후는 키로만 참조)
 	Mesh* pCube = dbg_new Mesh();
-	if (!pCube->InitializeAsCube(&device, g_cResourceMgr.GetDefaultVertexShader3D()))
+	if (!pCube->InitializeAsCube(&device))
 	{
 		jc::Console::WriteLine("큐브 메시 생성 실패!");
 		delete pCube;

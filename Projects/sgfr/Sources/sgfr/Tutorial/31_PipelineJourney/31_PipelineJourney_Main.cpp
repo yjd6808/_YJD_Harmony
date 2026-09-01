@@ -143,8 +143,8 @@ void PipelineJourney_Main()
 	// [§10~§11] 메시: VB + IB + 입력 레이아웃 + 토폴로지를 한 덩어리로
 	Mesh* pCubeMesh = dbg_new Mesh();
 	Mesh* pQuadMesh = dbg_new Mesh();
-	if (!pCubeMesh->InitializeAsCube(&device, g_cResourceMgr.GetDefaultVertexShader3D()) ||
-		!pQuadMesh->InitializeAsQuad2D(&device, g_cResourceMgr.GetDefaultVertexShader2D()))
+	if (!pCubeMesh->InitializeAsCube(&device) ||
+		!pQuadMesh->InitializeAsQuad2D(&device))
 	{
 		jc::Console::WriteLine("메시 생성 실패!");
 		delete pCubeMesh;

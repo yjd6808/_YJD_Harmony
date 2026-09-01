@@ -237,7 +237,7 @@ SoundEngine::WavData* SoundEngine::loadWav(const jc::String& _path)
 		return nullptr;
 	}
 
-	WavData* pWav = new WavData();
+	WavData* pWav = dbg_new WavData();
 	memset(&pWav->format_, 0, sizeof(WAVEFORMATEX));
 	bool hasFmt = false;
 	bool hasData = false;
@@ -431,7 +431,7 @@ _s32 SoundEngine::PlayTone(_s32 _frequency, _s32 _milliseconds, _f32 _volume)
 	const _s32 sampleCount = SAMPLE_RATE * _milliseconds / 1000;
 
 	// 톤 전용 WavData를 만든다. (캐시와 무관, 슬롯이 소유하고 끝나면 삭제)
-	WavData* pTone = new WavData();
+	WavData* pTone = dbg_new WavData();
 	memset(&pTone->format_, 0, sizeof(WAVEFORMATEX));
 	pTone->format_.wFormatTag = WAVE_FORMAT_PCM;
 	pTone->format_.nChannels = 1;							// 모노

@@ -6,6 +6,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/16_SvgTextureDraw/16_SvgTextureDraw_Function.h"
 
 using namespace sgf;

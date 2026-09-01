@@ -11,6 +11,7 @@
 #include "sgf/Graphics/Buffers.h"
 #include "sgf/Graphics/Texture.h"
 #include "sgf/Graphics/ShaderProgram.h"
+#include "sgf/Graphics/VertexDeclaration.h"
 #include "sgf/Graphics/RenderTarget.h"
 #include "sgf/Core/Window.h"
 
@@ -62,16 +63,16 @@ bool GraphicDevice::Initialize()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 모든 D3D 객체 해제. 부품별 Finalize를 순서대로 부른다.
+// 모든 D3D 객체 해제. 부품별 Finalize를 순서대로 부른다. (C안: 자체 레지스트리 없음)
 void GraphicDevice::Finalize()
 {
 	// 멱등 가드 — 이미 완전히 해제된 상태에서 재호출 시 아무 작업 없이 복귀
-	if (!IsValid() && textures_.IsEmpty() && indexBuffers_.IsEmpty() && vertexBuffers_.IsEmpty() && vertexShaders_.IsEmpty() && pixelShaders_.IsEmpty())
+	if (!IsValid() && inputLayoutCache_.IsEmpty() && pDevice_ == nullptr)
 	{
 		return;
 	}
 
-	// 바인딩 해제 — 레지스트리 리소스가 파이프라인에 묶인 채 삭제되지 않도록 선행
+	// 바인딩 해제 — ResourceMgr 리소스가 파이프라인에 묶인 채 삭제되지 않도록 선행
 	if (context_.Raw() != nullptr)
 	{
 		context_.ClearState();
@@ -81,41 +82,15 @@ void GraphicDevice::Finalize()
 		context_.InvalidateCache();
 	}
 
-	// 레지스트리 역순 해제 — textures → indexBuffers → vertexBuffers → shaders
-	for (_s32 i = 0; i < textures_.Size(); ++i)
-	{
-		delete textures_[i];
-	}
-	textures_.Clear();
+	// 레이아웃 캐시 해제 — ClearState(바인딩 해제) 이후에 수행해야 라이브 오브젝트 경고가 없다
+	inputLayoutCache_.Clear();
 
-	for (_s32 i = 0; i < indexBuffers_.Size(); ++i)
-	{
-		delete indexBuffers_[i];
-	}
-	indexBuffers_.Clear();
-
-	for (_s32 i = 0; i < vertexBuffers_.Size(); ++i)
-	{
-		delete vertexBuffers_[i].pBuffer;
-	}
-	vertexBuffers_.Clear();
-
-	for (_s32 i = 0; i < vertexShaders_.Size(); ++i)
-	{
-		delete vertexShaders_[i];
-	}
-	vertexShaders_.Clear();
-
-	for (_s32 i = 0; i < pixelShaders_.Size(); ++i)
-	{
-		delete pixelShaders_[i];
-	}
-	pixelShaders_.Clear();
-
+	// 외부에서 주입된 Registry는 외부에서 Finalize한다. Device는 소유하지 않으므로 여기서 Finalize하지 않는다.
 	depthSurface_.Finalize();
 	swapChain_.Finalize();
 	context_.Finalize();
 	states_.Finalize();
+	pRegistry_ = nullptr;
 	pDevice_.Reset();
 }
 
@@ -229,78 +204,135 @@ bool GraphicDevice::CreateSwapChain(HWND _hWnd, _s32 _width, _s32 _height, Pixel
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_u32 GraphicDevice::CreateVertexShader(const jc::String& _hlslSource, const jc::String& _entry)
+bool GraphicDevice::EnsureRegistry() const
 {
-	VertexShader* pVs = new VertexShader();
+	if (pRegistry_ != nullptr) { return true; }
+	jc_assert_msg(false, "ResourceMgr::Initialize 이후에만 리소스를 만들 수 있습니다. 외부에서 g_cResourceMgr.Initialize(&device)를 호출하세요.");
+	return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+_u64 GraphicDevice::CreateVertexShader(const jc::String& _hlslSource, const jc::String& _entry)
+{
+	if (!EnsureRegistry()) { return INVALID_RESOURCE_KEY; }
+	VertexShader* pVs = dbg_new VertexShader();
 	if (!pVs->InitializeFromSource(this, _hlslSource, _entry))
 	{
 		delete pVs;
-		return INVALID_HANDLE;
+		return INVALID_RESOURCE_KEY;
 	}
-	vertexShaders_.PushBack(pVs);
-	const _u32 handle = static_cast<_u32>(vertexShaders_.Size()) - 1;
-	context_.SetVertexShader(handle);
-	return handle;
+	return pRegistry_->Register(pVs);
 }
 
-_u32 GraphicDevice::CreatePixelShader(const jc::String& _hlslSource, const jc::String& _entry)
+//////////////////////////////////////////////////////////////////////////////////////////
+_u64 GraphicDevice::CreatePixelShader(const jc::String& _hlslSource, const jc::String& _entry)
 {
-	PixelShader* pPs = new PixelShader();
+	if (!EnsureRegistry()) { return INVALID_RESOURCE_KEY; }
+	PixelShader* pPs = dbg_new PixelShader();
 	if (!pPs->InitializeFromSource(this, _hlslSource, _entry))
 	{
 		delete pPs;
-		return INVALID_HANDLE;
+		return INVALID_RESOURCE_KEY;
 	}
-	pixelShaders_.PushBack(pPs);
-	const _u32 handle = static_cast<_u32>(pixelShaders_.Size()) - 1;
-	context_.SetPixelShader(handle);
-	return handle;
+	return pRegistry_->Register(pPs);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_u32 GraphicDevice::CreateIndexBuffer(const _u32* _pIndices, _u32 _count, ResourceUsage _usage)
+_u64 GraphicDevice::CreateIndexBuffer(const _u32* _pIndices, _u32 _count, ResourceUsage _usage)
 {
-	IndexBuffer* pBuffer = new IndexBuffer();
+	if (!EnsureRegistry()) { return INVALID_RESOURCE_KEY; }
+	IndexBuffer* pBuffer = dbg_new IndexBuffer();
 	if (!pBuffer->Create(this, _pIndices, _count, _usage))
 	{
 		delete pBuffer;
-		return INVALID_HANDLE;
+		return INVALID_RESOURCE_KEY;
 	}
-	indexBuffers_.PushBack(pBuffer);
-	const _u32 handle = static_cast<_u32>(indexBuffers_.Size()) - 1;
-	context_.SetIndexBuffer(handle);
-	return handle;
+	return pRegistry_->Register(pBuffer);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_u32 GraphicDevice::CreateTexture(_s32 _width, _s32 _height, const _u8* _pPixels, PixelFormat _format)
+_u64 GraphicDevice::CreateTexture(_s32 _width, _s32 _height, const _u8* _pPixels, PixelFormat _format)
 {
-	Texture* pTexture = new Texture();
+	if (!EnsureRegistry()) { return INVALID_RESOURCE_KEY; }
+	Texture* pTexture = dbg_new Texture();
 	if (!pTexture->CreateFromMemory(this, _pPixels, _width, _height, _format))
 	{
 		delete pTexture;
-		return INVALID_HANDLE;
+		return INVALID_RESOURCE_KEY;
 	}
-	textures_.PushBack(pTexture);
-	const _u32 handle = static_cast<_u32>(textures_.Size()) - 1;
-	context_.SetTexture(0, handle);
-	return handle;
+	return pRegistry_->Register(pTexture);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_u32 GraphicDevice::CreateVertexBufferInternal(const void* _pVertices, UINT _stride, _u32 _count, ResourceUsage _usage, VertexLayoutSpan _layout)
+_u64 GraphicDevice::CreateVertexBufferInternal(const void* _pVertices, _u32 _count, ResourceUsage _usage, const VertexDeclaration* _pDecl)
 {
 	jc_assert(IsValid());
-	VertexBuffer* pBuffer = new VertexBuffer();
-	if (!pBuffer->Create(this, _pVertices, _stride, _count, _layout, _usage))
+	if (!EnsureRegistry()) { return INVALID_RESOURCE_KEY; }
+	VertexBuffer* pBuffer = dbg_new VertexBuffer();
+	if (!pBuffer->Create(this, _pVertices, _count, _pDecl, _usage))
 	{
 		delete pBuffer;
-		return INVALID_HANDLE;
+		return INVALID_RESOURCE_KEY;
 	}
-	vertexBuffers_.PushBack({ pBuffer });
-	const _u32 handle = static_cast<_u32>(vertexBuffers_.Size()) - 1;
-	context_.SetVertexBuffer(handle);
-	return handle;
+	return pRegistry_->Register(pBuffer);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+ID3D11InputLayout* GraphicDevice::GetOrCreateInputLayout(const VertexDeclaration* _pDecl, VertexShader* _pVs)
+{
+	if (_pDecl == nullptr || _pVs == nullptr || _pVs->Bytecode() == nullptr)
+	{
+		return nullptr;
+	}
+
+	const _u64 declHash = _pDecl->Hash();
+	const _u64 sigHash = _pVs->InputSignatureHash();
+
+	// 1. 캐시 조회 — 같은 (선언 × 시그니처) 조합은 앱 전체에서 1개만 존재한다
+	for (_s32 i = 0; i < inputLayoutCache_.Size(); ++i)
+	{
+		InputLayoutEntry& entry = inputLayoutCache_[i];
+		if (entry.declHash_ == declHash && entry.sigHash_ == sigHash)
+		{
+			return entry.pLayout_.Get();
+		}
+	}
+
+#if defined(_DEBUG)
+	// 2. 사전 검증 — VS가 소비하는 모든 시맨틱이 선언에 있어야 한다.
+	for (_s32 i = 0; i < _pVs->InputSignature().Size(); ++i)
+	{
+		const VertexShader::SignatureElement& sig = _pVs->InputSignature()[i];
+		jc_assert_msg(_pDecl->Contains(sig.semanticName_, sig.semanticIndex_),
+			"VS가 요구하는 시맨틱이 VertexDeclaration에 없습니다: %s%u", sig.semanticName_, sig.semanticIndex_);
+	}
+#endif
+
+	// 3. 생성 + 등록 (최초 조합에서만 도달)
+	D3D11_INPUT_ELEMENT_DESC descs[MAX_VERTEX_ELEMENTS] = {};
+	const _s32 descCount = BuildD3DElementDescs(*_pDecl, descs, MAX_VERTEX_ELEMENTS);
+	if (descCount <= 0) { return nullptr; }
+
+	ID3DBlob* pBytecode = _pVs->Bytecode();
+	SgfComPtr<ID3D11InputLayout> pLayout;
+	HRESULT hr = pDevice_->CreateInputLayout(
+		descs, static_cast<UINT>(descCount),
+		pBytecode->GetBufferPointer(), pBytecode->GetBufferSize(),
+		pLayout.GetAddressOf());
+	if (FAILED(hr))
+	{
+		_LogWarn_("[sgf] CreateInputLayout 실패 (declHash=%llx, sigHash=%llx)", declHash, sigHash);
+		return nullptr;
+	}
+
+	SetDebugName(pLayout.Get(), "InputLayout(decl x vs)");
+
+	InputLayoutEntry entry;
+	entry.declHash_ = declHash;
+	entry.sigHash_ = sigHash;
+	entry.pLayout_ = pLayout;
+	inputLayoutCache_.PushBack(entry);
+	return inputLayoutCache_[inputLayoutCache_.Size() - 1].pLayout_.Get();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -330,52 +362,44 @@ void GraphicDevice::Present(bool _vsync)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-VertexShader* GraphicDevice::ResolveVertexShader(_u32 _handle)
+template <typename T>
+T* GraphicDevice::ResolveTemplate(_u64 _key)
 {
-	if (_handle < static_cast<_u32>(vertexShaders_.Size()))
-	{
-		return vertexShaders_[_handle];
-	}
-	return nullptr;
+	if (pRegistry_ == nullptr || _key == INVALID_RESOURCE_KEY) { return nullptr; }
+	if (GetResourceTypeFromKey(_key) != T::RESOURCE_TYPE) { return nullptr; }
+	IResource* pRes = pRegistry_->Resolve(_key);
+	if (pRes == nullptr || pRes->GetResourceType() != T::RESOURCE_TYPE) { return nullptr; }
+	return static_cast<T*>(pRes);
 }
 
-PixelShader* GraphicDevice::ResolvePixelShader(_u32 _handle)
+////////////////////////////////////////////////////////////////////////////////////////
+VertexShader* GraphicDevice::ResolveVertexShader(_u64 _key)
 {
-	if (_handle < static_cast<_u32>(pixelShaders_.Size()))
-	{
-		return pixelShaders_[_handle];
-	}
-	return nullptr;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-GraphicDevice::VertexBufferSlot* GraphicDevice::ResolveVertexBuffer(_u32 _handle)
-{
-	if (_handle < static_cast<_u32>(vertexBuffers_.Size()))
-	{
-		return &vertexBuffers_[_handle];
-	}
-	return nullptr;
+	return ResolveTemplate<VertexShader>(_key);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IndexBuffer* GraphicDevice::ResolveIndexBuffer(_u32 _handle)
+PixelShader* GraphicDevice::ResolvePixelShader(_u64 _key)
 {
-	if (_handle < static_cast<_u32>(indexBuffers_.Size()))
-	{
-		return indexBuffers_[_handle];
-	}
-	return nullptr;
+	return ResolveTemplate<PixelShader>(_key);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Texture* GraphicDevice::ResolveTexture(_u32 _handle)
+VertexBuffer* GraphicDevice::ResolveVertexBuffer(_u64 _key)
 {
-	if (_handle < static_cast<_u32>(textures_.Size()))
-	{
-		return textures_[_handle];
-	}
-	return nullptr;
+	return ResolveTemplate<VertexBuffer>(_key);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+IndexBuffer* GraphicDevice::ResolveIndexBuffer(_u64 _key)
+{
+	return ResolveTemplate<IndexBuffer>(_key);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+Texture* GraphicDevice::ResolveTexture(_u64 _key)
+{
+	return ResolveTemplate<Texture>(_key);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

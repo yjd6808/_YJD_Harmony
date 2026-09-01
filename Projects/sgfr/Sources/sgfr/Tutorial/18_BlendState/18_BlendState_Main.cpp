@@ -30,6 +30,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/18_BlendState/18_BlendState_Main.h"
 #include "sgfr/Tutorial/18_BlendState/18_BlendState_Function.h"
 
@@ -65,9 +66,19 @@ void BlendState_Main()
 		window.Destroy();
 		return;
 	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
+
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
 	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 	return;
@@ -81,6 +92,7 @@ void BlendState_Main()
 	if (!texture.CreateFromMemory(&device, s_Pixels, 128, 128))
 	{
 		jc::Console::WriteLine("텍스처 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -92,23 +104,24 @@ void BlendState_Main()
 
 	VertexBuffer vb;
 	IndexBuffer ib;
-	if (!vb.Create(&device, vertices, sizeof(VertexPTC), 4, ResourceUsage::ruDynamic) ||	// bDynamic = true!
+	if (!vb.Create(&device, vertices, 4, VertexPTC::Decl()) ||	// bDynamic = true!
 		!ib.Create(&device, indices, 6))
 		{
 		jc::Console::WriteLine("버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
 	// 4. 셰이더
-	VertexLayoutSpan pLayoutDescs = VertexPTC::Layout();
 
-	_u32 vsShader = device.Context().CreateVertexShader(BlendQuadShaderSource());
-	_u32 psShader = device.Context().CreatePixelShader(BlendQuadShaderSource());
-	if (vsShader == INVALID_HANDLE || psShader == INVALID_HANDLE)
+	_u64 vsShader = device.Context().CreateVertexShader(BlendQuadShaderSource());
+	_u64 psShader = device.Context().CreatePixelShader(BlendQuadShaderSource());
+	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY)
 	{
 		jc::Console::WriteLine("셰이더 컴파일 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -164,7 +177,6 @@ void BlendState_Main()
 		device.Context().SetVertexShader(vsShader);
 		device.Context().SetPixelShader(psShader);
 		{
-			device.Context().SetInputLayout(vsShader, pLayoutDescs);
 		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
@@ -213,6 +225,7 @@ void BlendState_Main()
 
 	// 7. 정리 (블렌드 상태를 기본값으로 되돌려 다음 튜토리얼에 영향을 주지 않는다)
 	device.Context().SetBlend(BlendMode::bmNone);
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

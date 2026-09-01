@@ -21,6 +21,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/08_MeshAndTopology/08_MeshAndTopology_Main.h"
 
 using namespace sgf;
@@ -82,9 +83,19 @@ void MeshAndTopology_Main()
 		window.Destroy();
 		return;
 	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
+
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
 	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 	return;
@@ -99,6 +110,7 @@ void MeshAndTopology_Main()
 		!ps.InitializeFromSource(&device, PASSTHROUGH_SHADER_SOURCE))
 	{
 		jc::Console::WriteLine("셰이더 컴파일 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -119,12 +131,12 @@ void MeshAndTopology_Main()
 	}
 
 	// 4. 메시 생성: 정점버퍼 + 레이아웃 + 토폴로지를 한 덩어리로
-	VertexLayoutSpan pLayoutDescs = VertexPTC::Layout();
 
 	Mesh mesh;
-	if (!mesh.Initialize(&device, vertices, sizeof(VertexPTC), 6, pLayoutDescs, &vs))
+	if (!mesh.Initialize(&device, vertices, 6, VertexPTC::Decl()))
 	{
 		jc::Console::WriteLine("메시 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -169,6 +181,7 @@ void MeshAndTopology_Main()
 	mesh.Finalize();
 	ps.Finalize();
 	vs.Finalize();
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

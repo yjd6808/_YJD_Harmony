@@ -20,9 +20,11 @@
 #pragma once
 
 #include "sgf/Graphics/IResource.h"
+#include "sgf/Graphics/IResourceRegistry.h"
 #include "sgf/Graphics/PrimitiveMeshType.h"
 #include "jc/Container/HashMap.h"
 #include "jc/Container/HashSet.h"
+#include "jc/Container/Vector.h"
 #include "jc/Pool/Provider.h"
 #include "jc/Primitives/String.h"
 #include "jc/Primitives/StringView.h"
@@ -37,8 +39,10 @@ class Texture;
 class Material;
 class VertexShader;
 class PixelShader;
+class VertexBuffer;
+class IndexBuffer;
 
-class ResourceMgr
+class ResourceMgr final : public IResourceRegistry
 {
 public:
 	static ResourceMgr& GetInstance();
@@ -50,13 +54,18 @@ public:
 	void Finalize();
 
 	bool IsInitialized() const { return pDevice_ != nullptr; }
+	GraphicDevice* GetDevice() const { return pDevice_; }
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	// 등록/제거
+	// IResourceRegistry 구현 (GraphicDevice 위임용)
+	virtual _u64 Register(IResource* _pResource) override;
+	virtual IResource* Resolve(_u64 _key) override;
+	virtual bool Unregister(_u64 _key) override;
+
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 등록/제거 (기존 API — 내부에서 Register/Unregister로 위임)
 	// 리소스 소유권을 넘겨받고 새 키를 발급한다. (이후 소멸은 ResourceMgr 담당)
 	_u64 Add(IResource* _pResource);
-
-	// 경로 인덱스와 함께 등록한다. 같은 경로가 이미 있으면 등록 실패(INVALID_RESOURCE_KEY).
 	_u64 Add(IResource* _pResource, StringView _path);
 
 	// 키의 리소스를 소멸시키고 키를 반납한다. 디폴트 키는 거부한다.
@@ -67,18 +76,18 @@ public:
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 검색
-	// 키로 찾는다. 없으면 nullptr.
+	// 키로 찾는다. 없으면 nullptr. (세대 검증 포함)
 	IResource* Find(_u64 _key);
 
 	// 키로 찾고 타입까지 검증한다. 타입이 다르면 nullptr.
 	template <typename T>
 	T* Find(_u64 _key)
 	{
+		if (_key == INVALID_RESOURCE_KEY) { return nullptr; }
+		if (GetResourceTypeFromKey(_key) != T::RESOURCE_TYPE) { return nullptr; }
 		IResource* pResource = Find(_key);
-		if (pResource == nullptr || pResource->GetResourceType() != T::RESOURCE_TYPE)
-		{
-			return nullptr;
-		}
+		if (pResource == nullptr) { return nullptr; }
+		if (pResource->GetResourceType() != T::RESOURCE_TYPE) { return nullptr; }
 		return static_cast<T*>(pResource);
 	}
 
@@ -121,10 +130,9 @@ public:
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 진단
-	_s32 GetCount() const { return resources_.Size(); }
-
-	// 보관 중인 리소스 목록을 디버그 출력으로 내보낸다. (누수 진단용)
+	_s32 GetCount() const;
 	void PrintStatus();
+	static void FormatKey(_u64 _key, _s8* _outBuffer, _sz _bufferSize);
 
 private:
 	ResourceMgr();
@@ -135,11 +143,19 @@ private:
 	bool CreateDefaults();
 	void RemovePathEntry(_u64 _key);
 
-	GraphicDevice* pDevice_;							// 소유하지 않음
-	HashMap<_u64, IResource*> resources_;				// 키 -> 리소스 (소유)
-	HashMap<String, _u64> pathIndex_;					// 경로 -> 키 (중복 로드 방지)
-	HashSet<_u64> defaultKeys_;							// 제거 금지 키 (FR-30)
-	Provider<IdProviderReuse<_u64>> keyProvider_;	// 키 발급기 (D-12)
+	struct Slot
+	{
+		IResource* pResource_ = nullptr;
+		_u32 gen_ = 1; // 1부터, 0은 무효 — Remove 시 +1
+	};
+
+	static constexpr _s32 TYPE_COUNT = static_cast<_s32>(ResourceType::Max);
+
+	GraphicDevice* pDevice_;								// 소유하지 않음
+	Vector<Slot> slots_[TYPE_COUNT];						// 타입별 슬롯 배열 (파티션)
+	Provider<IdProviderReuse<_u32>> indexProviders_[TYPE_COUNT]; // 타입별 인덱스 발급기 (1-base → 0-base 변환)
+	HashMap<String, _u64> pathIndex_;						// 경로 -> 키 (중복 로드 방지)
+	HashSet<_u64> defaultKeys_;								// 제거 금지 키 (FR-30)
 
 	_u64 defaultTextureKey_;
 	_u64 defaultVs2DKey_;

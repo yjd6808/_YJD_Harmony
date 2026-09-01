@@ -27,6 +27,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/26_PostProcess/26_PostProcess_Main.h"
 #include "sgfr/Tutorial/26_PostProcess/26_PostProcess_Function.h"
 #include "sgfr/Common/TutorialCommon.h"	// 셰이더/큐브 공용 사용
@@ -78,9 +79,19 @@ void PostProcess_Main()
 		window.Destroy();
 		return;
 	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
+
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
 	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 	return;
@@ -91,6 +102,7 @@ void PostProcess_Main()
 	if (!sceneTarget.Create(&device, window.Width(), window.Height()))
 	{
 		jc::Console::WriteLine("렌더 타깃 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -109,31 +121,31 @@ void PostProcess_Main()
 	IndexBuffer cubeIb;
 	VertexBuffer quadVb;
 	IndexBuffer quadIb;
-	if (!cubeVb.Create(&device, cubeVertices, sizeof(VertexPC), 8) ||
+	if (!cubeVb.Create(&device, cubeVertices, 8, VertexPC::Decl()) ||
 		!cubeIb.Create(&device, cubeIndices, 36) ||
-		!quadVb.Create(&device, quadVertices, sizeof(VertexPTC), 4) ||
+		!quadVb.Create(&device, quadVertices, 4, VertexPTC::Decl()) ||
 		!quadIb.Create(&device, quadIndices, 6))
 		{
 		jc::Console::WriteLine("버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
 	// 4. 셰이더 2종 + 상수 버퍼 2종
-	VertexLayoutSpan pCubeLayout = VertexPC::Layout();
-	VertexLayoutSpan pQuadLayout = VertexPTC::Layout();
 
-	_u32 vsSceneShader = device.Context().CreateVertexShader(ColorTransformShaderSource());
-	_u32 psSceneShader = device.Context().CreatePixelShader(ColorTransformShaderSource());
-	_u32 vsPostShader = device.Context().CreateVertexShader(PostProcessShaderSource());
-	_u32 psPostShader = device.Context().CreatePixelShader(PostProcessShaderSource());
+	_u64 vsSceneShader = device.Context().CreateVertexShader(ColorTransformShaderSource());
+	_u64 psSceneShader = device.Context().CreatePixelShader(ColorTransformShaderSource());
+	_u64 vsPostShader = device.Context().CreateVertexShader(PostProcessShaderSource());
+	_u64 psPostShader = device.Context().CreatePixelShader(PostProcessShaderSource());
 	ConstantBuffer<CbTransform> cbTransform;
 	ConstantBuffer<CbPost> cbPost;
-	if (vsSceneShader == INVALID_HANDLE || psSceneShader == INVALID_HANDLE || vsPostShader == INVALID_HANDLE || psPostShader == INVALID_HANDLE || !cbTransform.Create(&device) ||
+	if (vsSceneShader == INVALID_RESOURCE_KEY || psSceneShader == INVALID_RESOURCE_KEY || vsPostShader == INVALID_RESOURCE_KEY || psPostShader == INVALID_RESOURCE_KEY || !cbTransform.Create(&device) ||
 		!cbPost.Create(&device))
 		{
 		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -207,7 +219,6 @@ void PostProcess_Main()
 		device.Context().SetVertexShader(vsSceneShader);
 		device.Context().SetPixelShader(psSceneShader);
 		{
-			device.Context().SetInputLayout(vsSceneShader, pCubeLayout);
 		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		device.Context().DrawIndexed(36, 0, 0);
@@ -231,7 +242,6 @@ void PostProcess_Main()
 		device.Context().SetVertexShader(vsPostShader);
 		device.Context().SetPixelShader(psPostShader);
 		{
-			device.Context().SetInputLayout(vsPostShader, pQuadLayout);
 		}
 		device.Context().DrawIndexed(6, 0, 0);
 
@@ -240,6 +250,7 @@ void PostProcess_Main()
 
 	// 8. 정리
 	sceneTarget.Destroy();
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

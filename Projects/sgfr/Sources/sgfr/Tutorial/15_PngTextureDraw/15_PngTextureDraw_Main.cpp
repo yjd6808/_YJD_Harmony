@@ -20,6 +20,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/15_PngTextureDraw/15_PngTextureDraw_Main.h"
 #include "sgfr/Tutorial/15_PngTextureDraw/15_PngTextureDraw_Function.h"
 #include "sgfr/Common/TutorialCommon.h"	// TextureShaderSource 공용 사용
@@ -50,9 +51,19 @@ void PngTextureDraw_Main()
 		window.Destroy();
 		return;
 	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
+
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
 	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 	return;
@@ -74,6 +85,7 @@ void PngTextureDraw_Main()
 	else
 	{
 		jc::Console::WriteLine("텍스처 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -94,23 +106,24 @@ void PngTextureDraw_Main()
 
 	VertexBuffer vb;
 	IndexBuffer ib;
-	if (!vb.Create(&device, vertices, sizeof(VertexPTC), 4) ||
+	if (!vb.Create(&device, vertices, 4, VertexPTC::Decl()) ||
 		!ib.Create(&device, indices, 6))
 		{
 		jc::Console::WriteLine("버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
 	// 4. 셰이더 컴파일 (텍스처 샘플링 버전)
-	VertexLayoutSpan pLayoutDescs = VertexPTC::Layout();
 
-	_u32 vsShader = device.Context().CreateVertexShader(TextureShaderSource());
-	_u32 psShader = device.Context().CreatePixelShader(TextureShaderSource());
-	if (vsShader == INVALID_HANDLE || psShader == INVALID_HANDLE)
+	_u64 vsShader = device.Context().CreateVertexShader(TextureShaderSource());
+	_u64 psShader = device.Context().CreatePixelShader(TextureShaderSource());
+	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY)
 	{
 		jc::Console::WriteLine("셰이더 컴파일 실패!");
+	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -139,7 +152,6 @@ void PngTextureDraw_Main()
 		device.Context().SetVertexShader(vsShader);
 		device.Context().SetPixelShader(psShader);
 		{
-			device.Context().SetInputLayout(vsShader, pLayoutDescs);
 		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		device.Context().DrawIndexed(6, 0, 0);
@@ -148,6 +160,7 @@ void PngTextureDraw_Main()
 	}
 
 	// 7. 정리
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

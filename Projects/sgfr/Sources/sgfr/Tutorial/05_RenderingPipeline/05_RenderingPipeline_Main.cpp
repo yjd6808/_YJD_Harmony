@@ -28,6 +28,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/05_RenderingPipeline/05_RenderingPipeline_Main.h"
 #include "sgfr/Tutorial/05_RenderingPipeline/05_RenderingPipeline_Function.h"
 
@@ -64,9 +65,19 @@ void RenderingPipeline_Main()
 		window.Destroy();
 		return;
 	}
+	if (!g_cResourceMgr.Initialize(&gd))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		gd.Finalize();
+		window.Destroy();
+		return;
+	}
+
 	if (!gd.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
 		jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
 		gd.Finalize();
 		window.Destroy();
 		return;
@@ -83,33 +94,35 @@ void RenderingPipeline_Main()
 
 	// 3-A. Legacy 리소스 (직접 바인딩 경로 - 레거시 API)
 	VertexBuffer vbLegacy;
-	if (!vbLegacy.Create(&gd, vertices, sizeof(VertexPC), 3))
+	if (!vbLegacy.Create(&gd, vertices, 3, VertexPC::Decl()))
 	{
 		jc::Console::WriteLine("Legacy 정점 버퍼 생성 실패!");
+	g_cResourceMgr.Finalize();
 		gd.Finalize();
 		window.Destroy();
 		return;
 	}
-	_u32 vsShaderLegacy = gc.CreateVertexShader(TriangleShaderSource());
-	_u32 psShaderLegacy = gc.CreatePixelShader(TriangleShaderSource());
-	if (vsShaderLegacy == INVALID_HANDLE || psShaderLegacy == INVALID_HANDLE)
+	_u64 vsShaderLegacy = gc.CreateVertexShader(TriangleShaderSource());
+	_u64 psShaderLegacy = gc.CreatePixelShader(TriangleShaderSource());
+	if (vsShaderLegacy == INVALID_RESOURCE_KEY || psShaderLegacy == INVALID_RESOURCE_KEY)
 	{
 		jc::Console::WriteLine("Legacy 셰이더 컴파일 실패!");
+	g_cResourceMgr.Finalize();
 		gd.Finalize();
 		window.Destroy();
 		return;
 	}
 	// Legacy InputLayout은 핸들+레이아웃 경로로 수동 지정 (SetInputLayout 자체로 동작, 실패 시 assert)
-	VertexLayoutSpan legacyLayout = VertexPC::Layout();
 
 	// 3-B. Simple 리소스 (목표 코드 경로 - 핸들 기반, 분리형 VS/PS)
-	const _u32 hVsSimple = gc.CreateVertexShader(TriangleShaderSource());
-	const _u32 hPsSimple = gc.CreatePixelShader(TriangleShaderSource());
-	const _u32 hVbSimple = gd.CreateVertexBuffer<VertexPC>(vertices, 3);
-	const _u32 hIbSimple = gd.CreateIndexBuffer(indices, 3);
-	if (hVsSimple == INVALID_HANDLE || hPsSimple == INVALID_HANDLE || hVbSimple == INVALID_HANDLE || hIbSimple == INVALID_HANDLE)
+	const _u64 hVsSimple = gc.CreateVertexShader(TriangleShaderSource());
+	const _u64 hPsSimple = gc.CreatePixelShader(TriangleShaderSource());
+	const _u64 hVbSimple = gd.CreateVertexBuffer<VertexPC>(vertices, 3);
+	const _u64 hIbSimple = gd.CreateIndexBuffer(indices, 3);
+	if (hVsSimple == INVALID_RESOURCE_KEY || hPsSimple == INVALID_RESOURCE_KEY || hVbSimple == INVALID_RESOURCE_KEY || hIbSimple == INVALID_RESOURCE_KEY)
 	{
 		jc::Console::WriteLine("Simple 핸들 리소스 생성 실패!");
+	g_cResourceMgr.Finalize();
 		gd.Finalize();
 		window.Destroy();
 		return;
@@ -149,7 +162,6 @@ void RenderingPipeline_Main()
 			vbLegacy.Bind(gc);
 			gc.SetVertexShader(vsShaderLegacy);
 			gc.SetPixelShader(psShaderLegacy);
-			gc.SetInputLayout(vsShaderLegacy, legacyLayout);
 			gc.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 			gc.Draw(3, 0);
 		}
@@ -158,7 +170,6 @@ void RenderingPipeline_Main()
 			// Simple 경로: 핸들 기반 (VS/VB 핸들로 InputLayout 수동 지정, 없으면 assert)
 			gc.SetVertexShader(hVsSimple);
 			gc.SetPixelShader(hPsSimple);
-			gc.SetInputLayout(hVsSimple, hVbSimple);
 			gc.SetVertexBuffer(hVbSimple);
 			gc.SetIndexBuffer(hIbSimple);
 			gc.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
@@ -173,6 +184,7 @@ void RenderingPipeline_Main()
 	}
 
 	// 5. 정리 - gd.Finalize() 하나로 레지스트리/표면/컨텍스트 역순 정리
+	g_cResourceMgr.Finalize();
 	gd.Finalize();
 	window.Destroy();
 }

@@ -25,6 +25,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/04_DeviceAndSwapChain/04_DeviceAndSwapChain_Main.h"
 #include "sgfr/Tutorial/04_DeviceAndSwapChain/04_DeviceAndSwapChain_Function.h"
 
@@ -58,9 +59,19 @@ void DeviceAndSwapChain_Main()
 		window.Destroy();
 		return;
 	}
+	if (!g_cResourceMgr.Initialize(&device))
+	{
+		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+	g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
+	}
+
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
 	jc::Console::WriteLine("스왑체인 생성 실패!");
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 	return;
@@ -98,6 +109,7 @@ void DeviceAndSwapChain_Main()
 	}
 
 	// 5. 정리: 생성의 역순으로 해제한다.
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 }

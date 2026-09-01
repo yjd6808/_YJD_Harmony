@@ -135,7 +135,7 @@ void Material_Main()
 
 	// 4. 메시: 디폴트 2D 셰이더의 VertexPTC 레이아웃과 일치하는 내장 쿼드
 	Mesh quad;
-	if (!quad.InitializeAsQuad2D(&device, g_cResourceMgr.GetDefaultVertexShader2D()))
+	if (!quad.InitializeAsQuad2D(&device))
 	{
 		jc::Console::WriteLine("쿼드 메시 생성 실패!");
 		g_cResourceMgr.Finalize();

@@ -22,6 +22,7 @@
  */
 
 #include "Core.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/03_DeviceAndContext/03_DeviceAndContext_Main.h"
 
 using namespace sgf;
@@ -66,6 +67,7 @@ void DeviceAndContext_Main()
 	jc::Console::WriteLine("  (BeginFrame처럼 엔진 내부에서 상태를 바꾸는 지점이 대표적)\n");
 
 	// 4. 정리
+	g_cResourceMgr.Finalize();
 	device.Finalize();
 	jc::Console::WriteLine("디바이스 정리 완료. (함수가 반환되면 런처가 목차로 돌아간다)");
 }

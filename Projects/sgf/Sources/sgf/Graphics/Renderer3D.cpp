@@ -80,10 +80,10 @@ const char* Renderer3D::ShaderSource() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// BatchRenderer 훅: VertexPC 레이아웃
-VertexLayoutSpan Renderer3D::VertexLayout() const
+// BatchRenderer 훅: VertexPC 선언
+const VertexDeclaration* Renderer3D::VertexDecl() const
 {
-	return VertexPC::Layout();
+	return VertexPC::Decl();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -91,11 +91,11 @@ VertexLayoutSpan Renderer3D::VertexLayout() const
 // 삼각형/선용 동적(DYNAMIC) 정점 버퍼를 만든다. (매 프레임 CPU 배치를 복사해 넣는다)
 bool Renderer3D::CreateBatchResources(GraphicDevice* _pDevice)
 {
-	if (!triangleVb_.Create(_pDevice, nullptr, sizeof(VertexPC), MAX_TRIANGLES * 3, ResourceUsage::ruDynamic))
+	if (!triangleVb_.Create(_pDevice, nullptr, MAX_TRIANGLES * 3, VertexPC::Decl(), ResourceUsage::ruDynamic))
 	{
 		return false;
 	}
-	if (!lineVb_.Create(_pDevice, nullptr, sizeof(VertexPC), MAX_LINES * 2, ResourceUsage::ruDynamic))
+	if (!lineVb_.Create(_pDevice, nullptr, MAX_LINES * 2, VertexPC::Decl(), ResourceUsage::ruDynamic))
 	{
 		return false;
 	}
