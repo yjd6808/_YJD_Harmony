@@ -19,8 +19,6 @@
     <Filter Include="Io\Http">
       <UniqueIdentifier>{11111111-2222-3333-4444-888888888888}</UniqueIdentifier>
     </Filter>
-      <UniqueIdentifier>{a1b2c3d4-e5f6-7890-abcd-ef1234567890}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utils">
       <UniqueIdentifier>{8b2b9f39-68d8-4130-8e89-71764baa9a09}</UniqueIdentifier>
     </Filter>
