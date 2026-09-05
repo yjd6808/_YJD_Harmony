@@ -9,8 +9,8 @@
 
 #include "jc/Namespace.h"
 #include "jc/Pattern/NonCopyableh.h"
-#include "jc/Io/IoDefine.h"
-#include "jc/Io/Engine/IoJobEngine.h"
+#include "jc/IO/IODefine.h"
+#include "jc/IO/Engine/IOJobEngine.h"
 
 NS_JC_BEGIN
 
@@ -19,19 +19,19 @@ class PathResolver;
 class FileService final : public NonCopyableNonMovable
 {
 public:
-	IoHandle LoadAsync(const String& _path, const IoCallback& _callback = nullptr, const LoadOptions& _options = LoadOptions());
-	IoHandle DownloadAsync(const String& _srcPath, const String& _destPath, const IoCallback& _callback = nullptr);
+	IOHandle LoadAsync(const String& _path, const IOCallback& _callback = nullptr, const LoadOptions& _options = LoadOptions());
+	IOHandle DownloadAsync(const String& _srcPath, const String& _destPath, const IOCallback& _callback = nullptr);
 
-	IoResultPtr Load(const String& _path, const LoadOptions& _options = LoadOptions());
-	IoResultPtr Download(const String& _srcPath, const String& _destPath);
+	IOResultPtr Load(const String& _path, const LoadOptions& _options = LoadOptions());
+	IOResultPtr Download(const String& _srcPath, const String& _destPath);
 
 private:
-	friend class IoDaemon;
-	FileService(PathResolver& _resolver, IoJobEngine& _engine);
+	friend class IODaemon;
+	FileService(PathResolver& _resolver, IOJobEngine& _engine);
 	void InitializeDefaults(_s64 _memoryLimit, _s32 _readUnit);
 
 	PathResolver& resolver_;
-	IoJobEngine& engine_;
+	IOJobEngine& engine_;
 	_s64 memoryLimit_ = 256LL * 1024 * 1024;
 	_s32 readUnit_ = 256 * 1024;
 };

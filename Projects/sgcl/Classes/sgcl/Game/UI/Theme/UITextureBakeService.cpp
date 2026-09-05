@@ -2,7 +2,7 @@
 #include "sgcl/Game/UI/Theme/UITextureBakeService.h"
 #include "sgcl/Game/UI/Theme/Baker/UIControlBakeRecipes.h"
 #include "sgcl/Game/UI/Theme/Serialization/UITextureBinaryWriter.h"
-#include "jc/FileSystem/Path.h"
+#include "jc/IO/Path.h"
 
 UITextureBakeService::UITextureBakeService()
 {

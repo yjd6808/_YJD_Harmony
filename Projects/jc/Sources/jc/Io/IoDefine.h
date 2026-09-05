@@ -4,8 +4,8 @@
  * 작성자: 윤정도
  * =====================
  * Io 통합 전송 계층 공통 정의
- *   - IoHandle / IoState(is*) / IoError(ie*) / IoErrorDetail
- *   - IoProgress / IoCallback / TransferPolicy / LoadOptions / IoDaemonConfig
+ *   - IOHandle / IOState(is*) / IOError(ie*) / IOErrorDetail
+ *   - IOProgress / IOCallback / TransferPolicy / LoadOptions / IODaemonConfig
  */
 
 #include "jc/Namespace.h"
@@ -17,21 +17,20 @@
 #include "jc/Container/MemoryStream.h"
 #include "jc/Threading/ThreadPool.h"
 
-#include "jc/Io/Http/HttpTypes.h"
+#include "jc/IO/Http/HttpTypes.h"
 
 NS_JC_BEGIN
 
-class IoResult;
-using IoResultPtr = SharedPtr<IoResult>;
+class IOResult;
+using IOResultPtr = SharedPtr<IOResult>;
 
-class IDataSource;
-class IIoSource;
-class IIoDest;
+class IIOSource;
+class IIODest;
 
-using IoHandle = _u32;
-constexpr IoHandle InvalidIoHandle = 0;
+using IOHandle = _u32;
+constexpr IOHandle InvalidIOHandle = 0;
 
-enum IoState
+enum IOState
 {
 	isNone,
 	isPending,
@@ -42,7 +41,7 @@ enum IoState
 	isFailed
 };
 
-enum IoError
+enum IOError
 {
 	ieNone,
 	ieInvalidUri,
@@ -57,22 +56,22 @@ enum IoError
 };
 
 // 에러 무손실(R4): 공통 코드 + 채널 상세 (HTTP 상태, TLS/타임아웃 등 전송 계층 코드)
-struct IoErrorDetail
+struct IOErrorDetail
 {
 	_s32 channelError_ = 0;		// 채널 고유 코드 (예: HttpError)
 	_s32 httpStatus_ = 0;		// HTTP 상태 코드 (HTTP가 아니면 0)
 };
 
-struct IoProgress
+struct IOProgress
 {
-	IoHandle handle_ = InvalidIoHandle;
-	IoState state_ = isNone;
+	IOHandle handle_ = InvalidIOHandle;
+	IOState state_ = isNone;
 	_s64 totalBytes_ = -1;			// 미상 = -1
 	_s64 transferredBytes_ = 0;
 	String uri_;					// 로그/디버그 표시용 원본 경로 또는 URL
 };
 
-using IoCallback = Action<const IoResult&>;
+using IOCallback = Action<const IOResult&>;
 
 struct TransferPolicy
 {
@@ -86,7 +85,7 @@ struct LoadOptions
 	TransferPolicy policy_;
 };
 
-struct IoDaemonConfig
+struct IODaemonConfig
 {
 	_s32 workerCount_ = 4;							// 단일 ThreadPool (기존 파일용+HTTP용 2+2 대체)
 	_s32 readUnit_ = 256 * 1024;

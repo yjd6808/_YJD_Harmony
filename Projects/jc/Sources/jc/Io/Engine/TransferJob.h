@@ -15,24 +15,24 @@
 #include "jc/Primitives/Atomic.h"
 #include "jc/Primitives/SmartPtr.h"
 #include "jc/Primitives/String.h"
-#include "jc/Io/IoDefine.h"
-#include "jc/Io/Engine/IIoSource.h"
-#include "jc/Io/Engine/IIoDest.h"
+#include "jc/IO/IODefine.h"
+#include "jc/IO/Engine/IIOSource.h"
+#include "jc/IO/Engine/IIODest.h"
 
 NS_JC_BEGIN
 
 struct TransferJob
 {
 	// [Identity]
-	IoHandle handle_ = InvalidIoHandle;
+	IOHandle handle_ = InvalidIOHandle;
 	String uri_;						// 표시용 원본 경로/URL
 	TransferPolicy policy_;
-	IoCallback callback_;
+	IOCallback callback_;
 	bool isHttp_ = false;				// 결과의 http_ 부분 채움 여부
 
 	// [Parts] 데이터 평면 부품 — 창구가 조립해 제출
-	IoSourcePtr spSource_;
-	IoDestPtr spDest_;
+	IOSourcePtr spSource_;
+	IODestPtr spDest_;
 
 	// [State] — 원자 상태 기계 (isPending → isOpening → isTransferring → 종료)
 	Atomic<int> state_{ isPending };
@@ -43,9 +43,9 @@ struct TransferJob
 
 	// [Data] — 워커가 채우고 엔진이 결과로 조립 (Pump 종료 후 읽기 안전)
 	_s32 chanError_ = 0;
-	IoSourceInfo sourceInfo_;
+	IOSourceInfo sourceInfo_;
 	MemoryStreamPtr spMemoryResult_;
-	IoResultPtr spResult_;					// Finalize 산출물
+	IOResultPtr spResult_;					// Finalize 산출물
 
 	bool TrySetState(int _from, int _to)
 	{

@@ -1,27 +1,27 @@
-#include "jc/Io/IoDaemon.h"
+#include "jc/IO/IODaemon.h"
 #include "jc/Assert.h"
 
 NS_JC_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IoDaemon::IoDaemon()
+IODaemon::IODaemon()
 	: files_(resolver_, engine_)
 	, http_(resolver_, engine_)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IoDaemon::~IoDaemon()
+IODaemon::~IODaemon()
 {
 	Shutdown();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool IoDaemon::Initialize(const IoDaemonConfig& _config)
+bool IODaemon::Initialize(const IODaemonConfig& _config)
 {
 	jc_assert(!initialized_);
 
-	IoJobEngineConfig engineConfig;
+	IOJobEngineConfig engineConfig;
 	engineConfig.workerCount_ = _config.workerCount_;
 	engineConfig.readUnit_ = _config.readUnit_;
 	engineConfig.progressNotifyIntervalMs_ = _config.progressNotifyIntervalMs_;
@@ -43,7 +43,7 @@ bool IoDaemon::Initialize(const IoDaemonConfig& _config)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IoDaemon::Shutdown()
+void IODaemon::Shutdown()
 {
 	if (!initialized_)
 		return;
@@ -54,13 +54,13 @@ void IoDaemon::Shutdown()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IoDaemon::SetListener(IIoListener* _pListener, bool _transferOwnership)
+void IODaemon::SetListener(IIOListener* _pListener, bool _transferOwnership)
 {
 	engine_.SetListener(_pListener, _transferOwnership);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IoDaemon::Update()
+void IODaemon::Update()
 {
 	engine_.Pump();
 }

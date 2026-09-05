@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/9/2023 12:04:30 AM
  * =====================
@@ -42,10 +42,10 @@
 #include "jc/Threading/Scheduler.h"
 #include "jc/Threading/Pulser.h"
 
-#include "jc/FileSystem/File.h"
-#include "jc/FileSystem/Path.h"
-#include "jc/FileSystem/FileStream.h"
-#include "jc/FileSystem/Directory.h"
+#include "jc/IO/File.h"
+#include "jc/IO/Path.h"
+#include "jc/IO/FileStream.h"
+#include "jc/IO/Directory.h"
 
 #include "jc/Container/Vector.h"
 #include "jc/Container/ArrayStack.h"

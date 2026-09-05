@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "jc/PCH/Core.h"
 
@@ -31,10 +31,10 @@
 #include "jc/Primitives/StaticString.h"
 #include "jc/Primitives/RefCountObjectPtr.h"
 
-#include "jc/FileSystem/File.h"
-#include "jc/FileSystem/FileStream.h"
-#include "jc/FileSystem/Directory.h"
-#include "jc/FileSystem/Path.h"
+#include "jc/IO/File.h"
+#include "jc/IO/FileStream.h"
+#include "jc/IO/Directory.h"
+#include "jc/IO/Path.h"
 
 #include "jc/Encoding/CodePage.h"
 

@@ -1,5 +1,5 @@
-#include "jc/Io/Http/SyncHttpTransport.h"
-#include "jc/Io/Http/HttpHeaders.h"
+#include "jc/IO/Http/SyncHttpTransport.h"
+#include "jc/IO/Http/HttpHeaders.h"
 #include "jc/Primitives/StringUtil.h"
 
 #include <string>

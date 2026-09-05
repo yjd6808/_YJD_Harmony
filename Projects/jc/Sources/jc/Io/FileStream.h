@@ -11,8 +11,8 @@
 
 #include "jc/Stream.h"
 
-#include "jc/FileSystem/FileAccess.h"
-#include "jc/FileSystem/FileMode.h"
+#include "jc/IO/FileAccess.h"
+#include "jc/IO/FileMode.h"
 
 NS_JC_BEGIN
 

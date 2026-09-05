@@ -1,8 +1,8 @@
-#include "jc/Primitives/Uri.h"
+﻿#include "jc/Primitives/Uri.h"
 
 #include "jc/Primitives/StringUtil.h"
 #include "jc/Ascii.h"
-#include "jc/FileSystem/Path.h"
+#include "jc/IO/Path.h"
 
 NS_JC_BEGIN
 

@@ -1,7 +1,7 @@
-#include "GameCoreHeader.h"
+﻿#include "GameCoreHeader.h"
 #include "sgcl/Game/UI/Theme/UIThemeManager.h"
 #include "sg/Core/AppConfig.h"
-#include "jc/FileSystem/Path.h"
+#include "jc/IO/Path.h"
 
 static UIThemeManager* g_pThemeManager = nullptr;
 

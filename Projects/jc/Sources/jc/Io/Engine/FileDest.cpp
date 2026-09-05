@@ -1,7 +1,7 @@
-#include "jc/Io/Engine/FileDest.h"
-#include "jc/FileSystem/File.h"
-#include "jc/FileSystem/Directory.h"
-#include "jc/FileSystem/Path.h"
+﻿#include "jc/IO/Engine/FileDest.h"
+#include "jc/IO/File.h"
+#include "jc/IO/Directory.h"
+#include "jc/IO/Path.h"
 #include "jc/Primitives/StringUtil.h"
 #include "jc/Debug/New.h"
 
@@ -20,7 +20,7 @@ FileDest::~FileDest()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void FileDest::Bind(IoHandle _handle)
+void FileDest::Bind(IOHandle _handle)
 {
 	partPath_ = destPath_;
 	partPath_.Append(".part.");

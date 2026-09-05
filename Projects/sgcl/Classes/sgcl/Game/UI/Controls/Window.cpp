@@ -14,8 +14,8 @@
 #include "sgcl/Game/UI/Panels/Grid.h"
 #include "sgcl/Game/UI/Panels/StackPanel.h"
 #include "sgcl/Game/UI/Theme/UIThemeManager.h"
-#include "jc/FileSystem/Path.h"
-#include "jc/FileSystem/File.h"
+#include "jc/IO/Path.h"
+#include "jc/IO/File.h"
 
 namespace sgui
 {

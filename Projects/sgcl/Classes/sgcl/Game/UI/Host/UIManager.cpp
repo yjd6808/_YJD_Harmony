@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * =====================
  */
@@ -8,8 +8,8 @@
 
 #include "sgcl/Game/UI/Xml/UIXmlLoader.h"
 #include "sg/Core/AppConfig.h"
-#include "jc/FileSystem/Path.h"
-#include "jc/FileSystem/File.h"
+#include "jc/IO/Path.h"
+#include "jc/IO/File.h"
 
 USING_NS_CC;
 USING_NS_JC;

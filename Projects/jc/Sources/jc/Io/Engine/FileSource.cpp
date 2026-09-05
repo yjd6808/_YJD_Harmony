@@ -1,5 +1,5 @@
-#include "jc/Io/Engine/FileSource.h"
-#include "jc/FileSystem/File.h"
+﻿#include "jc/IO/Engine/FileSource.h"
+#include "jc/IO/File.h"
 #include "jc/Debug/New.h"
 
 NS_JC_BEGIN
@@ -17,12 +17,12 @@ FileSource::~FileSource()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool FileSource::Open(OUT IoSourceInfo& _info)
+bool FileSource::Open(OUT IOSourceInfo& _info)
 {
 	if (!File::Exist(path_))
 	{
 		lastError_ = ieOpenFailed;
-		detail_ = IoErrorDetail{};
+		detail_ = IOErrorDetail{};
 		return false;
 	}
 

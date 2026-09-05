@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 6:58:48 AM
  * =====================
@@ -9,8 +9,8 @@
 
 #include "jc/Container/Vector.h"
 
-#include "jc/FileSystem/Directory.h"
-#include "jc/FileSystem/File.h"
+#include "jc/IO/Directory.h"
+#include "jc/IO/File.h"
 #include "jc/Env.h"
 
 #if TEST_DirectoryTest == ON

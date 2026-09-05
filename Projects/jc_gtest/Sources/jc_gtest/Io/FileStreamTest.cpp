@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/7/2023 8:02:23 AM
  * =====================
@@ -9,7 +9,7 @@
 
 
 
-#include "jc/FileSystem/FileStream.h"
+#include "jc/IO/FileStream.h"
 
 #if TEST_FileStreamTest == ON
 

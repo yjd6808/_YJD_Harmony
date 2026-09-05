@@ -11,8 +11,8 @@
 
 #include "sg/Core/AppConfig.h"
 
-#include "jc/FileSystem/Directory.h"
-#include "jc/FileSystem/Path.h"
+#include "jc/IO/Directory.h"
+#include "jc/IO/Path.h"
 
 USING_NS_JC;
 USING_NS_JS;

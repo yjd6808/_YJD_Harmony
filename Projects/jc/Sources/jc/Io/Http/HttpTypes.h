@@ -5,7 +5,7 @@
  * =====================
  * HTTP 도메인 경량 타입 (jc/Io 소속)
  *   - HttpMethod(hm*) / HttpMethodName / HttpError(he*, 전송 계층 상세 코드)
- *   - HttpServiceConfig : IoDaemonConfig.http_ 에 주입되는 HTTP 전용 설정
+ *   - HttpServiceConfig : IODaemonConfig.http_ 에 주입되는 HTTP 전용 설정
  */
 
 #include "jc/Namespace.h"
@@ -39,7 +39,7 @@ inline const char* HttpMethodName(HttpMethod _method)
 	}
 }
 
-// 전송 계층(WinHTTP) 상세 에러 — IoErrorDetail.channelError_ 로 보존된다 (R4)
+// 전송 계층(WinHTTP) 상세 에러 — IOErrorDetail.channelError_ 로 보존된다 (R4)
 enum HttpError
 {
 	heNone,

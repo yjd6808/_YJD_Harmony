@@ -8,7 +8,7 @@
 #include "GameCoreHeader.h"
 #include "Game/Texture/ImagePack.h"
 
-#include "jc/FileSystem/Path.h"
+#include "jc/IO/Path.h"
 #include "sg/Sga/SgaSpriteAbstract.h"
 #include "sg/Sga/SgaColorFormat.h"
 

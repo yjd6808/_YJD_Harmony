@@ -1,14 +1,14 @@
-#include "jc/Io/Files/FileService.h"
-#include "jc/Io/PathResolver.h"
-#include "jc/Io/Engine/FileSource.h"
-#include "jc/Io/Engine/MemoryDest.h"
-#include "jc/Io/Engine/FileDest.h"
-#include "jc/Io/IoResult.h"
+#include "jc/IO/Files/FileService.h"
+#include "jc/IO/PathResolver.h"
+#include "jc/IO/Engine/FileSource.h"
+#include "jc/IO/Engine/MemoryDest.h"
+#include "jc/IO/Engine/FileDest.h"
+#include "jc/IO/IOResult.h"
 
 NS_JC_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
-FileService::FileService(PathResolver& _resolver, IoJobEngine& _engine)
+FileService::FileService(PathResolver& _resolver, IOJobEngine& _engine)
 	: resolver_(_resolver)
 	, engine_(_engine)
 {
@@ -22,7 +22,7 @@ void FileService::InitializeDefaults(_s64 _memoryLimit, _s32 _readUnit)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IoHandle FileService::LoadAsync(const String& _path, const IoCallback& _callback, const LoadOptions& _options)
+IOHandle FileService::LoadAsync(const String& _path, const IOCallback& _callback, const LoadOptions& _options)
 {
 	// ★ 접수 시점 1회 해석 — 이후 Mount 재바인딩이 일어나도 진행 중 잡은 오염되지 않는다 (R11.5)
 	const ResolveResult r = resolver_.Resolve(_path, _options.baseAlias_);
@@ -45,7 +45,7 @@ IoHandle FileService::LoadAsync(const String& _path, const IoCallback& _callback
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IoHandle FileService::DownloadAsync(const String& _srcPath, const String& _destPath, const IoCallback& _callback)
+IOHandle FileService::DownloadAsync(const String& _srcPath, const String& _destPath, const IOCallback& _callback)
 {
 	const ResolveResult src = resolver_.Resolve(_srcPath);
 	if (!src.IsOk())
@@ -65,19 +65,19 @@ IoHandle FileService::DownloadAsync(const String& _srcPath, const String& _destP
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IoResultPtr FileService::Load(const String& _path, const LoadOptions& _options)
+IOResultPtr FileService::Load(const String& _path, const LoadOptions& _options)
 {
 	const ResolveResult r = resolver_.Resolve(_path, _options.baseAlias_);
 	if (r.error_ == preEmptyPath || r.error_ == preUnknownAlias)
 	{
-		IoResultPtr spRes = MakeShared<IoResult>();
+		IOResultPtr spRes = MakeShared<IOResult>();
 		spRes->error_ = ieInvalidUri;
 		spRes->state_ = isFailed;
 		return spRes;
 	}
 	if (r.error_ == preNotFound)
 	{
-		IoResultPtr spRes = MakeShared<IoResult>();
+		IOResultPtr spRes = MakeShared<IOResult>();
 		spRes->error_ = ieOpenFailed;
 		spRes->state_ = isFailed;
 		return spRes;
@@ -92,20 +92,20 @@ IoResultPtr FileService::Load(const String& _path, const LoadOptions& _options)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IoResultPtr FileService::Download(const String& _srcPath, const String& _destPath)
+IOResultPtr FileService::Download(const String& _srcPath, const String& _destPath)
 {
 	const ResolveResult src = resolver_.Resolve(_srcPath);
 	const ResolveResult dest = resolver_.ResolveWritable(_destPath);
 	if (!src.IsOk())
 	{
-		IoResultPtr spRes = MakeShared<IoResult>();
+		IOResultPtr spRes = MakeShared<IOResult>();
 		spRes->error_ = src.error_ == preNotFound ? ieOpenFailed : ieInvalidUri;
 		spRes->state_ = isFailed;
 		return spRes;
 	}
 	if (!dest.IsOk())
 	{
-		IoResultPtr spRes = MakeShared<IoResult>();
+		IOResultPtr spRes = MakeShared<IOResult>();
 		spRes->error_ = ieInvalidUri;
 		spRes->state_ = isFailed;
 		return spRes;

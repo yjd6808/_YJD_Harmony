@@ -1,10 +1,10 @@
-#include "gtest/gtest.h"
+﻿#include "gtest/gtest.h"
 #include "Core.h"
 
-#include "jc/Io/IoDaemon.h"
-#include "jc/FileSystem/File.h"
-#include "jc/FileSystem/Directory.h"
-#include "jc/FileSystem/Path.h"
+#include "jc/IO/IODaemon.h"
+#include "jc/IO/File.h"
+#include "jc/IO/Directory.h"
+#include "jc/IO/Path.h"
 #include "jc/Env.h"
 #include "jc/Threading/Thread.h"
 
@@ -25,11 +25,11 @@ namespace
 		return path;
 	}
 
-	struct IoTestDaemon
+	struct IOTestDaemon
 	{
-		IoDaemon daemon;
+		IODaemon daemon;
 
-		IoTestDaemon()
+		IOTestDaemon()
 		{
 			EXPECT_TRUE(daemon.Initialize());
 			PathResolver& fs = daemon.Resolver();
@@ -37,22 +37,22 @@ namespace
 			fs.Mount("save", "test_io/filesvc/save");
 			fs.SetDefaultAlias("src");
 		}
-		~IoTestDaemon() { daemon.Shutdown(); }
+		~IOTestDaemon() { daemon.Shutdown(); }
 	};
 }
 
 TEST(FileServiceTest, LoadAsyncWithExplicitAlias)
 {
-	IoTestDaemon env;
+	IOTestDaemon env;
 	MakeFile("src/table.bin", 1024);
 	MakeFile("src/table2.bin", 1024);
 
-	env.daemon.Files().LoadAsync("src:/table.bin", [](const IoResult& r)
+	env.daemon.Files().LoadAsync("src:/table.bin", [](const IOResult& r)
 	{
 	}, LoadOptions());
 
 	// 동기 API로 확정 검증 (다른 파일로 동시 접근 회피)
-	IoResultPtr result = env.daemon.Files().Load("src:/table2.bin");
+	IOResultPtr result = env.daemon.Files().Load("src:/table2.bin");
 	ASSERT_NE(result, nullptr);
 	EXPECT_TRUE(result->IsSuccess());
 	ASSERT_NE(result->data_, nullptr);
@@ -61,37 +61,37 @@ TEST(FileServiceTest, LoadAsyncWithExplicitAlias)
 
 TEST(FileServiceTest, DefaultAliasAndRequestOverride)
 {
-	IoTestDaemon env;
+	IOTestDaemon env;
 	MakeFile("src/default.txt", 16);
 	MakeFile("save/overridden.txt", 32);
 
 	// 디폴트 별칭(src) 기준 — 접두어 없는 상대경로
-	IoResultPtr a = env.daemon.Files().Load("default.txt");
+	IOResultPtr a = env.daemon.Files().Load("default.txt");
 	ASSERT_NE(a, nullptr);
 	EXPECT_TRUE(a->IsSuccess());
 
 	// 요청 단위 오버라이드 — 이 요청만 save 별칭 사용
 	LoadOptions options;
 	options.baseAlias_ = "save";
-	IoResultPtr b = env.daemon.Files().Load("overridden.txt", options);
+	IOResultPtr b = env.daemon.Files().Load("overridden.txt", options);
 	ASSERT_NE(b, nullptr);
 	EXPECT_TRUE(b->IsSuccess());
 
 	// 존재하지 않는 파일 → Update()에서 ieOpenFailed 통지 대기열 진입
-	IoHandle bad = env.daemon.Files().LoadAsync("not_exist_file.bin");
-	EXPECT_NE(bad, InvalidIoHandle);
+	IOHandle bad = env.daemon.Files().LoadAsync("not_exist_file.bin");
+	EXPECT_NE(bad, InvalidIOHandle);
 	env.daemon.Update();	// FailImmediate 큐 소비 — 리스너 없으니 무통지로 정리만
 	EXPECT_EQ(env.daemon.GetState(bad), isNone);	// 펌프 완료 후 activeJobs 제거
 }
 
 namespace
 {
-	struct CaptureListener : IIoListener
+	struct CaptureListener : IIOListener
 	{
-		IoError lastError_ = ieNone;
+		IOError lastError_ = ieNone;
 		bool failedNotified_ = false;
 
-		void OnFailed(const IoResult& r) override
+		void OnFailed(const IOResult& r) override
 		{
 			failedNotified_ = true;
 			lastError_ = r.error_;
@@ -101,12 +101,12 @@ namespace
 
 TEST(FileServiceTest, MissingFileFailsThroughPumpWithListener)
 {
-	IoTestDaemon env;
+	IOTestDaemon env;
 	CaptureListener listener;
 	env.daemon.SetListener(&listener);
 
-	IoHandle h = env.daemon.Files().LoadAsync("ghost.bin");
-	EXPECT_NE(h, InvalidIoHandle);
+	IOHandle h = env.daemon.Files().LoadAsync("ghost.bin");
+	EXPECT_NE(h, InvalidIOHandle);
 
 	int spins = 0;
 	while (!listener.failedNotified_ && spins++ < 1000)
@@ -120,13 +120,13 @@ TEST(FileServiceTest, MissingFileFailsThroughPumpWithListener)
 
 TEST(FileServiceTest, DownloadUsesResolveWritableAndCommits)
 {
-	IoTestDaemon env;
+	IOTestDaemon env;
 	MakeFile("src/payload.dat", 2048);
 	{
 		auto r = env.daemon.Resolver().ResolveWritable("save:/out.dat");
 		File::Delete(r.fullPath_);
 	}
-	IoResultPtr result = env.daemon.Files().Download("src:/payload.dat", "save:/out.dat");
+	IOResultPtr result = env.daemon.Files().Download("src:/payload.dat", "save:/out.dat");
 	ASSERT_NE(result, nullptr);
 	EXPECT_TRUE(result->IsSuccess());
 	auto resolved = env.daemon.Resolver().ResolveWritable("save:/out.dat");
@@ -136,18 +136,18 @@ TEST(FileServiceTest, DownloadUsesResolveWritableAndCommits)
 
 TEST(FileServiceTest, MountRebindingAffectsOnlyNewRequests)
 {
-	IoTestDaemon env;
+	IOTestDaemon env;
 	MakeFile("src/rebind.txt", 8);
 
 	// 첫 해석 성공
-	IoResultPtr first = env.daemon.Files().Load("rebind.txt");
+	IOResultPtr first = env.daemon.Files().Load("rebind.txt");
 	ASSERT_NE(first, nullptr);
 	EXPECT_TRUE(first->IsSuccess());
 
 	// 재바인딩: src를 빈 디렉토리로 교체 → 이후 접수분은 미스
 	env.daemon.Resolver().Mount("src", "test_io/filesvc/empty_dir");
 
-	IoResultPtr second = env.daemon.Files().Load("rebind.txt");
+	IOResultPtr second = env.daemon.Files().Load("rebind.txt");
 	ASSERT_NE(second, nullptr);
 	EXPECT_FALSE(second->IsSuccess());
 	EXPECT_EQ(second->error_, ieOpenFailed);

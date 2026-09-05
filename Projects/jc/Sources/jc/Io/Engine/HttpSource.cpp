@@ -1,4 +1,4 @@
-#include "jc/Io/Engine/HttpSource.h"
+#include "jc/IO/Engine/HttpSource.h"
 #include "jc/Debug/New.h"
 
 NS_JC_BEGIN
@@ -18,7 +18,7 @@ HttpSource::~HttpSource()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool HttpSource::Open(OUT IoSourceInfo& _info)
+bool HttpSource::Open(OUT IOSourceInfo& _info)
 {
 	HttpError err = heNone;
 	spConn_ = transport_.Open(request_, OUT err);

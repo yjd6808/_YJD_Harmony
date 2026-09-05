@@ -3,9 +3,9 @@
 #include "jc/Primitives/SmartPtr.h"
 #include "jc/Container/MemoryStream.h"
 
-#include "jc/Io/Http/HttpTypes.h"
-#include "jc/Io/Http/HttpHeaders.h"
-#include "jc/Io/Http/IHttpTransport.h"
+#include "jc/IO/Http/HttpTypes.h"
+#include "jc/IO/Http/HttpHeaders.h"
+#include "jc/IO/Http/IHttpTransport.h"
 
 NS_JC_BEGIN
 

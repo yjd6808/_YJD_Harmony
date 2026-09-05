@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * =====================
  * 테마/스킴 전환 테스트 (테마 JSON 전환 + 컨트롤 갤러리 + 타이틀 윈도우 border 확인)
@@ -12,8 +12,8 @@
 #include "sgcl/Game/UI/Host/UIManager.h"
 #include "sgcl/Game/UI/Theme/UIThemeManager.h"
 #include "sg/Core/AppConfig.h"
-#include "jc/FileSystem/Path.h"
-#include "jc/FileSystem/File.h"
+#include "jc/IO/Path.h"
+#include "jc/IO/File.h"
 
 #include <cstdio>
 

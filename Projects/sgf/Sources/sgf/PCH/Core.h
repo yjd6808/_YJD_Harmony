@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/4/2026 10:30:00 PM
  * =====================
@@ -62,8 +62,8 @@
 #include "jc/Utils/Console.h"
 #include "jc/Logger/LoggerDefine.h"		// _LogInfo_/_LogDebug_ 등 검증 로그 매크로
 #include "jc/Time.h"					// jc::TimeSpan (DeltaTime)
-#include "jc/FileSystem/File.h"			// jc 파일 IO
-#include "jc/FileSystem/FileStream.h"	// jc 파일 스트림 (WAV 로딩 등)
+#include "jc/IO/File.h"			// jc 파일 IO
+#include "jc/IO/FileStream.h"	// jc 파일 스트림 (WAV 로딩 등)
 
 #include "sgf/Namespace.h"
 

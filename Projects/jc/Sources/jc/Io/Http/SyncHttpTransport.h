@@ -1,7 +1,7 @@
 #pragma once
 
-#include "jc/Io/Http/IHttpTransport.h"
-#include "jc/Io/Http/HttpRequest.h"
+#include "jc/IO/Http/IHttpTransport.h"
+#include "jc/IO/Http/HttpRequest.h"
 
 #include <Windows.h>
 #include <winhttp.h>

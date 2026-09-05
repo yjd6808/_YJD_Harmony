@@ -8,8 +8,8 @@
 
 #include "sgcl/Game/UI/Theme/UIThemeManager.h"
 #include "sg/Core/AppConfig.h"
-#include "jc/FileSystem/Path.h"
-#include "jc/FileSystem/File.h"
+#include "jc/IO/Path.h"
+#include "jc/IO/File.h"
 
 #include <cstdio>
 

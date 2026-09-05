@@ -115,17 +115,13 @@
     <ClCompile Include="..\Sources\jc_gtest\Wrapper\CRuntimeTest.cpp">
       <Filter>Wrapper</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\FileSystem\FileStreamTest.cpp">
-      <Filter>FileSystem</Filter>
+    <ClCompile Include="..\Sources\jc_gtest\IO\FileStreamTest.cpp">
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\FileSystem\FileUtilTest.cpp">
-      <Filter>FileSystem</Filter>
+    <ClCompile Include="..\Sources\jc_gtest\IO\FileUtilTest.cpp">
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\FileSystem\DirectoryUtilTest.cpp">
-      <Filter>FileSystem</Filter>
+    <ClCompile Include="..\Sources\jc_gtest\IO\DirectoryUtilTest.cpp">
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\FileSystem\PathUtilTest.cpp">
-      <Filter>FileSystem</Filter>
+    <ClCompile Include="..\Sources\jc_gtest\IO\PathUtilTest.cpp">
     </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Container\TreeMapTest.cpp">
       <Filter>Container</Filter>
@@ -160,23 +156,21 @@
     <ClCompile Include="..\Sources\jc_gtest\PCH\Core.cpp">
       <Filter>PCH</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\Io\PathResolverTest.cpp">
+    <ClCompile Include="..\Sources\jc_gtest\IO\PathResolverTest.cpp">
       <Filter>Io</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\Io\IoEngineTest.cpp">
+    <ClCompile Include="..\Sources\jc_gtest\IO\IOEngineTest.cpp">
       <Filter>Io</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\Io\FileServiceTest.cpp">
+    <ClCompile Include="..\Sources\jc_gtest\IO\FileServiceTest.cpp">
       <Filter>Io</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\Io\HttpServiceTest.cpp">
+    <ClCompile Include="..\Sources\jc_gtest\IO\HttpServiceTest.cpp">
       <Filter>Io</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\FileSystem\UriTest.cpp">
-      <Filter>FileSystem</Filter>
+    <ClCompile Include="..\Sources\jc_gtest\IO\UriTest.cpp">
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\FileSystem\MemoryStreamTest.cpp">
-      <Filter>FileSystem</Filter>
+    <ClCompile Include="..\Sources\jc_gtest\IO\MemoryStreamTest.cpp">
     </ClCompile>
     </ClCompile>
     </ClCompile>
@@ -206,9 +200,6 @@
     <Filter Include="Pool">
       <UniqueIdentifier>{eda00c72-9c10-42f4-be6b-7eb4293c1bad}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FileSystem">
-      <UniqueIdentifier>{750802d8-37fc-4cbb-89bb-cf423f2efea4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Io">
       <UniqueIdentifier>{aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee}</UniqueIdentifier>
     </Filter>
@@ -225,7 +216,7 @@
     <ClInclude Include="..\Sources\jc_gtest\PCH\Core.h">
       <Filter>PCH</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc_gtest\Io\MockHttpServer.h">
+    <ClInclude Include="..\Sources\jc_gtest\IO\MockHttpServer.h">
       <Filter>Io</Filter>
     </ClInclude>
     </ClInclude>

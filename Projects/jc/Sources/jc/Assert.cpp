@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	작성자 : 윤정도
  *	작성일 : 2023/02/05(일요일 오후 3시 35분 경)
  */
@@ -6,7 +6,7 @@
 
 #include "jc/Assert.h"
 #include "jc/Primitives/StringUtil.h"
-#include "jc/FileSystem/Path.h"
+#include "jc/IO/Path.h"
 #include "jc/Logger/LoggerDefine.h"
 #include "jc/Utils/StackTrace.h"
 

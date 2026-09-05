@@ -9,19 +9,19 @@
 
 #include "jc/Namespace.h"
 #include "jc/Declspec.h"
-#include "jc/Io/IoDefine.h"
+#include "jc/IO/IODefine.h"
 
 NS_JC_BEGIN
 
-class JC_NOVTABLE IIoListener
+class JC_NOVTABLE IIOListener
 {
 public:
-	virtual ~IIoListener() = default;
+	virtual ~IIOListener() = default;
 
-	virtual void OnProgress(const IoProgress& _progress) {}
-	virtual void OnCompleted(const IoResult& _result) {}
-	virtual void OnCancelled(const IoResult& _result) {}
-	virtual void OnFailed(const IoResult& _result) {}
+	virtual void OnProgress(const IOProgress& _progress) {}
+	virtual void OnCompleted(const IOResult& _result) {}
+	virtual void OnCancelled(const IOResult& _result) {}
+	virtual void OnFailed(const IOResult& _result) {}
 };
 
 NS_END

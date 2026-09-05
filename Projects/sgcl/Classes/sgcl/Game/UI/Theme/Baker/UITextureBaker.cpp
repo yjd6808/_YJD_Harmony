@@ -1,11 +1,11 @@
-#define _USE_MATH_DEFINES
+﻿#define _USE_MATH_DEFINES
 #include <cmath>
 #include "GameCoreHeader.h"
 #include "sgcl/Game/UI/Theme/Baker/UITextureBaker.h"
 #include "sgcl/Game/UI/Theme/Baker/UIShapeRasterizer.h"
 #include "sgcl/Game/UI/Theme/Baker/UIGradientRasterizer.h"
 #include "sgcl/Game/UI/Theme/Baker/UIColorMath.h"
-#include "jc/FileSystem/File.h"
+#include "jc/IO/File.h"
 
 #define NANOSVG_IMPLEMENTATION
 #define NANOSVGRAST_IMPLEMENTATION

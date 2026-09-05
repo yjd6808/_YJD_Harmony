@@ -1,4 +1,4 @@
-#include "jc/Io/Engine/TransferJob.h"
+#include "jc/IO/Engine/TransferJob.h"
 #include "jc/Assert.h"
 
 NS_JC_BEGIN
@@ -6,7 +6,7 @@ NS_JC_BEGIN
 namespace
 {
 	//////////////////////////////////////////////////////////////////////////////////////
-	void FailJob(const TransferJobPtr& _spJob, IoError _error, const IoErrorDetail& _detail)
+	void FailJob(const TransferJobPtr& _spJob, IOError _error, const IOErrorDetail& _detail)
 	{
 		_spJob->error_.Store((int)_error);
 		_spJob->state_.Store(isFailed);
@@ -16,7 +16,7 @@ namespace
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////
-	void Terminal(const TransferJobPtr& _spJob, int _state, IoError _error, _s32 _chanError)
+	void Terminal(const TransferJobPtr& _spJob, int _state, IOError _error, _s32 _chanError)
 	{
 		_spJob->error_.Store((int)_error);
 		_spJob->state_.Store(_state);
@@ -35,7 +35,7 @@ void PumpTransferJob(const TransferJobPtr& _spJob, _byte* _pWorkBuf, _s32 _workB
 		return;
 
 	// 1. 원천 열기 + 메타 수신 (HTTP 상태/헤더 포함)
-	IoSourceInfo sinfo;
+	IOSourceInfo sinfo;
 	if (!_spJob->spSource_->Open(OUT sinfo))
 	{
 		_spJob->sourceInfo_ = sinfo;
@@ -49,7 +49,7 @@ void PumpTransferJob(const TransferJobPtr& _spJob, _byte* _pWorkBuf, _s32 _workB
 	if (!_spJob->spDest_->Open(sinfo.totalBytes_))
 	{
 		_spJob->spSource_->Close();
-		FailJob(_spJob, _spJob->spDest_->GetLastError(), IoErrorDetail{});
+		FailJob(_spJob, _spJob->spDest_->GetLastError(), IOErrorDetail{});
 		return;
 	}
 
@@ -60,8 +60,8 @@ void PumpTransferJob(const TransferJobPtr& _spJob, _byte* _pWorkBuf, _s32 _workB
 		: _workBufLen;
 
 	bool completed = false;
-	IoError failError = ieNone;
-	IoErrorDetail failDetail{};
+	IOError failError = ieNone;
+	IOErrorDetail failDetail{};
 
 	for (;;)
 	{
@@ -113,8 +113,8 @@ void PumpTransferJob(const TransferJobPtr& _spJob, _byte* _pWorkBuf, _s32 _workB
 	// 3. 성공 마감 — FileDest: .part → Move (원자적 커밋)
 	if (!_spJob->spDest_->Commit())
 	{
-		const IoError commitErr = _spJob->spDest_->GetLastError();
-		FailJob(_spJob, commitErr == ieNone ? ieWriteFailed : commitErr, IoErrorDetail{});
+		const IOError commitErr = _spJob->spDest_->GetLastError();
+		FailJob(_spJob, commitErr == ieNone ? ieWriteFailed : commitErr, IOErrorDetail{});
 		return;
 	}
 

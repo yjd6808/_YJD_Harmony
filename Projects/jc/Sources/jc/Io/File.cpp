@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 1/7/2023 8:24:47 AM
  * =====================
@@ -8,7 +8,7 @@
 
 #include "jc/Exception.h"
 
-#include "jc/FileSystem/File.h"
+#include "jc/IO/File.h"
 #include "jc/Primitives/String.h"
 #include "jc/Wrapper/CRuntime.h"
 

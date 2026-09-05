@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/23/2026
  * =====================
@@ -13,10 +13,10 @@
 
 #include "jc/Primitives/Uri.h"
 #include "jc/Container/MemoryStream.h"
-#include "jc/FileSystem/FileStream.h"
-#include "jc/FileSystem/Loader/FileLoader.h"
-#include "jc/FileSystem/Loader/IFileDataSource.h"
-#include "jc/FileSystem/Loader/IFileLoaderListener.h"
+#include "jc/IO/FileStream.h"
+#include "jc/IO/Loader/FileLoader.h"
+#include "jc/IO/Loader/IFileDataSource.h"
+#include "jc/IO/Loader/IFileLoaderListener.h"
 
 #include <chrono>
 

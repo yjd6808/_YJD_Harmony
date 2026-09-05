@@ -1,18 +1,18 @@
-#include "jc/Io/Http/HttpService.h"
-#include "jc/Io/PathResolver.h"
-#include "jc/Io/Engine/HttpSource.h"
-#include "jc/Io/Engine/MemoryDest.h"
-#include "jc/Io/Engine/FileDest.h"
-#include "jc/Io/Http/HttpRequest.h"
-#include "jc/Io/Http/HttpResponse.h"
-#include "jc/Io/Http/IHttpTransport.h"
-#include "jc/Io/Http/SyncHttpTransport.h"
+#include "jc/IO/Http/HttpService.h"
+#include "jc/IO/PathResolver.h"
+#include "jc/IO/Engine/HttpSource.h"
+#include "jc/IO/Engine/MemoryDest.h"
+#include "jc/IO/Engine/FileDest.h"
+#include "jc/IO/Http/HttpRequest.h"
+#include "jc/IO/Http/HttpResponse.h"
+#include "jc/IO/Http/IHttpTransport.h"
+#include "jc/IO/Http/SyncHttpTransport.h"
 #include "jc/Debug/New.h"
 
 NS_JC_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
-HttpService::HttpService(PathResolver& _resolver, IoJobEngine& _engine)
+HttpService::HttpService(PathResolver& _resolver, IOJobEngine& _engine)
 	: resolver_(_resolver)
 	, engine_(_engine)
 {
@@ -45,7 +45,7 @@ void HttpService::Shutdown()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IoHandle HttpService::SendAsync(const HttpRequest& _request, const IoCallback& _callback)
+IOHandle HttpService::SendAsync(const HttpRequest& _request, const IOCallback& _callback)
 {
 	// 메모리 목적지 — 상태 코드를 결과로 전달 (401/404도 전송 자체는 성공)
 	return engine_.Submit(MakeShared<HttpSource>(_request, *pTransport_, false),
@@ -54,13 +54,13 @@ IoHandle HttpService::SendAsync(const HttpRequest& _request, const IoCallback& _
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IoHandle HttpService::GetAsync(const String& _url, const IoCallback& _callback)
+IOHandle HttpService::GetAsync(const String& _url, const IOCallback& _callback)
 {
 	return SendAsync(HttpRequest(_url), _callback);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IoHandle HttpService::DownloadAsync(const String& _url, const String& _destPath, const IoCallback& _callback)
+IOHandle HttpService::DownloadAsync(const String& _url, const String& _destPath, const IOCallback& _callback)
 {
 	// 원격 URL은 해석 대상이 아니고, 로컬 목적지만 주입받은 resolver로 해석한다
 	const ResolveResult dest = resolver_.ResolveWritable(_destPath);
@@ -121,9 +121,9 @@ HttpResponsePtr HttpService::Get(const String& _url)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IoResultPtr HttpService::Download(const String& _url, const String& _destPath)
+IOResultPtr HttpService::Download(const String& _url, const String& _destPath)
 {
-	IoCallback emptyCallback;
+	IOCallback emptyCallback;
 	const ResolveResult dest = resolver_.ResolveWritable(_destPath);
 	if (!dest.IsOk())
 	{
