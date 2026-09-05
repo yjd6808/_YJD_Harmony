@@ -68,6 +68,23 @@ enum CoState
 	csEnd,
 };
 
+// [코루틴-07] 코루틴 실패 원인을 숫자로 구분한다.
+// - 이전에는 실패해도 원인(g_cCoLastError)을 읽을 방법이 없어 CoRun이 nullptr을
+//   돌려줘도 fn이 null인지 메모리 부족인지 알 수 없었으므로 공개 enum으로 바꾼다.
+enum CoError : _u32
+{
+	coeNone = 0,
+	coeNullFunction,		// fn이 nullptr
+	coeVirtualAlloc,		// 스택 예약(VirtualAlloc) 실패
+	coeCommitFailed,		// 스택 커밋(InitStack) 실패
+	coeInvalidStackSize,	// cstCustom인데 크기가 0
+	coeInvalidCtx,			// 유효하지 않은 컨텍스트
+	coeWrongThread,			// 생성 스레드와 다른 스레드에서 resume
+	coeInvalidState,		// resume할 수 없는 상태
+	coeStaleHandle,			// 이미 종료되어 재사용된 핸들
+	coeException,			// fn에서 예외가 발생해 보관 중
+};
+
 #pragma pack(push, 8)
 
 struct CoStack
@@ -156,8 +173,16 @@ struct CoContext
 class CoMgr
 {
 public:
+	// [코루틴-07] 첫 사용 시 CoVEH를 프로세스에 1회 자동 등록한다.
+	// - 이전에는 사용자가 직접 AddVectoredExceptionHandler를 호출해야 해서
+	//   등록을 빼먹으면 첫 스택 확장 시점에 가드 폴트가 처리되지 않고 종료됐다.
+	CoMgr();
+
 	// ── Context 레벨 ──────────────────────────────────────────────────────────
-	void		InitCtx(CoContext* _pCtx);
+	// [코루틴-07] 풀에서 꺼낸 스택을 다시 커밋하다 실패할 수 있으므로 결과를 돌려준다.
+	// - 이전에는 InitStack이 커밋 실패를 무시하고 진행해서 커밋 안 된 스택으로
+	//   진입하다 첫 push에서 AV가 났다.
+	bool		InitCtx(CoContext* _pCtx);
 	CoContext*	AllocCtx(CoStackTier _stackTier, _u32 _stackSize = 0);
 	void		FreeCtx(CoContext* _pCtx);
 
@@ -187,7 +212,8 @@ public:
 	void		SetPageGrowCount(_u32 _count) { pageGrowCount_ = _count; }
 
 private:
-	void		InitStack(CoStack* _pStack);
+	// [코루틴-07] 커밋 실패를 호출자에게 알리기 위해 bool을 돌려준다.
+	bool		InitStack(CoStack* _pStack);
 	bool		AllocStack(OUT CoStack* _pStack, CoStackTier _stackTier, _u32 _stackSize);
 	void		FreeStack(CoStack* _pStack);
 
@@ -214,8 +240,24 @@ extern "C"
 	void		CPP_CALL CoOnAfterLaunch(CoContext* _pCtx);
 
 	CoContext*  ASM_CALL CoRun(FnCoroutine _fn, CoStackTier _stackTier = cstMid, _u32 _stackSize = 0);
-	void		ASM_CALL CoYield();
+	void		ASM_CALL CoYieldImpl();
 	CoContext*	ASM_CALL CoResume(CoContext* _pCtx);
+
+	// [코루틴-07] 마지막 코루틴 실패 원인을 돌려주고 지운다. (스레드별)
+	CoError		CPP_CALL CoGetLastError();
+	// [코루틴-07] CoError를 사람이 읽을 수 있는 문자열로 변환한다.
+	const char* CPP_CALL CoErrorString(CoError _err);
+}
+
+// [코루틴-07] 코루틴 밖(스레드 스택)에서 CoYield를 호출하면 asm이 null 컨텍스트를
+// 역참조해 크래시나므로 진입 전에 검사한다. Debug에서는 즉시 문제를 알리고,
+// Release에서는 조용히 무시하고 복귀한다.
+inline void CoYield()
+{
+	jc_assert_msg(CoCurrentCtx() != nullptr, "CoYield: 코루틴 밖에서 호출됨");
+	if (CoCurrentCtx() == nullptr)
+		return;
+	CoYieldImpl();
 }
 
 LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp);

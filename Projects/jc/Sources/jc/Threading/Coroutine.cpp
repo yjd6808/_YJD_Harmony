@@ -10,13 +10,64 @@
 #include "Core.h"
 #include "Coroutine.h"
 
+#include <mutex>
+
 USING_NS_JC;
 
-#define CO_ERROR_NULL_FUNCTION	1
-#define CO_ERROR_VIRTUAL_ALLOC	2
+// [코루틴-07] 마지막 코루틴 실패 원인. (스레드별 보관)
+// - 이전에는 파일 전역(g_cCoLastError)이라 사용자가 읽을 방법이 없었고,
+//   스레드별로 매니저가 따로 있는데 에러는 공유라 원인 추적이 어긋났다.
+static thread_local CoError t_coLastError = coeNone;
 
-_u32 g_coNextId_    = 0;
-_u32 g_cCoLastError = 0;
+CoError CoGetLastError()
+{
+	// 읽으면 지운다. 같은 실패를 두 번 보고하지 않기 위함이다.
+	CoError err = t_coLastError;
+	t_coLastError = coeNone;
+	return err;
+}
+
+const char* CoErrorString(CoError _err)
+{
+	switch (_err)
+	{
+	case coeNone:				return "성공";
+	case coeNullFunction:		return "코루틴 함수가 null";
+	case coeVirtualAlloc:		return "스택 예약 실패";
+	case coeCommitFailed:		return "스택 커밋 실패";
+	case coeInvalidStackSize:	return "잘못된 스택 크기";
+	case coeInvalidCtx:			return "유효하지 않은 컨텍스트";
+	case coeWrongThread:		return "생성 스레드와 다른 스레드에서 호출";
+	case coeInvalidState:		return "호출할 수 없는 상태";
+	case coeStaleHandle:		return "이미 종료된 핸들";
+	case coeException:			return "코루틴 함수에서 예외 발생";
+	default:					return "알 수 없는 오류";
+	}
+}
+
+// [코루틴-07] CoVEH 자동 등록. (프로세스 1회, 가장 앞 순서)
+// - 이전에는 사용자가 직접 AddVectoredExceptionHandler를 호출해야 해서
+//   등록을 빼먹으면 첫 스택 확장 시점에 가드 폴트가 처리되지 않고 종료됐다.
+// - Config.cpp의 전역 VEH보다 나중에 FIRST로 등록하므로 CoVEH가 먼저 불린다.
+static void* s_pCoVeh = nullptr;
+static std::once_flag s_coVehOnce;
+
+static void EnsureCoVehRegistered()
+{
+	std::call_once(s_coVehOnce, []
+	{
+		s_pCoVeh = ::AddVectoredExceptionHandler(1, CoVEH);
+		jc_assert_msg(s_pCoVeh != nullptr, "CoVEH 등록 실패");
+	});
+}
+
+CoMgr::CoMgr()
+{
+	// 스레드별 매니저가 처음 만들어지는 시점에 VEH를 보장한다.
+	EnsureCoVehRegistered();
+}
+
+_u32 g_coNextId_ = 0;
 
 thread_local CoMgr g_cCoMgr;
 
@@ -24,8 +75,10 @@ thread_local CoMgr g_cCoMgr;
 // [Private] InitStack
 //   CoStack의 pStackEnd_, size_, stackTier_ 가 설정된 상태에서 호출.
 //   스택 상단 pageInitCount_ 페이지 commit + pageGuardCount_ 페이지 PAGE_GUARD commit.
+// [코루틴-07] 커밋 실패를 무시하지 않고 false로 돌려준다.
+// - 이전에는 실패해도 void로 진행해서 커밋 안 된 스택으로 진입하다 첫 push에서 AV가 났다.
 //////////////////////////////////////////////////////////////////////////////////////////
-void CoMgr::InitStack(CoStack* _pStack)
+bool CoMgr::InitStack(CoStack* _pStack)
 {
 	_pStack->pStackBase_ = _pStack->pStackEnd_ + _pStack->size_;
 
@@ -52,7 +105,8 @@ void CoMgr::InitStack(CoStack* _pStack)
 		if (VirtualAlloc(pCommitAddr, actualInitCount * CO_PAGE_SIZE, MEM_COMMIT, PAGE_READWRITE) == nullptr)
 		{
 			_LogError_("VirtualAlloc (init commit) failed. Error: %lu", GetLastError());
-			return;
+			t_coLastError = coeCommitFailed;
+			return false;
 		}
 	}
 
@@ -67,12 +121,14 @@ void CoMgr::InitStack(CoStack* _pStack)
 		if (VirtualAlloc(pGuardAddr, actualGuardCount * CO_PAGE_SIZE, MEM_COMMIT, PAGE_READWRITE | PAGE_GUARD) == nullptr)
 		{
 			_LogError_("VirtualAlloc (guard commit) failed. Error: %lu", GetLastError());
-			return;
+			t_coLastError = coeCommitFailed;
+			return false;
 		}
 	}
 
 	_pStack->pStackLimit_ = pCommitAddr;
 	_pStack->pGuardLimit_ = pGuardAddr;
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -115,15 +171,14 @@ bool CoMgr::AllocStack(OUT CoStack* _pStack, CoStackTier _stackTier, _u32 _stack
 	char* pBase = (char*)VirtualAlloc(nullptr, stackSize, MEM_RESERVE, PAGE_NOACCESS);
 	if (pBase == nullptr)
 	{
-		g_cCoLastError = CO_ERROR_VIRTUAL_ALLOC;
+		t_coLastError = coeVirtualAlloc;
 		return false;
 	}
 
 	_pStack->pStackEnd_  = pBase;
 	_pStack->size_       = stackSize;
 	_pStack->stackTier_  = stackTier;
-	InitStack(_pStack);
-	return true;
+	return InitStack(_pStack);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -148,16 +203,19 @@ void CoMgr::FreeStack(CoStack* _pStack)
 //////////////////////////////////////////////////////////////////////////////////////////
 // InitCtx
 //   풀에서 꺼낸 CoContext를 재초기화. 스택은 decommit 상태이므로 InitStack으로 재commit.
+// [코루틴-07] 재커밋 실패를 호출자에게 알리기 위해 bool을 돌려준다.
 //////////////////////////////////////////////////////////////////////////////////////////
-void CoMgr::InitCtx(CoContext* _pCtx)
+bool CoMgr::InitCtx(CoContext* _pCtx)
 {
-	InitStack(&_pCtx->stack_);
+	if (!InitStack(&_pCtx->stack_))
+		return false;
 	_pCtx->id_         = 0;
 	_pCtx->threadId_   = 0;
 	_pCtx->regs_       = {};
 	_pCtx->state_      = csInit;
 	_pCtx->fn_         = nullptr;
 	_pCtx->callerCtx_  = nullptr;
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -188,7 +246,12 @@ CoContext* CoMgr::AllocCtx(CoStackTier _stackTier, _u32 _stackSize)
 	if (resolvedTier != cstCustom && free_[resolvedTier].PopFront(&pCtx))
 	{
 		// 풀에서 재사용: decommit된 상태 → InitStack이 다시 commit
-		InitCtx(pCtx);
+		// [코루틴-07] 재커밋 실패 시 이 ctx는 풀로 되돌리고 nullptr을 돌려준다.
+		if (!InitCtx(pCtx))
+		{
+			free_[resolvedTier].PushBack(pCtx);
+			return nullptr;
+		}
 	}
 	else
 	{
@@ -647,7 +710,8 @@ CoContext* CoAllocCtx(FnCoroutine _fn, CoStackTier _stackTier, _u32 _stackSize)
 {
 	if (_fn == nullptr)
 	{
-		g_cCoLastError = CO_ERROR_NULL_FUNCTION;
+		// [코루틴-07] 실패 원인을 공개 에러 코드로 남긴다.
+		t_coLastError = coeNullFunction;
 		return nullptr;
 	}
 

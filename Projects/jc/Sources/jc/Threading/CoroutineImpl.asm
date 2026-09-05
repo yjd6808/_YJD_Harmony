@@ -213,7 +213,13 @@ CoRun proc
     ; 전달받은 인자 그대로 이어서 전달
     call    CoAllocCtx
     cmp     rax,    0
-    je      FIN
+    jne     ALLOC_OK
+    ; [코루틴-07] 할당 실패(null fn, 예약/커밋 실패)는 nullptr을 돌려준다.
+    ; - 이전에는 FIN이 mov rax,rcx로 복귀했는데 rcx는 call에 의해 깨진 값이므로
+    ;   쓰레기 포인터가 반환됐다. 실패 원인은 CoGetLastError()로 확인한다.
+    xor     ecx,    ecx
+    jmp     FIN
+ALLOC_OK:
 
     push	rax                     ; CoContext 포인터 백업 (컨텍스트 스택)
 
@@ -311,7 +317,10 @@ FIN:
 CoRun endp
 
 
-CoYield proc
+; [코루틴-07] 기존 CoYield를 C++ 인라인 래퍼 뒤로 숨긴다.
+; - 코루틴 밖에서 호출하면 null 컨텍스트를 역참조해 크래시나므로,
+;   헤더의 inline CoYield()가 먼저 검사하고 여기서부터는 항상 유효한 호출이다.
+CoYieldImpl proc
     push    rbp
     push    rbx
     mov     rbp,    rsp
@@ -430,7 +439,7 @@ FIN:
     pop     rbx
     pop     rbp
     ret
-CoYield endp
+CoYieldImpl endp
 
 CoResume proc
     push    rbp

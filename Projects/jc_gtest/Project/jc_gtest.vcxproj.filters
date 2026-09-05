@@ -151,6 +151,9 @@
     <ClCompile Include="..\Sources\jc_gtest\Threading\SchedulerTest.cpp">
       <Filter>Threading</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Threading\CoroutineTest.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Pool\MemoryPoolTest.cpp">
       <Filter>Pool</Filter>
     </ClCompile>

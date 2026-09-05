@@ -10,6 +10,7 @@
     <ClCompile Include="..\Sources\jcr\05_PageGuard.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine_CoBasic.cpp" />
+    <ClCompile Include="..\Sources\jcr\06_Coroutine_07_ErrorVeh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jcr\Core.h" />

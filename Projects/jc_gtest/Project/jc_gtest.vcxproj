@@ -122,6 +122,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Threading\CoroutineTest.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Threading\ThreadLocalTest.cpp">
       <SubType>
       </SubType>

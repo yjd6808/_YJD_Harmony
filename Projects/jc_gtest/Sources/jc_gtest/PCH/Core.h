@@ -156,6 +156,7 @@ USING_NS_STD;
 		#define TEST_ThreadLocalTest            ON
 		#define TEST_ThreadPoolTest             ON
 		#define TEST_SchedulerTest              ON
+		#define TEST_CoroutineTest              ON
 	#endif
 
 	#if WrapperTest == ON
