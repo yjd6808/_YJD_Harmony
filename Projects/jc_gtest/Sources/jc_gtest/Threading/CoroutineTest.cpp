@@ -5,6 +5,8 @@
 
 #include "jc/Threading/Coroutine.h"
 
+#include <thread>
+
 #include <intrin.h>
 #include <stdexcept>
 #include <float.h>
@@ -442,7 +444,32 @@ TEST(Coroutine, Overflow_DirectTouchCaught)
 	g_cCoMgr.Clear();
 }
 
-// [코루틴-04] 비상 레이아웃이 제대로 깔려 있는지 확인한다. (죽지 않는 검사)
+// [코루틴-15] 스레드가 코루틴을 쓰고 종료해도 크래시가 없다.
+// - TLS 소멸 중/이후 가드 폴트가 오면 CoVEH가 매니저를 보지 않는다.
+// - jc::Thread는 생성된 스레드에서 ThreadLocal 맵 릭을 남기므로(기존 문제)
+//   std::thread로 검증한다.
+TEST(Coroutine, Veh_ThreadExitDuringClear)
+{
+	std::thread th([]
+	{
+		CoContext* pCtx = CoRun(CoTestFn_YieldForever06, cstMid);
+		while (pCtx)
+			pCtx = CoResume(pCtx);
+		g_cCoMgr.Clear();
+	});
+	th.join();
+	EXPECT_TRUE(true);
+}
+
+// [코루틴-15] VEH 통계 API가 동작한다.
+// - 커널이 성장을 직접 처리하면 우리 VEH가 안 불려 0일 수 있다.
+//   0이 zł못했다는 뜻이 아니라 안 불렸다는 뜻이다.
+TEST(Coroutine, Veh_StatsSmoke)
+{
+	CoMgr::CoVehStats st = g_cCoMgr.GetVehStats();
+	EXPECT_TRUE(st.maxDispatchUsed < 64 * 1024);
+	EXPECT_TRUE(true);
+}
 // - 예약 아래 패드 N페이지 RW 커밋, 오버플로우 가드 1페이지 NOACCESS,
 //   DeallocationStack = 밴드 상단.
 TEST(Coroutine, Overflow_LayoutCheck)

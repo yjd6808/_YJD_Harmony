@@ -65,6 +65,7 @@ static void EnsureCoVehRegistered()
 
 CoMgr::CoMgr()
 {
+	t_alive_ = true;
 	// 스레드별 매니저가 처음 만들어지는 시점에 VEH를 보장한다.
 	EnsureCoVehRegistered();
 
@@ -74,6 +75,15 @@ CoMgr::CoMgr()
 	jc_assert_msg(!IsShadowStackEnabled(),
 		"jc 코루틴은 CET(User Shadow Stack)와 호환되지 않는다. /CETCOMPAT:NO로 링크할 것");
 }
+
+CoMgr::~CoMgr()
+{
+	// [코루틴-15] 이후 가드 폴트는 모두 스레드 스택의 것으로 보고 OS에 맡긴다.
+	// - Clear()에서는 내리지 않는다. Clear는 풀 비우기라 뒤에도 재사용되기 때문이다.
+	t_alive_ = false;
+}
+
+thread_local bool CoMgr::t_alive_ = false;
 
 // [코루틴-08] 섀도우 스택이 켜져 있는지 확인한다.
 bool CoMgr::IsShadowStackEnabled()
@@ -374,6 +384,9 @@ void CoMgr::FreeCtx(CoContext* _pCtx)
 {
 	jc_assert(_pCtx != nullptr);
 
+	// [코루틴-15] 실행 중인 컨텍스트를 풀로 되돌리는 건 버그다.
+	jc_assert(currentCtx_ != _pCtx);
+
 	CoStackTier stackTier = _pCtx->stack_.stackTier_;
 	jc_assert_msg(stackTier >= cstValidTierBegin && stackTier <= cstValidTierEnd,
 		"잘못된 스택 티어입니다. tier: %d", stackTier);
@@ -548,7 +561,7 @@ bool CoMgr::TryFindStackByAddr(char* _pAddr, OUT CoStack** _pOut)
 // - 이전에는 pStackLimit_만 내려가고 gs:[16]이 그대로라 확장된 영역에서
 //   예외를 던지면 SEH가 스택 범위를 벗어났다고 보고 프로세스를 죽였다.
 //////////////////////////////////////////////////////////////////////////////////////////
-bool CoMgr::ExpandStack(CoContext* _pCtx, char* _pFaultAddr)
+bool __declspec(safebuffers) CoMgr::ExpandStack(CoContext* _pCtx, char* _pFaultAddr)
 {
 	CoStack* _pStack = &_pCtx->stack_;
 	if (pageGuardCount_ == 0)
@@ -726,83 +739,125 @@ void CoMgr::DumpStack(CoStack* _pStack, const char* _pTitle /*= nullptr*/)
 //   EXCEPTION_NONCONTINUABLE 플래그를 세워 실행 재개가 불가능함을 명시.
 //
 // [재귀 진입 처리]
-//   s_inCoVEH bool로 재귀 여부 판단.
+//   재진입 깊이를 카운터+RAII로 센다. (CoVehScope)
 //   재귀 진입 시 currentCtx_ 범위 체크만 수행하고 CONTINUE_EXECUTION 반환.
 //   가드존 재설치는 최상위 CoVEH 호출의 ExpandStack에서 일괄 처리됨.
 //
 //   코루틴 실행 중이 아닌 경우(currentCtx_==nullptr)는 즉시 CONTINUE_SEARCH.
 //////////////////////////////////////////////////////////////////////////////////////////
-static thread_local bool s_inCoVEH = false;
+// [코루틴-15] VEH 재진입 깊이. 어떤 경로로 나가도 복구되게 RAII로 센다.
+static thread_local _u32 t_coVehDepth = 0;
 
-LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp)
+struct CoVehScope
 {
-	if (_pEp->ExceptionRecord->ExceptionCode != STATUS_GUARD_PAGE_VIOLATION)
+	_u32& depth_;
+	explicit CoVehScope(_u32& _d) noexcept : depth_(_d) { ++depth_; }
+	~CoVehScope() noexcept { --depth_; }
+};
+
+static inline bool CoIsGrowableGuard(const CoContext* _pCtx, const char* _pAddr) noexcept
+{
+	return _pAddr >= _pCtx->stack_.pGuardLimit_ && _pAddr < _pCtx->stack_.pStackLimit_;
+}
+
+static inline bool CoIsOverflowGuard(const CoContext* _pCtx, const char* _pAddr) noexcept
+{
+	return _pAddr >= _pCtx->stack_.pStackEnd_ && _pAddr < _pCtx->stack_.pEmergencyTop_;
+}
+
+static inline bool CoIsOnStack(const CoContext* _pCtx, const char* _pAddr) noexcept
+{
+	return _pAddr >= _pCtx->stack_.pStackEnd_ && _pAddr < _pCtx->stack_.pStackBase_;
+}
+
+static LONG CoConvertToOverflow(EXCEPTION_POINTERS* _pEp, CoContext* _pCtx) noexcept
+{
+	if (_pCtx != nullptr)
+		_pCtx->stack_.overflowed_ = true;
+	_pEp->ExceptionRecord->ExceptionCode   = STATUS_STACK_OVERFLOW;
+	_pEp->ExceptionRecord->ExceptionFlags |= EXCEPTION_NONCONTINUABLE;
+	return EXCEPTION_CONTINUE_SEARCH;
+}
+
+// [코루틴-15] VEH 경로 함수는 스택을 적게 쓴다. 보안 쿠키 검사가 들어갈
+// 로컬 배열·문자열 포맷을 두지 않는다. (프레임 크기는 맵 파일에서 확인)
+#define CO_VEH_PATH __declspec(safebuffers)
+
+CO_VEH_PATH __declspec(noinline) LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp) noexcept
+{
+	// 1. 관심사만 남긴다. (이 핸들러는 모든 예외에 불리므로 싸야 한다)
+	const EXCEPTION_RECORD* pRec = _pEp->ExceptionRecord;
+	if (pRec->ExceptionCode != STATUS_GUARD_PAGE_VIOLATION)
 		return EXCEPTION_CONTINUE_SEARCH;
-	if (_pEp->ExceptionRecord->NumberParameters < 2)
+	if (pRec->NumberParameters < 2)
+		return EXCEPTION_CONTINUE_SEARCH;
+	if (!CoMgr::t_alive_)
 		return EXCEPTION_CONTINUE_SEARCH;
 
-	char* pFaultAddr = (char*)_pEp->ExceptionRecord->ExceptionInformation[1];
+	char* pFaultAddr = (char*)pRec->ExceptionInformation[1];
+	char* pFaultRsp  = (char*)_pEp->ContextRecord->Rsp;
 
-	// 코루틴 실행 중이 아니면 처리하지 않음 (O(1))
-	CoContext* pCtx = g_cCoMgr.GetCurrentCtx();
-	if (pCtx == nullptr)
-		return EXCEPTION_CONTINUE_SEARCH;
-
-	// 재귀 진입: VEH 핸들러 자체의 스택 사용으로 가드 페이지가 재터치된 경우
-	if (s_inCoVEH)
+#ifdef _DEBUG
+	// [코루틴-15] VEH가 실제로 쓴 깊이를 잰다. (가드 예산 튜닝 근거)
 	{
-		CoContext* pCtx = g_cCoMgr.GetCurrentCtx();
-		if (pCtx != nullptr
-			&& pFaultAddr >= pCtx->stack_.pStackEnd_
-			&& pFaultAddr <  pCtx->stack_.pStackBase_)
+		char* pVehRsp = (char*)_AddressOfReturnAddress();
+		char* pFaultRspDbg = (char*)_pEp->ContextRecord->Rsp;
+		CoMgr& mgrDbg = g_cCoMgr;
+		size_t dispatchUsed = (size_t)(pFaultRspDbg - pVehRsp);
+		CoContext* pDbg = mgrDbg.GetCurrentCtx();
+		if (pDbg != nullptr)
 		{
-			// [코루틴-04] 비상 밴드 아래 재귀 터치 → STACK_OVERFLOW
-			if (pFaultAddr < pCtx->stack_.pEmergencyTop_)
-			{
-				pCtx->stack_.overflowed_ = true;
-				_pEp->ExceptionRecord->ExceptionCode  = STATUS_STACK_OVERFLOW;
-				_pEp->ExceptionRecord->ExceptionFlags |= EXCEPTION_NONCONTINUABLE;
-				return EXCEPTION_CONTINUE_SEARCH;
-			}
-			// OS가 이미 PAGE_GUARD 해제 → 실행 재개만 하면 됨
-			// 가드존 재설치는 최상위 CoVEH 호출의 ExpandStack에서 처리
-			return EXCEPTION_CONTINUE_EXECUTION;
+			size_t remain = (size_t)(pVehRsp - pDbg->stack_.pGuardLimit_);
+			if (dispatchUsed > mgrDbg.vehStats_.maxDispatchUsed)
+				mgrDbg.vehStats_.maxDispatchUsed = dispatchUsed;
+			if (remain < mgrDbg.vehStats_.minRemain)
+				mgrDbg.vehStats_.minRemain = remain;
 		}
-		return EXCEPTION_CONTINUE_SEARCH;
 	}
+#endif
 
-	// 코루틴 실행 중이 아니면 처리하지 않음 (O(1))
-	CoContext* pCoCtx = g_cCoMgr.GetCurrentCtx();
-	if (pCoCtx == nullptr)
-		return EXCEPTION_CONTINUE_SEARCH;
-
-	// 현재 코루틴 스택 범위 체크
-	if (pFaultAddr < pCoCtx->stack_.pStackEnd_ || pFaultAddr >= pCoCtx->stack_.pStackBase_)
-		return EXCEPTION_CONTINUE_SEARCH;
-
-	// 오버플로우를 STACK_OVERFLOW로 변환한다.
-	// ExpandStack이 false를 반환하므로 아래에서 일괄 처리됨
-	s_inCoVEH = true;
-	LONG result = EXCEPTION_CONTINUE_SEARCH;
-
-	// [코루틴-03] ExpandStack이 성공하면 TEB StackLimit까지 같이 내려간다.
-	if (g_cCoMgr.ExpandStack(pCoCtx, pFaultAddr))
+	// 2. 대상 ctx를 정한다. currentCtx_ 우선, 비어 있으면 주소로 역조회한다.
+	// (스위치 직후 CoOnBeforeLaunch 전 몇 명령 사이를 보완한다)
+	CoContext* pCtx = g_cCoMgr.GetCurrentCtx();
+	if (pCtx == nullptr || !CoIsOnStack(pCtx, pFaultAddr))
 	{
-		result = EXCEPTION_CONTINUE_EXECUTION;
+		if (!g_cCoMgr.TryFindContextByAddr(pFaultAddr, &pCtx))
+			return EXCEPTION_CONTINUE_SEARCH;
 	}
-	else if (pFaultAddr < pCoCtx->stack_.pEmergencyTop_)
+	if (pCtx->stack_.magic_ != CO_STACK_MAGIC)
 	{
-		// [코루틴-04] 비상 밴드 아래 폴트: 스택 오버플로우로 확정한다.
-		// - 예약 아래 비상 패드가 SEH 디스패치 공간을 보장한다.
-		// - NONCONTINUABLE을 유지한다. (커널이 올리는 오버플로우와 동일.
-		//   그 자리에서 재개는 금지되지만 __except로 잡고 정리한 뒤 끝내는 건 된다.)
-		pCoCtx->stack_.overflowed_ = true;
-		_pEp->ExceptionRecord->ExceptionCode  = STATUS_STACK_OVERFLOW;
-		_pEp->ExceptionRecord->ExceptionFlags |= EXCEPTION_NONCONTINUABLE;
+		__debugbreak();
+		return EXCEPTION_CONTINUE_SEARCH;
+	}
+	// 실행 중이 아니면 스택이 자랄 수 없으므로 건드리지 않는다.
+	if (pCtx->state_ != csRun && pCtx->state_ != csInit)
+		return EXCEPTION_CONTINUE_SEARCH;
+	// 스택을 "써서" 난 폴트가 아니면(다른 스레드가 읽은 경우 등) 건드리지 않는다.
+	if (!CoIsOnStack(pCtx, pFaultRsp))
+		return EXCEPTION_CONTINUE_SEARCH;
+
+	// 3. 오버플로우 가드는 즉시 확정한다.
+	if (CoIsOverflowGuard(pCtx, pFaultAddr))
+		return CoConvertToOverflow(_pEp, pCtx);
+	// 우리가 설치한 성장 가드가 아니면(사용자 PAGE_GUARD 등) 건드리지 않는다.
+	if (!CoIsGrowableGuard(pCtx, pFaultAddr))
+		return EXCEPTION_CONTINUE_SEARCH;
+
+	// 4. 재진입: 바깥 호출이 가드존을 일괄 재설치하므로 실행만 재개한다.
+	// 2중 이상은 공간이 진짜 없다는 뜻이라 오버플로우로 확정한다.
+	CoVehScope scope(t_coVehDepth);
+	if (t_coVehDepth > 1)
+	{
+		if (t_coVehDepth > 2)
+			return CoConvertToOverflow(_pEp, pCtx);
+		return EXCEPTION_CONTINUE_EXECUTION;
 	}
 
-	s_inCoVEH = false;
-	return result;
+	// 5. 확장. 실패하면 오버플로우로 확정한다. (조용히 넘기면 다음 페이지에서 AV가 난다)
+	// [코루틴-03] TEB StackLimit 갱신은 ExpandStack 안에서 한다.
+	if (g_cCoMgr.ExpandStack(pCtx, pFaultAddr))
+		return EXCEPTION_CONTINUE_EXECUTION;
+	return CoConvertToOverflow(_pEp, pCtx);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -816,9 +871,29 @@ void CoOnBeforeLaunch(CoContext* _pCtx)
 	g_cCoMgr.currentCtx_  = _pCtx;
 }
 
+#ifdef _DEBUG
+// [코루틴-15] 스레드 스택으로 돌아온 뒤 가드존이 살아있는지 확인한다.
+// - 가드 비트까지는 보지 않는다. 커널이 성장 과정에서 우리 가드를 조용히
+//   커밋해 버리기 때문이다. (실측) 커밋 자체가 풀렸으면 풀 관리 버그다.
+static void CoVerifyGuardZone(const CoStack& _stack) noexcept
+{
+	if (_stack.pGuardLimit_ >= _stack.pStackLimit_)
+		return;
+	MEMORY_BASIC_INFORMATION mbi{};
+	if (::VirtualQuery(_stack.pGuardLimit_, &mbi, sizeof(mbi)) == sizeof(mbi))
+	{
+		if (mbi.State != MEM_COMMIT)
+			__debugbreak();
+	}
+}
+#endif
+
 void CoOnAfterLaunch(CoContext* _pCtx)
 {
 	g_cCoMgr.currentCtx_ = _pCtx->callerCtx_;
+#ifdef _DEBUG
+	CoVerifyGuardZone(_pCtx->stack_);
+#endif
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

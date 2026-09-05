@@ -31,6 +31,7 @@
     <ClCompile Include="..\Sources\jcr\06_Coroutine_03_StackLimit.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine_08_Mxcsr.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine_04_Emergency.cpp" />
+    <ClCompile Include="..\Sources\jcr\06_Coroutine_15_Veh.cpp" />
     <ClCompile Include="..\Sources\jcr\Core.cpp" />
     <ClCompile Include="..\Sources\jcr\main.cpp" />
     <ClCompile Include="..\Sources\jcr\01_AsmStudy1.cpp" />

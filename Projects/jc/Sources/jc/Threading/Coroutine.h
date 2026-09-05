@@ -239,6 +239,12 @@ public:
 	// - 이전에는 사용자가 직접 AddVectoredExceptionHandler를 호출해야 해서
 	//   등록을 빼먹으면 첫 스택 확장 시점에 가드 폴트가 처리되지 않고 종료됐다.
 	CoMgr();
+	// [코루틴-15] 스레드 종료 후에는 매니저를 건드리지 않는다.
+	// - TLS 소멸 중/이후 가드 폴트가 오면 CoVEH가 매니저를 보지 않게 한다.
+	~CoMgr();
+
+	// [코루틴-15] TLS 생존 여부. 소멸자 시작에서 false가 된다.
+	static thread_local bool t_alive_;
 
 	// ── Context 레벨 ──────────────────────────────────────────────────────────
 	// [코루틴-07] 풀에서 꺼낸 스택을 다시 커밋하다 실패할 수 있으므로 결과를 돌려준다.
@@ -270,6 +276,15 @@ public:
 	// ── 현재 실행 중인 코루틴 컨텍스트 (O(1) 접근) ───────────────────────────
 	CoContext*	GetCurrentCtx() const { return currentCtx_; }
 	CoContext*	currentCtx_ = nullptr;	// CoOnBeforeLaunch/AfterLaunch에서 직접 설정
+
+	// [코루틴-15] VEH가 실제로 쓴 깊이 통계. (디버그용. 가드 예산 튜닝 근거)
+	struct CoVehStats
+	{
+		size_t maxDispatchUsed = 0;	// 커널+ntdll이 밀어넣은 최대량
+		size_t minRemain = (size_t)-1;	// 가드존 바닥까지 최소 여유
+	};
+	CoVehStats vehStats_;
+	CoVehStats	GetVehStats() const { return vehStats_; }
 
 	// [코루틴-05] 관리 중인(using_) 컨텍스트인지 확인한다. (Debug 검증용)
 	bool		IsUsing(CoContext* _pCtx);
@@ -397,4 +412,4 @@ inline CoContext* CoResumeChecked(CoContext* _pCtx)
 	return pRet;
 }
 
-LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp);
+LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp) noexcept;
