@@ -121,6 +121,9 @@ struct CoStack
 	char*		pStackLimit_	= nullptr;	// 페이지 가드가 아닌 Commit된 영역의 끝 주소
 	char*		pGuardLimit_	= nullptr;	// 페이지 가드의 끝 주소 (pGuardLimit_과 pStackLimit_이 같다면 이제 더이상 페이지가드가 없다는 뜻..)
 	CoStackTier stackTier_		= cstNone;
+	// [코루틴-05] 스택 식별 매직. 풀에 있거나 해제된 메모리를 가리키는
+	// 잘못된 컨텍스트를 resume 전에 가려내기 위해 사용한다.
+	_u64		magic_			= 0;
 };
 
 struct CoRegs
@@ -161,6 +164,12 @@ struct CoContext
 {
 	_u32		id_ = 0;
 	_u32		threadId_ = 0;
+	// [코루틴-05] 세대 번호. 해제될 때마다 증가한다.
+	// - 종료된 컨텍스트가 풀에 들어갔다가 다른 코루틴으로 재사용되면
+	//   예전 포인터로 resume해도 엉뚱한 코루틴이 실행되는 ABA 문제가 생기므로,
+	//   핸들에 세대를 함께 들고 있어 재사용을 가려낸다. (InitCtx에서 리셋하지 않음)
+	_u32		generation_ = 0;
+	_u32		_padGen_ = 0;
 	CoRegs		regs_;
 	CoStack		stack_;
 	CoState		state_;
@@ -169,6 +178,22 @@ struct CoContext
 };
 
 #pragma pack(pop)
+
+// [코루틴-05] 세대가 포함된 코루틴 핸들.
+// - 생 CoContext*는 종료 후 풀 재사용되면 엉뚱한 코루틴을 가리키게 되므로(ABA),
+//   핸들에 세대를 함께 들고 있어 IsAlive()로 유효성을 검사한다.
+struct CoHandle
+{
+	CoContext*	pCtx = nullptr;
+	_u32		generation = 0;
+
+	bool IsAlive() const
+	{
+		return pCtx != nullptr
+			&& pCtx->generation_ == generation
+			&& pCtx->state_ != csEnd;
+	}
+};
 
 class CoMgr
 {
@@ -205,6 +230,9 @@ public:
 	// ── 현재 실행 중인 코루틴 컨텍스트 (O(1) 접근) ───────────────────────────
 	CoContext*	GetCurrentCtx() const { return currentCtx_; }
 	CoContext*	currentCtx_ = nullptr;	// CoOnBeforeLaunch/AfterLaunch에서 직접 설정
+
+	// [코루틴-05] 관리 중인(using_) 컨텍스트인지 확인한다. (Debug 검증용)
+	bool		IsUsing(CoContext* _pCtx);
 
 	// 테스트 전용: 내부 파라미터를 외부에서 설정한다.
 	void		SetPageInitCount(_u32 _count) { pageInitCount_ = _count; }
@@ -247,6 +275,12 @@ extern "C"
 	CoError		CPP_CALL CoGetLastError();
 	// [코루틴-07] CoError를 사람이 읽을 수 있는 문자열로 변환한다.
 	const char* CPP_CALL CoErrorString(CoError _err);
+
+	// [코루틴-05] resume 전에 컨텍스트가 유효한지 검사한다.
+	// - 다른 스레드, 잘못된 상태, 자기 자신이면 false를 돌려주고 원인을 남긴다.
+	bool		CPP_CALL CoValidateResume(CoContext* _pCtx);
+	// [코루틴-05] 핸들이 살아있는지 검사하고 resume한다. (죽은 핸들은 coeStaleHandle)
+	CoContext*	CPP_CALL CoResumeH(CoHandle _h);
 }
 
 // [코루틴-07] 코루틴 밖(스레드 스택)에서 CoYield를 호출하면 asm이 null 컨텍스트를
@@ -258,6 +292,14 @@ inline void CoYield()
 	if (CoCurrentCtx() == nullptr)
 		return;
 	CoYieldImpl();
+}
+
+// [코루틴-05] 세대가 포함된 핸들로 코루틴을 시작한다.
+// - CoRun이 종료까지 돌고 nullptr을 돌려준 경우(최초 yield 전 종료)는 빈 핸들이다.
+inline CoHandle CoRunH(FnCoroutine _fn, CoStackTier _tier = cstMid, _u32 _size = 0)
+{
+	CoContext* pCtx = CoRun(_fn, _tier, _size);
+	return pCtx ? CoHandle{ pCtx, pCtx->generation_ } : CoHandle{};
 }
 
 LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp);

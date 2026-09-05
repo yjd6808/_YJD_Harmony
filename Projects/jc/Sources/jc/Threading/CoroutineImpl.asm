@@ -13,6 +13,7 @@ extern CoAllocCtx       : proc
 extern CoFreeCtx        : proc
 extern CoCurrentCtx     : proc
 extern CoValidateAddr   : proc
+extern CoValidateResume : proc
 extern CoOnBeforeLaunch : proc
 extern CoOnAfterLaunch  : proc
 
@@ -43,6 +44,7 @@ CoStack struct 8
     pGuardLimit_ QWORD   ?
     stackTier_   DWORD   ?
     _pad1_       DWORD   ?
+    magic_       QWORD   ?           ; [코루틴-05] 스택 식별 매직 (C++ CoStack과 순서/크기 일치)
 CoStack ends
 
 OFFSET_COSTACK_SIZE        EQU CoStack.size_
@@ -53,6 +55,7 @@ OFFSET_COSTACK_BASEADDR    EQU CoStack.pStackEnd_
 OFFSET_COSTACK_STACKLIMIT  EQU CoStack.pStackLimit_
 OFFSET_COSTACK_GUARDLIMIT  EQU CoStack.pGuardLimit_
 OFFSET_COSTACK_STACKTIER   EQU CoStack.stackTier_
+OFFSET_COSTACK_MAGIC       EQU CoStack.magic_
 
 ; ============================================================
 CoRegs struct 8
@@ -112,6 +115,8 @@ OFFSET_COREGS_XMM15 EQU CoRegs.xmm15_
 CoContext struct 8
     id_         DWORD   ?
     threadId_   DWORD   ?
+    generation_ DWORD   ?           ; [코루틴-05] 세대 번호 (C++ CoContext와 순서/크기 일치)
+    _padGen_    DWORD   ?
     regs_       CoRegs  <>
     stack_      CoStack <>
     state_      DWORD   ?
@@ -122,6 +127,7 @@ CoContext ends
 
 OFFSET_COCTX_ID       EQU CoContext.id_
 OFFSET_COCTX_THREADID EQU CoContext.threadId_
+OFFSET_COCTX_GEN      EQU CoContext.generation_
 OFFSET_COCTX_REGS     EQU CoContext.regs_
 OFFSET_COCTX_STACK    EQU CoContext.stack_
 OFFSET_COCTX_STATE    EQU CoContext.state_
@@ -450,6 +456,16 @@ CoResume proc
     cmp     rcx,    0
     jz      FIN
 
+    ; [코루틴-05] resume 전 검사 (스레드/상태/자기 자신).
+    ; - 이전에는 null 검사만 해서 다른 스레드나 종료된 컨텍스트를 resume하면
+    ;   정의되지 않은 곳으로 점프했다. 실패 시 nullptr과 에러 코드를 돌려준다.
+    ; - rsp는 0 mod 16이므로 shadow space가 이미 확보되어 바로 call한다.
+    mov     rbx,    rcx                 ; ctx 보관 (rbx는 callee-saved, push로 보존됨)
+    call    CoValidateResume            ; rcx = ctx
+    test    al,     al
+    jz      FIN_NULL
+    mov     rcx,    rbx
+
     push    rcx                     ; CoContext 포인터 백업 (컨텍스트 스택)
     mov     rax,    rcx
 
@@ -580,6 +596,13 @@ YIELD:
     mov     rcx,        0
 FIN:
     mov     rax,        rcx
+    mov     rsp,        rbp
+    pop     rbx
+    pop     rbp
+    ret
+FIN_NULL:
+    ; [코루틴-05] 검증 실패 경로. rax = nullptr로 복귀한다.
+    xor     eax,        eax
     mov     rsp,        rbp
     pop     rbx
     pop     rbp

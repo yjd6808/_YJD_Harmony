@@ -178,6 +178,9 @@ bool CoMgr::AllocStack(OUT CoStack* _pStack, CoStackTier _stackTier, _u32 _stack
 	_pStack->pStackEnd_  = pBase;
 	_pStack->size_       = stackSize;
 	_pStack->stackTier_  = stackTier;
+	// [코루틴-05] 스택 식별 매직을 찍는다. 해제된 메모리를 가리키는
+	// 잘못된 컨텍스트를 resume 전에 가려내기 위해 사용한다.
+	_pStack->magic_      = CO_STACK_MAGIC;
 	return InitStack(_pStack);
 }
 
@@ -290,6 +293,13 @@ void CoMgr::FreeCtx(CoContext* _pCtx)
 		return;
 	}
 
+	// [코루틴-05] 해제 표시. 세대를 올려 예전 핸들을 모두 무효화한다.
+	// - 종료된 컨텍스트가 풀에 들어갔다가 재사용되면 예전 포인터로
+	//   엉뚱한 코루틴이 실행되는 ABA 문제가 생기므로 세대로 가려낸다.
+	pPopped->generation_++;
+	pPopped->state_ = csEnd;
+	pPopped->fn_    = nullptr;
+
 	FreeStack(&pPopped->stack_);
 
 	if (stackTier == cstCustom)
@@ -369,6 +379,15 @@ bool CoMgr::TryFindContextByAddr(char* _pAddr, OUT CoContext** _pOut)
 		return false;
 	if (_pOut) *_pOut = pCtx;
 	return true;
+}
+
+// [코루틴-05] 관리 중인(using_) 컨텍스트인지 확인한다. (Debug 검증용)
+bool CoMgr::IsUsing(CoContext* _pCtx)
+{
+	if (_pCtx == nullptr)
+		return false;
+	CoContext** pFound = using_.Find(_pCtx->stack_.pStackBase_);
+	return pFound != nullptr && *pFound == _pCtx;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -701,6 +720,60 @@ bool CoValidateAddr(CoContext* _pCtx, char* _pAddr)
 		return false;
 	return _pAddr >= _pCtx->stack_.pStackEnd_
 		&& _pAddr <  _pCtx->stack_.pStackBase_;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// [코루틴-05] CoResume 안전장치.
+// - 이전에는 null 검사만 하고 레지스터를 복원했으므로 다른 스레드에서 resume하거나
+//   이미 종료된 컨텍스트를 resume하면 정의되지 않은 곳으로 점프했다.
+// - 여기서 걸리면 nullptr이 반환되고 원인은 CoGetLastError()로 확인한다.
+//////////////////////////////////////////////////////////////////////////////////////////
+bool CoValidateResume(CoContext* _pCtx)
+{
+	if (_pCtx == nullptr)
+	{
+		t_coLastError = coeInvalidCtx;
+		return false;
+	}
+	if (_pCtx->stack_.magic_ != CO_STACK_MAGIC)
+	{
+		t_coLastError = coeInvalidCtx;
+		return false;
+	}
+	if (_pCtx->threadId_ != GetCurrentThreadId())
+	{
+		t_coLastError = coeWrongThread;
+		return false;
+	}
+	if (_pCtx->state_ != csInit && _pCtx->state_ != csYield)
+	{
+		t_coLastError = coeInvalidState;
+		return false;
+	}
+	if (_pCtx == g_cCoMgr.GetCurrentCtx())
+	{
+		// 자기 자신을 resume하면 자기 스택으로 재진입해 스택이 오염된다.
+		t_coLastError = coeInvalidState;
+		return false;
+	}
+#ifdef _DEBUG
+	if (!g_cCoMgr.IsUsing(_pCtx))
+	{
+		t_coLastError = coeInvalidCtx;
+		return false;
+	}
+#endif
+	return true;
+}
+
+CoContext* CoResumeH(CoHandle _h)
+{
+	if (!_h.IsAlive())
+	{
+		t_coLastError = coeStaleHandle;
+		return nullptr;
+	}
+	return CoResume(_h.pCtx);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
