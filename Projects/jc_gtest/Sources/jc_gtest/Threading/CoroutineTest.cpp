@@ -470,7 +470,8 @@ TEST(Coroutine, Veh_StatsSmoke)
 	EXPECT_TRUE(st.maxDispatchUsed < 64 * 1024);
 	EXPECT_TRUE(true);
 }
-// - 예약 아래 패드 N페이지 RW 커밋, 오버플로우 가드 1페이지 NOACCESS,
+// [코루틴-04] 비상 레이아웃이 제대로 깔려 있는지 확인한다. (죽지 않는 검사)
+// - 예약 아래 패드 N페이지 RW 커밋, 오버플로우 가드 1페이지 GUARD,
 //   DeallocationStack = 밴드 상단.
 TEST(Coroutine, Overflow_LayoutCheck)
 {
@@ -494,6 +495,97 @@ TEST(Coroutine, Overflow_LayoutCheck)
 
 	while (pCtx)
 		pCtx = CoResume(pCtx);
+	g_cCoMgr.Clear();
+}
+
+// [코루틴-14] userData로 전역 없이 데이터를 넘긴다.
+static void CoTestFn_UserData(CoContext* pCtx)
+{
+	int* pAcc = (int*)pCtx->userData_;
+	*pAcc += 1;
+	CoYield();
+	*pAcc += 10;
+}
+
+TEST(Coroutine, Api_UserData)
+{
+	int acc = 0;
+	CoContext* pCtx = CoRunU(CoTestFn_UserData, &acc, cstMid);
+	ASSERT_NE(pCtx, nullptr);
+	EXPECT_EQ(acc, 1);
+	while (pCtx)
+		pCtx = CoResume(pCtx);
+	EXPECT_EQ(acc, 11);
+	g_cCoMgr.Clear();
+}
+
+// [코루틴-14] 값 채널로 양방향 값을 주고받는다.
+// - CoYield(내보내기)는 다음 resume 때 들어오는 값을 돌려주고,
+//   CoResumeV(넣기)는 재개 뒤 코루틴이 마지막에 낸 값을 돌려준다.
+// - 첫 yield 값은 resume 전에 transfer_에서 직접 읽는다.
+static unsigned g_coEchoGot = 0;
+static void CoTestFn_Echo(CoContext*)
+{
+	_u64 v = CoYield((_u64)100);
+	g_coEchoGot = (unsigned)v;
+	CoYield((_u64)200);
+}
+
+TEST(Coroutine, Api_Transfer)
+{
+	g_coEchoGot = 0;
+	CoContext* pCtx = CoRun(CoTestFn_Echo, cstMid);
+	ASSERT_NE(pCtx, nullptr);
+	EXPECT_EQ(pCtx->transfer_, (_u64)100);	// 첫 yield 값
+	_u64 out = 0;
+	pCtx = CoResumeV(pCtx, (_u64)111, &out);
+	ASSERT_NE(pCtx, nullptr);
+	EXPECT_EQ(out, (_u64)200);	// 두 번째 yield 값
+	EXPECT_EQ(g_coEchoGot, (unsigned)111);	// 코루틴이 111을 받았다
+	pCtx = CoResumeV(pCtx, (_u64)222, &out);
+	EXPECT_EQ(pCtx, nullptr);	// fn 종료
+	EXPECT_EQ(out, (_u64)0);
+	g_cCoMgr.Clear();
+}
+
+// [코루틴-14] 람다 캡처로 코루틴을 돌린다.
+TEST(Coroutine, Api_Lambda)
+{
+	int acc = 0;
+	CoContext* pCtx = CoRunFn([&](CoContext*)
+	{
+		for (int i = 0; i < 3; ++i)
+		{
+			acc += i;
+			CoYield();
+		}
+	}, cstMid);
+	while (pCtx)
+		pCtx = CoResume(pCtx);
+	EXPECT_EQ(acc, 3);
+	g_cCoMgr.Clear();
+}
+
+// [코루틴-14] CoScoped로 협력적 취소를 한다.
+static bool g_coCancelSeen = false;
+static void CoTestFn_Cancel(CoContext*)
+{
+	while (!CoCancelRequested())
+		CoYield();
+	g_coCancelSeen = true;
+}
+
+TEST(Coroutine, Api_ScopedCancel)
+{
+	g_coCancelSeen = false;
+	{
+		CoScoped sc(CoRunH(CoTestFn_Cancel, cstMid));
+		EXPECT_FALSE(sc.Done());
+		sc.Resume();
+		sc.Cancel();
+		EXPECT_TRUE(sc.Done());
+	}
+	EXPECT_TRUE(g_coCancelSeen);
 	g_cCoMgr.Clear();
 }
 

@@ -19,6 +19,7 @@
     <ClCompile Include="..\Sources\jcr\06_Coroutine_08_Mxcsr.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine_04_Emergency.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine_15_Veh.cpp" />
+    <ClCompile Include="..\Sources\jcr\06_Coroutine_14_Api.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jcr\Core.h" />

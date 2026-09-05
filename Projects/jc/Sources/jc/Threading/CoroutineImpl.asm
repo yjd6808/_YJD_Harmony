@@ -6,9 +6,9 @@
 ; - Windows x64 callee-saved 레지스터 전부 저장/복원
 ; ========================================================================
 
-option casemap: NONE
-include ..\Sources\jc\_Extern\Extern.asm
-
+; [코루틴-09] 코루틴에 필요한 것만 직접 선언한다.
+; - 이전에는 Extern.asm을 include해서 코루틴과 무관한 extern까지 들어왔다.
+OPTION CASEMAP: NONE
 extern CoAllocCtx       : proc
 extern CoFreeCtx        : proc
 extern CoCurrentCtx     : proc
@@ -56,10 +56,8 @@ CoStack struct 8
 CoStack ends
 
 OFFSET_COSTACK_SIZE        EQU CoStack.size_
-OFFSET_COSTACK_STACKBASE   EQU CoStack.pStackBase_
-OFFSET_COSTACK_BASEEND     EQU CoStack.pStackBase_     ; EndAddr는 StackEnd와 동일하게 사용
-OFFSET_COSTACK_STACKEND    EQU CoStack.pStackEnd_
-OFFSET_COSTACK_BASEADDR    EQU CoStack.pStackEnd_
+OFFSET_COSTACK_STACKBASE   EQU CoStack.pStackBase_   ; 높은 주소, 초기 RSP (TEB StackBase)
+OFFSET_COSTACK_STACKEND    EQU CoStack.pStackEnd_    ; 예약 하단 (비상 패드 아래)
 OFFSET_COSTACK_STACKLIMIT  EQU CoStack.pStackLimit_
 OFFSET_COSTACK_GUARDLIMIT  EQU CoStack.pGuardLimit_
 OFFSET_COSTACK_STACKTIER   EQU CoStack.stackTier_
@@ -143,6 +141,10 @@ CoContext struct 8
     _pad0_      DWORD   ?
     fn_         QWORD   ?
     callerCtx_  QWORD   ?
+    userData_   QWORD   ?           ; [코루틴-14] 사용자 포인터 (C++와 일치. asm은 안 씀)
+    transfer_   QWORD   ?           ; [코루틴-14] 값 채널 (C++와 일치. asm은 안 씀)
+    cancelRequested_ BYTE ?         ; [코루틴-14] 취소 요청 (C++와 일치. asm은 안 씀)
+    _padEnd_    BYTE    7 dup(?)    ; sizeof(CoContext) = 408
 CoContext ends
 
 OFFSET_COCTX_ID       EQU CoContext.id_

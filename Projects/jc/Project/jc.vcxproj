@@ -739,6 +739,7 @@
     <Natvis Include="..\Sources\jc\Natvis\ArrayStack.natvis" />
     <Natvis Include="..\Sources\jc\Natvis\Atomic.natvis" />
     <Natvis Include="..\Sources\jc\Natvis\CMessage.natvis" />
+    <Natvis Include="..\Sources\jc\Natvis\Coroutine.natvis" />
     <Natvis Include="..\Sources\jc\Natvis\HashMap.natvis" />
     <Natvis Include="..\Sources\jc\Natvis\HashSet.natvis" />
     <Natvis Include="..\Sources\jc\Natvis\LinkedList.natvis" />

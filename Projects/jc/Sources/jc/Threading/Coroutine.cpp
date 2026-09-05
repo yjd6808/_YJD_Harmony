@@ -107,6 +107,9 @@ _u32 g_coNextId_ = 0;
 
 thread_local CoMgr g_cCoMgr;
 
+// [코루틴-14] CoRunU 핸드오프. CoAllocCtx가 읽는 즉시 지운다.
+thread_local void* t_coStartUserData = nullptr;
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // [Private] InitStack
 //   CoStack의 pStackEnd_, size_, stackTier_ 가 설정된 상태에서 호출.
@@ -328,6 +331,10 @@ bool CoMgr::InitCtx(CoContext* _pCtx)
 	_pCtx->state_      = csInit;
 	_pCtx->fn_         = nullptr;
 	_pCtx->callerCtx_  = nullptr;
+	// [코루틴-14] 사용자 채널은 재사용 때마다 비운다. (세대는 유지)
+	_pCtx->userData_        = nullptr;
+	_pCtx->transfer_        = 0;
+	_pCtx->cancelRequested_ = false;
 	return true;
 }
 
@@ -985,6 +992,9 @@ CoContext* CoAllocCtx(FnCoroutine _fn, CoStackTier _stackTier, _u32 _stackSize)
 	pCtx->threadId_ = GetCurrentThreadId();
 	pCtx->state_    = csInit;
 	pCtx->fn_       = _fn;
+	// [코루틴-14] CoRunU 핸드오프를 소비한다. (1회성. plain CoRun이면 null)
+	pCtx->userData_ = t_coStartUserData;
+	t_coStartUserData = nullptr;
 	return pCtx;
 }
 

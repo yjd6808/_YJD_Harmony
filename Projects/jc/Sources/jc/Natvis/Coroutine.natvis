@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+	<!--
+	코루틴 디버거 뷰. (문서 14)
+	CoContext에 마우스를 올리면 상태/티어/스택 사용량이 보인다.
+	-->
+
+	<Type Name="CoContext">
+		<DisplayString>co#{id_} {state_,en} tier={stack_.stackTier_,en} used={(char*)stack_.pStackBase_ - (char*)regs_.rsp_,ub}B committed={(char*)stack_.pStackBase_ - (char*)stack_.pStackLimit_,ub}B</DisplayString>
+		<Expand>
+			<Item Name="state">state_,en</Item>
+			<Item Name="rip">(void*)regs_.rip_</Item>
+			<Item Name="rsp">(void*)regs_.rsp_</Item>
+			<Item Name="stack base">(void*)stack_.pStackBase_</Item>
+			<Item Name="stack limit">(void*)stack_.pStackLimit_</Item>
+			<Item Name="guard limit">(void*)stack_.pGuardLimit_</Item>
+			<Item Name="stack end">(void*)stack_.pStackEnd_</Item>
+			<Item Name="emergency top">(void*)stack_.pEmergencyTop_</Item>
+			<Item Name="userData">userData_</Item>
+			<Item Name="transfer">transfer_,x</Item>
+			<Item Name="fn">fn_</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="CoMgr">
+		<DisplayString>current={currentCtx_} using={using_.treeTable_.size_}</DisplayString>
+		<Expand>
+			<Item Name="current">currentCtx_</Item>
+			<Item Name="using">using_</Item>
+		</Expand>
+	</Type>
+
+</AutoVisualizer>

@@ -12,6 +12,10 @@
 #include "jc/Container/LinkedList.h"
 #include "jc/Container/TreeMap.h"
 
+#include <type_traits>
+#include <utility>
+#include <cstddef>
+
 #define CO_PAGE_SIZE			4096
 
 #define CO_PAGE_INIT_COUNT		2		// commit
@@ -212,9 +216,38 @@ struct CoContext
 	CoState		state_;
 	FnCoroutine	fn_ = nullptr;
 	CoContext*	callerCtx_ = nullptr;	// CoOnBeforeLaunch 진입 시 이전 currentCtx_ 보관
+	// [코루틴-14] 사용자 임의 포인터. 전역 변수 없이 데이터를 넘긴다.
+	void*		userData_ = nullptr;
+	// [코루틴-14] yield/resume 양방향 값 채널.
+	_u64		transfer_ = 0;
+	// [코루틴-14] 협력적 취소 요청. CoScoped가 세운다.
+	bool		cancelRequested_ = false;
 };
 
 #pragma pack(pop)
+
+// [코루틴-09] asm 구조체와 C++ 구조체의 일치를 강제한다.
+// - 사람이 보고 맞추는 상태라 필드 추가 때 어긋나기 쉽다. 어긋나면 여기서 멈춘다.
+static_assert(offsetof(CoRegs, rip_) == 0);
+static_assert(offsetof(CoRegs, gs1478_) == 40);
+static_assert(offsetof(CoRegs, rsi_) == 48);
+static_assert(offsetof(CoRegs, mxcsr_) == 96);
+static_assert(offsetof(CoRegs, xmm6_) == 104);
+static_assert(sizeof(CoRegs) == 264);
+
+static_assert(offsetof(CoStack, pStackBase_) == 8);
+static_assert(offsetof(CoStack, pStackEnd_) == 16);
+static_assert(offsetof(CoStack, magic_) == 48);
+static_assert(offsetof(CoStack, pEmergencyTop_) == 56);
+static_assert(offsetof(CoStack, pReserveBase_) == 64);
+static_assert(sizeof(CoStack) == 80);
+
+static_assert(offsetof(CoContext, regs_) == 16);
+static_assert(offsetof(CoContext, stack_) == 280);
+static_assert(offsetof(CoContext, state_) == 360);
+static_assert(offsetof(CoContext, fn_) == 368);
+static_assert(offsetof(CoContext, userData_) == 384);
+static_assert(sizeof(CoContext) == 408);
 
 // [코루틴-05] 세대가 포함된 코루틴 핸들.
 // - 생 CoContext*는 종료 후 풀 재사용되면 엉뚱한 코루틴을 가리키게 되므로(ABA),
@@ -326,6 +359,11 @@ private:
 
 extern thread_local CoMgr g_cCoMgr;
 
+// [코루틴-14] CoRunU가 fn 실행 전에 건네는 사용자 포인터. (스레드별 1회성)
+// - asm CoRun은 인자를 그대로 넘기므로 C++에서 미리 둔다.
+// - CoAllocCtx가 읽는 즉시 지운다. plain CoRun에는 null이 들어간다.
+extern thread_local void* t_coStartUserData;
+
 
 extern "C"
 {
@@ -390,6 +428,111 @@ inline CoHandle CoRunH(FnCoroutine _fn, CoStackTier _tier = cstMid, _u32 _size =
 {
 	CoContext* pCtx = CoRun(_fn, _tier, _size);
 	return pCtx ? CoHandle{ pCtx, pCtx->generation_ } : CoHandle{};
+}
+
+// [코루틴-14] 사용자 포인터와 함께 시작한다. (asm CoRun과 이름이 겹치면 안 돼 별도 이름)
+// - fn 첫 구간부터 userData_를 볼 수 있다. (끝나고 붙이면 첫 구간에 안 보임)
+inline CoContext* CoRunU(FnCoroutine _fn, void* _userData, CoStackTier _tier = cstMid, _u32 _size = 0)
+{
+	t_coStartUserData = _userData;
+	CoContext* pCtx = CoRun(_fn, _tier, _size);
+	t_coStartUserData = nullptr;
+	return pCtx;
+}
+
+// [코루틴-14] CoRunH의 userData 버전. (C++ 인라인이라 오버로드된다)
+inline CoHandle CoRunH(FnCoroutine _fn, void* _userData, CoStackTier _tier = cstMid, _u32 _size = 0)
+{
+	CoContext* pCtx = CoRunU(_fn, _userData, _tier, _size);
+	return pCtx ? CoHandle{ pCtx, pCtx->generation_ } : CoHandle{};
+}
+
+// [코루틴-14] 람다/함수자 지원. (extern "C" CoRun과 이름이 겹치면 안 돼 별도 이름)
+// - 람다 객체는 힙에 두고 fn이 끝나면 지운다. 시작 자체가 실패하면 여기서 지운다.
+//   (끝까지 돈 경우와 구분하려고 시작 플래그를 쓴다. 에러 코드 판별은 겹칠 수 있음)
+template <typename Fn_>
+CoContext* CoRunFn(Fn_&& _fn, CoStackTier _tier = cstMid, _u32 _size = 0)
+{
+	using DecayFn = std::decay_t<Fn_>;
+	struct Starter
+	{
+		DecayFn* pFn = nullptr;
+		bool started = false;
+	};
+	DecayFn* pFn = dbg_new DecayFn(std::forward<Fn_>(_fn));
+	Starter starter{ pFn, false };
+	CoContext* pCtx = CoRunU([](CoContext* _c)
+	{
+		Starter* pS = (Starter*)_c->userData_;
+		pS->started = true;
+		DecayFn* pOwn = pS->pFn;
+		(*pOwn)(_c);
+		delete pOwn;
+	}, &starter, _tier, _size);
+	if (!starter.started)
+		delete pFn;
+	return pCtx;
+}
+
+// [코루틴-14] 값 채널. 코루틴 → 스케줄러로 내보내고, 다음 resume 때 값을 받는다.
+// - CoYield는 C++ 래퍼라 오버로드된다. (asm 본체는 CoYieldImpl)
+inline _u64 CoYield(_u64 _out)
+{
+	CoContext* pCtx = CoCurrentCtx();
+	jc_assert_msg(pCtx != nullptr, "CoYield: 코루틴 밖에서 호출됨");
+	if (pCtx == nullptr)
+		return 0;
+	pCtx->transfer_ = _out;
+	CoYieldImpl();
+	return pCtx->transfer_;
+}
+
+// [코루틴-14] 값 채널의 resume 쪽. CoResume은 asm이라 오버로드가 안 돼 별도 이름이다.
+inline CoContext* CoResumeV(CoContext* _pCtx, _u64 _in, _u64* _pOut = nullptr)
+{
+	if (!CoValidateResume(_pCtx))
+		return nullptr;
+	_pCtx->transfer_ = _in;
+	CoContext* pRet = CoResume(_pCtx);
+	if (_pOut != nullptr)
+		*_pOut = (pRet != nullptr) ? pRet->transfer_ : 0;
+	return pRet;
+}
+
+// [코루틴-14] 협력적 취소 + 자동 정리 핸들.
+class CoScoped
+{
+	CoHandle h_;
+public:
+	explicit CoScoped(CoHandle _h) : h_(_h) {}
+	CoScoped(CoScoped&& _o) noexcept : h_(_o.h_) { _o.h_ = {}; }
+	CoScoped(const CoScoped&) = delete;
+	~CoScoped() { Cancel(); }
+
+	bool Resume() { return CoResumeH(h_) != nullptr; }
+	bool Done() const { return !h_.IsAlive(); }
+
+	// yield 상태 코루틴을 끝까지 돌려 정리한다.
+	// - 스택 위 C++ 객체 소멸자는 돌지 않는다. fn이 CoCancelRequested()를 보고
+	//   직접 return하는 협력적 취소를 권장한다.
+	void Cancel()
+	{
+		if (!h_.IsAlive())
+		{
+			h_ = {};
+			return;
+		}
+		h_.pCtx->cancelRequested_ = true;
+		while (CoResumeH(h_) != nullptr) {}
+		h_ = {};
+	}
+};
+
+// [코루틴-14] 취소 요청이 들어왔는지 확인한다. (fn 안에서 호출)
+inline bool CoCancelRequested()
+{
+	CoContext* pCtx = CoCurrentCtx();
+	return pCtx != nullptr && pCtx->cancelRequested_;
 }
 
 // [코루틴-01] 예외를 스케줄러 스택에서 안전하게 받는다.

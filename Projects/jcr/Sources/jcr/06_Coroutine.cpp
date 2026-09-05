@@ -11,6 +11,7 @@ extern void Test_Co03_StackLimit();
 extern void Test_Co08_Mxcsr();
 extern void Test_Co04_Emergency();
 extern void Test_Co15_VehDefense();
+extern void Test_Co14_Api();
 
 //////////////////////////////////////////////////////////////////////////////////////////
 int call_06_Coroutine(int _argc, char** _argv)
@@ -26,6 +27,7 @@ int call_06_Coroutine(int _argc, char** _argv)
 	Test_Co08_Mxcsr();
 	Test_Co04_Emergency();
 	Test_Co15_VehDefense();
+	Test_Co14_Api();
 
 	return 0;
 }
