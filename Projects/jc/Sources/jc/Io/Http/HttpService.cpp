@@ -1,8 +1,8 @@
 #include "jc/IO/Http/HttpService.h"
 #include "jc/IO/PathResolver.h"
-#include "jc/IO/Engine/HttpSource.h"
-#include "jc/IO/Engine/MemoryDest.h"
-#include "jc/IO/Engine/FileDest.h"
+#include "jc/IO/Http/HttpSource.h"
+#include "jc/IO/Memory/MemoryDest.h"
+#include "jc/IO/File/FileDest.h"
 #include "jc/IO/Http/HttpRequest.h"
 #include "jc/IO/Http/HttpResponse.h"
 #include "jc/IO/Http/IHttpTransport.h"
@@ -12,7 +12,7 @@
 NS_JC_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
-HttpService::HttpService(PathResolver& _resolver, IOJobEngine& _engine)
+HttpService::HttpService(PathResolver& _resolver, IOEngine& _engine)
 	: resolver_(_resolver)
 	, engine_(_engine)
 {

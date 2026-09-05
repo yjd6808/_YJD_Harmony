@@ -1,4 +1,4 @@
-#include "jc/IO/Engine/IOJobEngine.h"
+#include "jc/IO/Engine/IOEngine.h"
 #include "jc/IO/IOResult.h"
 #include "jc/Threading/Thread.h"
 #include "jc/Debug/New.h"
@@ -26,13 +26,13 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IOJobEngine::~IOJobEngine()
+IOEngine::~IOEngine()
 {
 	Shutdown();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool IOJobEngine::Initialize(const IOJobEngineConfig& _config)
+bool IOEngine::Initialize(const IOEngineConfig& _config)
 {
 	jc_assert(!initialized_.Load());
 	config_ = _config;
@@ -56,7 +56,7 @@ bool IOJobEngine::Initialize(const IOJobEngineConfig& _config)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IOJobEngine::Shutdown()
+void IOEngine::Shutdown()
 {
 	if (!initialized_.Exchange(false))
 		return;
@@ -100,10 +100,10 @@ void IOJobEngine::Shutdown()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-TransferJobPtr IOJobEngine::MakeJob(const IOSourcePtr& _spSource, const IODestPtr& _spDest,
+IOJobPtr IOEngine::MakeJob(const IOSourcePtr& _spSource, const IODestPtr& _spDest,
 	const String& _uri, const TransferPolicy& _policy, const IOCallback& _callback, bool _isHttp)
 {
-	TransferJobPtr spJob = MakeShared<TransferJob>();
+	IOJobPtr spJob = MakeShared<IOJob>();
 	spJob->handle_ = idProvider_.Acquire();
 	spJob->uri_ = _uri;
 	spJob->policy_ = _policy;
@@ -116,7 +116,7 @@ TransferJobPtr IOJobEngine::MakeJob(const IOSourcePtr& _spSource, const IODestPt
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IOJobEngine::ExecuteOnWorker(const TransferJobPtr& _spJob)
+void IOEngine::ExecuteOnWorker(const IOJobPtr& _spJob)
 {
 	{
 		LockGuard<NormalLock> guard(activeLock_);
@@ -127,7 +127,7 @@ void IOJobEngine::ExecuteOnWorker(const TransferJobPtr& _spJob)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IOHandle IOJobEngine::Submit(const IOSourcePtr& _spSource, const IODestPtr& _spDest,
+IOHandle IOEngine::Submit(const IOSourcePtr& _spSource, const IODestPtr& _spDest,
 	const String& _uri, const TransferPolicy& _policy, const IOCallback& _callback, bool _isHttp)
 {
 	jc_assert(initialized_.Load());
@@ -137,15 +137,15 @@ IOHandle IOJobEngine::Submit(const IOSourcePtr& _spSource, const IODestPtr& _spD
 		return InvalidIOHandle;
 	}
 
-	TransferJobPtr spJob = MakeJob(_spSource, _spDest, _uri, _policy, _callback, _isHttp);
+	IOJobPtr spJob = MakeJob(_spSource, _spDest, _uri, _policy, _callback, _isHttp);
 	ExecuteOnWorker(spJob);
 	return spJob->handle_;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IOHandle IOJobEngine::FailImmediate(IOError _error, const String& _uri, const IOCallback& _callback)
+IOHandle IOEngine::FailImmediate(IOError _error, const String& _uri, const IOCallback& _callback)
 {
-	TransferJobPtr spJob = MakeShared<TransferJob>();
+	IOJobPtr spJob = MakeShared<IOJob>();
 	spJob->handle_ = idProvider_.Acquire();
 	spJob->uri_ = _uri;
 	spJob->callback_ = _callback;
@@ -165,15 +165,15 @@ IOHandle IOJobEngine::FailImmediate(IOError _error, const String& _uri, const IO
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IOResultPtr IOJobEngine::RunSync(const IOSourcePtr& _spSource, const IODestPtr& _spDest,
+IOResultPtr IOEngine::RunSync(const IOSourcePtr& _spSource, const IODestPtr& _spDest,
 	const String& _uri, const TransferPolicy& _policy, bool _isHttp)
 {
 	jc_assert(initialized_.Load());
 
-	TransferJobPtr spJob;
+	IOJobPtr spJob;
 	if (shuttingDown_.Load())
 	{
-		spJob = MakeShared<TransferJob>();
+		spJob = MakeShared<IOJob>();
 		spJob->handle_ = idProvider_.Acquire();
 		spJob->uri_ = _uri;
 		spJob->error_.Store((int)ieShutdown);
@@ -218,7 +218,7 @@ IOResultPtr IOJobEngine::RunSync(const IOSourcePtr& _spSource, const IODestPtr& 
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IOJobEngine::ExecuteJob(IOJobEngine* _pSelf, const TransferJobPtr& _spJob)
+void IOEngine::ExecuteJob(IOEngine* _pSelf, const IOJobPtr& _spJob)
 {
 	// 워커별 재사용 청크 버퍼
 	static thread_local WorkBuffer t_work;
@@ -243,7 +243,7 @@ void IOJobEngine::ExecuteJob(IOJobEngine* _pSelf, const TransferJobPtr& _spJob)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IOJobEngine::Finalize(const TransferJobPtr& _spJob)
+void IOEngine::Finalize(const IOJobPtr& _spJob)
 {
 	IOResultPtr spRes = MakeShared<IOResult>();
 	spRes->handle_ = _spJob->handle_;
@@ -285,7 +285,7 @@ void IOJobEngine::Finalize(const TransferJobPtr& _spJob)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IOJobEngine::PushProgress(const TransferJobPtr& _spJob)
+void IOEngine::PushProgress(const IOJobPtr& _spJob)
 {
 	LockGuard<NormalLock> guard(progressLock_);
 	IOProgress* pExist = pendingProgress_.Find(_spJob->handle_);	// 핸들당 최신 1건 합삭
@@ -296,7 +296,7 @@ void IOJobEngine::PushProgress(const TransferJobPtr& _spJob)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IOProgress IOJobEngine::MakeProgress(const TransferJobPtr& _spJob) const
+IOProgress IOEngine::MakeProgress(const IOJobPtr& _spJob) const
 {
 	IOProgress progress;
 	progress.handle_ = _spJob->handle_;
@@ -308,7 +308,7 @@ IOProgress IOJobEngine::MakeProgress(const TransferJobPtr& _spJob) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IOJobEngine::SetListener(IIOListener* _pListener, bool _transferOwnership)
+void IOEngine::SetListener(IIOListener* _pListener, bool _transferOwnership)
 {
 	if (listenerOwned_ && pListener_ != nullptr)
 		JC_DELETE_SAFE(pListener_);
@@ -317,7 +317,7 @@ void IOJobEngine::SetListener(IIOListener* _pListener, bool _transferOwnership)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IOJobEngine::Pump()
+void IOEngine::Pump()
 {
 	// 1. 진행 통지 (합삭된 최신 스냅샷만)
 	Vector<IOProgress> progress;
@@ -341,7 +341,7 @@ void IOJobEngine::Pump()
 	}
 
 	// 2. 완료 큐 swap 소비 — 콜백 먼저, 리스너 다음 (현행 순서 보존)
-	Vector<TransferJobPtr> done;
+	Vector<IOJobPtr> done;
 	{
 		LockGuard<NormalLock> guard(completedLock_);
 		if (completedQueue_.Size() > 0)
@@ -350,7 +350,7 @@ void IOJobEngine::Pump()
 
 	for (int i = 0; i < done.Size(); ++i)
 	{
-		const TransferJobPtr& spJob = done[i];
+		const IOJobPtr& spJob = done[i];
 		const IOResult& result = *spJob->spResult_;
 
 		if (spJob->callback_)
@@ -375,21 +375,21 @@ void IOJobEngine::Pump()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IOState IOJobEngine::GetState(IOHandle _handle) const
+IOState IOEngine::GetState(IOHandle _handle) const
 {
 	LockGuard<NormalLock> guard(activeLock_);
-	TransferJobPtr* pJob = activeJobs_.Find(_handle);
+	IOJobPtr* pJob = activeJobs_.Find(_handle);
 	if (pJob != nullptr)
 		return static_cast<IOState>((*pJob)->state_.Load());
 	return isNone;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool IOJobEngine::GetProgress(IOHandle _handle, OUT IOProgress& _out) const
+bool IOEngine::GetProgress(IOHandle _handle, OUT IOProgress& _out) const
 {
 	{
 		LockGuard<NormalLock> guard(activeLock_);
-		TransferJobPtr* pJob = activeJobs_.Find(_handle);
+		IOJobPtr* pJob = activeJobs_.Find(_handle);
 		if (pJob != nullptr)
 		{
 			_out = MakeProgress(*pJob);
@@ -417,12 +417,12 @@ bool IOJobEngine::GetProgress(IOHandle _handle, OUT IOProgress& _out) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool IOJobEngine::Cancel(IOHandle _handle)
+bool IOEngine::Cancel(IOHandle _handle)
 {
-	TransferJobPtr spJob;
+	IOJobPtr spJob;
 	{
 		LockGuard<NormalLock> guard(activeLock_);
-		TransferJobPtr* pJob = activeJobs_.Find(_handle);
+		IOJobPtr* pJob = activeJobs_.Find(_handle);
 		if (pJob == nullptr)
 			return false;
 		spJob = *pJob;
@@ -444,14 +444,14 @@ bool IOJobEngine::Cancel(IOHandle _handle)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IOJobEngine::CancelAll()
+void IOEngine::CancelAll()
 {
 	LockGuard<NormalLock> guard(activeLock_);
 	auto it = activeJobs_.Begin();
 	while (it.HasNext())
 	{
 		auto& pair = it.Next();
-		TransferJobPtr spJob = pair.value_;
+		IOJobPtr spJob = pair.value_;
 		if (spJob->TrySetState(isPending, isCancelled))
 		{
 			spJob->error_.Store((int)ieCancelledByUser);
@@ -469,14 +469,14 @@ void IOJobEngine::CancelAll()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int IOJobEngine::GetActiveCount() const
+int IOEngine::GetActiveCount() const
 {
 	LockGuard<NormalLock> guard(activeLock_);
 	return activeJobs_.Size();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void IOJobEngine::GetActiveSnapshot(OUT Vector<IOProgress>& _out) const
+void IOEngine::GetActiveSnapshot(OUT Vector<IOProgress>& _out) const
 {
 	LockGuard<NormalLock> guard(activeLock_);
 	auto it = activeJobs_.Begin();

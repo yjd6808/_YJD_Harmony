@@ -1,14 +1,14 @@
-#include "jc/IO/Files/FileService.h"
+#include "jc/IO/File/FileService.h"
 #include "jc/IO/PathResolver.h"
-#include "jc/IO/Engine/FileSource.h"
-#include "jc/IO/Engine/MemoryDest.h"
-#include "jc/IO/Engine/FileDest.h"
+#include "jc/IO/File/FileSource.h"
+#include "jc/IO/Memory/MemoryDest.h"
+#include "jc/IO/File/FileDest.h"
 #include "jc/IO/IOResult.h"
 
 NS_JC_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
-FileService::FileService(PathResolver& _resolver, IOJobEngine& _engine)
+FileService::FileService(PathResolver& _resolver, IOEngine& _engine)
 	: resolver_(_resolver)
 	, engine_(_engine)
 {

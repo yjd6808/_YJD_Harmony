@@ -9,7 +9,7 @@
  *         ▲ 참조 주입   ▲ 참조 주입
  *   FileService files_          파일 창구 (대등한 소비자)
  *   HttpService  http_          HTTP 창구 (대등한 소비자)
- *   IOJobEngine  engine_        핸들·큐·워커·펌프·취소 (공용 기계 1벌)
+ *   IOEngine  engine_        핸들·큐·워커·펌프·취소 (공용 기계 1벌)
  *
  * 조립 코드는 이 클래스의 멤버 선언 순서(1→2→3) 한 곳에만 존재한다. 역방향 의존 0.
  */
@@ -17,11 +17,11 @@
 #include "jc/Namespace.h"
 #include "jc/Pattern/NonCopyableh.h"
 #include "jc/IO/IODefine.h"
-#include "jc/IO/IIOListener.h"
+#include "jc/IO/Engine/IIOListener.h"
 #include "jc/IO/IOResult.h"
 #include "jc/IO/PathResolver.h"
-#include "jc/IO/Engine/IOJobEngine.h"
-#include "jc/IO/Files/FileService.h"
+#include "jc/IO/Engine/IOEngine.h"
+#include "jc/IO/File/FileService.h"
 #include "jc/IO/Http/HttpService.h"
 
 NS_JC_BEGIN
@@ -52,7 +52,7 @@ public:
 
 private:
 	PathResolver resolver_;
-	IOJobEngine engine_;
+	IOEngine engine_;
 	FileService files_;
 	HttpService http_;
 	bool initialized_ = false;

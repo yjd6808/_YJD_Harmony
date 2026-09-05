@@ -3,7 +3,7 @@
 /*
  * 작성자: 윤정도
  * =====================
- * TransferJob — 잡 상태 덩어리 + Pump (유일한 복사 루프, C안 심장)
+ * IOJob — 잡 상태 덩어리 + Pump (유일한 복사 루프, C안 심장)
  *
  *   src.Open → dest.Open → loop{ 취소/셧다운 검사 → src.Read → dest.Write → 진행 push }
  *             → 성공: dest.Commit / 실패·취소: dest.Abort
@@ -21,7 +21,7 @@
 
 NS_JC_BEGIN
 
-struct TransferJob
+struct IOJob
 {
 	// [Identity]
 	IOHandle handle_ = InvalidIOHandle;
@@ -60,9 +60,9 @@ struct TransferJob
 	}
 };
 
-using TransferJobPtr = SharedPtr<TransferJob>;
+using IOJobPtr = SharedPtr<IOJob>;
 
 // 유일한 복사 루프 (C안 심장) — 재사용 버퍼 주입(잡당 할당 0회), _shutdown은 엔진 소유 플래그
-void PumpTransferJob(const TransferJobPtr& _spJob, _byte* _pWorkBuf, _s32 _workBufLen, const Atomic<bool>& _shutdown);
+void PumpTransferJob(const IOJobPtr& _spJob, _byte* _pWorkBuf, _s32 _workBufLen, const Atomic<bool>& _shutdown);
 
 NS_END

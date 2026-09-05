@@ -58,8 +58,11 @@
     <Filter Include="IO\Engine">
       <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
     </Filter>
-    <Filter Include="IO\Files">
+    <Filter Include="IO\File">
       <UniqueIdentifier>{11111111-2222-3333-4444-777777777777}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IO\Memory">
+      <UniqueIdentifier>{11111111-2222-3333-4444-999999999999}</UniqueIdentifier>
     </Filter>
     <Filter Include="IO\Http">
       <UniqueIdentifier>{11111111-2222-3333-4444-888888888888}</UniqueIdentifier>
@@ -380,32 +383,32 @@
       <Filter>IO</Filter>
       <UniqueIdentifier>{11111111-2222-3333-4444-555555555555}</UniqueIdentifier>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc\IO\Engine\FileDest.cpp">
+    <ClCompile Include="..\Sources\jc\IO\File\FileDest.cpp">
+      <Filter>IO\File</Filter>
+      <UniqueIdentifier>{11111111-2222-3333-4444-777777777777}</UniqueIdentifier>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc\IO\File\FileSource.cpp">
+      <Filter>IO\File</Filter>
+      <UniqueIdentifier>{11111111-2222-3333-4444-777777777777}</UniqueIdentifier>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc\IO\Http\HttpSource.cpp">
+      <Filter>IO\Http</Filter>
+      <UniqueIdentifier>{11111111-2222-3333-4444-888888888888}</UniqueIdentifier>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc\IO\Engine\IOEngine.cpp">
       <Filter>IO\Engine</Filter>
       <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc\IO\Engine\FileSource.cpp">
+    <ClCompile Include="..\Sources\jc\IO\Memory\MemoryDest.cpp">
+      <Filter>IO\Memory</Filter>
+      <UniqueIdentifier>{11111111-2222-3333-4444-999999999999}</UniqueIdentifier>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc\IO\Engine\IOJob.cpp">
       <Filter>IO\Engine</Filter>
       <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc\IO\Engine\HttpSource.cpp">
-      <Filter>IO\Engine</Filter>
-      <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc\IO\Engine\IOJobEngine.cpp">
-      <Filter>IO\Engine</Filter>
-      <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc\IO\Engine\MemoryDest.cpp">
-      <Filter>IO\Engine</Filter>
-      <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc\IO\Engine\TransferJob.cpp">
-      <Filter>IO\Engine</Filter>
-      <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc\IO\Files\FileService.cpp">
-      <Filter>IO\Files</Filter>
+    <ClCompile Include="..\Sources\jc\IO\File\FileService.cpp">
+      <Filter>IO\File</Filter>
       <UniqueIdentifier>{11111111-2222-3333-4444-777777777777}</UniqueIdentifier>
     </ClCompile>
     <ClCompile Include="..\Sources\jc\IO\Http\HttpHeaders.cpp">
@@ -1003,9 +1006,9 @@
       <Filter>_Extern</Filter>
       <UniqueIdentifier>{75f35ed7-f2ef-42a7-8c59-daf30312cade}</UniqueIdentifier>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\IO\IIOListener.h">
-      <Filter>IO</Filter>
-      <UniqueIdentifier>{11111111-2222-3333-4444-555555555555}</UniqueIdentifier>
+    <ClInclude Include="..\Sources\jc\IO\Engine\IIOListener.h">
+      <Filter>IO\Engine</Filter>
+      <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\IO\IODefine.h">
       <Filter>IO</Filter>
@@ -1031,32 +1034,32 @@
       <Filter>IO\Engine</Filter>
       <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\IO\Engine\FileDest.h">
+    <ClInclude Include="..\Sources\jc\IO\File\FileDest.h">
+      <Filter>IO\File</Filter>
+      <UniqueIdentifier>{11111111-2222-3333-4444-777777777777}</UniqueIdentifier>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\IO\File\FileSource.h">
+      <Filter>IO\File</Filter>
+      <UniqueIdentifier>{11111111-2222-3333-4444-777777777777}</UniqueIdentifier>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\IO\Http\HttpSource.h">
+      <Filter>IO\Http</Filter>
+      <UniqueIdentifier>{11111111-2222-3333-4444-888888888888}</UniqueIdentifier>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\IO\Engine\IOEngine.h">
       <Filter>IO\Engine</Filter>
       <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\IO\Engine\FileSource.h">
+    <ClInclude Include="..\Sources\jc\IO\Memory\MemoryDest.h">
+      <Filter>IO\Memory</Filter>
+      <UniqueIdentifier>{11111111-2222-3333-4444-999999999999}</UniqueIdentifier>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\IO\Engine\IOJob.h">
       <Filter>IO\Engine</Filter>
       <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\IO\Engine\HttpSource.h">
-      <Filter>IO\Engine</Filter>
-      <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\IO\Engine\IOJobEngine.h">
-      <Filter>IO\Engine</Filter>
-      <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\IO\Engine\MemoryDest.h">
-      <Filter>IO\Engine</Filter>
-      <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\IO\Engine\TransferJob.h">
-      <Filter>IO\Engine</Filter>
-      <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\IO\Files\FileService.h">
-      <Filter>IO\Files</Filter>
+    <ClInclude Include="..\Sources\jc\IO\File\FileService.h">
+      <Filter>IO\File</Filter>
       <UniqueIdentifier>{11111111-2222-3333-4444-777777777777}</UniqueIdentifier>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\IO\Http\HttpService.h">

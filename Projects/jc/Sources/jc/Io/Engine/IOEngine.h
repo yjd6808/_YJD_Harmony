@@ -3,7 +3,7 @@
 /*
  * 작성자: 윤정도
  * =====================
- * IOJobEngine — 핸들·잡맵·큐·워커·펌프·취소 (구 FileLoader 기계 이식, B안 공용 엔진)
+ * IOEngine — 핸들·잡맵·큐·워커·펌프·취소 (구 FileLoader 기계 이식, B안 공용 엔진)
  *
  *   - Submit : Source/Dest 조립물을 접수 → 핸들 발급 → 워커 실행
  *   - RunSync: 접수 스레드에서 인라인 실행 (동기 API)
@@ -20,12 +20,12 @@
 #include "jc/Container/Vector.h"
 #include "jc/Container/TreeMap.h"
 #include "jc/IO/IODefine.h"
-#include "jc/IO/IIOListener.h"
-#include "jc/IO/Engine/TransferJob.h"
+#include "jc/IO/Engine/IIOListener.h"
+#include "jc/IO/Engine/IOJob.h"
 
 NS_JC_BEGIN
 
-struct IOJobEngineConfig
+struct IOEngineConfig
 {
 	_s32 workerCount_ = 4;							// 단일 풀
 	_s32 readUnit_ = 256 * 1024;
@@ -34,13 +34,13 @@ struct IOJobEngineConfig
 	ThreadPool* pSharedPool_ = nullptr;
 };
 
-class IOJobEngine final : public NonCopyableNonMovable
+class IOEngine final : public NonCopyableNonMovable
 {
 public:
-	IOJobEngine() = default;
-	~IOJobEngine();
+	IOEngine() = default;
+	~IOEngine();
 
-	bool Initialize(const IOJobEngineConfig& _config);
+	bool Initialize(const IOEngineConfig& _config);
 	void Shutdown();
 
 	IOHandle Submit(const IOSourcePtr& _spSource, const IODestPtr& _spDest,
@@ -67,18 +67,18 @@ public:
 	bool IsInitialized() const { return initialized_.Load(); }
 
 private:
-	TransferJobPtr MakeJob(const IOSourcePtr& _spSource, const IODestPtr& _spDest,
+	IOJobPtr MakeJob(const IOSourcePtr& _spSource, const IODestPtr& _spDest,
 		const String& _uri, const TransferPolicy& _policy, const IOCallback& _callback, bool _isHttp);
-	void Finalize(const TransferJobPtr& _spJob);			// 결과 조립 + 완료 링 캐시 기록
-	void PushProgress(const TransferJobPtr& _spJob);
-	IOProgress MakeProgress(const TransferJobPtr& _spJob) const;
-	void ExecuteOnWorker(const TransferJobPtr& _spJob);
+	void Finalize(const IOJobPtr& _spJob);			// 결과 조립 + 완료 링 캐시 기록
+	void PushProgress(const IOJobPtr& _spJob);
+	IOProgress MakeProgress(const IOJobPtr& _spJob) const;
+	void ExecuteOnWorker(const IOJobPtr& _spJob);
 
-	static void ExecuteJob(IOJobEngine* _pSelf, const TransferJobPtr& _spJob);
+	static void ExecuteJob(IOEngine* _pSelf, const IOJobPtr& _spJob);
 
 private:
 	// [Config]
-	IOJobEngineConfig config_;
+	IOEngineConfig config_;
 
 	// [State]
 	Atomic<bool> initialized_{ false };
@@ -96,13 +96,13 @@ private:
 
 	// [Jobs] 활성 잡맵 (동기/비동기 모두 등록 — 비대칭 #4 해소)
 	mutable NormalLock activeLock_;
-	TreeMap<IOHandle, TransferJobPtr> activeJobs_;
+	TreeMap<IOHandle, IOJobPtr> activeJobs_;
 
 	// [Queues] 진행(합삭) + 완료 큐 — 워커 → Pump
 	NormalLock progressLock_;
 	TreeMap<IOHandle, IOProgress> pendingProgress_;		// 핸들당 최신 1건 합삭 (R9/성능 4)
 	NormalLock completedLock_;
-	Vector<TransferJobPtr> completedQueue_;
+	Vector<IOJobPtr> completedQueue_;
 
 	// [RingCache] 완료 후에도 GetProgress가 응답하는 유한 링 캐시 (무한 성장 맵 대체)
 	mutable NormalLock ringLock_;

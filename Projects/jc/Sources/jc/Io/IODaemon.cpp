@@ -21,7 +21,7 @@ bool IODaemon::Initialize(const IODaemonConfig& _config)
 {
 	jc_assert(!initialized_);
 
-	IOJobEngineConfig engineConfig;
+	IOEngineConfig engineConfig;
 	engineConfig.workerCount_ = _config.workerCount_;
 	engineConfig.readUnit_ = _config.readUnit_;
 	engineConfig.progressNotifyIntervalMs_ = _config.progressNotifyIntervalMs_;

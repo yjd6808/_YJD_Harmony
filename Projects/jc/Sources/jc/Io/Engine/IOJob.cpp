@@ -1,4 +1,4 @@
-#include "jc/IO/Engine/TransferJob.h"
+#include "jc/IO/Engine/IOJob.h"
 #include "jc/Assert.h"
 
 NS_JC_BEGIN
@@ -6,7 +6,7 @@ NS_JC_BEGIN
 namespace
 {
 	//////////////////////////////////////////////////////////////////////////////////////
-	void FailJob(const TransferJobPtr& _spJob, IOError _error, const IOErrorDetail& _detail)
+	void FailJob(const IOJobPtr& _spJob, IOError _error, const IOErrorDetail& _detail)
 	{
 		_spJob->error_.Store((int)_error);
 		_spJob->state_.Store(isFailed);
@@ -16,7 +16,7 @@ namespace
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////
-	void Terminal(const TransferJobPtr& _spJob, int _state, IOError _error, _s32 _chanError)
+	void Terminal(const IOJobPtr& _spJob, int _state, IOError _error, _s32 _chanError)
 	{
 		_spJob->error_.Store((int)_error);
 		_spJob->state_.Store(_state);
@@ -27,7 +27,7 @@ namespace
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 유일한 복사 루프 (C안 심장) — 재사용 버퍼 주입(잡당 할당 0회), _shutdown은 엔진 소유 플래그
-void PumpTransferJob(const TransferJobPtr& _spJob, _byte* _pWorkBuf, _s32 _workBufLen, const Atomic<bool>& _shutdown)
+void PumpTransferJob(const IOJobPtr& _spJob, _byte* _pWorkBuf, _s32 _workBufLen, const Atomic<bool>& _shutdown)
 {
 	jc_assert(_spJob != nullptr && _pWorkBuf != nullptr && _workBufLen > 0);
 

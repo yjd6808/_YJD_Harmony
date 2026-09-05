@@ -57,7 +57,7 @@ public:
 	MemoryStreamPtr data_;			// 메모리 목적지 결과 (파일 목적지는 nullptr)
 
 private:
-	friend class IOJobEngine;
+	friend class IOEngine;
 	bool taken_ = false;
 };
 

@@ -10,7 +10,7 @@
 #include "jc/Namespace.h"
 #include "jc/Pattern/NonCopyableh.h"
 #include "jc/IO/IODefine.h"
-#include "jc/IO/Engine/IOJobEngine.h"
+#include "jc/IO/Engine/IOEngine.h"
 
 NS_JC_BEGIN
 
@@ -27,11 +27,11 @@ public:
 
 private:
 	friend class IODaemon;
-	FileService(PathResolver& _resolver, IOJobEngine& _engine);
+	FileService(PathResolver& _resolver, IOEngine& _engine);
 	void InitializeDefaults(_s64 _memoryLimit, _s32 _readUnit);
 
 	PathResolver& resolver_;
-	IOJobEngine& engine_;
+	IOEngine& engine_;
 	_s64 memoryLimit_ = 256LL * 1024 * 1024;
 	_s32 readUnit_ = 256 * 1024;
 };

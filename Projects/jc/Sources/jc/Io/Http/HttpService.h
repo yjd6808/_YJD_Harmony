@@ -19,7 +19,7 @@
 #include "jc/Namespace.h"
 #include "jc/Pattern/NonCopyableh.h"
 #include "jc/IO/IODefine.h"
-#include "jc/IO/Engine/IOJobEngine.h"
+#include "jc/IO/Engine/IOEngine.h"
 #include "jc/IO/Http/HttpTypes.h"
 #include "jc/IO/Http/HttpResponse.h"
 
@@ -50,12 +50,12 @@ public:
 
 private:
 	friend class IODaemon;
-	HttpService(PathResolver& _resolver, IOJobEngine& _engine);
+	HttpService(PathResolver& _resolver, IOEngine& _engine);
 	bool Initialize(const HttpServiceConfig& _config, _s64 _memoryLimit, _s32 _readUnit);
 	void Shutdown();
 
 	PathResolver& resolver_;
-	IOJobEngine& engine_;
+	IOEngine& engine_;
 	IHttpTransport* pTransport_ = nullptr;		// Initialize에서 생성, Shutdown에서 파괴 (IOCP 교체 지점)
 	HttpServiceConfig config_;
 	_s64 memoryLimit_ = 256LL * 1024 * 1024;

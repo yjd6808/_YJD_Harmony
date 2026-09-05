@@ -1,10 +1,10 @@
-﻿#include "gtest/gtest.h"
+#include "gtest/gtest.h"
 #include "Core.h"
 
-#include "jc/IO/Engine/IOJobEngine.h"
-#include "jc/IO/Engine/FileSource.h"
-#include "jc/IO/Engine/MemoryDest.h"
-#include "jc/IO/Engine/FileDest.h"
+#include "jc/IO/Engine/IOEngine.h"
+#include "jc/IO/File/FileSource.h"
+#include "jc/IO/Memory/MemoryDest.h"
+#include "jc/IO/File/FileDest.h"
 #include "jc/IO/IOResult.h"
 #include "jc/IO/File.h"
 #include "jc/IO/Path.h"
@@ -33,7 +33,7 @@ namespace
 		const String path = Path::Combine(base, String("test_io/engine/") + String(_name));
 		auto spSrc = MakeShared<FileSource>(path);
 		MemoryDest dest(1LL << 30);
-		IOJobEngine writer;	// 파일 생성용 소형 엔진 대신 직접 기록
+		IOEngine writer;	// 파일 생성용 소형 엔진 대신 직접 기록
 		FileDest fileDest(path);
 		fileDest.Bind(1);
 		EXPECT_TRUE(fileDest.Open(-1));
@@ -51,8 +51,8 @@ TEST(IOEngineTest, FileToMemorySyncLoadAndTakeData)
 {
 	const String src = MakeSourceFile("mem_load.bin", 4096);
 
-	IOJobEngine engine;
-	engine.Initialize(IOJobEngineConfig{});
+	IOEngine engine;
+	engine.Initialize(IOEngineConfig{});
 
 	IOResultPtr result = engine.RunSync(MakeShared<FileSource>(src),
 		MakeShared<MemoryDest>(1LL << 30), src, TransferPolicy{}, false);
@@ -78,8 +78,8 @@ TEST(IOEngineTest, FileToFileDownloadCommitsAtomically)
 	const String dest = String("test_io/engine/dl_out.bin");
 	File::Delete(dest);
 
-	IOJobEngine engine;
-	engine.Initialize(IOJobEngineConfig{});
+	IOEngine engine;
+	engine.Initialize(IOEngineConfig{});
 
 	IOResultPtr result = engine.RunSync(MakeShared<FileSource>(src),
 		MakeShared<FileDest>(dest), src + " -> " + dest, TransferPolicy{}, false);
@@ -96,8 +96,8 @@ TEST(IOEngineTest, FileToFileDownloadCommitsAtomically)
 
 TEST(IOEngineTest, MissingFileFailsWithoutSilentLoss)
 {
-	IOJobEngine engine;
-	engine.Initialize(IOJobEngineConfig{});
+	IOEngine engine;
+	engine.Initialize(IOEngineConfig{});
 
 	IOResultPtr result = engine.RunSync(MakeShared<FileSource>(String("test_io/engine/no_such_file.bin")),
 		MakeShared<MemoryDest>(1LL << 30), "missing", TransferPolicy{}, false);
@@ -113,8 +113,8 @@ TEST(IOEngineTest, MemoryLimitFailsWithDedicatedError)
 {
 	const String src = MakeSourceFile("limit.bin", 2048);
 
-	IOJobEngine engine;
-	engine.Initialize(IOJobEngineConfig{});
+	IOEngine engine;
+	engine.Initialize(IOEngineConfig{});
 
 	IOResultPtr result = engine.RunSync(MakeShared<FileSource>(src),
 		MakeShared<MemoryDest>(1024), src, TransferPolicy{}, false);	// 1KB 한도 < 2KB 페이로드
@@ -130,8 +130,8 @@ TEST(IOEngineTest, AsyncCompletesWithCallbackThenListenerAtPump)
 {
 	const String src = MakeSourceFile("async.bin", 1024);
 
-	IOJobEngine engine;
-	engine.Initialize(IOJobEngineConfig{});
+	IOEngine engine;
+	engine.Initialize(IOEngineConfig{});
 	CountingListener listener;
 	engine.SetListener(&listener);
 
@@ -168,8 +168,8 @@ TEST(IOEngineTest, CancelRunningTransferViaCancelRequestedFlag)
 	const String src = MakeSourceFile("cancel_src.bin", payloadBytes);
 	const String dest = String("test_io/engine/cancel_out.bin");
 
-	IOJobEngine engine;
-	engine.Initialize(IOJobEngineConfig{});
+	IOEngine engine;
+	engine.Initialize(IOEngineConfig{});
 	CountingListener listener;
 	engine.SetListener(&listener);
 
@@ -195,8 +195,8 @@ TEST(IOEngineTest, CancelRunningTransferViaCancelRequestedFlag)
 
 TEST(IOEngineTest, FailImmediateQueuesCallbackForNextPump)
 {
-	IOJobEngine engine;
-	engine.Initialize(IOJobEngineConfig{});
+	IOEngine engine;
+	engine.Initialize(IOEngineConfig{});
 
 	Atomic<bool> failed{ false };
 	IOError seen = ieNone;
@@ -216,10 +216,10 @@ TEST(IOEngineTest, FailImmediateQueuesCallbackForNextPump)
 TEST(IOEngineTest, SharedThreadPoolIsNotOwnedByEngine)
 {
 	ThreadPool sharedPool(2);
-	IOJobEngineConfig cfg;
+	IOEngineConfig cfg;
 	cfg.pSharedPool_ = &sharedPool;
 
-	IOJobEngine engine;
+	IOEngine engine;
 	EXPECT_TRUE(engine.Initialize(cfg));
 
 	const String src = MakeSourceFile("shared.bin", 512);
