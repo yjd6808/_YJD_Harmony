@@ -30,11 +30,28 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Sources\jc_gbench\Pool\MemoryPoolTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gbench\Primitives\StrForBench.cpp" />
+    <ClCompile Include="..\Sources\jc_gbench\Primitives\StringBench_Append.cpp" />
+    <ClCompile Include="..\Sources\jc_gbench\Primitives\StringBench_Container.cpp" />
+    <ClCompile Include="..\Sources\jc_gbench\Primitives\StringBench_Lifetime.cpp" />
+    <ClCompile Include="..\Sources\jc_gbench\Primitives\StringBench_Thread.cpp" />
     <ClCompile Include="..\Sources\jc_gbench\Research\AllocationTest.cpp" />
     <ClCompile Include="..\Sources\jc_gbench\Research\VirtualAllocTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gbench\Threading\CoroutineTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jc_gbench\PCH\Core.h" />
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBench.h" />
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBench.inl" />
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBench_S1.inl" />
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBench_S2.inl" />
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBench_S3.inl" />
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBench_S4.inl" />
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBench_S5.inl" />
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBench_SImpl.inl" />
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBench_SXThread.inl" />
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBenchPool.h" />
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StringBench_Common.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -59,14 +76,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
+    <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
+    <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>

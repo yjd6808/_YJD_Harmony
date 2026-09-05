@@ -13,6 +13,12 @@
     <Filter Include="PCH">
       <UniqueIdentifier>{046a54bd-3ab8-4a99-abc7-6da2957214b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Primitives">
+      <UniqueIdentifier>{7f3a1c52-8b4e-4d2a-9e5f-3c6d8a1b2e4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Threading">
+      <UniqueIdentifier>{a3b1c2d4-e5f6-4789-abcd-ef0123456789}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\jc_gbench\Container\HashMapTest.cpp">
@@ -39,10 +45,61 @@
     <ClCompile Include="..\Sources\jc_gbench\PCH\Core.cpp">
       <Filter>PCH</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc_gbench\Primitives\StrForBench.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gbench\Primitives\StringBench_Append.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gbench\Primitives\StringBench_Container.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gbench\Primitives\StringBench_Lifetime.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gbench\Primitives\StringBench_Thread.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gbench\Threading\CoroutineTest.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jc_gbench\PCH\Core.h">
       <Filter>PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBench.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBench.inl">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBench_S1.inl">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBench_S2.inl">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBench_S3.inl">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBench_S4.inl">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBench_S5.inl">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBench_SImpl.inl">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBench_SXThread.inl">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StrForBenchPool.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc_gbench\Primitives\StringBench_Common.h">
+      <Filter>Primitives</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
