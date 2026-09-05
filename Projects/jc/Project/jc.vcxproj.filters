@@ -429,12 +429,16 @@
       <UniqueIdentifier>{11111111-2222-3333-4444-888888888888}</UniqueIdentifier>
     </ClCompile>
     <ClCompile Include="..\Sources\jc\IO\Directory.cpp">
+      <Filter>IO</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\jc\IO\File.cpp">
+      <Filter>IO</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\jc\IO\FileStream.cpp">
+      <Filter>IO</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\jc\IO\Path.cpp">
+      <Filter>IO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1088,16 +1092,22 @@
       <UniqueIdentifier>{75f35ed7-f2ef-42a7-8c59-daf30312cade}</UniqueIdentifier>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\IO\Directory.h">
+      <Filter>IO</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\IO\File.h">
+      <Filter>IO</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\IO\FileAccess.h">
+      <Filter>IO</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\IO\FileMode.h">
+      <Filter>IO</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\IO\FileStream.h">
+      <Filter>IO</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\IO\Path.h">
+      <Filter>IO</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

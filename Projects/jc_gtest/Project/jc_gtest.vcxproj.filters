@@ -1,20 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\Sources\jc_gtest\TypeTraitsTest.cpp" />
-    <ClCompile Include="..\Sources\jc_gtest\RandomTest.cpp" />
-    <ClCompile Include="..\Sources\jc_gtest\MathTest.cpp" />
-    <ClCompile Include="..\Sources\jc_gtest\Container\ArraysTest.cpp">
-      <Filter>Container</Filter>
+    <ClCompile Include="..\Sources\jc_gtest\TypeTraitsTest.cpp">
+      <Filter>TypeTraitsTest</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\HasherTest.cpp" />
-    <ClCompile Include="..\Sources\jc_gtest\ComparatorTest.cpp" />
-    <ClCompile Include="..\Sources\jc_gtest\TimeTest.cpp" />
-    <ClCompile Include="..\Sources\jc_gtest\ExceptionTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\RandomTest.cpp">
+      <Filter>RandomTest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\MathTest.cpp">
+      <Filter>MathTest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\HasherTest.cpp">
+      <Filter>HasherTest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\ComparatorTest.cpp">
+      <Filter>ComparatorTest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\TimeTest.cpp">
+      <Filter>TimeTest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\ExceptionTest.cpp">
+      <Filter>ExceptionTest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\MemoryTest.cpp">
+      <Filter>MemoryTest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\EventTest.cpp">
+      <Filter>EventTest</Filter>
+    </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Logger\FileLoggerTest.cpp">
       <Filter>Logger</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\MemoryTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Container\ArrayStackTest.cpp">
       <Filter>Container</Filter>
     </ClCompile>
@@ -39,21 +55,35 @@
     <ClCompile Include="..\Sources\jc_gtest\Container\HashMapTest.cpp">
       <Filter>Container</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\EventTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\Container\TreeMapTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\HashSetTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\TreeSetTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\DataMapTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Container\CMessageTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Container\Impl\AVLTreeImplTest.cpp">
-      <Filter>Container\Impl</Filter>
+      <Filter>Container</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Container\Impl\AVLTreeMemoImplTest.cpp">
-      <Filter>Container\Impl</Filter>
+      <Filter>Container</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Container\Impl\BinarySearchTreeImplTest.cpp">
-      <Filter>Container\Impl</Filter>
+      <Filter>Container</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Container\Impl\DynamicHashMapImplTest.cpp">
-      <Filter>Container\Impl</Filter>
+      <Filter>Container</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Container\Impl\TwoTreeFourTreeImplTest.cpp">
-      <Filter>Container\Impl</Filter>
+      <Filter>Container</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Primitives\ObserverPtrTest.cpp">
       <Filter>Primitives</Filter>
@@ -68,6 +98,15 @@
       <Filter>Primitives</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Primitives\StringUtilTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Primitives\BitFlagTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Primitives\StringViewTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Primitives\AtomicTest.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Sync\SemaphoreTest.cpp">
@@ -91,9 +130,6 @@
     <ClCompile Include="..\Sources\jc_gtest\Sync\LockGuardTest.cpp">
       <Filter>Sync</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\Primitives\AtomicTest.cpp">
-      <Filter>Primitives</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Sync\WaitHandleTest.cpp">
       <Filter>Sync</Filter>
     </ClCompile>
@@ -106,25 +142,8 @@
     <ClCompile Include="..\Sources\jc_gtest\Threading\ThreadTest.cpp">
       <Filter>Threading</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\Pool\MemoryPoolTest.cpp">
-      <Filter>Pool</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Threading\ThreadLocalTest.cpp">
       <Filter>Threading</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\Wrapper\CRuntimeTest.cpp">
-      <Filter>Wrapper</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\IO\FileStreamTest.cpp">
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\IO\FileUtilTest.cpp">
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\IO\DirectoryUtilTest.cpp">
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\IO\PathUtilTest.cpp">
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\Container\TreeMapTest.cpp">
-      <Filter>Container</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Threading\ThreadPoolTest.cpp">
       <Filter>Threading</Filter>
@@ -132,48 +151,56 @@
     <ClCompile Include="..\Sources\jc_gtest\Threading\SchedulerTest.cpp">
       <Filter>Threading</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\Container\HashSetTest.cpp">
-      <Filter>Container</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\Container\TreeSetTest.cpp">
-      <Filter>Container</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\Primitives\BitFlagTest.cpp">
-      <Filter>Primitives</Filter>
+    <ClCompile Include="..\Sources\jc_gtest\Pool\MemoryPoolTest.cpp">
+      <Filter>Pool</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Pool\AccessibleObjectPoolTest.cpp">
       <Filter>Pool</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\Container\DataMapTest.cpp">
-      <Filter>Container</Filter>
+    <ClCompile Include="..\Sources\jc_gtest\Wrapper\CRuntimeTest.cpp">
+      <Filter>Wrapper</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\Container\CMessageTest.cpp">
-      <Filter>Container</Filter>
+    <ClCompile Include="..\Sources\jc_gtest\IO\FileStreamTest.cpp">
+      <Filter>IO</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\Primitives\StringViewTest.cpp">
-      <Filter>Primitives</Filter>
+    <ClCompile Include="..\Sources\jc_gtest\IO\FileUtilTest.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\IO\DirectoryUtilTest.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\IO\PathUtilTest.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\IO\PathResolverTest.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\IO\IOEngineTest.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\IO\FileServiceTest.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\IO\HttpServiceTest.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\IO\UriTest.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\IO\MemoryStreamTest.cpp">
+      <Filter>IO</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\PCH\Core.cpp">
       <Filter>PCH</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\IO\PathResolverTest.cpp">
-      <Filter>Io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\IO\IOEngineTest.cpp">
-      <Filter>Io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\IO\FileServiceTest.cpp">
-      <Filter>Io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\IO\HttpServiceTest.cpp">
-      <Filter>Io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\IO\UriTest.cpp">
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\IO\MemoryStreamTest.cpp">
-    </ClCompile>
-    </ClCompile>
-    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\jc_gtest\PCH\Core.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc_gtest\IO\MockHttpServer.h">
+      <Filter>IO</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Container">
@@ -200,10 +227,17 @@
     <Filter Include="Pool">
       <UniqueIdentifier>{eda00c72-9c10-42f4-be6b-7eb4293c1bad}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Io">
-      <UniqueIdentifier>{aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee}</UniqueIdentifier>
+    <Filter Include="IO">
+      <UniqueIdentifier>{bbbbbbbb-cccc-dddd-eeee-ffffffffffff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="IO\Engine">
       <UniqueIdentifier>{d4e5f6a7-b8c9-0123-def0-123456789abc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IO\Files">
+      <UniqueIdentifier>{e5f6a7b8-c9d0-1234-ef01-123456789012}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IO\Http">
+      <UniqueIdentifier>{f6a7b8c9-d0e1-2345-f012-234567890123}</UniqueIdentifier>
     </Filter>
     <Filter Include="PCH">
       <UniqueIdentifier>{80a5ce19-c26c-4777-a2cc-d2ef50485e33}</UniqueIdentifier>
@@ -211,14 +245,5 @@
     <Filter Include="Logger">
       <UniqueIdentifier>{a12b3c4d-5e6f-7890-abcd-ef1234567890}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Sources\jc_gtest\PCH\Core.h">
-      <Filter>PCH</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc_gtest\IO\MockHttpServer.h">
-      <Filter>Io</Filter>
-    </ClInclude>
-    </ClInclude>
   </ItemGroup>
 </Project>
