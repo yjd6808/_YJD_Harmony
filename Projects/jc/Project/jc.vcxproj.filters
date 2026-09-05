@@ -79,10 +79,6 @@
       <Filter>Threading</Filter>
       <UniqueIdentifier>{fb9cb62a-b9c7-48ff-a4bc-1d1163a7ec26}</UniqueIdentifier>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc\Container\MemoryStream.cpp">
-      <Filter>Container</Filter>
-      <UniqueIdentifier>{308c2458-ce51-462e-8870-446b4f833f96}</UniqueIdentifier>
-    </ClCompile>
     <ClCompile Include="..\Sources\jc\Container\Property.cpp">
       <Filter>Container\RelatedProperty</Filter>
       <UniqueIdentifier>{ca97943b-966f-4a15-b961-ed19ec652ab1}</UniqueIdentifier>
@@ -375,9 +371,9 @@
       <Filter>_Extern</Filter>
       <UniqueIdentifier>{75f35ed7-f2ef-42a7-8c59-daf30312cade}</UniqueIdentifier>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc\IO\IODaemon.cpp">
-      <Filter>IO</Filter>
-      <UniqueIdentifier>{11111111-2222-3333-4444-555555555555}</UniqueIdentifier>
+    <ClCompile Include="..\Sources\jc\IO\Engine\IODaemon.cpp">
+      <Filter>IO\Engine</Filter>
+      <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
     </ClCompile>
     <ClCompile Include="..\Sources\jc\IO\PathResolver.cpp">
       <Filter>IO</Filter>
@@ -444,6 +440,9 @@
     <ClCompile Include="..\Sources\jc\IO\FileStream.cpp">
       <Filter>IO</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc\IO\MemoryStream.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
     <ClCompile Include="..\Sources\jc\IO\Path.cpp">
       <Filter>IO</Filter>
     </ClCompile>
@@ -494,10 +493,6 @@
       <UniqueIdentifier>{308c2458-ce51-462e-8870-446b4f833f96}</UniqueIdentifier>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\Container\HashTable_Bucket.h">
-      <Filter>Container</Filter>
-      <UniqueIdentifier>{308c2458-ce51-462e-8870-446b4f833f96}</UniqueIdentifier>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\MemoryStream.h">
       <Filter>Container</Filter>
       <UniqueIdentifier>{308c2458-ce51-462e-8870-446b4f833f96}</UniqueIdentifier>
     </ClInclude>
@@ -1014,17 +1009,17 @@
       <Filter>IO\Engine</Filter>
       <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\IO\IOTypes.h">
-      <Filter>IO</Filter>
-      <UniqueIdentifier>{11111111-2222-3333-4444-555555555555}</UniqueIdentifier>
+    <ClInclude Include="..\Sources\jc\IO\Engine\IOTypes.h">
+      <Filter>IO\Engine</Filter>
+      <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\IO\PathResolver.h">
       <Filter>IO</Filter>
       <UniqueIdentifier>{11111111-2222-3333-4444-555555555555}</UniqueIdentifier>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\IO\IODaemon.h">
-      <Filter>IO</Filter>
-      <UniqueIdentifier>{11111111-2222-3333-4444-555555555555}</UniqueIdentifier>
+    <ClInclude Include="..\Sources\jc\IO\Engine\IODaemon.h">
+      <Filter>IO\Engine</Filter>
+      <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\IO\Engine\IIOSource.h">
       <Filter>IO\Engine</Filter>
@@ -1111,6 +1106,9 @@
       <Filter>IO</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\IO\FileStream.h">
+      <Filter>IO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\IO\MemoryStream.h">
       <Filter>IO</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\IO\Path.h">

@@ -8,7 +8,7 @@
 | 구분 | 파일 | 역할 |
 |---|---|---|
 | Uri | `Primitives/Uri.h/.cpp` | `file://`, `http://`, `https://`, 로컬 경로 파싱. `UriScheme { usUnknown, usFile, usHttp, usHttps }` |
-| MemoryStream | `Container/MemoryStream.h/.cpp` | 소유/비소유 바이트 버퍼. `Write`→ 자동 확장(소유 시), `Read`→ 내부 offset |
+| MemoryStream | `IO/MemoryStream.h/.cpp` | 소유/비소유 바이트 버퍼. `Write`→ 자동 확장(소유 시), `Read`→ 내부 offset |
 | DataSource | `FileSystem/Loader/IFileDataSource.h`, `FileDataSource.h/.cpp` | `Open(Uri) -> Read/Close` 추상. 기본 등록은 `usFile` |
 | Job/Result | `FileLoaderJob.h`, `FileLoaderResult.h/.cpp`, `FileLoaderDefine.h` | `LoadState { lsNone..lsFailed }`, `LoadError { leNone..leShutdown }`, `LoadProgress` |
 | FileLoader | `FileSystem/Loader/FileLoader.h/.cpp` | 동기/비동기 로드·다운로드, 스레드풀, 큐, 리스너, 취소 |

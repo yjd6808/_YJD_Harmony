@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "jc/Namespace.h"
 #include "jc/Type.h"
@@ -7,15 +7,17 @@
 #include "jc/Memory.h"
 #include "jc/Math.h"
 #include "jc/Primitives/SmartPtr.h"
+#include "jc/Stream.h"
 
 using _byte = _u8;
 
 NS_JC_BEGIN
 
-class MemoryStream
+class MemoryStream : public Stream
 {
 public:
 	explicit MemoryStream(_u32 _capacity)
+		: Stream(true, true, true)
 	{
 		owner_ = true;		// 빈 버퍼도 소유 버퍼 — 이후 Write 시 자동 확장 (non-owner는 3인자 생성자 전용)
 		if (_capacity > 0)
@@ -26,6 +28,7 @@ public:
 	}
 
 	MemoryStream(_byte* _pBytes, _u32 _len, bool _owner)
+		: Stream(true, true, true)
 	{
 		pBytes_ = _pBytes;
 		capacity_ = _len;
@@ -33,7 +36,7 @@ public:
 		owner_ = _owner;
 	}
 
-	~MemoryStream()
+	~MemoryStream() override
 	{
 		Free();
 	}
@@ -43,19 +46,34 @@ public:
 	MemoryStream(MemoryStream&&) = delete;
 	MemoryStream& operator=(MemoryStream&&) = delete;
 
+	// Stream 가상함수 — cpp에 구현
+	int Read(OUT _u8* _pBytes, int _offset, int _len) override;
+	void Write(const _u8* _pBytes, int _offset, int _len) override;
+	void Seek(int _offset, Origin _origin = Origin::eBegin) override;
+	bool Flush() override;
+	void Close() override;
+	bool IsClosed() override { return closed_; }
+
+	// 기존 2인자 편의 API — Stream 커서와 동일한 읽기 위치에서 동작, 쓰기는末尾 추가
+	//   IO 엔진(MemoryDest/MemorySource)·기존 테스트와 호환 유지
 	void Write(const void* _p, _u32 _len)
 	{
+		jc_assert_msg(!closed_, "닫힌 스트림에 Write 할 수 없습니다.");
 		ExpandAllocateIfNeeded(writeOffset_ + _len);
-		Memory::CopyUnsafe(pBytes_ + writeOffset_, _p, (int)_len);
+		if (_len > 0)
+			Memory::CopyUnsafe(pBytes_ + writeOffset_, _p, (int)_len);
 		writeOffset_ += _len;
+		m_iLength = (int)writeOffset_;
 	}
 
 	_u32 Read(void* _pOut, _u32 _len)
 	{
+		jc_assert_msg(!closed_, "닫힌 스트림에서 Read 할 수 없습니다.");
 		_u32 readable = Math::Min(_len, writeOffset_ - readOffset_);
 		if (readable > 0)
 			Memory::CopyUnsafe(_pOut, pBytes_ + readOffset_, (int)readable);
 		readOffset_ += readable;
+		m_iOffset = (int)readOffset_;
 		return readable;
 	}
 
@@ -72,6 +90,7 @@ public:
 	void ConsumeRead(_u32 _len)
 	{
 		readOffset_ += Math::Min(_len, writeOffset_ - readOffset_);
+		m_iOffset = (int)readOffset_;
 	}
 
 	// 제로카피 쓰기 — 내부 버퍼 직접 노출 (반환 후 CommitWrite로 확정)
@@ -80,6 +99,7 @@ public:
 	{
 		jc_assert(writeOffset_ + _len <= capacity_);
 		writeOffset_ += _len;
+		m_iLength = (int)writeOffset_;
 	}
 
 	void ExpandAllocateIfNeeded(_u32 _need)
@@ -112,6 +132,8 @@ public:
 		capacity_ = 0;
 		writeOffset_ = 0;
 		readOffset_ = 0;
+		m_iOffset = 0;
+		m_iLength = 0;
 	}
 
 private:
@@ -120,6 +142,7 @@ private:
 	_u32 writeOffset_ = 0;
 	_u32 readOffset_ = 0;
 	bool owner_ = false;
+	bool closed_ = false;
 };
 
 using MemoryStreamPtr = SharedPtr<MemoryStream>;

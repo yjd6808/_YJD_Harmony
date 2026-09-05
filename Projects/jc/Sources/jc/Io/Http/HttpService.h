@@ -21,8 +21,8 @@
 
 #include "jc/Namespace.h"
 #include "jc/Pattern/NonCopyableh.h"
-#include "jc/Container/MemoryStream.h"
-#include "jc/IO/IOTypes.h"
+#include "jc/IO/MemoryStream.h"
+#include "jc/IO/Engine/IOTypes.h"
 #include "jc/IO/Engine/IOEngine.h"
 #include "jc/IO/Http/HttpTypes.h"
 #include "jc/IO/Http/HttpResponse.h"

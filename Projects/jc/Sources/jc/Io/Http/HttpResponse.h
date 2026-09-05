@@ -9,7 +9,7 @@
  */
 
 #include "jc/Primitives/SmartPtr.h"
-#include "jc/Container/MemoryStream.h"
+#include "jc/IO/MemoryStream.h"
 
 #include "jc/IO/Http/HttpTypes.h"
 #include "jc/IO/Http/HttpHeaders.h"

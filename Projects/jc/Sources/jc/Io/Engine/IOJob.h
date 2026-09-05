@@ -12,7 +12,7 @@
 #include "jc/Primitives/Atomic.h"
 #include "jc/Primitives/SmartPtr.h"
 #include "jc/Primitives/String.h"
-#include "jc/IO/IOTypes.h"
+#include "jc/IO/Engine/IOTypes.h"
 #include "jc/IO/Engine/IIOSource.h"
 #include "jc/IO/Engine/IIODest.h"
 

@@ -9,7 +9,7 @@
  */
 
 #include "jc/Namespace.h"
-#include "jc/Container/MemoryStream.h"
+#include "jc/IO/MemoryStream.h"
 #include "jc/IO/Engine/IIODest.h"
 
 NS_JC_BEGIN

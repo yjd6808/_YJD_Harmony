@@ -12,8 +12,8 @@
 #include "jc/Namespace.h"
 #include "jc/Declspec.h"
 #include "jc/Primitives/SmartPtr.h"
-#include "jc/Container/MemoryStream.h"		// _byte
-#include "jc/IO/IOTypes.h"
+#include "jc/IO/MemoryStream.h"		// _byte
+#include "jc/IO/Engine/IOTypes.h"
 
 NS_JC_BEGIN
 

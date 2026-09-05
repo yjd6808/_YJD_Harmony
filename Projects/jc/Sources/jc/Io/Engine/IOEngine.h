@@ -19,7 +19,7 @@
 #include "jc/Sync/LockGuard.h"
 #include "jc/Container/Vector.h"
 #include "jc/Container/TreeMap.h"
-#include "jc/IO/IOTypes.h"
+#include "jc/IO/Engine/IOTypes.h"
 #include "jc/IO/Engine/IIOListener.h"
 #include "jc/IO/Engine/IOJob.h"
 

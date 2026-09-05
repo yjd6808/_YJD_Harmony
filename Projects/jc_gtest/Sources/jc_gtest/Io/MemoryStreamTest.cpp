@@ -5,7 +5,7 @@
  * jc::MemoryStream 단위 테스트 — 로더 메모리 모드의 수신 버퍼 지지율 검증
  */
 
-#include "jc/Container/MemoryStream.h"
+#include "jc/IO/MemoryStream.h"
 
 namespace {
 inline _byte Pattern(_s64 _i) { return (_byte)(_i % 251); }

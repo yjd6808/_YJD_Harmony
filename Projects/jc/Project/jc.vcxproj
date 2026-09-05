@@ -26,7 +26,6 @@
     </ClCompile>
     <ClCompile Include="..\Sources\jc\Container\CMessage.cpp" />
     <ClCompile Include="..\Sources\jc\Threading\Coroutine.cpp" />
-    <ClCompile Include="..\Sources\jc\Container\MemoryStream.cpp" />
     <ClCompile Include="..\Sources\jc\Container\Property.cpp" />
     <ClCompile Include="..\Sources\jc\Container\PropertyBase.cpp" />
     <ClCompile Include="..\Sources\jc\Container\PropertyFactory.cpp" />
@@ -180,6 +179,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc\IO\MemoryStream.cpp" />
     <ClCompile Include="..\Sources\jc\IO\File.cpp">
       <SubType>
       </SubType>
@@ -289,7 +289,7 @@
     <ClCompile Include="..\Sources\jc\_Extern\Extern_Random.cpp" />
     <ClCompile Include="..\Sources\jc\_Extern\Extern_StringUtil.cpp" />
     <ClCompile Include="..\Sources\jc\_Extern\Extern_Time.cpp" />
-    <ClCompile Include="..\Sources\jc\IO\IODaemon.cpp" />
+    <ClCompile Include="..\Sources\jc\IO\Engine\IODaemon.cpp" />
     <ClCompile Include="..\Sources\jc\IO\PathResolver.cpp" />
     <ClCompile Include="..\Sources\jc\IO\File\FileDest.cpp" />
     <ClCompile Include="..\Sources\jc\IO\File\FileSource.cpp" />
@@ -336,7 +336,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\Container\MemoryStream.h" />
     <ClInclude Include="..\Sources\jc\Container\Properties.h" />
     <ClInclude Include="..\Sources\jc\Container\PropertiesIterator.h">
       <SubType>
@@ -410,6 +409,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\jc\IO\MemoryStream.h" />
     <ClInclude Include="..\Sources\jc\IO\File.h">
       <SubType>
       </SubType>
@@ -712,9 +712,9 @@
     <ClInclude Include="..\Sources\jc\_Extern\Extern_Random.h" />
     <ClInclude Include="..\Sources\jc\_Extern\Extern_StringUtil.h" />
     <ClInclude Include="..\Sources\jc\IO\Engine\IIOListener.h" />
-    <ClInclude Include="..\Sources\jc\IO\IOTypes.h" />
+    <ClInclude Include="..\Sources\jc\IO\Engine\IOTypes.h" />
     <ClInclude Include="..\Sources\jc\IO\PathResolver.h" />
-    <ClInclude Include="..\Sources\jc\IO\IODaemon.h" />
+    <ClInclude Include="..\Sources\jc\IO\Engine\IODaemon.h" />
     <ClInclude Include="..\Sources\jc\IO\Engine\IIOSource.h" />
     <ClInclude Include="..\Sources\jc\IO\Engine\IIODest.h" />
     <ClInclude Include="..\Sources\jc\IO\File\FileDest.h" />

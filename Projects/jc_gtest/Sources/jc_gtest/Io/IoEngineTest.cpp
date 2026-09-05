@@ -6,7 +6,7 @@
 #include "jc/IO/Memory/MemoryDest.h"
 #include "jc/IO/Memory/MemorySource.h"
 #include "jc/IO/File/FileDest.h"
-#include "jc/IO/IOTypes.h"
+#include "jc/IO/Engine/IOTypes.h"
 #include "jc/IO/File.h"
 #include "jc/IO/Path.h"
 #include "jc/Env.h"

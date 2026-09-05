@@ -2,7 +2,7 @@
 
 #include "jc/Primitives/Uri.h"
 #include "jc/Primitives/String.h"
-#include "jc/Container/MemoryStream.h"
+#include "jc/IO/MemoryStream.h"
 
 #include "jc/IO/Http/HttpTypes.h"
 #include "jc/IO/Http/HttpHeaders.h"
