@@ -19,6 +19,8 @@ public:
 	bool Commit() override;
 	void Abort() override;
 	IOError GetLastError() const override { return lastError_; }
+	_s32 GetChannelError() const override { return channelError_; }
+	IOType GetType() const override { return IOType::File; }
 
 private:
 	String destPath_;
@@ -26,6 +28,7 @@ private:
 	_iohandle hFile_ = nullptr;
 	bool opened_ = false;
 	IOError lastError_ = ieNone;
+	_s32 channelError_ = 0;		// P0-2: OS 에러(errno/GetLastError) 기록 — R4 무손실
 };
 
 NS_END

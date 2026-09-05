@@ -403,6 +403,10 @@
       <Filter>IO\Memory</Filter>
       <UniqueIdentifier>{11111111-2222-3333-4444-999999999999}</UniqueIdentifier>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc\IO\Memory\MemorySource.cpp">
+      <Filter>IO\Memory</Filter>
+      <UniqueIdentifier>{11111111-2222-3333-4444-999999999999}</UniqueIdentifier>
+    </ClCompile>
     <ClCompile Include="..\Sources\jc\IO\Engine\IOJob.cpp">
       <Filter>IO\Engine</Filter>
       <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
@@ -1010,11 +1014,7 @@
       <Filter>IO\Engine</Filter>
       <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
     </ClInclude>
-    <ClInclude Include="..\Sources\jc\IO\IODefine.h">
-      <Filter>IO</Filter>
-      <UniqueIdentifier>{11111111-2222-3333-4444-555555555555}</UniqueIdentifier>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc\IO\IOResult.h">
+    <ClInclude Include="..\Sources\jc\IO\IOTypes.h">
       <Filter>IO</Filter>
       <UniqueIdentifier>{11111111-2222-3333-4444-555555555555}</UniqueIdentifier>
     </ClInclude>
@@ -1051,6 +1051,10 @@
       <UniqueIdentifier>{11111111-2222-3333-4444-666666666666}</UniqueIdentifier>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\IO\Memory\MemoryDest.h">
+      <Filter>IO\Memory</Filter>
+      <UniqueIdentifier>{11111111-2222-3333-4444-999999999999}</UniqueIdentifier>
+    </ClInclude>
+    <ClInclude Include="..\Sources\jc\IO\Memory\MemorySource.h">
       <Filter>IO\Memory</Filter>
       <UniqueIdentifier>{11111111-2222-3333-4444-999999999999}</UniqueIdentifier>
     </ClInclude>

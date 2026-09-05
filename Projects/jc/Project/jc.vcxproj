@@ -296,6 +296,7 @@
     <ClCompile Include="..\Sources\jc\IO\Http\HttpSource.cpp" />
     <ClCompile Include="..\Sources\jc\IO\Engine\IOEngine.cpp" />
     <ClCompile Include="..\Sources\jc\IO\Memory\MemoryDest.cpp" />
+    <ClCompile Include="..\Sources\jc\IO\Memory\MemorySource.cpp" />
     <ClCompile Include="..\Sources\jc\IO\Engine\IOJob.cpp" />
     <ClCompile Include="..\Sources\jc\IO\File\FileService.cpp" />
     <ClCompile Include="..\Sources\jc\IO\Http\HttpHeaders.cpp" />
@@ -711,8 +712,7 @@
     <ClInclude Include="..\Sources\jc\_Extern\Extern_Random.h" />
     <ClInclude Include="..\Sources\jc\_Extern\Extern_StringUtil.h" />
     <ClInclude Include="..\Sources\jc\IO\Engine\IIOListener.h" />
-    <ClInclude Include="..\Sources\jc\IO\IODefine.h" />
-    <ClInclude Include="..\Sources\jc\IO\IOResult.h" />
+    <ClInclude Include="..\Sources\jc\IO\IOTypes.h" />
     <ClInclude Include="..\Sources\jc\IO\PathResolver.h" />
     <ClInclude Include="..\Sources\jc\IO\IODaemon.h" />
     <ClInclude Include="..\Sources\jc\IO\Engine\IIOSource.h" />
@@ -722,6 +722,7 @@
     <ClInclude Include="..\Sources\jc\IO\Http\HttpSource.h" />
     <ClInclude Include="..\Sources\jc\IO\Engine\IOEngine.h" />
     <ClInclude Include="..\Sources\jc\IO\Memory\MemoryDest.h" />
+    <ClInclude Include="..\Sources\jc\IO\Memory\MemorySource.h" />
     <ClInclude Include="..\Sources\jc\IO\Engine\IOJob.h" />
     <ClInclude Include="..\Sources\jc\IO\File\FileService.h" />
     <ClInclude Include="..\Sources\jc\IO\Http\HttpService.h" />

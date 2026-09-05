@@ -1,11 +1,18 @@
 #pragma once
 
+/*
+ * 작성자: 윤정도
+ * =====================
+ * HttpResponse — 호출자 소유의 응답 그릇
+ *   상태/헤더/바디는 HttpSource가 전송 중 직접 기록한다 (연결 보관형 스트리밍 삭제).
+ *   (동기 Send는 엔진 경로로 통합 — _waitForBody 옵션은 HttpRequest로 이관 검토).
+ */
+
 #include "jc/Primitives/SmartPtr.h"
 #include "jc/Container/MemoryStream.h"
 
 #include "jc/IO/Http/HttpTypes.h"
 #include "jc/IO/Http/HttpHeaders.h"
-#include "jc/IO/Http/IHttpTransport.h"
 
 NS_JC_BEGIN
 
@@ -13,7 +20,7 @@ class HttpResponse
 {
 public:
 	HttpResponse() = default;
-	~HttpResponse();
+	~HttpResponse() = default;
 
 	HttpResponse(const HttpResponse&) = delete;
 	HttpResponse& operator=(const HttpResponse&) = delete;
@@ -26,29 +33,17 @@ public:
 	HttpHeaders& GetHeaders() { return headers_; }
 
 	jc::MemoryStream* GetBody() const { return spBody_.Get(); }
-	jc::MemoryStreamPtr TakeBody();
-	bool IsTaken() const { return taken_; }
+	const jc::MemoryStreamPtr& GetBodyPtr() const { return spBody_; }
 
 	void SetStatusCode(int _code) { statusCode_ = _code; }
 	void AttachBody(jc::MemoryStreamPtr _spBody) { spBody_ = _spBody; }
-	void AttachConnection(IHttpConnectionPtr _spConn) { spConn_ = _spConn; }
-
-	int ReadBody(void* _pBuffer, int _len);
-	void CloseBody();
 
 private:
-	friend class HttpClient;
-	friend class WinHttpTransport;
-	friend class HttpService;
-
 	int statusCode_ = 0;
 	HttpHeaders headers_;
 	jc::MemoryStreamPtr spBody_;
-	IHttpConnectionPtr spConn_;
-	bool taken_ = false;
 };
 
 using HttpResponsePtr = jc::SharedPtr<HttpResponse>;
 
 NS_END
-

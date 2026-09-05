@@ -16,9 +16,9 @@
 
 #include "jc/Namespace.h"
 #include "jc/Pattern/NonCopyableh.h"
-#include "jc/IO/IODefine.h"
+#include "jc/IO/IOTypes.h"
 #include "jc/IO/Engine/IIOListener.h"
-#include "jc/IO/IOResult.h"
+#include "jc/IO/IOTypes.h"
 #include "jc/IO/PathResolver.h"
 #include "jc/IO/Engine/IOEngine.h"
 #include "jc/IO/File/FileService.h"

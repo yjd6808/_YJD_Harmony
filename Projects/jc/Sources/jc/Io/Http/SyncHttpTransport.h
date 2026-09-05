@@ -23,7 +23,7 @@ public:
 private:
 	HINTERNET hConnect_ = nullptr;
 	HINTERNET hRequest_ = nullptr;
-	mutable HttpError lastError_ = HttpError::heNone;
+	mutable HttpError lastError_ = HttpError::heSendFailed;
 };
 
 class SyncHttpTransport final : public IHttpTransport

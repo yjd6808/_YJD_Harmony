@@ -3,10 +3,10 @@
 /*
  * 작성자: 윤정도
  * =====================
- * IOEngine — 핸들·잡맵·큐·워커·펌프·취소 (구 FileLoader 기계 이식, B안 공용 엔진)
+ * IOEngine — 핸들·잡맵·큐·워커·펌프·취소 (구 IOJobEngine, B안 공용 엔진)
  *
  *   - Submit : Source/Dest 조립물을 접수 → 핸들 발급 → 워커 실행
- *   - RunSync: 접수 스레드에서 인라인 실행 (동기 API)
+ *   - RunSync: 접수 스레드에서 인라인 실행 (동기 API) — IOResult 값 반환
  *   - Pump   : 메인 스레드 통지 펌프 (진행 합삭 + 완료 큐 swap 소비)
  *   - 관제   : GetState/GetProgress(완료 링 캐시)/Cancel/CancelAll/GetActiveCount/Snapshot
  */
@@ -19,7 +19,7 @@
 #include "jc/Sync/LockGuard.h"
 #include "jc/Container/Vector.h"
 #include "jc/Container/TreeMap.h"
-#include "jc/IO/IODefine.h"
+#include "jc/IO/IOTypes.h"
 #include "jc/IO/Engine/IIOListener.h"
 #include "jc/IO/Engine/IOJob.h"
 
@@ -45,11 +45,11 @@ public:
 
 	IOHandle Submit(const IOSourcePtr& _spSource, const IODestPtr& _spDest,
 		const String& _uri, const TransferPolicy& _policy,
-		const IOCallback& _callback, bool _isHttp);
+		const IOCallback& _callback);
 	IOHandle FailImmediate(IOError _error, const String& _uri, const IOCallback& _callback);
 
-	IOResultPtr RunSync(const IOSourcePtr& _spSource, const IODestPtr& _spDest,
-		const String& _uri, const TransferPolicy& _policy, bool _isHttp);
+	IOResult RunSync(const IOSourcePtr& _spSource, const IODestPtr& _spDest,
+		const String& _uri, const TransferPolicy& _policy);
 
 	void SetListener(IIOListener* _pListener, bool _transferOwnership = false);
 
@@ -68,11 +68,15 @@ public:
 
 private:
 	IOJobPtr MakeJob(const IOSourcePtr& _spSource, const IODestPtr& _spDest,
-		const String& _uri, const TransferPolicy& _policy, const IOCallback& _callback, bool _isHttp);
-	void Finalize(const IOJobPtr& _spJob);			// 결과 조립 + 완료 링 캐시 기록
+		const String& _uri, const TransferPolicy& _policy, const IOCallback& _callback);
+	bool Finalize(const IOJobPtr& _spJob);				// 결과 조립 + 완료 링 캐시 기록 (선점 성공 시 true)
 	void PushProgress(const IOJobPtr& _spJob);
 	IOProgress MakeProgress(const IOJobPtr& _spJob) const;
 	void ExecuteOnWorker(const IOJobPtr& _spJob);
+
+	// 유일한 복사 루프 (C안 심장) — 3경로: 소스 직독 / 목적지 직접기록 / 스테이징 폴백
+	//   _pWorkBuf == nullptr이면 폴백 경로에서만 lazy 할당
+	void PumpJob(const IOJobPtr& _spJob, _byte* _pWorkBuf, _s32 _workBufLen);
 
 	static void ExecuteJob(IOEngine* _pSelf, const IOJobPtr& _spJob);
 

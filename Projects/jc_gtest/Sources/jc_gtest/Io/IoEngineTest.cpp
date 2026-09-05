@@ -4,11 +4,14 @@
 #include "jc/IO/Engine/IOEngine.h"
 #include "jc/IO/File/FileSource.h"
 #include "jc/IO/Memory/MemoryDest.h"
+#include "jc/IO/Memory/MemorySource.h"
 #include "jc/IO/File/FileDest.h"
-#include "jc/IO/IOResult.h"
+#include "jc/IO/IOTypes.h"
 #include "jc/IO/File.h"
 #include "jc/IO/Path.h"
 #include "jc/Env.h"
+#include "jc/Threading/ThreadPool.h"
+#include "jc/Threading/Thread.h"
 
 using namespace jc;
 
@@ -31,9 +34,6 @@ namespace
 	{
 		const String base = Env::CurrentDirectory();
 		const String path = Path::Combine(base, String("test_io/engine/") + String(_name));
-		auto spSrc = MakeShared<FileSource>(path);
-		MemoryDest dest(1LL << 30);
-		IOEngine writer;	// 파일 생성용 소형 엔진 대신 직접 기록
 		FileDest fileDest(path);
 		fileDest.Bind(1);
 		EXPECT_TRUE(fileDest.Open(-1));
@@ -45,29 +45,35 @@ namespace
 		EXPECT_TRUE(fileDest.Commit());
 		return path;
 	}
+
+	bool VerifyPattern(const _byte* _p, int _len, int _startOffset = 0)
+	{
+		for (int i = 0; i < _len; ++i)
+		{
+			if (_p[i] != (_byte)((_startOffset + i) % 251))
+				return false;
+		}
+		return true;
+	}
 }
 
-TEST(IOEngineTest, FileToMemorySyncLoadAndTakeData)
+TEST(IOEngineTest, FileToMemorySyncLoadWritesCallerBuffer)
 {
 	const String src = MakeSourceFile("mem_load.bin", 4096);
 
 	IOEngine engine;
 	engine.Initialize(IOEngineConfig{});
 
-	IOResultPtr result = engine.RunSync(MakeShared<FileSource>(src),
-		MakeShared<MemoryDest>(1LL << 30), src, TransferPolicy{}, false);
+	// 호출자 그릇에 직접 기록 — 결과 회수 단계 없음
+	MemoryStreamPtr spOut = MakeShared<MemoryStream>(0u);
+	IOResult result = engine.RunSync(MakeShared<FileSource>(src),
+		MakeShared<MemoryDest>(spOut, 1LL << 30), src, TransferPolicy{});
 
-	ASSERT_NE(result, nullptr);
-	EXPECT_TRUE(result->IsSuccess());
-	EXPECT_EQ(result->error_, ieNone);
-	EXPECT_EQ(result->detail_.httpStatus_, 0);			// 파일 전송은 HTTP 상태 없음
-	ASSERT_NE(result->data_, nullptr);
-	EXPECT_EQ(result->data_->GetSize(), 4096u);
-	EXPECT_EQ(result->data_->GetData()[100], (_byte)(100 % 251));
-
-	MemoryStreamPtr taken = result->TakeData();
-	EXPECT_TRUE(taken != nullptr);
-	EXPECT_TRUE(result->IsTaken());
+	EXPECT_TRUE(result.IsOk());
+	EXPECT_EQ(result.error_, ieNone);
+	EXPECT_EQ(result.bytesTransferred_, 4096u);
+	EXPECT_EQ(spOut->GetSize(), 4096u);
+	EXPECT_TRUE(VerifyPattern(spOut->GetData(), 4096));
 
 	engine.Shutdown();
 }
@@ -81,11 +87,10 @@ TEST(IOEngineTest, FileToFileDownloadCommitsAtomically)
 	IOEngine engine;
 	engine.Initialize(IOEngineConfig{});
 
-	IOResultPtr result = engine.RunSync(MakeShared<FileSource>(src),
-		MakeShared<FileDest>(dest), src + " -> " + dest, TransferPolicy{}, false);
+	IOResult result = engine.RunSync(MakeShared<FileSource>(src),
+		MakeShared<FileDest>(dest), src + " -> " + dest, TransferPolicy{});
 
-	ASSERT_NE(result, nullptr);
-	EXPECT_TRUE(result->IsSuccess());
+	EXPECT_TRUE(result.IsOk());
 	EXPECT_TRUE(File::Exist(dest));
 	EXPECT_EQ(File::Size(dest), 8192);
 	// .part 잔여물 없음
@@ -94,17 +99,18 @@ TEST(IOEngineTest, FileToFileDownloadCommitsAtomically)
 	engine.Shutdown();
 }
 
-TEST(IOEngineTest, MissingFileFailsWithoutSilentLoss)
+TEST(IOEngineTest, MissingFileFailsWithChannelError)
 {
 	IOEngine engine;
 	engine.Initialize(IOEngineConfig{});
 
-	IOResultPtr result = engine.RunSync(MakeShared<FileSource>(String("test_io/engine/no_such_file.bin")),
-		MakeShared<MemoryDest>(1LL << 30), "missing", TransferPolicy{}, false);
+	MemoryStreamPtr spOut = MakeShared<MemoryStream>(0u);
+	IOResult result = engine.RunSync(MakeShared<FileSource>(String("test_io/engine/no_such_file.bin")),
+		MakeShared<MemoryDest>(spOut, 1LL << 30), "missing", TransferPolicy{});
 
-	ASSERT_NE(result, nullptr);
-	EXPECT_FALSE(result->IsSuccess());
-	EXPECT_EQ(result->error_, ieOpenFailed);
+	EXPECT_FALSE(result.IsOk());
+	EXPECT_EQ(result.error_, ieOpenFailed);
+	EXPECT_NE(result.channelError_, 0);		// P0-2: OS 에러 기록 — R4 무손실
 
 	engine.Shutdown();
 }
@@ -116,12 +122,33 @@ TEST(IOEngineTest, MemoryLimitFailsWithDedicatedError)
 	IOEngine engine;
 	engine.Initialize(IOEngineConfig{});
 
-	IOResultPtr result = engine.RunSync(MakeShared<FileSource>(src),
-		MakeShared<MemoryDest>(1024), src, TransferPolicy{}, false);	// 1KB 한도 < 2KB 페이로드
+	MemoryStreamPtr spOut = MakeShared<MemoryStream>(0u);
+	IOResult result = engine.RunSync(MakeShared<FileSource>(src),
+		MakeShared<MemoryDest>(spOut, 1024), src, TransferPolicy{});	// 1KB 한도 < 2KB 페이로드
 
-	ASSERT_NE(result, nullptr);
-	EXPECT_FALSE(result->IsSuccess());
-	EXPECT_EQ(result->error_, ieMemoryLimit);
+	EXPECT_FALSE(result.IsOk());
+	EXPECT_EQ(result.error_, ieMemoryLimit);
+
+	engine.Shutdown();
+}
+
+TEST(IOEngineTest, FixedBufferOverflowFailsWithBufferTooSmall)
+{
+	const String src = MakeSourceFile("fixed.bin", 2048);
+
+	IOEngine engine;
+	engine.Initialize(IOEngineConfig{});
+
+	// §1 계약 2: 고정 버퍼(raw/non-owner) 용량 부족 — bytesTransferred_가 재시도 힌트
+	_byte fixed[1024];
+	MemoryStreamPtr spWrap = MakeShared<MemoryStream>(fixed, (_u32)sizeof(fixed), false);
+	IOResult result = engine.RunSync(MakeShared<FileSource>(src),
+		MakeShared<MemoryDest>(spWrap, 1LL << 30), src, TransferPolicy{});
+
+	EXPECT_FALSE(result.IsOk());
+	EXPECT_EQ(result.error_, ieBufferTooSmall);
+	EXPECT_EQ(result.bytesTransferred_, 1024u);
+	EXPECT_TRUE(VerifyPattern(fixed, 1024));
 
 	engine.Shutdown();
 }
@@ -136,12 +163,14 @@ TEST(IOEngineTest, AsyncCompletesWithCallbackThenListenerAtPump)
 	engine.SetListener(&listener);
 
 	Atomic<bool> callbackDone{ false };
-	IOHandle handle = engine.Submit(MakeShared<FileSource>(src), MakeShared<MemoryDest>(1LL << 30),
+	MemoryStreamPtr spOut = MakeShared<MemoryStream>(0u);
+	IOHandle handle = engine.Submit(MakeShared<FileSource>(src), MakeShared<MemoryDest>(spOut, 1LL << 30),
 		src, TransferPolicy{}, [&](const IOResult& r)
 	{
 		callbackDone.Store(true);
-		EXPECT_TRUE(r.IsSuccess());
-	}, false);
+		EXPECT_TRUE(r.IsOk());
+		EXPECT_EQ(r.bytesTransferred_, 1024u);
+	});
 	EXPECT_NE(handle, InvalidIOHandle);
 	EXPECT_FALSE(callbackDone.Load());		// 콜백은 Pump()에서만
 
@@ -162,6 +191,38 @@ TEST(IOEngineTest, AsyncCompletesWithCallbackThenListenerAtPump)
 	engine.Shutdown();
 }
 
+TEST(IOEngineTest, ProgressNotificationsWiredToListener)
+{
+	// P0-1: 전송 루프 → PushProgress → OnProgress 배선 검증
+	//   (계약: policy interval 0 = 데몬 기본값 — 매 청크 통지는 엔진 기본값 0으로)
+	const String src = MakeSourceFile("progress.bin", 1024 * 1024);
+
+	IOEngine engine;
+	IOEngineConfig cfg;
+	cfg.progressNotifyIntervalMs_ = 0;	// 매 청크 통지
+	engine.Initialize(cfg);
+	CountingListener listener;
+	engine.SetListener(&listener);
+
+	Atomic<bool> callbackDone{ false };
+	MemoryStreamPtr spOut = MakeShared<MemoryStream>(0u);
+	TransferPolicy policy;
+	IOHandle handle = engine.Submit(MakeShared<FileSource>(src), MakeShared<MemoryDest>(spOut, 1LL << 30),
+		src, policy, [&](const IOResult& r) { callbackDone.Store(r.IsOk()); });
+	EXPECT_NE(handle, InvalidIOHandle);
+
+	int spins = 0;
+	while (!callbackDone.Load() && spins++ < 5000)
+	{
+		engine.Pump();
+		Thread::Sleep(1);
+	}
+	EXPECT_TRUE(callbackDone.Load());
+	EXPECT_GT(listener.progress_.Load(), 0);	// P0-1 이전에는 영구 0이었음
+
+	engine.Shutdown();
+}
+
 TEST(IOEngineTest, CancelRunningTransferViaCancelRequestedFlag)
 {
 	const int payloadBytes = 4 * 1024 * 1024;
@@ -173,8 +234,9 @@ TEST(IOEngineTest, CancelRunningTransferViaCancelRequestedFlag)
 	CountingListener listener;
 	engine.SetListener(&listener);
 
-	IOHandle handle = engine.Submit(MakeShared<FileSource>(src), MakeShared<FileDest>(dest),
-		src, TransferPolicy{}, nullptr, false);
+	MemoryStreamPtr spOut = MakeShared<MemoryStream>(0u);
+	IOHandle handle = engine.Submit(MakeShared<FileSource>(src), MakeShared<MemoryDest>(spOut, 1LL << 30),
+		src, TransferPolicy{}, nullptr);
 
 	// 즉시 취소 — pending 선점 또는 실행 중 협조 취소 (로컬 파일은 매우 빠르므로 완료될 수도 있음)
 	bool cancelOk = engine.Cancel(handle);
@@ -200,11 +262,12 @@ TEST(IOEngineTest, FailImmediateQueuesCallbackForNextPump)
 
 	Atomic<bool> failed{ false };
 	IOError seen = ieNone;
-	engine.FailImmediate(ieOpenFailed, "bad/path", [&](const IOResult& r)
+	IOHandle handle = engine.FailImmediate(ieOpenFailed, "bad/path", [&](const IOResult& r)
 	{
 		failed.Store(true);
 		seen = r.error_;
 	});
+	EXPECT_NE(handle, InvalidIOHandle);		// P0-5: 발급 핸들을 그대로 반환
 	EXPECT_FALSE(failed.Load());
 	engine.Pump();
 	EXPECT_TRUE(failed.Load());
@@ -223,12 +286,42 @@ TEST(IOEngineTest, SharedThreadPoolIsNotOwnedByEngine)
 	EXPECT_TRUE(engine.Initialize(cfg));
 
 	const String src = MakeSourceFile("shared.bin", 512);
-	IOResultPtr result = engine.RunSync(MakeShared<FileSource>(src),
-		MakeShared<MemoryDest>(1LL << 30), src, TransferPolicy{}, false);
-	EXPECT_TRUE(result->IsSuccess());
+	MemoryStreamPtr spOut = MakeShared<MemoryStream>(0u);
+	IOResult result = engine.RunSync(MakeShared<FileSource>(src),
+		MakeShared<MemoryDest>(spOut, 1LL << 30), src, TransferPolicy{});
+	EXPECT_TRUE(result.IsOk());
 
 	engine.Shutdown();	// 공유 풀은 Join하지 않음 — 이후에도 사용 가능
 	Task<void> t = sharedPool.Run([] {});
 	t.Wait();
+	// 공유 풀 워커 스레드 정리 (~RunnableThread의 핸들 assert 회피 — 풀 소멸 전 명시 Join)
+	sharedPool.Join(ThreadPool::JoinStrategy::WaitOnlyRunningTask);
 	SUCCEED();
+}
+
+TEST(IOEngineTest, MemorySourceFeedsFileDestWithoutCopy)
+{
+	// P1-3 경로 ①: 소스 직독 (Memory → File Save 경로의 엔진 수준 검증)
+	const String dest = String("test_io/engine/memsrc_out.bin");
+	File::Delete(dest);
+
+	IOEngine engine;
+	engine.Initialize(IOEngineConfig{});
+
+	MemoryStreamPtr spData = MakeShared<MemoryStream>(0u);
+	_byte chunk[512];
+	for (int i = 0; i < 512; ++i)
+		chunk[i] = (_byte)(i % 251);
+	spData->Write(chunk, 512);
+	spData->Write(chunk, 512);
+
+	IOResult result = engine.RunSync(MakeShared<MemorySource>(spData),
+		MakeShared<FileDest>(dest), "mem->file", TransferPolicy{});
+
+	EXPECT_TRUE(result.IsOk());
+	EXPECT_EQ(result.bytesTransferred_, 1024u);
+	EXPECT_TRUE(File::Exist(dest));
+	EXPECT_EQ(File::Size(dest), 1024);
+
+	engine.Shutdown();
 }

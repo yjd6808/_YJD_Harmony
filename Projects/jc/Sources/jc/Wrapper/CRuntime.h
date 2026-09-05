@@ -128,6 +128,16 @@ struct CRuntime {
 	static bool JC_CDECL FileSeekEnd(_iohandle _pStream, long _offset);
 
 	/**
+	 * 64비트 파일 오프셋 계열 (_fseeki64/_ftelli64 기반, 2GB 이상 파일 지원)
+	 * \return FileTell64: 성공시 커서 위치, 실패시 -1 (원인은 ErrorNo()로 조회). FileSeek64*: 성공 여부
+	 */
+	static _s64 JC_CDECL FileTell64(_iohandle _pStream);
+	static bool JC_CDECL FileSeek64(_iohandle _pStream, _s64 _offset, int _origin);
+	static bool JC_CDECL FileSeekBegin64(_iohandle _pStream, _s64 _offset);
+	static bool JC_CDECL FileSeekCur64(_iohandle _pStream, _s64 _offset);
+	static bool JC_CDECL FileSeekEnd64(_iohandle _pStream, _s64 _offset);
+
+	/**
 	 * \brief https://en.cppreference.com/w/cpp/io/c/fflush
 	 *  - 파일 스트림 버퍼에 내용을 파일에 반영한다.
 	 *  - nullptr로 전달시 모든 열린 스트림에 대해서 flush가 수행된다.

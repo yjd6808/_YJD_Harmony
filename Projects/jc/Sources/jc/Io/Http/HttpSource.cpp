@@ -4,10 +4,11 @@
 NS_JC_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
-HttpSource::HttpSource(const HttpRequest& _request, IHttpTransport& _transport, bool _failNon2xx)
+HttpSource::HttpSource(const HttpRequest& _request, IHttpTransport& _transport, bool _failNon2xx, const HttpResponsePtr& _spResponse)
 	: request_(_request)
 	, transport_(_transport)
 	, failNon2xx_(_failNon2xx)
+	, spResponse_(_spResponse)
 {
 }
 
@@ -20,42 +21,46 @@ HttpSource::~HttpSource()
 //////////////////////////////////////////////////////////////////////////////////////////
 bool HttpSource::Open(OUT IOSourceInfo& _info)
 {
-	HttpError err = heNone;
+	HttpError err = heSendFailed;
 	spConn_ = transport_.Open(request_, OUT err);
 	if (spConn_ == nullptr)
 	{
 		lastError_ = err == heInvalidUri ? ieInvalidUri : ieOpenFailed;
-		detail_.channelError_ = (int)err;
-		detail_.httpStatus_ = 0;
+		channelError_ = (int)err;
 		return false;
 	}
 
-	spHeaders_ = MakeShared<HttpHeaders>();
-	if (!spConn_->ReadHeaders(OUT *spHeaders_))
+	HttpHeaders headers;
+	if (!spConn_->ReadHeaders(OUT headers))
 	{
 		lastError_ = ieReadFailed;
-		detail_.channelError_ = (int)spConn_->GetLastError();
+		channelError_ = (int)spConn_->GetLastError();
 		spConn_->Close();
 		spConn_ = nullptr;
 		return false;
 	}
 
 	const int status = spConn_->GetStatusCode();
-	_info.httpStatus_ = status;
-	_info.spHeaders_ = spHeaders_;
-	_info.totalBytes_ = spHeaders_->GetContentLength();
+	_info.totalBytes_ = headers.GetContentLength();
+
+	// 상태/헤더는 호출자의 응답 그릇에 직접 기록 — 실패 시에도 부분 수신 메타 보존 (P0-3)
+	if (spResponse_ != nullptr)
+	{
+		spResponse_->SetStatusCode(status);
+		spResponse_->GetHeaders() = headers;
+	}
 
 	if (failNon2xx_ && !(status >= 200 && status < 300))
 	{
 		lastError_ = ieHttpStatusFailed;
-		detail_.channelError_ = (int)heHttpStatusFailed;
-		detail_.httpStatus_ = status;
+		channelError_ = (int)heHttpStatusFailed;
 		spConn_->Close();
 		spConn_ = nullptr;
 		return false;
 	}
 
 	lastError_ = ieNone;
+	channelError_ = 0;
 	return true;
 }
 
@@ -72,7 +77,7 @@ _s32 HttpSource::Read(_byte* _pBuffer, _s32 _len)
 	if (n < 0)
 	{
 		lastError_ = ieReadFailed;	// 전송 단계 상세는 channelError_ 로 보존 (TLS/타임아웃 등)
-		detail_.channelError_ = (int)spConn_->GetLastError();
+		channelError_ = (int)spConn_->GetLastError();
 	}
 	return n;
 }

@@ -1,5 +1,6 @@
 #include "jc/Wrapper/CRuntime.h"
 
+#include "cstdio"
 #include "cstdlib"
 #include "process.h"
 
@@ -128,6 +129,47 @@ JC_CDECL
 CRuntime::FileSeekEnd(_iohandle _pStream, long _offset)
 {
     return FileSeek(_pStream, _offset, SEEK_END);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+_s64
+JC_CDECL
+CRuntime::FileTell64(_iohandle _pStream)
+{
+    // 실패시 -1 반환 — 원인은 CRuntime::ErrorNo()로 조회 (위치값과 구별 불가한 errno 매핑 방지)
+    return (_s64)::_ftelli64((FILE*)_pStream);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool
+JC_CDECL
+CRuntime::FileSeek64(_iohandle _pStream, _s64 _offset, int _origin)
+{
+    return ::_fseeki64((FILE*)_pStream, (__int64)_offset, _origin) == 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool
+JC_CDECL
+CRuntime::FileSeekBegin64(_iohandle _pStream, _s64 _offset)
+{
+    return FileSeek64(_pStream, _offset, SEEK_SET);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool
+JC_CDECL
+CRuntime::FileSeekCur64(_iohandle _pStream, _s64 _offset)
+{
+    return FileSeek64(_pStream, _offset, SEEK_CUR);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+bool
+JC_CDECL
+CRuntime::FileSeekEnd64(_iohandle _pStream, _s64 _offset)
+{
+    return FileSeek64(_pStream, _offset, SEEK_END);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

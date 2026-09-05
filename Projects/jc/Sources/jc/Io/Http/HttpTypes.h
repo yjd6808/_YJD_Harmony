@@ -39,10 +39,10 @@ inline const char* HttpMethodName(HttpMethod _method)
 	}
 }
 
-// 전송 계층(WinHTTP) 상세 에러 — IOErrorDetail.channelError_ 로 보존된다 (R4)
+// 전송 계층(WinHTTP) 상세 에러 — IOResult.channelError_ 로 보존된다 (R4)
+//   HTTP 고유값만 유지 (엔진 공용값과 겹치는 거울값 heNone/heWriteFailed/heMemoryLimit/heCancelledByUser/heShutdown 제거)
 enum HttpError
 {
-	heNone,
 	heInvalidUri,
 	heConnectFailed,
 	heTlsFailed,
@@ -50,11 +50,7 @@ enum HttpError
 	heRecvFailed,
 	heTimeout,
 	heTooManyRedirects,
-	heHttpStatusFailed,
-	heWriteFailed,
-	heMemoryLimit,
-	heCancelledByUser,
-	heShutdown
+	heHttpStatusFailed
 };
 
 struct HttpServiceConfig

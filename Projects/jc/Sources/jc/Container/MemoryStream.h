@@ -17,11 +17,11 @@ class MemoryStream
 public:
 	explicit MemoryStream(_u32 _capacity)
 	{
+		owner_ = true;		// 빈 버퍼도 소유 버퍼 — 이후 Write 시 자동 확장 (non-owner는 3인자 생성자 전용)
 		if (_capacity > 0)
 		{
 			pBytes_ = dbg_new _byte[_capacity];
 			capacity_ = _capacity;
-			owner_ = true;
 		}
 	}
 
@@ -64,6 +64,23 @@ public:
 	_u32 GetCapacity() const { return capacity_; }
 	_u32 GetReadOffset() const { return readOffset_; }
 	_u32 GetWriteOffset() const { return writeOffset_; }
+	bool IsOwner() const { return owner_; }
+
+	// 제로카피 읽기 — 내부 버퍼 직접 노출 (반환 후 ConsumeRead로 확정)
+	const _byte* GetReadPtr() const { return pBytes_ + readOffset_; }
+	_u32 GetReadable() const { return writeOffset_ - readOffset_; }
+	void ConsumeRead(_u32 _len)
+	{
+		readOffset_ += Math::Min(_len, writeOffset_ - readOffset_);
+	}
+
+	// 제로카피 쓰기 — 내부 버퍼 직접 노출 (반환 후 CommitWrite로 확정)
+	_byte* GetWritePtr() const { return pBytes_ + writeOffset_; }
+	void CommitWrite(_u32 _len)
+	{
+		jc_assert(writeOffset_ + _len <= capacity_);
+		writeOffset_ += _len;
+	}
 
 	void ExpandAllocateIfNeeded(_u32 _need)
 	{

@@ -148,10 +148,8 @@ int SyncHttpConnection::ReadBody(void* _pBuffer, int _len)
 	BOOL ok = ::WinHttpReadData(hRequest_, _pBuffer, (DWORD)_len, &read);
 	if (!ok)
 	{
+		// MapLastError는 미분류 WinHTTP 코드를 heSendFailed로 귀결시킨다
 		lastError_ = SyncHttpTransport::MapLastError();
-		// MapLastError may return eNone for unknown? Ensure something
-		if (lastError_ == HttpError::heNone)
-			lastError_ = HttpError::heRecvFailed;
 		return -1;
 	}
 	return (int)read;
@@ -224,7 +222,7 @@ void SyncHttpTransport::Shutdown()
 //////////////////////////////////////////////////////////////////////////////////////////
 IHttpConnectionPtr SyncHttpTransport::Open(const HttpRequest& _request, OUT HttpError& _error)
 {
-	_error = HttpError::heNone;
+	_error = HttpError::heSendFailed;	// 이후 실패 분기에서 구체 코드로 덮어씀
 	const jc::Uri& uri = _request.GetUri();
 
 	if (hSession_ == nullptr)
