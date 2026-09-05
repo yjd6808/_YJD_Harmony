@@ -26,6 +26,10 @@
     <ClCompile Include="..\Sources\jcr\06_Coroutine_07_ErrorVeh.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine_05_Safety.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine_06_Custom.cpp" />
+    <ClCompile Include="..\Sources\jcr\06_Coroutine_01_Exception.cpp" />
+    <ClCompile Include="..\Sources\jcr\06_Coroutine_02_Teb.cpp" />
+    <ClCompile Include="..\Sources\jcr\06_Coroutine_03_StackLimit.cpp" />
+    <ClCompile Include="..\Sources\jcr\06_Coroutine_08_Mxcsr.cpp" />
     <ClCompile Include="..\Sources\jcr\Core.cpp" />
     <ClCompile Include="..\Sources\jcr\main.cpp" />
     <ClCompile Include="..\Sources\jcr\01_AsmStudy1.cpp" />

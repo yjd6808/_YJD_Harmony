@@ -13,6 +13,10 @@
     <ClCompile Include="..\Sources\jcr\06_Coroutine_07_ErrorVeh.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine_05_Safety.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine_06_Custom.cpp" />
+    <ClCompile Include="..\Sources\jcr\06_Coroutine_01_Exception.cpp" />
+    <ClCompile Include="..\Sources\jcr\06_Coroutine_02_Teb.cpp" />
+    <ClCompile Include="..\Sources\jcr\06_Coroutine_03_StackLimit.cpp" />
+    <ClCompile Include="..\Sources\jcr\06_Coroutine_08_Mxcsr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jcr\Core.h" />

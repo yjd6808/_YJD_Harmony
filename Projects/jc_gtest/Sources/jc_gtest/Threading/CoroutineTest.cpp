@@ -5,6 +5,10 @@
 
 #include "jc/Threading/Coroutine.h"
 
+#include <intrin.h>
+#include <stdexcept>
+#include <float.h>
+
 #if TEST_CoroutineTest == ON
 
 // [코루틴-07] fn이 null이면 종료가 아니라 실패이므로 원인이 보여야 한다.
@@ -219,6 +223,134 @@ TEST(Coroutine, Custom_LargeNoPool)
 	EXPECT_NE(pCtx->stack_.pStackBase_, pCustomBase);
 	while (pCtx)
 		pCtx = CoResume(pCtx);
+	g_cCoMgr.Clear();
+}
+
+// [코루틴-01] fn 안에서 던진 예외는 스케줄러 스택에서 받을 수 있다.
+// - 이전에는 트램폴린을 넘어 언와인더가 꼬여 프로세스가 죽었다.
+static void CoTestFn_Throw(CoContext*)
+{
+	throw std::runtime_error("co-boom");
+}
+
+TEST(Coroutine, Exception_ThrowInsideCaughtOutside)
+{
+	bool caught = false;
+	try
+	{
+		CoContext* pCtx = CoRunChecked(CoTestFn_Throw, cstMid);
+		EXPECT_EQ(pCtx, nullptr);
+	}
+	catch (const std::runtime_error&)
+	{
+		caught = true;
+	}
+	EXPECT_TRUE(caught);
+	EXPECT_EQ(CoGetLastError(), coeNone);
+	CoClearPendingException();	// 보관 소유권 정리 (take 뒤 catch가 끝난 자리)
+	g_cCoMgr.Clear();
+}
+
+// [코루틴-02] 코루틴 안에서 보는 StackBase/Limit은 코루틴 스택을 가리킨다.
+// - DeallocationStack은 교체하지 않으므로 스레드 원본과 같아야 한다.
+//   (교체하면 커널이 가드 폴트를 직접 확장해 VEH가 안 불림. B안으로 확정)
+static void* g_coTebVals[3] = { nullptr, nullptr, nullptr };
+static void* g_coTebBase = nullptr;
+static void* g_coTebThreadDealloc = nullptr;
+static void CoTestFn_ReadTeb(CoContext* pCtx)
+{
+	g_coTebVals[0] = (void*)__readgsqword(0x08);
+	g_coTebVals[1] = (void*)__readgsqword(0x10);
+	g_coTebVals[2] = (void*)__readgsqword(0x1478);
+	g_coTebBase = pCtx->stack_.pStackBase_;
+}
+
+TEST(Coroutine, Teb_StackRangesInside)
+{
+	g_coTebThreadDealloc = (void*)__readgsqword(0x1478);
+	CoContext* pCtx = CoRun(CoTestFn_ReadTeb, cstMid);
+	while (pCtx)
+		pCtx = CoResume(pCtx);
+	EXPECT_EQ(g_coTebVals[0], g_coTebBase);
+	EXPECT_EQ(g_coTebVals[2], g_coTebThreadDealloc);
+	g_cCoMgr.Clear();
+}
+
+// [코루틴-02] 성장 가드존은 PAGE_GUARD다. (NOACCESS면 예외 배달이 죽으므로)
+// - DeallocationStack 교체와 조합 시 커널이 직접 확장해 VEH가 안 불릴 수 있어,
+//   Teb_StackLimitAfterGrowth 테스트에서 VEH 확장이 도는지 함께 감시한다.
+TEST(Coroutine, GuardZone_IsPageGuard)
+{
+	g_cCoMgr.Clear();
+	CoContext* pCtx = CoRun(CoTestFn_YieldForever06, cstMid);
+	ASSERT_NE(pCtx, nullptr);
+	MEMORY_BASIC_INFORMATION mbi{};
+	EXPECT_EQ(::VirtualQuery(pCtx->stack_.pGuardLimit_, &mbi, sizeof(mbi)), sizeof(mbi));
+	EXPECT_EQ(mbi.State, (DWORD)MEM_COMMIT);
+	EXPECT_NE(mbi.Protect & PAGE_GUARD, 0u);
+	while (pCtx)
+		pCtx = CoResume(pCtx);
+	g_cCoMgr.Clear();
+}
+
+// [코루틴-03] 확장 후에도 throw/catch가 되고, yield를 거치면 한계가 동기화된다.
+// - 이전에는 gs:[16]이 그대로라 확장된 영역에서 catch에 닿지 못하고 죽었다.
+// - 한계 동기화는 yield 시점에 살아있는 TEB 값을 기준으로 맞춘다.
+//   (커널이 가드 폴트를 직접 확장할 수 있어 pStackLimit_만 믿을 수 없기 때문)
+static bool g_coTestLimitMatch = false;
+static bool g_coTestCaught = false;
+static void CoTestFn_ThrowAfterGrow(CoContext*)
+{
+	volatile char big[CO_PAGE_SIZE * 4];
+	for (int i = (int)sizeof(big) - 1; i >= 0; i -= CO_PAGE_SIZE)
+		big[i] = (char)i;
+	CoYield();	// 여기서 살아있는 한계가 stack_에 동기화된다.
+	void* limitNow = (void*)__readgsqword(0x10);
+	CoContext* self = CoCurrentCtx();
+	g_coTestLimitMatch = (limitNow == self->stack_.pStackLimit_);
+	try { throw 42; }
+	catch (int v) { g_coTestCaught = (v == 42); }
+	(void)big;
+}
+
+TEST(Coroutine, Teb_StackLimitAfterGrowth)
+{
+	g_coTestLimitMatch = false;
+	g_coTestCaught = false;
+	CoContext* pCtx = CoRun(CoTestFn_ThrowAfterGrow, cstMid);
+	while (pCtx)
+		pCtx = CoResume(pCtx);
+	EXPECT_TRUE(g_coTestLimitMatch);
+	EXPECT_TRUE(g_coTestCaught);
+	g_cCoMgr.Clear();
+}
+
+// [코루틴-08] 코루틴이 바꾼 반올림 모드가 yield/resume을 넘어 유지되고,
+// 스레드 쪽에는 새지 않는다. (x87 CW도 같은 경로로 교체되므로 MXCSR로 대표 검증)
+static unsigned g_coMxcsrInside = 0;
+static void CoTestFn_Rounding(CoContext*)
+{
+	unsigned old = 0;
+	::_controlfp_s(&old, _RC_DOWN, _MCW_RC);
+	CoYield();
+	unsigned now = 0;
+	::_controlfp_s(&now, 0, 0);
+	g_coMxcsrInside = now;
+}
+
+TEST(Coroutine, Abi_MxcsrPreserved)
+{
+	CoContext* pCtx = CoRun(CoTestFn_Rounding, cstMid);
+	ASSERT_NE(pCtx, nullptr);
+	unsigned mid = 0;
+	::_controlfp_s(&mid, 0, 0);
+	EXPECT_EQ(mid & _MCW_RC, (unsigned)_RC_NEAR);	// 스레드 쪽은 그대로
+	while (pCtx)
+		pCtx = CoResume(pCtx);
+	EXPECT_EQ(g_coMxcsrInside & _MCW_RC, (unsigned)_RC_DOWN);	// 코루틴 쪽은 유지
+	unsigned after = 0;
+	::_controlfp_s(&after, 0, 0);
+	EXPECT_EQ(after & _MCW_RC, (unsigned)_RC_NEAR);	// 종료 후 스레드 복원
 	g_cCoMgr.Clear();
 }
 

@@ -11,6 +11,8 @@
 #include "Coroutine.h"
 
 #include <mutex>
+#include <intrin.h>
+#include <utility>
 
 USING_NS_JC;
 
@@ -65,6 +67,22 @@ CoMgr::CoMgr()
 {
 	// 스레드별 매니저가 처음 만들어지는 시점에 VEH를 보장한다.
 	EnsureCoVehRegistered();
+
+	// [코루틴-08] CET(User Shadow Stack)가 켜진 프로세스에서는 코루틴을 쓸 수 없다.
+	// - rsp를 임의로 바꾸고 ret하는 방식이라 섀도우 스택 검사에 걸려 즉사하므로
+	//   링커 /CETCOMPAT:NO로 빌드해야 한다. 여기서 미리 막는다.
+	jc_assert_msg(!IsShadowStackEnabled(),
+		"jc 코루틴은 CET(User Shadow Stack)와 호환되지 않는다. /CETCOMPAT:NO로 링크할 것");
+}
+
+// [코루틴-08] 섀도우 스택이 켜져 있는지 확인한다.
+bool CoMgr::IsShadowStackEnabled()
+{
+	PROCESS_MITIGATION_USER_SHADOW_STACK_POLICY policy{};
+	if (::GetProcessMitigationPolicy(::GetCurrentProcess(),
+		ProcessUserShadowStackPolicy, &policy, sizeof(policy)))
+		return policy.EnableUserShadowStack != 0;
+	return false;
 }
 
 _u32 g_coNextId_ = 0;
@@ -115,6 +133,9 @@ bool CoMgr::InitStack(CoStack* _pStack)
 	if (pGuardAddr < _pStack->pStackEnd_)
 		pGuardAddr = _pStack->pStackEnd_;
 
+	// [코루틴-02] 성장 가드존은 PAGE_GUARD로 둔다.
+	// - NOACCESS로 두면 커널이 예외 배달용 CONTEXT를 유저 스택에 밀어넣지 못해
+	//   VEH가 호출되기도 전에 프로세스가 죽으므로 GUARD여야 한다.
 	_u32 actualGuardCount = (_u32)((pCommitAddr - pGuardAddr) / CO_PAGE_SIZE);
 	if (actualGuardCount > 0)
 	{
@@ -463,19 +484,23 @@ bool CoMgr::TryFindStackByAddr(char* _pAddr, OUT CoStack** _pOut)
 // 처리 흐름:
 //   [Before]                              [After]
 //   pStackLimit_                           pStackLimit_ (old)
-//    GUARD page 0  ← _pFaultAddr            RW page 0       ← fault 페이지 (OS가 GUARD 해제)
-//    GUARD page 1                           RW grow 0       ← pageGrowCount_ 개 GUARD 해제
-//    GUARD page 2                           RW grow 1          (명시적 VirtualProtect)
-//   pGuardLimit_                         pStackLimit_ (new) = old pGuardLimit_
+//    GUARD page 0  ← _pFaultAddr            RW page 0       ← fault 페이지 커밋
+//    GUARD page 1                           RW grow 0       ← pageGrowCount_ 개 함께 커밋
+//    GUARD page 2                           RW grow 1
+//   pGuardLimit_                         pStackLimit_ (new) = 성장 시작 주소
 //    (reserved)                             NEW GUARD 0      ← pageGuardCount_ 페이지 새로
 //    (reserved)                             NEW GUARD 1         commit + PAGE_GUARD 설정
 //    (reserved)                             NEW GUARD 2
-//   pStackEnd_                           pGuardLimit_ (new) = old pGuardLimit_ - pageGuardCount_ * PAGE
+//   pStackEnd_                           pGuardLimit_ (new)
 //                                          (reserved)
 //                                         pStackEnd_
+// [코루틴-03] 확장이 끝나면 TEB StackLimit도 함께 내린다.
+// - 이전에는 pStackLimit_만 내려가고 gs:[16]이 그대로라 확장된 영역에서
+//   예외를 던지면 SEH가 스택 범위를 벗어났다고 보고 프로세스를 죽였다.
 //////////////////////////////////////////////////////////////////////////////////////////
-bool CoMgr::ExpandStack(CoStack* _pStack, char* _pFaultAddr)
+bool CoMgr::ExpandStack(CoContext* _pCtx, char* _pFaultAddr)
 {
+	CoStack* _pStack = &_pCtx->stack_;
 	if (pageGuardCount_ == 0)
 	{
 		// 페이지 가드 갯수가 없는 경우는 존재할 수 없다.
@@ -541,6 +566,12 @@ bool CoMgr::ExpandStack(CoStack* _pStack, char* _pFaultAddr)
 		}
 	}
 	_pStack->pGuardLimit_ = pNewGuardStart;
+
+	// [코루틴-03] 이 코루틴이 지금 실행 중(폴트를 낸 스택)이면 TEB도 함께 내린다.
+	// - VEH는 폴트를 낸 스레드에서 돌므로 이 TEB 쓰기가 정확하다.
+	// - 예외 디스패처가 보는 유효 스택 = [pStackLimit_, pStackBase_) 이다.
+	if (_pCtx == currentCtx_)
+		__writegsqword(0x10, (_u64)pGrowthStart);
 
 	//_LogInfo_("Stack expanded: newLimit=0x%p  newGuardLimit=0x%p  growthSize=%u KB (%u pages)",
 	//	_pStack->pStackLimit_, _pStack->pGuardLimit_,
@@ -642,7 +673,7 @@ void CoMgr::DumpStack(CoStack* _pStack, const char* _pTitle /*= nullptr*/)
 //   코루틴 스택 가드 페이지 터치 예외처리
 //
 // [오버플로우 가드 페이지]
-//   pStackEnd_ ~ pStackEnd_+PAGE 는 영구 PAGE_GUARD 페이지.
+//   pStackEnd_ ~ pStackEnd_+PAGE 는 영구 가드 페이지.
 //   이 페이지가 터치되면 ExpandStack이 false 반환 → STACK_OVERFLOW 예외로 변환.
 //   EXCEPTION_NONCONTINUABLE 플래그를 세워 실행 재개가 불가능함을 명시.
 //
@@ -658,6 +689,8 @@ static thread_local bool s_inCoVEH = false;
 LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp)
 {
 	if (_pEp->ExceptionRecord->ExceptionCode != STATUS_GUARD_PAGE_VIOLATION)
+		return EXCEPTION_CONTINUE_SEARCH;
+	if (_pEp->ExceptionRecord->NumberParameters < 2)
 		return EXCEPTION_CONTINUE_SEARCH;
 
 	char* pFaultAddr = (char*)_pEp->ExceptionRecord->ExceptionInformation[1];
@@ -698,7 +731,8 @@ LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp)
 	s_inCoVEH = true;
 	LONG result = EXCEPTION_CONTINUE_SEARCH;
 
-	if (g_cCoMgr.ExpandStack(&pCtx->stack_, pFaultAddr))
+	// [코루틴-03] ExpandStack이 성공하면 TEB StackLimit까지 같이 내려간다.
+	if (g_cCoMgr.ExpandStack(pCtx, pFaultAddr))
 	{
 		result = EXCEPTION_CONTINUE_EXECUTION;
 	}
@@ -826,4 +860,49 @@ void CoFreeCtx(CoContext* _ctx)
 	if (_ctx == nullptr)
 		return;
 	g_cCoMgr.FreeCtx(_ctx);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// [코루틴-01] 코루틴 진입점. asm이 fn_ 대신 이 함수로 점프한다.
+// - fn에서 빠져나온 C++ 예외를 코루틴 스택에서 잡아 두고,
+//   스케줄러 스택으로 돌아간 뒤 CoTakePendingException으로 다시 던진다.
+// - 받을 사람 없는 스택 밖으로 예외가 전파되면 언와인더가 트램폴린에서
+//   꼬여 프로세스가 죽으므로(또는 이상 종료) 여기서 반드시 끊는다.
+//////////////////////////////////////////////////////////////////////////////////////////
+static thread_local std::exception_ptr t_coPendingException;
+
+void CoEntry(CoContext* _pCtx) noexcept
+{
+	// 이전 보관분이 있으면 여기서 정리한다. (take 후 버리기를 잊은 경우)
+	// - 캡처와 take 사이에 사용자 코드가 끼지 않으므로 여기서 버려도 안전하다.
+	t_coPendingException = nullptr;
+	try
+	{
+		_pCtx->fn_(_pCtx);
+	}
+	catch (...)
+	{
+		t_coPendingException = std::current_exception();
+		t_coLastError = coeException;
+	}
+	// 여기서 ret → CoFnEndTrampoline_Resume (정상 종료 경로와 동일)
+}
+
+bool CoTakePendingException()
+{
+	if (!t_coPendingException)
+		return false;
+	// 예외 자체가 보고서이므로 에러 코드는 지운다.
+	t_coLastError = coeNone;
+	// 보관 소유권을 유지한 채 던진다.
+	// - 풀어버리면 unwind 중 마지막 소유자가 사라져 객체가 유실되므로
+	//   catch가 끝난 뒤 CoClearPendingException()으로 버릴 것.
+	std::rethrow_exception(t_coPendingException);
+	return true;
+}
+
+void CoClearPendingException()
+{
+	t_coPendingException = nullptr;
+	t_coLastError = coeNone;
 }

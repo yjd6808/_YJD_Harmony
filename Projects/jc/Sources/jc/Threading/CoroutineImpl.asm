@@ -16,6 +16,10 @@ extern CoValidateAddr   : proc
 extern CoValidateResume : proc
 extern CoOnBeforeLaunch : proc
 extern CoOnAfterLaunch  : proc
+extern CoEntry          : proc      ; [코루틴-01] 코루틴 진입점 (fn 대신 점프)
+
+; TEB 오프셋 (참고용. DeallocationStack은 교체하지 않음. [코루틴-02])
+TEB_DEALLOCATION_STACK EQU 1478h
 
 ; ============================================================
 ;  CoStackTier enum
@@ -65,6 +69,7 @@ CoRegs struct 8
 
     gs8_    QWORD   ?           ; offset  24  TEB StackBase:  0x8
     gs16_   QWORD   ?           ; offset  32  TEB StackLimit: 0x10
+    ; [코루틴-02] DeallocationStack은 교체하지 않으므로 필드 없음 (C++와 일치)
 
     ; Windows x64 callee-saved 정수 레지스터
     rsi_    QWORD   ?           ; offset  40
@@ -74,18 +79,23 @@ CoRegs struct 8
     r14_    QWORD   ?           ; offset  72
     r15_    QWORD   ?           ; offset  80
 
+    ; [코루틴-08] 부동소수점 제어 상태 (C++ CoRegs와 순서/크기 일치)
+    mxcsr_  DWORD   ?           ; offset  88
+    fpucw_  WORD    ?           ; offset  92
+    _padFp_ WORD    ?           ; offset  94
+
     ; Windows x64 callee-saved XMM 레지스터 (16 bytes each, 8-byte aligned)
-    xmm6_   BYTE    16 dup(?)   ; offset  88
-    xmm7_   BYTE    16 dup(?)   ; offset 104
-    xmm8_   BYTE    16 dup(?)   ; offset 120
-    xmm9_   BYTE    16 dup(?)   ; offset 136
-    xmm10_  BYTE    16 dup(?)   ; offset 152
-    xmm11_  BYTE    16 dup(?)   ; offset 168
-    xmm12_  BYTE    16 dup(?)   ; offset 184
-    xmm13_  BYTE    16 dup(?)   ; offset 200
+    xmm6_   BYTE    16 dup(?)   ; offset  96
+    xmm7_   BYTE    16 dup(?)   ; offset 112
+    xmm8_   BYTE    16 dup(?)   ; offset 128
+    xmm9_   BYTE    16 dup(?)   ; offset 144
+    xmm10_  BYTE    16 dup(?)   ; offset 160
+    xmm11_  BYTE    16 dup(?)   ; offset 176
+    xmm12_  BYTE    16 dup(?)   ; offset 192
+    xmm13_  BYTE    16 dup(?)   ; offset 208
     xmm14_  BYTE    16 dup(?)   ; offset 216
     xmm15_  BYTE    16 dup(?)   ; offset 232
-    ; sizeof(CoRegs) = 248
+    ; sizeof(CoRegs) = 256 (C++와 EQU로 일치. 어긋나면 09의 static_assert가 잡음)
 
 CoRegs ends
 
@@ -100,6 +110,8 @@ OFFSET_COREGS_R12   EQU CoRegs.r12_
 OFFSET_COREGS_R13   EQU CoRegs.r13_
 OFFSET_COREGS_R14   EQU CoRegs.r14_
 OFFSET_COREGS_R15   EQU CoRegs.r15_
+OFFSET_COREGS_MXCSR EQU CoRegs.mxcsr_
+OFFSET_COREGS_FPUCW EQU CoRegs.fpucw_
 OFFSET_COREGS_XMM6  EQU CoRegs.xmm6_
 OFFSET_COREGS_XMM7  EQU CoRegs.xmm7_
 OFFSET_COREGS_XMM8  EQU CoRegs.xmm8_
@@ -138,30 +150,29 @@ code
 
 ; ============================================================
 ; CoFnEndTrampoline
-;   fn()이 정상 종료(ret)할 때 진입하는 트램폴린
-;   CoRun이 call 대신 push-trampoline + jmp 패턴을 사용하므로
-;   fn()의 ret이 여기로 도착함 (코루틴 스택 활성화 상태)
+;   CoEntry()가 ret할 때 진입하는 트램폴린 (코루틴 스택 활성화 상태)
+;
+; [코루틴-01] 진입 시 스택 레이아웃 (pStackBase_ 기준):
+;   [pStackBase_ -  8] = 0 (가짜 반환주소. 언와인더가 여기서 멈춤)
+;   [pStackBase_ - 16] = CoContext* (CoRun이 백업)
+;   [pStackBase_ - 48] ← RSP (0 mod 16, 트램폴린 프레임 40)
+; 언와인드 경로: fn → CoEntry → Resume → .allocstack 40 해제 → base-8 pop = 0 → 종료.
+; 디버거 콜스택은 fn ← CoFnEndTrampoline 에서 깔끔하게 끝난다.
 ;
 ; 역할:
-;   1. CoCurrentCtx로 현재 CoContext 탐색
-;   2. 컨텍스트의 GS / RSI~R15 / XMM6~15 복원
+;   1. CoCurrentCtx로 현재 CoContext 탐색 ([rsp+32] 백업 덕에 shadow 추가 없이 call)
+;   2. 스레드 TEB 3종 / 정수 / XMM / 부동소수점 제어 상태 복원
 ;   3. state = csEnd 설정
-;   4. 컨텍스트 스택으로 전환 + 컨텍스트의 RBP 복원
-;   5. 컨텍스트의 YIELD 레이블로 점프
-;      → YIELD: pop rcx(CoContext*), csEnd 감지, CoFreeCtx 호출, 0 반환
-;
-; 진입 시 스택 레이아웃 (pStackBase_ 기준):
-;   [pStackBase_ - 32] ← RSP (16-byte 정렬)
-;   [pStackBase_ - 40]   = CoFnEndTrampoline 주소 (fn ret이 이미 pop 완료)
-;   shadow space: [pStackBase_-32 .. pStackBase_-9]
+;   4. 스케줄러 스택으로 전환 후 YIELD 레이블로 점프
 ; ============================================================
-CoFnEndTrampoline proc
-
-    ; 진입 시 RSP = pStackBase_ - 32 (코루틴 스택, 16-byte 정렬)
-    ; CoCurrentCtx() — 인자 없음, shadow space만 필요
-    sub     rsp,    32
+CoFnEndTrampoline proc FRAME
+    sub     rsp,    40
+    .allocstack 40
+    .endprolog
+CoFnEndTrampoline_Resume::
+    ; 진입: RSP = pStackBase_-48 (0 mod 16). 프레임 40 안에 shadow가 있으므로 바로 call.
+    ; (call이 미는 반환주소는 base-56에 얹히고, [rsp+32] 백업은 shadow 밖에 있어 안전)
     call    CoCurrentCtx
-    add     rsp,    32
 
     ; rax = CoContext* (null이면 프로그래밍 오류 - unreachable)
     cmp     rax,    0
@@ -169,11 +180,15 @@ CoFnEndTrampoline proc
     int     3                           ; 코루틴 스택에서 컨텍스트를 찾지 못함
 CTX_OK:
 
-    ; 컨텍스트의 GS (TEB StackBase / StackLimit) 복원
+    ; 스레드 TEB 복원 (StackBase/Limit. DeallocationStack은 교체하지 않음 [코루틴-02])
     mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS8]
     mov     gs:[8],  r10
     mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS16]
     mov     gs:[16], r10
+
+    ; [코루틴-08] 스레드 부동소수점 제어 상태 복원
+    ldmxcsr [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_MXCSR]
+    fldcw   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_FPUCW]
 
     ; 컨텍스트의 callee-saved 정수 레지스터 복원
     mov     rsi,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RSI]
@@ -210,11 +225,16 @@ CTX_OK:
 CoFnEndTrampoline endp
 
 ; ============================================================
-CoRun proc
+CoRun proc FRAME
     push    rbp
+    .pushreg rbp
     push    rbx
+    .pushreg rbx
     mov	    rbp,    rsp
+    .setframe rbp, 0
     sub     rsp,    8 + 32  ; align 8(push를 2번 했으므로.. 3번하면 16, 4번하면 24), shadow space for 32 byte
+    .allocstack 40
+    .endprolog
 
     ; 전달받은 인자 그대로 이어서 전달
     call    CoAllocCtx
@@ -230,6 +250,7 @@ ALLOC_OK:
     push	rax                     ; CoContext 포인터 백업 (컨텍스트 스택)
 
     lea     rbx,    YIELD           ; CoYield / 트램폴린에서 복귀할 때 사용할 주소
+    ; 스레드 TEB 저장 (r10/r11만 사용)
     mov     r10,    gs:[8]          ; 기존 StackBase 저장
     mov     r11,    gs:[16]         ; 기존 StackLimit 저장
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS8],     r10
@@ -259,38 +280,40 @@ ALLOC_OK:
     movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14],   xmm14
     movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15],   xmm15
 
+    ; [코루틴-08] 스레드 부동소수점 제어 상태 저장 (코루틴은 이 값으로 시작)
+    stmxcsr [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_MXCSR]
+    fnstcw  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_FPUCW]
+
     mov     dword ptr[rax + OFFSET_COCTX_STATE],   csRun
 
     mov     r10,   [rax + OFFSET_COCTX_STACK + OFFSET_COSTACK_STACKBASE]
     mov     r11,   [rax + OFFSET_COCTX_STACK + OFFSET_COSTACK_STACKLIMIT]
+    mov     gs:[8],     r10         ; StackBase  = 코루틴 스택 Base (r10은 아래 rsp 전환에 재사용)
+    mov     gs:[16],    r11         ; StackLimit = 코루틴 스택 Limit (초기 커밋)
+    ; [코루틴-02] DeallocationStack은 교체하지 않는다.
+    ; - 교체하면 커널이 코루틴 가드 폴트를 스레드 스택 확장으로 직접 처리해
+    ;   VEH가 호출되지 않는다. (실측으로 확인됨)
 
-    ; TEB에 커스텀 스택 범위 설정
-    mov     gs:[8],     r10         ; StackBase  = 커스텀 스택 Base
-    mov     gs:[16],    r11         ; StackLimit = 커스텀 스택 Limit (초기 커밋)
+    ; --- 코루틴 스택 진입 ([코루틴-01] 가짜 프레임 + 반환주소 0) ---
+    ; call 대신 push-trampoline + jmp 패턴은 유지하되, 언와인더가 멈출 수 있게
+    ; 트램폴린 아래에 가짜 프레임(40, .allocstack과 일치)과 반환주소 0을 깐다.
+    mov     rsp,        r10             ; RSP = pStackBase_ (0 mod 16)
+    push    0                           ; 가짜 반환주소 = 0 → 언와인더 종료 (8 mod 16)
+    sub     rsp,        40              ; 트램폴린 프레임 (0 mod 16)
+    mov     [rsp+32],   rax             ; 트램폴린이 꺼내 쓸 ctx 백업
 
-    ; 커스텀 스택으로 전환 후 fn() 호출
-    ; call 대신 push-trampoline + jmp 패턴:
-    ;   - fn() 정상 종료 시 CoFnEndTrampoline으로 복귀
-    ;   - 마지막으로 재개한 컨텍스트(CoRun/CoResume)의 YIELD로 올바르게 점프
-    ;   - 스택 레이아웃은 call과 동일 (push r11 + jmp = 호출 효과)
-    mov     rsp,        r10             ; 코루틴 스택으로 전환 (RSP = pStackBase_, 0 mod 16)
-
-    ; CoOnBeforeLaunch(CoContext*) — fn() 실행 직전
-    ;   push rax  → RSP = pStackBase_-8  (8 mod 16)
-    ;   sub  rsp, 40 (shadow 32 + align 8) → RSP = pStackBase_-48 (0 mod 16) ✓
-    push    rax
+    ; CoOnBeforeLaunch(CoContext*) — CoEntry 실행 직전
+    ;   call이 미는 반환주소는 base-56에 얹히고, [rsp+32] 백업은 shadow 밖에 있어 안전.
     mov     rcx,        rax
-    sub     rsp,        40
-    call    CoOnBeforeLaunch
-    add     rsp,        40
-    pop     rax                         ; rax = CoContext* 복원, RSP = pStackBase_ (0 mod 16)
+    call    CoOnBeforeLaunch            ; 진입 rsp = base-56 (8 mod 16) ✓
+    mov     rax,        [rsp+32]        ; rax = CoContext* 복원, RSP = pStackBase_-48
 
-    sub     rsp,        32                  ; shadow space for fn()
-    mov     r10,        [rax + OFFSET_COCTX_FN]
-    lea     r11,        CoFnEndTrampoline
-    push    r11                             ; "return address" = trampoline
-    mov     rcx,        rax                 ; arg: CoContext* (rax는 push r11에 의해 불변)
-    jmp     r10                             ; fn(CoContext*)
+    ; [코루틴-01] fn_ 대신 CoEntry로 점프. fn의 예외는 CoEntry가 잡아 둔다.
+    lea     r10,        CoEntry
+    lea     r11,        CoFnEndTrampoline_Resume
+    push    r11                         ; CoEntry의 반환주소 = 트램폴린 본문 (8 mod 16)
+    mov     rcx,        rax             ; arg: CoContext*
+    jmp     r10                         ; CoEntry(CoContext*)
 
 YIELD:
     ; 컨텍스트 스택 활성화 상태
@@ -326,11 +349,16 @@ CoRun endp
 ; [코루틴-07] 기존 CoYield를 C++ 인라인 래퍼 뒤로 숨긴다.
 ; - 코루틴 밖에서 호출하면 null 컨텍스트를 역참조해 크래시나므로,
 ;   헤더의 inline CoYield()가 먼저 검사하고 여기서부터는 항상 유효한 호출이다.
-CoYieldImpl proc
+CoYieldImpl proc FRAME
     push    rbp
+    .pushreg rbp
     push    rbx
+    .pushreg rbx
     mov     rbp,    rsp
+    .setframe rbp, 0
     sub     rsp,    8 + 32  ; align 8(push를 2번 했으므로.. 3번하면 16, 4번하면 24), shadow space for 32 byte
+    .allocstack 40
+    .endprolog
 
     ; 현재 실행 중인 코루틴 컨텍스트 취득 (O(1) thread_local)
     call    CoCurrentCtx            ; 인자 없음, shadow space 기할당
@@ -348,14 +376,19 @@ CoYieldImpl proc
 
     ; 컨텍스트 스위치 수행
 
-    ; StackBase, StackLimit xchg
-    mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS8]
-    xchg    r10,    gs:[8]
+    ; StackBase mov 교환 (r10/r11만 사용. LOCK이 걸리는 xchg mem 대신)
+    mov     r10,    gs:[8]                                      ; 현재(코루틴)
+    mov     r11,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS8] ; 저장(스레드)
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS8],  r10
+    mov     gs:[8], r11
 
+    ; StackLimit: 현재(코루틴) 한계를 stack_에 동기화 후 스레드 값 복원 ([코루틴-03])
+    ; - 커널이 가드 폴트를 직접 확장할 수 있어 pStackLimit_가 뒤처질 수 있으므로,
+    ;   yield 시점에 살아있는 TEB 값을 기준으로 맞춘다. resume은 이 값을 읽는다.
+    mov     r10,    gs:[16]
+    mov     [rax + OFFSET_COCTX_STACK + OFFSET_COSTACK_STACKLIMIT], r10
     mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS16]
-    xchg    r10,    gs:[16]
-    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS16], r10
+    mov     gs:[16], r10
 
     lea     rbx,    FIN
     xchg    rbx,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RIP]
@@ -437,6 +470,19 @@ CoYieldImpl proc
     movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15],   xmm15
     movaps  xmm15,  xmm0
 
+    ; [코루틴-08] MXCSR/x87 교환 (현재 부동소수점 상태를 저장하고 상대 값을 로드)
+    ; - x87 예외는 기본 마스크되어 있어 fldcw 전 fnclex가 필요 없다.
+    sub     rsp, 8
+    stmxcsr [rsp]
+    fnstcw  [rsp+4]
+    ldmxcsr [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_MXCSR]
+    fldcw   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_FPUCW]
+    mov     r10d, [rsp]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_MXCSR], r10d
+    mov     r10w, [rsp+4]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_FPUCW], r10w
+    add     rsp, 8
+
     mov     dword ptr[rax + OFFSET_COCTX_STATE],              csYield
     jmp     rbx
 
@@ -447,11 +493,16 @@ FIN:
     ret
 CoYieldImpl endp
 
-CoResume proc
+CoResume proc FRAME
     push    rbp
+    .pushreg rbp
     push    rbx
+    .pushreg rbx
     mov     rbp,    rsp
+    .setframe rbp, 0
     sub     rsp,    8 + 32  ; align 8(push를 2번 했으므로.. 3번하면 16, 4번하면 24), shadow space for 32 byte
+    .allocstack 40
+    .endprolog
 
     cmp     rcx,    0
     jz      FIN
@@ -469,15 +520,18 @@ CoResume proc
     push    rcx                     ; CoContext 포인터 백업 (컨텍스트 스택)
     mov     rax,    rcx
 
-    ; StackBase 복원 및 백업
-    mov     rbx,        gs:[8]
-    xchg    rbx,        [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS8]
-    mov	    gs:[8],     rbx
+    ; StackBase mov 교환 (스레드 값 저장 + 코루틴 값 설치)
+    mov     r10,        gs:[8]
+    mov     r11,        [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS8]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS8],     r10
+    mov	    gs:[8],     r11
 
-    ; StackLimit 복원 및 백업
-    mov     rbx,        gs:[16]
-    xchg    rbx,        [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS16]
-    mov     gs:[16],    rbx
+    ; StackLimit 스레드 값 저장 + 코루틴 현재값 로드
+    ; ([코루틴-03] yield 시점에 동기화된 한계를 읽는다. VEH 확장이 있으면 그 값)
+    mov     r11,        gs:[16]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS16],    r11
+    mov     r11,        [rax + OFFSET_COCTX_STACK + OFFSET_COSTACK_STACKLIMIT]
+    mov     gs:[16],    r11
 
     ; rbp xchg
     mov     rbx,        [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RBP]
@@ -549,6 +603,18 @@ CoResume proc
     movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15]
     movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15],   xmm15
     movaps  xmm15,  xmm0
+
+    ; [코루틴-08] MXCSR/x87 교환 (CoYieldImpl과 동일. rsp 전환 전에 임시 8바이트 사용)
+    sub     rsp, 8
+    stmxcsr [rsp]
+    fnstcw  [rsp+4]
+    ldmxcsr [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_MXCSR]
+    fldcw   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_FPUCW]
+    mov     r10d, [rsp]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_MXCSR], r10d
+    mov     r10w, [rsp+4]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_FPUCW], r10w
+    add     rsp, 8
 
     ; rsp & rip 복구 (코루틴의 저장된 값)
     mov     r10,        [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RSP]

@@ -145,6 +145,10 @@ struct CoRegs
 	// 스위칭전 TEB의 gs:[8]과 gs:[16]에 저장된 StackBase와 StackLimit을 보관하는 용도
 	_u64 gs8_  = 0;		// offset 24  TEB StackBase:  0x8
 	_u64 gs16_ = 0;		// offset 32  TEB StackLimit: 0x10
+	// [코루틴-02] TEB DeallocationStack(TEB+0x1478)은 교체하지 않는다.
+	// - 교체하면 커널 페이지폴트 핸들러가 코루틴 가드 폴트를 스레드 스택 확장으로
+	//   오인해 직접 커밋해 버리고 VEH가 호출되지 않는다. (실측으로 확인됨)
+	// - 따라서 StackBase/Limit만 교체하고, DeallocationStack은 스레드 원본을 둔다.
 
 	// Windows x64 callee-saved 정수 레지스터
 	_u64 rsi_  = 0;		// offset 40
@@ -154,18 +158,24 @@ struct CoRegs
 	_u64 r14_  = 0;		// offset 72
 	_u64 r15_  = 0;		// offset 80
 
+	// [코루틴-08] 부동소수점 제어 상태. Win x64 ABI에서 callee-saved이므로 교체한다.
+	// - 코루틴이 반올림 모드를 바꾸고 yield하면 다른 코루틴까지 영향을 받는다.
+	_u32 mxcsr_ = 0x1F80;	// offset  88
+	_u16 fpucw_ = 0x027F;	// offset  92
+	_u16 _padFp_ = 0;		// offset  94
+
 	// Windows x64 callee-saved XMM 레지스터 (16 bytes each, 8-byte aligned)
-	_u8 xmm6_[16]  = {};	// offset  88
-	_u8 xmm7_[16]  = {};	// offset 104
-	_u8 xmm8_[16]  = {};	// offset 120
-	_u8 xmm9_[16]  = {};	// offset 136
-	_u8 xmm10_[16] = {};	// offset 152
-	_u8 xmm11_[16] = {};	// offset 168
-	_u8 xmm12_[16] = {};	// offset 184
-	_u8 xmm13_[16] = {};	// offset 200
-	_u8 xmm14_[16] = {};	// offset 216
-	_u8 xmm15_[16] = {};	// offset 232
-	// sizeof(CoRegs) = 248
+	_u8 xmm6_[16]  = {};	// offset  96
+	_u8 xmm7_[16]  = {};	// offset 112
+	_u8 xmm8_[16]  = {};	// offset 128
+	_u8 xmm9_[16]  = {};	// offset 144
+	_u8 xmm10_[16] = {};	// offset 160
+	_u8 xmm11_[16] = {};	// offset 176
+	_u8 xmm12_[16] = {};	// offset 192
+	_u8 xmm13_[16] = {};	// offset 208
+	_u8 xmm14_[16] = {};	// offset 224
+	_u8 xmm15_[16] = {};	// offset 240
+	// sizeof(CoRegs) = 256
 };
 
 using FnCoroutine = void(*)(CoContext*);
@@ -233,7 +243,8 @@ public:
 	bool		TryFindStackByAddr(char* _pAddr, OUT CoStack** _pOut);
 
 	// ── 공통 ──────────────────────────────────────────────────────────────────
-	bool		ExpandStack(CoStack* _pStack, char* _pFaultAddr);
+	// [코루틴-03] 확장과 함께 TEB StackLimit을 갱신해야 해서 컨텍스트를 받는다.
+	bool		ExpandStack(CoContext* _pCtx, char* _pFaultAddr);
 	void		DumpStack(CoStack* _pStack, const char* _pTitle = nullptr);
 	void		Clear();
 
@@ -248,6 +259,9 @@ public:
 	// - 작은 custom 요청은 티어로 올리되 크기도 티어 크기로 맞춰 풀 오염을 막고,
 	//   진짜 큰 custom은 페이지 단위로 올림해 풀에 넣지 않는다.
 	static bool ResolveTier(CoStackTier _tier, _u32 _size, OUT CoStackTier* _pTier, OUT _u32* _pSize);
+
+	// [코루틴-08] CET(User Shadow Stack)가 켜져 있는지 확인한다.
+	static bool IsShadowStackEnabled();
 
 	// 테스트 전용: 내부 파라미터를 외부에서 설정한다.
 	void		SetPageInitCount(_u32 _count) { pageInitCount_ = _count; }
@@ -296,6 +310,17 @@ extern "C"
 	bool		CPP_CALL CoValidateResume(CoContext* _pCtx);
 	// [코루틴-05] 핸들이 살아있는지 검사하고 resume한다. (죽은 핸들은 coeStaleHandle)
 	CoContext*	CPP_CALL CoResumeH(CoHandle _h);
+
+	// [코루틴-01] 코루틴 진입점. fn을 noexcept 경계 안에서 호출하고,
+	// 빠져나온 예외는 보관해 둔다. (asm이 fn_ 대신 이 함수로 점프한다)
+	void		CPP_CALL CoEntry(CoContext* _pCtx) noexcept;
+	// [코루틴-01] 보관된 예외가 있으면 스케줄러 스택에서 다시 던진다. (1회성)
+	// - 던지는 동안 보관 소유권을 유지해야 해서 take 뒤에도 보관분이 남는다.
+	//   catch 뒤에는 CoClearPendingException()으로 버릴 것. (잊어도 다음
+	//   코루틴 시작 시 정리되지만, 그 전 take는 묵은 예외를 던지므로 주의)
+	bool		CPP_CALL CoTakePendingException();
+	// [코루틴-01] 보관된 예외를 버린다. (catch 뒤 호출)
+	void		CPP_CALL CoClearPendingException();
 }
 
 // [코루틴-07] 코루틴 밖(스레드 스택)에서 CoYield를 호출하면 asm이 null 컨텍스트를
@@ -315,6 +340,26 @@ inline CoHandle CoRunH(FnCoroutine _fn, CoStackTier _tier = cstMid, _u32 _size =
 {
 	CoContext* pCtx = CoRun(_fn, _tier, _size);
 	return pCtx ? CoHandle{ pCtx, pCtx->generation_ } : CoHandle{};
+}
+
+// [코루틴-01] 예외를 스케줄러 스택에서 안전하게 받는다.
+// - fn이 예외를 던지면 코루틴은 종료되고 CoRun/CoResume은 nullptr을 돌려준다.
+//   보관된 예외는 여기서 다시 던져진다. (받을 사람이 없는 스택 밖 전파 대신)
+inline CoContext* CoRunChecked(FnCoroutine _fn, CoStackTier _tier = cstMid, _u32 _size = 0)
+{
+	CoContext* pCtx = CoRun(_fn, _tier, _size);
+	if (pCtx == nullptr)
+		CoTakePendingException();
+	return pCtx;
+}
+
+// [코루틴-01] CoRunChecked의 resume 버전.
+inline CoContext* CoResumeChecked(CoContext* _pCtx)
+{
+	CoContext* pRet = CoResume(_pCtx);
+	if (pRet == nullptr)
+		CoTakePendingException();
+	return pRet;
 }
 
 LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp);
