@@ -230,15 +230,6 @@
     <Filter Include="IO">
       <UniqueIdentifier>{bbbbbbbb-cccc-dddd-eeee-ffffffffffff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="IO\Engine">
-      <UniqueIdentifier>{d4e5f6a7-b8c9-0123-def0-123456789abc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="IO\Files">
-      <UniqueIdentifier>{e5f6a7b8-c9d0-1234-ef01-123456789012}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="IO\Http">
-      <UniqueIdentifier>{f6a7b8c9-d0e1-2345-f012-234567890123}</UniqueIdentifier>
-    </Filter>
     <Filter Include="PCH">
       <UniqueIdentifier>{80a5ce19-c26c-4777-a2cc-d2ef50485e33}</UniqueIdentifier>
     </Filter>
