@@ -23,6 +23,7 @@
     <ClCompile Include="..\Sources\jcr\05_PageGuard.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine_CoBasic.cpp" />
+    <ClInclude Include="..\Sources\jcr\06_Coroutine_Menu.h" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine_07_ErrorVeh.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine_05_Safety.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine_06_Custom.cpp" />

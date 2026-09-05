@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jcr\Core.h" />
+    <ClInclude Include="..\Sources\jcr\06_Coroutine_Menu.h" />
   </ItemGroup>
   <ItemGroup>
     <MASM Include="..\Sources\jcr\01_AsmStudy2.asm" />

@@ -1,4 +1,5 @@
 #include "Core.h"
+#include "06_Coroutine_Menu.h"
 
 static auto fn_running_thread = []
 {
@@ -68,9 +69,51 @@ int main(int _argc, char** _argv)
 	pRoot->Add("5", "PageGuard - 페이지 가드 터치",
 		CONSOLE_MENU_ACTION(call_05_PageGuard(_argc, _argv))
 	);
-	pRoot->Add("6", "Coroutine - 코루틴 연구",
+
+	// 6. 코루틴은 별도 서브메뉴로 묶는다. (선택하면 코루틴 예제만 나옴)
+	ConsoleMenuItem* pCoroutine = nullptr;
+	pRoot->AddMenu("6", "Coroutine - 코루틴 연구", pCoroutine);
+	pCoroutine->AddHeader(
+		"========================================\n"
+		"           코루틴 예제 메뉴\n"
+		"========================================");
+	pCoroutine->Add("1", "Coroutine 기초 TC",
+		CONSOLE_MENU_ACTION(Test_CoBasic())
+	);
+	pCoroutine->Add("2", "07 에러보고 + VEH 자동등록",
+		CONSOLE_MENU_ACTION(Test_Co07_ErrorVeh())
+	);
+	pCoroutine->Add("3", "05 CoResume 안전장치 + 세대핸들",
+		CONSOLE_MENU_ACTION(Test_Co05_ResumeSafety())
+	);
+	pCoroutine->Add("4", "06 cstCustom 크기정규화",
+		CONSOLE_MENU_ACTION(Test_Co06_CustomTier())
+	);
+	pCoroutine->Add("5", "01 예외 전파 방어",
+		CONSOLE_MENU_ACTION(Test_Co01_Exception())
+	);
+	pCoroutine->Add("6", "02 TEB 스택 범위",
+		CONSOLE_MENU_ACTION(Test_Co02_Teb())
+	);
+	pCoroutine->Add("7", "03 StackLimit 동기화",
+		CONSOLE_MENU_ACTION(Test_Co03_StackLimit())
+	);
+	pCoroutine->Add("8", "08 MXCSR 보존",
+		CONSOLE_MENU_ACTION(Test_Co08_Mxcsr())
+	);
+	pCoroutine->Add("9", "04 오버플로우 EmergencyPages",
+		CONSOLE_MENU_ACTION(Test_Co04_Emergency())
+	);
+	pCoroutine->Add("10", "15 VEH 자체 방어",
+		CONSOLE_MENU_ACTION(Test_Co15_VehDefense())
+	);
+	pCoroutine->Add("11", "14 API 편의성",
+		CONSOLE_MENU_ACTION(Test_Co14_Api())
+	);
+	pCoroutine->Add("12", "전체 실행",
 		CONSOLE_MENU_ACTION(call_06_Coroutine(_argc, _argv))
 	);
+	pCoroutine->AddBack("0", "뒤로");
 	pRoot->AddBack("0", "종료");
 
 	// ====================================================
