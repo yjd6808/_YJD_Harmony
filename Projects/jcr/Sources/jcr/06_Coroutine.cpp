@@ -9,6 +9,7 @@ extern void Test_Co01_Exception();
 extern void Test_Co02_Teb();
 extern void Test_Co03_StackLimit();
 extern void Test_Co08_Mxcsr();
+extern void Test_Co04_Emergency();
 
 //////////////////////////////////////////////////////////////////////////////////////////
 int call_06_Coroutine(int _argc, char** _argv)
@@ -22,6 +23,7 @@ int call_06_Coroutine(int _argc, char** _argv)
 	Test_Co02_Teb();
 	Test_Co03_StackLimit();
 	Test_Co08_Mxcsr();
+	Test_Co04_Emergency();
 
 	return 0;
 }

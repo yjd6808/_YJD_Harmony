@@ -49,6 +49,10 @@ CoStack struct 8
     stackTier_   DWORD   ?
     _pad1_       DWORD   ?
     magic_       QWORD   ?           ; [코루틴-05] 스택 식별 매직 (C++ CoStack과 순서/크기 일치)
+    pEmergencyTop_ QWORD ?           ; [코루틴-04] 비상 밴드 상단 (C++와 일치)
+    pReserveBase_ QWORD  ?           ; [코루틴-04] 예약 시작 주소 (C++와 일치)
+    overflowed_  BYTE    ?           ; [코루틴-04] 오버플로우 처리 여부 (C++와 일치)
+    _pad2_       BYTE    7 dup(?)    ; sizeof(CoStack) = 80
 CoStack ends
 
 OFFSET_COSTACK_SIZE        EQU CoStack.size_
@@ -60,6 +64,9 @@ OFFSET_COSTACK_STACKLIMIT  EQU CoStack.pStackLimit_
 OFFSET_COSTACK_GUARDLIMIT  EQU CoStack.pGuardLimit_
 OFFSET_COSTACK_STACKTIER   EQU CoStack.stackTier_
 OFFSET_COSTACK_MAGIC       EQU CoStack.magic_
+OFFSET_COSTACK_EMERGENCYTOP EQU CoStack.pEmergencyTop_
+OFFSET_COSTACK_RESERVEBASE EQU CoStack.pReserveBase_
+OFFSET_COSTACK_OVERFLOWED  EQU CoStack.overflowed_
 
 ; ============================================================
 CoRegs struct 8
@@ -69,33 +76,33 @@ CoRegs struct 8
 
     gs8_    QWORD   ?           ; offset  24  TEB StackBase:  0x8
     gs16_   QWORD   ?           ; offset  32  TEB StackLimit: 0x10
-    ; [코루틴-02] DeallocationStack은 교체하지 않으므로 필드 없음 (C++와 일치)
+    gs1478_ QWORD   ?           ; offset  40  TEB DeallocationStack: 0x1478 [코루틴-02/04]
 
     ; Windows x64 callee-saved 정수 레지스터
-    rsi_    QWORD   ?           ; offset  40
-    rdi_    QWORD   ?           ; offset  48
-    r12_    QWORD   ?           ; offset  56
-    r13_    QWORD   ?           ; offset  64
-    r14_    QWORD   ?           ; offset  72
-    r15_    QWORD   ?           ; offset  80
+    rsi_    QWORD   ?           ; offset  48
+    rdi_    QWORD   ?           ; offset  56
+    r12_    QWORD   ?           ; offset  64
+    r13_    QWORD   ?           ; offset  72
+    r14_    QWORD   ?           ; offset  80
+    r15_    QWORD   ?           ; offset  88
 
     ; [코루틴-08] 부동소수점 제어 상태 (C++ CoRegs와 순서/크기 일치)
-    mxcsr_  DWORD   ?           ; offset  88
-    fpucw_  WORD    ?           ; offset  92
-    _padFp_ WORD    ?           ; offset  94
+    mxcsr_  DWORD   ?           ; offset  96
+    fpucw_  WORD    ?           ; offset 100
+    _padFp_ WORD    ?           ; offset 102
 
     ; Windows x64 callee-saved XMM 레지스터 (16 bytes each, 8-byte aligned)
-    xmm6_   BYTE    16 dup(?)   ; offset  96
-    xmm7_   BYTE    16 dup(?)   ; offset 112
-    xmm8_   BYTE    16 dup(?)   ; offset 128
-    xmm9_   BYTE    16 dup(?)   ; offset 144
-    xmm10_  BYTE    16 dup(?)   ; offset 160
-    xmm11_  BYTE    16 dup(?)   ; offset 176
-    xmm12_  BYTE    16 dup(?)   ; offset 192
-    xmm13_  BYTE    16 dup(?)   ; offset 208
-    xmm14_  BYTE    16 dup(?)   ; offset 216
-    xmm15_  BYTE    16 dup(?)   ; offset 232
-    ; sizeof(CoRegs) = 256 (C++와 EQU로 일치. 어긋나면 09의 static_assert가 잡음)
+    xmm6_   BYTE    16 dup(?)   ; offset 104
+    xmm7_   BYTE    16 dup(?)   ; offset 120
+    xmm8_   BYTE    16 dup(?)   ; offset 136
+    xmm9_   BYTE    16 dup(?)   ; offset 152
+    xmm10_  BYTE    16 dup(?)   ; offset 168
+    xmm11_  BYTE    16 dup(?)   ; offset 184
+    xmm12_  BYTE    16 dup(?)   ; offset 200
+    xmm13_  BYTE    16 dup(?)   ; offset 216
+    xmm14_  BYTE    16 dup(?)   ; offset 232
+    xmm15_  BYTE    16 dup(?)   ; offset 248
+    ; sizeof(CoRegs) = 264 (C++와 EQU로 일치. 어긋나면 09의 static_assert가 잡음)
 
 CoRegs ends
 
@@ -104,6 +111,7 @@ OFFSET_COREGS_RSP   EQU CoRegs.rsp_
 OFFSET_COREGS_RBP   EQU CoRegs.rbp_
 OFFSET_COREGS_GS8   EQU CoRegs.gs8_
 OFFSET_COREGS_GS16  EQU CoRegs.gs16_
+OFFSET_COREGS_GS1478 EQU CoRegs.gs1478_
 OFFSET_COREGS_RSI   EQU CoRegs.rsi_
 OFFSET_COREGS_RDI   EQU CoRegs.rdi_
 OFFSET_COREGS_R12   EQU CoRegs.r12_
@@ -180,11 +188,14 @@ CoFnEndTrampoline_Resume::
     int     3                           ; 코루틴 스택에서 컨텍스트를 찾지 못함
 CTX_OK:
 
-    ; 스레드 TEB 복원 (StackBase/Limit. DeallocationStack은 교체하지 않음 [코루틴-02])
+    ; 스레드 TEB 복원 (StackBase/Limit + DeallocationStack)
     mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS8]
     mov     gs:[8],  r10
     mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS16]
     mov     gs:[16], r10
+    ; [코루틴-02/04] DeallocationStack 복원 (비상 밴드 상단으로 설치했던 값)
+    mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS1478]
+    mov     gs:[TEB_DEALLOCATION_STACK], r10
 
     ; [코루틴-08] 스레드 부동소수점 제어 상태 복원
     ldmxcsr [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_MXCSR]
@@ -255,6 +266,8 @@ ALLOC_OK:
     mov     r11,    gs:[16]         ; 기존 StackLimit 저장
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS8],     r10
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS16],    r11
+    mov     r10,    gs:[TEB_DEALLOCATION_STACK] ; 기존 DeallocationStack 저장
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS1478],  r10
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RSP],     rsp
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RIP],     rbx
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RBP],     rbp
@@ -290,9 +303,11 @@ ALLOC_OK:
     mov     r11,   [rax + OFFSET_COCTX_STACK + OFFSET_COSTACK_STACKLIMIT]
     mov     gs:[8],     r10         ; StackBase  = 코루틴 스택 Base (r10은 아래 rsp 전환에 재사용)
     mov     gs:[16],    r11         ; StackLimit = 코루틴 스택 Limit (초기 커밋)
-    ; [코루틴-02] DeallocationStack은 교체하지 않는다.
-    ; - 교체하면 커널이 코루틴 가드 폴트를 스레드 스택 확장으로 직접 처리해
-    ;   VEH가 호출되지 않는다. (실측으로 확인됨)
+    ; [코루틴-02/04] DeallocationStack = 비상 밴드 상단.
+    ; - 예약 하단을 설치하면 커널이 가드 폴트를 직접 확장해 VEH가 안 불리므로(실측),
+    ;   밴드 상단을 경계로 둔다. 그 아래는 커널이 오버플로우로 확정한다.
+    mov     r11,   [rax + OFFSET_COCTX_STACK + OFFSET_COSTACK_EMERGENCYTOP]
+    mov     gs:[TEB_DEALLOCATION_STACK], r11
 
     ; --- 코루틴 스택 진입 ([코루틴-01] 가짜 프레임 + 반환주소 0) ---
     ; call 대신 push-trampoline + jmp 패턴은 유지하되, 언와인더가 멈출 수 있게
@@ -389,6 +404,12 @@ CoYieldImpl proc FRAME
     mov     [rax + OFFSET_COCTX_STACK + OFFSET_COSTACK_STACKLIMIT], r10
     mov     r10,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS16]
     mov     gs:[16], r10
+
+    ; DeallocationStack mov 교환 ([코루틴-02/04] 비상 밴드 상단 ↔ 스레드 값)
+    mov     r10,    gs:[TEB_DEALLOCATION_STACK]
+    mov     r11,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS1478]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS1478], r10
+    mov     gs:[TEB_DEALLOCATION_STACK], r11
 
     lea     rbx,    FIN
     xchg    rbx,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RIP]
@@ -532,6 +553,12 @@ CoResume proc FRAME
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS16],    r11
     mov     r11,        [rax + OFFSET_COCTX_STACK + OFFSET_COSTACK_STACKLIMIT]
     mov     gs:[16],    r11
+
+    ; DeallocationStack mov 교환 ([코루틴-02/04] 비상 밴드 상단 ↔ 스레드 값)
+    mov     r10,        gs:[TEB_DEALLOCATION_STACK]
+    mov     r11,        [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS1478]
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS1478],  r10
+    mov     gs:[TEB_DEALLOCATION_STACK], r11
 
     ; rbp xchg
     mov     rbx,        [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RBP]

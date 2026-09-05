@@ -17,6 +17,7 @@
     <ClCompile Include="..\Sources\jcr\06_Coroutine_02_Teb.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine_03_StackLimit.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine_08_Mxcsr.cpp" />
+    <ClCompile Include="..\Sources\jcr\06_Coroutine_04_Emergency.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jcr\Core.h" />

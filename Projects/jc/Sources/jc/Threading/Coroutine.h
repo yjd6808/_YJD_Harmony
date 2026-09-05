@@ -28,6 +28,12 @@
 
 #define CO_STACK_MAGIC			0x1F04210951DFBEE
 
+// [코루틴-04] 비상 패드 페이지 수. 오버플로우 때 SEH 디스패치가 돌 공간이다.
+// - 예약 하단(pStackEnd_) 아래에 미리 RW 커밋해 둔다.
+// - 오버플로우 폴트 때 RSP는 예약 하단 근처라 그 아래가 비어 있으면 배달 자체가
+//   죽으므로, 패드가 배달 공간을 보장한다. (스레드 스택 개런티와 같은 역할)
+#define CO_PAGE_EMERGENCY_COUNT	4
+
 // [코루틴-06] 스택 한 장이 최소 몇 페이지여야 하는지 계산한다.
 // (오버플로우 가드 1 + 비상 N + 가드 + 초기 커밋)
 // - 현재 cstLow(16KB=4p)는 1+0+3+2=6p를 담지 못하므로 InitStack이 가드존을
@@ -134,6 +140,16 @@ struct CoStack
 	// [코루틴-05] 스택 식별 매직. 풀에 있거나 해제된 메모리를 가리키는
 	// 잘못된 컨텍스트를 resume 전에 가려내기 위해 사용한다.
 	_u64		magic_			= 0;
+	// [코루틴-04] 비상 밴드 상단. 일반 확장이 내려갈 수 있는 하한이다.
+	// - pStackEnd_ + PAGE 지점이다. (오버플로우 가드 1페이지 바로 위)
+	// - TEB DeallocationStack에도 이 값을 설치해, 그 아래는 커널이
+	//   스택 오버플로우로 확정하게 한다.
+	char*		pEmergencyTop_	= nullptr;
+	// [코루틴-04] 예약 시작 주소. (아래 패드 때문에 pStackEnd_와 다르다)
+	// - 해제(MEM_RELEASE)는 여기서부터 해야 한다.
+	char*		pReserveBase_	= nullptr;
+	// [코루틴-04] 비상 밴드가 이미 오버플로우 처리에 쓰였는지 여부.
+	bool		overflowed_		= false;
 };
 
 struct CoRegs
@@ -145,37 +161,38 @@ struct CoRegs
 	// 스위칭전 TEB의 gs:[8]과 gs:[16]에 저장된 StackBase와 StackLimit을 보관하는 용도
 	_u64 gs8_  = 0;		// offset 24  TEB StackBase:  0x8
 	_u64 gs16_ = 0;		// offset 32  TEB StackLimit: 0x10
-	// [코루틴-02] TEB DeallocationStack(TEB+0x1478)은 교체하지 않는다.
-	// - 교체하면 커널 페이지폴트 핸들러가 코루틴 가드 폴트를 스레드 스택 확장으로
-	//   오인해 직접 커밋해 버리고 VEH가 호출되지 않는다. (실측으로 확인됨)
-	// - 따라서 StackBase/Limit만 교체하고, DeallocationStack은 스레드 원본을 둔다.
+	// [코루틴-02/04] TEB DeallocationStack (TEB+0x1478) 보관용.
+	// - 예약 하단이 아니라 비상 밴드 상단(pEmergencyTop_)을 설치한다.
+	//   예약 하단을 설치하면 커널이 가드 폴트를 직접 확장해 VEH가 안 불리고,
+	//   밴드 상단을 경계로 두면 그 아래는 커널이 스택 오버플로우로 확정한다.
+	_u64 gs1478_ = 0;	// offset 40  TEB DeallocationStack: 0x1478
 
 	// Windows x64 callee-saved 정수 레지스터
-	_u64 rsi_  = 0;		// offset 40
-	_u64 rdi_  = 0;		// offset 48
-	_u64 r12_  = 0;		// offset 56
-	_u64 r13_  = 0;		// offset 64
-	_u64 r14_  = 0;		// offset 72
-	_u64 r15_  = 0;		// offset 80
+	_u64 rsi_  = 0;		// offset 48
+	_u64 rdi_  = 0;		// offset 56
+	_u64 r12_  = 0;		// offset 64
+	_u64 r13_  = 0;		// offset 72
+	_u64 r14_  = 0;		// offset 80
+	_u64 r15_  = 0;		// offset 88
 
 	// [코루틴-08] 부동소수점 제어 상태. Win x64 ABI에서 callee-saved이므로 교체한다.
 	// - 코루틴이 반올림 모드를 바꾸고 yield하면 다른 코루틴까지 영향을 받는다.
-	_u32 mxcsr_ = 0x1F80;	// offset  88
-	_u16 fpucw_ = 0x027F;	// offset  92
-	_u16 _padFp_ = 0;		// offset  94
+	_u32 mxcsr_ = 0x1F80;	// offset  96
+	_u16 fpucw_ = 0x027F;	// offset 100
+	_u16 _padFp_ = 0;		// offset 102
 
 	// Windows x64 callee-saved XMM 레지스터 (16 bytes each, 8-byte aligned)
-	_u8 xmm6_[16]  = {};	// offset  96
-	_u8 xmm7_[16]  = {};	// offset 112
-	_u8 xmm8_[16]  = {};	// offset 128
-	_u8 xmm9_[16]  = {};	// offset 144
-	_u8 xmm10_[16] = {};	// offset 160
-	_u8 xmm11_[16] = {};	// offset 176
-	_u8 xmm12_[16] = {};	// offset 192
-	_u8 xmm13_[16] = {};	// offset 208
-	_u8 xmm14_[16] = {};	// offset 224
-	_u8 xmm15_[16] = {};	// offset 240
-	// sizeof(CoRegs) = 256
+	_u8 xmm6_[16]  = {};	// offset 104
+	_u8 xmm7_[16]  = {};	// offset 120
+	_u8 xmm8_[16]  = {};	// offset 136
+	_u8 xmm9_[16]  = {};	// offset 152
+	_u8 xmm10_[16] = {};	// offset 168
+	_u8 xmm11_[16] = {};	// offset 184
+	_u8 xmm12_[16] = {};	// offset 200
+	_u8 xmm13_[16] = {};	// offset 216
+	_u8 xmm14_[16] = {};	// offset 232
+	_u8 xmm15_[16] = {};	// offset 248
+	// sizeof(CoRegs) = 264
 };
 
 using FnCoroutine = void(*)(CoContext*);
@@ -245,6 +262,8 @@ public:
 	// ── 공통 ──────────────────────────────────────────────────────────────────
 	// [코루틴-03] 확장과 함께 TEB StackLimit을 갱신해야 해서 컨텍스트를 받는다.
 	bool		ExpandStack(CoContext* _pCtx, char* _pFaultAddr);
+	// [코루틴-04] 오버플로우를 잡은 뒤 가드존을 다시 세운다. (실패 시 false)
+	bool		ResetOverflow();
 	void		DumpStack(CoStack* _pStack, const char* _pTitle = nullptr);
 	void		Clear();
 
@@ -263,10 +282,15 @@ public:
 	// [코루틴-08] CET(User Shadow Stack)가 켜져 있는지 확인한다.
 	static bool IsShadowStackEnabled();
 
+	// [코루틴-04] 비상 패드 페이지 수. 전체의 1/4을 넘지 않게 한다.
+	_u32		EmergencyPadPages(_u32 _totalPages) const;
+
 	// 테스트 전용: 내부 파라미터를 외부에서 설정한다.
 	void		SetPageInitCount(_u32 _count) { pageInitCount_ = _count; }
 	void		SetPageGuardCount(_u32 _count) { pageGuardCount_ = _count; }
 	void		SetPageGrowCount(_u32 _count) { pageGrowCount_ = _count; }
+	// [코루틴-04] 비상 페이지 수. 작은 스택에 다 안 들어가면 InitStack이 클램프한다.
+	void		SetPageEmergencyCount(_u32 _count) { pageEmergencyCount_ = _count; }
 
 private:
 	// [코루틴-07] 커밋 실패를 호출자에게 알리기 위해 bool을 돌려준다.
@@ -277,6 +301,8 @@ private:
 	_u32 pageInitCount_  = 2;
 	_u32 pageGuardCount_ = 3;
 	_u32 pageGrowCount_  = 2;	// 확장 시 한 번에 늘리는 페이지 수 (soft 오버플로우 방지 위해 1 이상 권장)
+	// [코루틴-04] 비상 페이지 수. 오버플로우 때 SEH 디스패치가 돌 공간이다.
+	_u32 pageEmergencyCount_ = CO_PAGE_EMERGENCY_COUNT;
 	_u32 nextId_         = 0;
 
 	jc::LinkedList<CoContext*>	  free_[cstReservedTierCount + 1];
@@ -321,6 +347,15 @@ extern "C"
 	bool		CPP_CALL CoTakePendingException();
 	// [코루틴-01] 보관된 예외를 버린다. (catch 뒤 호출)
 	void		CPP_CALL CoClearPendingException();
+
+	// [코루틴-04] 오버플로우를 잡은 뒤 계속 쓰려면 가드존을 다시 세운다.
+	// - 현재 rsp 아래에 여유가 있어야 하며, 실패하면 false. (그럼 종료할 것)
+	// - 성공해도 스택 위 객체들은 이미 망가졌을 수 있어 재개보다 종료를 권장한다.
+	bool		CPP_CALL CoResetStackOverflow();
+	// [코루틴-04] 커널이 올린 스택 오버플로우를 잡았다고 표시한다.
+	// - 커널이 직접 올린 오버플로우는 우리를 거치지 않으므로 __except 안에서
+	//   호출해 overflowed_를 찍는다. (CoResetStackOverflow의 전제 조건은 아님)
+	void		CPP_CALL CoNoteStackOverflow();
 }
 
 // [코루틴-07] 코루틴 밖(스레드 스택)에서 CoYield를 호출하면 asm이 null 컨텍스트를

@@ -85,6 +85,14 @@ bool CoMgr::IsShadowStackEnabled()
 	return false;
 }
 
+// [코루틴-04] 비상 패드 페이지 수. 전체의 1/4을 넘지 않게 한다.
+// - Low(4p)는 1장, Mid(16p)/High(64p)은 4장(기본값 상한)이 된다.
+_u32 CoMgr::EmergencyPadPages(_u32 _totalPages) const
+{
+	_u32 cap = _totalPages / 4;
+	return pageEmergencyCount_ < cap ? pageEmergencyCount_ : cap;
+}
+
 _u32 g_coNextId_ = 0;
 
 thread_local CoMgr g_cCoMgr;
@@ -100,22 +108,31 @@ bool CoMgr::InitStack(CoStack* _pStack)
 {
 	_pStack->pStackBase_ = _pStack->pStackEnd_ + _pStack->size_;
 
+	// [코루틴-04] 경계 확정.
+	// - pEmergencyTop_ = pStackEnd_ + PAGE. 이 아래는 일반 확장이 내려가지 못하고,
+	//   TEB DeallocationStack에도 이 값을 설치해 커널이 오버플로우로 확정하게 한다.
+	// - pReserveBase_ ~ pStackEnd_ = 비상 패드. 미리 RW 커밋해 둔다.
+	//   오버플로우 폴트 때 RSP는 예약 하단 근처라 그 아래가 비어 있으면 배달 자체가
+	//   죽으므로, 패드가 SEH 디스패치 공간을 보장한다.
+	_pStack->pEmergencyTop_ = _pStack->pStackEnd_ + CO_PAGE_SIZE;
+	_pStack->overflowed_    = false;
+
 	//  pStackBase_       ──────────────── (높은 주소, 초기 RSP)
 	//                    | init pages  |  ← pageInitCount_ 개 commit
 	//  pStackLimit_      ────────────────
 	//                    | guard pages |  ← pageGuardCount_ 개 commit + PAGE_GUARD
 	//  pGuardLimit_      ────────────────
 	//                    |  (reserve)  |
-	//  pStackEnd_        ──────────────── (낮은 주소)
+	//  pEmergencyTop_    ──────────────── ← 확장 하한 + 커널 오버플로우 경계
+	//                    | 오버플로우 가드 1페이지 (GUARD, 절대 해제 금지)
+	//  pStackEnd_        ────────────────
+	//                    | 비상 패드 N페이지 (RW, 디스패치용. 절대 건드리지 않음)
+	//  pReserveBase_     ──────────────── (낮은 주소, 예약 시작. 해제 기준점)
 
-	// 오버플로우 가드 페이지: pStackEnd_ ~ pStackEnd_+PAGE (영구 PAGE_GUARD, 절대 해제 금지)
-	// 이 페이지가 터치되면 CoVEH에서 STACK_OVERFLOW 예외로 변환한다.
-	char* pOverflowGuardTop = _pStack->pStackEnd_ + CO_PAGE_SIZE;
+	// init commit 영역: 비상 밴드 상단 미만으로 내려가지 않도록 클램프
 	char* pCommitAddr = _pStack->pStackBase_ - (pageInitCount_ * CO_PAGE_SIZE);
-	
-	// init commit 영역: pOverflowGuardTop 미만으로 내려가지 않도록 클램프
-	if (pCommitAddr < pOverflowGuardTop)
-		pCommitAddr = pOverflowGuardTop;
+	if (pCommitAddr < _pStack->pEmergencyTop_)
+		pCommitAddr = _pStack->pEmergencyTop_;
 
 	_u32 actualInitCount = (_u32)((_pStack->pStackBase_ - pCommitAddr) / CO_PAGE_SIZE);
 	if (actualInitCount > 0)
@@ -128,10 +145,10 @@ bool CoMgr::InitStack(CoStack* _pStack)
 		}
 	}
 
-	// guard 영역: pOverflowGuardTop 미만으로 내려가지 않도록 클램프
+	// guard 영역: 비상 밴드 상단 미만으로 내려가지 않도록 클램프
 	char* pGuardAddr = pCommitAddr - (pageGuardCount_ * CO_PAGE_SIZE);
-	if (pGuardAddr < _pStack->pStackEnd_)
-		pGuardAddr = _pStack->pStackEnd_;
+	if (pGuardAddr < _pStack->pEmergencyTop_)
+		pGuardAddr = _pStack->pEmergencyTop_;
 
 	// [코루틴-02] 성장 가드존은 PAGE_GUARD로 둔다.
 	// - NOACCESS로 두면 커널이 예외 배달용 CONTEXT를 유저 스택에 밀어넣지 못해
@@ -149,6 +166,31 @@ bool CoMgr::InitStack(CoStack* _pStack)
 
 	_pStack->pStackLimit_ = pCommitAddr;
 	_pStack->pGuardLimit_ = pGuardAddr;
+
+	// [코루틴-04] 오버플로우 가드 1페이지를 GUARD로 둔다. (절대 해제 금지)
+	// - NOACCESS로 두면 RSP가 바로 위에 있을 때 배달 push가 실패해 죽으므로
+	//   GUARD로 둔다. (배달 push가 가드를 자동 해제한다)
+	if (VirtualAlloc(_pStack->pStackEnd_, CO_PAGE_SIZE,
+		MEM_COMMIT, PAGE_READWRITE | PAGE_GUARD) == nullptr)
+	{
+		_LogError_("VirtualAlloc (overflow guard commit) failed. Error: %lu", GetLastError());
+		t_coLastError = coeCommitFailed;
+		return false;
+	}
+
+	// [코루틴-04] 비상 패드(예약 아래 N페이지)를 RW 커밋한다.
+	// - 패드 크기는 예약 때 정해진다. (pStackEnd_ - pReserveBase_)
+	if (_pStack->pReserveBase_ < _pStack->pStackEnd_)
+	{
+		if (VirtualAlloc(_pStack->pReserveBase_,
+			(SIZE_T)(_pStack->pStackEnd_ - _pStack->pReserveBase_),
+			MEM_COMMIT, PAGE_READWRITE) == nullptr)
+		{
+			_LogError_("VirtualAlloc (emergency pad commit) failed. Error: %lu", GetLastError());
+			t_coLastError = coeCommitFailed;
+			return false;
+		}
+	}
 	return true;
 }
 
@@ -182,14 +224,20 @@ bool CoMgr::AllocStack(OUT CoStack* _pStack, CoStackTier _stackTier, _u32 _stack
 		return false;
 	}
 
-	char* pBase = (char*)VirtualAlloc(nullptr, _stackSize, MEM_RESERVE, PAGE_NOACCESS);
+	// [코루틴-04] 예약 아래에 비상 패드를 덧붙인다. (오버플로우 배달 공간)
+	// - 패드는 스택 크기의 1/4을 넘지 않게 한다. (Low는 1장, Mid/High은 4장)
+	_u32 padPages = EmergencyPadPages(_stackSize / CO_PAGE_SIZE);
+	_u32 reserveBytes = _stackSize + padPages * CO_PAGE_SIZE;
+
+	char* pBase = (char*)VirtualAlloc(nullptr, reserveBytes, MEM_RESERVE, PAGE_NOACCESS);
 	if (pBase == nullptr)
 	{
 		t_coLastError = coeVirtualAlloc;
 		return false;
 	}
 
-	_pStack->pStackEnd_  = pBase;
+	_pStack->pReserveBase_ = pBase;
+	_pStack->pStackEnd_  = pBase + padPages * CO_PAGE_SIZE;
 	_pStack->size_       = _stackSize;
 	_pStack->stackTier_  = _stackTier;
 	// [코루틴-05] 스택 식별 매직을 찍는다. 해제된 메모리를 가리키는
@@ -244,7 +292,8 @@ void CoMgr::FreeStack(CoStack* _pStack)
 {
 	if (_pStack->stackTier_ == cstCustom)
 	{
-		VirtualFree(_pStack->pBaseAddr_, 0, MEM_RELEASE);
+		// [코루틴-04] 패드까지 포함해 예약 전체를 해제한다.
+		VirtualFree(_pStack->pReserveBase_, 0, MEM_RELEASE);
 	}
 	else
 	{
@@ -374,7 +423,8 @@ void CoMgr::Clear()
 		CoContext* pCtx = nullptr;
 		while (free_[tier].PopFront(&pCtx))
 		{
-			VirtualFree(pCtx->stack_.pStackEnd_, 0, MEM_RELEASE);
+			// [코루틴-04] 패드까지 포함해 예약 전체를 해제한다.
+			VirtualFree(pCtx->stack_.pReserveBase_, 0, MEM_RELEASE);
 			delete pCtx;
 		}
 	}
@@ -508,11 +558,9 @@ bool CoMgr::ExpandStack(CoContext* _pCtx, char* _pFaultAddr)
 		return false;
 	}
 
-	// 오버플로우 가드 페이지 상단 (pStackEnd_ ~ pStackEnd_+PAGE 는 절대 건드리지 않음)
-	char* pOverflowGuardTop = _pStack->pStackEnd_ + CO_PAGE_SIZE;
-
-	// 오버플로우 가드 페이지 터치 감지 → 스택 오버플로우 (CoVEH에서 STACK_OVERFLOW로 변환)
-	if (_pFaultAddr < pOverflowGuardTop)
+	// [코루틴-04] 비상 밴드 상단이 일반 확장이 내려갈 수 있는 하한이다.
+	// - 밴드 아래 폴트는 오버플로우로 보고 false를 돌려준다.
+	if (_pFaultAddr < _pStack->pEmergencyTop_)
 		return false;
 
 	// 여기서 Start는 낮은 주소를 나타냄
@@ -538,9 +586,9 @@ bool CoMgr::ExpandStack(CoContext* _pCtx, char* _pFaultAddr)
 	{
 		pGrowthStart = pGrowthStart - pageGrowCount_ * CO_PAGE_SIZE;
 
-		// 오버플로우 가드 페이지 위로 클램프 (pStackEnd_ 가 아닌 pOverflowGuardTop)
-		if (pGrowthStart < pOverflowGuardTop)
-			pGrowthStart = pOverflowGuardTop;
+		// [코루틴-04] 비상 밴드 위로 클램프 (밴드는 확장 대상이 아님)
+		if (pGrowthStart < _pStack->pEmergencyTop_)
+			pGrowthStart = _pStack->pEmergencyTop_;
 
 		commitPageCount += (_u32)((pGrowthEnd - pGrowthStart) / CO_PAGE_SIZE);
 	}
@@ -552,9 +600,9 @@ bool CoMgr::ExpandStack(CoContext* _pCtx, char* _pFaultAddr)
 	char* pNewGuardEnd     = pGrowthStart;
 	char* pNewGuardStart   = pGrowthStart - pageGuardCount_ * CO_PAGE_SIZE;
 
-	// 오버플로우 가드 페이지까지만 페이지 가드로 설정
-	if (pNewGuardStart < _pStack->pStackEnd_)
-		pNewGuardStart = _pStack->pStackEnd_;
+	// [코루틴-04] 새 가드존도 비상 밴드 위까지만 둔다.
+	if (pNewGuardStart < _pStack->pEmergencyTop_)
+		pNewGuardStart = _pStack->pEmergencyTop_;
 
 	_u32 newGuardPageCount = (_u32)((pNewGuardEnd - pNewGuardStart) / CO_PAGE_SIZE);
 	if (newGuardPageCount > 0)
@@ -695,6 +743,11 @@ LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp)
 
 	char* pFaultAddr = (char*)_pEp->ExceptionRecord->ExceptionInformation[1];
 
+	// 코루틴 실행 중이 아니면 처리하지 않음 (O(1))
+	CoContext* pCtx = g_cCoMgr.GetCurrentCtx();
+	if (pCtx == nullptr)
+		return EXCEPTION_CONTINUE_SEARCH;
+
 	// 재귀 진입: VEH 핸들러 자체의 스택 사용으로 가드 페이지가 재터치된 경우
 	if (s_inCoVEH)
 	{
@@ -703,9 +756,10 @@ LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp)
 			&& pFaultAddr >= pCtx->stack_.pStackEnd_
 			&& pFaultAddr <  pCtx->stack_.pStackBase_)
 		{
-			// 오버플로우 가드 페이지 재귀 터치 → STACK_OVERFLOW
-			if (pFaultAddr < pCtx->stack_.pStackEnd_ + CO_PAGE_SIZE)
+			// [코루틴-04] 비상 밴드 아래 재귀 터치 → STACK_OVERFLOW
+			if (pFaultAddr < pCtx->stack_.pEmergencyTop_)
 			{
+				pCtx->stack_.overflowed_ = true;
 				_pEp->ExceptionRecord->ExceptionCode  = STATUS_STACK_OVERFLOW;
 				_pEp->ExceptionRecord->ExceptionFlags |= EXCEPTION_NONCONTINUABLE;
 				return EXCEPTION_CONTINUE_SEARCH;
@@ -718,27 +772,31 @@ LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp)
 	}
 
 	// 코루틴 실행 중이 아니면 처리하지 않음 (O(1))
-	CoContext* pCtx = g_cCoMgr.GetCurrentCtx();
-	if (pCtx == nullptr)
+	CoContext* pCoCtx = g_cCoMgr.GetCurrentCtx();
+	if (pCoCtx == nullptr)
 		return EXCEPTION_CONTINUE_SEARCH;
 
 	// 현재 코루틴 스택 범위 체크
-	if (pFaultAddr < pCtx->stack_.pStackEnd_ || pFaultAddr >= pCtx->stack_.pStackBase_)
+	if (pFaultAddr < pCoCtx->stack_.pStackEnd_ || pFaultAddr >= pCoCtx->stack_.pStackBase_)
 		return EXCEPTION_CONTINUE_SEARCH;
 
-	// 오버플로우 가드 페이지 터치 → STACK_OVERFLOW 예외로 변환
+	// 오버플로우를 STACK_OVERFLOW로 변환한다.
 	// ExpandStack이 false를 반환하므로 아래에서 일괄 처리됨
 	s_inCoVEH = true;
 	LONG result = EXCEPTION_CONTINUE_SEARCH;
 
 	// [코루틴-03] ExpandStack이 성공하면 TEB StackLimit까지 같이 내려간다.
-	if (g_cCoMgr.ExpandStack(pCtx, pFaultAddr))
+	if (g_cCoMgr.ExpandStack(pCoCtx, pFaultAddr))
 	{
 		result = EXCEPTION_CONTINUE_EXECUTION;
 	}
-	else if (pFaultAddr < pCtx->stack_.pStackEnd_ + CO_PAGE_SIZE)
+	else if (pFaultAddr < pCoCtx->stack_.pEmergencyTop_)
 	{
-		// 오버플로우 가드 페이지 터치: STATUS_STACK_OVERFLOW 로 변환
+		// [코루틴-04] 비상 밴드 아래 폴트: 스택 오버플로우로 확정한다.
+		// - 예약 아래 비상 패드가 SEH 디스패치 공간을 보장한다.
+		// - NONCONTINUABLE을 유지한다. (커널이 올리는 오버플로우와 동일.
+		//   그 자리에서 재개는 금지되지만 __except로 잡고 정리한 뒤 끝내는 건 된다.)
+		pCoCtx->stack_.overflowed_ = true;
 		_pEp->ExceptionRecord->ExceptionCode  = STATUS_STACK_OVERFLOW;
 		_pEp->ExceptionRecord->ExceptionFlags |= EXCEPTION_NONCONTINUABLE;
 	}
@@ -905,4 +963,49 @@ void CoClearPendingException()
 {
 	t_coPendingException = nullptr;
 	t_coLastError = coeNone;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// [코루틴-04] 오버플로우 복구 + 표시.
+// - 이전에는 오버플로우 가드를 치는 순간 디스패치 공간이 없어 이중 폴트로
+//   프로세스가 강제 종료됐고, 잡을 방법도 되돌릴 방법도 없었다.
+// - 비상 밴드(미리 RW 커밋)가 있어 __except 핸들러까지는 도달한다.
+//   거기서 CoNoteStackOverflow()로 표시하고, 계속 쓰려면 CoResetStackOverflow()로
+//   가드존을 다시 세운다. (스택 위 객체는 망가졌을 수 있어 종료를 권장)
+//////////////////////////////////////////////////////////////////////////////////////////
+void CoNoteStackOverflow()
+{
+	CoContext* pCtx = g_cCoMgr.GetCurrentCtx();
+	if (pCtx != nullptr)
+		pCtx->stack_.overflowed_ = true;
+}
+
+bool CoMgr::ResetOverflow()
+{
+	CoContext* pCtx = currentCtx_;
+	if (pCtx == nullptr || !pCtx->stack_.overflowed_)
+		return false;
+	CoStack& st = pCtx->stack_;
+
+	// 현재 rsp 아래에 가드존을 다시 만들 여유가 있어야 한다.
+	char* rsp = (char*)_AddressOfReturnAddress();
+	char* pNewLimit = (char*)(((uintptr_t)rsp & ~(uintptr_t)(CO_PAGE_SIZE - 1)) - CO_PAGE_SIZE);
+	char* pNewGuard = pNewLimit - CO_PAGE_SIZE * pageGuardCount_;
+	if (pNewGuard < st.pEmergencyTop_)
+		return false;
+
+	DWORD old = 0;
+	if (!::VirtualProtect(pNewGuard, CO_PAGE_SIZE * pageGuardCount_,
+		PAGE_READWRITE | PAGE_GUARD, &old))
+		return false;
+	st.pStackLimit_ = pNewLimit;
+	st.pGuardLimit_ = pNewGuard;
+	st.overflowed_  = false;
+	__writegsqword(0x10, (_u64)pNewLimit);
+	return true;
+}
+
+bool CoResetStackOverflow()
+{
+	return g_cCoMgr.ResetOverflow();
 }

@@ -251,28 +251,28 @@ TEST(Coroutine, Exception_ThrowInsideCaughtOutside)
 	g_cCoMgr.Clear();
 }
 
-// [코루틴-02] 코루틴 안에서 보는 StackBase/Limit은 코루틴 스택을 가리킨다.
-// - DeallocationStack은 교체하지 않으므로 스레드 원본과 같아야 한다.
-//   (교체하면 커널이 가드 폴트를 직접 확장해 VEH가 안 불림. B안으로 확정)
+// [코루틴-02/04] 코루틴 안에서 보는 StackBase/Limit은 코루틴 스택을 가리킨다.
+// - DeallocationStack은 비상 밴드 상단(pEmergencyTop_)이 설치된다.
+//   (예약 하단은 커널이 직접 확장해 VEH가 안 불리므로 경계를 위로 둔다)
 static void* g_coTebVals[3] = { nullptr, nullptr, nullptr };
 static void* g_coTebBase = nullptr;
-static void* g_coTebThreadDealloc = nullptr;
+static void* g_coTebEmergencyTop = nullptr;
 static void CoTestFn_ReadTeb(CoContext* pCtx)
 {
 	g_coTebVals[0] = (void*)__readgsqword(0x08);
 	g_coTebVals[1] = (void*)__readgsqword(0x10);
 	g_coTebVals[2] = (void*)__readgsqword(0x1478);
 	g_coTebBase = pCtx->stack_.pStackBase_;
+	g_coTebEmergencyTop = pCtx->stack_.pEmergencyTop_;
 }
 
 TEST(Coroutine, Teb_StackRangesInside)
 {
-	g_coTebThreadDealloc = (void*)__readgsqword(0x1478);
 	CoContext* pCtx = CoRun(CoTestFn_ReadTeb, cstMid);
 	while (pCtx)
 		pCtx = CoResume(pCtx);
 	EXPECT_EQ(g_coTebVals[0], g_coTebBase);
-	EXPECT_EQ(g_coTebVals[2], g_coTebThreadDealloc);
+	EXPECT_EQ(g_coTebVals[2], g_coTebEmergencyTop);
 	g_cCoMgr.Clear();
 }
 
@@ -351,6 +351,122 @@ TEST(Coroutine, Abi_MxcsrPreserved)
 	unsigned after = 0;
 	::_controlfp_s(&after, 0, 0);
 	EXPECT_EQ(after & _MCW_RC, (unsigned)_RC_NEAR);	// 종료 후 스레드 복원
+	g_cCoMgr.Clear();
+}
+
+// [코루틴-04] 스택 오버플로우가 __except에 닿고, 표시·복구가 된다.
+// - 이전에는 가드를 치는 순간 디스패치 공간이 없어 이중 폴트로 강제 종료됐다.
+// - 예약 아래 비상 패드가 SEH 디스패치 공간을 보장한다.
+// - 확립된 프레임에서 직접 찍으면 잡힌다. (__chkstk/RTC-fill처럼 RSP가 따라
+//   내려가는 프로브는 배달 공간·언와인드 문제로 죽을 수 있어 별도 검증 대상)
+static int CoTestFilterSO(unsigned _code)
+{
+	return _code == EXCEPTION_STACK_OVERFLOW ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH;
+}
+
+// [코루틴-03] yield 시점에 살아있는 한계가 stack_에 동기화된다.
+// - 커널이 가드 폴트를 직접 확장할 수 있어(실측) pStackLimit_만 믿을 수 없으므로,
+//   yield 때 TEB 값을 기준으로 맞추고 resume은 이 값을 읽는다.
+// - 우리 ExpandStack이 돌았으면 guard까지 내려가 있고, 커널이 먹었으면
+//   guard는 그대로다. (limit은 yield 동기화로 내려감)
+static char* g_coSyncLimitAtYield = nullptr;
+static char* g_coSyncLimitInitial = nullptr;
+static char* g_coSyncGuardAtYield = nullptr;
+static char* g_coSyncGuardInitial = nullptr;
+static void CoTestFn_SyncGrowYield(CoContext* pCtx)
+{
+	g_coSyncLimitInitial = pCtx->stack_.pStackLimit_;
+	g_coSyncGuardInitial = pCtx->stack_.pGuardLimit_;
+	volatile char buf[10 * 1024];
+	for (int i = 0; i < (int)sizeof(buf); i += 4096)
+		buf[i] = (char)i;
+	CoYield();
+	g_coSyncLimitAtYield = CoCurrentCtx()->stack_.pStackLimit_;
+	g_coSyncGuardAtYield = CoCurrentCtx()->stack_.pGuardLimit_;
+	(void)buf;
+}
+
+TEST(Coroutine, Growth_YieldSyncsLimit)
+{
+	g_cCoMgr.Clear();
+	CoContext* pCtx = CoRun(CoTestFn_SyncGrowYield, cstMid);
+	while (pCtx)
+		pCtx = CoResume(pCtx);
+	// 한계는 살아있는 값으로 동기화된다. 가드는 우리 ExpandStack이 안 돌아서 그대로다.
+	EXPECT_NE(g_coSyncLimitAtYield, g_coSyncLimitInitial);
+	EXPECT_EQ(g_coSyncGuardAtYield, g_coSyncGuardInitial);
+	g_cCoMgr.Clear();
+}
+
+static bool g_coOverflowCaught = false;
+static bool g_coOverflowFlag = false;
+static bool g_coOverflowReset = false;
+
+// [코루틴-04] 확립된 프레임에서 오버플로우 가드를 직접 찍으면 잡힌다.
+// - __chkstk/RTC-fill처럼 RSP가 따라 내려가는 프로브는 배달 공간이 없어 죽지만,
+//   직접 인덱스로 찍으면 RSP가 위에 있어 디스패치가 된다.
+__declspec(noinline) static void CoTestTouchDeep(volatile char* _p)
+{
+	*_p = 42;
+}
+
+static void CoTestFn_DirectTouch(CoContext* pCtx)
+{
+	__try
+	{
+		// 오버플로우 가드 페이지를 직접 찍는다. (RSP는 위에 그대로)
+		volatile char* pGuard = (volatile char*)pCtx->stack_.pStackEnd_;
+		CoTestTouchDeep(pGuard);
+	}
+	__except (CoTestFilterSO(GetExceptionCode()))
+	{
+		g_coOverflowCaught = true;
+		CoNoteStackOverflow();
+		g_coOverflowFlag = CoCurrentCtx()->stack_.overflowed_;
+		g_coOverflowReset = CoResetStackOverflow();
+	}
+}
+
+TEST(Coroutine, Overflow_DirectTouchCaught)
+{
+	g_coOverflowCaught = false;
+	g_coOverflowFlag = false;
+	g_coOverflowReset = false;
+	g_cCoMgr.Clear();
+	CoContext* pCtx = CoRun(CoTestFn_DirectTouch, cstMid);
+	while (pCtx)
+		pCtx = CoResume(pCtx);
+	EXPECT_TRUE(g_coOverflowCaught);
+	EXPECT_TRUE(g_coOverflowFlag);
+	EXPECT_TRUE(g_coOverflowReset);
+	g_cCoMgr.Clear();
+}
+
+// [코루틴-04] 비상 레이아웃이 제대로 깔려 있는지 확인한다. (죽지 않는 검사)
+// - 예약 아래 패드 N페이지 RW 커밋, 오버플로우 가드 1페이지 NOACCESS,
+//   DeallocationStack = 밴드 상단.
+TEST(Coroutine, Overflow_LayoutCheck)
+{
+	g_cCoMgr.Clear();
+	CoContext* pCtx = CoRun(CoTestFn_YieldForever06, cstMid);
+	ASSERT_NE(pCtx, nullptr);
+
+	MEMORY_BASIC_INFORMATION mbi{};
+	// 패드: 예약 시작 주소는 RW 커밋이어야 한다.
+	EXPECT_EQ(::VirtualQuery(pCtx->stack_.pReserveBase_, &mbi, sizeof(mbi)), sizeof(mbi));
+	EXPECT_EQ(mbi.State, (DWORD)MEM_COMMIT);
+	EXPECT_EQ(mbi.Protect & 0xFF, (DWORD)PAGE_READWRITE);
+	// 오버플로우 가드: GUARD여야 한다. (배달 push가 자동 해제)
+	EXPECT_EQ(::VirtualQuery(pCtx->stack_.pStackEnd_, &mbi, sizeof(mbi)), sizeof(mbi));
+	EXPECT_EQ(mbi.State, (DWORD)MEM_COMMIT);
+	EXPECT_NE(mbi.Protect & PAGE_GUARD, 0u);
+	// 패드 크기: Mid(16p)는 4장이다.
+	EXPECT_EQ(pCtx->stack_.pStackEnd_ - pCtx->stack_.pReserveBase_, (ptrdiff_t)(4 * CO_PAGE_SIZE));
+	// 밴드 상단 = 예약 하단 + 1페이지다.
+	EXPECT_EQ(pCtx->stack_.pEmergencyTop_, pCtx->stack_.pStackEnd_ + CO_PAGE_SIZE);
+
+	while (pCtx)
+		pCtx = CoResume(pCtx);
 	g_cCoMgr.Clear();
 }
 
