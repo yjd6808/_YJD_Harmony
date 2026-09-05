@@ -141,4 +141,85 @@ TEST(Coroutine, Resume_StaleHandle)
 	g_cCoMgr.Clear();
 }
 
+// [코루틴-06] 작은 custom 요청은 티어로 올림되고 크기도 티어 크기가 된다.
+// - 이전에는 티어만 바뀌고 크기가 5000B 그대로라 정렬이 깨지고 풀이 오염됐다.
+static void CoTestFn_YieldForever06(CoContext*)
+{
+	CoYield();
+}
+
+TEST(Coroutine, Custom_RoundUp)
+{
+	g_cCoMgr.Clear();
+	CoContext* pCtx = CoRun(CoTestFn_YieldForever06, cstCustom, 5000);
+	ASSERT_NE(pCtx, nullptr);
+	EXPECT_EQ(pCtx->stack_.stackTier_, cstLow);
+	EXPECT_EQ(pCtx->stack_.size_, (_u32)CO_STACK_SIZE_LOW);
+	EXPECT_EQ(((uintptr_t)pCtx->stack_.pStackBase_ & (CO_PAGE_SIZE - 1)), 0u);
+	while (pCtx)
+		pCtx = CoResume(pCtx);
+	g_cCoMgr.Clear();
+}
+
+// [코루틴-06] 크기가 0인 custom은 만들 수 없다.
+TEST(Coroutine, Custom_ZeroRejected)
+{
+	CoContext* pCtx = CoRun(CoTestFn_YieldForever06, cstCustom, 0);
+	EXPECT_EQ(pCtx, nullptr);
+	EXPECT_EQ(CoGetLastError(), coeInvalidStackSize);
+}
+
+// [코루틴-06] custom 5000B가 풀을 오염시키지 않는다.
+// - 이전에는 5000B 스택이 cstLow 풀에 들어가 다음 사용자가 좁은 스택을 받았다.
+// - 6KB를 쓰는 이유: 5000B 스택에는 절대 안 들어가고, 진짜 16KB Low 스택의
+//   초기 커밋(8KB)에는 들어가므로 VEH 확장을 타지 않고 판별된다.
+//   (Low에서 10KB 같은 성장은 VEH 예산 부족으로 죽을 수 있어 15에서 다룬다.)
+static void CoTestFn_Touch6K(CoContext*)
+{
+	volatile char buf[6 * 1024];
+	for (int i = 0; i < (int)sizeof(buf); i += 4096)
+		buf[i] = (char)i;
+}
+
+TEST(Coroutine, Custom_NoPoolMix)
+{
+	g_cCoMgr.Clear();
+	// 5000B custom → Low로 올림 → 종료 → 풀에 반납
+	CoContext* pCtx = CoRun(CoTestFn_YieldForever06, cstCustom, 5000);
+	while (pCtx)
+		pCtx = CoResume(pCtx);
+
+	// 같은 풀에서 꺼낸 Low 스택으로 6KB를 써도 멀쩡해야 한다. (5000B였으면 오버플로우)
+	pCtx = CoRun(CoTestFn_Touch6K, cstLow);
+	EXPECT_EQ(pCtx, nullptr);
+	EXPECT_EQ(CoGetLastError(), coeNone);
+	g_cCoMgr.Clear();
+}
+
+// [코루틴-06] 진짜 큰 custom은 페이지 올림되고 풀에 들어가지 않는다.
+TEST(Coroutine, Custom_LargeNoPool)
+{
+	g_cCoMgr.Clear();
+	CoContext* pCtx = CoRun(CoTestFn_YieldForever06, cstCustom, 300000);
+	ASSERT_NE(pCtx, nullptr);
+	EXPECT_EQ(pCtx->stack_.stackTier_, cstCustom);
+	EXPECT_EQ(pCtx->stack_.size_, ((_u32)300000 + CO_PAGE_SIZE - 1) & ~(_u32)(CO_PAGE_SIZE - 1));
+	char* pCustomBase = pCtx->stack_.pStackBase_;
+	while (pCtx)
+		pCtx = CoResume(pCtx);
+
+	// custom은 해제되고 풀에 남지 않으므로 예약 영역이 반환되어야 한다.
+	MEMORY_BASIC_INFORMATION mbi{};
+	EXPECT_EQ(::VirtualQuery(pCustomBase - 1, &mbi, sizeof(mbi)), sizeof(mbi));
+	EXPECT_EQ(mbi.State, (DWORD)MEM_FREE);
+
+	// 다음 Low 요청이 custom 스택 주소를 받으면 안 된다.
+	pCtx = CoRun(CoTestFn_YieldForever06, cstLow);
+	ASSERT_NE(pCtx, nullptr);
+	EXPECT_NE(pCtx->stack_.pStackBase_, pCustomBase);
+	while (pCtx)
+		pCtx = CoResume(pCtx);
+	g_cCoMgr.Clear();
+}
+
 #endif // TEST_CoroutineTest == ON

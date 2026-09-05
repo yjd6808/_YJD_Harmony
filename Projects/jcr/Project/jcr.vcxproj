@@ -25,6 +25,7 @@
     <ClCompile Include="..\Sources\jcr\06_Coroutine_CoBasic.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine_07_ErrorVeh.cpp" />
     <ClCompile Include="..\Sources\jcr\06_Coroutine_05_Safety.cpp" />
+    <ClCompile Include="..\Sources\jcr\06_Coroutine_06_Custom.cpp" />
     <ClCompile Include="..\Sources\jcr\Core.cpp" />
     <ClCompile Include="..\Sources\jcr\main.cpp" />
     <ClCompile Include="..\Sources\jcr\01_AsmStudy1.cpp" />

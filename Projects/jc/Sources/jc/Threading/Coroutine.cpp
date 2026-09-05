@@ -133,9 +133,10 @@ bool CoMgr::InitStack(CoStack* _pStack)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // [Private] AllocStack
-//   tier/size에 따라 메모리를 예약(RESERVE)하고 InitStack을 호출.
-//   풀에 재사용 가능한 CoStack이 있으면 먼저 꺼내서 사용.
-//   _pStack에 결과를 복사하여 반환.
+//   확정된 tier/size로 메모리를 예약(RESERVE)하고 InitStack을 호출.
+//   티어 판별은 하지 않는다. (호출 전 ResolveTier로 확정할 것)
+// [코루틴-06] 이전에는 여기서 티어만 바꾸고 크기는 그대로 둬서
+//   5000B짜리 스택이 cstLow 풀로 들어가 다음 사용자를 오염시켰다.
 //////////////////////////////////////////////////////////////////////////////////////////
 bool CoMgr::AllocStack(OUT CoStack* _pStack, CoStackTier _stackTier, _u32 _stackSize)
 {
@@ -151,24 +152,16 @@ bool CoMgr::AllocStack(OUT CoStack* _pStack, CoStackTier _stackTier, _u32 _stack
 		return false;
 	}
 
-	// 티어 → 크기 결정
-	_u32 stackSize = _stackSize;
-	CoStackTier stackTier = _stackTier;
-	switch (stackTier)
+	// ResolveTier를 거친 크기이므로 페이지 정렬이어야 한다.
+	jc_assert_msg((_stackSize & (CO_PAGE_SIZE - 1)) == 0,
+		"스택 크기가 페이지 정렬이 아닙니다. size: %u", _stackSize);
+	if ((_stackSize & (CO_PAGE_SIZE - 1)) != 0)
 	{
-	case cstLow:    stackSize = CO_STACK_SIZE_LOW;  break;
-	case cstMid:    stackSize = CO_STACK_SIZE_MID;  break;
-	case cstHigh:   stackSize = CO_STACK_SIZE_HIGH; break;
-	default:
-		{
-			if (_stackSize < CO_STACK_SIZE_LOW)        stackTier = cstLow;
-			else if (_stackSize < CO_STACK_SIZE_MID)   stackTier = cstMid;
-			else if (_stackSize < CO_STACK_SIZE_HIGH)  stackTier = cstHigh;
-		}
-		break;
+		t_coLastError = coeInvalidStackSize;
+		return false;
 	}
 
-	char* pBase = (char*)VirtualAlloc(nullptr, stackSize, MEM_RESERVE, PAGE_NOACCESS);
+	char* pBase = (char*)VirtualAlloc(nullptr, _stackSize, MEM_RESERVE, PAGE_NOACCESS);
 	if (pBase == nullptr)
 	{
 		t_coLastError = coeVirtualAlloc;
@@ -176,12 +169,49 @@ bool CoMgr::AllocStack(OUT CoStack* _pStack, CoStackTier _stackTier, _u32 _stack
 	}
 
 	_pStack->pStackEnd_  = pBase;
-	_pStack->size_       = stackSize;
-	_pStack->stackTier_  = stackTier;
+	_pStack->size_       = _stackSize;
+	_pStack->stackTier_  = _stackTier;
 	// [코루틴-05] 스택 식별 매직을 찍는다. 해제된 메모리를 가리키는
 	// 잘못된 컨텍스트를 resume 전에 가려내기 위해 사용한다.
 	_pStack->magic_      = CO_STACK_MAGIC;
 	return InitStack(_pStack);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// [코루틴-06] 티어/크기 결정을 한 곳으로 모은다.
+// - 이전에는 AllocStack과 AllocCtx가 각자 판별 로직을 복사해 가져서 어긋날 수 있었고,
+//   티어는 올리면서 크기는 그대로 둬 풀 오염과 정렬 깨짐이 생겼다.
+//////////////////////////////////////////////////////////////////////////////////////////
+static _u32 RoundUpPage(_u32 _v)
+{
+	return (_v + CO_PAGE_SIZE - 1) & ~(_u32)(CO_PAGE_SIZE - 1);
+}
+
+bool CoMgr::ResolveTier(CoStackTier _tier, _u32 _size, OUT CoStackTier* _pTier, OUT _u32* _pSize)
+{
+	switch (_tier)
+	{
+	case cstLow:  *_pTier = cstLow;  *_pSize = CO_STACK_SIZE_LOW;  return true;
+	case cstMid:  *_pTier = cstMid;  *_pSize = CO_STACK_SIZE_MID;  return true;
+	case cstHigh: *_pTier = cstHigh; *_pSize = CO_STACK_SIZE_HIGH; return true;
+	case cstCustom:
+		if (_size == 0)
+		{
+			t_coLastError = coeInvalidStackSize;
+			return false;
+		}
+		// 작은 요청은 티어로 올림. 크기도 티어 크기로 맞춰 풀에 섞이지 않게 한다.
+		if (_size <= CO_STACK_SIZE_LOW)  { *_pTier = cstLow;  *_pSize = CO_STACK_SIZE_LOW;  return true; }
+		if (_size <= CO_STACK_SIZE_MID)  { *_pTier = cstMid;  *_pSize = CO_STACK_SIZE_MID;  return true; }
+		if (_size <= CO_STACK_SIZE_HIGH) { *_pTier = cstHigh; *_pSize = CO_STACK_SIZE_HIGH; return true; }
+		// 진짜 custom: 페이지 단위로 올림, 풀링 없음.
+		*_pTier = cstCustom;
+		*_pSize = RoundUpPage(_size);
+		return true;
+	default:
+		jc_assert_msg(false, "잘못된 스택 티어입니다. tier: %d", _tier);
+		return false;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -228,38 +258,31 @@ bool CoMgr::InitCtx(CoContext* _pCtx)
 //////////////////////////////////////////////////////////////////////////////////////////
 CoContext* CoMgr::AllocCtx(CoStackTier _stackTier, _u32 _stackSize)
 {
-	if (_stackTier <= 0 || _stackTier > cstValidTierEnd)
-	{
-		jc_assert_msg(false, "잘못된 스택 티어입니다. tier: %d", _stackTier);
+	// [코루틴-06] 티어/크기 판별을 한 곳에서 확정한다.
+	CoStackTier tier = cstNone;
+	_u32 size = 0;
+	if (!ResolveTier(_stackTier, _stackSize, &tier, &size))
 		return nullptr;
-	}
-
-	// 커스텀 크기 → 실제 티어 판별 (AllocStack과 동일 로직)
-	CoStackTier resolvedTier = _stackTier;
-	if (_stackTier == cstCustom)
-	{
-		if (_stackSize < CO_STACK_SIZE_LOW)        resolvedTier = cstLow;
-		else if (_stackSize < CO_STACK_SIZE_MID)   resolvedTier = cstMid;
-		else if (_stackSize < CO_STACK_SIZE_HIGH)  resolvedTier = cstHigh;
-		// else: 진짜 Custom, 풀링 없음
-	}
 
 	CoContext* pCtx = nullptr;
 
-	if (resolvedTier != cstCustom && free_[resolvedTier].PopFront(&pCtx))
+	if (tier != cstCustom && free_[tier].PopFront(&pCtx))
 	{
 		// 풀에서 재사용: decommit된 상태 → InitStack이 다시 commit
+		// [코루틴-06] 풀 무결성 확인. 크기가 다르면 오염된 것이므로 쓰지 않는다.
+		jc_assert_msg(pCtx->stack_.size_ == size,
+			"풀 오염: 티어 크기와 다릅니다. tier: %d, size: %u", tier, pCtx->stack_.size_);
 		// [코루틴-07] 재커밋 실패 시 이 ctx는 풀로 되돌리고 nullptr을 돌려준다.
 		if (!InitCtx(pCtx))
 		{
-			free_[resolvedTier].PushBack(pCtx);
+			free_[tier].PushBack(pCtx);
 			return nullptr;
 		}
 	}
 	else
 	{
 		pCtx = dbg_new CoContext();
-		if (!AllocStack(&pCtx->stack_, _stackTier, _stackSize))
+		if (!AllocStack(&pCtx->stack_, tier, size))
 		{
 			delete pCtx;
 			return nullptr;

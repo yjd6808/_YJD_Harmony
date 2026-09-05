@@ -28,6 +28,16 @@
 
 #define CO_STACK_MAGIC			0x1F04210951DFBEE
 
+// [코루틴-06] 스택 한 장이 최소 몇 페이지여야 하는지 계산한다.
+// (오버플로우 가드 1 + 비상 N + 가드 + 초기 커밋)
+// - 현재 cstLow(16KB=4p)는 1+0+3+2=6p를 담지 못하므로 InitStack이 가드존을
+//   클램프해서 동작한다. 크기를 키우면 기존 동작이 바뀌므로 현상 유지하고,
+//   티어별 상수가 필요해지면 여기서 확장한다.
+constexpr _u32 CoMinStackPages(int _guard, int _init, int _emergency = 0)
+{
+	return 1 + (_u32)_emergency + (_u32)_guard + (_u32)_init;
+}
+
 // 스택 등급
 struct CoContext;
 
@@ -233,6 +243,11 @@ public:
 
 	// [코루틴-05] 관리 중인(using_) 컨텍스트인지 확인한다. (Debug 검증용)
 	bool		IsUsing(CoContext* _pCtx);
+
+	// [코루틴-06] 요청(tier, size)을 실제(tier, size)로 바꾼다.
+	// - 작은 custom 요청은 티어로 올리되 크기도 티어 크기로 맞춰 풀 오염을 막고,
+	//   진짜 큰 custom은 페이지 단위로 올림해 풀에 넣지 않는다.
+	static bool ResolveTier(CoStackTier _tier, _u32 _size, OUT CoStackTier* _pTier, OUT _u32* _pSize);
 
 	// 테스트 전용: 내부 파라미터를 외부에서 설정한다.
 	void		SetPageInitCount(_u32 _count) { pageInitCount_ = _count; }
