@@ -173,29 +173,29 @@ static void BM_String_OwnerExit(State& state)
 }
 
 #if BenchStrB12 == ON
-STR_REG_R0(BM_String_CrossThread, Arg(1000));
-STR_REG_S0(BM_String_CrossThread, Arg(1000));
-STR_REG_S1(BM_String_CrossThread, Arg(1000));
-STR_REG_S2(BM_String_CrossThread, Arg(1000));
-STR_REG_S3(BM_String_CrossThread, Arg(1000));
-STR_REG_S4(BM_String_CrossThread, Arg(1000));
-STR_REG_S5(BM_String_CrossThread, Arg(1000));
-STR_REG_S6(BM_String_CrossThread, Arg(1000));
-STR_REG_S7(BM_String_CrossThread, Arg(1000));
-STR_REG_R1(BM_String_CrossThread, Arg(1000));
+STR_REG_R0(BM_String_CrossThread, Arg(100));
+STR_REG_S0(BM_String_CrossThread, Arg(100));
+STR_REG_S1(BM_String_CrossThread, Arg(100));
+STR_REG_S2(BM_String_CrossThread, Arg(100));
+STR_REG_S3(BM_String_CrossThread, Arg(100));
+STR_REG_S4(BM_String_CrossThread, Arg(100));
+STR_REG_S5(BM_String_CrossThread, Arg(100));
+STR_REG_S6(BM_String_CrossThread, Arg(100));
+STR_REG_S7(BM_String_CrossThread, Arg(100));
+STR_REG_R1(BM_String_CrossThread, Arg(100));
 #endif
 
 #if BenchStrB13 == ON
-STR_REG_R0(BM_String_OwnerExit, Arg(1000));
-STR_REG_S0(BM_String_OwnerExit, Arg(1000));
-STR_REG_S1(BM_String_OwnerExit, Arg(1000));
-STR_REG_S2(BM_String_OwnerExit, Arg(1000));
-STR_REG_S3(BM_String_OwnerExit, Arg(1000));
-STR_REG_S4(BM_String_OwnerExit, Arg(1000));
-STR_REG_S5(BM_String_OwnerExit, Arg(1000));
-STR_REG_S6(BM_String_OwnerExit, Arg(1000));
-STR_REG_S7(BM_String_OwnerExit, Arg(1000));
-STR_REG_R1(BM_String_OwnerExit, Arg(1000));
+STR_REG_R0(BM_String_OwnerExit, Arg(100));
+STR_REG_S0(BM_String_OwnerExit, Arg(100));
+STR_REG_S1(BM_String_OwnerExit, Arg(100));
+STR_REG_S2(BM_String_OwnerExit, Arg(100));
+STR_REG_S3(BM_String_OwnerExit, Arg(100));
+STR_REG_S4(BM_String_OwnerExit, Arg(100));
+STR_REG_S5(BM_String_OwnerExit, Arg(100));
+STR_REG_S6(BM_String_OwnerExit, Arg(100));
+STR_REG_S7(BM_String_OwnerExit, Arg(100));
+STR_REG_R1(BM_String_OwnerExit, Arg(100));
 #endif
 
 #endif

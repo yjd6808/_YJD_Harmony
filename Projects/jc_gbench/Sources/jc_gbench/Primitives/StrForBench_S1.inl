@@ -273,7 +273,8 @@ inline StrForBench::StrForBench(const char* _pStr, const int _capacity)
 	const int length = StringUtil::Length(_pStr);
 	if (length == 0)
 	{
-		Initialize(_capacity);
+		// 빈 문자열은 capacity 힌트와 무관하게 SSO에 둔다 (힙 할당 0회).
+		ToSsoEmpty();
 		return;
 	}
 

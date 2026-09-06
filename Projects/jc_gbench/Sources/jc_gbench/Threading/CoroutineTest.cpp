@@ -20,6 +20,44 @@
  *   - jc 코루틴은 CoVEH가 등록돼 있어야 스택 자동 확장이 동작한다. (EnsureCoVEH)
  *   - Fiber 는 fiber proc 에서 return 하면 스레드가 종료되므로 반드시 SwitchToFiber(main)으로 복귀시킨다.
  *   - Release x64 로 측정할 것. Debug 는 jc_assert / dbg_new 오버헤드가 섞인다.
+ * 
+ * BM_Lifecycle_Jc/1                     202 ns          200 ns      3200000 items_per_second=4.99512M/s cstLow(16KB)
+ * BM_Lifecycle_Jc/2                     194 ns          197 ns      3733333 items_per_second=5.08369M/s cstMid(64KB)
+ * BM_Lifecycle_Jc/3                     195 ns          195 ns      3446154 items_per_second=5.12916M/s cstHigh(256KB)
+ * BM_Lifecycle_Cpp20                   60.2 ns         60.0 ns     11200000 items_per_second=16.6698M/s
+ * BM_Lifecycle_Fiber/16384            10851 ns        10986 ns        64000 items_per_second=91.0222k/s
+ * BM_Lifecycle_Fiber/65536            11379 ns        11475 ns        64000 items_per_second=87.1489k/s
+ * BM_Lifecycle_Fiber/262144           11786 ns        11998 ns        56000 items_per_second=83.3488k/s
+ * BM_Switch_Jc                         36.6 ns         36.9 ns     19478261 items_per_second=27.1002M/s
+ * BM_Switch_Cpp20                      3.15 ns         3.14 ns    224000000 items_per_second=318.578M/s
+ * BM_Switch_Fiber                      60.1 ns         60.0 ns     11200000 items_per_second=16.6698M/s
+ * BM_RoundRobin_Jc/64                  2.93 us         2.92 us       235789 items_per_second=21.9498M/s
+ * BM_RoundRobin_Jc/1024                53.7 us         53.1 us        10000 items_per_second=19.2753M/s
+ * BM_RoundRobin_Jc/4096                 493 us          492 us         1493 items_per_second=8.32726M/s
+ * BM_RoundRobin_Cpp20/64              0.213 us        0.210 us      3200000 items_per_second=304.819M/s
+ * BM_RoundRobin_Cpp20/1024             3.40 us         3.38 us       203636 items_per_second=303.307M/s
+ * BM_RoundRobin_Cpp20/4096             15.0 us         15.0 us        44800 items_per_second=273.117M/s
+ * BM_RoundRobin_Fiber/64               4.43 us         4.43 us       165926 items_per_second=14.4603M/s
+ * BM_RoundRobin_Fiber/1024             88.9 us         88.9 us         8960 items_per_second=11.5138M/s
+ * BM_RoundRobin_Fiber/4096              462 us          461 us         1659 items_per_second=8.87545M/s
+ * BM_DeepYield_Jc/1                    60.8 ns         60.0 ns     11200000 items_per_second=16.6698M/s
+ * BM_DeepYield_Jc/8                    70.7 ns         71.1 ns     11200000 items_per_second=14.0549M/s
+ * BM_DeepYield_Jc/64                    212 ns          213 ns      3446154 items_per_second=4.69264M/s
+ * BM_DeepYield_Jc/256                   676 ns          670 ns      1120000 items_per_second=1.49333M/s
+ * BM_DeepYield_Cpp20/1                  137 ns          136 ns      4480000 items_per_second=7.35179M/s
+ * BM_DeepYield_Cpp20/8                  606 ns          614 ns      1120000 items_per_second=1.62909M/s
+ * BM_DeepYield_Cpp20/64                5672 ns         5720 ns       112000 items_per_second=174.829k/s
+ * BM_DeepYield_Cpp20/256              21613 ns        21484 ns        32000 items_per_second=46.5455k/s
+ * BM_StackGrowth_Jc_Lazy/8192         0.204 us        0.204 us      3446154 items_per_second=4.9012M/s
+ * BM_StackGrowth_Jc_Lazy/32768        0.216 us        0.218 us      3446154 items_per_second=4.59487M/s
+ * BM_StackGrowth_Jc_Lazy/131072       0.343 us        0.342 us      2240000 items_per_second=2.92571M/s
+ * BM_StackGrowth_Jc_Eager/8192        0.218 us        0.214 us      2986667 items_per_second=4.66211M/s
+ * BM_StackGrowth_Jc_Eager/32768       0.210 us        0.210 us      3200000 items_per_second=4.76279M/s
+ * BM_StackGrowth_Jc_Eager/131072      0.320 us        0.315 us      2133333 items_per_second=3.17519M/s
+ * BM_StackGrowth_Fiber/8192            19.7 us         19.5 us        34462 items_per_second=51.2923k/s
+ * BM_StackGrowth_Fiber/32768           45.2 us         45.0 us        14933 items_per_second=22.2259k/s
+ * BM_StackGrowth_Fiber/131072           142 us          140 us         4480 items_per_second=7.168k/s
+ * 
  */
 
 #include "jc/Threading/Coroutine.h"

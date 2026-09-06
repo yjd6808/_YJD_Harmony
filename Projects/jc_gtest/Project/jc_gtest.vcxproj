@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\jc_gbench\Sources\jc_gbench\Threading\CoroutineTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\ComparatorTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Container\ArrayQueueTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Container\ArrayStackTest.cpp" />

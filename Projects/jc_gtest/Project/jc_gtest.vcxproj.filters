@@ -1,33 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\Sources\jc_gtest\TypeTraitsTest.cpp">
-      <Filter>TypeTraitsTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\RandomTest.cpp">
-      <Filter>RandomTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\MathTest.cpp">
-      <Filter>MathTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\HasherTest.cpp">
-      <Filter>HasherTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\ComparatorTest.cpp">
-      <Filter>ComparatorTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\TimeTest.cpp">
-      <Filter>TimeTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\ExceptionTest.cpp">
-      <Filter>ExceptionTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\MemoryTest.cpp">
-      <Filter>MemoryTest</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc_gtest\EventTest.cpp">
-      <Filter>EventTest</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Logger\FileLoggerTest.cpp">
       <Filter>Logger</Filter>
     </ClCompile>
@@ -196,13 +169,21 @@
     <ClCompile Include="..\Sources\jc_gtest\PCH\Core.cpp">
       <Filter>PCH</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\ComparatorTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\Container\ArraysTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\EventTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\ExceptionTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\HasherTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\MathTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\MemoryTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\RandomTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\TimeTest.cpp" />
+    <ClCompile Include="..\Sources\jc_gtest\TypeTraitsTest.cpp" />
+    <ClCompile Include="..\..\jc_gbench\Sources\jc_gbench\Threading\CoroutineTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jc_gtest\PCH\Core.h">
       <Filter>PCH</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\jc_gtest\IO\MockHttpServer.h">
-      <Filter>IO</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
