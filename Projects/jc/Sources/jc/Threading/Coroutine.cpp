@@ -242,17 +242,53 @@ bool CoMgr::AllocStack(OUT CoStack* _pStack, CoStackTier _stackTier, _u32 _stack
 	// [코루틴-04] 예약 아래에 비상 패드를 덧붙인다. (오버플로우 배달 공간)
 	// - 패드는 스택 크기의 1/4을 넘지 않게 한다. (Low는 1장, Mid/High은 4장)
 	_u32 padPages = EmergencyPadPages(_stackSize / CO_PAGE_SIZE);
-	_u32 reserveBytes = _stackSize + padPages * CO_PAGE_SIZE;
+	_u32 slotBytes = _stackSize + padPages * CO_PAGE_SIZE;
 
-	char* pBase = (char*)VirtualAlloc(nullptr, reserveBytes, MEM_RESERVE, PAGE_NOACCESS);
-	if (pBase == nullptr)
+	char* pSlot = nullptr;
+	if (_stackTier == cstCustom)
 	{
-		t_coLastError = coeVirtualAlloc;
-		return false;
+		// custom은 기존대로 직접 예약한다. (슬랩에 안 넣음)
+		pSlot = (char*)VirtualAlloc(nullptr, slotBytes, MEM_RESERVE, PAGE_NOACCESS);
+		if (pSlot == nullptr)
+		{
+			t_coLastError = coeVirtualAlloc;
+			return false;
+		}
+	}
+	else
+	{
+		// [코루틴-13] 슬랩에서 슬롯을 잘라 쓴다. (64KB 그래뉴러리티 낭비 제거)
+		// - 1MB 슬랩을 티어 크기로 분할. 빈 슬랩이 없으면 새로 예약한다.
+		// - 반납된 슬롯 재사용은 free_ 풀 몫이라 used는 앞으로만 간다.
+		StackSlab* pSlab = nullptr;
+		if (!slabs_[_stackTier].IsEmpty())
+		{
+			StackSlab& back = slabs_[_stackTier].Back();
+			if (back.used < back.slotCount)
+				pSlab = &back;
+		}
+		if (pSlab == nullptr)
+		{
+			char* pSlabBase = (char*)VirtualAlloc(nullptr, SLAB_BYTES, MEM_RESERVE, PAGE_NOACCESS);
+			if (pSlabBase == nullptr)
+			{
+				t_coLastError = coeVirtualAlloc;
+				return false;
+			}
+			StackSlab slab;
+			slab.pBase = pSlabBase;
+			slab.slotBytes = slotBytes;
+			slab.slotCount = SLAB_BYTES / slotBytes;
+			slab.used = 0;
+			slabs_[_stackTier].PushBack(slab);
+			pSlab = &slabs_[_stackTier].Back();
+		}
+		pSlot = pSlab->pBase + (size_t)pSlab->slotBytes * pSlab->used;
+		pSlab->used++;
 	}
 
-	_pStack->pReserveBase_ = pBase;
-	_pStack->pStackEnd_  = pBase + padPages * CO_PAGE_SIZE;
+	_pStack->pReserveBase_ = pSlot;
+	_pStack->pStackEnd_  = pSlot + padPages * CO_PAGE_SIZE;
 	_pStack->size_       = _stackSize;
 	_pStack->stackTier_  = _stackTier;
 	// [코루틴-05] 스택 식별 매직을 찍는다. 해제된 메모리를 가리키는
@@ -480,9 +516,9 @@ void CoMgr::FreeCtx(CoContext* _pCtx)
 	}
 	else if (free_[stackTier].Size() >= (int)poolMax_[stackTier])
 	{
-		// [코루틴-12] 풀이 가득 찼다. 커밋 메모리가 쌓이지 않게 예약까지 해제한다.
-		// - FreeStack은 decommit만 해서 예약을 남기므로 여기서 직접 release한다.
-		VirtualFree(pPopped->stack_.pReserveBase_, 0, MEM_RELEASE);
+		// [코루틴-12/13] 풀이 가득 찼다. 슬롯은 슬랩 조각이라 release하면 안 되고
+		// decommit 후 버린다. (슬랩 자체는 Clear 때 해제)
+		FreeStack(&pPopped->stack_);
 		delete pPopped;
 	}
 	else
@@ -511,10 +547,18 @@ void CoMgr::Clear()
 		CoContext* pCtx = nullptr;
 		while (free_[tier].PopFront(&pCtx))
 		{
-			// [코루틴-04] 패드까지 포함해 예약 전체를 해제한다.
-			VirtualFree(pCtx->stack_.pReserveBase_, 0, MEM_RELEASE);
+			// [코루틴-13] 풀 ctx는 슬랩 슬롯이라 개별 release 금지. delete만 한다.
+			// (custom은 풀에 안 들어가서 여기 올 일이 없음)
 			delete pCtx;
 		}
+	}
+
+	// [코루틴-13] 슬랩 예약 전체를 해제한다.
+	for (int tier = cstReservedTierBegin; tier <= cstReservedTierEnd; ++tier)
+	{
+		StackSlab slab;
+		while (slabs_[tier].PopFront(&slab))
+			VirtualFree(slab.pBase, 0, MEM_RELEASE);
 	}
 }
 

@@ -471,7 +471,72 @@ TEST(Coroutine, Veh_StatsSmoke)
 	EXPECT_TRUE(true);
 }
 
-// [코루틴-12] 풀 반납 후 재사용해도 커밋이 유지된다. (커널을 다시 안 탐)
+// [코루틴-13] 슬랩에 패킹된다. Low 100개가 소수 예약에 들어간다.
+// - 이전에는 1개당 64KB씩 가상주소를 먹었다. (16KB 요청도 64KB 단위)
+static void CoTestFn_YieldForever13(CoContext*)
+{
+	CoYield();
+}
+
+TEST(Coroutine, Slab_PacksReservations)
+{
+	g_cCoMgr.Clear();
+	const int N = 100;
+	CoContext* ctxs[100];
+	for (int i = 0; i < N; ++i)
+	{
+		ctxs[i] = CoRun(CoTestFn_YieldForever13, cstLow);
+		ASSERT_NE(ctxs[i], nullptr);
+	}
+
+	// 1MB 단위로 묶인다. 서로 다른 슬랩 개수를 센다.
+	uintptr_t slabs[100];
+	int slabCount = 0;
+	for (int i = 0; i < N; ++i)
+	{
+		uintptr_t slabBase = (uintptr_t)ctxs[i]->stack_.pReserveBase_ & ~((uintptr_t)0x100000 - 1);
+		bool found = false;
+		for (int j = 0; j < slabCount; ++j)
+		{
+			if (slabs[j] == slabBase)
+			{
+				found = true;
+				break;
+			}
+		}
+		if (!found)
+			slabs[slabCount++] = slabBase;
+	}
+	// Low 슬롯 20KB → 1MB에 51개. 100개면 슬랩 2개면 된다. (여유 있게 4개 이하)
+	EXPECT_LE(slabCount, 4);
+
+	for (int i = 0; i < N; ++i)
+	{
+		while (ctxs[i])
+			ctxs[i] = CoResume(ctxs[i]);
+	}
+	g_cCoMgr.Clear();
+}
+
+// [코루틴-13] 이웃 슬롯이 붙어 있어도 각자 동작한다. (경계는 바닥 가드가 담당)
+TEST(Coroutine, Slab_NeighborIsolation)
+{
+	g_cCoMgr.Clear();
+	CoContext* a = CoRun(CoTestFn_YieldForever13, cstLow);
+	CoContext* b = CoRun(CoTestFn_YieldForever13, cstLow);
+	ASSERT_NE(a, nullptr);
+	ASSERT_NE(b, nullptr);
+	// 같은 슬랩에 이웃하게 들어갔는지 확인한다. (슬롯 단위 연속)
+	ptrdiff_t diff = a->stack_.pStackBase_ > b->stack_.pStackBase_
+		? a->stack_.pStackBase_ - b->stack_.pStackBase_
+		: b->stack_.pStackBase_ - a->stack_.pStackBase_;
+	EXPECT_EQ(diff, (ptrdiff_t)(CO_STACK_SIZE_LOW + CO_PAGE_SIZE));	// 16KB + 패드 1장
+	while (a)
+		a = CoResume(a);
+	while (b)
+		b = CoResume(b);
+	g_cCoMgr.Clear();
+}
 // - 이전에는 반납 때 전체 decommit + 재commit이라 생성 1회에 수 µs가 들었다.
 static void CoTestFn_YieldForever12(CoContext*)
 {

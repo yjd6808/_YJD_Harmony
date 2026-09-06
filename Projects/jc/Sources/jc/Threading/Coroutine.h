@@ -378,6 +378,18 @@ private:
 
 	jc::LinkedList<CoContext*>	  free_[cstReservedTierCount + 1];
 	jc::TreeMap<char*, CoContext*> using_;	// key: CoStack::pStackBase_
+	// [코루틴-13] 티어별 슬랩. 64KB 그래뉴러리티 낭비 없이 1MB 예약을 분할한다.
+	// - 각 슬롯은 아래(낮은 주소)부터 패드 + 스택. 이웃 경계는 각 슬롯 바닥의
+	//   오버플로우 가드가 맡아서 안전성은 그대로다. 반납 슬롯 재사용은 free_ 풀 몫.
+	struct StackSlab
+	{
+		char*	pBase = nullptr;	// 슬랩 예약 시작
+		_u32	slotBytes = 0;		// 슬롯 1개 크기 (스택 + 아래 패드)
+		_u32	slotCount = 0;		// 슬롯 개수
+		_u32	used = 0;			// 할당한 슬롯 수 (bump pointer)
+	};
+	jc::LinkedList<StackSlab> slabs_[cstReservedTierCount + 1];	// 티어 인덱스 직접 사용
+	static constexpr _u32 SLAB_BYTES = 1 << 20;	// 1MB
 };
 
 extern thread_local CoMgr g_cCoMgr;
