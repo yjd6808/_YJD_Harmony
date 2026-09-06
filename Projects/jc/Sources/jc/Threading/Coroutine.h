@@ -155,6 +155,9 @@ struct CoStack
 	char*		pReserveBase_	= nullptr;
 	// [코루틴-04] 비상 밴드가 이미 오버플로우 처리에 쓰였는지 여부.
 	bool		overflowed_		= false;
+	// [코루틴-12] 실제 커밋된 가장 낮은 주소. 풀 반납 때 이 위로만 유지하고
+	// 나머지는 디커밋한다. (다음 사용자가 바로 쓰는 high-water mark)
+	char*		pCommitLow_		= nullptr;
 };
 
 struct CoRegs
@@ -224,11 +227,11 @@ struct CoContext
 	void*		userData_ = nullptr;
 	// [코루틴-14] yield/resume 양방향 값 채널.
 	_u64		transfer_ = 0;
-	// [코루틴-14] 협력적 취소 요청. CoScoped가 세운다.
-	bool		cancelRequested_ = false;
 	// [코루틴-11] 스케줄러 쪽 레지스터 세트. 스위치할 때 현재 스케줄러 상태가
 	// 여기로 저장된다. (코루틴 상태는 regs_에 따로 저장. xchg 공유 안 함)
 	CoRegs		schedRegs_;
+	// [코루틴-14] 협력적 취소 요청. CoScoped가 세운다.
+	bool		cancelRequested_ = false;
 };
 
 #pragma pack(pop)
@@ -248,15 +251,15 @@ static_assert(offsetof(CoStack, pStackEnd_) == 16);
 static_assert(offsetof(CoStack, magic_) == 48);
 static_assert(offsetof(CoStack, pEmergencyTop_) == 56);
 static_assert(offsetof(CoStack, pReserveBase_) == 64);
-static_assert(sizeof(CoStack) == 80);
-
+static_assert(sizeof(CoStack) == 88);
 static_assert(offsetof(CoContext, regs_) == 16);
 static_assert(offsetof(CoContext, stack_) == 288);
-static_assert(offsetof(CoContext, state_) == 368);
-static_assert(offsetof(CoContext, fn_) == 376);
-static_assert(offsetof(CoContext, userData_) == 392);
+static_assert(offsetof(CoContext, state_) == 376);
+static_assert(offsetof(CoContext, fn_) == 384);
+static_assert(offsetof(CoContext, userData_) == 400);
 static_assert(offsetof(CoContext, schedRegs_) == 416);
-static_assert(sizeof(CoContext) == 688);
+static_assert(offsetof(CoContext, schedRegs_) % 16 == 0);	// [코루틴-11] movaps 전제
+static_assert(sizeof(CoContext) == 696);
 
 // [코루틴-05] 세대가 포함된 코루틴 핸들.
 // - 생 CoContext*는 종료 후 풀 재사용되면 엉뚱한 코루틴을 가리키게 되므로(ABA),
@@ -289,10 +292,9 @@ public:
 	static thread_local bool t_alive_;
 
 	// ── Context 레벨 ──────────────────────────────────────────────────────────
-	// [코루틴-07] 풀에서 꺼낸 스택을 다시 커밋하다 실패할 수 있으므로 결과를 돌려준다.
-	// - 이전에는 InitStack이 커밋 실패를 무시하고 진행해서 커밋 안 된 스택으로
-	//   진입하다 첫 push에서 AV가 났다.
-	bool		InitCtx(CoContext* _pCtx);
+	// [코루틴-12] 풀에서 꺼낸 건 레지스터/상태만 리셋한다. 스택은 반납 때
+	// 이미 다음 사용 준비가 끝나서 커밋을 다시 안 한다.
+	void		InitCtx(CoContext* _pCtx);
 	CoContext*	AllocCtx(CoStackTier _stackTier, _u32 _stackSize = 0);
 	void		FreeCtx(CoContext* _pCtx);
 
@@ -345,6 +347,8 @@ public:
 
 	// [코루틴-04] 비상 패드 페이지 수. 전체의 1/4을 넘지 않게 한다.
 	_u32		EmergencyPadPages(_u32 _totalPages) const;
+	// [코루틴-12] 풀 반납 시 커밋 유지 + 가드존 재배치. (커널 전이 최소화)
+	void		RecycleStack(CoStack* _pStack);
 
 	// 테스트 전용: 내부 파라미터를 외부에서 설정한다.
 	void		SetPageInitCount(_u32 _count) { pageInitCount_ = _count; }
@@ -352,6 +356,8 @@ public:
 	void		SetPageGrowCount(_u32 _count) { pageGrowCount_ = _count; }
 	// [코루틴-04] 비상 페이지 수. 작은 스택에 다 안 들어가면 InitStack이 클램프한다.
 	void		SetPageEmergencyCount(_u32 _count) { pageEmergencyCount_ = _count; }
+	// [코루틴-12] 풀 반납 스택이 유지할 커밋 상한. (이 아래는 디커밋)
+	void		SetPoolKeepBytes(_u32 _bytes) { poolKeepBytes_ = _bytes; }
 
 private:
 	// [코루틴-07] 커밋 실패를 호출자에게 알리기 위해 bool을 돌려준다.
@@ -364,6 +370,10 @@ private:
 	_u32 pageGrowCount_  = 2;	// 확장 시 한 번에 늘리는 페이지 수 (soft 오버플로우 방지 위해 1 이상 권장)
 	// [코루틴-04] 비상 페이지 수. 오버플로우 때 SEH 디스패치가 돌 공간이다.
 	_u32 pageEmergencyCount_ = CO_PAGE_EMERGENCY_COUNT;
+	// [코루틴-12] 풀에 반납된 스택이 유지할 커밋 상한. (그 아래는 디커밋)
+	_u32 poolKeepBytes_ = CO_STACK_SIZE_MID;
+	// [코루틴-12] 티어별 풀 상한. 넘으면 반납 때 완전 해제한다. (티어 인덱스 직접 사용)
+	_u32 poolMax_[cstReservedTierCount + 1] = { 0, 256, 64, 16 };
 	_u32 nextId_         = 0;
 
 	jc::LinkedList<CoContext*>	  free_[cstReservedTierCount + 1];

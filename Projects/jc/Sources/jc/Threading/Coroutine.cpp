@@ -179,6 +179,8 @@ bool CoMgr::InitStack(CoStack* _pStack)
 
 	_pStack->pStackLimit_ = pCommitAddr;
 	_pStack->pGuardLimit_ = pGuardAddr;
+	// [코루틴-12] 커밋 하한 기록. 풀 반납 때 이 위로만 유지한다.
+	_pStack->pCommitLow_ = pGuardAddr;
 
 	// [코루틴-04] 오버플로우 가드 1페이지를 GUARD로 둔다. (절대 해제 금지)
 	// - NOACCESS로 두면 RSP가 바로 위에 있을 때 배달 push가 실패해 죽으므로
@@ -317,14 +319,73 @@ void CoMgr::FreeStack(CoStack* _pStack)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// InitCtx
-//   풀에서 꺼낸 CoContext를 재초기화. 스택은 decommit 상태이므로 InitStack으로 재commit.
-// [코루틴-07] 재커밋 실패를 호출자에게 알리기 위해 bool을 돌려준다.
+// [코루틴-12] 풀 반납 시 커밋 유지 + 가드존 재배치.
+// - 이전에는 매번 전체 decommit + 재commit(커널 3회)이라 생성 1회에 수 µs가 들었다.
+// - 유지 상한(poolKeepBytes_)을 넘는 커밋만 디커밋하고, 가드존은 Protect로만
+//   재배치한다. 확장 없이 끝난 경우(가장 흔함)는 Protect 1회로 끝난다.
+// - 커밋된 페이지 내용은 지우지 않는다. 다음 사용자가 바로 쓴다.
+//   (스택 잔류 데이터가 문제면 SecureZeroMemory 정책을 추가할 것)
 //////////////////////////////////////////////////////////////////////////////////////////
-bool CoMgr::InitCtx(CoContext* _pCtx)
+void CoMgr::RecycleStack(CoStack* _pStack)
 {
-	if (!InitStack(&_pCtx->stack_))
-		return false;
+	const _u32 guardBytes = CO_PAGE_SIZE * pageGuardCount_;
+	const _u32 initBytes  = CO_PAGE_SIZE * pageInitCount_;
+	char* pInitLow  = _pStack->pStackBase_ - initBytes;
+	char* pGuardLow = pInitLow - guardBytes;
+	if (pGuardLow < _pStack->pEmergencyTop_)
+		pGuardLow = _pStack->pEmergencyTop_;
+
+	// [코루틴-12] 실제 가드존 크기. 클램프되면 guardBytes보다 작다.
+	// - 클램프 무시하고 guardBytes로 Protect하면 init 영역까지 가드가 번진다.
+	SIZE_T guardZoneBytes = (SIZE_T)(pInitLow - pGuardLow);
+
+	// 유지 상한을 넘는 커밋만 디커밋한다. (보통은 0바이트)
+	char* pKeepLow = _pStack->pStackBase_ - poolKeepBytes_;
+	if (_pStack->pCommitLow_ != nullptr && _pStack->pCommitLow_ < pKeepLow)
+	{
+		VirtualFree(_pStack->pCommitLow_, (SIZE_T)(pKeepLow - _pStack->pCommitLow_), MEM_DECOMMIT);
+		_pStack->pCommitLow_ = pKeepLow;
+	}
+
+	// 가드존을 초기 위치로. 이미 커밋된 영역이라 Protect만으로 된다.
+	// - 확장 없이 끝났으면 가드가 그대로 살아 있어서 이것도 생략한다. (커널 0회)
+	if (_pStack->pStackLimit_ == pInitLow && _pStack->pGuardLimit_ == pGuardLow)
+		return;
+	if (guardZoneBytes == 0)
+	{
+		_pStack->pStackLimit_ = pInitLow;
+		_pStack->pGuardLimit_ = pGuardLow;
+		return;
+	}
+
+	DWORD old = 0;
+	if (::VirtualProtect(pGuardLow, guardZoneBytes, PAGE_READWRITE | PAGE_GUARD, &old) != FALSE)
+	{
+		_pStack->pStackLimit_ = pInitLow;
+		_pStack->pGuardLimit_ = pGuardLow;
+		return;
+	}
+
+	// Protect 실패 = 가드존이 디커밋된 상태. 커밋부터 다시 한다.
+	if (VirtualAlloc(pGuardLow, guardZoneBytes, MEM_COMMIT, PAGE_READWRITE | PAGE_GUARD) != nullptr)
+	{
+		_pStack->pStackLimit_ = pInitLow;
+		_pStack->pGuardLimit_ = pGuardLow;
+		if (_pStack->pCommitLow_ == nullptr || pGuardLow < _pStack->pCommitLow_)
+			_pStack->pCommitLow_ = pGuardLow;
+	}
+	// 여기까지 실패하면 다음 AllocCtx가 InitStack... (풀 경로는 InitStack을 안 타므로
+	//  가드 없이 돌아간다. 다음 확장이 커널 몫이 되는 기존 한계와 동일.assert로 알림)
+	jc_assert_msg(_pStack->pGuardLimit_ == pGuardLow, "가드존 재설치 실패");
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// InitCtx
+//   풀에서 꺼낸 CoContext를 가볍게 리셋. 스택은 반납 때 이미 다음 사용 준비가
+//   끝나서 커밋을 다시 안 한다. ([코루틴-12] 이전에는 여기서 재커밋했다)
+//////////////////////////////////////////////////////////////////////////////////////////
+void CoMgr::InitCtx(CoContext* _pCtx)
+{
 	_pCtx->id_         = 0;
 	_pCtx->threadId_   = 0;
 	_pCtx->regs_       = {};
@@ -336,7 +397,6 @@ bool CoMgr::InitCtx(CoContext* _pCtx)
 	_pCtx->userData_        = nullptr;
 	_pCtx->transfer_        = 0;
 	_pCtx->cancelRequested_ = false;
-	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -356,16 +416,11 @@ CoContext* CoMgr::AllocCtx(CoStackTier _stackTier, _u32 _stackSize)
 
 	if (tier != cstCustom && free_[tier].PopFront(&pCtx))
 	{
-		// 풀에서 재사용: decommit된 상태 → InitStack이 다시 commit
+		// [코루틴-12] 풀 재사용: 커밋 유지됨. 레지스터/상태만 리셋하고 바로 쓴다.
 		// [코루틴-06] 풀 무결성 확인. 크기가 다르면 오염된 것이므로 쓰지 않는다.
 		jc_assert_msg(pCtx->stack_.size_ == size,
 			"풀 오염: 티어 크기와 다릅니다. tier: %d, size: %u", tier, pCtx->stack_.size_);
-		// [코루틴-07] 재커밋 실패 시 이 ctx는 풀로 되돌리고 nullptr을 돌려준다.
-		if (!InitCtx(pCtx))
-		{
-			free_[tier].PushBack(pCtx);
-			return nullptr;
-		}
+		InitCtx(pCtx);
 	}
 	else
 	{
@@ -418,14 +473,22 @@ void CoMgr::FreeCtx(CoContext* _pCtx)
 	pPopped->state_ = csEnd;
 	pPopped->fn_    = nullptr;
 
-	FreeStack(&pPopped->stack_);
-
 	if (stackTier == cstCustom)
 	{
+		FreeStack(&pPopped->stack_);
+		delete pPopped;
+	}
+	else if (free_[stackTier].Size() >= (int)poolMax_[stackTier])
+	{
+		// [코루틴-12] 풀이 가득 찼다. 커밋 메모리가 쌓이지 않게 예약까지 해제한다.
+		// - FreeStack은 decommit만 해서 예약을 남기므로 여기서 직접 release한다.
+		VirtualFree(pPopped->stack_.pReserveBase_, 0, MEM_RELEASE);
 		delete pPopped;
 	}
 	else
 	{
+		// [코루틴-12] 커밋을 유지한 채 풀로 되돌린다. 다음 AllocCtx는 커널을 안 탄다.
+		RecycleStack(&pPopped->stack_);
 		free_[stackTier].PushBack(pPopped);
 	}
 }
@@ -639,6 +702,10 @@ bool __declspec(safebuffers) CoMgr::ExpandStack(CoContext* _pCtx, char* _pFaultA
 		}
 	}
 	_pStack->pGuardLimit_ = pNewGuardStart;
+
+	// [코루틴-12] 커밋 하한 갱신. (새 가드존까지 커밋됨)
+	if (_pStack->pCommitLow_ == nullptr || pNewGuardStart < _pStack->pCommitLow_)
+		_pStack->pCommitLow_ = pNewGuardStart;
 
 	// [코루틴-03] 이 코루틴이 지금 실행 중(폴트를 낸 스택)이면 TEB도 함께 내린다.
 	// - VEH는 폴트를 낸 스레드에서 돌므로 이 TEB 쓰기가 정확하다.

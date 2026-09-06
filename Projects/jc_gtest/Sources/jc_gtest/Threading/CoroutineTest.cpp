@@ -463,14 +463,42 @@ TEST(Coroutine, Veh_ThreadExitDuringClear)
 
 // [코루틴-15] VEH 통계 API가 동작한다.
 // - 커널이 성장을 직접 처리하면 우리 VEH가 안 불려 0일 수 있다.
-//   0이 zł못했다는 뜻이 아니라 안 불렸다는 뜻이다.
+//   0이 잘못됐다는 뜻이 아니라 안 불렸다는 뜻이다.
 TEST(Coroutine, Veh_StatsSmoke)
 {
 	CoMgr::CoVehStats st = g_cCoMgr.GetVehStats();
 	EXPECT_TRUE(st.maxDispatchUsed < 64 * 1024);
 	EXPECT_TRUE(true);
 }
-// [코루틴-04] 비상 레이아웃이 제대로 깔려 있는지 확인한다. (죽지 않는 검사)
+
+// [코루틴-12] 풀 반납 후 재사용해도 커밋이 유지된다. (커널을 다시 안 탐)
+// - 이전에는 반납 때 전체 decommit + 재commit이라 생성 1회에 수 µs가 들었다.
+static void CoTestFn_YieldForever12(CoContext*)
+{
+	CoYield();
+}
+
+TEST(Coroutine, Pool_NoRecommitOnReuse)
+{
+	g_cCoMgr.Clear();
+	CoContext* pCtx = CoRun(CoTestFn_YieldForever12, cstMid);
+	ASSERT_NE(pCtx, nullptr);
+	char* pBase = pCtx->stack_.pStackBase_;
+	while (pCtx)
+		pCtx = CoResume(pCtx);	// 풀로 반납. 커밋 유지되어야 함.
+
+	MEMORY_BASIC_INFORMATION mbi{};
+	EXPECT_EQ(::VirtualQuery(pBase - CO_PAGE_SIZE, &mbi, sizeof(mbi)), sizeof(mbi));
+	EXPECT_EQ(mbi.State, (DWORD)MEM_COMMIT);	// decommit됐으면 FREE/RESERVE다.
+
+	// 같은 풀에서 꺼내면 같은 주소가 재사용되고 바로 동작한다.
+	pCtx = CoRun(CoTestFn_YieldForever12, cstMid);
+	ASSERT_NE(pCtx, nullptr);
+	EXPECT_EQ(pCtx->stack_.pStackBase_, pBase);
+	while (pCtx)
+		pCtx = CoResume(pCtx);
+	g_cCoMgr.Clear();
+}
 // - 예약 아래 패드 N페이지 RW 커밋, 오버플로우 가드 1페이지 GUARD,
 //   DeallocationStack = 밴드 상단.
 TEST(Coroutine, Overflow_LayoutCheck)

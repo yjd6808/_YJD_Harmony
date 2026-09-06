@@ -45,7 +45,8 @@ CoStack struct 8
     pEmergencyTop_ QWORD ?           ; [肄붾（??04] 鍮꾩긽 諛대뱶 ?곷떒 (C++? ?쇱튂)
     pReserveBase_ QWORD  ?           ; [肄붾（??04] ?덉빟 ?쒖옉 二쇱냼 (C++? ?쇱튂)
     overflowed_  BYTE    ?           ; [肄붾（??04] ?ㅻ쾭?뚮줈??泥섎━ ?щ? (C++? ?쇱튂)
-    _pad2_       BYTE    7 dup(?)    ; sizeof(CoStack) = 80
+    _pad2_       BYTE    7 dup(?)
+    pCommitLow_  QWORD   ?
 CoStack ends
 
 OFFSET_COSTACK_SIZE        EQU CoStack.size_
