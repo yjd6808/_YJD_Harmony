@@ -1,17 +1,17 @@
 ; ========================================================================
-; ?묒꽦??: ?ㅼ젙??
-; 肄붾（???댁뀍釉붾━ 援ы쁽
-; - CoSwitchImpl: ?좎씪??吏꾩엯?? ?쒖닔 ?덉??ㅽ꽣 援먯껜 (遺꾧린 ?놁쓬, ?몄텧 ?놁쓬)
-; - CoEntryThunk: 泥?吏꾩엯 thunk. regs_.rbp_ = ctx 洹쒖빟
-; - Windows x64 callee-saved ?덉??ㅽ꽣 ?꾨? ???蹂듭썝
+; 작성자 : 윤정도
+; 코루틴 어셈블리 구현
+; - CoSwitchImpl: 유일한 진입점. 순수 레지스터 교체 (분기 없음, 호출 없음)
+; - CoEntryThunk: 첫 진입 thunk. regs_.rbp_ = ctx 규약
+; - Windows x64 callee-saved 레지스터 전부 저장/복원
 ; ========================================================================
 
-; [肄붾（??09/11] 肄붾（?댁뿉 ?꾩슂??寃껊쭔 吏곸젒 ?좎뼵?쒕떎.
-; - CoRun/CoYield/CoResume? C++ ?몃씪???섑띁濡???꺼??asm 吏꾩엯?먯씠 ?꾨땲??
+; [코루틴-09/11] 코루틴에 필요한 것만 직접 선언한다.
+; - CoRun/CoYield/CoResume은 C++ 인라인 래퍼로 옮겨서 asm 진입점이 아니다.
 OPTION CASEMAP: NONE
-extern CoEntry          : proc      ; [肄붾（??01] 肄붾（??吏꾩엯??
+extern CoEntry          : proc      ; [코루틴-01] 코루틴 진입점
 
-; TEB ?ㅽ봽??(李멸퀬?? DeallocationStack? 援먯껜?섏? ?딆쓬. [肄붾（??02])
+; TEB 오프셋 (참고용)
 TEB_DEALLOCATION_STACK EQU 1478h
 
 ; ============================================================
@@ -41,17 +41,17 @@ CoStack struct 8
     pGuardLimit_ QWORD   ?
     stackTier_   DWORD   ?
     _pad1_       DWORD   ?
-    magic_       QWORD   ?           ; [肄붾（??05] ?ㅽ깮 ?앸퀎 留ㅼ쭅 (C++ CoStack怨??쒖꽌/?ш린 ?쇱튂)
-    pEmergencyTop_ QWORD ?           ; [肄붾（??04] 鍮꾩긽 諛대뱶 ?곷떒 (C++? ?쇱튂)
-    pReserveBase_ QWORD  ?           ; [肄붾（??04] ?덉빟 ?쒖옉 二쇱냼 (C++? ?쇱튂)
-    overflowed_  BYTE    ?           ; [肄붾（??04] ?ㅻ쾭?뚮줈??泥섎━ ?щ? (C++? ?쇱튂)
+    magic_       QWORD   ?           ; [코루틴-05] 스택 식별 매직 (C++ CoStack과 순서/크기 일치)
+    pEmergencyTop_ QWORD ?           ; [코루틴-04] 비상 밴드 상단 (C++와 일치)
+    pReserveBase_ QWORD  ?           ; [코루틴-04] 예약 시작 주소 (C++와 일치)
+    overflowed_  BYTE    ?           ; [코루틴-04] 오버플로우 처리 여부 (C++와 일치)
     _pad2_       BYTE    7 dup(?)
     pCommitLow_  QWORD   ?
 CoStack ends
 
 OFFSET_COSTACK_SIZE        EQU CoStack.size_
-OFFSET_COSTACK_STACKBASE   EQU CoStack.pStackBase_   ; ?믪? 二쇱냼, 珥덇린 RSP (TEB StackBase)
-OFFSET_COSTACK_STACKEND    EQU CoStack.pStackEnd_    ; ?덉빟 ?섎떒 (鍮꾩긽 ?⑤뱶 ?꾨옒)
+OFFSET_COSTACK_STACKBASE   EQU CoStack.pStackBase_   ; 높은 주소, 초기 RSP (TEB StackBase)
+OFFSET_COSTACK_STACKEND    EQU CoStack.pStackEnd_    ; 예약 하단 (비상 패드 아래)
 OFFSET_COSTACK_STACKLIMIT  EQU CoStack.pStackLimit_
 OFFSET_COSTACK_GUARDLIMIT  EQU CoStack.pGuardLimit_
 OFFSET_COSTACK_STACKTIER   EQU CoStack.stackTier_
@@ -68,9 +68,9 @@ CoRegs struct 8
 
     gs8_    QWORD   ?           ; offset  24  TEB StackBase:  0x8
     gs16_   QWORD   ?           ; offset  32  TEB StackLimit: 0x10
-    gs1478_ QWORD   ?           ; offset  40  TEB DeallocationStack: 0x1478 [肄붾（??02/04]
+    gs1478_ QWORD   ?           ; offset  40  TEB DeallocationStack: 0x1478 [코루틴-02/04]
 
-    ; Windows x64 callee-saved ?뺤닔 ?덉??ㅽ꽣
+    ; Windows x64 callee-saved 정수 레지스터
     rsi_    QWORD   ?           ; offset  48
     rdi_    QWORD   ?           ; offset  56
     r12_    QWORD   ?           ; offset  64
@@ -78,13 +78,13 @@ CoRegs struct 8
     r14_    QWORD   ?           ; offset  80
     r15_    QWORD   ?           ; offset  88
 
-    ; [肄붾（??08] 遺?숈냼?섏젏 ?쒖뼱 ?곹깭 (C++ CoRegs? ?쒖꽌/?ш린 ?쇱튂)
+    ; [코루틴-08] 부동소수점 제어 상태 (C++ CoRegs와 순서/크기 일치)
     mxcsr_  DWORD   ?           ; offset  96
     fpucw_  WORD    ?           ; offset 100
     _padFp_ WORD    ?           ; offset 102
-    _padAlign_ BYTE 8 dup(?)    ; offset 104  [肄붾（??10] XMM 16 ?뺣젹 ?⑤뵫
+    _padAlign_ BYTE 8 dup(?)    ; offset 104  [코루틴-10] XMM 16 정렬 패딩
 
-    ; Windows x64 callee-saved XMM ?덉??ㅽ꽣 (16 bytes each, 16-byte aligned)
+    ; Windows x64 callee-saved XMM 레지스터 (16 bytes each, 16-byte aligned)
     xmm6_   BYTE    16 dup(?)   ; offset 112
     xmm7_   BYTE    16 dup(?)   ; offset 128
     xmm8_   BYTE    16 dup(?)   ; offset 144
@@ -95,7 +95,7 @@ CoRegs struct 8
     xmm13_  BYTE    16 dup(?)   ; offset 224
     xmm14_  BYTE    16 dup(?)   ; offset 240
     xmm15_  BYTE    16 dup(?)   ; offset 256
-    ; sizeof(CoRegs) = 272 (C++? EQU濡??쇱튂. ?닿툔?섎㈃ 09??static_assert媛 ?≪쓬)
+    ; sizeof(CoRegs) = 272 (C++와 EQU로 일치. 어긋나면 09의 static_assert가 잡음)
 
 CoRegs ends
 
@@ -128,7 +128,7 @@ OFFSET_COREGS_XMM15 EQU CoRegs.xmm15_
 CoContext struct 8
     id_         DWORD   ?
     threadId_   DWORD   ?
-    generation_ DWORD   ?           ; [肄붾（??05] ?몃? 踰덊샇 (C++ CoContext? ?쒖꽌/?ш린 ?쇱튂)
+    generation_ DWORD   ?           ; [코루틴-05] 세대 번호 (C++ CoContext와 순서/크기 일치)
     _padGen_    DWORD   ?
     regs_       CoRegs  <>
     stack_      CoStack <>
@@ -136,11 +136,11 @@ CoContext struct 8
     _pad0_      DWORD   ?
     fn_         QWORD   ?
     callerCtx_  QWORD   ?
-    userData_   QWORD   ?           ; [肄붾（??14] ?ъ슜???ъ씤??(C++? ?쇱튂. asm? ???)
-    transfer_   QWORD   ?           ; [肄붾（??14] 媛?梨꾨꼸 (C++? ?쇱튂. asm? ???)
-    cancelRequested_ BYTE ?         ; [肄붾（??14] 痍⑥냼 ?붿껌 (C++? ?쇱튂. asm? ???)
-    _padEnd_    BYTE    7 dup(?)    ; + 痍⑥냼 ?⑤뵫 (C++? ?쇱튂)
-    schedRegs_  CoRegs  <>          ; [肄붾（??11] ?ㅼ?以꾨윭 ?덉??ㅽ꽣 (C++? ?쇱튂)
+    userData_   QWORD   ?           ; [코루틴-14] 사용자 포인터 (C++와 일치. asm은 안 씀)
+    transfer_   QWORD   ?           ; [코루틴-14] 값 채널 (C++와 일치. asm은 안 씀)
+    cancelRequested_ BYTE ?         ; [코루틴-14] 취소 요청 (C++와 일치. asm은 안 씀)
+    _padEnd_    BYTE    7 dup(?)    ; + 취소 패딩 (C++와 일치)
+    schedRegs_  CoRegs  <>          ; [코루틴-11] 스케줄러 레지스터 (C++와 일치)
 CoContext ends
 
 OFFSET_COCTX_ID       EQU CoContext.id_
@@ -157,16 +157,16 @@ code
 
 ; ============================================================
 ; CoSwitchImpl
-;   [肄붾（??11] ?좎씪??asm 吏꾩엯?? ?쒖닔 ?덉??ㅽ꽣 援먯껜 (遺꾧린 ?놁쓬, ?몄텧 ?놁쓬)
-;   - rcx = ??ν븷 CoRegs*, rdx = ?쎌쓣 const CoRegs*
-;   - ?꾩옱 ?덉??ㅽ꽣瑜?save????ν븯怨?load?먯꽌 蹂듭썝????ret濡?蹂듦??쒕떎.
-;   - rbx???ㅽ깮???좎떆 ?밸뒗?? (?묒そ ?ㅽ깮??媛곸옄 蹂닿?. ctx ?꾨뱶 遺덊븘??
-;   - RIP? [rsp]濡??ㅺ컙?? (CoRegs.rip_ ?꾨뱶???덉씠?꾩썐 ?명솚?⑹쑝濡??좎?)
-;   - TEB 3醫?+ MXCSR/x87 ?ы븿. gs16 ?쒓퀎 ?숆린??03)??C++ ?섑띁媛 ?쒕떎.
+;   [코루틴-11] 유일한 asm 진입점. 순수 레지스터 교체 (분기 없음, 호출 없음)
+;   - rcx = 저장할 CoRegs*, rdx = 읽을 const CoRegs*
+;   - 현재 레지스터를 save에 저장하고 load에서 복원한 뒤 ret로 복귀한다.
+;   - rbx는 스택에 잠시 얹는다. (양쪽 스택이 각자 보관. ctx 필드 불필요)
+;   - RIP은 [rsp]로 오간다. (CoRegs.rip_ 필드는 레이아웃 호환용으로 유지)
+;   - TEB 3종 + MXCSR/x87 포함. gs16 한계 동기화(03)는 C++ 래퍼가 한다.
 ; ============================================================
 CoSwitchImpl proc FRAME
     .endprolog
-    ; --- save (?꾩옱 ?곹깭) ---
+    ; --- save (현재 상태) ---
     push    rbx
     mov     [rcx + OFFSET_COREGS_RSP],  rsp
     mov     [rcx + OFFSET_COREGS_RBP],  rbp
@@ -222,24 +222,24 @@ CoSwitchImpl proc FRAME
     mov     rbp,    [rdx + OFFSET_COREGS_RBP]
     mov     rsp,    [rdx + OFFSET_COREGS_RSP]
     pop     rbx
-    ret                                          ; [rsp] = ????뱀떆??諛섑솚二쇱냼
+    ret                                          ; [rsp] = 저장 당시의 반환주소
 CoSwitchImpl endp
 
 ; ============================================================
 ; CoEntryThunk
-;   [肄붾（??11] 泥?吏꾩엯 thunk. regs_.rbp_ = ctx 洹쒖빟?쇰줈 CoEntry瑜??몄텧?쒕떎.
-;   - CoRun 以鍮? RSP = pStackBase_-16, [base-16] = thunk 二쇱냼, [base-8] = 0.
-;   - ret濡?吏꾩엯?섎㈃ RSP = base-8 (8 mod 16, call 洹쒖빟 OK).
-;   - .allocstack 40 ??諛섑솚二쇱냼??[base-8] = 0?대씪 ?몄??몃뜑媛 硫덉텣?? (01 ?좎?)
-;   - CoEntry???앸굹硫??ㅼ쐞移섏븘?껎븯誘濡???thunk濡?蹂듦??섏? ?딅뒗?? (int 3)
+;   [코루틴-11] 첫 진입 thunk. regs_.rbp_ = ctx 규약으로 CoEntry를 호출한다.
+;   - CoRun 준비: RSP = pStackBase_-16, [base-16] = thunk 주소, [base-8] = 0.
+;   - ret로 진입하면 RSP = base-8 (8 mod 16, call 규약 OK).
+;   - .allocstack 40 뒤 반환주소는 [base-8] = 0이라 언와인더가 멈춘다. (01 유지)
+;   - CoEntry는 끝나면 스위치아웃하므로 이 thunk로 복귀하지 않는다. (int 3)
 ; ============================================================
 CoEntryThunk proc FRAME
     sub     rsp,    40
     .allocstack 40
     .endprolog
-    mov     rcx,    rbp             ; ctx (CoRun??regs_.rbp_???ｌ뼱??
+    mov     rcx,    rbp             ; ctx (CoRun이 regs_.rbp_에 넣어둠)
     call    CoEntry
-    int     3                       ; 蹂듦? 遺덇?
+    int     3                       ; 복귀 불가
 CoEntryThunk endp
 
 
