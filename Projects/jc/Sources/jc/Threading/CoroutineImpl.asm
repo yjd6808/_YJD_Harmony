@@ -88,19 +88,20 @@ CoRegs struct 8
     mxcsr_  DWORD   ?           ; offset  96
     fpucw_  WORD    ?           ; offset 100
     _padFp_ WORD    ?           ; offset 102
+    _padAlign_ BYTE 8 dup(?)    ; offset 104  [코루틴-10] XMM 16 정렬 패딩
 
-    ; Windows x64 callee-saved XMM 레지스터 (16 bytes each, 8-byte aligned)
-    xmm6_   BYTE    16 dup(?)   ; offset 104
-    xmm7_   BYTE    16 dup(?)   ; offset 120
-    xmm8_   BYTE    16 dup(?)   ; offset 136
-    xmm9_   BYTE    16 dup(?)   ; offset 152
-    xmm10_  BYTE    16 dup(?)   ; offset 168
-    xmm11_  BYTE    16 dup(?)   ; offset 184
-    xmm12_  BYTE    16 dup(?)   ; offset 200
-    xmm13_  BYTE    16 dup(?)   ; offset 216
-    xmm14_  BYTE    16 dup(?)   ; offset 232
-    xmm15_  BYTE    16 dup(?)   ; offset 248
-    ; sizeof(CoRegs) = 264 (C++와 EQU로 일치. 어긋나면 09의 static_assert가 잡음)
+    ; Windows x64 callee-saved XMM 레지스터 (16 bytes each, 16-byte aligned)
+    xmm6_   BYTE    16 dup(?)   ; offset 112
+    xmm7_   BYTE    16 dup(?)   ; offset 128
+    xmm8_   BYTE    16 dup(?)   ; offset 144
+    xmm9_   BYTE    16 dup(?)   ; offset 160
+    xmm10_  BYTE    16 dup(?)   ; offset 176
+    xmm11_  BYTE    16 dup(?)   ; offset 192
+    xmm12_  BYTE    16 dup(?)   ; offset 208
+    xmm13_  BYTE    16 dup(?)   ; offset 224
+    xmm14_  BYTE    16 dup(?)   ; offset 240
+    xmm15_  BYTE    16 dup(?)   ; offset 256
+    ; sizeof(CoRegs) = 272 (C++와 EQU로 일치. 어긋나면 09의 static_assert가 잡음)
 
 CoRegs ends
 
@@ -211,17 +212,17 @@ CTX_OK:
     mov     r14,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R14]
     mov     r15,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R15]
 
-    ; 컨텍스트의 callee-saved XMM 레지스터 복원 (movdqu: alignment 미보장)
-    movdqu  xmm6,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM6]
-    movdqu  xmm7,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM7]
-    movdqu  xmm8,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM8]
-    movdqu  xmm9,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM9]
-    movdqu  xmm10,  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM10]
-    movdqu  xmm11,  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM11]
-    movdqu  xmm12,  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM12]
-    movdqu  xmm13,  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM13]
-    movdqu  xmm14,  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14]
-    movdqu  xmm15,  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15]
+    ; 컨텍스트의 callee-saved XMM 레지스터 복원 (movaps: CoRegs 16 정렬 보장)
+    movaps  xmm6,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM6]
+    movaps  xmm7,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM7]
+    movaps  xmm8,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM8]
+    movaps  xmm9,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM9]
+    movaps  xmm10,  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM10]
+    movaps  xmm11,  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM11]
+    movaps  xmm12,  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM12]
+    movaps  xmm13,  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM13]
+    movaps  xmm14,  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14]
+    movaps  xmm15,  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15]
 
     ; state = csEnd
     mov     dword ptr[rax + OFFSET_COCTX_STATE], csEnd
@@ -275,7 +276,7 @@ ALLOC_OK:
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RBP],     rbp
 
     ; 컨텍스트의 callee-saved 정수 레지스터를 regs_에 저장
-    ; (코루틴 최초 실행 전 초기화: CoYield xchg 시 올바른 컨텍스트 값 복원을 위해)
+    ; (코루틴 최초 실행 전 초기화: CoYield 교환 시 올바른 컨텍스트 값 복원을 위해)
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RSI],     rsi
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RDI],     rdi
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R12],     r12
@@ -283,17 +284,17 @@ ALLOC_OK:
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R14],     r14
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_R15],     r15
 
-    ; 컨텍스트의 callee-saved XMM 레지스터를 regs_에 저장 (movdqu: alignment 미보장)
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM6],    xmm6
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM7],    xmm7
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM8],    xmm8
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM9],    xmm9
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM10],   xmm10
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM11],   xmm11
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM12],   xmm12
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM13],   xmm13
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14],   xmm14
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15],   xmm15
+    ; 컨텍스트의 callee-saved XMM 레지스터를 regs_에 저장 (movaps: CoRegs 16 정렬 보장)
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM6],    xmm6
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM7],    xmm7
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM8],    xmm8
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM9],    xmm9
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM10],   xmm10
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM11],   xmm11
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM12],   xmm12
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM13],   xmm13
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14],   xmm14
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15],   xmm15
 
     ; [코루틴-08] 스레드 부동소수점 제어 상태 저장 (코루틴은 이 값으로 시작)
     stmxcsr [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_MXCSR]
@@ -413,8 +414,11 @@ CoYieldImpl proc FRAME
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS1478], r10
     mov     gs:[TEB_DEALLOCATION_STACK], r11
 
-    lea     rbx,    FIN
-    xchg    rbx,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RIP]
+    ; RIP mov 교환 ([코루틴-10] LOCK이 걸리는 xchg mem 대신.
+    ; rbx가 복귀 주소라 맞바꿀 필요 없음)
+    mov     rbx,    [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RIP]
+    lea     r10,    FIN
+    mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RIP],  r10
 
     mov     r10,    rsp
     mov     r11,    rbp
@@ -452,45 +456,45 @@ CoYieldImpl proc FRAME
     mov     r15,    r10
 
     ; callee-saved XMM 레지스터 xchg (xmm0은 volatile 임시 레지스터로 사용)
-    ; 패턴: xmm0 = regs_[xmmN], regs_[xmmN] = xmmN (movdqu), xmmN = xmm0 (movaps reg←reg)
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM6]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM6],    xmm6
+    ; 패턴: xmm0 = regs_[xmmN], regs_[xmmN] = xmmN (movaps), xmmN = xmm0 (movaps reg←reg)
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM6]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM6],    xmm6
     movaps  xmm6,   xmm0
 
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM7]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM7],    xmm7
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM7]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM7],    xmm7
     movaps  xmm7,   xmm0
 
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM8]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM8],    xmm8
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM8]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM8],    xmm8
     movaps  xmm8,   xmm0
 
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM9]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM9],    xmm9
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM9]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM9],    xmm9
     movaps  xmm9,   xmm0
 
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM10]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM10],   xmm10
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM10]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM10],   xmm10
     movaps  xmm10,  xmm0
 
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM11]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM11],   xmm11
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM11]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM11],   xmm11
     movaps  xmm11,  xmm0
 
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM12]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM12],   xmm12
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM12]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM12],   xmm12
     movaps  xmm12,  xmm0
 
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM13]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM13],   xmm13
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM13]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM13],   xmm13
     movaps  xmm13,  xmm0
 
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14],   xmm14
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14],   xmm14
     movaps  xmm14,  xmm0
 
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15],   xmm15
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15],   xmm15
     movaps  xmm15,  xmm0
 
     ; [코루틴-08] MXCSR/x87 교환 (현재 부동소수점 상태를 저장하고 상대 값을 로드)
@@ -562,7 +566,7 @@ CoResume proc FRAME
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_GS1478],  r10
     mov     gs:[TEB_DEALLOCATION_STACK], r11
 
-    ; rbp xchg
+    ; rbp 교환 (레지스터 간이라 LOCK 없음. [코루틴-10] 제거 대상 아님)
     mov     rbx,        [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RBP]
     xchg    rbx,        rbp
     mov     [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_RBP],     rbx
@@ -593,44 +597,44 @@ CoResume proc FRAME
     mov     r15,    r10
 
     ; callee-saved XMM 레지스터 xchg (xmm0은 volatile 임시 레지스터로 사용)
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM6]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM6],    xmm6
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM6]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM6],    xmm6
     movaps  xmm6,   xmm0
 
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM7]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM7],    xmm7
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM7]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM7],    xmm7
     movaps  xmm7,   xmm0
 
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM8]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM8],    xmm8
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM8]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM8],    xmm8
     movaps  xmm8,   xmm0
 
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM9]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM9],    xmm9
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM9]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM9],    xmm9
     movaps  xmm9,   xmm0
 
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM10]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM10],   xmm10
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM10]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM10],   xmm10
     movaps  xmm10,  xmm0
 
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM11]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM11],   xmm11
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM11]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM11],   xmm11
     movaps  xmm11,  xmm0
 
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM12]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM12],   xmm12
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM12]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM12],   xmm12
     movaps  xmm12,  xmm0
 
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM13]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM13],   xmm13
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM13]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM13],   xmm13
     movaps  xmm13,  xmm0
 
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14],   xmm14
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM14],   xmm14
     movaps  xmm14,  xmm0
 
-    movdqu  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15]
-    movdqu  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15],   xmm15
+    movaps  xmm0,   [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15]
+    movaps  [rax + OFFSET_COCTX_REGS + OFFSET_COREGS_XMM15],   xmm15
     movaps  xmm15,  xmm0
 
     ; [코루틴-08] MXCSR/x87 교환 (CoYieldImpl과 동일. rsp 전환 전에 임시 8바이트 사용)

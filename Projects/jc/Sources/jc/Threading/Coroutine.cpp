@@ -377,6 +377,10 @@ CoContext* CoMgr::AllocCtx(CoStackTier _stackTier, _u32 _stackSize)
 		pCtx->state_ = csInit;
 	}
 
+	// [코루틴-10] movaps 전제. CoContext가 16 정렬이어야 regs_ 안 XMM도 정렬된다.
+	jc_assert_msg((((uintptr_t)pCtx & 15) == 0),
+		"CoContext가 16 정렬이 아닙니다. pCtx: 0x%p", pCtx);
+
 	pCtx->id_ = ++nextId_;
 	using_.Insert(pCtx->stack_.pStackBase_, pCtx);
 	return pCtx;

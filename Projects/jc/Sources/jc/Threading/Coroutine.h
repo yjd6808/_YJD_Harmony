@@ -184,19 +184,22 @@ struct CoRegs
 	_u32 mxcsr_ = 0x1F80;	// offset  96
 	_u16 fpucw_ = 0x027F;	// offset 100
 	_u16 _padFp_ = 0;		// offset 102
+	// [코루틴-10] XMM 16 정렬 패딩. movaps는 정렬 위반 시 즉시 fault라
+	// movdqu보다 빠르고(최신 CPU는 동등) 정렬 오류를 바로 드러낸다.
+	_u8 _padAlign_[8] = {};	// offset 104
 
-	// Windows x64 callee-saved XMM 레지스터 (16 bytes each, 8-byte aligned)
-	_u8 xmm6_[16]  = {};	// offset 104
-	_u8 xmm7_[16]  = {};	// offset 120
-	_u8 xmm8_[16]  = {};	// offset 136
-	_u8 xmm9_[16]  = {};	// offset 152
-	_u8 xmm10_[16] = {};	// offset 168
-	_u8 xmm11_[16] = {};	// offset 184
-	_u8 xmm12_[16] = {};	// offset 200
-	_u8 xmm13_[16] = {};	// offset 216
-	_u8 xmm14_[16] = {};	// offset 232
-	_u8 xmm15_[16] = {};	// offset 248
-	// sizeof(CoRegs) = 264
+	// Windows x64 callee-saved XMM 레지스터 (16 bytes each, 16-byte aligned)
+	_u8 xmm6_[16]  = {};	// offset 112
+	_u8 xmm7_[16]  = {};	// offset 128
+	_u8 xmm8_[16]  = {};	// offset 144
+	_u8 xmm9_[16]  = {};	// offset 160
+	_u8 xmm10_[16] = {};	// offset 176
+	_u8 xmm11_[16] = {};	// offset 192
+	_u8 xmm12_[16] = {};	// offset 208
+	_u8 xmm13_[16] = {};	// offset 224
+	_u8 xmm14_[16] = {};	// offset 240
+	_u8 xmm15_[16] = {};	// offset 256
+	// sizeof(CoRegs) = 272
 };
 
 using FnCoroutine = void(*)(CoContext*);
@@ -232,8 +235,9 @@ static_assert(offsetof(CoRegs, rip_) == 0);
 static_assert(offsetof(CoRegs, gs1478_) == 40);
 static_assert(offsetof(CoRegs, rsi_) == 48);
 static_assert(offsetof(CoRegs, mxcsr_) == 96);
-static_assert(offsetof(CoRegs, xmm6_) == 104);
-static_assert(sizeof(CoRegs) == 264);
+static_assert(offsetof(CoRegs, xmm6_) == 112);
+static_assert(offsetof(CoRegs, xmm6_) % 16 == 0);	// [코루틴-10] movaps 전제
+static_assert(sizeof(CoRegs) == 272);
 
 static_assert(offsetof(CoStack, pStackBase_) == 8);
 static_assert(offsetof(CoStack, pStackEnd_) == 16);
@@ -243,11 +247,11 @@ static_assert(offsetof(CoStack, pReserveBase_) == 64);
 static_assert(sizeof(CoStack) == 80);
 
 static_assert(offsetof(CoContext, regs_) == 16);
-static_assert(offsetof(CoContext, stack_) == 280);
-static_assert(offsetof(CoContext, state_) == 360);
-static_assert(offsetof(CoContext, fn_) == 368);
-static_assert(offsetof(CoContext, userData_) == 384);
-static_assert(sizeof(CoContext) == 408);
+static_assert(offsetof(CoContext, stack_) == 288);
+static_assert(offsetof(CoContext, state_) == 368);
+static_assert(offsetof(CoContext, fn_) == 376);
+static_assert(offsetof(CoContext, userData_) == 392);
+static_assert(sizeof(CoContext) == 416);
 
 // [코루틴-05] 세대가 포함된 코루틴 핸들.
 // - 생 CoContext*는 종료 후 풀 재사용되면 엉뚱한 코루틴을 가리키게 되므로(ABA),
