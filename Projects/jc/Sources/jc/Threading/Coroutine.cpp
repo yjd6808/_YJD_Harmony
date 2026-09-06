@@ -438,7 +438,7 @@ void CoMgr::InitCtx(CoContext* _pCtx)
 //////////////////////////////////////////////////////////////////////////////////////////
 // AllocCtx
 //   풀에 재사용 가능한 CoContext가 있으면 꺼내서 InitCtx 후 반환.
-//   없으면 새로 dbg_new 하고 AllocStack → using_ 등록 후 반환.
+//   없으면 새로 dbg_new 하고 AllocStack → stacksByBase_ 등록 후 반환.
 //////////////////////////////////////////////////////////////////////////////////////////
 CoContext* CoMgr::AllocCtx(CoStackTier _stackTier, _u32 _stackSize)
 {
@@ -474,13 +474,13 @@ CoContext* CoMgr::AllocCtx(CoStackTier _stackTier, _u32 _stackSize)
 		"CoContext가 16 정렬이 아닙니다. pCtx: 0x%p", pCtx);
 
 	pCtx->id_ = ++nextId_;
-	using_.Insert(pCtx->stack_.pStackBase_, pCtx);
+	stacksByBase_.Insert(pCtx->stack_.pStackBase_, pCtx);
 	return pCtx;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // FreeCtx
-//   using_ 에서 제거 후 커스텀이면 메모리 해제 + delete,
+//   stacksByBase_ 에서 제거 후 커스텀이면 메모리 해제 + delete,
 //   풀 티어면 decommit 후 free_ 풀로 반환.
 //////////////////////////////////////////////////////////////////////////////////////////
 void CoMgr::FreeCtx(CoContext* _pCtx)
@@ -495,7 +495,7 @@ void CoMgr::FreeCtx(CoContext* _pCtx)
 		"잘못된 스택 티어입니다. tier: %d", stackTier);
 
 	CoContext* pPopped = nullptr;
-	if (using_.TryPop(_pCtx->stack_.pStackBase_, &pPopped) == false)
+	if (stacksByBase_.TryPop(_pCtx->stack_.pStackBase_, &pPopped) == false)
 	{
 		jc_assert_msg(false, "해당 컨텍스트는 관리 중인 컨텍스트가 아닙니다. pStackBase_: 0x%p",
 			_pCtx->stack_.pStackBase_);
@@ -531,15 +531,15 @@ void CoMgr::FreeCtx(CoContext* _pCtx)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Clear
-//   using_ 에 남은 항목 경고 후 free_ 풀 전체 해제.
+//   stacksByBase_ 에 남은 항목 경고 후 free_ 풀 전체 해제.
 //////////////////////////////////////////////////////////////////////////////////////////
 void CoMgr::Clear()
 {
 	currentCtx_ = nullptr;
 
-	if (using_.Size() > 0)
+	if (stacksByBase_.Size() > 0)
 	{
-		jc_assert_msg(false, "Clear 호출 시점에 아직 할당된 컨텍스트가 존재합니다. Count: %zu", using_.Size());
+		jc_assert_msg(false, "Clear 호출 시점에 아직 할당된 컨텍스트가 존재합니다. Count: %zu", stacksByBase_.Size());
 	}
 
 	for (int tier = cstReservedTierBegin; tier <= cstReservedTierEnd; ++tier)
@@ -567,7 +567,7 @@ void CoMgr::Clear()
 //////////////////////////////////////////////////////////////////////////////////////////
 CoContext* CoMgr::FindContextByBase(char* _pBase)
 {
-	CoContext** pFound = using_.Find(_pBase);
+	CoContext** pFound = stacksByBase_.Find(_pBase);
 	if (pFound == nullptr)
 		return nullptr;
 	return *pFound;
@@ -575,7 +575,7 @@ CoContext* CoMgr::FindContextByBase(char* _pBase)
 
 CoContext* CoMgr::FindContextByAddr(char* _pAddr)
 {
-	CoContext** pFound = using_.LowerBoundValue(_pAddr);
+	CoContext** pFound = stacksByBase_.LowerBoundValue(_pAddr);
 	if (pFound == nullptr)
 		return nullptr;
 
@@ -591,7 +591,7 @@ CoContext* CoMgr::FindContextByAddr(char* _pAddr)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool CoMgr::TryFindContextByBase(char* _pBase, OUT CoContext** _pOut)
 {
-	CoContext** pFound = using_.Find(_pBase);
+	CoContext** pFound = stacksByBase_.Find(_pBase);
 	if (pFound == nullptr)
 		return false;
 	if (_pOut) *_pOut = *pFound;
@@ -607,12 +607,12 @@ bool CoMgr::TryFindContextByAddr(char* _pAddr, OUT CoContext** _pOut)
 	return true;
 }
 
-// [코루틴-05] 관리 중인(using_) 컨텍스트인지 확인한다. (Debug 검증용)
+// [코루틴-05] 관리 중인(stacksByBase_) 컨텍스트인지 확인한다. (Debug 검증용)
 bool CoMgr::IsUsing(CoContext* _pCtx)
 {
 	if (_pCtx == nullptr)
 		return false;
-	CoContext** pFound = using_.Find(_pCtx->stack_.pStackBase_);
+	CoContext** pFound = stacksByBase_.Find(_pCtx->stack_.pStackBase_);
 	return pFound != nullptr && *pFound == _pCtx;
 }
 

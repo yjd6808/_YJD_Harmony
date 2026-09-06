@@ -43,6 +43,20 @@ static bool IsFatalException(DWORD _code)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+struct DumpThreadArgs
+{
+	PCONTEXT	pContext;
+	DWORD		code;
+};
+
+static DWORD WINAPI DumpThreadProc(void* _pParam)
+{
+	DumpThreadArgs* pArgs = (DumpThreadArgs*)_pParam;
+	StackTrace::WriteMinidump(pArgs->pContext, pArgs->code);
+	return 0;
+}
+
+//////////////////////////////////////////////////////////////////////////
 static LONG CALLBACK VectoredExceptionHandler(PEXCEPTION_POINTERS _pExceptionInfo)
 {
 	PEXCEPTION_RECORD pRecord = _pExceptionInfo->ExceptionRecord;
@@ -68,7 +82,20 @@ static LONG CALLBACK VectoredExceptionHandler(PEXCEPTION_POINTERS _pExceptionInf
 
 	_LogError_("========================================");
 
-	StackTrace::WriteMinidump(_pExceptionInfo->ContextRecord, pRecord->ExceptionCode);
+	// [코루틴-15] 덤프는 별도 스레드에서 쓴다.
+	// - 코루틴 오버플로우처럼 폴트 스택에 여유가 없을 때 같은 스택에서 쓰면
+	//   이중 폴트로 죽는다. 실패하면 기존 방식(같은 스택)으로 폴백한다.
+	DumpThreadArgs dumpArgs{ _pExceptionInfo->ContextRecord, pRecord->ExceptionCode };
+	HANDLE hDumpThread = ::CreateThread(nullptr, 64 * 1024, DumpThreadProc, &dumpArgs, 0, nullptr);
+	if (hDumpThread != nullptr)
+	{
+		::WaitForSingleObject(hDumpThread, 30000);
+		::CloseHandle(hDumpThread);
+	}
+	else
+	{
+		StackTrace::WriteMinidump(_pExceptionInfo->ContextRecord, pRecord->ExceptionCode);
+	}
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
 	_CrtDumpMemoryLeaks();

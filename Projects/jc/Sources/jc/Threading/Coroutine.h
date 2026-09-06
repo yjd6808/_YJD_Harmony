@@ -334,7 +334,7 @@ public:
 	static void	VerifyGuardZone(const CoStack& _stack) noexcept;
 #endif
 
-	// [코루틴-05] 관리 중인(using_) 컨텍스트인지 확인한다. (Debug 검증용)
+	// [코루틴-05] 관리 중인(stacksByBase_) 컨텍스트인지 확인한다. (Debug 검증용)
 	bool		IsUsing(CoContext* _pCtx);
 
 	// [코루틴-06] 요청(tier, size)을 실제(tier, size)로 바꾼다.
@@ -377,7 +377,7 @@ private:
 	_u32 nextId_         = 0;
 
 	jc::LinkedList<CoContext*>	  free_[cstReservedTierCount + 1];
-	jc::TreeMap<char*, CoContext*> using_;	// key: CoStack::pStackBase_
+	jc::TreeMap<char*, CoContext*> stacksByBase_;	// key: CoStack::pStackBase_ (09: 용도 드러내는 이름)
 	// [코루틴-13] 티어별 슬랩. 64KB 그래뉴러리티 낭비 없이 1MB 예약을 분할한다.
 	// - 각 슬롯은 아래(낮은 주소)부터 패드 + 스택. 이웃 경계는 각 슬롯 바닥의
 	//   오버플로우 가드가 맡아서 안전성은 그대로다. 반납 슬롯 재사용은 free_ 풀 몫.
