@@ -537,6 +537,24 @@ TEST(Coroutine, Slab_NeighborIsolation)
 		b = CoResume(b);
 	g_cCoMgr.Clear();
 }
+// [코루틴-12] init이 전체를 덮어도(Eager) 반납이 죽지 않는다.
+// - 이전에는 pInitLow 클램프가 빠져 guardZoneBytes가 언더플로우나서
+//   BM_StackGrowth_Jc_Eager에서 assert가 터졌다.
+static void CoTestFn_YieldForever12Eager(CoContext*)
+{
+	CoYield();
+}
+
+TEST(Coroutine, Recycle_ExtremeInitCount)
+{
+	g_cCoMgr.Clear();
+	g_cCoMgr.SetPageInitCount(CO_STACK_PAGE_COUNT_HIGH);	// High 전체 선커밋
+	CoContext* pCtx = CoRun(CoTestFn_YieldForever12Eager, cstHigh);
+	while (pCtx)
+		pCtx = CoResume(pCtx);	// 여기서 RecycleStack이 돈다. 죽으면 안 됨.
+	g_cCoMgr.SetPageInitCount(2);
+	g_cCoMgr.Clear();
+}
 // - 이전에는 반납 때 전체 decommit + 재commit이라 생성 1회에 수 µs가 들었다.
 static void CoTestFn_YieldForever12(CoContext*)
 {

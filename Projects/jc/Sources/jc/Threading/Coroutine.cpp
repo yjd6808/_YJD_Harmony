@@ -366,22 +366,32 @@ void CoMgr::RecycleStack(CoStack* _pStack)
 {
 	const _u32 guardBytes = CO_PAGE_SIZE * pageGuardCount_;
 	const _u32 initBytes  = CO_PAGE_SIZE * pageInitCount_;
-	char* pInitLow  = _pStack->pStackBase_ - initBytes;
-	char* pGuardLow = pInitLow - guardBytes;
-	if (pGuardLow < _pStack->pEmergencyTop_)
-		pGuardLow = _pStack->pEmergencyTop_;
-
-	// [코루틴-12] 실제 가드존 크기. 클램프되면 guardBytes보다 작다.
-	// - 클램프 무시하고 guardBytes로 Protect하면 init 영역까지 가드가 번진다.
-	SIZE_T guardZoneBytes = (SIZE_T)(pInitLow - pGuardLow);
 
 	// 유지 상한을 넘는 커밋만 디커밋한다. (보통은 0바이트)
+	// - 먼저 잘라야 아래 pCommitLow_가 실제 커밋 하한을 가리킨다.
 	char* pKeepLow = _pStack->pStackBase_ - poolKeepBytes_;
 	if (_pStack->pCommitLow_ != nullptr && _pStack->pCommitLow_ < pKeepLow)
 	{
 		VirtualFree(_pStack->pCommitLow_, (SIZE_T)(pKeepLow - _pStack->pCommitLow_), MEM_DECOMMIT);
 		_pStack->pCommitLow_ = pKeepLow;
 	}
+
+	// 위치 재계산. 실제 커밋 하한 아래로 내려가지 않는다.
+	// - 잘라낸 뒤에도 예전 위치를 가리키면 다음 사용자가 디커밋된 곳을 밟아 죽는다.
+	//   (Eager로 전체 커밋 후 잘리면 limit이 허공을 가리키던 버그)
+	char* pFloor = _pStack->pEmergencyTop_;
+	if (_pStack->pCommitLow_ != nullptr && pFloor < _pStack->pCommitLow_)
+		pFloor = _pStack->pCommitLow_;
+	char* pInitLow = _pStack->pStackBase_ - initBytes;
+	if (pInitLow < pFloor)
+		pInitLow = pFloor;
+	char* pGuardLow = pInitLow - guardBytes;
+	if (pGuardLow < pFloor)
+		pGuardLow = pFloor;
+
+	// [코루틴-12] 실제 가드존 크기. 클램프되면 guardBytes보다 작다.
+	// - 클램프 무시하고 guardBytes로 Protect하면 init 영역까지 가드가 번진다.
+	SIZE_T guardZoneBytes = (SIZE_T)(pInitLow - pGuardLow);
 
 	// 가드존을 초기 위치로. 이미 커밋된 영역이라 Protect만으로 된다.
 	// - 확장 없이 끝났으면 가드가 그대로 살아 있어서 이것도 생략한다. (커널 0회)
