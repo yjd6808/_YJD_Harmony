@@ -15,6 +15,7 @@
 #include <type_traits>
 #include <utility>
 #include <cstddef>
+#include <intrin.h>
 
 #define CO_PAGE_SIZE			4096
 
@@ -225,6 +226,9 @@ struct CoContext
 	_u64		transfer_ = 0;
 	// [코루틴-14] 협력적 취소 요청. CoScoped가 세운다.
 	bool		cancelRequested_ = false;
+	// [코루틴-11] 스케줄러 쪽 레지스터 세트. 스위치할 때 현재 스케줄러 상태가
+	// 여기로 저장된다. (코루틴 상태는 regs_에 따로 저장. xchg 공유 안 함)
+	CoRegs		schedRegs_;
 };
 
 #pragma pack(pop)
@@ -251,7 +255,8 @@ static_assert(offsetof(CoContext, stack_) == 288);
 static_assert(offsetof(CoContext, state_) == 368);
 static_assert(offsetof(CoContext, fn_) == 376);
 static_assert(offsetof(CoContext, userData_) == 392);
-static_assert(sizeof(CoContext) == 416);
+static_assert(offsetof(CoContext, schedRegs_) == 416);
+static_assert(sizeof(CoContext) == 688);
 
 // [코루틴-05] 세대가 포함된 코루틴 핸들.
 // - 생 CoContext*는 종료 후 풀 재사용되면 엉뚱한 코루틴을 가리키게 되므로(ABA),
@@ -322,6 +327,10 @@ public:
 	};
 	CoVehStats vehStats_;
 	CoVehStats	GetVehStats() const { return vehStats_; }
+#ifdef _DEBUG
+	// [코루틴-15] 스위치 복귀 시 가드존 커밋 검증. (헤더 래퍼에서 호출)
+	static void	VerifyGuardZone(const CoStack& _stack) noexcept;
+#endif
 
 	// [코루틴-05] 관리 중인(using_) 컨텍스트인지 확인한다. (Debug 검증용)
 	bool		IsUsing(CoContext* _pCtx);
@@ -376,12 +385,11 @@ extern "C"
 	CoContext*  CPP_CALL CoCurrentCtx();
 	bool		CPP_CALL CoValidateAddr(CoContext* _pCtx, char* _pAddr);
 
-	void		CPP_CALL CoOnBeforeLaunch(CoContext* _pCtx);
-	void		CPP_CALL CoOnAfterLaunch(CoContext* _pCtx);
-
-	CoContext*  ASM_CALL CoRun(FnCoroutine _fn, CoStackTier _stackTier = cstMid, _u32 _stackSize = 0);
-	void		ASM_CALL CoYieldImpl();
-	CoContext*	ASM_CALL CoResume(CoContext* _pCtx);
+	// [코루틴-11] 유일한 asm 진입점. 현재 레지스터를 save에 저장하고
+	// load에서 복원한 뒤 ret로 복귀한다. (분기 없음, 호출 없음)
+	void		ASM_CALL CoSwitchImpl(CoRegs* _pSave, const CoRegs* _pLoad);
+	// [코루틴-11] 첫 진입 thunk. regs_.rbp_ = ctx 규약으로 CoEntry를 호출한다.
+	void		ASM_CALL CoEntryThunk();
 
 	// [코루틴-07] 마지막 코루틴 실패 원인을 돌려주고 지운다. (스레드별)
 	CoError		CPP_CALL CoGetLastError();
@@ -415,15 +423,95 @@ extern "C"
 	void		CPP_CALL CoNoteStackOverflow();
 }
 
-// [코루틴-07] 코루틴 밖(스레드 스택)에서 CoYield를 호출하면 asm이 null 컨텍스트를
-// 역참조해 크래시나므로 진입 전에 검사한다. Debug에서는 즉시 문제를 알리고,
-// Release에서는 조용히 무시하고 복귀한다.
+// [코루틴-11] 스위치 앞뒤 로직은 C++ 인라인에 두고 asm은 순수 레지스터 교체만 한다.
+// - 이전에는 yield→resume 한 바퀴에 C 호출 2~4회(TLS+프롤로그)가 붙었다.
+// - CoRun/CoResume은 extern "C"를 뗐다. (호출자가 전부 이 헤더를 쓰는 C++라 문제없음.
+//   asm 경계에 걸리는 CoSwitchImpl/CoEntryThunk/CoEntry 등은 extern "C" 유지)
+
+// [코루틴-07] 코루틴 밖(스레드 스택)에서 CoYield를 호출하면 크래시나므로
+// 진입 전에 검사한다. Debug에서는 즉시 문제를 알리고, Release에서는 조용히 무시한다.
 inline void CoYield()
 {
-	jc_assert_msg(CoCurrentCtx() != nullptr, "CoYield: 코루틴 밖에서 호출됨");
-	if (CoCurrentCtx() == nullptr)
+	CoMgr& mgr = g_cCoMgr;
+	CoContext* pCtx = mgr.currentCtx_;
+	jc_assert_msg(pCtx != nullptr, "CoYield: 코루틴 밖에서 호출됨");
+	if (pCtx == nullptr)
 		return;
-	CoYieldImpl();
+#ifdef _DEBUG
+	jc_assert(CoValidateAddr(pCtx, (char*)_AddressOfReturnAddress()));
+#endif
+	// [코루틴-03] 살아있는 한계를 stack_에 동기화한다. (커널 확장분 반영)
+	pCtx->stack_.pStackLimit_ = (char*)__readgsqword(0x10);
+	pCtx->state_ = csYield;
+	mgr.currentCtx_ = pCtx->callerCtx_;
+	CoSwitchImpl(&pCtx->regs_, &pCtx->schedRegs_);
+	// 복귀 = resume됨. currentCtx_는 resume 쪽에서 이미 설정.
+#ifdef _DEBUG
+	CoMgr::VerifyGuardZone(pCtx->stack_);
+#endif
+}
+
+inline CoContext* CoResume(CoContext* _pCtx)
+{
+	// [코루틴-05] 스레드/상태/자기 자신 검사. 실패하면 nullptr + 에러 코드.
+	if (!CoValidateResume(_pCtx))
+		return nullptr;
+	CoMgr& mgr = g_cCoMgr;
+	_pCtx->callerCtx_ = mgr.currentCtx_;
+	mgr.currentCtx_ = _pCtx;
+	_pCtx->state_ = csRun;
+	CoSwitchImpl(&_pCtx->schedRegs_, &_pCtx->regs_);
+	// 복귀: yield 또는 종료. 스케줄러 쪽 currentCtx_를 되돌린다.
+	mgr.currentCtx_ = _pCtx->callerCtx_;
+#ifdef _DEBUG
+	CoMgr::VerifyGuardZone(_pCtx->stack_);
+#endif
+	if (_pCtx->state_ == csEnd)
+	{
+		mgr.FreeCtx(_pCtx);
+		return nullptr;
+	}
+	return _pCtx;
+}
+
+inline CoContext* CoRun(FnCoroutine _fn, CoStackTier _tier = cstMid, _u32 _size = 0)
+{
+	CoContext* pCtx = CoAllocCtx(_fn, _tier, _size);
+	if (pCtx == nullptr)
+		return nullptr;
+
+	// TEB에 설치할 코루틴 스택 범위. (실제 교체는 CoSwitchImpl이 한다)
+	char* pBase = pCtx->stack_.pStackBase_;
+	pCtx->regs_.gs8_ = (_u64)pBase;
+	pCtx->regs_.gs16_ = (_u64)pCtx->stack_.pStackLimit_;
+	pCtx->regs_.gs1478_ = (_u64)pCtx->stack_.pEmergencyTop_;
+	// 부동소수점 제어 상태는 기본값으로 시작한다. (스레드값 상속 안 함)
+	// regs_는 InitCtx에서 {} 리셋되어 mxcsr_=0x1F80, fpucw_=0x027F임.
+	// thunk가 ctx를 찾을 통로. (thunk: mov rcx, rbp)
+	pCtx->regs_.rbp_ = (_u64)pCtx;
+	// 스택 준비: [base-8] = 0 (가짜 반환주소. 언와인더 종료),
+	// [base-16] = thunk 주소, [base-24] = 더미 (CoSwitchImpl의 pop rbx용).
+	*(void**)(pBase - 8) = nullptr;
+	*(void**)(pBase - 16) = (void*)&CoEntryThunk;
+	*(void**)(pBase - 24) = nullptr;
+	pCtx->regs_.rsp_ = (_u64)(pBase - 24);
+
+	CoMgr& mgr = g_cCoMgr;
+	CoContext* pParent = mgr.currentCtx_;
+	pCtx->callerCtx_ = pParent;
+	mgr.currentCtx_ = pCtx;
+	pCtx->state_ = csRun;
+	CoSwitchImpl(&pCtx->schedRegs_, &pCtx->regs_);
+	mgr.currentCtx_ = pParent;
+#ifdef _DEBUG
+	CoMgr::VerifyGuardZone(pCtx->stack_);
+#endif
+	if (pCtx->state_ == csEnd)
+	{
+		mgr.FreeCtx(pCtx);
+		return nullptr;
+	}
+	return pCtx;
 }
 
 // [코루틴-05] 세대가 포함된 핸들로 코루틴을 시작한다.
@@ -479,15 +567,14 @@ CoContext* CoRunFn(Fn_&& _fn, CoStackTier _tier = cstMid, _u32 _size = 0)
 }
 
 // [코루틴-14] 값 채널. 코루틴 → 스케줄러로 내보내고, 다음 resume 때 값을 받는다.
-// - CoYield는 C++ 래퍼라 오버로드된다. (asm 본체는 CoYieldImpl)
 inline _u64 CoYield(_u64 _out)
 {
-	CoContext* pCtx = CoCurrentCtx();
+	CoContext* pCtx = g_cCoMgr.currentCtx_;
 	jc_assert_msg(pCtx != nullptr, "CoYield: 코루틴 밖에서 호출됨");
 	if (pCtx == nullptr)
 		return 0;
 	pCtx->transfer_ = _out;
-	CoYieldImpl();
+	CoYield();
 	return pCtx->transfer_;
 }
 

@@ -328,6 +328,7 @@ bool CoMgr::InitCtx(CoContext* _pCtx)
 	_pCtx->id_         = 0;
 	_pCtx->threadId_   = 0;
 	_pCtx->regs_       = {};
+	_pCtx->schedRegs_  = {};
 	_pCtx->state_      = csInit;
 	_pCtx->fn_         = nullptr;
 	_pCtx->callerCtx_  = nullptr;
@@ -872,21 +873,15 @@ CO_VEH_PATH __declspec(noinline) LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp) n
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// CoOnBeforeLaunch / CoOnAfterLaunch
-//   ASM에서 코루틴 스택 전환 직후/스케줄러 복귀 직후 호출.
-//   currentCtx_ 포인터를 유지하여 CoVEH가 O(1)로 현재 코루틴을 찾을 수 있게 함.
+// currentCtx_ 체인 관리 (CoOnBeforeLaunch/AfterLaunch 역할)
+//   [코루틴-11] 스위치 앞뒤 처리가 C++ 인라인 래퍼로 옮겨서 전용 함수는 삭제.
+//   currentCtx_/callerCtx_ 갱신은 헤더의 CoRun/CoResume/CoYield 래퍼에서 직접 한다.
 //////////////////////////////////////////////////////////////////////////////////////////
-void CoOnBeforeLaunch(CoContext* _pCtx)
-{
-	_pCtx->callerCtx_     = g_cCoMgr.currentCtx_;
-	g_cCoMgr.currentCtx_  = _pCtx;
-}
-
 #ifdef _DEBUG
 // [코루틴-15] 스레드 스택으로 돌아온 뒤 가드존이 살아있는지 확인한다.
 // - 가드 비트까지는 보지 않는다. 커널이 성장 과정에서 우리 가드를 조용히
 //   커밋해 버리기 때문이다. (실측) 커밋 자체가 풀렸으면 풀 관리 버그다.
-static void CoVerifyGuardZone(const CoStack& _stack) noexcept
+void CoMgr::VerifyGuardZone(const CoStack& _stack) noexcept
 {
 	if (_stack.pGuardLimit_ >= _stack.pStackLimit_)
 		return;
@@ -898,14 +893,6 @@ static void CoVerifyGuardZone(const CoStack& _stack) noexcept
 	}
 }
 #endif
-
-void CoOnAfterLaunch(CoContext* _pCtx)
-{
-	g_cCoMgr.currentCtx_ = _pCtx->callerCtx_;
-#ifdef _DEBUG
-	CoVerifyGuardZone(_pCtx->stack_);
-#endif
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // CoCurrentCtx / CoValidateAddr  (extern "C" 래퍼)
@@ -1032,7 +1019,12 @@ void CoEntry(CoContext* _pCtx) noexcept
 		t_coPendingException = std::current_exception();
 		t_coLastError = coeException;
 	}
-	// 여기서 ret → CoFnEndTrampoline_Resume (정상 종료 경로와 동일)
+	// [코루틴-11] 종료는 스위치아웃이다. 트램폴린 대신 직접 스케줄러로 돌아간다.
+	// - 스케줄러 쪽 래퍼가 csEnd를 보고 FreeCtx한다. 여기로 복귀하는 일은 없다.
+	_pCtx->state_ = csEnd;
+	CoSwitchImpl(&_pCtx->regs_, &_pCtx->schedRegs_);
+	jc_assert_msg(false, "CoEntry: 종료 스위치에서 복귀함");
+	std::terminate();
 }
 
 bool CoTakePendingException()
