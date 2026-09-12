@@ -8,6 +8,7 @@
 
 #include "DescMgr_Item.h"
 
+#include "jc/Primitives/StringConvert.h"
 #include "sg/Core/AppConfig.h"
 #include "sg/Util/JsonUtil.h"
 
@@ -23,7 +24,7 @@ ItemInfoLoader::ItemInfoLoader()
 bool ItemInfoLoader::Load()
 {
 	const jc::String& srcDataPath = g_cAppConfig.srcDataPath_;
-	jc::String itemRootPath = jc::Path::Combine(srcDataPath, GetConfigFileName());
+	jc::String itemRootPath = jc::Path::Combine(srcDataPath, StringConvert::FromUtf8(GetConfigFileName()));
 
 	if (!jc::Directory::Exist(itemRootPath))
 		return false;
@@ -34,7 +35,7 @@ bool ItemInfoLoader::Load()
 		{
 			if (ItemType::IsEquip[i])
 			{
-				jc::String equipItemPath = jc::Path::Combine(itemRootPath, "equip");
+				jc::String equipItemPath = jc::Path::Combine(itemRootPath, _T("equip"));
 				LoadEquip(equipItemPath, i);
 			}
 		}
@@ -43,7 +44,7 @@ bool ItemInfoLoader::Load()
 	}
 	catch (std::exception& ex)
 	{
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), ex.what());
+		_LogError_(_T("%hs 파싱중 오류가 발생하였습니다. %hs"), GetConfigFileName(), ex.what());
 		return false;
 	}
 
@@ -102,7 +103,7 @@ void ItemInfoLoader::LoadEquip(const jc::String& _equipItemPath, int _equipItemT
 		return;
 	}
 
-	LoadAccessory(jc::Path::Combine(_equipItemPath, ItemType::Name[_equipItemType]) + ".json", _equipItemType);
+		LoadAccessory(jc::Path::Combine(_equipItemPath, StringConvert::FromUtf8(ItemType::Name[_equipItemType])) + _T(".json"), _equipItemType);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -115,22 +116,22 @@ void ItemInfoLoader::LoadDetailedEquip(const jc::String& _equipItemPath, int _eq
 	case (int)ItemType::Avatar:
 		for (int charTypeIndex = 0; charTypeIndex < CharType::Max; ++charTypeIndex)
 		{
-			LoadAvatar(jc::Path::Combine(_equipItemPath, CharType::Name[charTypeIndex], equipName), charTypeIndex,
+			LoadAvatar(jc::Path::Combine(_equipItemPath, StringConvert::FromUtf8(CharType::Name[charTypeIndex]), StringConvert::FromUtf8(equipName)), charTypeIndex,
 			           _equipItemType);
 		}
 		break;
 	case (int)ItemType::Weapon:
 		for (int charTypeIndex = 0; charTypeIndex < CharType::Max; ++charTypeIndex)
 		{
-			LoadWeapon(jc::Path::Combine(_equipItemPath, CharType::Name[charTypeIndex], equipName), charTypeIndex,
+			LoadWeapon(jc::Path::Combine(_equipItemPath, StringConvert::FromUtf8(CharType::Name[charTypeIndex]), StringConvert::FromUtf8(equipName)), charTypeIndex,
 			           _equipItemType);
 		}
 		break;
 	default:
 		for (int equipArmorTypeIndex = 0; equipArmorTypeIndex < EquipArmorType::Max; ++equipArmorTypeIndex)
 		{
-			jc::String armorPath = jc::Path::Combine(_equipItemPath, equipName, EquipArmorType::Name[equipArmorTypeIndex]);
-			LoadArmor(armorPath + ".json", equipArmorTypeIndex, _equipItemType);
+				jc::String armorPath = jc::Path::Combine(_equipItemPath, StringConvert::FromUtf8(equipName), StringConvert::FromUtf8(EquipArmorType::Name[equipArmorTypeIndex]));
+				LoadArmor(armorPath + _T(".json"), equipArmorTypeIndex, _equipItemType);
 		}
 		break;
 	}
@@ -140,7 +141,7 @@ void ItemInfoLoader::LoadDetailedEquip(const jc::String& _equipItemPath, int _eq
 void ItemInfoLoader::LoadAccessory(const jc::String& _equipAccessoryPath, int _equipItemType)
 {
 	if (!File::Exist(_equipAccessoryPath))
-		throw std::exception(StringUtilT::Format("%s 파일을 찾지 못했습니다.\n", _equipAccessoryPath.Source()).Source());
+		throw std::exception(StringConvert::ToAnsi(StringUtil::Format(_T("%s 파일을 찾지 못했습니다.\n"), _equipAccessoryPath.Source())).Source());
 
 	Json::Value root;
 	JsonUtil::LoadThrow(_equipAccessoryPath, root);
@@ -161,7 +162,7 @@ void ItemInfoLoader::LoadAccessory(const jc::String& _equipAccessoryPath, int _e
 void ItemInfoLoader::LoadArmor(const jc::String& _equipItemArmorPath, int _armorType, int _equipItemType)
 {
 	if (!File::Exist(_equipItemArmorPath))
-		throw std::exception(StringUtilT::Format("%s 파일을 찾지 못했습니다.\n", _equipItemArmorPath.Source()).Source());
+		throw std::exception(StringConvert::ToAnsi(StringUtil::Format(_T("%s 파일을 찾지 못했습니다.\n"), _equipItemArmorPath.Source())).Source());
 
 	Json::Value root;
 	JsonUtil::LoadThrow(_equipItemArmorPath, root);
@@ -184,7 +185,7 @@ void ItemInfoLoader::LoadAvatar(const jc::String& _equipItemAvatarPath, int _cha
 {
 	for (int avatarTypeIndex = 0; avatarTypeIndex < AvatarType::Max; ++avatarTypeIndex)
 	{
-		jc::String avatarPath = jc::Path::Combine(_equipItemAvatarPath, AvatarType::Name[avatarTypeIndex]) + ".json";
+		jc::String avatarPath = jc::Path::Combine(_equipItemAvatarPath, StringConvert::FromUtf8(AvatarType::Name[avatarTypeIndex])) + _T(".json");
 
 		Json::Value root;
 		JsonUtil::LoadThrow(avatarPath, root);
@@ -208,7 +209,7 @@ void ItemInfoLoader::LoadWeapon(const jc::String& _equipItemWeaponPath, int _cha
 {
 	for (int weaponTypeIndex = 0; weaponTypeIndex < WeaponType::Max; ++weaponTypeIndex)
 	{
-		jc::String weaponPath = jc::Path::Combine(_equipItemWeaponPath, WeaponType::Name[weaponTypeIndex]) + ".json";
+		jc::String weaponPath = jc::Path::Combine(_equipItemWeaponPath, StringConvert::FromUtf8(WeaponType::Name[weaponTypeIndex])) + _T(".json");
 
 		Json::Value root;
 		JsonUtil::LoadThrow(weaponPath, root);

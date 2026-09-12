@@ -21,7 +21,7 @@ public:
 	virtual ~IConnection() = default;
 
 	virtual bool Connect(const jc::String& _hostname, const uint16_t& _port, const jc::String& _username,
-	                     const jc::String& _password, const jc::String& _dbName = "") = 0;
+	                     const jc::String& _password, const jc::String& _dbName = _T("")) = 0;
 	virtual bool SelectDB(const jc::String& _dbName) = 0;
 	virtual void Disconnect() = 0;
 

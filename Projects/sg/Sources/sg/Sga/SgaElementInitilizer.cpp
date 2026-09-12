@@ -15,7 +15,7 @@ USING_NS_JC;
 ////////////////////////////////////////////////////////////////////////////////////////
 void SgaElementInitializerImpl<-1>::Initialize(const SgaElementPtr& _pElement, Stream& _stream, bool _indexOnly)
 {
-	jc_assert_msg(false, "이상한 버전이군요");
+	jc_assert_msg(false, _T("이상한 버전이군요"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -41,7 +41,7 @@ void SgaElementInitializerImpl<1>::Initialize(const SgaElementPtr& _pElement, St
 	int spriteDataOffset = _stream.GetOffset() + _pElement->indexLength_;
 	int waitForLoadingCount = image.WaitForLoadingDataCount();
 
-	jc_assert_msg(waitForLoadingCount == image.Count(), "로딩해야할 데이터 수와 미리 생성된 NULL 벡터의 용량이랑 다릅니다. (%d:%d)",
+	jc_assert_msg(waitForLoadingCount == image.Count(), _T("로딩해야할 데이터 수와 미리 생성된 NULL 벡터의 용량이랑 다릅니다. (%d:%d)"),
 	               waitForLoadingCount, image.Count());
 
 	for (int i = 0; i < waitForLoadingCount; ++i)
@@ -101,7 +101,7 @@ void SgaElementInitializerImpl<2>::Initialize(const SgaElementPtr& _pElement, St
 	int spriteDataOffset = _stream.GetOffset() + _pElement->indexLength_;
 	int waitForLoadingCount = image.WaitForLoadingDataCount();
 
-	jc_assert_msg(waitForLoadingCount == image.Count(), "로딩해야할 데이터 수와 미리 생성된 NULL 벡터의 용량이랑 다릅니다. (%d:%d)",
+	jc_assert_msg(waitForLoadingCount == image.Count(), _T("로딩해야할 데이터 수와 미리 생성된 NULL 벡터의 용량이랑 다릅니다. (%d:%d)"),
 	               waitForLoadingCount, image.Count());
 
 	for (int i = 0; i < waitForLoadingCount; ++i)
@@ -204,8 +204,8 @@ void SgaElementInitializer::InitializeElement(const SgaElementPtr& _pElement, St
 {
 	int version = _pElement->GetVersion();
 
-	jc_assert_msg(InitializerMap_v.Size() != 0, "초기화를 먼저 진행해주세요.");
-	jc_assert_msg(version >= MinVersion_v && version <= MaxVersion_v, "올바른 버전이 아닙니다.");
+	jc_assert_msg(InitializerMap_v.Size() != 0, _T("초기화를 먼저 진행해주세요."));
+	jc_assert_msg(version >= MinVersion_v && version <= MaxVersion_v, _T("올바른 버전이 아닙니다."));
 
 	InitializerMap_v[version]->Initialize(_pElement, _stream, _indexOnly);
 }

@@ -31,7 +31,7 @@ void EventLock::Lock()
 //////////////////////////////////////////////////////////////////////////////////////////
 void EventLock::Unlock()
 {
-	jc_assert_msg(m_bLocked.Load(), "이미 잠금이 해제된 상태입니다.");
+	jc_assert_msg(m_bLocked.Load(), _T("이미 잠금이 해제된 상태입니다."));
 	m_bLocked = false;
 	m_LockEvent.Signal();
 }

@@ -399,7 +399,7 @@ class Vector : public ArrayCollection<T, TAllocator>
     /// </summary>
     void RemoveAt(const int _idx)
     {
-        jc_assert_msg(this->IsValidIndex(_idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", _idx, this->size_);
+        jc_assert_msg(this->IsValidIndex(_idx), _T("올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)"), _idx, this->size_);
 
         const int moveBlockSize = this->size_ - (_idx + 1);
 

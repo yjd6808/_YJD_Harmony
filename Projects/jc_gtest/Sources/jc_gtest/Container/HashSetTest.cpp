@@ -167,7 +167,7 @@ TEST(HashSetTest, MemoryPool) {
 	MemoryPoolLeakCheck
 	HashSet<String, CDefaultArrayAllocator> q;
 	for (int i = 0; i < 1'000; i++) {
-		q.Insert(StringUtilT::Format(_T("ss%d"), i));
+		q.Insert(StringUtil::Format(_T("ss%d"), i));
 	}
 }
 

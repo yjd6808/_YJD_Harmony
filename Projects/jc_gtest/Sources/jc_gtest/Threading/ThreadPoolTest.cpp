@@ -15,13 +15,13 @@ TEST(ThreadPoolTest, General) {
 	int r = 0;
 	for (;;)
 	{
-		Console::WriteLine("====================== [%d] ======================", ++r);
+		Console::WriteLine(_T("====================== [%d] ======================"), ++r);
 		ThreadPool pool(12);
 
 		Task<int> t1 = pool.Run([](int a, int b) {
 			EXPECT_TRUE(a == 100);
 			EXPECT_TRUE(b == 200);
-			Console::WriteLine("태스크1");
+			Console::WriteLine(_T("태스크1"));
 			Thread::Sleep(R(100, 200));
 			return 100;
 		}, 100, 200);
@@ -30,7 +30,7 @@ TEST(ThreadPoolTest, General) {
 		Task<void> t2 = pool.Run([](int a, int b) {
 			EXPECT_EQ(a, 100);
 			EXPECT_EQ(b, 200);
-			Console::WriteLine("태스크2");
+			Console::WriteLine(_T("태스크2"));
 			Thread::Sleep(R(100, 400));
 		}, 100, 200);
 		t2.SetDebugName(_T("태스크2"));
@@ -41,27 +41,27 @@ TEST(ThreadPoolTest, General) {
 			taskArr[i - 3] = pool.Run([=](int a, int b) {
 				EXPECT_EQ(a, 100);
 				EXPECT_EQ(b, 200);
-				Console::WriteLine("태스크%d", i);
+				Console::WriteLine(_T("태스크%d"), i);
 				Thread::Sleep(R(100, 800));
 			}, 100, 200);
-			taskArr[i - 3].SetDebugName(StringUtilT::Format(_T("태스크%d"), i));
+			taskArr[i - 3].SetDebugName(StringUtil::Format(_T("태스크%d"), i));
 		}
 
 		Thread th1{ [=](void*) {
 			int r;
 			if (!t1.Wait(&r)) {
-				Console::WriteLine("태스크1 작업 취소됨");
+				Console::WriteLine(_T("태스크1 작업 취소됨"));
 				EXPECT_EQ(r, 100);
 			} else {
-				Console::WriteLine("태스크1 작업 완료 %d", r);
+				Console::WriteLine(_T("태스크1 작업 완료 %d"), r);
 			}
 		}};
 
 		Thread th2{ [=](void*) {
 			if (!t2.Wait()) {
-				Console::WriteLine("태스크2 작업 취소됨");
+				Console::WriteLine(_T("태스크2 작업 취소됨"));
 			} else {
-				Console::WriteLine("태스크2 작업 작업완료");
+				Console::WriteLine(_T("태스크2 작업 작업완료"));
 			}
 		}};
 
@@ -69,27 +69,27 @@ TEST(ThreadPoolTest, General) {
 			for (int i = 0; i <= 5; ++i) {
 				TaskWaitResult r;
 				taskArr[i].Wait(&r);
-				Console::WriteLine("태스크%d 작업완료(대기 결과 %d)", i+ 3, r);
+				Console::WriteLine(_T("태스크%d 작업완료(대기 결과 %d)"), i+ 3, r);
 			}
 		} };
 
 
 		Thread::Sleep(R(10, 1000));
-		Console::WriteLine("조인1");
+		Console::WriteLine(_T("조인1"));
 		pool.Join();
-		Console::WriteLine("조인2");
+		Console::WriteLine(_T("조인2"));
 		th1.Join();
-		Console::WriteLine("조인3");
+		Console::WriteLine(_T("조인3"));
 		th2.Join();
-		Console::WriteLine("조인4");
-		Console::WriteLine("조인4-State:%d", (int)taskArr[0].GetContextState());
-		Console::WriteLine("조인4-State:%d", (int)taskArr[1].GetContextState());
-		Console::WriteLine("조인4-State:%d", (int)taskArr[2].GetContextState());
-		Console::WriteLine("조인4-State:%d", (int)taskArr[3].GetContextState());
-		Console::WriteLine("조인4-State:%d", (int)taskArr[4].GetContextState());
-		Console::WriteLine("조인4-State:%d", (int)taskArr[5].GetContextState());
+		Console::WriteLine(_T("조인4"));
+		Console::WriteLine(_T("조인4-State:%d"), (int)taskArr[0].GetContextState());
+		Console::WriteLine(_T("조인4-State:%d"), (int)taskArr[1].GetContextState());
+		Console::WriteLine(_T("조인4-State:%d"), (int)taskArr[2].GetContextState());
+		Console::WriteLine(_T("조인4-State:%d"), (int)taskArr[3].GetContextState());
+		Console::WriteLine(_T("조인4-State:%d"), (int)taskArr[4].GetContextState());
+		Console::WriteLine(_T("조인4-State:%d"), (int)taskArr[5].GetContextState());
 		th3.Join();
-		Console::WriteLine("조인5");
+		Console::WriteLine(_T("조인5"));
 		if (r == 3) break;
 	}
 }

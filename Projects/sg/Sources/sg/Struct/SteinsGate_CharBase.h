@@ -311,7 +311,7 @@ struct AnimationInfo : SDescBase
 {
 	AnimationInfo()
 	{
-		jc_assert_msg(false, "호출 금지");
+		jc_assert_msg(false, _T("호출 금지"));
 	}
 
 	AnimationInfo(int _frameSize)

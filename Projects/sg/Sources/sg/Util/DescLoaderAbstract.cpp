@@ -7,6 +7,7 @@
 
 #include "DescLoaderMgr.h"
 
+#include "jc/Primitives/StringConvert.h"
 #include "sg/Util/JsonUtil.h"
 #include "sg/Core/AppConfig.h"
 
@@ -23,7 +24,7 @@ bool DescLoaderAbstract::DirectoryTree::Init(const jc::String& _rootDirectoryNam
 	}
 	catch (std::exception& exception)
 	{
-		_LogError_("설정파일 %s을 초기화 하는중 오류가 발생하였습니다. (%s)", loader_->GetConfigFileName(), exception.what());
+		_LogError_(_T("설정파일 %hs을 초기화 하는중 오류가 발생하였습니다. (%hs)"), loader_->GetConfigFileName(), exception.what());
 		return false;
 	}
 }
@@ -41,7 +42,7 @@ bool DescLoaderAbstract::DirectoryTree::Load()
 	}
 	catch (std::exception& exception)
 	{
-		_LogError_("설정파일 %s을 로드하는중 오류가 발생하였습니다. (%s)", loader_->GetConfigFileName(), exception.what());
+		_LogError_(_T("설정파일 %hs을 로드하는중 오류가 발생하였습니다. (%hs)"), loader_->GetConfigFileName(), exception.what());
 		return false;
 	}
 }
@@ -54,19 +55,19 @@ void DescLoaderAbstract::DirectoryTree::Clear()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void DescLoaderAbstract::DirectoryTree::SetCallback(const char* _directoryName,
-                                                          DirectoryTreeNodeCallback_t&& _callback)
+void DescLoaderAbstract::DirectoryTree::SetCallback(const jc::String& _directoryName,
+                                                           DirectoryTreeNodeCallback_t&& _callback)
 {
 	if (root_ == nullptr)
 	{
-		_LogWarn_("디렉토리 트리의 Root 노드가 MULL입니다.");
+		_LogWarn_(_T("디렉토리 트리의 Root 노드가 MULL입니다."));
 		return;
 	}
 
 	DirectoryTreeNode* pNode = FindNodeRecursive(root_, _directoryName);
 	if (pNode == nullptr)
 	{
-		_LogWarn_("디렉토리 트리에서 %s 경로의 디렉토리를 찾지 못했습니다.", _directoryName);
+		_LogWarn_(_T("디렉토리 트리에서 %s 경로의 디렉토리를 찾지 못했습니다."), _directoryName);
 		return;
 	}
 
@@ -74,19 +75,19 @@ void DescLoaderAbstract::DirectoryTree::SetCallback(const char* _directoryName,
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void DescLoaderAbstract::DirectoryTree::SetCallback(const char* _directoryName,
-                                                          const DirectoryTreeNodeCallback_t& _callback)
+void DescLoaderAbstract::DirectoryTree::SetCallback(const jc::String& _directoryName,
+                                                           const DirectoryTreeNodeCallback_t& _callback)
 {
 	if (root_ == nullptr)
 	{
-		_LogWarn_("디렉토리 트리의 Root 노드가 MULL입니다.");
+		_LogWarn_(_T("디렉토리 트리의 Root 노드가 MULL입니다."));
 		return;
 	}
 
 	DirectoryTreeNode* pNode = FindNodeRecursive(root_, _directoryName);
 	if (pNode == nullptr)
 	{
-		_LogWarn_("디렉토리 트리에서 %s 경로의 디렉토리를 찾지 못했습니다.", _directoryName);
+		_LogWarn_(_T("디렉토리 트리에서 %s 경로의 디렉토리를 찾지 못했습니다."), _directoryName);
 		return;
 	}
 
@@ -107,7 +108,7 @@ void DescLoaderAbstract::DirectoryTree::SetCallbackCommon(const DirectoryTreeNod
 
 //////////////////////////////////////////////////////////////////////////////////////////
 DescLoaderAbstract::DirectoryTreeNode* DescLoaderAbstract::DirectoryTree::FindNodeRecursive(
-	DirectoryTreeNode* _pNode, const char* _pDirectoryName)
+	DirectoryTreeNode* _pNode, const jc::String& _pDirectoryName)
 {
 	jc_assert(_pNode);
 
@@ -126,18 +127,18 @@ DescLoaderAbstract::DirectoryTreeNode* DescLoaderAbstract::DirectoryTree::FindNo
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void DescLoaderAbstract::DirectoryTree::ConstructTreeRecursive(
-	OUT DirectoryTreeNode** _ppNode, const char* _path, int _depth)
+	OUT DirectoryTreeNode** _ppNode, const jc::String& _path, int _depth)
 {
 	const int directoryCount = jc::Directory::DirectoryCount(_path);
 	const jc::String directoryName = jc::Path::FileNameLevel(_path, _depth);
 	DirectoryTreeNode* pNewNode = dbg_new DirectoryTreeNode{ directoryName, directoryCount };
 
-	for (const std::filesystem::directory_entry& directoryEntry : std::filesystem::directory_iterator(_path))
+	for (const std::filesystem::directory_entry& directoryEntry : std::filesystem::directory_iterator(std::filesystem::path(_path.Source())))
 	{
 		if (is_directory(directoryEntry))
 		{
 			DirectoryTreeNode* pChild = nullptr;
-			ConstructTreeRecursive(&pChild, directoryEntry.path().string().c_str(), _depth + 1);
+			ConstructTreeRecursive(&pChild, jc::StringConvert::FromAnsi(directoryEntry.path().string().c_str()), _depth + 1);
 			pNewNode->children_.PushBack(pChild);
 		}
 	}
@@ -156,12 +157,12 @@ void DescLoaderAbstract::DirectoryTree::LoadRecursive(DirectoryTree* _pTree, Dir
 		if (directoryEntry.is_regular_file())
 		{
 			Json::Value root;
-			jc::String fileName = directoryEntry.path().string().c_str();
+			jc::String fileName = jc::StringConvert::FromAnsi(directoryEntry.path().string().c_str());
 
 			if (!JsonUtil::Load(fileName.Source(), root))
 			{
 				jc::String fName = jc::Path::FileName(fileName.Source());
-				_LogDebug_("%s 파일 로딩 실패 (무시함)", fName.SafeSource());
+				_LogDebug_(_T("%s 파일 로딩 실패 (무시함)"), fName.SafeSource());
 				continue;
 			}
 
@@ -212,20 +213,20 @@ void DescLoaderAbstract::LoadDepedencies()
 //////////////////////////////////////////////////////////////////////////////////////////
 bool DescLoaderAbstract::LoadJson(OUT Json::Value& _root)
 {
-	jc::String configPath = GetConfigFileName();
+	jc::String configPath = jc::StringConvert::FromUtf8(GetConfigFileName());
 	if (UseSrcDataPath())
 	{
-		configPath = jc::Path::Combine(g_cAppConfig.srcDataPath_, GetConfigFileName());
+		configPath = jc::Path::Combine(g_cAppConfig.srcDataPath_, jc::StringConvert::FromUtf8(GetConfigFileName()));
 	}
 
-	if (jc::Path::Extension(configPath) != ".json")
+	if (jc::Path::Extension(configPath) != _T(".json"))
 	{
-		_LogWarn_("%s 설정파일은 json 형식의 파일이 아닙니다.", GetConfigFileName());
+		_LogWarn_(_T("%hs 설정파일은 json 형식의 파일이 아닙니다."), GetConfigFileName());
 		return false;
 	}
 
 	std::ifstream reader(configPath.Source(), std::ifstream::in | std::ifstream::binary);
-	jc_assert_msg(reader.is_open(), "%s 파일을 여는데 실패했습니다.", GetConfigFileName());
+	jc_assert_msg(reader.is_open(), _T("%hs 파일을 여는데 실패했습니다."), GetConfigFileName());
 
 	try
 	{
@@ -233,7 +234,7 @@ bool DescLoaderAbstract::LoadJson(OUT Json::Value& _root)
 	}
 	catch (std::exception& exception)
 	{
-		_LogError_("설정파일 %s을 로드하는중 오류가 발생하였습니다. (%s)", GetConfigFileName(), exception.what());
+		_LogError_(_T("설정파일 %hs을 로드하는중 오류가 발생하였습니다. (%hs)"), GetConfigFileName(), exception.what());
 		return false;
 	}
 
@@ -244,11 +245,11 @@ bool DescLoaderAbstract::LoadJson(OUT Json::Value& _root)
 bool DescLoaderAbstract::LoadDirectory(OUT DirectoryTree& _directoryTree)
 {
 	const jc::String& srcDataPath = g_cAppConfig.srcDataPath_;
-	const jc::String directoryPath = jc::Path::Combine(srcDataPath, GetConfigFileName());
+	const jc::String directoryPath = jc::Path::Combine(srcDataPath, jc::StringConvert::FromUtf8(GetConfigFileName()));
 
 	if (!jc::Directory::Exist(directoryPath))
 	{
-		_LogWarn_("%s 디렉토리를 찾지 못했습니다.", directoryPath.Source());
+		_LogWarn_(_T("%s 디렉토리를 찾지 못했습니다."), directoryPath.Source());
 		return false;
 	}
 
@@ -280,14 +281,14 @@ void DescLoaderAbstract::AddData(SDescBase* _pData)
 {
 	if (!configDataMap_.Insert(_pData->code_, _pData))
 	{
-		jc_assert_msg(false, "%s 파일에서 이미 %d번 데이터를 읽은 후 입력하였습니다.", GetConfigFileName(), _pData->code_);
+		jc_assert_msg(false, _T("%hs 파일에서 이미 %d번 데이터를 읽은 후 입력하였습니다."), GetConfigFileName(), _pData->code_);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 SDescBase* DescLoaderAbstract::GetData(int _code)
 {
-	jc_assert_msg(configDataMap_.Exist(_code), "%s 파일에서 읽은 데이터중 %d의 코드에 해당하는 데이터는 존재하지 않습니다.", GetConfigFileName(), _code);
+	jc_assert_msg(configDataMap_.Exist(_code), _T("%hs 파일에서 읽은 데이터중 %d의 코드에 해당하는 데이터는 존재하지 않습니다."), GetConfigFileName(), _code);
 	return configDataMap_[_code];
 }
 

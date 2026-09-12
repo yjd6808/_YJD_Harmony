@@ -129,27 +129,27 @@ bool NetGroup_InterServ::ConnectCenterServer(int _tryCount)
 {
 	if (pCenterTcp_ == nullptr)
 	{
-		_LogWarn_("인터서버 TCP 클라이언트가 초기화되어있지 않습니다.");
+		_LogWarn_(_T("인터서버 TCP 클라이언트가 초기화되어있지 않습니다."));
 		return false;
 	}
 
 	if (!sgapi_IsInterServerClient())
 	{
-		_LogWarn_("이 프로세스는 인터서버 클라이언트가 아닙니다.");
+		_LogWarn_(_T("이 프로세스는 인터서버 클라이언트가 아닙니다."));
 		return false;
 	}
 
 	const NetInterServerInfo& interserverInfo = g_cNetCore.GetInterServerInfo();
 	if (!interserverInfo.remoteCenterServerEp_.IsValidRemoteEndPoint())
 	{
-		jc_assert_msg(false, "중앙서버 원격 엔드포인트가 유효하지 않습니다.");
+		jc_assert_msg(false, _T("중앙서버 원격 엔드포인트가 유효하지 않습니다."));
 		return false;
 	}
 
 	constexpr int CONNECTION_TIMEOUT = 1000;
 	int tryCountIndex = 0;
 
-	_LogDebug_("중앙 서버에 접속을 시도합니다...");
+	_LogDebug_(_T("중앙 서버에 접속을 시도합니다..."));
 	while (!pCenterTcp_->Connect(interserverInfo.remoteCenterServerEp_, CONNECTION_TIMEOUT))
 	{
 		++tryCountIndex;
@@ -165,6 +165,6 @@ bool NetGroup_InterServ::ConnectCenterServer(int _tryCount)
 		return true;
 	}
 
-	_NetLogError_("중앙서버 접속에 실패했습니다. 프로세스를 종료합니다.");
+	_NetLogError_(_T("중앙서버 접속에 실패했습니다. 프로세스를 종료합니다."));
 	return false;
 }

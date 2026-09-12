@@ -17,7 +17,7 @@ USING_NS_JC;
 // =============================================================
 void AudioPlayer::PlayOnce()
 {
-	jc_assert_msg(handle_, "핸들이 설정되지 않았습니다.");
+	jc_assert_msg(handle_, _T("핸들이 설정되지 않았습니다."));
 
 	if (playing_)
 		Stop(handle_);
@@ -55,7 +55,7 @@ void AudioPlayer::PlayNew(const SoundDataPtr& _pSoundData, bool _repeat)
 //////////////////////////////////////////////////////////////////////////////////////////
 void AudioPlayer::PlayRepeat()
 {
-	jc_assert_msg(handle_, "핸들이 설정되지 않았습니다.");
+	jc_assert_msg(handle_, _T("핸들이 설정되지 않았습니다."));
 
 	if (playing_)
 		Stop(handle_);

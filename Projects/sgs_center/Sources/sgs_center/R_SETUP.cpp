@@ -23,7 +23,7 @@ void R_SETUP::RECV_SCE_ItsMe(Session* _pSession, ICommand* _pCmd)
 
 	if (pCmd->ProcessType < ServerProcessType::Begin || pCmd->ProcessType > ServerProcessType::End) 
 	{
-		_LogWarn_("누군지 알 수 없는 세션이 접속을 시도하였습니다.");
+		_LogWarn_(_T("누군지 알 수 없는 세션이 접속을 시도하였습니다."));
 		_pSession->Disconnect();
 		return;
 	}
@@ -35,7 +35,7 @@ void R_SETUP::RECV_SCE_ItsMe(Session* _pSession, ICommand* _pCmd)
 void R_SETUP::RECV_SCE_NotifyBootState(Session* _pSession, ICommand* _pCmd)
 {
 	SCE_NotifyBootState* pCmd = (SCE_NotifyBootState*)_pCmd;
-	_LogInfo_("%s서버가 %s됨.", ServerType::Name[pCmd->ServerType], ServerBootState::Name[pCmd->State]);
+	_LogInfo_(_T("%hs서버가 %hs됨."), ServerType::Name[pCmd->ServerType], ServerBootState::Name[pCmd->State]);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -43,7 +43,7 @@ void R_SETUP::RECV_SCE_NotifyOrderFailed(jnet::Session* _pSession, jnet::IComman
 {
 	SCE_NotifyOrderFailed* pCmd = (SCE_NotifyOrderFailed*)_pCmd;
 
-	_LogInfo_("%s서버가 %s에 실패했습니다. (EC: %u)",
+	_LogInfo_(_T("%hs서버가 %hs에 실패했습니다. (EC: %u)"),
 		ServerType::Name[pCmd->ServerType],
 		CenterOrder::Name[pCmd->Order],
 		pCmd->ErrorCode);

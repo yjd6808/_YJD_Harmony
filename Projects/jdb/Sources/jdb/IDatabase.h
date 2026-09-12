@@ -63,14 +63,14 @@ public:
 	IQueryTaskPtr		QueryAsync(const BoundStmt& _stmt) const;
 	IQueryTaskPtr		QueryAsync(int _id, const BoundStmt& _stmt) const;
 
-	// QueryDefine.h의 SelectStatement/Statement 템플릿이 Script(const char*)와 인자를 그대로 전달하는 구형 호출을 지원
+	// QueryDefine.h의 SelectStatement/Statement 템플릿이 Script와 인자를 그대로 전달하는 구형 호출을 지원
 	// (PreparedStatement 값 바인딩이 없는 최소 호환용)
 	template <typename... Args>
-	IQueryPtr			Query(const char* _stmt, Args&&... _args) const
+	IQueryPtr			Query(const _char* _stmt, Args&&... _args) const
 	{
 		BoundStmt stmt;
 		stmt.text_ = _stmt;
-		stmt.info_.text_ = _stmt;
+		stmt.info_.text_ = stmt.text_;
 		stmt.info_.argCount_ = static_cast<int>(sizeof...(Args));
 		return Query(stmt);
 	}

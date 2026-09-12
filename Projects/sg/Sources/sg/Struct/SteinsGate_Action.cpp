@@ -21,7 +21,7 @@ ComboKeyList::ComboKeyList()
 ComboKeyList::ComboKeyList(std::initializer_list<ControlKey_t> _list)
 {
 	int keyCount = static_cast<int>(_list.size());
-	jc_assert_msg(keyCount <= Const::Action::ComboSequenceCount, "최대 콤보 가능한 컨트롤 키의 수를 벗어났습니다.");
+	jc_assert_msg(keyCount <= Const::Action::ComboSequenceCount, _T("최대 콤보 가능한 컨트롤 키의 수를 벗어났습니다."));
 
 	auto it = _list.begin();
 

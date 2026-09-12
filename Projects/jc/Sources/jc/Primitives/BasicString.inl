@@ -43,7 +43,7 @@ inline BasicString<CharT, Storage>::BasicString(const CharT* _pStr, int _capacit
 		return;
 	}
 
-	const int length = StringUtil<CharT>::Length(_pStr);
+	const int length = BasicStringUtil<CharT>::Length(_pStr);
 	if (length == 0)
 	{
 		// S1과 동일: 빈 문자열은 capacity 힌트와 무관하게 비워둔다 (힙 할당 0회).
@@ -150,7 +150,7 @@ inline void BasicString<CharT, Storage>::Append(const CharT* _pStr)
 		throw NullPointerException("추가하고자 하는 문자열이 nullptr 입니다.");
 	}
 
-	Append(_pStr, StringUtil<CharT>::Length(_pStr));
+	Append(_pStr, BasicStringUtil<CharT>::Length(_pStr));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -277,7 +277,7 @@ inline void BasicString<CharT, Storage>::Append(bool _val)
 template <typename CharT, typename Storage>
 inline void BasicString<CharT, Storage>::Insert(const int _idx, const CharT* _pStr)
 {
-	const int iLen = StringUtil<CharT>::Length(_pStr);
+	const int iLen = BasicStringUtil<CharT>::Length(_pStr);
 
 	if (iLen == 0)
 	{
@@ -358,15 +358,15 @@ inline void BasicString<CharT, Storage>::CommitLen(int _len)
 template <typename CharT, typename Storage>
 inline int BasicString<CharT, Storage>::Compare(const BasicString& _str) const
 {
-	return StringUtil<CharT>::Compare(st_.Data(), st_.Len(), _str.st_.Data(), _str.st_.Len());
+	return BasicStringUtil<CharT>::Compare(st_.Data(), st_.Len(), _str.st_.Data(), _str.st_.Len());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 inline int BasicString<CharT, Storage>::Compare(const CharT* _pStr, const int _strLen) const
 {
-	const int iStrLen = _strLen == -1 ? StringUtil<CharT>::Length(_pStr) : _strLen;
-	return StringUtil<CharT>::Compare(st_.Data(), st_.Len(), _pStr, iStrLen);
+	const int iStrLen = _strLen == -1 ? BasicStringUtil<CharT>::Length(_pStr) : _strLen;
+	return BasicStringUtil<CharT>::Compare(st_.Data(), st_.Len(), _pStr, iStrLen);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -374,7 +374,7 @@ template <typename CharT, typename Storage>
 inline Vector<int, CDefaultAllocator> BasicString<CharT, Storage>::FindAll(int _startIdx, int _endIdx, const CharT* _pStr, bool _caseSensitive) const
 {
 	Vector<int, CDefaultAllocator> offsets;
-	const int iStrLen = StringUtil<CharT>::Length(_pStr);
+	const int iStrLen = BasicStringUtil<CharT>::Length(_pStr);
 
 	if (iStrLen == 0)
 	{
@@ -417,7 +417,7 @@ inline Vector<int, CDefaultAllocator> BasicString<CharT, Storage>::FindAll(const
 template <typename CharT, typename Storage>
 inline int BasicString<CharT, Storage>::Find(int _startIdx, int _endIdx, const CharT* _pStr, bool _caseSensitive) const
 {
-	return StringUtil<CharT>::Find(st_.Data(), st_.Len(), _startIdx, _endIdx, _pStr, _caseSensitive);
+	return BasicStringUtil<CharT>::Find(st_.Data(), st_.Len(), _startIdx, _endIdx, _pStr, _caseSensitive);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -452,7 +452,7 @@ inline int BasicString<CharT, Storage>::Find(int _startIdx, const BasicString& _
 template <typename CharT, typename Storage>
 inline int BasicString<CharT, Storage>::FindReverse(int _startIdx, int _endIdx, const CharT* _pStr, bool _caseSensitive) const
 {
-	const int iFindStrLen = StringUtil<CharT>::Length(_pStr);
+	const int iFindStrLen = BasicStringUtil<CharT>::Length(_pStr);
 	const int iSrcLen = _endIdx - _startIdx + 1;
 
 	if (iFindStrLen == 0)
@@ -572,7 +572,7 @@ inline int BasicString<CharT, Storage>::Count(const int _startIdx, const int _en
 	ThrowIfNotInitialized();
 	ThrowIfInvalidRangeIndex(_startIdx, _endIdx);
 
-	const int iStrLen = StringUtil<CharT>::Length(_pStr);
+	const int iStrLen = BasicStringUtil<CharT>::Length(_pStr);
 
 	int iOffset = _startIdx;
 	int iCount = 0;
@@ -596,7 +596,7 @@ inline int BasicString<CharT, Storage>::Count(const int _startIdx, const int _en
 template <typename CharT, typename Storage>
 inline int BasicString<CharT, Storage>::Replace(const CharT* _pFrom, const BasicString& _to, bool _caseSensitive)
 {
-	return Replace(Find(_pFrom, _caseSensitive), StringUtil<CharT>::Length(_pFrom), _to);
+	return Replace(Find(_pFrom, _caseSensitive), BasicStringUtil<CharT>::Length(_pFrom), _to);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -661,7 +661,7 @@ inline int BasicString<CharT, Storage>::Replace(int _offset, int _length, const 
 template <typename CharT, typename Storage>
 inline int BasicString<CharT, Storage>::Replace(int _offset, const CharT* _pFrom, const BasicString& _to, bool _caseSensitive)
 {
-	return Replace(Find(_offset, _pFrom, _caseSensitive), StringUtil<CharT>::Length(_pFrom), _to);
+	return Replace(Find(_offset, _pFrom, _caseSensitive), BasicStringUtil<CharT>::Length(_pFrom), _to);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -751,7 +751,7 @@ inline void BasicString<CharT, Storage>::Format(const CharT* _format, ...)
 template <typename CharT, typename Storage>
 inline void BasicString<CharT, Storage>::ReplaceAll(const CharT* _pFrom, const CharT* _pTo, bool _caseSensitive)
 {
-	const int iFromLen = StringUtil<CharT>::Length(_pFrom);
+	const int iFromLen = BasicStringUtil<CharT>::Length(_pFrom);
 
 	if (iFromLen == 0)
 	{
@@ -854,7 +854,7 @@ inline Vector<BasicString<CharT, Storage>, CDefaultAllocator> BasicString<CharT,
 		return vecTokens;
 	}
 
-	const int iDelimiterLen = StringUtil<CharT>::Length(_delimiter);
+	const int iDelimiterLen = BasicStringUtil<CharT>::Length(_delimiter);
 	const int len = Length();
 	if (iOffset - 1 < 0)
 	{
@@ -1110,7 +1110,7 @@ inline BasicString<CharT, Storage>& BasicString<CharT, Storage>::operator=(const
 {
 	// S1과 동일: 모자랄 때만 정리 후 확보. 들어가면 SSO로 (힙 해제), 넘치면 len+10+32 힙.
 	// SSO 한계는 Storage::kSsoCapacity로 본다 (현재 Cap이 아니라).
-	const int iToLen = StringUtil<CharT>::Length(_pOther);
+	const int iToLen = BasicStringUtil<CharT>::Length(_pOther);
 	const int iExpectedCapaity = iToLen + 10;
 
 	if (iExpectedCapaity > st_.Cap())
@@ -1238,140 +1238,140 @@ inline void BasicString<CharT, Storage>::ThrowIfInvalidIndex(int _idx) const
 template <typename CharT, typename Storage>
 _s8 BasicString<CharT, Storage>::ToInt8(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_s8>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_s8>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 _u8 BasicString<CharT, Storage>::ToUInt8(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_u8>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_u8>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 _s16 BasicString<CharT, Storage>::ToInt16(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_s16>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_s16>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 _u16 BasicString<CharT, Storage>::ToUInt16(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_u16>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_u16>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 _s32 BasicString<CharT, Storage>::ToInt32(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_s32>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_s32>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 _u32 BasicString<CharT, Storage>::ToUInt32(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_u32>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_u32>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 _s64 BasicString<CharT, Storage>::ToInt64(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_s64>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_s64>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 _u64 BasicString<CharT, Storage>::ToUInt64(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_u64>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_u64>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 _f32 BasicString<CharT, Storage>::ToFloat(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_f32>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_f32>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 _f64 BasicString<CharT, Storage>::ToDouble(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_f64>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_f64>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 inline bool BasicString<CharT, Storage>::TryToInt8(OUT _s8& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 inline bool BasicString<CharT, Storage>::TryToUInt8(OUT _u8& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 inline bool BasicString<CharT, Storage>::TryToInt16(OUT _s16& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 inline bool BasicString<CharT, Storage>::TryToUInt16(OUT _u16& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 inline bool BasicString<CharT, Storage>::TryToInt32(OUT _s32& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 inline bool BasicString<CharT, Storage>::TryToUInt32(OUT _u32& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 inline bool BasicString<CharT, Storage>::TryToInt64(OUT _s64& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 inline bool BasicString<CharT, Storage>::TryToUInt64(OUT _u64& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 inline bool BasicString<CharT, Storage>::TryToFloat(OUT _f32& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT, typename Storage>
 inline bool BasicString<CharT, Storage>::TryToDouble(OUT _f64& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

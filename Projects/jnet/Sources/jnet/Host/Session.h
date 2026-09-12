@@ -75,7 +75,7 @@ public:
 
 		jc_assert_msg(
 			cmdSize <= pBuffer->GetRemainBufferSize(),
-			"버퍼의 남은 공간에 넣을 커맨드가 너무 큽니다. (CmdSize: %d, RemainBufferCapacity: %d)",
+			_T("버퍼의 남은 공간에 넣을 커맨드가 너무 큽니다. (CmdSize: %d, RemainBufferCapacity: %d)"),
 			cmdSize,
 			pBuffer->GetRemainBufferSize());
 		return pBuffer->EmplaceCmd<TCommand>(_count);

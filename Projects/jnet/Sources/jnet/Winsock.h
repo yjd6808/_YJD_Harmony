@@ -18,9 +18,8 @@ struct Winsock
 	static bool			Finalize();
 	static bool			IsFinalized() { return Finalized; }
 	static _u32		LastError();
-	static jc::String	LastErrorMessageUTF8();
-	static jc::String	ErrorMessageMBCS(_u32 _errorCode);
-	static jc::String	ErrorMessageUTF8(_u32 _errorCode);
+	static jc::String	LastErrorMessage();
+	static jc::String	ErrorMessage(_u32 _errorCode);
 private:
 	static bool Initialized;
 	static bool Finalized;

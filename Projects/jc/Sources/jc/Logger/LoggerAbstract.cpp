@@ -297,12 +297,12 @@ void LoggerAbstract::SetHeaderFormat(const String& _fmt)
 
 	if (m_pOption->ShowLevel)
 	{
-		jc_assert_msg(levelIndex != -1, "헤더에 레벨 태그가 없습니다.");
+		jc_assert_msg(levelIndex != -1, _T("헤더에 레벨 태그가 없습니다."));
 	}
 
 	if (m_pOption->ShowDateTime)
 	{
-		jc_assert_msg(dateTimeIndex != -1, "헤더에 데이트타임 태그가 없습니다.");
+		jc_assert_msg(dateTimeIndex != -1, _T("헤더에 데이트타임 태그가 없습니다."));
 	}
 
 	m_szHeaderFormat = _fmt;
@@ -320,8 +320,8 @@ String LoggerAbstract::CreateHeader(Level _level)
 	const int levelIndex = m_szHeaderFormat.Find(_T("level"));
 	const int dateTimeIndex = m_szHeaderFormat.Find(_T("datetime"));
 
-	jc_assert_msg(m_pOption->ShowLevel && levelIndex != -1, "헤더에 레벨 태그가 없습니다.");
-	jc_assert_msg(m_pOption->ShowDateTime && dateTimeIndex != -1, "헤더에 데이트타임 태그가 없습니다.");
+	jc_assert_msg(m_pOption->ShowLevel && levelIndex != -1, _T("헤더에 레벨 태그가 없습니다."));
+	jc_assert_msg(m_pOption->ShowDateTime && dateTimeIndex != -1, _T("헤더에 데이트타임 태그가 없습니다."));
 
 	String dateTimeFmt = DateTime::Now().Format(StringConvert::ToUtf8(m_szDateTimeFormat).Source());
 	String header(128);

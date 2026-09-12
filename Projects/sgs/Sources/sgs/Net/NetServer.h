@@ -31,7 +31,7 @@ public:
 	const NetServerInfo& GetServerInfo() const { return serverInfo_; }
 
 	bool Start();
-	virtual const char* GetName() const override { return serverInfo_.serverName_.SafeSource(); }
+	virtual jc::String GetName() const override { return serverInfo_.serverName_; }
 
 	virtual void OnStarted() override;
 	virtual void OnStartFailed(_u32 _errorCode) override;

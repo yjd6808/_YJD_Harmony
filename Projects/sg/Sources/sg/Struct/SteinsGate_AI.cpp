@@ -45,7 +45,7 @@ AIInfo::AIInfo(const AIInfo& _other)
 //////////////////////////////////////////////////////////////////////////////////////////
 float AIInfo::GetWanderProb(AIWanderDecision_t _decision)
 {
-	jc_assert_msg(_decision >= 0 && _decision < AIWanderDecision::Max, "원더 디시전 범위가 이상합니다.");
+	jc_assert_msg(_decision >= 0 && _decision < AIWanderDecision::Max, _T("원더 디시전 범위가 이상합니다."));
 	if (_decision == 0)
 	{
 		return wanderProbs_[0];
@@ -57,7 +57,7 @@ float AIInfo::GetWanderProb(AIWanderDecision_t _decision)
 //////////////////////////////////////////////////////////////////////////////////////////
 float AIInfo::GetTrackProb(AITrackDecision_t _decision)
 {
-	jc_assert_msg(_decision >= 0 && _decision < AITrackDecision::Max, "트랙 디시전 범위가 이상합니다.");
+	jc_assert_msg(_decision >= 0 && _decision < AITrackDecision::Max, _T("트랙 디시전 범위가 이상합니다."));
 	if (_decision == 0)
 	{
 		return trackProbs_[0];
@@ -69,7 +69,7 @@ float AIInfo::GetTrackProb(AITrackDecision_t _decision)
 //////////////////////////////////////////////////////////////////////////////////////////
 float AIInfo::GetAngryProb(AIAngryDecision_t _decision)
 {
-	jc_assert_msg(_decision >= 0 && _decision < AIAngryDecision::Max, "앵구리 디시전 범위가 이상합니다.");
+	jc_assert_msg(_decision >= 0 && _decision < AIAngryDecision::Max, _T("앵구리 디시전 범위가 이상합니다."));
 	if (_decision == 0)
 	{
 		return angryProbs_[0];

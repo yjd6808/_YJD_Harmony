@@ -59,19 +59,19 @@ void PacketParser::Received(_u32l _receivedBytes)
 			switch (r)
 			{
 			case PacketReader::rrInvalidPacket_MagicNumberMismatch:
-				_NetLogWarn_("패킷 매직넘버가 이상합니다. 패킷이 잘못된 것 같습니다.");
+				_NetLogWarn_(_T("패킷 매직넘버가 이상합니다. 패킷이 잘못된 것 같습니다."));
 				pRecvBuffer->ResetPosition();
 				break;
 			case PacketReader::rrInvalidPacket_UnknownPacketType:
-				_NetLogWarn_("알 수 없는 패킷 타입입니다.");
+				_NetLogWarn_(_T("알 수 없는 패킷 타입입니다."));
 				pRecvBuffer->ResetPosition();
 				break;
 			case PacketReader::rrInvalidCmd:
-				_NetLogWarn_("커맨드 크기가 이상합니다.");
+				_NetLogWarn_(_T("커맨드 크기가 이상합니다."));
 				pRecvBuffer->ResetPosition();
 				break;
 			case PacketReader::rrInvalidMsg:
-				_NetLogWarn_("메시지 크기가 이상합니다.");
+				_NetLogWarn_(_T("메시지 크기가 이상합니다."));
 				pRecvBuffer->ResetPosition();
 				break;
 				// 아직 데이터가 덜 모인 경우: readPos를 옮기지 않고 다음 수신을 기다린다.
@@ -79,7 +79,7 @@ void PacketParser::Received(_u32l _receivedBytes)
 			case PacketReader::rrReadHeaderFailed_InsufficientPaylodeLen:
 				break;
 			default:
-				_NetLogWarn_("PacketParser 알 수 없는 오류 (%d)", r);
+				_NetLogWarn_(_T("PacketParser 알 수 없는 오류 (%d)"), r);
 				pRecvBuffer->ResetPosition();
 				break;
 			}

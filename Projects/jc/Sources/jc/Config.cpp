@@ -114,10 +114,10 @@ void InitializeJCore(int _argc, char** _argv)
 	//  - MSVC 컴파일러 옵션 설정도 변경함
 	bool bRet = true;
 	bRet = Console::Init();
-	jc_assert_msg(bRet, "콘솔 출력 스트림 핸들 얻기 실패");
+	jc_assert_msg(bRet, _T("콘솔 출력 스트림 핸들 얻기 실패"));
 
 	bRet = Console::SetOutputCodePage(UTF8);
-	jc_assert_msg(bRet, "콘솔 출력 스트림 UTF8 코드페이지 변경 실패");
+	jc_assert_msg(bRet, _T("콘솔 출력 스트림 UTF8 코드페이지 변경 실패"));
 
 	Console::SetEnableVTMode(true);
 

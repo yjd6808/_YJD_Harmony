@@ -55,8 +55,8 @@ struct Arrays final
 	template <typename T>
 	static void InsertionSort(T* _pArr, const int _arrSize)
 	{
-		jc_assert_msg(_pArr != nullptr, "배열이 null입니다.");
-		jc_assert_msg(_arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
+		jc_assert_msg(_pArr != nullptr, _T("배열이 null입니다."));
+		jc_assert_msg(_arrSize >= 1, _T("arrSize는 무조건 1이상이어야합니다."));
 		InsertionSortImpl(_pArr, _arrSize, NaturalOrder{});
 	}
 
@@ -64,8 +64,8 @@ struct Arrays final
 	template <typename T, typename TPredicate>
 	static void InsertionSort(T* _pArr, const int _arrSize, TPredicate&& _predicate)
 	{
-		jc_assert_msg(_pArr != nullptr, "배열이 null입니다.");
-		jc_assert_msg(_arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
+		jc_assert_msg(_pArr != nullptr, _T("배열이 null입니다."));
+		jc_assert_msg(_arrSize >= 1, _T("arrSize는 무조건 1이상이어야합니다."));
 		InsertionSortImpl(_pArr, _arrSize, Forward<TPredicate>(_predicate));
 	}
 
@@ -73,8 +73,8 @@ struct Arrays final
 	template <typename T>
 	static void Sort(T* _pArr, const int _arrSize)
 	{
-		jc_assert_msg(_pArr != nullptr, "배열이 null입니다.");
-		jc_assert_msg(_arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
+		jc_assert_msg(_pArr != nullptr, _T("배열이 null입니다."));
+		jc_assert_msg(_arrSize >= 1, _T("arrSize는 무조건 1이상이어야합니다."));
 		QuickSort(_pArr, 0, _arrSize - 1, NaturalOrder{});
 	}
 
@@ -82,24 +82,24 @@ struct Arrays final
 	template <typename T, typename TPredicate>
 	static void Sort(T* _pArr, const int _arrSize, TPredicate&& _predicate)
 	{
-		jc_assert_msg(_pArr != nullptr, "배열이 null입니다.");
-		jc_assert_msg(_arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
+		jc_assert_msg(_pArr != nullptr, _T("배열이 null입니다."));
+		jc_assert_msg(_arrSize >= 1, _T("arrSize는 무조건 1이상이어야합니다."));
 		QuickSort(_pArr, 0, _arrSize - 1, Forward<TPredicate>(_predicate));
 	}
 
 	template <typename T>
 	static void SortRange(T* _pArr, const int _startIndex, const int _endIndex)
 	{
-		jc_assert_msg(_pArr != nullptr, "배열이 null입니다.");
-		jc_assert_msg(_startIndex >= 0 && _startIndex <= _endIndex, "올바르지 않은 인덱스 범위입니다.");
+		jc_assert_msg(_pArr != nullptr, _T("배열이 null입니다."));
+		jc_assert_msg(_startIndex >= 0 && _startIndex <= _endIndex, _T("올바르지 않은 인덱스 범위입니다."));
 		QuickSort(_pArr, _startIndex, _endIndex, NaturalOrder{});
 	}
 
 	template <typename T, typename TPredicate>
 	static void SortRange(T* _pArr, const int _startIndex, const int _endIndex, TPredicate&& _predicate)
 	{
-		jc_assert_msg(_pArr != nullptr, "배열이 null입니다.");
-		jc_assert_msg(_startIndex >= 0 && _startIndex <= _endIndex, "올바르지 않은 인덱스 범위입니다.");
+		jc_assert_msg(_pArr != nullptr, _T("배열이 null입니다."));
+		jc_assert_msg(_startIndex >= 0 && _startIndex <= _endIndex, _T("올바르지 않은 인덱스 범위입니다."));
 		QuickSort(_pArr, _startIndex, _endIndex, Forward<TPredicate>(_predicate));
 	}
 
@@ -121,8 +121,8 @@ struct Arrays final
 	template <typename T>
 	static void HeapSort(T* _pArr, const int _arrSize)
 	{
-		jc_assert_msg(_pArr != nullptr, "배열이 null입니다.");
-		jc_assert_msg(_arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
+		jc_assert_msg(_pArr != nullptr, _T("배열이 null입니다."));
+		jc_assert_msg(_arrSize >= 1, _T("arrSize는 무조건 1이상이어야합니다."));
 		HeapSortImpl(_pArr, _arrSize, NaturalOrder{});
 	}
 
@@ -130,24 +130,24 @@ struct Arrays final
 	template <typename T, typename TPredicate>
 	static void HeapSort(T* _pArr, const int _arrSize, TPredicate&& _predicate)
 	{
-		jc_assert_msg(_pArr != nullptr, "배열이 null입니다.");
-		jc_assert_msg(_arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
+		jc_assert_msg(_pArr != nullptr, _T("배열이 null입니다."));
+		jc_assert_msg(_arrSize >= 1, _T("arrSize는 무조건 1이상이어야합니다."));
 		HeapSortImpl(_pArr, _arrSize, 0, _arrSize - 1, Forward<TPredicate>(_predicate));
 	}
 
 	template <typename T>
 	static void SortHeapRange(T* _pArr, const int _startIndex, const int _endIndex)
 	{
-		jc_assert_msg(_pArr != nullptr, "배열이 null입니다.");
-		jc_assert_msg(_startIndex >= 0 && _startIndex <= _endIndex, "올바르지 않은 인덱스 범위입니다.");
+		jc_assert_msg(_pArr != nullptr, _T("배열이 null입니다."));
+		jc_assert_msg(_startIndex >= 0 && _startIndex <= _endIndex, _T("올바르지 않은 인덱스 범위입니다."));
 		HeapSortImpl(_pArr + _startIndex, _endIndex - _startIndex + 1, NaturalOrder{});
 	}
 
 	template <typename T, typename TPredicate>
 	static void SortHeapRange(T* _pArr, const int _startIndex, const int _endIndex, TPredicate&& _predicate)
 	{
-		jc_assert_msg(_pArr != nullptr, "배열이 null입니다.");
-		jc_assert_msg(_startIndex >= 0 && _startIndex <= _endIndex, "올바르지 않은 인덱스 범위입니다.");
+		jc_assert_msg(_pArr != nullptr, _T("배열이 null입니다."));
+		jc_assert_msg(_startIndex >= 0 && _startIndex <= _endIndex, _T("올바르지 않은 인덱스 범위입니다."));
 		HeapSortImpl(_pArr + _startIndex, _endIndex - _startIndex + 1, Forward<TPredicate>(_predicate));
 	}
 
@@ -164,7 +164,7 @@ struct Arrays final
 	template <typename T>
 	static int LinearSearch(T* _pArr, const int _arrSize, const T& _data)
 	{
-		jc_assert_msg(_pArr != nullptr, "배열이 null입니다.");
+		jc_assert_msg(_pArr != nullptr, _T("배열이 null입니다."));
 
 		for (int index = 0; index < _arrSize; ++index)
 		{
@@ -189,8 +189,8 @@ struct Arrays final
 	template <typename T>
 	static int LinearSearchReverse(T* _pArr, const int _arrSize, const T& _data)
 	{
-		jc_assert_msg(_pArr != nullptr, "배열이 null입니다.");
-		jc_assert_msg(_arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
+		jc_assert_msg(_pArr != nullptr, _T("배열이 null입니다."));
+		jc_assert_msg(_arrSize >= 1, _T("arrSize는 무조건 1이상이어야합니다."));
 
 		for (int index = _arrSize - 1; index >= 0; --index)
 		{
@@ -212,8 +212,8 @@ struct Arrays final
 	template <typename T>
 	static int BinarySearch(T* _pArr, const int _arrSize, const T& _data)
 	{
-		jc_assert_msg(_pArr != nullptr, "배열이 null입니다.");
-		jc_assert_msg(_arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
+		jc_assert_msg(_pArr != nullptr, _T("배열이 null입니다."));
+		jc_assert_msg(_arrSize >= 1, _T("arrSize는 무조건 1이상이어야합니다."));
 
 		int start = 0;
 		int end = _arrSize - 1;
@@ -288,8 +288,8 @@ struct Arrays final
 	template <typename T, typename TVal, typename TPredicate>
 	static int LowerBound(const T* pArr, const int _arrSize, TVal&& _data, TPredicate&& _predicate)
 	{
-		jc_assert_msg(pArr != nullptr, "배열이 null입니다.");
-		jc_assert_msg(_arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
+		jc_assert_msg(pArr != nullptr, _T("배열이 null입니다."));
+		jc_assert_msg(_arrSize >= 1, _T("arrSize는 무조건 1이상이어야합니다."));
 
 		return static_cast<int>(std::lower_bound(pArr, pArr + _arrSize, Forward<TVal>(_data),
 		                                         Forward<TPredicate>(_predicate)) - pArr);
@@ -301,8 +301,8 @@ struct Arrays final
 	template <typename T>
 	static int LowerBound(const T* pArr, const int _arrSize, const T& _data)
 	{
-		jc_assert_msg(pArr != nullptr, "배열이 null입니다.");
-		jc_assert_msg(_arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
+		jc_assert_msg(pArr != nullptr, _T("배열이 null입니다."));
+		jc_assert_msg(_arrSize >= 1, _T("arrSize는 무조건 1이상이어야합니다."));
 
 		return static_cast<int>(std::lower_bound(pArr, pArr + _arrSize, _data) - pArr);
 	}
@@ -319,8 +319,8 @@ struct Arrays final
 	template <typename T>
 	static int UpperBound(T* _pArr, const int _arrSize, const T& _data)
 	{
-		jc_assert_msg(_pArr != nullptr, "배열이 null입니다.");
-		jc_assert_msg(_arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
+		jc_assert_msg(_pArr != nullptr, _T("배열이 null입니다."));
+		jc_assert_msg(_arrSize >= 1, _T("arrSize는 무조건 1이상이어야합니다."));
 
 		return static_cast<int>(std::upper_bound(_pArr, _pArr + _arrSize, _data) - _pArr);
 	}
@@ -498,9 +498,9 @@ struct Arrays final
 	template <typename T>
 	static void SwapCheck(T* pArr, int _size, int _left, int _right)
 	{
-		jc_assert_msg(pArr != nullptr, "배열이 null입니다.");
+		jc_assert_msg(pArr != nullptr, _T("배열이 null입니다."));
 		jc_assert_msg(_left <= _right && _left >= 0 && _left < _size && _right >= 0 && _right < _size,
-		               "올바르지 않은 인덱스 범위입니다.");
+		               _T("올바르지 않은 인덱스 범위입니다."));
 
 		Swap(pArr, _left, _right);
 	}

@@ -17,7 +17,7 @@ void RefCountObject::Release(int _count)
 
     for (;;)
     {
-        jc_assert_msg(desired >= 0, "레퍼런스 카운트 계산을 똑바로 해주세요.");
+        jc_assert_msg(desired >= 0, _T("레퍼런스 카운트 계산을 똑바로 해주세요."));
 
         if (m_iRef.CompareExchange(expected, desired))
         {

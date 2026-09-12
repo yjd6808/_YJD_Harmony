@@ -26,7 +26,7 @@ public:
 
 	void SetState(AuthenticationState_t _state);
 	void SetSerial(AuthenticationSerial_t _serial);
-	void SetAccountId(const char* _pAccountId);
+	void SetAccountId(const _char* _pAccountId);
 
 	AuthenticationState_t GetState() const { return state_; }
 	AuthenticationSerial_t GetSerial() const { return serial_; }

@@ -12,7 +12,10 @@
 
 #include <mysql.h> // 젤 위에 있어야함. 아래 헤더파일들에서 mysql.h에 정의된 타입을 참조하기 때문
 #include <sqlext.h>
+// msodbcsql.h: MS ODBC Driver for SQL Server SDK. 없는 환경에서는 JDB_HAS_MSODBCSQL 미정의
+#ifdef JDB_HAS_MSODBCSQL
 #include <msodbcsql.h>
+#endif
 
 #include "jdb/Namespace.h"
 #include "jdb/DLLExport.h"

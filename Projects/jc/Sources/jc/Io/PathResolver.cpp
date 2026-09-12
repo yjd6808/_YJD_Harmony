@@ -340,28 +340,28 @@ String PathResolver::Dump() const
 {
 	SnapshotPtr spSnap = GetSnapshot();
 	String out;
-	out += "default: ";
+	out += _T("default: ");
 	out += spSnap->defaultAlias_;
-	out += "\n";
+	out += _T("\n");
 	for (int i = 0; i < spSnap->aliasOrder_.Size(); ++i)
 	{
 		const AliasEntry* pEntry = spSnap->aliases_.Find(spSnap->aliasOrder_[i]);
 		if (pEntry == nullptr)
 			continue;
-		out += "[";
+		out += _T("[");
 		out += spSnap->aliasOrder_[i];
-		out += "] -> ";
+		out += _T("] -> ");
 		out += pEntry->primaryDir_;
-		out += "\n";
+		out += _T("\n");
 		for (int j = 0; j < pEntry->searchDirs_.Size(); ++j)
 		{
-			out += "    (";
-			char buf[16] = {};
-			_snprintf_s(buf, sizeof(buf), "%d", pEntry->searchDirs_[j].priority_);
+			out += _T("    (");
+			_char buf[16] = {};
+			_sntprintf_s(buf, _countof(buf), _T("%d"), pEntry->searchDirs_[j].priority_);
 			out += buf;
-			out += ") ";
+			out += _T(") ");
 			out += pEntry->searchDirs_[j].dir_;
-			out += "\n";
+			out += _T("\n");
 		}
 	}
 	return out;

@@ -1,3 +1,5 @@
+// MYSQL-UNICODE-EXCLUDE: MySQL C API is narrow-only; excluded from Unicode builds.
+#ifndef _UNICODE
 #include "MysqlConnection.h"
 
 USING_NS_JC;
@@ -46,7 +48,7 @@ bool MysqlConnection::Connect(const jc::String& _hostname, const uint16_t& _port
 	if (pMySqlConnRet == nullptr)
 	{
 		isConnected_ = false;
-		_LogError_("MySQL 데이터베이스 연결 실패 : %s", mysql_error(mySqlConn_));
+		_LogError_(_T("MySQL 데이터베이스 연결 실패 : %s"), mysql_error(mySqlConn_));
 		mysql_close(mySqlConn_);
 		mySqlConn_ = nullptr;
 	}
@@ -75,18 +77,18 @@ bool MysqlConnection::SelectDB(const jc::String& _dbName)
 {
 	if (!isConnected_)
 	{
-		_LogError_("SelectDB() 실패 : MySQL 데이터베이스에 연결되어 있지 않습니다.");
+		_LogError_(_T("SelectDB() 실패 : MySQL 데이터베이스에 연결되어 있지 않습니다."));
 		return false;
 	}
 
 	if (mysql_select_db(mySqlConn_, _dbName.Source()) != 0)
 	{
-		_LogError_("SelectDB() 실패 : mysql_select_db() 호출 실패 : %s", mysql_error(mySqlConn_));
+		_LogError_(_T("SelectDB() 실패 : mysql_select_db() 호출 실패 : %s"), mysql_error(mySqlConn_));
 		return false;
 	}
 
 	dbName_ = _dbName.Source();
-	_LogDebug_("SelectDB() 성공 : \"%s\"", _dbName.Source());
+	_LogDebug_(_T("SelectDB() 성공 : \")%s\""), _dbName.Source());
 	return true;
 }
 
@@ -95,7 +97,7 @@ jc::String MysqlConnection::GetLastErrorString() const
 {
 	if (!isConnected_)
 	{
-		_LogWarn_("GetLastErrorString() 실패 : MySQL 데이터베이스에 연결되어 있지 않습니다.");
+		_LogWarn_(_T("GetLastErrorString() 실패 : MySQL 데이터베이스에 연결되어 있지 않습니다."));
 		return "연결 안되있음";
 	}
 
@@ -107,7 +109,7 @@ int MysqlConnection::GetLastErrorCode() const
 {
 	if (!isConnected_)
 	{
-		_LogWarn_("GetLastErrorCode() 실패 : MySQL 데이터베이스에 연결되어 있지 않습니다.");
+		_LogWarn_(_T("GetLastErrorCode() 실패 : MySQL 데이터베이스에 연결되어 있지 않습니다."));
 		return -1;
 	}
 
@@ -136,7 +138,7 @@ jc::String MysqlConnection::EscapeString(const jc::String& _value) const
 {
 	if (!isConnected_)
 	{
-		_LogWarn_("DB에 연결되어있지 않습니다.");
+		_LogWarn_(_T("DB에 연결되어있지 않습니다."));
 		return "";
 	}
 
@@ -153,3 +155,5 @@ jc::String MysqlConnection::EscapeString(const jc::String& _value) const
 }
 
 NS_END
+
+#endif // !_UNICODE

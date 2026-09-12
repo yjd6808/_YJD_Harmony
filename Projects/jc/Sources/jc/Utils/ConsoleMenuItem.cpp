@@ -4,7 +4,6 @@
 
 #include "jc/Utils/ConsoleMenuItem.h"
 #include "jc/Primitives/StringUtil.h"
-#include "jc/Primitives/StringConvert.h"
 
 #include <cstdio>
 
@@ -23,7 +22,7 @@ namespace
 
 		if (_opt.inputFormatPadding_ > 0)
 		{
-		return jc::StringUtilT::Format(_T("%*s"), _opt.inputFormatPadding_, displayKey.SafeSource());
+		return jc::StringUtil::Format(_T("%*s"), _opt.inputFormatPadding_, displayKey.SafeSource());
 		}
 		
 		// 패딩 미사용
@@ -34,36 +33,36 @@ namespace
 	void CMI_PrintEntry(const jc::ConsoleMenuItem::Entry& _entry, const jc::ConsoleMenuItemOption& _opt)
 	{
 		// 표시 텍스트 결정
-		jc::AString displayText = jc::StringConvert::ToUtf8(_entry.text_);
+		jc::String displayText = _entry.text_;
 		if (_entry.text_.IsEmpty())
 		{
 			if (_entry.type_ == jc::ConsoleMenuItem::EntryType::Back)
-				displayText = jc::StringConvert::ToUtf8(_opt.backMenuName_);
+				displayText = _opt.backMenuName_;
 			else if (_entry.type_ == jc::ConsoleMenuItem::EntryType::Home)
-				displayText = jc::StringConvert::ToUtf8(_opt.homeMenuName_);
+				displayText = _opt.homeMenuName_;
 			else
-				displayText = jc::StringConvert::ToUtf8(_opt.defaultMenuName_);
+				displayText = _opt.defaultMenuName_;
 		}
 
 		jc::String formattedKey = CMI_FormatEntryKey(_entry.key_, _opt);
 
 		// 포맷: [LEFT_PAD][LEFT_BRACE][formatted_key][RIGHT_BRACE][RIGHT_PAD][description]
 		if (_opt.inputLeftPadding_.Length() > 0)
-			jc::Console::Write(_opt.inputPaddingColor_, "%s", jc::StringConvert::ToUtf8(_opt.inputLeftPadding_).Source());
+			jc::Console::Write(_opt.inputPaddingColor_, _T("%s"), _opt.inputLeftPadding_.Source());
 
 		if (_opt.inputLeftBrace_.Length() > 0)
-			jc::Console::Write(_opt.inputBraceColor_,   "%s", jc::StringConvert::ToUtf8(_opt.inputLeftBrace_).Source());
+			jc::Console::Write(_opt.inputBraceColor_,   _T("%s"), _opt.inputLeftBrace_.Source());
 
 		// key
-		jc::Console::Write(_opt.inputColor_,        "%s", jc::StringConvert::ToUtf8(formattedKey).Source());
+		jc::Console::Write(_opt.inputColor_,        _T("%s"), formattedKey.Source());
 
 		if (_opt.inputRightBrace_.Length() > 0)
-			jc::Console::Write(_opt.inputBraceColor_,   "%s", jc::StringConvert::ToUtf8(_opt.inputRightBrace_).Source());
+			jc::Console::Write(_opt.inputBraceColor_,   _T("%s"), _opt.inputRightBrace_.Source());
 		if (_opt.inputRightPadding_.Length() > 0)
-			jc::Console::Write(_opt.inputPaddingColor_, "%s", jc::StringConvert::ToUtf8(_opt.inputRightPadding_).Source());
+			jc::Console::Write(_opt.inputPaddingColor_, _T("%s"), _opt.inputRightPadding_.Source());
 
 		// desc
-		jc::Console::WriteLine(_opt.menuColor_,     "%s", displayText.Source());
+		jc::Console::WriteLine(_opt.menuColor_,     _T("%s"), displayText.Source());
 	}
 
 	// 메뉴 한 레벨을 처리하는 재귀 함수
@@ -76,7 +75,7 @@ namespace
 
 			// 헤더 출력
 			if (!_pItem->header_.IsEmpty())
-				jc::Console::WriteLine(_opt.titleColor_, "%s", jc::StringConvert::ToUtf8(_pItem->header_).Source());
+				jc::Console::WriteLine(_opt.titleColor_, _T("%s"), _pItem->header_.Source());
 
 			// 항목 출력
 			for (const auto& entry : _pItem->entries_)
@@ -86,7 +85,7 @@ namespace
 			jc::String input;
 			if (_opt.userInputTitle_)
 			{
-				input = jc::Console::ReadLine(jc::StringConvert::ToUtf8(_opt.inputTitle_).Source());
+				input = jc::Console::ReadLine(_opt.inputTitle_.Source());
 			}
 			else
 			{
@@ -122,7 +121,7 @@ namespace
 
 					if (_opt.pressAnyKeyAfterCallback_)
 					{
-						jc::Console::WriteLine(jc::ConsoleColor::Green, "아무 키나 눌러서 계속하세요...");
+						jc::Console::WriteLine(jc::ConsoleColor::Green, _T("아무 키나 눌러서 계속하세요..."));
 						jc::Console::ReadKey();
 					}
 				}

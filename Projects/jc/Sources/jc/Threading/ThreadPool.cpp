@@ -6,30 +6,29 @@
  */
 
 #include "jc/Threading/ThreadPool.h"
-#include "jc/Primitives/StringConvert.h"
 
 NS_JC_BEGIN
 // =============================================================================================
 // TaskContext
 // =============================================================================================
-const char* TaskContext::ToStateString(int _state)
+const _char* TaskContext::ToStateString(int _state)
 {
-	if (_state == TaskState::eRunningWait) return "RunningWait";
-	if (_state == TaskState::eRunning) return "Running";
-	if (_state == TaskState::eFinished) return "Finished";
-	if (_state == TaskState::eCancelled) return "Cancelled";
-	return "none";
+	if (_state == TaskState::eRunningWait) return _T("RunningWait");
+	if (_state == TaskState::eRunning) return _T("Running");
+	if (_state == TaskState::eFinished) return _T("Finished");
+	if (_state == TaskState::eCancelled) return _T("Cancelled");
+	return _T("none");
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void TaskContext::Run()
 {
 	{
-		TASKPOOL_LOG("%s 실행 Begin", StringConvert::ToUtf8(m_DebugName).Source());
+		TASKPOOL_LOG(_T("%s 실행 Begin"), m_DebugName.Source());
 		NormalLockGuard guard(ctxLock_);
 		if (state_.value_ == TaskState::eCancelled)
 		{
-			TASKPOOL_LOG("%s 실행 Cancel 리턴", StringConvert::ToUtf8(m_DebugName).Source());
+			TASKPOOL_LOG(_T("%s 실행 Cancel 리턴"), m_DebugName.Source());
 			return;
 		}
 		state_.value_ = TaskState::eRunning;
@@ -46,7 +45,7 @@ void TaskContext::Run()
 	//  ==> Race Condition이 발생함.
 	// m_eState = eFinished;
 	ctxCondVar_.NotifyAll();
-	TASKPOOL_LOG("%s 실행 End", StringConvert::ToUtf8(m_DebugName).Source());
+	TASKPOOL_LOG(_T("%s 실행 End"), m_DebugName.Source());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -142,7 +141,7 @@ void TaskThread::WorkerThread()
 		poolWaitingTasks_.TryDequeue(spRunningTask);
 	}
 
-	TASKPOOL_LOG("쓰레드 %d 종료됨", m_iCode);
+	TASKPOOL_LOG(_T("쓰레드 %d 종료됨"), m_iCode);
 	m_bJoinWait = true;
 	joinCondVar_.NotifyOne();
 }
@@ -191,11 +190,11 @@ void ThreadPool::Join(JoinStrategy _strategy)
 		NormalLockGuard guard(lock_);
 		for (int i = 0; i < threads_.Size(); ++i)
 		{
-			TASKPOOL_LOG("조인1-%d 시작", i);
+			TASKPOOL_LOG(_T("조인1-%d 시작"), i);
 			TaskThread* pThread = threads_[i].GetPtr();
 			joinCondVar_.Wait(guard, [pThread] { return pThread->IsJoinWait(); });
 			pThread->Join();
-			TASKPOOL_LOG("조인1-%d 완료", i);
+			TASKPOOL_LOG(_T("조인1-%d 완료"), i);
 		}
 		threads_.Clear();
 		state_ = eJoined;

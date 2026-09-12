@@ -935,7 +935,7 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 		switch (eFormatToken) {
 		case DateFormat::d:
 		case DateFormat::dd: {
-			const int day = StringUtilT::ToNumber<_s32>(szDateStringToken.Source());
+			const int day = StringUtil::ToNumber<_s32>(szDateStringToken.Source());
 			if (day < 0 || day > 31) {
 				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
 				break;
@@ -951,7 +951,7 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 		}
 		case DateFormat::h:
 		case DateFormat::hh: {
-			int hour = StringUtilT::ToNumber<_s32>(szDateStringToken.Source());
+			int hour = StringUtil::ToNumber<_s32>(szDateStringToken.Source());
 
 			if (eAMPM == AMPM::None) {
 				ms_tlsiLastError = DATETIME_PARSE_ERROR_AMBIGUOUS_DATESTRING_TOKEN;
@@ -972,7 +972,7 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 		}
 		case DateFormat::H:
 		case DateFormat::HH: {
-			const int hour = StringUtilT::ToNumber<_s32>(szDateStringToken.Source());
+			const int hour = StringUtil::ToNumber<_s32>(szDateStringToken.Source());
 			if (hour < 0 || hour > 23) {
 				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
 				break;
@@ -982,7 +982,7 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 		}
 		case DateFormat::m:
 		case DateFormat::mm: {
-			const int minute = StringUtilT::ToNumber<_s32>(szDateStringToken.Source());
+			const int minute = StringUtil::ToNumber<_s32>(szDateStringToken.Source());
 			if (minute < 0 || minute > 59) {
 				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
 				break;
@@ -992,7 +992,7 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 		}
 		case DateFormat::M:
 		case DateFormat::MM: {
-			const int month = StringUtilT::ToNumber<_s32>(szDateStringToken.Source());
+			const int month = StringUtil::ToNumber<_s32>(szDateStringToken.Source());
 			if (month < 0 || month > 12) {
 				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
 				break;
@@ -1007,7 +1007,7 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 		}
 		case DateFormat::s:
 		case DateFormat::ss: {
-			const int sec = StringUtilT::ToNumber<_s32>(szDateStringToken.Source());
+			const int sec = StringUtil::ToNumber<_s32>(szDateStringToken.Source());
 			if (sec < 0 || sec > 59) {
 				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
 				break;
@@ -1044,7 +1044,7 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 		}
 		case DateFormat::y:
 		case DateFormat::yy: {
-			const int year2 = StringUtilT::ToNumber<_s32>(szDateStringToken.Source());
+			const int year2 = StringUtil::ToNumber<_s32>(szDateStringToken.Source());
 			if (year2 < 0 || year2 > 99) {
 				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
 				break;
@@ -1054,7 +1054,7 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 		}
 		case DateFormat::yyy:
 		case DateFormat::yyyy: {
-			const int year4 = StringUtilT::ToNumber<_s32>(szDateStringToken.Source());
+			const int year4 = StringUtil::ToNumber<_s32>(szDateStringToken.Source());
 			if (year4 < 0 || year4 > 9999) {
 				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
 				break;
@@ -1595,10 +1595,10 @@ void DateTime::ReflectFormat(const DateAndTime& _time, String& _ret, const char 
 
 	switch (format) {
 	case DateFormat::d:
-		_ret += StringUtilT::Format(_T("%d"), _time.Day);
+		_ret += StringUtil::Format(_T("%d"), _time.Day);
 		break;
 	case DateFormat::dd:
-		_ret += StringUtilT::Format(_T("%02d"), _time.Day);
+		_ret += StringUtil::Format(_T("%02d"), _time.Day);
 		break;
 	case DateFormat::ddd:
 		_ret += GetAbbreviationWeekendName(GetDayOfWeek());
@@ -1607,28 +1607,28 @@ void DateTime::ReflectFormat(const DateAndTime& _time, String& _ret, const char 
 		_ret += GetFullWeekendName(GetDayOfWeek());
 		break;
 	case DateFormat::h:
-		_ret += StringUtilT::Format(_T("%d"), _time.Hour < 13 ? _time.Hour : _time.Hour - 12);
+		_ret += StringUtil::Format(_T("%d"), _time.Hour < 13 ? _time.Hour : _time.Hour - 12);
 		break;
 	case DateFormat::hh:
-		_ret += StringUtilT::Format(_T("%02d"), _time.Hour < 13 ? _time.Hour : _time.Hour - 12);
+		_ret += StringUtil::Format(_T("%02d"), _time.Hour < 13 ? _time.Hour : _time.Hour - 12);
 		break;
 	case DateFormat::H:
-		_ret += StringUtilT::Format(_T("%d"), _time.Hour);
+		_ret += StringUtil::Format(_T("%d"), _time.Hour);
 		break;
 	case DateFormat::HH:
-		_ret += StringUtilT::Format(_T("%02d"), _time.Hour);
+		_ret += StringUtil::Format(_T("%02d"), _time.Hour);
 		break;
 	case DateFormat::m:
-		_ret += StringUtilT::Format(_T("%d"), _time.Minute);
+		_ret += StringUtil::Format(_T("%d"), _time.Minute);
 		break;
 	case DateFormat::mm:
-		_ret += StringUtilT::Format(_T("%02d"), _time.Minute);
+		_ret += StringUtil::Format(_T("%02d"), _time.Minute);
 		break;
 	case DateFormat::M:
-		_ret += StringUtilT::Format(_T("%d"), _time.Month);
+		_ret += StringUtil::Format(_T("%d"), _time.Month);
 		break;
 	case DateFormat::MM:
-		_ret += StringUtilT::Format(_T("%02d"), _time.Month);
+		_ret += StringUtil::Format(_T("%02d"), _time.Month);
 		break;
 	case DateFormat::MMM:
 		_ret += GetAbbreviationMonthName(static_cast<MonthOfYear>(_time.Month - 1));
@@ -1637,35 +1637,35 @@ void DateTime::ReflectFormat(const DateAndTime& _time, String& _ret, const char 
 		_ret += GetFullMonthName(static_cast<MonthOfYear>(_time.Month - 1));
 		break;
 	case DateFormat::s:
-		_ret += StringUtilT::Format(_T("%d"), _time.Second);
+		_ret += StringUtil::Format(_T("%d"), _time.Second);
 		break;
 	case DateFormat::ss:
-		_ret += StringUtilT::Format(_T("%02d"), _time.Second);
+		_ret += StringUtil::Format(_T("%02d"), _time.Second);
 		break;
 	case DateFormat::t:
-		_ret += StringUtilT::Format(_T("%hs"), _time.Hour / 12 > 0
+		_ret += StringUtil::Format(_T("%hs"), _time.Hour / 12 > 0
 			                                ? GetAbbreviationAMPMName(AMPM::PM)
 			                                : GetAbbreviationAMPMName(AMPM::AM));
 		break;
 	case DateFormat::tt:
-		_ret += StringUtilT::Format(_T("%hs"), _time.Hour / 12 > 0 ? GetFullAMPMName(AMPM::PM) : GetFullAMPMName(AMPM::AM));
+		_ret += StringUtil::Format(_T("%hs"), _time.Hour / 12 > 0 ? GetFullAMPMName(AMPM::PM) : GetFullAMPMName(AMPM::AM));
 		break;
 	case DateFormat::y:
-		_ret += StringUtilT::Format(_T("%d"), _time.Year % 100);
+		_ret += StringUtil::Format(_T("%d"), _time.Year % 100);
 		break;
 	case DateFormat::yy:
-		_ret += StringUtilT::Format(_T("%02d"), _time.Year % 100);
+		_ret += StringUtil::Format(_T("%02d"), _time.Year % 100);
 		break;
 	case DateFormat::yyy:
-		_ret += StringUtilT::Format(_T("%d"), _time.Year % 10000);
+		_ret += StringUtil::Format(_T("%d"), _time.Year % 10000);
 		break;
 	case DateFormat::yyyy:
-		_ret += StringUtilT::Format(_T("%04d"), _time.Year % 10000);
+		_ret += StringUtil::Format(_T("%04d"), _time.Year % 10000);
 		break;
 	case DateFormat::K:
 	case DateFormat::zzz: {
 		const _s32 timezonBias = TimeZoneBiasMinute();
-		_ret += StringUtilT::Format(_T("%hs%02d:%02d"),
+		_ret += StringUtil::Format(_T("%hs%02d:%02d"),
 		                          timezonBias < 0 ? "+" : "", // %s
 		                          (timezonBias * -1) / 60, // %02d
 		                          (timezonBias * -1) % 60);
@@ -1673,37 +1673,37 @@ void DateTime::ReflectFormat(const DateAndTime& _time, String& _ret, const char 
 	}
 	case DateFormat::z: {
 		const _s32 timezonBias = TimeZoneBiasMinute();
-		_ret += StringUtilT::Format(_T("%hs%d"),
+		_ret += StringUtil::Format(_T("%hs%d"),
 		                          timezonBias < 0 ? "+" : "", // %s
 		                          (timezonBias * -1) / 60); // %d
 		break;
 	}
 	case DateFormat::zz: {
 		const _s32 timezonBias = TimeZoneBiasMinute();
-		_ret += StringUtilT::Format(_T("%hs%02d"),
+		_ret += StringUtil::Format(_T("%hs%02d"),
 		                          timezonBias < 0 ? "+" : "", // %s
 		                          (timezonBias * -1) / 60); // %d
 		break;
 	}
 	case DateFormat::f:
-		_ret += StringUtilT::Format(_T("%d"), _time.MiliSecond / 100);
+		_ret += StringUtil::Format(_T("%d"), _time.MiliSecond / 100);
 		break;
 	case DateFormat::ff:
-		_ret += StringUtilT::Format(_T("%02d"), _time.MiliSecond / 10);
+		_ret += StringUtil::Format(_T("%02d"), _time.MiliSecond / 10);
 		break;
 	case DateFormat::fff:
-		_ret += StringUtilT::Format(_T("%03d"), _time.MiliSecond / 1);
+		_ret += StringUtil::Format(_T("%03d"), _time.MiliSecond / 1);
 		break;
 	case DateFormat::ffff:
 	case DateFormat::fffff:
 	case DateFormat::ffffff:
 		const int miliMicro = _time.MiliSecond * MaxMiliSecond_v + _time.MicroSecond;
 		if (_count == 4)
-			_ret += StringUtilT::Format(_T("%04d"), miliMicro / 100);
+			_ret += StringUtil::Format(_T("%04d"), miliMicro / 100);
 		else if (_count == 5)
-			_ret += StringUtilT::Format(_T("%05d"), miliMicro / 10);
+			_ret += StringUtil::Format(_T("%05d"), miliMicro / 10);
 		else if (_count == 6)
-			_ret += StringUtilT::Format(_T("%06d"), miliMicro / 1);
+			_ret += StringUtil::Format(_T("%06d"), miliMicro / 1);
 		break;
 	}
 }
@@ -1961,19 +1961,19 @@ TimeSpan StopWatch<StopWatchMode::System>::GetElapsed() {
 // @함수 설명 참고: https://learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter
 StopWatch<StopWatchMode::HighResolution>::StopWatch() {
 	if (!QueryPerformanceFrequency((LARGE_INTEGER*)&Frequency)) {
-		jc_assert_msg(false, "쿼리퍼포먼스 프리퀀시 획득 실패 (오류코드: %d)", ::GetLastError());
+		jc_assert_msg(false, _T("쿼리퍼포먼스 프리퀀시 획득 실패 (오류코드: %d)"), ::GetLastError());
 	}
 
 	// 기본: Freqency.QuadPart: 10'000'000
 	// 백의 자리 나노단위까지 정밀하게 측정가능
 	// TimeSpan은 마이크로초 단위까지만 이쁘게 표현가능하므로 마이크로초 단위로 변환해주자.
-	jc_assert_msg((Frequency / 1'000'000) > 0, "프리퀀시가 마이크로초 단위 정밀도를 커버하지 못합니다.");
+	jc_assert_msg((Frequency / 1'000'000) > 0, _T("프리퀀시가 마이크로초 단위 정밀도를 커버하지 못합니다."));
 	Precision = Frequency / 1'000'000;
 }
 
 _u64 StopWatch<StopWatchMode::HighResolution>::Start() {
 	if (!QueryPerformanceCounter((LARGE_INTEGER*)&StartCounter)) {
-		jc_assert_msg(false, "쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)", ::GetLastError());
+		jc_assert_msg(false, _T("쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)"), ::GetLastError());
 	}
 
 	return StartCounter;
@@ -1984,7 +1984,7 @@ TimeSpan StopWatch<StopWatchMode::HighResolution>::Stop()
 {
 	_u64 StopCounter;
 	if (!QueryPerformanceCounter((LARGE_INTEGER*)&StopCounter)) {
-		jc_assert_msg(false, "쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)", ::GetLastError());
+		jc_assert_msg(false, _T("쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)"), ::GetLastError());
 	}
 
 	_u64 uiGap = StopCounter - StartCounter;
@@ -1997,7 +1997,7 @@ TimeSpan StopWatch<StopWatchMode::HighResolution>::GetElapsed()
 {
 	_u64 StopCounter;
 	if (!QueryPerformanceCounter((LARGE_INTEGER*)&StopCounter)) {
-		jc_assert_msg(false, "쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)", ::GetLastError());
+		jc_assert_msg(false, _T("쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)"), ::GetLastError());
 	}
 
 	return (StopCounter - StartCounter) / Precision;

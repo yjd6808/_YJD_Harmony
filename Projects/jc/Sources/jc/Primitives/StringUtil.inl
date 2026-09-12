@@ -1,6 +1,6 @@
 /*
 	작성자 : 윤정도
-	StringUtil<CharT> 본문 정의. StringUtil.h 끝에서 include된다 (별칭 이후).
+	BasicStringUtil<CharT> 본문 정의. StringUtil.h 끝에서 include된다 (별칭 이후).
 	직접 include하지 않는다.
 */
 
@@ -9,25 +9,25 @@
 #include <cstdlib>
 #include <cstdarg>
 #include <utility>
-
 #include "jc/Primitives/StringUtil.h"
+#include "jc/Container/Vector.h"
 
 NS_JC_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-void StringUtil<CharT>::ConcatInnerBack(CharT* _pBuf, int _buflen, int _bufCapacity, const CharT* _pConcatStr, int _concatStrLen)
+void BasicStringUtil<CharT>::ConcatInnerBack(CharT* _pBuf, int _buflen, int _bufCapacity, const CharT* _pConcatStr, int _concatStrLen)
 {
-	jc_assert_msg(_buflen + _concatStrLen + 1 <= _bufCapacity, "버퍼 용량을 초과할 수 없습니다.");
+	jc_assert_msg(_buflen + _concatStrLen + 1 <= _bufCapacity, _T("버퍼 용량을 초과할 수 없습니다."));
 	Memory::CopyUnsafe(_pBuf + _buflen, _pConcatStr, _concatStrLen * static_cast<int>(sizeof(CharT)));
 	_pBuf[_buflen + _concatStrLen] = CharT(0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-void StringUtil<CharT>::ConcatInnerFront(CharT* _pBuf, int _buflen, int _bufCapacity, const CharT* _pConcatStr, int _concatStrLen)
+void BasicStringUtil<CharT>::ConcatInnerFront(CharT* _pBuf, int _buflen, int _bufCapacity, const CharT* _pConcatStr, int _concatStrLen)
 {
-	jc_assert_msg(_buflen + _concatStrLen + 1 <= _bufCapacity, "버퍼 용량을 초과할 수 없습니다.");
+	jc_assert_msg(_buflen + _concatStrLen + 1 <= _bufCapacity, _T("버퍼 용량을 초과할 수 없습니다."));
 	Memory::CopyUnsafeReverse(_pBuf + _concatStrLen, _pBuf, _buflen * static_cast<int>(sizeof(CharT)));
 	Memory::CopyUnsafe(_pBuf, _pConcatStr, _concatStrLen * static_cast<int>(sizeof(CharT)));
 	_pBuf[_buflen + _concatStrLen] = CharT(0);
@@ -35,7 +35,7 @@ void StringUtil<CharT>::ConcatInnerFront(CharT* _pBuf, int _buflen, int _bufCapa
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-void StringUtil<CharT>::ConcatInnerFront(CharT* _pBuf, int _bufCapacity, const CharT* _pConcatStr)
+void BasicStringUtil<CharT>::ConcatInnerFront(CharT* _pBuf, int _bufCapacity, const CharT* _pConcatStr)
 {
 	int iBufLen = Length(_pBuf);
 	int iConcatLen = Length(_pConcatStr);
@@ -44,7 +44,7 @@ void StringUtil<CharT>::ConcatInnerFront(CharT* _pBuf, int _bufCapacity, const C
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::Copy(CharT* _pBuffer, const int _bufferSize, const CharT* _pCopy)
+int BasicStringUtil<CharT>::Copy(CharT* _pBuffer, const int _bufferSize, const CharT* _pCopy)
 {
 	if (_pBuffer == nullptr || _pCopy == nullptr)
 	{
@@ -68,7 +68,7 @@ int StringUtil<CharT>::Copy(CharT* _pBuffer, const int _bufferSize, const CharT*
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::CopyUnsafe(CharT* _pBuffer, const CharT* _pCopy)
+int BasicStringUtil<CharT>::CopyUnsafe(CharT* _pBuffer, const CharT* _pCopy)
 {
 	if (_pBuffer == nullptr || _pCopy == nullptr)
 	{
@@ -92,14 +92,14 @@ int StringUtil<CharT>::CopyUnsafe(CharT* _pBuffer, const CharT* _pCopy)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::Find(const CharT* _pSource, int _sourceLen, int _startIdx, int _endIdx, const CharT* _pStr, bool _caseSensitive /*= true*/)
+int BasicStringUtil<CharT>::Find(const CharT* _pSource, int _sourceLen, int _startIdx, int _endIdx, const CharT* _pStr, bool _caseSensitive /*= true*/)
 {
 	return Find(_pSource, _sourceLen, _startIdx, _endIdx, _pStr, Length(_pStr), _caseSensitive);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::Find(const CharT* _pSource, int _sourceLen, int _startIdx, int _endIdx, const CharT* _pStr, int _strLen, bool _caseSensitive /*= true*/)
+int BasicStringUtil<CharT>::Find(const CharT* _pSource, int _sourceLen, int _startIdx, int _endIdx, const CharT* _pStr, int _strLen, bool _caseSensitive /*= true*/)
 {
 	const int iFindStrLen = _strLen;
 	const int iSearchLen = _endIdx - _startIdx + 1;
@@ -149,14 +149,14 @@ int StringUtil<CharT>::Find(const CharT* _pSource, int _sourceLen, int _startIdx
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::Find(const CharT* _pSource, int _sourceLen, int _startIdx, const CharT* _pStr, bool _caseSensitive /*= true*/)
+int BasicStringUtil<CharT>::Find(const CharT* _pSource, int _sourceLen, int _startIdx, const CharT* _pStr, bool _caseSensitive /*= true*/)
 {
 	return Find(_pSource, _sourceLen, _startIdx, _sourceLen - 1, _pStr, _caseSensitive);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::FindAll(OUT int* _pPositionArray, const CharT* _pSource, const CharT* _pStr, bool _caseSensitive /*= true*/)
+int BasicStringUtil<CharT>::FindAll(OUT int* _pPositionArray, const CharT* _pSource, const CharT* _pStr, bool _caseSensitive /*= true*/)
 {
 	const int iSourceLength = Length(_pSource);
 	return FindAll(_pPositionArray, _pSource, iSourceLength, 0, iSourceLength - 1, _pStr, _caseSensitive);
@@ -164,14 +164,14 @@ int StringUtil<CharT>::FindAll(OUT int* _pPositionArray, const CharT* _pSource, 
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::FindAll(OUT int* _pPositionArray, const CharT* _pSource, int _sourceLen, const CharT* _pStr, bool _caseSensitive /*= true*/)
+int BasicStringUtil<CharT>::FindAll(OUT int* _pPositionArray, const CharT* _pSource, int _sourceLen, const CharT* _pStr, bool _caseSensitive /*= true*/)
 {
 	return FindAll(_pPositionArray, _pSource, _sourceLen, 0, _sourceLen - 1, _pStr, _caseSensitive);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::FindAll(OUT int* _pPositionArray, const CharT* _pSource, int _sourceLen, int _startIdx, int _endIdx, const CharT* _pStr, bool _caseSensitive /*= true*/)
+int BasicStringUtil<CharT>::FindAll(OUT int* _pPositionArray, const CharT* _pSource, int _sourceLen, int _startIdx, int _endIdx, const CharT* _pStr, bool _caseSensitive /*= true*/)
 {
 	if (_endIdx < _startIdx)
 	{
@@ -193,7 +193,7 @@ int StringUtil<CharT>::FindAll(OUT int* _pPositionArray, const CharT* _pSource, 
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::FindChar(const CharT* _pSource, CharT _ch)
+int BasicStringUtil<CharT>::FindChar(const CharT* _pSource, CharT _ch)
 {
 	int i = 0;
 
@@ -217,14 +217,14 @@ int StringUtil<CharT>::FindChar(const CharT* _pSource, CharT _ch)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::FindCharReverse(const CharT* _pSource, CharT _ch)
+int BasicStringUtil<CharT>::FindCharReverse(const CharT* _pSource, CharT _ch)
 {
 	return FindCharReverse(_pSource, Length(_pSource), _ch);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::FindCharReverse(const CharT* _pSource, int _len, CharT _ch)
+int BasicStringUtil<CharT>::FindCharReverse(const CharT* _pSource, int _len, CharT _ch)
 {
 	while ((--_len) >= 0)
 	{
@@ -236,7 +236,7 @@ int StringUtil<CharT>::FindCharReverse(const CharT* _pSource, int _len, CharT _c
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::FindCharUncontained(const CharT* _pSource, CharT _ch)
+int BasicStringUtil<CharT>::FindCharUncontained(const CharT* _pSource, CharT _ch)
 {
 	int i = 0;
 
@@ -260,7 +260,7 @@ int StringUtil<CharT>::FindCharUncontained(const CharT* _pSource, CharT _ch)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::Format(const CharT* _pFormat, ...)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::Format(const CharT* _pFormat, ...)
 {
 	va_list args;
 	va_start(args, _pFormat);
@@ -271,7 +271,7 @@ typename StringUtil<CharT>::StrType StringUtil<CharT>::Format(const CharT* _pFor
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::Format(const CharT* _pFormat, va_list _args)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::Format(const CharT* _pFormat, va_list _args)
 {
 	va_list argsCopy;
 	va_copy(argsCopy, _args);
@@ -295,7 +295,7 @@ typename StringUtil<CharT>::StrType StringUtil<CharT>::Format(const CharT* _pFor
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-void StringUtil<CharT>::FormatBuffer(CharT* _pBuff, const int _buffCapacity, const CharT* _pFormat, ...)
+void BasicStringUtil<CharT>::FormatBuffer(CharT* _pBuff, const int _buffCapacity, const CharT* _pFormat, ...)
 {
 	va_list args;
 	va_start(args, _pFormat);
@@ -305,20 +305,20 @@ void StringUtil<CharT>::FormatBuffer(CharT* _pBuff, const int _buffCapacity, con
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-void StringUtil<CharT>::FormatBuffer(CharT* _pBuff, const int _buffCapacity, const CharT* _pFormat, va_list _args)
+void BasicStringUtil<CharT>::FormatBuffer(CharT* _pBuff, const int _buffCapacity, const CharT* _pFormat, va_list _args)
 {
 	va_list argsCopy;
 	va_copy(argsCopy, _args);
 	const int iExpectedLen = CRuntime::FormatLengthV(_pFormat, argsCopy);
 	va_end(argsCopy);
-	jc_assert_msg(iExpectedLen > 0, "문자열 포맷 수행중 오류가 발생하였습니다.");
-	jc_assert_msg(iExpectedLen < _buffCapacity, "문자열 포맷 수행중 오류가 발생하였습니다. (문자열 길이가 버퍼의 용량을 초과합니다.)");
+	jc_assert_msg(iExpectedLen > 0, _T("문자열 포맷 수행중 오류가 발생하였습니다."));
+	jc_assert_msg(iExpectedLen < _buffCapacity, _T("문자열 포맷 수행중 오류가 발생하였습니다. (문자열 길이가 버퍼의 용량을 초과합니다.)"));
 	CRuntime::FormatV(_pBuff, _buffCapacity, _pFormat, _args);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::GetRange(const CharT* _pSource, int _sourceLen, int _startIdx, int _endIdx)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::GetRange(const CharT* _pSource, int _sourceLen, int _startIdx, int _endIdx)
 {
 	auto [pBuffer, iLen, iCapacity] = GetRangeUnsafe(_pSource, _sourceLen, _startIdx, _endIdx);
 
@@ -329,7 +329,7 @@ typename StringUtil<CharT>::StrType StringUtil<CharT>::GetRange(const CharT* _pS
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-Tuple<CharT*, int, int> StringUtil<CharT>::GetRangeUnsafe(const CharT* _pSource, int _sourceLen, int _startIdx, int _endIdx)
+Tuple<CharT*, int, int> BasicStringUtil<CharT>::GetRangeUnsafe(const CharT* _pSource, int _sourceLen, int _startIdx, int _endIdx)
 {
 	if (_startIdx > _endIdx || _startIdx < 0 || _endIdx >= _sourceLen)
 	{
@@ -356,7 +356,7 @@ Tuple<CharT*, int, int> StringUtil<CharT>::GetRangeUnsafe(const CharT* _pSource,
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::SubStr(const CharT* _pSource, int _sourceLen, int _startIdx, int _count)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::SubStr(const CharT* _pSource, int _sourceLen, int _startIdx, int _count)
 {
 	if (_startIdx < 0 || _startIdx >= _sourceLen || _count < 0)
 	{
@@ -373,14 +373,14 @@ typename StringUtil<CharT>::StrType StringUtil<CharT>::SubStr(const CharT* _pSou
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-bool StringUtil<CharT>::IsEqual(const CharT* _pSrc, const CharT* _pDst, bool _bCompareCase/*= true*/)
+bool BasicStringUtil<CharT>::IsEqual(const CharT* _pSrc, const CharT* _pDst, bool _bCompareCase/*= true*/)
 {
 	return IsEqual(_pSrc, Length(_pSrc), _pDst, Length(_pDst), _bCompareCase);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-bool StringUtil<CharT>::IsEqual(const CharT* _pSrc, const int _srcLen, const CharT* _pDst, const int _dstLen, bool _bCompareCase /*= true*/)
+bool BasicStringUtil<CharT>::IsEqual(const CharT* _pSrc, const int _srcLen, const CharT* _pDst, const int _dstLen, bool _bCompareCase /*= true*/)
 {
 	for (int i = 0, j = 0; i < _srcLen && j < _dstLen; i++, j++)
 	{
@@ -403,7 +403,7 @@ bool StringUtil<CharT>::IsEqual(const CharT* _pSrc, const int _srcLen, const Cha
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-bool StringUtil<CharT>::IsNullOrEmpty(const CharT* _pStr)
+bool BasicStringUtil<CharT>::IsNullOrEmpty(const CharT* _pStr)
 {
 	if (_pStr == nullptr)
 		return true;
@@ -414,14 +414,14 @@ bool StringUtil<CharT>::IsNullOrEmpty(const CharT* _pStr)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::Compare(const CharT* _pStr1, const CharT* _pStr2)
+int BasicStringUtil<CharT>::Compare(const CharT* _pStr1, const CharT* _pStr2)
 {
 	return Compare(_pStr1, Length(_pStr1), _pStr2, Length(_pStr2));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::Compare(const CharT* _pStr1, int _str1Len, const CharT* _pStr2, int _str2Len)
+int BasicStringUtil<CharT>::Compare(const CharT* _pStr1, int _str1Len, const CharT* _pStr2, int _str2Len)
 {
 	const CharT* pSrc = _pStr1;
 	const CharT* pDst = _pStr2;
@@ -447,7 +447,7 @@ int StringUtil<CharT>::Compare(const CharT* _pStr1, int _str1Len, const CharT* _
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-const CharT* StringUtil<CharT>::SkipLeadingChar(const CharT* _pStr, CharT _skipChar)
+const CharT* BasicStringUtil<CharT>::SkipLeadingChar(const CharT* _pStr, CharT _skipChar)
 {
 	const int iPos = FindCharUncontained(_pStr, _skipChar);
 	return _pStr + iPos;
@@ -455,7 +455,7 @@ const CharT* StringUtil<CharT>::SkipLeadingChar(const CharT* _pStr, CharT _skipC
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-const CharT* StringUtil<CharT>::SkipLeadingNumberZero(const CharT* _pStr)
+const CharT* BasicStringUtil<CharT>::SkipLeadingNumberZero(const CharT* _pStr)
 {
 	const int iStrLen = Length(_pStr);
 
@@ -478,21 +478,21 @@ const CharT* StringUtil<CharT>::SkipLeadingNumberZero(const CharT* _pStr)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-Vector<typename StringUtil<CharT>::StrType, CDefaultAllocator> StringUtil<CharT>::Split(StrType& _src, const CharT* _pDelimiter)
+Vector<typename BasicStringUtil<CharT>::StrType, CDefaultAllocator> BasicStringUtil<CharT>::Split(StrType& _src, const CharT* _pDelimiter)
 {
 	return _src.Split(_pDelimiter);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-Vector<typename StringUtil<CharT>::StrType, CDefaultAllocator> StringUtil<CharT>::Split(StrType& _src, CharT _delimiter)
+Vector<typename BasicStringUtil<CharT>::StrType, CDefaultAllocator> BasicStringUtil<CharT>::Split(StrType& _src, CharT _delimiter)
 {
 	return _src.Split(_delimiter);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-void StringUtil<CharT>::Swap(StrType& _src, StrType& _dst)
+void BasicStringUtil<CharT>::Swap(StrType& _src, StrType& _dst)
 {
 	StrType temp = std::move(_src);
 	_src = std::move(_dst);
@@ -506,7 +506,7 @@ void StringUtil<CharT>::Swap(StrType& _src, StrType& _dst)
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 template <typename TInteger>
-TInteger StringUtil<CharT>::ToNumber(const CharT* _pStr, OUT CharT** _ppEndptr /* = nullptr */, bool _ignoreLeadingZero /* = true */)
+TInteger BasicStringUtil<CharT>::ToNumber(const CharT* _pStr, OUT CharT** _ppEndptr /* = nullptr */, bool _ignoreLeadingZero /* = true */)
 {
 	const CharT* pStr = _ignoreLeadingZero ? SkipLeadingNumberZero(_pStr) : _pStr;
 
@@ -546,7 +546,7 @@ TInteger StringUtil<CharT>::ToNumber(const CharT* _pStr, OUT CharT** _ppEndptr /
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, bool _value)
+int BasicStringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, bool _value)
 {
 	if constexpr (std::is_same_v<CharT, char>)
 		return CRuntime::FormatBuffered(_pBuff, _capacity, "%s", _value ? "true" : "false");
@@ -556,7 +556,7 @@ int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, bool _valu
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _s8 _value)
+int BasicStringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _s8 _value)
 {
 	if constexpr (std::is_same_v<CharT, char>)
 		return CRuntime::FormatBuffered(_pBuff, _capacity, "%d", static_cast<_s32>(_value));
@@ -566,7 +566,7 @@ int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _s8 _value
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _u8 _value)
+int BasicStringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _u8 _value)
 {
 	if constexpr (std::is_same_v<CharT, char>)
 		return CRuntime::FormatBuffered(_pBuff, _capacity, "%u", static_cast<_u32>(_value));
@@ -576,7 +576,7 @@ int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _u8 _value
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _s16 _value)
+int BasicStringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _s16 _value)
 {
 	if constexpr (std::is_same_v<CharT, char>)
 		return CRuntime::FormatBuffered(_pBuff, _capacity, "%d", static_cast<_s32>(_value));
@@ -586,7 +586,7 @@ int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _s16 _valu
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _u16 _value)
+int BasicStringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _u16 _value)
 {
 	if constexpr (std::is_same_v<CharT, char>)
 		return CRuntime::FormatBuffered(_pBuff, _capacity, "%u", static_cast<_u32>(_value));
@@ -596,7 +596,7 @@ int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _u16 _valu
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _s32 _value)
+int BasicStringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _s32 _value)
 {
 	if constexpr (std::is_same_v<CharT, char>)
 		return CRuntime::FormatBuffered(_pBuff, _capacity, "%d", _value);
@@ -606,7 +606,7 @@ int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _s32 _valu
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _u32 _value)
+int BasicStringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _u32 _value)
 {
 	if constexpr (std::is_same_v<CharT, char>)
 		return CRuntime::FormatBuffered(_pBuff, _capacity, "%u", _value);
@@ -616,7 +616,7 @@ int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _u32 _valu
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _s32l _value)
+int BasicStringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _s32l _value)
 {
 	if constexpr (std::is_same_v<CharT, char>)
 		return CRuntime::FormatBuffered(_pBuff, _capacity, "%ld", _value);
@@ -626,7 +626,7 @@ int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _s32l _val
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _u32l _value)
+int BasicStringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _u32l _value)
 {
 	if constexpr (std::is_same_v<CharT, char>)
 		return CRuntime::FormatBuffered(_pBuff, _capacity, "%lu", _value);
@@ -636,7 +636,7 @@ int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _u32l _val
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _s64 _value)
+int BasicStringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _s64 _value)
 {
 	if constexpr (std::is_same_v<CharT, char>)
 		return CRuntime::FormatBuffered(_pBuff, _capacity, "%lld", _value);
@@ -646,7 +646,7 @@ int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _s64 _valu
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _u64 _value)
+int BasicStringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _u64 _value)
 {
 	if constexpr (std::is_same_v<CharT, char>)
 		return CRuntime::FormatBuffered(_pBuff, _capacity, "%llu", _value);
@@ -656,7 +656,7 @@ int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, _u64 _valu
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, float _value)
+int BasicStringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, float _value)
 {
 	if constexpr (std::is_same_v<CharT, char>)
 		return CRuntime::FormatBuffered(_pBuff, _capacity, "%g", _value);
@@ -666,7 +666,7 @@ int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, float _val
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, double _value)
+int BasicStringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, double _value)
 {
 	if constexpr (std::is_same_v<CharT, char>)
 		return CRuntime::FormatBuffered(_pBuff, _capacity, "%g", _value);
@@ -680,7 +680,7 @@ int StringUtil<CharT>::ToStringBuffered(CharT* _pBuff, int _capacity, double _va
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(bool _value)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::ToString(bool _value)
 {
 	CharT buf[8];
 	ToStringBuffered(buf, _countof(buf), _value);
@@ -689,7 +689,7 @@ typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(bool _value)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_s8 _value)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::ToString(_s8 _value)
 {
 	CharT buf[8];
 	ToStringBuffered(buf, _countof(buf), _value);
@@ -698,7 +698,7 @@ typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_s8 _value)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_u8 _value)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::ToString(_u8 _value)
 {
 	CharT buf[8];
 	ToStringBuffered(buf, _countof(buf), _value);
@@ -707,7 +707,7 @@ typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_u8 _value)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_s16 _value)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::ToString(_s16 _value)
 {
 	CharT buf[16];
 	ToStringBuffered(buf, _countof(buf), _value);
@@ -716,7 +716,7 @@ typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_s16 _value)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_u16 _value)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::ToString(_u16 _value)
 {
 	CharT buf[16];
 	ToStringBuffered(buf, _countof(buf), _value);
@@ -725,7 +725,7 @@ typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_u16 _value)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_s32 _value)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::ToString(_s32 _value)
 {
 	CharT buf[16];
 	ToStringBuffered(buf, _countof(buf), _value);
@@ -734,7 +734,7 @@ typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_s32 _value)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_u32 _value)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::ToString(_u32 _value)
 {
 	CharT buf[16];
 	ToStringBuffered(buf, _countof(buf), _value);
@@ -743,7 +743,7 @@ typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_u32 _value)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_s32l _value)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::ToString(_s32l _value)
 {
 	CharT buf[16];
 	ToStringBuffered(buf, _countof(buf), _value);
@@ -752,7 +752,7 @@ typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_s32l _value)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_u32l _value)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::ToString(_u32l _value)
 {
 	CharT buf[16];
 	ToStringBuffered(buf, _countof(buf), _value);
@@ -761,7 +761,7 @@ typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_u32l _value)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_s64 _value)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::ToString(_s64 _value)
 {
 	CharT buf[32];
 	ToStringBuffered(buf, _countof(buf), _value);
@@ -770,7 +770,7 @@ typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_s64 _value)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_u64 _value)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::ToString(_u64 _value)
 {
 	CharT buf[32];
 	ToStringBuffered(buf, _countof(buf), _value);
@@ -779,7 +779,7 @@ typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(_u64 _value)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(float _value)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::ToString(float _value)
 {
 	CharT buf[64];
 	ToStringBuffered(buf, _countof(buf), _value);
@@ -788,7 +788,7 @@ typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(float _value)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(double _value)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::ToString(double _value)
 {
 	CharT buf[64];
 	ToStringBuffered(buf, _countof(buf), _value);
@@ -797,14 +797,14 @@ typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(double _value)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(const StrType& _value)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::ToString(const StrType& _value)
 {
 	return _value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(StrType&& _value)
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::ToString(StrType&& _value)
 {
 	return std::move(_value);
 }
@@ -812,7 +812,7 @@ typename StringUtil<CharT>::StrType StringUtil<CharT>::ToString(StrType&& _value
 ////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 template <typename T>
-typename StringUtil<CharT>::StrType StringUtil<CharT>::FillLeft(const T& _v, CharT _paddingCharacter, int _len) {
+typename BasicStringUtil<CharT>::StrType BasicStringUtil<CharT>::FillLeft(const T& _v, CharT _paddingCharacter, int _len) {
 	if (_len >= 1023)
 	{
 		jc_assert(false);

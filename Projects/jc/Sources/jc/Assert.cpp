@@ -14,26 +14,27 @@ NS_JC_BEGIN
 	NS_DETAIL_BEGIN
 
 	/////////////////////////////////////////////////////////////////////////////////
-	void __DebugAssertMsgImpl(const char* _expectStr, const char* _filePath, int _lineNum, const char* _functionName, const char* _fmt, ...) 
+	void __DebugAssertMsgImpl(const char* _expectStr, const _char* _filePath, int _lineNum, const _char* _functionName, const _char* _fmt, ...) 
 	{
 
 		// 내부에서 오류 발생시 DebugAssert 재귀 호출되기땜에 여기선 오류 절대 발생하면안댐
 		static bool PreventUnrechableCode = true;
 		static constexpr int BufSize = 512;													
-		char szFmtBuf[BufSize] = { 0, };													
-		if (StringUtilA::Length(_fmt) > 0) {
+		_char szFmtBuf[BufSize] = { 0, };													
+		if (StringUtil::Length(_fmt) > 0) {
 			va_list args;
 			va_start(args, _fmt);
-			StringUtilA::FormatBuffer(szFmtBuf, BufSize, _fmt, args);
+			StringUtil::FormatBuffer(szFmtBuf, BufSize, _fmt, args);
 			va_end(args);
 		}
-		StringUtilA::ConcatInnerFront(szFmtBuf, BufSize, "┌ 어썰트 발생 : ");
-		printf("%s\n", szFmtBuf);															
-		Path::FileNameLevel(szFmtBuf, BufSize, _filePath, StringUtilA::Length(_filePath), 2);
-		printf("│ EXP : %s\n", _expectStr);
-		printf("│ 파일 : %s\n", szFmtBuf);												    
-		printf("│ 라인 : %d\n", _lineNum);
-		printf("└ 함수 : %s\n", _functionName);
+		StringUtil::ConcatInnerFront(szFmtBuf, BufSize, _T("┌ 어썰트 발생 : "));
+		_tprintf(_T("%s\n"), szFmtBuf);															
+		_char szFileBuf[BufSize] = { 0, };
+		Path::FileNameLevel(szFileBuf, BufSize, _filePath, StringUtil::Length(_filePath), 2);
+		_tprintf(_T("│ EXP : %hs\n"), _expectStr);
+		_tprintf(_T("│ 파일 : %s\n"), szFileBuf);												    
+		_tprintf(_T("│ 라인 : %d\n"), _lineNum);
+		_tprintf(_T("└ 함수 : %s\n"), _functionName);
 
 		StackTrace::PrintStack(1);
 

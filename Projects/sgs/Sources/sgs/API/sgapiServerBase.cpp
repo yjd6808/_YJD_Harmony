@@ -23,33 +23,33 @@ void sgapiServerBase::Init()
 	sgapiBase::Init();
 
 	String moduleName = Env::ModuleName();
-	if (moduleName == "sgs_auth")
+	if (moduleName == _T("sgs_auth"))
 	{
 		serverProcessType_ = ServerProcessType::Auth;
 		isInterServerClient_ = true;
 	}
-	else if (moduleName == "sgs_center")
+	else if (moduleName == _T("sgs_center"))
 	{
 		serverProcessType_ = ServerProcessType::Center;
 		isInterServerClient_ = false;
 	}
-	else if (moduleName == "sgs_lobby")
+	else if (moduleName == _T("sgs_lobby"))
 	{
 		serverProcessType_ = ServerProcessType::Lobby;
 		isInterServerClient_ = true;
 	}
-	else if (moduleName == "sgs_game")
+	else if (moduleName == _T("sgs_game"))
 	{
 		serverProcessType_ = ServerProcessType::Game;
 		isInterServerClient_ = true;
 	}
-	else if (moduleName == "sgs_query")
+	else if (moduleName == _T("sgs_query"))
 	{
 		serverProcessType_ = ServerProcessType::Query;
 		isInterServerClient_ = true;	// 쿼리 서버는 중앙서버에 접속하지만.. 접속이 언제든지 연결/해제 되어도 상관없다.
 	}
 	else
 	{
-		jc_assert_msg(false, "알 수 없는 서버 프로세스 타입입니다. (%s)", moduleName.Source());
+		jc_assert_msg(false, _T("알 수 없는 서버 프로세스 타입입니다. (%s)"), moduleName.Source());
 	}
 }

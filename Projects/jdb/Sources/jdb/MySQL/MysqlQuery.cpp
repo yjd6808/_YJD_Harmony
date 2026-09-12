@@ -1,3 +1,5 @@
+// MYSQL-UNICODE-EXCLUDE: MySQL C API is narrow-only; excluded from Unicode builds.
+#ifndef _UNICODE
 #include "MysqlQuery.h"
 
 USING_NS_JC;
@@ -15,7 +17,7 @@ bool MysqlQueryUpdate::Execute()
 		const String errorString = pMysqlConn->GetLastErrorString();
 		errorCode_ = pMysqlConn->GetLastErrorCode();
 		if (errorString.Length() > 2)
-			_LogError_("MySQL UPDATE 오류 : %s", errorString.Source());
+			_LogError_(_T("MySQL UPDATE 오류 : %s"), errorString.Source());
 		return false;
 	}
 
@@ -33,7 +35,7 @@ bool MysqlQueryDelete::Execute()
 		const String errorString = pMysqlConn->GetLastErrorString();
 		errorCode_ = pMysqlConn->GetLastErrorCode();
 		if (errorString.Length() > 2)
-			_LogError_("MySQL DELETE 오류 : %s", errorString.Source());
+			_LogError_(_T("MySQL DELETE 오류 : %s"), errorString.Source());
 		return false;
 	}
 
@@ -51,7 +53,7 @@ bool MysqlQueryInsert::Execute()
 		const String errorString = pMysqlConn->GetLastErrorString();
 		errorCode_ = pMysqlConn->GetLastErrorCode();
 		if (errorString.Length() > 2)
-			_LogError_("MySQL INSERT 오류 : %s", errorString.Source());
+			_LogError_(_T("MySQL INSERT 오류 : %s"), errorString.Source());
 		return false;
 	}
 
@@ -77,7 +79,7 @@ const char* MysqlQuerySelect::GetRawString(const char* _pFieldName)
 {
 	if (IsFailed())
 	{
-		_LogError_("쿼리 수행결과가 존재하지 않습니다. %s", "GetRawString()");
+		_LogError_(_T("쿼리 수행결과가 존재하지 않습니다. %s"), "GetRawString()");
 		return nullptr;
 	}
 
@@ -85,7 +87,7 @@ const char* MysqlQuerySelect::GetRawString(const char* _pFieldName)
 
 	if (fieldIndex == -1)
 	{
-		_LogError_("%s 필드를 찾지 못했습니다. %s", _pFieldName, "GetRawString()");
+		_LogError_(_T("%s 필드를 찾지 못했습니다. %s"), _pFieldName, "GetRawString()");
 		return nullptr;
 	}
 
@@ -97,7 +99,7 @@ const char* MysqlQuerySelect::GetRawString(int _fieldIndex)
 {
 	if (IsFailed())
 	{
-		_LogError_("쿼리 수행결과가 존재하지 않습니다. %s", "GetRawString()");
+		_LogError_(_T("쿼리 수행결과가 존재하지 않습니다. %s"), "GetRawString()");
 		return nullptr;
 	}
 
@@ -106,7 +108,7 @@ const char* MysqlQuerySelect::GetRawString(int _fieldIndex)
 
 	if (_fieldIndex < 0 || _fieldIndex >= static_cast<int>(fieldList_.Size()))
 	{
-		_LogError_("필드 인덱스(%d)가 범위를 벗어났습니다. (0~%d) %s",
+		_LogError_(_T("필드 인덱스(%d)가 범위를 벗어났습니다. (0~%d) %s"),
 		           _fieldIndex, static_cast<int>(fieldList_.Size()) - 1, "GetRawString()");
 		return nullptr;
 	}
@@ -135,7 +137,7 @@ jc::DateTime MysqlQuerySelect::ParseRawStringToDateTime(const char* _pRawString)
 	DateTime parsed;
 
 	char dateFormatBuffer[64];
-	int decimalPointPos = StringUtilT::FindCharReverse(_pRawString, '.');
+	int decimalPointPos = StringUtil::FindCharReverse(_pRawString, '.');
 	int decimalPlaceCount = 0;
 
 	if (decimalPointPos != -1)
@@ -145,15 +147,15 @@ jc::DateTime MysqlQuerySelect::ParseRawStringToDateTime(const char* _pRawString)
 			decimalPlaceCount++;
 		}
 
-		jc_assert_msg(decimalPlaceCount > 0, "소수점(.)이 있는데 소수점 자릿수가 하나도 없습니다.");
+		jc_assert_msg(decimalPlaceCount > 0, _T("소수점(.)이 있는데 소수점 자릿수가 하나도 없습니다."));
 	}
 
 	if (decimalPlaceCount > 6)
 		decimalPlaceCount = 6;
 
-	StringUtilT::FormatBuffer(dateFormatBuffer, 64, DATE_FORMAT, DECIMAL_POINT_FORMATS[decimalPlaceCount]);
+	StringUtil::FormatBuffer(dateFormatBuffer, 64, DATE_FORMAT, DECIMAL_POINT_FORMATS[decimalPlaceCount]);
 	DateTime::TryParse(parsed, dateFormatBuffer, _pRawString);
-	jc_assert_msg(DateTime::LastError() == 0, "소수점 날짜 포맷 파싱수행중 오류가 발생하였습니다. (%s)", DateTime::LastErrorMessage());
+	jc_assert_msg(DateTime::LastError() == 0, _T("소수점 날짜 포맷 파싱수행중 오류가 발생하였습니다. (%hs)"), DateTime::LastErrorMessage());
 	return parsed;
 }
 
@@ -176,7 +178,7 @@ _u32 MysqlQuerySelect::GetColCount() const
 {
 	if (IsFailed())
 	{
-		_LogError_("쿼리 수행결과가 존재하지 않습니다. GetFieldCount()");
+		_LogError_(_T("쿼리 수행결과가 존재하지 않습니다. GetFieldCount()"));
 		return 0;
 	}
 
@@ -203,7 +205,7 @@ bool MysqlQuerySelect::Execute()
 		const String errorString = pMysqlConn->GetLastErrorString();
 		errorCode_ = pMysqlConn->GetLastErrorCode();
 		if (errorString.Length() > 2)
-			_LogError_("MySQL SELECT 오류 : %s", errorString.Source());
+			_LogError_(_T("MySQL SELECT 오류 : %s"), errorString.Source());
 		return false;
 	}
 
@@ -214,7 +216,7 @@ bool MysqlQuerySelect::Execute()
 		const String errorString = pMysqlConn->GetLastErrorString();
 		errorCode_ = pMysqlConn->GetLastErrorCode();
 		if (errorString.Length() > 2)
-			_LogError_("MySQL SELECT 오류 : %s", errorString.Source());
+			_LogError_(_T("MySQL SELECT 오류 : %s"), errorString.Source());
 		return false;
 	}
 
@@ -249,7 +251,7 @@ _s8 MysqlQuerySelect::GetS8(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0;
-	return jc::StringUtilT::ToNumber<_s8>(pRawString);
+	return jc::StringUtil::ToNumber<_s8>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -257,7 +259,7 @@ _u8 MysqlQuerySelect::GetU8(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0;
-	return jc::StringUtilT::ToNumber<_u8>(pRawString);
+	return jc::StringUtil::ToNumber<_u8>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -265,7 +267,7 @@ _s16 MysqlQuerySelect::GetS16(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0;
-	return jc::StringUtilT::ToNumber<_s16>(pRawString);
+	return jc::StringUtil::ToNumber<_s16>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -273,7 +275,7 @@ _u16 MysqlQuerySelect::GetU16(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0;
-	return jc::StringUtilT::ToNumber<_u16>(pRawString);
+	return jc::StringUtil::ToNumber<_u16>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -281,7 +283,7 @@ _s32 MysqlQuerySelect::GetS32(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0;
-	return jc::StringUtilT::ToNumber<_s32>(pRawString);
+	return jc::StringUtil::ToNumber<_s32>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -289,7 +291,7 @@ _u32 MysqlQuerySelect::GetU32(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0;
-	return jc::StringUtilT::ToNumber<_u32>(pRawString);
+	return jc::StringUtil::ToNumber<_u32>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -297,7 +299,7 @@ _s64 MysqlQuerySelect::GetS64(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0;
-	return jc::StringUtilT::ToNumber<_s64>(pRawString);
+	return jc::StringUtil::ToNumber<_s64>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -305,7 +307,7 @@ _u64 MysqlQuerySelect::GetU64(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0;
-	return jc::StringUtilT::ToNumber<_u64>(pRawString);
+	return jc::StringUtil::ToNumber<_u64>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -313,7 +315,7 @@ _f32 MysqlQuerySelect::GetFloat(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0.0f;
-	return jc::StringUtilT::ToNumber<_f32>(pRawString);
+	return jc::StringUtil::ToNumber<_f32>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -321,14 +323,14 @@ _f64 MysqlQuerySelect::GetDouble(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0.0;
-	return jc::StringUtilT::ToNumber<_f64>(pRawString);
+	return jc::StringUtil::ToNumber<_f64>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-jc::StringView MysqlQuerySelect::ReadRawString()
+	jc::AStringView MysqlQuerySelect::ReadRawString()
 {
 	const char* pRaw = GetRawString(static_cast<int>(colReadOffset_++));
-	return pRaw ? jc::StringView(pRaw) : jc::StringView();
+	return pRaw ? jc::AStringView(pRaw) : jc::AStringView();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -405,3 +407,5 @@ jc::DateTime MysqlQuerySelect::ReadDateTime()
 }
 
 NS_END
+
+#endif // !_UNICODE

@@ -8,6 +8,7 @@
 #include "sg/Sga/SgaLoader.h"
 #include "sg/Sga/SgaPackage.h"
 
+#include "jc/Primitives/StringConvert.h"
 #include "jc/IO/FileStream.h"
 #include "jc/IO/Path.h"
 
@@ -33,7 +34,7 @@ void SgaPackage::Add(const int _index, const SgaElementPtr& _pElement)
 //////////////////////////////////////////////////////////////////////////////////////////
 SgaElementPtr SgaPackage::Get(int _index)
 {
-	jc_assert_msg(elementMap_.Exist(_index), "엘리먼트가 존재하지 않습니다.");
+	jc_assert_msg(elementMap_.Exist(_index), _T("엘리먼트가 존재하지 않습니다."));
 	return elementMap_[_index];
 }
 
@@ -49,10 +50,10 @@ SgaElementPtr SgaPackage::GetUnsafe(int _index)
 //////////////////////////////////////////////////////////////////////////////////////////
 void SgaPackage::LoadElement(const int _index, bool _elementOnly)
 {
-	jc_assert_msg(_index >= 0 && _index < elementHeaders_.Size(), "올바르지 않은 Element 인덱스입니다.");
+	jc_assert_msg(_index >= 0 && _index < elementHeaders_.Size(), _T("올바르지 않은 Element 인덱스입니다."));
 	const SgaElementPtr pElement = SgaLoader::ReadElement(stream_.GetRef(), elementHeaders_[_index],
 	                                                      elementHeaders_[_index].nextOffset_, _elementOnly);
-	jc_assert_msg(pElement.Exist(), "엘리먼트 파싱에 실패했습니다.");
+	jc_assert_msg(pElement.Exist(), _T("엘리먼트 파싱에 실패했습니다."));
 	pElement->pParent_ = Weak();
 	Add(_index, pElement);
 }
@@ -81,16 +82,16 @@ bool SgaPackage::IsElementLoaded(const int _index) const
 int SgaPackage::GetElementIndex(const String& _elementName)
 {
 	bool exist = elementNameToIndex_.Exist(_elementName);
-	jc_assert_msg(exist, "해당 엘리먼트 이름에 해당하는 인덱스가 없습니다.");
+	jc_assert_msg(exist, _T("해당 엘리먼트 이름에 해당하는 인덱스가 없습니다."));
 	return elementNameToIndex_[_elementName];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 int SgaPackage::GetElementIndex(const char* _elementName)
 {
-	bool exist = elementNameToIndex_.Exist(_elementName);
-	jc_assert_msg(exist, "해당 엘리먼트 이름에 해당하는 인덱스가 없습니다.");
-	return elementNameToIndex_[_elementName];
+	bool exist = elementNameToIndex_.Exist(StringConvert::FromUtf8(_elementName));
+	jc_assert_msg(exist, _T("해당 엘리먼트 이름에 해당하는 인덱스가 없습니다."));
+	return elementNameToIndex_[StringConvert::FromUtf8(_elementName)];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -102,7 +103,7 @@ bool SgaPackage::HasElementIndex(const String& _elementName) const
 //////////////////////////////////////////////////////////////////////////////////////////
 bool SgaPackage::HasElementIndex(const char* _elementName) const
 {
-	return elementNameToIndex_.Exist(_elementName);
+	return elementNameToIndex_.Exist(StringConvert::FromUtf8(_elementName));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -115,5 +116,5 @@ SgaElement& SgaPackage::operator[](const int _index)
 //////////////////////////////////////////////////////////////////////////////////////////
 String SgaPackage::ToString() const
 {
-	return StringUtilT::Format("Sga(%s)", path_.Source());
+	return StringUtil::Format(_T("Sga(%s)"), path_.Source());
 }

@@ -461,7 +461,7 @@ struct ItemVisualInfo : ItemEquipInfo
 			return VisualType::Weapon;
 		}
 
-		jc_assert_msg(false, "비주얼 타입이 아닌 녀석이 비주얼 타입으로 설정되어있습니다.");
+		jc_assert_msg(false, _T("비주얼 타입이 아닌 녀석이 비주얼 타입으로 설정되어있습니다."));
 		return (VisualType_t)-1;
 	}
 };

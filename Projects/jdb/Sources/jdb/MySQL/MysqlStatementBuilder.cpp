@@ -1,3 +1,5 @@
+// MYSQL-UNICODE-EXCLUDE: MySQL C API is narrow-only; excluded from Unicode builds.
+#ifndef _UNICODE
 #include "../Structure.h"
 
 #include "MysqlStatementBuilder.h"
@@ -43,3 +45,5 @@ void MysqlStatementBuilder::Finalize()
 }
 
 NS_END
+
+#endif // !_UNICODE

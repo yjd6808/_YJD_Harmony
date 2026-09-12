@@ -83,7 +83,7 @@ jc::CMessage PacketBuffer::EmplaceMsg()
 	int remaining = GetRemainBufferSize();
 	if (remaining < jc::CMessage::MESSAGE_HEADER_SIZE + 5) // 5 byte = int 1개 이상 쓸 수 있는 최소한의 공간
 	{
-		_NetLogWarn_("패킷 버퍼에 메시지를 쓸 공간이 부족합니다. 남은 공간: %d", remaining);
+		_NetLogWarn_(_T("패킷 버퍼에 메시지를 쓸 공간이 부족합니다. 남은 공간: %d"), remaining);
 		return jc::CMessage::Null; // null message 반환
 	}
 
@@ -108,13 +108,13 @@ void PacketBuffer::CompleteMsg()
 	PacketHeader& header = GetPacketHeader();
 	if (header.packetType_ != PacketType::Message)
 	{
-		jc_assert_msg(false, "메시지 패킷이 아닙니다.");
+		jc_assert_msg(false, _T("메시지 패킷이 아닙니다."));
 		return;
 	}
 
 	if (currMsgPending_ == false)
 	{
-		jc_assert_msg(false, "이미 메시지가 완성되어 있습니다.");
+		jc_assert_msg(false, _T("이미 메시지가 완성되어 있습니다."));
 		return; // 중복 호출 금지.
 	}
 
@@ -137,7 +137,7 @@ void PacketBuffer::EmplaceCmd(ICommand* _pCmd)
 
 	if (!MoveWritePos(cmdSize))
 	{
-		jc_assert_msg(false, "버퍼에 커맨드를 쓸 공간이 부족합니다.");
+		jc_assert_msg(false, _T("버퍼에 커맨드를 쓸 공간이 부족합니다."));
 	}
 
 	jc::Memory::CopyUnsafe(pCmdMem, _pCmd, cmdSize);
@@ -167,7 +167,7 @@ bool PacketBuffer::PreProcessElement(PacketType_t _type)
 	int remaining = GetRemainBufferSize();
 	if (remaining < PACKET_HEADER_SIZE)
 	{
-		_NetLogWarn_("버퍼에 패킷 헤더를 쓸 공간이 부족합니다. 남은 공간: %d", remaining);
+		_NetLogWarn_(_T("버퍼에 패킷 헤더를 쓸 공간이 부족합니다. 남은 공간: %d"), remaining);
 		return false;
 	}
 

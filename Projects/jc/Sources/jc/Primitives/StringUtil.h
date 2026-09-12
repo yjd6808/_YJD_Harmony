@@ -15,20 +15,25 @@
 #include "jc/Namespace.h"
 
 NS_JC_BEGIN
-template <typename CharT> class StringUtil;
+template <typename CharT> class BasicStringUtil;
 NS_END
 
 #include "jc/Primitives/String.h"
-#include "jc/Container/Vector.h"
 #include "jc/Tuple.h"
 #include "jc/Wrapper/CRuntime.h"
+
+NS_JC_BEGIN
+// Vector.h 직접 포함 시 Comparator.h 경유 순환(Comparator→StaticString→StringUtil→Vector→Arrays→Comparator 미완성)이
+// 발생하므로 전방 선언만 둔다. 정의가 필요한 본문(StringUtil.inl)에서 포함한다.
+template <typename T, typename TAllocator> class Vector;
+NS_END
 
 NS_JC_BEGIN
 
 class CDefaultAllocator;
 
 template <typename CharT>
-class StringUtil final
+class BasicStringUtil final
 {
 public:
 	using StrType = BasicString<CharT, StringImpl_SSO<CharT>>;
@@ -437,12 +442,12 @@ private:
 	}
 };
 
-using StringUtilA = StringUtil<char>;
-using StringUtilW = StringUtil<wchar_t>;
-using StringUtilT = StringUtil<_char>;
+using StringUtilA = BasicStringUtil<char>;
+using StringUtilW = BasicStringUtil<wchar_t>;
+using StringUtil = BasicStringUtil<_char>;
 
 NS_END
 
-#define JC_FMT(...) jc::StringUtilT::Format(__VA_ARGS__)
+#define JC_FMT(...) jc::StringUtil::Format(__VA_ARGS__)
 
 #include "jc/Primitives/StringUtil.inl"

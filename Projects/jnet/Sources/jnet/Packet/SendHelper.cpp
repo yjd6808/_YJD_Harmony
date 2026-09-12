@@ -19,7 +19,7 @@ bool SendHelperBase::IsValidInformation(Session* _pSender, SendStrategy _strateg
 	{
 		if (_strategy == SendStrategy::SendToAsync)
 		{
-			_LogWarn_("TCP인데 UDP 송신전략을 사용할려고합니다.");
+			_LogWarn_(_T("TCP인데 UDP 송신전략을 사용할려고합니다."));
 			return false;
 		}
 	}
@@ -28,7 +28,7 @@ bool SendHelperBase::IsValidInformation(Session* _pSender, SendStrategy _strateg
 	{
 		if (_strategy == SendStrategy::SendAsync)
 		{
-			_LogWarn_("UDP인데 TCP 송신전략을 사용할려고합니다.");
+			_LogWarn_(_T("UDP인데 TCP 송신전략을 사용할려고합니다."));
 			return false;
 		}
 	}

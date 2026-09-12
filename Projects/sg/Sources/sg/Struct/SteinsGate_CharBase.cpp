@@ -13,14 +13,14 @@ WeaponType_t WeaponType::getType(const jc::String& _name)
 {
 	static jc::HashMap<jc::String, WeaponType_t> nameToTypeMap
 	{
-		{ "auto", Automatic },
-		{ "rev", Revolver },
-		{ "bowgun", Bowgun },
-		{ "musket", Musket },
-		{ "hcan", HandCannon }
+		{ _T("auto"), Automatic },
+		{ _T("rev"), Revolver },
+		{ _T("bowgun"), Bowgun },
+		{ _T("musket"), Musket },
+		{ _T("hcan"), HandCannon }
 	};
 
-	jc_assert_msg(nameToTypeMap.Exist(_name), "%s 무기타입명에 해당하는 코드가 존재하지 않습니다.", _name.Source());
+	jc_assert_msg(nameToTypeMap.Exist(_name), _T("%s 무기타입명에 해당하는 코드가 존재하지 않습니다."), _name.Source());
 	return nameToTypeMap[_name];
 }
 
@@ -49,8 +49,8 @@ ActorPartSpriteData::ActorPartSpriteData(int _zOrder, int _sga, int _img)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 AccountData::AccountData()
-: id_{ "" }
-, pass_{ "" }
+: id_{ _T("") }
+, pass_{ _T("") }
 , lastLoginTime_(0)
 , lastServer_(GameServerType::Max)
 {
@@ -59,8 +59,8 @@ AccountData::AccountData()
 //////////////////////////////////////////////////////////////////////////////////////////
 void AccountData::Clear()
 {
-	id_ = "";
-	pass_ = "";
+	id_ = _T("");
+	pass_ = _T("");
 	lastLoginTime_.Tick = 0;
 	lastServer_ = GameServerType::Max;
 }

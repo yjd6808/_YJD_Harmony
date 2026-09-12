@@ -50,5 +50,5 @@ int main(int _argc, char** _argv)
     FinalizeNetLogger();
     FinalizeJCore();
     Winsock::Finalize();
-    return Console::ReadKeyWhile("X키 입력시 종료", ConsoleKey::X) ? 0 : -1;
+    return Console::ReadKeyWhile(_T("X키 입력시 종료"), ConsoleKey::X) ? 0 : -1;
 }

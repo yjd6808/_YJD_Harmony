@@ -51,7 +51,7 @@ struct CRuntime {
 
 
 	/**
-	 * \brief 수치 변환 narrow/wide 오버로드 (StringUtil<CharT> 단일 본문용)
+	 * \brief 수치 변환 narrow/wide 오버로드 (BasicStringUtil<CharT> 단일 본문용)
 	 * char판은 strto* 계열, wide판은 wcsto* 계열을 호출한다.
 	 */
 	static long				JC_CDECL StrToLong(const char* _pStr, char** _ppEnd, int _radix);

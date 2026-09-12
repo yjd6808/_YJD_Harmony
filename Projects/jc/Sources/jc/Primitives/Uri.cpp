@@ -37,7 +37,7 @@ namespace
 	//////////////////////////////////////////////////////////////////////////////////////
 	bool StartsWithIgnoreCase(const String& _s, const _char* _prefix)
 	{
-		int preLen = StringUtilT::Length(_prefix);
+		int preLen = StringUtil::Length(_prefix);
 		if (_s.Length() < preLen)
 			return false;
 		return _s.Find(_prefix, false) == 0;

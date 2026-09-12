@@ -40,14 +40,14 @@ public:
 
 		if (pFind == nullptr)
 		{
-			_LogWarn_("%s %s에서 %d 호스트 검색에 실패했습니다.", name_.Source(), TypeName(), _id);
+			_LogWarn_(_T("%s %hs에서 %d 호스트 검색에 실패했습니다."), name_.Source(), TypeName(), _id);
 			return nullptr;
 		}
 
 		T* pHost = dynamic_cast<T*>(pFind->GetPtr());
 		if (pHost == nullptr)
 		{
-			_LogWarn_("%s %s에서 %d 호스트는 %s 타입이 아닙니다.", name_.Source(), TypeName(), _id, typeid(T).name());
+			_LogWarn_(_T("%s %hs에서 %d 호스트는 %hs 타입이 아닙니다."), name_.Source(), TypeName(), _id, typeid(T).name());
 			return nullptr;
 		}
 

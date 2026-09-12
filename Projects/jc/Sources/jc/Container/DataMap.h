@@ -127,7 +127,7 @@ struct DataVariant
 				}
 				if (pAllocatedStr == nullptr)
 				{
-					jc_assert_msg(false, "문자열 할당에 실패했습니다.");
+					jc_assert_msg(false, _T("문자열 할당에 실패했습니다."));
 					return;
 				}
 				ptr_ = reinterpret_cast<_ptr>(pAllocatedStr);
@@ -354,7 +354,7 @@ public:
 		String* pAllocatedStr = TAllocator::template AllocateInitStatic<String>(_value);
 		if (pAllocatedStr == nullptr)
 		{
-			jc_assert_msg(false, "문자열 할당에 실패했습니다.");
+			jc_assert_msg(false, _T("문자열 할당에 실패했습니다."));
 			return false;
 		}
 		DataVariant variant;

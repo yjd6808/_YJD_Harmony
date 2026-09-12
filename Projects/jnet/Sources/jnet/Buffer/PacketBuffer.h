@@ -43,7 +43,7 @@ public:
 #if _DEBUG
 		if (cmdSize <= 0 || cmdSize >= 2500)
 		{
-			jc_assert_msg(false, "%s::_Size(%d) = %d 커맨드 사이즈가 이상합니다.", TCommand::_Name(), _count, cmdSize);
+			jc_assert_msg(false, _T("%hs::_Size(%d) = %d 커맨드 사이즈가 이상합니다."), TCommand::_Name(), _count, cmdSize);
 		}
 #endif
 		TCommand* pCmd = (TCommand*)(buffer_ + writePos_);
@@ -51,7 +51,7 @@ public:
 
 		if (!MoveWritePos(cmdSize))
 		{
-			jc_assert_msg(false, "버퍼에 커맨드를 쓸 공간이 부족합니다.");
+			jc_assert_msg(false, _T("버퍼에 커맨드를 쓸 공간이 부족합니다."));
 		}
 
 		PacketHeader& header = GetPacketHeader();

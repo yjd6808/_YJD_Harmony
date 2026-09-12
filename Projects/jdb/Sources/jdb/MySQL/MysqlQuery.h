@@ -20,6 +20,9 @@
 
 NS_JDB_BEGIN
 
+// MySQL C API는 narrow 전용이라 Unicode 빌드에서 MySQL 구현을 제외한다.
+#ifndef _UNICODE
+
 // ===========================================================================================
 // MysqlQuery: MySQL 쿼리 구현 베이스
 // ===========================================================================================
@@ -116,7 +119,7 @@ public:
 	virtual _f64 GetDouble(int _fieldIdx) override;
 
 	virtual void		   ResetColReadOffset() override { colReadOffset_ = 0; }
-	virtual jc::StringView ReadRawString() override;
+	virtual jc::AStringView ReadRawString() override;
 	virtual jc::String	   ReadString() override;
 	virtual _s8			   ReaS8() override;
 	virtual _u8			   ReadU8() override;
@@ -140,5 +143,7 @@ private:
 
 	jc::HashMap<jc::String, int> fieldList_;
 };
+
+#endif // !_UNICODE (MySQL Unicode 제외)
 
 NS_END

@@ -18,18 +18,18 @@ SqlServerQuery::~SqlServerQuery()
 //////////////////////////////////////////////////////////////////////////////////////////
 void SqlServerQuery::ExtractError(SQLHSTMT _hStmt)
 {
-	SQLCHAR sqlState[6];
+	SQLTCHAR sqlState[6];
 	SQLINTEGER nativeError = 0;
-	SQLCHAR messageText[512];
+	SQLTCHAR messageText[512];
 	SQLSMALLINT textLength;
 
-	SQLRETURN ret = SQLGetDiagRecA(SQL_HANDLE_STMT, _hStmt, 1, sqlState, &nativeError,
-	                               messageText, sizeof(messageText), &textLength);
+	SQLRETURN ret = SQLGetDiagRec(SQL_HANDLE_STMT, _hStmt, 1, sqlState, &nativeError,
+	                               messageText, sizeof(messageText) / sizeof(SQLTCHAR), &textLength);
 
 	if (SQL_SUCCEEDED(ret))
 	{
 		errorCode_ = static_cast<int>(nativeError);
-		errorMsg_ = jc::String((char*)messageText);
+		errorMsg_ = jc::String((_char*)messageText);
 	}
 	else
 	{
@@ -56,15 +56,15 @@ bool SqlServerQueryUpdate::Execute()
 	if (!SQL_SUCCEEDED(ret))
 	{
 		errorCode_ = -1;
-		_LogError_("SQLServer UPDATE 스테이트먼트 핸들 할당 실패");
+		_LogError_(_T("SQLServer UPDATE 스테이트먼트 핸들 할당 실패"));
 		return false;
 	}
 
-	ret = SQLExecDirectA(hStmt_, (SQLCHAR*)ptmt_.SafeSource(), SQL_NTS);
+	ret = SQLExecDirect(hStmt_, (SQLTCHAR*)ptmt_.Source(), SQL_NTS);
 	if (!SQL_SUCCEEDED(ret))
 	{
 		ExtractError(hStmt_);
-		_LogError_("SQLServer UPDATE 오류 (errorCode=%d, %s)", errorCode_, errorMsg_.SafeSource());
+		_LogError_(_T("SQLServer UPDATE 오류 (errorCode=%d, %s)"), errorCode_, errorMsg_.SafeSource());
 		return false;
 	}
 
@@ -84,15 +84,15 @@ bool SqlServerQueryDelete::Execute()
 	if (!SQL_SUCCEEDED(ret))
 	{
 		errorCode_ = -1;
-		_LogError_("SQLServer DELETE 스테이트먼트 핸들 할당 실패");
+		_LogError_(_T("SQLServer DELETE 스테이트먼트 핸들 할당 실패"));
 		return false;
 	}
 
-	ret = SQLExecDirectA(hStmt_, (SQLCHAR*)ptmt_.SafeSource(), SQL_NTS);
+	ret = SQLExecDirect(hStmt_, (SQLTCHAR*)ptmt_.Source(), SQL_NTS);
 	if (!SQL_SUCCEEDED(ret))
 	{
 		ExtractError(hStmt_);
-		_LogError_("SQLServer DELETE 오류 (errorCode=%d, %s)", errorCode_, errorMsg_.SafeSource());
+		_LogError_(_T("SQLServer DELETE 오류 (errorCode=%d, %s)"), errorCode_, errorMsg_.SafeSource());
 		return false;
 	}
 
@@ -112,16 +112,16 @@ bool SqlServerQueryInsert::Execute()
 	if (!SQL_SUCCEEDED(ret))
 	{
 		errorCode_ = -1;
-		_LogError_("SQLServer INSERT 스테이트먼트 핸들 할당 실패");
+		_LogError_(_T("SQLServer INSERT 스테이트먼트 핸들 할당 실패"));
 		return false;
 	}
 
-	ret = SQLExecDirectA(hStmt_, (SQLCHAR*)ptmt_.SafeSource(), SQL_NTS);
+	ret = SQLExecDirect(hStmt_, (SQLTCHAR*)ptmt_.Source(), SQL_NTS);
 	if (!SQL_SUCCEEDED(ret))
 	{
 		FreeStatement();
 		ExtractError(hStmt_);
-		_LogError_("SQLServer INSERT 오류 (errorCode=%d, %s)", errorCode_, errorMsg_.SafeSource());
+		_LogError_(_T("SQLServer INSERT 오류 (errorCode=%d, %s)"), errorCode_, errorMsg_.SafeSource());
 		return false;
 	}
 
@@ -134,7 +134,7 @@ bool SqlServerQueryInsert::Execute()
 	ret = SQLAllocHandle(SQL_HANDLE_STMT, pSqlServerConn->GetConnection(), &hIdentityStmt);
 	if (SQL_SUCCEEDED(ret))
 	{
-		ret = SQLExecDirectA(hIdentityStmt, (SQLCHAR*)"SELECT SCOPE_IDENTITY()", SQL_NTS);
+		ret = SQLExecDirect(hIdentityStmt, (SQLTCHAR*)_T("SELECT SCOPE_IDENTITY()"), SQL_NTS);
 		if (SQL_SUCCEEDED(ret))
 		{
 			ret = SQLFetch(hIdentityStmt);
@@ -144,7 +144,7 @@ bool SqlServerQueryInsert::Execute()
 				SQLLEN indicator;
 				ret = SQLGetData(hIdentityStmt, 1, SQL_C_CHAR, idBuffer, sizeof(idBuffer), &indicator);
 				if (SQL_SUCCEEDED(ret) && indicator != SQL_NULL_DATA)
-					insertId_ = jc::StringUtilT::ToNumber<_u64>((char*)idBuffer);
+					insertId_ = jc::StringUtilA::ToNumber<_u64>((char*)idBuffer);
 			}
 		}
 		SQLFreeHandle(SQL_HANDLE_STMT, hIdentityStmt);
@@ -154,9 +154,10 @@ bool SqlServerQueryInsert::Execute()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int SqlServerQuerySelect::GetColIndex(const char* _pFieldName)
+int SqlServerQuerySelect::GetColIndex(const _char* _pFieldName)
 {
-	const int* pIndex = colNameMap_.Find(_pFieldName);
+	// colNameMap_은 디버그용으로 비어 있음.
+	const int* pIndex = colNameMap_.Find(jc::String(_pFieldName));
 
 	if (pIndex == nullptr)
 		return -1;
@@ -165,11 +166,11 @@ int SqlServerQuerySelect::GetColIndex(const char* _pFieldName)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-const char* SqlServerQuerySelect::GetRawString(const char* _pFieldName)
+const char* SqlServerQuerySelect::GetRawString(const _char* _pFieldName)
 {
 	if (IsFailed())
 	{
-		_LogError_("쿼리 수행결과가 존재하지 않습니다. %s", "GetRawString()");
+		_LogError_(_T("쿼리 수행결과가 존재하지 않습니다. %hs"), "GetRawString()");
 		return nullptr;
 	}
 
@@ -177,7 +178,7 @@ const char* SqlServerQuerySelect::GetRawString(const char* _pFieldName)
 
 	if (fieldIndex == -1)
 	{
-		_LogError_("%s 필드를 찾지 못했습니다. %s", _pFieldName, "GetRawString()");
+		_LogError_(_T("%s 필드를 찾지 못했습니다. %hs"), _pFieldName, "GetRawString()");
 		return nullptr;
 	}
 
@@ -189,13 +190,13 @@ const char* SqlServerQuerySelect::GetRawString(int _colIdx)
 {
 	if (IsFailed())
 	{
-		_LogError_("쿼리 수행결과가 존재하지 않습니다. %s", "GetRawString()");
+		_LogError_(_T("쿼리 수행결과가 존재하지 않습니다. %hs"), "GetRawString()");
 		return nullptr;
 	}
 
 	if (_colIdx < 0 || _colIdx >= static_cast<int>(colCount_))
 	{
-		_LogError_("컬럼 인덱스(%d)가 범위를 벗어났습니다. (0~%d) %s",
+		_LogError_(_T("컬럼 인덱스(%d)가 범위를 벗어났습니다. (0~%d) %hs"),
 			_colIdx, colCount_ - 1, "GetRawString()");
 		return nullptr;
 	}
@@ -226,7 +227,7 @@ DateTime SqlServerQuerySelect::ParseStringToDateTime(const char* _pRawString)
 	DateTime parsed;
 
 	char dateFormatBuffer[64];
-	int decimalPointPos = StringUtilT::FindCharReverse(_pRawString, '.');
+	int decimalPointPos = StringUtilA::FindCharReverse(_pRawString, '.');
 	int decimalPlaceCount = 0;
 
 	if (decimalPointPos != -1)
@@ -240,26 +241,26 @@ DateTime SqlServerQuerySelect::ParseStringToDateTime(const char* _pRawString)
 		}
 
 		decimalPlaceCount = floatIndex - decimalPointPos - 1;
-		jc_assert_msg(decimalPlaceCount > 0, "소수점(.)이 있는데 소수점 자릿수가 하나도 없습니다.");
+		jc_assert_msg(decimalPlaceCount > 0, _T("소수점(.)이 있는데 소수점 자릿수가 하나도 없습니다."));
 	}
 
 	// SQL Server는 최대 7자리 소수점(datetime2)
 	if (decimalPlaceCount >= 7)
 		decimalPlaceCount = 6; // 내가 구현한 DateTime은 6자리 까지만 지원한다.
 
-	StringUtilT::FormatBuffer(dateFormatBuffer, 64, DATE_FORMAT, DECIMAL_POINT_FORMATS[decimalPlaceCount]);
+	StringUtilA::FormatBuffer(dateFormatBuffer, 64, DATE_FORMAT, DECIMAL_POINT_FORMATS[decimalPlaceCount]);
 	DateTime::TryParse(parsed, dateFormatBuffer, _pRawString);
-	jc_assert_msg(DateTime::LastError() == 0, "소수점 날짜 포맷 파싱수행중 오류가 발생하였습니다. (%s)", DateTime::LastErrorMessage());
+	jc_assert_msg(DateTime::LastError() == 0, _T("소수점 날짜 포맷 파싱수행중 오류가 발생하였습니다. (%hs)"), DateTime::LastErrorMessage());
 	return parsed;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-DateTime SqlServerQuerySelect::GetDateTime(const char* _pFieldName)
+DateTime SqlServerQuerySelect::GetDateTime(const _char* _pFieldName)
 {
 	const int fieldIndex = GetColIndex(_pFieldName);
 	if (fieldIndex == -1)
 	{
-		_LogError_("%s 필드를 찾지 못했습니다. GetDateTime()", _pFieldName);
+		_LogError_(_T("%s 필드를 찾지 못했습니다. GetDateTime()"), _pFieldName);
 		return 0;
 	}
 	return GetDateTime(fieldIndex);
@@ -317,7 +318,7 @@ _u32 SqlServerQuerySelect::GetColCount() const
 {
 	if (IsFailed())
 	{
-		_LogError_("쿼리 수행결과가 존재하지 않습니다. GetFieldCount()");
+		_LogError_(_T("쿼리 수행결과가 존재하지 않습니다. GetFieldCount()"));
 		return 0;
 	}
 
@@ -329,7 +330,7 @@ int SqlServerQuerySelect::GetColType(int _colIdx) const
 {
 	if (_colIdx < 0 || _colIdx >= static_cast<int>(colCount_))
 	{
-		_LogError_("컬럼 인덱스(%d)가 범위를 벗어났습니다. (0~%d)", _colIdx, colCount_ - 1);
+		_LogError_(_T("컬럼 인덱스(%d)가 범위를 벗어났습니다. (0~%d)"), _colIdx, colCount_ - 1);
 		return -1;
 	}
 	return colInfoList_[_colIdx].type_;
@@ -402,7 +403,7 @@ bool SqlServerQuerySelect::Execute()
 	if (!SQL_SUCCEEDED(ret))
 	{
 		errorCode_ = -1;
-		_LogError_("SQLServer SELECT 스테이트먼트 핸들 할당 실패");
+		_LogError_(_T("SQLServer SELECT 스테이트먼트 핸들 할당 실패"));
 		return false;
 	}
 
@@ -410,12 +411,12 @@ bool SqlServerQuerySelect::Execute()
 	// 커넥션 풀로 커넥션 반환 후에도 결과셋을 안전하게 사용할 수 있다.
 	SQLSetStmtAttr(hStmt_, SQL_ATTR_CURSOR_TYPE, (SQLPOINTER)SQL_CURSOR_STATIC, 0);
 
-	ret = SQLExecDirectA(hStmt_, (SQLCHAR*)ptmt_.SafeSource(), SQL_NTS);
+	ret = SQLExecDirect(hStmt_, (SQLTCHAR*)ptmt_.Source(), SQL_NTS);
 	if (!SQL_SUCCEEDED(ret))
 	{
 		FreeStatement();
 		ExtractError(hStmt_);
-		_LogError_("SQLServer SELECT 오류 (errorCode=%d, %s)", errorCode_, errorMsg_.SafeSource());
+		_LogError_(_T("SQLServer SELECT 오류 (errorCode=%d, %s)"), errorCode_, errorMsg_.SafeSource());
 		return false;
 	}
 
@@ -426,18 +427,18 @@ bool SqlServerQuerySelect::Execute()
 
 	for (SQLSMALLINT i = 1; i <= colCount_; ++i)
 	{
-		SQLCHAR columnName[256];
+		SQLTCHAR columnName[256];
 		SQLSMALLINT nameLength = 0;
 		SQLSMALLINT dataType = 0;
 		SQLULEN columnSize = 0;
 		SQLSMALLINT decimalDigits = 0;
 		SQLSMALLINT nullable = 0;
 
-		SQLDescribeColA(hStmt_, i, columnName, sizeof(columnName), &nameLength,
+		SQLDescribeCol(hStmt_, i, columnName, sizeof(columnName) / sizeof(SQLTCHAR), &nameLength,
 			&dataType, &columnSize, &decimalDigits, &nullable);
 
 		int index = i - 1;
-		jc::String fieldName((char*)columnName);
+		jc::String fieldName = jc::String((_char*)columnName);
 
 		ColumnBinder& col = row_[index];
 		col.capacity_ = columnSize + 1;
@@ -448,7 +449,7 @@ bool SqlServerQuerySelect::Execute()
 		if (!SQL_SUCCEEDED(bindRet))
 		{
 			col.pBuf_[0] = '\0';
-			_LogWarn_("SQLServer SELECT 컬럼 바인딩 실패 (필드: %s)", fieldName.SafeSource());
+			_LogWarn_(_T("SQLServer SELECT 컬럼 바인딩 실패 (필드: %s)"), fieldName.SafeSource());
 		}
 
 		colInfoList_[index].type_ = dataType;
@@ -508,7 +509,7 @@ bool SqlServerQuerySelect::Next()
 
 	hasCurrentRow_ = false;
 	ExtractError(hStmt_);
-	_LogError_("SQLFetch failed: %s", errorMsg_.SafeSource());
+	_LogError_(_T("SQLFetch failed: %s"), errorMsg_.SafeSource());
 	return false;
 }
 
@@ -537,8 +538,8 @@ namespace
 				Memory::CopyUnsafe(pNewBuf, _pBuf, nullPos != -1 ? nullPos : static_cast<int>(_length));
 				pNewBuf[nullPos != -1 ? nullPos : static_cast<int>(_length)] = '\0';
 
-				jc::String str(0);
-				str.ExchangeSource(pNewBuf, nullPos != -1 ? nullPos : static_cast<int>(_length));
+				jc::String str = jc::StringConvert::FromAnsi(pNewBuf, nullPos != -1 ? nullPos : static_cast<int>(_length));
+				JC_DELETE_ARRAY_SAFE(pNewBuf);
 				return str;
 			}
 		case SQL_VARCHAR:
@@ -546,8 +547,8 @@ namespace
 				char* pNewBuf = dbg_new char[_length + 1];
 				Memory::CopyUnsafe(pNewBuf, _pBuf, static_cast<int>(_length));
 				pNewBuf[_length] = '\0';
-				jc::String str(0);
-				str.ExchangeSource(pNewBuf, static_cast<int>(_length));
+				jc::String str = jc::StringConvert::FromAnsi(pNewBuf, static_cast<int>(_length));
+				JC_DELETE_ARRAY_SAFE(pNewBuf);
 				return str;
 			}
 		case SQL_WVARCHAR:
@@ -565,8 +566,8 @@ namespace
 		default:
 			{
 				_pBuf[_length] = '\0';
-				jc_assert_msg(false, "문자열 변환을 지원하지 않는 SQL 타입입니다. SQL 타입: %d", _sqlType);
-				return jc::String(_pBuf);
+				jc_assert_msg(false, _T("문자열 변환을 지원하지 않는 SQL 타입입니다. SQL 타입: %d"), _sqlType);
+				return jc::StringConvert::FromAnsi(_pBuf);
 			}
 		}
 	}
@@ -645,9 +646,9 @@ namespace
 			}
 		default:
 			{
-				// 문자열 타입 (CHAR, VARCHAR 등): 널 종료 후 StringUtilT::ToNumber 폴백
+				// 문자열 타입 (CHAR, VARCHAR 등): 널 종료 후 StringUtilA::ToNumber 폴백 (narrow 버퍼)
 				_pBuf[_length] = '\0';
-				return jc::StringUtilT::ToNumber<T>(_pBuf);
+				return jc::StringUtilA::ToNumber<T>(_pBuf);
 			}
 		}
 	}
@@ -789,7 +790,7 @@ jc::Date SqlServerQuerySelect::GetDate(int _colIdx)
 		}
 	default:
 		{
-			jc_assert_msg(false, "지원하지 않는 SQL 타입입니다. (SQL 타입: %d)", sqlType);
+			jc_assert_msg(false, _T("지원하지 않는 SQL 타입입니다. (SQL 타입: %d)"), sqlType);
 			return jc::Date{};
 		}
 	}
@@ -819,6 +820,7 @@ jc::Time SqlServerQuerySelect::GetTime(int _colIdx)
 			auto* pDs = reinterpret_cast<const SQL_TIME_STRUCT*>(col.pBuf_);
 			return jc::Time{ pDs->hour, pDs->minute, pDs->second, 0, 0 };
 		}
+#ifdef JDB_HAS_MSODBCSQL
 	case SQL_SS_TIME2:
 		{
 			auto* pTime2 = reinterpret_cast<const SQL_SS_TIME2_STRUCT*>(col.pBuf_);
@@ -826,24 +828,25 @@ jc::Time SqlServerQuerySelect::GetTime(int _colIdx)
 			_s16 micro = static_cast<_s16>((pTime2->fraction % 1000000) / 1000);
 			return jc::Time{ pTime2->hour, pTime2->minute, pTime2->second, mili, micro};
 		}
+#endif
 	default:
 		{
-			jc_assert_msg(false, "지원하지 않는 SQL 타입입니다. (SQL 타입: %d)", sqlType);
+			jc_assert_msg(false, _T("지원하지 않는 SQL 타입입니다. (SQL 타입: %d)"), sqlType);
 			return {};
 		}
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-jc::StringView SqlServerQuerySelect::ReadRawString()
+	jc::AStringView SqlServerQuerySelect::ReadRawString()
 {
 	if (colReadOffset_ >= static_cast<_u32>(colCount_))
 	{
-		jc_assert_msg(false, "컬럼을 모두 읽었습니다. 더 이상 읽을 컬럼이 없습니다.");
-		return jc::StringView();
+		jc_assert_msg(false, _T("컬럼을 모두 읽었습니다. 더 이상 읽을 컬럼이 없습니다."));
+		return jc::AStringView();
 	}
 	ColumnBinder& col = row_[colReadOffset_++];
-	return jc::StringView(col.pBuf_);
+	return jc::AStringView(col.pBuf_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -851,7 +854,7 @@ jc::String SqlServerQuerySelect::ReadString()
 {
 	if (colReadOffset_ >= static_cast<_u32>(colCount_))
 	{
-		jc_assert_msg(false, "컬럼을 모두 읽었습니다. 더 이상 읽을 컬럼이 없습니다.");
+		jc_assert_msg(false, _T("컬럼을 모두 읽었습니다. 더 이상 읽을 컬럼이 없습니다."));
 		return jc::String();
 	}
 	_u32 colIdx = colReadOffset_++;

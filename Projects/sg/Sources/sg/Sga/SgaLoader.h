@@ -21,9 +21,9 @@ class FileStream;
 class SgaLoader
 {
 public:
-	inline static const char* SgaFlag = "For SteinsGate Sga";
-	inline static const char* ImgFlag = "For SteinsGate Img"; // 버전퍼
-	inline static const char* SpriteFlag = "For SteinsGate Sprite"; // 버전세
+	inline static const _char* SgaFlag = _T("For SteinsGate Sga");
+	inline static const _char* ImgFlag = _T("For SteinsGate Img"); // 버전퍼
+	inline static const _char* SpriteFlag = _T("For SteinsGate Sprite"); // 버전세
 	static constexpr int SGA_IMG_PATH_LEN = 40;
 
 	static SgaPackagePtr

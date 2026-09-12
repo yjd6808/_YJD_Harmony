@@ -90,7 +90,7 @@ void R_AUTHENTICATION::RECV_SAU_AuthenticationCheck(Session* _session, ICommand*
 		pAuthenticationData = g_cAuthMgr.Update(pCmd->Serial, pCmd->AccountId.Source, AuthenticationState::Game);
 		eReplyServer = ServerProcessType::Game;
 	} else {
-		_LogWarn_("알 수 없는 프로세스로부터 수신");
+		_LogWarn_(_T("알 수 없는 프로세스로부터 수신"));
 		return;
 	}
 

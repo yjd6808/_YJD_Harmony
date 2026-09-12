@@ -5,14 +5,17 @@
 
 #pragma once
 
-#include "jc/Primitives/String.h"
-#include "jc/Primitives/StaticString.h"
+#include "jc/Type.h"
+#include "jc/Functional.h"
 #include "jc/Wrapper/CRuntime.h"
 
 #include "jc/TypeTraits/IntegralConstant.h"
 #include "jc/TypeCast.h"
 
 NS_JC_BEGIN
+template <typename CharT, typename Storage> class BasicString;
+template <typename CharT> class StringImpl_SSO;
+template <_u32 Size, typename CharT> struct StaticString;
 template <typename T>
 struct Comparator
 {
@@ -57,18 +60,12 @@ struct Comparator<const char*>
 // TODO: operator() 함수가 오버로딩 되어있어서 CallableSignatureParam_t<TComparator>::Count 호출시 0이 나오는 문제 수정
 // decltype(&Fn::operator()) 실행시  cannot determine which instance of overloaded function is intended오류가 발생해서 강제로 SFINAE가 발동됨.
 template <>
-struct Comparator<String>
+struct Comparator<BasicString<_char, StringImpl_SSO<_char>>>
 {
-	int operator()(const String& _lhs, const String& _rhs)
-	{
-		return _lhs.Compare(_rhs);
-	}
+	int operator()(const BasicString<_char, StringImpl_SSO<_char>>& _lhs, const BasicString<_char, StringImpl_SSO<_char>>& _rhs);
 
 	template <_u32 Size>
-	int operator()(const String& _lhs, const StaticString<Size, _char>& _rhs) const
-	{
-		return _lhs.Compare(_rhs.Source);
-	}
+	int operator()(const BasicString<_char, StringImpl_SSO<_char>>& _lhs, const StaticString<Size, _char>& _rhs) const;
 };
 
 struct NaturalOrder
@@ -94,8 +91,11 @@ struct ReverseOrder
 template <typename TComparator>
 constexpr bool IsComparator_v = true;
 
-//template <typename TComparator>
-//constexpr bool IsComparator_v = IsCallable_v<TComparator>;
-
 
 NS_END
+
+// String 완성형이 필요한 본문. NaturalOrder 선언보다 뒤에 두어 include 순서와 무관하게 한다.
+#include "jc/Comparator.inl"
+
+//template <typename TComparator>
+//constexpr bool IsCallable_v = IsCallable_v<TComparator>;

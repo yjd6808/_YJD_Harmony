@@ -15,26 +15,26 @@ NS_JDB_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 String Util::ReplacePlaceholders(const StringView& _stmt, const String* _pArgs, int _argCount)
 {
-	const char* pSrc = _stmt.Source();
+	const _char* pSrc = _stmt.Source();
 	const int len = _stmt.Length();
 
 	String result(len * 2);
 
 	for (int i = 0; i < len; ++i)
 	{
-		if (pSrc[i] == '{')
+		if (pSrc[i] == _T('{'))
 		{
 			int numStart = i + 1;
 			int numEnd = numStart;
 
-			while (numEnd < len && pSrc[numEnd] >= '0' && pSrc[numEnd] <= '9')
+			while (numEnd < len && pSrc[numEnd] >= _T('0') && pSrc[numEnd] <= _T('9'))
 				++numEnd;
 
-			if (numEnd > numStart && numEnd < len && pSrc[numEnd] == '}')
+			if (numEnd > numStart && numEnd < len && pSrc[numEnd] == _T('}'))
 			{
 				int index = 0;
 				for (int k = numStart; k < numEnd; ++k)
-					index = index * 10 + (pSrc[k] - '0');
+					index = index * 10 + (pSrc[k] - _T('0'));
 
 				if (index >= 0 && index < _argCount)
 				{
@@ -45,7 +45,7 @@ String Util::ReplacePlaceholders(const StringView& _stmt, const String* _pArgs, 
 
 				// Query(select * from t_test where c_uid = {0}, {1}, "abcd")
 				// -> {1}에 대응하는 인자를 못찾음
-				jc_assert_msg(false, "cannot find {%d} argument.\nsource: %s", index, pSrc);
+				jc_assert_msg(false, _T("cannot find {%d} argument.\nsource: %s"), index, pSrc);
 			}
 		}
 

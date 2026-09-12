@@ -106,13 +106,13 @@ protected:
 		bool Load();
 		void Clear();
 
-		void SetCallback(const char* _directoryName, DirectoryTreeNodeCallback_t&& _callback);
-		void SetCallback(const char* _directoryName, const DirectoryTreeNodeCallback_t& _callback);
+		void SetCallback(const jc::String& _directoryName, DirectoryTreeNodeCallback_t&& _callback);
+		void SetCallback(const jc::String& _directoryName, const DirectoryTreeNodeCallback_t& _callback);
 		void SetCallbackCommon(DirectoryTreeNodeCallback_t&& _callback);
 		auto SetCallbackCommon(const DirectoryTreeNodeCallback_t& _callback) -> void;
 
-		static DirectoryTreeNode* FindNodeRecursive(DirectoryTreeNode* _pNode, const char* _pDirectoryName);
-		static void ConstructTreeRecursive(OUT DirectoryTreeNode** _ppNode, const char* _path, int _depth);
+		static DirectoryTreeNode* FindNodeRecursive(DirectoryTreeNode* _pNode, const jc::String& _pDirectoryName);
+		static void ConstructTreeRecursive(OUT DirectoryTreeNode** _ppNode, const jc::String& _path, int _depth);
 		static void LoadRecursive(DirectoryTree* _pTree, DirectoryTreeNode* _pNode);
 		static void ClearRecursive(DirectoryTreeNode* _pNode);
 

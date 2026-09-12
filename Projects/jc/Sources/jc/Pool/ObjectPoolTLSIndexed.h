@@ -299,7 +299,7 @@ template <typename T>
 inline typename ObjectPoolTLSIndexed<T>::Pool* ObjectPoolTLSIndexed<T>::CreatePool()
 {
 	const _u32 idx = PoolCount.Increment() - 1;			// Increment는 증가 후 값을 반환
-	jc_assert_msg(idx < kMaxPoolCount, "ObjectPoolTLSIndexed: 풀 번호가 상한(%u)을 넘었습니다.", kMaxPoolCount);
+	jc_assert_msg(idx < kMaxPoolCount, _T("ObjectPoolTLSIndexed: 풀 번호가 상한(%u)을 넘었습니다."), kMaxPoolCount);
 
 	// Pool은 alignas(64). 일반 new는 C++17 aligned new를 탄다. dbg_new(placement 인자)와는 혼용 안 되므로
 	// 정렬 할당 + placement new로 명시한다. 해제하지 않는다 (D8).
@@ -492,7 +492,7 @@ inline _u32 ObjectPoolTLSIndexed<T>::ThisPoolIdx()
 template <typename T>
 inline void* TlsPoolNewDeleteMixin<T>::operator new(size_t _size)
 {
-	jc_assert_msg(_size == sizeof(T), "파생 타입은 이 풀로 할당할 수 없습니다.");
+	jc_assert_msg(_size == sizeof(T), _T("파생 타입은 이 풀로 할당할 수 없습니다."));
 	return TPool::Pop();
 }
 

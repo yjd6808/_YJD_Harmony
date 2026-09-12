@@ -21,7 +21,7 @@ FileLogger::FileLogger(const String& _filePath)
 , m_hFile(nullptr)
 {
 	m_hFile = CRuntime::FileOpen(m_szFilePath.Source(), _T("a"));
-	jc_assert_msg(m_hFile != nullptr, "FileLogger: 파일을 열 수 없습니다. (%s)", m_szFilePath.Source());
+	jc_assert_msg(m_hFile != nullptr, _T("FileLogger: 파일을 열 수 없습니다. (%s)"), m_szFilePath.Source());
 }
 
 FileLogger::~FileLogger()
@@ -67,7 +67,7 @@ void FileLogger::LogVaList(Level _level, const _char* _pFmt, va_list _list)
 		m_Lock.Lock();
 	}
 
-	String fmtText = StringUtilT::Format(_pFmt, _list);
+	String fmtText = StringUtil::Format(_pFmt, _list);
 
 	m_szBuffer += CreateHeader(_level);
 	m_szBuffer += fmtText;
@@ -98,7 +98,7 @@ void FileLogger::LogPlainVaList(const _char* _pFmt, va_list _list)
 		m_Lock.Lock();
 	}
 
-	String fmtText = StringUtilT::Format(_pFmt, _list);
+	String fmtText = StringUtil::Format(_pFmt, _list);
 
 	m_szBuffer += fmtText;
 	m_szBuffer += _T('\n');

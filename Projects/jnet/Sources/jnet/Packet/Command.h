@@ -285,7 +285,7 @@ NS_END
 	{                                                                                                                                                      \
 		if (_index < 0 || _index >= count_)                                                                                                                \
 		{                                                                                                                                                  \
-			jc_assert_msg(false, "%s 커맨드의 다이나믹 필드 갯수가 %d인데 %d인덱스에 접근을 시도했습니다.", _Name(), count_, _index);                       \
+			jc_assert_msg(false, _T("%hs 커맨드의 다이나믹 필드 갯수가 %d인데 %d인덱스에 접근을 시도했습니다."), _Name(), count_, _index);                       \
 			throw jc::OutOfRangeException("");                                                                                                          \
 		}                                                                                                                                                  \
 		return object_[_index].elem_name;                                                                                                                  \

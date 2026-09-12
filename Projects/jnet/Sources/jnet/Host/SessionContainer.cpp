@@ -38,13 +38,13 @@ bool SessionContainer::Add(Session* _pSession)
 
 	if (!IsValidHandle(handleIndex))
 	{
-		_NetLogWarn_("세션 컨테이너 인덱스 범위를 벗어난 핸들입니다. %d", 1);
+		_NetLogWarn_(_T("세션 컨테이너 인덱스 범위를 벗어난 핸들입니다. %d"), 1);
 		return false;
 	}
 
 	if (sessionList_[handleIndex] != nullptr)
 	{
-		_NetLogWarn_("동일한 핸들의 세션이 컨테이너에 존재합니다.");
+		_NetLogWarn_(_T("동일한 핸들의 세션이 컨테이너에 존재합니다."));
 		return false;
 	}
 
@@ -60,7 +60,7 @@ Session* SessionContainer::Get(object_id _handle)
 		
 	if (!IsValidHandle(handleIndex))
 	{
-		_NetLogWarn_("세션 컨테이너 인덱스 범위를 벗어난 핸들입니다. %d", 2);
+		_NetLogWarn_(_T("세션 컨테이너 인덱스 범위를 벗어난 핸들입니다. %d"), 2);
 		return nullptr;
 	}
 
@@ -75,7 +75,7 @@ void SessionContainer::DisconnectAll()
 	CallbackProgressListener* pListener = dbg_new CallbackProgressListener;
 	pListener->ProgressedCallback = [](int _index, int _size)
 	{
-		_NetLogDebug_("세션 연결 닫음: %d/%d(%.1f%%)", _index, _size, _index / float(_size) * 100.0f);
+		_NetLogDebug_(_T("세션 연결 닫음: %d/%d(%.1f%%)"), _index, _size, _index / float(_size) * 100.0f);
 	};
 	notifier.SetListener(pListener, true);
 
@@ -94,7 +94,7 @@ void SessionContainer::DisconnectAll()
 		notifier.Progress(i + 1);
 	}
 
-	_NetLogDebug_("모든 세션 연결종료 완료");
+	_NetLogDebug_(_T("모든 세션 연결종료 완료"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -114,7 +114,7 @@ void SessionContainer::Clear()
 	}
 
 	size_ = 0;
-	_NetLogDebug_("모든 세션 삭제완료");
+	_NetLogDebug_(_T("모든 세션 삭제완료"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

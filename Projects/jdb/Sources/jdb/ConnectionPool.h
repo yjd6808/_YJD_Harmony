@@ -70,8 +70,8 @@ struct AutoReleaseConnection
 
 	~AutoReleaseConnection()
 	{
-		jc_assert_msg(connection_ != nullptr, "AutoReleaseConn 소멸자 오류 발생 / 커넥션이 NULL입니다.");
-		jc_assert_msg(connectionPool_ != nullptr, "AutoReleaseConn 소멸자 오류 발생 / 풀이 NULL입니다.");
+		jc_assert_msg(connection_ != nullptr, _T("AutoReleaseConn 소멸자 오류 발생 / 커넥션이 NULL입니다."));
+		jc_assert_msg(connectionPool_ != nullptr, _T("AutoReleaseConn 소멸자 오류 발생 / 풀이 NULL입니다."));
 		connectionPool_->ReleaseConnection(connection_);
 	}
 

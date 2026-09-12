@@ -29,11 +29,11 @@ NS_JDB_BEGIN
 struct SelectResultBinder
 {
 	template <typename TField>
-	constexpr static void BindField(const char* _fieldName, TField& _fieldVariable, IQuery* _executedQuery)
+	constexpr static void BindField(const _char* _fieldName, TField& _fieldVariable, IQuery* _executedQuery)
 	{
 		if constexpr (jc::IsString_v<TField>)
 		{
-			_fieldVariable = _executedQuery->GetRawString(_fieldName);
+			_fieldVariable = _executedQuery->GetString(_fieldName);
 		}
 		else if constexpr (
 			jc::Or_v<
@@ -50,7 +50,7 @@ struct SelectResultBinder
 		}
 		else
 		{
-			jc_assert_msg(false, "바인딩 할 수 없는 필드입니다. (TField = %s)", typeid(TField).name());
+			jc_assert_msg(false, _T("바인딩 할 수 없는 필드입니다. (TField = %hs)"), typeid(TField).name());
 		}
 	}
 
@@ -59,7 +59,7 @@ struct SelectResultBinder
 	{
 		if constexpr (jc::IsString_v<TField>)
 		{
-			_fieldVariable = _executedQuery->GetRawString(_fieldIndex);
+			_fieldVariable = _executedQuery->GetString(_fieldIndex);
 		}
 		else if constexpr (
 			jc::Or_v<
@@ -76,7 +76,7 @@ struct SelectResultBinder
 		}
 		else
 		{
-			jc_assert_msg(false, "바인딩 할 수 없는 필드입니다. (TField = %s)", typeid(TField).name());
+			jc_assert_msg(false, _T("바인딩 할 수 없는 필드입니다. (TField = %hs)"), typeid(TField).name());
 		}
 	}
 };
@@ -152,7 +152,7 @@ struct Visitable<struct_name>																							\
 // 공통 Result
 // ===========================================================================================
 
-#define QRY_RESULT_DEBUG_ASSERT jc_assert_msg(Query != nullptr, "쿼리 변수가 NULL임");
+#define QRY_RESULT_DEBUG_ASSERT jc_assert_msg(Query != nullptr, _T("쿼리 변수가 NULL임"));
 
 struct Result
 {
@@ -230,7 +230,7 @@ struct SelectStatement
 		if (spQuery == nullptr)
 			return;
 
-		jc_assert_msg(spQuery->GetStatementType() == StatementType::Select, "셀렉트 스테이트먼트가 아닙니다.");
+		jc_assert_msg(spQuery->GetStatementType() == StatementType::Select, _T("셀렉트 스테이트먼트가 아닙니다."));
 
 		const int iErrorCode = spQuery->GetErrorCode();
 
@@ -303,7 +303,7 @@ struct Statement
 		if (spQuery == nullptr)
 			return;
 
-		jc_assert_msg(spQuery->GetStatementType() == ST, "%s 스테이트먼트가 아닙니다.", StatementName(ST));
+		jc_assert_msg(spQuery->GetStatementType() == ST, _T("%s 스테이트먼트가 아닙니다."), StatementName(ST));
 		const int iErrorCode = spQuery->GetErrorCode();
 
 		_result.Query = spQuery;

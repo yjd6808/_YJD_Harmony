@@ -21,7 +21,7 @@ IOCP::IOCP(int _threadCount)
 {
 	if ((iocpHandle_ = CreateIoCompletionPort(INVALID_HANDLE_VALUE, nullptr, 0, static_cast<_u32l>(_threadCount))) == INVALID_HANDLE_VALUE)
 	{
-		jc_assert_msg(false, "IOCP를 생성하는데 실패했습니다.");
+		jc_assert_msg(false, _T("IOCP를 생성하는데 실패했습니다."));
 	}
 
 	threadCount_ = _threadCount;
@@ -34,7 +34,7 @@ IOCP::~IOCP()
 {
 	if (state_ == State::Running)
 	{
-		jc_assert_msg(false, "먼저 조인을 해주세요");
+		jc_assert_msg(false, _T("먼저 조인을 해주세요"));
 	}
 
 	if (state_ != State::Destroyed)
@@ -67,7 +67,7 @@ void IOCP::Run()
 {
 	if (state_ != State::Initialized)
 	{
-		jc_assert_msg(false, "Initialized 상태의 IOCP만 Run할 수 있습니다.");
+		jc_assert_msg(false, _T("Initialized 상태의 IOCP만 Run할 수 있습니다."));
 		return;
 	}
 
@@ -83,7 +83,7 @@ void IOCP::Join()
 {
 	if (state_ != State::Running)
 	{
-		jc_assert_msg(false, "Running 상태의 IOCP만 Join 할 수 있습니다.");
+		jc_assert_msg(false, _T("Running 상태의 IOCP만 Join 할 수 있습니다."));
 		return;
 	}
 
@@ -113,13 +113,13 @@ void IOCP::WaitForZeroPending()
 		int pending = pendingOverlappedCount_;
 		if (pending <= 0)
 		{
-			jc_assert_msg(pending >= 0, "멍미 펜딩 카운트가 움수 인뎁쇼 (%d)", pending);
+			jc_assert_msg(pending >= 0, _T("멍미 펜딩 카운트가 움수 인뎁쇼 (%d)"), pending);
 			break;
 		}
 
 		if (logCounter.ElapsedSeconds(1))
 		{
-			_NetLogDebug_("IOCP::WaitForZeroPending - pendingOverlappedCount_: %d", pending);
+			_NetLogDebug_(_T("IOCP::WaitForZeroPending - pendingOverlappedCount_: %d"), pending);
 		}
 	}
 }
@@ -187,7 +187,7 @@ int IOCP::PollTasks()
 {
 	if (pollingMode_ == false)
 	{
-		jc_assert_msg(false, "폴링 모드가 아닙니다. PollTasks를 호출하기 전에 SetPollingMode(true)로 폴링 모드로 설정해주세요.");
+		jc_assert_msg(false, _T("폴링 모드가 아닙니다. PollTasks를 호출하기 전에 SetPollingMode(true)로 폴링 모드로 설정해주세요."));
 		return 0;
 	}
 

@@ -450,7 +450,7 @@ class TreeTable<Pack<TKey, TKeyComparator, TAllocator>, ETreeTableImplementation
             else
                 pUncle = pGrandParent->pLeft_;
         }
-        jc_assert_msg(pGrandParent, "그랜드 부모가 NULL입니다.");
+        jc_assert_msg(pGrandParent, _T("그랜드 부모가 NULL입니다."));
         const char eUncleColor = pUncle ? pUncle->color_ : TreeNodeColor::eBlack; // 삼촌 노드는 있을 수도 없을 수도
                                                                                   // 있고. NIL 노드는 Black이다.
 
@@ -532,7 +532,7 @@ class TreeTable<Pack<TKey, TKeyComparator, TAllocator>, ETreeTableImplementation
         if(pChild)
         {
             // 케이스 1. 자식이 한개만 있는경우 (이 자식은 무조건 Red일 것이다.)
-            jc_assert_msg(_child->Count() == 1, "1. 삭제될 노드에 자식이 1개만 있어야하는데 2개 있습니다.");
+            jc_assert_msg(_child->Count() == 1, _T("1. 삭제될 노드에 자식이 1개만 있어야하는데 2개 있습니다."));
             jc_assert(_child->color_ == TreeNodeColor::eBlack);
             jc_assert(pChild->color_ == TreeNodeColor::eRed);
             pChild->color_ = TreeNodeColor::eBlack;
@@ -578,11 +578,11 @@ class TreeTable<Pack<TKey, TKeyComparator, TAllocator>, ETreeTableImplementation
             {
                 const bool bRightChild = _child->IsRight();
                 Parent = _child->pParent_; // 부모 노드
-                jc_assert_msg(Parent, "부모노드 없을 수 없습니다.");
+                jc_assert_msg(Parent, _T("부모노드 없을 수 없습니다."));
 
                 Sibling = bRightChild ? Parent->pLeft_ : Parent->pRight_; // 형제 노드 (child가 우측이면 부모의
                                                                           // 왼쪽 노드가 형제 노드)
-                jc_assert_msg(Sibling, "형제노드가 없을 수 없습니다.");
+                jc_assert_msg(Sibling, _T("형제노드가 없을 수 없습니다."));
 
                 const TTreeNode* pNephewLine = nullptr; // 조카 노드 (일렬로 나열)
                 const TTreeNode* pNephewTri = nullptr;  // 조카 노드 (꺽여서 나열)
@@ -654,7 +654,7 @@ class TreeTable<Pack<TKey, TKeyComparator, TAllocator>, ETreeTableImplementation
             return;
         }
 
-        jc_assert_msg(family.SiblingColor == TreeNodeColor::eBlack, "[그룹 케이스 1] 형제노드가 Black이 아닙니다.");
+        jc_assert_msg(family.SiblingColor == TreeNodeColor::eBlack, _T("[그룹 케이스 1] 형제노드가 Black이 아닙니다."));
         // 그룹 케이스 1: 부모의 색이 Red인 경우
         if(family.NephewTriColor == TreeNodeColor::eBlack && family.NephewLineColor == TreeNodeColor::eBlack)
         {
@@ -1531,7 +1531,7 @@ class TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, ETreeTableImplem
             else
                 pUncle = pGrandParent->pLeft_;
         }
-        jc_assert_msg(pGrandParent, "그랜드 부모가 NULL입니다.");
+        jc_assert_msg(pGrandParent, _T("그랜드 부모가 NULL입니다."));
         const char eUncleColor = pUncle ? pUncle->color_ : TreeNodeColor::eBlack; // 삼촌 노드는 있을 수도 없을 수도
                                                                                   // 있고. NIL 노드는 Black이다.
 
@@ -1686,7 +1686,7 @@ class TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, ETreeTableImplem
         if(pChild)
         {
             // 케이스 1. 자식이 한개만 있는경우 (이 자식은 무조건 Red일 것이다.)
-            jc_assert_msg(_child->Count() == 1, "1. 삭제될 노드에 자식이 1개만 있어야하는데 2개 있습니다.");
+            jc_assert_msg(_child->Count() == 1, _T("1. 삭제될 노드에 자식이 1개만 있어야하는데 2개 있습니다."));
             jc_assert(_child->color_ == TreeNodeColor::eBlack);
             jc_assert(pChild->color_ == TreeNodeColor::eRed);
             pChild->color_ = TreeNodeColor::eBlack;
@@ -1732,11 +1732,11 @@ class TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, ETreeTableImplem
             {
                 const bool bRightChild = _child->IsRight();
                 Parent = _child->pParent_; // 부모 노드
-                jc_assert_msg(Parent, "부모노드 없을 수 없습니다.");
+                jc_assert_msg(Parent, _T("부모노드 없을 수 없습니다."));
 
                 Sibling = bRightChild ? Parent->pLeft_ : Parent->pRight_; // 형제 노드 (child가 우측이면 부모의
                                                                           // 왼쪽 노드가 형제 노드)
-                jc_assert_msg(Sibling, "형제노드가 없을 수 없습니다.");
+                jc_assert_msg(Sibling, _T("형제노드가 없을 수 없습니다."));
 
                 const TTreeNode* pNephewLine = nullptr; // 조카 노드 (일렬로 나열)
                 const TTreeNode* pNephewTri = nullptr;  // 조카 노드 (꺽여서 나열)
@@ -1808,7 +1808,7 @@ class TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, ETreeTableImplem
             return;
         }
 
-        jc_assert_msg(family.SiblingColor == TreeNodeColor::eBlack, "[그룹 케이스 1] 형제노드가 Black이 아닙니다.");
+        jc_assert_msg(family.SiblingColor == TreeNodeColor::eBlack, _T("[그룹 케이스 1] 형제노드가 Black이 아닙니다."));
         // 그룹 케이스 1: 부모의 색이 Red인 경우
         if(family.NephewTriColor == TreeNodeColor::eBlack && family.NephewLineColor == TreeNodeColor::eBlack)
         {

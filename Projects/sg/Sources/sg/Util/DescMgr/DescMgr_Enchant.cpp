@@ -42,7 +42,7 @@ bool EnchantInfoLoader::Load()
 	}
 	catch (std::exception& ex)
 	{
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), ex.what());
+		_LogError_(_T("%hs 파싱중 오류가 발생하였습니다. %hs"), GetConfigFileName(), ex.what());
 		return false;
 	}
 
@@ -61,8 +61,8 @@ void EnchantInfoLoader::ReadEnchantInfo(Json::Value& _enchantRoot, OUT EnchantIn
 	int armorBonusOptCount = (int)armorBonusOptListRoot.size();
 	int accessoryBonusOptCount = (int)accessoryBonusOptListRoot.size();
 
-	jc_assert_msg(armorBonusOptCount > 0, "아머 보너스 옵트가 없습니다.");
-	jc_assert_msg(accessoryBonusOptCount > 0, "악세 보너스 옵트가 없습니다.");
+	jc_assert_msg(armorBonusOptCount > 0, _T("아머 보너스 옵트가 없습니다."));
+	jc_assert_msg(accessoryBonusOptCount > 0, _T("악세 보너스 옵트가 없습니다."));
 
 	_pEnchantInfo->armorBonusOptCount_ = armorBonusOptCount;
 	_pEnchantInfo->accessoryBonusOptCount_ = accessoryBonusOptCount;
@@ -73,7 +73,7 @@ void EnchantInfoLoader::ReadEnchantInfo(Json::Value& _enchantRoot, OUT EnchantIn
 
 		jc::String optName = JsonUtil::GetString(armorBonusOptRoot["opt_name"]);
 		Value& optValListRoot = armorBonusOptRoot["opt_val"];
-		jc_assert_msg(optValListRoot.size() == Const::Item::MaxEnchantLevel, "방어구 보너스 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)",
+		jc_assert_msg(optValListRoot.size() == Const::Item::MaxEnchantLevel, _T("방어구 보너스 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)"),
 		               optValListRoot.size(), Const::Item::MaxEnchantLevel);
 
 		_pEnchantInfo->armorBonusOptList_[i].opt_ = g_cDescMgr.GetItemOptInfo(optName);
@@ -90,7 +90,7 @@ void EnchantInfoLoader::ReadEnchantInfo(Json::Value& _enchantRoot, OUT EnchantIn
 
 		jc::String optName = JsonUtil::GetString(accessoryBonusOptRoot["opt_name"]);
 		Value& optValListRoot = accessoryBonusOptRoot["opt_val"];
-		jc_assert_msg(optValListRoot.size() == Const::Item::MaxEnchantLevel, "악세서리 보너스 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)",
+		jc_assert_msg(optValListRoot.size() == Const::Item::MaxEnchantLevel, _T("악세서리 보너스 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)"),
 		               optValListRoot.size(), Const::Item::MaxEnchantLevel);
 
 		_pEnchantInfo->accessoryBonusOptList_[i].opt_ = g_cDescMgr.GetItemOptInfo(optName);
@@ -117,12 +117,12 @@ void EnchantInfoLoader::ReadEnchantInfo(Json::Value& _enchantRoot, OUT EnchantIn
 	int armorRarityConstantCount = (int)armorRarityConstantListRoot.size();
 	int accessoryRarityConstantCount = (int)accessoryRarityConstantListRoot.size();
 
-	jc_assert_msg(weaponBonusOptValueCount == Const::Item::MaxEnchantLevel, "무기 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)",weaponBonusOptValueCount, Const::Item::MaxEnchantLevel);
-	jc_assert_msg(probCount == Const::Item::MaxEnchantLevel, "강화 확률 값이 %d개 입니다. (%d개로 맞춰야함)", probCount,Const::Item::MaxEnchantLevel);
-	jc_assert_msg(sellBonusCount == Const::Item::MaxEnchantLevel, "판매 보너스 값이 %d개 입니다. (%d개로 맞춰야함)", sellBonusCount, Const::Item::MaxEnchantLevel);
-	jc_assert_msg(weaponRarityConstantCount == RarityType::Max, "무기 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)", weaponBonusOptValueCount, RarityType::Max);
-	jc_assert_msg(armorRarityConstantCount == RarityType::Max, "강화 확률 값이 %d개 입니다. (%d개로 맞춰야함)", probCount, RarityType::Max);
-	jc_assert_msg(accessoryRarityConstantCount == RarityType::Max, "판매 보너스 값이 %d개 입니다. (%d개로 맞춰야함)", sellBonusCount, RarityType::Max);
+	jc_assert_msg(weaponBonusOptValueCount == Const::Item::MaxEnchantLevel, _T("무기 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)"),weaponBonusOptValueCount, Const::Item::MaxEnchantLevel);
+	jc_assert_msg(probCount == Const::Item::MaxEnchantLevel, _T("강화 확률 값이 %d개 입니다. (%d개로 맞춰야함)"), probCount,Const::Item::MaxEnchantLevel);
+	jc_assert_msg(sellBonusCount == Const::Item::MaxEnchantLevel, _T("판매 보너스 값이 %d개 입니다. (%d개로 맞춰야함)"), sellBonusCount, Const::Item::MaxEnchantLevel);
+	jc_assert_msg(weaponRarityConstantCount == RarityType::Max, _T("무기 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)"), weaponBonusOptValueCount, RarityType::Max);
+	jc_assert_msg(armorRarityConstantCount == RarityType::Max, _T("강화 확률 값이 %d개 입니다. (%d개로 맞춰야함)"), probCount, RarityType::Max);
+	jc_assert_msg(accessoryRarityConstantCount == RarityType::Max, _T("판매 보너스 값이 %d개 입니다. (%d개로 맞춰야함)"), sellBonusCount, RarityType::Max);
 
 	for (int i = 0; i < Const::Item::MaxEnchantLevel; ++i)
 	{

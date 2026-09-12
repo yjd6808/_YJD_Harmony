@@ -54,7 +54,7 @@ public:
 
 	static void InitPool(int _capacity, int _size, int _startId = 0)
 	{
-		jc_assert_msg(AccessTable == nullptr, "이미 풀이 초기화되어 있습니다.");
+		jc_assert_msg(AccessTable == nullptr, _T("이미 풀이 초기화되어 있습니다."));
 		jc_assert(_capacity >= _size);
 
 		AccessTable = dbg_new Vector<T*>(_capacity, nullptr);
@@ -74,14 +74,14 @@ public:
 
 	static void Expand(int _capacity)
 	{
-		jc_assert_msg(AccessTable != nullptr, "초기화를 우선 해주세요.");
+		jc_assert_msg(AccessTable != nullptr, _T("초기화를 우선 해주세요."));
 
 		const int curSize = AccessTable->Size();
 		const bool shrink = _capacity < curSize;
 
 		if (shrink)
 		{
-			jc_assert_msg(false, "엑세스 오브젝트 풀의 사이즈를 줄이는 것은 불가능합니다.");
+			jc_assert_msg(false, _T("엑세스 오브젝트 풀의 사이즈를 줄이는 것은 불가능합니다."));
 			return;
 		}
 
@@ -106,7 +106,7 @@ public:
 
 	static T* Pop()
 	{
-		jc_assert_msg(AccessTable != nullptr, "초기화를 우선 해주세요.");
+		jc_assert_msg(AccessTable != nullptr, _T("초기화를 우선 해주세요."));
 
 		JC_LIB_LOCK_GUARD(Sync);
 		if (Count == Capacity)
@@ -161,7 +161,7 @@ public:
 	static void FreeAllObjects()
 	{
 		JC_LIB_LOCK_GUARD(Sync);
-		jc_assert_msg(Count == Pool.Size(), "%s 아직 반환되지 않은 오브젝트가 %d개 존재합니다.", typeid(T).name(), Count - Pool.Size());
+		jc_assert_msg(Count == Pool.Size(), _T("%hs 아직 반환되지 않은 오브젝트가 %d개 존재합니다."), typeid(T).name(), Count - Pool.Size());
 
 		for (int index = 0; index < Count; ++index)
 		{

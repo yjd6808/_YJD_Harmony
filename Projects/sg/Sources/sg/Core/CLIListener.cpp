@@ -57,7 +57,7 @@ bool CLIListener::ParseInput(int _argc, String* _pArgv)
 			{
 				String desc;
 				GetDesc(_pArgv[0], desc);
-				Console::WriteLine("%s 명령 수행중 오류 발생: %s\n%s", _pArgv[0].SafeSource(), error.SafeSource(), desc.SafeSource());
+				Console::WriteLine(_T("%s 명령 수행중 오류 발생: %s\n%s"), _pArgv[0].SafeSource(), error.SafeSource(), desc.SafeSource());
 				break; // 오류가 발생한 경우에도 propagation 하지 않음
 			}
 		}
@@ -90,7 +90,7 @@ bool CLIListener::ShowDesc(const jc::String& _key)
 	jc::String desc;
 	if (GetDesc(_key, desc))
 	{
-		Console::WriteLine("%s", desc.Source());
+		Console::WriteLine(_T("%s"), desc.Source());
 		return true;
 	}
 	return false;
@@ -127,16 +127,16 @@ bool CLI_HelpBase(int _argc, jc::String* _pArgv, OUT jc::String& _error)
 		jc::String desc;
 		if (g_cCLIListener.GetDesc(_pArgv[1], desc))
 		{
-			Console::WriteLine("%s", desc.Source());
+			Console::WriteLine(_T("%s"), desc.Source());
 		}
 		else
 		{
-			_error = JC_FMT("%s는 알 수 없는 함수명입니다.", _pArgv[0].SafeSource());
+			_error = JC_FMT(_T("%s는 알 수 없는 함수명입니다."), _pArgv[0].SafeSource());
 		}
 	}
 	else
 	{
-		_error = "인자 갯수가 올바르지 않습니다.";
+		_error = _T("인자 갯수가 올바르지 않습니다.");
 	}
 	return true; // propagation
 }
@@ -150,8 +150,8 @@ void CLIListener::ShowAllFunctions()
 	while (it.HasNext())
 	{
 		jc::Pair<jc::String, TCLI_CallbackList>& list = it.Next();
-		text += " - ";
-		text += list.key_ + "\n";
+		text += _T(" - ");
+		text += list.key_ + _T("\n");
 	}
 	jc::Console::WriteLine(text.SafeSource());
 }
@@ -160,9 +160,9 @@ void CLIListener::ShowAllFunctions()
 int CLIListener::ToNumber(const jc::String& _numString, int _argIndex)
 {
 	int value;
-	if (!StringUtilT::TryToNumber(value, _numString.Source()))
+	if (!StringUtil::TryToNumber(value, _numString.Source()))
 	{
-		Console::WriteLine("%d번째 인자가 올바르지 않습니다.", _argIndex + 1);
+		Console::WriteLine(_T("%d번째 인자가 올바르지 않습니다."), _argIndex + 1);
 		return InvalidValue_v;
 	}
 	return value;

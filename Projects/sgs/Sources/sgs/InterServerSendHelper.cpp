@@ -24,7 +24,7 @@ void InterServerSendHelperBase::FlushSendBuffer()
 {
 	if (SendInformation.sender_ == nullptr)
 	{
-		_LogError_("샌더 미할당");
+		_LogError_(_T("샌더 미할당"));
 		return;
 	}
 
@@ -81,7 +81,7 @@ void InterServerSendHelperBase::SendEnd(IPacket* _packet)
 		// 할거 없음
 		break;
 	default:
-		_LogWarn_("전송전략이 제대로 설정되어있지 않습니다. (커맨드 유실 위험)");
+		_LogWarn_(_T("전송전략이 제대로 설정되어있지 않습니다. (커맨드 유실 위험)"));
 	}
 }
 
@@ -97,7 +97,7 @@ bool InterServerSendHelperBase::IsValidInformation(Session* _pSender, SendStrate
 	{
 		if (_toServerId == InvalidValue_v)
 		{
-			_LogWarn_("UDP인데 송신지 ID를 기입하지 않습니다.");
+			_LogWarn_(_T("UDP인데 송신지 ID를 기입하지 않습니다."));
 			return false;
 		}
 	}

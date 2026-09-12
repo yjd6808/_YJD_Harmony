@@ -379,7 +379,7 @@ public:
 			_capacity = 4;
 		}
 
-		jc_assert_msg(_capacity > capacity_, "이전 해쉬맵 크기보다 커야합니다.");
+		jc_assert_msg(_capacity > capacity_, _T("이전 해쉬맵 크기보다 커야합니다."));
 
 		int allocatedSize = 0;
 		TBucket* pNewTable = TAllocator::template AllocateDynamic<TBucket*>(sizeof(TBucket) * _capacity, allocatedSize);
@@ -1055,7 +1055,7 @@ public:
 			_capacity = 4;
 		}
 
-		jc_assert_msg(_capacity > capacity_, "이전 해쉬맵 크기보다 커야합니다.");
+		jc_assert_msg(_capacity > capacity_, _T("이전 해쉬맵 크기보다 커야합니다."));
 
 		int allocatedSize = 0;
 		TBucket* pNewTable = TAllocator::template AllocateDynamic<TBucket*>(sizeof(TBucket) * _capacity, allocatedSize);

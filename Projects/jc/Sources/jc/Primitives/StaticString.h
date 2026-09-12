@@ -29,28 +29,28 @@ struct StaticString
 
 	template <_u32 ParamSize>
 	constexpr bool operator==(const CharT(&_str)[ParamSize]) const {
-		return StringUtil<CharT>::CTCompare(Source, _str) == 0;
+		return BasicStringUtil<CharT>::CTCompare(Source, _str) == 0;
 	}
 
 	template <_u32 ParamSize>
 	constexpr bool operator!=(const CharT(&_str)[ParamSize]) const {
-		return StringUtil<CharT>::CTCompare(Source, _str) != 0;
+		return BasicStringUtil<CharT>::CTCompare(Source, _str) != 0;
 	}
 
 	constexpr bool operator==(const CharT* _pStr) const {
-		return StringUtil<CharT>::CTCompare(Source, _pStr) == 0;
+		return BasicStringUtil<CharT>::CTCompare(Source, _pStr) == 0;
 	}
 
 	constexpr bool operator!=(const CharT* _pStr) const {
-		return StringUtil<CharT>::CTCompare(Source, _pStr) != 0;
+		return BasicStringUtil<CharT>::CTCompare(Source, _pStr) != 0;
 	}
 
 	constexpr bool operator==(const StrType& _str) const {
-		return StringUtil<CharT>::CTCompare(Source, _str.SafeSource()) == 0;
+		return BasicStringUtil<CharT>::CTCompare(Source, _str.SafeSource()) == 0;
 	}
 
 	constexpr bool operator!=(const StrType& _str) const {
-		return StringUtil<CharT>::CTCompare(Source, _str.SafeSource()) != 0;
+		return BasicStringUtil<CharT>::CTCompare(Source, _str.SafeSource()) != 0;
 	}
 
 	template <_u32 ParamSize>
@@ -72,11 +72,11 @@ struct StaticString
 	}
 
 	constexpr int Length() const {
-		return StringUtil<CharT>::CTLength(Source);
+		return BasicStringUtil<CharT>::CTLength(Source);
 	}
 
 	constexpr int LengthWithNull() const {
-		return StringUtil<CharT>::CTLength(Source) + 1;
+		return BasicStringUtil<CharT>::CTLength(Source) + 1;
 	}
 
 	static constexpr int Capacity() {
@@ -84,12 +84,12 @@ struct StaticString
 	}
 
 	constexpr int Compare(const CharT* _pStr) const {
-		return StringUtil<CharT>::CTCompare(Source, _pStr);
+		return BasicStringUtil<CharT>::CTCompare(Source, _pStr);
 	}
 
 	template <_u32 ParamSize>
 	constexpr int Compare(const StaticString<ParamSize, CharT>& _str) const {
-		return StringUtil<CharT>::CTCompare(Source, _str.Source);
+		return BasicStringUtil<CharT>::CTCompare(Source, _str.Source);
 	}
 
 	template <_u32 ParamSize>
@@ -170,7 +170,7 @@ struct StaticString
 
 		const CharT* pSrc = Source + startIdx;
 
-		const int iStrLen = StringUtil<CharT>::CTLength(str);
+		const int iStrLen = BasicStringUtil<CharT>::CTLength(str);
 		int iContinuousCount = 0;
 		int iOffset = startIdx;
 
@@ -243,14 +243,14 @@ struct StaticString
 	===================================================================*/
 
 	StaticString<Size, CharT>& operator=(const CharT* str) {
-		int iCopySize = StringUtil<CharT>::Copy(Source, Size, str);
-		jc_assert_msg(iCopySize != -1, "복사에 실패했습니다.");
+		int iCopySize = BasicStringUtil<CharT>::Copy(Source, Size, str);
+		jc_assert_msg(iCopySize != -1, _T("복사에 실패했습니다."));
 		return *this;
 	}
 
 	StaticString<Size, CharT>& operator=(const StrType& str) {
-		int iCopySize = StringUtil<CharT>::Copy(Source, Size, str.Source());
-		jc_assert_msg(iCopySize != -1, "복사에 실패했습니다.");
+		int iCopySize = BasicStringUtil<CharT>::Copy(Source, Size, str.Source());
+		jc_assert_msg(iCopySize != -1, _T("복사에 실패했습니다."));
 		return *this;
 	}
 
@@ -261,56 +261,56 @@ struct StaticString
 	// s.operator=(b); // 실행해도 안들어옴, 어셈블리 확인하면 하나씩 복사해주는 코드가 알아서들어가는 걸로보인다.
 	template <_u32 SrcSize>
 	StaticString<Size, CharT>& operator=(const StaticString<SrcSize, CharT>&& str) {
-		int iCopySize = StringUtil<CharT>::Copy(Source, Size, str.Source);
-		jc_assert_msg(iCopySize != -1, "복사에 실패했습니다.");
+		int iCopySize = BasicStringUtil<CharT>::Copy(Source, Size, str.Source);
+		jc_assert_msg(iCopySize != -1, _T("복사에 실패했습니다."));
 		return *this;
 	}
 
 	// Source의 Capacity는 고려하지 않고 str의 문자들을 모두 복사
 	int SetStringUnsafe(const CharT* str) {
-		return StringUtil<CharT>::CopyUnsafe(Source, str);
+		return BasicStringUtil<CharT>::CopyUnsafe(Source, str);
 	}
 
 	int SetStringUnsafe(const StrType& str) {
-		return StringUtil<CharT>::CopyUnsafe(Source, str.Source());
+		return BasicStringUtil<CharT>::CopyUnsafe(Source, str.Source());
 	}
 
 	int SetStringUnsafe(const std::basic_string<CharT>& str) {
-		return StringUtil<CharT>::CopyUnsafe(Source, str.c_str());
+		return BasicStringUtil<CharT>::CopyUnsafe(Source, str.c_str());
 	}
 
 	template <_u32 ParamSize>
 	int SetStringUnsafe(const StaticString<ParamSize, CharT>& str) {
-		return StringUtil<CharT>::CopyUnsafe(Source, str.Source);
+		return BasicStringUtil<CharT>::CopyUnsafe(Source, str.Source);
 	}
 
 	int SetString(const CharT* str) {
-		return StringUtil<CharT>::Copy(Source, Size, str);
+		return BasicStringUtil<CharT>::Copy(Source, Size, str);
 	}
 
 	int SetString(const StrType& str) {
-		return StringUtil<CharT>::Copy(Source, Size, str.Source());
+		return BasicStringUtil<CharT>::Copy(Source, Size, str.Source());
 	}
 
 	template <_u32 ParamSize>
 	int SetString(const StaticString<ParamSize, CharT>& str) {
-		return StringUtil<CharT>::Copy(Source, Size, str.Source);
+		return BasicStringUtil<CharT>::Copy(Source, Size, str.Source);
 	}
 
 	int SetString(const CharT* str, int count) {
 		const int iCapacity = count < static_cast<int>(Size) ? count : static_cast<int>(Size);
-		return StringUtil<CharT>::Copy(Source, iCapacity, str);
+		return BasicStringUtil<CharT>::Copy(Source, iCapacity, str);
 	}
 
 	int SetString(const StrType& str, int count) {
 		const int iCapacity = count < static_cast<int>(Size) ? count : static_cast<int>(Size);
-		return StringUtil<CharT>::Copy(Source, iCapacity, str.Source());
+		return BasicStringUtil<CharT>::Copy(Source, iCapacity, str.Source());
 	}
 
 	template <_u32 ParamSize>
 	int SetString(const StaticString<ParamSize, CharT>& str, int count) {
 		const int iCapacity = count < static_cast<int>(Size) ? count : static_cast<int>(Size);
-		return StringUtil<CharT>::Copy(Source, iCapacity, str.Source);
+		return BasicStringUtil<CharT>::Copy(Source, iCapacity, str.Source);
 	}
 
 
@@ -319,7 +319,7 @@ struct StaticString
 	}
 
 	void CopyFrom(const CharT* str) {
-		const int iLen = StringUtil<CharT>::Length(str);
+		const int iLen = BasicStringUtil<CharT>::Length(str);
 
 		if (iLen <= 0) {
 			Source[0] = CharT(0);

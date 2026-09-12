@@ -314,7 +314,7 @@ public:
 	bool		ExpandStack(CoContext* _pCtx, char* _pFaultAddr);
 	// [코루틴-04] 오버플로우를 잡은 뒤 가드존을 다시 세운다. (실패 시 false)
 	bool		ResetOverflow();
-	void		DumpStack(CoStack* _pStack, const char* _pTitle = nullptr);
+	void		DumpStack(CoStack* _pStack, const _char* _pTitle = nullptr);
 	void		Clear();
 
 	// ── 현재 실행 중인 코루틴 컨텍스트 (O(1) 접근) ───────────────────────────
@@ -456,7 +456,7 @@ inline void CoYield()
 {
 	CoMgr& mgr = g_cCoMgr;
 	CoContext* pCtx = mgr.currentCtx_;
-	jc_assert_msg(pCtx != nullptr, "CoYield: 코루틴 밖에서 호출됨");
+	jc_assert_msg(pCtx != nullptr, _T("CoYield: 코루틴 밖에서 호출됨"));
 	if (pCtx == nullptr)
 		return;
 #ifdef _DEBUG
@@ -592,7 +592,7 @@ CoContext* CoRunFn(Fn_&& _fn, CoStackTier _tier = cstMid, _u32 _size = 0)
 inline _u64 CoYield(_u64 _out)
 {
 	CoContext* pCtx = g_cCoMgr.currentCtx_;
-	jc_assert_msg(pCtx != nullptr, "CoYield: 코루틴 밖에서 호출됨");
+	jc_assert_msg(pCtx != nullptr, _T("CoYield: 코루틴 밖에서 호출됨"));
 	if (pCtx == nullptr)
 		return 0;
 	pCtx->transfer_ = _out;

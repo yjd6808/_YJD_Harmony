@@ -39,20 +39,20 @@ bool ItemOptInfoLoader::Load()
 		{
 			Value& itemOptRoot = itemOptListRoot[i];
 			int levelOptCount = itemOptRoot["lv"].size();
-			jc_assert_msg(levelOptCount > 0, "아이템 옵트 카운트가 0입니다.");
+			jc_assert_msg(levelOptCount > 0, _T("아이템 옵트 카운트가 0입니다."));
 			ItemOptInfo* pItemOpt = dbg_new ItemOptInfo(levelOptCount);
 			ReadItemOptInfo(itemOptRoot, pItemOpt);
 			AddData(pItemOpt);
 
 			if (!dataMapByName_.Insert(pItemOpt->eName_, pItemOpt))
 			{
-				jc_assert_msg(false, "아이템 옵트 목록에 이미 %s 데이터가 존재하는데 넣을려고 했습니다.", pItemOpt->eName_.Source());
+				jc_assert_msg(false, _T("아이템 옵트 목록에 이미 %s 데이터가 존재하는데 넣을려고 했습니다."), pItemOpt->eName_.Source());
 			}
 		}
 	}
 	catch (std::exception& ex)
 	{
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), ex.what());
+		_LogError_(_T("%hs 파싱중 오류가 발생하였습니다. %hs"), GetConfigFileName(), ex.what());
 		return false;
 	}
 	Loaded();
@@ -82,6 +82,6 @@ void ItemOptInfoLoader::ReadItemOptInfo(Json::Value& _optRoot, ItemOptInfo* _pOp
 //////////////////////////////////////////////////////////////////////////////////////////
 ItemOptInfo* ItemOptInfoLoader::GetData(const jc::String& _name)
 {
-	jc_assert_msg(dataMapByName_.Exist(_name), "아이템 옵트 목록에 %s라는 옵트의 정보는 존재하지 않습니다.", _name.Source());
+	jc_assert_msg(dataMapByName_.Exist(_name), _T("아이템 옵트 목록에 %s라는 옵트의 정보는 존재하지 않습니다."), _name.Source());
 	return dataMapByName_[_name];
 }

@@ -15,8 +15,9 @@ USING_NS_JNET;
 USING_NS_JDB;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Q_LOGIN::SelectAccountInfoList(const char* _pAccountId)
+void Q_LOGIN::SelectAccountInfoList(const _char* _pAccountId)
 {
+#ifndef _UNICODE
 	MysqlDatabase* pDatabase = nullptr;
 	SelectAccountInfoListResult result;
 	SelectAccountInfoList::Execute<THelper>(pDatabase, result);
@@ -25,20 +26,32 @@ void Q_LOGIN::SelectAccountInfoList(const char* _pAccountId)
 	{
 
 	} while (result.FetchNextRow());
+#else
+	jc_assert_msg(false, _T("MySQL은 Unicode 빌드에서 지원하지 않습니다."));
+	(void)_pAccountId;
+#endif
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool Q_LOGIN::RegisterAccount(const char* _pAccountId, const char* _pAccountPass)
+bool Q_LOGIN::RegisterAccount(const _char* _pAccountId, const _char* _pAccountPass)
 {
+#ifndef _UNICODE
 	MysqlDatabase* pDatabase = nullptr;
 	InsertResult result;
 	InsertAccountInfo::Execute<THelper>(pDatabase, result, _pAccountId, _pAccountPass);
 	return IsSuccess;
+#else
+	jc_assert_msg(false, _T("MySQL은 Unicode 빌드에서 지원하지 않습니다."));
+	(void)_pAccountId;
+	(void)_pAccountPass;
+	return false;
+#endif
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool Q_LOGIN::SelectAccountInfo(const char* _pAccountId, OUT AccountData& _accountData)
+bool Q_LOGIN::SelectAccountInfo(const _char* _pAccountId, OUT AccountData& _accountData)
 {
+#ifndef _UNICODE
 	MysqlDatabase* pDatabase = nullptr;
 	SelectAccountInfoResult result;
 	SelectAccountInfo::Execute<THelper>(pDatabase, result, _pAccountId);
@@ -59,4 +72,10 @@ bool Q_LOGIN::SelectAccountInfo(const char* _pAccountId, OUT AccountData& _accou
 	_accountData.id_ = result.Id;
 	_accountData.pass_ = result.Pass;
 	return true;
+#else
+	jc_assert_msg(false, _T("MySQL은 Unicode 빌드에서 지원하지 않습니다."));
+	(void)_pAccountId;
+	(void)_accountData;
+	return false;
+#endif
 }

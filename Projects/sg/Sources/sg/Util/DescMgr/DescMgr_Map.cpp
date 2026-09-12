@@ -36,12 +36,12 @@ bool MapInfoLoader::Load()
 		return false;
 	}
 
-	directoryTree.SetCallback("map/map_of_dungeon", JC_CALLBACK_3(MapInfoLoader::OnDungeonMapRootLoaded, this));
-	directoryTree.SetCallback("map/map_of_dungeon_area", JC_CALLBACK_3(MapInfoLoader::OnAreaRootLoaded, this));
-	directoryTree.SetCallback("map/map_of_private", JC_CALLBACK_3(MapInfoLoader::OnPrivateMapRootLoaded, this));
-	directoryTree.SetCallback("map/map_of_private_area", JC_CALLBACK_3(MapInfoLoader::OnAreaRootLoaded, this));
-	directoryTree.SetCallback("map/map_of_town", JC_CALLBACK_3(MapInfoLoader::OnTownMapRootLoaded, this));
-	directoryTree.SetCallback("map/map_of_town_area", JC_CALLBACK_3(MapInfoLoader::OnAreaRootLoaded, this));
+	directoryTree.SetCallback(_T("map/map_of_dungeon"), JC_CALLBACK_3(MapInfoLoader::OnDungeonMapRootLoaded, this));
+	directoryTree.SetCallback(_T("map/map_of_dungeon_area"), JC_CALLBACK_3(MapInfoLoader::OnAreaRootLoaded, this));
+	directoryTree.SetCallback(_T("map/map_of_private"), JC_CALLBACK_3(MapInfoLoader::OnPrivateMapRootLoaded, this));
+	directoryTree.SetCallback(_T("map/map_of_private_area"), JC_CALLBACK_3(MapInfoLoader::OnAreaRootLoaded, this));
+	directoryTree.SetCallback(_T("map/map_of_town"), JC_CALLBACK_3(MapInfoLoader::OnTownMapRootLoaded, this));
+	directoryTree.SetCallback(_T("map/map_of_town_area"), JC_CALLBACK_3(MapInfoLoader::OnAreaRootLoaded, this));
 
 	directoryTree.SetCallbackCommon(JC_CALLBACK_3(MapInfoLoader::TestOnCommon, this));
 	directoryTree.Load();
@@ -92,20 +92,20 @@ void MapInfoLoader::OnAreaRootLoaded(Value& _areaRoot, const jc::String& _fileNa
 
 	if (mapCode < 1)
 	{
-		_LogWarn_("%s 올바르지 않은 area 데이터", _fileName.Source());
+		_LogWarn_(_T("%s 올바르지 않은 area 데이터"), _fileName.Source());
 		return;
 	}
 
 	if (height == 0)
 	{
-		_LogWarn_("%s area 데이터가 없음", _fileName.Source());
+		_LogWarn_(_T("%s area 데이터가 없음"), _fileName.Source());
 		return;
 	}
 
 	MapAreaInfo* pMapAreaInfo = dbg_new MapAreaInfo(height);
 	ReadMapAreaInfo(_areaRoot, pMapAreaInfo);
 	const bool added = mapAreaInfoHash_.Insert(mapCode, pMapAreaInfo);
-	_LogWarnIf_(!added, "이미 %d 맵의 area 데이터가 존재함", mapCode);
+	_LogWarnIf_(!added, _T("이미 %d 맵의 area 데이터가 존재함"), mapCode);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

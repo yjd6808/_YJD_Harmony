@@ -5,8 +5,8 @@ NS_JC_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 int MemoryStream::Read(OUT _u8* _pBytes, int _offset, int _len)
 {
-	jc_assert_msg(CanRead(), "읽기가 불가능한 스트림입니다.");
-	jc_assert_msg(!closed_, "스트림이 닫혀 있습니다.");
+	jc_assert_msg(CanRead(), _T("읽기가 불가능한 스트림입니다."));
+	jc_assert_msg(!closed_, _T("스트림이 닫혀 있습니다."));
 	if (_pBytes == nullptr || _len <= 0)
 		return 0;
 	if (readOffset_ >= writeOffset_)
@@ -24,8 +24,8 @@ int MemoryStream::Read(OUT _u8* _pBytes, int _offset, int _len)
 //////////////////////////////////////////////////////////////////////////////////////////
 void MemoryStream::Write(const _u8* _pBytes, int _offset, int _len)
 {
-	jc_assert_msg(CanWrite(), "쓰기가 불가능한 스트림입니다.");
-	jc_assert_msg(!closed_, "스트림이 닫혀 있습니다.");
+	jc_assert_msg(CanWrite(), _T("쓰기가 불가능한 스트림입니다."));
+	jc_assert_msg(!closed_, _T("스트림이 닫혀 있습니다."));
 	if (_pBytes == nullptr || _len <= 0)
 		return;
 	ExpandAllocateIfNeeded(writeOffset_ + (_u32)_len);
@@ -37,8 +37,8 @@ void MemoryStream::Write(const _u8* _pBytes, int _offset, int _len)
 //////////////////////////////////////////////////////////////////////////////////////////
 void MemoryStream::Seek(int _offset, Origin _origin)
 {
-	jc_assert_msg(CanSeek(), "탐색이 불가능한 스트림입니다.");
-	jc_assert_msg(!closed_, "스트림이 닫혀 있습니다.");
+	jc_assert_msg(CanSeek(), _T("탐색이 불가능한 스트림입니다."));
+	jc_assert_msg(!closed_, _T("스트림이 닫혀 있습니다."));
 
 	int next = 0;
 	switch (_origin)

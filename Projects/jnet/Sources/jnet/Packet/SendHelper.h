@@ -100,7 +100,7 @@ struct SendHelper : SendHelperBase
 	template <typename TCommand>
 	static TSending<TCommand> SendBegin(int _count)
 	{
-		jc_assert_msg(SendInformation.Sender, "샌더가 설정되어있지 않습니다.");
+		jc_assert_msg(SendInformation.Sender, _T("샌더가 설정되어있지 않습니다."));
 
 		if (SendInformation.Strategy == SendStrategy::SendAlloc)
 		{
@@ -123,7 +123,7 @@ struct SendHelper : SendHelperBase
 	{
 		if (SendInformation.Sender == nullptr)
 		{
-			_LogError_("샌더 미할당");
+			_LogError_(_T("샌더 미할당"));
 			return;
 		}
 
@@ -152,13 +152,13 @@ struct SendHelper : SendHelperBase
 	{
 		if (SendInformation.Sender == nullptr)
 		{
-			_LogError_("센더가 설정되지 않았습니다.");
+			_LogError_(_T("센더가 설정되지 않았습니다."));
 			return false;
 		}
 
 		if (SendInformation.Strategy == SendStrategy::None)
 		{
-			_LogError_("송신 전략이 설정되지 않았습니다.");
+			_LogError_(_T("송신 전략이 설정되지 않았습니다."));
 			return false;
 		}
 
@@ -172,7 +172,7 @@ struct SendHelper : SendHelperBase
 			// 할거 없음
 			break;
 		default:
-			_LogWarn_("전송전략이 제대로 설정되어있지 않습니다. (커맨드 유실 위험)");
+			_LogWarn_(_T("전송전략이 제대로 설정되어있지 않습니다. (커맨드 유실 위험)"));
 		}
 
 		return true;

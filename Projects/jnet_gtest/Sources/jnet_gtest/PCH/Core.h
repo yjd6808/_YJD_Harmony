@@ -46,6 +46,11 @@ USING_NS_STD;
 
 #if TestEnabled == ON
 
+	#define TEST_ByteOrderTest				ON
+	#define TEST_IPAddressTest				ON
+	#define TEST_IPEndPointTest				ON
+	#define TEST_SocketTest					ON
+
 	#if HttpTestEnabled == ON
 		#define TEST_MockHttpServerSelfTest		ON
 		#define TEST_HttpHeadersTest			ON

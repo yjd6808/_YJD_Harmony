@@ -55,7 +55,7 @@ IPv4EndPoint::IPv4EndPoint(const SOCKADDR_IN& _other)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IPv4EndPoint::IPv4EndPoint(const char* _pEndPointString)
+IPv4EndPoint::IPv4EndPoint(const _char* _pEndPointString)
 {
 	operator=(Parse(_pEndPointString));
 }
@@ -130,7 +130,7 @@ InternetProtocol IPv4EndPoint::GetProtocol() const
 //////////////////////////////////////////////////////////////////////////////////////////
 String IPv4EndPoint::ToString() const
 {
-	String result = GetAddress().ToString() + ':';
+	String result = GetAddress().ToString() + _T(':');
 	result += GetPort();
 	return result;
 }
@@ -148,48 +148,48 @@ _u16 IPv4EndPoint::GetPort() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-IPv4EndPoint IPv4EndPoint::Parse(const char* _pEndPointAddr)
+IPv4EndPoint IPv4EndPoint::Parse(const _char* _pEndPointAddr)
 {
 	static constexpr int END_POINT_LEN = IPv4Len_v + 6; // +6 : 포트 최대 5자리 + 문자 ':'를 포함한 길이
 	using IPv4EndPointString = StaticString<END_POINT_LEN>;
 
-	const int endPointLength = StringUtilT::Length(_pEndPointAddr);
+	const int endPointLength = StringUtil::Length(_pEndPointAddr);
 
 	if (endPointLength > END_POINT_LEN)
 	{
-		jc_assert_msg(false, "올바르지 않은 EndPoint 형식입니다. 문자열 길이가 최대로 가능한 EndPoint 길이를 초과합니다.");
+		jc_assert_msg(false, _T("올바르지 않은 EndPoint 형식입니다. 문자열 길이가 최대로 가능한 EndPoint 길이를 초과합니다."));
 		return Invalid;
 	}
 
 	IPv4EndPointString endPointString{};
 	endPointString.CopyFrom(_pEndPointAddr);
-	const int delimiterIndex = endPointString.Find(":");
+	const int delimiterIndex = endPointString.Find(_T(":"));
 
 	if (delimiterIndex == -1)
 	{
-		jc_assert_msg(false, "올바르지 않은 EndPoint 형식입니다. 구분자 ':'를 찾지 못했습니다.");
+		jc_assert_msg(false, _T("올바르지 않은 EndPoint 형식입니다. 구분자 ':'를 찾지 못했습니다."));
 		return Invalid;
 	}
 
 	IPv4EndPointString addressString{};
 	IPv4EndPointString portString{};
 
-	addressString.CopyFrom(0, delimiterIndex - 1, const_cast<char*>(endPointString.Source));
-	portString.CopyFrom(delimiterIndex + 1, endPointString.Length() - 1, const_cast<char*>(endPointString.Source));
+	addressString.CopyFrom(0, delimiterIndex - 1, const_cast<_char*>(endPointString.Source));
+	portString.CopyFrom(delimiterIndex + 1, endPointString.Length() - 1, const_cast<_char*>(endPointString.Source));
 
 	const int portStringLength = portString.Length();
 	(void)portStringLength; // length currently unused but kept for potential validation
 
 	int port = -1;
-	if (!StringUtilT::TryToNumber<_s32>(port, portString.Source))
+	if (!StringUtil::TryToNumber<_s32>(port, portString.Source))
 	{
-		jc_assert_msg(false, "올바른 포트번호가 아닙니다.");
+		jc_assert_msg(false, _T("올바른 포트번호가 아닙니다."));
 		return Invalid;
 	}
 
 	if (port < 0 || port > 0xffff)
 	{
-		jc_assert_msg(false, "올바르지 않은 EndPoint 형식입니다. 포트번호는 0이상 65535이하만 가능합니다.");
+		jc_assert_msg(false, _T("올바르지 않은 EndPoint 형식입니다. 포트번호는 0이상 65535이하만 가능합니다."));
 		return Invalid;
 	}
 

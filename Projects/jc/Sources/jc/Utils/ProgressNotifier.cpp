@@ -77,7 +77,7 @@ PercentProgressNotifier::PercentProgressNotifier(int _maxStep, float _notificati
 	if (_notificationStepPercent < 0.1f)
 	{
 		m_fNotificationStepPercent = 0.1f;
-		jc_assert_msg(false, "알림 퍼센트가 0.1%보다 작으면 안됩니다.");
+		jc_assert_msg(false, _T("알림 퍼센트가 0.1%보다 작으면 안됩니다."));
 	}
 
 	// Ex) 30개 -> 1% -> 0.3개마다 알림

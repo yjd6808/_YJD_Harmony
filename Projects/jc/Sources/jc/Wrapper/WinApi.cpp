@@ -180,7 +180,7 @@ String JC_CDECL WinApi::GetMemoryBasicInformationString(const MEMORY_BASIC_INFOR
 //////////////////////////////////////////////////////////////////////////////////////////
 void WinApi::PrintMemoryBasicInformation(const MEMORY_BASIC_INFORMATION& _memInfo, int _index)
 {
-	Console::WriteLine("%s", GetMemoryBasicInformationString(_memInfo, _index).SafeSource());
+	Console::WriteLine(_T("%s"), GetMemoryBasicInformationString(_memInfo, _index).SafeSource());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -203,18 +203,18 @@ String JC_CDECL WinApi::ProtectToString(DWORD _protect)
 	if (_protect == 0)
 		return _T("0");
 
-	if (_protect & PAGE_EXECUTE) result += "PAGE_EXECUTE|";
-	if (_protect & PAGE_EXECUTE_READ) result += "PAGE_EXECUTE_READ|";
-	if (_protect & PAGE_EXECUTE_READWRITE) result += "PAGE_EXECUTE_READWRITE|";
-	if (_protect & PAGE_EXECUTE_WRITECOPY) result += "PAGE_EXECUTE_WRITECOPY|";
-	if (_protect & PAGE_NOACCESS) result += "PAGE_NOACCESS|";
-	if (_protect & PAGE_READONLY) result += "PAGE_READONLY|";
-	if (_protect & PAGE_READWRITE) result += "PAGE_READWRITE|";
-	if (_protect & PAGE_WRITECOPY) result += "PAGE_WRITECOPY|";
+	if (_protect & PAGE_EXECUTE) result += _T("PAGE_EXECUTE|");
+	if (_protect & PAGE_EXECUTE_READ) result += _T("PAGE_EXECUTE_READ|");
+	if (_protect & PAGE_EXECUTE_READWRITE) result += _T("PAGE_EXECUTE_READWRITE|");
+	if (_protect & PAGE_EXECUTE_WRITECOPY) result += _T("PAGE_EXECUTE_WRITECOPY|");
+	if (_protect & PAGE_NOACCESS) result += _T("PAGE_NOACCESS|");
+	if (_protect & PAGE_READONLY) result += _T("PAGE_READONLY|");
+	if (_protect & PAGE_READWRITE) result += _T("PAGE_READWRITE|");
+	if (_protect & PAGE_WRITECOPY) result += _T("PAGE_WRITECOPY|");
 
-	if (_protect & PAGE_GUARD) result += "PAGE_GUARD|";
-	if (_protect & PAGE_NOCACHE) result += "PAGE_NOCACHE|";
-	if (_protect & PAGE_WRITECOMBINE) result += "PAGE_WRITECOMBINE|";
+	if (_protect & PAGE_GUARD) result += _T("PAGE_GUARD|");
+	if (_protect & PAGE_NOCACHE) result += _T("PAGE_NOCACHE|");
+	if (_protect & PAGE_WRITECOMBINE) result += _T("PAGE_WRITECOMBINE|");
 
 	if (!result.IsEmpty())
 		result.PopBack();

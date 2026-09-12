@@ -86,7 +86,7 @@ void CLIThread::WorkerThread()
 		String inputLine = Console::ReadLine();
 		JC_LOCK_GUARD(lock_);
 
-		Input input = { inputLine.Split(" ") };
+		Input input = { inputLine.Split(_T(" ")) };
 
 		if (input.arguments_.Size() == 0 || input.arguments_[0].Length() == 0)
 		{
@@ -142,7 +142,7 @@ void CLIThread::SendInterrupt()
 
 	if (!hasConsole)
 	{
-		_LogWarn_("콘솔 정보를 찾지 못했습니다.");
+		_LogWarn_(_T("콘솔 정보를 찾지 못했습니다."));
 		return;
 	}
 

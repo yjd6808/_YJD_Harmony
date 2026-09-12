@@ -41,12 +41,12 @@ bool Winsock::Initialize(_u8 _highVersion, _u8 _lowVersion)
 
 	if (detail::UseConnectEx() == false)
 	{
-		jc_assert_msg(false, "UseConnectEx 실패");
+		jc_assert_msg(false, _T("UseConnectEx 실패"));
 	}
 
 	if (detail::UseDisconnectEx() == false)
 	{
-		jc_assert_msg(false, "UseDisconnectEx 실패");
+		jc_assert_msg(false, _T("UseDisconnectEx 실패"));
 	}
 
 	return Initialized = true;
@@ -68,61 +68,24 @@ _u32 Winsock::LastError()
 	return WSAGetLastError();
 }
 
-jc::String Winsock::LastErrorMessageUTF8()
+jc::String Winsock::LastErrorMessage()
 {
-	return ErrorMessageUTF8(::WSAGetLastError());
+	return ErrorMessage(::WSAGetLastError());
 }
 
-jc::String Winsock::ErrorMessageMBCS(_u32 _errorCode)
+jc::String Winsock::ErrorMessage(_u32 _errorCode)
 {
 	constexpr int BUF_SIZE = 512;
 
-	jc::String mbcsString{BUF_SIZE};
-	char* pSource = mbcsString.Source();
-	DWORD messageLength = FormatMessageA(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM,
-	                                     nullptr, _errorCode,
-	                                     MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-	                                     pSource, BUF_SIZE, nullptr);
+	jc::String msg{BUF_SIZE};
+	// FormatMessage는 UNICODE 기준 매크로(W/A 자동 선택). 버퍼 _char*와 타입이 일치한다.
+	DWORD messageLength = FormatMessage(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM,
+	                                    nullptr, _errorCode,
+	                                    MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+	                                    msg.Source(), BUF_SIZE, nullptr);
 
-	mbcsString.SetLength(int(messageLength));
-	return mbcsString;
-}
-
-jc::String Winsock::ErrorMessageUTF8(_u32 _errorCode)
-{
-	// MBCS -> UTF16 -> UTF8보다는 바로 UTF16 -> UTF8로 변환이 당연히 낫겟지?
-	// 근데, FormatMessage에서 곧바로 UTF8 문자열을 반환 받는 방법은 없나..
-
-	constexpr int BUF_SIZE_UNICODCE = 512;
-
-	wchar_t buf[BUF_SIZE_UNICODCE];
-
-	FormatMessageW(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM,
-	               nullptr, _errorCode,
-	               MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-	               buf, BUF_SIZE_UNICODCE, nullptr);
-
-	int requiredLength = 0;
-	// 먼저 필요한 버퍼 크기를 얻는다.
-	if ((requiredLength = WideCharToMultiByte(CP_UTF8, 0, buf, BUF_SIZE_UNICODCE, nullptr, 0, nullptr, nullptr)) == 0)
-	{
-		// @에러코드 표: https://learn.microsoft.com/ko-kr/windows/win32/debug/system-error-codes--0-499-
-		jc_assert_msg(false, "%d", ::GetLastError());
-		return {};
-	}
-
-	jc::String utf8String{requiredLength + 1};
-	char* pSource = utf8String.Source();
-
-	if (WideCharToMultiByte(CP_UTF8, 0, buf, BUF_SIZE_UNICODCE, pSource, requiredLength, nullptr, nullptr) == 0)
-	{
-		jc_assert_msg(false, "%d", ::GetLastError());
-		return {};
-	}
-
-	pSource[requiredLength] = '\0';
-	utf8String.SetLength(requiredLength);
-	return utf8String;
+	msg.SetLength(int(messageLength));
+	return msg;
 }
 
 NS_END

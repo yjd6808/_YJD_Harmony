@@ -140,7 +140,7 @@ public:
 	{
 	}
 
-	const char* ToStateString(int _state);
+	const _char* ToStateString(int _state);
 	virtual ~TaskContext() = default;
 	virtual void RunImpl() = 0;
 	virtual bool IsResultTask() = 0;
@@ -155,16 +155,16 @@ public:
 		int state;
 		TaskWaitResult eResult = TaskWaitResult::Success;
 
-		TASKPOOL_LOG("%s Wait Step Begin", m_DebugName.Source());
+		TASKPOOL_LOG(_T("%s Wait Step Begin"), m_DebugName.Source());
 		NormalLockGuard guard(ctxLock_);
 		ctxCondVar_.Wait(guard, [this, &state]
 		{
 			state = state_.value_;
-			TASKPOOL_LOG("%s Wait State: %s", m_DebugName.Source(), ToStateString(state));
+			TASKPOOL_LOG(_T("%s Wait State: %s"), m_DebugName.Source(), ToStateString(state));
 			return state == TaskState::eFinished || state == TaskState::eCancelled;
 		});
 
-		TASKPOOL_LOG("%s Wait Step End", m_DebugName.Source());
+		TASKPOOL_LOG(_T("%s Wait Step End"), m_DebugName.Source());
 		if (state == TaskState::eCancelled)
 			return TaskWaitResult::Cancelled;
 
@@ -319,7 +319,7 @@ struct Task : TaskBase
 	{
 		if (!ValidateGetValueStrategy(_getValueStrategy))
 		{
-			jc_assert_msg(false, "%d 값 가져오기 방식을 사용할 수 없는 타입입니다.", (int)_getValueStrategy);
+			jc_assert_msg(false, _T("%d 값 가져오기 방식을 사용할 수 없는 타입입니다."), (int)_getValueStrategy);
 			return false;
 		}
 
@@ -499,7 +499,7 @@ public:
 			NormalLockGuard guard(lock_);
 			if (state_ != eRunning)
 			{
-				jc_assert_msg(state_ == eRunning, "쓰레드풀이 작업을 실행가능한 상태가 아닙니다.");
+				jc_assert_msg(state_ == eRunning, _T("쓰레드풀이 작업을 실행가능한 상태가 아닙니다."));
 				return Task<ReturnType>{nullptr};
 			}
 

@@ -9,7 +9,7 @@ NS_JC_BEGIN
 // memcpy_s와 기능이 동일합니다.
 void Memory::Copy(void* _dst, const int _dstCapacityByte, const void* _src, const int _srcCopyByte)
 {
-	jc_assert_msg(_dst && _src && _dstCapacityByte > 0, "인자를 똑띠 전달해주세요");
+	jc_assert_msg(_dst && _src && _dstCapacityByte > 0, _T("인자를 똑띠 전달해주세요"));
 	int iCopiedBytes = 0;
 
 	_u8* pDst = static_cast<_u8*>(_dst);
@@ -28,7 +28,7 @@ void Memory::Copy(void* _dst, const int _dstCapacityByte, const void* _src, cons
 // memcpy와 기능이 동일합니다.
 void Memory::CopyUnsafe(void* _dst, const void* _src, const int _srcCopyByte)
 {
-	jc_assert_msg(_dst && _src, "인자를 똑띠 전달해주세요");
+	jc_assert_msg(_dst && _src, _T("인자를 똑띠 전달해주세요"));
 	int iCopiedBytes = 0;
 
 	_u8* pDst = static_cast<_u8*>(_dst);
@@ -46,7 +46,7 @@ void Memory::CopyUnsafe(void* _dst, const void* _src, const int _srcCopyByte)
 
 void Memory::CopyReverse(void* _dst, const int _dstCapacityByte, const void* _src, const int _srcCopyByte)
 {
-	jc_assert_msg(_dst && _src && _dstCapacityByte > 0, "인자를 똑띠 전달해주세요");
+	jc_assert_msg(_dst && _src && _dstCapacityByte > 0, _T("인자를 똑띠 전달해주세요"));
 	int iCopiedBytes = 0;
 
 	_u8* pDst = (_u8*)_dst;
@@ -66,7 +66,7 @@ void Memory::CopyReverse(void* _dst, const int _dstCapacityByte, const void* _sr
 
 void Memory::CopyUnsafeReverse(void* _dst, const void* _src, const int _srcCopyByte)
 {
-	jc_assert_msg(_dst && _src, "인자를 똑띠 전달해주세요");
+	jc_assert_msg(_dst && _src, _T("인자를 똑띠 전달해주세요"));
 	int iCopiedBytes = 0;
 
 	_u8* pDst = (_u8*)_dst;
@@ -90,7 +90,7 @@ void Memory::Set(void* _src, const int _srcCapacity, const _u8 _value)
 #ifdef _DEBUG
 	if (_src == nullptr || _srcCapacity <= 0)
 	{
-		jc_assert_msg(false, "인자를 똑띠 전달해주세요");
+		jc_assert_msg(false, _T("인자를 똑띠 전달해주세요"));
 	}
 #endif
 

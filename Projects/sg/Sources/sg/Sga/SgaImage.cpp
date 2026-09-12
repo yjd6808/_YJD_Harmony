@@ -78,7 +78,7 @@ bool SgaImage::Unload()
 //////////////////////////////////////////////////////////////////////////////////////////
 jc::String SgaImage::ToString() const
 {
-	return StringUtilT::Format("Sga(%s) Img(%s)", pParent_->GetPath().Source(), header_.name_.Source());
+	return StringUtil::Format(_T("Sga(%s) Img(%s)"), pParent_->GetPath().Source(), header_.name_.Source());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -107,7 +107,7 @@ SgaSpriteAbstract& SgaImage::GetAtRef(const int _idx) const
 //////////////////////////////////////////////////////////////////////////////////////////
 void SgaImage::Set(int _idx, const SgaSpriteAbstractPtr& _pSprite) const
 {
-	jc_assert_msg(sprite_[_idx] == nullptr, "이미 초기화된 스프라이트 인덱스에 넣을려고 하고 있습니다.");
+	jc_assert_msg(sprite_[_idx] == nullptr, _T("이미 초기화된 스프라이트 인덱스에 넣을려고 하고 있습니다."));
 	sprite_[_idx] = _pSprite;
 }
 

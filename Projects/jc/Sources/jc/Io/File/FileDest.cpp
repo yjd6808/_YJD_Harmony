@@ -23,7 +23,7 @@ void FileDest::Bind(IOHandle _handle)
 {
 	partPath_ = destPath_;
 	partPath_.Append(_T(".part."));
-	partPath_.Append(StringUtilT::ToString(_handle));
+	partPath_.Append(StringUtil::ToString(_handle));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

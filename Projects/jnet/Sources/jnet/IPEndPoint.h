@@ -28,7 +28,7 @@ public:
 	IPv4EndPoint();
 	IPv4EndPoint(const IPv4EndPoint& _other);
 	IPv4EndPoint(const SOCKADDR_IN& _other);
-	explicit IPv4EndPoint(const char* _pEndPointString);
+	explicit IPv4EndPoint(const _char* _pEndPointString);
 	explicit IPv4EndPoint(const jc::String& _endPointString);
 	IPv4EndPoint(IPv4Address _address, _u16 _port);
 
@@ -44,13 +44,13 @@ public:
 
 	IPv4EndPoint& operator=(const IPv4EndPoint& _other);
 	bool operator==(const IPv4EndPoint& _other) const;
-	bool operator==(const char* _pOther) const { return *this == Parse(_pOther); }
+	bool operator==(const _char* _pOther) const { return *this == Parse(_pOther); }
 	bool operator==(const jc::String& _other) const { return *this == Parse(_other); }
 	bool operator!=(const IPv4EndPoint& _other) const { return !(*this == _other); }
-	bool operator!=(const char* _pOther) const { return !(*this == _pOther); }
+	bool operator!=(const _char* _pOther) const { return !(*this == _pOther); }
 	bool operator!=(const jc::String& _other) const { return !(*this == _other); }
 
-	static IPv4EndPoint Parse(const char* _pEndPointAddr);
+	static IPv4EndPoint Parse(const _char* _pEndPointAddr);
 	static IPv4EndPoint Parse(const jc::String& _endPointAddr);
 
 	SOCKADDR_IN InternetAddr;
@@ -65,7 +65,7 @@ class IPv6EndPoint final : public IPEndPoint
 
 public:
 	InternetProtocol GetProtocol() const override { return InternetProtocol::IPv6; }
-	jc::String ToString() const override { return ""; }
+	jc::String ToString() const override { return _T(""); }
 };
 
 NS_END

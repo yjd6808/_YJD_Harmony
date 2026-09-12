@@ -70,7 +70,7 @@ public:
 
 	jc::String ToString() const
 	{
-		return jc::StringUtilT::Format("Sga(%s), Img(%s), Sprite(%d)",
+		return jc::StringUtil::Format(_T("Sga(%s), Img(%s), Sprite(%d)"),
 		                            m_spParent->GetParent()->GetPath().Source(), m_spParent->GetName().Source(),
 		                            m_iFrameIndex);
 	}

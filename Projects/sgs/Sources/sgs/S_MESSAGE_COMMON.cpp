@@ -8,6 +8,7 @@
 
 #include "S_MESSAGE_COMMON.h"
 
+#include "jc/Primitives/StringConvert.h"
 #include "sg/Cmd_MESSAGE.h"
 
 
@@ -15,5 +16,5 @@
 void S_MESSAGE_COMMON::SEND_SC_ClientText(const char* _pClientTextKey)
 {
 	auto sending = SendBegin<SC_ClientText>();
-	sending.Cmd.Key.SetString(_pClientTextKey);
+	sending.Cmd.Key.SetString(jc::StringConvert::FromUtf8(_pClientTextKey));
 }

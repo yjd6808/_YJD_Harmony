@@ -92,25 +92,25 @@ public:
 
     int GetBlockTotalCounter(int _blockIndex)
     {
-        jc_assert_msg(_blockIndex >= 0 && _blockIndex <= detail::MemoryBlockSizeMapSize_v, "유효한 범위의 블록인덱스가 아닙니다.");
+        jc_assert_msg(_blockIndex >= 0 && _blockIndex <= detail::MemoryBlockSizeMapSize_v, _T("유효한 범위의 블록인덱스가 아닙니다."));
         return statistics_.blockTotalCounter_[_blockIndex];
     }
 
     int GetBlockUsedCounter(int _blockIndex)
     {
-        jc_assert_msg(_blockIndex >= 0 && _blockIndex <= detail::MemoryBlockSizeMapSize_v, "유효한 범위의 블록인덱스가 아닙니다.");
+        jc_assert_msg(_blockIndex >= 0 && _blockIndex <= detail::MemoryBlockSizeMapSize_v, _T("유효한 범위의 블록인덱스가 아닙니다."));
         return statistics_.blockUsedCounter_[_blockIndex];
     }
 
     int GetBlockNewAllocCounter(int _blockIndex)
     {
-        jc_assert_msg(_blockIndex >= 0 && _blockIndex <= detail::MemoryBlockSizeMapSize_v, "유효한 범위의 블록인덱스가 아닙니다.");
+        jc_assert_msg(_blockIndex >= 0 && _blockIndex <= detail::MemoryBlockSizeMapSize_v, _T("유효한 범위의 블록인덱스가 아닙니다."));
         return statistics_.blockNewAllocCounter_[_blockIndex];
     }
 
     int GetBlockUsingCounter(int _blockIndex)
     {
-        jc_assert_msg(_blockIndex >= 0 && _blockIndex <= detail::MemoryBlockSizeMapSize_v, "유효한 범위의 블록인덱스가 아닙니다.");
+        jc_assert_msg(_blockIndex >= 0 && _blockIndex <= detail::MemoryBlockSizeMapSize_v, _T("유효한 범위의 블록인덱스가 아닙니다."));
         return statistics_.blockUsingCounter_[_blockIndex];
     }
 
@@ -133,7 +133,7 @@ public:
     template <bool KeepDetectingState = true>    // 릭 디텍팅 상태를 복구할지
     _u64 StopDetectLeak(OUT_OPT int* _pDetail = nullptr)
     {
-        jc_assert_msg(Detecting(), "어라? StartDetectLeak()이 호출되지 않았어요.");
+        jc_assert_msg(Detecting(), _T("어라? StartDetectLeak()이 호출되지 않았어요."));
         _u64 leakedBytes = 0;
 
         for (int i = 0; i < detail::MemoryBlockSizeMapSize_v; ++i)
@@ -144,11 +144,11 @@ public:
                 _pDetail[i] = leakedBlockCount;
 
             if (i == 0)
-                Console::WriteLine("┌ [릭 탐지 결과]");
+                Console::WriteLine(_T("┌ [릭 탐지 결과]"));
             if (leakedBlockCount > 0)
-                Console::WriteLine("│ [%8d]: %d", detail::AllocationLengthMapConverter::ToSize(i), leakedBlockCount);
+                Console::WriteLine(_T("│ [%8d]: %d"), detail::AllocationLengthMapConverter::ToSize(i), leakedBlockCount);
             if (i == detail::MemoryBlockSizeMapSize_v - 1)
-                Console::WriteLine("└──────────────── %llu바이트 릭 <", leakedBytes);
+                Console::WriteLine(_T("└──────────────── %llu바이트 릭 <"), leakedBytes);
         }
 
         if constexpr (!KeepDetectingState)

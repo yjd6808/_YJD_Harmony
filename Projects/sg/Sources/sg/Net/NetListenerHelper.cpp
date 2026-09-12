@@ -47,10 +47,10 @@ void NetListenerHelper::LogCommand(TransportProtocol _protocol, Transmission _tr
 
 	const char* pName = sg::CommandNameDictionary.Get(id);
 
-	_LogDebug_("%c %s %sB %s(%d)",
+	_LogDebug_(_T("%c %hs %sB %hs(%d)"),
 		TransmissionName(_transmission),
 		TransportProtocolName(_protocol),
-		StringUtilT::FillLeft(_pCommand->GetLength(), ' ', 4).Source(),
+		StringUtil::FillLeft(_pCommand->GetLength(), ' ', 4).Source(),
 		pName,
 		id);
 }

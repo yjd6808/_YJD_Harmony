@@ -159,7 +159,7 @@ public:
 
 		if (_size > MAX_ALLOCATABLE_SIZE)
 		{
-			jc_assert_msg(false, "풀인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트)", MAX_ALLOCATABLE_SIZE, _size);
+			jc_assert_msg(false, _T("풀인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트)"), MAX_ALLOCATABLE_SIZE, _size);
 			return nullptr;
 		}
 
@@ -170,7 +170,7 @@ public:
 
 			if (chunkQueueIndex < 0 || chunkQueueIndex >= HIGH_TARGETER_LIST_CAPACITY)
 			{
-				jc_assert_msg(false, "올바르지 않은 청크큐 인덱스입니다. %d바이트 [%s]", _size, "하이");
+				jc_assert_msg(false, _T("올바르지 않은 청크큐 인덱스입니다. %d바이트 [%s]"), _size, _T("하이"));
 				return nullptr;
 			}
 		}
@@ -181,7 +181,7 @@ public:
 
 			if (chunkQueueIndex < 0 || chunkQueueIndex >= LOW_TARGETER_LIST_CAPACITY)
 			{
-				jc_assert_msg(false, "올바르지 않은 청크큐 인덱스입니다. %d바이트 [%s]", _size, "하이");
+				jc_assert_msg(false, _T("올바르지 않은 청크큐 인덱스입니다. %d바이트 [%s]"), _size, _T("하이"));
 				return nullptr;
 			}
 		}
@@ -204,15 +204,15 @@ public:
 
 	void Initialize(const HashMap<int, int>& _allocationMap) override
 	{
-		jc_assert_msg(initialized_ == false, "이미 풀이 초기화 되어 있습니다.");
+		jc_assert_msg(initialized_ == false, _T("이미 풀이 초기화 되어 있습니다."));
 
 		const_cast<HashMap<int, int>&>(_allocationMap).ForEach([this](Pair<int, int>& _count)
 		{
 			const int blockSize = _count.key_;
 			const int blockCount = _count.value_;
 			const int allocationIndex = detail::AllocationLengthMapConverter::ToIndex(blockSize);
-			jc_assert_msg(blockSize <= MAX_ALLOCATABLE_SIZE, "이 풀 인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트 블록을 초기화하려함)", MAX_ALLOCATABLE_SIZE, blockSize);
-			jc_assert_msg(detail::AllocationLengthMapConverter::ValidateSize(blockSize), "뭐야! 사이즈가 안맞자나!");
+			jc_assert_msg(blockSize <= MAX_ALLOCATABLE_SIZE, _T("이 풀 인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트 블록을 초기화하려함)"), MAX_ALLOCATABLE_SIZE, blockSize);
+			jc_assert_msg(detail::AllocationLengthMapConverter::ValidateSize(blockSize), _T("뭐야! 사이즈가 안맞자나!"));
 			if (poolChunkQueueArray_Member[allocationIndex])
 				JC_DELETE_SAFE(poolChunkQueueArray_Member[allocationIndex]);
 
@@ -226,7 +226,7 @@ public:
 	// 반드시 프로그램 종료전 메모리풀을 더이상 사용하지 않을 때 호출하여 정리할 것
 	void Finalize() override
 	{
-		jc_assert_msg(HasUsingBlock() == false, "현재 사용중인 블록이 있습니다. !!!");
+		jc_assert_msg(HasUsingBlock() == false, _T("현재 사용중인 블록이 있습니다. !!!"));
 
 		for (int boundaryIndex = 0; boundaryIndex <= HIGH_BOUNDARY_INDEX; ++boundaryIndex)
 		{
@@ -256,8 +256,8 @@ public:
 
 	void CreateTargeters()
 	{
-		jc_assert_msg(poolTargeterLow_Member == nullptr, "이미 Low 타게터 세팅이 되어있습니다.");
-		jc_assert_msg(poolTargeterHigh_Member == nullptr, "이미 High 타게터 세팅이 되어있습니다.");
+		jc_assert_msg(poolTargeterLow_Member == nullptr, _T("이미 Low 타게터 세팅이 되어있습니다."));
+		jc_assert_msg(poolTargeterHigh_Member == nullptr, _T("이미 High 타게터 세팅이 되어있습니다."));
 
 		poolTargeterLow_Member = dbg_new MemoryChunkQueueTargetrList(LOW_TARGETER_LIST_CAPACITY, nullptr);    // 513
 		poolTargeterHigh_Member = dbg_new MemoryChunkQueueTargetrList(HIGH_TARGETER_LIST_CAPACITY, nullptr);  // 524

@@ -159,7 +159,7 @@ void CMessage::SetContext(CMessageView* _pView)
 		return;
 	if (!_pView->IsValid())
 	{
-		jc_assert_msg(false, "CMessage::SetContext - invalid CMessageView provided");
+		jc_assert_msg(false, _T("CMessage::SetContext - invalid CMessageView provided"));
 		return;
 	}
 
@@ -569,7 +569,7 @@ CMessageView::CMessageView(_u8* _pBuf, _u32 _prefixMemCapacity, _u32 _memCapacit
 	{
 		if (memCapacity_ < prefixMemCapacity_ + sizeof(CMessageHeader))
 		{
-			jc_assert_msg(false, "CMessageView constructor - buffer too small for header");
+			jc_assert_msg(false, _T("CMessageView constructor - buffer too small for header"));
 			return;
 		}
 	}
@@ -886,7 +886,7 @@ CMessage::VariantType CMessageView::ReadAny(OUT _u32* _pMemSize /*= nullptr*/)
 
 	if (readOffset_ >= header.writeOffset_)
 	{
-		jc_assert_msg(false, "CMessageView::ReadAny - no more elements to read");
+		jc_assert_msg(false, _T("CMessageView::ReadAny - no more elements to read"));
 		return CMessage::vt_none;
 	}
 
@@ -914,7 +914,7 @@ String CMessageView::ReadString()
 	int result = TryReadBinaryImpl(CMessage::vt_string, &pBuf, 0, length);
 	if (result != 0)
 	{
-		jc_assert_msg(false, "CMessageView::ReadString - failed, error code: %d (%s)", result, GetBinaryReadErrorMessage(result));
+		jc_assert_msg(false, _T("CMessageView::ReadString - failed, error code: %d (%hs)"), result, GetBinaryReadErrorMessage(result));
 		return String::Empty;
 	}
 
@@ -923,7 +923,7 @@ String CMessageView::ReadString()
 	{
 		if (length % sizeof(_char) != 0)
 		{
-			jc_assert_msg(false, "CMessageView::ReadString - length is not a multiple of CharT.");
+			jc_assert_msg(false, _T("CMessageView::ReadString - length is not a multiple of CharT."));
 			Memory::Deallocate(pBuf);
 			return String::Empty;
 		}
@@ -938,14 +938,14 @@ bool CMessageView::ReadBinary(Span<_u8> _buffer, OUT _u32& _outLen)
 {
 	if (_buffer.pArr_ == nullptr || _buffer.len_ == 0)
 	{
-		jc_assert_msg(false, "CMessageView::ReadBinary - invalid buffer");
+		jc_assert_msg(false, _T("CMessageView::ReadBinary - invalid buffer"));
 		return false;
 	}
 
 	int result = TryReadBinaryImpl(CMessage::vt_binary, &_buffer.pArr_, _buffer.len_, _outLen);
 	if (result != 0)
 	{
-		jc_assert_msg(false, "CMessageView::ReadBinary - failed, error code: %d (%s)", result, GetBinaryReadErrorMessage(result));
+		jc_assert_msg(false, _T("CMessageView::ReadBinary - failed, error code: %d (%hs)"), result, GetBinaryReadErrorMessage(result));
 		return false;
 	}
 	return true;
@@ -956,14 +956,14 @@ bool CMessageView::ReadBinary(_u8* _pBytes, _u32 _capacity, OUT _u32& _outLen)
 {
 	if (_pBytes == nullptr || _capacity == 0)
 	{
-		jc_assert_msg(false, "CMessageView::ReadBinary - invalid buffer");
+		jc_assert_msg(false, _T("CMessageView::ReadBinary - invalid buffer"));
 		return false;
 	}
 
 	int result = TryReadBinaryImpl(CMessage::vt_binary, &_pBytes, _capacity, _outLen);
 	if (result != 0)
 	{
-		jc_assert_msg(false, "CMessageView::ReadBinary - failed, error code: %d (%s)", result, GetBinaryReadErrorMessage(result));
+		jc_assert_msg(false, _T("CMessageView::ReadBinary - failed, error code: %d (%hs)"), result, GetBinaryReadErrorMessage(result));
 		return false;
 	}
 	return true;
@@ -987,7 +987,7 @@ bool CMessageView::TryReadString(OUT String& _value)
 	}
 	else if (length % sizeof(_char) != 0)
 	{
-		jc_assert_msg(false, "CMessageView::TryReadString - length is not a multiple of CharT.");
+		jc_assert_msg(false, _T("CMessageView::TryReadString - length is not a multiple of CharT."));
 		if (pBufOrigin == nullptr)
 			Memory::Deallocate(pBuf);
 		return false;
@@ -1185,12 +1185,12 @@ jc::String CMessageView::Dump() const
 				if (typeCode == CMessage::vt_s8)
 				{
 					_s32 value = *reinterpret_cast<_s8*>(pRead);
-					str += StringUtilT::Format(_T("  s8: %d"), value);
+					str += StringUtil::Format(_T("  s8: %d"), value);
 				}
 				else
 				{
 					_s32 value = *pRead;
-					str += StringUtilT::Format(_T("  u8: %d"), value);
+					str += StringUtil::Format(_T("  u8: %d"), value);
 				}
 				
 				remaining -= 1;
@@ -1209,12 +1209,12 @@ jc::String CMessageView::Dump() const
 				if (typeCode == CMessage::vt_s16)
 				{
 					_s32 value = *reinterpret_cast<_s16*>(pRead);
-					str += StringUtilT::Format(_T("  s16: %d"), value);
+					str += StringUtil::Format(_T("  s16: %d"), value);
 				}
 				else
 				{
 					_s32 value = *reinterpret_cast<_u16*>(pRead);
-					str += StringUtilT::Format(_T("  u16: %d"), value);
+					str += StringUtil::Format(_T("  u16: %d"), value);
 				}
 				remaining -= 2;
 				pRead += 2;
@@ -1232,12 +1232,12 @@ jc::String CMessageView::Dump() const
 				if (typeCode == CMessage::vt_s32)
 				{
 					_s64 value = *reinterpret_cast<_s32*>(pRead);
-					str += StringUtilT::Format(_T("  s32: %lld"), value);
+					str += StringUtil::Format(_T("  s32: %lld"), value);
 				}
 				else
 				{
 					_s64 value = *reinterpret_cast<_u32*>(pRead);
-					str += StringUtilT::Format(_T("  u32: %lld"), value);
+					str += StringUtil::Format(_T("  u32: %lld"), value);
 				}
 				remaining -= 4;
 				pRead += 4;
@@ -1255,12 +1255,12 @@ jc::String CMessageView::Dump() const
 				if (typeCode == CMessage::vt_s64)
 				{
 					_s64 value = *reinterpret_cast<_s64*>(pRead);
-					str += StringUtilT::Format(_T("  s64: %lld"), value);
+					str += StringUtil::Format(_T("  s64: %lld"), value);
 				}
 				else
 				{
 					_u64 value = *reinterpret_cast<_u64*>(pRead);
-					str += StringUtilT::Format(_T("  u64: %llu"), value);
+					str += StringUtil::Format(_T("  u64: %llu"), value);
 				}
 				
 				remaining -= 8;
@@ -1276,7 +1276,7 @@ jc::String CMessageView::Dump() const
 				}
 
 				_f32 value = *reinterpret_cast<_f32*>(pRead);
-				str += StringUtilT::Format(_T("  f32: %.3f"), value);
+				str += StringUtil::Format(_T("  f32: %.3f"), value);
 				remaining -= 4;
 				pRead += 4;
 			}
@@ -1290,7 +1290,7 @@ jc::String CMessageView::Dump() const
 				}
 
 				_f64 value = *reinterpret_cast<_f64*>(pRead);
-				str += StringUtilT::Format(_T("  f64: %.3lf"), value);
+				str += StringUtil::Format(_T("  f64: %.3lf"), value);
 				remaining -= 8;
 				pRead += 8;
 			}
@@ -1304,7 +1304,7 @@ jc::String CMessageView::Dump() const
 				}
 
 				_ptr value = *reinterpret_cast<_ptr*>(pRead);
-				str += StringUtilT::Format(_T("  ptr: 0x%p"), value);
+				str += StringUtil::Format(_T("  ptr: 0x%p"), value);
 				remaining -= sizeof(_ptr);
 				pRead += sizeof(_ptr);
 			}
@@ -1345,7 +1345,7 @@ jc::String CMessageView::Dump() const
 				}
 				else
 				{
-					str += StringUtilT::Format(_T("  Binary: %d bytes"), length);
+					str += StringUtil::Format(_T("  Binary: %d bytes"), length);
 					pRead += length;
 					remaining -= length;
 				}

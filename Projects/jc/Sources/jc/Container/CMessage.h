@@ -320,16 +320,16 @@ public:
 		case 0:
 			break;
 		case -1:
-			jc_assert_msg(false, "CMessageView::ReadValue - no more elements to read");
+			jc_assert_msg(false, _T("CMessageView::ReadValue - no more elements to read"));
 			break;
 		case -2:
-			jc_assert_msg(false, "CMessageView::ReadValue - not enough bytes for element");
+			jc_assert_msg(false, _T("CMessageView::ReadValue - not enough bytes for element"));
 			break;
 		case -3:
-			jc_assert_msg(false, "CMessageView::ReadValue - variant type mismatch");
+			jc_assert_msg(false, _T("CMessageView::ReadValue - variant type mismatch"));
 			break;
 		default:
-			jc_assert_msg(false, "CMessageView::ReadValue - unknown read error");
+			jc_assert_msg(false, _T("CMessageView::ReadValue - unknown read error"));
 			break;
 		}
 		return value;

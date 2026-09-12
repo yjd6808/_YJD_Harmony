@@ -74,7 +74,7 @@ bool FrameEventLoader::Load()
 	}
 	catch (std::exception& exception)
 	{
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), exception.what());
+		_LogError_(_T("%hs 파싱중 오류가 발생하였습니다. %hs"), GetConfigFileName(), exception.what());
 		return false;
 	}
 

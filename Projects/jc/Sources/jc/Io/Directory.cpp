@@ -188,7 +188,7 @@ void Directory::FilesRecursive(Vector<String>& _files, String _path, bool _recur
 			if (findData.cFileName[0] == _T('.'))
 				continue;
 
-			String filePath = StringUtilT::Format(_T("%s/%s"), _path.Source(), findData.cFileName);
+			String filePath = StringUtil::Format(_T("%s/%s"), _path.Source(), findData.cFileName);
 
 			// 디렉토리가 아닌 녀석들
 			if (!(findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))

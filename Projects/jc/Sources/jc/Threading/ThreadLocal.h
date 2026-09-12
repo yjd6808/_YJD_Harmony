@@ -35,14 +35,14 @@ public:
 	template <typename... Args>
 	explicit ThreadLocal(Args&&... _args) {
 		if (m_uiObjectId != 0ULL) {
-			jc_assert_msg(false, "이미 생성자가 한번 호출이 되었습니다.");
+			jc_assert_msg(false, _T("이미 생성자가 한번 호출이 되었습니다."));
 			return;
 		}
 
 		m_uiObjectId = ++ms_uiObjectUniuqeIdSeq;
 
 		thread_local TlsRefMap tls_RefMap
-			= JC_INLINE_RETURN_MESSAGE(TlsRefMap, {}, "[%5d] ThreadLocal<%s> 해쉬맵 초기화", Thread::GetThreadId(), typeid(T).name());
+			= JC_INLINE_RETURN_MESSAGE(TlsRefMap, {}, _T("[%5d] ThreadLocal<%hs> 해쉬맵 초기화"), Thread::GetThreadId(), typeid(T).name());
 
 
 
@@ -136,7 +136,7 @@ public:
 	// ThreadLocal<T>와 생명주기가 같음
 	T& Ref() {
 		NormalLockGuard guard(m_Lock);
-		jc_assert_msg(m_pRefMap && m_pRefMap->Exist(m_uiObjectId), "생성자에서 초기화되지 않은 상태이거나 소멸된 객체입니다.");
+		jc_assert_msg(m_pRefMap && m_pRefMap->Exist(m_uiObjectId), _T("생성자에서 초기화되지 않은 상태이거나 소멸된 객체입니다."));
 
 		/* 계속 쓰레기 데이터 쌓이는데 어떻게 처리하지.. 흠
 		 *

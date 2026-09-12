@@ -19,14 +19,14 @@ USING_NS_JC;
 LoggerAbstract* Logger_v;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void InitializeDefaultLogger(const char* _pSpecifier)
+void InitializeDefaultLogger(const String& _pSpecifier)
 {
-	jc_assert_msg(Logger_v == nullptr, "이미 로거가 초기화되어 있습니다.");
+	jc_assert_msg(Logger_v == nullptr, _T("이미 로거가 초기화되어 있습니다."));
 
 	ConsoleLogger* pConsoleLogger = dbg_new ConsoleLogger;
 	pConsoleLogger->SetEnableLock(true);
 	pConsoleLogger->SetAutoFlush(true);
-	pConsoleLogger->SetHeaderFormat(StringUtilT::Format(_T("%hs[ level ✓  datetime ] "), _pSpecifier));
+	pConsoleLogger->SetHeaderFormat(StringUtil::Format(_T("%s[ level ✓  datetime ] "), _pSpecifier.Source()));
 	pConsoleLogger->ShowDateTime(true);
 	pConsoleLogger->ShowLevel(true);
 	Logger_v = pConsoleLogger;
@@ -37,7 +37,7 @@ void InitializeFileLogger(const char* _pDirectory)
 {
 	String szTimestamp = DateTime::Now().Format("yyyy-MM-dd-HHmmss");
 	String szDir = StringConvert::FromAnsi(_pDirectory);
-	String szPath = StringUtilT::Format(_T("%hs/%s"), _pDirectory, szTimestamp.Source());
+	String szPath = StringUtil::Format(_T("%hs/%s"), _pDirectory, szTimestamp.Source());
 
 	Directory::Create(szDir);
 

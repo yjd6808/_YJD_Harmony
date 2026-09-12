@@ -31,7 +31,7 @@ public:
 
 		if (commandActionMap_.Exist(TCommand::_Command()))
 		{
-			jc_assert_msg(false, "해당 커맨드가 이미 있습니다.");
+			jc_assert_msg(false, _T("해당 커맨드가 이미 있습니다."));
 			return;
 		}
 

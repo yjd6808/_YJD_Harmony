@@ -833,140 +833,140 @@ Vector<BasicStringView<CharT>, CDefaultAllocator> BasicStringView<CharT>::Split(
 template <typename CharT>
 _s8 BasicStringView<CharT>::ToInt8(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_s8>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_s8>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 _u8 BasicStringView<CharT>::ToUInt8(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_u8>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_u8>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 _s16 BasicStringView<CharT>::ToInt16(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_s16>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_s16>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 _u16 BasicStringView<CharT>::ToUInt16(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_u16>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_u16>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 _s32 BasicStringView<CharT>::ToInt32(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_s32>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_s32>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 _u32 BasicStringView<CharT>::ToUInt32(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_u32>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_u32>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 _s64 BasicStringView<CharT>::ToInt64(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_s64>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_s64>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 _u64 BasicStringView<CharT>::ToUInt64(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_u64>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_u64>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 _f32 BasicStringView<CharT>::ToFloat(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_f32>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_f32>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 _f64 BasicStringView<CharT>::ToDouble(bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::template ToNumber<_f64>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::template ToNumber<_f64>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 bool BasicStringView<CharT>::TryToInt8(OUT _s8& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 bool BasicStringView<CharT>::TryToUInt8(OUT _u8& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 bool BasicStringView<CharT>::TryToInt16(OUT _s16& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 bool BasicStringView<CharT>::TryToUInt16(OUT _u16& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 bool BasicStringView<CharT>::TryToInt32(OUT _s32& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 bool BasicStringView<CharT>::TryToUInt32(OUT _u32& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 bool BasicStringView<CharT>::TryToInt64(OUT _s64& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 bool BasicStringView<CharT>::TryToUInt64(OUT _u64& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 bool BasicStringView<CharT>::TryToFloat(OUT _f32& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 bool BasicStringView<CharT>::TryToDouble(OUT _f64& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return BasicStringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -1038,7 +1038,7 @@ typename BasicStringView<CharT>::StrType BasicStringView<CharT>::ToUpperCase() c
 ////////////////////////////////////////////////////////////////////////////////////////
 // BasicString glue — BasicStringView가 완성된 뒤라야 정의할 수 있어서 여기 둔다.
 template <typename CharT, typename Storage>
-inline void BasicString<CharT, Storage>::Append(const BasicStringView<char>& _str)
+inline void BasicString<CharT, Storage>::Append(const BasicStringView<CharT>& _str)
 {
 	Append(_str.SafeSource(), static_cast<int>(_str.Length()));
 }

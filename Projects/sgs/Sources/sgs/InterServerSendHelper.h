@@ -88,7 +88,7 @@ struct InterServerSendHelper : InterServerSendHelperBase
 
 			if (SendInformation.toId_ == InvalidValue_v)
 			{
-				jc_assert_msg(false, "누구에게 보낼지 설정되지 않았습니다.");
+				jc_assert_msg(false, _T("누구에게 보낼지 설정되지 않았습니다."));
 				return;
 			}
 
@@ -107,7 +107,7 @@ struct InterServerSendHelper : InterServerSendHelperBase
 	template <typename TCommand>
 	static TSending<TCommand> SendBegin(int _count = 1)
 	{
-		jc_assert_msg(SendInformation.sender_, "%s 샌더가 설정되어있지 않습니다.", TCommand::_Name());
+		jc_assert_msg(SendInformation.sender_, _T("%hs 샌더가 설정되어있지 않습니다."), TCommand::_Name());
 
 		// InterServerCommand를 상속받지않은 커맨드를 전달하려는 경우를 막아야함.
 		static_assert(IsInterServerCommand_v<TCommand>, "... TCommand is not InterServerCommand");

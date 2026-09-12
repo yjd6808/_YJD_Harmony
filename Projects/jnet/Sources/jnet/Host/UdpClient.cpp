@@ -41,12 +41,12 @@ void UdpClient::Initialize()
 
 	if (!CreateSocket(TransportProtocol::UDP, NonblokingSocket))
 	{
-		jc_assert_msg(false, "UDP 소켓 생성에 실패했습니다. (%u)", Winsock::LastError());
+		jc_assert_msg(false, _T("UDP 소켓 생성에 실패했습니다. (%u)"), Winsock::LastError());
 	}
 
 	if (!ConnectIocp())
 	{
-		jc_assert_msg(false, "IOCP 연결 실패 (%d)", ::GetLastError());
+		jc_assert_msg(false, _T("IOCP 연결 실패 (%d)"), ::GetLastError());
 	}
 }
 

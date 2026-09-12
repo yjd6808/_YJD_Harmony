@@ -17,13 +17,13 @@ enum class StatementType
 	Etc,
 };
 
-constexpr const char* StatementName(StatementType _statementType)
+constexpr const _char* StatementName(StatementType _statementType)
 {
-	if (_statementType == StatementType::Select) return "Select";
-	if (_statementType == StatementType::Update) return "Update";
-	if (_statementType == StatementType::Delete) return "Delete";
-	if (_statementType == StatementType::Insert) return "Insert";
-	return "None";
+	if (_statementType == StatementType::Select) return _T("Select");
+	if (_statementType == StatementType::Update) return _T("Update");
+	if (_statementType == StatementType::Delete) return _T("Delete");
+	if (_statementType == StatementType::Insert) return _T("Insert");
+	return _T("None");
 }
 
 NS_END

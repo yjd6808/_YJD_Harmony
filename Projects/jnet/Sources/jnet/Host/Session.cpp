@@ -49,7 +49,7 @@ void Session::Initialize()
 
 	if (currentState == eConnectWait || currentState == eConnected)
 	{
-		_NetLogWarn_("초기화 되지 않았거나 혹은 연결이 끊긴 대상만 초기화를 진행할 수 있습니다.");
+		_NetLogWarn_(_T("초기화 되지 않았거나 혹은 연결이 끊긴 대상만 초기화를 진행할 수 있습니다."));
 		return;
 	}
 
@@ -70,7 +70,7 @@ bool Session::Bind(const IPv4EndPoint& _bindEndPoint)
 {
 	if (!socket_.IsValid())
 	{
-		_NetLogError_("바인드에 실패했습니다. INVALID_SOCKET 입니다.");
+		_NetLogError_(_T("바인드에 실패했습니다. INVALID_SOCKET 입니다."));
 		WSASetLastError(WSA_INVALID_HANDLE);
 		return false;
 	}
@@ -78,11 +78,11 @@ bool Session::Bind(const IPv4EndPoint& _bindEndPoint)
 	const int bindResult = socket_.Bind(_bindEndPoint);
 	if (bindResult == SOCKET_ERROR)
 	{
-		_NetLogError_("%s %s 바인드 실패 (%u)", TypeName(), _bindEndPoint.ToString().Source(), Winsock::LastError());
+		_NetLogError_(_T("%s %s 바인드 실패 (%u)"), TypeName(), _bindEndPoint.ToString().Source(), Winsock::LastError());
 		return false;
 	}
 
-	_NetLogDebug_("%s %s 바인드 완료", TypeName(), _bindEndPoint.ToString().Source());
+	_NetLogDebug_(_T("%s %s 바인드 완료"), TypeName(), _bindEndPoint.ToString().Source());
 	localEndPoint_ = _bindEndPoint;
 	return true;
 }
@@ -147,7 +147,7 @@ int Session::Send(char* _pData, int _len)
 			}
 			else
 			{
-				_NetLogError_("Send 실패 (%u)", errorCode);
+				_NetLogError_(_T("Send 실패 (%u)"), errorCode);
 			}
 			break;
 		}
@@ -199,7 +199,7 @@ int Session::SendPending(OUT _u32& _errorCode)
 			_errorCode = Winsock::LastError();
 			if (_errorCode != WSAEWOULDBLOCK)
 			{
-				_NetLogError_("SendPending 실패 (%u)", _errorCode);
+				_NetLogError_(_T("SendPending 실패 (%u)"), _errorCode);
 			}
 			break;
 		}
@@ -249,7 +249,7 @@ bool Session::SendAsync(IPacket* _pPacket)
 		_u32 errorCode = Winsock::LastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
-			_NetLogError_("SendAsync 실패 (%u)", errorCode);
+			_NetLogError_(_T("SendAsync 실패 (%u)"), errorCode);
 			_pPacket->Release();
 			pOverlapped->Release();
 			return false;
@@ -267,7 +267,7 @@ bool Session::SendAsync(IPacket* _pPacket)
 bool Session::SendAsync(const PacketBufferPtr& _pBuffer)
 {
 #ifdef DebugMode
-	jc_assert_msg(_pBuffer->IsValid(), "보내고자하는 커맨드 버퍼 데이터가 이상합니다.");
+	jc_assert_msg(_pBuffer->IsValid(), _T("보내고자하는 커맨드 버퍼 데이터가 이상합니다."));
 #endif
 	return SendAsync(dbg_new PacketBufferPacket(_pBuffer));
 }
@@ -293,7 +293,7 @@ PacketBufferPacket* Session::GetCommandBufferForSending()
 	if (!pOldSendBuffer->IsValid())
 	{
 		delete pWrappedPacket;
-		_NetLogError_("무야! 보내고자하는 커맨드 센드 버퍼 데이터가 이상합니다.");
+		_NetLogError_(_T("무야! 보내고자하는 커맨드 센드 버퍼 데이터가 이상합니다."));
 		return nullptr;
 	}
 #endif
@@ -315,7 +315,7 @@ bool Session::SendToAsync(IPacket* _pPacket, const IPv4EndPoint& _destination)
 {
 	if (!_destination.IsValidRemoteEndPoint())
 	{
-		_NetLogError_("유효한 목적지 주소가 아닙니다.");
+		_NetLogError_(_T("유효한 목적지 주소가 아닙니다."));
 		return false;
 	}
 
@@ -330,7 +330,7 @@ bool Session::SendToAsync(IPacket* _pPacket, const IPv4EndPoint& _destination)
 		_u32 errorCode = Winsock::LastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
-			jc_assert_msg(false, "SendToAsync 실패 (%d)", errorCode);
+			jc_assert_msg(false, _T("SendToAsync 실패 (%d)"), errorCode);
 			_pPacket->Release();
 			pOverlapped->Release();
 			return false;
@@ -344,7 +344,7 @@ bool Session::SendToAsync(IPacket* _pPacket, const IPv4EndPoint& _destination)
 bool Session::SendToAsync(const PacketBufferPtr& _pBuffer, const IPv4EndPoint& _destination)
 {
 #ifdef DebugMode
-	jc_assert_msg(_pBuffer->IsValid(), "보내고자하는 커맨드 버퍼 데이터가 이상합니다.");
+	jc_assert_msg(_pBuffer->IsValid(), _T("보내고자하는 커맨드 버퍼 데이터가 이상합니다."));
 #endif
 	auto pPacket = dbg_new PacketBufferPacket(_pBuffer);
 	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
@@ -371,7 +371,7 @@ bool Session::RecvAsync()
 		_u32 errorCode = Winsock::LastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
-			_NetLogError_("RecvAsync 실패 (%u)", errorCode);
+			_NetLogError_(_T("RecvAsync 실패 (%u)"), errorCode);
 			pOverlapped->Release();
 			return false;
 		}
@@ -384,7 +384,7 @@ bool Session::RecvFromAsync()
 {
 	if (!socket_.IsBinded())
 	{
-		_NetLogError_("소켓이 바인딩된 상태여야 수신이 가능합니다. 상대방에게 먼저 송신하여 오토 바인딩해주거나 수동 바인딩을 해주세요.");
+		_NetLogError_(_T("소켓이 바인딩된 상태여야 수신이 가능합니다. 상대방에게 먼저 송신하여 오토 바인딩해주거나 수동 바인딩을 해주세요."));
 		return false;
 	}
 
@@ -403,7 +403,7 @@ bool Session::RecvFromAsync()
 		_u32 errorCode = Winsock::LastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
-			jc_assert_msg(false, "RecvFromAsync 실패 (%d)", errorCode);
+			jc_assert_msg(false, _T("RecvFromAsync 실패 (%d)"), errorCode);
 			pRecvFromOverlapped->Release();
 			return false;
 		}
@@ -424,7 +424,7 @@ void Session::EnqueueCmd(ICommand* _pCmd, bool _flushIfOverflow /*= true*/)
 
 	jc_assert_msg(
 		cmdSize <= sendBuffer_->GetRemainBufferSize(),
-		"버퍼의 남은 공간에 넣을 커맨드가 너무 큽니다. (CmdSize: %d, RemainBufferCapacity: %d)",
+		_T("버퍼의 남은 공간에 넣을 커맨드가 너무 큽니다. (CmdSize: %d, RemainBufferCapacity: %d)"),
 		cmdSize,
 		sendBuffer_->GetRemainBufferSize());
 	sendBuffer_->EmplaceCmd(_pCmd);
@@ -473,7 +473,7 @@ void Session::WaitForZeroPending()
 
 		if (pending < 0)
 		{
-			_NetLogWarn_("멍미 펜딩 카운트가 움수 인뎁쇼 (%d)", pending);
+			_NetLogWarn_(_T("멍미 펜딩 카운트가 움수 인뎁쇼 (%d)"), pending);
 			break;
 		}
 
@@ -485,7 +485,7 @@ void Session::WaitForZeroPending()
 		if (equalCount >= 1'000)
 		{
 			equalCount = 0;
-			_NetLogWarn_("펜딩 카운트 기달 %d", pending);
+			_NetLogWarn_(_T("펜딩 카운트 기달 %d"), pending);
 		}
 
 		previousPendingCount = pending;

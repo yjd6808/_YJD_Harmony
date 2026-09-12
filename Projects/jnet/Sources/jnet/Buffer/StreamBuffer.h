@@ -139,7 +139,7 @@ public:
 	{
 		if (!_forceMove && readPos_ - _len < 0)
 		{
-			jc_assert_msg(false, "len > m_iReadPos");
+			jc_assert_msg(false, _T("len > m_iReadPos"));
 			return;
 		}
 

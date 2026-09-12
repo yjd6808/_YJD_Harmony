@@ -60,10 +60,10 @@ void ConsoleLogger::LogVaList(Level _level, const _char* _pFmt, va_list _list)
 		m_Lock.Lock();
 	}
 
-	String fmtText = StringUtilT::Format(_pFmt, _list);
+	String fmtText = StringUtil::Format(_pFmt, _list);
 
 	m_szBuffer += CreateHeader(_level);
-	m_szBuffer += StringConvert::FromUtf8(Console::VTForeColor[GetLogColor(_level)]);
+	m_szBuffer += Console::VTForeColor[GetLogColor(_level)];
 	m_szBuffer += fmtText;
 
 	if (m_bAutoFlush)
@@ -92,9 +92,9 @@ void ConsoleLogger::LogPlainVaList(const _char* _pFmt, va_list _list)
 		m_Lock.Lock();
 	}
 
-	String fmtText = StringUtilT::Format(_pFmt, _list);
+	String fmtText = StringUtil::Format(_pFmt, _list);
 
-	m_szBuffer += StringConvert::FromUtf8(Console::VTForeColor[ConsoleColor::LightGray]);
+	m_szBuffer += Console::VTForeColor[ConsoleColor::LightGray];
 	m_szBuffer += fmtText;
 
 	if (m_bAutoFlush)
@@ -121,12 +121,12 @@ String ConsoleLogger::CreateHeader(Level _level)
 
 	if (m_pOption->ShowLevel)
 	{
-		jc_assert_msg(levelIndex != -1, "헤더에 레벨 태그가 없습니다.");
+		jc_assert_msg(levelIndex != -1, _T("헤더에 레벨 태그가 없습니다."));
 	}
 
 	if (m_pOption->ShowDateTime)
 	{
-		jc_assert_msg(dateTimeIndex != -1, "헤더에 데이트타임 태그가 없습니다.");
+		jc_assert_msg(dateTimeIndex != -1, _T("헤더에 데이트타임 태그가 없습니다."));
 	}
 
 	String dateTimeFmt = DateTime::Now().Format(StringConvert::ToUtf8(m_szDateTimeFormat).Source());
@@ -135,12 +135,12 @@ String ConsoleLogger::CreateHeader(Level _level)
 
 	ConsoleLoggerOption* pConsoleOption = static_cast<ConsoleLoggerOption*>(m_pOption);
 
-	header += StringConvert::FromUtf8(Console::VTForeColor[pConsoleOption->HeaderColors[_level]]);
+	header += Console::VTForeColor[pConsoleOption->HeaderColors[_level]];
 	header += m_szHeaderFormat;
 
 	if (m_pOption->ShowLevel)
 	{
-		StringUtilT::FormatBuffer(tempBuff, 256, _T("%hs%s%hs"),
+		StringUtil::FormatBuffer(tempBuff, 256, _T("%s%s%s"),
 			Console::VTForeColor[pConsoleOption->LevelColors[_level]],
 			m_szLevelText[_level].Source(),
 			Console::VTForeColor[pConsoleOption->HeaderColors[_level]]
@@ -150,7 +150,7 @@ String ConsoleLogger::CreateHeader(Level _level)
 
 	if (m_pOption->ShowDateTime)
 	{
-		StringUtilT::FormatBuffer(tempBuff, 256, _T("%hs%s%hs"),
+		StringUtil::FormatBuffer(tempBuff, 256, _T("%s%s%s"),
 			Console::VTForeColor[pConsoleOption->TimeColors[_level]],
 			dateTimeFmt.Source(),
 			Console::VTForeColor[pConsoleOption->HeaderColors[_level]]

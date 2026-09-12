@@ -17,7 +17,7 @@ EnchantBonusOptInfo::EnchantBonusOptInfo(const EnchantBonusOptInfo& _other)
 //////////////////////////////////////////////////////////////////////////////////////////
 EnchantBonusOptInfo& EnchantBonusOptInfo::operator=(const EnchantBonusOptInfo& _other)
 {
-	jc_assert_msg(this != &_other, "셀프 어사인 하지마!");
+	jc_assert_msg(this != &_other, _T("셀프 어사인 하지마!"));
 	opt_ = _other.opt_;
 	jc::Memory::CopyUnsafe(value_, _other.value_, sizeof(int) * Const::Item::MaxEnchantLevel);
 	return *this;

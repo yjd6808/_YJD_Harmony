@@ -11,7 +11,7 @@ public:
 	~SqlServerConnection() override;
 
 	bool Connect(const jc::String& _hostname, const uint16_t& _port, const jc::String& _username,
-	             const jc::String& _password, const jc::String& _dbName = "") override;
+	             const jc::String& _password, const jc::String& _dbName = _T("")) override;
 	bool SelectDB(const jc::String& _dbName) override;
 	void Disconnect() override;
 

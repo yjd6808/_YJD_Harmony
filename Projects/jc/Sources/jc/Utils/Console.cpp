@@ -8,8 +8,10 @@
 
 #include "Windows.h"
 
+#include <iostream>
+
 NS_JC_BEGIN
-	const char*      Console::VTForeColor[ConsoleColor::Max]{
+	const _char*      Console::VTForeColor[ConsoleColor::Max]{
     // 사이에 공백 없도록 주의!
     CSI_GRAPHIC_RENDITION(0;30),  // Black  
     CSI_GRAPHIC_RENDITION(0;34),  // Blue
@@ -29,7 +31,7 @@ NS_JC_BEGIN
     CSI_GRAPHIC_RENDITION(0;97)   // White
 };
 
-const char*      Console::VTBackColor[ConsoleColor::Max]{
+const _char*      Console::VTBackColor[ConsoleColor::Max]{
     CSI_GRAPHIC_RENDITION(0;30),  // Black  
     CSI_GRAPHIC_RENDITION(0;34),  // Blue
     CSI_GRAPHIC_RENDITION(0;32),  // Green
@@ -48,7 +50,7 @@ const char*      Console::VTBackColor[ConsoleColor::Max]{
     CSI_GRAPHIC_RENDITION(0;97)   // White
 };
 
-const char*     Console::VTForeToken[ConsoleColor::Max] {
+const _char*     Console::VTForeToken[ConsoleColor::Max] {
 	VT_FORE_COLOR_BLACK        ,
 	VT_FORE_COLOR_BLUE         ,
 	VT_FORE_COLOR_GREEN        ,
@@ -67,7 +69,7 @@ const char*     Console::VTForeToken[ConsoleColor::Max] {
 	VT_FORE_COLOR_WHITE  
 };
 
-const char*     Console::VTBackToken[ConsoleColor::Max] {
+const _char*     Console::VTBackToken[ConsoleColor::Max] {
     VT_BACK_COLOR_BLACK         ,
     VT_BACK_COLOR_BLUE          ,
     VT_BACK_COLOR_GREEN         ,
@@ -125,7 +127,7 @@ void Console::RestoreColor()
 void Console::SetColor(ConsoleColor _color)
 {
     TLockGuard guard(ms_ConsoleLock);
-    jc_assert_msg(ms_hStdout != WinApi::InvalidHandleValue, "출력 핸들이 이상합니다.");
+    jc_assert_msg(ms_hStdout != WinApi::InvalidHandleValue, _T("출력 핸들이 이상합니다."));
     ms_iDefaultColor = _color;
     ::SetConsoleTextAttribute(ms_hStdout, static_cast<_s16>(_color));
 }
@@ -162,6 +164,20 @@ ConsoleColor Console::ConvertColorString(const String& _colorString)
 //////////////////////////////////////////////////////////////////////////////////////////
 String Console::ReadLine()
 {
+#ifdef _UNICODE
+    if (!std::wcin.good())
+    {
+        std::wcin.clear();
+    }
+
+    String line;
+    wchar_t keyChar;
+
+    while (std::wcin.get(keyChar) && keyChar != L'\n')
+        line += keyChar;
+
+    return line;
+#else
     if (!std::cin.good())
     {
         std::cin.clear();
@@ -174,38 +190,44 @@ String Console::ReadLine()
         line += keyChar;
 
     return line;
+#endif
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-String Console::ReadLine(const char* _pMsg)
+String Console::ReadLine(const _char* _pMsg)
 {
 	if (_pMsg)
 	{
-		Write("%s", _pMsg);
+		Write(_T("%s"), _pMsg);
 	}
     return ReadLine();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-int Console::ReadLineBuffered(const char* _pMsg, char* _pBuff, int _capacity)
+int Console::ReadLineBuffered(const _char* _pMsg, _char* _pBuff, int _capacity)
 {
     int index = 0;
-    char keyChar;
+    _char keyChar;
 
 	if (_pMsg) 
 	{
-		Write("%s", _pMsg);
+		Write(_T("%s"), _pMsg);
 	}
 
+#ifdef _UNICODE
+    while (std::wcin.get(keyChar) && index < _capacity && keyChar != L'\n')
+        _pBuff[index++] = keyChar;
+#else
     while (std::cin.get(keyChar) && index < _capacity && keyChar != '\n')
         _pBuff[index++] = keyChar;
+#endif
 
-    _pBuff[index] = NULL;
+    _pBuff[index] = _T('\0');
     return index;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ConsoleKeyInfo Console::ReadKey(const char* _pMsg)
+ConsoleKeyInfo Console::ReadKey(const _char* _pMsg)
 {
     // 멀티쓰레딩시 인풋 동기화를 위해 사용
     static NormalLock s_Lock;
@@ -216,12 +238,12 @@ ConsoleKeyInfo Console::ReadKey(const char* _pMsg)
     }
 
     if (_pMsg != nullptr)
-		Write("%s", _pMsg);
+		Write(_T("%s"), _pMsg);
 
     INPUT_RECORD inputRecord;
     DWORD eventsRead;
     BOOL result = FALSE;
-    char keyChar;
+    _char keyChar;
     VirtualKey virtualKey;
 
     JC_LOCK_GUARD(s_Lock);
@@ -244,7 +266,11 @@ ConsoleKeyInfo Console::ReadKey(const char* _pMsg)
         }
 
         virtualKey = (VirtualKey)inputRecord.Event.KeyEvent.wVirtualKeyCode;
+#ifdef _UNICODE
+        keyChar = inputRecord.Event.KeyEvent.uChar.UnicodeChar;
+#else
         keyChar = inputRecord.Event.KeyEvent.uChar.AsciiChar;
+#endif
 
         if (keyChar == 0)
         {
@@ -259,10 +285,10 @@ ConsoleKeyInfo Console::ReadKey(const char* _pMsg)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-ConsoleKeyInfo Console::ReadKeyWhile(const char* _pMsg, ConsoleKey _key)
+ConsoleKeyInfo Console::ReadKeyWhile(const _char* _pMsg, ConsoleKey _key)
 {
     if (_pMsg)
-        Write("%s", _pMsg);
+        Write(_T("%s"), _pMsg);
 
     for (;;)
     {
@@ -278,7 +304,7 @@ ConsoleKeyInfo Console::ReadKeyWhile(const char* _pMsg, ConsoleKey _key)
 void Console::Clear()
 {
     TLockGuard guard(ms_ConsoleLock);
-    CRuntime::System("cls");
+    CRuntime::System(_T("cls"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

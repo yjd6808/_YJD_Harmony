@@ -29,14 +29,14 @@ SqlServerConnection* SqlServerDatabase::BeginTransaction()
 {
 	if (connectionPool_ == nullptr)
 	{
-		jc_assert_msg(false, "커넥션 풀이 초기화되지 않았습니다.");
+		jc_assert_msg(false, _T("커넥션 풀이 초기화되지 않았습니다."));
 		return nullptr;
 	}
 
 	auto pConn = static_cast<SqlServerConnection*>(connectionPool_->GetConnection());
 	if (pConn == nullptr)
 	{
-		jc_assert_msg(false, "SqlServerDatabase::BeginTransaction() 커넥션 풀에서 가져오기 실패");
+		jc_assert_msg(false, _T("SqlServerDatabase::BeginTransaction() 커넥션 풀에서 가져오기 실패"));
 		return nullptr;
 	}
 
@@ -54,7 +54,7 @@ bool SqlServerDatabase::CommitTransaction(SqlServerConnection* _pConn)
 {
 	if (_pConn == nullptr)
 	{
-		_LogError_("CommitTransaction() 실패 : 커넥션이 NULL입니다.");
+		_LogError_(_T("CommitTransaction() 실패 : 커넥션이 NULL입니다."));
 		return false;
 	}
 
@@ -68,7 +68,7 @@ bool SqlServerDatabase::RollbackTransaction(SqlServerConnection* _pConn)
 {
 	if (_pConn == nullptr)
 	{
-		_LogError_("RollbackTransaction() 실패 : 커넥션이 NULL입니다.");
+		_LogError_(_T("RollbackTransaction() 실패 : 커넥션이 NULL입니다."));
 		return false;
 	}
 
@@ -92,7 +92,7 @@ IQueryPtr SqlServerDatabase::CreateQuery(IConnection* _pConn, const BoundStmt& _
 	case StatementType::Delete: pQuery = MakeShared<SqlServerQueryDelete>(); break;
 	case StatementType::Insert: pQuery = MakeShared<SqlServerQueryInsert>(); break;
 	default:
-		jc_assert_msg(false, "올바르지 않은 스테이트먼트입니다.");
+		jc_assert_msg(false, _T("올바르지 않은 스테이트먼트입니다."));
 		return nullptr;
 	}
 
@@ -105,7 +105,7 @@ IQueryPtr SqlServerDatabase::QueryOnConnection(SqlServerConnection* _pConn, cons
 {
 	if (_pConn == nullptr)
 	{
-		jc_assert_msg(false, "SqlServerDatabase::QueryOnConnection() 커넥션이 NULL입니다.");
+		jc_assert_msg(false, _T("SqlServerDatabase::QueryOnConnection() 커넥션이 NULL입니다."));
 		return nullptr;
 	}
 
@@ -113,7 +113,7 @@ IQueryPtr SqlServerDatabase::QueryOnConnection(SqlServerConnection* _pConn, cons
 
 	if (pQuery == nullptr)
 	{
-		jc_assert_msg(false, "SqlServerDatabase::QueryOnConnection() 쿼리문 파싱 실패");
+		jc_assert_msg(false, _T("SqlServerDatabase::QueryOnConnection() 쿼리문 파싱 실패"));
 		return nullptr;
 	}
 

@@ -61,7 +61,7 @@ void AuthenticationComponent::SetSerial(AuthenticationSerial_t _serial)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void AuthenticationComponent::SetAccountId(const char* _pAccountId)
+void AuthenticationComponent::SetAccountId(const _char* _pAccountId)
 {
 	accountId_.SetString(_pAccountId);
 }
@@ -71,6 +71,6 @@ void AuthenticationComponent::RemoveUnauthenticatedSession()
 {
 	/*if (!g_cUnauthenticatedSessionManager.Remove(serial_))
 	{
-		_LogWarn_("미인증 세션목록에 %d 시리얼에 해당하는 세션이 없습니다.", serial_);
+		_LogWarn_(_T("미인증 세션목록에 %d 시리얼에 해당하는 세션이 없습니다."), serial_);
 	}*/
 }

@@ -13,7 +13,7 @@ USING_NS_JC;
 USING_NS_JNET;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void S_AUTHENTICATION_IS::SEND_SAU_AuthenticationCheck(object_id _sessionHandle, const char* _pAccountId, AuthenticationSerial_t _serial)
+void S_AUTHENTICATION_IS::SEND_SAU_AuthenticationCheck(object_id _sessionHandle, const _char* _pAccountId, AuthenticationSerial_t _serial)
 {
 	auto sending = SendBegin<SAU_AuthenticationCheck>();
 	sending.cmd_.SessionHandle = _sessionHandle;

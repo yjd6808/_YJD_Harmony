@@ -11,6 +11,8 @@
 
 #include "jc/Logger/ConsoleLogger.h"
 
+#include "jc/Primitives/StringConvert.h"
+
 #include "sg/Struct/SteinsGate_Client.h"
 #include "sg/API/sgapi_Util.h"
 
@@ -64,26 +66,26 @@ void AppConfig::ReadEnvArgs()
 		argMap.Insert(key, value);
 	}
 
-	if (jc::String* pMode = argMap.Find("mode"))
+	if (jc::String* pMode = argMap.Find(_T("mode")))
 	{
-		mode_ = StringUtilT::ToNumber<int>(pMode->SafeSource());
+		mode_ = StringUtil::ToNumber<int>(pMode->SafeSource());
 	}
 
-	if (jc::String* pAssetPath = argMap.Find("assets"))
+	if (jc::String* pAssetPath = argMap.Find(_T("assets")))
 	{
-		char absPath[MAX_PATH];
-		DWORD len = GetFullPathNameA(pAssetPath->Source(), MAX_PATH, absPath, nullptr);
+		_char absPath[MAX_PATH];
+		DWORD len = GetFullPathName(pAssetPath->Source(), MAX_PATH, absPath, nullptr);
 		jc::String assetPath = len ? jc::String(absPath) : *pAssetPath;
 
-		jc::String srcDataPath = jc::Path::Combine(assetPath, "src_data");
-		jc::String resDataPath = jc::Path::Combine(assetPath, "res_data");
+		jc::String srcDataPath = jc::Path::Combine(assetPath, _T("src_data"));
+		jc::String resDataPath = jc::Path::Combine(assetPath, _T("res_data"));
 
 		assetPath_ = assetPath;
 		srcDataPath_ = srcDataPath;
 		resDataPath_ = resDataPath;
-		resDataFontPath_ = jc::Path::Combine(resDataPath, "font");
-		resDataImagePath_ = jc::Path::Combine(resDataPath, "image");
-		resDataSoundPath_ = jc::Path::Combine(resDataPath, "sound");
+		resDataFontPath_ = jc::Path::Combine(resDataPath, _T("font"));
+		resDataImagePath_ = jc::Path::Combine(resDataPath, _T("image"));
+		resDataSoundPath_ = jc::Path::Combine(resDataPath, _T("sound"));
 	}
 
 	argsMap_ = Move(argMap);
@@ -94,7 +96,7 @@ void AppConfig::LoadConfFile()
 {
 	if (!File::Exist(SG_RUNTIME_CONFIG_FILENAME))
 	{
-		_LogWarn_("런타임 설정파일(%s)이 없어 기본 클라이언트 설정을 사용합니다.", SG_RUNTIME_CONFIG_FILENAME);
+		_LogWarn_(_T("런타임 설정파일(%hs)이 없어 기본 클라이언트 설정을 사용합니다."), SG_RUNTIME_CONFIG_FILENAME);
 		return;
 	}
 
@@ -115,19 +117,19 @@ void AppConfig::LoadConfFile()
 			if (clientRoot.isObject())
 			{
 				ReadClient(clientRoot);
-				_LogInfo_("런타임 설정파일(%s)에서 클라이언트 설정을 불러왔습니다.", SG_RUNTIME_CONFIG_FILENAME);
+				_LogInfo_(_T("런타임 설정파일(%hs)에서 클라이언트 설정을 불러왔습니다."), SG_RUNTIME_CONFIG_FILENAME);
 			}
 			else
 			{
-				_LogWarn_("런타임 설정파일(%s)에 클라이언트 설정 섹션이 없어 기본 설정을 사용합니다.", SG_RUNTIME_CONFIG_FILENAME);
+				_LogWarn_(_T("런타임 설정파일(%hs)에 클라이언트 설정 섹션이 없어 기본 설정을 사용합니다."), SG_RUNTIME_CONFIG_FILENAME);
 			}
 		}
 
-		_LogInfo_("런타임 설정파일(%s) 로드완료", SG_RUNTIME_CONFIG_FILENAME);
+		_LogInfo_(_T("런타임 설정파일(%hs) 로드완료"), SG_RUNTIME_CONFIG_FILENAME);
 	}
 	catch (std::exception& ex)
 	{
-		_LogError_("런타임 설정파일(%s) 로드중 오류가 발생하였습니다.\n%s", SG_RUNTIME_CONFIG_FILENAME, ex.what());
+		_LogError_(_T("런타임 설정파일(%hs) 로드중 오류가 발생하였습니다.\n%hs"), SG_RUNTIME_CONFIG_FILENAME, ex.what());
 	}
 }
 
@@ -136,22 +138,22 @@ void AppConfig::DeleteConfFile()
 {
 	if (!File::Exist(SG_RUNTIME_CONFIG_FILENAME))
 	{
-		_LogInfo_("런타임 설정파일(%s)이 실행 디렉토리에 없습니다.", SG_RUNTIME_CONFIG_FILENAME);
+		_LogInfo_(_T("런타임 설정파일(%hs)이 실행 디렉토리에 없습니다."), SG_RUNTIME_CONFIG_FILENAME);
 		return;
 	}
 
 	bool isDeleted = File::Delete(SG_RUNTIME_CONFIG_FILENAME);
 	if (isDeleted)
-		_LogInfo_("런타임 설정파일(%s) 삭제완료", SG_RUNTIME_CONFIG_FILENAME);
+		_LogInfo_(_T("런타임 설정파일(%hs) 삭제완료"), SG_RUNTIME_CONFIG_FILENAME);
 	else
-		_LogWarn_("런타임 설정파일(%s) 삭제실패", SG_RUNTIME_CONFIG_FILENAME);
+		_LogWarn_(_T("런타임 설정파일(%hs) 삭제실패"), SG_RUNTIME_CONFIG_FILENAME);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void AppConfig::SaveConfiFile()
 {
 	const jc::String exeDirectoryPath = Env::CurrentDirectory();
-	const jc::String runtimeAppConfigPath = jc::Path::Combine(exeDirectoryPath, SG_RUNTIME_CONFIG_FILENAME);
+	const jc::String runtimeAppConfigPath = jc::Path::Combine(exeDirectoryPath, StringConvert::FromUtf8(SG_RUNTIME_CONFIG_FILENAME));
 
 	try
 	{
@@ -173,11 +175,11 @@ void AppConfig::SaveConfiFile()
 			throw std::exception("Value 문자열 변환중 오류 발생");
 		}
 		File::WriteAllText(content.c_str(), (int)content.length(), runtimeAppConfigPath.Source());
-		_LogInfo_("런타임 설정파일(%s) 저장완료", SG_RUNTIME_CONFIG_FILENAME);
+		_LogInfo_(_T("런타임 설정파일(%hs) 저장완료"), SG_RUNTIME_CONFIG_FILENAME);
 	}
 	catch (std::exception& ex)
 	{
-		_LogError_("런타임 설정파일(%s) 저장중 오류가 발생하였습니다.\n%s", SG_RUNTIME_CONFIG_FILENAME, ex.what());
+		_LogError_(_T("런타임 설정파일(%hs) 저장중 오류가 발생하였습니다.\n%hs"), SG_RUNTIME_CONFIG_FILENAME, ex.what());
 	}
 }
 

@@ -38,6 +38,7 @@ public:
 	// "abcd", 4 (NULL 문자는 뺀 길이를 전달해줘야함)
 	static void WriteAllText(const char* _pContent, int _contentLength, const char* _pPath);
 	static void WriteAllText(const String& _content, const char* _pPath);
+	static void WriteAllText(const char* _pContent, int _contentLength, const String& _path);
 	static void WriteAllBytes(const _u8* _pContent, int _contentLength, const char* _pPath);
 
 	static String ReadAllText(const char* _pPath);

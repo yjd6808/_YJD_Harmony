@@ -50,7 +50,7 @@ bool ClientTextInfoLoader::Load()
 	}
 	catch (std::exception& ex)
 	{
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), ex.what());
+		_LogError_(_T("%hs 파싱중 오류가 발생하였습니다. %hs"), GetConfigFileName(), ex.what());
 		return false;
 	}
 
@@ -59,6 +59,7 @@ bool ClientTextInfoLoader::Load()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+#ifndef _UNICODE
 bool ClientTextInfoLoader::TryGetTextRaw(const char* _id, OUT char** _pText)
 {
 	const jc::String* pFind = textMap_.Find(_id);
@@ -71,8 +72,10 @@ bool ClientTextInfoLoader::TryGetTextRaw(const char* _id, OUT char** _pText)
 	*_pText = pFind->Source();
 	return true;
 }
+#endif // !_UNICODE (narrow 텍스트 API)
 
 //////////////////////////////////////////////////////////////////////////////////////////
+#ifndef _UNICODE
 bool ClientTextInfoLoader::TryGetText(const char* _id, OUT jc::String** _pText)
 {
 	jc::String* pFind = textMap_.Find(_id);
@@ -85,6 +88,7 @@ bool ClientTextInfoLoader::TryGetText(const char* _id, OUT jc::String** _pText)
 	*_pText = pFind;
 	return true;
 }
+#endif // !_UNICODE (narrow 텍스트 API)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 bool ClientTextInfoLoader::TryGetText(const jc::String& _id, OUT jc::String** _pText)

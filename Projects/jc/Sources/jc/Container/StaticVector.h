@@ -116,13 +116,13 @@ public:
 
     T& operator[](int _index)
     {
-        jc_assert_msg(_index >= 0 && _index < size_, "StaticVector: index out of range. (%d, size: %d)", _index, size_);
+        jc_assert_msg(_index >= 0 && _index < size_, _T("StaticVector: index out of range. (%d, size: %d)"), _index, size_);
         return data_[_index];
     }
 
     const T& operator[](int _index) const
     {
-        jc_assert_msg(_index >= 0 && _index < size_, "StaticVector: index out of range. (%d, size: %d)", _index, size_);
+        jc_assert_msg(_index >= 0 && _index < size_, _T("StaticVector: index out of range. (%d, size: %d)"), _index, size_);
         return data_[_index];
     }
 

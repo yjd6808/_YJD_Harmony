@@ -42,7 +42,7 @@ NS_JNET_BEGIN
 
 		if (dummySocket.Close() == SOCKET_ERROR)
 		{
-			jc_assert_msg(false, "함수주소 획득을 위해 생성한 더미 소켓을 닫는데 실패했습니다.");
+			jc_assert_msg(false, _T("함수주소 획득을 위해 생성한 더미 소켓을 닫는데 실패했습니다."));
 		}
 
 		return true;
@@ -60,7 +60,7 @@ NS_JNET_BEGIN
 		if (isSucceeded && lpfnConnectEx)
 			return true;
 
-		jc_assert_msg(false, "ConnectEx 함수 주소를 얻는데 실패했습니다.");
+		jc_assert_msg(false, _T("ConnectEx 함수 주소를 얻는데 실패했습니다."));
 		return false;
 	}
 
@@ -76,7 +76,7 @@ NS_JNET_BEGIN
 		if (isSucceeded && lpfnDisconnectEx)
 			return true;
 
-		jc_assert_msg(false, "DisconnectEx 함수 주소를 얻는데 실패했습니다.");
+		jc_assert_msg(false, _T("DisconnectEx 함수 주소를 얻는데 실패했습니다."));
 		return false;
 	}	
 
@@ -361,8 +361,8 @@ int Socketv4::ConnectEx(const IPv4EndPoint& _ipv4EndPoint, LPOVERLAPPED _pOverla
 	address.sin_family = AF_INET;
 	address.sin_port = ByteOrder::HostToNetwork(_ipv4EndPoint.GetPort());
 	address.sin_addr.S_un.S_addr = ByteOrder::HostToNetwork(_ipv4EndPoint.GetAddress().GetAddress());
-	jc_assert_msg(lpfnConnectEx != nullptr, "ConnectEx 함수를 사용할려면 먼저 UseConnectEx를 호출해주세요");
-	jc_assert_msg(Protocol == TransportProtocol::TCP, "커넥션 오리엔티드 소켓만 사용가능합니다.");
+	jc_assert_msg(lpfnConnectEx != nullptr, _T("ConnectEx 함수를 사용할려면 먼저 UseConnectEx를 호출해주세요"));
+	jc_assert_msg(Protocol == TransportProtocol::TCP, _T("커넥션 오리엔티드 소켓만 사용가능합니다."));
 	return lpfnConnectEx(
 		Handle,
 		reinterpret_cast<sockaddr*>(&address),
@@ -378,8 +378,8 @@ int Socketv4::ConnectEx(const IPv4EndPoint& _ipv4EndPoint, LPOVERLAPPED _pOverla
 //////////////////////////////////////////////////////////////////////////////////////////
 int Socketv4::DisconnectEx(LPOVERLAPPED _pOverlapped, _u32l _flag)
 {
-	jc_assert_msg(lpfnDisconnectEx != nullptr, "DisconnectEx 함수를 사용할려면 먼저 UseDisconnectEx를 호출해주세요");
-	jc_assert_msg(Protocol == TransportProtocol::TCP, "커넥션 오리엔티드 소켓만 사용가능합니다.");
+	jc_assert_msg(lpfnDisconnectEx != nullptr, _T("DisconnectEx 함수를 사용할려면 먼저 UseDisconnectEx를 호출해주세요"));
+	jc_assert_msg(Protocol == TransportProtocol::TCP, _T("커넥션 오리엔티드 소켓만 사용가능합니다."));
 	return lpfnDisconnectEx(Handle, _pOverlapped, _flag, 0);
 }
 

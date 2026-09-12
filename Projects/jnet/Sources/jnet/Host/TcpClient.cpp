@@ -53,12 +53,12 @@ void TcpClient::Initialize()
 
 	if (!CreateSocket(TransportProtocol::TCP, NonblokingSocket))
 	{
-		jc_assert_msg(false, "TCP 소켓 생성에 실패했습니다. (%u)", Winsock::LastError());
+		jc_assert_msg(false, _T("TCP 소켓 생성에 실패했습니다. (%u)"), Winsock::LastError());
 	}
 
 	if (!ConnectIocp())
 	{
-		jc_assert_msg(false, "IOCP에 연결하는데 실패했습니다. (%u)", Winsock::LastError());
+		jc_assert_msg(false, _T("IOCP에 연결하는데 실패했습니다. (%u)"), Winsock::LastError());
 	}
 }
 
@@ -69,7 +69,7 @@ bool TcpClient::Connect(const IPv4EndPoint& _remoteEndPoint, int _timeoutMillise
 {
 	if (!socket_.IsValid())
 	{
-		_NetLogError_("연결에 실패했습니다. INVALID_SOCKET 입니다.");
+		_NetLogError_(_T("연결에 실패했습니다. INVALID_SOCKET 입니다."));
 
 		if (pEventListener_)
 		{
@@ -88,7 +88,7 @@ bool TcpClient::Connect(const IPv4EndPoint& _remoteEndPoint, int _timeoutMillise
 			pEventListener_->OnConnectFailed(this, errorCode);
 		}
 
-		_NetLogError_("연결에 실패했습니다. 논블로킹 소켓 전환실패 (%u)", errorCode);
+		_NetLogError_(_T("연결에 실패했습니다. 논블로킹 소켓 전환실패 (%u)"), errorCode);
 		return false;
 	}
 
@@ -98,7 +98,7 @@ bool TcpClient::Connect(const IPv4EndPoint& _remoteEndPoint, int _timeoutMillise
 
 		if (errorCode != WSAEWOULDBLOCK)
 		{
-			_NetLogError_("연결에 실패했습니다. (%u)", errorCode);
+			_NetLogError_(_T("연결에 실패했습니다. (%u)"), errorCode);
 
 			if (pEventListener_)
 			{
@@ -184,7 +184,7 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& _destination)
 
 	if (!iocpConnected_)
 	{
-		jc_assert_msg(false, "IOCP와 연결해주세요.");
+		jc_assert_msg(false, _T("IOCP와 연결해주세요."));
 
 		if (pEventListener_)
 		{
@@ -229,7 +229,7 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& _destination)
 		const _u32 errorCode = Winsock::LastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
-			jc_assert_msg(false, "서버 접속에 실패하였습니다. (%u)", errorCode);
+			jc_assert_msg(false, _T("서버 접속에 실패하였습니다. (%u)"), errorCode);
 			Disconnect();
 			pOverlapped->Release();
 
@@ -309,20 +309,20 @@ void TcpClient::Connected()
 	// 일정주기마다 "나 살아있소" 전송
 	if (socket_.Option().SetKeepAliveEnabled(true) == SOCKET_ERROR)
 	{
-		jc_assert_msg(false, "클라이언트 소켓 Keep Alive 활성화 실패");
+		jc_assert_msg(false, _T("클라이언트 소켓 Keep Alive 활성화 실패"));
 	}
 
 	// 빠른 반응을 위해 Nagle 알고리즘을 꺼준다.
 	if (socket_.Option().SetNagleEnabled(false) == SOCKET_ERROR)
 	{
-		jc_assert_msg(false, "클라이언트 소켓 Nagle 비활성화 실패");
+		jc_assert_msg(false, _T("클라이언트 소켓 Nagle 비활성화 실패"));
 	}
 
 	// 클라이언트는 린저를 꺼주자.
 	// 송신 버퍼에 있는 데이터를 모두 보내고 안전하게 종료할 수 있도록
 	if (socket_.Option().SetLingerEnabled(false) == SOCKET_ERROR)
 	{
-		jc_assert_msg(false, "클라이언트 소켓 린저 타임아웃 설정 실패");
+		jc_assert_msg(false, _T("클라이언트 소켓 린저 타임아웃 설정 실패"));
 	}
 
 	if (pEventListener_)

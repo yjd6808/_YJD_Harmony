@@ -18,7 +18,7 @@ int main(int _argc, char* _pArgv[])
 	
 	Env::InitArgs(_argc, _pArgv);
 	int gameServerType = parse_args(_argc, _pArgv);
-	const String logSpecifier = StringUtilT::Format(LOG_SPECIFIER_GAME, GameServerType::Name[gameServerType]);
+	const String logSpecifier = StringUtil::Format(LOG_SPECIFIER_GAME, GameServerType::Name[gameServerType]);
 
     Winsock::Initialize(2, 2);
     Console::SetSize(800, 400);
@@ -50,7 +50,7 @@ int main(int _argc, char* _pArgv[])
     FinalizeNetLogger();
     FinalizeJCore();
     Winsock::Finalize();
-    return Console::ReadKeyWhile("X키 입력시 종료", ConsoleKey::X) ? 0 : -1;
+    return Console::ReadKeyWhile(_T("X키 입력시 종료"), ConsoleKey::X) ? 0 : -1;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -59,22 +59,22 @@ int parse_args(int _argc, char* _pArgv[])
 	if (_argc <= 1)
 	{
 		// 게임 서버 타입을 인자로 전달해주세요.
-		Console::WriteLine("required GameServerType_t(integer) argument");
+		Console::WriteLine(_T("required GameServerType_t(integer) argument"));
 		::exit(-1);
 	}
 
 	int gameServerType = -1;
-	if (!StringUtilT::TryToNumber<int>(gameServerType, _pArgv[1]))
+	if (!StringUtilA::TryToNumber<int>(gameServerType, _pArgv[1]))
 	{
 		// 전달받은 인자를 정수타입으로 변환하는데 실패했습니다. (%s)
-		Console::WriteLine("not a integer string. (%s)", _pArgv[1]);
+		Console::WriteLine(_T("not a integer string. (%hs)"), _pArgv[1]);
 		::exit(-2);
 	}
 
 	if (gameServerType < GameServerType::Begin || gameServerType > GameServerType::End)
 	{
 		// 전달받은 인자가 올바른 게임 서버 타입이 아닙니다. (%d)
-		Console::WriteLine("invalid GameServerType. (%d)", gameServerType);
+		Console::WriteLine(_T("invalid GameServerType. (%d)"), gameServerType);
 		::exit(-3);
 	}
 

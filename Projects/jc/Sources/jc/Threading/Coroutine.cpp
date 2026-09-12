@@ -59,7 +59,7 @@ static void EnsureCoVehRegistered()
 	std::call_once(s_coVehOnce, []
 	{
 		s_pCoVeh = ::AddVectoredExceptionHandler(1, CoVEH);
-		jc_assert_msg(s_pCoVeh != nullptr, "CoVEH 등록 실패");
+		jc_assert_msg(s_pCoVeh != nullptr, _T("CoVEH 등록 실패"));
 	});
 }
 
@@ -73,7 +73,7 @@ CoMgr::CoMgr()
 	// - rsp를 임의로 바꾸고 ret하는 방식이라 섀도우 스택 검사에 걸려 즉사하므로
 	//   링커 /CETCOMPAT:NO로 빌드해야 한다. 여기서 미리 막는다.
 	jc_assert_msg(!IsShadowStackEnabled(),
-		"jc 코루틴은 CET(User Shadow Stack)와 호환되지 않는다. /CETCOMPAT:NO로 링크할 것");
+		_T("jc 코루틴은 CET(User Shadow Stack)와 호환되지 않는다. /CETCOMPAT:NO로 링크할 것"));
 }
 
 CoMgr::~CoMgr()
@@ -220,19 +220,19 @@ bool CoMgr::AllocStack(OUT CoStack* _pStack, CoStackTier _stackTier, _u32 _stack
 {
 	if (_pStack == nullptr)
 	{
-		jc_assert_msg(false, "스택 구조체 포인터가 nullptr입니다.");
+		jc_assert_msg(false, _T("스택 구조체 포인터가 nullptr입니다."));
 		return false;
 	}
 
 	if (_stackTier <= 0 || _stackTier > cstValidTierEnd)
 	{
-		jc_assert_msg(false, "잘못된 스택 티어입니다. tier: %d", _stackTier);
+		jc_assert_msg(false, _T("잘못된 스택 티어입니다. tier: %d"), _stackTier);
 		return false;
 	}
 
 	// ResolveTier를 거친 크기이므로 페이지 정렬이어야 한다.
 	jc_assert_msg((_stackSize & (CO_PAGE_SIZE - 1)) == 0,
-		"스택 크기가 페이지 정렬이 아닙니다. size: %u", _stackSize);
+		_T("스택 크기가 페이지 정렬이 아닙니다. size: %u"), _stackSize);
 	if ((_stackSize & (CO_PAGE_SIZE - 1)) != 0)
 	{
 		t_coLastError = coeInvalidStackSize;
@@ -329,7 +329,7 @@ bool CoMgr::ResolveTier(CoStackTier _tier, _u32 _size, OUT CoStackTier* _pTier, 
 		*_pSize = RoundUpPage(_size);
 		return true;
 	default:
-		jc_assert_msg(false, "잘못된 스택 티어입니다. tier: %d", _tier);
+		jc_assert_msg(false, _T("잘못된 스택 티어입니다. tier: %d"), _tier);
 		return false;
 	}
 }
@@ -422,7 +422,7 @@ void CoMgr::RecycleStack(CoStack* _pStack)
 	}
 	// 여기까지 실패하면 다음 AllocCtx가 InitStack... (풀 경로는 InitStack을 안 타므로
 	//  가드 없이 돌아간다. 다음 확장이 커널 몫이 되는 기존 한계와 동일.assert로 알림)
-	jc_assert_msg(_pStack->pGuardLimit_ == pGuardLow, "가드존 재설치 실패");
+	jc_assert_msg(_pStack->pGuardLimit_ == pGuardLow, _T("가드존 재설치 실패"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -465,7 +465,7 @@ CoContext* CoMgr::AllocCtx(CoStackTier _stackTier, _u32 _stackSize)
 		// [코루틴-12] 풀 재사용: 커밋 유지됨. 레지스터/상태만 리셋하고 바로 쓴다.
 		// [코루틴-06] 풀 무결성 확인. 크기가 다르면 오염된 것이므로 쓰지 않는다.
 		jc_assert_msg(pCtx->stack_.size_ == size,
-			"풀 오염: 티어 크기와 다릅니다. tier: %d, size: %u", tier, pCtx->stack_.size_);
+			_T("풀 오염: 티어 크기와 다릅니다. tier: %d, size: %u"), tier, pCtx->stack_.size_);
 		InitCtx(pCtx);
 	}
 	else
@@ -481,7 +481,7 @@ CoContext* CoMgr::AllocCtx(CoStackTier _stackTier, _u32 _stackSize)
 
 	// [코루틴-10] movaps 전제. CoContext가 16 정렬이어야 regs_ 안 XMM도 정렬된다.
 	jc_assert_msg((((uintptr_t)pCtx & 15) == 0),
-		"CoContext가 16 정렬이 아닙니다. pCtx: 0x%p", pCtx);
+		_T("CoContext가 16 정렬이 아닙니다. pCtx: 0x%p"), pCtx);
 
 	pCtx->id_ = ++nextId_;
 	stacksByBase_.Insert(pCtx->stack_.pStackBase_, pCtx);
@@ -502,12 +502,12 @@ void CoMgr::FreeCtx(CoContext* _pCtx)
 
 	CoStackTier stackTier = _pCtx->stack_.stackTier_;
 	jc_assert_msg(stackTier >= cstValidTierBegin && stackTier <= cstValidTierEnd,
-		"잘못된 스택 티어입니다. tier: %d", stackTier);
+		_T("잘못된 스택 티어입니다. tier: %d"), stackTier);
 
 	CoContext* pPopped = nullptr;
 	if (stacksByBase_.TryPop(_pCtx->stack_.pStackBase_, &pPopped) == false)
 	{
-		jc_assert_msg(false, "해당 컨텍스트는 관리 중인 컨텍스트가 아닙니다. pStackBase_: 0x%p",
+		jc_assert_msg(false, _T("해당 컨텍스트는 관리 중인 컨텍스트가 아닙니다. pStackBase_: 0x%p"),
 			_pCtx->stack_.pStackBase_);
 		return;
 	}
@@ -549,7 +549,7 @@ void CoMgr::Clear()
 
 	if (stacksByBase_.Size() > 0)
 	{
-		jc_assert_msg(false, "Clear 호출 시점에 아직 할당된 컨텍스트가 존재합니다. Count: %zu", stacksByBase_.Size());
+		jc_assert_msg(false, _T("Clear 호출 시점에 아직 할당된 컨텍스트가 존재합니다. Count: %zu"), stacksByBase_.Size());
 	}
 
 	for (int tier = cstReservedTierBegin; tier <= cstReservedTierEnd; ++tier)
@@ -776,50 +776,50 @@ bool __declspec(safebuffers) CoMgr::ExpandStack(CoContext* _pCtx, char* _pFaultA
 //////////////////////////////////////////////////////////////////////////////////////////
 // DumpStack
 //////////////////////////////////////////////////////////////////////////////////////////
-void CoMgr::DumpStack(CoStack* _pStack, const char* _pTitle /*= nullptr*/)
+void CoMgr::DumpStack(CoStack* _pStack, const _char* _pTitle /*= nullptr*/)
 {
 	if (_pTitle)
-		Console::WriteLine(ConsoleColor::Green, "\n==== %s ====", _pTitle);
+		Console::WriteLine(ConsoleColor::Green, _T("\n==== %s ===="), _pTitle);
 
 	// ── CoStack 멤버 ──────────────────────────────────────────────────────────
-	const char* pTierName = "Unknown";
+	const _char* pTierName = _T("Unknown");
 	switch (_pStack->stackTier_)
 	{
-	case cstNone:   pTierName = "None";   break;
-	case cstLow:    pTierName = "Low";    break;
-	case cstMid:    pTierName = "Mid";    break;
-	case cstHigh:   pTierName = "High";   break;
-	case cstCustom: pTierName = "Custom"; break;
+	case cstNone:   pTierName = _T("None");   break;
+	case cstLow:    pTierName = _T("Low");    break;
+	case cstMid:    pTierName = _T("Mid");    break;
+	case cstHigh:   pTierName = _T("High");   break;
+	case cstCustom: pTierName = _T("Custom"); break;
 	}
 
-	Console::WriteLine(ConsoleColor::White, "  [CoStack]");
-	Console::WriteLine(ConsoleColor::White, "    size_        : %u KB  (%u pages)",
+	Console::WriteLine(ConsoleColor::White, _T("  [CoStack]"));
+	Console::WriteLine(ConsoleColor::White, _T("    size_        : %u KB  (%u pages)"),
 		_pStack->size_ / 1024, _pStack->size_ / CO_PAGE_SIZE);
-	Console::WriteLine(ConsoleColor::White, "    stackTier_   : %d (%s)",
+	Console::WriteLine(ConsoleColor::White, _T("    stackTier_   : %d (%s)"),
 		(_s32)_pStack->stackTier_, pTierName);
-	Console::WriteLine(ConsoleColor::White, "    pStackBase_  : 0x%016llX",
+	Console::WriteLine(ConsoleColor::White, _T("    pStackBase_  : 0x%016llX"),
 		(uintptr_t)_pStack->pStackBase_);
-	Console::WriteLine(ConsoleColor::White, "    pStackEnd_   : 0x%016llX",
+	Console::WriteLine(ConsoleColor::White, _T("    pStackEnd_   : 0x%016llX"),
 		(uintptr_t)_pStack->pStackEnd_);
-	Console::WriteLine(ConsoleColor::White, "    pStackLimit_ : 0x%016llX",
+	Console::WriteLine(ConsoleColor::White, _T("    pStackLimit_ : 0x%016llX"),
 		(uintptr_t)_pStack->pStackLimit_);
-	Console::WriteLine(ConsoleColor::White, "    pGuardLimit_ : 0x%016llX",
+	Console::WriteLine(ConsoleColor::White, _T("    pGuardLimit_ : 0x%016llX"),
 		(uintptr_t)_pStack->pGuardLimit_);
 
 	// ── Ranges ────────────────────────────────────────────────────────────────
 	long long commitBytes = (long long)(_pStack->pStackBase_ - _pStack->pStackLimit_);
 	long long guardBytes  = (long long)(_pStack->pStackLimit_ - _pStack->pGuardLimit_);
 
-	Console::WriteLine(ConsoleColor::White, "  [Ranges]");
-	Console::WriteLine(ConsoleColor::White, "    StackRange   : [0x%016llX, 0x%016llX)  (%u KB, %u pages)",
+	Console::WriteLine(ConsoleColor::White, _T("  [Ranges]"));
+	Console::WriteLine(ConsoleColor::White, _T("    StackRange   : [0x%016llX, 0x%016llX)  (%u KB, %u pages)"),
 		(uintptr_t)_pStack->pStackEnd_,
 		(uintptr_t)_pStack->pStackBase_,
 		_pStack->size_ / 1024, _pStack->size_ / CO_PAGE_SIZE);
-	Console::WriteLine(ConsoleColor::Cyan,  "    CommitRange  : [0x%016llX, 0x%016llX)  (%lld KB, %lld pages)",
+	Console::WriteLine(ConsoleColor::Cyan,  _T("    CommitRange  : [0x%016llX, 0x%016llX)  (%lld KB, %lld pages)"),
 		(uintptr_t)_pStack->pStackLimit_,
 		(uintptr_t)_pStack->pStackBase_,
 		commitBytes / 1024, commitBytes / CO_PAGE_SIZE);
-	Console::WriteLine(ConsoleColor::Yellow,"    GuardRange   : [0x%016llX, 0x%016llX)  (%lld KB, %lld pages)",
+	Console::WriteLine(ConsoleColor::Yellow, _T("    GuardRange   : [0x%016llX, 0x%016llX)  (%lld KB, %lld pages)"),
 		(uintptr_t)_pStack->pGuardLimit_,
 		(uintptr_t)_pStack->pStackLimit_,
 		guardBytes / 1024, guardBytes / CO_PAGE_SIZE);
@@ -838,25 +838,25 @@ void CoMgr::DumpStack(CoStack* _pStack, const char* _pTitle /*= nullptr*/)
 		if (mbi.State == MEM_FREE)
 		{
 			Console::WriteLine(ConsoleColor::Red,
-				"  [%02llu] 0x%016llX ~ 0x%016llX : FREE",
+				_T("  [%02llu] 0x%016llX ~ 0x%016llX : FREE"),
 				i, (uintptr_t)pPageBegin, (uintptr_t)pPageEnd);
 		}
 		else if (isGuard)
 		{
 			Console::WriteLine(ConsoleColor::Yellow,
-				"  [%02llu] 0x%016llX ~ 0x%016llX : COMMIT + GUARD",
+				_T("  [%02llu] 0x%016llX ~ 0x%016llX : COMMIT + GUARD"),
 				i, (uintptr_t)pPageBegin, (uintptr_t)pPageEnd);
 		}
 		else if (mbi.State == MEM_COMMIT)
 		{
 			Console::WriteLine(ConsoleColor::Cyan,
-				"  [%02llu] 0x%016llX ~ 0x%016llX : COMMIT",
+				_T("  [%02llu] 0x%016llX ~ 0x%016llX : COMMIT"),
 				i, (uintptr_t)pPageBegin, (uintptr_t)pPageEnd);
 		}
 		else
 		{
 			Console::WriteLine(ConsoleColor::White,
-				"  [%02llu] 0x%016llX ~ 0x%016llX : RESERVE",
+				_T("  [%02llu] 0x%016llX ~ 0x%016llX : RESERVE"),
 				i, (uintptr_t)pPageBegin, (uintptr_t)pPageEnd);
 		}
 	}
@@ -1144,7 +1144,7 @@ void CoEntry(CoContext* _pCtx) noexcept
 	// - 스케줄러 쪽 래퍼가 csEnd를 보고 FreeCtx한다. 여기로 복귀하는 일은 없다.
 	_pCtx->state_ = csEnd;
 	CoSwitchImpl(&_pCtx->regs_, &_pCtx->schedRegs_);
-	jc_assert_msg(false, "CoEntry: 종료 스위치에서 복귀함");
+	jc_assert_msg(false, _T("CoEntry: 종료 스위치에서 복귀함"));
 	std::terminate();
 }
 

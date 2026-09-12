@@ -14,7 +14,7 @@
 // SelectAccountInfoList
 // ==================================================================
 QRY_SELECT_STATEMENT_BEGIN(SelectAccountInfoList)
-static constexpr const char* Script = "select c_uid, c_account_id, c_account_pass, c_created, c_logined from t_account";
+static constexpr const _char* Script = _T("select c_uid, c_account_id, c_account_pass, c_created, c_logined from t_account");
 QRY_SELECT_STATEMENT_END
 
 QRY_SELECT_RESULT_BEGIN(SelectAccountInfoListResult)
@@ -28,11 +28,11 @@ QRY_SELECT_RESULT_END
 REGISTER_QRY_STRUCT
 (
 	SelectAccountInfoListResult
-	, AccountId, "c_uid"
-	, Id, "c_account_id"
-	, Pass, "c_account_pass"
-	, Created, "c_created"
-	, Logined, "c_logined"
+	, AccountId, _T("c_uid")
+	, Id, _T("c_account_id")
+	, Pass, _T("c_account_pass")
+	, Created, _T("c_created")
+	, Logined, _T("c_logined")
 );
 
 // ==================================================================
@@ -40,7 +40,7 @@ REGISTER_QRY_STRUCT
 // ==================================================================
 
 QRY_SELECT_STATEMENT_BEGIN(SelectAccountInfo)
-static constexpr const char* Script = "select c_account_id, c_account_pass, c_created, c_logined, c_last_login_server from t_account where c_account_id = ?";
+static constexpr const _char* Script = _T("select c_account_id, c_account_pass, c_created, c_logined, c_last_login_server from t_account where c_account_id = ?");
 QRY_SELECT_STATEMENT_END
 
 QRY_SELECT_RESULT_BEGIN(SelectAccountInfoResult)
@@ -55,11 +55,11 @@ QRY_SELECT_RESULT_END
 REGISTER_QRY_STRUCT
 (
 	SelectAccountInfoResult
-	, Id, "c_account_id"
-	, Pass, "c_account_pass"
-	, Created, "c_created"
-	, Logined, "c_logined"
-	, LastServer, "c_last_login_server"
+	, Id, _T("c_account_id")
+	, Pass, _T("c_account_pass")
+	, Created, _T("c_created")
+	, Logined, _T("c_logined")
+	, LastServer, _T("c_last_login_server")
 );
 
 // ==================================================================
@@ -67,5 +67,5 @@ REGISTER_QRY_STRUCT
 // ==================================================================
 
 QRY_INSERT_STATEMENT_BEGIN(InsertAccountInfo)
-static constexpr const char* Script = "insert into t_account (c_account_id, c_account_pass) values (?, ?)";
+static constexpr const _char* Script = _T("insert into t_account (c_account_id, c_account_pass) values (?, ?)");
 QRY_INSERT_STATEMENT_END

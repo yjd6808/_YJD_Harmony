@@ -190,7 +190,7 @@ private:
 	_u32 len_;
 };
 
-using StringView = BasicStringView<char>;
+using StringView = BasicStringView<_char>;
 using AStringView = BasicStringView<char>;
 using WStringView = BasicStringView<wchar_t>;
 using StringViewT = BasicStringView<_char>;

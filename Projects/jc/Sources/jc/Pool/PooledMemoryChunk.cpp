@@ -8,7 +8,7 @@ PooledMemoryChunk::PooledMemoryChunk(const MemoryPoolAbstractPtr& _allocator, in
 , requestSize_(_requestSize)
 , realSize_(0)
 {
-	jc_assert_msg(allocator_ != nullptr, "PooledMemoryChunk - allocator is nullptr");
+	jc_assert_msg(allocator_ != nullptr, _T("PooledMemoryChunk - allocator is nullptr"));
 
 	if (requestSize_ > 0)
 	{

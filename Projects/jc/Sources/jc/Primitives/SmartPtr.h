@@ -834,7 +834,7 @@ protected:
 	static void WeakMoveToShared(SharedPtr<U>& _shared)
 	{
 		// 필요 없음
-		jc_assert_msg(true, "멍미");
+		jc_assert_msg(true, _T("멍미"));
 	}
 
 	template <typename U>

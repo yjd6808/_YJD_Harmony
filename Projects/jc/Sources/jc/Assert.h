@@ -8,13 +8,26 @@
 #pragma once
 
 #include "jc/Namespace.h"
+#include "jc/Type.h"
 
 // 헤더파일 의존성 회피를 위함
 NS_JC_BEGIN
 	NS_DETAIL_BEGIN
-	void __DebugAssertMsgImpl(const char* _expectStr, const char* _filePath, int _lineNum, const char* _functionName, const char* _fmt, ...);
+	void __DebugAssertMsgImpl(const char* _expectStr, const _char* _filePath, int _lineNum, const _char* _functionName, const _char* _fmt, ...);
 	NS_END
 NS_END
+
+// _FILEW_/__WFUNCTION__ 매크로는 컴파일러에 없으므로 2단 연결로 만든다.
+// _UNICODE면 wide 파일명/함수명, 아니면 narrow 그대로를 assert에 넘긴다.
+#define JC_WIDEN2(x) L ## x
+#define JC_WIDEN(x) JC_WIDEN2(x)
+#ifdef _UNICODE
+	#define JC_FILE JC_WIDEN(__FILE__)
+	#define JC_FUNC JC_WIDEN(__FUNCTION__)
+#else
+	#define JC_FILE __FILE__
+	#define JC_FUNC __FUNCTION__
+#endif
 
 
 #ifndef DebugAssert
@@ -22,9 +35,9 @@ NS_END
 		#define jc_assert_msg(expect, fmt, ...)																		\
 		do {																											\
 			if ((expect)) break;																						\
-			jc::detail::__DebugAssertMsgImpl(#expect, __FILE__, __LINE__, __FUNCTION__, fmt, __VA_ARGS__);			\
+			jc::detail::__DebugAssertMsgImpl(#expect, JC_FILE, __LINE__, JC_FUNC, fmt, __VA_ARGS__);			\
 		} while (0)
-        #define jc_assert(expect)            jc_assert_msg(expect, "메시지 없음")
+        #define jc_assert(expect)            jc_assert_msg(expect, _T("메시지 없음"))
 
 
     #else

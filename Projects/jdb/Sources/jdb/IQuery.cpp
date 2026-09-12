@@ -24,16 +24,16 @@ StatementType IQuery::ParseStatement(const String& _statement)
 {
 	const String statementPrefix = _statement.GetRange(0, 5).ToLowerCase();
 
-	if (statementPrefix.Find("select") == 0)
+	if (statementPrefix.Find(_T("select")) == 0)
 		return StatementType::Select;
-	if (statementPrefix.Find("update") == 0)
+	if (statementPrefix.Find(_T("update")) == 0)
 		return StatementType::Update;
-	if (statementPrefix.Find("insert") == 0)
+	if (statementPrefix.Find(_T("insert")) == 0)
 		return StatementType::Insert;
-	if (statementPrefix.Find("delete") == 0)
+	if (statementPrefix.Find(_T("delete")) == 0)
 		return StatementType::Delete;
 
-	jc_assert_msg(false, "올바른 스테이트먼트가 아닙니다.");
+	jc_assert_msg(false, _T("올바른 스테이트먼트가 아닙니다."));
 	return StatementType::None;
 }
 

@@ -8,6 +8,7 @@
 
 #include "DescLoaderMgr.h"
 
+#include "jc/Primitives/StringConvert.h"
 #include "sg/Struct/SteinsGate_ChannelBase.h"
 #include "sg/Struct/SteinsGate_Enchant.h"
 #include "sg/Struct/SteinsGate_Server.h"
@@ -65,14 +66,14 @@ void DescLoaderMgr::LoadAll()
 		}
 	}
 
-	_LogInfo_("기획파일 %d개중 %d개를 로딩하였습니다.", initCount, loadedCount);
+	_LogInfo_(_T("기획파일 %d개중 %d개를 로딩하였습니다."), initCount, loadedCount);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 SDescBase* DescLoaderMgr::GetData(ConfigFileType_t _configFileType, int _code)
 {
 	jc_assert(m_pConfigFileLoaders[_configFileType] != nullptr);
-	jc_assert_msg(_configFileType >= ConfigFileType::Begin && _configFileType <= ConfigFileType::End, "올바르지 않은 ConfigFileType 입니다.");
+	jc_assert_msg(_configFileType >= ConfigFileType::Begin && _configFileType <= ConfigFileType::End, _T("올바르지 않은 ConfigFileType 입니다."));
 	return m_pConfigFileLoaders[_configFileType]->GetData(_code);
 }
 
@@ -80,7 +81,7 @@ SDescBase* DescLoaderMgr::GetData(ConfigFileType_t _configFileType, int _code)
 SDescBase* DescLoaderMgr::GetDataAny(ConfigFileType_t _configFileType)
 {
 	jc_assert(m_pConfigFileLoaders[_configFileType] != nullptr);
-	jc_assert_msg(_configFileType >= ConfigFileType::Begin && _configFileType <= ConfigFileType::End, "올바르지 않은 ConfigFileType 입니다.");
+	jc_assert_msg(_configFileType >= ConfigFileType::Begin && _configFileType <= ConfigFileType::End, _T("올바르지 않은 ConfigFileType 입니다."));
 	return m_pConfigFileLoaders[_configFileType]->GetDataAny();
 }
 
@@ -88,7 +89,7 @@ SDescBase* DescLoaderMgr::GetDataAny(ConfigFileType_t _configFileType)
 bool DescLoaderMgr::Load(ConfigFileType_t _configFileType)
 {
 	DescLoaderAbstract* pLoader = m_pConfigFileLoaders[_configFileType];
-	jc_assert_msg(pLoader != nullptr, "%s 파일 로더가 아직 생성되어있지 않습니다.", ConfigFileType::FileName[_configFileType]);
+	jc_assert_msg(pLoader != nullptr, _T("%hs 파일 로더가 아직 생성되어있지 않습니다."), ConfigFileType::FileName[_configFileType]);
 	if (!pLoader->IsLoaded())
 	{
 		return pLoader->Load();
@@ -100,7 +101,7 @@ bool DescLoaderMgr::Load(ConfigFileType_t _configFileType)
 //////////////////////////////////////////////////////////////////////////////////////////
 void DescLoaderMgr::Unload(ConfigFileType_t _configFileType)
 {
-	jc_assert_msg(false, "아직 구현 안됨");
+	jc_assert_msg(false, _T("아직 구현 안됨"));
 	// TODO: 필요시 구현
 }
 
@@ -112,17 +113,17 @@ void DescLoaderMgr::Clear()
 		JC_DELETE_SAFE(m_pConfigFileLoaders[configFileTypeIndex]);
 	}
 
-	_LogDebug_("설정파일에서 읽은 모든 데이터를 정리하였습니다.");
+	_LogDebug_(_T("설정파일에서 읽은 모든 데이터를 정리하였습니다."));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void DescLoaderMgr::AddLoader(DescLoaderAbstract* _pLoader)
 {
-	jc_assert_msg(_pLoader != nullptr, "널 포인터를 추가할 수 없습니다.");
+	jc_assert_msg(_pLoader != nullptr, _T("널 포인터를 추가할 수 없습니다."));
 	const ConfigFileType_t configFileType = _pLoader->GetConfigFileType();
 	if (m_pConfigFileLoaders[configFileType] != nullptr)
 	{
-		_LogWarn_("이미 %s 파일 로더가 존재합니다.", ConfigFileType::FileName[configFileType]);
+		_LogWarn_(_T("이미 %s 파일 로더가 존재합니다."), ConfigFileType::FileName[configFileType]);
 		m_pConfigFileLoaders[configFileType]->Unload();
 		JC_DELETE_SAFE(m_pConfigFileLoaders[configFileType]);
 	}
@@ -139,7 +140,7 @@ MonsterBaseInfo* DescLoaderMgr::GetMobBaseInfo(int _monsterCode)
 {
 	constexpr auto CONFIG_TYPE = ConfigFileType::Monster;
 	const auto pRet = dynamic_cast<MonsterBaseInfo*>(GetData(CONFIG_TYPE, _monsterCode));
-	jc_assert_msg(pRet, "아바타 타입이 아닙니다.");
+	jc_assert_msg(pRet, _T("아바타 타입이 아닙니다."));
 	return pRet;
 }
 
@@ -148,7 +149,7 @@ ItemAvatarInfo* DescLoaderMgr::GetAvatarInfo(int _avatarCode)
 {
 	constexpr auto CONFIG_TYPE = ConfigFileType::Item;
 	const auto pRet = dynamic_cast<ItemAvatarInfo*>(GetData(CONFIG_TYPE, _avatarCode));
-	jc_assert_msg(pRet, "아바타 타입이 아닙니다.");
+	jc_assert_msg(pRet, _T("아바타 타입이 아닙니다."));
 	return pRet;
 }
 
@@ -157,7 +158,7 @@ ItemWeaponInfo* DescLoaderMgr::GetWeaponInfo(int _weaponCode)
 {
 	constexpr auto CONFIG_TYPE = ConfigFileType::Item;
 	const auto pRet = dynamic_cast<ItemWeaponInfo*>(GetData(CONFIG_TYPE, _weaponCode));
-	jc_assert_msg(pRet, "무기 타입이 아닙니다.");
+	jc_assert_msg(pRet, _T("무기 타입이 아닙니다."));
 	return pRet;
 }
 
@@ -166,7 +167,7 @@ ItemArmorInfo* DescLoaderMgr::GetArmorInfo(int _armorCode)
 {
 	constexpr auto CONFIG_TYPE = ConfigFileType::Item;
 	const auto pRet = dynamic_cast<ItemArmorInfo*>(GetData(CONFIG_TYPE, _armorCode));
-	jc_assert_msg(pRet, "방어구 | 장신구 | 칭호 타입이 아닙니다.");
+	jc_assert_msg(pRet, _T("방어구 | 장신구 | 칭호 타입이 아닙니다."));
 	return pRet;
 }
 
@@ -175,7 +176,7 @@ ItemVisualInfo* DescLoaderMgr::GetVisualInfo(int _visualCode)
 {
 	constexpr auto CONFIG_TYPE = ConfigFileType::Item;
 	const auto pRet = dynamic_cast<ItemVisualInfo*>(GetData(CONFIG_TYPE, _visualCode));
-	jc_assert_msg(pRet, "아바타 | 무기가 아닙니다.");
+	jc_assert_msg(pRet, _T("아바타 | 무기가 아닙니다."));
 	return pRet;
 }
 
@@ -184,7 +185,7 @@ ItemOptInfo* DescLoaderMgr::GetItemOptInfo(int _itemOptCode)
 {
 	constexpr auto CONFIG_TYPE = ConfigFileType::ItemOpt;
 	const auto pRet = dynamic_cast<ItemOptInfo*>(GetData(CONFIG_TYPE, _itemOptCode));
-	jc_assert_msg(pRet, "아이템 옵트 타입이 아닙니다.");
+	jc_assert_msg(pRet, _T("아이템 옵트 타입이 아닙니다."));
 	return pRet;
 }
 
@@ -200,7 +201,7 @@ ChannelBaseInfo* DescLoaderMgr::GetChannelBaseInfo(int _channelCode)
 {
 	constexpr auto CONFIG_TYPE = ConfigFileType::Channel;
 	const auto pRet = dynamic_cast<ChannelBaseInfo*>(GetData(CONFIG_TYPE, _channelCode));
-	jc_assert_msg(pRet, "채널 인포 타입이 아닙니다.");
+	jc_assert_msg(pRet, _T("채널 인포 타입이 아닙니다."));
 	return pRet;
 }
 
@@ -209,7 +210,7 @@ EnchantInfo* DescLoaderMgr::GetEnchantInfo(int _enchantCode)
 {
 	constexpr auto CONFIG_TYPE = ConfigFileType::Enchant;
 	const auto pRet = dynamic_cast<EnchantInfo*>(GetData(CONFIG_TYPE, _enchantCode));
-	jc_assert_msg(pRet, "인챈트 인포 타입이 아닙니다.");
+	jc_assert_msg(pRet, _T("인챈트 인포 타입이 아닙니다."));
 	return pRet;
 }
 
@@ -218,7 +219,7 @@ ServerProcessInfo* DescLoaderMgr::GetServerProcessInfo()
 {
 	constexpr auto CONFIG_TYPE = ConfigFileType::ServerInfo;
 	const auto pRet = dynamic_cast<ServerProcessInfo*>(GetDataAny(CONFIG_TYPE));
-	jc_assert_msg(pRet, "서버 인포 타입이 아닙니다.");
+	jc_assert_msg(pRet, _T("서버 인포 타입이 아닙니다."));
 	return pRet;
 }
 
@@ -227,7 +228,7 @@ CharCommonInfo* DescLoaderMgr::GetCharCommonInfo(int _charCommonCode)
 {
 	constexpr auto CONFIG_TYPE = ConfigFileType::Char_Common;
 	const auto pRet = dynamic_cast<CharCommonInfo*>(GetData(CONFIG_TYPE, _charCommonCode));
-	jc_assert_msg(pRet, "데이터베이스 인포 타입이 아닙니다.");
+	jc_assert_msg(pRet, _T("데이터베이스 인포 타입이 아닙니다."));
 	return pRet;
 }
 
@@ -236,7 +237,7 @@ MapInfo* DescLoaderMgr::GetMapInfo(int _mapCode)
 {
 	constexpr auto CONFIG_TYPE = ConfigFileType::Map;
 	const auto pRet = dynamic_cast<MapInfo*>(GetData(CONFIG_TYPE, _mapCode));
-	jc_assert_msg(pRet, "맵 인포 타입이 아닙니다.");
+	jc_assert_msg(pRet, _T("맵 인포 타입이 아닙니다."));
 	return pRet;
 }
 
@@ -248,14 +249,14 @@ MapAreaInfo* DescLoaderMgr::GetMapAreaInfo(int _mapCode)
 
 	if (pLoader == nullptr)
 	{
-		_LogWarn_("맵 인포 로더가 없습니다.");
+		_LogWarn_(_T("맵 인포 로더가 없습니다."));
 		return nullptr;
 	}
 
 	MapAreaInfo* pRet = pLoader->GetMapAreaInfo(_mapCode);
 	if (pRet == nullptr)
 	{
-		_LogWarn_("%d 맵의 Area 데이터를 찾지 못했습니다.", _mapCode);
+		_LogWarn_(_T("%d 맵의 Area 데이터를 찾지 못했습니다."), _mapCode);
 		return nullptr;
 	}
 
@@ -267,7 +268,7 @@ MapPhysicsInfo* DescLoaderMgr::GetMapPhysicsInfo(int _physicsCode)
 {
 	constexpr auto CONFIG_TYPE = ConfigFileType::MapPhysics;
 	const auto pRet = dynamic_cast<MapPhysicsInfo*>(GetData(CONFIG_TYPE, _physicsCode));
-	jc_assert_msg(pRet, "맵 피직스 타입이 아닙니다.");
+	jc_assert_msg(pRet, _T("맵 피직스 타입이 아닙니다."));
 	return pRet;
 }
 
@@ -400,6 +401,7 @@ ChannelInfo* DescLoaderMgr::GetChannelInfo(int _channelCode)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+#ifndef _UNICODE
 char* DescLoaderMgr::GetTextRaw(const char* _textId)
 {
 	constexpr auto eType = ConfigFileType::ClientText;
@@ -407,18 +409,19 @@ char* DescLoaderMgr::GetTextRaw(const char* _textId)
 
 	if (pLoader == nullptr)
 	{
-		_LogWarn_("텍스트 로더가 없습니다.");
+		_LogWarn_(_T("텍스트 로더가 없습니다."));
 		return ClientTextInfoLoader::DummyText.Source();
 	}
 
 	char* pText = nullptr;
 	if (!pLoader->TryGetTextRaw(_textId, &pText))
 	{
-		_LogWarn_("%s 텍스트를 찾지 못했습니다.", _textId);
+		_LogWarn_(_T("%s 텍스트를 찾지 못했습니다."), _textId);
 	}
 
 	return pText;
 }
+#endif // !_UNICODE (narrow 텍스트 API)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 jc::String& DescLoaderMgr::GetText(const char* _textId)
@@ -428,14 +431,15 @@ jc::String& DescLoaderMgr::GetText(const char* _textId)
 
 	if (pLoader == nullptr)
 	{
-		_LogWarn_("텍스트 로더가 없습니다.");
+		_LogWarn_(_T("텍스트 로더가 없습니다."));
 		return ClientTextInfoLoader::DummyText;
 	}
 
 	jc::String* pText = nullptr;
-	if (!pLoader->TryGetText(_textId, &pText))
+	const jc::String wideId = jc::StringConvert::FromUtf8(_textId);
+	if (!pLoader->TryGetText(wideId, &pText))
 	{
-		_LogWarn_("%s 텍스트를 찾지 못했습니다.", _textId);
+		_LogWarn_(_T("%hs 텍스트를 찾지 못했습니다."), _textId);
 	}
 
 	return *pText;
@@ -444,5 +448,20 @@ jc::String& DescLoaderMgr::GetText(const char* _textId)
 //////////////////////////////////////////////////////////////////////////////////////////
 jc::String& DescLoaderMgr::GetText(const jc::String& _textId)
 {
-	return GetText(_textId.Source());
+	constexpr auto eType = ConfigFileType::ClientText;
+	const auto pLoader = dynamic_cast<ClientTextInfoLoader*>(m_pConfigFileLoaders[eType]);
+
+	if (pLoader == nullptr)
+	{
+		_LogWarn_(_T("텍스트 로더가 없습니다."));
+		return ClientTextInfoLoader::DummyText;
+	}
+
+	jc::String* pText = nullptr;
+	if (!pLoader->TryGetText(_textId, &pText))
+	{
+		_LogWarn_(_T("%s 텍스트를 찾지 못했습니다."), _textId.Source());
+	}
+
+	return *pText;
 }

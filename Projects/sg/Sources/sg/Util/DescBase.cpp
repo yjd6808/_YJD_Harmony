@@ -18,6 +18,6 @@ SgaResourceIndex::SgaResourceIndex()
 //////////////////////////////////////////////////////////////////////////////////////////
 String SgaResourceIndex::ToString() const
 {
-	return StringUtilT::Format("Sga(%d) Img(%d) Sprite(%d)", un_.sgaIndex_, un_.imgIndex_, un_.frameIndex_);
+	return StringUtil::Format(_T("Sga(%d) Img(%d) Sprite(%d)"), un_.sgaIndex_, un_.imgIndex_, un_.frameIndex_);
 }
 

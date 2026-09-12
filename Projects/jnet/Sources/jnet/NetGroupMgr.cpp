@@ -33,7 +33,7 @@ void NetGroupMgr::Finalize()
 
 	netGroupMap_.Clear();
 	finalized_ = true;
-	_LogInfo_("%s %s 정리완료", name_.Source(), TypeName());
+	_LogInfo_(_T("%s %hs 정리완료"), name_.Source(), TypeName());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -48,13 +48,13 @@ void NetGroupMgr::AddNetGroup(int _groupId, const NetGroupPtr& _pGroupPtr)
 	if (validator_ != nullptr && !validator_(_pGroupPtr))
 	{
 		jc_assert(false);
-		_NetLogWarn_("유효하지 않은 네트 그룹입니다.");
+		_NetLogWarn_(_T("유효하지 않은 네트 그룹입니다."));
 		return;
 	}
 
 	if (!netGroupMap_.Insert(_groupId, _pGroupPtr))
 	{
-		_NetLogWarn_("이미 해당 네트 그룹이 있습니다.");
+		_NetLogWarn_(_T("이미 해당 네트 그룹이 있습니다."));
 	}
 }
 
@@ -65,7 +65,7 @@ NetGroupPtr NetGroupMgr::GetNetGroup(int _id)
 
 	if (pFind == nullptr)
 	{
-		_NetLogWarn_("%d ID의 네트 그룹이 없습니다.", _id);
+		_NetLogWarn_(_T("%d ID의 네트 그룹이 없습니다."), _id);
 		return nullptr;
 	}
 

@@ -27,7 +27,7 @@ void NetClientListener::OnConnected(jnet::Session* _pSession)
 	const IPv4EndPoint& remoteEndPoint = _pSession->GetRemoteEndPoint();
 	const String remoteEndPointString = remoteEndPoint.ToString();
 
-	_LogInfo_("%s와 연결되었습니다.", remoteEndPointString.Source());
+	_LogInfo_(_T("%s와 연결되었습니다."), remoteEndPointString.Source());
 
 	if (fnConnected_)
 	{
@@ -38,7 +38,7 @@ void NetClientListener::OnConnected(jnet::Session* _pSession)
 //////////////////////////////////////////////////////////////////////////////////////////
 void NetClientListener::OnConnectFailed(jnet::Session* _pSession, _u32 _errorCode)
 {
-	_LogInfo_("연결 실패 (%d)", _errorCode);
+	_LogInfo_(_T("연결 실패 (%d)"), _errorCode);
 
 	if (fnConnectFailed_)
 	{
@@ -52,7 +52,7 @@ void NetClientListener::OnDisconnected(jnet::Session* _pSession, _u32 _errorCode
 	const IPv4EndPoint& remoteEndPoint = _pSession->GetRemoteEndPoint();
 	const String remoteEndPointString = remoteEndPoint.ToString();
 
-	_LogInfo_("%s와 연결이 종료되었습니다.", remoteEndPointString.Source());
+	_LogInfo_(_T("%s와 연결이 종료되었습니다."), remoteEndPointString.Source());
 
 	if (fnDisconnected_)
 	{
@@ -101,10 +101,10 @@ void NetClientListener::OnReceivedCmd(jnet::Session* _pSession, ICommand* _pRecv
 		const Cmd_t id = _pRecvCmd->GetId();
 		const char* pCommandName = sg::CommandNameDictionary.Get(id);
 
-		_LogWarn_("%c %s %sB %s(%d) Parse Faliled",
+		_LogWarn_(_T("%c %hs %sB %hs(%d) Parse Faliled"),
 			TransmissionName(Transmission::Recv),
 			TransportProtocolName(_pSession->Protocol()),
-			StringUtilT::FillLeft(_pRecvCmd->GetLength(), ' ', 4).Source(),
+			StringUtil::FillLeft(_pRecvCmd->GetLength(), ' ', 4).Source(),
 			pCommandName,
 			id);
 	}

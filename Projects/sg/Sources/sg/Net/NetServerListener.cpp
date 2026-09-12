@@ -26,8 +26,8 @@ NetServerListener::NetServerListener(jnet::TcpServer* _pServer, jnet::CommandPar
 //////////////////////////////////////////////////////////////////////////////////////////
 void NetServerListener::OnStarted()
 {
-	const char* pServerName = pServer_->GetName();
-	_LogInfo_("%s 서버가 시작되었습니다.", pServerName);
+	const String serverName = pServer_->GetName();
+	_LogInfo_(_T("%s 서버가 시작되었습니다."), serverName.Source());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -36,7 +36,7 @@ void NetServerListener::OnConnected(Session* _pConnectedSession)
 	const IPv4EndPoint& remoteEndPoint = _pConnectedSession->GetRemoteEndPoint();
 	const String remoteEndPointString = remoteEndPoint.ToString();
 
-	_LogInfo_("%s 클라이언트 접속", remoteEndPointString.Source());
+	_LogInfo_(_T("%s 클라이언트 접속"), remoteEndPointString.Source());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -45,7 +45,7 @@ void NetServerListener::OnDisconnected(Session* _pDisconnectedSession, _u32 _err
 	const IPv4EndPoint& remoteEndPoint = _pDisconnectedSession->GetRemoteEndPoint();
 	const String remoteEndPointString = remoteEndPoint.ToString();
 
-	_LogInfo_("%s 클라이언트 연결종료", remoteEndPointString.Source());
+	_LogInfo_(_T("%s 클라이언트 연결종료"), remoteEndPointString.Source());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -82,10 +82,10 @@ void NetServerListener::OnReceivedCmd(Session* _pReceiver, ICommand* _pRecvCmd)
 		const Cmd_t id = _pRecvCmd->GetId();
 		const char* pCommandName = sg::CommandNameDictionary.Get(id);
 
-		_LogWarn_("%c %s %sB %s(%d) Parse Faliled",
+		_LogWarn_(_T("%c %hs %sB %hs(%d) Parse Faliled"),
 			TransmissionName(Transmission::Recv),
 			TransportProtocolName(_pReceiver->Protocol()),
-			StringUtilT::FillLeft(_pRecvCmd->GetLength(), ' ', 4).Source(),
+			StringUtil::FillLeft(_pRecvCmd->GetLength(), ' ', 4).Source(),
 			pCommandName,
 			id);
 	}
@@ -100,5 +100,5 @@ void NetServerListener::OnReceivedPacket(Session* _pReceiver, RecvedPacket* _pRe
 //////////////////////////////////////////////////////////////////////////////////////////
 void NetServerListener::OnStopped()
 {
-	_LogInfo_("%s 서버가 중지되었습니다.", pServer_->GetName());
+	_LogInfo_(_T("%s 서버가 중지되었습니다."), pServer_->GetName());
 }

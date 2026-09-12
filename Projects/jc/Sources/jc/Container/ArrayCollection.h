@@ -166,7 +166,7 @@ protected:
 	/// </summary>
 	void CopyFrom(const TArrayCollection& _other)
 	{
-		jc_assert_msg(this != &_other, "자기 자신에게 대입할 수 없습니다.");
+		jc_assert_msg(this != &_other, _T("자기 자신에게 대입할 수 없습니다."));
 
 		Clear();
 
@@ -377,7 +377,7 @@ protected:
 			return;
 		}
 
-		jc_assert_msg(_newCapacity > capacity_, "현재 용량보다 더 작은 용량입니다.");
+		jc_assert_msg(_newCapacity > capacity_, _T("현재 용량보다 더 작은 용량입니다."));
 		int allocatedSize = 0;
 		T* pNewArray = TAllocator::template AllocateDynamic<T*>(_newCapacity * sizeof(T), allocatedSize);
 
@@ -484,7 +484,7 @@ protected:
 	void DestroyAtRange(const int _startIndex, const int _endIndex)
 	{
 		jc_assert_msg(IsValidRange(_startIndex, _endIndex),
-			"올바르지 않은 인덱스 범위(%d ~ %d) 입니다. (%d, 컨테이너 크기: %d)", _startIndex, _endIndex, size_);
+			_T("올바르지 않은 인덱스 범위(%d ~ %d) 입니다. (%d, 컨테이너 크기: %d)"), _startIndex, _endIndex, size_);
 
 		// 포인터 타입은 소멸자 호출을 하지 않도록 한다.
 		if constexpr (IsPointerType_v<T>)
@@ -531,19 +531,19 @@ protected:
 
 	T& GetAt(const int _index) const
 	{
-		jc_assert_msg(IsValidIndex(_index), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", _index, size_);
+		jc_assert_msg(IsValidIndex(_index), _T("올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)"), _index, size_);
 		return pArray_[_index];
 	}
 
 	void SetAt(const int _index, const T& _data)
 	{
-		jc_assert_msg(IsValidIndex(_index), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", _index, size_);
+		jc_assert_msg(IsValidIndex(_index), _T("올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)"), _index, size_);
 		ConstructAt(_index, _data);
 	}
 
 	void SetAt(const int _index, T&& _data)
 	{
-		jc_assert_msg(IsValidIndex(_index), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", _index, size_);
+		jc_assert_msg(IsValidIndex(_index), _T("올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)"), _index, size_);
 		ConstructAt(_index, Move(_data));
 	}
 
@@ -577,11 +577,11 @@ protected:
 	template <typename... Args>
 	void EmplaceAt(const int _index, Args&&... _args)
 	{
-		jc_assert_msg(IsValidIndex(_index), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", _index, size_);
+		jc_assert_msg(IsValidIndex(_index), _T("올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)"), _index, size_);
 
 		if constexpr (IsPointerType_v<T>)
 		{
-			jc_assert_msg(false, "포인터 타입은 Emplace 기능 사용 금지...");
+			jc_assert_msg(false, _T("포인터 타입은 Emplace 기능 사용 금지..."));
 		}
 		else
 		{
@@ -591,7 +591,7 @@ protected:
 
 	void DestroyAt(const int _index)
 	{
-		jc_assert_msg(IsValidIndex(_index), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", _index, size_);
+		jc_assert_msg(IsValidIndex(_index), _T("올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)"), _index, size_);
 
 		// 포인터 타입은 소멸자 호출을 하지 않도록 한다.
 		if constexpr (IsPointerType_v<T>)
@@ -629,15 +629,15 @@ protected:
 
 		// 데이터가 존재하는지
 		jc_assert_msg(IsValidIndex(_blockIndex),
-			"(1) 올바르지 않은 데이터 인덱스 입니다. (%d, 컨테이너 크기: %d)", _blockIndex, size_);
+			_T("(1) 올바르지 않은 데이터 인덱스 입니다. (%d, 컨테이너 크기: %d)"), _blockIndex, size_);
 		jc_assert_msg(IsValidIndex(_blockIndex + _blockSize - 1),
-			"(2) 올바르지 않은 데이터 인덱스 입니다. (%d, 컨테이너 크기: %d)", _blockIndex + _blockSize - 1, size_);
+			_T("(2) 올바르지 않은 데이터 인덱스 입니다. (%d, 컨테이너 크기: %d)"), _blockIndex + _blockSize - 1, size_);
 
 		// 블록이 이동할 위치가 배열 내부에 둘 수 있는지 체크
 		jc_assert_msg(IsValidIndexCapacity(_moveIndex),
-			"(3) 올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", _moveIndex, size_);
+			_T("(3) 올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)"), _moveIndex, size_);
 		jc_assert_msg(IsValidIndexCapacity(_moveIndex + _blockSize - 1),
-			"(4) 올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", _moveIndex + _blockSize - 1, size_);
+			_T("(4) 올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)"), _moveIndex + _blockSize - 1, size_);
 
 		if (_moveIndex > _blockIndex)
 		{

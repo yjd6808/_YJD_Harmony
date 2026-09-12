@@ -13,6 +13,7 @@
 #include "jc/Primitives/String.h"
 
 #include "jc/Tuple.h"
+#include "jc/Primitives/StringConvert.h"
 #include "jc/IO/FileStream.h"
 #include "jc/IO/Directory.h"
 #include "jc/IO/Path.h"
@@ -53,8 +54,8 @@ Vector<SgaElement::Header> SgaLoader::ReadPackageIndex(Stream& _stream, int _ele
 //////////////////////////////////////////////////////////////////////////////////////////
 String SgaLoader::ReadElementPath(Stream& _stream)
 {
-	String elementPath{ SGA_IMG_PATH_LEN };
-	char* pElementPathBuffer = elementPath.Source();
+	AString narrowPath{ SGA_IMG_PATH_LEN };
+	char* pElementPathBuffer = narrowPath.Source();
 	int length = 0;
 
 	for (int i = 0; i < SGA_IMG_PATH_LEN && !_stream.IsEnd(); ++i)
@@ -68,10 +69,10 @@ String SgaLoader::ReadElementPath(Stream& _stream)
 		}
 	}
 
-	elementPath.SetLength(length);
+	narrowPath.SetLength(length);
 	int nextPosition = SGA_IMG_PATH_LEN - length - 1;
 	_stream.Seek(nextPosition, Stream::Origin::eCurrent);
-	return elementPath;
+	return StringConvert::FromAnsi(narrowPath.Source(), length);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -123,8 +124,8 @@ SgaElementPtr SgaLoader::ReadElement(Stream& _stream, SgaElement::Header& _heade
 		return pElement;
 	}
 
-	if (_header.name_.EndWith(".wav") ||
-		_header.name_.EndWith(".ogg"))
+	if (_header.name_.EndWith(_T(".wav")) ||
+		_header.name_.EndWith(_T(".ogg")))
 	{
 		_stream.Seek(_header.offset_);
 		pElement = SgaSound::Create(_header);
@@ -180,7 +181,7 @@ SgaPackagePtr SgaLoader::Load(const String& _sgaPath, int _indexOnly, bool _head
 	{
 		SgaElement::Header& header = headers[i];
 		SgaElementPtr pElement = ReadElement(pStream.GetRef(), header, header.nextOffset_, _indexOnly);
-		jc_assert_msg(pElement.Exist(), "엘리먼트 파싱에 실패했습니다.");
+		jc_assert_msg(pElement.Exist(), _T("엘리먼트 파싱에 실패했습니다."));
 		pElement->pParent_ = pPackage;
 		pPackage->Add(header.indexInPackage_, pElement);
 	}

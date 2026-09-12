@@ -19,5 +19,5 @@ extern jc::LoggerAbstract* NetLogger_v;
 #define _NetLogDebug_(fmt, ...)  do { if (NetLogger_v) NetLogger_v->Log(jc::LoggerAbstract::eDebug,  fmt, __VA_ARGS__); } while (0)
 #define _NetLogNormal_(fmt, ...) do { if (NetLogger_v) NetLogger_v->Log(jc::LoggerAbstract::eNormal, fmt, __VA_ARGS__); } while (0)
 
-void InitializeNetLogger(const char* _pSpecifier = "");
+void InitializeNetLogger(const jc::String& _pSpecifier = _T(""));
 void FinalizeNetLogger();

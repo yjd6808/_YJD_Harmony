@@ -126,7 +126,7 @@ _u32 JC_STDCALL Thread::ThreadRoutine(void* _pParam)
 //////////////////////////////////////////////////////////////////////////////////////////
 int Thread::Start(TRunnable&& _fn, void* _pParam)
 {
-    jc_assert_msg(m_eState == eUninitialized, "이미 시작된적이 있는 쓰레드입니다.");      // 재시작 막음
+    jc_assert_msg(m_eState == eUninitialized, _T("이미 시작된적이 있는 쓰레드입니다."));      // 재시작 막음
     m_eState = eRunningWait;
     ThreadParam* pStartParam = dbg_new ThreadParam;
     pStartParam->Param = _pParam;

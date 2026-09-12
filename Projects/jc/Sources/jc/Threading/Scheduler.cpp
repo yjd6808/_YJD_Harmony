@@ -38,7 +38,7 @@ void Scheduler::AddFirstTask(SchedulerTask* _pTask)
 		NormalLockGuard guard(lock_);
 		if (state_ != State::Running)
 		{
-			jc_assert_msg(state_ == State::Running, "스케쥴러가 Running상태가 아닌데 Task삽입을 시도했습니다.");
+			jc_assert_msg(state_ == State::Running, _T("스케쥴러가 Running상태가 아닌데 Task삽입을 시도했습니다."));
 			delete _pTask;
 			return;
 		}

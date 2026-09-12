@@ -208,10 +208,72 @@ void Path::FileNameLevel(char* _pBuf, int _bufCapacity, const char* _pPath, int 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+// narrow buf판의 _char 미러. 힙을 쓰지 않아 assert 경로에서 호출 가능하다.
+#ifdef _UNICODE // _char == wchar_t: separate overload
+void Path::FileNameLevel(_char* _pBuf, int _bufCapacity, const _char* _pPath, int _pathLen, int _level)
+{
+	int lastIndex = _bufCapacity - 1;
+
+	_char* pPath = (_char*)_pPath;
+	int currentLevel = 0;
+
+	for (int i = _pathLen - 1; i >= 0; --i, --lastIndex)
+	{
+		_char& ch = pPath[i];
+
+		if (ch == _T('\\') || ch == _T('/'))
+		{
+			_pBuf[lastIndex] = _T('/');
+
+			if (currentLevel == _level)
+			{
+				break;
+			}
+
+			// 슬래쉬가 아닌 문자열을 만날때까지 체크
+			int j = i - 1;
+			while (j >= 0 && (pPath[j] == _T('\\') || pPath[j] == _T('/')))
+			{
+				--j;
+			}
+
+			i = j + 1;
+			++currentLevel;
+		}
+		else
+		{
+			_pBuf[lastIndex] = ch;
+		}
+	}
+
+	//  x x x x x a b c
+	//          |
+	//        iLast 다 읽고나면 빈 곳에 있기때문
+
+	//  x x x x x a b c
+	//            |
+	//          iLast 이렇게 옮겨 줘야함
+
+	lastIndex += 1; // 문자열이 있는 위치로 다시 옮겨 놓는다.
+
+	// 레벨을 높게 잡아버린 경우 마지막 슬래쉬가 포함될 수가 있다.
+	// //a///b//c/d에 레벨 10을 전달하면 /a/b/c/d 이렇게 됨
+	if (_pBuf[lastIndex] == _T('/'))
+	{
+		++lastIndex;
+	}
+
+	int fileNameLength = _bufCapacity - lastIndex;
+	Memory::Copy(_pBuf, _bufCapacity * (int)sizeof(_char), _pBuf + lastIndex, fileNameLength * (int)sizeof(_char));
+	_pBuf[fileNameLength] = _T('\0');
+}
+#endif // _UNICODE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 String Path::FileNameLevel(const char* _pPath, int _length, int _level)
 {
 	static constexpr int BUF_SIZE = 512;
-	jc_assert_msg(_length < BUF_SIZE, "경로 길이는 버퍼 사이즈보다 작아야합니다.");
+	jc_assert_msg(_length < BUF_SIZE, _T("경로 길이는 버퍼 사이즈보다 작아야합니다."));
 
 	char fileName[BUF_SIZE]{};
 	FileNameLevel(fileName, BUF_SIZE, _pPath, _length, _level);

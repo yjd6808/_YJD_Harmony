@@ -124,14 +124,14 @@ public:
 
 	void Initialize(const HashMap<int, int>& _allocationMap) override
 	{
-		jc_assert_msg(initialized_ == false, "이미 풀이 초기화 되어 있습니다.");
+		jc_assert_msg(initialized_ == false, _T("이미 풀이 초기화 되어 있습니다."));
 
 		const_cast<HashMap<int, int>&>(_allocationMap).ForEach([this](Pair<int, int>& count)
 		{
 			int size = count.key_;
 			int countValue = count.value_;
 			int index = detail::AllocationLengthMapConverter::ToIndex(size);
-			jc_assert_msg(detail::AllocationLengthMapConverter::ValidateSize(size), "뭐야! 사이즈가 안맞자나!");
+			jc_assert_msg(detail::AllocationLengthMapConverter::ValidateSize(size), _T("뭐야! 사이즈가 안맞자나!"));
 
 			if (pPool_[index])
 			{
@@ -148,7 +148,7 @@ public:
 	// 반드시 프로그램 종료전 메모리풀을 더이상 사용하지 않을 때 호출하여 정리할 것
 	void Finalize() override
 	{
-		jc_assert_msg(HasUsingBlock() == false, "현재 사용중인 블록이 있습니다. !!!");
+		jc_assert_msg(HasUsingBlock() == false, _T("현재 사용중인 블록이 있습니다. !!!"));
 
 		for (int i = 0; i < detail::MemoryBlockSizeMapSize_v; ++i)
 		{

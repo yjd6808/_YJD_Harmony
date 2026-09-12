@@ -36,13 +36,13 @@ bool NetServer::Start()
 {
 	if (serverInfo_.serverType_ == ServerType::None)
 	{
-		_LogError_("서버 타입이 설정되지 않았습니다.");
+		_LogError_(_T("서버 타입이 설정되지 않았습니다."));
 		return false;
 	}
 
 	if (!serverInfo_.bindTcp_.IsValidEndPoint())
 	{
-		_LogError_("바인드 엔드포인트가 유효하지 않습니다. (%s)", serverInfo_.bindTcp_.ToString().Source());
+		_LogError_(_T("바인드 엔드포인트가 유효하지 않습니다. (%s)"), serverInfo_.bindTcp_.ToString().Source());
 		return false;
 	}
 

@@ -54,7 +54,7 @@ void IOCPWorker::JoinWait(WaitHandle* _pWaitHandle)
 	// 어느 쓰레드가 꺠어날지 모르기 때문에 여기서 join을 수행하면 안됨
 	if (!iocp_->Post(0, completionKey, nullptr))
 	{
-		_NetLogWarn_("IOCPWorker::Pause() Failed");
+		_NetLogWarn_(_T("IOCPWorker::Pause() Failed"));
 		pPostOrder->Release();
 	}
 }
@@ -76,7 +76,7 @@ void IOCPWorker::WorkerThread(void* _pParam)
 {
 	(void)_pParam;
 	const _u32l BATCH_SIZE = iocp_->GetBatchSize();
-	_NetLogDebug_("IOCPWorker 쓰레드가 실행되었습니다. (id: %d, batch size: %u)", Thread::GetThreadId(), BATCH_SIZE);
+	_NetLogDebug_(_T("IOCPWorker 쓰레드가 실행되었습니다. (id: %d, batch size: %u)"), Thread::GetThreadId(), BATCH_SIZE);
 	
 	OVERLAPPED_ENTRY* entries = dbg_new OVERLAPPED_ENTRY[BATCH_SIZE];
 	_u32l numEntriesRemoved = 0;
@@ -130,10 +130,10 @@ void IOCPWorker::WorkerThread(void* _pParam)
 				case IOCP_POST_ORDER_TERMINATE:
 					goto THREAD_END;
 				case IOCP_POST_ORDER_ERROR:
-					jc_assert_msg(false, "오류");
+					jc_assert_msg(false, _T("오류"));
 					break;
 				default:
-					jc_assert_msg(false, "이상한 타입의 포스트 오더입니다.");
+					jc_assert_msg(false, _T("이상한 타입의 포스트 오더입니다."));
 					break;
 				}
 			}
@@ -144,7 +144,7 @@ void IOCPWorker::WorkerThread(void* _pParam)
 
 THREAD_END:
 	delete[] entries;
-	_NetLogDebug_("%s IOCPWorker 쓰레드가 종료되었습니다. (%d)", iocp_->GetName().Source(), Thread::GetThreadId());
+	_NetLogDebug_(_T("%s IOCPWorker 쓰레드가 종료되었습니다. (%d)"), iocp_->GetName().Source(), Thread::GetThreadId());
 	state_ = State::eJoinWait;
 }
 

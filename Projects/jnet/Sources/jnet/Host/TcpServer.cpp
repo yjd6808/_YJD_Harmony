@@ -55,7 +55,7 @@ void TcpServer::SessionDisconnected(TcpSession* _pSession, _u32 _errorCode)
 	// 이렇게 체크한번만 해주면 쓰레드 세이프하게 재사용할 수 있다. (맞겠지?)
 	if (state_ != eListening)
 	{
-		_NetLogDebug_("IOCP 서버가 리스닝 상태가 아닙니다. 세션 재사용을 하지 않습니다.");
+		_NetLogDebug_(_T("IOCP 서버가 리스닝 상태가 아닙니다. 세션 재사용을 하지 않습니다."));
 		return;
 	}
 
@@ -64,7 +64,7 @@ void TcpServer::SessionDisconnected(TcpSession* _pSession, _u32 _errorCode)
 
 	if (!_pSession->AcceptAsync())
 	{
-		_NetLogDebug_("세션을 재사용 실패");
+		_NetLogDebug_(_T("세션을 재사용 실패"));
 	}
 }
 
@@ -166,13 +166,13 @@ void TcpServer::Initialize()
 
 	if (!CreateSocket(TransportProtocol::TCP))
 	{
-		_NetLogError_("TCP 서버 소켓 생성 실패");
+		_NetLogError_(_T("TCP 서버 소켓 생성 실패"));
 		return;
 	}
 
 	if (!ConnectIocp())
 	{
-		_NetLogError_("TCP 서버 IOCP 연결 실패");
+		_NetLogError_(_T("TCP 서버 IOCP 연결 실패"));
 		return;
 	}
 
@@ -213,28 +213,28 @@ bool TcpServer::Start(const IPv4EndPoint& _localEndPoint)
 
 	if (state_ != eInitailized)
 	{
-		_NetLogError_("서버가 초기화 상태여야 시작할 수 있습니다.");
+		_NetLogError_(_T("서버가 초기화 상태여야 시작할 수 있습니다."));
 		notifier.errorCode_ = WSANOTINITIALISED;
 		return false;
 	}
 
 	if (socket_.Option().SetReuseAddrEnabled(true) == SOCKET_ERROR)
 	{
-		_NetLogWarn_("서버 소켓 SetReuseAddrEnabled(true) 실패");
+		_NetLogWarn_(_T("서버 소켓 SetReuseAddrEnabled(true) 실패"));
 	}
 
 	if (socket_.Bind(_localEndPoint) == SOCKET_ERROR)
 	{
-		_NetLogError_("%s %s %s 바인드 실패 (%u)", TypeName(), _localEndPoint.ToString().Source(), socket_.ProtocolName(),
+		_NetLogError_(_T("%s %s %s 바인드 실패 (%u)"), TypeName(), _localEndPoint.ToString().Source(), socket_.ProtocolName(),
 		              Winsock::LastError());
 		notifier.errorCode_ = Winsock::LastError();
 		return false;
 	}
-	_NetLogDebug_("%s %s %s 바인드 완료", TypeName(), _localEndPoint.ToString().Source(), socket_.ProtocolName());
+	_NetLogDebug_(_T("%s %s %s 바인드 완료"), TypeName(), _localEndPoint.ToString().Source(), socket_.ProtocolName());
 
 	if (socket_.Listen() == SOCKET_ERROR)
 	{
-		_NetLogError_("서버 소켓 리슨 실패 (%d)", Winsock::LastError());
+		_NetLogError_(_T("서버 소켓 리슨 실패 (%d)"), Winsock::LastError());
 		notifier.errorCode_ = Winsock::LastError();
 		return false;
 	}
@@ -293,7 +293,7 @@ bool TcpServer::Stop()
 
 	if (socket_.Close() == SOCKET_ERROR)
 	{
-		_NetLogError_("서버 소켓을 닫는데 실패했습니다. (%d)", Winsock::LastError());
+		_NetLogError_(_T("서버 소켓을 닫는데 실패했습니다. (%d)"), Winsock::LastError());
 	}
 
 	socket_.Invalidate();

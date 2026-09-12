@@ -141,8 +141,8 @@ FileStream::~FileStream()
 //////////////////////////////////////////////////////////////////////////////////////////
 int FileStream::Read(OUT _u8* _pBytes, int _offset, int _len)
 {
-	jc_assert_msg(CanRead(), "읽기가 불가능한 스트림입니다.");
-	jc_assert_msg(m_hHandle, "스트림이 닫혀 있습니다.");
+	jc_assert_msg(CanRead(), _T("읽기가 불가능한 스트림입니다."));
+	jc_assert_msg(m_hHandle, _T("스트림이 닫혀 있습니다."));
 
 	int readCount = (int)CRuntime::FileRead(_pBytes + _offset, 1, _len, m_hHandle);
 
@@ -160,8 +160,8 @@ int FileStream::Read(OUT _u8* _pBytes, int _offset, int _len)
 //////////////////////////////////////////////////////////////////////////////////////////
 void FileStream::Write(const _u8* _pBytes, int _offset, int _len)
 {
-	jc_assert_msg(CanWrite(), "쓰기가 불가능한 스트림입니다.");
-	jc_assert_msg(m_hHandle, "스트림이 닫혀 있습니다.");
+	jc_assert_msg(CanWrite(), _T("쓰기가 불가능한 스트림입니다."));
+	jc_assert_msg(m_hHandle, _T("스트림이 닫혀 있습니다."));
 
 	int writeCount = (int)CRuntime::FileWrite(_pBytes + _offset, 1, _len, m_hHandle);
 	SetOffset(m_iOffset += writeCount);
@@ -172,8 +172,8 @@ void FileStream::Write(const _u8* _pBytes, int _offset, int _len)
 //////////////////////////////////////////////////////////////////////////////////////////
 void FileStream::Seek(int _offset, Origin _origin)
 {
-	jc_assert_msg(CanSeek(), "읽기가 불가능한 스트림입니다.");
-	jc_assert_msg(m_hHandle, "스트림이 닫혀 있습니다.");
+	jc_assert_msg(CanSeek(), _T("읽기가 불가능한 스트림입니다."));
+	jc_assert_msg(m_hHandle, _T("스트림이 닫혀 있습니다."));
 
 	switch (_origin)
 	{

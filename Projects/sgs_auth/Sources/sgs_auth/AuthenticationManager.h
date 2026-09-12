@@ -30,9 +30,9 @@ class AuthenticationManager : public jc::SingletonPointer<AuthenticationManager>
 
 public:
 	AuthenticationData* Issue(const  AccountData& _accountData);								// 발급
-	bool Exist(AuthenticationSerial_t _serial, const char* _pAccountId);							// 발급되었는지 확인
-	AuthenticationData* Update(AuthenticationSerial_t _serial, const char* _pAccountId, AuthenticationState_t _state);	// 최신화시각 갱신 및 상태 업데이트
-	bool Remove(AuthenticationSerial_t _serial, const char* _pAccountId);
+	bool Exist(AuthenticationSerial_t _serial, const _char* _pAccountId);							// 발급되었는지 확인
+	AuthenticationData* Update(AuthenticationSerial_t _serial, const _char* _pAccountId, AuthenticationState_t _state);	// 최신화시각 갱신 및 상태 업데이트
+	bool Remove(AuthenticationSerial_t _serial, const _char* _pAccountId);
 	void Clear();
 	void OnScheduled(jc::SchedulerTask* _pTask);
 
@@ -58,11 +58,11 @@ private:
 	AuthenticationData* IssueRaw(const  AccountData& _accountData);
 	AuthenticationData* FindRaw(const jc::DateTime& _timeId);
 	AuthenticationData* FindRaw(AuthenticationSerial_t _serial);
-	AuthenticationData* FindRaw(AuthenticationSerial_t _serial, const char* _pAccountId);
-	AuthenticationData* UpdateRaw(AuthenticationSerial_t _serial, const char* _pAccountId, AuthenticationState_t _nextState);
+	AuthenticationData* FindRaw(AuthenticationSerial_t _serial, const _char* _pAccountId);
+	AuthenticationData* UpdateRaw(AuthenticationSerial_t _serial, const _char* _pAccountId, AuthenticationState_t _nextState);
 	bool RemoveRaw(const jc::DateTime& _timeId);
 	bool RemoveRaw(AuthenticationSerial_t _serial);
-	bool RemoveRaw(AuthenticationSerial_t _serial, const char* _pAccountId);
+	bool RemoveRaw(AuthenticationSerial_t _serial, const _char* _pAccountId);
 
 	bool GenerateSerial(OUT AuthenticationSerial_t& _serial);
 	bool GenerateTimeId(OUT jc::DateTime& _timeId, AuthenticationState_t _state);

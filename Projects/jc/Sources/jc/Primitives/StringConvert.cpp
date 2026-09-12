@@ -39,7 +39,7 @@ WString StringConvert::ToWide(const char* _pStr, int _len)
 
 	if (wlen <= 0)
 	{
-		jc_assert_msg(false, "MultiByteToWideChar size 계산 실패. 오류 코드: %d", GetLastError());
+		jc_assert_msg(false, _T("MultiByteToWideChar size 계산 실패. 오류 코드: %d"), GetLastError());
 		return WString();
 	}
 
@@ -55,7 +55,7 @@ WString StringConvert::ToWide(const char* _pStr, int _len)
 
 	if (r <= 0)
 	{
-		jc_assert_msg(false, "MultiByteToWideChar 변환 실패. 오류 코드: %d", GetLastError());
+		jc_assert_msg(false, _T("MultiByteToWideChar 변환 실패. 오류 코드: %d"), GetLastError());
 		Memory::Deallocate(buf);
 		return WString();
 	}
@@ -101,7 +101,7 @@ AString StringConvert::ToUtf8(const wchar_t* _pStr, int _len)
 
 	if (size <= 0)
 	{
-		jc_assert_msg(false, "WideCharToMultiByte size 계산 실패. 오류 코드: %d", GetLastError());
+		jc_assert_msg(false, _T("WideCharToMultiByte size 계산 실패. 오류 코드: %d"), GetLastError());
 		return AString();
 	}
 
@@ -119,7 +119,7 @@ AString StringConvert::ToUtf8(const wchar_t* _pStr, int _len)
 
 	if (r <= 0)
 	{
-		jc_assert_msg(false, "WideCharToMultiByte 변환 실패. 오류 코드: %d", GetLastError());
+		jc_assert_msg(false, _T("WideCharToMultiByte 변환 실패. 오류 코드: %d"), GetLastError());
 		Memory::Deallocate(buf);
 		return AString();
 	}

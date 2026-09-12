@@ -26,7 +26,7 @@ void R_SETUP_COMMON::RECV_CES_WhoAreYou(Session* _session, ICommand* _cmd)
 //////////////////////////////////////////////////////////////////////////////////////////
 void R_SETUP_COMMON::RECV_CES_AlreadyConnected(Session* _session, ICommand* _cmd)
 {
-	_LogWarn_("이미 중앙서버에 접속중입니다. 프로세스를 종료합니다.");
+	_LogWarn_(_T("이미 중앙서버에 접속중입니다. 프로세스를 종료합니다."));
 	g_cNetCore.Terminate();
 }
 
@@ -39,7 +39,7 @@ void R_SETUP_COMMON::RECV_CES_YouNeedToDoThis(Session* _session, ICommand* _cmd)
 
 	if (g_cNetCore.GetProcessType() == ServerProcessType::Center)
 	{
-		_LogWarn_("잘못된 요청입니다.");
+		_LogWarn_(_T("잘못된 요청입니다."));
 		return;
 	}
 

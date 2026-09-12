@@ -35,7 +35,7 @@ void TcpSession::Initialize()
 
 	if (!CreateSocket(TransportProtocol::TCP, NonblokingSocket))
 	{
-		jc_assert_msg(false, "TCP 소켓 생성에 실패했습니다. (%u)", Winsock::LastError());
+		jc_assert_msg(false, _T("TCP 소켓 생성에 실패했습니다. (%u)"), Winsock::LastError());
 	}
 }
 
@@ -61,7 +61,7 @@ bool TcpSession::AcceptAsync()
 		_u32 errorCode = Winsock::LastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
-			_NetLogWarn_("세션 AcceptEx 실패 (%d:%s)", errorCode, Winsock::LastErrorMessageUTF8().Source());
+			_NetLogWarn_(_T("세션 AcceptEx 실패 (%d:%s)"), errorCode, Winsock::LastErrorMessage().Source());
 			pOverlapped->Release();
 			return false;
 		}

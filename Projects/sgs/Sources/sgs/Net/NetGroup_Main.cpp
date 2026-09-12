@@ -92,7 +92,7 @@ bool NetGroup_Main::AddUpdatable(int _id, IUpdatable* _pUpdatable)
 {
 	if (!updatableCollection_.Add(_id, _pUpdatable))
 	{
-		_LogWarn_("넷그룹 업데이터블 추가실패(%d)", _id);
+		_LogWarn_(_T("넷그룹 업데이터블 추가실패(%d)"), _id);
 		return false;
 	}
 

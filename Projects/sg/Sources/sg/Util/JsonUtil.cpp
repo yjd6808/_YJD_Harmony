@@ -14,18 +14,18 @@ USING_NS_JC;
 //////////////////////////////////////////////////////////////////////////////////////////
 bool JsonUtil::Load(const char* _pFileName, OUT Json::Value& _root)
 {
-	if (jc::Path::Extension(_pFileName) != ".json")
+	if (jc::Path::Extension(StringConvert::FromUtf8(_pFileName)) != _T(".json"))
 		return false;
 
 	std::ifstream reader(_pFileName, std::ifstream::in | std::ifstream::binary);
-	jc_assert_msg(reader.is_open(), "%s 파일을 여는데 실패했습니다.", _pFileName);
+	jc_assert_msg(reader.is_open(), _T("%hs 파일을 여는데 실패했습니다."), _pFileName);
 	try
 	{
 		reader >> _root;
 	}
 	catch (std::exception& ex)
 	{
-		_LogError_("설정파일 %s을 로드하는중 오류가 발생하였습니다. (%s)", _pFileName, ex.what());
+		_LogError_(_T("설정파일 %hs을 로드하는중 오류가 발생하였습니다. (%hs)"), _pFileName, ex.what());
 		return false;
 	}
 	return true;
@@ -34,39 +34,39 @@ bool JsonUtil::Load(const char* _pFileName, OUT Json::Value& _root)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool JsonUtil::Load(const jc::String& _fileName, OUT Json::Value& _root)
 {
-	return Load(_fileName.Source(), _root);
+	return Load(StringConvert::ToAnsi(_fileName).Source(), _root);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void JsonUtil::LoadThrow(const char* _pFileName, Json::Value& _root)
 {
 	std::ifstream reader(_pFileName, std::ifstream::in | std::ifstream::binary);
-	jc_assert_msg(reader.is_open(), "%s 파일을 여는데 실패했습니다.", _pFileName);
+	jc_assert_msg(reader.is_open(), _T("%hs 파일을 여는데 실패했습니다."), _pFileName);
 	reader >> _root;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void JsonUtil::LoadThrow(const jc::String& _fileName, Json::Value& _root)
 {
-	LoadThrow(_fileName.Source(), _root);
+	LoadThrow(StringConvert::ToAnsi(_fileName).Source(), _root);
 }
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
 jc::String JsonUtil::GetString(Json::Value& _value)
 {
-	jc_assert_msg(!_value.isNull(), "인자로 전달한 Json 오브젝트에 문자열 데이터가 없습니다.");
+	jc_assert_msg(!_value.isNull(), _T("인자로 전달한 Json 오브젝트에 문자열 데이터가 없습니다."));
 	const char* pBegin;
 	const char* pEnd;
 	_value.getString(&pBegin, &pEnd);
 	const int length = int(pEnd - pBegin);
-	return { pBegin, length + 1 };
+	return StringConvert::FromUtf8(pBegin, length);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 const char* JsonUtil::GetStringRaw(Json::Value& _value, OUT_OPT int* _pLength /* = nullptr */)
 {
-	jc_assert_msg(!_value.isNull(), "인자로 전달한 Json 오브젝트에 문자열 데이터가 없습니다.");
+	jc_assert_msg(!_value.isNull(), _T("인자로 전달한 Json 오브젝트에 문자열 데이터가 없습니다."));
 	const char* pBegin;
 	const char* pEnd;
 	_value.getString(&pBegin, &pEnd);
@@ -195,7 +195,7 @@ void JsonUtil::ParseAnimationInfo(Json::Value& _animationRoot, OUT AnimationInfo
 	_info.code_ = GetIntDefault(_animationRoot["code"], 1);
 	_info.loop_ = GetBooleanDefault(_animationRoot["loop"]);
 
-	if (!_info.name_.IsNull() && _info.name_ == "sliding")
+	if (!_info.name_.IsEmpty() && _info.name_ == _T("sliding"))
 	{
 		int a = 40;
 	}
@@ -252,10 +252,10 @@ void JsonUtil::ParseColor4B(Json::Value& _root, OUT cc::Color4B& _color)
 	int a;
 
 	ParseIntNumber4(_root, r, g, b, a);
-	jc_assert_msg(r >= 0 && r <= MaxByte_v, "R 색상값(%d)이 0 ~ %d사이 값이 아닙니다.", r, MaxByte_v);
-	jc_assert_msg(g >= 0 && g <= MaxByte_v, "G 색상값(%d)이 0 ~ %d사이 값이 아닙니다.", g, MaxByte_v);
-	jc_assert_msg(b >= 0 && b <= MaxByte_v, "B 색상값(%d)이 0 ~ %d사이 값이 아닙니다.", b, MaxByte_v);
-	jc_assert_msg(a >= 0 && a <= MaxByte_v, "A 색상값(%d)이 0 ~ %d사이 값이 아닙니다.", a, MaxByte_v);
+	jc_assert_msg(r >= 0 && r <= MaxByte_v, _T("R 색상값(%d)이 0 ~ %d사이 값이 아닙니다."), r, MaxByte_v);
+	jc_assert_msg(g >= 0 && g <= MaxByte_v, _T("G 색상값(%d)이 0 ~ %d사이 값이 아닙니다."), g, MaxByte_v);
+	jc_assert_msg(b >= 0 && b <= MaxByte_v, _T("B 색상값(%d)이 0 ~ %d사이 값이 아닙니다."), b, MaxByte_v);
+	jc_assert_msg(a >= 0 && a <= MaxByte_v, _T("A 색상값(%d)이 0 ~ %d사이 값이 아닙니다."), a, MaxByte_v);
 
 	_color.r = (unsigned char)r;
 	_color.g = (unsigned char)g;

@@ -29,19 +29,19 @@ void R_LOBBY::RECV_CLO_JoinLobby(Session* _pSession, ICommand* _pCmd)
 
 	if (!Const::Authentication::SerialRange.Contain(pCmd->Serial)) 
 	{
-		_LogWarn_("세션의 시리얼 정보가 올바르지 않습니다. (시리얼: %d)", pCmd->Serial);
+		_LogWarn_(_T("세션의 시리얼 정보가 올바르지 않습니다. (시리얼: %d)"), pCmd->Serial);
 		_pSession->Disconnect();
 		return;
 	}
 
 	if (!g_cUnauthenticatedSessionManager.Add(pCmd->Serial, pSession))
 	{
-		_LogWarn_("세션이 이미 포함되어있습니다.");
+		_LogWarn_(_T("세션이 이미 포함되어있습니다."));
 		_pSession->Disconnect();
 		return;
 	}
 
-	_LogInfo_("%s 로비 접속 시도중", pCmd->AccountId.Source);
+	_LogInfo_(_T("%s 로비 접속 시도중"), pCmd->AccountId.Source);
 	sg::AuthenticationComponent* pAuthenticationComponent = pSession->GetComponent<sg::AuthenticationComponent>();
 	pAuthenticationComponent->SetSerial(pCmd->Serial);
 	pAuthenticationComponent->SetState(AuthenticationState::LobbyWait);

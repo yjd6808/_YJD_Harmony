@@ -5,6 +5,7 @@
 
 #include "Extern_Console.h"
 #include "jc/Utils/Console.h"
+#include "jc/Primitives/StringConvert.h"
 
 USING_NS_JC;
 
@@ -41,13 +42,17 @@ _s32 Console_GetColor()
 //////////////////////////////////////////////////////////////////////////////////////////
 _s32 Console_Write(const _s8* _pFmt)
 {
-	return Console::Write(_pFmt);
+	// C-ABI narrow 경계: ANSI 바이트를 String으로 들여서 TCHAR 출력으로 넘긴다.
+	String msg = StringConvert::FromAnsi(_pFmt);
+	return Console::Write(_T("%s"), msg.Source());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 _s32 Console_WriteLine(const _s8* _pFmt)
 {
-	return Console::WriteLine(_pFmt);
+	// C-ABI narrow 경계: ANSI 바이트를 String으로 들여서 TCHAR 출력으로 넘긴다.
+	String msg = StringConvert::FromAnsi(_pFmt);
+	return Console::WriteLine(_T("%s"), msg.Source());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -63,7 +68,9 @@ _s32 Console_WriteFmt(const _s8* _pFmt, ...)
 	if (written <= 0)
 		return written;
 
-	return Console::Write(buf);
+	// C-ABI narrow 경계: narrow로 포맷한 뒤 String으로 들여서 넘긴다.
+	String msg = StringConvert::FromAnsi(buf);
+	return Console::Write(_T("%s"), msg.Source());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -79,7 +86,9 @@ _s32 Console_WriteLineFmt(const _s8* _pFmt, ...)
 	if (written <= 0)
 		return written;
 
-	return Console::WriteLine(buf);
+	// C-ABI narrow 경계: narrow로 포맷한 뒤 String으로 들여서 넘긴다.
+	String msg = StringConvert::FromAnsi(buf);
+	return Console::WriteLine(_T("%s"), msg.Source());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -88,7 +97,28 @@ _s32 Console_ReadLineBuffered(const _s8* _pMsg, _s8* _pBuffer, _s32 _capacity)
 	if (_pBuffer == nullptr || _capacity <= 0)
 		return -1;
 
-	return Console::ReadLineBuffered(_pMsg, _pBuffer, _capacity);
+	// C-ABI narrow 경계: 프롬프트는 ANSI→String, 입력은 String으로 읽어 ANSI로 되돌린다.
+	String line;
+	if (_pMsg != nullptr)
+	{
+		String msg = StringConvert::FromAnsi(_pMsg);
+		line = Console::ReadLine(msg.Source());
+	}
+	else
+	{
+		line = Console::ReadLine();
+	}
+
+	AString narrow = StringConvert::ToAnsi(line);
+	int copyLen = narrow.Length();
+	if (copyLen >= _capacity)
+		copyLen = _capacity - 1;
+
+	const char* pSrc = narrow.Source();
+	for (int i = 0; i < copyLen; ++i)
+		_pBuffer[i] = pSrc[i];
+	_pBuffer[copyLen] = '\0';
+	return copyLen;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

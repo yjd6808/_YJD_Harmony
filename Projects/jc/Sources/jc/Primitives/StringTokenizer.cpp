@@ -13,7 +13,7 @@ NS_JC_BEGIN
 StringTokenizer::StringTokenizer(const _char* _str)
 : pStr_(_str)
 {
-	strLen_ = StringUtilT::Length(_str);
+	strLen_ = StringUtil::Length(_str);
 	delims_.Reserve(4);
 }
 
@@ -81,7 +81,7 @@ String StringTokenizer::Next(OUT _char* _catchedDelim /*= nullptr*/)
 		}
 	}
 
-	String ret = StringUtilT::SubStr(pStr_, strLen_, prev_, cur_ - prev_);
+	String ret = StringUtil::SubStr(pStr_, strLen_, prev_, cur_ - prev_);
 	cur_ = cur_ + 1;	// 딜리미터 스킵
 	return ret;
 }

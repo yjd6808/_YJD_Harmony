@@ -26,7 +26,7 @@ IOCPOverlapped::IOCPOverlapped(IOCP* _pIocp, Type _type)
 , pIocp_(_pIocp)
 {
 	pIocp_->AddPendingCount();
-	jc_assert_msg(_pIocp->GetState() == IOCP::State::Running, "IOCP가 Running 상태가 아닙니다.");
+	jc_assert_msg(_pIocp->GetState() == IOCP::State::Running, _T("IOCP가 Running 상태가 아닙니다."));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

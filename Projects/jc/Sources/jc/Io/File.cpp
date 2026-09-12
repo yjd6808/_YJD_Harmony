@@ -102,9 +102,8 @@ bool File::Move(const char* _pSrcPath, const char* _pDstPath)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool File::Move(const String& _srcPath, const String& _dstPath)
 {
-	const AString narrowSrc = StringConvert::ToAnsi(_srcPath);
-	const AString narrowDst = StringConvert::ToAnsi(_dstPath);
-	return Move(narrowSrc.Source(), narrowDst.Source());
+	// 경로는 OS 인코딩이라 _char 오버로드로 직접 넘긴다 (narrow 왕복 시 비ASCII 손실)
+	return CRuntime::FileRename(_srcPath.Source(), _dstPath.Source());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -143,9 +142,38 @@ bool File::Copy(const char* _pSrcPath, const char* _pDstPath)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool File::Copy(const String& _srcPath, const String& _dstPath)
 {
-	const AString narrowSrc = StringConvert::ToUtf8(_srcPath);
-	const AString narrowDst = StringConvert::ToUtf8(_dstPath);
-	return Copy(narrowSrc.Source(), narrowDst.Source());
+	// 경로는 OS 인코딩이라 _char 오버로드로 직접 넘긴다 (narrow 왕복 시 비ASCII 손실)
+	_iohandle pSrcStream = CRuntime::FileOpen(_srcPath.Source(), _T("rb"));
+
+	if (pSrcStream == nullptr)
+	{
+		return false;
+	}
+
+	_iohandle pDstStream = CRuntime::FileOpen(_dstPath.Source(), _T("wb"));
+
+	if (pDstStream == nullptr)
+	{
+		CRuntime::FileClose(pSrcStream);
+		return false;
+	}
+
+	_u8 buff[FILE_READ_COUNT];
+	size_t readCount = 0;
+
+	while ((readCount = CRuntime::FileRead(buff, 1, FILE_READ_COUNT, pSrcStream)) != 0)
+	{
+		if (CRuntime::FileWrite(buff, readCount, 1, pDstStream) != 1)
+		{
+			CRuntime::FileClose(pSrcStream);
+			CRuntime::FileClose(pDstStream);
+			return false;
+		}
+	}
+
+	CRuntime::FileClose(pSrcStream);
+	CRuntime::FileClose(pDstStream);
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -207,6 +235,27 @@ void File::WriteAllText(const String& _content, const char* _pPath)
 {
 	const AString narrow = StringConvert::ToUtf8(_content);
 	WriteAllText(narrow.Source(), narrow.Length(), _pPath);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+void File::WriteAllText(const char* _pContent, const int _contentLength, const String& _path)
+{
+	// 내용은 바이트, 경로는 OS 인코딩이라 _char로 연다.
+	_iohandle pStream = CRuntime::FileOpen(_path.Source(), _T("wb"));
+
+	if (pStream == nullptr)
+	{
+		throw RuntimeException("해당 파일이 이미 쓰기 모드로 사용중인듯?");
+	}
+
+	size_t writeCount = CRuntime::FileWrite(_pContent, _contentLength, 1, pStream);
+
+	if (writeCount != 1)
+	{
+		throw RuntimeException("파일에 내용을 쓰는데 실패하였습니다.");
+	}
+
+	CRuntime::FileClose(pStream);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

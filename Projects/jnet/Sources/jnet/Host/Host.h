@@ -10,6 +10,7 @@
 
 #include "jc/Container/Properties.h"
 #include "jc/Sync/SpinLock.h"
+#include "jc/Primitives/StringConvert.h"
 
 #include "jnet/Socket.h"
 #include "jnet/IOCP/IOCP.h"
@@ -61,7 +62,7 @@ public:
 
 	virtual void Initialize() = 0;
 	virtual Type GetType() const = 0;
-	virtual const char* GetName() const { return TypeName(); } // 호스트 이름을 디폴트로 함.
+	virtual jc::String GetName() const { return jc::StringConvert::FromUtf8(TypeName()); } // 호스트 이름을 디폴트로 함.
 	virtual DetailType GetDetailType() const = 0;
 	virtual const char* TypeName() const = 0;
 

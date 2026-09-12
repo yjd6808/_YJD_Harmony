@@ -29,7 +29,7 @@ bool Host::CreateSocket(TransportProtocol _protocol, bool _nonBlocking)
 
 	if (socket_.Option().SetNonBlockingEnabled(_nonBlocking) == SOCKET_ERROR)
 	{
-		jc_assert_msg(false, "논블로킹 소켓 설정 실패 (%u)", Winsock::LastError());
+		jc_assert_msg(false, _T("논블로킹 소켓 설정 실패 (%u)"), Winsock::LastError());
 	}
 
 	/*
@@ -41,12 +41,12 @@ bool Host::CreateSocket(TransportProtocol _protocol, bool _nonBlocking)
 
 	if (DisableSendBuffering && socket_.Option().SetSendBufferSize(0) == SOCKET_ERROR)
 	{
-		jc_assert_msg(false, "소켓 %s 버퍼링 비활성화 실패 (%u)", TransmissionName(Transmission::Send), Winsock::LastError());
+		jc_assert_msg(false, _T("소켓 %c 버퍼링 비활성화 실패 (%u)"), TransmissionName(Transmission::Send), Winsock::LastError());
 	}
 
 	if (DisableRecvBuffering && socket_.Option().SetRecvBufferSize(0) == SOCKET_ERROR)
 	{
-		jc_assert_msg(false, "소켓 %s 버퍼링 비활성화 실패 (%u)", TransmissionName(Transmission::Recv), Winsock::LastError());
+		jc_assert_msg(false, _T("소켓 %c 버퍼링 비활성화 실패 (%u)"), TransmissionName(Transmission::Recv), Winsock::LastError());
 	}
 
 	return true;

@@ -75,7 +75,7 @@ public:
 
 		if (pInst == nullptr)
 		{
-			jc_assert_msg(false, "삭제된 객체에 접근을 시도했습니다.");
+			jc_assert_msg(false, _T("삭제된 객체에 접근을 시도했습니다."));
 			return nullptr;
 		}
 
@@ -113,7 +113,7 @@ public:
 			ms_Lock.Lock();
 			if (ms_bDeleted)
 			{
-				jc_assert_msg(false, "삭제된 객체에 접근을 시도했습니다.");
+				jc_assert_msg(false, _T("삭제된 객체에 접근을 시도했습니다."));
 				ms_Lock.Unlock();
 				return nullptr;
 			}

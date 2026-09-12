@@ -9,7 +9,7 @@
  *   (본문에서만 쓰고, 본문은 전부 완성된 뒤에 컴파일된다.)
  * - 본문은 Storage 계약(Data/Len/SetLen/Cap/Reserve/Assign/AssignFresh/Clear/Adopt
  *   + 복사/이동/소멸)만 쓴다. 저장 방식을 가정하는 분기는 금지한다.
- * - 단위 알고리즘(Length/Copy/Compare/Find)은 StringUtil<CharT>가 유일한 집이다.
+ * - 단위 알고리즘(Length/Copy/Compare/Find)은 BasicStringUtil<CharT>가 유일한 집이다.
  * - Format은 char/wchar 둘 다 지원 (vsnprintf/vswprintf). 수치 변환은 char 전용 StringUtil API.
  * - Null 상태 없음. 빈 문자열은 len 0이다. IsNull()은 항상 false.
  * - Reserve는 축소하지 않는다 (Storage 계약).
@@ -91,7 +91,7 @@ public:
 	void Append(CharT* _pStr);
 	void Append(const std::basic_string<CharT>& _str);
 	void Append(const BasicString& _str);
-	void Append(const BasicStringView<char>& _str);
+	void Append(const BasicStringView<CharT>& _str);
 	void Append(BasicString&& _str);
 	void Append(_s32 _val);
 	void Append(_u32 _val);

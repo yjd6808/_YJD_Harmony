@@ -12,6 +12,7 @@
 #include "jc/Assert.h"
 #include "jc/Time.h"
 #include "jc/Primitives/String.h"
+#include "jc/Primitives/StringConvert.h"
 #include "jc/Primitives/SmartPtr.h"
 #include "jc/Type.h"
 #include "jc/TypeTraits.h"
@@ -51,17 +52,17 @@ public:
 	// SELECT 전용 메서드 (기본 구현: 무동작)
 	virtual bool         HasNext() const                        { return false; }
 	virtual bool         Next()                                 { return false; }
-	virtual int          GetColIndex(const char* _pFieldName) { return -1; }
+	virtual int          GetColIndex(const _char* _pFieldName) { return -1; }
 	virtual _u32         GetColCount() const { return 0; }
 	virtual int			 GetColType(int _fieldIndex) { return -1; }
 
-	virtual const char*  GetRawString(const char* _pFieldName)  { return nullptr; }
+	virtual const char*  GetRawString(const _char* _pFieldName)  { return nullptr; }
 	virtual const char*  GetRawString(int _fieldIndex)          { return nullptr; }
-	virtual jc::DateTime GetDateTime(const char* _pFieldName)   { return 0; }
+	virtual jc::DateTime GetDateTime(const _char* _pFieldName)   { return 0; }
 	virtual jc::DateTime GetDateTime(int _fieldIndex)           { return 0; }
 	
-	virtual jc::String	 GetString(const char* _pFieldName) { return GetRawString(_pFieldName); }
-	virtual jc::String	 GetString(int _fieldIndex) { return GetRawString(_fieldIndex); }
+	virtual jc::String	 GetString(const _char* _pFieldName) { return jc::StringConvert::FromAnsi(GetRawString(_pFieldName)); }
+	virtual jc::String	 GetString(int _fieldIndex) { return jc::StringConvert::FromAnsi(GetRawString(_fieldIndex)); }
 
 	// ===========================================================================================
 	// 타입 읽기 메서드 (SELECT 전용)
@@ -80,7 +81,7 @@ public:
 	virtual jc::Time GetTime(int _fieldIdx) { return {}; }
 
 	template <typename T>
-	T GetNumber(const char* _pFieldName)
+	T GetNumber(const _char* _pFieldName)
 	{
 		int idx = GetColIndex(_pFieldName);
 		if (idx == -1) return T{};
@@ -112,7 +113,7 @@ public:
 	}
 
 	virtual void		   ResetColReadOffset() { }
-	virtual jc::StringView ReadRawString() { return jc::StringView{}; }
+	virtual jc::AStringView ReadRawString() { return jc::AStringView{}; }
 	virtual jc::String	   ReadString() { return jc::String(); }
 	virtual _s8			   ReaS8() { return 0; }
 	virtual _u8			   ReadU8() { return 0; }
@@ -141,8 +142,10 @@ protected:
 	jc::String	  errorMsg_			  = jc::String(0);
 	_u32          rowCount_           = 0;
 
-	friend class MysqlDatabase;
 	friend class SqlServerDatabase;
+#ifndef _UNICODE
+	friend class MysqlDatabase;
+#endif
 };
 
 // ===========================================================================================

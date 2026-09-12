@@ -41,7 +41,7 @@ bool AIInfoLoader::Load()
 	}
 	catch (std::exception& ex)
 	{
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileType(), ex.what());
+		_LogError_(_T("%s 파싱중 오류가 발생하였습니다. %s"), GetConfigFileType(), ex.what());
 		return false;
 	}
 

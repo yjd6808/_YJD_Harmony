@@ -233,7 +233,7 @@ protected:
 		static_assert(IsAssignable_v<U&, const T&>, "... U cannot be assign to T (T = U is impossible operation)");
 
 		using UListNode = ListNode<U, UAllocator>;
-		jc_assert_msg(this != &_otherCollection, "자기 자신에게 대입할 수 없습니다.");
+		jc_assert_msg(this != &_otherCollection, _T("자기 자신에게 대입할 수 없습니다."));
 
 		TListNode* pPrev = nullptr;
 		TListNode* pCur = pHead_;
@@ -583,7 +583,7 @@ public:
 
 	void PopFront()
 	{
-		jc_assert_msg(size_ != 0, "데이터가 없습니다.");
+		jc_assert_msg(size_ != 0, _T("데이터가 없습니다."));
 
 		TListNode* pDel = pHead_;
 		pHead_ = pHead_->pNext_;
@@ -623,7 +623,7 @@ public:
 
 	void PopBack()
 	{
-		jc_assert_msg(size_ != 0, "데이터가 없습니다.");
+		jc_assert_msg(size_ != 0, _T("데이터가 없습니다."));
 
 		TListNode* pDel = pTail_;
 		pTail_ = pTail_->pPrevious_;
@@ -663,13 +663,13 @@ public:
 
 	T& Front() const
 	{
-		jc_assert_msg(size_ != 0, "데이터가 없습니다.");
+		jc_assert_msg(size_ != 0, _T("데이터가 없습니다."));
 		return pHead_->value_;
 	}
 
 	T& Back() const
 	{
-		jc_assert_msg(size_ != 0, "데이터가 없습니다.");
+		jc_assert_msg(size_ != 0, _T("데이터가 없습니다."));
 		return pTail_->value_;
 	}
 
@@ -678,7 +678,7 @@ protected:
 	{
 		if constexpr (!IsCopyConstructible_v<T>)
 		{
-			jc_assert_msg(false, "복사 생성할 수 없는 객체입니다.");
+			jc_assert_msg(false, _T("복사 생성할 수 없는 객체입니다."));
 			return nullptr;
 		}
 		else
@@ -693,7 +693,7 @@ protected:
 	{
 		if constexpr (!IsMoveConstructible_v<T>)
 		{
-			jc_assert_msg(false, "이동 생성할 수 없는 객체입니다.");
+			jc_assert_msg(false, _T("이동 생성할 수 없는 객체입니다."));
 			return nullptr;
 		}
 		else

@@ -58,13 +58,13 @@ struct AllocationLengthMapConverter
 	static int ToIndex(_s32 _size)
 	{
 		int iIndex = Arrays::LowerBound(detail::MemoryBlockSizeMap_v, _size);
-		jc_assert_msg(iIndex >= 0 && iIndex < MemoryBlockSizeMapSize_v, "전달한 Size로 할당가능한 사이즈에 맞는 풀이 없어요");
+		jc_assert_msg(iIndex >= 0 && iIndex < MemoryBlockSizeMapSize_v, _T("전달한 Size로 할당가능한 사이즈에 맞는 풀이 없어요"));
 		return iIndex;
 	}
 
 	static int ToSize(_s32 _index)
 	{
-		jc_assert_msg(_index >= 0 && _index < MemoryBlockSizeMapSize_v, "전달한 Index에 해당하는 풀이 없어요");
+		jc_assert_msg(_index >= 0 && _index < MemoryBlockSizeMapSize_v, _T("전달한 Index에 해당하는 풀이 없어요"));
 		return detail::MemoryBlockSizeMap_v[_index];
 	}
 
@@ -88,7 +88,7 @@ struct AllocationLengthMapConverter
 	// 런타임에는 성능이 중요하니 내장함수를 사용하자.
 	static bool ValidateSize(_s32 _size)
 	{
-		jc_assert_msg(_size > 0, "사이즈가 0보다는 무조건 커야돼요");
+		jc_assert_msg(_size > 0, _T("사이즈가 0보다는 무조건 커야돼요"));
 		return __popcnt(_size) == 1;
 	}
 };

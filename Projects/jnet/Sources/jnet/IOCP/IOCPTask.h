@@ -125,7 +125,7 @@ public:
 
 		if (!iocp_->Post(0, NULL, pOverlapped))
 		{
-			jc_assert_msg(false, "Task::Start Failed");
+			jc_assert_msg(false, _T("Task::Start Failed"));
 			pOverlapped->Release();
 			state_ = IOCPTaskState::eFinished;
 			result_.success_ = false;

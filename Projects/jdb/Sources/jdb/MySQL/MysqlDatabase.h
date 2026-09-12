@@ -33,6 +33,9 @@
 
 NS_JDB_BEGIN
 
+// MySQL C API는 narrow 전용이라 Unicode 빌드에서 MySQL 구현을 제외한다.
+#ifndef _UNICODE
+
 class JDB_DLL MysqlDatabase : public IDatabase
 {
 public:
@@ -45,5 +48,7 @@ protected:
 	virtual _u32 GetQueryFailedErrorCode() const override { return IOCPTASK_FAILED_DB; }
 
 };
+
+#endif // !_UNICODE (MySQL Unicode 제외)
 
 NS_END

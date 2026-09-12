@@ -45,7 +45,7 @@ void R_AUTHENTICATION::RECV_AUS_AuthenticationCheckAck(UNUSED Session*, ICommand
 
 	if (!g_cUnauthenticatedSessionManager.Remove(pAuthenticationComponent->GetSerial()))
 	{
-		_LogWarn_("인증이 성공했는데, 미인증 세션 목록에 없습니다.");
+		_LogWarn_(_T("인증이 성공했는데, 미인증 세션 목록에 없습니다."));
 		S_MESSAGE_COMMON::SetInformation(pSession, SendStrategy::SendAsync);
 		S_MESSAGE_COMMON::SEND_SC_ClientText("AUTHENTICATION_LOBBY_FAILED");
 		pSession->Disconnect();

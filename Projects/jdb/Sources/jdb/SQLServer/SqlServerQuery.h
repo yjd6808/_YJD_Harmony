@@ -103,13 +103,13 @@ public:
 	virtual	bool		 Execute() override;
 	virtual	bool         HasNext() const override;
 	virtual	bool         Next() override;
-	virtual	int          GetColIndex(const char* _pFieldName) override;
+	virtual	int          GetColIndex(const _char* _pFieldName) override;
 	virtual	_u32         GetColCount() const override;
 	virtual int			 GetColType(int _colIdx) const;
 
-	virtual	const char*  GetRawString(const char* _pFieldName) override;
+	virtual	const char*  GetRawString(const _char* _pFieldName) override;
 	virtual	const char*  GetRawString(int _fieldIndex) override;
-	virtual	jc::DateTime GetDateTime(const char* _pFieldName) override;
+	virtual	jc::DateTime GetDateTime(const _char* _pFieldName) override;
 	virtual	jc::DateTime GetDateTime(int _fieldIndex) override;
 
 	virtual jc::String GetString(int _colIdx) override;
@@ -127,7 +127,7 @@ public:
 	virtual jc::Time GetTime(int _colIdx) override;
 
 	virtual void		   ResetColReadOffset() override { colReadOffset_ = 0; }
-	virtual jc::StringView ReadRawString() override;
+	virtual jc::AStringView ReadRawString() override;
 	virtual jc::String	   ReadString() override;
 	virtual _s8			   ReaS8() override;
 	virtual _u8			   ReadU8() override;

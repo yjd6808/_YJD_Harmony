@@ -52,5 +52,5 @@ int main(int _argc, char** _argv)
 	FinalizeJCore();
 	Winsock::Finalize();
 	sgapiBase::Free();
-	return Console::ReadKeyWhile("X키 입력시 종료", ConsoleKey::X);
+	return Console::ReadKeyWhile(_T("X키 입력시 종료"), ConsoleKey::X);
 }

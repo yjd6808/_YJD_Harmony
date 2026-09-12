@@ -28,7 +28,7 @@ public:
 
 	T& operator[](const int _index)
 	{
-		jc_assert_msg(_index >= 0 && _index < length_, "세그먼트의 인덱스 범위가 이상합니다.");
+		jc_assert_msg(_index >= 0 && _index < length_, _T("세그먼트의 인덱스 범위가 이상합니다."));
 		return pRawArray_[_index];
 	}
 

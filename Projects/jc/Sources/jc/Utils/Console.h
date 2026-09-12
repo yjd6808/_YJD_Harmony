@@ -23,47 +23,48 @@
 
 
 // @참고 https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
-#define CSI "\x1b["
-#define CSI_AND ";"
+// VT 시퀀스는 ASCII 범위라 바이트 값은 동일하다. 문자셋을 따라가도록 _T()로 둔다.
+#define CSI _T("\x1b[")
+#define CSI_AND _T(";")
 
 // 우선색상만..
-#define CSI_GRAPHIC_RENDITION(x) CSI#x"m"
-#define CSI_GRAPHIC_RENDITION_END "m"
+#define CSI_GRAPHIC_RENDITION(x) CSI _T(#x) _T("m")
+#define CSI_GRAPHIC_RENDITION_END _T("m")
 
-#define VT_RESET                    "0"
-#define VT_FORE_COLOR_BLACK         "30"
-#define VT_FORE_COLOR_BLUE          "34"
-#define VT_FORE_COLOR_GREEN         "32"
-#define VT_FORE_COLOR_CYAN          "36"
-#define VT_FORE_COLOR_RED           "31"
-#define VT_FORE_COLOR_MAGNETA       "35"
-#define VT_FORE_COLOR_YELLOW        "33"
-#define VT_FORE_COLOR_LIGHT_GRAY    "1;39"
-#define VT_FORE_COLOR_GRAY          "39"
-#define VT_FORE_COLOR_LIGHT_BLUE    "94"
-#define VT_FORE_COLOR_LIGHT_GREEN   "92"
-#define VT_FORE_COLOR_LIGHT_CYAN    "96"
-#define VT_FORE_COLOR_LIGHT_RED     "91"
-#define VT_FORE_COLOR_LIGHT_MAGNETA "95"
-#define VT_FORE_COLOR_LIGHT_YELLOW  "93"
-#define VT_FORE_COLOR_WHITE         "97"
+#define VT_RESET                    _T("0")
+#define VT_FORE_COLOR_BLACK         _T("30")
+#define VT_FORE_COLOR_BLUE          _T("34")
+#define VT_FORE_COLOR_GREEN         _T("32")
+#define VT_FORE_COLOR_CYAN          _T("36")
+#define VT_FORE_COLOR_RED           _T("31")
+#define VT_FORE_COLOR_MAGNETA       _T("35")
+#define VT_FORE_COLOR_YELLOW        _T("33")
+#define VT_FORE_COLOR_LIGHT_GRAY    _T("1;39")
+#define VT_FORE_COLOR_GRAY          _T("39")
+#define VT_FORE_COLOR_LIGHT_BLUE    _T("94")
+#define VT_FORE_COLOR_LIGHT_GREEN   _T("92")
+#define VT_FORE_COLOR_LIGHT_CYAN    _T("96")
+#define VT_FORE_COLOR_LIGHT_RED     _T("91")
+#define VT_FORE_COLOR_LIGHT_MAGNETA _T("95")
+#define VT_FORE_COLOR_LIGHT_YELLOW  _T("93")
+#define VT_FORE_COLOR_WHITE         _T("97")
 
-#define VT_BACK_COLOR_BLACK         "40"
-#define VT_BACK_COLOR_BLUE          "44"
-#define VT_BACK_COLOR_GREEN         "42"
-#define VT_BACK_COLOR_CYAN          "46"
-#define VT_BACK_COLOR_RED           "41"
-#define VT_BACK_COLOR_MAGNETA       "45"
-#define VT_BACK_COLOR_YELLOW        "43"
-#define VT_BACK_COLOR_LIGHT_GRAY    "49"        // 배경은 회색 우째하지
-#define VT_BACK_COLOR_GRAY          "49"        // 배경은 회색 우째하지
-#define VT_BACK_COLOR_LIGHT_BLUE    "104"
-#define VT_BACK_COLOR_LIGHT_GREEN   "102"
-#define VT_BACK_COLOR_LIGHT_CYAN    "106"
-#define VT_BACK_COLOR_LIGHT_RED     "101"
-#define VT_BACK_COLOR_LIGHT_MAGNETA "105"
-#define VT_BACK_COLOR_LIGHT_YELLOW  "103"
-#define VT_BACK_COLOR_WHITE         "107"
+#define VT_BACK_COLOR_BLACK         _T("40")
+#define VT_BACK_COLOR_BLUE          _T("44")
+#define VT_BACK_COLOR_GREEN         _T("42")
+#define VT_BACK_COLOR_CYAN          _T("46")
+#define VT_BACK_COLOR_RED           _T("41")
+#define VT_BACK_COLOR_MAGNETA       _T("45")
+#define VT_BACK_COLOR_YELLOW        _T("43")
+#define VT_BACK_COLOR_LIGHT_GRAY    _T("49")        // 배경은 회색 우째하지
+#define VT_BACK_COLOR_GRAY          _T("49")        // 배경은 회색 우째하지
+#define VT_BACK_COLOR_LIGHT_BLUE    _T("104")
+#define VT_BACK_COLOR_LIGHT_GREEN   _T("102")
+#define VT_BACK_COLOR_LIGHT_CYAN    _T("106")
+#define VT_BACK_COLOR_LIGHT_RED     _T("101")
+#define VT_BACK_COLOR_LIGHT_MAGNETA _T("105")
+#define VT_BACK_COLOR_LIGHT_YELLOW  _T("103")
+#define VT_BACK_COLOR_WHITE         _T("107")
 
 NS_JC_BEGIN
 
@@ -75,16 +76,16 @@ struct ConsoleKeyInfo
 {
     ConsoleKeyInfo()
     : Key(ConsoleKey::None)
-	, KeyChar(NULL)
+	, KeyChar(_T('\0'))
 	, Success(false) {}
 
-    ConsoleKeyInfo(ConsoleKey _key, char _keyChar)
+    ConsoleKeyInfo(ConsoleKey _key, _char _keyChar)
     : Key(_key)
 	, KeyChar(_keyChar)
 	, Success(true) {}
 
     ConsoleKey Key;
-    char KeyChar;
+    _char KeyChar;
     bool Success;           // 성공적으로 키입력을 받았는지.
 
     operator bool()
@@ -107,11 +108,11 @@ class Console
     inline static int           ms_iCursorPosY{};
     inline constexpr static int TempBufferLen = 1024;
 public:
-    static const char*   VTForeColor[ConsoleColor::Max];
-    static const char*   VTBackColor[ConsoleColor::Max];
+    static const _char*   VTForeColor[ConsoleColor::Max];
+    static const _char*   VTBackColor[ConsoleColor::Max];
 
-    static const char*   VTForeToken[ConsoleColor::Max];
-    static const char*   VTBackToken[ConsoleColor::Max];
+    static const _char*   VTForeToken[ConsoleColor::Max];
+    static const _char*   VTBackToken[ConsoleColor::Max];
 public:
     static bool Init();
     static bool SetSize(int _width, int _height);
@@ -122,7 +123,7 @@ public:
     static ConsoleColor ConvertColorString(const String& _colorString);
 
     template <typename... TArgs>
-    static int Write(ConsoleColor _color, const char* _pFormat, TArgs&&... _args)
+    static int Write(ConsoleColor _color, const _char* _pFormat, TArgs&&... _args)
     {
         TLockGuard guard(ms_ConsoleLock);
         ConsoleColor prevColor = ms_iDefaultColor;
@@ -133,7 +134,7 @@ public:
     }
 
     template <_u32 FormatBufferLen, typename... TArgs>
-    static int Write(ConsoleColor _color, char(&_format)[FormatBufferLen], TArgs&&... _args)
+    static int Write(ConsoleColor _color, _char(&_format)[FormatBufferLen], TArgs&&... _args)
     {
         TLockGuard guard(ms_ConsoleLock);
         ConsoleColor prevColor = ms_iDefaultColor;
@@ -144,45 +145,45 @@ public:
     }
 
     template <typename... TArgs>
-    static int Write(const char* _pFormat, TArgs&&... _args)
+    static int Write(const _char* _pFormat, TArgs&&... _args)
     {
 		if constexpr (sizeof...(_args) == 0)
 		{
 			TLockGuard guard(ms_ConsoleLock);
-			return printf("%s", _pFormat);
+			return _tprintf(_T("%s"), _pFormat);
 		}
 		else
 		{
-			char buf[TempBufferLen];
-			int written = sprintf_s(buf, TempBufferLen, _pFormat, Forward<TArgs>(_args)...);
+			_char buf[TempBufferLen];
+			int written = _stprintf_s(buf, TempBufferLen, _pFormat, Forward<TArgs>(_args)...);
 			if (written <= 0)
 			{
 				return written;
 			}
 
 			TLockGuard guard(ms_ConsoleLock);
-			return printf_s("%s", buf);
+			return _tprintf(_T("%s"), buf);
 		}
     }
 
     template <_u32 FormatBufferLen, typename... TArgs>
-    static int Write(char(&_format)[FormatBufferLen], TArgs&&... _args)
+    static int Write(_char(&_format)[FormatBufferLen], TArgs&&... _args)
     {
         TLockGuard guard(ms_ConsoleLock);
-        return printf_s(_format, Forward<TArgs>(_args)...);
+        return _tprintf(_format, Forward<TArgs>(_args)...);
     }
 
     static String ReadLine();
-    static String ReadLine(const char* _pMsg);
-	static int ReadLineBuffered(char* _pBuff, int _capacity) { return ReadLineBuffered(nullptr, _pBuff, _capacity); }
-    static int ReadLineBuffered(const char* _pMsg, char* _pBuff, int _capacity);
+    static String ReadLine(const _char* _pMsg);
+	static int ReadLineBuffered(_char* _pBuff, int _capacity) { return ReadLineBuffered(nullptr, _pBuff, _capacity); }
+    static int ReadLineBuffered(const _char* _pMsg, _char* _pBuff, int _capacity);
 
     static ConsoleKeyInfo ReadKey()
     {
         return ReadKey(nullptr);
     }
 
-    static ConsoleKeyInfo ReadKey(const char* _pMsg);
+    static ConsoleKeyInfo ReadKey(const _char* _pMsg);
 
     // 특정키를 입력받을때까지 체크
     static ConsoleKeyInfo ReadKeyWhile(ConsoleKey _key)
@@ -190,10 +191,10 @@ public:
         return ReadKeyWhile(nullptr, _key);
     }
 
-    static ConsoleKeyInfo ReadKeyWhile(const char* _pMsg, ConsoleKey _key);
+    static ConsoleKeyInfo ReadKeyWhile(const _char* _pMsg, ConsoleKey _key);
 
     template <typename... TArgs>
-    static int WriteLine(ConsoleColor _color, const char* _pFormat, TArgs&&... _args)
+    static int WriteLine(ConsoleColor _color, const _char* _pFormat, TArgs&&... _args)
     {
         TLockGuard guard(ms_ConsoleLock);
         ConsoleColor prevColor = ms_iDefaultColor;
@@ -204,7 +205,7 @@ public:
     }
 
     template <_u32 FormatBufferLen, typename... TArgs>
-    static int WriteLine(ConsoleColor _color, char(&_format)[FormatBufferLen], TArgs&&... _args)
+    static int WriteLine(ConsoleColor _color, _char(&_format)[FormatBufferLen], TArgs&&... _args)
     {
         TLockGuard guard(ms_ConsoleLock);
         ConsoleColor prevColor = ms_iDefaultColor;
@@ -215,32 +216,32 @@ public:
     }
 
     template <typename... TArgs>
-    static int WriteLine(const char* _pFormat = nullptr, TArgs&&... _args)
+    static int WriteLine(const _char* _pFormat = nullptr, TArgs&&... _args)
     {
         if constexpr (sizeof...(_args) == 0)
         {
-			if (_pFormat == nullptr || _pFormat[0] == '\0')
+			if (_pFormat == nullptr || _pFormat[0] == _T('\0'))
 			{
-				putchar('\n');
+				_puttchar(_T('\n'));
 			}
 			else
 			{
-				printf("%s\n", _pFormat);
+				_tprintf(_T("%s\n"), _pFormat);
 			}
             return 0;
         }
         else
         {
             TLockGuard guard(ms_ConsoleLock);
-            return Math::Min(printf_s("\n"), printf_s(_pFormat, Forward<TArgs>(_args)...));
+            return Math::Min(_tprintf(_T("\n")), _tprintf(_pFormat, Forward<TArgs>(_args)...));
         }
     }
 
     template <_u32 FormatBufferLen, typename... TArgs>
-    static int WriteLine(char(&_format)[FormatBufferLen], TArgs&&... _args)
+    static int WriteLine(_char(&_format)[FormatBufferLen], TArgs&&... _args)
     {
         TLockGuard guard(ms_ConsoleLock);
-        return Math::Min(putchar('\n'), printf_s(_format, Forward<TArgs>(_args)...));
+        return Math::Min(_puttchar(_T('\n')), _tprintf(_format, Forward<TArgs>(_args)...));
     }
 
     static void Clear();

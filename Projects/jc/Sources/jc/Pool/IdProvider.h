@@ -45,9 +45,9 @@ public:
 
 	virtual void Release(TKey _key) override
 	{
-		jc_assert_msg(_key != TProvider::INVALID_KEY, "무효 키는 반납할 수 없습니다.");
-		jc_assert_msg(_key < next_, "발급한 적 없는 키입니다.");
-		jc_assert_msg(acquiredCount_ > 0, "발급 중인 키가 없는데 반납했습니다.");
+		jc_assert_msg(_key != TProvider::INVALID_KEY, _T("무효 키는 반납할 수 없습니다."));
+		jc_assert_msg(_key < next_, _T("발급한 적 없는 키입니다."));
+		jc_assert_msg(acquiredCount_ > 0, _T("발급 중인 키가 없는데 반납했습니다."));
 
 		acquiredCount_ -= 1;
 	}

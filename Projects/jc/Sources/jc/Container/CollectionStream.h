@@ -178,13 +178,13 @@ public:
 
 	T& First() const
 	{
-		jc_assert_msg(this->size_ != 0, "데이터가 없습니다.");
+		jc_assert_msg(this->size_ != 0, _T("데이터가 없습니다."));
 		return *pHead_->pNext_->pValue_;
 	}
 
 	T& Last() const
 	{
-		jc_assert_msg(this->size_ != 0, "데이터가 없습니다.");
+		jc_assert_msg(this->size_ != 0, _T("데이터가 없습니다."));
 		return *pTail_->pPrevious_->pValue_;
 	}
 

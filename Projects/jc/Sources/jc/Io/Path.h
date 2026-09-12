@@ -25,6 +25,9 @@ public:
 	static String FileNameLevel(const char* _pPath, int _length, int _level);
 	static String FileNameLevel(const char* _pPath, int _level);
 	static void FileNameLevel(char* _pBuf, int _bufCapacity, const char* _pPath, int _pathLen, int _level);
+#ifdef _UNICODE // _char == wchar_t: separate overload (MB에서는 char판과 중복되므로 제외)
+	static void FileNameLevel(_char* _pBuf, int _bufCapacity, const _char* _pPath, int _pathLen, int _level);
+#endif
 	static String Combine(const String& _lhs, const String& _rhs);
 	static String Combine(const String& _lhs, const String& _rhs, const String& _khs);
 	static String Extension(const String& _path);

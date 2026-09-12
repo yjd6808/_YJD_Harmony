@@ -8,6 +8,7 @@
 
 #include "ConnectionPool.h"
 
+#include "jc/Assert.h"
 #include "IConnection.h"
 
 #include "SQLServer/SqlServerConnection.h"
@@ -145,7 +146,11 @@ IConnection* ConnectionPool::CreateConnection() const
 
 	if (dbType_ == DatabaseType::dbtMySQL)
 	{
+#ifndef _UNICODE
 		pConnection = dbg_new MysqlConnection();
+#else
+		jc_assert_msg(false, _T("MySQL은 Unicode 빌드에서 지원하지 않습니다."));
+#endif
 	}
 	else
 	{

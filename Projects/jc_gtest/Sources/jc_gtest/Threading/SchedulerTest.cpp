@@ -20,21 +20,21 @@ static void JoinTest(Scheduler::JoinStrategy strategy) {
 		start = DateTime::Now();
 		counter = 0;
 
-		Console::WriteLine(" ======================= [%d] ======================= ", ++i);
+		Console::WriteLine(_T(" ======================= [%d] ======================= "), ++i);
 		Scheduler s(6);
 
 		s.IntervalAt([](SchedulerTask* task) {
-			Console::WriteLine("0.1초당 한번 (%.1f초 경화 후 호출됨)", DateTime::Now().Diff(start).GetTotalSeconds());
+			Console::WriteLine(_T("0.1초당 한번 (%.1f초 경화 후 호출됨)"), DateTime::Now().Diff(start).GetTotalSeconds());
 			++counter;
 		}, DateTime::Now() + TimeSpan::FromMiliSeocnd(R(2000, 2001)), TimeSpan::FromMiliSeocnd(R(100, 101)), 5);
 
 		s.IntervalAt([](SchedulerTask* task) {
-			Console::WriteLine("0.2초당 한번 (%.1f초 경화 후 호출됨)", DateTime::Now().Diff(start).GetTotalSeconds());
+			Console::WriteLine(_T("0.2초당 한번 (%.1f초 경화 후 호출됨)"), DateTime::Now().Diff(start).GetTotalSeconds());
 			++counter;
 		}, DateTime::Now() + TimeSpan::FromMiliSeocnd(R(1000, 1001)), TimeSpan::FromMiliSeocnd(R(200, 201)), 5);
 
 		s.IntervalAt([](SchedulerTask* task) {
-			Console::WriteLine("0.3초당 한번 (%.1f초 경화 후 호출됨)", DateTime::Now().Diff(start).GetTotalSeconds());
+			Console::WriteLine(_T("0.3초당 한번 (%.1f초 경화 후 호출됨)"), DateTime::Now().Diff(start).GetTotalSeconds());
 			++counter;
 		}, DateTime::Now(), TimeSpan::FromMiliSeocnd(R(300, 301)), 5);
 

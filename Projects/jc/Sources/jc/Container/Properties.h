@@ -52,7 +52,7 @@ public:
 		PropertyBase** ppProperty = properties_.Find(Forward<Ky>(_propertyKey));
 		if (ppProperty != nullptr)
 		{
-			_LogWarn_("%s 프로퍼티에 %s타입으로 이미 사용중입니다.", jc::StringUtilT::ToString(Forward<Ky>(_propertyKey)).SafeSource(), PropertyType::NAME[(*ppProperty)->GetType()]);
+			_LogWarn_("%s 프로퍼티에 %s타입으로 이미 사용중입니다.", jc::StringUtil::ToString(Forward<Ky>(_propertyKey)).SafeSource(), PropertyType::NAME[(*ppProperty)->GetType()]);
 			return nullptr;
 		}
 
@@ -110,7 +110,7 @@ public:
 		PropertyBase* pProp = Get(Forward<Ky>(_propertyKey));									\
 		if (pProp == nullptr) return false;														\
 		if (pProp->GetType() != PropertyTypeGetter<NaturalType_t<type>>::Type)					\
-		{ jc_assert_msg(false, "property key type mismatched."); return false; }				\
+		{ jc_assert_msg(false, _T("property key type mismatched.")); return false; }				\
 		_value = pProp->Ref<type>();															\
 		return true;																			\
 	}
@@ -135,7 +135,7 @@ public:
 		PropertyBase* pProp = Get(Forward<Ky>(_propertyKey));									\
 		if (pProp == nullptr) { return type(); }												\
 		if (pProp->GetType() != PropertyTypeGetter<NaturalType_t<type>>::Type)					\
-		{ jc_assert_msg(false, "property key type mismatched."); return type(); }				\
+		{ jc_assert_msg(false, _T("property key type mismatched.")); return type(); }				\
 		return pProp->Ref<type>();																\
 	}
 
@@ -163,7 +163,7 @@ public:
 		}
 		if (pProp->GetType() != PropertyTypeGetter<NaturalType_t<bool>>::Type)
 		{
-			jc_assert_msg(false, "property key type mismatched."); 
+			jc_assert_msg(false, _T("property key type mismatched.")); 
 			return false; 
 		}
 		bool& v = pProp->Ref<bool>();

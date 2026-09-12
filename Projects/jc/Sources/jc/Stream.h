@@ -81,7 +81,7 @@ public:
 	// bytes의 0위치부터 len만큼 스트림에 작성한다.
 	virtual void Write(const _u8* _pBytes, int _length)
 	{
-		jc_assert_msg(CanWrite(), "해당 스트림에 Write 할 수 없습니다.");
+		jc_assert_msg(CanWrite(), _T("해당 스트림에 Write 할 수 없습니다."));
 		Write(_pBytes, 0, _length);
 	}
 

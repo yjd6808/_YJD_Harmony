@@ -24,27 +24,27 @@ public:
 	struct Setter;
 
 	template <_u32 Size>
-	struct Setter<const char[Size]>
+	struct Setter<const _char[Size]>
 	{
-		void operator()(jc::String* _pArgs, int _idx, const char* _pStr) const
+		void operator()(jc::String* _pArgs, int _idx, const _char* _pStr) const
 		{
 			_pArgs[_idx] = SqlServerStatementBuilder::EscapeValue(jc::String(_pStr));
 		}
 	};
 
 	template <_u32 Size>
-	struct Setter<char[Size]>
+	struct Setter<_char[Size]>
 	{
-		void operator()(jc::String* _pArgs, int _idx, const char* _pStr) const
+		void operator()(jc::String* _pArgs, int _idx, const _char* _pStr) const
 		{
 			_pArgs[_idx] = SqlServerStatementBuilder::EscapeValue(jc::String(_pStr));
 		}
 	};
 
 	template <>
-	struct Setter<const char*>
+	struct Setter<const _char*>
 	{
-		void operator()(jc::String* _pArgs, int _idx, const char* _pStr) const
+		void operator()(jc::String* _pArgs, int _idx, const _char* _pStr) const
 		{
 			_pArgs[_idx] = SqlServerStatementBuilder::EscapeValue(jc::String(_pStr));
 		}
@@ -105,7 +105,7 @@ public:
 	{
 		void operator()(jc::String* _pArgs, int _idx, const std::nullptr_t& _val) const
 		{
-			_pArgs[_idx] = "NULL";
+			_pArgs[_idx] = _T("NULL");
 		}
 	};
 
@@ -129,18 +129,18 @@ public:
 	{
 		thread_local jc::String escaped;
 		escaped.Clear();
-		escaped += "N'";
+		escaped += _T("N'");
 
 		for (int i = 0; i < _value.Length(); ++i)
 		{
-			char ch = _value[i];
-			if (ch == '\'')
-				escaped += "''";
+			_char ch = _value[i];
+			if (ch == _T('\''))
+				escaped += _T("''");
 			else
 				escaped += ch;
 		}
 
-		escaped += "'";
+		escaped += _T("'");
 		return escaped;
 	}
 

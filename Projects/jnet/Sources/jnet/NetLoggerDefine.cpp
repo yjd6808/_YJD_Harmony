@@ -13,14 +13,14 @@ USING_NS_JC;
 LoggerAbstract* NetLogger_v;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void InitializeNetLogger(const char* _pSpecifier)
+void InitializeNetLogger(const String& _pSpecifier)
 {
-	jc_assert_msg(NetLogger_v == nullptr, "이미 로거가 초기화되어 있습니다.");
+	jc_assert_msg(NetLogger_v == nullptr, _T("이미 로거가 초기화되어 있습니다."));
 
 	ConsoleLogger* pConsoleLogger = dbg_new ConsoleLogger;
 	pConsoleLogger->SetEnableLock(true);
 	pConsoleLogger->SetAutoFlush(true);
-	pConsoleLogger->SetHeaderFormat(StringUtilT::Format("%s[ level ✓  datetime ] ", _pSpecifier));
+	pConsoleLogger->SetHeaderFormat(StringUtil::Format(_T("%s[ level ✓  datetime ] "), _pSpecifier.Source()));
 
 	pConsoleLogger->ShowDateTime(true);
 	pConsoleLogger->ShowLevel(true);

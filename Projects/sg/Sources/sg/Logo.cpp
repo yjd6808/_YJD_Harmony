@@ -31,153 +31,153 @@ void InitializeClientLogo(bool _print, int _leftPadding)
 {
 	Logo_v.SetLength(0);
 	if (_print)
-		printf(Logo_v.Source());
+		_tprintf(_T("%s"), Logo_v.Source());
 }
 
 void InitializeServerAuthLogo(bool _print, int _leftPadding)
 {
 	if (_leftPadding > MAX_PADDING_SIZE)
 	{
-		_LogWarn_("패딩 사이즈는 %d를 초과해선 안됩니다.", MAX_PADDING_SIZE);
+		_LogWarn_(_T("패딩 사이즈는 %d를 초과해선 안됩니다."), MAX_PADDING_SIZE);
 		return;
 	}
 
-	char leftPad[MAX_PADDING_SIZE + 1]{};
-	Arrays::Fill(leftPad, _leftPadding, ' ');
+	_char leftPad[MAX_PADDING_SIZE + 1]{};
+	Arrays::Fill(leftPad, _leftPadding, _T(' '));
 
 	Logo_v.SetLength(0);
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, "        ", COLOR_WHITE, "                          \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, "        ", COLOR_WHITE, "                          \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, "█████╗  ", COLOR_WHITE, "██╗   ██╗████████╗██╗  ██╗\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, "██╔══██╗", COLOR_WHITE, "██║   ██║╚══██╔══╝██║  ██║\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, "███████║", COLOR_WHITE, "██║   ██║   ██║   ███████║\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, "██╔══██║", COLOR_WHITE, "██║   ██║   ██║   ██╔══██║\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, "██║  ██║", COLOR_WHITE, "╚██████╔╝   ██║   ██║  ██║\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, "╚═╝  ╚═╝", COLOR_WHITE, " ╚═════╝    ╚═╝   ╚═╝  ╚═╝\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, leftPad, "--───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, "\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, _T("        "), COLOR_WHITE, _T("                          \n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, _T("        "), COLOR_WHITE, _T("                          \n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, _T("█████╗  "), COLOR_WHITE, _T("██╗   ██╗████████╗██╗  ██╗\n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, _T("██╔══██╗"), COLOR_WHITE, _T("██║   ██║╚══██╔══╝██║  ██║\n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, _T("███████║"), COLOR_WHITE, _T("██║   ██║   ██║   ███████║\n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, _T("██╔══██║"), COLOR_WHITE, _T("██║   ██║   ██║   ██╔══██║\n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, _T("██║  ██║"), COLOR_WHITE, _T("╚██████╔╝   ██║   ██║  ██║\n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED, leftPad, _T("╚═╝  ╚═╝"), COLOR_WHITE, _T(" ╚═════╝    ╚═╝   ╚═╝  ╚═╝\n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, leftPad, _T("--───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, _T("\n"));
 	Logo_v += MoveConcat<String>(CSI_GRAPHIC_RENDITION(0));
 	if (_print)
-		printf(Logo_v.Source());
+		_tprintf(_T("%s"), Logo_v.Source());
 }
 
 void InitializeServerLobbyLogo(bool _print, int _leftPadding)
 {
 	if (_leftPadding > MAX_PADDING_SIZE)
 	{
-		_LogWarn_("패딩 사이즈는 %d를 초과해선 안됩니다.", MAX_PADDING_SIZE);
+		_LogWarn_(_T("패딩 사이즈는 %d를 초과해선 안됩니다."), MAX_PADDING_SIZE);
 		return;
 	}
 
-	char leftPad[MAX_PADDING_SIZE + 1]{};
-	Arrays::Fill(leftPad, _leftPadding, ' ');
+	_char leftPad[MAX_PADDING_SIZE + 1]{};
+	Arrays::Fill(leftPad, _leftPadding, _T(' '));
 
 	Logo_v.SetLength(0);
 	Logo_v += MoveConcat<String>(
-		COLOR_LIGHT_GREEN, leftPad, "        " COLOR_WHITE "                                   \n");
+		COLOR_LIGHT_GREEN, leftPad, _T("        ") COLOR_WHITE _T("                                   \n"));
 	Logo_v += MoveConcat<String>(
-		COLOR_LIGHT_GREEN, leftPad, "        " COLOR_WHITE "                                   \n");
+		COLOR_LIGHT_GREEN, leftPad, _T("        ") COLOR_WHITE _T("                                   \n"));
 	Logo_v += MoveConcat<String>(
-		COLOR_LIGHT_GREEN, leftPad, "██╗     " COLOR_WHITE "  ██████╗ ██████╗ ██████╗ ██╗   ██╗\n");
+		COLOR_LIGHT_GREEN, leftPad, _T("██╗     ") COLOR_WHITE _T("  ██████╗ ██████╗ ██████╗ ██╗   ██╗\n"));
 	Logo_v += MoveConcat<String>(
-		COLOR_LIGHT_GREEN, leftPad, "██║     " COLOR_WHITE " ██╔═══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝\n");
+		COLOR_LIGHT_GREEN, leftPad, _T("██║     ") COLOR_WHITE _T(" ██╔═══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝\n"));
 	Logo_v += MoveConcat<String>(
-		COLOR_LIGHT_GREEN, leftPad, "██║     " COLOR_WHITE " ██║   ██║██████╔╝██████╔╝ ╚████╔╝ \n");
+		COLOR_LIGHT_GREEN, leftPad, _T("██║     ") COLOR_WHITE _T(" ██║   ██║██████╔╝██████╔╝ ╚████╔╝ \n"));
 	Logo_v += MoveConcat<String>(
-		COLOR_LIGHT_GREEN, leftPad, "██║     " COLOR_WHITE " ██║   ██║██╔══██╗██╔══██╗  ╚██╔╝  \n");
+		COLOR_LIGHT_GREEN, leftPad, _T("██║     ") COLOR_WHITE _T(" ██║   ██║██╔══██╗██╔══██╗  ╚██╔╝  \n"));
 	Logo_v += MoveConcat<String>(
-		COLOR_LIGHT_GREEN, leftPad, "███████╗" COLOR_WHITE " ╚██████╔╝██████╔╝██████╔╝   ██║   \n");
+		COLOR_LIGHT_GREEN, leftPad, _T("███████╗") COLOR_WHITE _T(" ╚██████╔╝██████╔╝██████╔╝   ██║   \n"));
 	Logo_v += MoveConcat<String>(
-		COLOR_LIGHT_GREEN, leftPad, "╚══════╝" COLOR_WHITE "  ╚═════╝ ╚═════╝ ╚═════╝    ╚═╝   \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, leftPad, "    --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, "\n");
+		COLOR_LIGHT_GREEN, leftPad, _T("╚══════╝") COLOR_WHITE _T("  ╚═════╝ ╚═════╝ ╚═════╝    ╚═╝   \n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, leftPad, _T("    --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, _T("\n"));
 	Logo_v += MoveConcat<String>(CSI_GRAPHIC_RENDITION(0));
 	if (_print)
-		printf(Logo_v.Source());
+		_tprintf(_T("%s"), Logo_v.Source());
 }
 
 void InitializeServerGameLogo(bool _print, int _leftPadding)
 {
 	if (_leftPadding > MAX_PADDING_SIZE)
 	{
-		_LogWarn_("패딩 사이즈는 %d를 초과해선 안됩니다.", MAX_PADDING_SIZE);
+		_LogWarn_(_T("패딩 사이즈는 %d를 초과해선 안됩니다."), MAX_PADDING_SIZE);
 		return;
 	}
 
-	char leftPad[MAX_PADDING_SIZE + 1]{};
-	Arrays::Fill(leftPad, _leftPadding, ' ');
+	_char leftPad[MAX_PADDING_SIZE + 1]{};
+	Arrays::Fill(leftPad, _leftPadding, _T(' '));
 
 	Logo_v.SetLength(0);
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, "        " COLOR_WHITE "                            \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, "        " COLOR_WHITE "                            \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, " ██████╗" COLOR_WHITE "  █████╗ ███╗   ███╗███████╗\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, "██╔════╝" COLOR_WHITE " ██╔══██╗████╗ ████║██╔════╝\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, "██║  ███" COLOR_WHITE "╗███████║██╔████╔██║█████╗  \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, "██║   ██" COLOR_WHITE "║██╔══██║██║╚██╔╝██║██╔══╝  \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, "╚██████╔" COLOR_WHITE "╝██║  ██║██║ ╚═╝ ██║███████╗\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, " ╚═════╝" COLOR_WHITE " ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, leftPad, "   --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, "\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, _T("        ") COLOR_WHITE _T("                            \n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, _T("        ") COLOR_WHITE _T("                            \n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, _T(" ██████╗") COLOR_WHITE _T("  █████╗ ███╗   ███╗███████╗\n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, _T("██╔════╝") COLOR_WHITE _T(" ██╔══██╗████╗ ████║██╔════╝\n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, _T("██║  ███") COLOR_WHITE _T("╗███████║██╔████╔██║█████╗  \n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, _T("██║   ██") COLOR_WHITE _T("║██╔══██║██║╚██╔╝██║██╔══╝  \n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, _T("╚██████╔") COLOR_WHITE _T("╝██║  ██║██║ ╚═╝ ██║███████╗\n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW, leftPad, _T(" ╚═════╝") COLOR_WHITE _T(" ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝\n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, leftPad, _T("   --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, _T("\n"));
 	Logo_v += MoveConcat<String>(CSI_GRAPHIC_RENDITION(0));
 	if (_print)
-		printf(Logo_v.Source());
+		_tprintf(_T("%s"), Logo_v.Source());
 }
 
 void InitializeServerCenterLogo(bool _print, int _leftPadding)
 {
 	if (_leftPadding > MAX_PADDING_SIZE)
 	{
-		_LogWarn_("패딩 사이즈는 %d를 초과해선 안됩니다.", MAX_PADDING_SIZE);
+		_LogWarn_(_T("패딩 사이즈는 %d를 초과해선 안됩니다."), MAX_PADDING_SIZE);
 		return;
 	}
 
-	char leftPad[MAX_PADDING_SIZE + 1]{};
-	Arrays::Fill(leftPad, _leftPadding, ' ');
+	_char leftPad[MAX_PADDING_SIZE + 1]{};
+	Arrays::Fill(leftPad, _leftPadding, _T(' '));
 
 	Logo_v.SetLength(0);
-	Logo_v += MoveConcat<String>(COLOR_CYAN, leftPad, "        " COLOR_WHITE "                                           \n");
-	Logo_v += MoveConcat<String>(COLOR_CYAN, leftPad, "        " COLOR_WHITE "                                           \n");
-	Logo_v += MoveConcat<String>(COLOR_CYAN, leftPad, "  ██████" COLOR_WHITE "╗███████╗███╗  ██╗████████╗███████╗██████╗ \n");
-	Logo_v += MoveConcat<String>(COLOR_CYAN, leftPad, "██╔════╝" COLOR_WHITE "██╔════╝████╗  ██║╚══██╔══╝██╔════╝██╔══██╗\n");
-	Logo_v += MoveConcat<String>(COLOR_CYAN, leftPad, "██║     " COLOR_WHITE "█████╗  ██╔██╗ ██║   ██║   █████╗  ██████╔╝\n");
-	Logo_v += MoveConcat<String>(COLOR_CYAN, leftPad, "██║     " COLOR_WHITE "██╔══╝  ██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗\n");
-	Logo_v += MoveConcat<String>(COLOR_CYAN, leftPad, "╚██████╗" COLOR_WHITE "███████╗██║ ╚████║   ██║   ███████╗██║  ██║\n");
-	Logo_v += MoveConcat<String>(COLOR_CYAN, leftPad, " ╚═════╝" COLOR_WHITE "╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, leftPad, "           --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, "\n");
+	Logo_v += MoveConcat<String>(COLOR_CYAN, leftPad, _T("        ") COLOR_WHITE _T("                                           \n"));
+	Logo_v += MoveConcat<String>(COLOR_CYAN, leftPad, _T("        ") COLOR_WHITE _T("                                           \n"));
+	Logo_v += MoveConcat<String>(COLOR_CYAN, leftPad, _T("  ██████") COLOR_WHITE _T("╗███████╗███╗  ██╗████████╗███████╗██████╗ \n"));
+	Logo_v += MoveConcat<String>(COLOR_CYAN, leftPad, _T("██╔════╝") COLOR_WHITE _T("██╔════╝████╗  ██║╚══██╔══╝██╔════╝██╔══██╗\n"));
+	Logo_v += MoveConcat<String>(COLOR_CYAN, leftPad, _T("██║     ") COLOR_WHITE _T("█████╗  ██╔██╗ ██║   ██║   █████╗  ██████╔╝\n"));
+	Logo_v += MoveConcat<String>(COLOR_CYAN, leftPad, _T("██║     ") COLOR_WHITE _T("██╔══╝  ██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗\n"));
+	Logo_v += MoveConcat<String>(COLOR_CYAN, leftPad, _T("╚██████╗") COLOR_WHITE _T("███████╗██║ ╚████║   ██║   ███████╗██║  ██║\n"));
+	Logo_v += MoveConcat<String>(COLOR_CYAN, leftPad, _T(" ╚═════╝") COLOR_WHITE _T("╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝\n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, leftPad, _T("           --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, _T("\n"));
 	Logo_v += MoveConcat<String>(CSI_GRAPHIC_RENDITION(0));
 	if (_print)
-		printf(Logo_v.Source());
+		_tprintf(_T("%s"), Logo_v.Source());
 }
 
 void InitializeServerQueryLogo(bool _print, int _leftPadding)
 {
 	if (_leftPadding > MAX_PADDING_SIZE)
 	{
-		_LogWarn_("패딩 사이즈는 %d를 초과해선 안됩니다.", MAX_PADDING_SIZE);
+		_LogWarn_(_T("패딩 사이즈는 %d를 초과해선 안됩니다."), MAX_PADDING_SIZE);
 		return;
 	}
 
-	char leftPad[MAX_PADDING_SIZE + 1]{};
-	Arrays::Fill(leftPad, _leftPadding, ' ');
+	_char leftPad[MAX_PADDING_SIZE + 1]{};
+	Arrays::Fill(leftPad, _leftPadding, _T(' '));
 
 	Logo_v.SetLength(0);
 
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_MAGNETA, leftPad, "        " COLOR_WHITE "                                             \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_MAGNETA, leftPad, "        " COLOR_WHITE "                                             \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_MAGNETA, leftPad, " ██████╗ " COLOR_WHITE "██╗   ██╗███████╗██████╗ ██╗   ██╗\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_MAGNETA, leftPad, "██╔═══██╗" COLOR_WHITE "██║   ██║██╔════╝██╔══██╗╚██╗ ██╔╝\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_MAGNETA, leftPad, "██║   ██║" COLOR_WHITE "██║   ██║█████╗  ██████╔╝ ╚████╔╝ \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_MAGNETA, leftPad, "██║▄▄ ██║" COLOR_WHITE "██║   ██║██╔══╝  ██╔══██╗  ╚██╔╝  \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_MAGNETA, leftPad, "╚██████╔╝" COLOR_WHITE "╚██████╔╝███████╗██║  ██║   ██║   \n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_MAGNETA, leftPad, " ╚══▀▀═╝ " COLOR_WHITE " ╚═════╝ ╚══════╝╚═╝  ╚═╝   ╚═╝   \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_MAGNETA, leftPad, _T("        ") COLOR_WHITE _T("                                             \n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_MAGNETA, leftPad, _T("        ") COLOR_WHITE _T("                                             \n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_MAGNETA, leftPad, _T(" ██████╗ ") COLOR_WHITE _T("██╗   ██╗███████╗██████╗ ██╗   ██╗\n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_MAGNETA, leftPad, _T("██╔═══██╗") COLOR_WHITE _T("██║   ██║██╔════╝██╔══██╗╚██╗ ██╔╝\n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_MAGNETA, leftPad, _T("██║   ██║") COLOR_WHITE _T("██║   ██║█████╗  ██████╔╝ ╚████╔╝ \n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_MAGNETA, leftPad, _T("██║▄▄ ██║") COLOR_WHITE _T("██║   ██║██╔══╝  ██╔══██╗  ╚██╔╝  \n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_MAGNETA, leftPad, _T("╚██████╔╝") COLOR_WHITE _T("╚██████╔╝███████╗██║  ██║   ██║   \n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_MAGNETA, leftPad, _T(" ╚══▀▀═╝ ") COLOR_WHITE _T(" ╚═════╝ ╚══════╝╚═╝  ╚═╝   ╚═╝   \n"));
 
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, leftPad, "           --─── QUERY SERVER ───▬▬▬▬▬▬▬▬▬▬───--\n");
-	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, "\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, leftPad, _T("           --─── QUERY SERVER ───▬▬▬▬▬▬▬▬▬▬───--\n"));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN, _T("\n"));
 	Logo_v += MoveConcat<String>(CSI_GRAPHIC_RENDITION(0));
 
 	if (_print)
-		printf(Logo_v.Source());
+		_tprintf(_T("%s"), Logo_v.Source());
 }
 
 

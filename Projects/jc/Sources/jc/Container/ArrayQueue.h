@@ -171,7 +171,7 @@ public:
 
 	void Dequeue()
 	{
-		jc_assert_msg(!this->IsEmpty(), "데이터가 존재하지 않습니다.");
+		jc_assert_msg(!this->IsEmpty(), _T("데이터가 존재하지 않습니다."));
 		this->DestroyAt(head_);
 		head_ = NextHeadValue(1);
 		--this->size_;
@@ -179,7 +179,7 @@ public:
 
 	T& Front() const
 	{
-		jc_assert_msg(!this->IsEmpty(), "데이터가 존재하지 않습니다.");
+		jc_assert_msg(!this->IsEmpty(), _T("데이터가 존재하지 않습니다."));
 		return this->pArray_[head_];
 	}
 
@@ -262,7 +262,7 @@ protected:
 	/// </summary>
 	void CopyFrom(const TArrayQueue& _other)
 	{
-		jc_assert_msg(this != &_other, "자기 자신에게 대입할 수 없습니다.");
+		jc_assert_msg(this != &_other, _T("자기 자신에게 대입할 수 없습니다."));
 
 		const TArrayQueue& otherQueue = _other;
 
@@ -412,7 +412,7 @@ protected:
 		}
 
 		jc_assert_msg(IsValidRange(_startIndex, _endIndex),
-			"올바르지 않은 인덱스 범위(%d ~ %d) 입니다. (%d, 컨테이너 크기: %d)", _startIndex, _endIndex, size_);
+			_T("올바르지 않은 인덱스 범위(%d ~ %d) 입니다. (%d, 컨테이너 크기: %d)"), _startIndex, _endIndex, size_);
 
 		// 포인터 타입은 소멸자 호출을 하지 않도록 한다.
 		if constexpr (IsPointerType_v<T>)
@@ -485,7 +485,7 @@ protected:
 
 	void DestroyAt(const int _index)
 	{
-		jc_assert_msg(IsValidIndex(_index), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", _index, size_);
+		jc_assert_msg(IsValidIndex(_index), _T("올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)"), _index, size_);
 
 		// 포인터 타입은 소멸자 호출을 하지 않도록 한다.
 		if constexpr (IsPointerType_v<T>)

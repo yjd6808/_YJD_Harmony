@@ -35,7 +35,7 @@ bool CharAnimationInfoLoader::Load()
 	}
 	catch (std::exception& ex)
 	{
-		_LogError_("%s 0c9f 18s  05dchi 13b3 15c6  16d1d 0c  01b 14c6 1477 ", GetConfigFileName(), ex.what());
+		_LogError_(_T("%hs 0c9f 18s  05dchi 13b3 15c6  16d1d 0c  01b 14c6 1477 "), GetConfigFileName(), ex.what());
 		return false;
 	}
 
@@ -46,6 +46,6 @@ bool CharAnimationInfoLoader::Load()
 //////////////////////////////////////////////////////////////////////////////////////////
 jc::Vector<AnimationInfo*>& CharAnimationInfoLoader::GetAnimationList(CharType_t _charCode)
 {
-	jc_assert_msg(_charCode >= CharType::Begin && _charCode <= CharType::End, " 03c6salt  1d71 19ff 08b5 02f6 1520 ");
+	jc_assert_msg(_charCode >= CharType::Begin && _charCode <= CharType::End, _T(" 03c6salt  1d71 19ff 08b5 02f6 1520 "));
 	return charAnimationList_[_charCode];
 }

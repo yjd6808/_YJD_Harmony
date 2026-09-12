@@ -1,3 +1,5 @@
+// MYSQL-UNICODE-EXCLUDE: MySQL C API is narrow-only; excluded from Unicode builds.
+#ifndef _UNICODE
 #include "MysqlDatabase.h"
 
 #include "MysqlQuery.h"
@@ -39,10 +41,12 @@ IQueryPtr MysqlDatabase::CreateQuery(IConnection* _pConn, const BoundStmt& _stmt
 	case StatementType::Delete: pQuery = MakeShared<MysqlQueryDelete>(); break;
 	case StatementType::Insert: pQuery = MakeShared<MysqlQueryInsert>(); break;
 	default:
-		jc_assert_msg(false, "올바르지 않은 스테이트먼트입니다.");
+		jc_assert_msg(false, _T("올바르지 않은 스테이트먼트입니다."));
 		return nullptr;
 	}
 
 	pQuery->Init(_pConn, ptmtStr);
 	return pQuery;
 }
+
+#endif // !_UNICODE

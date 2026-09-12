@@ -58,7 +58,7 @@ public:
 	//   IO 엔진(MemoryDest/MemorySource)·기존 테스트와 호환 유지
 	void Write(const void* _p, _u32 _len)
 	{
-		jc_assert_msg(!closed_, "닫힌 스트림에 Write 할 수 없습니다.");
+		jc_assert_msg(!closed_, _T("닫힌 스트림에 Write 할 수 없습니다."));
 		ExpandAllocateIfNeeded(writeOffset_ + _len);
 		if (_len > 0)
 			Memory::CopyUnsafe(pBytes_ + writeOffset_, _p, (int)_len);
@@ -68,7 +68,7 @@ public:
 
 	_u32 Read(void* _pOut, _u32 _len)
 	{
-		jc_assert_msg(!closed_, "닫힌 스트림에서 Read 할 수 없습니다.");
+		jc_assert_msg(!closed_, _T("닫힌 스트림에서 Read 할 수 없습니다."));
 		_u32 readable = Math::Min(_len, writeOffset_ - readOffset_);
 		if (readable > 0)
 			Memory::CopyUnsafe(_pOut, pBytes_ + readOffset_, (int)readable);
@@ -108,7 +108,7 @@ public:
 			return;
 		if (!owner_)
 		{
-			jc_assert_msg(false, "Non-owner MemoryStream capacity exceeded (%u > %u)", _need, capacity_);
+			jc_assert_msg(false, _T("Non-owner MemoryStream capacity exceeded (%u > %u)"), _need, capacity_);
 			return;
 		}
 		_u32 newCap = Math::Max(capacity_ * 2, _need);

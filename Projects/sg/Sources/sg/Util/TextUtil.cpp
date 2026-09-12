@@ -7,6 +7,8 @@
 
 #include "TextUtil.h"
 
+#include "jc/Primitives/StringConvert.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////
 char* TextUtil::ParseFrameInfo(const char* _pFrameString, int _len,
                                  OUT int& _frameIndex,
@@ -50,7 +52,9 @@ char* TextUtil::ParseFrameInfo(const char* _pFrameString, int _len,
 //////////////////////////////////////////////////////////////////////////////////////////
 void TextUtil::ParseIntNumbers(const jc::String& _numStr, OUT int* _pNumArr, int _count)
 {
-	char* pSource = _numStr.Source();
+	// 숫자 텍스트는 ASCII라 narrow로 내려서 파싱한다.
+	const jc::AString narrow = jc::StringConvert::ToAnsi(_numStr);
+	const char* pSource = narrow.Source();
 	int ptrIndex = 0;
 	int buffIndex = 0;
 	int readCount = 0;
@@ -72,13 +76,15 @@ void TextUtil::ParseIntNumbers(const jc::String& _numStr, OUT int* _pNumArr, int
 		++buffIndex;
 	}
 
-	jc_assert_msg(readCount == _count, "읽은 숫자와 작성된 숫자가 틀립니다.");
+	jc_assert_msg(readCount == _count, _T("읽은 숫자와 작성된 숫자가 틀립니다."));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void TextUtil::ParseFloatNumbers(const jc::String& _numStr, OUT float* _pNumArr, int _count)
 {
-	ParseFloatNumbers(_numStr.Source(), _numStr.Length(), _pNumArr, _count);
+	// 숫자 텍스트는 ASCII라 narrow로 내려서 파싱한다.
+	const jc::AString narrow = jc::StringConvert::ToAnsi(_numStr);
+	ParseFloatNumbers(narrow.Source(), narrow.Length(), _pNumArr, _count);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -105,5 +111,5 @@ void TextUtil::ParseFloatNumbers(char* _pSource, int _len, OUT float* _pNumArr, 
 		++buffIndex;
 	}
 
-	jc_assert_msg(readCount == _count, "읽은 숫자와 작성된 숫자가 틀립니다.");
+	jc_assert_msg(readCount == _count, _T("읽은 숫자와 작성된 숫자가 틀립니다."));
 }

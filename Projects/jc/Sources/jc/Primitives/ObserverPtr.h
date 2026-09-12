@@ -323,7 +323,7 @@ public:
 		}
 		else
 		{
-			jc_assert_msg(false, "... cannot conver to T_T"); //static_assert(false, "... cannot conver to T_T");
+			jc_assert_msg(false, _T("... cannot conver to T_T")); //static_assert(false, "... cannot conver to T_T");
 		}
 		return nullptr;
 	}
@@ -623,7 +623,7 @@ public:
 		}
 		else
 		{
-			jc_assert_msg(false, "... cannot convert each other");
+			jc_assert_msg(false, _T("... cannot convert each other"));
 			// static_assert(false, "cannot convert each other");
 		}
 	}
@@ -719,7 +719,7 @@ public:
 		}
 		else
 		{
-			jc_assert_msg(false, "... cannot convert each other"); //static_assert(false, "cannot convert each other");
+			jc_assert_msg(false, _T("... cannot convert each other")); //static_assert(false, "cannot convert each other");
 		}
 	}
 
@@ -742,7 +742,7 @@ public:
 		}
 		else
 		{
-			jc_assert_msg(false, "... cannot convert each other");
+			jc_assert_msg(false, _T("... cannot convert each other"));
 		}
 	}
 
@@ -765,7 +765,7 @@ public:
 		}
 		else
 		{
-			jc_assert_msg(false, "... cannot convert each other");
+			jc_assert_msg(false, _T("... cannot convert each other"));
 		}
 	}
 };

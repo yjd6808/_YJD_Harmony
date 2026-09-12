@@ -21,12 +21,12 @@ void PacketViewer::View(jnet::Transmission _transmission, char* _pData, int _len
 
 	if (_len > hex.Capacity() - 1)
 	{
-		_LogWarn_("패킷 뷰 실패(출력 불가능한 크기)");
+		_LogWarn_(_T("패킷 뷰 실패(출력 불가능한 크기)"));
 		return;
 	}
 
 	Hex(_pData, _len, hex);
-	_LogPlain_("\t[%c 패킷 뷰]\n\t패킷 크기: %d\n\t커맨드 수: %d\n\t헥스\n%s", jnet::TransmissionName(_transmission), _len,
+	_LogPlain_(_T("\t[%c 패킷 뷰]\n\t패킷 크기: %d\n\t커맨드 수: %d\n\t헥스\n%s"), jnet::TransmissionName(_transmission), _len,
 	           _cmdCount, hex.Source());
 }
 
@@ -37,12 +37,12 @@ void PacketViewer::View(jnet::Transmission _transmission, char* _pData, int _len
 
 	if (_len > hex.Capacity() - 1)
 	{
-		_LogWarn_("패킷 뷰 실패(출력 불가능한 크기)");
+		_LogWarn_(_T("패킷 뷰 실패(출력 불가능한 크기)"));
 		return;
 	}
 
 	Hex(_pData, _len, hex);
-	_LogPlain_("\t[%c 패킷 뷰]\n\t패킷 크기: %d\n\t헥스\n%s", jnet::TransmissionName(_transmission), _len, hex.Source());
+	_LogPlain_(_T("\t[%c 패킷 뷰]\n\t패킷 크기: %d\n\t헥스\n%s"), jnet::TransmissionName(_transmission), _len, hex.Source());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,12 +90,12 @@ void PacketViewer::View(jnet::ICommand* _pCmd)
 
 	if (cmdLen > hex.Capacity() - 1)
 	{
-		_LogWarn_("커맨드 뷰 실패(출력 불가능한 크기)");
+		_LogWarn_(_T("커맨드 뷰 실패(출력 불가능한 크기)"));
 		return;
 	}
 
 	Hex((char*)_pCmd, cmdLen, hex);
-	_LogPlain_("[커맨드 뷰]\n커맨드 타입:%d\n커맨드: %d\n크기: %d\n헥스\n%s", _pCmd->GetType(), _pCmd->GetId(), cmdLen, hex.Source());
+	_LogPlain_(_T("[커맨드 뷰]\n커맨드 타입:%d\n커맨드: %d\n크기: %d\n헥스\n%s"), _pCmd->GetType(), _pCmd->GetId(), cmdLen, hex.Source());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

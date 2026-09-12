@@ -88,9 +88,11 @@ public:
 	FrameEvent*						GetFrameEvent(ActorType_t _actorType, int _frameEventCode);
 	ChannelInfo*					GetChannelInfo(int _channelCode);
 
-	char*							GetTextRaw(const char* _textId);
 	jc::String&						GetText(const char* _textId);
 	jc::String&						GetText(const jc::String& _textId);
+#ifndef _UNICODE
+	char*							GetTextRaw(const char* _textId);
+#endif
 
 private:
 	DescLoaderAbstract* m_pConfigFileLoaders[ConfigFileType::Max]{};

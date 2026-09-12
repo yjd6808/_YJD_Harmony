@@ -37,7 +37,7 @@ bool CharBaseInfoLoader::Load()
 	}
 	catch (std::exception& ex)
 	{
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", GetConfigFileName(), ex.what());
+		_LogError_(_T("%hs 파싱중 오류가 발생하였습니다. %hs"), GetConfigFileName(), ex.what());
 		return false;
 	}
 

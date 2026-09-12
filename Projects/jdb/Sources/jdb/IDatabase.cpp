@@ -18,7 +18,7 @@ int IDatabase::PollEvents()
 {
 	if (iocp_ == nullptr)
 	{
-		jc_assert_msg(false, "IOCP가 초기화되지 않았습니다. IOCP를 사용하는 데이터베이스인지 확인해주세요.");
+		jc_assert_msg(false, _T("IOCP가 초기화되지 않았습니다. IOCP를 사용하는 데이터베이스인지 확인해주세요."));
 		return -1;
 	}
 	return iocp_->PollTasks();
@@ -29,7 +29,7 @@ bool IDatabase::Initialize(const DatabaseInfo& _info)
 {
 	if (initialized_)
 	{
-		_LogError_("이미 생성된 객체입니다.");
+		_LogError_(_T("이미 생성된 객체입니다."));
 		return false;
 	}
 
@@ -54,7 +54,7 @@ bool IDatabase::Initialize(const DatabaseInfo& _info)
 	if (!connectionPool_->Init(connectionPoolSize))
 	{
 		JC_DELETE_SAFE(connectionPool_);
-		_LogError_("DB 커넥션 풀 초기화 실패");
+		_LogError_(_T("DB 커넥션 풀 초기화 실패"));
 		return false;
 	}
 
@@ -62,22 +62,27 @@ bool IDatabase::Initialize(const DatabaseInfo& _info)
 	// String Escape 하나를 위해서 어쩔수없이 초기화함;
 	if (info_.type_ == DatabaseType::dbtMySQL)
 	{
+#ifndef _UNICODE
 		if (!MysqlStatementBuilder::Initialize(info_))
 		{
-			_LogError_("DB 스테이트먼트 빌더 초기화 실패");
+			_LogError_(_T("DB 스테이트먼트 빌더 초기화 실패"));
 			return false;
 		}
+#else
+		jc_assert_msg(false, _T("MySQL은 Unicode 빌드에서 지원하지 않습니다."));
+		return false;
+#endif
 	}
 	else if (info_.type_ == DatabaseType::dbtSQLServer)
 	{
 		if (!SqlServerStatementBuilder::Initialize(info_))
 		{
-			_LogError_("DB 스테이트먼트 빌더 초기화 실패");
+			_LogError_(_T("DB 스테이트먼트 빌더 초기화 실패"));
 			return false;
 		}
 	}
 	
-	_LogInfo_("데이터베이스 커넥션 풀(크기: %d) 초기화 [%s:%d]",
+	_LogInfo_(_T("데이터베이스 커넥션 풀(크기: %d) 초기화 [%s:%d]"),
 		connectionPoolSize,
 		info_.hostName_.Source(),
 		info_.connPort_);
@@ -93,11 +98,11 @@ bool IDatabase::Initialize(const DatabaseInfo& _info)
 		iocp_->SetPollingMode(info_.iocpPollingMode_);
 		iocp_->SetCompletedCallback(QueryCompletedCallbackFunctor{ this });
 		iocp_->Run();
-		_LogInfo_("%s %s 실행완료 (쓰레드 수: %d)", info_.name_.Source(), jnet::IOCP::TypeName(), threadCount);
+		_LogInfo_(_T("%s %s 실행완료 (쓰레드 수: %d)"), info_.name_.Source(), jnet::IOCP::TypeName(), threadCount);
 	}
 	else
 	{
-		_LogInfo_("%s 쓰레딩 사용안함. (QueryAsync 사용 불가능.)", info_.name_.Source());
+		_LogInfo_(_T("%s 쓰레딩 사용안함. (QueryAsync 사용 불가능.)"), info_.name_.Source());
 	}
 	initialized_ = true;
 	return true;
@@ -109,27 +114,31 @@ void IDatabase::Finalize()
 	if (initialized_ == false)
 		return;
 
-	_LogInfo_("%s 파괴시작", info_.name_.Source());
+	_LogInfo_(_T("%s 파괴시작"), info_.name_.Source());
 	initialized_ = false;
 
 	if (iocp_)
 	{
 		iocp_->Join();
-		_LogInfo_("%s %s 쪼인완료", info_.name_.Source(), jnet::IOCP::TypeName());
+		_LogInfo_(_T("%s %s 쪼인완료"), info_.name_.Source(), jnet::IOCP::TypeName());
 
 		iocp_->Destroy();
-		_LogInfo_("%s %s 파괴완료", info_.name_.Source(), jnet::IOCP::TypeName());
+		_LogInfo_(_T("%s %s 파괴완료"), info_.name_.Source(), jnet::IOCP::TypeName());
 	}
 
 	// iocp가 먼저 소멸되어야함. 태스크가 커넥션을 참조하기 때문.
 	JC_DELETE_SAFE(iocp_);
 	JC_DELETE_SAFE(connectionPool_);
 
-	_LogInfo_("%s 커넥션 풀 파괴완료", info_.name_.Source());
+	_LogInfo_(_T("%s 커넥션 풀 파괴완료"), info_.name_.Source());
 
 	if (info_.type_ == DatabaseType::dbtMySQL)
 	{
+#ifndef _UNICODE
 		MysqlStatementBuilder::Finalize();
+#else
+		jc_assert_msg(false, _T("MySQL은 Unicode 빌드에서 지원하지 않습니다."));
+#endif
 	}
 	else if (info_.type_ == DatabaseType::dbtSQLServer)
 	{
@@ -148,14 +157,14 @@ IQueryPtr IDatabase::Query(int _id, const BoundStmt& _stmt) const
 {
 	if (connectionPool_ == nullptr)
 	{
-		jc_assert_msg(false, "커넥션 풀이 초기화되지 않았습니다. 데이터베이스가 연결되어있는지 확인해주세요.");
+		jc_assert_msg(false, _T("커넥션 풀이 초기화되지 않았습니다. 데이터베이스가 연결되어있는지 확인해주세요."));
 		return nullptr;
 	}
 
 	auto pConn = connectionPool_->GetConnection();
 	if (pConn == nullptr)
 	{
-		jc_assert_msg(false, "SqlServerDatabase::Query() 커넥션 풀에서 가져오기 실패");
+		jc_assert_msg(false, _T("SqlServerDatabase::Query() 커넥션 풀에서 가져오기 실패"));
 		return nullptr;
 	}
 
@@ -165,7 +174,7 @@ IQueryPtr IDatabase::Query(int _id, const BoundStmt& _stmt) const
 
 	if (pQuery == nullptr)
 	{
-		jc_assert_msg(false, "SqlServerDatabase::Query() 쿼리문 파싱 실패");
+		jc_assert_msg(false, _T("SqlServerDatabase::Query() 쿼리문 파싱 실패"));
 		return nullptr;
 	}
 	pQuery->SetId(_id);
@@ -195,19 +204,19 @@ IQueryTaskPtr IDatabase::QueryAsyncInternal(int _id, const BoundStmt& _stmt) con
 {
 	if (iocp_ == nullptr)
 	{
-		jc_assert_msg(false, "IOCP가 초기화되지 않았습니다. 쓰레딩이 필요한 기능을 사용하려면 IOCP를 초기화해주세요.");
+		jc_assert_msg(false, _T("IOCP가 초기화되지 않았습니다. 쓰레딩이 필요한 기능을 사용하려면 IOCP를 초기화해주세요."));
 		return nullptr;
 	}
 	if (connectionPool_ == nullptr)
 	{
-		jc_assert_msg(false, "커넥션 풀이 초기화되지 않았습니다.");
+		jc_assert_msg(false, _T("커넥션 풀이 초기화되지 않았습니다."));
 		return nullptr;
 	}
 
 	auto pConn = connectionPool_->GetConnection();
 	if (pConn == nullptr)
 	{
-		jc_assert_msg(false, "QueryAsyncInternal() 커넥션 풀에서 가져오기 실패");
+		jc_assert_msg(false, _T("QueryAsyncInternal() 커넥션 풀에서 가져오기 실패"));
 		return nullptr;
 	}
 
@@ -215,7 +224,7 @@ IQueryTaskPtr IDatabase::QueryAsyncInternal(int _id, const BoundStmt& _stmt) con
 	if (pQuery == nullptr)
 	{
 		connectionPool_->ReleaseConnection(pConn);
-		jc_assert_msg(false, "QueryAsyncInternal() 쿼리문 파싱 실패");
+		jc_assert_msg(false, _T("QueryAsyncInternal() 쿼리문 파싱 실패"));
 		return nullptr;
 	}
 	pQuery->SetId(_id);

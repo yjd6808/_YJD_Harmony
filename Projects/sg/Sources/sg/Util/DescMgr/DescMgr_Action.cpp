@@ -49,7 +49,7 @@ bool ActionInfoLoader::Load()
 	}
 	catch (std::exception& ex)
 	{
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s\n", GetConfigFileName(), ex.what());
+		_LogError_(_T("%hs 파싱중 오류가 발생하였습니다. %hs\n"), GetConfigFileName(), ex.what());
 		return false;
 	}
 
@@ -89,7 +89,7 @@ void ActionInfoLoader::ReadActionInfo(Json::Value& _actionRoot, OUT ActionInfo* 
 				break;
 			case 'c': keyList[k] = ControlKey::Jump;
 				break;
-			default: jc_assert_msg(false, "올바르지 않은 조작키 입니다.");
+			default: jc_assert_msg(false, _T("올바르지 않은 조작키 입니다."));
 			}
 		}
 

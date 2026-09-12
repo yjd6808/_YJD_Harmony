@@ -49,17 +49,17 @@ VirtualMachine::~VirtualMachine()
 //////////////////////////////////////////////////////////////////////////////////////////
 void VirtualMachine::Init()
 {
-	_LogDebug_("[DBG] VM: new CLIListener");
+	_LogDebug_(_T("[DBG] VM: new CLIListener"));
 	pCLIListener_ = dbg_new CLIListener;
-	_LogDebug_("[DBG] VM: new CLIThread");
+	_LogDebug_(_T("[DBG] VM: new CLIThread"));
 	pCliThread_ = dbg_new CLIThread;
-	_LogDebug_("[DBG] VM: SetListener");
+	_LogDebug_(_T("[DBG] VM: SetListener"));
 	pCliThread_->SetListener(pCLIListener_);
-	_LogDebug_("[DBG] VM: new ThreadPool");
+	_LogDebug_(_T("[DBG] VM: new ThreadPool"));
 	pThreadPool_ = dbg_new jc::ThreadPool(2);
-	_LogDebug_("[DBG] VM: new Scheduler");
+	_LogDebug_(_T("[DBG] VM: new Scheduler"));
 	pScheduler_ = dbg_new jc::Scheduler(2);
-	_LogDebug_("[DBG] VM: Start");
+	_LogDebug_(_T("[DBG] VM: Start"));
 	pCliThread_->Start();
 	printf("[RAW] Init done\n"); fflush(stdout);
 }

@@ -14,7 +14,7 @@
 
 
 NS_JNET_BEGIN
-#ifdef UNICODE
+#ifdef _UNICODE
 constexpr _u32 IPv4Len_v = 40;
 constexpr _u32 IPv6Len_v = 80;
 #else
@@ -42,7 +42,7 @@ public:
 	{
 	}
 
-	explicit IPv4Address(const char* _pHostOrderedAddressString);
+	explicit IPv4Address(const _char* _pHostOrderedAddressString);
 	~IPv4Address() override = default;
 
 public:
@@ -74,7 +74,7 @@ public:
 		return address_.addr_ == _other.address_.addr_;
 	}
 
-	bool operator==(const char* _pOther) const
+	bool operator==(const _char* _pOther) const
 	{
 		return address_.addr_ == Parse(_pOther).address_.addr_;
 	}
@@ -89,7 +89,7 @@ public:
 		return !(*this == _other);
 	}
 
-	bool operator!=(const char* _pOther) const
+	bool operator!=(const _char* _pOther) const
 	{
 		return !(*this == _pOther);
 	}
@@ -105,7 +105,7 @@ public:
 		return IPv4Address{INADDR_ANY};
 	}
 
-	static IPv4Address Parse(const char* _pHostOrderedAddressString);
+	static IPv4Address Parse(const _char* _pHostOrderedAddressString);
 
 	static IPv4Address Parse(const jc::String& _hostOrderedAddressString)
 	{

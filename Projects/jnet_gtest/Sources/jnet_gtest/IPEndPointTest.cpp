@@ -6,7 +6,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 TEST(IPEndPointTest, IPv4)
 {
-	IPv4EndPoint ep("127.0.0.1:8000");
+	IPv4EndPoint ep(_T("127.0.0.1:8000"));
 
 	EXPECT_TRUE(ep.GetProtocol() == InternetProtocol::IPv4);
 	EXPECT_TRUE(ep.GetPort() == 8000);
@@ -15,7 +15,7 @@ TEST(IPEndPointTest, IPv4)
 	EXPECT_TRUE(ep.GetAddress().GetAddressOctet(2) == 0);
 	EXPECT_TRUE(ep.GetAddress().GetAddressOctet(3) == 1);
 	String k = ep.ToString();
-	EXPECT_TRUE(ep.ToString() == "127.0.0.1:8000");
+	EXPECT_TRUE(ep.ToString() == _T("127.0.0.1:8000"));
 }
 
 #endif
