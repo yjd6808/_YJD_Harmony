@@ -5,6 +5,16 @@
 
 #pragma once
 
+#include <tchar.h>
+
+using _char		= TCHAR;	// _UNICODE 시 wchar_t, 아니면 char
+using _achar	= char;		// narrow 고정
+using _wchar	= wchar_t;	// wide 고정
+
+#if defined(_UNICODE) != defined(UNICODE)
+#error "UNICODE와 _UNICODE가 어긋나 있습니다. CharacterSet 설정을 확인하십시오."
+#endif
+
 using _s64		= long long;
 using _u64		= unsigned long long;
 using object_id = _u64;

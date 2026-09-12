@@ -8,6 +8,7 @@
 #include "jc/Env.h"
 #include "jc/Primitives/String.h"
 #include "jc/Wrapper/WinApi.h"
+#include "jc/Primitives/StringConvert.h"
 
 #include "timeapi.h"
 
@@ -118,7 +119,7 @@ void Env::InitArgs(int _argc, char** _argv)
 	args_.Clear();
 	for (int i = 0; i < _argc; ++i) 
 	{
-		args_.PushBack(String(_argv[i]));
+		args_.PushBack(StringConvert::FromUtf8(_argv[i]));
 	}
 }
 

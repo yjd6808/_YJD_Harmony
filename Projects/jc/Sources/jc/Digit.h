@@ -16,6 +16,7 @@ struct Digit
 {
 	static int Length(int _num);	// 자릿수
 	static const char* HexChar;
+	static const wchar_t* HexCharW;
 };
 
 

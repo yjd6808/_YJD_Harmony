@@ -16,6 +16,7 @@
 #include "jc/Type.h"
 #include "jc/Define.h"
 #include "jc/TypeTraits.h"
+#include "jc/Primitives/String.h"
 
 #define WIN32_LEAN_AND_MEAN	
 #include <Windows.h>

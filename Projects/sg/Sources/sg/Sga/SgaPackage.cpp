@@ -115,5 +115,5 @@ SgaElement& SgaPackage::operator[](const int _index)
 //////////////////////////////////////////////////////////////////////////////////////////
 String SgaPackage::ToString() const
 {
-	return StringUtil::Format("Sga(%s)", path_.Source());
+	return StringUtilT::Format("Sga(%s)", path_.Source());
 }

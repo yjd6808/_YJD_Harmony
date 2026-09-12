@@ -17,11 +17,11 @@
 #include "jc/Type.h"
 #include "jc/Assert.h"
 #include "jc/Define.h"
+#include "jc/Primitives/String.h"
 
 NS_JC_BEGIN
 template <typename T>
 class SharedPtr;
-class String;
 
 class Stream
 {

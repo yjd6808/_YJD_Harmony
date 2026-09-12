@@ -132,7 +132,7 @@ void BlendState_Main()
 
 	auto UpdateTitle = [&]()
 	{
-		jc::String szTitle = jc::StringUtil::Format("18. 블렌드 - 왼쪽: Opaque(기준) | 오른쪽: %s (1~4, ESC)", s_szBlendNames[static_cast<_s32>(blendMode)]);
+		jc::String szTitle = jc::StringUtilT::Format("18. 블렌드 - 왼쪽: Opaque(기준) | 오른쪽: %s (1~4, ESC)", s_szBlendNames[static_cast<_s32>(blendMode)]);
 		window.SetTitle(szTitle);
 	};
 	UpdateTitle();

@@ -55,33 +55,33 @@ public:
 		// 중간에 비는게 있으면 -1을 반환하여 올바르지 않은 플레이스 홀더를 나타내도록 한다.
 		char temp[32]{};
 		int i = 0;
-		int len = jc::StringUtil::CTLength(_pStr);
+		int len = jc::StringUtilT::CTLength(_pStr);
 		int maxNum = -1;
 		PlaceholderInfo r;
 		do
 		{
-			i = jc::StringUtil::CTFindChar(_pStr, '{', i);
+			i = jc::StringUtilT::CTFindChar(_pStr, '{', i);
 			if (i <= -1)
 				break; // 더 이상 { 문자가 없는 경우
 			if (i + 1 >= len)
 				return PlaceholderInfo::Error(-2); // {이 마지막 문자인 경우
-			int e = jc::StringUtil::CTFindChar(_pStr, '}', i + 1);
+			int e = jc::StringUtilT::CTFindChar(_pStr, '}', i + 1);
 			if (e <= -1)
 				return PlaceholderInfo::Error(-3); // { 다음에 } 문자가 없는 경우
 			int sz = e - i - 1;
 			if (sz >= 32)
 				return PlaceholderInfo::Error(-4); // 플레이스홀더 내용이 말도 안되는 경우
-			jc::StringUtil::CTCopy(temp, 32, _pStr + i + 1, sz);
+			jc::StringUtilT::CTCopy(temp, 32, _pStr + i + 1, sz);
 			for (int k = 0; k < sz; ++k)
 				if (temp[k] < '0' || temp[k] > '9')
 					return PlaceholderInfo::Error(-5); // 플레이스홀더 내용이 숫자가 아닌 경우
-			int num = jc::StringUtil::CTToInt32(temp);
+			int num = jc::StringUtilT::CTToInt32(temp);
 			if (num < 0 || num >= STMT_PLACEHOLDER_MAX)
 				return PlaceholderInfo::Error(-6); // 플레이스홀더 번호가 음수이거나 최대 번호(100)를 넘는 경우
 			++r.map_[num]; // 존재하는 플레이스홀더 표시
 			if (num > maxNum)
 				maxNum = num;
-			jc::StringUtil::CTZeroMemory(temp, 32);
+			jc::StringUtilT::CTZeroMemory(temp, 32);
 			i = e + 1;
 		} while (i < len);
 
@@ -99,14 +99,14 @@ public:
 	{
 		// 문자열이 SELECT, INSERT, UPDATE, DELETE 중 무엇으로 시작하는지 판단하여 StatementType을 반환한다.
 		// 대소문자 구분 없이 판단한다.
-		int length = jc::StringUtil::CTLength(_pStr);
-		if (jc::StringUtil::CTFind(_pStr, length, "SELECT", 6, 0, false) == 0)
+		int length = jc::StringUtilT::CTLength(_pStr);
+		if (jc::StringUtilT::CTFind(_pStr, length, "SELECT", 6, 0, false) == 0)
 			return StatementType::Select;
-		if (jc::StringUtil::CTFind(_pStr, length, "INSERT", 6, 0, false) == 0)
+		if (jc::StringUtilT::CTFind(_pStr, length, "INSERT", 6, 0, false) == 0)
 			return StatementType::Insert;
-		if (jc::StringUtil::CTFind(_pStr, length, "UPDATE", 6, 0, false) == 0)
+		if (jc::StringUtilT::CTFind(_pStr, length, "UPDATE", 6, 0, false) == 0)
 			return StatementType::Update;
-		if (jc::StringUtil::CTFind(_pStr, length, "DELETE", 6, 0, false) == 0)
+		if (jc::StringUtilT::CTFind(_pStr, length, "DELETE", 6, 0, false) == 0)
 			return StatementType::Delete;
 		return StatementType::Etc;
 	}

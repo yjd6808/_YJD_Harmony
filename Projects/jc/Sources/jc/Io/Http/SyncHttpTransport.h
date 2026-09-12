@@ -40,10 +40,6 @@ public:
 	static HttpError MapLastError();
 
 private:
-	// WinHTTP는 wide 전용이므로 내부 변환용으로만 std::wstring 사용 (외부 노출 없음, 대안: Stack WideChar 버퍼 수동 관리)
-	// jc::String(UTF-8) -> MultiByteToWideChar -> 스택/힙 wide 버퍼 -> LPCWSTR 로 대체 가능하나, 현재는 내부 일시 생성 후 즉시 소멸 패턴 유지
-	static std::wstring ToWide(const jc::String& _str);
-	static std::wstring ToWide(const char* _pStr);
 
 private:
 	HINTERNET hSession_ = nullptr;

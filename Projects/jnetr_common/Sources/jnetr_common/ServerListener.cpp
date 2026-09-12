@@ -95,7 +95,7 @@ void ServerListener::OnReceivedCmd(Session* _pReceiver, ICommand* _pCmd)
 		// 다이나믹 패킷 에코 진행
 		auto pPacket = dbg_new DynamicCmdPacket<DynamicMessage>(len + 1);
 		DynamicMessage* pMsg = pPacket->Get<0>();
-		StringUtil::CopyUnsafe(pMsg->Msg(), pDynamicMessage->Msg());
+		StringUtilT::CopyUnsafe(pMsg->Msg(), pDynamicMessage->Msg());
 
 		if (!_pReceiver->SendAsync(pPacket))
 		{

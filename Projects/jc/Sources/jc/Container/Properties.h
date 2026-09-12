@@ -52,7 +52,7 @@ public:
 		PropertyBase** ppProperty = properties_.Find(Forward<Ky>(_propertyKey));
 		if (ppProperty != nullptr)
 		{
-			_LogWarn_("%s 프로퍼티에 %s타입으로 이미 사용중입니다.", jc::StringUtil::ToString(Forward<Ky>(_propertyKey)).SafeSource(), PropertyType::NAME[(*ppProperty)->GetType()]);
+			_LogWarn_("%s 프로퍼티에 %s타입으로 이미 사용중입니다.", jc::StringUtilT::ToString(Forward<Ky>(_propertyKey)).SafeSource(), PropertyType::NAME[(*ppProperty)->GetType()]);
 			return nullptr;
 		}
 

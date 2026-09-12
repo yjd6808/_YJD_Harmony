@@ -66,7 +66,7 @@ void AppConfig::ReadEnvArgs()
 
 	if (jc::String* pMode = argMap.Find("mode"))
 	{
-		mode_ = StringUtil::ToNumber<int>(pMode->SafeSource());
+		mode_ = StringUtilT::ToNumber<int>(pMode->SafeSource());
 	}
 
 	if (jc::String* pAssetPath = argMap.Find("assets"))

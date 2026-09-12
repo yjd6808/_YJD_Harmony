@@ -134,8 +134,8 @@ int main(int _argc, char** _argv)
 	{
 
 		
-		String id = StringUtil::Format("test%d", x);
-		String pass = StringUtil::Format("pass%d", x);
+		String id = StringUtilT::Format("test%d", x);
+		String pass = StringUtilT::Format("pass%d", x);
 		db.Query(QID_INSERT_1, MS_STMT("INSERT INTO t_account (c_account_id, c_account_pass) VALUES({0}, {1}); ", id, pass));
 		 
 		 // jc_assert_msg(rowCount == 1, "영향받은 행 갯수가 1이 아닙니다. rowCount: %u", rowCount);
@@ -182,7 +182,7 @@ int main(int _argc, char** _argv)
 	// ------------------------------------------
 	// delete 테스트
 	{
-		db.Query(QID_DELETE_1, MS_STMT("DELETE FROM t_account WHERE c_account_id = {0}", StringUtil::Format("test%d", x)));
+		db.Query(QID_DELETE_1, MS_STMT("DELETE FROM t_account WHERE c_account_id = {0}", StringUtilT::Format("test%d", x)));
 	}
 
 

@@ -11,13 +11,13 @@ NS_JC_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 void PropertyBase::LogGettingMismatchedType(PropertyType_t _lhs, PropertyType_t _rhs)
 {
-	_LogWarn_("%s타입의 프로퍼티를 %s타입의 프로퍼티로 가져올려고 시도했습니다.", PropertyType::NAME[_lhs], PropertyType::NAME[_rhs]);
+	_LogWarn_(_T("%hs타입의 프로퍼티를 %hs타입의 프로퍼티로 가져올려고 시도했습니다."), PropertyType::NAME[_lhs], PropertyType::NAME[_rhs]);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 void PropertyBase::LogConversionFailed(PropertyType_t _to, PropertyType_t _from)
 {
-	_LogWarn_("%s타입의 프로퍼티에 %s타입의 매개변수를 저장하는데 실패함.", PropertyType::NAME[_to], PropertyType::NAME[_from]);
+	_LogWarn_(_T("%hs타입의 프로퍼티에 %hs타입의 매개변수를 저장하는데 실패함."), PropertyType::NAME[_to], PropertyType::NAME[_from]);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,7 +27,7 @@ PropertyBase& PropertyBase::operator++()
 	IPropertyValueUnaryOperator* pOperator = PropertyStatics::UnaryOperators[eType];
 	if (!pOperator)
 	{
-		_LogWarn_("%s타입은 %s연산이 불가능합니다.", PropertyType::NAME[eType], "prefix ++");
+		_LogWarn_(_T("%hs타입은 %hs연산이 불가능합니다."), PropertyType::NAME[eType], "prefix ++");
 		return *this;
 	}
 
@@ -42,7 +42,7 @@ PropertyBase& PropertyBase::operator--()
 	IPropertyValueUnaryOperator* pOperator = PropertyStatics::UnaryOperators[eType];
 	if (!pOperator)
 	{
-		_LogWarn_("%s타입은 %s연산이 불가능합니다.", PropertyType::NAME[eType], "prefix --");
+		_LogWarn_(_T("%hs타입은 %hs연산이 불가능합니다."), PropertyType::NAME[eType], "prefix --");
 		return *this;
 	}
 
@@ -57,7 +57,7 @@ _s64 PropertyBase::operator++(int)
 	IPropertyValueUnaryOperator* pOperator = PropertyStatics::UnaryOperators[eType];
 	if (!pOperator)
 	{
-		_LogWarn_("%s타입은 %s연산이 불가능합니다.", PropertyType::NAME[eType], "postfix ++");
+		_LogWarn_(_T("%hs타입은 %hs연산이 불가능합니다."), PropertyType::NAME[eType], "postfix ++");
 		return 0;
 	}
 
@@ -71,7 +71,7 @@ _s64 PropertyBase::operator--(int)
 	IPropertyValueUnaryOperator* pOperator = PropertyStatics::UnaryOperators[eType];
 	if (!pOperator)
 	{
-		_LogWarn_("%s타입은 %s연산이 불가능합니다.", PropertyType::NAME[eType], "postfix --");
+		_LogWarn_(_T("%hs타입은 %hs연산이 불가능합니다."), PropertyType::NAME[eType], "postfix --");
 		return 0;
 	}
 

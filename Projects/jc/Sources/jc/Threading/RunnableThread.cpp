@@ -41,7 +41,7 @@ void RunnableThread::Start()
 
 	if (startError != 0)
 	{
-		_LogError_("쓰레드 시작 실패 (%d)", startError);
+		_LogError_(_T("쓰레드 시작 실패 (%d)"), startError);
 	}
 }
 

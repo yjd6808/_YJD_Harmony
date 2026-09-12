@@ -5,6 +5,9 @@
 
 #pragma once
 
+#include <type_traits>
+#include <cerrno>
+
 #include "jc/Type.h"
 #include "jc/Define.h"
 #include "jc/Assert.h"
@@ -12,25 +15,31 @@
 #include "jc/Namespace.h"
 
 NS_JC_BEGIN
+template <typename CharT> class StringUtil;
+NS_END
+
+#include "jc/Primitives/String.h"
+#include "jc/Container/Vector.h"
+#include "jc/Tuple.h"
+#include "jc/Wrapper/CRuntime.h"
+
+NS_JC_BEGIN
 
 class CDefaultAllocator;
 
-template <typename...>
-struct Tuple;
-
-template <typename, typename>
-class Vector;
-class String;
+template <typename CharT>
 class StringUtil final
 {
 public:
-	// buf에 str 문자열 추가함
-	static void ConcatInnerBack(char* _pBuf, int _buflen, int _bufCapacity, const char* _pConcatStr, int _concatStrLen);
-	static void ConcatInnerFront(char* _pBuf, int _buflen, int _bufCapacity, const char* _pConcatStr, int _concatStrLen);
-	static void ConcatInnerFront(char* _pBuf, int _bufCapacity, const char* _pConcatStr);
+	using StrType = BasicString<CharT, StringImpl_SSO<CharT>>;
 
-	static int Copy(char* _pBuffer, int _bufferSize, const char* _pCopy);
-	static int CopyUnsafe(char* _pBuffer, const char* _pCopy);
+	// buf에 str 문자열 추가함
+	static void ConcatInnerBack(CharT* _pBuf, int _buflen, int _bufCapacity, const CharT* _pConcatStr, int _concatStrLen);
+	static void ConcatInnerFront(CharT* _pBuf, int _buflen, int _bufCapacity, const CharT* _pConcatStr, int _concatStrLen);
+	static void ConcatInnerFront(CharT* _pBuf, int _bufCapacity, const CharT* _pConcatStr);
+
+	static int Copy(CharT* _pBuffer, int _bufferSize, const CharT* _pCopy);
+	static int CopyUnsafe(CharT* _pBuffer, const CharT* _pCopy);
 
 	// 컴파일 타임용
 	template <typename T, typename U>
@@ -45,10 +54,10 @@ public:
 		const int ISRC_LEN = CTLength(_src);
 		const int IDST_LEN = CTLength(_dst);
 
-		char* pSrc = (char*)_src;
-		char* pDst = (char*)_dst;
+		CharT* pSrc = (CharT*)_src;
+		CharT* pDst = (CharT*)_dst;
 
-		while (*pDst != NULL && *pSrc != NULL) {
+		while (*pDst != CharT(0) && *pSrc != CharT(0)) {
 			if (*pDst > *pSrc)
 				return -1;
 			else if (*pDst < *pSrc)
@@ -66,24 +75,24 @@ public:
 		return 0;
 	}
 
-	static constexpr void CTCopy(char* _pBuffer, int _bufferSize, const char* _pCopy, int _count)
+	static constexpr void CTCopy(CharT* _pBuffer, int _bufferSize, const CharT* _pCopy, int _count)
 	{
 		if (_pBuffer == nullptr || _pCopy == nullptr || _bufferSize <= 0)
 		{
 			return;
 		}
 		int iSize = 0;
-		while (*_pCopy != NULL && iSize < _bufferSize - 1 && iSize < _count)
+		while (*_pCopy != CharT(0) && iSize < _bufferSize - 1 && iSize < _count)
 		{
 			*_pBuffer = *_pCopy;
 			_pBuffer++;
 			_pCopy++;
 			iSize++;
 		}
-		*_pBuffer = NULL;
+		*_pBuffer = CharT(0);
 	}
 
-	static constexpr int CTCount(const char* _pStr, const char* _pTarget) {
+	static constexpr int CTCount(const CharT* _pStr, const CharT* _pTarget) {
 		const int STR_LEN = CTLength(_pStr);
 		const int TARGET_LEN = CTLength(_pTarget);
 		if (TARGET_LEN == 0 || TARGET_LEN > STR_LEN)
@@ -104,16 +113,16 @@ public:
 	}
 
 	// 문자열에서 특정 문자의 개수를 반환
-	static constexpr int CTCountChar(const char* _pStr, const char _ch) {
+	static constexpr int CTCountChar(const CharT* _pStr, const CharT _ch) {
 		return CTCountCharRecursive(_pStr, _ch, 0, 0);
 	}
 
-	static constexpr int CTFind(const char* _pSource, const char* _pTarget, bool _caseSensitive = true)
+	static constexpr int CTFind(const CharT* _pSource, const CharT* _pTarget, bool _caseSensitive = true)
 	{
 		return CTFind(_pSource, _pTarget, 0, _caseSensitive);
 	}
 
-	static constexpr int CTFind(const char* _pSource, const char* _pTarget, int _startOffset, bool _caseSensitive = true)
+	static constexpr int CTFind(const CharT* _pSource, const CharT* _pTarget, int _startOffset, bool _caseSensitive = true)
 	{
 		const int SOURCE_LEN = CTLength(_pSource);
 		const int TARGET_LEN = CTLength(_pTarget);
@@ -121,9 +130,9 @@ public:
 	}
 
 	static constexpr int CTFind(
-		const char* _pSource,
+		const CharT* _pSource,
 		int _sourceLen,
-		const char* _pTarget,
+		const CharT* _pTarget,
 		int _targetLen,
 		int _startOffset,
 		bool _caseSensitive = true)
@@ -146,30 +155,30 @@ public:
 	}
 
 	// 문자열에서 문자를 찾아서 인덱스값을 반환 (앞에서부터)
-	static constexpr int CTFindChar(const char* _pStr, const char _ch)
+	static constexpr int CTFindChar(const CharT* _pStr, const CharT _ch)
 	{
 		return CTFindCharRecursive(_pStr, _ch, 0);
 	}
 
-	static constexpr int CTFindChar(const char* _pStr, const char _ch, int _startOffset)
+	static constexpr int CTFindChar(const CharT* _pStr, const CharT _ch, int _startOffset)
 	{
 		return CTFindCharRecursive(_pStr + _startOffset, _ch, _startOffset);
 	}
 
 	// 문자열에서 문자를 찾아서 인덱스값을 반환 (뒤에서부터)
-	static constexpr int CTFindCharReverse(const char* _pStr, const char _ch) {
+	static constexpr int CTFindCharReverse(const CharT* _pStr, const CharT _ch) {
 		const int STR_LEN = CTLength(_pStr);
 		return CTFindCharReverseRecursive(_pStr + STR_LEN - 1, _ch, STR_LEN);
 	}
 
-	static constexpr int CTLength(const char* _pStr)
+	static constexpr int CTLength(const CharT* _pStr)
 	{
 		if (_pStr == nullptr)
 		{
 			return 0;
 		}
 		int iLength = 0;
-		while (*_pStr != '\0')
+		while (*_pStr != CharT(0))
 		{
 			iLength++;
 			_pStr++;
@@ -178,28 +187,28 @@ public:
 	}
 
 	template <_u32 CAP>
-	static constexpr int CTLength(const char(&_str)[CAP])
+	static constexpr int CTLength(const CharT(&_str)[CAP])
 	{
 		return CAP - 1;
 	}
 
-	static constexpr int CTToInt32(const char* _pStr)
+	static constexpr int CTToInt32(const CharT* _pStr)
 	{
 		return CTToNumber<_s32>(_pStr);
 	}
 
-	static constexpr _s64 CTToInt64(const char* _pStr)
+	static constexpr _s64 CTToInt64(const CharT* _pStr)
 	{
 		return CTToNumber<_s64>(_pStr);
 	}
 
-	static constexpr void CTTrim(char* _pBuffer, int _bufferSize, char _ch = ' ')
+	static constexpr void CTTrim(CharT* _pBuffer, int _bufferSize, CharT _ch = CharT(' '))
 	{
 		CTTrimLeft(_pBuffer, _bufferSize, _ch);
 		CTTrimRight(_pBuffer, _bufferSize, _ch);
 	}
 
-	static constexpr void CTTrimLeft(char* _pBuffer, int _bufferSize, char _ch = ' ')
+	static constexpr void CTTrimLeft(CharT* _pBuffer, int _bufferSize, CharT _ch = CharT(' '))
 	{
 		if (_pBuffer == nullptr || _bufferSize <= 0)
 		{
@@ -223,7 +232,7 @@ public:
 		}
 	}
 
-	static constexpr void CTTrimRight(char* _pBuffer, int _bufferSize, char _ch = ' ')
+	static constexpr void CTTrimRight(CharT* _pBuffer, int _bufferSize, CharT _ch = CharT(' '))
 	{
 		if (_pBuffer == nullptr || _bufferSize <= 0)
 		{
@@ -243,7 +252,7 @@ public:
 		}
 	}
 
-	static constexpr void CTZeroMemory(char* _pBuffer, int _bufferSize)
+	static constexpr void CTZeroMemory(CharT* _pBuffer, int _bufferSize)
 	{
 		if (_pBuffer == nullptr || _bufferSize <= 0)
 		{
@@ -258,95 +267,98 @@ public:
 	// FillLeft(20, '0', 3) -> 020
 	// FillLeft(20, '0', 4) -> 0020
 	template <typename T>
-	static String FillLeft(const T& _v, char _paddingCharacter, int _len) {
-		if (_len >= 1023)
-		{
-			jc_assert(false);
-			return jc::String(0);
-		}
+	static StrType FillLeft(const T& _v, CharT _paddingCharacter, int _len);
 
-		char szFill[1024];
-		String szRet;
-		szRet += _v;
+	static int Find(const CharT* _pSource, int _sourceLen, int _startIdx, int _endIdx, const CharT* _pStr, bool _caseSensitive = true);
+	static int Find(const CharT* _pSource, int _sourceLen, int _startIdx, int _endIdx, const CharT* _pStr, int _strLen, bool _caseSensitive = true);
+	static int Find(const CharT* _pSource, int _sourceLen, int _startIdx, const CharT* _pStr, bool _caseSensitive = true);
+	static int FindAll(OUT int* _pPositionArray, const CharT* _pSource, const CharT* _pStr, bool _caseSensitive = true);
+	static int FindAll(OUT int* _pPositionArray, const CharT* _pSource, int _sourceLen, const CharT* _pStr, bool _caseSensitive = true);
+	static int FindAll(OUT int* _pPositionArray, const CharT* _pSource, int _sourceLen, int _startIdx, int _endIdx, const CharT* _pStr, bool _caseSensitive = true);
+	static int FindChar(const CharT* _pSource, CharT _ch);
+	static int FindCharReverse(const CharT* _pSource, CharT _ch);
+	static int FindCharReverse(const CharT* _pSource, int _len, CharT _ch);
+	static int FindCharUncontained(const CharT* _pSource, CharT _ch);
 
-		const int iFillCount = _len - szRet.Length();
-		int i = 0;
-		for (i = 0; i < iFillCount; ++i) {
-			szFill[i] = _paddingCharacter;
-		}
-		szFill[i] = '\0';
-		szRet.Insert(0, szFill);
-		return szRet;
-	}
+	static StrType Format(const CharT* _pFormat, ...);
+	static StrType Format(const CharT* _pFormat, va_list _args);
+	static void FormatBuffer(CharT* _pBuff, int _buffCapacity, const CharT* _pFormat, ...);
+	static void FormatBuffer(CharT* _pBuff, int _buffCapacity, const CharT* _pFormat, va_list _args);
 
-	static int Find(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr, bool _caseSensitive = true);
-	static int Find(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr, int _strLen, bool _caseSensitive = true);
-	static int Find(const char* _pSource, int _sourceLen, int _startIdx, const char* _pStr, bool _caseSensitive = true);
-	static int FindAll(OUT int* _pPositionArray, const char* _pSource, const char* _pStr, bool _caseSensitive = true);
-	static int FindAll(OUT int* _pPositionArray, const char* _pSource, int _sourceLen, const char* _pStr, bool _caseSensitive = true);
-	static int FindAll(OUT int* _pPositionArray, const char* _pSource, int _sourceLen, int _startIdx, int _endIdx, const char* _pStr, bool _caseSensitive = true);
-	static int FindChar(const char* _pSource, char _ch);
-	static int FindCharReverse(const char* _pSource, char _ch);
-	static int FindCharReverse(const char* _pSource, int _len, char _ch);
-	static int FindCharUncontained(const char* _pSource, char _ch);
+	static StrType GetRange(const CharT* _pSource, int _sourceLen, int _startIdx, int _endIdx);
+	static Tuple<CharT*, int, int> GetRangeUnsafe(const CharT* _pSource, int _sourceLen, int _startIdx, int _endIdx);
+	static StrType SubStr(const CharT* _pSource, int _sourceLen, int _startIdx, int _count);
 
-	static String Format(const char* _pFormat, ...);
-	static String Format(const char* _pFormat, va_list _args);
-	static void FormatBuffer(char* _pBuff, int _buffCapacity, const char* _pFormat, ...);
-	static void FormatBuffer(char* _pBuff, int _buffCapacity, const char* _pFormat, va_list _args);
+	static bool IsEqual(const CharT* _pSrc, const CharT* _pDst, bool _bCompareCase = true);
+	static bool IsEqual(const CharT* _pSrc, int _srcLen, const CharT* _pDst, int _dstLen, bool _bCompareCase = true);
+	static bool IsNullOrEmpty(const CharT* _pStr);
 
-	static String GetRange(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx);
-	static Tuple<char*, int, int> GetRangeUnsafe(const char* _pSource, int _sourceLen, int _startIdx, int _endIdx);
-	static String SubStr(const char* _pSource, int _sourceLen, int _startIdx, int _count);
+	static int Compare(const CharT* _pStr, const CharT* _pStr2);
+	static int Compare(const CharT* _pSrc, int _srcLen, const CharT* _pDst, int _dstLen);
 
-	static bool IsEqual(const char* _pSrc, const char* _pDst, bool _bCompareCase = true);
-	static bool IsEqual(const char* _pSrc, int _srcLen, const char* _pDst, int _dstLen, bool _bCompareCase = true);
-	static bool IsNullOrEmpty(const char* _pStr);
-
-	static int Compare(const char* _pStr, const char* _pStr2);
-	static int Compare(const char* _pSrc, int _srcLen, const char* _pDst, int _dstLen);
-
-	constexpr static int Length(const char* _pStr) {
+	constexpr static int Length(const CharT* _pStr) {
 		if (_pStr == nullptr) {
 			return -1;
 		}
 
 		int iSize = 0;
-		while (*_pStr != NULL) {
+		while (*_pStr != CharT(0)) {
 			iSize++;
 			_pStr++;
 		}
 		return iSize;
 	}
 
-	constexpr static int LengthWithNull(const char* _pStr) {
+	constexpr static int LengthWithNull(const CharT* _pStr) {
 		return Length(_pStr) + 1;
 	}
 
-	static const char* SkipLeadingChar(const char* _pStr, char _skipChar);
-	static const char* SkipLeadingNumberZero(const char* _pStr);
+	static const CharT* SkipLeadingChar(const CharT* _pStr, CharT _skipChar);
+	static const CharT* SkipLeadingNumberZero(const CharT* _pStr);
 
-	static Vector<String, CDefaultAllocator> Split(String& _src, const char* _pDelimiter);
-	static Vector<String, CDefaultAllocator> Split(String& _src, char _delimiter);
+	static Vector<StrType, CDefaultAllocator> Split(StrType& _src, const CharT* _pDelimiter);
+	static Vector<StrType, CDefaultAllocator> Split(StrType& _src, CharT _delimiter);
 
-	static void Swap(String& _src, String& _dst);
+	static void Swap(StrType& _src, StrType& _dst);
 
 	template <typename TInteger>
-	static TInteger ToNumber(const char* _pStr, OUT char** _ppEndptr = nullptr, bool _ignoreLeadingZero = true);
+	static TInteger ToNumber(const CharT* _pStr, OUT CharT** _ppEndptr = nullptr, bool _ignoreLeadingZero = true);
 
-	template <typename TNumber>
-	static int ToStringBuffered(char* _pBuff, int _capacity, TNumber _value);
+	static int ToStringBuffered(CharT* _pBuff, int _capacity, bool _value);
+	static int ToStringBuffered(CharT* _pBuff, int _capacity, _s8 _value);
+	static int ToStringBuffered(CharT* _pBuff, int _capacity, _u8 _value);
+	static int ToStringBuffered(CharT* _pBuff, int _capacity, _s16 _value);
+	static int ToStringBuffered(CharT* _pBuff, int _capacity, _u16 _value);
+	static int ToStringBuffered(CharT* _pBuff, int _capacity, _s32 _value);
+	static int ToStringBuffered(CharT* _pBuff, int _capacity, _u32 _value);
+	static int ToStringBuffered(CharT* _pBuff, int _capacity, _s32l _value);
+	static int ToStringBuffered(CharT* _pBuff, int _capacity, _u32l _value);
+	static int ToStringBuffered(CharT* _pBuff, int _capacity, _s64 _value);
+	static int ToStringBuffered(CharT* _pBuff, int _capacity, _u64 _value);
+	static int ToStringBuffered(CharT* _pBuff, int _capacity, float _value);
+	static int ToStringBuffered(CharT* _pBuff, int _capacity, double _value);
 
-	template <typename TNumber>
-	static String ToString(TNumber _value);
-
-	static jc::String ToUtf8(const wchar_t* _pStr, int _length);
+	static StrType ToString(bool _value);
+	static StrType ToString(_s8 _value);
+	static StrType ToString(_u8 _value);
+	static StrType ToString(_s16 _value);
+	static StrType ToString(_u16 _value);
+	static StrType ToString(_s32 _value);
+	static StrType ToString(_u32 _value);
+	static StrType ToString(_s32l _value);
+	static StrType ToString(_u32l _value);
+	static StrType ToString(_s64 _value);
+	static StrType ToString(_u64 _value);
+	static StrType ToString(float _value);
+	static StrType ToString(double _value);
+	static StrType ToString(const StrType& _value);
+	static StrType ToString(StrType&& _value);
 
 	// https://stackoverflow.com/questions/26080829/detecting-strtol-failure
 	template <typename TInteger>
-	static bool TryToNumber(OUT TInteger& _val, const char* _pStr, bool _ignoreLeadingZero = true) {
+	static bool TryToNumber(OUT TInteger& _val, const CharT* _pStr, bool _ignoreLeadingZero = true) {
 		errno = 0;
-		char* pEnd = nullptr;
+		CharT* pEnd = nullptr;
 		TInteger v = ToNumber<TInteger>(_pStr, &pEnd, _ignoreLeadingZero);
 
 		if (pEnd == _pStr) {	// 숫자 못찾는 경우 에로노 셋안됨
@@ -362,7 +374,7 @@ public:
 
 private:
 	template <typename T>
-	static constexpr T CTToNumber(const char* _pStr)
+	static constexpr T CTToNumber(const CharT* _pStr)
 	{
 		if (_pStr == nullptr)
 		{
@@ -370,26 +382,26 @@ private:
 		}
 		T result = 0;
 		int sign = 1;
-		const char* p = _pStr;
-		if (*p == '-') {
+		const CharT* p = _pStr;
+		if (*p == CharT('-')) {
 			sign = -1;
 			p++;
 		}
 
-		while (*p >= '0' && *p <= '9')
+		while (*p >= CharT('0') && *p <= CharT('9'))
 		{
-			result = result * 10 + (*p - '0');
+			result = result * 10 + (*p - CharT('0'));
 			p++;
 		}
 		return sign * result;
 	}
 
-	static constexpr int CTLengthRecursive(const char* _pStr, const int _position) {
-		return *_pStr != '\0' ? CTLengthRecursive(_pStr + 1, _position + 1) : _position;
+	static constexpr int CTLengthRecursive(const CharT* _pStr, const int _position) {
+		return *_pStr != CharT(0) ? CTLengthRecursive(_pStr + 1, _position + 1) : _position;
 	}
 
-	static constexpr int CTFindCharRecursive(const char* _pStr, const char _ch, const int _position) {
-		if (*_pStr == '\0') {
+	static constexpr int CTFindCharRecursive(const CharT* _pStr, const CharT _ch, const int _position) {
+		if (*_pStr == CharT(0)) {
 			return -1;
 		}
 
@@ -400,7 +412,7 @@ private:
 		return CTFindCharRecursive(_pStr + 1, _ch, _position + 1);
 	}
 
-	static constexpr int CTFindCharReverseRecursive(const char* _pStr, const char _ch, const int _position) {
+	static constexpr int CTFindCharReverseRecursive(const CharT* _pStr, const CharT _ch, const int _position) {
 		if (_position == 0) {
 			return -1;
 		}
@@ -412,8 +424,8 @@ private:
 		return CTFindCharReverseRecursive(_pStr - 1, _ch, _position - 1);
 	}
 
-	static constexpr int CTCountCharRecursive(const char* _pStr, const char _ch, const int _position, int _count) {
-		if (*_pStr == '\0') {
+	static constexpr int CTCountCharRecursive(const CharT* _pStr, const CharT _ch, const int _position, int _count) {
+		if (*_pStr == CharT(0)) {
 			return _count;
 		}
 
@@ -425,6 +437,12 @@ private:
 	}
 };
 
+using StringUtilA = StringUtil<char>;
+using StringUtilW = StringUtil<wchar_t>;
+using StringUtilT = StringUtil<_char>;
+
 NS_END
 
-#define JC_FMT(...) jc::StringUtil::Format(__VA_ARGS__)
+#define JC_FMT(...) jc::StringUtilT::Format(__VA_ARGS__)
+
+#include "jc/Primitives/StringUtil.inl"

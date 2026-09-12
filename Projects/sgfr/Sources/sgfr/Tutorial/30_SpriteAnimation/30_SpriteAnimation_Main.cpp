@@ -141,7 +141,7 @@ void SpriteAnimation_Main()
 
 	auto UpdateTitle = [&]()
 	{
-		jc::String szTitle = jc::StringUtil::Format("30. 스프라이트 - 위: 선형(기준) | 아래: %s / FPS %d (1~3, ↑↓, ESC)", s_szEasingNames[easingMode], animFps);
+		jc::String szTitle = jc::StringUtilT::Format("30. 스프라이트 - 위: 선형(기준) | 아래: %s / FPS %d (1~3, ↑↓, ESC)", s_szEasingNames[easingMode], animFps);
 		window.SetTitle(szTitle);
 	};
 	UpdateTitle();

@@ -8,10 +8,12 @@
 #include "jc/Type.h"
 #include "jc/TypeCast.h"
 #include "jc/TypeTraits.h"
-#include "jc/Exception.h"
 #include "jc/Debug/New.h"
 
 NS_JC_BEGIN
+
+struct InvalidOperationException;
+
 class Memory final
 {
 public:

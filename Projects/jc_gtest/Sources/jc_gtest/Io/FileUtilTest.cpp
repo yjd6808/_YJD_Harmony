@@ -13,18 +13,18 @@
 
 TEST(FileUtilsTest, BasicTest)
 {
-	CRuntime::FileDelete("a.txt");
-	CRuntime::FileDelete("b.txt");
+	CRuntime::FileDelete(_T("a.txt"));
+	CRuntime::FileDelete(_T("b.txt"));
 
-	File::WriteAllText("안녕하세요", "a.txt");
-	EXPECT_TRUE(File::ReadAllText("a.txt") == "안녕하세요");
+	File::WriteAllText(_T("안녕하세요"), "a.txt");
+	EXPECT_TRUE(File::ReadAllText("a.txt") == _T("안녕하세요"));
 
-	EXPECT_TRUE(File::Copy("a.txt", "b.txt"));
-	EXPECT_TRUE(File::Exist("a.txt"));
-	EXPECT_TRUE(File::Exist("b.txt"));
+	EXPECT_TRUE(File::Copy(_T("a.txt"), _T("b.txt")));
+	EXPECT_TRUE(File::Exist(_T("a.txt")));
+	EXPECT_TRUE(File::Exist(_T("b.txt")));
 
-	CRuntime::FileDelete("a.txt");
-	CRuntime::FileDelete("b.txt");
+	CRuntime::FileDelete(_T("a.txt"));
+	CRuntime::FileDelete(_T("b.txt"));
 	
 }
 

@@ -8,13 +8,19 @@
 #include "jc/Memory.h"
 
 #include "jc/IO/Path.h"
+#include "jc/Primitives/StringConvert.h"
 
 NS_JC_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 String Path::FileName(const String& _path)
 {
-	return FileName(_path.Source(), _path.Length());
+	int slash = _path.FindReverse(_T("/"));
+	int bslash = _path.FindReverse(_T("\\"));
+	int pos = slash > bslash ? slash : bslash;
+	if (pos < 0)
+		return _path;
+	return _path.SubStr(pos + 1, _path.Length() - pos - 1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,14 +32,22 @@ String Path::FileName(const char* _pPath)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 String Path::FileNameWithoutExt(const String& _path)
 {
-	return FileNameWithoutExt(_path.Source());
+	const String fileName = FileName(_path);
+	int lastPeriodIndex = fileName.FindReverse(_T("."));
+
+	if (lastPeriodIndex == -1)
+	{
+		return fileName;
+	}
+
+	return fileName.SubStr(0, lastPeriodIndex);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 String Path::FileNameWithoutExt(const char* _pPath)
 {
 	const String fileName = FileName(_pPath);
-	int lastPeriodIndex = fileName.FindReverse(".");
+	int lastPeriodIndex = fileName.FindReverse(_T("."));
 
 	// 점이 없으면 전체 파일 이름 반환
 	if (lastPeriodIndex == -1)
@@ -47,7 +61,7 @@ String Path::FileNameWithoutExt(const char* _pPath)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 String Path::FileName(const char* _pPath, int _length)
 {
-	String fileName;
+	AString fileName;
 	bool slashFound = false;
 	char* pPath = (char*)_pPath;
 
@@ -65,16 +79,67 @@ String Path::FileName(const char* _pPath, int _length)
 
 	if (slashFound == false)
 	{
-		return _pPath;
+		return StringConvert::FromAnsi(_pPath, _length);
 	}
 
-	return fileName;
+	return StringConvert::FromAnsi(fileName);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 String Path::FileNameLevel(const String& _path, int _level)
 {
-	return FileNameLevel(_path.Source(), _path.Length(), _level);
+	const int len = _path.Length();
+	const _char* src = _path.Source();
+	int currentLevel = 0;
+	bool broke = false;
+	int i = len - 1;
+	for (; i >= 0; --i)
+	{
+		_char ch = src[i];
+		if (ch == _T('\\') || ch == _T('/'))
+		{
+			if (currentLevel == _level)
+			{
+				broke = true;
+				break;
+			}
+			int j = i - 1;
+			while (j >= 0 && (src[j] == _T('\\') || src[j] == _T('/')))
+			{
+				--j;
+			}
+			i = j + 1;
+			++currentLevel;
+		}
+	}
+	int start = i + 1;
+	if (start >= len)
+		return String();
+	// narrow판(FileNameLevel(char*))과 동일하게 슬래시 런을 '/' 하나로 정규화. '\\'도 '/'로 통일
+	String ret;
+	bool lastWasSlash = false;
+	for (int k = start; k < len; ++k)
+	{
+		const _char ch = src[k];
+		if (ch == _T('\\') || ch == _T('/'))
+		{
+			if (!lastWasSlash)
+				ret += _T('/');
+			lastWasSlash = true;
+		}
+		else
+		{
+			ret += ch;
+			lastWasSlash = false;
+		}
+	}
+	if (!broke && !ret.IsEmpty() && ret[0] == _T('/'))
+	{
+		if (ret.Length() <= 1)
+			return String();
+		ret = ret.SubStr(1, ret.Length() - 1);
+	}
+	return ret;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -151,7 +216,7 @@ String Path::FileNameLevel(const char* _pPath, int _length, int _level)
 	char fileName[BUF_SIZE]{};
 	FileNameLevel(fileName, BUF_SIZE, _pPath, _length, _level);
 
-	return fileName;
+	return StringConvert::FromAnsi(fileName);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -164,7 +229,7 @@ String Path::Combine(const String& _lhs, const String& _rhs)
 
 	for (int i = combined.Length() - 1; i >= 0; --i, ++count)
 	{
-		if (combined[i] != '/' && combined[i] != '\\')
+		if (combined[i] != _T('/') && combined[i] != _T('\\'))
 		{
 			lastIndex = i;
 			break;
@@ -178,14 +243,14 @@ String Path::Combine(const String& _lhs, const String& _rhs)
 
 	if (combined.Length() != 0)
 	{
-		combined.Append('/');
+		combined.Append(_T('/'));
 	}
 
 	count = 0;
 
 	for (lastIndex = 0; lastIndex < _rhs.Length(); ++lastIndex, ++count)
 	{
-		if (_rhs.GetAt(lastIndex) != '/' && _rhs.GetAt(lastIndex) != '\\')
+		if (_rhs.GetAt(lastIndex) != _T('/') && _rhs.GetAt(lastIndex) != _T('\\'))
 		{
 			break;
 		}
@@ -208,18 +273,18 @@ String Path::Extension(const String& _path)
 
 	for (int i = _path.Length() - 1; i >= 0; --i, ++count)
 	{
-		if (_path.GetAt(i) == '.')
+		if (_path.GetAt(i) == _T('.'))
 		{
 			return { _path.Source() + i, count + 1 };
 		}
 
-		if (_path.GetAt(i) == '/' || _path.GetAt(i) == '\\')
+		if (_path.GetAt(i) == _T('/') || _path.GetAt(i) == _T('\\'))
 		{
-			return "";
+			return _T("");
 		}
 	}
 
-	return "";
+	return _T("");
 }
 
 NS_END

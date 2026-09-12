@@ -139,7 +139,7 @@ void ShadingModel_Main()
 
 	auto UpdateTitle = [&]()
 	{
-		jc::String szTitle = jc::StringUtil::Format("24. 셰이딩 모델 - %s / 날카로움 %.0f (1/2/3, ↑↓, ESC)", s_szModeNames[mode], specPower);
+		jc::String szTitle = jc::StringUtilT::Format("24. 셰이딩 모델 - %s / 날카로움 %.0f (1/2/3, ↑↓, ESC)", s_szModeNames[mode], specPower);
 		window.SetTitle(szTitle);
 	};
 	UpdateTitle();

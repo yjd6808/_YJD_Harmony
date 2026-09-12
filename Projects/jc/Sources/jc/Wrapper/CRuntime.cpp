@@ -2,17 +2,30 @@
 
 #include "cstdio"
 #include "cstdlib"
+#include "cstring"
+#include "cwchar"
 #include "process.h"
+#include "tchar.h"
 
 NS_JC_BEGIN
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 int
 JC_CDECL
 CRuntime::System(const char* _pCmd)
 {
     return ::system(_pCmd);
 }
+
+#ifdef _UNICODE
+////////////////////////////////////////////////////////////////////////////////////////
+int
+JC_CDECL
+CRuntime::System(const _char* _pCmd)
+{
+    return ::_tsystem(_pCmd);
+}
+#endif
 
 //////////////////////////////////////////////////////////////////////////////////////////
 _ptr
@@ -57,6 +70,25 @@ CRuntime::FileOpen(const char* _pFilename, const char* _pMode)
 
     return nullptr;
 }
+
+#ifdef _UNICODE
+////////////////////////////////////////////////////////////////////////////////////////
+_iohandle
+JC_CDECL
+CRuntime::FileOpen(const _char* _pFilename, const _char* _pMode)
+{
+    FILE* pFile = nullptr;
+
+    int errorCode = ::_tfopen_s(&pFile, _pFilename, _pMode);
+
+    if (errorCode == 0)
+    {
+        return pFile;
+    }
+
+    return nullptr;
+}
+#endif
 
 //////////////////////////////////////////////////////////////////////////////////////////
 size_t
@@ -210,6 +242,16 @@ CRuntime::FileDelete(const char* _pPath)
     return ::remove(_pPath) == 0;
 }
 
+#ifdef _UNICODE
+////////////////////////////////////////////////////////////////////////////////////////
+bool
+JC_CDECL
+CRuntime::FileDelete(const _char* _pPath)
+{
+    return ::_tremove(_pPath) == 0;
+}
+#endif
+
 //////////////////////////////////////////////////////////////////////////////////////////
 bool CRuntime::FileRename(const char* _pOldPath, const char* _pNewPath, bool _overwrite)
 {
@@ -220,6 +262,227 @@ bool CRuntime::FileRename(const char* _pOldPath, const char* _pNewPath, bool _ov
     }
 
     return ::rename(_pOldPath, _pNewPath) == 0;
+}
+
+#ifdef _UNICODE
+////////////////////////////////////////////////////////////////////////////////////////
+bool CRuntime::FileRename(const _char* _pOldPath, const _char* _pNewPath, bool _overwrite)
+{
+    if (_overwrite)
+    {
+        FileDelete(_pNewPath);
+    }
+
+    return ::_trename(_pOldPath, _pNewPath) == 0;
+}
+#endif
+
+////////////////////////////////////////////////////////////////////////////////////////
+long
+JC_CDECL
+CRuntime::StrToLong(const char* _pStr, char** _ppEnd, int _radix)
+{
+    return ::strtol(_pStr, _ppEnd, _radix);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+unsigned long
+JC_CDECL
+CRuntime::StrToULong(const char* _pStr, char** _ppEnd, int _radix)
+{
+    return ::strtoul(_pStr, _ppEnd, _radix);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+long long
+JC_CDECL
+CRuntime::StrToLLong(const char* _pStr, char** _ppEnd, int _radix)
+{
+    return ::strtoll(_pStr, _ppEnd, _radix);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+unsigned long long
+JC_CDECL
+CRuntime::StrToULLong(const char* _pStr, char** _ppEnd, int _radix)
+{
+    return ::strtoull(_pStr, _ppEnd, _radix);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+float
+JC_CDECL
+CRuntime::StrToFloat(const char* _pStr, char** _ppEnd)
+{
+    return ::strtof(_pStr, _ppEnd);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+double
+JC_CDECL
+CRuntime::StrToDouble(const char* _pStr, char** _ppEnd)
+{
+    return ::strtod(_pStr, _ppEnd);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+long
+JC_CDECL
+CRuntime::StrToLong(const wchar_t* _pStr, wchar_t** _ppEnd, int _radix)
+{
+    return ::wcstol(_pStr, _ppEnd, _radix);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+unsigned long
+JC_CDECL
+CRuntime::StrToULong(const wchar_t* _pStr, wchar_t** _ppEnd, int _radix)
+{
+    return ::wcstoul(_pStr, _ppEnd, _radix);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+long long
+JC_CDECL
+CRuntime::StrToLLong(const wchar_t* _pStr, wchar_t** _ppEnd, int _radix)
+{
+    return ::wcstoll(_pStr, _ppEnd, _radix);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+unsigned long long
+JC_CDECL
+CRuntime::StrToULLong(const wchar_t* _pStr, wchar_t** _ppEnd, int _radix)
+{
+    return ::wcstoull(_pStr, _ppEnd, _radix);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+float
+JC_CDECL
+CRuntime::StrToFloat(const wchar_t* _pStr, wchar_t** _ppEnd)
+{
+    return ::wcstof(_pStr, _ppEnd);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+double
+JC_CDECL
+CRuntime::StrToDouble(const wchar_t* _pStr, wchar_t** _ppEnd)
+{
+    return ::wcstod(_pStr, _ppEnd);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+int
+JC_CDECL
+CRuntime::FormatV(char* _pBuff, int _capacity, const char* _pFormat, va_list _args)
+{
+    return ::vsnprintf(_pBuff, _capacity, _pFormat, _args);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+int
+JC_CDECL
+CRuntime::FormatV(wchar_t* _pBuff, int _capacity, const wchar_t* _pFormat, va_list _args)
+{
+    return ::vswprintf(_pBuff, _capacity, _pFormat, _args);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+int
+JC_CDECL
+CRuntime::FormatLengthV(const char* _pFormat, va_list _args)
+{
+    va_list argsCopy;
+    va_copy(argsCopy, _args);
+    int length = ::vsnprintf(nullptr, 0, _pFormat, argsCopy);
+    va_end(argsCopy);
+    return length;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+int
+JC_CDECL
+CRuntime::FormatLengthV(const wchar_t* _pFormat, va_list _args)
+{
+    va_list argsCopy;
+    va_copy(argsCopy, _args);
+    int length = ::_vscwprintf(_pFormat, argsCopy);
+    va_end(argsCopy);
+    return length;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+int
+JC_CDECL
+CRuntime::FormatBuffered(char* _pBuff, int _capacity, const char* _pFormat, ...)
+{
+    va_list args;
+    va_start(args, _pFormat);
+    int written = FormatV(_pBuff, _capacity, _pFormat, args);
+    va_end(args);
+    return written;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+int
+JC_CDECL
+CRuntime::FormatBuffered(wchar_t* _pBuff, int _capacity, const wchar_t* _pFormat, ...)
+{
+    va_list args;
+    va_start(args, _pFormat);
+    int written = FormatV(_pBuff, _capacity, _pFormat, args);
+    va_end(args);
+    return written;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+int
+JC_CDECL
+CRuntime::StrLen(const char* _pStr)
+{
+    return static_cast<int>(::strlen(_pStr));
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+int
+JC_CDECL
+CRuntime::StrLen(const wchar_t* _pStr)
+{
+    return static_cast<int>(::wcslen(_pStr));
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+int
+JC_CDECL
+CRuntime::StrCmp(const char* _pLhs, const char* _pRhs)
+{
+    return ::strcmp(_pLhs, _pRhs);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+int
+JC_CDECL
+CRuntime::StrCmp(const wchar_t* _pLhs, const wchar_t* _pRhs)
+{
+    return ::wcscmp(_pLhs, _pRhs);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+const char*
+JC_CDECL
+CRuntime::StrRChr(const char* _pStr, char _ch)
+{
+    return ::strrchr(_pStr, _ch);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+const wchar_t*
+JC_CDECL
+CRuntime::StrRChr(const wchar_t* _pStr, wchar_t _ch)
+{
+    return ::wcsrchr(_pStr, _ch);
 }
 
 NS_END

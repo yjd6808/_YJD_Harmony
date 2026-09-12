@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <cstdarg>
+
 #include "jc/Define.h"
 #include "jc/Type.h"
 
@@ -49,6 +51,48 @@ struct CRuntime {
 
 
 	/**
+	 * \brief 수치 변환 narrow/wide 오버로드 (StringUtil<CharT> 단일 본문용)
+	 * char판은 strto* 계열, wide판은 wcsto* 계열을 호출한다.
+	 */
+	static long				JC_CDECL StrToLong(const char* _pStr, char** _ppEnd, int _radix);
+	static unsigned long	JC_CDECL StrToULong(const char* _pStr, char** _ppEnd, int _radix);
+	static long long		JC_CDECL StrToLLong(const char* _pStr, char** _ppEnd, int _radix);
+	static unsigned long long JC_CDECL StrToULLong(const char* _pStr, char** _ppEnd, int _radix);
+	static float			JC_CDECL StrToFloat(const char* _pStr, char** _ppEnd);
+	static double			JC_CDECL StrToDouble(const char* _pStr, char** _ppEnd);
+
+	static long				JC_CDECL StrToLong(const wchar_t* _pStr, wchar_t** _ppEnd, int _radix);
+	static unsigned long	JC_CDECL StrToULong(const wchar_t* _pStr, wchar_t** _ppEnd, int _radix);
+	static long long		JC_CDECL StrToLLong(const wchar_t* _pStr, wchar_t** _ppEnd, int _radix);
+	static unsigned long long JC_CDECL StrToULLong(const wchar_t* _pStr, wchar_t** _ppEnd, int _radix);
+	static float			JC_CDECL StrToFloat(const wchar_t* _pStr, wchar_t** _ppEnd);
+	static double			JC_CDECL StrToDouble(const wchar_t* _pStr, wchar_t** _ppEnd);
+
+	/**
+	 * \brief 서식 출력 narrow/wide 오버로드
+	 * FormatV는 기록한 문자 수(종결자 제외), FormatLengthV는 필요 길이를 반환한다.
+	 * wide판 FormatLengthV는 _vscwprintf 기반이다 (vswprintf는 길이를 반환하지 않음).
+	 */
+	static int				JC_CDECL FormatV(char* _pBuff, int _capacity, const char* _pFormat, va_list _args);
+	static int				JC_CDECL FormatV(wchar_t* _pBuff, int _capacity, const wchar_t* _pFormat, va_list _args);
+	static int				JC_CDECL FormatLengthV(const char* _pFormat, va_list _args);
+	static int				JC_CDECL FormatLengthV(const wchar_t* _pFormat, va_list _args);
+	static int				JC_CDECL FormatBuffered(char* _pBuff, int _capacity, const char* _pFormat, ...);
+	static int				JC_CDECL FormatBuffered(wchar_t* _pBuff, int _capacity, const wchar_t* _pFormat, ...);
+
+	static int				JC_CDECL StrLen(const char* _pStr);
+	static int				JC_CDECL StrLen(const wchar_t* _pStr);
+	static int				JC_CDECL StrCmp(const char* _pLhs, const char* _pRhs);
+	static int				JC_CDECL StrCmp(const wchar_t* _pLhs, const wchar_t* _pRhs);
+	static const char*		JC_CDECL StrRChr(const char* _pStr, char _ch);
+	static const wchar_t*	JC_CDECL StrRChr(const wchar_t* _pStr, wchar_t _ch);
+
+	#ifdef _UNICODE // _char == wchar_t: separate overload
+	static int      JC_CDECL System(const _char* _pCmd);
+	#endif
+
+
+	/**
 	 * \brief https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/fopen-s-wfopen-s?view=msvc-170
 	 * 파일를 특정 mode로 열기
 	 *
@@ -63,6 +107,9 @@ struct CRuntime {
 	 * "w+, ccs=UTF-8" 뭐 이런식으로
 	 */
 	static _iohandle JC_CDECL FileOpen(const char* _pFilename, const char* _pMode);
+	#ifdef _UNICODE // _char == wchar_t: separate overload
+	static _iohandle JC_CDECL FileOpen(const _char* _pFilename, const _char* _pMode);
+	#endif
 
 
 	/**
@@ -162,11 +209,17 @@ struct CRuntime {
 	 * 파일을 삭제한다.
 	 */
 	static bool JC_CDECL FileDelete(const char* _pPath);
+	#ifdef _UNICODE // _char == wchar_t: separate overload
+	static bool JC_CDECL FileDelete(const _char* _pPath);
+	#endif
 
 	/**
 	 * \brief https://en.cppreference.com/w/cpp/io/c/rename
 	 * 파일의 이름을 변경한다.
 	 */
 	static bool JC_CDECL FileRename(const char* _pOldPath, const char* _pNewPath, bool _overwrite = true);
+	#ifdef _UNICODE // _char == wchar_t: separate overload
+	static bool JC_CDECL FileRename(const _char* _pOldPath, const _char* _pNewPath, bool _overwrite = true);
+	#endif
 };
 NS_END

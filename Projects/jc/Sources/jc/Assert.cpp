@@ -21,15 +21,15 @@ NS_JC_BEGIN
 		static bool PreventUnrechableCode = true;
 		static constexpr int BufSize = 512;													
 		char szFmtBuf[BufSize] = { 0, };													
-		if (StringUtil::Length(_fmt) > 0) {
+		if (StringUtilA::Length(_fmt) > 0) {
 			va_list args;
 			va_start(args, _fmt);
-			StringUtil::FormatBuffer(szFmtBuf, BufSize, _fmt, args);
+			StringUtilA::FormatBuffer(szFmtBuf, BufSize, _fmt, args);
 			va_end(args);
 		}
-		StringUtil::ConcatInnerFront(szFmtBuf, BufSize, "┌ 어썰트 발생 : ");
+		StringUtilA::ConcatInnerFront(szFmtBuf, BufSize, "┌ 어썰트 발생 : ");
 		printf("%s\n", szFmtBuf);															
-		Path::FileNameLevel(szFmtBuf, BufSize, _filePath, StringUtil::Length(_filePath), 2);
+		Path::FileNameLevel(szFmtBuf, BufSize, _filePath, StringUtilA::Length(_filePath), 2);
 		printf("│ EXP : %s\n", _expectStr);
 		printf("│ 파일 : %s\n", szFmtBuf);												    
 		printf("│ 라인 : %d\n", _lineNum);

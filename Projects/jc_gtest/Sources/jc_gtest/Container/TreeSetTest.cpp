@@ -142,23 +142,23 @@ TEST(TreeSetTest, NonFundamental) {
 	LeakCheck;
 
 	TreeSet<String> testSet;
-	EXPECT_TRUE(testSet.Insert("abcd"));
-	EXPECT_TRUE(testSet.Insert("abce"));
+	EXPECT_TRUE(testSet.Insert(_T("abcd")));
+	EXPECT_TRUE(testSet.Insert(_T("abce")));
 
 	EXPECT_TRUE(testSet.Size() == 2);
 
-	EXPECT_TRUE(testSet.Exist("abcd"));
-	EXPECT_TRUE(testSet.Exist("abce"));
+	EXPECT_TRUE(testSet.Exist(_T("abcd")));
+	EXPECT_TRUE(testSet.Exist(_T("abce")));
 
-	EXPECT_TRUE(testSet.Remove("abcd"));
-	EXPECT_TRUE(testSet.Remove("abce"));
+	EXPECT_TRUE(testSet.Remove(_T("abcd")));
+	EXPECT_TRUE(testSet.Remove(_T("abce")));
 
 	EXPECT_TRUE(testSet.Size() == 0);
 
-	testSet = { "abcd", "abcde", "abcdef" };
-	EXPECT_TRUE(testSet.Exist("abcd"));
-	EXPECT_TRUE(testSet.Exist("abcde"));
-	EXPECT_TRUE(testSet.Exist("abcdef"));
+	testSet = { _T("abcd"), _T("abcde"), _T("abcdef") };
+	EXPECT_TRUE(testSet.Exist(_T("abcd")));
+	EXPECT_TRUE(testSet.Exist(_T("abcde")));
+	EXPECT_TRUE(testSet.Exist(_T("abcdef")));
 	testSet.Clear();
 	EXPECT_TRUE(testSet.Size() == 0);
 }
@@ -168,7 +168,7 @@ TEST(TreeSetTest, MemoryPool) {
 	MemoryPoolLeakCheck
 	TreeSet<String, Comparator<String>, CDefaultArrayAllocator> q;
 	for (int i = 0; i < 1'000; i++) {
-		q.Insert(StringUtil::Format("ss%d", i));
+		q.Insert(StringUtilT::Format(_T("ss%d"), i));
 	}
 }
 

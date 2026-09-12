@@ -13,6 +13,7 @@
 #include "jc/Wrapper/CRuntime.h"
 
 #include "jc/Primitives/StringUtil.h"
+#include "jc/Primitives/StringConvert.h"
 
 #define MODE_BUFFER_SIZE		32
 #define FILE_READ_COUNT			64
@@ -38,7 +39,16 @@ bool File::Exist(const char* _pPath)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool File::Exist(const String& _path)
 {
-	return Exist(_path.Source());
+	_iohandle pHandle = CRuntime::FileOpen(_path.Source(), _T("rb"));
+	bool exists = false;
+
+	if (pHandle)
+	{
+		exists = true;
+		CRuntime::FileClose(pHandle);
+	}
+
+	return exists;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,7 +69,16 @@ long File::Size(const char* _pPath)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 long File::Size(const String& _path)
 {
-	return Size(_path.Source());
+	_iohandle pHandle = CRuntime::FileOpen(_path.Source(), _T("rb"));
+	long size = -1;
+
+	if (pHandle && CRuntime::FileSeekEnd(pHandle, 0))
+	{
+		size = CRuntime::FileTell(pHandle);
+		CRuntime::FileClose(pHandle);
+	}
+
+	return size;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,7 +90,7 @@ bool File::Delete(const char* _pPath)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool File::Delete(const String& _path)
 {
-	return Delete(_path.Source());
+	return CRuntime::FileDelete(_path.Source());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +102,9 @@ bool File::Move(const char* _pSrcPath, const char* _pDstPath)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool File::Move(const String& _srcPath, const String& _dstPath)
 {
-	return Move(_srcPath.Source(), _dstPath.Source());
+	const AString narrowSrc = StringConvert::ToAnsi(_srcPath);
+	const AString narrowDst = StringConvert::ToAnsi(_dstPath);
+	return Move(narrowSrc.Source(), narrowDst.Source());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -122,7 +143,9 @@ bool File::Copy(const char* _pSrcPath, const char* _pDstPath)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool File::Copy(const String& _srcPath, const String& _dstPath)
 {
-	return Copy(_srcPath.Source(), _dstPath.Source());
+	const AString narrowSrc = StringConvert::ToUtf8(_srcPath);
+	const AString narrowDst = StringConvert::ToUtf8(_dstPath);
+	return Copy(narrowSrc.Source(), narrowDst.Source());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -131,28 +154,28 @@ void File::FormatFileMode(char* _pModeBuffer, const int _modeBufferCapacity, con
 	switch (_codePage)
 	{
 	case CodePage::ANSI:
-		StringUtil::FormatBuffer(_pModeBuffer, _modeBufferCapacity, "%s", _pDefaultMode);
+		StringUtilA::FormatBuffer(_pModeBuffer, _modeBufferCapacity, "%s", _pDefaultMode);
 		break;
 	case CodePage::UTF8:
-		StringUtil::FormatBuffer(_pModeBuffer, _modeBufferCapacity, "%s, ccs=UTF-8", _pDefaultMode);
+		StringUtilA::FormatBuffer(_pModeBuffer, _modeBufferCapacity, "%s, ccs=UTF-8", _pDefaultMode);
 		break;
 	case CodePage::UTF16LE:
-		StringUtil::FormatBuffer(_pModeBuffer, _modeBufferCapacity, "%s, ccs=UTF-16LE", _pDefaultMode);
+		StringUtilA::FormatBuffer(_pModeBuffer, _modeBufferCapacity, "%s, ccs=UTF-16LE", _pDefaultMode);
 		break;
 
 	// 아래 3개는 문서에 없다.
 	case CodePage::UTF16BE:
-		StringUtil::FormatBuffer(_pModeBuffer, _modeBufferCapacity, "%s, ccs=UTF-16BE", _pDefaultMode);
+		StringUtilA::FormatBuffer(_pModeBuffer, _modeBufferCapacity, "%s, ccs=UTF-16BE", _pDefaultMode);
 		break;
 	case CodePage::UTF32LE:
-		StringUtil::FormatBuffer(_pModeBuffer, _modeBufferCapacity, "%s, ccs=UTF-32LE", _pDefaultMode);
+		StringUtilA::FormatBuffer(_pModeBuffer, _modeBufferCapacity, "%s, ccs=UTF-32LE", _pDefaultMode);
 		break;
 	case CodePage::UTF32BE:
-		StringUtil::FormatBuffer(_pModeBuffer, _modeBufferCapacity, "%s, ccs=UTF-32BE", _pDefaultMode);
+		StringUtilA::FormatBuffer(_pModeBuffer, _modeBufferCapacity, "%s, ccs=UTF-32BE", _pDefaultMode);
 		break;
 
 	default:
-		StringUtil::FormatBuffer(_pModeBuffer, _modeBufferCapacity, "%s", _pDefaultMode);
+		StringUtilA::FormatBuffer(_pModeBuffer, _modeBufferCapacity, "%s", _pDefaultMode);
 		break;
 	}
 }
@@ -182,7 +205,8 @@ void File::WriteAllText(const char* _pContent, const int _contentLength, const c
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 void File::WriteAllText(const String& _content, const char* _pPath)
 {
-	WriteAllText(_content.Source(), _content.Length(), _pPath);
+	const AString narrow = StringConvert::ToUtf8(_content);
+	WriteAllText(narrow.Source(), narrow.Length(), _pPath);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -224,23 +248,23 @@ String File::ReadAllText(const char* _pPath)
 		throw RuntimeException("파일 사이즈 획득 실패");
 	}
 
-	String buffer(fileSize + 32);
+	AString narrow(fileSize + 32);
 	int readCount;
 	int offset = 0;
 
-	while ((readCount = (int)CRuntime::FileRead(buffer.Source() + offset, 1, FILE_READ_COUNT, pStream)) != 0)
+	while ((readCount = (int)CRuntime::FileRead(narrow.Source() + offset, 1, FILE_READ_COUNT, pStream)) != 0)
 	{
 		offset += readCount;
 		int nextLength = offset + FILE_READ_COUNT + 1; // 확장시 NULL 문자 고려해야함
 
-		buffer.SetLength(offset);
-		buffer.ResizeIfNeeded(nextLength);
+		narrow.SetLength(offset);
+		narrow.ResizeIfNeeded(nextLength);
 	}
 
-	buffer.Source()[offset] = '\0';
+	narrow.Source()[offset] = '\0';
 
 	CRuntime::FileClose(pStream);
-	return buffer;
+	return StringConvert::FromUtf8(narrow);
 }
 
 NS_END

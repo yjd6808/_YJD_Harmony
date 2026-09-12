@@ -7,6 +7,7 @@
 
 #include "jc/Container/CMessage.h"
 #include "jc/Primitives/StringUtil.h"
+#include "jc/Primitives/StringConvert.h"
 
 USING_NS_JC;
 
@@ -830,7 +831,7 @@ CMessage::VariantType CMessageView::GetCurrentVT(OUT _u32* _pMemSize) const
 //////////////////////////////////////////////////////////////////////////////////////////
 void CMessageView::WriteString(const String& _str)
 {
-	WriteBinaryImpl(CMessage::vt_string, (_u8*)_str.SafeSource(), static_cast<_u32>(_str.Length()));
+	WriteBinaryImpl(CMessage::vt_string, reinterpret_cast<const _u8*>(_str.SafeSource()), static_cast<_u32>(_str.Length() * sizeof(_char)));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -914,13 +915,20 @@ String CMessageView::ReadString()
 	if (result != 0)
 	{
 		jc_assert_msg(false, "CMessageView::ReadString - failed, error code: %d (%s)", result, GetBinaryReadErrorMessage(result));
-		return String::Null;
+		return String::Empty;
 	}
 
 	String str(0);
 	if (length > 0)
 	{
-		str.ExchangeSource((char*)pBuf, length);
+		if (length % sizeof(_char) != 0)
+		{
+			jc_assert_msg(false, "CMessageView::ReadString - length is not a multiple of CharT.");
+			Memory::Deallocate(pBuf);
+			return String::Empty;
+		}
+		str.Append(reinterpret_cast<const _char*>(pBuf), static_cast<int>(length / sizeof(_char)));
+		Memory::Deallocate(pBuf);
 	}
 	return str;
 }
@@ -964,11 +972,12 @@ bool CMessageView::ReadBinary(_u8* _pBytes, _u32 _capacity, OUT _u32& _outLen)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool CMessageView::TryReadString(OUT String& _value)
 {
-	_u8* pBuf = (_u8*)_value.Source();
+	_u8* pBuf = reinterpret_cast<_u8*>(_value.Source());
 	_u8* pBufOrigin = pBuf;
 	_u32 length = 0;
+	const _u32 capacityBytes = pBuf == nullptr ? 0 : static_cast<_u32>(_value.Capacity() * sizeof(_char));
 
-	int result = TryReadBinaryImpl(CMessage::vt_string, &pBuf, pBuf == nullptr ? 0 : _value.Capacity(), length);
+	int result = TryReadBinaryImpl(CMessage::vt_string, &pBuf, capacityBytes, length);
 	if (result != 0)
 		return false;
 
@@ -976,15 +985,26 @@ bool CMessageView::TryReadString(OUT String& _value)
 	{
 		_value.Clear();
 	}
+	else if (length % sizeof(_char) != 0)
+	{
+		jc_assert_msg(false, "CMessageView::TryReadString - length is not a multiple of CharT.");
+		if (pBufOrigin == nullptr)
+			Memory::Deallocate(pBuf);
+		return false;
+	}
 	else
 	{
+		const int charLen = static_cast<int>(length / sizeof(_char));
 		if (pBufOrigin == nullptr)
 		{
-			_value.ExchangeSource((char*)pBuf, length);
+			_value.Clear();
+			_value.Append(reinterpret_cast<const _char*>(pBuf), charLen);
+			Memory::Deallocate(pBuf);
 		}
 		else
 		{
-			_value.SetLength((int)length);
+			_value.Source()[charLen] = 0;
+			_value.SetLength(charLen);
 		}
 	}
 	
@@ -1146,7 +1166,7 @@ jc::String CMessageView::Dump() const
 		--remaining;
 		if (remaining == 0)
 		{
-			str += "  <invalid element: missing type code>\n";
+			str += _T("  <invalid element: missing type code>\n");
 			break;
 		}
 		++pRead;
@@ -1158,19 +1178,19 @@ jc::String CMessageView::Dump() const
 			{
 				if (remaining < 1)
 				{
-					str += "  <invalid element length for s8>\n";
+					str += _T("  <invalid element length for s8>\n");
 					break;
 				}
 
 				if (typeCode == CMessage::vt_s8)
 				{
 					_s32 value = *reinterpret_cast<_s8*>(pRead);
-					str += StringUtil::Format("  s8: %d", value);
+					str += StringUtilT::Format(_T("  s8: %d"), value);
 				}
 				else
 				{
 					_s32 value = *pRead;
-					str += StringUtil::Format("  u8: %d", value);
+					str += StringUtilT::Format(_T("  u8: %d"), value);
 				}
 				
 				remaining -= 1;
@@ -1182,19 +1202,19 @@ jc::String CMessageView::Dump() const
 			{
 				if (remaining < 2)
 				{
-					str += "  <invalid element length for s16>\n";
+					str += _T("  <invalid element length for s16>\n");
 					break;
 				}
 
 				if (typeCode == CMessage::vt_s16)
 				{
 					_s32 value = *reinterpret_cast<_s16*>(pRead);
-					str += StringUtil::Format("  s16: %d", value);
+					str += StringUtilT::Format(_T("  s16: %d"), value);
 				}
 				else
 				{
 					_s32 value = *reinterpret_cast<_u16*>(pRead);
-					str += StringUtil::Format("  u16: %d", value);
+					str += StringUtilT::Format(_T("  u16: %d"), value);
 				}
 				remaining -= 2;
 				pRead += 2;
@@ -1205,19 +1225,19 @@ jc::String CMessageView::Dump() const
 			{
 				if (remaining < 4)
 				{
-					str += "  <invalid element length for s32>\n";
+					str += _T("  <invalid element length for s32>\n");
 					break;
 				}
 
 				if (typeCode == CMessage::vt_s32)
 				{
 					_s64 value = *reinterpret_cast<_s32*>(pRead);
-					str += StringUtil::Format("  s32: %lld", value);
+					str += StringUtilT::Format(_T("  s32: %lld"), value);
 				}
 				else
 				{
 					_s64 value = *reinterpret_cast<_u32*>(pRead);
-					str += StringUtil::Format("  u32: %lld", value);
+					str += StringUtilT::Format(_T("  u32: %lld"), value);
 				}
 				remaining -= 4;
 				pRead += 4;
@@ -1228,19 +1248,19 @@ jc::String CMessageView::Dump() const
 			{
 				if (remaining < 8)
 				{
-					str += "  <invalid element length for s64>\n";
+					str += _T("  <invalid element length for s64>\n");
 					break;
 				}
 
 				if (typeCode == CMessage::vt_s64)
 				{
 					_s64 value = *reinterpret_cast<_s64*>(pRead);
-					str += StringUtil::Format("  s64: %lld", value);
+					str += StringUtilT::Format(_T("  s64: %lld"), value);
 				}
 				else
 				{
 					_u64 value = *reinterpret_cast<_u64*>(pRead);
-					str += StringUtil::Format("  u64: %llu", value);
+					str += StringUtilT::Format(_T("  u64: %llu"), value);
 				}
 				
 				remaining -= 8;
@@ -1251,12 +1271,12 @@ jc::String CMessageView::Dump() const
 			{
 				if (remaining < 4)
 				{
-					str += "  <invalid element length for f32>\n";
+					str += _T("  <invalid element length for f32>\n");
 					break;
 				}
 
 				_f32 value = *reinterpret_cast<_f32*>(pRead);
-				str += StringUtil::Format("  f32: %.3f", value);
+				str += StringUtilT::Format(_T("  f32: %.3f"), value);
 				remaining -= 4;
 				pRead += 4;
 			}
@@ -1265,12 +1285,12 @@ jc::String CMessageView::Dump() const
 			{
 				if (remaining < 8)
 				{
-					str += "  <invalid element length for f64>\n";
+					str += _T("  <invalid element length for f64>\n");
 					break;
 				}
 
 				_f64 value = *reinterpret_cast<_f64*>(pRead);
-				str += StringUtil::Format("  f64: %.3lf", value);
+				str += StringUtilT::Format(_T("  f64: %.3lf"), value);
 				remaining -= 8;
 				pRead += 8;
 			}
@@ -1279,12 +1299,12 @@ jc::String CMessageView::Dump() const
 			{
 				if (remaining < sizeof(void*))
 				{
-					str += "  <invalid element length for pointer>\n";
+					str += _T("  <invalid element length for pointer>\n");
 					break;
 				}
 
 				_ptr value = *reinterpret_cast<_ptr*>(pRead);
-				str += StringUtil::Format("  ptr: 0x%p", value);
+				str += StringUtilT::Format(_T("  ptr: 0x%p"), value);
 				remaining -= sizeof(_ptr);
 				pRead += sizeof(_ptr);
 			}
@@ -1296,7 +1316,7 @@ jc::String CMessageView::Dump() const
 				_u32 readLenBytes = Memory::ReadU32_LEB128(pRead, remaining, length);
 				if (readLenBytes == Memory::INVALID_OFFSET)
 				{
-					str += "  <invalid LEB128 length info>\n";
+					str += _T("  <invalid LEB128 length info>\n");
 					break;
 				}
 
@@ -1305,34 +1325,34 @@ jc::String CMessageView::Dump() const
 
 				if (remaining < length)
 				{
-					str += "  <invalid element length for binary/string data>\n";
+					str += _T("  <invalid element length for binary/string data>\n");
 				}
 
 				if (length == 0)
 				{
-					str += typeCode == CMessage::vt_string ? "  String: \"\"" : "  Binary: <empty>";
+					str += typeCode == CMessage::vt_string ? _T("  String: \"\"") : _T("  Binary: <empty>");
 				}
 				else if (typeCode == CMessage::vt_string)
 				{
 					_u8* pBuf = pRead;
 					_u8 backup = pBuf[length];
 					pBuf[length] = '\0'; // null terminator for safe dumping as string
-					str += "  String: \"";
-					str += (char*)pBuf;
+					str += _T("  String: \"");
+					str += StringConvert::FromUtf8(reinterpret_cast<const char*>(pBuf), static_cast<int>(length));
 					pBuf[length] = backup;
 					pRead += length;
 					remaining -= length;
 				}
 				else
 				{
-					str += StringUtil::Format("  Binary: %d bytes", length);
+					str += StringUtilT::Format(_T("  Binary: %d bytes"), length);
 					pRead += length;
 					remaining -= length;
 				}
 			}
 			break;
 		}
-		str += "\n";
+		str += _T("\n");
 	}
 
 	return str;

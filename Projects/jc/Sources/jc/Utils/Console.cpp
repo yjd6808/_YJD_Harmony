@@ -140,22 +140,22 @@ ConsoleColor Console::GetColor()
 //////////////////////////////////////////////////////////////////////////////////////////
 ConsoleColor Console::ConvertColorString(const String& _colorString)
 {
-    if (_colorString == "black") { return Black; }
-    if (_colorString == "blue") { return Blue; }
-    if (_colorString == "green") { return Green; }
-    if (_colorString == "cyan") { return Cyan; }
-    if (_colorString == "red") { return Red; }
-    if (_colorString == "magenta") { return Magenta; }
-    if (_colorString == "yellow") { return Yellow; }
-    if (_colorString == "lightgray") { return LightGray; }
-    if (_colorString == "gray") { return Gray; }
-    if (_colorString == "lightblue") { return LightBlue; }
-    if (_colorString == "lightgreen") { return LightGreen; }
-    if (_colorString == "lightcyan") { return LightCyan; }
-    if (_colorString == "lightred") { return LightRed; }
-    if (_colorString == "lightmagenta") { return LightMagenta; }
-    if (_colorString == "lightyellow") { return LightYellow; }
-    if (_colorString == "white") { return White; }
+    if (_colorString == _T("black")) { return Black; }
+    if (_colorString == _T("blue")) { return Blue; }
+    if (_colorString == _T("green")) { return Green; }
+    if (_colorString == _T("cyan")) { return Cyan; }
+    if (_colorString == _T("red")) { return Red; }
+    if (_colorString == _T("magenta")) { return Magenta; }
+    if (_colorString == _T("yellow")) { return Yellow; }
+    if (_colorString == _T("lightgray")) { return LightGray; }
+    if (_colorString == _T("gray")) { return Gray; }
+    if (_colorString == _T("lightblue")) { return LightBlue; }
+    if (_colorString == _T("lightgreen")) { return LightGreen; }
+    if (_colorString == _T("lightcyan")) { return LightCyan; }
+    if (_colorString == _T("lightred")) { return LightRed; }
+    if (_colorString == _T("lightmagenta")) { return LightMagenta; }
+    if (_colorString == _T("lightyellow")) { return LightYellow; }
+    if (_colorString == _T("white")) { return White; }
     return Max;
 }
 

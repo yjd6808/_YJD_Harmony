@@ -22,8 +22,8 @@ FileDest::~FileDest()
 void FileDest::Bind(IOHandle _handle)
 {
 	partPath_ = destPath_;
-	partPath_.Append(".part.");
-	partPath_.Append(StringUtil::ToString(_handle));
+	partPath_.Append(_T(".part."));
+	partPath_.Append(StringUtilT::ToString(_handle));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -32,8 +32,8 @@ bool FileDest::Open(_s64 _expectedBytes)
 	(void)_expectedBytes;
 	{
 		// .part 파일의 부모 디렉토리 확보
-		int slash = partPath_.FindReverse("/");
-		int bslash = partPath_.FindReverse("\\");
+		int slash = partPath_.FindReverse(_T("/"));
+		int bslash = partPath_.FindReverse(_T("\\"));
 		int pos = slash > bslash ? slash : bslash;
 		if (pos > 0)
 		{
@@ -42,7 +42,7 @@ bool FileDest::Open(_s64 _expectedBytes)
 				Directory::Create(parent);
 		}
 	}
-	hFile_ = CRuntime::FileOpen(partPath_.Source(), "wb");
+	hFile_ = CRuntime::FileOpen(partPath_.Source(), _T("wb"));
 	if (hFile_ == nullptr)
 	{
 		lastError_ = ieWriteFailed;

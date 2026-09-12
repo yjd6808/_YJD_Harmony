@@ -21,13 +21,12 @@ FileStream::FileStream(const String& _path, FileAccess _access, FileMode _mode)
 	, m_eMode(_mode)
 	, m_hHandle(nullptr)
 {
-	const char* pPath = _path.Source();
 
 	switch (_access)
 	{
 	case FileAccess::eRead:
 	{
-		m_hHandle = CRuntime::FileOpen(pPath, "rb");
+		m_hHandle = CRuntime::FileOpen(_path.Source(), _T("rb"));
 
 		if (m_hHandle == nullptr)
 		{
@@ -49,7 +48,7 @@ FileStream::FileStream(const String& _path, FileAccess _access, FileMode _mode)
 		switch (_mode)
 		{
 		case FileMode::eAppend:
-			m_hHandle = CRuntime::FileOpen(pPath, "ab");
+			m_hHandle = CRuntime::FileOpen(_path.Source(), _T("ab"));
 			if (m_hHandle == nullptr)
 			{
 				throw RuntimeException("파일을 Write/Append 모드로 여는데 실패하였습니다.");
@@ -59,11 +58,11 @@ FileStream::FileStream(const String& _path, FileAccess _access, FileMode _mode)
 			break;
 
 		case FileMode::eOpen:
-			if (!File::Exist(pPath))
+			if (!File::Exist(_path))
 			{
 				throw RuntimeException("파일을 Write/Open 모드로 여는데 실패하였습니다. (파일이 없음)");
 			}
-			m_hHandle = CRuntime::FileOpen(pPath, "wb");
+			m_hHandle = CRuntime::FileOpen(_path.Source(), _T("wb"));
 			if (m_hHandle == nullptr)
 			{
 				throw RuntimeException("파일을 Write/Open 모드로 여는데 실패하였습니다.");
@@ -72,7 +71,7 @@ FileStream::FileStream(const String& _path, FileAccess _access, FileMode _mode)
 			break;
 
 		case FileMode::eCreate:
-			m_hHandle = CRuntime::FileOpen(pPath, "wb");
+			m_hHandle = CRuntime::FileOpen(_path.Source(), _T("wb"));
 			if (m_hHandle == nullptr)
 			{
 				throw RuntimeException("파일을 Write/Create 모드로 여는데 실패하였습니다.");
@@ -89,12 +88,12 @@ FileStream::FileStream(const String& _path, FileAccess _access, FileMode _mode)
 		switch (_mode)
 		{
 		case FileMode::eAppend:
-			m_iLength = File::Size(pPath); // append/read 모드로 열면 한번이라도 write 하기전에는 옵셋이 0임, 따라서 위치를 수동으로 구해줘야한다.
+			m_iLength = File::Size(_path); // append/read 모드로 열면 한번이라도 write 하기전에는 옵셋이 0임, 따라서 위치를 수동으로 구해줘야한다.
 			if (m_iLength == -1)
 			{
 				throw RuntimeException("파일을 ReadWrite/Append 모드로 여는데 실패하였습니다.");
 			}
-			m_hHandle = CRuntime::FileOpen(pPath, "ab+");
+			m_hHandle = CRuntime::FileOpen(_path.Source(), _T("ab+"));
 			if (m_hHandle == nullptr)
 			{
 				throw RuntimeException("파일을 ReadWrite/Append 모드로 여는데 실패하였습니다.");
@@ -103,12 +102,12 @@ FileStream::FileStream(const String& _path, FileAccess _access, FileMode _mode)
 			break;
 
 		case FileMode::eOpen:
-			m_iLength = File::Size(pPath); // read/write 모드로 열면 옵셋이 초기 0이므로 길이를 수동으로 구해줘야한다.
+			m_iLength = File::Size(_path); // read/write 모드로 열면 옵셋이 초기 0이므로 길이를 수동으로 구해줘야한다.
 			if (m_iLength == -1)
 			{
 				throw RuntimeException("파일을 ReadWrite/Open 모드로 여는데 실패하였습니다.");
 			}
-			m_hHandle = CRuntime::FileOpen(pPath, "rb+");
+			m_hHandle = CRuntime::FileOpen(_path.Source(), _T("rb+"));
 			if (m_hHandle == nullptr)
 			{
 				throw RuntimeException("파일을 ReadWrite/Open 모드로 여는데 실패하였습니다.");
@@ -116,7 +115,7 @@ FileStream::FileStream(const String& _path, FileAccess _access, FileMode _mode)
 			break;
 
 		case FileMode::eCreate:
-			m_hHandle = CRuntime::FileOpen(pPath, "wb+");
+			m_hHandle = CRuntime::FileOpen(_path.Source(), _T("wb+"));
 			if (m_hHandle == nullptr)
 			{
 				throw RuntimeException("파일을 ReadWrite/Create 모드로 여는데 실패하였습니다.");

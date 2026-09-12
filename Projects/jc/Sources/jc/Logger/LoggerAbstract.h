@@ -42,20 +42,20 @@ public:
 
 	virtual void Flush() = 0;
 	virtual void FlushAll();
-	virtual void LogVaList(Level _level, const char* _pFmt, va_list _list) = 0;
-	void Log(Level _level, const char* _pFmt, ...);
-	virtual void LogPlainVaList(const char* _pFmt, va_list _list) = 0;
-	void LogPlain(const char* _pFmt, ...);
+	virtual void LogVaList(Level _level, const _char* _pFmt, va_list _list) = 0;
+	void Log(Level _level, const _char* _pFmt, ...);
+	virtual void LogPlainVaList(const _char* _pFmt, va_list _list) = 0;
+	void LogPlain(const _char* _pFmt, ...);
 	void LogPlain(const String& _str);
 	virtual String CreateHeader(Level _level);
 
 	void ChainLogger(LoggerAbstract* _pLogger);
 
 	void Log(Level _level, const String& _str);
-	void LogInfo(const char* _pFmt, ...);
-	void LogWarn(const char* _pFmt, ...);
-	void LogError(const char* _pFmt, ...);
-	void LogDebug(const char* _pFmt, ...);
+	void LogInfo(const _char* _pFmt, ...);
+	void LogWarn(const _char* _pFmt, ...);
+	void LogError(const _char* _pFmt, ...);
+	void LogDebug(const _char* _pFmt, ...);
 	void Lock() { m_Lock.Lock(); }
 	void Unlock() { m_Lock.Unlock(); }
 

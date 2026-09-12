@@ -9,6 +9,7 @@
 #include "jc/Time.h"
 #include "jc/Primitives/StringUtil.h"
 #include "jc/Logger/FileLogger.h"
+#include "jc/Primitives/StringConvert.h"
 #include "jc/Wrapper/CRuntime.h"
 
 NS_JC_BEGIN
@@ -19,7 +20,7 @@ FileLogger::FileLogger(const String& _filePath)
 , m_szFilePath(_filePath)
 , m_hFile(nullptr)
 {
-	m_hFile = CRuntime::FileOpen(m_szFilePath.Source(), "a");
+	m_hFile = CRuntime::FileOpen(m_szFilePath.Source(), _T("a"));
 	jc_assert_msg(m_hFile != nullptr, "FileLogger: 파일을 열 수 없습니다. (%s)", m_szFilePath.Source());
 }
 
@@ -52,7 +53,7 @@ void FileLogger::Flush()
 	}
 }
 
-void FileLogger::LogVaList(Level _level, const char* _pFmt, va_list _list)
+void FileLogger::LogVaList(Level _level, const _char* _pFmt, va_list _list)
 {
 	if (!m_pOption->EnableLog[_level])
 	{
@@ -66,11 +67,11 @@ void FileLogger::LogVaList(Level _level, const char* _pFmt, va_list _list)
 		m_Lock.Lock();
 	}
 
-	String fmtText = StringUtil::Format(_pFmt, _list);
+	String fmtText = StringUtilT::Format(_pFmt, _list);
 
 	m_szBuffer += CreateHeader(_level);
 	m_szBuffer += fmtText;
-	m_szBuffer += '\n';
+	m_szBuffer += _T('\n');
 
 	if (m_bAutoFlush)
 	{
@@ -83,7 +84,7 @@ void FileLogger::LogVaList(Level _level, const char* _pFmt, va_list _list)
 	}
 }
 
-void FileLogger::LogPlainVaList(const char* _pFmt, va_list _list)
+void FileLogger::LogPlainVaList(const _char* _pFmt, va_list _list)
 {
 	if (!m_pOption->EnablePlainLog)
 	{
@@ -97,10 +98,10 @@ void FileLogger::LogPlainVaList(const char* _pFmt, va_list _list)
 		m_Lock.Lock();
 	}
 
-	String fmtText = StringUtil::Format(_pFmt, _list);
+	String fmtText = StringUtilT::Format(_pFmt, _list);
 
 	m_szBuffer += fmtText;
-	m_szBuffer += '\n';
+	m_szBuffer += _T('\n');
 
 	if (m_bAutoFlush)
 	{
@@ -131,7 +132,8 @@ void FileLogger::WriteBufferToFile()
 
 	if (length <= 0) return;
 
-	CRuntime::FileWrite(m_szBuffer.Source(), 1, length, m_hFile);
+	const AString narrow = StringConvert::ToUtf8(m_szBuffer);
+	CRuntime::FileWrite(narrow.Source(), 1, narrow.Length(), m_hFile);
 }
 
 void FileLogger::CloseFile()

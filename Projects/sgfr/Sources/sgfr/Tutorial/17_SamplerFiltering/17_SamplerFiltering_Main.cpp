@@ -145,7 +145,7 @@ void SamplerFiltering_Main()
 	// 창 제목에 현재 모드를 표시하는 보조 람다
 	auto UpdateTitle = [&]()
 	{
-		jc::String szTitle = jc::StringUtil::Format("17. 샘플러 - 왼쪽: Point+Wrap(기준) | 오른쪽: %s + %s (1/2, 3/4/5, ESC)", s_szFilterNames[static_cast<_s32>(filter)],
+		jc::String szTitle = jc::StringUtilT::Format("17. 샘플러 - 왼쪽: Point+Wrap(기준) | 오른쪽: %s + %s (1/2, 3/4/5, ESC)", s_szFilterNames[static_cast<_s32>(filter)],
 			s_szAddressNames[static_cast<_s32>(address)]);
 		window.SetTitle(szTitle);
 	};

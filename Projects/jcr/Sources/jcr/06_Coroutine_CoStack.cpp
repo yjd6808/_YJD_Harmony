@@ -110,7 +110,7 @@ static bool VerifyGuardPages(CoStack* _pStack, _u32 _expGuardCount, const char* 
 	{
 		char* pPage = _pStack->pGuardLimit_ + i * CO_PAGE_SIZE;
 		char tagBuf[128];
-		StringUtil::FormatBuffer(tagBuf, sizeof(tagBuf), "%s/GUARD[%u]", _pTag, i);
+		StringUtilT::FormatBuffer(tagBuf, sizeof(tagBuf), "%s/GUARD[%u]", _pTag, i);
 		if (!VerifyPageState(pPage, MEM_COMMIT, PAGE_GUARD, tagBuf))
 			ok = false;
 	}
@@ -123,7 +123,7 @@ static bool VerifyGuardPages(CoStack* _pStack, _u32 _expGuardCount, const char* 
 
 	char* pCommitPage = _pStack->pStackLimit_;
 	char tagCommit[128];
-	StringUtil::FormatBuffer(tagCommit, sizeof(tagCommit), "%s/COMMIT_above_limit", _pTag);
+	StringUtilT::FormatBuffer(tagCommit, sizeof(tagCommit), "%s/COMMIT_above_limit", _pTag);
 	if (!VerifyPageState(pCommitPage, MEM_COMMIT, PAGE_READWRITE, tagCommit))
 		ok = false;
 
@@ -155,7 +155,7 @@ static void TC_GrowCount(const char* _pName, _u32 _growCount, _u32 _expLimitDelt
 	char* pInitGuardLimit = pStack->pGuardLimit_;
 
 	char tagPre[64];
-	StringUtil::FormatBuffer(tagPre, sizeof(tagPre), "%s/pre", _pName);
+	StringUtilT::FormatBuffer(tagPre, sizeof(tagPre), "%s/pre", _pName);
 	VerifyPageState(pInitLimit - CO_PAGE_SIZE, MEM_COMMIT, PAGE_GUARD, tagPre);
 
 	*(volatile char*)(pStack->pStackLimit_ - 4) = 0;
@@ -164,11 +164,11 @@ static void TC_GrowCount(const char* _pName, _u32 _growCount, _u32 _expLimitDelt
 	char* expGuardLimit = pInitGuardLimit - _expGuardDelta * CO_PAGE_SIZE;
 
 	char tagPtrs[64];
-	StringUtil::FormatBuffer(tagPtrs, sizeof(tagPtrs), "%s/ptrs", _pName);
+	StringUtilT::FormatBuffer(tagPtrs, sizeof(tagPtrs), "%s/ptrs", _pName);
 	VerifyPtrs(pStack, expLimit, expGuardLimit, tagPtrs);
 
 	char tagGuard[64];
-	StringUtil::FormatBuffer(tagGuard, sizeof(tagGuard), "%s/guard", _pName);
+	StringUtilT::FormatBuffer(tagGuard, sizeof(tagGuard), "%s/guard", _pName);
 	VerifyGuardPages(pStack, 3, tagGuard);
 
 	g_cCoMgr.DumpStack(pStack, _pName);
@@ -395,14 +395,14 @@ static void TC_MultipleExpansions_AlwaysLeavesGuard()
 		if (hasGuard && pStack->pGuardLimit_ >= pOverflowGuardTop)
 		{
 			char tagBuf[64];
-			StringUtil::FormatBuffer(tagBuf, sizeof(tagBuf), "TC10/exp%d", expansionCount + 1);
+			StringUtilT::FormatBuffer(tagBuf, sizeof(tagBuf), "TC10/exp%d", expansionCount + 1);
 			PrintPass(tagBuf, "가드 페이지 유지됨");
 			VerifyGuardPages(pStack, 2, tagBuf);
 		}
 		else
 		{
 			char tagBuf[64];
-			StringUtil::FormatBuffer(tagBuf, sizeof(tagBuf), "TC10/exp%d", expansionCount + 1);
+			StringUtilT::FormatBuffer(tagBuf, sizeof(tagBuf), "TC10/exp%d", expansionCount + 1);
 			if (!hasGuard)
 				PrintFail(tagBuf, "가드 페이지 없음");
 			else

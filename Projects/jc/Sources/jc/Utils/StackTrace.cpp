@@ -71,7 +71,7 @@ void StackTrace::EnsureSymInit()
 
 	if (!SymInitialize(s_hProcess, szSearchPath, TRUE))
 	{
-		_LogError_("SymInitialize 실패: GetLastError=%lu, SearchPath=%s", GetLastError(), szSearchPath);
+		_LogError_(_T("SymInitialize 실패: GetLastError=%lu, SearchPath=%hs"), GetLastError(), szSearchPath);
 	}
 
 	char szExePath[MAX_PATH] = { 0, };
@@ -167,21 +167,21 @@ void StackTrace::Print() const
 
 		if (bHasSymbol && bHasLine)
 		{
-			_LogError_("  #%d: %s (0x%p) [%s:%lu]", i, pSymbol->Name, addresses_[i], stLine.FileName, stLine.LineNumber);
+			_LogError_(_T("  #%d: %hs (0x%p) [%hs:%lu]"), i, pSymbol->Name, addresses_[i], stLine.FileName, stLine.LineNumber);
 		}
 		else if (bHasSymbol)
 		{
 			if (szModuleName)
-				_LogError_("  #%d: %s (0x%p) [%s]", i, pSymbol->Name, addresses_[i], szModuleName);
+				_LogError_(_T("  #%d: %hs (0x%p) [%hs]"), i, pSymbol->Name, addresses_[i], szModuleName);
 			else
-				_LogError_("  #%d: %s (0x%p)", i, pSymbol->Name, addresses_[i]);
+				_LogError_(_T("  #%d: %hs (0x%p)"), i, pSymbol->Name, addresses_[i]);
 		}
 		else
 		{
 			if (szModuleName)
-				_LogError_("  #%d: 0x%p (%s)", i, addresses_[i], szModuleName);
+				_LogError_(_T("  #%d: 0x%p (%hs)"), i, addresses_[i], szModuleName);
 			else
-				_LogError_("  #%d: 0x%p", i, addresses_[i]);
+				_LogError_(_T("  #%d: 0x%p"), i, addresses_[i]);
 		}
 	}
 }
@@ -228,7 +228,7 @@ void StackTrace::WriteMinidump(CONTEXT* _pContext, DWORD _exceptionCode)
 	HANDLE hFile = CreateFileA(szDumpPath, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
-		_LogError_("미니덤프 파일 생성 실패: %s (GetLastError=%lu)", szDumpPath, GetLastError());
+		_LogError_(_T("미니덤프 파일 생성 실패: %hs (GetLastError=%lu)"), szDumpPath, GetLastError());
 		return;
 	}
 
@@ -265,9 +265,9 @@ void StackTrace::WriteMinidump(CONTEXT* _pContext, DWORD _exceptionCode)
 	CloseHandle(hFile);
 
 	if (bRet)
-		_LogError_("미니덤프 저장 완료: %s", szDumpPath);
+		_LogError_(_T("미니덤프 저장 완료: %hs"), szDumpPath);
 	else
-		_LogError_("미니덤프 저장 실패: GetLastError=%lu", GetLastError());
+		_LogError_(_T("미니덤프 저장 실패: GetLastError=%lu"), GetLastError());
 }
 
 NS_END

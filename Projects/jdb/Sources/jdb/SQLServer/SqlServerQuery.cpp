@@ -1,5 +1,7 @@
 #include "SqlServerQuery.h"
 
+#include "jc/Primitives/StringConvert.h"
+
 #include "type_traits"
 #include "cstring"
 
@@ -142,7 +144,7 @@ bool SqlServerQueryInsert::Execute()
 				SQLLEN indicator;
 				ret = SQLGetData(hIdentityStmt, 1, SQL_C_CHAR, idBuffer, sizeof(idBuffer), &indicator);
 				if (SQL_SUCCEEDED(ret) && indicator != SQL_NULL_DATA)
-					insertId_ = jc::StringUtil::ToNumber<_u64>((char*)idBuffer);
+					insertId_ = jc::StringUtilT::ToNumber<_u64>((char*)idBuffer);
 			}
 		}
 		SQLFreeHandle(SQL_HANDLE_STMT, hIdentityStmt);
@@ -224,7 +226,7 @@ DateTime SqlServerQuerySelect::ParseStringToDateTime(const char* _pRawString)
 	DateTime parsed;
 
 	char dateFormatBuffer[64];
-	int decimalPointPos = StringUtil::FindCharReverse(_pRawString, '.');
+	int decimalPointPos = StringUtilT::FindCharReverse(_pRawString, '.');
 	int decimalPlaceCount = 0;
 
 	if (decimalPointPos != -1)
@@ -245,7 +247,7 @@ DateTime SqlServerQuerySelect::ParseStringToDateTime(const char* _pRawString)
 	if (decimalPlaceCount >= 7)
 		decimalPlaceCount = 6; // 내가 구현한 DateTime은 6자리 까지만 지원한다.
 
-	StringUtil::FormatBuffer(dateFormatBuffer, 64, DATE_FORMAT, DECIMAL_POINT_FORMATS[decimalPlaceCount]);
+	StringUtilT::FormatBuffer(dateFormatBuffer, 64, DATE_FORMAT, DECIMAL_POINT_FORMATS[decimalPlaceCount]);
 	DateTime::TryParse(parsed, dateFormatBuffer, _pRawString);
 	jc_assert_msg(DateTime::LastError() == 0, "소수점 날짜 포맷 파싱수행중 오류가 발생하였습니다. (%s)", DateTime::LastErrorMessage());
 	return parsed;
@@ -551,7 +553,14 @@ namespace
 		case SQL_WVARCHAR:
 			{
 				wchar_t* pWBuf = reinterpret_cast<wchar_t*>(_pBuf);
-				return jc::StringUtil::ToUtf8(pWBuf, _length / sizeof(wchar_t));
+				const int wlen = static_cast<int>(_length / sizeof(wchar_t));
+#ifdef _UNICODE
+				jc::WString wstr;
+				wstr.Append(pWBuf, wlen);
+				return wstr;
+#else
+				return jc::StringConvert::ToUtf8(pWBuf, wlen);
+#endif
 			}
 		default:
 			{
@@ -636,9 +645,9 @@ namespace
 			}
 		default:
 			{
-				// 문자열 타입 (CHAR, VARCHAR 등): 널 종료 후 StringUtil::ToNumber 폴백
+				// 문자열 타입 (CHAR, VARCHAR 등): 널 종료 후 StringUtilT::ToNumber 폴백
 				_pBuf[_length] = '\0';
-				return jc::StringUtil::ToNumber<T>(_pBuf);
+				return jc::StringUtilT::ToNumber<T>(_pBuf);
 			}
 		}
 	}

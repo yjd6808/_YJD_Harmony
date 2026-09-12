@@ -33,7 +33,7 @@ namespace
 	// 창 제목에 프레임당 드로우콜 수를 실시간으로 표시한다. (배칭 검증용)
 	void SetTitleDrawCall(Window* _pWindow, const char* _pFormat, _u32 _drawCalls)
 	{
-		jc::String title = jc::StringUtil::Format(_pFormat, _drawCalls);
+		jc::String title = jc::StringUtilT::Format(_pFormat, _drawCalls);
 		_pWindow->SetTitle(title);
 	}
 

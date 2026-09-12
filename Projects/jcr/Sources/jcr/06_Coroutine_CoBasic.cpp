@@ -74,7 +74,7 @@ static void Test_CO02()
 	else
 	{
 		char buf[128];
-		StringUtil::FormatBuffer(buf, sizeof(buf), "CoRun=%p state=%d (기대: csYield=%d)", pCtx, pCtx ? (int)pCtx->state_ : -1, (int)csYield);
+		StringUtilT::FormatBuffer(buf, sizeof(buf), "CoRun=%p state=%d (기대: csYield=%d)", pCtx, pCtx ? (int)pCtx->state_ : -1, (int)csYield);
 		PrintFail("CO02/run", buf);
 		if (pCtx) g_cCoMgr.FreeCtx(pCtx);
 		return;
@@ -86,7 +86,7 @@ static void Test_CO02()
 	else
 	{
 		char buf[128];
-		StringUtil::FormatBuffer(buf, sizeof(buf), "CoResume=%p (nullptr 기대)", pResult);
+		StringUtilT::FormatBuffer(buf, sizeof(buf), "CoResume=%p (nullptr 기대)", pResult);
 		PrintFail("CO02/resume", buf);
 	}
 }
@@ -116,7 +116,7 @@ static void Test_CO03()
 		if (pCtx == nullptr || pCtx->state_ != csYield)
 		{
 			char buf[128];
-			StringUtil::FormatBuffer(buf, sizeof(buf), "resume %d 에서 pCtx=%p state=%d (csYield=%d 기대)", i + 1, pCtx, pCtx ? (int)pCtx->state_ : -1, (int)csYield);
+			StringUtilT::FormatBuffer(buf, sizeof(buf), "resume %d 에서 pCtx=%p state=%d (csYield=%d 기대)", i + 1, pCtx, pCtx ? (int)pCtx->state_ : -1, (int)csYield);
 			PrintFail("CO03", buf);
 			if (pCtx) g_cCoMgr.FreeCtx(pCtx);
 			return;
@@ -189,7 +189,7 @@ static void Test_CO04()
 		if (g_CO04_order[i] != i + 1)
 		{
 			char buf[128];
-			StringUtil::FormatBuffer(buf, sizeof(buf), "order[%d]=%d (기대 %d)", i, g_CO04_order[i], i + 1);
+			StringUtilT::FormatBuffer(buf, sizeof(buf), "order[%d]=%d (기대 %d)", i, g_CO04_order[i], i + 1);
 			PrintFail("CO04", buf);
 			ok = false;
 			break;
@@ -222,13 +222,13 @@ static void Test_CO05()
 	if (pCtx != nullptr && pCtx == g_CO05_pCtxFromFn)
 	{
 		char buf[128];
-		StringUtil::FormatBuffer(buf, sizeof(buf), "CoRun=%p == fn_arg=%p", pCtx, g_CO05_pCtxFromFn);
+		StringUtilT::FormatBuffer(buf, sizeof(buf), "CoRun=%p == fn_arg=%p", pCtx, g_CO05_pCtxFromFn);
 		PrintPass("CO05", buf);
 	}
 	else
 	{
 		char buf[128];
-		StringUtil::FormatBuffer(buf, sizeof(buf), "CoRun=%p != fn_arg=%p", pCtx, g_CO05_pCtxFromFn);
+		StringUtilT::FormatBuffer(buf, sizeof(buf), "CoRun=%p != fn_arg=%p", pCtx, g_CO05_pCtxFromFn);
 		PrintFail("CO05", buf);
 	}
 
@@ -301,14 +301,14 @@ static void Test_CO07()
 		if (pCtx != nullptr && pCtx->state_ == csYield && pCtx->stack_.stackTier_ == tiers[i])
 		{
 			char buf[128];
-			StringUtil::FormatBuffer(buf, sizeof(buf), "tier=%s pStackBase_=0x%p", tierNames[i], pCtx->stack_.pStackBase_);
+			StringUtilT::FormatBuffer(buf, sizeof(buf), "tier=%s pStackBase_=0x%p", tierNames[i], pCtx->stack_.pStackBase_);
 			PrintPass("CO07", buf);
 			CoResume(pCtx);
 		}
 		else
 		{
 			char buf[128];
-			StringUtil::FormatBuffer(buf, sizeof(buf), "tier=%s 실패 (pCtx=%p state=%d tier=%d)",
+			StringUtilT::FormatBuffer(buf, sizeof(buf), "tier=%s 실패 (pCtx=%p state=%d tier=%d)",
 				tierNames[i], pCtx, pCtx ? (int)pCtx->state_ : -1, pCtx ? (int)pCtx->stack_.stackTier_ : -1);
 			PrintFail("CO07", buf);
 			if (pCtx) g_cCoMgr.FreeCtx(pCtx);
@@ -382,7 +382,7 @@ static void Test_CO09()
 	else
 	{
 		char buf[192];
-		StringUtil::FormatBuffer(buf, sizeof(buf),
+		StringUtilT::FormatBuffer(buf, sizeof(buf),
 			"outer=%p(state=%d) inner=%p(state=%d)",
 			pOuter, pOuter ? (int)pOuter->state_ : -1,
 			g_CO09_innerCtx, g_CO09_innerCtx ? (int)g_CO09_innerCtx->state_ : -1);
@@ -398,7 +398,7 @@ static void Test_CO09()
 	else
 	{
 		char buf[128];
-		StringUtil::FormatBuffer(buf, sizeof(buf), "CoResume=%p (nullptr 기대)", pResult);
+		StringUtilT::FormatBuffer(buf, sizeof(buf), "CoResume=%p (nullptr 기대)", pResult);
 		PrintFail("CO09/final", buf);
 	}
 }
@@ -432,7 +432,7 @@ static void Test_CO10()
 	else
 	{
 		char buf[256];
-		StringUtil::FormatBuffer(buf, sizeof(buf),
+		StringUtilT::FormatBuffer(buf, sizeof(buf),
 			"gs:[8]=%p(exp %p) gs:[16]=%p(exp %p)", curBase, mainBase, curLimit, mainLimit);
 		PrintFail("CO10/after_run", buf);
 	}
@@ -447,7 +447,7 @@ static void Test_CO10()
 	else
 	{
 		char buf[256];
-		StringUtil::FormatBuffer(buf, sizeof(buf),
+		StringUtilT::FormatBuffer(buf, sizeof(buf),
 			"gs:[8]=%p(exp %p) gs:[16]=%p(exp %p)", curBase, mainBase, curLimit, mainLimit);
 		PrintFail("CO10/after_resume", buf);
 	}
@@ -466,7 +466,7 @@ static void Test_CO11()
 	else
 	{
 		char buf[128];
-		StringUtil::FormatBuffer(buf, sizeof(buf), "CoResume(nullptr) = %p (nullptr 기대)", pResult);
+		StringUtilT::FormatBuffer(buf, sizeof(buf), "CoResume(nullptr) = %p (nullptr 기대)", pResult);
 		PrintFail("CO11", buf);
 	}
 }
@@ -499,13 +499,13 @@ static void Test_CO12()
 	if (g_CO12_count == N * 2)
 	{
 		char buf[64];
-		StringUtil::FormatBuffer(buf, sizeof(buf), "%d회 반복, count=%d", N, g_CO12_count);
+		StringUtilT::FormatBuffer(buf, sizeof(buf), "%d회 반복, count=%d", N, g_CO12_count);
 		PrintPass("CO12", buf);
 	}
 	else
 	{
 		char buf[64];
-		StringUtil::FormatBuffer(buf, sizeof(buf), "count=%d (기대 %d)", g_CO12_count, N * 2);
+		StringUtilT::FormatBuffer(buf, sizeof(buf), "count=%d (기대 %d)", g_CO12_count, N * 2);
 		PrintFail("CO12", buf);
 	}
 }
@@ -545,7 +545,7 @@ static void Test_CO13()
 		if (pCtx != nullptr && pCtx->state_ == csYield)
 		{
 			char buf[256];
-			StringUtil::FormatBuffer(buf, sizeof(buf),
+			StringUtilT::FormatBuffer(buf, sizeof(buf),
 				"req=8KB | tier=%d size=%uKB | resolvedTier=cstLow(%d) 풀%s",
 				(int)pCtx->stack_.stackTier_, pCtx->stack_.size_ / 1024,
 				(int)cstLow, pCtx->stack_.stackTier_ == cstLow ? "히트" : "미스(신규 cstCustom)");
@@ -555,7 +555,7 @@ static void Test_CO13()
 		else
 		{
 			char buf[128];
-			StringUtil::FormatBuffer(buf, sizeof(buf),
+			StringUtilT::FormatBuffer(buf, sizeof(buf),
 				"pCtx=%p state=%d", pCtx, pCtx ? (int)pCtx->state_ : -1);
 			PrintFail("CO13-A", buf);
 			if (pCtx) g_cCoMgr.FreeCtx(pCtx);
@@ -571,7 +571,7 @@ static void Test_CO13()
 		if (pCtx != nullptr && pCtx->state_ == csYield)
 		{
 			char buf[256];
-			StringUtil::FormatBuffer(buf, sizeof(buf),
+			StringUtilT::FormatBuffer(buf, sizeof(buf),
 				"req=24KB | tier=%d size=%uKB | resolvedTier=cstMid(%d) 풀%s",
 				(int)pCtx->stack_.stackTier_, pCtx->stack_.size_ / 1024,
 				(int)cstMid, pCtx->stack_.stackTier_ == cstMid ? "히트" : "미스(신규 cstCustom)");
@@ -581,7 +581,7 @@ static void Test_CO13()
 		else
 		{
 			char buf[128];
-			StringUtil::FormatBuffer(buf, sizeof(buf),
+			StringUtilT::FormatBuffer(buf, sizeof(buf),
 				"pCtx=%p state=%d", pCtx, pCtx ? (int)pCtx->state_ : -1);
 			PrintFail("CO13-B", buf);
 			if (pCtx) g_cCoMgr.FreeCtx(pCtx);
@@ -597,7 +597,7 @@ static void Test_CO13()
 		if (pCtx != nullptr && pCtx->state_ == csYield)
 		{
 			char buf[256];
-			StringUtil::FormatBuffer(buf, sizeof(buf),
+			StringUtilT::FormatBuffer(buf, sizeof(buf),
 				"req=128KB | tier=%d size=%uKB | resolvedTier=cstHigh(%d) 풀%s",
 				(int)pCtx->stack_.stackTier_, pCtx->stack_.size_ / 1024,
 				(int)cstHigh, pCtx->stack_.stackTier_ == cstHigh ? "히트" : "미스(신규 cstCustom)");
@@ -607,7 +607,7 @@ static void Test_CO13()
 		else
 		{
 			char buf[128];
-			StringUtil::FormatBuffer(buf, sizeof(buf),
+			StringUtilT::FormatBuffer(buf, sizeof(buf),
 				"pCtx=%p state=%d", pCtx, pCtx ? (int)pCtx->state_ : -1);
 			PrintFail("CO13-C", buf);
 			if (pCtx) g_cCoMgr.FreeCtx(pCtx);
@@ -624,7 +624,7 @@ static void Test_CO13()
 			&& pCtx->stack_.size_ == reqSize)
 		{
 			char buf[128];
-			StringUtil::FormatBuffer(buf, sizeof(buf),
+			StringUtilT::FormatBuffer(buf, sizeof(buf),
 				"req=320KB | tier=cstCustom size=320KB | 진짜 Custom (풀링 없음)");
 			PrintPass("CO13-D", buf);
 			CoResume(pCtx);
@@ -632,7 +632,7 @@ static void Test_CO13()
 		else
 		{
 			char buf[256];
-			StringUtil::FormatBuffer(buf, sizeof(buf),
+			StringUtilT::FormatBuffer(buf, sizeof(buf),
 				"pCtx=%p state=%d tier=%d size=%uKB | 기대: tier=cstCustom(%d) size=320KB",
 				pCtx, pCtx ? (int)pCtx->state_ : -1,
 				pCtx ? (int)pCtx->stack_.stackTier_ : -1,
@@ -725,7 +725,7 @@ static void Test_CO14()
 	else
 	{
 		char buf[128];
-		StringUtil::FormatBuffer(buf, sizeof(buf),
+		StringUtilT::FormatBuffer(buf, sizeof(buf),
 			"pCtx=%p state=%d result=%d", pCtx, pCtx ? (int)pCtx->state_ : -1, (int)g_CO14A_result);
 		PrintFail("CO14-A", buf);
 	}
@@ -753,7 +753,7 @@ static void Test_CO14()
 		&& g_CO14B_code == STATUS_STACK_OVERFLOW)
 	{
 		char buf[128];
-		StringUtil::FormatBuffer(buf, sizeof(buf),
+		StringUtilT::FormatBuffer(buf, sizeof(buf),
 			"STATUS_STACK_OVERFLOW(0x%08X) 포착 성공", (unsigned)g_CO14B_code);
 		PrintPass("CO14-B", buf);
 		CoResume(pCtxB);
@@ -761,7 +761,7 @@ static void Test_CO14()
 	else
 	{
 		char buf[256];
-		StringUtil::FormatBuffer(buf, sizeof(buf),
+		StringUtilT::FormatBuffer(buf, sizeof(buf),
 			"pCtx=%p state=%d caught=%d code=0x%08X | 기대: caught=true code=STATUS_STACK_OVERFLOW(0x%08X)",
 			pCtxB, pCtxB ? (int)pCtxB->state_ : -1,
 			(int)g_CO14B_caught, (unsigned)g_CO14B_code,
@@ -802,14 +802,14 @@ static void Test_CO15()
 	if (g_CO15_count == 1000 && resumeCount == 1000)
 	{
 		char buf[128];
-		StringUtil::FormatBuffer(buf, sizeof(buf),
+		StringUtilT::FormatBuffer(buf, sizeof(buf),
 			"yield=%d, resume=%d (모두 1000회)", g_CO15_count, resumeCount);
 		PrintPass("CO15", buf);
 	}
 	else
 	{
 		char buf[128];
-		StringUtil::FormatBuffer(buf, sizeof(buf),
+		StringUtilT::FormatBuffer(buf, sizeof(buf),
 			"yield=%d, resume=%d (1000 기대)", g_CO15_count, resumeCount);
 		PrintFail("CO15", buf);
 	}

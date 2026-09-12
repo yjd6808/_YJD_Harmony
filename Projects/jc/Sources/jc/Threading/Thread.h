@@ -17,6 +17,7 @@
 #include "jc/Primitives/SmartPtr.h"
 #include "jc/Primitives/Atomic.h"
 #include "jc/Primitives/String.h"
+#include "jc/Primitives/StringConvert.h"
 
 NS_JC_BEGIN
 
@@ -51,7 +52,7 @@ public:
         void* Param;
     };
 
-    Thread(const char* _name = nullptr, bool _autoJoin = false) : m_hHandle(nullptr), m_Name(_name), m_uiThreadId(0), m_eState(eUninitialized), m_RunningSignal(1, 0), m_bAutoJoin(_autoJoin) {}
+    Thread(const char* _name = nullptr, bool _autoJoin = false) : m_hHandle(nullptr), m_Name(StringConvert::FromUtf8(_name)), m_uiThreadId(0), m_eState(eUninitialized), m_RunningSignal(1, 0), m_bAutoJoin(_autoJoin) {}
     Thread(TRunnable&& _fn, void* _param = nullptr, const char* _name = nullptr, bool _autoJoin = false); 
     Thread(const Thread& _other) = delete;
     Thread(Thread&& _other) noexcept;

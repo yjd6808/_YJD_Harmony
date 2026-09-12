@@ -185,7 +185,7 @@ TEST(HashMapTest, InnerDestructorTest) {
 			else
 				aq.Remove(*aq.Keys().Last());
 		} else {
-			aq.Insert(i, "fsefesfesfesf");
+			aq.Insert(i, _T("fsefesfesfesf"));
 		}
 	}
 }
@@ -196,7 +196,7 @@ TEST(HashMapTest, MemoryPool) {
 
 	HashMap<String, String, CDefaultArrayAllocator> q;
 	for (int i = 0; i < 100'000; i++) 
-		q.Insert(StringUtil::Format("ss%d", i), StringUtil::Format("ss%d", i));
+		q.Insert(StringUtilT::Format(_T("ss%d"), i), StringUtilT::Format(_T("ss%d"), i));
 }
 
 

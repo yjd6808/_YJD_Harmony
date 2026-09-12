@@ -104,7 +104,7 @@ void NetClientListener::OnReceivedCmd(jnet::Session* _pSession, ICommand* _pRecv
 		_LogWarn_("%c %s %sB %s(%d) Parse Faliled",
 			TransmissionName(Transmission::Recv),
 			TransportProtocolName(_pSession->Protocol()),
-			StringUtil::FillLeft(_pRecvCmd->GetLength(), ' ', 4).Source(),
+			StringUtilT::FillLeft(_pRecvCmd->GetLength(), ' ', 4).Source(),
 			pCommandName,
 			id);
 	}

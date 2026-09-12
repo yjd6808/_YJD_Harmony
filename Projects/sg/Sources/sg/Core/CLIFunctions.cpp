@@ -88,7 +88,7 @@ bool CLI_SendCommandFilter(int _argc, String* _pArgv, OUT jc::String& _error)
 		}
 
 		Cmd_t commandId;
-		if (!StringUtil::TryToNumber(commandId, _pArgv[2].Source()))
+		if (!StringUtilT::TryToNumber(commandId, _pArgv[2].Source()))
 		{
 			Console::WriteLine("올바르지 않은 커맨드 ID입니다.");
 			return false;
@@ -106,7 +106,7 @@ bool CLI_SendCommandFilter(int _argc, String* _pArgv, OUT jc::String& _error)
 		}
 
 		Cmd_t commandId;
-		if (!StringUtil::TryToNumber(commandId, _pArgv[2].Source()))
+		if (!StringUtilT::TryToNumber(commandId, _pArgv[2].Source()))
 		{
 			Console::WriteLine("올바르지 않은 커맨드 ID입니다.");
 			return false;
@@ -145,7 +145,7 @@ bool CLI_RecvCommandFilter(int _argc, String* _pArgv, OUT jc::String& _error)
 		}
 
 		Cmd_t commandId;
-		if (!StringUtil::TryToNumber(commandId, _pArgv[2].Source()))
+		if (!StringUtilT::TryToNumber(commandId, _pArgv[2].Source()))
 		{
 			Console::WriteLine("올바르지 않은 커맨드 ID입니다.");
 			return false;
@@ -163,7 +163,7 @@ bool CLI_RecvCommandFilter(int _argc, String* _pArgv, OUT jc::String& _error)
 		}
 
 		Cmd_t commandId;
-		if (!StringUtil::TryToNumber(commandId, _pArgv[2].Source()))
+		if (!StringUtilT::TryToNumber(commandId, _pArgv[2].Source()))
 		{
 			Console::WriteLine("올바르지 않은 커맨드 ID입니다.");
 			return false;

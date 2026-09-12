@@ -161,7 +161,7 @@ void PostProcess_Main()
 
 	auto UpdateTitle = [&]()
 	{
-		jc::String szTitle = jc::StringUtil::Format("26. 포스트 프로세싱 - 왼쪽: 원본 | 오른쪽: %s (경계 %d%%) (0~5, ←→, ESC)", s_szEffectNames[effectMode], (_s32)(split * 100.0f));
+		jc::String szTitle = jc::StringUtilT::Format("26. 포스트 프로세싱 - 왼쪽: 원본 | 오른쪽: %s (경계 %d%%) (0~5, ←→, ESC)", s_szEffectNames[effectMode], (_s32)(split * 100.0f));
 		window.SetTitle(szTitle);
 	};
 	UpdateTitle();

@@ -11,11 +11,11 @@
 #include "jc/Type.h"
 #include "jc/Define.h"
 #include "jc/Encoding/CodePage.h"
+#include "jc/Primitives/String.h"
 
 
 NS_JC_BEGIN
 
-class String;
 class File
 {
 public:

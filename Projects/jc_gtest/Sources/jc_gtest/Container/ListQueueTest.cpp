@@ -268,7 +268,7 @@ TEST(ListQueueTest, InnerDestructorTest) {
 		if (i && i % 4 == 0) {
 			aq.Dequeue();
 		} else {
-			aq.Enqueue("fsvgfsrdvsrdrsf");
+			aq.Enqueue(_T("fsvgfsrdvsrdrsf"));
 		}
 	}
 }

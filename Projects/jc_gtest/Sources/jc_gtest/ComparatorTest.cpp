@@ -13,9 +13,9 @@ using namespace std;
 #if TEST_ComparatorTest == ON
 
 TEST(ComparatorTest, ComparatorTest) {
-	EXPECT_TRUE(Comparator<String>()("abcd", "abc") > 0);
-	EXPECT_TRUE(Comparator<String>()("abc", "abc") == 0);
-	EXPECT_TRUE(Comparator<String>()("abc", "abcd") < 0);
+	EXPECT_TRUE(Comparator<String>()(_T("abcd"), _T("abc")) > 0);
+	EXPECT_TRUE(Comparator<String>()(_T("abc"), _T("abc")) == 0);
+	EXPECT_TRUE(Comparator<String>()(_T("abc"), _T("abcd")) < 0);
 
 	EXPECT_TRUE(Comparator<const char*>()("abcd", "abc") > 0);
 	EXPECT_TRUE(Comparator<const char*>()("abc", "abc") == 0);

@@ -8,6 +8,7 @@
 #include "jc/Time.h"
 #include "jc/Container/Arrays.h"
 #include "jc/Logger/LoggerAbstract.h"
+#include "jc/Primitives/StringConvert.h"
 
 NS_JC_BEGIN
 
@@ -17,13 +18,13 @@ LoggerAbstract::LoggerAbstract(LoggerOption* _pOption)
 , m_bUseLock(true)
 , m_bOptionOwner(false)
 , m_pOption(_pOption) // yyyy-MM-dd
-, m_szDateTimeFormat("HH:mm:ss")
+, m_szDateTimeFormat(_T("HH:mm:ss"))
 , m_szLevelText{
-	"Info  ",
-	"Warn  ",
-	"Error ",
-	"Debug ",
-	"Normal" }
+	_T("Info  "),
+	_T("Warn  "),
+	_T("Error "),
+	_T("Debug "),
+	_T("Normal") }
 {
 }
 
@@ -43,7 +44,7 @@ LoggerAbstract::~LoggerAbstract()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-void LoggerAbstract::Log(Level _level, const char* _pFmt, ...)
+void LoggerAbstract::Log(Level _level, const _char* _pFmt, ...)
 {
 	if (!m_pOption->EnableLog[_level])
 	{
@@ -76,7 +77,7 @@ void LoggerAbstract::Log(Level _level, const String& _str)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-void LoggerAbstract::LogPlain(const char* _pFmt, ...)
+void LoggerAbstract::LogPlain(const _char* _pFmt, ...)
 {
 	if (!m_pOption->EnablePlainLog)
 	{
@@ -122,7 +123,7 @@ void LoggerAbstract::LogPlain(const char* _pFmt, ...)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 void LoggerAbstract::LogPlain(const jc::String& _str)
 {
-	LogPlain("%s", _str.Source());
+	LogPlain(_T("%s"), _str.Source());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,7 +143,7 @@ void LoggerAbstract::ChainLogger(LoggerAbstract* _pLogger)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-void LoggerAbstract::LogInfo(const char* _pFmt, ...)
+void LoggerAbstract::LogInfo(const _char* _pFmt, ...)
 {
 	if (!m_pOption->EnableLog[eInfo])
 	{
@@ -156,7 +157,7 @@ void LoggerAbstract::LogInfo(const char* _pFmt, ...)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-void LoggerAbstract::LogWarn(const char* _pFmt, ...)
+void LoggerAbstract::LogWarn(const _char* _pFmt, ...)
 {
 	if (!m_pOption->EnableLog[eWarn])
 	{
@@ -170,7 +171,7 @@ void LoggerAbstract::LogWarn(const char* _pFmt, ...)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-void LoggerAbstract::LogError(const char* _pFmt, ...)
+void LoggerAbstract::LogError(const _char* _pFmt, ...)
 {
 	if (!m_pOption->EnableLog[eError])
 	{
@@ -184,7 +185,7 @@ void LoggerAbstract::LogError(const char* _pFmt, ...)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-void LoggerAbstract::LogDebug(const char* _pFmt, ...)
+void LoggerAbstract::LogDebug(const _char* _pFmt, ...)
 {
 	if (!m_pOption->EnableLog[eDebug])
 	{
@@ -248,17 +249,22 @@ void LoggerAbstract::SetEnablePlainLog(bool _enabled)
 //////////////////////////////////////////////////////////////////////////////////////////
 LoggerAbstract::Level LoggerAbstract::ConvertLogLevel(const jc::String& _logLevelString)
 {
-	return ConvertLogLevel(_logLevelString.SafeSource());
+	if (_logLevelString == _T("debug")) return LoggerAbstract::eDebug;
+	if (_logLevelString == _T("warn")) return LoggerAbstract::eWarn;
+	if (_logLevelString == _T("error")) return LoggerAbstract::eError;
+	if (_logLevelString == _T("info")) return LoggerAbstract::eInfo;
+	if (_logLevelString == _T("normal")) return LoggerAbstract::eInfo;
+	return LoggerAbstract::eMax;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 LoggerAbstract::Level LoggerAbstract::ConvertLogLevel(const char* _logLevelString)
 {
-	if (StringUtil::IsEqual(_logLevelString, "debug")) return LoggerAbstract::eDebug;
-	if (StringUtil::IsEqual(_logLevelString, "warn")) return LoggerAbstract::eWarn;
-	if (StringUtil::IsEqual(_logLevelString, "error")) return LoggerAbstract::eError;
-	if (StringUtil::IsEqual(_logLevelString, "info")) return LoggerAbstract::eInfo;
-	if (StringUtil::IsEqual(_logLevelString, "normal")) return LoggerAbstract::eInfo;
+	if (StringUtilA::IsEqual(_logLevelString, "debug")) return LoggerAbstract::eDebug;
+	if (StringUtilA::IsEqual(_logLevelString, "warn")) return LoggerAbstract::eWarn;
+	if (StringUtilA::IsEqual(_logLevelString, "error")) return LoggerAbstract::eError;
+	if (StringUtilA::IsEqual(_logLevelString, "info")) return LoggerAbstract::eInfo;
+	if (StringUtilA::IsEqual(_logLevelString, "normal")) return LoggerAbstract::eInfo;
 	return LoggerAbstract::eMax;
 }
 
@@ -286,8 +292,8 @@ LoggerOption& LoggerOption::operator=(const LoggerOption& _other)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 void LoggerAbstract::SetHeaderFormat(const String& _fmt)
 {
-	const int levelIndex = _fmt.Find("level");
-	const int dateTimeIndex = _fmt.Find("datetime");
+	const int levelIndex = _fmt.Find(_T("level"));
+	const int dateTimeIndex = _fmt.Find(_T("datetime"));
 
 	if (m_pOption->ShowLevel)
 	{
@@ -311,25 +317,25 @@ void LoggerAbstract::SetLevelText(Level _level, const String& _levelText)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 String LoggerAbstract::CreateHeader(Level _level)
 {
-	const int levelIndex = m_szHeaderFormat.Find("level");
-	const int dateTimeIndex = m_szHeaderFormat.Find("datetime");
+	const int levelIndex = m_szHeaderFormat.Find(_T("level"));
+	const int dateTimeIndex = m_szHeaderFormat.Find(_T("datetime"));
 
 	jc_assert_msg(m_pOption->ShowLevel && levelIndex != -1, "헤더에 레벨 태그가 없습니다.");
 	jc_assert_msg(m_pOption->ShowDateTime && dateTimeIndex != -1, "헤더에 데이트타임 태그가 없습니다.");
 
-	String dateTimeFmt = DateTime::Now().Format(m_szDateTimeFormat.Source());
+	String dateTimeFmt = DateTime::Now().Format(StringConvert::ToUtf8(m_szDateTimeFormat).Source());
 	String header(128);
 
 	header = m_szHeaderFormat;
 
 	if (m_pOption->ShowLevel)
 	{
-		header.ReplaceAll("level", m_szLevelText[_level].Source());
+		header.ReplaceAll(_T("level"), m_szLevelText[_level].Source());
 	}
 
 	if (m_pOption->ShowDateTime)
 	{
-		header.ReplaceAll("datetime", dateTimeFmt.Source());
+		header.ReplaceAll(_T("datetime"), dateTimeFmt.Source());
 	}
 
 	return header;

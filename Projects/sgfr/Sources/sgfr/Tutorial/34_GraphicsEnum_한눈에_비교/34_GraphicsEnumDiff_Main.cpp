@@ -681,7 +681,7 @@ void GraphicsEnumDiff_Main()
 
 	auto UpdateTitle = [&]()
 	{
-		jc::String title = jc::StringUtil::Format("34. %s (%s)  Before:%s  |  After:%s  [1~8 카테고리, Left/Right 값, ESC]", CATEGORY_NAMES_KO[static_cast<_s32>(category)],
+		jc::String title = jc::StringUtilT::Format("34. %s (%s)  Before:%s  |  After:%s  [1~8 카테고리, Left/Right 값, ESC]", CATEGORY_NAMES_KO[static_cast<_s32>(category)],
 			CATEGORY_NAMES[static_cast<_s32>(category)],
 			GetBeforeName(category), GetAfterName(category, afterIdx));
 		window.SetTitle(title);

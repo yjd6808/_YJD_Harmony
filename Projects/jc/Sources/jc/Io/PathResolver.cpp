@@ -241,13 +241,13 @@ bool PathResolver::IsAbsolutePath(const String& _path)
 {
 	if (_path.IsEmpty())
 		return false;
-	if (_path[0] == '/' || _path[0] == '\\')
+	if (_path[0] == _T('/') || _path[0] == _T('\\'))
 		return true;
 	// "C:" 드라이브: [영문자][':']
-	if (_path.Length() >= 2 && _path[1] == ':')
+	if (_path.Length() >= 2 && _path[1] == _T(':'))
 	{
-		const char c = _path[0];
-		if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+		const _char c = _path[0];
+		if ((c >= _T('A') && c <= _T('Z')) || (c >= _T('a') && c <= _T('z')))
 			return true;
 	}
 	return false;
@@ -259,23 +259,23 @@ bool PathResolver::IsAbsolutePath(const String& _path)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool PathResolver::TryParseAlias(const String& _path, OUT String& _alias, OUT String& _rel)
 {
-	const int colon = _path.Find(":");
+	const int colon = _path.Find(_T(":"));
 	if (colon < 2)
 		return false;
 	if (colon + 1 >= _path.Length())
 		return false;
-	if (_path[colon + 1] != '/' && _path[colon + 1] != '\\')
+	if (_path[colon + 1] != _T('/') && _path[colon + 1] != _T('\\'))
 		return false;
 
 	for (int i = 0; i < colon; ++i)		// 별칭부에 경로 문자가 섞이면 별칭이 아님
 	{
-		if (_path[i] == '/' || _path[i] == '\\' || _path[i] == '.')
+		if (_path[i] == _T('/') || _path[i] == _T('\\') || _path[i] == _T('.'))
 			return false;
 	}
 
 	_alias = _path.SubStr(0, colon);
 	int relStart = colon + 1;
-	while (relStart < _path.Length() && (_path[relStart] == '/' || _path[relStart] == '\\'))
+	while (relStart < _path.Length() && (_path[relStart] == _T('/') || _path[relStart] == _T('\\')))
 		++relStart;						// "res://a" 같은 중복 구분자 허용
 	_rel = _path.SubStr(relStart, _path.Length() - relStart);
 	return true;
@@ -288,18 +288,18 @@ String PathResolver::ExpandTokens(const Snapshot& _snap, const String& _dir)
 	String result = _dir;
 	for (int guardCount = 0; guardCount < 8; ++guardCount)		// 순환 참조 안전장치
 	{
-		const int start = result.Find("${");
+		const int start = result.Find(_T("${"));
 		if (start == -1)
 			break;
-		const int end = result.Find(start + 2, "}");
+		const int end = result.Find(start + 2, _T("}"));
 		if (end == -1)
 			break;
 
 		const String token = result.SubStr(start + 2, end - start - 2);
 		String value;
-		if (token == "exe")
+		if (token == _T("exe"))
 			value = ExeDirectory();
-		else if (token == "cwd")
+		else if (token == _T("cwd"))
 			value = Env::CurrentDirectory();
 		else if (const AliasEntry* pEntry = _snap.aliases_.Find(token))
 			value = pEntry->primaryDir_;
@@ -330,7 +330,7 @@ String PathResolver::ExeDirectory()
 	const String& modulePath = Env::ModulePath();	// a/b/c/d.exe
 	String fileName = Path::FileName(modulePath);
 	String dir = modulePath.SubStr(0, modulePath.Length() - fileName.Length());
-	while (dir.Length() > 0 && (dir.Last() == '/' || dir.Last() == '\\'))
+	while (dir.Length() > 0 && (dir.Last() == _T('/') || dir.Last() == _T('\\')))
 		dir = dir.SubStr(0, dir.Length() - 1);
 	return dir;
 }

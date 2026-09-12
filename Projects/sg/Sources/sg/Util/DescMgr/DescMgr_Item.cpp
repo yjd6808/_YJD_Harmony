@@ -140,7 +140,7 @@ void ItemInfoLoader::LoadDetailedEquip(const jc::String& _equipItemPath, int _eq
 void ItemInfoLoader::LoadAccessory(const jc::String& _equipAccessoryPath, int _equipItemType)
 {
 	if (!File::Exist(_equipAccessoryPath))
-		throw std::exception(StringUtil::Format("%s 파일을 찾지 못했습니다.\n", _equipAccessoryPath.Source()).Source());
+		throw std::exception(StringUtilT::Format("%s 파일을 찾지 못했습니다.\n", _equipAccessoryPath.Source()).Source());
 
 	Json::Value root;
 	JsonUtil::LoadThrow(_equipAccessoryPath, root);
@@ -161,7 +161,7 @@ void ItemInfoLoader::LoadAccessory(const jc::String& _equipAccessoryPath, int _e
 void ItemInfoLoader::LoadArmor(const jc::String& _equipItemArmorPath, int _armorType, int _equipItemType)
 {
 	if (!File::Exist(_equipItemArmorPath))
-		throw std::exception(StringUtil::Format("%s 파일을 찾지 못했습니다.\n", _equipItemArmorPath.Source()).Source());
+		throw std::exception(StringUtilT::Format("%s 파일을 찾지 못했습니다.\n", _equipItemArmorPath.Source()).Source());
 
 	Json::Value root;
 	JsonUtil::LoadThrow(_equipItemArmorPath, root);

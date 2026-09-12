@@ -1,14 +1,36 @@
-#include "jc/Primitives/StringView.h"
-#include "jc/Primitives/String.h"
-#include "jc/Primitives/StringUtil.h"
+﻿/*
+ * StringView.inl: BasicStringView<CharT> 멤버 정의.
+ * StringView.h 끝에서 include된다 (BasicString.h/.inl 분리와 동일). 직접 include하지 않는다.
+ */
+
+#pragma once
+
+#include <cctype>
+#include <cwctype>
+#include <type_traits>
+
 #include "jc/Container/Vector.h"
 
-USING_NS_JC;
+NS_JC_BEGIN
+
+template <typename CharT>
+inline CharT ViewToLowerChar(CharT _ch)
+{
+	if constexpr (std::is_same_v<CharT, char>)
+	{
+		return static_cast<CharT>(tolower(_ch));
+	}
+	else
+	{
+		return static_cast<CharT>(towlower(_ch));
+	}
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 생성자
 //////////////////////////////////////////////////////////////////////////////////////////
-StringView::StringView(char* _pStr) : pBuf_(_pStr)
+template <typename CharT>
+BasicStringView<CharT>::BasicStringView(CharT* _pStr) : pBuf_(_pStr)
 {
 	if (_pStr)
 	{
@@ -23,44 +45,53 @@ StringView::StringView(char* _pStr) : pBuf_(_pStr)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-StringView::StringView(char* _pStr, _u32 _len) : pBuf_(_pStr), len_(_len)
+template <typename CharT>
+BasicStringView<CharT>::BasicStringView(CharT* _pStr, _u32 _len) : pBuf_(_pStr), len_(_len)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-StringView::StringView(const String& _str) : pBuf_(_str.Source()), len_(_str.Length())
+template <typename CharT>
+BasicStringView<CharT>::BasicStringView(const StrType& _str) : pBuf_(_str.Source()), len_(_str.Length())
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 기본 정보 & 상태 조회
 //////////////////////////////////////////////////////////////////////////////////////////
-const char* StringView::Source() const
+template <typename CharT>
+const CharT* BasicStringView<CharT>::Source() const
 {
 	return pBuf_;
 }
 
-const char* StringView::SafeSource() const
+template <typename CharT>
+const CharT* BasicStringView<CharT>::SafeSource() const
 {
-	return pBuf_ ? pBuf_ : "";
+	static constexpr CharT kEmpty[1] = { CharT(0) };
+	return pBuf_ ? pBuf_ : kEmpty;
 }
 
-_u32 StringView::Length() const
+template <typename CharT>
+_u32 BasicStringView<CharT>::Length() const
 {
 	return len_;
 }
 
-_u32 StringView::LengthWithNull() const
+template <typename CharT>
+_u32 BasicStringView<CharT>::LengthWithNull() const
 {
 	return len_ + 1;
 }
 
-bool StringView::IsEmpty() const
+template <typename CharT>
+bool BasicStringView<CharT>::IsEmpty() const
 {
 	return len_ == 0;
 }
 
-bool StringView::IsNull() const
+template <typename CharT>
+bool BasicStringView<CharT>::IsNull() const
 {
 	return pBuf_ == nullptr;
 }
@@ -68,12 +99,14 @@ bool StringView::IsNull() const
 //////////////////////////////////////////////////////////////////////////////////////////
 // 인덱스 검증
 //////////////////////////////////////////////////////////////////////////////////////////
-bool StringView::IsValidIndex(const _s32 _index) const
+template <typename CharT>
+bool BasicStringView<CharT>::IsValidIndex(const _s32 _index) const
 {
 	return _index >= 0 && _index < static_cast<_s32>(len_);
 }
 
-bool StringView::IsValidIndexRange(const _s32 _startIndex, const _s32 _endIndex) const
+template <typename CharT>
+bool BasicStringView<CharT>::IsValidIndexRange(const _s32 _startIndex, const _s32 _endIndex) const
 {
 	return _startIndex >= 0 && _endIndex >= _startIndex && _endIndex < static_cast<_s32>(len_);
 }
@@ -81,28 +114,32 @@ bool StringView::IsValidIndexRange(const _s32 _startIndex, const _s32 _endIndex)
 //////////////////////////////////////////////////////////////////////////////////////////
 // 문자 접근
 //////////////////////////////////////////////////////////////////////////////////////////
-char StringView::GetAt(_s32 _idx) const
+template <typename CharT>
+CharT BasicStringView<CharT>::GetAt(_s32 _idx) const
 {
 	if (IsValidIndex(_idx))
 		return pBuf_[_idx];
 	return '\0';
 }
 
-char StringView::First() const
+template <typename CharT>
+CharT BasicStringView<CharT>::First() const
 {
 	if (len_ > 0)
 		return pBuf_[0];
 	return '\0';
 }
 
-char StringView::Last() const
+template <typename CharT>
+CharT BasicStringView<CharT>::Last() const
 {
 	if (len_ > 0)
 		return pBuf_[len_ - 1];
 	return '\0';
 }
 
-char StringView::operator[](_s32 _index) const
+template <typename CharT>
+CharT BasicStringView<CharT>::operator[](_s32 _index) const
 {
 	if (IsValidIndex(_index))
 		return pBuf_[_index];
@@ -112,7 +149,8 @@ char StringView::operator[](_s32 _index) const
 //////////////////////////////////////////////////////////////////////////////////////////
 // 검색 & 찾기 연산
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringView::Find(const char* _pStr, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::Find(const CharT* _pStr, bool _caseSensitive /*= true*/) const
 {
 	if (!_pStr || !pBuf_)
 		return -1;
@@ -131,8 +169,8 @@ _s32 StringView::Find(const char* _pStr, bool _caseSensitive /*= true*/) const
 		bool match = true;
 		for (_u32 j = 0; j < searchLen; j++)
 		{
-			char a = _caseSensitive ? pBuf_[i + j] : static_cast<char>(tolower(pBuf_[i + j]));
-			char b = _caseSensitive ? _pStr[j] : static_cast<char>(tolower(_pStr[j]));
+			CharT a = _caseSensitive ? pBuf_[i + j] : ViewToLowerChar(pBuf_[i + j]);
+			CharT b = _caseSensitive ? _pStr[j] : ViewToLowerChar(_pStr[j]);
 			if (a != b)
 			{
 				match = false;
@@ -146,17 +184,20 @@ _s32 StringView::Find(const char* _pStr, bool _caseSensitive /*= true*/) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringView::Find(const StringView& _str, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::Find(const BasicStringView& _str, bool _caseSensitive /*= true*/) const
 {
 	return Find(_str.Source(), _caseSensitive);
 }
 
-_s32 StringView::Find(const String& _str, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::Find(const StrType& _str, bool _caseSensitive /*= true*/) const
 {
 	return Find(_str.Source(), _caseSensitive);
 }
 
-_s32 StringView::Find(_s32 _startIndex, const char* _pStr, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::Find(_s32 _startIndex, const CharT* _pStr, bool _caseSensitive /*= true*/) const
 {
 	if (!_pStr || !pBuf_ || _startIndex < 0 || _startIndex >= static_cast<_s32>(len_))
 		return -1;
@@ -175,8 +216,8 @@ _s32 StringView::Find(_s32 _startIndex, const char* _pStr, bool _caseSensitive /
 		bool match = true;
 		for (_u32 j = 0; j < searchLen; j++)
 		{
-			char a = _caseSensitive ? pBuf_[i + j] : static_cast<char>(tolower(pBuf_[i + j]));
-			char b = _caseSensitive ? _pStr[j] : static_cast<char>(tolower(_pStr[j]));
+			CharT a = _caseSensitive ? pBuf_[i + j] : ViewToLowerChar(pBuf_[i + j]);
+			CharT b = _caseSensitive ? _pStr[j] : ViewToLowerChar(_pStr[j]);
 			if (a != b)
 			{
 				match = false;
@@ -190,18 +231,21 @@ _s32 StringView::Find(_s32 _startIndex, const char* _pStr, bool _caseSensitive /
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringView::Find(_s32 _startIndex, const StringView& _str, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::Find(_s32 _startIndex, const BasicStringView& _str, bool _caseSensitive /*= true*/) const
 {
 	return Find(_startIndex, _str.Source(), _caseSensitive);
 }
 
-_s32 StringView::Find(_s32 _startIndex, const String& _str, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::Find(_s32 _startIndex, const StrType& _str, bool _caseSensitive /*= true*/) const
 {
 	return Find(_startIndex, _str.Source(), _caseSensitive);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringView::Find(_s32 _startIndex, _s32 _endIndex, const char* _pStr, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::Find(_s32 _startIndex, _s32 _endIndex, const CharT* _pStr, bool _caseSensitive /*= true*/) const
 {
 	if (!_pStr || !pBuf_ || !IsValidIndexRange(_startIndex, _endIndex))
 		return -1;
@@ -222,8 +266,8 @@ _s32 StringView::Find(_s32 _startIndex, _s32 _endIndex, const char* _pStr, bool 
 		bool match = true;
 		for (_u32 j = 0; j < searchLen; j++)
 		{
-			char a = _caseSensitive ? pBuf_[i + j] : static_cast<char>(tolower(pBuf_[i + j]));
-			char b = _caseSensitive ? _pStr[j] : static_cast<char>(tolower(_pStr[j]));
+			CharT a = _caseSensitive ? pBuf_[i + j] : ViewToLowerChar(pBuf_[i + j]);
+			CharT b = _caseSensitive ? _pStr[j] : ViewToLowerChar(_pStr[j]);
 			if (a != b)
 			{
 				match = false;
@@ -237,7 +281,8 @@ _s32 StringView::Find(_s32 _startIndex, _s32 _endIndex, const char* _pStr, bool 
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringView::FindReverse(const char* _pStr, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::FindReverse(const CharT* _pStr, bool _caseSensitive /*= true*/) const
 {
 	if (!_pStr || !pBuf_)
 		return -1;
@@ -256,8 +301,8 @@ _s32 StringView::FindReverse(const char* _pStr, bool _caseSensitive /*= true*/) 
 		bool match = true;
 		for (_u32 j = 0; j < searchLen; j++)
 		{
-			char a = _caseSensitive ? pBuf_[i + j] : static_cast<char>(tolower(pBuf_[i + j]));
-			char b = _caseSensitive ? _pStr[j] : static_cast<char>(tolower(_pStr[j]));
+			CharT a = _caseSensitive ? pBuf_[i + j] : ViewToLowerChar(pBuf_[i + j]);
+			CharT b = _caseSensitive ? _pStr[j] : ViewToLowerChar(_pStr[j]);
 			if (a != b)
 			{
 				match = false;
@@ -271,17 +316,20 @@ _s32 StringView::FindReverse(const char* _pStr, bool _caseSensitive /*= true*/) 
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringView::FindReverse(const StringView& _str, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::FindReverse(const BasicStringView& _str, bool _caseSensitive /*= true*/) const
 {
 	return FindReverse(_str.Source(), _caseSensitive);
 }
 
-_s32 StringView::FindReverse(const String& _str, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::FindReverse(const StrType& _str, bool _caseSensitive /*= true*/) const
 {
 	return FindReverse(_str.Source(), _caseSensitive);
 }
 
-_s32 StringView::FindReverse(_s32 _startIndex, _s32 _endIndex, const char* _pStr, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::FindReverse(_s32 _startIndex, _s32 _endIndex, const CharT* _pStr, bool _caseSensitive /*= true*/) const
 {
 	if (!_pStr || !pBuf_ || !IsValidIndexRange(_startIndex, _endIndex))
 		return -1;
@@ -302,8 +350,8 @@ _s32 StringView::FindReverse(_s32 _startIndex, _s32 _endIndex, const char* _pStr
 		bool match = true;
 		for (_u32 j = 0; j < searchLen; j++)
 		{
-			char a = _caseSensitive ? pBuf_[i + j] : static_cast<char>(tolower(pBuf_[i + j]));
-			char b = _caseSensitive ? _pStr[j] : static_cast<char>(tolower(_pStr[j]));
+			CharT a = _caseSensitive ? pBuf_[i + j] : ViewToLowerChar(pBuf_[i + j]);
+			CharT b = _caseSensitive ? _pStr[j] : ViewToLowerChar(_pStr[j]);
 			if (a != b)
 			{
 				match = false;
@@ -319,66 +367,70 @@ _s32 StringView::FindReverse(_s32 _startIndex, _s32 _endIndex, const char* _pStr
 //////////////////////////////////////////////////////////////////////////////////////////
 // 패턴 매칭 & 문자열 내용
 //////////////////////////////////////////////////////////////////////////////////////////
-bool StringView::StartWith(const StringView& _str, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+bool BasicStringView<CharT>::StartWith(const BasicStringView& _str, bool _caseSensitive /*= true*/) const
 {
 	if (_str.Length() > len_ || !pBuf_)
 		return false;
 
-	const char* pSearchStr = _str.Source();
+	const CharT* pSearchStr = _str.Source();
 	for (_u32 i = 0; i < _str.Length(); i++)
 	{
-		char a = _caseSensitive ? pBuf_[i] : static_cast<char>(tolower(pBuf_[i]));
-		char b = _caseSensitive ? pSearchStr[i] : static_cast<char>(tolower(pSearchStr[i]));
+		CharT a = _caseSensitive ? pBuf_[i] : ViewToLowerChar(pBuf_[i]);
+		CharT b = _caseSensitive ? pSearchStr[i] : ViewToLowerChar(pSearchStr[i]);
 		if (a != b)
 			return false;
 	}
 	return true;
 }
 
-bool StringView::StartWith(const String& _str, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+bool BasicStringView<CharT>::StartWith(const StrType& _str, bool _caseSensitive /*= true*/) const
 {
 	if (_str.Length() > static_cast<_s32>(len_) || !pBuf_)
 		return false;
 
-	const char* pSearchStr = _str.Source();
+	const CharT* pSearchStr = _str.Source();
 	for (_u32 i = 0; i < static_cast<_u32>(_str.Length()); i++)
 	{
-		char a = _caseSensitive ? pBuf_[i] : static_cast<char>(tolower(pBuf_[i]));
-		char b = _caseSensitive ? pSearchStr[i] : static_cast<char>(tolower(pSearchStr[i]));
+		CharT a = _caseSensitive ? pBuf_[i] : ViewToLowerChar(pBuf_[i]);
+		CharT b = _caseSensitive ? pSearchStr[i] : ViewToLowerChar(pSearchStr[i]);
 		if (a != b)
 			return false;
 	}
 	return true;
 }
 
-bool StringView::EndWith(const StringView& _str, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+bool BasicStringView<CharT>::EndWith(const BasicStringView& _str, bool _caseSensitive /*= true*/) const
 {
 	if (_str.Length() > len_ || !pBuf_)
 		return false;
 
-	const char* pSearchStr = _str.Source();
+	const CharT* pSearchStr = _str.Source();
 	_u32 offset = len_ - _str.Length();
 	for (_u32 i = 0; i < _str.Length(); i++)
 	{
-		char a = _caseSensitive ? pBuf_[offset + i] : static_cast<char>(tolower(pBuf_[offset + i]));
-		char b = _caseSensitive ? pSearchStr[i] : static_cast<char>(tolower(pSearchStr[i]));
+		CharT a = _caseSensitive ? pBuf_[offset + i] : ViewToLowerChar(pBuf_[offset + i]);
+		CharT b = _caseSensitive ? pSearchStr[i] : ViewToLowerChar(pSearchStr[i]);
 		if (a != b)
 			return false;
 	}
 	return true;
 }
 
-bool StringView::EndWith(const String& _str, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+bool BasicStringView<CharT>::EndWith(const StrType& _str, bool _caseSensitive /*= true*/) const
 {
 	if (_str.Length() > static_cast<_s32>(len_) || !pBuf_)
 		return false;
 
-	const char* pSearchStr = _str.Source();
+	const CharT* pSearchStr = _str.Source();
 	_u32 offset = len_ - _str.Length();
 	for (_u32 i = 0; i < static_cast<_u32>(_str.Length()); i++)
 	{
-		char a = _caseSensitive ? pBuf_[offset + i] : static_cast<char>(tolower(pBuf_[offset + i]));
-		char b = _caseSensitive ? pSearchStr[i] : static_cast<char>(tolower(pSearchStr[i]));
+		CharT a = _caseSensitive ? pBuf_[offset + i] : ViewToLowerChar(pBuf_[offset + i]);
+		CharT b = _caseSensitive ? pSearchStr[i] : ViewToLowerChar(pSearchStr[i]);
 		if (a != b)
 			return false;
 	}
@@ -386,17 +438,20 @@ bool StringView::EndWith(const String& _str, bool _caseSensitive /*= true*/) con
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool StringView::Contain(const char* _str, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+bool BasicStringView<CharT>::Contain(const CharT* _str, bool _caseSensitive /*= true*/) const
 {
 	return Find(_str, _caseSensitive) != -1;
 }
 
-bool StringView::Contain(const StringView& _str, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+bool BasicStringView<CharT>::Contain(const BasicStringView& _str, bool _caseSensitive /*= true*/) const
 {
 	return Find(_str, _caseSensitive) != -1;
 }
 
-bool StringView::Contain(const String& _str, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+bool BasicStringView<CharT>::Contain(const StrType& _str, bool _caseSensitive /*= true*/) const
 {
 	return Find(_str, _caseSensitive) != -1;
 }
@@ -404,7 +459,8 @@ bool StringView::Contain(const String& _str, bool _caseSensitive /*= true*/) con
 //////////////////////////////////////////////////////////////////////////////////////////
 // 개수 세기 연산
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringView::Count(const char* _pStr, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::Count(const CharT* _pStr, bool _caseSensitive /*= true*/) const
 {
 	if (!_pStr || !pBuf_)
 		return 0;
@@ -422,8 +478,8 @@ _s32 StringView::Count(const char* _pStr, bool _caseSensitive /*= true*/) const
 		bool match = true;
 		for (_u32 j = 0; j < searchLen; j++)
 		{
-			char a = _caseSensitive ? pBuf_[i + j] : static_cast<char>(tolower(pBuf_[i + j]));
-			char b = _caseSensitive ? _pStr[j] : static_cast<char>(tolower(_pStr[j]));
+			CharT a = _caseSensitive ? pBuf_[i + j] : ViewToLowerChar(pBuf_[i + j]);
+			CharT b = _caseSensitive ? _pStr[j] : ViewToLowerChar(_pStr[j]);
 			if (a != b)
 			{
 				match = false;
@@ -439,17 +495,20 @@ _s32 StringView::Count(const char* _pStr, bool _caseSensitive /*= true*/) const
 	return count;
 }
 
-_s32 StringView::Count(const StringView& _value, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::Count(const BasicStringView& _value, bool _caseSensitive /*= true*/) const
 {
 	return Count(_value.Source(), _caseSensitive);
 }
 
-_s32 StringView::Count(const String& _value, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::Count(const StrType& _value, bool _caseSensitive /*= true*/) const
 {
 	return Count(_value.Source(), _caseSensitive);
 }
 
-_s32 StringView::Count(_s32 _startIndex, _s32 _endIndex, const char* _pStr, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::Count(_s32 _startIndex, _s32 _endIndex, const CharT* _pStr, bool _caseSensitive /*= true*/) const
 {
 	if (!_pStr || !pBuf_ || !IsValidIndexRange(_startIndex, _endIndex))
 		return 0;
@@ -471,8 +530,8 @@ _s32 StringView::Count(_s32 _startIndex, _s32 _endIndex, const char* _pStr, bool
 		bool match = true;
 		for (_u32 j = 0; j < searchLen; j++)
 		{
-			char a = _caseSensitive ? pBuf_[i + j] : static_cast<char>(tolower(pBuf_[i + j]));
-			char b = _caseSensitive ? _pStr[j] : static_cast<char>(tolower(_pStr[j]));
+			CharT a = _caseSensitive ? pBuf_[i + j] : ViewToLowerChar(pBuf_[i + j]);
+			CharT b = _caseSensitive ? _pStr[j] : ViewToLowerChar(_pStr[j]);
 			if (a != b)
 			{
 				match = false;
@@ -488,12 +547,14 @@ _s32 StringView::Count(_s32 _startIndex, _s32 _endIndex, const char* _pStr, bool
 	return count;
 }
 
-_s32 StringView::Count(_s32 _startIndex, _s32 _endIndex, const StringView& _value, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::Count(_s32 _startIndex, _s32 _endIndex, const BasicStringView& _value, bool _caseSensitive /*= true*/) const
 {
 	return Count(_startIndex, _endIndex, _value.Source(), _caseSensitive);
 }
 
-_s32 StringView::Count(_s32 _startIndex, _s32 _endIndex, const String& _value, bool _caseSensitive /*= true*/) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::Count(_s32 _startIndex, _s32 _endIndex, const StrType& _value, bool _caseSensitive /*= true*/) const
 {
 	return Count(_startIndex, _endIndex, _value.Source(), _caseSensitive);
 }
@@ -501,9 +562,10 @@ _s32 StringView::Count(_s32 _startIndex, _s32 _endIndex, const String& _value, b
 //////////////////////////////////////////////////////////////////////////////////////////
 // 비교 연산
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringView::Compare(const StringView& _str) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::Compare(const BasicStringView& _str) const
 {
-	const char* pOther = _str.Source();
+	const CharT* pOther = _str.Source();
 	_u32 otherLen = _str.Length();
 
 	_u32 minLen = len_ < otherLen ? len_ : otherLen;
@@ -521,9 +583,10 @@ _s32 StringView::Compare(const StringView& _str) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringView::Compare(const String& _str) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::Compare(const StrType& _str) const
 {
-	const char* pOther = _str.Source();
+	const CharT* pOther = _str.Source();
 	_u32 otherLen = _str.Length();
 
 	_u32 minLen = len_ < otherLen ? len_ : otherLen;
@@ -541,7 +604,8 @@ _s32 StringView::Compare(const String& _str) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringView::Compare(const char* _pStr, _s32 _strLen) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::Compare(const CharT* _pStr, _s32 _strLen) const
 {
 	if (!_pStr)
 		return pBuf_ ? 1 : 0;
@@ -574,77 +638,92 @@ _s32 StringView::Compare(const char* _pStr, _s32 _strLen) const
 //////////////////////////////////////////////////////////////////////////////////////////
 // 비교 연산자
 //////////////////////////////////////////////////////////////////////////////////////////
-bool StringView::operator==(const StringView& _other) const
+template <typename CharT>
+bool BasicStringView<CharT>::operator==(const BasicStringView& _other) const
 {
 	return Compare(_other) == 0;
 }
 
-bool StringView::operator==(const String& _other) const
+template <typename CharT>
+bool BasicStringView<CharT>::operator==(const StrType& _other) const
 {
 	return Compare(_other) == 0;
 }
 
-bool StringView::operator==(const char* _pOther) const
+template <typename CharT>
+bool BasicStringView<CharT>::operator==(const CharT* _pOther) const
 {
 	return Compare(_pOther) == 0;
 }
 
-bool StringView::operator<(const StringView& _other) const
+template <typename CharT>
+bool BasicStringView<CharT>::operator<(const BasicStringView& _other) const
 {
 	return Compare(_other) < 0;
 }
 
-bool StringView::operator<(const String& _other) const
+template <typename CharT>
+bool BasicStringView<CharT>::operator<(const StrType& _other) const
 {
 	return Compare(_other) < 0;
 }
 
-bool StringView::operator<(const char* _pOther) const
+template <typename CharT>
+bool BasicStringView<CharT>::operator<(const CharT* _pOther) const
 {
 	return Compare(_pOther) < 0;
 }
 
-bool StringView::operator>(const StringView& _other) const
+template <typename CharT>
+bool BasicStringView<CharT>::operator>(const BasicStringView& _other) const
 {
 	return Compare(_other) > 0;
 }
 
-bool StringView::operator>(const String& _other) const
+template <typename CharT>
+bool BasicStringView<CharT>::operator>(const StrType& _other) const
 {
 	return Compare(_other) > 0;
 }
 
-bool StringView::operator>(const char* _pOther) const
+template <typename CharT>
+bool BasicStringView<CharT>::operator>(const CharT* _pOther) const
 {
 	return Compare(_pOther) > 0;
 }
 
-bool StringView::operator<=(const StringView& _other) const
+template <typename CharT>
+bool BasicStringView<CharT>::operator<=(const BasicStringView& _other) const
 {
 	return Compare(_other) <= 0;
 }
 
-bool StringView::operator<=(const String& _other) const
+template <typename CharT>
+bool BasicStringView<CharT>::operator<=(const StrType& _other) const
 {
 	return Compare(_other) <= 0;
 }
 
-bool StringView::operator<=(const char* _pOther) const
+template <typename CharT>
+bool BasicStringView<CharT>::operator<=(const CharT* _pOther) const
 {
 	return Compare(_pOther) <= 0;
 }
 
-bool StringView::operator>=(const StringView& _other) const
+template <typename CharT>
+bool BasicStringView<CharT>::operator>=(const BasicStringView& _other) const
 {
 	return Compare(_other) >= 0;
 }
 
-bool StringView::operator>=(const String& _other) const
+template <typename CharT>
+bool BasicStringView<CharT>::operator>=(const StrType& _other) const
 {
 	return Compare(_other) >= 0;
 }
 
-bool StringView::operator>=(const char* _pOther) const
+template <typename CharT>
+bool BasicStringView<CharT>::operator>=(const CharT* _pOther) const
 {
 	return Compare(_pOther) >= 0;
 }
@@ -652,9 +731,10 @@ bool StringView::operator>=(const char* _pOther) const
 //////////////////////////////////////////////////////////////////////////////////////////
 // Split 기능
 //////////////////////////////////////////////////////////////////////////////////////////
-Vector<StringView, CDefaultAllocator> StringView::Split(const char* _delimiter, bool _includeEmpty) const
+template <typename CharT>
+Vector<BasicStringView<CharT>, CDefaultAllocator> BasicStringView<CharT>::Split(const CharT* _delimiter, bool _includeEmpty) const
 {
-	Vector<StringView, CDefaultAllocator> vecTokens;
+	Vector<BasicStringView<CharT>, CDefaultAllocator> vecTokens;
 	
 	if (!_delimiter || !pBuf_)
 		return vecTokens;
@@ -719,9 +799,10 @@ Vector<StringView, CDefaultAllocator> StringView::Split(const char* _delimiter, 
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-Vector<StringView, CDefaultAllocator> StringView::Split(char _delimiter, bool _includeEmpty) const
+template <typename CharT>
+Vector<BasicStringView<CharT>, CDefaultAllocator> BasicStringView<CharT>::Split(CharT _delimiter, bool _includeEmpty) const
 {
-	Vector<StringView, CDefaultAllocator> vecTokens;
+	Vector<BasicStringView<CharT>, CDefaultAllocator> vecTokens;
 	
 	if (!pBuf_)
 		return vecTokens;
@@ -749,123 +830,143 @@ Vector<StringView, CDefaultAllocator> StringView::Split(char _delimiter, bool _i
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s8 StringView::ToInt8(bool _ignoreLeadingZero) const
+template <typename CharT>
+_s8 BasicStringView<CharT>::ToInt8(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_s8>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtil<CharT>::template ToNumber<_s8>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_u8 StringView::ToUInt8(bool _ignoreLeadingZero) const
+template <typename CharT>
+_u8 BasicStringView<CharT>::ToUInt8(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_u8>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtil<CharT>::template ToNumber<_u8>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s16 StringView::ToInt16(bool _ignoreLeadingZero) const
+template <typename CharT>
+_s16 BasicStringView<CharT>::ToInt16(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_s16>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtil<CharT>::template ToNumber<_s16>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_u16 StringView::ToUInt16(bool _ignoreLeadingZero) const
+template <typename CharT>
+_u16 BasicStringView<CharT>::ToUInt16(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_u16>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtil<CharT>::template ToNumber<_u16>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s32 StringView::ToInt32(bool _ignoreLeadingZero) const
+template <typename CharT>
+_s32 BasicStringView<CharT>::ToInt32(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_s32>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtil<CharT>::template ToNumber<_s32>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_u32 StringView::ToUInt32(bool _ignoreLeadingZero) const
+template <typename CharT>
+_u32 BasicStringView<CharT>::ToUInt32(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_u32>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtil<CharT>::template ToNumber<_u32>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_s64 StringView::ToInt64(bool _ignoreLeadingZero) const
+template <typename CharT>
+_s64 BasicStringView<CharT>::ToInt64(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_s64>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtil<CharT>::template ToNumber<_s64>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_u64 StringView::ToUInt64(bool _ignoreLeadingZero) const
+template <typename CharT>
+_u64 BasicStringView<CharT>::ToUInt64(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_u64>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtil<CharT>::template ToNumber<_u64>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_f32 StringView::ToFloat(bool _ignoreLeadingZero) const
+template <typename CharT>
+_f32 BasicStringView<CharT>::ToFloat(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_f32>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtil<CharT>::template ToNumber<_f32>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-_f64 StringView::ToDouble(bool _ignoreLeadingZero) const
+template <typename CharT>
+_f64 BasicStringView<CharT>::ToDouble(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_f64>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtil<CharT>::template ToNumber<_f64>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool StringView::TryToInt8(OUT _s8& _outValue, bool _ignoreLeadingZero) const
+template <typename CharT>
+bool BasicStringView<CharT>::TryToInt8(OUT _s8& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool StringView::TryToUInt8(OUT _u8& _outValue, bool _ignoreLeadingZero) const
+template <typename CharT>
+bool BasicStringView<CharT>::TryToUInt8(OUT _u8& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool StringView::TryToInt16(OUT _s16& _outValue, bool _ignoreLeadingZero) const
+template <typename CharT>
+bool BasicStringView<CharT>::TryToInt16(OUT _s16& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool StringView::TryToUInt16(OUT _u16& _outValue, bool _ignoreLeadingZero) const
+template <typename CharT>
+bool BasicStringView<CharT>::TryToUInt16(OUT _u16& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool StringView::TryToInt32(OUT _s32& _outValue, bool _ignoreLeadingZero) const
+template <typename CharT>
+bool BasicStringView<CharT>::TryToInt32(OUT _s32& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool StringView::TryToUInt32(OUT _u32& _outValue, bool _ignoreLeadingZero) const
+template <typename CharT>
+bool BasicStringView<CharT>::TryToUInt32(OUT _u32& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool StringView::TryToInt64(OUT _s64& _outValue, bool _ignoreLeadingZero) const
+template <typename CharT>
+bool BasicStringView<CharT>::TryToInt64(OUT _s64& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool StringView::TryToUInt64(OUT _u64& _outValue, bool _ignoreLeadingZero) const
+template <typename CharT>
+bool BasicStringView<CharT>::TryToUInt64(OUT _u64& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool StringView::TryToFloat(OUT _f32& _outValue, bool _ignoreLeadingZero) const
+template <typename CharT>
+bool BasicStringView<CharT>::TryToFloat(OUT _f32& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool StringView::TryToDouble(OUT _f64& _outValue, bool _ignoreLeadingZero) const
+template <typename CharT>
+bool BasicStringView<CharT>::TryToDouble(OUT _f64& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtil<CharT>::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -873,9 +974,10 @@ bool StringView::TryToDouble(OUT _f64& _outValue, bool _ignoreLeadingZero) const
 //////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////
-StringView StringView::SubStr(_s32 _startIdx, _u32 _count) const {
+template <typename CharT>
+BasicStringView<CharT> BasicStringView<CharT>::SubStr(_s32 _startIdx, _u32 _count) const {
 	if (!IsValidIndex(_startIdx))
-		return StringView();
+		return BasicStringView();
 	
 	_u32 actualCount = _count;
 	if (_startIdx + static_cast<_s32>(_count) > static_cast<_s32>(len_))
@@ -883,25 +985,27 @@ StringView StringView::SubStr(_s32 _startIdx, _u32 _count) const {
 		actualCount = len_ - _startIdx;
 	}
 
-	return StringView(pBuf_ + _startIdx, actualCount);
+	return BasicStringView(pBuf_ + _startIdx, actualCount);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-StringView StringView::GetRange(_s32 _startIdx, _s32 _endIdx) const {
+template <typename CharT>
+BasicStringView<CharT> BasicStringView<CharT>::GetRange(_s32 _startIdx, _s32 _endIdx) const {
 	if (!IsValidIndexRange(_startIdx, _endIdx))
-		return StringView();
+		return BasicStringView();
 
 	_u32 rangeLen = _endIdx - _startIdx + 1;
-	return StringView(pBuf_ + _startIdx, rangeLen);
+	return BasicStringView(pBuf_ + _startIdx, rangeLen);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-String StringView::ToLowerCase() const {
-	jc::String str(0);
+template <typename CharT>
+typename BasicStringView<CharT>::StrType BasicStringView<CharT>::ToLowerCase() const {
+	StrType str(0);
 	if (!pBuf_ || len_ == 0)
 		return str;
 
-	char* pTemp = dbg_new char[len_ + 1];
+	CharT* pTemp = Memory::Allocate<CharT*>(static_cast<_u32>((len_ + 1) * sizeof(CharT)));
 	for (_u32 i = 0; i < len_; i++)
 	{
 		pTemp[i] = (pBuf_[i] >= 'A' && pBuf_[i] <= 'Z') ? pBuf_[i] + 32 : pBuf_[i];
@@ -913,13 +1017,14 @@ String StringView::ToLowerCase() const {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-String StringView::ToUpperCase() const
+template <typename CharT>
+typename BasicStringView<CharT>::StrType BasicStringView<CharT>::ToUpperCase() const
 {
-	jc::String str(0);
+	StrType str(0);
 	if (!pBuf_ || len_ == 0)
 		return str;
 
-	char* pTemp = dbg_new char[len_ + 1];
+	CharT* pTemp = Memory::Allocate<CharT*>(static_cast<_u32>((len_ + 1) * sizeof(CharT)));
 	for (_u32 i = 0; i < len_; i++)
 	{
 		pTemp[i] = (pBuf_[i] >= 'a' && pBuf_[i] <= 'z') ? pBuf_[i] - 32 : pBuf_[i];
@@ -929,3 +1034,13 @@ String StringView::ToUpperCase() const
 	str.ExchangeSource(pTemp, len_);
 	return str;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////
+// BasicString glue — BasicStringView가 완성된 뒤라야 정의할 수 있어서 여기 둔다.
+template <typename CharT, typename Storage>
+inline void BasicString<CharT, Storage>::Append(const BasicStringView<char>& _str)
+{
+	Append(_str.SafeSource(), static_cast<int>(_str.Length()));
+}
+
+NS_END

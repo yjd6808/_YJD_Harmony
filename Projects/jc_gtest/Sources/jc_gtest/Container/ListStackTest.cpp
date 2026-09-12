@@ -181,7 +181,7 @@ TEST(ListStackTest, InnerDestructorTest) {
 		if (i && i % 4 == 0) {
 			aq.Pop();
 		} else {
-			aq.Push("fsvgfsrdvsrdrsf");
+			aq.Push(_T("fsvgfsrdvsrdrsf"));
 		}
 	}
 }

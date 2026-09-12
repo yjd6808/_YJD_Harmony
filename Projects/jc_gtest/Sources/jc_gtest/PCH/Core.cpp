@@ -6,8 +6,11 @@
 #include "jc/Encoding/CodePage.h"
 #include "jc/Utils/Console.h"
 #include "jc/Random.h"
+#include "jc/Env.h"
 
 #include "jc/Container/PropertyStatics.h"
+
+#include <windows.h>
 
 static Random g_cR;
 
@@ -39,6 +42,8 @@ TEST(JCoreTest, DeleteArraySafe)
 // 전 프로젝트 UTF8로 교체함에따라 main 함수 명시적으로 추가해줌
 int main(int _argc, char** _argv) 
 {
+	// 상대경로 테스트(a.dat, test_io 등) 잔재물이 실행 위치에 흩어지지 않도록 exe 디렉토리로 고정
+	::SetCurrentDirectory(Env::CurrentDirectory().Source());
 	::testing::InitGoogleTest(&_argc, _argv);
 	InitializeJCore(_argc, _argv);
 	g_cR.Initialize();

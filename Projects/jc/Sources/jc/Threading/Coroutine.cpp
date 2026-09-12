@@ -152,7 +152,7 @@ bool CoMgr::InitStack(CoStack* _pStack)
 	{
 		if (VirtualAlloc(pCommitAddr, actualInitCount * CO_PAGE_SIZE, MEM_COMMIT, PAGE_READWRITE) == nullptr)
 		{
-			_LogError_("VirtualAlloc (init commit) failed. Error: %lu", GetLastError());
+			_LogError_(_T("VirtualAlloc (init commit) failed. Error: %lu"), GetLastError());
 			t_coLastError = coeCommitFailed;
 			return false;
 		}
@@ -171,7 +171,7 @@ bool CoMgr::InitStack(CoStack* _pStack)
 	{
 		if (VirtualAlloc(pGuardAddr, actualGuardCount * CO_PAGE_SIZE, MEM_COMMIT, PAGE_READWRITE | PAGE_GUARD) == nullptr)
 		{
-			_LogError_("VirtualAlloc (guard commit) failed. Error: %lu", GetLastError());
+			_LogError_(_T("VirtualAlloc (guard commit) failed. Error: %lu"), GetLastError());
 			t_coLastError = coeCommitFailed;
 			return false;
 		}
@@ -188,7 +188,7 @@ bool CoMgr::InitStack(CoStack* _pStack)
 	if (VirtualAlloc(_pStack->pStackEnd_, CO_PAGE_SIZE,
 		MEM_COMMIT, PAGE_READWRITE | PAGE_GUARD) == nullptr)
 	{
-		_LogError_("VirtualAlloc (overflow guard commit) failed. Error: %lu", GetLastError());
+		_LogError_(_T("VirtualAlloc (overflow guard commit) failed. Error: %lu"), GetLastError());
 		t_coLastError = coeCommitFailed;
 		return false;
 	}
@@ -201,7 +201,7 @@ bool CoMgr::InitStack(CoStack* _pStack)
 			(SIZE_T)(_pStack->pStackEnd_ - _pStack->pReserveBase_),
 			MEM_COMMIT, PAGE_READWRITE) == nullptr)
 		{
-			_LogError_("VirtualAlloc (emergency pad commit) failed. Error: %lu", GetLastError());
+			_LogError_(_T("VirtualAlloc (emergency pad commit) failed. Error: %lu"), GetLastError());
 			t_coLastError = coeCommitFailed;
 			return false;
 		}

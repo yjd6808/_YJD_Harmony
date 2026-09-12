@@ -103,7 +103,7 @@ IOResult HttpService::Post(const String& _url, const MemoryStreamPtr& _spBody, c
 	HttpRequest request(_url);
 	request.SetMethod(hmPost);
 	if (!_contentType.IsEmpty())
-		request.SetHeader("Content-Type", _contentType);
+		request.SetHeader(_T("Content-Type"), _contentType);
 	if (_spBody != nullptr)
 		request.SetBody(_spBody);
 	return Send(request, _spResponse);
@@ -121,7 +121,7 @@ IOHandle HttpService::PostAsync(const String& _url, const MemoryStreamPtr& _spBo
 	HttpRequest request(_url);
 	request.SetMethod(hmPost);
 	if (!_contentType.IsEmpty())
-		request.SetHeader("Content-Type", _contentType);
+		request.SetHeader(_T("Content-Type"), _contentType);
 	if (_spBody != nullptr)
 		request.SetBody(_spBody);
 	return SendAsync(request, _spResponse, _callback);
@@ -137,7 +137,7 @@ IOResult HttpService::Download(const String& _url, const String& _destPath, cons
 
 	// 파일 다운로드는 2xx만 성공 — 상태/헤더는 _spResponse가 있으면 보존
 	return engine_.RunSync(MakeSource(HttpRequest(jc::Uri(_url)), true, _spResponse),
-		MakeShared<FileDest>(dest.fullPath_), _url + " -> " + _destPath, TransferPolicy{});
+		MakeShared<FileDest>(dest.fullPath_), _url + _T(" -> ") + _destPath, TransferPolicy{});
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -148,7 +148,7 @@ IOHandle HttpService::DownloadAsync(const String& _url, const String& _destPath,
 		return engine_.FailImmediate(ieInvalidUri, _destPath, _callback);
 
 	return engine_.Submit(MakeSource(HttpRequest(jc::Uri(_url)), true, _spResponse),
-		MakeShared<FileDest>(dest.fullPath_), _url + " -> " + _destPath, TransferPolicy{}, _callback);
+		MakeShared<FileDest>(dest.fullPath_), _url + _T(" -> ") + _destPath, TransferPolicy{}, _callback);
 }
 
 NS_END

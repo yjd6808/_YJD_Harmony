@@ -17,18 +17,24 @@ NS_JC_BEGIN
 String Stream::ReadString()
 {
 	String szRet(READ_BUFFER_SIZE);
-	char* szRetBuffer = szRet.Source();
+	_char* szRetBuffer = szRet.Source();
 	int iReadLength = 0;
 	for (int i = 0; !IsEnd(); i++)
 	{
-		szRetBuffer[i] = ReadInt8();
-		if (szRetBuffer[i] == NULL) break;
+		_char ch = _char(0);
+		if (Read(reinterpret_cast<_u8*>(&ch), 0, sizeof(_char)) != sizeof(_char))
+		{
+			throw RuntimeException("스트림에서 문자열을 읽는데 실패했습니다.");
+		}
+		szRetBuffer[i] = ch;
+		if (ch == _char(0)) break;
 
 		iReadLength += 1;
 		szRet.SetLength(iReadLength);
 		szRet.ResizeIfNeeded(iReadLength + 64); // 좀 여유를 두고 확장
+		szRetBuffer = szRet.Source();
 	}
-	szRetBuffer[iReadLength] = NULL;
+	szRetBuffer[iReadLength] = _char(0);
 
 	return szRet;
 }
@@ -116,7 +122,7 @@ _u64 Stream::ReadInt64U()
 
 void Stream::WriteString(const String& _str, bool _withNull)
 {
-	Write((_u8*)_str.Source(), _withNull ? _str.Length() + 1 : _str.Length());
+	Write(reinterpret_cast<const _u8*>(_str.Source()), _withNull ? (_str.Length() + 1) * sizeof(_char) : _str.Length() * sizeof(_char));
 }
 
 

@@ -75,7 +75,7 @@ bool SqlServerConnection::Connect(const jc::String& _hostname, const uint16_t& _
 	// MARS_Connection은 SQL Server에서 다중 활성 결과 집합(Multiple Active Result Sets)을 허용하는 옵션입니다. 이
 	// 옵션이 활성화되면 하나의 연결에서 여러 개의 결과 집합을 동시에 사용할 수 있습니다.
 	char connStr[512];
-	jc::StringUtil::FormatBuffer(connStr, 512,
+	jc::StringUtilT::FormatBuffer(connStr, 512,
 		"DRIVER={ODBC Driver 17 for SQL Server};SERVER=%s,%d;DATABASE=%s;UID=%s;PWD=%s;MARS_Connection=Yes;",
 		hostname_.Source(), static_cast<int>(port_), dbName_.Source(), username_.Source(), password_.Source());
 

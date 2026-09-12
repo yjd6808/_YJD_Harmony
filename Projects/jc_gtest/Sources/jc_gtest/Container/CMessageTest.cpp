@@ -253,15 +253,15 @@ TEST(CMessageTest, WriteReadString) {
 	LeakCheck;
 	CMessage msg(32, 256, 12, 0);
 
-	msg.WriteString(String("Hello"));
-	msg.WriteString(String("World"));
-	msg.WriteString(String(""));
+	msg.WriteString(String(_T("Hello")));
+	msg.WriteString(String(_T("World")));
+	msg.WriteString(String(_T("")));
 
 	msg.ResetReadOffset();
 
-	EXPECT_EQ(msg.ReadString(), String("Hello"));
-	EXPECT_EQ(msg.ReadString(), String("World"));
-	EXPECT_EQ(msg.ReadString(), String(""));
+	EXPECT_EQ(msg.ReadString(), String(_T("Hello")));
+	EXPECT_EQ(msg.ReadString(), String(_T("World")));
+	EXPECT_EQ(msg.ReadString(), String(_T("")));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -300,7 +300,7 @@ TEST(CMessageTest, MixedDataTypes) {
 	// 다양한 타입의 데이터 쓰기
 	msg.WriteS32(42);
 	msg.WriteFloat(3.14f);
-	msg.WriteString(String("test"));
+	msg.WriteString(String(_T("test")));
 	msg.WriteU64(9999999999ULL);
 	msg.WriteBool(true);
 
@@ -308,7 +308,7 @@ TEST(CMessageTest, MixedDataTypes) {
 
 	EXPECT_EQ(msg.ReadS32(), 42);
 	EXPECT_FLOAT_EQ(msg.ReadFloat(), 3.14f);
-	EXPECT_EQ(msg.ReadString(), String("test"));
+	EXPECT_EQ(msg.ReadString(), String(_T("test")));
 	EXPECT_EQ(msg.ReadU64(), 9999999999ULL);
 	EXPECT_TRUE(msg.ReadBool());
 }
@@ -322,7 +322,7 @@ TEST(CMessageTest, TryReadMethods) {
 
 	msg.WriteS32(100);
 	msg.WriteFloat(2.5f);
-	msg.WriteString(String("success"));
+	msg.WriteString(String(_T("success")));
 
 	msg.ResetReadOffset();
 
@@ -337,7 +337,7 @@ TEST(CMessageTest, TryReadMethods) {
 	EXPECT_FLOAT_EQ(floatVal, 2.5f);
 
 	EXPECT_TRUE(msg.TryReadString(strVal));
-	EXPECT_EQ(strVal, String("success"));
+	EXPECT_EQ(strVal, String(_T("success")));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -401,7 +401,7 @@ TEST(CMessageTest, CopyConstructor) {
 	{
 		CMessage msg1(32, 256, 100, 200);
 		msg1.WriteS32(42);
-		msg1.WriteString(String("original"));
+		msg1.WriteString(String(_T("original")));
 
 		CMessage msg2(msg1);
 
@@ -411,7 +411,7 @@ TEST(CMessageTest, CopyConstructor) {
 
 		msg2.ResetReadOffset();
 		EXPECT_EQ(msg2.ReadS32(), 42);
-		EXPECT_EQ(msg2.ReadString(), String("original"));
+		EXPECT_EQ(msg2.ReadString(), String(_T("original")));
 	}
 }
 
@@ -423,7 +423,7 @@ TEST(CMessageTest, MoveConstructor) {
 	{
 		CMessage msg1(32, 256, 100, 200);
 		msg1.WriteS32(42);
-		msg1.WriteString(String("moved"));
+		msg1.WriteString(String(_T("moved")));
 
 		_u16 originalWriteOffset = msg1.GetWriteOffset();
 
@@ -435,7 +435,7 @@ TEST(CMessageTest, MoveConstructor) {
 
 		msg2.ResetReadOffset();
 		EXPECT_EQ(msg2.ReadS32(), 42);
-		EXPECT_EQ(msg2.ReadString(), String("moved"));
+		EXPECT_EQ(msg2.ReadString(), String(_T("moved")));
 	}
 }
 
@@ -471,7 +471,7 @@ TEST(CMessageTest, MoveAssignment) {
 	{
 		CMessage msg1(32, 256, 100, 200);
 		msg1.WriteS32(500);
-		msg1.WriteString(String("test"));
+		msg1.WriteString(String(_T("test")));
 
 		CMessage msg2(32, 256, 50, 60);
 		msg2.WriteU32(111);
@@ -483,7 +483,7 @@ TEST(CMessageTest, MoveAssignment) {
 
 		msg2.ResetReadOffset();
 		EXPECT_EQ(msg2.ReadS32(), 500);
-		EXPECT_EQ(msg2.ReadString(), String("test"));
+		EXPECT_EQ(msg2.ReadString(), String(_T("test")));
 	}
 }
 
@@ -512,7 +512,7 @@ TEST(CMessageTest, ReadAny) {
 
 	msg.WriteS8(10);
 	msg.WriteU16(1000);
-	msg.WriteString(String("test"));
+	msg.WriteString(String(_T("test")));
 
 	msg.ResetReadOffset();
 
@@ -558,7 +558,7 @@ TEST(CMessageTest, GetCurrentVT) {
 
 	msg.WriteS32(42);
 	msg.WriteFloat(3.14f);
-	msg.WriteString(String("test"));
+	msg.WriteString(String(_T("test")));
 
 	msg.ResetReadOffset();
 
@@ -580,7 +580,7 @@ TEST(CMessageTest, GetVT) {
 
 	msg.WriteS32(100);
 	msg.WriteFloat(2.5f);
-	msg.WriteString(String("variant"));
+	msg.WriteString(String(_T("variant")));
 
 	EXPECT_EQ(msg.GetVT(0), CMessage::vt_s32);
 	EXPECT_EQ(msg.GetVT(1), CMessage::vt_f32);

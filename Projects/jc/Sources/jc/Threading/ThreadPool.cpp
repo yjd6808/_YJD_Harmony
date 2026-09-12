@@ -6,6 +6,7 @@
  */
 
 #include "jc/Threading/ThreadPool.h"
+#include "jc/Primitives/StringConvert.h"
 
 NS_JC_BEGIN
 // =============================================================================================
@@ -24,11 +25,11 @@ const char* TaskContext::ToStateString(int _state)
 void TaskContext::Run()
 {
 	{
-		TASKPOOL_LOG("%s 실행 Begin", m_DebugName.Source());
+		TASKPOOL_LOG("%s 실행 Begin", StringConvert::ToUtf8(m_DebugName).Source());
 		NormalLockGuard guard(ctxLock_);
 		if (state_.value_ == TaskState::eCancelled)
 		{
-			TASKPOOL_LOG("%s 실행 Cancel 리턴", m_DebugName.Source());
+			TASKPOOL_LOG("%s 실행 Cancel 리턴", StringConvert::ToUtf8(m_DebugName).Source());
 			return;
 		}
 		state_.value_ = TaskState::eRunning;
@@ -45,7 +46,7 @@ void TaskContext::Run()
 	//  ==> Race Condition이 발생함.
 	// m_eState = eFinished;
 	ctxCondVar_.NotifyAll();
-	TASKPOOL_LOG("%s 실행 End", m_DebugName.Source());
+	TASKPOOL_LOG("%s 실행 End", StringConvert::ToUtf8(m_DebugName).Source());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

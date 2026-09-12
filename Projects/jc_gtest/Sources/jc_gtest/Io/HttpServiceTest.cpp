@@ -7,8 +7,9 @@
 #include "jc/IO/File.h"
 #include "jc/Threading/Thread.h"
 #include <string>
+#include "jc/Primitives/StringConvert.h"
 using namespace jc;
-namespace { struct HttpEnv { IODaemon daemon; httptest::MockHttpServer server; HttpEnv() { IODaemonConfig cfg; cfg.http_.receiveTimeoutMs_ = 2000; daemon.Initialize(cfg); daemon.Resolver().Mount("save", "test_io/http/save"); server.Start(0); } ~HttpEnv() { server.Stop(); daemon.Shutdown(); } };
+namespace { struct HttpEnv { IODaemon daemon; httptest::MockHttpServer server; HttpEnv() { IODaemonConfig cfg; cfg.http_.receiveTimeoutMs_ = 2000; daemon.Initialize(cfg); daemon.Resolver().Mount(_T("save"), _T("test_io/http/save")); server.Start(0); } ~HttpEnv() { server.Stop(); daemon.Shutdown(); } };
 
 bool VerifyHttpPattern(const _byte* _p, int _len)
 {
@@ -47,7 +48,7 @@ TEST(HttpServiceTest, GetWritesCallerResponseBody)
 
 	// 호출자 그릇에 직접 기록 — 결과 회수 단계 없음 (§1)
 	HttpResponsePtr spRes = MakeShared<HttpResponse>();
-	IOResult r = env.daemon.Http().Get(env.server.GetUri("/get200").c_str(), spRes);
+	IOResult r = env.daemon.Http().Get(StringConvert::FromUtf8(env.server.GetUri("/get200")), spRes);
 
 	EXPECT_TRUE(r.IsOk());
 	EXPECT_EQ(r.bytesTransferred_, 3000u);
@@ -89,7 +90,7 @@ TEST(HttpServiceTest, PostBodyAndHeader)
 	HttpResponsePtr spRes = MakeShared<HttpResponse>();
 	MemoryStreamPtr spBody = MakeShared<MemoryStream>(0u);
 	spBody->Write(json.data(), (_u32)json.size());
-	IOResult r = env.daemon.Http().Post(env.server.GetUri("/login").c_str(), spBody, String("application/json"), spRes);
+	IOResult r = env.daemon.Http().Post(StringConvert::FromUtf8(env.server.GetUri("/login")), spBody, String(_T("application/json")), spRes);
 
 	EXPECT_TRUE(r.IsOk());
 	EXPECT_EQ(spRes->GetStatusCode(), 200);
@@ -109,7 +110,7 @@ TEST(HttpServiceTest, PostAsyncBodyAndHeader)
 	HttpResponsePtr spRes = MakeShared<HttpResponse>();
 	MemoryStreamPtr spBody = MakeShared<MemoryStream>(0u);
 	spBody->Write(json.data(), (_u32)json.size());
-	env.daemon.Http().PostAsync(env.server.GetUri("/login2").c_str(), spBody, String("application/json"), spRes,
+	env.daemon.Http().PostAsync(StringConvert::FromUtf8(env.server.GetUri("/login2")), spBody, String(_T("application/json")), spRes,
 		[&](const IOResult&) { done.Store(true); });
 
 	PumpUntil(env.daemon, done);
@@ -125,12 +126,12 @@ TEST(HttpServiceTest, DownloadCommitsFileAndPreservesStatus)
 {
 	HttpEnv env;
 	env.server.RegisterText("/get200", 200, MakePatternBody(3000));
-	auto rr = env.daemon.Resolver().ResolveWritable("save:/get200_body.bin");
+	auto rr = env.daemon.Resolver().ResolveWritable(_T("save:/get200_body.bin"));
 	File::Delete(rr.fullPath_);
 
 	// _spResponse 전달 — 상태/헤더 필요 시 보존
 	HttpResponsePtr spRes = MakeShared<HttpResponse>();
-	IOResult r = env.daemon.Http().Download(env.server.GetUri("/get200"), "save:/get200_body.bin", spRes);
+	IOResult r = env.daemon.Http().Download(StringConvert::FromUtf8(env.server.GetUri("/get200")), _T("save:/get200_body.bin"), spRes);
 
 	EXPECT_TRUE(r.IsOk());
 	EXPECT_EQ(r.bytesTransferred_, 3000u);
@@ -148,7 +149,7 @@ TEST(HttpServiceTest, DownloadNon2xxFailsWithStatusPreserved)
 	IOError seenErr = ieNone;
 	int seenStatus = 0;
 	HttpResponsePtr spRes = MakeShared<HttpResponse>();
-	env.daemon.Http().DownloadAsync(env.server.GetUri("/gone"), "save:/gone.bin", spRes, [&](const IOResult& rr)
+	env.daemon.Http().DownloadAsync(StringConvert::FromUtf8(env.server.GetUri("/gone")), _T("save:/gone.bin"), spRes, [&](const IOResult& rr)
 	{
 		done.Store(true);
 		seenErr = rr.error_;
@@ -168,11 +169,11 @@ TEST(HttpServiceTest, SendWithRequestObject)
 	env.server.RegisterText("/login", 200, "{}");
 	std::string json = "{\"user\":\"tester\"}";
 
-	HttpRequest req(env.server.GetUri("/login").c_str());	// 사용자 예제 패턴 그대로
+	HttpRequest req(StringConvert::FromUtf8(env.server.GetUri("/login")));	// 사용자 예제 패턴 그대로
 	req.SetMethod(HttpMethod::hmPost)
-	   .SetHeader(jc::String("Content-Type"), jc::String("application/json"))
-	   .SetHeader(jc::String("Authorization"), jc::String("Bearer token123"));
-	req.SetBody(jc::String(json.c_str()));
+	   .SetHeader(jc::String(_T("Content-Type")), jc::String(_T("application/json")))
+	   .SetHeader(jc::String(_T("Authorization")), jc::String(_T("Bearer token123")));
+	req.SetBody(jc::StringConvert::FromUtf8(json.c_str()));
 
 	HttpResponsePtr spRes = MakeShared<HttpResponse>();
 	IOResult r = env.daemon.Http().Send(req, spRes);

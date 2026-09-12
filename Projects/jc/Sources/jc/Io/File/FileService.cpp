@@ -1,4 +1,5 @@
 #include "jc/IO/File/FileService.h"
+#include "jc/Primitives/StringConvert.h"
 #include "jc/IO/PathResolver.h"
 #include "jc/IO/File/FileSource.h"
 #include "jc/IO/Memory/MemorySource.h"
@@ -97,7 +98,7 @@ IOResult FileService::Save(const String& _path, const MemoryStreamPtr& _spData)
 		return MakeLocalError(ieInvalidUri);
 
 	return engine_.RunSync(MakeShared<MemorySource>(_spData),
-		MakeShared<FileDest>(dest.fullPath_), _path + " -> " + dest.fullPath_, TransferPolicy{});
+		MakeShared<FileDest>(dest.fullPath_), _path + _T(" -> ") + dest.fullPath_, TransferPolicy{});
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -124,7 +125,7 @@ IOHandle FileService::SaveAsync(const String& _path, const MemoryStreamPtr& _spD
 		return engine_.FailImmediate(ieInvalidUri, _path, _callback);
 
 	return engine_.Submit(MakeShared<MemorySource>(_spData),
-		MakeShared<FileDest>(dest.fullPath_), _path + " -> " + dest.fullPath_, TransferPolicy{}, _callback);
+		MakeShared<FileDest>(dest.fullPath_), _path + _T(" -> ") + dest.fullPath_, TransferPolicy{}, _callback);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -134,15 +135,14 @@ String FileService::LoadText(const String& _path, const LoadOptions& _options)
 	IOResult result = Load(_path, spOut, 0, 0, _options);
 	if (!result.IsOk() || spOut->GetSize() == 0)
 		return String();
-	String text;
-	text.Append((const char*)spOut->GetData(), (int)spOut->GetSize());
-	return text;
+	return StringConvert::FromUtf8((const char*)spOut->GetData(), (int)spOut->GetSize());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 IOResult FileService::SaveText(const String& _path, const String& _text)
 {
-	return Save(_path, (const _byte*)_text.Source(), (_u32)_text.Length());
+	const AString narrow = StringConvert::ToUtf8(_text);
+	return Save(_path, (const _byte*)narrow.Source(), (_u32)narrow.Length());
 }
 
 NS_END

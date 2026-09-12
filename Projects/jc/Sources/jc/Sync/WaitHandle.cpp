@@ -8,12 +8,13 @@
 
 #include "jc/Wrapper/WinApi.h"
 #include "jc/Sync/WaitHandle.h"
+#include "jc/Primitives/StringConvert.h"
 
 NS_JC_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 WaitHandle::WaitHandle(bool _initialState, bool _manualReset, const char* _name)
 : handle_(WinApi::CreateEventA(_initialState, _manualReset, _name))
-, name_(_name)
+, name_(StringConvert::FromUtf8(_name))
 {
 }
 
@@ -74,7 +75,7 @@ void WaitHandle::operator=(WaitHandle&& _other) noexcept
 	handle_ = _other.handle_;
 	_other.handle_ = nullptr;
 
-	if (_other.name_.IsNull())
+	if (_other.name_.IsEmpty())
 		return;
 
 	name_ = Move(_other.name_);

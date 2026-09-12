@@ -83,8 +83,8 @@ auto PrintHeaps(HANDLE* _heaps, int _heapCount, bool _showEntry, const char* _ph
 	for (int i = 0; i < heapEntries.size(); ++i)
 	{
 		HeapStartEntry& heap = heapEntries[i];
-		String heapRange = StringUtil::Format("[%2d] Heap Base: 0x%p\n", i, heap.base_.lpData);
-		heapRange += StringUtil::Format("BlockFirst: 0x%p, BlockLast: 0x%p, Commit: 0x%6x, Uncommit: 0x%4x, EntryCount: %3d\n",
+		String heapRange = StringUtilT::Format("[%2d] Heap Base: 0x%p\n", i, heap.base_.lpData);
+		heapRange += StringUtilT::Format("BlockFirst: 0x%p, BlockLast: 0x%p, Commit: 0x%6x, Uncommit: 0x%4x, EntryCount: %3d\n",
 			heap.base_.Region.lpFirstBlock,
 			heap.base_.Region.lpLastBlock,
 			heap.base_.Region.dwCommittedSize,
@@ -99,7 +99,7 @@ auto PrintHeaps(HANDLE* _heaps, int _heapCount, bool _showEntry, const char* _ph
 		for (int j =0; j < heap.entries_.size(); ++j)
 		{
 			const auto& et = heap.entries_[j];
-			heapRange += StringUtil::Format("   [%4d] Data: 0xp%p, Size: 0x%5x, Overhead: 0x%4x, Flags: 0x%x (%s)\n",
+			heapRange += StringUtilT::Format("   [%4d] Data: 0xp%p, Size: 0x%5x, Overhead: 0x%4x, Flags: 0x%x (%s)\n",
 				j,
 				et.lpData,
 				et.cbData,

@@ -177,7 +177,7 @@ TEST(ArrayStackTest, InnerDestructorTest) {
 			if (i && i % 4 == 0) {
 				aq.Pop();
 			} else {
-				aq.Push("ab");
+				aq.Push(_T("ab"));
 			}
 		}
 	}
@@ -190,7 +190,7 @@ TEST(ArrayStackTest, MemoryPool) {
 	MemoryPoolLeakCheck;
 
 	ArrayStack<String, CDefaultArrayAllocator> q;
-	for (int i = 0; i < 100'000; i++) q.Push("1");
+	for (int i = 0; i < 100'000; i++) q.Push(_T("1"));
 }
 
 TEST(ArrayStackTest, ZeroCapacityTest) {

@@ -15,6 +15,7 @@
 #include "jc/Comparator.h"
 #include "jc/Primitives/BitFlag.h"
 #include "jc/Container/Vector.h"
+#include "jc/Primitives/StringConvert.h"
 
 
 NS_JC_BEGIN
@@ -518,7 +519,6 @@ struct TimeSpanF
 #define DATETIME_PARSE_ERROR_AMBIGUOUS_DATESTRING_TOKEN						10009			// 1) AMPM 정보가 주어지지 않고 h와 hh에 해당하는 정보를 얻을려고하는 경우
 
 
-class String;
 class DateTime
 {
 public: // constructors
@@ -627,13 +627,13 @@ public: // public static
 	static bool IsLeapYear(int _year);
 
 	// TODO: TryParse 유닛 테스트
-	static bool TryParse(DateTime& _parsed, const char* _fmt, const String& _dateString) { return TryParse(_parsed, _fmt, StringUtil::Length(_fmt), _dateString.Source(), _dateString.Length()); }
-	static bool TryParse(DateTime& _parsed, const char* _fmt, const char* _dateString) { return TryParse(_parsed, _fmt, StringUtil::Length(_fmt), _dateString, StringUtil::Length(_dateString)); }
+	static bool TryParse(DateTime& _parsed, const char* _fmt, const String& _dateString) { const AString narrowDate = StringConvert::ToUtf8(_dateString); return TryParse(_parsed, _fmt, StringUtilA::Length(_fmt), narrowDate.Source(), narrowDate.Length()); }
+	static bool TryParse(DateTime& _parsed, const char* _fmt, const char* _dateString) { return TryParse(_parsed, _fmt, StringUtilA::Length(_fmt), _dateString, StringUtilA::Length(_dateString)); }
 	static bool TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const char* _dateString, int _dateStringLen);
 	static DateTime FromUnixTime(double _unixTimestamp, TimeStandard _timeStandard = TimeStandard::Local);	// 초단위 스탬프를 DateTime으로 변환
 	static int LastError() { return ms_tlsiLastError; }
 	static const char* LastErrorMessage();
-	static Vector<DateFormat_t> ParseFormat(const String& _fmt, IN_OPT Vector<String>* _delimiters = nullptr) { return ParseFormat(_fmt.Source(), _fmt.Length(), _delimiters); }
+	static Vector<DateFormat_t> ParseFormat(const String& _fmt, IN_OPT Vector<String>* _delimiters = nullptr) { const AString narrowFmt = StringConvert::ToUtf8(_fmt); return ParseFormat(narrowFmt.Source(), narrowFmt.Length(), _delimiters); }
 	static Vector<DateFormat_t> ParseFormat(const char* _fmt, int _fmtLen, IN_OPT Vector<String>* _delimiters = nullptr);
 
 	static const char* GetAbbreviationWeekendName(DayOfWeek _week) {

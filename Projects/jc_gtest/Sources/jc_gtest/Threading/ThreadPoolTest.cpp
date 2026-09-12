@@ -25,7 +25,7 @@ TEST(ThreadPoolTest, General) {
 			Thread::Sleep(R(100, 200));
 			return 100;
 		}, 100, 200);
-		t1.SetDebugName("태스크1");
+		t1.SetDebugName(_T("태스크1"));
 
 		Task<void> t2 = pool.Run([](int a, int b) {
 			EXPECT_EQ(a, 100);
@@ -33,7 +33,7 @@ TEST(ThreadPoolTest, General) {
 			Console::WriteLine("태스크2");
 			Thread::Sleep(R(100, 400));
 		}, 100, 200);
-		t2.SetDebugName("태스크2");
+		t2.SetDebugName(_T("태스크2"));
 
 		Task<void> taskArr[20];
 
@@ -44,7 +44,7 @@ TEST(ThreadPoolTest, General) {
 				Console::WriteLine("태스크%d", i);
 				Thread::Sleep(R(100, 800));
 			}, 100, 200);
-			taskArr[i - 3].SetDebugName(StringUtil::Format("태스크%d", i));
+			taskArr[i - 3].SetDebugName(StringUtilT::Format(_T("태스크%d"), i));
 		}
 
 		Thread th1{ [=](void*) {

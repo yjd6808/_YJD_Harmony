@@ -8,6 +8,7 @@
 #include "jc/Time.h"
 #include "jc/Container/Arrays.h"
 #include "jc/Logger/ConsoleLogger.h"
+#include "jc/Primitives/StringConvert.h"
 
 NS_JC_BEGIN
 
@@ -32,7 +33,7 @@ void ConsoleLogger::Flush()
 
 	if (m_szBuffer.Length() > 0)
 	{
-		printf("%s\n", m_szBuffer.Source());
+		printf("%s\n", StringConvert::ToUtf8(m_szBuffer).Source());
 		m_szBuffer.SetLength(0);
 	}
 
@@ -45,7 +46,7 @@ void ConsoleLogger::Flush()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConsoleLogger::LogVaList(Level _level, const char* _pFmt, va_list _list)
+void ConsoleLogger::LogVaList(Level _level, const _char* _pFmt, va_list _list)
 {
 	if (!m_pOption->EnableLog[_level])
 	{
@@ -59,10 +60,10 @@ void ConsoleLogger::LogVaList(Level _level, const char* _pFmt, va_list _list)
 		m_Lock.Lock();
 	}
 
-	String fmtText = StringUtil::Format(_pFmt, _list);
+	String fmtText = StringUtilT::Format(_pFmt, _list);
 
 	m_szBuffer += CreateHeader(_level);
-	m_szBuffer += Console::VTForeColor[GetLogColor(_level)];
+	m_szBuffer += StringConvert::FromUtf8(Console::VTForeColor[GetLogColor(_level)]);
 	m_szBuffer += fmtText;
 
 	if (m_bAutoFlush)
@@ -77,7 +78,7 @@ void ConsoleLogger::LogVaList(Level _level, const char* _pFmt, va_list _list)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void ConsoleLogger::LogPlainVaList(const char* _pFmt, va_list _list)
+void ConsoleLogger::LogPlainVaList(const _char* _pFmt, va_list _list)
 {
 	if (!m_pOption->EnablePlainLog)
 	{
@@ -91,9 +92,9 @@ void ConsoleLogger::LogPlainVaList(const char* _pFmt, va_list _list)
 		m_Lock.Lock();
 	}
 
-	String fmtText = StringUtil::Format(_pFmt, _list);
+	String fmtText = StringUtilT::Format(_pFmt, _list);
 
-	m_szBuffer += Console::VTForeColor[ConsoleColor::LightGray];
+	m_szBuffer += StringConvert::FromUtf8(Console::VTForeColor[ConsoleColor::LightGray]);
 	m_szBuffer += fmtText;
 
 	if (m_bAutoFlush)
@@ -115,8 +116,8 @@ String ConsoleLogger::CreateHeader(Level _level)
 		return {};
 	}
 
-	int levelIndex = m_szHeaderFormat.Find("level");
-	int dateTimeIndex = m_szHeaderFormat.Find("datetime");
+	int levelIndex = m_szHeaderFormat.Find(_T("level"));
+	int dateTimeIndex = m_szHeaderFormat.Find(_T("datetime"));
 
 	if (m_pOption->ShowLevel)
 	{
@@ -128,33 +129,33 @@ String ConsoleLogger::CreateHeader(Level _level)
 		jc_assert_msg(dateTimeIndex != -1, "헤더에 데이트타임 태그가 없습니다.");
 	}
 
-	String dateTimeFmt = DateTime::Now().Format(m_szDateTimeFormat.Source());
+	String dateTimeFmt = DateTime::Now().Format(StringConvert::ToUtf8(m_szDateTimeFormat).Source());
 	String header(256);
-	char tempBuff[256];
+	_char tempBuff[256];
 
 	ConsoleLoggerOption* pConsoleOption = static_cast<ConsoleLoggerOption*>(m_pOption);
 
-	header += Console::VTForeColor[pConsoleOption->HeaderColors[_level]];
+	header += StringConvert::FromUtf8(Console::VTForeColor[pConsoleOption->HeaderColors[_level]]);
 	header += m_szHeaderFormat;
 
 	if (m_pOption->ShowLevel)
 	{
-		StringUtil::FormatBuffer(tempBuff, 256, "%s%s%s",
+		StringUtilT::FormatBuffer(tempBuff, 256, _T("%hs%s%hs"),
 			Console::VTForeColor[pConsoleOption->LevelColors[_level]],
 			m_szLevelText[_level].Source(),
 			Console::VTForeColor[pConsoleOption->HeaderColors[_level]]
 		);
-		header.ReplaceAll("level", tempBuff);
+		header.ReplaceAll(_T("level"), tempBuff);
 	}
 
 	if (m_pOption->ShowDateTime)
 	{
-		StringUtil::FormatBuffer(tempBuff, 256, "%s%s%s",
+		StringUtilT::FormatBuffer(tempBuff, 256, _T("%hs%s%hs"),
 			Console::VTForeColor[pConsoleOption->TimeColors[_level]],
 			dateTimeFmt.Source(),
 			Console::VTForeColor[pConsoleOption->HeaderColors[_level]]
 		);
-		header.ReplaceAll("datetime", tempBuff);
+		header.ReplaceAll(_T("datetime"), tempBuff);
 	}
 
 	return header;

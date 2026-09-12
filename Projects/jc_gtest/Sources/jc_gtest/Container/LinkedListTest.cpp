@@ -167,7 +167,7 @@ TEST(LinkedListTest, InnerDestructorTest) {
 			else
 				aq.Remove(*aq.Last());
 		} else {
-			aq.PushBack("fsefesfesfesf");
+			aq.PushBack(_T("fsefesfesfesf"));
 		}
 	}
 }

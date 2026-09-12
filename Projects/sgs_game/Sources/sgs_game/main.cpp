@@ -18,7 +18,7 @@ int main(int _argc, char* _pArgv[])
 	
 	Env::InitArgs(_argc, _pArgv);
 	int gameServerType = parse_args(_argc, _pArgv);
-	const String logSpecifier = StringUtil::Format(LOG_SPECIFIER_GAME, GameServerType::Name[gameServerType]);
+	const String logSpecifier = StringUtilT::Format(LOG_SPECIFIER_GAME, GameServerType::Name[gameServerType]);
 
     Winsock::Initialize(2, 2);
     Console::SetSize(800, 400);
@@ -64,7 +64,7 @@ int parse_args(int _argc, char* _pArgv[])
 	}
 
 	int gameServerType = -1;
-	if (!StringUtil::TryToNumber<int>(gameServerType, _pArgv[1]))
+	if (!StringUtilT::TryToNumber<int>(gameServerType, _pArgv[1]))
 	{
 		// 전달받은 인자를 정수타입으로 변환하는데 실패했습니다. (%s)
 		Console::WriteLine("not a integer string. (%s)", _pArgv[1]);

@@ -11,6 +11,7 @@
 #include "jc/Container/HashMap.h"
 #include "jc/Primitives/String.h"
 #include "jc/Primitives/StaticString.h"
+#include "jc/Primitives/StringConvert.h"
 
 #include "chrono"
 #include "timezoneapi.h"
@@ -706,38 +707,38 @@ HashMap<char, Tuple<char, DateFormat_t, int>> FormatTokenMap_v =
 
 HashMap<String, DateFormat_t> DateFormatMap_v =
 {
-	{ "d", DateFormat::d },
-	{ "dd", DateFormat::dd },
-	{ "ddd", DateFormat::ddd },
-	{ "dddd", DateFormat::dddd },
-	{ "h", DateFormat::h },
-	{ "hh", DateFormat::hh },
-	{ "H", DateFormat::H },
-	{ "HH", DateFormat::HH },
-	{ "m", DateFormat::m },
-	{ "mm", DateFormat::mm },
-	{ "M", DateFormat::M },
-	{ "MM", DateFormat::MM },
-	{ "MMM", DateFormat::MMM },
-	{ "MMMM", DateFormat::MMMM },
-	{ "s", DateFormat::s },
-	{ "ss", DateFormat::ss },
-	{ "t", DateFormat::t },
-	{ "tt", DateFormat::tt },
-	{ "y", DateFormat::y },
-	{ "yy", DateFormat::yy },
-	{ "yyy", DateFormat::yyy },
-	{ "yyyy", DateFormat::yyyy },
-	{ "K", DateFormat::K },
-	{ "z", DateFormat::z },
-	{ "zz", DateFormat::zz },
-	{ "zzz", DateFormat::zzz },
-	{ "f", DateFormat::f },
-	{ "ff", DateFormat::ff },
-	{ "fff", DateFormat::fff },
-	{ "ffff", DateFormat::ffff },
-	{ "fffff", DateFormat::fffff },
-	{ "ffffff", DateFormat::ffffff }
+	{ _T("d"), DateFormat::d },
+	{ _T("dd"), DateFormat::dd },
+	{ _T("ddd"), DateFormat::ddd },
+	{ _T("dddd"), DateFormat::dddd },
+	{ _T("h"), DateFormat::h },
+	{ _T("hh"), DateFormat::hh },
+	{ _T("H"), DateFormat::H },
+	{ _T("HH"), DateFormat::HH },
+	{ _T("m"), DateFormat::m },
+	{ _T("mm"), DateFormat::mm },
+	{ _T("M"), DateFormat::M },
+	{ _T("MM"), DateFormat::MM },
+	{ _T("MMM"), DateFormat::MMM },
+	{ _T("MMMM"), DateFormat::MMMM },
+	{ _T("s"), DateFormat::s },
+	{ _T("ss"), DateFormat::ss },
+	{ _T("t"), DateFormat::t },
+	{ _T("tt"), DateFormat::tt },
+	{ _T("y"), DateFormat::y },
+	{ _T("yy"), DateFormat::yy },
+	{ _T("yyy"), DateFormat::yyy },
+	{ _T("yyyy"), DateFormat::yyyy },
+	{ _T("K"), DateFormat::K },
+	{ _T("z"), DateFormat::z },
+	{ _T("zz"), DateFormat::zz },
+	{ _T("zzz"), DateFormat::zzz },
+	{ _T("f"), DateFormat::f },
+	{ _T("ff"), DateFormat::ff },
+	{ _T("fff"), DateFormat::fff },
+	{ _T("ffff"), DateFormat::ffff },
+	{ _T("fffff"), DateFormat::fffff },
+	{ _T("ffffff"), DateFormat::ffffff }
 };
 
 
@@ -770,7 +771,7 @@ int DateTime::FormatBuffered(const char* _fmt, char* _pBuff, int _capacity) cons
 	if (_pBuff == nullptr || _capacity <= 0)
 		return 0;
 
-	const int iFmtLen = StringUtil::Length(_fmt);
+	const int iFmtLen = StringUtilA::Length(_fmt);
 
 	int pos = 0;
 	int iContinuousCount = 0;
@@ -817,7 +818,7 @@ int DateTime::FormatBuffered(const char* _fmt, char* _pBuff, int _capacity) cons
 String DateTime::Format(const char* _fmt) const {
 	char buf[256];
 	FormatBuffered(_fmt, buf, sizeof(buf));
-	return String(buf);
+	return StringConvert::FromUtf8(buf);
 }
 
 bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const char* _dateString, int _dateStringLen) {
@@ -853,7 +854,8 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 	for (int i = 0; i < vDelimiterList.Size(); ++i) {
 		const String& szDelimiter = vDelimiterList[i];
 		const int iPrevDateStringDelimiterPos = iDateStringDelimiterPos;
-		iDateStringDelimiterPos = StringUtil::Find(_dateString, _dateStringLen, iPrevDateStringDelimiterPos, szDelimiter.Source());
+		const AString narrowDelim = StringConvert::ToUtf8(szDelimiter);
+		iDateStringDelimiterPos = StringUtilA::Find(_dateString, _dateStringLen, iPrevDateStringDelimiterPos, narrowDelim.Source());
 
 		// 포맷에는 현재 구분자가 있지만 dateString에는 해당 구분자가 없는 경우
 		if (iDateStringDelimiterPos == -1) {
@@ -861,13 +863,13 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 			return false;
 		}
 
-		String szDateString = StringUtil::GetRange(_dateString, _dateStringLen, iPrevDateStringDelimiterPos, iDateStringDelimiterPos - 1);
+		String szDateString = StringConvert::FromUtf8(StringUtilA::GetRange(_dateString, _dateStringLen, iPrevDateStringDelimiterPos, iDateStringDelimiterPos - 1));
 		vDateStringList.PushBack({ vDateStringList.Size(), Move(szDateString)});
 		iDateStringDelimiterPos += szDelimiter.Length();
 	}
 
 	if (iDateStringDelimiterPos < _dateStringLen) {
-		String szDateString = StringUtil::GetRange(_dateString, _dateStringLen, iDateStringDelimiterPos, _dateStringLen - 1);
+		String szDateString = StringConvert::FromUtf8(StringUtilA::GetRange(_dateString, _dateStringLen, iDateStringDelimiterPos, _dateStringLen - 1));
 		vDateStringList.PushBack({ vDateStringList.Size(), Move(szDateString) });
 	}
 
@@ -933,7 +935,7 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 		switch (eFormatToken) {
 		case DateFormat::d:
 		case DateFormat::dd: {
-			const int day = StringUtil::ToNumber<_s32>(szDateStringToken.Source());
+			const int day = StringUtilT::ToNumber<_s32>(szDateStringToken.Source());
 			if (day < 0 || day > 31) {
 				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
 				break;
@@ -949,7 +951,7 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 		}
 		case DateFormat::h:
 		case DateFormat::hh: {
-			int hour = StringUtil::ToNumber<_s32>(szDateStringToken.Source());
+			int hour = StringUtilT::ToNumber<_s32>(szDateStringToken.Source());
 
 			if (eAMPM == AMPM::None) {
 				ms_tlsiLastError = DATETIME_PARSE_ERROR_AMBIGUOUS_DATESTRING_TOKEN;
@@ -970,7 +972,7 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 		}
 		case DateFormat::H:
 		case DateFormat::HH: {
-			const int hour = StringUtil::ToNumber<_s32>(szDateStringToken.Source());
+			const int hour = StringUtilT::ToNumber<_s32>(szDateStringToken.Source());
 			if (hour < 0 || hour > 23) {
 				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
 				break;
@@ -980,7 +982,7 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 		}
 		case DateFormat::m:
 		case DateFormat::mm: {
-			const int minute = StringUtil::ToNumber<_s32>(szDateStringToken.Source());
+			const int minute = StringUtilT::ToNumber<_s32>(szDateStringToken.Source());
 			if (minute < 0 || minute > 59) {
 				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
 				break;
@@ -990,7 +992,7 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 		}
 		case DateFormat::M:
 		case DateFormat::MM: {
-			const int month = StringUtil::ToNumber<_s32>(szDateStringToken.Source());
+			const int month = StringUtilT::ToNumber<_s32>(szDateStringToken.Source());
 			if (month < 0 || month > 12) {
 				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
 				break;
@@ -1005,7 +1007,7 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 		}
 		case DateFormat::s:
 		case DateFormat::ss: {
-			const int sec = StringUtil::ToNumber<_s32>(szDateStringToken.Source());
+			const int sec = StringUtilT::ToNumber<_s32>(szDateStringToken.Source());
 			if (sec < 0 || sec > 59) {
 				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
 				break;
@@ -1014,12 +1016,12 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 			break;
 		}
 		case DateFormat::t: {
-			if (szDateStringToken == "A") {
+			if (szDateStringToken == _T("A")) {
 				eAMPM = AMPM::AM;
 				break;
 			}
 
-			if (szDateStringToken == "P") {
+			if (szDateStringToken == _T("P")) {
 				eAMPM = AMPM::PM;
 				break;
 			}
@@ -1028,12 +1030,12 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 			break;
 		}
 		case DateFormat::tt: {
-			if (szDateStringToken == "AM") {
+			if (szDateStringToken == _T("AM")) {
 				eAMPM = AMPM::AM;
 				break;
 			}
 
-			if (szDateStringToken == "PM") {
+			if (szDateStringToken == _T("PM")) {
 				eAMPM = AMPM::PM;
 				break;
 			}
@@ -1042,7 +1044,7 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 		}
 		case DateFormat::y:
 		case DateFormat::yy: {
-			const int year2 = StringUtil::ToNumber<_s32>(szDateStringToken.Source());
+			const int year2 = StringUtilT::ToNumber<_s32>(szDateStringToken.Source());
 			if (year2 < 0 || year2 > 99) {
 				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
 				break;
@@ -1052,7 +1054,7 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 		}
 		case DateFormat::yyy:
 		case DateFormat::yyyy: {
-			const int year4 = StringUtil::ToNumber<_s32>(szDateStringToken.Source());
+			const int year4 = StringUtilT::ToNumber<_s32>(szDateStringToken.Source());
 			if (year4 < 0 || year4 > 9999) {
 				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
 				break;
@@ -1100,8 +1102,8 @@ bool DateTime::TryParse(DateTime& _parsed, const char* _fmt, int _fmtLen, const 
 
 			Memory::Copy(upper, 3, szDateStringToken.Source(), 3);
 			Memory::Copy(lower, 3, szDateStringToken.Source() + 3, 3);
-			int iMiliSeconds = StringUtil::ToNumber<_s32>(upper);
-			int iMicroSeconds = StringUtil::ToNumber<_s32>(lower);
+			int iMiliSeconds = StringUtilA::ToNumber<_s32>(upper);
+			int iMicroSeconds = StringUtilA::ToNumber<_s32>(lower);
 
 			switch (eFormatToken) {
 			case DateFormat::f: {
@@ -1593,10 +1595,10 @@ void DateTime::ReflectFormat(const DateAndTime& _time, String& _ret, const char 
 
 	switch (format) {
 	case DateFormat::d:
-		_ret += StringUtil::Format("%d", _time.Day);
+		_ret += StringUtilT::Format(_T("%d"), _time.Day);
 		break;
 	case DateFormat::dd:
-		_ret += StringUtil::Format("%02d", _time.Day);
+		_ret += StringUtilT::Format(_T("%02d"), _time.Day);
 		break;
 	case DateFormat::ddd:
 		_ret += GetAbbreviationWeekendName(GetDayOfWeek());
@@ -1605,28 +1607,28 @@ void DateTime::ReflectFormat(const DateAndTime& _time, String& _ret, const char 
 		_ret += GetFullWeekendName(GetDayOfWeek());
 		break;
 	case DateFormat::h:
-		_ret += StringUtil::Format("%d", _time.Hour < 13 ? _time.Hour : _time.Hour - 12);
+		_ret += StringUtilT::Format(_T("%d"), _time.Hour < 13 ? _time.Hour : _time.Hour - 12);
 		break;
 	case DateFormat::hh:
-		_ret += StringUtil::Format("%02d", _time.Hour < 13 ? _time.Hour : _time.Hour - 12);
+		_ret += StringUtilT::Format(_T("%02d"), _time.Hour < 13 ? _time.Hour : _time.Hour - 12);
 		break;
 	case DateFormat::H:
-		_ret += StringUtil::Format("%d", _time.Hour);
+		_ret += StringUtilT::Format(_T("%d"), _time.Hour);
 		break;
 	case DateFormat::HH:
-		_ret += StringUtil::Format("%02d", _time.Hour);
+		_ret += StringUtilT::Format(_T("%02d"), _time.Hour);
 		break;
 	case DateFormat::m:
-		_ret += StringUtil::Format("%d", _time.Minute);
+		_ret += StringUtilT::Format(_T("%d"), _time.Minute);
 		break;
 	case DateFormat::mm:
-		_ret += StringUtil::Format("%02d", _time.Minute);
+		_ret += StringUtilT::Format(_T("%02d"), _time.Minute);
 		break;
 	case DateFormat::M:
-		_ret += StringUtil::Format("%d", _time.Month);
+		_ret += StringUtilT::Format(_T("%d"), _time.Month);
 		break;
 	case DateFormat::MM:
-		_ret += StringUtil::Format("%02d", _time.Month);
+		_ret += StringUtilT::Format(_T("%02d"), _time.Month);
 		break;
 	case DateFormat::MMM:
 		_ret += GetAbbreviationMonthName(static_cast<MonthOfYear>(_time.Month - 1));
@@ -1635,35 +1637,35 @@ void DateTime::ReflectFormat(const DateAndTime& _time, String& _ret, const char 
 		_ret += GetFullMonthName(static_cast<MonthOfYear>(_time.Month - 1));
 		break;
 	case DateFormat::s:
-		_ret += StringUtil::Format("%d", _time.Second);
+		_ret += StringUtilT::Format(_T("%d"), _time.Second);
 		break;
 	case DateFormat::ss:
-		_ret += StringUtil::Format("%02d", _time.Second);
+		_ret += StringUtilT::Format(_T("%02d"), _time.Second);
 		break;
 	case DateFormat::t:
-		_ret += StringUtil::Format("%s", _time.Hour / 12 > 0
+		_ret += StringUtilT::Format(_T("%hs"), _time.Hour / 12 > 0
 			                                ? GetAbbreviationAMPMName(AMPM::PM)
 			                                : GetAbbreviationAMPMName(AMPM::AM));
 		break;
 	case DateFormat::tt:
-		_ret += StringUtil::Format("%s", _time.Hour / 12 > 0 ? GetFullAMPMName(AMPM::PM) : GetFullAMPMName(AMPM::AM));
+		_ret += StringUtilT::Format(_T("%hs"), _time.Hour / 12 > 0 ? GetFullAMPMName(AMPM::PM) : GetFullAMPMName(AMPM::AM));
 		break;
 	case DateFormat::y:
-		_ret += StringUtil::Format("%d", _time.Year % 100);
+		_ret += StringUtilT::Format(_T("%d"), _time.Year % 100);
 		break;
 	case DateFormat::yy:
-		_ret += StringUtil::Format("%02d", _time.Year % 100);
+		_ret += StringUtilT::Format(_T("%02d"), _time.Year % 100);
 		break;
 	case DateFormat::yyy:
-		_ret += StringUtil::Format("%d", _time.Year % 10000);
+		_ret += StringUtilT::Format(_T("%d"), _time.Year % 10000);
 		break;
 	case DateFormat::yyyy:
-		_ret += StringUtil::Format("%04d", _time.Year % 10000);
+		_ret += StringUtilT::Format(_T("%04d"), _time.Year % 10000);
 		break;
 	case DateFormat::K:
 	case DateFormat::zzz: {
 		const _s32 timezonBias = TimeZoneBiasMinute();
-		_ret += StringUtil::Format("%s%02d:%02d",
+		_ret += StringUtilT::Format(_T("%hs%02d:%02d"),
 		                          timezonBias < 0 ? "+" : "", // %s
 		                          (timezonBias * -1) / 60, // %02d
 		                          (timezonBias * -1) % 60);
@@ -1671,37 +1673,37 @@ void DateTime::ReflectFormat(const DateAndTime& _time, String& _ret, const char 
 	}
 	case DateFormat::z: {
 		const _s32 timezonBias = TimeZoneBiasMinute();
-		_ret += StringUtil::Format("%s%d",
+		_ret += StringUtilT::Format(_T("%hs%d"),
 		                          timezonBias < 0 ? "+" : "", // %s
 		                          (timezonBias * -1) / 60); // %d
 		break;
 	}
 	case DateFormat::zz: {
 		const _s32 timezonBias = TimeZoneBiasMinute();
-		_ret += StringUtil::Format("%s%02d",
+		_ret += StringUtilT::Format(_T("%hs%02d"),
 		                          timezonBias < 0 ? "+" : "", // %s
 		                          (timezonBias * -1) / 60); // %d
 		break;
 	}
 	case DateFormat::f:
-		_ret += StringUtil::Format("%d", _time.MiliSecond / 100);
+		_ret += StringUtilT::Format(_T("%d"), _time.MiliSecond / 100);
 		break;
 	case DateFormat::ff:
-		_ret += StringUtil::Format("%02d", _time.MiliSecond / 10);
+		_ret += StringUtilT::Format(_T("%02d"), _time.MiliSecond / 10);
 		break;
 	case DateFormat::fff:
-		_ret += StringUtil::Format("%03d", _time.MiliSecond / 1);
+		_ret += StringUtilT::Format(_T("%03d"), _time.MiliSecond / 1);
 		break;
 	case DateFormat::ffff:
 	case DateFormat::fffff:
 	case DateFormat::ffffff:
 		const int miliMicro = _time.MiliSecond * MaxMiliSecond_v + _time.MicroSecond;
 		if (_count == 4)
-			_ret += StringUtil::Format("%04d", miliMicro / 100);
+			_ret += StringUtilT::Format(_T("%04d"), miliMicro / 100);
 		else if (_count == 5)
-			_ret += StringUtil::Format("%05d", miliMicro / 10);
+			_ret += StringUtilT::Format(_T("%05d"), miliMicro / 10);
 		else if (_count == 6)
-			_ret += StringUtil::Format("%06d", miliMicro / 1);
+			_ret += StringUtilT::Format(_T("%06d"), miliMicro / 1);
 		break;
 	}
 }

@@ -131,7 +131,7 @@ void RasterizerState_Main()
 
 	auto UpdateTitle = [&]()
 	{
-		jc::String szTitle = jc::StringUtil::Format("19. 래스터라이저 - 왼쪽: Solid+Back(기준) | 오른쪽: %s / %s (W, 1/2/3, ESC)", bWireframe ? "Wireframe(선)" : "Solid(면)",
+		jc::String szTitle = jc::StringUtilT::Format("19. 래스터라이저 - 왼쪽: Solid+Back(기준) | 오른쪽: %s / %s (W, 1/2/3, ESC)", bWireframe ? "Wireframe(선)" : "Solid(면)",
 			s_szCullNames[static_cast<_s32>(cullMode)]);
 		window.SetTitle(szTitle);
 	};

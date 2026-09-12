@@ -20,7 +20,7 @@ void InitializeNetLogger(const char* _pSpecifier)
 	ConsoleLogger* pConsoleLogger = dbg_new ConsoleLogger;
 	pConsoleLogger->SetEnableLock(true);
 	pConsoleLogger->SetAutoFlush(true);
-	pConsoleLogger->SetHeaderFormat(StringUtil::Format("%s[ level ✓  datetime ] ", _pSpecifier));
+	pConsoleLogger->SetHeaderFormat(StringUtilT::Format("%s[ level ✓  datetime ] ", _pSpecifier));
 
 	pConsoleLogger->ShowDateTime(true);
 	pConsoleLogger->ShowLevel(true);

@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include "jc/Primitives/StringUtil.h"
 #include "jc/Primitives/String.h"
 #include "jc/Primitives/StaticString.h"
+#include "jc/Wrapper/CRuntime.h"
 
 #include "jc/TypeTraits/IntegralConstant.h"
 #include "jc/TypeCast.h"
@@ -37,18 +37,19 @@ struct Comparator<const char*>
 {
 	int operator()(const char* _lhs, const char* _rhs) const
 	{
-		return StringUtil::CTCompare(_lhs, _rhs);
-	}
-
-	int operator()(const char* _lhs, const String& _rhs) const
-	{
-		return StringUtil::CTCompare(_lhs, _rhs.Source());
+		if (_lhs == nullptr && _rhs == nullptr)
+			return 0;
+		if (_lhs == nullptr)
+			return -1;
+		if (_rhs == nullptr)
+			return 1;
+		return CRuntime::StrCmp(_lhs, _rhs);
 	}
 
 	template <_u32 Size>
-	int operator()(const char* _lhs, const StaticString<Size>& _rhs) const
+	int operator()(const char* _lhs, const StaticString<Size, char>& _rhs) const
 	{
-		return StringUtil::CTCompare(_lhs, _rhs.Source());
+		return operator()(_lhs, _rhs.Source);
 	}
 };
 
@@ -63,13 +64,8 @@ struct Comparator<String>
 		return _lhs.Compare(_rhs);
 	}
 
-	int operator()(const String& _lhs, const char* _rhs)
-	{
-		return _lhs.Compare(_rhs);
-	}
-
 	template <_u32 Size>
-	int operator()(const String& _lhs, const StaticString<Size>& _rhs)
+	int operator()(const String& _lhs, const StaticString<Size, _char>& _rhs) const
 	{
 		return _lhs.Compare(_rhs.Source);
 	}

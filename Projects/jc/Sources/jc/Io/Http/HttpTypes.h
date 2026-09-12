@@ -25,17 +25,17 @@ enum HttpMethod
 	hmPatch
 };
 
-inline const char* HttpMethodName(HttpMethod _method)
+inline const _char* HttpMethodName(HttpMethod _method)
 {
 	switch (_method)
 	{
-	case hmGet: return "GET";
-	case hmPost: return "POST";
-	case hmPut: return "PUT";
-	case hmDelete: return "DELETE";
-	case hmHead: return "HEAD";
-	case hmPatch: return "PATCH";
-	default: return "GET";
+	case hmGet: return _T("GET");
+	case hmPost: return _T("POST");
+	case hmPut: return _T("PUT");
+	case hmDelete: return _T("DELETE");
+	case hmHead: return _T("HEAD");
+	case hmPatch: return _T("PATCH");
+	default: return _T("GET");
 	}
 }
 
@@ -55,7 +55,7 @@ enum HttpError
 
 struct HttpServiceConfig
 {
-	String userAgent_ = "jnet-http/1.0";
+	String userAgent_ = _T("jnet-http/1.0");
 	int connectTimeoutMs_ = 10000;
 	int sendTimeoutMs_ = 10000;
 	int receiveTimeoutMs_ = 30000;

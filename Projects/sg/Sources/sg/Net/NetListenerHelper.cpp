@@ -50,7 +50,7 @@ void NetListenerHelper::LogCommand(TransportProtocol _protocol, Transmission _tr
 	_LogDebug_("%c %s %sB %s(%d)",
 		TransmissionName(_transmission),
 		TransportProtocolName(_protocol),
-		StringUtil::FillLeft(_pCommand->GetLength(), ' ', 4).Source(),
+		StringUtilT::FillLeft(_pCommand->GetLength(), ' ', 4).Source(),
 		pName,
 		id);
 }

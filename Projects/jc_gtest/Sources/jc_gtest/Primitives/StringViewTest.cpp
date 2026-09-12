@@ -1,11 +1,14 @@
 /*
-	�ۼ��� : ������
-	StringView Ŭ���� �׽�Ʈ�Դϴ�.
+	작성자 : 윤정도
+	StringView 클래스 테스트입니다. (A/W 양쪽)
 */
 
 
+#include <type_traits>
+
 #include "jc/Primitives/StringView.h"
 #include "jc/Primitives/String.h"
+#include "jc/Primitives/StringConvert.h"
 #include "jc/Container/Vector.h"
 
 
@@ -13,296 +16,318 @@ using namespace std;
 
 #if TEST_StringViewTest == ON
 
-// StringView ������ �׽�Ʈ
-TEST(StringViewTest, Constructor) {
-	// �⺻ ������
-	StringView view1;
+template <typename CharT>
+using TStr = jc::BasicString<CharT, jc::StringImpl_SSO<CharT>>;
+
+template <typename CharT>
+using V = BasicStringView<CharT>;
+
+// narrow 테스트 데이터를 CharT 문자열로 변환한다 (wchar_t판은 UTF-8 디코드).
+template <typename CharT>
+TStr<CharT> C(const char* _str)
+{
+	if constexpr (std::is_same_v<CharT, char>)
+		return TStr<CharT>(_str);
+	else
+		return jc::StringConvert::ToWide(_str);
+}
+
+template <typename CharT>
+class StringViewTypedTest : public ::testing::Test {};
+
+// googletest 1.8.1이라 TYPED_TEST_SUITE 대신 TYPED_TEST_CASE를 쓴다.
+// 1.8.1 TYPED_TEST_CASE는 가변 인자라 콤마가 있으면 쪼개지므로 typedef로 묶어야 한다.
+typedef ::testing::Types<char, wchar_t> StringViewTestTypes;
+TYPED_TEST_CASE(StringViewTypedTest, StringViewTestTypes);
+
+// StringView 생성자 테스트
+TYPED_TEST(StringViewTypedTest, Constructor) {
+	// 기본 생성자
+	V<TypeParam> view1;
 	EXPECT_TRUE(view1.IsNull());
 	EXPECT_TRUE(view1.IsEmpty());
 	EXPECT_EQ(view1.Length(), 0);
 
-	// char* ������
-	const char* pStr = "abcd";
-	StringView view2(const_cast<char*>(pStr));
+	// char* 생성자
+	auto pStr = C<TypeParam>("abcd");
+	V<TypeParam> view2(pStr.Source());
 	EXPECT_FALSE(view2.IsNull());
 	EXPECT_FALSE(view2.IsEmpty());
 	EXPECT_EQ(view2.Length(), 4);
-	EXPECT_EQ(view2.Source(), pStr);
+	EXPECT_EQ(view2.Source(), pStr.Source());
 
-	// char*, length ������
-	StringView view3(const_cast<char*>(pStr), 2);
+	// char*, length 생성자
+	V<TypeParam> view3(pStr.Source(), 2);
 	EXPECT_EQ(view3.Length(), 2);
 
-	// String ������
-	String szStr = "hello";
-	StringView view4(szStr);
+	// String 생성자
+	TStr<TypeParam> szStr = C<TypeParam>("hello");
+	V<TypeParam> view4(szStr);
 	EXPECT_EQ(view4.Length(), 5);
 	EXPECT_EQ(view4.Source(), szStr.Source());
 }
 
-// StringView �⺻ ���� ��ȸ �׽�Ʈ
-TEST(StringViewTest, BasicInformation) {
-	const char* pStr = "test";
-	StringView view(const_cast<char*>(pStr));
+// StringView 기본 정보 조회 테스트
+TYPED_TEST(StringViewTypedTest, BasicInformation) {
+	auto pStr = C<TypeParam>("test");
+	V<TypeParam> view(pStr.Source());
 
 	EXPECT_EQ(view.Length(), 4);
 	EXPECT_EQ(view.LengthWithNull(), 5);
 	EXPECT_FALSE(view.IsEmpty());
 	EXPECT_FALSE(view.IsNull());
-	EXPECT_EQ(view.Source(), pStr);
-	EXPECT_STREQ(view.SafeSource(), "test");
+	EXPECT_EQ(view.Source(), pStr.Source());
+	EXPECT_TRUE(view == C<TypeParam>("test"));
 
 	// Null StringView
-	StringView nullView;
+	V<TypeParam> nullView;
 	EXPECT_TRUE(nullView.IsNull());
-	EXPECT_STREQ(nullView.SafeSource(), "");
+	EXPECT_TRUE(nullView == C<TypeParam>(""));
 
 	// Empty StringView
-	StringView emptyView(const_cast<char*>(""), 0);
+	auto sEmpty = C<TypeParam>("");
+	V<TypeParam> emptyView(sEmpty.Source(), 0);
 	EXPECT_TRUE(emptyView.IsEmpty());
 	EXPECT_FALSE(emptyView.IsNull());
 }
 
-// StringView �ε��� ���� �׽�Ʈ
-TEST(StringViewTest, IndexValidation) {
-	const char* pStr = "abcde";
-	StringView view(const_cast<char*>(pStr));
+// StringView 인덱스 검증 테스트
+TYPED_TEST(StringViewTypedTest, IndexValidation) {
+	auto pStr = C<TypeParam>("abcde");
+	V<TypeParam> view(pStr.Source());
 
-	// ��ȿ�� �ε���
+	// 유효한 인덱스
 	EXPECT_TRUE(view.IsValidIndex(0));
 	EXPECT_TRUE(view.IsValidIndex(4));
 	EXPECT_FALSE(view.IsValidIndex(5));
 	EXPECT_FALSE(view.IsValidIndex(-1));
 
-	// ���� ����
+	// 범위 검증
 	EXPECT_TRUE(view.IsValidIndexRange(0, 4));
 	EXPECT_TRUE(view.IsValidIndexRange(1, 3));
 	EXPECT_FALSE(view.IsValidIndexRange(0, 5));
 	EXPECT_FALSE(view.IsValidIndexRange(4, 3));
 }
 
-// StringView ���� ���� �׽�Ʈ
-TEST(StringViewTest, CharacterAccess) {
-	const char* pStr = "abcde";
-	StringView view(const_cast<char*>(pStr));
+// StringView 문자 접근 테스트
+TYPED_TEST(StringViewTypedTest, CharacterAccess) {
+	auto pStr = C<TypeParam>("abcde");
+	V<TypeParam> view(pStr.Source());
 
-	EXPECT_EQ(view.GetAt(0), 'a');
-	EXPECT_EQ(view.GetAt(4), 'e');
-	EXPECT_EQ(view.GetAt(5), '\0');
-	EXPECT_EQ(view.GetAt(-1), '\0');
+	EXPECT_EQ(view.GetAt(0), TypeParam('a'));
+	EXPECT_EQ(view.GetAt(4), TypeParam('e'));
+	EXPECT_EQ(view.GetAt(5), TypeParam('\0'));
+	EXPECT_EQ(view.GetAt(-1), TypeParam('\0'));
 
-	EXPECT_EQ(view.First(), 'a');
-	EXPECT_EQ(view.Last(), 'e');
+	EXPECT_EQ(view.First(), TypeParam('a'));
+	EXPECT_EQ(view.Last(), TypeParam('e'));
 
-	EXPECT_EQ(view[0], 'a');
-	EXPECT_EQ(view[4], 'e');
-	EXPECT_EQ(view[5], '\0');
+	EXPECT_EQ(view[0], TypeParam('a'));
+	EXPECT_EQ(view[4], TypeParam('e'));
+	EXPECT_EQ(view[5], TypeParam('\0'));
 
 	// Empty StringView
-	StringView emptyView;
-	EXPECT_EQ(emptyView.First(), '\0');
-	EXPECT_EQ(emptyView.Last(), '\0');
+	V<TypeParam> emptyView;
+	EXPECT_EQ(emptyView.First(), TypeParam('\0'));
+	EXPECT_EQ(emptyView.Last(), TypeParam('\0'));
 }
 
-// StringView::Find �׽�Ʈ
-TEST(StringViewTest, Find) {
-	const char* pStr = "abcdefg";
-	StringView view(const_cast<char*>(pStr));
+// StringView::Find 테스트
+TYPED_TEST(StringViewTypedTest, Find) {
+	auto pStr = C<TypeParam>("abcdefg");
+	V<TypeParam> view(pStr.Source());
 
-	// �⺻ Find
-	EXPECT_EQ(view.Find("g"), 6);
-	EXPECT_EQ(view.Find("fg"), 5);
-	EXPECT_EQ(view.Find("efg"), 4);
-	EXPECT_EQ(view.Find("defg"), 3);
-	EXPECT_EQ(view.Find("cdefg"), 2);
-	EXPECT_EQ(view.Find("bcdefg"), 1);
-	EXPECT_EQ(view.Find("abcdefg"), 0);
-	EXPECT_EQ(view.Find("-abcdefg"), -1);
-	EXPECT_EQ(view.Find("abcdefg-"), -1);
+	// 기본 Find
+	EXPECT_EQ(view.Find(C<TypeParam>("g").Source()), 6);
+	EXPECT_EQ(view.Find(C<TypeParam>("fg").Source()), 5);
+	EXPECT_EQ(view.Find(C<TypeParam>("efg").Source()), 4);
+	EXPECT_EQ(view.Find(C<TypeParam>("defg").Source()), 3);
+	EXPECT_EQ(view.Find(C<TypeParam>("cdefg").Source()), 2);
+	EXPECT_EQ(view.Find(C<TypeParam>("bcdefg").Source()), 1);
+	EXPECT_EQ(view.Find(C<TypeParam>("abcdefg").Source()), 0);
+	EXPECT_EQ(view.Find(C<TypeParam>("-abcdefg").Source()), -1);
+	EXPECT_EQ(view.Find(C<TypeParam>("abcdefg-").Source()), -1);
 
-	// ���ʿ��� �˻�
-	EXPECT_EQ(view.Find("a"), 0);
-	EXPECT_EQ(view.Find("ab"), 0);
-	EXPECT_EQ(view.Find("abc"), 0);
+	// 왼쪽에서 검사
+	EXPECT_EQ(view.Find(C<TypeParam>("a").Source()), 0);
+	EXPECT_EQ(view.Find(C<TypeParam>("ab").Source()), 0);
+	EXPECT_EQ(view.Find(C<TypeParam>("abc").Source()), 0);
+	EXPECT_EQ(view.Find(C<TypeParam>("abcd").Source()), 0);
+	EXPECT_EQ(view.Find(C<TypeParam>("abcde").Source()), 0);
+	EXPECT_EQ(view.Find(C<TypeParam>("abcdef").Source()), 0);
+	EXPECT_EQ(view.Find(C<TypeParam>("abcdefg").Source()), 0);
+	EXPECT_EQ(view.Find(C<TypeParam>("abcdefg-").Source()), -1);
+	EXPECT_EQ(view.Find(C<TypeParam>("-abcdefg").Source()), -1);
 
-	// ���� ��ġ ����
-	EXPECT_EQ(view.Find(0, "a"), 0);
-	EXPECT_EQ(view.Find(1, "a"), -1);
-	EXPECT_EQ(view.Find(4, "e"), 4);
-
-	// ���� ����
-	EXPECT_EQ(view.Find(0, 2, "abc"), 0);
-	EXPECT_EQ(view.Find(1, 2, "abc"), -1);
-	EXPECT_EQ(view.Find(4, 6, "efg"), 4);
-	EXPECT_EQ(view.Find(0, 5, "abcdefg"), -1);
-
-	// StringView�� String Ÿ��
-	StringView searchView(const_cast<char*>("cd"));
-	String searchStr("cd");
-	EXPECT_EQ(view.Find(searchView), 2);
-	EXPECT_EQ(view.Find(searchStr), 2);
+	// 범위 검사
+	EXPECT_EQ(view.Find(0, 6, C<TypeParam>("abcdefg").Source()), 0);
+	EXPECT_EQ(view.Find(1, 6, C<TypeParam>("abcdefg").Source()), -1);
+	EXPECT_EQ(view.Find(0, 5, C<TypeParam>("abcdefg").Source()), -1);
 }
 
-// StringView::FindReverse �׽�Ʈ
-TEST(StringViewTest, FindReverse) {
-	const char* pStr = "abcdefg";
-	StringView view(const_cast<char*>(pStr));
+// StringView::FindReverse 테스트
+TYPED_TEST(StringViewTypedTest, FindReverse) {
+	auto pStr = C<TypeParam>("abcdefg");
+	V<TypeParam> view(pStr.Source());
 
-	// �⺻ FindReverse
-	EXPECT_EQ(view.FindReverse("g"), 6);
-	EXPECT_EQ(view.FindReverse("fg"), 5);
-	EXPECT_EQ(view.FindReverse("efg"), 4);
-	EXPECT_EQ(view.FindReverse("abcdefg"), 0);
-	EXPECT_EQ(view.FindReverse("-abcdefg"), -1);
+	// 기본 FindReverse
+	EXPECT_EQ(view.FindReverse(C<TypeParam>("g").Source()), 6);
+	EXPECT_EQ(view.FindReverse(C<TypeParam>("fg").Source()), 5);
+	EXPECT_EQ(view.FindReverse(C<TypeParam>("efg").Source()), 4);
+	EXPECT_EQ(view.FindReverse(C<TypeParam>("abcdefg").Source()), 0);
+	EXPECT_EQ(view.FindReverse(C<TypeParam>("-abcdefg").Source()), -1);
 
-	// ���� ����
-	EXPECT_EQ(view.FindReverse(0, 6, "abcdefg"), 0);
-	EXPECT_EQ(view.FindReverse(1, 6, "abcdefg"), -1);
-	EXPECT_EQ(view.FindReverse(0, 5, "abcdefg"), -1);
+	// 범위 지정
+	EXPECT_EQ(view.FindReverse(0, 6, C<TypeParam>("abcdefg").Source()), 0);
+	EXPECT_EQ(view.FindReverse(1, 6, C<TypeParam>("abcdefg").Source()), -1);
+	EXPECT_EQ(view.FindReverse(0, 5, C<TypeParam>("abcdefg").Source()), -1);
 
-	// StringView�� String Ÿ��
-	StringView searchView(const_cast<char*>("cd"));
-	String searchStr("cd");
+	// StringView와 String 타입
+	auto sCd = C<TypeParam>("cd");
+	V<TypeParam> searchView(sCd.Source());
+	TStr<TypeParam> searchStr = C<TypeParam>("cd");
 	EXPECT_EQ(view.FindReverse(searchView), 2);
 	EXPECT_EQ(view.FindReverse(searchStr), 2);
 }
 
-// StringView::StartWith �׽�Ʈ
-TEST(StringViewTest, StartWith) {
-	const char* pStr = "abcdefg";
-	StringView view(const_cast<char*>(pStr));
+// StringView::StartWith 테스트
+TYPED_TEST(StringViewTypedTest, StartWith) {
+	auto pStr = C<TypeParam>("abcdefg");
+	V<TypeParam> view(pStr.Source());
 
-	EXPECT_TRUE(view.StartWith(StringView(const_cast<char*>("a"))));
-	EXPECT_TRUE(view.StartWith(StringView(const_cast<char*>("abc"))));
-	EXPECT_TRUE(view.StartWith(StringView(const_cast<char*>("abcdefg"))));
-	EXPECT_FALSE(view.StartWith(StringView(const_cast<char*>("b"))));
-	EXPECT_FALSE(view.StartWith(StringView(const_cast<char*>("abcdefgh"))));
+	EXPECT_TRUE(view.StartWith(V<TypeParam>(C<TypeParam>("a").Source())));
+	EXPECT_TRUE(view.StartWith(V<TypeParam>(C<TypeParam>("abc").Source())));
+	EXPECT_TRUE(view.StartWith(V<TypeParam>(C<TypeParam>("abcdefg").Source())));
+	EXPECT_FALSE(view.StartWith(V<TypeParam>(C<TypeParam>("b").Source())));
+	EXPECT_FALSE(view.StartWith(V<TypeParam>(C<TypeParam>("abcdefgh").Source())));
 
-	// String Ÿ��
-	String prefixStr("abc");
+	// String 타입
+	TStr<TypeParam> prefixStr = C<TypeParam>("abc");
 	EXPECT_TRUE(view.StartWith(prefixStr));
-	EXPECT_FALSE(view.StartWith(String("xyz")));
+	EXPECT_FALSE(view.StartWith(C<TypeParam>("xyz")));
 }
 
-// StringView::EndWith �׽�Ʈ
-TEST(StringViewTest, EndWith) {
-	const char* pStr = "abcdefg";
-	StringView view(const_cast<char*>(pStr));
+// StringView::EndWith 테스트
+TYPED_TEST(StringViewTypedTest, EndWith) {
+	auto pStr = C<TypeParam>("abcdefg");
+	V<TypeParam> view(pStr.Source());
 
-	EXPECT_TRUE(view.EndWith(StringView(const_cast<char*>("g"))));
-	EXPECT_TRUE(view.EndWith(StringView(const_cast<char*>("efg"))));
-	EXPECT_TRUE(view.EndWith(StringView(const_cast<char*>("abcdefg"))));
-	EXPECT_FALSE(view.EndWith(StringView(const_cast<char*>("f"))));
-	EXPECT_FALSE(view.EndWith(StringView(const_cast<char*>("xabcdefg"))));
+	EXPECT_TRUE(view.EndWith(V<TypeParam>(C<TypeParam>("g").Source())));
+	EXPECT_TRUE(view.EndWith(V<TypeParam>(C<TypeParam>("efg").Source())));
+	EXPECT_TRUE(view.EndWith(V<TypeParam>(C<TypeParam>("abcdefg").Source())));
+	EXPECT_FALSE(view.EndWith(V<TypeParam>(C<TypeParam>("f").Source())));
+	EXPECT_FALSE(view.EndWith(V<TypeParam>(C<TypeParam>("xabcdefg").Source())));
 
-	// String Ÿ��
-	String suffixStr("efg");
+	// String 타입
+	TStr<TypeParam> suffixStr = C<TypeParam>("efg");
 	EXPECT_TRUE(view.EndWith(suffixStr));
-	EXPECT_FALSE(view.EndWith(String("xyz")));
+	EXPECT_FALSE(view.EndWith(C<TypeParam>("xyz")));
 }
 
-// StringView::Contain �׽�Ʈ
-TEST(StringViewTest, Contain) {
-	const char* pStr = "abcdefg";
-	StringView view(const_cast<char*>(pStr));
+// StringView::Contain 테스트
+TYPED_TEST(StringViewTypedTest, Contain) {
+	auto pStr = C<TypeParam>("abcdefg");
+	V<TypeParam> view(pStr.Source());
 
-	EXPECT_TRUE(view.Contain("a"));
-	EXPECT_TRUE(view.Contain("bcd"));
-	EXPECT_TRUE(view.Contain("g"));
-	EXPECT_FALSE(view.Contain("xyz"));
-	EXPECT_FALSE(view.Contain("abcdefgh"));
+	EXPECT_TRUE(view.Contain(C<TypeParam>("a").Source()));
+	EXPECT_TRUE(view.Contain(C<TypeParam>("bcd").Source()));
+	EXPECT_TRUE(view.Contain(C<TypeParam>("g").Source()));
+	EXPECT_FALSE(view.Contain(C<TypeParam>("xyz").Source()));
+	EXPECT_FALSE(view.Contain(C<TypeParam>("abcdefgh").Source()));
 
-	// StringView�� String Ÿ��
-	StringView searchView(const_cast<char*>("cd"));
-	String searchStr("cd");
+	// StringView와 String 타입
+	auto sCd = C<TypeParam>("cd");
+	V<TypeParam> searchView(sCd.Source());
+	TStr<TypeParam> searchStr = C<TypeParam>("cd");
 	EXPECT_TRUE(view.Contain(searchView));
 	EXPECT_TRUE(view.Contain(searchStr));
 }
 
-// StringView::Count �׽�Ʈ
-TEST(StringViewTest, Count) {
-	const char* pStr = "aabbccaa";
-	StringView view(const_cast<char*>(pStr));
+// StringView::Count 테스트
+TYPED_TEST(StringViewTypedTest, Count) {
+	auto pStr = C<TypeParam>("aabbccaa");
+	V<TypeParam> view(pStr.Source());
 
-	EXPECT_EQ(view.Count("a"), 4);
-	EXPECT_EQ(view.Count("aa"), 2);
-	EXPECT_EQ(view.Count("b"), 2);
-	EXPECT_EQ(view.Count("c"), 2);
-	EXPECT_EQ(view.Count("cc"), 1);
-	EXPECT_EQ(view.Count("xyz"), 0);
+	EXPECT_EQ(view.Count(C<TypeParam>("a").Source()), 4);
+	EXPECT_EQ(view.Count(C<TypeParam>("aa").Source()), 2);
+	EXPECT_EQ(view.Count(C<TypeParam>("b").Source()), 2);
+	EXPECT_EQ(view.Count(C<TypeParam>("c").Source()), 2);
+	EXPECT_EQ(view.Count(C<TypeParam>("cc").Source()), 1);
+	EXPECT_EQ(view.Count(C<TypeParam>("xyz").Source()), 0);
 
-	// StringView�� String Ÿ��
-	StringView searchView(const_cast<char*>("aa"));
-	String searchStr("aa");
+	// StringView와 String 타입
+	auto sAa = C<TypeParam>("aa");
+	V<TypeParam> searchView(sAa.Source());
+	TStr<TypeParam> searchStr = C<TypeParam>("aa");
 	EXPECT_EQ(view.Count(searchView), 2);
 	EXPECT_EQ(view.Count(searchStr), 2);
 
-	// ���� ����
-	EXPECT_EQ(view.Count(0, 3, "a"), 2);
-	EXPECT_EQ(view.Count(4, 7, "a"), 2);
+	// 범위 지정
+	EXPECT_EQ(view.Count(0, 3, C<TypeParam>("a").Source()), 2);
+	EXPECT_EQ(view.Count(4, 7, C<TypeParam>("a").Source()), 2);
 }
 
-// StringView::Compare �׽�Ʈ
-TEST(StringViewTest, Compare) {
-	const char* pStr1 = "abcd";
-	const char* pStr2 = "abc";
-	const char* pStr3 = "abcd";
-	const char* pStr4 = "abce";
+// StringView::Compare 테스트
+TYPED_TEST(StringViewTypedTest, Compare) {
+	auto pStr1 = C<TypeParam>("abcd");
+	auto pStr2 = C<TypeParam>("abc");
+	auto pStr3 = C<TypeParam>("abcd");
+	auto pStr4 = C<TypeParam>("abce");
 
-	StringView view1(const_cast<char*>(pStr1));
-	StringView view2(const_cast<char*>(pStr2));
-	StringView view3(const_cast<char*>(pStr3));
-	StringView view4(const_cast<char*>(pStr4));
+	V<TypeParam> view1(pStr1.Source());
+	V<TypeParam> view2(pStr2.Source());
+	V<TypeParam> view3(pStr3.Source());
+	V<TypeParam> view4(pStr4.Source());
 
 	EXPECT_EQ(view1.Compare(view3), 0);  // abcd == abcd
 	EXPECT_GT(view1.Compare(view2), 0);  // abcd > abc
 	EXPECT_LT(view2.Compare(view1), 0);  // abc < abcd
 	EXPECT_LT(view1.Compare(view4), 0);  // abcd < abce
 
-	// Compare with char*
-	EXPECT_EQ(view1.Compare("abcd"), 0);
-	EXPECT_GT(view1.Compare("abc"), 0);
+	// Compare with CharT*
+	EXPECT_EQ(view1.Compare(C<TypeParam>("abcd").Source()), 0);
+	EXPECT_GT(view1.Compare(C<TypeParam>("abc").Source()), 0);
 
 	// Compare with String
-	String str2("abc");
+	TStr<TypeParam> str2 = C<TypeParam>("abc");
 	EXPECT_GT(view1.Compare(str2), 0);
 
-	String a = "abcdefg";
-	String b = "";
-	String c(0);
-	std::vector<StringView> vec;
+	TStr<TypeParam> a = C<TypeParam>("abcdefg");
+	TStr<TypeParam> b = C<TypeParam>("");
+	TStr<TypeParam> c(0);
+	std::vector<V<TypeParam>> vec;
 
-	vec.push_back(StringView(a));
-	vec.push_back(StringView(b));
-	vec.push_back(StringView(c));
+	vec.push_back(V<TypeParam>(a));
+	vec.push_back(V<TypeParam>(b));
+	vec.push_back(V<TypeParam>(c));
 
-	EXPECT_TRUE(vec[0] == StringView(a));
+	EXPECT_TRUE(vec[0] == V<TypeParam>(a));
 	EXPECT_TRUE(vec[0] == a);
 
-	EXPECT_TRUE(vec[1] == StringView(b));
+	EXPECT_TRUE(vec[1] == V<TypeParam>(b));
 	EXPECT_TRUE(vec[1] == b);
-	EXPECT_TRUE(vec[1] == "");
+	EXPECT_TRUE(vec[1] == C<TypeParam>(""));
 	EXPECT_TRUE(vec[1].Length() == 0);
 
-	EXPECT_TRUE(vec[2] == StringView(c));
+	EXPECT_TRUE(vec[2] == V<TypeParam>(c));
 	EXPECT_TRUE(vec[2] == c);
-	EXPECT_TRUE(vec[2] == "");
+	EXPECT_TRUE(vec[2] == C<TypeParam>(""));
 	EXPECT_TRUE(vec[2].Length() == 0);
 }
 
-// StringView::Comparison Operators �׽�Ʈ
-TEST(StringViewTest, ComparisonOperators) {
-	const char* pStr1 = "abcd";
-	const char* pStr2 = "abc";
-	const char* pStr3 = "abcd";
+// StringView::Comparison Operators 테스트
+TYPED_TEST(StringViewTypedTest, ComparisonOperators) {
+	auto pStr1 = C<TypeParam>("abcd");
+	auto pStr2 = C<TypeParam>("abc");
+	auto pStr3 = C<TypeParam>("abcd");
 
-	StringView view1(const_cast<char*>(pStr1));
-	StringView view2(const_cast<char*>(pStr2));
-	StringView view3(const_cast<char*>(pStr3));
+	V<TypeParam> view1(pStr1.Source());
+	V<TypeParam> view2(pStr2.Source());
+	V<TypeParam> view3(pStr3.Source());
 
 	// Equality
 	EXPECT_TRUE(view1 == view3);
-	EXPECT_TRUE(view1 == "abcd");
+	EXPECT_TRUE(view1 == C<TypeParam>("abcd"));
 	EXPECT_FALSE(view1 == view2);
 
 	// Less than
@@ -321,151 +346,151 @@ TEST(StringViewTest, ComparisonOperators) {
 	EXPECT_TRUE(view1 >= view3);
 	EXPECT_TRUE(view1 >= view2);
 
-	// String Ÿ��
-	String str2("abc");
+	// String 타입
+	TStr<TypeParam> str2 = C<TypeParam>("abc");
 	EXPECT_TRUE(view1 > str2);
 	EXPECT_TRUE(view1 >= str2);
 	EXPECT_FALSE(view1 < str2);
 }
 
-// StringView::Split �׽�Ʈ
-TEST(StringViewTest, Split) {
-	const char* pStr1 = "abcd_cd_efg";
-	const char* pStr2 = "___";
-	const char* pStr3 = "_bbbbb_";
-	const char* pStr4 = "a,b,c";
+// StringView::Split 테스트
+TYPED_TEST(StringViewTypedTest, Split) {
+	auto pStr1 = C<TypeParam>("abcd_cd_efg");
+	auto pStr2 = C<TypeParam>("___");
+	auto pStr3 = C<TypeParam>("_bbbbb_");
+	auto pStr4 = C<TypeParam>("a,b,c");
 
-	StringView view1(const_cast<char*>(pStr1));
-	StringView view2(const_cast<char*>(pStr2));
-	StringView view3(const_cast<char*>(pStr3));
-	StringView view4(const_cast<char*>(pStr4));
+	V<TypeParam> view1(pStr1.Source());
+	V<TypeParam> view2(pStr2.Source());
+	V<TypeParam> view3(pStr3.Source());
+	V<TypeParam> view4(pStr4.Source());
 
-	// char* delimiter with includeEmpty = true
+	// CharT* delimiter with includeEmpty = true
 	{
 		LeakCheck;
-		auto tokens = view1.Split("_", true);
+		auto tokens = view1.Split(C<TypeParam>("_").Source(), true);
 		EXPECT_EQ(tokens.Size(), 3);
 		if (tokens.Size() == 3) {
-			EXPECT_TRUE(tokens[0] == StringView(const_cast<char*>("abcd"), 4));
-			EXPECT_TRUE(tokens[1] == StringView(const_cast<char*>("cd"), 2));
-			EXPECT_TRUE(tokens[2] == StringView(const_cast<char*>("efg"), 3));
+			EXPECT_TRUE(tokens[0] == V<TypeParam>(C<TypeParam>("abcd").Source(), 4));
+			EXPECT_TRUE(tokens[1] == V<TypeParam>(C<TypeParam>("cd").Source(), 2));
+			EXPECT_TRUE(tokens[2] == V<TypeParam>(C<TypeParam>("efg").Source(), 3));
 		}
 	}
 
 	// char delimiter
 	{
 		LeakCheck;
-		auto tokens = view4.Split(',', true);
+		auto tokens = view4.Split(TypeParam(','), true);
 		EXPECT_EQ(tokens.Size(), 3);
 		if (tokens.Size() == 3) {
-			EXPECT_TRUE(tokens[0] == StringView(const_cast<char*>("a"), 1));
-			EXPECT_TRUE(tokens[1] == StringView(const_cast<char*>("b"), 1));
-			EXPECT_TRUE(tokens[2] == StringView(const_cast<char*>("c"), 1));
+			EXPECT_TRUE(tokens[0] == V<TypeParam>(C<TypeParam>("a").Source(), 1));
+			EXPECT_TRUE(tokens[1] == V<TypeParam>(C<TypeParam>("b").Source(), 1));
+			EXPECT_TRUE(tokens[2] == V<TypeParam>(C<TypeParam>("c").Source(), 1));
 		}
 	}
 
 	// Multiple delimiters
 	{
 		LeakCheck;
-		auto tokens = view2.Split("_", true);
+		auto tokens = view2.Split(C<TypeParam>("_").Source(), true);
 		EXPECT_EQ(tokens.Size(), 4);
 	}
 
 	// With includeEmpty = false
 	{
 		LeakCheck;
-		auto tokens = view3.Split("_", false);
+		auto tokens = view3.Split(C<TypeParam>("_").Source(), false);
 		EXPECT_EQ(tokens.Size(), 1);
 	}
 }
 
-// StringView::SubStr �׽�Ʈ
-TEST(StringViewTest, SubStr) {
-	const char* pStr = "abcdefg";
-	StringView view(const_cast<char*>(pStr));
+// StringView::SubStr 테스트
+TYPED_TEST(StringViewTypedTest, SubStr) {
+	auto pStr = C<TypeParam>("abcdefg");
+	V<TypeParam> view(pStr.Source());
 
-	StringView sub1 = view.SubStr(0, 3);
+	V<TypeParam> sub1 = view.SubStr(0, 3);
 	EXPECT_EQ(sub1.Length(), 3);
-	EXPECT_TRUE(sub1 == StringView(const_cast<char*>("abc"), 3));
+	EXPECT_TRUE(sub1 == V<TypeParam>(C<TypeParam>("abc").Source(), 3));
 
-	StringView sub2 = view.SubStr(3, 2);
+	V<TypeParam> sub2 = view.SubStr(3, 2);
 	EXPECT_EQ(sub2.Length(), 2);
-	EXPECT_TRUE(sub2 == StringView(const_cast<char*>("de"), 2));
+	EXPECT_TRUE(sub2 == V<TypeParam>(C<TypeParam>("de").Source(), 2));
 
 	// Count exceeds remaining length
-	StringView sub3 = view.SubStr(5, 10);
+	V<TypeParam> sub3 = view.SubStr(5, 10);
 	EXPECT_EQ(sub3.Length(), 2);
 
 	// Invalid start index
-	StringView sub4 = view.SubStr(10, 5);
+	V<TypeParam> sub4 = view.SubStr(10, 5);
 	EXPECT_TRUE(sub4.IsEmpty());
 }
 
-// StringView::GetRange �׽�Ʈ
-TEST(StringViewTest, GetRange) {
-	const char* pStr = "abcdefg";
-	StringView view(const_cast<char*>(pStr));
+// StringView::GetRange 테스트
+TYPED_TEST(StringViewTypedTest, GetRange) {
+	auto pStr = C<TypeParam>("abcdefg");
+	V<TypeParam> view(pStr.Source());
 
-	StringView range1 = view.GetRange(0, 2);
+	V<TypeParam> range1 = view.GetRange(0, 2);
 	EXPECT_EQ(range1.Length(), 3);
-	EXPECT_TRUE(range1 == StringView(const_cast<char*>("abc"), 3));
+	EXPECT_TRUE(range1 == V<TypeParam>(C<TypeParam>("abc").Source(), 3));
 
-	StringView range2 = view.GetRange(3, 5);
+	V<TypeParam> range2 = view.GetRange(3, 5);
 	EXPECT_EQ(range2.Length(), 3);
-	EXPECT_TRUE(range2 == StringView(const_cast<char*>("def"), 3));
+	EXPECT_TRUE(range2 == V<TypeParam>(C<TypeParam>("def").Source(), 3));
 
-	StringView range3 = view.GetRange(6, 6);
+	V<TypeParam> range3 = view.GetRange(6, 6);
 	EXPECT_EQ(range3.Length(), 1);
-	EXPECT_TRUE(range3 == StringView(const_cast<char*>("g"), 1));
+	EXPECT_TRUE(range3 == V<TypeParam>(C<TypeParam>("g").Source(), 1));
 
 	// Invalid range
-	StringView range4 = view.GetRange(5, 3);
+	V<TypeParam> range4 = view.GetRange(5, 3);
 	EXPECT_TRUE(range4.IsEmpty());
 }
 
-// StringView::ToLowerCase �׽�Ʈ
-TEST(StringViewTest, ToLowerCase) {
-	const char* pStr = "AbCdEfG";
-	StringView view(const_cast<char*>(pStr));
+// StringView::ToLowerCase 테스트
+TYPED_TEST(StringViewTypedTest, ToLowerCase) {
+	auto pStr = C<TypeParam>("AbCdEfG");
+	V<TypeParam> view(pStr.Source());
 
-	String lower = view.ToLowerCase();
+	TStr<TypeParam> lower = view.ToLowerCase();
 	EXPECT_EQ(lower.Length(), 7);
-	EXPECT_EQ(lower[0], 'a');
-	EXPECT_EQ(lower[1], 'b');
-	EXPECT_EQ(lower[2], 'c');
+	EXPECT_EQ(lower[0], TypeParam('a'));
+	EXPECT_EQ(lower[1], TypeParam('b'));
+	EXPECT_EQ(lower[2], TypeParam('c'));
 
 	// Empty StringView
-	StringView emptyView;
-	String emptyLower = emptyView.ToLowerCase();
+	V<TypeParam> emptyView;
+	TStr<TypeParam> emptyLower = emptyView.ToLowerCase();
 	EXPECT_TRUE(emptyLower.IsEmpty());
 }
 
-// StringView::ToUpperCase �׽�Ʈ
-TEST(StringViewTest, ToUpperCase) {
-	const char* pStr = "AbCdEfG";
-	StringView view(const_cast<char*>(pStr));
+// StringView::ToUpperCase 테스트
+TYPED_TEST(StringViewTypedTest, ToUpperCase) {
+	auto pStr = C<TypeParam>("AbCdEfG");
+	V<TypeParam> view(pStr.Source());
 
-	String upper = view.ToUpperCase();
+	TStr<TypeParam> upper = view.ToUpperCase();
 	EXPECT_EQ(upper.Length(), 7);
-	EXPECT_EQ(upper[0], 'A');
-	EXPECT_EQ(upper[1], 'B');
-	EXPECT_EQ(upper[2], 'C');
+	EXPECT_EQ(upper[0], TypeParam('A'));
+	EXPECT_EQ(upper[1], TypeParam('B'));
+	EXPECT_EQ(upper[2], TypeParam('C'));
 
 	// Empty StringView
-	StringView emptyView;
-	String emptyUpper = emptyView.ToUpperCase();
+	V<TypeParam> emptyView;
+	TStr<TypeParam> emptyUpper = emptyView.ToUpperCase();
 	EXPECT_TRUE(emptyUpper.IsEmpty());
 }
 
-// StringView::Type Conversion �׽�Ʈ - ToInt32, ToUInt32 ��
-TEST(StringViewTest, TypeConversion) {
-	const char* pStr1 = "12345";
-	const char* pStr2 = "3.14";
-	const char* pStr3 = "-100";
+// StringView::Type Conversion 테스트 - ToInt32, ToUInt32 등
+TYPED_TEST(StringViewTypedTest, TypeConversion) {
+	auto pStr1 = C<TypeParam>("12345");
+	auto pStr2 = C<TypeParam>("3.14");
+	auto pStr3 = C<TypeParam>("-100");
 
-	StringView view1(const_cast<char*>(pStr1));
-	StringView view2(const_cast<char*>(pStr2));
-	StringView view3(const_cast<char*>(pStr3));
+	V<TypeParam> view1(pStr1.Source());
+	V<TypeParam> view2(pStr2.Source());
+	V<TypeParam> view3(pStr3.Source());
 
 	// ToInt32
 	EXPECT_EQ(view1.ToInt32(), 12345);
@@ -483,28 +508,28 @@ TEST(StringViewTest, TypeConversion) {
 	EXPECT_TRUE(doubleVal > 3.1 && doubleVal < 3.2);
 
 	// ToInt8
-	const char* pInt8Str = "127";
-	StringView int8View(const_cast<char*>(pInt8Str));
+	auto pInt8Str = C<TypeParam>("127");
+	V<TypeParam> int8View(pInt8Str.Source());
 	EXPECT_EQ(int8View.ToInt8(), 127);
 
 	// ToInt16
-	const char* pInt16Str = "32000";
-	StringView int16View(const_cast<char*>(pInt16Str));
+	auto pInt16Str = C<TypeParam>("32000");
+	V<TypeParam> int16View(pInt16Str.Source());
 	EXPECT_EQ(int16View.ToInt16(), 32000);
 
 	// ToInt64
-	const char* pInt64Str = "9223372036854775807";
-	StringView int64View(const_cast<char*>(pInt64Str));
+	auto pInt64Str = C<TypeParam>("9223372036854775807");
+	V<TypeParam> int64View(pInt64Str.Source());
 	EXPECT_EQ(int64View.ToInt64(), 9223372036854775807LL);
 }
 
-// StringView::TryToXXX �׽�Ʈ
-TEST(StringViewTest, TryTypeConversion) {
-	const char* pValidInt = "12345";
-	const char* pInvalidInt = "abc";
+// StringView::TryToXXX 테스트
+TYPED_TEST(StringViewTypedTest, TryTypeConversion) {
+	auto pValidInt = C<TypeParam>("12345");
+	auto pInvalidInt = C<TypeParam>("abc");
 
-	StringView validView(const_cast<char*>(pValidInt));
-	StringView invalidView(const_cast<char*>(pInvalidInt));
+	V<TypeParam> validView(pValidInt.Source());
+	V<TypeParam> invalidView(pInvalidInt.Source());
 
 	_s32 result = 0;
 	EXPECT_TRUE(validView.TryToInt32(result));
@@ -515,8 +540,8 @@ TEST(StringViewTest, TryTypeConversion) {
 	EXPECT_EQ(result2, 999);  // Should remain unchanged
 
 	// TryToFloat
-	const char* pFloatStr = "3.14";
-	StringView floatView(const_cast<char*>(pFloatStr));
+	auto pFloatStr = C<TypeParam>("3.14");
+	V<TypeParam> floatView(pFloatStr.Source());
 	_f32 floatResult = 0.0f;
 	EXPECT_TRUE(floatView.TryToFloat(floatResult));
 	EXPECT_TRUE(floatResult > 3.1f && floatResult < 3.2f);
@@ -528,8 +553,8 @@ TEST(StringViewTest, TryTypeConversion) {
 
 	// TryToInt8
 	_s8 int8Result = 0;
-	const char* pInt8Str = "100";
-	StringView int8View(const_cast<char*>(pInt8Str));
+	auto pInt8Str = C<TypeParam>("100");
+	V<TypeParam> int8View(pInt8Str.Source());
 	EXPECT_TRUE(int8View.TryToInt8(int8Result));
 	EXPECT_EQ(int8Result, 100);
 
@@ -540,194 +565,194 @@ TEST(StringViewTest, TryTypeConversion) {
 
 	// TryToInt64
 	_s64 int64Result = 0;
-	const char* pInt64Str = "9223372036854775807";
-	StringView int64View(const_cast<char*>(pInt64Str));
+	auto pInt64Str = C<TypeParam>("9223372036854775807");
+	V<TypeParam> int64View(pInt64Str.Source());
 	EXPECT_TRUE(int64View.TryToInt64(int64Result));
 	EXPECT_EQ(int64Result, 9223372036854775807LL);
 }
 
-// StringView �����ڿ��� String ��ü ��� �׽�Ʈ
-TEST(StringViewTest, StringInteroperability) {
-	String szStr = "hello world";
-	StringView view(szStr);
+// StringView 생성자에서 String 객체 사용 테스트
+TYPED_TEST(StringViewTypedTest, StringInteroperability) {
+	TStr<TypeParam> szStr = C<TypeParam>("hello world");
+	V<TypeParam> view(szStr);
 
 	EXPECT_EQ(view.Length(), 11);
 	EXPECT_EQ(view.Source(), szStr.Source());
-	EXPECT_TRUE(view == "hello world");
+	EXPECT_TRUE(view == C<TypeParam>("hello world"));
 	EXPECT_TRUE(view == szStr);
 
-	// ���ڿ� ���� ���� �׽�Ʈ
-	String szStr2 = "a";
-	StringView view2(szStr2);
+	// 문자열 길이 1 테스트
+	TStr<TypeParam> szStr2 = C<TypeParam>("a");
+	V<TypeParam> view2(szStr2);
 	EXPECT_EQ(view2.Length(), 1);
-	EXPECT_EQ(view2[0], 'a');
+	EXPECT_EQ(view2[0], TypeParam('a'));
 }
 
-// StringView ���� ���̽� �׽�Ʈ
-TEST(StringViewTest, EdgeCases) {
+// StringView 엣지 케이스 테스트
+TYPED_TEST(StringViewTypedTest, EdgeCases) {
 	// Null StringView with operations
-	StringView nullView;
-	EXPECT_EQ(nullView.Find("test"), -1);
-	EXPECT_EQ(nullView.Count("test"), 0);
-	EXPECT_FALSE(nullView.Contain("test"));
+	V<TypeParam> nullView;
+	EXPECT_EQ(nullView.Find(C<TypeParam>("test").Source()), -1);
+	EXPECT_EQ(nullView.Count(C<TypeParam>("test").Source()), 0);
+	EXPECT_FALSE(nullView.Contain(C<TypeParam>("test").Source()));
 	EXPECT_TRUE(nullView.IsNull());
 	EXPECT_TRUE(nullView.IsEmpty());
 
 	// Empty but non-null StringView
-	const char* pEmptyStr = "";
-	StringView emptyView(const_cast<char*>(pEmptyStr), 0);
+	auto sEmptyStr = C<TypeParam>("");
+	V<TypeParam> emptyView(sEmptyStr.Source(), 0);
 	EXPECT_FALSE(emptyView.IsNull());
 	EXPECT_TRUE(emptyView.IsEmpty());
-	EXPECT_EQ(emptyView.First(), '\0');
-	EXPECT_EQ(emptyView.Last(), '\0');
+	EXPECT_EQ(emptyView.First(), TypeParam('\0'));
+	EXPECT_EQ(emptyView.Last(), TypeParam('\0'));
 
 	// Single character
-	const char* pSingleChar = "x";
-	StringView singleView(const_cast<char*>(pSingleChar));
+	auto pSingleChar = C<TypeParam>("x");
+	V<TypeParam> singleView(pSingleChar.Source());
 	EXPECT_EQ(singleView.Length(), 1);
-	EXPECT_EQ(singleView.First(), 'x');
-	EXPECT_EQ(singleView.Last(), 'x');
-	EXPECT_TRUE(singleView == "x");
+	EXPECT_EQ(singleView.First(), TypeParam('x'));
+	EXPECT_EQ(singleView.Last(), TypeParam('x'));
+	EXPECT_TRUE(singleView == C<TypeParam>("x"));
 }
 
-// StringView ���� �˻� �׽�Ʈ
-TEST(StringViewTest, RangeOperations) {
-	const char* pStr = "0123456789";
-	StringView view(const_cast<char*>(pStr));
+// StringView 범위 검색 테스트
+TYPED_TEST(StringViewTypedTest, RangeOperations) {
+	auto pStr = C<TypeParam>("0123456789");
+	V<TypeParam> view(pStr.Source());
 
 	// Count with range
-	EXPECT_EQ(view.Count(0, 4, "1"), 1);
-	EXPECT_EQ(view.Count(5, 9, "1"), 0);
+	EXPECT_EQ(view.Count(0, 4, C<TypeParam>("1").Source()), 1);
+	EXPECT_EQ(view.Count(5, 9, C<TypeParam>("1").Source()), 0);
 
 	// Find with range
-	EXPECT_EQ(view.Find(2, 8, "456"), 4);
-	EXPECT_EQ(view.Find(0, 2, "456"), -1);
+	EXPECT_EQ(view.Find(2, 8, C<TypeParam>("456").Source()), 4);
+	EXPECT_EQ(view.Find(0, 2, C<TypeParam>("456").Source()), -1);
 
 	// FindReverse with range
-	EXPECT_EQ(view.FindReverse(0, 8, "7"), 7);
+	EXPECT_EQ(view.FindReverse(0, 8, C<TypeParam>("7").Source()), 7);
 }
 
 // StringView caseSensitive 검색 테스트
-TEST(StringViewTest, FindCaseSensitive) {
-	const char* pStr = "Hello World ABCDEFG";
-	StringView view(const_cast<char*>(pStr));
+TYPED_TEST(StringViewTypedTest, FindCaseSensitive) {
+	auto pStr = C<TypeParam>("Hello World ABCDEFG");
+	V<TypeParam> view(pStr.Source());
 
 	// caseSensitive = true (기본값)
-	EXPECT_EQ(view.Find("Hello"), 0);
-	EXPECT_EQ(view.Find("hello"), -1);
-	EXPECT_EQ(view.Find("WORLD"), -1);
-	EXPECT_EQ(view.Find("ABCDEFG"), 12);
+	EXPECT_EQ(view.Find(C<TypeParam>("Hello").Source()), 0);
+	EXPECT_EQ(view.Find(C<TypeParam>("hello").Source()), -1);
+	EXPECT_EQ(view.Find(C<TypeParam>("WORLD").Source()), -1);
+	EXPECT_EQ(view.Find(C<TypeParam>("ABCDEFG").Source()), 12);
 
 	// caseSensitive = false
-	EXPECT_EQ(view.Find("hello", false), 0);
-	EXPECT_EQ(view.Find("HELLO", false), 0);
-	EXPECT_EQ(view.Find("world", false), 6);
-	EXPECT_EQ(view.Find("WORLD", false), 6);
-	EXPECT_EQ(view.Find("abcdefg", false), 12);
+	EXPECT_EQ(view.Find(C<TypeParam>("hello").Source(), false), 0);
+	EXPECT_EQ(view.Find(C<TypeParam>("HELLO").Source(), false), 0);
+	EXPECT_EQ(view.Find(C<TypeParam>("world").Source(), false), 6);
+	EXPECT_EQ(view.Find(C<TypeParam>("WORLD").Source(), false), 6);
+	EXPECT_EQ(view.Find(C<TypeParam>("abcdefg").Source(), false), 12);
 
 	// 범위 지정 + caseSensitive = false
-	EXPECT_EQ(view.Find(0, 4, "hello", false), 0);
-	EXPECT_EQ(view.Find(1, 4, "hello", false), -1);
-	EXPECT_EQ(view.Find(6, 10, "world", false), 6);
+	EXPECT_EQ(view.Find(0, 4, C<TypeParam>("hello").Source(), false), 0);
+	EXPECT_EQ(view.Find(1, 4, C<TypeParam>("hello").Source(), false), -1);
+	EXPECT_EQ(view.Find(6, 10, C<TypeParam>("world").Source(), false), 6);
 }
 
 // StringView::FindReverse caseSensitive 테스트
-TEST(StringViewTest, FindReverseCaseSensitive) {
-	const char* pStr = "AbcABCAbc";
-	StringView view(const_cast<char*>(pStr));
+TYPED_TEST(StringViewTypedTest, FindReverseCaseSensitive) {
+	auto pStr = C<TypeParam>("AbcABCAbc");
+	V<TypeParam> view(pStr.Source());
 
 	// caseSensitive = true (기본값)
-	EXPECT_EQ(view.FindReverse("Abc"), 6);
-	EXPECT_EQ(view.FindReverse("abc"), -1);
-	EXPECT_EQ(view.FindReverse("ABC"), 3);
+	EXPECT_EQ(view.FindReverse(C<TypeParam>("Abc").Source()), 6);
+	EXPECT_EQ(view.FindReverse(C<TypeParam>("abc").Source()), -1);
+	EXPECT_EQ(view.FindReverse(C<TypeParam>("ABC").Source()), 3);
 
 	// caseSensitive = false
-	EXPECT_EQ(view.FindReverse("abc", false), 6);
-	EXPECT_EQ(view.FindReverse("ABC", false), 6);
+	EXPECT_EQ(view.FindReverse(C<TypeParam>("abc").Source(), false), 6);
+	EXPECT_EQ(view.FindReverse(C<TypeParam>("ABC").Source(), false), 6);
 
 	// 범위 지정 + caseSensitive = false
-	EXPECT_EQ(view.FindReverse(0, 5, "abc", false), 3);
-	EXPECT_EQ(view.FindReverse(0, 2, "abc", false), 0);
+	EXPECT_EQ(view.FindReverse(0, 5, C<TypeParam>("abc").Source(), false), 3);
+	EXPECT_EQ(view.FindReverse(0, 2, C<TypeParam>("abc").Source(), false), 0);
 }
 
 // StringView::Count caseSensitive 테스트
-TEST(StringViewTest, CountCaseSensitive) {
-	const char* pStr = "HellohelloHELLO";
-	StringView view(const_cast<char*>(pStr));
+TYPED_TEST(StringViewTypedTest, CountCaseSensitive) {
+	auto pStr = C<TypeParam>("HellohelloHELLO");
+	V<TypeParam> view(pStr.Source());
 
 	// caseSensitive = true (기본값)
-	EXPECT_EQ(view.Count("hello"), 1);
-	EXPECT_EQ(view.Count("Hello"), 1);
-	EXPECT_EQ(view.Count("HELLO"), 1);
+	EXPECT_EQ(view.Count(C<TypeParam>("hello").Source()), 1);
+	EXPECT_EQ(view.Count(C<TypeParam>("Hello").Source()), 1);
+	EXPECT_EQ(view.Count(C<TypeParam>("HELLO").Source()), 1);
 
 	// caseSensitive = false
-	EXPECT_EQ(view.Count("hello", false), 3);
-	EXPECT_EQ(view.Count("HELLO", false), 3);
+	EXPECT_EQ(view.Count(C<TypeParam>("hello").Source(), false), 3);
+	EXPECT_EQ(view.Count(C<TypeParam>("HELLO").Source(), false), 3);
 
 	// 범위 지정 + caseSensitive = false
-	EXPECT_EQ(view.Count(0, 9, "hello", false), 2);
-	EXPECT_EQ(view.Count(5, 14, "hello", false), 2);
+	EXPECT_EQ(view.Count(0, 9, C<TypeParam>("hello").Source(), false), 2);
+	EXPECT_EQ(view.Count(5, 14, C<TypeParam>("hello").Source(), false), 2);
 }
 
 // StringView::StartWith caseSensitive 테스트
-TEST(StringViewTest, StartWithCaseSensitive) {
-	const char* pStr = "HelloWorld";
-	StringView view(const_cast<char*>(pStr));
+TYPED_TEST(StringViewTypedTest, StartWithCaseSensitive) {
+	auto pStr = C<TypeParam>("HelloWorld");
+	V<TypeParam> view(pStr.Source());
 
 	// caseSensitive = true (기본값)
-	EXPECT_TRUE(view.StartWith(StringView(const_cast<char*>("Hello"))));
-	EXPECT_FALSE(view.StartWith(StringView(const_cast<char*>("hello"))));
+	EXPECT_TRUE(view.StartWith(V<TypeParam>(C<TypeParam>("Hello").Source())));
+	EXPECT_FALSE(view.StartWith(V<TypeParam>(C<TypeParam>("hello").Source())));
 
 	// caseSensitive = false
-	EXPECT_TRUE(view.StartWith(StringView(const_cast<char*>("hello")), false));
-	EXPECT_TRUE(view.StartWith(StringView(const_cast<char*>("HELLO")), false));
-	EXPECT_FALSE(view.StartWith(StringView(const_cast<char*>("world")), false));
+	EXPECT_TRUE(view.StartWith(V<TypeParam>(C<TypeParam>("hello").Source()), false));
+	EXPECT_TRUE(view.StartWith(V<TypeParam>(C<TypeParam>("HELLO").Source()), false));
+	EXPECT_FALSE(view.StartWith(V<TypeParam>(C<TypeParam>("world").Source()), false));
 
 	// String 타입 + caseSensitive = false
-	EXPECT_TRUE(view.StartWith(String("hello"), false));
-	EXPECT_TRUE(view.StartWith(String("HELLO"), false));
+	EXPECT_TRUE(view.StartWith(C<TypeParam>("hello"), false));
+	EXPECT_TRUE(view.StartWith(C<TypeParam>("HELLO"), false));
 }
 
 // StringView::EndWith caseSensitive 테스트
-TEST(StringViewTest, EndWithCaseSensitive) {
-	const char* pStr = "HelloWorld";
-	StringView view(const_cast<char*>(pStr));
+TYPED_TEST(StringViewTypedTest, EndWithCaseSensitive) {
+	auto pStr = C<TypeParam>("HelloWorld");
+	V<TypeParam> view(pStr.Source());
 
 	// caseSensitive = true (기본값)
-	EXPECT_TRUE(view.EndWith(StringView(const_cast<char*>("World"))));
-	EXPECT_FALSE(view.EndWith(StringView(const_cast<char*>("world"))));
+	EXPECT_TRUE(view.EndWith(V<TypeParam>(C<TypeParam>("World").Source())));
+	EXPECT_FALSE(view.EndWith(V<TypeParam>(C<TypeParam>("world").Source())));
 
 	// caseSensitive = false
-	EXPECT_TRUE(view.EndWith(StringView(const_cast<char*>("world")), false));
-	EXPECT_TRUE(view.EndWith(StringView(const_cast<char*>("WORLD")), false));
-	EXPECT_FALSE(view.EndWith(StringView(const_cast<char*>("hello")), false));
+	EXPECT_TRUE(view.EndWith(V<TypeParam>(C<TypeParam>("world").Source()), false));
+	EXPECT_TRUE(view.EndWith(V<TypeParam>(C<TypeParam>("WORLD").Source()), false));
+	EXPECT_FALSE(view.EndWith(V<TypeParam>(C<TypeParam>("hello").Source()), false));
 
 	// String 타입 + caseSensitive = false
-	EXPECT_TRUE(view.EndWith(String("world"), false));
-	EXPECT_TRUE(view.EndWith(String("WORLD"), false));
+	EXPECT_TRUE(view.EndWith(C<TypeParam>("world"), false));
+	EXPECT_TRUE(view.EndWith(C<TypeParam>("WORLD"), false));
 }
 
 // StringView::Contain caseSensitive 테스트
-TEST(StringViewTest, ContainCaseSensitive) {
-	const char* pStr = "Hello World";
-	StringView view(const_cast<char*>(pStr));
+TYPED_TEST(StringViewTypedTest, ContainCaseSensitive) {
+	auto pStr = C<TypeParam>("Hello World");
+	V<TypeParam> view(pStr.Source());
 
 	// caseSensitive = true (기본값)
-	EXPECT_TRUE(view.Contain("World"));
-	EXPECT_FALSE(view.Contain("world"));
-	EXPECT_FALSE(view.Contain("HELLO"));
+	EXPECT_TRUE(view.Contain(C<TypeParam>("World").Source()));
+	EXPECT_FALSE(view.Contain(C<TypeParam>("world").Source()));
+	EXPECT_FALSE(view.Contain(C<TypeParam>("HELLO").Source()));
 
 	// caseSensitive = false
-	EXPECT_TRUE(view.Contain("world", false));
-	EXPECT_TRUE(view.Contain("HELLO", false));
-	EXPECT_TRUE(view.Contain("hello world", false));
-	EXPECT_FALSE(view.Contain("xyz", false));
+	EXPECT_TRUE(view.Contain(C<TypeParam>("world").Source(), false));
+	EXPECT_TRUE(view.Contain(C<TypeParam>("HELLO").Source(), false));
+	EXPECT_TRUE(view.Contain(C<TypeParam>("hello world").Source(), false));
+	EXPECT_FALSE(view.Contain(C<TypeParam>("xyz").Source(), false));
 
 	// StringView 타입 + caseSensitive = false
-	EXPECT_TRUE(view.Contain(StringView(const_cast<char*>("WORLD")), false));
+	EXPECT_TRUE(view.Contain(V<TypeParam>(C<TypeParam>("WORLD").Source()), false));
 
 	// String 타입 + caseSensitive = false
-	EXPECT_TRUE(view.Contain(String("hello"), false));
+	EXPECT_TRUE(view.Contain(C<TypeParam>("hello"), false));
 }
 
 #endif // TEST_StringViewTest == ON

@@ -153,7 +153,7 @@ void StateCache_Main()
 		renderer.EndScene();
 
 		// 4. 통계를 창 제목으로 출력 (API 호출 수 vs 캐시가 생략한 수)
-		jc::String szTitle = jc::StringUtil::Format("23. 스테이트 캐시 [%s] - API 호출: %llu, 생략: %llu (1 토글, ESC 종료)", bCacheDisabled ? "캐시 꺼짐" : "캐시 켜짐",
+		jc::String szTitle = jc::StringUtilT::Format("23. 스테이트 캐시 [%s] - API 호출: %llu, 생략: %llu (1 토글, ESC 종료)", bCacheDisabled ? "캐시 꺼짐" : "캐시 켜짐",
 			context.GetApiCallCount(),
 			context.GetSkippedCallCount());
 		window.SetTitle(szTitle);

@@ -64,23 +64,23 @@ static LONG CALLBACK VectoredExceptionHandler(PEXCEPTION_POINTERS _pExceptionInf
 	if (!IsFatalException(pRecord->ExceptionCode))
 		return EXCEPTION_CONTINUE_SEARCH;
 
-	_LogError_("========================================");
-	_LogError_("  치명적 예외 발생!");
-	_LogError_("  예외 코드 : 0x%08X", pRecord->ExceptionCode);
-	_LogError_("  예외 주소 : 0x%p", pRecord->ExceptionAddress);
+	_LogError_(_T("========================================"));
+	_LogError_(_T("  치명적 예외 발생!"));
+	_LogError_(_T("  예외 코드 : 0x%08X"), pRecord->ExceptionCode);
+	_LogError_(_T("  예외 주소 : 0x%p"), pRecord->ExceptionAddress);
 
 	if (pRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION && pRecord->NumberParameters >= 2)
 	{
-		_LogError_("  위반 주소 : 0x%p", (void*)pRecord->ExceptionInformation[1]);
+		_LogError_(_T("  위반 주소 : 0x%p"), (void*)pRecord->ExceptionInformation[1]);
 	}
 
-	_LogError_("  예외 시점 콜스택 (Context 기반):");
+	_LogError_(_T("  예외 시점 콜스택 (Context 기반):"));
 	StackTrace::PrintStack(_pExceptionInfo->ContextRecord);
 
-	_LogError_("  현재 스레드 콜스택 (CaptureStackBackTrace 기반):");
+	_LogError_(_T("  현재 스레드 콜스택 (CaptureStackBackTrace 기반):"));
 	StackTrace::PrintStack(3);
 
-	_LogError_("========================================");
+	_LogError_(_T("========================================"));
 
 	// [코루틴-15] 덤프는 별도 스레드에서 쓴다.
 	// - 코루틴 오버플로우처럼 폴트 스택에 여유가 없을 때 같은 스택에서 쓰면

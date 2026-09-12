@@ -8,6 +8,7 @@
 
 #include "jc/Limit.h"
 #include "jc/Wrapper/WinApi.h"
+#include "jc/Primitives/StringConvert.h"
 
 NS_JC_BEGIN
 _whandle WinApi::InvalidHandleValue = INVALID_HANDLE_VALUE;
@@ -169,8 +170,8 @@ String JC_CDECL WinApi::GetMemoryBasicInformationString(const MEMORY_BASIC_INFOR
 
 	String msg;
 	msg.Format(
-		"[%d] Base: 0x%p AllocBase: 0x%p\n"
-		"AllocProtect: %s RegionSize: 0x%x State: %s Protect: %s Type: %s\n",
+		_T("[%d] Base: 0x%p AllocBase: 0x%p\n")
+		_T("AllocProtect: %s RegionSize: 0x%x State: %s Protect: %s Type: %s\n"),
 		_index, _mbi.BaseAddress, _mbi.AllocationBase,
 		allocProtectStr.Source(), _mbi.RegionSize, stateStr.Source(), protectStr.Source(), typeStr.Source());
 	return msg;
@@ -187,10 +188,10 @@ String JC_CDECL WinApi::MemoryStateToString(DWORD _state)
 {
 	switch (_state)
 	{
-	case MEM_COMMIT:  return "MEM_COMMIT";
-	case MEM_RESERVE: return "MEM_RESERVE";
-	case MEM_FREE:    return "MEM_FREE";
-	default:          return "UNKNOWN";
+	case MEM_COMMIT:  return _T("MEM_COMMIT");
+	case MEM_RESERVE: return _T("MEM_RESERVE");
+	case MEM_FREE:    return _T("MEM_FREE");
+	default:          return _T("UNKNOWN");
 	}
 }
 
@@ -200,7 +201,7 @@ String JC_CDECL WinApi::ProtectToString(DWORD _protect)
 	String result(128);
 
 	if (_protect == 0)
-		return "0";
+		return _T("0");
 
 	if (_protect & PAGE_EXECUTE) result += "PAGE_EXECUTE|";
 	if (_protect & PAGE_EXECUTE_READ) result += "PAGE_EXECUTE_READ|";
@@ -226,10 +227,10 @@ String JC_CDECL WinApi::MemoryTypeToString(DWORD _type)
 {
 	switch (_type)
 	{
-	case MEM_IMAGE:   return "MEM_IMAGE";
-	case MEM_MAPPED:  return "MEM_MAPPED";
-	case MEM_PRIVATE: return "MEM_PRIVATE";
-	default:          return "UNKNOWN";
+	case MEM_IMAGE:   return _T("MEM_IMAGE");
+	case MEM_MAPPED:  return _T("MEM_MAPPED");
+	case MEM_PRIVATE: return _T("MEM_PRIVATE");
+	default:          return _T("UNKNOWN");
 	}
 }
 

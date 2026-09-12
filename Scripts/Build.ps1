@@ -12,6 +12,7 @@
 #   .\Scripts\Build.ps1 -ProjectName MyProject -Clean
 #   .\Scripts\Build.ps1 -ProjectName MyProject -FileLog   (빌드 로그를 Scripts\BuildProject\sgs-{년월일}-{시분초}.log 에 저장)
 #   .\Scripts\Build.ps1 -ProjectName MyProject -FileLog -NoConsoleLogging   (콘솔 출력 없이 로그 파일로만 저장)
+#   .\\Scripts\\Build.ps1 -ProjectName MyProject -Multibyte   (MultiByte Charset build)
 
 param (
     [Parameter(Mandatory = $true)]
@@ -31,7 +32,11 @@ param (
 
     [switch]$FileLog,
 
-    [switch]$NoConsoleLogging
+    [switch]$NoConsoleLogging,
+
+    # 문자셋: 지정 시 MultiByte(<CharacterSet>MultiByte</CharacterSet> 대신
+    # msbuild 전역 속성 /p:CharacterSet=MultiByte 전달). 미지정 시 Unicode.
+    [switch]$Multibyte
 )
 
 # UTF-8 고정 (한글 출력 깨짐 방지)
@@ -94,7 +99,8 @@ catch {
 # ---------------------------------------------------------------------
 
 if ($FileLog) {
-    $logDir = Join-Path $solutionDir "Scripts\BuildProject"
+    $logDirName = if ($Multibyte) { "Scripts\BuildProject-Multibyte" } else { "Scripts\BuildProject" }
+    $logDir = Join-Path $solutionDir $logDirName
     if (-not (Test-Path $logDir)) { New-Item -ItemType Directory -Path $logDir -Force | Out-Null }
     $script:LogFile = Join-Path $logDir ("sgs-{0}-{1}.log" -f (Get-Date -Format 'yyyyMMdd'), (Get-Date -Format 'HHmmss'))
     $script:LogWriter = New-Object System.IO.StreamWriter($script:LogFile, $true, (New-Object System.Text.UTF8Encoding($false)))
@@ -105,6 +111,10 @@ if ($FileLog) {
 Write-Info "SolutionDir : $solutionDir"
 Write-Info "ProjectName : $ProjectName"
 Write-Info "Config      : $Configuration / $Platform"
+
+# 문자셋 결정 (기본값 Unicode, -Multibyte 지정 시 MultiByte)
+$characterSet = if ($Multibyte) { "MultiByte" } else { "Unicode" }
+Write-Info "CharacterSet: $characterSet"
 Write-Info "Action      : $action"
 
 # ---------------------------------------------------------------------
@@ -151,6 +161,7 @@ if (Test-Path $vcxprojPath) {
         /t:$action `
         /p:Configuration=$Configuration `
         /p:Platform=$Platform `
+        /p:CharacterSet=$characterSet `
         /p:SolutionDir="$solutionDir" `
         /m 2>&1 | ForEach-Object {
             if (-not $script:NoConsole) { Write-Output $_ }

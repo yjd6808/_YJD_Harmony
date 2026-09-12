@@ -9,15 +9,15 @@
 
 NS_JC_BEGIN
 
-//////////////////////////////////////////////////////////////////////////////////////////
-StringTokenizer::StringTokenizer(const char* _str)
+////////////////////////////////////////////////////////////////////////////////////////
+StringTokenizer::StringTokenizer(const _char* _str)
 : pStr_(_str)
 {
-	strLen_ = StringUtil::Length(_str);
+	strLen_ = StringUtilT::Length(_str);
 	delims_.Reserve(4);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 StringTokenizer::StringTokenizer(const String& _str)
 : pStr_(_str.Source())
 {
@@ -25,14 +25,14 @@ StringTokenizer::StringTokenizer(const String& _str)
 	delims_.Reserve(4);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-bool StringTokenizer::IsDelim(char _delim)
+////////////////////////////////////////////////////////////////////////////////////////
+bool StringTokenizer::IsDelim(_char _delim)
 {
 	return delims_.Exist(_delim);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-void StringTokenizer::AddDelim(char _delim)
+////////////////////////////////////////////////////////////////////////////////////////
+void StringTokenizer::AddDelim(_char _delim)
 {
 	if (IsDelim(_delim))
 		return;
@@ -40,7 +40,7 @@ void StringTokenizer::AddDelim(char _delim)
 	delims_.PushBack(_delim);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 bool StringTokenizer::HasNext()
 {
 	if (cur_ >= strLen_)
@@ -55,8 +55,8 @@ bool StringTokenizer::HasNext()
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-String StringTokenizer::Next(OUT char* _catchedDelim /*= nullptr*/)
+////////////////////////////////////////////////////////////////////////////////////////
+String StringTokenizer::Next(OUT _char* _catchedDelim /*= nullptr*/)
 {
 	// 연속된 딜리미터 스킵
 	while (cur_ < strLen_ && IsDelim(pStr_[cur_]))
@@ -70,7 +70,7 @@ String StringTokenizer::Next(OUT char* _catchedDelim /*= nullptr*/)
 	// 토큰 끝 찾기
 	for (; cur_ < strLen_; ++cur_)
 	{
-		char ch = pStr_[cur_];
+		_char ch = pStr_[cur_];
 		if (IsDelim(ch))
 		{
 			if (_catchedDelim)
@@ -81,7 +81,7 @@ String StringTokenizer::Next(OUT char* _catchedDelim /*= nullptr*/)
 		}
 	}
 
-	String ret = StringUtil::SubStr(pStr_, strLen_, prev_, cur_ - prev_);
+	String ret = StringUtilT::SubStr(pStr_, strLen_, prev_, cur_ - prev_);
 	cur_ = cur_ + 1;	// 딜리미터 스킵
 	return ret;
 }

@@ -10,6 +10,7 @@
 #include "exception"
 #include "stacktrace"
 #include "jc/Primitives/String.h"
+#include "jc/Primitives/StringConvert.h"
 
 NS_JC_BEGIN
 
@@ -21,49 +22,49 @@ struct Exception : public std::exception
 struct NullPointerException : Exception
 {
 	NullPointerException(const char* _msg) : Exception(_msg) {}
-	NullPointerException(const String& _msg) : Exception(_msg.Source()) {}
+	NullPointerException(const String& _msg) : Exception(StringConvert::ToUtf8(_msg).Source()) {}
 };
 
 struct RuntimeException : Exception
 {
 	RuntimeException(const char* _msg) : Exception(_msg) {}
-	RuntimeException(const String& _msg) : Exception(_msg.Source()) {}
+	RuntimeException(const String& _msg) : Exception(StringConvert::ToUtf8(_msg).Source()) {}
 };
 
 struct InvalidArgumentException : Exception
 {
 	InvalidArgumentException(const char* _msg) : Exception(_msg) {}
-	InvalidArgumentException(const String& _msg) : Exception(_msg.Source()) {}
+	InvalidArgumentException(const String& _msg) : Exception(StringConvert::ToUtf8(_msg).Source()) {}
 };
 
 struct OutOfRangeException : public Exception
 {
 	OutOfRangeException(const char* _msg) : Exception(_msg) {}
-	OutOfRangeException(const String& _msg) : Exception(_msg.Source()) {}
+	OutOfRangeException(const String& _msg) : Exception(StringConvert::ToUtf8(_msg).Source()) {}
 };
 
 struct OverFlowException : public Exception
 {
 	OverFlowException(const char* _msg) : Exception(_msg) {}
-	OverFlowException(const String& _msg) : Exception(_msg.Source()) {}
+	OverFlowException(const String& _msg) : Exception(StringConvert::ToUtf8(_msg).Source()) {}
 };
 
 struct UnderFlowException : public Exception
 {
 	UnderFlowException(const char* _msg) : Exception(_msg) {}
-	UnderFlowException(const String& _msg) : Exception(_msg.Source()) {}
+	UnderFlowException(const String& _msg) : Exception(StringConvert::ToUtf8(_msg).Source()) {}
 };
 
 struct InvalidOperationException : public Exception
 {
 	InvalidOperationException(const char* _msg) : Exception(_msg) {}
-	InvalidOperationException(const String& _msg) : Exception(_msg.Source()) {}
+	InvalidOperationException(const String& _msg) : Exception(StringConvert::ToUtf8(_msg).Source()) {}
 };
 
 struct NotImplementedException : public Exception
 {
   NotImplementedException(const char* _msg) : Exception(_msg) {}
-  NotImplementedException(const String& _msg) : Exception(_msg.Source()) {}
+  NotImplementedException(const String& _msg) : Exception(StringConvert::ToUtf8(_msg).Source()) {}
 };
 
 

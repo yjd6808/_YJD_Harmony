@@ -17,23 +17,23 @@ struct SPropertyValueUnaryOperator : IPropertyValueUnaryOperator
 {
 	void PrefixIncrement(PropertyBase* _pProperty) override
 	{
-		_LogWarn_("%s타입은 %s연산이 불가능합니다.", _pProperty->GetTypeName(), "Prefix ++");
+		_LogWarn_(_T("%hs타입은 %hs연산이 불가능합니다."), _pProperty->GetTypeName(), "Prefix ++");
 	}
 
 	void PrefixDecrement(PropertyBase* _pProperty) override
 	{
-		_LogWarn_("%s타입은 %s연산이 불가능합니다.", _pProperty->GetTypeName(), "Prefix --");
+		_LogWarn_(_T("%hs타입은 %hs연산이 불가능합니다."), _pProperty->GetTypeName(), "Prefix --");
 	}
 
 	_s64 PostfixIncrement(PropertyBase* _pProperty) override
 	{
-		_LogWarn_("%s타입은 %s연산이 불가능합니다.", _pProperty->GetTypeName(), "Postfix ++");
+		_LogWarn_(_T("%hs타입은 %hs연산이 불가능합니다."), _pProperty->GetTypeName(), "Postfix ++");
 		return 0;
 	}
 
 	_s64 PostfixDecrement(PropertyBase* _pProperty) override
 	{
-		_LogWarn_("%s타입은 %s연산이 불가능합니다.", _pProperty->GetTypeName(), "Postfix --");
+		_LogWarn_(_T("%hs타입은 %hs연산이 불가능합니다."), _pProperty->GetTypeName(), "Postfix --");
 		return 0;
 	}
 };

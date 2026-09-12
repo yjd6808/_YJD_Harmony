@@ -39,6 +39,14 @@
 
 - 내부적으로 `Scripts\Build.ps1 -ProjectName ... -Configuration ... -Platform ...`을 호출한다.
 
+- 문자셋: 기본값은 Unicode. MultiByte 빌드는 **`Scripts\BuildProject-Multibyte\{프로젝트명}.bat`** 으로 한다 (내부적으로 `Build.ps1 -Multibyte` → msbuild `/p:CharacterSet=MultiByte` 전달). 로그는 `Scripts\BuildProject-Multibyte\`에 남는다.
+  
+  ```
+  Scripts\BuildProject-Multibyte\jc.bat -C Debug -P x64
+  ```
+
+- 모든 C++ 프로젝트는 Unicode/MultiByte 양쪽 빌드가 통과해야 한다. 문자셋 전환 시에는 `-Rebuild` 사용을 권장한다 (Intermediate 캐시 혼용 방지).
+
 - cocos2d 엔진이 필요한 프로젝트는 먼저 해당 구성의 엔진 DLL(`ThirdParty\Cocos2d-x\Output\%PLATFORM%\%CONFIG%\libcocos2d.dll`)이 빌드되어 있어야 한다 (없으면 `Scripts\Build-Cocos.bat`).
 
 ## How to Run Projects

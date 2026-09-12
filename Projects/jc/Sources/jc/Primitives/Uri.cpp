@@ -3,6 +3,7 @@
 #include "jc/Primitives/StringUtil.h"
 #include "jc/Ascii.h"
 #include "jc/IO/Path.h"
+#include "jc/Primitives/StringConvert.h"
 
 NS_JC_BEGIN
 
@@ -14,7 +15,7 @@ namespace
 		if (_s.IsEmpty())
 			return _s;
 
-		const char* p = _s.Source();
+		const _char* p = _s.Source();
 		int len = _s.Length();
 		int start = 0;
 		int end = len - 1;
@@ -34,16 +35,16 @@ namespace
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////
-	bool StartsWithIgnoreCase(const String& _s, const char* _prefix)
+	bool StartsWithIgnoreCase(const String& _s, const _char* _prefix)
 	{
-		int preLen = StringUtil::Length(_prefix);
+		int preLen = StringUtilT::Length(_prefix);
 		if (_s.Length() < preLen)
 			return false;
 		return _s.Find(_prefix, false) == 0;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////
-	bool Contains(const String& _s, const char* _sub)
+	bool Contains(const String& _s, const _char* _sub)
 	{
 		return _s.Find(_sub, true) != -1;
 	}
@@ -85,8 +86,8 @@ namespace
 	{
 		if (_path.IsEmpty())
 			return String::Empty;
-		int lastSlash = _path.FindReverse("/", true);
-		int lastBack = _path.FindReverse("\\", true);
+		int lastSlash = _path.FindReverse(_T("/"), true);
+		int lastBack = _path.FindReverse(_T("\\"), true);
 		int last = lastSlash > lastBack ? lastSlash : lastBack;
 		if (last < 0)
 			return _path;
@@ -102,8 +103,8 @@ namespace
 		int len = copy.Length();
 		for (int i = 0; i < len; ++i)
 		{
-			if (copy[i] == '/')
-				copy.SetAt(i, '\\');
+			if (copy[i] == _T('/'))
+				copy.SetAt(i, _T('\\'));
 		}
 		return copy;
 	}
@@ -115,7 +116,7 @@ String Uri::GetPathAndQuery() const
 	if (query_.IsEmpty())
 		return path_;
 	String ret = path_;
-	ret.Append('?');
+	ret.Append(_T('?'));
 	ret.Append(query_);
 	return ret;
 }
@@ -140,25 +141,25 @@ bool Uri::Parse(const String& _raw)
 	valid_ = false;
 
 	String rest;
-	if (StartsWithIgnoreCase(raw_, "http://"))
+	if (StartsWithIgnoreCase(raw_, _T("http://")))
 	{
 		scheme_ = UriScheme::usHttp;
 		port_ = 80;
 		rest = SubFrom(raw_, 7);
 	}
-	else if (StartsWithIgnoreCase(raw_, "https://"))
+	else if (StartsWithIgnoreCase(raw_, _T("https://")))
 	{
 		scheme_ = UriScheme::usHttps;
 		port_ = 443;
 		rest = SubFrom(raw_, 8);
 	}
-	else if (StartsWithIgnoreCase(raw_, "file://"))
+	else if (StartsWithIgnoreCase(raw_, _T("file://")))
 	{
 		scheme_ = UriScheme::usFile;
 		path_ = SubFrom(raw_, 7);
 		return FinishLocal();
 	}
-	else if (Contains(raw_, "://"))
+	else if (Contains(raw_, _T("://")))
 	{
 		valid_ = false;
 		return false;
@@ -171,13 +172,13 @@ bool Uri::Parse(const String& _raw)
 	}
 
 	// http(s): host[:port][/path][?query]
-	int slash = rest.Find("/", true);
+	int slash = rest.Find(_T("/"), true);
 	String authority;
 	String pathPart;
 	if (slash < 0)
 	{
 		authority = rest;
-		pathPart = "/";
+		pathPart = _T("/");
 	}
 	else
 	{
@@ -191,7 +192,7 @@ bool Uri::Parse(const String& _raw)
 		return false;
 	}
 
-	int colon = authority.Find(":", true);
+	int colon = authority.Find(_T(":"), true);
 	if (colon < 0)
 	{
 		host_ = authority;
@@ -207,7 +208,7 @@ bool Uri::Parse(const String& _raw)
 		}
 	}
 
-	int q = pathPart.Find("?", true);
+	int q = pathPart.Find(_T("?"), true);
 	if (q < 0)
 	{
 		path_ = pathPart;
@@ -239,7 +240,7 @@ bool Uri::Parse(const char* _raw)
 		valid_ = false;
 		return false;
 	}
-	return Parse(String(_raw));
+	return Parse(StringConvert::FromUtf8(_raw));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

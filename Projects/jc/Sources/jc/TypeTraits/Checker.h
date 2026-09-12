@@ -6,9 +6,12 @@
 NS_JC_BEGIN
 
 class DateTime;
-class String;
 
-template <_u32> struct StaticString;
+template <typename, typename>
+class BasicString;
+
+template <_u32, typename>
+struct StaticString;
 
 	NS_DETAIL_BEGIN
     // 포인터 타입인지 확인하는 템플릿
@@ -118,16 +121,18 @@ template <_u32> struct StaticString;
     struct IsStringType<wchar_t*> : TrueType {};
     template <>
     struct IsStringType<const wchar_t*> : TrueType {};
-    template <>
-    struct IsStringType<String> : TrueType {};
-    template <_u32 Size>
-    struct IsStringType<StaticString<Size>> : TrueType {};
+    template <typename CharT, typename Storage>
+    struct IsStringType<BasicString<CharT, Storage>> : TrueType {};
+    template <_u32 Size, typename CharT>
+    struct IsStringType<StaticString<Size, CharT>> : TrueType {};
     template <_u32 Size>
     struct IsStringType<char[Size]> : TrueType {};
     template <_u32 Size>
     struct IsStringType<wchar_t[Size]> : TrueType {};
 	template <_u32 Size>
 	struct IsStringType<const char[Size]> : TrueType {};
+	template <_u32 Size>
+	struct IsStringType<const wchar_t[Size]> : TrueType {};
 
     // 배열 타입인지 확인
     template <typename T>
@@ -188,7 +193,7 @@ template <_u32> struct StaticString;
     template <typename T>   struct IsLDouble : FalseType {};
     template <>             struct IsLDouble<_f64l> : TrueType {};
     template <typename T>   struct IsString : FalseType {};
-    template <>             struct IsString<String> : TrueType {};
+    template <typename CharT, typename Storage> struct IsString<BasicString<CharT, Storage>> : TrueType {};
     template <typename T>   struct IsDateTime : FalseType {};
     template <>             struct IsDateTime<DateTime> : TrueType {};
 

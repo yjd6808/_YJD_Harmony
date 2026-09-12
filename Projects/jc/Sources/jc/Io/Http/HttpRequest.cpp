@@ -1,5 +1,6 @@
 #include "jc/IO/Http/HttpRequest.h"
 #include "jc/Debug/New.h"
+#include "jc/Primitives/StringConvert.h"
 
 NS_JC_BEGIN
 
@@ -50,8 +51,10 @@ HttpRequest& HttpRequest::SetBody(const jc::String& _body)
 		spBody_ = nullptr;
 		return *this;
 	}
-	spBody_ = jc::MakeShared<jc::MemoryStream>((_u32)_body.Length());
-	spBody_->Write(_body.Source(), (_u32)_body.Length());
+	// 와이어는 narrow(UTF-8) 고정. _char 단위가 아닌 바이트 단위로 담는다.
+	const AString utf8Body = StringConvert::ToUtf8(_body);
+	spBody_ = jc::MakeShared<jc::MemoryStream>((_u32)utf8Body.Length());
+	spBody_->Write(utf8Body.Source(), (_u32)utf8Body.Length());
 	return *this;
 }
 

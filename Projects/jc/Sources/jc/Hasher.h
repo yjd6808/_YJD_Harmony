@@ -208,7 +208,7 @@ public:
 	void AppendString(const char* _str) noexcept
 	{
 		if (_str != nullptr)
-			Append(_str, jc::StringUtil::Length(_str));
+			Append(_str, jc::StringUtilA::Length(_str));
 	}
 
 	void AppendString(const String& _str) noexcept
@@ -284,12 +284,12 @@ struct Hasher<const char*, TAlgo>
 
 	Result operator()(const String& _val) const noexcept
 	{
-		return TAlgo::HashBytes(_val.Source(), static_cast<size_t>(_val.Length()));
+		return TAlgo::HashBytes(_val.Source(), static_cast<size_t>(_val.Length()) * sizeof(_char));
 	}
 
 	constexpr Result operator()(const char* _val) const noexcept
 	{
-		return _val ? TAlgo::HashBytes(_val, jc::StringUtil::Length(_val)) : TAlgo::kOffset;
+		return _val ? TAlgo::HashBytes(_val, jc::StringUtilA::Length(_val)) : TAlgo::kOffset;
 	}
 
 	template <_u32 Size>
@@ -330,12 +330,12 @@ struct Hasher<String, TAlgo>
 
 	Result operator()(const String& _val) const noexcept
 	{
-		return TAlgo::HashBytes(_val.Source(), static_cast<size_t>(_val.Length()));
+		return TAlgo::HashBytes(_val.Source(), static_cast<size_t>(_val.Length()) * sizeof(_char));
 	}
 
 	Result operator()(const char* _val) const noexcept
 	{
-		return _val ? TAlgo::HashBytes(_val, jc::StringUtil::Length(_val)) : TAlgo::kOffset;
+		return _val ? TAlgo::HashBytes(_val, jc::StringUtilA::Length(_val)) : TAlgo::kOffset;
 	}
 
 	template <_u32 Size>
@@ -397,12 +397,12 @@ struct Hasher64<const char*, TAlgo>
 
 	Result operator()(const String& _val) const noexcept
 	{
-		return TAlgo::HashBytes(_val.Source(), static_cast<size_t>(_val.Length()));
+		return TAlgo::HashBytes(_val.Source(), static_cast<size_t>(_val.Length()) * sizeof(_char));
 	}
 
 	constexpr Result operator()(const char* _val) const noexcept
 	{
-		return _val ? TAlgo::HashBytes(_val, jc::StringUtil::Length(_val)) : TAlgo::kOffset;
+		return _val ? TAlgo::HashBytes(_val, jc::StringUtilA::Length(_val)) : TAlgo::kOffset;
 	}
 
 	template <_u32 Size>
@@ -442,12 +442,12 @@ struct Hasher64<String, TAlgo>
 
 	Result operator()(const String& _val) const noexcept
 	{
-		return TAlgo::HashBytes(_val.Source(), static_cast<size_t>(_val.Length()));
+		return TAlgo::HashBytes(_val.Source(), static_cast<size_t>(_val.Length()) * sizeof(_char));
 	}
 
 	Result operator()(const char* _val) const noexcept
 	{
-		return _val ? TAlgo::HashBytes(_val, jc::StringUtil::Length(_val)) : TAlgo::kOffset;
+		return _val ? TAlgo::HashBytes(_val, jc::StringUtilA::Length(_val)) : TAlgo::kOffset;
 	}
 
 	template <_u32 Size>

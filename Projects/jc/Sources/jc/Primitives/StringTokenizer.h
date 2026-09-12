@@ -16,18 +16,18 @@ NS_JC_BEGIN
 class StringTokenizer
 {
 public:
-	StringTokenizer(const char* _str);
+	StringTokenizer(const _char* _str);
 	StringTokenizer(const String& _str);
 
-	bool	IsDelim(char _delim);
-	void	AddDelim(char _delim);
+	bool	IsDelim(_char _delim);
+	void	AddDelim(_char _delim);
 
 	bool    HasNext();
-	String	Next(OUT char* _catchedDelim = nullptr);
+	String	Next(OUT _char* _catchedDelim = nullptr);
 
 private:
-	jc::Vector<char> delims_;
-	const char* pStr_;
+	jc::Vector<_char> delims_;
+	const _char* pStr_;
 	int strLen_ = 0;
 	int prev_ = 0;
 	int cur_ = 0;

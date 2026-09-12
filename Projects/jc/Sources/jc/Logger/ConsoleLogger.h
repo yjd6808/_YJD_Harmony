@@ -20,8 +20,8 @@ public:
 	ConsoleLogger();
 
 	void Flush() override;
-	void LogVaList(Level _level, const char* _pFmt, va_list _list) override;
-	void LogPlainVaList(const char* _pFmt, va_list _list) override;
+	void LogVaList(Level _level, const _char* _pFmt, va_list _list) override;
+	void LogPlainVaList(const _char* _pFmt, va_list _list) override;
 	String CreateHeader(Level _level) override;
 
 	void SetHeaderLevelColor(Level _level, ConsoleColor _color);

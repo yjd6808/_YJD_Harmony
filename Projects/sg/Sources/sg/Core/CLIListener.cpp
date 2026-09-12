@@ -160,7 +160,7 @@ void CLIListener::ShowAllFunctions()
 int CLIListener::ToNumber(const jc::String& _numString, int _argIndex)
 {
 	int value;
-	if (!StringUtil::TryToNumber(value, _numString.Source()))
+	if (!StringUtilT::TryToNumber(value, _numString.Source()))
 	{
 		Console::WriteLine("%d번째 인자가 올바르지 않습니다.", _argIndex + 1);
 		return InvalidValue_v;

@@ -67,8 +67,8 @@ TEST(EventTest, ClassMethod) {
 		void member_test2(int a, int b) { g_event_testal++; }
 	};
 
-	Legend t1{ "t1" };
-	Legend t2{ "t2" };
+	Legend t1{ _T("t1") };
+	Legend t2{ _T("t2") };
 
 	e.Register(0, Legend::test);
 

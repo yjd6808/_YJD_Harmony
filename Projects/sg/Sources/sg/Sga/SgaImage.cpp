@@ -78,7 +78,7 @@ bool SgaImage::Unload()
 //////////////////////////////////////////////////////////////////////////////////////////
 jc::String SgaImage::ToString() const
 {
-	return StringUtil::Format("Sga(%s) Img(%s)", pParent_->GetPath().Source(), header_.name_.Source());
+	return StringUtilT::Format("Sga(%s) Img(%s)", pParent_->GetPath().Source(), header_.name_.Source());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

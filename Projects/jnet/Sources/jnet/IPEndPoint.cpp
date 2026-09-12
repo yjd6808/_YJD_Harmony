@@ -153,7 +153,7 @@ IPv4EndPoint IPv4EndPoint::Parse(const char* _pEndPointAddr)
 	static constexpr int END_POINT_LEN = IPv4Len_v + 6; // +6 : 포트 최대 5자리 + 문자 ':'를 포함한 길이
 	using IPv4EndPointString = StaticString<END_POINT_LEN>;
 
-	const int endPointLength = StringUtil::Length(_pEndPointAddr);
+	const int endPointLength = StringUtilT::Length(_pEndPointAddr);
 
 	if (endPointLength > END_POINT_LEN)
 	{
@@ -181,7 +181,7 @@ IPv4EndPoint IPv4EndPoint::Parse(const char* _pEndPointAddr)
 	(void)portStringLength; // length currently unused but kept for potential validation
 
 	int port = -1;
-	if (!StringUtil::TryToNumber<_s32>(port, portString.Source))
+	if (!StringUtilT::TryToNumber<_s32>(port, portString.Source))
 	{
 		jc_assert_msg(false, "올바른 포트번호가 아닙니다.");
 		return Invalid;

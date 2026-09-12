@@ -102,8 +102,8 @@ static void SendMsg(UdpClient* _pClient, const IPv4EndPoint& _target)
 	StaticMessage& msg1 = _pClient->EnqueueCmd<StaticMessage>();
 	DynamicMessage& msg2 = _pClient->EnqueueCmd<DynamicMessage>(length);
 
-	StringUtil::CopyUnsafe(msg1.msg_.Source, s.Source);
-	StringUtil::CopyUnsafe(msg2.Msg(), s.Source);
+	StringUtilT::CopyUnsafe(msg1.msg_.Source, s.Source);
+	StringUtilT::CopyUnsafe(msg2.Msg(), s.Source);
 
 	// 다이나믹 패킷을 활용한 전송
 	auto pPacket = dbg_new DynamicCmdPacket<DynamicMessage, DynamicMessage, DynamicMessage>(length, length, length);
@@ -111,9 +111,9 @@ static void SendMsg(UdpClient* _pClient, const IPv4EndPoint& _target)
 	auto pMsg4 = pPacket->Get<1>();
 	auto pMsg5 = pPacket->Get<2>();
 
-	StringUtil::CopyUnsafe(pMsg3->Msg(), s.Source);
-	StringUtil::CopyUnsafe(pMsg4->Msg(), s.Source);
-	StringUtil::CopyUnsafe(pMsg5->Msg(), s.Source);
+	StringUtilT::CopyUnsafe(pMsg3->Msg(), s.Source);
+	StringUtilT::CopyUnsafe(pMsg4->Msg(), s.Source);
+	StringUtilT::CopyUnsafe(pMsg5->Msg(), s.Source);
 
 	// 커맨드 버퍼를 활용한 전송 테스트
 	PacketBufferPtr pBuffer = PacketBuffer::Create(_pClient->GetBufferAllocator());
@@ -121,14 +121,14 @@ static void SendMsg(UdpClient* _pClient, const IPv4EndPoint& _target)
 	DynamicMessage& msg7 = pBuffer->EmplaceCmd<DynamicMessage>(length);
 	DynamicMessage& msg8 = pBuffer->EmplaceCmd<DynamicMessage>(length);
 
-	StringUtil::CopyUnsafe(msg6.Msg(), s.Source);
-	StringUtil::CopyUnsafe(msg7.Msg(), s.Source);
-	StringUtil::CopyUnsafe(msg8.Msg(), s.Source);
+	StringUtilT::CopyUnsafe(msg6.Msg(), s.Source);
+	StringUtilT::CopyUnsafe(msg7.Msg(), s.Source);
+	StringUtilT::CopyUnsafe(msg8.Msg(), s.Source);
 
 	// 싱글 패킷 전송 (스태틱, 다이나믹 커맨드 아무거나 가능)
 	// auto pMsg9 = dbg_new SingleCmdPacket<DynamicMessage>(); assert 발사: 다이나믹 커맨드는 명시적으로 무조건 사이즈 전달
 	auto pMsg9 = dbg_new SingleCmdPacket<DynamicMessage>(length);
-	StringUtil::CopyUnsafe(pMsg9->cmd_.Msg(), s.Source);
+	StringUtilT::CopyUnsafe(pMsg9->cmd_.Msg(), s.Source);
 
 	_pClient->SendToAsync(pMsg9, _target);
 	_pClient->SendToAsync(pBuffer, _target);

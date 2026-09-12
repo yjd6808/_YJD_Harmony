@@ -5,41 +5,49 @@
 
 #pragma once
 
+#include "jc/Namespace.h"
+
 NS_JC_BEGIN
 
-constexpr bool IsAlphabat(const char _ch) {
-	return _ch >= 'a' && _ch <= 'z' || _ch >= 'A' && _ch <= 'Z';
+template <typename CharT>
+constexpr bool IsAlphabat(const CharT _ch) {
+	return _ch >= CharT('a') && _ch <= CharT('z') || _ch >= CharT('A') && _ch <= CharT('Z');
 }
 
 // 소문자 알파벳인지
-constexpr bool IsLowerCaseAlphabat(const char ch) {
-	return ch >= 'a' && ch <= 'z';
+template <typename CharT>
+constexpr bool IsLowerCaseAlphabat(const CharT ch) {
+	return ch >= CharT('a') && ch <= CharT('z');
 }
 
 // 대문자 알파벳인지
-constexpr bool IsUpperCaseAlphabat(const char ch) {
-	return ch >= 'A' && ch <= 'Z';
+template <typename CharT>
+constexpr bool IsUpperCaseAlphabat(const CharT ch) {
+	return ch >= CharT('A') && ch <= CharT('Z');
 }
 
-constexpr bool IsNumeric(const char ch) {
-	return ch >= '0' && ch <= '9';
+template <typename CharT>
+constexpr bool IsNumeric(const CharT ch) {
+	return ch >= CharT('0') && ch <= CharT('9');
 }
 
-constexpr bool IsSpace(const char ch) {
-	return ch == ' ' || ch == '\t' || ch == '\n' || ch == '\v' || ch == '\r' || ch == '\f';
+template <typename CharT>
+constexpr bool IsSpace(const CharT ch) {
+	return ch == CharT(' ') || ch == CharT('\t') || ch == CharT('\n') || ch == CharT('\v') || ch == CharT('\r') || ch == CharT('\f');
 }
 
-constexpr char ToLower(const char ch) {
-	return  (ch >= 'A' && ch <= 'Z')
-	? (ch - 'A' + 'a')	// 대문자인 경우 소문자로 변경
+template <typename CharT>
+constexpr CharT ToLower(const CharT ch) {
+	return  (ch >= CharT('A') && ch <= CharT('Z'))
+	? (ch - CharT('A') + CharT('a'))	// 대문자인 경우 소문자로 변경
 	: ch;
 }
 
-constexpr char ToUpper(const char ch) {
-	return (ch >= 'a' && ch <= 'z')
-	? (ch - 'a' + 'A')	// 소문자인 경우 대문자로 변경
+template <typename CharT>
+constexpr CharT ToUpper(const CharT ch) {
+	return (ch >= CharT('a') && ch <= CharT('z'))
+	? (ch - CharT('a') + CharT('A'))	// 소문자인 경우 대문자로 변경
 	: ch;
 }
 
 NS_END
-

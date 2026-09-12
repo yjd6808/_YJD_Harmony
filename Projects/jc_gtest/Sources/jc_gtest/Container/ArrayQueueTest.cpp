@@ -298,7 +298,7 @@ TEST(ArrayQueueTest, InnerDestructorTest) {
 		if (i && i % 4 == 0) {
 			aq.Dequeue();
 		} else {
-			aq.Enqueue("ab");
+			aq.Enqueue(_T("ab"));
 		}
 	}
 }

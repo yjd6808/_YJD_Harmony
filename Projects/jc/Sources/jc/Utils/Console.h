@@ -19,6 +19,7 @@
 #include "jc/Math.h"
 #include "jc/Tuple.h"
 #include "jc/Assert.h"
+#include "jc/Primitives/String.h"
 
 
 // @참고 https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences

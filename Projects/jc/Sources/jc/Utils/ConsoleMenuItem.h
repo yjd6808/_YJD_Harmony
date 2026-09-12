@@ -62,7 +62,7 @@ struct ConsoleMenuItemOption
 
 	// 입력 프롬프트 타이틀 (userInputTitle_ = true 일 때 사용)
 	// ex) inputTitle_ = "수행할 함수를 선택"  ->  "수행할 함수를 선택> "
-	jc::String inputTitle_ = jc::String("입력> ");
+	jc::String inputTitle_ = jc::String(_T("입력> "));
 
 	// false: 대소문자 구분 없이 매칭 (기본값)
 	// true : 대소문자 정확히 일치해야 매칭
@@ -71,8 +71,8 @@ struct ConsoleMenuItemOption
 	// true 이면 Add("help") 가 "HELP" 로 표시됨
 	bool inputForceCase_ = false;
 
-	jc::String inputLeftBrace_ = "[";
-	jc::String inputRightBrace_ = "]";
+	jc::String inputLeftBrace_ = _T("[");
+	jc::String inputRightBrace_ = _T("]");
 
 	// inputFormatPadding_ 이 2 라면
 	//   Add("1")  ->  [ 1]
@@ -80,10 +80,10 @@ struct ConsoleMenuItemOption
 	int inputFormatPadding_ = -1;
 
 	// 키 표시 블록([key]) 앞
-	jc::String inputLeftPadding_ = jc::String(" ");
+	jc::String inputLeftPadding_ = jc::String(_T(" "));
 
 	// 키 표시 블록([key]) 뒤
-	jc::String inputRightPadding_ = jc::String(" ");
+	jc::String inputRightPadding_ = jc::String(_T(" "));
 
 	ConsoleColor titleColor_        = ConsoleColor::LightGray;
 	ConsoleColor menuColor_         = ConsoleColor::LightGray;
@@ -92,9 +92,9 @@ struct ConsoleMenuItemOption
 	ConsoleColor inputPaddingColor_ = ConsoleColor::LightGray;
 
 	// Back/Home 항목의 기본 표시 이름
-	jc::String defaultMenuName_ = jc::String("NO NAME");
-	jc::String backMenuName_ = jc::String("GO HOME");
-	jc::String homeMenuName_ = jc::String("GO BACK");
+	jc::String defaultMenuName_ = jc::String(_T("NO NAME"));
+	jc::String backMenuName_ = jc::String(_T("GO HOME"));
+	jc::String homeMenuName_ = jc::String(_T("GO BACK"));
 
 	// 콜백 실행 후 자동으로 "아무 키나 눌러서 계속하세요..." 출력
 	bool pressAnyKeyAfterCallback_ = false;

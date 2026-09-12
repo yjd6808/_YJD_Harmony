@@ -44,14 +44,14 @@ TEST(WaitHandleTest, WaitHandle) {
 
     handles.ForEach([](WaitHandle& handle) { handle.Reset(); });
     auto wakeup = WaitHandle::WaitAny(handles);
-    EXPECT_TRUE(wakeup->Name() == "A");
+    EXPECT_TRUE(wakeup->Name() == _T("A"));
     wakeup->Reset();
 
-    EXPECT_TRUE(WaitHandle::WaitAny(handles)->Name() == "F");
+    EXPECT_TRUE(WaitHandle::WaitAny(handles)->Name() == _T("F"));
     WaitHandle movedHandle(Move(handles[0]));
 
-    EXPECT_TRUE(movedHandle.Name() == "A");
-    EXPECT_TRUE(handles[0].Name().IsNull());
+    EXPECT_TRUE(movedHandle.Name() == _T("A"));
+    EXPECT_TRUE(handles[0].Name().IsEmpty());
     th.join();
 }
 

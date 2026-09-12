@@ -270,7 +270,7 @@ inline StrForBench::StrForBench(const char* _pStr, const int _capacity)
 		return;
 	}
 
-	const int length = StringUtil::Length(_pStr);
+	const int length = StringUtilT::Length(_pStr);
 	if (length == 0)
 	{
 		// 빈 문자열은 capacity 힌트와 무관하게 SSO에 둔다 (힙 할당 0회).
@@ -575,7 +575,7 @@ inline void StrForBench::Append(const char* _pStr)
 		throw NullPointerException("추가하고자 하는 문자열이 nullptr 입니다.");
 	}
 
-	const int iStrLen = StringUtil::Length(_pStr);
+	const int iStrLen = StringUtilT::Length(_pStr);
 	const int iDstLen = Len() + iStrLen;
 	ResizeIfNeeded(iDstLen);
 
@@ -642,7 +642,7 @@ inline void StrForBench::Append(StrForBench&& _str)
 
 inline void StrForBench::Insert(const int _idx, const char* _pStr)
 {
-	const int iLen = StringUtil::Length(_pStr);
+	const int iLen = StringUtilT::Length(_pStr);
 
 	if (iLen == 0)
 	{
@@ -732,7 +732,7 @@ inline int StrForBench::Compare(const StrForBench& _str) const
 inline int StrForBench::Compare(const char* _str, const int _strLen) const
 {
 	const int len = Len();
-	const int iStrLen = _strLen == -1 ? StringUtil::Length(_str) : _strLen;
+	const int iStrLen = _strLen == -1 ? StringUtilT::Length(_str) : _strLen;
 	const char* pSrc = SafeSource();
 
 	while (*pSrc != NULL && *_str != NULL)
@@ -757,7 +757,7 @@ inline int StrForBench::Compare(const char* _str, const int _strLen) const
 inline Vector<int, CDefaultAllocator> StrForBench::FindAll(int _startIdx, int _endIdx, const char* _pStr, bool _caseSensitive /*= true*/) const
 {
 	Vector<int, CDefaultAllocator> offsets;
-	const int iStrLen = StringUtil::Length(_pStr);
+	const int iStrLen = StringUtilT::Length(_pStr);
 
 	if (iStrLen == 0)
 	{
@@ -794,7 +794,7 @@ inline Vector<int, CDefaultAllocator> StrForBench::FindAll(const StrForBench& _s
 
 inline int StrForBench::Find(int _startIdx, int _endIdx, const char* _pStr, bool _caseSensitive /*= true*/) const
 {
-	return StringUtil::Find(Data(), Len(), _startIdx, _endIdx, _pStr, _caseSensitive);
+	return StringUtilT::Find(Data(), Len(), _startIdx, _endIdx, _pStr, _caseSensitive);
 }
 
 inline int StrForBench::Find(int _startIdx, const char* _pStr, bool _caseSensitive /*= true*/) const
@@ -819,7 +819,7 @@ inline int StrForBench::Find(int _startIdx, const StrForBench& _str, bool _caseS
 
 inline int StrForBench::FindReverse(int _startIdx, int _endIdx, const char* _pStr, bool _caseSensitive /*= true*/) const
 {
-	const int iFindStrLen = StringUtil::Length(_pStr);
+	const int iFindStrLen = StringUtilT::Length(_pStr);
 	const int iSrcLen = _endIdx - _startIdx + 1;
 
 	if (iFindStrLen == 0)
@@ -913,7 +913,7 @@ inline int StrForBench::Count(const int _startIdx, const int _endIdx, const char
 	ThrowIfNotInitialized();
 	ThrowIfInvalidRangeIndex(_startIdx, _endIdx);
 
-	const int iStrLen = StringUtil::Length(_pStr);
+	const int iStrLen = StringUtilT::Length(_pStr);
 
 	int iOffset = _startIdx;
 	int iCount = 0;
@@ -933,7 +933,7 @@ inline int StrForBench::Count(const int _startIdx, const int _endIdx, const StrF
 
 inline int StrForBench::Replace(const char* _pFrom, const StrForBench& _to, bool _caseSensitive /*= true*/)
 {
-	return Replace(Find(_pFrom, _caseSensitive), StringUtil::Length(_pFrom), _to);
+	return Replace(Find(_pFrom, _caseSensitive), StringUtilT::Length(_pFrom), _to);
 }
 
 inline int StrForBench::Replace(const StrForBench& _from, const StrForBench& _to, bool _caseSensitive /*= true*/)
@@ -994,7 +994,7 @@ inline int StrForBench::Replace(int _offset, int _length, const StrForBench& _to
 
 inline int StrForBench::Replace(int _offset, const char* _pFrom, const StrForBench& _to, bool _caseSensitive /*= true*/)
 {
-	return Replace(Find(_offset, _pFrom, _caseSensitive), StringUtil::Length(_pFrom), _to);
+	return Replace(Find(_offset, _pFrom, _caseSensitive), StringUtilT::Length(_pFrom), _to);
 }
 
 inline int StrForBench::Replace(int _offset, const StrForBench& _from, const StrForBench& _to, bool _caseSensitive /*= true*/)
@@ -1039,7 +1039,7 @@ inline void StrForBench::Format(const char* _format, ...)
 
 inline void StrForBench::ReplaceAll(const char* _pFrom, const char* _pTo, bool _caseSensitive /*= true*/)
 {
-	const int iFromLen = StringUtil::Length(_pFrom);
+	const int iFromLen = StringUtilT::Length(_pFrom);
 
 	if (iFromLen == 0)
 	{
@@ -1096,7 +1096,7 @@ inline StrForBench StrForBench::SubStr(int _startIdx, int _count) const
 
 inline Tuple<char*, int, int> StrForBench::GetRangeUnsafe(const int _startIdx, const int _endIdx) const
 {
-	return StringUtil::GetRangeUnsafe(Data(), Len(), _startIdx, _endIdx);
+	return StringUtilT::GetRangeUnsafe(Data(), Len(), _startIdx, _endIdx);
 }
 
 inline Vector<StrForBench> StrForBench::Split(const char* _delimiter, const bool _includeEmpty) const
@@ -1111,7 +1111,7 @@ inline Vector<StrForBench> StrForBench::Split(const char* _delimiter, const bool
 	}
 
 	const int len = Len();
-	const int iDelimiterLen = StringUtil::Length(_delimiter);
+	const int iDelimiterLen = StringUtilT::Length(_delimiter);
 	if (iOffset - 1 < 0)
 	{
 		if (_includeEmpty)
@@ -1343,7 +1343,7 @@ inline StrForBench& StrForBench::operator=(StrForBench&& _other) noexcept
 
 inline StrForBench& StrForBench::operator=(const char* _other)
 {
-	const int iToLen = StringUtil::Length(_other);
+	const int iToLen = StringUtilT::Length(_other);
 	const int iExpectedCapaity = iToLen + 10;
 
 	if (iExpectedCapaity > Cap())
@@ -1447,102 +1447,102 @@ inline void StrForBench::ThrowIfInvalidIndex(const int _idx) const
 
 inline _s8 StrForBench::ToInt8(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_s8>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtilT::ToNumber<_s8>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 inline _u8 StrForBench::ToUInt8(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_u8>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtilT::ToNumber<_u8>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 inline _s16 StrForBench::ToInt16(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_s16>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtilT::ToNumber<_s16>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 inline _u16 StrForBench::ToUInt16(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_u16>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtilT::ToNumber<_u16>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 inline _s32 StrForBench::ToInt32(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_s32>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtilT::ToNumber<_s32>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 inline _u32 StrForBench::ToUInt32(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_u32>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtilT::ToNumber<_u32>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 inline _s64 StrForBench::ToInt64(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_s64>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtilT::ToNumber<_s64>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 inline _u64 StrForBench::ToUInt64(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_u64>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtilT::ToNumber<_u64>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 inline _f32 StrForBench::ToFloat(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_f32>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtilT::ToNumber<_f32>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 inline _f64 StrForBench::ToDouble(bool _ignoreLeadingZero) const
 {
-	return StringUtil::ToNumber<_f64>(SafeSource(), nullptr, _ignoreLeadingZero);
+	return StringUtilT::ToNumber<_f64>(SafeSource(), nullptr, _ignoreLeadingZero);
 }
 
 inline bool StrForBench::TryToInt8(OUT _s8& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtilT::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 inline bool StrForBench::TryToUInt8(OUT _u8& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtilT::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 inline bool StrForBench::TryToInt16(OUT _s16& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtilT::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 inline bool StrForBench::TryToUInt16(OUT _u16& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtilT::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 inline bool StrForBench::TryToInt32(OUT _s32& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtilT::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 inline bool StrForBench::TryToUInt32(OUT _u32& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtilT::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 inline bool StrForBench::TryToInt64(OUT _s64& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtilT::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 inline bool StrForBench::TryToUInt64(OUT _u64& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtilT::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 inline bool StrForBench::TryToFloat(OUT _f32& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtilT::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 inline bool StrForBench::TryToDouble(OUT _f64& _outValue, bool _ignoreLeadingZero) const
 {
-	return StringUtil::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
+	return StringUtilT::TryToNumber(_outValue, SafeSource(), _ignoreLeadingZero);
 }
 
 inline char StrForBench::PopBack()

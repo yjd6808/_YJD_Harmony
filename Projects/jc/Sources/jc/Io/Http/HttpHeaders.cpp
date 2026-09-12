@@ -57,7 +57,7 @@ void HttpHeaders::Clear()
 _s64 HttpHeaders::GetContentLength() const
 {
 	jc::String value;
-	if (!TryGet("content-length", OUT value))
+	if (!TryGet(_T("content-length"), OUT value))
 		return -1;
 	_s64 length = -1;
 	if (!value.TryToInt64(OUT length))

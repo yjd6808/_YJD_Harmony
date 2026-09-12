@@ -135,7 +135,7 @@ jc::DateTime MysqlQuerySelect::ParseRawStringToDateTime(const char* _pRawString)
 	DateTime parsed;
 
 	char dateFormatBuffer[64];
-	int decimalPointPos = StringUtil::FindCharReverse(_pRawString, '.');
+	int decimalPointPos = StringUtilT::FindCharReverse(_pRawString, '.');
 	int decimalPlaceCount = 0;
 
 	if (decimalPointPos != -1)
@@ -151,7 +151,7 @@ jc::DateTime MysqlQuerySelect::ParseRawStringToDateTime(const char* _pRawString)
 	if (decimalPlaceCount > 6)
 		decimalPlaceCount = 6;
 
-	StringUtil::FormatBuffer(dateFormatBuffer, 64, DATE_FORMAT, DECIMAL_POINT_FORMATS[decimalPlaceCount]);
+	StringUtilT::FormatBuffer(dateFormatBuffer, 64, DATE_FORMAT, DECIMAL_POINT_FORMATS[decimalPlaceCount]);
 	DateTime::TryParse(parsed, dateFormatBuffer, _pRawString);
 	jc_assert_msg(DateTime::LastError() == 0, "소수점 날짜 포맷 파싱수행중 오류가 발생하였습니다. (%s)", DateTime::LastErrorMessage());
 	return parsed;
@@ -249,7 +249,7 @@ _s8 MysqlQuerySelect::GetS8(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0;
-	return jc::StringUtil::ToNumber<_s8>(pRawString);
+	return jc::StringUtilT::ToNumber<_s8>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -257,7 +257,7 @@ _u8 MysqlQuerySelect::GetU8(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0;
-	return jc::StringUtil::ToNumber<_u8>(pRawString);
+	return jc::StringUtilT::ToNumber<_u8>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -265,7 +265,7 @@ _s16 MysqlQuerySelect::GetS16(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0;
-	return jc::StringUtil::ToNumber<_s16>(pRawString);
+	return jc::StringUtilT::ToNumber<_s16>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -273,7 +273,7 @@ _u16 MysqlQuerySelect::GetU16(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0;
-	return jc::StringUtil::ToNumber<_u16>(pRawString);
+	return jc::StringUtilT::ToNumber<_u16>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -281,7 +281,7 @@ _s32 MysqlQuerySelect::GetS32(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0;
-	return jc::StringUtil::ToNumber<_s32>(pRawString);
+	return jc::StringUtilT::ToNumber<_s32>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -289,7 +289,7 @@ _u32 MysqlQuerySelect::GetU32(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0;
-	return jc::StringUtil::ToNumber<_u32>(pRawString);
+	return jc::StringUtilT::ToNumber<_u32>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -297,7 +297,7 @@ _s64 MysqlQuerySelect::GetS64(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0;
-	return jc::StringUtil::ToNumber<_s64>(pRawString);
+	return jc::StringUtilT::ToNumber<_s64>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -305,7 +305,7 @@ _u64 MysqlQuerySelect::GetU64(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0;
-	return jc::StringUtil::ToNumber<_u64>(pRawString);
+	return jc::StringUtilT::ToNumber<_u64>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -313,7 +313,7 @@ _f32 MysqlQuerySelect::GetFloat(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0.0f;
-	return jc::StringUtil::ToNumber<_f32>(pRawString);
+	return jc::StringUtilT::ToNumber<_f32>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -321,7 +321,7 @@ _f64 MysqlQuerySelect::GetDouble(int _fieldIdx)
 {
 	const char* pRawString = GetRawString(_fieldIdx);
 	if (pRawString == nullptr) return 0.0;
-	return jc::StringUtil::ToNumber<_f64>(pRawString);
+	return jc::StringUtilT::ToNumber<_f64>(pRawString);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

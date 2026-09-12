@@ -15,9 +15,9 @@
 
 TEST(FileStreamTest, BasicTest) {
 
-	CRuntime::FileDelete("a.dat");
-	CRuntime::FileDelete("b.dat");
-	CRuntime::FileDelete("c.dat");
+	CRuntime::FileDelete(_T("a.dat"));
+	CRuntime::FileDelete(_T("b.dat"));
+	CRuntime::FileDelete(_T("c.dat"));
 
 	_u8 wbuff[] { 1, 2, 3, 4, 5 };
 	_u8 wbuff2[] {  6, 7, 8, 9, 10 };
@@ -26,12 +26,12 @@ TEST(FileStreamTest, BasicTest) {
 
 	//  ===================== Write =========================================
 	{
-		EXPECT_THROW(FileStream("a.dat", FileAccess::eWrite, FileMode::eOpen), RuntimeException);		// 파일이 없으므로 오류
+		EXPECT_THROW(FileStream(_T("a.dat"), FileAccess::eWrite, FileMode::eOpen), RuntimeException);		// 파일이 없으므로 오류
 	}
 
 	{
 		
-		FileStream stream("a.dat", FileAccess::eWrite, FileMode::eCreate);	// 정상 (파일 생성)
+		FileStream stream(_T("a.dat"), FileAccess::eWrite, FileMode::eCreate);	// 정상 (파일 생성)
 		stream.Write(wbuff, 0, 5);
 		stream.Write(wbuff, 0, 5);
 		stream.Write(wbuff, 0, 5);
@@ -40,7 +40,7 @@ TEST(FileStreamTest, BasicTest) {
 	}
 
 	{
-		FileStream stream("c.dat", FileAccess::eWrite, FileMode::eAppend);	// 정상 (파일 생성)
+		FileStream stream(_T("c.dat"), FileAccess::eWrite, FileMode::eAppend);	// 정상 (파일 생성)
 		stream.Write(wbuff, 0, 5);
 		stream.Write(wbuff, 0, 5);
 		stream.Write(wbuff, 0, 5);
@@ -51,7 +51,7 @@ TEST(FileStreamTest, BasicTest) {
 	//  ===================== Read =========================================
 	{
 		Arrays::Fill(rbuff, (_u8)0);
-		FileStream stream("a.dat", FileAccess::eRead, FileMode::eOpen);		// 정상 (a.dat을 위에서 만들었으므로)
+		FileStream stream(_T("a.dat"), FileAccess::eRead, FileMode::eOpen);		// 정상 (a.dat을 위에서 만들었으므로)
 		int offset = 0;
 		EXPECT_EQ(stream.Read(rbuff, offset, 5), 5); offset += 5;
 
@@ -72,7 +72,7 @@ TEST(FileStreamTest, BasicTest) {
 	}
 
 	{
-		EXPECT_THROW(FileStream("b.dat", FileAccess::eRead, FileMode::eOpen), RuntimeException);		// 파일이 없으므로 오류
+		EXPECT_THROW(FileStream(_T("b.dat"), FileAccess::eRead, FileMode::eOpen), RuntimeException);		// 파일이 없으므로 오류
 	}
 
 
@@ -80,12 +80,12 @@ TEST(FileStreamTest, BasicTest) {
 
 
 	{
-		EXPECT_THROW(FileStream("b.dat", FileAccess::eReadWrite, FileMode::eOpen), RuntimeException);		// 파일이 없으므로 오류	
+		EXPECT_THROW(FileStream(_T("b.dat"), FileAccess::eReadWrite, FileMode::eOpen), RuntimeException);		// 파일이 없으므로 오류	
 	}
 
 	{
 		Arrays::Fill(rbuff, (_u8)0);
-		FileStream stream("a.dat", FileAccess::eReadWrite, FileMode::eOpen);		// 정상 (a.dat을 위에서 만들었으므로)
+		FileStream stream(_T("a.dat"), FileAccess::eReadWrite, FileMode::eOpen);		// 정상 (a.dat을 위에서 만들었으므로)
 		EXPECT_EQ(stream.GetLength(), 20);	// 위에서 20바이트만큼 썼으므로
 		EXPECT_EQ(stream.GetOffset(), 0);	// 아직 아무런 작업을 하지 않았으므로
 		stream.Write(wbuff2, 0, 5);
@@ -120,7 +120,7 @@ TEST(FileStreamTest, BasicTest) {
 	}
 
 	{
-		FileStream stream("a.dat", FileAccess::eReadWrite, FileMode::eAppend);	// 새로 덮어쒸워서 생성했으므로 모두 0
+		FileStream stream(_T("a.dat"), FileAccess::eReadWrite, FileMode::eAppend);	// 새로 덮어쒸워서 생성했으므로 모두 0
 		EXPECT_EQ(stream.GetLength(), 30);
 		EXPECT_EQ(stream.GetOffset(), 30);
 
@@ -132,7 +132,7 @@ TEST(FileStreamTest, BasicTest) {
 	}
 
 	{
-		FileStream stream("a.dat", FileAccess::eReadWrite, FileMode::eCreate);	// 새로 덮어쒸워서 생성했으므로 모두 0
+		FileStream stream(_T("a.dat"), FileAccess::eReadWrite, FileMode::eCreate);	// 새로 덮어쒸워서 생성했으므로 모두 0
 		EXPECT_EQ(stream.GetLength(), 0);
 		EXPECT_EQ(stream.GetOffset(), 0);
 		stream.Write(wbuff2, 0, 5);
@@ -144,7 +144,7 @@ TEST(FileStreamTest, BasicTest) {
 	}
 
 	{
-		FileStream stream("a.dat", FileAccess::eReadWrite, FileMode::eCreate);	// 새로 덮어쒸워서 생성했으므로 모두 0
+		FileStream stream(_T("a.dat"), FileAccess::eReadWrite, FileMode::eCreate);	// 새로 덮어쒸워서 생성했으므로 모두 0
 		stream.WriteInt16(12345);
 		stream.WriteInt16(23456);
 		stream.WriteInt16(30102);
@@ -152,19 +152,20 @@ TEST(FileStreamTest, BasicTest) {
 		EXPECT_EQ(stream.ReadInt16(), 12345);
 		EXPECT_EQ(stream.ReadInt16(), 23456);
 		EXPECT_EQ(stream.ReadInt16(), 30102);
-		stream.WriteString("abcdefg", true);
+		stream.WriteString(_T("abcdefg"), true);
 		stream.Close();
 	}
 
 	{
-		FileStream stream("a.dat", FileAccess::eReadWrite, FileMode::eOpen);	
+		FileStream stream(_T("a.dat"), FileAccess::eReadWrite, FileMode::eOpen);	
 		stream.Seek(6);
-		EXPECT_TRUE(stream.ReadString() == "abcdefg");
+		EXPECT_TRUE(stream.ReadString() == _T("abcdefg"));
 	}
 
 
-	CRuntime::FileDelete("a.dat");
-	CRuntime::FileDelete("b.dat");
+	CRuntime::FileDelete(_T("a.dat"));
+	CRuntime::FileDelete(_T("b.dat"));
+	CRuntime::FileDelete(_T("c.dat"));
 }
 
 #endif

@@ -300,10 +300,10 @@ TEST(VectorTest, MemoryPool) {
 // 생성자 테스트
 TEST(VectorTest, SizeInit) {
 	LeakCheck;
-	Vector<String> v(30, "a" );
+	Vector<String> v(30, _T("a") );
 
 	for (int i = 0; i < 30; ++i) {
-		EXPECT_TRUE(v[i] == "a");
+		EXPECT_TRUE(v[i] == _T("a"));
 	}
 }
 

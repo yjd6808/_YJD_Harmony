@@ -89,7 +89,7 @@ public:
 
 		if (AllocatedCount != 0)
 		{
-			_LogWarn_("아직 반환되지 않은 데이터가 존재합니다.");
+			_LogWarn_(_T("아직 반환되지 않은 데이터가 존재합니다."));
 		}
 
 		T* pCur = nullptr;
@@ -110,7 +110,7 @@ public:
 
 		if (totalDeletedCount != TotalCount)
 		{
-			_LogWarn_("오브젝트풀의 데이터가 모두 제대로 삭제되지 않았습니다.");
+			_LogWarn_(_T("오브젝트풀의 데이터가 모두 제대로 삭제되지 않았습니다."));
 		}
 	}
 
@@ -168,7 +168,7 @@ public:
 	{
 		if (_pObject == nullptr)
 		{
-			_LogWarn_("삭제할려는 %s 오브젝트 풀 객체가 nullptr입니다.", typeid(T).name());
+			_LogWarn_(_T("삭제할려는 %hs 오브젝트 풀 객체가 nullptr입니다."), typeid(T).name());
 			return;
 		}
 
@@ -177,7 +177,7 @@ public:
 		JC_LIB_LOCK_GUARD(Lock);
 		if (pInst->pNext_)
 		{
-			_LogWarn_("풀에서 관리중인 객체를 삭제할려고 시도했습니다.");
+			_LogWarn_(_T("풀에서 관리중인 객체를 삭제할려고 시도했습니다."));
 			return;
 		}
 

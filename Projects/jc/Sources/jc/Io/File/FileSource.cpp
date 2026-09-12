@@ -21,7 +21,7 @@ FileSource::~FileSource()
 //////////////////////////////////////////////////////////////////////////////////////////
 bool FileSource::Open(OUT IOSourceInfo& _info)
 {
-	hFile_ = CRuntime::FileOpen(path_.Source(), "rb");
+	hFile_ = CRuntime::FileOpen(path_.Source(), _T("rb"));
 	if (hFile_ == nullptr)
 	{
 		lastError_ = ieOpenFailed;

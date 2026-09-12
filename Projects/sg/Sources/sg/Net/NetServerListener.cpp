@@ -85,7 +85,7 @@ void NetServerListener::OnReceivedCmd(Session* _pReceiver, ICommand* _pRecvCmd)
 		_LogWarn_("%c %s %sB %s(%d) Parse Faliled",
 			TransmissionName(Transmission::Recv),
 			TransportProtocolName(_pReceiver->Protocol()),
-			StringUtil::FillLeft(_pRecvCmd->GetLength(), ' ', 4).Source(),
+			StringUtilT::FillLeft(_pRecvCmd->GetLength(), ' ', 4).Source(),
 			pCommandName,
 			id);
 	}

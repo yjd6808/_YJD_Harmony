@@ -210,11 +210,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\jc\Primitives\Span.cpp" />
-    <ClCompile Include="..\Sources\jc\Primitives\String.cpp" />
     <ClCompile Include="..\Sources\jc\Primitives\Uri.cpp" />
     <ClCompile Include="..\Sources\jc\Primitives\StringTokenizer.cpp" />
+    <ClCompile Include="..\Sources\jc\Primitives\StringConvert.cpp" />
     <ClCompile Include="..\Sources\jc\Primitives\StringUtil.cpp" />
-    <ClCompile Include="..\Sources\jc\Primitives\StringView.cpp" />
     <ClCompile Include="..\Sources\jc\Random.cpp" />
     <ClCompile Include="..\Sources\jc\Stream.cpp">
       <SubType>
@@ -777,27 +776,27 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">

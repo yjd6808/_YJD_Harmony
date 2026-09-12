@@ -44,7 +44,7 @@ public:
 			// 2번 IOCP가 워커1, 워커2라는 이름으로 이벤트를 생성하고 join을하면 WaitForMultipleObjects가 곧바로 기다리지도 않고 정상 리턴을 해버림.
 			// 다시 재빌하드니까 제대로됨. 뭐지? 이룸문제가 아닌건가
 
-			String workerName = StringUtil::Format("%s 워커(%d)", typeid(TWorker).name(), i);
+			String workerName = StringUtilT::Format("%s 워커(%d)", typeid(TWorker).name(), i);
 
 			pManager->workers_.PushBack(dbg_new TWorker(Forward<Args>(_args)...));
 			pManager->handles_.EmplaceBack(false, workerName.Source());

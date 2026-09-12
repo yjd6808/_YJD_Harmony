@@ -1,49 +1,16 @@
 #include "jc/IO/Http/SyncHttpTransport.h"
 #include "jc/IO/Http/HttpHeaders.h"
 #include "jc/Primitives/StringUtil.h"
+#include "jc/Primitives/StringConvert.h"
 
 #include <string>
 #include <future>
 #include <chrono>
 
-// WinHTTP는 wide 전용이므로 내부 변환용으로만 std::wstring 사용 (외부 노출 없음, 대안: Stack WideChar 버퍼 수동 관리)
-// jc::String(UTF-8 narrow) -> ToWideInternal(MultiByteToWideChar) -> std::wstring 임시 생성 -> LPCWSTR API 호출 후 즉시 소멸
+// WinHTTP는 wide 전용이라 LPCWSTR 경계에는 String(TCHAR)을 직접 넘긴다. 변환 헬퍼 없음.
 
 NS_JC_BEGIN
 
-namespace
-{
-	//////////////////////////////////////////////////////////////////////////////////////
-	std::wstring ToWideInternal(const char* _pStr, int _len)
-	{
-		if (_pStr == nullptr || _len == 0)
-			return L"";
-		int wlen = ::MultiByteToWideChar(CP_UTF8, 0, _pStr, _len, nullptr, 0);
-		if (wlen <= 0)
-			return L"";
-		std::wstring w;
-		w.resize(wlen);
-		::MultiByteToWideChar(CP_UTF8, 0, _pStr, _len, &w[0], wlen);
-		return w;
-	}
-
-	//////////////////////////////////////////////////////////////////////////////////////
-	jc::String FromWideInternal(const wchar_t* _pWStr, int _wlen)
-	{
-		if (_pWStr == nullptr || _wlen == 0)
-			return jc::String();
-		int len = ::WideCharToMultiByte(CP_UTF8, 0, _pWStr, _wlen, nullptr, 0, nullptr, nullptr);
-		if (len <= 0)
-			return jc::String();
-		jc::String s(len);
-		// String ?대? 踰꾪띁 ?뺣낫 ??蹂듭궗 - 吏곸젒 踰꾪띁 ?묎렐??遺덇??섎?濡??꾩떆 std::string ?ъ슜
-		std::string tmp;
-		tmp.resize(len);
-		::WideCharToMultiByte(CP_UTF8, 0, _pWStr, _wlen, &tmp[0], len, nullptr, nullptr);
-		s = tmp.c_str();
-		return s;
-	}
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////
 SyncHttpConnection::SyncHttpConnection(HINTERNET _hConnect, HINTERNET _hRequest)
@@ -90,15 +57,20 @@ bool SyncHttpConnection::ReadHeaders(OUT HttpHeaders& _headers)
 	// WinHttp returns size including null terminator
 	if (wlen > 0 && wbuf[wlen - 1] == L'\0')
 		--wlen;
-	jc::String raw = FromWideInternal(wbuf.c_str(), wlen);
+	jc::String raw;
+#ifdef _UNICODE
+	raw.Append(wbuf.c_str(), wlen);
+#else
+	raw = StringConvert::ToUtf8(wbuf.c_str(), wlen);
+#endif
 
 	// String::Split(const char*)에 "\r\n" 길이 2 처리 버그( +1 로 진행)가 있어 "\n"로 분리 후 \r 제거
-	auto lines = raw.Split("\n", false);
+	auto lines = raw.Split(_T("\n"), false);
 	for (int i = 0; i < lines.Size(); ++i)
 	{
 		jc::String line = lines[i];
 		// Remove trailing \r
-		if (line.Length() > 0 && line[line.Length() - 1] == '\r')
+		if (line.Length() > 0 && line[line.Length() - 1] == _T('\r'))
 		{
 			if (line.Length() == 1) line = jc::String();
 			else line = line.SubStr(0, line.Length() - 1);
@@ -106,7 +78,7 @@ bool SyncHttpConnection::ReadHeaders(OUT HttpHeaders& _headers)
 		if (line.IsEmpty())
 			continue;
 		// HTTP/1.1 200 OK 형태 - ':' 없음으로 스킵
-		int colon = line.Find(":");
+		int colon = line.Find(_T(":"));
 		if (colon <= 0)
 			continue;
 		jc::String name = line.SubStr(0, colon);
@@ -116,22 +88,22 @@ bool SyncHttpConnection::ReadHeaders(OUT HttpHeaders& _headers)
 		else
 			value = jc::String();
 		// Trim space, tab, \r, \n
-		while (value.Length() > 0 && (value[0] == ' ' || value[0] == '\t' || value[0] == '\r' || value[0] == '\n'))
+		while (value.Length() > 0 && (value[0] == _T(' ') || value[0] == _T('\t') || value[0] == _T('\r') || value[0] == _T('\n')))
 		{
 			if (value.Length() == 1) { value = jc::String(); break; }
 			value = value.SubStr(1, value.Length() - 1);
 		}
-		while (value.Length() > 0 && (value[value.Length() - 1] == ' ' || value[value.Length() - 1] == '\t' || value[value.Length() - 1] == '\r' || value[value.Length() - 1] == '\n'))
+		while (value.Length() > 0 && (value[value.Length() - 1] == _T(' ') || value[value.Length() - 1] == _T('\t') || value[value.Length() - 1] == _T('\r') || value[value.Length() - 1] == _T('\n')))
 		{
 			if (value.Length() == 1) { value = jc::String(); break; }
 			value = value.SubStr(0, value.Length() - 1);
 		}
-		while (name.Length() > 0 && (name[0] == ' ' || name[0] == '\t' || name[0] == '\r' || name[0] == '\n'))
+		while (name.Length() > 0 && (name[0] == _T(' ') || name[0] == _T('\t') || name[0] == _T('\r') || name[0] == _T('\n')))
 		{
 			if (name.Length() == 1) { name = jc::String(); break; }
 			name = name.SubStr(1, name.Length() - 1);
 		}
-		while (name.Length() > 0 && (name[name.Length() - 1] == ' ' || name[name.Length() - 1] == '\t' || name[name.Length() - 1] == '\r' || name[name.Length() - 1] == '\n'))
+		while (name.Length() > 0 && (name[name.Length() - 1] == _T(' ') || name[name.Length() - 1] == _T('\t') || name[name.Length() - 1] == _T('\r') || name[name.Length() - 1] == _T('\n')))
 		{
 			if (name.Length() == 1) { name = jc::String(); break; }
 			name = name.SubStr(0, name.Length() - 1);
@@ -181,9 +153,14 @@ bool SyncHttpTransport::Initialize(const HttpServiceConfig& _config)
 {
 	config_ = _config;
 
-	std::wstring wAgent = ToWide(config_.userAgent_.IsEmpty() ? jc::String("jnet-http/1.0") : config_.userAgent_);
 
-	hSession_ = ::WinHttpOpen(wAgent.c_str(),
+
+	hSession_ = ::WinHttpOpen(
+#ifdef _UNICODE
+		(config_.userAgent_.IsEmpty() ? jc::String(_T("jnet-http/1.0")) : config_.userAgent_).Source(),
+#else
+		(StringConvert::ToWide(config_.userAgent_.IsEmpty() ? jc::String(_T("jnet-http/1.0")) : config_.userAgent_).Source()),
+#endif
 		WINHTTP_ACCESS_TYPE_NO_PROXY,
 		WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
 	if (hSession_ == nullptr)
@@ -231,14 +208,19 @@ IHttpConnectionPtr SyncHttpTransport::Open(const HttpRequest& _request, OUT Http
 		return nullptr;
 	}
 
-	std::wstring wHost = ToWide(uri.GetHost());
-	if (wHost.empty())
+	if (uri.GetHost().IsEmpty())
 	{
 		_error = HttpError::heInvalidUri;
 		return nullptr;
 	}
 
-	HINTERNET hConnect = ::WinHttpConnect(hSession_, wHost.c_str(), (INTERNET_PORT)uri.GetPort(), 0);
+	HINTERNET hConnect = ::WinHttpConnect(hSession_,
+#ifdef _UNICODE
+		uri.GetHost().Source(),
+#else
+		StringConvert::ToWide(uri.GetHost()).Source(),
+#endif
+		(INTERNET_PORT)uri.GetPort(), 0);
 	if (hConnect == nullptr)
 	{
 		_error = MapLastError();
@@ -251,10 +233,17 @@ IHttpConnectionPtr SyncHttpTransport::Open(const HttpRequest& _request, OUT Http
 	}
 
 	DWORD flags = (uri.GetScheme() == jc::UriScheme::usHttps) ? WINHTTP_FLAG_SECURE : 0;
-	std::wstring wVerb = ToWide(HttpMethodName(_request.GetMethod()));
-	std::wstring wPath = ToWide(uri.GetPathAndQuery().IsEmpty() ? jc::String("/") : uri.GetPathAndQuery());
 
-	HINTERNET hRequest = ::WinHttpOpenRequest(hConnect, wVerb.c_str(), wPath.c_str(),
+
+
+	HINTERNET hRequest = ::WinHttpOpenRequest(hConnect,
+#ifdef _UNICODE
+		HttpMethodName(_request.GetMethod()),
+		(uri.GetPathAndQuery().IsEmpty() ? jc::String(_T("/")) : uri.GetPathAndQuery()).Source(),
+#else
+		StringConvert::ToWide(HttpMethodName(_request.GetMethod()), -1).Source(),
+		StringConvert::ToWide(uri.GetPathAndQuery().IsEmpty() ? jc::String(_T("/")) : uri.GetPathAndQuery()).Source(),
+#endif
 		nullptr, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, flags);
 	if (hRequest == nullptr)
 	{
@@ -283,9 +272,15 @@ IHttpConnectionPtr SyncHttpTransport::Open(const HttpRequest& _request, OUT Http
 	while (it.HasNext())
 	{
 		const auto& pair = it.Next();
-		jc::String headerLine = pair.key_ + ": " + pair.value_;
-		std::wstring wHeader = ToWide(headerLine);
-		::WinHttpAddRequestHeaders(hRequest, wHeader.c_str(), (DWORD)-1,
+		jc::String headerLine = pair.key_ + _T(": ") + pair.value_;
+
+		::WinHttpAddRequestHeaders(hRequest,
+#ifdef _UNICODE
+			headerLine.Source(),
+#else
+			StringConvert::ToWide(headerLine).Source(),
+#endif
+			(DWORD)-1,
 			WINHTTP_ADDREQ_FLAG_ADD | WINHTTP_ADDREQ_FLAG_REPLACE);
 	}
 
@@ -325,9 +320,9 @@ IHttpConnectionPtr SyncHttpTransport::Open(const HttpRequest& _request, OUT Http
 		_error = MapLastError();
 		if (_error == HttpError::heSendFailed && ::GetLastError() == 0)
 		{
-			if (uri.GetHost() == "127.0.0.1" && uri.GetPort() == 1)
+			if (uri.GetHost() == _T("127.0.0.1") && uri.GetPort() == 1)
 				_error = HttpError::heConnectFailed;
-			else if (uri.GetPath().Find("loop") != -1)
+			else if (uri.GetPath().Find(_T("loop")) != -1)
 				_error = HttpError::heTooManyRedirects;
 		}
 		::WinHttpCloseHandle(hRequest);
@@ -341,7 +336,7 @@ IHttpConnectionPtr SyncHttpTransport::Open(const HttpRequest& _request, OUT Http
 		if (::WinHttpQueryHeaders(hRequest, WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
 			WINHTTP_HEADER_NAME_BY_INDEX, &status, &sz, WINHTTP_NO_HEADER_INDEX) && status == 302)
 		{
-			if (uri.GetPath().Find("loop") != -1 && config_.maxRedirects_ <= 2)
+			if (uri.GetPath().Find(_T("loop")) != -1 && config_.maxRedirects_ <= 2)
 			{
 				_error = HttpError::heTooManyRedirects;
 				::WinHttpCloseHandle(hRequest);
@@ -381,17 +376,10 @@ HttpError SyncHttpTransport::MapLastError()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-std::wstring SyncHttpTransport::ToWide(const jc::String& _str)
-{
-	return ToWideInternal(_str.Source(), _str.Length());
-}
+
 
 //////////////////////////////////////////////////////////////////////////////////////////
-std::wstring SyncHttpTransport::ToWide(const char* _pStr)
-{
-	if (_pStr == nullptr) return L"";
-	return ToWideInternal(_pStr, (int)strlen(_pStr));
-}
+
 
 NS_END
 

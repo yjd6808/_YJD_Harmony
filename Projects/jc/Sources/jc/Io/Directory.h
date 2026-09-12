@@ -8,12 +8,13 @@
 
 #pragma once
 
+#include "jc/Primitives/String.h"
+
 NS_JC_BEGIN
 
 template <typename, typename>
 class Vector;
 class CDefaultAllocator;
-class String;
 class Directory
 {
 public:
