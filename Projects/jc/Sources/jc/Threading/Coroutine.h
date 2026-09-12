@@ -11,6 +11,7 @@
 
 #include "jc/Container/LinkedList.h"
 #include "jc/Container/TreeMap.h"
+#include "jc/Primitives/String.h"
 
 #include <type_traits>
 #include <utility>
@@ -415,8 +416,6 @@ extern "C"
 
 	// [코루틴-07] 마지막 코루틴 실패 원인을 돌려주고 지운다. (스레드별)
 	CoError		CPP_CALL CoGetLastError();
-	// [코루틴-07] CoError를 사람이 읽을 수 있는 문자열로 변환한다.
-	const char* CPP_CALL CoErrorString(CoError _err);
 
 	// [코루틴-05] resume 전에 컨텍스트가 유효한지 검사한다.
 	// - 다른 스레드, 잘못된 상태, 자기 자신이면 false를 돌려주고 원인을 남긴다.
@@ -444,6 +443,9 @@ extern "C"
 	//   호출해 overflowed_를 찍는다. (CoResetStackOverflow의 전제 조건은 아님)
 	void		CPP_CALL CoNoteStackOverflow();
 }
+
+// [코루틴-07] CoError를 사람이 읽을 수 있는 문자열로 변환한다.
+jc::String	CPP_CALL CoErrorString(CoError _err);
 
 // [코루틴-11] 스위치 앞뒤 로직은 C++ 인라인에 두고 asm은 순수 레지스터 교체만 한다.
 // - 이전에는 yield→resume 한 바퀴에 C 호출 2~4회(TLS+프롤로그)가 붙었다.

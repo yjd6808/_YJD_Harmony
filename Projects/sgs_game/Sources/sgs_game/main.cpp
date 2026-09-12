@@ -1,6 +1,7 @@
 ﻿#include "Core.h"
 
 #include <jc/Random.h>
+#include <jc/Primitives/StringConvert.h>
 
 #include <sg/LogSpecifier.h>
 #include <sgs/ServerCore.h>
@@ -18,7 +19,7 @@ int main(int _argc, char* _pArgv[])
 	
 	Env::InitArgs(_argc, _pArgv);
 	int gameServerType = parse_args(_argc, _pArgv);
-	const String logSpecifier = StringUtil::Format(LOG_SPECIFIER_GAME, GameServerType::Name[gameServerType]);
+	const String logSpecifier = StringUtil::Format(LOG_SPECIFIER_GAME, StringConvert::FromUtf8(GameServerType::Name[gameServerType]));
 
     Winsock::Initialize(2, 2);
     Console::SetSize(800, 400);

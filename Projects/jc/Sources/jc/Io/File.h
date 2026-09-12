@@ -39,9 +39,12 @@ public:
 	static void WriteAllText(const char* _pContent, int _contentLength, const char* _pPath);
 	static void WriteAllText(const String& _content, const char* _pPath);
 	static void WriteAllText(const char* _pContent, int _contentLength, const String& _path);
+	static void WriteAllText(const String& _content, const String& _path);
 	static void WriteAllBytes(const _u8* _pContent, int _contentLength, const char* _pPath);
+	static void WriteAllBytes(const _u8* _pContent, int _contentLength, const String& _path);
 
 	static String ReadAllText(const char* _pPath);
+	static String ReadAllText(const String& _path);
 
 	template <_u32 ContentLength>
 	static void WriteAllText(const char (&_content)[ContentLength], const char* _pPath)

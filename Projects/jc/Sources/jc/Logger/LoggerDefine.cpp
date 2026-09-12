@@ -59,6 +59,31 @@ void InitializeFileLogger(const char* _pDirectory)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+void InitializeFileLogger(const String& _directory)
+{
+	String szTimestamp = DateTime::Now().Format("yyyy-MM-dd-HHmmss");
+	String szPath = StringUtil::Format(_T("%s/%s"), _directory.Source(), szTimestamp.Source());
+
+	Directory::Create(_directory);
+
+	FileLogger* pFileLogger = dbg_new FileLogger(szPath);
+	pFileLogger->SetEnableLock(true);
+	pFileLogger->SetAutoFlush(true);
+	pFileLogger->SetHeaderFormat(_T("[ level | datetime ] "));
+	pFileLogger->ShowDateTime(true);
+	pFileLogger->ShowLevel(true);
+
+	if (Logger_v == nullptr)
+	{
+		Logger_v = pFileLogger;
+	}
+	else
+	{
+		Logger_v->ChainLogger(pFileLogger);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 void FinalizeDefaultLogger()
 {
 	JC_DELETE_SAFE(Logger_v);

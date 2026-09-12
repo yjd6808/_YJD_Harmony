@@ -23,6 +23,13 @@ Thread::Thread(TRunnable&& _fn, void* _pParam, const char* _pName, bool _autoJoi
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+Thread::Thread(TRunnable&& _fn, void* _pParam, const String& _name, bool _autoJoin)
+: Thread(_name, _autoJoin)
+{
+    Start(Move(_fn), _pParam);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 Thread::~Thread() noexcept
 {
     if (m_bAutoJoin)

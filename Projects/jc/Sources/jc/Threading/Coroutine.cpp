@@ -29,21 +29,21 @@ CoError CoGetLastError()
 	return err;
 }
 
-const char* CoErrorString(CoError _err)
+String CoErrorString(CoError _err)
 {
 	switch (_err)
 	{
-	case coeNone:				return "성공";
-	case coeNullFunction:		return "코루틴 함수가 null";
-	case coeVirtualAlloc:		return "스택 예약 실패";
-	case coeCommitFailed:		return "스택 커밋 실패";
-	case coeInvalidStackSize:	return "잘못된 스택 크기";
-	case coeInvalidCtx:			return "유효하지 않은 컨텍스트";
-	case coeWrongThread:		return "생성 스레드와 다른 스레드에서 호출";
-	case coeInvalidState:		return "호출할 수 없는 상태";
-	case coeStaleHandle:		return "이미 종료된 핸들";
-	case coeException:			return "코루틴 함수에서 예외 발생";
-	default:					return "알 수 없는 오류";
+	case coeNone:				return _T("성공");
+	case coeNullFunction:		return _T("코루틴 함수가 null");
+	case coeVirtualAlloc:		return _T("스택 예약 실패");
+	case coeCommitFailed:		return _T("스택 커밋 실패");
+	case coeInvalidStackSize:	return _T("잘못된 스택 크기");
+	case coeInvalidCtx:			return _T("유효하지 않은 컨텍스트");
+	case coeWrongThread:		return _T("생성 스레드와 다른 스레드에서 호출");
+	case coeInvalidState:		return _T("호출 불가능한 상태");
+	case coeStaleHandle:		return _T("이미 종료된 핸들");
+	case coeException:			return _T("코루틴 함수에서 예외 발생");
+	default:					return _T("알려지지 않은 오류");
 	}
 }
 

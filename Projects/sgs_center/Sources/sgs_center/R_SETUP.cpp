@@ -9,6 +9,7 @@
 
 #include "R_SETUP.h"
 
+#include "jc/Primitives/StringConvert.h"
 #include "sgs/CmdHost.h"
 #include "sgs_center/S_SETUP_IS.h"
 
@@ -35,7 +36,7 @@ void R_SETUP::RECV_SCE_ItsMe(Session* _pSession, ICommand* _pCmd)
 void R_SETUP::RECV_SCE_NotifyBootState(Session* _pSession, ICommand* _pCmd)
 {
 	SCE_NotifyBootState* pCmd = (SCE_NotifyBootState*)_pCmd;
-	_LogInfo_(_T("%hs서버가 %hs됨."), ServerType::Name[pCmd->ServerType], ServerBootState::Name[pCmd->State]);
+	_LogInfo_(_T("%s서버가 %s됨."), StringConvert::FromUtf8(ServerType::Name[pCmd->ServerType]), StringConvert::FromUtf8(ServerBootState::Name[pCmd->State]));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -43,8 +44,8 @@ void R_SETUP::RECV_SCE_NotifyOrderFailed(jnet::Session* _pSession, jnet::IComman
 {
 	SCE_NotifyOrderFailed* pCmd = (SCE_NotifyOrderFailed*)_pCmd;
 
-	_LogInfo_(_T("%hs서버가 %hs에 실패했습니다. (EC: %u)"),
-		ServerType::Name[pCmd->ServerType],
-		CenterOrder::Name[pCmd->Order],
+	_LogInfo_(_T("%s서버가 %s에 실패했습니다. (EC: %u)"),
+		StringConvert::FromUtf8(ServerType::Name[pCmd->ServerType]),
+		StringConvert::FromUtf8(CenterOrder::Name[pCmd->Order]),
 		pCmd->ErrorCode);
 }

@@ -28,4 +28,5 @@ extern jc::LoggerAbstract* Logger_v;
 
 void InitializeDefaultLogger(const jc::String& _pSpecifier = _T(""));
 void InitializeFileLogger(const char* _pDirectory);
+void InitializeFileLogger(const jc::String& _directory);
 void FinalizeDefaultLogger();

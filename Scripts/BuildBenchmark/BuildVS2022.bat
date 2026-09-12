@@ -16,14 +16,8 @@ git submodule update --init --recursive
 if errorlevel 1 ( echo [FAIL] git submodule init failed & exit /b 1 )
 
 
-:: 32∫Ò∆Æ ∫ÙµÂ
-cmake -S . -B %BuildDir%/Win32 -G"Visual Studio 17 2022" -A Win32 -DBENCHMARK_ENABLE_GTEST_TESTS=OFF -DBENCHMARK_ENABLE_TESTING=OFF
-cmake --build %BuildDir%/Win32 --config Debug
-if errorlevel 1 ( echo [FAIL] Win32 Debug build failed & exit /b 1 )
-cmake --build %BuildDir%/Win32 --config Release
-if errorlevel 1 ( echo [FAIL] Win32 Release build failed & exit /b 1 )
 
-:: 64∫Ò∆Æ ∫ÙµÂ
+:: x64 only (Win32 skipped: no x86 C compiler in this env)
 cmake -S . -B %BuildDir%/x64 -G"Visual Studio 17 2022" -A x64 -DBENCHMARK_ENABLE_GTEST_TESTS=OFF -DBENCHMARK_ENABLE_TESTING=OFF
 cmake --build %BuildDir%/x64 --config Debug
 if errorlevel 1 ( echo [FAIL] x64 Debug build failed & exit /b 1 )

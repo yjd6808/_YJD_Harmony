@@ -24,7 +24,7 @@ void RegisterStack(void* _pBase, size_t _reserveSize, size_t _pageSize)
 {
 	if (gStackCount >= MAX_MANAGED_STACKS)
 	{
-		_LogError_("Max managed stacks exceeded");
+		_LogError_(_T("Max managed stacks exceeded"));
 		return;
 	}
 
@@ -127,7 +127,7 @@ char* StackAlloc(size_t _reserveSize, size_t _pageSize)
 	if (pBase == nullptr)
 	{
 		DWORD error = GetLastError();
-		_LogError_("VirtualAlloc failed. Error code: %lu", error);
+		_LogError_(_T("VirtualAlloc failed. Error code: %lu"), error);
 		return nullptr;
 	}
 
@@ -142,7 +142,7 @@ char* StackAlloc(size_t _reserveSize, size_t _pageSize)
 	if (pValloc == nullptr)
 	{
 		DWORD error = GetLastError();
-		_LogError_("VirtualAlloc failed. Error code: %lu", error);
+		_LogError_(_T("VirtualAlloc failed. Error code: %lu"), error);
 		VirtualFree(pBase, 0, MEM_RELEASE);
 		return nullptr;
 	}
@@ -153,7 +153,7 @@ char* StackAlloc(size_t _reserveSize, size_t _pageSize)
 	if (!protResult)
 	{
 		DWORD error = GetLastError();
-		_LogError_("VirtualProtect failed. Error code: %lu", error);
+		_LogError_(_T("VirtualProtect failed. Error code: %lu"), error);
 		VirtualFree(pBase, 0, MEM_RELEASE);
 		return nullptr;
 	}
@@ -181,7 +181,7 @@ void StackInit(void* _pBase, size_t _reserveSize, size_t _pageSize)
 	if (pValloc == nullptr)
 	{
 		DWORD error = GetLastError();
-		_LogError_("VirtualAlloc failed. Error code: %lu", error);
+		_LogError_(_T("VirtualAlloc failed. Error code: %lu"), error);
 		return;
 	}
 
@@ -191,7 +191,7 @@ void StackInit(void* _pBase, size_t _reserveSize, size_t _pageSize)
 	if (!protResult)
 	{
 		DWORD error = GetLastError();
-		_LogError_("VirtualProtect failed. Error code: %lu", error);
+		_LogError_(_T("VirtualProtect failed. Error code: %lu"), error);
 		VirtualFree(_pBase, 0, MEM_RELEASE);
 	}
 }
@@ -203,9 +203,9 @@ void StackFree(void* _pBase)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void DumpPages(void* _pBase, size_t _reserveSize, size_t _pageSize, const char* _pTitle)
+void DumpPages(void* _pBase, size_t _reserveSize, size_t _pageSize, const _char* _pTitle)
 {
-	Console::WriteLine(ConsoleColor::Green, "\n==== %s ====", _pTitle);
+	Console::WriteLine(ConsoleColor::Green, _T("\n==== %s ===="), _pTitle);
 
 	size_t pageCount = _reserveSize / _pageSize;
 	char* pBase = (char*)_pBase;
@@ -219,32 +219,32 @@ void DumpPages(void* _pBase, size_t _reserveSize, size_t _pageSize, const char* 
 		MEMORY_BASIC_INFORMATION mbi;
 		VirtualQuery(pAddr, &mbi, sizeof(mbi));
 
-		const char* pStateStr = "";
-		if (mbi.State == MEM_COMMIT)  pStateStr = "COMMIT";
-		else if (mbi.State == MEM_RESERVE) pStateStr = "RESERVE";
-		else if (mbi.State == MEM_FREE)    pStateStr = "FREE";
+		const _char* pStateStr = _T("");
+		if (mbi.State == MEM_COMMIT)  pStateStr = _T("COMMIT");
+		else if (mbi.State == MEM_RESERVE) pStateStr = _T("RESERVE");
+		else if (mbi.State == MEM_FREE)    pStateStr = _T("FREE");
 
 		bool isGuard = (mbi.Protect & PAGE_GUARD) != 0;
 
 		if (mbi.State == MEM_FREE)
 		{
 			Console::WriteLine(ConsoleColor::Red,
-				"[%02llu] %p : FREE", i, pAddr);
+				_T("[%02llu] %p : FREE"), i, pAddr);
 		}
 		else if (isGuard)
 		{
 			Console::WriteLine(ConsoleColor::Yellow,
-				"[%02llu] %p : %s + GUARD", i, pAddr, pStateStr);
+				_T("[%02llu] %p : %s + GUARD"), i, pAddr, pStateStr);
 		}
 		else if (mbi.State == MEM_COMMIT)
 		{
 			Console::WriteLine(ConsoleColor::Cyan,
-				"[%02llu] %p : COMMIT", i, pAddr);
+				_T("[%02llu] %p : COMMIT"), i, pAddr);
 		}
 		else
 		{
 			Console::WriteLine(ConsoleColor::White,
-				"[%02llu] %p : RESERVE", i, pAddr);
+				_T("[%02llu] %p : RESERVE"), i, pAddr);
 		}
 	}
 }
@@ -257,7 +257,7 @@ static void Test_StackExpansion(int _argc, char** _argv)
 	constexpr size_t RESERVE_SIZE = 16 * 4096;
 	size_t pageSize = GetPageSize();
 
-	Console::WriteLine(ConsoleColor::White, "Page Size: %llu bytes", pageSize);
+	Console::WriteLine(ConsoleColor::White, _T("Page Size: %llu bytes"), pageSize);
 
 	// VEH 핸들러 등록 (1 = 최우선 호출)
 	void* pVeh = AddVectoredExceptionHandler(1, CoStack_VectoredHandler);
@@ -265,36 +265,36 @@ static void Test_StackExpansion(int _argc, char** _argv)
 	// 1. StackAlloc
 	void* pStack = StackAlloc(RESERVE_SIZE, pageSize);
 	RegisterStack(pStack, RESERVE_SIZE, pageSize);
-	DumpPages(pStack, RESERVE_SIZE, pageSize, "After StackAlloc");
-	Console::ReadKeyWhile("Press spacebar to continue...", ConsoleKey::Spacebar);
+	DumpPages(pStack, RESERVE_SIZE, pageSize, _T("After StackAlloc"));
+	Console::ReadKeyWhile(_T("Press spacebar to continue..."), ConsoleKey::Spacebar);
 
 	// 🔥 공통: stack top
 	char* pTop = (char*)pStack + RESERVE_SIZE;
 
 	// 2. TouchStack (아래 방향으로 접근 → GUARD 트리거)
 	*(pTop - pageSize - 100) = 0;
-	DumpPages(pStack, RESERVE_SIZE, pageSize, "After TouchStack");
-	Console::ReadKeyWhile("Press spacebar to continue...", ConsoleKey::Spacebar);
+	DumpPages(pStack, RESERVE_SIZE, pageSize, _T("After TouchStack"));
+	Console::ReadKeyWhile(_T("Press spacebar to continue..."), ConsoleKey::Spacebar);
 
 	// 3. StackInit
 	StackInit(pStack, RESERVE_SIZE, pageSize);
-	DumpPages(pStack, RESERVE_SIZE, pageSize, "After StackInit");
-	Console::ReadKeyWhile("Press spacebar to continue...", ConsoleKey::Spacebar);
+	DumpPages(pStack, RESERVE_SIZE, pageSize, _T("After StackInit"));
+	Console::ReadKeyWhile(_T("Press spacebar to continue..."), ConsoleKey::Spacebar);
 
 	// 4. TouchStack 다시 (동일하게 아래 방향)
 	*(pTop - pageSize - 100) = 0;
-	DumpPages(pStack, RESERVE_SIZE, pageSize, "After TouchStack");
-	Console::ReadKeyWhile("Press spacebar to continue...", ConsoleKey::Spacebar);
+	DumpPages(pStack, RESERVE_SIZE, pageSize, _T("After TouchStack"));
+	Console::ReadKeyWhile(_T("Press spacebar to continue..."), ConsoleKey::Spacebar);
 
 	// 5. StackFree
 	UnregisterStack(pStack);
 	StackFree(pStack);
-	DumpPages(pStack, RESERVE_SIZE, pageSize, "After StackFree");
+	DumpPages(pStack, RESERVE_SIZE, pageSize, _T("After StackFree"));
 
 	// VEH 핸들러 해제
 	RemoveVectoredExceptionHandler(pVeh);
 
-	Console::ReadKeyWhile("Press spacebar to exit...", ConsoleKey::Spacebar);
+	Console::ReadKeyWhile(_T("Press spacebar to exit..."), ConsoleKey::Spacebar);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -310,10 +310,10 @@ static void Test_StackExpansionPerf(int _argc, char** _argv)
 	size_t pageSize = GetPageSize();
 
 	Console::WriteLine(ConsoleColor::White,
-		"[성능 테스트] VEH 핸들러 %d회 트리거 비용 측정", TRIAL_COUNT);
-	Console::WriteLine(ConsoleColor::White, "Page Size  : %llu bytes", pageSize);
-	Console::WriteLine(ConsoleColor::White, "Trial Count: %d", TRIAL_COUNT);
-	Console::WriteLine(ConsoleColor::White, "");
+		_T("[성능 테스트] VEH 핸들러 %d회 트리거 비용 측정"), TRIAL_COUNT);
+	Console::WriteLine(ConsoleColor::White, _T("Page Size  : %llu bytes"), pageSize);
+	Console::WriteLine(ConsoleColor::White, _T("Trial Count: %d"), TRIAL_COUNT);
+	Console::WriteLine(ConsoleColor::White, _T(""));
 
 	// VEH 핸들러 등록
 	void* pVeh = AddVectoredExceptionHandler(1, CoStack_VectoredHandler);
@@ -322,7 +322,7 @@ static void Test_StackExpansionPerf(int _argc, char** _argv)
 	void* pStack = StackAlloc(RESERVE_SIZE, pageSize);
 	if (pStack == nullptr)
 	{
-		Console::WriteLine(ConsoleColor::Red, "StackAlloc 실패");
+		Console::WriteLine(ConsoleColor::Red, _T("StackAlloc 실패"));
 		RemoveVectoredExceptionHandler(pVeh);
 		return;
 	}
@@ -378,22 +378,22 @@ static void Test_StackExpansionPerf(int _argc, char** _argv)
 
 	bool countOk = (vehCallCount == TRIAL_COUNT);
 
-	Console::WriteLine(ConsoleColor::LightCyan,  "──────────────────────────────────────");
-	Console::WriteLine(ConsoleColor::White,       "StackInit %d회 합산       : %.3f ms", TRIAL_COUNT, initOnlyMs);
-	Console::WriteLine(ConsoleColor::White,       "StackInit+VEH %d회 합산   : %.3f ms", TRIAL_COUNT, totalMs);
-	Console::WriteLine(ConsoleColor::LightGreen,  "VEH 순수 합산             : %.3f ms", vehTotalMs);
-	Console::WriteLine(ConsoleColor::LightGreen,  "VEH 1회 평균              : %.3f µs  (%.1f ns)", vehAvgUs, vehAvgNs);
+	Console::WriteLine(ConsoleColor::LightCyan,  _T("──────────────────────────────────────"));
+	Console::WriteLine(ConsoleColor::White,       _T("StackInit %d회 합산       : %.3f ms"), TRIAL_COUNT, initOnlyMs);
+	Console::WriteLine(ConsoleColor::White,       _T("StackInit+VEH %d회 합산   : %.3f ms"), TRIAL_COUNT, totalMs);
+	Console::WriteLine(ConsoleColor::LightGreen,  _T("VEH 순수 합산             : %.3f ms"), vehTotalMs);
+	Console::WriteLine(ConsoleColor::LightGreen,  _T("VEH 1회 평균              : %.3f µs  (%.1f ns)"), vehAvgUs, vehAvgNs);
 	Console::WriteLine(countOk ? ConsoleColor::LightGreen : ConsoleColor::LightRed,
-		"VEH 실제 호출 횟수        : %d / %d  (%s)",
+		_T("VEH 실제 호출 횟수        : %d / %d  (%s)"),
 		vehCallCount, TRIAL_COUNT, countOk ? "OK" : "MISMATCH");
-	Console::WriteLine(ConsoleColor::LightCyan,   "──────────────────────────────────────");
+	Console::WriteLine(ConsoleColor::LightCyan,   _T("──────────────────────────────────────"));
 
 	// 정리
 	UnregisterStack(pStack);
 	StackFree(pStack);
 	RemoveVectoredExceptionHandler(pVeh);
 
-	Console::ReadKeyWhile("Press spacebar to exit...", ConsoleKey::Spacebar);
+	Console::ReadKeyWhile(_T("Press spacebar to exit..."), ConsoleKey::Spacebar);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -415,7 +415,7 @@ static void co_func2(int _depth)
 		return;
 	char stk[4096 * 3];
 	stk[0xff] = 0xff;
-	Console::WriteLine("co_func2: stk[0xff] = 0x%x", stk[0xff]);
+	Console::WriteLine(_T("co_func2: stk[0xff] = 0x%x"), stk[0xff]);
 	co_func2(_depth + 1);
 }
 
@@ -424,7 +424,7 @@ static void co_func1()
 	int a = 30;
 	co_func2(1);
 
-	Console::WriteLine("co_func1: a = %d", a);
+	Console::WriteLine(_T("co_func1: a = %d"), a);
 }
 
 static void Test_CoStack(int _argc, char** _argv)
@@ -447,19 +447,19 @@ int call_04_CoStack(int _argc, char** _argv)
 {
 	auto pMenu = jc::MakeShared<ConsoleMenuItem>();
 	pMenu->AddHeader(
-		"========================================\n"
-		"      CoStack R&D - 코루틴용 스택 연구\n"
-		"========================================");
-	pMenu->Add("1", "스택확장 테스트",
+		_T("========================================\n")
+		_T("      CoStack R&D - 코루틴용 스택 연구\n")
+		_T("========================================"));
+	pMenu->Add(_T("1"), _T("스택확장 테스트"),
 		CONSOLE_MENU_ACTION(Test_StackExpansion(_argc, _argv))
 	);
-	pMenu->Add("2", "스택확장 성능 (VEH 1000회 호출 비용)",
+	pMenu->Add(_T("2"), _T("스택확장 성능 (VEH 1000회 호출 비용)"),
 		CONSOLE_MENU_ACTION(Test_StackExpansionPerf(_argc, _argv))
 	);
-	pMenu->Add("3", "커스텀 스택 테스트 (코루틴의 근간)",
+	pMenu->Add(_T("3"), _T("커스텀 스택 테스트 (코루틴의 근간)"),
 		CONSOLE_MENU_ACTION(Test_CoStack(_argc, _argv))
 	);
-	pMenu->AddBack("0", "뒤로가기");
+	pMenu->AddBack(_T("0"), _T("뒤로가기"));
 
 	ConsoleMenuItem::Show(pMenu);
 

@@ -3,7 +3,7 @@
 #define HEAP_LAL			1
 #define HEAP_LFH			2
 
-auto PrintHeaps(HANDLE* _heaps, int _heapCount, bool _showEntry, const char* _pheader, const char* _fileName) -> void
+auto PrintHeaps(HANDLE* _heaps, int _heapCount, bool _showEntry, const _char* _pheader, const char* _fileName) -> void
 {
 	struct HeapStartEntry
 	{
@@ -76,15 +76,15 @@ auto PrintHeaps(HANDLE* _heaps, int _heapCount, bool _showEntry, const char* _ph
 	}
 
 	String content;
-	content += "==================================================\n";
-	content += "[";
+	content += _T("==================================================\n");
+	content += _T("[");
 	content += _pheader;
-	content += "]\n";
+	content += _T("]\n");
 	for (int i = 0; i < heapEntries.size(); ++i)
 	{
 		HeapStartEntry& heap = heapEntries[i];
-		String heapRange = StringUtilT::Format("[%2d] Heap Base: 0x%p\n", i, heap.base_.lpData);
-		heapRange += StringUtilT::Format("BlockFirst: 0x%p, BlockLast: 0x%p, Commit: 0x%6x, Uncommit: 0x%4x, EntryCount: %3d\n",
+		String heapRange = StringUtil::Format(_T("[%2d] Heap Base: 0x%p\n"), i, heap.base_.lpData);
+		heapRange += StringUtil::Format(_T("BlockFirst: 0x%p, BlockLast: 0x%p, Commit: 0x%6x, Uncommit: 0x%4x, EntryCount: %3d\n"),
 			heap.base_.Region.lpFirstBlock,
 			heap.base_.Region.lpLastBlock,
 			heap.base_.Region.dwCommittedSize,
@@ -99,13 +99,13 @@ auto PrintHeaps(HANDLE* _heaps, int _heapCount, bool _showEntry, const char* _ph
 		for (int j =0; j < heap.entries_.size(); ++j)
 		{
 			const auto& et = heap.entries_[j];
-			heapRange += StringUtilT::Format("   [%4d] Data: 0xp%p, Size: 0x%5x, Overhead: 0x%4x, Flags: 0x%x (%s)\n",
+			heapRange += StringUtil::Format(_T("   [%4d] Data: 0xp%p, Size: 0x%5x, Overhead: 0x%4x, Flags: 0x%x (%s)\n"),
 				j,
 				et.lpData,
 				et.cbData,
 				et.cbOverhead,
 				et.wFlags,
-				et.wFlags & PROCESS_HEAP_ENTRY_BUSY ? "busy" : "free");
+				et.wFlags & PROCESS_HEAP_ENTRY_BUSY ? _T("busy") : _T("free"));
 		}
 		
 		content += heapRange;
@@ -132,7 +132,7 @@ int call_02_HeapStudy(int _argc, char** _argv)
 	}
 
 	// 힙 상태 출력 (할당 직후)
-	PrintHeaps(&hLFHHeap, 1, false, "LFH_BEFORE", "heap_lfh_before.txt");
+	PrintHeaps(&hLFHHeap, 1, false, _T("LFH_BEFORE"), "heap_lfh_before.txt");
 
 	// 일부 블록 해제 후 작은 블록 재할당
 	for (int i = 0; i < STD_CNT; i += 2)
@@ -142,7 +142,7 @@ int call_02_HeapStudy(int _argc, char** _argv)
 	}
 
 	// 힙 상태 출력 (해제/재할당 후)
-	PrintHeaps(&hLFHHeap, 1, false, "LFH_AFTER", "heap_lfh_after.txt");
+	PrintHeaps(&hLFHHeap, 1, false, _T("LFH_AFTER"), "heap_lfh_after.txt");
 
 	HeapDestroy(hLFHHeap);
 	return 0;

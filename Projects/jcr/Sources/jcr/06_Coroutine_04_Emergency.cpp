@@ -7,13 +7,13 @@
 //   STATUS_STACK_OVERFLOW로 확정해 잡을 수 있게 한다.
 // - 한계: __chkstk/RTC-fill처럼 RSP가 따라 내려가는 깊은 하강은 커널이 삼켜
 //   잡지 못할 수 있다. 코루틴 한 장은 적당한 깊이로 쓰는 것이 안전하다.
-static void PrintSection04(const char* _pName)
+static void PrintSection04(const _char* _pName)
 {
 	Console::WriteLine(ConsoleColor::Yellow,
-		"\n================================================================");
-	Console::WriteLine(ConsoleColor::Yellow, "  %s", _pName);
+		_T("\n================================================================"));
+	Console::WriteLine(ConsoleColor::Yellow, _T("  %s"), _pName);
 	Console::WriteLine(ConsoleColor::Yellow,
-		"================================================================");
+		_T("================================================================"));
 }
 
 static int Filter_SO(unsigned _code)
@@ -33,26 +33,26 @@ static void fn_Co04_Overflow(CoContext* pCtx)
 	{
 		volatile char* pGuard = (volatile char*)pCtx->stack_.pStackEnd_;
 		Touch_OverflowGuard(pGuard);
-		Console::WriteLine(ConsoleColor::Red, "  FAIL [CO04] 가드를 찍었는데 살아있음");
+		Console::WriteLine(ConsoleColor::Red, _T("  FAIL [CO04] 가드를 찍었는데 살아있음"));
 	}
 	__except (Filter_SO(GetExceptionCode()))
 	{
-		Console::WriteLine(ConsoleColor::Green, "  PASS [CO04] 오버플로우를 __except로 받음");
+		Console::WriteLine(ConsoleColor::Green, _T("  PASS [CO04] 오버플로우를 __except로 받음"));
 		CoNoteStackOverflow();
 		if (CoCurrentCtx()->stack_.overflowed_)
-			Console::WriteLine(ConsoleColor::Green, "  PASS [CO04] overflowed_ 표시됨");
+			Console::WriteLine(ConsoleColor::Green, _T("  PASS [CO04] overflowed_ 표시됨"));
 		else
-			Console::WriteLine(ConsoleColor::Red, "  FAIL [CO04] overflowed_ 미표시");
+			Console::WriteLine(ConsoleColor::Red, _T("  FAIL [CO04] overflowed_ 미표시"));
 		if (CoResetStackOverflow())
-			Console::WriteLine(ConsoleColor::Green, "  PASS [CO04] 가드존 재설치됨");
+			Console::WriteLine(ConsoleColor::Green, _T("  PASS [CO04] 가드존 재설치됨"));
 		else
-			Console::WriteLine(ConsoleColor::Red, "  FAIL [CO04] 가드존 재설치 실패");
+			Console::WriteLine(ConsoleColor::Red, _T("  FAIL [CO04] 가드존 재설치 실패"));
 	}
 }
 
 static void Test_Co04_Overflow()
 {
-	PrintSection04("CO04: 오버플로우 SEH 도달 + 표시 + 복구");
+	PrintSection04(_T("CO04: 오버플로우 SEH 도달 + 표시 + 복구"));
 
 	CoContext* pCtx = CoRun(fn_Co04_Overflow, cstMid);
 	while (pCtx)

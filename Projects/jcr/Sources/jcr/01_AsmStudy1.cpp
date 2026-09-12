@@ -444,11 +444,11 @@ void test_packing() {
 	} p3;
 #pragma pack(pop)
 
-	Console::WriteLine("TestStruct%d: a=%d b=%d c=%d", 
+	Console::WriteLine(_T("TestStruct%d: a=%d b=%d c=%d"), 
 		1, (int)offsetof(Packed1, a_), (int)offsetof(Packed1, b_), (int)offsetof(Packed1, c_));
-	Console::WriteLine("TestStruct%d: a=%d b=%d c=%d",
+	Console::WriteLine(_T("TestStruct%d: a=%d b=%d c=%d"),
 		2, (int)offsetof(Packed2, a_),(int)offsetof(Packed2, b_), (int)offsetof(Packed2, c_));
-	Console::WriteLine("TestStruct%d: a=%d b=%d c=%d",
+	Console::WriteLine(_T("TestStruct%d: a=%d b=%d c=%d"),
 		3, (int)offsetof(Packed3, a_), (int)offsetof(Packed3, b_), (int)offsetof(Packed3, c_));
 
 

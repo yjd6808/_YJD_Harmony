@@ -259,6 +259,13 @@ void File::WriteAllText(const char* _pContent, const int _contentLength, const S
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+void File::WriteAllText(const String& _content, const String& _path)
+{
+	const AString narrow = StringConvert::ToUtf8(_content);
+	WriteAllText(narrow.Source(), narrow.Length(), _path);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 void File::WriteAllBytes(const _u8* _pContent, const int _contentLength, const char* _pPath)
 {
 	_iohandle pStream = CRuntime::FileOpen(_pPath, "wb");
@@ -279,6 +286,26 @@ void File::WriteAllBytes(const _u8* _pContent, const int _contentLength, const c
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+void File::WriteAllBytes(const _u8* _pContent, const int _contentLength, const String& _path)
+{
+	_iohandle pStream = CRuntime::FileOpen(_path.Source(), _T("wb"));
+
+	if (pStream == nullptr)
+	{
+		throw RuntimeException("해당 파일이 이미 쓰기 모드로 사용중인듯?");
+	}
+
+	size_t writeCount = CRuntime::FileWrite(_pContent, _contentLength, 1, pStream);
+
+	if (writeCount != 1)
+	{
+		throw RuntimeException("파일에 내용을 쓰는데 실패하였습니다.");
+	}
+
+	CRuntime::FileClose(pStream);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 String File::ReadAllText(const char* _pPath)
 {
 	char modeBuffer[MODE_BUFFER_SIZE];
@@ -291,6 +318,42 @@ String File::ReadAllText(const char* _pPath)
 	}
 
 	const int fileSize = Size(_pPath);
+
+	if (fileSize == -1)
+	{
+		throw RuntimeException("파일 사이즈 획득 실패");
+	}
+
+	AString narrow(fileSize + 32);
+	int readCount;
+	int offset = 0;
+
+	while ((readCount = (int)CRuntime::FileRead(narrow.Source() + offset, 1, FILE_READ_COUNT, pStream)) != 0)
+	{
+		offset += readCount;
+		int nextLength = offset + FILE_READ_COUNT + 1; // 확장시 NULL 문자 고려해야함
+
+		narrow.SetLength(offset);
+		narrow.ResizeIfNeeded(nextLength);
+	}
+
+	narrow.Source()[offset] = '\0';
+
+	CRuntime::FileClose(pStream);
+	return StringConvert::FromUtf8(narrow);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+String File::ReadAllText(const String& _path)
+{
+	_iohandle pStream = CRuntime::FileOpen(_path.Source(), _T("r"));
+
+	if (pStream == nullptr)
+	{
+		throw RuntimeException("해당 파일이 없거나 이미 쓰기 모드로 사용중인듯?");
+	}
+
+	const int fileSize = Size(_path);
 
 	if (fileSize == -1)
 	{

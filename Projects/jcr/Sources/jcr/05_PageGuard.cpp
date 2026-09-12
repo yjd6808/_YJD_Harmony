@@ -11,7 +11,7 @@ LONG CALLBACK PageGuardVectoredHandler(EXCEPTION_POINTERS* _pEp)
 
 	void* pFaultAddr = (void*)_pEp->ExceptionRecord->ExceptionInformation[1];
 
-	Console::WriteLine(ConsoleColor::Yellow,"[VEH] GUARD PAGE VIOLATION at %p",pFaultAddr);
+	Console::WriteLine(ConsoleColor::Yellow,_T("[VEH] GUARD PAGE VIOLATION at %p"),pFaultAddr);
 
 	// OS에 위임하지 않고 직접 처리 완료 → 이후 가드 페이지도 VEH가 계속 호출됨
 	return EXCEPTION_CONTINUE_SEARCH;
@@ -57,7 +57,7 @@ int call_05_PageGuard(int _argc, char** _argv)
 	}
 
 	Console::WriteLine(ConsoleColor::White,
-		"Total committed walked: %llu bytes, Guard pages found: %llu",
+		_T("Total committed walked: %llu bytes, Guard pages found: %llu"),
 		total,
 		guardPageInfos.size());
 
@@ -71,18 +71,18 @@ int call_05_PageGuard(int _argc, char** _argv)
 
 	if (guardPageInfos.empty())
 	{
-		Console::WriteLine(ConsoleColor::Red, "No guard pages found. Aborting.");
+		Console::WriteLine(ConsoleColor::Red, _T("No guard pages found. Aborting."));
 		RemoveVectoredExceptionHandler(pVeh);
 		return -1;
 	}
 
-	Console::ReadKeyWhile("Press spacebar to touch guard page...", ConsoleKey::Spacebar);
+	Console::ReadKeyWhile(_T("Press spacebar to touch guard page..."), ConsoleKey::Spacebar);
 
 	// 가드 페이지 터치
 	*(char*)guardPageInfos[0].BaseAddress = 0;
 
 	// 터치 후 가드 페이지였던 페이지들의 변화된 상태 출력
-	Console::WriteLine(ConsoleColor::White, "\n-- After Touch: former guard pages --");
+	Console::WriteLine(ConsoleColor::White, _T("\n-- After Touch: former guard pages --"));
 	for (int i = 0; i < (int)guardPageInfos.size(); ++i)
 	{
 		mbi = {};
@@ -106,7 +106,7 @@ int call_05_PageGuard(int _argc, char** _argv)
 	// VEH 핸들러 해제
 	RemoveVectoredExceptionHandler(pVeh);
 
-	Console::ReadKeyWhile("Press spacebar to exit...", ConsoleKey::Spacebar);
+	Console::ReadKeyWhile(_T("Press spacebar to exit..."), ConsoleKey::Spacebar);
 
 	return 0;
 }

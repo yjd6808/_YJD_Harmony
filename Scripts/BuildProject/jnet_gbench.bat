@@ -16,6 +16,13 @@ shift
 goto :parse
 :parsed
 
+if not exist "ThirdParty\Build\%PLATFORM%\lib\%CONFIG%\benchmark.lib" (
+  echo.
+  echo [FAILED] benchmark.lib not found: ThirdParty\Build\%PLATFORM%\lib\%CONFIG%\benchmark.lib
+  echo          Run Scripts\BuildBenchmark\BuildVS2022.bat first.
+  exit /b 1
+)
+
 set "BUILD_PS1=%BAT_DIR%..\..\Scripts\Build.ps1"
 call :build jnet
 if errorlevel 1 exit /b 1
