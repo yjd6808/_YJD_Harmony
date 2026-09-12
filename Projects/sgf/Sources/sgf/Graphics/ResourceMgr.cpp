@@ -14,6 +14,7 @@
 #include "sgf/Graphics/ShaderProgram.h"
 #include "sgf/Graphics/DefaultShaders.h"
 #include "jc/Container/Vector.h"
+#include "jc/Primitives/StringConvert.h"
 
 #include <cstdio>
 
@@ -102,7 +103,7 @@ ResourceMgr::~ResourceMgr()
 //////////////////////////////////////////////////////////////////////////////////////////
 bool ResourceMgr::Initialize(GraphicDevice* _pDevice)
 {
-	jc_assert_msg(_pDevice != nullptr, "GraphicDevice가 필요합니다.");
+	jc_assert_msg(_pDevice != nullptr, _T("GraphicDevice가 필요합니다."));
 
 	if (pDevice_ != nullptr)
 	{
@@ -180,14 +181,14 @@ void ResourceMgr::Finalize()
 //////////////////////////////////////////////////////////////////////////////////////////
 _u64 ResourceMgr::Register(IResource* _pResource)
 {
-	jc_assert_msg(pDevice_ != nullptr, "Initialize 이후에만 등록할 수 있습니다.");
-	jc_assert_msg(_pResource != nullptr, "등록할 리소스가 비어있습니다.");
-	jc_assert_msg(_pResource->GetKey() == INVALID_RESOURCE_KEY, "이미 등록된 리소스입니다.");
+	jc_assert_msg(pDevice_ != nullptr, _T("Initialize 이후에만 등록할 수 있습니다."));
+	jc_assert_msg(_pResource != nullptr, _T("등록할 리소스가 비어있습니다."));
+	jc_assert_msg(_pResource->GetKey() == INVALID_RESOURCE_KEY, _T("이미 등록된 리소스입니다."));
 
 	const ResourceType type = _pResource->GetResourceType();
-	jc_assert_msg(type != ResourceType::rtUnknown, "알 수 없는 리소스 타입입니다.");
+	jc_assert_msg(type != ResourceType::rtUnknown, _T("알 수 없는 리소스 타입입니다."));
 	const _s32 t = static_cast<_s32>(type);
-	jc_assert_msg(t >= 0 && t < TYPE_COUNT, "타입 범위 초과");
+	jc_assert_msg(t >= 0 && t < TYPE_COUNT, _T("타입 범위 초과"));
 
 	const _u32 raw = static_cast<_u32>(indexProviders_[t].Acquire());
 	const _u32 index = raw - 1; // 1-base → 0-base
@@ -196,13 +197,13 @@ _u64 ResourceMgr::Register(IResource* _pResource)
 	if (index >= static_cast<_u32>(slots_[t].Size()))
 	{
 		// Acquire는 1씩 증가하므로 index == Size인 경우만 정상
-		jc_assert_msg(index == static_cast<_u32>(slots_[t].Size()), "인덱스 연속성 위반");
+		jc_assert_msg(index == static_cast<_u32>(slots_[t].Size()), _T("인덱스 연속성 위반"));
 		slots_[t].PushBack(Slot{});
 		// 새로 추가된 슬롯의 gen은 기본 1 유지
 	}
 
 	Slot& slot = slots_[t][index];
-	jc_assert_msg(slot.pResource_ == nullptr, "슬롯이 이미 점유됨 — 발급기 중복");
+	jc_assert_msg(slot.pResource_ == nullptr, _T("슬롯이 이미 점유됨 — 발급기 중복"));
 
 	slot.pResource_ = _pResource;
 	const _u64 key = MakeResourceKey(type, slot.gen_, index);
@@ -233,7 +234,7 @@ _u64 ResourceMgr::Add(IResource* _pResource, StringView _path)
 {
 	if (FindKeyByPath(_path) != INVALID_RESOURCE_KEY)
 	{
-		jc_assert_msg(false, "같은 경로의 리소스가 이미 등록되어 있습니다.");
+		jc_assert_msg(false, _T("같은 경로의 리소스가 이미 등록되어 있습니다."));
 		return INVALID_RESOURCE_KEY;
 	}
 
@@ -250,7 +251,7 @@ bool ResourceMgr::Remove(_u64 _key)
 
 	if (defaultKeys_.Exist(_key))
 	{
-		jc_assert_msg(false, "디폴트 리소스는 제거할 수 없습니다.");
+		jc_assert_msg(false, _T("디폴트 리소스는 제거할 수 없습니다."));
 		return false;
 	}
 
@@ -348,7 +349,7 @@ _u64 ResourceMgr::FindKeyByPath(StringView _path)
 //////////////////////////////////////////////////////////////////////////////////////////
 _u64 ResourceMgr::LoadTextureFromFile(const jc::String& _szFilePath)
 {
-	jc_assert_msg(pDevice_ != nullptr, "Initialize 이후에만 로드할 수 있습니다.");
+	jc_assert_msg(pDevice_ != nullptr, _T("Initialize 이후에만 로드할 수 있습니다."));
 
 	const _u64 existingKey = FindKeyByPath(StringView{ _szFilePath });
 	if (existingKey != INVALID_RESOURCE_KEY)
@@ -370,7 +371,7 @@ _u64 ResourceMgr::LoadTextureFromFile(const jc::String& _szFilePath)
 //////////////////////////////////////////////////////////////////////////////////////////
 _u64 ResourceMgr::LoadTextureFromSvgFile(const jc::String& _szFilePath, _f32 _scale)
 {
-	jc_assert_msg(pDevice_ != nullptr, "Initialize 이후에만 로드할 수 있습니다.");
+	jc_assert_msg(pDevice_ != nullptr, _T("Initialize 이후에만 로드할 수 있습니다."));
 
 	const _u64 existingKey = FindKeyByPath(StringView{ _szFilePath });
 	if (existingKey != INVALID_RESOURCE_KEY)
@@ -516,10 +517,11 @@ void ResourceMgr::PrintStatus()
 			const IResource* pResource = slot.pResource_;
 			const _u64 key = MakeResourceKey(static_cast<ResourceType>(t), slot.gen_, static_cast<_u32>(i));
 			FormatKey(key, keyBuf, sizeof(keyBuf));
+			const jc::AString narrowName = jc::StringConvert::ToAnsi(jc::String(pResource->GetDebugName()));
 			sprintf_s(buffer, "  key=%s type=%s name=%s\n",
 				keyBuf,
 				RESOURCE_TYPE_NAMES[static_cast<_s32>(pResource->GetResourceType())],
-				pResource->GetDebugName());
+				narrowName.Source());
 			OutputDebugStringA(buffer);
 		}
 	}
@@ -530,39 +532,39 @@ bool ResourceMgr::CreateDefaults()
 {
 	// 1. 디폴트 셰이더 (소스 내장. D-17)
 	VertexShader* pVs2D = dbg_new VertexShader;
-	if (!pVs2D->InitializeFromSource(pDevice_, DEFAULT_SHADER_SOURCE_2D))
+	if (!pVs2D->InitializeFromSource(pDevice_, jc::StringConvert::FromUtf8(DEFAULT_SHADER_SOURCE_2D)))
 	{
 		delete pVs2D;
 		return false;
 	}
-	pVs2D->SetDebugName("DefaultVS2D");
+	pVs2D->SetDebugName(_T("DefaultVS2D"));
 	defaultVs2DKey_ = Add(pVs2D);
 
 	PixelShader* pPs2D = dbg_new PixelShader;
-	if (!pPs2D->InitializeFromSource(pDevice_, DEFAULT_SHADER_SOURCE_2D))
+	if (!pPs2D->InitializeFromSource(pDevice_, jc::StringConvert::FromUtf8(DEFAULT_SHADER_SOURCE_2D)))
 	{
 		delete pPs2D;
 		return false;
 	}
-	pPs2D->SetDebugName("DefaultPS2D");
+	pPs2D->SetDebugName(_T("DefaultPS2D"));
 	defaultPs2DKey_ = Add(pPs2D);
 
 	VertexShader* pVs3D = dbg_new VertexShader;
-	if (!pVs3D->InitializeFromSource(pDevice_, DEFAULT_SHADER_SOURCE_3D))
+	if (!pVs3D->InitializeFromSource(pDevice_, jc::StringConvert::FromUtf8(DEFAULT_SHADER_SOURCE_3D)))
 	{
 		delete pVs3D;
 		return false;
 	}
-	pVs3D->SetDebugName("DefaultVS3D");
+	pVs3D->SetDebugName(_T("DefaultVS3D"));
 	defaultVs3DKey_ = Add(pVs3D);
 
 	PixelShader* pPs3D = dbg_new PixelShader;
-	if (!pPs3D->InitializeFromSource(pDevice_, DEFAULT_SHADER_SOURCE_3D))
+	if (!pPs3D->InitializeFromSource(pDevice_, jc::StringConvert::FromUtf8(DEFAULT_SHADER_SOURCE_3D)))
 	{
 		delete pPs3D;
 		return false;
 	}
-	pPs3D->SetDebugName("DefaultPS3D");
+	pPs3D->SetDebugName(_T("DefaultPS3D"));
 	defaultPs3DKey_ = Add(pPs3D);
 
 	// 2. 1x1 흰색 텍스처 (D-18. 텍스처 없는 머티리얼의 대체재)
@@ -573,7 +575,7 @@ bool ResourceMgr::CreateDefaults()
 		delete pWhite;
 		return false;
 	}
-	pWhite->SetDebugName("DefaultWhiteTexture");
+	pWhite->SetDebugName(_T("DefaultWhiteTexture"));
 	defaultTextureKey_ = Add(pWhite);
 
 	// 3. 디폴트 머티리얼 (2D: 알파 블렌드 + 깊이 끄기 / 3D: 불투명 + 깊이 읽기쓰기)
@@ -587,7 +589,7 @@ bool ResourceMgr::CreateDefaults()
 	}
 	pMat2D->SetVertexShaderKey(defaultVs2DKey_);
 	pMat2D->SetPixelShaderKey(defaultPs2DKey_);
-	pMat2D->SetDebugName("DefaultMaterial2D");
+	pMat2D->SetDebugName(_T("DefaultMaterial2D"));
 	defaultMaterial2DKey_ = Add(pMat2D);
 
 	Material* pMat3D = dbg_new Material;
@@ -598,7 +600,7 @@ bool ResourceMgr::CreateDefaults()
 	}
 	pMat3D->SetVertexShaderKey(defaultVs3DKey_);
 	pMat3D->SetPixelShaderKey(defaultPs3DKey_);
-	pMat3D->SetDebugName("DefaultMaterial3D");
+	pMat3D->SetDebugName(_T("DefaultMaterial3D"));
 	defaultMaterial3DKey_ = Add(pMat3D);
 
 	// 4. 프리미티브 메시 (2D: 순수 2D 4종 — vfPTC2D 배칭용 / 3D 공용 6종 — vfPNT3D)
@@ -647,8 +649,8 @@ void ResourceMgr::RemovePathEntry(_u64 _key)
 		return;
 	}
 
-	const char* szPath = static_cast<ResourceBase*>(pResource)->GetPath();
-	if (szPath[0] != '\0')
+	const _char* szPath = static_cast<ResourceBase*>(pResource)->GetPath();
+	if (szPath[0] != _T('\0'))
 	{
 		pathIndex_.Remove(String(szPath));
 	}

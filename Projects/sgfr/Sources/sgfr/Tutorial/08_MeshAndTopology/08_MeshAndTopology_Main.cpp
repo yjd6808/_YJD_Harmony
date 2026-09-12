@@ -21,6 +21,7 @@
  */
 
 #include "Core.h"
+#include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/08_MeshAndTopology/08_MeshAndTopology_Main.h"
 
@@ -59,7 +60,7 @@ float4 PSMain(VsOut _in) : SV_Target
 )";
 
 	// 토폴로지별 창 제목 이름표
-	const char* s_szTopologyNames[] = { "삼각형 리스트", "선 스트립", "점 리스트" };
+	const _char* s_szTopologyNames[] = { _T("삼각형 리스트"), _T("선 스트립"), _T("점 리스트") };
 }
 
 // 메시와 토폴로지 튜토리얼을 실행한다. (같은 정점 6개를 세 가지 방법으로 해석)
@@ -67,9 +68,9 @@ void MeshAndTopology_Main()
 {
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("08. 메시와 토폴로지 (1/2/3 전환, ESC 종료)", 800, 600))
+	if (!window.Create(_T("08. 메시와 토폴로지 (1/2/3 전환, ESC 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -79,13 +80,13 @@ void MeshAndTopology_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -94,7 +95,7 @@ void MeshAndTopology_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -106,10 +107,10 @@ void MeshAndTopology_Main()
 	// 2. 셰이더 준비 (VertexShader/PixelShader가 별도 클래스다)
 	VertexShader vs;
 	PixelShader ps;
-	if (!vs.InitializeFromSource(&device, PASSTHROUGH_SHADER_SOURCE) ||
-		!ps.InitializeFromSource(&device, PASSTHROUGH_SHADER_SOURCE))
+	if (!vs.InitializeFromSource(&device, jc::StringConvert::FromUtf8(PASSTHROUGH_SHADER_SOURCE)) ||
+		!ps.InitializeFromSource(&device, jc::StringConvert::FromUtf8(PASSTHROUGH_SHADER_SOURCE)))
 	{
-		jc::Console::WriteLine("셰이더 컴파일 실패!");
+		jc::Console::WriteLine(_T("셰이더 컴파일 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -135,14 +136,14 @@ void MeshAndTopology_Main()
 	Mesh mesh;
 	if (!mesh.Initialize(&device, vertices, 6, VertexPTC::Decl()))
 	{
-		jc::Console::WriteLine("메시 생성 실패!");
+		jc::Console::WriteLine(_T("메시 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
-	jc::Console::WriteLine("같은 정점 6개를 1/2/3 키로 다르게 해석해보세요!");
+	jc::Console::WriteLine(_T("같은 정점 6개를 1/2/3 키로 다르게 해석해보세요!"));
 
 	// 5. 렌더 루프
 	PrimitiveTopology topology = PrimitiveTopology::ptTriangleList;

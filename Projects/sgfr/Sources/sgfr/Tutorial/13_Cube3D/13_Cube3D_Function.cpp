@@ -49,13 +49,13 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 // 깊이 버퍼와 원근 투영의 원리를 콘솔에 출력한다. (학습용)
 void PrintDepthAndPerspectiveExplanation()
 {
-	jc::Console::WriteLine("\n[원근 투영 (Perspective Projection)]");
-	jc::Console::WriteLine(" 멀리 있는 물체일수록 작게 보이게 만드는 투영. (사람 눈과 동일)");
-	jc::Console::WriteLine(" PerspectiveFovLH(시야각, 화면비율, 근평면, 원평면)으로 만든다.");
-	jc::Console::WriteLine(" 직교 투영(지금까지 사용)은 거리와 무관하게 같은 크기 => 2D/UI용.");
-	jc::Console::WriteLine("\n[깊이 버퍼 (Depth Buffer / Z-Buffer)]");
-	jc::Console::WriteLine(" 픽셀마다 '지금까지 그려진 가장 가까운 깊이'를 기억하는 별도 버퍼.");
-	jc::Console::WriteLine(" 새 픽셀이 더 멀다면 버리고, 더 가깝다면 덮어쓴다. => 그리는 순서와 무관하게 앞뒤가 정확해진다!");
-	jc::Console::WriteLine(" 이게 없으면 나중에 그린 뒷면이 앞면을 덮어버리는 참사가 벌어진다.");
-	jc::Console::WriteLine(" sgf에서는 device.Context().SetDepth(DepthMode::dmReadWrite)로 켜고 끈다.\n");
+	jc::Console::WriteLine(_T("\n[원근 투영 (Perspective Projection)]"));
+	jc::Console::WriteLine(_T(" 멀리 있는 물체일수록 작게 보이게 만드는 투영. (사람 눈과 동일)"));
+	jc::Console::WriteLine(_T(" PerspectiveFovLH(시야각, 화면비율, 근평면, 원평면)으로 만든다."));
+	jc::Console::WriteLine(_T(" 직교 투영(지금까지 사용)은 거리와 무관하게 같은 크기 => 2D/UI용."));
+	jc::Console::WriteLine(_T("\n[깊이 버퍼 (Depth Buffer / Z-Buffer)]"));
+	jc::Console::WriteLine(_T(" 픽셀마다 '지금까지 그려진 가장 가까운 깊이'를 기억하는 별도 버퍼."));
+	jc::Console::WriteLine(_T(" 새 픽셀이 더 멀다면 버리고, 더 가깝다면 덮어쓴다. => 그리는 순서와 무관하게 앞뒤가 정확해진다!"));
+	jc::Console::WriteLine(_T(" 이게 없으면 나중에 그린 뒷면이 앞면을 덮어버리는 참사가 벌어진다."));
+	jc::Console::WriteLine(_T(" sgf에서는 device.Context().SetDepth(DepthMode::dmReadWrite)로 켜고 끈다.\n"));
 }

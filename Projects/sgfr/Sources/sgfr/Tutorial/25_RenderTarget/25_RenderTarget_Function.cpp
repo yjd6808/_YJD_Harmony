@@ -16,17 +16,17 @@ using namespace jc;
 // 렌더 타깃의 개념과 활용처를 콘솔에 출력한다. (학습용)
 void PrintRenderTargetExplanation()
 {
-	jc::Console::WriteLine("\n[렌더 타깃(Render Target)이란?]");
-	jc::Console::Write(" 지금까지는 항상 "); jc::Console::WriteLine("'백버퍼(화면)'에만 그렸습니다.");
-	jc::Console::WriteLine(" 렌더 타깃을 쓰면 '내가 만든 텍스처'에 그릴 수 있습니다.");
-	jc::Console::WriteLine(" 그려진 결과는 그냥 텍스처이므로 다시 샘플링해서 화면에 붙일 수 있죠!\n");
-	jc::Console::WriteLine("[활용처 - 현대 엔진의 핵심 기술!]");
-	jc::Console::WriteLine(" - 미니맵/백미러/감시카메라: 다른 시점으로 한 번 더 그려서 작게 표시");
-	jc::Console::WriteLine(" - 포스트 프로세싱(26번): 화면 전체를 텍스처로 받아 후보정 효과");
-	jc::Console::WriteLine(" - 그림자 매핑(27번): 빛 시점의 깊이를 텍스처에 저장\n");
-	jc::Console::WriteLine("[이 화면]");
-	jc::Console::WriteLine(" 가운데: 카메라로 본 큐브 (백버퍼에 직접 그림)");
-	jc::Console::WriteLine(" 오른쪽 위: 같은 큐브를 '바로 위에서' 내려다본 미니맵 (렌더 타깃에 그림)\n");
+	jc::Console::WriteLine(_T("\n[렌더 타깃(Render Target)이란?]"));
+	jc::Console::Write(_T(" 지금까지는 항상 ")); jc::Console::WriteLine(_T("'백버퍼(화면)'에만 그렸습니다."));
+	jc::Console::WriteLine(_T(" 렌더 타깃을 쓰면 '내가 만든 텍스처'에 그릴 수 있습니다."));
+	jc::Console::WriteLine(_T(" 그려진 결과는 그냥 텍스처이므로 다시 샘플링해서 화면에 붙일 수 있죠!\n"));
+	jc::Console::WriteLine(_T("[활용처 - 현대 엔진의 핵심 기술!]"));
+	jc::Console::WriteLine(_T(" - 미니맵/백미러/감시카메라: 다른 시점으로 한 번 더 그려서 작게 표시"));
+	jc::Console::WriteLine(_T(" - 포스트 프로세싱(26번): 화면 전체를 텍스처로 받아 후보정 효과"));
+	jc::Console::WriteLine(_T(" - 그림자 매핑(27번): 빛 시점의 깊이를 텍스처에 저장\n"));
+	jc::Console::WriteLine(_T("[이 화면]"));
+	jc::Console::WriteLine(_T(" 가운데: 카메라로 본 큐브 (백버퍼에 직접 그림)"));
+	jc::Console::WriteLine(_T(" 오른쪽 위: 같은 큐브를 '바로 위에서' 내려다본 미니맵 (렌더 타깃에 그림)\n"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

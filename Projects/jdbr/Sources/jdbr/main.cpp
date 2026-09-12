@@ -18,7 +18,9 @@ void check(const jdb::StmtTemplate& _stmt)
 	auto fsef =&_stmt;
 }
 
-constexpr jdb::StmtTemplate abcdefg = jdb::Util::CTParseStmt("select legend {0}, {1}");
+// CTParseStmt의 StringView(CharT*) 경로가 non-constexpr라 컴파일시 상수식 불가 (jc 체인 제한).
+// 리서치용이라 실행 시 파싱으로 전환한다.
+const jdb::StmtTemplate abcdefg = jdb::Util::CTParseStmt(_T("select legend {0}, {1}"));
 
 // constexpr jdb::Stmt STMT_SELECT_1{ "SELECT c_account_id FROM t_account", 50 };
 int main(int _argc, char** _argv) 
@@ -28,24 +30,24 @@ int main(int _argc, char** _argv)
 	InitializeNetLogger();
 
 	auto fsef = &abcdefg;
-	Console::WriteLine("stmt text: %p", fsef->text_.SafeSource());
+	Console::WriteLine(_T("stmt text: %p"), fsef->text_.SafeSource());
 	check(abcdefg);
 	// constexpr jdb::StatementType t = jdb::Util::CTParseStmtType("select");
 	// constexpr jdb::Util::PlaceholderInfo info = jdb::Util::CTParsePlaceholder("fsefes");
 
 	jdb::SqlServerStatementBuilder::Initialize({});
 
-	jdb::StmtTemplate stmt = jdb::Util::CTParseStmt("{0}{1}");
+	jdb::StmtTemplate stmt = jdb::Util::CTParseStmt(_T("{0}{1}"));
 	jdb::BoundStmt ptmt22 = jdb::Util::BuildStmt(jdb::dbtSQLServer, stmt, 10, 20);
 
 	jdb::DatabaseInfo info;
 	info.type_ = jdb::DatabaseType::dbtSQLServer;
-	info.name_ = "게임DB";
-	info.hostName_ = "127.0.0.1";
+	info.name_ = _T("게임DB");
+	info.hostName_ = _T("127.0.0.1");
 	info.connPort_ = 1433;
-	info.accountId_ = "sa";
-	info.accountPass_ = "1234";
-	info.dbName_ = "steinsgate";
+	info.accountId_ = _T("sa");
+	info.accountPass_ = _T("1234");
+	info.dbName_ = _T("steinsgate");
 	info.maxConnection_ = 100;
 	info.connPoolSize_ = 100;
 	info.iocpThreadCount_ = MULTITHREAD_TEST ? 8 : 0;
@@ -134,13 +136,14 @@ int main(int _argc, char** _argv)
 	{
 
 		
-		String id = StringUtilT::Format("test%d", x);
-		String pass = StringUtilT::Format("pass%d", x);
-		db.Query(QID_INSERT_1, MS_STMT("INSERT INTO t_account (c_account_id, c_account_pass) VALUES({0}, {1}); ", id, pass));
+		String id = StringUtil::Format(_T("test%d"), x);
+		String pass = StringUtil::Format(_T("pass%d"), x);
+		db.Query(QID_INSERT_1, MS_STMT(_T("INSERT INTO t_account (c_account_id, c_account_pass) VALUES({0}, {1}); "), id, pass));
 		 
 		 // jc_assert_msg(rowCount == 1, "영향받은 행 갯수가 1이 아닙니다. rowCount: %u", rowCount);
 		// db.Query("delete from t_test");
-		jc::String text = 
+			// 미사용 리서치 SQL문. narrow 연결이라 const char*로 둔다.
+		const char* text = 
 			"INSERT INTO dbo.t_test ("
 				"c_float,"
 				"c_double,"
@@ -182,7 +185,7 @@ int main(int _argc, char** _argv)
 	// ------------------------------------------
 	// delete 테스트
 	{
-		db.Query(QID_DELETE_1, MS_STMT("DELETE FROM t_account WHERE c_account_id = {0}", StringUtilT::Format("test%d", x)));
+		db.Query(QID_DELETE_1, MS_STMT(_T("DELETE FROM t_account WHERE c_account_id = {0}"), StringUtil::Format(_T("test%d"), x)));
 	}
 
 
@@ -191,7 +194,7 @@ int main(int _argc, char** _argv)
 	// ------------------------------------------
 	// select 테스트
 
-	db.Query(QID_SELECT_2, MS_STMT("SELECT c_uid, c_varchar, c_char, c_nvarchar, c_float, c_double, c_s8, c_s16, c_s32, c_s64, c_u8, c_u16, c_u32, c_u64, c_datetime, c_date, c_time FROM dbo.t_test"));
+	db.Query(QID_SELECT_2, MS_STMT(_T("SELECT c_uid, c_varchar, c_char, c_nvarchar, c_float, c_double, c_s8, c_s16, c_s32, c_s64, c_u8, c_u16, c_u32, c_u64, c_datetime, c_date, c_time FROM dbo.t_test")));
 	
 
 
@@ -206,7 +209,7 @@ int main(int _argc, char** _argv)
 			runningThread[i] = true;
 			while (runningThread[i])
 			{
-				auto pQuery = db.Query(QID_SELECT_1, MS_STMT("select * from t_account"));
+				auto pQuery = db.Query(QID_SELECT_1, MS_STMT(_T("select * from t_account")));
 				++counter;
 				Sleep(1);
 
@@ -223,7 +226,7 @@ int main(int _argc, char** _argv)
 	// db.Query(QID_SELECT_1, "select * from t_account");
 	
 
-	Console::Write("%s\n", "x키 입력시 종료");
+	Console::Write(_T("%s\n"), _T("x키 입력시 종료"));
 
 	int updatePerSecond = 10;
 	PulserStatistics pulseStat;
@@ -272,7 +275,7 @@ int main(int _argc, char** _argv)
 			int usingConnCount = 0;
 			int availableConnCount = 0;
 			db.GetConnectionPool()->GetConnCount(usingConnCount, availableConnCount);
-			Console::Write("SQL Server 이벤트 수: %d, 수행 대기중 오버랩 수: %d, (쿼리 생성 수: %d, 사용 중 연결: %d, 비사용 중 연결: %d)\n", pollingEventCountPerSec, db.GetPendingQueryCount(), counter, usingConnCount, availableConnCount);
+			Console::Write(_T("SQL Server 이벤트 수: %d, 수행 대기중 오버랩 수: %d, (쿼리 생성 수: %d, 사용 중 연결: %d, 비사용 중 연결: %d)\n"), pollingEventCountPerSec, db.GetPendingQueryCount(), counter, usingConnCount, availableConnCount);
 			pollingEventCountPerSec = 0;
 		}
 

@@ -21,6 +21,7 @@
  */
 
 #include "Core.h"
+#include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/13_Cube3D/13_Cube3D_Main.h"
 #include "sgfr/Tutorial/13_Cube3D/13_Cube3D_Function.h"
@@ -44,9 +45,9 @@ void Cube3D_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("13. 3D 큐브 - 스페이스바로 깊이 테스트 토글 (ESC로 종료)", 800, 600))
+	if (!window.Create(_T("13. 3D 큐브 - 스페이스바로 깊이 테스트 토글 (ESC로 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -56,13 +57,13 @@ void Cube3D_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -71,7 +72,7 @@ void Cube3D_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -113,7 +114,7 @@ void Cube3D_Main()
 	if (!vb.Create(&device, vertices, 8, VertexPC::Decl()) ||
 		!ib.Create(&device, indices, 36))
 		{
-		jc::Console::WriteLine("버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -122,13 +123,13 @@ void Cube3D_Main()
 
 	// 4. 셰이더 + 상수 버퍼
 
-	_u64 vsShader = device.Context().CreateVertexShader(CubeShaderSource());
-	_u64 psShader = device.Context().CreatePixelShader(CubeShaderSource());
+	_u64 vsShader = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(CubeShaderSource()));
+	_u64 psShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(CubeShaderSource()));
 	ConstantBuffer<CbTransform> cbTransform;
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY ||
 		!cbTransform.Create(&device))
 		{
-		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -149,7 +150,7 @@ void Cube3D_Main()
 	_f32 elapsed = 0.0f;
 	bool bDepthTest = true;
 
-	jc::Console::WriteLine("스페이스바로 깊이 테스트를 켜고 꺼보세요. 꺼지면 뒷면이 앞을 덮는 오류가 보입니다!");
+	jc::Console::WriteLine(_T("스페이스바로 깊이 테스트를 켜고 꺼보세요. 꺼지면 뒷면이 앞을 덮는 오류가 보입니다!"));
 
 	// 6. 렌더 루프
 	while (window.PumpMessage())
@@ -164,7 +165,7 @@ void Cube3D_Main()
 		{
 			bDepthTest = !bDepthTest;
 			device.Context().SetDepth(bDepthTest ? DepthMode::dmReadWrite : DepthMode::dmDisabled);
-			jc::Console::Write("깊이 테스트: %s\n", bDepthTest ? "ON (정상)" : "OFF (뒷면이 덮일 수 있음)");
+			jc::Console::Write(_T("깊이 테스트: %s\n"), bDepthTest ? _T("ON (정상)") : _T("OFF (뒷면이 덮일 수 있음)"));
 		}
 
 		input.NextFrame();

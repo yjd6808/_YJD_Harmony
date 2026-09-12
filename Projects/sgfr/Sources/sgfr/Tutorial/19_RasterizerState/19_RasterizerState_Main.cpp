@@ -28,6 +28,7 @@
  */
 
 #include "Core.h"
+#include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/19_RasterizerState/19_RasterizerState_Main.h"
 #include "sgfr/Tutorial/19_RasterizerState/19_RasterizerState_Function.h"
@@ -45,7 +46,7 @@ namespace
 	};
 
 	// 창 제목에 표시할 컬링 이름표 (CullMode enum 순서와 일치)
-	const char* s_szCullNames[] = { "None(양면)", "Back(뒷면 제거)", "Front(앞면 제거)" };
+	const _char* s_szCullNames[] = { _T("None(양면)"), _T("Back(뒷면 제거)"), _T("Front(앞면 제거)") };
 }
 
 // 래스터라이저 스테이트 튜토리얼을 실행한다. (좌: 기본 상태 / 우: 선택 상태 Before/After 비교)
@@ -55,9 +56,9 @@ void RasterizerState_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("19. 래스터라이저 스테이트 (W 와이어, 1/2/3 컬링, ESC 종료)", 800, 600))
+	if (!window.Create(_T("19. 래스터라이저 스테이트 (W 와이어, 1/2/3 컬링, ESC 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -67,13 +68,13 @@ void RasterizerState_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -82,7 +83,7 @@ void RasterizerState_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -99,7 +100,7 @@ void RasterizerState_Main()
 	if (!vb.Create(&device, vertices, 8, VertexPC::Decl()) ||
 		!ib.Create(&device, indices, 36))
 		{
-		jc::Console::WriteLine("버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -108,13 +109,13 @@ void RasterizerState_Main()
 
 	// 3. 셰이더 + 상수 버퍼
 
-	_u64 vsShader = device.Context().CreateVertexShader(ColorTransformShaderSource());
-	_u64 psShader = device.Context().CreatePixelShader(ColorTransformShaderSource());
+	_u64 vsShader = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(ColorTransformShaderSource()));
+	_u64 psShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(ColorTransformShaderSource()));
 	ConstantBuffer<CbTransform> cbTransform;
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY ||
 		!cbTransform.Create(&device))
 		{
-		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -131,7 +132,7 @@ void RasterizerState_Main()
 
 	auto UpdateTitle = [&]()
 	{
-		jc::String szTitle = jc::StringUtilT::Format("19. 래스터라이저 - 왼쪽: Solid+Back(기준) | 오른쪽: %s / %s (W, 1/2/3, ESC)", bWireframe ? "Wireframe(선)" : "Solid(면)",
+		jc::String szTitle = jc::StringUtil::Format(_T("19. 래스터라이저 - 왼쪽: Solid+Back(기준) | 오른쪽: %s / %s (W, 1/2/3, ESC)"), bWireframe ? _T("Wireframe(선)") : _T("Solid(면)"),
 			s_szCullNames[static_cast<_s32>(cullMode)]);
 		window.SetTitle(szTitle);
 	};

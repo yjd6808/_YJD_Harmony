@@ -49,15 +49,15 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 // 폴링과 이벤트 방식의 차이를 콘솔에 출력한다. (학습용)
 void PrintInputModelExplanation()
 {
-	jc::Console::WriteLine("\n[입력을 읽는 두 가지 방법]");
-	jc::Console::WriteLine(" 1. 폴링(Polling): 매 프레임 '지금 눌린 상태인가?'를 직접 묻는다.");
-	jc::Console::WriteLine("    - IsKeyDown / IsKeyPressed / MouseX / MouseY");
-	jc::Console::WriteLine("    - 이동처럼 매 프레임 연속적으로 반응할 때 적합");
-	jc::Console::WriteLine(" 2. 이벤트(Event): '눌리는 순간' 등록해둔 함수가 호출된다.");
-	jc::Console::WriteLine("    - onKeyPressed / onMousePressed / onMouseWheel 등 (jc::Event 기반)");
-	jc::Console::WriteLine("    - 버튼 클릭, 메뉴 열기처럼 '발생 순간' 1번만 반응할 때 적합");
-	jc::Console::WriteLine(" Cocos2d-x의 EventListener가 2번 방식, 유니티의 Input.GetKey가 1번 방식이다.");
-	jc::Console::WriteLine(" sgf는 둘 다 지원하므로 상황에 맞게 골라 쓰면 된다!\n");
+	jc::Console::WriteLine(_T("\n[입력을 읽는 두 가지 방법]"));
+	jc::Console::WriteLine(_T(" 1. 폴링(Polling): 매 프레임 '지금 눌린 상태인가?'를 직접 묻는다."));
+	jc::Console::WriteLine(_T("    - IsKeyDown / IsKeyPressed / MouseX / MouseY"));
+	jc::Console::WriteLine(_T("    - 이동처럼 매 프레임 연속적으로 반응할 때 적합"));
+	jc::Console::WriteLine(_T(" 2. 이벤트(Event): '눌리는 순간' 등록해둔 함수가 호출된다."));
+	jc::Console::WriteLine(_T("    - onKeyPressed / onMousePressed / onMouseWheel 등 (jc::Event 기반)"));
+	jc::Console::WriteLine(_T("    - 버튼 클릭, 메뉴 열기처럼 '발생 순간' 1번만 반응할 때 적합"));
+	jc::Console::WriteLine(_T(" Cocos2d-x의 EventListener가 2번 방식, 유니티의 Input.GetKey가 1번 방식이다."));
+	jc::Console::WriteLine(_T(" sgf는 둘 다 지원하므로 상황에 맞게 골라 쓰면 된다!\n"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

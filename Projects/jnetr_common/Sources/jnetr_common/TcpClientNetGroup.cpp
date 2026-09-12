@@ -14,7 +14,7 @@ NS_JNET_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
 TcpClientNetGroup::TcpClientNetGroup()
-: NetGroup("테스트 클라이언트 그룹")
+: NetGroup(_T("테스트 클라이언트 그룹"))
 {
 }
 
@@ -43,11 +43,11 @@ void TcpClientNetGroup::Initialize()
 	AddHost(3, pGameClient);
 
 	loginClient_ = pLoginClient;
-	loginClient_->SetEventListener(dbg_new ClientListener{ "로그인 클라" });
+	loginClient_->SetEventListener(dbg_new ClientListener{ _T("로그인 클라") });
 	channelClient_ = pChannelClient;
-	channelClient_->SetEventListener(dbg_new ClientListener{ "채널 클라" });
+	channelClient_->SetEventListener(dbg_new ClientListener{ _T("채널 클라") });
 	gameClient_ = pGameClient;
-	gameClient_->SetEventListener(dbg_new ClientListener{ "게임 클라" });
+	gameClient_->SetEventListener(dbg_new ClientListener{ _T("게임 클라") });
 }
 
 NS_END

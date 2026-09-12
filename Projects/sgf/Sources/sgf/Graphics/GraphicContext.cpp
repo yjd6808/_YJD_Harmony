@@ -270,7 +270,7 @@ _u64 GraphicContext::CreatePixelShader(const jc::String& _hlslSource, const jc::
 // ★ 상수버퍼 바인딩 — 셰이더가 읽을 데이터 보관함을 특정 스테이지/슬롯에 장착한다.
 void GraphicContext::SetConstantBuffer(ShaderStage _stage, _u32 _slot, ID3D11Buffer* _pBuffer)
 {
-	jc_assert_msg(_slot < MAX_CBUFFER_SLOTS, "상수버퍼 슬롯 범위를 벗어났습니다.");
+	jc_assert_msg(_slot < MAX_CBUFFER_SLOTS, _T("상수버퍼 슬롯 범위를 벗어났습니다."));
 
 	const _s32 stageIndex = static_cast<_s32>(_stage);
 	if (_pBuffer == pCachedCbuffers_[stageIndex][_slot])
@@ -296,7 +296,7 @@ void GraphicContext::SetConstantBuffer(ShaderStage _stage, _u32 _slot, ID3D11Buf
 //////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::SetTexture(ShaderStage _stage, _u32 _slot, Texture* _pTexture)
 {
-	jc_assert_msg(_slot < MAX_TEXTURE_SLOTS, "텍스처 슬롯 범위를 벗어났습니다.");
+	jc_assert_msg(_slot < MAX_TEXTURE_SLOTS, _T("텍스처 슬롯 범위를 벗어났습니다."));
 
 	ID3D11ShaderResourceView* pSrv = (_pTexture != nullptr) ? _pTexture->Srv() : nullptr;
 	const _s32 stageIndex = static_cast<_s32>(_stage);
@@ -323,7 +323,7 @@ void GraphicContext::SetTexture(ShaderStage _stage, _u32 _slot, Texture* _pTextu
 //////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::SetSampler(ShaderStage _stage, _u32 _slot, SamplerState* _pSampler)
 {
-	jc_assert_msg(_slot < MAX_TEXTURE_SLOTS, "샘플러 슬롯 범위를 벗어났습니다.");
+	jc_assert_msg(_slot < MAX_TEXTURE_SLOTS, _T("샘플러 슬롯 범위를 벗어났습니다."));
 
 	ID3D11SamplerState* pRaw = (_pSampler != nullptr) ? _pSampler->Raw() : nullptr;
 	const _s32 stageIndex = static_cast<_s32>(_stage);
@@ -351,7 +351,7 @@ void GraphicContext::SetSampler(ShaderStage _stage, _u32 _slot, SamplerState* _p
 // Raw 오버로드 — 같은 캐시 필드(pCachedSamplers_) 공유
 void GraphicContext::SetSamplerRaw(ShaderStage _stage, _u32 _slot, ID3D11SamplerState* _pRaw)
 {
-	jc_assert_msg(_slot < MAX_TEXTURE_SLOTS, "샘플러 슬롯 범위를 벗어났습니다.");
+	jc_assert_msg(_slot < MAX_TEXTURE_SLOTS, _T("샘플러 슬롯 범위를 벗어났습니다."));
 
 	const _s32 stageIndex = static_cast<_s32>(_stage);
 	if (_pRaw == pCachedSamplers_[stageIndex][_slot])
@@ -550,7 +550,7 @@ bool GraphicContext::_ResolveInputLayout()
 	}
 	if (pDevice_ == nullptr || pCurrentVs_ == nullptr || pCurrentDecl_ == nullptr)
 	{
-		jc_assert_msg(false, "draw 전에 VS와 VertexDeclaration이 필요합니다. (SetVertexShader / SetVertexBuffer 확인)");
+		jc_assert_msg(false, _T("draw 전에 VS와 VertexDeclaration이 필요합니다. (SetVertexShader / SetVertexBuffer 확인)"));
 		return false;
 	}
 

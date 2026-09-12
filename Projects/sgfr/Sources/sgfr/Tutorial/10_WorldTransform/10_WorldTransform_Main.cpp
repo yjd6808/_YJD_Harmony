@@ -21,6 +21,7 @@
  */
 
 #include "Core.h"
+#include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/10_WorldTransform/10_WorldTransform_Main.h"
 #include "sgfr/Tutorial/10_WorldTransform/10_WorldTransform_Function.h"
@@ -44,9 +45,9 @@ void WorldTransform_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("10. 월드 변환 - 태양/지구/달 (ESC로 종료)", 800, 600))
+	if (!window.Create(_T("10. 월드 변환 - 태양/지구/달 (ESC로 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -56,13 +57,13 @@ void WorldTransform_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -71,7 +72,7 @@ void WorldTransform_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -104,7 +105,7 @@ void WorldTransform_Main()
 		!vbMoon.Create(&device, moonVertices, 4, VertexPC::Decl()) ||
 		!ib.Create(&device, indices, 6))
 		{
-		jc::Console::WriteLine("버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -113,13 +114,13 @@ void WorldTransform_Main()
 
 	// 3. 셰이더 + 상수 버퍼
 
-	_u64 vsShader = device.Context().CreateVertexShader(TransformShaderSource());
-	_u64 psShader = device.Context().CreatePixelShader(TransformShaderSource());
+	_u64 vsShader = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(TransformShaderSource()));
+	_u64 psShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(TransformShaderSource()));
 	ConstantBuffer<CbTransform> cbTransform;
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY ||
 		!cbTransform.Create(&device))
 		{
-		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -152,7 +153,7 @@ void WorldTransform_Main()
 		device.Context().DrawIndexed(6, 0, 0);
 	};
 
-	jc::Console::WriteLine("태양 주위를 지구가, 지구 주위를 달이 돕니다. 모두 행렬 곱셈의 결과입니다!");
+	jc::Console::WriteLine(_T("태양 주위를 지구가, 지구 주위를 달이 돕니다. 모두 행렬 곱셈의 결과입니다!"));
 
 	// 5. 렌더 루프
 	while (window.PumpMessage())

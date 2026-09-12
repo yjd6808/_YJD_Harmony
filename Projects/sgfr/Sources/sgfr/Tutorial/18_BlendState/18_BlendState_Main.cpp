@@ -30,6 +30,7 @@
  */
 
 #include "Core.h"
+#include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/18_BlendState/18_BlendState_Main.h"
 #include "sgfr/Tutorial/18_BlendState/18_BlendState_Function.h"
@@ -40,7 +41,7 @@ using namespace jc;
 namespace
 {
 	// 창 제목에 표시할 모드 이름표 (BlendMode enum 순서와 일치)
-	const char* s_szBlendNames[] = { "Opaque(불투명)", "Alpha(반투명)", "Additive(가산)", "Multiply(곱셈)" };
+	const _char* s_szBlendNames[] = { _T("Opaque(불투명)"), _T("Alpha(반투명)"), _T("Additive(가산)"), _T("Multiply(곱셈)") };
 }
 
 // 블렌드 스테이트 튜토리얼을 실행한다. (좌: Opaque 기준 / 우: 선택 모드 Before/After 비교)
@@ -50,9 +51,9 @@ void BlendState_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("18. 블렌드 스테이트 (1~4 모드, ESC 종료)", 800, 600))
+	if (!window.Create(_T("18. 블렌드 스테이트 (1~4 모드, ESC 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -62,13 +63,13 @@ void BlendState_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -77,7 +78,7 @@ void BlendState_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -91,7 +92,7 @@ void BlendState_Main()
 	Texture texture;
 	if (!texture.CreateFromMemory(&device, s_Pixels, 128, 128))
 	{
-		jc::Console::WriteLine("텍스처 생성 실패!");
+		jc::Console::WriteLine(_T("텍스처 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -107,7 +108,7 @@ void BlendState_Main()
 	if (!vb.Create(&device, vertices, 4, VertexPTC::Decl()) ||	// bDynamic = true!
 		!ib.Create(&device, indices, 6))
 		{
-		jc::Console::WriteLine("버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -116,11 +117,11 @@ void BlendState_Main()
 
 	// 4. 셰이더
 
-	_u64 vsShader = device.Context().CreateVertexShader(BlendQuadShaderSource());
-	_u64 psShader = device.Context().CreatePixelShader(BlendQuadShaderSource());
+	_u64 vsShader = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(BlendQuadShaderSource()));
+	_u64 psShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(BlendQuadShaderSource()));
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY)
 	{
-		jc::Console::WriteLine("셰이더 컴파일 실패!");
+		jc::Console::WriteLine(_T("셰이더 컴파일 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -132,7 +133,7 @@ void BlendState_Main()
 
 	auto UpdateTitle = [&]()
 	{
-		jc::String szTitle = jc::StringUtilT::Format("18. 블렌드 - 왼쪽: Opaque(기준) | 오른쪽: %s (1~4, ESC)", s_szBlendNames[static_cast<_s32>(blendMode)]);
+		jc::String szTitle = jc::StringUtil::Format(_T("18. 블렌드 - 왼쪽: Opaque(기준) | 오른쪽: %s (1~4, ESC)"), s_szBlendNames[static_cast<_s32>(blendMode)]);
 		window.SetTitle(szTitle);
 	};
 	UpdateTitle();

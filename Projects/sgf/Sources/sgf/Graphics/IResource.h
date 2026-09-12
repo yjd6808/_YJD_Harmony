@@ -101,7 +101,7 @@ public:
 	virtual _u64 GetKey() const = 0;
 
 	// 디버그 이름 (없으면 빈 문자열)
-	virtual const char* GetDebugName() const = 0;
+	virtual const _char* GetDebugName() const = 0;
 };
 
 // 키/디버그 이름 보관을 구현해둔 공통 베이스.
@@ -115,7 +115,7 @@ public:
 	}
 
 	virtual _u64 GetKey() const override { return key_; }
-	virtual const char* GetDebugName() const override { return debugName_.SafeSource(); }
+	virtual const _char* GetDebugName() const override { return debugName_.SafeSource(); }
 
 	// ResourceMgr만 호출한다. (Add/Remove 시 키 부여/회수)
 	void SetKey(_u64 _key) { key_ = _key; }
@@ -127,7 +127,7 @@ public:
 	}
 
 	// 경로로 등록된 리소스의 로드 경로. 경로 없이 Add된 리소스는 빈 문자열. (B-7)
-	const char* GetPath() const { return path_.SafeSource(); }
+	const _char* GetPath() const { return path_.SafeSource(); }
 
 	// ResourceMgr만 호출한다. (경로와 함께 Add할 때 보관 — 역방향 인덱스 불필요)
 	void SetPath(StringView _path) { path_ = _path; }

@@ -115,7 +115,7 @@ bool Renderer3D::CreateBatchResources(GraphicDevice* _pDevice)
 // - (용어) 상수버퍼(ConstantBuffer): 셰이더가 읽는 데이터 보관함. b0은 프레임당 1회, b1은 오브젝트당 1회 갱신.
 void Renderer3D::BeginScene(const FrameConstants& _frame)
 {
-	jc_assert_msg(pDevice_ != nullptr, "Initialize 이후에만 사용할 수 있습니다.");
+	jc_assert_msg(pDevice_ != nullptr, _T("Initialize 이후에만 사용할 수 있습니다."));
 
 	GraphicContext& context = pDevice_->Context();
 
@@ -132,7 +132,7 @@ void Renderer3D::BeginScene(const FrameConstants& _frame)
 	// 배치 파이프라인(DrawCube/Grid)도 함께 연다. (뷰프로젝션 = 뷰 x 투영)
 	Begin(_frame.view_ * _frame.projection_);
 	if ((++sLogFrame % 60) == 1)
-		_LogDebug_("[sgf] Renderer3D::BeginScene — b0(프레임) 갱신");
+		_LogDebug_(_T("[sgf] Renderer3D::BeginScene — b0(프레임) 갱신"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -142,7 +142,7 @@ void Renderer3D::EndScene()
 	if (!begun_) return;
 	End();		// BatchRenderer::End → Flush + begun_ 해제
 	if ((sLogFrame % 60) == 1)
-		_LogDebug_("[sgf] Renderer3D::EndScene — 배치 종료");
+		_LogDebug_(_T("[sgf] Renderer3D::EndScene — 배치 종료"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -168,7 +168,7 @@ void Renderer3D::Draw(const RenderObject& _object)
 
 	if (pLastMesh_ == nullptr || pLastMaterial_ == nullptr)
 	{
-		jc_assert_msg(false, "RenderObject의 메시/머티리얼 키가 유효하지 않습니다.");
+		jc_assert_msg(false, _T("RenderObject의 메시/머티리얼 키가 유효하지 않습니다."));
 		return;
 	}
 
@@ -182,8 +182,8 @@ void Renderer3D::Draw(const RenderObject& _object)
 // 순서: ① 재질 바인딩 ② 모양 바인딩 ③ 월드 행렬(b1) 갱신 ④ 드로우콜.
 void Renderer3D::Draw(Mesh* _pMesh, Material* _pMaterial, const mat4& _world)
 {
-	jc_assert_msg(pDevice_ != nullptr, "Initialize 이후에만 사용할 수 있습니다.");
-	jc_assert_msg(_pMesh != nullptr && _pMaterial != nullptr, "메시/머티리얼이 비어있습니다.");
+	jc_assert_msg(pDevice_ != nullptr, _T("Initialize 이후에만 사용할 수 있습니다."));
+	jc_assert_msg(_pMesh != nullptr && _pMaterial != nullptr, _T("메시/머티리얼이 비어있습니다."));
 
 	GraphicContext& context = pDevice_->Context();
 

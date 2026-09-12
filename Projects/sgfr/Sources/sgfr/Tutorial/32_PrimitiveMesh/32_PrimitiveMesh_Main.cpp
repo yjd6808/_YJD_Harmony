@@ -34,9 +34,9 @@ namespace
 	constexpr _f32 VIEW_HEIGHT = 600.0f;	// 가상 화면 세로
 
 	// 창 제목에 프레임당 드로우콜 수를 실시간으로 표시한다. (배칭 검증용)
-	void SetTitleDrawCall(Window* _pWindow, const char* _pFormat, _u32 _drawCalls)
+	void SetTitleDrawCall(Window* _pWindow, const _char* _pFormat, _u32 _drawCalls)
 	{
-		jc::String title = jc::StringUtilT::Format(_pFormat, _drawCalls);
+		jc::String title = jc::StringUtil::Format(_pFormat, _drawCalls);
 		_pWindow->SetTitle(title);
 	}
 
@@ -65,22 +65,22 @@ namespace
 		void OnEnter() override
 		{
 			GetCamera2D()->SetOrthographic2D(VIEW_WIDTH, VIEW_HEIGHT);
-			GetWindow()->SetTitle("32. 2D 프리미티브 - SPACE: 3D 씬 (ESC: 종료)");
+			GetWindow()->SetTitle(_T("32. 2D 프리미티브 - SPACE: 3D 씬 (ESC: 종료)"));
 
 			Mesh* pRect = g_cResourceMgr.FindPrimitiveMesh2D(PrimitiveMesh2DType::Rect);
 			Mesh* pCircle = g_cResourceMgr.FindPrimitiveMesh2D(PrimitiveMesh2DType::Circle);
 			Mesh* pTriangle = g_cResourceMgr.FindPrimitiveMesh2D(PrimitiveMesh2DType::Triangle);
 			Mesh* pLine = g_cResourceMgr.FindPrimitiveMesh2D(PrimitiveMesh2DType::Line);
 
-			Create2DObject("Rect", pRect, vec2(200.0f, 300.0f), vec3(150.0f, 100.0f, 1.0f), 0.0f, color(0xFF, 0x6B, 0x6B));
-			Create2DObject("Circle", pCircle, vec2(350.0f, 300.0f), vec3(80.0f, 80.0f, 1.0f), 0.0f, color(0xFF, 0xCC, 0x4D));
-			Create2DObject("Triangle", pTriangle, vec2(500.0f, 300.0f), vec3(140.0f, 120.0f, 1.0f), 0.0f, color(0x6B, 0xD0, 0xFF));
-			Create2DObject("Line", pLine, vec2(660.0f, 300.0f), vec3(180.0f, 10.0f, 1.0f), 0.5f, color(0x8A, 0xFF, 0x8A));
+			Create2DObject(_T("Rect"), pRect, vec2(200.0f, 300.0f), vec3(150.0f, 100.0f, 1.0f), 0.0f, color(0xFF, 0x6B, 0x6B));
+			Create2DObject(_T("Circle"), pCircle, vec2(350.0f, 300.0f), vec3(80.0f, 80.0f, 1.0f), 0.0f, color(0xFF, 0xCC, 0x4D));
+			Create2DObject(_T("Triangle"), pTriangle, vec2(500.0f, 300.0f), vec3(140.0f, 120.0f, 1.0f), 0.0f, color(0x6B, 0xD0, 0xFF));
+			Create2DObject(_T("Line"), pLine, vec2(660.0f, 300.0f), vec3(180.0f, 10.0f, 1.0f), 0.5f, color(0x8A, 0xFF, 0x8A));
 
 			// StaticLevel 시연: Line은 "현재 월드 행렬"을 고정 보관해 Static(A)으로 전환한다.
 			// 이후 OnUpdate에서 Transform을 바꿔도 위치가 고정된다. (나머지 3종은 Dynamic(B))
 			createdObjects_[3]->SetMeshStaticLevel(StaticLevel::slStatic);
-			_LogInfo_("[32] Primitive2DScene::OnEnter — 2D 프리미티브 4종 배치 완료 (Line: Static 행렬 고정)");
+			_LogInfo_(_T("[32] Primitive2DScene::OnEnter — 2D 프리미티브 4종 배치 완료 (Line: Static 행렬 고정)"));
 		}
 
 		// 매 프레임: B/Dynamic 3종은 트랜스폼이 그대로 반영되고, A/Static 1종(Line)은 고정된다.
@@ -105,7 +105,7 @@ namespace
 			vec2(660.0f + 100.0f * sinf(t * 2.0f), 300.0f));
 
 			SetTitleDrawCall(GetWindow(),
-			"32. 2D 프리미티브 - DrawCall: %u (SPACE: 3D 씬, ESC: 종료)",
+			_T("32. 2D 프리미티브 - DrawCall: %u (SPACE: 3D 씬, ESC: 종료)"),
 			g_cRenderer2D.GetDrawCallCount());
 
 			if (g_cInput.IsKeyPressed(VK_SPACE))
@@ -115,7 +115,7 @@ namespace
 		}
 
 	private:
-		GameObject* Create2DObject(const char* _pName, Mesh* _pMesh, const vec2& _position,
+		GameObject* Create2DObject(const _char* _pName, Mesh* _pMesh, const vec2& _position,
 			const vec3& _scale, _f32 _radian, const color& _tint)
 		{
 			GameObject* pObj = new GameObject(_pName);
@@ -152,7 +152,7 @@ namespace
 		{
 			GetCamera3D()->SetPerspectiveDegrees(60.0f, GetWindow()->AspectRatio(), 0.1f, 1000.0f);
 			GetCamera3D()->SetLookAt(vec3(0.0f, 2.5f, -8.0f), vec3::Zero());
-			GetWindow()->SetTitle("32. 3D 프리미티브 6종 (SPACE: 2D 씬, ESC: 종료)");
+			GetWindow()->SetTitle(_T("32. 3D 프리미티브 6종 (SPACE: 2D 씬, ESC: 종료)"));
 
 			// 6종 전부 3D enum으로 꺼낸다. (2D/3D 엄격 분리 — 2D enum에는 3D 타입이 없다)
 			Mesh* pCube = g_cResourceMgr.FindPrimitiveMesh3D(PrimitiveMesh3DType::Cube);
@@ -163,13 +163,13 @@ namespace
 			Mesh* pQuad = g_cResourceMgr.FindPrimitiveMesh3D(PrimitiveMesh3DType::Quad);
 
 			const _f32 xs[] = { -5.5f, -3.3f, -1.1f, 1.1f, 3.3f, 5.5f };
-			Create3DObject("Cube", pCube, vec3(xs[0], 0.0f, 0.0f), vec3(1.1f, 1.1f, 1.1f), color(0xFF, 0x6B, 0x6B));
-			Create3DObject("Sphere", pSphere, vec3(xs[1], 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f), color(0xFF, 0xCC, 0x4D));
-			Create3DObject("Capsule", pCapsule, vec3(xs[2], 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f), color(0x6B, 0xD0, 0xFF));
-			Create3DObject("Cylinder", pCylinder, vec3(xs[3], 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f), color(0x8A, 0xFF, 0x8A));
-			Create3DObject("Plane", pPlane, vec3(xs[4], 0.0f, 0.0f), vec3(1.2f, 1.2f, 1.2f), color(0xFF, 0x8A, 0xD0));
-			Create3DObject("Quad", pQuad, vec3(xs[5], 0.0f, 0.0f), vec3(1.2f, 1.2f, 1.2f), color(0xC0, 0xA0, 0xFF));
-			_LogInfo_("[32] Primitive3DScene::OnEnter — 3D 프리미티브 6종 배치 완료");
+			Create3DObject(_T("Cube"), pCube, vec3(xs[0], 0.0f, 0.0f), vec3(1.1f, 1.1f, 1.1f), color(0xFF, 0x6B, 0x6B));
+			Create3DObject(_T("Sphere"), pSphere, vec3(xs[1], 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f), color(0xFF, 0xCC, 0x4D));
+			Create3DObject(_T("Capsule"), pCapsule, vec3(xs[2], 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f), color(0x6B, 0xD0, 0xFF));
+			Create3DObject(_T("Cylinder"), pCylinder, vec3(xs[3], 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f), color(0x8A, 0xFF, 0x8A));
+			Create3DObject(_T("Plane"), pPlane, vec3(xs[4], 0.0f, 0.0f), vec3(1.2f, 1.2f, 1.2f), color(0xFF, 0x8A, 0xD0));
+			Create3DObject(_T("Quad"), pQuad, vec3(xs[5], 0.0f, 0.0f), vec3(1.2f, 1.2f, 1.2f), color(0xC0, 0xA0, 0xFF));
+			_LogInfo_(_T("[32] Primitive3DScene::OnEnter — 3D 프리미티브 6종 배치 완료"));
 		}
 
 		void OnUpdate(const jc::TimeSpan& _dt) override
@@ -182,7 +182,7 @@ namespace
 		}
 
 	private:
-		GameObject* Create3DObject(const char* _pName, Mesh* _pMesh, const vec3& _position,
+		GameObject* Create3DObject(const _char* _pName, Mesh* _pMesh, const vec3& _position,
 			const vec3& _scale, const color& _tint)
 		{
 			GameObject* pObj = new GameObject(_pName);
@@ -227,7 +227,7 @@ namespace
 		// 엔진 준비 완료 직후: 첫 씬을 시작한다.
 		bool ApplicationDidFinishLaunching() override
 		{
-			_LogInfo_("[32] DemoApp::ApplicationDidFinishLaunching — 첫 씬 시작");
+			_LogInfo_(_T("[32] DemoApp::ApplicationDidFinishLaunching — 첫 씬 시작"));
 			g_cDirector.RunScene(CreatePrimitive2DScene());
 			return true;
 		}
@@ -247,12 +247,12 @@ namespace
 // 튜토리얼 진입점
 void PrimitiveMesh_Main()
 {
-	_LogInfo_("[32] 프리미티브 메시 튜토리얼 시작");
+	_LogInfo_(_T("[32] 프리미티브 메시 튜토리얼 시작"));
 
 	DemoApp app;
-	if (!app.Initialize("32. 프리미티브 메시 (SPACE: 씬 전환, ESC: 종료)", 800, 600))
+	if (!app.Initialize(_T("32. 프리미티브 메시 (SPACE: 씬 전환, ESC: 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("엔진 초기화에 실패했습니다.");
+		jc::Console::WriteLine(_T("엔진 초기화에 실패했습니다."));
 		return;
 	}
 

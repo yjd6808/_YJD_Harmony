@@ -110,21 +110,21 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 // 세 셰이딩 모델의 수식과 차이를 콘솔에 출력한다. (학습용)
 void PrintShadingExplanation()
 {
-	jc::Console::WriteLine("\n[셰이딩(Shading)이란?]");
-	jc::Console::WriteLine(" \"빛이 표면에서 어떻게 반사되는가\"를 수식으로 흉내 내는 것.\n");
-	jc::Console::WriteLine("[세 가지 성분]");
-	jc::Console::WriteLine(" 1. 주변광(Ambient)   : 사방에서 은은히 도달하는 기본 밝기 (상수 0.15)");
-	jc::Console::WriteLine(" 2. 확산광(Diffuse)   : max(0, N\xc2\xb7(-L)) - 빛을 마주볼수록 밝다 (램버트 법칙)");
-	jc::Console::WriteLine(" 3. 정반사광(Specular): 거울 반사 하이라이트 - 카메라 위치가 필요하다!\n");
-	jc::Console::WriteLine("[모델별 정반사 계산]");
-	jc::Console::WriteLine(" 1. 램버트   : 정반사 없음. 무광택 표면 (분필, 천)");
-	jc::Console::WriteLine(" 2. 퐁       : pow(max(0, R\xc2\xb7V), n), R = reflect(L, N)");
-	jc::Console::WriteLine(" 3. 블린-퐁  : pow(max(0, N\xc2\xb7H), n), H = normalize(-L + V)");
-	jc::Console::WriteLine("    -> reflect 계산이 빠지고 결과도 자연스러워 현대 엔진의 표준!\n");
-	jc::Console::WriteLine("[조작법]");
-	jc::Console::WriteLine(" 1/2/3: 셰이딩 모델 전환");
-	jc::Console::WriteLine(" 위/아래 방향키: 하이라이트 날카로움(SpecPower) 2~256 증감");
-	jc::Console::WriteLine("  -> 값이 클수록 작고 선명한 하이라이트 = 매끈한 표면 느낌\n");
+	jc::Console::WriteLine(_T("\n[셰이딩(Shading)이란?]"));
+	jc::Console::WriteLine(_T(" \"빛이 표면에서 어떻게 반사되는가\"를 수식으로 흉내 내는 것.\n"));
+	jc::Console::WriteLine(_T("[세 가지 성분]"));
+	jc::Console::WriteLine(_T(" 1. 주변광(Ambient)   : 사방에서 은은히 도달하는 기본 밝기 (상수 0.15)"));
+	jc::Console::WriteLine(_T(" 2. 확산광(Diffuse)   : max(0, N·(-L)) - 빛을 마주볼수록 밝다 (램버트 법칙)"));
+	jc::Console::WriteLine(_T(" 3. 정반사광(Specular): 거울 반사 하이라이트 - 카메라 위치가 필요하다!\n"));
+	jc::Console::WriteLine(_T("[모델별 정반사 계산]"));
+	jc::Console::WriteLine(_T(" 1. 램버트   : 정반사 없음. 무광택 표면 (분필, 천)"));
+	jc::Console::WriteLine(_T(" 2. 퐁       : pow(max(0, R·V), n), R = reflect(L, N)"));
+	jc::Console::WriteLine(_T(" 3. 블린-퐁  : pow(max(0, N·H), n), H = normalize(-L + V)"));
+	jc::Console::WriteLine(_T("    -> reflect 계산이 빠지고 결과도 자연스러워 현대 엔진의 표준!\n"));
+	jc::Console::WriteLine(_T("[조작법]"));
+	jc::Console::WriteLine(_T(" 1/2/3: 셰이딩 모델 전환"));
+	jc::Console::WriteLine(_T(" 위/아래 방향키: 하이라이트 날카로움(SpecPower) 2~256 증감"));
+	jc::Console::WriteLine(_T("  -> 값이 클수록 작고 선명한 하이라이트 = 매끈한 표면 느낌\n"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

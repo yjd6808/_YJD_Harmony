@@ -80,12 +80,12 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 // 람버트 법칙의 원리를 콘솔에 출력한다. (학습용)
 void PrintLambertExplanation()
 {
-	jc::Console::WriteLine("\n[람버트 확산광 (Lambert Diffuse)]");
-	jc::Console::WriteLine(" 밝기 = max(0, dot(법선, -빛방향))");
-	jc::Console::WriteLine(" - 법선(Normal): 면이 바라보는 방향의 단위 벡터");
-	jc::Console::WriteLine(" - 빛을 정면으로 받으면 1 (가장 밝음), 수직이면 0 (안 받음)");
-	jc::Console::WriteLine(" - 내적 하나로 계산되는 가장 기초적이면서 핵심적인 조명 모델");
-	jc::Console::WriteLine(" - 주변광(Ambient): 완전한 암흑을 막기 위한 최소 밝기 (간접광 흉내)\n");
+	jc::Console::WriteLine(_T("\n[람버트 확산광 (Lambert Diffuse)]"));
+	jc::Console::WriteLine(_T(" 밝기 = max(0, dot(법선, -빛방향))"));
+	jc::Console::WriteLine(_T(" - 법선(Normal): 면이 바라보는 방향의 단위 벡터"));
+	jc::Console::WriteLine(_T(" - 빛을 정면으로 받으면 1 (가장 밝음), 수직이면 0 (안 받음)"));
+	jc::Console::WriteLine(_T(" - 내적 하나로 계산되는 가장 기초적이면서 핵심적인 조명 모델"));
+	jc::Console::WriteLine(_T(" - 주변광(Ambient): 완전한 암흑을 막기 위한 최소 밝기 (간접광 흉내)\n"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

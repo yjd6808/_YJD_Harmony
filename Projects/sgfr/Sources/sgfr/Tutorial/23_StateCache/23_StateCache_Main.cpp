@@ -35,9 +35,9 @@ void StateCache_Main()
 {
 	// 1. 윈도우 + 디바이스 + 리소스 매니저 + 씬 렌더러 준비
 	Window window;
-	if (!window.Create("23. 스테이트 캐시 (1 캐시 무력화 토글, ESC 종료)", 800, 600))
+	if (!window.Create(_T("23. 스테이트 캐시 (1 캐시 무력화 토글, ESC 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -47,13 +47,13 @@ void StateCache_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	device.Finalize();
 	window.Destroy();
 	return;
@@ -61,7 +61,7 @@ void StateCache_Main()
 
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -71,7 +71,7 @@ void StateCache_Main()
 	Renderer3D renderer;
 	if (!renderer.Initialize(&device))
 	{
-		jc::Console::WriteLine("씬 렌더러 초기화 실패!");
+		jc::Console::WriteLine(_T("씬 렌더러 초기화 실패!"));
 		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -82,7 +82,7 @@ void StateCache_Main()
 	Mesh* pCube = dbg_new Mesh();
 	if (!pCube->InitializeAsCube(&device))
 	{
-		jc::Console::WriteLine("큐브 메시 생성 실패!");
+		jc::Console::WriteLine(_T("큐브 메시 생성 실패!"));
 		delete pCube;
 		renderer.Finalize();
 		g_cResourceMgr.Finalize();
@@ -90,15 +90,15 @@ void StateCache_Main()
 		window.Destroy();
 		return;
 	}
-	pCube->SetDebugName("CacheDemoCube");
+	pCube->SetDebugName(_T("CacheDemoCube"));
 	const _u64 cubeMeshKey = g_cResourceMgr.Add(pCube);
 
 	RenderObject object;
 	object.meshKey_ = cubeMeshKey;
 	object.materialKey_ = g_cResourceMgr.GetDefaultMaterial3DKey();
 
-	jc::Console::Write("같은 메시/머티리얼 %d개를 그립니다. 창 제목의 수치를 보세요!\n", CUBE_GRID_SIZE * CUBE_GRID_SIZE);
-	jc::Console::WriteLine("1번 키로 캐시를 무력화하면 v2처럼 매번 전부 바인딩합니다.");
+	jc::Console::Write(_T("같은 메시/머티리얼 %d개를 그립니다. 창 제목의 수치를 보세요!\n"), CUBE_GRID_SIZE * CUBE_GRID_SIZE);
+	jc::Console::WriteLine(_T("1번 키로 캐시를 무력화하면 v2처럼 매번 전부 바인딩합니다."));
 
 	// 3. 카메라: 그리드 전체가 보이도록 위에서 내려다본다.
 	FrameConstants frame;
@@ -153,7 +153,7 @@ void StateCache_Main()
 		renderer.EndScene();
 
 		// 4. 통계를 창 제목으로 출력 (API 호출 수 vs 캐시가 생략한 수)
-		jc::String szTitle = jc::StringUtilT::Format("23. 스테이트 캐시 [%s] - API 호출: %llu, 생략: %llu (1 토글, ESC 종료)", bCacheDisabled ? "캐시 꺼짐" : "캐시 켜짐",
+		jc::String szTitle = jc::StringUtil::Format(_T("23. 스테이트 캐시 [%s] - API 호출: %llu, 생략: %llu (1 토글, ESC 종료)"), bCacheDisabled ? _T("캐시 꺼짐") : _T("캐시 켜짐"),
 			context.GetApiCallCount(),
 			context.GetSkippedCallCount());
 		window.SetTitle(szTitle);
@@ -166,5 +166,5 @@ void StateCache_Main()
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
-	_LogInfo_("[23] StateCache 종료 — API 호출 %llu, 생략 %llu", context.GetApiCallCount(), context.GetSkippedCallCount());
+	_LogInfo_(_T("[23] StateCache 종료 — API 호출 %llu, 생략 %llu"), context.GetApiCallCount(), context.GetSkippedCallCount());
 }

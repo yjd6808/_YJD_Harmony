@@ -21,7 +21,7 @@ using TutorialFn = void(*)();
 // 튜토리얼 한 개의 정보
 struct TutorialEntry
 {
-	const char* name_;			// 콘솔 목차에 표시될 이름
+	const _char* name_;			// 콘솔 목차에 표시될 이름
 	TutorialFn fn_;				// 실행할 함수
 };
 

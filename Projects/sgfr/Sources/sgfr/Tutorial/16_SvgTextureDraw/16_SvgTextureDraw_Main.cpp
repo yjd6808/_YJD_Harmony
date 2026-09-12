@@ -27,6 +27,7 @@
 #include "sgfr/Tutorial/16_SvgTextureDraw/16_SvgTextureDraw_Main.h"
 #include "sgfr/Tutorial/16_SvgTextureDraw/16_SvgTextureDraw_Function.h"
 #include "sgfr/Common/TutorialCommon.h"	// TextureShaderSource 공용 사용
+#include "jc/Primitives/StringConvert.h"
 
 using namespace sgf;
 using namespace jc;
@@ -38,9 +39,9 @@ void SvgTextureDraw_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("16. SVG 텍스처 그리기 (ESC로 종료)", 800, 600))
+	if (!window.Create(_T("16. SVG 텍스처 그리기 (ESC로 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -50,13 +51,13 @@ void SvgTextureDraw_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -65,7 +66,7 @@ void SvgTextureDraw_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -83,21 +84,21 @@ void SvgTextureDraw_Main()
 	{
 		// scale 2.0: SVG 원본(256x256)을 2배 해상도(512x512)로 래스터화
 		// -> 화면에서 확대되어도 깨끗하다. 이것이 벡터의 힘!
-		bLoaded = texture.LoadFromSvgFile(&device, szSvgPath, 2.0f);
+		bLoaded = texture.LoadFromSvgFile(&device, jc::StringConvert::FromUtf8(szSvgPath), 2.0f);
 	}
 
 	if (bLoaded)
 	{
-		jc::Console::Write("%s 래스터화 성공! (%d x %d)\n", szSvgPath, texture.Width(), texture.Height());
+		jc::Console::Write(_T("%hs 래스터화 성공! (%d x %d)\n"), szSvgPath, texture.Width(), texture.Height());
 	}
 	else if (CreateFallbackCircleTexture(&device, &texture))
 	{
-		jc::Console::WriteLine("nanosvg 미설치 -> CPU로 직접 그린 대체 텍스처로 진행합니다.");
-		jc::Console::WriteLine("(sgf/_Extern/nanosvg/README.md 참고해서 헤더  2개를 넣으면 진짜 SVG 래스터화를 볼 수 있습니다)");
+		jc::Console::WriteLine(_T("nanosvg 미설치 -> CPU로 직접 그린 대체 텍스처로 진행합니다."));
+		jc::Console::WriteLine(_T("(sgf/_Extern/nanosvg/README.md 참고해서 헤더  2개를 넣으면 진짜 SVG 래스터화를 볼 수 있습니다)"));
 	}
 	else
 	{
-		jc::Console::WriteLine("텍스처 생성 실패!");
+		jc::Console::WriteLine(_T("텍스처 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -113,7 +114,7 @@ void SvgTextureDraw_Main()
 	if (!vb.Create(&device, vertices, 4, VertexPTC::Decl()) ||
 		!ib.Create(&device, indices, 6))
 		{
-		jc::Console::WriteLine("버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -122,11 +123,11 @@ void SvgTextureDraw_Main()
 
 	// 4. 셰이더는 15번과 완전히 동일 (텍스처 샘플링) -> 재사용!
 
-	_u64 vsShader = device.Context().CreateVertexShader(TextureShaderSource());
-	_u64 psShader = device.Context().CreatePixelShader(TextureShaderSource());
+	_u64 vsShader = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(TextureShaderSource()));
+	_u64 psShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(TextureShaderSource()));
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY)
 	{
-		jc::Console::WriteLine("셰이더 컴파일 실패!");
+		jc::Console::WriteLine(_T("셰이더 컴파일 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();

@@ -38,7 +38,7 @@ struct ServerListener : ServerEventListener
 
 struct tagServerGroup : NetGroup
 {
-	tagServerGroup() : NetGroup("서버")
+	tagServerGroup() : NetGroup(_T("서버"))
 	{
 	}
 

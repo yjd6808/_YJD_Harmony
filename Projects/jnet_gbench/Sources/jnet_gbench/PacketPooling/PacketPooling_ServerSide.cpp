@@ -55,7 +55,7 @@ struct tagServerGroup : NetGroup
 {
 	//////////////////////////////////////////////////////////////////////////////////////
 	tagServerGroup()
-		: NetGroup("서버")
+		: NetGroup(_T("서버"))
 	{
 	}
 

@@ -119,21 +119,21 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 // 포스트 프로세싱의 개념과 각 효과의 수식을 콘솔에 출력한다. (학습용)
 void PrintPostProcessExplanation()
 {
-	jc::Console::WriteLine("\n[포스트 프로세싱이란?]");
-	jc::Console::WriteLine(" 1단계: 장면을 화면이 아닌 '렌더 타깃 텍스처'에 그린다 (25번에서 배움!)");
-	jc::Console::WriteLine(" 2단계: 화면 전체 사각형을 그리면서 그 텍스처를 픽셀단위로 가공한다");
-	jc::Console::WriteLine(" = 게임 화면에 '사진 필터'를 입히는 것과 같다!\n");
-	jc::Console::WriteLine("[Before/After 비교 슬라이더]");
-	jc::Console::WriteLine(" 노란 세로선 왼쪽  = 원본(Before), 오른쪽 = 효과 적용(After)");
-	jc::Console::WriteLine(" 왼쪽/오른쪽 방향키로 경계를 직접 좁혀가며 비교해보세요!\n");
-	jc::Console::WriteLine("[효과 목록 (0~5 키로 전환)]");
-	jc::Console::WriteLine(" 0. 원본       : 효과 없음 (경계 양쪽이 완전히 같아진다)");
-	jc::Console::WriteLine(" 1. 그레이     : 밝기만 남긴다. gray = 0.299R + 0.587G + 0.114B");
-	jc::Console::WriteLine(" 2. 세피아     : 그레이에 갈색 입히기. 옛날 사진 느낌");
-	jc::Console::WriteLine(" 3. 색 반전    : 1 - RGB");
-	jc::Console::WriteLine(" 4. 비네트     : 중심에서 멀수록 어둡게. 시선 집중 효과");
-	jc::Console::WriteLine(" 5. 물결       : UV를 사인파로 흔들기. 취함/지지직 이펙트\n");
-	jc::Console::WriteLine(" 핵심: 장면이 아무리 복잡해도 후보정 비용은 화면 픽셀 수에만 비례한다!\n");
+	jc::Console::WriteLine(_T("\n[포스트 프로세싱이란?]"));
+	jc::Console::WriteLine(_T(" 1단계: 장면을 화면이 아닌 '렌더 타깃 텍스처'에 그린다 (25번에서 배움!)"));
+	jc::Console::WriteLine(_T(" 2단계: 화면 전체 사각형을 그리면서 그 텍스처를 픽셀단위로 가공한다"));
+	jc::Console::WriteLine(_T(" = 게임 화면에 '사진 필터'를 입히는 것과 같다!\n"));
+	jc::Console::WriteLine(_T("[Before/After 비교 슬라이더]"));
+	jc::Console::WriteLine(_T(" 노란 세로선 왼쪽  = 원본(Before), 오른쪽 = 효과 적용(After)"));
+	jc::Console::WriteLine(_T(" 왼쪽/오른쪽 방향키로 경계를 직접 좁혀가며 비교해보세요!\n"));
+	jc::Console::WriteLine(_T("[효과 목록 (0~5 키로 전환)]"));
+	jc::Console::WriteLine(_T(" 0. 원본       : 효과 없음 (경계 양쪽이 완전히 같아진다)"));
+	jc::Console::WriteLine(_T(" 1. 그레이     : 밝기만 남긴다. gray = 0.299R + 0.587G + 0.114B"));
+	jc::Console::WriteLine(_T(" 2. 세피아     : 그레이에 갈색 입히기. 옛날 사진 느낌"));
+	jc::Console::WriteLine(_T(" 3. 색 반전    : 1 - RGB"));
+	jc::Console::WriteLine(_T(" 4. 비네트     : 중심에서 멀수록 어둡게. 시선 집중 효과"));
+	jc::Console::WriteLine(_T(" 5. 물결       : UV를 사인파로 흔들기. 취함/지지직 이펙트\n"));
+	jc::Console::WriteLine(_T(" 핵심: 장면이 아무리 복잡해도 후보정 비용은 화면 픽셀 수에만 비례한다!\n"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

@@ -64,14 +64,14 @@ void Scene3D::RenderScene()
 	frame.cameraPosition_ = vec4(GetCamera3D()->Eye(), 1.0f);
 	g_cRenderer3D.BeginScene(frame);           // b0 갱신
 	if ((++sLogFrame % 60) == 1)
-		_LogDebug_("[sgf] Scene3D::RenderScene Begin (window=%p)", (void*)GetWindow());
+		_LogDebug_(_T("[sgf] Scene3D::RenderScene Begin (window=%p)"), (void*)GetWindow());
 
 	RenderNode(root_);                         // 노드 OnRender() → pScene_ 경유 DrawMesh
 	OnRender();                                // 수동 3D/2D 혼합 (씬 자신 — 최상위)
 
 	g_cRenderer3D.EndScene();
 	if ((sLogFrame % 60) == 1)
-		_LogDebug_("[sgf] Scene3D::RenderScene End");
+		_LogDebug_(_T("[sgf] Scene3D::RenderScene End"));
 }
 
 NS_SGF_END

@@ -31,6 +31,7 @@
  */
 
 #include "Core.h"
+#include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/27_ShadowMapping/27_ShadowMapping_Main.h"
 #include "sgfr/Tutorial/27_ShadowMapping/27_ShadowMapping_Function.h"
@@ -72,9 +73,9 @@ void ShadowMapping_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("27. 그림자 매핑 - 왼쪽: 그림자 없음 | 오른쪽: 그림자 적용 (←→ 빛, ↑↓ 바이어스, ESC)", 800, 600))
+	if (!window.Create(_T("27. 그림자 매핑 - 왼쪽: 그림자 없음 | 오른쪽: 그림자 적용 (←→ 빛, ↑↓ 바이어스, ESC)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -84,13 +85,13 @@ void ShadowMapping_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -99,7 +100,7 @@ void ShadowMapping_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -111,7 +112,7 @@ void ShadowMapping_Main()
 	RenderTarget shadowMap;
 	if (!shadowMap.CreateDepthOnly(&device, 1024, 1024))
 	{
-		jc::Console::WriteLine("그림자 맵 생성 실패!");
+		jc::Console::WriteLine(_T("그림자 맵 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -136,7 +137,7 @@ void ShadowMapping_Main()
 		!cubeVb.Create(&device, cubeVertices, 24, VertexPNT::Decl()) ||
 		!cubeIb.Create(&device, cubeIndices, 36))
 		{
-		jc::Console::WriteLine("버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -145,16 +146,16 @@ void ShadowMapping_Main()
 
 	// 4. 셰이더 2종(깊이 전용/장면용) + 상수 버퍼 3종
 
-	_u64 vsDepthShader = device.Context().CreateVertexShader(ShadowDepthShaderSource());
-	_u64 psDepthShader = device.Context().CreatePixelShader(ShadowDepthShaderSource());
-	_u64 vsSceneShader = device.Context().CreateVertexShader(ShadowSceneShaderSource());
-	_u64 psSceneShader = device.Context().CreatePixelShader(ShadowSceneShaderSource());
+	_u64 vsDepthShader = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(ShadowDepthShaderSource()));
+	_u64 psDepthShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(ShadowDepthShaderSource()));
+	_u64 vsSceneShader = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(ShadowSceneShaderSource()));
+	_u64 psSceneShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(ShadowSceneShaderSource()));
 	ConstantBuffer<CbDepth> cbDepth;
 	ConstantBuffer<CbScene> cbScene;
 	ConstantBuffer<CbLight> cbLight;
 	if (vsDepthShader == INVALID_RESOURCE_KEY || psDepthShader == INVALID_RESOURCE_KEY || vsSceneShader == INVALID_RESOURCE_KEY || psSceneShader == INVALID_RESOURCE_KEY || !cbDepth.Create(&device) || !cbScene.Create(&device) || !cbLight.Create(&device))
 		{
-		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -198,12 +199,12 @@ void ShadowMapping_Main()
 		if (input.IsKeyPressed(VK_UP))
 		{
 			shadowBias = Clamp(shadowBias + 0.001f, 0.0f, 0.01f);
-			jc::Console::Write("그림자 바이어스: %.4f\n", shadowBias);
+			jc::Console::Write(_T("그림자 바이어스: %.4f\n"), shadowBias);
 		}
 		if (input.IsKeyPressed(VK_DOWN))
 		{
 			shadowBias = Clamp(shadowBias - 0.001f, 0.0f, 0.01f);
-			jc::Console::Write("그림자 바이어스: %.4f (0이면 오른쪽에서 여드름 관찰 가능!)\n", shadowBias);
+			jc::Console::Write(_T("그림자 바이어스: %.4f (0이면 오른쪽에서 여드름 관찰 가능!)\n"), shadowBias);
 		}
 
 		input.NextFrame();

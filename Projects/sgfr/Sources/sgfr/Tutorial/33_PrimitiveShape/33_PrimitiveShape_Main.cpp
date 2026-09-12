@@ -31,9 +31,9 @@ namespace
 	constexpr _f32 VIEW_HEIGHT = 600.0f;	// 가상 화면 세로
 
 	// 창 제목에 프레임당 드로우콜 수를 실시간으로 표시한다. (배칭 검증용)
-	void SetTitleDrawCall(Window* _pWindow, const char* _pFormat, _u32 _drawCalls)
+	void SetTitleDrawCall(Window* _pWindow, const _char* _pFormat, _u32 _drawCalls)
 	{
-		jc::String title = jc::StringUtilT::Format(_pFormat, _drawCalls);
+		jc::String title = jc::StringUtil::Format(_pFormat, _drawCalls);
 		_pWindow->SetTitle(title);
 	}
 
@@ -62,33 +62,33 @@ namespace
 		void OnEnter() override
 		{
 			GetCamera2D()->SetOrthographic2D(VIEW_WIDTH, VIEW_HEIGHT);
-			GetWindow()->SetTitle("33. Shape2D - SPACE: 3D 씬 (ESC: 종료)");
+			GetWindow()->SetTitle(_T("33. Shape2D - SPACE: 3D 씬 (ESC: 종료)"));
 
 			// 사각형 — 채운 사각형 패널 (절대좌표: 왼쪽 위 200,150, 크기 120x90)
-			Shape2D* pRect = new Shape2D("Rect");
+			Shape2D* pRect = new Shape2D(_T("Rect"));
 			pRect->SetRect(rect(200.0f, 150.0f, 120.0f, 90.0f), color(0xFF, 0x6B, 0x6B));
 			AddChild(pRect, 0);
 			createdObjects_.PushBack(pRect);
 
 			// 원 — 중심 (380, 300), 반지름 60, 기본 32분할
-			Shape2D* pCircle = new Shape2D("Circle");
+			Shape2D* pCircle = new Shape2D(_T("Circle"));
 			pCircle->SetCircle(vec2(380.0f, 300.0f), 60.0f, color(0xFF, 0xCC, 0x4D));
 			AddChild(pCircle, 0);
 			createdObjects_.PushBack(pCircle);
 
 			// 선 — 두께 6의 선분 (절대좌표 두 점)
-			Shape2D* pLine = new Shape2D("Line");
+			Shape2D* pLine = new Shape2D(_T("Line"));
 			pLine->SetLine(vec2(500.0f, 180.0f), vec2(650.0f, 420.0f), 6.0f, color(0x8A, 0xFF, 0x8A));
 			AddChild(pLine, 0);
 			createdObjects_.PushBack(pLine);
 
 			// 삼각형 — 절대좌표 세 점
-			Shape2D* pTriangle = new Shape2D("Triangle");
+			Shape2D* pTriangle = new Shape2D(_T("Triangle"));
 			pTriangle->SetTriangle(vec2(200.0f, 420.0f), vec2(260.0f, 300.0f), vec2(330.0f, 440.0f), color(0x6B, 0xD0, 0xFF));
 			AddChild(pTriangle, 0);
 			createdObjects_.PushBack(pTriangle);
 
-			_LogInfo_("[33] Shape2DScene::OnEnter — Shape2D 4종 배치 완료");
+			_LogInfo_(_T("[33] Shape2DScene::OnEnter — Shape2D 4종 배치 완료"));
 		}
 
 		// 매 프레임: 지난 프레임의 실제 GPU 드로우콜 수를 창 제목에 표시 (배칭이 잘 되면 1)
@@ -96,7 +96,7 @@ namespace
 		{
 			(void)_dt;
 			SetTitleDrawCall(GetWindow(),
-			"33. Shape2D 4종 - DrawCall: %u (SPACE: 3D 씬, ESC: 종료)",
+			_T("33. Shape2D 4종 - DrawCall: %u (SPACE: 3D 씬, ESC: 종료)"),
 			g_cRenderer2D.GetDrawCallCount());
 
 			if (g_cInput.IsKeyPressed(VK_SPACE))
@@ -129,16 +129,16 @@ namespace
 		{
 			GetCamera3D()->SetPerspectiveDegrees(60.0f, GetWindow()->AspectRatio(), 0.1f, 1000.0f);
 			GetCamera3D()->SetLookAt(vec3(0.0f, 2.5f, -8.0f), vec3::Zero());
-			GetWindow()->SetTitle("33. Shape3D 6종 (SPACE: 2D 씬, ESC: 종료)");
+			GetWindow()->SetTitle(_T("33. Shape3D 6종 (SPACE: 2D 씬, ESC: 종료)"));
 
 			const _f32 xs[] = { -5.5f, -3.3f, -1.1f, 1.1f, 3.3f, 5.5f };
-			CreateShape("Cube", PrimitiveMesh3DType::Cube, vec3(xs[0], 0.0f, 0.0f), 1.1f, color(0xFF, 0x6B, 0x6B));
-			CreateShape("Sphere", PrimitiveMesh3DType::Sphere, vec3(xs[1], 0.0f, 0.0f), 1.0f, color(0xFF, 0xCC, 0x4D));
-			CreateShape("Capsule", PrimitiveMesh3DType::Capsule, vec3(xs[2], 0.0f, 0.0f), 1.0f, color(0x6B, 0xD0, 0xFF));
-			CreateShape("Cylinder", PrimitiveMesh3DType::Cylinder, vec3(xs[3], 0.0f, 0.0f), 1.0f, color(0x8A, 0xFF, 0x8A));
-			CreateShape("Plane", PrimitiveMesh3DType::Plane, vec3(xs[4], 0.0f, 0.0f), 1.2f, color(0xFF, 0x8A, 0xD0));
-			CreateShape("Quad", PrimitiveMesh3DType::Quad, vec3(xs[5], 0.0f, 0.0f), 1.2f, color(0xC0, 0xA0, 0xFF));
-			_LogInfo_("[33] Shape3DScene::OnEnter — Shape3D 6종 배치 완료");
+			CreateShape(_T("Cube"), PrimitiveMesh3DType::Cube, vec3(xs[0], 0.0f, 0.0f), 1.1f, color(0xFF, 0x6B, 0x6B));
+			CreateShape(_T("Sphere"), PrimitiveMesh3DType::Sphere, vec3(xs[1], 0.0f, 0.0f), 1.0f, color(0xFF, 0xCC, 0x4D));
+			CreateShape(_T("Capsule"), PrimitiveMesh3DType::Capsule, vec3(xs[2], 0.0f, 0.0f), 1.0f, color(0x6B, 0xD0, 0xFF));
+			CreateShape(_T("Cylinder"), PrimitiveMesh3DType::Cylinder, vec3(xs[3], 0.0f, 0.0f), 1.0f, color(0x8A, 0xFF, 0x8A));
+			CreateShape(_T("Plane"), PrimitiveMesh3DType::Plane, vec3(xs[4], 0.0f, 0.0f), 1.2f, color(0xFF, 0x8A, 0xD0));
+			CreateShape(_T("Quad"), PrimitiveMesh3DType::Quad, vec3(xs[5], 0.0f, 0.0f), 1.2f, color(0xC0, 0xA0, 0xFF));
+			_LogInfo_(_T("[33] Shape3DScene::OnEnter — Shape3D 6종 배치 완료"));
 		}
 
 		// 매 프레임: 각 도형을 제자리에서 자전시킨다. (bake가 없는 Shape3D의 자유도)
@@ -162,7 +162,7 @@ namespace
 		}
 
 	private:
-		Shape3D* CreateShape(const char* _pName, PrimitiveMesh3DType _type,
+		Shape3D* CreateShape(const _char* _pName, PrimitiveMesh3DType _type,
 			const vec3& _position, _f32 _scale, const color& _color)
 		{
 			Shape3D* pShape = new Shape3D(_pName);
@@ -199,7 +199,7 @@ namespace
 		// 엔진 준비 완료 직후: 첫 씬을 시작한다.
 		bool ApplicationDidFinishLaunching() override
 		{
-			_LogInfo_("[33] DemoApp::ApplicationDidFinishLaunching — 첫 씬 시작");
+			_LogInfo_(_T("[33] DemoApp::ApplicationDidFinishLaunching — 첫 씬 시작"));
 			g_cDirector.RunScene(CreateShape2DScene());
 			return true;
 		}
@@ -219,12 +219,12 @@ namespace
 // 튜토리얼 진입점
 void PrimitiveShape_Main()
 {
-	_LogInfo_("[33] 프리미티브 셰이프 튜토리얼 시작");
+	_LogInfo_(_T("[33] 프리미티브 셰이프 튜토리얼 시작"));
 
 	DemoApp app;
-	if (!app.Initialize("33. 프리미티브 셰이프 (SPACE: 씬 전환, ESC: 종료)", 800, 600))
+	if (!app.Initialize(_T("33. 프리미티브 셰이프 (SPACE: 씬 전환, ESC: 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("엔진 초기화에 실패했습니다.");
+		jc::Console::WriteLine(_T("엔진 초기화에 실패했습니다."));
 		return;
 	}
 

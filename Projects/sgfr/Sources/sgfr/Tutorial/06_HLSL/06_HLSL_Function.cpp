@@ -69,12 +69,12 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 // HLSL 문법 핵심 요약을 콘솔에 출력한다. (학습용)
 void PrintHlslSummary()
 {
-	jc::Console::WriteLine("\n[HLSL 핵심 요약]");
-	jc::Console::WriteLine(" 1. HLSL은 GPU에서 돌아가는 C유사 언어다. (High Level Shading Language)");
-	jc::Console::WriteLine(" 2. 기본 타입: float / float2 / float3 / float4 / float4x4 (행렬)");
-	jc::Console::WriteLine(" 3. 시맨틱(Semantic): 변수의 '역할 꾸리표'. POSITION, COLOR0, SV_POSITION 등");
-	jc::Console::WriteLine("    - SV_ 접두사는 GPU가 특별 취급하는 시스템 값 (SV_POSITION = 최종 위치)");
-	jc::Console::WriteLine(" 4. cbuffer: C++이 보내주는 공유 데이터. register(b0)의 0이 슬롯 번호");
-	jc::Console::WriteLine(" 5. 내장 함수: sin/cos/lerp/saturate/normalize/dot/mul 등");
-	jc::Console::WriteLine(" 6. 16바이트 정렬: cbuffer 크기는 반드시 16의 배수여야 한다! (패딩 필수)\n");
+	jc::Console::WriteLine(_T("\n[HLSL 핵심 요약]"));
+	jc::Console::WriteLine(_T(" 1. HLSL은 GPU에서 돌아가는 C유사 언어다. (High Level Shading Language)"));
+	jc::Console::WriteLine(_T(" 2. 기본 타입: float / float2 / float3 / float4 / float4x4 (행렬)"));
+	jc::Console::WriteLine(_T(" 3. 시맨틱(Semantic): 변수의 '역할 꾸리표'. POSITION, COLOR0, SV_POSITION 등"));
+	jc::Console::WriteLine(_T("    - SV_ 접두사는 GPU가 특별 취급하는 시스템 값 (SV_POSITION = 최종 위치)"));
+	jc::Console::WriteLine(_T(" 4. cbuffer: C++이 보내주는 공유 데이터. register(b0)의 0이 슬롯 번호"));
+	jc::Console::WriteLine(_T(" 5. 내장 함수: sin/cos/lerp/saturate/normalize/dot/mul 등"));
+	jc::Console::WriteLine(_T(" 6. 16바이트 정렬: cbuffer 크기는 반드시 16의 배수여야 한다! (패딩 필수)\n"));
 }

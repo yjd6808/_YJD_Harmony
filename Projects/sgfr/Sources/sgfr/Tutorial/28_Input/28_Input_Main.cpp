@@ -19,6 +19,7 @@
  */
 
 #include "Core.h"
+#include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/28_Input/28_Input_Main.h"
 #include "sgfr/Tutorial/28_Input/28_Input_Function.h"
@@ -33,9 +34,9 @@ void Input_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("28. 입력 처리 - 마우스/키보드/휠 (ESC로 종료)", 800, 600))
+	if (!window.Create(_T("28. 입력 처리 - 마우스/키보드/휠 (ESC로 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -45,13 +46,13 @@ void Input_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -60,7 +61,7 @@ void Input_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -76,21 +77,21 @@ void Input_Main()
 	input.onMouseWheel.Register(1, [&halfSize](_s32 _delta)
 	{
 		halfSize = Clamp(halfSize + _f32(_delta) * 0.02f, 0.02f, 0.4f);
-		jc::Console::Write("[이벤트] 휠 delta=%d -> 반폭 %.2f\n", _delta, halfSize);
+		jc::Console::Write(_T("[이벤트] 휠 delta=%d -> 반폭 %.2f\n"), _delta, halfSize);
 	});
 
 	// 키 이벤트: 눌리는 순간 1번만 발생한다. (꾹 눌러도 1번!)
 	input.onKeyPressed.Register(1, [](_s32 _vkCode)
 	{
-		jc::Console::Write("[이벤트] 키 눌림: VK 코드 0x%02X\n", _vkCode);
+		jc::Console::Write(_T("[이벤트] 키 눌림: VK 코드 0x%02X\n"), _vkCode);
 	});
 
 	// 마우스 버튼 이벤트: 어느 버튼이 어디서 눌렸는지 알려준다.
 	input.onMousePressed.Register(1, [](MouseButton _button, _s32 _x, _s32 _y)
 	{
-		const char* szName = (_button == MouseButton::Left) ? "왼쪽"
-			: (_button == MouseButton::Right) ? "오른쪽" : "가운데";
-		jc::Console::Write("[이벤트] 마우스 %s 버튼 눌림 @ (%d, %d)\n", szName, _x, _y);
+		const _char* szName = (_button == MouseButton::Left) ? _T("왼쪽")
+			: (_button == MouseButton::Right) ? _T("오른쪽") : _T("가운데");
+		jc::Console::Write(_T("[이벤트] 마우스 %s 버튼 눌림 @ (%d, %d)\n"), szName, _x, _y);
 	});
 
 	// 3. 동적 정점 버퍼 (매 프레임 위치/크기/색이 바뀌므로 bDynamic = true)
@@ -102,7 +103,7 @@ void Input_Main()
 	if (!vb.Create(&device, vertices, 4, VertexPC::Decl()) ||
 		!ib.Create(&device, indices, 6))
 		{
-		jc::Console::WriteLine("버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -111,11 +112,11 @@ void Input_Main()
 
 	// 4. 셰이더 컴파일
 
-	_u64 vsShader = device.Context().CreateVertexShader(InputDemoShaderSource());
-	_u64 psShader = device.Context().CreatePixelShader(InputDemoShaderSource());
+	_u64 vsShader = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(InputDemoShaderSource()));
+	_u64 psShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(InputDemoShaderSource()));
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY)
 	{
-		jc::Console::WriteLine("셰이더 컴파일 실패!");
+		jc::Console::WriteLine(_T("셰이더 컴파일 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();

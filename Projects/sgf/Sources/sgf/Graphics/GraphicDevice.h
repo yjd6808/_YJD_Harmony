@@ -54,8 +54,8 @@ public:
 
 	// ---- 리소스 레지스트리
 	// C안: 반환 키는 _u64 Resource Key [type 8][gen 24][index 32], 실패 시 INVALID_RESOURCE_KEY(0)
-	_u64 CreateVertexShader(const jc::String& _hlslSource, const jc::String& _entry = "VSMain");
-	_u64 CreatePixelShader(const jc::String& _hlslSource, const jc::String& _entry = "PSMain");
+	_u64 CreateVertexShader(const jc::String& _hlslSource, const jc::String& _entry = _T("VSMain"));
+	_u64 CreatePixelShader(const jc::String& _hlslSource, const jc::String& _entry = _T("PSMain"));
 	template <typename TVertex>
 	_u64 CreateVertexBuffer(const TVertex* _pVertices, _u32 _count, ResourceUsage _usage = ResourceUsage::ruDefault)
 	{

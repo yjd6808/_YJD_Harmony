@@ -98,7 +98,7 @@ bool MCPServer::Start(int _port)
     tcpServer_ = dbg_new MCPTcpServer(this, iocp_, pool);
     tcpServer_->SetEventListener(dbg_new MCPServerEventListener(this));
 
-    IPv4EndPoint endPoint(IPv4Address::Parse("127.0.0.1"), static_cast<_u16>(_port));
+    IPv4EndPoint endPoint(IPv4Address::Parse(_T("127.0.0.1")), static_cast<_u16>(_port));
     if (!tcpServer_->Start(endPoint))
         return false;
 

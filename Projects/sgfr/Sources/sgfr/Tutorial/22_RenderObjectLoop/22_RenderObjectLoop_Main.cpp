@@ -33,12 +33,12 @@ namespace
 // 렌더 오브젝트 루프 튜토리얼을 실행한다. (BeginScene → Draw 반복 패턴)
 void RenderObjectLoop_Main()
 {
-	_LogInfo_("[22] RenderObjectLoop 시작");
+	_LogInfo_(_T("[22] RenderObjectLoop 시작"));
 	// 1. 윈도우 + 디바이스 + 리소스 매니저 준비
 	Window window;
-	if (!window.Create("22. 렌더 오브젝트 루프 (1 가운데 큐브 토글, ESC 종료)", 800, 600))
+	if (!window.Create(_T("22. 렌더 오브젝트 루프 (1 가운데 큐브 토글, ESC 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -48,13 +48,13 @@ void RenderObjectLoop_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	device.Finalize();
 	window.Destroy();
 	return;
@@ -62,7 +62,7 @@ void RenderObjectLoop_Main()
 
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -72,7 +72,7 @@ void RenderObjectLoop_Main()
 	Renderer3D renderer;
 	if (!renderer.Initialize(&device))
 	{
-		jc::Console::WriteLine("씬 렌더러 초기화 실패!");
+		jc::Console::WriteLine(_T("씬 렌더러 초기화 실패!"));
 		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -83,7 +83,7 @@ void RenderObjectLoop_Main()
 	Mesh* pCube = dbg_new Mesh();
 	if (!pCube->InitializeAsCube(&device))
 	{
-		jc::Console::WriteLine("큐브 메시 생성 실패!");
+		jc::Console::WriteLine(_T("큐브 메시 생성 실패!"));
 		delete pCube;
 		renderer.Finalize();
 		g_cResourceMgr.Finalize();
@@ -91,9 +91,9 @@ void RenderObjectLoop_Main()
 		window.Destroy();
 		return;
 	}
-	pCube->SetDebugName("UnitCube");
+	pCube->SetDebugName(_T("UnitCube"));
 	const _u64 cubeMeshKey = g_cResourceMgr.Add(pCube);
-	_LogInfo_("[22] 리소스 준비 완료 — 메시 키=%llu", (unsigned long long)cubeMeshKey);
+	_LogInfo_(_T("[22] 리소스 준비 완료 — 메시 키=%llu"), (unsigned long long)cubeMeshKey);
 
 	// 4. 그릴 목록 구성: 가운데 큰 큐브 1개 + 주변 궤도 큐브 4개
 	// 월드 행렬은 매 프레임 갱신하므로 여기서는 키/머티리얼/visible_만 채운다.
@@ -105,7 +105,7 @@ void RenderObjectLoop_Main()
 		objects[i].visible_ = true;
 	}
 
-	jc::Console::Write("RenderObject %d개를 BeginScene → Draw 루프로 그립니다!\n", 1 + ORBIT_CUBE_COUNT);
+	jc::Console::Write(_T("RenderObject %d개를 BeginScene → Draw 루프로 그립니다!\n"), 1 + ORBIT_CUBE_COUNT);
 
 	// 5. 카메라는 고정, 객체만 회전시킨다.
 	FrameConstants frame;
@@ -161,7 +161,7 @@ void RenderObjectLoop_Main()
 		++frameCount;
 		if (frameCount == 1 || frameCount == 60 || frameCount == 300)
 		{
-			_LogDebug_("[22] 렌더 프레임 %d회 — Draw %d건", frameCount, 1 + ORBIT_CUBE_COUNT);
+			_LogDebug_(_T("[22] 렌더 프레임 %d회 — Draw %d건"), frameCount, 1 + ORBIT_CUBE_COUNT);
 		}
 	}
 
@@ -170,5 +170,5 @@ void RenderObjectLoop_Main()
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
-	_LogInfo_("[22] RenderObjectLoop 종료 — 렌더 프레임 %d회", frameCount);
+	_LogInfo_(_T("[22] RenderObjectLoop 종료 — 렌더 프레임 %d회"), frameCount);
 }

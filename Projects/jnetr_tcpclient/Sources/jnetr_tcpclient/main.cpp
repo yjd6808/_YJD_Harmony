@@ -18,7 +18,7 @@ TcpClientNetGroup* pClientGroup;
 //////////////////////////////////////////////////////////////////////////////////////////
 int main(int _argc, char** _argv)
 {
-	IPv4EndPoint a{ "127.0.0.1:5555" };
+	IPv4EndPoint a{ _T("127.0.0.1:5555") };
 
     Winsock::Initialize(2, 2);
     InitializeJCore(_argc, _argv);

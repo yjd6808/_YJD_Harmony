@@ -36,9 +36,9 @@ void DeviceAndSwapChain_Main()
 {
 	// 1. 윈도우 생성 (02번 튜토리얼과 동일)
 	Window window;
-	if (!window.Create("04. 디바이스와 스왑체인 (ESC로 종료)", 800, 600))
+	if (!window.Create(_T("04. 디바이스와 스왑체인 (ESC로 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -55,13 +55,13 @@ void DeviceAndSwapChain_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -70,14 +70,14 @@ void DeviceAndSwapChain_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
 	return;
 	}
 
-	jc::Console::WriteLine("디바이스 초기화 성공! 배경색이 부드럽게 변합니다. (ESC로 종료)");
+	jc::Console::WriteLine(_T("디바이스 초기화 성공! 배경색이 부드럽게 변합니다. (ESC로 종료)"));
 
 	// 3. 시간 측정용 타이머
 	FrameTimer timer;

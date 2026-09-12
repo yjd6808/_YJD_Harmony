@@ -29,7 +29,7 @@ class Scene2D;
 class Shape2D : public GameObject
 {
 public:
-	explicit Shape2D(const jc::String& _name = "Shape2D");
+	explicit Shape2D(const jc::String& _name = _T("Shape2D"));
 
 	// AddChild 전에 설정 (OnEnter에서 1회 bake — 이후 변경은 무시)
 	void SetRect(const rect& _region, const color& _color);

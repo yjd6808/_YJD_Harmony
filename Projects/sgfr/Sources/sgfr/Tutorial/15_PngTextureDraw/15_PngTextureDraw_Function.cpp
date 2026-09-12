@@ -15,11 +15,11 @@ using namespace sgf;
 // UV 좌표계의 원리를 콘솔에 출력한다. (학습용)
 void PrintUvExplanation()
 {
-	jc::Console::WriteLine("\n[UV 좌표계]");
-	jc::Console::WriteLine(" 텍스처 위의 위치를 나타내는 0~1 좌표계.");
-	jc::Console::WriteLine(" (0,0) = 왼쪽 위, (1,1) = 오른쪽 아래. 해상도와 무관하다!");
-	jc::Console::WriteLine(" 정점에 UV를 적어두면 래스터라이저가 픽셀마다 보간해서 전달한다.");
-	jc::Console::WriteLine(" 픽셀 셰이더는 그 UV로 텍스처 색을 읽는다(Sample).\n");
+	jc::Console::WriteLine(_T("\n[UV 좌표계]"));
+	jc::Console::WriteLine(_T(" 텍스처 위의 위치를 나타내는 0~1 좌표계."));
+	jc::Console::WriteLine(_T(" (0,0) = 왼쪽 위, (1,1) = 오른쪽 아래. 해상도와 무관하다!"));
+	jc::Console::WriteLine(_T(" 정점에 UV를 적어두면 래스터라이저가 픽셀마다 보간해서 전달한다."));
+	jc::Console::WriteLine(_T(" 픽셀 셰이더는 그 UV로 텍스처 색을 읽는다(Sample).\n"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

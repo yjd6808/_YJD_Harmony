@@ -30,8 +30,8 @@ USING_NS_STD;
 USING_NS_BENCHMARK;
 
 // 테스트 IP:포트
-#define JNET_RESEARCH_CONN_ADDR		"127.0.0.1:9999"
-#define JNET_RESEARCH_BIND_ADDR		"0.0.0.0:9999"
+#define JNET_RESEARCH_CONN_ADDR		_T("127.0.0.1:9999")
+#define JNET_RESEARCH_BIND_ADDR		_T("0.0.0.0:9999")
 
 #define ON							1
 #define OFF							0

@@ -111,7 +111,7 @@ void Director::RunScene(Scene* _pScene, Window* _pWindow)
 	_pScene->SetWindow(pWindow);	// 씬에게 소속 윈도우를 알려준다
 	_pScene->SetDevice(&g_cDevice);	// 그래픽 디바이스 주입 (GetGraphicDevice)
 	_pScene->OnEnter();
-	_LogInfo_("[sgf] Director::RunScene — 씬 시작 (window=%p)", (void*)pWindow);
+	_LogInfo_(_T("[sgf] Director::RunScene — 씬 시작 (window=%p)"), (void*)pWindow);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -148,13 +148,13 @@ void Director::ReplaceScene(Scene* _pScene, Window* _pWindow)
 		_pScene->SetWindow(pWindow);
 		_pScene->SetDevice(&g_cDevice);
 		_pScene->OnEnter();
-		_LogInfo_("[sgf] Director::ReplaceScene — 즉시 시작 (window=%p)", (void*)pWindow);
+		_LogInfo_(_T("[sgf] Director::ReplaceScene — 즉시 시작 (window=%p)"), (void*)pWindow);
 		return;
 	}
 
 	// 프레임 도중 교체는 위험하므로 다음 Update 시작 시점에 교체한다.
 	slot.pNext_ = _pScene;
-	_LogInfo_("[sgf] Director::ReplaceScene — 교체 예약 (window=%p)", (void*)pWindow);
+	_LogInfo_(_T("[sgf] Director::ReplaceScene — 교체 예약 (window=%p)"), (void*)pWindow);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -209,7 +209,7 @@ void Director::Update(const jc::TimeSpan& _dt)
 		slots_[i].pCurrent_->SetWindow(slots_[i].pWindow_);
 		slots_[i].pCurrent_->SetDevice(&g_cDevice);	// 디바이스 주입
 		slots_[i].pCurrent_->OnEnter();
-		_LogInfo_("[sgf] Director::Update — 예약 씬 교체 완료 (window=%p)", (void*)slots_[i].pWindow_);
+		_LogInfo_(_T("[sgf] Director::Update — 예약 씬 교체 완료 (window=%p)"), (void*)slots_[i].pWindow_);
 	}
 
 	// 2. 모든 윈도우의 현재 씬 갱신

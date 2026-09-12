@@ -172,7 +172,7 @@ void Renderer2D::OnBegin()
 // - (용어) ViewProjection: 뷰(카메라가 보는 변환) × 투영(화면에 펼치는 변환)을 합친 행렬.
 void Renderer2D::BeginScene(Scene2D* _pScene)
 {
-	jc_assert_msg(_pScene != nullptr, "null 씬으로 배치를 시작할 수 없습니다.");
+	jc_assert_msg(_pScene != nullptr, _T("null 씬으로 배치를 시작할 수 없습니다."));
 	if (_pScene == nullptr) return;
 
 	pScene_ = _pScene;
@@ -242,7 +242,7 @@ void Renderer2D::FlushStatic()
 	}
 	staticItems_.Clear();
 	if ((++sLogFrame % 60) == 1)
-		_LogDebug_("[sgf] Renderer2D::FlushStatic — 스태틱 세그먼트 드로우 (%d건)", drawnCount);
+		_LogDebug_(_T("[sgf] Renderer2D::FlushStatic — 스태틱 세그먼트 드로우 (%d건)"), drawnCount);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -267,7 +267,7 @@ void Renderer2D::FlushDynamic()
 	dynamicItems_.Clear();
 	dynamicParams_.Clear();
 	if ((sLogFrame % 60) == 1)
-		_LogDebug_("[sgf] Renderer2D::FlushDynamic — 다이나믹 세그먼트 드로우 (%d건)", drawnCount);
+		_LogDebug_(_T("[sgf] Renderer2D::FlushDynamic — 다이나믹 세그먼트 드로우 (%d건)"), drawnCount);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

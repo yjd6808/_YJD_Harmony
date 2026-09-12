@@ -44,7 +44,7 @@ namespace
 
 		if (number < 1 || number > sgfr::TutorialCount())
 		{
-			jc::Console::WriteLine("잘못된 튜토리얼 번호입니다: %d (범위: 1~%d)", number, sgfr::TutorialCount());
+			jc::Console::WriteLine(_T("잘못된 튜토리얼 번호입니다: %d (범위: 1~%d)"), number, sgfr::TutorialCount());
 			return -1;
 		}
 		return number - 1;	// 0부터 시작하는 인덱스로 변환
@@ -54,69 +54,69 @@ namespace
 	// 메인 메뉴 출력
 	void PrintMainMenu()
 	{
-		jc::Console::WriteLine("");
-		jc::Console::WriteLine("==========================================");
-		jc::Console::WriteLine(" sgf 튜토리얼 (메인 메뉴)");
-		jc::Console::WriteLine("==========================================");
-		jc::Console::WriteLine("   1. Tutorial");
-		jc::Console::WriteLine("   2. Practice");
-		jc::Console::WriteLine("   0. 종료");
-		jc::Console::WriteLine("==========================================");
+		jc::Console::WriteLine(_T(""));
+		jc::Console::WriteLine(_T("=========================================="));
+		jc::Console::WriteLine(_T(" sgf 튜토리얼 (메인 메뉴)"));
+		jc::Console::WriteLine(_T("=========================================="));
+		jc::Console::WriteLine(_T("   1. Tutorial"));
+		jc::Console::WriteLine(_T("   2. Practice"));
+		jc::Console::WriteLine(_T("   0. 종료"));
+		jc::Console::WriteLine(_T("=========================================="));
 	}
 
 //////////////////////////////////////////////////////////////////////////////////////////
 	// 튜토리얼 목차 출력
 	void PrintTutorialMenu()
 	{
-		jc::Console::WriteLine("");
-		jc::Console::WriteLine("==========================================");
-		jc::Console::WriteLine(" sgf 튜토리얼 목차");
-		jc::Console::WriteLine("==========================================");
+		jc::Console::WriteLine(_T(""));
+		jc::Console::WriteLine(_T("=========================================="));
+		jc::Console::WriteLine(_T(" sgf 튜토리얼 목차"));
+		jc::Console::WriteLine(_T("=========================================="));
 
 		const _s32 count = sgfr::TutorialCount();
 		for (_s32 i = 0; i < count; ++i)
 		{
-			jc::Console::WriteLine("  %2d. %s", i + 1, sgfr::TutorialAt(i).name_);
+			jc::Console::WriteLine(_T("  %2d. %s"), i + 1, sgfr::TutorialAt(i).name_);
 		}
 
-		jc::Console::WriteLine("   0. 메인 메뉴로");
-		jc::Console::WriteLine("==========================================");
+		jc::Console::WriteLine(_T("   0. 메인 메뉴로"));
+		jc::Console::WriteLine(_T("=========================================="));
 	}
 
-//////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////
 	// Practice 목차 출력
 	void PrintPracticeMenu()
 	{
-		jc::Console::WriteLine("");
-		jc::Console::WriteLine("==========================================");
-		jc::Console::WriteLine(" sgf 튜토리얼 - Practice (연습)");
-		jc::Console::WriteLine("==========================================");
+		jc::Console::WriteLine(_T(""));
+		jc::Console::WriteLine(_T("=========================================="));
+		jc::Console::WriteLine(_T(" sgf 튜토리얼 - Practice (연습)"));
+		jc::Console::WriteLine(_T("=========================================="));
 
 		const _s32 count = sgfr::PracticeCount();
 		for (_s32 i = 0; i < count; ++i)
 		{
-			jc::Console::WriteLine("  %2d. %s", i + 1, sgfr::PracticeAt(i).name_);
+			jc::Console::WriteLine(_T("  %2d. %s"), i + 1, sgfr::PracticeAt(i).name_);
 		}
 
-		jc::Console::WriteLine("   0. 메인 메뉴로");
-		jc::Console::WriteLine("==========================================");
+		jc::Console::WriteLine(_T("   0. 메인 메뉴로"));
+		jc::Console::WriteLine(_T("=========================================="));
 	}
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////
 	// 번호 입력 (잘못된 입력이면 -1 반환)
 	_s32 ReadSelection()
 	{
-		_s8 szLine[64];
-		jc::Console::ReadLineBuffered("번호 입력: ", szLine, sizeof(szLine));
+		_char szLine[64];
+		jc::Console::ReadLineBuffered(_T("번호 입력: "), szLine, sizeof(szLine) / sizeof(_char));
 
 		_s32 selection = -1;
-		if (sscanf_s(szLine, "%d", &selection) != 1)
+		if (_stscanf_s(szLine, _T("%d"), &selection) != 1)
 		{
 			return -1;
 		}
 		return selection;
 	}
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////
 _s32 main(_s32 _argc, _s8** _argv)
@@ -127,18 +127,18 @@ _s32 main(_s32 _argc, _s8** _argv)
 	// 파일 로그 검증: 콘솔 + 파일 로거 동시 초기화
 	// - 콘솔: 화면에서 바로 확인 (실행 중 보기)
 	// - 파일: logs/ 폴더에 타임스탬프 로그 파일 생성 (사후 검증)
-	InitializeDefaultLogger("[sgfr] ");
+	InitializeDefaultLogger(_T("[sgfr] "));
 	InitializeFileLogger("logs");
-	_LogInfo_("sgfr 런처 시작 (argc=%d, argv[0]=%s)", _argc, _argv[0]);
+	_LogInfo_(_T("sgfr 런처 시작 (argc=%d, argv[0]=%hs)"), _argc, _argv[0]);
 
 	// 명령행 인자로 특정 튜토리얼 직접 실행
 	const _s32 directIndex = ReadTutorialArg(_argc, _argv);
 	if (directIndex >= 0)
 	{
 		const sgfr::TutorialEntry& entry = sgfr::TutorialAt(directIndex);
-		jc::Console::WriteLine("");
-		jc::Console::WriteLine("=== [%d] %s 직접 실행 ===", directIndex + 1, entry.name_);
-		_LogInfo_("[Tutorial] 시작: %d. %s", directIndex + 1, entry.name_);
+		jc::Console::WriteLine(_T(""));
+		jc::Console::WriteLine(_T("=== [%d] %s 직접 실행 ==="), directIndex + 1, entry.name_);
+		_LogInfo_(_T("[Tutorial] 시작: %d. %s"), directIndex + 1, entry.name_);
 
 		const jc::DateTime tBegin = jc::DateTime::Now();
 		try
@@ -147,17 +147,17 @@ _s32 main(_s32 _argc, _s8** _argv)
 		}
 		catch (const std::exception& _ex)
 		{
-			_LogError_("[Tutorial] 예외 발생: %s", _ex.what());
+			_LogError_(_T("[Tutorial] 예외 발생: %hs"), _ex.what());
 		}
 		catch (...)
 		{
-			_LogError_("[Tutorial] 알 수 없는 예외 발생");
+			_LogError_(_T("[Tutorial] 알 수 없는 예외 발생"));
 		}
 		const jc::DateTime tEnd = jc::DateTime::Now();
 
-		_LogInfo_("[Tutorial] 종료: %d. %s (경과 %d ms)", directIndex + 1, entry.name_,
+		_LogInfo_(_T("[Tutorial] 종료: %d. %s (경과 %d ms)"), directIndex + 1, entry.name_,
 			(_s32)tEnd.Diff(tBegin).GetTotalMiliSecondsInt32());
-		jc::Console::WriteLine("=== [%d] %s 종료 ===", directIndex + 1, entry.name_);
+		jc::Console::WriteLine(_T("=== [%d] %s 종료 ==="), directIndex + 1, entry.name_);
 
 		FinalizeDefaultLogger();
 		jc::FinalizeJCore();
@@ -181,13 +181,13 @@ _s32 main(_s32 _argc, _s8** _argv)
 		const _s32 mainSelection = ReadSelection();
 		if (mainSelection == 0)
 		{
-			jc::Console::WriteLine("종료합니다.");
+			jc::Console::WriteLine(_T("종료합니다."));
 			break;
 		}
 
 		if (mainSelection != 1 && mainSelection != 2)
 		{
-			jc::Console::WriteLine("잘못된 번호입니다. 다시 입력해주세요.");
+			jc::Console::WriteLine(_T("잘못된 번호입니다. 다시 입력해주세요."));
 			continue;
 		}
 
@@ -214,26 +214,26 @@ _s32 main(_s32 _argc, _s8** _argv)
 			const _s32 count = practice ? sgfr::PracticeCount() : sgfr::TutorialCount();
 			if (selection < 1 || selection > count)
 			{
-				jc::Console::WriteLine("잘못된 번호입니다. 다시 입력해주세요.");
+				jc::Console::WriteLine(_T("잘못된 번호입니다. 다시 입력해주세요."));
 				continue;
 			}
 
 			const sgfr::TutorialEntry& entry = practice ? sgfr::PracticeAt(selection - 1) : sgfr::TutorialAt(selection - 1);
-			jc::Console::WriteLine("");
-			jc::Console::WriteLine("=== [%d] %s 시작 ===", selection, entry.name_);
-			_LogInfo_("[Tutorial] 시작: %d. %s", selection, entry.name_);
+			jc::Console::WriteLine(_T(""));
+			jc::Console::WriteLine(_T("=== [%d] %s 시작 ==="), selection, entry.name_);
+			_LogInfo_(_T("[Tutorial] 시작: %d. %s"), selection, entry.name_);
 
 			const jc::DateTime tBegin = jc::DateTime::Now();
 			entry.fn_();
 			const jc::DateTime tEnd = jc::DateTime::Now();
 
-			_LogInfo_("[Tutorial] 종료: %d. %s (경과 %d ms)", selection, entry.name_,
+			_LogInfo_(_T("[Tutorial] 종료: %d. %s (경과 %d ms)"), selection, entry.name_,
 				(_s32)tEnd.Diff(tBegin).GetTotalMiliSecondsInt32());
-			jc::Console::WriteLine("=== [%d] %s 종료 ===", selection, entry.name_);
+			jc::Console::WriteLine(_T("=== [%d] %s 종료 ==="), selection, entry.name_);
 		}
 	}
 
-	_LogInfo_("sgfr 런처 종료");
+		_LogInfo_(_T("sgfr 런처 종료"));
 	FinalizeDefaultLogger();
 	jc::FinalizeJCore();
 	return 0;

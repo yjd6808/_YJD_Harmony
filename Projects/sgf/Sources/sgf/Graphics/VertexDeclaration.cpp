@@ -36,7 +36,7 @@ _u32 VertexElementSize(VertexElementFormat _format)
 	case VertexElementFormat::vefFloat4:	return 16;
 	case VertexElementFormat::vefColor32:	return 4;
 	case VertexElementFormat::vefUByte4:	return 4;
-	default: jc_assert_msg(false, "알 수 없는 VertexElementFormat"); return 0;
+	default: jc_assert_msg(false, _T("알 수 없는 VertexElementFormat")); return 0;
 	}
 }
 
@@ -64,7 +64,7 @@ namespace
 const VertexDeclaration* VertexDeclaration::GetOrCreate(const VertexElement* _pElements, _s32 _count)
 {
 	jc_assert_msg(_pElements != nullptr && _count > 0 && _count <= MAX_VERTEX_ELEMENTS,
-		"VertexDeclaration 요소 개수가 잘못되었습니다.");
+		_T("VertexDeclaration 요소 개수가 잘못되었습니다."));
 
 	// 1. 오프셋 해석(자동 누적) + 슬롯별 stride + 해시 계산 (HashBuilder<Fnv1a64>로 패딩 배제 누적)
 	_u16 resolvedOffsets[MAX_VERTEX_ELEMENTS] = {};
@@ -73,7 +73,7 @@ const VertexDeclaration* VertexDeclaration::GetOrCreate(const VertexElement* _pE
 	for (_s32 i = 0; i < _count; ++i)
 	{
 		const VertexElement& element = _pElements[i];
-		jc_assert_msg(element.slot_ < MAX_VERTEX_STREAMS, "슬롯 번호가 범위를 벗어났습니다.");
+		jc_assert_msg(element.slot_ < MAX_VERTEX_STREAMS, _T("슬롯 번호가 범위를 벗어났습니다."));
 
 		const _u16 offset = (element.offset_ == VERTEX_OFFSET_APPEND)
 			? static_cast<_u16>(strides[element.slot_])

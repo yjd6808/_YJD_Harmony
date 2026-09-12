@@ -20,6 +20,7 @@
  */
 
 #include "Core.h"
+#include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/15_PngTextureDraw/15_PngTextureDraw_Main.h"
 #include "sgfr/Tutorial/15_PngTextureDraw/15_PngTextureDraw_Function.h"
@@ -35,9 +36,9 @@ void PngTextureDraw_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("15. PNG 텍스처 그리기 (ESC로 종료)", 800, 600))
+	if (!window.Create(_T("15. PNG 텍스처 그리기 (ESC로 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -47,13 +48,13 @@ void PngTextureDraw_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -62,7 +63,7 @@ void PngTextureDraw_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -73,18 +74,18 @@ void PngTextureDraw_Main()
 	// (1순위) 실행 팏더의 Resources\sample.png를 WIC로 디코딩
 	// (2순위) 파일이 없으면 직접 만든 체커보드 픽셀로 텍스처 생성
 	Texture texture;
-	if (texture.LoadFromFile(&device, "Resources\\sample.png"))
+	if (texture.LoadFromFile(&device, _T("Resources\\sample.png")))
 	{
-		jc::Console::Write("Resources\\sample.png 로드 성공! (%d x %d)\n", texture.Width(), texture.Height());
+		jc::Console::Write(_T("Resources\\sample.png 로드 성공! (%d x %d)\n"), texture.Width(), texture.Height());
 	}
 	else if (CreateCheckerboardTexture(&device, &texture))
 	{
-		jc::Console::Write("sample.png가 없어 체커보드 텍스처로 대체합니다. (%d x %d)\n", texture.Width(), texture.Height());
-		jc::Console::WriteLine("(실행 팏더에 Resources\\sample.png를 넣으면 진짜 PNG를 볼 수 있습니다)");
+		jc::Console::Write(_T("sample.png가 없어 체커보드 텍스처로 대체합니다. (%d x %d)\n"), texture.Width(), texture.Height());
+		jc::Console::WriteLine(_T("(실행 팏더에 Resources\\sample.png를 넣으면 진짜 PNG를 볼 수 있습니다)"));
 	}
 	else
 	{
-		jc::Console::WriteLine("텍스처 생성 실패!");
+		jc::Console::WriteLine(_T("텍스처 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -109,7 +110,7 @@ void PngTextureDraw_Main()
 	if (!vb.Create(&device, vertices, 4, VertexPTC::Decl()) ||
 		!ib.Create(&device, indices, 6))
 		{
-		jc::Console::WriteLine("버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -118,11 +119,11 @@ void PngTextureDraw_Main()
 
 	// 4. 셰이더 컴파일 (텍스처 샘플링 버전)
 
-	_u64 vsShader = device.Context().CreateVertexShader(TextureShaderSource());
-	_u64 psShader = device.Context().CreatePixelShader(TextureShaderSource());
+	_u64 vsShader = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(TextureShaderSource()));
+	_u64 psShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(TextureShaderSource()));
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY)
 	{
-		jc::Console::WriteLine("셰이더 컴파일 실패!");
+		jc::Console::WriteLine(_T("셰이더 컴파일 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();

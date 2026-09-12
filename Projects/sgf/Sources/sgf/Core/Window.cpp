@@ -15,9 +15,14 @@ NS_SGF_BEGIN
 // 윈도우 클래스 이름 (RegisterClassEx에 등록할 식별자)
 static const wchar_t* s_szWindowClassName = L"SgfWindowClass";
 
-// jc::String(UTF-8) → wide(WCHAR) 변환 헬퍼 (타이틀 전용)
+// jc::String → wide(WCHAR) 변환 헬퍼 (타이틀 전용)
 static std::wstring Utf8ToWide(const jc::String& _utf8)
 {
+#ifdef _UNICODE
+	if (_utf8.IsEmpty())
+		return L"";
+	return std::wstring(_utf8.Source(), _utf8.Length());
+#else
 	if (_utf8.IsEmpty())
 		return L"";
 	const char* pStr = _utf8.Source();
@@ -28,6 +33,7 @@ static std::wstring Utf8ToWide(const jc::String& _utf8)
 	std::wstring wstr(wlen, L'\0');
 	::MultiByteToWideChar(CP_UTF8, 0, pStr, utf8Len, wstr.data(), wlen);
 	return wstr;
+#endif
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -110,7 +116,7 @@ bool Window::Create(const jc::String& _title, _s32 _width, _s32 _height)
 	// 4. 창 표시
 	ShowWindow(hWnd_, SW_SHOW);
 	UpdateWindow(hWnd_);
-	_LogInfo_("[sgf] Window::Create OK — %dx%d (hwnd=0x%p)", _width, _height, (void*)hWnd_);
+	_LogInfo_(_T("[sgf] Window::Create OK — %dx%d (hwnd=0x%p)"), _width, _height, (void*)hWnd_);
 	return true;
 }
 

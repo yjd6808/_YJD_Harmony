@@ -47,78 +47,78 @@ bool Application::Initialize(const jc::String& _title, _s32 _width, _s32 _height
 
 	// 0. g_c 매크로가 동작하도록 전역 포인터를 가장 먼저 연결한다.
 	__sSgfApplication = this;
-	_LogInfo_("[sgf] Application::Initialize 시작 (title=%s %dx%d)", _title.Source(), _width, _height);
+	_LogInfo_(_T("[sgf] Application::Initialize 시작 (title=%s %dx%d)"), _title.Source(), _width, _height);
 
 	// 1. 메인 윈도우 생성 + 입력 관리자 연결
 	if (!window_.Create(_title, _width, _height))
 	{
 		OutputDebugStringA("[sgf] 윈도우 생성 실패\n");
-		_LogError_("[sgf] Application::Initialize 실패 — 윈도우 생성");
+		_LogError_(_T("[sgf] Application::Initialize 실패 — 윈도우 생성"));
 		__sSgfApplication = nullptr;
 		return false;
 	}
 	window_.ConnectInput(&input_);
-	_LogInfo_("[sgf] Application::Initialize OK — 윈도우 생성");
+	_LogInfo_(_T("[sgf] Application::Initialize OK — 윈도우 생성"));
 
 	// 2. DX11 디바이스 초기화 (창과 분리된 "디바이스만" 만든다)
 	if (!device_.Initialize())
 	{
 		OutputDebugStringA("[sgf] 그래픽 디바이스 초기화 실패\n");
-		_LogError_("[sgf] Application::Initialize 실패 — 그래픽 디바이스");
+		_LogError_(_T("[sgf] Application::Initialize 실패 — 그래픽 디바이스"));
 		__sSgfApplication = nullptr;
 		return false;
 	}
-	_LogInfo_("[sgf] Application::Initialize OK — 그래픽 디바이스");
+	_LogInfo_(_T("[sgf] Application::Initialize OK — 그래픽 디바이스"));
 
 	// 2.5. 리소스 매니저 초기화 (디폴트 셰이더/머티리얼/흰색 텍스처 준비)
 	if (!g_cResourceMgr.Initialize(&device_))
 	{
 		OutputDebugStringA("[sgf] 리소스 매니저 초기화 실패\n");
-		_LogError_("[sgf] Application::Initialize 실패 — 리소스 매니저");
+		_LogError_(_T("[sgf] Application::Initialize 실패 — 리소스 매니저"));
 		__sSgfApplication = nullptr;
 		return false;
 	}
-	_LogInfo_("[sgf] Application::Initialize OK — 리소스 매니저");
+	_LogInfo_(_T("[sgf] Application::Initialize OK — 리소스 매니저"));
 
 	// 3. 메인 윈도우에 그리기 표면(스왑체인 + 깊이버퍼)을 붙인다.
 	if (!window_.CreateSurface(&device_))
 	{
 		OutputDebugStringA("[sgf] 메인 윈도우 표면 생성 실패\n");
-		_LogError_("[sgf] Application::Initialize 실패 — 메인 윈도우 표면");
+		_LogError_(_T("[sgf] Application::Initialize 실패 — 메인 윈도우 표면"));
 		__sSgfApplication = nullptr;
 		return false;
 	}
-	_LogInfo_("[sgf] Application::Initialize OK — 메인 윈도우 표면");
+	_LogInfo_(_T("[sgf] Application::Initialize OK — 메인 윈도우 표면"));
 
 	// 4. 2D 렌더러 초기화 (셰이더 컴파일, 배치 버퍼 생성)
 	if (!renderer_.Initialize(&device_))
 	{
 		OutputDebugStringA("[sgf] 2D 렌더러 초기화 실패\n");
-		_LogError_("[sgf] Application::Initialize 실패 — 2D 렌더러");
+		_LogError_(_T("[sgf] Application::Initialize 실패 — 2D 렌더러"));
 		__sSgfApplication = nullptr;
 		return false;
 	}
-	_LogInfo_("[sgf] Application::Initialize OK — 2D 렌더러");
+	_LogInfo_(_T("[sgf] Application::Initialize OK — 2D 렌더러"));
 
 	// 5. 3D 렌더러 초기화 (2D와 동급인 전역 배치 렌더러)
 	if (!renderer3D_.Initialize(&device_))
 	{
 		OutputDebugStringA("[sgf] 3D 렌더러 초기화 실패\n");
-		_LogError_("[sgf] Application::Initialize 실패 — 3D 렌더러");
+		_LogError_(_T("[sgf] Application::Initialize 실패 — 3D 렌더러"));
 		__sSgfApplication = nullptr;
 		return false;
 	}
-	_LogInfo_("[sgf] Application::Initialize OK — 3D 렌더러");
+	_LogInfo_(_T("[sgf] Application::Initialize OK — 3D 렌더러"));
 
 	// 6. 사운드 엔진 초기화 (실패해도 게임은 계속 - 소리만 안 날 뿐)
 	if (!SoundEngine::Get()->Initialize())
 	{
 		OutputDebugStringA("[sgf] 사운드 엔진 초기화 실패 (소리 없이 계속 진행)\n");
-		_LogWarn_("[sgf] Application::Initialize — 사운드 엔진 초기화 실패 (계속 진행)");
+		_LogWarn_(_T("[sgf] Application::Initialize — 사운드 엔진 초기화 실패 (계속 진행)"));
 	}
 	else
 	{
-		_LogInfo_("[sgf] Application::Initialize OK — 사운드 엔진");
+		_LogInfo_(_T("[sgf] Application::Initialize OK — 사운드 엔진"));
 	}
 
 	// 7. 창 활성/비활성 이벤트 구독
@@ -143,11 +143,11 @@ bool Application::Initialize(const jc::String& _title, _s32 _width, _s32 _height
 	if (!ApplicationDidFinishLaunching())
 	{
 		OutputDebugStringA("[sgf] ApplicationDidFinishLaunching 실패\n");
-		_LogError_("[sgf] Application::Initialize 실패 — ApplicationDidFinishLaunching");
+		_LogError_(_T("[sgf] Application::Initialize 실패 — ApplicationDidFinishLaunching"));
 		Finalize();
 		return false;
 	}
-	_LogInfo_("[sgf] Application::Initialize 완료 — ApplicationDidFinishLaunching OK");
+	_LogInfo_(_T("[sgf] Application::Initialize 완료 — ApplicationDidFinishLaunching OK"));
 	return true;
 }
 
@@ -158,7 +158,7 @@ bool Application::Initialize(const jc::String& _title, _s32 _width, _s32 _height
 // 반환된 창에 g_cDirector.RunScene(pScene, pWindow)로 씬을 올리면 된다.
 Window* Application::CreateSubWindow(const jc::String& _title, _s32 _width, _s32 _height)
 {
-	jc_assert_msg(initialized_, "Initialize 이후에만 서브 윈도우를 만들 수 있습니다");
+	jc_assert_msg(initialized_, _T("Initialize 이후에만 서브 윈도우를 만들 수 있습니다"));
 
 	Window* pWindow = dbg_new Window();
 	if (!pWindow->Create(_title, _width, _height))
@@ -195,7 +195,7 @@ void Application::Run()
 	{
 		return;
 	}
-	_LogInfo_("[sgf] Application::Run 시작 (메인 루프)");
+	_LogInfo_(_T("[sgf] Application::Run 시작 (메인 루프)"));
 
 	while (true)
 	{
@@ -252,7 +252,7 @@ void Application::Run()
 		// 8. 사운드 엔진 정리 (재생이 끝난 소리의 재생기 회수)
 		g_cSound.Update();
 	}
-	_LogInfo_("[sgf] Application::Run 종료 (메인 루프 탈출)");
+	_LogInfo_(_T("[sgf] Application::Run 종료 (메인 루프 탈출)"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -290,7 +290,7 @@ void Application::Finalize()
 		return;
 	}
 	initialized_ = false;
-	_LogInfo_("[sgf] Application::Finalize 시작");
+	_LogInfo_(_T("[sgf] Application::Finalize 시작"));
 
 	ApplicationDidExit();			// 파생 앱 정리 훅
 	g_cDirector.Cleanup();			// 모든 윈도우의 씬 정리 (텍스처 등 리소스 반납)
@@ -314,7 +314,7 @@ void Application::Finalize()
 	window_.Destroy();			// 메인 윈도우 파괴
 
 	__sSgfApplication = nullptr;	// 전역 포인터 해제
-	_LogInfo_("[sgf] Application::Finalize 완료");
+	_LogInfo_(_T("[sgf] Application::Finalize 완료"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

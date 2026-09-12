@@ -17,20 +17,20 @@ using namespace jc;
 // 스프라이트 시트/프레임 애니메이션/이징의 원리를 콘솔에 출력한다. (학습용)
 void PrintSpriteAnimationExplanation()
 {
-	jc::Console::WriteLine("\n[스프라이트 시트(Sprite Sheet)란?]");
-	jc::Console::WriteLine(" 애니메이션 프레임들을 한 장의 큰 텍스처에 바둑판처럼 모아둔 것.");
-	jc::Console::WriteLine(" 텍스처 교체 없이 UV 오프셋만 바꿔서 프레임을 넘기므로 매우 빠르다!");
-	jc::Console::WriteLine(" (이 튜토리얼은 256x256 시트에 64x64 프레임 16개를 코드로 직접 그려 사용한다)\n");
-	jc::Console::WriteLine("[프레임 선택 공식]");
-	jc::Console::WriteLine(" frame = (int)(누적시간 x 초당프레임수) % 전체프레임수");
-	jc::Console::WriteLine(" uvOffset = (열 x 0.25, 행 x 0.25), uvScale = 0.25 (4x4 시트)\n");
-	jc::Console::WriteLine("[이징(Easing)이란?]");
-	jc::Console::WriteLine(" 이동 진행도 t(0~1)를 그대로 쓰면(선형) 기계적으로 보인다.");
-	jc::Console::WriteLine(" t를 곡선 함수에 통과시키면 가속/감속/통통 튀는 느낌이 난다.");
-	jc::Console::WriteLine(" Cocos2d-x의 EaseInOut/EaseBounce 액션도 정확히 이 원리다!\n");
-	jc::Console::WriteLine("[조작법]");
-	jc::Console::WriteLine(" 1: 선형 / 2: 부드럽게(ease-in-out) / 3: 바운스");
-	jc::Console::WriteLine(" 위/아래 방향키: 초당 프레임 수(FPS) 증감 (4~60)\n");
+	jc::Console::WriteLine(_T("\n[스프라이트 시트(Sprite Sheet)란?]"));
+	jc::Console::WriteLine(_T(" 애니메이션 프레임들을 한 장의 큰 텍스처에 바둑판처럼 모아둔 것."));
+	jc::Console::WriteLine(_T(" 텍스처 교체 없이 UV 오프셋만 바꿔서 프레임을 넘기므로 매우 빠르다!"));
+	jc::Console::WriteLine(_T(" (이 튜토리얼은 256x256 시트에 64x64 프레임 16개를 코드로 직접 그려 사용한다)\n"));
+	jc::Console::WriteLine(_T("[프레임 선택 공식]"));
+	jc::Console::WriteLine(_T(" frame = (int)(누적시간 x 초당프레임수) % 전체프레임수"));
+	jc::Console::WriteLine(_T(" uvOffset = (열 x 0.25, 행 x 0.25), uvScale = 0.25 (4x4 시트)\n"));
+	jc::Console::WriteLine(_T("[이징(Easing)이란?]"));
+	jc::Console::WriteLine(_T(" 이동 진행도 t(0~1)를 그대로 쓰면(선형) 기계적으로 보인다."));
+	jc::Console::WriteLine(_T(" t를 곡선 함수에 통과시키면 가속/감속/통통 튀는 느낌이 난다."));
+	jc::Console::WriteLine(_T(" Cocos2d-x의 EaseInOut/EaseBounce 액션도 정확히 이 원리다!\n"));
+	jc::Console::WriteLine(_T("[조작법]"));
+	jc::Console::WriteLine(_T(" 1: 선형 / 2: 부드럽게(ease-in-out) / 3: 바운스"));
+	jc::Console::WriteLine(_T(" 위/아래 방향키: 초당 프레임 수(FPS) 증감 (4~60)\n"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

@@ -20,7 +20,7 @@ int main(int _argc, char** _argv)
 	Winsock::Initialize(2, 2);
 	InitializeJCore(_argc, _argv);
 
-	pClientGroup = dbg_new UdpClientNetGroup{ "UDP B" };
+	pClientGroup = dbg_new UdpClientNetGroup{ _T("UDP B") };
 	pClientGroup->Initialize();
 
 	for (;;)

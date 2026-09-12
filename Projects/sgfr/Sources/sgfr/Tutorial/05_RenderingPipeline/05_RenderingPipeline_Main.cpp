@@ -28,6 +28,7 @@
  */
 
 #include "Core.h"
+#include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/05_RenderingPipeline/05_RenderingPipeline_Main.h"
 #include "sgfr/Tutorial/05_RenderingPipeline/05_RenderingPipeline_Function.h"
@@ -40,17 +41,17 @@ void RenderingPipeline_Main()
 {
 	PrintNdcExplanation();
 
-	jc::Console::WriteLine("[05] 렌더링 파이프라인 - 처음은 Legacy, 방향키로 자유 전환");
-	jc::Console::WriteLine("  LEFT  : Legacy (기존, 직접 바인딩)");
-	jc::Console::WriteLine("  RIGHT : Simple (목표 코드, gd/gc 핸들)");
-	jc::Console::WriteLine("  ESC   : 종료");
-	jc::Console::WriteLine("");
+	jc::Console::WriteLine(_T("[05] 렌더링 파이프라인 - 처음은 Legacy, 방향키로 자유 전환"));
+	jc::Console::WriteLine(_T("  LEFT  : Legacy (기존, 직접 바인딩)"));
+	jc::Console::WriteLine(_T("  RIGHT : Simple (목표 코드, gd/gc 핸들)"));
+	jc::Console::WriteLine(_T("  ESC   : 종료"));
+	jc::Console::WriteLine(_T(""));
 
 	// 1. 윈도우 + 디바이스 (단일 인스턴스 공유)
 	Window window;
-	if (!window.Create("05. 렌더링 파이프라인 - [Legacy] (LEFT Legacy | RIGHT Simple | ESC 종료)", 800, 600))
+	if (!window.Create(_T("05. 렌더링 파이프라인 - [Legacy] (LEFT Legacy | RIGHT Simple | ESC 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -61,13 +62,13 @@ void RenderingPipeline_Main()
 	GraphicDevice& gd = GraphicDevice::Get();
 	if (!gd.Initialize())
 	{
-		jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+		jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&gd))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		gd.Finalize();
 		window.Destroy();
@@ -76,7 +77,7 @@ void RenderingPipeline_Main()
 
 	if (!gd.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-		jc::Console::WriteLine("스왑체인 생성 실패!");
+		jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		gd.Finalize();
 		window.Destroy();
@@ -96,17 +97,17 @@ void RenderingPipeline_Main()
 	VertexBuffer vbLegacy;
 	if (!vbLegacy.Create(&gd, vertices, 3, VertexPC::Decl()))
 	{
-		jc::Console::WriteLine("Legacy 정점 버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("Legacy 정점 버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		gd.Finalize();
 		window.Destroy();
 		return;
 	}
-	_u64 vsShaderLegacy = gc.CreateVertexShader(TriangleShaderSource());
-	_u64 psShaderLegacy = gc.CreatePixelShader(TriangleShaderSource());
+	_u64 vsShaderLegacy = gc.CreateVertexShader(jc::StringConvert::FromUtf8(TriangleShaderSource()));
+	_u64 psShaderLegacy = gc.CreatePixelShader(jc::StringConvert::FromUtf8(TriangleShaderSource()));
 	if (vsShaderLegacy == INVALID_RESOURCE_KEY || psShaderLegacy == INVALID_RESOURCE_KEY)
 	{
-		jc::Console::WriteLine("Legacy 셰이더 컴파일 실패!");
+		jc::Console::WriteLine(_T("Legacy 셰이더 컴파일 실패!"));
 	g_cResourceMgr.Finalize();
 		gd.Finalize();
 		window.Destroy();
@@ -115,20 +116,20 @@ void RenderingPipeline_Main()
 	// Legacy InputLayout은 핸들+레이아웃 경로로 수동 지정 (SetInputLayout 자체로 동작, 실패 시 assert)
 
 	// 3-B. Simple 리소스 (목표 코드 경로 - 핸들 기반, 분리형 VS/PS)
-	const _u64 hVsSimple = gc.CreateVertexShader(TriangleShaderSource());
-	const _u64 hPsSimple = gc.CreatePixelShader(TriangleShaderSource());
+	const _u64 hVsSimple = gc.CreateVertexShader(jc::StringConvert::FromUtf8(TriangleShaderSource()));
+	const _u64 hPsSimple = gc.CreatePixelShader(jc::StringConvert::FromUtf8(TriangleShaderSource()));
 	const _u64 hVbSimple = gd.CreateVertexBuffer<VertexPC>(vertices, 3);
 	const _u64 hIbSimple = gd.CreateIndexBuffer(indices, 3);
 	if (hVsSimple == INVALID_RESOURCE_KEY || hPsSimple == INVALID_RESOURCE_KEY || hVbSimple == INVALID_RESOURCE_KEY || hIbSimple == INVALID_RESOURCE_KEY)
 	{
-		jc::Console::WriteLine("Simple 핸들 리소스 생성 실패!");
+		jc::Console::WriteLine(_T("Simple 핸들 리소스 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		gd.Finalize();
 		window.Destroy();
 		return;
 	}
 
-	jc::Console::WriteLine("삼각형이 보이면 성공! [Legacy]로 시작 - RIGHT로 Simple, LEFT로 Legacy 전환 가능 (ESC 종료)");
+	jc::Console::WriteLine(_T("삼각형이 보이면 성공! [Legacy]로 시작 - RIGHT로 Simple, LEFT로 Legacy 전환 가능 (ESC 종료)"));
 
 	enum class Mode { Legacy, Simple };
 	Mode mode = Mode::Legacy;
@@ -144,14 +145,14 @@ void RenderingPipeline_Main()
 		if (input.IsKeyPressed(VK_LEFT) && mode != Mode::Legacy)
 		{
 			mode = Mode::Legacy;
-			window.SetTitle("05. 렌더링 파이프라인 - [Legacy] (LEFT Legacy | RIGHT Simple | ESC 종료)");
-			jc::Console::WriteLine("[전환] Legacy 모드 (직접 바인딩)");
+			window.SetTitle(_T("05. 렌더링 파이프라인 - [Legacy] (LEFT Legacy | RIGHT Simple | ESC 종료)"));
+			jc::Console::WriteLine(_T("[전환] Legacy 모드 (직접 바인딩)"));
 		}
 		if (input.IsKeyPressed(VK_RIGHT) && mode != Mode::Simple)
 		{
 			mode = Mode::Simple;
-			window.SetTitle("05. 렌더링 파이프라인 - [Simple] (LEFT Legacy | RIGHT Simple | ESC 종료)");
-			jc::Console::WriteLine("[전환] Simple 모드 (목표 코드 핸들)");
+			window.SetTitle(_T("05. 렌더링 파이프라인 - [Simple] (LEFT Legacy | RIGHT Simple | ESC 종료)"));
+			jc::Console::WriteLine(_T("[전환] Simple 모드 (목표 코드 핸들)"));
 		}
 
 		gd.BeginFrame(color::CORNFLOWER_BLUE);

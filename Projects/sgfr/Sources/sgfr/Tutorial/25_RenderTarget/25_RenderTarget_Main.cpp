@@ -20,6 +20,7 @@
  */
 
 #include "Core.h"
+#include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/25_RenderTarget/25_RenderTarget_Main.h"
 #include "sgfr/Tutorial/25_RenderTarget/25_RenderTarget_Function.h"
@@ -49,9 +50,9 @@ void RenderTarget_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("25. 렌더 타깃 (오른쪽 위 = 미니맵, ESC 종료)", 800, 600))
+	if (!window.Create(_T("25. 렌더 타깃 (오른쪽 위 = 미니맵, ESC 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -61,13 +62,13 @@ void RenderTarget_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -76,7 +77,7 @@ void RenderTarget_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -87,7 +88,7 @@ void RenderTarget_Main()
 	RenderTarget miniMapTarget;
 	if (!miniMapTarget.Create(&device, 256, 256))
 	{
-		jc::Console::WriteLine("렌더 타깃 생성 실패!");
+		jc::Console::WriteLine(_T("렌더 타깃 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -104,7 +105,7 @@ void RenderTarget_Main()
 	if (!cubeVb.Create(&device, cubeVertices, 8, VertexPC::Decl()) ||
 		!cubeIb.Create(&device, cubeIndices, 36))
 		{
-		jc::Console::WriteLine("큐브 버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("큐브 버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -121,7 +122,7 @@ void RenderTarget_Main()
 	if (!quadVb.Create(&device, quadVertices, 4, VertexPTC::Decl()) ||
 		!quadIb.Create(&device, quadIndices, 6))
 		{
-		jc::Console::WriteLine("미니맵 버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("미니맵 버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -130,15 +131,15 @@ void RenderTarget_Main()
 
 	// 5. 셰이더 2종 + 상수 버퍼
 
-	_u64 vsCubeShader = device.Context().CreateVertexShader(ColorTransformShaderSource());
-	_u64 psCubeShader = device.Context().CreatePixelShader(ColorTransformShaderSource());
-	_u64 vsQuadShader = device.Context().CreateVertexShader(TextureShaderSource());
-	_u64 psQuadShader = device.Context().CreatePixelShader(TextureShaderSource());
+	_u64 vsCubeShader = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(ColorTransformShaderSource()));
+	_u64 psCubeShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(ColorTransformShaderSource()));
+	_u64 vsQuadShader = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(TextureShaderSource()));
+	_u64 psQuadShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(TextureShaderSource()));
 	ConstantBuffer<CbTransform> cbTransform;
 	ConstantBuffer<CbPost> cbPost;
 	if (vsCubeShader == INVALID_RESOURCE_KEY || psCubeShader == INVALID_RESOURCE_KEY || vsQuadShader == INVALID_RESOURCE_KEY || psQuadShader == INVALID_RESOURCE_KEY || !cbTransform.Create(&device) || !cbPost.Create(&device))
 		{
-		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();

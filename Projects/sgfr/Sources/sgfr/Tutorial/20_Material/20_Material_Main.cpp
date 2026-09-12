@@ -63,9 +63,9 @@ void Material_Main()
 {
 	// 1. 윈도우 + 디바이스 + 리소스 매니저 준비
 	Window window;
-	if (!window.Create("20. 머티리얼 (1/2 블렌드, 3/4 필터, 5 틴트, ESC 종료)", 800, 600))
+	if (!window.Create(_T("20. 머티리얼 (1/2 블렌드, 3/4 필터, 5 틴트, ESC 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -75,13 +75,13 @@ void Material_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	device.Finalize();
 	window.Destroy();
 	return;
@@ -91,7 +91,7 @@ void Material_Main()
 	// (Application 기반 게임에서는 엔진이 알아서 초기화해준다)
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -106,21 +106,21 @@ void Material_Main()
 	Texture* pChecker = dbg_new Texture();
 	if (!pChecker->CreateFromMemory(&device, pixels, 64, 64))
 	{
-		jc::Console::WriteLine("텍스처 생성 실패!");
+		jc::Console::WriteLine(_T("텍스처 생성 실패!"));
 		delete pChecker;
 		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
-	pChecker->SetDebugName("Checker64");
+	pChecker->SetDebugName(_T("Checker64"));
 	const _u64 checkerKey = g_cResourceMgr.Add(pChecker);
 
 	// 3. 머티리얼 구성: 디폴트 2D 셰이더 키 + 체커 텍스처 키 + 상태 조합
 	Material material;
 	if (!material.Initialize(&device))
 	{
-		jc::Console::WriteLine("머티리얼 초기화 실패!");
+		jc::Console::WriteLine(_T("머티리얼 초기화 실패!"));
 		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -137,7 +137,7 @@ void Material_Main()
 	Mesh quad;
 	if (!quad.InitializeAsQuad2D(&device))
 	{
-		jc::Console::WriteLine("쿼드 메시 생성 실패!");
+		jc::Console::WriteLine(_T("쿼드 메시 생성 실패!"));
 		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -150,14 +150,14 @@ void Material_Main()
 	ConstantBuffer<ObjectConstants> objectCb;
 	if (!frameCb.Create(&device) || !objectCb.Create(&device))
 	{
-		jc::Console::WriteLine("상수버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("상수버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
-	jc::Console::WriteLine("머티리얼 하나로 셰이더/상태/텍스처가 한 번에 바인딩됩니다!");
+	jc::Console::WriteLine(_T("머티리얼 하나로 셰이더/상태/텍스처가 한 번에 바인딩됩니다!"));
 
 	// 6. 렌더 루프
 	_s32 tintIndex = 0;

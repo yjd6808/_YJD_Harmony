@@ -241,7 +241,7 @@ public:
     static int WriteLine(_char(&_format)[FormatBufferLen], TArgs&&... _args)
     {
         TLockGuard guard(ms_ConsoleLock);
-        return Math::Min(_puttchar(_T('\n')), _tprintf(_format, Forward<TArgs>(_args)...));
+        return Math::Min<int>(_puttchar(_T('\n')), _tprintf(_format, Forward<TArgs>(_args)...));
     }
 
     static void Clear();

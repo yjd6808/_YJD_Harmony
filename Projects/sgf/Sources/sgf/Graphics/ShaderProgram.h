@@ -43,10 +43,10 @@ public:
 	~VertexShader();
 
 	// HLSL 소스 문자열을 컴파일해서 VS를 만든다.
-	bool InitializeFromSource(GraphicDevice* _pDevice, const jc::String& _szSource, const jc::String& _szEntry = "VSMain");
+	bool InitializeFromSource(GraphicDevice* _pDevice, const jc::String& _szSource, const jc::String& _szEntry = _T("VSMain"));
 
 	// HLSL 파일을 읽어서 컴파일한다.
-	bool InitializeFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePath, const jc::String& _szEntry = "VSMain");
+	bool InitializeFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePath, const jc::String& _szEntry = _T("VSMain"));
 
 	void Finalize();
 
@@ -78,8 +78,8 @@ public:
 	PixelShader();
 	~PixelShader();
 
-	bool InitializeFromSource(GraphicDevice* _pDevice, const jc::String& _szSource, const jc::String& _szEntry = "PSMain");
-	bool InitializeFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePath, const jc::String& _szEntry = "PSMain");
+	bool InitializeFromSource(GraphicDevice* _pDevice, const jc::String& _szSource, const jc::String& _szEntry = _T("PSMain"));
+	bool InitializeFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePath, const jc::String& _szEntry = _T("PSMain"));
 
 	void Finalize();
 

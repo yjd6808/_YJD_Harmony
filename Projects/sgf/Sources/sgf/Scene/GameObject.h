@@ -46,7 +46,7 @@ class GraphicDevice;
 class GameObject
 {
 public:
-	explicit GameObject(const jc::String& _name = "");
+	explicit GameObject(const jc::String& _name = _T(""));
 	virtual ~GameObject();						// GID 반환 + 컴포넌트 + 자식 전부 정리
 
 	////////////////////////////////////////////////////////////////////////////////////////

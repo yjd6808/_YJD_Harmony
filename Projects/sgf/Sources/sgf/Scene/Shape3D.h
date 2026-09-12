@@ -31,7 +31,7 @@ using namespace jc;
 class Shape3D : public GameObject
 {
 public:
-	explicit Shape3D(const jc::String& _name = "Shape3D");
+	explicit Shape3D(const jc::String& _name = _T("Shape3D"));
 
 	// AddChild 전에 설정 (OnEnter에서 1회 구성 — 이후 변경은 무시)
 	void SetShape(PrimitiveMesh3DType _type, const color& _color);

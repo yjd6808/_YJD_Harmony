@@ -18,25 +18,25 @@ using namespace jc;
 // 씬/디렉터/사운드 구조와 Cocos2d-x와의 차이를 콘솔에 출력한다. (학습용)
 void PrintSceneGraphExplanation()
 {
-	jc::Console::WriteLine("");
-	jc::Console::WriteLine("[씬(Scene)과 디렉터(Director)]");
-	jc::Console::WriteLine(" 씬 = 게임의 \"화면 하나\" (타이틀/인게임/결과창처럼 통째로 교체되는 단위)");
-	jc::Console::WriteLine(" 디렉터 = 현재 씬을 들고 있다가 매 프레임 Update/Render를 전달하고,");
-	jc::Console::WriteLine("           ReplaceScene 요청이 오면 프레임 경계에서 안전하게 교체한다.");
-	jc::Console::WriteLine("");
-	jc::Console::WriteLine("[v2에서 바뀐 점 - Node/Sprite 제거]");
-	jc::Console::WriteLine(" 부모-자식(AddChild) 계층 없이 Scene::OnRender에서");
-	jc::Console::WriteLine(" Renderer2D::DrawSprite/DrawRect/DrawLine을 직접 불러 즉시 그린다.");
-	jc::Console::WriteLine(" 그리는 순서 = 코드 순서라 흐름을 따라가기 쉽다.");
-	jc::Console::WriteLine("");
-	jc::Console::WriteLine("[Cocos2d-x에서 가져온 것]");
-	jc::Console::WriteLine(" Application 생명주기 훅(ApplicationDidFinishLaunching 등),");
-	jc::Console::WriteLine(" SoundEngine(AudioEngine 대응: Play2d/PlayTone/PauseAll/ResumeAll),");
-	jc::Console::WriteLine(" g_c 전역 접근(g_cDirector/g_cSound/g_cInput - sgcl 스타일).");
-	jc::Console::WriteLine("");
-	jc::Console::WriteLine("[조작법]");
-	jc::Console::WriteLine(" SPACE: 씬 교체 (효과음과 함께) / 방향키: 카메라 이동 / 휠: 줌 / ESC: 종료");
-	jc::Console::WriteLine("");
+	jc::Console::WriteLine(_T(""));
+	jc::Console::WriteLine(_T("[씬(Scene)과 디렉터(Director)]"));
+	jc::Console::WriteLine(_T(" 씬 = 게임의 \"화면 하나\" (타이틀/인게임/결과창처럼 통째로 교체되는 단위)"));
+	jc::Console::WriteLine(_T(" 디렉터 = 현재 씬을 들고 있다가 매 프레임 Update/Render를 전달하고,"));
+	jc::Console::WriteLine(_T("           ReplaceScene 요청이 오면 프레임 경계에서 안전하게 교체한다."));
+	jc::Console::WriteLine(_T(""));
+	jc::Console::WriteLine(_T("[v2에서 바뀐 점 - Node/Sprite 제거]"));
+	jc::Console::WriteLine(_T(" 부모-자식(AddChild) 계층 없이 Scene::OnRender에서"));
+	jc::Console::WriteLine(_T(" Renderer2D::DrawSprite/DrawRect/DrawLine을 직접 불러 즉시 그린다."));
+	jc::Console::WriteLine(_T(" 그리는 순서 = 코드 순서라 흐름을 따라가기 쉽다."));
+	jc::Console::WriteLine(_T(""));
+	jc::Console::WriteLine(_T("[Cocos2d-x에서 가져온 것]"));
+	jc::Console::WriteLine(_T(" Application 생명주기 훅(ApplicationDidFinishLaunching 등),"));
+	jc::Console::WriteLine(_T(" SoundEngine(AudioEngine 대응: Play2d/PlayTone/PauseAll/ResumeAll),"));
+	jc::Console::WriteLine(_T(" g_c 전역 접근(g_cDirector/g_cSound/g_cInput - sgcl 스타일)."));
+	jc::Console::WriteLine(_T(""));
+	jc::Console::WriteLine(_T("[조작법]"));
+	jc::Console::WriteLine(_T(" SPACE: 씬 교체 (효과음과 함께) / 방향키: 카메라 이동 / 휠: 줌 / ESC: 종료"));
+	jc::Console::WriteLine(_T(""));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

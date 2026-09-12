@@ -61,11 +61,11 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 // 행렬 결합과 계층 구조의 원리를 콘솔에 출력한다. (학습용)
 void PrintHierarchyExplanation()
 {
-	jc::Console::WriteLine("\n[계층 변환의 핵심]");
-	jc::Console::WriteLine(" 태양 월드 = 태양 로컬(자전 x 이동)");
-	jc::Console::WriteLine(" 지구 월드 = 지구 로컬 x 태양 공전 행렬");
-	jc::Console::WriteLine(" 달   월드 = 달 로컬 x 지구 공전 행렬 x 태양 공전 행렬");
-	jc::Console::WriteLine(" => 부모가 움직이면 자식은 자동으로 따라 움직인다!");
-	jc::Console::WriteLine(" (행 벡터 규약이므로 왼쪽에 있는 행렬이 먼저 적용된다)");
-	jc::Console::WriteLine(" 이것이 바로 씬 그래프(Scene Graph)의 원리다. Cocos2d-x의 addChild도 똑같다!\n");
+	jc::Console::WriteLine(_T("\n[계층 변환의 핵심]"));
+	jc::Console::WriteLine(_T(" 태양 월드 = 태양 로컬(자전 x 이동)"));
+	jc::Console::WriteLine(_T(" 지구 월드 = 지구 로컬 x 태양 공전 행렬"));
+	jc::Console::WriteLine(_T(" 달   월드 = 달 로컬 x 지구 공전 행렬 x 태양 공전 행렬"));
+	jc::Console::WriteLine(_T(" => 부모가 움직이면 자식은 자동으로 따라 움직인다!"));
+	jc::Console::WriteLine(_T(" (행 벡터 규약이므로 왼쪽에 있는 행렬이 먼저 적용된다)"));
+	jc::Console::WriteLine(_T(" 이것이 바로 씬 그래프(Scene Graph)의 원리다. Cocos2d-x의 addChild도 똑같다!\n"));
 }

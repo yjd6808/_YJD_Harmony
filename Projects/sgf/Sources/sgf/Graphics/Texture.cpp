@@ -17,6 +17,7 @@
 #include "sgf/Graphics/Texture.h"
 #include "sgf/Graphics/GraphicDevice.h"
 #include "sgf/Graphics/GraphicContext.h"
+#include "jc/Primitives/StringConvert.h"
 
 // nanosvg는 선택 사항이다. _Extern 폴더에 헤더가 있으면 SVG 기능이 켜진다.
 // (없어도 컴파일은 되며, LoadFromSvgFile이 false를 반환할 뿐이다)
@@ -69,12 +70,16 @@ bool Texture::LoadFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePat
 		if (FAILED(hr)) { break; }
 
 		// 2. 파일 디코더 생성: 확장자에 맞는 코덱(PNG/JPG...)을 자동 선택한다.
-		// String(UTF-8) → wide 변환
+#ifdef _UNICODE
+		const wchar_t* widePathPtr = _szFilePath.Source();
+#else
 		wchar_t widePath[MAX_PATH * 2] = { 0, };
 		::MultiByteToWideChar(CP_UTF8, 0, _szFilePath.Source(), _szFilePath.Length(), widePath, _countof(widePath) - 1);
+		const wchar_t* widePathPtr = widePath;
+#endif
 		SgfComPtr<IWICBitmapDecoder> pDecoder;
 		hr = pFactory->CreateDecoderFromFilename(
-			widePath, nullptr, GENERIC_READ,
+			widePathPtr, nullptr, GENERIC_READ,
 			WICDecodeMetadataCacheOnDemand, pDecoder.GetAddressOf());
 		if (FAILED(hr)) { break; }
 
@@ -126,7 +131,8 @@ bool Texture::LoadFromSvgFile(GraphicDevice* _pDevice, const jc::String& _szFile
 #if SGF_HAS_NANOSVG
 	// 1. SVG 파싱: 파일을 읽어 벡터 도형 목록으로 변환한다.
 	// "px" 단위, 96 DPI는 nanosvg 권장 기본값이다.
-	NSVGimage* pImage = nsvgParseFromFile(_szFilePath.Source(), "px", 96.0f);
+	const jc::AString narrowSvgPath = jc::StringConvert::ToAnsi(_szFilePath);
+	NSVGimage* pImage = nsvgParseFromFile(narrowSvgPath.Source(), "px", 96.0f);
 	if (pImage == nullptr)
 	{
 		return false;

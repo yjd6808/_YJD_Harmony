@@ -27,6 +27,7 @@
  */
 
 #include "Core.h"
+#include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/26_PostProcess/26_PostProcess_Main.h"
 #include "sgfr/Tutorial/26_PostProcess/26_PostProcess_Function.h"
@@ -53,7 +54,7 @@ namespace
 	};
 
 	// 창 제목에 표시할 효과 이름표 (gMode 값 순서와 일치)
-	const char* s_szEffectNames[] = { "원본", "그레이", "세피아", "색 반전", "비네트", "물결" };
+	const _char* s_szEffectNames[] = { _T("원본"), _T("그레이"), _T("세피아"), _T("색 반전"), _T("비네트"), _T("물결") };
 }
 
 // 포스트 프로세싱 튜토리얼을 실행한다. (좌: 원본 / 우: 효과, 이동형 경계 슬라이더)
@@ -63,9 +64,9 @@ void PostProcess_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("26. 포스트 프로세싱 (0~5 효과, ←→ 경계, ESC 종료)", 800, 600))
+	if (!window.Create(_T("26. 포스트 프로세싱 (0~5 효과, ←→ 경계, ESC 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -75,13 +76,13 @@ void PostProcess_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -90,7 +91,7 @@ void PostProcess_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -101,7 +102,7 @@ void PostProcess_Main()
 	RenderTarget sceneTarget;
 	if (!sceneTarget.Create(&device, window.Width(), window.Height()))
 	{
-		jc::Console::WriteLine("렌더 타깃 생성 실패!");
+		jc::Console::WriteLine(_T("렌더 타깃 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -126,7 +127,7 @@ void PostProcess_Main()
 		!quadVb.Create(&device, quadVertices, 4, VertexPTC::Decl()) ||
 		!quadIb.Create(&device, quadIndices, 6))
 		{
-		jc::Console::WriteLine("버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -135,16 +136,16 @@ void PostProcess_Main()
 
 	// 4. 셰이더 2종 + 상수 버퍼 2종
 
-	_u64 vsSceneShader = device.Context().CreateVertexShader(ColorTransformShaderSource());
-	_u64 psSceneShader = device.Context().CreatePixelShader(ColorTransformShaderSource());
-	_u64 vsPostShader = device.Context().CreateVertexShader(PostProcessShaderSource());
-	_u64 psPostShader = device.Context().CreatePixelShader(PostProcessShaderSource());
+	_u64 vsSceneShader = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(ColorTransformShaderSource()));
+	_u64 psSceneShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(ColorTransformShaderSource()));
+	_u64 vsPostShader = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(PostProcessShaderSource()));
+	_u64 psPostShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(PostProcessShaderSource()));
 	ConstantBuffer<CbTransform> cbTransform;
 	ConstantBuffer<CbPost> cbPost;
 	if (vsSceneShader == INVALID_RESOURCE_KEY || psSceneShader == INVALID_RESOURCE_KEY || vsPostShader == INVALID_RESOURCE_KEY || psPostShader == INVALID_RESOURCE_KEY || !cbTransform.Create(&device) ||
 		!cbPost.Create(&device))
 		{
-		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -161,7 +162,7 @@ void PostProcess_Main()
 
 	auto UpdateTitle = [&]()
 	{
-		jc::String szTitle = jc::StringUtilT::Format("26. 포스트 프로세싱 - 왼쪽: 원본 | 오른쪽: %s (경계 %d%%) (0~5, ←→, ESC)", s_szEffectNames[effectMode], (_s32)(split * 100.0f));
+		jc::String szTitle = jc::StringUtil::Format(_T("26. 포스트 프로세싱 - 왼쪽: 원본 | 오른쪽: %s (경계 %d%%) (0~5, ←→, ESC)"), s_szEffectNames[effectMode], (_s32)(split * 100.0f));
 		window.SetTitle(szTitle);
 	};
 	UpdateTitle();

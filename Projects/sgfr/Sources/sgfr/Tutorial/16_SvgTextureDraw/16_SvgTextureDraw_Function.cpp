@@ -16,16 +16,16 @@ using namespace jc;
 // 벡터 그래픽 vs 래스터 그래픽 차이를 콘솔에 출력한다. (학습용)
 void PrintVectorVsRasterExplanation()
 {
-	jc::Console::WriteLine("\n[래스터 그래픽 (PNG/JPG)]");
-	jc::Console::WriteLine(" 픽셀 격자에 색을 저장. 확대하면 계단 현상(픽셀 깨짐)이 생긴다.");
-	jc::Console::WriteLine("\n[벡터 그래픽 (SVG)]");
-	jc::Console::WriteLine(" '중심 (100,100)에 반지름 80짜리 빨간 원' 처럼 도형 명령어를 저장.");
-	jc::Console::WriteLine(" 아무리 확대해도 다시 계산해서 그리므로 항상 깨끗하다!");
-	jc::Console::WriteLine("\n[GPU는 벡터를 모른다?]");
-	jc::Console::WriteLine(" GPU 텍스처는 결국 픽셀 격자다. 그래서 SVG를 쓰려면");
-	jc::Console::WriteLine(" '래스터화(Rasterize)' 과정이 필요하다: SVG -> [nanosvg 파싱] ->");
-	jc::Console::WriteLine(" [nanosvgrast 래스터화] -> RGBA 픽셀 -> GPU 텍스처.");
-	jc::Console::WriteLine(" 원하는 크기로 래스터화할 수 있는 것이 SVG의 최대 장점! (scale 인자)\n");
+	jc::Console::WriteLine(_T("\n[래스터 그래픽 (PNG/JPG)]"));
+	jc::Console::WriteLine(_T(" 픽셀 격자에 색을 저장. 확대하면 계단 현상(픽셀 깨짐)이 생긴다."));
+	jc::Console::WriteLine(_T("\n[벡터 그래픽 (SVG)]"));
+	jc::Console::WriteLine(_T(" '중심 (100,100)에 반지름 80짜리 빨간 원' 처럼 도형 명령어를 저장."));
+	jc::Console::WriteLine(_T(" 아무리 확대해도 다시 계산해서 그리므로 항상 깨끗하다!"));
+	jc::Console::WriteLine(_T("\n[GPU는 벡터를 모른다?]"));
+	jc::Console::WriteLine(_T(" GPU 텍스처는 결국 픽셀 격자다. 그래서 SVG를 쓰려면"));
+	jc::Console::WriteLine(_T(" '래스터화(Rasterize)' 과정이 필요하다: SVG -> [nanosvg 파싱] ->"));
+	jc::Console::WriteLine(_T(" [nanosvgrast 래스터화] -> RGBA 픽셀 -> GPU 텍스처."));
+	jc::Console::WriteLine(_T(" 원하는 크기로 래스터화할 수 있는 것이 SVG의 최대 장점! (scale 인자)\n"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

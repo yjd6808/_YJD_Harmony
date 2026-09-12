@@ -18,5 +18,5 @@ using namespace jc;
 // 렌더링 파이프라인 연습 튜토리얼을 실행한다.
 void Practice_RenderingPipeline_Main()
 {
-	jc::Console::WriteLine("[Practice] 렌더링 파이프라인 연습 (준비 중)");
+	jc::Console::WriteLine(_T("[Practice] 렌더링 파이프라인 연습 (준비 중)"));
 }

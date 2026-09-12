@@ -39,7 +39,7 @@ bool Mesh::Initialize(
 	const _u32* _pIndices, UINT _indexCount,
 	PrimitiveTopology _topology)
 {
-	jc_assert_msg(_pVertices != nullptr && _vertexCount > 0, "정점 데이터가 비어있습니다.");
+	jc_assert_msg(_pVertices != nullptr && _vertexCount > 0, _T("정점 데이터가 비어있습니다."));
 
 	if (!vertexBuffer_.Create(_pDevice, _pVertices, _vertexCount, _pDecl))
 	{
@@ -80,7 +80,7 @@ bool Mesh::InitializeAsRect2D(GraphicDevice* _pDevice)
 	result.indices_.PushBack((_u16)0); result.indices_.PushBack((_u16)1); result.indices_.PushBack((_u16)2);
 	result.indices_.PushBack((_u16)0); result.indices_.PushBack((_u16)2); result.indices_.PushBack((_u16)3);
 	result.pTexture_ = nullptr;
-	return Build2DPrimitive(_pDevice, result, "Rect2D");
+	return Build2DPrimitive(_pDevice, result, _T("Rect2D"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -89,7 +89,7 @@ bool Mesh::InitializeAsCircle2D(GraphicDevice* _pDevice, _u32 _segments)
 {
 	FillResult result;
 	PrimitiveBuilder::BuildCircle(vec2::Zero(), 1.0f, color::WHITE, _segments, result);
-	return Build2DPrimitive(_pDevice, result, "Circle2D");
+	return Build2DPrimitive(_pDevice, result, _T("Circle2D"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -102,7 +102,7 @@ bool Mesh::InitializeAsTriangle2D(GraphicDevice* _pDevice)
 
 	FillResult result;
 	PrimitiveBuilder::BuildTriangle(pTop, pBottomLeft, pBottomRight, color::WHITE, result);
-	return Build2DPrimitive(_pDevice, result, "Triangle2D");
+	return Build2DPrimitive(_pDevice, result, _T("Triangle2D"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -112,7 +112,7 @@ bool Mesh::InitializeAsLine2D(GraphicDevice* _pDevice)
 {
 	FillResult result;
 	PrimitiveBuilder::BuildLine(vec2(-0.5f, 0.0f), vec2(0.5f, 0.0f), 1.0f, color::WHITE, result);
-	return Build2DPrimitive(_pDevice, result, "Line2D");
+	return Build2DPrimitive(_pDevice, result, _T("Line2D"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -199,7 +199,7 @@ bool Mesh::InitializeAsCube(GraphicDevice* _pDevice)
 		return false;
 	}
 
-	SetDebugName("Cube");
+	SetDebugName(_T("Cube"));
 	return true;
 }
 
@@ -207,7 +207,7 @@ bool Mesh::InitializeAsCube(GraphicDevice* _pDevice)
 // 반지름 1 구 (VertexPNT). UV 스피어 — slices(경도)/stacks(위도) 그리드, 북극→남극.
 bool Mesh::InitializeAsSphere(GraphicDevice* _pDevice, _u32 _slices, _u32 _stacks)
 {
-	jc_assert_msg(_slices >= 3 && _stacks >= 2, "구는 slices>=3, stacks>=2 필요합니다.");
+	jc_assert_msg(_slices >= 3 && _stacks >= 2, _T("구는 slices>=3, stacks>=2 필요합니다."));
 
 	const _f32 radius = 1.0f;
 	const _s32 ringCount = (_s32)_stacks + 1;	// 위도 고리 수 (북극~남극)
@@ -256,7 +256,7 @@ bool Mesh::InitializeAsSphere(GraphicDevice* _pDevice, _u32 _slices, _u32 _stack
 	}
 
 	format_ = VertexFormat::vfPNT3D;
-	SetDebugName("Sphere");
+	SetDebugName(_T("Sphere"));
 	return true;
 }
 
@@ -264,7 +264,7 @@ bool Mesh::InitializeAsSphere(GraphicDevice* _pDevice, _u32 _slices, _u32 _stack
 // 반지름 1, 높이 2 원기둥 (VertexPNT). 옆면 + 상하 원판 (y ±1, 중심 원점).
 bool Mesh::InitializeAsCylinder(GraphicDevice* _pDevice, _u32 _segments)
 {
-	jc_assert_msg(_segments >= 3, "원기둥은 segments>=3 필요합니다.");
+	jc_assert_msg(_segments >= 3, _T("원기둥은 segments>=3 필요합니다."));
 
 	const _f32 radius = 1.0f;
 	const _f32 halfHeight = 1.0f;	// y -1 ~ +1 (전체 높이 2)
@@ -328,7 +328,7 @@ bool Mesh::InitializeAsCylinder(GraphicDevice* _pDevice, _u32 _segments)
 	}
 
 	format_ = VertexFormat::vfPNT3D;
-	SetDebugName("Cylinder");
+	SetDebugName(_T("Cylinder"));
 	return true;
 }
 
@@ -336,7 +336,7 @@ bool Mesh::InitializeAsCylinder(GraphicDevice* _pDevice, _u32 _segments)
 // 반지름 0.5, 전체 높이 2 캡슐 (VertexPNT). 원통부(높이 1) + 상하 반구 (Unity 규격).
 bool Mesh::InitializeAsCapsule(GraphicDevice* _pDevice, _u32 _segments)
 {
-	jc_assert_msg(_segments >= 3, "캡슐은 segments>=3 필요합니다.");
+	jc_assert_msg(_segments >= 3, _T("캡슐은 segments>=3 필요합니다."));
 
 	const _f32 radius = 0.5f;
 	const _f32 cylinderHalf = 0.5f;		// 원통부 y ±0.5 → 전체 높이 2
@@ -412,7 +412,7 @@ bool Mesh::InitializeAsCapsule(GraphicDevice* _pDevice, _u32 _segments)
 	}
 
 	format_ = VertexFormat::vfPNT3D;
-	SetDebugName("Capsule");
+	SetDebugName(_T("Capsule"));
 	return true;
 }
 
@@ -463,7 +463,7 @@ bool Mesh::InitializeAsPlane(GraphicDevice* _pDevice)
 	}
 
 	format_ = VertexFormat::vfPNT3D;
-	SetDebugName("Plane");
+	SetDebugName(_T("Plane"));
 	return true;
 }
 
@@ -487,7 +487,7 @@ bool Mesh::InitializeAsQuad3D(GraphicDevice* _pDevice)
 	}
 
 	format_ = VertexFormat::vfPNT3D;
-	SetDebugName("Quad3D");
+	SetDebugName(_T("Quad3D"));
 	return true;
 }
 

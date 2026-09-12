@@ -175,7 +175,7 @@ void Scene2D::RenderScene()
 
 	g_cRenderer2D.BeginScene(this);            // 씬 카메라로 2D 배치 시작
 	if ((++sLogFrame % 60) == 1)
-		_LogDebug_("[sgf] Scene2D::RenderScene Begin (window=%p)", (void*)GetWindow());
+		_LogDebug_(_T("[sgf] Scene2D::RenderScene Begin (window=%p)"), (void*)GetWindow());
 
 	// ── ① 예약 (GPU 무접촉, 트리 순회 순서 = 드로우 순서) ──
 	RenderNode(root_);                         // 레이어 zOrder 오름차순 DFS, 부모 먼저
@@ -189,7 +189,7 @@ void Scene2D::RenderScene()
 
 	g_cRenderer2D.EndScene();
 	if ((sLogFrame % 60) == 1)
-		_LogDebug_("[sgf] Scene2D::RenderScene End");
+		_LogDebug_(_T("[sgf] Scene2D::RenderScene End"));
 }
 
 NS_SGF_END

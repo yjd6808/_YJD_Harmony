@@ -10,6 +10,7 @@
 #include "sgf/Graphics/GraphicDevice.h"
 #include "sgf/Graphics/VertexDeclaration.h"
 #include "jc/Hasher.h"
+#include "jc/Primitives/StringConvert.h"
 
 #include <cstdio>
 #include <cstring>
@@ -30,10 +31,13 @@ namespace
 #endif
 
 		SgfComPtr<ID3DBlob> pErrorBlob;
+		const jc::AString narrowSource = jc::StringConvert::ToAnsi(_szSource);
+		const jc::AString narrowEntry = jc::StringConvert::ToAnsi(_szEntry);
+		const jc::AString narrowTarget = jc::StringConvert::ToAnsi(_szTarget);
 		HRESULT hr = D3DCompile(
-			_szSource.Source(), _szSource.Length(),
+			narrowSource.Source(), narrowSource.Length(),
 			nullptr, nullptr, nullptr,
-			_szEntry.Source(), _szTarget.Source(),
+			narrowEntry.Source(), narrowTarget.Source(),
 			flags, 0,
 			_outBlob.GetAddressOf(), pErrorBlob.GetAddressOf());
 
@@ -54,7 +58,8 @@ namespace
 	String ReadTextFile(const jc::String& _szFilePath)
 	{
 		FILE* pFile = nullptr;
-		if (fopen_s(&pFile, _szFilePath.Source(), "rb") != 0 || pFile == nullptr)
+		const jc::AString narrowPath = jc::StringConvert::ToAnsi(_szFilePath);
+		if (fopen_s(&pFile, narrowPath.Source(), "rb") != 0 || pFile == nullptr)
 		{
 			return String{};
 		}
@@ -75,7 +80,7 @@ namespace
 		fclose(pFile);
 		pBuffer[readSize] = '\0';
 
-		String result(pBuffer);
+		String result = jc::StringConvert::FromUtf8(pBuffer, static_cast<int>(readSize));
 		delete[] pBuffer;
 		return result;
 	}
@@ -97,7 +102,7 @@ bool VertexShader::InitializeFromSource(GraphicDevice* _pDevice, const jc::Strin
 {
 	Finalize();
 
-	if (!CompileHlsl(_szSource, _szEntry, "vs_5_0", pBytecode_))
+	if (!CompileHlsl(_szSource, _szEntry, _T("vs_5_0"), pBytecode_))
 	{
 		return false;
 	}
@@ -218,7 +223,7 @@ bool PixelShader::InitializeFromSource(GraphicDevice* _pDevice, const jc::String
 	Finalize();
 
 	SgfComPtr<ID3DBlob> pBytecode;
-	jc::String psTarget = "ps_5_0";
+	jc::String psTarget = _T("ps_5_0");
 	if (!CompileHlsl(_szSource, _szEntry, psTarget, pBytecode))
 	{
 		return false;

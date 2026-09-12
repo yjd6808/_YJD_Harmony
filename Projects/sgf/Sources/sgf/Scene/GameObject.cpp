@@ -62,10 +62,10 @@ GameObject::~GameObject()
 // - (용어) zOrder: 그리기 순서. 작을수록 아래(먼저)에 그려진다.
 void GameObject::AddChild(GameObject* _pChild, _u64 _zOrder)
 {
-	jc_assert_msg(_pChild != nullptr, "null 자식은 추가할 수 없습니다.");
+	jc_assert_msg(_pChild != nullptr, _T("null 자식은 추가할 수 없습니다."));
 	if (_pChild == nullptr) return;                                  // 오류 — 처리 거부
 
-	jc_assert_msg(_pChild->pParent_ == nullptr, "이미 부모가 있는 객체");
+	jc_assert_msg(_pChild->pParent_ == nullptr, _T("이미 부모가 있는 객체"));
 	if (_pChild->pParent_ != nullptr) return;                       // 오류 — 처리 거부
 
 	_pChild->pParent_ = this;
@@ -82,7 +82,7 @@ void GameObject::AddChild(GameObject* _pChild, _u64 _zOrder)
 //////////////////////////////////////////////////////////////////////////////////////////
 void GameObject::RemoveChild(GameObject* _pChild)
 {
-	jc_assert_msg(_pChild != nullptr, "null 자식은 제거할 수 없습니다.");
+	jc_assert_msg(_pChild != nullptr, _T("null 자식은 제거할 수 없습니다."));
 	if (_pChild == nullptr) return;
 
 	_pChild->OnExit();                       // RemoveChild 시 1회 — (필요 시) 스태틱 정리
@@ -111,7 +111,7 @@ void GameObject::RemoveAllChildren()
 //////////////////////////////////////////////////////////////////////////////////////////
 GameObject* GameObject::GetChildAt(int _index) const
 {
-	jc_assert_msg(_index >= 0 && _index < children_.Size(), "자식 인덱스 범위 초과");
+	jc_assert_msg(_index >= 0 && _index < children_.Size(), _T("자식 인덱스 범위 초과"));
 	if (_index < 0 || _index >= children_.Size()) return nullptr;
 	return children_[_index].pObject_;
 }

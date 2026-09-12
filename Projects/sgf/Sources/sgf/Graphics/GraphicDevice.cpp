@@ -14,6 +14,7 @@
 #include "sgf/Graphics/VertexDeclaration.h"
 #include "sgf/Graphics/RenderTarget.h"
 #include "sgf/Core/Window.h"
+#include "jc/Primitives/StringConvert.h"
 
 NS_SGF_BEGIN
 
@@ -58,7 +59,7 @@ bool GraphicDevice::Initialize()
 	};
 	context_.SetSamplerRaw(ShaderStage::ssPixel, 0, pSamplers[0]);
 	context_.SetRasterizer(CullMode::cmBack, FillMode::fmSolid, FrontFace::ffClockwise);
-	_LogInfo_("[sgf] GraphicDevice::Initialize OK — 디바이스/컨텍스트/상태 준비");
+	_LogInfo_(_T("[sgf] GraphicDevice::Initialize OK — 디바이스/컨텍스트/상태 준비"));
 	return true;
 }
 
@@ -207,7 +208,7 @@ bool GraphicDevice::CreateSwapChain(HWND _hWnd, _s32 _width, _s32 _height, Pixel
 bool GraphicDevice::EnsureRegistry() const
 {
 	if (pRegistry_ != nullptr) { return true; }
-	jc_assert_msg(false, "ResourceMgr::Initialize 이후에만 리소스를 만들 수 있습니다. 외부에서 g_cResourceMgr.Initialize(&device)를 호출하세요.");
+	jc_assert_msg(false, _T("ResourceMgr::Initialize 이후에만 리소스를 만들 수 있습니다. 외부에서 g_cResourceMgr.Initialize(&device)를 호출하세요."));
 	return false;
 }
 
@@ -304,7 +305,7 @@ ID3D11InputLayout* GraphicDevice::GetOrCreateInputLayout(const VertexDeclaration
 	{
 		const VertexShader::SignatureElement& sig = _pVs->InputSignature()[i];
 		jc_assert_msg(_pDecl->Contains(sig.semanticName_, sig.semanticIndex_),
-			"VS가 요구하는 시맨틱이 VertexDeclaration에 없습니다: %s%u", sig.semanticName_, sig.semanticIndex_);
+			_T("VS가 요구하는 시맨틱이 VertexDeclaration에 없습니다: %hs%u"), sig.semanticName_, sig.semanticIndex_);
 	}
 #endif
 
@@ -321,11 +322,11 @@ ID3D11InputLayout* GraphicDevice::GetOrCreateInputLayout(const VertexDeclaration
 		pLayout.GetAddressOf());
 	if (FAILED(hr))
 	{
-		_LogWarn_("[sgf] CreateInputLayout 실패 (declHash=%llx, sigHash=%llx)", declHash, sigHash);
+		_LogWarn_(_T("[sgf] CreateInputLayout 실패 (declHash=%llx, sigHash=%llx)"), declHash, sigHash);
 		return nullptr;
 	}
 
-	SetDebugName(pLayout.Get(), "InputLayout(decl x vs)");
+	SetDebugName(pLayout.Get(), _T("InputLayout(decl x vs)"));
 
 	InputLayoutEntry entry;
 	entry.declHash_ = declHash;
@@ -436,7 +437,8 @@ void GraphicDevice::SetDebugName(ID3D11DeviceChild* _pChild, const jc::String& _
 	{
 		return;
 	}
-	_pChild->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(_name.Length()), _name.Source());
+	const jc::AString narrowName = jc::StringConvert::ToAnsi(_name);
+	_pChild->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(narrowName.Length()), narrowName.Source());
 #else
 	(void)_pChild;
 	(void)_name;

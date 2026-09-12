@@ -213,7 +213,7 @@ SoundEngine::WavData* SoundEngine::loadWav(const jc::String& _path)
 	// 2. 파일 존재/크기 확인 (jc::File)
 	if (!jc::File::Exist(_path))
 	{
-		jc::Console::WriteLine("[sgf] SoundEngine: WAV file not found");
+		jc::Console::WriteLine(_T("[sgf] SoundEngine: WAV file not found"));
 		return nullptr;
 	}
 	const _s64 fileSize = jc::File::Size(_path);
@@ -233,7 +233,7 @@ SoundEngine::WavData* SoundEngine::loadWav(const jc::String& _path)
 	const _u8* pData = bytes.Source();
 	if (memcmp(pData, "RIFF", 4) != 0 || memcmp(pData + 8, "WAVE", 4) != 0)
 	{
-		jc::Console::WriteLine("[sgf] SoundEngine: not a WAV(RIFF) file");
+		jc::Console::WriteLine(_T("[sgf] SoundEngine: not a WAV(RIFF) file"));
 		return nullptr;
 	}
 
@@ -272,7 +272,7 @@ SoundEngine::WavData* SoundEngine::loadWav(const jc::String& _path)
 			const _s64 sampleSize = (_s64)chunkSize;
 			if (sampleSize > (_s64)INT_MAX)
 			{
-				jc::Console::WriteLine("[sgf] SoundEngine: WAV data chunk too large");
+				jc::Console::WriteLine(_T("[sgf] SoundEngine: WAV data chunk too large"));
 				delete pWav;
 				return nullptr;
 			}
@@ -287,7 +287,7 @@ SoundEngine::WavData* SoundEngine::loadWav(const jc::String& _path)
 	// 6. 필수 청크 검사 + 비압축 PCM만 지원 (압축 포맷은 튜토리얼 범위 밖)
 	if (!hasFmt || !hasData || pWav->format_.wFormatTag != WAVE_FORMAT_PCM)
 	{
-		jc::Console::WriteLine("[sgf] SoundEngine: unsupported WAV format (PCM only)");
+		jc::Console::WriteLine(_T("[sgf] SoundEngine: unsupported WAV format (PCM only)"));
 		delete pWav;
 		return nullptr;
 	}

@@ -48,12 +48,12 @@ public:
 			: 0.0f;
 
 
-		Console::WriteLine("[PacketPooling] Progress: %d / %d (%.1f%%)", _step, _maxStep, percent);
+		Console::WriteLine(_T("[PacketPooling] Progress: %d / %d (%.1f%%)"), _step, _maxStep, percent);
 	}
 
 	void OnFinished(int _step, int _maxStep) override
 	{
-		Console::WriteLine("[PacketPooling] Finished: %d / %d (100%%)", _step, _maxStep);
+		Console::WriteLine(_T("[PacketPooling] Finished: %d / %d (100%%)"), _step, _maxStep);
 	}
 };
 

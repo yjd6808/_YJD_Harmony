@@ -87,22 +87,22 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 // 샘플러/필터링의 원리를 콘솔에 출력한다. (학습용)
 void PrintSamplerExplanation()
 {
-	jc::Console::WriteLine("\n[샘플링(Sampling)이란?]");
-	jc::Console::WriteLine(" 화면 픽셀 하나를 칠할 때 텍스처의 어느 색을 꺼내 올지 정하는 규칙입니다.");
-	jc::Console::WriteLine(" 작은 텍스처를 크게 늘리면(확대) 화면 픽셀 여러 개가 텍셀 하나를 나눠 씁니다.\n");
-	jc::Console::WriteLine("[Before/After 비교 뷰]");
-	jc::Console::WriteLine(" 노란 세로선 왼쪽  = 기준 상태 (Point + Wrap 고정)");
-	jc::Console::WriteLine(" 노란 세로선 오른쪽 = 현재 선택한 필터/주소 모드");
-	jc::Console::WriteLine(" 키를 눌러 오른쪽만 바꿔가며 왼쪽과 직접 비교해보세요!\n");
-	jc::Console::WriteLine("[필터 (1/2 키로 전환)]");
-	jc::Console::WriteLine(" 1. Point  : 가장 가까운 텍셀 하나를 그대로 사용 -> 네모가 각진 도트 느낌");
-	jc::Console::WriteLine(" 2. Linear : 주변 텍셀 4개를 거리비례로 섞음   -> 부드럽지만 흐릿해짐\n");
-	jc::Console::WriteLine("[주소 모드 (3/4/5 키로 전환)] - UV가 0~1 범위를 벗어났을 때");
-	jc::Console::WriteLine(" 3. Wrap   : 처음부터 반복 (바닥 타일링에 필수)");
-	jc::Console::WriteLine(" 4. Clamp  : 가장자리 색을 잡아당겨 늘임 (빨간 테두리가 줄줄 늘어난다!)");
-	jc::Console::WriteLine(" 5. Mirror : 거울처럼 뒤집으며 반복\n");
-	jc::Console::WriteLine(" 이 화면의 사각형은 UV를 0~3으로 주므로 주소 모드 차이가 바로 보입니다.");
-	jc::Console::WriteLine(" 텍스처는 고작 32x32 픽셀! 확대해 보면 필터 차이도 바로 보입니다.\n");
+	jc::Console::WriteLine(_T("\n[샘플링(Sampling)이란?]"));
+	jc::Console::WriteLine(_T(" 화면 픽셀 하나를 칠할 때 텍스처의 어느 색을 꺼내 올지 정하는 규칙입니다."));
+	jc::Console::WriteLine(_T(" 작은 텍스처를 크게 늘리면(확대) 화면 픽셀 여러 개가 텍셀 하나를 나눠 씁니다.\n"));
+	jc::Console::WriteLine(_T("[Before/After 비교 뷰]"));
+	jc::Console::WriteLine(_T(" 노란 세로선 왼쪽  = 기준 상태 (Point + Wrap 고정)"));
+	jc::Console::WriteLine(_T(" 노란 세로선 오른쪽 = 현재 선택한 필터/주소 모드"));
+	jc::Console::WriteLine(_T(" 키를 눌러 오른쪽만 바꿔가며 왼쪽과 직접 비교해보세요!\n"));
+	jc::Console::WriteLine(_T("[필터 (1/2 키로 전환)]"));
+	jc::Console::WriteLine(_T(" 1. Point  : 가장 가까운 텍셀 하나를 그대로 사용 -> 네모가 각진 도트 느낌"));
+	jc::Console::WriteLine(_T(" 2. Linear : 주변 텍셀 4개를 거리비례로 섞음   -> 부드럽지만 흐릿해짐\n"));
+	jc::Console::WriteLine(_T("[주소 모드 (3/4/5 키로 전환)] - UV가 0~1 범위를 벗어났을 때"));
+	jc::Console::WriteLine(_T(" 3. Wrap   : 처음부터 반복 (바닥 타일링에 필수)"));
+	jc::Console::WriteLine(_T(" 4. Clamp  : 가장자리 색을 잡아당겨 늘임 (빨간 테두리가 줄줄 늘어난다!)"));
+	jc::Console::WriteLine(_T(" 5. Mirror : 거울처럼 뒤집으며 반복\n"));
+	jc::Console::WriteLine(_T(" 이 화면의 사각형은 UV를 0~3으로 주므로 주소 모드 차이가 바로 보입니다."));
+	jc::Console::WriteLine(_T(" 텍스처는 고작 32x32 픽셀! 확대해 보면 필터 차이도 바로 보입니다.\n"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

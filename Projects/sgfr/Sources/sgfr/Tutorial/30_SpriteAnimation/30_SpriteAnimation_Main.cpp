@@ -31,6 +31,7 @@
  */
 
 #include "Core.h"
+#include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/30_SpriteAnimation/30_SpriteAnimation_Main.h"
 #include "sgfr/Tutorial/30_SpriteAnimation/30_SpriteAnimation_Function.h"
@@ -42,7 +43,7 @@ using namespace jc;
 namespace
 {
 	// 창 제목에 표시할 이징 이름표 (ApplyEasing의 모드 순서와 일치)
-	const char* s_szEasingNames[] = { "선형", "부드럽게", "바운스" };
+	const _char* s_szEasingNames[] = { _T("선형"), _T("부드럽게"), _T("바운스") };
 }
 
 // 스프라이트 애니메이션 튜토리얼을 실행한다. (위: 선형 기준 / 아래: 선택 이징 Before/After 비교)
@@ -52,9 +53,9 @@ void SpriteAnimation_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("30. 스프라이트 - 위: 선형(기준) | 아래: 선택 이징 (1~3, ↑↓ FPS, ESC)", 800, 600))
+	if (!window.Create(_T("30. 스프라이트 - 위: 선형(기준) | 아래: 선택 이징 (1~3, ↑↓ FPS, ESC)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -64,13 +65,13 @@ void SpriteAnimation_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -79,7 +80,7 @@ void SpriteAnimation_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -96,7 +97,7 @@ void SpriteAnimation_Main()
 	JC_DELETE_SAFE(pPixels);	// GPU로 복사되었으므로 CPU 메모리는 바로 해제
 	if (!bTextureOk)
 	{
-		jc::Console::WriteLine("스프라이트 시트 텍스처 생성 실패!");
+		jc::Console::WriteLine(_T("스프라이트 시트 텍스처 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -116,7 +117,7 @@ void SpriteAnimation_Main()
 	if (!quadVb.Create(&device, quadVertices, 4, VertexPTC::Decl()) ||
 		!quadIb.Create(&device, quadIndices, 6))
 		{
-		jc::Console::WriteLine("버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -124,11 +125,11 @@ void SpriteAnimation_Main()
 	}
 
 	// 4. 셰이더
-	_u64 vsSprite = device.Context().CreateVertexShader(TextureShaderSource());
-	_u64 psSprite = device.Context().CreatePixelShader(TextureShaderSource());
+	_u64 vsSprite = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(TextureShaderSource()));
+	_u64 psSprite = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(TextureShaderSource()));
 	if (vsSprite == INVALID_RESOURCE_KEY || psSprite == INVALID_RESOURCE_KEY)
 	{
-		jc::Console::WriteLine("셰이더 생성 실패!");
+		jc::Console::WriteLine(_T("셰이더 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -141,7 +142,7 @@ void SpriteAnimation_Main()
 
 	auto UpdateTitle = [&]()
 	{
-		jc::String szTitle = jc::StringUtilT::Format("30. 스프라이트 - 위: 선형(기준) | 아래: %s / FPS %d (1~3, ↑↓, ESC)", s_szEasingNames[easingMode], animFps);
+		jc::String szTitle = jc::StringUtil::Format(_T("30. 스프라이트 - 위: 선형(기준) | 아래: %s / FPS %d (1~3, ↑↓, ESC)"), s_szEasingNames[easingMode], animFps);
 		window.SetTitle(szTitle);
 	};
 	UpdateTitle();

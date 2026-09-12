@@ -164,22 +164,22 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 // 그림자 매핑의 2패스 원리와 그림자 여드름(acne)/바이어스를 콘솔에 출력한다. (학습용)
 void PrintShadowExplanation()
 {
-	jc::Console::WriteLine("\n[그림자 매핑(Shadow Mapping)의 핵심 아이디어]");
-	jc::Console::WriteLine(" \"빛의 입장에서 보이지 않는 곳이 그림자다!\"\n");
-	jc::Console::WriteLine("[Before/After 비교 뷰]");
-	jc::Console::WriteLine(" 노란 세로선 왼쪽  = 그림자 없음(Before): 라이팅만 있는 세상");
-	jc::Console::WriteLine(" 노란 세로선 오른쪽 = 그림자 적용(After): 큐브의 그림자가 바닥에 드리워진다");
-	jc::Console::WriteLine(" 그림자 하나가 공간감을 얼마나 바꾸는지 눈으로 비교해보자!\n");
-	jc::Console::WriteLine("[2패스 구조]");
-	jc::Console::WriteLine(" 패스 1: 카메라를 빛의 위치에 놓고 장면의 '깊이만' 텍스처에 기록 (그림자 맵)");
-	jc::Console::WriteLine(" 패스 2: 보통처럼 그리되, 각 픽셀을 빛 시점으로 재투영해서 비교:");
-	jc::Console::WriteLine("   '내 깊이 > 그림자 맵의 깊이' 이면 내 앞에 뭔가 있다 = 그늘진 곳!\n");
-	jc::Console::WriteLine("[그림자 여드름(Shadow Acne)과 바이어스]");
-	jc::Console::WriteLine(" 그림자 맵 해상도의 한계로 자기 자신이 자기를 가린다고 오판하면 줄무늬가 생긴다.");
-	jc::Console::WriteLine(" 깊이 비교에 작은 여유(바이어스)를 두면 해결! (단, 크면 그림자가 물체에서 분리된다)\n");
-	jc::Console::WriteLine("[조작법]");
-	jc::Console::WriteLine(" 왼쪽/오른쪽 방향키: 태양(빛) 방향 회전 -> 오른쪽 화면의 그림자가 따라 움직인다!");
-	jc::Console::WriteLine(" 위/아래 방향키: 바이어스 조절 -> 오른쪽에서만 줄무늬 현상을 관찰할 수 있다\n");
+	jc::Console::WriteLine(_T("\n[그림자 매핑(Shadow Mapping)의 핵심 아이디어]"));
+	jc::Console::WriteLine(_T(" \"빛의 입장에서 보이지 않는 곳이 그림자다!\"\n"));
+	jc::Console::WriteLine(_T("[Before/After 비교 뷰]"));
+	jc::Console::WriteLine(_T(" 노란 세로선 왼쪽  = 그림자 없음(Before): 라이팅만 있는 세상"));
+	jc::Console::WriteLine(_T(" 노란 세로선 오른쪽 = 그림자 적용(After): 큐브의 그림자가 바닥에 드리워진다"));
+	jc::Console::WriteLine(_T(" 그림자 하나가 공간감을 얼마나 바꾸는지 눈으로 비교해보자!\n"));
+	jc::Console::WriteLine(_T("[2패스 구조]"));
+	jc::Console::WriteLine(_T(" 패스 1: 카메라를 빛의 위치에 놓고 장면의 '깊이만' 텍스처에 기록 (그림자 맵)"));
+	jc::Console::WriteLine(_T(" 패스 2: 보통처럼 그리되, 각 픽셀을 빛 시점으로 재투영해서 비교:"));
+	jc::Console::WriteLine(_T("   '내 깊이 > 그림자 맵의 깊이' 이면 내 앞에 뭔가 있다 = 그늘진 곳!\n"));
+	jc::Console::WriteLine(_T("[그림자 여드름(Shadow Acne)과 바이어스]"));
+	jc::Console::WriteLine(_T(" 그림자 맵 해상도의 한계로 자기 자신이 자기를 가린다고 오판하면 줄무늬가 생긴다."));
+	jc::Console::WriteLine(_T(" 깊이 비교에 작은 여유(바이어스)를 두면 해결! (단, 크면 그림자가 물체에서 분리된다)\n"));
+	jc::Console::WriteLine(_T("[조작법]"));
+	jc::Console::WriteLine(_T(" 왼쪽/오른쪽 방향키: 태양(빛) 방향 회전 -> 오른쪽 화면의 그림자가 따라 움직인다!"));
+	jc::Console::WriteLine(_T(" 위/아래 방향키: 바이어스 조절 -> 오른쪽에서만 줄무늬 현상을 관찰할 수 있다\n"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

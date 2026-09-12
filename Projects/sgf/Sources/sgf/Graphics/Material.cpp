@@ -56,21 +56,21 @@ void Material::Finalize()
 //////////////////////////////////////////////////////////////////////////////////////////
 void Material::SetTextureKey(_u32 _slot, _u64 _key)
 {
-	jc_assert_msg(_slot < GraphicContext::MAX_TEXTURE_SLOTS, "텍스처 슬롯 범위를 벗어났습니다.");
+	jc_assert_msg(_slot < GraphicContext::MAX_TEXTURE_SLOTS, _T("텍스처 슬롯 범위를 벗어났습니다."));
 	textureKeys_[_slot] = _key;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 _u64 Material::GetTextureKey(_u32 _slot) const
 {
-	jc_assert_msg(_slot < GraphicContext::MAX_TEXTURE_SLOTS, "텍스처 슬롯 범위를 벗어났습니다.");
+	jc_assert_msg(_slot < GraphicContext::MAX_TEXTURE_SLOTS, _T("텍스처 슬롯 범위를 벗어났습니다."));
 	return textureKeys_[_slot];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 bool Material::SetRasterizer(CullMode _cull, FillMode _fill, FrontFace _frontFace)
 {
-	jc_assert_msg(pDevice_ != nullptr, "Initialize 이후에만 상태를 바꿀 수 있습니다.");
+	jc_assert_msg(pDevice_ != nullptr, _T("Initialize 이후에만 상태를 바꿀 수 있습니다."));
 	cullMode_ = _cull;
 	fillMode_ = _fill;
 	frontFace_ = _frontFace;
@@ -80,7 +80,7 @@ bool Material::SetRasterizer(CullMode _cull, FillMode _fill, FrontFace _frontFac
 //////////////////////////////////////////////////////////////////////////////////////////
 bool Material::SetBlend(BlendMode _mode)
 {
-	jc_assert_msg(pDevice_ != nullptr, "Initialize 이후에만 상태를 바꿀 수 있습니다.");
+	jc_assert_msg(pDevice_ != nullptr, _T("Initialize 이후에만 상태를 바꿀 수 있습니다."));
 	blendMode_ = _mode;
 	return true;
 }
@@ -88,7 +88,7 @@ bool Material::SetBlend(BlendMode _mode)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool Material::SetDepth(DepthMode _mode)
 {
-	jc_assert_msg(pDevice_ != nullptr, "Initialize 이후에만 상태를 바꿀 수 있습니다.");
+	jc_assert_msg(pDevice_ != nullptr, _T("Initialize 이후에만 상태를 바꿀 수 있습니다."));
 	depthMode_ = _mode;
 	return true;
 }
@@ -96,7 +96,7 @@ bool Material::SetDepth(DepthMode _mode)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool Material::SetSampler(FilterMode _filter, AddressMode _addressU, AddressMode _addressV)
 {
-	jc_assert_msg(pDevice_ != nullptr, "Initialize 이후에만 상태를 바꿀 수 있습니다.");
+	jc_assert_msg(pDevice_ != nullptr, _T("Initialize 이후에만 상태를 바꿀 수 있습니다."));
 	filter_ = _filter;
 	addrU_ = _addressU;
 	addrV_ = _addressV;
@@ -111,7 +111,7 @@ bool Material::Bind(GraphicContext& _context)
 	PixelShader* pPs = g_cResourceMgr.Find<PixelShader>(pixelShaderKey_);
 	if (pVs == nullptr || pPs == nullptr)
 	{
-		jc_assert_msg(false, "머티리얼의 셰이더 키가 유효하지 않습니다.");
+		jc_assert_msg(false, _T("머티리얼의 셰이더 키가 유효하지 않습니다."));
 		return false;
 	}
 

@@ -34,6 +34,7 @@
  */
 
 #include "Core.h"
+#include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/34_GraphicsEnum_한눈에_비교/34_GraphicsEnumDiff_Main.h"
 #include "sgfr/Common/TutorialCommon.h"
@@ -95,41 +96,41 @@ namespace
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 화면 타이틀에 표시할 카테고리 이름
 
-	const char* CATEGORY_NAMES[] =
+	const _char* CATEGORY_NAMES[] =
 	{
-		"BlendMode",
-		"FilterMode",
-		"AddressMode",
-		"CullMode",
-		"FillMode",
-		"DepthMode",
-		"FrontFace",
-		"Topology",
+		_T("BlendMode"),
+		_T("FilterMode"),
+		_T("AddressMode"),
+		_T("CullMode"),
+		_T("FillMode"),
+		_T("DepthMode"),
+		_T("FrontFace"),
+		_T("Topology"),
 	};
 
-	const char* CATEGORY_NAMES_KO[] =
+	const _char* CATEGORY_NAMES_KO[] =
 	{
-		"블렌드",
-		"필터",
-		"주소모드",
-		"컬링",
-		"채우기",
-		"깊이",
-		"앞면판정",
-		"토폴로지",
+		_T("블렌드"),
+		_T("필터"),
+		_T("주소모드"),
+		_T("컬링"),
+		_T("채우기"),
+		_T("깊이"),
+		_T("앞면판정"),
+		_T("토폴로지"),
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 각 카테고리 enum 이름표 (타이틀/콘솔에 그대로 보여준다)
 
-	const char* BLEND_NAMES[]   = { "bmNone(덮어쓰기)", "bmAlpha(반투명)", "bmAdd(가산)", "bmMultiply(곱셈)" };
-	const char* FILTER_NAMES[]  = { "fmPoint(최근접)", "fmLinear(선형)", "fmAnisotropic(비등방)" };
-	const char* ADDRESS_NAMES[] = { "amWrap(반복)", "amMirror(거울)", "amClamp(고정)", "amBorder(테두리색)" };
-	const char* CULL_NAMES[]    = { "cmNone(양면)", "cmFront(앞면제거)", "cmBack(뒷면제거)" };
-	const char* FILL_NAMES[]    = { "fmSolid(면)", "fmWireframe(선)" };
-	const char* DEPTH_NAMES[]   = { "dmDisabled(끄기)", "dmReadWrite(읽기+쓰기)", "dmReadOnly(읽기만)" };
-	const char* FRONT_FACE_NAMES[]   = { "ffClockwise(시계=앞)", "ffCounterClockwise(반시계=앞)" };
-	const char* TOPOLOGY_NAMES[]    = { "ptPointList(점)", "ptLineList(선분)", "ptLineStrip(연결선)", "ptTriangleList(삼각형)", "ptTriangleStrip(띠)" };
+	const _char* BLEND_NAMES[]   = { _T("bmNone(덮어쓰기)"), _T("bmAlpha(반투명)"), _T("bmAdd(가산)"), _T("bmMultiply(곱셈)") };
+	const _char* FILTER_NAMES[]  = { _T("fmPoint(최근접)"), _T("fmLinear(선형)"), _T("fmAnisotropic(비등방)") };
+	const _char* ADDRESS_NAMES[] = { _T("amWrap(반복)"), _T("amMirror(거울)"), _T("amClamp(고정)"), _T("amBorder(테두리색)") };
+	const _char* CULL_NAMES[]    = { _T("cmNone(양면)"), _T("cmFront(앞면제거)"), _T("cmBack(뒷면제거)") };
+	const _char* FILL_NAMES[]    = { _T("fmSolid(면)"), _T("fmWireframe(선)") };
+	const _char* DEPTH_NAMES[]   = { _T("dmDisabled(끄기)"), _T("dmReadWrite(읽기+쓰기)"), _T("dmReadOnly(읽기만)") };
+	const _char* FRONT_FACE_NAMES[]   = { _T("ffClockwise(시계=앞)"), _T("ffCounterClockwise(반시계=앞)") };
+	const _char* TOPOLOGY_NAMES[]    = { _T("ptPointList(점)"), _T("ptLineList(선분)"), _T("ptLineStrip(연결선)"), _T("ptTriangleList(삼각형)"), _T("ptTriangleStrip(띠)") };
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 실제 엔진 enum값 매핑
@@ -403,90 +404,89 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 
 	void PrintGuide(DiffCategory _category, _s32 _afterIndex)
 	{
-		Console::WriteLine("\n==================================================");
-		Console::WriteLine(" 34. GraphicsEnum 한눈에 비교 (Before=디폴트 / After=선택)");
-		Console::WriteLine("==================================================");
-		Console::WriteLine(" 좌(Before)=엔진 디폴트 고정, 우(After)=선택값. 같은 장면을 두 번 그려 비교합니다.");
-		Console::WriteLine("");
-		Console::WriteLine("[조작법]");
-		Console::WriteLine(" 1~8 / Up,Down : 카테고리 전환");
-		Console::WriteLine("    1 Blend(4)  2 Filter(3)  3 Address(4)  4 Cull(3)");
-		Console::WriteLine("    5 Fill(2)   6 Depth(3)   7 FrontFace(2) 8 Topology(5)");
-		Console::WriteLine(" Left,Right    : After 값 순회 (파이프라인 즉시 반영)");
-		Console::WriteLine(" ESC            : 종료");
-		Console::WriteLine("");
-		Console::WriteLine("[엔진 디폴트(Before 고정)]");
-		Console::WriteLine(" Blend bmAlpha / Filter fmLinear / Address amClamp / Cull cmBack");
-		Console::WriteLine(" Fill fmSolid / Depth dmReadWrite / Front ffClockwise / Topo ptTriangleList");
-		Console::WriteLine("");
-
-		Console::WriteLine("[현재 카테고리]");
-		char buf[128];
-		sprintf_s(buf, " %d. %s", static_cast<_s32>(_category) + 1, CATEGORY_NAMES[static_cast<_s32>(_category)]);
+		Console::WriteLine(_T("\n=================================================="));
+		Console::WriteLine(_T(" 34. GraphicsEnum 한눈에 비교 (Before=디폴트 / After=선택)"));
+		Console::WriteLine(_T("=================================================="));
+		Console::WriteLine(_T(" 좌(Before)=엔진 디폴트 고정, 우(After)=선택값. 같은 장면을 두 번 그려 비교합니다."));
+		Console::WriteLine(_T(""));
+		Console::WriteLine(_T("[조작법]"));
+		Console::WriteLine(_T(" 1~8 / Up,Down : 카테고리 전환"));
+		Console::WriteLine(_T("    1 Blend(4)  2 Filter(3)  3 Address(4)  4 Cull(3)"));
+		Console::WriteLine(_T("    5 Fill(2)   6 Depth(3)   7 FrontFace(2) 8 Topology(5)"));
+		Console::WriteLine(_T(" Left,Right    : After 값 순회 (파이프라인 즉시 반영)"));
+		Console::WriteLine(_T(" ESC            : 종료"));
+		Console::WriteLine(_T(""));
+		Console::WriteLine(_T("[엔진 디폴트(Before 고정)]"));
+		Console::WriteLine(_T(" Blend bmAlpha / Filter fmLinear / Address amClamp / Cull cmBack"));
+		Console::WriteLine(_T(" Fill fmSolid / Depth dmReadWrite / Front ffClockwise / Topo ptTriangleList"));
+		Console::WriteLine(_T(""));
+		Console::WriteLine(_T("[현재 카테고리]"));
+		_char buf[128];
+		_stprintf_s(buf, _T(" %d. %s"), static_cast<_s32>(_category) + 1, CATEGORY_NAMES[static_cast<_s32>(_category)]);
 		Console::WriteLine(buf);
-		Console::WriteLine("");
+		Console::WriteLine(_T(""));
 
 		if (_category == DiffCategory::dcBlendMode)
 		{
-			Console::WriteLine("[BlendMode - 픽셀 합성 공식: 최종색 = 새색*Src + 기존색*Dest]");
-			Console::WriteLine(" bmNone    : BlendEnable FALSE (ONE/ZERO) - 덮어쓰기 불투명");
-			Console::WriteLine(" bmAlpha   : SRC_ALPHA / INV_SRC_ALPHA - 일반 반투명 (UI, 스프라이트) [디폴트]");
-			Console::WriteLine(" bmAdd     : SRC_ALPHA / ONE - 가산, 겹칠수록 밝아짐 (빛, 이펙트)");
-			Console::WriteLine(" bmMultiply: DEST_COLOR / ZERO - 곱셈, 겹칠수록 어두워짐 (그림자)");
+			Console::WriteLine(_T("[BlendMode - 픽셀 합성 공식: 최종색 = 새색*Src + 기존색*Dest]"));
+			Console::WriteLine(_T(" bmNone    : BlendEnable FALSE (ONE/ZERO) - 덮어쓰기 불투명"));
+			Console::WriteLine(_T(" bmAlpha   : SRC_ALPHA / INV_SRC_ALPHA - 일반 반투명 (UI, 스프라이트) [디폴트]"));
+			Console::WriteLine(_T(" bmAdd     : SRC_ALPHA / ONE - 가산, 겹칠수록 밝아짐 (빛, 이펙트)"));
+			Console::WriteLine(_T(" bmMultiply: DEST_COLOR / ZERO - 곱셈, 겹칠수록 어두워짐 (그림자)"));
 		}
 		else 		if (_category == DiffCategory::dcFilterMode)
 		{
-			Console::WriteLine("[FilterMode - 확대/축소 시 보간 규칙]");
-			Console::WriteLine(" fmPoint      : MIN_MAG_MIP_POINT - 가장 가까운 1픽셀 그대로 (도트, 계단 현상, 확대 시 블록 느낌)");
-			Console::WriteLine(" fmLinear     : MIN_MAG_MIP_LINEAR - 주변 4픽셀을 섞어 부드럽게 [디폴트] (정면 평면에서는 Anisotropic과 동일)");
-			Console::WriteLine(" fmAnisotropic: ANISOTROPIC 16x - 비스듬한 면(복도 바닥, 먼 벽)에서 방향을 따라 최대 16개 샘플을 모아 선명도 유지");
-			Console::WriteLine("  -> 정면 체커(현재 화면)는 Linear와 Anisotropic이 거의 같아 보인다. 차이는 멀리 비스듬히 보이는 바닥/벽에서만 드러난다.");
+			Console::WriteLine(_T("[FilterMode - 확대/축소 시 보간 규칙]"));
+			Console::WriteLine(_T(" fmPoint      : MIN_MAG_MIP_POINT - 가장 가까운 1픽셀 그대로 (도트, 계단 현상, 확대 시 블록 느낌)"));
+			Console::WriteLine(_T(" fmLinear     : MIN_MAG_MIP_LINEAR - 주변 4픽셀을 섞어 부드럽게 [디폴트] (정면 평면에서는 Anisotropic과 동일)"));
+			Console::WriteLine(_T(" fmAnisotropic: ANISOTROPIC 16x - 비스듬한 면(복도 바닥, 먼 벽)에서 방향을 따라 최대 16개 샘플을 모아 선명도 유지"));
+			Console::WriteLine(_T("  -> 정면 체커(현재 화면)는 Linear와 Anisotropic이 거의 같아 보인다. 차이는 멀리 비스듬히 보이는 바닥/벽에서만 드러난다."));
 		}
 		else if (_category == DiffCategory::dcAddressMode)
 		{
-			Console::WriteLine("[AddressMode - UV 0~1 벗어날 때]");
-			Console::WriteLine(" amWrap  : 반복 타일링");
-			Console::WriteLine(" amMirror: 거울 뒤집어 반복");
-			Console::WriteLine(" amClamp : 가장자리 색 고정 [디폴트]");
-			Console::WriteLine(" amBorder: BorderColor(검정)로 채움");
+			Console::WriteLine(_T("[AddressMode - UV 0~1 벗어날 때]"));
+			Console::WriteLine(_T(" amWrap  : 반복 타일링"));
+			Console::WriteLine(_T(" amMirror: 거울 뒤집어 반복"));
+			Console::WriteLine(_T(" amClamp : 가장자리 색 고정 [디폴트]"));
+			Console::WriteLine(_T(" amBorder: BorderColor(검정)로 채움"));
 		}
 		else if (_category == DiffCategory::dcCullMode)
 		{
-			Console::WriteLine("[CullMode - 어느 면을 버릴지]");
-			Console::WriteLine(" cmNone : 양면 모두 그림");
-			Console::WriteLine(" cmFront: 앞면 버림 (특수)");
-			Console::WriteLine(" cmBack : 뒷면 버림 [디폴트] - 큐브 속이 안 보임");
+			Console::WriteLine(_T("[CullMode - 어느 면을 버릴지]"));
+			Console::WriteLine(_T(" cmNone : 양면 모두 그림"));
+			Console::WriteLine(_T(" cmFront: 앞면 버림 (특수)"));
+			Console::WriteLine(_T(" cmBack : 뒷면 버림 [디폴트] - 큐브 속이 안 보임"));
 		}
 		else if (_category == DiffCategory::dcFillMode)
 		{
-			Console::WriteLine("[FillMode - 면을 채울지]");
-			Console::WriteLine(" fmSolid    : 면 채우기 [디폴트]");
-			Console::WriteLine(" fmWireframe: 선만 (토폴로지 디버깅)");
+			Console::WriteLine(_T("[FillMode - 면을 채울지]"));
+			Console::WriteLine(_T(" fmSolid    : 면 채우기 [디폴트]"));
+			Console::WriteLine(_T(" fmWireframe: 선만 (토폴로지 디버깅)"));
 		}
 		else if (_category == DiffCategory::dcDepthMode)
 		{
-			Console::WriteLine("[DepthMode - 깊이 테스트/쓰기]");
-			Console::WriteLine(" dmDisabled : DepthEnable FALSE - 2D 적층 순서대로");
-			Console::WriteLine(" dmReadWrite: Enable TRUE, Write ALL, Func LESS_EQUAL [디폴트] - 3D 기본");
-			Console::WriteLine(" dmReadOnly : Enable TRUE, Write ZERO - 반투명 3D (테스트만)");
+			Console::WriteLine(_T("[DepthMode - 깊이 테스트/쓰기]"));
+			Console::WriteLine(_T(" dmDisabled : DepthEnable FALSE - 2D 적층 순서대로"));
+			Console::WriteLine(_T(" dmReadWrite: Enable TRUE, Write ALL, Func LESS_EQUAL [디폴트] - 3D 기본"));
+			Console::WriteLine(_T(" dmReadOnly : Enable TRUE, Write ZERO - 반투명 3D (테스트만)"));
 		}
 		else if (_category == DiffCategory::dcFrontFace)
 		{
-			Console::WriteLine("[FrontFace - 앞면 판정]");
-			Console::WriteLine(" ffClockwise       : 시계방향=앞면, CounterClockwise=FALSE [디폴트] (D3D 기본)");
-			Console::WriteLine(" ffCounterClockwise: 반시계=앞면, TRUE (OpenGL 스타일)");
+			Console::WriteLine(_T("[FrontFace - 앞면 판정]"));
+			Console::WriteLine(_T(" ffClockwise       : 시계방향=앞면, CounterClockwise=FALSE [디폴트] (D3D 기본)"));
+			Console::WriteLine(_T(" ffCounterClockwise: 반시계=앞면, TRUE (OpenGL 스타일)"));
 		}
 		else if (_category == DiffCategory::dcTopology)
 		{
-			Console::WriteLine("[PrimitiveTopology - 정점 연결 방식]");
-			Console::WriteLine(" ptPointList    : 점 목록");
-			Console::WriteLine(" ptLineList     : 독립 선분 (2점당 1선)");
-			Console::WriteLine(" ptLineStrip    : 연결된 선");
-			Console::WriteLine(" ptTriangleList : 독립 삼각형 [디폴트]");
-			Console::WriteLine(" ptTriangleStrip: 띠(이전 2점+신점)");
+			Console::WriteLine(_T("[PrimitiveTopology - 정점 연결 방식]"));
+			Console::WriteLine(_T(" ptPointList    : 점 목록"));
+			Console::WriteLine(_T(" ptLineList     : 독립 선분 (2점당 1선)"));
+			Console::WriteLine(_T(" ptLineStrip    : 연결된 선"));
+			Console::WriteLine(_T(" ptTriangleList : 독립 삼각형 [디폴트]"));
+			Console::WriteLine(_T(" ptTriangleStrip: 띠(이전 2점+신점)"));
 		}
 
-		const char* afterName = "?";
+		const _char* afterName = _T("?");
 		if (_category == DiffCategory::dcBlendMode)       afterName = BLEND_NAMES[_afterIndex];
 		else if (_category == DiffCategory::dcFilterMode)  afterName = FILTER_NAMES[_afterIndex];
 		else if (_category == DiffCategory::dcAddressMode) afterName = ADDRESS_NAMES[_afterIndex];
@@ -496,16 +496,16 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 		else if (_category == DiffCategory::dcFrontFace)   afterName = FRONT_FACE_NAMES[_afterIndex];
 		else if (_category == DiffCategory::dcTopology)    afterName = TOPOLOGY_NAMES[_afterIndex];
 
-		char afterBuf[128];
-		sprintf_s(afterBuf, " -> After: %s", afterName);
+		_char afterBuf[128];
+		_stprintf_s(afterBuf, _T(" -> After: %s"), afterName);
 		Console::WriteLine(afterBuf);
-		Console::WriteLine(" Left,Right로 After 값을 바꿔보세요. 좌=디폴트, 우=선택 비교!\n");
+		Console::WriteLine(_T(" Left,Right로 After 값을 바꿔보세요. 좌=디폴트, 우=선택 비교!\n"));
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 현재 카테고리/인덱스에 해당하는 표시 이름을 반환한다.
 
-	const char* GetAfterName(DiffCategory _category, _s32 _index)
+	const _char* GetAfterName(DiffCategory _category, _s32 _index)
 	{
 		if (_category == DiffCategory::dcBlendMode)       return BLEND_NAMES[_index];
 		if (_category == DiffCategory::dcFilterMode)      return FILTER_NAMES[_index];
@@ -517,7 +517,7 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 		return TOPOLOGY_NAMES[_index];
 	}
 
-	const char* GetBeforeName(DiffCategory _category)
+	const _char* GetBeforeName(DiffCategory _category)
 	{
 		return GetAfterName(_category, DEFAULT_INDEX[static_cast<_s32>(_category)]);
 	}
@@ -537,9 +537,9 @@ void GraphicsEnumDiff_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("34. GraphicsEnum 한눈에 비교 (1~8 카테고리, Left/Right 값, ESC 종료)", 960, 600))
+	if (!window.Create(_T("34. GraphicsEnum 한눈에 비교 (1~8 카테고리, Left/Right 값, ESC 종료)"), 960, 600))
 	{
-		Console::WriteLine("윈도우 생성 실패!");
+		Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -549,13 +549,13 @@ void GraphicsEnumDiff_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	Console::WriteLine("그래픽 디바이스 초기화 실패!");
+		Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -564,7 +564,7 @@ void GraphicsEnumDiff_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+		jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -640,15 +640,15 @@ void GraphicsEnumDiff_Main()
 
 	// 4. 셰이더 + 상수 버퍼
 
-	_u64 vsBlend = device.Context().CreateVertexShader(BlendQuadShaderSource34());
-	_u64 psBlend = device.Context().CreatePixelShader(BlendQuadShaderSource34());
-	_u64 vsSplit = device.Context().CreateVertexShader(SamplerSplitShaderSource34());
-	_u64 psSplit = device.Context().CreatePixelShader(SamplerSplitShaderSource34());
-	_u64 vsColor = device.Context().CreateVertexShader(ColorTransformShaderSource34());
-	_u64 psColor = device.Context().CreatePixelShader(ColorTransformShaderSource34());
+	_u64 vsBlend = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(BlendQuadShaderSource34()));
+	_u64 psBlend = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(BlendQuadShaderSource34()));
+	_u64 vsSplit = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(SamplerSplitShaderSource34()));
+	_u64 psSplit = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(SamplerSplitShaderSource34()));
+	_u64 vsColor = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(ColorTransformShaderSource34()));
+	_u64 psColor = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(ColorTransformShaderSource34()));
 	if (vsBlend == INVALID_RESOURCE_KEY || psBlend == INVALID_RESOURCE_KEY || vsSplit == INVALID_RESOURCE_KEY || psSplit == INVALID_RESOURCE_KEY || vsColor == INVALID_RESOURCE_KEY || psColor == INVALID_RESOURCE_KEY)
 	{
-		jc::Console::WriteLine("셰이더 생성 실패!");
+		jc::Console::WriteLine(_T("셰이더 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -681,7 +681,7 @@ void GraphicsEnumDiff_Main()
 
 	auto UpdateTitle = [&]()
 	{
-		jc::String title = jc::StringUtilT::Format("34. %s (%s)  Before:%s  |  After:%s  [1~8 카테고리, Left/Right 값, ESC]", CATEGORY_NAMES_KO[static_cast<_s32>(category)],
+		jc::String title = jc::StringUtil::Format(_T("34. %s (%s)  Before:%s  |  After:%s  [1~8 카테고리, Left/Right 값, ESC]"), CATEGORY_NAMES_KO[static_cast<_s32>(category)],
 			CATEGORY_NAMES[static_cast<_s32>(category)],
 			GetBeforeName(category), GetAfterName(category, afterIdx));
 		window.SetTitle(title);
@@ -753,8 +753,8 @@ void GraphicsEnumDiff_Main()
 			UpdateTitle();
 			PrintGuide(category, afterIdx);
 
-			char buf[128];
-			sprintf_s(buf, "[After %d/%d] %s", afterIdx + 1, COUNT_PER_CATEGORY[static_cast<_s32>(category)], GetAfterName(category, afterIdx));
+			_char buf[128];
+			_stprintf_s(buf, _T("[After %d/%d] %s"), afterIdx + 1, COUNT_PER_CATEGORY[static_cast<_s32>(category)], GetAfterName(category, afterIdx));
 			Console::WriteLine(buf);
 		}
 

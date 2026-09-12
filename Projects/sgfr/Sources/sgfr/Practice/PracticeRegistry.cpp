@@ -17,7 +17,7 @@ namespace sgfr
 
 static const TutorialEntry s_Practices[] =
 {
-	{ "렌더링 파이프라인 (Practice) - 첫 조합 연습", Practice_RenderingPipeline_Main },
+	{ _T("렌더링 파이프라인 (Practice) - 첫 조합 연습"), Practice_RenderingPipeline_Main },
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////

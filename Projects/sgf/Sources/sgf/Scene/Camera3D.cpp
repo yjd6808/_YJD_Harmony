@@ -21,7 +21,7 @@ Camera3D::Camera3D()
 	, target_(0.0f, 0.0f, 0.0f)
 	, up_(0.0f, 1.0f, 0.0f)
 {
-	SetName("DefaultCamera3D");
+	SetName(_T("DefaultCamera3D"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

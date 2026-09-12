@@ -20,6 +20,7 @@
  */
 
 #include "Core.h"
+#include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/06_HLSL/06_HLSL_Main.h"
 #include "sgfr/Tutorial/06_HLSL/06_HLSL_Function.h"
@@ -45,9 +46,9 @@ void HLSL_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("06. HLSL 셰이더 - 상수 버퍼 애니메이션 (ESC로 종료)", 800, 600))
+	if (!window.Create(_T("06. HLSL 셰이더 - 상수 버퍼 애니메이션 (ESC로 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -57,13 +58,13 @@ void HLSL_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -72,7 +73,7 @@ void HLSL_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -89,7 +90,7 @@ void HLSL_Main()
 	VertexBuffer vb;
 	if (!vb.Create(&device, vertices, 3, VertexPC::Decl()))
 	{
-		jc::Console::WriteLine("정점 버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("정점 버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -98,13 +99,13 @@ void HLSL_Main()
 
 	// 3. 셰이더 + 상수 버퍼
 
-	_u64 vsShader = device.Context().CreateVertexShader(AnimatedShaderSource());
-	_u64 psShader = device.Context().CreatePixelShader(AnimatedShaderSource());
+	_u64 vsShader = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(AnimatedShaderSource()));
+	_u64 psShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(AnimatedShaderSource()));
 	ConstantBuffer<CbTime> cbTime;
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY ||
 		!cbTime.Create(&device))
 		{
-		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();

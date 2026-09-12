@@ -12,29 +12,29 @@
 // [가상 키코드란?]
 // 키보드 종류와 상관없이 OS가 약속한 키 번호다.
 // 숫자/알파벳 키는 ASCII 코드와 값이 같다. ('A' == 0x41 == VK_A)
-const char* VkCodeToName(_s32 _vkCode)
+const _char* VkCodeToName(_s32 _vkCode)
 {
 	switch (_vkCode)
 	{
-	case VK_ESCAPE:  return "ESC";
-	case VK_SPACE:   return "SPACE";
-	case VK_RETURN:  return "ENTER";
-	case VK_LEFT:    return "LEFT";
-	case VK_RIGHT:   return "RIGHT";
-	case VK_UP:      return "UP";
-	case VK_DOWN:    return "DOWN";
-	case VK_SHIFT:   return "SHIFT";
-	case VK_CONTROL: return "CTR";
+	case VK_ESCAPE:  return _T("ESC");
+	case VK_SPACE:   return _T("SPACE");
+	case VK_RETURN:  return _T("ENTER");
+	case VK_LEFT:    return _T("LEFT");
+	case VK_RIGHT:   return _T("RIGHT");
+	case VK_UP:      return _T("UP");
+	case VK_DOWN:    return _T("DOWN");
+	case VK_SHIFT:   return _T("SHIFT");
+	case VK_CONTROL: return _T("CTR");
 	default:
 		break;
 	}
 
 	// 알파벳/숫자는 문자 그대로 보여준다. (정적 버퍼 사용: 단순 로그용)
-	static _s8 s_szName[2] = { 0, 0 };
+	static _char s_szName[2] = { 0, 0 };
 	if ((_vkCode >= '0' && _vkCode <= '9') || (_vkCode >= 'A' && _vkCode <= 'Z'))
 	{
-		s_szName[0] = (_s8)_vkCode;
+		s_szName[0] = (_char)_vkCode;
 		return s_szName;
 	}
-	return "(기타)";
+	return _T("(기타)");
 }

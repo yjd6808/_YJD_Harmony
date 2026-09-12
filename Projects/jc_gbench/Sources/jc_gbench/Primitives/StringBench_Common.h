@@ -17,7 +17,8 @@ namespace jc_gbench {
 
 // 벤치 대상 별칭: R0(원본), S0(복사본), S1(inline SSO), S2(Impl 포인터),
 // S3(Impl + TLS pool), S4(pool + Impl SSO), R1(std::string 참조군)
-using BenchR0 = jc::String;
+// 데이터셋이 narrow 바이트 단위라 R0도 narrow 고정한다.
+using BenchR0 = jc::AString;
 #if BenchStrS0 == ON
 using BenchS0 = s0::StrForBench;
 #endif

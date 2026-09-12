@@ -8,6 +8,7 @@
 #include "Core.h"
 #include "sgf/Graphics/BatchRenderer.h"
 #include "sgf/Graphics/GraphicDevice.h"
+#include "jc/Primitives/StringConvert.h"
 
 NS_SGF_BEGIN
 
@@ -34,11 +35,12 @@ bool BatchRenderer::Initialize(GraphicDevice* _pDevice)
 	pDevice_ = _pDevice;
 
 	// 1. 파생이 내려준 셰이더 소스로 분리형 VS/PS 생성
-	if (!vs_.InitializeFromSource(_pDevice, ShaderSource()))
+	const jc::String hlslSource = jc::StringConvert::FromUtf8(ShaderSource());
+	if (!vs_.InitializeFromSource(_pDevice, hlslSource))
 	{
 		return false;
 	}
-	if (!ps_.InitializeFromSource(_pDevice, ShaderSource()))
+	if (!ps_.InitializeFromSource(_pDevice, hlslSource))
 	{
 		vs_.Finalize();
 		return false;

@@ -14,7 +14,7 @@ NS_JNET_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
 UdpClientNetGroup::UdpClientNetGroup(const jc::String& _name)
-	: NetGroup(StringUtilT::Format("%s 그룹", _name))
+	: NetGroup(StringUtil::Format(_T("%s 그룹"), _name))
 {
 }
 

@@ -60,7 +60,7 @@ struct ClientListener : ClientEventListener
 
 struct tagClientGroup : NetGroup
 {
-	tagClientGroup() : NetGroup("클라이언트") {}
+	tagClientGroup() : NetGroup(_T("클라이언트")) {}
 
 	void Initialize() override {
 		CreateIOCP(4);
@@ -92,7 +92,7 @@ void ClientSide::Initialize()
 {
 	if (TestClientCount > MAX_CLIENT)
 	{
-		jc_assert_msg(false, "클라이언트 수가 너무 많습니다.");
+		jc_assert_msg(false, _T("클라이언트 수가 너무 많습니다."));
 		return;
 	}
 

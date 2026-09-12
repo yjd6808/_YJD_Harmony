@@ -21,6 +21,7 @@
  */
 
 #include "Core.h"
+#include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/14_Lighting/14_Lighting_Main.h"
 #include "sgfr/Tutorial/14_Lighting/14_Lighting_Function.h"
@@ -53,9 +54,9 @@ void Lighting_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("14. 라이팅 - 람버트 확산광 (↑↓ 주변광, ESC 종료)", 800, 600))
+	if (!window.Create(_T("14. 라이팅 - 람버트 확산광 (↑↓ 주변광, ESC 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -65,13 +66,13 @@ void Lighting_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -80,7 +81,7 @@ void Lighting_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -97,7 +98,7 @@ void Lighting_Main()
 	if (!vb.Create(&device, vertices, 24, VertexPNT::Decl()) ||
 		!ib.Create(&device, indices, 36))
 		{
-		jc::Console::WriteLine("버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -106,15 +107,15 @@ void Lighting_Main()
 
 	// 3. 셰이더 + 상수 버퍼 2개 (변환용 b0, 조명용 b1)
 
-	_u64 vsShader = device.Context().CreateVertexShader(LambertShaderSource());
-	_u64 psShader = device.Context().CreatePixelShader(LambertShaderSource());
+	_u64 vsShader = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(LambertShaderSource()));
+	_u64 psShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(LambertShaderSource()));
 	ConstantBuffer<CbTransform> cbTransform;
 	ConstantBuffer<CbLight> cbLight;
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY ||
 		!cbTransform.Create(&device) ||
 		!cbLight.Create(&device))
 		{
-		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -130,7 +131,7 @@ void Lighting_Main()
 	_f32 elapsed = 0.0f;
 	_f32 ambient = 0.15f;	// 주변광 기본값
 
-	jc::Console::WriteLine("빛은 오른쪽 위 앞에서 대각선으로 내리쪼입니다. ↑↓로 주변광을 조절해보세요.");
+	jc::Console::WriteLine(_T("빛은 오른쪽 위 앞에서 대각선으로 내리쪼입니다. ↑↓로 주변광을 조절해보세요."));
 
 	// 5. 렌더 루프
 	while (window.PumpMessage())

@@ -43,7 +43,7 @@ bool ServerNetGroupMgr::Initialize()
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ServerLoginChannelNetGroup::ServerLoginChannelNetGroup()
-: NetGroup("서버 TCP 로그인,채널 서버 그룹")
+: NetGroup(_T("서버 TCP 로그인,채널 서버 그룹"))
 {
 }
 
@@ -73,9 +73,9 @@ void ServerLoginChannelNetGroup::Initialize()
 	AddHost(2, pChannelServer);
 
 	loginServer_ = pLoginServer;
-	loginServer_->SetEventListener(dbg_new ServerListener{ "로그인 서버" });
+	loginServer_->SetEventListener(dbg_new ServerListener{ _T("로그인 서버") });
 	channelServer_ = pChannelServer;
-	channelServer_->SetEventListener(dbg_new ServerListener{ "채널 서버" });
+	channelServer_->SetEventListener(dbg_new ServerListener{ _T("채널 서버") });
 }
 
 
@@ -87,7 +87,7 @@ void ServerLoginChannelNetGroup::Initialize()
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ServerGameNetGroup::ServerGameNetGroup()
-: NetGroup("서버 TCP 게임 서버 그룹")
+: NetGroup(_T("서버 TCP 게임 서버 그룹"))
 {
 }
 
@@ -113,7 +113,7 @@ void ServerGameNetGroup::Initialize()
 	AddHost(1, pGameServer);
 
 	gameServer_ = pGameServer;
-	gameServer_->SetEventListener(dbg_new ServerListener{ "게임 서버 " });
+	gameServer_->SetEventListener(dbg_new ServerListener{ _T("게임 서버 ") });
 }
 
 /* =============================================================================
@@ -124,7 +124,7 @@ void ServerGameNetGroup::Initialize()
 
 //////////////////////////////////////////////////////////////////////////////////////////
 ServerUdpNetGroup::ServerUdpNetGroup()
-: NetGroup("서버 UDP 그룹")
+: NetGroup(_T("서버 UDP 그룹"))
 {
 }
 
@@ -161,11 +161,11 @@ void ServerUdpNetGroup::Initialize()
 	AddHost(3, pGameUdp);
 
 	loginUdpClient_ = pLoginUdp;
-	loginUdpClient_->SetEventListener(dbg_new ClientListener{ "로그인 UDP" });
+	loginUdpClient_->SetEventListener(dbg_new ClientListener{ _T("로그인 UDP") });
 	channelUdpClient_ = pChannelUdp;
-	channelUdpClient_->SetEventListener(dbg_new ClientListener{ "채널 UDP" });
+	channelUdpClient_->SetEventListener(dbg_new ClientListener{ _T("채널 UDP") });
 	gameUdpClient_ = pGameUdp;
-	gameUdpClient_->SetEventListener(dbg_new ClientListener{ "게임 UDP" });
+	gameUdpClient_->SetEventListener(dbg_new ClientListener{ _T("게임 UDP") });
 }
 
 

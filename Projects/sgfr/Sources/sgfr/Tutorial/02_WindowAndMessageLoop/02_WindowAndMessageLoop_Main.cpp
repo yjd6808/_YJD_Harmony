@@ -34,9 +34,9 @@ void WindowAndMessageLoop_Main()
 	// (2) AdjustWindowRect: 요청한 800x600이 '그림 영역' 크기가 되도록 테두리 포함 크기 계산
 	// (3) CreateWindowEx: 실제 창 생성, 식별자(HWND) 발급
 	Window window;
-	if (!window.Create("02. 윈도우와 메시지 루프 (ESC로 종료)", 800, 600))
+	if (!window.Create(_T("02. 윈도우와 메시지 루프 (ESC로 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -49,17 +49,17 @@ void WindowAndMessageLoop_Main()
 	// "키가 눌리는 순간" 콜백이 호출된다. (폴링 방식과 비교해보기)
 	input.onKeyPressed.Register(1, [](_s32 _vkCode)
 	{
-		jc::Console::Write("[이벤트] 키 누름: %s (코드: 0x%02X)\n", VkCodeToName(_vkCode), _vkCode);
+		jc::Console::Write(_T("[이벤트] 키 누름: %s (코드: 0x%02X)\n"), VkCodeToName(_vkCode), _vkCode);
 	});
 
 	input.onMousePressed.Register(1, [](MouseButton _button, _s32 _x, _s32 _y)
 	{
-		const char* szName = (_button == MouseButton::Left) ? "왼쪽"
-			: (_button == MouseButton::Right) ? "오른쪽" : "가운데";
-		jc::Console::Write("[이벤트] 마우스 %s 버튼 클릭: (%d, %d)\n", szName, _x, _y);
+		const _char* szName = (_button == MouseButton::Left) ? _T("왼쪽")
+			: (_button == MouseButton::Right) ? _T("오른쪽") : _T("가운데");
+		jc::Console::Write(_T("[이벤트] 마우스 %s 버튼 클릭: (%d, %d)\n"), szName, _x, _y);
 	});
 
-	jc::Console::WriteLine("윈도우가 생성되었습니다. 아무 키나 마우스를 눌러보세요. (ESC로 종료)");
+	jc::Console::WriteLine(_T("윈도우가 생성되었습니다. 아무 키나 마우스를 눌러보세요. (ESC로 종료)"));
 
 	// 4. 메시지 루프 = 게임 루프의 뼈대
 	// PumpMessage()가 false를 반환하면 WM_QUIT이 도착한 것이다. (창 닫힘)
@@ -68,7 +68,7 @@ void WindowAndMessageLoop_Main()
 		// 폴링 방식 입력 처리: "지금 이 순간 키가 눌려있나?"를 직접 묻는다.
 		if (input.IsKeyPressed(VK_ESCAPE))
 		{
-			jc::Console::WriteLine("ESC 입력 -> 종료");
+			jc::Console::WriteLine(_T("ESC 입력 -> 종료"));
 			break;
 		}
 

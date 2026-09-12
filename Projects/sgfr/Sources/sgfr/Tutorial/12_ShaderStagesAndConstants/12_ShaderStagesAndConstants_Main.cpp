@@ -21,6 +21,7 @@
 #include "Core.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/12_ShaderStagesAndConstants/12_ShaderStagesAndConstants_Main.h"
+#include "jc/Primitives/StringConvert.h"
 
 using namespace sgf;
 using namespace jc;
@@ -94,9 +95,9 @@ void ShaderStagesAndConstants_Main()
 {
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("12. 셰이더 스테이지와 상수버퍼 (ESC 종료)", 800, 600))
+	if (!window.Create(_T("12. 셰이더 스테이지와 상수버퍼 (ESC 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -106,13 +107,13 @@ void ShaderStagesAndConstants_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -121,7 +122,7 @@ void ShaderStagesAndConstants_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -133,10 +134,10 @@ void ShaderStagesAndConstants_Main()
 	// 2. 셰이더 + 메시 준비
 	VertexShader vs;
 	PixelShader ps;
-	if (!vs.InitializeFromSource(&device, STAGE_DEMO_SHADER_SOURCE) ||
-		!ps.InitializeFromSource(&device, STAGE_DEMO_SHADER_SOURCE))
+	if (!vs.InitializeFromSource(&device, jc::StringConvert::FromUtf8(STAGE_DEMO_SHADER_SOURCE)) ||
+		!ps.InitializeFromSource(&device, jc::StringConvert::FromUtf8(STAGE_DEMO_SHADER_SOURCE)))
 	{
-		jc::Console::WriteLine("셰이더 컴파일 실패!");
+		jc::Console::WriteLine(_T("셰이더 컴파일 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -156,7 +157,7 @@ void ShaderStagesAndConstants_Main()
 	Mesh quad;
 	if (!quad.Initialize(&device, vertices, 4, VertexPTC::Decl()))
 	{
-		jc::Console::WriteLine("메시 생성 실패!");
+		jc::Console::WriteLine(_T("메시 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -168,14 +169,14 @@ void ShaderStagesAndConstants_Main()
 	ConstantBuffer<CbObject> objectCb;
 	if (!frameCb.Create(&device) || !objectCb.Create(&device))
 	{
-		jc::Console::WriteLine("상수버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("상수버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
-	jc::Console::WriteLine("b0(프레임)/b1(오브젝트) 슬롯 규약을 눈으로 확인하세요!");
+	jc::Console::WriteLine(_T("b0(프레임)/b1(오브젝트) 슬롯 규약을 눈으로 확인하세요!"));
 
 	// 4. 렌더 루프
 	FrameTimer timer;

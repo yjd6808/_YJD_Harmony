@@ -93,8 +93,8 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// 셰이더 단계 — 분리형
-	_u64 CreateVertexShader(const jc::String& _hlslSource, const jc::String& _entry = "VSMain");
-	_u64 CreatePixelShader(const jc::String& _hlslSource, const jc::String& _entry = "PSMain");
+	_u64 CreateVertexShader(const jc::String& _hlslSource, const jc::String& _entry = _T("VSMain"));
+	_u64 CreatePixelShader(const jc::String& _hlslSource, const jc::String& _entry = _T("PSMain"));
 	void SetVertexShader(VertexShader* _pShader);
 	void SetPixelShader(PixelShader* _pShader);
 	void SetVertexShader(_u64 _key);

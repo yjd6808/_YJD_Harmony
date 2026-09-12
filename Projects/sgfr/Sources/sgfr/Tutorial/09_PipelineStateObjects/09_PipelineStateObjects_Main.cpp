@@ -21,6 +21,7 @@
  */
 
 #include "Core.h"
+#include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/09_PipelineStateObjects/09_PipelineStateObjects_Main.h"
 
@@ -84,9 +85,9 @@ void PipelineStateObjects_Main()
 {
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("09. 파이프라인 상태 객체 (1/2 채우기, 3/4 블렌드, ESC 종료)", 800, 600))
+	if (!window.Create(_T("09. 파이프라인 상태 객체 (1/2 채우기, 3/4 블렌드, ESC 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -96,13 +97,13 @@ void PipelineStateObjects_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -111,7 +112,7 @@ void PipelineStateObjects_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -123,10 +124,10 @@ void PipelineStateObjects_Main()
 	// 2. 셰이더 준비
 	VertexShader vs;
 	PixelShader ps;
-	if (!vs.InitializeFromSource(&device, PASSTHROUGH_SHADER_SOURCE) ||
-		!ps.InitializeFromSource(&device, PASSTHROUGH_SHADER_SOURCE))
+	if (!vs.InitializeFromSource(&device, jc::StringConvert::FromUtf8(PASSTHROUGH_SHADER_SOURCE)) ||
+		!ps.InitializeFromSource(&device, jc::StringConvert::FromUtf8(PASSTHROUGH_SHADER_SOURCE)))
 	{
-		jc::Console::WriteLine("셰이더 컴파일 실패!");
+		jc::Console::WriteLine(_T("셰이더 컴파일 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -139,7 +140,7 @@ void PipelineStateObjects_Main()
 	if (!BuildQuadMesh(&device, &backQuad, vec2(-0.15f, 0.0f), 0.5f, color(0x33, 0x99, 0xFF, 0xFF)) ||
 		!BuildQuadMesh(&device, &frontQuad, vec2(0.15f, 0.0f), 0.5f, color(0xFF, 0x66, 0x33, 0x80)))
 	{
-		jc::Console::WriteLine("메시 생성 실패!");
+		jc::Console::WriteLine(_T("메시 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -160,14 +161,14 @@ void PipelineStateObjects_Main()
 		!blendAlpha.Initialize(&device, BlendMode::bmAlpha) ||
 		!depthDisabled.Initialize(&device, DepthMode::dmDisabled))
 	{
-		jc::Console::WriteLine("상태 객체 생성 실패!");
+		jc::Console::WriteLine(_T("상태 객체 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
 
-	jc::Console::WriteLine("1/2로 채우기, 3/4로 블렌드를 바꿔보세요!");
+	jc::Console::WriteLine(_T("1/2로 채우기, 3/4로 블렌드를 바꿔보세요!"));
 
 	// 5. 렌더 루프
 	RasterizerState* pCurrentRs = &rsSolid;

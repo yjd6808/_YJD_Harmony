@@ -67,17 +67,17 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 // 블렌딩 공식과 네 가지 모드의 원리를 콘솔에 출력한다. (학습용)
 void PrintBlendExplanation()
 {
-	jc::Console::WriteLine("\n[블렌딩 공식]");
-	jc::Console::WriteLine(" 최종색 = 새색 x SrcBlend  (+)  기존색 x DestBlend");
-	jc::Console::WriteLine(" SrcBlend/DestBlend 계수만 바꿔 끼우면 아래 모든 효과가 나온다!\n");
-	jc::Console::WriteLine("[네 가지 모드 (1~4 키로 전환)]");
-	jc::Console::WriteLine(" 1. Opaque   : 섞지 않고 덮어쓴다          (알파 무시! 사각형이 통째로 보인다)");
-	jc::Console::WriteLine(" 2. Alpha    : 새색x알파 + 기존색x(1-알파) (일반적인 반투명, UI/스프라이트)");
-	jc::Console::WriteLine(" 3. Additive : 새색x알파 + 기존색          (밝아지기만 한다! 빛/폭발/이펙트)");
-	jc::Console::WriteLine(" 4. Multiply : 새색 x 기존색               (어두워지기만 한다! 그림자/스테인드글라스)\n");
-	jc::Console::WriteLine(" 세 원이 겹치는 부분을 관찰하세요:");
-	jc::Console::WriteLine(" - Additive는 빨+초+파 = 흰색으로 밝아진다 (빛의 삼원색!)");
-	jc::Console::WriteLine(" - Multiply는 겹칠수록 검게 어두워진다 (물감의 삼원색처럼)\n");
+	jc::Console::WriteLine(_T("\n[블렌딩 공식]"));
+	jc::Console::WriteLine(_T(" 최종색 = 새색 x SrcBlend  (+)  기존색 x DestBlend"));
+	jc::Console::WriteLine(_T(" SrcBlend/DestBlend 계수만 바꿔 끼우면 아래 모든 효과가 나온다!\n"));
+	jc::Console::WriteLine(_T("[네 가지 모드 (1~4 키로 전환)]"));
+	jc::Console::WriteLine(_T(" 1. Opaque   : 섞지 않고 덮어쓴다          (알파 무시! 사각형이 통째로 보인다)"));
+	jc::Console::WriteLine(_T(" 2. Alpha    : 새색x알파 + 기존색x(1-알파) (일반적인 반투명, UI/스프라이트)"));
+	jc::Console::WriteLine(_T(" 3. Additive : 새색x알파 + 기존색          (밝아지기만 한다! 빛/폭발/이펙트)"));
+	jc::Console::WriteLine(_T(" 4. Multiply : 새색 x 기존색               (어두워지기만 한다! 그림자/스테인드글라스)\n"));
+	jc::Console::WriteLine(_T(" 세 원이 겹치는 부분을 관찰하세요:"));
+	jc::Console::WriteLine(_T(" - Additive는 빨+초+파 = 흰색으로 밝아진다 (빛의 삼원색!)"));
+	jc::Console::WriteLine(_T(" - Multiply는 겹칠수록 검게 어두워진다 (물감의 삼원색처럼)\n"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

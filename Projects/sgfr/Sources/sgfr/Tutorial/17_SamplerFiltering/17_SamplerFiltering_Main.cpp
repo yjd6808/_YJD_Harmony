@@ -29,6 +29,7 @@
  */
 
 #include "Core.h"
+#include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/17_SamplerFiltering/17_SamplerFiltering_Main.h"
 #include "sgfr/Tutorial/17_SamplerFiltering/17_SamplerFiltering_Function.h"
@@ -46,8 +47,8 @@ namespace
 	};
 
 	// 창 제목에 표시할 모드 이름표 (enum 순서와 일치)
-	const char* s_szFilterNames[] = { "Point(최근접)", "Linear(선형보간)" };
-	const char* s_szAddressNames[] = { "Wrap(반복)", "Mirror(거울)", "Clamp(고정)" };
+	const _char* s_szFilterNames[] = { _T("Point(최근접)"), _T("Linear(선형보간)") };
+	const _char* s_szAddressNames[] = { _T("Wrap(반복)"), _T("Mirror(거울)"), _T("Clamp(고정)") };
 }
 
 // 샘플러와 필터링 튜토리얼을 실행한다. (Point/Linear, Wrap/Clamp/Mirror, 좌우 Before/After 비교)
@@ -57,9 +58,9 @@ void SamplerFiltering_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("17. 샘플러와 필터링 (1/2 필터, 3/4/5 주소, ESC 종료)", 800, 600))
+	if (!window.Create(_T("17. 샘플러와 필터링 (1/2 필터, 3/4/5 주소, ESC 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -69,13 +70,13 @@ void SamplerFiltering_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -84,7 +85,7 @@ void SamplerFiltering_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -99,7 +100,7 @@ void SamplerFiltering_Main()
 	Texture texture;
 	if (!texture.CreateFromMemory(&device, pixels, 32, 32))
 	{
-		jc::Console::WriteLine("텍스처 생성 실패!");
+		jc::Console::WriteLine(_T("텍스처 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -116,7 +117,7 @@ void SamplerFiltering_Main()
 	if (!vb.Create(&device, vertices, 4, VertexPTC::Decl()) ||
 		!ib.Create(&device, indices, 6))
 		{
-		jc::Console::WriteLine("버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -125,13 +126,13 @@ void SamplerFiltering_Main()
 
 	// 4. 셰이더 + 경계 상수 버퍼
 
-	_u64 vsShader = device.Context().CreateVertexShader(TextureQuadShaderSource());
-	_u64 psShader = device.Context().CreatePixelShader(TextureQuadShaderSource());
+	_u64 vsShader = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(TextureQuadShaderSource()));
+	_u64 psShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(TextureQuadShaderSource()));
 	ConstantBuffer<CbSplit> cbSplit;
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY ||
 		!cbSplit.Create(&device))
 		{
-		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -145,7 +146,7 @@ void SamplerFiltering_Main()
 	// 창 제목에 현재 모드를 표시하는 보조 람다
 	auto UpdateTitle = [&]()
 	{
-		jc::String szTitle = jc::StringUtilT::Format("17. 샘플러 - 왼쪽: Point+Wrap(기준) | 오른쪽: %s + %s (1/2, 3/4/5, ESC)", s_szFilterNames[static_cast<_s32>(filter)],
+		jc::String szTitle = jc::StringUtil::Format(_T("17. 샘플러 - 왼쪽: Point+Wrap(기준) | 오른쪽: %s + %s (1/2, 3/4/5, ESC)"), s_szFilterNames[static_cast<_s32>(filter)],
 			s_szAddressNames[static_cast<_s32>(address)]);
 		window.SetTitle(szTitle);
 	};

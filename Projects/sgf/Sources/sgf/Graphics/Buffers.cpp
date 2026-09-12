@@ -54,7 +54,7 @@ VertexBuffer::~VertexBuffer()
 // 정점 버퍼 생성
 bool VertexBuffer::Create(GraphicDevice* _pDevice, const void* _pData, UINT _count, const VertexDeclaration* _pDecl, ResourceUsage _usage)
 {
-	jc_assert_msg(_pDecl != nullptr, "정점 버퍼에는 VertexDeclaration이 필요합니다.");
+	jc_assert_msg(_pDecl != nullptr, _T("정점 버퍼에는 VertexDeclaration이 필요합니다."));
 
 	stride_ = _pDecl->Stride(0);
 	count_ = _count;

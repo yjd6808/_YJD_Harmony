@@ -49,12 +49,12 @@ namespace
 // 파이프라인 여행 튜토리얼을 실행한다. (수도 코드 전 항목을 API로 재현)
 void PipelineJourney_Main()
 {
-	_LogInfo_("[31] PipelineJourney 시작");
+	_LogInfo_(_T("[31] PipelineJourney 시작"));
 	// [§1] 윈도우 초기화: window.init(1280, 720)
 	Window window;
-	if (!window.Create("31. 파이프라인 여행 (ESC 종료)", 1280, 720))
+	if (!window.Create(_T("31. 파이프라인 여행 (ESC 종료)"), 1280, 720))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -67,13 +67,13 @@ void PipelineJourney_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	device.Finalize();
 	window.Destroy();
 	return;
@@ -83,7 +83,7 @@ void PipelineJourney_Main()
 	// 리소스 매니저: 디폴트 셰이더/머티리얼이 여기서 준비된다. ([§8~§9]의 완성형)
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -93,7 +93,7 @@ void PipelineJourney_Main()
 	Renderer3D renderer;
 	if (!renderer.Initialize(&device))
 	{
-		jc::Console::WriteLine("씬 렌더러 초기화 실패!");
+		jc::Console::WriteLine(_T("씬 렌더러 초기화 실패!"));
 		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -107,7 +107,7 @@ void PipelineJourney_Main()
 	Texture* pChecker = dbg_new Texture();
 	if (!pChecker->CreateFromMemory(&device, pixels, 64, 64))
 	{
-		jc::Console::WriteLine("텍스처 생성 실패!");
+		jc::Console::WriteLine(_T("텍스처 생성 실패!"));
 		delete pChecker;
 		renderer.Finalize();
 		g_cResourceMgr.Finalize();
@@ -115,15 +115,15 @@ void PipelineJourney_Main()
 		window.Destroy();
 		return;
 	}
-	pChecker->SetDebugName("JourneyChecker");
-	const _u64 checkerKey = g_cResourceMgr.Add(pChecker, "memory://journey_checker");
+	pChecker->SetDebugName(_T("JourneyChecker"));
+	const _u64 checkerKey = g_cResourceMgr.Add(pChecker, _T("memory://journey_checker"));
 
 	// [§9] 머티리얼 구성: 셰이더 + 상태 4종 + 텍스처 슬롯 (값 하나로 묶인다)
 	// - 바닥용: 디폴트 3D 셰이더 + 체커 텍스처
 	Material* pFloorMaterial = dbg_new Material();
 	if (!pFloorMaterial->Initialize(&device))
 	{
-		jc::Console::WriteLine("머티리얼 초기화 실패!");
+		jc::Console::WriteLine(_T("머티리얼 초기화 실패!"));
 		delete pFloorMaterial;
 		renderer.Finalize();
 		g_cResourceMgr.Finalize();
@@ -146,7 +146,7 @@ void PipelineJourney_Main()
 	if (!pCubeMesh->InitializeAsCube(&device) ||
 		!pQuadMesh->InitializeAsQuad2D(&device))
 	{
-		jc::Console::WriteLine("메시 생성 실패!");
+		jc::Console::WriteLine(_T("메시 생성 실패!"));
 		delete pCubeMesh;
 		delete pQuadMesh;
 		renderer.Finalize();
@@ -155,8 +155,8 @@ void PipelineJourney_Main()
 		window.Destroy();
 		return;
 	}
-	pCubeMesh->SetDebugName("JourneyCube");
-	pQuadMesh->SetDebugName("JourneyFloor");
+	pCubeMesh->SetDebugName(_T("JourneyCube"));
+	pQuadMesh->SetDebugName(_T("JourneyFloor"));
 	const _u64 cubeMeshKey = g_cResourceMgr.Add(pCubeMesh);
 	const _u64 quadMeshKey = g_cResourceMgr.Add(pQuadMesh);
 
@@ -178,7 +178,7 @@ void PipelineJourney_Main()
 	// [§14] 뷰포트는 device.Initialize가 전체 화면으로 잡아둔다.
 	// (반읐만 쓰고 싶다면 context.SetViewport(Viewport(...))로 언제든 바꿀 수 있다)
 
-	jc::Console::WriteLine("수도 코드 §1~§20이 이 파일 하나에 전부 들어있습니다. 주석의 [§N]을 따라가세요!");
+	jc::Console::WriteLine(_T("수도 코드 §1~§20이 이 파일 하나에 전부 들어있습니다. 주석의 [§N]을 따라가세요!"));
 
 	// [§20] 메인 루프: while (window.isRunning())
 	FrameTimer timer;
@@ -223,5 +223,5 @@ void PipelineJourney_Main()
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
-	_LogInfo_("[31] PipelineJourney 종료 — 렌더 프레임 %d회", frameCount);
+	_LogInfo_(_T("[31] PipelineJourney 종료 — 렌더 프레임 %d회"), frameCount);
 }

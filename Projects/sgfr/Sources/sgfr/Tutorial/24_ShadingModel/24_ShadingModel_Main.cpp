@@ -22,6 +22,7 @@
  */
 
 #include "Core.h"
+#include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
 #include "sgfr/Tutorial/24_ShadingModel/24_ShadingModel_Main.h"
 #include "sgfr/Tutorial/24_ShadingModel/24_ShadingModel_Function.h"
@@ -50,7 +51,7 @@ namespace
 	};
 
 	// 창 제목에 표시할 모드 이름표 (gMode 값 순서와 일치)
-	const char* s_szModeNames[] = { "램버트(확산만)", "퐁(R·V)", "블린-퐁(N·H)" };
+	const _char* s_szModeNames[] = { _T("램버트(확산만)"), _T("퐁(R·V)"), _T("블린-퐁(N·H)") };
 }
 
 // 셰이딩 모델 튜토리얼을 실행한다. (램버트/퐁/블린-퐁)
@@ -60,9 +61,9 @@ void ShadingModel_Main()
 
 	// 1. 윈도우 + 디바이스 준비
 	Window window;
-	if (!window.Create("24. 셰이딩 모델 (1/2/3 모드, ↑↓ 날카로움, ESC 종료)", 800, 600))
+	if (!window.Create(_T("24. 셰이딩 모델 (1/2/3 모드, ↑↓ 날카로움, ESC 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("윈도우 생성 실패!");
+		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
 	}
 
@@ -72,13 +73,13 @@ void ShadingModel_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine("그래픽 디바이스 초기화 실패!");
+	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
-		jc::Console::WriteLine("리소스 매니저 초기화 실패!");
+		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -87,7 +88,7 @@ void ShadingModel_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine("스왑체인 생성 실패!");
+	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();
@@ -104,7 +105,7 @@ void ShadingModel_Main()
 	if (!vb.Create(&device, vertices.Source(), static_cast<UINT>(vertices.Size()), VertexPNT::Decl()) ||
 		!ib.Create(&device, indices.Source(), static_cast<UINT>(indices.Size())))
 		{
-		jc::Console::WriteLine("버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -113,15 +114,15 @@ void ShadingModel_Main()
 
 	// 3. 셰이더 + 상수 버퍼 2개 (b0: 변환, b1: 셰이딩 설정)
 
-	_u64 vsShader = device.Context().CreateVertexShader(ShadingShaderSource());
-	_u64 psShader = device.Context().CreatePixelShader(ShadingShaderSource());
+	_u64 vsShader = device.Context().CreateVertexShader(jc::StringConvert::FromUtf8(ShadingShaderSource()));
+	_u64 psShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(ShadingShaderSource()));
 	ConstantBuffer<CbTransform> cbTransform;
 	ConstantBuffer<CbShading> cbShading;
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY ||
 		!cbTransform.Create(&device) ||
 		!cbShading.Create(&device))
 		{
-		jc::Console::WriteLine("셰이더/상수 버퍼 생성 실패!");
+		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
@@ -139,7 +140,7 @@ void ShadingModel_Main()
 
 	auto UpdateTitle = [&]()
 	{
-		jc::String szTitle = jc::StringUtilT::Format("24. 셰이딩 모델 - %s / 날카로움 %.0f (1/2/3, ↑↓, ESC)", s_szModeNames[mode], specPower);
+		jc::String szTitle = jc::StringUtil::Format(_T("24. 셰이딩 모델 - %s / 날카로움 %.0f (1/2/3, ↑↓, ESC)"), s_szModeNames[mode], specPower);
 		window.SetTitle(szTitle);
 	};
 	UpdateTitle();

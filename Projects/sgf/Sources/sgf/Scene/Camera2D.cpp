@@ -21,7 +21,7 @@ Camera2D::Camera2D()
 	, height2D_(0.0f)
 	, position2D_(0.0f, 0.0f)
 {
-	SetName("DefaultCamera2D");
+	SetName(_T("DefaultCamera2D"));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

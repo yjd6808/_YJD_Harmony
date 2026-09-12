@@ -122,9 +122,9 @@ static void BM_HashMapIteratorVisit(State& state) {
 #endif
 	}
 #ifdef StdHashMap
-	jc_assert_msg(v.size() == hashMap.size(), "데이터가 이상합니다.");
+	jc_assert_msg(v.size() == hashMap.size(), _T("데이터가 이상합니다."));
 #else
-	jc_assert_msg(v.size() == hashMap.Size(), "데이터가 이상합니다.");
+	jc_assert_msg(v.size() == hashMap.Size(), _T("데이터가 이상합니다."));
 #endif
 }
 
@@ -169,9 +169,9 @@ static void BM_HashMapIteratorCreation(State& state) {
 #endif
 	}
 #ifdef StdHashMap
-	jc_assert_msg(v.size() == dataSize * iterationCount, "데이터가 이상합니다.");
+	jc_assert_msg(v.size() == dataSize * iterationCount, _T("데이터가 이상합니다."));
 #else
-	jc_assert_msg(v.size() == dataSize * iterationCount, "데이터가 이상합니다.");
+	jc_assert_msg(v.size() == dataSize * iterationCount, _T("데이터가 이상합니다."));
 #endif
 }
 

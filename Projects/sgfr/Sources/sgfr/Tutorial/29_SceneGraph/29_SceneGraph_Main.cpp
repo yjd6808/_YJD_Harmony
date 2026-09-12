@@ -45,12 +45,12 @@ namespace
 		// 씬이 무대에 오를 때 1회: 텍스처 준비 + 카메라 설정
 		void OnEnter() override
 		{
-			_LogInfo_("[29] SolarSystemScene::OnEnter 시작");
+			_LogInfo_(_T("[29] SolarSystemScene::OnEnter 시작"));
 			if (!CreateCircleTexture(&g_cDevice, &sunTexture_, 128, color(0xFF, 0xD9, 0x33, 0xFF)) ||
 			!CreateCircleTexture(&g_cDevice, &earthTexture_, 64, color(0x4D, 0x8C, 0xFF, 0xFF)) ||
 			!CreateCircleTexture(&g_cDevice, &moonTexture_, 32, color(0xCC, 0xCC, 0xCC, 0xFF)))
 			{
-			jc::Console::WriteLine("원형 텍스처 생성 실패!");
+			jc::Console::WriteLine(_T("원형 텍스처 생성 실패!"));
 			return;
 			}
 
@@ -58,8 +58,8 @@ namespace
 			elapsed_ = 0.0f;
 
 			// 씬은 자신이 그려지는 창을 안다. (Director가 연결해준다)
-			GetWindow()->SetTitle("29. 태양계 씬 - SPACE: 씬 교체 / M: 서브 윈도우 (ESC로 종료)");
-			_LogInfo_("[29] SolarSystemScene::OnEnter 완료 — 카메라 800x600, 씬 시작");
+			GetWindow()->SetTitle(_T("29. 태양계 씬 - SPACE: 씬 교체 / M: 서브 윈도우 (ESC로 종료)"));
+			_LogInfo_(_T("[29] SolarSystemScene::OnEnter 완료 — 카메라 800x600, 씬 시작"));
 		}
 
 		// 매 프레임: 경과 시간 누적 + 입력 처리 (jc::TimeSpan)
@@ -81,7 +81,7 @@ namespace
 			// 메인 창과 서브 창이 각자 다른 씬을 동시에 그리는 것을 눈으로 확인하자.
 			if (g_cInput.IsKeyPressed('M'))
 			{
-			Window* pSub = g_cApp.CreateSubWindow("서브 윈도우", 480, 360);
+			Window* pSub = g_cApp.CreateSubWindow(_T("서브 윈도우"), 480, 360);
 			if (pSub != nullptr)
 			{
 				g_cDirector.RunScene(CreateBouncingBallScene(), pSub);
@@ -120,7 +120,7 @@ namespace
 		// 씬이 무대에서 내려갈 때 1회: 리소스 정리는 Texture 소멸자가 처리한다.
 		void OnExit() override
 		{
-			_LogInfo_("[29] SolarSystemScene::OnExit — 씬 내려감");
+			_LogInfo_(_T("[29] SolarSystemScene::OnExit — 씬 내려감"));
 		}
 
 	private:
@@ -157,12 +157,12 @@ namespace
 		// 씬 진입: 공 텍스처 + 초기 위치/속도 배치
 		void OnEnter() override
 		{
-			_LogInfo_("[29] BouncingBallScene::OnEnter 시작");
+			_LogInfo_(_T("[29] BouncingBallScene::OnEnter 시작"));
 			GetCamera2D()->SetOrthographic2D(VIEW_WIDTH, VIEW_HEIGHT);
 
 			// 이 씬이 서브 윈도우에 올라가면 그 창의 제목이 바뀝다.
-			GetWindow()->SetTitle("29. 통통 튀는 공 씬 - SPACE: 씬 교체 (ESC로 종료)");
-			_LogInfo_("[29] BouncingBallScene::OnEnter 완료 — 공 %d개 준비", BALL_COUNT);
+			GetWindow()->SetTitle(_T("29. 통통 튀는 공 씬 - SPACE: 씬 교체 (ESC로 종료)"));
+			_LogInfo_(_T("[29] BouncingBallScene::OnEnter 완료 — 공 %d개 준비"), BALL_COUNT);
 
 			// 공마다 색상을 달리해 텍스처를 만든다.
 			for (_s32 i = 0; i < BALL_COUNT; ++i)
@@ -171,7 +171,7 @@ namespace
 			const color ballColor = color::FromFloat(0.4f + 0.6f * t, 0.9f - 0.6f * t, 0.5f + 0.4f * sinf(t * jc_math_pi2), 1.0f);
 			if (!CreateCircleTexture(&g_cDevice, &textures_[i], 64, ballColor))
 			{
-			jc::Console::WriteLine("공 텍스처 생성 실패!");
+			jc::Console::WriteLine(_T("공 텍스처 생성 실패!"));
 				return;
 			}
 
@@ -292,7 +292,7 @@ namespace
 		// 엔진 준비 완료 직후: 첫 씬을 시작한다.
 		bool ApplicationDidFinishLaunching() override
 		{
-			_LogInfo_("[29] DemoApp::ApplicationDidFinishLaunching — 첫 씬 시작");
+			_LogInfo_(_T("[29] DemoApp::ApplicationDidFinishLaunching — 첫 씬 시작"));
 			g_cDirector.RunScene(CreateSolarSystemScene());
 			return true;
 		}
@@ -317,9 +317,9 @@ void SceneGraph_Main()
 	PrintSceneGraphExplanation();
 
 	DemoApp app;
-	if (!app.Initialize("29. 씬 & 사운드 - SPACE로 씬 교체 (ESC로 종료)", 800, 600))
+	if (!app.Initialize(_T("29. 씬 & 사운드 - SPACE로 씬 교체 (ESC로 종료)"), 800, 600))
 	{
-		jc::Console::WriteLine("엔진 초기화에 실패했습니다.");
+		jc::Console::WriteLine(_T("엔진 초기화에 실패했습니다."));
 		return;
 	}
 
