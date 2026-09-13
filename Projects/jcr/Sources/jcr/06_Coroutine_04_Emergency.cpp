@@ -1,8 +1,8 @@
 #include "Core.h"
 
-// [코루틴-04] 스택 오버플로우 EmergencyPages 예제.
-// - 이 변경점이 없으면: 오버플로우 가드를 치는 순간 SEH 디스패치가 돌 공간이
-//   없어 이중 폴트로 프로세스가 강제 종료됐다. (__except에 닿지 않음)
+// 스택 오버플로우 EmergencyPages 예제.
+// - 오버플로우 가드를 치는 순간 SEH 디스패치가 돌 공간이 없어 이중 폴트로
+//   프로세스가 강제 종료된다. (__except에 닿지 않음)
 // - 예약 아래 비상 패드가 배달 공간을 보장하고, 오버플로우 가드를 찍으면
 //   STATUS_STACK_OVERFLOW로 확정해 잡을 수 있게 한다.
 // - 한계: __chkstk/RTC-fill처럼 RSP가 따라 내려가는 깊은 하강은 커널이 삼켜
@@ -54,9 +54,8 @@ static void Test_Co04_Overflow()
 {
 	PrintSection04(_T("CO04: 오버플로우 SEH 도달 + 표시 + 복구"));
 
-	CoContext* pCtx = CoRun(fn_Co04_Overflow, cstMid);
-	while (pCtx)
-		pCtx = CoResume(pCtx);
+	CoId id = CoRun(fn_Co04_Overflow);
+	while (CoResume(id)) {}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

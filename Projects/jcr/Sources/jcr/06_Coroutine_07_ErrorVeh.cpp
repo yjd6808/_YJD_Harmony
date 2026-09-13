@@ -1,8 +1,5 @@
 #include "Core.h"
 
-// [코루틴-07] 실패 원인 보고 + VEH 자동 등록 예제.
-// - 이 변경점이 없으면: CoRun이 nullptr을 돌려줘도 이유를 알 수 없고,
-//   VEH 등록을 빼먹으면 첫 스택 확장에서 프로세스가 종료된다.
 static void PrintSection07(const _char* _pName)
 {
 	Console::WriteLine(ConsoleColor::Yellow,
@@ -17,8 +14,8 @@ static void Test_Co07_NullFunction()
 {
 	PrintSection07(_T("CO07-1: CoRun(null) → coeNullFunction"));
 
-	CoContext* pCtx = CoRun(nullptr, cstMid);
-	if (pCtx == nullptr && CoGetLastError() == coeNullFunction)
+	CoId id = CoRun(nullptr);
+	if (id == CO_INVALID_ID && CoGetLastError() == coeNullFunction)
 		Console::WriteLine(ConsoleColor::Green, _T("  PASS [CO07-1] %s"), CoErrorString(coeNullFunction));
 	else
 		Console::WriteLine(ConsoleColor::Red, _T("  FAIL [CO07-1] 원인이 보이지 않음"));
@@ -37,8 +34,8 @@ static void Test_Co07_AutoVeh()
 {
 	PrintSection07(_T("CO07-2: VEH 미등록 상태에서 10KB 스택 확장"));
 
-	CoContext* pCtx = CoRun(fn_Co07_Grow, cstMid);
-	if (pCtx == nullptr && CoGetLastError() == coeNone)
+	CoId id = CoRun(fn_Co07_Grow);
+	if (id == CO_INVALID_ID && CoGetLastError() == coeNone)
 		Console::WriteLine(ConsoleColor::Green, _T("  PASS [CO07-2] 확장 후 정상 종료"));
 	else
 		Console::WriteLine(ConsoleColor::Red, _T("  FAIL [CO07-2] 확장 실패"));

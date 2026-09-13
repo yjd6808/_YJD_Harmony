@@ -329,10 +329,10 @@ static void BM_Lifecycle_Jc(State& state)
 
 	for (auto _ : state)
 	{
-		// fn 이 yield 없이 종료 → CoFnEndTrampoline → CoFreeCtx → nullptr 반환
-		// (첫 iteration 이후엔 풀 재사용 경로: PopFront + InitStack(commit) + TreeMap Insert/Pop + decommit)
-		CoContext* pCtx = CoRun(fn_Empty, tier);
-		DoNotOptimize(pCtx);
+		// fn 이 yield 없이 종료 → CoEntry 스위치아웃 → csEnd → FreeCtx → 무효 id 반환
+		// (첫 iteration 이후엔 풀 재사용 경로: PopFront + InitCtx + 맵 Insert/Pop + 커밋 유지)
+		CoId id = CoRun(fn_Empty, {.spec_ = CoStackSpec::FromTier(tier)});
+		DoNotOptimize(id);
 	}
 	state.SetItemsProcessed(state.iterations());
 	state.SetLabel(tier == cstLow ? "cstLow(16KB)" : tier == cstMid ? "cstMid(64KB)" : "cstHigh(256KB)");
@@ -376,15 +376,15 @@ static void BM_Switch_Jc(State& state)
 {
 	EnsureCoVEH();
 	g_stop = false;
-	CoContext* pCtx = CoRun(fn_YieldForever, cstLow);	// 첫 yield 까지 실행된 상태
+	CoId id = CoRun(fn_YieldForever, {.spec_ = CoStackSpec::Low()});	// 첫 yield 까지 실행된 상태
 
 	for (auto _ : state)
 	{
-		pCtx = CoResume(pCtx);								// resume → CoYield → 복귀
+		CoResume(id);								// resume → CoYield → 복귀
 	}
 
 	g_stop = true;
-	while (pCtx) pCtx = CoResume(pCtx);						// 정상 종료시켜 컨텍스트 반환
+	while (CoResume(id)) {}						// 정상 종료시켜 컨텍스트 반환
 	state.SetItemsProcessed(state.iterations());
 }
 
@@ -436,19 +436,19 @@ static void BM_RoundRobin_Jc(State& state)
 	const int M = (int)state.range(0);
 	g_stop = false;
 
-	std::vector<CoContext*> ctxs(M);
+	std::vector<CoId> ids(M);
 	for (int i = 0; i < M; ++i)
-		ctxs[i] = CoRun(fn_YieldForever, cstLow);
+		ids[i] = CoRun(fn_YieldForever, {.spec_ = CoStackSpec::Low()});
 
 	for (auto _ : state)
 	{
 		for (int i = 0; i < M; ++i)
-			ctxs[i] = CoResume(ctxs[i]);
+			CoResume(ids[i]);
 	}
 
 	g_stop = true;
 	for (int i = 0; i < M; ++i)
-		while (ctxs[i]) ctxs[i] = CoResume(ctxs[i]);
+		while (CoResume(ids[i])) {}
 
 	state.SetItemsProcessed(state.iterations() * M);
 }
@@ -524,15 +524,15 @@ static void BM_DeepYield_Jc(State& state)
 	g_stop  = false;
 
 	// depth 256 × ~150B ≈ 40KB → cstHigh(256KB) 사용. 첫 하강 때 VEH 확장이 몇 번 발생하고 이후엔 커밋 유지.
-	CoContext* pCtx = CoRun(fn_DeepYieldForever, cstHigh);
+	CoId id = CoRun(fn_DeepYieldForever, {.spec_ = CoStackSpec::High()});
 
 	for (auto _ : state)
 	{
-		pCtx = CoResume(pCtx);
+		CoResume(id);
 	}
 
 	g_stop = true;
-	while (pCtx) pCtx = CoResume(pCtx);
+	while (CoResume(id)) {}
 	state.SetItemsProcessed(state.iterations());
 }
 
@@ -575,8 +575,8 @@ static void BM_StackGrowth_Jc_Lazy(State& state)
 
 	for (auto _ : state)
 	{
-		CoContext* pCtx = CoRun(fn_Touch, cstHigh);
-		DoNotOptimize(pCtx);
+		CoId id = CoRun(fn_Touch, {.spec_ = CoStackSpec::High()});
+		DoNotOptimize(id);
 	}
 	state.SetItemsProcessed(state.iterations());
 }
@@ -592,8 +592,8 @@ static void BM_StackGrowth_Jc_Eager(State& state)
 
 	for (auto _ : state)
 	{
-		CoContext* pCtx = CoRun(fn_Touch, cstHigh);
-		DoNotOptimize(pCtx);
+		CoId id = CoRun(fn_Touch, {.spec_ = CoStackSpec::High()});
+		DoNotOptimize(id);
 	}
 
 	// 기본값 복원

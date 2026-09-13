@@ -32,9 +32,6 @@ static bool IsFatalException(DWORD _code)
 	case EXCEPTION_NONCONTINUABLE_EXCEPTION:
 	case EXCEPTION_BREAKPOINT:
 		return true;
-	// [코루틴-07] 가드 페이지 폴트는 코루틴 스택 확장(또는 일반 스택 성장)이라
-	// 치명적 예외가 아니다. CoVEH가 먼저 처리하고, 여기서 로깅하면 VEH가 쓰는
-	// 스택 공간을 갉아먹어 이중 폴트로 이어질 수 있으므로 명시적으로 제외한다.
 	case STATUS_GUARD_PAGE_VIOLATION:
 		return false;
 	default:
@@ -82,7 +79,7 @@ static LONG CALLBACK VectoredExceptionHandler(PEXCEPTION_POINTERS _pExceptionInf
 
 	_LogError_(_T("========================================"));
 
-	// [코루틴-15] 덤프는 별도 스레드에서 쓴다.
+	// 덤프는 별도 스레드에서 쓴다.
 	// - 코루틴 오버플로우처럼 폴트 스택에 여유가 없을 때 같은 스택에서 쓰면
 	//   이중 폴트로 죽는다. 실패하면 기존 방식(같은 스택)으로 폴백한다.
 	DumpThreadArgs dumpArgs{ _pExceptionInfo->ContextRecord, pRecord->ExceptionCode };

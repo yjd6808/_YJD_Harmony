@@ -42,15 +42,15 @@ static void fn_CO01(CoContext* _pCtx)
 
 static void Test_CO01()
 {
-	PrintSection(_T("TC_CO01: fn() 즉시 완료 (yield 없음) → CoRun=nullptr"));
+	PrintSection(_T("TC_CO01: fn() 즉시 완료 (yield 없음) → CoRun=INVALID"));
 
-	CoContext* pCtx = CoRun(fn_CO01);
-	if (pCtx == nullptr)
-		PrintPass(_T("CO01"), _T("CoRun=nullptr (fn 즉시 완료 확인)"));
+	CoId id = CoRun(fn_CO01);
+	if (id == CO_INVALID_ID)
+		PrintPass(_T("CO01"), _T("CoRun=INVALID (fn 즉시 완료 확인)"));
 	else
 	{
-		PrintFail(_T("CO01"), _T("CoRun != nullptr (fn 즉시 완료가 감지되지 않음)"));
-		g_cCoMgr.FreeCtx(pCtx);
+		PrintFail(_T("CO01"), _T("CoRun != INVALID (fn 즉시 완료가 감지되지 않음)"));
+		while (CoResume(id)) {}
 	}
 }
 
@@ -68,25 +68,25 @@ static void Test_CO02()
 {
 	PrintSection(_T("TC_CO02: yield 1회 - CoRun/CoResume 기본 흐름"));
 
-	CoContext* pCtx = CoRun(fn_CO02);
-	if (pCtx != nullptr && pCtx->state_ == csYield)
-		PrintPass(_T("CO02/run"), _T("CoRun=CoContext*(csYield)"));
+	CoContext* pView = nullptr;
+	CoId id = CoRun(fn_CO02, {.ppOut_ = &pView});
+	if (id != CO_INVALID_ID && pView->state_ == csYield)
+		PrintPass(_T("CO02/run"), _T("CoRun 유효 (csYield)"));
 	else
 	{
 		_char buf[128];
-		StringUtil::FormatBuffer(buf, sizeof(buf), _T("CoRun=%p state=%d (기대: csYield=%d)"), pCtx, pCtx ? (int)pCtx->state_ : -1, (int)csYield);
+		StringUtil::FormatBuffer(buf, sizeof(buf), _T("CoRun id=%llu state=%d (기대: csYield=%d)"), (unsigned long long)id, pView ? (int)pView->state_ : -1, (int)csYield);
 		PrintFail(_T("CO02/run"), buf);
-		if (pCtx) g_cCoMgr.FreeCtx(pCtx);
+		while (CoResume(id)) {}
 		return;
 	}
 
-	CoContext* pResult = CoResume(pCtx);
-	if (pResult == nullptr)
-		PrintPass(_T("CO02/resume"), _T("CoResume=nullptr (fn 완료 확인)"));
+	if (!CoResume(id))
+		PrintPass(_T("CO02/resume"), _T("CoResume=false (fn 완료 확인)"));
 	else
 	{
 		_char buf[128];
-		StringUtil::FormatBuffer(buf, sizeof(buf), _T("CoResume=%p (nullptr 기대)"), pResult);
+		StringUtil::FormatBuffer(buf, sizeof(buf), _T("CoResume=true (false 기대)"));
 		PrintFail(_T("CO02/resume"), buf);
 	}
 }
@@ -108,28 +108,30 @@ static void Test_CO03()
 {
 	PrintSection(_T("TC_CO03: yield 3회 루프"));
 
-	CoContext* pCtx = CoRun(fn_CO03);
+	CoId id = CoRun(fn_CO03);
 	bool ok = true;
 
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < 2; ++i)
 	{
-		if (pCtx == nullptr || pCtx->state_ != csYield)
+		if (!CoResume(id))
 		{
 			_char buf[128];
-			StringUtil::FormatBuffer(buf, sizeof(buf), _T("resume %d 에서 pCtx=%p state=%d (csYield=%d 기대)"), i + 1, pCtx, pCtx ? (int)pCtx->state_ : -1, (int)csYield);
+			StringUtil::FormatBuffer(buf, sizeof(buf), _T("resume %d 에서 종료됨 (계속 기대)"), i + 1);
 			PrintFail(_T("CO03"), buf);
-			if (pCtx) g_cCoMgr.FreeCtx(pCtx);
-			return;
+			ok = false;
+			break;
 		}
-		pCtx = CoResume(pCtx);
 	}
 
-	if (pCtx == nullptr)
-		PrintPass(_T("CO03"), _T("3회 yield-resume 완료, 최종 CoResume=nullptr"));
-	else
+	if (ok)
 	{
-		PrintFail(_T("CO03"), _T("3회 후 nullptr 기대했으나 pCtx != nullptr"));
-		g_cCoMgr.FreeCtx(pCtx);
+		if (!CoResume(id))
+			PrintPass(_T("CO03"), _T("3회 yield-resume 완료, 최종 CoResume=false"));
+		else
+		{
+			PrintFail(_T("CO03"), _T("3회 후 false 기대했으나 true 반환"));
+			while (CoResume(id)) {}
+		}
 	}
 }
 
@@ -171,17 +173,17 @@ static void Test_CO04()
 	g_CO04_orderIdx = 0;
 	memset(g_CO04_order, 0, sizeof(g_CO04_order));
 
-	CoContext* pA = CoRun(fn_CO04_A);
-	CoContext* pB = CoRun(fn_CO04_B);
-	CoContext* pC = CoRun(fn_CO04_C);
+	CoId idA = CoRun(fn_CO04_A);
+	CoId idB = CoRun(fn_CO04_B);
+	CoId idC = CoRun(fn_CO04_C);
 
 	// A→B→C 순으로 2회 씩 resume
-	pA = CoResume(pA);
-	pB = CoResume(pB);
-	pC = CoResume(pC);
-	pA = CoResume(pA);
-	pB = CoResume(pB);
-	pC = CoResume(pC);
+	CoResume(idA);
+	CoResume(idB);
+	CoResume(idC);
+	CoResume(idA);
+	CoResume(idB);
+	CoResume(idC);
 
 	bool ok = true;
 	for (int i = 0; i < 9; ++i)
@@ -195,10 +197,10 @@ static void Test_CO04()
 			break;
 		}
 	}
-	if (ok && pA == nullptr && pB == nullptr && pC == nullptr)
-		PrintPass(_T("CO04"), _T("3개 코루틴 순서 1~9 정확, 모두 nullptr 반환"));
+	if (ok && !CoResume(idA) && !CoResume(idB) && !CoResume(idC))
+		PrintPass(_T("CO04"), _T("3개 코루틴 순서 1~9 정확, 모두 종료 확인"));
 	else if (ok)
-		PrintFail(_T("CO04"), _T("순서는 맞으나 일부 CoContext가 nullptr이 아님"));
+		PrintFail(_T("CO04"), _T("순서는 맞으나 일부 코루틴이 종료되지 않음"));
 }
 
 //--------------------------------------------------------------------------------------
@@ -214,25 +216,26 @@ static void fn_CO05(CoContext* _pCtx)
 
 static void Test_CO05()
 {
-	PrintSection(_T("TC_CO05: fn()에 전달된 CoContext*가 CoRun 반환값과 동일한지 검증"));
+	PrintSection(_T("TC_CO05: fn()에 전달된 CoContext*가 ppOut 뷰와 동일한지 검증"));
 
 	g_CO05_pCtxFromFn = nullptr;
-	CoContext* pCtx = CoRun(fn_CO05);
+	CoContext* pView = nullptr;
+	CoId id = CoRun(fn_CO05, {.ppOut_ = &pView});
 
-	if (pCtx != nullptr && pCtx == g_CO05_pCtxFromFn)
+	if (id != CO_INVALID_ID && pView == g_CO05_pCtxFromFn)
 	{
 		_char buf[128];
-		StringUtil::FormatBuffer(buf, sizeof(buf), _T("CoRun=%p == fn_arg=%p"), pCtx, g_CO05_pCtxFromFn);
+		StringUtil::FormatBuffer(buf, sizeof(buf), _T("ppOut=%p == fn_arg=%p"), pView, g_CO05_pCtxFromFn);
 		PrintPass(_T("CO05"), buf);
 	}
 	else
 	{
 		_char buf[128];
-		StringUtil::FormatBuffer(buf, sizeof(buf), _T("CoRun=%p != fn_arg=%p"), pCtx, g_CO05_pCtxFromFn);
+		StringUtil::FormatBuffer(buf, sizeof(buf), _T("ppOut=%p != fn_arg=%p"), pView, g_CO05_pCtxFromFn);
 		PrintFail(_T("CO05"), buf);
 	}
 
-	if (pCtx) CoResume(pCtx);
+	while (CoResume(id)) {}
 }
 
 //--------------------------------------------------------------------------------------
@@ -259,11 +262,12 @@ static void Test_CO06()
 	g_cCoMgr.SetPageGuardCount(3);
 	g_cCoMgr.SetPageGrowCount(2);
 
-	CoContext* pCtx = CoRun(fn_CO06);
-	if (pCtx != nullptr && pCtx->state_ == csYield)
+	CoContext* pView = nullptr;
+	CoId id = CoRun(fn_CO06, {.ppOut_ = &pView});
+	if (id != CO_INVALID_ID)
 	{
 		// 확장 후 pStackLimit_이 내려갔는지 확인
-		CoStack* pStack = &pCtx->stack_;
+		CoStack* pStack = &pView->stack_;
 		Console::WriteLine(ConsoleColor::Cyan,
 			_T("    [CO06] 스택 확장 후: pStackLimit_=0x%p  pStackBase_=0x%p  diff=%lld pages"),
 			pStack->pStackLimit_, pStack->pStackBase_,
@@ -271,9 +275,9 @@ static void Test_CO06()
 		PrintPass(_T("CO06"), _T("VEH 발동 및 스택 확장 후 yield 성공"));
 	}
 	else
-		PrintFail(_T("CO06"), _T("CoRun이 nullptr을 반환하거나 csYield가 아님"));
+		PrintFail(_T("CO06"), _T("CoRun이 무효 id를 반환함"));
 
-	if (pCtx) CoResume(pCtx);
+	while (CoResume(id)) {}
 }
 
 //--------------------------------------------------------------------------------------
@@ -297,21 +301,22 @@ static void Test_CO07()
 
 	for (int i = 0; i < 3; ++i)
 	{
-		CoContext* pCtx = CoRun(fn_CO07, tiers[i]);
-		if (pCtx != nullptr && pCtx->state_ == csYield && pCtx->stack_.stackTier_ == tiers[i])
+		CoContext* pView = nullptr;
+		CoId id = CoRun(fn_CO07, {.spec_ = CoStackSpec::FromTier(tiers[i]), .ppOut_ = &pView});
+		if (id != CO_INVALID_ID && pView->stack_.stackTier_ == tiers[i])
 		{
 			_char buf[128];
-			StringUtil::FormatBuffer(buf, sizeof(buf), _T("tier=%s pStackBase_=0x%p"), tierNames[i], pCtx->stack_.pStackBase_);
+			StringUtil::FormatBuffer(buf, sizeof(buf), _T("tier=%s pStackBase_=0x%p"), tierNames[i], pView->stack_.pStackBase_);
 			PrintPass(_T("CO07"), buf);
-			CoResume(pCtx);
+			while (CoResume(id)) {}
 		}
 		else
 		{
 			_char buf[128];
-			StringUtil::FormatBuffer(buf, sizeof(buf), _T("tier=%s 실패 (pCtx=%p state=%d tier=%d)"),
-				tierNames[i], pCtx, pCtx ? (int)pCtx->state_ : -1, pCtx ? (int)pCtx->stack_.stackTier_ : -1);
+			StringUtil::FormatBuffer(buf, sizeof(buf), _T("tier=%s 실패 (id=%llu tier=%d)"),
+				tierNames[i], (unsigned long long)id, pView ? (int)pView->stack_.stackTier_ : -1);
 			PrintFail(_T("CO07"), buf);
-			if (pCtx) g_cCoMgr.FreeCtx(pCtx);
+			while (CoResume(id)) {}
 		}
 	}
 }
@@ -334,8 +339,8 @@ static void Test_CO08()
 	PrintSection(_T("TC_CO08: 로컬 변수 보존 (yield/resume 사이 volatile 지역변수 유지)"));
 
 	g_CO08_pass = false;
-	CoContext* pCtx = CoRun(fn_CO08);
-	CoResume(pCtx);
+	CoId id = CoRun(fn_CO08);
+	while (CoResume(id)) {}
 
 	if (g_CO08_pass)
 		PrintPass(_T("CO08"), _T("volatile 지역변수 a=0xDEAD, b=0xBEEF 유지 확인"));
@@ -346,7 +351,7 @@ static void Test_CO08()
 //--------------------------------------------------------------------------------------
 // TC_CO09: 중첩 코루틴 (코루틴 내에서 CoRun/CoResume 호출)
 //--------------------------------------------------------------------------------------
-static CoContext* g_CO09_innerCtx = nullptr;
+static CoId g_CO09_innerId = CO_INVALID_ID;
 
 static void fn_CO09_inner(CoContext*)
 {
@@ -358,11 +363,11 @@ static void fn_CO09_inner(CoContext*)
 static void fn_CO09_outer(CoContext*)
 {
 	Console::WriteLine(ConsoleColor::Cyan, _T("    [CO09/outer] 내부 코루틴 실행"));
-	g_CO09_innerCtx = CoRun(fn_CO09_inner);
+	g_CO09_innerId = CoRun(fn_CO09_inner);
 	Console::WriteLine(ConsoleColor::Cyan, _T("    [CO09/outer] 내부 yield 감지, 외부 yield"));
 	CoYield();
 	Console::WriteLine(ConsoleColor::Cyan, _T("    [CO09/outer] resume, 내부 코루틴 재개"));
-	CoResume(g_CO09_innerCtx);
+	CoResume(g_CO09_innerId);
 	Console::WriteLine(ConsoleColor::Cyan, _T("    [CO09/outer] 완료"));
 }
 
@@ -370,36 +375,35 @@ static void Test_CO09()
 {
 	PrintSection(_T("TC_CO09: 중첩 코루틴 (코루틴 내에서 CoRun/CoResume 호출)"));
 
-	g_CO09_innerCtx = nullptr;
-	CoContext* pOuter = CoRun(fn_CO09_outer);
+	g_CO09_innerId = CO_INVALID_ID;
+	CoId outerId = CoRun(fn_CO09_outer);
 
-	// outer가 inner를 실행하고 yield → pOuter=csYield, g_CO09_innerCtx=csYield
-	bool innerOk = (g_CO09_innerCtx != nullptr && g_CO09_innerCtx->state_ == csYield);
-	bool outerOk = (pOuter != nullptr && pOuter->state_ == csYield);
+	// outer가 inner를 실행하고 yield → 둘 다 살아있음
+	bool innerOk = (g_CO09_innerId != CO_INVALID_ID);
+	bool outerOk = (outerId != CO_INVALID_ID);
 
 	if (innerOk && outerOk)
-		PrintPass(_T("CO09/first_yield"), _T("outer csYield, inner csYield 확인"));
+		PrintPass(_T("CO09/first_yield"), _T("outer 유효, inner 유효 확인"));
 	else
 	{
 		_char buf[192];
 		StringUtil::FormatBuffer(buf, sizeof(buf),
-			_T("outer=%p(state=%d) inner=%p(state=%d)"),
-			pOuter, pOuter ? (int)pOuter->state_ : -1,
-			g_CO09_innerCtx, g_CO09_innerCtx ? (int)g_CO09_innerCtx->state_ : -1);
+			_T("outer=%llu inner=%llu"),
+			(unsigned long long)outerId,
+			(unsigned long long)g_CO09_innerId);
 		PrintFail(_T("CO09/first_yield"), buf);
-		if (pOuter) g_cCoMgr.FreeCtx(pOuter);
+		while (CoResume(outerId)) {}
+		while (CoResume(g_CO09_innerId)) {}
 		return;
 	}
 
-	// outer resume → inner resume → inner 완료 → outer 완료 → nullptr
-	CoContext* pResult = CoResume(pOuter);
-	if (pResult == nullptr)
-		PrintPass(_T("CO09/final"), _T("중첩 코루틴 최종 완료, CoResume=nullptr"));
+	// outer resume → inner resume → inner 완료 → outer 완료 → false
+	if (!CoResume(outerId))
+		PrintPass(_T("CO09/final"), _T("중첩 코루틴 최종 완료, CoResume=false"));
 	else
 	{
-		_char buf[128];
-		StringUtil::FormatBuffer(buf, sizeof(buf), _T("CoResume=%p (nullptr 기대)"), pResult);
-		PrintFail(_T("CO09/final"), buf);
+		PrintFail(_T("CO09/final"), _T("CoResume=true (false 기대)"));
+		while (CoResume(outerId)) {}
 	}
 }
 
@@ -422,7 +426,7 @@ static void Test_CO10()
 	Console::WriteLine(ConsoleColor::Cyan,
 		_T("    [CO10] 실행 전: gs:[8]=0x%p  gs:[16]=0x%p"), mainBase, mainLimit);
 
-	CoContext* pCtx = CoRun(fn_CO10);
+	CoId id = CoRun(fn_CO10);
 
 	char* curBase  = (char*)__readgsqword(8);
 	char* curLimit = (char*)__readgsqword(16);
@@ -437,7 +441,7 @@ static void Test_CO10()
 		PrintFail(_T("CO10/after_run"), buf);
 	}
 
-	if (pCtx) CoResume(pCtx);
+	if (id != CO_INVALID_ID) CoResume(id);
 
 	curBase  = (char*)__readgsqword(8);
 	curLimit = (char*)__readgsqword(16);
@@ -454,21 +458,16 @@ static void Test_CO10()
 }
 
 //--------------------------------------------------------------------------------------
-// TC_CO11: CoResume(nullptr) 안전 처리 → nullptr 반환
+// TC_CO11: CoResume(INVALID) 안전 처리 → false 반환
 //--------------------------------------------------------------------------------------
 static void Test_CO11()
 {
-	PrintSection(_T("TC_CO11: CoResume(nullptr) 안전 처리"));
+	PrintSection(_T("TC_CO11: CoResume(INVALID) 안전 처리"));
 
-	CoContext* pResult = CoResume(nullptr);
-	if (pResult == nullptr)
-		PrintPass(_T("CO11"), _T("CoResume(nullptr) = nullptr (안전 처리 확인)"));
+	if (!CoResume(CO_INVALID_ID))
+		PrintPass(_T("CO11"), _T("CoResume(INVALID) = false (안전 처리 확인)"));
 	else
-	{
-		_char buf[128];
-		StringUtil::FormatBuffer(buf, sizeof(buf), _T("CoResume(nullptr) = %p (nullptr 기대)"), pResult);
-		PrintFail(_T("CO11"), buf);
-	}
+		PrintFail(_T("CO11"), _T("CoResume(INVALID) = true (false 기대)"));
 }
 
 //--------------------------------------------------------------------------------------
@@ -492,8 +491,8 @@ static void Test_CO12()
 
 	for (int i = 0; i < N; ++i)
 	{
-		CoContext* pCtx = CoRun(fn_CO12);
-		CoResume(pCtx);
+		CoId id = CoRun(fn_CO12);
+		while (CoResume(id)) {}
 	}
 
 	if (g_CO12_count == N * 2)
@@ -541,24 +540,24 @@ static void Test_CO13()
 	//   풀 히트: stackTier_=cstLow,   size=16KB
 	{
 		const _u32 reqSize = 2 * CO_PAGE_SIZE; // 8 KB
-		CoContext* pCtx = CoRun(fn_CO13, cstCustom, reqSize);
-		if (pCtx != nullptr && pCtx->state_ == csYield)
+		CoContext* pView = nullptr;
+		CoId id = CoRun(fn_CO13, {.spec_ = CoStackSpec::Custom(reqSize), .ppOut_ = &pView});
+		if (id != CO_INVALID_ID)
 		{
 			_char buf[256];
 			StringUtil::FormatBuffer(buf, sizeof(buf),
 				_T("req=8KB | tier=%d size=%uKB | resolvedTier=cstLow(%d) 풀%s"),
-				(int)pCtx->stack_.stackTier_, pCtx->stack_.size_ / 1024,
-				(int)cstLow, pCtx->stack_.stackTier_ == cstLow ? "히트" : "미스(신규 cstCustom)");
+				(int)pView->stack_.stackTier_, pView->stack_.size_ / 1024,
+				(int)cstLow, pView->stack_.stackTier_ == cstLow ? "히트" : "미스(신규 cstCustom)");
 			PrintPass(_T("CO13-A"), buf);
-			CoResume(pCtx);
+			while (CoResume(id)) {}
 		}
 		else
 		{
 			_char buf[128];
 			StringUtil::FormatBuffer(buf, sizeof(buf),
-				_T("pCtx=%p state=%d"), pCtx, pCtx ? (int)pCtx->state_ : -1);
+				_T("id=%llu"), (unsigned long long)id);
 			PrintFail(_T("CO13-A"), buf);
-			if (pCtx) g_cCoMgr.FreeCtx(pCtx);
 		}
 	}
 
@@ -567,24 +566,24 @@ static void Test_CO13()
 	//   풀 히트: stackTier_=cstMid,   size=64KB
 	{
 		const _u32 reqSize = 6 * CO_PAGE_SIZE; // 24 KB
-		CoContext* pCtx = CoRun(fn_CO13, cstCustom, reqSize);
-		if (pCtx != nullptr && pCtx->state_ == csYield)
+		CoContext* pView = nullptr;
+		CoId id = CoRun(fn_CO13, {.spec_ = CoStackSpec::Custom(reqSize), .ppOut_ = &pView});
+		if (id != CO_INVALID_ID)
 		{
 			_char buf[256];
 			StringUtil::FormatBuffer(buf, sizeof(buf),
 				_T("req=24KB | tier=%d size=%uKB | resolvedTier=cstMid(%d) 풀%s"),
-				(int)pCtx->stack_.stackTier_, pCtx->stack_.size_ / 1024,
-				(int)cstMid, pCtx->stack_.stackTier_ == cstMid ? "히트" : "미스(신규 cstCustom)");
+				(int)pView->stack_.stackTier_, pView->stack_.size_ / 1024,
+				(int)cstMid, pView->stack_.stackTier_ == cstMid ? "히트" : "미스(신규 cstCustom)");
 			PrintPass(_T("CO13-B"), buf);
-			CoResume(pCtx);
+			while (CoResume(id)) {}
 		}
 		else
 		{
 			_char buf[128];
 			StringUtil::FormatBuffer(buf, sizeof(buf),
-				_T("pCtx=%p state=%d"), pCtx, pCtx ? (int)pCtx->state_ : -1);
+				_T("id=%llu"), (unsigned long long)id);
 			PrintFail(_T("CO13-B"), buf);
-			if (pCtx) g_cCoMgr.FreeCtx(pCtx);
 		}
 	}
 
@@ -593,24 +592,24 @@ static void Test_CO13()
 	//   풀 히트: stackTier_=cstHigh,  size=256KB
 	{
 		const _u32 reqSize = 32 * CO_PAGE_SIZE; // 128 KB
-		CoContext* pCtx = CoRun(fn_CO13, cstCustom, reqSize);
-		if (pCtx != nullptr && pCtx->state_ == csYield)
+		CoContext* pView = nullptr;
+		CoId id = CoRun(fn_CO13, {.spec_ = CoStackSpec::Custom(reqSize), .ppOut_ = &pView});
+		if (id != CO_INVALID_ID)
 		{
 			_char buf[256];
 			StringUtil::FormatBuffer(buf, sizeof(buf),
 				_T("req=128KB | tier=%d size=%uKB | resolvedTier=cstHigh(%d) 풀%s"),
-				(int)pCtx->stack_.stackTier_, pCtx->stack_.size_ / 1024,
-				(int)cstHigh, pCtx->stack_.stackTier_ == cstHigh ? "히트" : "미스(신규 cstCustom)");
+				(int)pView->stack_.stackTier_, pView->stack_.size_ / 1024,
+				(int)cstHigh, pView->stack_.stackTier_ == cstHigh ? "히트" : "미스(신규 cstCustom)");
 			PrintPass(_T("CO13-C"), buf);
-			CoResume(pCtx);
+			while (CoResume(id)) {}
 		}
 		else
 		{
 			_char buf[128];
 			StringUtil::FormatBuffer(buf, sizeof(buf),
-				_T("pCtx=%p state=%d"), pCtx, pCtx ? (int)pCtx->state_ : -1);
+				_T("id=%llu"), (unsigned long long)id);
 			PrintFail(_T("CO13-C"), buf);
-			if (pCtx) g_cCoMgr.FreeCtx(pCtx);
 		}
 	}
 
@@ -618,28 +617,29 @@ static void Test_CO13()
 	//   반드시: stackTier_==cstCustom, size_==reqSize
 	{
 		const _u32 reqSize = 80 * CO_PAGE_SIZE; // 320 KB
-		CoContext* pCtx = CoRun(fn_CO13, cstCustom, reqSize);
-		if (pCtx != nullptr && pCtx->state_ == csYield
-			&& pCtx->stack_.stackTier_ == cstCustom
-			&& pCtx->stack_.size_ == reqSize)
+		CoContext* pView = nullptr;
+		CoId id = CoRun(fn_CO13, {.spec_ = CoStackSpec::Custom(reqSize), .ppOut_ = &pView});
+		if (id != CO_INVALID_ID
+			&& pView->stack_.stackTier_ == cstCustom
+			&& pView->stack_.size_ == reqSize)
 		{
 			_char buf[128];
 			StringUtil::FormatBuffer(buf, sizeof(buf),
 				_T("req=320KB | tier=cstCustom size=320KB | 진짜 Custom (풀링 없음)"));
 			PrintPass(_T("CO13-D"), buf);
-			CoResume(pCtx);
+			while (CoResume(id)) {}
 		}
 		else
 		{
 			_char buf[256];
 			StringUtil::FormatBuffer(buf, sizeof(buf),
-				_T("pCtx=%p state=%d tier=%d size=%uKB | 기대: tier=cstCustom(%d) size=320KB"),
-				pCtx, pCtx ? (int)pCtx->state_ : -1,
-				pCtx ? (int)pCtx->stack_.stackTier_ : -1,
-				pCtx ? pCtx->stack_.size_ / 1024 : 0,
+				_T("id=%llu tier=%d size=%uKB | 기대: tier=cstCustom(%d) size=320KB"),
+				(unsigned long long)id,
+				pView ? (int)pView->stack_.stackTier_ : -1,
+				pView ? pView->stack_.size_ / 1024 : 0,
 				(int)cstCustom);
 			PrintFail(_T("CO13-D"), buf);
-			if (pCtx) g_cCoMgr.FreeCtx(pCtx);
+			while (CoResume(id)) {}
 		}
 	}
 }
@@ -711,11 +711,12 @@ static void Test_CO14()
 	g_cCoMgr.SetPageGrowCount(2);
 	g_CO14A_result = -1;
 
-	CoContext* pCtx = CoRun(fn_CO14A);
+	CoContext* pView = nullptr;
+	CoId id = CoRun(fn_CO14A, {.ppOut_ = &pView});
 
-	if (pCtx != nullptr && pCtx->state_ == csYield && g_CO14A_result >= 0)
+	if (id != CO_INVALID_ID && g_CO14A_result >= 0)
 	{
-		CoStack* pStack = &pCtx->stack_;
+		CoStack* pStack = &pView->stack_;
 		Console::WriteLine(ConsoleColor::Cyan,
 			_T("    [CO14-A] 확장 후: pStackLimit_=0x%p  diff=%lld pages from base"),
 			pStack->pStackLimit_,
@@ -726,10 +727,10 @@ static void Test_CO14()
 	{
 		_char buf[128];
 		StringUtil::FormatBuffer(buf, sizeof(buf),
-			_T("pCtx=%p state=%d result=%d"), pCtx, pCtx ? (int)pCtx->state_ : -1, (int)g_CO14A_result);
+			_T("id=%llu result=%d"), (unsigned long long)id, (int)g_CO14A_result);
 		PrintFail(_T("CO14-A"), buf);
 	}
-	if (pCtx) CoResume(pCtx);
+	while (CoResume(id)) {}
 
 	// CO14-B: STATUS_STACK_OVERFLOW 포착
 	PrintSection(_T("TC_CO14-B: 스택 완전 소진 → STATUS_STACK_OVERFLOW __try/__except 포착"));
@@ -746,9 +747,9 @@ static void Test_CO14()
 	// → ExpandStack이 비상 페이지 COMMIT + TEB StackLimit 갱신
 	// → CoVEH가 STATUS_STACK_OVERFLOW + NONCONTINUABLE 으로 변환
 	// → fn_CO14B 내 __except 블록에서 포착
-	CoContext* pCtxB = CoRun(fn_CO14B, cstMid);
+	CoId idB = CoRun(fn_CO14B);
 
-	if (pCtxB != nullptr && pCtxB->state_ == csYield
+	if (idB != CO_INVALID_ID
 		&& g_CO14B_caught
 		&& g_CO14B_code == STATUS_STACK_OVERFLOW)
 	{
@@ -756,18 +757,18 @@ static void Test_CO14()
 		StringUtil::FormatBuffer(buf, sizeof(buf),
 			_T("STATUS_STACK_OVERFLOW(0x%08X) 포착 성공"), (unsigned)g_CO14B_code);
 		PrintPass(_T("CO14-B"), buf);
-		CoResume(pCtxB);
+		while (CoResume(idB)) {}
 	}
 	else
 	{
 		_char buf[256];
 		StringUtil::FormatBuffer(buf, sizeof(buf),
-			_T("pCtx=%p state=%d caught=%d code=0x%08X | 기대: caught=true code=STATUS_STACK_OVERFLOW(0x%08X)"),
-			pCtxB, pCtxB ? (int)pCtxB->state_ : -1,
+			_T("id=%llu caught=%d code=0x%08X | 기대: caught=true code=STATUS_STACK_OVERFLOW(0x%08X)"),
+			(unsigned long long)idB,
 			(int)g_CO14B_caught, (unsigned)g_CO14B_code,
 			(unsigned)STATUS_STACK_OVERFLOW);
 		PrintFail(_T("CO14-B"), buf);
-		if (pCtxB) g_cCoMgr.FreeCtx(pCtxB);
+		while (CoResume(idB)) {}
 	}
 }
 
@@ -790,12 +791,13 @@ static void Test_CO15()
 	PrintSection(_T("TC_CO15: 1000회 yield 스트레스 테스트"));
 
 	g_CO15_count = 0;
-	CoContext* pCtx = CoRun(fn_CO15);
+	CoId id = CoRun(fn_CO15);
 
 	int resumeCount = 0;
-	while (pCtx != nullptr)
+	bool alive = true;
+	while (alive)
 	{
-		pCtx = CoResume(pCtx);
+		alive = CoResume(id);
 		resumeCount++;
 	}
 
@@ -839,12 +841,11 @@ static void Test_CO99()
 {
 	PrintSection(_T("TC_CO99: 자율 테스트"));
 
-	CoContext* pCtx = CoRun(fn_CO99);
+	CoId id = CoRun(fn_CO99);
 
 	int resumeCount = 0;
-	while (pCtx != nullptr)
+	while (CoResume(id))
 	{
-		pCtx = CoResume(pCtx);
 		resumeCount++;
 	}
 }

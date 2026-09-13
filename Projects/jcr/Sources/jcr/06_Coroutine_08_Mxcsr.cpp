@@ -1,9 +1,9 @@
 #include "Core.h"
 #include <float.h>
 
-// [코루틴-08] MXCSR/x87 제어 상태 보존 예제.
-// - 이 변경점이 없으면: 코루틴이 반올림 모드를 바꾸고 yield하면 스레드와
-//   다른 모든 코루틴이 바뀐 모드로 계산했다. (Win x64 ABI 위반)
+// MXCSR/x87 제어 상태 보존 예제.
+// - 코루틴이 반올림 모드를 바꾸고 yield하면 스레드와
+//   다른 모든 코루틴이 바뀐 모드로 계산한다. (Win x64 ABI 위반)
 static void PrintSection08(const _char* _pName)
 {
 	Console::WriteLine(ConsoleColor::Yellow,
@@ -31,7 +31,7 @@ static void Test_Co08_Rounding()
 {
 	PrintSection08(_T("CO08: 반올림 모드 격리"));
 
-	CoContext* pCtx = CoRun(fn_Co08_Rounding, cstMid);
+	CoId id = CoRun(fn_Co08_Rounding);
 
 	unsigned mid = 0;
 	_controlfp_s(&mid, 0, 0);
@@ -40,8 +40,7 @@ static void Test_Co08_Rounding()
 	else
 		Console::WriteLine(ConsoleColor::Red, _T("  FAIL [CO08] 스레드 쪽 오염"));
 
-	while (pCtx)
-		pCtx = CoResume(pCtx);
+	while (CoResume(id)) {}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

@@ -16,16 +16,28 @@
 
 USING_NS_JC;
 
-// [코루틴-07] 마지막 코루틴 실패 원인. (스레드별 보관)
-// - 이전에는 파일 전역(g_cCoLastError)이라 사용자가 읽을 방법이 없었고,
-//   스레드별로 매니저가 따로 있는데 에러는 공유라 원인 추적이 어긋났다.
-static thread_local CoError t_coLastError = coeNone;
+// ── 스레드 지역 상태 ──────────────────────────────────────────
+// 코루틴의 스레드별 값들을 한곳에 둔다. (CoMgr::tls_alive_ 정의 포함)
+// - g_cCoMgr: 스레드별 매니저. live 등록부 + 현재 컨텍스트 + id 발급.
+// - tls_coLastError: 마지막 실패 원인. 읽으면 지운다.
+// - tls_coGlobalExceptionHandler: 스레드별 전역 예외 핸들러. (개별 onException 다음, 보관 전)
+// - tls_coPendingException: CoEntry가 잡아 둔 예외. 스케줄러 스택에서 처리한다.
+// - tls_coVehDepth: VEH 재진입 깊이. RAII 스코프로 증감한다.
+thread_local CoMgr g_cCoMgr;
+thread_local bool CoMgr::tls_alive_ = false;
+static thread_local CoError tls_coLastError = coeNone;
+static thread_local FnCoException tls_coGlobalExceptionHandler = nullptr;
+static thread_local std::exception_ptr tls_coPendingException;
+static thread_local _u32 tls_coVehDepth = 0;
 
+//////////////////////////////////////////////////////////////////////////////////////////
+// 마지막 실패 원인 보고 (읽으면 지운다)
+//////////////////////////////////////////////////////////////////////////////////////////
 CoError CoGetLastError()
 {
 	// 읽으면 지운다. 같은 실패를 두 번 보고하지 않기 위함이다.
-	CoError err = t_coLastError;
-	t_coLastError = coeNone;
+	CoError err = tls_coLastError;
+	tls_coLastError = coeNone;
 	return err;
 }
 
@@ -39,7 +51,6 @@ String CoErrorString(CoError _err)
 	case coeCommitFailed:		return _T("스택 커밋 실패");
 	case coeInvalidStackSize:	return _T("잘못된 스택 크기");
 	case coeInvalidCtx:			return _T("유효하지 않은 컨텍스트");
-	case coeWrongThread:		return _T("생성 스레드와 다른 스레드에서 호출");
 	case coeInvalidState:		return _T("호출 불가능한 상태");
 	case coeStaleHandle:		return _T("이미 종료된 핸들");
 	case coeException:			return _T("코루틴 함수에서 예외 발생");
@@ -47,10 +58,9 @@ String CoErrorString(CoError _err)
 	}
 }
 
-// [코루틴-07] CoVEH 자동 등록. (프로세스 1회, 가장 앞 순서)
-// - 이전에는 사용자가 직접 AddVectoredExceptionHandler를 호출해야 해서
-//   등록을 빼먹으면 첫 스택 확장 시점에 가드 폴트가 처리되지 않고 종료됐다.
-// - Config.cpp의 전역 VEH보다 나중에 FIRST로 등록하므로 CoVEH가 먼저 불린다.
+//////////////////////////////////////////////////////////////////////////////////////////
+// CoVEH 자동 등록 + 매니저 수명
+//////////////////////////////////////////////////////////////////////////////////////////
 static void* s_pCoVeh = nullptr;
 static std::once_flag s_coVehOnce;
 
@@ -65,11 +75,11 @@ static void EnsureCoVehRegistered()
 
 CoMgr::CoMgr()
 {
-	t_alive_ = true;
+	tls_alive_ = true;
 	// 스레드별 매니저가 처음 만들어지는 시점에 VEH를 보장한다.
 	EnsureCoVehRegistered();
 
-	// [코루틴-08] CET(User Shadow Stack)가 켜진 프로세스에서는 코루틴을 쓸 수 없다.
+	// CET(User Shadow Stack)가 켜진 프로세스에서는 코루틴을 쓸 수 없다.
 	// - rsp를 임의로 바꾸고 ret하는 방식이라 섀도우 스택 검사에 걸려 즉사하므로
 	//   링커 /CETCOMPAT:NO로 빌드해야 한다. 여기서 미리 막는다.
 	jc_assert_msg(!IsShadowStackEnabled(),
@@ -78,14 +88,11 @@ CoMgr::CoMgr()
 
 CoMgr::~CoMgr()
 {
-	// [코루틴-15] 이후 가드 폴트는 모두 스레드 스택의 것으로 보고 OS에 맡긴다.
+	// 이후 가드 폴트는 모두 스레드 스택의 것으로 보고 OS에 맡긴다.
 	// - Clear()에서는 내리지 않는다. Clear는 풀 비우기라 뒤에도 재사용되기 때문이다.
-	t_alive_ = false;
+	tls_alive_ = false;
 }
 
-thread_local bool CoMgr::t_alive_ = false;
-
-// [코루틴-08] 섀도우 스택이 켜져 있는지 확인한다.
 bool CoMgr::IsShadowStackEnabled()
 {
 	PROCESS_MITIGATION_USER_SHADOW_STACK_POLICY policy{};
@@ -95,7 +102,9 @@ bool CoMgr::IsShadowStackEnabled()
 	return false;
 }
 
-// [코루틴-04] 비상 패드 페이지 수. 전체의 1/4을 넘지 않게 한다.
+//////////////////////////////////////////////////////////////////////////////////////////
+// 비상 패드 수 계산. 전체의 1/4을 넘지 않게 한다.
+//////////////////////////////////////////////////////////////////////////////////////////
 // - Low(4p)는 1장, Mid(16p)/High(64p)은 4장(기본값 상한)이 된다.
 _u32 CoMgr::EmergencyPadPages(_u32 _totalPages) const
 {
@@ -103,25 +112,24 @@ _u32 CoMgr::EmergencyPadPages(_u32 _totalPages) const
 	return pageEmergencyCount_ < cap ? pageEmergencyCount_ : cap;
 }
 
-_u32 g_coNextId_ = 0;
-
-thread_local CoMgr g_cCoMgr;
-
-// [코루틴-14] CoRunU 핸드오프. CoAllocCtx가 읽는 즉시 지운다.
-thread_local void* t_coStartUserData = nullptr;
+//////////////////////////////////////////////////////////////////////////////////////////
+// 스레드별 전역 예외 핸들러 등록
+//////////////////////////////////////////////////////////////////////////////////////////
+void CoSetExceptionHandler(FnCoException _fn)
+{
+	tls_coGlobalExceptionHandler = _fn;
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // [Private] InitStack
 //   CoStack의 pStackEnd_, size_, stackTier_ 가 설정된 상태에서 호출.
 //   스택 상단 pageInitCount_ 페이지 commit + pageGuardCount_ 페이지 PAGE_GUARD commit.
-// [코루틴-07] 커밋 실패를 무시하지 않고 false로 돌려준다.
-// - 이전에는 실패해도 void로 진행해서 커밋 안 된 스택으로 진입하다 첫 push에서 AV가 났다.
 //////////////////////////////////////////////////////////////////////////////////////////
 bool CoMgr::InitStack(CoStack* _pStack)
 {
 	_pStack->pStackBase_ = _pStack->pStackEnd_ + _pStack->size_;
 
-	// [코루틴-04] 경계 확정.
+	// 경계 확정.
 	// - pEmergencyTop_ = pStackEnd_ + PAGE. 이 아래는 일반 확장이 내려가지 못하고,
 	//   TEB DeallocationStack에도 이 값을 설치해 커널이 오버플로우로 확정하게 한다.
 	// - pReserveBase_ ~ pStackEnd_ = 비상 패드. 미리 RW 커밋해 둔다.
@@ -153,7 +161,7 @@ bool CoMgr::InitStack(CoStack* _pStack)
 		if (VirtualAlloc(pCommitAddr, actualInitCount * CO_PAGE_SIZE, MEM_COMMIT, PAGE_READWRITE) == nullptr)
 		{
 			_LogError_(_T("VirtualAlloc (init commit) failed. Error: %lu"), GetLastError());
-			t_coLastError = coeCommitFailed;
+			tls_coLastError = coeCommitFailed;
 			return false;
 		}
 	}
@@ -163,7 +171,7 @@ bool CoMgr::InitStack(CoStack* _pStack)
 	if (pGuardAddr < _pStack->pEmergencyTop_)
 		pGuardAddr = _pStack->pEmergencyTop_;
 
-	// [코루틴-02] 성장 가드존은 PAGE_GUARD로 둔다.
+	// 성장 가드존은 PAGE_GUARD로 둔다.
 	// - NOACCESS로 두면 커널이 예외 배달용 CONTEXT를 유저 스택에 밀어넣지 못해
 	//   VEH가 호출되기도 전에 프로세스가 죽으므로 GUARD여야 한다.
 	_u32 actualGuardCount = (_u32)((pCommitAddr - pGuardAddr) / CO_PAGE_SIZE);
@@ -172,28 +180,28 @@ bool CoMgr::InitStack(CoStack* _pStack)
 		if (VirtualAlloc(pGuardAddr, actualGuardCount * CO_PAGE_SIZE, MEM_COMMIT, PAGE_READWRITE | PAGE_GUARD) == nullptr)
 		{
 			_LogError_(_T("VirtualAlloc (guard commit) failed. Error: %lu"), GetLastError());
-			t_coLastError = coeCommitFailed;
+			tls_coLastError = coeCommitFailed;
 			return false;
 		}
 	}
 
 	_pStack->pStackLimit_ = pCommitAddr;
 	_pStack->pGuardLimit_ = pGuardAddr;
-	// [코루틴-12] 커밋 하한 기록. 풀 반납 때 이 위로만 유지한다.
+	// 커밋 하한 기록. 풀 반납 때 이 위로만 유지한다.
 	_pStack->pCommitLow_ = pGuardAddr;
 
-	// [코루틴-04] 오버플로우 가드 1페이지를 GUARD로 둔다. (절대 해제 금지)
+	// 오버플로우 가드 1페이지를 GUARD로 둔다. (절대 해제 금지)
 	// - NOACCESS로 두면 RSP가 바로 위에 있을 때 배달 push가 실패해 죽으므로
 	//   GUARD로 둔다. (배달 push가 가드를 자동 해제한다)
 	if (VirtualAlloc(_pStack->pStackEnd_, CO_PAGE_SIZE,
 		MEM_COMMIT, PAGE_READWRITE | PAGE_GUARD) == nullptr)
 	{
 		_LogError_(_T("VirtualAlloc (overflow guard commit) failed. Error: %lu"), GetLastError());
-		t_coLastError = coeCommitFailed;
+		tls_coLastError = coeCommitFailed;
 		return false;
 	}
 
-	// [코루틴-04] 비상 패드(예약 아래 N페이지)를 RW 커밋한다.
+	// 비상 패드(예약 아래 N페이지)를 RW 커밋한다.
 	// - 패드 크기는 예약 때 정해진다. (pStackEnd_ - pReserveBase_)
 	if (_pStack->pReserveBase_ < _pStack->pStackEnd_)
 	{
@@ -202,7 +210,7 @@ bool CoMgr::InitStack(CoStack* _pStack)
 			MEM_COMMIT, PAGE_READWRITE) == nullptr)
 		{
 			_LogError_(_T("VirtualAlloc (emergency pad commit) failed. Error: %lu"), GetLastError());
-			t_coLastError = coeCommitFailed;
+			tls_coLastError = coeCommitFailed;
 			return false;
 		}
 	}
@@ -213,8 +221,6 @@ bool CoMgr::InitStack(CoStack* _pStack)
 // [Private] AllocStack
 //   확정된 tier/size로 메모리를 예약(RESERVE)하고 InitStack을 호출.
 //   티어 판별은 하지 않는다. (호출 전 ResolveTier로 확정할 것)
-// [코루틴-06] 이전에는 여기서 티어만 바꾸고 크기는 그대로 둬서
-//   5000B짜리 스택이 cstLow 풀로 들어가 다음 사용자를 오염시켰다.
 //////////////////////////////////////////////////////////////////////////////////////////
 bool CoMgr::AllocStack(OUT CoStack* _pStack, CoStackTier _stackTier, _u32 _stackSize)
 {
@@ -235,11 +241,11 @@ bool CoMgr::AllocStack(OUT CoStack* _pStack, CoStackTier _stackTier, _u32 _stack
 		_T("스택 크기가 페이지 정렬이 아닙니다. size: %u"), _stackSize);
 	if ((_stackSize & (CO_PAGE_SIZE - 1)) != 0)
 	{
-		t_coLastError = coeInvalidStackSize;
+		tls_coLastError = coeInvalidStackSize;
 		return false;
 	}
 
-	// [코루틴-04] 예약 아래에 비상 패드를 덧붙인다. (오버플로우 배달 공간)
+	// 예약 아래에 비상 패드를 덧붙인다. (오버플로우 배달 공간)
 	// - 패드는 스택 크기의 1/4을 넘지 않게 한다. (Low는 1장, Mid/High은 4장)
 	_u32 padPages = EmergencyPadPages(_stackSize / CO_PAGE_SIZE);
 	_u32 slotBytes = _stackSize + padPages * CO_PAGE_SIZE;
@@ -251,20 +257,20 @@ bool CoMgr::AllocStack(OUT CoStack* _pStack, CoStackTier _stackTier, _u32 _stack
 		pSlot = (char*)VirtualAlloc(nullptr, slotBytes, MEM_RESERVE, PAGE_NOACCESS);
 		if (pSlot == nullptr)
 		{
-			t_coLastError = coeVirtualAlloc;
+			tls_coLastError = coeVirtualAlloc;
 			return false;
 		}
 	}
 	else
 	{
-		// [코루틴-13] 슬랩에서 슬롯을 잘라 쓴다. (64KB 그래뉴러리티 낭비 제거)
+		// 슬랩에서 슬롯을 잘라 쓴다. (64KB 그래뉴러리티 낭비 제거)
 		// - 1MB 슬랩을 티어 크기로 분할. 빈 슬랩이 없으면 새로 예약한다.
-		// - 반납된 슬롯 재사용은 free_ 풀 몫이라 used는 앞으로만 간다.
+		// - 반납된 슬롯 재사용은 free_ 풀 몫이라 used_는 앞으로만 간다.
 		StackSlab* pSlab = nullptr;
 		if (!slabs_[_stackTier].IsEmpty())
 		{
 			StackSlab& back = slabs_[_stackTier].Back();
-			if (back.used < back.slotCount)
+			if (back.used_ < back.slotCount_)
 				pSlab = &back;
 		}
 		if (pSlab == nullptr)
@@ -272,39 +278,35 @@ bool CoMgr::AllocStack(OUT CoStack* _pStack, CoStackTier _stackTier, _u32 _stack
 			char* pSlabBase = (char*)VirtualAlloc(nullptr, SLAB_BYTES, MEM_RESERVE, PAGE_NOACCESS);
 			if (pSlabBase == nullptr)
 			{
-				t_coLastError = coeVirtualAlloc;
+				tls_coLastError = coeVirtualAlloc;
 				return false;
 			}
 			StackSlab slab;
-			slab.pBase = pSlabBase;
-			slab.slotBytes = slotBytes;
-			slab.slotCount = SLAB_BYTES / slotBytes;
-			slab.used = 0;
+			slab.pBase_ = pSlabBase;
+			slab.slotBytes_ = slotBytes;
+			slab.slotCount_ = SLAB_BYTES / slotBytes;
+			slab.used_ = 0;
 			slabs_[_stackTier].PushBack(slab);
 			pSlab = &slabs_[_stackTier].Back();
 		}
-		pSlot = pSlab->pBase + (size_t)pSlab->slotBytes * pSlab->used;
-		pSlab->used++;
+		pSlot = pSlab->pBase_ + (size_t)pSlab->slotBytes_ * pSlab->used_;
+		pSlab->used_++;
 	}
 
 	_pStack->pReserveBase_ = pSlot;
 	_pStack->pStackEnd_  = pSlot + padPages * CO_PAGE_SIZE;
 	_pStack->size_       = _stackSize;
 	_pStack->stackTier_  = _stackTier;
-	// [코루틴-05] 스택 식별 매직을 찍는다. 해제된 메모리를 가리키는
-	// 잘못된 컨텍스트를 resume 전에 가려내기 위해 사용한다.
 	_pStack->magic_      = CO_STACK_MAGIC;
 	return InitStack(_pStack);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// [코루틴-06] 티어/크기 결정을 한 곳으로 모은다.
-// - 이전에는 AllocStack과 AllocCtx가 각자 판별 로직을 복사해 가져서 어긋날 수 있었고,
-//   티어는 올리면서 크기는 그대로 둬 풀 오염과 정렬 깨짐이 생겼다.
+// 티어/크기 결정을 한 곳으로 모은다.
 //////////////////////////////////////////////////////////////////////////////////////////
-static _u32 RoundUpPage(_u32 _v)
+static _u32 RoundUpPage(_u32 _value)
 {
-	return (_v + CO_PAGE_SIZE - 1) & ~(_u32)(CO_PAGE_SIZE - 1);
+	return (_value + CO_PAGE_SIZE - 1) & ~(_u32)(CO_PAGE_SIZE - 1);
 }
 
 bool CoMgr::ResolveTier(CoStackTier _tier, _u32 _size, OUT CoStackTier* _pTier, OUT _u32* _pSize)
@@ -317,7 +319,7 @@ bool CoMgr::ResolveTier(CoStackTier _tier, _u32 _size, OUT CoStackTier* _pTier, 
 	case cstCustom:
 		if (_size == 0)
 		{
-			t_coLastError = coeInvalidStackSize;
+			tls_coLastError = coeInvalidStackSize;
 			return false;
 		}
 		// 작은 요청은 티어로 올림. 크기도 티어 크기로 맞춰 풀에 섞이지 않게 한다.
@@ -343,7 +345,7 @@ void CoMgr::FreeStack(CoStack* _pStack)
 {
 	if (_pStack->stackTier_ == cstCustom)
 	{
-		// [코루틴-04] 패드까지 포함해 예약 전체를 해제한다.
+		// 패드까지 포함해 예약 전체를 해제한다.
 		VirtualFree(_pStack->pReserveBase_, 0, MEM_RELEASE);
 	}
 	else
@@ -355,7 +357,7 @@ void CoMgr::FreeStack(CoStack* _pStack)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// [코루틴-12] 풀 반납 시 커밋 유지 + 가드존 재배치.
+// 풀 반납 시 커밋 유지 + 가드존 재배치.
 // - 이전에는 매번 전체 decommit + 재commit(커널 3회)이라 생성 1회에 수 µs가 들었다.
 // - 유지 상한(poolKeepBytes_)을 넘는 커밋만 디커밋하고, 가드존은 Protect로만
 //   재배치한다. 확장 없이 끝난 경우(가장 흔함)는 Protect 1회로 끝난다.
@@ -389,7 +391,7 @@ void CoMgr::RecycleStack(CoStack* _pStack)
 	if (pGuardLow < pFloor)
 		pGuardLow = pFloor;
 
-	// [코루틴-12] 실제 가드존 크기. 클램프되면 guardBytes보다 작다.
+	// 실제 가드존 크기. 클램프되면 guardBytes보다 작다.
 	// - 클램프 무시하고 guardBytes로 Protect하면 init 영역까지 가드가 번진다.
 	SIZE_T guardZoneBytes = (SIZE_T)(pInitLow - pGuardLow);
 
@@ -428,31 +430,31 @@ void CoMgr::RecycleStack(CoStack* _pStack)
 //////////////////////////////////////////////////////////////////////////////////////////
 // InitCtx
 //   풀에서 꺼낸 CoContext를 가볍게 리셋. 스택은 반납 때 이미 다음 사용 준비가
-//   끝나서 커밋을 다시 안 한다. ([코루틴-12] 이전에는 여기서 재커밋했다)
+//   끝나서 커밋을 다시 안 한다.
 //////////////////////////////////////////////////////////////////////////////////////////
 void CoMgr::InitCtx(CoContext* _pCtx)
 {
 	_pCtx->id_         = 0;
-	_pCtx->threadId_   = 0;
 	_pCtx->regs_       = {};
-	_pCtx->schedRegs_  = {};
+	_pCtx->callerRegs_ = {};
 	_pCtx->state_      = csInit;
 	_pCtx->fn_         = nullptr;
-	_pCtx->callerCtx_  = nullptr;
-	// [코루틴-14] 사용자 채널은 재사용 때마다 비운다. (세대는 유지)
+	_pCtx->pCallerCtx_ = nullptr;
+	// 사용자 채널은 재사용 때마다 비운다. (id는 AllocCtx에서 재부여)
 	_pCtx->userData_        = nullptr;
-	_pCtx->transfer_        = 0;
-	_pCtx->cancelRequested_ = false;
+	_pCtx->switchData_      = 0;
+	_pCtx->isCancelRequested_ = false;
+	_pCtx->onException_     = nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // AllocCtx
 //   풀에 재사용 가능한 CoContext가 있으면 꺼내서 InitCtx 후 반환.
-//   없으면 새로 dbg_new 하고 AllocStack → stacksByBase_ 등록 후 반환.
+//   없으면 새로 dbg_new 하고 AllocStack → usingByBase_/usingById_ 등록 후 반환.
 //////////////////////////////////////////////////////////////////////////////////////////
 CoContext* CoMgr::AllocCtx(CoStackTier _stackTier, _u32 _stackSize)
 {
-	// [코루틴-06] 티어/크기 판별을 한 곳에서 확정한다.
+	// 티어/크기 판별을 한 곳에서 확정한다.
 	CoStackTier tier = cstNone;
 	_u32 size = 0;
 	if (!ResolveTier(_stackTier, _stackSize, &tier, &size))
@@ -462,8 +464,8 @@ CoContext* CoMgr::AllocCtx(CoStackTier _stackTier, _u32 _stackSize)
 
 	if (tier != cstCustom && free_[tier].PopFront(&pCtx))
 	{
-		// [코루틴-12] 풀 재사용: 커밋 유지됨. 레지스터/상태만 리셋하고 바로 쓴다.
-		// [코루틴-06] 풀 무결성 확인. 크기가 다르면 오염된 것이므로 쓰지 않는다.
+		// 풀 재사용: 커밋 유지됨. 레지스터/상태만 리셋하고 바로 쓴다.
+		// 풀 무결성 확인. 크기가 다르면 오염된 것이므로 쓰지 않는다.
 		jc_assert_msg(pCtx->stack_.size_ == size,
 			_T("풀 오염: 티어 크기와 다릅니다. tier: %d, size: %u"), tier, pCtx->stack_.size_);
 		InitCtx(pCtx);
@@ -479,25 +481,26 @@ CoContext* CoMgr::AllocCtx(CoStackTier _stackTier, _u32 _stackSize)
 		pCtx->state_ = csInit;
 	}
 
-	// [코루틴-10] movaps 전제. CoContext가 16 정렬이어야 regs_ 안 XMM도 정렬된다.
+	// movaps 전제. CoContext가 16 정렬이어야 regs_ 안 XMM도 정렬된다.
 	jc_assert_msg((((uintptr_t)pCtx & 15) == 0),
 		_T("CoContext가 16 정렬이 아닙니다. pCtx: 0x%p"), pCtx);
 
 	pCtx->id_ = ++nextId_;
-	stacksByBase_.Insert(pCtx->stack_.pStackBase_, pCtx);
+	usingByBase_.Insert(pCtx->stack_.pStackBase_, pCtx);
+	usingById_.Insert(pCtx->id_, pCtx);
 	return pCtx;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // FreeCtx
-//   stacksByBase_ 에서 제거 후 커스텀이면 메모리 해제 + delete,
+//   usingByBase_/usingById_ 에서 제거 후 커스텀이면 메모리 해제 + delete,
 //   풀 티어면 decommit 후 free_ 풀로 반환.
 //////////////////////////////////////////////////////////////////////////////////////////
 void CoMgr::FreeCtx(CoContext* _pCtx)
 {
 	jc_assert(_pCtx != nullptr);
 
-	// [코루틴-15] 실행 중인 컨텍스트를 풀로 되돌리는 건 버그다.
+	// 실행 중인 컨텍스트를 풀로 되돌리는 건 버그다.
 	jc_assert(currentCtx_ != _pCtx);
 
 	CoStackTier stackTier = _pCtx->stack_.stackTier_;
@@ -505,17 +508,19 @@ void CoMgr::FreeCtx(CoContext* _pCtx)
 		_T("잘못된 스택 티어입니다. tier: %d"), stackTier);
 
 	CoContext* pPopped = nullptr;
-	if (stacksByBase_.TryPop(_pCtx->stack_.pStackBase_, &pPopped) == false)
+	if (usingByBase_.TryPop(_pCtx->stack_.pStackBase_, &pPopped) == false)
 	{
 		jc_assert_msg(false, _T("해당 컨텍스트는 관리 중인 컨텍스트가 아닙니다. pStackBase_: 0x%p"),
 			_pCtx->stack_.pStackBase_);
 		return;
 	}
+	CoContext* pPoppedById = nullptr;
+	if (usingById_.TryPop(pPopped->id_, &pPoppedById) == false || pPoppedById != pPopped)
+	{
+		jc_assert_msg(false, _T("id 맵과 base 맵이 어긋났습니다. id: %llu"), pPopped->id_);
+		return;
+	}
 
-	// [코루틴-05] 해제 표시. 세대를 올려 예전 핸들을 모두 무효화한다.
-	// - 종료된 컨텍스트가 풀에 들어갔다가 재사용되면 예전 포인터로
-	//   엉뚱한 코루틴이 실행되는 ABA 문제가 생기므로 세대로 가려낸다.
-	pPopped->generation_++;
 	pPopped->state_ = csEnd;
 	pPopped->fn_    = nullptr;
 
@@ -526,14 +531,14 @@ void CoMgr::FreeCtx(CoContext* _pCtx)
 	}
 	else if (free_[stackTier].Size() >= (int)poolMax_[stackTier])
 	{
-		// [코루틴-12/13] 풀이 가득 찼다. 슬롯은 슬랩 조각이라 release하면 안 되고
+		// 풀이 가득 찼다. 슬롯은 슬랩 조각이라 release하면 안 되고
 		// decommit 후 버린다. (슬랩 자체는 Clear 때 해제)
 		FreeStack(&pPopped->stack_);
 		delete pPopped;
 	}
 	else
 	{
-		// [코루틴-12] 커밋을 유지한 채 풀로 되돌린다. 다음 AllocCtx는 커널을 안 탄다.
+		// 커밋을 유지한 채 풀로 되돌린다. 다음 AllocCtx는 커널을 안 탄다.
 		RecycleStack(&pPopped->stack_);
 		free_[stackTier].PushBack(pPopped);
 	}
@@ -541,43 +546,47 @@ void CoMgr::FreeCtx(CoContext* _pCtx)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Clear
-//   stacksByBase_ 에 남은 항목 경고 후 free_ 풀 전체 해제.
+//   usingByBase_ 에 남은 항목 경고 후 free_ 풀 전체 해제.
 //////////////////////////////////////////////////////////////////////////////////////////
 void CoMgr::Clear()
 {
 	currentCtx_ = nullptr;
 
-	if (stacksByBase_.Size() > 0)
+	if (usingByBase_.Size() > 0)
 	{
-		jc_assert_msg(false, _T("Clear 호출 시점에 아직 할당된 컨텍스트가 존재합니다. Count: %zu"), stacksByBase_.Size());
+		jc_assert_msg(false, _T("Clear 호출 시점에 아직 할당된 컨텍스트가 존재합니다. Count: %zu"), usingByBase_.Size());
 	}
 
-	for (int tier = cstReservedTierBegin; tier <= cstReservedTierEnd; ++tier)
+	for (_s32 tier = cstReservedTierBegin; tier <= cstReservedTierEnd; ++tier)
 	{
 		CoContext* pCtx = nullptr;
 		while (free_[tier].PopFront(&pCtx))
 		{
-			// [코루틴-13] 풀 ctx는 슬랩 슬롯이라 개별 release 금지. delete만 한다.
+			// 풀 ctx는 슬랩 슬롯이라 개별 release 금지. delete만 한다.
 			// (custom은 풀에 안 들어가서 여기 올 일이 없음)
 			delete pCtx;
 		}
 	}
 
-	// [코루틴-13] 슬랩 예약 전체를 해제한다.
-	for (int tier = cstReservedTierBegin; tier <= cstReservedTierEnd; ++tier)
+	// 슬랩 예약 전체를 해제한다.
+	for (_s32 tier = cstReservedTierBegin; tier <= cstReservedTierEnd; ++tier)
 	{
 		StackSlab slab;
 		while (slabs_[tier].PopFront(&slab))
-			VirtualFree(slab.pBase, 0, MEM_RELEASE);
+			VirtualFree(slab.pBase_, 0, MEM_RELEASE);
 	}
+
+	// id 맵은 비어 있어야 한다. (살아있는 ctx는 위 assert에서 걸림)
+	// nextId_는 리셋하지 않는다. 리셋하면 id가 재사용되어 ABA가 부활한다.
+	usingById_.Clear();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// FindContextByBase / FindContextByAddr
+// FindContextByBase / FindContextByAddr / FindContextById
 //////////////////////////////////////////////////////////////////////////////////////////
 CoContext* CoMgr::FindContextByBase(char* _pBase)
 {
-	CoContext** pFound = stacksByBase_.Find(_pBase);
+	CoContext** pFound = usingByBase_.Find(_pBase);
 	if (pFound == nullptr)
 		return nullptr;
 	return *pFound;
@@ -585,7 +594,7 @@ CoContext* CoMgr::FindContextByBase(char* _pBase)
 
 CoContext* CoMgr::FindContextByAddr(char* _pAddr)
 {
-	CoContext** pFound = stacksByBase_.LowerBoundValue(_pAddr);
+	CoContext** pFound = usingByBase_.LowerBoundValue(_pAddr);
 	if (pFound == nullptr)
 		return nullptr;
 
@@ -596,12 +605,12 @@ CoContext* CoMgr::FindContextByAddr(char* _pAddr)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// TryFindContextByBase / TryFindContextByAddr
+// TryFindContextByBase / TryFindContextByAddr / TryFindContextById
 //   assert 없이 nullptr 시 false 반환.
 //////////////////////////////////////////////////////////////////////////////////////////
 bool CoMgr::TryFindContextByBase(char* _pBase, OUT CoContext** _pOut)
 {
-	CoContext** pFound = stacksByBase_.Find(_pBase);
+	CoContext** pFound = usingByBase_.Find(_pBase);
 	if (pFound == nullptr)
 		return false;
 	if (_pOut) *_pOut = *pFound;
@@ -617,12 +626,28 @@ bool CoMgr::TryFindContextByAddr(char* _pAddr, OUT CoContext** _pOut)
 	return true;
 }
 
-// [코루틴-05] 관리 중인(stacksByBase_) 컨텍스트인지 확인한다. (Debug 검증용)
+CoContext* CoMgr::FindContextById(CoId _id)
+{
+	CoContext** pFound = usingById_.Find(_id);
+	if (pFound == nullptr)
+		return nullptr;
+	return *pFound;
+}
+
+bool CoMgr::TryFindContextById(CoId _id, OUT CoContext** _pOut)
+{
+	CoContext* pCtx = FindContextById(_id);
+	if (pCtx == nullptr)
+		return false;
+	if (_pOut) *_pOut = pCtx;
+	return true;
+}
+
 bool CoMgr::IsUsing(CoContext* _pCtx)
 {
 	if (_pCtx == nullptr)
 		return false;
-	CoContext** pFound = stacksByBase_.Find(_pCtx->stack_.pStackBase_);
+	CoContext** pFound = usingByBase_.Find(_pCtx->stack_.pStackBase_);
 	return pFound != nullptr && *pFound == _pCtx;
 }
 
@@ -686,7 +711,7 @@ bool CoMgr::TryFindStackByAddr(char* _pAddr, OUT CoStack** _pOut)
 //   pStackEnd_                           pGuardLimit_ (new)
 //                                          (reserved)
 //                                         pStackEnd_
-// [코루틴-03] 확장이 끝나면 TEB StackLimit도 함께 내린다.
+// 확장이 끝나면 TEB StackLimit도 함께 내린다.
 // - 이전에는 pStackLimit_만 내려가고 gs:[16]이 그대로라 확장된 영역에서
 //   예외를 던지면 SEH가 스택 범위를 벗어났다고 보고 프로세스를 죽였다.
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -700,7 +725,7 @@ bool __declspec(safebuffers) CoMgr::ExpandStack(CoContext* _pCtx, char* _pFaultA
 		return false;
 	}
 
-	// [코루틴-04] 비상 밴드 상단이 일반 확장이 내려갈 수 있는 하한이다.
+	// 비상 밴드 상단이 일반 확장이 내려갈 수 있는 하한이다.
 	// - 밴드 아래 폴트는 오버플로우로 보고 false를 돌려준다.
 	if (_pFaultAddr < _pStack->pEmergencyTop_)
 		return false;
@@ -728,7 +753,7 @@ bool __declspec(safebuffers) CoMgr::ExpandStack(CoContext* _pCtx, char* _pFaultA
 	{
 		pGrowthStart = pGrowthStart - pageGrowCount_ * CO_PAGE_SIZE;
 
-		// [코루틴-04] 비상 밴드 위로 클램프 (밴드는 확장 대상이 아님)
+		// 비상 밴드 위로 클램프 (밴드는 확장 대상이 아님)
 		if (pGrowthStart < _pStack->pEmergencyTop_)
 			pGrowthStart = _pStack->pEmergencyTop_;
 
@@ -742,7 +767,7 @@ bool __declspec(safebuffers) CoMgr::ExpandStack(CoContext* _pCtx, char* _pFaultA
 	char* pNewGuardEnd     = pGrowthStart;
 	char* pNewGuardStart   = pGrowthStart - pageGuardCount_ * CO_PAGE_SIZE;
 
-	// [코루틴-04] 새 가드존도 비상 밴드 위까지만 둔다.
+	// 새 가드존도 비상 밴드 위까지만 둔다.
 	if (pNewGuardStart < _pStack->pEmergencyTop_)
 		pNewGuardStart = _pStack->pEmergencyTop_;
 
@@ -757,11 +782,11 @@ bool __declspec(safebuffers) CoMgr::ExpandStack(CoContext* _pCtx, char* _pFaultA
 	}
 	_pStack->pGuardLimit_ = pNewGuardStart;
 
-	// [코루틴-12] 커밋 하한 갱신. (새 가드존까지 커밋됨)
+	// 커밋 하한 갱신. (새 가드존까지 커밋됨)
 	if (_pStack->pCommitLow_ == nullptr || pNewGuardStart < _pStack->pCommitLow_)
 		_pStack->pCommitLow_ = pNewGuardStart;
 
-	// [코루틴-03] 이 코루틴이 지금 실행 중(폴트를 낸 스택)이면 TEB도 함께 내린다.
+	// 이 코루틴이 지금 실행 중(폴트를 낸 스택)이면 TEB도 함께 내린다.
 	// - VEH는 폴트를 낸 스레드에서 돌므로 이 TEB 쓰기가 정확하다.
 	// - 예외 디스패처가 보는 유효 스택 = [pStackLimit_, pStackBase_) 이다.
 	if (_pCtx == currentCtx_)
@@ -807,8 +832,8 @@ void CoMgr::DumpStack(CoStack* _pStack, const _char* _pTitle /*= nullptr*/)
 		(uintptr_t)_pStack->pGuardLimit_);
 
 	// ── Ranges ────────────────────────────────────────────────────────────────
-	long long commitBytes = (long long)(_pStack->pStackBase_ - _pStack->pStackLimit_);
-	long long guardBytes  = (long long)(_pStack->pStackLimit_ - _pStack->pGuardLimit_);
+	_s64 commitBytes = (_s64)(_pStack->pStackBase_ - _pStack->pStackLimit_);
+	_s64 guardBytes  = (_s64)(_pStack->pStackLimit_ - _pStack->pGuardLimit_);
 
 	Console::WriteLine(ConsoleColor::White, _T("  [Ranges]"));
 	Console::WriteLine(ConsoleColor::White, _T("    StackRange   : [0x%016llX, 0x%016llX)  (%u KB, %u pages)"),
@@ -878,9 +903,6 @@ void CoMgr::DumpStack(CoStack* _pStack, const _char* _pTitle /*= nullptr*/)
 //
 //   코루틴 실행 중이 아닌 경우(currentCtx_==nullptr)는 즉시 CONTINUE_SEARCH.
 //////////////////////////////////////////////////////////////////////////////////////////
-// [코루틴-15] VEH 재진입 깊이. 어떤 경로로 나가도 복구되게 RAII로 센다.
-static thread_local _u32 t_coVehDepth = 0;
-
 struct CoVehScope
 {
 	_u32& depth_;
@@ -912,7 +934,7 @@ static LONG CoConvertToOverflow(EXCEPTION_POINTERS* _pEp, CoContext* _pCtx) noex
 	return EXCEPTION_CONTINUE_SEARCH;
 }
 
-// [코루틴-15] VEH 경로 함수는 스택을 적게 쓴다. 보안 쿠키 검사가 들어갈
+// VEH 경로 함수는 스택을 적게 쓴다. 보안 쿠키 검사가 들어갈
 // 로컬 배열·문자열 포맷을 두지 않는다. (프레임 크기는 맵 파일에서 확인)
 #define CO_VEH_PATH __declspec(safebuffers)
 
@@ -924,14 +946,14 @@ CO_VEH_PATH __declspec(noinline) LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp) n
 		return EXCEPTION_CONTINUE_SEARCH;
 	if (pRec->NumberParameters < 2)
 		return EXCEPTION_CONTINUE_SEARCH;
-	if (!CoMgr::t_alive_)
+	if (!CoMgr::tls_alive_)
 		return EXCEPTION_CONTINUE_SEARCH;
 
 	char* pFaultAddr = (char*)pRec->ExceptionInformation[1];
 	char* pFaultRsp  = (char*)_pEp->ContextRecord->Rsp;
 
 #ifdef _DEBUG
-	// [코루틴-15] VEH가 실제로 쓴 깊이를 잰다. (가드 예산 튜닝 근거)
+	// VEH가 실제로 쓴 깊이를 잰다. (가드 예산 튜닝 근거)
 	{
 		char* pVehRsp = (char*)_AddressOfReturnAddress();
 		char* pFaultRspDbg = (char*)_pEp->ContextRecord->Rsp;
@@ -941,10 +963,10 @@ CO_VEH_PATH __declspec(noinline) LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp) n
 		if (pDbg != nullptr)
 		{
 			size_t remain = (size_t)(pVehRsp - pDbg->stack_.pGuardLimit_);
-			if (dispatchUsed > mgrDbg.vehStats_.maxDispatchUsed)
-				mgrDbg.vehStats_.maxDispatchUsed = dispatchUsed;
-			if (remain < mgrDbg.vehStats_.minRemain)
-				mgrDbg.vehStats_.minRemain = remain;
+			if (dispatchUsed > mgrDbg.vehStats_.maxDispatchUsed_)
+				mgrDbg.vehStats_.maxDispatchUsed_ = dispatchUsed;
+			if (remain < mgrDbg.vehStats_.minRemain_)
+				mgrDbg.vehStats_.minRemain_ = remain;
 		}
 	}
 #endif
@@ -978,30 +1000,29 @@ CO_VEH_PATH __declspec(noinline) LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp) n
 
 	// 4. 재진입: 바깥 호출이 가드존을 일괄 재설치하므로 실행만 재개한다.
 	// 2중 이상은 공간이 진짜 없다는 뜻이라 오버플로우로 확정한다.
-	CoVehScope scope(t_coVehDepth);
-	if (t_coVehDepth > 1)
+	CoVehScope scope(tls_coVehDepth);
+	if (tls_coVehDepth > 1)
 	{
-		if (t_coVehDepth > 2)
+		if (tls_coVehDepth > 2)
 			return CoConvertToOverflow(_pEp, pCtx);
 		return EXCEPTION_CONTINUE_EXECUTION;
 	}
 
 	// 5. 확장. 실패하면 오버플로우로 확정한다. (조용히 넘기면 다음 페이지에서 AV가 난다)
-	// [코루틴-03] TEB StackLimit 갱신은 ExpandStack 안에서 한다.
+	// TEB StackLimit 갱신은 ExpandStack 안에서 한다.
 	if (g_cCoMgr.ExpandStack(pCtx, pFaultAddr))
 		return EXCEPTION_CONTINUE_EXECUTION;
 	return CoConvertToOverflow(_pEp, pCtx);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// currentCtx_ 체인 관리 (CoOnBeforeLaunch/AfterLaunch 역할)
-//   [코루틴-11] 스위치 앞뒤 처리가 C++ 인라인 래퍼로 옮겨서 전용 함수는 삭제.
-//   currentCtx_/callerCtx_ 갱신은 헤더의 CoRun/CoResume/CoYield 래퍼에서 직접 한다.
+// currentCtx_ 체인 관리
+//   currentCtx_/pCallerCtx_ 갱신은 CoRun/CoResume/CoYield 래퍼에서 직접 한다.
 //////////////////////////////////////////////////////////////////////////////////////////
 #ifdef _DEBUG
-// [코루틴-15] 스레드 스택으로 돌아온 뒤 가드존이 살아있는지 확인한다.
+// 스레드 스택으로 돌아온 뒤 가드존이 살아있는지 확인한다.
 // - 가드 비트까지는 보지 않는다. 커널이 성장 과정에서 우리 가드를 조용히
-//   커밋해 버리기 때문이다. (실측) 커밋 자체가 풀렸으면 풀 관리 버그다.
+//   커밋해 버리기 때문이다. 커밋 자체가 풀렸으면 풀 관리 버그다.
 void CoMgr::VerifyGuardZone(const CoStack& _stack) noexcept
 {
 	if (_stack.pGuardLimit_ >= _stack.pStackLimit_)
@@ -1032,57 +1053,180 @@ bool CoValidateAddr(CoContext* _pCtx, char* _pAddr)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// [코루틴-05] CoResume 안전장치.
-// - 이전에는 null 검사만 하고 레지스터를 복원했으므로 다른 스레드에서 resume하거나
-//   이미 종료된 컨텍스트를 resume하면 정의되지 않은 곳으로 점프했다.
-// - 여기서 걸리면 nullptr이 반환되고 원인은 CoGetLastError()로 확인한다.
+// id 기반 실행 (검증 + 재개 + 시작 + 스코프 가드)
 //////////////////////////////////////////////////////////////////////////////////////////
-bool CoValidateResume(CoContext* _pCtx)
+// id로 재개 가능한지 검사한다. 검증 순서: 맵 미조회 → stale, 자기 자신 → invalid, csYield 아님 → invalid.
+// - 타 스레드 코루틴은 맵에 안 보이므로 stale로 보고된다. (잘못된 점프 방지는 동일)
+static bool CoLookupResumable(CoId _id, OUT CoContext** _pOut)
 {
-	if (_pCtx == nullptr)
+	CoContext* pCtx = nullptr;
+	if (!g_cCoMgr.TryFindContextById(_id, &pCtx) || pCtx == nullptr)
 	{
-		t_coLastError = coeInvalidCtx;
+		tls_coLastError = coeStaleHandle;
 		return false;
 	}
-	if (_pCtx->stack_.magic_ != CO_STACK_MAGIC)
-	{
-		t_coLastError = coeInvalidCtx;
-		return false;
-	}
-	if (_pCtx->threadId_ != GetCurrentThreadId())
-	{
-		t_coLastError = coeWrongThread;
-		return false;
-	}
-	if (_pCtx->state_ != csInit && _pCtx->state_ != csYield)
-	{
-		t_coLastError = coeInvalidState;
-		return false;
-	}
-	if (_pCtx == g_cCoMgr.GetCurrentCtx())
+	if (pCtx == g_cCoMgr.GetCurrentCtx())
 	{
 		// 자기 자신을 resume하면 자기 스택으로 재진입해 스택이 오염된다.
-		t_coLastError = coeInvalidState;
+		tls_coLastError = coeInvalidState;
 		return false;
 	}
-#ifdef _DEBUG
-	if (!g_cCoMgr.IsUsing(_pCtx))
+	if (pCtx->state_ != csYield)
 	{
-		t_coLastError = coeInvalidCtx;
+		tls_coLastError = coeInvalidState;
 		return false;
 	}
-#endif
+	if (_pOut != nullptr)
+		*_pOut = pCtx;
 	return true;
 }
 
-CoContext* CoResumeH(CoHandle _h)
+// 스위치 복귀 뒷처리. yield면 true, 종료면 정리 후 false를 돌려준다.
+// - 종료 시 보관 예외가 있으면 onException → 전역 → 보관 순으로 처리한다.
+//   핸들러에는 소유권을 넘겨 정확히 1회 전달하며, 호출은 스케줄러 스택에서 일어난다.
+static bool CoOnSwitchReturn(CoId _id, CoContext* _pCtx)
 {
-	if (!_h.IsAlive())
+	if (_pCtx->state_ != csEnd)
+		return true;
+
+	FnCoException onException = _pCtx->onException_;
+	g_cCoMgr.FreeCtx(_pCtx);
+
+	if (tls_coPendingException)
 	{
-		t_coLastError = coeStaleHandle;
-		return nullptr;
+		std::exception_ptr pending = tls_coPendingException;
+		if (onException != nullptr || tls_coGlobalExceptionHandler != nullptr)
+			tls_coPendingException = nullptr; // 소비형 전달. 핸들러 복귀 후 보관에 남기지 않음
+		if (onException != nullptr)
+			onException(_id, pending);
+		else if (tls_coGlobalExceptionHandler != nullptr)
+			tls_coGlobalExceptionHandler(_id, pending);
+		// 둘 다 없으면 보관 유지. CoTakePendingException()으로 꺼낸다.
 	}
-	return CoResume(_h.pCtx);
+	return false;
+}
+
+bool CoResume(CoId _id)
+{
+	CoContext* pCtx = nullptr;
+	if (!CoLookupResumable(_id, &pCtx))
+		return false;
+	CoMgr& mgr = g_cCoMgr;
+	pCtx->pCallerCtx_ = mgr.currentCtx_;
+	mgr.currentCtx_ = pCtx;
+	pCtx->state_ = csRun;
+	CoSwitchImpl(&pCtx->callerRegs_, &pCtx->regs_);
+	// 복귀: yield 또는 종료. 스케줄러 쪽 currentCtx_를 되돌린다.
+	mgr.currentCtx_ = pCtx->pCallerCtx_;
+#ifdef _DEBUG
+	CoMgr::VerifyGuardZone(pCtx->stack_);
+#endif
+	return CoOnSwitchReturn(_id, pCtx);
+}
+
+bool CoResume(CoId _id, _u64 _inSwitchData, _u64* _pOut)
+{
+	CoContext* pCtx = nullptr;
+	if (!CoLookupResumable(_id, &pCtx))
+	{
+		if (_pOut != nullptr)
+			*_pOut = 0;
+		return false;
+	}
+	pCtx->switchData_ = _inSwitchData;
+	CoMgr& mgr = g_cCoMgr;
+	pCtx->pCallerCtx_ = mgr.currentCtx_;
+	mgr.currentCtx_ = pCtx;
+	pCtx->state_ = csRun;
+	CoSwitchImpl(&pCtx->callerRegs_, &pCtx->regs_);
+	mgr.currentCtx_ = pCtx->pCallerCtx_;
+#ifdef _DEBUG
+	CoMgr::VerifyGuardZone(pCtx->stack_);
+#endif
+	bool alive = CoOnSwitchReturn(_id, pCtx);
+	if (_pOut != nullptr)
+		*_pOut = alive ? pCtx->switchData_ : 0;
+	return alive;
+}
+
+CoId CoRun(FnCoroutine _fn, const CoDesc& _desc)
+{
+	if (_fn == nullptr)
+	{
+		tls_coLastError = coeNullFunction;
+		return CO_INVALID_ID;
+	}
+
+	CoContext* pCtx = g_cCoMgr.AllocCtx(_desc.spec_.tier_, _desc.spec_.size_);
+	if (pCtx == nullptr)
+		return CO_INVALID_ID;
+
+	pCtx->state_    = csInit;
+	pCtx->fn_       = _fn;
+	pCtx->userData_ = _desc.userData_;
+	pCtx->onException_ = _desc.onException_;
+	CoId id = pCtx->id_;
+	if (_desc.ppOut_ != nullptr)
+		*_desc.ppOut_ = pCtx;
+
+	// TEB에 설치할 코루틴 스택 범위. (실제 교체는 CoSwitchImpl이 한다)
+	char* pBase = pCtx->stack_.pStackBase_;
+	pCtx->regs_.gs8_ = (_u64)pBase;
+	pCtx->regs_.gs16_ = (_u64)pCtx->stack_.pStackLimit_;
+	pCtx->regs_.gs1478_ = (_u64)pCtx->stack_.pEmergencyTop_;
+	// 부동소수점 제어 상태는 기본값으로 시작한다. (스레드값 상속 안 함)
+	// regs_는 InitCtx에서 {} 리셋되어 mxcsr_=0x1F80, fpucw_=0x027F임.
+	// thunk가 ctx를 찾을 통로. (thunk: mov rcx, rbp)
+	pCtx->regs_.rbp_ = (_u64)pCtx;
+	// 스택 준비: [base-8] = 0 (가짜 반환주소. 언와인더 종료),
+	// [base-16] = thunk 주소, [base-24] = 더미 (CoSwitchImpl의 pop rbx용).
+	*(void**)(pBase - 8) = nullptr;
+	*(void**)(pBase - 16) = (void*)&CoEntryThunk;
+	*(void**)(pBase - 24) = nullptr;
+	pCtx->regs_.rsp_ = (_u64)(pBase - 24);
+
+	CoMgr& mgr = g_cCoMgr;
+	CoContext* pParent = mgr.currentCtx_;
+	pCtx->pCallerCtx_ = pParent;
+	mgr.currentCtx_ = pCtx;
+	pCtx->state_ = csRun;
+	CoSwitchImpl(&pCtx->callerRegs_, &pCtx->regs_);
+	mgr.currentCtx_ = pParent;
+#ifdef _DEBUG
+	CoMgr::VerifyGuardZone(pCtx->stack_);
+#endif
+	if (pCtx->state_ != csEnd)
+		return id;
+	return CoOnSwitchReturn(id, pCtx) ? id : CO_INVALID_ID;
+}
+
+CoScope::~CoScope()
+{
+	CoContext* pCtx = nullptr;
+	if (!g_cCoMgr.TryFindContextById(id_, &pCtx) || pCtx == nullptr)
+	{
+		id_ = CO_INVALID_ID;
+		return;
+	}
+#ifdef _DEBUG
+	if (rule_ == CoScopeRule::CancelAssert)
+		jc_assert_msg(false, _T("CoScope: 명시 종료 없이 소멸합니다. id: %llu"), id_);
+#endif
+	// 소멸 중 핸들러 재throw는 terminate된다. (noexcept 소멸자)
+	Cancel();
+}
+
+void CoScope::Cancel()
+{
+	CoContext* pCtx = nullptr;
+	if (!g_cCoMgr.TryFindContextById(id_, &pCtx) || pCtx == nullptr)
+	{
+		id_ = CO_INVALID_ID;
+		return;
+	}
+	pCtx->isCancelRequested_ = true;
+	while (CoResume(id_)) {}
+	id_ = CO_INVALID_ID;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -1092,8 +1236,7 @@ CoContext* CoAllocCtx(FnCoroutine _fn, CoStackTier _stackTier, _u32 _stackSize)
 {
 	if (_fn == nullptr)
 	{
-		// [코루틴-07] 실패 원인을 공개 에러 코드로 남긴다.
-		t_coLastError = coeNullFunction;
+		tls_coLastError = coeNullFunction;
 		return nullptr;
 	}
 
@@ -1101,12 +1244,8 @@ CoContext* CoAllocCtx(FnCoroutine _fn, CoStackTier _stackTier, _u32 _stackSize)
 	if (pCtx == nullptr)
 		return nullptr;
 
-	pCtx->threadId_ = GetCurrentThreadId();
 	pCtx->state_    = csInit;
 	pCtx->fn_       = _fn;
-	// [코루틴-14] CoRunU 핸드오프를 소비한다. (1회성. plain CoRun이면 null)
-	pCtx->userData_ = t_coStartUserData;
-	t_coStartUserData = nullptr;
 	return pCtx;
 }
 
@@ -1118,59 +1257,61 @@ void CoFreeCtx(CoContext* _ctx)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// [코루틴-01] 코루틴 진입점. asm이 fn_ 대신 이 함수로 점프한다.
+// 코루틴 진입점. asm이 fn_ 대신 이 함수로 점프한다.
 // - fn에서 빠져나온 C++ 예외를 코루틴 스택에서 잡아 두고,
 //   스케줄러 스택으로 돌아간 뒤 CoTakePendingException으로 다시 던진다.
 // - 받을 사람 없는 스택 밖으로 예외가 전파되면 언와인더가 트램폴린에서
-//   꼬여 프로세스가 죽으므로(또는 이상 종료) 여기서 반드시 끊는다.
+//   꼬여 프로세스가 죽으므로 여기서 반드시 끊는다.
 //////////////////////////////////////////////////////////////////////////////////////////
-static thread_local std::exception_ptr t_coPendingException;
-
 void CoEntry(CoContext* _pCtx) noexcept
 {
 	// 이전 보관분이 있으면 여기서 정리한다. (take 후 버리기를 잊은 경우)
-	// - 캡처와 take 사이에 사용자 코드가 끼지 않으므로 여기서 버려도 안전하다.
-	t_coPendingException = nullptr;
+#ifdef _DEBUG
+	if (tls_coPendingException)
+		jc_assert_msg(false, _T("CoEntry: 꺼내지 않은 보관 예외가 버려집니다."));
+#endif
+	tls_coPendingException = nullptr;
 	try
 	{
 		_pCtx->fn_(_pCtx);
 	}
 	catch (...)
 	{
-		t_coPendingException = std::current_exception();
-		t_coLastError = coeException;
+		tls_coPendingException = std::current_exception();
+		tls_coLastError = coeException;
 	}
-	// [코루틴-11] 종료는 스위치아웃이다. 트램폴린 대신 직접 스케줄러로 돌아간다.
+	// 종료는 스위치아웃이다. 직접 스케줄러로 돌아간다.
 	// - 스케줄러 쪽 래퍼가 csEnd를 보고 FreeCtx한다. 여기로 복귀하는 일은 없다.
 	_pCtx->state_ = csEnd;
-	CoSwitchImpl(&_pCtx->regs_, &_pCtx->schedRegs_);
+	CoSwitchImpl(&_pCtx->regs_, &_pCtx->callerRegs_);
 	jc_assert_msg(false, _T("CoEntry: 종료 스위치에서 복귀함"));
 	std::terminate();
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+// 보관 예외 수령 + 정리
+//////////////////////////////////////////////////////////////////////////////////////////
 bool CoTakePendingException()
 {
-	if (!t_coPendingException)
+	if (!tls_coPendingException)
 		return false;
 	// 예외 자체가 보고서이므로 에러 코드는 지운다.
-	t_coLastError = coeNone;
+	tls_coLastError = coeNone;
 	// 보관 소유권을 유지한 채 던진다.
 	// - 풀어버리면 unwind 중 마지막 소유자가 사라져 객체가 유실되므로
 	//   catch가 끝난 뒤 CoClearPendingException()으로 버릴 것.
-	std::rethrow_exception(t_coPendingException);
+	std::rethrow_exception(tls_coPendingException);
 	return true;
 }
 
 void CoClearPendingException()
 {
-	t_coPendingException = nullptr;
-	t_coLastError = coeNone;
+	tls_coPendingException = nullptr;
+	tls_coLastError = coeNone;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// [코루틴-04] 오버플로우 복구 + 표시.
-// - 이전에는 오버플로우 가드를 치는 순간 디스패치 공간이 없어 이중 폴트로
-//   프로세스가 강제 종료됐고, 잡을 방법도 되돌릴 방법도 없었다.
+// 오버플로우 복구 + 표시.
 // - 비상 밴드(미리 RW 커밋)가 있어 __except 핸들러까지는 도달한다.
 //   거기서 CoNoteStackOverflow()로 표시하고, 계속 쓰려면 CoResetStackOverflow()로
 //   가드존을 다시 세운다. (스택 위 객체는 망가졌을 수 있어 종료를 권장)

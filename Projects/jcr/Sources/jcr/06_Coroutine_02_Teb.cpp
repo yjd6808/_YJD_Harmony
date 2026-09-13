@@ -1,10 +1,10 @@
 #include "Core.h"
 #include <intrin.h>
 
-// [코루틴-02] TEB 스택 범위 예제. (B안: DeallocationStack은 교체하지 않음)
-// - 이 변경점이 없으면: StackBase/Limit만 바뀌어 CRT·언와인더·디버거가 보는
-//   범위가 어긋났다. DeallocationStack까지 교체하면 커널이 가드 폴트를 직접
-//   확장해 VEH가 안 불리므로(실측 확인) 스레드 원본을 둔다.
+// TEB 스택 범위 예제. (DeallocationStack은 교체하지 않음)
+// - StackBase/Limit이 바뀌면 CRT·언와인더·디버거가 보는 범위가 어긋난다.
+//   DeallocationStack까지 교체하면 커널이 가드 폴트를 직접 확장해 VEH가 안 불리므로
+//   스레드 원본을 둔다.
 static void PrintSection02(const _char* _pName)
 {
 	Console::WriteLine(ConsoleColor::Yellow,
@@ -33,9 +33,8 @@ static void Run_Co02_Teb()
 {
 	PrintSection02(_T("CO02: 코루틴 안에서 보는 TEB 범위"));
 
-	CoContext* pCtx = CoRun(fn_Co02_ReadTeb, cstMid);
-	while (pCtx)
-		pCtx = CoResume(pCtx);
+	CoId id = CoRun(fn_Co02_ReadTeb);
+	while (CoResume(id)) {}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

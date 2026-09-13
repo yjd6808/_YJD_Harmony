@@ -6,10 +6,10 @@
 ; - Windows x64 callee-saved 레지스터 전부 저장/복원
 ; ========================================================================
 
-; [코루틴-09/11] 코루틴에 필요한 것만 직접 선언한다.
+; 코루틴에 필요한 것만 직접 선언한다.
 ; - CoRun/CoYield/CoResume은 C++ 인라인 래퍼로 옮겨서 asm 진입점이 아니다.
 OPTION CASEMAP: NONE
-extern CoEntry          : proc      ; [코루틴-01] 코루틴 진입점
+extern CoEntry          : proc      ; 코루틴 진입점
 
 ; TEB 오프셋 (참고용)
 TEB_DEALLOCATION_STACK EQU 1478h
@@ -34,18 +34,18 @@ csEnd                EQU 3
 ; ============================================================
 CoStack struct 8
     size_        DWORD   ?
-    _pad0_       DWORD   ?
+    pad0_        DWORD   ?
     pStackBase_  QWORD   ?
     pStackEnd_   QWORD   ?
     pStackLimit_ QWORD   ?
     pGuardLimit_ QWORD   ?
     stackTier_   DWORD   ?
-    _pad1_       DWORD   ?
-    magic_       QWORD   ?           ; [코루틴-05] 스택 식별 매직 (C++ CoStack과 순서/크기 일치)
-    pEmergencyTop_ QWORD ?           ; [코루틴-04] 비상 밴드 상단 (C++와 일치)
-    pReserveBase_ QWORD  ?           ; [코루틴-04] 예약 시작 주소 (C++와 일치)
-    overflowed_  BYTE    ?           ; [코루틴-04] 오버플로우 처리 여부 (C++와 일치)
-    _pad2_       BYTE    7 dup(?)
+    pad1_        DWORD   ?
+    magic_       QWORD   ?
+    pEmergencyTop_ QWORD ?           ; 비상 밴드 상단 (C++와 일치)
+    pReserveBase_ QWORD  ?           ; 예약 시작 주소 (C++와 일치)
+    overflowed_  BYTE    ?           ; 오버플로우 처리 여부 (C++와 일치)
+    pad2_        BYTE    7 dup(?)
     pCommitLow_  QWORD   ?
 CoStack ends
 
@@ -68,7 +68,7 @@ CoRegs struct 8
 
     gs8_    QWORD   ?           ; offset  24  TEB StackBase:  0x8
     gs16_   QWORD   ?           ; offset  32  TEB StackLimit: 0x10
-    gs1478_ QWORD   ?           ; offset  40  TEB DeallocationStack: 0x1478 [코루틴-02/04]
+    gs1478_ QWORD   ?           ; offset  40  TEB DeallocationStack: 0x1478
 
     ; Windows x64 callee-saved 정수 레지스터
     rsi_    QWORD   ?           ; offset  48
@@ -78,11 +78,11 @@ CoRegs struct 8
     r14_    QWORD   ?           ; offset  80
     r15_    QWORD   ?           ; offset  88
 
-    ; [코루틴-08] 부동소수점 제어 상태 (C++ CoRegs와 순서/크기 일치)
+    ; 부동소수점 제어 상태 (C++ CoRegs와 순서/크기 일치)
     mxcsr_  DWORD   ?           ; offset  96
     fpucw_  WORD    ?           ; offset 100
-    _padFp_ WORD    ?           ; offset 102
-    _padAlign_ BYTE 8 dup(?)    ; offset 104  [코루틴-10] XMM 16 정렬 패딩
+    padFp_  WORD    ?           ; offset 102
+    padAlign_ BYTE 8 dup(?)     ; offset 104  XMM 16 정렬 패딩
 
     ; Windows x64 callee-saved XMM 레지스터 (16 bytes each, 16-byte aligned)
     xmm6_   BYTE    16 dup(?)   ; offset 112
@@ -126,38 +126,35 @@ OFFSET_COREGS_XMM15 EQU CoRegs.xmm15_
 
 ; ============================================================
 CoContext struct 8
-    id_         DWORD   ?
-    threadId_   DWORD   ?
-    generation_ DWORD   ?           ; [코루틴-05] 세대 번호 (C++ CoContext와 순서/크기 일치)
-    _padGen_    DWORD   ?
+    id_         QWORD   ?
+    pad0_       QWORD   ?           ; regs_ 16 정렬 유지용 (C++와 일치)
     regs_       CoRegs  <>
     stack_      CoStack <>
     state_      DWORD   ?
-    _pad0_      DWORD   ?
+    pad1_       DWORD   ?
     fn_         QWORD   ?
-    callerCtx_  QWORD   ?
-    userData_   QWORD   ?           ; [코루틴-14] 사용자 포인터 (C++와 일치. asm은 안 씀)
-    transfer_   QWORD   ?           ; [코루틴-14] 값 채널 (C++와 일치. asm은 안 씀)
-    cancelRequested_ BYTE ?         ; [코루틴-14] 취소 요청 (C++와 일치. asm은 안 씀)
-    _padEnd_    BYTE    7 dup(?)    ; + 취소 패딩 (C++와 일치)
-    schedRegs_  CoRegs  <>          ; [코루틴-11] 스케줄러 레지스터 (C++와 일치)
+    pCallerCtx_ QWORD   ?
+    userData_   QWORD   ?           ; 사용자 컨텍스트 (C++와 일치. asm은 안 씀)
+    switchData_ QWORD   ?           ; 스위치 왕복 값 (C++와 일치. asm은 안 씀)
+    callerRegs_ CoRegs  <>          ; 호출자 레지스터 (C++와 일치. asm은 안 씀)
+    isCancelRequested_ BYTE ?       ; 협력적 취소 요청 (C++와 일치. asm은 안 씀)
+    padCancel_  BYTE    7 dup(?)
+    onException_ QWORD  ?           ; 예외 콜백 (C++와 일치. asm은 안 씀)
 CoContext ends
 
 OFFSET_COCTX_ID       EQU CoContext.id_
-OFFSET_COCTX_THREADID EQU CoContext.threadId_
-OFFSET_COCTX_GEN      EQU CoContext.generation_
 OFFSET_COCTX_REGS     EQU CoContext.regs_
 OFFSET_COCTX_STACK    EQU CoContext.stack_
 OFFSET_COCTX_STATE    EQU CoContext.state_
 OFFSET_COCTX_FN       EQU CoContext.fn_
-OFFSET_COCTX_CALLER   EQU CoContext.callerCtx_
-OFFSET_COCTX_SCHEDREGS EQU CoContext.schedRegs_
+OFFSET_COCTX_CALLER   EQU CoContext.pCallerCtx_
+OFFSET_COCTX_CALLERREGS EQU CoContext.callerRegs_
 
 code
 
 ; ============================================================
 ; CoSwitchImpl
-;   [코루틴-11] 유일한 asm 진입점. 순수 레지스터 교체 (분기 없음, 호출 없음)
+;   유일한 asm 진입점. 순수 레지스터 교체 (분기 없음, 호출 없음)
 ;   - rcx = 저장할 CoRegs*, rdx = 읽을 const CoRegs*
 ;   - 현재 레지스터를 save에 저장하고 load에서 복원한 뒤 ret로 복귀한다.
 ;   - rbx는 스택에 잠시 얹는다. (양쪽 스택이 각자 보관. ctx 필드 불필요)
@@ -227,7 +224,7 @@ CoSwitchImpl endp
 
 ; ============================================================
 ; CoEntryThunk
-;   [코루틴-11] 첫 진입 thunk. regs_.rbp_ = ctx 규약으로 CoEntry를 호출한다.
+;   첫 진입 thunk. regs_.rbp_ = ctx 규약으로 CoEntry를 호출한다.
 ;   - CoRun 준비: RSP = pStackBase_-16, [base-16] = thunk 주소, [base-8] = 0.
 ;   - ret로 진입하면 RSP = base-8 (8 mod 16, call 규약 OK).
 ;   - .allocstack 40 뒤 반환주소는 [base-8] = 0이라 언와인더가 멈춘다. (01 유지)

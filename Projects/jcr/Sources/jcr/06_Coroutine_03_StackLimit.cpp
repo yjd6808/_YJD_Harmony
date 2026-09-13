@@ -1,9 +1,9 @@
 #include "Core.h"
 #include <intrin.h>
 
-// [코루틴-03] 확장 후 TEB StackLimit 동기화 예제.
-// - 이 변경점이 없으면: 확장 뒤 gs:[16]이 그대로라 확장된 영역에서 예외를
-//   던지면 SEH가 스택 범위를 벗어났다고 보고 프로세스를 죽였다.
+// 확장 후 TEB StackLimit 동기화 예제.
+// - 확장 뒤 gs:[16]이 그대로면 확장된 영역에서 던진 예외를 SEH가
+//   스택 범위 밖으로 보고 프로세스를 죽인다.
 // - 한계 동기화는 yield 시점에 살아있는 TEB 값을 기준으로 맞춘다.
 static void PrintSection03(const _char* _pName)
 {
@@ -43,9 +43,8 @@ static void Test_Co03_GrowThrow()
 {
 	PrintSection03(_T("CO03: 16KB 확장 후 throw/catch + 한계 동기화"));
 
-	CoContext* pCtx = CoRun(fn_Co03_GrowThrow, cstMid);
-	while (pCtx)
-		pCtx = CoResume(pCtx);
+	CoId id = CoRun(fn_Co03_GrowThrow);
+	while (CoResume(id)) {}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
