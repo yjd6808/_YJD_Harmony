@@ -63,14 +63,14 @@ void BlendState_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
+		jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
 		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -78,11 +78,11 @@ void BlendState_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
-	g_cResourceMgr.Finalize();
-	device.Finalize();
-	window.Destroy();
-	return;
+		jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
+		g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
 	}
 
 	// 2. 부드러운 흰색 원 텍스처 (색은 정점 색으로 입힌다 -> 텍스처 하나로 재활용)
@@ -93,7 +93,7 @@ void BlendState_Main()
 	if (!texture.CreateFromMemory(&device, s_Pixels, 128, 128))
 	{
 		jc::Console::WriteLine(_T("텍스처 생성 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -107,9 +107,9 @@ void BlendState_Main()
 	IndexBuffer ib;
 	if (!vb.Create(&device, vertices, 4, VertexPTC::Decl()) ||	// bDynamic = true!
 		!ib.Create(&device, indices, 6))
-		{
+	{
 		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -122,7 +122,7 @@ void BlendState_Main()
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY)
 	{
 		jc::Console::WriteLine(_T("셰이더 컴파일 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -188,16 +188,16 @@ void BlendState_Main()
 			device.Context().SetBlend(_mode);
 			for (_s32 c = 0; c < 3; ++c)
 			{
-			// 각 원의 중심: 반지름 0.15짜리 궤도를 도는 위치 (서로 120도 차이)
-			const _f32 angle = elapsed * 0.8f + jc_math_pi2 * c / 3.0f;
-			const vec2 center(_groupCenter.x + cosf(angle) * 0.15f, _groupCenter.y + sinf(angle) * 0.15f);
+				// 각 원의 중심: 반지름 0.15짜리 궤도를 도는 위치 (서로 120도 차이)
+				const _f32 angle = elapsed * 0.8f + jc_math_pi2 * c / 3.0f;
+				const vec2 center(_groupCenter.x + cosf(angle) * 0.15f, _groupCenter.y + sinf(angle) * 0.15f);
 
-			FillQuadVertices(vertices, center, 0.28f, circleColors[c]);
-			vb.Update(device.Context(), vertices, 4);	// 동적 버퍼 갱신
+				FillQuadVertices(vertices, center, 0.28f, circleColors[c]);
+				vb.Update(device.Context(), vertices, 4);	// 동적 버퍼 갱신
 
-			vb.Bind(device.Context());
-			ib.Bind(device.Context());
-			device.Context().DrawIndexed(6, 0, 0);
+				vb.Bind(device.Context());
+				ib.Bind(device.Context());
+				device.Context().DrawIndexed(6, 0, 0);
 			}
 		};
 

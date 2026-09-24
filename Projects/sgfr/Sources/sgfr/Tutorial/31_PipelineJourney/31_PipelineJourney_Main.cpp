@@ -34,12 +34,12 @@ namespace
 		{
 			for (_s32 x = 0; x < _width; ++x)
 			{
-			const bool bLight = (((x / 8) + (y / 8)) % 2) == 0;
-			_u8* pPixel = _pOutPixels + (y * _width + x) * 4;
-			pPixel[0] = bLight ? 180 : 60;
-			pPixel[1] = bLight ? 180 : 60;
-			pPixel[2] = bLight ? 200 : 90;
-			pPixel[3] = 255;
+				const bool bLight = (((x / 8) + (y / 8)) % 2) == 0;
+				_u8* pPixel = _pOutPixels + (y * _width + x) * 4;
+				pPixel[0] = bLight ? 180 : 60;
+				pPixel[1] = bLight ? 180 : 60;
+				pPixel[2] = bLight ? 200 : 90;
+				pPixel[3] = 255;
 			}
 		}
 	}
@@ -67,16 +67,16 @@ void PipelineJourney_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
+		jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
-	device.Finalize();
-	window.Destroy();
-	return;
+		jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
+		device.Finalize();
+		window.Destroy();
+		return;
 	}
 	GraphicContext& context = device.Context();
 

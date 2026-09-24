@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Sources\sgf_gtest\GraphicsEnumsTest.cpp" />
+    <ClCompile Include="..\Sources\sgf_gtest\TransformTest.cpp" />
+    <ClCompile Include="..\Sources\sgf_gtest\PrimitiveBuilderTest.cpp" />
+    <ClCompile Include="..\Sources\sgf_gtest\PCH\Core.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\sgf_gtest\PCH\Core.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{80a5ce19-c26c-4777-a2cc-d2ef50485e33}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

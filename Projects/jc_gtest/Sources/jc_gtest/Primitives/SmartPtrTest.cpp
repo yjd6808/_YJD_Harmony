@@ -417,7 +417,7 @@ TEST(SharedPtr, MakeSharedFromThis) {
 		LeakCheck;
 		WeakPtr<IRunnable> wp;
 		{
-			auto p = new MyThread;
+			auto p = dbg_new MyThread;
 			SharedPtr<IRunnable> sp(p); // 제대로 m_pWeak 초기화 되는지
 			wp = sp;
 			{

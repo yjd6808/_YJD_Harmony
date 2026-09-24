@@ -112,7 +112,19 @@
     <Filter Include="02. Practice">
       <UniqueIdentifier>{915FB8D5-0E16-42EA-858F-3FDEC1BD589E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. Practice\01. 렌더링 파이프라인">
+    <Filter Include="02. Practice\01. 2D 씬 템플릿">
+      <UniqueIdentifier>{31DD90C5-2B84-4119-A046-836DB2CB8734}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Practice\02. 3D 씬 템플릿">
+      <UniqueIdentifier>{0A7061DB-94B0-4D95-B9C7-F92DD3A2132A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Practice\03. 2D 씬 연습">
+      <UniqueIdentifier>{5B1A9A46-2D26-4876-811E-948BF8DB1403}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Practice\04. 3D 씬 연습">
+      <UniqueIdentifier>{37166901-6AA6-424E-968A-456FB7536E72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Practice\05. 렌더링 파이프라인">
       <UniqueIdentifier>{D4A56191-650F-4FDE-B9A1-830C3CFA5005}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -288,8 +300,20 @@
     <ClCompile Include="..\Sources\sgfr\Tutorial\10_WorldTransform\10_WorldTransform_Main.cpp">
       <Filter>01. Tutorial\10_월드_변환</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgfr\Practice\01_RenderingPipeline\01_RenderingPipeline_Main.cpp">
-      <Filter>02. Practice\01. 렌더링 파이프라인</Filter>
+    <ClCompile Include="..\Sources\sgfr\Practice\01_2DSceneTemplate\01_2DSceneTemplate_Main.cpp">
+      <Filter>02. Practice\01. 2D 씬 템플릿</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\Practice\02_3DSceneTemplate\02_3DSceneTemplate_Main.cpp">
+      <Filter>02. Practice\02. 3D 씬 템플릿</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\Practice\03_2DScenePractice\03_2DScenePractice_Main.cpp">
+      <Filter>02. Practice\03. 2D 씬 연습</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\Practice\04_3DScenePractice\04_3DScenePractice_Main.cpp">
+      <Filter>02. Practice\04. 3D 씬 연습</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\Practice\05_RenderingPipeline\05_RenderingPipeline_Main.cpp">
+      <Filter>02. Practice\05. 렌더링 파이프라인</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgfr\Practice\PracticeRegistry.cpp">
       <Filter>02. Practice</Filter>
@@ -474,8 +498,20 @@
     <ClInclude Include="..\Sources\sgfr\Tutorial\10_WorldTransform\10_WorldTransform_Function.h">
       <Filter>01. Tutorial\10_월드_변환</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgfr\Practice\01_RenderingPipeline\01_RenderingPipeline_Main.h">
-      <Filter>02. Practice\01. 렌더링 파이프라인</Filter>
+    <ClInclude Include="..\Sources\sgfr\Practice\01_2DSceneTemplate\01_2DSceneTemplate_Main.h">
+      <Filter>02. Practice\01. 2D 씬 템플릿</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\Practice\02_3DSceneTemplate\02_3DSceneTemplate_Main.h">
+      <Filter>02. Practice\02. 3D 씬 템플릿</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\Practice\03_2DScenePractice\03_2DScenePractice_Main.h">
+      <Filter>02. Practice\03. 2D 씬 연습</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\Practice\04_3DScenePractice\04_3DScenePractice_Main.h">
+      <Filter>02. Practice\04. 3D 씬 연습</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\Practice\05_RenderingPipeline\05_RenderingPipeline_Main.h">
+      <Filter>02. Practice\05. 렌더링 파이프라인</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgfr\Practice\PracticeRegistry.h">
       <Filter>02. Practice</Filter>

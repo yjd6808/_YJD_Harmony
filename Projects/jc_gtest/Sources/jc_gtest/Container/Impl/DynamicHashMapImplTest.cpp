@@ -39,7 +39,7 @@ public:
 	int Count;
 
 	Bucket() {
-		TNode* pDummy = new TNode;
+		TNode* pDummy = dbg_new TNode;
 
 		Head = pDummy;
 		Tail = pDummy;
@@ -62,7 +62,7 @@ public:
 
 	template <typename KeyType, typename ValueType>
 	void Add(KeyType&& key, ValueType&& val) {
-		TNode* pNewNode = new TNode;
+		TNode* pNewNode = dbg_new TNode;
 		pNewNode->Key = Forward<KeyType>(key);
 		pNewNode->Value = Forward<ValueType>(val);
 
@@ -147,7 +147,7 @@ private:
 	static constexpr _u32	ms_iTableDefaultCapacity = 16;	// 테이블 초기 크기
 public:
 	HashMap(int capacity = ms_iTableDefaultCapacity) {
-		m_Table = new TBucket[capacity];
+		m_Table = dbg_new TBucket[capacity];
 		m_iSize = 0;
 		m_iCapacity = capacity;
 		m_iMask = capacity - 1;
@@ -201,7 +201,7 @@ public:
 	}
 
 	void Resize(const int capacity) {
-		TBucket* pNewTable = new TBucket[capacity];
+		TBucket* pNewTable = dbg_new TBucket[capacity];
 		int iPrevCapacity = m_iCapacity;
 		
 		m_iCapacity = capacity;

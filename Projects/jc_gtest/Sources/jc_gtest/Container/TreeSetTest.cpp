@@ -210,7 +210,7 @@ TEST(TreeSetTest, Sort) {
 
 TEST(TreeSetTest, Pointer) {
 	LeakCheck;	// 릭이 없어야함.
-	int* ptr = new int;
+	int* ptr = dbg_new int;
 	TreeSet<int*> testSet1;
 	EXPECT_TRUE(testSet1.Insert(ptr));
 	EXPECT_FALSE(testSet1.Insert(ptr));

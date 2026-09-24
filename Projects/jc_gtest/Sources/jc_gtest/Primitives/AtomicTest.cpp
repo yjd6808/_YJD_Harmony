@@ -118,7 +118,7 @@ TEST(AtomicTest, bool) {
 
 
 TEST(AtomicTest, Pointer) {
-    int* orignal = new int{5};
+    int* orignal = dbg_new int{5};
     void* base = orignal;
 
     Atomic<void*> a1(orignal);

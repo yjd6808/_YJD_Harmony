@@ -80,14 +80,14 @@ void MeshAndTopology_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
+		jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
 		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -95,11 +95,11 @@ void MeshAndTopology_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
-	g_cResourceMgr.Finalize();
-	device.Finalize();
-	window.Destroy();
-	return;
+		jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
+		g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
 	}
 
 	GraphicContext& context = device.Context();
@@ -111,7 +111,7 @@ void MeshAndTopology_Main()
 		!ps.InitializeFromSource(&device, jc::StringConvert::FromUtf8(PASSTHROUGH_SHADER_SOURCE)))
 	{
 		jc::Console::WriteLine(_T("셰이더 컴파일 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -137,7 +137,7 @@ void MeshAndTopology_Main()
 	if (!mesh.Initialize(&device, vertices, 6, VertexPTC::Decl()))
 	{
 		jc::Console::WriteLine(_T("메시 생성 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;

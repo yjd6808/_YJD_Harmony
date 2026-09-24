@@ -85,14 +85,14 @@ void ShadowMapping_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
+		jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
 		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -100,11 +100,11 @@ void ShadowMapping_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
-	g_cResourceMgr.Finalize();
-	device.Finalize();
-	window.Destroy();
-	return;
+		jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
+		g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
 	}
 
 	// 2. 그림자 맵: 색 없이 깊이만 담는 1024x1024 렌더 타깃
@@ -113,7 +113,7 @@ void ShadowMapping_Main()
 	if (!shadowMap.CreateDepthOnly(&device, 1024, 1024))
 	{
 		jc::Console::WriteLine(_T("그림자 맵 생성 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -136,9 +136,9 @@ void ShadowMapping_Main()
 		!planeIb.Create(&device, planeIndices, 6) ||
 		!cubeVb.Create(&device, cubeVertices, 24, VertexPNT::Decl()) ||
 		!cubeIb.Create(&device, cubeIndices, 36))
-		{
+	{
 		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -154,9 +154,9 @@ void ShadowMapping_Main()
 	ConstantBuffer<CbScene> cbScene;
 	ConstantBuffer<CbLight> cbLight;
 	if (vsDepthShader == INVALID_RESOURCE_KEY || psDepthShader == INVALID_RESOURCE_KEY || vsSceneShader == INVALID_RESOURCE_KEY || psSceneShader == INVALID_RESOURCE_KEY || !cbDepth.Create(&device) || !cbScene.Create(&device) || !cbLight.Create(&device))
-		{
+	{
 		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;

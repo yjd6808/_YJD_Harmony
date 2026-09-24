@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{046a54bd-3ab8-4a99-abc7-6da2957214b1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Sources\sgf_gbench\TransformBench.cpp" />
+    <ClCompile Include="..\Sources\sgf_gbench\PrimitiveBuilderBench.cpp" />
+    <ClCompile Include="..\Sources\sgf_gbench\PCH\Core.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\sgf_gbench\PCH\Core.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -76,14 +76,14 @@ void PostProcess_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
+		jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
 		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -91,11 +91,11 @@ void PostProcess_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
-	g_cResourceMgr.Finalize();
-	device.Finalize();
-	window.Destroy();
-	return;
+		jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
+		g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
 	}
 
 	// 2. 화면과 같은 크기의 렌더 타깃: 장면이 먼저 여기에 그려진다.
@@ -103,7 +103,7 @@ void PostProcess_Main()
 	if (!sceneTarget.Create(&device, window.Width(), window.Height()))
 	{
 		jc::Console::WriteLine(_T("렌더 타깃 생성 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -126,9 +126,9 @@ void PostProcess_Main()
 		!cubeIb.Create(&device, cubeIndices, 36) ||
 		!quadVb.Create(&device, quadVertices, 4, VertexPTC::Decl()) ||
 		!quadIb.Create(&device, quadIndices, 6))
-		{
+	{
 		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -144,9 +144,9 @@ void PostProcess_Main()
 	ConstantBuffer<CbPost> cbPost;
 	if (vsSceneShader == INVALID_RESOURCE_KEY || psSceneShader == INVALID_RESOURCE_KEY || vsPostShader == INVALID_RESOURCE_KEY || psPostShader == INVALID_RESOURCE_KEY || !cbTransform.Create(&device) ||
 		!cbPost.Create(&device))
-		{
+	{
 		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -189,13 +189,13 @@ void PostProcess_Main()
 			// '0'~'5' 숫자 키: 문자 코드와 가상 키 코드가 같다.
 			if (input.IsKeyPressed('0' + k))
 			{
-			effectMode = k;
-			bChanged = true;
+				effectMode = k;
+				bChanged = true;
 			}
 		}
 
 		// 경계 슬라이더: 누르고 있는 동안 부드럽게 이동 (IsKeyDown)
-		if (input.IsKeyDown(VK_LEFT))  { split = Clamp(split - 0.4f * dt, 0.02f, 0.98f); bChanged = true; }
+		if (input.IsKeyDown(VK_LEFT)) { split = Clamp(split - 0.4f * dt, 0.02f, 0.98f); bChanged = true; }
 		if (input.IsKeyDown(VK_RIGHT)) { split = Clamp(split + 0.4f * dt, 0.02f, 0.98f); bChanged = true; }
 		if (bChanged)
 		{

@@ -107,14 +107,14 @@ void ShaderStagesAndConstants_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
+		jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
 		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -122,11 +122,11 @@ void ShaderStagesAndConstants_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
-	g_cResourceMgr.Finalize();
-	device.Finalize();
-	window.Destroy();
-	return;
+		jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
+		g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
 	}
 
 	GraphicContext& context = device.Context();
@@ -138,7 +138,7 @@ void ShaderStagesAndConstants_Main()
 		!ps.InitializeFromSource(&device, jc::StringConvert::FromUtf8(STAGE_DEMO_SHADER_SOURCE)))
 	{
 		jc::Console::WriteLine(_T("셰이더 컴파일 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -147,8 +147,8 @@ void ShaderStagesAndConstants_Main()
 	const VertexPTC vertices[4] =
 	{
 		{ vec3(-0.25f,  0.25f, 0.0f), vec2(0.0f, 0.0f), color(0xFF, 0xFF, 0xFF, 0xFF) },
-		{ vec3( 0.25f,  0.25f, 0.0f), vec2(1.0f, 0.0f), color(0xFF, 0xFF, 0xFF, 0xFF) },
-		{ vec3( 0.25f, -0.25f, 0.0f), vec2(1.0f, 1.0f), color(0x99, 0x99, 0x99, 0xFF) },
+		{ vec3(0.25f,  0.25f, 0.0f), vec2(1.0f, 0.0f), color(0xFF, 0xFF, 0xFF, 0xFF) },
+		{ vec3(0.25f, -0.25f, 0.0f), vec2(1.0f, 1.0f), color(0x99, 0x99, 0x99, 0xFF) },
 		{ vec3(-0.25f, -0.25f, 0.0f), vec2(0.0f, 1.0f), color(0x99, 0x99, 0x99, 0xFF) },
 	};
 	const _u32 indices[6] = { 0, 1, 2, 0, 2, 3 };
@@ -158,7 +158,7 @@ void ShaderStagesAndConstants_Main()
 	if (!quad.Initialize(&device, vertices, 4, VertexPTC::Decl()))
 	{
 		jc::Console::WriteLine(_T("메시 생성 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -170,7 +170,7 @@ void ShaderStagesAndConstants_Main()
 	if (!frameCb.Create(&device) || !objectCb.Create(&device))
 	{
 		jc::Console::WriteLine(_T("상수버퍼 생성 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;

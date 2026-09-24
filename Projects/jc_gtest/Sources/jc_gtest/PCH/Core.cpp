@@ -23,7 +23,7 @@ int R(int _min, int _max)
 
 TEST(JCoreTest, DeleteSafe) 
 {
-	int* szAlloc = new int;
+	int* szAlloc = dbg_new int;
 	*szAlloc = 20;
 	JC_DELETE_SAFE(szAlloc);
 	EXPECT_TRUE(szAlloc == NULL);
@@ -31,7 +31,7 @@ TEST(JCoreTest, DeleteSafe)
 
 TEST(JCoreTest, DeleteArraySafe) 
 {
-	int* szAlloc = new int[512];
+	int* szAlloc = dbg_new int[512];
 	JC_DELETE_ARRAY_SAFE(szAlloc);
 	EXPECT_TRUE(szAlloc == NULL);
 }

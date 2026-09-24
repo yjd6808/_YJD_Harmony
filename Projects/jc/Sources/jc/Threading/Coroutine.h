@@ -314,7 +314,6 @@ public:
 	CoContext*	FindContextById(CoId _id);
 	bool		TryFindContextByBase(char* _pBase, OUT CoContext** _pOut);
 	bool		TryFindContextByAddr(char* _pAddr, OUT CoContext** _pOut);
-	bool		TryFindContextById(CoId _id, OUT CoContext** _pOut);
 
 	// ── Stack 레벨 (CoStack* 직접 접근이 필요한 경우) ─────────────────────────
 	CoStack*	FindStackByBase(char* _pBase);
@@ -567,10 +566,6 @@ public:
 
 	CoId Id() const { return id_; }
 	bool Resume() { return CoResume(id_); }
-
-	// yield 상태 코루틴을 끝까지 돌려 정리한다.
-	// - 스택 위 C++ 객체는 정상 복귀 경로로 소멸한다. fn이 CoCancelRequested()를 보고
-	//   직접 return하는 협력적 취소를 권장한다.
 	void Cancel();
 };
 

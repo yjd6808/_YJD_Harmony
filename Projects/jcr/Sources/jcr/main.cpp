@@ -36,6 +36,8 @@ int main(int _argc, char** _argv)
 	InitializeJCore(0, nullptr);
 	InitializeDefaultLogger();
 
+	int a  = Console::GetOutputCodePage();
+
 	// ====================================================
 	// 메뉴 옵션 설정
 	// ====================================================

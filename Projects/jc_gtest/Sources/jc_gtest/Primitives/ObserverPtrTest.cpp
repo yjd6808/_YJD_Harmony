@@ -17,7 +17,7 @@ using namespace std;
 // 보이드 타입의 포인터 테스트
 TEST(ObserverPtrTest, VoidOwner_VoidWatcher) {
 	LeakCheck;
-	int* pNew = new int(1000);
+	int* pNew = dbg_new int(1000);
 	CVoidOwner owner(pNew);
 
 	*owner.Get<int*>() = 300;			// 값 수정

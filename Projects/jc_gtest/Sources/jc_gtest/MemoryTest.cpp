@@ -56,7 +56,7 @@ TEST(MemoryTest, AssemblyTest) {
 
 TEST(MemoryTest, MemoryCopy) {
 
-	int* c = new int[4];
+	int* c = dbg_new int[4];
 	const int d[4] = { 0, 1, 2, 3};
 
 	Memory::Copy(c, sizeof(int) * 4, d, sizeof(d));
@@ -89,7 +89,7 @@ struct TestStruct {
 
 TEST(MemoryTest, MemorySet) {
 	const int kiArraySize = 32;
-	TestStruct* c = new TestStruct[kiArraySize];
+	TestStruct* c = dbg_new TestStruct[kiArraySize];
 	TestStruct d(10);
 
 	Memory::Set(c, sizeof(TestStruct) * kiArraySize, 0);
@@ -103,7 +103,7 @@ TEST(MemoryTest, MemorySet) {
 TEST(MemoryTest, MemorySetT) {
 
 	constexpr int kiArraySize = 32;
-	TestStruct* c = new TestStruct[kiArraySize];
+	TestStruct* c = dbg_new TestStruct[kiArraySize];
 	const TestStruct d(10);
 
 	Memory::Set<TestStruct>(c, kiArraySize, d);

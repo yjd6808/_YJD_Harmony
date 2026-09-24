@@ -107,6 +107,8 @@ class Console
     inline static int           ms_iCursorPosX{};
     inline static int           ms_iCursorPosY{};
     inline constexpr static int TempBufferLen = 1024;
+    inline constexpr static int MaxHeapWriteLen = 65536;
+    inline static const _char* TruncatedMark = _T("...[이하 생략]");
 public:
     static const _char*   VTForeColor[ConsoleColor::Max];
     static const _char*   VTBackColor[ConsoleColor::Max];
@@ -154,15 +156,34 @@ public:
 		}
 		else
 		{
-			_char buf[TempBufferLen];
-			int written = _stprintf_s(buf, TempBufferLen, _pFormat, Forward<TArgs>(_args)...);
-			if (written <= 0)
+			int need = _sctprintf(_pFormat, Forward<TArgs>(_args)...);
+			if (need < 0)
 			{
-				return written;
+				return -1;
 			}
 
 			TLockGuard guard(ms_ConsoleLock);
-			return _tprintf(_T("%s"), buf);
+			if (need < TempBufferLen)
+			{
+				_char buf[TempBufferLen];
+				int written = _stprintf_s(buf, TempBufferLen, _pFormat, Forward<TArgs>(_args)...);
+				return (written <= 0) ? written : _tprintf(_T("%s"), buf);
+			}
+
+			// 단일 출력이 비정상적으로 김 (덤프·서식 버그 가능)
+			jc_assert_msg(need < MaxHeapWriteLen, _T("단일 콘솔 출력이 비정상적으로 깁니다. (%d자)"), need);
+
+			const int capacity = (need < MaxHeapWriteLen ? need + 1 : MaxHeapWriteLen);
+			_char* heapBuf = new _char[capacity];
+			// 잘려도 출력되도록 _TRUNCATE 지정
+			_sntprintf_s(heapBuf, capacity, _TRUNCATE, _pFormat, Forward<TArgs>(_args)...);
+			int ret = _tprintf(_T("%s"), heapBuf);
+			if (need >= MaxHeapWriteLen)
+			{
+				_tprintf(_T("%s"), TruncatedMark);
+			}
+			delete[] heapBuf;
+			return ret;
 		}
     }
 

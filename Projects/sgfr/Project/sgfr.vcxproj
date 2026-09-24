@@ -84,7 +84,13 @@
     <ClCompile Include="..\Sources\sgfr\Tutorial\33_PrimitiveShape\33_PrimitiveShape_Main.cpp" />
     <ClCompile Include="..\Sources\sgfr\Tutorial\34_GraphicsEnum_한눈에_비교\34_GraphicsEnumDiff_Main.cpp" />
     <ClCompile Include="..\Sources\sgfr\Common\TutorialCommon.cpp" />
-    <ClCompile Include="..\Sources\sgfr\Practice\01_RenderingPipeline\01_RenderingPipeline_Main.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\01_2DSceneTemplate\01_2DSceneTemplate_Main.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\02_3DSceneTemplate\02_3DSceneTemplate_Main.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\03_2DScenePractice\03_2DScenePractice_Main.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\04_3DScenePractice\04_3DScenePractice_Main.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\05_RenderingPipeline\05_RenderingPipeline_Main.cpp">
+      <ObjectFileName>$(IntDir)Practice_05_RenderingPipeline_Main.obj</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\Sources\sgfr\Practice\PracticeRegistry.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -147,7 +153,11 @@
     <ClInclude Include="..\Sources\sgfr\Tutorial\33_PrimitiveShape\33_PrimitiveShape_Main.h" />
     <ClInclude Include="..\Sources\sgfr\Tutorial\34_GraphicsEnum_한눈에_비교\34_GraphicsEnumDiff_Main.h" />
     <ClInclude Include="..\Sources\sgfr\Common\TutorialCommon.h" />
-    <ClInclude Include="..\Sources\sgfr\Practice\01_RenderingPipeline\01_RenderingPipeline_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Practice\01_2DSceneTemplate\01_2DSceneTemplate_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Practice\02_3DSceneTemplate\02_3DSceneTemplate_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Practice\03_2DScenePractice\03_2DScenePractice_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Practice\04_3DScenePractice\04_3DScenePractice_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Practice\05_RenderingPipeline\05_RenderingPipeline_Main.h" />
     <ClInclude Include="..\Sources\sgfr\Practice\PracticeRegistry.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

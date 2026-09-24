@@ -123,14 +123,14 @@ namespace
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 각 카테고리 enum 이름표 (타이틀/콘솔에 그대로 보여준다)
 
-	const _char* BLEND_NAMES[]   = { _T("bmNone(덮어쓰기)"), _T("bmAlpha(반투명)"), _T("bmAdd(가산)"), _T("bmMultiply(곱셈)") };
-	const _char* FILTER_NAMES[]  = { _T("fmPoint(최근접)"), _T("fmLinear(선형)"), _T("fmAnisotropic(비등방)") };
+	const _char* BLEND_NAMES[] = { _T("bmNone(덮어쓰기)"), _T("bmAlpha(반투명)"), _T("bmAdd(가산)"), _T("bmMultiply(곱셈)") };
+	const _char* FILTER_NAMES[] = { _T("fmPoint(최근접)"), _T("fmLinear(선형)"), _T("fmAnisotropic(비등방)") };
 	const _char* ADDRESS_NAMES[] = { _T("amWrap(반복)"), _T("amMirror(거울)"), _T("amClamp(고정)"), _T("amBorder(테두리색)") };
-	const _char* CULL_NAMES[]    = { _T("cmNone(양면)"), _T("cmFront(앞면제거)"), _T("cmBack(뒷면제거)") };
-	const _char* FILL_NAMES[]    = { _T("fmSolid(면)"), _T("fmWireframe(선)") };
-	const _char* DEPTH_NAMES[]   = { _T("dmDisabled(끄기)"), _T("dmReadWrite(읽기+쓰기)"), _T("dmReadOnly(읽기만)") };
-	const _char* FRONT_FACE_NAMES[]   = { _T("ffClockwise(시계=앞)"), _T("ffCounterClockwise(반시계=앞)") };
-	const _char* TOPOLOGY_NAMES[]    = { _T("ptPointList(점)"), _T("ptLineList(선분)"), _T("ptLineStrip(연결선)"), _T("ptTriangleList(삼각형)"), _T("ptTriangleStrip(띠)") };
+	const _char* CULL_NAMES[] = { _T("cmNone(양면)"), _T("cmFront(앞면제거)"), _T("cmBack(뒷면제거)") };
+	const _char* FILL_NAMES[] = { _T("fmSolid(면)"), _T("fmWireframe(선)") };
+	const _char* DEPTH_NAMES[] = { _T("dmDisabled(끄기)"), _T("dmReadWrite(읽기+쓰기)"), _T("dmReadOnly(읽기만)") };
+	const _char* FRONT_FACE_NAMES[] = { _T("ffClockwise(시계=앞)"), _T("ffCounterClockwise(반시계=앞)") };
+	const _char* TOPOLOGY_NAMES[] = { _T("ptPointList(점)"), _T("ptLineList(선분)"), _T("ptLineStrip(연결선)"), _T("ptTriangleList(삼각형)"), _T("ptTriangleStrip(띠)") };
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 실제 엔진 enum값 매핑
@@ -317,21 +317,21 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 		{
 			for (_s32 x = 0; x < _size; ++x)
 			{
-			_f32 dx = x - center;
-			_f32 dy = y - center;
-			_f32 dist = sqrtf(dx * dx + dy * dy) / maxDist;
+				_f32 dx = x - center;
+				_f32 dy = y - center;
+				_f32 dist = sqrtf(dx * dx + dy * dy) / maxDist;
 
-			_f32 alpha = 1.0f;
-			if (dist > 0.7f)
-			{
-				alpha = Clamp(1.0f - (dist - 0.7f) / 0.3f, 0.0f, 1.0f);
-			}
+				_f32 alpha = 1.0f;
+				if (dist > 0.7f)
+				{
+					alpha = Clamp(1.0f - (dist - 0.7f) / 0.3f, 0.0f, 1.0f);
+				}
 
-			_u8* pPixel = _pOutPixels + (y * _size + x) * 4;
-			pPixel[0] = 255;
-			pPixel[1] = 255;
-			pPixel[2] = 255;
-			pPixel[3] = static_cast<_u8>(alpha * 255.0f);
+				_u8* pPixel = _pOutPixels + (y * _size + x) * 4;
+				pPixel[0] = 255;
+				pPixel[1] = 255;
+				pPixel[2] = 255;
+				pPixel[3] = static_cast<_u8>(alpha * 255.0f);
 			}
 		}
 	}
@@ -346,25 +346,25 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 		{
 			for (_s32 x = 0; x < _width; ++x)
 			{
-			bool isBorder = (x == 0 || y == 0 || x == _width - 1 || y == _height - 1);
+				bool isBorder = (x == 0 || y == 0 || x == _width - 1 || y == _height - 1);
 
-			_u8 r, g, b;
-			if (isBorder)
-			{
-				r = 220; g = 60; b = 60;
-			}
-			else
-			{
-				bool isLight = (((x / _cellSize) + (y / _cellSize)) % 2) == 0;
-				if (isLight) { r = 240; g = 240; b = 240; }
-				else         { r = 40;  g = 70;  b = 160; }
-			}
+				_u8 r, g, b;
+				if (isBorder)
+				{
+					r = 220; g = 60; b = 60;
+				}
+				else
+				{
+					bool isLight = (((x / _cellSize) + (y / _cellSize)) % 2) == 0;
+					if (isLight) { r = 240; g = 240; b = 240; }
+					else { r = 40;  g = 70;  b = 160; }
+				}
 
-			_u8* pPixel = _pOutPixels + (y * _width + x) * 4;
-			pPixel[0] = r;
-			pPixel[1] = g;
-			pPixel[2] = b;
-			pPixel[3] = 255;
+				_u8* pPixel = _pOutPixels + (y * _width + x) * 4;
+				pPixel[0] = r;
+				pPixel[1] = g;
+				pPixel[2] = b;
+				pPixel[3] = 255;
 			}
 		}
 	}
@@ -556,7 +556,7 @@ void GraphicsEnumDiff_Main()
 	if (!g_cResourceMgr.Initialize(&device))
 	{
 		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -565,10 +565,10 @@ void GraphicsEnumDiff_Main()
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
 		jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
-	g_cResourceMgr.Finalize();
-	device.Finalize();
-	window.Destroy();
-	return;
+		g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
 	}
 
 	GraphicContext& ctx = device.Context();
@@ -649,7 +649,7 @@ void GraphicsEnumDiff_Main()
 	if (vsBlend == INVALID_RESOURCE_KEY || psBlend == INVALID_RESOURCE_KEY || vsSplit == INVALID_RESOURCE_KEY || psSplit == INVALID_RESOURCE_KEY || vsColor == INVALID_RESOURCE_KEY || psColor == INVALID_RESOURCE_KEY)
 	{
 		jc::Console::WriteLine(_T("셰이더 생성 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -709,10 +709,10 @@ void GraphicsEnumDiff_Main()
 		{
 			if (input.IsKeyPressed('1' + i))
 			{
-			category = static_cast<DiffCategory>(i);
-			afterIdx = afterIndices[static_cast<_s32>(category)];
-			isCategoryChanged = true;
-			break;
+				category = static_cast<DiffCategory>(i);
+				afterIdx = afterIndices[static_cast<_s32>(category)];
+				isCategoryChanged = true;
+				break;
 			}
 		}
 
@@ -786,22 +786,22 @@ void GraphicsEnumDiff_Main()
 			device.Context().SetVertexShader(vsBlend);
 			device.Context().SetPixelShader(psBlend);
 			{
-		}
+			}
 			ctx.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
 			auto DrawCircleGroup = [&](const vec2& _groupCenter, BlendMode _mode)
 			{
-			device.Context().SetBlend(_mode);
-			for (_s32 i = 0; i < 3; ++i)
-			{
-				_f32 angle = elapsed * 0.8f + jc_math_pi2 * i / 3.0f;
-				vec2 center(_groupCenter.x + cosf(angle) * 0.15f, _groupCenter.y + sinf(angle) * 0.15f);
-				FillQuadVertices(quadVertices, center, 0.28f, circleColors[i]);
-				vbQuad.Update(device.Context(), quadVertices, 4);
-				vbQuad.Bind(device.Context());
-				ibQuad.Bind(device.Context());
-				ctx.DrawIndexed(6, 0, 0);
-			}
+				device.Context().SetBlend(_mode);
+				for (_s32 i = 0; i < 3; ++i)
+				{
+					_f32 angle = elapsed * 0.8f + jc_math_pi2 * i / 3.0f;
+					vec2 center(_groupCenter.x + cosf(angle) * 0.15f, _groupCenter.y + sinf(angle) * 0.15f);
+					FillQuadVertices(quadVertices, center, 0.28f, circleColors[i]);
+					vbQuad.Update(device.Context(), quadVertices, 4);
+					vbQuad.Bind(device.Context());
+					ibQuad.Bind(device.Context());
+					ctx.DrawIndexed(6, 0, 0);
+				}
 			};
 
 			// [Before] 왼쪽: 디폴트 고정
@@ -835,17 +835,17 @@ void GraphicsEnumDiff_Main()
 
 			if (category == DiffCategory::dcFilterMode)
 			{
-			filterBefore = FILTER_VALUES[DEFAULT_INDEX[1]]; // fmLinear
-			filterAfter = FILTER_VALUES[afterIdx];
-			addressBefore = AddressMode::amWrap;
-			addressAfter = AddressMode::amWrap;
+				filterBefore = FILTER_VALUES[DEFAULT_INDEX[1]]; // fmLinear
+				filterAfter = FILTER_VALUES[afterIdx];
+				addressBefore = AddressMode::amWrap;
+				addressAfter = AddressMode::amWrap;
 			}
 			else
 			{
-			filterBefore = FilterMode::fmLinear;
-			filterAfter = FilterMode::fmLinear;
-			addressBefore = ADDRESS_VALUES[DEFAULT_INDEX[2]]; // amClamp
-			addressAfter = ADDRESS_VALUES[afterIdx];
+				filterBefore = FilterMode::fmLinear;
+				filterAfter = FilterMode::fmLinear;
+				addressBefore = ADDRESS_VALUES[DEFAULT_INDEX[2]]; // amClamp
+				addressAfter = ADDRESS_VALUES[afterIdx];
 			}
 
 			device.Context().SetSampler(filterBefore, addressBefore, 0);
@@ -862,7 +862,7 @@ void GraphicsEnumDiff_Main()
 			device.Context().SetVertexShader(vsSplit);
 			device.Context().SetPixelShader(psSplit);
 			{
-		}
+			}
 			ctx.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 			ctx.DrawIndexed(6, 0, 0);
 		}
@@ -876,27 +876,27 @@ void GraphicsEnumDiff_Main()
 			device.Context().SetVertexShader(vsColor);
 			device.Context().SetPixelShader(psColor);
 			{
-		}
+			}
 			ctx.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
 			auto DrawCube = [&](_f32 _offsetX, CullMode _cull, FillMode _fill, FrontFace _front)
 			{
-			// FrontFace가 달라지는 경우는 GraphicDevice의 간단 래퍼로 처리할 수 없어
-			// RenderStates에서 직접 래스터라이저 상태를 꺼내 바인딩한다.
-			if (category == DiffCategory::dcFrontFace)
-			{
-				auto* pRs = device.States().GetRasterizerState(_cull, _fill, _front);
-				ctx.SetRasterizerStateRaw(pRs);
-			}
-			else
-			{
-				device.Context().SetRasterizer(_cull, _fill);
-			}
+				// FrontFace가 달라지는 경우는 GraphicDevice의 간단 래퍼로 처리할 수 없어
+				// RenderStates에서 직접 래스터라이저 상태를 꺼내 바인딩한다.
+				if (category == DiffCategory::dcFrontFace)
+				{
+					auto* pRs = device.States().GetRasterizerState(_cull, _fill, _front);
+					ctx.SetRasterizerStateRaw(pRs);
+				}
+				else
+				{
+					device.Context().SetRasterizer(_cull, _fill);
+				}
 
-			CbTransform cb;
-			cb.wvp_ = rot * mat4::Translation(_offsetX, 0.0f, 0.0f) * view * proj;
-			cbTransform.UpdateAndBind(device.Context(), cb, 0);
-			ctx.DrawIndexed(36, 0, 0);
+				CbTransform cb;
+				cb.wvp_ = rot * mat4::Translation(_offsetX, 0.0f, 0.0f) * view * proj;
+				cbTransform.UpdateAndBind(device.Context(), cb, 0);
+				ctx.DrawIndexed(36, 0, 0);
 			};
 
 			CullMode cullBefore = CULL_VALUES[DEFAULT_INDEX[3]];
@@ -923,29 +923,29 @@ void GraphicsEnumDiff_Main()
 			device.Context().SetVertexShader(vsColor);
 			device.Context().SetPixelShader(psColor);
 			{
-		}
+			}
 			ctx.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 			device.Context().SetRasterizer(CullMode::cmBack, FillMode::fmSolid);
 
 			auto DrawDepthPair = [&](_f32 _offsetX, DepthMode _mode)
 			{
-			auto* pDs = device.States().GetDepthState(_mode);
-			ctx.SetDepthStencilStateRaw(pDs);
+				auto* pDs = device.States().GetDepthState(_mode);
+				ctx.SetDepthStencilStateRaw(pDs);
 
-			// 뒤 큐브 (Z=0.5)
-			{
-				CbTransform cb;
-				cb.wvp_ = mat4::Translation(_offsetX - 0.3f, 0.0f, 0.5f) * view * proj;
-				cbTransform.UpdateAndBind(device.Context(), cb, 0);
-				ctx.DrawIndexed(36, 0, 0);
-			}
-			// 앞 큐브 (Z=0.0)
-			{
-				CbTransform cb;
-				cb.wvp_ = mat4::Translation(_offsetX + 0.3f, 0.0f, 0.0f) * view * proj;
-				cbTransform.UpdateAndBind(device.Context(), cb, 0);
-				ctx.DrawIndexed(36, 0, 0);
-			}
+				// 뒤 큐브 (Z=0.5)
+				{
+					CbTransform cb;
+					cb.wvp_ = mat4::Translation(_offsetX - 0.3f, 0.0f, 0.5f) * view * proj;
+					cbTransform.UpdateAndBind(device.Context(), cb, 0);
+					ctx.DrawIndexed(36, 0, 0);
+				}
+				// 앞 큐브 (Z=0.0)
+				{
+					CbTransform cb;
+					cb.wvp_ = mat4::Translation(_offsetX + 0.3f, 0.0f, 0.0f) * view * proj;
+					cbTransform.UpdateAndBind(device.Context(), cb, 0);
+					ctx.DrawIndexed(36, 0, 0);
+				}
 			};
 
 			DepthMode depthBefore = DEPTH_VALUES[DEFAULT_INDEX[5]];
@@ -964,40 +964,40 @@ void GraphicsEnumDiff_Main()
 			device.Context().SetVertexShader(vsColor);
 			device.Context().SetPixelShader(psColor);
 			{
-		}
+			}
 			vbTopo.Bind(device.Context());
 
 			PrimitiveTopology topoAfter = TOPOLOGY_VALUES[afterIdx];
 			{
-			CbTransform cb;
-			cb.wvp_ = mat4::Translation(0.0f, 0.0f, 0.0f) * view * proj;
-			cbTransform.UpdateAndBind(device.Context(), cb, 0);
-			ctx.SetPrimitiveTopology(topoAfter);
+				CbTransform cb;
+				cb.wvp_ = mat4::Translation(0.0f, 0.0f, 0.0f) * view * proj;
+				cbTransform.UpdateAndBind(device.Context(), cb, 0);
+				ctx.SetPrimitiveTopology(topoAfter);
 
-			if (topoAfter == PrimitiveTopology::ptPointList)
-			{
-				ctx.Draw(5, 0);
-			}
-			else if (topoAfter == PrimitiveTopology::ptLineList)
-			{
-				ibTopoLine.Bind(device.Context());
-				ctx.DrawIndexed(10, 0, 0);
-			}
-			else if (topoAfter == PrimitiveTopology::ptLineStrip)
-			{
-				ibTopoLineStrip.Bind(device.Context());
-				ctx.DrawIndexed(6, 0, 0);
-			}
-			else if (topoAfter == PrimitiveTopology::ptTriangleList)
-			{
-				ibTopoTriList.Bind(device.Context());
-				ctx.DrawIndexed(9, 0, 0);
-			}
-			else // ptTriangleStrip
-			{
-				ibTopoStrip.Bind(device.Context());
-				ctx.DrawIndexed(6, 0, 0);
-			}
+				if (topoAfter == PrimitiveTopology::ptPointList)
+				{
+					ctx.Draw(5, 0);
+				}
+				else if (topoAfter == PrimitiveTopology::ptLineList)
+				{
+					ibTopoLine.Bind(device.Context());
+					ctx.DrawIndexed(10, 0, 0);
+				}
+				else if (topoAfter == PrimitiveTopology::ptLineStrip)
+				{
+					ibTopoLineStrip.Bind(device.Context());
+					ctx.DrawIndexed(6, 0, 0);
+				}
+				else if (topoAfter == PrimitiveTopology::ptTriangleList)
+				{
+					ibTopoTriList.Bind(device.Context());
+					ctx.DrawIndexed(9, 0, 0);
+				}
+				else // ptTriangleStrip
+				{
+					ibTopoStrip.Bind(device.Context());
+					ctx.DrawIndexed(6, 0, 0);
+				}
 			}
 			ctx.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		}

@@ -240,8 +240,8 @@ TEST(StaticVectorTest, ObjectTest) {
 	// 포인터 타입 테스트
 	{
 		StaticVector<Model*, 5> v;
-		Model* p1 = new Model(10);
-		Model* p2 = new Model(20);
+		Model* p1 = dbg_new Model(10);
+		Model* p2 = dbg_new Model(20);
 
 		v.Add(p1);
 		v.Add(p2);

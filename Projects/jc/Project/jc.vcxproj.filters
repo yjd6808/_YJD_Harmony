@@ -226,10 +226,6 @@
       <Filter>Primitives</Filter>
       <UniqueIdentifier>{25408a68-942e-4dc1-9634-f31dbe27dc37}</UniqueIdentifier>
     </ClCompile>
-    <ClCompile Include="..\Sources\jc\Primitives\String.cpp">
-      <Filter>Primitives</Filter>
-      <UniqueIdentifier>{25408a68-942e-4dc1-9634-f31dbe27dc37}</UniqueIdentifier>
-    </ClCompile>
     <ClCompile Include="..\Sources\jc\Primitives\Uri.cpp">
       <Filter>Primitives</Filter>
       <UniqueIdentifier>{25408a68-942e-4dc1-9634-f31dbe27dc37}</UniqueIdentifier>
@@ -239,10 +235,6 @@
       <UniqueIdentifier>{25408a68-942e-4dc1-9634-f31dbe27dc37}</UniqueIdentifier>
     </ClCompile>
     <ClCompile Include="..\Sources\jc\Primitives\StringUtil.cpp">
-      <Filter>Primitives</Filter>
-      <UniqueIdentifier>{25408a68-942e-4dc1-9634-f31dbe27dc37}</UniqueIdentifier>
-    </ClCompile>
-    <ClCompile Include="..\Sources\jc\Primitives\StringView.cpp">
       <Filter>Primitives</Filter>
       <UniqueIdentifier>{25408a68-942e-4dc1-9634-f31dbe27dc37}</UniqueIdentifier>
     </ClCompile>
@@ -445,6 +437,9 @@
     </ClCompile>
     <ClCompile Include="..\Sources\jc\IO\Path.cpp">
       <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\jc\Primitives\StringConvert.cpp">
+      <Filter>Primitives</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1114,6 +1109,9 @@
     <ClInclude Include="..\Sources\jc\IO\Path.h">
       <Filter>IO</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\jc\Primitives\StringConvert.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Sources\jc\_Extern\Extern.asm">
@@ -1193,6 +1191,9 @@
     <Natvis Include="..\Sources\jc\Natvis\Vector.natvis">
       <Filter>Natvis</Filter>
       <UniqueIdentifier>{cd93ccfc-1929-4e3a-af4d-c7be6197f686}</UniqueIdentifier>
+    </Natvis>
+    <Natvis Include="..\Sources\jc\Natvis\Coroutine.natvis">
+      <Filter>Threading</Filter>
     </Natvis>
   </ItemGroup>
   <ItemGroup>

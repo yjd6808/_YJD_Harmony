@@ -17,7 +17,7 @@ namespace AutoPtrTest {
 	
 TEST(AutoObjectTest, AutoPointer) {
 	LeakCheck;
-	Model* ptr = new Model();
+	Model* ptr = dbg_new Model();
 	AutoPtr<Model, Deletor<Model>> _(ptr);
 }
 

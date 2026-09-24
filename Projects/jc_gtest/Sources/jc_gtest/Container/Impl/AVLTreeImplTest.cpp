@@ -65,7 +65,7 @@ class AVLTree
 {
 public:
 	AVLTree() {
-		m_pVirtualRoot = new Node;
+		m_pVirtualRoot = dbg_new Node;
 		m_iSize = 0;
 	}
 	~AVLTree() {
@@ -75,7 +75,7 @@ public:
 public:
 	void Add(int data) {
 		if (m_iSize == 0) {
-			m_pVirtualRoot->Left = new Node{ data };
+			m_pVirtualRoot->Left = dbg_new Node{ data };
 			m_pVirtualRoot->Left->Parent = m_pVirtualRoot;
 			m_iSize++;
 			return;
@@ -145,7 +145,7 @@ private:
 	Node* Add(Node* root, int data) {
 		Node* pParent = nullptr;
 		Node* pCur = root;
-		Node* pNewNode = new Node{ data };
+		Node* pNewNode = dbg_new Node{ data };
 		int iComp = 0;
 
 		while (pCur != nullptr) {

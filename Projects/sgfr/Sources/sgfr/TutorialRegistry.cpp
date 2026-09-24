@@ -47,61 +47,61 @@
 #include "sgfr/Tutorial/33_PrimitiveShape/33_PrimitiveShape_Main.h"
 #include "sgfr/Tutorial/34_GraphicsEnum_한눈에_비교/34_GraphicsEnumDiff_Main.h"
 
-// 튜토리얼 목록 (번호 순서 = 학습 순서)
+ // 튜토리얼 목록 (번호 순서 = 학습 순서)
 namespace sgfr
 {
 
-static const TutorialEntry s_Tutorials[] =
-{
-	{ _T("선형대수 (벡터/행렬 기초)"),                LinearAlgebra_Main },
-	{ _T("윈도우와 메시지 루프"),                       WindowAndMessageLoop_Main },
-	{ _T("디바이스와 컨텍스트 (생성/바인딩 분리)"),   DeviceAndContext_Main },
-	{ _T("디바이스와 스왑체인 (화면 지우기)"),          DeviceAndSwapChain_Main },
-	{ _T("렌더링 파이프라인 (첫 삼각형)"),             RenderingPipeline_Main },
-	{ _T("HLSL 셰이더 (색상 보간과 애니메이션)"),       HLSL_Main },
-	{ _T("정점/인덱스 버퍼 (사각형 그리기)"),           VertexIndexBuffer_Main },
-	{ _T("메시와 토폴로지 (정점 조립 한 덩어리로)"),    MeshAndTopology_Main },
-	{ _T("파이프라인 상태 객체 (래스터/블렌드/깊이/샘플러)"), PipelineStateObjects_Main },
-	{ _T("월드 변환 (태양-지구-달 계층 구조)"),        WorldTransform_Main },
-	{ _T("카메라 좌표계 (WASD 이동/줌)"),              Camera_Main },
-	{ _T("셰이더 스테이지와 상수버퍼 (b0/b1 규약)"),    ShaderStagesAndConstants_Main },
-	{ _T("3D 큐브 (깊이 버퍼와 원근 투영)"),           Cube3D_Main },
-	{ _T("라이팅 (람버트 확산광)"),                    Lighting_Main },
-	{ _T("PNG 텍스처 그리기 (WIC 디코딩)"),           PngTextureDraw_Main },
-	{ _T("SVG 텍스처 그리기 (nanosvg 래스터)"),        SvgTextureDraw_Main },
-	{ _T("샘플러와 필터링 (Point/Linear, Wrap/Clamp/Mirror)"), SamplerFiltering_Main },
-	{ _T("블렌드 스테이트 (불투명/알파/가산/곱셈)"),   BlendState_Main },
-	{ _T("래스터라이저 스테이트 (와이어프레임/컬링)"),  RasterizerState_Main },
-	{ _T("머티리얼 (셰이더+상태+텍스처 묶음)"),         Material_Main },
-	{ _T("리소스 매니저 (키 발급과 수명 관리)"),         ResourceManager_Main },
-	{ _T("렌더 오브젝트 루프 (b0/b1 자동화)"),           RenderObjectLoop_Main },
-	{ _T("스테이트 캐시 (중복 바인딩 절감)"),           StateCache_Main },
-	{ _T("셰이딩 모델 (람버트/퐁/블린-퐁)"),          ShadingModel_Main },
-	{ _T("렌더 타깃 (미니맵)"),                        RenderTarget_Main },
-	{ _T("포스트 프로세싱 (화면 후보정)"),             PostProcess_Main },
-	{ _T("그림자 매핑 (섀도우 맵)"),                   ShadowMapping_Main },
-	{ _T("입력 처리 (키보드/마우스 이벤트)"),          Input_Main },
-	{ _T("씬 & 사운드 (Application/Director/SoundEngine)"), SceneGraph_Main },
-	{ _T("스프라이트 애니메이션 (시트/트위닝)"),        SpriteAnimation_Main },
-	{ _T("파이프라인 여행 (수도 코드 §1~§20 캡스톤)"),  PipelineJourney_Main },
-	{ _T("프리미티브 메시 (리소스 매니저 2D/3D)"),      PrimitiveMesh_Main },
-	{ _T("프리미티브 셰이프 (Shape2D/Shape3D)"),        PrimitiveShape_Main },
-	{ _T("GraphicsEnum 한눈에 비교 (Before=디폴트 / After=선택)"), GraphicsEnumDiff_Main },
-};
+	static const TutorialEntry s_Tutorials[] =
+	{
+		{ _T("선형대수 (벡터/행렬 기초)"),                LinearAlgebra_Main },
+		{ _T("윈도우와 메시지 루프"),                       WindowAndMessageLoop_Main },
+		{ _T("디바이스와 컨텍스트 (생성/바인딩 분리)"),   DeviceAndContext_Main },
+		{ _T("디바이스와 스왑체인 (화면 지우기)"),          DeviceAndSwapChain_Main },
+		{ _T("렌더링 파이프라인 (첫 삼각형)"),             RenderingPipeline_Main },
+		{ _T("HLSL 셰이더 (색상 보간과 애니메이션)"),       HLSL_Main },
+		{ _T("정점/인덱스 버퍼 (사각형 그리기)"),           VertexIndexBuffer_Main },
+		{ _T("메시와 토폴로지 (정점 조립 한 덩어리로)"),    MeshAndTopology_Main },
+		{ _T("파이프라인 상태 객체 (래스터/블렌드/깊이/샘플러)"), PipelineStateObjects_Main },
+		{ _T("월드 변환 (태양-지구-달 계층 구조)"),        WorldTransform_Main },
+		{ _T("카메라 좌표계 (WASD 이동/줌)"),              Camera_Main },
+		{ _T("셰이더 스테이지와 상수버퍼 (b0/b1 규약)"),    ShaderStagesAndConstants_Main },
+		{ _T("3D 큐브 (깊이 버퍼와 원근 투영)"),           Cube3D_Main },
+		{ _T("라이팅 (람버트 확산광)"),                    Lighting_Main },
+		{ _T("PNG 텍스처 그리기 (WIC 디코딩)"),           PngTextureDraw_Main },
+		{ _T("SVG 텍스처 그리기 (nanosvg 래스터)"),        SvgTextureDraw_Main },
+		{ _T("샘플러와 필터링 (Point/Linear, Wrap/Clamp/Mirror)"), SamplerFiltering_Main },
+		{ _T("블렌드 스테이트 (불투명/알파/가산/곱셈)"),   BlendState_Main },
+		{ _T("래스터라이저 스테이트 (와이어프레임/컬링)"),  RasterizerState_Main },
+		{ _T("머티리얼 (셰이더+상태+텍스처 묶음)"),         Material_Main },
+		{ _T("리소스 매니저 (키 발급과 수명 관리)"),         ResourceManager_Main },
+		{ _T("렌더 오브젝트 루프 (b0/b1 자동화)"),           RenderObjectLoop_Main },
+		{ _T("스테이트 캐시 (중복 바인딩 절감)"),           StateCache_Main },
+		{ _T("셰이딩 모델 (람버트/퐁/블린-퐁)"),          ShadingModel_Main },
+		{ _T("렌더 타깃 (미니맵)"),                        RenderTarget_Main },
+		{ _T("포스트 프로세싱 (화면 후보정)"),             PostProcess_Main },
+		{ _T("그림자 매핑 (섀도우 맵)"),                   ShadowMapping_Main },
+		{ _T("입력 처리 (키보드/마우스 이벤트)"),          Input_Main },
+		{ _T("씬 & 사운드 (Application/Director/SoundEngine)"), SceneGraph_Main },
+		{ _T("스프라이트 애니메이션 (시트/트위닝)"),        SpriteAnimation_Main },
+		{ _T("파이프라인 여행 (수도 코드 §1~§20 캡스톤)"),  PipelineJourney_Main },
+		{ _T("프리미티브 메시 (리소스 매니저 2D/3D)"),      PrimitiveMesh_Main },
+		{ _T("프리미티브 셰이프 (Shape2D/Shape3D)"),        PrimitiveShape_Main },
+		{ _T("GraphicsEnum 한눈에 비교 (Before=디폴트 / After=선택)"), GraphicsEnumDiff_Main },
+	};
 
-//////////////////////////////////////////////////////////////////////////////////////////
-// 등록된 튜토리얼 개수를 반환한다.
-_s32 TutorialCount()
-{
-	return (_s32)(sizeof(s_Tutorials) / sizeof(s_Tutorials[0]));
-}
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// 등록된 튜토리얼 개수를 반환한다.
+	_s32 TutorialCount()
+	{
+		return (_s32)(sizeof(s_Tutorials) / sizeof(s_Tutorials[0]));
+	}
 
-//////////////////////////////////////////////////////////////////////////////////////////
-// _index(0부터 시작)번째 튜토리얼 정보를 반환한다.
-const TutorialEntry& TutorialAt(_s32 _index)
-{
-	jc_assert(_index >= 0 && _index < TutorialCount());
-	return s_Tutorials[_index];
-}
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// _index(0부터 시작)번째 튜토리얼 정보를 반환한다.
+	const TutorialEntry& TutorialAt(_s32 _index)
+	{
+		jc_assert(_index >= 0 && _index < TutorialCount());
+		return s_Tutorials[_index];
+	}
 
 } // namespace sgfr

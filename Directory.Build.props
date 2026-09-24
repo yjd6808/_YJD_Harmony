@@ -23,6 +23,8 @@
 	'$(MSBuildProjectName)' == 'sge'					OR
 	'$(MSBuildProjectName)' == 'sgf'						OR
 	'$(MSBuildProjectName)' == 'sgfr'					OR
+	'$(MSBuildProjectName)' == 'sgf_gtest'				OR
+	'$(MSBuildProjectName)' == 'sgf_gbench'				OR
 	'$(MSBuildProjectName)' == 'sgcl'					OR
 	'$(MSBuildProjectName)' == 'sgs'					OR
 
@@ -88,6 +90,8 @@
 	'$(MSBuildProjectName)' == 'sge'					OR
 	'$(MSBuildProjectName)' == 'sgf'						OR
 	'$(MSBuildProjectName)' == 'sgfr'					OR
+	'$(MSBuildProjectName)' == 'sgf_gtest'				OR
+	'$(MSBuildProjectName)' == 'sgf_gbench'				OR
 	'$(MSBuildProjectName)' == 'sgcl'					OR
 	'$(MSBuildProjectName)' == 'sgs'					OR
 	'$(MSBuildProjectName)' == 'sgs_auth'				OR
@@ -112,7 +116,9 @@
 
 	<Import Project="$(MSBuildThisFileDirectory)Props/sgf.props" 
 			Condition="
-	'$(MSBuildProjectName)' == 'sgfr'
+	'$(MSBuildProjectName)' == 'sgfr'					OR
+	'$(MSBuildProjectName)' == 'sgf_gtest'				OR
+	'$(MSBuildProjectName)' == 'sgf_gbench'
 			" />
 
 	<Import Project="$(MSBuildThisFileDirectory)Props/jnet.props" 

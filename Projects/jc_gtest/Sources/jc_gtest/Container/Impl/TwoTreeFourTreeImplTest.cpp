@@ -121,7 +121,7 @@ struct Node
 		}
 		
 		if (Children[iDataCount - 1] == nullptr) {
-			Children[iDataCount - 1] = new Node;
+			Children[iDataCount - 1] = dbg_new Node;
 		}
 
 		return Children[iDataCount - 1];
@@ -141,7 +141,7 @@ public:
 public:
 	void Add(int data) {
 		if (m_pRoot == nullptr) {
-			m_pRoot = new Node(data);
+			m_pRoot = dbg_new Node(data);
 			m_iSize++;
 			return;
 		}

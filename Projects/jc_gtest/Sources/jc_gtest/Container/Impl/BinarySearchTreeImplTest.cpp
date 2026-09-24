@@ -27,7 +27,7 @@ public:
 	BinarySearchTree(int (*comp)(int, int)) {
 		m_iSize = 0;
 		m_fnComp = comp;
-		m_pVirtualRoot = new Node{0};
+		m_pVirtualRoot = dbg_new Node{0};
 	}
 	~BinarySearchTree() {
 		Clear();
@@ -42,7 +42,7 @@ public:
 	void Add(int data) {
 		Node* pParent = m_pVirtualRoot;
 		Node* pCur = GetChildIfExist(m_pVirtualRoot);
-		Node* pNew = new Node{ data };
+		Node* pNew = dbg_new Node{ data };
 
 		int iComp = 0;
 

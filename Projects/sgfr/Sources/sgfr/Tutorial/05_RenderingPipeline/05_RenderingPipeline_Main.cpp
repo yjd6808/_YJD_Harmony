@@ -69,7 +69,7 @@ void RenderingPipeline_Main()
 	if (!g_cResourceMgr.Initialize(&gd))
 	{
 		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		gd.Finalize();
 		window.Destroy();
 		return;
@@ -78,7 +78,7 @@ void RenderingPipeline_Main()
 	if (!gd.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
 		jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		gd.Finalize();
 		window.Destroy();
 		return;
@@ -98,7 +98,7 @@ void RenderingPipeline_Main()
 	if (!vbLegacy.Create(&gd, vertices, 3, VertexPC::Decl()))
 	{
 		jc::Console::WriteLine(_T("Legacy 정점 버퍼 생성 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		gd.Finalize();
 		window.Destroy();
 		return;
@@ -108,7 +108,7 @@ void RenderingPipeline_Main()
 	if (vsShaderLegacy == INVALID_RESOURCE_KEY || psShaderLegacy == INVALID_RESOURCE_KEY)
 	{
 		jc::Console::WriteLine(_T("Legacy 셰이더 컴파일 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		gd.Finalize();
 		window.Destroy();
 		return;
@@ -123,7 +123,7 @@ void RenderingPipeline_Main()
 	if (hVsSimple == INVALID_RESOURCE_KEY || hPsSimple == INVALID_RESOURCE_KEY || hVbSimple == INVALID_RESOURCE_KEY || hIbSimple == INVALID_RESOURCE_KEY)
 	{
 		jc::Console::WriteLine(_T("Simple 핸들 리소스 생성 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		gd.Finalize();
 		window.Destroy();
 		return;

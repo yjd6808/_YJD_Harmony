@@ -343,7 +343,7 @@ TEST(VectorTest, ZeroCapacityTest) {
 TEST(VectorTest, Pointer) {
 	{
 		LeakCheck;
-		Vector vector({ new int, new int });
+		Vector vector({ dbg_new int, dbg_new int });
 
 		delete vector[0];
 		delete vector[1];

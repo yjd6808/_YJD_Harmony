@@ -605,7 +605,7 @@ CoContext* CoMgr::FindContextByAddr(char* _pAddr)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// TryFindContextByBase / TryFindContextByAddr / TryFindContextById
+// TryFindContextByBase / TryFindContextByAddr
 //   assert 없이 nullptr 시 false 반환.
 //////////////////////////////////////////////////////////////////////////////////////////
 bool CoMgr::TryFindContextByBase(char* _pBase, OUT CoContext** _pOut)
@@ -632,15 +632,6 @@ CoContext* CoMgr::FindContextById(CoId _id)
 	if (pFound == nullptr)
 		return nullptr;
 	return *pFound;
-}
-
-bool CoMgr::TryFindContextById(CoId _id, OUT CoContext** _pOut)
-{
-	CoContext* pCtx = FindContextById(_id);
-	if (pCtx == nullptr)
-		return false;
-	if (_pOut) *_pOut = pCtx;
-	return true;
 }
 
 bool CoMgr::IsUsing(CoContext* _pCtx)
@@ -1059,8 +1050,8 @@ bool CoValidateAddr(CoContext* _pCtx, char* _pAddr)
 // - 타 스레드 코루틴은 맵에 안 보이므로 stale로 보고된다. (잘못된 점프 방지는 동일)
 static bool CoLookupResumable(CoId _id, OUT CoContext** _pOut)
 {
-	CoContext* pCtx = nullptr;
-	if (!g_cCoMgr.TryFindContextById(_id, &pCtx) || pCtx == nullptr)
+	CoContext* pCtx = g_cCoMgr.FindContextById(_id);
+	if (pCtx == nullptr)
 	{
 		tls_coLastError = coeStaleHandle;
 		return false;
@@ -1202,8 +1193,8 @@ CoId CoRun(FnCoroutine _fn, const CoDesc& _desc)
 
 CoScope::~CoScope()
 {
-	CoContext* pCtx = nullptr;
-	if (!g_cCoMgr.TryFindContextById(id_, &pCtx) || pCtx == nullptr)
+	CoContext* pCtx = g_cCoMgr.FindContextById(id_);
+	if (pCtx == nullptr)
 	{
 		id_ = CO_INVALID_ID;
 		return;
@@ -1218,8 +1209,8 @@ CoScope::~CoScope()
 
 void CoScope::Cancel()
 {
-	CoContext* pCtx = nullptr;
-	if (!g_cCoMgr.TryFindContextById(id_, &pCtx) || pCtx == nullptr)
+	CoContext* pCtx = g_cCoMgr.FindContextById(id_);
+	if (pCtx == nullptr)
 	{
 		id_ = CO_INVALID_ID;
 		return;

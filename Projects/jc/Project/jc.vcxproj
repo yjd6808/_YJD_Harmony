@@ -318,13 +318,14 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\Container\CMessage.h" />
+    <ClInclude Include="..\Sources\jc\Primitives\StringConvert.h" />
     <ClInclude Include="..\Sources\jc\Threading\Coroutine.h" />
     <ClInclude Include="..\Sources\jc\Container\CollectionStream.h" />
     <ClInclude Include="..\Sources\jc\Container\CollectionStreamIterator.h">
       <SubType>
       </SubType>
     </ClInclude>
-            <ClInclude Include="..\Sources\jc\Container\DataMap.h" />
+    <ClInclude Include="..\Sources\jc\Container\DataMap.h" />
     <ClInclude Include="..\Sources\jc\Container\HashSet.h" />
     <ClInclude Include="..\Sources\jc\Container\HashSetIterator.h" />
     <ClInclude Include="..\Sources\jc\Container\HashTable.h">
@@ -349,7 +350,7 @@
     <ClInclude Include="..\Sources\jc\Container\PropertyStatics.h" />
     <ClInclude Include="..\Sources\jc\Container\PropertyType.h" />
     <ClInclude Include="..\Sources\jc\Container\PropertyTypeTraits.h" />
-            <ClInclude Include="..\Sources\jc\Container\TreeMap.h" />
+    <ClInclude Include="..\Sources\jc\Container\TreeMap.h" />
     <ClInclude Include="..\Sources\jc\Container\TreeMapIterator.h" />
     <ClInclude Include="..\Sources\jc\Container\TreeSet.h">
       <SubType>
@@ -439,7 +440,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-            <ClInclude Include="..\Sources\jc\Container\ArrayCollection.h">
+    <ClInclude Include="..\Sources\jc\Container\ArrayCollection.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -447,7 +448,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-        <ClInclude Include="..\Sources\jc\Container\HashMap.h">
+    <ClInclude Include="..\Sources\jc\Container\HashMap.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -455,12 +456,12 @@
       <SubType>
       </SubType>
     </ClInclude>
-                <ClInclude Include="..\Sources\jc\Container\Pair.h">
+    <ClInclude Include="..\Sources\jc\Container\Pair.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\jc\Container\LinkedList.h" />
-        <ClInclude Include="..\Sources\jc\Container\ListCollection.h">
+    <ClInclude Include="..\Sources\jc\Container\ListCollection.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -476,13 +477,13 @@
       <SubType>
       </SubType>
     </ClInclude>
-        <ClInclude Include="..\Sources\jc\Container\ListStack.h" />
-            <ClInclude Include="..\Sources\jc\Container\StaticVector.h" />
+    <ClInclude Include="..\Sources\jc\Container\ListStack.h" />
+    <ClInclude Include="..\Sources\jc\Container\StaticVector.h" />
     <ClInclude Include="..\Sources\jc\Container\Vector.h">
       <SubType>
       </SubType>
     </ClInclude>
-        <ClInclude Include="..\Sources\jc\Deletor.h">
+    <ClInclude Include="..\Sources\jc\Deletor.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -657,7 +658,7 @@
     <ClInclude Include="..\Sources\jc\Type.h" />
     <ClInclude Include="..\Sources\jc\TypeCast.h" />
     <ClInclude Include="..\Sources\jc\Utils\StackTrace.h" />
-<ClInclude Include="..\Sources\jc\TypeTraits.h" />
+    <ClInclude Include="..\Sources\jc\TypeTraits.h" />
     <ClInclude Include="..\Sources\jc\TypeTraits\Adder.h">
       <SubType>
       </SubType>

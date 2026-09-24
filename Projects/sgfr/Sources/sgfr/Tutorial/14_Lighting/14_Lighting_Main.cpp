@@ -66,14 +66,14 @@ void Lighting_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
+		jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
 		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -81,11 +81,11 @@ void Lighting_Main()
 
 	if (!device.CreateSwapChain(window.Handle(), window.Width(), window.Height(), PixelFormat::pfRgba8))
 	{
-	jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
-	g_cResourceMgr.Finalize();
-	device.Finalize();
-	window.Destroy();
-	return;
+		jc::Console::WriteLine(_T("스왑체인 생성 실패!"));
+		g_cResourceMgr.Finalize();
+		device.Finalize();
+		window.Destroy();
+		return;
 	}
 
 	// 2. 법선 포함 큐브 생성 (면별 정점 24개 + 인덱스 36개)
@@ -97,9 +97,9 @@ void Lighting_Main()
 	IndexBuffer ib;
 	if (!vb.Create(&device, vertices, 24, VertexPNT::Decl()) ||
 		!ib.Create(&device, indices, 36))
-		{
+	{
 		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -114,9 +114,9 @@ void Lighting_Main()
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY ||
 		!cbTransform.Create(&device) ||
 		!cbLight.Create(&device))
-		{
+	{
 		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -146,7 +146,7 @@ void Lighting_Main()
 		elapsed += dt;
 
 		// ↑↓로 주변광 조절 (누르고 있는 동안 연속 변화)
-		if (input.IsKeyDown(VK_UP))   { ambient = Clamp(ambient + 0.5f * dt, 0.0f, 1.0f); }
+		if (input.IsKeyDown(VK_UP)) { ambient = Clamp(ambient + 0.5f * dt, 0.0f, 1.0f); }
 		if (input.IsKeyDown(VK_DOWN)) { ambient = Clamp(ambient - 0.5f * dt, 0.0f, 1.0f); }
 
 		input.NextFrame();
