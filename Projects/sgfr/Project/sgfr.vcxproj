@@ -88,9 +88,10 @@
     <ClCompile Include="..\Sources\sgfr\Practice\02_3DSceneTemplate\02_3DSceneTemplate_Main.cpp" />
     <ClCompile Include="..\Sources\sgfr\Practice\03_2DScenePractice\03_2DScenePractice_Main.cpp" />
     <ClCompile Include="..\Sources\sgfr\Practice\04_3DScenePractice\04_3DScenePractice_Main.cpp" />
-    <ClCompile Include="..\Sources\sgfr\Practice\05_RenderingPipeline\05_RenderingPipeline_Main.cpp">
-      <ObjectFileName>$(IntDir)Practice_05_RenderingPipeline_Main.obj</ObjectFileName>
-    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\Practice\05_2DPipelineTemplate\05_2DPipelineTemplate_Main.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\06_3DPipelineTemplate\06_3DPipelineTemplate_Main.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\07_2DPipelinePractice\07_2DPipelinePractice_Main.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\08_3DPipelinePractice\08_3DPipelinePractice_Main.cpp" />
     <ClCompile Include="..\Sources\sgfr\Practice\PracticeRegistry.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -157,7 +158,10 @@
     <ClInclude Include="..\Sources\sgfr\Practice\02_3DSceneTemplate\02_3DSceneTemplate_Main.h" />
     <ClInclude Include="..\Sources\sgfr\Practice\03_2DScenePractice\03_2DScenePractice_Main.h" />
     <ClInclude Include="..\Sources\sgfr\Practice\04_3DScenePractice\04_3DScenePractice_Main.h" />
-    <ClInclude Include="..\Sources\sgfr\Practice\05_RenderingPipeline\05_RenderingPipeline_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Practice\05_2DPipelineTemplate\05_2DPipelineTemplate_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Practice\06_3DPipelineTemplate\06_3DPipelineTemplate_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Practice\07_2DPipelinePractice\07_2DPipelinePractice_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Practice\08_3DPipelinePractice\08_3DPipelinePractice_Main.h" />
     <ClInclude Include="..\Sources\sgfr\Practice\PracticeRegistry.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -33,29 +33,31 @@ public:
 
 	virtual ~Camera() override = default;
 
-	// 월드 → 카메라 기준 행렬
-	virtual mat4 View() const = 0;
+	// 월드 → 카메라 기준 행렬 (파생의 Rebuild2D/Rebuild3D가 view_를 갱신한다)
+	mat4 View() const { return view_; }
 
-	// 카메라 기준 → NDC 행렬
-	virtual mat4 Projection() const = 0;
+	// 카메라 기준 → NDC 행렬 (파생의 Rebuild2D/Rebuild3D가 projection_을 갱신한다)
+	mat4 Projection() const { return projection_; }
 
-	// 뷰 x 투영 합성 (셰이더에 올리는 값) — 파라미터 변경 시에만 재계산한다. (B-6)
+	// 뷰 x 투영 합성 (셰이더에 올리는 값) — 파라미터 변경 시에만 재계산한다.
 	mat4 ViewProjection() const
 	{
 		if (vpDirty_)
 		{
-			vp_ = View() * Projection();
+			vp_ = view_ * projection_;
 			vpDirty_ = false;
 		}
 		return vp_;
 	}
 
-	// 카메라 파라미터가 바뀌면 파생 클래스(Rebuild2D/Rebuild3D)가 호출한다. (B-6)
+	// 카메라 파라미터가 바뀌면 파생 클래스(Rebuild2D/Rebuild3D)가 호출한다.
 	void InvalidateViewProjection() const { vpDirty_ = true; }
 
 	bool enabled_ = true;		// false면 렌더 제외 (미래: 다중 카메라 분할 화면)
-	mutable mat4 vp_ = mat4::Identity();	// 뷰 x 투영 캐시 (B-6)
-	mutable bool vpDirty_ = true;			// 캐시 무효 여부 (B-6)
+	mat4 view_ = mat4::Identity();			// 뷰 행렬 (파생의 Rebuild2D/Rebuild3D가 갱신)
+	mat4 projection_ = mat4::Identity();	// 투영 행렬 (파생의 Rebuild2D/Rebuild3D가 갱신)
+	mutable mat4 vp_ = mat4::Identity();	// 뷰 x 투영 캐시
+	mutable bool vpDirty_ = true;			// 캐시 무효 여부
 };
 
 NS_SGF_END

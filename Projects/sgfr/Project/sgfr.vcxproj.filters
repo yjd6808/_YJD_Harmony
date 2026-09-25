@@ -124,8 +124,17 @@
     <Filter Include="02. Practice\04. 3D 씬 연습">
       <UniqueIdentifier>{37166901-6AA6-424E-968A-456FB7536E72}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. Practice\05. 렌더링 파이프라인">
-      <UniqueIdentifier>{D4A56191-650F-4FDE-B9A1-830C3CFA5005}</UniqueIdentifier>
+    <Filter Include="02. Practice\05. 2D 렌더링 파이프라인 템플릿">
+      <UniqueIdentifier>{A1B2C3D4-0501-4001-8001-000000000501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Practice\06. 3D 렌더링 파이프라인 템플릿">
+      <UniqueIdentifier>{A1B2C3D4-0601-4001-8001-000000000601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Practice\07. 2D 렌더링 파이프라인 연습">
+      <UniqueIdentifier>{A1B2C3D4-0701-4001-8001-000000000701}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Practice\08. 3D 렌더링 파이프라인 연습">
+      <UniqueIdentifier>{A1B2C3D4-0801-4001-8001-000000000801}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -312,8 +321,17 @@
     <ClCompile Include="..\Sources\sgfr\Practice\04_3DScenePractice\04_3DScenePractice_Main.cpp">
       <Filter>02. Practice\04. 3D 씬 연습</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\sgfr\Practice\05_RenderingPipeline\05_RenderingPipeline_Main.cpp">
-      <Filter>02. Practice\05. 렌더링 파이프라인</Filter>
+    <ClCompile Include="..\Sources\sgfr\Practice\05_2DPipelineTemplate\05_2DPipelineTemplate_Main.cpp">
+      <Filter>02. Practice\05. 2D 렌더링 파이프라인 템플릿</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\Practice\06_3DPipelineTemplate\06_3DPipelineTemplate_Main.cpp">
+      <Filter>02. Practice\06. 3D 렌더링 파이프라인 템플릿</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\Practice\07_2DPipelinePractice\07_2DPipelinePractice_Main.cpp">
+      <Filter>02. Practice\07. 2D 렌더링 파이프라인 연습</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\sgfr\Practice\08_3DPipelinePractice\08_3DPipelinePractice_Main.cpp">
+      <Filter>02. Practice\08. 3D 렌더링 파이프라인 연습</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\sgfr\Practice\PracticeRegistry.cpp">
       <Filter>02. Practice</Filter>
@@ -510,8 +528,17 @@
     <ClInclude Include="..\Sources\sgfr\Practice\04_3DScenePractice\04_3DScenePractice_Main.h">
       <Filter>02. Practice\04. 3D 씬 연습</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\sgfr\Practice\05_RenderingPipeline\05_RenderingPipeline_Main.h">
-      <Filter>02. Practice\05. 렌더링 파이프라인</Filter>
+    <ClInclude Include="..\Sources\sgfr\Practice\05_2DPipelineTemplate\05_2DPipelineTemplate_Main.h">
+      <Filter>02. Practice\05. 2D 렌더링 파이프라인 템플릿</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\Practice\06_3DPipelineTemplate\06_3DPipelineTemplate_Main.h">
+      <Filter>02. Practice\06. 3D 렌더링 파이프라인 템플릿</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\Practice\07_2DPipelinePractice\07_2DPipelinePractice_Main.h">
+      <Filter>02. Practice\07. 2D 렌더링 파이프라인 연습</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\sgfr\Practice\08_3DPipelinePractice\08_3DPipelinePractice_Main.h">
+      <Filter>02. Practice\08. 3D 렌더링 파이프라인 연습</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\sgfr\Practice\PracticeRegistry.h">
       <Filter>02. Practice</Filter>

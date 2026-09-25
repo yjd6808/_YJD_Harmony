@@ -76,6 +76,13 @@ public:
 	void RenderSelf();
 
 	////////////////////////////////////////////////////////////////////////////////////////
+	// 엔진 진입점/퇴장점 (— AddChild/RemoveChild가 호출, Enter -> OnEnter 순서)
+	// 파생이 override해 기본동작을 넣을 수 있다.
+	// 사용자는 OnEnter/OnExit을 재정의한다. (Enter/Leave를 직접 호출하지 않는다)
+	virtual void Enter() { OnEnter(); }
+	virtual void Leave() { OnExit(); }
+
+	////////////////////////////////////////////////////////////////////////////////////////
 	// 수명주기 훅 (— 씬 소속 확정/해제 시 1회)
 	virtual void OnEnter() {}		// AddChild 직후 — DeclareStaticXX로 스태틱 bake
 	virtual void OnExit() {}		// RemoveChild 직후 — (필요 시) 스태틱 정리

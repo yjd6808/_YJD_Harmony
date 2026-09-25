@@ -87,7 +87,7 @@ Director::SceneSlot& Director::GetOrCreateSlot(Window* _pWindow)
 //////////////////////////////////////////////////////////////////////////////////////////
 // 지정 윈도우에 첫 씬을 시작한다.
 // ★ 왜 필요한가: 게임의 "첫 무대"를 여는 일. ApplicationDidFinishLaunching에서 호출한다.
-// - 하는 일: 슬롯(윈도우별 씬 자리) 확보 → 씬에 창/디바이스 주입 → 씬의 OnEnter 1회 호출.
+// - 하는 일: 슬롯(윈도우별 씬 자리) 확보 → 씬에 창/디바이스 주입 → 씬의 Enter 1회 호출.
 // - 이미 씬이 돌고 있으면 ReplaceScene과 동일하게 교체로 처리한다.
 void Director::RunScene(Scene* _pScene, Window* _pWindow)
 {
@@ -110,7 +110,7 @@ void Director::RunScene(Scene* _pScene, Window* _pWindow)
 	slot.pCurrent_ = _pScene;
 	_pScene->SetWindow(pWindow);	// 씬에게 소속 윈도우를 알려준다
 	_pScene->SetDevice(&g_cDevice);	// 그래픽 디바이스 주입 (GetGraphicDevice)
-	_pScene->OnEnter();
+	_pScene->Enter();
 	_LogInfo_(_T("[sgf] Director::RunScene — 씬 시작 (window=%p)"), (void*)pWindow);
 }
 
@@ -147,7 +147,7 @@ void Director::ReplaceScene(Scene* _pScene, Window* _pWindow)
 		slot.pCurrent_ = _pScene;
 		_pScene->SetWindow(pWindow);
 		_pScene->SetDevice(&g_cDevice);
-		_pScene->OnEnter();
+		_pScene->Enter();
 		_LogInfo_(_T("[sgf] Director::ReplaceScene — 즉시 시작 (window=%p)"), (void*)pWindow);
 		return;
 	}
@@ -181,7 +181,7 @@ Scene* Director::GetRunningScene()
 void Director::Update(const jc::TimeSpan& _dt)
 {
 	// 1. 예약된 씬 교체 처리 (프레임 경계이므로 안전하다)
-	// 씬 콜백(OnExit/OnEnter/OnUpdate)이 slots_를 변경할 수 있으므로(재진입)
+	// 씬 콜백(Enter/Leave/OnUpdate)이 slots_를 변경할 수 있으므로(재진입)
 	// 참조를 오래 붙잡지 않고 매 접근마다 인덱스로 다시 조회한다.
 	for (_s32 i = 0; i < slots_.Size(); ++i)
 	{
@@ -190,14 +190,14 @@ void Director::Update(const jc::TimeSpan& _dt)
 			continue;
 		}
 
-		// 이전 씬을 내리고 (OnExit 중 씬 교체 가능 → 이후 슬롯 재조회)
+		// 이전 씬을 내리고 (Leave 중 씬 교체 가능 → 이후 슬롯 재조회)
 		if (slots_[i].pCurrent_ != nullptr)
 		{
-			slots_[i].pCurrent_->OnExit();
+			slots_[i].pCurrent_->Leave();
 			JC_DELETE_SAFE(slots_[i].pCurrent_);
 		}
 
-		// OnExit 도중 예약이 바뀌었을 수 있으니 현재 예약 상태를 다시 읽는다.
+		// Leave 도중 예약이 바뀌었을 수 있으니 현재 예약 상태를 다시 읽는다.
 		if (slots_[i].pNext_ == nullptr)
 		{
 			continue;	// (이론적) 교체가 취소된 경우
@@ -208,7 +208,7 @@ void Director::Update(const jc::TimeSpan& _dt)
 		slots_[i].pNext_ = nullptr;
 		slots_[i].pCurrent_->SetWindow(slots_[i].pWindow_);
 		slots_[i].pCurrent_->SetDevice(&g_cDevice);	// 디바이스 주입
-		slots_[i].pCurrent_->OnEnter();
+		slots_[i].pCurrent_->Enter();
 		_LogInfo_(_T("[sgf] Director::Update — 예약 씬 교체 완료 (window=%p)"), (void*)slots_[i].pWindow_);
 	}
 
@@ -255,7 +255,7 @@ void Director::DetachWindow(Window* _pWindow)
 
 	if (pSlot->pCurrent_ != nullptr)
 	{
-		pSlot->pCurrent_->OnExit();
+		pSlot->pCurrent_->Leave();
 		JC_DELETE_SAFE(pSlot->pCurrent_);
 	}
 
@@ -277,7 +277,7 @@ void Director::Cleanup()
 		}
 		if (slot.pCurrent_ != nullptr)
 		{
-			slot.pCurrent_->OnExit();
+			slot.pCurrent_->Leave();
 			JC_DELETE_SAFE(slot.pCurrent_);
 		}
 		slot.pWindow_ = nullptr;

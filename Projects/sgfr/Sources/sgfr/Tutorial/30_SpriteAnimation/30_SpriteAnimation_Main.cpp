@@ -178,12 +178,12 @@ void SpriteAnimation_Main()
 		}
 		if (input.IsKeyPressed(VK_UP))
 		{
-			animFps = Clamp(animFps + 4, 4, 60);
+			animFps = Clamp((_f32)animFps + 4, 4, 60);
 			bChanged = true;
 		}
 		if (input.IsKeyPressed(VK_DOWN))
 		{
-			animFps = Clamp(animFps - 4, 4, 60);
+			animFps = Clamp((_f32)animFps - 4, 4, 60);
 			bChanged = true;
 		}
 		if (bChanged)

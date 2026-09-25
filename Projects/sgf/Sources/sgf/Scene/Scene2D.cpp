@@ -164,15 +164,22 @@ _u64 Scene2D::DeclareStatic(const Fill& _fill, const rect& _region,
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+// 엔진 진입점 — 카메라 자동 구성 후 사용자 갈고리를 호출한다.
+// 카메라가 아직 구성되지 않았으면 윈도우 크기로 직교 투영을 자동 설정한다.
+void Scene2D::Enter()
+{
+	if (!GetCamera2D()->IsConfigured())
+		GetCamera2D()->SetOrthographic2D((_f32)GetWindow()->Width(), (_f32)GetWindow()->Height());
+
+	OnEnter();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
 // ★ 2D 한 프레임의 총괄 — 예약(트리 순회) → 수동 그리기(OnRender) → 픽업(Flush) 3단계.
 // - GPU와의 접촉은 ③에서 1회만 일어난다. ①②는 "그릴 것 목록 만들기"일 뿐이다.
 // - (용어) 예약/픽업: 물건을 등록만 하고(예약), 프레임 끝에 일괄 처리(픽업)하는 방식. 배칭의 구조적 근거.
 void Scene2D::RenderScene()
 {
-	// 카메라가 아직 구성되지 않았으면 윈도우 크기로 직교 투영을 자동 설정한다.
-	if (!GetCamera2D()->IsConfigured())
-		GetCamera2D()->SetOrthographic2D((_f32)GetWindow()->Width(), (_f32)GetWindow()->Height());
-
 	g_cRenderer2D.BeginScene(this);            // 씬 카메라로 2D 배치 시작
 	if ((++sLogFrame % 60) == 1)
 		_LogDebug_(_T("[sgf] Scene2D::RenderScene Begin (window=%p)"), (void*)GetWindow());

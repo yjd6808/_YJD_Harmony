@@ -121,6 +121,7 @@ USING_NS_STD;
 
         #define TEST_AtomicTest                 ON
 		#define TEST_BitFlagTest                ON
+		#define TEST_DeferScopeTest             ON
         #define TEST_ObserverPtrTest		    ON
         #define TEST_SmartPtrTest			    ON
         #define TEST_StaticStringTest           ON

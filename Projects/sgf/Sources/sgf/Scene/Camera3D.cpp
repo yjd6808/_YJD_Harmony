@@ -15,9 +15,7 @@ using namespace jc;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 Camera3D::Camera3D()
-	: view_(mat4::Identity())
-	, projection_(mat4::Identity())
-	, eye_(0.0f, 0.0f, -5.0f)
+	: eye_(0.0f, 0.0f, -5.0f)
 	, target_(0.0f, 0.0f, 0.0f)
 	, up_(0.0f, 1.0f, 0.0f)
 {

@@ -59,6 +59,7 @@
 #include "jc/Container/HashMap.h"
 #include "jc/Pattern/Singleton.h"
 #include "jc/Primitives/String.h"
+#include "jc/Primitives/DeferScope.h"
 #include "jc/Utils/Console.h"
 #include "jc/Logger/LoggerDefine.h"		// _LogInfo_/_LogDebug_ 등 검증 로그 매크로
 #include "jc/Time.h"					// jc::TimeSpan (DeltaTime)

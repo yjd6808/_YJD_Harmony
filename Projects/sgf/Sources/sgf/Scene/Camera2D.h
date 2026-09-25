@@ -65,19 +65,12 @@ public:
 	// 카메라가 구성되었는가? (SetOrthographic2D 호출 여부)
 	bool IsConfigured() const { return configured_; }
 
-	////////////////////////////////////////////////////////////////////////////////////////
-	// Camera 추상 구현
-	virtual mat4 View() const override { return view_; }
-	virtual mat4 Projection() const override { return projection_; }
-
 private:
-	// 2D 설정값으로 뷰/투영 행렬을 다시 계산한다.
+	// 2D 설정값으로 뷰/투영 행렬을 다시 계산한다. (Camera의 view_/projection_ 갱신)
 	void Rebuild2D();
 
 private:
 	bool configured_ = false;		// SetOrthographic2D 호출 여부
-	mat4 view_;						// 뷰 행렬
-	mat4 projection_;				// 투영 행렬
 	_f32 width2D_;					// 2D 가상 화면 가로
 	_f32 height2D_;					// 2D 가상 화면 세로
 	vec2 position2D_;				// 2D 카메라 중심 위치

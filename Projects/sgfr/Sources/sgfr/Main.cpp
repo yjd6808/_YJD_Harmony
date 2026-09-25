@@ -1,9 +1,6 @@
 /*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 9:00:00 AM
- * 수정일: 8/9/2026 1:00:00 AM (콘솔 IO를 jc::Console로 교체)
- * 수정일: 8/10/2026 (2단계 메뉴 — 메인 메뉴에서 Tutorial 진입 후 목차 출력)
- * 수정일: 8/16/2026 (파일 로그 검증 — 명령행 인자로 튜토리얼 직접 실행 + 로거 초기화)
  * =====================
  * sgfr 튜토리얼 런처 (콘솔 목차)
  *
@@ -133,6 +130,12 @@ _s32 main(_s32 _argc, _s8** _argv)
 	InitializeFileLogger("logs");
 	_LogInfo_(_T("sgfr 런처 시작 (argc=%d, argv[0]=%hs)"), _argc, _argv[0]);
 
+	JC_DEFER_SCOPE()
+	{
+		FinalizeDefaultLogger();
+		jc::FinalizeJCore();
+	};
+
 	// 명령행 인자로 특정 튜토리얼 직접 실행
 	const _s32 directIndex = ReadTutorialArg(_argc, _argv);
 	if (directIndex >= 0)
@@ -161,18 +164,14 @@ _s32 main(_s32 _argc, _s8** _argv)
 			(_s32)tEnd.Diff(tBegin).GetTotalMiliSecondsInt32());
 		jc::Console::WriteLine(_T("=== [%d] %s 종료 ==="), directIndex + 1, entry.name_);
 
-		FinalizeDefaultLogger();
-		jc::FinalizeJCore();
 		return 0;
 	}
 
 	// 즉시 실행: 1로 바꾸면 메뉴 없이 마지막 Practice를 바로 실행한다. (기본 0 = 메뉴 실행)
 	if (0)
 	{
-		const sgfr::TutorialEntry& entry = sgfr::PracticeAt(sgfr::PracticeCount() - 1);
+		const sgfr::TutorialEntry& entry = sgfr::PracticeAt(2);
 		entry.fn_();
-		FinalizeDefaultLogger();
-		jc::FinalizeJCore();
 		return 0;
 	}
 
@@ -235,8 +234,6 @@ _s32 main(_s32 _argc, _s8** _argv)
 		}
 	}
 
-		_LogInfo_(_T("sgfr 런처 종료"));
-	FinalizeDefaultLogger();
-	jc::FinalizeJCore();
+	_LogInfo_(_T("sgfr 런처 종료"));
 	return 0;
 }

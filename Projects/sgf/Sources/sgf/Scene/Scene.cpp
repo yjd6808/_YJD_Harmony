@@ -17,7 +17,7 @@ using namespace jc;
 Scene::Scene()
 {
 	root_.SetName(_T("Root"));
-	root_.SetScene(this);	// root_가 씬 소속이 되어야 AddChild의 씬 전파·OnEnter가 동작한다.
+	root_.SetScene(this);	// root_가 씬 소속이 되어야 AddChild의 씬 전파·Enter가 동작한다.
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -74,13 +74,13 @@ void Scene::AddChild(GameObject* _pChild, _u64 _zOrder)
 	jc_assert_msg(pRunning == this, _T("이 씬이 running 중이 아닙니다. AddChild 거부."));
 	if (pRunning != this) return;						// 오류 — 처리 거부
 
-	root_.AddChild(_pChild, _zOrder);					// → pScene_ 주입 + Initialize + OnEnter
+	root_.AddChild(_pChild, _zOrder);					// → pScene_ 주입 + Initialize + Enter
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void Scene::RemoveChild(GameObject* _pChild)
 {
-	root_.RemoveChild(_pChild);							// → OnExit + 씬 소속 해제
+	root_.RemoveChild(_pChild);							// → Leave + 씬 소속 해제
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

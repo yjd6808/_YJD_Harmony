@@ -10,7 +10,7 @@
  * 기본 카메라는 Camera3D (원근 투영).
  *
  * [RenderScene]
- * 카메라 자동 구성(1회) → Renderer3D::BeginScene(frame) → 트래버설 + OnRender → EndScene.
+ * Enter에서 카메라 자동 구성(1회) → Renderer3D::BeginScene(frame) → 트래버설 + OnRender → EndScene.
  * FrameConstants(뷰/투영/카메라 위치)는 Renderer3D::BeginScene으로 넘어간다. (6-6)
  */
 
@@ -38,6 +38,9 @@ public:
 	// 3D 즉시 그리기 창구 (— Renderer3D로 전달)
 	virtual void DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world) override;
 	virtual void DrawMesh(const RenderObject& _object);
+
+	// 엔진 진입점 (— 카메라 자동 구성 후 OnEnter 호출)
+	virtual void Enter() override;
 
 	virtual void RenderScene() override;
 

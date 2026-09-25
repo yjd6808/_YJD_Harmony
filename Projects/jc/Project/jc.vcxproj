@@ -563,6 +563,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\jc\Primitives\DeferScope.h" />
     <ClInclude Include="..\Sources\jc\Primitives\ObserverPtr.h" />
     <ClInclude Include="..\Sources\jc\Primitives\Range.h">
       <SubType>

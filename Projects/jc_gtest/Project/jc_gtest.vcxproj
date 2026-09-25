@@ -100,6 +100,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Primitives\DeferScopeTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\IO\UriTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\IO\MemoryStreamTest.cpp" />
     <ClCompile Include="..\Sources\jc_gtest\Primitives\ObserverPtrTest.cpp" />

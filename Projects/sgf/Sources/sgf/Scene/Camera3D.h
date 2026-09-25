@@ -67,19 +67,12 @@ public:
 	// 카메라가 구성되었는가? (SetPerspective* 호출 여부)
 	bool IsConfigured() const { return configured_; }
 
-	////////////////////////////////////////////////////////////////////////////////////////
-	// Camera 추상 구현
-	virtual mat4 View() const override { return view_; }
-	virtual mat4 Projection() const override { return projection_; }
-
 private:
-	// 현재 Eye/Target/Up으로 뷰 행렬을 다시 계산한다.
+	// 현재 Eye/Target/Up으로 뷰 행렬을 다시 계산한다. (Camera의 view_/projection_ 갱신)
 	void Rebuild3D();
 
 private:
 	bool configured_ = false;		// SetPerspective* 호출 여부
-	mat4 view_;						// 뷰 행렬
-	mat4 projection_;				// 투영 행렬
 	_f32 fovY_ = 0.0f;				// 세로 시야각 (라디안)
 	_f32 aspect_ = 1.0f;			// 화면 가로/세로 비율
 	_f32 nearZ_ = 0.1f;				// 근평면

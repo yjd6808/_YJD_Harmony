@@ -15,9 +15,7 @@ using namespace jc;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 Camera2D::Camera2D()
-	: view_(mat4::Identity())
-	, projection_(mat4::Identity())
-	, width2D_(0.0f)
+	: width2D_(0.0f)
 	, height2D_(0.0f)
 	, position2D_(0.0f, 0.0f)
 {
@@ -137,15 +135,14 @@ void Camera2D::Rebuild2D()
 {
 	// 뷰: "카메라가 움직인다 = 세상이 반대로 움직인다"
 	// 월드에서 카메라 중심을 뺀 뒤 줌 배율을 곱한다.
-	view_ = mat4::Translation(-position2D_.x, -position2D_.y, 0.0f)
-		* mat4::Scale(zoom_, zoom_, 1.0f);
+	view_ = mat4::Translation(-position2D_.x, -position2D_.y, 0.0f) * mat4::Scale(zoom_, zoom_, 1.0f);
 
 	// 투영: 화면 중심 기준 -half ~ +half 범위를 NDC(-1~+1)로 매핑
 	const _f32 halfW = width2D_ * 0.5f;
 	const _f32 halfH = height2D_ * 0.5f;
 	projection_ = mat4::OrthographicOffCenterLH(-halfW, +halfW, -halfH, +halfH, 0.0f, 1.0f);
 
-	// 뷰/투영이 바뀌었으니 VP 캐시 무효화 (B-6)
+	// 뷰/투영이 바뀌었으니 VP 캐시 무효화
 	InvalidateViewProjection();
 }
 

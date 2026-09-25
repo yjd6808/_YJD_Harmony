@@ -23,7 +23,10 @@ namespace
 	public:
 		void OnEnter() override
 		{
-			GetCamera2D()->SetOrthographic2D(800.0f, 600.0f);
+			Shape2D* pRect = new Shape2D(_T("Rect"));
+			pRect->SetRect(rect(200.0f, 150.0f, 120.0f, 90.0f), color(0xFF, 0x6B, 0x6B));
+			AddChild(pRect, 0);
+
 			GetWindow()->SetTitle(_T("Practice 03. 2D 씬 연습 (방향키 이동, 휠 줌, ESC 종료)"));
 			elapsed_ = 0.0f;
 		}

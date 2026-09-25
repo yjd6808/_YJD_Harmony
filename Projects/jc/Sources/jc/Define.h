@@ -149,6 +149,15 @@
 	
 	#define JC_SWAP(val1, val2, type) do { type temp = val1; val1 = val2; val2 = temp; } while (0)
 
+	// 스코프 종료 시 지정된 작업을 수행한다. (jc/Primitives/DeferScope.h 필요)
+	// [사용법]
+	// JC_DEFER_SCOPE(=)
+	// {
+	//     ...
+	// };
+	// 캡처는 콤마로 구분하여 여러 개 지정 가능하다. (예: JC_DEFER_SCOPE(&a, &b))
+	#define JC_DEFER_SCOPE(...) auto JC_CONCAT_COUNTER(_jcDefer_) = ::jc::detail::ScopeExitHelper() + [__VA_ARGS__]()
+
 	// Cocos2d-x에서 자주사용하던 바인딩
 	#define JC_CALLBACK_0(__selector__,__target__, ...) std::bind(&__selector__,__target__, ##__VA_ARGS__)
 	#define JC_CALLBACK_1(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, ##__VA_ARGS__)

@@ -23,8 +23,8 @@
  *
  * [생성 계약]
  * - 생성자: root_.SetScene(this) + 파생이 CreateDefaultCamera()로 기본 카메라 생성.
- * - Director::RunScene 순서: running 등록 → 씬 OnEnter → (프레임마다 Update/RenderScene).
- * OnEnter 안에서 AddChild가 running 검증을 통과하려면 등록이 OnEnter보다 먼저다.
+ * - Director::RunScene 순서: running 등록 → 씬 Enter(기본동작 후 OnEnter) → (프레임마다 Update/RenderScene).
+ * OnEnter 안에서 AddChild가 running 검증을 통과하려면 등록이 Enter보다 먼저다.
  */
 
 #pragma once
@@ -77,6 +77,13 @@ public:
 		const color& _color1 = color::WHITE, const color& _color2 = color::WHITE,
 		_u32 _option = 0, RenderLayer _layer = RenderLayer::Default) {}	// (3D 씬 = no-op)
 	virtual void DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world) {}	// 3D 창구 (2D 씬 = no-op)
+
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 엔진 진입점/퇴장점 (— Director가 호출, Scene -> Enter -> OnEnter 순서)
+	// 파생(Scene2D/Scene3D)이 override해 기본동작(카메라 자동 구성)을 넣는다.
+	// 사용자는 OnEnter/OnExit을 재정의한다. (Enter/Leave를 직접 호출하지 않는다)
+	virtual void Enter() { OnEnter(); }
+	virtual void Leave() { OnExit(); }
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 생명주기 (— 씬도 수명주기 훅 보유)

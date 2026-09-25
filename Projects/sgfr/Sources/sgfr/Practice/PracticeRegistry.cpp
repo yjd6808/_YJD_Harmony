@@ -13,7 +13,10 @@
 #include "sgfr/Practice/02_3DSceneTemplate/02_3DSceneTemplate_Main.h"
 #include "sgfr/Practice/03_2DScenePractice/03_2DScenePractice_Main.h"
 #include "sgfr/Practice/04_3DScenePractice/04_3DScenePractice_Main.h"
-#include "sgfr/Practice/05_RenderingPipeline/05_RenderingPipeline_Main.h"
+#include "sgfr/Practice/05_2DPipelineTemplate/05_2DPipelineTemplate_Main.h"
+#include "sgfr/Practice/06_3DPipelineTemplate/06_3DPipelineTemplate_Main.h"
+#include "sgfr/Practice/07_2DPipelinePractice/07_2DPipelinePractice_Main.h"
+#include "sgfr/Practice/08_3DPipelinePractice/08_3DPipelinePractice_Main.h"
 
  // 연습용 튜토리얼 목록 (번호 순서 = 학습 순서)
 namespace sgfr
@@ -25,7 +28,10 @@ namespace sgfr
 		{ _T("3D 씬 템플릿 (Practice) - 기반 코드"), Practice_3DSceneTemplate_Main },
 		{ _T("2D 씬 연습 (Practice)"), Practice_2DScenePractice_Main },
 		{ _T("3D 씬 연습 (Practice)"), Practice_3DScenePractice_Main },
-		{ _T("렌더링 파이프라인 (Practice) - 첫 조합 연습"), Practice_RenderingPipeline_Main },
+		{ _T("2D 렌더링 파이프라인 템플릿 (Practice) - 기반 코드"), Practice_2DPipelineTemplate_Main },
+		{ _T("3D 렌더링 파이프라인 템플릿 (Practice) - 기반 코드"), Practice_3DPipelineTemplate_Main },
+		{ _T("2D 렌더링 파이프라인 연습 (Practice)"), Practice_2DPipelinePractice_Main },
+		{ _T("3D 렌더링 파이프라인 연습 (Practice)"), Practice_3DPipelinePractice_Main },
 	};
 
 	//////////////////////////////////////////////////////////////////////////////////////////

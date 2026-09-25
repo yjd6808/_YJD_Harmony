@@ -768,6 +768,10 @@
       <Filter>Primitives</Filter>
       <UniqueIdentifier>{25408a68-942e-4dc1-9634-f31dbe27dc37}</UniqueIdentifier>
     </ClInclude>
+    <ClInclude Include="..\Sources\jc\Primitives\DeferScope.h">
+      <Filter>Primitives</Filter>
+      <UniqueIdentifier>{25408a68-942e-4dc1-9634-f31dbe27dc37}</UniqueIdentifier>
+    </ClInclude>
     <ClInclude Include="..\Sources\jc\Primitives\ObserverPtr.h">
       <Filter>Primitives</Filter>
       <UniqueIdentifier>{25408a68-942e-4dc1-9634-f31dbe27dc37}</UniqueIdentifier>

@@ -302,10 +302,10 @@ struct vec3
 	constexpr vec3() : x(0.0f), y(0.0f), z(0.0f) {}
 
 	// 성분을 직접 지정하는 생성자
-	constexpr vec3(_f32 _x, _f32 _y, _f32 _z) : x(_x), y(_y), z(_z) {}
+	constexpr vec3(_f32 _x, _f32 _y, _f32 _z = 1.f) : x(_x), y(_y), z(_z) {}
 
 	// 2D 벡터를 3D로 확장하는 생성자 (z는 별도 지정)
-	constexpr vec3(const vec2& _xy, _f32 _z) : x(_xy.x), y(_xy.y), z(_z) {}
+	constexpr vec3(const vec2& _xy, _f32 _z = 1.f) : x(_xy.x), y(_xy.y), z(_z) {}
 
 	constexpr vec3 operator+(const vec3& _other) const { return vec3(x + _other.x, y + _other.y, z + _other.z); }
 	constexpr vec3 operator-(const vec3& _other) const { return vec3(x - _other.x, y - _other.y, z - _other.z); }
@@ -415,7 +415,18 @@ struct vec4
 // =====================================================================================
 struct color
 {
-	_u8 r, g, b, a;
+	// RGBA를 바이트 단위(r/g/b/a)와 32비트 packed 값(rgba) 중 편한 쪽으로 다룬다.
+	// 메모리 배치는 리틀엔디안 기준 하위 바이트부터 r, g, b, a다.
+	// (예: color(0xFF, 0x00, 0x00).rgba == 0xFF0000FF)
+	// GPU 정점 포맷 R8G8B8A8_UNORM과 바이트 순서가 일치한다.
+	union
+	{
+		struct
+		{
+			_u8 r, g, b, a;
+		};
+		_u32 rgba;
+	};
 
 	// 기본 생성자: 불투명 흰색
 	constexpr color() : r(255), g(255), b(255), a(255) {}
@@ -429,6 +440,9 @@ struct color
 		, g((_u8)(_g < 0 ? 0 : _g > 255 ? 255 : _g))
 		, b((_u8)(_b < 0 ? 0 : _b > 255 ? 255 : _b))
 		, a((_u8)(_a < 0 ? 0 : _a > 255 ? 255 : _a)) {}
+
+	// packed 32비트로부터 생성. (예: color(0xFF0000FF) -> 빨강)
+	explicit constexpr color(_u32 _rgba) : rgba(_rgba) {}
 
 	// 0.0f~1.0f float로부터 런타임 변환. (반올림 + 클램프)
 	// 예: color::FromFloat(1.0f, 0.5f, 0.0f) -> 주황색

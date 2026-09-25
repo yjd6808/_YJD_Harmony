@@ -1,44 +1,134 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
 
 	<!--
-	작성자: 윤정도
-	작성일: 23/02/05
-		
-	[커스텀 리스트 아이템 사용법]
-	https://learn.microsoft.com/en-us/visualstudio/debugger/create-custom-views-of-native-objects?view=vs-2019#customlistitems-expansion
-	
+	작성자: 윤정도 (수정: 26/09/25)
+	대상: jc::BasicString<CharT, jc::StringImpl_SSO<CharT>> + jc::BasicStringView<CharT>
+
+	[왜 다시 썼는가]
+	- 이전 String.natvis는 구 String 멤버(pBuffer_/len_)를 참조했고,
+	  타입명도 "jc::String;"(세미콜론 포함)이라 현재 코드와 매칭되지 않았다.
+	- 현재 String = BasicString<_char, StringImpl_SSO<_char>>이며 실멤버는
+	  st_(Storage) 하나다. Storage는 24B union이다.
+	  heap: pHeap_ + len_ + cap_ + 패딩 8B (꼬리 바이트에 0xFF 마크)
+	  sso : sso_[24](char) / sso_[12](wchar_t), 끝 원소에 len 보관
+	- SSO 버퍼와 heap 포인터가 union이라 pHeap_!=0 으로는 힙 판정이 안 된다.
+	  (SSO 문자열 선두 바이트가 포인터 자리와 겹친다.)
+	  IsHeap()와 동일하게 꼬리 바이트(전체 24B 중 23번 바이트)가 0xFF인지로 판정한다.
+	  ((unsigned char*)&st_.u_.sso_[0])[23]==255
+
+	[문자셋 대응]
+	- char판    : 멀티바이트(UTF-8) 가정. 표시 포맷 s8
+	- wchar_t판 : 유니코드(UTF-16) 가정. 표시 포맷 su
+	- 정본은 BasicString<CharT, StringImpl_SSO<CharT>> 2종(char/wchar_t)이다.
+	  AString/WString은 AlternativeType으로 연결된다.
+	- jc::String / jc::StringView 별칭은 빌드 문자셋에 따라 char/wchar_t 중
+	  하나로 고정되므로, 별칭용 Type은 sizeof 분기로 양쪽을 모두 표시한다.
+	  (배열 확장은 정본 항목을 사용한다.)
+
 	[낫비스 오류 출력법]
-	Under Tools > Options (or Debug > Options) > 
-	Debugging > Output Window, set Natvis diagnostic messages 
+	Under Tools > Options (or Debug > Options) >
+	Debugging > Output Window, set Natvis diagnostic messages
 	(C++ only) to Error, Warning, or Verbose, and then select OK.
-	
-	[낫비스 포맷팅]
-	https://learn.microsoft.com/en-us/visualstudio/debugger/format-specifiers-in-cpp?view=vs-2022#BKMK_Visual_Studio_2012_format_specifiers
 	-->
 
-	
-	<Type Name="jc::String;">
-		<!-- 유니코드 문자열 포맷: s8(UTF-8), su(UTF-16), s32(UTF-32)  -->
-		<!-- 기본: na  -->
-		<DisplayString>{pBuffer_,s8}</DisplayString>
-		<StringView Condition="pBuffer_">pBuffer_,na</StringView>
+	<!-- AString 본체 (char, UTF-8) -->
+	<Type Name="jc::BasicString&lt;char,jc::StringImpl_SSO&lt;char&gt;&gt;">
+		<AlternativeType Name="jc::AString" />
+		<DisplayString Condition="((unsigned char*)&amp;st_.u_.sso_[0])[23]==255">{st_.u_.heap_.pHeap_,s8}</DisplayString>
+		<DisplayString>{st_.u_.sso_,s8}</DisplayString>
+		<StringView Condition="((unsigned char*)&amp;st_.u_.sso_[0])[23]==255">st_.u_.heap_.pHeap_,s8</StringView>
+		<StringView>st_.u_.sso_,s8</StringView>
 		<Expand>
 			<ArrayItems>
-				<Size>len_</Size>
-				<ValuePointer>pBuffer_</ValuePointer>
+				<Size>((unsigned char*)&amp;st_.u_.sso_[0])[23]==255 ? st_.u_.heap_.len_ : (int)st_.u_.sso_[23]</Size>
+				<ValuePointer>((unsigned char*)&amp;st_.u_.sso_[0])[23]==255 ? st_.u_.heap_.pHeap_ : st_.u_.sso_</ValuePointer>
 			</ArrayItems>
+			<Item Name="[len_]">((unsigned char*)&amp;st_.u_.sso_[0])[23]==255 ? st_.u_.heap_.len_ : (int)st_.u_.sso_[23]</Item>
+			<Item Name="[cap_]">((unsigned char*)&amp;st_.u_.sso_[0])[23]==255 ? st_.u_.heap_.cap_ : 22</Item>
+			<Item Name="[heap_]">((unsigned char*)&amp;st_.u_.sso_[0])[23]==255</Item>
 		</Expand>
 	</Type>
-	
-	<Type Name="jc::StringView;">
+
+	<!-- WString 본체 (wchar_t, UTF-16) -->
+	<Type Name="jc::BasicString&lt;wchar_t,jc::StringImpl_SSO&lt;wchar_t&gt;&gt;">
+		<AlternativeType Name="jc::WString" />
+		<DisplayString Condition="((unsigned char*)&amp;st_.u_.sso_[0])[23]==255">{st_.u_.heap_.pHeap_,su}</DisplayString>
+		<DisplayString>{st_.u_.sso_,su}</DisplayString>
+		<StringView Condition="((unsigned char*)&amp;st_.u_.sso_[0])[23]==255">st_.u_.heap_.pHeap_,su</StringView>
+		<StringView>st_.u_.sso_,su</StringView>
+		<Expand>
+			<ArrayItems>
+				<Size>((unsigned char*)&amp;st_.u_.sso_[0])[23]==255 ? st_.u_.heap_.len_ : (int)st_.u_.sso_[11]</Size>
+				<ValuePointer>((unsigned char*)&amp;st_.u_.sso_[0])[23]==255 ? st_.u_.heap_.pHeap_ : st_.u_.sso_</ValuePointer>
+			</ArrayItems>
+			<Item Name="[len_]">((unsigned char*)&amp;st_.u_.sso_[0])[23]==255 ? st_.u_.heap_.len_ : (int)st_.u_.sso_[11]</Item>
+			<Item Name="[cap_]">((unsigned char*)&amp;st_.u_.sso_[0])[23]==255 ? st_.u_.heap_.cap_ : 10</Item>
+			<Item Name="[heap_]">((unsigned char*)&amp;st_.u_.sso_[0])[23]==255</Item>
+		</Expand>
+	</Type>
+
+	<!-- jc::String 별칭 (문자셋에 따라 char/wchar_t 중 하나. sizeof 분기로 양쪽 표시) -->
+	<Type Name="jc::String">
+		<DisplayString Condition="sizeof(st_.u_.sso_[0])==1 &amp;&amp; ((unsigned char*)&amp;st_.u_.sso_[0])[23]==255">{st_.u_.heap_.pHeap_,s8}</DisplayString>
+		<DisplayString Condition="sizeof(st_.u_.sso_[0])!=1 &amp;&amp; ((unsigned char*)&amp;st_.u_.sso_[0])[23]==255">{st_.u_.heap_.pHeap_,su}</DisplayString>
+		<DisplayString Condition="sizeof(st_.u_.sso_[0])==1">{st_.u_.sso_,s8}</DisplayString>
+		<DisplayString>{st_.u_.sso_,su}</DisplayString>
+		<StringView Condition="sizeof(st_.u_.sso_[0])==1 &amp;&amp; ((unsigned char*)&amp;st_.u_.sso_[0])[23]==255">st_.u_.heap_.pHeap_,s8</StringView>
+		<StringView Condition="sizeof(st_.u_.sso_[0])!=1 &amp;&amp; ((unsigned char*)&amp;st_.u_.sso_[0])[23]==255">st_.u_.heap_.pHeap_,su</StringView>
+		<StringView Condition="sizeof(st_.u_.sso_[0])==1">st_.u_.sso_,s8</StringView>
+		<StringView>st_.u_.sso_,su</StringView>
+		<Expand>
+			<Item Name="[len_]" Condition="((unsigned char*)&amp;st_.u_.sso_[0])[23]==255">st_.u_.heap_.len_</Item>
+			<Item Name="[len_]" Condition="sizeof(st_.u_.sso_[0])==1">(int)st_.u_.sso_[23]</Item>
+			<Item Name="[len_]">(int)st_.u_.sso_[11]</Item>
+			<Item Name="[cap_]" Condition="((unsigned char*)&amp;st_.u_.sso_[0])[23]==255">st_.u_.heap_.cap_</Item>
+			<Item Name="[cap_]" Condition="sizeof(st_.u_.sso_[0])==1">22</Item>
+			<Item Name="[cap_]">10</Item>
+			<Item Name="[heap_]">((unsigned char*)&amp;st_.u_.sso_[0])[23]==255</Item>
+		</Expand>
+	</Type>
+
+	<!-- AStringView 본체 (char, UTF-8) -->
+	<Type Name="jc::BasicStringView&lt;char&gt;">
+		<AlternativeType Name="jc::AStringView" />
+		<DisplayString Condition="pBuf_==0">""</DisplayString>
 		<DisplayString>{pBuf_,s8}</DisplayString>
-		<StringView Condition="pBuf_">pBuf_,na</StringView>
+		<StringView Condition="pBuf_!=0">pBuf_,s8</StringView>
 		<Expand>
 			<ArrayItems>
 				<Size>len_</Size>
 				<ValuePointer>pBuf_</ValuePointer>
 			</ArrayItems>
+			<Item Name="[len_]">len_</Item>
+		</Expand>
+	</Type>
+
+	<!-- WStringView 본체 (wchar_t, UTF-16) -->
+	<Type Name="jc::BasicStringView&lt;wchar_t&gt;">
+		<AlternativeType Name="jc::WStringView" />
+		<DisplayString Condition="pBuf_==0">""</DisplayString>
+		<DisplayString>{pBuf_,su}</DisplayString>
+		<StringView Condition="pBuf_!=0">pBuf_,su</StringView>
+		<Expand>
+			<ArrayItems>
+				<Size>len_</Size>
+				<ValuePointer>pBuf_</ValuePointer>
+			</ArrayItems>
+			<Item Name="[len_]">len_</Item>
+		</Expand>
+	</Type>
+
+	<!-- StringView / StringViewT 별칭 (문자셋에 따라 char/wchar_t 중 하나) -->
+	<Type Name="jc::StringView">
+		<AlternativeType Name="jc::StringViewT" />
+		<DisplayString Condition="pBuf_==0">""</DisplayString>
+		<DisplayString Condition="sizeof(pBuf_[0])==1">{pBuf_,s8}</DisplayString>
+		<DisplayString>{pBuf_,su}</DisplayString>
+		<StringView Condition="pBuf_!=0 &amp;&amp; sizeof(pBuf_[0])==1">pBuf_,s8</StringView>
+		<StringView Condition="pBuf_!=0">pBuf_,su</StringView>
+		<Expand>
+			<Item Name="[len_]">len_</Item>
 		</Expand>
 	</Type>
 

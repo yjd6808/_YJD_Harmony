@@ -76,6 +76,9 @@
     <ClCompile Include="..\Sources\jc_gtest\Primitives\BitFlagTest.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\jc_gtest\Primitives\DeferScopeTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
     <ClCompile Include="..\Sources\jc_gtest\Primitives\StringViewTest.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>

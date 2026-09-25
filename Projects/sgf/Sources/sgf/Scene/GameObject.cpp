@@ -57,8 +57,8 @@ GameObject::~GameObject()
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // ★ 트리에 자식 추가 — 씬 트리의 골격을 만드는 핵심 함수.
-// 하는 일: ① 부모 연결 ② 씬 소속 전파(자식 재귀) ③ zOrder 정렬 삽입 ④ OnEnter 1회 호출.
-// - OnEnter에서 스태틱 bake(버텍스 1회 생성)가 일어나므로, 리소스 준비는 여기서 하면 된다.
+// 하는 일: ① 부모 연결 ② 씬 소속 전파(자식 재귀) ③ zOrder 정렬 삽입 ④ Enter 1회 호출.
+// - Enter에서 OnEnter(스태틱 bake)가 일어나므로, 리소스 준비는 여기서 하면 된다.
 // - (용어) zOrder: 그리기 순서. 작을수록 아래(먼저)에 그려진다.
 void GameObject::AddChild(GameObject* _pChild, _u64 _zOrder)
 {
@@ -76,7 +76,7 @@ void GameObject::AddChild(GameObject* _pChild, _u64 _zOrder)
 		_pChild->Initialize(pScene_->GetGraphicDevice());   // 씬 초기화 이후 추가 → 즉시 GPU 초기화
 
 	InsertChildSorted(_pChild, _zOrder);
-	_pChild->OnEnter();                      // AddChild 직후 1회 — 스태틱 bake
+	_pChild->Enter();                      // AddChild 직후 1회 — 스태틱 bake
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +85,7 @@ void GameObject::RemoveChild(GameObject* _pChild)
 	jc_assert_msg(_pChild != nullptr, _T("null 자식은 제거할 수 없습니다."));
 	if (_pChild == nullptr) return;
 
-	_pChild->OnExit();                       // RemoveChild 시 1회 — (필요 시) 스태틱 정리
+	_pChild->Leave();                       // RemoveChild 시 1회 — (필요 시) 스태틱 정리
 	for (int i = 0; i < children_.Size(); ++i)
 	{
 		if (children_[i].pObject_ == _pChild)
@@ -122,7 +122,7 @@ void GameObject::SetZOrder(_u64 _zOrder)
 	if (pParent_ == nullptr || zOrder_ == _zOrder) return;
 	zOrder_ = _zOrder;
 
-	// 리스트에서 빼서 새 위치에 재삽입 (OnExit/OnEnter 없이 — SetZOrder는 수명주기 변경이 아님)
+	// 리스트에서 빼서 새 위치에 재삽입 (Leave/Enter 없이 — SetZOrder는 수명주기 변경이 아님)
 	jc::Vector<ChildEntry>& list = pParent_->children_;
 	int from = 0;
 	for (; from < list.Size(); ++from)
