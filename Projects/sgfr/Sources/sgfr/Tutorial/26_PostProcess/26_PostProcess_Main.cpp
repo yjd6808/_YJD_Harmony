@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 2:30:00 PM
  * =====================
@@ -100,7 +100,7 @@ void PostProcess_Main()
 
 	// 2. 화면과 같은 크기의 렌더 타깃: 장면이 먼저 여기에 그려진다.
 	RenderTarget sceneTarget;
-	if (!sceneTarget.Create(&device, window.Width(), window.Height()))
+	if (!sceneTarget.Create(device, window.Width(), window.Height()))
 	{
 		jc::Console::WriteLine(_T("렌더 타깃 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -122,10 +122,10 @@ void PostProcess_Main()
 	IndexBuffer cubeIb;
 	VertexBuffer quadVb;
 	IndexBuffer quadIb;
-	if (!cubeVb.Create(&device, cubeVertices, 8, VertexPC::Decl()) ||
-		!cubeIb.Create(&device, cubeIndices, 36) ||
-		!quadVb.Create(&device, quadVertices, 4, VertexPTC::Decl()) ||
-		!quadIb.Create(&device, quadIndices, 6))
+	if (!cubeVb.Create(device, cubeVertices, 8, VertexPC::Decl()) ||
+		!cubeIb.Create(device, cubeIndices, 36) ||
+		!quadVb.Create(device, quadVertices, 4, VertexPTC::Decl()) ||
+		!quadIb.Create(device, quadIndices, 6))
 	{
 		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -142,8 +142,8 @@ void PostProcess_Main()
 	_u64 psPostShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(PostProcessShaderSource()));
 	ConstantBuffer<CbTransform> cbTransform;
 	ConstantBuffer<CbPost> cbPost;
-	if (vsSceneShader == INVALID_RESOURCE_KEY || psSceneShader == INVALID_RESOURCE_KEY || vsPostShader == INVALID_RESOURCE_KEY || psPostShader == INVALID_RESOURCE_KEY || !cbTransform.Create(&device) ||
-		!cbPost.Create(&device))
+	if (vsSceneShader == INVALID_RESOURCE_KEY || psSceneShader == INVALID_RESOURCE_KEY || vsPostShader == INVALID_RESOURCE_KEY || psPostShader == INVALID_RESOURCE_KEY || !cbTransform.Create(device) ||
+		!cbPost.Create(device))
 	{
 		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -208,7 +208,7 @@ void PostProcess_Main()
 		device.BeginFrame(color(0x00, 0x00, 0x00, 0xFF));
 
 		device.SetRenderTarget(&sceneTarget);
-		sceneTarget.Clear(&device, color(0x1F, 0x1A, 0x33, 0xFF));
+		sceneTarget.Clear(device, color(0x1F, 0x1A, 0x33, 0xFF));
 
 		const mat4 world = mat4::RotationY(elapsed * 0.8f) * mat4::RotationX(elapsed * 0.3f);
 		CbTransform cbT;
@@ -236,7 +236,7 @@ void PostProcess_Main()
 		cbPost.UpdateAndBind(device.Context(), cbP, 0);
 
 		device.Context().SetSampler(FilterMode::fmLinear, AddressMode::amClamp, 0);
-		sceneTarget.BindAsTexture(&device, 0);
+		sceneTarget.BindAsTexture(device, 0);
 
 		quadVb.Bind(device.Context());
 		quadIb.Bind(device.Context());

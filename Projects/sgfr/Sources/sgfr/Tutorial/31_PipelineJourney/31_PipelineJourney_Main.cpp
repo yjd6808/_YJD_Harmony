@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 6:30:00 PM
  * =====================
@@ -105,7 +105,7 @@ void PipelineJourney_Main()
 	FillChecker(pixels, 64, 64);
 
 	Texture* pChecker = dbg_new Texture();
-	if (!pChecker->CreateFromMemory(&device, pixels, 64, 64))
+	if (!pChecker->CreateFromMemory(device, pixels, 64, 64))
 	{
 		jc::Console::WriteLine(_T("텍스처 생성 실패!"));
 		delete pChecker;
@@ -115,36 +115,35 @@ void PipelineJourney_Main()
 		window.Destroy();
 		return;
 	}
-	pChecker->SetDebugName(_T("JourneyChecker"));
+
 	const _u64 checkerKey = g_cResourceMgr.Add(pChecker, _T("memory://journey_checker"));
 
 	// [§9] 머티리얼 구성: 셰이더 + 상태 4종 + 텍스처 슬롯 (값 하나로 묶인다)
 	// - 바닥용: 디폴트 3D 셰이더 + 체커 텍스처
-	Material* pFloorMaterial = dbg_new Material();
-	if (!pFloorMaterial->Initialize(&device))
+	MaterialDesc floorMaterialDesc;
+	floorMaterialDesc.vertexShaderKey_ = g_cResourceMgr.GetDefaultVertexShader2DKey();
+	floorMaterialDesc.pixelShaderKey_ = g_cResourceMgr.GetDefaultPixelShader2DKey();
+	floorMaterialDesc.textureKeys_[0] = checkerKey;
+	floorMaterialDesc.cullMode_ = CullMode::cmBack;
+	floorMaterialDesc.blendMode_ = BlendMode::bmNone;
+	floorMaterialDesc.depthMode_ = DepthMode::dmReadWrite;
+	floorMaterialDesc.filter_ = FilterMode::fmLinear;
+	const _u64 floorMaterialKey = g_cResourceMgr.CreateMaterial(floorMaterialDesc);
+	if (floorMaterialKey == INVALID_RESOURCE_KEY)
 	{
-		jc::Console::WriteLine(_T("머티리얼 초기화 실패!"));
-		delete pFloorMaterial;
+		jc::Console::WriteLine(_T("머티리얼 생성 실패!"));
 		renderer.Finalize();
 		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
-	pFloorMaterial->SetVertexShaderKey(g_cResourceMgr.GetDefaultVertexShader2DKey());
-	pFloorMaterial->SetPixelShaderKey(g_cResourceMgr.GetDefaultPixelShader2DKey());
-	pFloorMaterial->SetTextureKey(0, checkerKey);			// [§9] texture[8] 슬롯 중 t0
-	pFloorMaterial->SetRasterizer(CullMode::cmBack);			// [§7] 래스터라이저 상태
-	pFloorMaterial->SetBlend(BlendMode::bmNone);			// [§7] 블렌드 상태
-	pFloorMaterial->SetDepth(DepthMode::dmReadWrite);			// [§7] 깊이 상태
-	pFloorMaterial->SetSampler(FilterMode::fmLinear);			// [§7] 샘플러 상태
-	const _u64 floorMaterialKey = g_cResourceMgr.Add(pFloorMaterial);
 
 	// [§10~§11] 메시: VB + IB + 입력 레이아웃 + 토폴로지를 한 덩어리로
 	Mesh* pCubeMesh = dbg_new Mesh();
 	Mesh* pQuadMesh = dbg_new Mesh();
-	if (!pCubeMesh->InitializeAsCube(&device) ||
-		!pQuadMesh->InitializeAsQuad2D(&device))
+	if (!pCubeMesh->InitializeAsCube(device) ||
+		!pQuadMesh->InitializeAsQuad2D(device))
 	{
 		jc::Console::WriteLine(_T("메시 생성 실패!"));
 		delete pCubeMesh;
@@ -155,8 +154,7 @@ void PipelineJourney_Main()
 		window.Destroy();
 		return;
 	}
-	pCubeMesh->SetDebugName(_T("JourneyCube"));
-	pQuadMesh->SetDebugName(_T("JourneyFloor"));
+
 	const _u64 cubeMeshKey = g_cResourceMgr.Add(pCubeMesh);
 	const _u64 quadMeshKey = g_cResourceMgr.Add(pQuadMesh);
 

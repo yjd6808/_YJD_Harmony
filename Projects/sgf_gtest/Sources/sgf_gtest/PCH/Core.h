@@ -19,3 +19,4 @@ USING_NS_STD;
 #define TEST_GraphicsEnumsTest ON
 #define TEST_TransformTest ON
 #define TEST_PrimitiveBuilderTest ON
+#define TEST_ResourceOwnershipTest ON

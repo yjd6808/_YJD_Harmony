@@ -68,7 +68,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 메시 그리기 (— Mesh+Material 자동 드로우)
 	// GameObject::RenderSelf → Scene2D::DrawMesh → Renderer2D::DrawMesh (2D 배칭)
-	virtual void DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world) override;
+	virtual void DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world, const color& _tint = color::WHITE) override;
 
 	// 엔진 진입점 (— 카메라 자동 구성 후 OnEnter 호출)
 	virtual void Enter() override;

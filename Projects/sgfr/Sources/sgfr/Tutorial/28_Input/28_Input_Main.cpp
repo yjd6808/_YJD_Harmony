@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 11:10:00 AM
  * =====================
@@ -100,8 +100,8 @@ void Input_Main()
 
 	VertexBuffer vb;
 	IndexBuffer ib;
-	if (!vb.Create(&device, vertices, 4, VertexPC::Decl()) ||
-		!ib.Create(&device, indices, 6))
+	if (!vb.Create(device, vertices, 4, VertexPC::Decl()) ||
+		!ib.Create(device, indices, 6))
 	{
 		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();

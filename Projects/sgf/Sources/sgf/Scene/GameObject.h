@@ -17,7 +17,7 @@
  *
  * [수명주기 훅]
  * - OnEnter: AddChild 직후 1회 (씬 소속 확정) — 스태틱 bake(DeclareStatic*)는 여기서
- * - OnExit: RemoveChild 직후 1회 — (필요 시) 스태틱 정리
+ * - OnExit: DetachChild/DestroyChild 직후 1회 — (필요 시) 스태틱 정리
  * - OnRender: 매 프레임 트래버설 — pScene_->RenderStatic/RenderDynamic/DrawMesh 호출
  * - OnUpdate: 매 프레임 — 로직 갱신
  */
@@ -31,6 +31,7 @@
 #include "jc/Primitives/String.h"
 #include "jc/Pool/IdProvider.h"
 #include "sgf/Graphics/GraphicsEnums.h"	// StaticLevel
+#include "sgf/Graphics/IResource.h"		// INVALID_RESOURCE_KEY
 #include "sgf/Scene/Component.h"
 #include "sgf/Scene/Transform.h"
 
@@ -41,7 +42,6 @@ using namespace jc;
 class Scene;
 class Mesh;
 class Material;
-class GraphicDevice;
 
 class GameObject
 {
@@ -56,7 +56,8 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 트리 (핵심)
 	void AddChild(GameObject* _pChild, _u64 _zOrder);	// 소유권 이전 + zOrder 정렬 삽입
-	void RemoveChild(GameObject* _pChild);				// 분리 (delete 안 함)
+	GameObject* DetachChild(GameObject* _pChild);
+	void DestroyChild(GameObject* _pChild);
 	void RemoveAllChildren();
 	GameObject* GetParent() const { return pParent_; }
 	int GetChildCount() const { return children_.Size(); }
@@ -72,7 +73,7 @@ public:
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 메시 자동 드로우 (— Scene::RenderNode가 트래버설 중 호출)
-	// SetMesh()만 하면 기본 Material(흰색)로 그려진다. (단색 도형 = Material baseColor로 채움색 지정)
+	// SetMeshKey()만 하면 기본 Material(흰색)로 그려진다. (단색 도형 = Material baseColor로 채움색 지정)
 	void RenderSelf();
 
 	////////////////////////////////////////////////////////////////////////////////////////
@@ -93,15 +94,25 @@ public:
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 컴포넌트 (그대로 — 하이브리드 보관, 카메라는 컴포넌트 아님)
-	template <typename T> T* GetComponent();	// Transform/Material = O(1) 멤버, 그 외 = 선형 스캔
+	template <typename T> T* GetComponent();	// Transform = O(1) 멤버, 그 외 = 선형 스캔
 	template <typename T> T* AddComponent();	// 그 외 컴포넌트 생성+추가 (소유)
 	Transform* GetTransform() const { return pTransform_; }
-	Material*  GetMaterial()  const { return pMaterial_; }
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	// 메시 / 표시
-	void SetMesh(Mesh* _pMesh);  Mesh* GetMesh() const { return pMesh_; }	// 빌림 (ResourceMgr 소유)
+	// 렌더 리소스 (— 모두 ResourceMgr 소유를 키로 빌린다. 소유하지 않는다)
+	void SetMeshKey(_u64 _key);
+	void SetMaterialKey(_u64 _key);
+	_u64 GetMeshKey() const { return meshKey_; }
+	_u64 GetMaterialKey() const { return materialKey_; }
+	const Mesh* GetMesh() const;
+	const Material* GetMaterial() const;
+
 	void SetVisible(bool _visible);  bool IsVisible() const { return visible_; }
+
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 오브젝트별 색상 (— Material이 아니라 인스턴스 데이터)
+	void SetTint(const color& _tint) { tint_ = _tint; }
+	const color& GetTint() const { return tint_; }
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 메시 스태틱 레벨 (— B 기본 / A는 명시적 호출로 전환)
@@ -122,7 +133,6 @@ public:
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 엔진 내부 (Scene/Transform이 호출)
-	void Initialize(GraphicDevice* _pDevice);	// 기본 Material GPU 초기화, 자식 재귀
 	void Update(const jc::TimeSpan& _dt);		// OnUpdate + 컴포넌트 OnUpdate + 자식 재귀
 
 private:
@@ -130,6 +140,7 @@ private:
 	friend class Transform;
 	void SetScene(Scene* _pScene);								// 소속 씬 (자식 재귀)
 	void InsertChildSorted(GameObject* _pChild, _u64 _zOrder);	// 정렬 안정 삽입
+	Material* ResolveMaterial(const Mesh& _mesh) const;			// 지정 없으면 메시 종류별 기본 머티리얼
 
 protected:
 	Scene* pScene_ = nullptr;						// 소속 씬 (OnRender()에서 사용, AddChild 시 주입)
@@ -139,17 +150,17 @@ private:
 	_u64 gid_ = 0;									// 고유 ID (생성자에서 발급, 소멸자에서 반환)
 	jc::CDataMap<> dataMap_;						// 범용 데이터 보관 (이름 키)
 	Transform* pTransform_ = nullptr;				// 기본 멤버 (생성 시 new)
-	Material*  pMaterial_  = nullptr;				// 기본 멤버 (생성 시 new)
 	jc::Vector<Component*> components_;				// 그 외 컴포넌트 (소유)
 
 	GameObject* pParent_ = nullptr;
 	struct ChildEntry { GameObject* pObject_; _u64 zOrder_; };
 	jc::Vector<ChildEntry> children_;				// zOrder 오름차순 유지 (안정)
 
-	Mesh* pMesh_ = nullptr;							// 빌림
+	_u64 meshKey_ = INVALID_RESOURCE_KEY;			// 빌림 (ResourceMgr 소유)
+	_u64 materialKey_ = INVALID_RESOURCE_KEY;		// 빌림 (INVALID면 렌더 시 기본 머티리얼)
+	color tint_ = color::WHITE;						// 오브젝트별 색상
 	_u64 zOrder_ = 0;								// 부모 리스트 기준 (자기 자신의 깊이)
 	bool visible_ = true;
-	bool initialized_ = false;
 	StaticLevel staticLevel_ = StaticLevel::slDynamic;	// 렌더 모드 (기본: B — 다이나믹)
 	mat4 staticWorld_ = mat4::Identity();				// slStatic 시 고정된 월드 행렬
 
@@ -162,9 +173,11 @@ private:
 template <typename T>
 T* GameObject::GetComponent()
 {
+	static_assert(!std::is_same_v<T, Material>,
+		_T("Material은 컴포넌트가 아닙니다. GetMaterialKey()/SetMaterialKey()를 사용하세요."));
+
 	// 기본 멤버 (O(1))
 	if constexpr (std::is_same_v<T, Transform>) return pTransform_;
-	if constexpr (std::is_same_v<T, Material>)  return pMaterial_;
 
 	// 그 외: components_ 선형 스캔 (커스텀 컴포넌트)
 	for (Component* pComponent : components_)
@@ -180,9 +193,11 @@ T* GameObject::GetComponent()
 template <typename T>
 T* GameObject::AddComponent()
 {
+	static_assert(!std::is_same_v<T, Material>,
+		_T("Material은 ResourceMgr가 소유합니다. CreateMaterial()과 SetMaterialKey()를 사용하세요."));
+
 	// 기본 멤버는 이미 존재하므로 그대로 반환
 	if constexpr (std::is_same_v<T, Transform>) return pTransform_;
-	if constexpr (std::is_same_v<T, Material>)  return pMaterial_;
 
 	T* pComponent = dbg_new T(this);
 	components_.PushBack(pComponent);

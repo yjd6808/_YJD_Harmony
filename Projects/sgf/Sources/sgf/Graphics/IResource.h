@@ -99,9 +99,6 @@ public:
 
 	// ResourceMgr가 발급한 키 (등록 전이면 INVALID_RESOURCE_KEY)
 	virtual _u64 GetKey() const = 0;
-
-	// 디버그 이름 (없으면 빈 문자열)
-	virtual const _char* GetDebugName() const = 0;
 };
 
 // 키/디버그 이름 보관을 구현해둔 공통 베이스.
@@ -115,16 +112,9 @@ public:
 	}
 
 	virtual _u64 GetKey() const override { return key_; }
-	virtual const _char* GetDebugName() const override { return debugName_.SafeSource(); }
 
 	// ResourceMgr만 호출한다. (Add/Remove 시 키 부여/회수)
 	void SetKey(_u64 _key) { key_ = _key; }
-
-	// 디버그 이름을 붙여둔다. (PrintStatus/로그에서 식별용)
-	void SetDebugName(StringView _name)
-	{
-		debugName_ = _name;
-	}
 
 	// 경로로 등록된 리소스의 로드 경로. 경로 없이 Add된 리소스는 빈 문자열. (B-7)
 	const _char* GetPath() const { return path_.SafeSource(); }
@@ -134,7 +124,6 @@ public:
 
 protected:
 	_u64 key_;			// ResourceMgr 발급 키
-	String debugName_;	// 디버그 이름
 	String path_;		// 등록 경로 (ResourceMgr::Add(resource, path)로 세팅)
 };
 

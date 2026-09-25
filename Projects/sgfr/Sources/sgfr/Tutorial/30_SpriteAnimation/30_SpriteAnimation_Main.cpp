@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 2:50:00 PM
  * =====================
@@ -93,7 +93,7 @@ void SpriteAnimation_Main()
 	FillSpriteSheetPixels(pPixels);
 
 	Texture sheetTexture;
-	const bool bTextureOk = sheetTexture.CreateFromMemory(&device, pPixels, sheetSize, sheetSize);
+	const bool bTextureOk = sheetTexture.CreateFromMemory(device, pPixels, sheetSize, sheetSize);
 	JC_DELETE_SAFE(pPixels);	// GPU로 복사되었으므로 CPU 메모리는 바로 해제
 	if (!bTextureOk)
 	{
@@ -114,8 +114,8 @@ void SpriteAnimation_Main()
 
 	VertexBuffer quadVb;
 	IndexBuffer quadIb;
-	if (!quadVb.Create(&device, quadVertices, 4, VertexPTC::Decl()) ||
-		!quadIb.Create(&device, quadIndices, 6))
+	if (!quadVb.Create(device, quadVertices, 4, VertexPTC::Decl()) ||
+		!quadIb.Create(device, quadIndices, 6))
 		{
 		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 	g_cResourceMgr.Finalize();

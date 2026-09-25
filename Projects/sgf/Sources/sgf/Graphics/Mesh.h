@@ -63,34 +63,34 @@ public:
 	// @param _indexCount: 인덱스 개수
 	// @param _topology: 정점 해석 방법 (기본: 삼각형 리스트)
 	bool Initialize(
-		GraphicDevice* _pDevice,
+		GraphicDevice& _device,
 		const void* _pVertices, UINT _vertexCount,
 		const VertexDeclaration* _pDecl,
 		const _u32* _pIndices = nullptr, UINT _indexCount = 0,
 		PrimitiveTopology _topology = PrimitiveTopology::ptTriangleList);
 
 	// XY 평면 1x1 쿼드 (VertexPTC. 2D 스프라이트/UI용. 중심 원점)
-	bool InitializeAsQuad2D(GraphicDevice* _pDevice);
+	bool InitializeAsQuad2D(GraphicDevice& _device);
 
 	// 1x1x1 큐브 (VertexPNT. 면별 법선. 중심 원점)
-	bool InitializeAsCube(GraphicDevice* _pDevice);
+	bool InitializeAsCube(GraphicDevice& _device);
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 3D 프리미티브 팩토리 (— VertexPNT, GPU 전용, CPU 미러 없음)
 	// Unity 표준 규격을 따른다. (중심 원점 — scale/rotation으로 제어)
-	bool InitializeAsSphere(GraphicDevice* _pDevice, _u32 _slices = 16, _u32 _stacks = 8);	// 반지름 1 구
-	bool InitializeAsCylinder(GraphicDevice* _pDevice, _u32 _segments = 16);	// 반지름 1, 높이 2 원기둥
-	bool InitializeAsCapsule(GraphicDevice* _pDevice, _u32 _segments = 16);	// 반지름 0.5, 전체 높이 2 캡슐
-	bool InitializeAsPlane(GraphicDevice* _pDevice);	// XY 1x1 +Z 향 평면 (8x8 격자)
-	bool InitializeAsQuad3D(GraphicDevice* _pDevice);	// XY 1x1 +Z 향 쿼드
+	bool InitializeAsSphere(GraphicDevice& _device, _u32 _slices = 16, _u32 _stacks = 8);	// 반지름 1 구
+	bool InitializeAsCylinder(GraphicDevice& _device, _u32 _segments = 16);	// 반지름 1, 높이 2 원기둥
+	bool InitializeAsCapsule(GraphicDevice& _device, _u32 _segments = 16);	// 반지름 0.5, 전체 높이 2 캡슐
+	bool InitializeAsPlane(GraphicDevice& _device);	// XY 1x1 +Z 향 평면 (8x8 격자)
+	bool InitializeAsQuad3D(GraphicDevice& _device);	// XY 1x1 +Z 향 쿼드
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 2D 프리미티브 팩토리 (— 모두 단위 도형, 중심 원점, VertexPTC)
 	// Transform scale/rotation으로 크기·회전을 제어한다. (scale = 크기, rotation = 각도)
-	bool InitializeAsRect2D(GraphicDevice* _pDevice);	// 1x1 사각형 (= InitializeAsQuad2D)
-	bool InitializeAsCircle2D(GraphicDevice* _pDevice, _u32 _segments = 32);	// 반지름 1 원
-	bool InitializeAsTriangle2D(GraphicDevice* _pDevice);	// 단위 삼각형
-	bool InitializeAsLine2D(GraphicDevice* _pDevice);	// 가로 길이 1, 두께 1 (중심 원점)
+	bool InitializeAsRect2D(GraphicDevice& _device);	// 1x1 사각형 (= InitializeAsQuad2D)
+	bool InitializeAsCircle2D(GraphicDevice& _device, _u32 _segments = 32);	// 반지름 1 원
+	bool InitializeAsTriangle2D(GraphicDevice& _device);	// 단위 삼각형
+	bool InitializeAsLine2D(GraphicDevice& _device);	// 가로 길이 1, 두께 1 (중심 원점)
 
 	void Finalize();
 
@@ -112,7 +112,7 @@ public:
 
 private:
 	// FillResult 기하 → GPU 메시 + vfPTC2D 표기 (CPU 미러 없음 — GPU 변환 통일)
-	bool Build2DPrimitive(GraphicDevice* _pDevice, FillResult& _result, const jc::String& _pName);
+	bool Build2DPrimitive(GraphicDevice& _device, FillResult& _result);
 
 	VertexBuffer vertexBuffer_;		// 정점 버퍼 (소유 — 선언은 VB가 보관)
 	IndexBuffer indexBuffer_;		// 인덱스 버퍼 (소유. 비인덱스면 비어있음)

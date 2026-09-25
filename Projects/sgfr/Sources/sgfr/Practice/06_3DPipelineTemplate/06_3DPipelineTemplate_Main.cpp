@@ -70,7 +70,7 @@ void Practice_3DPipelineTemplate_Main()
 	InputManager input;
 	window.ConnectInput(&input);
 
-	GraphicDevice& gd = GraphicDevice::Get();
+	GraphicDevice gd;
 	if (!gd.Initialize())
 	{
 		jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
@@ -117,8 +117,8 @@ void Practice_3DPipelineTemplate_Main()
 
 	VertexBuffer vb;
 	IndexBuffer ib;
-	if (!vb.Create(&gd, vertices, 8, VertexPC::Decl()) ||
-		!ib.Create(&gd, indices, 36))
+	if (!vb.Create(gd, vertices, 8, VertexPC::Decl()) ||
+		!ib.Create(gd, indices, 36))
 	{
 		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -131,7 +131,7 @@ void Practice_3DPipelineTemplate_Main()
 	const _u64 hPs = gc.CreatePixelShader(jc::StringConvert::FromUtf8(GetShaderSource()));
 	ConstantBuffer<CbTransform> cbTransform;
 	if (hVs == INVALID_RESOURCE_KEY || hPs == INVALID_RESOURCE_KEY ||
-		!cbTransform.Create(&gd))
+		!cbTransform.Create(gd))
 	{
 		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();

@@ -36,18 +36,18 @@ bool BatchRenderer::Initialize(GraphicDevice* _pDevice)
 
 	// 1. 파생이 내려준 셰이더 소스로 분리형 VS/PS 생성
 	const jc::String hlslSource = jc::StringConvert::FromUtf8(ShaderSource());
-	if (!vs_.InitializeFromSource(_pDevice, hlslSource))
+	if (!vs_.InitializeFromSource(*_pDevice, hlslSource))
 	{
 		return false;
 	}
-	if (!ps_.InitializeFromSource(_pDevice, hlslSource))
+	if (!ps_.InitializeFromSource(*_pDevice, hlslSource))
 	{
 		vs_.Finalize();
 		return false;
 	}
 
 	// 2. 뷰프로젝션 행렬용 상수 버퍼
-	if (!cbFrame_.Create(_pDevice))
+	if (!cbFrame_.Create(*_pDevice))
 	{
 		vs_.Finalize();
 		ps_.Finalize();

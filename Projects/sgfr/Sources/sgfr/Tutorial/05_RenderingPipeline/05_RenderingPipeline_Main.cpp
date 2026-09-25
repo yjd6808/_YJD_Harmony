@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 9:40:00 AM
  * 수정일: 8/23/2026 - 방향키 자유 전환 (처음 Legacy, 좌/우로 토글)
@@ -58,8 +58,7 @@ void RenderingPipeline_Main()
 	InputManager input;
 	window.ConnectInput(&input);
 
-	// 최종 설계서 기준: 잘 알려진 인스턴스 + 명시적 수명
-	GraphicDevice& gd = GraphicDevice::Get();
+	GraphicDevice gd;
 	if (!gd.Initialize())
 	{
 		jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
@@ -95,7 +94,7 @@ void RenderingPipeline_Main()
 
 	// 3-A. Legacy 리소스 (직접 바인딩 경로 - 레거시 API)
 	VertexBuffer vbLegacy;
-	if (!vbLegacy.Create(&gd, vertices, 3, VertexPC::Decl()))
+	if (!vbLegacy.Create(gd, vertices, 3, VertexPC::Decl()))
 	{
 		jc::Console::WriteLine(_T("Legacy 정점 버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();

@@ -101,9 +101,9 @@ void Scene2D::RenderDynamic(const rect& _region, const Fill& _fill,
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 메시 그리기 — Mesh+Material 자동 드로우 (GameObject::RenderSelf → 이곳)
-void Scene2D::DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world)
+void Scene2D::DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world, const color& _tint)
 {
-	g_cRenderer2D.DrawMesh(_pMesh, _pMaterial, _world);
+	g_cRenderer2D.DrawMesh(_pMesh, _pMaterial, _world, _tint);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

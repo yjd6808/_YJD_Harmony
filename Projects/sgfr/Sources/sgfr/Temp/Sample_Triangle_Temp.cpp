@@ -42,7 +42,7 @@ void Sample_Triangle_Temp_Run()
 	Window window;
 	window.Create("Sample Triangle", 800, 600);
 
-	GraphicDevice& gd = GraphicDevice::Get();
+	GraphicDevice gd;
 	gd.Initialize();
 	gd.CreateSwapChain(window.Handle(), 800, 600, PixelFormat::pfRgba8);
 	GraphicContext& gc = gd.Context();

@@ -10,7 +10,7 @@
 #include "sgf/Scene/Transform.h"
 #include "sgf/Graphics/Material.h"
 #include "sgf/Graphics/Mesh.h"
-#include "sgf/Graphics/GraphicDevice.h"
+#include "sgf/Graphics/ResourceMgr.h"
 #include "jc/Assert.h"
 #include "jc/Debug/New.h"
 
@@ -26,7 +26,6 @@ GameObject::GameObject(const jc::String& _name)
 	: name_(_name)
 	, gid_(gidProvider_.Acquire())			// 1, 2, 3, ... 계속 증가 (INVALID_KEY=0은 발급 안 됨)
 	, pTransform_(dbg_new Transform(this))	// 기본 컴포넌트
-	, pMaterial_(dbg_new Material())
 {
 }
 
@@ -50,8 +49,7 @@ GameObject::~GameObject()
 	}
 	components_.Clear();
 
-	// 기본 멤버 정리 (Transform/Material)
-	JC_DELETE_SAFE(pMaterial_);
+	// 기본 멤버 정리 (Transform만 소유. Mesh/Material은 ResourceMgr 소유)
 	JC_DELETE_SAFE(pTransform_);
 }
 
@@ -72,39 +70,49 @@ void GameObject::AddChild(GameObject* _pChild, _u64 _zOrder)
 	_pChild->zOrder_  = _zOrder;
 	_pChild->SetScene(pScene_);              // 씬 소속 전파 (자식 재귀)
 
-	if (initialized_ && pScene_ != nullptr && pScene_->GetWindow() != nullptr)
-		_pChild->Initialize(pScene_->GetGraphicDevice());   // 씬 초기화 이후 추가 → 즉시 GPU 초기화
-
 	InsertChildSorted(_pChild, _zOrder);
 	_pChild->Enter();                      // AddChild 직후 1회 — 스태틱 bake
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GameObject::RemoveChild(GameObject* _pChild)
+GameObject* GameObject::DetachChild(GameObject* _pChild)
 {
-	jc_assert_msg(_pChild != nullptr, _T("null 자식은 제거할 수 없습니다."));
-	if (_pChild == nullptr) return;
+	jc_assert_msg(_pChild != nullptr, _T("null 자식은 분리할 수 없습니다."));
+	if (_pChild == nullptr) return nullptr;
 
-	_pChild->Leave();                       // RemoveChild 시 1회 — (필요 시) 스태틱 정리
+	bool found = false;
 	for (int i = 0; i < children_.Size(); ++i)
 	{
 		if (children_[i].pObject_ == _pChild)
 		{
-			children_.RemoveAt(i);           // 분리만 (delete 안 함)
+			children_.RemoveAt(i);
+			found = true;
 			break;
 		}
 	}
+
+	jc_assert_msg(found, _T("이 노드의 자식이 아닙니다."));
+	if (!found) return nullptr;
+
+	_pChild->Leave();
 	_pChild->pParent_ = nullptr;
-	_pChild->SetScene(nullptr);              // 씬 소속 해제 (자식 재귀)
+	_pChild->SetScene(nullptr);
+	return _pChild;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+void GameObject::DestroyChild(GameObject* _pChild)
+{
+	GameObject* pDetached = DetachChild(_pChild);
+	JC_DELETE_SAFE(pDetached);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void GameObject::RemoveAllChildren()
 {
-	// 역순 제거 — RemoveChild가 리스트를 수정하므로 뒤에서부터
 	while (children_.Size() > 0)
 	{
-		RemoveChild(children_.Last()->pObject_);
+		DestroyChild(children_.Last()->pObject_);
 	}
 }
 
@@ -152,9 +160,49 @@ GameObject* GameObject::FindChildByName(const jc::String& _name)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GameObject::SetMesh(Mesh* _pMesh)
+void GameObject::SetMeshKey(_u64 _key)
 {
-	pMesh_ = _pMesh;
+	jc_assert_msg(_key == INVALID_RESOURCE_KEY || GetResourceTypeFromKey(_key) == ResourceType::rtMesh,
+		_T("Mesh 키가 아닙니다."));
+	meshKey_ = _key;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+void GameObject::SetMaterialKey(_u64 _key)
+{
+	jc_assert_msg(_key == INVALID_RESOURCE_KEY || GetResourceTypeFromKey(_key) == ResourceType::rtMaterial,
+		_T("Material 키가 아닙니다."));
+	materialKey_ = _key;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+const Mesh* GameObject::GetMesh() const
+{
+	return g_cResourceMgr.Find<Mesh>(meshKey_);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+const Material* GameObject::GetMaterial() const
+{
+	return g_cResourceMgr.Find<Material>(materialKey_);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+Material* GameObject::ResolveMaterial(const Mesh& _mesh) const
+{
+	if (materialKey_ != INVALID_RESOURCE_KEY)
+	{
+		Material* pMaterial = g_cResourceMgr.Find<Material>(materialKey_);
+		if (pMaterial != nullptr)
+		{
+			return pMaterial;
+		}
+		jc_assert_msg(false, _T("제거된 머티리얼 키입니다."));
+	}
+
+	return _mesh.Is2D()
+		? g_cResourceMgr.GetDefaultMaterial2D()
+		: g_cResourceMgr.GetDefaultMaterial3D();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -184,7 +232,20 @@ void GameObject::SetVisible(bool _visible)
 // - (용어) 월드 행렬: 오브젝트를 "게임 세계" 어디에 놓을지 알려주는 4x4 변환.
 void GameObject::RenderSelf()
 {
-	if (pMesh_ == nullptr || pScene_ == nullptr)
+	if (pScene_ == nullptr || !visible_)
+	{
+		return;
+	}
+
+	Mesh* pMesh = g_cResourceMgr.Find<Mesh>(meshKey_);
+	if (pMesh == nullptr)
+	{
+		jc_assert_msg(meshKey_ == INVALID_RESOURCE_KEY, _T("제거된 메시 키입니다."));
+		return;
+	}
+
+	Material* pMaterial = ResolveMaterial(*pMesh);
+	if (pMaterial == nullptr)
 	{
 		return;
 	}
@@ -192,27 +253,10 @@ void GameObject::RenderSelf()
 	const mat4& world = (staticLevel_ == StaticLevel::slStatic)
 		? staticWorld_
 		: pTransform_->GetWorldMatrix();
-	pScene_->DrawMesh(pMesh_, pMaterial_, world);
+	pScene_->DrawMesh(pMesh, pMaterial, world, tint_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void GameObject::Initialize(GraphicDevice* _pDevice)
-{
-	// 기본 Material GPU 초기화 (이미 초기화됐으면 스킵 — Material 내부에서도 재초기화 방지)
-	if (pMaterial_ != nullptr && !initialized_ && _pDevice != nullptr)
-	{
-		pMaterial_->Initialize(_pDevice);
-	}
-
-	initialized_ = true;
-
-	// 자식 재귀
-	for (int i = 0; i < children_.Size(); ++i)
-	{
-		children_[i].pObject_->Initialize(_pDevice);
-	}
-}
-
 //////////////////////////////////////////////////////////////////////////////////////////
 void GameObject::Update(const jc::TimeSpan& _dt)
 {

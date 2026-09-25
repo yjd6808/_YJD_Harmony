@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 1:50:00 PM
  * =====================
@@ -90,7 +90,7 @@ void BlendState_Main()
 	FillSoftCirclePixels(s_Pixels, 128);
 
 	Texture texture;
-	if (!texture.CreateFromMemory(&device, s_Pixels, 128, 128))
+	if (!texture.CreateFromMemory(device, s_Pixels, 128, 128))
 	{
 		jc::Console::WriteLine(_T("텍스처 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -105,8 +105,8 @@ void BlendState_Main()
 
 	VertexBuffer vb;
 	IndexBuffer ib;
-	if (!vb.Create(&device, vertices, 4, VertexPTC::Decl()) ||	// bDynamic = true!
-		!ib.Create(&device, indices, 6))
+	if (!vb.Create(device, vertices, 4, VertexPTC::Decl()) ||	// bDynamic = true!
+		!ib.Create(device, indices, 6))
 	{
 		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();

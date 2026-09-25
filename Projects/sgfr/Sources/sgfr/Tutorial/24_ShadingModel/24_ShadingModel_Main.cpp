@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 2:10:00 PM
  * =====================
@@ -102,8 +102,8 @@ void ShadingModel_Main()
 
 	VertexBuffer vb;
 	IndexBuffer ib;
-	if (!vb.Create(&device, vertices.Source(), static_cast<UINT>(vertices.Size()), VertexPNT::Decl()) ||
-		!ib.Create(&device, indices.Source(), static_cast<UINT>(indices.Size())))
+	if (!vb.Create(device, vertices.Source(), static_cast<UINT>(vertices.Size()), VertexPNT::Decl()) ||
+		!ib.Create(device, indices.Source(), static_cast<UINT>(indices.Size())))
 	{
 		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -119,8 +119,8 @@ void ShadingModel_Main()
 	ConstantBuffer<CbTransform> cbTransform;
 	ConstantBuffer<CbShading> cbShading;
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY ||
-		!cbTransform.Create(&device) ||
-		!cbShading.Create(&device))
+		!cbTransform.Create(device) ||
+		!cbShading.Create(device))
 	{
 		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();

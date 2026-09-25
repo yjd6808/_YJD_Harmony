@@ -22,6 +22,7 @@
     <ClCompile Include="..\Sources\sgf_gtest\GraphicsEnumsTest.cpp" />
     <ClCompile Include="..\Sources\sgf_gtest\TransformTest.cpp" />
     <ClCompile Include="..\Sources\sgf_gtest\PrimitiveBuilderTest.cpp" />
+    <ClCompile Include="..\Sources\sgf_gtest\ResourceOwnershipTest.cpp" />
     <ClCompile Include="..\Sources\sgf_gtest\PCH\Core.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

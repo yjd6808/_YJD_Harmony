@@ -51,31 +51,21 @@ namespace
 	class Primitive2DScene : public Scene2D
 	{
 	public:
-		~Primitive2DScene()
-		{
-			// root_ 트리는 자식을 소유하지 않으므로(분리만) 직접 정리한다.
-			for (GameObject* pObj : createdObjects_)
-			{
-				RemoveChild(pObj);
-				delete pObj;
-			}
-		}
-
 		// 씬 진입: 카메라 + 리소스 매니저에서 메시를 꺼내 4개의 GameObject를 배치
 		void OnEnter() override
 		{
 			GetCamera2D()->SetOrthographic2D(VIEW_WIDTH, VIEW_HEIGHT);
 			GetWindow()->SetTitle(_T("32. 2D 프리미티브 - SPACE: 3D 씬 (ESC: 종료)"));
 
-			Mesh* pRect = g_cResourceMgr.FindPrimitiveMesh2D(PrimitiveMesh2DType::Rect);
-			Mesh* pCircle = g_cResourceMgr.FindPrimitiveMesh2D(PrimitiveMesh2DType::Circle);
-			Mesh* pTriangle = g_cResourceMgr.FindPrimitiveMesh2D(PrimitiveMesh2DType::Triangle);
-			Mesh* pLine = g_cResourceMgr.FindPrimitiveMesh2D(PrimitiveMesh2DType::Line);
+			const _u64 rectKey = g_cResourceMgr.GetPrimitiveMesh2DKey(PrimitiveMesh2DType::Rect);
+			const _u64 circleKey = g_cResourceMgr.GetPrimitiveMesh2DKey(PrimitiveMesh2DType::Circle);
+			const _u64 triangleKey = g_cResourceMgr.GetPrimitiveMesh2DKey(PrimitiveMesh2DType::Triangle);
+			const _u64 lineKey = g_cResourceMgr.GetPrimitiveMesh2DKey(PrimitiveMesh2DType::Line);
 
-			Create2DObject(_T("Rect"), pRect, vec2(200.0f, 300.0f), vec3(150.0f, 100.0f, 1.0f), 0.0f, color(0xFF, 0x6B, 0x6B));
-			Create2DObject(_T("Circle"), pCircle, vec2(350.0f, 300.0f), vec3(80.0f, 80.0f, 1.0f), 0.0f, color(0xFF, 0xCC, 0x4D));
-			Create2DObject(_T("Triangle"), pTriangle, vec2(500.0f, 300.0f), vec3(140.0f, 120.0f, 1.0f), 0.0f, color(0x6B, 0xD0, 0xFF));
-			Create2DObject(_T("Line"), pLine, vec2(660.0f, 300.0f), vec3(180.0f, 10.0f, 1.0f), 0.5f, color(0x8A, 0xFF, 0x8A));
+			Create2DObject(_T("Rect"), rectKey, vec2(200.0f, 300.0f), vec3(150.0f, 100.0f, 1.0f), 0.0f, color(0xFF, 0x6B, 0x6B));
+			Create2DObject(_T("Circle"), circleKey, vec2(350.0f, 300.0f), vec3(80.0f, 80.0f, 1.0f), 0.0f, color(0xFF, 0xCC, 0x4D));
+			Create2DObject(_T("Triangle"), triangleKey, vec2(500.0f, 300.0f), vec3(140.0f, 120.0f, 1.0f), 0.0f, color(0x6B, 0xD0, 0xFF));
+			Create2DObject(_T("Line"), lineKey, vec2(660.0f, 300.0f), vec3(180.0f, 10.0f, 1.0f), 0.5f, color(0x8A, 0xFF, 0x8A));
 
 			// StaticLevel 시연: Line은 "현재 월드 행렬"을 고정 보관해 Static(A)으로 전환한다.
 			// 이후 OnUpdate에서 Transform을 바꿔도 위치가 고정된다. (나머지 3종은 Dynamic(B))
@@ -115,12 +105,23 @@ namespace
 		}
 
 	private:
-		GameObject* Create2DObject(const _char* _pName, Mesh* _pMesh, const vec2& _position,
+		GameObject* Create2DObject(const _char* _pName, _u64 _meshKey, const vec2& _position,
 			const vec3& _scale, _f32 _radian, const color& _tint)
 		{
+			MaterialDesc material;
+			material.vertexShaderKey_ = g_cResourceMgr.GetDefaultVertexShader2DKey();
+			material.pixelShaderKey_ = g_cResourceMgr.GetDefaultPixelShader2DKey();
+			material.blendMode_ = BlendMode::bmAlpha;
+			material.depthMode_ = DepthMode::dmDisabled;
+			material.cullMode_ = CullMode::cmNone;
+			material.baseColor_ = _tint;
+
+			const _u64 materialKey = g_cResourceMgr.CreateMaterial(material);
+			jc_assert(materialKey != INVALID_RESOURCE_KEY);
+
 			GameObject* pObj = new GameObject(_pName);
-			pObj->SetMesh(_pMesh);
-			pObj->GetMaterial()->SetBaseColor(_tint);
+			pObj->SetMeshKey(_meshKey);
+			pObj->SetMaterialKey(materialKey);
 			pObj->GetTransform()->SetLocalPosition(_position);
 			pObj->GetTransform()->SetLocalScale(_scale);
 			pObj->GetTransform()->SetLocalRotationRad(_radian);
@@ -129,7 +130,7 @@ namespace
 			return pObj;
 		}
 
-		jc::Vector<GameObject*> createdObjects_;	// 소멸자에서 정리할 오브젝트 목록
+		jc::Vector<GameObject*> createdObjects_;	// 관찰용 목록 (소유권은 부모 트리)
 		_f32 elapsed_ = 0.0f;					// 애니메이션 시간 누적 (초)
 	};
 
@@ -138,15 +139,6 @@ namespace
 	class Primitive3DScene : public Scene3D
 	{
 	public:
-		~Primitive3DScene()
-		{
-			for (GameObject* pObj : createdObjects_)
-			{
-				RemoveChild(pObj);
-				delete pObj;
-			}
-		}
-
 		// 씬 진입: 카메라 + 리소스 매니저에서 3D 메시 6종을 꺼내 일렬 배치
 		void OnEnter() override
 		{
@@ -155,20 +147,20 @@ namespace
 			GetWindow()->SetTitle(_T("32. 3D 프리미티브 6종 (SPACE: 2D 씬, ESC: 종료)"));
 
 			// 6종 전부 3D enum으로 꺼낸다. (2D/3D 엄격 분리 — 2D enum에는 3D 타입이 없다)
-			Mesh* pCube = g_cResourceMgr.FindPrimitiveMesh3D(PrimitiveMesh3DType::Cube);
-			Mesh* pSphere = g_cResourceMgr.FindPrimitiveMesh3D(PrimitiveMesh3DType::Sphere);
-			Mesh* pCapsule = g_cResourceMgr.FindPrimitiveMesh3D(PrimitiveMesh3DType::Capsule);
-			Mesh* pCylinder = g_cResourceMgr.FindPrimitiveMesh3D(PrimitiveMesh3DType::Cylinder);
-			Mesh* pPlane = g_cResourceMgr.FindPrimitiveMesh3D(PrimitiveMesh3DType::Plane);
-			Mesh* pQuad = g_cResourceMgr.FindPrimitiveMesh3D(PrimitiveMesh3DType::Quad);
+			const _u64 cubeKey = g_cResourceMgr.GetPrimitiveMesh3DKey(PrimitiveMesh3DType::Cube);
+			const _u64 sphereKey = g_cResourceMgr.GetPrimitiveMesh3DKey(PrimitiveMesh3DType::Sphere);
+			const _u64 capsuleKey = g_cResourceMgr.GetPrimitiveMesh3DKey(PrimitiveMesh3DType::Capsule);
+			const _u64 cylinderKey = g_cResourceMgr.GetPrimitiveMesh3DKey(PrimitiveMesh3DType::Cylinder);
+			const _u64 planeKey = g_cResourceMgr.GetPrimitiveMesh3DKey(PrimitiveMesh3DType::Plane);
+			const _u64 quadKey = g_cResourceMgr.GetPrimitiveMesh3DKey(PrimitiveMesh3DType::Quad);
 
 			const _f32 xs[] = { -5.5f, -3.3f, -1.1f, 1.1f, 3.3f, 5.5f };
-			Create3DObject(_T("Cube"), pCube, vec3(xs[0], 0.0f, 0.0f), vec3(1.1f, 1.1f, 1.1f), color(0xFF, 0x6B, 0x6B));
-			Create3DObject(_T("Sphere"), pSphere, vec3(xs[1], 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f), color(0xFF, 0xCC, 0x4D));
-			Create3DObject(_T("Capsule"), pCapsule, vec3(xs[2], 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f), color(0x6B, 0xD0, 0xFF));
-			Create3DObject(_T("Cylinder"), pCylinder, vec3(xs[3], 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f), color(0x8A, 0xFF, 0x8A));
-			Create3DObject(_T("Plane"), pPlane, vec3(xs[4], 0.0f, 0.0f), vec3(1.2f, 1.2f, 1.2f), color(0xFF, 0x8A, 0xD0));
-			Create3DObject(_T("Quad"), pQuad, vec3(xs[5], 0.0f, 0.0f), vec3(1.2f, 1.2f, 1.2f), color(0xC0, 0xA0, 0xFF));
+			Create3DObject(_T("Cube"), cubeKey, vec3(xs[0], 0.0f, 0.0f), vec3(1.1f, 1.1f, 1.1f), color(0xFF, 0x6B, 0x6B));
+			Create3DObject(_T("Sphere"), sphereKey, vec3(xs[1], 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f), color(0xFF, 0xCC, 0x4D));
+			Create3DObject(_T("Capsule"), capsuleKey, vec3(xs[2], 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f), color(0x6B, 0xD0, 0xFF));
+			Create3DObject(_T("Cylinder"), cylinderKey, vec3(xs[3], 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f), color(0x8A, 0xFF, 0x8A));
+			Create3DObject(_T("Plane"), planeKey, vec3(xs[4], 0.0f, 0.0f), vec3(1.2f, 1.2f, 1.2f), color(0xFF, 0x8A, 0xD0));
+			Create3DObject(_T("Quad"), quadKey, vec3(xs[5], 0.0f, 0.0f), vec3(1.2f, 1.2f, 1.2f), color(0xC0, 0xA0, 0xFF));
 			_LogInfo_(_T("[32] Primitive3DScene::OnEnter — 3D 프리미티브 6종 배치 완료"));
 		}
 
@@ -182,19 +174,20 @@ namespace
 		}
 
 	private:
-		GameObject* Create3DObject(const _char* _pName, Mesh* _pMesh, const vec3& _position,
+		GameObject* Create3DObject(const _char* _pName, _u64 _meshKey, const vec3& _position,
 			const vec3& _scale, const color& _tint)
 		{
-			GameObject* pObj = new GameObject(_pName);
-			pObj->SetMesh(_pMesh);
+			MaterialDesc material;
+			material.vertexShaderKey_ = g_cResourceMgr.GetDefaultVertexShader3DKey();
+			material.pixelShaderKey_ = g_cResourceMgr.GetDefaultPixelShader3DKey();
+			material.baseColor_ = _tint;
 
-			// 3D 렌더러(Renderer3D)는 재질의 셰이더 키를 해석해 파이프라인을 구성한다.
-			// GameObject 기본 재질에는 키가 없으므로 디폴트 3D 셰이더를 지정해준다.
-			Material* pMat = pObj->GetMaterial();
-			pMat->SetVertexShaderKey(g_cResourceMgr.GetDefaultVertexShader3DKey());
-			pMat->SetPixelShaderKey(g_cResourceMgr.GetDefaultPixelShader3DKey());
-			pMat->SetBaseColor(_tint);
-			pMat->Initialize(&g_cDevice);		// GPU 상태(파이프라인 상태/상수 버퍼) 초기화
+			const _u64 materialKey = g_cResourceMgr.CreateMaterial(material);
+			jc_assert(materialKey != INVALID_RESOURCE_KEY);
+
+			GameObject* pObj = new GameObject(_pName);
+			pObj->SetMeshKey(_meshKey);
+			pObj->SetMaterialKey(materialKey);
 
 			pObj->GetTransform()->SetLocalPosition(_position);
 			pObj->GetTransform()->SetLocalScale(_scale);
@@ -203,7 +196,7 @@ namespace
 			return pObj;
 		}
 
-		jc::Vector<GameObject*> createdObjects_;	// 소멸자에서 정리할 오브젝트 목록
+		jc::Vector<GameObject*> createdObjects_;	// 관찰용 목록 (소유권은 부모 트리)
 	};
 
 	//////////////////////////////////////////////////////////////////////////////////////////

@@ -31,7 +31,7 @@ using namespace jc;
 // mul(v, M)은 행벡터 x 행렬 순서로, 우리 수학 규약과 일치.
 // PSMain: 픽셀마다 실행. 텍스처 색 x 정점 색(틴트) x 머티리얼 색(b2).
 // SV_POSITION: "이 값이 클립 좌표다"라고 파이프라인에 알려주는 의미소(Semantic).
-// [상수버퍼 규약] (FR-19) — b0 프레임/뷰프로젝션, b1 오브젝트/월드, b2 머티리얼/기본색
+// [상수버퍼 규약] (FR-19) — b0 프레임/뷰프로젝션, b1 오브젝트/월드+틴트, b2 머티리얼/기본색
 static const char* s_szSpriteShader = R"(
 cbuffer ConstantBufferFrame : register(b0)
 {
@@ -41,6 +41,7 @@ cbuffer ConstantBufferFrame : register(b0)
 cbuffer ConstantBufferObject : register(b1)
 {
 	row_major float4x4 world_;			// 월드 행렬 (배치 경로: 단위행렬 고정)
+	float4 tint_;						// 오브젝트별 색 (배치 경로: 흰색 고정)
 };
 
 cbuffer ConstantBufferMaterial : register(b2)
@@ -80,7 +81,7 @@ PSInput VSMain(VSInput input)
 // 흰색 1x1 텍스처를 쓰면 결과가 틴트 색 그대로가 되므로 단색 도형도 같은 셰이더로 그린다.
 float4 PSMain(PSInput input) : SV_TARGET
 {
-	return texture_.Sample(sampler_, input.uv_) * input.color_ * baseColor_;
+	return texture_.Sample(sampler_, input.uv_) * input.color_ * baseColor_ * tint_;
 }
 )";
 
@@ -125,20 +126,20 @@ const VertexDeclaration* Renderer2D::VertexDecl() const
 bool Renderer2D::CreateBatchResources(GraphicDevice* _pDevice)
 {
 	// 1. DYNAMIC 정점 버퍼 (매 프레임 CPU가 채워 넣는다 — ResourceUsage::ruDynamic → D3D11_USAGE_DYNAMIC)
-	if (!vertexBuffer_.Create(_pDevice, nullptr, MAX_VERTICES, VertexPTC::Decl(), ResourceUsage::ruDynamic))
+	if (!vertexBuffer_.Create(*_pDevice, nullptr, MAX_VERTICES, VertexPTC::Decl(), ResourceUsage::ruDynamic))
 	{
 		return false;
 	}
 
 	// 2. DYNAMIC 인덱스 버퍼 (— 임의 인덱스/도형 지원, 매 Flush마다 CPU 인덱스를 업데이트)
-	if (!indexBuffer_.Create(_pDevice, nullptr, MAX_INDICES, ResourceUsage::ruDynamic))
+	if (!indexBuffer_.Create(*_pDevice, nullptr, MAX_INDICES, ResourceUsage::ruDynamic))
 	{
 		return false;
 	}
 
 	// 3. 메시 파이프라인 상수 버퍼 (b1 오브젝트 / b2 머티리얼 — Renderer3D와 동일 규약)
-	if (!objectCb_.Create(_pDevice)) { return false; }
-	if (!materialCb_.Create(_pDevice)) { return false; }
+	if (!objectCb_.Create(*_pDevice)) { return false; }
+	if (!materialCb_.Create(*_pDevice)) { return false; }
 
 	// 4. (1x1 흰색 텍스처는 ResourceMgr 기본 텍스처(GetDefaultTexture)를 공유한다 — A-2)
 	return true;
@@ -468,7 +469,7 @@ void Renderer2D::DrawCircle(const vec2& _center, _f32 _radius, const color& _col
 // - GetDefaultTexture()는 매번 "조회"일 뿐 생성/변경이 아니다 — ResourceMgr가 1번 생성해 보관하고
 //   같은 객체의 포인터만 반환한다. 텍스처는 생성 후 내용이 변하지 않는 불변 리소스이고,
 //   매 프레임 같은 텍스처를 Bind해도 GraphicContext의 바인딩 캐시(B-1)가 실제 D3D 호출을 생략한다.
-void Renderer2D::DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world)
+void Renderer2D::DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world, const color& _tint)
 {
 	if (_pMesh == nullptr || !_pMesh->Is2D())
 	{
@@ -510,18 +511,20 @@ void Renderer2D::DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world
 		pTexture->Bind(pDevice_->Context(), 0);
 	}
 
-	// 4. b2 머티리얼 상수 = 재질 기본색 (틴트. 배치 경로는 흰색 고정 — 메시 경로만 갱신)
+	// 4. b2 머티리얼 상수 = 재질 기본색 (배치 경로는 흰색 고정 — 메시 경로만 갱신)
 	MaterialConstants material;
-	const color tint = (_pMaterial != nullptr) ? _pMaterial->GetBaseColor() : color::WHITE;
-	tint.ToFloat4(material.baseColor_);
+	const color base = (_pMaterial != nullptr) ? _pMaterial->GetBaseColor() : color::WHITE;
+	base.ToFloat4(material.baseColor_);
 	materialCb_.Update(pDevice_->Context(), material);
 	context.SetConstantBuffer(ShaderStage::ssPixel, 2, materialCb_.Raw());
 
-	// 5. b1 오브젝트 상수 = 월드 행렬 (GPU 변환 — StaticLevel은 행렬 고정으로 전달됨)
+	// 5. b1 오브젝트 상수 = 월드 행렬 + 오브젝트별 색 (GPU 변환 — StaticLevel은 행렬 고정으로 전달됨)
 	ObjectConstants object;
 	object.world_ = _world;
+	_tint.ToFloat4(object.tint_);
 	objectCb_.Update(pDevice_->Context(), object);
 	context.SetConstantBuffer(ShaderStage::ssVertex, 1, objectCb_.Raw());
+	context.SetConstantBuffer(ShaderStage::ssPixel, 1, objectCb_.Raw());
 
 	// 6. 드로우 콜 (인덱스 유무에 따라 DrawIndexed/Draw)
 	++drawCallCount_;
@@ -559,12 +562,14 @@ void Renderer2D::Flush()
 	// 2. 파이프라인 구성: 셰이더/버퍼/텍스처/상수버퍼/토폴로지
 	ApplyFrameStates();
 
-	// 배치 정점은 이미 월드좌표(CPU 변환 완료)이므로 b1=단위행렬, b2=흰색 고정.
+	// 배치 정점은 이미 월드좌표(CPU 변환 완료)이므로 b1=단위행렬+흰색, b2=흰색 고정.
 	// 메시 즉시 드로우가 남긴 b1/b2를 배치 드로우 전에 되돌린다.
 	ObjectConstants object;
 	object.world_ = mat4::Identity();
+	color::WHITE.ToFloat4(object.tint_);
 	objectCb_.Update(pDevice_->Context(), object);
 	context.SetConstantBuffer(ShaderStage::ssVertex, 1, objectCb_.Raw());
+	context.SetConstantBuffer(ShaderStage::ssPixel, 1, objectCb_.Raw());
 
 	MaterialConstants material;	// 기본값 = 흰색 (1,1,1,1)
 	materialCb_.Update(pDevice_->Context(), material);

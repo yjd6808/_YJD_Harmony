@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 10:30:00 AM
  * =====================
@@ -111,8 +111,8 @@ void Cube3D_Main()
 
 	VertexBuffer vb;
 	IndexBuffer ib;
-	if (!vb.Create(&device, vertices, 8, VertexPC::Decl()) ||
-		!ib.Create(&device, indices, 36))
+	if (!vb.Create(device, vertices, 8, VertexPC::Decl()) ||
+		!ib.Create(device, indices, 36))
 	{
 		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -127,7 +127,7 @@ void Cube3D_Main()
 	_u64 psShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(CubeShaderSource()));
 	ConstantBuffer<CbTransform> cbTransform;
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY ||
-		!cbTransform.Create(&device))
+		!cbTransform.Create(device))
 	{
 		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();

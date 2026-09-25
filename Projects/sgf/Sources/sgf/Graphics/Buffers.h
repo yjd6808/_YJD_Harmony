@@ -30,7 +30,7 @@ public:
 	VertexBuffer();
 	~VertexBuffer();
 
-	bool Create(GraphicDevice* _pDevice, const void* _pData, UINT _count, const VertexDeclaration* _pDecl, ResourceUsage _usage = ResourceUsage::ruDefault);
+	bool Create(GraphicDevice& _device, const void* _pData, UINT _count, const VertexDeclaration* _pDecl, ResourceUsage _usage = ResourceUsage::ruDefault);
 	bool Update(GraphicContext& _context, const void* _pData, UINT _count);
 	void Bind(GraphicContext& _context);
 
@@ -55,7 +55,7 @@ public:
 	IndexBuffer();
 	~IndexBuffer();
 
-	bool Create(GraphicDevice* _pDevice, const _u32* _pIndices, UINT _count, ResourceUsage _usage = ResourceUsage::ruDefault);
+	bool Create(GraphicDevice& _device, const _u32* _pIndices, UINT _count, ResourceUsage _usage = ResourceUsage::ruDefault);
 	bool Update(GraphicContext& _context, const _u32* _pIndices, UINT _count);
 	void Bind(GraphicContext& _context);
 
@@ -76,7 +76,7 @@ public:
 	ConstantBuffer() : pBuffer_(nullptr) {}
 	~ConstantBuffer() {}
 
-	bool Create(GraphicDevice* _pDevice)
+	bool Create(GraphicDevice& _device)
 	{
 		static_assert(sizeof(T) % 16 == 0, "상수 버퍼 구조체는 16바이트 배수여야 합니다.");
 		pBuffer_.Reset();
@@ -85,7 +85,7 @@ public:
 		bd.Usage = ToD3D11(ResourceUsage::ruDynamic);
 		bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		return SUCCEEDED(_pDevice->Device()->CreateBuffer(&bd, nullptr, pBuffer_.GetAddressOf()));
+		return SUCCEEDED(_device.Device()->CreateBuffer(&bd, nullptr, pBuffer_.GetAddressOf()));
 	}
 
 	void UpdateAndBind(GraphicContext& _context, const T& _data, UINT _slot = 0)

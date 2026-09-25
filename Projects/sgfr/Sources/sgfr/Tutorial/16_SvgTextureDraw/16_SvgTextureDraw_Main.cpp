@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 11:00:00 AM
  * =====================
@@ -84,14 +84,14 @@ void SvgTextureDraw_Main()
 	{
 		// scale 2.0: SVG 원본(256x256)을 2배 해상도(512x512)로 래스터화
 		// -> 화면에서 확대되어도 깨끗하다. 이것이 벡터의 힘!
-		bLoaded = texture.LoadFromSvgFile(&device, jc::StringConvert::FromUtf8(szSvgPath), 2.0f);
+		bLoaded = texture.LoadFromSvgFile(device, jc::StringConvert::FromUtf8(szSvgPath), 2.0f);
 	}
 
 	if (bLoaded)
 	{
 		jc::Console::Write(_T("%hs 래스터화 성공! (%d x %d)\n"), szSvgPath, texture.Width(), texture.Height());
 	}
-	else if (CreateFallbackCircleTexture(&device, &texture))
+	else if (CreateFallbackCircleTexture(device, &texture))
 	{
 		jc::Console::WriteLine(_T("nanosvg 미설치 -> CPU로 직접 그린 대체 텍스처로 진행합니다."));
 		jc::Console::WriteLine(_T("(sgf/_Extern/nanosvg/README.md 참고해서 헤더  2개를 넣으면 진짜 SVG 래스터화를 볼 수 있습니다)"));
@@ -111,8 +111,8 @@ void SvgTextureDraw_Main()
 
 	VertexBuffer vb;
 	IndexBuffer ib;
-	if (!vb.Create(&device, vertices, 4, VertexPTC::Decl()) ||
-		!ib.Create(&device, indices, 6))
+	if (!vb.Create(device, vertices, 4, VertexPTC::Decl()) ||
+		!ib.Create(device, indices, 6))
 	{
 		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();

@@ -34,43 +34,49 @@ struct MaterialConstants
 	_f32 baseColor_[4] = { 1.0f, 1.0f, 1.0f, 1.0f };	// 기본색/틴트
 };
 
+struct MaterialDesc
+{
+	_u64 vertexShaderKey_ = INVALID_RESOURCE_KEY;
+	_u64 pixelShaderKey_ = INVALID_RESOURCE_KEY;
+	_u64 textureKeys_[GraphicContext::MAX_TEXTURE_SLOTS] = {};
+
+	color baseColor_ = color::WHITE;
+
+	BlendMode blendMode_ = BlendMode::bmNone;
+	DepthMode depthMode_ = DepthMode::dmReadWrite;
+	CullMode cullMode_ = CullMode::cmBack;
+	FillMode fillMode_ = FillMode::fmSolid;
+	FrontFace frontFace_ = FrontFace::ffClockwise;
+	FilterMode filter_ = FilterMode::fmLinear;
+	AddressMode addrU_ = AddressMode::amClamp;
+	AddressMode addrV_ = AddressMode::amClamp;
+
+	static MaterialDesc Default2D();
+	static MaterialDesc Default3D();
+
+	_u64 Hash() const;
+	bool operator==(const MaterialDesc& _other) const;
+	bool operator!=(const MaterialDesc& _other) const { return !(*this == _other); }
+};
+
 class Material : public ResourceBase
 {
 	SGF_RESOURCE_TYPE(rtMaterial)
 
+	friend class ResourceMgr;
+
 public:
-	Material();
 	~Material();
 
-	// 디폴트 상태(솔리드+백컬링, 블렌드 없음, 깊이 읽기쓰기, Linear+Clamp)로 준비한다.
-	// 셰이더 키는 별도로 지정해야 한다. (SetVertexShaderKey/SetPixelShaderKey)
-	bool Initialize(GraphicDevice* _pDevice);
-
-	void Finalize();
+	const MaterialDesc& GetDesc() const { return desc_; }
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 셰이더/텍스처 (ResourceMgr 키)
-	void SetVertexShaderKey(_u64 _key) { vertexShaderKey_ = _key; }
-	void SetPixelShaderKey(_u64 _key) { pixelShaderKey_ = _key; }
 	_u64 GetVertexShaderKey() const { return vertexShaderKey_; }
 	_u64 GetPixelShaderKey() const { return pixelShaderKey_; }
 
 	// @param _slot: 셰이더의 register(t0)~t7 번호
-	void SetTextureKey(_u32 _slot, _u64 _key);
 	_u64 GetTextureKey(_u32 _slot) const;
-
-	////////////////////////////////////////////////////////////////////////////////////////
-	// 파이프라인 상태 (설정 키만 보관 — D3D 상태 객체는 RenderStates 풀에서 공유)
-	// 같은 설정을 가진 재질 여러 개가 풀의 객체 1개를 공유하므로
-	// GraphicContext 포인터 비교 캐시가 히트해 재바인드를 피한다. (B-3)
-	bool SetRasterizer(CullMode _cull, FillMode _fill = FillMode::fmSolid, FrontFace _frontFace = FrontFace::ffClockwise);
-	bool SetBlend(BlendMode _mode);
-	bool SetDepth(DepthMode _mode);
-	bool SetSampler(FilterMode _filter, AddressMode _addressU = AddressMode::amClamp, AddressMode _addressV = AddressMode::amClamp);
-
-	////////////////////////////////////////////////////////////////////////////////////////
-	// 머티리얼 상수
-	void SetBaseColor(const color& _color) { _color.ToFloat4(constants_.baseColor_); constantsDirty_ = true; }
 	color GetBaseColor() const { return color::FromFloat(constants_.baseColor_[0], constants_.baseColor_[1], constants_.baseColor_[2], constants_.baseColor_[3]); }
 
 	// 이 머티리얼의 모든 상태를 파이프라인에 장착한다.
@@ -79,7 +85,13 @@ public:
 	bool Bind(GraphicContext& _context);
 
 private:
+	Material();
+	bool Initialize(GraphicDevice& _device, const MaterialDesc& _desc);
+	void Finalize();
+	void ApplyDesc(const MaterialDesc& _desc);
+
 	GraphicDevice* pDevice_;			// Bind 시 RenderStates 풀/상수버퍼 조회용 (소유하지 않음)
+	MaterialDesc desc_;
 
 	_u64 vertexShaderKey_;									// VS 리소스 키
 	_u64 pixelShaderKey_;									// PS 리소스 키

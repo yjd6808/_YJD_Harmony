@@ -28,12 +28,12 @@ class RasterizerState
 {
 public:
 	// 상태 객체를 생성한다.
-	// @param _pDevice: 그래픽 디바이스
+	// @param _device: 그래픽 디바이스
 	// @param _cull: 컴링 모드 (기본 cmBack)
 	// @param _fill: 채우기 모드 (기본 fmSolid)
 	// @param _frontFace: 앞면 판정 기준 (기본 ffClockwise)
 	bool Initialize(
-		GraphicDevice* _pDevice,
+		GraphicDevice& _device,
 		CullMode _cull = CullMode::cmBack,
 		FillMode _fill = FillMode::fmSolid,
 		FrontFace _frontFace = FrontFace::ffClockwise);
@@ -58,7 +58,7 @@ private:
 class BlendState
 {
 public:
-	bool Initialize(GraphicDevice* _pDevice, BlendMode _mode = BlendMode::bmNone);
+	bool Initialize(GraphicDevice& _device, BlendMode _mode = BlendMode::bmNone);
 	void Finalize();
 
 	bool IsValid() const { return pState_ != nullptr; }
@@ -75,7 +75,7 @@ private:
 class DepthStencilState
 {
 public:
-	bool Initialize(GraphicDevice* _pDevice, DepthMode _mode = DepthMode::dmReadWrite);
+	bool Initialize(GraphicDevice& _device, DepthMode _mode = DepthMode::dmReadWrite);
 	void Finalize();
 
 	bool IsValid() const { return pState_ != nullptr; }
@@ -93,7 +93,7 @@ class SamplerState
 {
 public:
 	bool Initialize(
-		GraphicDevice* _pDevice,
+		GraphicDevice& _device,
 		FilterMode _filter = FilterMode::fmLinear,
 		AddressMode _addressU = AddressMode::amClamp,
 		AddressMode _addressV = AddressMode::amClamp);

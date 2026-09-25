@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 1:40:00 PM
  * =====================
@@ -98,7 +98,7 @@ void SamplerFiltering_Main()
 	FillCheckerPixels(pixels, 32, 32, 4);
 
 	Texture texture;
-	if (!texture.CreateFromMemory(&device, pixels, 32, 32))
+	if (!texture.CreateFromMemory(device, pixels, 32, 32))
 	{
 		jc::Console::WriteLine(_T("텍스처 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -114,8 +114,8 @@ void SamplerFiltering_Main()
 
 	VertexBuffer vb;
 	IndexBuffer ib;
-	if (!vb.Create(&device, vertices, 4, VertexPTC::Decl()) ||
-		!ib.Create(&device, indices, 6))
+	if (!vb.Create(device, vertices, 4, VertexPTC::Decl()) ||
+		!ib.Create(device, indices, 6))
 	{
 		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -130,7 +130,7 @@ void SamplerFiltering_Main()
 	_u64 psShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(TextureQuadShaderSource()));
 	ConstantBuffer<CbSplit> cbSplit;
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY ||
-		!cbSplit.Create(&device))
+		!cbSplit.Create(device))
 	{
 		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();

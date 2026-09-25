@@ -7,11 +7,8 @@
 
 #include "Core.h"
 #include "sgf/Scene/Shape3D.h"
-#include "sgf/Scene/Scene.h"	// pScene_->GetGraphicDevice() (전체 정의)
-#include "sgf/Graphics/Mesh.h"
 #include "sgf/Graphics/Material.h"
 #include "sgf/Graphics/ResourceMgr.h"
-#include "sgf/Graphics/GraphicDevice.h"
 
 NS_SGF_BEGIN
 
@@ -41,21 +38,25 @@ void Shape3D::OnEnter()
 		return;
 	}
 
-	Mesh* pMesh = g_cResourceMgr.FindPrimitiveMesh3D(type_);
-	if (pMesh == nullptr)
+	const _u64 meshKey = g_cResourceMgr.GetPrimitiveMesh3DKey(type_);
+	if (meshKey == INVALID_RESOURCE_KEY)
 	{
 		return;
 	}
 
-	SetMesh(pMesh);
+	MaterialDesc material;
+	material.vertexShaderKey_ = g_cResourceMgr.GetDefaultVertexShader3DKey();
+	material.pixelShaderKey_ = g_cResourceMgr.GetDefaultPixelShader3DKey();
+	material.baseColor_ = color_;
 
-	// 3D 렌더러(Renderer3D)는 재질의 셰이더 키를 해석해 파이프라인을 구성한다.
-	// GameObject 기본 재질에는 키가 없으므로 디폴트 3D 셰이더를 지정해준다.
-	Material* pMaterial = GetMaterial();
-	pMaterial->SetVertexShaderKey(g_cResourceMgr.GetDefaultVertexShader3DKey());
-	pMaterial->SetPixelShaderKey(g_cResourceMgr.GetDefaultPixelShader3DKey());
-	pMaterial->SetBaseColor(color_);
-	pMaterial->Initialize(pScene_->GetGraphicDevice());	// GPU 상태(파이프라인/상수버퍼) 초기화
+	const _u64 materialKey = g_cResourceMgr.CreateMaterial(material);
+	if (materialKey == INVALID_RESOURCE_KEY)
+	{
+		return;
+	}
+
+	SetMeshKey(meshKey);
+	SetMaterialKey(materialKey);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

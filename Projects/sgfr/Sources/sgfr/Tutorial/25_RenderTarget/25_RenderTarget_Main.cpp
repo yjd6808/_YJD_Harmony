@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 2:20:00 PM
  * =====================
@@ -86,7 +86,7 @@ void RenderTarget_Main()
 
 	// 2. 렌더 타깃: 256x256 텍스처 + 전용 깊이 버퍼가 함께 만들어진다.
 	RenderTarget miniMapTarget;
-	if (!miniMapTarget.Create(&device, 256, 256))
+	if (!miniMapTarget.Create(device, 256, 256))
 	{
 		jc::Console::WriteLine(_T("렌더 타깃 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -102,8 +102,8 @@ void RenderTarget_Main()
 
 	VertexBuffer cubeVb;
 	IndexBuffer cubeIb;
-	if (!cubeVb.Create(&device, cubeVertices, 8, VertexPC::Decl()) ||
-		!cubeIb.Create(&device, cubeIndices, 36))
+	if (!cubeVb.Create(device, cubeVertices, 8, VertexPC::Decl()) ||
+		!cubeIb.Create(device, cubeIndices, 36))
 	{
 		jc::Console::WriteLine(_T("큐브 버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -119,8 +119,8 @@ void RenderTarget_Main()
 
 	VertexBuffer quadVb;
 	IndexBuffer quadIb;
-	if (!quadVb.Create(&device, quadVertices, 4, VertexPTC::Decl()) ||
-		!quadIb.Create(&device, quadIndices, 6))
+	if (!quadVb.Create(device, quadVertices, 4, VertexPTC::Decl()) ||
+		!quadIb.Create(device, quadIndices, 6))
 	{
 		jc::Console::WriteLine(_T("미니맵 버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -137,7 +137,7 @@ void RenderTarget_Main()
 	_u64 psQuadShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(TextureShaderSource()));
 	ConstantBuffer<CbTransform> cbTransform;
 	ConstantBuffer<CbPost> cbPost;
-	if (vsCubeShader == INVALID_RESOURCE_KEY || psCubeShader == INVALID_RESOURCE_KEY || vsQuadShader == INVALID_RESOURCE_KEY || psQuadShader == INVALID_RESOURCE_KEY || !cbTransform.Create(&device) || !cbPost.Create(&device))
+	if (vsCubeShader == INVALID_RESOURCE_KEY || psCubeShader == INVALID_RESOURCE_KEY || vsQuadShader == INVALID_RESOURCE_KEY || psQuadShader == INVALID_RESOURCE_KEY || !cbTransform.Create(device) || !cbPost.Create(device))
 	{
 		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -177,7 +177,7 @@ void RenderTarget_Main()
 		device.BeginFrame(color(0x14, 0x14, 0x1F, 0xFF));	// 백버퍼도 미리 클리어
 
 		device.SetRenderTarget(&miniMapTarget);				// 이제 그리기는 텍스처로!
-		miniMapTarget.Clear(&device, color(0x1A, 0x40, 0x26, 0xFF));	// 초록 배경 = 미니맵 티가 나게
+		miniMapTarget.Clear(device, color(0x1A, 0x40, 0x26, 0xFF));	// 초록 배경 = 미니맵 티가 나게
 
 		CbTransform cb;
 		cb.wvp_ = world * topView * topProj;
@@ -208,7 +208,7 @@ void RenderTarget_Main()
 
 		// ---- 패스 3: 렌더 타깃 결과를 미니맵 사각형에 출력 ----
 		device.Context().SetSampler(FilterMode::fmLinear, AddressMode::amClamp, 0);
-		miniMapTarget.BindAsTexture(&device, 0);			// 그려진 결과를 텍스처로 장착
+		miniMapTarget.BindAsTexture(device, 0);			// 그려진 결과를 텍스처로 장착
 
 		quadVb.Bind(device.Context());
 		quadIb.Bind(device.Context());

@@ -22,6 +22,7 @@
 #include "sgf/Graphics/IResource.h"
 #include "sgf/Graphics/IResourceRegistry.h"
 #include "sgf/Graphics/PrimitiveMeshType.h"
+#include "sgf/Graphics/Material.h"
 #include "jc/Container/HashMap.h"
 #include "jc/Container/HashSet.h"
 #include "jc/Container/Vector.h"
@@ -73,6 +74,10 @@ public:
 
 	// 디폴트를 제외한 모든 리소스를 제거한다. (씬 전환 등)
 	void RemoveAll();
+
+	// 머티리얼 명세로 생성 + 등록한다. 동일 명세는 기존 키를 재사용한다.
+	// 실패 시 INVALID_RESOURCE_KEY.
+	_u64 CreateMaterial(const MaterialDesc& _desc);
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 검색
@@ -156,6 +161,8 @@ private:
 	Provider<IdProviderReuse<_u32>> indexProviders_[TYPE_COUNT]; // 타입별 인덱스 발급기 (1-base → 0-base 변환)
 	HashMap<String, _u64> pathIndex_;						// 경로 -> 키 (중복 로드 방지)
 	HashSet<_u64> defaultKeys_;								// 제거 금지 키 (FR-30)
+	HashMap<_u64, _u64> materialCache_;						// 명세 해시 -> 머티리얼 키 (동일 명세 공유)
+	HashMap<_u64, _u64> materialKeyToHash_;					// 머티리얼 키 -> 명세 해시 (개별 제거 시 캐시 정리)
 
 	_u64 defaultTextureKey_;
 	_u64 defaultVs2DKey_;

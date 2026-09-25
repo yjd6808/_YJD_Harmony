@@ -34,9 +34,9 @@ Camera3D* Scene3D::GetCamera3D() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Scene3D::DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world)
+void Scene3D::DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world, const color& _tint)
 {
-	g_cRenderer3D.Draw(_pMesh, _pMaterial, _world);
+	g_cRenderer3D.Draw(_pMesh, _pMaterial, _world, _tint);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

@@ -65,10 +65,11 @@ struct FrameConstants
 	vec4 cameraPosition_;	// 카메라 월드 위치 (스페큘러 등에 사용)
 };
 
-// b1 오브젝트 상수 (64바이트)
+// b1 오브젝트 상수 (64 + 16 = 80바이트)
 struct ObjectConstants
 {
-	mat4 world_;			// 월드 행렬
+	mat4 world_;								// 월드 행렬
+	_f32 tint_[4] = { 1.0f, 1.0f, 1.0f, 1.0f };	// 오브젝트별 색
 };
 
 // 그려야 할 대상 하나 = 메시(무엇을) + 머티리얼(어떻게) + 월드 행렬(어디에)
@@ -77,6 +78,7 @@ struct RenderObject
 	_u64 meshKey_ = INVALID_RESOURCE_KEY;		// ResourceMgr의 메시 키
 	_u64 materialKey_ = INVALID_RESOURCE_KEY;	// ResourceMgr의 머티리얼 키
 	mat4 world_;								// 월드 행렬 (기본: 단위행렬)
+	color tint_ = color::WHITE;					// 오브젝트별 색
 	bool visible_ = true;						// false면 Draw에서 건너뀜
 };
 
@@ -106,7 +108,7 @@ public:
 	// 렌더 오브젝트 하나를 그린다. (키 해서 -> 머티리얼/메시 바인딩 -> b1 갱신 -> 드로우)
 	void Draw(const RenderObject& _object);
 	// 포인터로 직접 그리기 (ResourceMgr를 거치지 않는 경우용)
-	void Draw(Mesh* _pMesh, Material* _pMaterial, const mat4& _world);
+	void Draw(Mesh* _pMesh, Material* _pMaterial, const mat4& _world, const color& _tint = color::WHITE);
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 삼각형 배치

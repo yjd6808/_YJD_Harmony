@@ -26,17 +26,17 @@ using namespace jc;
 namespace
 {
 	//////////////////////////////////////////////////////////////////////////////////////
-	bool CreatePrimitiveMesh2D(GraphicDevice* _pDevice, ResourceMgr& _mgr,
+	bool CreatePrimitiveMesh2D(GraphicDevice& _device, ResourceMgr& _mgr,
 		PrimitiveMesh2DType _type, _u64& _outKey)
 	{
 		Mesh* pMesh = dbg_new Mesh;
 		bool ok = false;
 		switch (_type)
 		{
-		case PrimitiveMesh2DType::Rect:		ok = pMesh->InitializeAsRect2D(_pDevice); break;
-		case PrimitiveMesh2DType::Circle:	ok = pMesh->InitializeAsCircle2D(_pDevice); break;
-		case PrimitiveMesh2DType::Triangle:	ok = pMesh->InitializeAsTriangle2D(_pDevice); break;
-		case PrimitiveMesh2DType::Line:		ok = pMesh->InitializeAsLine2D(_pDevice); break;
+		case PrimitiveMesh2DType::Rect:		ok = pMesh->InitializeAsRect2D(_device); break;
+		case PrimitiveMesh2DType::Circle:	ok = pMesh->InitializeAsCircle2D(_device); break;
+		case PrimitiveMesh2DType::Triangle:	ok = pMesh->InitializeAsTriangle2D(_device); break;
+		case PrimitiveMesh2DType::Line:		ok = pMesh->InitializeAsLine2D(_device); break;
 		default: ok = false; break;
 		}
 		if (!ok) { delete pMesh; return false; }
@@ -45,19 +45,19 @@ namespace
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////
-	bool CreatePrimitiveMesh3D(GraphicDevice* _pDevice, ResourceMgr& _mgr,
+	bool CreatePrimitiveMesh3D(GraphicDevice& _device, ResourceMgr& _mgr,
 		PrimitiveMesh3DType _type, _u64& _outKey)
 	{
 		Mesh* pMesh = dbg_new Mesh;
 		bool ok = false;
 		switch (_type)
 		{
-		case PrimitiveMesh3DType::Cube:		ok = pMesh->InitializeAsCube(_pDevice); break;
-		case PrimitiveMesh3DType::Sphere:	ok = pMesh->InitializeAsSphere(_pDevice); break;
-		case PrimitiveMesh3DType::Capsule:	ok = pMesh->InitializeAsCapsule(_pDevice); break;
-		case PrimitiveMesh3DType::Cylinder:	ok = pMesh->InitializeAsCylinder(_pDevice); break;
-		case PrimitiveMesh3DType::Plane:	ok = pMesh->InitializeAsPlane(_pDevice); break;
-		case PrimitiveMesh3DType::Quad:		ok = pMesh->InitializeAsQuad3D(_pDevice); break;
+		case PrimitiveMesh3DType::Cube:		ok = pMesh->InitializeAsCube(_device); break;
+		case PrimitiveMesh3DType::Sphere:	ok = pMesh->InitializeAsSphere(_device); break;
+		case PrimitiveMesh3DType::Capsule:	ok = pMesh->InitializeAsCapsule(_device); break;
+		case PrimitiveMesh3DType::Cylinder:	ok = pMesh->InitializeAsCylinder(_device); break;
+		case PrimitiveMesh3DType::Plane:	ok = pMesh->InitializeAsPlane(_device); break;
+		case PrimitiveMesh3DType::Quad:		ok = pMesh->InitializeAsQuad3D(_device); break;
 		default: ok = false; break;
 		}
 		if (!ok) { delete pMesh; return false; }
@@ -157,6 +157,8 @@ void ResourceMgr::Finalize()
 
 	pathIndex_.Clear();
 	defaultKeys_.Clear();
+	materialCache_.Clear();
+	materialKeyToHash_.Clear();
 
 	defaultTextureKey_ = INVALID_RESOURCE_KEY;
 	defaultVs2DKey_ = INVALID_RESOURCE_KEY;
@@ -270,6 +272,14 @@ bool ResourceMgr::Remove(_u64 _key)
 	if (slot.pResource_->GetResourceType() != type) { return false; }
 
 	RemovePathEntry(_key);
+	if (type == ResourceType::rtMaterial)
+	{
+		if (_u64* pHash = materialKeyToHash_.Find(_key))
+		{
+			materialCache_.Remove(*pHash);
+			materialKeyToHash_.Remove(_key);
+		}
+	}
 	delete slot.pResource_;
 	slot.pResource_ = nullptr;
 
@@ -314,6 +324,8 @@ void ResourceMgr::RemoveAll()
 		}
 		Remove(key);
 	}
+	materialCache_.Clear();
+	materialKeyToHash_.Clear();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -358,13 +370,13 @@ _u64 ResourceMgr::LoadTextureFromFile(const jc::String& _szFilePath)
 	}
 
 	Texture* pTexture = dbg_new Texture;
-	if (!pTexture->LoadFromFile(pDevice_, _szFilePath))
+	if (!pTexture->LoadFromFile(*pDevice_, _szFilePath))
 	{
 		delete pTexture;
 		return INVALID_RESOURCE_KEY;
 	}
 
-	pTexture->SetDebugName(StringView{ _szFilePath });
+
 	return Add(pTexture, StringView{ _szFilePath });
 }
 
@@ -380,13 +392,13 @@ _u64 ResourceMgr::LoadTextureFromSvgFile(const jc::String& _szFilePath, _f32 _sc
 	}
 
 	Texture* pTexture = dbg_new Texture;
-	if (!pTexture->LoadFromSvgFile(pDevice_, _szFilePath, _scale))
+	if (!pTexture->LoadFromSvgFile(*pDevice_, _szFilePath, _scale))
 	{
 		delete pTexture;
 		return INVALID_RESOURCE_KEY;
 	}
 
-	pTexture->SetDebugName(StringView{ _szFilePath });
+
 	return Add(pTexture, StringView{ _szFilePath });
 }
 
@@ -514,108 +526,141 @@ void ResourceMgr::PrintStatus()
 		{
 			const Slot& slot = slots_[t][i];
 			if (slot.pResource_ == nullptr) { continue; }
-			const IResource* pResource = slot.pResource_;
-			const _u64 key = MakeResourceKey(static_cast<ResourceType>(t), slot.gen_, static_cast<_u32>(i));
-			FormatKey(key, keyBuf, sizeof(keyBuf));
-			const jc::AString narrowName = jc::StringConvert::ToAnsi(jc::String(pResource->GetDebugName()));
-			sprintf_s(buffer, "  key=%s type=%s name=%s\n",
-				keyBuf,
-				RESOURCE_TYPE_NAMES[static_cast<_s32>(pResource->GetResourceType())],
-				narrowName.Source());
-			OutputDebugStringA(buffer);
+		const IResource* pResource = slot.pResource_;
+		const _u64 key = MakeResourceKey(static_cast<ResourceType>(t), slot.gen_, static_cast<_u32>(i));
+		FormatKey(key, keyBuf, sizeof(keyBuf));
+		sprintf_s(buffer, "  key=%s type=%s\n",
+			keyBuf,
+			RESOURCE_TYPE_NAMES[static_cast<_s32>(pResource->GetResourceType())]);
+		OutputDebugStringA(buffer);
 		}
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+_u64 ResourceMgr::CreateMaterial(const MaterialDesc& _desc)
+{
+	jc_assert_msg(pDevice_ != nullptr, _T("Initialize 이후에만 머티리얼을 만들 수 있습니다."));
+	if (pDevice_ == nullptr)
+	{
+		return INVALID_RESOURCE_KEY;
+	}
+
+	const _u64 hash = _desc.Hash();
+	if (_u64* pCachedKey = materialCache_.Find(hash))
+	{
+		Material* pCached = Find<Material>(*pCachedKey);
+		if (pCached != nullptr && pCached->GetDesc() == _desc)
+		{
+			return *pCachedKey;
+		}
+		materialCache_.Remove(hash);
+	}
+
+	Material* pMaterial = dbg_new Material();
+	if (!pMaterial->Initialize(*pDevice_, _desc))
+	{
+		delete pMaterial;
+		return INVALID_RESOURCE_KEY;
+	}
+
+	const _u64 key = Add(pMaterial);
+	if (key == INVALID_RESOURCE_KEY)
+	{
+		delete pMaterial;
+		return INVALID_RESOURCE_KEY;
+	}
+
+	materialCache_.Insert(hash, key);
+	materialKeyToHash_.Insert(key, hash);
+	return key;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
 bool ResourceMgr::CreateDefaults()
 {
 	// 1. 디폴트 셰이더 (소스 내장. D-17)
 	VertexShader* pVs2D = dbg_new VertexShader;
-	if (!pVs2D->InitializeFromSource(pDevice_, jc::StringConvert::FromUtf8(DEFAULT_SHADER_SOURCE_2D)))
+	if (!pVs2D->InitializeFromSource(*pDevice_, jc::StringConvert::FromUtf8(DEFAULT_SHADER_SOURCE_2D)))
 	{
 		delete pVs2D;
 		return false;
 	}
-	pVs2D->SetDebugName(_T("DefaultVS2D"));
 	defaultVs2DKey_ = Add(pVs2D);
 
 	PixelShader* pPs2D = dbg_new PixelShader;
-	if (!pPs2D->InitializeFromSource(pDevice_, jc::StringConvert::FromUtf8(DEFAULT_SHADER_SOURCE_2D)))
+	if (!pPs2D->InitializeFromSource(*pDevice_, jc::StringConvert::FromUtf8(DEFAULT_SHADER_SOURCE_2D)))
 	{
 		delete pPs2D;
 		return false;
 	}
-	pPs2D->SetDebugName(_T("DefaultPS2D"));
 	defaultPs2DKey_ = Add(pPs2D);
 
 	VertexShader* pVs3D = dbg_new VertexShader;
-	if (!pVs3D->InitializeFromSource(pDevice_, jc::StringConvert::FromUtf8(DEFAULT_SHADER_SOURCE_3D)))
+	if (!pVs3D->InitializeFromSource(*pDevice_, jc::StringConvert::FromUtf8(DEFAULT_SHADER_SOURCE_3D)))
 	{
 		delete pVs3D;
 		return false;
 	}
-	pVs3D->SetDebugName(_T("DefaultVS3D"));
 	defaultVs3DKey_ = Add(pVs3D);
 
 	PixelShader* pPs3D = dbg_new PixelShader;
-	if (!pPs3D->InitializeFromSource(pDevice_, jc::StringConvert::FromUtf8(DEFAULT_SHADER_SOURCE_3D)))
+	if (!pPs3D->InitializeFromSource(*pDevice_, jc::StringConvert::FromUtf8(DEFAULT_SHADER_SOURCE_3D)))
 	{
 		delete pPs3D;
 		return false;
 	}
-	pPs3D->SetDebugName(_T("DefaultPS3D"));
 	defaultPs3DKey_ = Add(pPs3D);
 
 	// 2. 1x1 흰색 텍스처 (D-18. 텍스처 없는 머티리얼의 대체재)
 	const _u8 whitePixel[4] = { 255, 255, 255, 255 };
 	Texture* pWhite = dbg_new Texture;
-	if (!pWhite->CreateFromMemory(pDevice_, whitePixel, 1, 1))
+	if (!pWhite->CreateFromMemory(*pDevice_, whitePixel, 1, 1))
 	{
 		delete pWhite;
 		return false;
 	}
-	pWhite->SetDebugName(_T("DefaultWhiteTexture"));
 	defaultTextureKey_ = Add(pWhite);
 
 	// 3. 디폴트 머티리얼 (2D: 알파 블렌드 + 깊이 끄기 / 3D: 불투명 + 깊이 읽기쓰기)
-	Material* pMat2D = dbg_new Material;
-	if (!pMat2D->Initialize(pDevice_)
-		|| !pMat2D->SetBlend(BlendMode::bmAlpha)
-		|| !pMat2D->SetRasterizer(CullMode::cmNone)
-		|| !pMat2D->SetDepth(DepthMode::dmDisabled))
+	MaterialDesc material2D;
+	material2D.vertexShaderKey_ = defaultVs2DKey_;
+	material2D.pixelShaderKey_ = defaultPs2DKey_;
+	material2D.blendMode_ = BlendMode::bmAlpha;
+	material2D.depthMode_ = DepthMode::dmDisabled;
+	material2D.cullMode_ = CullMode::cmNone;
+	defaultMaterial2DKey_ = CreateMaterial(material2D);
+	if (defaultMaterial2DKey_ == INVALID_RESOURCE_KEY)
 	{
-		delete pMat2D;
 		return false;
 	}
-	pMat2D->SetVertexShaderKey(defaultVs2DKey_);
-	pMat2D->SetPixelShaderKey(defaultPs2DKey_);
-	pMat2D->SetDebugName(_T("DefaultMaterial2D"));
-	defaultMaterial2DKey_ = Add(pMat2D);
 
-	Material* pMat3D = dbg_new Material;
-	if (!pMat3D->Initialize(pDevice_))
+
+	MaterialDesc material3D;
+	material3D.vertexShaderKey_ = defaultVs3DKey_;
+	material3D.pixelShaderKey_ = defaultPs3DKey_;
+	material3D.blendMode_ = BlendMode::bmNone;
+	material3D.depthMode_ = DepthMode::dmReadWrite;
+	material3D.cullMode_ = CullMode::cmBack;
+	defaultMaterial3DKey_ = CreateMaterial(material3D);
+	if (defaultMaterial3DKey_ == INVALID_RESOURCE_KEY)
 	{
-		delete pMat3D;
 		return false;
 	}
-	pMat3D->SetVertexShaderKey(defaultVs3DKey_);
-	pMat3D->SetPixelShaderKey(defaultPs3DKey_);
-	pMat3D->SetDebugName(_T("DefaultMaterial3D"));
-	defaultMaterial3DKey_ = Add(pMat3D);
+
 
 	// 4. 프리미티브 메시 (2D: 순수 2D 4종 — vfPTC2D 배칭용 / 3D 공용 6종 — vfPNT3D)
 	// 2D/3D 별도 키 테이블 — 각 enum은 자기 영역만 담당한다.
 	for (_s32 t = 0; t < PRIMITIVE_MESH2D_COUNT; ++t)
 	{
-		if (!CreatePrimitiveMesh2D(pDevice_, *this, static_cast<PrimitiveMesh2DType>(t), primitiveMesh2DKeys_[t]))
+		if (!CreatePrimitiveMesh2D(*pDevice_, *this, static_cast<PrimitiveMesh2DType>(t), primitiveMesh2DKeys_[t]))
 		{
 			return false;
 		}
 	}
 	for (_s32 t = 0; t < PRIMITIVE_MESH3D_COUNT; ++t)
 	{
-		if (!CreatePrimitiveMesh3D(pDevice_, *this, static_cast<PrimitiveMesh3DType>(t), primitiveMesh3DKeys_[t]))
+		if (!CreatePrimitiveMesh3D(*pDevice_, *this, static_cast<PrimitiveMesh3DType>(t), primitiveMesh3DKeys_[t]))
 		{
 			return false;
 		}

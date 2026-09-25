@@ -63,7 +63,7 @@ bool EnsureSampleSvgFile(const char* _szFilePath)
 //////////////////////////////////////////////////////////////////////////////////////////
 // nanosvg가 없을 때 대체용으로 그라데이션 원 텍스처를 직접 만든다.
 // (SVG 래스터화 결과와 비슷한 부드러운 원을 CPU로 직접 그린다)
-bool CreateFallbackCircleTexture(GraphicDevice* _pDevice, Texture* _pOutTexture)
+bool CreateFallbackCircleTexture(GraphicDevice& _device, Texture* _pOutTexture)
 {
 	const _s32 size = 256;
 	const _f32 center = size * 0.5f;
@@ -93,5 +93,5 @@ bool CreateFallbackCircleTexture(GraphicDevice* _pDevice, Texture* _pOutTexture)
 		}
 	}
 
-	return _pOutTexture->CreateFromMemory(_pDevice, pixels.Source(), size, size);
+	return _pOutTexture->CreateFromMemory(_device, pixels.Source(), size, size);
 }

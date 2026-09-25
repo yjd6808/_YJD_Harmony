@@ -98,7 +98,7 @@ VertexShader::~VertexShader()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-bool VertexShader::InitializeFromSource(GraphicDevice* _pDevice, const jc::String& _szSource, const jc::String& _szEntry)
+bool VertexShader::InitializeFromSource(GraphicDevice& _device, const jc::String& _szSource, const jc::String& _szEntry)
 {
 	Finalize();
 
@@ -107,7 +107,7 @@ bool VertexShader::InitializeFromSource(GraphicDevice* _pDevice, const jc::Strin
 		return false;
 	}
 
-	if (FAILED(_pDevice->Device()->CreateVertexShader(
+	if (FAILED(_device.Device()->CreateVertexShader(
 		pBytecode_->GetBufferPointer(), pBytecode_->GetBufferSize(), nullptr, pShader_.GetAddressOf())))
 	{
 		pBytecode_.Reset();
@@ -125,7 +125,7 @@ bool VertexShader::InitializeFromSource(GraphicDevice* _pDevice, const jc::Strin
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-bool VertexShader::InitializeFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePath, const jc::String& _szEntry)
+bool VertexShader::InitializeFromFile(GraphicDevice& _device, const jc::String& _szFilePath, const jc::String& _szEntry)
 {
 	String source = ReadTextFile(_szFilePath);
 	if (source.Length() == 0)
@@ -133,12 +133,11 @@ bool VertexShader::InitializeFromFile(GraphicDevice* _pDevice, const jc::String&
 		return false;
 	}
 
-	if (!InitializeFromSource(_pDevice, source, _szEntry))
+	if (!InitializeFromSource(_device, source, _szEntry))
 	{
 		return false;
 	}
 
-	SetDebugName(_szFilePath);
 	return true;
 }
 
@@ -218,7 +217,7 @@ PixelShader::~PixelShader()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-bool PixelShader::InitializeFromSource(GraphicDevice* _pDevice, const jc::String& _szSource, const jc::String& _szEntry)
+bool PixelShader::InitializeFromSource(GraphicDevice& _device, const jc::String& _szSource, const jc::String& _szEntry)
 {
 	Finalize();
 
@@ -229,12 +228,12 @@ bool PixelShader::InitializeFromSource(GraphicDevice* _pDevice, const jc::String
 		return false;
 	}
 
-	return SUCCEEDED(_pDevice->Device()->CreatePixelShader(
+	return SUCCEEDED(_device.Device()->CreatePixelShader(
 		pBytecode->GetBufferPointer(), pBytecode->GetBufferSize(), nullptr, pShader_.GetAddressOf()));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-bool PixelShader::InitializeFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePath, const jc::String& _szEntry)
+bool PixelShader::InitializeFromFile(GraphicDevice& _device, const jc::String& _szFilePath, const jc::String& _szEntry)
 {
 	String source = ReadTextFile(_szFilePath);
 	if (source.Length() == 0)
@@ -242,12 +241,11 @@ bool PixelShader::InitializeFromFile(GraphicDevice* _pDevice, const jc::String& 
 		return false;
 	}
 
-	if (!InitializeFromSource(_pDevice, source, _szEntry))
+	if (!InitializeFromSource(_device, source, _szEntry))
 	{
 		return false;
 	}
 
-	SetDebugName(_szFilePath);
 	return true;
 }
 

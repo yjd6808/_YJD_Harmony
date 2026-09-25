@@ -29,44 +29,50 @@ namespace
 			Shape3D* pCube = dbg_new Shape3D(_T("Box"));
 			pCube->SetShape(PrimitiveMesh3DType::Cube, color(0x4D, 0x8C, 0xFF, 0xFF));
 			pCube->SetPosition(vec3(-1.5f, 1.0f, 0.0f));
-			jc_assert(pCube->GetMaterial());
 			AddChild(pCube, 0);
+			jc_assert(pCube->GetMaterial() != nullptr);
 
 			Shape3D* pBall = dbg_new Shape3D(_T("Ball"));
 			pBall->SetShape(PrimitiveMesh3DType::Sphere, color(0xFF, 0x66, 0x33, 0xFF));
 			pBall->SetPosition(vec3(1.5f, 1.0f, 0.0f));
 			pBall->SetScale(0.75f);
-			jc_assert(pBall->GetMaterial());
 			AddChild(pBall, 1);
+			jc_assert(pBall->GetMaterial() != nullptr);
 
 			Shape3D* pPillar = dbg_new Shape3D(_T("Pillar"));
 			pPillar->SetShape(PrimitiveMesh3DType::Cylinder, color(0x33, 0x99, 0x66, 0xFF));
 			pPillar->SetPosition(vec3(0.0f, 1.0f, 2.0f));
 			pPillar->SetScale(vec3(0.5f, 1.0f, 0.5f));
-			jc_assert(pPillar->GetMaterial());
 			AddChild(pPillar, 2);
+			jc_assert(pPillar->GetMaterial() != nullptr);
+
+			MaterialDesc signMaterial;
+			signMaterial.vertexShaderKey_ = g_cResourceMgr.GetDefaultVertexShader3DKey();
+			signMaterial.pixelShaderKey_ = g_cResourceMgr.GetDefaultPixelShader3DKey();
+			signMaterial.baseColor_ = color(0xFF, 0xD9, 0x33, 0xFF);
+			const _u64 signMaterialKey = g_cResourceMgr.CreateMaterial(signMaterial);
 
 			GameObject* pSign = dbg_new GameObject(_T("Sign"));
-			pSign->SetMesh(g_cResourceMgr.FindPrimitiveMesh3D(PrimitiveMesh3DType::Quad));
+			pSign->SetMeshKey(g_cResourceMgr.GetPrimitiveMesh3DKey(PrimitiveMesh3DType::Quad));
+			pSign->SetMaterialKey(signMaterialKey);
 			pSign->GetTransform()->SetLocalPosition(vec3(0.0f, 2.6f, 1.0f));
 			pSign->GetTransform()->SetLocalScale(vec3(3.0f, 1.6f, 1.0f));
-			pSign->GetMaterial()->SetVertexShaderKey(g_cResourceMgr.GetDefaultVertexShader3DKey());
-			pSign->GetMaterial()->SetPixelShaderKey(g_cResourceMgr.GetDefaultPixelShader3DKey());
-			pSign->GetMaterial()->SetBaseColor(color(0xFF, 0xD9, 0x33, 0xFF));
-			pSign->GetMaterial()->Initialize(&g_cDevice);	// GPU 상태(파이프라인/상수버퍼) 초기화
-			jc_assert(pSign->GetMaterial());
+			jc_assert(pSign->GetMesh() != nullptr);
 			AddChild(pSign, 3);
 
+			MaterialDesc decalMaterial;
+			decalMaterial.vertexShaderKey_ = g_cResourceMgr.GetDefaultVertexShader3DKey();
+			decalMaterial.pixelShaderKey_ = g_cResourceMgr.GetDefaultPixelShader3DKey();
+			decalMaterial.baseColor_ = color(0x33, 0x99, 0x99, 0xFF);
+			const _u64 decalMaterialKey = g_cResourceMgr.CreateMaterial(decalMaterial);
+
 			GameObject* pDecal = dbg_new GameObject(_T("Decal"));
-			pDecal->SetMesh(g_cResourceMgr.FindPrimitiveMesh3D(PrimitiveMesh3DType::Quad));
+			pDecal->SetMeshKey(g_cResourceMgr.GetPrimitiveMesh3DKey(PrimitiveMesh3DType::Quad));
+			pDecal->SetMaterialKey(decalMaterialKey);
 			pDecal->GetTransform()->SetLocalPosition(vec3(3.2f, 0.02f, 2.0f));
 			pDecal->GetTransform()->SetLocalRotationEuler(-90.0f, 0.0f, 0.0f);
 			pDecal->GetTransform()->SetLocalScale(vec3(2.0f, 2.0f, 1.0f));
-			pDecal->GetMaterial()->SetVertexShaderKey(g_cResourceMgr.GetDefaultVertexShader3DKey());
-			pDecal->GetMaterial()->SetPixelShaderKey(g_cResourceMgr.GetDefaultPixelShader3DKey());
-			pDecal->GetMaterial()->SetBaseColor(color(0x33, 0x99, 0x99, 0xFF));
-			pDecal->GetMaterial()->Initialize(&g_cDevice);	// GPU 상태(파이프라인/상수버퍼) 초기화
-			jc_assert(pDecal->GetMaterial());
+			jc_assert(pDecal->GetMesh() != nullptr);
 			AddChild(pDecal, 4);
 		}
 

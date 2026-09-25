@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 10:10:00 AM
  * =====================
@@ -100,10 +100,10 @@ void WorldTransform_Main()
 
 	VertexBuffer vbSun, vbEarth, vbMoon;
 	IndexBuffer ib;
-	if (!vbSun.Create(&device, sunVertices, 4, VertexPC::Decl()) ||
-		!vbEarth.Create(&device, earthVertices, 4, VertexPC::Decl()) ||
-		!vbMoon.Create(&device, moonVertices, 4, VertexPC::Decl()) ||
-		!ib.Create(&device, indices, 6))
+	if (!vbSun.Create(device, sunVertices, 4, VertexPC::Decl()) ||
+		!vbEarth.Create(device, earthVertices, 4, VertexPC::Decl()) ||
+		!vbMoon.Create(device, moonVertices, 4, VertexPC::Decl()) ||
+		!ib.Create(device, indices, 6))
 	{
 		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -118,7 +118,7 @@ void WorldTransform_Main()
 	_u64 psShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(TransformShaderSource()));
 	ConstantBuffer<CbTransform> cbTransform;
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY ||
-		!cbTransform.Create(&device))
+		!cbTransform.Create(device))
 	{
 		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();

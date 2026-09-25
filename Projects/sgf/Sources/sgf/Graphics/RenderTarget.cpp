@@ -37,16 +37,16 @@ RenderTarget::~RenderTarget()
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 색 + 깊이를 모두 가진 일반 렌더 타깃 생성 (미니맵/후처리용)
-bool RenderTarget::Create(GraphicDevice* _pDevice, _s32 _width, _s32 _height)
+bool RenderTarget::Create(GraphicDevice& _device, _s32 _width, _s32 _height)
 {
-	jc_assert(_pDevice != nullptr && _width > 0 && _height > 0);
+	jc_assert(_width > 0 && _height > 0);
 
 	Destroy();
 	width_ = _width;
 	height_ = _height;
 	depthOnly_ = false;
 
-	ID3D11Device* pDevice = _pDevice->Device();
+	ID3D11Device* pDevice = _device.Device();
 
 	// 1. 색 텍스처: 백버퍼와 같은 RGBA8 포맷.
 	// BIND_RENDER_TARGET(그리기 대상) + BIND_SHADER_RESOURCE(셰이더 입력)
@@ -103,16 +103,16 @@ bool RenderTarget::Create(GraphicDevice* _pDevice, _s32 _width, _s32 _height)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 깊이 전용 렌더 타깃 생성 (그림자 맵용)
-bool RenderTarget::CreateDepthOnly(GraphicDevice* _pDevice, _s32 _width, _s32 _height)
+bool RenderTarget::CreateDepthOnly(GraphicDevice& _device, _s32 _width, _s32 _height)
 {
-	jc_assert(_pDevice != nullptr && _width > 0 && _height > 0);
+	jc_assert(_width > 0 && _height > 0);
 
 	Destroy();
 	width_ = _width;
 	height_ = _height;
 	depthOnly_ = true;
 
-	ID3D11Device* pDevice = _pDevice->Device();
+	ID3D11Device* pDevice = _device.Device();
 
 	// 1. 깊이 텍스처를 TYPELESS(해석 미정) 포맷으로 만든다.
 	// 같은 32비트 데이터를 DSV는 "깊이"로, SRV는 "실수"로
@@ -176,9 +176,9 @@ void RenderTarget::Destroy()
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 타깃 지우기
-void RenderTarget::Clear(GraphicDevice* _pDevice, const color& _clearColor)
+void RenderTarget::Clear(GraphicDevice& _device, const color& _clearColor)
 {
-	ID3D11DeviceContext* pContext = _pDevice->Context().Raw();
+	ID3D11DeviceContext* pContext = _device.Context().Raw();
 
 	// 색 타깃이 있으면 배경색으로 지운다.
 	if (pRTV_ != nullptr)
@@ -200,10 +200,10 @@ void RenderTarget::Clear(GraphicDevice* _pDevice, const color& _clearColor)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 다 그린 결과를 일반 텍스처처럼 셰이더 입력으로 바인딩
-void RenderTarget::BindAsTexture(GraphicDevice* _pDevice, UINT _slot)
+void RenderTarget::BindAsTexture(GraphicDevice& _device, UINT _slot)
 {
 	ID3D11ShaderResourceView* pSrvs[] = { SRV() };
-	_pDevice->Context().Raw()->PSSetShaderResources(_slot, 1, pSrvs);
+	_device.Context().Raw()->PSSetShaderResources(_slot, 1, pSrvs);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

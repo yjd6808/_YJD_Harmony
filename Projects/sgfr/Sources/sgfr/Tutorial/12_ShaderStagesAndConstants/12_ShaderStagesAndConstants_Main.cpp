@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 6:30:00 PM
  * =====================
@@ -134,8 +134,8 @@ void ShaderStagesAndConstants_Main()
 	// 2. 셰이더 + 메시 준비
 	VertexShader vs;
 	PixelShader ps;
-	if (!vs.InitializeFromSource(&device, jc::StringConvert::FromUtf8(STAGE_DEMO_SHADER_SOURCE)) ||
-		!ps.InitializeFromSource(&device, jc::StringConvert::FromUtf8(STAGE_DEMO_SHADER_SOURCE)))
+	if (!vs.InitializeFromSource(device, jc::StringConvert::FromUtf8(STAGE_DEMO_SHADER_SOURCE)) ||
+		!ps.InitializeFromSource(device, jc::StringConvert::FromUtf8(STAGE_DEMO_SHADER_SOURCE)))
 	{
 		jc::Console::WriteLine(_T("셰이더 컴파일 실패!"));
 		g_cResourceMgr.Finalize();
@@ -155,7 +155,7 @@ void ShaderStagesAndConstants_Main()
 
 
 	Mesh quad;
-	if (!quad.Initialize(&device, vertices, 4, VertexPTC::Decl()))
+	if (!quad.Initialize(device, vertices, 4, VertexPTC::Decl()))
 	{
 		jc::Console::WriteLine(_T("메시 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -167,7 +167,7 @@ void ShaderStagesAndConstants_Main()
 	// 3. 상수버퍼 2개: 갱신 주기가 다르므로 분리한다
 	ConstantBuffer<CbFrame> frameCb;
 	ConstantBuffer<CbObject> objectCb;
-	if (!frameCb.Create(&device) || !objectCb.Create(&device))
+	if (!frameCb.Create(device) || !objectCb.Create(device))
 	{
 		jc::Console::WriteLine(_T("상수버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();

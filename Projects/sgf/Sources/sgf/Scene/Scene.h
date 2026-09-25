@@ -17,7 +17,7 @@
  * 3. **카메라 = GameObject 파생** — defaultCamera_/selectedCamera_ 포인터로 보유.
  * SelectCamera(GameObject*)로 전환. (기존 값 멤버 camera_ 제거)
  * 4. **예약 창구 (가상)** — Scene2D(2D)/Scene3D(3D)가 구현. 게임 코드는 씬에만 접근.
- * RenderStatic(id) / RenderDynamic(region, fill, ...) / DrawMesh(mesh, mat, world)
+ * RenderStatic(id) / RenderDynamic(region, fill, ...) / DrawMesh(mesh, mat, world, tint)
  * 5. **OnRender() 무인자** — 트래버설 후 최상위 수동 그리기. (유지)
  * 6. **Scene도 DataMap 보유** — GameObject와 동일하게 이름 키 → 값.
  *
@@ -62,7 +62,8 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 트리 (— root_ 노드에 위임)
 	void AddChild(GameObject* _pChild, _u64 _zOrder);	// 루트 직속 자식 (레이어 추가)
-	void RemoveChild(GameObject* _pChild);
+	GameObject* DetachChild(GameObject* _pChild);
+	void DestroyChild(GameObject* _pChild);
 	GameObject* FindGameObjectByName(const jc::String& _name);	// root_ 서브트리 재귀
 	int  GetGameObjectCount() const;						// root_ 서브트리 노드 수 (재귀)
 
@@ -76,7 +77,7 @@ public:
 	virtual void RenderDynamic(const rect& _region, const Fill& _fill,
 		const color& _color1 = color::WHITE, const color& _color2 = color::WHITE,
 		_u32 _option = 0, RenderLayer _layer = RenderLayer::Default) {}	// (3D 씬 = no-op)
-	virtual void DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world) {}	// 3D 창구 (2D 씬 = no-op)
+	virtual void DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world, const color& _tint = color::WHITE) { (void)_pMesh; (void)_pMaterial; (void)_world; (void)_tint; }	// 3D 창구 (2D 씬 = no-op)
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 엔진 진입점/퇴장점 (— Director가 호출, Scene -> Enter -> OnEnter 순서)

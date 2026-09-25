@@ -16,7 +16,7 @@ NS_SGF_BEGIN
 
 namespace
 {
-	inline bool CreateD3DBuffer(GraphicDevice* _pDevice, UINT _byteWidth, D3D11_BIND_FLAG _bindFlag, ResourceUsage _usage, const void* _pData, SgfComPtr<ID3D11Buffer>& _outBuffer)
+	inline bool CreateD3DBuffer(GraphicDevice& _device, UINT _byteWidth, D3D11_BIND_FLAG _bindFlag, ResourceUsage _usage, const void* _pData, SgfComPtr<ID3D11Buffer>& _outBuffer)
 	{
 		D3D11_BUFFER_DESC bd = {};
 		bd.ByteWidth = _byteWidth;
@@ -27,7 +27,7 @@ namespace
 		D3D11_SUBRESOURCE_DATA sd = {};
 		sd.pSysMem = _pData;
 
-		return SUCCEEDED(_pDevice->Device()->CreateBuffer(&bd, (_pData != nullptr) ? &sd : nullptr, _outBuffer.GetAddressOf()));
+		return SUCCEEDED(_device.Device()->CreateBuffer(&bd, (_pData != nullptr) ? &sd : nullptr, _outBuffer.GetAddressOf()));
 	}
 }
 
@@ -52,7 +52,7 @@ VertexBuffer::~VertexBuffer()
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // 정점 버퍼 생성
-bool VertexBuffer::Create(GraphicDevice* _pDevice, const void* _pData, UINT _count, const VertexDeclaration* _pDecl, ResourceUsage _usage)
+bool VertexBuffer::Create(GraphicDevice& _device, const void* _pData, UINT _count, const VertexDeclaration* _pDecl, ResourceUsage _usage)
 {
 	jc_assert_msg(_pDecl != nullptr, _T("정점 버퍼에는 VertexDeclaration이 필요합니다."));
 
@@ -61,7 +61,7 @@ bool VertexBuffer::Create(GraphicDevice* _pDevice, const void* _pData, UINT _cou
 	usage_ = _usage;
 	pDecl_ = _pDecl;
 
-	return CreateD3DBuffer(_pDevice, stride_ * _count, D3D11_BIND_VERTEX_BUFFER, _usage, _pData, pBuffer_);
+	return CreateD3DBuffer(_device, stride_ * _count, D3D11_BIND_VERTEX_BUFFER, _usage, _pData, pBuffer_);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -102,12 +102,12 @@ IndexBuffer::~IndexBuffer()
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // 인덱스 버퍼 생성
-bool IndexBuffer::Create(GraphicDevice* _pDevice, const _u32* _pIndices, UINT _count, ResourceUsage _usage)
+bool IndexBuffer::Create(GraphicDevice& _device, const _u32* _pIndices, UINT _count, ResourceUsage _usage)
 {
 	count_ = _count;
 	usage_ = _usage;
 
-	return CreateD3DBuffer(_pDevice, sizeof(_u32) * _count, D3D11_BIND_INDEX_BUFFER, _usage, _pIndices, pBuffer_);
+	return CreateD3DBuffer(_device, sizeof(_u32) * _count, D3D11_BIND_INDEX_BUFFER, _usage, _pIndices, pBuffer_);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

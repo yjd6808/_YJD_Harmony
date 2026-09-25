@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 6:30:00 PM
  * =====================
@@ -104,7 +104,7 @@ void Material_Main()
 	FillChecker(pixels, 64, 64);
 
 	Texture* pChecker = dbg_new Texture();
-	if (!pChecker->CreateFromMemory(&device, pixels, 64, 64))
+	if (!pChecker->CreateFromMemory(device, pixels, 64, 64))
 	{
 		jc::Console::WriteLine(_T("텍스처 생성 실패!"));
 		delete pChecker;
@@ -113,29 +113,30 @@ void Material_Main()
 		window.Destroy();
 		return;
 	}
-	pChecker->SetDebugName(_T("Checker64"));
+
 	const _u64 checkerKey = g_cResourceMgr.Add(pChecker);
 
 	// 3. 머티리얼 구성: 디폴트 2D 셰이더 키 + 체커 텍스처 키 + 상태 조합
-	Material material;
-	if (!material.Initialize(&device))
+	MaterialDesc desc;
+	desc.vertexShaderKey_ = g_cResourceMgr.GetDefaultVertexShader2DKey();
+	desc.pixelShaderKey_ = g_cResourceMgr.GetDefaultPixelShader2DKey();
+	desc.textureKeys_[0] = checkerKey;
+	desc.blendMode_ = BlendMode::bmAlpha;
+	desc.depthMode_ = DepthMode::dmDisabled;
+	desc.cullMode_ = CullMode::cmNone;
+	_u64 materialKey = g_cResourceMgr.CreateMaterial(desc);
+	if (materialKey == INVALID_RESOURCE_KEY)
 	{
-		jc::Console::WriteLine(_T("머티리얼 초기화 실패!"));
+		jc::Console::WriteLine(_T("머티리얼 생성 실패!"));
 		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
 	}
-	material.SetVertexShaderKey(g_cResourceMgr.GetDefaultVertexShader2DKey());
-	material.SetPixelShaderKey(g_cResourceMgr.GetDefaultPixelShader2DKey());
-	material.SetTextureKey(0, checkerKey);
-	material.SetBlend(BlendMode::bmAlpha);
-	material.SetDepth(DepthMode::dmDisabled);
-	material.SetRasterizer(CullMode::cmNone);
 
 	// 4. 메시: 디폴트 2D 셰이더의 VertexPTC 레이아웃과 일치하는 내장 쿼드
 	Mesh quad;
-	if (!quad.InitializeAsQuad2D(&device))
+	if (!quad.InitializeAsQuad2D(device))
 	{
 		jc::Console::WriteLine(_T("쿼드 메시 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -148,7 +149,7 @@ void Material_Main()
 	// (22번부터는 Renderer3D가 이 작업까지 대신해준다)
 	ConstantBuffer<FrameConstants> frameCb;
 	ConstantBuffer<ObjectConstants> objectCb;
-	if (!frameCb.Create(&device) || !objectCb.Create(&device))
+	if (!frameCb.Create(device) || !objectCb.Create(device))
 	{
 		jc::Console::WriteLine(_T("상수버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -168,14 +169,15 @@ void Material_Main()
 		{
 			break;
 		}
-		if (input.IsKeyPressed('1')) { material.SetBlend(BlendMode::bmNone); }
-		if (input.IsKeyPressed('2')) { material.SetBlend(BlendMode::bmAlpha); }
-		if (input.IsKeyPressed('3')) { material.SetSampler(FilterMode::fmPoint); }
-		if (input.IsKeyPressed('4')) { material.SetSampler(FilterMode::fmLinear); }
+		if (input.IsKeyPressed('1')) { desc.blendMode_ = BlendMode::bmNone; materialKey = g_cResourceMgr.CreateMaterial(desc); }
+		if (input.IsKeyPressed('2')) { desc.blendMode_ = BlendMode::bmAlpha; materialKey = g_cResourceMgr.CreateMaterial(desc); }
+		if (input.IsKeyPressed('3')) { desc.filter_ = FilterMode::fmPoint; materialKey = g_cResourceMgr.CreateMaterial(desc); }
+		if (input.IsKeyPressed('4')) { desc.filter_ = FilterMode::fmLinear; materialKey = g_cResourceMgr.CreateMaterial(desc); }
 		if (input.IsKeyPressed('5'))
 		{
 			tintIndex = (tintIndex + 1) % (_s32)(sizeof(s_tintColors) / sizeof(s_tintColors[0]));
-			material.SetBaseColor(s_tintColors[tintIndex]);	// b2 머티리얼 상수 갱신
+			desc.baseColor_ = s_tintColors[tintIndex];
+			materialKey = g_cResourceMgr.CreateMaterial(desc);
 		}
 		input.NextFrame();
 
@@ -192,11 +194,14 @@ void Material_Main()
 
 		ObjectConstants object;
 		object.world_ = mat4::Scale(1.2f);
+		color::WHITE.ToFloat4(object.tint_);
 		objectCb.Update(device.Context(), object);
 		context.SetConstantBuffer(ShaderStage::ssVertex, 1, objectCb.Raw());
+		context.SetConstantBuffer(ShaderStage::ssPixel, 1, objectCb.Raw());
 
 		// 핵심! 셰이더/상태 4종/텍스처/b2까지 이 한 줄이 전부 바인딩한다.
-		if (material.Bind(context))
+		Material* pMaterial = g_cResourceMgr.Find<Material>(materialKey);
+		if (pMaterial != nullptr && pMaterial->Bind(context))
 		{
 			quad.Bind(context);
 			quad.Draw(context);
@@ -205,9 +210,8 @@ void Material_Main()
 		device.Present(true);
 	}
 
-	// 7. 정리: 등록한 텍스처는 매니저 Finalize가 함께 소멸시킨다.
+	// 7. 정리: 등록한 텍스처/머티리얼은 매니저 Finalize가 함께 소멸시킨다.
 	quad.Finalize();
-	material.Finalize();
 	g_cResourceMgr.Finalize();
 	device.Finalize();
 	window.Destroy();

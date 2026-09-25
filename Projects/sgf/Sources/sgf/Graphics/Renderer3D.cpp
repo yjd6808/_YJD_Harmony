@@ -91,18 +91,18 @@ const VertexDeclaration* Renderer3D::VertexDecl() const
 // 삼각형/선용 동적(DYNAMIC) 정점 버퍼를 만든다. (매 프레임 CPU 배치를 복사해 넣는다)
 bool Renderer3D::CreateBatchResources(GraphicDevice* _pDevice)
 {
-	if (!triangleVb_.Create(_pDevice, nullptr, MAX_TRIANGLES * 3, VertexPC::Decl(), ResourceUsage::ruDynamic))
+	if (!triangleVb_.Create(*_pDevice, nullptr, MAX_TRIANGLES * 3, VertexPC::Decl(), ResourceUsage::ruDynamic))
 	{
 		return false;
 	}
-	if (!lineVb_.Create(_pDevice, nullptr, MAX_LINES * 2, VertexPC::Decl(), ResourceUsage::ruDynamic))
+	if (!lineVb_.Create(*_pDevice, nullptr, MAX_LINES * 2, VertexPC::Decl(), ResourceUsage::ruDynamic))
 	{
 		return false;
 	}
 
 	// 메시 파이프라인 상수 버퍼 (b0 프레임 / b1 오브젝트)
-	if (!frameCb_.Create(_pDevice)) { return false; }
-	if (!objectCb_.Create(_pDevice)) { return false; }
+	if (!frameCb_.Create(*_pDevice)) { return false; }
+	if (!objectCb_.Create(*_pDevice)) { return false; }
 
 	return true;
 }
@@ -173,7 +173,7 @@ void Renderer3D::Draw(const RenderObject& _object)
 		return;
 	}
 
-	Draw(pLastMesh_, pLastMaterial_, _object.world_);
+	Draw(pLastMesh_, pLastMaterial_, _object.world_, _object.tint_);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -181,7 +181,7 @@ void Renderer3D::Draw(const RenderObject& _object)
 // ★ 왜 필요한가: 3D 그리기 한 건 = "무엇을(메시) 어떻게(머티리얼) 어디에(월드)"를 GPU로 전달하는 일.
 // - (용어) 메시 = 모양(정점 묶음), 머티리얼 = 재질(셰이더+텍스처+상태), 월드 행렬 = 위치/회전/크기.
 // 순서: ① 재질 바인딩 ② 모양 바인딩 ③ 월드 행렬(b1) 갱신 ④ 드로우콜.
-void Renderer3D::Draw(Mesh* _pMesh, Material* _pMaterial, const mat4& _world)
+void Renderer3D::Draw(Mesh* _pMesh, Material* _pMaterial, const mat4& _world, const color& _tint)
 {
 	jc_assert_msg(pDevice_ != nullptr, _T("Initialize 이후에만 사용할 수 있습니다."));
 	jc_assert_msg(_pMesh != nullptr && _pMaterial != nullptr, _T("메시/머티리얼이 비어있습니다."));
@@ -200,8 +200,10 @@ void Renderer3D::Draw(Mesh* _pMesh, Material* _pMaterial, const mat4& _world)
 	// 3. 어디에 그릴지 (b1 월드 행렬)
 	ObjectConstants object;
 	object.world_ = _world;
+	_tint.ToFloat4(object.tint_);
 	objectCb_.Update(pDevice_->Context(), object);
 	context.SetConstantBuffer(ShaderStage::ssVertex, 1, objectCb_.Raw());
+	context.SetConstantBuffer(ShaderStage::ssPixel, 1, objectCb_.Raw());
 
 	// 4. 드로우 호출
 	_pMesh->Draw(context);

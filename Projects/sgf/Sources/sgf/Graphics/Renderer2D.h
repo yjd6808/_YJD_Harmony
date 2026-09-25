@@ -87,7 +87,7 @@ public:
 	// 메시 그리기 (— Mesh+Material 자동 드로우, GPU 변환 즉시 드로우)
 	// 2D 프리미티브 메시(vfPTC2D)만 지원. 로컬 정점을 그대로 그리며 월드 변환은 GPU(b1)가 수행.
 	// 배치 경로와 달리 오브젝트당 1콜. 트래버설 중 GameObject::RenderSelf → Scene2D::DrawMesh → 이곳.
-	void DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world);
+	void DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world, const color& _tint = color::WHITE);
 
 	// 모아둔 배치를 즉시 GPU로 보낸다. (보통 End가 알아서 호출)
 	virtual void Flush() override;

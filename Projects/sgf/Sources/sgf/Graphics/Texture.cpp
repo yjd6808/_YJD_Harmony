@@ -49,7 +49,7 @@ Texture::~Texture()
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // WIC으로 이미지 파일을 읽어 텍스처 생성
-bool Texture::LoadFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePath)
+bool Texture::LoadFromFile(GraphicDevice& _device, const jc::String& _szFilePath)
 {
 	// COM 초기화. 이미 다른 곳에서 초기화했으면 S_FALSE가 오지만 문제없다.
 	// RPC_E_CHANGED_MODE인 경우만 짜짝이 다른 것이므로 CoUninitialize를 생략해야 하지만
@@ -114,7 +114,7 @@ bool Texture::LoadFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePat
 		if (FAILED(hr)) { break; }
 
 		// 6. GPU 텍스처 생성
-		result = CreateFromMemory(_pDevice, pixels.Source(), _s32(width), _s32(height));
+		result = CreateFromMemory(_device, pixels.Source(), _s32(width), _s32(height));
 	} while (false);
 
 	if (needUninit)
@@ -126,7 +126,7 @@ bool Texture::LoadFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePat
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // nanosvg로 SVG 파일을 래스터화해서 텍스처 생성
-bool Texture::LoadFromSvgFile(GraphicDevice* _pDevice, const jc::String& _szFilePath, _f32 _scale)
+bool Texture::LoadFromSvgFile(GraphicDevice& _device, const jc::String& _szFilePath, _f32 _scale)
 {
 #if SGF_HAS_NANOSVG
 	// 1. SVG 파싱: 파일을 읽어 벡터 도형 목록으로 변환한다.
@@ -158,7 +158,7 @@ bool Texture::LoadFromSvgFile(GraphicDevice* _pDevice, const jc::String& _szFile
 			width * 4);			// stride
 
 		// 4. GPU 텍스처 생성
-		result = CreateFromMemory(_pDevice, pixels.Source(), width, height);
+		result = CreateFromMemory(_device, pixels.Source(), width, height);
 		nsvgDeleteRasterizer(pRasterizer);
 	}
 
@@ -166,7 +166,7 @@ bool Texture::LoadFromSvgFile(GraphicDevice* _pDevice, const jc::String& _szFile
 	return result;
 #else
 	// nanosvg 미설치: _Extern/nanosvg/README.md 참고 (사용하지 않는 인자 경고 제거)
-	(void)_pDevice;
+	(void)_device;
 	(void)_szFilePath;
 	(void)_scale;
 	return false;
@@ -175,7 +175,7 @@ bool Texture::LoadFromSvgFile(GraphicDevice* _pDevice, const jc::String& _szFile
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 메모리의 RGBA 픽셀 배열로 텍스처 생성
-bool Texture::CreateFromMemory(GraphicDevice* _pDevice, const _u8* _pPixels, _s32 _width, _s32 _height, PixelFormat _format)
+bool Texture::CreateFromMemory(GraphicDevice& _device, const _u8* _pPixels, _s32 _width, _s32 _height, PixelFormat _format)
 {
 	// 재사용(재초기화) 대비: 기존 텍스처 뷰를 먼저 정리한다. (GetAddressOf 덮어쓰기 누수 방지)
 	pShaderResourceView_.Reset();
@@ -197,14 +197,14 @@ bool Texture::CreateFromMemory(GraphicDevice* _pDevice, const _u8* _pPixels, _s3
 	sd.SysMemPitch = UINT(_width) * 4;				// 한 줄의 바이트 수
 
 	SgfComPtr<ID3D11Texture2D> pTexture;
-	HRESULT hr = _pDevice->Device()->CreateTexture2D(&td, &sd, pTexture.GetAddressOf());
+	HRESULT hr = _device.Device()->CreateTexture2D(&td, &sd, pTexture.GetAddressOf());
 	if (FAILED(hr))
 	{
 		return false;
 	}
 
 	// 셰이더가 이 텍스처를 읽을 수 있게 해주는 뷰(SRV) 생성
-	hr = _pDevice->Device()->CreateShaderResourceView(
+	hr = _device.Device()->CreateShaderResourceView(
 		pTexture.Get(), nullptr, pShaderResourceView_.GetAddressOf());
 	if (FAILED(hr))
 	{

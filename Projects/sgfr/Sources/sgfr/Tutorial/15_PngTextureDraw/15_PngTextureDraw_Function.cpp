@@ -25,7 +25,7 @@ void PrintUvExplanation()
 //////////////////////////////////////////////////////////////////////////////////////////
 // 체커보드 무늬 픽셀(RGBA)을 직접 만들어 텍스처를 생성한다.
 // PNG 파일이 없을 때도 튜토리얼이 항상 동작하도록 하는 대체 경로다.
-bool CreateCheckerboardTexture(GraphicDevice* _pDevice, Texture* _pOutTexture)
+bool CreateCheckerboardTexture(GraphicDevice& _device, Texture* _pOutTexture)
 {
 	const _s32 size = 256;		// 256 x 256 픽셀
 	const _s32 cell = 32;		// 한 칸 32픽셀
@@ -49,5 +49,5 @@ bool CreateCheckerboardTexture(GraphicDevice* _pDevice, Texture* _pOutTexture)
 		}
 	}
 
-	return _pOutTexture->CreateFromMemory(_pDevice, pixels.Source(), size, size);
+	return _pOutTexture->CreateFromMemory(_device, pixels.Source(), size, size);
 }

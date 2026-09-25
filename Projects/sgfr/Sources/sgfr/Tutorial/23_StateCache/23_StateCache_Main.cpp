@@ -80,7 +80,7 @@ void StateCache_Main()
 
 	// 2. 큐브 메시 하나를 100개 객체가 공유한다. (캐시 효과가 극대화되는 조건)
 	Mesh* pCube = dbg_new Mesh();
-	if (!pCube->InitializeAsCube(&device))
+	if (!pCube->InitializeAsCube(device))
 	{
 		jc::Console::WriteLine(_T("큐브 메시 생성 실패!"));
 		delete pCube;
@@ -90,7 +90,7 @@ void StateCache_Main()
 		window.Destroy();
 		return;
 	}
-	pCube->SetDebugName(_T("CacheDemoCube"));
+
 	const _u64 cubeMeshKey = g_cResourceMgr.Add(pCube);
 
 	RenderObject object;

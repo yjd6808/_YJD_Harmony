@@ -81,7 +81,7 @@ void RenderObjectLoop_Main()
 
 	// 3. 큐브 메시를 만들어 리소스 매니저에 등록 (이후는 키로만 참조)
 	Mesh* pCube = dbg_new Mesh();
-	if (!pCube->InitializeAsCube(&device))
+	if (!pCube->InitializeAsCube(device))
 	{
 		jc::Console::WriteLine(_T("큐브 메시 생성 실패!"));
 		delete pCube;
@@ -91,7 +91,7 @@ void RenderObjectLoop_Main()
 		window.Destroy();
 		return;
 	}
-	pCube->SetDebugName(_T("UnitCube"));
+
 	const _u64 cubeMeshKey = g_cResourceMgr.Add(pCube);
 	_LogInfo_(_T("[22] 리소스 준비 완료 — 메시 키=%llu"), (unsigned long long)cubeMeshKey);
 

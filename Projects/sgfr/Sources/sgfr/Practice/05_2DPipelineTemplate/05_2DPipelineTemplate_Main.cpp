@@ -60,7 +60,7 @@ void Practice_2DPipelineTemplate_Main()
 	InputManager input;
 	window.ConnectInput(&input);
 
-	GraphicDevice& gd = GraphicDevice::Get();
+	GraphicDevice gd;
 	if (!gd.Initialize())
 	{
 		jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));

@@ -31,14 +31,7 @@ GraphicDevice::~GraphicDevice()
 	Finalize();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-GraphicDevice& GraphicDevice::Get()
-{
-	static GraphicDevice s_instance;
-	return s_instance;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 // D3D11 초기화 전체 진행
 // [순서가 중요하다]
 // 1. 디바이스+스왑체인 -> 2. 깊이버퍼 -> 3. 상태 캐시 -> 4. 뷰포트/기본상태.
@@ -217,7 +210,7 @@ _u64 GraphicDevice::CreateVertexShader(const jc::String& _hlslSource, const jc::
 {
 	if (!EnsureRegistry()) { return INVALID_RESOURCE_KEY; }
 	VertexShader* pVs = dbg_new VertexShader();
-	if (!pVs->InitializeFromSource(this, _hlslSource, _entry))
+	if (!pVs->InitializeFromSource(*this, _hlslSource, _entry))
 	{
 		delete pVs;
 		return INVALID_RESOURCE_KEY;
@@ -230,7 +223,7 @@ _u64 GraphicDevice::CreatePixelShader(const jc::String& _hlslSource, const jc::S
 {
 	if (!EnsureRegistry()) { return INVALID_RESOURCE_KEY; }
 	PixelShader* pPs = dbg_new PixelShader();
-	if (!pPs->InitializeFromSource(this, _hlslSource, _entry))
+	if (!pPs->InitializeFromSource(*this, _hlslSource, _entry))
 	{
 		delete pPs;
 		return INVALID_RESOURCE_KEY;
@@ -243,7 +236,7 @@ _u64 GraphicDevice::CreateIndexBuffer(const _u32* _pIndices, _u32 _count, Resour
 {
 	if (!EnsureRegistry()) { return INVALID_RESOURCE_KEY; }
 	IndexBuffer* pBuffer = dbg_new IndexBuffer();
-	if (!pBuffer->Create(this, _pIndices, _count, _usage))
+	if (!pBuffer->Create(*this, _pIndices, _count, _usage))
 	{
 		delete pBuffer;
 		return INVALID_RESOURCE_KEY;
@@ -256,7 +249,7 @@ _u64 GraphicDevice::CreateTexture(_s32 _width, _s32 _height, const _u8* _pPixels
 {
 	if (!EnsureRegistry()) { return INVALID_RESOURCE_KEY; }
 	Texture* pTexture = dbg_new Texture();
-	if (!pTexture->CreateFromMemory(this, _pPixels, _width, _height, _format))
+	if (!pTexture->CreateFromMemory(*this, _pPixels, _width, _height, _format))
 	{
 		delete pTexture;
 		return INVALID_RESOURCE_KEY;
@@ -270,7 +263,7 @@ _u64 GraphicDevice::CreateVertexBufferInternal(const void* _pVertices, _u32 _cou
 	jc_assert(IsValid());
 	if (!EnsureRegistry()) { return INVALID_RESOURCE_KEY; }
 	VertexBuffer* pBuffer = dbg_new VertexBuffer();
-	if (!pBuffer->Create(this, _pVertices, _count, _pDecl, _usage))
+	if (!pBuffer->Create(*this, _pVertices, _count, _pDecl, _usage))
 	{
 		delete pBuffer;
 		return INVALID_RESOURCE_KEY;
@@ -325,8 +318,6 @@ ID3D11InputLayout* GraphicDevice::GetOrCreateInputLayout(const VertexDeclaration
 		_LogWarn_(_T("[sgf] CreateInputLayout 실패 (declHash=%llx, sigHash=%llx)"), declHash, sigHash);
 		return nullptr;
 	}
-
-	SetDebugName(pLayout.Get(), _T("InputLayout(decl x vs)"));
 
 	InputLayoutEntry entry;
 	entry.declHash_ = declHash;
@@ -427,22 +418,6 @@ void GraphicDevice::SetRenderTarget(RenderTarget* _pTarget)
 	// 뷰포트를 렌더 타깃 크기에 맞춘다. (백버퍼와 크기가 다를 수 있다)
 	Viewport viewport(0.0f, 0.0f, static_cast<_f32>(_pTarget->Width()), static_cast<_f32>(_pTarget->Height()));
 	context_.SetViewport(viewport);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void GraphicDevice::SetDebugName(ID3D11DeviceChild* _pChild, const jc::String& _name)
-{
-#if defined(_DEBUG)
-	if (_pChild == nullptr || _name.IsEmpty())
-	{
-		return;
-	}
-	const jc::AString narrowName = jc::StringConvert::ToAnsi(_name);
-	_pChild->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(narrowName.Length()), narrowName.Source());
-#else
-	(void)_pChild;
-	(void)_name;
-#endif
 }
 
 NS_SGF_END

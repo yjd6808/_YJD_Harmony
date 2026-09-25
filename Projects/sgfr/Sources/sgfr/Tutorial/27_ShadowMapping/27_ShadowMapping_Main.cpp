@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 2:40:00 PM
  * =====================
@@ -110,7 +110,7 @@ void ShadowMapping_Main()
 	// 2. 그림자 맵: 색 없이 깊이만 담는 1024x1024 렌더 타깃
 	// 해상도가 클수록 그림자 경계가 선명해진다. (대신 메모리 증가)
 	RenderTarget shadowMap;
-	if (!shadowMap.CreateDepthOnly(&device, 1024, 1024))
+	if (!shadowMap.CreateDepthOnly(device, 1024, 1024))
 	{
 		jc::Console::WriteLine(_T("그림자 맵 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -132,10 +132,10 @@ void ShadowMapping_Main()
 	IndexBuffer planeIb;
 	VertexBuffer cubeVb;
 	IndexBuffer cubeIb;
-	if (!planeVb.Create(&device, planeVertices, 4, VertexPNT::Decl()) ||
-		!planeIb.Create(&device, planeIndices, 6) ||
-		!cubeVb.Create(&device, cubeVertices, 24, VertexPNT::Decl()) ||
-		!cubeIb.Create(&device, cubeIndices, 36))
+	if (!planeVb.Create(device, planeVertices, 4, VertexPNT::Decl()) ||
+		!planeIb.Create(device, planeIndices, 6) ||
+		!cubeVb.Create(device, cubeVertices, 24, VertexPNT::Decl()) ||
+		!cubeIb.Create(device, cubeIndices, 36))
 	{
 		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -153,7 +153,7 @@ void ShadowMapping_Main()
 	ConstantBuffer<CbDepth> cbDepth;
 	ConstantBuffer<CbScene> cbScene;
 	ConstantBuffer<CbLight> cbLight;
-	if (vsDepthShader == INVALID_RESOURCE_KEY || psDepthShader == INVALID_RESOURCE_KEY || vsSceneShader == INVALID_RESOURCE_KEY || psSceneShader == INVALID_RESOURCE_KEY || !cbDepth.Create(&device) || !cbScene.Create(&device) || !cbLight.Create(&device))
+	if (vsDepthShader == INVALID_RESOURCE_KEY || psDepthShader == INVALID_RESOURCE_KEY || vsSceneShader == INVALID_RESOURCE_KEY || psSceneShader == INVALID_RESOURCE_KEY || !cbDepth.Create(device) || !cbScene.Create(device) || !cbLight.Create(device))
 	{
 		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -225,7 +225,7 @@ void ShadowMapping_Main()
 
 		// ---- 패스 1: 빛 시점에서 깊이만 그림자 맵에 기록 ----
 		device.SetRenderTarget(&shadowMap);
-		shadowMap.Clear(&device, color::BLACK);	// 깊이 전용이므로 깊이만 1.0으로 초기화된다
+		shadowMap.Clear(device, color::BLACK);	// 깊이 전용이므로 깊이만 1.0으로 초기화된다
 
 		device.Context().SetVertexShader(vsDepthShader);
 		device.Context().SetPixelShader(psDepthShader);
@@ -254,7 +254,7 @@ void ShadowMapping_Main()
 
 		// 그림자 맵은 이웃 픽셀과 섞이면 깊이 값이 망가지므로 Point + Clamp 샘플러 사용
 		device.Context().SetSampler(FilterMode::fmPoint, AddressMode::amClamp, 0);
-		shadowMap.BindAsTexture(&device, 0);
+		shadowMap.BindAsTexture(device, 0);
 
 		device.Context().SetVertexShader(vsSceneShader);
 		device.Context().SetPixelShader(psSceneShader);

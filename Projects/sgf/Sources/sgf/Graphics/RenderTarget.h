@@ -42,26 +42,26 @@ public:
 	~RenderTarget();
 
 	// 색 + 깊이를 모두 가진 일반 렌더 타깃을 만든다. (미니맵/후처리용)
-	// @param _pDevice: 그래픽 디바이스
+	// @param _device: 그래픽 디바이스
 	// @param _width: 텍스처 가로 크기 (백버퍼와 달라도 된다)
 	// @param _height: 텍스처 세로 크기
 	// @return 성공 여부
-	bool Create(GraphicDevice* _pDevice, _s32 _width, _s32 _height);
+	bool Create(GraphicDevice& _device, _s32 _width, _s32 _height);
 
 	// 깊이 전용 렌더 타깃을 만든다. (그림자 맵용 - 색 기록 없음)
 	// 해상도가 클수록 그림자 경계가 깨끗해진다. (보통 1024/2048 정사각형)
-	bool CreateDepthOnly(GraphicDevice* _pDevice, _s32 _width, _s32 _height);
+	bool CreateDepthOnly(GraphicDevice& _device, _s32 _width, _s32 _height);
 
 	// 모든 리소스를 해제한다.
 	void Destroy();
 
 	// 타깃을 지운다. (색은 _clearColor로, 깊이는 1.0=가장 멀리로)
 	// 이 타깃에 그리기 시작하기 전에 호출할 것.
-	void Clear(GraphicDevice* _pDevice, const color& _clearColor);
+	void Clear(GraphicDevice& _device, const color& _clearColor);
 
 	// 다 그린 결과를 일반 텍스처처럼 셰이더 입력으로 바인딩한다.
 	// @param _slot: PS의 t레지스터 슬롯 번호
-	void BindAsTexture(GraphicDevice* _pDevice, UINT _slot = 0);
+	void BindAsTexture(GraphicDevice& _device, UINT _slot = 0);
 
 	bool IsDepthOnly() const { return depthOnly_; }
 	_s32 Width() const { return width_; }

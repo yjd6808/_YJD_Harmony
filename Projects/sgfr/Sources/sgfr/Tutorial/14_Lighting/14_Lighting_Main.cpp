@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 10:40:00 AM
  * =====================
@@ -95,8 +95,8 @@ void Lighting_Main()
 
 	VertexBuffer vb;
 	IndexBuffer ib;
-	if (!vb.Create(&device, vertices, 24, VertexPNT::Decl()) ||
-		!ib.Create(&device, indices, 36))
+	if (!vb.Create(device, vertices, 24, VertexPNT::Decl()) ||
+		!ib.Create(device, indices, 36))
 	{
 		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -112,8 +112,8 @@ void Lighting_Main()
 	ConstantBuffer<CbTransform> cbTransform;
 	ConstantBuffer<CbLight> cbLight;
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY ||
-		!cbTransform.Create(&device) ||
-		!cbLight.Create(&device))
+		!cbTransform.Create(device) ||
+		!cbLight.Create(device))
 	{
 		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();

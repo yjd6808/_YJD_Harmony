@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 9:50:00 AM
  * =====================
@@ -88,7 +88,7 @@ void HLSL_Main()
 	};
 
 	VertexBuffer vb;
-	if (!vb.Create(&device, vertices, 3, VertexPC::Decl()))
+	if (!vb.Create(device, vertices, 3, VertexPC::Decl()))
 	{
 		jc::Console::WriteLine(_T("정점 버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();
@@ -103,7 +103,7 @@ void HLSL_Main()
 	_u64 psShader = device.Context().CreatePixelShader(jc::StringConvert::FromUtf8(AnimatedShaderSource()));
 	ConstantBuffer<CbTime> cbTime;
 	if (vsShader == INVALID_RESOURCE_KEY || psShader == INVALID_RESOURCE_KEY ||
-		!cbTime.Create(&device))
+		!cbTime.Create(device))
 	{
 		jc::Console::WriteLine(_T("셰이더/상수 버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();

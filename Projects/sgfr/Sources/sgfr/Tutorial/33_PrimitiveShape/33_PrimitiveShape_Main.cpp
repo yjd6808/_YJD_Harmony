@@ -48,16 +48,6 @@ namespace
 	class Shape2DScene : public Scene2D
 	{
 	public:
-		~Shape2DScene()
-		{
-			// root_ 트리는 자식을 소유하지 않으므로(분리만) 직접 정리한다.
-			for (GameObject* pObj : createdObjects_)
-			{
-				RemoveChild(pObj);
-				delete pObj;
-			}
-		}
-
 		// 씬 진입: 카메라 + Shape2D 4종 배치 (AddChild 직후 1회 bake)
 		void OnEnter() override
 		{
@@ -106,7 +96,7 @@ namespace
 		}
 
 	private:
-		jc::Vector<GameObject*> createdObjects_;	// 소멸자에서 정리할 오브젝트 목록
+		jc::Vector<GameObject*> createdObjects_;	// 관찰용 목록 (소유권은 부모 트리)
 	};
 
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -115,15 +105,6 @@ namespace
 	class Shape3DScene : public Scene3D
 	{
 	public:
-		~Shape3DScene()
-		{
-			for (GameObject* pObj : createdObjects_)
-			{
-				RemoveChild(pObj);
-				delete pObj;
-			}
-		}
-
 		// 씬 진입: 카메라 + Shape3D 6종 배치 (AddChild 직후 메시/머티리얼 1회 구성)
 		void OnEnter() override
 		{
@@ -174,7 +155,7 @@ namespace
 			return pShape;
 		}
 
-		jc::Vector<GameObject*> createdObjects_;	// 소멸자에서 정리할 오브젝트 목록
+		jc::Vector<GameObject*> createdObjects_;	// 관찰용 목록 (소유권은 부모 트리)
 		_f32 rotateAngle_ = 0.0f;				// 자전 각도 누적 (도)
 	};
 

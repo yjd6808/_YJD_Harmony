@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 6:30:00 PM
  * =====================
@@ -107,8 +107,8 @@ void MeshAndTopology_Main()
 	// 2. 셰이더 준비 (VertexShader/PixelShader가 별도 클래스다)
 	VertexShader vs;
 	PixelShader ps;
-	if (!vs.InitializeFromSource(&device, jc::StringConvert::FromUtf8(PASSTHROUGH_SHADER_SOURCE)) ||
-		!ps.InitializeFromSource(&device, jc::StringConvert::FromUtf8(PASSTHROUGH_SHADER_SOURCE)))
+	if (!vs.InitializeFromSource(device, jc::StringConvert::FromUtf8(PASSTHROUGH_SHADER_SOURCE)) ||
+		!ps.InitializeFromSource(device, jc::StringConvert::FromUtf8(PASSTHROUGH_SHADER_SOURCE)))
 	{
 		jc::Console::WriteLine(_T("셰이더 컴파일 실패!"));
 		g_cResourceMgr.Finalize();
@@ -134,7 +134,7 @@ void MeshAndTopology_Main()
 	// 4. 메시 생성: 정점버퍼 + 레이아웃 + 토폴로지를 한 덩어리로
 
 	Mesh mesh;
-	if (!mesh.Initialize(&device, vertices, 6, VertexPTC::Decl()))
+	if (!mesh.Initialize(device, vertices, 6, VertexPTC::Decl()))
 	{
 		jc::Console::WriteLine(_T("메시 생성 실패!"));
 		g_cResourceMgr.Finalize();

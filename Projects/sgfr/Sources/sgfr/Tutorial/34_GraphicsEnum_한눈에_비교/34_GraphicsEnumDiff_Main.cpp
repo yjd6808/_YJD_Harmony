@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/22/2026
  * =====================
@@ -580,12 +580,12 @@ void GraphicsEnumDiff_Main()
 	static _u8 s_SoftPixels[128 * 128 * 4];
 	FillSoftCirclePixels(s_SoftPixels, 128);
 	Texture texSoft;
-	texSoft.CreateFromMemory(&device, s_SoftPixels, 128, 128);
+	texSoft.CreateFromMemory(device, s_SoftPixels, 128, 128);
 
 	static _u8 s_Checker[32 * 32 * 4];
 	FillCheckerPixels(s_Checker, 32, 32, 4);
 	Texture texChecker;
-	texChecker.CreateFromMemory(&device, s_Checker, 32, 32);
+	texChecker.CreateFromMemory(device, s_Checker, 32, 32);
 
 	// 3. 버퍼 생성
 	// - quad: 블렌드용 동적 쿼드 (매 프레임 위치 갱신)
@@ -597,24 +597,24 @@ void GraphicsEnumDiff_Main()
 	_u32 quadIndices[6] = { 0, 1, 2, 2, 1, 3 };
 	VertexBuffer vbQuad;
 	IndexBuffer ibQuad;
-	vbQuad.Create(&device, quadVertices, 4, VertexPTC::Decl());
-	ibQuad.Create(&device, quadIndices, 6);
+	vbQuad.Create(device, quadVertices, 4, VertexPTC::Decl());
+	ibQuad.Create(device, quadIndices, 6);
 
 	VertexPTC uvQuad[4];
 	_u32 uvIdx[6];
 	FillUvQuad(uvQuad, uvIdx, 3.0f);
 	VertexBuffer vbUv;
 	IndexBuffer ibUv;
-	vbUv.Create(&device, uvQuad, 4, VertexPTC::Decl());
-	ibUv.Create(&device, uvIdx, 6);
+	vbUv.Create(device, uvQuad, 4, VertexPTC::Decl());
+	ibUv.Create(device, uvIdx, 6);
 
 	VertexPC cubeVerts[8];
 	_u32 cubeIdx[36];
 	FillColorCube(cubeVerts, cubeIdx);
 	VertexBuffer vbCube;
 	IndexBuffer ibCube;
-	vbCube.Create(&device, cubeVerts, 8, VertexPC::Decl());
-	ibCube.Create(&device, cubeIdx, 36);
+	vbCube.Create(device, cubeVerts, 8, VertexPC::Decl());
+	ibCube.Create(device, cubeIdx, 36);
 
 	// 토폴로지용: 5개 외곽점 + 중심 1점 = 별 모양
 	VertexPC topoVerts[] =
@@ -630,13 +630,13 @@ void GraphicsEnumDiff_Main()
 	const _u32 topoIdxStrip[] = { 0, 1, 5, 2, 3, 4 };         // triangleStrip
 	VertexBuffer vbTopo;
 	IndexBuffer ibTopoTriList, ibTopoStrip, ibTopoLine, ibTopoLineStrip;
-	vbTopo.Create(&device, topoVerts, 6, VertexPC::Decl());
-	ibTopoTriList.Create(&device, topoIdxList, 9);
-	ibTopoStrip.Create(&device, topoIdxStrip, 6);
+	vbTopo.Create(device, topoVerts, 6, VertexPC::Decl());
+	ibTopoTriList.Create(device, topoIdxList, 9);
+	ibTopoStrip.Create(device, topoIdxStrip, 6);
 	_u32 lineIdx[] = { 0, 1, 1, 2, 2, 3, 3, 4, 4, 0 };
-	ibTopoLine.Create(&device, lineIdx, 10);
+	ibTopoLine.Create(device, lineIdx, 10);
 	_u32 lineStripIdx[] = { 0, 1, 2, 3, 4, 0 };
-	ibTopoLineStrip.Create(&device, lineStripIdx, 6);
+	ibTopoLineStrip.Create(device, lineStripIdx, 6);
 
 	// 4. 셰이더 + 상수 버퍼
 
@@ -656,9 +656,9 @@ void GraphicsEnumDiff_Main()
 	}
 
 	ConstantBuffer<CbTransform> cbTransform;
-	cbTransform.Create(&device);
+	cbTransform.Create(device);
 	ConstantBuffer<CbSplit> cbSplit;
-	cbSplit.Create(&device);
+	cbSplit.Create(device);
 
 	// 5. 카테고리별 After 선택값 기억 (카테고리를 옮겨도 이전 선택 유지)
 	// - 초기 After는 Before와 확실히 다르도록 한 칸 옆 값으로 둔다. (처음부터 차이 보이게)

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 10:50:00 AM
  * =====================
@@ -74,11 +74,11 @@ void PngTextureDraw_Main()
 	// (1순위) 실행 팏더의 Resources\sample.png를 WIC로 디코딩
 	// (2순위) 파일이 없으면 직접 만든 체커보드 픽셀로 텍스처 생성
 	Texture texture;
-	if (texture.LoadFromFile(&device, _T("Resources\\sample.png")))
+	if (texture.LoadFromFile(device, _T("Resources\\sample.png")))
 	{
 		jc::Console::Write(_T("Resources\\sample.png 로드 성공! (%d x %d)\n"), texture.Width(), texture.Height());
 	}
-	else if (CreateCheckerboardTexture(&device, &texture))
+	else if (CreateCheckerboardTexture(device, &texture))
 	{
 		jc::Console::Write(_T("sample.png가 없어 체커보드 텍스처로 대체합니다. (%d x %d)\n"), texture.Width(), texture.Height());
 		jc::Console::WriteLine(_T("(실행 팏더에 Resources\\sample.png를 넣으면 진짜 PNG를 볼 수 있습니다)"));
@@ -107,8 +107,8 @@ void PngTextureDraw_Main()
 
 	VertexBuffer vb;
 	IndexBuffer ib;
-	if (!vb.Create(&device, vertices, 4, VertexPTC::Decl()) ||
-		!ib.Create(&device, indices, 6))
+	if (!vb.Create(device, vertices, 4, VertexPTC::Decl()) ||
+		!ib.Create(device, indices, 6))
 	{
 		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
 		g_cResourceMgr.Finalize();

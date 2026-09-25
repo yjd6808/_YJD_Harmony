@@ -40,8 +40,6 @@ public:
 	GraphicDevice(const GraphicDevice&) = delete;
 	GraphicDevice& operator=(const GraphicDevice&) = delete;
 
-	static GraphicDevice& Get();				// 잘 알려진 기본 인스턴스 (Meyers static, 지연 초기화 없음)
-
 	bool IsValid() const { return pDevice_ != nullptr; }
 
 	// ---- 수명 ----
@@ -86,7 +84,6 @@ public:
 	RenderStates& States() { return states_; }
 	SwapChain& GetSwapChain() { return swapChain_; }
 	DepthStencilSurface& GetDepthSurface() { return depthSurface_; }
-	void SetDebugName(ID3D11DeviceChild* _pChild, const jc::String& _name);
 
 	// ---- 레지스트리 조회 (GraphicContext 전용) — _u64 키 ----
 	VertexShader* ResolveVertexShader(_u64 _key);

@@ -16,4 +16,4 @@ bool EnsureSampleSvgFile(const char* _szFilePath);
 
 // nanosvg가 없을 때 대체용으로 그라데이션 원 텍스처를 직접 만든다.
 // (SVG 래스터화 결과와 비슷한 부드러운 원을 CPU로 직접 그린다)
-bool CreateFallbackCircleTexture(sgf::GraphicDevice* _pDevice, sgf::Texture* _pOutTexture);
+bool CreateFallbackCircleTexture(sgf::GraphicDevice& _device, sgf::Texture* _pOutTexture);

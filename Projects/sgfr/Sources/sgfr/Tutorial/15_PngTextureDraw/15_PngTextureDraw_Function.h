@@ -12,4 +12,4 @@ void PrintUvExplanation();
 
 // 체커보드 무늬 픽셀(RGBA)을 직접 만들어 텍스처를 생성한다.
 // PNG 파일이 없을 때도 튜토리얼이 항상 동작하도록 하는 대체 경로다.
-bool CreateCheckerboardTexture(sgf::GraphicDevice* _pDevice, sgf::Texture* _pOutTexture);
+bool CreateCheckerboardTexture(sgf::GraphicDevice& _device, sgf::Texture* _pOutTexture);

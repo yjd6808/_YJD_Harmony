@@ -11,6 +11,9 @@
 #include "sgf/Graphics/ShaderProgram.h"
 #include "sgf/Graphics/Texture.h"
 #include "sgf/Graphics/ResourceMgr.h"
+#include "jc/Hasher.h"
+
+#include <cstring>
 
 NS_SGF_BEGIN
 
@@ -36,14 +39,133 @@ Material::~Material()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool Material::Initialize(GraphicDevice* _pDevice)
+bool Material::Initialize(GraphicDevice& _device, const MaterialDesc& _desc)
 {
-	pDevice_ = _pDevice;
+	pDevice_ = &_device;
+	ApplyDesc(_desc);
 
 	// 상태 객체는 생성하지 않는다 — 설정 키(디폴트)만 보관하고,
 	// Bind 시점에 RenderStates 풀에서 조회해 공유한다. (B-3)
-	if (!constantBuffer_.Create(_pDevice)) { return false; }
+	if (!constantBuffer_.Create(_device))
+	{
+		pDevice_ = nullptr;
+		return false;
+	}
+	return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+void Material::ApplyDesc(const MaterialDesc& _desc)
+{
+	desc_ = _desc;
+	vertexShaderKey_ = _desc.vertexShaderKey_;
+	pixelShaderKey_ = _desc.pixelShaderKey_;
+	for (_u32 i = 0; i < GraphicContext::MAX_TEXTURE_SLOTS; ++i)
+	{
+		textureKeys_[i] = _desc.textureKeys_[i];
+	}
+	blendMode_ = _desc.blendMode_;
+	depthMode_ = _desc.depthMode_;
+	cullMode_ = _desc.cullMode_;
+	fillMode_ = _desc.fillMode_;
+	frontFace_ = _desc.frontFace_;
+	filter_ = _desc.filter_;
+	addrU_ = _desc.addrU_;
+	addrV_ = _desc.addrV_;
+	_desc.baseColor_.ToFloat4(constants_.baseColor_);
 	constantsDirty_ = true;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+MaterialDesc MaterialDesc::Default2D()
+{
+	MaterialDesc desc;
+	desc.vertexShaderKey_ = g_cResourceMgr.GetDefaultVertexShader2DKey();
+	desc.pixelShaderKey_ = g_cResourceMgr.GetDefaultPixelShader2DKey();
+	desc.blendMode_ = BlendMode::bmAlpha;
+	desc.depthMode_ = DepthMode::dmDisabled;
+	desc.cullMode_ = CullMode::cmNone;
+	return desc;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+MaterialDesc MaterialDesc::Default3D()
+{
+	MaterialDesc desc;
+	desc.vertexShaderKey_ = g_cResourceMgr.GetDefaultVertexShader3DKey();
+	desc.pixelShaderKey_ = g_cResourceMgr.GetDefaultPixelShader3DKey();
+	desc.blendMode_ = BlendMode::bmNone;
+	desc.depthMode_ = DepthMode::dmReadWrite;
+	desc.cullMode_ = CullMode::cmBack;
+	return desc;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+_u64 MaterialDesc::Hash() const
+{
+	jc::HashBuilder<jc::HashAlgorithm::Fnv1a64> builder;
+	builder.AppendIntegral(vertexShaderKey_);
+	builder.AppendIntegral(pixelShaderKey_);
+	for (_u32 i = 0; i < GraphicContext::MAX_TEXTURE_SLOTS; ++i)
+	{
+		builder.AppendIntegral(textureKeys_[i]);
+	}
+	_f32 rgba[4] = {};
+	baseColor_.ToFloat4(rgba);
+	for (_s32 i = 0; i < 4; ++i)
+	{
+		_u32 bits = 0;
+		memcpy(&bits, &rgba[i], sizeof(bits));
+		builder.AppendIntegral(static_cast<_u64>(bits));
+	}
+	builder.AppendIntegral(static_cast<_u64>(blendMode_));
+	builder.AppendIntegral(static_cast<_u64>(depthMode_));
+	builder.AppendIntegral(static_cast<_u64>(cullMode_));
+	builder.AppendIntegral(static_cast<_u64>(fillMode_));
+	builder.AppendIntegral(static_cast<_u64>(frontFace_));
+	builder.AppendIntegral(static_cast<_u64>(filter_));
+	builder.AppendIntegral(static_cast<_u64>(addrU_));
+	builder.AppendIntegral(static_cast<_u64>(addrV_));
+	return builder.Digest();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+bool MaterialDesc::operator==(const MaterialDesc& _other) const
+{
+	if (vertexShaderKey_ != _other.vertexShaderKey_ ||
+		pixelShaderKey_ != _other.pixelShaderKey_)
+	{
+		return false;
+	}
+	for (_u32 i = 0; i < GraphicContext::MAX_TEXTURE_SLOTS; ++i)
+	{
+		if (textureKeys_[i] != _other.textureKeys_[i])
+		{
+			return false;
+		}
+	}
+	if (blendMode_ != _other.blendMode_ ||
+		depthMode_ != _other.depthMode_ ||
+		cullMode_ != _other.cullMode_ ||
+		fillMode_ != _other.fillMode_ ||
+		frontFace_ != _other.frontFace_ ||
+		filter_ != _other.filter_ ||
+		addrU_ != _other.addrU_ ||
+		addrV_ != _other.addrV_)
+	{
+		return false;
+	}
+	_f32 left[4] = {};
+	_f32 right[4] = {};
+	baseColor_.ToFloat4(left);
+	_other.baseColor_.ToFloat4(right);
+	for (_s32 i = 0; i < 4; ++i)
+	{
+		if (left[i] != right[i])
+		{
+			return false;
+		}
+	}
 	return true;
 }
 
@@ -54,53 +176,13 @@ void Material::Finalize()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Material::SetTextureKey(_u32 _slot, _u64 _key)
-{
-	jc_assert_msg(_slot < GraphicContext::MAX_TEXTURE_SLOTS, _T("텍스처 슬롯 범위를 벗어났습니다."));
-	textureKeys_[_slot] = _key;
-}
+
 
 //////////////////////////////////////////////////////////////////////////////////////////
 _u64 Material::GetTextureKey(_u32 _slot) const
 {
 	jc_assert_msg(_slot < GraphicContext::MAX_TEXTURE_SLOTS, _T("텍스처 슬롯 범위를 벗어났습니다."));
 	return textureKeys_[_slot];
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-bool Material::SetRasterizer(CullMode _cull, FillMode _fill, FrontFace _frontFace)
-{
-	jc_assert_msg(pDevice_ != nullptr, _T("Initialize 이후에만 상태를 바꿀 수 있습니다."));
-	cullMode_ = _cull;
-	fillMode_ = _fill;
-	frontFace_ = _frontFace;
-	return true;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-bool Material::SetBlend(BlendMode _mode)
-{
-	jc_assert_msg(pDevice_ != nullptr, _T("Initialize 이후에만 상태를 바꿀 수 있습니다."));
-	blendMode_ = _mode;
-	return true;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-bool Material::SetDepth(DepthMode _mode)
-{
-	jc_assert_msg(pDevice_ != nullptr, _T("Initialize 이후에만 상태를 바꿀 수 있습니다."));
-	depthMode_ = _mode;
-	return true;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-bool Material::SetSampler(FilterMode _filter, AddressMode _addressU, AddressMode _addressV)
-{
-	jc_assert_msg(pDevice_ != nullptr, _T("Initialize 이후에만 상태를 바꿀 수 있습니다."));
-	filter_ = _filter;
-	addrU_ = _addressU;
-	addrV_ = _addressV;
-	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

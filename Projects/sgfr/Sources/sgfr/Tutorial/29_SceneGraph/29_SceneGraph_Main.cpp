@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 11:20:00 AM
  * 수정일: 8/9/2026 1:00:00 AM (Node/Sprite 제거, Application 훅 + SoundEngine + g_c 전역 접근)
@@ -46,9 +46,9 @@ namespace
 		void OnEnter() override
 		{
 			_LogInfo_(_T("[29] SolarSystemScene::OnEnter 시작"));
-			if (!CreateCircleTexture(&g_cDevice, &sunTexture_, 128, color(0xFF, 0xD9, 0x33, 0xFF)) ||
-				!CreateCircleTexture(&g_cDevice, &earthTexture_, 64, color(0x4D, 0x8C, 0xFF, 0xFF)) ||
-				!CreateCircleTexture(&g_cDevice, &moonTexture_, 32, color(0xCC, 0xCC, 0xCC, 0xFF)))
+			if (!CreateCircleTexture(g_cDevice, &sunTexture_, 128, color(0xFF, 0xD9, 0x33, 0xFF)) ||
+				!CreateCircleTexture(g_cDevice, &earthTexture_, 64, color(0x4D, 0x8C, 0xFF, 0xFF)) ||
+				!CreateCircleTexture(g_cDevice, &moonTexture_, 32, color(0xCC, 0xCC, 0xCC, 0xFF)))
 			{
 				jc::Console::WriteLine(_T("원형 텍스처 생성 실패!"));
 				return;
@@ -169,7 +169,7 @@ namespace
 			{
 				const _f32 t = static_cast<_f32>(i) / BALL_COUNT;
 				const color ballColor = color::FromFloat(0.4f + 0.6f * t, 0.9f - 0.6f * t, 0.5f + 0.4f * sinf(t * jc_math_pi2), 1.0f);
-				if (!CreateCircleTexture(&g_cDevice, &textures_[i], 64, ballColor))
+				if (!CreateCircleTexture(g_cDevice, &textures_[i], 64, ballColor))
 				{
 					jc::Console::WriteLine(_T("공 텍스처 생성 실패!"));
 					return;

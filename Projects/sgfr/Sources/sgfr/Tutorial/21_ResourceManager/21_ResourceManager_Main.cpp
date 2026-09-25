@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 6:30:00 PM
  * =====================
@@ -30,7 +30,7 @@ namespace
 	//////////////////////////////////////////////////////////////////////////////////////////
 
 	// 2x2 단색 텍스처를 만든다. (데모용 더미 리소스)
-	Texture* CreateSolidTexture(GraphicDevice* _pDevice, _u8 _r, _u8 _g, _u8 _b)
+	Texture* CreateSolidTexture(GraphicDevice& _device, _u8 _r, _u8 _g, _u8 _b)
 	{
 		_u8 pixels[2 * 2 * 4];
 		for (_s32 i = 0; i < 4; ++i)
@@ -42,7 +42,7 @@ namespace
 		}
 
 		Texture* pTexture = dbg_new Texture();
-		if (!pTexture->CreateFromMemory(_pDevice, pixels, 2, 2))
+		if (!pTexture->CreateFromMemory(_device, pixels, 2, 2))
 		{
 			delete pTexture;
 			return nullptr;
@@ -83,8 +83,8 @@ void ResourceManager_Main()
 	// 3. 리소스 등록: Add에 넘기는 순간 소유권이 매니저로 넘어간다.
 	jc::Console::WriteLine(_T("\n--- 2. 등록/검색/제거 ---"));
 
-	Texture* pRed = CreateSolidTexture(&device, 255, 0, 0);
-	Texture* pGreen = CreateSolidTexture(&device, 0, 255, 0);
+	Texture* pRed = CreateSolidTexture(device, 255, 0, 0);
+	Texture* pGreen = CreateSolidTexture(device, 0, 255, 0);
 	if (pRed == nullptr || pGreen == nullptr)
 	{
 		jc::Console::WriteLine(_T("텍스처 생성 실패!"));
@@ -94,8 +94,7 @@ void ResourceManager_Main()
 		device.Finalize();
 		return;
 	}
-	pRed->SetDebugName(_T("RedTexture"));
-	pGreen->SetDebugName(_T("GreenTexture"));
+
 
 	const _u64 redKey = g_cResourceMgr.Add(pRed);
 	const _u64 greenKey = g_cResourceMgr.Add(pGreen, _T("memory://green"));	// 경로 별칭 부여
@@ -112,7 +111,7 @@ void ResourceManager_Main()
 	jc::Console::Write(_T("FindKeyByPath(\"memory://green\") = %llu (기대값 %llu)\n"), foundByPath, greenKey);
 
 	// 같은 경로로 또 등록하면 중복으로 거부된다. (INVALID_RESOURCE_KEY 반환, 소유권은 호출자에게 그대로)
-	Texture* pDuplicated = CreateSolidTexture(&device, 0, 0, 255);
+	Texture* pDuplicated = CreateSolidTexture(device, 0, 0, 255);
 	if (pDuplicated != nullptr)
 	{
 		const _u64 duplicatedKey = g_cResourceMgr.Add(pDuplicated, _T("memory://green"));
@@ -128,10 +127,10 @@ void ResourceManager_Main()
 	jc::Console::Write(_T("빨간 텍스처 제거 (키 %llu 반납)\n"), redKey);
 	g_cResourceMgr.Remove(redKey);	// 이 순간 pRed는 소멸된다! (소유자 = 수명 결정자)
 
-	Texture* pYellow = CreateSolidTexture(&device, 255, 255, 0);
+	Texture* pYellow = CreateSolidTexture(device, 255, 255, 0);
 	if (pYellow != nullptr)
 	{
-		pYellow->SetDebugName(_T("YellowTexture"));
+
 		const _u64 yellowKey = g_cResourceMgr.Add(pYellow);
 		jc::Console::Write(_T("새 텍스처 키: %llu (반납한 키 %llu가 재사용되면 성공!)\n"), yellowKey, redKey);
 	}

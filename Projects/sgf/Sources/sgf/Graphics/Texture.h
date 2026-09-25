@@ -42,19 +42,19 @@ public:
 	// PNG/JPG/BMP 등 일반 이미지 파일을 WIC으로 읽어 텍스처를 만든다.
 	// @param _szFilePath: 이미지 파일 경로 (유니코드)
 	// @return 성공 여부
-	bool LoadFromFile(GraphicDevice* _pDevice, const jc::String& _szFilePath);
+	bool LoadFromFile(GraphicDevice& _device, const jc::String& _szFilePath);
 
 	// SVG 파일을 nanosvg로 래스터화해서 텍스처를 만든다.
 	// @param _szFilePath: SVG 파일 경로 (멀티바이트)
 	// @param _scale: 확대 배율 (1.0 = SVG 원본 크기)
 	// @return 성공 여부 (nanosvg 미설치 시 항상 false)
-	bool LoadFromSvgFile(GraphicDevice* _pDevice, const jc::String& _szFilePath, _f32 _scale = 1.0f);
+	bool LoadFromSvgFile(GraphicDevice& _device, const jc::String& _szFilePath, _f32 _scale = 1.0f);
 
 	// 메모리의 RGBA 픽셀 배열로 직접 텍스처를 만든다.
 	// (절차적 생성 텍스처, 단색 텍스처 등에 사용)
 	// @param _pPixels: RGBA 순서 8비트씩, 한 줄에 _width*4 바이트
 	// @param _format: 픽셀 포맷 (기본 pfRgba8)
-	bool CreateFromMemory(GraphicDevice* _pDevice, const _u8* _pPixels, _s32 _width, _s32 _height, PixelFormat _format = PixelFormat::pfRgba8);
+	bool CreateFromMemory(GraphicDevice& _device, const _u8* _pPixels, _s32 _width, _s32 _height, PixelFormat _format = PixelFormat::pfRgba8);
 
 	// PS 단계 지정 슬롯에 이 텍스처를 장착한다.
 	// @param _slot: 셰이더의 register(t0), register(t1)... 번호

@@ -23,15 +23,19 @@ Scene::Scene()
 //////////////////////////////////////////////////////////////////////////////////////////
 Scene::~Scene()
 {
-	// defaultCamera_ 정리 (GameObject 파생 — 소유)
-	// (root_ 트리의 자식이면 RemoveChild로 분리된 뒤 delete)
 	if (defaultCamera_ != nullptr)
 	{
-		root_.RemoveChild(defaultCamera_);	// 트리에 있으면 분리 (없으면 no-op)
-		JC_DELETE_SAFE(defaultCamera_);
+		if (defaultCamera_->GetParent() == &root_)
+		{
+			root_.DestroyChild(defaultCamera_);
+		}
+		else
+		{
+			JC_DELETE_SAFE(defaultCamera_);
+		}
+		defaultCamera_ = nullptr;
 	}
 
-	// root_ 서브트리 전부 정리 (소멸자가 재귀 정리)
 	root_.RemoveAllChildren();
 }
 
@@ -78,9 +82,15 @@ void Scene::AddChild(GameObject* _pChild, _u64 _zOrder)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void Scene::RemoveChild(GameObject* _pChild)
+GameObject* Scene::DetachChild(GameObject* _pChild)
 {
-	root_.RemoveChild(_pChild);							// → Leave + 씬 소속 해제
+	return root_.DetachChild(_pChild);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+void Scene::DestroyChild(GameObject* _pChild)
+{
+	root_.DestroyChild(_pChild);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

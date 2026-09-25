@@ -6,7 +6,7 @@
  *
  * [상수버퍼 슬롯 규약] (FR-19)
  * b0 = 프레임 공통 (view/projection/카메라 위치. Renderer3D가 소유)
- * b1 = 오브젝트 공통 (world. Renderer3D가 오브젝트마다 갱신)
+ * b1 = 오브젝트 공통 (world + tint. Renderer3D가 오브젝트마다 갱신)
  * b2 = 머티리얼 (baseColor. Material이 소유)
  *
  * [행렷 규약]
@@ -33,6 +33,7 @@ cbuffer ConstantBufferFrame : register(b0)
 cbuffer ConstantBufferObject : register(b1)
 {
 	row_major float4x4 world_;
+	float4 tint_;
 };
 
 cbuffer ConstantBufferMaterial : register(b2)
@@ -69,7 +70,7 @@ PSInput VSMain(VSInput input)
 
 float4 PSMain(PSInput input) : SV_Target
 {
-	return texture0_.Sample(sampler0_, input.uv_) * input.color_ * baseColor_;
+	return texture0_.Sample(sampler0_, input.uv_) * input.color_ * baseColor_ * tint_;
 }
 )";
 
@@ -86,6 +87,7 @@ cbuffer ConstantBufferFrame : register(b0)
 cbuffer ConstantBufferObject : register(b1)
 {
 	row_major float4x4 world_;
+	float4 tint_;
 };
 
 cbuffer ConstantBufferMaterial : register(b2)
@@ -127,7 +129,7 @@ float4 PSMain(PSInput input) : SV_Target
 	float ndotl = saturate(dot(normalize(input.normal_), -lightDir));
 	float lighting = 0.25f + 0.75f * ndotl;						// 앵비언트 0.25
 	float4 texColor = texture0_.Sample(sampler0_, input.uv_);
-	return float4(texColor.rgb * baseColor_.rgb * lighting, texColor.a * baseColor_.a);
+	return float4(texColor.rgb * baseColor_.rgb * tint_.rgb * lighting, texColor.a * baseColor_.a * tint_.a);
 }
 )";
 
