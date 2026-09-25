@@ -93,7 +93,7 @@ bool Mesh::InitializeAsCircle2D(GraphicDevice* _pDevice, _u32 _segments)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// 단위 삼각형. 중심이 원점, 시계 반대 방향(앞면) 감기. (VertexPTC)
+// 단위 삼각형. 중심이 원점, 시계 방향(앞면) 감기. (VertexPTC)
 bool Mesh::InitializeAsTriangle2D(GraphicDevice* _pDevice)
 {
 	const vec2 pTop(0.0f, 0.5f);			// 위 꼭짓점
@@ -101,7 +101,7 @@ bool Mesh::InitializeAsTriangle2D(GraphicDevice* _pDevice)
 	const vec2 pBottomRight(0.5f, -0.5f);	// 오른아래
 
 	FillResult result;
-	PrimitiveBuilder::BuildTriangle(pTop, pBottomLeft, pBottomRight, color::WHITE, result);
+	PrimitiveBuilder::BuildTriangle(pTop, pBottomRight, pBottomLeft, color::WHITE, result);
 	return Build2DPrimitive(_pDevice, result, _T("Triangle2D"));
 }
 
@@ -186,11 +186,11 @@ bool Mesh::InitializeAsCube(GraphicDevice* _pDevice)
 	{
 		const _u32 base = face * 4;
 		indices[face * 6 + 0] = base + 0;
-		indices[face * 6 + 1] = base + 1;
-		indices[face * 6 + 2] = base + 2;
+		indices[face * 6 + 1] = base + 2;
+		indices[face * 6 + 2] = base + 1;
 		indices[face * 6 + 3] = base + 0;
-		indices[face * 6 + 4] = base + 2;
-		indices[face * 6 + 5] = base + 3;
+		indices[face * 6 + 4] = base + 3;
+		indices[face * 6 + 5] = base + 2;
 	}
 
 	if (!Initialize(_pDevice, vertices, _countof(vertices),
@@ -199,6 +199,7 @@ bool Mesh::InitializeAsCube(GraphicDevice* _pDevice)
 		return false;
 	}
 
+	format_ = VertexFormat::vfPNT3D;
 	SetDebugName(_T("Cube"));
 	return true;
 }
@@ -244,8 +245,8 @@ bool Mesh::InitializeAsSphere(GraphicDevice* _pDevice, _u32 _slices, _u32 _stack
 			const _u32 v10 = (_u32)((i + 1) * colCount + j);
 			const _u32 v01 = (_u32)(i * colCount + j + 1);
 			const _u32 v11 = (_u32)((i + 1) * colCount + j + 1);
-			indices.PushBack(v00); indices.PushBack(v10); indices.PushBack(v01);
-			indices.PushBack(v01); indices.PushBack(v10); indices.PushBack(v11);
+			indices.PushBack(v00); indices.PushBack(v01); indices.PushBack(v10);
+			indices.PushBack(v01); indices.PushBack(v11); indices.PushBack(v10);
 		}
 	}
 
@@ -311,14 +312,14 @@ bool Mesh::InitializeAsCylinder(GraphicDevice* _pDevice, _u32 _segments)
 	{
 		const _u32 v0 = (_u32)(bottomRing + j);
 		const _u32 v1 = (_u32)(bottomRing + j + 1);
-		indices.PushBack((_u32)0); indices.PushBack(v1); indices.PushBack(v0);
+		indices.PushBack((_u32)0); indices.PushBack(v0); indices.PushBack(v1);
 	}
 	// 위원판 (법선 +Y): 중심→현재→다음
 	for (_s32 j = 0; j < n; ++j)
 	{
 		const _u32 v0 = (_u32)(topRing + j);
 		const _u32 v1 = (_u32)(topRing + j + 1);
-		indices.PushBack((_u32)1); indices.PushBack(v0); indices.PushBack(v1);
+		indices.PushBack((_u32)1); indices.PushBack(v1); indices.PushBack(v0);
 	}
 
 	if (!Initialize(_pDevice, vertices.Source(), vertices.Size(),
@@ -400,8 +401,8 @@ bool Mesh::InitializeAsCapsule(GraphicDevice* _pDevice, _u32 _segments)
 			const _u32 v10 = (_u32)((i + 1) * colCount + j);
 			const _u32 v01 = (_u32)(i * colCount + j + 1);
 			const _u32 v11 = (_u32)((i + 1) * colCount + j + 1);
-			indices.PushBack(v00); indices.PushBack(v10); indices.PushBack(v01);
-			indices.PushBack(v01); indices.PushBack(v10); indices.PushBack(v11);
+			indices.PushBack(v00); indices.PushBack(v01); indices.PushBack(v10);
+			indices.PushBack(v01); indices.PushBack(v11); indices.PushBack(v10);
 		}
 	}
 

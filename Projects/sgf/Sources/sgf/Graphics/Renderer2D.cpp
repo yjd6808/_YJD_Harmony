@@ -163,6 +163,8 @@ void Renderer2D::OnBegin()
 
 	pDevice_->Context().SetDepth(DepthMode::dmDisabled);
 	pDevice_->Context().SetBlend(BlendMode::bmAlpha);
+	// 2D는 버킷/zOrder 순서로 그리므로 컬링 불필요. cmBack해도 3d와 다르게 성능상 이점 없음.
+	pDevice_->Context().SetRasterizer(CullMode::cmNone, FillMode::fmSolid);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -545,6 +547,8 @@ void Renderer2D::Flush()
 	// 2D는 항상 "깊이 끄고, 반투명 켜고" 그려지도록 보장하기 위함이다.
 	pDevice_->Context().SetDepth(DepthMode::dmDisabled);
 	pDevice_->Context().SetBlend(BlendMode::bmAlpha);
+	// DrawMesh 바인딩 잔재가 배치를 컬링하지 못하도록 Flush 직전 cmNone 확정.
+	pDevice_->Context().SetRasterizer(CullMode::cmNone, FillMode::fmSolid);
 
 	// 1. CPU 배치 -> GPU 정점/인덱스 버퍼 복사
 	vertexBuffer_.Update(pDevice_->Context(), vertices_.Source(), UINT(vertexCount));

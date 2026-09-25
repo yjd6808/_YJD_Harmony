@@ -25,6 +25,49 @@ namespace
 		{
 			GetWindow()->SetTitle(_T("Practice 02. 3D 씬 템플릿 (방향키 공전, 휠 접근, ESC 종료)"));
 			elapsed_ = 0.0f;
+
+			Shape3D* pCube = dbg_new Shape3D(_T("Box"));
+			pCube->SetShape(PrimitiveMesh3DType::Cube, color(0x4D, 0x8C, 0xFF, 0xFF));
+			pCube->SetPosition(vec3(-1.5f, 1.0f, 0.0f));
+			jc_assert(pCube->GetMaterial());
+			AddChild(pCube, 0);
+
+			Shape3D* pBall = dbg_new Shape3D(_T("Ball"));
+			pBall->SetShape(PrimitiveMesh3DType::Sphere, color(0xFF, 0x66, 0x33, 0xFF));
+			pBall->SetPosition(vec3(1.5f, 1.0f, 0.0f));
+			pBall->SetScale(0.75f);
+			jc_assert(pBall->GetMaterial());
+			AddChild(pBall, 1);
+
+			Shape3D* pPillar = dbg_new Shape3D(_T("Pillar"));
+			pPillar->SetShape(PrimitiveMesh3DType::Cylinder, color(0x33, 0x99, 0x66, 0xFF));
+			pPillar->SetPosition(vec3(0.0f, 1.0f, 2.0f));
+			pPillar->SetScale(vec3(0.5f, 1.0f, 0.5f));
+			jc_assert(pPillar->GetMaterial());
+			AddChild(pPillar, 2);
+
+			GameObject* pSign = dbg_new GameObject(_T("Sign"));
+			pSign->SetMesh(g_cResourceMgr.FindPrimitiveMesh3D(PrimitiveMesh3DType::Quad));
+			pSign->GetTransform()->SetLocalPosition(vec3(0.0f, 2.6f, 1.0f));
+			pSign->GetTransform()->SetLocalScale(vec3(3.0f, 1.6f, 1.0f));
+			pSign->GetMaterial()->SetVertexShaderKey(g_cResourceMgr.GetDefaultVertexShader3DKey());
+			pSign->GetMaterial()->SetPixelShaderKey(g_cResourceMgr.GetDefaultPixelShader3DKey());
+			pSign->GetMaterial()->SetBaseColor(color(0xFF, 0xD9, 0x33, 0xFF));
+			pSign->GetMaterial()->Initialize(&g_cDevice);	// GPU 상태(파이프라인/상수버퍼) 초기화
+			jc_assert(pSign->GetMaterial());
+			AddChild(pSign, 3);
+
+			GameObject* pDecal = dbg_new GameObject(_T("Decal"));
+			pDecal->SetMesh(g_cResourceMgr.FindPrimitiveMesh3D(PrimitiveMesh3DType::Quad));
+			pDecal->GetTransform()->SetLocalPosition(vec3(3.2f, 0.02f, 2.0f));
+			pDecal->GetTransform()->SetLocalRotationEuler(-90.0f, 0.0f, 0.0f);
+			pDecal->GetTransform()->SetLocalScale(vec3(2.0f, 2.0f, 1.0f));
+			pDecal->GetMaterial()->SetVertexShaderKey(g_cResourceMgr.GetDefaultVertexShader3DKey());
+			pDecal->GetMaterial()->SetPixelShaderKey(g_cResourceMgr.GetDefaultPixelShader3DKey());
+			pDecal->GetMaterial()->SetBaseColor(color(0x33, 0x99, 0x99, 0xFF));
+			pDecal->GetMaterial()->Initialize(&g_cDevice);	// GPU 상태(파이프라인/상수버퍼) 초기화
+			jc_assert(pDecal->GetMaterial());
+			AddChild(pDecal, 4);
 		}
 
 		void OnUpdate(const jc::TimeSpan& _dt) override
@@ -40,6 +83,16 @@ namespace
 
 			const _f32 offsetY = 1.0f + sinf(elapsed_ * 2.0f) * 0.25f;
 			g_cRenderer3D.DrawCube(vec3(0.0f, offsetY, 0.0f), vec3(1.0f, 1.0f, 1.0f), color(0x4D, 0x8C, 0xFF, 0xFF));
+
+			g_cRenderer3D.DrawTriangle(vec3(-1.0f, 2.5f, 0.0f), vec3(1.0f, 2.5f, 0.0f), vec3(-1.0f, 0.5f, 0.0f), color(0xFF, 0xD9, 0x33, 0xFF));
+			g_cRenderer3D.DrawLine3D(vec3(0.0f, 0.0f, -2.0f), vec3(0.0f, 4.0f, -2.0f), color(0x66, 0x66, 0x66, 0xFF));
+			g_cRenderer3D.DrawCube(vec3(0.0f, 0.5f, -2.0f), vec3(0.5f, 0.5f, 0.5f), color(0x99, 0x33, 0x66, 0xFF));
+
+			g_cRenderer3D.DrawCube(vec3(-3.0f, 1.2f, 1.0f), vec3(2.4f, 1.2f, 0.05f), color(0x66, 0x33, 0x99, 0xFF));
+			g_cRenderer3D.DrawLine3D(vec3(-4.2f, 0.6f, 1.0f), vec3(-1.8f, 0.6f, 1.0f), color(0xFF, 0xFF, 0xFF, 0xFF));
+			g_cRenderer3D.DrawLine3D(vec3(-1.8f, 0.6f, 1.0f), vec3(-1.8f, 1.8f, 1.0f), color(0xFF, 0xFF, 0xFF, 0xFF));
+			g_cRenderer3D.DrawLine3D(vec3(-1.8f, 1.8f, 1.0f), vec3(-4.2f, 1.8f, 1.0f), color(0xFF, 0xFF, 0xFF, 0xFF));
+			g_cRenderer3D.DrawLine3D(vec3(-4.2f, 1.8f, 1.0f), vec3(-4.2f, 0.6f, 1.0f), color(0xFF, 0xFF, 0xFF, 0xFF));
 		}
 
 	private:

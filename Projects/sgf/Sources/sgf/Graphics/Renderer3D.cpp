@@ -118,7 +118,8 @@ void Renderer3D::BeginScene(const FrameConstants& _frame)
 	jc_assert_msg(pDevice_ != nullptr, _T("Initialize 이후에만 사용할 수 있습니다."));
 
 	GraphicContext& context = pDevice_->Context();
-
+	context.SetRasterizer(CullMode::cmBack, FillMode::fmSolid);
+	
 	frameCb_.Update(pDevice_->Context(), _frame);
 	context.SetConstantBuffer(ShaderStage::ssVertex, 0, frameCb_.Raw());
 	context.SetConstantBuffer(ShaderStage::ssPixel, 0, frameCb_.Raw());

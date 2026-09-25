@@ -582,6 +582,7 @@ bool ResourceMgr::CreateDefaults()
 	Material* pMat2D = dbg_new Material;
 	if (!pMat2D->Initialize(pDevice_)
 		|| !pMat2D->SetBlend(BlendMode::bmAlpha)
+		|| !pMat2D->SetRasterizer(CullMode::cmNone)
 		|| !pMat2D->SetDepth(DepthMode::dmDisabled))
 	{
 		delete pMat2D;
