@@ -207,18 +207,31 @@ _u16 CMessage::GetReadOffset() const
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteS8(_s8 _value) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _s8>(_value); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteU8(_u8 _value) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _u8>(_value); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteS16(_s16 _value) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _s16>(_value); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteU16(_u16 _value) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _u16>(_value); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteS32(_s32 _value) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _s32>(_value); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteS32L(_s32l _value) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _s32l>(_value); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteU32(_u32 _value) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _u32>(_value); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteU32L(_u32l _value) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _u32l>(_value); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteS64(_s64 _value) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _s64>(_value); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteU64(_u64 _value) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _u64>(_value); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteFloat(_f32 _value) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _f32>(_value); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteDouble(_f64 _value) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _f64>(_value); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WritePtr(void* _value) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, void*>(_value); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteBool(bool _value) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, bool>(_value); }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -253,16 +266,27 @@ void CMessage::WriteBinaryDummy(_u32 _len)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteS8(_s8 _value, OUT _s8** _ppAddr) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _s8>(_value, _ppAddr); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteU8(_u8 _value, OUT _u8** _ppAddr) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _u8>(_value, _ppAddr); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteS16(_s16 _value, OUT _s16** _ppAddr) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _s16>(_value, _ppAddr); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteU16(_u16 _value, OUT _u16** _ppAddr) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _u16>(_value, _ppAddr); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteS32(_s32 _value, OUT _s32** _ppAddr) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _s32>(_value, _ppAddr); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteS32L(_s32l _value, OUT _s32l** _ppAddr) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _s32l>(_value, _ppAddr); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteU32(_u32 _value, OUT _u32** _ppAddr) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _u32>(_value, _ppAddr); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteU32L(_u32l _value, OUT _u32l** _ppAddr) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _u32l>(_value, _ppAddr); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteS64(_s64 _value, OUT _s64** _ppAddr) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _s64>(_value, _ppAddr); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteU64(_u64 _value, OUT _u64** _ppAddr) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _u64>(_value, _ppAddr); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteFloat(_f32 _value, OUT _f32** _ppAddr) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _f32>(_value, _ppAddr); }
+////////////////////////////////////////////////////////////////////////////////////////
 void CMessage::WriteDouble(_f64 _value, OUT _f64** _ppAddr) { ReadyDefaultContext(); pContext_->WriteValue<CMessage_VariantTraits, _f64>(_value, _ppAddr); }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -581,7 +605,7 @@ CMessageView::~CMessageView()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// CMessageView 구현
+// : CMessageView 구현
 //////////////////////////////////////////////////////////////////////////////////////////
 CMessageHeader& CMessageView::GetMsgHeader() const
 {
@@ -1426,7 +1450,7 @@ CMessage::VariantType CMessageView::PeekVT(_u8* _pBuf, _u32 _capacity, OUT _u32*
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// CMessageContext
+// : CMessageContext
 //////////////////////////////////////////////////////////////////////////////////////////
 CMessageContext::CMessageContext(_u32 _prefixMemCapacity, _u32 _elemMemCapacity, int _msgId, object_id _targetId)
 : CMessageView(nullptr, _prefixMemCapacity, 0)

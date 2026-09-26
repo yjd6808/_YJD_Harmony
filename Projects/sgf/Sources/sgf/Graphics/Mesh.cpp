@@ -1,7 +1,6 @@
 /*
  * 작성자: 윤정도
  * 생성일: 8/9/2026 5:40:00 PM
- * 수정일: 8/16/2026 (2D 프리미티브 팩토리 + CPU 미러)
  * =====================
  * 메시 구현부
  */
@@ -60,15 +59,17 @@ bool Mesh::Initialize(
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// XY 평면 1x1 쿼드. (— 2D 프리미티브 팩토리로 위임)
+// : XY 평면 1x1 쿼드. (— 2D 프리미티브 팩토리로 위임)
+////////////////////////////////////////////////////////////////////////////////////////
 bool Mesh::InitializeAsQuad2D(GraphicDevice& _device)
 {
 	return InitializeAsRect2D(_device);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// 1x1 사각형. 중심이 원점이라 스케일 = 크기, 이동 = 위치로 바로 쓰인다. (VertexPTC)
+// : 1x1 사각형. 중심이 원점이라 스케일 = 크기, 이동 = 위치로 바로 쓰인다. (VertexPTC)
 // UV는 기존 InitializeAsQuad2D와 동일(왼위→(0,0)) — 텍스처 방향을 보존한다.
+////////////////////////////////////////////////////////////////////////////////////////
 bool Mesh::InitializeAsRect2D(GraphicDevice& _device)
 {
 	const color white = color::WHITE;
@@ -84,7 +85,8 @@ bool Mesh::InitializeAsRect2D(GraphicDevice& _device)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// 단위원 (반지름 1). 중심이 원점 — 스케일로 반지름을 조절한다. (VertexPTC)
+// : 단위원 (반지름 1). 중심이 원점 — 스케일로 반지름을 조절한다. (VertexPTC)
+////////////////////////////////////////////////////////////////////////////////////////
 bool Mesh::InitializeAsCircle2D(GraphicDevice& _device, _u32 _segments)
 {
 	FillResult result;
@@ -93,7 +95,8 @@ bool Mesh::InitializeAsCircle2D(GraphicDevice& _device, _u32 _segments)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// 단위 삼각형. 중심이 원점, 시계 방향(앞면) 감기. (VertexPTC)
+// : 단위 삼각형. 중심이 원점, 시계 방향(앞면) 감기. (VertexPTC)
+////////////////////////////////////////////////////////////////////////////////////////
 bool Mesh::InitializeAsTriangle2D(GraphicDevice& _device)
 {
 	const vec2 pTop(0.0f, 0.5f);			// 위 꼭짓점
@@ -106,8 +109,9 @@ bool Mesh::InitializeAsTriangle2D(GraphicDevice& _device)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// 단위 선분 — 가로 길이 1, 두께 1, 중심 원점. (VertexPTC)
+// : 단위 선분 — 가로 길이 1, 두께 1, 중심 원점. (VertexPTC)
 // Transform: scale=(길이, 두께, 1), rotation=각도, position=중점.
+////////////////////////////////////////////////////////////////////////////////////////
 bool Mesh::InitializeAsLine2D(GraphicDevice& _device)
 {
 	FillResult result;
@@ -116,7 +120,8 @@ bool Mesh::InitializeAsLine2D(GraphicDevice& _device)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// [공용] FillResult 기하 → GPU 메시 + vfPTC2D 표기. 2D 팩토리 전용. (CPU 미러 없음)
+// : [공용] FillResult 기하 → GPU 메시 + vfPTC2D 표기. 2D 팩토리 전용. (CPU 미러 없음)
+////////////////////////////////////////////////////////////////////////////////////////
 bool Mesh::Build2DPrimitive(GraphicDevice& _device,
 	FillResult& _result)
 {
@@ -144,7 +149,8 @@ bool Mesh::Build2DPrimitive(GraphicDevice& _device,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// 1x1x1 큐브. 면마다 법선이 달라서 정점을 공유하지 않는다. (24정점/36인덱스)
+// : 1x1x1 큐브. 면마다 법선이 달라서 정점을 공유하지 않는다. (24정점/36인덱스)
+////////////////////////////////////////////////////////////////////////////////////////
 bool Mesh::InitializeAsCube(GraphicDevice& _device)
 {
 	const VertexPNT vertices[] = {
@@ -204,7 +210,8 @@ bool Mesh::InitializeAsCube(GraphicDevice& _device)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// 반지름 1 구 (VertexPNT). UV 스피어 — slices(경도)/stacks(위도) 그리드, 북극→남극.
+// : 반지름 1 구 (VertexPNT). UV 스피어 — slices(경도)/stacks(위도) 그리드, 북극→남극.
+////////////////////////////////////////////////////////////////////////////////////////
 bool Mesh::InitializeAsSphere(GraphicDevice& _device, _u32 _slices, _u32 _stacks)
 {
 	jc_assert_msg(_slices >= 3 && _stacks >= 2, _T("구는 slices>=3, stacks>=2 필요합니다."));
@@ -261,7 +268,8 @@ bool Mesh::InitializeAsSphere(GraphicDevice& _device, _u32 _slices, _u32 _stacks
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// 반지름 1, 높이 2 원기둥 (VertexPNT). 옆면 + 상하 원판 (y ±1, 중심 원점).
+// : 반지름 1, 높이 2 원기둥 (VertexPNT). 옆면 + 상하 원판 (y ±1, 중심 원점).
+////////////////////////////////////////////////////////////////////////////////////////
 bool Mesh::InitializeAsCylinder(GraphicDevice& _device, _u32 _segments)
 {
 	jc_assert_msg(_segments >= 3, _T("원기둥은 segments>=3 필요합니다."));
@@ -333,7 +341,8 @@ bool Mesh::InitializeAsCylinder(GraphicDevice& _device, _u32 _segments)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// 반지름 0.5, 전체 높이 2 캡슐 (VertexPNT). 원통부(높이 1) + 상하 반구 (Unity 규격).
+// : 반지름 0.5, 전체 높이 2 캡슐 (VertexPNT). 원통부(높이 1) + 상하 반구 (Unity 규격).
+////////////////////////////////////////////////////////////////////////////////////////
 bool Mesh::InitializeAsCapsule(GraphicDevice& _device, _u32 _segments)
 {
 	jc_assert_msg(_segments >= 3, _T("캡슐은 segments>=3 필요합니다."));
@@ -417,7 +426,8 @@ bool Mesh::InitializeAsCapsule(GraphicDevice& _device, _u32 _segments)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// XY 1x1 평면 (VertexPNT). +Z 향, 8x8 격자 (Unity Plane 형태). 중심 원점.
+// : XY 1x1 평면 (VertexPNT). +Z 향, 8x8 격자 (Unity Plane 형태). 중심 원점.
+////////////////////////////////////////////////////////////////////////////////////////
 bool Mesh::InitializeAsPlane(GraphicDevice& _device)
 {
 	constexpr _s32 SEGMENTS = 8;
@@ -468,7 +478,8 @@ bool Mesh::InitializeAsPlane(GraphicDevice& _device)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// XY 1x1 쿼드 (VertexPNT). +Z 향, 4정점/2삼각형. 중심 원점.
+// : XY 1x1 쿼드 (VertexPNT). +Z 향, 4정점/2삼각형. 중심 원점.
+////////////////////////////////////////////////////////////////////////////////////////
 bool Mesh::InitializeAsQuad3D(GraphicDevice& _device)
 {
 	const VertexPNT vertices[4] = {
@@ -499,7 +510,8 @@ void Mesh::Finalize()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// ★ IA(입력 조립기) 세팅 — "이 메시를 어떻게 해석할지"를 컨텍스트에 알린다.
+// : ★ IA(입력 조립기) 세팅 — "이 메시를 어떻게 해석할지"를 컨텍스트에 알린다.
+////////////////////////////////////////////////////////////////////////////////////////
 void Mesh::Bind(GraphicContext& _context)
 {
 	_context.SetVertexBuffer(&vertexBuffer_);	// 선언이 여기서 자동 전파된다
@@ -511,7 +523,8 @@ void Mesh::Bind(GraphicContext& _context)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// ★ 그리기 발사 — 정점 수만큼 GPU 파이프라인을 통과시킨다.
+// : ★ 그리기 발사 — 정점 수만큼 GPU 파이프라인을 통과시킨다.
+////////////////////////////////////////////////////////////////////////////////////////
 void Mesh::Draw(GraphicContext& _context)
 {
 	if (indexed_)

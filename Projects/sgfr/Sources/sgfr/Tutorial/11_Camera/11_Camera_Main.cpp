@@ -36,7 +36,9 @@ namespace
 	};
 }
 
-// 카메라 튜토리얼을 실행한다. (WASD 이동 / 마우스 휠 줌)
+////////////////////////////////////////////////////////////////////////////////////////
+// : 카메라 튜토리얼을 실행한다. (WASD 이동 / 마우스 휠 줌)
+////////////////////////////////////////////////////////////////////////////////////////
 void Camera_Main()
 {
 	PrintCameraExplanation();
@@ -184,8 +186,6 @@ void Camera_Main()
 				ib.Bind(device.Context());
 				device.Context().SetVertexShader(vsShader);
 				device.Context().SetPixelShader(psShader);
-				{
-				}
 				device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 				device.Context().DrawIndexed(6, 0, 0);
 			}

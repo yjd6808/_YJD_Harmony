@@ -27,6 +27,7 @@ using namespace jc;
 
 namespace
 {
+	//////////////////////////////////////////////////////////////////////////////////////
 	template <typename T>
 	inline bool CheckAndUpdateCache(T& _cached, T _incoming, _u64& _skipped, _u64& _api)
 	{
@@ -131,7 +132,8 @@ void GraphicContext::Finalize()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 캐시를 모두 비운다. 외부에서 상태를 바꿨을 수 있는 경계(BeginFrame 등)에서 호출.
+// : 캐시를 모두 비운다. 외부에서 상태를 바꿨을 수 있는 경계(BeginFrame 등)에서 호출.
+//////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::InvalidateCache()
 {
 	pCachedVertexBuffer_ = nullptr;
@@ -267,7 +269,8 @@ _u64 GraphicContext::CreatePixelShader(const jc::String& _hlslSource, const jc::
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// ★ 상수버퍼 바인딩 — 셰이더가 읽을 데이터 보관함을 특정 스테이지/슬롯에 장착한다.
+// : ★ 상수버퍼 바인딩 — 셰이더가 읽을 데이터 보관함을 특정 스테이지/슬롯에 장착한다.
+//////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::SetConstantBuffer(ShaderStage _stage, _u32 _slot, ID3D11Buffer* _pBuffer)
 {
 	jc_assert_msg(_slot < MAX_CBUFFER_SLOTS, _T("상수버퍼 슬롯 범위를 벗어났습니다."));
@@ -348,7 +351,8 @@ void GraphicContext::SetSampler(ShaderStage _stage, _u32 _slot, SamplerState* _p
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// Raw 오버로드 — 같은 캐시 필드(pCachedSamplers_) 공유
+// : Raw 오버로드 — 같은 캐시 필드(pCachedSamplers_) 공유
+//////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::SetSamplerRaw(ShaderStage _stage, _u32 _slot, ID3D11SamplerState* _pRaw)
 {
 	jc_assert_msg(_slot < MAX_TEXTURE_SLOTS, _T("샘플러 슬롯 범위를 벗어났습니다."));
@@ -375,7 +379,8 @@ void GraphicContext::SetSamplerRaw(ShaderStage _stage, _u32 _slot, ID3D11Sampler
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 뷰포트는 값이 작아 비교 비용이 더 크므로 캐시 없이 항상 적용한다.
+// : 뷰포트는 값이 작아 비교 비용이 더 크므로 캐시 없이 항상 적용한다.
+//////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::SetViewport(const Viewport& _viewport)
 {
 	D3D11_VIEWPORT vp;
@@ -399,7 +404,8 @@ void GraphicContext::SetRasterizerState(RasterizerState* _pState)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// Raw 오버로드 — RenderStates 풀에서 나온 원시 포인터를 직접 받는다.
+// : Raw 오버로드 — RenderStates 풀에서 나온 원시 포인터를 직접 받는다.
+//////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::SetRasterizerStateRaw(ID3D11RasterizerState* _pRaw)
 {
 	if (CheckAndUpdateCache(pCachedRasterizer_, _pRaw, skippedCallCount_, apiCallCount_)) { return; }
@@ -415,7 +421,8 @@ void GraphicContext::SetBlendState(BlendState* _pState)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// Raw 오버로드 — 같은 캐시 필드(pCachedBlend_) 공유
+// : Raw 오버로드 — 같은 캐시 필드(pCachedBlend_) 공유
+//////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::SetBlendStateRaw(ID3D11BlendState* _pRaw)
 {
 	if (CheckAndUpdateCache(pCachedBlend_, _pRaw, skippedCallCount_, apiCallCount_)) { return; }
@@ -431,7 +438,8 @@ void GraphicContext::SetDepthStencilState(DepthStencilState* _pState)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// Raw 오버로드 — 같은 캐시 필드(pCachedDepth_) 공유
+// : Raw 오버로드 — 같은 캐시 필드(pCachedDepth_) 공유
+//////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::SetDepthStencilStateRaw(ID3D11DepthStencilState* _pRaw)
 {
 	if (CheckAndUpdateCache(pCachedDepth_, _pRaw, skippedCallCount_, apiCallCount_)) { return; }
@@ -541,7 +549,8 @@ void GraphicContext::SetSampler(FilterMode _filter, AddressMode _address, _u32 _
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// draw 직전 호출 — (현재 선언 × 현재 VS)로 InputLayout을 결정해 IA에 반영한다.
+// : draw 직전 호출 — (현재 선언 × 현재 VS)로 InputLayout을 결정해 IA에 반영한다.
+//////////////////////////////////////////////////////////////////////////////////////////
 bool GraphicContext::_ResolveInputLayout()
 {
 	if (!inputLayoutDirty_)
@@ -575,7 +584,8 @@ bool GraphicContext::_ResolveInputLayout()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// ★ 드로우콜 — "지금 바인딩된 상태로 정점 N개를 그려라"는 GPU 명령의 발사 버튼.
+// : ★ 드로우콜 — "지금 바인딩된 상태로 정점 N개를 그려라"는 GPU 명령의 발사 버튼.
+//////////////////////////////////////////////////////////////////////////////////////////
 void GraphicContext::SetVertexShader(_u64 _key)
 {
 	if (pDevice_ == nullptr) return;

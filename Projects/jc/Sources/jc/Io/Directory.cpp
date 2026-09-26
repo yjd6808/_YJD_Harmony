@@ -15,7 +15,8 @@
 NS_JC_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 파일시스템 네이티브 경로를 String으로. 경로는 OS 인코딩이라 문자셋 분기가 필요하다.
+// : 파일시스템 네이티브 경로를 String으로. 경로는 OS 인코딩이라 문자셋 분기가 필요하다.
+//////////////////////////////////////////////////////////////////////////////////////////
 static String ToStringPath(const std::filesystem::path& _path)
 {
 #ifdef _UNICODE
@@ -25,6 +26,7 @@ static String ToStringPath(const std::filesystem::path& _path)
 #endif
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 bool Directory::Exist(const char* _pPath)
 {
 	return Exist(StringConvert::FromUtf8(_pPath));

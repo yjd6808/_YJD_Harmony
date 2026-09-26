@@ -208,7 +208,8 @@ void Path::FileNameLevel(char* _pBuf, int _bufCapacity, const char* _pPath, int 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-// narrow buf판의 _char 미러. 힙을 쓰지 않아 assert 경로에서 호출 가능하다.
+// : narrow buf판의 _char 미러. 힙을 쓰지 않아 assert 경로에서 호출 가능하다.
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 #ifdef _UNICODE // _char == wchar_t: separate overload
 void Path::FileNameLevel(_char* _pBuf, int _bufCapacity, const _char* _pPath, int _pathLen, int _level)
 {

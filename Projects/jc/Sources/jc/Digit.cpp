@@ -12,6 +12,7 @@ NS_JC_BEGIN
 const char* Digit::HexChar = "0123456789ABCDEF";
 const wchar_t* Digit::HexCharW = L"0123456789ABCDEF";
 
+////////////////////////////////////////////////////////////////////////////////////////
 int Digit::Length(int _num)
 {
 	int len = 1;

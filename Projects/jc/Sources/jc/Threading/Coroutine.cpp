@@ -31,7 +31,7 @@ static thread_local std::exception_ptr tls_coPendingException;
 static thread_local _u32 tls_coVehDepth = 0;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 마지막 실패 원인 보고 (읽으면 지운다)
+// : 마지막 실패 원인 보고 (읽으면 지운다)
 //////////////////////////////////////////////////////////////////////////////////////////
 CoError CoGetLastError()
 {
@@ -59,7 +59,7 @@ String CoErrorString(CoError _err)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// CoVEH 자동 등록 + 매니저 수명
+// : CoVEH 자동 등록 + 매니저 수명
 //////////////////////////////////////////////////////////////////////////////////////////
 static void* s_pCoVeh = nullptr;
 static std::once_flag s_coVehOnce;
@@ -103,7 +103,7 @@ bool CoMgr::IsShadowStackEnabled()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 비상 패드 수 계산. 전체의 1/4을 넘지 않게 한다.
+// : 비상 패드 수 계산. 전체의 1/4을 넘지 않게 한다.
 //////////////////////////////////////////////////////////////////////////////////////////
 // - Low(4p)는 1장, Mid(16p)/High(64p)은 4장(기본값 상한)이 된다.
 _u32 CoMgr::EmergencyPadPages(_u32 _totalPages) const
@@ -113,7 +113,7 @@ _u32 CoMgr::EmergencyPadPages(_u32 _totalPages) const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 스레드별 전역 예외 핸들러 등록
+// : 스레드별 전역 예외 핸들러 등록
 //////////////////////////////////////////////////////////////////////////////////////////
 void CoSetExceptionHandler(FnCoException _fn)
 {
@@ -121,9 +121,9 @@ void CoSetExceptionHandler(FnCoException _fn)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// [Private] InitStack
-//   CoStack의 pStackEnd_, size_, stackTier_ 가 설정된 상태에서 호출.
-//   스택 상단 pageInitCount_ 페이지 commit + pageGuardCount_ 페이지 PAGE_GUARD commit.
+// : [Private] InitStack
+// CoStack의 pStackEnd_, size_, stackTier_ 가 설정된 상태에서 호출.
+// 스택 상단 pageInitCount_ 페이지 commit + pageGuardCount_ 페이지 PAGE_GUARD commit.
 //////////////////////////////////////////////////////////////////////////////////////////
 bool CoMgr::InitStack(CoStack* _pStack)
 {
@@ -218,9 +218,9 @@ bool CoMgr::InitStack(CoStack* _pStack)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// [Private] AllocStack
-//   확정된 tier/size로 메모리를 예약(RESERVE)하고 InitStack을 호출.
-//   티어 판별은 하지 않는다. (호출 전 ResolveTier로 확정할 것)
+// : [Private] AllocStack
+// 확정된 tier/size로 메모리를 예약(RESERVE)하고 InitStack을 호출.
+// 티어 판별은 하지 않는다. (호출 전 ResolveTier로 확정할 것)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool CoMgr::AllocStack(OUT CoStack* _pStack, CoStackTier _stackTier, _u32 _stackSize)
 {
@@ -302,7 +302,7 @@ bool CoMgr::AllocStack(OUT CoStack* _pStack, CoStackTier _stackTier, _u32 _stack
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 티어/크기 결정을 한 곳으로 모은다.
+// : 티어/크기 결정을 한 곳으로 모은다.
 //////////////////////////////////////////////////////////////////////////////////////////
 static _u32 RoundUpPage(_u32 _value)
 {
@@ -337,9 +337,9 @@ bool CoMgr::ResolveTier(CoStackTier _tier, _u32 _size, OUT CoStackTier* _pTier, 
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// [Private] FreeStack
-//   풀 티어: decommit (예약 유지 → 재사용 가능)
-//   커스텀:  MEM_RELEASE (완전 해제)
+// : [Private] FreeStack
+// 풀 티어: decommit (예약 유지 → 재사용 가능)
+// 커스텀:  MEM_RELEASE (완전 해제)
 //////////////////////////////////////////////////////////////////////////////////////////
 void CoMgr::FreeStack(CoStack* _pStack)
 {
@@ -357,12 +357,12 @@ void CoMgr::FreeStack(CoStack* _pStack)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 풀 반납 시 커밋 유지 + 가드존 재배치.
+// : 풀 반납 시 커밋 유지 + 가드존 재배치.
 // - 이전에는 매번 전체 decommit + 재commit(커널 3회)이라 생성 1회에 수 µs가 들었다.
 // - 유지 상한(poolKeepBytes_)을 넘는 커밋만 디커밋하고, 가드존은 Protect로만
-//   재배치한다. 확장 없이 끝난 경우(가장 흔함)는 Protect 1회로 끝난다.
+// 재배치한다. 확장 없이 끝난 경우(가장 흔함)는 Protect 1회로 끝난다.
 // - 커밋된 페이지 내용은 지우지 않는다. 다음 사용자가 바로 쓴다.
-//   (스택 잔류 데이터가 문제면 SecureZeroMemory 정책을 추가할 것)
+// (스택 잔류 데이터가 문제면 SecureZeroMemory 정책을 추가할 것)
 //////////////////////////////////////////////////////////////////////////////////////////
 void CoMgr::RecycleStack(CoStack* _pStack)
 {
@@ -428,9 +428,9 @@ void CoMgr::RecycleStack(CoStack* _pStack)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// InitCtx
-//   풀에서 꺼낸 CoContext를 가볍게 리셋. 스택은 반납 때 이미 다음 사용 준비가
-//   끝나서 커밋을 다시 안 한다.
+// : InitCtx
+// 풀에서 꺼낸 CoContext를 가볍게 리셋. 스택은 반납 때 이미 다음 사용 준비가
+// 끝나서 커밋을 다시 안 한다.
 //////////////////////////////////////////////////////////////////////////////////////////
 void CoMgr::InitCtx(CoContext* _pCtx)
 {
@@ -448,9 +448,9 @@ void CoMgr::InitCtx(CoContext* _pCtx)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// AllocCtx
-//   풀에 재사용 가능한 CoContext가 있으면 꺼내서 InitCtx 후 반환.
-//   없으면 새로 dbg_new 하고 AllocStack → usingByBase_/usingById_ 등록 후 반환.
+// : AllocCtx
+// 풀에 재사용 가능한 CoContext가 있으면 꺼내서 InitCtx 후 반환.
+// 없으면 새로 dbg_new 하고 AllocStack → usingByBase_/usingById_ 등록 후 반환.
 //////////////////////////////////////////////////////////////////////////////////////////
 CoContext* CoMgr::AllocCtx(CoStackTier _stackTier, _u32 _stackSize)
 {
@@ -492,9 +492,9 @@ CoContext* CoMgr::AllocCtx(CoStackTier _stackTier, _u32 _stackSize)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// FreeCtx
-//   usingByBase_/usingById_ 에서 제거 후 커스텀이면 메모리 해제 + delete,
-//   풀 티어면 decommit 후 free_ 풀로 반환.
+// : FreeCtx
+// usingByBase_/usingById_ 에서 제거 후 커스텀이면 메모리 해제 + delete,
+// 풀 티어면 decommit 후 free_ 풀로 반환.
 //////////////////////////////////////////////////////////////////////////////////////////
 void CoMgr::FreeCtx(CoContext* _pCtx)
 {
@@ -545,8 +545,8 @@ void CoMgr::FreeCtx(CoContext* _pCtx)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// Clear
-//   usingByBase_ 에 남은 항목 경고 후 free_ 풀 전체 해제.
+// : Clear
+// usingByBase_ 에 남은 항목 경고 후 free_ 풀 전체 해제.
 //////////////////////////////////////////////////////////////////////////////////////////
 void CoMgr::Clear()
 {
@@ -582,7 +582,7 @@ void CoMgr::Clear()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// FindContextByBase / FindContextByAddr / FindContextById
+// : FindContextByBase / FindContextByAddr / FindContextById
 //////////////////////////////////////////////////////////////////////////////////////////
 CoContext* CoMgr::FindContextByBase(char* _pBase)
 {
@@ -605,8 +605,8 @@ CoContext* CoMgr::FindContextByAddr(char* _pAddr)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// TryFindContextByBase / TryFindContextByAddr
-//   assert 없이 nullptr 시 false 반환.
+// : TryFindContextByBase / TryFindContextByAddr
+// assert 없이 nullptr 시 false 반환.
 //////////////////////////////////////////////////////////////////////////////////////////
 bool CoMgr::TryFindContextByBase(char* _pBase, OUT CoContext** _pOut)
 {
@@ -643,8 +643,8 @@ bool CoMgr::IsUsing(CoContext* _pCtx)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// FindStackByBase / FindStackByAddr
-//   CoContext 내부의 CoStack* 을 반환 (ExpandStack, DumpStack 등에서 사용).
+// : FindStackByBase / FindStackByAddr
+// CoContext 내부의 CoStack* 을 반환 (ExpandStack, DumpStack 등에서 사용).
 //////////////////////////////////////////////////////////////////////////////////////////
 CoStack* CoMgr::FindStackByBase(char* _pBase)
 {
@@ -663,7 +663,7 @@ CoStack* CoMgr::FindStackByAddr(char* _pAddr)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// TryFindStackByBase / TryFindStackByAddr
+// : TryFindStackByBase / TryFindStackByAddr
 //////////////////////////////////////////////////////////////////////////////////////////
 bool CoMgr::TryFindStackByBase(char* _pBase, OUT CoStack** _pOut)
 {
@@ -684,27 +684,27 @@ bool CoMgr::TryFindStackByAddr(char* _pAddr, OUT CoStack** _pOut)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// ※ 주의: 여기서는 스택확장이 발생한다.
+// : ※ 주의: 여기서는 스택확장이 발생한다.
 // 확장 전에 Console::WriteLine 등, chkstk를 다시 호출하여 VEH가 재귀적으로 호출되는 케이스가 발생할 수 있으므로.
 // 로그를 남기고 싶다면 확장이 다 된 이후에 하도록 할 것.
 // VEH에서 호출: 가드 페이지 터치 시 스택 확장 처리
 //
 // 처리 흐름:
-//   [Before]                              [After]
-//   pStackLimit_                           pStackLimit_ (old)
-//    GUARD page 0  ← _pFaultAddr            RW page 0       ← fault 페이지 커밋
-//    GUARD page 1                           RW grow 0       ← pageGrowCount_ 개 함께 커밋
-//    GUARD page 2                           RW grow 1
-//   pGuardLimit_                         pStackLimit_ (new) = 성장 시작 주소
-//    (reserved)                             NEW GUARD 0      ← pageGuardCount_ 페이지 새로
-//    (reserved)                             NEW GUARD 1         commit + PAGE_GUARD 설정
-//    (reserved)                             NEW GUARD 2
-//   pStackEnd_                           pGuardLimit_ (new)
-//                                          (reserved)
-//                                         pStackEnd_
+// [Before]                              [After]
+// pStackLimit_                           pStackLimit_ (old)
+// GUARD page 0  ← _pFaultAddr            RW page 0       ← fault 페이지 커밋
+// GUARD page 1                           RW grow 0       ← pageGrowCount_ 개 함께 커밋
+// GUARD page 2                           RW grow 1
+// pGuardLimit_                         pStackLimit_ (new) = 성장 시작 주소
+// (reserved)                             NEW GUARD 0      ← pageGuardCount_ 페이지 새로
+// (reserved)                             NEW GUARD 1         commit + PAGE_GUARD 설정
+// (reserved)                             NEW GUARD 2
+// pStackEnd_                           pGuardLimit_ (new)
+// (reserved)
+// pStackEnd_
 // 확장이 끝나면 TEB StackLimit도 함께 내린다.
 // - 이전에는 pStackLimit_만 내려가고 gs:[16]이 그대로라 확장된 영역에서
-//   예외를 던지면 SEH가 스택 범위를 벗어났다고 보고 프로세스를 죽였다.
+// 예외를 던지면 SEH가 스택 범위를 벗어났다고 보고 프로세스를 죽였다.
 //////////////////////////////////////////////////////////////////////////////////////////
 bool __declspec(safebuffers) CoMgr::ExpandStack(CoContext* _pCtx, char* _pFaultAddr)
 {
@@ -790,7 +790,7 @@ bool __declspec(safebuffers) CoMgr::ExpandStack(CoContext* _pCtx, char* _pFaultA
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// DumpStack
+// : DumpStack
 //////////////////////////////////////////////////////////////////////////////////////////
 void CoMgr::DumpStack(CoStack* _pStack, const _char* _pTitle /*= nullptr*/)
 {
@@ -879,20 +879,20 @@ void CoMgr::DumpStack(CoStack* _pStack, const _char* _pTitle /*= nullptr*/)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// Vectored Exception Handler
-//   코루틴 스택 가드 페이지 터치 예외처리
+// : Vectored Exception Handler
+// 코루틴 스택 가드 페이지 터치 예외처리
 //
 // [오버플로우 가드 페이지]
-//   pStackEnd_ ~ pStackEnd_+PAGE 는 영구 가드 페이지.
-//   이 페이지가 터치되면 ExpandStack이 false 반환 → STACK_OVERFLOW 예외로 변환.
-//   EXCEPTION_NONCONTINUABLE 플래그를 세워 실행 재개가 불가능함을 명시.
+// pStackEnd_ ~ pStackEnd_+PAGE 는 영구 가드 페이지.
+// 이 페이지가 터치되면 ExpandStack이 false 반환 → STACK_OVERFLOW 예외로 변환.
+// EXCEPTION_NONCONTINUABLE 플래그를 세워 실행 재개가 불가능함을 명시.
 //
 // [재귀 진입 처리]
-//   재진입 깊이를 카운터+RAII로 센다. (CoVehScope)
-//   재귀 진입 시 currentCtx_ 범위 체크만 수행하고 CONTINUE_EXECUTION 반환.
-//   가드존 재설치는 최상위 CoVEH 호출의 ExpandStack에서 일괄 처리됨.
+// 재진입 깊이를 카운터+RAII로 센다. (CoVehScope)
+// 재귀 진입 시 currentCtx_ 범위 체크만 수행하고 CONTINUE_EXECUTION 반환.
+// 가드존 재설치는 최상위 CoVEH 호출의 ExpandStack에서 일괄 처리됨.
 //
-//   코루틴 실행 중이 아닌 경우(currentCtx_==nullptr)는 즉시 CONTINUE_SEARCH.
+// 코루틴 실행 중이 아닌 경우(currentCtx_==nullptr)는 즉시 CONTINUE_SEARCH.
 //////////////////////////////////////////////////////////////////////////////////////////
 struct CoVehScope
 {
@@ -1007,8 +1007,8 @@ CO_VEH_PATH __declspec(noinline) LONG CALLBACK CoVEH(EXCEPTION_POINTERS* _pEp) n
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// currentCtx_ 체인 관리
-//   currentCtx_/pCallerCtx_ 갱신은 CoRun/CoResume/CoYield 래퍼에서 직접 한다.
+// : currentCtx_ 체인 관리
+// currentCtx_/pCallerCtx_ 갱신은 CoRun/CoResume/CoYield 래퍼에서 직접 한다.
 //////////////////////////////////////////////////////////////////////////////////////////
 #ifdef _DEBUG
 // 스레드 스택으로 돌아온 뒤 가드존이 살아있는지 확인한다.
@@ -1028,7 +1028,7 @@ void CoMgr::VerifyGuardZone(const CoStack& _stack) noexcept
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// CoCurrentCtx / CoValidateAddr  (extern "C" 래퍼)
+// : CoCurrentCtx / CoValidateAddr  (extern "C" 래퍼)
 //////////////////////////////////////////////////////////////////////////////////////////
 CoContext* CoCurrentCtx()
 {
@@ -1044,7 +1044,7 @@ bool CoValidateAddr(CoContext* _pCtx, char* _pAddr)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// id 기반 실행 (검증 + 재개 + 시작 + 스코프 가드)
+// : id 기반 실행 (검증 + 재개 + 시작 + 스코프 가드)
 //////////////////////////////////////////////////////////////////////////////////////////
 // id로 재개 가능한지 검사한다. 검증 순서: 맵 미조회 → stale, 자기 자신 → invalid, csYield 아님 → invalid.
 // - 타 스레드 코루틴은 맵에 안 보이므로 stale로 보고된다. (잘못된 점프 방지는 동일)
@@ -1221,7 +1221,7 @@ void CoScope::Cancel()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// CoAllocCtx / CoFreeCtx  (extern "C" 래퍼)
+// : CoAllocCtx / CoFreeCtx  (extern "C" 래퍼)
 //////////////////////////////////////////////////////////////////////////////////////////
 CoContext* CoAllocCtx(FnCoroutine _fn, CoStackTier _stackTier, _u32 _stackSize)
 {
@@ -1248,11 +1248,11 @@ void CoFreeCtx(CoContext* _ctx)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 코루틴 진입점. asm이 fn_ 대신 이 함수로 점프한다.
+// : 코루틴 진입점. asm이 fn_ 대신 이 함수로 점프한다.
 // - fn에서 빠져나온 C++ 예외를 코루틴 스택에서 잡아 두고,
-//   스케줄러 스택으로 돌아간 뒤 CoTakePendingException으로 다시 던진다.
+// 스케줄러 스택으로 돌아간 뒤 CoTakePendingException으로 다시 던진다.
 // - 받을 사람 없는 스택 밖으로 예외가 전파되면 언와인더가 트램폴린에서
-//   꼬여 프로세스가 죽으므로 여기서 반드시 끊는다.
+// 꼬여 프로세스가 죽으므로 여기서 반드시 끊는다.
 //////////////////////////////////////////////////////////////////////////////////////////
 void CoEntry(CoContext* _pCtx) noexcept
 {
@@ -1280,7 +1280,7 @@ void CoEntry(CoContext* _pCtx) noexcept
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 보관 예외 수령 + 정리
+// : 보관 예외 수령 + 정리
 //////////////////////////////////////////////////////////////////////////////////////////
 bool CoTakePendingException()
 {
@@ -1302,10 +1302,10 @@ void CoClearPendingException()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 오버플로우 복구 + 표시.
+// : 오버플로우 복구 + 표시.
 // - 비상 밴드(미리 RW 커밋)가 있어 __except 핸들러까지는 도달한다.
-//   거기서 CoNoteStackOverflow()로 표시하고, 계속 쓰려면 CoResetStackOverflow()로
-//   가드존을 다시 세운다. (스택 위 객체는 망가졌을 수 있어 종료를 권장)
+// 거기서 CoNoteStackOverflow()로 표시하고, 계속 쓰려면 CoResetStackOverflow()로
+// 가드존을 다시 세운다. (스택 위 객체는 망가졌을 수 있어 종료를 권장)
 //////////////////////////////////////////////////////////////////////////////////////////
 void CoNoteStackOverflow()
 {

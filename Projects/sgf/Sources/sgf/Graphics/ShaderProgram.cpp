@@ -22,7 +22,8 @@ using namespace jc;
 namespace
 {
 	//////////////////////////////////////////////////////////////////////////////////////////
-	// HLSL 문자열을 바이트코드로 컴파일한다. 실패 시 오류를 디버그 출력창으로 보낸다.
+	// : HLSL 문자열을 바이트코드로 컴파일한다. 실패 시 오류를 디버그 출력창으로 보낸다.
+	//////////////////////////////////////////////////////////////////////////////////////////
 	bool CompileHlsl(const jc::String& _szSource, const jc::String& _szEntry, const jc::String& _szTarget, SgfComPtr<ID3DBlob>& _outBlob)
 	{
 		UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
@@ -53,8 +54,9 @@ namespace
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////
-	// 파일 전체를 읽어 String으로 반환한다. 실패 시 빈 문자열.
+	// : 파일 전체를 읽어 String으로 반환한다. 실패 시 빈 문자열.
 	// (std:: 금지 규칙에 따라 CRT + jc::String 사용. FR-26)
+	//////////////////////////////////////////////////////////////////////////////////////////
 	String ReadTextFile(const jc::String& _szFilePath)
 	{
 		FILE* pFile = nullptr;

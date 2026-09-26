@@ -54,7 +54,9 @@ namespace
 	const _char* s_szModeNames[] = { _T("램버트(확산만)"), _T("퐁(R·V)"), _T("블린-퐁(N·H)") };
 }
 
-// 셰이딩 모델 튜토리얼을 실행한다. (램버트/퐁/블린-퐁)
+////////////////////////////////////////////////////////////////////////////////////////
+// : 셰이딩 모델 튜토리얼을 실행한다. (램버트/퐁/블린-퐁)
+////////////////////////////////////////////////////////////////////////////////////////
 void ShadingModel_Main()
 {
 	PrintShadingExplanation();
@@ -197,8 +199,6 @@ void ShadingModel_Main()
 		ib.Bind(device.Context());
 		device.Context().SetVertexShader(vsShader);
 		device.Context().SetPixelShader(psShader);
-		{
-		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		device.Context().DrawIndexed(static_cast<UINT>(indices.Size()), 0, 0);
 

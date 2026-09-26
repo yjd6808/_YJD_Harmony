@@ -8,9 +8,7 @@
 #include "jc/Threading/ThreadPool.h"
 
 NS_JC_BEGIN
-// =============================================================================================
-// TaskContext
-// =============================================================================================
+////////////////////////////////////////////////////////////////////////////////////////
 const _char* TaskContext::ToStateString(int _state)
 {
 	if (_state == TaskState::eRunningWait) return _T("RunningWait");
@@ -62,6 +60,7 @@ void TaskContext::Cancel()
 // =============================================================================================
 // TaskThread
 // =============================================================================================
+////////////////////////////////////////////////////////////////////////////////////////
 TaskThread::TaskThread(
 	ConditionVariable& _poolCv, 
 	ConditionVariable& _joinCv, 
@@ -69,7 +68,6 @@ TaskThread::TaskThread(
 	int& _poolState,
 	TaskQueue& _poolTaskQueue, 
 	int _code)
-//////////////////////////////////////////////////////////////////////////////////////////
 : RunnableThread()
 , poolCondVar_(_poolCv)
 , joinCondVar_(_joinCv)
@@ -81,6 +79,7 @@ TaskThread::TaskThread(
 {
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 TaskThread::~TaskThread()
 {
 }

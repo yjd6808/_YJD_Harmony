@@ -139,6 +139,7 @@ NS_JC_BEGIN
 // ConsoleMenuItem 빌더 메서드 구현
 // ============================================================
 
+////////////////////////////////////////////////////////////////////////////////////////
 ConsoleMenuItem* ConsoleMenuItem::AddHeader(const jc::String& _text)
 {
 	header_ = _text;
@@ -207,6 +208,7 @@ ConsoleMenuItem* ConsoleMenuItem::AddHome(const jc::String& _key, const jc::Stri
 // ConsoleMenuItem 메뉴 실행
 // ============================================================
 
+////////////////////////////////////////////////////////////////////////////////////////
 void ConsoleMenuItem::Show(ConsoleMenuItemOptionPtr _pOption)
 {
 	ConsoleMenuItemOption defaultOption;

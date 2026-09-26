@@ -75,8 +75,7 @@ public:
 	bool InitializeImmediate(GraphicDevice* _pDevice, ID3D11DeviceContext* _pImmediate);
 	// 워커 스레드용 - 직접 만들고 배타적으로 소유한다
 	bool InitializeDeferred(GraphicDevice* _pDevice);
-	// [삭제 예정] 하위 호환 - InitializeImmediate로 위임 (디바이스의 즉시 컨텍스트를 사용)
-	// 최종 설계 §4-3에는 없는 래퍼. A단계에서는 유지하되 B에서 호출부를 InitializeImmediate로 교체 후 삭제 예정.
+	// 하위 호환 - InitializeImmediate로 위임 (디바이스의 즉시 컨텍스트를 사용)
 	bool Initialize(GraphicDevice* _pDevice);
 	void Finalize();
 	bool IsDeferred() const { return deferred_; }

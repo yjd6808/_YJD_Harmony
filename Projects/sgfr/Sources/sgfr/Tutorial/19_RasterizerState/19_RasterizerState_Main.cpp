@@ -49,7 +49,9 @@ namespace
 	const _char* s_szCullNames[] = { _T("None(양면)"), _T("Back(뒷면 제거)"), _T("Front(앞면 제거)") };
 }
 
-// 래스터라이저 스테이트 튜토리얼을 실행한다. (좌: 기본 상태 / 우: 선택 상태 Before/After 비교)
+////////////////////////////////////////////////////////////////////////////////////////
+// : 래스터라이저 스테이트 튜토리얼을 실행한다. (좌: 기본 상태 / 우: 선택 상태 Before/After 비교)
+////////////////////////////////////////////////////////////////////////////////////////
 void RasterizerState_Main()
 {
 	PrintRasterizerExplanation();
@@ -174,8 +176,6 @@ void RasterizerState_Main()
 		ib.Bind(device.Context());
 		device.Context().SetVertexShader(vsShader);
 		device.Context().SetPixelShader(psShader);
-		{
-		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
 		// 같은 큐브를 지정한 x 위치/래스터라이저 상태로 그리는 보조 람다

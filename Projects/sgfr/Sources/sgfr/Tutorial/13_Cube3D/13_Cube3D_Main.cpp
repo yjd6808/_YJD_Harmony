@@ -38,7 +38,9 @@ namespace
 	};
 }
 
-// 3D 큐브 튜토리얼을 실행한다. (깊이 버퍼와 원근 투영)
+////////////////////////////////////////////////////////////////////////////////////////
+// : 3D 큐브 튜토리얼을 실행한다. (깊이 버퍼와 원근 투영)
+////////////////////////////////////////////////////////////////////////////////////////
 void Cube3D_Main()
 {
 	PrintDepthAndPerspectiveExplanation();
@@ -186,8 +188,6 @@ void Cube3D_Main()
 		ib.Bind(device.Context());
 		device.Context().SetVertexShader(vsShader);
 		device.Context().SetPixelShader(psShader);
-		{
-		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		device.Context().DrawIndexed(36, 0, 0);
 

@@ -157,7 +157,7 @@ void ResourceMgr::Finalize()
 
 	pathIndex_.Clear();
 	defaultKeys_.Clear();
-	materialCache_.Clear();
+	materialHashToKey_.Clear();
 	materialKeyToHash_.Clear();
 
 	defaultTextureKey_ = INVALID_RESOURCE_KEY;
@@ -179,7 +179,7 @@ void ResourceMgr::Finalize()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// IResourceRegistry
+// : IResourceRegistry
 //////////////////////////////////////////////////////////////////////////////////////////
 _u64 ResourceMgr::Register(IResource* _pResource)
 {
@@ -276,7 +276,7 @@ bool ResourceMgr::Remove(_u64 _key)
 	{
 		if (_u64* pHash = materialKeyToHash_.Find(_key))
 		{
-			materialCache_.Remove(*pHash);
+			materialHashToKey_.Remove(*pHash);
 			materialKeyToHash_.Remove(_key);
 		}
 	}
@@ -324,7 +324,7 @@ void ResourceMgr::RemoveAll()
 		}
 		Remove(key);
 	}
-	materialCache_.Clear();
+	materialHashToKey_.Clear();
 	materialKeyToHash_.Clear();
 }
 
@@ -445,7 +445,8 @@ Material* ResourceMgr::GetDefaultMaterial3D()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 공통 헬퍼 — 프리미티브 인덱스 검증
+// : 공통 헬퍼 — 프리미티브 인덱스 검증
+//////////////////////////////////////////////////////////////////////////////////////////
 inline bool IsValidPrimitiveIndex(_s32 _index, _s32 _count) { return _index >= 0 && _index < _count; }
 
 Mesh* ResourceMgr::FindPrimitiveMesh2D(PrimitiveMesh2DType _type)
@@ -547,14 +548,14 @@ _u64 ResourceMgr::CreateMaterial(const MaterialDesc& _desc)
 	}
 
 	const _u64 hash = _desc.Hash();
-	if (_u64* pCachedKey = materialCache_.Find(hash))
+	if (_u64* pCachedKey = materialHashToKey_.Find(hash))
 	{
 		Material* pCached = Find<Material>(*pCachedKey);
 		if (pCached != nullptr && pCached->GetDesc() == _desc)
 		{
 			return *pCachedKey;
 		}
-		materialCache_.Remove(hash);
+		materialHashToKey_.Remove(hash);
 	}
 
 	Material* pMaterial = dbg_new Material();
@@ -571,7 +572,7 @@ _u64 ResourceMgr::CreateMaterial(const MaterialDesc& _desc)
 		return INVALID_RESOURCE_KEY;
 	}
 
-	materialCache_.Insert(hash, key);
+	materialHashToKey_.Insert(hash, key);
 	materialKeyToHash_.Insert(key, hash);
 	return key;
 }

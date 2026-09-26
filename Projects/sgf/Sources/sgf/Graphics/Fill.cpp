@@ -26,7 +26,9 @@ using namespace jc;
 
 namespace
 {
-	// 공통: 텍스처가 유효한지 (단색은 nullptr 허용)
+	//////////////////////////////////////////////////////////////////////////////////////
+	// : 공통: Fill의 텍스처를 반환한다. 없으면 nullptr (단색은 허용)
+	//////////////////////////////////////////////////////////////////////////////////////
 	Texture* ResolveTexture(const Fill& _fill, const RenderParams& _params)
 	{
 		const Texture* pTex = _fill.GetTexture();
@@ -38,7 +40,9 @@ namespace
 	}
 }
 
-// 단색: 영역을 color1로 채운 쿼드 1개 (텍스처 없음)
+//////////////////////////////////////////////////////////////////////////////////////////
+// : 단색: 영역을 color1로 채운 쿼드 1개 (텍스처 없음)
+//////////////////////////////////////////////////////////////////////////////////////////
 static void FillSolid(const Fill& _fill, const RenderParams& _p, FillResult& _r)
 {
 	PrimitiveBuilder::PushQuad(_r, _p.region_.Left(), _p.region_.Bottom(), _p.region_.Right(), _p.region_.Top(),
@@ -46,7 +50,9 @@ static void FillSolid(const Fill& _fill, const RenderParams& _p, FillResult& _r)
 	_r.pTexture_ = ResolveTexture(_fill, _p);	// 단색은 보통 nullptr
 }
 
-// 텍스처 쿼드: 영역에 _fill의 텍스처/uv를 입힌 쿼드 1개 (틴트 = color1)
+//////////////////////////////////////////////////////////////////////////////////////////
+// : 텍스처 쿼드: 영역에 _fill의 텍스처/uv를 입힌 쿼드 1개 (틴트 = color1)
+//////////////////////////////////////////////////////////////////////////////////////////
 static void FillTexture(const Fill& _fill, const RenderParams& _p, FillResult& _r)
 {
 	const rect& uv = _fill.GetUV();
@@ -55,8 +61,10 @@ static void FillTexture(const Fill& _fill, const RenderParams& _p, FillResult& _
 	_r.pTexture_ = ResolveTexture(_fill, _p);
 }
 
-// 9-패치: 텍스처를 가로3×세로3 = 9분할, 모서리는 그대로·가장자리는 스트레치·중앙은 확장
+//////////////////////////////////////////////////////////////////////////////////////////
+// : 9-패치: 텍스처를 가로3×세로3 = 9분할, 모서리는 그대로·가장자리는 스트레치·중앙은 확장
 // 슬라이스(l/t/r/b 픽셀)가 텍스처의 실제 픽셀 크기를 초과하지 않도록 클램프한다.
+//////////////////////////////////////////////////////////////////////////////////////////
 static void FillNinePatch(const Fill& _fill, const RenderParams& _p, FillResult& _r)
 {
 	const Texture* pTex = _fill.GetTexture();
@@ -124,7 +132,9 @@ static void FillNinePatch(const Fill& _fill, const RenderParams& _p, FillResult&
 	_r.pTexture_ = const_cast<Texture*>(pTex);
 }
 
-// 수평 게이지: ratio만큼 color2로 채운 막대 + 나머지 color1 배경
+//////////////////////////////////////////////////////////////////////////////////////////
+// : 수평 게이지: ratio만큼 color2로 채운 막대 + 나머지 color1 배경
+//////////////////////////////////////////////////////////////////////////////////////////
 static void FillGauge(const Fill& _fill, const RenderParams& _p, FillResult& _r)
 {
 	const _f32 ratio = jc::Clamp(_fill.GetRatio(), 0.0f, 1.0f);
@@ -142,36 +152,42 @@ static void FillGauge(const Fill& _fill, const RenderParams& _p, FillResult& _r)
 
 // Custom은 이 파일에 구현이 없다 — 사용자가 콜백을 정의해 Fill::Custom(fn)으로 전달한다.
 
+//////////////////////////////////////////////////////////////////////////////////////////
 Fill Fill::Solid()
 {
 	const _f32 slice[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	return Fill(FillSolid, nullptr, rect(0.0f, 0.0f, 1.0f, 1.0f), slice, 1.0f, 0);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 Fill Fill::Texture(sgf::Texture* _pTex, const rect& _uv)
 {
 	const _f32 slice[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	return Fill(FillTexture, _pTex, _uv, slice, 1.0f, 0);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 Fill Fill::NinePatch(sgf::Texture* _pTex, _f32 _l, _f32 _t, _f32 _r, _f32 _b, const rect& _uv)
 {
 	const _f32 slice[4] = { _l, _t, _r, _b };
 	return Fill(FillNinePatch, _pTex, _uv, slice, 1.0f, 0);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 Fill Fill::Gauge(_f32 _ratio)
 {
 	const _f32 slice[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	return Fill(FillGauge, nullptr, rect(0.0f, 0.0f, 1.0f, 1.0f), slice, _ratio, 0);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 Fill Fill::Custom(FillCallback _pFn, _u32 _userData)
 {
 	const _f32 slice[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	return Fill(_pFn, nullptr, rect(0.0f, 0.0f, 1.0f, 1.0f), slice, 1.0f, _userData);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 Fill Fill::CustomData(FillCallback _pFn, const void* _pData)
 {
 	const _f32 slice[4] = { 0.0f, 0.0f, 0.0f, 0.0f };

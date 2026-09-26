@@ -27,7 +27,9 @@
 using namespace sgf;
 using namespace jc;
 
-// 입력 처리 튜토리얼을 실행한다. (폴링 vs 이벤트, 마우스로 그리기)
+////////////////////////////////////////////////////////////////////////////////////////
+// : 입력 처리 튜토리얼을 실행한다. (폴링 vs 이벤트, 마우스로 그리기)
+////////////////////////////////////////////////////////////////////////////////////////
 void Input_Main()
 {
 	PrintInputModelExplanation();
@@ -163,8 +165,6 @@ void Input_Main()
 		ib.Bind(device.Context());
 		device.Context().SetVertexShader(vsShader);
 		device.Context().SetPixelShader(psShader);
-		{
-		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		device.Context().DrawIndexed(6, 0, 0);
 

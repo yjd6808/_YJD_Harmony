@@ -43,10 +43,10 @@ using namespace sgf;
 using namespace jc;
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 카테고리 정의
+// : 카테고리 정의
 // - DiffCategory 한 값이 곧 콘솔 1~8번과 대응한다.
 // - 각 카테고리의 After 값은 방향키로 순회하고, Before 값은 항상 엔진 디폴트로 고정한다.
-
+//////////////////////////////////////////////////////////////////////////////////////////
 enum class DiffCategory
 {
 	dcBlendMode = 0,	// 블렌드 합성
@@ -63,9 +63,9 @@ enum class DiffCategory
 namespace
 {
 	////////////////////////////////////////////////////////////////////////////////////////
-	// 엔진 디폴트 인덱스 (Before 고정)
+	// : 엔진 디폴트 인덱스 (Before 고정)
 	// - 이 값들은 GraphicDevice Initialize (now Initialize() + CreateSwapChain)가 깔아두는 기본 상태와 동일하다.
-
+	////////////////////////////////////////////////////////////////////////////////////////
 	const _s32 DEFAULT_INDEX[] =
 	{
 		1,	// Blend     bmAlpha      (일반 반투명)
@@ -79,8 +79,8 @@ namespace
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	// 카테고리별 항목 수
-
+	// : 카테고리별 항목 수
+	////////////////////////////////////////////////////////////////////////////////////////
 	const _s32 COUNT_PER_CATEGORY[] =
 	{
 		4,	// Blend
@@ -94,8 +94,8 @@ namespace
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	// 화면 타이틀에 표시할 카테고리 이름
-
+	// : 화면 타이틀에 표시할 카테고리 이름
+	////////////////////////////////////////////////////////////////////////////////////////
 	const _char* CATEGORY_NAMES[] =
 	{
 		_T("BlendMode"),
@@ -121,8 +121,8 @@ namespace
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	// 각 카테고리 enum 이름표 (타이틀/콘솔에 그대로 보여준다)
-
+	// : 각 카테고리 enum 이름표 (타이틀/콘솔에 그대로 보여준다)
+	////////////////////////////////////////////////////////////////////////////////////////
 	const _char* BLEND_NAMES[] = { _T("bmNone(덮어쓰기)"), _T("bmAlpha(반투명)"), _T("bmAdd(가산)"), _T("bmMultiply(곱셈)") };
 	const _char* FILTER_NAMES[] = { _T("fmPoint(최근접)"), _T("fmLinear(선형)"), _T("fmAnisotropic(비등방)") };
 	const _char* ADDRESS_NAMES[] = { _T("amWrap(반복)"), _T("amMirror(거울)"), _T("amClamp(고정)"), _T("amBorder(테두리색)") };
@@ -133,9 +133,9 @@ namespace
 	const _char* TOPOLOGY_NAMES[] = { _T("ptPointList(점)"), _T("ptLineList(선분)"), _T("ptLineStrip(연결선)"), _T("ptTriangleList(삼각형)"), _T("ptTriangleStrip(띠)") };
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	// 실제 엔진 enum값 매핑
+	// : 실제 엔진 enum값 매핑
 	// - 화면에서 고른 인덱스를 실제 D3D 상태로 바꾸는 테이블이다.
-
+	////////////////////////////////////////////////////////////////////////////////////////
 	const BlendMode BLEND_VALUES[] = { BlendMode::bmNone, BlendMode::bmAlpha, BlendMode::bmAdd, BlendMode::bmMultiply };
 	const FilterMode FILTER_VALUES[] = { FilterMode::fmPoint, FilterMode::fmLinear, FilterMode::fmAnisotropic };
 	const AddressMode ADDRESS_VALUES[] = { AddressMode::amWrap, AddressMode::amMirror, AddressMode::amClamp, AddressMode::amBorder };
@@ -146,9 +146,9 @@ namespace
 	const PrimitiveTopology TOPOLOGY_VALUES[] = { PrimitiveTopology::ptPointList, PrimitiveTopology::ptLineList, PrimitiveTopology::ptLineStrip, PrimitiveTopology::ptTriangleList, PrimitiveTopology::ptTriangleStrip };
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	// 셰이더 소스 - 색 변환 (큐브/깊이/토폴로지용)
+	// : 셰이더 소스 - 색 변환 (큐브/깊이/토폴로지용)
 	// - 정점 색을 그대로 출력하고, 행렬(gWvp)로 월드->화면 변환만 한다.
-
+	////////////////////////////////////////////////////////////////////////////////////////
 	const char* ColorTransformShaderSource34()
 	{
 		return R"(
@@ -185,10 +185,10 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	// 셰이더 소스 - 블렌드 쿼드 (부드러운 원)
+	// : 셰이더 소스 - 블렌드 쿼드 (부드러운 원)
 	// - 흰 원 텍스처 x 정점 색으로 색입힌 원을 만든다.
 	// - 원 밖(알파 0)은 흰색(변화 없음)으로 섞어 곱셈 모드에서 검은 사각형이 안 보이게 한다.
-
+	////////////////////////////////////////////////////////////////////////////////////////
 	const char* BlendQuadShaderSource34()
 	{
 		return R"(
@@ -229,11 +229,11 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	// 셰이더 소스 - 샘플러 분할 비교 (Filter/Address용)
+	// : 셰이더 소스 - 샘플러 분할 비교 (Filter/Address용)
 	// - s0=Before(디폴트), s1=After(선택) 두 샘플러로 같은 텍스처를 읽는다.
 	// - 픽셀의 화면 x좌표가 경계(gSplitPixelX)보다 왼쪽이면 s0, 오른쪽이면 s1을 쓴다.
 	// - 덕분에 한 번의 Draw로 좌우가 다른 샘플링 결과를 비교할 수 있다.
-
+	////////////////////////////////////////////////////////////////////////////////////////
 	const char* SamplerSplitShaderSource34()
 	{
 		return R"(
@@ -289,9 +289,9 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	// 상수 버퍼 구조체
+	// : 상수 버퍼 구조체
 	// - HLSL의 cbuffer와 메모리 배치가 정확히 일치해야 한다. (16바이트 배수)
-
+	////////////////////////////////////////////////////////////////////////////////////////
 	struct CbTransform
 	{
 		mat4 wvp_;	// 월드 x 뷰 x 투영 합성 행렬
@@ -304,10 +304,10 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	// 부드러운 원 텍스처를 채운다.
+	// : 부드러운 원 텍스처를 채운다.
 	// - 중심은 불투명 흰색, 가장자리로 갈수록 알파가 0으로 부드럽게 줄어든다.
 	// - 색은 흰색 고정: 실제 색은 정점 색으로 입힌다. (텍스처 재활용)
-
+	////////////////////////////////////////////////////////////////////////////////////////
 	void FillSoftCirclePixels(_u8* _pOutPixels, _s32 _size)
 	{
 		const _f32 center = (_size - 1) * 0.5f;
@@ -337,9 +337,9 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	// 체커보드 텍스처를 채운다.
+	// : 체커보드 텍스처를 채운다.
 	// - 가장자리 1픽셀은 빨간 테두리: Clamp에서 테두리가 늘어나는 것을 보기 위해서다.
-
+	////////////////////////////////////////////////////////////////////////////////////////
 	void FillCheckerPixels(_u8* _pOutPixels, _s32 _width, _s32 _height, _s32 _cellSize)
 	{
 		for (_s32 y = 0; y < _height; ++y)
@@ -370,9 +370,9 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	// UV가 0~_uvScale인 화면 덮개 사각형을 채운다.
+	// : UV가 0~_uvScale인 화면 덮개 사각형을 채운다.
 	// - _uvScale이 1보다 크면 UV가 0~1을 벗어나 주소 모드 차이를 관찰할 수 있다.
-
+	////////////////////////////////////////////////////////////////////////////////////////
 	void FillUvQuad(VertexPTC* _pOutVertices4, _u32* _pOutIndices6, _f32 _uvScale)
 	{
 		const color white = color::WHITE;
@@ -388,8 +388,8 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	// NDC 기준 사각형 정점 4개를 채운다. (UV 0~1, 지정 색)
-
+	// : NDC 기준 사각형 정점 4개를 채운다. (UV 0~1, 지정 색)
+	////////////////////////////////////////////////////////////////////////////////////////
 	void FillQuadVertices(VertexPTC* _pOutVertices4, const vec2& _center, _f32 _halfSize, const color& _color)
 	{
 		_pOutVertices4[0] = { vec3(_center.x - _halfSize, _center.y + _halfSize, 0.0f), vec2(0.0f, 0.0f), _color };
@@ -399,9 +399,9 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	// 콘솔 가이드 출력
+	// : 콘솔 가이드 출력
 	// - 현재 카테고리의 의미와 각 enum값의 D3D 매핑을 초심자 눈높이로 설명한다.
-
+	////////////////////////////////////////////////////////////////////////////////////////
 	void PrintGuide(DiffCategory _category, _s32 _afterIndex)
 	{
 		Console::WriteLine(_T("\n=================================================="));
@@ -503,8 +503,8 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	// 현재 카테고리/인덱스에 해당하는 표시 이름을 반환한다.
-
+	// : 현재 카테고리/인덱스에 해당하는 표시 이름을 반환한다.
+	////////////////////////////////////////////////////////////////////////////////////////
 	const _char* GetAfterName(DiffCategory _category, _s32 _index)
 	{
 		if (_category == DiffCategory::dcBlendMode)       return BLEND_NAMES[_index];
@@ -525,9 +525,9 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 } // namespace
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 튜토리얼 진입점
+// : 튜토리얼 진입점
 // - 좌(Before)=디폴트 고정, 우(After)=선택값. Left/Right로 After 상태를 즉시 교체한다.
-
+//////////////////////////////////////////////////////////////////////////////////////////
 void GraphicsEnumDiff_Main()
 {
 	// 현재 보고 있는 카테고리와 After 선택값
@@ -785,8 +785,6 @@ void GraphicsEnumDiff_Main()
 			texSoft.Bind(device.Context(), 0);
 			device.Context().SetVertexShader(vsBlend);
 			device.Context().SetPixelShader(psBlend);
-			{
-			}
 			ctx.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
 			auto DrawCircleGroup = [&](const vec2& _groupCenter, BlendMode _mode)
@@ -861,8 +859,6 @@ void GraphicsEnumDiff_Main()
 			ibUv.Bind(device.Context());
 			device.Context().SetVertexShader(vsSplit);
 			device.Context().SetPixelShader(psSplit);
-			{
-			}
 			ctx.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 			ctx.DrawIndexed(6, 0, 0);
 		}
@@ -875,8 +871,6 @@ void GraphicsEnumDiff_Main()
 			ibCube.Bind(device.Context());
 			device.Context().SetVertexShader(vsColor);
 			device.Context().SetPixelShader(psColor);
-			{
-			}
 			ctx.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
 			auto DrawCube = [&](_f32 _offsetX, CullMode _cull, FillMode _fill, FrontFace _front)
@@ -922,8 +916,6 @@ void GraphicsEnumDiff_Main()
 			ibCube.Bind(device.Context());
 			device.Context().SetVertexShader(vsColor);
 			device.Context().SetPixelShader(psColor);
-			{
-			}
 			ctx.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 			device.Context().SetRasterizer(CullMode::cmBack, FillMode::fmSolid);
 
@@ -963,8 +955,6 @@ void GraphicsEnumDiff_Main()
 
 			device.Context().SetVertexShader(vsColor);
 			device.Context().SetPixelShader(psColor);
-			{
-			}
 			vbTopo.Bind(device.Context());
 
 			PrimitiveTopology topoAfter = TOPOLOGY_VALUES[afterIdx];

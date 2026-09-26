@@ -32,7 +32,9 @@
 using namespace sgf;
 using namespace jc;
 
-// SVG 텍스처 튜토리얼을 실행한다. (nanosvg 래스터 + 벡터 vs 래스터)
+////////////////////////////////////////////////////////////////////////////////////////
+// : SVG 텍스처 튜토리얼을 실행한다. (nanosvg 래스터 + 벡터 vs 래스터)
+////////////////////////////////////////////////////////////////////////////////////////
 void SvgTextureDraw_Main()
 {
 	PrintVectorVsRasterExplanation();
@@ -171,8 +173,6 @@ void SvgTextureDraw_Main()
 		ib.Bind(device.Context());
 		device.Context().SetVertexShader(vsShader);
 		device.Context().SetPixelShader(psShader);
-		{
-		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		device.Context().DrawIndexed(6, 0, 0);
 

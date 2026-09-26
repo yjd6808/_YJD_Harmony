@@ -51,7 +51,7 @@ public:
 	bool CreateSwapChainForWindow(HWND _hWnd, _s32 _width, _s32 _height, PixelFormat _format, IDXGISwapChain** _ppOutSwapChain);
 
 	// ---- 리소스 레지스트리
-	// C안: 반환 키는 _u64 Resource Key [type 8][gen 24][index 32], 실패 시 INVALID_RESOURCE_KEY(0)
+	// 반환 키는 _u64 Resource Key [type 8][gen 24][index 32], 실패 시 INVALID_RESOURCE_KEY(0)
 	_u64 CreateVertexShader(const jc::String& _hlslSource, const jc::String& _entry = _T("VSMain"));
 	_u64 CreatePixelShader(const jc::String& _hlslSource, const jc::String& _entry = _T("PSMain"));
 	template <typename TVertex>

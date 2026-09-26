@@ -6,7 +6,7 @@
 #include "jc/Memory.h"
 
 NS_JC_BEGIN
-// memcpy_s와 기능이 동일합니다.
+////////////////////////////////////////////////////////////////////////////////////////
 void Memory::Copy(void* _dst, const int _dstCapacityByte, const void* _src, const int _srcCopyByte)
 {
 	jc_assert_msg(_dst && _src && _dstCapacityByte > 0, _T("인자를 똑띠 전달해주세요"));
@@ -25,7 +25,7 @@ void Memory::Copy(void* _dst, const int _dstCapacityByte, const void* _src, cons
 	}
 }
 
-// memcpy와 기능이 동일합니다.
+////////////////////////////////////////////////////////////////////////////////////////
 void Memory::CopyUnsafe(void* _dst, const void* _src, const int _srcCopyByte)
 {
 	jc_assert_msg(_dst && _src, _T("인자를 똑띠 전달해주세요"));
@@ -44,6 +44,7 @@ void Memory::CopyUnsafe(void* _dst, const void* _src, const int _srcCopyByte)
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 void Memory::CopyReverse(void* _dst, const int _dstCapacityByte, const void* _src, const int _srcCopyByte)
 {
 	jc_assert_msg(_dst && _src && _dstCapacityByte > 0, _T("인자를 똑띠 전달해주세요"));
@@ -64,6 +65,7 @@ void Memory::CopyReverse(void* _dst, const int _dstCapacityByte, const void* _sr
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 void Memory::CopyUnsafeReverse(void* _dst, const void* _src, const int _srcCopyByte)
 {
 	jc_assert_msg(_dst && _src, _T("인자를 똑띠 전달해주세요"));
@@ -84,7 +86,7 @@ void Memory::CopyUnsafeReverse(void* _dst, const void* _src, const int _srcCopyB
 	}
 }
 
-// memset과 기능이 동일합니다.
+////////////////////////////////////////////////////////////////////////////////////////
 void Memory::Set(void* _src, const int _srcCapacity, const _u8 _value)
 {
 #ifdef _DEBUG

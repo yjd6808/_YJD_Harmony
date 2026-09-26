@@ -66,7 +66,9 @@ namespace
 	};
 }
 
-// 그림자 매핑 튜토리얼을 실행한다. (좌: 그림자 없음 / 우: 그림자 적용 Before/After 비교)
+////////////////////////////////////////////////////////////////////////////////////////
+// : 그림자 매핑 튜토리얼을 실행한다. (좌: 그림자 없음 / 우: 그림자 적용 Before/After 비교)
+////////////////////////////////////////////////////////////////////////////////////////
 void ShadowMapping_Main()
 {
 	PrintShadowExplanation();
@@ -229,8 +231,6 @@ void ShadowMapping_Main()
 
 		device.Context().SetVertexShader(vsDepthShader);
 		device.Context().SetPixelShader(psDepthShader);
-		{
-		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
 		CbDepth cbD;
@@ -258,8 +258,6 @@ void ShadowMapping_Main()
 
 		device.Context().SetVertexShader(vsSceneShader);
 		device.Context().SetPixelShader(psSceneShader);
-		{
-		}
 
 		CbLight cbL;
 		cbL.lightDir_ = lightDir;

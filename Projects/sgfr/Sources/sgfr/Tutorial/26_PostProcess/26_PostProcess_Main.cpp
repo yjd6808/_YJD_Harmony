@@ -57,7 +57,9 @@ namespace
 	const _char* s_szEffectNames[] = { _T("원본"), _T("그레이"), _T("세피아"), _T("색 반전"), _T("비네트"), _T("물결") };
 }
 
-// 포스트 프로세싱 튜토리얼을 실행한다. (좌: 원본 / 우: 효과, 이동형 경계 슬라이더)
+////////////////////////////////////////////////////////////////////////////////////////
+// : 포스트 프로세싱 튜토리얼을 실행한다. (좌: 원본 / 우: 효과, 이동형 경계 슬라이더)
+////////////////////////////////////////////////////////////////////////////////////////
 void PostProcess_Main()
 {
 	PrintPostProcessExplanation();
@@ -219,8 +221,6 @@ void PostProcess_Main()
 		cubeIb.Bind(device.Context());
 		device.Context().SetVertexShader(vsSceneShader);
 		device.Context().SetPixelShader(psSceneShader);
-		{
-		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		device.Context().DrawIndexed(36, 0, 0);
 
@@ -242,8 +242,6 @@ void PostProcess_Main()
 		quadIb.Bind(device.Context());
 		device.Context().SetVertexShader(vsPostShader);
 		device.Context().SetPixelShader(psPostShader);
-		{
-		}
 		device.Context().DrawIndexed(6, 0, 0);
 
 		device.Present(true);

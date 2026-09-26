@@ -26,7 +26,9 @@ namespace
 	struct PolygonData { const vec2* pPoints_; _u32 count_; };
 	struct TriangleData { vec2 p1_; vec2 p2_; vec2 p3_; };
 
-	// 두께 있는 선분을 사각형(2삼각형)으로 bake한다.
+	//////////////////////////////////////////////////////////////////////////////////////
+	// : 두께 있는 선분을 사각형(2삼각형)으로 bake한다.
+	//////////////////////////////////////////////////////////////////////////////////////
 	void FillEngineLine(const Fill& _fill, const RenderParams& _params, FillResult& _r)
 	{
 		const LineData* pData = static_cast<const LineData*>(_fill.GetData());
@@ -34,7 +36,9 @@ namespace
 		PrimitiveBuilder::BuildLine(pData->p1_, pData->p2_, pData->thickness_, _params.color1_, _r);
 	}
 
-	// 원: 중심에서 부채꼴로 뻗치는 삼각형들로 근사.
+	//////////////////////////////////////////////////////////////////////////////////////
+	// : 원: 중심에서 부채꼴로 뻗치는 삼각형들로 근사.
+	//////////////////////////////////////////////////////////////////////////////////////
 	void FillEngineCircle(const Fill& _fill, const RenderParams& _params, FillResult& _r)
 	{
 		const CircleData* pData = static_cast<const CircleData*>(_fill.GetData());
@@ -42,7 +46,9 @@ namespace
 		PrimitiveBuilder::BuildCircle(pData->center_, pData->radius_, _params.color1_, pData->segments_, _r);
 	}
 
-	// 볼록 다각형: 첫 점을 중심으로 삼각형 부채꼴.
+	//////////////////////////////////////////////////////////////////////////////////////
+	// : 볼록 다각형: 첫 점을 중심으로 삼각형 부채꼴.
+	//////////////////////////////////////////////////////////////////////////////////////
 	void FillEnginePolygon(const Fill& _fill, const RenderParams& _params, FillResult& _r)
 	{
 		const PolygonData* pData = static_cast<const PolygonData*>(_fill.GetData());
@@ -50,7 +56,7 @@ namespace
 		PrimitiveBuilder::BuildPolygon(pData->pPoints_, pData->count_, _params.color1_, _r);
 	}
 
-	// 삼각형 1개.
+	//////////////////////////////////////////////////////////////////////////////////////
 	void FillEngineTriangle(const Fill& _fill, const RenderParams& _params, FillResult& _r)
 	{
 		const TriangleData* pData = static_cast<const TriangleData*>(_fill.GetData());
@@ -100,24 +106,28 @@ void Scene2D::RenderDynamic(const rect& _region, const Fill& _fill,
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 메시 그리기 — Mesh+Material 자동 드로우 (GameObject::RenderSelf → 이곳)
+// : 메시 그리기 — Mesh+Material 자동 드로우 (GameObject::RenderSelf → 이곳)
+//////////////////////////////////////////////////////////////////////////////////////////
 void Scene2D::DrawMesh(Mesh* _pMesh, Material* _pMaterial, const mat4& _world, const color& _tint)
 {
 	g_cRenderer2D.DrawMesh(_pMesh, _pMaterial, _world, _tint);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 스태틱 선언 6종 — 모두 범용 DeclareStatic(Fill, ...)로 위임한다. (설계 4-2)
+// : 스태틱 선언 6종 — 모두 범용 DeclareStatic(Fill, ...)로 위임한다. (설계 4-2)
+//////////////////////////////////////////////////////////////////////////////////////////
 _u64 Scene2D::DeclareStaticRect(const rect& _region, const color& _color)
 {
 	return DeclareStatic(Fill::Solid(), _region, _color);    // 범용 선언으로 위임
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 _u64 Scene2D::DeclareStaticImage(Texture* _pTexture, const rect& _region)
 {
 	return DeclareStatic(Fill::Texture(_pTexture), _region, color::WHITE);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 _u64 Scene2D::DeclareStaticImage(Texture* _pTexture, const rect& _region,
 	_f32 _sliceLeft, _f32 _sliceTop, _f32 _sliceRight, _f32 _sliceBottom)
 {
@@ -125,24 +135,28 @@ _u64 Scene2D::DeclareStaticImage(Texture* _pTexture, const rect& _region,
 		_region, color::WHITE);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 _u64 Scene2D::DeclareStaticLine(const vec2& _p1, const vec2& _p2, _f32 _thickness, const color& _color)
 {
 	LineData data{ _p1, _p2, _thickness };
 	return DeclareStatic(Fill::CustomData(&FillEngineLine, &data), rect(), _color);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 _u64 Scene2D::DeclareStaticCircle(const vec2& _center, _f32 _radius, const color& _color, _u32 _segments)
 {
 	CircleData data{ _center, _radius, _segments };
 	return DeclareStatic(Fill::CustomData(&FillEngineCircle, &data), rect(), _color);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 _u64 Scene2D::DeclareStaticPolygon(const vec2* _pPoints, _u32 _count, const color& _color)
 {
 	PolygonData data{ _pPoints, _count };
 	return DeclareStatic(Fill::CustomData(&FillEnginePolygon, &data), rect(), _color);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 _u64 Scene2D::DeclareStaticTriangle(const vec2& _p1, const vec2& _p2, const vec2& _p3, const color& _color)
 {
 	TriangleData data{ _p1, _p2, _p3 };
@@ -164,8 +178,9 @@ _u64 Scene2D::DeclareStatic(const Fill& _fill, const rect& _region,
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 엔진 진입점 — 카메라 자동 구성 후 사용자 갈고리를 호출한다.
+// : 엔진 진입점 — 카메라 자동 구성 후 사용자 갈고리를 호출한다.
 // 카메라가 아직 구성되지 않았으면 윈도우 크기로 직교 투영을 자동 설정한다.
+//////////////////////////////////////////////////////////////////////////////////////////
 void Scene2D::Enter()
 {
 	if (!GetCamera2D()->IsConfigured())
@@ -175,9 +190,10 @@ void Scene2D::Enter()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// ★ 2D 한 프레임의 총괄 — 예약(트리 순회) → 수동 그리기(OnRender) → 픽업(Flush) 3단계.
+// : ★ 2D 한 프레임의 총괄 — 예약(트리 순회) → 수동 그리기(OnRender) → 픽업(Flush) 3단계.
 // - GPU와의 접촉은 ③에서 1회만 일어난다. ①②는 "그릴 것 목록 만들기"일 뿐이다.
 // - (용어) 예약/픽업: 물건을 등록만 하고(예약), 프레임 끝에 일괄 처리(픽업)하는 방식. 배칭의 구조적 근거.
+////////////////////////////////////////////////////////////////////////////////////////
 void Scene2D::RenderScene()
 {
 	g_cRenderer2D.BeginScene(this);            // 씬 카메라로 2D 배치 시작

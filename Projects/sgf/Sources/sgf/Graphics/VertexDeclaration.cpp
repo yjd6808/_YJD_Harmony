@@ -59,8 +59,9 @@ namespace
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// 인터닝 — 같은 내용이면 같은 인스턴스. 저장소 수명 = 프로그램 수명.
+// : 인터닝 — 같은 내용이면 같은 인스턴스. 저장소 수명 = 프로그램 수명.
 // [주의] 초기화 경로 단일 스레드 가정. 멀티스레드 로딩 도입 시 락 추가할 것.
+////////////////////////////////////////////////////////////////////////////////////////
 const VertexDeclaration* VertexDeclaration::GetOrCreate(const VertexElement* _pElements, _s32 _count)
 {
 	jc_assert_msg(_pElements != nullptr && _count > 0 && _count <= MAX_VERTEX_ELEMENTS,

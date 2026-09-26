@@ -160,9 +160,9 @@ private:
 	Vector<Slot> slots_[TYPE_COUNT];						// 타입별 슬롯 배열 (파티션)
 	Provider<IdProviderReuse<_u32>> indexProviders_[TYPE_COUNT]; // 타입별 인덱스 발급기 (1-base → 0-base 변환)
 	HashMap<String, _u64> pathIndex_;						// 경로 -> 키 (중복 로드 방지)
-	HashSet<_u64> defaultKeys_;								// 제거 금지 키 (FR-30)
-	HashMap<_u64, _u64> materialCache_;						// 명세 해시 -> 머티리얼 키 (동일 명세 공유)
-	HashMap<_u64, _u64> materialKeyToHash_;					// 머티리얼 키 -> 명세 해시 (개별 제거 시 캐시 정리)
+	HashSet<_u64> defaultKeys_;								// 제거 금지 키
+	HashMap<_u64, _u64> materialHashToKey_;					// MaterialDesc는 셰이더 멤버가 많은 구조체고 이걸 operator ==로 동일비교하면 비용이큼 해쉬 추출 후 충돌할 경우에만 == 체크해서 비용절약. 
+	HashMap<_u64, _u64> materialKeyToHash_;
 
 	_u64 defaultTextureKey_;
 	_u64 defaultVs2DKey_;

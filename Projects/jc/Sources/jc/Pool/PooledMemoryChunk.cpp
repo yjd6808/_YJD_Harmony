@@ -2,6 +2,7 @@
 
 USING_NS_JC;
 
+////////////////////////////////////////////////////////////////////////////////////////
 PooledMemoryChunk::PooledMemoryChunk(const MemoryPoolAbstractPtr& _allocator, int _requestSize)
 : allocator_(_allocator)
 , buffer_(nullptr)

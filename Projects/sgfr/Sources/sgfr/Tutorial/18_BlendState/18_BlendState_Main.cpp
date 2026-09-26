@@ -44,7 +44,9 @@ namespace
 	const _char* s_szBlendNames[] = { _T("Opaque(불투명)"), _T("Alpha(반투명)"), _T("Additive(가산)"), _T("Multiply(곱셈)") };
 }
 
-// 블렌드 스테이트 튜토리얼을 실행한다. (좌: Opaque 기준 / 우: 선택 모드 Before/After 비교)
+////////////////////////////////////////////////////////////////////////////////////////
+// : 블렌드 스테이트 튜토리얼을 실행한다. (좌: Opaque 기준 / 우: 선택 모드 Before/After 비교)
+////////////////////////////////////////////////////////////////////////////////////////
 void BlendState_Main()
 {
 	PrintBlendExplanation();
@@ -177,8 +179,6 @@ void BlendState_Main()
 		texture.Bind(device.Context(), 0);
 		device.Context().SetVertexShader(vsShader);
 		device.Context().SetPixelShader(psShader);
-		{
-		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
 		// 한 묶음(원 3개)을 지정한 중심/블렌드 모드로 그리는 보조 람다.

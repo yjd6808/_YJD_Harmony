@@ -46,7 +46,9 @@ namespace
 	const _char* s_szEasingNames[] = { _T("선형"), _T("부드럽게"), _T("바운스") };
 }
 
-// 스프라이트 애니메이션 튜토리얼을 실행한다. (위: 선형 기준 / 아래: 선택 이징 Before/After 비교)
+////////////////////////////////////////////////////////////////////////////////////////
+// : 스프라이트 애니메이션 튜토리얼을 실행한다. (위: 선형 기준 / 아래: 선택 이징 Before/After 비교)
+////////////////////////////////////////////////////////////////////////////////////////
 void SpriteAnimation_Main()
 {
 	PrintSpriteAnimationExplanation();
@@ -65,14 +67,14 @@ void SpriteAnimation_Main()
 	GraphicDevice device;
 	if (!device.Initialize())
 	{
-	jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
+		jc::Console::WriteLine(_T("그래픽 디바이스 초기화 실패!"));
 		window.Destroy();
 		return;
 	}
 	if (!g_cResourceMgr.Initialize(&device))
 	{
 		jc::Console::WriteLine(_T("리소스 매니저 초기화 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -118,7 +120,7 @@ void SpriteAnimation_Main()
 		!quadIb.Create(device, quadIndices, 6))
 		{
 		jc::Console::WriteLine(_T("버퍼 생성 실패!"));
-	g_cResourceMgr.Finalize();
+		g_cResourceMgr.Finalize();
 		device.Finalize();
 		window.Destroy();
 		return;
@@ -172,8 +174,8 @@ void SpriteAnimation_Main()
 		{
 			if (input.IsKeyPressed('1' + k))
 			{
-			easingMode = k;
-			bChanged = true;
+				easingMode = k;
+				bChanged = true;
 			}
 		}
 		if (input.IsKeyPressed(VK_UP))
@@ -223,8 +225,6 @@ void SpriteAnimation_Main()
 		sheetTexture.Bind(device.Context(), 0);
 		device.Context().SetVertexShader(vsSprite);
 		device.Context().SetPixelShader(psSprite);
-		{
-		}
 		quadIb.Bind(device.Context());
 
 		// --- [Before] 지단 (y=+0.4): 항상 선형 이동 = 기준선 ---

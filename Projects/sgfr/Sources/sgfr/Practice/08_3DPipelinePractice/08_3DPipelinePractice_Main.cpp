@@ -20,6 +20,7 @@ struct CbTransform
 	mat4 worldViewProj_;
 };
 
+////////////////////////////////////////////////////////////////////////////////////////
 const char* GetShaderSource()
 {
 	return R"(
@@ -56,6 +57,7 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 void Practice_3DPipelinePractice_Main()
 {
 	jc::Console::WriteLine(_T("[Practice 08] 3D 렌더링 파이프라인 연습 - ESC 종료"));

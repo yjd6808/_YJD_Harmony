@@ -39,7 +39,9 @@ namespace
 	};
 }
 
-// HLSL 셰이더 튜토리얼을 실행한다. (상수 버퍼로 삼각형 색/크기 애니메이션)
+////////////////////////////////////////////////////////////////////////////////////////
+// : HLSL 셰이더 튜토리얼을 실행한다. (상수 버퍼로 삼각형 색/크기 애니메이션)
+////////////////////////////////////////////////////////////////////////////////////////
 void HLSL_Main()
 {
 	PrintHlslSummary();
@@ -138,8 +140,6 @@ void HLSL_Main()
 		vb.Bind(device.Context());
 		device.Context().SetVertexShader(vsShader);
 		device.Context().SetPixelShader(psShader);
-		{
-		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		device.Context().Draw(3, 0);
 

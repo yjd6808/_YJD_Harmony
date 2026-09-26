@@ -30,7 +30,9 @@ namespace
 	constexpr _s32 ORBIT_CUBE_COUNT = 4;	// 주변을 도는 작은 큐브 개수
 }
 
-// 렌더 오브젝트 루프 튜토리얼을 실행한다. (BeginScene → Draw 반복 패턴)
+////////////////////////////////////////////////////////////////////////////////////////
+// : 렌더 오브젝트 루프 튜토리얼을 실행한다. (BeginScene → Draw 반복 패턴)
+////////////////////////////////////////////////////////////////////////////////////////
 void RenderObjectLoop_Main()
 {
 	_LogInfo_(_T("[22] RenderObjectLoop 시작"));
@@ -68,7 +70,7 @@ void RenderObjectLoop_Main()
 		return;
 	}
 
-	// 2. 씬 렌더러 준비 (b0/b1 상수버퍼를 내부에서 관리) — Renderer3D (이전 이름 SceneRenderer 통합)
+	// 2. 씬 렌더러 준비 (b0/b1 상수버퍼를 내부에서 관리) — Renderer3D
 	Renderer3D renderer;
 	if (!renderer.Initialize(&device))
 	{

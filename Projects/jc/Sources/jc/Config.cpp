@@ -106,6 +106,7 @@ static LONG CALLBACK VectoredExceptionHandler(PEXCEPTION_POINTERS _pExceptionInf
 	return EXCEPTION_CONTINUE_SEARCH;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 void InitializeJCore(int _argc, char** _argv)
 {
 	// -----------------------------------------------------------------------
@@ -170,6 +171,7 @@ void InitializeJCore(int _argc, char** _argv)
 	PropertyStatics::Initialize();
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 void FinalizeJCore()
 {
 	PropertyStatics::Finalize();

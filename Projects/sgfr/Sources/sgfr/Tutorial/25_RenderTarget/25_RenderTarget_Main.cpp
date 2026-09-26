@@ -43,7 +43,9 @@ namespace
 	};
 }
 
-// 렌더 타깃 튜토리얼을 실행한다. (화면 밖 텍스처에 그리기 + 미니맵)
+////////////////////////////////////////////////////////////////////////////////////////
+// : 렌더 타깃 튜토리얼을 실행한다. (화면 밖 텍스처에 그리기 + 미니맵)
+////////////////////////////////////////////////////////////////////////////////////////
 void RenderTarget_Main()
 {
 	PrintRenderTargetExplanation();
@@ -187,8 +189,6 @@ void RenderTarget_Main()
 		cubeIb.Bind(device.Context());
 		device.Context().SetVertexShader(vsCubeShader);
 		device.Context().SetPixelShader(psCubeShader);
-		{
-		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		device.Context().DrawIndexed(36, 0, 0);
 
@@ -202,8 +202,6 @@ void RenderTarget_Main()
 		cubeIb.Bind(device.Context());
 		device.Context().SetVertexShader(vsCubeShader);
 		device.Context().SetPixelShader(psCubeShader);
-		{
-		}
 		device.Context().DrawIndexed(36, 0, 0);
 
 		// ---- 패스 3: 렌더 타깃 결과를 미니맵 사각형에 출력 ----
@@ -214,8 +212,6 @@ void RenderTarget_Main()
 		quadIb.Bind(device.Context());
 		device.Context().SetVertexShader(vsQuadShader);
 		device.Context().SetPixelShader(psQuadShader);
-		{
-		}
 		device.Context().DrawIndexed(6, 0, 0);
 
 		device.Present(true);

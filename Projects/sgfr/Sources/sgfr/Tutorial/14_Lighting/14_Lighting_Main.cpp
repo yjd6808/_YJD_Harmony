@@ -47,7 +47,9 @@ namespace
 	};
 }
 
-// 라이팅 튜토리얼을 실행한다. (람버트 확산광 + 주변광)
+////////////////////////////////////////////////////////////////////////////////////////
+// : 라이팅 튜토리얼을 실행한다. (람버트 확산광 + 주변광)
+////////////////////////////////////////////////////////////////////////////////////////
 void Lighting_Main()
 {
 	PrintLambertExplanation();
@@ -171,8 +173,6 @@ void Lighting_Main()
 		ib.Bind(device.Context());
 		device.Context().SetVertexShader(vsShader);
 		device.Context().SetPixelShader(psShader);
-		{
-		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		device.Context().DrawIndexed(36, 0, 0);
 

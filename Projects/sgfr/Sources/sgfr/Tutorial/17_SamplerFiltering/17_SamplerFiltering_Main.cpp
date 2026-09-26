@@ -51,7 +51,9 @@ namespace
 	const _char* s_szAddressNames[] = { _T("Wrap(반복)"), _T("Mirror(거울)"), _T("Clamp(고정)") };
 }
 
-// 샘플러와 필터링 튜토리얼을 실행한다. (Point/Linear, Wrap/Clamp/Mirror, 좌우 Before/After 비교)
+////////////////////////////////////////////////////////////////////////////////////////
+// : 샘플러와 필터링 튜토리얼을 실행한다. (Point/Linear, Wrap/Clamp/Mirror, 좌우 Before/After 비교)
+////////////////////////////////////////////////////////////////////////////////////////
 void SamplerFiltering_Main()
 {
 	PrintSamplerExplanation();
@@ -193,8 +195,6 @@ void SamplerFiltering_Main()
 		ib.Bind(device.Context());
 		device.Context().SetVertexShader(vsShader);
 		device.Context().SetPixelShader(psShader);
-		{
-		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		device.Context().DrawIndexed(6, 0, 0);
 

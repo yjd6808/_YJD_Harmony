@@ -13,6 +13,7 @@
 NS_JC_BEGIN
 _whandle WinApi::InvalidHandleValue = INVALID_HANDLE_VALUE;
 
+////////////////////////////////////////////////////////////////////////////////////////
 bool
 JC_CDECL
 WinApi::SetConsoleCursorPosition( _whandle _stdoutHandle,  int _x,  int _y)
@@ -23,6 +24,7 @@ WinApi::SetConsoleCursorPosition( _whandle _stdoutHandle,  int _x,  int _y)
 	return ::SetConsoleCursorPosition(_stdoutHandle, p) != 0;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 bool
 JC_CDECL
 WinApi::GetConsoleCursorPosition( _whandle _stdoutHandle, OUT int& _x, OUT int& _y)
@@ -39,6 +41,7 @@ WinApi::GetConsoleCursorPosition( _whandle _stdoutHandle, OUT int& _x, OUT int& 
 	return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 bool
 JC_CDECL
 WinApi::SetConsoleTextAttribute( _whandle _stdoutHandle,  _s16 _attribute)
@@ -46,7 +49,7 @@ WinApi::SetConsoleTextAttribute( _whandle _stdoutHandle,  _s16 _attribute)
 	return ::SetConsoleTextAttribute(_stdoutHandle, _attribute) != 0;
 }
 
-
+////////////////////////////////////////////////////////////////////////////////////////
 bool
 JC_CDECL
 WinApi::SetConsoleOutputCodePage( _s32 _codePage)
@@ -54,7 +57,7 @@ WinApi::SetConsoleOutputCodePage( _s32 _codePage)
 	return ::SetConsoleOutputCP(_codePage) != 0;
 }
 
-
+////////////////////////////////////////////////////////////////////////////////////////
 _s32
 JC_CDECL
 WinApi::GetConsoleOutputCodePage()
@@ -62,6 +65,7 @@ WinApi::GetConsoleOutputCodePage()
 	return static_cast<int>(::GetConsoleOutputCP());
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 _whandle
 JC_CDECL
 WinApi::GetStdoutHandle()
@@ -69,6 +73,7 @@ WinApi::GetStdoutHandle()
 	return ::GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 _whandle
 JC_CDECL
 WinApi::GetStdinHandle()
@@ -76,6 +81,7 @@ WinApi::GetStdinHandle()
 	return ::GetStdHandle(STD_INPUT_HANDLE);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 _whandle
 JC_CDECL
 WinApi::CreateEventA(bool _initialState, bool _manualReset, const char* _pName)
@@ -83,6 +89,7 @@ WinApi::CreateEventA(bool _initialState, bool _manualReset, const char* _pName)
 	return ::CreateEventA(nullptr, _manualReset ? TRUE : FALSE, _initialState ? TRUE : FALSE, _pName);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 _u32l
 JC_CDECL
 WinApi::WaitForMultipleObjectsEx( _u32 _eventCount,  _whandle* _handles,  bool _waitAll,
@@ -96,6 +103,7 @@ WinApi::WaitForMultipleObjectsEx( _u32 _eventCount,  _whandle* _handles,  bool _
 	return result;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 _u32l
 JC_CDECL
 WinApi::WaitForSingleObject(_whandle _handle, _u32 _timeout)
@@ -103,6 +111,7 @@ WinApi::WaitForSingleObject(_whandle _handle, _u32 _timeout)
 	return ::WaitForSingleObject(_handle, _timeout);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 _u32l
 JC_CDECL
 WinApi::GetLastError()
@@ -110,6 +119,7 @@ WinApi::GetLastError()
 	return ::GetLastError();
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 bool
 JC_CDECL
 WinApi::SetEvent( _whandle _handle)
@@ -117,6 +127,7 @@ WinApi::SetEvent( _whandle _handle)
 	return ::SetEvent(_handle) != 0;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 bool
 JC_CDECL
 WinApi::ResetEvent( _whandle _handle)
@@ -124,6 +135,7 @@ WinApi::ResetEvent( _whandle _handle)
 	return ::ResetEvent(_handle) != 0;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 bool
 JC_CDECL
 WinApi::CloseHandle( _whandle _handle)
@@ -131,6 +143,7 @@ WinApi::CloseHandle( _whandle _handle)
 	return ::CloseHandle(_handle) != 0;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 int
 JC_CDECL
 WinApi::GetThreadPriority( _whandle _threadHandle)
@@ -138,6 +151,7 @@ WinApi::GetThreadPriority( _whandle _threadHandle)
 	return ::GetThreadPriority(_threadHandle);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 bool
 JC_CDECL
 WinApi::SetThreadPriority( _whandle _threadHandle,  int _priority)
@@ -145,7 +159,7 @@ WinApi::SetThreadPriority( _whandle _threadHandle,  int _priority)
 	return ::SetThreadPriority(_threadHandle, _priority) != 0;
 }
 
-
+////////////////////////////////////////////////////////////////////////////////////////
 _u32
 JC_CDECL
 WinApi::GetCurrentThreadId()
@@ -153,6 +167,7 @@ WinApi::GetCurrentThreadId()
 	return ::GetCurrentThreadId();
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 _u32
 JC_CDECL
 WinApi::GetModuleFilePath(IN_OPT _wmodule _module, OUT char* _filenameBuffer, int _filenameBufferCapacity)

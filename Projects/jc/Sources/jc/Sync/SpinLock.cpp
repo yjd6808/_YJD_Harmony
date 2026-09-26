@@ -37,7 +37,7 @@ SpinLock::~SpinLock() = default;
    }
    isLocked_ = true;
    아 이건 안되겠네. while문을 동시에 2개의 쓰레드가 빠져 나와버리는 경우가 있을 수 있을 것 같은데?
- */
+  */
 
 // @학습 : https://modoocode.com/271
 // memory_order_acquire : 해당 명령 이후에 오는 모든 메모리 명령들이 해당 명령 이전으로 재배치 되는 것을 금지한다
@@ -48,6 +48,7 @@ SpinLock::~SpinLock() = default;
 
 // CompareExchange 함수는 기본적으로 memory_order_seq_cst를 사용하도록 하고 있는데
 // 인텔에서는 비용이 그렇게 크지 않은데 ARM CPU는 일관성을 보장하기 위한 비용이 매우 크다고 한다.
+////////////////////////////////////////////////////////////////////////////////////////
 void SpinLock::Lock()
 {
 	bool expected = false;
@@ -66,17 +67,20 @@ void SpinLock::Lock()
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 void SpinLock::Unlock()
 {
 	isLocked_ = false;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 bool SpinLock::TryLock()
 {
 	bool expected = false;
 	return isLocked_.CompareExchange(expected, true);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 bool SpinLock::IsLocked()
 {
 	return isLocked_;

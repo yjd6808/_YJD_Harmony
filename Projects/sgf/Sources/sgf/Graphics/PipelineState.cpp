@@ -12,7 +12,8 @@
 NS_SGF_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// 상태 설명자 채우기 헬퍼
+// : 상태 설명자 채우기 헬퍼
+////////////////////////////////////////////////////////////////////////////////////////////
 void FillRasterizerDesc(D3D11_RASTERIZER_DESC* _pOutDesc, CullMode _cull, FillMode _fill, FrontFace _frontFace)
 {
 	*_pOutDesc = {};
@@ -112,7 +113,8 @@ void FillSamplerDesc(D3D11_SAMPLER_DESC* _pOutDesc, FilterMode _filter, AddressM
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// RasterizerState
+// : RasterizerState
+////////////////////////////////////////////////////////////////////////////////////////////
 bool RasterizerState::Initialize(GraphicDevice& _device, CullMode _cull, FillMode _fill, FrontFace _frontFace)
 {
 	jc_assert_msg(_device.IsValid(), _T("디바이스가 없습니다."));
@@ -141,7 +143,6 @@ void RasterizerState::Finalize()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BlendState
 bool BlendState::Initialize(GraphicDevice& _device, BlendMode _mode)
 {
 	jc_assert_msg(_device.IsValid(), _T("디바이스가 없습니다."));
@@ -167,7 +168,8 @@ void BlendState::Finalize()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DepthStencilState
+// : DepthStencilState
+////////////////////////////////////////////////////////////////////////////////////////////
 bool DepthStencilState::Initialize(GraphicDevice& _device, DepthMode _mode)
 {
 	jc_assert_msg(_device.IsValid(), _T("디바이스가 없습니다."));
@@ -193,7 +195,6 @@ void DepthStencilState::Finalize()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// SamplerState
 bool SamplerState::Initialize(GraphicDevice& _device, FilterMode _filter, AddressMode _addressU, AddressMode _addressV)
 {
 	jc_assert_msg(_device.IsValid(), _T("디바이스가 없습니다."));

@@ -15,6 +15,7 @@ using namespace jc;
 
 namespace
 {
+////////////////////////////////////////////////////////////////////////////////////////
 const char* GetShaderSource()
 {
 	return R"(
@@ -46,6 +47,7 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 void Practice_2DPipelineTemplate_Main()
 {
 	jc::Console::WriteLine(_T("[Practice 05] 2D 렌더링 파이프라인 템플릿 - ESC 종료"));

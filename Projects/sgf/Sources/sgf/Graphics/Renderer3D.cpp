@@ -73,22 +73,25 @@ Renderer3D::~Renderer3D()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// BatchRenderer 훅: 위치+색 셔이더 소스
+// : BatchRenderer 훅: 위치+색 셔이더 소스
+//////////////////////////////////////////////////////////////////////////////////////////
 const char* Renderer3D::ShaderSource() const
 {
 	return s_szColorShader;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// BatchRenderer 훅: VertexPC 선언
+// : BatchRenderer 훅: VertexPC 선언
+//////////////////////////////////////////////////////////////////////////////////////////
 const VertexDeclaration* Renderer3D::VertexDecl() const
 {
 	return VertexPC::Decl();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// BatchRenderer 훅: 셰이더/상수 버퍼 생성 후 호출된다.
+// : BatchRenderer 훅: 셰이더/상수 버퍼 생성 후 호출된다.
 // 삼각형/선용 동적(DYNAMIC) 정점 버퍼를 만든다. (매 프레임 CPU 배치를 복사해 넣는다)
+//////////////////////////////////////////////////////////////////////////////////////////
 bool Renderer3D::CreateBatchResources(GraphicDevice* _pDevice)
 {
 	if (!triangleVb_.Create(*_pDevice, nullptr, MAX_TRIANGLES * 3, VertexPC::Decl(), ResourceUsage::ruDynamic))
@@ -108,11 +111,12 @@ bool Renderer3D::CreateBatchResources(GraphicDevice* _pDevice)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 프레임 공통 상수를 갱신하고 b0에 장착한다. (프레임당 1회 호출 — Scene3D::RenderScene)
+// : 프레임 공통 상수를 갱신하고 b0에 장착한다. (프레임당 1회 호출 — Scene3D::RenderScene)
 // 기존 SceneRenderer::BeginScene 역할을 이 클래스가 흡수한다. (배치 파이프라인도 함께 연다)
 // ★ 왜 필요한가: "보는 방법"을 GPU에 알리는 3D 프레임의 문을 여는 일.
 // - (용어) 뷰(View) 행렬: 카메라가 세상을 보는 변환. 투영(Projection) 행렬: 보이는 범위를 화면에 펼침.
 // - (용어) 상수버퍼(ConstantBuffer): 셰이더가 읽는 데이터 보관함. b0은 프레임당 1회, b1은 오브젝트당 1회 갱신.
+//////////////////////////////////////////////////////////////////////////////////////////
 void Renderer3D::BeginScene(const FrameConstants& _frame)
 {
 	jc_assert_msg(pDevice_ != nullptr, _T("Initialize 이후에만 사용할 수 있습니다."));
@@ -137,7 +141,8 @@ void Renderer3D::BeginScene(const FrameConstants& _frame)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 잔여 배치 플러시 + 배치 종료
+// : 잔여 배치 플러시 + 배치 종료
+//////////////////////////////////////////////////////////////////////////////////////////
 void Renderer3D::EndScene()
 {
 	if (!begun_) return;
@@ -147,7 +152,8 @@ void Renderer3D::EndScene()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 렌더 오브젝트 하나를 그린다. (키 해서 -> 머티리얼/메시 바인딩 -> b1 갱신 -> 드로우)
+// : 렌더 오브젝트 하나를 그린다. (키 해서 -> 머티리얼/메시 바인딩 -> b1 갱신 -> 드로우)
+//////////////////////////////////////////////////////////////////////////////////////////
 void Renderer3D::Draw(const RenderObject& _object)
 {
 	if (!_object.visible_)
@@ -177,10 +183,11 @@ void Renderer3D::Draw(const RenderObject& _object)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 포인터로 직접 그리기 (ResourceMgr를 거치지 않는 경우용)
+// : 포인터로 직접 그리기 (ResourceMgr를 거치지 않는 경우용)
 // ★ 왜 필요한가: 3D 그리기 한 건 = "무엇을(메시) 어떻게(머티리얼) 어디에(월드)"를 GPU로 전달하는 일.
 // - (용어) 메시 = 모양(정점 묶음), 머티리얼 = 재질(셰이더+텍스처+상태), 월드 행렬 = 위치/회전/크기.
 // 순서: ① 재질 바인딩 ② 모양 바인딩 ③ 월드 행렬(b1) 갱신 ④ 드로우콜.
+//////////////////////////////////////////////////////////////////////////////////////////
 void Renderer3D::Draw(Mesh* _pMesh, Material* _pMaterial, const mat4& _world, const color& _tint)
 {
 	jc_assert_msg(pDevice_ != nullptr, _T("Initialize 이후에만 사용할 수 있습니다."));
@@ -219,9 +226,10 @@ void Renderer3D::Finalize()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// BatchRenderer 훅: Begin() 공통 처리 후 호출된다.
+// : BatchRenderer 훅: Begin() 공통 처리 후 호출된다.
 // [주의] 깊이/블렌드 상태는 여기서 바꾸지 않고 Flush 직전에 적용한다.
 // Renderer2D와 Begin~End 구간이 겹쳐도 서로 상태를 덮어쓰지 않기 위함이다.
+//////////////////////////////////////////////////////////////////////////////////////////
 void Renderer3D::OnBegin()
 {
 	triangleVertices_.Clear();
@@ -236,7 +244,8 @@ void Renderer3D::Flush()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 하나의 배치를 GPU로 복사해 한 번의 DrawCall로 그린다.
+// : 하나의 배치를 GPU로 복사해 한 번의 DrawCall로 그린다.
+//////////////////////////////////////////////////////////////////////////////////////////
 void Renderer3D::FlushBatch(VertexBuffer& _vertexBuffer, jc::Vector<VertexPC>& _vertices,
 	PrimitiveTopology _topology)
 {
@@ -262,9 +271,10 @@ void Renderer3D::FlushBatch(VertexBuffer& _vertexBuffer, jc::Vector<VertexPC>& _
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// [내부 도우미] 사각형(면) 하나를 삼각형 2개로 쪼개 배치에 넣는다.
+// : [내부 도우미] 사각형(면) 하나를 삼각형 2개로 쪼개 배치에 넣는다.
 // 정점 순서는 바깥에서 볼 때 (왼위, 오른위, 왼아래, 오른아래).
 // 19장 큐브와 동일한 시계 방향 감기(winding)를 사용한다. (D3D 기본 = 앞면)
+//////////////////////////////////////////////////////////////////////////////////////////
 static void sAddQuad(jc::Vector<VertexPC>& _vertices,
 	const vec3& _topLeft, const vec3& _topRight,
 	const vec3& _bottomLeft, const vec3& _bottomRight,
@@ -281,7 +291,8 @@ static void sAddQuad(jc::Vector<VertexPC>& _vertices,
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 삼각형 하나 배치. (바깥에서 볼 때 시계 방향 순서가 앞면이다)
+// : 삼각형 하나 배치. (바깥에서 볼 때 시계 방향 순서가 앞면이다)
+//////////////////////////////////////////////////////////////////////////////////////////
 void Renderer3D::DrawTriangle(const vec3& _p0, const vec3& _p1, const vec3& _p2, const color& _color)
 {
 	jc_assert(begun_);
@@ -297,9 +308,10 @@ void Renderer3D::DrawTriangle(const vec3& _p0, const vec3& _p1, const vec3& _p2,
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 단색 상자 배치.
+// : 단색 상자 배치.
 // [CPU측 간이 음영] 조명 셔이더 없이도 입체감이 느껴지도록
 // 면마다 밝기 계수를 달리 적용한다. (윗면이 가장 밝고 아랫면이 가장 어둡다)
+//////////////////////////////////////////////////////////////////////////////////////////
 void Renderer3D::DrawCube(const vec3& _center, const vec3& _size, const color& _color)
 {
 	jc_assert(begun_);
@@ -358,7 +370,6 @@ void Renderer3D::DrawCube(const vec3& _center, const vec3& _size, const color& _
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 3D 선분 하나 배치.
 void Renderer3D::DrawLine3D(const vec3& _from, const vec3& _to, const color& _color)
 {
 	jc_assert(begun_);
@@ -373,7 +384,8 @@ void Renderer3D::DrawLine3D(const vec3& _from, const vec3& _to, const color& _co
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// XZ 평면 격자 (바닥 기준선)
+// : XZ 평면 격자 (바닥 기준선)
+//////////////////////////////////////////////////////////////////////////////////////////
 void Renderer3D::DrawGrid(_s32 _halfCount, _f32 _spacing, const color& _color)
 {
 	const _f32 extent = _halfCount * _spacing;
@@ -388,7 +400,8 @@ void Renderer3D::DrawGrid(_s32 _halfCount, _f32 _spacing, const color& _color)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 원점 좌표축: X=빨강, Y=초록, Z=파랑
+// : 원점 좌표축: X=빨강, Y=초록, Z=파랑
+//////////////////////////////////////////////////////////////////////////////////////////
 void Renderer3D::DrawAxis(_f32 _length)
 {
 	DrawLine3D(vec3(0.0f, 0.0f, 0.0f), vec3(_length, 0.0f, 0.0f), color(0xFF, 0x33, 0x33));

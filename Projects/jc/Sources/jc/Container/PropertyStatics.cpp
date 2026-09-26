@@ -12,6 +12,7 @@
 
 NS_JC_BEGIN
 
+////////////////////////////////////////////////////////////////////////////////////////
 template <PropertyType_t I>
 static void CreateFactory() {
 	if constexpr (I == PropertyType::CharPtr) return;
@@ -21,6 +22,7 @@ static void CreateFactory() {
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 template <PropertyType_t I>
 static void InitDefaultProperty() {
 	if constexpr (I == PropertyType::CharPtr) return;
@@ -30,7 +32,7 @@ static void InitDefaultProperty() {
 	}
 }
 
-
+////////////////////////////////////////////////////////////////////////////////////////
 void PropertyStatics::Initialize() {
 	InitializePropertyOperatorSelectors();
 	InitializePropertyOperatorUnary();
@@ -55,7 +57,7 @@ void PropertyStatics::Initialize() {
 	InitDefaultProperty<PropertyType_t(0)>();
 }
 
-
+////////////////////////////////////////////////////////////////////////////////////////
 void PropertyStatics::Finalize() {
 	for (int i = 0; i < PropertyType::Max; ++i) {
 		for (int j = 0; j < PropertyType::Max; ++j) {

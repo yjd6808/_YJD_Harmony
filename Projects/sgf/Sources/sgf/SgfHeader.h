@@ -1,9 +1,6 @@
 /*
  * 작성자: 윤정도
  * 생성일: 8/4/2026 10:30:00 PM
- * 수정일: 8/9/2026 1:00:00 AM (Node/Sprite 제거, SoundEngine/분리된 D3D 부품 추가)
- * 수정일: 8/9/2026 6:20:00 PM (GraphicContext/파이프라인 상태 객체/Mesh/Material/SceneRenderer/ResourceMgr 추가)
- * 수정일: 8/16/2026 (개편: Fill/GameObject/Layer/Transform/Component/Camera2D/3D/Scene2D/3D 추가, SceneRenderer 제거)
  * =====================
  * sgf 엔진 통합 헤더
  *

@@ -21,7 +21,8 @@ using namespace jc;
 namespace PrimitiveBuilder
 {
 	//////////////////////////////////////////////////////////////////////////////////////
-	// 공용 쿼드 — 네 꼭짓점(좌하단 시작) + UV + 색. Fill::PushQuad2D와 동일 정점/인덱스 순서. (A-7)
+	// : 공용 쿼드 — 네 꼭짓점(좌하단 시작) + UV + 색. Fill::PushQuad2D와 동일 정점/인덱스 순서. (A-7)
+	//////////////////////////////////////////////////////////////////////////////////////
 	void PushQuad(FillResult& _out, _f32 _x1, _f32 _y1, _f32 _x2, _f32 _y2,
 		const vec2& _uvMin, const vec2& _uvMax, const color& _color)
 	{
@@ -35,7 +36,8 @@ namespace PrimitiveBuilder
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////
-	// 단색 사각형 — 영역 전체를 채운 쿼드 1개. (Fill::Solid 콜백과 동일 로직)
+	// : 단색 사각형 — 영역 전체를 채운 쿼드 1개. (Fill::Solid 콜백과 동일 로직)
+	//////////////////////////////////////////////////////////////////////////////////////
 	void BuildRect(const rect& _region, const color& _color, FillResult& _out)
 	{
 		PushQuad(_out, _region.Left(), _region.Bottom(), _region.Right(), _region.Top(),
@@ -44,7 +46,8 @@ namespace PrimitiveBuilder
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////
-	// 원 — 중심에서 부채꼴 삼각형들로 근사. (Renderer2D::DrawCircle과 동일 로직)
+	// : 원 — 중심에서 부채꼴 삼각형들로 근사. (Renderer2D::DrawCircle과 동일 로직)
+	//////////////////////////////////////////////////////////////////////////////////////
 	void BuildCircle(const vec2& _center, _f32 _radius, const color& _color, _u32 _segments, FillResult& _out)
 	{
 		_s32 segments = (_s32)_segments;
@@ -70,7 +73,8 @@ namespace PrimitiveBuilder
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////
-	// 두께 있는 선분 — 두 점을 잇는 회전 사각형(2삼각형). (Renderer2D::DrawLine과 동일 로직)
+	// : 두께 있는 선분 — 두 점을 잇는 회전 사각형(2삼각형). (Renderer2D::DrawLine과 동일 로직)
+	//////////////////////////////////////////////////////////////////////////////////////
 	void BuildLine(const vec2& _p1, const vec2& _p2, _f32 _thickness, const color& _color, FillResult& _out)
 	{
 		const _f32 dx = _p2.x - _p1.x;
@@ -102,7 +106,8 @@ namespace PrimitiveBuilder
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////
-	// 볼록 다각형 — 첫 점을 중심으로 삼각형 부채꼴. (사용자는 시계/반시계 무관, 순서만 지킴)
+	// : 볼록 다각형 — 첫 점을 중심으로 삼각형 부채꼴. (사용자는 시계/반시계 무관, 순서만 지킴)
+	//////////////////////////////////////////////////////////////////////////////////////
 	void BuildPolygon(const vec2* _pPoints, _u32 _count, const color& _color, FillResult& _out)
 	{
 		if (_pPoints == nullptr || _count < 3) return;
@@ -122,7 +127,6 @@ namespace PrimitiveBuilder
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////
-	// 삼각형 1개.
 	void BuildTriangle(const vec2& _p1, const vec2& _p2, const vec2& _p3, const color& _color, FillResult& _out)
 	{
 		const _s32 base = _out.vertices_.Size();

@@ -32,7 +32,9 @@
 using namespace sgf;
 using namespace jc;
 
-// 정점/인덱스 버퍼 튜토리얼을 실행한다. (삼각형 2개로 사각형 그리기)
+////////////////////////////////////////////////////////////////////////////////////////
+// : 정점/인덱스 버퍼 튜토리얼을 실행한다. (삼각형 2개로 사각형 그리기)
+////////////////////////////////////////////////////////////////////////////////////////
 void VertexIndexBuffer_Main()
 {
 	PrintIndexBufferBenefit();
@@ -131,8 +133,6 @@ void VertexIndexBuffer_Main()
 		ib.Bind(device.Context());		// 인덱스 버퍼도 IA 단계에 묶는다.
 		device.Context().SetVertexShader(vsShader);
 		device.Context().SetPixelShader(psShader);
-		{
-		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 
 		// Draw 대신 DrawIndexed!

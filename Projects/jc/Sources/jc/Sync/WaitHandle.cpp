@@ -65,6 +65,7 @@ bool WaitHandle::Reset()
 	return WinApi::ResetEvent(handle_);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
 void WaitHandle::operator=(const WaitHandle& _other)
 {
 }

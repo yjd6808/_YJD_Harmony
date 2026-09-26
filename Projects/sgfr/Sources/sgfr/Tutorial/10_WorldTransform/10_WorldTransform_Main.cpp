@@ -38,7 +38,9 @@ namespace
 	};
 }
 
-// 월드 변환 튜토리얼을 실행한다. (태양-지구-달 계층 구조)
+////////////////////////////////////////////////////////////////////////////////////////
+// : 월드 변환 튜토리얼을 실행한다. (태양-지구-달 계층 구조)
+////////////////////////////////////////////////////////////////////////////////////////
 void WorldTransform_Main()
 {
 	PrintHierarchyExplanation();
@@ -147,8 +149,6 @@ void WorldTransform_Main()
 		ib.Bind(device.Context());
 		device.Context().SetVertexShader(vsShader);
 		device.Context().SetPixelShader(psShader);
-		{
-		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		device.Context().DrawIndexed(6, 0, 0);
 	};

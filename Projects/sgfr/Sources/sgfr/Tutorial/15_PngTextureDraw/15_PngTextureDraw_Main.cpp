@@ -29,7 +29,9 @@
 using namespace sgf;
 using namespace jc;
 
-// PNG 텍스처 튜토리얼을 실행한다. (WIC 디코딩 + UV 좌표계)
+////////////////////////////////////////////////////////////////////////////////////////
+// : PNG 텍스처 튜토리얼을 실행한다. (WIC 디코딩 + UV 좌표계)
+////////////////////////////////////////////////////////////////////////////////////////
 void PngTextureDraw_Main()
 {
 	PrintUvExplanation();
@@ -152,8 +154,6 @@ void PngTextureDraw_Main()
 		ib.Bind(device.Context());
 		device.Context().SetVertexShader(vsShader);
 		device.Context().SetPixelShader(psShader);
-		{
-		}
 		device.Context().SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		device.Context().DrawIndexed(6, 0, 0);
 

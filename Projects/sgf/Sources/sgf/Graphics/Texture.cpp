@@ -34,7 +34,6 @@
 NS_SGF_BEGIN
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 생성자
 Texture::Texture()
 	: width_(0)
 	, height_(0)
@@ -42,18 +41,20 @@ Texture::Texture()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 소멸자 (ComPtr이 자동 Release)
+// : 소멸자 (ComPtr이 자동 Release)
+//////////////////////////////////////////////////////////////////////////////////////////
 Texture::~Texture()
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// WIC으로 이미지 파일을 읽어 텍스처 생성
+// : WIC으로 이미지 파일을 읽어 텍스처 생성
+//////////////////////////////////////////////////////////////////////////////////////////
 bool Texture::LoadFromFile(GraphicDevice& _device, const jc::String& _szFilePath)
 {
 	// COM 초기화. 이미 다른 곳에서 초기화했으면 S_FALSE가 오지만 문제없다.
-	// RPC_E_CHANGED_MODE인 경우만 짜짝이 다른 것이므로 CoUninitialize를 생략해야 하지만
-	// 튜토리얼 수준에서는 일관되게 COINIT_MULTITHREADED를 사용하므로 고려하지 않는다.
+	// RPC_E_CHANGED_MODE인 경우만 모드가 다르므로 CoUninitialize를 생략해야 하지만
+	// 일관되게 COINIT_MULTITHREADED를 사용하므로 고려하지 않는다.
 	const HRESULT hrCoInit = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	const bool needUninit = SUCCEEDED(hrCoInit);
 
@@ -125,7 +126,8 @@ bool Texture::LoadFromFile(GraphicDevice& _device, const jc::String& _szFilePath
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// nanosvg로 SVG 파일을 래스터화해서 텍스처 생성
+// : nanosvg로 SVG 파일을 래스터화해서 텍스처 생성
+//////////////////////////////////////////////////////////////////////////////////////////
 bool Texture::LoadFromSvgFile(GraphicDevice& _device, const jc::String& _szFilePath, _f32 _scale)
 {
 #if SGF_HAS_NANOSVG
@@ -174,7 +176,8 @@ bool Texture::LoadFromSvgFile(GraphicDevice& _device, const jc::String& _szFileP
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 메모리의 RGBA 픽셀 배열로 텍스처 생성
+// : 메모리의 RGBA 픽셀 배열로 텍스처 생성
+//////////////////////////////////////////////////////////////////////////////////////////
 bool Texture::CreateFromMemory(GraphicDevice& _device, const _u8* _pPixels, _s32 _width, _s32 _height, PixelFormat _format)
 {
 	// 재사용(재초기화) 대비: 기존 텍스처 뷰를 먼저 정리한다. (GetAddressOf 덮어쓰기 누수 방지)
@@ -217,7 +220,8 @@ bool Texture::CreateFromMemory(GraphicDevice& _device, const _u8* _pPixels, _s32
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// PS 단계 지정 슬롯에 텍스처 장착 — GraphicContext 캐시를 통과한다
+// : PS 단계 지정 슬롯에 텍스처 장착 — GraphicContext 캐시를 통과한다
+//////////////////////////////////////////////////////////////////////////////////////////
 void Texture::Bind(GraphicContext& _context, _u32 _slot)
 {
 	_context.SetTexture(ShaderStage::ssPixel, _slot, this);

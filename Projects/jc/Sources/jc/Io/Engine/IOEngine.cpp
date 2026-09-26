@@ -248,10 +248,11 @@ void IOEngine::ExecuteJob(IOEngine* _pSelf, const IOJobPtr& _spJob)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// 유일한 복사 루프 (C안 심장) — 3경로:
-//   ① 소스 직독 (source.BeginRead → dest.Write) — Memory→File Save
-//   ② 목적지 직접기록 (dest.BeginWrite → source.Read) — File→Memory Load, Http→Memory Get
-//   ③ 스테이징 폴백 (workbuf 경유, File→File 등) — _pWorkBuf == nullptr이면 lazy 할당
+// : 유일한 복사 루프 (C안 심장) — 3경로:
+// ① 소스 직독 (source.BeginRead → dest.Write) — Memory→File Save
+// ② 목적지 직접기록 (dest.BeginWrite → source.Read) — File→Memory Load, Http→Memory Get
+// ③ 스테이징 폴백 (workbuf 경유, File→File 등) — _pWorkBuf == nullptr이면 lazy 할당
+//////////////////////////////////////////////////////////////////////////////////////////
 void IOEngine::PumpJob(const IOJobPtr& _spJob, _byte* _pWorkBuf, _s32 _workBufLen)
 {
 	jc_assert(_spJob != nullptr);

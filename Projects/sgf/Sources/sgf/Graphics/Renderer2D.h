@@ -1,7 +1,6 @@
 /*
  * 작성자: 윤정도
  * 생성일: 8/5/2026 8:24:00 AM
- * 수정일: 8/16/2026 (예약/그리기 분리 — DeclareStatic/RenderStatic/RenderDynamic + FlushStatic/Dynamic)
  * =====================
  * 2D 배치 렌더러 (— 예약/그리기 분리 + 스태틱 캐시)
  *
