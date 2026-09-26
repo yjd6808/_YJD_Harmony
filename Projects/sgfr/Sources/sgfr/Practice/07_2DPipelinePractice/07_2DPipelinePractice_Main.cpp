@@ -110,6 +110,19 @@ void Practice_2DPipelinePractice_Main()
 		return;
 	}
 
+	vec3 pos = { 0.f, 1.f, 3.f };
+	mat4 translation = mat4::Translation(pos);
+	pos.Mul(translation, 1.f);
+
+	// view matrix - 카메라
+	mat4 view = mat4::Identity();
+
+	// projection matrix - 직교 투영
+	mat4 projection = mat4::Identity();
+	
+	// world matrix - 모델 변환
+	mat4 world = mat4::Identity();
+
 	while (window.PumpMessage())
 	{
 		if (input.IsKeyPressed(VK_ESCAPE))

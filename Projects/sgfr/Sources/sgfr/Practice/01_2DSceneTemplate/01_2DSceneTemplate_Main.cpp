@@ -43,6 +43,7 @@ namespace
 			Shape2D* pTri = dbg_new Shape2D(_T("Tri"));
 			pTri->SetTriangle(vec2(640.0f, 200.0f), vec2(580.0f, 110.0f), vec2(700.0f, 110.0f), color(0x99, 0x33, 0x66, 0xFF));
 			AddChild(pTri, 3);
+
 		}
 
 		void OnUpdate(const jc::TimeSpan& _dt) override

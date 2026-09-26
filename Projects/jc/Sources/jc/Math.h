@@ -29,6 +29,10 @@
 
 NS_JC_BEGIN
 
+struct mat4;
+struct vec3;
+struct size;
+
 struct Math final
 {
 	template <typename T>
@@ -210,6 +214,10 @@ struct vec2
 	// 두 점 사이의 거리
 	_f32 Distance(const vec2& _other) const { return (*this - _other).Length(); }
 
+	// 행렬 곱셈: v' = v * M (행벡터 규약). 실제 연산은 여기, mat4::Transform*은 위임.
+	// _w=1이면 점(이동 적용), _w=0이면 방향(이동 무시). z=0 가정.
+	vec2 Mul(const mat4& _mat, _f32 _w) const;
+
 	// 영벡터 상수
 	static constexpr vec2 Zero() { return vec2(0.0f, 0.0f); }
 	static constexpr vec2 One() { return vec2(1.0f, 1.0f); }
@@ -361,6 +369,11 @@ struct vec3
 	// 두 점 사이의 거리
 	_f32 Distance(const vec3& _other) const { return (*this - _other).Length(); }
 
+	// 행렬 곱셈: v' = v * M (행벡터 규약). 실제 연산은 여기, mat4::Transform*은 위임.
+	// _w=1이면 점(이동 적용), _w=0이면 방향(이동 무시).
+	// 투영 행렬은 w'가 달라지므로 vec4::Mul을 사용한다.
+	vec3 Mul(const mat4& _mat, _f32 _w) const;
+
 	static constexpr vec3 Zero() { return vec3(0.0f, 0.0f, 0.0f); }
 	static constexpr vec3 One() { return vec3(1.0f, 1.0f, 1.0f); }
 	static constexpr vec3 Up() { return vec3(0.0f, 1.0f, 0.0f); }		// +Y가 위 (DX 관례)
@@ -403,6 +416,9 @@ struct vec4
 
 	// xyz 성분만 추출
 	vec3 XYZ() const { return vec3(x, y, z); }
+
+	// 행렬 곱셈: v' = v * M (행벡터 규약). w는 멤버값 사용. 투영 행렬용.
+	vec4 Mul(const mat4& _mat) const;
 };
 
 // =====================================================================================
@@ -844,13 +860,25 @@ struct color
 //  - 행렬 곱하면 "변환의 합성"이 된다. (World * View * Proj)
 //
 // [저장 방식: row-major, 규약: 행벡터 v' = v * M]
-//  - m[행][열] 순서로 메모리에 배치한다. (m[0][0], m[0][1], ... 순서로 연속)
-//  - 이동 성분은 4번째 행 m[3][0..2]에 위치한다.
+//  - m[행][열] 순서로 메모리에 배치한다. (m[0][0]==_11, ... 순서로 연속)
+//  - 이동 성분은 4번째 행 m[3][0..2]==_41,_42,_43에 위치한다.
 //  - HLSL 상수 버퍼에 row_major로 선언하면 전치 없이 그대로 올려도 된다.
 // =====================================================================================
 struct mat4
 {
-	_f32 m[4][4];
+	// row-major 공유 접근: m[행][열] == _RC (예: m[0][0]==_11, m[3][0]==_41)
+	// HLSL 상수 버퍼에 row_major로 선언하면 전치 없이 그대로 올릴 수 있다.
+	union
+	{
+		struct
+		{
+			_f32 _11, _12, _13, _14;
+			_f32 _21, _22, _23, _24;
+			_f32 _31, _32, _33, _34;
+			_f32 _41, _42, _43, _44;
+		};
+		_f32 m[4][4];
+	};
 
 	// 기본 생성자: 단위 행렬(Identity)로 초기화
 	mat4()
@@ -901,30 +929,19 @@ struct mat4
 	// 점(Point) 변환: w=1로 취급하여 이동까지 적용된다.
 	vec3 TransformPoint(const vec3& _point) const
 	{
-		const _f32 x = _point.x * m[0][0] + _point.y * m[1][0] + _point.z * m[2][0] + m[3][0];
-		const _f32 y = _point.x * m[0][1] + _point.y * m[1][1] + _point.z * m[2][1] + m[3][1];
-		const _f32 z = _point.x * m[0][2] + _point.y * m[1][2] + _point.z * m[2][2] + m[3][2];
-		return vec3(x, y, z);
+		return _point.Mul(*this, 1.0f);
 	}
 
 	// 방향(Vector) 변환: 이동을 무시하고 회전/크기만 적용된다.
 	vec3 TransformVector(const vec3& _vector) const
 	{
-		const _f32 x = _vector.x * m[0][0] + _vector.y * m[1][0] + _vector.z * m[2][0];
-		const _f32 y = _vector.x * m[0][1] + _vector.y * m[1][1] + _vector.z * m[2][1];
-		const _f32 z = _vector.x * m[0][2] + _vector.y * m[1][2] + _vector.z * m[2][2];
-		return vec3(x, y, z);
+		return _vector.Mul(*this, 0.0f);
 	}
 
 	// vec4 완전 변환 (w 포함. 투영 행렬 결과 확인용)
 	vec4 Transform(const vec4& _v) const
 	{
-		return vec4(
-			_v.x * m[0][0] + _v.y * m[1][0] + _v.z * m[2][0] + _v.w * m[3][0],
-			_v.x * m[0][1] + _v.y * m[1][1] + _v.z * m[2][1] + _v.w * m[3][1],
-			_v.x * m[0][2] + _v.y * m[1][2] + _v.z * m[2][2] + _v.w * m[3][2],
-			_v.x * m[0][3] + _v.y * m[1][3] + _v.z * m[2][3] + _v.w * m[3][3]
-		);
+		return _v.Mul(*this);
 	}
 
 	// 전치 행렬: 행과 열을 바꿔치기
@@ -948,18 +965,22 @@ struct mat4
 	// | 1  0  0  0 |
 	// | 0  1  0  0 |
 	// | 0  0  1  0 |
-	// | tx ty tz 1 |   <- 행벡터 규약에서는 이동이 마지막 "행"에 위치
+	// | tx ty tz 1 |   <- 행벡터 규약에서는 이동이 마지막 "행"(_41,_42,_43)에 위치
 	static mat4 Translation(_f32 _x, _f32 _y, _f32 _z)
 	{
 		mat4 result;			// 단위 행렬로 시작
-		result.m[3][0] = _x;
-		result.m[3][1] = _y;
-		result.m[3][2] = _z;
+		result._41 = _x;
+		result._42 = _y;
+		result._43 = _z;
 		return result;
 	}
 	static mat4 Translation(const vec3& _pos)
 	{
 		return Translation(_pos.x, _pos.y, _pos.z);
+	}
+	static mat4 Translation(const vec2& _pos)
+	{
+		return Translation(_pos.x, _pos.y, 0.f);
 	}
 
 	// ---------------------------------------------------------------------------------
@@ -972,9 +993,9 @@ struct mat4
 	static mat4 Scale(_f32 _x, _f32 _y, _f32 _z)
 	{
 		mat4 result;
-		result.m[0][0] = _x;
-		result.m[1][1] = _y;
-		result.m[2][2] = _z;
+		result._11 = _x;
+		result._22 = _y;
+		result._33 = _z;
 		return result;
 	}
 	static mat4 Scale(_f32 _uniform)
@@ -990,8 +1011,8 @@ struct mat4
 		mat4 result;
 		const _f32 c = std::cos(_radian);
 		const _f32 s = std::sin(_radian);
-		result.m[0][0] = c;  result.m[0][1] = s;
-		result.m[1][0] = -s; result.m[1][1] = c;
+		result._11 = c;  result._12 = s;
+		result._21 = -s; result._22 = c;
 		return result;
 	}
 
@@ -1000,8 +1021,8 @@ struct mat4
 		mat4 result;
 		const _f32 c = std::cos(_radian);
 		const _f32 s = std::sin(_radian);
-		result.m[1][1] = c;  result.m[1][2] = s;
-		result.m[2][1] = -s; result.m[2][2] = c;
+		result._22 = c;  result._23 = s;
+		result._32 = -s; result._33 = c;
 		return result;
 	}
 
@@ -1010,8 +1031,8 @@ struct mat4
 		mat4 result;
 		const _f32 c = std::cos(_radian);
 		const _f32 s = std::sin(_radian);
-		result.m[0][0] = c;  result.m[0][2] = -s;
-		result.m[2][0] = s;  result.m[2][2] = c;
+		result._11 = c;  result._13 = -s;
+		result._31 = s;  result._33 = c;
 		return result;
 	}
 
@@ -1033,12 +1054,12 @@ struct mat4
 		const vec3 yAxis = zAxis.Cross(xAxis);					// 카메라의 위 방향
 
 		mat4 result;
-		result.m[0][0] = xAxis.x; result.m[0][1] = yAxis.x; result.m[0][2] = zAxis.x;
-		result.m[1][0] = xAxis.y; result.m[1][1] = yAxis.y; result.m[1][2] = zAxis.y;
-		result.m[2][0] = xAxis.z; result.m[2][1] = yAxis.z; result.m[2][2] = zAxis.z;
-		result.m[3][0] = -xAxis.Dot(_eye);
-		result.m[3][1] = -yAxis.Dot(_eye);
-		result.m[3][2] = -zAxis.Dot(_eye);
+		result._11 = xAxis.x; result._12 = yAxis.x; result._13 = zAxis.x;
+		result._21 = xAxis.y; result._22 = yAxis.y; result._23 = zAxis.y;
+		result._31 = xAxis.z; result._32 = yAxis.z; result._33 = zAxis.z;
+		result._41 = -xAxis.Dot(_eye);
+		result._42 = -yAxis.Dot(_eye);
+		result._43 = -zAxis.Dot(_eye);
 		return result;
 	}
 
@@ -1058,10 +1079,10 @@ struct mat4
 		const _f32 xScale = yScale / _aspect;
 		const _f32 zRange = _farZ / (_farZ - _nearZ);
 
-		result.m[0][0] = xScale;
-		result.m[1][1] = yScale;
-		result.m[2][2] = zRange;			result.m[2][3] = 1.0f;
-		result.m[3][2] = -_nearZ * zRange;	result.m[3][3] = 0.0f;
+		result._11 = xScale;
+		result._22 = yScale;
+		result._33 = zRange;			result._34 = 1.0f;
+		result._43 = -_nearZ * zRange;	result._44 = 0.0f;
 		return result;
 	}
 
@@ -1076,12 +1097,12 @@ struct mat4
 		}
 
 		mat4 result;
-		result.m[0][0] = 2.0f / (_right - _left);
-		result.m[1][1] = 2.0f / (_top - _bottom);
-		result.m[2][2] = 1.0f / (_farZ - _nearZ);
-		result.m[3][0] = (_left + _right) / (_left - _right);
-		result.m[3][1] = (_top + _bottom) / (_bottom - _top);
-		result.m[3][2] = _nearZ / (_nearZ - _farZ);
+		result._11 = 2.0f / (_right - _left);
+		result._22 = 2.0f / (_top - _bottom);
+		result._33 = 1.0f / (_farZ - _nearZ);
+		result._41 = (_left + _right) / (_left - _right);
+		result._42 = (_top + _bottom) / (_bottom - _top);
+		result._43 = _nearZ / (_nearZ - _farZ);
 		return result;
 	}
 
@@ -1097,5 +1118,33 @@ struct mat4
 		return mat4();
 	}
 };
+
+// =====================================================================================
+// vec::Mul 정의부 (mat4 완성 이후에 정의해야 _11~_44 접근 가능)
+// 규약: 행벡터 v' = v * M, 이동 성분은 _41,_42,_43
+// =====================================================================================
+inline vec2 vec2::Mul(const mat4& _mat, _f32 _w) const
+{
+	return vec2(
+		x * _mat._11 + y * _mat._21 + _w * _mat._41,
+		x * _mat._12 + y * _mat._22 + _w * _mat._42);
+}
+
+inline vec3 vec3::Mul(const mat4& _mat, _f32 _w) const
+{
+	return vec3(
+		x * _mat._11 + y * _mat._21 + z * _mat._31 + _w * _mat._41,
+		x * _mat._12 + y * _mat._22 + z * _mat._32 + _w * _mat._42,
+		x * _mat._13 + y * _mat._23 + z * _mat._33 + _w * _mat._43);
+}
+
+inline vec4 vec4::Mul(const mat4& _mat) const
+{
+	return vec4(
+		x * _mat._11 + y * _mat._21 + z * _mat._31 + w * _mat._41,
+		x * _mat._12 + y * _mat._22 + z * _mat._32 + w * _mat._42,
+		x * _mat._13 + y * _mat._23 + z * _mat._33 + w * _mat._43,
+		x * _mat._14 + y * _mat._24 + z * _mat._34 + w * _mat._44);
+}
 
 NS_END
