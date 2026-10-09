@@ -2,14 +2,14 @@
  * 작성자: 윤정도
  * 생성일: 9/24/2026
  * =====================
- * 03. 2D 씬 연습 (Practice) - 연습용 진입점
+ * 07. 2D 씬 연습 (Practice) - 연습용 진입점
  *
- * 01번 2D 씬 템플릿을 복사한 독립 코드다.
+ * 05번 2D 씬 템플릿을 복사한 독립 코드다.
  * 연습 내용은 Practice2DScene에 채워나간다.
  */
 
 #include "Core.h"
-#include "sgfr/Practice/03_2DScenePractice/03_2DScenePractice_Main.h"
+#include "sgfr/Practice/07_2DScenePractice/07_2DScenePractice_Main.h"
 
 using namespace sgf;
 using namespace jc;
@@ -28,7 +28,7 @@ namespace
 			pRect->SetRect(rect(200.0f, 150.0f, 120.0f, 90.0f), color(0xFF, 0x6B, 0x6B));
 			AddChild(pRect, 0);
 
-			GetWindow()->SetTitle(_T("Practice 03. 2D 씬 연습 (방향키 이동, 휠 줌, ESC 종료)"));
+			GetWindow()->SetTitle(_T("Practice 07. 2D 씬 연습 (방향키 이동, 휠 줌, ESC 종료)"));
 			elapsed_ = 0.0f;
 		}
 
@@ -80,10 +80,10 @@ namespace
 ////////////////////////////////////////////////////////////////////////////////////////
 void Practice_2DScenePractice_Main()
 {
-	jc::Console::WriteLine(_T("[Practice 03] 2D 씬 연습 - 방향키 이동, 휠 줌, ESC 종료"));
+	jc::Console::WriteLine(_T("[Practice 07] 2D 씬 연습 - 방향키 이동, 휠 줌, ESC 종료"));
 
 	Practice2DApp app;
-	if (!app.Initialize(_T("Practice 03. 2D 씬 연습"), 800, 600))
+	if (!app.Initialize(_T("Practice 07. 2D 씬 연습"), 800, 600))
 	{
 		jc::Console::WriteLine(_T("엔진 초기화에 실패했습니다."));
 		return;

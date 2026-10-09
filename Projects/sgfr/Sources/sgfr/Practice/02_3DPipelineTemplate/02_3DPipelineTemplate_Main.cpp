@@ -2,13 +2,13 @@
  * 작성자: 윤정도
  * 생성일: 9/25/2026
  * =====================
- * 08. 3D 렌더링 파이프라인 연습 (Practice) - 연습용 진입점
+ * 02. 3D 렌더링 파이프라인 템플릿 (Practice) - 기반 코드
  */
 
 #include "Core.h"
 #include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
-#include "sgfr/Practice/08_3DPipelinePractice/08_3DPipelinePractice_Main.h"
+#include "sgfr/Practice/02_3DPipelineTemplate/02_3DPipelineTemplate_Main.h"
 
 using namespace sgf;
 using namespace jc;
@@ -58,12 +58,12 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-void Practice_3DPipelinePractice_Main()
+void Practice_3DPipelineTemplate_Main()
 {
-	jc::Console::WriteLine(_T("[Practice 08] 3D 렌더링 파이프라인 연습 - ESC 종료"));
+	jc::Console::WriteLine(_T("[Practice 02] 3D 렌더링 파이프라인 템플릿 - ESC 종료"));
 
 	Window window;
-	if (!window.Create(_T("Practice 08. 3D 렌더링 파이프라인 연습 (ESC 종료)"), 800, 600))
+	if (!window.Create(_T("Practice 02. 3D 렌더링 파이프라인 템플릿 (ESC 종료)"), 800, 600))
 	{
 		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;
@@ -142,7 +142,7 @@ void Practice_3DPipelinePractice_Main()
 		return;
 	}
 
-	const mat4 view = mat4::LookAtLH(vec3(0.0f, 1.2f, -2.5f), vec3::Zero(), vec3::Up());
+	const mat4 view = mat4::LookAtLH(vec3(0.0f, 1.2f, -2.5f), vec3::ZERO, vec3::UP);
 	const mat4 proj = mat4::PerspectiveFovLH(jc_math_deg2rad(60.0f), window.AspectRatio(), 0.1f, 100.0f);
 
 	FrameTimer timer;

@@ -2,14 +2,14 @@
  * 작성자: 윤정도
  * 생성일: 9/24/2026
  * =====================
- * 02. 3D 씬 템플릿 (Practice) - 기반 코드
+ * 06. 3D 씬 템플릿 (Practice) - 기반 코드
  *
  * Scene3D를 상속한 최소 씬과 Application 파생 실행기로 구성한다.
- * 이후 04번 연습은 이 템플릿을 복사해서 내용을 채운다.
+ * 이후 08번 연습은 이 템플릿을 복사해서 내용을 채운다.
  */
 
 #include "Core.h"
-#include "sgfr/Practice/02_3DSceneTemplate/02_3DSceneTemplate_Main.h"
+#include "sgfr/Practice/06_3DSceneTemplate/06_3DSceneTemplate_Main.h"
 
 using namespace sgf;
 using namespace jc;
@@ -24,7 +24,7 @@ namespace
 	public:
 		void OnEnter() override
 		{
-			GetWindow()->SetTitle(_T("Practice 02. 3D 씬 템플릿 (방향키 공전, 휠 접근, ESC 종료)"));
+			GetWindow()->SetTitle(_T("Practice 06. 3D 씬 템플릿 (방향키 공전, 휠 접근, ESC 종료)"));
 			elapsed_ = 0.0f;
 
 			Shape3D* pCube = dbg_new Shape3D(_T("Box"));
@@ -134,10 +134,10 @@ namespace
 ////////////////////////////////////////////////////////////////////////////////////////
 void Practice_3DSceneTemplate_Main()
 {
-	jc::Console::WriteLine(_T("[Practice 02] 3D 씬 템플릿 - 방향키 공전, 휠 접근, ESC 종료"));
+	jc::Console::WriteLine(_T("[Practice 06] 3D 씬 템플릿 - 방향키 공전, 휠 접근, ESC 종료"));
 
 	Template3DApp app;
-	if (!app.Initialize(_T("Practice 02. 3D 씬 템플릿"), 800, 600))
+	if (!app.Initialize(_T("Practice 06. 3D 씬 템플릿"), 800, 600))
 	{
 		jc::Console::WriteLine(_T("엔진 초기화에 실패했습니다."));
 		return;

@@ -766,7 +766,7 @@ void GraphicsEnumDiff_Main()
 		device.BeginFrame(color(0x14, 0x14, 0x1F, 0xFF));
 
 		// 큐브 카테고리에서 공통으로 쓰는 뷰/투영 (약간 위에서 내려다보기)
-		const mat4 view = mat4::LookAtLH(vec3(0.0f, 1.2f, -4.0f), vec3::Zero(), vec3::Up());
+		const mat4 view = mat4::LookAtLH(vec3(0.0f, 1.2f, -4.0f), vec3::ZERO, vec3::UP);
 		const mat4 proj = mat4::PerspectiveFovLH(jc_math_pi_div4, window.AspectRatio(), 0.1f, 100.0f);
 		const mat4 rot = mat4::RotationY(elapsed * 0.5f) * mat4::RotationX(elapsed * 0.2f);
 

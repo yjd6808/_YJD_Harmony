@@ -90,7 +90,7 @@ bool Mesh::InitializeAsRect2D(GraphicDevice& _device)
 bool Mesh::InitializeAsCircle2D(GraphicDevice& _device, _u32 _segments)
 {
 	FillResult result;
-	PrimitiveBuilder::BuildCircle(vec2::Zero(), 1.0f, color::WHITE, _segments, result);
+	PrimitiveBuilder::BuildCircle(vec2::ZERO, 1.0f, color::WHITE, _segments, result);
 	return Build2DPrimitive(_device, result);
 }
 

@@ -50,31 +50,31 @@ bool InputManager::HandleMessage(UINT _msg, WPARAM _wParam, LPARAM _lParam)
 	////////////////////////////////////////////////////////////////////////////////////////
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:		// ALT 조합 키도 동일하게 처리
-	{
-		const _s32 virtualKeyCode = _s32(_wParam);
-		if (virtualKeyCode >= 0 && virtualKeyCode < KEY_COUNT)
 		{
-			// 30번 비트 == 0 일 때만 "처음 눌린 것"
-			const bool firstPress = (_lParam & (1 << 30)) == 0;
-			keyDown_[virtualKeyCode] = true;
-			if (firstPress)
+			const _s32 virtualKeyCode = _s32(_wParam);
+			if (virtualKeyCode >= 0 && virtualKeyCode < KEY_COUNT)
 			{
-				onKeyPressed.Invoke(virtualKeyCode);
+				// 30번 비트 == 0 일 때만 "처음 눌린 것"
+				const bool firstPress = (_lParam & (1 << 30)) == 0;
+				keyDown_[virtualKeyCode] = true;
+				if (firstPress)
+				{
+					onKeyPressed.Invoke(virtualKeyCode);
+				}
 			}
+			return true;
 		}
-		return true;
-	}
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
-	{
-		const _s32 virtualKeyCode = _s32(_wParam);
-		if (virtualKeyCode >= 0 && virtualKeyCode < KEY_COUNT)
 		{
-			keyDown_[virtualKeyCode] = false;
-			onKeyReleased.Invoke(virtualKeyCode);
+			const _s32 virtualKeyCode = _s32(_wParam);
+			if (virtualKeyCode >= 0 && virtualKeyCode < KEY_COUNT)
+			{
+				keyDown_[virtualKeyCode] = false;
+				onKeyReleased.Invoke(virtualKeyCode);
+			}
+			return true;
 		}
-		return true;
-	}
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// : 마우스 버튼

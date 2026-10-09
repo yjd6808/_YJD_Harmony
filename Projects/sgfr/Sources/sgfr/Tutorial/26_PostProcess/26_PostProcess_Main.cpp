@@ -155,7 +155,7 @@ void PostProcess_Main()
 	}
 
 	// 5. 카메라
-	const mat4 view = mat4::LookAtLH(vec3(0.0f, 1.5f, -4.0f), vec3::Zero(), vec3::Up());
+	const mat4 view = mat4::LookAtLH(vec3(0.0f, 1.5f, -4.0f), vec3::ZERO, vec3::UP);
 	const mat4 proj = mat4::PerspectiveFovLH(jc_math_pi_div4, window.AspectRatio(), 0.1f, 100.0f);
 
 	// 6. 현재 효과 모드 + Before/After 경계 위치

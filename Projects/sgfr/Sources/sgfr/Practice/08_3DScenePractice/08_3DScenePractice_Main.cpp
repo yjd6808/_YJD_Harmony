@@ -2,14 +2,14 @@
  * 작성자: 윤정도
  * 생성일: 9/24/2026
  * =====================
- * 04. 3D 씬 연습 (Practice) - 연습용 진입점
+ * 08. 3D 씬 연습 (Practice) - 연습용 진입점
  *
- * 02번 3D 씬 템플릿을 복사한 독립 코드다.
+ * 06번 3D 씬 템플릿을 복사한 독립 코드다.
  * 연습 내용은 Practice3DScene에 채워나간다.
  */
 
 #include "Core.h"
-#include "sgfr/Practice/04_3DScenePractice/04_3DScenePractice_Main.h"
+#include "sgfr/Practice/08_3DScenePractice/08_3DScenePractice_Main.h"
 
 using namespace sgf;
 using namespace jc;
@@ -24,7 +24,7 @@ namespace
 	public:
 		void OnEnter() override
 		{
-			GetWindow()->SetTitle(_T("Practice 04. 3D 씬 연습 (방향키 공전, 휠 접근, ESC 종료)"));
+			GetWindow()->SetTitle(_T("Practice 08. 3D 씬 연습 (방향키 공전, 휠 접근, ESC 종료)"));
 			elapsed_ = 0.0f;
 		}
 
@@ -75,10 +75,10 @@ namespace
 ////////////////////////////////////////////////////////////////////////////////////////
 void Practice_3DScenePractice_Main()
 {
-	jc::Console::WriteLine(_T("[Practice 04] 3D 씬 연습 - 방향키 공전, 휠 접근, ESC 종료"));
+	jc::Console::WriteLine(_T("[Practice 08] 3D 씬 연습 - 방향키 공전, 휠 접근, ESC 종료"));
 
 	Practice3DApp app;
-	if (!app.Initialize(_T("Practice 04. 3D 씬 연습"), 800, 600))
+	if (!app.Initialize(_T("Practice 08. 3D 씬 연습"), 800, 600))
 	{
 		jc::Console::WriteLine(_T("엔진 초기화에 실패했습니다."));
 		return;

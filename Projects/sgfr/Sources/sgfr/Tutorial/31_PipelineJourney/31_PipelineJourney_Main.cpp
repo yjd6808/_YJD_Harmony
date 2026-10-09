@@ -171,7 +171,7 @@ void PipelineJourney_Main()
 
 	// [§13] 프레임 데이터: 뷰/투영/카메라 위치
 	FrameConstants frame;
-	frame.view_ = mat4::LookAtLH(vec3(0.0f, 2.0f, -4.0f), vec3::Zero(), vec3::Up());
+	frame.view_ = mat4::LookAtLH(vec3(0.0f, 2.0f, -4.0f), vec3::ZERO, vec3::UP);
 	frame.projection_ = mat4::PerspectiveFovLH(jc_math_deg2rad(60.0f), window.AspectRatio(), 0.1f, 100.0f);
 	frame.cameraPosition_ = vec4(0.0f, 2.0f, -4.0f, 1.0f);
 

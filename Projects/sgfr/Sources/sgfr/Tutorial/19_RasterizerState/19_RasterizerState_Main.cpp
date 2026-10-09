@@ -125,7 +125,7 @@ void RasterizerState_Main()
 	}
 
 	// 4. 카메라: 큐브 두 개가 모두 보이도록 약간 뒤로 물러서 내려다본다.
-	const mat4 view = mat4::LookAtLH(vec3(0.0f, 1.5f, -4.5f), vec3::Zero(), vec3::Up());
+	const mat4 view = mat4::LookAtLH(vec3(0.0f, 1.5f, -4.5f), vec3::ZERO, vec3::UP);
 	const mat4 proj = mat4::PerspectiveFovLH(jc_math_pi_div4, window.AspectRatio(), 0.1f, 100.0f);
 
 	// 5. 현재 래스터라이저 상태 (키 입력으로 바꾼다. 오른쪽 After 큐브에만 적용된다)

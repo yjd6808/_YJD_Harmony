@@ -125,7 +125,7 @@ void Lighting_Main()
 	}
 
 	// 4. 뷰/투영 행렬 (13번과 동일)
-	const mat4 view = mat4::LookAtLH(vec3(0.0f, 1.2f, -2.5f), vec3::Zero(), vec3::Up());
+	const mat4 view = mat4::LookAtLH(vec3(0.0f, 1.2f, -2.5f), vec3::ZERO, vec3::UP);
 	const mat4 proj = mat4::PerspectiveFovLH(jc_math_deg2rad(60.0f), window.AspectRatio(), 0.1f, 100.0f);
 
 	FrameTimer timer;

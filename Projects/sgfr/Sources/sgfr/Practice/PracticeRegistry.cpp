@@ -9,14 +9,14 @@
 #include "Core.h"
 #include "sgfr/Practice/PracticeRegistry.h"
 
-#include "sgfr/Practice/01_2DSceneTemplate/01_2DSceneTemplate_Main.h"
-#include "sgfr/Practice/02_3DSceneTemplate/02_3DSceneTemplate_Main.h"
-#include "sgfr/Practice/03_2DScenePractice/03_2DScenePractice_Main.h"
-#include "sgfr/Practice/04_3DScenePractice/04_3DScenePractice_Main.h"
-#include "sgfr/Practice/05_2DPipelineTemplate/05_2DPipelineTemplate_Main.h"
-#include "sgfr/Practice/06_3DPipelineTemplate/06_3DPipelineTemplate_Main.h"
-#include "sgfr/Practice/07_2DPipelinePractice/07_2DPipelinePractice_Main.h"
-#include "sgfr/Practice/08_3DPipelinePractice/08_3DPipelinePractice_Main.h"
+#include "sgfr/Practice/01_2DPipelineTemplate/01_2DPipelineTemplate_Main.h"
+#include "sgfr/Practice/02_3DPipelineTemplate/02_3DPipelineTemplate_Main.h"
+#include "sgfr/Practice/03_2DPipelinePractice/03_2DPipelinePractice_Main.h"
+#include "sgfr/Practice/04_3DPipelinePractice/04_3DPipelinePractice_Main.h"
+#include "sgfr/Practice/05_2DSceneTemplate/05_2DSceneTemplate_Main.h"
+#include "sgfr/Practice/06_3DSceneTemplate/06_3DSceneTemplate_Main.h"
+#include "sgfr/Practice/07_2DScenePractice/07_2DScenePractice_Main.h"
+#include "sgfr/Practice/08_3DScenePractice/08_3DScenePractice_Main.h"
 
  // 연습용 튜토리얼 목록 (번호 순서 = 학습 순서)
 namespace sgfr
@@ -24,14 +24,14 @@ namespace sgfr
 
 	static const TutorialEntry s_Practices[] =
 	{
-		{ _T("2D 씬 템플릿 (Practice) - 기반 코드"), Practice_2DSceneTemplate_Main },
-		{ _T("3D 씬 템플릿 (Practice) - 기반 코드"), Practice_3DSceneTemplate_Main },
-		{ _T("2D 씬 연습 (Practice)"), Practice_2DScenePractice_Main },
-		{ _T("3D 씬 연습 (Practice)"), Practice_3DScenePractice_Main },
 		{ _T("2D 렌더링 파이프라인 템플릿 (Practice) - 기반 코드"), Practice_2DPipelineTemplate_Main },
 		{ _T("3D 렌더링 파이프라인 템플릿 (Practice) - 기반 코드"), Practice_3DPipelineTemplate_Main },
 		{ _T("2D 렌더링 파이프라인 연습 (Practice)"), Practice_2DPipelinePractice_Main },
 		{ _T("3D 렌더링 파이프라인 연습 (Practice)"), Practice_3DPipelinePractice_Main },
+		{ _T("2D 씬 템플릿 (Practice) - 기반 코드"), Practice_2DSceneTemplate_Main },
+		{ _T("3D 씬 템플릿 (Practice) - 기반 코드"), Practice_3DSceneTemplate_Main },
+		{ _T("2D 씬 연습 (Practice)"), Practice_2DScenePractice_Main },
+		{ _T("3D 씬 연습 (Practice)"), Practice_3DScenePractice_Main },
 	};
 
 	//////////////////////////////////////////////////////////////////////////////////////////

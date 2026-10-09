@@ -54,7 +54,7 @@ void Scene3D::Enter()
 	if (!GetCamera3D()->IsConfigured())
 	{
 		GetCamera3D()->SetPerspectiveDegrees(60.0f, GetWindow()->AspectRatio(), 0.1f, 1000.0f);
-		GetCamera3D()->SetLookAt(vec3(0.0f, 3.0f, -8.0f), vec3::Zero());
+		GetCamera3D()->SetLookAt(vec3(0.0f, 3.0f, -8.0f), vec3::ZERO);
 	}
 
 	OnEnter();

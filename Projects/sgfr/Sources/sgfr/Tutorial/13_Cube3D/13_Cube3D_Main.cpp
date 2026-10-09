@@ -141,7 +141,7 @@ void Cube3D_Main()
 	// 5. 뷰/투영 행렬 준비
 	// LookAtLH(카메라 위치, 바라보는 지점, 위 방향)
 	// 카메라를 뒤쪽(z = -2.5)에 두고 원점을 바라본다. (LH: +z가 화면 안쪽)
-	const mat4 view = mat4::LookAtLH(vec3(0.0f, 1.2f, -2.5f), vec3::Zero(), vec3::Up());
+	const mat4 view = mat4::LookAtLH(vec3(0.0f, 1.2f, -2.5f), vec3::ZERO, vec3::UP);
 
 	// PerspectiveFovLH(수직 시야각, 화면비율, 근평면, 원평면)
 	// 시야각 60도: 사람 눈과 비슷한 자연스러운 화각

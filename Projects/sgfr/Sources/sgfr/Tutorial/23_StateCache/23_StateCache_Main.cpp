@@ -104,7 +104,7 @@ void StateCache_Main()
 
 	// 3. 카메라: 그리드 전체가 보이도록 위에서 내려다본다.
 	FrameConstants frame;
-	frame.view_ = mat4::LookAtLH(vec3(0.0f, 12.0f, -14.0f), vec3::Zero(), vec3::Up());
+	frame.view_ = mat4::LookAtLH(vec3(0.0f, 12.0f, -14.0f), vec3::ZERO, vec3::UP);
 	frame.projection_ = mat4::PerspectiveFovLH(jc_math_deg2rad(60.0f), window.AspectRatio(), 0.1f, 100.0f);
 	frame.cameraPosition_ = vec4(0.0f, 12.0f, -14.0f, 1.0f);
 

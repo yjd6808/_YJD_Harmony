@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>원근 투영 행렬 — near 평면에서 NDC까지</title>
+<style>
+  :root{
+    --text:#2C2C2B; --text2:#7D7A75; --canvas:#FFFFFF;
+    --soft:#F9F8F7; --soft2:#F0EFED; --border:#E6E5E3;
+    --blue:#2783DE; --blue-soft:#E5F2FC;
+    --green:#46A171; --green-soft:#E8F1EC;
+    --orange:#D5803B; --orange-soft:#FBEBDE;
+    --red:#E56458; --red-soft:#FCE9E7;
+    --mono:"Menlo","Consolas",monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--canvas); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    font-size:16px; line-height:1.65; -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- layout ---------- */
+  .shell{display:grid; grid-template-columns:268px minmax(0,1fr);}
+  .sidebar{
+    position:sticky; top:0; height:100vh; overflow-y:auto;
+    border-right:1px solid var(--border); background:var(--soft);
+    padding:32px 20px 64px;
+  }
+  .sidebar h2{font-size:12px; letter-spacing:.09em; text-transform:uppercase; color:var(--text2); margin:0 0 14px; font-weight:600}
+  .sidebar ol{list-style:none; margin:0; padding:0; counter-reset:ch}
+  .sidebar li{counter-increment:ch; margin-bottom:2px}
+  .sidebar a{
+    display:flex; gap:9px; align-items:baseline;
+    text-decoration:none; color:var(--text); font-size:13.5px; line-height:1.4;
+    padding:7px 9px; border-radius:8px;
+  }
+  .sidebar a::before{
+    content:counter(ch); font-family:var(--mono); font-size:11px;
+    color:var(--text2); min-width:16px; text-align:right; flex:none;
+  }
+  .sidebar a:hover{background:var(--soft2)}
+  .sidebar .lead{font-size:12.5px; color:var(--text2); margin:0 0 24px; line-height:1.5}
+
+  main{min-width:0; padding:0 0 120px}
+  .wrap{max-width:820px; margin:0 auto; padding:0 32px}
+
+  /* ---------- hero ---------- */
+  .hero{
+    border-bottom:1px solid var(--border);
+    background:linear-gradient(180deg,#FFFFFF 0%,var(--soft) 100%);
+    padding:72px 0 56px; margin-bottom:56px;
+  }
+  .eyebrow{
+    display:inline-block; font-family:var(--mono); font-size:11.5px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--blue); background:var(--blue-soft);
+    padding:5px 11px; border-radius:6px; margin-bottom:22px;
+  }
+  .hero h1{font-size:42px; line-height:1.15; margin:0 0 18px; letter-spacing:-.02em; font-weight:700}
+  .hero p{font-size:17.5px; color:var(--text2); margin:0; max-width:660px}
+  .hero .meta{display:flex; flex-wrap:wrap; gap:8px; margin-top:28px}
+  .hero .meta span{
+    font-size:12.5px; color:var(--text2); background:#fff;
+    border:1px solid var(--border); border-radius:20px; padding:5px 13px;
+  }
+
+  /* ---------- sections ---------- */
+  section{padding:8px 0 20px; margin-bottom:56px; border-bottom:1px solid var(--border)}
+  section:last-of-type{border-bottom:none}
+  .chapno{
+    font-family:var(--mono); font-size:12px; color:var(--blue);
+    letter-spacing:.08em; text-transform:uppercase; margin-bottom:8px; display:block;
+  }
+  h2.ch{font-size:29px; line-height:1.25; margin:0 0 10px; letter-spacing:-.015em; font-weight:700; scroll-margin-top:24px}
+  .goal{
+    font-size:14.5px; color:var(--text2); margin:0 0 32px;
+    padding-left:14px; border-left:3px solid var(--border);
+  }
+  h3{font-size:20px; margin:40px 0 12px; letter-spacing:-.01em; font-weight:650}
+  h4{font-size:16px; margin:28px 0 8px; font-weight:650}
+  p{margin:0 0 16px}
+  ul,ol{margin:0 0 16px; padding-left:22px}
+  li{margin-bottom:7px}
+  b,strong{font-weight:650}
+  code{
+    font-family:var(--mono); font-size:.87em; background:var(--soft2);
+    padding:2px 5px; border-radius:4px;
+  }
+  a.inl{color:var(--blue)}
+
+  /* ---------- math primitives ---------- */
+  .eq{
+    background:var(--soft); border:1px solid var(--border); border-radius:8px;
+    padding:18px 22px; margin:20px 0; overflow-x:auto;
+    font-family:var(--mono); font-size:15px; line-height:2.1;
+  }
+  .eq.center{text-align:center}
+  .eq .tag{
+    float:right; font-size:11.5px; color:var(--text2);
+    font-family:var(--mono); padding-top:3px;
+  }
+  .steps{counter-reset:st; list-style:none; padding:0; margin:20px 0}
+  .steps > li{
+    counter-increment:st; position:relative; padding-left:38px; margin-bottom:22px;
+  }
+  .steps > li::before{
+    content:counter(st); position:absolute; left:0; top:1px;
+    width:25px; height:25px; border-radius:50%; background:var(--blue-soft);
+    color:var(--blue); font-family:var(--mono); font-size:12px; font-weight:600;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; margin:0 .18em}
+  .frac .n{border-bottom:1.3px solid currentColor; padding:0 .38em; line-height:1.45}
+  .frac .d{padding:0 .38em; line-height:1.45}
+  .sub{font-size:.72em; vertical-align:sub; letter-spacing:.02em}
+  .sup{font-size:.72em; vertical-align:super}
+  .mat{
+    display:inline-grid; gap:4px 18px; vertical-align:middle;
+    border-left:2px solid var(--text); border-right:2px solid var(--text);
+    padding:8px 11px; margin:0 .22em; text-align:right; line-height:1.6;
+  }
+  .mat > span{white-space:nowrap}
+  .mat.c4{grid-template-columns:repeat(4,auto)}
+  .mat.c3{grid-template-columns:repeat(3,auto)}
+  .mat.c1{grid-template-columns:auto}
+  .op{display:inline-block; margin:0 .4em; vertical-align:middle}
+  .zero{color:#B8B5B0}
+
+  /* ---------- callouts ---------- */
+  .note,.warn,.key,.try{
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:14.5px;
+    border:1px solid var(--border); background:var(--soft);
+  }
+  .note{background:var(--blue-soft); border-color:#C9E3F8}
+  .key{background:var(--green-soft); border-color:#CBE2D5}
+  .warn{background:var(--orange-soft); border-color:#F2DCC6}
+  .try{background:#fff; border-color:var(--border)}
+  .note p:last-child,.warn p:last-child,.key p:last-child,.try p:last-child{margin-bottom:0}
+  .label{
+    display:block; font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
+    font-weight:650; margin-bottom:7px; font-family:var(--mono);
+  }
+  .note .label{color:#1B6AB5}
+  .key .label{color:#2F7A53}
+  .warn .label{color:#A9612A}
+  .try .label{color:var(--text2)}
+
+  /* ---------- table ---------- */
+  .tblwrap{overflow-x:auto; margin:22px 0}
+  table{border-collapse:collapse; width:100%; font-size:14px}
+  th,td{border:1px solid var(--border); padding:9px 13px; text-align:left; vertical-align:top}
+  th{background:var(--soft2); font-weight:650; font-size:13px}
+  td code{background:#fff; border:1px solid var(--border)}
+
+  /* ---------- code block ---------- */
+  pre{
+    background:#F9F8F7; border:1px solid var(--border); border-radius:8px;
+    padding:18px 20px; overflow-x:auto; font-family:var(--mono);
+    font-size:13px; line-height:1.65; margin:20px 0;
+  }
+  pre code{background:none; padding:0; font-size:13px}
+  .cm{color:var(--text2)}
+  .kw{color:#2783DE}
+  .st{color:#46A171}
+  .nu{color:#D5803B}
+
+  /* ---------- figures ---------- */
+  figure{margin:26px 0; text-align:center}
+  figure svg{max-width:100%; height:auto}
+  figcaption{font-size:13px; color:var(--text2); margin-top:10px; text-align:center}
+  .figbox{border:1px solid var(--border); border-radius:8px; padding:20px; background:#fff}
+
+  /* ---------- details ---------- */
+  details{
+    border:1px solid var(--border); border-radius:8px; padding:0 18px;
+    margin:16px 0; background:#fff;
+  }
+  details[open]{padding-bottom:10px}
+  summary{
+    cursor:pointer; padding:14px 0; font-weight:600; font-size:14.5px;
+    list-style:none; display:flex; align-items:center; gap:9px;
+  }
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:""; display:inline-block; width:0; height:0; border-left:6px solid var(--blue); border-top:4px solid transparent; border-bottom:4px solid transparent; margin-right:2px}
+  details[open] summary::before{border-left:4px solid transparent; border-right:4px solid transparent; border-top:6px solid var(--blue); border-bottom:0; margin-right:4px}
+
+  /* ---------- calculator ---------- */
+  .calc{border:1px solid var(--border); border-radius:10px; overflow:hidden; margin:24px 0}
+  .calc-in{background:var(--soft); padding:20px; border-bottom:1px solid var(--border)}
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(112px,1fr)); gap:12px}
+  .fld label{display:block; font-size:11.5px; font-family:var(--mono); color:var(--text2); margin-bottom:4px}
+  .fld input{
+    width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:6px;
+    font-family:var(--mono); font-size:13.5px; color:var(--text); background:#fff;
+  }
+  .fld input:focus{outline:2px solid var(--blue); outline-offset:-1px; border-color:var(--blue)}
+  .calc-out{padding:20px; font-family:var(--mono); font-size:13.5px; line-height:1.95}
+  .calc-out .row{display:flex; gap:10px; flex-wrap:wrap; border-bottom:1px dashed var(--border); padding:5px 0}
+  .calc-out .row:last-child{border-bottom:none}
+  .calc-out .k{color:var(--text2); min-width:168px}
+  .calc-out .v{color:var(--text)}
+
+  /* ---------- checklist ---------- */
+  .chk{list-style:none; padding:0}
+  .chk li{padding-left:28px; position:relative}
+  .chk li::before{
+    content:""; position:absolute; left:2px; top:8px; width:11px; height:11px;
+    border:1.5px solid var(--blue); border-radius:3px;
+  }
+
+  @media (max-width:860px){
+    .shell{grid-template-columns:1fr}
+    .sidebar{position:static; height:auto; border-right:none; border-bottom:1px solid var(--border)}
+    .wrap{padding:0 20px}
+    .hero h1{font-size:31px}
+    .hero{padding:44px 0 36px; margin-bottom:40px}
+    h2.ch{font-size:24px}
+    .eq{font-size:13.5px; padding:14px 16px}
+  }
+
+  /* ---------- overview ---------- */
+  .ov-steps{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:16px 0 0}
+  .ov-step{border:1px solid var(--border); border-radius:8px; padding:14px 16px; background:var(--soft)}
+  .ov-step .n{font-family:var(--mono); font-size:12px; color:var(--blue); font-weight:700; letter-spacing:.04em}
+  .ov-step h4{margin:4px 0 8px; font-size:15px}
+  .ov-step p{margin:0 0 6px; font-size:14px; line-height:1.55}
+  .ov-step code{font-size:13px}
+  .ov-step .f{font-family:var(--mono); font-size:13px; background:#fff; border:1px solid var(--border); border-radius:6px; padding:6px 8px; margin:8px 0 0; line-height:1.6}
+  .figbox svg{max-width:100%; height:auto; display:block; margin:0 auto}
+  @media (max-width:760px){ .ov-steps{grid-template-columns:1fr} #overview .figbox{overflow-x:auto} #overview .figbox svg{min-width:680px; max-width:none} }
+</style>
+<style>
+  sub{font-size:.7em; line-height:0; vertical-align:-.25em; letter-spacing:.01em}
+  .eq .frac{font-size:1em}
+  .eq b{color:var(--blue)}
+  .hl{background:var(--blue-soft); border-radius:4px; padding:0 4px}
+  .calc-out .ok{color:var(--green); font-weight:600}
+  .calc-out .ng{color:var(--red); font-weight:600}
+  .calc .mat{font-size:13px}
+  .sidebar > a::before{content:none}
+  .mat.c4 > span{justify-self:center;text-align:center;display:inline-flex;align-items:center;justify-content:center}
+  .sym td:first-child{font-family:var(--mono); white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="shell">
+<nav class="sidebar">
+  <h2>커리큘럼</h2>
+  <p class="lead">카메라 공간의 정점 하나가 near 평면 투영 → 정규화 → 클립 공간 → NDC → 화면 픽셀이 되는 과정을 순서대로 따라갑니다.</p>
+  <a href="#overview" style="display:block;padding:7px 9px;margin:0 0 8px;border-radius:8px;background:var(--blue-soft);color:#1B6AB5;font-weight:600;text-decoration:none;font-size:13.5px">★ 변환 순서 한눈에</a>
+  <ol>
+    <li><a href="#ch1"><span>기호 정리</span></a></li>
+    <li><a href="#ch2"><span>near·far와 렌더링 범위</span></a></li>
+    <li><a href="#ch3"><span>near 평면에 투영 (닮음)</span></a></li>
+    <li><a href="#ch4"><span>화면 경계 h<sub>n</sub>, h<sub>f</sub> 구하기</span></a></li>
+    <li><a href="#ch5"><span>NDC 정규화와 n의 소거</span></a></li>
+    <li><a href="#ch6"><span>수평 FOV와 화면 비율 a</span></a></li>
+    <li><a href="#ch7"><span>클립 공간과 w = z<sub>1</sub></span></a></li>
+    <li><a href="#ch8"><span>깊이: 왜 A + B/z<sub>1</sub>인가</span></a></li>
+    <li><a href="#ch9"><span>최종 투영 행렬</span></a></li>
+    <li><a href="#ch10"><span>클립 → NDC → 화면</span></a></li>
+    <li><a href="#ch11"><span>숫자로 끝까지 따라가기</span></a></li>
+    <li><a href="#ch12"><span>인터랙티브 계산기</span></a></li>
+  </ol>
+</nav>
+<main>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">3D Graphics · Projection Matrix</span>
+    <h1>원근 투영 행렬을<br />near 평면부터 직접 만들기</h1>
+    <p>카메라 공간의 정점 하나가 <b>near 평면 투영 → 화면 경계로 정규화 → 클립 공간 → NDC → 화면 픽셀</b>이 되기까지, 각 단계의 식이 왜 그렇게 생겼는지 정리합니다.</p>
+    <div class="meta">
+      <span>카메라 원점 · 전방 +Z</span>
+      <span>행 벡터 · v′ = v·M</span>
+      <span>NDC x, y ∈ [−1, 1]</span>
+      <span>NDC z ∈ [0, 1] (DirectX)</span>
+      <span>12개 챕터</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+<!-- ============ OVERVIEW ============ -->
+<section id="overview">
+  <span class="chapno">한눈에 보기</span>
+  <h2 class="ch">변환 순서 — 공간에서 공간으로</h2>
+  <p class="goal">카메라 공간의 정점은 아래 순서로 공간을 갈아탑니다. 화살표 하나가 변환 한 번입니다.</p>
+
+  <figure class="figbox">
+  <svg viewBox="0 0 790 138" width="790" role="img" aria-label="카메라 공간에서 화면 픽셀까지 네 공간과 세 번의 변환">
+  <defs><marker id="st-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#7D7A75"/></marker></defs>
+  <g font-family="Menlo,Consolas,'Apple SD Gothic Neo','Malgun Gothic',monospace">
+    <rect x="4" y="8" width="146" height="56" rx="7" fill="#F9F8F7" stroke="#E6E5E3"/>
+    <text x="77" y="31" text-anchor="middle" font-size="12.5" font-weight="700" fill="#2C2C2B">1. 카메라 공간</text>
+    <text x="77" y="50" text-anchor="middle" font-size="11" fill="#7D7A75">(x₁, y₁, z₁, 1)</text>
+    <rect x="218" y="8" width="146" height="56" rx="7" fill="#E5F2FC" stroke="#C9E3F8"/>
+    <text x="291" y="31" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1B6AB5">2. Clip</text>
+    <text x="291" y="50" text-anchor="middle" font-size="11" fill="#7D7A75">동차 좌표, w = z₁</text>
+    <rect x="432" y="8" width="146" height="56" rx="7" fill="#E8F1EC" stroke="#CBE2D5"/>
+    <text x="505" y="31" text-anchor="middle" font-size="12.5" font-weight="700" fill="#2F7A53">3. NDC</text>
+    <text x="505" y="50" text-anchor="middle" font-size="11" fill="#7D7A75">xy∈[−1,1], z∈[0,1]</text>
+    <rect x="640" y="8" width="146" height="56" rx="7" fill="#FFFFFF" stroke="#E6E5E3"/>
+    <text x="713" y="31" text-anchor="middle" font-size="12.5" font-weight="700" fill="#2C2C2B">4. Screen</text>
+    <text x="713" y="50" text-anchor="middle" font-size="11" fill="#7D7A75">픽셀 좌표</text>
+    <line x1="153" y1="36" x2="214" y2="36" stroke="#7D7A75" stroke-width="1.4" marker-end="url(#st-ar)"/>
+    <text x="184" y="84" text-anchor="middle" font-size="11" fill="#2783DE" font-weight="600">× M_proj</text>
+    <text x="184" y="99" text-anchor="middle" font-size="10" fill="#7D7A75">Ch 3~9</text>
+    <line x1="367" y1="36" x2="428" y2="36" stroke="#7D7A75" stroke-width="1.4" marker-end="url(#st-ar)"/>
+    <text x="398" y="84" text-anchor="middle" font-size="11" fill="#2783DE" font-weight="600">클리핑 → ÷ w</text>
+    <text x="398" y="99" text-anchor="middle" font-size="10" fill="#7D7A75">Ch 10</text>
+    <line x1="581" y1="36" x2="636" y2="36" stroke="#7D7A75" stroke-width="1.4" marker-end="url(#st-ar)"/>
+    <text x="608" y="84" text-anchor="middle" font-size="11" fill="#2783DE" font-weight="600">Viewport</text>
+    <text x="608" y="99" text-anchor="middle" font-size="10" fill="#7D7A75">Ch 10</text>
+    <path d="M77,110 L77,118 L505,118 L505,110" fill="none" stroke="#2783DE"/>
+    <text x="291" y="133" text-anchor="middle" font-size="11.5" fill="#1B6AB5" font-weight="600">▼ 아래 그림이 이 구간(①→③)을 이해용으로 펼친 것</text>
+  </g>
+  </svg>
+  </figure>
+
+  <figure class="figbox" style="margin-top:16px">
+  <svg viewBox="0 0 760 350" width="760" role="img" aria-label="카메라 단면에서 near 평면 투영, near 평면 정면, NDC 정규화로 이어지는 3단계 도해">
+  <defs>
+    <marker id="ov-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#C9C6C1"/></marker>
+    <marker id="ov-arb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#2783DE"/></marker>
+  </defs>
+  <g font-family="Menlo,Consolas,'Apple SD Gothic Neo','Malgun Gothic',monospace">
+  <g>
+    <text x="0" y="22" font-size="13" font-weight="700" fill="#2C2C2B">① 옆 단면 · near에 투영</text>
+    <text x="0" y="40" font-size="11" fill="#7D7A75">같은 광선 위 → 닮음</text>
+    <polygon points="14,200 78,161.6 222,75.2 222,324.8 78,238.4" fill="#E5F2FC" fill-opacity=".55"/>
+    <line x1="14" y1="200" x2="222" y2="75.2" stroke="#7D7A75" stroke-dasharray="3 3"/>
+    <line x1="14" y1="200" x2="222" y2="324.8" stroke="#7D7A75" stroke-dasharray="3 3"/>
+    <line x1="14" y1="200" x2="236" y2="200" stroke="#C9C6C1" marker-end="url(#ov-ar)"/>
+    <text x="222" y="216" font-size="11" fill="#7D7A75">+Z</text>
+    <line x1="78" y1="161.6" x2="78" y2="238.4" stroke="#2783DE" stroke-width="2.4"/>
+    <line x1="222" y1="75.2" x2="222" y2="324.8" stroke="#2783DE" stroke-width="2.4" opacity=".6"/>
+    <circle cx="78" cy="161.6" r="3" fill="#2783DE"/>
+    <text x="72" y="160" text-anchor="end" font-size="10.5" fill="#1B6AB5" font-weight="600">h<tspan font-size="8" dy="3">n</tspan></text>
+    <circle cx="222" cy="75.2" r="3" fill="#2783DE"/>
+    <text x="216" y="68" text-anchor="end" font-size="10.5" fill="#1B6AB5" font-weight="600">h<tspan font-size="8" dy="3">f</tspan></text>
+    <text x="78" y="256" text-anchor="middle" font-size="11" fill="#1B6AB5" font-weight="600">near Z=n</text>
+    <text x="222" y="340.8" text-anchor="end" font-size="11" fill="#1B6AB5" font-weight="600">far Z=f</text>
+    <line x1="14" y1="200" x2="164" y2="134" stroke="#D5803B" stroke-width="1.8"/>
+    <line x1="164" y1="134" x2="164" y2="200" stroke="#D5803B" stroke-dasharray="2 2"/>
+    <circle cx="164" cy="134" r="4.5" fill="#D5803B"/>
+    <text x="158" y="124" text-anchor="end" font-size="11" fill="#B5652A" font-weight="600">(y₁, z₁)</text>
+    <circle cx="78" cy="171.8" r="4" fill="#46A171"/>
+    <text x="86" y="186" font-size="11" fill="#2F7A53" font-weight="600">y<tspan font-size="8" dy="3">n</tspan></text>
+    <path d="M44,200 A30,30 0 0 0 41.4,187.8" fill="none" stroke="#D5803B"/>
+    <text x="48" y="194" font-size="10" fill="#B5652A">α</text>
+    <circle cx="14" cy="200" r="4" fill="#2C2C2B"/>
+    <text x="14" y="218" font-size="11" fill="#2C2C2B">카메라</text>
+  </g>
+  <g>
+    <line x1="240" y1="200" x2="266" y2="200" stroke="#2783DE" stroke-width="2" marker-end="url(#ov-arb)"/>
+    <line x1="500" y1="200" x2="526" y2="200" stroke="#2783DE" stroke-width="2" marker-end="url(#ov-arb)"/>
+    <text x="513" y="186" text-anchor="middle" font-size="10" fill="#1B6AB5" font-weight="600">정규화</text>
+  </g>
+  <g>
+    <text x="272" y="22" font-size="13" font-weight="700" fill="#2C2C2B">② near 평면 정면</text>
+    <text x="272" y="40" font-size="11" fill="#7D7A75">아직 실제 길이 단위</text>
+    <rect x="280" y="140" width="212" height="120" fill="#E5F2FC" fill-opacity=".55" stroke="#2783DE" stroke-width="2"/>
+    <line x1="280" y1="200" x2="492" y2="200" stroke="#C9C6C1" stroke-dasharray="3 3"/>
+    <line x1="386" y1="140" x2="386" y2="260" stroke="#C9C6C1" stroke-dasharray="3 3"/>
+    <circle cx="431" cy="155" r="4.5" fill="#46A171"/>
+    <text x="425" y="170" text-anchor="end" font-size="10.5" fill="#2F7A53" font-weight="600">(x<tspan font-size="8" dy="3">n</tspan><tspan dy="-3">, y</tspan><tspan font-size="8" dy="3">n</tspan><tspan dy="-3">)</tspan></text>
+    <text x="386" y="132" text-anchor="middle" font-size="10.5" fill="#1B6AB5" font-weight="600">+h<tspan font-size="8" dy="3">n</tspan></text>
+    <text x="386" y="278" text-anchor="middle" font-size="10.5" fill="#1B6AB5" font-weight="600">−h<tspan font-size="8" dy="3">n</tspan></text>
+    <text x="492" y="278" text-anchor="end" font-size="10.5" fill="#1B6AB5" font-weight="600">+w<tspan font-size="8" dy="3">n</tspan><tspan dy="-3"> = a·h</tspan><tspan font-size="8" dy="3">n</tspan></text>
+    <text x="386" y="308" text-anchor="middle" font-size="11" fill="#7D7A75">가로가 a배 긴 직사각형</text>
+  </g>
+  <g>
+    <text x="532" y="22" font-size="13" font-weight="700" fill="#2C2C2B">③ NDC · 정규화 완료</text>
+    <text x="532" y="40" font-size="11" fill="#7D7A75">x, y ∈ [−1, 1] 정사각형</text>
+    <rect x="560" y="110" width="180" height="180" fill="#E8F1EC" fill-opacity=".75" stroke="#46A171" stroke-width="2"/>
+    <line x1="560" y1="200" x2="740" y2="200" stroke="#C9C6C1" stroke-dasharray="3 3"/>
+    <line x1="650" y1="110" x2="650" y2="290" stroke="#C9C6C1" stroke-dasharray="3 3"/>
+    <circle cx="688" cy="132.5" r="4.5" fill="#D5803B"/>
+    <text x="682" y="150" text-anchor="end" font-size="10.5" fill="#B5652A" font-weight="600">(0.42, 0.75)</text>
+    <text x="744" y="106" text-anchor="end" font-size="10.5" fill="#7D7A75">(1, 1)</text>
+    <text x="556" y="304" font-size="10.5" fill="#7D7A75">(−1, −1)</text>
+    <text x="650" y="326" text-anchor="middle" font-size="11" fill="#2F7A53" font-weight="600">깊이: near → 0, far → 1</text>
+  </g>
+  </g>
+  </svg>
+  <figcaption>그림 A. 원근 투영의 핵심 3단계. 정점 (y₁, z₁)을 ① near 평면에 투영하고 → ② 그 평면의 실제 크기(wₙ, hₙ)를 확인한 뒤 → ③ 그 크기로 나눠 [−1, 1]로 정규합니다.</figcaption>
+  </figure>
+
+  <div class="ov-steps">
+    <div class="ov-step">
+      <span class="n">STEP ①</span>
+      <h4>near 평면에 투영</h4>
+      <p>정점과 투영점은 카메라에서 나가는 <b>같은 광선 위</b>에 있으므로 닮음입니다. 여기에는 FOV가 필요 없습니다.</p>
+      <div class="f">y<sub>n</sub> / n = y<sub>1</sub> / z<sub>1</sub><br />y<sub>n</sub> = n·y<sub>1</sub> / z<sub>1</sub><br />x<sub>n</sub> = n·x<sub>1</sub> / z<sub>1</sub></div>
+    </div>
+    <div class="ov-step">
+      <span class="n">STEP ②</span>
+      <h4>화면 경계로 정규화</h4>
+      <p>near 평면의 <b>위쪽 끝 높이 h<sub>n</sub></b>과 <b>오른쪽 끝 너비 w<sub>n</sub></b>으로 나누면 [−1, 1]이 됩니다. tan은 여기서 등장합니다.</p>
+      <div class="f">h<sub>n</sub> = n·tan(θ<sub>v</sub>/2)<br />w<sub>n</sub> = a·h<sub>n</sub><br />y<sub>NDC</sub> = y<sub>n</sub> / h<sub>n</sub></div>
+    </div>
+    <div class="ov-step">
+      <span class="n">STEP ③</span>
+      <h4>n 소거 → 행렬화</h4>
+      <p>n이 약분되고 z<sub>1</sub>으로 나누는 일만 남습니다. 이 나눗셈을 w에 맡기고, 깊이는 0~1로 맞춥니다.</p>
+      <div class="f">y<sub>NDC</sub> = y<sub>1</sub> / (z<sub>1</sub>·tan(θ<sub>v</sub>/2))<br />w<sub>clip</sub> = z<sub>1</sub><br />z<sub>NDC</sub> = A + B / z<sub>1</sub></div>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:16px">
+    <span class="label">실제 GPU에서의 순서</span>
+    <p>위 ①→③은 “이해용” 순서입니다. 실제로는 M<sub>proj</sub>를 곱해 <b>클립 공간</b>(w = z<sub>1</sub>)을 만들고, 클리핑한 뒤 <b>÷w</b> 한 번으로 투영과 정규화가 동시에 끝납니다. near 평면에 투영하는 중간 단계는 행렬 안에서 따로 계산되지 않습니다.</p>
+  </div>
+</section>
+
+<!-- ============ CH1 ============ -->
+<section id="ch1">
+  <span class="chapno">Chapter 01</span>
+  <h2 class="ch">기호 정리 — 이 문서에서 쓰는 문자</h2>
+  <p class="goal">헷갈리지 않도록 식에 나오는 문자를 먼저 고정합니다. 카메라는 원점에 있고, 전방이 +Z, 위쪽이 +Y, 오른쪽이 +X입니다.</p>
+
+  <div class="tblwrap"><table class="sym">
+    <tr><th>기호</th><th>의미</th><th>비고</th></tr>
+    <tr><td>(x<sub>1</sub>, y<sub>1</sub>, z<sub>1</sub>)</td><td>물체 정점의 위치. 좌우·상하·전방 깊이</td><td>입력값</td></tr>
+    <tr><td>n, f</td><td>near 평면과 far 평면까지의 전방 거리</td><td>카메라 설정</td></tr>
+    <tr><td>(x<sub>n</sub>, y<sub>n</sub>)</td><td>정점을 <b>near 평면에 투영한 점</b>의 좌우·상하 위치</td><td>정점마다 다름</td></tr>
+    <tr><td>h<sub>n</sub>, h<sub>f</sub></td><td>near·far 평면 시야 사각형의 <b>반높이</b>(위쪽 경계 높이)</td><td>고정값</td></tr>
+    <tr><td>w<sub>n</sub>, w<sub>f</sub></td><td>near·far 평면 시야 사각형의 <b>반너비</b>(오른쪽 경계)</td><td>고정값</td></tr>
+    <tr><td>θ<sub>v</sub>, θ<sub>h</sub></td><td>전체 수직 FOV, 전체 수평 FOV</td><td>θ<sub>v</sub>를 입력으로 씀</td></tr>
+    <tr><td>a</td><td>화면 비율 = 가로 ÷ 세로</td><td>16:9이면 ≈ 1.778</td></tr>
+    <tr><td>α</td><td>카메라 전방 축과 임의의 광선 사이 각도</td><td>정점마다 다름</td></tr>
+    <tr><td>s<sub>x</sub>, s<sub>y</sub></td><td>s<sub>y</sub> = 1 / tan(θ<sub>v</sub>/2), s<sub>x</sub> = s<sub>y</sub> / a</td><td>행렬 원소</td></tr>
+    <tr><td>A, B</td><td>깊이를 0~1로 보내는 계수</td><td>Ch 8</td></tr>
+    <tr><td>x<sub>NDC</sub>, y<sub>NDC</sub>, z<sub>NDC</sub></td><td>정규화된 장치 좌표</td><td>x, y ∈ [−1,1], z ∈ [0,1]</td></tr>
+  </table></div>
+
+  <div class="warn">
+    <span class="label">가장 많이 헷갈리는 구분</span>
+    <p><b>y<sub>n</sub></b>은 “어떤 정점이 near 평면에 떨어진 위치”이고 정점마다 바뀝니다. <b>h<sub>n</sub></b>은 “near 평면 화면의 맨 위 높이”이고 하나로 고정입니다. 두 값이 같아지는 건 투영점이 화면 맨 위에 있을 때뿐입니다.</p>
+  </div>
+</section>
+
+<!-- ============ CH2 ============ -->
+<section id="ch2">
+  <span class="chapno">Chapter 02</span>
+  <h2 class="ch">near·far와 렌더링 범위</h2>
+  <p class="goal">카메라는 어디까지 그리고, 왜 가까운 물체가 크게 보이는가.</p>
+
+  <h3>2-1. FarZ는 “깊이 범위의 끝”</h3>
+  <p>far는 원거리 클리핑 평면입니다. near보다 가까운 부분과 far보다 먼 부분은 잘립니다. 기준은 카메라에서의 <b>직선거리가 아니라 전방 깊이 z<sub>1</sub></b>입니다.</p>
+  <div class="eq center">n ≤ z<sub>1</sub> ≤ f</div>
+  <ul>
+    <li>f = 1000이면 “전방 깊이 1000까지”이지, 반지름 1000인 구 안이 아닙니다.</li>
+    <li>이 범위 안이라도 FOV 밖에 있거나 다른 물체에 가려지면 보이지 않습니다.</li>
+    <li>far 평면에 걸친 물체는 원칙적으로 안쪽 부분만 표시됩니다. 엔진의 거리 콜링이 물체 전체를 먼저 제외할 수도 있습니다.</li>
+  </ul>
+
+  <h3>2-2. 왜 가까우면 크게 보이나</h3>
+  <p>near와 far 모두 화면의 경계는 NDC ±1로 갑니다. 하지만 그 경계까지의 <b>실제 크기가 다릅니다</b>. far 쪽은 더 큰 영역을 같은 [−1, 1]에 압축해 넣습니다.</p>
+  <p>같은 깊이 z<sub>1</sub>에 있는 두 정점의 높이 차가 Δy라면 (Ch 5의 결과를 미리 쓰면):</p>
+  <div class="eq center">Δy<sub>NDC</sub> = <span class="frac"><span class="n">Δy</span><span class="d">z<sub>1</sub>·tan(θ<sub>v</sub>/2)</span></span></div>
+  <p>화면에서 차지하는 크기는 <b>깊이 z<sub>1</sub>에 반비례</b>합니다. 같은 길이는 near에서 far보다 <b>f / n배</b> 크게 보입니다.</p>
+</section>
+
+<!-- ============ CH3 ============ -->
+<section id="ch3">
+  <span class="chapno">Chapter 03</span>
+  <h2 class="ch">near 평면에 투영 — 닮은 삼각형</h2>
+  <p class="goal">정점 (y<sub>1</sub>, z<sub>1</sub>)이 near 평면 Z = n에서 어디 (y<sub>n</sub>, n)에 떨어지는지 구합니다.</p>
+
+  <h3>3-1. 같은 광선 위의 두 점</h3>
+  <p>카메라 원점에서 정점으로 직선을 긋고, 그 직선이 near 평면과 만나는 점이 투영점입니다. 평면에 수직으로 내리는 정사가 아니라, <b>카메라를 향하는 직선을 따라</b> 투영합니다.</p>
+  <pre><code>카메라            near 평면 (Z=n)            정점 (Z=z₁)
+  O ─────────────────┼────────────────────────── (y₁, z₁)
+                 (yₙ, n)  ← 투영점</code></pre>
+  <p>카메라 각을 공유하고 둘 다 직각인 삼각형이므로 닮음입니다.</p>
+  <div class="eq center"><span class="frac"><span class="n">y<sub>n</sub></span><span class="d">n</span></span> = <span class="frac"><span class="n">y<sub>1</sub></span><span class="d">z<sub>1</sub></span></span> <span class="op">⇒</span> y<sub>n</sub> = <span class="frac"><span class="n">n</span><span class="d">z<sub>1</sub></span></span>·y<sub>1</sub> <span class="tag">(3-1)</span></div>
+  <div class="eq center">x<sub>n</sub> = <span class="frac"><span class="n">n</span><span class="d">z<sub>1</sub></span></span>·x<sub>1</sub> <span class="tag">(3-2)</span></div>
+
+  <div class="key">
+    <span class="label">여기엔 tan이 없다</span>
+    <p>이 식은 정점을 평면에 옮기는 일만 합니다. FOV와 무관합니다. y<sub>n</sub>은 <b>아직 정규화 전의 실제 높이</b>라서 1보다 클 수도 있습니다.</p>
+  </div>
+
+  <h3>3-2. 예시</h3>
+  <p>n = 2, 정점 (y<sub>1</sub>, z<sub>1</sub>) = (3, 4)이면:</p>
+  <div class="eq center">y<sub>n</sub> = <span class="frac"><span class="n">2</span><span class="d">4</span></span> × 3 = 1.5</div>
+  <p>이 1.5가 화면에서 어디인지는 화면 맨 위가 near 평면에서 얼마인지 알아야 정해집니다. 그게 다음 챕터의 h<sub>n</sub>입니다.</p>
+</section>
+
+<!-- ============ CH4 ============ -->
+<section id="ch4">
+  <span class="chapno">Chapter 04</span>
+  <h2 class="ch">화면 경계 h<sub>n</sub>, h<sub>f</sub> 구하기 — tan(θ<sub>v</sub>/2)가 나오는 곳</h2>
+  <p class="goal">화면 맨 위 경계가 각 평면에서 실제로 얼마의 높이인지 FOV로 구합니다.</p>
+
+  <h3>4-1. 경계는 각도 θ<sub>v</sub>/2의 광선 위에 있다</h3>
+  <p>전방 축과 시야 위쪽 경계 사이 각은 θ<sub>v</sub>/2입니다. 탄젠트 = 높이 ÷ 전방 거리이므로:</p>
+  <div class="eq center">tan(<span class="frac"><span class="n">θ<sub>v</sub></span><span class="d">2</span></span>) = <span class="frac"><span class="n">h<sub>n</sub></span><span class="d">n</span></span> = <span class="frac"><span class="n">h<sub>f</sub></span><span class="d">f</span></span> <span class="tag">(4-1)</span></div>
+  <div class="eq center">h<sub>n</sub> = n·tan(θ<sub>v</sub>/2), <span class="op"></span> h<sub>f</sub> = f·tan(θ<sub>v</sub>/2), <span class="op"></span> <span class="frac"><span class="n">h<sub>f</sub></span><span class="d">h<sub>n</sub></span></span> = <span class="frac"><span class="n">f</span><span class="d">n</span></span></div>
+  <p>near의 위쪽 경계와 far의 위쪽 경계는 <b>같은 광선 위</b>에 있습니다. 그래서 두 비율이 같고, 둘 다 NDC y = 1에 대응합니다.</p>
+
+  <div class="tblwrap"><table>
+    <tr><th>θ<sub>v</sub> = 90°, n = 2, f = 10</th><th>Near (Z = 2)</th><th>Far (Z = 10)</th></tr>
+    <tr><td>NDC y = 1에 대응하는 실제 높이</td><td>h<sub>n</sub> = 2</td><td>h<sub>f</sub> = 10</td></tr>
+    <tr><td>카메라 공간 높이 범위</td><td>−2 ~ 2</td><td>−10 ~ 10</td></tr>
+    <tr><td>높이 ÷ 거리 = tan 45°</td><td>2 / 2 = 1</td><td>10 / 10 = 1</td></tr>
+    <tr><td>NDC 높이 범위</td><td>−1 ~ 1</td><td>−1 ~ 1</td></tr>
+  </table></div>
+
+  <div class="warn">
+    <span class="label">1 / n = tan(θ<sub>v</sub>/2)는 틀린 식</span>
+    <p>NDC의 1은 정규화된 값입니다. 분자에는 <b>각 평면에서 경계까지의 실제 높이</b>가 들어가야 합니다. 1/n = 1/f는 n ≠ f이면 성립하지 않습니다. 1/n = tan(θ<sub>v</sub>/2)는 우연히 h<sub>n</sub> = 1인 경우에만 맞습니다.</p>
+  </div>
+
+  <h3>4-2. 임의의 점은 각도가 다르다</h3>
+  <p>화면 안의 임의의 투영점 y<sub>n</sub>은 자기만의 각도 α를 가집니다.</p>
+  <div class="eq center"><span class="frac"><span class="n">y<sub>n</sub></span><span class="d">n</span></span> = tan α <span class="op"></span> (점마다 다름) <span class="op">vs</span> <span class="frac"><span class="n">h<sub>n</sub></span><span class="d">n</span></span> = tan(θ<sub>v</sub>/2) <span class="op"></span> (고정)</div>
+  <p>투영점이 화면 맨 위까지 올라가면 y<sub>n</sub> = h<sub>n</sub>, α = θ<sub>v</sub>/2가 됩니다. <b>tan(θ<sub>v</sub>/2)는 경계 하나에만 쓰는 값</b>입니다.</p>
+</section>
+
+<!-- ============ CH5 ============ -->
+<section id="ch5">
+  <span class="chapno">Chapter 05</span>
+  <h2 class="ch">NDC 정규화 — 왜 n이 사라지는가</h2>
+  <p class="goal">투영된 높이를 화면 반높이로 나눠 [−1, 1]로 만들고, 식을 정점 좌표만으로 다시 씁니다.</p>
+
+  <h3>5-1. 정규화 = 투영 높이 ÷ 화면 반높이</h3>
+  <div class="eq center">y<sub>NDC</sub> = <span class="frac"><span class="n">y<sub>n</sub></span><span class="d">h<sub>n</sub></span></span> = <span class="frac"><span class="n">y<sub>n</sub></span><span class="d">n·tan(θ<sub>v</sub>/2)</span></span> <span class="tag">(5-1)</span></div>
+  <div class="tblwrap"><table>
+    <tr><th>n = 2, θ<sub>v</sub> = 90° (h<sub>n</sub> = 2)</th><th>y<sub>n</sub></th><th>y<sub>n</sub> / n = tan α</th><th>y<sub>NDC</sub> = y<sub>n</sub> / h<sub>n</sub></th></tr>
+    <tr><td>아래쪽 경계</td><td>−2</td><td>−1</td><td>−1</td></tr>
+    <tr><td>중심</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><td>임의의 점</td><td>1</td><td>0.5</td><td>0.5</td></tr>
+    <tr><td>정점 (3, 4)의 투영</td><td>1.5</td><td>0.75</td><td>0.75</td></tr>
+    <tr><td>위쪽 경계</td><td>2 (= h<sub>n</sub>)</td><td>1</td><td>1</td></tr>
+  </table></div>
+  <p>[−1, 1] 안에 있어야 하는 것은 <b>y<sub>NDC</sub></b>이지 y<sub>n</sub>이 아닙니다.</p>
+
+  <h3>5-2. (3-1)을 대입하면 n이 약분된다</h3>
+  <div class="eq center">y<sub>NDC</sub> = <span class="frac"><span class="n">(n / z<sub>1</sub>)·y<sub>1</sub></span><span class="d">n·tan(θ<sub>v</sub>/2)</span></span> = <b><span class="frac"><span class="n">y<sub>1</sub></span><span class="d">z<sub>1</sub>·tan(θ<sub>v</sub>/2)</span></span></b> <span class="tag">(5-2)</span></div>
+  <p>최종 식에는 near 거리 n이 없고, <b>정점의 깊이 z<sub>1</sub></b>만 남습니다.</p>
+
+  <h3>5-3. 상은 어디에 맺히나 — “화면”은 특정 Z에 고정되어 있지 않다</h3>
+  <p>화면 역할을 하는 가상 평면을 near 대신 임의의 깊이 s에 놓아도 같습니다. 투영 높이도, 화면 반높이도 같이 s에 비례하기 때문입니다.</p>
+  <div class="eq center">y<sub>NDC</sub> = <span class="frac"><span class="n">(s / z<sub>1</sub>)·y<sub>1</sub></span><span class="d">s·tan(θ<sub>v</sub>/2)</span></span> = <span class="frac"><span class="n">y<sub>1</sub></span><span class="d">z<sub>1</sub>·tan(θ<sub>v</sub>/2)</span></span></div>
+  <ul>
+    <li><b>화면 평면만 옮긴다</b>(s = n, s = f, 임의의 값) → X·Y NDC는 같습니다.</li>
+    <li><b>물체를 옮긴다</b>(z<sub>1</sub>이 바뀜) → NDC가 달라져 크기가 바뀝니다.</li>
+  </ul>
+  <p>near 평면은 “화면이 놓인 위치”가 아니라 가까운 쪽을 잘라내는 경계입니다. 다만 이해할 때는 near 평면을 화면으로 생각해도 결과가 같습니다.</p>
+
+  <div class="key"><div class="label">결론 — 상이 맺히는 “정확한 Z”는 없다</div>
+  <p>원근 투영에는 실제 카메라의 필름이나 센서 같은 <b>고정된 상 평면이 없습니다</b>. “화면에 맺힌다”는 말은 정점이 <b>어느 광선 방향</b>에 있는지를 2D 좌표로 바꾼다는 뜻입니다. 투영 평면을 near에 두든, far에 두든, 깊이 1에 두든 결과 NDC는 똑같습니다. 그래서 “화면이 정확히 어느 z에 있느냐”는 정답이 없는 질문이고, 정할 필요도 없습니다.</p></div>
+
+  <div class="warn"><div class="label">헷갈리기 쉬운 것 — z<sub>NDC</sub> = 0, 1은 화면 평면이 아니다</div>
+  <p>z<sub>NDC</sub> = 0은 near 평면, z<sub>NDC</sub> = 1은 far 평면에 대응합니다. 하지만 이건 <b>깊이 버퍼에 저장할 깊이 값</b>의 범위일 뿐, “상이 z = 0에 맺힌다”거나 “화면이 z = 1에 있다”는 뜻이 아닙니다.</p>
+  <ul>
+    <li><b>x<sub>NDC</sub>, y<sub>NDC</sub></b> → 화면의 어디에 찍히나 (방향). 투영 평면 위치 s와 무관합니다.</li>
+    <li><b>z<sub>NDC</sub></b> → 얼마나 먼가 (가림 판정용). 화면 위치 정보가 아닙니다.</li>
+  </ul>
+  <p>즉 NDC 공간의 z축은 “화면 안쪽 깊이 눈금”이고, 화면 자체는 x·y 두 축뿐입니다. 화면은 특정 z 평면이 아니라 <b>x·y 정사각형 [−1, 1]²</b>입니다.</p></div>
+
+  <div class="tblwrap"><table>
+    <tr><th>질문</th><th>답</th></tr>
+    <tr><td>상은 카메라 공간의 어느 z에 맺히나?</td><td>정해진 곳 없음. 아무 s에 두어도 NDC가 같음</td></tr>
+    <tr><td>near 평면이 화면인가?</td><td>아님. 앞쪽 클리핑 경계. 설명할 때 화면처럼 써도 결과는 같음</td></tr>
+    <tr><td>NDC z = 0이 화면인가?</td><td>아님. near 깊이에 있는 점의 깊이 값</td></tr>
+    <tr><td>NDC z = 1이 화면인가?</td><td>아님. far 깊이에 있는 점의 깊이 값</td></tr>
+    <tr><td>그럼 화면은?</td><td>NDC의 x·y 범위 [−1, 1]². 깊이와 분리된 2D 좌표</td></tr>
+  </table></div>
+
+</section>
+
+<!-- ============ CH6 ============ -->
+<section id="ch6">
+  <span class="chapno">Chapter 06</span>
+  <h2 class="ch">수평 FOV와 화면 비율 a</h2>
+  <p class="goal">가로 방향은 수평 FOV를 쓰고, 수평 FOV는 화면 비율로 수직 FOV에서 구합니다.</p>
+
+  <h3>6-1. 가로도 같은 원리</h3>
+  <div class="eq center"><span class="frac"><span class="n">w<sub>n</sub></span><span class="d">n</span></span> = tan(<span class="frac"><span class="n">θ<sub>h</sub></span><span class="d">2</span></span>), <span class="op"></span> x<sub>NDC</sub> = <span class="frac"><span class="n">x<sub>n</sub></span><span class="d">w<sub>n</sub></span></span></div>
+  <p>화면 비율이 a이면 w<sub>n</sub> = a·h<sub>n</sub>이므로:</p>
+  <div class="eq center">tan(θ<sub>h</sub>/2) = a·tan(θ<sub>v</sub>/2) <span class="tag">(6-1)</span></div>
+  <p><b>각도가 아니라 탄젠트 값이 a배</b>입니다. θ<sub>h</sub> = a·θ<sub>v</sub>가 아닙니다.</p>
+  <div class="eq">예) θ<sub>v</sub> = 45°, 16:9<br />tan(θ<sub>h</sub>/2) = (16/9)·tan 22.5° ≈ 0.736<br />θ<sub>h</sub> = 2·arctan(0.736) ≈ <b>72.7°</b></div>
+  <p>(5-2)와 같은 방식으로 n을 약분하면:</p>
+  <div class="eq center">x<sub>NDC</sub> = <span class="frac"><span class="n">x<sub>1</sub></span><span class="d">z<sub>1</sub>·tan(θ<sub>h</sub>/2)</span></span> = <b><span class="frac"><span class="n">x<sub>1</sub></span><span class="d">z<sub>1</sub>·a·tan(θ<sub>v</sub>/2)</span></span></b> <span class="tag">(6-2)</span></div>
+
+  <h3>6-2. a를 빼면 어떻게 되나</h3>
+  <p>a 없이 x<sub>n</sub>을 h<sub>n</sub>으로 나누면 수평 FOV도 θ<sub>v</sub>로 취급하는 것과 같습니다. 카메라는 45° × 45° 정사각형 시야만 보고, 그걸 16:9 화면에 꽉 채우게 됩니다.</p>
+  <div class="tblwrap"><table>
+    <tr><th>θ<sub>v</sub> = 45°, 16:9</th><th>a 사용</th><th>a 미사용</th></tr>
+    <tr><td>실제로 보이는 수평 범위</td><td>≈ 72.7°</td><td>45° (양옆이 잘림)</td></tr>
+    <tr><td>화면에 그려지는 모습</td><td>정상 비율</td><td>가로로 약 1.78배 늘어남</td></tr>
+    <tr><td>원의 모양</td><td>원</td><td>가로로 긴 타원</td></tr>
+  </table></div>
+  <div class="note">
+    <span class="label">왜 최종 화면은 정상 비율인가</span>
+    <p>NDC는 가로·세로 모두 [−1, 1]인 <b>정사각형 공간</b>입니다. 투영할 때 가로를 a로 <b>나눠 압축</b>하고, 뷰포트 변환에서 화면 너비에 맞춰 <b>다시 늘리므로</b> 두 과정이 상쇄됩니다. 화면이 정사각형(a = 1)이면 a를 빼도 결과가 같습니다.</p>
+  </div>
+</section>
+
+<!-- ============ CH7 ============ -->
+<section id="ch7">
+  <span class="chapno">Chapter 07</span>
+  <h2 class="ch">클립 공간과 w<sub>clip</sub> = z<sub>1</sub></h2>
+  <p class="goal">행렬은 나눗셈을 못 합니다. 그래서 분자만 계산하고, 분모 z<sub>1</sub>은 w<sub>clip</sub> 자리에 맡겨 둡니다.</p>
+
+  <h3>7-1. 기호</h3>
+  <ul>
+    <li>정점(행 벡터): [x<sub>1</sub> y<sub>1</sub> z<sub>1</sub> 1] — 카메라 공간</li>
+    <li>M: 4×4 투영 행렬, m<sub>ij</sub>는 i행 j열 칸</li>
+    <li>클립 좌표: [x<sub>clip</sub> y<sub>clip</sub> z<sub>clip</sub> w<sub>clip</sub>] = [x<sub>1</sub> y<sub>1</sub> z<sub>1</sub> 1] · M</li>
+    <li>s<sub>y</sub> = <span class="frac"><span class="n">1</span><span class="d">tan(θ<sub>v</sub>/2)</span></span>, s<sub>x</sub> = <span class="frac"><span class="n">s<sub>y</sub></span><span class="d">a</span></span></li>
+  </ul>
+
+  <h3>7-2. 행렬은 “곱하고 더하기”만 한다</h3>
+  <p>행 벡터 기준으로 클립 좌표의 j번째 성분은 <b>M의 j열</b>과 곱해진 값입니다.</p>
+  <div class="eq center">(j번째 성분) = x<sub>1</sub>·m<sub>1j</sub> + y<sub>1</sub>·m<sub>2j</sub> + z<sub>1</sub>·m<sub>3j</sub> + 1·m<sub>4j</sub></div>
+  <p>즉 x<sub>1</sub>, y<sub>1</sub>, z<sub>1</sub>의 <b>일차식</b>만 만들 수 있습니다. y<sub>1</sub> / z<sub>1</sub>처럼 변수로 나누는 식은 만들 수 없습니다.</p>
+
+  <h3>7-3. w<sub>clip</sub>은 정점의 깊이 z<sub>1</sub> 그 자체</h3>
+  <p>M의 4열을 [0, 0, 1, 0]으로 두면</p>
+  <div class="eq center">w<sub>clip</sub> = x<sub>1</sub>·0 + y<sub>1</sub>·0 + z<sub>1</sub>·1 + 1·0 = <b>z<sub>1</sub></b></div>
+  <p>행렬은 깊이 z<sub>1</sub>을 w 자리에 <b>복사</b>해 둘 뿐입니다. 나눗셈은 그다음 GPU가 합니다.</p>
+
+  <h3>7-4. 네 성분을 모두 같은 w<sub>clip</sub>으로 나눈다</h3>
+  <div class="tblwrap"><table>
+    <tr><th>성분</th><th>클립 (행렬 결과)</th><th>NDC (÷ w<sub>clip</sub>)</th></tr>
+    <tr><td>x</td><td>x<sub>clip</sub> = s<sub>x</sub>·x<sub>1</sub></td><td>x<sub>NDC</sub> = s<sub>x</sub>·x<sub>1</sub> / z<sub>1</sub></td></tr>
+    <tr><td>y</td><td>y<sub>clip</sub> = s<sub>y</sub>·y<sub>1</sub></td><td><b>y<sub>NDC</sub> = y<sub>1</sub> / (z<sub>1</sub>·tan(θ<sub>v</sub>/2))</b></td></tr>
+    <tr><td>z</td><td>z<sub>clip</sub> = A·z<sub>1</sub> + B</td><td>z<sub>NDC</sub> = A + B / z<sub>1</sub></td></tr>
+    <tr><td>w</td><td>w<sub>clip</sub> = z<sub>1</sub></td><td>1</td></tr>
+  </table></div>
+
+  <h3>7-5. near 평면 식과 완전히 같다</h3>
+  <div class="eq center">y<sub>NDC</sub> = <span class="frac"><span class="n">y<sub>clip</sub></span><span class="d">w<sub>clip</sub></span></span> = <span class="frac"><span class="n">s<sub>y</sub>·y<sub>1</sub></span><span class="d">z<sub>1</sub></span></span> = <span class="frac"><span class="n">y<sub>1</sub></span><span class="d">z<sub>1</sub>·tan(θ<sub>v</sub>/2)</span></span> <span class="op">=</span> <span class="frac"><span class="n">y<sub>n</sub></span><span class="d">h<sub>n</sub></span></span> = <span class="frac"><span class="n">n·y<sub>1</sub> / z<sub>1</sub></span><span class="d">n·tan(θ<sub>v</sub>/2)</span></span></div>
+  <div class="key"><div class="label">순서만 다르다</div>
+  <p><b>행렬 경로:</b> s<sub>y</sub>·y<sub>1</sub>을 먼저 만들고 나중에 ÷ z<sub>1</sub><br /><b>near 평면 경로:</b> 먼저 ÷ z<sub>1</sub>(투영)하고 나중에 ÷ h<sub>n</sub>(정규화)<br />w<sub>clip</sub> = z<sub>1</sub>은 x, y, z가 함께 쓰는 <b>공통 분모</b>입니다.</p></div>
+
+  <h3>7-6. 숫자로 보기</h3>
+  <p>θ<sub>v</sub> = 90°, a = 16/9, n = 2, f = 10, 정점 (3, 3, 4)</p>
+  <div class="eq">클립 = [1.6875, 3, 2.5, <b>4</b>] <span class="op">→</span> w<sub>clip</sub> = z<sub>1</sub> = 4<br />NDC = [1.6875/4, 3/4, 2.5/4] = <b>(0.421875, 0.75, 0.625)</b><br />검산: y<sub>n</sub> = 2·3/4 = 1.5, h<sub>n</sub> = 2·tan 45° = 2 <span class="op">→</span> 1.5 / 2 = 0.75 ✓</div>
+</section>
+
+<!-- ============ CH8 ============ -->
+<section id="ch8">
+  <span class="chapno">Chapter 08</span>
+  <h2 class="ch">깊이 — 왜 z<sub>NDC</sub> = A + B / z<sub>1</sub>인가</h2>
+  <p class="goal">이 모양은 우리가 고른 게 아닙니다. 행렬과 ÷ w 때문에 이 모양밖에 나올 수 없습니다.</p>
+
+  <h3>8-1. 1단계 — 행렬이 만드는 z<sub>clip</sub></h3>
+  <p>z<sub>clip</sub>은 M의 3열과 곱해집니다.</p>
+  <div class="eq center">z<sub>clip</sub> = x<sub>1</sub>·m<sub>13</sub> + y<sub>1</sub>·m<sub>23</sub> + z<sub>1</sub>·m<sub>33</sub> + 1·m<sub>43</sub></div>
+  <p>깊이가 화면 위치 x<sub>1</sub>, y<sub>1</sub>에 따라 달라지면 안 되므로 m<sub>13</sub> = m<sub>23</sub> = 0. 남은 두 칸을 A = m<sub>33</sub>, B = m<sub>43</sub>이라 부르면</p>
+  <div class="eq center">z<sub>clip</sub> = A·z<sub>1</sub> + B</div>
+
+  <h3>8-2. 2단계 — z만 빼고 나눌 수는 없다</h3>
+  <p>x, y는 원근 때문에 z<sub>1</sub>로 나눠야 해서 w<sub>clip</sub> = z<sub>1</sub>로 정했습니다(7장). 정점 하나에 w는 <b>딱 하나</b>이고, GPU는 x, y, z를 <b>전부</b> 그 w로 나눕니다.</p>
+
+  <h3>8-3. 3단계 — 합치면</h3>
+  <div class="eq center">z<sub>NDC</sub> = <span class="frac"><span class="n">z<sub>clip</sub></span><span class="d">w<sub>clip</sub></span></span> = <span class="frac"><span class="n">A·z<sub>1</sub> + B</span><span class="d">z<sub>1</sub></span></span> = <b>A + <span class="frac"><span class="n">B</span><span class="d">z<sub>1</sub></span></span></b></div>
+  <div class="key"><div class="label">이 모양은 강제된다</div>
+  <p>행렬이라서 → 분자는 A·z<sub>1</sub> + B<br />x, y 때문에 정한 w = z<sub>1</sub> → 분모는 z<sub>1</sub><br />우리가 고를 수 있는 건 <b>숫자 A, B 두 개</b>뿐입니다.</p></div>
+
+  <h3>8-4. A, B 구하기 — near → 0, far → 1</h3>
+  <div class="eq">A + B / n = 0 <span class="op">⇒</span> B = −A·n<br />A + B / f = 1 <span class="op">⇒</span> A − A·n / f = 1 <span class="op">⇒</span> A(f − n) = f</div>
+  <div class="eq center">A = <span class="frac"><span class="n">f</span><span class="d">f − n</span></span>, <span class="op"></span> B = −<span class="frac"><span class="n">n·f</span><span class="d">f − n</span></span></div>
+  <p>미지수 2개, 조건 2개라서 n &lt; f이기만 하면 범위가 아무리 커도 항상 0 ~ 1에 맞출 수 있습니다.</p>
+
+  <h3>8-5. 왜 z<sub>1</sub>을 직선으로 0 ~ 1에 못 넣나</h3>
+  <p>원하는 값이 (z<sub>1</sub> − n)/(f − n)이라면, 나눗셈 뒤에 이 값이 나오려면 나누기 전에</p>
+  <div class="eq center">z<sub>clip</sub> = <span class="frac"><span class="n">z<sub>1</sub> − n</span><span class="d">f − n</span></span>·z<sub>1</sub></div>
+  <p>이어야 합니다. 이건 <b>z<sub>1</sub>²</b> 항이라 행렬로 만들 수 없습니다. 그래서 깊이는 1/z<sub>1</sub> 꼴(비선형)이 됩니다. 대신 A + B/z<sub>1</sub>은 <b>화면 공간에서 선형</b>이라 삼각형 안에서 픽셀별로 직선 보간하기 좋습니다.</p>
+
+  <h3>8-6. 비선형이라 생기는 일</h3>
+  <div class="tblwrap"><table>
+    <tr><th>n = 2, f = 10</th><th>z<sub>1</sub> = 2</th><th>z<sub>1</sub> = 4</th><th>z<sub>1</sub> = 6</th><th>z<sub>1</sub> = 10</th></tr>
+    <tr><td>z<sub>NDC</sub></td><td>0</td><td>0.625</td><td>0.833</td><td>1</td></tr>
+  </table></div>
+  <p>앞쪽 구간이 깊이 값 대부분을 씁니다. 먼 쪽은 정밀도가 떨어져 Z-fighting이 생기기 쉽고, 주원인은 <b>n을 너무 작게 잡는 것</b>입니다.</p>
+</section>
+
+<!-- ============ CH9 ============ -->
+<section id="ch9">
+  <span class="chapno">Chapter 09</span>
+  <h2 class="ch">최종 투영 행렬 — 행 벡터 기준</h2>
+  <p class="goal">[x<sub>1</sub> y<sub>1</sub> z<sub>1</sub> 1] · M = [x<sub>clip</sub> y<sub>clip</sub> z<sub>clip</sub> w<sub>clip</sub>]이 되도록 조립합니다. 전방 +Z, 깊이 0 ~ 1(DirectX의 PerspectiveFovLH와 같은 형태).</p>
+
+  <div class="eq center" style="line-height:1.6">M<sub>proj</sub> = <span class="mat c4">
+    <span><span class="frac"><span class="n">1</span><span class="d">a·tan(θ<sub>v</sub>/2)</span></span></span><span class="zero">0</span><span class="zero">0</span><span class="zero">0</span>
+    <span class="zero">0</span><span><span class="frac"><span class="n">1</span><span class="d">tan(θ<sub>v</sub>/2)</span></span></span><span class="zero">0</span><span class="zero">0</span>
+    <span class="zero">0</span><span class="zero">0</span><span><span class="frac"><span class="n">f</span><span class="d">f − n</span></span></span><span>1</span>
+    <span class="zero">0</span><span class="zero">0</span><span>−<span class="frac"><span class="n">n·f</span><span class="d">f − n</span></span></span><span class="zero">0</span>
+  </span></div>
+
+  <h3>9-1. 검산</h3>
+  <div class="eq center">[x<sub>1</sub> <span class="op"></span> y<sub>1</sub> <span class="op"></span> z<sub>1</sub> <span class="op"></span> 1]·M = [s<sub>x</sub>·x<sub>1</sub> <span class="op"></span> s<sub>y</sub>·y<sub>1</sub> <span class="op"></span> <span class="frac"><span class="n">f·z<sub>1</sub> − n·f</span><span class="d">f − n</span></span> <span class="op"></span> z<sub>1</sub>]</div>
+  <p>w = z<sub>1</sub>로 나누면 7-4 표의 NDC 식이 그대로 나옵니다.</p>
+
+  <h3>9-2. 각 칸이 하는 일</h3>
+  <div class="tblwrap"><table>
+    <tr><th>위치</th><th>값</th><th>역할</th></tr>
+    <tr><td>1행 1열</td><td>s<sub>x</sub> = 1 / (a·tan(θ<sub>v</sub>/2))</td><td>가로를 화면 반너비 기준으로 정규화</td></tr>
+    <tr><td>2행 2열</td><td>s<sub>y</sub> = 1 / tan(θ<sub>v</sub>/2)</td><td>세로를 화면 반높이 기준으로 정규화</td></tr>
+    <tr><td>3행 3열, 4행 3열</td><td>A, B</td><td>깊이 near → 0, far → 1</td></tr>
+    <tr><td>3행 4열</td><td>1</td><td>w = z<sub>1</sub>로 만들어 원근 나눗셈 준비</td></tr>
+    <tr><td>4행 4열</td><td>0</td><td>w에 상수항이 섞이지 않게 함</td></tr>
+  </table></div>
+  <p>열벡터(M·v) 기준이면 이 행렬을 <b>전치</b>해서 씁니다.</p>
+</section>
+
+<!-- ============ CH10 ============ -->
+<section id="ch10">
+  <span class="chapno">Chapter 10</span>
+  <h2 class="ch">클립 공간 → NDC → 화면 픽셀</h2>
+  <p class="goal">행렬 곱 이후 GPU가 하는 세 단계: 클리핑, 원근 나눗셈, 뷰포트 변환.</p>
+
+  <h3>10-1. 클리핑 — 나누기 전에 한다</h3>
+  <p>NDC 범위 조건에 w를 곱하면 클립 공간에서 바로 검사할 수 있습니다.</p>
+  <div class="eq">−w ≤ x<sub>clip</sub> ≤ w<br />−w ≤ y<sub>clip</sub> ≤ w<br /><span style="white-space:nowrap">  0 ≤ z<sub>clip</sub> ≤ w</span> <span class="tag">깊이 0~1 기준</span></div>
+  <p>나누기 전에 검사하는 이유는 카메라 뒤쪽(w ≤ 0) 정점 때문입니다. 먼저 나누면 부호가 뒤집히거나 0으로 나누게 됩니다. 경계에 걸친 삼각형은 클립 공간에서 잘라 새 정점을 만듭니다.</p>
+
+  <h3>10-2. 원근 나눗셈 — 클립 → NDC</h3>
+  <div class="eq center">(x<sub>NDC</sub>, y<sub>NDC</sub>, z<sub>NDC</sub>) = (<span class="frac"><span class="n">x<sub>clip</sub></span><span class="d">w</span></span>, <span class="frac"><span class="n">y<sub>clip</sub></span><span class="d">w</span></span>, <span class="frac"><span class="n">z<sub>clip</sub></span><span class="d">w</span></span>)</div>
+  <p>이 한 번의 나눗셈으로 “near 평면 투영(÷ z<sub>1</sub>)”과 “화면 경계 정규화”가 동시에 끝납니다. 결과는 x, y ∈ [−1, 1], z ∈ [0, 1]인 상자입니다.</p>
+
+  <h3>10-3. 뷰포트 변환 — NDC → 픽셀</h3>
+  <p>화면 크기를 W × H 픽셀이라 하면, 픽셀 Y는 아래로 증가하므로 세로를 뒤집습니다.</p>
+  <div class="eq">p<sub>x</sub> = <span class="frac"><span class="n">x<sub>NDC</sub> + 1</span><span class="d">2</span></span>·W<br />p<sub>y</sub> = <span class="frac"><span class="n">1 − y<sub>NDC</sub></span><span class="d">2</span></span>·H<br />depth = z<sub>NDC</sub> <span class="tag">깊이 버퍼</span></div>
+  <p>여기서 가로를 W로, 세로를 H로 늘리면서 Ch 6의 a로 나눈 압축이 상쇄됩니다.</p>
+</section>
+
+<!-- ============ CH11 ============ -->
+<section id="ch11">
+  <span class="chapno">Chapter 11</span>
+  <h2 class="ch">숫자로 끝까지 따라가기</h2>
+  <p class="goal">정점 하나를 행렬부터 픽셀까지 넣어 보고, near 평면 방식과 결과가 같은지 확인합니다.</p>
+
+  <h3>11-1. 설정</h3>
+  <div class="eq">θ<sub>v</sub> = 90° (tan 45° = 1), <span class="op"></span> 화면 1920 × 1080 (a = 16/9), <span class="op"></span> n = 2, <span class="op"></span> f = 10<br />s<sub>y</sub> = 1, <span class="op"></span> s<sub>x</sub> = 9/16 = 0.5625, <span class="op"></span> A = 1.25, <span class="op"></span> B = −2.5<br />정점 (x<sub>1</sub>, y<sub>1</sub>, z<sub>1</sub>) = (3, 3, 4)</div>
+
+  <h3>11-2. 행렬 경로</h3>
+  <ol class="steps">
+    <li><b>클립 공간</b>: [3·0.5625, <span class="op"></span>3·1, <span class="op"></span>1.25·4 − 2.5, <span class="op"></span>4] = <span class="hl">[1.6875, 3, 2.5, 4]</span></li>
+    <li><b>클리핑</b>: |1.6875| ≤ 4, |3| ≤ 4, 0 ≤ 2.5 ≤ 4 → 통과</li>
+    <li><b>NDC</b>: (1.6875/4, 3/4, 2.5/4) = <span class="hl">(0.4219, 0.75, 0.625)</span></li>
+    <li><b>픽셀</b>: p<sub>x</sub> = (1.4219/2)·1920 = <b>1365</b>, <span class="op"></span> p<sub>y</sub> = (0.25/2)·1080 = <b>135</b></li>
+  </ol>
+
+  <h3>11-3. near 평면 경로로 검산</h3>
+  <div class="eq">h<sub>n</sub> = 2·tan 45° = 2, <span class="op"></span> w<sub>n</sub> = a·h<sub>n</sub> ≈ 3.556<br />y<sub>n</sub> = 2·3/4 = 1.5 <span class="op">→</span> y<sub>NDC</sub> = 1.5 / 2 = 0.75 ✓<br />x<sub>n</sub> = 2·3/4 = 1.5 <span class="op">→</span> x<sub>NDC</sub> = 1.5 / 3.556 ≈ 0.4219 ✓</div>
+
+</section>
+
+<!-- ============ CH12 ============ -->
+<section id="ch12">
+  <span class="chapno">Chapter 12</span>
+  <h2 class="ch">인터랙티브 계산기</h2>
+  <p class="goal">값을 바꾸면 행렬, 클립, NDC, 픽셀을 바로 계산합니다. near 평면 경로의 값도 함께 보여줍니다.</p>
+  <div class="calc">
+    <div class="calc-in"><div class="grid">
+      <div class="fld"><label for="c-fov">θᵥ (deg)</label><input id="c-fov" type="number" value="90" step="1" /></div>
+      <div class="fld"><label for="c-w">화면 W</label><input id="c-w" type="number" value="1920" /></div>
+      <div class="fld"><label for="c-h">화면 H</label><input id="c-h" type="number" value="1080" /></div>
+      <div class="fld"><label for="c-n">near n</label><input id="c-n" type="number" value="2" step="0.1" /></div>
+      <div class="fld"><label for="c-f">far f</label><input id="c-f" type="number" value="10" step="1" /></div>
+      <div class="fld"><label for="c-x">x₁</label><input id="c-x" type="number" value="3" step="0.1" /></div>
+      <div class="fld"><label for="c-y">y₁</label><input id="c-y" type="number" value="3" step="0.1" /></div>
+      <div class="fld"><label for="c-z">z₁</label><input id="c-z" type="number" value="4" step="0.1" /></div>
+    </div></div>
+    <div class="calc-out" id="c-out"></div>
+  </div>
+</section>
+
+</div>
+</main>
+</div>
+<script>
+(function(){
+  var ids=['fov','w','h','n','f','x','y','z'];
+  function v(id){return parseFloat(document.getElementById('c-'+id).value);}
+  function r(x,d){if(!isFinite(x))return '—'; var p=Math.pow(10,d==null?4:d); return String(Math.round(x*p)/p);}
+  function row(k,val){return '<div class="row"><span class="k">'+k+'</span><span class="v">'+val+'</span></div>';}
+  function calc(){
+    var fov=v('fov'),W=v('w'),H=v('h'),n=v('n'),f=v('f'),x=v('x'),y=v('y'),z=v('z');
+    var out=document.getElementById('c-out');
+    if(!(fov>0&&fov<180&&W>0&&H>0&&n>0&&f>n)){out.innerHTML=row('입력 오류','<span class="ng">0 &lt; θᵥ &lt; 180, W·H &gt; 0, 0 &lt; n &lt; f 이어야 합니다</span>');return;}
+    var a=W/H,t=Math.tan(fov*Math.PI/360),sy=1/t,sx=sy/a,A=f/(f-n),B=-n*f/(f-n);
+    var thh=2*Math.atan(a*t)*180/Math.PI;
+    var cx=sx*x,cy=sy*y,cz=A*z+B,cw=z;
+    var inside=cw>0&&Math.abs(cx)<=cw&&Math.abs(cy)<=cw&&cz>=0&&cz<=cw;
+    var nx=cx/cw,ny=cy/cw,nz=cz/cw,px=(nx+1)/2*W,py=(1-ny)/2*H;
+    var hn=n*t,wn=a*hn,yn=n*y/z,xn=n*x/z;
+    var m='<span class="mat c4"><span>'+r(sx)+'</span><span class="zero">0</span><span class="zero">0</span><span class="zero">0</span><span class="zero">0</span><span>'+r(sy)+'</span><span class="zero">0</span><span class="zero">0</span><span class="zero">0</span><span class="zero">0</span><span>'+r(A)+'</span><span>1</span><span class="zero">0</span><span class="zero">0</span><span>'+r(B)+'</span><span class="zero">0</span></span>';
+    out.innerHTML=
+      row('a, θₕ',r(a)+', '+r(thh,2)+'°')+
+      row('sₓ, sᵧ, A, B',r(sx)+', '+r(sy)+', '+r(A)+', '+r(B))+
+      row('M_proj',m)+
+      row('hₙ, wₙ (near 경계)',r(hn)+', '+r(wn))+
+      row('xₙ, yₙ (near 투영)',r(xn)+', '+r(yn))+
+      row('clip [x y z w]','['+r(cx)+', '+r(cy)+', '+r(cz)+', '+r(cw)+']')+
+      row('클리핑',inside?'<span class="ok">통과 — 화면 안</span>':'<span class="ng">탈락 — 프러스텀 밖</span>')+
+      row('NDC (x, y, z)',cw>0?'('+r(nx)+', '+r(ny)+', '+r(nz)+')':'— (w ≤ 0, 카메라 뒤)')+
+      row('검산 xₙ/wₙ, yₙ/hₙ',r(xn/wn)+', '+r(yn/hn))+
+      row('픽셀 (pₓ, pᵧ)',cw>0?'('+r(px,1)+', '+r(py,1)+')':'—');
+  }
+  ids.forEach(function(id){document.getElementById('c-'+id).addEventListener('input',calc);});
+  calc();
+})();
+</script>
+</body>
+</html>

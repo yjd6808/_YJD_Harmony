@@ -69,6 +69,7 @@ bool VertexBuffer::Create(GraphicDevice& _device, const void* _pData, UINT _coun
 ////////////////////////////////////////////////////////////////////////////////////////
 bool VertexBuffer::Update(GraphicContext& _context, const void* _pData, UINT _count)
 {
+	jc_assert_msg(pBuffer_.Get() != nullptr, _T("Create 하지 않은 정점 버퍼에 Update를 호출했습니다."));
 	if (usage_ != ResourceUsage::ruDynamic || _count > count_)
 	{
 		return false;
@@ -114,6 +115,7 @@ bool IndexBuffer::Create(GraphicDevice& _device, const _u32* _pIndices, UINT _co
 ////////////////////////////////////////////////////////////////////////////////////////
 bool IndexBuffer::Update(GraphicContext& _context, const _u32* _pIndices, UINT _count)
 {
+	jc_assert_msg(pBuffer_.Get() != nullptr, _T("Create 하지 않은 인덱스 버퍼에 Update를 호출했습니다."));
 	if (usage_ != ResourceUsage::ruDynamic || _count > count_)
 	{
 		return false;

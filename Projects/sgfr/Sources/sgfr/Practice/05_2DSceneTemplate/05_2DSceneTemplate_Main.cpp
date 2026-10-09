@@ -2,14 +2,14 @@
  * 작성자: 윤정도
  * 생성일: 9/24/2026
  * =====================
- * 01. 2D 씬 템플릿 (Practice) - 기반 코드
+ * 05. 2D 씬 템플릿 (Practice) - 기반 코드
  *
  * Scene2D를 상속한 최소 씬과 Application 파생 실행기로 구성한다.
- * 이후 03번 연습은 이 템플릿을 복사해서 내용을 채운다.
+ * 이후 07번 연습은 이 템플릿을 복사해서 내용을 채운다.
  */
 
 #include "Core.h"
-#include "sgfr/Practice/01_2DSceneTemplate/01_2DSceneTemplate_Main.h"
+#include "sgfr/Practice/05_2DSceneTemplate/05_2DSceneTemplate_Main.h"
 
 using namespace sgf;
 using namespace jc;
@@ -25,7 +25,7 @@ namespace
 		void OnEnter() override
 		{
 			GetCamera2D()->SetOrthographic2D(800.0f, 600.0f);
-			GetWindow()->SetTitle(_T("Practice 01. 2D 씬 템플릿 (방향키 이동, 휠 줌, ESC 종료)"));
+			GetWindow()->SetTitle(_T("Practice 05. 2D 씬 템플릿 (방향키 이동, 휠 줌, ESC 종료)"));
 			elapsed_ = 0.0f;
 
 			Shape2D* pPanel = dbg_new Shape2D(_T("Panel"));
@@ -97,10 +97,10 @@ namespace
 ////////////////////////////////////////////////////////////////////////////////////////
 void Practice_2DSceneTemplate_Main()
 {
-	jc::Console::WriteLine(_T("[Practice 01] 2D 씬 템플릿 - 방향키 이동, 휠 줌, ESC 종료"));
+	jc::Console::WriteLine(_T("[Practice 05] 2D 씬 템플릿 - 방향키 이동, 휠 줌, ESC 종료"));
 
 	Template2DApp app;
-	if (!app.Initialize(_T("Practice 01. 2D 씬 템플릿"), 800, 600))
+	if (!app.Initialize(_T("Practice 05. 2D 씬 템플릿"), 800, 600))
 	{
 		jc::Console::WriteLine(_T("엔진 초기화에 실패했습니다."));
 		return;

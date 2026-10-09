@@ -221,7 +221,7 @@ void FillShadowCube(VertexPNT* _pOutVertices24, _u32* _pOutIndices36)
 //////////////////////////////////////////////////////////////////////////////////////////
 void FillGroundPlane(VertexPNT* _pOutVertices4, _u32* _pOutIndices6, _f32 _halfSize)
 {
-	const vec3 up = vec3::Up();
+	const vec3 up = vec3::UP;
 
 	// 위에서 내려다볼 때 시계 방향이 되도록: 멀리-왼 → 멀리-오른 → 가까이-왼 → 가까이-오른
 	_pOutVertices4[0] = { vec3(-_halfSize, 0.0f, +_halfSize), up, vec2(0.0f, 0.0f) };

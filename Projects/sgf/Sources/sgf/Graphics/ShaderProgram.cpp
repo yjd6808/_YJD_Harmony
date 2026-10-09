@@ -47,6 +47,12 @@ namespace
 			if (pErrorBlob != nullptr)
 			{
 				OutputDebugStringA(static_cast<const char*>(pErrorBlob->GetBufferPointer()));
+				const String errorMsg = jc::StringConvert::FromAnsi(static_cast<const char*>(pErrorBlob->GetBufferPointer()));
+				_LogError_(_T("[sgf] HLSL 컴파일 실패 (entry=%s, target=%s): %s"), _szEntry.Source(), _szTarget.Source(), errorMsg.Source());
+			}
+			else
+			{
+				_LogError_(_T("[sgf] HLSL 컴파일 실패 (entry=%s, target=%s): 에러 정보 없음 (hr=0x%08X)"), _szEntry.Source(), _szTarget.Source(), static_cast<unsigned int>(hr));
 			}
 			return false;
 		}

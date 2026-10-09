@@ -149,11 +149,11 @@ void RenderTarget_Main()
 	}
 
 	// 6. 카메라 2개: 장면은 경사 시점, 미니맵은 바로 위에서 내려다본다.
-	const mat4 sceneView = mat4::LookAtLH(vec3(0.0f, 1.5f, -4.0f), vec3::Zero(), vec3::Up());
+	const mat4 sceneView = mat4::LookAtLH(vec3(0.0f, 1.5f, -4.0f), vec3::ZERO, vec3::UP);
 	const mat4 sceneProj = mat4::PerspectiveFovLH(jc_math_pi_div4, window.AspectRatio(), 0.1f, 100.0f);
 
 	// 바로 위에서 볼 때는 Up 벡터로 +Y를 쓸 수 없으므로 +Z를 사용한다.
-	const mat4 topView = mat4::LookAtLH(vec3(0.0f, 5.0f, 0.0f), vec3::Zero(), vec3::Forward());
+	const mat4 topView = mat4::LookAtLH(vec3(0.0f, 5.0f, 0.0f), vec3::ZERO, vec3::FORWARD);
 	const mat4 topProj = mat4::PerspectiveFovLH(jc_math_pi_div4, 1.0f, 0.1f, 100.0f);	// 렌더 타깃은 정사각형(256x256)
 
 	FrameTimer timer;

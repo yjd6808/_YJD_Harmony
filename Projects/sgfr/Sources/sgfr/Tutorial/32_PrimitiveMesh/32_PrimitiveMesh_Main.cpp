@@ -151,7 +151,7 @@ namespace
 		void OnEnter() override
 		{
 			GetCamera3D()->SetPerspectiveDegrees(60.0f, GetWindow()->AspectRatio(), 0.1f, 1000.0f);
-			GetCamera3D()->SetLookAt(vec3(0.0f, 2.5f, -8.0f), vec3::Zero());
+			GetCamera3D()->SetLookAt(vec3(0.0f, 2.5f, -8.0f), vec3::ZERO);
 			GetWindow()->SetTitle(_T("32. 3D 프리미티브 6종 (SPACE: 2D 씬, ESC: 종료)"));
 
 			// 6종 전부 3D enum으로 꺼낸다. (2D/3D 엄격 분리 — 2D enum에는 3D 타입이 없다)

@@ -77,9 +77,9 @@ private:
 	Transform* pParent_;	// 부모 Transform (트리 상속용, 소유 아님)
 
 	vec3 localPosition_;						// 로컬 위치
-	vec3 localScale_ = vec3::One();				// 로컬 크기 (기본 1)
+	vec3 localScale_ = vec3::ONE;				// 로컬 크기 (기본 1)
 	_f32 localRotationZ_ = 0.0f;				// 2D Z축 회전 (라디안)
-	vec3 localRotationEuler_ = vec3::Zero();	// 3D 오일러 (도)
+	vec3 localRotationEuler_ = vec3::ZERO;	// 3D 오일러 (도)
 
 	mat4 local_;						// 로컬 행렬 캐시
 	mat4 world_;						// 월드 행렬 캐시

@@ -80,8 +80,8 @@ void LinearAlgebra_Main()
 	// =================================================================
 	jc::Console::WriteLine(_T("\n--- 3. 외적 ---"));
 
-	const vec3 xAxis = vec3::Right();
-	const vec3 yAxis = vec3::Up();
+	const vec3 xAxis = vec3::RIGHT;
+	const vec3 yAxis = vec3::UP;
 	PrintVec3(_T("X cross Y"), xAxis.Cross(yAxis));		// (0, 0, 1) = Z축
 
 	jc::Console::Write(_T("right cross up (2D)   = %.3f (양수: up은 right의 반시계 방향)\n"), right.Cross(up));
@@ -118,7 +118,7 @@ void LinearAlgebra_Main()
 
 	// SRT2D는 Scale * RotationZ * Translation을 한번에 만들어주는 헬퍼다.
 	// 씬 그래프의 모든 Node가 이 함수로 로컬 변환을 만든다.
-	PrintMat4(_T("SRT2D(배쀨1, 90도, (10,0))"), mat4::SRT2D(vec2::One(), jc_math_deg2rad(90.0f), vec2(10.0f, 0.0f)));
+	PrintMat4(_T("SRT2D(배쀨1, 90도, (10,0))"), mat4::SRT2D(vec2::ONE, jc_math_deg2rad(90.0f), vec2(10.0f, 0.0f)));
 
 	jc::Console::WriteLine(_T("\n[정리]"));
 	jc::Console::WriteLine(_T(" - 벡터 = 크기 + 방향, 내적 = 방향 유사도, 외적 = 수직 벡터"));

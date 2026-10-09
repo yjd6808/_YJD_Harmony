@@ -111,7 +111,7 @@ void RenderObjectLoop_Main()
 
 	// 5. 카메라는 고정, 객체만 회전시킨다.
 	FrameConstants frame;
-	frame.view_ = mat4::LookAtLH(vec3(0.0f, 2.5f, -5.0f), vec3::Zero(), vec3::Up());
+	frame.view_ = mat4::LookAtLH(vec3(0.0f, 2.5f, -5.0f), vec3::ZERO, vec3::UP);
 	frame.projection_ = mat4::PerspectiveFovLH(jc_math_deg2rad(60.0f), window.AspectRatio(), 0.1f, 100.0f);
 	frame.cameraPosition_ = vec4(0.0f, 2.5f, -5.0f, 1.0f);
 

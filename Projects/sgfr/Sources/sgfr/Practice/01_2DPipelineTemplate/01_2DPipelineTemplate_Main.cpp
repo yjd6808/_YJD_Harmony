@@ -2,13 +2,13 @@
  * 작성자: 윤정도
  * 생성일: 9/25/2026
  * =====================
- * 05. 2D 렌더링 파이프라인 템플릿 (Practice) - 기반 코드
+ * 01. 2D 렌더링 파이프라인 템플릿 (Practice) - 기반 코드
  */
 
 #include "Core.h"
 #include "jc/Primitives/StringConvert.h"
 #include "sgf/Graphics/ResourceMgr.h"
-#include "sgfr/Practice/05_2DPipelineTemplate/05_2DPipelineTemplate_Main.h"
+#include "sgfr/Practice/01_2DPipelineTemplate/01_2DPipelineTemplate_Main.h"
 
 using namespace sgf;
 using namespace jc;
@@ -50,10 +50,10 @@ float4 PSMain(VSOutput _input) : SV_TARGET
 ////////////////////////////////////////////////////////////////////////////////////////
 void Practice_2DPipelineTemplate_Main()
 {
-	jc::Console::WriteLine(_T("[Practice 05] 2D 렌더링 파이프라인 템플릿 - ESC 종료"));
+	jc::Console::WriteLine(_T("[Practice 01] 2D 렌더링 파이프라인 템플릿 - ESC 종료"));
 
 	Window window;
-	if (!window.Create(_T("Practice 05. 2D 렌더링 파이프라인 템플릿 (ESC 종료)"), 800, 600))
+	if (!window.Create(_T("Practice 01. 2D 렌더링 파이프라인 템플릿 (ESC 종료)"), 800, 600))
 	{
 		jc::Console::WriteLine(_T("윈도우 생성 실패!"));
 		return;

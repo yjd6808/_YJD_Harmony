@@ -84,14 +84,18 @@
     <ClCompile Include="..\Sources\sgfr\Tutorial\33_PrimitiveShape\33_PrimitiveShape_Main.cpp" />
     <ClCompile Include="..\Sources\sgfr\Tutorial\34_GraphicsEnum_한눈에_비교\34_GraphicsEnumDiff_Main.cpp" />
     <ClCompile Include="..\Sources\sgfr\Common\TutorialCommon.cpp" />
-    <ClCompile Include="..\Sources\sgfr\Practice\01_2DSceneTemplate\01_2DSceneTemplate_Main.cpp" />
-    <ClCompile Include="..\Sources\sgfr\Practice\02_3DSceneTemplate\02_3DSceneTemplate_Main.cpp" />
-    <ClCompile Include="..\Sources\sgfr\Practice\03_2DScenePractice\03_2DScenePractice_Main.cpp" />
-    <ClCompile Include="..\Sources\sgfr\Practice\04_3DScenePractice\04_3DScenePractice_Main.cpp" />
-    <ClCompile Include="..\Sources\sgfr\Practice\05_2DPipelineTemplate\05_2DPipelineTemplate_Main.cpp" />
-    <ClCompile Include="..\Sources\sgfr\Practice\06_3DPipelineTemplate\06_3DPipelineTemplate_Main.cpp" />
-    <ClCompile Include="..\Sources\sgfr\Practice\07_2DPipelinePractice\07_2DPipelinePractice_Main.cpp" />
-    <ClCompile Include="..\Sources\sgfr\Practice\08_3DPipelinePractice\08_3DPipelinePractice_Main.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\01_2DPipelineTemplate\01_2DPipelineTemplate_Main.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\02_3DPipelineTemplate\02_3DPipelineTemplate_Main.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\03_2DPipelinePractice\03_2DPipelinePractice_Main.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\03_2DPipelinePractice\CPUTransformedVertex.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\03_2DPipelinePractice\GPUTransformedVertex.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\04_3DPipelinePractice\04_3DPipelinePractice_Main.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\04_3DPipelinePractice\CPUTransformedVertex3D.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\04_3DPipelinePractice\GPUTransformedVertex3D.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\05_2DSceneTemplate\05_2DSceneTemplate_Main.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\06_3DSceneTemplate\06_3DSceneTemplate_Main.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\07_2DScenePractice\07_2DScenePractice_Main.cpp" />
+    <ClCompile Include="..\Sources\sgfr\Practice\08_3DScenePractice\08_3DScenePractice_Main.cpp" />
     <ClCompile Include="..\Sources\sgfr\Practice\PracticeRegistry.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -154,14 +158,14 @@
     <ClInclude Include="..\Sources\sgfr\Tutorial\33_PrimitiveShape\33_PrimitiveShape_Main.h" />
     <ClInclude Include="..\Sources\sgfr\Tutorial\34_GraphicsEnum_한눈에_비교\34_GraphicsEnumDiff_Main.h" />
     <ClInclude Include="..\Sources\sgfr\Common\TutorialCommon.h" />
-    <ClInclude Include="..\Sources\sgfr\Practice\01_2DSceneTemplate\01_2DSceneTemplate_Main.h" />
-    <ClInclude Include="..\Sources\sgfr\Practice\02_3DSceneTemplate\02_3DSceneTemplate_Main.h" />
-    <ClInclude Include="..\Sources\sgfr\Practice\03_2DScenePractice\03_2DScenePractice_Main.h" />
-    <ClInclude Include="..\Sources\sgfr\Practice\04_3DScenePractice\04_3DScenePractice_Main.h" />
-    <ClInclude Include="..\Sources\sgfr\Practice\05_2DPipelineTemplate\05_2DPipelineTemplate_Main.h" />
-    <ClInclude Include="..\Sources\sgfr\Practice\06_3DPipelineTemplate\06_3DPipelineTemplate_Main.h" />
-    <ClInclude Include="..\Sources\sgfr\Practice\07_2DPipelinePractice\07_2DPipelinePractice_Main.h" />
-    <ClInclude Include="..\Sources\sgfr\Practice\08_3DPipelinePractice\08_3DPipelinePractice_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Practice\01_2DPipelineTemplate\01_2DPipelineTemplate_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Practice\02_3DPipelineTemplate\02_3DPipelineTemplate_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Practice\03_2DPipelinePractice\03_2DPipelinePractice_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Practice\04_3DPipelinePractice\04_3DPipelinePractice_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Practice\05_2DSceneTemplate\05_2DSceneTemplate_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Practice\06_3DSceneTemplate\06_3DSceneTemplate_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Practice\07_2DScenePractice\07_2DScenePractice_Main.h" />
+    <ClInclude Include="..\Sources\sgfr\Practice\08_3DScenePractice\08_3DScenePractice_Main.h" />
     <ClInclude Include="..\Sources\sgfr\Practice\PracticeRegistry.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

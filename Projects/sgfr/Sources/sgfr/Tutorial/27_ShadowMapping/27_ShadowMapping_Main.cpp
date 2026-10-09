@@ -165,7 +165,7 @@ void ShadowMapping_Main()
 	}
 
 	// 5. 카메라(관찰자 시점)
-	const mat4 view = mat4::LookAtLH(vec3(0.0f, 3.0f, -6.0f), vec3(0.0f, 0.5f, 0.0f), vec3::Up());
+	const mat4 view = mat4::LookAtLH(vec3(0.0f, 3.0f, -6.0f), vec3(0.0f, 0.5f, 0.0f), vec3::UP);
 	const mat4 proj = mat4::PerspectiveFovLH(jc_math_pi_div4, window.AspectRatio(), 0.1f, 100.0f);
 
 	// 6. 빛 상태: 방위각(azimuth)으로 태양 방향을 돌린다.
@@ -215,7 +215,7 @@ void ShadowMapping_Main()
 		// 방향광(태양)은 무한히 멀리 있다고 가정 -> 평행광선 -> 직교 투영 사용!
 		const vec3 lightDir = vec3(cosf(lightAzimuth), -1.2f, sinf(lightAzimuth)).Normalized();
 		const vec3 lightPos = lightDir * -8.0f;	// 빛을 거슬러 올라간 가상 위치
-		const mat4 lightView = mat4::LookAtLH(lightPos, vec3::Zero(), vec3::Up());
+		const mat4 lightView = mat4::LookAtLH(lightPos, vec3::ZERO, vec3::UP);
 		const mat4 lightProj = mat4::OrthographicOffCenterLH(-4.0f, 4.0f, -4.0f, 4.0f, 0.1f, 20.0f);
 		const mat4 lightViewProj = lightView * lightProj;
 

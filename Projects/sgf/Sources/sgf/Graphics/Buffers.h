@@ -90,6 +90,7 @@ public:
 
 	void UpdateAndBind(GraphicContext& _context, const T& _data, UINT _slot = 0)
 	{
+		jc_assert_msg(pBuffer_.Get() != nullptr, _T("Create 하지 않은 상수 버퍼에 UpdateAndBind를 호출했습니다."));
 		_context.UpdateBuffer(pBuffer_.Get(), &_data, sizeof(T));
 		_context.SetConstantBuffer(ShaderStage::ssVertex, _slot, pBuffer_.Get());
 		_context.SetConstantBuffer(ShaderStage::ssPixel, _slot, pBuffer_.Get());
@@ -97,6 +98,7 @@ public:
 
 	void Update(GraphicContext& _context, const T& _data)
 	{
+		jc_assert_msg(pBuffer_.Get() != nullptr, _T("Create 하지 않은 상수 버퍼에 Update를 호출했습니다."));
 		_context.UpdateBuffer(pBuffer_.Get(), &_data, sizeof(T));
 	}
 

@@ -117,7 +117,7 @@ namespace
 		void OnEnter() override
 		{
 			GetCamera3D()->SetPerspectiveDegrees(60.0f, GetWindow()->AspectRatio(), 0.1f, 1000.0f);
-			GetCamera3D()->SetLookAt(vec3(0.0f, 2.5f, -8.0f), vec3::Zero());
+			GetCamera3D()->SetLookAt(vec3(0.0f, 2.5f, -8.0f), vec3::ZERO);
 			GetWindow()->SetTitle(_T("33. Shape3D 6종 (SPACE: 2D 씬, ESC: 종료)"));
 
 			const _f32 xs[] = { -5.5f, -3.3f, -1.1f, 1.1f, 3.3f, 5.5f };

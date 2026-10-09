@@ -133,7 +133,7 @@ void ShadingModel_Main()
 
 	// 4. 카메라: 정반사광 계산에 카메라 위치가 직접 쓰이므로 변수로 보관한다.
 	const vec3 cameraPos(0.0f, 0.8f, -3.0f);
-	const mat4 view = mat4::LookAtLH(cameraPos, vec3::Zero(), vec3::Up());
+	const mat4 view = mat4::LookAtLH(cameraPos, vec3::ZERO, vec3::UP);
 	const mat4 proj = mat4::PerspectiveFovLH(jc_math_pi_div4, window.AspectRatio(), 0.1f, 100.0f);
 
 	// 5. 셰이딩 상태 (키 입력으로 바꾼다)
