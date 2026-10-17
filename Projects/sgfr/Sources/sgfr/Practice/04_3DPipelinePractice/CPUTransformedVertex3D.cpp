@@ -51,14 +51,14 @@ namespace
 		)";
 	}
 
-	struct s2DModel
+	struct s3DModel
 	{
 		vec3 localPos_;
 		vec3 localScale_ = { 1.f, 1.f, 1.f };
-		vec3 localRotation_ = { 0.f, 0.f, 0.f };
+		vec3 localRotation_ = { 0.f, 0.f, 0.f };	// x = pitch, y = yaw, z = roll
 
 		bool transformDirty_ = true;
-		mat4 matWorld_;	// camera world
+		mat4 matWorld_;
 
 		void InvalidateTransform() { transformDirty_ = true; }
 		void UpdateTransform()
@@ -66,17 +66,18 @@ namespace
 			// srt 순으로 행렬곱한다.
 			// 행 백터(row major) 기준으로 작업했기 때문.
 			// scale 먼저 적용, 그 다음 회전, 마지막 이동 적용
-			//                   | a  b  0  0 | 
-			//                   | c  d  0  0 | 
-			// [ x, y, z, 1 ] *  | 0  0  1  0 |
-			//                   | tx ty tz  1 |
+			//                   | r00 r01 r02 0 | 
+			//                   | r10 r11 r12 0 | 
+			// [ x, y, z, 1 ] *  | r20 r21 r22 0 |
+			//                   | tx  ty  tz  1 |
 
 			matWorld_ = mat4::Scale(localScale_)
-				* (mat4::RotationZ(localRotation_.z) * mat4::RotationX(localRotation_.y) * mat4::RotationX(localRotation_.x))
+				* (mat4::RotationZ(localRotation_.z) * mat4::RotationY(localRotation_.y) * mat4::RotationX(localRotation_.x))
 				* mat4::Translation(localPos_);
 		}
 
 		Vector<vec3> verticesCPU_;
+		Vector<color> colorsCPU_;
 		Vector<_u32> indices_;
 
 		Vector<VertexPC> verticesGPU_;
@@ -85,9 +86,8 @@ namespace
 	struct s3DCamera
 	{
 		vec3 localPos_;			// eye
-		vec3 localRotation_;	// x = pitch, y = yaw, z = roll
 		vec3 targetPos_;		// target
-		vec3 up_;				// up
+		vec3 up_ = vec3::UP;	// up
 
 		bool matViewDirty_ = true;
 		mat4 matView_;
@@ -316,30 +316,110 @@ void CPUTransformedVertex3D_Main()
 		return;
 	}
 
-	s2DModel model;
-	model.indices_ = { 0, 1, 2 };
+	// 정육면체 정점 8개 (각 꼭짓점마다 다른 색 -> 면 색이 그라데이션으로 보간된다)
+	//
+	//	4 -------- 5
+	//	/| /|
+	//	0 -------- 1 | (z가 작은 쪽이 앞면: 0,1,2,3)
+	//	| 6 -------|-7
+	//	|/ |/
+	//	2 -------- 3
+	s3DModel model;
 	model.verticesCPU_ =
 	{
-		{ 0.f, 0.f, },
-		{ 1.f, 1.f },
-		{ 0.f, 1.f }
+		{ -0.5f, +0.5f, -0.5f },	// 0: 앞-왼위
+		{ +0.5f, +0.5f, -0.5f },	// 1: 앞-오른위
+		{ -0.5f, -0.5f, -0.5f },	// 2: 앞-왼아래
+		{ +0.5f, -0.5f, -0.5f },	// 3: 앞-오른아래
+		{ -0.5f, +0.5f, +0.5f },	// 4: 뒤-왼위
+		{ +0.5f, +0.5f, +0.5f },	// 5: 뒤-오른위
+		{ -0.5f, -0.5f, +0.5f },	// 6: 뒤-왼아래
+		{ +0.5f, -0.5f, +0.5f },	// 7: 뒤-오른아래
+	};
+	model.colorsCPU_ =
+	{
+		color(0xFF, 0x00, 0x00, 0xFF),
+		color(0x00, 0xFF, 0x00, 0xFF),
+		color(0x00, 0x00, 0xFF, 0xFF),
+		color(0xFF, 0xFF, 0x00, 0xFF),
+		color(0xFF, 0x00, 0xFF, 0xFF),
+		color(0x00, 0xFF, 0xFF, 0xFF),
+		color(0xFF, 0xFF, 0xFF, 0xFF),
+		color(0x4D, 0x4D, 0x4D, 0xFF),
+	};
+	// 인덱스 36개 (6면 x 삼각형 2개 x 3). 바깥에서 볼 때 시계 방향.
+	model.indices_ =
+	{
+		0, 1, 2,  2, 1, 3,	// 앞면 (z-)
+		5, 4, 7,  7, 4, 6,	// 뒷면 (z+)
+		4, 5, 0,  0, 5, 1,	// 윗면 (y+)
+		2, 3, 6,  6, 3, 7,	// 아랫면 (y-)
+		4, 0, 6,  6, 0, 2,	// 왼면 (x-)
+		1, 5, 3,  3, 5, 7,	// 오른면 (x+)
 	};
 	model.verticesGPU_.Resize(model.verticesCPU_.Size());
 
-	model.localPos_ = { 200.f, 300.f };
-	model.localScale_ = { 100.f, 100.f };
+	model.localPos_ = { 0.f, 0.f, 0.f };
+	model.localScale_ = { 1.f, 1.f, 1.f };
 	model.InvalidateTransform();
 
+	// 카메라를 원점 뒤쪽(z = -2.5)에 두고 원점을 바라본다. (LH: +z가 화면 안쪽)
 	s3DCamera camera;
-	camera.localPos_ = { 0.0f, 0.f };
-	camera.localRotation_ = 0.f;
+	camera.localPos_ = { 0.f, 0.f, -2.5f };
+	camera.targetPos_ = { 0.f, 0.f, 0.f };
+	camera.up_ = vec3::UP;
 
-	// 이 설명만 봐도 이해 안되면 Docs/sgfr/02_Practice/projection-matrix.html 파일 참고해서 볼 것
+	/*
+	 * 원근 투영 행렬 (Perspective Projection) - 3D라 원근감을 적용한다.
+	 * 카메라 공간의 정점을 원근감이 적용된 클립 좌표로 변환한다.
+	 * 멀수록 작게, 가까울수록 크게 보이게 하고, near ~ far 깊이를 0 ~ 1로 매핑한다.
+	 *
+	 * [왜 나눗셈을 w에 넣는가]
+	 *  y_ndc = y1 / (z1 * tan(fov/2)) 처럼 z1로 나누는 식은 행렬의 곱/합만으로 표현할 수 없다.
+	 *  그래서 나눗셈의 분모(z1)를 w 성분에 그대로 담아두고, GPU가 클립 좌표를 w로 나눈다.
+	 *
+	 *  [x1 y1 z1 1] * M_proj = [x_clip y_clip z_clip w_clip]   (w_clip = z1)
+	 *  rasterizer가 x_clip/w, y_clip/w, z_clip/w 로 나눠 NDC를 만든다.
+	 *
+	 * [near 평면에 투영 (닮은 삼각형)]
+	 *  y_n / n = y1 / z1   =>   y_n = n * y1 / z1
+	 *
+	 * [화면 경계로 정규화]
+	 *  near 평면의 반높이 h_n = n * tan(fovY/2)
+	 *  y_ndc = y_n / h_n = y1 / (z1 * tan(fovY/2))     (n이 약분된다)
+	 *  x_ndc = x1 / (z1 * tan(fovY/2) * aspect)
+	 *
+	 * [행렬 원소]
+	 *  sy = 1 / tan(fovY/2)          세로 스케일
+	 *  sx = sy / aspect              가로 스케일 (aspect = W / H)
+	 *  A  = far / (far - near)       깊이: near -> 0, far -> 1   (z_ndc = A + B / z1)
+	 *  B  = -near * far / (far - near)
+	 *
+	 *      | sx  0   0   0 |
+	 *      | 0   sy  0   0 |
+	 *      | 0   0   A   1 |
+	 *      | 0   0   B   0 |
+	 *
+	 *  [x1 y1 z1 1] * M_proj = [sx*x1  sy*y1  A*z1+B  z1]
+	 *
+	 * 이 설명만 봐도 이해 안되면 Docs/sgfr/02_Practice/projection-matrix.html 파일 참고해서 볼 것
+	 */
+	const _f32 fovY = jc_math_deg2rad(60.0f);
+	const _f32 aspect = window.AspectRatio();
+	const _f32 nearZ = 0.1f;
+	const _f32 farZ = 100.0f;
 
-	camera.matProjection_._11 = 2.f / window.Width();
-	camera.matProjection_._22 = -2.f / window.Height();
-	camera.matProjection_._41 = -1.f;
-	camera.matProjection_._42 = 1.f;
+	const _f32 sy = 1.0f / tanf(fovY * 0.5f);
+	const _f32 sx = sy / aspect;
+	const _f32 depthA = farZ / (farZ - nearZ);
+	const _f32 depthB = -nearZ * farZ / (farZ - nearZ);
+
+	camera.matProjection_._11 = sx;
+	camera.matProjection_._22 = sy;
+	camera.matProjection_._33 = depthA;
+	camera.matProjection_._34 = 1.0f;
+	camera.matProjection_._43 = depthB;
+	camera.matProjection_._44 = 0.0f;
 
 	VertexBuffer vb;
 	vb.Create(gd, nullptr, 1024, VertexPC::Decl(), ResourceUsage::ruDynamic);
@@ -353,45 +433,96 @@ void CPUTransformedVertex3D_Main()
 		if (input.IsKeyPressed(VK_ESCAPE))
 			break;
 
+		const _f32 moveStep = 0.03f;
+		const _f32 rotateStep = 0.03f;
+
+		// 카메라 이동 (eye와 target을 함께 이동시켜 바라보는 방향은 유지)
 		if (input.IsKeyDown(VK_LEFT))
 		{
-			camera.localPos_.x -= 1.f;
+			camera.localPos_.x -= moveStep;
+			camera.targetPos_.x -= moveStep;
 			camera.InvalidateView();
 		}
 		if (input.IsKeyDown(VK_RIGHT))
 		{
-			camera.localPos_.x += 1.f;
+			camera.localPos_.x += moveStep;
+			camera.targetPos_.x += moveStep;
 			camera.InvalidateView();
 		}
 		if (input.IsKeyDown(VK_UP))
 		{
-			camera.localPos_.y -= 1.f;
+			camera.localPos_.y += moveStep;
+			camera.targetPos_.y += moveStep;
 			camera.InvalidateView();
 		}
 		if (input.IsKeyDown(VK_DOWN))
 		{
-			camera.localPos_.y += 1.f;
+			camera.localPos_.y -= moveStep;
+			camera.targetPos_.y -= moveStep;
 			camera.InvalidateView();
 		}
 
+		// 모델 이동 (x, y, z)
 		if (input.IsKeyDown('A'))
 		{
-			model.localPos_.x -= 1.f;
+			model.localPos_.x -= moveStep;
 			model.InvalidateTransform();
 		}
 		if (input.IsKeyDown('D'))
 		{
-			model.localPos_.x += 1.f;
+			model.localPos_.x += moveStep;
+			model.InvalidateTransform();
+		}
+		if (input.IsKeyDown('Q'))
+		{
+			model.localPos_.y += moveStep;
+			model.InvalidateTransform();
+		}
+		if (input.IsKeyDown('E'))
+		{
+			model.localPos_.y -= moveStep;
 			model.InvalidateTransform();
 		}
 		if (input.IsKeyDown('W'))
 		{
-			model.localPos_.y -= 1.f;
+			model.localPos_.z += moveStep;
 			model.InvalidateTransform();
 		}
 		if (input.IsKeyDown('S'))
 		{
-			model.localPos_.y += 1.f;
+			model.localPos_.z -= moveStep;
+			model.InvalidateTransform();
+		}
+
+		// 모델 회전 (y = yaw, x = pitch, z = roll)
+		if (input.IsKeyDown('F'))
+		{
+			model.localRotation_.y -= rotateStep;
+			model.InvalidateTransform();
+		}
+		if (input.IsKeyDown('G'))
+		{
+			model.localRotation_.y += rotateStep;
+			model.InvalidateTransform();
+		}
+		if (input.IsKeyDown('R'))
+		{
+			model.localRotation_.x -= rotateStep;
+			model.InvalidateTransform();
+		}
+		if (input.IsKeyDown('T'))
+		{
+			model.localRotation_.x += rotateStep;
+			model.InvalidateTransform();
+		}
+		if (input.IsKeyDown('V'))
+		{
+			model.localRotation_.z -= rotateStep;
+			model.InvalidateTransform();
+		}
+		if (input.IsKeyDown('B'))
+		{
+			model.localRotation_.z += rotateStep;
 			model.InvalidateTransform();
 		}
 
@@ -416,14 +547,15 @@ void CPUTransformedVertex3D_Main()
 			// 카메라 상에서 보여질 모델의 최종 위치를 계산하기 위해서이다.
 			mat4 final = model.matWorld_ * camera.matVp_;
 
-			// 각 정점ㅁ마다 업데이트 수행.
+			// 각 정점마다 업데이트 수행.
 			for (_u32 i = 0; i < model.verticesCPU_.Size(); ++i)
 			{
-				vec3 g = model.verticesCPU_[i].Mul(final, 1.f);
-				model.verticesGPU_[i].position_.x = g.x;
-				model.verticesGPU_[i].position_.y = g.y;
-				model.verticesGPU_[i].position_.z = 0;
-				model.verticesGPU_[i].color_ = color::RED;
+				// 원근 투영은 w로 나눈 뒤에야 NDC가 나오므로 vec4로 클립 좌표를 구한 뒤 w로 나눈다.
+				vec4 clip = vec4(model.verticesCPU_[i], 1.f).Mul(final);
+				vec3 ndc = clip.ToVec3() / clip.w;
+
+				model.verticesGPU_[i].position_ = ndc;
+				model.verticesGPU_[i].color_ = model.colorsCPU_[i];
 			}
 
 			vb.Update(gc, model.verticesGPU_.Source(), model.verticesGPU_.Size());
@@ -437,7 +569,7 @@ void CPUTransformedVertex3D_Main()
 		gc.SetIndexBuffer(&ib);
 		gc.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		gc.SetRasterizer(CullMode::cmNone, FillMode::fmSolid, FrontFace::ffClockwise);
-		gc.SetDepth(DepthMode::dmDisabled);
+		gc.SetDepth(DepthMode::dmReadWrite);
 		gc.SetBlend(BlendMode::bmNone);
 		gc.DrawIndexed(model.indices_.Size(), 0, 0);
 

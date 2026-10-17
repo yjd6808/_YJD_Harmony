@@ -59,43 +59,74 @@ namespace
 		)";
 	}
 
-	struct s2DModel
+	struct s3DModel
 	{
-		vec2 localPos_;
-		vec2 localScale_ = { 1.f, 1.f };
-		vec2 localDirection_ = { 0.f, 0.f };
+		vec3 localPos_;
+		vec3 localScale_ = { 1.f, 1.f, 1.f };
+		vec3 localRotation_ = { 0.f, 0.f, 0.f };	// x = pitch, y = yaw, z = roll
 
-		bool transformDirty_;
+		bool transformDirty_ = true;
+		mat4 matWorld_;
 
 		void InvalidateTransform() { transformDirty_ = true; }
 		void UpdateTransform()
 		{
+			// srt 순으로 행렬곱한다.
+			// 행 백터(row major) 기준으로 작업했기 때문.
+			// scale 먼저 적용, 그 다음 회전, 마지막 이동 적용
 			matWorld_ = mat4::Scale(localScale_)
-				* mat4::RotationZ(atan2f(localDirection_.y, localDirection_.x))
+				* (mat4::RotationZ(localRotation_.z) * mat4::RotationY(localRotation_.y) * mat4::RotationX(localRotation_.x))
 				* mat4::Translation(localPos_);
 		}
-		mat4 matWorld_;
 
 		Vector<_u32> indices_;
 		Vector<VertexPC> verticesGPU_;
 	};
 
-	struct s2DCamera
+	struct s3DCamera
 	{
-		vec2 localPos_;
-		_f32 localRotation_ = 0.f;
+		vec3 localPos_;			// eye
+		vec3 targetPos_;		// target
+		vec3 up_ = vec3::UP;	// up
+
+		bool matViewDirty_ = true;
+		mat4 matView_;
+		mat4 matProjection_;
+		mat4 matVp_; // matViewProjection_
 
 		void InvalidateView() { matViewDirty_ = true; }
 		void UpdateView()
 		{
-			matView_ = mat4::Translation(-localPos_) * mat4::RotationZ(-localRotation_);
+			// LookAt 방식으로 View 행렬을 구성한다. (자세한 설명은 CPU 정점 굽기 파일 참고)
+			const _f32 upLength = up_.Length();
+			vec3 upHint = up_;
+			if (upLength > 1) upHint.Normalize();
+			jc_assert(upLength > 0);
+
+			vec3 f = (targetPos_ - localPos_).Normalized(); // camera forward (camera z)
+			vec3 r = (f.Cross(upHint) * -1).Normalized(); // camera right (camera x)
+			vec3 u = f.Cross(r); // camera up, (camera y)
+
+			// translation 적용
+			matView_._41 = -r.Dot(localPos_);
+			matView_._42 = -u.Dot(localPos_);
+			matView_._43 = -f.Dot(localPos_);
+
+			// rotation 적용
+			matView_._11 = r.Dot(vec3::RIGHT);
+			matView_._12 = u.Dot(vec3::RIGHT);
+			matView_._13 = f.Dot(vec3::RIGHT);
+
+			matView_._21 = r.Dot(vec3::UP);
+			matView_._22 = u.Dot(vec3::UP);
+			matView_._23 = f.Dot(vec3::UP);
+
+			matView_._31 = r.Dot(vec3::FORWARD);
+			matView_._32 = u.Dot(vec3::FORWARD);
+			matView_._33 = f.Dot(vec3::FORWARD);
+
 			matVp_ = matView_ * matProjection_;
 		}
-
-		bool matViewDirty_;
-		mat4 matView_;
-		mat4 matProjection_;
-		mat4 matVp_;
 	};
 }
 
@@ -151,28 +182,58 @@ void GPUTransformedVertex3D_Main()
 		return;
 	}
 
-	s2DModel model;
-	model.indices_ = { 0, 1, 2 };
+	// 정육면체 정점 8개 (각 꼭짓점마다 다른 색 -> 면 색이 그라데이션으로 보간된다)
+	s3DModel model;
 	model.verticesGPU_ =
 	{
-		{ { 0.f, 0.f }, color(0xffff0000) },
-		{ { 1.f, 1.f }, color(0xffff0000) },
-		{ { 0.f, 1.f }, color(0xffff0000) }
+		{ { -0.5f, +0.5f, -0.5f }, color(0xFF, 0x00, 0x00, 0xFF) },	// 0: 앞-왼위
+		{ { +0.5f, +0.5f, -0.5f }, color(0x00, 0xFF, 0x00, 0xFF) },	// 1: 앞-오른위
+		{ { -0.5f, -0.5f, -0.5f }, color(0x00, 0x00, 0xFF, 0xFF) },	// 2: 앞-왼아래
+		{ { +0.5f, -0.5f, -0.5f }, color(0xFF, 0xFF, 0x00, 0xFF) },	// 3: 앞-오른아래
+		{ { -0.5f, +0.5f, +0.5f }, color(0xFF, 0x00, 0xFF, 0xFF) },	// 4: 뒤-왼위
+		{ { +0.5f, +0.5f, +0.5f }, color(0x00, 0xFF, 0xFF, 0xFF) },	// 5: 뒤-오른위
+		{ { -0.5f, -0.5f, +0.5f }, color(0xFF, 0xFF, 0xFF, 0xFF) },	// 6: 뒤-왼아래
+		{ { +0.5f, -0.5f, +0.5f }, color(0x4D, 0x4D, 0x4D, 0xFF) },	// 7: 뒤-오른아래
+	};
+	// 인덱스 36개 (6면 x 삼각형 2개 x 3). 바깥에서 볼 때 시계 방향.
+	model.indices_ =
+	{
+		0, 1, 2,  2, 1, 3,	// 앞면 (z-)
+		5, 4, 7,  7, 4, 6,	// 뒷면 (z+)
+		4, 5, 0,  0, 5, 1,	// 윗면 (y+)
+		2, 3, 6,  6, 3, 7,	// 아랫면 (y-)
+		4, 0, 6,  6, 0, 2,	// 왼면 (x-)
+		1, 5, 3,  3, 5, 7,	// 오른면 (x+)
 	};
 
-	model.localPos_ = { 200.f, 300.f };
-	model.localScale_ = { 100.f, 100.f };
-	model.transformDirty_ = true;
+	model.localPos_ = { 0.f, 0.f, 0.f };
+	model.localScale_ = { 1.f, 1.f, 1.f };
+	model.InvalidateTransform();
 
-	s2DCamera camera;
-	camera.localPos_ = { 0.0f, 0.f };
-	camera.localRotation_ = 0.f;
+	// 카메라를 원점 뒤쪽(z = -2.5)에 두고 원점을 바라본다. (LH: +z가 화면 안쪽)
+	s3DCamera camera;
+	camera.localPos_ = { 0.f, 0.f, -2.5f };
+	camera.targetPos_ = { 0.f, 0.f, 0.f };
+	camera.up_ = vec3::UP;
 	camera.InvalidateView();
 
-	camera.matProjection_._11 = 2.f / window.Width();
-	camera.matProjection_._22 = -2.f / window.Height();
-	camera.matProjection_._41 = -1.f;
-	camera.matProjection_._42 = 1.f;
+	// 원근 투영 행렬 (자세한 유도는 CPU 정점 굽기 파일과 Docs/sgfr/02_Practice/projection-matrix.html 참고)
+	const _f32 fovY = jc_math_deg2rad(60.0f);
+	const _f32 aspect = window.AspectRatio();
+	const _f32 nearZ = 0.1f;
+	const _f32 farZ = 100.0f;
+
+	const _f32 sy = 1.0f / tanf(fovY * 0.5f);
+	const _f32 sx = sy / aspect;
+	const _f32 depthA = farZ / (farZ - nearZ);
+	const _f32 depthB = -nearZ * farZ / (farZ - nearZ);
+
+	camera.matProjection_._11 = sx;
+	camera.matProjection_._22 = sy;
+	camera.matProjection_._33 = depthA;
+	camera.matProjection_._34 = 1.0f;
+	camera.matProjection_._43 = depthB;
+	camera.matProjection_._44 = 0.0f;
 
 	VertexBuffer vb;
 	vb.Create(gd, model.verticesGPU_.Source(), model.verticesGPU_.Size(), VertexPC::Decl(), ResourceUsage::ruImmutable);
@@ -192,45 +253,96 @@ void GPUTransformedVertex3D_Main()
 		if (input.IsKeyPressed(VK_ESCAPE))
 			break;
 
+		const _f32 moveStep = 0.03f;
+		const _f32 rotateStep = 0.03f;
+
+		// 카메라 이동 (eye와 target을 함께 이동시켜 바라보는 방향은 유지)
 		if (input.IsKeyDown(VK_LEFT))
 		{
-			camera.localPos_.x -= 1.f;
+			camera.localPos_.x -= moveStep;
+			camera.targetPos_.x -= moveStep;
 			camera.InvalidateView();
 		}
 		if (input.IsKeyDown(VK_RIGHT))
 		{
-			camera.localPos_.x += 1.f;
+			camera.localPos_.x += moveStep;
+			camera.targetPos_.x += moveStep;
 			camera.InvalidateView();
 		}
 		if (input.IsKeyDown(VK_UP))
 		{
-			camera.localPos_.y -= 1.f;
+			camera.localPos_.y += moveStep;
+			camera.targetPos_.y += moveStep;
 			camera.InvalidateView();
 		}
 		if (input.IsKeyDown(VK_DOWN))
 		{
-			camera.localPos_.y += 1.f;
+			camera.localPos_.y -= moveStep;
+			camera.targetPos_.y -= moveStep;
 			camera.InvalidateView();
 		}
-			
+
+		// 모델 이동 (x, y, z)
 		if (input.IsKeyDown('A'))
 		{
-			model.localPos_.x -= 1.f;
+			model.localPos_.x -= moveStep;
 			model.InvalidateTransform();
 		}
 		if (input.IsKeyDown('D'))
 		{
-			model.localPos_.x += 1.f;
+			model.localPos_.x += moveStep;
+			model.InvalidateTransform();
+		}
+		if (input.IsKeyDown('Q'))
+		{
+			model.localPos_.y += moveStep;
+			model.InvalidateTransform();
+		}
+		if (input.IsKeyDown('E'))
+		{
+			model.localPos_.y -= moveStep;
 			model.InvalidateTransform();
 		}
 		if (input.IsKeyDown('W'))
 		{
-			model.localPos_.y -= 1.f;
+			model.localPos_.z += moveStep;
 			model.InvalidateTransform();
 		}
 		if (input.IsKeyDown('S'))
 		{
-			model.localPos_.y += 1.f;
+			model.localPos_.z -= moveStep;
+			model.InvalidateTransform();
+		}
+
+		// 모델 회전 (y = yaw, x = pitch, z = roll)
+		if (input.IsKeyDown('F'))
+		{
+			model.localRotation_.y -= rotateStep;
+			model.InvalidateTransform();
+		}
+		if (input.IsKeyDown('G'))
+		{
+			model.localRotation_.y += rotateStep;
+			model.InvalidateTransform();
+		}
+		if (input.IsKeyDown('R'))
+		{
+			model.localRotation_.x -= rotateStep;
+			model.InvalidateTransform();
+		}
+		if (input.IsKeyDown('T'))
+		{
+			model.localRotation_.x += rotateStep;
+			model.InvalidateTransform();
+		}
+		if (input.IsKeyDown('V'))
+		{
+			model.localRotation_.z -= rotateStep;
+			model.InvalidateTransform();
+		}
+		if (input.IsKeyDown('B'))
+		{
+			model.localRotation_.z += rotateStep;
 			model.InvalidateTransform();
 		}
 
@@ -256,7 +368,7 @@ void GPUTransformedVertex3D_Main()
 		gc.SetIndexBuffer(&ib);
 		gc.SetPrimitiveTopology(PrimitiveTopology::ptTriangleList);
 		gc.SetRasterizer(CullMode::cmNone, FillMode::fmSolid, FrontFace::ffClockwise);
-		gc.SetDepth(DepthMode::dmDisabled);
+		gc.SetDepth(DepthMode::dmReadWrite);
 		gc.SetBlend(BlendMode::bmNone);
 		gc.DrawIndexed(model.indices_.Size(), 0, 0);
 
