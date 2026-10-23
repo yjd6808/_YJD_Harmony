@@ -116,6 +116,11 @@ int main(int _argc, char** _argv)
 		CONSOLE_MENU_ACTION(call_06_Coroutine(_argc, _argv))
 	);
 	pCoroutine->AddBack(_T("0"), _T("뒤로"));
+
+	pRoot->Add(_T("7"), _T("FuturePromise Practice - future/promise 학습"),
+		CONSOLE_MENU_ACTION(call_07_FuturePromise(_argc, _argv))
+	);
+
 	pRoot->AddBack(_T("0"), _T("종료"));
 
 	// ====================================================

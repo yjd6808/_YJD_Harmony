@@ -39,6 +39,7 @@
     <ClCompile Include="..\Sources\jcr\01_AsmStudy1.cpp" />
     <ClCompile Include="..\Sources\jcr\02_HeapStudy1.cpp" />
     <ClCompile Include="..\Sources\jcr\03_RSPGame.cpp" />
+    <ClCompile Include="..\Sources\jcr\07_FuturePromise_Practice.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\jcr\Core.h" />

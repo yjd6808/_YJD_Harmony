@@ -6,11 +6,13 @@ cd /d "%BAT_DIR%..\.."
 
 set "CONFIG=Debug"
 set "PLATFORM=x64"
+set "REBUILD="
 
 :parse
 if "%~1"=="" goto :parsed
 if /i "%~1"=="-C" ( set "CONFIG=%~2" & shift & shift & goto :parse )
 if /i "%~1"=="-P" ( set "PLATFORM=%~2" & shift & shift & goto :parse )
+if /i "%~1"=="-Rebuild" ( set "REBUILD= -Rebuild" & shift & goto :parse )
 echo [WARN] Unknown option: %~1
 shift
 goto :parse
@@ -42,7 +44,7 @@ echo.
 echo ================================================================
 echo  [%CONFIG%/%PLATFORM%] Building %~1 ...
 echo ================================================================
-powershell -ExecutionPolicy Bypass -File "%BUILD_PS1%" -ProjectName %~1 -Configuration %CONFIG% -Platform %PLATFORM% -FileLog -NoConsoleLogging
+powershell -ExecutionPolicy Bypass -File "%BUILD_PS1%" -ProjectName %~1 -Configuration %CONFIG% -Platform %PLATFORM% -FileLog -NoConsoleLogging!REBUILD!
 if errorlevel 1 (
     set "EC=!ERRORLEVEL!"
     echo.

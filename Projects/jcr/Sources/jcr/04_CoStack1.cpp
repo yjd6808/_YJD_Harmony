@@ -414,7 +414,7 @@ static void co_func2(int _depth)
 	if (_depth >= 3)
 		return;
 	char stk[4096 * 3];
-	stk[0xff] = 0xff;
+	stk[0xff] = (char)0xff;
 	Console::WriteLine(_T("co_func2: stk[0xff] = 0x%x"), stk[0xff]);
 	co_func2(_depth + 1);
 }
